@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="JPCH.cpp" />
+    <ClCompile Include="JCoreTest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="JStringTest.cpp">
+      <Filter>Core\String</Filter>
+    </ClCompile>
+    <ClCompile Include="JStringUtilTest.cpp">
+      <Filter>Core\String</Filter>
+    </ClCompile>
+    <ClCompile Include="JUniquePointerTest.cpp">
+      <Filter>Core\SmartPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="JMemoryUtilTest.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="JPCH.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{c9ed1de4-41b3-4560-89ed-33a5668a41cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SmartPointer">
+      <UniqueIdentifier>{9b19a681-900e-4ee2-afa4-6b496f8acba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\String">
+      <UniqueIdentifier>{1116a258-3587-473f-95ee-48537ad3bf2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{8d8dc4d4-8627-4592-8b94-71aec8022479}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Study">
+      <UniqueIdentifier>{b0e06cde-9747-43f4-adbf-0dc168ffa20c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

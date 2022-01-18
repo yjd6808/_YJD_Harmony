@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Container">
+      <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{572997ed-9b91-422a-a46e-3a14fd16c403}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="String">
+      <UniqueIdentifier>{4fa22042-3a2d-4ea5-86eb-a3b65f6d717c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\JCore\Core.cpp" />
+    <ClCompile Include="..\Sources\JCore\Memory\MemoryUtil.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\String\String.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\String\StringUtil.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\JCore\Core.h" />
+    <ClInclude Include="..\Sources\JCore\Type.h" />
+    <ClInclude Include="..\Sources\JCore\Memory\MemoryUtil.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\String\String.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\String\StringUtil.h">
+      <Filter>String</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
