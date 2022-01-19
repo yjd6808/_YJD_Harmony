@@ -18,15 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\Study\JStudyServerBase.cpp" />
-    <ClCompile Include="src\Study\JStudySynchronizedEchoServer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Study\JStudyServerBase.h" />
-    <ClInclude Include="src\Study\JStudySynchronizedEchoServer.h" />
-    <ClInclude Include="src\Study\JStudyTcpServer.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -81,10 +72,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)JNetwork/src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Output\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Output\include\JCore;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(SolutionDir)Output\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Output\include\JCore;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -100,7 +98,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Core/JCore.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -118,7 +116,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>JCore.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>

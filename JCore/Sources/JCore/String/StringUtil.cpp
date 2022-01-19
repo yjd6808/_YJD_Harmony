@@ -84,5 +84,7 @@ void StringUtil::Swap(String& src, String& dst)
 	dst = std::move(temp);
 }
 
+
+
 } // namespace JCore
 

@@ -12,11 +12,11 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <WinSock2.h>
 #include <iostream>
 #include <thread>
 #include <Windows.h>
 #include <exception>
+#include <random>
 
 #define force_cast				reinterpret_cast
 

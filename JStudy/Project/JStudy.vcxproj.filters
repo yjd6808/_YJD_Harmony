@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\JStudy\Base.cpp" />
+    <ClCompile Include="..\Sources\JStudy\Study.cpp" />
+    <ClCompile Include="..\Sources\JStudy\Server\SynchronizedEchoServer.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JStudy\Server\TcpServer.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\JStudy\Base.h" />
+    <ClInclude Include="..\Sources\JStudy\Study.h" />
+    <ClInclude Include="..\Sources\JStudy\Server\SynchronizedEchoServer.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JStudy\Server\TcpServer.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JStudy\Socket.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Server">
+      <UniqueIdentifier>{edfe20da-36df-4921-82c1-f3e664d95541}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Client">
+      <UniqueIdentifier>{5897eb54-70c8-4270-a086-61ce101cac22}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,27 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="String">
-      <UniqueIdentifier>{52c741f0-49b1-4332-b5a1-77135adbbc66}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Memory">
-      <UniqueIdentifier>{53938fec-92be-4bbe-bf3b-82801e155dd8}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Sources\CoreTest.cpp" />
-    <ClCompile Include="..\Sources\JPCH.cpp" />
-    <ClCompile Include="..\Sources\Memory\MemoryUtilTest.cpp">
+    <ClCompile Include="..\Sources\JCoreTest\CoreTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryUtilTest.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\String\StringTest.cpp">
+    <ClCompile Include="..\Sources\JCoreTest\String\StringUtilTest.cpp">
       <Filter>String</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\String\StringUtilTest.cpp">
+    <ClCompile Include="..\Sources\JCoreTest\String\StringTest.cpp">
       <Filter>String</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\JPCH.h" />
+    <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{a7d7a37c-b569-4a8d-b426-30af7a008424}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="String">
+      <UniqueIdentifier>{6e7783aa-96fd-4418-a911-3ce5bc80a97b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

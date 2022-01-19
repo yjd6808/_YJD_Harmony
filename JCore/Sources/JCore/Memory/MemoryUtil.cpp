@@ -9,8 +9,7 @@
 namespace JCore {
 
 // memcpy_s와 기능이 동일합니다.
-void MemoryUtil::Copy(void* src, const int srcCapacity, const void* dst, const int dstCopySize)
-{
+void MemoryUtil::Copy(void* src, const int srcCapacity, const void* dst, const int dstCopySize) {
 	int iCopiedBytes = 0;
 
 	Byte* pSrc = (Byte*)src;
@@ -25,8 +24,7 @@ void MemoryUtil::Copy(void* src, const int srcCapacity, const void* dst, const i
 }
 
 // memcpy와 기능이 동일합니다.
-void MemoryUtil::CopyUnsafe(void* src, const void* dst, const int dstCopySize)
-{
+void MemoryUtil::CopyUnsafe(void* src, const void* dst, const int dstCopySize) {
 	int iCopiedBytes = 0;
 
 	Byte* pSrc = (Byte*)src;
@@ -41,8 +39,7 @@ void MemoryUtil::CopyUnsafe(void* src, const void* dst, const int dstCopySize)
 }
 
 // memset과 기능이 동일합니다.
-void MemoryUtil::Set(void* src, const int srcCapacity, const Byte value)
-{
+void MemoryUtil::Set(void* src, const int srcCapacity, const Byte value) {
 	Byte* pSrc = (Byte*)src;
 
 	for (int i = 0; i < srcCapacity; i++) {

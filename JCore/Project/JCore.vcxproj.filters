@@ -35,5 +35,9 @@
     <ClInclude Include="..\Sources\JCore\String\StringUtil.h">
       <Filter>String</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Memory\SharedPointer.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
   </ItemGroup>
 </Project>

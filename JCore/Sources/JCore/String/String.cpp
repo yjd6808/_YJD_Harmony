@@ -211,8 +211,7 @@ int String::Find(int startIdx, int endIdx, const char* str) const
 		if (iContinuousCount == 0) {
 			pSrc++;
 			iOffset++;
-		}
-		else {
+		} else {
 			iOffset += iContinuousCount;
 		}
 
@@ -366,8 +365,7 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 		if (includeEmpty) {
 			vecTokens.emplace_back(EMPTY);
 		}
-	}
-	else {
+	} else {
 		vecTokens.emplace_back(GetRangeUnsafe(0, iOffset - 1));
 	}
 
@@ -384,8 +382,7 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 			if (includeEmpty) {
 				vecTokens.emplace_back(EMPTY);
 			}
-		}
-		else {
+		} else {
 			vecTokens.emplace_back(GetRangeUnsafe(iOffset, iNextOffset - 1));
 		}
 		iOffset = iNextOffset + 1;
@@ -393,8 +390,7 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 
 	if (iOffset < m_iLen) {
 		vecTokens.emplace_back(GetRangeUnsafe(iOffset, m_iLen - 1));
-	}
-	else {
+	} else {
 		if (includeEmpty) {
 			vecTokens.emplace_back(EMPTY);
 		}
