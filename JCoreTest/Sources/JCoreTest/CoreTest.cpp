@@ -6,15 +6,19 @@
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Core.h>
 
-TEST(JCoreTest, JSAFE_DELETE) {
+#if TEST_CoreTest == ON
+
+TEST(JCoreTest, safe_delete) {
 	int* szAlloc = new int;
 	*szAlloc = 20;
-	JSAFE_DELETE(szAlloc);
+	safe_delete(szAlloc);
 	EXPECT_TRUE(szAlloc == NULL);
 }
 
-TEST(JCoreTest, JSAFE_DELETE_ARRAY) {
+TEST(JCoreTest, safe_delete_array) {
 	int* szAlloc = new int[512];
-	JSAFE_DELETE_ARRAY(szAlloc);
+	safe_delete_array(szAlloc);
 	EXPECT_TRUE(szAlloc == NULL);
 }
+
+#endif // TEST_CoreTest == ON

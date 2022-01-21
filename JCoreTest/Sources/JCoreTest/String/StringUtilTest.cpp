@@ -9,6 +9,8 @@
 
 using namespace JCore;
 
+#if TEST_StringUtilTest == ON
+
 TEST(StringUtilTest, Length) {
 	EXPECT_TRUE(StringUtil::Length("abcd") == 4);
 	EXPECT_TRUE(StringUtil::Length("0") == 1);
@@ -72,3 +74,5 @@ TEST(StringUtilTest, CTFindCharReverse) {
 	EXPECT_TRUE(idx4 == 3);
 	EXPECT_TRUE(idx5 == -1);
 }
+
+#endif // TEST_StringUtilTest == ON

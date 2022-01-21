@@ -18,9 +18,10 @@
 #include <exception>
 #include <random>
 
-#define force_cast				reinterpret_cast
+#define force_cast					reinterpret_cast
+#define r_static_assert(exp, msg)	static_assrt(!(exp), msg)
 
-#define JSAFE_DELETE(x)			\
+#define safe_delete(x)			\
 do {							\
 	if (x) {					\
 		delete x;				\
@@ -28,7 +29,7 @@ do {							\
 	x = nullptr;				\
 } while (0);					
 
-#define JSAFE_DELETE_ARRAY(x)	\
+#define safe_delete_array(x)	\
 do {							\
 	if (x) {					\
 		delete[] x;				\

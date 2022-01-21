@@ -17,3 +17,13 @@
 #include <string_view>
 #include <type_traits>
 
+#define ON		1
+#define OFF		0
+
+#define TEST_MemoryUtilTest				ON
+#define TEST_BinarySearchTreeImplTest	ON
+#define TEST_StringTest					ON
+#define TEST_StringUtilTest				ON
+#define TEST_CoreTest					ON
+#define TEST_RandomTest					OFF
+#define TEST_TypeTraitsTest				ON

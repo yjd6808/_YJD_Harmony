@@ -12,6 +12,10 @@
       <Filter>String</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\BinarySearchTreeImplTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
@@ -22,6 +26,9 @@
     </Filter>
     <Filter Include="String">
       <UniqueIdentifier>{6e7783aa-96fd-4418-a911-3ce5bc80a97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Container">
+      <UniqueIdentifier>{bf264a65-8776-4297-ba02-ad0ca1dd182b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -13,6 +13,8 @@ using namespace std;
 
 std::vector<int> g_vec;
 
+#if TEST_StringTest == ON
+
 // String::Compare 함수 테스트
 TEST(StringTest, Compare) {
 	String szStr1 = "abcd";
@@ -171,3 +173,5 @@ TEST(StringTest, AssignmentOperator) {
 	EXPECT_TRUE(szStr1 == "ccc");
 	EXPECT_TRUE(szStr2.Source()  == nullptr);
 }
+
+#endif // TEST_StringTest == ON

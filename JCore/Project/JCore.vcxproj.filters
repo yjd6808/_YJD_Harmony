@@ -22,6 +22,7 @@
     <ClCompile Include="..\Sources\JCore\String\StringUtil.cpp">
       <Filter>String</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Random.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -39,5 +40,7 @@
       <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
+    <ClInclude Include="..\Sources\JCore\Random.h" />
+    <ClInclude Include="..\Sources\JCore\Tuple.h" />
   </ItemGroup>
 </Project>

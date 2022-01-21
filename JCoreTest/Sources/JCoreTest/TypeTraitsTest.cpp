@@ -10,6 +10,8 @@
 
 using namespace JCore;
 
+#if TEST_TypeTraitsTest == ON
+
 TEST(TypeTraitsTest, Type) {
 
 	// 변수명위에 마우스 올려서 확인 ㄱ
@@ -29,3 +31,4 @@ TEST(TypeTraitsTest, Move) {
 	int&& g = JCore::Forward<int&&>(b);
 }
 
+#endif // TEST_TypeTraitsTest == ON

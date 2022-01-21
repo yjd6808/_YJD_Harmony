@@ -5,6 +5,8 @@
 
 using namespace JCore;
 
+#if TEST_MemoryUtilTest == ON
+
 // 어셈블리어 약간 복습
 TEST(MemoryUtilTest, AssemblyTest) {
 
@@ -101,3 +103,4 @@ TEST(MemoryUtilTest, MemorySetT) {
 }
 
 
+#endif // TEST_MemoryUtilTest == ON
