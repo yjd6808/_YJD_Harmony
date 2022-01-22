@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include <JCore/Type.h>
+
 namespace JCore {
 
 class String;
@@ -21,9 +23,13 @@ public:
 	static void Swap(String& src, String& dst);
 
 	// 컴파일 타임용
-
 	static constexpr int CTLength(const char* str) {
 		return CTLengthRecursive(str, 0);
+	}
+
+	template <Int32U Len>
+	static constexpr int CTLength(const char(&str)[Len]) {
+		return Len;
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 0번 인덱스부터 올라가면서 하나씩 검사

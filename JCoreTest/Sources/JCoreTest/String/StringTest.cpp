@@ -174,4 +174,97 @@ TEST(StringTest, AssignmentOperator) {
 	EXPECT_TRUE(szStr2.Source()  == nullptr);
 }
 
+
+// String::Find 테스트
+TEST(StringTest, Find) {
+	String szSource = "abcdefg"; // 0 ~ 6
+
+	EXPECT_TRUE(szSource.Find("g") == 6);
+	EXPECT_TRUE(szSource.Find("fg") == 5);
+	EXPECT_TRUE(szSource.Find("efg") == 4);
+	EXPECT_TRUE(szSource.Find("defg") == 3);
+	EXPECT_TRUE(szSource.Find("cdefg") == 2);
+	EXPECT_TRUE(szSource.Find("bcdefg") == 1);
+	EXPECT_TRUE(szSource.Find("abcdefg") == 0);
+	EXPECT_TRUE(szSource.Find("-abcdefg") == -1);
+	EXPECT_TRUE(szSource.Find("abcdefg-") == -1);
+
+	// 왼쪽에서 검사 테스트
+	EXPECT_TRUE(szSource.Find("a") == 0);
+	EXPECT_TRUE(szSource.Find("ab") == 0);
+	EXPECT_TRUE(szSource.Find("abc") == 0);
+	EXPECT_TRUE(szSource.Find("abcd") == 0);
+	EXPECT_TRUE(szSource.Find("abcde") == 0);
+	EXPECT_TRUE(szSource.Find("abcdef") == 0);
+	EXPECT_TRUE(szSource.Find("abcdefg") == 0);
+	EXPECT_TRUE(szSource.Find("abcdefg-") == -1);
+	EXPECT_TRUE(szSource.Find("-abcdefg") == -1);
+
+	// 범위 검사 테스트
+	EXPECT_TRUE(szSource.Find(0, 0, "a") == 0);
+	EXPECT_TRUE(szSource.Find(0, 1, "a") == 0);
+	EXPECT_TRUE(szSource.Find(1, 1, "a") == -1);
+
+	EXPECT_TRUE(szSource.Find(0, 2, "abc") == 0);
+	EXPECT_TRUE(szSource.Find(1, 2, "abc") == -1);
+	EXPECT_TRUE(szSource.Find(2, 2, "abc") == -1);
+
+	EXPECT_TRUE(szSource.Find(4, 4, "e") == 4);
+	EXPECT_TRUE(szSource.Find(4, 5, "ef") == 4);
+	EXPECT_TRUE(szSource.Find(4, 6, "efg") == 4);
+
+	EXPECT_TRUE(szSource.Find(0, 6, "abcdefg") == 0);
+	EXPECT_TRUE(szSource.Find(1, 6, "abcdefg") == -1);
+	EXPECT_TRUE(szSource.Find(0, 5, "abcdefg") == -1);
+}
+
+
+
+// String::FindReverse 테스트
+TEST(StringTest, FindReverse) {
+	String szSource = "abcdefg"; // 0 ~ 6
+
+	EXPECT_TRUE(szSource.FindReverse("g") == 6);
+	EXPECT_TRUE(szSource.FindReverse("fg") == 5);
+	EXPECT_TRUE(szSource.FindReverse("efg") == 4);
+	EXPECT_TRUE(szSource.FindReverse("defg") == 3);
+	EXPECT_TRUE(szSource.FindReverse("cdefg") == 2);
+	EXPECT_TRUE(szSource.FindReverse("bcdefg") == 1);
+	EXPECT_TRUE(szSource.FindReverse("abcdefg") == 0);
+	EXPECT_TRUE(szSource.FindReverse("-abcdefg") == -1);
+	EXPECT_TRUE(szSource.FindReverse("abcdefg-") == -1);
+
+	// 왼쪽에서 검사 테스트
+	EXPECT_TRUE(szSource.FindReverse("a") == 0);
+	EXPECT_TRUE(szSource.FindReverse("ab") == 0);
+	EXPECT_TRUE(szSource.FindReverse("abc") == 0);
+	EXPECT_TRUE(szSource.FindReverse("abcd") == 0);
+	EXPECT_TRUE(szSource.FindReverse("abcde") == 0);
+	EXPECT_TRUE(szSource.FindReverse("abcdef") == 0);
+	EXPECT_TRUE(szSource.FindReverse("abcdefg") == 0);
+	EXPECT_TRUE(szSource.FindReverse("abcdefg-") == -1);
+	EXPECT_TRUE(szSource.FindReverse("-abcdefg") == -1);
+
+	// 범위 검사 테스트
+	EXPECT_TRUE(szSource.FindReverse(0, 0, "a") == 0);
+	EXPECT_TRUE(szSource.FindReverse(0, 1, "a") == 0);
+	EXPECT_TRUE(szSource.FindReverse(1, 1, "a") == -1);
+
+	EXPECT_TRUE(szSource.FindReverse(0, 2, "abc") == 0);
+	EXPECT_TRUE(szSource.FindReverse(1, 2, "abc") == -1);
+	EXPECT_TRUE(szSource.FindReverse(2, 2, "abc") == -1);
+
+	EXPECT_TRUE(szSource.FindReverse(4, 4, "e") == 4);
+	EXPECT_TRUE(szSource.FindReverse(4, 5, "ef") == 4);
+	EXPECT_TRUE(szSource.FindReverse(4, 6, "efg") == 4);
+
+	EXPECT_TRUE(szSource.FindReverse(0, 6, "abcdefg") == 0);
+	EXPECT_TRUE(szSource.FindReverse(1, 6, "abcdefg") == -1);
+	EXPECT_TRUE(szSource.FindReverse(0, 5, "abcdefg") == -1);
+
+}
+
+
 #endif // TEST_StringTest == ON
+
+

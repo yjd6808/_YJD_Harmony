@@ -287,20 +287,6 @@ TEST(BinarySearchTreeImplTest, BinarySearchTreeImplTest) {
 	std::vector<int> vec;
 
 
-	for (int i = 0; i < 10; i++) {
-		vec.push_back(rand.GenerateInt(0, 2));
-		tree.Add(vec[i]);
-	}
-
-	for (int i = 0; i < 10; i++) {
-		if (!tree.Remove(vec[i])) {
-			goto FAILED;
-		}
-	}
-
-	vec.clear();
-
-
 	// 정확성 테스트
 	for (int i = 0; i < ACCURATE_TEST; i++) {
 		for (int k = 0; k < ACCURATE_COUNT; k++) {

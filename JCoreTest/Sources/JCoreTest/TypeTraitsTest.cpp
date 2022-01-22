@@ -9,15 +9,15 @@
 #include <JCore/String/StringUtil.h>
 
 using namespace JCore;
+using namespace std;
 
 #if TEST_TypeTraitsTest == ON
 
 TEST(TypeTraitsTest, Type) {
-
+	EXPECT_TRUE(Type<int&>() == "int&");
+	EXPECT_TRUE(Type<const int&>() == "const int&");
+	EXPECT_TRUE(Type<int&&>() == "int&&");
 	// 변수명위에 마우스 올려서 확인 ㄱ
-	constexpr const char* str1 = JCore::Type<int&&>();
-	constexpr const char* str2 = JCore::Type<int&>();
-	constexpr const char* str3 = JCore::Type<int>();
 }
 
 
@@ -27,7 +27,6 @@ TEST(TypeTraitsTest, Move) {
 
 	int&& z = 30;
 	int&& c = JCore::Move(z);
-
 	int&& g = JCore::Forward<int&&>(b);
 }
 

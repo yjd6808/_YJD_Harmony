@@ -1,7 +1,8 @@
 #pragma once
 
-namespace JCore {
+#include <JCore/String/String.h>
 
+namespace JCore {
 
 template <typename T>
 struct RemoveReference
@@ -35,8 +36,13 @@ inline constexpr T&& Forward(RemoveReference_t<T>& arg) {
 }
 
 template <typename T>
-inline constexpr const char* Type() {
-	return (const char*)__FUNCSIG__;
+inline String Type() {
+	String szFuncSig(__FUNCSIG__);
+
+	const int kiLeftIdx = szFuncSig.Find("<");
+	const int kiRightIdx = szFuncSig.FindReverse(">");
+
+	return szFuncSig.GetRange(kiLeftIdx + 1, kiRightIdx - 1);
 }
 
 } // namespace JCore

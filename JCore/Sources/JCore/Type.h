@@ -1,5 +1,5 @@
 #pragma once
 
-using UnsignedInt32		=	typename unsigned int;
-using UnsignedInt16		=	typename unsigned short;
-using Byte				=	typename unsigned char;
+using Int32U		=	typename unsigned int;
+using Int16U		=	typename unsigned short;
+using Byte			=	typename unsigned char;

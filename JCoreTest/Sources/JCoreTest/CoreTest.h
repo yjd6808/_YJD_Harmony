@@ -21,7 +21,8 @@
 #define OFF		0
 
 #define TEST_MemoryUtilTest				ON
-#define TEST_BinarySearchTreeImplTest	ON
+#define TEST_BinarySearchTreeImplTest	OFF
+#define TEST_TwoThreeFourTreeImplTest	ON
 #define TEST_StringTest					ON
 #define TEST_StringUtilTest				ON
 #define TEST_CoreTest					ON

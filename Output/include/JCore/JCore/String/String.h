@@ -47,6 +47,10 @@ public:
 	int Find(int startIdx, int endIdx, const char* str) const;
 	int Find(const char* str) const;
 	int Find(const String& str) const;
+	int FindReverse(int startIdx, int endIdx, const char* str) const;
+	int FindReverse(const String& str) const;
+	int FindReverse(const char* str) const;
+
 	bool Contain(const char* str) const;
 	bool Contain(const String& str) const;
 	void Format(const char* format, ...);

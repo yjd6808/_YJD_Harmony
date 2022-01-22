@@ -196,7 +196,7 @@ int String::Find(int startIdx, int endIdx, const char* str) const
 	}
 
 	while (iOffset <= endIdx) {
-		char* pDst = (char*)str;
+		char* pDst = const_cast<char*>(str);
 
 		while (*pDst != NULL && *pSrc == *pDst) {
 			iContinuousCount++;
@@ -231,6 +231,59 @@ int String::Find(const char* str) const
 int String::Find(const String& str) const
 {
 	return Find(str.m_pBuffer);
+}
+
+// 문자열의 startIdx(시작인덱스 - 포함)부터 endIdx(종료인덱스 - 포함) 포함하여 str문자열이 있을 경우의 위치 인덱스를 반환해줍니다.
+// Find 함수와 결과는 완전히 동일하지만 탐색 방향이 반대입니다.
+// O(n)
+int String::FindReverse(int startIdx, int endIdx, const char* str) const {
+	char* pSrc = m_pBuffer + endIdx;
+
+	int iStrLen = StringUtil::Length(str);
+	int iContinuousCount = 0;
+	int iOffset = endIdx;
+
+	if (iStrLen == 0) {
+		return -1;
+	}
+
+	if (!IsValidIndexRange(startIdx, endIdx)) {
+		throw std::runtime_error("인덱스 범위를 벗어났습니다.");
+	}
+
+	while (iOffset >= startIdx) {
+		char* pDst = const_cast<char*>(str) + iStrLen - 1;
+
+		while (*pDst != NULL && *pSrc == *pDst) {
+			iContinuousCount++;
+			pSrc--;
+			pDst--;
+		}
+
+		if (iContinuousCount == iStrLen && iOffset - iContinuousCount + 1 >= startIdx) {
+			return iOffset - iContinuousCount + 1;
+		}
+
+		if (iContinuousCount == 0) {
+			pSrc--;
+			iOffset--;
+		} else {
+			iOffset -= iContinuousCount;
+		}
+
+		iContinuousCount = 0;
+	}
+
+	return -1;
+
+}
+
+int String::FindReverse(const String& str) const {
+	return FindReverse(0, m_iLen - 1, str.m_pBuffer);
+}
+
+int String::FindReverse(const char* str) const {
+	return FindReverse(0, m_iLen - 1, str);
 }
 
 bool String::Contain(const char* str) const

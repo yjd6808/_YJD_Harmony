@@ -16,6 +16,9 @@
       <Filter>Container</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\TwoTreeFourTreeImplTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
