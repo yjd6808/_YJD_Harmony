@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
+    <ClInclude Include="..\Sources\JCore\Math.h" />
     <ClInclude Include="..\Sources\JCore\Memory\MemoryUtil.h" />
     <ClInclude Include="..\Sources\JCore\Memory\SharedPointer.h">
       <SubType>

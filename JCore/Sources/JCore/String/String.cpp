@@ -80,7 +80,7 @@ String::String(String&& str) noexcept
 
 String::~String()
 {
-	safe_delete_array(m_pBuffer);
+	DeleteArraySafe(m_pBuffer);
 }
 
 /* ========================================================== */
@@ -141,7 +141,7 @@ void String::Resize(const int capacity)
 	m_iCapacity = capacity;
 
 	StringUtil::Copy(m_pBuffer, m_iCapacity, pTempBuffer);
-	safe_delete_array(pTempBuffer);
+	DeleteArraySafe(pTempBuffer);
 }
 
 
@@ -453,7 +453,7 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 }
 
 void String::Initialize(int capacity) {
-	safe_delete_array(m_pBuffer);
+	DeleteArraySafe(m_pBuffer);
 
 	m_pBuffer = new char[capacity];
 	m_iLen = 0;

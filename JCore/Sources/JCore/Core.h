@@ -19,9 +19,9 @@
 #include <random>
 
 #define force_cast					reinterpret_cast
-#define r_static_assert(exp, msg)	static_assrt(!(exp), msg)
+#define RStaticAssert(exp, msg)		static_assrt(!(exp), msg)
 
-#define safe_delete(x)			\
+#define DeleteSafe(x)			\
 do {							\
 	if (x) {					\
 		delete x;				\
@@ -29,7 +29,7 @@ do {							\
 	x = nullptr;				\
 } while (0);					
 
-#define safe_delete_array(x)	\
+#define DeleteArraySafe(x)		\
 do {							\
 	if (x) {					\
 		delete[] x;				\

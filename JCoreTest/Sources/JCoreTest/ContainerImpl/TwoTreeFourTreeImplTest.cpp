@@ -29,8 +29,7 @@ struct Node
 
 	Node() {}
 	Node(int d1) {
-		Datas[0] = d1;
-		IsEmpty[0] = false;
+		Fill(0, d1);
 	}
 
 	Node* Any() {

@@ -12,12 +12,19 @@
       <Filter>String</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\Container\BinarySearchTreeImplTest.cpp">
-      <Filter>Container</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\Container\TwoTreeFourTreeImplTest.cpp">
-      <Filter>Container</Filter>
+    <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeImplTest.cpp">
+      <Filter>ContainerImpl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeMemoImplTest.cpp">
+      <Filter>ContainerImpl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\BinarySearchTreeImplTest.cpp">
+      <Filter>ContainerImpl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\TwoTreeFourTreeImplTest.cpp">
+      <Filter>ContainerImpl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +39,9 @@
     </Filter>
     <Filter Include="Container">
       <UniqueIdentifier>{bf264a65-8776-4297-ba02-ad0ca1dd182b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ContainerImpl">
+      <UniqueIdentifier>{5b1b6a66-dd38-4023-937b-462eb518f03a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

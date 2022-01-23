@@ -150,14 +150,14 @@ public:
 
 		int iChildCount = GetChildCount(pCur);
 		if (iChildCount == 0) {
-			SafeDeleteChild(pParent, pCur);
+			DeleteSafeChild(pParent, pCur);
 		} else if (iChildCount == 1) {
 			Node* pCurChild = GetChildIfExist(pCur);
 			if (pParent->Right == pCur) {
-				SafeDeleteChild(pParent, pCur);
+				DeleteSafeChild(pParent, pCur);
 				pParent->Right = pCurChild;
 			} else {
-				SafeDeleteChild(pParent, pCur);
+				DeleteSafeChild(pParent, pCur);
 				pParent->Left = pCurChild;
 			}
 		} else {
@@ -176,7 +176,7 @@ public:
 			} else {
 				pSmallestParent->Right = pSmallest->Right;
 			}
-			safe_delete(pSmallest);
+			DeleteSafe(pSmallest);
 		}
 		m_iSize--;
 		return true;
@@ -198,15 +198,15 @@ public:
 		return c;
 	}
 private:
-	void SafeDeleteChild(Node* parent, Node* child) {
+	void DeleteSafeChild(Node* parent, Node* child) {
 		if (parent == nullptr || child == nullptr) {
 			throw std::runtime_error("parent == nullptr || child == nullptr");
 		}
 
 		if (parent->Left == child) {
-			safe_delete(parent->Left);
+			DeleteSafe(parent->Left);
 		} else {
-			safe_delete(parent->Right);
+			DeleteSafe(parent->Right);
 		}
 	}
 
@@ -280,8 +280,8 @@ TEST(BinarySearchTreeImplTest, BinarySearchTreeImplTest) {
 	const int MIN_TEST = 1000;
 	const int MIN_COUNT = 10;
 
-	const int ACCURATE_TEST = 1000;
-	const int ACCURATE_COUNT = 1000;
+	const int ACCURATE_TEST = 100;
+	const int ACCURATE_COUNT = 100;
 
 	Random rand;
 	std::vector<int> vec;

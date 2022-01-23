@@ -8,16 +8,16 @@
 
 #if TEST_CoreTest == ON
 
-TEST(JCoreTest, safe_delete) {
+TEST(JCoreTest, DeleteSafe) {
 	int* szAlloc = new int;
 	*szAlloc = 20;
-	safe_delete(szAlloc);
+	DeleteSafe(szAlloc);
 	EXPECT_TRUE(szAlloc == NULL);
 }
 
-TEST(JCoreTest, safe_delete_array) {
+TEST(JCoreTest, DeleteArraySafe) {
 	int* szAlloc = new int[512];
-	safe_delete_array(szAlloc);
+	DeleteArraySafe(szAlloc);
 	EXPECT_TRUE(szAlloc == NULL);
 }
 

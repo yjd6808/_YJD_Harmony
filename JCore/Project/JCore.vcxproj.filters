@@ -42,5 +42,6 @@
     <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
     <ClInclude Include="..\Sources\JCore\Random.h" />
     <ClInclude Include="..\Sources\JCore\Tuple.h" />
+    <ClInclude Include="..\Sources\JCore\Math.h" />
   </ItemGroup>
 </Project>
