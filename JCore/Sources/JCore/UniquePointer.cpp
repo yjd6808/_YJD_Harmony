@@ -4,7 +4,7 @@
 */
 
 #include <JCore/Core.h>
-#include "$itemname$.h"
+#include <JCore/UniquePointer.h>
 
 namespace JCore {
 
@@ -12,10 +12,10 @@ namespace JCore {
 					Constructors
     ======================================================= */
 
-$itemname$::$itemname$() {
+UniquePointer::UniquePointer() {
 }
 
-$itemname$::~$itemname$() {
+UniquePointer::~UniquePointer() {
 
 
 /*  =======================================================

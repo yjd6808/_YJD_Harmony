@@ -9,7 +9,7 @@
 
 namespace JCore {
 
-struct Random
+struct Random final
 {
 	Random();
 

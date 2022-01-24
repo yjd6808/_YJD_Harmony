@@ -23,6 +23,7 @@
 #define ON		1
 #define OFF		0
 
+#define	TEST_ArraysTest					ON
 #define	TEST_AVLTreeImplTest			ON
 #define	TEST_AVLTreeMemoImplTest		ON
 #define TEST_MemoryUtilTest				ON

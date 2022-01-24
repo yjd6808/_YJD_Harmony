@@ -26,9 +26,15 @@
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\TwoTreeFourTreeImplTest.cpp">
       <Filter>ContainerImpl</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
+    <ClInclude Include="..\Sources\JCoreTest\ContainerImpl\ContainerImplTest.cpp">
+      <Filter>ContainerImpl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Memory">

@@ -14,8 +14,12 @@ using namespace JCore;
 
 #if TEST_AVLTreeImplTest == ON
 
-namespace AVL {
+#define INSERTION_BALANCE ON		// 밸런싱 사용할지
+#if INSERTION_BALANCE == ON
+	#define DELETION_BALANCE ON		// 삭제시 밸런싱 사용할지
+#endif
 
+namespace AVL {
 
 struct Node
 {
@@ -82,7 +86,9 @@ public:
 		}
 
 		Node* pNewNode = Add(m_pVirtualRoot->Any(), data);
+	#if INSERTION_BALANCE == ON
 		BalanceStart(pNewNode);
+	#endif
 		m_iSize++;
 	}
 
@@ -114,15 +120,15 @@ public:
 
 		pParent = pDel->Parent;
 		int iChildCount = pDel->ChildCount();
+		Node* pBalanceStartingNode = nullptr;	// 밸런싱을 진행할 노드
 
 		if (iChildCount == 0) {
-			//PrintLine("0 자식 삭제 시도");
 			// 1. 삭제할 노드가 자식이 없는 경우
 			//		부모에게서 해당 노드를 없애준다.
 
 			pParent->DeleteChild(pDel);
+			pBalanceStartingNode = pParent;
 		} else if (iChildCount == 1) {
-			//PrintLine("1 자식 삭제 시도");
 			// 2. 삭제할 노드가 자식이 한개인 경우
 			//		1. 삭제할 노드가 부모기준 우측자식인 경우
 			//			삭제할 노드의 자식을 삭제할 노드의 부모 우측에 붙여준다.
@@ -131,11 +137,19 @@ public:
 
 			Node* pChild = pDel->Any();
 
-			if (pParent->Right == pDel) {
-				pParent->Right = pChild;
-			} else {
+			// 예외처리 만약 부모가 버추얼 노드라면 무조건 왼쪽에 붙이도록하자.
+			// --> 처음 AVL트리 생성후 노드 삽입할 때 왼쪽에 무조건 첫 노드를 붙이도록 했기 때문
+			if (pParent == m_pVirtualRoot) {
 				pParent->Left = pChild;
+			} else {
+				if (pParent->Right == pDel) {
+					pParent->Right = pChild;
+				} else {
+					pParent->Left = pChild;
+				}
+				pBalanceStartingNode = pParent;
 			}
+
 			pChild->Parent = pParent;
 			DeleteSafe(pDel);
 		} else {
@@ -151,7 +165,6 @@ public:
 			//			3. 제일 작은 노드를 삭제해준다.
 
 			// --> 방법2로 진행
-			//PrintLine("2 자식 삭제 시도");
 			Node* pSmallestParent = pDel;
 			Node* pSmallest = pDel->Right;
 
@@ -162,7 +175,6 @@ public:
 			pSmallestParent = pSmallest->Parent;
 			pDel->Data = Move(pSmallest->Data);
 
-			
 			if (pSmallestParent->Right == pSmallest) {
 				// 우측에 제일 작은 노드가 달린경우 
 				// 이 경우는 위의 while문을 한번도 안돌 경우이다.
@@ -176,8 +188,14 @@ public:
 				if (pSmallest->Right)
 					pSmallest->Right->Parent = pSmallestParent;
 			}
+			pBalanceStartingNode = pSmallestParent;
 			DeleteSafe(pSmallest);
 		}
+
+	#if DELETION_BALANCE == ON
+		if (pBalanceStartingNode)
+			BalanceStart(pBalanceStartingNode);
+	#endif
 		m_iSize--;
 		return true;
 	}
@@ -248,9 +266,9 @@ private:
 	void BalanceStart(Node* node) {
 		Node* pCur = node;
 
-		while (pCur->Parent != m_pVirtualRoot) {
-			pCur = pCur->Parent;
+		while (pCur != m_pVirtualRoot) {
 			Balance(pCur);
+			pCur = pCur->Parent;
 		}
 	}
 
@@ -278,24 +296,18 @@ private:
 			}
 		}
 	}
-	int cnt = 0;
+
 	int GetHeightDiff(Node* node) {
 		int iLeftSubtreeHeight = GetHeight(node->Left, 0);
-		cnt = 0;
 		int iRightSubtreeHeight = GetHeight(node->Right, 0);
-		cnt = 0;
+
 		return iRightSubtreeHeight - iLeftSubtreeHeight;
 	}
 
 	int GetHeight(Node* cur, int height) {
 		if (cur == nullptr) {
-			if (cnt != 0) {
-				//PrintLine("\t나감(재귀 호출 %d회 / %d)!", cnt, height);
-			}
-				
 			return height;
 		}
-		cnt++;
 		int iLeftHeight = GetHeight(cur->Left, height + 1);
 		int iRightHeight = GetHeight(cur->Right, height + 1);
 
@@ -405,29 +417,29 @@ TEST(AVLTreeImplTest, AVLTreeImplTest) {
 	const int MIN_TEST = 1000;
 	const int MIN_COUNT = 10;
 
-	const int ACCURATE_TEST = 100;
-	const int ACCURATE_COUNT = 100;
+	const int ACCURATE_TEST = 1000;
+	const int ACCURATE_COUNT = 1000;
 
 	Random rand;
 	std::vector<int> vec;
 
-	for (int k = 0; k < MIN_COUNT + 300; k++) {
-		vec.push_back(rand.GenerateInt(0, 20));
-		tree.Add(vec[k]);
-	}
-	tree.ShowDistribution();
-	for (int k = 0; k < MIN_COUNT + 30; k++) {
-		if (!tree.Remove(vec[k])) {
-			goto FAILED;
-		}
-	}
+	//for (int k = 0; k < MIN_COUNT + 300; k++) {
+	//	vec.push_back(rand.GenerateInt(0, 20));
+	//	tree.Add(vec[k]);
+	//}
+	////tree.ShowDistribution();
+	//for (int k = 0; k < MIN_COUNT + 300; k++) {
+	//	if (!tree.Remove(vec[k])) {
+	//		goto FAILED;
+	//	}
+	//}
 	
 	vec.clear();
 
 	// 정확성 테스트
 	for (int i = 0; i < ACCURATE_TEST; i++) {
 		for (int k = 0; k < ACCURATE_COUNT; k++) {
-			vec.push_back(rand.GenerateInt(0, 2));
+			vec.push_back(rand.GenerateInt(0, 1000));
 			tree.Add(vec[k]);
 		}
 
@@ -440,35 +452,35 @@ TEST(AVLTreeImplTest, AVLTreeImplTest) {
 		vec.clear();
 	}
 
-	// 많은 수의 원소 테스트
-	for (int i = 0; i < MANY_TEST; i++) {
-		for (int k = 0; k < MANY_COUNT; k++) {
-			vec.push_back(rand.GenerateInt(0, 100));
-			tree.Add(vec[k]);
-		}
+	//// 많은 수의 원소 테스트
+	//for (int i = 0; i < MANY_TEST; i++) {
+	//	for (int k = 0; k < MANY_COUNT; k++) {
+	//		vec.push_back(rand.GenerateInt(0, 100));
+	//		tree.Add(vec[k]);
+	//	}
 
-		for (int k = 0; k < MANY_COUNT; k++) {
-			if (!tree.Remove(vec[k])) {
-				goto FAILED;
-			}
-		}
-		vec.clear();
-	}
+	//	for (int k = 0; k < MANY_COUNT; k++) {
+	//		if (!tree.Remove(vec[k])) {
+	//			goto FAILED;
+	//		}
+	//	}
+	//	vec.clear();
+	//}
 
-	// 적은 수의 원소 테스트
-	for (int i = 0; i < MIN_TEST; i++) {
-		for (int k = 0; k < MIN_COUNT; k++) {
-			vec.push_back(rand.GenerateInt(0, 100));
-			tree.Add(vec[k]);
-		}
+	//// 적은 수의 원소 테스트
+	//for (int i = 0; i < MIN_TEST; i++) {
+	//	for (int k = 0; k < MIN_COUNT; k++) {
+	//		vec.push_back(rand.GenerateInt(0, 100));
+	//		tree.Add(vec[k]);
+	//	}
 
-		for (int k = 0; k < MIN_COUNT; k++) {
-			if (!tree.Remove(vec[k])) {
-				goto FAILED;
-			}
-		}
-		vec.clear();
-	}
+	//	for (int k = 0; k < MIN_COUNT; k++) {
+	//		if (!tree.Remove(vec[k])) {
+	//			goto FAILED;
+	//		}
+	//	}
+	//	vec.clear();
+	//}
 	return;
 FAILED:
 	EXPECT_TRUE(false);

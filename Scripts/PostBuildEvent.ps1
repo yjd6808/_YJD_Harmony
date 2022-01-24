@@ -21,6 +21,7 @@ using namespace System.Diagnostics;
 
 if (($Configuration -ne 'Debug') -and ($Configuration -ne 'Release')) {
     Write-Host '-c Debug 또는 -c Release 옵션이 필요합니다.'
+    exit 2
 }
 
 $SolutionPath = Resolve-Path (Join-Path $PSScriptRoot '..\')
@@ -47,6 +48,9 @@ if (!(Test-Path $LibraryFilePath)) {
 }
 
 Write-Host 'Post Build Event를 시작합니다.'
+Write-Host $SourcesPath '폴더를 비웁니다.'
+[Directory]::Delete($OutputIncludePath, $True);
+
 Write-Host '헤더파일들을 복사합니다.'
 
 foreach ($HeaderFile in [FileUtil]::GetChildrenInDirectory($SourcesPath, $True, $True)) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <JCore/String/String.h>
+#include <JCore/String.h>
 
 namespace JCore {
 

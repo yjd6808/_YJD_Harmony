@@ -6,7 +6,7 @@
 
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Core.h>
-#include <JCore/String/String.h>
+#include <JCore/String.h>
 
 using namespace JCore;
 using namespace std;

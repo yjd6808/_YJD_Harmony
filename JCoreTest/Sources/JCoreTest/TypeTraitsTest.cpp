@@ -5,8 +5,8 @@
 
 #include <JCoreTest/CoreTest.h>
 #include <JCore/TypeTraits.h>
-#include <JCore/String/String.h>
-#include <JCore/String/StringUtil.h>
+#include <JCore/String.h>
+#include <JCore/StringUtil.h>
 
 using namespace JCore;
 using namespace std;

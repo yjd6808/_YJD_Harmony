@@ -1,6 +1,6 @@
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/Memory/MemoryUtil.h>
+#include <JCore/MemoryUtil.h>
 #include <JCore/Type.h>
 
 using namespace JCore;

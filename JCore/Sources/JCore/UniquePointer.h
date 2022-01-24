@@ -7,11 +7,11 @@
 
 namespace JCore {
 
-class $itemname$
+class UniquePointer
 {
 public:
-	$itemname$();
-	~$itemname$();
+	UniquePointer();
+	~UniquePointer();
 public:
 
 

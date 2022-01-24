@@ -9,7 +9,7 @@
 
 namespace JCore {
 
-class Math
+class Math final
 {
 public:
 	Math(){}

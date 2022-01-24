@@ -4,44 +4,30 @@
     <Filter Include="Container">
       <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Memory">
-      <UniqueIdentifier>{572997ed-9b91-422a-a46e-3a14fd16c403}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="String">
-      <UniqueIdentifier>{4fa22042-3a2d-4ea5-86eb-a3b65f6d717c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp" />
-    <ClCompile Include="..\Sources\JCore\Memory\MemoryUtil.cpp">
-      <Filter>Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\String\String.cpp">
-      <Filter>String</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\String\StringUtil.cpp">
-      <Filter>String</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Random.cpp" />
+    <ClCompile Include="..\Sources\JCore\MemoryUtil.cpp" />
+    <ClCompile Include="..\Sources\JCore\String.cpp" />
+    <ClCompile Include="..\Sources\JCore\StringUtil.cpp" />
+    <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
+    <ClCompile Include="..\Sources\JCore\UniquePointer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
     <ClInclude Include="..\Sources\JCore\Type.h" />
-    <ClInclude Include="..\Sources\JCore\Memory\MemoryUtil.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\String\String.h">
-      <Filter>String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\String\StringUtil.h">
-      <Filter>String</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Memory\SharedPointer.h">
-      <Filter>Memory</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
     <ClInclude Include="..\Sources\JCore\Random.h" />
     <ClInclude Include="..\Sources\JCore\Tuple.h" />
     <ClInclude Include="..\Sources\JCore\Math.h" />
+    <ClInclude Include="..\Sources\JCore\String.h" />
+    <ClInclude Include="..\Sources\JCore\StringUtil.h" />
+    <ClInclude Include="..\Sources\JCore\MemoryUtil.h" />
+    <ClInclude Include="..\Sources\JCore\SharedPointer.h" />
+    <ClInclude Include="..\Sources\JCore\UniquePointer.h" />
+    <ClInclude Include="..\Sources\JCore\Container\Arrays.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

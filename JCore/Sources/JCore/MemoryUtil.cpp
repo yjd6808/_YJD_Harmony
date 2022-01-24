@@ -4,7 +4,7 @@
 */
 
 #include <JCore/Core.h>
-#include <JCore/Memory/MemoryUtil.h>
+#include <JCore/MemoryUtil.h>
 
 namespace JCore {
 

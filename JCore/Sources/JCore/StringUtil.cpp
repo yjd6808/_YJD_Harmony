@@ -4,8 +4,8 @@
 */
 
 #include <JCore/Core.h>
-#include <JCore/String/String.h>
-#include <JCore/String/StringUtil.h>
+#include <JCore/String.h>
+#include <JCore/StringUtil.h>
 
 namespace JCore {
 
