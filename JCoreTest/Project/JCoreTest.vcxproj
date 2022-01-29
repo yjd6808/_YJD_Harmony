@@ -22,12 +22,14 @@
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeMemoImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\BinarySearchTreeImplTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\DynamicHashMapImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\TwoTreeFourTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\CoreTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryUtilTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
@@ -36,7 +38,6 @@
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\JCoreTest\ContainerImpl\ContainerImplTest.cpp" />
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

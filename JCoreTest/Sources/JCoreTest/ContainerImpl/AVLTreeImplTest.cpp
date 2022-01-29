@@ -14,10 +14,12 @@ using namespace JCore;
 
 #if TEST_AVLTreeImplTest == ON
 
-#define INSERTION_BALANCE ON		// 밸런싱 사용할지
+#define INSERTION_BALANCE ON		// 삽입 밸런싱 사용할지
+
 #if INSERTION_BALANCE == ON
-	#define DELETION_BALANCE ON		// 삭제시 밸런싱 사용할지
+	#define DELETION_BALANCE ON		// 삭제 밸런싱 사용할지
 #endif
+
 
 namespace AVL {
 
@@ -40,10 +42,6 @@ struct Node
 		return nullptr;
 	}
 
-	bool IsTerminal() {
-		return Left == nullptr && Right == nullptr;
-	}
-
 	int ChildCount() {
 		if (Left && Right) {
 			return 2;
@@ -59,8 +57,10 @@ struct Node
 	void DeleteChild(Node* node) {
 		if (Left == node) {
 			DeleteSafe(Left);
-		} else {
+		} else if (Right == node) {
 			DeleteSafe(Right);
+		} else {
+			assert("몽미?");
 		}
 	}
 };
@@ -93,103 +93,22 @@ public:
 	}
 
 	bool Remove(int data) {
-
-		if (m_iSize == 0) {
-			return false;
-		}
-
-		Node* pParent = m_pVirtualRoot;
-		Node* pDel = m_pVirtualRoot->Any();
-
-		// 삭제할 노드를 찾는다.
-		while (pDel != nullptr) {
-			if (pDel->Data == data) {
-				break;
-			}
-
-			if (data > pDel->Data)
-				pDel = pDel->Right;
-			else
-				pDel = pDel->Left;
-		}
+		Node* pDel = FindNode(data);	// 삭제할 노드를 찾는다.
 
 		// 삭제할 노드를 못찾은 경우
 		if (pDel == nullptr) {
 			return false;
 		}
 
-		pParent = pDel->Parent;
+		Node* pBalanceStartingNode = nullptr;	// 밸런싱을 진행할 노드 = 실질적으로 삭제된 노드의 부모 노드
 		int iChildCount = pDel->ChildCount();
-		Node* pBalanceStartingNode = nullptr;	// 밸런싱을 진행할 노드
 
 		if (iChildCount == 0) {
-			// 1. 삭제할 노드가 자식이 없는 경우
-			//		부모에게서 해당 노드를 없애준다.
-
-			pParent->DeleteChild(pDel);
-			pBalanceStartingNode = pParent;
+			pBalanceStartingNode = RemoveDelNoChild(pDel);
 		} else if (iChildCount == 1) {
-			// 2. 삭제할 노드가 자식이 한개인 경우
-			//		1. 삭제할 노드가 부모기준 우측자식인 경우
-			//			삭제할 노드의 자식을 삭제할 노드의 부모 우측에 붙여준다.
-			//		2. 삭제할 노드가 부모기준 좌측자식인 경우
-			//			삭제할 노드의 자식을 삭제할 노드의 부모 좌측에 붙여준다.
-
-			Node* pChild = pDel->Any();
-
-			// 예외처리 만약 부모가 버추얼 노드라면 무조건 왼쪽에 붙이도록하자.
-			// --> 처음 AVL트리 생성후 노드 삽입할 때 왼쪽에 무조건 첫 노드를 붙이도록 했기 때문
-			if (pParent == m_pVirtualRoot) {
-				pParent->Left = pChild;
-			} else {
-				if (pParent->Right == pDel) {
-					pParent->Right = pChild;
-				} else {
-					pParent->Left = pChild;
-				}
-				pBalanceStartingNode = pParent;
-			}
-
-			pChild->Parent = pParent;
-			DeleteSafe(pDel);
+			pBalanceStartingNode = RemoveDelOneChild(pDel);
 		} else {
-			// 3. 삭제할 노드가 자식이 2개인 경우
-			//		1. 삭제할 노드의 좌측 자식의 서브트리에서 제일 큰 노드를 찾는다. (방법1)
-			//			1. 제일 큰 노드의 값을 삭제할 노드의 값에 대입해준다.
-			//			2. 제일 큰 노드의 좌측 자식을 제일 큰 노드의 부모의 우측 자식으로 만들어준다.
-			//			3. 제일 큰 노드를 삭제해준다.
-			// 
-			//		2. 삭제할 노드의 우측 자식의 서브트리에서 제일 작은 노드를 찾는다. (방법2)
-			//			1. 제일 작은 노드의 값을 삭제할 노드의 값에 대입해준다.
-			//			2. 제일 작은 노드의 우측 자식을 제일 작은 노드의 부모의 좌측 자식으로 만들어준다.
-			//			3. 제일 작은 노드를 삭제해준다.
-
-			// --> 방법2로 진행
-			Node* pSmallestParent = pDel;
-			Node* pSmallest = pDel->Right;
-
-			while (pSmallest->Left != nullptr) {
-				pSmallest = pSmallest->Left;
-			}
-
-			pSmallestParent = pSmallest->Parent;
-			pDel->Data = Move(pSmallest->Data);
-
-			if (pSmallestParent->Right == pSmallest) {
-				// 우측에 제일 작은 노드가 달린경우 
-				// 이 경우는 위의 while문을 한번도 안돌 경우이다.
-				//   -> 삭제할 노드보다 더 작은 노드가 아예 없는 경우
-
-				pSmallestParent->Right = pSmallest->Right;
-				if (pSmallest->Right)
-					pSmallest->Right->Parent = pSmallestParent;
-			} else {
-				pSmallestParent->Left = pSmallest->Right;
-				if (pSmallest->Right)
-					pSmallest->Right->Parent = pSmallestParent;
-			}
-			pBalanceStartingNode = pSmallestParent;
-			DeleteSafe(pSmallest);
+			pBalanceStartingNode = RemoveDelTwoChild(pDel);
 		}
 
 	#if DELETION_BALANCE == ON
@@ -204,10 +123,14 @@ public:
 		vector<vector<int>> values;
 		values.resize(30);
 		int maxDepth = Show(values, m_pVirtualRoot->Any(), 0);
-		PrintLine("각 층별 꽉찬 정도를 출력");
+		PrintFormat("각 층별 꽉찬 정도를 출력\n");
 		for (int i = 0; i < maxDepth; i++) {
-			PrintLine("%d층 : %.6f%%%", i + 1, (double)values[i].size() / Math::Pow(2, i) * 100);
+			PrintFormat("%d층 : %.6f%%%\n", i + 1, (double)values[i].size() / Math::Pow(2, i) * 100);
 		}
+	}
+
+	bool Find(int data) {
+		return FindNode(data) != nullptr;
 	}
 
 	void Clear() {
@@ -220,26 +143,9 @@ public:
 		DeleteElementRecursive(pRoot->Left);
 		DeleteElementRecursive(pRoot->Right);
 		DeleteSafe(pRoot);
+		m_iSize = 0;
 	}
 private:
-	void DeleteElementRecursive(Node* node) {
-		if (node == nullptr) {
-			return;
-		}
-
-		DeleteElementRecursive(node->Left);
-		DeleteElementRecursive(node->Right);
-		DeleteSafe(node);
-	}
-
-	int Show(vector<vector<int>>& values, Node* node, int depth) {
-		if (node == nullptr) {
-			return depth;
-		}
-		values[depth].push_back(node->Data);
-		return Math::Max(Show(values, node->Left, depth + 1), Show(values, node->Right, depth + 1));
-	}
-
 	Node* Add(Node* root, int data) {
 		Node* pParent = nullptr;
 		Node* pCur = root;
@@ -263,6 +169,114 @@ private:
 		return pNewNode;
 	}
 
+	void DeleteElementRecursive(Node* node) {
+		if (node == nullptr) {
+			return;
+		}
+
+		DeleteElementRecursive(node->Left);
+		DeleteElementRecursive(node->Right);
+		DeleteSafe(node);
+	}
+
+	Node* RemoveDelNoChild(Node* del) {
+		// 1. 삭제할 노드가 자식이 없는 경우
+		//		부모에게서 해당 노드를 없애준다.
+		Node* pParent = del->Parent;
+		pParent->DeleteChild(del);
+		return pParent;
+	}
+
+	Node* RemoveDelOneChild(Node* del) {
+		// 2. 삭제할 노드가 자식이 한개인 경우
+		//		1. 삭제할 노드가 부모기준 우측자식인 경우
+		//			삭제할 노드의 자식을 삭제할 노드의 부모 우측에 붙여준다.
+		//		[삭제 전]
+		//		A - parent
+		//			B - del
+		//				C
+		// 
+		//		[삭제 후]
+		//		A - parent
+		//			C
+		// 
+		//		2. 삭제할 노드가 부모기준 좌측자식인 경우
+		//			삭제할 노드의 자식을 삭제할 노드의 부모 좌측에 붙여준다.
+
+		Node* pParent = del->Parent;
+		Node* pChild = del->Any();
+		Node* pBalanceStartingNode = nullptr;
+
+		
+		if (pParent == m_pVirtualRoot) {
+			// 예외처리 만약 부모가 버추얼 노드라면 무조건 왼쪽에 붙이도록하자.
+			// --> 처음 AVL트리 생성후 노드 삽입할 때 왼쪽에 무조건 첫 노드를 붙이도록 했기 때문
+			pParent->Left = pChild;
+		} else {
+			if (pParent->Right == del) {
+				pParent->Right = pChild;
+			} else {
+				pParent->Left = pChild;
+			}
+			pBalanceStartingNode = pParent;
+		}
+
+		pChild->Parent = pParent;
+		DeleteSafe(del);
+		return pBalanceStartingNode;
+	}
+
+	Node* RemoveDelTwoChild(Node* del) {
+		// 3. 삭제할 노드가 자식이 2개인 경우
+		//		1. 삭제할 노드의 좌측 자식의 서브트리에서 제일 큰 노드를 찾는다. (방법1)
+		//			1. 제일 큰 노드의 값을 삭제할 노드의 값에 대입해준다.
+		//			2. 제일 큰 노드의 좌측 자식을 제일 큰 노드의 부모의 우측 자식으로 만들어준다.
+		//			3. 제일 큰 노드를 삭제해준다.
+		// 
+		//		2. 삭제할 노드의 우측 자식의 서브트리에서 제일 작은 노드를 찾는다. (방법2)
+		//			1. 제일 작은 노드의 값을 삭제할 노드의 값에 대입해준다.
+		//			2. 제일 작은 노드의 우측 자식을 제일 작은 노드의 부모의 좌측 자식으로 만들어준다.
+		//			3. 제일 작은 노드를 삭제해준다.
+
+		// --> 방법2로 진행
+
+		Node* pSmallestParent = del;		// 삭제할 노드의 부모
+		Node* pSmallest = del->Right;		// 삭제할 노드
+
+		while (pSmallest->Left != nullptr) {
+			pSmallest = pSmallest->Left;
+		}
+
+		pSmallestParent = pSmallest->Parent;
+		del->Data = Move(pSmallest->Data);
+
+		if (pSmallestParent->Right == pSmallest) {
+			// 우측에 제일 작은 노드가 달린경우 
+			// 이 경우는 위의 while문을 한번도 안돌 경우이다.
+			//   = "삭제할 노드보다 더 작은 노드가 아예 없는 경우"
+
+			pSmallestParent->Right = pSmallest->Right;
+			if (pSmallest->Right)
+				pSmallest->Right->Parent = pSmallestParent;
+		} else {
+			pSmallestParent->Left = pSmallest->Right;
+			if (pSmallest->Right)
+				pSmallest->Right->Parent = pSmallestParent;
+		}
+		DeleteSafe(pSmallest);
+		return pSmallestParent;
+	}
+
+	int Show(vector<vector<int>>& values, Node* node, int depth) {
+		if (node == nullptr) {
+			return depth;
+		}
+		values[depth].push_back(node->Data);
+		return Math::Max(Show(values, node->Left, depth + 1), Show(values, node->Right, depth + 1));
+	}
+
+	
+
 	void BalanceStart(Node* node) {
 		Node* pCur = node;
 
@@ -274,12 +288,9 @@ private:
 
 	// 해당 노드 기준으로 밸런싱 진행
 	void Balance(Node* node) {
-		//PrintLine("높이 확인!");
 		int iHeightDiff = GetHeightDiff(node);
-		//PrintLine("디프 : %d", iHeightDiff);
 		// 우측 높이가 좌측 높이보다 2이상 높은 경우
 		if (iHeightDiff >= 2) {
-
 			int iChildHeightDiff = GetHeightDiff(node->Right);
 			if (iChildHeightDiff >= 1) {
 				RotateRR(node);
@@ -295,6 +306,24 @@ private:
 				RotateLR(node);
 			}
 		}
+	}
+
+	Node* FindNode(int data) {
+		Node* pCur = m_pVirtualRoot->Any();
+
+		while (pCur != nullptr) {
+			if (pCur->Data == data) {
+				return pCur;
+			}
+
+			if (pCur->Data < data) {
+				pCur = pCur->Right;
+			} else {
+				pCur = pCur->Left;
+			}
+		}
+
+		return nullptr;
 	}
 
 	int GetHeightDiff(Node* node) {
@@ -417,22 +446,22 @@ TEST(AVLTreeImplTest, AVLTreeImplTest) {
 	const int MIN_TEST = 1000;
 	const int MIN_COUNT = 10;
 
-	const int ACCURATE_TEST = 1000;
-	const int ACCURATE_COUNT = 1000;
+	const int ACCURATE_TEST = 100;
+	const int ACCURATE_COUNT = 100;
 
 	Random rand;
 	std::vector<int> vec;
 
-	//for (int k = 0; k < MIN_COUNT + 300; k++) {
-	//	vec.push_back(rand.GenerateInt(0, 20));
-	//	tree.Add(vec[k]);
-	//}
-	////tree.ShowDistribution();
-	//for (int k = 0; k < MIN_COUNT + 300; k++) {
-	//	if (!tree.Remove(vec[k])) {
-	//		goto FAILED;
-	//	}
-	//}
+	for (int k = 0; k < MIN_COUNT + 300; k++) {
+		vec.push_back(rand.GenerateInt(0, 20));
+		tree.Add(vec[k]);
+	}
+	//tree.ShowDistribution();
+	for (int k = 0; k < MIN_COUNT + 300; k++) {
+		if (!tree.Remove(vec[k])) {
+			goto FAILED;
+		}
+	}
 	
 	vec.clear();
 
@@ -452,35 +481,35 @@ TEST(AVLTreeImplTest, AVLTreeImplTest) {
 		vec.clear();
 	}
 
-	//// 많은 수의 원소 테스트
-	//for (int i = 0; i < MANY_TEST; i++) {
-	//	for (int k = 0; k < MANY_COUNT; k++) {
-	//		vec.push_back(rand.GenerateInt(0, 100));
-	//		tree.Add(vec[k]);
-	//	}
+	// 많은 수의 원소 테스트
+	for (int i = 0; i < MANY_TEST; i++) {
+		for (int k = 0; k < MANY_COUNT; k++) {
+			vec.push_back(rand.GenerateInt(0, 100));
+			tree.Add(vec[k]);
+		}
 
-	//	for (int k = 0; k < MANY_COUNT; k++) {
-	//		if (!tree.Remove(vec[k])) {
-	//			goto FAILED;
-	//		}
-	//	}
-	//	vec.clear();
-	//}
+		for (int k = 0; k < MANY_COUNT; k++) {
+			if (!tree.Remove(vec[k])) {
+				goto FAILED;
+			}
+		}
+		vec.clear();
+	}
 
-	//// 적은 수의 원소 테스트
-	//for (int i = 0; i < MIN_TEST; i++) {
-	//	for (int k = 0; k < MIN_COUNT; k++) {
-	//		vec.push_back(rand.GenerateInt(0, 100));
-	//		tree.Add(vec[k]);
-	//	}
+	// 적은 수의 원소 테스트
+	for (int i = 0; i < MIN_TEST; i++) {
+		for (int k = 0; k < MIN_COUNT; k++) {
+			vec.push_back(rand.GenerateInt(0, 100));
+			tree.Add(vec[k]);
+		}
 
-	//	for (int k = 0; k < MIN_COUNT; k++) {
-	//		if (!tree.Remove(vec[k])) {
-	//			goto FAILED;
-	//		}
-	//	}
-	//	vec.clear();
-	//}
+		for (int k = 0; k < MIN_COUNT; k++) {
+			if (!tree.Remove(vec[k])) {
+				goto FAILED;
+			}
+		}
+		vec.clear();
+	}
 	return;
 FAILED:
 	EXPECT_TRUE(false);

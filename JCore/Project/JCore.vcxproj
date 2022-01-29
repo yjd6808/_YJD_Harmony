@@ -23,12 +23,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\MemoryUtil.cpp" />
+    <ClCompile Include="..\Sources\JCore\Memory.cpp" />
+    <ClCompile Include="..\Sources\JCore\RAII\UniquePointer.cpp" />
     <ClCompile Include="..\Sources\JCore\Random.cpp" />
     <ClCompile Include="..\Sources\JCore\String.cpp" />
     <ClCompile Include="..\Sources\JCore\StringUtil.cpp" />
+    <ClCompile Include="..\Sources\JCore\Time.cpp" />
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
-    <ClCompile Include="..\Sources\JCore\UniquePointer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Container\Arrays.h">
@@ -36,16 +37,29 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Core.h" />
+    <ClInclude Include="..\Sources\JCore\RAII\SharedPointer.h" />
+    <ClInclude Include="..\Sources\JCore\RAII\UniquePointer.h" />
+    <ClInclude Include="..\Sources\JCore\StaticString.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Hasher.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Math.h" />
-    <ClInclude Include="..\Sources\JCore\MemoryUtil.h" />
+    <ClInclude Include="..\Sources\JCore\Limit.h" />
+    <ClInclude Include="..\Sources\JCore\Memory.h" />
     <ClInclude Include="..\Sources\JCore\Random.h" />
-    <ClInclude Include="..\Sources\JCore\SharedPointer.h" />
     <ClInclude Include="..\Sources\JCore\String.h" />
     <ClInclude Include="..\Sources\JCore\StringUtil.h" />
+    <ClInclude Include="..\Sources\JCore\Time.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Tuple.h" />
     <ClInclude Include="..\Sources\JCore\Type.h" />
     <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
-    <ClInclude Include="..\Sources\JCore\UniquePointer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

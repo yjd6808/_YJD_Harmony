@@ -15,9 +15,9 @@ using namespace JCore;
 
 #if TEST_AVLTreeMemoImplTest == ON
 
-#define INSERTION_BALANCE ON		// 밸런싱 사용할지
+#define INSERTION_BALANCE ON		// 삽입 밸런싱 사용할지
 #if INSERTION_BALANCE == ON
-	#define DELETION_BALANCE ON		// 삭제시 밸런싱 사용할지
+	#define DELETION_BALANCE ON		// 삭제 밸런싱 사용할지
 #endif
 
 namespace AVLMemo {
@@ -42,10 +42,6 @@ struct Node
 		return nullptr;
 	}
 
-	bool IsTerminal() {
-		return Left == nullptr && Right == nullptr;
-	}
-
 	int ChildCount() {
 		if (Left && Right) {
 			return 2;
@@ -61,16 +57,18 @@ struct Node
 	void DeleteChild(Node* node) {
 		if (Left == node) {
 			DeleteSafe(Left);
-		} else {
+		} else if (Right == node) {
 			DeleteSafe(Right);
+		} else {
+			assert("몽미?");
 		}
 	}
 
 	void UpdateHeight() {
-		int iLeftHeight = Left ? Left->Height + 1 : 0;
-		int iRightHeight = Right ? Right->Height + 1 : 0;
+		int iLeftHeight = LeftSubtreeHeight();
+		int iRightHeight = RightSubtreeHeight();
 		
-		this->Height = Math::Max(iLeftHeight, iRightHeight);
+		this->Height = Math::Max(iLeftHeight, iRightHeight) + 1;
 	}
 
 	int LeftSubtreeHeight() {
@@ -102,6 +100,7 @@ public:
 			return;
 		}
 
+		Node* pRootNode = m_pVirtualRoot->Any();
 		Node* pNewNode = Add(m_pVirtualRoot->Any(), data);
 	#if INSERTION_BALANCE == ON
 		BalanceStart(pNewNode);
@@ -110,75 +109,22 @@ public:
 	}
 
 	bool Remove(int data) {
+		Node* pDel = FindNode(data);	// 삭제할 노드를 찾는다.
 
-		if (m_iSize == 0) {
-			return false;
-		}
-
-		Node* pParent = m_pVirtualRoot;
-		Node* pDel = m_pVirtualRoot->Any();
-
-		while (pDel != nullptr) {
-			if (pDel->Data == data) {
-				break;
-			}
-
-			if (data > pDel->Data)
-				pDel = pDel->Right;
-			else
-				pDel = pDel->Left;
-		}
-
+		// 삭제할 노드를 못찾은 경우
 		if (pDel == nullptr) {
 			return false;
 		}
 
-		pParent = pDel->Parent;
+		Node* pBalanceStartingNode = nullptr;	// 밸런싱을 진행할 노드 = 실질적으로 삭제된 노드의 부모 노드
 		int iChildCount = pDel->ChildCount();
-		Node* pBalanceStartingNode = nullptr;	// 밸런싱을 진행할 노드
 
 		if (iChildCount == 0) {
-			pParent->DeleteChild(pDel);
-			pBalanceStartingNode = pParent;	
+			pBalanceStartingNode = RemoveDelNoChild(pDel);
 		} else if (iChildCount == 1) {
-			Node* pChild = pDel->Any();
-
-			if (pParent == m_pVirtualRoot) {
-				pParent->Left = pChild;
-			} else {
-				if (pParent->Right == pDel) {
-					pParent->Right = pChild;
-				} else {
-					pParent->Left = pChild;
-				}
-				
-			}
-
-			pBalanceStartingNode = pParent;
-			pChild->Parent = pParent;
-			DeleteSafe(pDel);
+			pBalanceStartingNode = RemoveDelOneChild(pDel);
 		} else {
-			Node* pSmallestParent = pDel;
-			Node* pSmallest = pDel->Right;
-
-			while (pSmallest->Left != nullptr) {
-				pSmallest = pSmallest->Left;
-			}
-
-			pSmallestParent = pSmallest->Parent;
-			pDel->Data = Move(pSmallest->Data);
-
-			if (pSmallestParent->Right == pSmallest) {
-				pSmallestParent->Right = pSmallest->Right;
-				if (pSmallest->Right)
-					pSmallest->Right->Parent = pSmallestParent;
-			} else {
-				pSmallestParent->Left = pSmallest->Right;
-				if (pSmallest->Right)
-					pSmallest->Right->Parent = pSmallestParent;
-			}
-			pBalanceStartingNode = pSmallestParent;
-			DeleteSafe(pSmallest);
+			pBalanceStartingNode = RemoveDelTwoChild(pDel);
 		}
 
 	#if DELETION_BALANCE == ON
@@ -189,13 +135,17 @@ public:
 		return true;
 	}
 
+	bool Find(int data) {
+		return FindNode(data) != nullptr;
+	}
+
 	void ShowDistribution() {
 		vector<vector<int>> values;
 		values.resize(30);
 		int maxDepth = Show(values, m_pVirtualRoot->Any(), 0);
-		PrintLine("각 층별 꽉찬 정도를 출력");
+		PrintFormat("각 층별 꽉찬 정도를 출력\n");
 		for (int i = 0; i < maxDepth; i++) {
-			PrintLine("%d층 : %.6f%%%", i + 1, (double)values[i].size() / Math::Pow(2, i) * 100);
+			PrintFormat("%d층 : %.6f%%%\n", i + 1, (double)values[i].size() / Math::Pow(2, i) * 100);
 		}
 	}
 
@@ -209,6 +159,7 @@ public:
 		DeleteElementRecursive(pRoot->Left);
 		DeleteElementRecursive(pRoot->Right);
 		DeleteSafe(pRoot);
+		m_iSize = 0;
 	}
 private:
 	void DeleteElementRecursive(Node* node) {
@@ -250,6 +201,76 @@ private:
 		}
 
 		return pNewNode;
+	}
+
+	Node* RemoveDelNoChild(Node* del) {
+		Node* pParent = del->Parent;
+		pParent->DeleteChild(del);
+		return pParent;
+	}
+
+	Node* RemoveDelOneChild(Node* del) {
+		Node* pParent = del->Parent;
+		Node* pChild = del->Any();
+		Node* pBalanceStartingNode = nullptr;
+
+
+		if (pParent == m_pVirtualRoot) {
+			pParent->Left = pChild;
+		} else {
+			if (pParent->Right == del) {
+				pParent->Right = pChild;
+			} else {
+				pParent->Left = pChild;
+			}
+			pBalanceStartingNode = pParent;
+		}
+
+		pChild->Parent = pParent;
+		DeleteSafe(del);
+		return pBalanceStartingNode;
+	}
+
+	Node* RemoveDelTwoChild(Node* del) {
+		Node* pSmallestParent = del;		// 삭제할 노드의 부모
+		Node* pSmallest = del->Right;		// 삭제할 노드
+
+		while (pSmallest->Left != nullptr) {
+			pSmallest = pSmallest->Left;
+		}
+
+		pSmallestParent = pSmallest->Parent;
+		del->Data = Move(pSmallest->Data);
+
+		if (pSmallestParent->Right == pSmallest) {
+			pSmallestParent->Right = pSmallest->Right;
+			if (pSmallest->Right)
+				pSmallest->Right->Parent = pSmallestParent;
+		} else {
+			pSmallestParent->Left = pSmallest->Right;
+			if (pSmallest->Right)
+				pSmallest->Right->Parent = pSmallestParent;
+		}
+		DeleteSafe(pSmallest);
+		return pSmallestParent;
+	}
+
+	Node* FindNode(int data) {
+		Node* pCur = m_pVirtualRoot->Any();
+
+		while (pCur != nullptr) {
+			if (pCur->Data == data) {
+				return pCur;
+			}
+
+			if (pCur->Data < data) {
+				pCur = pCur->Right;
+			} else {
+				pCur = pCur->Left;
+			}
+		}
+
+		return nullptr;
 	}
 
 	void BalanceStart(Node* node) {
@@ -312,8 +333,8 @@ private:
 		
 	#if INSERTION_BALANCE == ON
 		// 회전 후 높이를 갱신해준다.
-		pChild->UpdateHeight();
 		pCur->UpdateHeight();
+		pChild->UpdateHeight();
 	#endif
 	}
 
@@ -348,8 +369,8 @@ private:
 
 		// 회전 후 높이를 갱신해준다.
 	#if INSERTION_BALANCE == ON
-		pChild->UpdateHeight();
 		pCur->UpdateHeight();
+		pChild->UpdateHeight();
 	#endif
 	}
 
@@ -383,24 +404,24 @@ TEST(AVLTreeMemoImplTest, AVLTreeMemoImplTest) {
 	const int MIN_TEST = 1000;
 	const int MIN_COUNT = 10;
 
-	const int ACCURATE_TEST = 1000;
-	const int ACCURATE_COUNT = 1000;
+	const int ACCURATE_TEST = 100;
+	const int ACCURATE_COUNT = 100;
 
 	Random rand;
 	std::vector<int> vec;
 
-	//for (int k = 0; k < MIN_COUNT + 300; k++) {
-	//	vec.push_back(rand.GenerateInt(0, 20));
-	//	tree.Add(vec[k]);
-	//}
-	////tree.ShowDistribution();
-	//for (int k = 0; k < MIN_COUNT + 300; k++) {
-	//	if (!tree.Remove(vec[k])) {
-	//		goto FAILED;
-	//	}
-	//}
+	for (int k = 0; k < MIN_COUNT + 300; k++) {
+		vec.push_back(rand.GenerateInt(0, 20));
+		tree.Add(vec[k]);
+	}
+	//tree.ShowDistribution();
+	for (int k = 0; k < MIN_COUNT + 300; k++) {
+		if (!tree.Remove(vec[k])) {
+			goto FAILED;
+		}
+	}
 
-	//vec.clear();
+	vec.clear();
 
 	// 정확성 테스트
 	for (int i = 0; i < ACCURATE_TEST; i++) {
@@ -419,35 +440,35 @@ TEST(AVLTreeMemoImplTest, AVLTreeMemoImplTest) {
 		vec.clear();
 	}
 
-	//// 많은 수의 원소 테스트
-	//for (int i = 0; i < MANY_TEST; i++) {
-	//	for (int k = 0; k < MANY_COUNT; k++) {
-	//		vec.push_back(rand.GenerateInt(0, 100));
-	//		tree.Add(vec[k]);
-	//	}
+	// 많은 수의 원소 테스트
+	for (int i = 0; i < MANY_TEST; i++) {
+		for (int k = 0; k < MANY_COUNT; k++) {
+			vec.push_back(rand.GenerateInt(0, 100));
+			tree.Add(vec[k]);
+		}
 
-	//	for (int k = 0; k < MANY_COUNT; k++) {
-	//		if (!tree.Remove(vec[k])) {
-	//			goto FAILED;
-	//		}
-	//	}
-	//	vec.clear();
-	//}
+		for (int k = 0; k < MANY_COUNT; k++) {
+			if (!tree.Remove(vec[k])) {
+				goto FAILED;
+			}
+		}
+		vec.clear();
+	}
 
-	//// 적은 수의 원소 테스트
-	//for (int i = 0; i < MIN_TEST; i++) {
-	//	for (int k = 0; k < MIN_COUNT; k++) {
-	//		vec.push_back(rand.GenerateInt(0, 100));
-	//		tree.Add(vec[k]);
-	//	}
+	// 적은 수의 원소 테스트
+	for (int i = 0; i < MIN_TEST; i++) {
+		for (int k = 0; k < MIN_COUNT; k++) {
+			vec.push_back(rand.GenerateInt(0, 100));
+			tree.Add(vec[k]);
+		}
 
-	//	for (int k = 0; k < MIN_COUNT; k++) {
-	//		if (!tree.Remove(vec[k])) {
-	//			goto FAILED;
-	//		}
-	//	}
-	//	vec.clear();
-	//}
+		for (int k = 0; k < MIN_COUNT; k++) {
+			if (!tree.Remove(vec[k])) {
+				goto FAILED;
+			}
+		}
+		vec.clear();
+	}
 	return;
 FAILED:
 	EXPECT_TRUE(false);

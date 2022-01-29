@@ -4,7 +4,7 @@
 */
 
 #include <JCore/Core.h>
-#include <JCore/UniquePointer.h>
+#include <JCore/RAII/UniquePointer.h>
 
 namespace JCore {
 

@@ -20,7 +20,7 @@
 #include <assert.h>
 
 #define force_cast					reinterpret_cast
-#define StaticAssert(exp, msg)		static_assrt(!(exp), msg)
+#define StaticAssert(exp, msg)		static_assert(!(exp), msg)
 #define DebugAssert(exp, msg)		assert(!(exp) && msg)
 
 #define DeleteSafe(x)			\

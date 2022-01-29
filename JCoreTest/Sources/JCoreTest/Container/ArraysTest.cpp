@@ -39,11 +39,11 @@ TEST(ArraysTest, Sort) {
 		for (int j = 0; j < r; j++) {
 			//Print("%d ", normal[j]);
 		}
-		PrintLine();
+		PrintFormat();
 		for (int j = 0; j < r; j++) {
 			Print("%d ", myArray[j]);
 		}
-		PrintLine();
+		PrintFormat();
 		
 		std::cout << r << "개의 데이터 정렬결과 일치\n";
 		*/

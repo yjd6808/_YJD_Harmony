@@ -4,15 +4,21 @@
     <Filter Include="Container">
       <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RAII">
+      <UniqueIdentifier>{950bda15-11e9-4fff-8ab5-f55598fa7957}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp" />
     <ClCompile Include="..\Sources\JCore\Random.cpp" />
-    <ClCompile Include="..\Sources\JCore\MemoryUtil.cpp" />
+    <ClCompile Include="..\Sources\JCore\Memory.cpp" />
     <ClCompile Include="..\Sources\JCore\String.cpp" />
     <ClCompile Include="..\Sources\JCore\StringUtil.cpp" />
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
-    <ClCompile Include="..\Sources\JCore\UniquePointer.cpp" />
+    <ClCompile Include="..\Sources\JCore\RAII\UniquePointer.cpp">
+      <Filter>RAII</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -23,11 +29,19 @@
     <ClInclude Include="..\Sources\JCore\Math.h" />
     <ClInclude Include="..\Sources\JCore\String.h" />
     <ClInclude Include="..\Sources\JCore\StringUtil.h" />
-    <ClInclude Include="..\Sources\JCore\MemoryUtil.h" />
-    <ClInclude Include="..\Sources\JCore\SharedPointer.h" />
-    <ClInclude Include="..\Sources\JCore\UniquePointer.h" />
     <ClInclude Include="..\Sources\JCore\Container\Arrays.h">
       <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Memory.h" />
+    <ClInclude Include="..\Sources\JCore\Limit.h" />
+    <ClInclude Include="..\Sources\JCore\Hasher.h" />
+    <ClInclude Include="..\Sources\JCore\Time.h" />
+    <ClInclude Include="..\Sources\JCore\StaticString.h" />
+    <ClInclude Include="..\Sources\JCore\RAII\SharedPointer.h">
+      <Filter>RAII</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\RAII\UniquePointer.h">
+      <Filter>RAII</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -42,7 +42,32 @@ public:
 		const int strLen = CTLength(str);
 		return CTFindCharReverseRecursive(str + strLen - 1, ch, strLen);
 	}
-	
+
+	template <typename T, typename U>
+	static constexpr int CTCompare(T&& src, U&& dst) {
+		const int iSrcLen = CTLength(src);
+		const int iDstLen = CTLength(dst);
+
+		char* pSrc = (char*)src;
+		char* pDst = (char*)dst;
+
+		while (*pDst != NULL && *pSrc != NULL) {
+			if (*pDst > *pSrc)
+				return 1;
+			else if (*pDst < *pSrc)
+				return -1;
+
+			pDst++;
+			pSrc++;
+		}
+
+		if (iDstLen > iSrcLen)
+			return 1;
+		else if (iDstLen < iSrcLen)
+			return -1;
+
+		return 0;
+	}
 private:
 	static constexpr int CTLengthRecursive(const char* str, const int position) {
 		return *str != NULL ? CTLengthRecursive(str + 1, position + 1) : position;

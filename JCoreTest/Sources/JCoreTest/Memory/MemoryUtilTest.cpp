@@ -1,14 +1,14 @@
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/MemoryUtil.h>
+#include <JCore/Memory.h>
 #include <JCore/Type.h>
 
 using namespace JCore;
 
-#if TEST_MemoryUtilTest == ON
+#if TEST_MemoryTest == ON
 
 // 어셈블리어 약간 복습
-TEST(MemoryUtilTest, AssemblyTest) {
+TEST(MemoryTest, AssemblyTest) {
 
 	int k = 5;
 
@@ -52,12 +52,12 @@ TEST(MemoryUtilTest, AssemblyTest) {
 }
 
 
-TEST(MemoryUtilTest, MemoryCopy) {
+TEST(MemoryTest, MemoryCopy) {
 
 	int* c = new int[4];
 	int d[4] = { 0, 1, 2, 3};
 
-	MemoryUtil::Copy(c, sizeof(int) * 4, d, sizeof(d));
+	Memory::Copy(c, sizeof(int) * 4, d, sizeof(d));
 
 	EXPECT_TRUE(c[0] == 0);
 	EXPECT_TRUE(c[1] == 1);
@@ -76,12 +76,12 @@ struct TestStruct {
 };
 
 
-TEST(MemoryUtilTest, MemorySet) {
+TEST(MemoryTest, MemorySet) {
 	const int kiArraySize = 32;
 	TestStruct* c = new TestStruct[kiArraySize];
 	TestStruct d(10);
 
-	MemoryUtil::Set(c, sizeof(TestStruct) * kiArraySize, 0);
+	Memory::Set(c, sizeof(TestStruct) * kiArraySize, 0);
 
 	for (int i = 0; i < kiArraySize; i++) {
 		EXPECT_TRUE(c[i].Val() == 0);
@@ -89,13 +89,13 @@ TEST(MemoryUtilTest, MemorySet) {
 }
 
 
-TEST(MemoryUtilTest, MemorySetT) {
+TEST(MemoryTest, MemorySetT) {
 
 	const int kiArraySize = 32;
 	TestStruct* c = new TestStruct[kiArraySize];
 	TestStruct d(10);
 
-	MemoryUtil::Set<TestStruct>(c, kiArraySize, d);
+	Memory::Set<TestStruct>(c, kiArraySize, d);
 
 	for (int i = 0; i < kiArraySize; i++) {
 		EXPECT_TRUE(c[i].Val() == 30);
@@ -103,4 +103,4 @@ TEST(MemoryUtilTest, MemorySetT) {
 }
 
 
-#endif // TEST_MemoryUtilTest == ON
+#endif // TEST_MemoryTest == ON

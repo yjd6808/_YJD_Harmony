@@ -9,7 +9,7 @@
 
 namespace JCore {
 
-class MemoryUtil final
+class Memory final
 {
 public:
 	static void Copy(void* src, const int srcCapacity, const void* dst, const int dstCopySize);

@@ -6,7 +6,7 @@
 #include <JCore/Core.h>
 #include <JCore/String.h>
 #include <JCore/StringUtil.h>
-#include <JCore/MemoryUtil.h>
+#include <JCore/Memory.h>
 
 
 namespace JCore {
@@ -99,7 +99,7 @@ void String::Append(const char* str)
 		Resize(iDstCapacity);
 	}
 
-	MemoryUtil::CopyUnsafe(m_pBuffer + m_iLen, str, iStrLen);
+	Memory::CopyUnsafe(m_pBuffer + m_iLen, str, iStrLen);
 	m_pBuffer[iDstLen] = NULL;
 	m_iLen = iDstLen;
 }

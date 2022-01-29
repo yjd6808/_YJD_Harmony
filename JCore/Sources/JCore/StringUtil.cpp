@@ -6,6 +6,8 @@
 #include <JCore/Core.h>
 #include <JCore/String.h>
 #include <JCore/StringUtil.h>
+#include <JCore/Math.h>
+#include <JCore/StaticString.h>
 
 namespace JCore {
 
@@ -85,6 +87,47 @@ void StringUtil::Swap(String& src, String& dst)
 }
 
 
+/*
+constexpr Int64 StringUtil::ConvertInt64(const char* src, const int len) {
+
+	return 0;
+}
+
+template <typename W>
+inline constexpr W StringUtil::Getter() {
+	return W();
+}
+
+template<Int32U Size>
+inline constexpr auto StringUtil::TrimFront(const char(&str)[Size], const char delimiter) {
+	constexpr int iLen = Size - 1;
+	int iTrimEndIdx = -1;
+	for (int i = 0; i < iLen; i++) {
+		if (str[i] != delimiter) {
+			iTrimEndIdx = i;
+		}
+	}
+
+	StaticString<iLen> ret{};
+	char* ptr = (char*)ret.Source;
+
+	// 트림이 어디서 끝나는지 알 수 없으므로 전부 널로 넣어주자
+	for (int i = 0; i < iLen; i++) {
+		*ptr = NULL;
+		ptr++;
+	}
+
+	ptr = (char*)ret.Source;
+
+	for (int i = iTrimEndIdx; i < iLen; i++) {
+		*ptr = str[i];
+		ptr++;
+	}
+
+	return ret;
+}
+
+*/
 
 } // namespace JCore
 
