@@ -19,7 +19,6 @@
 using namespace JCore;
 using namespace std;
 
-// 1643459478796342700
 int main() {
 	/*
 	IsIntegerType_v<const volatile int&>;
@@ -34,9 +33,11 @@ int main() {
 	IsFloatingPointType_v<float>;
 	*/
 
-
-	DateTime now = DateTime::Now();
-	DateAndTime dateAndTime = now.ToDateAndTime();
+	Time::DateTime now = Time::DateTime::Now();
+	Time::DateAndTime now2 = now.ToDateAndTime();
+	//now2.AddMicroSecond(Time::Detail::TicksPerHour * 10 + Time::Detail::TicksPerMinute * 125);
+	now2.AddDay(5);
+	now2.AddMonth(3);
 
 	return 0;
 }

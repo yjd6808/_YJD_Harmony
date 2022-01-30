@@ -1,7 +1,7 @@
 /*
 	작성자 : 윤정도
 	간단한 시간을 다룰 수 있는 기능을 추가합니다.
-	 - 100의 자리 나노 세컨드 정밀도의 시간관련 기능 
+	 - 마이크로초 단위 시간 관리 기능
 	 - C# 시간/날짜 관련 내장 라이브러리(System.DateTime) 참고
 	 - C++ std::chrono 내장 라이브러리 참고
 	 
@@ -11,51 +11,50 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/Tuple.h>
 
 
 namespace JCore {
-
-	namespace Detail {
+	namespace Time {
+		namespace Detail {
+			constexpr Int64U MaxDay_v			= 365;
+			constexpr Int64U MaxHour_v			= 24;
+			constexpr Int64U MaxMinute_v		= 60;
+			constexpr Int64U MaxSecond_v		= 60;
+			constexpr Int64U MaxMiliSecond_v	= 1000;
+			constexpr Int64U MaxMicroSecond_v	= 1000;
 		
-		constexpr double MaxDay_v			= 365;
-		constexpr Int64U MaxHour_v			= 24;
-		constexpr Int64U MaxMinute_v		= 60;
-		constexpr Int64U MaxSecond_v		= 60;
-		constexpr Int64U MaxMiliSecond_v	= 1000;
-		constexpr Int64U MaxMicroSecond_v	= 1000;
-		constexpr Int64U MaxNanoSecond_v	= 1000;
+			// 1틱당 1마이크로초
+			constexpr Int64U TicksPerMicroSecond	= 1;										// 마이크로초당 몇 틱인지 	1틱당					1마이크로초
+			constexpr Int64U TicksPerMiliSecond		= TicksPerMicroSecond * MaxMicroSecond_v;	// 밀리초당 몇 틱인지		1000틱당					1밀리초
+			constexpr Int64U TicksPerSecond			= TicksPerMiliSecond * MaxMiliSecond_v;		// 초당 몇 틱인지			1000000틱당				1초
+			constexpr Int64U TicksPerMinute			= TicksPerSecond * MaxSecond_v;				// 1분당 몇 틱인지		1000000 * 60			1분
+			constexpr Int64U TicksPerHour			= TicksPerMinute * MaxMinute_v;				// 1시간당 몇 틱인지		1000000 * 60 * 60		1시간
+			constexpr Int64U TicksPerDay			= TicksPerHour * MaxHour_v;					// 1일당 몇 틱인지		1000000 * 60 * 60 * 24	1일
+
+			constexpr int DaysPer1Years_v = MaxDay_v;
+			constexpr int DaysPer4Years_v = MaxDay_v * 4 + 1;				// 4년이 몇일인지 : 1461일
+			constexpr int DaysPer100Years_v = DaysPer4Years_v * 25 - 1;		// 100년이 몇일인지 : 36524일
+			constexpr int DaysPer400Years_v = DaysPer100Years_v * 4 + 1;	// 400년이 몇일인지 : 146097일
 		
-		// 1틱당 1나노초
-		constexpr Int64U TicksPerMicroSecond	= MaxNanoSecond_v;							// 마이크로초당 몇 틱인지 	1000틱당						1마이크로초
-		constexpr Int64U TicksPerMiliSecond		= TicksPerMicroSecond * MaxMicroSecond_v;	// 밀리초당 몇 틱인지		1000000틱당					1밀리초
-		constexpr Int64U TicksPerSecond			= TicksPerMiliSecond * MaxMiliSecond_v;		// 초당 몇 틱인지			1000000000틱당				1초
-		constexpr Int64U TicksPerMinute			= TicksPerSecond * MaxSecond_v;				// 1분당 몇 틱인지		1000000000 * 60				1분
-		constexpr Int64U TicksPerHour			= TicksPerMinute * MaxMinute_v;				// 1시간당 몇 틱인지		1000000000 * 60 * 60		1시간
-		constexpr Int64U TicksPerDay			= TicksPerHour * MaxHour_v;					// 1일당 몇 틱인지		1000000000 * 60 * 60 * 24	1일
+			constexpr int DaysUntilMonth365[13] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
+			constexpr int DaysUntilMonth366[13] = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
 
-		constexpr int DaysPer1Years_v = MaxDay_v;
-		constexpr int DaysPer4Years_v = MaxDay_v * 4 + 1;				// 4년이 몇일인지 : 1461일
-		constexpr int DaysPer100Years_v = DaysPer4Years_v * 25 - 1;		// 100년이 몇일인지 : 36524일
-		constexpr int DaysPer400Years_v = DaysPer100Years_v * 4 + 1;	// 400년이 몇일인지 : 146097일
+			constexpr int DaysForMonth365[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+			constexpr int DaysForMonth366[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+
+
+			/*
+			   After Christ 1970년도까지의 시간을 구한다음에 해봤는데 오차가 생김;
+			   아래 처럼 일 수의 소수점 단위까지 들고가면 안된다.
+			   constexpr long double EpochTimeBeginAC = long double(DaysPer400Years_v * 1969) / 400; // 일 수의 소수점 단위는 버려야함
+			*/
 		
-		constexpr int DaysUntilMonth365[13] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
-		constexpr int DaysUntilMonth366[13] = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
-
-		constexpr int DaysForMonth365[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		constexpr int DaysForMonth366[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-		enum class TimeUnit
-		{
-			Year,
-			Month,
-			Day,
-			Hour,
-			Minute,
-			Second,
-			MiliSecond,
-			MicroSecond,
-			NanoSecond
-		};
+			// [AD 0001년 1월 1일 ~ 1969년 12월 31일까지의 마이크로초 계산]
+			constexpr Int64U ADBegin	 = (DaysPer400Years_v * 1969) / 400;	// Epoch 시간 1970년 1월 1일까지의 일 수
+			constexpr Int64U ADBeginTick = ADBegin * TicksPerDay;				// Epoch 시간 1970년 1월 1일까지의 마이크로초
+		}
 
 		enum class DatePart
 		{
@@ -81,128 +80,310 @@ namespace JCore {
 			Local,			// 현재 컴퓨터 시스템 기준 시간
 			Universal		// UTC 기준시간
 		};
-	}
 
 
-struct Date
-{
-	Int16U Year;
-	Int16U Month;
-	Int16U Day;
-};
 
-struct Time
-{
-	Int16U Hour;
-	Int16U Minute;
-	Int16U Second;
-	Int16U MiliSecond;
-	Int16U MicroSecond;
-	Int16U NanoSecond;
-};
+		/* =================================================================================== 
+			시간 단위
+		   =================================================================================== */
 
-struct DateAndTime : Date, Time {};
+		enum class TimeUnit
+		{
+			Year,
+			Month,
+			Day,
+			Hour,
+			Minute,
+			Second,
+			MiliSecond,
+			MicroSecond,
+			NanoSecond
+		};
 
-class String;
-class DateTime
-{
-public:
-	constexpr DateTime() : m_Tick(0) {}
-	constexpr DateTime(Int64U tick) : m_Tick(tick) {}
-public:
-	// 특정 타입유닛에 해당하는 전체시간 얻기
-	inline constexpr Int64U GetTick() const { return m_Tick; }
-	inline constexpr Int64U GetTotalDays() const { return m_Tick / Detail::TicksPerDay; }
-	inline constexpr Int64U GetTotalHours() const { return m_Tick / Detail::TicksPerHour; }
-	inline constexpr Int64U GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute; }
-	inline constexpr Int64U GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond; }
-	inline constexpr Int64U GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond; }
-	inline constexpr Int64U GetTotalMicroSeconds() const { return m_Tick / Detail::TicksPerMicroSecond; }
-	inline constexpr Int64U GetTotalNanoSeconds() const { return m_Tick; }
+		
+		/* =================================================================================== 
+			시간 계산 및 관리
 
-	// 특정 타입유닛별로 시간 얻기
-	inline constexpr int GetYear() const { return GetDatePart(Detail::DatePart::Year); }
-	inline constexpr int GetMonth() const { return GetDatePart(Detail::DatePart::Month); }
-	inline constexpr int GetDay() const { return GetDatePart(Detail::DatePart::Day); }
-	inline constexpr int GetHour() const { return GetTotalHours() % Detail::MaxHour_v; }
-	inline constexpr int GetMinute() const { return GetTotalMinutes() % Detail::MaxMinute_v; }
-	inline constexpr int GetSecond() const { return GetTotalSeconds() % Detail::MaxSecond_v; }
-	inline constexpr int GetMiliSecond() const { return GetTotalMiliSeconds() % Detail::MaxMiliSecond_v; }
-	inline constexpr int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
-	inline constexpr int GetNanoSecond() const { return m_Tick % Detail::MaxNanoSecond_v; }
+			주의사항 : 시간관련 Add 연산 모두 음수를 지원안합니다.
+			          Subtract 함수를 사용해주세요.
+		   =================================================================================== */
+		struct Date
+		{
+			Int16U Year;
+			Int16U Month;
+			Int16U Day;
 
-	// 무슨 요일인지
-	inline constexpr Detail::DayOfWeek GetDayOfWeek() const { return Detail::DayOfWeek(GetTotalDays() / 7 + 1); }
+			Date() = default;
+			Date(Int16U year, Int16U month, Int16U day) : Year(year), Month(month), Day(day) {}
 
-	// 일년기준으로 몇일인지
-	inline constexpr int GetDayOfYear() const { return GetDatePart(Detail::DatePart::DayOfYear); }
+			virtual void AddYear(Int32U years);
+			virtual void AddMonth(Int32U months);
+			virtual void AddDay(Int32U days);
 
-	// 이번달이 최대 몇일인지
-	inline constexpr int GetMaxDayOfMonth() const { return GetDatePart(Detail::DatePart::MaxDayOfMonth); }
+			Int64U ToTick();
+		};
 
-	// 타입 변환
-	inline constexpr DateAndTime ToDateAndTime() const {
-		return { Int16U(GetYear()), Int16U(GetMonth()),	 Int16U(GetDay()),	// Date 정보
-				 Int16U(GetHour()), Int16U(GetMinute()), Int16U(GetSecond()), Int16U(GetMiliSecond()), Int16U(GetMicroSecond()), Int16U(GetNanoSecond()) };	// Time 정보
-	}
-	inline constexpr Date ToDate() const {
-		return { Int16U(GetYear()), Int16U(GetMonth()),	 Int16U(GetDay()) };
-	}
-	inline constexpr Time ToTime() const {
-		return { Int16U(GetHour()), Int16U(GetMinute()), Int16U(GetSecond()), Int16U(GetMiliSecond()), Int16U(GetMicroSecond()), Int16U(GetNanoSecond()) };
-	}
-public:
-	constexpr int GetDatePart(const Detail::DatePart part) const {
-		using namespace Detail;
+		struct Time
+		{
+			Int16U Hour;
+			Int16U Minute;
+			Int16U Second;
+			Int16U MiliSecond;
+			Int16U MicroSecond;
 
-		int iDays = GetTotalDays();					// 총 일수를 가져옴. ex) 2022년이면 오늘 기준이면 52년치 일수를 가져옴
+			Time() = default;
+			Time(Int16U hour, Int16U minute, Int16U second, Int16U miliSecond, Int16U microSecond)
+				: Hour(hour), Minute(minute), Second(second), MiliSecond(miliSecond), MicroSecond(microSecond)
+			{}
 
-		int i4Years = iDays / Detail::DaysPer4Years_v;		// 총 일수에서 4년의 수를 구한다.
-		iDays -= Detail::DaysPer4Years_v * i4Years;			// 4년의 수를 빼준다.
+			virtual void AddHour(Int64U hours);
+			virtual void AddMinute(Int64U minutes);
+			virtual void AddSecond(Int64U seconds);
+			virtual void AddMiliSecond(Int64U miliSeconds);
+			virtual void AddMicroSecond(Int64U microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
 
-		int i1Years = iDays / Detail::DaysPer1Years_v;		// 남은 일수에서 1년의 수를 구한다.
-		iDays -= Detail::DaysPer1Years_v * i1Years;			// 년단위는 모두 소거되고 366일 이내의 값이 남음
+			Int64U ToTick();
+		};
 
-		// 1년이 365.2545일이므로 366일 째에 1일이 남는 경우 때문에
-		if (i1Years == 4)
-			i1Years = 3;
+		struct DateTime;
+		struct DateAndTime : Date, Time {
+			DateAndTime() = default;
+			DateAndTime(Int16U year, Int16U month, Int16U day, Int16U hour, Int16U minute, Int16U second, Int16U miliSecond, Int16U microSecond)
+				: Date(year, month, day), Time(hour, minute, second, miliSecond, microSecond)
+			{}
 
-		// 4년, 즉 마지막년은 366일이므로
-		int* pUntilDays = i1Years == 3 ? (int*)DaysUntilMonth366 : (int*)DaysUntilMonth365;
-		int* pForDays = i1Years == 3 ? (int*)DaysForMonth366 : (int*)DaysForMonth365;
+			void AddYear(Int32U years) override;				// Date::AddYear와 동일
+			void AddMonth(Int32U months) override;				// Date::AddMonth와 동일
+			void AddDay(Int32U days) override;					// 기능 다름
+			void AddHour(Int64U hours) override;				// Time::AddHour와 동일
+			void AddMinute(Int64U minutes) override;			// Time::AddMinute와 동일
+			void AddSecond(Int64U seconds) override;			// Time::AddSecond와 동일
+			void AddMiliSecond(Int64U miliSeconds) override;	// Time::AddMiliSecond와 동일
+			void AddMicroSecond(Int64U microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond) override;	// 기능 다름
 
-		if (part == DatePart::Year) {
-			return 1970 + i4Years * 4 + i1Years;
-		} else if (part == DatePart::DayOfYear) {
-			return iDays + 1;
-		} 
+			DateTime ToDateTime();
+			Int64U ToTick();
+		};
 
-		int iMonth = 0;
+		class String;
+		class DateTime
+		{
+		public: // constructors
+			constexpr DateTime() : m_Tick(0) {}
+			constexpr DateTime(Int64U tick) : m_Tick(tick) {}
 
-		for (int i = 0; i < 13; i++) {
-			if (iDays >= pUntilDays[i]) {
-				iMonth = i; 
-				break;
+		public: // public non-static
+			// 특정 타입유닛에 해당하는 전체시간 얻기
+			inline constexpr Int64U GetTick() const { return m_Tick; }
+			inline constexpr Int64U GetTotalDays() const { return m_Tick / Detail::TicksPerDay; }
+			inline constexpr Int64U GetTotalHours() const { return m_Tick / Detail::TicksPerHour; }
+			inline constexpr Int64U GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute; }
+			inline constexpr Int64U GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond; }
+			inline constexpr Int64U GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond; }
+			inline constexpr Int64U GetTotalMicroSeconds() const { return m_Tick; }
+
+			// 특정 타입유닛별로 시간 얻기
+			inline constexpr int GetYear() const { return GetDatePart(DatePart::Year); }
+			inline constexpr int GetMonth() const { return GetDatePart(DatePart::Month); }
+			inline constexpr int GetDay() const { return GetDatePart(DatePart::Day); }
+			inline constexpr int GetHour() const { return GetTotalHours() % Detail::MaxHour_v; }
+			inline constexpr int GetMinute() const { return GetTotalMinutes() % Detail::MaxMinute_v; }
+			inline constexpr int GetSecond() const { return GetTotalSeconds() % Detail::MaxSecond_v; }
+			inline constexpr int GetMiliSecond() const { return GetTotalMiliSeconds() % Detail::MaxMiliSecond_v; }
+			inline constexpr int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
+
+			// 무슨 요일인지
+			inline constexpr DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7 + 1); }
+
+			// 일년기준으로 몇일인지
+			inline constexpr int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }
+
+			// 이번달이 최대 몇일인지
+			inline constexpr int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }
+
+			// 타입 변환
+			inline DateAndTime ToDateAndTime() const {
+				return DateAndTime(Int16U(GetYear()), Int16U(GetMonth()), Int16U(GetDay()),	// Date 정보
+								   Int16U(GetHour()), Int16U(GetMinute()), Int16U(GetSecond()), Int16U(GetMiliSecond()), Int16U(GetMicroSecond())); // Time 정보
 			}
-		}
 
-		if (part == DatePart::Month) {
-			return iMonth + 1; // 1월부터 시작이므로
-		} else if (part == DatePart::Day) {
-			return iDays - pUntilDays[iMonth] + 1;	// 1일부터 시작이므로
-		} else if (part == DatePart::MaxDayOfMonth) {
-			return pForDays[iMonth];
-		}
+			inline Date ToDate() const {
+				return Date(Int16U(GetYear()), Int16U(GetMonth()), Int16U(GetDay()));
+			}
+			inline Time ToTime() const {
+				return Time(Int16U(GetHour()), Int16U(GetMinute()), Int16U(GetSecond()), Int16U(GetMiliSecond()), Int16U(GetMicroSecond()));
+			}
 
-		return -1;
-	}
-	String Format(const char* fmt) const;
-public:
-	static DateTime Now(Detail::TimeStandard timeStandard = Detail::TimeStandard::Local);
-	static Int16U TimeZoneBiasHour();
-private:
-	Int64U m_Tick = 0ULL;
+			// 시간 연산
+			void AddYear(Int32U year);
+			void AddMonth(Int32U month);
+			void AddDay(Int32U day) { m_Tick += day * Detail::TicksPerDay; }
+			void AddHour(Int32U hour) { m_Tick += hour * Detail::TicksPerHour; }
+			void AddMinute(Int32U minute) { m_Tick += minute * Detail::TicksPerMinute; }
+			void AddSecond(Int32U second) { m_Tick += second * Detail::TicksPerSecond; }
+			void AddMiliSecond(Int32U miliSecond) { m_Tick += miliSecond * Detail::TicksPerMiliSecond; }
+
+			void SubtractDay(Int32U day) { m_Tick -= day * Detail::TicksPerDay; }
+			void SubtractHour(Int32U hour) { m_Tick -= hour * Detail::TicksPerHour; }
+			void SubtractMinute(Int32U minute) { m_Tick -= minute * Detail::TicksPerMinute; }
+			void SubtractAddSecond(Int32U second) { m_Tick -= second * Detail::TicksPerSecond; }
+			void SubtractMiliSecond(Int32U miliSecond) { m_Tick -= miliSecond * Detail::TicksPerMiliSecond; }
+
+			JCore::String Format(const char* fmt) const;
+
+		private: // private static
+			
+			// 단위 년도별로 일수를 가져옴
+			static constexpr auto GetYearsFromDays(int days) {
+				using namespace Detail;
+
+				int i400Years = days / DaysPer400Years_v;	// 총 일수에서 400년의 수를 구한다.
+				days -= DaysPer400Years_v * i400Years;		// 400년의 수를 빼준다.
+
+				int i100Years = days / DaysPer100Years_v;	// 총 일수에서 100년의 수를 구한다.
+				days -= DaysPer100Years_v * i100Years;		// 100년의 수를 빼준다.
+
+				int i4Years = days / DaysPer4Years_v;		// 총 일수에서 4년의 수를 구한다.
+				days -= DaysPer4Years_v * i4Years;			// 4년의 수를 빼준다.
+
+				int i1Years = days / DaysPer1Years_v;		// 남은 일수에서 1년의 수를 구한다.
+				days -= DaysPer1Years_v * i1Years;			// 년단위는 모두 소거되고 366일 이내의 값이 남음
+
+				return MakeTuple(i400Years, i100Years, i4Years, i1Years, days);
+			}
+		private: // private non-static
+			constexpr int GetDatePart(const DatePart part) const {
+				using namespace Detail;
+
+				auto years = GetYearsFromDays(GetTotalDays());
+
+				int i400Years = years.item1;
+				int i100Years = years.item2;
+				int i4Years = years.item3;
+				int i1Years = years.item4;
+				int iLeftDays = years.item5;
+
+				// 1년이 365.2545일이므로 366일 째에 1일이 남는 경우 때문에
+				if (i1Years == 4)
+					i1Years = 3;
+
+				// 4년, 즉 마지막년은 366일이므로
+				int* pUntilDays = i1Years == 3 ? (int*)DaysUntilMonth366 : (int*)DaysUntilMonth365;
+				int* pForDays = i1Years == 3 ? (int*)DaysForMonth366 : (int*)DaysForMonth365;
+
+
+				if (part == DatePart::Year) {
+					return i400Years * 400 + i100Years * 100 + i4Years * 4 + i1Years + 1;	// 년도도 1년부터 시작이기 때문에 + 1
+				} else if (part == DatePart::DayOfYear) {
+					return iLeftDays + 1;
+				}
+
+				int iMonth = 0;
+
+				for (int i = 11; i >= 0; i--) {
+					if (iLeftDays >= pUntilDays[i]) {
+						iMonth = i;
+						break;
+					}
+				}
+
+				if (part == DatePart::Month) {
+					return iMonth + 1; // 1월부터 시작이므로
+				} else if (part == DatePart::Day) {
+					return iLeftDays - pUntilDays[iMonth] + 1;	// 1일부터 시작이므로
+				} else if (part == DatePart::MaxDayOfMonth) {
+					return pForDays[iMonth];
+				}
+
+				return -1;
+			}
+		public: // public static
+			static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
+			static Int16U TimeZoneBiasHour();
+
+			// @윤년 조건 참고 : https://ko.wikipedia.org/wiki/%EC%9C%A4%EB%85%84 
+			static constexpr bool IsLeapYear(int year) {
+				if (year <= 0) {
+					return false;
+				}
+
+				if (year % 4 == 0) {
+					if (year % 100 == 0) {
+						if (year % 400 == 0) {
+							return true;
+						}
+						return false;
+					}
+					return true;
+				}
+				return false;
+			}
+
+		
+		private:
+			Int64U m_Tick;
+
+			friend struct DateAndTime;
+			friend struct Date;
+			friend struct Time;
+		};
+
+	} // namespace Time
+} // namespace JCore
+
+
+
+
+
+/*
+ 템플릿은 코드가 복잡해지게 만드는 단점이 있기 때문에 쓰지말자..
+template <int Value>
+struct DayUnit
+{
+	static constexpr Int64U Days = Value;
+	static constexpr Int64U Hours = Detail::MaxHour_v * Value;
+	static constexpr Int64U Minutes = Hours * Detail::MaxMinute_v;
+	static constexpr Int64U Seconds = Minutes * Detail::MaxSecond_v;
+	static constexpr Int64U MiliSeconds = Seconds * Detail::MaxMiliSecond_v;
+	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
 };
 
+template <int Value>
+struct HourUnit
+{
+	static constexpr Int64U Hours = Value;
+	static constexpr Int64U Minutes = Hours * Detail::MaxMinute_v;
+	static constexpr Int64U Seconds = Minutes * Detail::MaxSecond_v;
+	static constexpr Int64U MiliSeconds = Seconds * Detail::MaxMiliSecond_v;
+	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
+};
 
-} // namespace JCore
+template <int Value>
+struct MinuteUnit
+{
+	static constexpr Int64U Minutes = Value;
+	static constexpr Int64U Seconds = Minutes * Detail::MaxSecond_v;
+	static constexpr Int64U MiliSeconds = Seconds * Detail::MaxMiliSecond_v;
+	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
+};
+
+template <int Value>
+struct SecondUnit
+{
+	static constexpr Int64U Seconds = Value;
+	static constexpr Int64U MiliSeconds = Seconds * Detail::MaxMiliSecond_v;
+	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
+};
+
+template <int Value>
+struct MiliSecondUnit
+{
+	static constexpr Int64U MiliSeconds = Value;
+	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
+};
+
+template <int Value>
+struct MicroSecondUnit
+{
+	static constexpr Int64U MicroSeconds = Value;
+};*/
