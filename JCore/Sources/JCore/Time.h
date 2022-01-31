@@ -1,10 +1,6 @@
 /*
 	작성자 : 윤정도
 	간단한 시간을 다룰 수 있는 기능을 추가합니다.
-	 - 마이크로초 단위 시간 관리 기능
-	 - C# 시간/날짜 관련 내장 라이브러리(System.DateTime) 참고
-	 - C++ std::chrono 내장 라이브러리 참고
-	 
 	스톱워치 기능
 */
 
@@ -12,7 +8,6 @@
 
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
-
 
 namespace JCore {
 	namespace Time {
@@ -75,13 +70,70 @@ namespace JCore {
 			Saturday,
 		};
 
+		enum class MonthOfYear
+		{
+			January,
+			February,
+			March,
+			April,
+			June,
+			July,
+			August,
+			September,
+			October,
+			November,
+			December
+		};
+
+		enum class AMPM
+		{
+			AM,
+			PM
+		};
+
 		enum class TimeStandard
 		{
 			Local,			// 현재 컴퓨터 시스템 기준 시간
 			Universal		// UTC 기준시간
 		};
 
-
+		// https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
+		enum class DateFormat
+		{
+			d,			// 일 표시 -> 1 ~ 31
+			dd,			// 일 표시 -> 01 ~ 31
+			ddd,		// 요일 축약 이름-> Mon, Tue, Wed 
+			dddd,		// 요일 전체 이름 -> Monday, Tuesday, Wednesday
+			h,			// 12시간 단위 시간 -> 2
+			hh,			// 12시간 단위 시간 -> 02
+			H,			// 24시간 단위 시간 -> 2, 23
+			HH,			// 24시간 단위 시간 -> 02, 23
+			m,			// 분 -> 5
+			mm,			// 분 -> 05
+			M,			// 달 -> 1
+			MM,			// 달 -> 01
+			MMM,		// 달 축약 이름 -> Dec, Sep
+			MMMM,		// 달 전체 이름 -> December
+			s,			// 초 -> 5초
+			ss,			// 초 -> 05초
+			t,			// 오전 오후 -> A, P
+			tt,			// 오전 오후 -> AM, PM
+			y,			// 2자리년도 -> 2009 -> 9
+			yy,			// 2자리년도 -> 2009 -> 09
+			yyy,		// 4자리년도 -> 2022 -> 2022
+			yyyy,		// 4자리년도 -> 2022 -> 2022
+			K,			// 타임존 시간 (시간:분) -> +09:00
+			z,			// 타임존 시간 (시간) -> +9
+			zz,			// 타임존 시간 (시간) -> +09
+			zzz,		// 타임존 시간 (시간:분) -> +09:00
+			f,			// 밀리초 100의 자리까지 표시		10.123456 -> 1
+			ff,			// 밀리초 10의 자리까지 표시		10.123456 -> 12
+			fff,		// 밀리초 1의 자리까지 표시			10.123456 -> 123
+			ffff,		// 마이크로초 100의 자리까지 표시	10.123456 -> 1234
+			fffff,		// 마이크로초 10의 자리까지 표시	10.123456 -> 12345
+			ffffff,		// 마이크로초 1의 자리까지 표시		10.123456 -> 123456
+			// fffffff  // 나노초 100의 자리까지 표시 -> 마이크로초 까지만 지원하므로 제외한다.
+		};
 
 		/* =================================================================================== 
 			시간 단위
@@ -103,9 +155,6 @@ namespace JCore {
 		
 		/* =================================================================================== 
 			시간 계산 및 관리
-
-			주의사항 : 시간관련 Add 연산 모두 음수를 지원안합니다.
-			          Subtract 함수를 사용해주세요.
 		   =================================================================================== */
 		struct Date
 		{
@@ -116,11 +165,18 @@ namespace JCore {
 			Date() = default;
 			Date(Int16U year, Int16U month, Int16U day) : Year(year), Month(month), Day(day) {}
 
-			virtual void AddYear(Int32U years);
-			virtual void AddMonth(Int32U months);
-			virtual void AddDay(Int32U days);
+			virtual void AddYear(Int16 years);
+			virtual void AddMonth(Int16 months);
+			virtual void AddDay(Int16 days);
 
-			Int64U ToTick();
+			virtual void SubtractYear(Int16 years);
+			virtual void SubtractMonth(Int16 years);
+			virtual void SubtractDay(Int16 years);
+
+			Int64U ToTick() const;
+
+		protected:
+			static Date ConvertTickToDate(Int64U tick);
 		};
 
 		struct Time
@@ -136,13 +192,19 @@ namespace JCore {
 				: Hour(hour), Minute(minute), Second(second), MiliSecond(miliSecond), MicroSecond(microSecond)
 			{}
 
-			virtual void AddHour(Int64U hours);
-			virtual void AddMinute(Int64U minutes);
-			virtual void AddSecond(Int64U seconds);
-			virtual void AddMiliSecond(Int64U miliSeconds);
-			virtual void AddMicroSecond(Int64U microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
+			virtual void AddHour(Int64 hours);
+			virtual void AddMinute(Int64 minutes);
+			virtual void AddSecond(Int64 seconds);
+			virtual void AddMiliSecond(Int64 miliSeconds);
+			virtual void AddMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
 
-			Int64U ToTick();
+			virtual void SubtractHour(Int64 hours);
+			virtual void SubtractMinute(Int64 minutes);
+			virtual void SubtractSecond(Int64 seconds);
+			virtual void SubtractiliSecond(Int64 miliSeconds);
+			virtual void SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
+
+			Int64U ToTick() const;
 		};
 
 		struct DateTime;
@@ -152,20 +214,30 @@ namespace JCore {
 				: Date(year, month, day), Time(hour, minute, second, miliSecond, microSecond)
 			{}
 
-			void AddYear(Int32U years) override;				// Date::AddYear와 동일
-			void AddMonth(Int32U months) override;				// Date::AddMonth와 동일
-			void AddDay(Int32U days) override;					// 기능 다름
-			void AddHour(Int64U hours) override;				// Time::AddHour와 동일
-			void AddMinute(Int64U minutes) override;			// Time::AddMinute와 동일
-			void AddSecond(Int64U seconds) override;			// Time::AddSecond와 동일
-			void AddMiliSecond(Int64U miliSeconds) override;	// Time::AddMiliSecond와 동일
-			void AddMicroSecond(Int64U microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond) override;	// 기능 다름
+			void AddYear(Int16 years) override;				// Date::AddYear와 동일
+			void AddMonth(Int16 months) override;			// Date::AddMonth와 동일
+			void AddDay(Int16 days) override;				
+			void AddHour(Int64 hours) override;				
+			void AddMinute(Int64 minutes) override;			
+			void AddSecond(Int64 seconds) override;			
+			void AddMiliSecond(Int64 miliSeconds) override;	
+			void AddMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond) override;
 
-			DateTime ToDateTime();
-			Int64U ToTick();
+			void SubtractYear(Int16 years) override;
+			void SubtractMonth(Int16 years) override;
+			void SubtractDay(Int16 years) override;
+			void SubtractHour(Int64 hours) override;
+			void SubtractMinute(Int64 minutes) override;
+			void SubtractSecond(Int64 seconds) override;
+			void SubtractiliSecond(Int64 miliSeconds) override;
+			void SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond) override;
+
+
+			DateTime ToDateTime() const;
+			Int64U ToTick() const;
 		};
 
-		class String;
+		class JCore::String;
 		class DateTime
 		{
 		public: // constructors
@@ -193,13 +265,19 @@ namespace JCore {
 			inline constexpr int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
 
 			// 무슨 요일인지
-			inline constexpr DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7 + 1); }
+			inline constexpr DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }
+
+			// 몇달인지
+			inline constexpr MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }
 
 			// 일년기준으로 몇일인지
 			inline constexpr int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }
 
 			// 이번달이 최대 몇일인지
 			inline constexpr int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }
+
+			// 오전인지 오후인지
+			inline constexpr AMPM GetAMPM() const { return (GetHour() / 12) > 0 ? AMPM::PM : AMPM::AM; }
 
 			// 타입 변환
 			inline DateAndTime ToDateAndTime() const {
@@ -215,24 +293,25 @@ namespace JCore {
 			}
 
 			// 시간 연산
-			void AddYear(Int32U year);
-			void AddMonth(Int32U month);
-			void AddDay(Int32U day) { m_Tick += day * Detail::TicksPerDay; }
-			void AddHour(Int32U hour) { m_Tick += hour * Detail::TicksPerHour; }
-			void AddMinute(Int32U minute) { m_Tick += minute * Detail::TicksPerMinute; }
-			void AddSecond(Int32U second) { m_Tick += second * Detail::TicksPerSecond; }
-			void AddMiliSecond(Int32U miliSecond) { m_Tick += miliSecond * Detail::TicksPerMiliSecond; }
+			void AddYear(Int32 year);
+			void AddMonth(Int32 month);
+			void AddDay(Int32 day) { m_Tick += day * Detail::TicksPerDay; }
+			void AddHour(Int32 hour) { m_Tick += hour * Detail::TicksPerHour; }
+			void AddMinute(Int32 minute) { m_Tick += minute * Detail::TicksPerMinute; }
+			void AddSecond(Int32 second) { m_Tick += second * Detail::TicksPerSecond; }
+			void AddMiliSecond(Int32 miliSecond) { m_Tick += miliSecond * Detail::TicksPerMiliSecond; }
 
-			void SubtractDay(Int32U day) { m_Tick -= day * Detail::TicksPerDay; }
-			void SubtractHour(Int32U hour) { m_Tick -= hour * Detail::TicksPerHour; }
-			void SubtractMinute(Int32U minute) { m_Tick -= minute * Detail::TicksPerMinute; }
-			void SubtractAddSecond(Int32U second) { m_Tick -= second * Detail::TicksPerSecond; }
-			void SubtractMiliSecond(Int32U miliSecond) { m_Tick -= miliSecond * Detail::TicksPerMiliSecond; }
+			void SubtractYear(Int32 year);
+			void SubtractMonth(Int32 month);
+			void SubtractDay(Int32 day) { m_Tick -= day * Detail::TicksPerDay; }
+			void SubtractHour(Int32 hour) { m_Tick -= hour * Detail::TicksPerHour; }
+			void SubtractMinute(Int32 minute) { m_Tick -= minute * Detail::TicksPerMinute; }
+			void SubtractAddSecond(Int32 second) { m_Tick -= second * Detail::TicksPerSecond; }
+			void SubtractMiliSecond(Int32 miliSecond) { m_Tick -= miliSecond * Detail::TicksPerMiliSecond; }
 
-			JCore::String Format(const char* fmt) const;
+			String Format(const char* fmt) const;
 
 		private: // private static
-			
 			// 단위 년도별로 일수를 가져옴
 			static constexpr auto GetYearsFromDays(int days) {
 				using namespace Detail;
@@ -251,11 +330,13 @@ namespace JCore {
 
 				return MakeTuple(i400Years, i100Years, i4Years, i1Years, days);
 			}
-		private: // private non-static
-			constexpr int GetDatePart(const DatePart part) const {
+
+			static constexpr int GetDatePart(const Int64U tick, const DatePart part) {
 				using namespace Detail;
 
-				auto years = GetYearsFromDays(GetTotalDays());
+				DateTime dateTime(tick);
+
+				auto years = GetYearsFromDays(dateTime.GetTotalDays());
 
 				int i400Years = years.item1;
 				int i100Years = years.item2;
@@ -297,9 +378,16 @@ namespace JCore {
 
 				return -1;
 			}
+		private: // private non-static
+			inline constexpr int GetDatePart(const DatePart part) const {
+				return DateTime::GetDatePart(m_Tick, part);
+			}
+
+			void ReflectFormat(const DateAndTime& time, String& ret, char token, int count) const;
+
 		public: // public static
 			static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
-			static Int16U TimeZoneBiasHour();
+			static Int16 TimeZoneBiasMinute();
 
 			// @윤년 조건 참고 : https://ko.wikipedia.org/wiki/%EC%9C%A4%EB%85%84 
 			static constexpr bool IsLeapYear(int year) {
@@ -319,9 +407,39 @@ namespace JCore {
 				return false;
 			}
 
-		
+			inline static const char* GetAbbreviationWeekendName(DayOfWeek week) {
+				return ms_szWeekAbbrevName[int(week)];
+			}
+
+			inline static const char* GetFullWeekendName(DayOfWeek week) {
+				return ms_szWeekFullName[int(week)];
+			}
+
+			inline static const char* GetAbbreviationMonthName(MonthOfYear month) {
+				return ms_szMonthAbbrevName[int(month)];
+			}
+
+			inline static const char* GetFullMonthName(MonthOfYear month) {
+				return ms_szMonthFullName[int(month)];
+			}
+
+			inline static const char* GetFullAMPMName(AMPM ampm) {
+				return ms_szAMPMFullName[int(ampm)];
+			}
+
+			inline static const char* GetAbbreviationAMPMName(AMPM ampm) {
+				return ms_szAMPMAbbrevName[int(ampm)];
+			}
 		private:
 			Int64U m_Tick;
+
+			static const char* ms_szWeekAbbrevName[];
+			static const char* ms_szWeekFullName[];
+			static const char* ms_szMonthAbbrevName[];
+			static const char* ms_szMonthFullName[];
+			static const char* ms_szAMPMAbbrevName[];
+			static const char* ms_szAMPMFullName[];
+			
 
 			friend struct DateAndTime;
 			friend struct Date;

@@ -119,25 +119,42 @@ TEST(StringTest, Split) {
 }
 
 
-// String::Replace 함수 테스트
-TEST(StringTest, Replace) {
+// String::ReplaceAll 함수 테스트
+TEST(StringTest, ReplaceAll) {
+
+	// ReplaceAllDifferentLen 테스트
 	String szStr1 = "abcd_cd_efg";
 	String szStr2 = "___";
 	String szStr3 = "_bbbbb_";
 	String szStr4 = "_";
 	String szStr5 = "";
 
-	szStr1.Replace("_", "@@");
-	szStr2.Replace("_", "@@");
-	szStr3.Replace("_", "@@");
-	szStr4.Replace("_", "@@");
-	szStr5.Replace("", "abcdef");
+	szStr1.ReplaceAll("_", "@@");
+	szStr2.ReplaceAll("_", "@@");
+	szStr3.ReplaceAll("_", "@@");
+	szStr4.ReplaceAll("_", "@@");
+	szStr5.ReplaceAll("", "abcdef");
 
 	EXPECT_TRUE(szStr1 == "abcd@@cd@@efg");
 	EXPECT_TRUE(szStr2 == "@@@@@@");
 	EXPECT_TRUE(szStr3 == "@@bbbbb@@");
 	EXPECT_TRUE(szStr4 == "@@");
 	EXPECT_TRUE(szStr5 == "abcdef");	
+
+
+	// ReplaceAllEqualLen 테스트
+	String szStr6 = "한글__사랑__한글__동물";
+	String szStr7 = "a_a_b_c";
+	String szStr8 = "aa_aaa";
+
+	szStr6.ReplaceAll("한글", "국가");
+	szStr7.ReplaceAll("a", "z");
+	szStr8.ReplaceAll("aa", "kk");
+
+
+	EXPECT_TRUE(szStr6 == "국가__사랑__국가__동물");
+	EXPECT_TRUE(szStr7 == "z_z_b_c");
+	EXPECT_TRUE(szStr8 == "kk_kka");
 }
 
 

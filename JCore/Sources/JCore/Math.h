@@ -50,6 +50,10 @@ public:
 		return Min(arg0, Min(args...));
 	}
 
+	template <typename T>
+	static constexpr T Abs(const T arg) {
+		return arg < 0 ? arg * -1 : arg;
+	}
 private:
 };
 

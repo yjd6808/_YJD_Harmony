@@ -11,13 +11,11 @@
 
 namespace JCore {
 
-std::vector<String> StringUtil::Split(String& src, const char* delimiter)
-{
+std::vector<String> StringUtil::Split(String& src, const char* delimiter) {
 	return src.Split(delimiter);
 }
 
-String StringUtil::Format(const char* format, ...)
-{
+String StringUtil::Format(const char* format, ...) {
 	va_list args;
 	va_start(args, format);
 
@@ -30,12 +28,12 @@ String StringUtil::Format(const char* format, ...)
 	String szResult(iExpectedLen + 1 + String::DEFAULT_BUFFER_SIZE);
 	vsnprintf(szResult.Source(), szResult.Capacity(), format, args);
 	szResult.SetAt(iExpectedLen, NULL);
+	szResult.m_iLen = iExpectedLen;
 	va_end(args);
 	return szResult;
 }
 
-const int StringUtil::Length(const char* str)
-{
+const int StringUtil::Length(const char* str) {
 	if (str == nullptr) {
 		return -1;
 	}
@@ -49,8 +47,7 @@ const int StringUtil::Length(const char* str)
 }
 
 
-const int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy)
-{
+const int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy) {
 	if (buffer == nullptr || copy == nullptr) {
 		return -1;
 	}
@@ -69,8 +66,7 @@ const int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy)
 	return iSize;
 }
 
-const bool StringUtil::IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen)
-{
+const bool StringUtil::IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen) {
 	for (int i = 0, j = 0; i < srcLen && j < dstLen; i++, j++) {
 		if (*(src + i) != *(dst + j)) {
 			return false;
@@ -79,8 +75,7 @@ const bool StringUtil::IsEqual(const char* src, const int srcLen, const char* ds
 	return true;
 }
 
-void StringUtil::Swap(String& src, String& dst)
-{
+void StringUtil::Swap(String& src, String& dst) {
 	String temp = std::move(src);
 	src = std::move(dst);
 	dst = std::move(temp);

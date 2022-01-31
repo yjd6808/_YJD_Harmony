@@ -33,7 +33,32 @@ int main() {
 	IsFloatingPointType_v<float>;
 	*/
 
+
 	Time::DateTime now = Time::DateTime::Now();
+	auto cc = now.GetDayOfWeek();
+	try {
+		cout << now.Format("MM/dd/yyyy") << "\n";
+		cout << now.Format("dddd, dd MMMM yyyy") << "\n";
+		cout << now.Format("dddd, dd MMMM yyyy HH:mm:ss") << "\n";
+		cout << now.Format("MM/dd/yyyy HH:mm")	 << "\n";
+		cout << now.Format("MM/dd/yyyy hh:mm tt") << "\n";
+		cout << now.Format("MM/dd/yyyy H:mm") << "\n";
+		cout << now.Format("MM/dd/yyyy h:mm tt") << "\n";
+		cout << now.Format("MM/dd/yyyy HH:mm:ss") << "\n";
+		cout << now.Format("MMMM dd") << "\n";
+		cout << now.Format("yyyy-MM-ddTHH:mm:ss.ffffffK") << "\n";
+		cout << now.Format("ddd, dd MMM yyy HH:mm:ss GMT") << "\n";
+		cout << now.Format("yyyy-MM-ddTHH:mm:ss") << "\n";
+		cout << now.Format("HH:mm") << "\n";
+		cout << now.Format("hh:mm tt") << "\n";
+		cout << now.Format("H:mm") << "\n";
+		cout << now.Format("h:mm tt")	 << "\n";
+		cout << now.Format("HH:mm:ss") << "\n";
+		cout << now.Format("yyyy MMMM") << "\n";
+	} catch (std::exception& ex) {
+		cout << ex.what() << "\n";
+	}
+	
 	Time::DateAndTime now2 = now.ToDateAndTime();
 	//now2.AddMicroSecond(Time::Detail::TicksPerHour * 10 + Time::Detail::TicksPerMinute * 125);
 	now2.AddDay(5);
