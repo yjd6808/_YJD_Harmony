@@ -33,6 +33,8 @@
       <Filter>ContainerImpl</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\ComparatorTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

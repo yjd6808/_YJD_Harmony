@@ -9,6 +9,7 @@
 #include <JCore/Math.h>
 #include <JCore/String.h>
 #include <JCore/Hasher.h>
+#include <JCore/Ascii.h>
 
 #include <unordered_map>
 #include <chrono>
@@ -25,19 +26,42 @@ namespace JCore {
 												Date
 		 =====================================================================================*/
 
-		void Date::AddYear(Int16 years) {
+		Date::Date(Int32 year, Int32 month, Int32 day) {
+			if (year < 1 || year > 9999) 
+				throw std::invalid_argument("년은 1 ~ 9999년까지 가능합니다.");
+			if (month < 1 || month > 12)
+				throw std::invalid_argument("월은 1 ~ 12까지 가능합니다.");
+			if (day < 1 || day > 31)
+				throw std::invalid_argument("일은 1 ~ 31까지 가능합니다.");
+
+			Year = year;
+			Month = month;
+			Day = day;
+
+			AddMonth(0);
+		}
+
+		void Date::AddYear(Int32 years) {
 			AddMonth(years * 12);
 		}
 
-		void Date::AddMonth(Int16 months) {
+		void Date::AddMonth(Int32 months) {
 			if (months < 0) {
 				SubtractMonth(months);
 				return;
 			}
 
 			Month += months;
-			Year += (Month - 1) / 12;
-			Month %= 12;
+
+			if (Month > 12) {
+				int iAddedYear = (Month - 1) / 12;
+				Year += iAddedYear;
+				Month -= iAddedYear * 12;
+			}
+			
+			if (Year >= 10000) {
+				throw std::overflow_error("Date 달 덧셈 수행중 오류가 발생하였습니다. 1만년을 넘길 수 없습니다.");
+			}
 
 			// 만약 1월 31일날 13개월을 더했다고 했을 때 
 			// 달 단위만 변경해버리면 2월 31일이 되어버린다. (2월은 마지막일이 윤년일 경우 29일 평년일 경우 28일 임)
@@ -49,30 +73,51 @@ namespace JCore {
 			}
 		}
 
-		void Date::AddDay(Int16 day) {
-			Date date = DateTime(ToTick() + day * TicksPerDay).ToDate();
+		void Date::AddDay(Int32 day) {
+			Int64 tick = (Int64)ToTick() + day * TicksPerDay;
+
+			if (tick < 0) {
+				throw std::underflow_error("Date 일 덧셈 수행중 오류가 발생하였습니다. 일 연산 수행결과로 음수가 나오면 안됩니다.");
+			}
+
+			Date date = DateTime(tick).ToDate();
 
 			Year = date.Year;
 			Month = date.Month;
 			Day = date.Day;
 		}
 
+		void Date::AddDate(const Date& other) {
+			AddDay(other.Day);
+			AddMonth(other.Year * 12 + other.Month);
+		}
 
-		void Date::SubtractYear(Int16 years) {
+
+		void Date::SubtractYear(Int32 years) {
 			SubtractYear(years * 12);
 		}
 
-		void Date::SubtractMonth(Int16 months) {
+		void Date::SubtractMonth(Int32 months) {
 			if (months < 0) {
 				AddMonth(Math::Abs(months));
 				return;
 			}
 
-			Int16U iSubtractedYear = months / 12;
+			int iSubtractedYear = months / 12;
 			Year -= iSubtractedYear;
-			Month += iSubtractedYear * 12;
-			Year += (Month - 1) / 12;
-			Month %= 12;
+			months -= iSubtractedYear * 12;
+
+			if (Month - months >= 1) {
+				Month -= months;
+			} else {
+				Month += 12;
+				Year -= 1;
+				Month -= months;
+			}
+
+			if (Year <= 0 || Month <= 0) {
+				throw std::underflow_error("Date 달 빨셈 수행중 오류가 발생하였습니다. 년도와 달이 0이하가 될 수 없습니다.");
+			}
 
 			if (DateTime::IsLeapYear(Year)) {
 				Day = Day > DaysForMonth366[Month - 1] ? DaysForMonth366[Month - 1] : Day;
@@ -80,17 +125,65 @@ namespace JCore {
 				Day = Day > DaysForMonth365[Month - 1] ? DaysForMonth365[Month - 1] : Day;
 			}
 		}
-		void Date::SubtractDay(Int16 days) {
+		void Date::SubtractDay(Int32 days) {
 			if (days < 0) {
 				AddDay(Math::Abs(days));
 				return;
 			}
 
 			AddDay(days * -1);
+			
+		}
+
+		void Date::SubtractDate(const Date& other) {
+			SubtractDay(other.Day);
+			SubtractMonth(other.Year * 12 + other.Month);
 		}
 
 
-		Int64U Date::ToTick() const {
+		Date Date::operator-(const Date& other) {
+			Date temp(*this);
+			temp.SubtractDate(other);
+			return temp;
+		}
+
+		Date Date::operator+(const Date& other) {
+			Date temp(*this);
+			temp.AddDate(other);
+			return temp;
+		}
+
+		Date& Date::operator-=(const Date& other) {
+			SubtractDate(other);
+			return *this;
+		}
+
+		Date& Date::operator+=(const Date& other) {
+			AddDate(other);
+			return *this;
+		}
+
+		bool Date::operator>(const Date& other) {
+			return Compare(other) > 0;
+		}
+
+		bool Date::operator<(const Date& other) {
+			return Compare(other) < 0;
+		}
+
+		bool Date::operator>=(const Date& other) {
+			return Compare(other) >= 0;
+		}
+
+		bool Date::operator<=(const Date& other) {
+			return Compare(other) <= 0;
+		}
+
+		bool Date::operator==(const Date& other) {
+			return Compare(other) == 0;
+		}
+
+		Int64 Date::ToTick() const {
 			int iCurrentYear = Year > 0 ? Year - 1 : 0;
 			int iTotalDays = 0;
 
@@ -125,6 +218,26 @@ namespace JCore {
 												Time
 		 =====================================================================================*/
 
+		Time::Time(Int32 hour, Int32 minute, Int32 second, Int32 miliSecond, Int32 microSecond) {
+
+			if (hour < 0 || hour > 23)
+				throw std::invalid_argument("시간은 0 ~ 23까지만 가능합니다.");
+			if (minute < 0 || minute > 59)
+				throw std::invalid_argument("분은 0 ~ 59까지만 가능합니다.");
+			if (second < 0 || second > 59)
+				throw std::invalid_argument("초는 0 ~ 59까지만 가능합니다.");
+			if (miliSecond < 0 || miliSecond > 999)
+				throw std::invalid_argument("밀리초는 0 ~ 999까지만 가능합니다.");
+			if (microSecond < 0 || microSecond > 999)
+				throw std::invalid_argument("마이크로초는 0 ~ 999까지만 가능합니다.");
+
+			Hour = hour; 
+			Minute = minute;
+			Second = second;
+			MiliSecond = miliSecond;
+			MicroSecond = microSecond;
+		}
+
 		void Time::AddHour(Int64 hours) {
 			AddMicroSecond(hours * TicksPerHour, TimeUnit::Hour);
 		}
@@ -142,34 +255,48 @@ namespace JCore {
 		}
 
 		void Time::AddMicroSecond(Int64 microSeconds, TimeUnit timeUnit) {
-			Int64U uiTick = ToTick() + microSeconds;
+			Int64 iTick = Int64(ToTick()) + microSeconds;
 
-			Int64U uiHour = uiTick / TicksPerHour;
+			if (iTick < 0) {
+				throw std::underflow_error("Time 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			Int64 uiHour = iTick / TicksPerHour;
 			Hour = uiHour % MaxHour_v;
 
 			if (timeUnit == TimeUnit::Hour)
 				return;
 
-			Int64U uiMinute = uiTick / TicksPerMinute;
+			Int64 uiMinute = iTick / TicksPerMinute;
 			Minute = uiMinute % MaxMinute_v;
 
 			if (timeUnit == TimeUnit::Minute)
 				return;
 
-			Int64U uiSecond = uiTick / TicksPerSecond;
+			Int64 uiSecond = iTick / TicksPerSecond;
 			Second = uiSecond % MaxSecond_v;
 
 			if (timeUnit == TimeUnit::Second)
 				return;
 
-			Int64U uiMiliSecond = uiTick / TicksPerMiliSecond;
+			Int64 uiMiliSecond = iTick / TicksPerMiliSecond;
 			MiliSecond = uiMiliSecond % MaxMiliSecond_v;
 
 			if (timeUnit == TimeUnit::MiliSecond)
 				return;
 
 
-			MicroSecond = uiTick % MaxMicroSecond_v;
+			MicroSecond = iTick % MaxMicroSecond_v;
+		}
+
+		void Time::AddTime(const Time& other) {
+			Int64 iTick = ToTick() + other.ToTick();
+
+			if (iTick < 0) {
+				throw std::underflow_error("Time 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			*this = DateTime(iTick).ToTime();
 		}
 
 		void Time::SubtractHour(Int64 hours) {
@@ -184,7 +311,7 @@ namespace JCore {
 			SubtractMicroSecond(seconds * TicksPerSecond, TimeUnit::Second);
 		}
 
-		void Time::SubtractiliSecond(Int64 miliSeconds) {
+		void Time::SubtractMiliSecond(Int64 miliSeconds) {
 			SubtractMicroSecond(miliSeconds * TicksPerMiliSecond, TimeUnit::MiliSecond);
 		}
 
@@ -197,9 +324,61 @@ namespace JCore {
 			AddMicroSecond(microSeconds * -1);
 		}
 
+		void Time::SubtractTime(const Time& other) {
+			Int64 iTick = ToTick() - other.ToTick();
 
-		Int64U Time::ToTick() const {
-			Int64U uiTotalTick = 0;
+			if (iTick < 0) {
+				throw std::underflow_error("Time 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			*this = DateTime(iTick).ToTime();
+		}
+
+
+		Time Time::operator-(const Time& other) {
+			Time temp(*this);
+			temp.SubtractTime(other);
+			return temp;
+		}
+
+		Time Time::operator+(const Time& other) {
+			Time temp(*this);
+			temp.AddTime(other);
+			return temp;
+		}
+
+		Time& Time::operator-=(const Time& other) {
+			SubtractTime(other);
+			return *this;
+		}
+
+		Time& Time::operator+=(const Time& other) {
+			AddTime(other);
+			return *this;
+		}
+
+		bool Time::operator>(const Time& other) {
+			return Compare(other) > 0;
+		}
+
+		bool Time::operator<(const Time& other) {
+			return Compare(other) < 0;
+		}
+
+		bool Time::operator>=(const Time& other) {
+			return Compare(other) >= 0;
+		}
+
+		bool Time::operator<=(const Time& other) {
+			return Compare(other) <= 0;
+		}
+
+		bool Time::operator==(const Time& other) {
+			return Compare(other) == 0;
+		}
+
+		Int64 Time::ToTick() const {
+			Int64 uiTotalTick = 0;
 			uiTotalTick += Hour * TicksPerHour;
 			uiTotalTick += Minute * TicksPerMinute;
 			uiTotalTick += Second * TicksPerSecond;
@@ -209,28 +388,27 @@ namespace JCore {
 		}
 
 
-
-
 		/*=====================================================================================
 											DateAndTime
 		 =====================================================================================*/
+
 		DateTime DateAndTime::ToDateTime() const {
 			return DateTime(ToTick());
 		}
 
-		Int64U DateAndTime::ToTick() const {
+		Int64 DateAndTime::ToTick() const {
 			return Time::ToTick() + Date::ToTick();
 		}
 		
-		void DateAndTime::AddYear(Int16 years) {
+		void DateAndTime::AddYear(Int32 years) {
 			Date::AddMonth(years * 12);
 		}
 
-		void DateAndTime::AddMonth(Int16 months) {
+		void DateAndTime::AddMonth(Int32 months) {
 			Date::AddMonth(months);
 		}
 
-		void DateAndTime::AddDay(Int16 days) {
+		void DateAndTime::AddDay(Int32 days) {
 			AddMicroSecond(days * TicksPerDay);
 		}
 
@@ -251,17 +429,66 @@ namespace JCore {
 		}
 		
 		void DateAndTime::AddMicroSecond(Int64 microSeconds, TimeUnit timeUnit) {
-			DateTime current(ToTick() + microSeconds);
+			Int64 iTick = ToTick() + microSeconds;
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			if (iTick >= Ticks10000Years) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 1만년 이상이 될 수 없습니다.");
+			}
+			DateTime current(iTick);
 			*this = current.ToDateAndTime();
 		}
 
-		void DateAndTime::SubtractYear(Int16 years) {
+		void DateAndTime::AddDate(const Date& other) {
+			Int64 iTick = ToTick() + other.ToTick();
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			if (iTick >= Ticks10000Years) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 1만년 이상이 될 수 없습니다.");
+			}
+			DateTime current(iTick);
+			*this = current.ToDateAndTime();
+		}
+
+		void DateAndTime::AddTime(const Time& other) {
+			Int64 iTick = ToTick() + other.ToTick();
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			DateTime current(iTick);
+			*this = current.ToDateAndTime();
+		}
+
+		void DateAndTime::AddDateAndTime(const DateAndTime& other) {
+			Int64 iTick = ToTick() + other.ToTick();
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			if (iTick >= Ticks10000Years) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 1만년 이상이 될 수 없습니다.");
+			}
+
+			DateTime current(iTick);
+			*this = current.ToDateAndTime();
+		}
+
+		void DateAndTime::SubtractYear(Int32 years) {
 			Date::SubtractMonth(years * 12);
 		}
-		void DateAndTime::SubtractMonth(Int16 months) {
+		void DateAndTime::SubtractMonth(Int32 months) {
 			Date::SubtractMonth(months);
 		}
-		void DateAndTime::SubtractDay(Int16 days) {
+		void DateAndTime::SubtractDay(Int32 days) {
 			SubtractMicroSecond(days * TicksPerDay);
 		}
 
@@ -277,39 +504,170 @@ namespace JCore {
 			SubtractMicroSecond(seconds * TicksPerSecond);
 		}
 
-		void DateAndTime::SubtractiliSecond(Int64 miliSeconds) {
+		void DateAndTime::SubtractMiliSecond(Int64 miliSeconds) {
 			SubtractMicroSecond(miliSeconds * TicksPerMiliSecond);
 		}
 
 		void DateAndTime::SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit) {
-			DateTime current(ToTick() - microSeconds);
+			Int64 iTick = ToTick() - microSeconds;
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+			DateTime current(iTick);
 			*this = current.ToDateAndTime();
+		}
+
+		void DateAndTime::SubtractDate(const Date& other) {
+			Int64 iTick = ToTick() - other.ToTick();
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			DateTime current(iTick);
+			*this = current.ToDateAndTime();
+		}
+
+		void DateAndTime::SubtractTime(const Time& other) {
+			Int64 iTick = ToTick() - other.ToTick();
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			DateTime current(iTick);
+			*this = current.ToDateAndTime();
+		}
+
+		void DateAndTime::SubtractDateAndTime(const DateAndTime& other) {
+			SubtractMicroSecond(other.ToTick());
+		}
+
+		DateAndTime DateAndTime::operator-(const DateAndTime& other) {
+			Int64 iTick = ToTick() - other.ToTick();
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			return DateTime(iTick).ToDateAndTime();
+		}
+
+		DateAndTime DateAndTime::operator+(const DateAndTime& other) {
+			Int64 iTick = ToTick() + other.ToTick();
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			return DateTime(iTick).ToDateAndTime();
+		}
+
+		DateAndTime& DateAndTime::operator-=(const DateAndTime& other) {
+			SubtractMicroSecond(other.ToTick());
+			return *this;
+		}
+
+		DateAndTime& DateAndTime::operator+=(const DateAndTime& other) {
+			SubtractMicroSecond(other.ToTick());
+			AddDateAndTime(other);
+			return *this;
+		}
+
+		DateAndTime DateAndTime::operator-(const DateTime& other) {
+			Int64 iTick = ToTick() - other.m_Tick;
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			return DateTime(iTick).ToDateAndTime();
+		}
+
+		DateAndTime DateAndTime::operator+(const DateTime& other) {
+			Int64 iTick = ToTick() + other.m_Tick;
+
+			if (iTick < 0) {
+				throw std::underflow_error("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
+			}
+
+			return DateTime(iTick).ToDateAndTime();
+		}
+
+		DateAndTime& DateAndTime::operator-=(const DateTime& other) {
+			SubtractMicroSecond(other.m_Tick);
+			return *this;
+		}
+
+		DateAndTime& DateAndTime::operator+=(const DateTime& other) {
+			AddMicroSecond(other.m_Tick);
+			return *this;
+		}
+
+		bool DateAndTime::operator>(const DateAndTime& other) {
+			return Compare(other) > 0;
+		}
+
+		bool DateAndTime::operator<(const DateAndTime& other) {
+			return Compare(other) < 0;
+		}
+
+		bool DateAndTime::operator>=(const DateAndTime& other) {
+			return Compare(other) >= 0;
+		}
+
+		bool DateAndTime::operator<=(const DateAndTime& other) {
+			return Compare(other) <= 0;
+		}
+
+		bool DateAndTime::operator==(const DateAndTime& other) {
+			return Compare(other) == 0;
+		}
+
+		bool DateAndTime::operator>(const DateTime& other) {
+			return ToTick() > other.m_Tick;
+		}
+
+		bool DateAndTime::operator<(const DateTime& other) {
+			return ToTick() < other.m_Tick;
+		}
+
+		bool DateAndTime::operator>=(const DateTime& other) {
+			return ToTick() >= other.m_Tick;
+		}
+
+		bool DateAndTime::operator<=(const DateTime& other) {
+			return ToTick() <= other.m_Tick;
+		}
+
+		bool DateAndTime::operator==(const DateTime& other) {
+			return ToTick() == other.m_Tick;
 		}
 
 		/*=====================================================================================
 											DateTime
 		 =====================================================================================*/
 
-		const char* DateTime::ms_szWeekAbbrevName[] = {"Mon", "Tue" , "Wed" , "Thu" , "Fri" , "Sat", "Sun" };
+		const char* DateTime::ms_szWeekAbbrevName[] = { "Mon", "Tue" , "Wed" , "Thu" , "Fri" , "Sat", "Sun" };
 		const char* DateTime::ms_szWeekFullName[] = { "Monday", "Tueday" , "Wednesday" , "Thursday" , "Friday" , "Saturday", "Sunday" };
 		const char* DateTime::ms_szMonthAbbrevName[] = { "Jan", "Feb" , "Mar" , "Apr" , "May" , "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 		const char* DateTime::ms_szMonthFullName[] = { "January", "February" , "March" , "April" , "May" , "June", "July", "August", "September", "October", "November", "December" };
 		const char* DateTime::ms_szAMPMAbbrevName[] = { "A", "P" };
 		const char* DateTime::ms_szAMPMFullName[] = { "AM", "PM" };
-		
 
 		/*
 			키 : char (포맷 시작 앞문자)
 			값 : Tuple<char, Format, int>
 
-			     char : 포맷 시작 앞문자
+				 char : 포맷 시작 앞문자
 				 Format : 포맷 이넘 시작 정수
 				 int : 포매팅 가능한 최대 문자 갯수
 
 			예를들어서 포맷 분석중 y를 연속 세번 만난 경우 Format::y + 2를 해당 포맷 조건을 찾아가도록 한다.
 			그리고 y를 연속 5번 만나버린 경우. 즉 해당 포맷 문자에서 가증한 최대 문자 갯수를 초과한 경우는 오류를 뛰우기 위함
 		*/
-		
+
 		std::unordered_map<char, Tuple<char, DateFormat, int>, Hasher<char>> FormatTokenMap_v =
 		{
 			{ 'd', {'d', DateFormat::d, 4 } },
@@ -324,7 +682,362 @@ namespace JCore {
 			{ 'z', {'z', DateFormat::z, 3 } },
 			{ 'f', {'f', DateFormat::f, 6 } }
 		};
+
+
+		/*=====================================================================================
+		 public
+		 =====================================================================================*/
+		inline DateAndTime DateTime::ToDateAndTime() const {
+				return DateAndTime(Int32U(GetYear()), Int32U(GetMonth()), Int32U(GetDay()),	// Date 정보
+								   Int32U(GetHour()), Int32U(GetMinute()), Int32U(GetSecond()), Int32U(GetMiliSecond()), Int32U(GetMicroSecond())); // Time 정보
+		}
+
+		inline Date DateTime::ToDate() const {
+			return Date(Int32U(GetYear()), Int32U(GetMonth()), Int32U(GetDay()));
+		}
+
+		inline Time DateTime::ToTime() const {
+			return Time(Int32U(GetHour()), Int32U(GetMinute()), Int32U(GetSecond()), Int32U(GetMiliSecond()), Int32U(GetMicroSecond()));
+		}
+
+
+
+		// 포맷에 따라 시간 문자열을 얻도록 한다.
+		// @형식 레퍼런스 : https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
+		// C# 기준 포맷 형식을 따릅니다.
 		
+		// 중간에 문자열 확장이 발생하지 않는다면 O(n)
+		JCore::String DateTime::Format(const char* fmt) const {
+			JCore::String szFmt(fmt);
+			JCore::String szRet(szFmt.Capacity() * 2);
+
+			int iContinuousCount = 0;
+			char cContinuousToken = '\0';
+
+			const DateAndTime currentDateAndTime = ToDateAndTime();
+
+			for (int i = 0; i < szFmt.Length(); i++) {
+				if (FormatTokenMap_v.find(szFmt[i]) != FormatTokenMap_v.end()) {
+				
+					if (cContinuousToken != szFmt[i]) {
+						// 이전 토큰하고 다른 경우 = 처음 발견한 경우
+						ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
+						cContinuousToken = szFmt[i];
+						iContinuousCount = 1;
+					} else {
+						// 이전 토큰하고 일치하고 있는 경우
+						iContinuousCount++;
+					}
+				} else {
+					if (Ascii::IsAlphabat(szFmt[i])) {
+						throw std::invalid_argument("토큰 문자외의 알파벳 문자가 포맷문자열에 포함되어 있습니다.");
+					}
+
+					// 토큰이 아닌 다른 문자를 발견한 경우
+					ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
+					cContinuousToken = '\0';
+					szRet += szFmt[i];
+					iContinuousCount = 0;
+				}
+			}
+
+			ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
+
+			return szRet;
+		}
+		
+
+		// 타임존 시간 편차 얻는 함수
+		// @참고 : https://docs.microsoft.com/ko-kr/windows/win32/api/timezoneapi/nf-timezoneapi-gettimezoneinformation?redirectedfrom=MSDN (타임존 정보 얻는법)
+		Int32 DateTime::TimeZoneBiasMinute() {
+			TIME_ZONE_INFORMATION timeZoneInformation;
+			GetTimeZoneInformation(&timeZoneInformation);
+			Int32 bias = timeZoneInformation.Bias;
+			return bias;
+		}
+
+		// 현재시간 얻는 함수
+		// @참고 : https://stackoverflow.com/questions/15957805/extract-year-month-day-etc-from-stdchronotime-point-in-c (현재시간 얻는 방법)
+		// @참고 : https://stackoverflow.com/questions/32811729/add-time-duration-to-c-timepoint (시간 연산방법)
+		DateTime DateTime::Now(TimeStandard timeStandard) {
+			chrono::system_clock::time_point now = chrono::system_clock::now();
+
+			// Unix Epoch UTC 시간을 마이크로초 단위로 구한다.
+			//  = 1970년 1월 1일부터 현재까지의 마이크로초
+			Int64 epoch = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()).count(); 
+
+			// After Christ (0001년 1월 1일 ~ 1969년 12월 31일)까지의 마이크로초를 더해줌으로써
+			// 0001년 1월 1일 ~ 현재까지의 After Chirst UTC 시간을 구한다.
+			epoch += ADBeginTick;
+
+			// 로컬 시간은 타임존 편차만큼 더해준다.
+			if (timeStandard == TimeStandard::Local) {
+				Int32 uiBias = TimeZoneBiasMinute();
+				epoch += (uiBias * -1) * TicksPerMinute;
+			}
+			return DateTime(epoch);
+		}
+
+		// @윤년 조건 참고 : https://ko.wikipedia.org/wiki/%EC%9C%A4%EB%85%84 
+		bool DateTime::IsLeapYear(int year) {
+			if (year <= 0) {
+				return false;
+			}
+
+			if (year % 4 == 0) {
+				if (year % 100 == 0) {
+					if (year % 400 == 0) {
+						return true;
+					}
+					return false;
+				}
+				return true;
+			}
+			return false;
+		}
+
+		DateTime DateTime::AddYear(Int32 years) {
+			AddMonth(years * 12);
+			return *this;
+		}
+
+		DateTime DateTime::AddMonth(Int32 months) {
+			DateAndTime current = ToDateAndTime();
+			current.AddMonth(months);
+			m_Tick = current.ToTick();
+			return *this;
+		}
+
+		DateTime DateTime::AddDay(Int32 day) {
+			m_Tick += day * Detail::TicksPerDay;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+		DateTime DateTime::AddHour(Int32 hour) {
+			m_Tick += hour * Detail::TicksPerHour;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+		DateTime DateTime::AddMinute(Int32 minute) {
+			m_Tick += minute * Detail::TicksPerMinute;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+		DateTime DateTime::AddSecond(Int32 second) {
+			m_Tick += second * Detail::TicksPerSecond;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+		DateTime DateTime::AddMiliSecond(Int32 miliSecond) {
+			m_Tick += miliSecond * Detail::TicksPerMiliSecond;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+
+		DateTime DateTime::AddMicroSecond(Int32 microSecond) {
+			m_Tick += microSecond;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+
+		DateTime DateTime::AddDateTime(const DateTime& other) {
+			AddMicroSecond(other.m_Tick);
+			return *this;
+		}
+
+		DateTime DateTime::SubtractYear(Int32 years) {
+			SubtractMonth(years * 12);
+			return *this;
+		}
+
+		DateTime DateTime::SubtractMonth(Int32 months) {
+			DateAndTime current = ToDateAndTime();
+			current.SubtractMonth(months);
+			m_Tick = current.ToTick();
+			return *this;
+		}
+
+		DateTime DateTime::SubtractDay(Int32 day) {
+			m_Tick -= day * Detail::TicksPerDay;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+
+		DateTime DateTime::SubtractHour(Int32 hour) {
+			m_Tick -= hour * Detail::TicksPerHour;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+
+		DateTime DateTime::SubtractMinute(Int32 minute) {
+			m_Tick -= minute * Detail::TicksPerMinute;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+
+		DateTime DateTime::SubtractSecond(Int32 second) {
+			m_Tick -= second * Detail::TicksPerSecond;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+
+		DateTime DateTime::SubtractMiliSecond(Int32 miliSecond) {
+			m_Tick -= miliSecond * Detail::TicksPerMiliSecond;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+
+		DateTime DateTime::SubtractMicroSecond(Int32 microSecond) {
+			m_Tick -= microSecond;
+			CheckUnderFlow();
+			CheckOverFlow();
+			return *this;
+		}
+
+		DateTime DateTime::SubtractDateTime(const DateTime& other) {
+			SubtractMicroSecond(other.m_Tick);
+			return *this;
+		}
+
+		TimeSpan DateTime::Diff(const DateTime& other) {
+			return TimeSpan(m_Tick - other.m_Tick);
+		}
+
+		DateTime DateTime::operator-(const DateTime& other) {
+			DateTime temp(m_Tick);
+			temp.SubtractMicroSecond(other.m_Tick);
+			return temp;
+		}
+
+		DateTime DateTime::operator+(const DateTime& other) {
+			DateTime temp(m_Tick);
+			temp.AddMicroSecond(other.m_Tick);
+			return temp;
+		}
+
+		DateTime& DateTime::operator-=(const DateTime& other) {
+			SubtractMicroSecond(other.m_Tick);
+			return *this;
+		}
+
+		DateTime& DateTime::operator+=(const DateTime& other) {
+			AddMicroSecond(other.m_Tick);
+			return *this;
+		}
+
+		DateTime DateTime::operator-(const TimeSpan& other){
+			DateTime temp(m_Tick);
+			temp.SubtractMicroSecond(other.Tick);
+			return temp;
+		}
+
+		DateTime DateTime::operator+(const TimeSpan& other){
+			DateTime temp(m_Tick);
+			temp.AddMicroSecond(other.Tick);
+			return temp;
+		}
+
+		DateTime& DateTime::operator-=(const TimeSpan& other){
+			SubtractMicroSecond(other.Tick);
+			return *this;
+		}
+
+		DateTime& DateTime::operator+=(const DateAndTime& other) {
+			AddMicroSecond(other.ToTick());
+			return *this;
+		}
+
+		DateTime DateTime::operator-(const DateAndTime& other) {
+			DateTime temp(m_Tick);
+			temp.SubtractMicroSecond(other.ToTick());
+			return temp;
+		}
+
+		DateTime DateTime::operator+(const DateAndTime& other) {
+			DateTime temp(m_Tick);
+			temp.AddMicroSecond(other.ToTick());
+			return temp;
+		}
+
+		DateTime& DateTime::operator-=(const DateAndTime& other) {
+			SubtractMicroSecond(other.ToTick());
+			return *this;
+		}
+
+		bool DateTime::operator>(const DateTime& other) {
+			return Compare(other) > 0;
+		}
+
+		bool DateTime::operator<(const DateTime& other) {
+			return Compare(other) < 0;
+		}
+
+		bool DateTime::operator>=(const DateTime& other) {
+			return Compare(other) >= 0;
+		}
+
+		bool DateTime::operator<=(const DateTime& other) {
+			return Compare(other) <= 0;
+		}
+
+		bool DateTime::operator==(const DateTime& other) {
+			return Compare(other) == 0;
+		}
+
+		bool DateTime::operator>(const DateAndTime& other) {
+			return Compare(other.ToTick()) > 0;
+		}
+
+		bool DateTime::operator<(const DateAndTime& other) {
+			return Compare(other.ToTick()) < 0;
+		}
+
+		bool DateTime::operator>=(const DateAndTime& other) {
+			return Compare(other.ToTick()) >= 0;
+		}
+
+		bool DateTime::operator<=(const DateAndTime& other) {
+			return Compare(other.ToTick()) <= 0;
+		}
+
+		bool DateTime::operator==(const DateAndTime& other) {
+			return Compare(other.ToTick()) == 0;
+		}
+
+		bool DateTime::operator>(const TimeSpan& other) {
+			return Compare(other.Tick) > 0;
+		}
+
+		bool DateTime::operator<(const TimeSpan& other) {
+			return Compare(other.Tick) < 0;
+		}
+
+		bool DateTime::operator>=(const TimeSpan& other) {
+			return Compare(other.Tick) >= 0;
+		}
+
+		bool DateTime::operator<=(const TimeSpan& other) {
+			return Compare(other.Tick) <= 0;
+		}
+
+		bool DateTime::operator==(const TimeSpan& other) {
+			return Compare(other.Tick) == 0;
+		}
+
+		/*=====================================================================================
+		 private non-static
+		 =====================================================================================*/
 		void DateTime::ReflectFormat(const DateAndTime& time, JCore::String& ret, char token, int count) const {
 			if (token == '\0' || count == 0) {
 				return;
@@ -413,7 +1126,7 @@ namespace JCore {
 				break;
 			case DateFormat::K:
 			case DateFormat::zzz: {
-				Int16 timezonBias = TimeZoneBiasMinute();
+				Int32 timezonBias = TimeZoneBiasMinute();
 				ret += StringUtil::Format("%s%02d:%02d",
 					timezonBias < 0 ? "+" : "",		// %s
 					(timezonBias * -1) / 60,		// %02d
@@ -421,14 +1134,14 @@ namespace JCore {
 				break;
 			}
 			case DateFormat::z: {
-				Int16 timezonBias = TimeZoneBiasMinute();
+				Int32 timezonBias = TimeZoneBiasMinute();
 				ret += StringUtil::Format("%s%d",
 					timezonBias < 0 ? "+" : "",		// %s
 					(timezonBias * -1) / 60);		// %d
 				break;
 			}
 			case DateFormat::zz: {
-				Int16 timezonBias = TimeZoneBiasMinute();
+				Int32 timezonBias = TimeZoneBiasMinute();
 				ret += StringUtil::Format("%s%02d",
 					timezonBias < 0 ? "+" : "",		// %s
 					(timezonBias * -1) / 60);		// %d
@@ -457,99 +1170,85 @@ namespace JCore {
 			}
 		}
 
+		void DateTime::CheckUnderFlow() const {
+			if (m_Tick < 0) {
+				throw std::underflow_error("틱이 음수가 될 수 없습니다.");
+			}
+		}
 
-		// 포맷에 따라 시간 문자열을 얻도록 한다.
-		// @형식 레퍼런스 : https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
-		// C# 기준 포맷 형식을 따릅니다.
-		
-		// 중간에 문자열 확장이 발생하지 않는다면 O(n)
-		JCore::String DateTime::Format(const char* fmt) const {
-			JCore::String szFmt(fmt);
-			JCore::String szRet(szFmt.Capacity() * 2);
+		void DateTime::CheckOverFlow() const {
+			if (m_Tick >= Ticks10000Years) {
+				throw std::underflow_error("1만년을 넘길 수 없습니다.");
+			}
+		}
 
-			int iContinuousCount = 0;
-			char cContinuousToken = '\0';
+		/*=====================================================================================
+		 private static
+		 =====================================================================================*/
+		Tuple<int, int, int, int, int> DateTime::GetYearsFromDays(int days) {
+			using namespace Detail;
 
-			const DateAndTime currentDateAndTime = ToDateAndTime();
+			int i400Years = days / DaysPer400Years_v;	// 총 일수에서 400년의 수를 구한다.
+			days -= DaysPer400Years_v * i400Years;		// 400년의 수를 빼준다.
 
-			for (int i = 0; i < szFmt.Length(); i++) {
-				if (FormatTokenMap_v.find(szFmt[i]) != FormatTokenMap_v.end()) {
-				
-					if (cContinuousToken != szFmt[i]) {
-						// 이전 토큰하고 다른 경우 = 처음 발견한 경우
-						ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
-						cContinuousToken = szFmt[i];
-						iContinuousCount = 1;
-					} else {
-						// 이전 토큰하고 일치하고 있는 경우
-						iContinuousCount++;
-					}
-				} else {
-					// 토큰이 아닌 다른 문자를 발견한 경우
-					ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
-					cContinuousToken = '\0';
-					szRet += szFmt[i];
-					iContinuousCount = 0;
+			int i100Years = days / DaysPer100Years_v;	// 총 일수에서 100년의 수를 구한다.
+			days -= DaysPer100Years_v * i100Years;		// 100년의 수를 빼준다.
+
+			int i4Years = days / DaysPer4Years_v;		// 총 일수에서 4년의 수를 구한다.
+			days -= DaysPer4Years_v * i4Years;			// 4년의 수를 빼준다.
+
+			int i1Years = days / DaysPer1Years_v;		// 남은 일수에서 1년의 수를 구한다.
+			days -= DaysPer1Years_v * i1Years;			// 년단위는 모두 소거되고 366일 이내의 값이 남음
+
+			return { i400Years, i100Years, i4Years, i1Years, days };
+		}
+
+		int DateTime::GetDatePart(const Int64 tick, const DatePart part) {
+			DateTime dateTime(tick);
+
+			auto years = GetYearsFromDays(dateTime.GetTotalDays());
+
+			int i400Years = years.item1;
+			int i100Years = years.item2;
+			int i4Years = years.item3;
+			int i1Years = years.item4;
+			int iLeftDays = years.item5;
+
+			// 1년이 365.2545일이므로 366일 째에 1일이 남는 경우 때문에
+			if (i1Years == 4)
+				i1Years = 3;
+
+			// 4년, 즉 마지막년은 366일이므로
+			int* pUntilDays = i1Years == 3 ? (int*)DaysUntilMonth366 : (int*)DaysUntilMonth365;
+			int* pForDays = i1Years == 3 ? (int*)DaysForMonth366 : (int*)DaysForMonth365;
+
+
+			if (part == DatePart::Year) {
+				return i400Years * 400 + i100Years * 100 + i4Years * 4 + i1Years + 1;	// 년도도 1년부터 시작이기 때문에 + 1
+			} else if (part == DatePart::DayOfYear) {
+				return iLeftDays + 1;
+			}
+
+			int iMonth = 0;
+
+			for (int i = 11; i >= 0; i--) {
+				if (iLeftDays >= pUntilDays[i]) {
+					iMonth = i;
+					break;
 				}
 			}
 
-			ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
-
-			return szRet;
-		}
-		
-
-		// 타임존 시간 편차 얻는 함수
-		// @참고 : https://docs.microsoft.com/ko-kr/windows/win32/api/timezoneapi/nf-timezoneapi-gettimezoneinformation?redirectedfrom=MSDN (타임존 정보 얻는법)
-		Int16 DateTime::TimeZoneBiasMinute() {
-			TIME_ZONE_INFORMATION timeZoneInformation;
-			GetTimeZoneInformation(&timeZoneInformation);
-			Int16 bias = timeZoneInformation.Bias;
-			return bias;
-		}
-
-		// 현재시간 얻는 함수
-		// @참고 : https://stackoverflow.com/questions/15957805/extract-year-month-day-etc-from-stdchronotime-point-in-c (현재시간 얻는 방법)
-		// @참고 : https://stackoverflow.com/questions/32811729/add-time-duration-to-c-timepoint (시간 연산방법)
-		DateTime DateTime::Now(TimeStandard timeStandard) {
-			chrono::system_clock::time_point now = chrono::system_clock::now();
-
-			// Unix Epoch UTC 시간을 마이크로초 단위로 구한다.
-			//  = 1970년 1월 1일부터 현재까지의 마이크로초
-			Int64U epoch = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()).count(); 
-
-			// After Christ (0001년 1월 1일 ~ 1969년 12월 31일)까지의 마이크로초를 더해줌으로써
-			// 0001년 1월 1일 ~ 현재까지의 After Chirst UTC 시간을 구한다.
-			epoch += ADBeginTick;
-
-			// 로컬 시간은 타임존 편차만큼 더해준다.
-			if (timeStandard == TimeStandard::Local) {
-				Int16 uiBias = TimeZoneBiasMinute();
-				epoch += (uiBias * -1) * TicksPerMinute;
+			if (part == DatePart::Month) {
+				return iMonth + 1; // 1월부터 시작이므로
+			} else if (part == DatePart::Day) {
+				return iLeftDays - pUntilDays[iMonth] + 1;	// 1일부터 시작이므로
+			} else if (part == DatePart::MaxDayOfMonth) {
+				return pForDays[iMonth];
 			}
-			return DateTime(epoch);
+
+			return -1;
 		}
 
-		void DateTime::AddYear(Int32 years) {
-			AddMonth(years * 12);
-		}
-
-		void DateTime::AddMonth(Int32 months) {
-			DateAndTime current = ToDateAndTime();
-			current.AddMonth(months);
-			m_Tick = current.ToTick();
-		}
-
-		void DateTime::SubtractYear(Int32 years) {
-			SubtractMonth(years * 12);
-		}
-
-		void DateTime::SubtractMonth(Int32 months) {
-			DateAndTime current = ToDateAndTime();
-			current.SubtractMonth(months);
-			m_Tick = current.ToTick();
-		}
-
-	} // namespace Time
+} // namespace Time
 } // namespace JCore
 

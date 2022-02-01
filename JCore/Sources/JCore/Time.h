@@ -8,24 +8,25 @@
 
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
+#include <JCore/Comparator.h>
 
 namespace JCore {
 	namespace Time {
 		namespace Detail {
-			constexpr Int64U MaxDay_v			= 365;
-			constexpr Int64U MaxHour_v			= 24;
-			constexpr Int64U MaxMinute_v		= 60;
-			constexpr Int64U MaxSecond_v		= 60;
-			constexpr Int64U MaxMiliSecond_v	= 1000;
-			constexpr Int64U MaxMicroSecond_v	= 1000;
+			constexpr Int64 MaxDay_v			= 365;
+			constexpr Int64 MaxHour_v			= 24;
+			constexpr Int64 MaxMinute_v			= 60;
+			constexpr Int64 MaxSecond_v			= 60;
+			constexpr Int64 MaxMiliSecond_v		= 1000;
+			constexpr Int64 MaxMicroSecond_v	= 1000;
 		
 			// 1틱당 1마이크로초
-			constexpr Int64U TicksPerMicroSecond	= 1;										// 마이크로초당 몇 틱인지 	1틱당					1마이크로초
-			constexpr Int64U TicksPerMiliSecond		= TicksPerMicroSecond * MaxMicroSecond_v;	// 밀리초당 몇 틱인지		1000틱당					1밀리초
-			constexpr Int64U TicksPerSecond			= TicksPerMiliSecond * MaxMiliSecond_v;		// 초당 몇 틱인지			1000000틱당				1초
-			constexpr Int64U TicksPerMinute			= TicksPerSecond * MaxSecond_v;				// 1분당 몇 틱인지		1000000 * 60			1분
-			constexpr Int64U TicksPerHour			= TicksPerMinute * MaxMinute_v;				// 1시간당 몇 틱인지		1000000 * 60 * 60		1시간
-			constexpr Int64U TicksPerDay			= TicksPerHour * MaxHour_v;					// 1일당 몇 틱인지		1000000 * 60 * 60 * 24	1일
+			constexpr Int64 TicksPerMicroSecond	= 1;											// 마이크로초당 몇 틱인지 	1틱당					1마이크로초
+			constexpr Int64 TicksPerMiliSecond		= TicksPerMicroSecond * MaxMicroSecond_v;	// 밀리초당 몇 틱인지		1000틱당					1밀리초
+			constexpr Int64 TicksPerSecond			= TicksPerMiliSecond * MaxMiliSecond_v;		// 초당 몇 틱인지			1000000틱당				1초
+			constexpr Int64 TicksPerMinute			= TicksPerSecond * MaxSecond_v;				// 1분당 몇 틱인지		1000000 * 60			1분
+			constexpr Int64 TicksPerHour			= TicksPerMinute * MaxMinute_v;				// 1시간당 몇 틱인지		1000000 * 60 * 60		1시간
+			constexpr Int64 TicksPerDay			= TicksPerHour * MaxHour_v;						// 1일당 몇 틱인지		1000000 * 60 * 60 * 24	1일
 
 			constexpr int DaysPer1Years_v = MaxDay_v;
 			constexpr int DaysPer4Years_v = MaxDay_v * 4 + 1;				// 4년이 몇일인지 : 1461일
@@ -38,6 +39,8 @@ namespace JCore {
 			constexpr int DaysForMonth365[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 			constexpr int DaysForMonth366[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
+			constexpr Int64 Ticks10000Years = DaysPer400Years_v * 25 * TicksPerDay;
+
 
 
 			/*
@@ -47,9 +50,10 @@ namespace JCore {
 			*/
 		
 			// [AD 0001년 1월 1일 ~ 1969년 12월 31일까지의 마이크로초 계산]
-			constexpr Int64U ADBegin	 = (DaysPer400Years_v * 1969) / 400;	// Epoch 시간 1970년 1월 1일까지의 일 수
-			constexpr Int64U ADBeginTick = ADBegin * TicksPerDay;				// Epoch 시간 1970년 1월 1일까지의 마이크로초
+			constexpr Int64 ADBegin	 = (DaysPer400Years_v * 1969) / 400;	// Epoch 시간 1970년 1월 1일까지의 일 수
+			constexpr Int64 ADBeginTick = ADBegin * TicksPerDay;				// Epoch 시간 1970년 1월 1일까지의 마이크로초
 		}
+
 
 		enum class DatePart
 		{
@@ -155,257 +159,299 @@ namespace JCore {
 		
 		/* =================================================================================== 
 			시간 계산 및 관리
+
+			Date와 Time, DateAndTime의 DateTimedml 덧셈 뺄셈 연산 수행결과로 날짜, 시간, 틱이 음수가 나올 경우 예외를 던지므로
+			음수의 시간 차이를 계산하고 싶은 경우에는 DateTime의 Diff 함수를 사용하여 TimeSpan 구조체를 통해 확인할 것
 		   =================================================================================== */
 		struct Date
 		{
-			Int16U Year;
-			Int16U Month;
-			Int16U Day;
+		public:
+			Date() = delete;
+			Date(Int32 year, Int32 month, Int32 day);
+			Date(const Date& other) : Year(other.Year), Month(other.Month), Day(other.Day) {}
 
-			Date() = default;
-			Date(Int16U year, Int16U month, Int16U day) : Year(year), Month(month), Day(day) {}
+			virtual void AddYear(Int32 years);
+			virtual void AddMonth(Int32 months);
+			virtual void AddDay(Int32 days);
+			virtual void AddDate(const Date& other);
 
-			virtual void AddYear(Int16 years);
-			virtual void AddMonth(Int16 months);
-			virtual void AddDay(Int16 days);
+			virtual void SubtractYear(Int32 years);
+			virtual void SubtractMonth(Int32 years);
+			virtual void SubtractDay(Int32 years);
+			virtual void SubtractDate(const Date& other);
 
-			virtual void SubtractYear(Int16 years);
-			virtual void SubtractMonth(Int16 years);
-			virtual void SubtractDay(Int16 years);
+			inline Int32 GetYear() const { return Year; }
+			inline Int32 GetMonth() const { return Month; }
+			inline Int32 GetDay() const { return Day; }
 
-			Int64U ToTick() const;
+			inline int Compare(const Date& other) { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
+			Date operator-(const Date& other);
+			Date operator+(const Date& other);
+			Date& operator-=(const Date& other);
+			Date& operator+=(const Date& other);
+			bool operator>(const Date& other);
+			bool operator<(const Date& other);
+			bool operator>=(const Date& other);
+			bool operator<=(const Date& other);
+			bool operator==(const Date& other);
+
+			Int64 ToTick() const;
 		protected:
-			static Date ConvertTickToDate(Int64U tick);
+			Int32 Year;
+			Int32 Month;
+			Int32 Day;
+
+			friend class DateTime;
 		};
 
 		struct Time
 		{
-			Int16U Hour;
-			Int16U Minute;
-			Int16U Second;
-			Int16U MiliSecond;
-			Int16U MicroSecond;
-
-			Time() = default;
-			Time(Int16U hour, Int16U minute, Int16U second, Int16U miliSecond, Int16U microSecond)
-				: Hour(hour), Minute(minute), Second(second), MiliSecond(miliSecond), MicroSecond(microSecond)
-			{}
+		public:
+			Time() = delete;
+			Time(Int32 hour, Int32 minute, Int32 second, Int32 miliSecond, Int32 microSecond);
+			Time(const Time& other) : Hour(other.Hour), Minute(other.Minute), Second(other.Second), MiliSecond(other.MiliSecond), MicroSecond(other.MicroSecond) {}
 
 			virtual void AddHour(Int64 hours);
 			virtual void AddMinute(Int64 minutes);
 			virtual void AddSecond(Int64 seconds);
 			virtual void AddMiliSecond(Int64 miliSeconds);
 			virtual void AddMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
+			virtual void AddTime(const Time& other);
 
 			virtual void SubtractHour(Int64 hours);
 			virtual void SubtractMinute(Int64 minutes);
 			virtual void SubtractSecond(Int64 seconds);
-			virtual void SubtractiliSecond(Int64 miliSeconds);
+			virtual void SubtractMiliSecond(Int64 miliSeconds);
 			virtual void SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
+			virtual void SubtractTime(const Time& other);
 
-			Int64U ToTick() const;
+			inline Int32 GetHour() const { return Hour; }
+			inline Int32 GetMinute() const { return Minute; }
+			inline Int32 GetSecond() const { return Second; }
+			inline Int32 GetMiliSecond() const { return MiliSecond; }
+			inline Int32 GetMicroSecond() const { return MicroSecond; }
+
+			inline int Compare(const Time& other) { return Comparator<Int64>()(ToTick(), other.ToTick()); }
+
+			Time operator-(const Time& other);
+			Time operator+(const Time& other);
+			Time& operator-=(const Time& other);
+			Time& operator+=(const Time& other);
+			bool operator>(const Time& other);
+			bool operator<(const Time& other);
+			bool operator>=(const Time& other);
+			bool operator<=(const Time& other);
+			bool operator==(const Time& other);
+
+
+			Int64 ToTick() const;
+		protected:
+			Int32 Hour;
+			Int32 Minute;
+			Int32 Second;
+			Int32 MiliSecond;
+			Int32 MicroSecond;
+
+			friend class DateTime;
 		};
 
 		struct DateTime;
 		struct DateAndTime : Date, Time {
-			DateAndTime() = default;
-			DateAndTime(Int16U year, Int16U month, Int16U day, Int16U hour, Int16U minute, Int16U second, Int16U miliSecond, Int16U microSecond)
+			DateAndTime() = delete;
+			DateAndTime(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 miliSecond, Int32 microSecond)
 				: Date(year, month, day), Time(hour, minute, second, miliSecond, microSecond)
 			{}
 
-			void AddYear(Int16 years) override;				// Date::AddYear와 동일
-			void AddMonth(Int16 months) override;			// Date::AddMonth와 동일
-			void AddDay(Int16 days) override;				
+			void AddYear(Int32 years) override;				// Date::AddYear와 동일
+			void AddMonth(Int32 months) override;			// Date::AddMonth와 동일
+			void AddDay(Int32 days) override;				
 			void AddHour(Int64 hours) override;				
 			void AddMinute(Int64 minutes) override;			
 			void AddSecond(Int64 seconds) override;			
 			void AddMiliSecond(Int64 miliSeconds) override;	
 			void AddMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond) override;
+			void AddDate(const Date& other) override;
+			void AddTime(const Time& other) override;
+			void AddDateAndTime(const DateAndTime& other);
 
-			void SubtractYear(Int16 years) override;
-			void SubtractMonth(Int16 years) override;
-			void SubtractDay(Int16 years) override;
+			void SubtractYear(Int32 years) override;
+			void SubtractMonth(Int32 years) override;
+			void SubtractDay(Int32 years) override;
 			void SubtractHour(Int64 hours) override;
 			void SubtractMinute(Int64 minutes) override;
 			void SubtractSecond(Int64 seconds) override;
-			void SubtractiliSecond(Int64 miliSeconds) override;
+			void SubtractMiliSecond(Int64 miliSeconds) override;
 			void SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond) override;
+			void SubtractDate(const Date& other) override;
+			void SubtractTime(const Time& other) override;
+			void SubtractDateAndTime(const DateAndTime& other);
 
+			inline int Compare(const DateAndTime& other) { return Comparator<Int64>()(ToTick(), other.ToTick()); }
+
+			DateAndTime operator-(const DateAndTime& other);
+			DateAndTime operator+(const DateAndTime& other);
+			DateAndTime& operator-=(const DateAndTime& other);
+			DateAndTime& operator+=(const DateAndTime& other);
+
+			DateAndTime operator-(const DateTime& other);
+			DateAndTime operator+(const DateTime& other);
+			DateAndTime& operator-=(const DateTime& other);
+			DateAndTime& operator+=(const DateTime& other);
+
+			bool operator>(const DateAndTime& other);
+			bool operator<(const DateAndTime& other);
+			bool operator>=(const DateAndTime& other);
+			bool operator<=(const DateAndTime& other);
+			bool operator==(const DateAndTime& other);
+
+			bool operator>(const DateTime& other);
+			bool operator<(const DateTime& other);
+			bool operator>=(const DateTime& other);
+			bool operator<=(const DateTime& other);
+			bool operator==(const DateTime& other);
 
 			DateTime ToDateTime() const;
-			Int64U ToTick() const;
+			Int64 ToTick() const;
+		};
+
+		// 음수 시간을 다룰 수 있는 구조체
+		struct TimeSpan
+		{
+			constexpr TimeSpan(Int64 tick) : Tick(tick) {}
+
+			inline double GetTotalDays() const { return (double)Tick / Detail::TicksPerDay; }
+			inline double GetTotalHours() const { return (double)Tick / Detail::TicksPerHour; }
+			inline double GetTotalMinutes() const { return (double)Tick / Detail::TicksPerMinute; }
+			inline double GetTotalSeconds() const { return (double)Tick / Detail::TicksPerSecond; }
+			inline double GetTotalMiliSeconds() const { return (double)Tick / Detail::TicksPerMiliSecond; }
+			inline double GetTotalMicroSeconds() const { return (double)Tick; }
+
+			inline int GetDay() const { return Tick / Detail::TicksPerDay; }
+			inline int GetHour() const { return (Tick / Detail::TicksPerHour) % Detail::MaxHour_v; }
+			inline int GetMinute() const { return (Tick / Detail::TicksPerMinute) % Detail::MaxMinute_v; }
+			inline int GetSecond() const { return (Tick / Detail::TicksPerSecond) % Detail::MaxSecond_v; }
+			inline int GetMiliSecond() const { return (Tick / Detail::TicksPerMiliSecond) % Detail::MaxMiliSecond_v; }
+			inline int GetMicroSecond() const { return Tick % Detail::MaxMicroSecond_v; }
+
+			inline TimeSpan operator-(const TimeSpan& other) const { return { Tick - other.Tick }; }
+			inline TimeSpan operator+(const TimeSpan& other) const { return { Tick + other.Tick }; }
+			inline TimeSpan& operator+=(const TimeSpan& other) { Tick += other.Tick; return *this; }
+			inline TimeSpan& operator-=(const TimeSpan& other) { Tick -= other.Tick; return *this; }
+			inline bool operator>(const TimeSpan& other) { Tick > other.Tick; }
+			inline bool operator<(const TimeSpan& other) { Tick < other.Tick; }
+			inline bool operator>=(const TimeSpan& other) { Tick >= other.Tick; }
+			inline bool operator<=(const TimeSpan& other) { Tick <= other.Tick; }
+			inline bool operator==(const TimeSpan& other) { Tick == other.Tick; }
+
+			Int64 Tick;
 		};
 
 		class JCore::String;
 		class DateTime
 		{
 		public: // constructors
-			constexpr DateTime() : m_Tick(0) {}
-			constexpr DateTime(Int64U tick) : m_Tick(tick) {}
+			constexpr DateTime() : m_Tick(0ULL) {}
+			constexpr DateTime(Int64 tick) : m_Tick(tick) {}
 
 		public: // public non-static
 			// 특정 타입유닛에 해당하는 전체시간 얻기
-			inline constexpr Int64U GetTick() const { return m_Tick; }
-			inline constexpr Int64U GetTotalDays() const { return m_Tick / Detail::TicksPerDay; }
-			inline constexpr Int64U GetTotalHours() const { return m_Tick / Detail::TicksPerHour; }
-			inline constexpr Int64U GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute; }
-			inline constexpr Int64U GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond; }
-			inline constexpr Int64U GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond; }
-			inline constexpr Int64U GetTotalMicroSeconds() const { return m_Tick; }
+			inline Int64 GetTick() const { return m_Tick; }
+			inline Int64 GetTotalDays() const { return m_Tick / Detail::TicksPerDay; }
+			inline Int64 GetTotalHours() const { return m_Tick / Detail::TicksPerHour; }
+			inline Int64 GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute; }
+			inline Int64 GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond; }
+			inline Int64 GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond; }
+			inline Int64 GetTotalMicroSeconds() const { return m_Tick; }
 
 			// 특정 타입유닛별로 시간 얻기
-			inline constexpr int GetYear() const { return GetDatePart(DatePart::Year); }
-			inline constexpr int GetMonth() const { return GetDatePart(DatePart::Month); }
-			inline constexpr int GetDay() const { return GetDatePart(DatePart::Day); }
-			inline constexpr int GetHour() const { return GetTotalHours() % Detail::MaxHour_v; }
-			inline constexpr int GetMinute() const { return GetTotalMinutes() % Detail::MaxMinute_v; }
-			inline constexpr int GetSecond() const { return GetTotalSeconds() % Detail::MaxSecond_v; }
-			inline constexpr int GetMiliSecond() const { return GetTotalMiliSeconds() % Detail::MaxMiliSecond_v; }
-			inline constexpr int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
+			inline int GetYear() const { return GetDatePart(DatePart::Year); }
+			inline int GetMonth() const { return GetDatePart(DatePart::Month); }
+			inline int GetDay() const { return GetDatePart(DatePart::Day); }
+			inline int GetHour() const { return GetTotalHours() % Detail::MaxHour_v; }
+			inline int GetMinute() const { return GetTotalMinutes() % Detail::MaxMinute_v; }
+			inline int GetSecond() const { return GetTotalSeconds() % Detail::MaxSecond_v; }
+			inline int GetMiliSecond() const { return GetTotalMiliSeconds() % Detail::MaxMiliSecond_v; }
+			inline int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
 
-			// 무슨 요일인지
-			inline constexpr DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }
-
-			// 몇달인지
-			inline constexpr MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }
-
-			// 일년기준으로 몇일인지
-			inline constexpr int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }
-
-			// 이번달이 최대 몇일인지
-			inline constexpr int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }
-
-			// 오전인지 오후인지
-			inline constexpr AMPM GetAMPM() const { return (GetHour() / 12) > 0 ? AMPM::PM : AMPM::AM; }
+			
+			inline DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }			// 무슨 요일인지
+			inline MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }			// 몇달인지
+			inline int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }			// 일년기준으로 몇일인지
+			inline int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }	// 이번달이 최대 몇일인지
+			inline AMPM GetAMPM() const { return (GetHour() / 12) > 0 ? AMPM::PM : AMPM::AM; }		// 오전인지 오후인지
 
 			// 타입 변환
-			inline DateAndTime ToDateAndTime() const {
-				return DateAndTime(Int16U(GetYear()), Int16U(GetMonth()), Int16U(GetDay()),	// Date 정보
-								   Int16U(GetHour()), Int16U(GetMinute()), Int16U(GetSecond()), Int16U(GetMiliSecond()), Int16U(GetMicroSecond())); // Time 정보
-			}
-
-			inline Date ToDate() const {
-				return Date(Int16U(GetYear()), Int16U(GetMonth()), Int16U(GetDay()));
-			}
-			inline Time ToTime() const {
-				return Time(Int16U(GetHour()), Int16U(GetMinute()), Int16U(GetSecond()), Int16U(GetMiliSecond()), Int16U(GetMicroSecond()));
-			}
+			inline DateAndTime ToDateAndTime() const;
+			inline Date ToDate() const;
+			inline Time ToTime() const;
 
 			// 시간 연산
-			void AddYear(Int32 year);
-			void AddMonth(Int32 month);
-			void AddDay(Int32 day) { m_Tick += day * Detail::TicksPerDay; }
-			void AddHour(Int32 hour) { m_Tick += hour * Detail::TicksPerHour; }
-			void AddMinute(Int32 minute) { m_Tick += minute * Detail::TicksPerMinute; }
-			void AddSecond(Int32 second) { m_Tick += second * Detail::TicksPerSecond; }
-			void AddMiliSecond(Int32 miliSecond) { m_Tick += miliSecond * Detail::TicksPerMiliSecond; }
+			DateTime AddYear(Int32 year);
+			DateTime AddMonth(Int32 month);
+			DateTime AddDay(Int32 day);
+			DateTime AddHour(Int32 hour);
+			DateTime AddMinute(Int32 minute);
+			DateTime AddSecond(Int32 second);
+			DateTime AddMiliSecond(Int32 miliSecond);
+			DateTime AddMicroSecond(Int32 microSecond);
+			DateTime AddDateTime(const DateTime& other);
 
-			void SubtractYear(Int32 year);
-			void SubtractMonth(Int32 month);
-			void SubtractDay(Int32 day) { m_Tick -= day * Detail::TicksPerDay; }
-			void SubtractHour(Int32 hour) { m_Tick -= hour * Detail::TicksPerHour; }
-			void SubtractMinute(Int32 minute) { m_Tick -= minute * Detail::TicksPerMinute; }
-			void SubtractAddSecond(Int32 second) { m_Tick -= second * Detail::TicksPerSecond; }
-			void SubtractMiliSecond(Int32 miliSecond) { m_Tick -= miliSecond * Detail::TicksPerMiliSecond; }
+			DateTime SubtractYear(Int32 year);
+			DateTime SubtractMonth(Int32 month);
+			DateTime SubtractDay(Int32 day);
+			DateTime SubtractHour(Int32 hour);
+			DateTime SubtractMinute(Int32 minute);
+			DateTime SubtractSecond(Int32 second);
+			DateTime SubtractMiliSecond(Int32 miliSecond);
+			DateTime SubtractMicroSecond(Int32 microSecond);
+			DateTime SubtractDateTime(const DateTime& other);
+
+			inline int Compare(const DateTime& other) { return Comparator<Int64>()(m_Tick, other.m_Tick); }
+			TimeSpan Diff(const DateTime& other);
+
+			DateTime operator-(const DateTime& other);
+			DateTime operator+(const DateTime& other);
+			DateTime& operator-=(const DateTime& other);
+			DateTime& operator+=(const DateTime& other);
+			DateTime operator-(const TimeSpan& other);
+			DateTime operator+(const TimeSpan& other);
+			DateTime& operator-=(const TimeSpan& other);
+			DateTime& operator+=(const TimeSpan& other);
+			DateTime operator-(const DateAndTime& other);
+			DateTime operator+(const DateAndTime& other);
+			DateTime& operator-=(const DateAndTime& other);
+			DateTime& operator+=(const DateAndTime& other);
+			bool operator>(const DateTime& other);
+			bool operator<(const DateTime& other);
+			bool operator>=(const DateTime& other);
+			bool operator<=(const DateTime& other);
+			bool operator==(const DateTime& other);
+			bool operator>(const TimeSpan& other);
+			bool operator<(const TimeSpan& other);
+			bool operator>=(const TimeSpan& other);
+			bool operator<=(const TimeSpan& other);
+			bool operator==(const TimeSpan& other);
+			bool operator>(const DateAndTime& other);
+			bool operator<(const DateAndTime& other);
+			bool operator>=(const DateAndTime& other);
+			bool operator<=(const DateAndTime& other);
+			bool operator==(const DateAndTime& other);
 
 			String Format(const char* fmt) const;
 
 		private: // private static
-			// 단위 년도별로 일수를 가져옴
-			static constexpr auto GetYearsFromDays(int days) {
-				using namespace Detail;
-
-				int i400Years = days / DaysPer400Years_v;	// 총 일수에서 400년의 수를 구한다.
-				days -= DaysPer400Years_v * i400Years;		// 400년의 수를 빼준다.
-
-				int i100Years = days / DaysPer100Years_v;	// 총 일수에서 100년의 수를 구한다.
-				days -= DaysPer100Years_v * i100Years;		// 100년의 수를 빼준다.
-
-				int i4Years = days / DaysPer4Years_v;		// 총 일수에서 4년의 수를 구한다.
-				days -= DaysPer4Years_v * i4Years;			// 4년의 수를 빼준다.
-
-				int i1Years = days / DaysPer1Years_v;		// 남은 일수에서 1년의 수를 구한다.
-				days -= DaysPer1Years_v * i1Years;			// 년단위는 모두 소거되고 366일 이내의 값이 남음
-
-				return MakeTuple(i400Years, i100Years, i4Years, i1Years, days);
-			}
-
-			static constexpr int GetDatePart(const Int64U tick, const DatePart part) {
-				using namespace Detail;
-
-				DateTime dateTime(tick);
-
-				auto years = GetYearsFromDays(dateTime.GetTotalDays());
-
-				int i400Years = years.item1;
-				int i100Years = years.item2;
-				int i4Years = years.item3;
-				int i1Years = years.item4;
-				int iLeftDays = years.item5;
-
-				// 1년이 365.2545일이므로 366일 째에 1일이 남는 경우 때문에
-				if (i1Years == 4)
-					i1Years = 3;
-
-				// 4년, 즉 마지막년은 366일이므로
-				int* pUntilDays = i1Years == 3 ? (int*)DaysUntilMonth366 : (int*)DaysUntilMonth365;
-				int* pForDays = i1Years == 3 ? (int*)DaysForMonth366 : (int*)DaysForMonth365;
-
-
-				if (part == DatePart::Year) {
-					return i400Years * 400 + i100Years * 100 + i4Years * 4 + i1Years + 1;	// 년도도 1년부터 시작이기 때문에 + 1
-				} else if (part == DatePart::DayOfYear) {
-					return iLeftDays + 1;
-				}
-
-				int iMonth = 0;
-
-				for (int i = 11; i >= 0; i--) {
-					if (iLeftDays >= pUntilDays[i]) {
-						iMonth = i;
-						break;
-					}
-				}
-
-				if (part == DatePart::Month) {
-					return iMonth + 1; // 1월부터 시작이므로
-				} else if (part == DatePart::Day) {
-					return iLeftDays - pUntilDays[iMonth] + 1;	// 1일부터 시작이므로
-				} else if (part == DatePart::MaxDayOfMonth) {
-					return pForDays[iMonth];
-				}
-
-				return -1;
-			}
+			static Tuple<int, int, int, int, int> GetYearsFromDays(int days);		// 단위 년도별로 일수를 가져옴
+			static int GetDatePart(const Int64 tick, const DatePart part);
 		private: // private non-static
-			inline constexpr int GetDatePart(const DatePart part) const {
-				return DateTime::GetDatePart(m_Tick, part);
-			}
-
+			inline int GetDatePart(const DatePart part) const { return DateTime::GetDatePart(m_Tick, part); }
 			void ReflectFormat(const DateAndTime& time, String& ret, char token, int count) const;
-
+			void CheckUnderFlow() const;
+			void CheckOverFlow() const;
 		public: // public static
 			static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
-			static Int16 TimeZoneBiasMinute();
-
-			// @윤년 조건 참고 : https://ko.wikipedia.org/wiki/%EC%9C%A4%EB%85%84 
-			static constexpr bool IsLeapYear(int year) {
-				if (year <= 0) {
-					return false;
-				}
-
-				if (year % 4 == 0) {
-					if (year % 100 == 0) {
-						if (year % 400 == 0) {
-							return true;
-						}
-						return false;
-					}
-					return true;
-				}
-				return false;
-			}
+			static Int32 TimeZoneBiasMinute();
+			static bool IsLeapYear(int year);
 
 			inline static const char* GetAbbreviationWeekendName(DayOfWeek week) {
 				return ms_szWeekAbbrevName[int(week)];
@@ -440,7 +486,6 @@ namespace JCore {
 			static const char* ms_szAMPMAbbrevName[];
 			static const char* ms_szAMPMFullName[];
 			
-
 			friend struct DateAndTime;
 			friend struct Date;
 			friend struct Time;
@@ -453,55 +498,3 @@ namespace JCore {
 
 
 
-/*
- 템플릿은 코드가 복잡해지게 만드는 단점이 있기 때문에 쓰지말자..
-template <int Value>
-struct DayUnit
-{
-	static constexpr Int64U Days = Value;
-	static constexpr Int64U Hours = Detail::MaxHour_v * Value;
-	static constexpr Int64U Minutes = Hours * Detail::MaxMinute_v;
-	static constexpr Int64U Seconds = Minutes * Detail::MaxSecond_v;
-	static constexpr Int64U MiliSeconds = Seconds * Detail::MaxMiliSecond_v;
-	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
-};
-
-template <int Value>
-struct HourUnit
-{
-	static constexpr Int64U Hours = Value;
-	static constexpr Int64U Minutes = Hours * Detail::MaxMinute_v;
-	static constexpr Int64U Seconds = Minutes * Detail::MaxSecond_v;
-	static constexpr Int64U MiliSeconds = Seconds * Detail::MaxMiliSecond_v;
-	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
-};
-
-template <int Value>
-struct MinuteUnit
-{
-	static constexpr Int64U Minutes = Value;
-	static constexpr Int64U Seconds = Minutes * Detail::MaxSecond_v;
-	static constexpr Int64U MiliSeconds = Seconds * Detail::MaxMiliSecond_v;
-	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
-};
-
-template <int Value>
-struct SecondUnit
-{
-	static constexpr Int64U Seconds = Value;
-	static constexpr Int64U MiliSeconds = Seconds * Detail::MaxMiliSecond_v;
-	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
-};
-
-template <int Value>
-struct MiliSecondUnit
-{
-	static constexpr Int64U MiliSeconds = Value;
-	static constexpr Int64U MicroSeconds = MiliSeconds * Detail::MaxMicroSecond_v;
-};
-
-template <int Value>
-struct MicroSecondUnit
-{
-	static constexpr Int64U MicroSeconds = Value;
-};*/

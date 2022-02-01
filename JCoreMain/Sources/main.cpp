@@ -35,6 +35,14 @@ int main() {
 
 
 	Time::DateTime now = Time::DateTime::Now();
+	Time::TimeSpan span = now.Diff(Time::DateTime::Now().AddDay(5).AddSecond(45).AddMinute(5));
+
+	auto a = span.GetTotalDays();
+	auto b = span.GetTotalHours();
+	auto c = span.GetDay();
+	auto d = span.GetHour();
+	auto e = span.GetMinute();
+
 	auto cc = now.GetDayOfWeek();
 	try {
 		cout << now.Format("MM/dd/yyyy") << "\n";

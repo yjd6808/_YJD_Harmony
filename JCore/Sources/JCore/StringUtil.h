@@ -53,18 +53,18 @@ public:
 
 		while (*pDst != NULL && *pSrc != NULL) {
 			if (*pDst > *pSrc)
-				return 1;
-			else if (*pDst < *pSrc)
 				return -1;
+			else if (*pDst < *pSrc)
+				return 1;
 
 			pDst++;
 			pSrc++;
 		}
 
 		if (iDstLen > iSrcLen)
-			return 1;
-		else if (iDstLen < iSrcLen)
 			return -1;
+		else if (iDstLen < iSrcLen)
+			return 1;
 
 		return 0;
 	}

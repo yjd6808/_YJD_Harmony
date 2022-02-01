@@ -43,5 +43,7 @@
     <ClInclude Include="..\Sources\JCore\RAII\UniquePointer.h">
       <Filter>RAII</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Comparator.h" />
+    <ClInclude Include="..\Sources\JCore\Ascii.h" />
   </ItemGroup>
 </Project>

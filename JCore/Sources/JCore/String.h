@@ -83,6 +83,15 @@ public:
 	bool operator!=(const String& other);
 	bool operator!=(const char* other);
 
+	bool operator<(const String& other);
+	bool operator<(const char* other);
+	bool operator>(const String& other);
+	bool operator>(const char* other);
+	bool operator<=(const String& other);
+	bool operator<=(const char* other);
+	bool operator>=(const String& other);
+	bool operator>=(const char* other);
+
 	friend std::ostream& operator<<(std::ostream& os, const String& src);
 private:
 	void ReplaceAllWithEqualLen(const char* to, const int fromLen, std::vector<int>& offsets);

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\JCoreTest\ComparatorTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeMemoImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\BinarySearchTreeImplTest.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\String\StringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\String\StringUtilTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
   </ItemGroup>
   <ItemGroup>

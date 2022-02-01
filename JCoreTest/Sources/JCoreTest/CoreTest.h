@@ -31,21 +31,22 @@
 #define ON		1
 #define OFF		0
 
-#define	TEST_ArraysTest					ON
+#define	TEST_ArraysTest					OFF
 #define	TEST_AVLTreeImplTest			OFF
 #define	TEST_AVLTreeMemoImplTest		OFF
 #define TEST_MemoryTest					ON
-#define TEST_BinarySearchTreeImplTest	ON
-#define TEST_HashMapImplTest			ON
+#define TEST_BinarySearchTreeImplTest	OFF
+#define TEST_HashMapImplTest			OFF
 #define TEST_TwoThreeFourTreeImplTest	OFF
 #define TEST_StringTest					ON
 #define TEST_StringUtilTest				ON
+#define TEST_ComparatorTest				ON
 #define TEST_CoreTest					ON
-#define TEST_HasherTest					ON
+#define TEST_HasherTest					OFF
 #define TEST_MathTest					ON
-#define TEST_RandomTest					ON
+#define TEST_RandomTest					OFF
+#define TEST_TimeTest					ON
 #define TEST_TypeTraitsTest				ON
-
 
 template <typename... Args>
 void PrintFormat(const char* fmt, Args&&... args) {

@@ -32,6 +32,14 @@
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\JCore\Ascii.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Comparator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Arrays.h">
       <SubType>
       </SubType>

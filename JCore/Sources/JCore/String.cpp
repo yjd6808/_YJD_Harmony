@@ -603,6 +603,38 @@ bool String::operator!=(const char* other) {
 	return Compare(other) != 0;
 }
 
+bool String::operator<(const String& other) {
+	return Compare(other) < 0;
+}
+
+bool String::operator<(const char* other) {
+	return Compare(other) < 0;
+}
+
+bool String::operator>(const String& other) {
+	return Compare(other) > 0;
+}
+
+bool String::operator>(const char* other) {
+	return Compare(other) > 0;
+}
+
+bool String::operator<=(const String& other) {
+	return Compare(other) <= 0;
+}
+
+bool String::operator<=(const char* other) {
+	return Compare(other) <= 0;
+}
+
+bool String::operator>=(const String& other) {
+	return Compare(other) >= 0;
+}
+
+bool String::operator>=(const char* other) {
+	return Compare(other) >= 0;
+}
+
 std::ostream& operator<<(std::ostream& os, const String& src) {
 	os << src.m_pBuffer;
 	return os;
