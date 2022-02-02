@@ -7,6 +7,7 @@
 #include <JCore/String.h>
 #include <JCore/StringUtil.h>
 #include <JCore/Memory.h>
+#include <JCore/Exception.h>
 
 
 namespace JCore {
@@ -32,7 +33,7 @@ String::String(const char* str, const int capacity) {
 	m_pBuffer = nullptr;
 
 	if (str == nullptr) {
-		throw std::exception("문자열이 nullptr 입니다.");
+		throw NullPointerException("문자열이 nullptr 입니다.");
 	}
 
 	int iLen = StringUtil::Length(str);
@@ -91,7 +92,7 @@ void String::Append(const char ch) {
 
 void String::Append(const char* str) {
 	if (str == nullptr) {
-		throw std::exception("추가하고자 하는 문자열이 nullptr 입니다.");
+		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
 	}
 
 	int iStrLen = StringUtil::Length(str);
@@ -187,7 +188,7 @@ std::vector<int> String::FindAll(int startIdx, int endIdx, const char* str) cons
 	}
 
 	if (!IsValidIndexRange(startIdx, endIdx)) {
-		throw std::runtime_error("인덱스 범위를 벗어났습니다.");
+		throw OutOfRangeException("인덱스 범위를 벗어났습니다.");
 	}
 
 	while (iOffset <= endIdx) {
@@ -241,7 +242,7 @@ int String::Find(int startIdx, int endIdx, const char* str) const {
 	}
 
 	if (!IsValidIndexRange(startIdx, endIdx)) {
-		throw std::runtime_error("인덱스 범위를 벗어났습니다.");
+		throw OutOfRangeException("인덱스 범위를 벗어났습니다.");
 	}
 
 	while (iOffset <= endIdx) {
@@ -295,7 +296,7 @@ int String::FindReverse(int startIdx, int endIdx, const char* str) const {
 	}
 
 	if (!IsValidIndexRange(startIdx, endIdx)) {
-		throw std::runtime_error("인덱스 범위를 벗어났습니다.");
+		throw OutOfRangeException("인덱스 범위를 벗어났습니다.");
 	}
 
 	while (iOffset >= startIdx) {
@@ -350,7 +351,7 @@ void String::Format(const char* format, ...) {
 	int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
 
 	if (iExpectedLen <= 0) {
-		throw std::runtime_error("문자열 포맷 수행중 오류가 발생하였습니다.");
+		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
 	}
 
 	if (m_iCapacity < iExpectedLen + 1) {
@@ -417,7 +418,7 @@ void String::ReplaceAllWithDifferentLen(const char* from, const char* to, const 
 
 void String::SetAt(const int idx, const char ch) {
 	if (!IsValidIndex(idx)) {
-		throw std::out_of_range("인덱스가 범위를 벗어났습니다.");
+		throw OutOfRangeException("인덱스가 범위를 벗어났습니다.");
 	}
 
 	m_pBuffer[idx] = ch;
@@ -425,7 +426,7 @@ void String::SetAt(const int idx, const char ch) {
 
 const char String::GetAt(const int idx) const {
 	if (!IsValidIndex(idx)) {
-		throw std::out_of_range("인덱스가 범위를 벗어났습니다.");
+		throw OutOfRangeException("인덱스가 범위를 벗어났습니다.");
 	}
 
 	return m_pBuffer[idx];
@@ -438,7 +439,7 @@ String String::GetRange(const int startIdx, const int endIdx) const {
 // 기존 문자열의 시작인덱스(포함)부터 종료인덱스(포함)까지의 부분 문자열을 반환합니다.
 char* String::GetRangeUnsafe(const int startIdx, const int endIdx) const {
 	if (!IsValidIndexRange(startIdx, endIdx)) {
-		throw std::out_of_range("올바르지 않은 인덱스 범위입니다.");
+		throw OutOfRangeException("올바르지 않은 인덱스 범위입니다.");
 	}
 
 	char* pStr = m_pBuffer + startIdx;
@@ -518,7 +519,7 @@ void String::Initialize(int capacity) {
 
 char& String::operator[](const int idx) {
 	if (!IsValidIndex(idx)) {
-		throw std::out_of_range("인덱스가 범위를 벗어났습니다.");
+		throw OutOfRangeException("인덱스가 범위를 벗어났습니다.");
 	}
 
 	return m_pBuffer[idx];

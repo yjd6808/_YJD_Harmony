@@ -5,7 +5,7 @@
 
 #include <JCore/Core.h>
 #include <JCore/Random.h>
-
+#include <JCore/Exception.h>
 
 
 namespace JCore {
@@ -30,7 +30,7 @@ Random::Random() {
 
 int Random::GenerateInt(int begin, int end) {
 	if (begin > end) {
-		throw std::invalid_argument("begin > end µÇ¸é ¾È´ï");
+		throw InvalidArgumentException("begin > end µÇ¸é ¾È´ï");
 	}
 
 	std::uniform_int_distribution<> dist(begin, end - 1);
@@ -39,7 +39,7 @@ int Random::GenerateInt(int begin, int end) {
 
 double Random::GenerateDouble(double begin, double end) {
 	if (begin > end) {
-		throw std::invalid_argument("begin > end µÇ¸é ¾È´ï");
+		throw InvalidArgumentException("begin > end µÇ¸é ¾È´ï");
 	}
 
 	std::uniform_real_distribution<> dist(begin, end);

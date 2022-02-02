@@ -8,6 +8,7 @@
 #include <JCore/StringUtil.h>
 #include <JCore/Math.h>
 #include <JCore/StaticString.h>
+#include <JCore/Exception.h>
 
 namespace JCore {
 
@@ -22,7 +23,7 @@ String StringUtil::Format(const char* format, ...) {
 	int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
 
 	if (iExpectedLen <= 0) {
-		throw std::runtime_error("문자열 포맷 수행중 오류가 발생하였습니다.");
+		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
 	}
 
 	String szResult(iExpectedLen + 1 + String::DEFAULT_BUFFER_SIZE);

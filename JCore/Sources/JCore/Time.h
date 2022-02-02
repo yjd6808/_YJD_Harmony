@@ -180,9 +180,9 @@ namespace JCore {
 			virtual void SubtractDay(Int32 years);
 			virtual void SubtractDate(const Date& other);
 
-			inline Int32 GetYear() const { return Year; }
-			inline Int32 GetMonth() const { return Month; }
-			inline Int32 GetDay() const { return Day; }
+			inline Int32 GetYear() const { return Int32(Year); }
+			inline Int32 GetMonth() const { return Int32(Month); }
+			inline Int32 GetDay() const { return Int32(Day); }
 
 			inline int Compare(const Date& other) { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
@@ -198,9 +198,9 @@ namespace JCore {
 
 			Int64 ToTick() const;
 		protected:
-			Int32 Year;
-			Int32 Month;
-			Int32 Day;
+			Int16	Year;
+			Int8	Month;
+			Int8	Day;
 
 			friend class DateTime;
 		};
@@ -226,11 +226,11 @@ namespace JCore {
 			virtual void SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
 			virtual void SubtractTime(const Time& other);
 
-			inline Int32 GetHour() const { return Hour; }
-			inline Int32 GetMinute() const { return Minute; }
-			inline Int32 GetSecond() const { return Second; }
-			inline Int32 GetMiliSecond() const { return MiliSecond; }
-			inline Int32 GetMicroSecond() const { return MicroSecond; }
+			inline Int32 GetHour() const { return Int32(Hour); }
+			inline Int32 GetMinute() const { return Int32(Minute); }
+			inline Int32 GetSecond() const { return Int32(Second); }
+			inline Int32 GetMiliSecond() const { return Int32(MiliSecond); }
+			inline Int32 GetMicroSecond() const { return Int32(MicroSecond); }
 
 			inline int Compare(const Time& other) { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
@@ -247,11 +247,11 @@ namespace JCore {
 
 			Int64 ToTick() const;
 		protected:
-			Int32 Hour;
-			Int32 Minute;
-			Int32 Second;
-			Int32 MiliSecond;
-			Int32 MicroSecond;
+			Int8 Hour;
+			Int8 Minute;
+			Int8 Second;
+			Int16 MiliSecond;
+			Int16 MicroSecond;
 
 			friend class DateTime;
 		};
@@ -318,7 +318,8 @@ namespace JCore {
 		// 음수 시간을 다룰 수 있는 구조체
 		struct TimeSpan
 		{
-			constexpr TimeSpan(Int64 tick) : Tick(tick) {}
+			TimeSpan(Int64 tick) : Tick(tick) {}
+			TimeSpan(Int32 days, Int64 hours, Int64 minutes, Int64 seconds, Int64 miliSeconds, Int64 microSeconds);
 
 			inline double GetTotalDays() const { return (double)Tick / Detail::TicksPerDay; }
 			inline double GetTotalHours() const { return (double)Tick / Detail::TicksPerHour; }
@@ -351,8 +352,8 @@ namespace JCore {
 		class DateTime
 		{
 		public: // constructors
-			constexpr DateTime() : m_Tick(0ULL) {}
-			constexpr DateTime(Int64 tick) : m_Tick(tick) {}
+			DateTime() : m_Tick(0ULL) {}
+			DateTime(Int64 tick) : m_Tick(tick) {}
 
 		public: // public non-static
 			// 특정 타입유닛에 해당하는 전체시간 얻기
@@ -390,53 +391,53 @@ namespace JCore {
 			DateTime AddYear(Int32 year);
 			DateTime AddMonth(Int32 month);
 			DateTime AddDay(Int32 day);
-			DateTime AddHour(Int32 hour);
-			DateTime AddMinute(Int32 minute);
-			DateTime AddSecond(Int32 second);
-			DateTime AddMiliSecond(Int32 miliSecond);
-			DateTime AddMicroSecond(Int32 microSecond);
+			DateTime AddHour(Int64 hour);
+			DateTime AddMinute(Int64 minute);
+			DateTime AddSecond(Int64 second);
+			DateTime AddMiliSecond(Int64 miliSecond);
+			DateTime AddMicroSecond(Int64 microSecond);
 			DateTime AddDateTime(const DateTime& other);
 
 			DateTime SubtractYear(Int32 year);
 			DateTime SubtractMonth(Int32 month);
 			DateTime SubtractDay(Int32 day);
-			DateTime SubtractHour(Int32 hour);
-			DateTime SubtractMinute(Int32 minute);
-			DateTime SubtractSecond(Int32 second);
-			DateTime SubtractMiliSecond(Int32 miliSecond);
-			DateTime SubtractMicroSecond(Int32 microSecond);
+			DateTime SubtractHour(Int64 hour);
+			DateTime SubtractMinute(Int64 minute);
+			DateTime SubtractSecond(Int64 second);
+			DateTime SubtractMiliSecond(Int64 miliSecond);
+			DateTime SubtractMicroSecond(Int64 microSecond);
 			DateTime SubtractDateTime(const DateTime& other);
 
-			inline int Compare(const DateTime& other) { return Comparator<Int64>()(m_Tick, other.m_Tick); }
+			inline int Compare(const DateTime& other) const { return Comparator<Int64>()(m_Tick, other.m_Tick); }
 			TimeSpan Diff(const DateTime& other);
 
-			DateTime operator-(const DateTime& other);
-			DateTime operator+(const DateTime& other);
+			DateTime operator-(const DateTime& other) const;
+			DateTime operator+(const DateTime& other) const;
 			DateTime& operator-=(const DateTime& other);
 			DateTime& operator+=(const DateTime& other);
-			DateTime operator-(const TimeSpan& other);
-			DateTime operator+(const TimeSpan& other);
+			DateTime operator-(const TimeSpan& other) const;
+			DateTime operator+(const TimeSpan& other) const;
 			DateTime& operator-=(const TimeSpan& other);
 			DateTime& operator+=(const TimeSpan& other);
-			DateTime operator-(const DateAndTime& other);
-			DateTime operator+(const DateAndTime& other);
+			DateTime operator-(const DateAndTime& other) const;
+			DateTime operator+(const DateAndTime& other) const;
 			DateTime& operator-=(const DateAndTime& other);
 			DateTime& operator+=(const DateAndTime& other);
-			bool operator>(const DateTime& other);
-			bool operator<(const DateTime& other);
-			bool operator>=(const DateTime& other);
-			bool operator<=(const DateTime& other);
-			bool operator==(const DateTime& other);
-			bool operator>(const TimeSpan& other);
-			bool operator<(const TimeSpan& other);
-			bool operator>=(const TimeSpan& other);
-			bool operator<=(const TimeSpan& other);
-			bool operator==(const TimeSpan& other);
-			bool operator>(const DateAndTime& other);
-			bool operator<(const DateAndTime& other);
-			bool operator>=(const DateAndTime& other);
-			bool operator<=(const DateAndTime& other);
-			bool operator==(const DateAndTime& other);
+			bool operator>(const DateTime& other) const;
+			bool operator<(const DateTime& other) const;
+			bool operator>=(const DateTime& other) const;
+			bool operator<=(const DateTime& other) const;
+			bool operator==(const DateTime& other) const;
+			bool operator>(const TimeSpan& other) const;
+			bool operator<(const TimeSpan& other) const;
+			bool operator>=(const TimeSpan& other) const;
+			bool operator<=(const TimeSpan& other) const;
+			bool operator==(const TimeSpan& other) const;
+			bool operator>(const DateAndTime& other) const;
+			bool operator<(const DateAndTime& other) const;
+			bool operator>=(const DateAndTime& other) const;
+			bool operator<=(const DateAndTime& other) const;
+			bool operator==(const DateAndTime& other) const;
 
 			String Format(const char* fmt) const;
 

@@ -1,6 +1,9 @@
 #pragma once
 
+#include <JCore/Exception.h>
+
 #include <random>
+
 
 /*
 	작성자 : 윤정도
@@ -16,7 +19,7 @@ struct Random final
 	template <typename T>
 	T Generate(T begin, T end) {
 		if (begin > end) {
-			throw std::invalid_argument("begin > end 되면 안댐");
+			throw InvalidArgumentException("begin > end 되면 안댐");
 		}
 
 		std::uniform_int_distribution<T> dist(begin, end - 1);

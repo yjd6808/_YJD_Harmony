@@ -30,9 +30,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\ExceptionTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryUtilTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\String\StringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\String\StringUtilTest.cpp" />

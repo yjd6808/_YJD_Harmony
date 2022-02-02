@@ -22,10 +22,10 @@ using namespace std;
  =====================================================================================*/
 
 // 2022년 2월 1일 16시 11분 33초 715 716
-constexpr DateTime g_TestTime(63779328693715716);
+const DateTime g_TestTime(63779328693715716);
 
 // 2022년 1월 31일 0시 0분 0초 0.0
-constexpr DateTime g_TestCleanTime(63779184000000000);
+const DateTime g_TestCleanTime(63779184000000000);
 
 void PrintDate(DateTime& dt) {
 #if Print == ON
@@ -163,7 +163,7 @@ TEST(DateTimeTest, Operation_Day_Hour_Minute_Second_Mili_Micro) {
 
 
 // DateTime, DateAndTime, TimeSpan과 연산
-TEST(DateTimeTest, Operation_DateTime_DateAndTime_TimeSpan) {
+TEST(DateTimeTest, ComparisonOperation_DateTime_DateAndTime_TimeSpan) {
 	DateTime dt = g_TestCleanTime;
 
 	EXPECT_TRUE(dt >= DateAndTime(2022, 1, 30, 23, 59, 59, 999, 999));
@@ -190,9 +190,114 @@ TEST(DateTimeTest, Operation_DateTime_DateAndTime_TimeSpan) {
 	EXPECT_TRUE(dt <= TimeSpan(DateAndTime(2022, 1, 31, 0, 0, 0, 0, 1).ToTick()));
 }
 
+// DateTime, DateAndTime, TimeSpan과 연산
+TEST(DateTimeTest, CalculationOperation_DateTime_DateAndTime_TimeSpan) {
+	DateTime dt = g_TestTime;
+	DateTime dt2 = g_TestCleanTime;
+	DateTime v2 = dt - g_TestCleanTime;
 
+	// 2022년 2월 1일 16시 11분 33초 715 716
+	// 2022년 1월 31일 0시 0분 0초 0.0
+	// ts1 = 서로 시간 차이
+	TimeSpan ts1 = dt.Diff(g_TestCleanTime);
+
+	// 2022년 1월 31일 0시 0분 0초 0.0
+	// 2022년 2월 1일 16시 11분 33초 715 716
+	// ts2 = 서로 시간 차이
+	TimeSpan ts2 = dt2.Diff(dt);
+
+	EXPECT_TRUE(v2.GetYear() == 1);
+	EXPECT_TRUE(v2.GetMonth() == 1);
+	EXPECT_TRUE(v2.GetDay() == 2);
+	EXPECT_TRUE(v2.GetHour() == 16);
+	EXPECT_TRUE(v2.GetMinute() == 11);
+	EXPECT_TRUE(v2.GetSecond() == 33);
+	EXPECT_TRUE(v2.GetMiliSecond() == 715);
+	EXPECT_TRUE(v2.GetMicroSecond() == 716);
+
+	EXPECT_TRUE(ts1.GetDay() == 1);
+	EXPECT_TRUE(ts1.GetHour() == 16);
+	EXPECT_TRUE(ts1.GetMinute() == 11);
+	EXPECT_TRUE(ts1.GetSecond() == 33);
+	EXPECT_TRUE(ts1.GetMiliSecond() == 715);
+	EXPECT_TRUE(ts1.GetMicroSecond() == 716);
+
+	EXPECT_TRUE(ts2.GetDay() == -1);
+	EXPECT_TRUE(ts2.GetHour() == -16);
+	EXPECT_TRUE(ts2.GetMinute() == -11);
+	EXPECT_TRUE(ts2.GetSecond() == -33);
+	EXPECT_TRUE(ts2.GetMiliSecond() == -715);
+	EXPECT_TRUE(ts2.GetMicroSecond() == -716);
+}
+
+// DateTime 포매팅 테스트
+TEST(DateTimeTest, Format) {
+	// dt = 2022년 2월 1일(화) 6시 1분 3초 715 716
+	DateTime dt = g_TestTime - TimeSpan(0, 10, 10, 30, 0, 0);
+
+	// dt2 = 2022년 2월 1일(화) 12시 1분 3초 715 716
+	DateTime dt2 = dt + TimeSpan(0, 6, 0, 0, 0, 0);
+
+	// dt3 = 2022년 2월 1일(화) 13시 1분 3초 715 716
+	DateTime dt3 = dt + TimeSpan(0, 7, 0, 0, 0, 0);
+	
+	EXPECT_TRUE(dt.Format("d") == "1");
+	EXPECT_TRUE(dt.Format("dd") == "01");
+	EXPECT_TRUE(dt.Format("ddd") == "Tue");
+	EXPECT_TRUE(dt.Format("dddd") == "Tuesday");
+	EXPECT_TRUE(dt.Format("h") == "6");
+	EXPECT_TRUE(dt.Format("hh") == "06");
+	EXPECT_TRUE(dt.Format("H") == "6");
+	EXPECT_TRUE(dt.Format("HH") == "06");
+	EXPECT_TRUE(dt.Format("m") == "1");
+	EXPECT_TRUE(dt.Format("mm") == "01");
+	EXPECT_TRUE(dt.Format("M") == "2");
+	EXPECT_TRUE(dt.Format("MM") == "02");
+	EXPECT_TRUE(dt.Format("MMM") == "Feb");
+	EXPECT_TRUE(dt.Format("MMMM") == "February");
+	EXPECT_TRUE(dt.Format("s") == "3");
+	EXPECT_TRUE(dt.Format("ss") == "03");
+	EXPECT_TRUE(dt.Format("t") == "A");
+	EXPECT_TRUE(dt.Format("tt") == "AM");
+	EXPECT_TRUE(dt.Format("y") == "22");
+	EXPECT_TRUE(dt.Format("yy") == "22");
+	EXPECT_TRUE(dt.Format("yyy") == "2022");
+	EXPECT_TRUE(dt.Format("yyyy") == "2022");
+
+	if (DateTime::TimeZoneBiasMinute() == -540) {
+		EXPECT_TRUE(dt.Format("K") == "+09:00");
+		EXPECT_TRUE(dt.Format("z") == "+9");
+		EXPECT_TRUE(dt.Format("zz") == "+09");
+		EXPECT_TRUE(dt.Format("zzz") == "+09:00");
+	}
+	EXPECT_TRUE(dt.Format("f") == "7");
+	EXPECT_TRUE(dt.Format("ff") == "71");
+	EXPECT_TRUE(dt.Format("fff") == "715");
+	EXPECT_TRUE(dt.Format("ffff") == "7157");
+	EXPECT_TRUE(dt.Format("fffff") == "71571");
+	EXPECT_TRUE(dt.Format("ffffff") == "715716");
+
+
+	// dt2
+	EXPECT_TRUE(dt2.Format("h") == "12");
+	EXPECT_TRUE(dt2.Format("hh") == "12");
+	EXPECT_TRUE(dt2.Format("H") == "12");
+	EXPECT_TRUE(dt2.Format("HH") == "12");
+	EXPECT_TRUE(dt2.Format("t") == "P");
+	EXPECT_TRUE(dt2.Format("tt") == "PM");
+
+	// dt3
+	EXPECT_TRUE(dt3.Format("h") == "1");
+	EXPECT_TRUE(dt3.Format("hh") == "01");
+	EXPECT_TRUE(dt3.Format("H") == "13");
+	EXPECT_TRUE(dt3.Format("HH") == "13");
+	EXPECT_TRUE(dt3.Format("t") == "P");
+	EXPECT_TRUE(dt3.Format("tt") == "PM");
+}
 
 #endif // TEST_TimeTest == ON
+
+
 
 
 

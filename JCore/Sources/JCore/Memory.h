@@ -6,6 +6,7 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/Tuple.h>
 
 namespace JCore {
 
@@ -30,6 +31,9 @@ public:
 			pSrc += kiDataTypeSize;
 		}
 	}
+	
+	
+
 	
 };
 

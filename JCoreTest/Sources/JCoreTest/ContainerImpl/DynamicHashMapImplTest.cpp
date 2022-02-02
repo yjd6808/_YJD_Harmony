@@ -11,6 +11,7 @@
 #include <JCore/Math.h>
 #include <JCore/Hasher.h>
 #include <JCore/Type.h>
+#include <JCore/Tuple.h>
 #include <JCore/StringUtil.h>
 
 using namespace JCore;
@@ -282,6 +283,7 @@ private:
 TEST(HashMapImplTest, HashMapImplTest) {
 
 	{
+		
 		HM::HashMap<int, int> a;
 
 		for (int i = 0; i < 100000; i++) {

@@ -45,6 +45,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Core.h" />
+    <ClInclude Include="..\Sources\JCore\Exception.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\RAII\SharedPointer.h" />
     <ClInclude Include="..\Sources\JCore\RAII\UniquePointer.h" />
     <ClInclude Include="..\Sources\JCore\StaticString.h">

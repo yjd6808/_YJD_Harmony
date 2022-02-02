@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\JCoreTest\CoreTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryUtilTest.cpp">
+    <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryTest.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\String\StringUtilTest.cpp">
@@ -35,6 +35,7 @@
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ComparatorTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\ExceptionTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

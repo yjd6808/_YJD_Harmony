@@ -45,5 +45,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Comparator.h" />
     <ClInclude Include="..\Sources\JCore\Ascii.h" />
+    <ClInclude Include="..\Sources\JCore\Exception.h" />
   </ItemGroup>
 </Project>
