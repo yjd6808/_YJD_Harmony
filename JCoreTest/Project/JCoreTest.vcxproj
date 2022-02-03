@@ -38,6 +38,7 @@
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\String\StringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\String\StringUtilTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />

@@ -7,6 +7,7 @@
 #include <JCoreTest/CoreTest.h>
 #include <JCore/String.h>
 #include <JCore/Comparator.h>
+#include <JCore/Exception.h>
 #include <JCore/Time.h>
 
 using namespace JCore;
@@ -63,13 +64,13 @@ TEST(DateTimeTest, Operation_Year_Month) {
 	ResetDate(dt);
 	EXPECT_NO_THROW(dt.AddYear(7977)); // 9999
 	ResetDate(dt);
-	EXPECT_THROW(dt.AddYear(7978), std::overflow_error); // 10000
-	EXPECT_THROW(dt.AddYear(7978), std::overflow_error); // 10001
+	EXPECT_THROW(dt.AddYear(7978), OverFlowException); // 10000
+	EXPECT_THROW(dt.AddYear(7978), OverFlowException); // 10001
 
 	EXPECT_NO_THROW(dt.SubtractYear(2020)); ResetDate(dt);	// 2
 	EXPECT_NO_THROW(dt.SubtractYear(2021)); ResetDate(dt);	// 1
-	EXPECT_THROW(dt.SubtractYear(2022), std::underflow_error);	// 0
-	EXPECT_THROW(dt.SubtractYear(2023), std::underflow_error);	// 0
+	EXPECT_THROW(dt.SubtractYear(2022), UnderFlowException);	// 0
+	EXPECT_THROW(dt.SubtractYear(2023), UnderFlowException);	// 0
 
 	
 	EXPECT_TRUE(dt.AddMonth(1).ToDate() == Date(2022, 3, 1)); ResetDate(dt);

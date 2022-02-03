@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+hide empty methods
+hide empty fields
+
+
+class ICollection<T>
+{
+    void Add(T val)
+    bool Remove(T val)
+    int Count()
+}
+
+
+Vector -u-|> ICollection
+
+@enduml

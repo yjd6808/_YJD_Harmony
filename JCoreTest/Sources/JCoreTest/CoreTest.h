@@ -31,6 +31,8 @@
 #define ON		1
 #define OFF		0
 
+#define Print	ON
+
 #define	TEST_ArraysTest					OFF
 #define	TEST_AVLTreeImplTest			OFF
 #define	TEST_AVLTreeMemoImplTest		OFF
@@ -45,17 +47,22 @@
 #define TEST_HasherTest					OFF
 #define TEST_MathTest					ON
 #define TEST_RandomTest					OFF
+#define TEST_SmartPointerTest			ON
 #define TEST_TimeTest					ON
 #define TEST_TypeTraitsTest				ON
 
 template <typename... Args>
 void PrintFormat(const char* fmt, Args&&... args) {
+#if Print == ON
 	printf(fmt, JCore::Forward<Args>(args)...);
+#endif
 }
 
 template <typename... Args>
 void PrintFormat(Args&&... args) {
 	if (sizeof...(args) == 0) {
+	#if Print == ON
 		printf("\n");
+	#endif
 	}
 }
