@@ -227,6 +227,23 @@ constexpr bool IsStringType_v = IsStringType<NaturalType_t<T>>::value;
 /* =============================================================== */
 
 
+/* =============================================================== */
+// 문자열 타입인지 확인하는 템플릿
+
+template <typename T>
+struct IsArrayType : FalseType {};
+
+template <typename T>
+struct IsArrayType<T[]> : TrueType {};
+
+template <typename T, Int32U ArraySize>
+struct IsArrayType<T[ArraySize]> : TrueType {};
+
+template <typename T>
+constexpr bool IsArrayType_v = IsArrayType<NaturalType_t<T>>::value;
+/* =============================================================== */
+
+
 // 런타임에 타입명을 가져올 때 사용합니다.
 template <typename T>
 String Type() {
@@ -276,6 +293,12 @@ constexpr auto Type_v = CTType<T>();
 
 template <typename T1, typename T2>
 constexpr bool IsSameType_v = IsSameType<T1, T2>();
+
+template <typename T>
+constexpr T* AddressOf(T& arg) {
+	return __builtin_addressof((RemoveQulifier_t<T>&)arg);
+}
+
 
 /* ====================================================================== */
 // 제일 처음에 구현한 정수, 실수, 문자열 타입 체크 함수

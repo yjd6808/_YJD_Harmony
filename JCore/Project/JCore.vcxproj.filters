@@ -35,5 +35,7 @@
     <ClInclude Include="..\Sources\JCore\Ascii.h" />
     <ClInclude Include="..\Sources\JCore\Exception.h" />
     <ClInclude Include="..\Sources\JCore\SmartPointer.h" />
+    <ClInclude Include="..\Sources\JCore\Allocator.h" />
+    <ClInclude Include="..\Sources\JCore\Deletor.h" />
   </ItemGroup>
 </Project>

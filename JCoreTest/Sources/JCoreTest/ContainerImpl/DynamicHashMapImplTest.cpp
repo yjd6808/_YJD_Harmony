@@ -17,7 +17,7 @@
 using namespace JCore;
 using namespace std;
 
-#if TEST_HashMapImplTest == ON
+#if TEST_DynamicHashMapImplTest == ON
 
 
 namespace HM {
@@ -305,6 +305,6 @@ TEST(HashMapImplTest, HashMapImplTest) {
 
 
 
-#endif // TEST_HashMapImplTest == ON
+#endif // TEST_DynamicHashMapImplTest == ON
 
 

@@ -76,7 +76,7 @@ TEST(SmartPointerTest, SharedPointer) {
 	EXPECT_TRUE(m1.Get() == nullptr);
 
 	{
-		m1 = SharedPointer<ModelA>::Create(); // operator=(&&) 호출
+		m1 = MakeShared<ModelA>(); // operator=(&&) 호출
 	}
 	EXPECT_TRUE(m1.Exist());
 	EXPECT_TRUE(m1.Get() != nullptr);
@@ -190,6 +190,8 @@ TEST(SmartPointerTest, WeakPointer) {
 	EXPECT_TRUE(e1.RefCount() == 0);
 	EXPECT_TRUE(d1.Exist() == false);
 	EXPECT_TRUE(e1.Exist() == false);
+
+	
 }
 
 

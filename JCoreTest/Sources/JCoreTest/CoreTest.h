@@ -38,7 +38,8 @@
 #define	TEST_AVLTreeMemoImplTest		OFF
 #define TEST_MemoryTest					ON
 #define TEST_BinarySearchTreeImplTest	OFF
-#define TEST_HashMapImplTest			ON
+#define TEST_DynamicHashMapImplTest		OFF
+#define TEST_SmartVectorImplTest		ON
 #define TEST_TwoThreeFourTreeImplTest	OFF
 #define TEST_StringTest					ON
 #define TEST_StringUtilTest				ON

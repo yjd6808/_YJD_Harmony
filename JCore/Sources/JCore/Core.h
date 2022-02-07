@@ -39,3 +39,10 @@ do {							\
 	x = nullptr;				\
 } while (0);					
 
+
+#define DeletePlacementSafe(x, Type)	\
+do {									\
+	if (x) {							\
+		x->~Type();						\
+	}									\
+} while (0);	

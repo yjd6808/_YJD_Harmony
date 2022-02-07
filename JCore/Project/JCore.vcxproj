@@ -31,6 +31,10 @@
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\JCore\Allocator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Ascii.h">
       <SubType>
       </SubType>
@@ -44,6 +48,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Core.h" />
+    <ClInclude Include="..\Sources\JCore\Deletor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Exception.h">
       <SubType>
       </SubType>

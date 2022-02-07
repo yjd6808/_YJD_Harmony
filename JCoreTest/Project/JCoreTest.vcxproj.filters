@@ -37,6 +37,9 @@
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ExceptionTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\SmartVectorImplTest.cpp">
+      <Filter>ContainerImpl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
