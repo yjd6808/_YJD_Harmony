@@ -1,14 +1,14 @@
+/*
+	작성자 : 윤정도
+	난수 생성기
+*/
+
+
 #pragma once
 
 #include <JCore/Exception.h>
 
 #include <random>
-
-
-/*
-	작성자 : 윤정도
-	난수 생성기
-*/
 
 namespace JCore {
 

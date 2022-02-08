@@ -718,7 +718,7 @@ namespace JCore {
 		// @형식 레퍼런스 : https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
 		// C# 기준 포맷 형식을 따릅니다.
 		
-		// 중간에 문자열 확장이 발생하지 않는다면 O(n)
+		// O(n)
 		JCore::String DateTime::Format(const char* fmt) const {
 			JCore::String szFmt(fmt);
 			JCore::String szRet(szFmt.Capacity() * 2);

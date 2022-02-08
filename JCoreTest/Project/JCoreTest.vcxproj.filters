@@ -2,15 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\JCoreTest\CoreTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryTest.cpp">
-      <Filter>Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\String\StringUtilTest.cpp">
-      <Filter>String</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\String\StringTest.cpp">
-      <Filter>String</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
@@ -37,20 +28,16 @@
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ExceptionTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\SmartVectorImplTest.cpp">
-      <Filter>ContainerImpl</Filter>
-    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\PointerObserverTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\MemoryTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\StringTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\StringUtilTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\AutoObjectTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Memory">
-      <UniqueIdentifier>{a7d7a37c-b569-4a8d-b426-30af7a008424}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="String">
-      <UniqueIdentifier>{6e7783aa-96fd-4418-a911-3ce5bc80a97b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Container">
       <UniqueIdentifier>{bf264a65-8776-4297-ba02-ad0ca1dd182b}</UniqueIdentifier>
     </Filter>

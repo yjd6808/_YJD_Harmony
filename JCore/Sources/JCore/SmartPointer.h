@@ -521,72 +521,72 @@ public:
 	}
 
 	SharedPointer(TWeakPointer& weak) {
-		TBasePointer::SharedChangeToWeak(weak);
+		this->SharedChangeToWeak(weak);
 	}
 
 	SharedPointer(TWeakPointer&& weak) {
-		TBasePointer::SharedMoveToWeak(weak);
+		this->SharedMoveToWeak(weak);
 	}
 
 	SharedPointer(TSharedPointer& shared) {
-		TBasePointer::SharedChangeToShared(shared);
+		this->SharedChangeToShared(shared);
 	}
 
 	SharedPointer(TSharedPointer&& shared) {
-		TBasePointer::SharedMoveToShared(shared);
+		this->SharedMoveToShared(shared);
 	}
 
 	~SharedPointer() {
-		TBasePointer::SubtractReferenceCount();
+		this->SubtractReferenceCount();
 	}
 
 	T& operator*() const {
-		if (!TBasePointer::Exist()) {
+		if (!this->Exist()) {
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
-		return TBasePointer::GetObj();
+		return this->GetObj();
 	}
 
 	T* operator->() const {
-		if (!TBasePointer::Exist()) {
+		if (!this->Exist()) {
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
-		return TBasePointer::GetPointer();
+		return this->GetPointer();
 	}
 
 	T* Get() const {
-		if (!TBasePointer::Exist()) {
+		if (!this->Exist()) {
 			return nullptr;
 		}
 
-		return TBasePointer::GetPointer();
+		return this->GetPointer();
 	}
 
 
 	TSharedPointer& operator=(std::nullptr_t ptr) {
-		TBasePointer::MakeSharedEmpty();
+		this->MakeSharedEmpty();
 		return *this;
 	}
 
 	TSharedPointer& operator=(TSharedPointer& other) {
-		TBasePointer::SharedChangeToShared(other);
+		this->SharedChangeToShared(other);
 		return *this;
 	}
 
 	TSharedPointer& operator=(TSharedPointer&& other) {
-		TBasePointer::SharedMoveToShared(other);
+		this->SharedMoveToShared(other);
 		return *this;
 	}
 
 	TSharedPointer& operator=(TWeakPointer& other) {
-		TBasePointer::SharedChangeToWeak(other);
+		this->SharedChangeToWeak(other);
 		return *this;
 	}
 
 	TSharedPointer& operator=(TWeakPointer&& other) {
-		TBasePointer::SharedMoveToWeak(other);
+		this->SharedMoveToWeak(other);
 		return *this;
 	}
 };
@@ -649,15 +649,15 @@ public:
 	WeakPointer() {}
 	WeakPointer(std::nullptr_t nulptr) {}
 	WeakPointer(TWeakPointer& weak) {
-		TBasePointer::WeakChangeToWeak(weak);
+		this->WeakChangeToWeak(weak);
 	}
 
 	WeakPointer(TWeakPointer&& weak) {
-		TBasePointer::WeakMoveToWeak(weak);
+		this->WeakMoveToWeak(weak);
 	}
 
 	WeakPointer(TSharedPointer& shared) {
-		TBasePointer::WeakChangeToShared(shared);
+		this->WeakChangeToShared(shared);
 	}
 
 	// 쉐어드 포인터의 이동은 막도록 하자.
@@ -666,50 +666,50 @@ public:
 
 
 	~WeakPointer() {
-		TBasePointer::SubtractWeakCount();
+		this->SubtractWeakCount();
 	}
 
 	T& operator*() const {
-		if (!TBasePointer::Exist()) {
+		if (!this->Exist()) {
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
-		return TBasePointer::GetObj();
+		return this->GetObj();
 	}
 
 	T* operator->() const {
-		if (!TBasePointer::Exist()) {
+		if (!this->Exist()) {
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
-		return TBasePointer::GetPointer();
+		return this->GetPointer();
 	}
 
 	T* Get() const {
-		if (!TBasePointer::Exist()) {
+		if (!this->Exist()) {
 			return nullptr;
 		}
 
-		return TBasePointer::GetPointer();
+		return this->GetPointer();
 	}
 
 	TWeakPointer& operator=(std::nullptr_t ptr) {
-		TBasePointer::MakeWeakEmpty();
+		this->MakeWeakEmpty();
 		return *this;
 	}
 
 	TWeakPointer& operator=(TSharedPointer& other) {
-		TBasePointer::WeakChangeToShared(other);
+		this->WeakChangeToShared(other);
 		return *this;
 	}
 
 	TWeakPointer& operator=(TWeakPointer& other) {
-		TBasePointer::WeakChangeToWeak(other);
+		this->WeakChangeToWeak(other);
 		return *this;
 	}
 
 	TWeakPointer& operator=(TWeakPointer&& other) {
-		TBasePointer::WeakMoveToWeak(other);
+		this->WeakMoveToWeak(other);
 		return *this;
 	}
 

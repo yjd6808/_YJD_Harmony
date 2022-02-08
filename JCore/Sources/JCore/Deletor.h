@@ -5,7 +5,31 @@
 
 #pragma once
 
+#include <JCore/Type.h>
+
 namespace JCore {
+
+// void 타입으로 삭제할 경우 소멸자가 호출되지 않는다
+// 소멸자가 호출될 필요없는 경우에 사용하도록 하자.
+// @참고 : https://stackoverflow.com/questions/941832/is-it-safe-to-delete-a-void-pointer
+
+struct VoidDeletor
+{
+	VoidDeletor() = default;
+
+	void operator()(void * ptr) {
+		delete ptr;
+	}
+};
+
+struct ArrayVoidDeletor
+{
+	ArrayVoidDeletor() = default;
+
+	void operator()(void* ptr) {
+		delete[] ptr;
+	}
+};
 
 template <typename T>
 struct Deletor {

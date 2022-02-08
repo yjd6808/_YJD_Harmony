@@ -37,5 +37,7 @@
     <ClInclude Include="..\Sources\JCore\SmartPointer.h" />
     <ClInclude Include="..\Sources\JCore\Allocator.h" />
     <ClInclude Include="..\Sources\JCore\Deletor.h" />
+    <ClInclude Include="..\Sources\JCore\PointerObserver.h" />
+    <ClInclude Include="..\Sources\JCore\AutoObject.h" />
   </ItemGroup>
 </Project>

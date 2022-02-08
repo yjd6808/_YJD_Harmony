@@ -19,15 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\JCoreTest\AutoObjectTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ComparatorTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeMemoImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\BinarySearchTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\DynamicHashMapImplTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\SmartVectorImplTest.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\TwoTreeFourTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\CoreTest.cpp">
@@ -40,11 +37,12 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\Memory\MemoryTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\MemoryTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\PointerObserverTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\String\StringTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\String\StringUtilTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\StringTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\StringUtilTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
   </ItemGroup>

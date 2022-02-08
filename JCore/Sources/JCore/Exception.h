@@ -39,5 +39,10 @@ struct UnderFlowException : public std::exception
 	UnderFlowException(const char* msg) : std::exception(msg) {}
 };
 
+struct InvalidOperationException : public std::exception
+{
+	InvalidOperationException(const char* msg) : std::exception(msg) {}
+};
+
 
 } // namespace JCore

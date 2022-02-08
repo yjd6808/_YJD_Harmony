@@ -36,19 +36,21 @@
 #define	TEST_ArraysTest					OFF
 #define	TEST_AVLTreeImplTest			OFF
 #define	TEST_AVLTreeMemoImplTest		OFF
-#define TEST_MemoryTest					ON
 #define TEST_BinarySearchTreeImplTest	OFF
 #define TEST_DynamicHashMapImplTest		OFF
 #define TEST_SmartVectorImplTest		ON
 #define TEST_TwoThreeFourTreeImplTest	OFF
-#define TEST_StringTest					ON
-#define TEST_StringUtilTest				ON
+#define TEST_AutoObjectTest				ON
 #define TEST_ComparatorTest				ON
 #define TEST_CoreTest					ON
 #define TEST_HasherTest					OFF
 #define TEST_MathTest					ON
+#define TEST_MemoryTest					ON
+#define TEST_PointerObserverTest		ON
 #define TEST_RandomTest					OFF
 #define TEST_SmartPointerTest			ON
+#define TEST_StringTest					ON
+#define TEST_StringUtilTest				ON
 #define TEST_TimeTest					ON
 #define TEST_TypeTraitsTest				ON
 
