@@ -31,6 +31,13 @@ do {							\
 #endif
 
 namespace JCore {
+	// 스마트포인터는 배열타입은 기본 타입으로 붕괴해서 체크하자.. ㅠ
+	// 원시 타입인 경우는 같은 타입끼리만 가능하도록 한다.
+	template <typename Lhs, typename Rhs>
+	constexpr bool SmartPointer_Castable_v 
+			= (IsPrimitiveType_v<RemoveArray_t<Lhs>> && IsPrimitiveType_v<RemoveArray_t<Rhs>>) ? 
+			  IsSameType_v<RemoveArray_t<Lhs>, RemoveArray_t<Rhs>> : 
+			  DynamicCastable_v<RemoveArray_t<Lhs>*, RemoveArray_t<Rhs>*>;
 
 // 전방 선언
 template <typename>	class SharedMaker;
@@ -47,7 +54,6 @@ template <typename T, typename... Args>
 constexpr decltype(auto) MakeUnique(Args&&... args) {
 	return UniquePointer<T>::Create(Forward<Args>(args)...);
 }
-
 
 template <typename T>
 class UniquePointer
@@ -142,7 +148,7 @@ public:
 	template <typename... Args>
 	constexpr static TUniquePointer Create(Int32U Size, Args&&... args) {
 		void* pRawMemory = operator new[](sizeof(T) * Size);
-		T* pArray = static_cast<T*>(pRawMemory);
+		T* pArray = (T*)(pRawMemory);
 
 		for (int i = 0; i < Size; i++) {
 			::new (pArray + i) T{ Forward<Args>(args)...};
@@ -203,7 +209,7 @@ public:
 	template <typename... Args>
 	constexpr static TUniquePointer Create(Args&&... args) {
 		void* pRawMemory = operator new[](sizeof(T) * ArraySize);
-		T* pArray = static_cast<T*>(pRawMemory);
+		T* pArray = (T*)(pRawMemory);
 
 		for (int i = 0; i < ArraySize; i++) {
 			::new (pArray + i) T{ Forward<Args>(args)... };
@@ -318,7 +324,7 @@ struct SharedObject<T[]> : ControlBlock
 	template <typename... Args>
 	explicit SharedObject(int Size, Args&&... args) {
 		void* pRawMemory = ::operator new[](sizeof(T)* Size);
-		Pointer = static_cast<T*>(pRawMemory);
+		Pointer = (T*)(pRawMemory);
 
 		for (int i = 0; i < Size; i++) {
 			::new (Pointer + i) T{ Forward<Args>(args)... };
@@ -391,41 +397,47 @@ protected:
 	}
 
 	// Shared로 Shared 복사
-	void SharedChangeToShared(TSharedPointer& shared) {
+	template <typename U>
+	void SharedChangeToShared(SharedPointer<U>& shared) {
 		SubtractReferenceCount();
-		m_Pointer = shared.m_Pointer;
+		m_Pointer = (T*)(shared.m_Pointer);
 		m_ControlBlock = shared.m_ControlBlock;
 		AddReferenceCount();
 	}
 
 	// Shared로 Weak 복사
-	void SharedChangeToWeak(TWeakPointer& weak) {
+	template <typename U>
+	void SharedChangeToWeak(WeakPointer<U>& weak) {
 		SubtractReferenceCount();
-		m_Pointer = weak.m_Pointer;
+		m_Pointer = (T*)(weak.m_Pointer);
 		m_ControlBlock = weak.m_ControlBlock;
 		AddReferenceCount();
 	}
 
 	// Weak로 Shared 복사
-	void WeakChangeToShared(TSharedPointer& shared) {
+	template <typename U>
+	void WeakChangeToShared(SharedPointer<U>& shared) {
 		SubtractWeakCount();
-		m_Pointer = shared.m_Pointer;
+		m_Pointer = (T*)(shared.m_Pointer);
 		m_ControlBlock = shared.m_ControlBlock;
 		AddWeakCount();
 	}
 
 	// Weak로 Weak 복사
-	void WeakChangeToWeak(TWeakPointer& weak) {
+	template <typename U>
+	void WeakChangeToWeak(WeakPointer<U>& weak) {
 		SubtractWeakCount();
-		m_Pointer = weak.m_Pointer;
+		m_Pointer = (T*)(weak.m_Pointer);
 		m_ControlBlock = weak.m_ControlBlock;
 		AddWeakCount();
 	}
 
 	// Shared로 Shared 이동
-	void SharedMoveToShared(TSharedPointer& shared) {
+	template <typename U>
+	void SharedMoveToShared(SharedPointer<U>& shared) {
 		SubtractReferenceCount();
-		m_Pointer = shared.m_Pointer;
+
+		m_Pointer = (T*)(shared.m_Pointer);
 		m_ControlBlock = shared.m_ControlBlock;
 
 		shared.m_Pointer = nullptr;
@@ -433,7 +445,8 @@ protected:
 	}
 
 	// Shared로 Weak 이동
-	void SharedMoveToWeak(TWeakPointer& weak) {
+	template <typename U>
+	void SharedMoveToWeak(WeakPointer<U>& weak) {
 		SubtractReferenceCount();
 		m_Pointer = weak.m_Pointer;
 		m_ControlBlock = weak.m_ControlBlock;
@@ -442,12 +455,14 @@ protected:
 		weak.m_ControlBlock = nullptr;
 	}
 
-	void WeakMoveToShared(TSharedPointer& shared) {
+	template <typename U>
+	void WeakMoveToShared(SharedPointer<U>& shared) {
 		// 필요 없음
 		DebugAssert(true, "멍미");
 	}
 
-	void WeakMoveToWeak(TWeakPointer& weak) {
+	template <typename U>
+	void WeakMoveToWeak(WeakPointer<U>& weak) {
 		SubtractWeakCount();
 
 		m_Pointer = weak.m_Pointer;
@@ -494,7 +509,15 @@ protected:
 
 	template <typename U>
 	void SetSharedPointer(U* ptr, ControlBlock* controlBlock) {
-		m_Pointer = (T*)ptr;
+
+//		SharedPointer<Model[]> p3 = MakeShared<Model2[]>(20); // 모델 객체 20의 배열 생성
+// 		배열타입들땜에 강제 형변환 해줘야한다. ㄷㄷ;
+// 
+//		m_Pointer = static_cast<T*>(ptr);
+//		std::cout << Type_v<T> << "\n";
+//		std::cout << Type_v<U> << "\n";
+
+		m_Pointer = (T*)(ptr);
 		m_ControlBlock = controlBlock;
 	}
 
@@ -503,36 +526,41 @@ protected:
 	ControlBlock* m_ControlBlock = nullptr;
 
 	friend class SharedMaker<T>;
+
+	template <typename U>
+	friend class BasePointer;
 };
 
 
 template <typename T>
 class SharedPointer : public BasePointer<T>
 {
-	using TBasePointer		= typename BasePointer<T>;
-	using TSharedPointer	= typename SharedPointer<T>;
-	using TWeakPointer		= typename WeakPointer<T>;
+	using TSharedPointer = typename SharedPointer<T>;
 public:
 	SharedPointer() {}
 	SharedPointer(std::nullptr_t nulptr) {}
 
-
-	SharedPointer(T* ptr) {
-	}
-
-	SharedPointer(TWeakPointer& weak) {
+	template <typename U>
+	SharedPointer(WeakPointer<U>& weak) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->SharedChangeToWeak(weak);
 	}
-
-	SharedPointer(TWeakPointer&& weak) {
+	
+	template <typename U>
+	SharedPointer(WeakPointer<U>&& weak) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->SharedMoveToWeak(weak);
 	}
 
-	SharedPointer(TSharedPointer& shared) {
+	template <typename U>
+	SharedPointer(SharedPointer<U>& shared) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->SharedChangeToShared(shared);
 	}
 
-	SharedPointer(TSharedPointer&& shared) {
+	template <typename U>
+	SharedPointer(SharedPointer<U>&& shared) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->SharedMoveToShared(shared);
 	}
 
@@ -570,22 +598,30 @@ public:
 		return *this;
 	}
 
-	TSharedPointer& operator=(TSharedPointer& other) {
+	template <typename U>
+	TSharedPointer& operator=(SharedPointer<U>& other) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->SharedChangeToShared(other);
 		return *this;
 	}
 
-	TSharedPointer& operator=(TSharedPointer&& other) {
+	template <typename U>
+	TSharedPointer& operator=(SharedPointer<U>&& other) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->SharedMoveToShared(other);
 		return *this;
 	}
 
-	TSharedPointer& operator=(TWeakPointer& other) {
+	template <typename U>
+	TSharedPointer& operator=(WeakPointer<U>& other) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->SharedChangeToWeak(other);
 		return *this;
 	}
 
-	TSharedPointer& operator=(TWeakPointer&& other) {
+	template <typename U>
+	TSharedPointer& operator=(WeakPointer<U>&& other) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->SharedMoveToWeak(other);
 		return *this;
 	}
@@ -641,28 +677,33 @@ public:
 template <typename T>
 class WeakPointer : public BasePointer<T>
 {
-	using TSharedObject		= typename SharedObject<T>;
-	using TBasePointer		= typename BasePointer<T>;
-	using TSharedPointer	= typename SharedPointer<T>;
-	using TWeakPointer		= typename WeakPointer<T>;
+	using TWeakPointer = typename WeakPointer<T>;
 public:
 	WeakPointer() {}
 	WeakPointer(std::nullptr_t nulptr) {}
-	WeakPointer(TWeakPointer& weak) {
+
+	template <typename U>
+	WeakPointer(WeakPointer<U>& weak) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->WeakChangeToWeak(weak);
 	}
 
-	WeakPointer(TWeakPointer&& weak) {
+	template <typename U>
+	WeakPointer(WeakPointer<U>&& weak) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->WeakMoveToWeak(weak);
 	}
 
-	WeakPointer(TSharedPointer& shared) {
+	template <typename U>
+	WeakPointer(SharedPointer<U>& shared) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->WeakChangeToShared(shared);
 	}
 
 	// 쉐어드 포인터의 이동은 막도록 하자.
 	// 본체가 사라진 녀석을 참조해버릴 수 있으니까
-	WeakPointer(TSharedPointer&& shared) = delete;
+	template <typename U>
+	WeakPointer(SharedPointer<U>&& shared) = delete;
 
 
 	~WeakPointer() {
@@ -693,27 +734,36 @@ public:
 		return this->GetPointer();
 	}
 
+
 	TWeakPointer& operator=(std::nullptr_t ptr) {
 		this->MakeWeakEmpty();
 		return *this;
 	}
 
-	TWeakPointer& operator=(TSharedPointer& other) {
+
+	template <typename U>
+	TWeakPointer& operator=(SharedPointer<U>& other) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->WeakChangeToShared(other);
 		return *this;
 	}
 
-	TWeakPointer& operator=(TWeakPointer& other) {
+	template <typename U>
+	TWeakPointer& operator=(WeakPointer<U>& other) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->WeakChangeToWeak(other);
 		return *this;
 	}
 
-	TWeakPointer& operator=(TWeakPointer&& other) {
+	template <typename U>
+	TWeakPointer& operator=(WeakPointer<U>&& other) {
+		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
 		this->WeakMoveToWeak(other);
 		return *this;
 	}
 
-	TWeakPointer& operator=(TSharedPointer&& other) = delete;
+	template <typename U>
+	TWeakPointer& operator=(SharedPointer<U>&& other) = delete;
 };
 
 

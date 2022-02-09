@@ -21,6 +21,12 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\header.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

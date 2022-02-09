@@ -35,6 +35,7 @@ struct ModelA
 
 // 쉐어드 포인터 테스트
 TEST(SmartPointerTest, SharedPointer) {
+
 	SharedPointer<int> g1 = MakeShared<int>(2);
 	SharedPointer<int> g2 = MakeShared<int>(3);
 
@@ -85,8 +86,6 @@ TEST(SmartPointerTest, SharedPointer) {
 }
 
 
-
-
 // 워크 포인터 테스트
 TEST(SmartPointerTest, WeakPointer) {
 
@@ -99,7 +98,6 @@ TEST(SmartPointerTest, WeakPointer) {
 		EXPECT_TRUE(s1.RefCount() == 0);
 		EXPECT_TRUE(w1.Exist() == false);
 		EXPECT_TRUE(s1.Exist() == false);
-
 		w1 = s1;	// operator(&)
 
 		EXPECT_TRUE(w1.RefCount() == 0);
@@ -190,11 +188,36 @@ TEST(SmartPointerTest, WeakPointer) {
 	EXPECT_TRUE(e1.RefCount() == 0);
 	EXPECT_TRUE(d1.Exist() == false);
 	EXPECT_TRUE(e1.Exist() == false);
+}
 
-	
+
+// 다이나믹 캐스팅 테스트
+TEST(SmartPointerTest, DynamicCastingTest) {
+	struct Model
+	{
+		Model(int da) { a = da; PrintFormat("모델 1호 생성\n"); }
+		virtual ~Model() { PrintFormat("모델 1호 소멸\n"); }
+
+		int a = 3;
+		int b = 3;
+	};
+
+
+	struct SuperModel : Model
+	{
+		SuperModel() : Model(1) {}
+		~SuperModel() override { PrintFormat("슈퍼 모델 소멸\n"); }
+	};
+
+
+	{
+		SharedPointer<SuperModel> s1 = MakeShared<SuperModel[5]>();
+		SharedPointer<Model> s2 = s1;
+		SharedPointer<SuperModel> s3 = s2;
+	}
 }
 
 
 
-
 #endif // TEST_SmartPointerTest == ON
+

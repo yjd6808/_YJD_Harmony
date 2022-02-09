@@ -4,6 +4,8 @@
 #include <JCore/StringUtil.h>
 #include <JCore/StaticString.h>
 
+#include <type_traits>
+
 namespace JCore {
 
 /* =============================================================== */
@@ -77,6 +79,53 @@ using RemoveQulifier_t = typename RemoveQulifier<T>::Type;
 
 
 /* =============================================================== */
+// 배열 괄호 제거해서 기본 타입만 얻도록 하는 템플릿
+template <typename T>
+struct RemoveArray
+{
+	using Type = typename T;
+};
+
+template <typename T>
+struct RemoveArray<T[]>
+{
+	using Type = typename T;
+};
+
+template <typename T, Int32U ArraySize>
+struct RemoveArray<T[ArraySize]>
+{
+	using Type = typename T;
+};
+
+template <typename T>
+using RemoveArray_t = typename RemoveArray<T>::Type;
+/* =============================================================== */
+
+
+/* =============================================================== */
+// 한정자 제거해주는 템플릿
+// 포인터 타입은 제거가 안댐
+template <typename T>
+struct RevmovePointer
+{
+	using Type = typename T;
+};
+
+template <typename T>
+struct RevmovePointer<T*>
+{
+	using Type = typename T;
+};
+
+
+template <typename T>
+using RemovePointer_t = typename RevmovePointer<T>::Type;
+/* =============================================================== */
+
+
+
+/* =============================================================== */
 // 무브 시멘틱과 완벽한 전달
 template <typename T>
 inline constexpr RemoveReference_t<T>&& Move(T&& arg) {
@@ -88,6 +137,9 @@ inline constexpr T&& Forward(RemoveReference_t<T>& arg) {
 	return static_cast<T&&>(arg);
 }
 /* =============================================================== */
+
+
+
 
 
 
@@ -274,10 +326,10 @@ constexpr auto CTType() {
 		pSrc++;
 	}
 
-	if (szResult.StartWith("class ")) {
-		return szResult.Remove("class ");
-	} else if (szResult.StartWith("struct ")) {
-		return szResult.Remove("struct ");
+	if (szResult.StartWith("class")) {
+		//return szResult.Remove("class");
+	} else if (szResult.StartWith("struct")) {
+		//return szResult.Remove("struct");
 	}
 
 	return szResult;
@@ -293,6 +345,35 @@ constexpr auto Type_v = CTType<T>();
 
 template <typename T1, typename T2>
 constexpr bool IsSameType_v = IsSameType<T1, T2>();
+
+// From에서 To로 암묵적 변환이 가능한지
+// 즉 To ? = From이 가능한지
+// @참고 : https://docs.microsoft.com/ko-kr/cpp/standard-library/is-convertible-class?view=msvc-170
+template <typename From, typename To>
+constexpr bool IsConvertible_v = std::is_convertible_v<From, To>;
+
+
+template <typename Base, typename Derived>
+constexpr bool IsBaseOf_v = std::is_base_of_v<Base, Derived>;
+
+
+
+template <typename T>
+constexpr bool IsPrimitiveType_v = std::is_fundamental<T>::value;
+
+
+
+// 서로 다이나믹 캐스팅이 가능한지 알려주는 녀석
+// 템플릿 인자로 전달한 녀석이 둘 모두 포인터 타입 또는 레퍼런스 타입인 경우
+template <typename Lhs, typename Rhs>
+constexpr bool DynamicCastable_v = (IsPointerType_v<Lhs> && IsPointerType_v<Rhs>)  ||
+								   (IsReferenceType_v<Lhs> && IsReferenceType_v<Rhs>) 
+								   ?		
+									IsBaseOf_v<RemovePointer_t<RemoveReference_t<Lhs>>, RemovePointer_t<RemoveReference_t<Rhs>>> ||
+									IsBaseOf_v<RemovePointer_t<RemoveReference_t<Rhs>>, RemovePointer_t<RemoveReference_t<Lhs>>>
+								   :
+								   false;
+
 
 template <typename T>
 constexpr T* AddressOf(T& arg) {

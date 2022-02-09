@@ -39,5 +39,8 @@
     <ClInclude Include="..\Sources\JCore\Deletor.h" />
     <ClInclude Include="..\Sources\JCore\PointerObserver.h" />
     <ClInclude Include="..\Sources\JCore\AutoObject.h" />
+    <ClInclude Include="..\Sources\JCore\Container\Collection.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
