@@ -1,6 +1,12 @@
 /*
 	작성자 : 윤정도
 	스마트 포인터 만들어보기
+
+	배열 타입까지 구현해버리는 바람에 다이나믹 캐스팅이
+	실패하는 경우에 대한 처리를 하지 못했다.
+
+	코딩을 신경써서 하는 수밖에..
+	쓰레드 세이프하지 않으므로 나중에 뮤텍스 버전을 만들든 해야할 듯
 */
 
 #pragma once
@@ -31,16 +37,27 @@ do {							\
 #endif
 
 namespace JCore {
-	// 스마트포인터는 배열타입은 기본 타입으로 붕괴해서 체크하자.. ㅠ
-	// 원시 타입인 경우는 같은 타입끼리만 가능하도록 한다.
-	template <typename Lhs, typename Rhs>
-	constexpr bool SmartPointer_Castable_v 
-			= (IsPrimitiveType_v<RemoveArray_t<Lhs>> && IsPrimitiveType_v<RemoveArray_t<Rhs>>) ? 
-			  IsSameType_v<RemoveArray_t<Lhs>, RemoveArray_t<Rhs>> : 
-			  DynamicCastable_v<RemoveArray_t<Lhs>*, RemoveArray_t<Rhs>*>;
+	namespace StaticAssert {
+		// 스마트포인터는 배열타입은 기본 타입으로 붕괴해서 체크하자.. ㅠ
+		template <typename Lhs, typename Rhs>
+		constexpr bool SmartPointer_Castable_v = DynamicCastable_v<RemoveArray_t<Lhs>*, RemoveArray_t<Rhs>*>;
+
+		// 안씀
+		template <typename From, typename To>
+		constexpr bool SmartPointer_BaseOf_v = IsRPBasedOf_v<RemoveArray_t<From>*, RemoveArray_t<To>*>;
+
+		template <typename Lhs, typename Rhs>
+		void CheckDynamicCastable() {
+			static_assert(SmartPointer_Castable_v<Lhs, Rhs>, 
+				"... cannot convert! Type T* and U* must be dynamic castable each other");
+		}
+	}
+
+
 
 // 전방 선언
 template <typename>	class SharedMaker;
+template <typename>	class UniqueMaker;
 template <typename>	class WeakPointer;
 template <typename>	class SharedPointer;
 template <typename>	class UniquePointer;
@@ -52,26 +69,138 @@ constexpr decltype(auto) MakeShared(Args&&... args) {
 
 template <typename T, typename... Args>
 constexpr decltype(auto) MakeUnique(Args&&... args) {
-	return UniquePointer<T>::Create(Forward<Args>(args)...);
+	return UniqueMaker<T>::Create(Forward<Args>(args)...);
 }
+
+
+struct __declspec(novtable) UniqueBase
+{
+	virtual ~UniqueBase() { }
+	virtual void DeleteSelf() = 0;
+};
+
+template <typename T>
+struct UniqueObject : UniqueBase
+{
+	using TDeletor = typename PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
+
+	template <typename... Args>
+	explicit UniqueObject(Args&&... args) {
+		::new (reinterpret_cast<void*>(AddressOf(Object))) T(Forward<Args>(args)...);
+	}
+	virtual ~UniqueObject() {}
+
+	void DeleteSelf() override {
+		TDeletor()(AddressOf(Object));
+		delete this;
+	}
+
+	T* Address() const {
+		return (T*)AddressOf(Object);
+	}
+
+	union { T Object; };
+};
+
+template <typename T, int Size>
+struct UniqueObject<T[Size]> : UniqueBase
+{
+	using TDeletor = typename PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
+
+	template <typename... Args>
+	explicit UniqueObject(Args&&... args) {
+		for (int i = 0; i < Size; i++) {
+			::new (AddressOf(Object[i])) T{ Forward<Args>(args)... };
+		}
+	}
+
+	virtual ~UniqueObject() {}
+
+	void DeleteSelf() override {
+		TDeletor()(Object);
+		delete this;
+	}
+
+	T* Address() const {
+		return (T*)Object;
+	}
+
+	union { T Object[Size]; };
+};
+
+template <typename T>
+struct UniqueObject<T[]> : UniqueBase
+{
+	using TDeletor = typename PlacementDeletor<T[], DeletorOption::Both>;
+
+	template <typename... Args>
+	explicit UniqueObject(int Size, Args&&... args) {
+		void* pRawMemory = ::operator new[](sizeof(T)* Size);
+		Pointer = (T*)(pRawMemory);
+
+		for (int i = 0; i < Size; i++) {
+			::new (Pointer + i) T{ Forward<Args>(args)... };
+		}
+
+		m_Size = Size;
+	}
+	virtual ~UniqueObject() {}
+
+	void DeleteSelf() override {
+		TDeletor()(Pointer, m_Size);
+		delete this;
+	}
+
+	T* Address() const {
+		return reinterpret_cast<T*>(Pointer);
+	}
+
+	union { T* Pointer; };
+	int m_Size;
+};
 
 template <typename T>
 class UniquePointer
 {
-	using TDeletor			= typename Deletor<T>;
 	using TUniquePointer	= typename UniquePointer<T>;
 
-	UniquePointer(T* ptr) : m_Pointer(ptr) {}
+	template <typename U>
+	void SetUniquePointer(U* ptr, UniqueBase* base, int size) {
+		m_Pointer = (T*)ptr;
+		m_Base = base;
+		m_Size = size;
+	}
 public:
 	UniquePointer() : m_Pointer(nullptr) {}
 	UniquePointer(std::nullptr_t nulptr) : m_Pointer(nullptr) {}
-	UniquePointer(const TUniquePointer& other) = delete;
-	UniquePointer(TUniquePointer&& other) {
-		m_Pointer = other.m_Pointer;
+
+	template <typename U>
+	UniquePointer(const UniquePointer<U>& other) = delete;
+
+	template <typename U>
+	UniquePointer(UniquePointer<U>&& other) {
+		StaticAssert::CheckDynamicCastable<U, T>();
+
+		m_Pointer = (T*)other.m_Pointer;
+		m_Base = other.m_Base;
+		m_Size = other.m_Size;
+		
 		other.m_Pointer = nullptr;
+		other.m_Base = nullptr;
+		other.m_Size = 0;
+		
 	}
 
-	virtual ~UniquePointer() { TDeletor()(m_Pointer); }
+	virtual ~UniquePointer() { 
+		if (m_Base != nullptr) {
+			// 가상 클래스는 vfptr때문에 스칼라 타입은 4바이트만큼 뒤에 있어서 이렇게 캐스팅해주면 되던데
+			// 배열로 만들면 달라지네;
+			//UniqueBase* p = (UniqueBase*)((char*)m_Pointer - 4);
+
+			m_Base->DeleteSelf();
+		}
+			
+	}
 
 	T& operator*() const {
 		if (m_Pointer == nullptr) {
@@ -84,143 +213,102 @@ public:
 		return m_Pointer;
 	}
 
-	T* Get() const {
-		return m_Pointer;
+
+	T& operator[](const int idx) const {
+		if (m_Pointer == nullptr) {
+			throw NullPointerException("포인터가 존재하지 않습니다.");
+		}
+
+		if (idx < 0 || idx >= m_Size) {
+			throw OutOfRangeException("올바른 인덱스 값을 입력해주세요.");
+		}
+
+		return m_Pointer[idx];
+	}
+
+	int Length() const {
+		return m_Size;
+	}
+
+	// Get<Model*> -> Model*로 반환
+	// 모두 같은 반환을 수행한다.
+	template <typename U = T*>
+	U Get() const {
+		if (m_Pointer == nullptr) {
+			return nullptr;
+		}
+
+		
+		static_assert(!IsReferenceType_v<U>, "... cannot cast to reference type");	// Get<int&>와 같은 캐스팅을 방지
+		static_assert(IsPointerType_v<U>, "... only cast to pointer type.");		// Get<int>	와 같은 방식을 방지
+
+		// U -> int* -> 포인터를 없애주고 비교해야함
+		// T -> int
+		StaticAssert::CheckDynamicCastable<RemovePointer_t<U>, T>();
+		return (U)m_Pointer;
 	}
 
 	template <typename AnyType>
 	void operator=(AnyType&& other) = delete;
-
-	template <typename... Args>
-	constexpr static TUniquePointer Create(Args&&... args) {
-		return TUniquePointer{ new T{ Forward<Args>(args)... } };
-	}
 private:
-	T* m_Pointer;
+	T* m_Pointer = nullptr;
+	UniqueBase* m_Base = nullptr;
+	int m_Size = 0;
+
+	template <typename> friend class UniqueMaker;
+	template <typename> friend class UniquePointer;
+};
+
+
+
+
+template <typename T>
+class UniqueMaker
+{
+	static const int ms_uiArraySize = 1;		// 기본적으로 길이는 무조건 1
+
+	using TUniquePointer = typename UniquePointer<T>;
+	using TUniqueObject = typename UniqueObject<T>;
+public:
+	template <typename... Args>
+	static constexpr TUniquePointer Create(Args&&... args) {
+		TUniqueObject* obj = new TUniqueObject(Forward<Args>(args)...);
+		TUniquePointer sp;
+		sp.SetUniquePointer(obj->Address(), obj, ms_uiArraySize);
+		return sp;
+	}
+};
+
+template <typename T, int ArraySize>
+class UniqueMaker<T[ArraySize]>
+{
+	using TUniquePointer = typename UniquePointer<T[ArraySize]>;
+	using TUniqueObject = typename UniqueObject<T[ArraySize]>;
+public:
+	template <typename... Args>
+	static constexpr TUniquePointer Create(Args&&... args) {
+		TUniqueObject* obj = new TUniqueObject(Forward<Args>(args)...);
+		TUniquePointer sp;
+		sp.SetUniquePointer(obj->Address(), obj, ArraySize);
+		return sp;
+	}
 };
 
 
 template <typename T>
-class UniquePointer<T[]>
+class UniqueMaker<T[]>
 {
-	using TDeleteor			= typename PlacementDeletor<T[]>;
-	using TUniquePointer	= typename UniquePointer<T[]>;
-
-	UniquePointer(T* ptr, Int32U arraySize) : m_Pointer(ptr), m_Size(arraySize) {}
+	using TUniquePointer = typename UniquePointer<T[]>;
+	using TUniqueObject = typename UniqueObject<T[]>;
 public:
-	UniquePointer() : m_Pointer(nullptr) {}
-	UniquePointer(std::nullptr_t nulptr) : m_Pointer(nullptr) {}
-	UniquePointer(const TUniquePointer& other) = delete;
-	UniquePointer(TUniquePointer&& other) {
-		m_Pointer = other.m_Pointer;
-		other.m_Pointer = nullptr;
-	}
-
-	virtual ~UniquePointer() { 
-		TDeleteor()(m_Pointer, m_Size);
-	}
-
-	T& operator*() const {
-		if (m_Pointer == nullptr) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-		return *m_Pointer;
-	}
-
-	T* operator->() const {
-		return m_Pointer;
-	}
-
-	T* Get() const {
-		return m_Pointer;
-	}
-
-	T& operator[](const int idx) {
-		if (idx < 0 || idx >= m_Size) {
-			throw RuntimeException("인덱스 범위를 벗어났습니다.");
-		}
-		return m_Pointer[idx];
-	}
-
-	template <typename AnyType>
-	void operator=(AnyType&& other) = delete;
-
 	template <typename... Args>
-	constexpr static TUniquePointer Create(Int32U Size, Args&&... args) {
-		void* pRawMemory = operator new[](sizeof(T) * Size);
-		T* pArray = (T*)(pRawMemory);
-
-		for (int i = 0; i < Size; i++) {
-			::new (pArray + i) T{ Forward<Args>(args)...};
-		}
-
-		return TUniquePointer(pArray, Size);
+	static constexpr TUniquePointer Create(int Size, Args&&... args) {
+		TUniqueObject* obj = new TUniqueObject(Size, Forward<Args>(args)...);
+		TUniquePointer sp;
+		sp.SetUniquePointer(obj->Address(), obj, Size);
+		return sp;
 	}
-private:
-	T* m_Pointer;
-	Int32U m_Size;
 };
-
-template <typename T, Int32U ArraySize>
-class UniquePointer<T[ArraySize]>
-{
-	using TDeleteor		 = typename PlacementDeletor<T[ArraySize]>;
-	using TUniquePointer = typename UniquePointer<T[ArraySize]>;
-
-	UniquePointer(T* ptr) : m_Pointer(ptr) {}
-public:
-	UniquePointer() : m_Pointer(nullptr) {}
-	UniquePointer(std::nullptr_t nulptr) : m_Pointer(nullptr) {}
-	UniquePointer(const TUniquePointer& other) = delete;
-	UniquePointer(TUniquePointer&& other) {
-		m_Pointer = other.m_Pointer;
-		other.m_Pointer = nullptr;
-	}
-
-	virtual ~UniquePointer() {
-		TDeleteor()(m_Pointer);
-	}
-
-	T& operator*() const {
-		if (m_Pointer == nullptr) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-		return *m_Pointer;
-	}
-
-	T* operator->() const {
-		return m_Pointer;
-	}
-
-	T* Get() const {
-		return m_Pointer;
-	}
-
-	T& operator[](const int idx) {
-		if (idx < 0 || idx >= ArraySize) {
-			throw RuntimeException("인덱스 범위를 벗어났습니다.");
-		}
-		return m_Pointer[idx];
-	}
-
-	template <typename AnyType>
-	void operator=(AnyType&& other) = delete;
-
-	template <typename... Args>
-	constexpr static TUniquePointer Create(Args&&... args) {
-		void* pRawMemory = operator new[](sizeof(T) * ArraySize);
-		T* pArray = (T*)(pRawMemory);
-
-		for (int i = 0; i < ArraySize; i++) {
-			::new (pArray + i) T{ Forward<Args>(args)... };
-		}
-
-		return TUniquePointer(pArray);
-	}
-private:
-	T* m_Pointer;
-};
-
 
 
 
@@ -233,11 +321,11 @@ struct __declspec(novtable) ControlBlock
 	virtual void DestroyObject() = 0;
 
 	void IncreaseRefCount() {
-		ReferenceCount.fetch_add(1);
+		ReferenceCount++;
 	}
 
 	void IncreaseWeakCount() {
-		WeakCount.fetch_add(1);
+		WeakCount++;
 	}
 
 	void DecreaseRefCount() {
@@ -256,8 +344,8 @@ struct __declspec(novtable) ControlBlock
 	}
 
 
-	std::atomic<Int32U> ReferenceCount = 1;
-	std::atomic<Int32U> WeakCount = 1;
+	int ReferenceCount = 1;
+	int WeakCount = 1;
 };
 
 
@@ -287,7 +375,7 @@ struct SharedObject : ControlBlock
 	union { T Object; };
 };
 
-template <typename T, Int32U Size>
+template <typename T, int Size>
 struct SharedObject<T[Size]> : ControlBlock
 {
 	using TDeletor = typename PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
@@ -347,7 +435,7 @@ struct SharedObject<T[]> : ControlBlock
 	}
 
 	union { T* Pointer; };
-	Int32U m_Size;
+	int m_Size;
 };
 
 
@@ -357,7 +445,7 @@ class BasePointer
 	using TSharedPointer	= typename SharedPointer<T>;
 	using TWeakPointer		= typename WeakPointer<T>;
 public:
-	Int32U RefCount() const {
+	int RefCount() const {
 		if (m_ControlBlock == nullptr) {
 			return 0;
 		}
@@ -365,7 +453,7 @@ public:
 		return m_ControlBlock->ReferenceCount;
 	}
 
-	Int32U WeakCount() const {
+	int WeakCount() const {
 		if (m_ControlBlock == nullptr) {
 			return 0;
 		}
@@ -388,12 +476,62 @@ public:
 	T* GetPointer() const {
 		return m_Pointer;
 	}
+
+	int Length() const {
+		return m_Size;
+	}
+
+	// Get<Model*> -> Model*로 반환
+	// 모두 같은 반환을 수행한다.
+	template <typename U = T*>
+	U Get() const {
+		if (!Exist()) {
+			return nullptr;
+		}
+
+		static_assert(!IsReferenceType_v<U>, "... cannot cast to reference type");	// Get<int&>와 같은 캐스팅을 방지
+		static_assert(IsPointerType_v<U>, "... only cast to pointer type.");		// Get<int>	와 같은 방식을 방지
+
+		// U -> int* -> 포인터를 없애주고 비교해야함
+		// T -> int
+		StaticAssert::CheckDynamicCastable<RemovePointer_t<U>, T>();
+		return (U)m_Pointer;
+	}
+
+	T& operator*() const {
+		if (!Exist()) {
+			throw NullPointerException("포인터가 존재하지 않습니다.");
+		}
+
+		return GetObj();
+	}
+
+	T* operator->() const {
+		if (!Exist()) {
+			throw NullPointerException("포인터가 존재하지 않습니다.");
+		}
+
+		return GetPointer();
+	}
+
+	T& operator[](const int idx) const {
+		if (!Exist()) {
+			throw NullPointerException("포인터가 존재하지 않습니다.");
+		}
+
+		if (idx < 0 || idx >= m_Size) {
+			throw OutOfRangeException("올바른 인덱스 값을 입력해주세요.");
+		}
+
+		return m_Pointer[idx];
+	}
 protected:
 	void MakeSharedEmpty() {
 		m_ControlBlock->DecreaseRefCount();
 
 		m_Pointer = nullptr;
 		m_ControlBlock = nullptr;
+		m_Size = 0;
 	}
 
 	// Shared로 Shared 복사
@@ -402,6 +540,7 @@ protected:
 		SubtractReferenceCount();
 		m_Pointer = (T*)(shared.m_Pointer);
 		m_ControlBlock = shared.m_ControlBlock;
+		m_Size = shared.m_Size;
 		AddReferenceCount();
 	}
 
@@ -411,6 +550,7 @@ protected:
 		SubtractReferenceCount();
 		m_Pointer = (T*)(weak.m_Pointer);
 		m_ControlBlock = weak.m_ControlBlock;
+		m_Size = weak.m_Size;
 		AddReferenceCount();
 	}
 
@@ -420,6 +560,7 @@ protected:
 		SubtractWeakCount();
 		m_Pointer = (T*)(shared.m_Pointer);
 		m_ControlBlock = shared.m_ControlBlock;
+		m_Size = shared.m_Size;
 		AddWeakCount();
 	}
 
@@ -429,6 +570,7 @@ protected:
 		SubtractWeakCount();
 		m_Pointer = (T*)(weak.m_Pointer);
 		m_ControlBlock = weak.m_ControlBlock;
+		m_Size = weak.m_Size;
 		AddWeakCount();
 	}
 
@@ -439,9 +581,11 @@ protected:
 
 		m_Pointer = (T*)(shared.m_Pointer);
 		m_ControlBlock = shared.m_ControlBlock;
+		m_Size = shared.m_Size;
 
 		shared.m_Pointer = nullptr;
 		shared.m_ControlBlock = nullptr;
+		shared.m_Size = 0;
 	}
 
 	// Shared로 Weak 이동
@@ -453,6 +597,7 @@ protected:
 
 		weak.m_Pointer = nullptr;
 		weak.m_ControlBlock = nullptr;
+		weak.m_Size = 0;
 	}
 
 	template <typename U>
@@ -467,9 +612,11 @@ protected:
 
 		m_Pointer = weak.m_Pointer;
 		m_ControlBlock = weak.m_ControlBlock;
+		m_ControlBlock = weak.m_Size;
 
 		weak.m_Pointer = nullptr;
 		weak.m_ControlBlock = nullptr;
+		weak.m_Size = 0;
 	}
 
 
@@ -508,7 +655,7 @@ protected:
 	}
 
 	template <typename U>
-	void SetSharedPointer(U* ptr, ControlBlock* controlBlock) {
+	void SetSharedPointer(U* ptr, ControlBlock* controlBlock, int size) {
 
 //		SharedPointer<Model[]> p3 = MakeShared<Model2[]>(20); // 모델 객체 20의 배열 생성
 // 		배열타입들땜에 강제 형변환 해줘야한다. ㄷㄷ;
@@ -519,16 +666,16 @@ protected:
 
 		m_Pointer = (T*)(ptr);
 		m_ControlBlock = controlBlock;
+		m_Size = size;
 	}
 
 protected:
 	T* m_Pointer = nullptr;
 	ControlBlock* m_ControlBlock = nullptr;
+	int m_Size = 0;
 
-	friend class SharedMaker<T>;
-
-	template <typename U>
-	friend class BasePointer;
+	template <typename> friend class SharedMaker;
+	template <typename> friend class BasePointer;
 };
 
 
@@ -542,57 +689,32 @@ public:
 
 	template <typename U>
 	SharedPointer(WeakPointer<U>& weak) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->SharedChangeToWeak(weak);
 	}
 	
 	template <typename U>
 	SharedPointer(WeakPointer<U>&& weak) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->SharedMoveToWeak(weak);
 	}
 
 	template <typename U>
 	SharedPointer(SharedPointer<U>& shared) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->SharedChangeToShared(shared);
 	}
 
 	template <typename U>
 	SharedPointer(SharedPointer<U>&& shared) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->SharedMoveToShared(shared);
 	}
 
 	~SharedPointer() {
 		this->SubtractReferenceCount();
 	}
-
-	T& operator*() const {
-		if (!this->Exist()) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-
-		return this->GetObj();
-	}
-
-	T* operator->() const {
-		if (!this->Exist()) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-
-		return this->GetPointer();
-	}
-
-	T* Get() const {
-		if (!this->Exist()) {
-			return nullptr;
-		}
-
-		return this->GetPointer();
-	}
-
-
+	
 	TSharedPointer& operator=(std::nullptr_t ptr) {
 		this->MakeSharedEmpty();
 		return *this;
@@ -600,77 +722,33 @@ public:
 
 	template <typename U>
 	TSharedPointer& operator=(SharedPointer<U>& other) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->SharedChangeToShared(other);
 		return *this;
 	}
 
 	template <typename U>
 	TSharedPointer& operator=(SharedPointer<U>&& other) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->SharedMoveToShared(other);
 		return *this;
 	}
 
 	template <typename U>
 	TSharedPointer& operator=(WeakPointer<U>& other) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->SharedChangeToWeak(other);
 		return *this;
 	}
 
 	template <typename U>
 	TSharedPointer& operator=(WeakPointer<U>&& other) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->SharedMoveToWeak(other);
 		return *this;
 	}
-};
-
-template <typename T>
-class SharedMaker
-{
-	using TSharedPointer	= typename SharedPointer<T>;
-	using TSharedObject		= typename SharedObject<T>;
-public:
-	template <typename... Args>
-	static constexpr TSharedPointer Create(Args&&... args) {
-		TSharedObject* obj = new TSharedObject(Forward<Args>(args)...);
-		TSharedPointer sp;
-		sp.SetSharedPointer(obj->Address(), obj);
-		return sp;
-	}
-};
-
-template <typename T, Int32U ArraySize>
-class SharedMaker<T[ArraySize]>
-{
-	using TSharedPointer = typename SharedPointer<T[ArraySize]>;
-	using TSharedObject = typename SharedObject<T[ArraySize]>;
-public:
-	template <typename... Args>
-	static constexpr TSharedPointer Create(Args&&... args) {
-		TSharedObject* obj = new TSharedObject(Forward<Args>(args)...);
-		TSharedPointer sp;
-		sp.SetSharedPointer(obj->Address(), obj);
-		return sp;
-	}
-};
 
 
-template <typename T>
-class SharedMaker<T[]>
-{
-	using TSharedPointer = typename SharedPointer<T[]>;
-	using TSharedObject = typename SharedObject<T[]>;
-public:
-	template <typename... Args>
-	static constexpr TSharedPointer Create(Int32U Size, Args&&... args) {
-		TSharedObject* obj = new TSharedObject(Size, Forward<Args>(args)...);
-		TSharedPointer sp;
-		sp.SetSharedPointer(obj->Address(), obj);
-		return sp;
-	}
 };
 
 
@@ -684,19 +762,19 @@ public:
 
 	template <typename U>
 	WeakPointer(WeakPointer<U>& weak) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->WeakChangeToWeak(weak);
 	}
 
 	template <typename U>
 	WeakPointer(WeakPointer<U>&& weak) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->WeakMoveToWeak(weak);
 	}
 
 	template <typename U>
 	WeakPointer(SharedPointer<U>& shared) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->WeakChangeToShared(shared);
 	}
 
@@ -710,31 +788,6 @@ public:
 		this->SubtractWeakCount();
 	}
 
-	T& operator*() const {
-		if (!this->Exist()) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-
-		return this->GetObj();
-	}
-
-	T* operator->() const {
-		if (!this->Exist()) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-
-		return this->GetPointer();
-	}
-
-	T* Get() const {
-		if (!this->Exist()) {
-			return nullptr;
-		}
-
-		return this->GetPointer();
-	}
-
-
 	TWeakPointer& operator=(std::nullptr_t ptr) {
 		this->MakeWeakEmpty();
 		return *this;
@@ -743,21 +796,21 @@ public:
 
 	template <typename U>
 	TWeakPointer& operator=(SharedPointer<U>& other) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->WeakChangeToShared(other);
 		return *this;
 	}
 
 	template <typename U>
 	TWeakPointer& operator=(WeakPointer<U>& other) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->WeakChangeToWeak(other);
 		return *this;
 	}
 
 	template <typename U>
 	TWeakPointer& operator=(WeakPointer<U>&& other) {
-		static_assert(SmartPointer_Castable_v<U, T>, "... cannot convert");
+		StaticAssert::CheckDynamicCastable<U, T>();
 		this->WeakMoveToWeak(other);
 		return *this;
 	}
@@ -765,6 +818,56 @@ public:
 	template <typename U>
 	TWeakPointer& operator=(SharedPointer<U>&& other) = delete;
 };
+
+
+template <typename T>
+class SharedMaker
+{
+	static const int ms_uiArraySize = 1;		// 기본적으로 길이는 무조건 1
+
+	using TSharedPointer = typename SharedPointer<T>;
+	using TSharedObject = typename SharedObject<T>;
+public:
+	template <typename... Args>
+	static constexpr TSharedPointer Create(Args&&... args) {
+		TSharedObject* obj = new TSharedObject(Forward<Args>(args)...);
+		TSharedPointer sp;
+		sp.SetSharedPointer(obj->Address(), obj, ms_uiArraySize);
+		return sp;
+	}
+};
+
+template <typename T, int ArraySize>
+class SharedMaker<T[ArraySize]>
+{
+	using TSharedPointer = typename SharedPointer<T[ArraySize]>;
+	using TSharedObject = typename SharedObject<T[ArraySize]>;
+public:
+	template <typename... Args>
+	static constexpr TSharedPointer Create(Args&&... args) {
+		TSharedObject* obj = new TSharedObject(Forward<Args>(args)...);
+		TSharedPointer sp;
+		sp.SetSharedPointer(obj->Address(), obj, ArraySize);
+		return sp;
+	}
+};
+
+
+template <typename T>
+class SharedMaker<T[]>
+{
+	using TSharedPointer = typename SharedPointer<T[]>;
+	using TSharedObject = typename SharedObject<T[]>;
+public:
+	template <typename... Args>
+	static constexpr TSharedPointer Create(int size, Args&&... args) {
+		TSharedObject* obj = new TSharedObject(size, Forward<Args>(args)...);
+		TSharedPointer sp;
+		sp.SetSharedPointer(obj->Address(), obj, size);
+		return sp;
+	}
+};
+
 
 
 } // namespace JCore

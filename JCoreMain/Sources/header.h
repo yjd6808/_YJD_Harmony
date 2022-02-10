@@ -28,6 +28,7 @@
 #include <JCore/PointerObserver.h>
 #include <JCore/AutoObject.h>
 #include <JCore/Container/Arrays.h>
+#include <JCore/Container/Collection.h>
 
 using namespace JCore;
 using namespace std;

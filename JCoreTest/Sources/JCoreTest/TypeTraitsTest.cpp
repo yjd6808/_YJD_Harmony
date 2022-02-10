@@ -82,7 +82,6 @@ TEST(TypeTraitsTest, IsIntegerType_v) {
 	EXPECT_TRUE((IsIntegerType_v<const volatile Int32U&>));
 }
 
-
 TEST(TypeTraitsTest, Move) {
 	int a = 10;
 	int& b = a;
@@ -93,5 +92,51 @@ TEST(TypeTraitsTest, Move) {
 }
 
 
+TEST(TypeTraitsTest, DynamicCastable_v) {
+	struct Model
+	{
+		Model(int da) { a = da; PrintFormat("모델 1호 생성\n"); }
+		virtual ~Model() { PrintFormat("모델 1호 소멸\n"); }
+
+		int a = 3;
+		int b = 3;
+	};
+
+	struct SuperModel : Model
+	{
+		SuperModel() : Model(1) {}
+		~SuperModel() override { PrintFormat("슈퍼 모델 소멸\n"); }
+	};
+
+	struct NoobModel {};
+
+	EXPECT_TRUE((DynamicCastable_v<Model*, SuperModel*>));
+	EXPECT_TRUE((DynamicCastable_v<Model*, Model*>));
+	EXPECT_TRUE((DynamicCastable_v<SuperModel*, SuperModel*>));
+	EXPECT_TRUE((DynamicCastable_v<SuperModel*, Model*>));
+
+	EXPECT_TRUE((DynamicCastable_v<Model&, SuperModel&>));
+	EXPECT_TRUE((DynamicCastable_v<Model&, Model&>));
+	EXPECT_TRUE((DynamicCastable_v<SuperModel&, SuperModel&>));
+	EXPECT_TRUE((DynamicCastable_v<SuperModel&, Model&>));
+
+	// 부모 자식관계가 아닌 경우에는 안됨
+	EXPECT_FALSE((DynamicCastable_v<NoobModel*, SuperModel*>));
+	EXPECT_FALSE((DynamicCastable_v<Model*, NoobModel*>));
+	EXPECT_FALSE((DynamicCastable_v<NoobModel*, Model*>));
+	EXPECT_TRUE((DynamicCastable_v<NoobModel*, NoobModel*>));	// 서로 같은 타입이므로 OK
+	
+
+	// 값 타입은 무조건 실패
+	EXPECT_FALSE((DynamicCastable_v<Model, SuperModel>));
+	EXPECT_FALSE((DynamicCastable_v<Model, Model>));
+	EXPECT_FALSE((DynamicCastable_v<SuperModel, SuperModel>));
+	EXPECT_FALSE((DynamicCastable_v<SuperModel, Model>));
+
+	// 원시타입은 동일한 타입끼리만 허용 / 그래도 값타입은 안댐
+	EXPECT_FALSE((DynamicCastable_v<int, int>));
+	EXPECT_TRUE((DynamicCastable_v<int*, int*>));
+	EXPECT_TRUE((DynamicCastable_v<int&, int&>));
+}
 
 #endif // TEST_TypeTraitsTest == ON

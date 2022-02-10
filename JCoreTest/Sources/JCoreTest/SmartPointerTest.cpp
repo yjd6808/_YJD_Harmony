@@ -12,8 +12,50 @@ using namespace std;
 
 #if TEST_SmartPointerTest == ON
 
+namespace SmartPointerTest
+{
+
+struct Model
+{
+	Model(int da) { a = da; PrintFormat("¸ðµ¨ 1È£ »ý¼º\n"); }
+	virtual ~Model() { PrintFormat("¸ðµ¨ 1È£ ¼Ò¸ê\n"); }
+
+	int a = 3;
+	int b = 3;
+};
+
+
+struct SuperModel : Model
+{
+	SuperModel() : Model(1) {}
+	~SuperModel() override { PrintFormat("½´ÆÛ ¸ðµ¨ ¼Ò¸ê\n"); }
+};
+
+
+struct Animal
+{
+	virtual int GetAge() const = 0;
+};
+
+struct Dog : Animal
+{
+	int GetAge() const override { return Age; };
+
+	int Age = 300;
+};
+
+struct Bird : Animal
+{
+	int GetAge() const override { return Age; };
+	
+	int Dummy = 0;
+	int Age = 400;
+};
+
 // À¯´ÏÅ© Æ÷ÀÎÅÍ Å×½ºÆ®
 TEST(SmartPointerTest, UniquePointer) {
+	MemoryLeakDetector leak;
+
 	UniquePointer<int> g1 = MakeUnique<int>();
 	UniquePointer<int> g2 = MakeUnique<int>();
 	*g1 = 30;
@@ -28,13 +70,14 @@ TEST(SmartPointerTest, UniquePointer) {
 struct ModelA
 {
 #if Print == ON
-	ModelA() {  cout << "model A constructor called\n";  }
-	~ModelA() {  cout << "model A destructor called\n";  }
+	ModelA() {  PrintFormat("model A constructor called\n");  }
+	~ModelA() { PrintFormat("model A destructor called\n");  }
 #endif
 };
 
 // ½¦¾îµå Æ÷ÀÎÅÍ Å×½ºÆ®
 TEST(SmartPointerTest, SharedPointer) {
+	
 
 	SharedPointer<int> g1 = MakeShared<int>(2);
 	SharedPointer<int> g2 = MakeShared<int>(3);
@@ -88,7 +131,6 @@ TEST(SmartPointerTest, SharedPointer) {
 
 // ¿öÅ© Æ÷ÀÎÅÍ Å×½ºÆ®
 TEST(SmartPointerTest, WeakPointer) {
-
 	PrintFormat("[±âº» Å×½ºÆ®]\n");
 	{
 		WeakPointer<ModelA> w1;
@@ -119,8 +161,8 @@ TEST(SmartPointerTest, WeakPointer) {
 	struct ModelB
 	{
 	#if Print == ON
-		ModelB() { cout << "model B constructor called\n"; }
-		~ModelB() { cout << "model B destructor called\n"; }
+		ModelB() { PrintFormat("model B constructor called\n"); }
+		~ModelB() { PrintFormat("model B destructor called\n"); }
 	#endif
 		SharedPointer<ModelC> C;
 	};
@@ -128,8 +170,8 @@ TEST(SmartPointerTest, WeakPointer) {
 	struct ModelC
 	{
 	#if Print == ON
-		ModelC() { cout << "model C constructor called\n"; }
-		~ModelC() { cout << "model C destructor called\n"; }
+		ModelC() { PrintFormat("model C constructor called\n"); }
+		~ModelC() { PrintFormat("model C destructor called\n"); }
 	#endif
 		SharedPointer<ModelB> B;
 	};
@@ -141,8 +183,8 @@ TEST(SmartPointerTest, WeakPointer) {
 	struct ModelD
 	{
 	#if Print == ON
-		ModelD() { cout << "model D constructor called\n"; }
-		~ModelD() { cout << "model D destructor called\n"; }
+		ModelD() { PrintFormat("model D constructor called\n"); }
+		~ModelD() { PrintFormat("model D destructor called\n"); }
 	#endif
 		WeakPointer<ModelE> E;
 	};
@@ -150,8 +192,8 @@ TEST(SmartPointerTest, WeakPointer) {
 	struct ModelE
 	{
 	#if Print == ON
-		ModelE() { cout << "model E constructor called\n"; }
-		~ModelE() { cout << "model E destructor called\n"; }
+		ModelE() { PrintFormat("model E constructor called\n"); }
+		~ModelE() { PrintFormat("model E destructor called\n"); }
 	#endif
 		WeakPointer<ModelD> D;
 	};
@@ -193,31 +235,153 @@ TEST(SmartPointerTest, WeakPointer) {
 
 // ´ÙÀÌ³ª¹Í Ä³½ºÆÃ Å×½ºÆ®
 TEST(SmartPointerTest, DynamicCastingTest) {
-	struct Model
+	MemoryLeakDetector leak;
+
+	WeakPointer<Model> w1;
 	{
-		Model(int da) { a = da; PrintFormat("¸ðµ¨ 1È£ »ý¼º\n"); }
-		virtual ~Model() { PrintFormat("¸ðµ¨ 1È£ ¼Ò¸ê\n"); }
+		SharedPointer<SuperModel> s1 = MakeShared<SuperModel>();
+		
+		Model* z = s1.Get<Model*>();		// Get ´ÙÀÌ³ª¹Í Ä³½ºÆÃ Áö¿ø
+		SuperModel* z2 = s1.Get();			// ±âº»Å¸ÀÔÀº ±×³É µé°í¿À¸é µÊ
 
-		int a = 3;
-		int b = 3;
-	};
-
-
-	struct SuperModel : Model
-	{
-		SuperModel() : Model(1) {}
-		~SuperModel() override { PrintFormat("½´ÆÛ ¸ðµ¨ ¼Ò¸ê\n"); }
-	};
-
-
-	{
-		SharedPointer<SuperModel> s1 = MakeShared<SuperModel[5]>();
 		SharedPointer<Model> s2 = s1;
 		SharedPointer<SuperModel> s3 = s2;
+
+
+		w1 = s1;
 	}
+
+
 }
 
+// ÀÎµ¦½Ì Å×½ºÆ®
+// ¹è¿­Ã³·³ µ¿ÀÛ°¡´ÉÇÑÁö.
+TEST(SmartPointerTest, Indexing) {
+	MemoryLeakDetector leak;
+
+	constexpr int ArraySize = 3;
+	constexpr int Value = 30;
+	
+	SharedPointer<int> a = MakeShared<int[]>(ArraySize);
+	SharedPointer<int> b = MakeShared<int[ArraySize]>();
+
+	UniquePointer<int> d = MakeUnique<int[]>(ArraySize);
+	UniquePointer<int> e = MakeUnique<int[ArraySize]>();
+
+	SharedPointer<Model> ma = MakeShared<SuperModel[]>(ArraySize);
+	SharedPointer<Model> mb = MakeShared<SuperModel[ArraySize]>();
+
+	UniquePointer<Model> md = MakeUnique<SuperModel[]>(ArraySize);
+	UniquePointer<Model> me = MakeUnique<SuperModel[ArraySize]>();
+
+	for (int i = 0; i < ArraySize; i++) {
+		// ½¦¾îµå
+		a[i] = Value;
+		b[i] = Value;
+
+		EXPECT_TRUE(a[i] == Value);
+		EXPECT_TRUE(b[i] == Value);
+
+		// À¯´ÏÅ©
+		d[i] = Value;
+		e[i] = Value;
+
+		EXPECT_TRUE(d[i] == Value);
+		EXPECT_TRUE(e[i] == Value);
+
+		// °´Ã¼ ½¦¾îµå
+		ma[i].a = Value; ma[i].b = Value;
+		mb[i].a = Value; mb[i].b = Value;
+
+		EXPECT_TRUE(ma[i].a == Value && ma[i].b == Value);
+		EXPECT_TRUE(mb[i].a == Value && mb[i].b == Value);
+
+		// À¯´ÏÅ© ½¦¾îµå
+		md[i].a = Value; md[i].b = Value;
+		me[i].a = Value; me[i].b = Value;
+
+		EXPECT_TRUE(md[i].a == Value && md[i].b == Value);
+		EXPECT_TRUE(me[i].a == Value && me[i].b == Value);
+	}
+
+	// ½¦¾îµå
+	EXPECT_THROW(a[-1], OutOfRangeException);
+	EXPECT_THROW(b[-1], OutOfRangeException);
+	EXPECT_THROW(a[ArraySize], OutOfRangeException);
+	EXPECT_THROW(b[ArraySize], OutOfRangeException);
+	EXPECT_TRUE(a.Length() == 3);
+	EXPECT_TRUE(b.Length() == 3);
+
+	// À¯´ÏÅ©
+	EXPECT_THROW(d[-1], OutOfRangeException);
+	EXPECT_THROW(e[-1], OutOfRangeException);
+	EXPECT_THROW(d[ArraySize], OutOfRangeException);
+	EXPECT_THROW(e[ArraySize], OutOfRangeException);
+	EXPECT_TRUE(d.Length() == 3);
+	EXPECT_TRUE(e.Length() == 3);
+
+	// °´Ã¼ ½¦¾îµå
+	EXPECT_THROW(ma[-1], OutOfRangeException);
+	EXPECT_THROW(mb[-1], OutOfRangeException);
+	EXPECT_THROW(ma[ArraySize], OutOfRangeException);
+	EXPECT_THROW(mb[ArraySize], OutOfRangeException);
+	EXPECT_TRUE(ma.Length() == 3);
+	EXPECT_TRUE(mb.Length() == 3);
+
+	// °´Ã¼ À¯´ÏÅ©
+	EXPECT_THROW(md[-1], OutOfRangeException);
+	EXPECT_THROW(me[-1], OutOfRangeException);
+	EXPECT_THROW(md[ArraySize], OutOfRangeException);
+	EXPECT_THROW(me[ArraySize], OutOfRangeException);
+	EXPECT_TRUE(md.Length() == 3);
+	EXPECT_TRUE(me.Length() == 3);
 
 
+
+	// ½¦¾îµå ½ºÄ®¶ó ÀÎµ¦½Ì
+	SharedPointer<int> c = MakeShared<int>();
+	c[0] = Value;
+	EXPECT_TRUE(c[0] == Value);
+	EXPECT_TRUE(c.Length() == 1);
+	EXPECT_THROW(c[-1], OutOfRangeException);
+	EXPECT_THROW(c[-1], OutOfRangeException);
+	EXPECT_THROW(c[1], OutOfRangeException);
+	EXPECT_THROW(c[1], OutOfRangeException);
+	
+
+	// À¯´ÏÅ© ½ºÄ®¶ó ÀÎµ¦½Ì
+	UniquePointer<int> f = MakeUnique<int>();
+	f[0] = Value;
+	EXPECT_TRUE(f[0] == Value);
+	EXPECT_TRUE(f.Length() == 1);
+	EXPECT_THROW(f[-1], OutOfRangeException);
+	EXPECT_THROW(f[-1], OutOfRangeException);
+	EXPECT_THROW(f[1], OutOfRangeException);
+	EXPECT_THROW(f[1], OutOfRangeException);
+
+
+	// °´Ã¼ ½¦¾îµå ½ºÄ®¶ó ÀÎµ¦½Ì
+	SharedPointer<Model> mc = MakeShared<SuperModel>();
+	mc[0].a = Value; mc[0].b = Value;
+	EXPECT_TRUE(mc[0].a == Value && mc[0].b == Value);
+	EXPECT_TRUE(mc.Length() == 1);
+	EXPECT_THROW(mc[-1], OutOfRangeException);
+	EXPECT_THROW(mc[-1], OutOfRangeException);
+	EXPECT_THROW(mc[1], OutOfRangeException);
+	EXPECT_THROW(mc[1], OutOfRangeException);
+
+
+	// °´Ã¼ À¯´ÏÅ© ½ºÄ®¶ó ÀÎµ¦½Ì
+	UniquePointer<Model> mf = MakeUnique<SuperModel>();
+	mf[0].a = Value; mf[0].b = Value;
+	EXPECT_TRUE(mf[0].a == Value && mf[0].b == Value);
+	EXPECT_TRUE(mf.Length() == 1);
+	EXPECT_THROW(mf[-1], OutOfRangeException);
+	EXPECT_THROW(mf[-1], OutOfRangeException);
+	EXPECT_THROW(mf[1], OutOfRangeException);
+	EXPECT_THROW(mf[1], OutOfRangeException);
+}
+
+} // namespace SmartPointerTest
 #endif // TEST_SmartPointerTest == ON
 

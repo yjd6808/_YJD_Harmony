@@ -365,14 +365,47 @@ constexpr bool IsPrimitiveType_v = std::is_fundamental<T>::value;
 
 // 서로 다이나믹 캐스팅이 가능한지 알려주는 녀석
 // 템플릿 인자로 전달한 녀석이 둘 모두 포인터 타입 또는 레퍼런스 타입인 경우
+// 원시 타입은 원래 다이나믹 캐스팅이 안되지만 같은 타입끼리는 걍 된다고 처리
 template <typename Lhs, typename Rhs>
 constexpr bool DynamicCastable_v = (IsPointerType_v<Lhs> && IsPointerType_v<Rhs>)  ||
 								   (IsReferenceType_v<Lhs> && IsReferenceType_v<Rhs>) 
-								   ?		
-									IsBaseOf_v<RemovePointer_t<RemoveReference_t<Lhs>>, RemovePointer_t<RemoveReference_t<Rhs>>> ||
-									IsBaseOf_v<RemovePointer_t<RemoveReference_t<Rhs>>, RemovePointer_t<RemoveReference_t<Lhs>>>
+								   ?
+										IsSameType_v<Lhs, Rhs>	// 그냥 서로 동일한 타입이면 무조건 OK
+										? 
+										true
+										:
+										IsBaseOf_v<RemovePointer_t<RemoveReference_t<Lhs>>, RemovePointer_t<RemoveReference_t<Rhs>>> ||
+										IsBaseOf_v<RemovePointer_t<RemoveReference_t<Rhs>>, RemovePointer_t<RemoveReference_t<Lhs>>>
 								   :
 								   false;
+
+// From이 To의 부모 타입인지 포인터, 참조타입 인경우에 비교
+template <typename From, typename To>
+constexpr bool IsRPBasedOf_v =  (IsPointerType_v<From> && IsPointerType_v<To>)  ||
+								(IsReferenceType_v<From> && IsReferenceType_v<To>)
+								?
+								IsBaseOf_v<RemovePointer_t<RemoveReference_t<From>>, RemovePointer_t<RemoveReference_t<To>>>
+								:
+								false;
+
+/*
+
+template <typename Lhs, typename Rhs>
+constexpr bool DynamicCastable_v = (IsPointerType_v<Lhs> && IsPointerType_v<Rhs>)  ||
+								   (IsReferenceType_v<Lhs> && IsReferenceType_v<Rhs>)
+								   ?
+										IsPrimitiveType_v<RemovePointer_t<RemoveReference_t<Lhs>>> &&
+										IsPrimitiveType_v<RemovePointer_t<RemoveReference_t<Rhs>>>
+										?
+										IsSameType_v<Lhs, Rhs>
+										:
+										IsBaseOf_v<RemovePointer_t<RemoveReference_t<Lhs>>, RemovePointer_t<RemoveReference_t<Rhs>>> ||
+										IsBaseOf_v<RemovePointer_t<RemoveReference_t<Rhs>>, RemovePointer_t<RemoveReference_t<Lhs>>>
+								   :
+								   false;
+
+*/
+
 
 
 template <typename T>
