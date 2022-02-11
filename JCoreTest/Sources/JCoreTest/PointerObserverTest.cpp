@@ -254,7 +254,7 @@ TEST(PointerObserverTest, DynamicCastingTest) {
 		} catch (...) {
 		}
 
-		int a = 30;
+		
 	}
 }
 

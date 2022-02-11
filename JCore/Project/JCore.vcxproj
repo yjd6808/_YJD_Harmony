@@ -47,11 +47,37 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ArrayQueue.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ArrayQueueIterator.h" />
     <ClInclude Include="..\Sources\JCore\Container\Arrays.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Container\Collection.h">
+    <ClInclude Include="..\Sources\JCore\Container\ArrayStack.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ArrayStackIterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Collection.h" />
+    <ClInclude Include="..\Sources\JCore\Container\DynamicArray.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\DynamicArrayIterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Iterable.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Iterator.h">
       <SubType>
       </SubType>
     </ClInclude>

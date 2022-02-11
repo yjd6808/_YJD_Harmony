@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <functional>
+
 namespace JCore {
 
 template <typename T, typename OperatorFunctor>

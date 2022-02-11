@@ -54,7 +54,7 @@ public:
 	virtual ~VoidBase() {}
 
 	template <typename T>
-	T* Get() {
+	T* Get() const {
 		if (!Exist()) {
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
@@ -62,7 +62,7 @@ public:
 		return (T*)m_pPointer;
 	}
 
-	void* GetRaw() {
+	void* GetRaw() const {
 		if (!Exist()) {
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
@@ -71,7 +71,7 @@ public:
 	}
 
 
-	bool Exist() {
+	bool Exist() const {
 		if (m_pPointer == nullptr || m_pCounter == nullptr) {
 			return false;
 		}
@@ -79,7 +79,7 @@ public:
 		return m_pCounter->Alive;
 	}
 
-	int WatcherCount() {
+	int WatcherCount() const {
 		if (m_pCounter == nullptr) {
 			return false;
 		}
@@ -93,7 +93,9 @@ protected:
 			return;
 		}
 
-		DeleteSafe(m_pPointer);
+		if (!m_bNoDelete)
+			delete m_pPointer;
+		m_pPointer = nullptr;
 		m_pCounter->Alive = false;
 		m_pCounter->Counter--;
 	}
@@ -122,6 +124,7 @@ protected:
 	void WatcherCopyToWatcher(VoidWatcher& watcher);
 	void WatcherMoveToWatcher(VoidWatcher& watcher);
 protected:
+	bool m_bNoDelete = false;
 	void* m_pPointer = nullptr;
 	VoidPointerCounter* m_pCounter = nullptr;
 };
@@ -138,9 +141,10 @@ class VoidOwner : public VoidBase
 {
 	friend class VoidWatcher;
 public:
-	VoidOwner(void* ptr) {
+	VoidOwner(void* ptr, bool nodelete = false) {
 		m_pPointer = ptr;
 		m_pCounter = new VoidPointerCounter();
+		m_bNoDelete = nodelete;
 	}
 
 	VoidOwner(const VoidOwner&) = delete;
@@ -709,9 +713,64 @@ constexpr decltype(auto) MakeOwnerPointer(Args&&... args) {
 }
 
 
+// 글로벌 비교 오퍼레이터
+template <typename T, typename U>
+bool operator==(const Watcher<T>& lhs, const Owner<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const Owner<T>& lhs, const Watcher<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const Watcher<T>& lhs, const Watcher<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(std::nullptr_t, const Watcher<T>& rhs) {
+	return nullptr == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const Watcher<T>& lhs, std::nullptr_t) {
+	return lhs.Get() == nullptr;
+}
+
+template <typename T, typename U>
+bool operator==(std::nullptr_t, const Owner<T>& rhs) {
+	return nullptr == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const Owner<T>& lhs, std::nullptr_t) {
+	return lhs.Get() == nullptr;
+}
 
 
 
+// 글로벌 비교 오퍼레이터
+bool operator==(const VoidOwner& lhs, const VoidWatcher& rhs) {
+	return lhs.GetRaw() == rhs.GetRaw();
+}
+
+bool operator==(const VoidWatcher& lhs, const VoidOwner& rhs) {
+	return lhs.GetRaw() == rhs.GetRaw();
+}
+
+bool operator==(const VoidWatcher& lhs, const VoidWatcher& rhs) {
+	return lhs.GetRaw() == rhs.GetRaw();
+}
+
+bool operator==(const VoidWatcher& lhs, std::nullptr_t) {
+	return lhs.GetRaw() == nullptr;
+}
+
+bool operator==(std::nullptr_t, const VoidWatcher& rhs) {
+	return nullptr == rhs.GetRaw();
+}
 
 
 

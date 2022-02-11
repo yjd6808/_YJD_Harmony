@@ -5,8 +5,9 @@
 
 struct Model
 {
-	Model(int da) { a = da; cout <<("¸ðµ¨ 1È£ »ý¼º\n"); }
-	virtual ~Model() { cout << ("¸ðµ¨ 1È£ ¼Ò¸ê\n"); }
+	Model() { }
+	Model(int da) { a = da; cout << StringUtil::Format("¸ðµ¨ %dÈ£ »ý¼º\n", da); }
+	virtual ~Model() { cout << StringUtil::Format("¸ðµ¨ %dÈ£ ¼Ò¸ê\n", a); }
 
 	int a = 3;
 	int b = 3;
@@ -36,42 +37,61 @@ struct SuperModelTempalte : ModelTemplate<T>
 	~SuperModelTempalte() override { cout << ("½´ÆÛ ¸ðµ¨ ¼Ò¸ê\n"); }
 };
 
+
+struct Test
+{
+	Test() : owner(this, true) {}
+	virtual ~Test() { owner.~VoidOwner(); }
+
+	union { VoidOwner owner; };
+};
+
 int main() {
+	/*{
+		ArrayStack<SuperModel> stack;
+		stack.EmplacePush();
+		stack.EmplacePush();
+		SharedPointer<Iterator<SuperModel>> iter = stack.Begin();
 
-	std::vector<int> v { 1, 2, 3};
-
-	auto it = v.begin();
-	auto z1 = ++it;
-	auto z2 = it++;
-
-	/*
-	{
-		UniquePointer<Model> f = MakeUnique<SuperModel>();
-		(*f).a = 30;
-		Model* z = f.Get<Model*>();
-		SuperModel* e = f.Get<SuperModel*>();
-	}
-	{
-		SharedPointer<Model> f = MakeShared<SuperModel>();
-		(*f).a = 30;
-		Model* z = f.Get<Model*>();
-		SuperModel* e = f.Get<SuperModel*>();
-	}
+		while (iter->HasValue()) {
+			cout << iter->Next().a << "\n";
+		}
+	}*/
 
 	{
-		UniquePointer<ModelTemplate<int>> f = MakeUnique<SuperModelTempalte<int>>();
-		(*f).b = 30;
-		ModelTemplate<int>* z = f.Get<ModelTemplate<int>*>();
-		SuperModelTempalte<int>* e = f.Get<SuperModelTempalte<int>*>();
-	}
-	{
-		SharedPointer<Model> f = MakeShared<SuperModel>();
-		(*f).a = 30;
-		Model* z = f.Get<Model*>();
-		SuperModel* e = f.Get<SuperModel*>();
-	}
+		ArrayQueue<Model> queue;
+		
+		for (int i = 0; i < 20; i++) {
+			queue.Enqueue({ i });
+		}
 
-	*/
+		for (int i = 0; i < 20; i++) {
+			queue.Dequeue();
+		}
+
+
+		for (int i = 0; i < 40; i++) {
+			queue.Enqueue({ i });
+		}
+
+		Enumerator<Model> it = queue.Begin();
+		while (it->HasValue()) {
+			cout << "°¡Áî¾Æ : " << it->Next().a << "\n";
+		}
+
+		for (int i = 0; i < 20; i++) {
+			queue.Dequeue();
+		}
+
+		for (int i = 0; i < 40; i++) {
+			queue.Enqueue({ i });
+		}
+
+		it = queue.Begin();
+		while (it->HasValue()) {
+			cout << "°¡Áî¾Æ : " << it->Next().a << "\n";
+		}
+	}
 	
 
 	_CrtDumpMemoryLeaks();

@@ -262,6 +262,8 @@ private:
 
 
 
+
+
 template <typename T>
 class UniqueMaker
 {
@@ -747,8 +749,6 @@ public:
 		this->SharedMoveToWeak(other);
 		return *this;
 	}
-
-
 };
 
 
@@ -867,6 +867,112 @@ public:
 		return sp;
 	}
 };
+
+
+
+
+
+
+
+
+
+
+
+// 글로벌 비교 오퍼레이터
+
+// U == U
+// U == S
+// S == U
+// U == W
+// W == U
+// S == S
+// S == W
+// W == S
+// W == W
+
+template <typename T, typename U>
+bool operator==(const UniquePointer<T>& lhs, const UniquePointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const UniquePointer<T>& lhs, const SharedPointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const SharedPointer<T>& lhs, const UniquePointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const UniquePointer<T>& lhs, const WeakPointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const WeakPointer<T>& lhs, const UniquePointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const SharedPointer<T>& lhs, const SharedPointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const SharedPointer<T>& lhs, const WeakPointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const WeakPointer<T>& lhs, const SharedPointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const WeakPointer<T>& lhs, const WeakPointer<U>& rhs) {
+	return lhs.Get() == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const UniquePointer<T>& lhs, std::nullptr_t) {
+	return lhs.Get() == nullptr;
+}
+
+template <typename T, typename U>
+bool operator==(std::nullptr_t, const UniquePointer<T>& rhs) {
+	return nullptr == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const SharedPointer<T>& lhs, std::nullptr_t) {
+	return lhs.Get() == nullptr;
+}
+
+template <typename T, typename U>
+bool operator==(std::nullptr_t, const SharedPointer<T>& rhs) {
+	return nullptr == rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator==(const WeakPointer<T>& lhs, std::nullptr_t) {
+	return lhs.Get() == nullptr;
+}
+
+template <typename T, typename U>
+bool operator==(std::nullptr_t, const WeakPointer<T>& rhs) {
+	return nullptr == rhs.Get();
+}
+
+
+
+
+
+
+
+
+
 
 
 

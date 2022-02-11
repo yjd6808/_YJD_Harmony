@@ -42,5 +42,29 @@
     <ClInclude Include="..\Sources\JCore\Container\Collection.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\DynamicArray.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Iterable.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Iterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\DynamicArrayIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ArrayStack.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ArrayStackIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ArrayQueue.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ArrayQueueIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,7 +11,6 @@
 #include <JCore/Time.h>
 
 using namespace JCore;
-using namespace JCore::Time;
 using namespace std;
 
 #define Print ON
