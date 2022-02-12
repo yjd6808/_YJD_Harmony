@@ -27,6 +27,9 @@ Random::Random() {
 					   Public
     ======================================================= */
 
+void Random::EngineInitialize() {
+	ms_DefaultRandomEngine.seed(time(0));
+}
 
 int Random::GenerateInt(int begin, int end) {
 	if (begin > end) {
@@ -45,5 +48,6 @@ double Random::GenerateDouble(double begin, double end) {
 	std::uniform_real_distribution<> dist(begin, end);
 	return dist(ms_DefaultRandomEngine);
 }
+
 
 } // namespace JCore

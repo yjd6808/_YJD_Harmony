@@ -5,6 +5,8 @@
 
 
 #include <JCoreTest/CoreTest.h>
+#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/String.h>
 #include <JCore/Comparator.h>
 #include <JCore/TypeTraits.h>
@@ -14,9 +16,6 @@ using namespace JCore;
 using namespace std;
 
 #if TEST_PointerObserverTest == ON
-
-namespace PointerObserverTest {
-
 
 // 보이드 타입의 포인터 테스트
 TEST(PointerObserverTest, VoidOwner_VoidWatcher) {
@@ -68,24 +67,6 @@ TEST(PointerObserverTest, VoidOwner_VoidWatcher) {
 	EXPECT_TRUE(watch2.Exist() == false);
 
 }
-
-
-struct Model
-{
-	Model() { PrintFormat("디폴트 모델 1호 생성\n"); }
-	Model(int da) { a = da; PrintFormat("모델 1호 생성\n"); }
-	virtual ~Model() { PrintFormat("모델 1호 소멸\n"); }
-
-	int a = 3;
-	int b = 3;
-};
-
-
-struct SuperModel : Model
-{
-	SuperModel() : Model(1) {}
-	~SuperModel() override { PrintFormat("슈퍼 모델 소멸\n"); }
-};
 
 
 
@@ -146,32 +127,7 @@ TEST(PointerObserverTest, Owner_Watcher) {
 }
 
 
-struct Animal
-{
-	virtual int GetAge() const = 0;
 
-	Animal() { PrintFormat("애니멀 생성\n"); }
-	virtual ~Animal() { PrintFormat("애니멀 소멸\n"); }
-};
-
-struct Dog : Animal
-{
-	int GetAge() const override { return Age; };
-
-	virtual ~Dog() { PrintFormat("개 소멸\n"); }
-
-	int Age = 300;
-};
-
-struct Bird : Animal
-{
-	int GetAge() const override { return Age; };
-
-	virtual ~Bird() { PrintFormat("날개 소멸\n"); }
-
-	int Dummy = 0;
-	int Age = 400;
-};
 
 // 다이나믹 캐스팅
 TEST(PointerObserverTest, DynamicCastingTest) {
@@ -258,8 +214,6 @@ TEST(PointerObserverTest, DynamicCastingTest) {
 	}
 }
 
-
-} // namespace PointerObserverTest
 
 #endif // TEST_PointerObserverTest == ON
 

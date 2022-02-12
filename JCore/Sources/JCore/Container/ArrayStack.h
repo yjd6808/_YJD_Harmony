@@ -46,7 +46,8 @@ public:
 	}
 
 	void Pop() {
-		this->DestroyAt(--this->m_iSize);
+		this->DestroyAt(this->m_iSize - 1);
+		this->m_iSize--;
 	}
 
 	template <typename... Args>

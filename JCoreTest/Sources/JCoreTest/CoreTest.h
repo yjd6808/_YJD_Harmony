@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <utility>
 #include <string_view>
-#include <type_traits>
 #include <crtdbg.h>
 #include <unordered_map>
 #include <set>
@@ -28,18 +27,33 @@
 #include <stack>
 #include <array>
 
+#include <JCore/TypeTraits.h>
+
 #define ON		1
 #define OFF		0
 
 #define Print	ON
 
-#define	TEST_ArraysTest					OFF
-#define	TEST_AVLTreeImplTest			OFF
-#define	TEST_AVLTreeMemoImplTest		OFF
-#define TEST_BinarySearchTreeImplTest	OFF
-#define TEST_DynamicHashMapImplTest		OFF
-#define TEST_SmartVectorImplTest		ON
-#define TEST_TwoThreeFourTreeImplTest	OFF
+
+#define ContainerTestEnabled        ON
+#define ContainerImplTestEnabled    OFF
+
+#if ContainerTestEnabled == ON
+
+    #define	TEST_ArraysTest					    OFF
+    #define	TEST_ArrayStackTest				    ON
+    #define	TEST_ArrayQueueTest				    ON
+
+    #if ContainerImplTestEnabled == ON
+        #define	TEST_AVLTreeImplTest			OFF
+        #define	TEST_AVLTreeMemoImplTest		OFF
+        #define TEST_BinarySearchTreeImplTest	OFF
+        #define TEST_DynamicHashMapImplTest		OFF
+        #define TEST_SmartVectorImplTest		ON
+        #define TEST_TwoThreeFourTreeImplTest	OFF
+    #endif
+#endif
+
 #define TEST_AutoObjectTest				ON
 #define TEST_ComparatorTest				ON
 #define TEST_CoreTest					ON
@@ -84,8 +98,11 @@ public:
         _CrtMemState stateNow, stateDiff;
         _CrtMemCheckpoint(&stateNow);
         int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
-        if (diffResult)
+        
+        if (diffResult) {
             reportFailure(stateDiff.lSizes[1]);
+            _CrtMemDumpStatistics(&stateDiff);
+        }
     }
 private:
     void reportFailure(unsigned int unfreedBytes) {

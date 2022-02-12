@@ -435,7 +435,7 @@ constexpr bool IsFloatingType() {
 template <typename T>
 constexpr bool IsStringType() {
 	const auto kType = CTType<RemoveQulifier_t<RemoveReference_t<T>>>();
-	return	kType == "char *"		|| kType == "String" ||
+	return	kType == "char *"		|| kType == "JCore::String" ||
 			kType == "wchar_t *"	|| (kType.StartWith("char [") && kType.EndWith("]")) ||
 			(kType.StartWith("wchar_t [") && kType.EndWith("]"));
 }

@@ -4,6 +4,8 @@
 */
 
 #include <JCoreTest/CoreTest.h>
+#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/TypeTraits.h>
 #include <JCore/String.h>
 #include <JCore/StringUtil.h>
@@ -93,20 +95,7 @@ TEST(TypeTraitsTest, Move) {
 
 
 TEST(TypeTraitsTest, DynamicCastable_v) {
-	struct Model
-	{
-		Model(int da) { a = da; PrintFormat("¸ðµ¨ 1È£ »ý¼º\n"); }
-		virtual ~Model() { PrintFormat("¸ðµ¨ 1È£ ¼Ò¸ê\n"); }
-
-		int a = 3;
-		int b = 3;
-	};
-
-	struct SuperModel : Model
-	{
-		SuperModel() : Model(1) {}
-		~SuperModel() override { PrintFormat("½´ÆÛ ¸ðµ¨ ¼Ò¸ê\n"); }
-	};
+	
 
 	struct NoobModel {};
 

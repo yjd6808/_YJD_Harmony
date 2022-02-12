@@ -24,6 +24,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
+    <ClCompile Include="..\Sources\JCore\PointerObserver.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Random.cpp" />
     <ClCompile Include="..\Sources\JCore\String.cpp" />
     <ClCompile Include="..\Sources\JCore\StringUtil.cpp" />
@@ -78,6 +82,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Iterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Vector.h">
       <SubType>
       </SubType>
     </ClInclude>

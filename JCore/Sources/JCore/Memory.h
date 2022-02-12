@@ -32,9 +32,35 @@ public:
 		}
 	}
 	
-	
+	template <typename R>
+	static R Allocate(const int size) {
+		static_assert(IsPointerType_v<R>, "only cast to pointer type");
+		return (R)::operator new(size);
+	}
 
-	
+	static void Deallocate(void* ptr) {
+		::operator delete(ptr);
+	}
+
+	template <typename T, typename... Args>
+	static void PlacementAllocate(T& ref, Args&&... args) {
+		::new (__builtin_addressof(ref)) T(Forward<Args>(args)...);
+	}
+
+	template <typename T, typename... Args>
+	static void PlacementAllocate(T* ref, Args&&... args) {
+		::new (ref) T(Forward<Args>(args)...);
+	}
+
+	template <typename T>
+	static void PlacementDeallocate(T& ref) {
+		ref.~T();
+	}
+
+	template <typename T>
+	static void PlacementDeallocate(const T* ref) {
+		ref->~T();
+	}
 };
 
 } // namespace JCore

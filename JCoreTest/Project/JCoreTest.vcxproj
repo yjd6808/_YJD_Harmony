@@ -26,6 +26,8 @@
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\BinarySearchTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\DynamicHashMapImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\TwoTreeFourTreeImplTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\ArrayQueueTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\CoreTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -43,11 +45,13 @@
     <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\StringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\StringUtilTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\TestUtil\Object.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
+    <ClInclude Include="..\Sources\JCoreTest\TestUtil\Object.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5ce6fab1-0d87-4fb7-bdfe-b959b47f974e}</ProjectGuid>

@@ -13,6 +13,7 @@
     <ClCompile Include="..\Sources\JCore\StringUtil.cpp" />
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
+    <ClCompile Include="..\Sources\JCore\PointerObserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -64,6 +65,9 @@
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\ArrayQueueIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Vector.h">
       <Filter>Container</Filter>
     </ClInclude>
   </ItemGroup>

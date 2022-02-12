@@ -5,52 +5,15 @@
 
 
 #include <JCoreTest/CoreTest.h>
+#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/SmartPointer.h>
+
 
 using namespace JCore;
 using namespace std;
 
 #if TEST_SmartPointerTest == ON
-
-namespace SmartPointerTest
-{
-
-struct Model
-{
-	Model(int da) { a = da; PrintFormat("¸ðµ¨ 1È£ »ý¼º\n"); }
-	virtual ~Model() { PrintFormat("¸ðµ¨ 1È£ ¼Ò¸ê\n"); }
-
-	int a = 3;
-	int b = 3;
-};
-
-
-struct SuperModel : Model
-{
-	SuperModel() : Model(1) {}
-	~SuperModel() override { PrintFormat("½´ÆÛ ¸ðµ¨ ¼Ò¸ê\n"); }
-};
-
-
-struct Animal
-{
-	virtual int GetAge() const = 0;
-};
-
-struct Dog : Animal
-{
-	int GetAge() const override { return Age; };
-
-	int Age = 300;
-};
-
-struct Bird : Animal
-{
-	int GetAge() const override { return Age; };
-	
-	int Dummy = 0;
-	int Age = 400;
-};
 
 // À¯´ÏÅ© Æ÷ÀÎÅÍ Å×½ºÆ®
 TEST(SmartPointerTest, UniquePointer) {
@@ -382,6 +345,5 @@ TEST(SmartPointerTest, Indexing) {
 	EXPECT_THROW(mf[1], OutOfRangeException);
 }
 
-} // namespace SmartPointerTest
 #endif // TEST_SmartPointerTest == ON
 

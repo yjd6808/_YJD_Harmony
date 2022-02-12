@@ -33,9 +33,21 @@
     <ClCompile Include="..\Sources\JCoreTest\StringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\StringUtilTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\AutoObjectTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\TestUtil\Object.cpp">
+      <Filter>TestUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\ArrayQueueTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
+    <ClInclude Include="..\Sources\JCoreTest\TestUtil\Object.h">
+      <Filter>TestUtil</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Container">
@@ -43,6 +55,9 @@
     </Filter>
     <Filter Include="ContainerImpl">
       <UniqueIdentifier>{5b1b6a66-dd38-4023-937b-462eb518f03a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestUtil">
+      <UniqueIdentifier>{4d31eb33-c343-46a5-a6ca-9e1f6040344f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

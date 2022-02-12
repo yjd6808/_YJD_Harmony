@@ -8,6 +8,7 @@
 
 #include <JCore/Type.h>
 #include <JCore/Exception.h>
+#include <JCore/TypeTraits.h>
 
 #include <atomic>
 
@@ -51,22 +52,14 @@ struct VoidPointerCounter {
 class VoidBase {
 public:
 	VoidBase() {}
-	virtual ~VoidBase() {}
+	virtual ~VoidBase() noexcept {}
 
 	template <typename T>
 	T* Get() const {
-		if (!Exist()) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-
 		return (T*)m_pPointer;
 	}
 
 	void* GetRaw() const {
-		if (!Exist()) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-
 		return m_pPointer;
 	}
 
@@ -93,11 +86,17 @@ protected:
 			return;
 		}
 
-		if (!m_bNoDelete)
+		if (!m_bNoDelete) {
 			delete m_pPointer;
+		}
+
 		m_pPointer = nullptr;
 		m_pCounter->Alive = false;
 		m_pCounter->Counter--;
+
+		if (m_pCounter->Counter == 0) {
+			delete m_pCounter;
+		}
 	}
 
 	void SubtractWatcherCount() {
@@ -148,7 +147,7 @@ public:
 	}
 
 	VoidOwner(const VoidOwner&) = delete;
-	VoidOwner(VoidOwner&& owner) {
+	VoidOwner(VoidOwner&& owner) noexcept {
 		OwnerMoveToOwner(owner);
 	}
 
@@ -187,7 +186,7 @@ public:
 		WatcherCopyToWatcher(watcher);
 	}
 
-	VoidWatcher(VoidWatcher&& watcher) {
+	VoidWatcher(VoidWatcher&& watcher) noexcept {
 		WatcherMoveToWatcher(watcher);
 	}
 
@@ -214,46 +213,6 @@ public:
 		return *this;
 	}
 };
-
-
-
-void VoidBase::OwnerMoveToOwner(VoidOwner& owner) {
-	DeletePointer();
-
-	m_pPointer = owner.m_pPointer;
-	m_pCounter = owner.m_pCounter;
-
-	owner.m_pPointer = nullptr;
-	owner.m_pCounter = nullptr;
-}
-
-void VoidBase::WatcherCopyToOwner(VoidOwner& owner) {
-	SubtractWatcherCount();
-
-	m_pPointer = owner.m_pPointer;
-	m_pCounter = owner.m_pCounter;
-
-	AddWatcherCount();
-}
-
-void VoidBase::WatcherCopyToWatcher(VoidWatcher& watcher) {
-	SubtractWatcherCount();
-
-	m_pPointer = watcher.m_pPointer;
-	m_pCounter = watcher.m_pCounter;
-
-	AddWatcherCount();
-}
-
-void VoidBase::WatcherMoveToWatcher(VoidWatcher& watcher) {
-	SubtractWatcherCount();
-
-	m_pPointer = watcher.m_pPointer;
-	m_pCounter = watcher.m_pCounter;
-
-	watcher.m_pPointer = nullptr;
-	watcher.m_pCounter = nullptr;
-}
 
 
 
@@ -313,10 +272,6 @@ public:
 
 	template <typename U = T*>
 	U Get() {
-		if (!Exist()) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-
 		static_assert(!IsReferenceType_v<U>, "... cannot cast to reference type");	// Get<int&>와 같은 캐스팅을 방지
 		static_assert(IsPointerType_v<U>, "... only cast to pointer type.");		// Get<int>	와 같은 방식을 방지
 
@@ -341,13 +296,8 @@ public:
 	}
 
 	void* GetRaw() {
-		if (!Exist()) {
-			throw NullPointerException("포인터가 존재하지 않습니다.");
-		}
-
 		return (void*)m_pPointer;
 	}
-
 
 	bool Exist() {
 		if (m_pPointer == nullptr || m_pCounter == nullptr) {
@@ -716,63 +666,46 @@ constexpr decltype(auto) MakeOwnerPointer(Args&&... args) {
 // 글로벌 비교 오퍼레이터
 template <typename T, typename U>
 bool operator==(const Watcher<T>& lhs, const Owner<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+	return lhs.GetRaw() == rhs.GetRaw();
 }
 
 template <typename T, typename U>
 bool operator==(const Owner<T>& lhs, const Watcher<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+	return lhs.GetRaw() == rhs.GetRaw();
 }
 
 template <typename T, typename U>
 bool operator==(const Watcher<T>& lhs, const Watcher<U>& rhs) {
-	return lhs.Get() == rhs.Get();
+	return lhs.GetRaw() == rhs.GetRaw();
 }
 
 template <typename T, typename U>
 bool operator==(std::nullptr_t, const Watcher<T>& rhs) {
-	return nullptr == rhs.Get();
+	return nullptr == rhs.GetRaw();
 }
 
 template <typename T, typename U>
 bool operator==(const Watcher<T>& lhs, std::nullptr_t) {
-	return lhs.Get() == nullptr;
+	return lhs.GetRaw() == nullptr;
 }
 
 template <typename T, typename U>
 bool operator==(std::nullptr_t, const Owner<T>& rhs) {
-	return nullptr == rhs.Get();
+	return nullptr == rhs.GetRaw();
 }
 
 template <typename T, typename U>
 bool operator==(const Owner<T>& lhs, std::nullptr_t) {
-	return lhs.Get() == nullptr;
-}
-
-
-
-// 글로벌 비교 오퍼레이터
-bool operator==(const VoidOwner& lhs, const VoidWatcher& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
-}
-
-bool operator==(const VoidWatcher& lhs, const VoidOwner& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
-}
-
-bool operator==(const VoidWatcher& lhs, const VoidWatcher& rhs) {
-	return lhs.GetRaw() == rhs.GetRaw();
-}
-
-bool operator==(const VoidWatcher& lhs, std::nullptr_t) {
 	return lhs.GetRaw() == nullptr;
 }
 
-bool operator==(std::nullptr_t, const VoidWatcher& rhs) {
-	return nullptr == rhs.GetRaw();
-}
 
-
+// 글로벌 비교 오퍼레이터
+bool operator==(const VoidOwner& lhs, const VoidWatcher& rhs);
+bool operator==(const VoidWatcher& lhs, const VoidOwner& rhs);
+bool operator==(const VoidWatcher& lhs, const VoidWatcher& rhs);
+bool operator==(const VoidWatcher& lhs, std::nullptr_t);
+bool operator==(std::nullptr_t, const VoidWatcher& rhs);
 
 
 } // namespace JCore

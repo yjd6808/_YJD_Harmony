@@ -5,11 +5,10 @@
 #pragma once
 
 #include <JCore/Type.h>
-#include <JCore/SmartPointer.h>
-#include <JCore/PointerObserver.h>
 #include <JCore/Memory.h>
 
 #include <JCore/Container/Iterable.h>
+#include <JCore/Container/Iterator.h>
 
 #include <functional>
 
@@ -34,14 +33,15 @@ enum class ContainerType {
 template <typename T>
 class Collection : public Iterable<T>
 {
+	using TIterable		= typename Iterable<T>;
 	using TCollection	= typename Collection<T>;
-	using TIterator		= typename Iterator<T>;
+	using TEnumerator	= typename Enumerator<T>;
 public:
-	Collection() : m_Owner(this, true) {}
+	Collection() : TIterable(), m_Owner(this, true) {}
 	virtual ~Collection() noexcept { m_Owner.~VoidOwner(); }
 public:
 	void ForEach(std::function<void(T&)> fn) {
-		auto it = this->Begin();
+		TEnumerator it = this->Begin();
 		while (it->HasValue()) {
 			fn(it->Next());
 		}

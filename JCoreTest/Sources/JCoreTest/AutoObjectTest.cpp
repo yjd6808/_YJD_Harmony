@@ -5,6 +5,8 @@
 
 
 #include <JCoreTest/CoreTest.h>
+#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/Exception.h>
 #include <JCore/Deletor.h>
 #include <JCore/AutoObject.h>
@@ -34,18 +36,6 @@ TEST(AutoObjectTest, AutoRef) {
 	EXPECT_TRUE(g_iValue == 101);
 }
 
-
-
-
-struct Model
-{
-	Model() { PrintFormat("디폴트 생성자 호출\n"); }
-	Model(int da) { a = da; PrintFormat("일반 생성자 호출\n"); }
-	~Model() { PrintFormat("소멸자 호출\n"); }
-
-	int a = 3;
-	int b = 3;
-};
 
 TEST(AutoObjectTest, AutoPointer) {
 	{

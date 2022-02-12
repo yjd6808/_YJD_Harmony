@@ -47,7 +47,14 @@ struct Test
 };
 
 int main() {
-	/*{
+
+	VoidWatcher w;
+	if (w == nullptr) {
+		int a = 40;
+	}
+
+	std::vector<Model> m;
+	{
 		ArrayStack<SuperModel> stack;
 		stack.EmplacePush();
 		stack.EmplacePush();
@@ -56,25 +63,35 @@ int main() {
 		while (iter->HasValue()) {
 			cout << iter->Next().a << "\n";
 		}
-	}*/
+	}
 
 	{
+		queue<Model> q2;
 		ArrayQueue<Model> queue;
-		
+
 		for (int i = 0; i < 20; i++) {
 			queue.Enqueue({ i });
 		}
 
+		Enumerator<Model> it = queue.Begin();
+		while (it->HasValue()) {
+			cout << "가즈아 : " << it->Next().a << "\n";
+		}
+
+		queue.Clear();
+		/*
 		for (int i = 0; i < 20; i++) {
 			queue.Dequeue();
 		}
+		*/
+
 
 
 		for (int i = 0; i < 40; i++) {
 			queue.Enqueue({ i });
 		}
 
-		Enumerator<Model> it = queue.Begin();
+		it = queue.Begin();
 		while (it->HasValue()) {
 			cout << "가즈아 : " << it->Next().a << "\n";
 		}
@@ -93,7 +110,6 @@ int main() {
 		}
 	}
 	
-
 	_CrtDumpMemoryLeaks();
 	return 0;
 }

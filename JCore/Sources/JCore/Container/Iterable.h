@@ -4,7 +4,7 @@
 
 #pragma once
 
-
+#include <JCore/SmartPointer.h>
 
 namespace JCore {
 
@@ -13,7 +13,6 @@ namespace JCore {
 =====================================================================================*/
 
 // 전방 선언
-template <typename> class SharedPointer;
 template <typename> class Iterator;
 template <typename T>
 struct Iterable

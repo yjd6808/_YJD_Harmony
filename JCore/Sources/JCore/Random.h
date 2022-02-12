@@ -28,6 +28,8 @@ struct Random final
 
 	int GenerateInt(int begin, int end);
 	double GenerateDouble(double begin, double end);
+
+	static void EngineInitialize();
 private:
 	static bool ms_bInitialized;
 	static std::default_random_engine ms_DefaultRandomEngine;

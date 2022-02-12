@@ -44,7 +44,7 @@ public:
 		TArrayQueue* pQueue = CastArrayQueue();
 		T& val = pQueue->m_pArray[this->m_iPos--];
 
-		if (this->m_iPos == 0) {
+		if (this->m_iPos == -1) {
 			this->m_iPos = pQueue->GetCapacity() - 1;
 		}
 
@@ -54,6 +54,10 @@ public:
 protected:
 	virtual bool IsValidIndex(int idx) const {
 		TArrayQueue* pQueue = CastArrayQueue();
+
+		if (pQueue->IsEmpty()) {
+			return false;
+		}
 
 		if (pQueue->IsForwardedHead()) {
 			return (idx >= pQueue->m_iHead && idx < pQueue->GetCapacity()) ||
