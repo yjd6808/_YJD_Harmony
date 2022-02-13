@@ -18,8 +18,8 @@ template <typename T>
 class ArrayStack : public DynamicArray<T>
 {
 	using TEnumerator			= typename Enumerator<T>;
-	using TArrayStack			= typename ArrayStack<T>;
 	using TDynamicArray			= typename DynamicArray<T>;
+	using TArrayStack			= typename ArrayStack<T>;
 	using TArrayStackIterator	= typename ArrayStackIterator<T>;
 public:
 	ArrayStack(int capacity = TDynamicArray::ms_iDefaultCapcity) : TDynamicArray(capacity) {}

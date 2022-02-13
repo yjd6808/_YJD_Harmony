@@ -20,8 +20,8 @@ template <typename T>
 class ArrayQueue : public DynamicArray<T>
 {
 	using TEnumerator			= typename Enumerator<T>;
-	using TArrayQueue			= typename ArrayQueue<T>;
 	using TDynamicArray			= typename DynamicArray<T>;
+	using TArrayQueue			= typename ArrayQueue<T>;
 	using TArrayQueueIterator	= typename ArrayQueueIterator<T>;
 public:
 	ArrayQueue(int capacity = TDynamicArray::ms_iDefaultCapcity) : TDynamicArray(capacity) {

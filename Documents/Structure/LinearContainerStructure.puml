@@ -1,0 +1,140 @@
+﻿@startuml
+'https://plantuml.com/sequence-diagram
+
+hide empty methods
+hide empty fields
+
+
+interface Iterator<<반복자>> {
+    HasPrevious()
+    HasNext()
+    Previous()
+    Next()
+}
+
+
+
+interface Iterable <<반복가능한>> {
+    Begin()
+    End()
+    --
+    C++은 값타입으로 반환할거기 땜에 그냥 
+    구조체만 만들어놓자.
+} 
+
+abstract class Collection <<컨테이너>> extends Iterable {
+    Empty()
+    Count()
+    ToCollection()
+    ToArray()
+    ForEach()
+    Find()
+}
+
+note right of ListIterator
+    그리지만 않을 뿐이지
+    리스트도 배열과 마찬가지로
+    
+    ListQueueIterator
+    ListStackIterator
+    LinkedListIterator
+    
+    각각 구현한다.
+end note
+
+abstract class LinkedListBase extends Collection
+
+
+class ListStack extends LinkedListBase
+class ListQueue extends LinkedListBase 
+class LinkedList extends LinkedListBase
+
+abstract class DynamicArrayBase extends Collection {
+    Owner<ArrayState> m_spState;
+    --
+    상태의 주인
+    해당 객체가 사라지면 이를 감시중인 
+    모든 Watcher들 이 무효화된다.
+}
+
+rectangle 배열의_이터레이터 {
+    class ArrayIterator {
+        Watcher<ArrayState>
+        ---
+        Watcher는 Owner를 감시중이다.
+        Owner가 사라지면 해당 이터레이터는 무효화된다.
+    
+        operator++()
+        operator--()
+    }
+    
+    class ArrayQueueIterator
+    class ArrayStackIterator
+    class VectorIterator
+}
+
+ class ListIterator {
+        Watcher<ListState>
+    
+        operator++()
+        operator--()
+    }
+    
+
+class ArrayStack extends DynamicArrayBase
+class ArrayQueue extends DynamicArrayBase
+class Vector extends DynamicArrayBase
+
+
+
+
+
+rectangle 배열의_상태 {
+    class ArrayState {
+        T* Array
+    }
+
+    class ArrayQueueState {
+        int Head
+        int Tail
+    }
+    class ArrayStackState {
+        int Top
+    }
+    
+    class VectorState {
+        int Size
+    }
+    
+
+}
+
+
+Iterable -u-> Iterator
+LinkedListBase -l-> ListIterator
+DynamicArrayBase .u.> ArrayIterator 
+ListIterator -u-|> Iterator
+ArrayIterator -u-|> Iterator
+
+
+ArrayState <-r- DynamicArrayBase
+ArrayStackState -d-|> ArrayState
+ArrayQueueState -d-|> ArrayState
+VectorState -d-|> ArrayState
+VectorIterator -r-|> ArrayIterator
+ArrayStackIterator -r-|> ArrayIterator
+ArrayQueueIterator -r-|> ArrayIterator
+
+VectorIterator -d-> VectorState
+ArrayStackIterator -d-> ArrayStackState
+ArrayQueueIterator -d-> ArrayQueueState
+
+   
+
+' 노드간 포지션을 잡기를 위한 연결 '
+Collection -[hidden]r-> ListIterator         
+Collection -[hidden]l-> ArrayIterator
+ArrayIterator .[hidden]d.> ArrayState
+
+
+@enduml

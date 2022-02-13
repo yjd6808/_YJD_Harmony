@@ -38,13 +38,33 @@ struct SuperModelTempalte : ModelTemplate<T>
 };
 
 
-struct Test
+class Test
 {
+public:
 	Test() : owner(this, true) {}
 	virtual ~Test() { owner.~VoidOwner(); }
 
+	
 	union { VoidOwner owner; };
+protected:
+	virtual void A() {
+		cout << "a\n";
+	}
 };
+
+
+class Derived : public Test
+{
+public:
+	Derived() : Test() {}
+	virtual ~Derived() {  }
+public:
+	void A() override {
+		Test::A();
+		cout << "derived\n";
+	}
+};
+
 
 int main() {
 
@@ -52,6 +72,9 @@ int main() {
 	if (w == nullptr) {
 		int a = 40;
 	}
+
+	Derived d;
+	d.A();
 
 	std::vector<Model> m;
 	{
