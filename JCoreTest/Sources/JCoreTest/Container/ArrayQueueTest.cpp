@@ -27,14 +27,14 @@ TEST(ArrayQueueTest, Regular) {
 		queue.Dequeue();
 	}
 
-	EXPECT_TRUE(queue.GetSize() == 0);
+	EXPECT_TRUE(queue.Size() == 0);
 
 	for (int i = 0; i < count; i++) {
 		queue.Enqueue(i);
 	}
 
 	queue.Clear();
-	EXPECT_TRUE(queue.GetSize() == 0);
+	EXPECT_TRUE(queue.Size() == 0);
 }
 
 // 큐가 꽉찬 상황에서의 테스트
@@ -42,7 +42,7 @@ TEST(ArrayQueueTest, FullCaseTest) {
 
 	// 큐가 꽉찬 상태에서 이터레이터가 무한 순회하는 상황
 	ArrayQueue<int> q;
-	int z = q.GetCapacity();
+	int z = q.Capacity();
 
 	for (int i = 0; i < z; i++) {
 		q.Enqueue(i);
@@ -90,13 +90,13 @@ TEST(ArrayQueueTest, TotalTest) {
 			backward_list.push_front(i);
 		}
 
-		EXPECT_TRUE(queue.GetSize() == dataCount);
+		EXPECT_TRUE(queue.Size() == dataCount);
 		int r = dataCount;	// 갯수 추척
 		
 		// 2개 넣고 2개 빼고 다시 32개를 넣어서 꽉채운다.
 
 		while (suffleCount-- > 0) {
-			int popSize = random.GenerateInt(1, queue.GetSize() + 1);
+			int popSize = random.GenerateInt(1, queue.Size() + 1);
 			r -= popSize;
 			
 			for (int i = 0; i < popSize; i++) {
@@ -104,7 +104,7 @@ TEST(ArrayQueueTest, TotalTest) {
 				forward_list.pop_front();
 				backward_list.pop_back();
 			}
-			int queueSize1 = queue.GetSize();
+			int queueSize1 = queue.Size();
 			
 			vector<int> v;	// 데이터 추적
 							// 이번 셔플 단계에서 데이터가 일치하는지
@@ -144,7 +144,7 @@ TEST(ArrayQueueTest, TotalTest) {
 				backward_list.push_front(i);
 			}
 
-			int queueSize2 = queue.GetSize();
+			int queueSize2 = queue.Size();
 
 			it = queue.Begin();
 			int k = 0;
@@ -162,11 +162,11 @@ TEST(ArrayQueueTest, TotalTest) {
 				rvIt++;
 			}
 
-			EXPECT_TRUE(forward_list.size() == queue.GetSize());
-			EXPECT_TRUE(backward_list.size() == queue.GetSize());
+			EXPECT_TRUE(forward_list.size() == queue.Size());
+			EXPECT_TRUE(backward_list.size() == queue.Size());
 		}
 
-		EXPECT_TRUE(queue.GetSize() == r);
+		EXPECT_TRUE(queue.Size() == r);
 
 		auto forward_listit = forward_list.begin();
 		auto backward_listit = backward_list.begin();

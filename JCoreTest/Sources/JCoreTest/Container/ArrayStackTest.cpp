@@ -28,14 +28,14 @@ TEST(ArrayStackTest, Regular) {
 		stack.Pop();
 	}
 
-	EXPECT_TRUE(stack.GetSize() == 0);
+	EXPECT_TRUE(stack.Size() == 0);
 
 	for (int i = 0; i < count; i++) {
 		stack.Push(i);
 	}
 
 	stack.Clear();
-	EXPECT_TRUE(stack.GetSize() == 0);
+	EXPECT_TRUE(stack.Size() == 0);
 }
 
 // 추가, 삭제, 반복자 테스트
@@ -75,8 +75,8 @@ TEST(ArrayStackTest, TotalTest) {
 			rit++;
 		}
 
-		EXPECT_TRUE(stack.GetSize() == dc);
-		EXPECT_TRUE(stack.GetSize() == stl.size());
+		EXPECT_TRUE(stack.Size() == dc);
+		EXPECT_TRUE(stack.Size() == stl.size());
 
 		for (int i = dc - 1; i >= 0; i--) {
 			EXPECT_TRUE(stack.Top() == stl.top());
@@ -84,7 +84,7 @@ TEST(ArrayStackTest, TotalTest) {
 			stl.pop();
 		}
 
-		EXPECT_TRUE(stack.GetSize() == 0);
+		EXPECT_TRUE(stack.Size() == 0);
 		EXPECT_TRUE(stl.size() == 0);
 
 		for (int i = 0; i < dc; i++) {
@@ -92,11 +92,11 @@ TEST(ArrayStackTest, TotalTest) {
 			stl.push(i);
 		}
 
-		EXPECT_TRUE(stack.GetSize() == dc);
+		EXPECT_TRUE(stack.Size() == dc);
 
 		stack.Clear();
 
-		EXPECT_TRUE(stack.GetSize() == 0);
+		EXPECT_TRUE(stack.Size() == 0);
 	}
 }
 

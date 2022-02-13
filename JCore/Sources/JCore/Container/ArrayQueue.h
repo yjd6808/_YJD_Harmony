@@ -31,7 +31,7 @@ public:
 	virtual ~ArrayQueue() noexcept {}
 
 	virtual void Enqueue(const T& data) {
-		if (this->GetSize() == this->GetCapacity() - 1) {
+		if (this->IsFull()) {
 			this->ExpandAuto();
 		}
 
@@ -41,7 +41,7 @@ public:
 	}
 
 	virtual void Enqueue(T&& data) {
-		if (this->GetSize() == this->GetCapacity() - 1) {
+		if (this->IsFull()) {
 			this->ExpandAuto();
 		}
 
@@ -81,7 +81,7 @@ public:
 		}
 
 		if (IsForwardedHead()) {
-			this->DestroyAtRange(m_iHead , this->GetCapacity() - 1);
+			this->DestroyAtRange(m_iHead , this->Capacity() - 1);
 			this->DestroyAtRange(0		 , m_iTail - 1);
 		} else {
 			this->DestroyAtRange(m_iHead, m_iTail - 1);
@@ -123,14 +123,14 @@ protected:
 				 ========================================================
 				 ↑			     ↑                          ↑
 				 0              head                       tail
-								 └---- this->GetSize() -----┘
+								 └---- this->Size() -----┘
 
 			 */
 
 			Memory::CopyUnsafe(
 				pNewArray,
 				this->m_pArray + m_iHead,
-				sizeof(T) * this->GetSize());
+				sizeof(T) * this->Size());
 		} else {
 
 			/*	  아래와 같은 상황에서의 배열 확장방법
@@ -147,7 +147,7 @@ protected:
 
 			 */
 
-			int iHeadToEndSize		= this->GetCapacity() - m_iHead;
+			int iHeadToEndSize		= this->Capacity() - m_iHead;
 			int iBeginToTailSize	= m_iTail; 
 
 			Memory::CopyUnsafe(
@@ -168,7 +168,7 @@ protected:
 
 		// 확장 후 꼬리 헤드 위치 변경해줘야함
 		m_iHead = 0;
-		m_iTail = this->GetSize();
+		m_iTail = this->Size();
 	}
 
 
@@ -180,7 +180,7 @@ protected:
 	/// <param name="startIdx"></param>
 	/// <param name="endIdx"></param>
 	virtual bool IsValidRange(int startIdx, int endIdx) const {
-		return startIdx <= endIdx && startIdx >= 0 && endIdx < this->GetCapacity();
+		return startIdx <= endIdx && startIdx >= 0 && endIdx < this->Capacity();
 	}
 
 
@@ -193,7 +193,7 @@ protected:
 	/// <param name="endIdx"></param>
 	virtual bool IsValidIndex(int idx) const {
 		if (IsForwardedHead()) {
-			return (idx >= m_iHead && idx < this->GetCapacity()) ||
+			return (idx >= m_iHead && idx < this->Capacity()) ||
 				   (idx >= 0       && idx < m_iTail);
 		}
 
@@ -214,26 +214,34 @@ protected:
 		TDynamicArray::DestroyAtRange(startIdx, endIdx);
 	}
 
+	/// <summary>
+	/// [오버라이딩]
+	///  - From DynamicArray
+	/// </summary>
+	virtual bool IsFull() const {
+		return this->m_iSize == this->m_iCapacity - 1;
+	}
+
 protected:
 
 	/// <summary>
 	/// 꼬리의 gap 만큼 다음 위치에 해당하는 값을 가져온다.
 	/// </summary>
 	int NextTailValue(int gap) const {
-		gap %= this->GetCapacity();
+		gap %= this->Capacity();
 
-		if (m_iTail + gap >= this->GetCapacity()) {
-			return m_iTail + gap - this->GetCapacity();
+		if (m_iTail + gap >= this->Capacity()) {
+			return m_iTail + gap - this->Capacity();
 		}
 
 		return m_iTail + gap;
 	}
 
 	int NextHeadValue(int gap) const {
-		gap %= this->GetCapacity();
+		gap %= this->Capacity();
 
-		if (m_iHead + gap >= this->GetCapacity()) {
-			return m_iHead + gap - this->GetCapacity();
+		if (m_iHead + gap >= this->Capacity()) {
+			return m_iHead + gap - this->Capacity();
 		}
 
 		return m_iHead + gap;
@@ -243,20 +251,20 @@ protected:
 	/// 꼬리의 gap 만큼 이전 위치에 해당하는 값을 가져온다.
 	/// </summary>
 	int PrevTailValue(int gap) const {
-		gap %= this->GetCapacity();
+		gap %= this->Capacity();
 
 		if (m_iTail - gap < 0) {
-			return this->GetCapacity() - (gap - m_iTail);
+			return this->Capacity() - (gap - m_iTail);
 		}
 
 		return m_iTail - gap;
 	}
 
 	int PrevHeadValue(int gap) const {
-		gap %= this->GetCapacity();
+		gap %= this->Capacity();
 
 		if (m_iHead - gap < 0) {
-			return this->GetCapacity() - (gap - m_iHead);
+			return this->Capacity() - (gap - m_iHead);
 		}
 
 		return m_iHead - gap;

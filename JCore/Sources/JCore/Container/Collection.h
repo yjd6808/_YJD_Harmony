@@ -56,7 +56,7 @@ public:
 		return m_iSize == 0; 
 	}
 
-	int GetSize() const { 
+	int Size() const { 
 		return m_iSize; 
 	}
 protected:

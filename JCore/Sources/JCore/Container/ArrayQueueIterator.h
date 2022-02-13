@@ -33,7 +33,7 @@ public:
 		TArrayQueue* pQueue = CastArrayQueue();
 		T& val = pQueue->m_pArray[this->m_iPos++];
 
-		if (this->m_iPos == pQueue->GetCapacity()) {
+		if (this->m_iPos == pQueue->Capacity()) {
 			this->m_iPos = 0;
 		}
 
@@ -45,7 +45,7 @@ public:
 		T& val = pQueue->m_pArray[this->m_iPos--];
 
 		if (this->m_iPos == -1) {
-			this->m_iPos = pQueue->GetCapacity() - 1;
+			this->m_iPos = pQueue->Capacity() - 1;
 		}
 
 		return val;
@@ -60,7 +60,7 @@ protected:
 		}
 
 		if (pQueue->IsForwardedHead()) {
-			return (idx >= pQueue->m_iHead && idx < pQueue->GetCapacity()) ||
+			return (idx >= pQueue->m_iHead && idx < pQueue->Capacity()) ||
 				   (idx >= 0			   && idx < pQueue->m_iTail);
 		} 
 

@@ -41,7 +41,7 @@ public:
 	}
 protected:
 	virtual bool IsValidIndex(int idx) const {
-		return idx >= 0 && idx < CastDynamicArray()->GetSize();
+		return idx >= 0 && idx < CastDynamicArray()->Size();
 	}
 
 	TDynamicArray* CastDynamicArray() const {

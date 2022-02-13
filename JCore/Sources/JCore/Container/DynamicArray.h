@@ -38,7 +38,7 @@ public:
 		Memory::Deallocate(m_pArray);
 	}
 
-	int GetCapacity() const {
+	int Capacity() const {
 		return m_iCapacity;
 	}
 
@@ -49,8 +49,16 @@ public:
 	///  - ArrayQueue
 	/// </summary>
 	virtual void Clear() {
-		DestroyAtRange(0, this->GetSize() - 1);
+		DestroyAtRange(0, this->Size() - 1);
 		this->m_iSize = 0;
+	}
+
+	/// <summary>
+	/// [오버라이딩]
+	///  - ArrayQueue : 한칸이 덜 찬 상태를 꽉찬 상태로 처리해야하기 때문에 오버라이딩 해야함
+	/// </summary>
+	virtual bool IsFull() const {
+		return this->m_iSize == m_iCapacity;
 	}
 protected:
 	
@@ -95,7 +103,7 @@ protected:
 	}
 
 	virtual bool IsValidRange(const int startIdx, const int endIdx) const {
-		return startIdx <= endIdx && startIdx >= 0 && endIdx < this->GetSize();
+		return startIdx <= endIdx && startIdx >= 0 && endIdx < this->Size();
 	}
 
 	virtual void ExpandAuto() {
@@ -164,9 +172,7 @@ protected:
 		return GetAt(idx);
 	}
 
-	bool IsFull() const {
-		return this->m_iSize == m_iCapacity;
-	}
+	
 
 protected:
 	virtual void ThrowIfContainerIsEmpty() const {

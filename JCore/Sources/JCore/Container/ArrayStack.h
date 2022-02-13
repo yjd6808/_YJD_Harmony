@@ -64,7 +64,7 @@ public:
 	}
 
 	virtual TEnumerator End() const {
-		return MakeShared<TArrayStackIterator>(this->GetOwner(), this->GetSize() - 1);
+		return MakeShared<TArrayStackIterator>(this->GetOwner(), this->Size() - 1);
 	}
 
 protected:

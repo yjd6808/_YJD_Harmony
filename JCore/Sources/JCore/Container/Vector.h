@@ -7,7 +7,7 @@
 
 
 #include <JCore/Container/VectorIterator.h>
-#include <JCore/Container/DynamicArray.h>
+#include <JCore/Container/AbstractDynamicArray.h>
 
 namespace JCore { // namespace JCore
 
@@ -16,14 +16,14 @@ namespace JCore { // namespace JCore
 =====================================================================================*/
 
 template <typename T>
-class Vector : public DynamicArray<T>
+class Vector : public AbstractDynamicArray<T>
 {
 	using TEnumerator			= typename Enumerator<T>;
-	using TDynamicArray			= typename DynamicArray<T>;
+	using TAbstractDynamicArray			= typename AbstractDynamicArray<T>;
 	using TVector				= typename Vector<T>;
 	using TVectorIterator		= typename VectorIterator<T>;
 public:
-	Vector(int capacity = TDynamicArray::ms_iDefaultCapcity) : TDynamicArray(capacity) {}
+	Vector(int capacity = TAbstractDynamicArray::ms_iDefaultCapcity) : TAbstractDynamicArray(capacity) {}
 	virtual ~Vector() noexcept {}
 
 	void PushBack(const T& data) {
@@ -56,7 +56,7 @@ public:
 	}
 
 	virtual TEnumerator End() const {
-		return MakeShared<TVectorIterator>(this->GetOwner(), this->GetSize() - 1);
+		return MakeShared<TVectorIterator>(this->GetOwner(), this->Size() - 1);
 	}
 
 protected:
