@@ -52,6 +52,11 @@ public:
 	}
 
 protected:
+
+	/// <summary>
+	/// [오버라이딩]
+	/// - From DynamicArrayIterator
+	/// </summary>
 	virtual bool IsValidIndex(int idx) const {
 		TArrayQueue* pQueue = CastArrayQueue();
 

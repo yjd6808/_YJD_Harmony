@@ -68,71 +68,22 @@ public:
 
 int main() {
 
-	VoidWatcher w;
-	if (w == nullptr) {
-		int a = 40;
+	Vector<int> vec;
+	vec.PushBack(1);
+	vec.PushBack(2);
+	vec.PushBack(3);
+	vec.PushBack(4);
+	vec.PushBack(5);
+	vec.PushBack(6);
+
+	vec.Insert(0, 1);
+	vec.Insert(0, 2);
+	vec.Insert(0, 3);
+
+	for (int i = 0; i < vec.Size(); i++) {
+		cout << vec[i] << "\n";
 	}
 
-	Derived d;
-	d.A();
-
-	std::vector<Model> m;
-	{
-		ArrayStack<SuperModel> stack;
-		stack.EmplacePush();
-		stack.EmplacePush();
-		SharedPointer<Iterator<SuperModel>> iter = stack.Begin();
-
-		while (iter->HasValue()) {
-			cout << iter->Next().a << "\n";
-		}
-	}
-
-	{
-		queue<Model> q2;
-		ArrayQueue<Model> queue;
-
-		for (int i = 0; i < 20; i++) {
-			queue.Enqueue({ i });
-		}
-
-		Enumerator<Model> it = queue.Begin();
-		while (it->HasValue()) {
-			cout << "가즈아 : " << it->Next().a << "\n";
-		}
-
-		queue.Clear();
-		/*
-		for (int i = 0; i < 20; i++) {
-			queue.Dequeue();
-		}
-		*/
-
-
-
-		for (int i = 0; i < 40; i++) {
-			queue.Enqueue({ i });
-		}
-
-		it = queue.Begin();
-		while (it->HasValue()) {
-			cout << "가즈아 : " << it->Next().a << "\n";
-		}
-
-		for (int i = 0; i < 20; i++) {
-			queue.Dequeue();
-		}
-
-		for (int i = 0; i < 40; i++) {
-			queue.Enqueue({ i });
-		}
-
-		it = queue.Begin();
-		while (it->HasValue()) {
-			cout << "가즈아 : " << it->Next().a << "\n";
-		}
-	}
-	
 	_CrtDumpMemoryLeaks();
 	return 0;
 }

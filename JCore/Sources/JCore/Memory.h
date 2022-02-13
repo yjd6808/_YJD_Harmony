@@ -13,8 +13,13 @@ namespace JCore {
 class Memory final
 {
 public:
-	static void Copy(void* src, const int srcCapacity, const void* dst, const int dstCopySize);
-	static void CopyUnsafe(void* src, const void* dst, const int dstCopySize);
+	// 시작 바이트부터 복사 시작
+	static void Copy(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte);
+	static void CopyUnsafe(void* dst, const void* src, const int srcCopyByte);
+
+	// 마지막 바이트부터 복사 시작
+	static void CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte);
+	static void CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte);
 
 	static void Set(void* src, const int srcCapacity, const Byte value);
 

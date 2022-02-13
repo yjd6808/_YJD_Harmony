@@ -30,6 +30,7 @@
 #include <JCore/Container/Arrays.h>
 #include <JCore/Container/ArrayStack.h>
 #include <JCore/Container/ArrayQueue.h>
+#include <JCore/Container/Vector.h>
 
 using namespace JCore;
 using namespace JCore;

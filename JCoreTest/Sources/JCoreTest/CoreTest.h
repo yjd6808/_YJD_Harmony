@@ -40,7 +40,7 @@
 
 #if ContainerTestEnabled == ON
 
-    #define	TEST_ArraysTest					    OFF
+    #define	TEST_ArraysTest					    ON
     #define	TEST_ArrayStackTest				    ON
     #define	TEST_ArrayQueueTest				    ON
 

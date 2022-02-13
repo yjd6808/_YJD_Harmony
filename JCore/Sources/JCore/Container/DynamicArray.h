@@ -6,6 +6,8 @@
 #pragma once
 
 #include <JCore/Memory.h>
+
+#include <JCore/Container/Arrays.h>
 #include <JCore/Container/Collection.h>
 #include <JCore/Container/DynamicArrayIterator.h>
 
@@ -166,13 +168,42 @@ protected:
 		Memory::PlacementDeallocate(m_pArray[idx]);
 	}
 
-	
 
-	T& operator[](const int idx) const {
-		return GetAt(idx);
+	/// <summary>
+	/// 블록을 원하는 위치로 이동한다.
+	/// 블록은 배열의 특정인덱스부터 정해진 갯수까지의 구간을 블록이라 한다.
+	/// </summary>
+	/// <param name="blockIdx"> 블록 시작 위치 </param>
+	/// <param name="blockSize"> 블록 크기 </param>
+	/// <param name="moveCount"> 이동할 위치 </param>
+	void MoveBlock(const int blockIdx, int moveIdx, const int blockSize) {
+		if (blockSize < 0) {
+			throw InvalidArgumentException("복사할 블록 크기가 0보다 작을 수 없습니다.");
+		}
+
+		// 제자리 복사는 그냥 반환하자.
+		if (moveIdx == blockIdx) {
+			return;
+		}
+
+		ThrowIfIndexIsInvalid(moveIdx);
+		ThrowIfIndexIsInvalid(blockIdx);
+
+		if (moveIdx > blockIdx) {
+			Memory::CopyUnsafeReverse(
+				m_pArray + moveIdx,
+				m_pArray + blockIdx,
+				blockSize * sizeof(T));
+			return;
+		} 
+		
+		Memory::CopyUnsafe(
+			m_pArray + moveIdx,
+			m_pArray + blockIdx,
+			blockSize * sizeof(T));
 	}
 
-	
+
 
 protected:
 	virtual void ThrowIfContainerIsEmpty() const {

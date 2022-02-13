@@ -38,13 +38,8 @@ abstract class Collection <<컨테이너>> extends Iterable {
 
     해당 컨테이너 포인터의 주인을 설정한다.
     --
-    Empty()
+    IsEmpty()
     Size()
-    ToCollection()
-    ToArray()
-    ForEach()
-    Find()
-
     --
     선형 컨테이너와 비선형 컨테이너의 인터페이스
 }
@@ -68,23 +63,16 @@ class ListQueue extends LinkedListBase
 class LinkedList extends LinkedListBase
 
 abstract class DynamicArray extends Collection {
-
+    Clear()
+    IsFull()
     --
-    Resize()
-
+    배열기반 선형 컨테이너의 인터페이스
 }
 
 rectangle 배열의_이터레이터 {
-    class ArrayIterator {
-        Watcher<ArrayState>
-        ---
-        Watcher는 Owner를 감시중이다.
-        Owner가 사라지면 해당 이터레이터는 무효화된다.
-    
-        operator++()
-        operator--()
+    abstract class DynamicArrayIterator {
+        배열 기반 컨테이너 이터레이터의 인터페이스
     }
-    
     class ArrayQueueIterator
     class ArrayStackIterator
     class VectorIterator
@@ -99,29 +87,44 @@ rectangle 배열의_이터레이터 {
     end note
 }
 
- class ListIterator {
-        Watcher<ListState>
-    
-        operator++()
-        operator--()
-    }
-    
+ class ListIterator
 
-class ArrayStack
-class ArrayQueue
-class Vector
+class ArrayStack {
+    Push()
+    Pop()
+    Top()
+}
+
+class ArrayQueue {
+    Enqueue()
+    Dequeue()
+    Front()
+}
+
+class Vector {
+    PushBack()
+    Insert()
+    Remove()
+    RemoveAt()
+    Find()
+    FindBinary()
+    Offset()
+    OffsetBinary()
+    EmplaceBack()
+    EmplaceInsert()
+}
 
 
 
 Iterable -u-> Iterator
 LinkedListBase -l-> ListIterator
 ListIterator -u-|> Iterator
-ArrayIterator -u-|> Iterator
+DynamicArrayIterator -u-|> Iterator
 
 
-VectorIterator -u-|> ArrayIterator
-ArrayStackIterator -u-|> ArrayIterator
-ArrayQueueIterator -u-|> ArrayIterator
+VectorIterator -u-|> DynamicArrayIterator
+ArrayStackIterator -u-|> DynamicArrayIterator
+ArrayQueueIterator -u-|> DynamicArrayIterator
 
 Vector -r-|> DynamicArray
 ArrayStack -r-|> DynamicArray
@@ -141,7 +144,7 @@ VectorIterator --> Vector
 
 ' 노드간 포지션을 잡기를 위한 연결 '
 Collection -[hidden]r-> ListIterator         
-Collection -[hidden]l-> ArrayIterator
+Collection -[hidden]l-> DynamicArrayIterator
 
 
 @enduml

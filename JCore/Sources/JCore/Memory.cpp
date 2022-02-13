@@ -9,14 +9,15 @@
 namespace JCore {
 
 // memcpy_s와 기능이 동일합니다.
-void Memory::Copy(void* src, const int srcCapacity, const void* dst, const int dstCopySize) {
+void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
 	int iCopiedBytes = 0;
 
-	Byte* pSrc = (Byte*)src;
 	Byte* pDst = (Byte*)dst;
+	Byte* pSrc = (Byte*)src;
+	
 
-	while (iCopiedBytes <= srcCapacity && iCopiedBytes <= dstCopySize) {
-		*pSrc = *pDst;
+	while (iCopiedBytes <= dstCapacityByte && iCopiedBytes <= srcCopyByte) {
+		*pDst = *pSrc;
 		pSrc++;
 		pDst++;
 		iCopiedBytes++;
@@ -24,16 +25,51 @@ void Memory::Copy(void* src, const int srcCapacity, const void* dst, const int d
 }
 
 // memcpy와 기능이 동일합니다.
-void Memory::CopyUnsafe(void* src, const void* dst, const int dstCopySize) {
+void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
 	int iCopiedBytes = 0;
 
-	Byte* pSrc = (Byte*)src;
 	Byte* pDst = (Byte*)dst;
+	Byte* pSrc = (Byte*)src;
+	
 
-	while (iCopiedBytes <= dstCopySize) {
-		*pSrc = *pDst;
+	while (iCopiedBytes <= srcCopyByte) {
+		*pDst = *pSrc;
 		pSrc++;
 		pDst++;
+		iCopiedBytes++;
+	}
+}
+
+void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
+	int iCopiedBytes = 0;
+
+	Byte* pDst = (Byte*)dst;
+	Byte* pSrc = (Byte*)src;
+
+	pDst += srcCopyByte;
+	pSrc += srcCopyByte;
+
+	while (iCopiedBytes <= dstCapacityByte && iCopiedBytes <= srcCopyByte) {
+		*pDst = *pSrc;
+		pSrc--;
+		pDst--;
+		iCopiedBytes++;
+	}
+}
+
+void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte) {
+	int iCopiedBytes = 0;
+
+	Byte* pDst = (Byte*)dst;
+	Byte* pSrc = (Byte*)src;
+
+	pDst += srcCopyByte;
+	pSrc += srcCopyByte;
+
+	while (iCopiedBytes <= srcCopyByte) {
+		*pDst = *pSrc;
+		pSrc--;
+		pDst--;
 		iCopiedBytes++;
 	}
 }

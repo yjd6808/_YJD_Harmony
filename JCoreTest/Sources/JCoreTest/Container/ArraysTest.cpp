@@ -54,7 +54,118 @@ FAILED:
 	EXPECT_TRUE(false);
 }
 
+TEST(ArraysTest, BinarySearch) {
+	std::vector<int> vec;
 
+	// 데이터가 1개만 있는 경우
+	{
+		vec.push_back(1);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 1) == 0);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 2) == -1);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 0) == -1);
+	}
+	
+	// 데이터가 2개만 있는 경우
+	{
+		vec.clear();
+		vec.push_back(1);
+		vec.push_back(2);
+
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 1) == 0);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 2) == 1);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 0) == -1);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 3) == -1);
+	}
+
+	// 데이터가 3개만 있는 경우
+	{
+		vec.clear();
+		vec.push_back(1);
+		vec.push_back(2);
+		vec.push_back(3);
+
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 1) == 0);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 2) == 1);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 3) == 2);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 0) == -1);
+		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 4) == -1);
+	}
+
+	// 겹치는 숫자가 많은 경우
+	for (int i = 0; i < 50; i++) {
+		vec.clear();
+		Random rand;
+		int dataCount = rand.GenerateInt(1, 3000);
+		while (dataCount--) {
+			vec.push_back(rand.GenerateInt(1, 10));
+		}
+
+		std::sort(vec.begin(), vec.end());
+
+		for (int i = 0; i < vec.size(); i++) {
+
+			int search = Arrays::BinarySearch(&vec[0], vec.size(), vec[i]);
+			EXPECT_TRUE(search >= 0);
+		}
+	}
+
+	// 겹치는 숫자가 거의 없는 경우
+	for (int i = 0; i < 50; i++) {
+		vec.clear();
+		Random rand;
+		int dataCount = rand.GenerateInt(1, 3000);
+		while (dataCount--) {
+			vec.push_back(rand.GenerateInt(1, 10000000));
+		}
+
+		std::sort(vec.begin(), vec.end());
+
+		for (int i = 0; i < vec.size(); i++) {
+
+			int search = Arrays::BinarySearch(&vec[0], vec.size(), vec[i]);
+			EXPECT_TRUE(search >= 0);
+		}
+	}
+}
+
+TEST(ArraysTest, LowerBound) {
+	std::vector<int> vec;
+
+	// 데이터가 1개만 있는 경우
+	{
+		vec.push_back(1);
+
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 1) == 0);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 2) == 1);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == 0);
+	}
+
+	// 데이터가 2개만 있는 경우
+	{
+		vec.clear();
+		vec.push_back(1);
+		vec.push_back(2);
+
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 1) == 0);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 2) == 1);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == -1);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 3) == -1);
+	}
+
+	// 데이터가 3개만 있는 경우
+	{
+		vec.clear();
+		vec.push_back(1);
+		vec.push_back(2);
+		vec.push_back(3);
+
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 1) == 0);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 2) == 1);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 3) == 2);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == -1);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 4) == -1);
+	}
+}
 
 #endif // TEST_ArraysTest == ON
 
