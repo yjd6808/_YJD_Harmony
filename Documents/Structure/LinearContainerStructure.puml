@@ -16,7 +16,10 @@ abstract Iterator<<반복자>> {
     IsValid() 함수가 이를 확인하는 함수이다.
     --
     virtual bool IsValid()
-    virtual bool HasValue()
+
+    virtual bool HasNext()
+    virtual bool HasPrevious()
+
     virtual T& Previous()
     virtual T& Next()
     --
@@ -55,14 +58,18 @@ note right of ListIterator
     각각 구현한다.
 end note
 
-abstract class LinkedListBase extends Collection
+abstract class ListCollection extends Collection {
+    헤드 더미 양방향 연결리스트로 구현
+    --
+    연결리스트 기반 선형 컨테이너의 인터페이스
+}
 
 
-class ListStack extends LinkedListBase
-class ListQueue extends LinkedListBase 
-class LinkedList extends LinkedListBase
+class ListStack extends ListCollection
+class ListQueue extends ListCollection
+class LinkedList extends ListCollection
 
-abstract class DynamicArray extends Collection {
+abstract class ArrayCollection extends Collection {
     Clear()
     IsFull()
     --
@@ -70,7 +77,7 @@ abstract class DynamicArray extends Collection {
 }
 
 rectangle 배열의_이터레이터 {
-    abstract class DynamicArrayIterator {
+    abstract class ArrayCollectionIterator {
         배열 기반 컨테이너 이터레이터의 인터페이스
     }
     class ArrayQueueIterator
@@ -80,7 +87,7 @@ rectangle 배열의_이터레이터 {
     circle 설명
     note top of 설명
 
-    각 반복자들은 본체의 포인터 정보를 멤버변수로 가지고 있고
+    각 반복자들은 컨테이너의 포인터 정보를 멤버변수로 가지고 있고
     이를 캐스팅하여 사용한다.
 
 
@@ -103,7 +110,9 @@ class ArrayQueue {
 
 class Vector {
     PushBack()
+    PushBackAll()
     Insert()
+    InsertAll()
     Remove()
     RemoveAt()
     Find()
@@ -117,18 +126,18 @@ class Vector {
 
 
 Iterable -u-> Iterator
-LinkedListBase -l-> ListIterator
+ListCollection -l-> ListIterator
 ListIterator -u-|> Iterator
-DynamicArrayIterator -u-|> Iterator
+ArrayCollectionIterator -u-|> Iterator
 
 
-VectorIterator -u-|> DynamicArrayIterator
-ArrayStackIterator -u-|> DynamicArrayIterator
-ArrayQueueIterator -u-|> DynamicArrayIterator
+VectorIterator -u-|> ArrayCollectionIterator
+ArrayStackIterator -u-|> ArrayCollectionIterator
+ArrayQueueIterator -u-|> ArrayCollectionIterator
 
-Vector -r-|> DynamicArray
-ArrayStack -r-|> DynamicArray
-ArrayQueue -r-|> DynamicArray
+Vector -r-|> ArrayCollection
+ArrayStack -r-|> ArrayCollection
+ArrayQueue -r-|> ArrayCollection
 
 ArrayStack ..> ArrayStackIterator
 ArrayQueue ..> ArrayQueueIterator
@@ -144,7 +153,7 @@ VectorIterator --> Vector
 
 ' 노드간 포지션을 잡기를 위한 연결 '
 Collection -[hidden]r-> ListIterator         
-Collection -[hidden]l-> DynamicArrayIterator
+Collection -[hidden]l-> ArrayCollectionIterator
 
 
 @enduml

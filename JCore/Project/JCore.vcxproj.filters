@@ -43,7 +43,7 @@
     <ClInclude Include="..\Sources\JCore\Container\Collection.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Container\DynamicArray.h">
+    <ClInclude Include="..\Sources\JCore\Container\ArrayCollection.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Iterable.h">
@@ -52,7 +52,7 @@
     <ClInclude Include="..\Sources\JCore\Container\Iterator.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Container\DynamicArrayIterator.h">
+    <ClInclude Include="..\Sources\JCore\Container\ArrayCollectionIterator.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\ArrayStack.h">

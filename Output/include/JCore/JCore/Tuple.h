@@ -1,9 +1,9 @@
-#pragma once
-
 /*
 	작성자 : 윤정도
 	간단한 튜플
 */
+
+#pragma once
 
 #include <JCore/TypeTraits.h>
 

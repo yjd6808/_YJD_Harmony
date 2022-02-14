@@ -1,9 +1,9 @@
-#pragma once
-
 /*
 	작성자 : 윤정도
 	비교 펑터
 */
+
+#pragma once
 
 #include <JCore/StringUtil.h>
 #include <JCore/String.h>

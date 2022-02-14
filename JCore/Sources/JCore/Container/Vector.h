@@ -1,4 +1,3 @@
-
 /*
 	작성자 : 윤정도
 */
@@ -7,7 +6,7 @@
 
 
 #include <JCore/Container/VectorIterator.h>
-#include <JCore/Container/DynamicArray.h>
+#include <JCore/Container/ArrayCollection.h>
 
 namespace JCore { // namespace JCore
 
@@ -16,14 +15,15 @@ namespace JCore { // namespace JCore
 =====================================================================================*/
 
 template <typename T>
-class Vector : public DynamicArray<T>
+class Vector : public ArrayCollection<T>
 {
 	using TEnumerator			= typename Enumerator<T>;
-	using TDynamicArray			= typename DynamicArray<T>;
+	using TCollection			= typename Collection<T>;
+	using TArrayCollection		= typename ArrayCollection<T>;
 	using TVector				= typename Vector<T>;
 	using TVectorIterator		= typename VectorIterator<T>;
 public:
-	Vector(int capacity = TDynamicArray::ms_iDefaultCapcity) : TDynamicArray(capacity) {}
+	Vector(int capacity = TArrayCollection::ms_iDefaultCapcity) : TArrayCollection(capacity) {}
 	virtual ~Vector() noexcept {}
 
 	void PushBack(const T& data) {
@@ -31,7 +31,7 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->SetAt(this->m_iSize++, data);
+		this->SetAtUnsafe(this->m_iSize++, data);
 	}
 
 	void PushBack(T&& data) {
@@ -39,10 +39,31 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->SetAt(this->m_iSize++, Move(data));
+		this->SetAtUnsafe(this->m_iSize++, data);
+	}
+
+	/// <summary>>a
+	/// 여러개의 데이터를 뒤에 추가하고자할 때
+	/// </summary>
+	void PushBackAll(const TCollection& collection) {
+		int iExpandSize = this->CalculateExpandCapacity(this->m_iSize + collection.Size());
+
+		if (iExpandSize > this->m_iCapacity) {
+			this->Expand(iExpandSize);
+		}
+
+		TEnumerator it = collection.Begin();
+		while (it->HasNext()) {
+			this->SetAtUnsafe(this->m_iSize++, it->Next());
+		}
 	}
 
 	void Insert(int idx, const T& data) {
+		// 마지막 위치에 삽입하는 경우 그냥 PushBack을 수행하자.
+		if (idx == this->m_iSize) {
+			PushBack(data);
+		}
+
 		if (this->IsFull()) {
 			this->ExpandAuto();
 		}
@@ -58,6 +79,12 @@ public:
 	}
 
 	void Insert(int idx, T&& data) {
+		// 마지막 위치에 삽입하는 경우 그냥 PushBack을 수행하자.
+		if (idx == this->m_iSize) {
+			PushBack(Move(data));
+			return;
+		}
+
 		if (this->IsFull()) {
 			this->ExpandAuto();
 		}
@@ -71,6 +98,38 @@ public:
 		this->SetAt(idx, Move(data));
 		this->m_iSize++;
 	}
+
+	/// <summary>
+	/// 특정 위치에 데이터를 많이 삽입하고자 할 때
+	/// </summary>
+	void InsertAll(int idx, const TCollection& collection) {
+		if (idx == this->m_iSize) {
+			PushBackAll(collection);
+			return;
+		}
+
+		int iCollectionSize = collection.Size();
+		int iExpandSize = this->CalculateExpandCapacity(this->m_iSize + iCollectionSize);
+
+		if (iExpandSize > this->m_iCapacity) {
+			this->Expand(iExpandSize);
+		}
+
+		int iMoveBlockSize = this->m_iSize - idx;
+
+		this->MoveBlock(
+			idx,
+			idx + iCollectionSize,
+			iMoveBlockSize);
+
+		TEnumerator it = collection.Begin();
+		while (it->HasNext()) {
+			this->SetAtUnsafe(idx++, it->Next());
+		}
+
+		this->m_iSize += iCollectionSize;
+	}
+
 
 	/// <summary>
 	/// 인자를 받아서 내부에서 생성한다.
@@ -89,14 +148,19 @@ public:
 	/// </summary>
 	template <typename... Args>
 	void EmplaceInsert(int idx, Args&&... args) {
+		if (idx == this->m_iSize) {
+			EmplaceBack(Forward<Args>(args)...);
+			return;
+		}
+
 		if (this->IsFull()) {
 			this->ExpandAuto();
 		}
 
-		this->CopyBlock(
+		this->MoveBlock(
 			idx,
 			idx + 1,
-			this->m_iSize - idx - 1);
+			this->m_iSize - idx);
 		this->EmplaceAt(idx, Forward<Args>(args)...);
 		this->m_iSize++;
 	}
@@ -212,7 +276,7 @@ public:
 	}
 
 	virtual TEnumerator End() const {
-		return MakeShared<TVectorIterator>(this->GetOwner(), this->Size() - 1);
+		return MakeShared<TVectorIterator>(this->GetOwner(), this->Size());
 	}
 protected:
 	friend class TVectorIterator;

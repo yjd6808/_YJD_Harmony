@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <JCore/Container/DynamicArrayIterator.h>
+#include <JCore/Container/ArrayCollectionIterator.h>
 
 namespace JCore {
 
@@ -13,20 +13,34 @@ namespace JCore {
 					class VoidOwner;
 template <typename> class ArrayQueue;
 template <typename T>
-class ArrayQueueIterator : public DynamicArrayIterator<T>
+class ArrayQueueIterator : public ArrayCollectionIterator<T>
 {
-	using TDynamicArrayIterator = typename DynamicArrayIterator<T>;
-	using TArrayQueue			= typename ArrayQueue<T>;
+	using TArrayCollectionIterator	= typename ArrayCollectionIterator<T>;
+	using TArrayQueue				= typename ArrayQueue<T>;
 public:
-	ArrayQueueIterator(VoidOwner& owner, int pos) : TDynamicArrayIterator(owner, pos) {}
+	ArrayQueueIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
 	virtual ~ArrayQueueIterator() noexcept {}
 public:
-	virtual bool HasValue() const {
+	virtual bool HasNext() const {
 		if (!this->IsValid()) {
 			return false;
 		}
 
 		return IsValidIndex(this->m_iPos);
+	}
+
+	virtual bool HasPrevious() const {
+		if (!this->IsValid()) {
+			return false;
+		}
+
+		int iPos = this->m_iPos - 1;
+
+		if (iPos == -1) {
+			iPos = CastArrayQueue()->Capacity() - 1;
+		}
+
+		return IsValidIndex(iPos);
 	}
 
 	virtual T& Next() {
@@ -42,21 +56,20 @@ public:
 
 	virtual T& Previous() {
 		TArrayQueue* pQueue = CastArrayQueue();
-		T& val = pQueue->m_pArray[this->m_iPos--];
-
+		this->m_iPos -= 1;
 		if (this->m_iPos == -1) {
 			this->m_iPos = pQueue->Capacity() - 1;
 		}
 
-		return val;
+		return pQueue->m_pArray[this->m_iPos];
 	}
-
 protected:
 
 	/// <summary>
 	/// [오버라이딩]
-	/// - From DynamicArrayIterator
+	/// - From ArrayCollectionIterator
 	/// </summary>
+	
 	virtual bool IsValidIndex(int idx) const {
 		TArrayQueue* pQueue = CastArrayQueue();
 
@@ -71,6 +84,8 @@ protected:
 
 		return idx >= pQueue->m_iHead && idx < pQueue->m_iTail;
 	}
+	
+
 
 	TArrayQueue* CastArrayQueue() const {
 		this->ThrowIfIteratorIsNotValid();

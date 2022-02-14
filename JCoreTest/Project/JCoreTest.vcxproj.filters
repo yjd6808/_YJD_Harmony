@@ -42,6 +42,9 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayQueueTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\VectorTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

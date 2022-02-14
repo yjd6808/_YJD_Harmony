@@ -9,7 +9,7 @@
 
 #include <JCore/Container/Arrays.h>
 #include <JCore/Container/Collection.h>
-#include <JCore/Container/DynamicArrayIterator.h>
+#include <JCore/Container/ArrayCollectionIterator.h>
 
 
 namespace JCore {
@@ -21,13 +21,13 @@ namespace JCore {
 =====================================================================================*/
 
 template <typename T>
-class DynamicArray : public Collection<T>
+class ArrayCollection : public Collection<T>
 {
-	using TCollection			= Collection<T>;
-	using TDynamicArray			= DynamicArray<T>;
-	using TDynamicArrayIterator = DynamicArrayIterator<T>;
+	using TCollection				= Collection<T>;
+	using TArrayCollection			= ArrayCollection<T>;
+	using TArrayCollectionIterator  = ArrayCollectionIterator<T>;
 public:
-	DynamicArray(int capacity) : TCollection()  {
+	ArrayCollection(int capacity) : TCollection()  {
 		if (capacity < 1) {
 			throw InvalidArgumentException("컨테이너의 크기가 0이하가 될 수 없습니다.");
 		}
@@ -36,9 +36,7 @@ public:
 		m_iCapacity = capacity;
 	}
 
-	virtual ~DynamicArray() noexcept {
-		Memory::Deallocate(m_pArray);
-	}
+	virtual ~ArrayCollection() noexcept = 0;
 
 	int Capacity() const {
 		return m_iCapacity;
@@ -93,8 +91,8 @@ protected:
 	}
 	
 	/// <summary>
-	/// 유효한 인덱스 범위인지
-	/// 
+	/// 사이즈 내부에 존재하는 유효한 인덱스 범위인지
+	/// 즉, 데이터가 할당된 위치인지
 	/// [오버라이딩]
 	///  - ArrayQueue
 	/// </summary>
@@ -104,8 +102,20 @@ protected:
 		return idx >= 0 && idx < this->m_iSize;
 	}
 
+	/// <summary>
+	/// 할당된 배열 내부에 존재하는 인덱스 값인지
+	/// </summary>
+	/// <param name="idx">할당된 배열 내부의 인덱스</param>
+	virtual bool IsValidIndexCapacity(const int idx) const {
+		return idx >= 0 && idx < this->Capacity();
+	}
+
 	virtual bool IsValidRange(const int startIdx, const int endIdx) const {
 		return startIdx <= endIdx && startIdx >= 0 && endIdx < this->Size();
+	}
+
+	virtual bool IsValidRangeCapacity(const int startIdx, const int endIdx) const {
+		return startIdx <= endIdx && startIdx >= 0 && endIdx < this->Capacity();
 	}
 
 	virtual void ExpandAuto() {
@@ -124,6 +134,10 @@ protected:
 			Memory::PlacementDeallocate(m_pArray[i]);
 		}
 	}
+
+
+	
+
 protected:
 	T& GetAt(const int idx) const {
 		ThrowIfIndexIsInvalid(idx);
@@ -168,15 +182,14 @@ protected:
 		Memory::PlacementDeallocate(m_pArray[idx]);
 	}
 
-
 	/// <summary>
 	/// 블록을 원하는 위치로 이동한다.
-	/// 블록은 배열의 특정인덱스부터 정해진 갯수까지의 구간을 블록이라 한다.
+	/// 블록은 배열의 특정 인덱스부터 정해진 갯수까지의 구간을 블록이라 한다.
 	/// </summary>
 	/// <param name="blockIdx"> 블록 시작 위치 </param>
 	/// <param name="blockSize"> 블록 크기 </param>
 	/// <param name="moveCount"> 이동할 위치 </param>
-	void MoveBlock(const int blockIdx, int moveIdx, const int blockSize) {
+	void MoveBlock(const int blockIdx, const int moveIdx, const int blockSize) {
 		if (blockSize < 0) {
 			throw InvalidArgumentException("복사할 블록 크기가 0보다 작을 수 없습니다.");
 		}
@@ -186,8 +199,17 @@ protected:
 			return;
 		}
 
-		ThrowIfIndexIsInvalid(moveIdx);
+		if (blockSize == 0) {
+			return;
+		}
+
+		// 데이터가 존재하는지
 		ThrowIfIndexIsInvalid(blockIdx);
+		ThrowIfIndexIsInvalid(blockIdx + blockSize - 1);
+
+		// 블록이 이동할 위치가 배열 내부에 둘 수 있는지 체크
+		ThrowIfIndexIsNotCapacityIndex(moveIdx);
+		ThrowIfIndexIsNotCapacityIndex(moveIdx + blockSize - 1);
 
 		if (moveIdx > blockIdx) {
 			Memory::CopyUnsafeReverse(
@@ -195,8 +217,8 @@ protected:
 				m_pArray + blockIdx,
 				blockSize * sizeof(T));
 			return;
-		} 
-		
+		}
+
 		Memory::CopyUnsafe(
 			m_pArray + moveIdx,
 			m_pArray + blockIdx,
@@ -204,7 +226,24 @@ protected:
 	}
 
 
+	/// <summary>
+	/// 전달받은 사이즈 크기에 맞는 배열 크기를 반환해준다.
+	/// </summary>
+	int CalculateExpandCapacity(int size) {
+		if (size < m_iCapacity) {
+			return m_iCapacity;
+		}
 
+		int iExpectedCapacity = m_iCapacity;
+
+		while (true) {
+			iExpectedCapacity *= ms_iExpandingFactor;
+			if (iExpectedCapacity > size) {
+				break;
+			}
+		}
+		return iExpectedCapacity;
+	}
 protected:
 	virtual void ThrowIfContainerIsEmpty() const {
 		if (this->IsEmpty()) {
@@ -214,7 +253,13 @@ protected:
 
 	virtual void ThrowIfIndexIsInvalid(int idx) const {
 		if (!IsValidIndex(idx)) {
-			throw OutOfRangeException("올바르지 않은 인덱스 입니다.");
+			throw OutOfRangeException("올바르지 않은 데이터 인덱스 입니다.");
+		}
+	}
+
+	virtual void ThrowIfIndexIsNotCapacityIndex(int capacityIdx) const {
+		if (!IsValidIndexCapacity(capacityIdx)) {
+			throw OutOfRangeException("올바르지 않은 배열 인덱스 입니다.");
 		}
 	}
 
@@ -236,7 +281,12 @@ protected:
 	T* m_pArray;
 	int m_iCapacity;
 
-	friend class TDynamicArrayIterator;
+	friend class TArrayCollectionIterator;
 };
+
+template <typename T>
+ArrayCollection<T>::~ArrayCollection() noexcept {
+	Memory::Deallocate(m_pArray);
+}
 
 } // namespace JCore

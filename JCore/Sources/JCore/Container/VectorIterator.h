@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <JCore/Container/DynamicArrayIterator.h>
+#include <JCore/Container/ArrayCollectionIterator.h>
 
 namespace JCore {
 
@@ -12,24 +12,28 @@ namespace JCore {
 					class VoidOwner;
 template <typename> class Vector;
 template <typename T>
-class VectorIterator : public DynamicArrayIterator<T>
+class VectorIterator : public ArrayCollectionIterator<T>
 {
-	using TDynamicArrayIterator = typename DynamicArrayIterator<T>;
-	using TVector				= typename Vector<T>;
+	using TArrayCollectionIterator  = typename ArrayCollectionIterator<T>;
+	using TVector					= typename Vector<T>;
 public:
-	VectorIterator(VoidOwner& owner, int pos) : TDynamicArrayIterator(owner, pos) {}
+	VectorIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
 	virtual ~VectorIterator() noexcept {}
 public:
-	virtual bool HasValue() const {
-		return TDynamicArrayIterator::HasValue();
+	virtual bool HasNext() const {
+		return TArrayCollectionIterator::HasNext();
+	}
+
+	virtual bool HasPrevious() const {
+		return TArrayCollectionIterator::HasPrevious();
 	}
 
 	virtual T& Next() {
-		return TDynamicArrayIterator::Next();
+		return TArrayCollectionIterator::Next();
 	}
 
 	virtual T& Previous() {
-		return TDynamicArrayIterator::Previous();
+		return TArrayCollectionIterator::Previous();
 	}
 };
 

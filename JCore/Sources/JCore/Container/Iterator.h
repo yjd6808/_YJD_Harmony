@@ -22,7 +22,8 @@ struct Iterator
 	Iterator(VoidOwner& owner) : Watcher(owner) {}
 	virtual ~Iterator() noexcept { Watcher.~VoidWatcher(); }
 
-	virtual bool HasValue() const = 0;
+	virtual bool HasNext() const = 0;
+	virtual bool HasPrevious() const = 0;
 
 	virtual T& Previous() = 0;
 	virtual T& Next() = 0;

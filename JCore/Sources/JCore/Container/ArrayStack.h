@@ -6,7 +6,7 @@
 
 
 #include <JCore/Container/ArrayStackIterator.h>
-#include <JCore/Container/DynamicArray.h>
+#include <JCore/Container/ArrayCollection.h>
 
 namespace JCore {
 
@@ -15,14 +15,14 @@ namespace JCore {
 =====================================================================================*/
 
 template <typename T>
-class ArrayStack : public DynamicArray<T>
+class ArrayStack : public ArrayCollection<T>
 {
 	using TEnumerator			= typename Enumerator<T>;
-	using TDynamicArray			= typename DynamicArray<T>;
+	using TArrayCollection		= typename ArrayCollection<T>;
 	using TArrayStack			= typename ArrayStack<T>;
 	using TArrayStackIterator	= typename ArrayStackIterator<T>;
 public:
-	ArrayStack(int capacity = TDynamicArray::ms_iDefaultCapcity) : TDynamicArray(capacity) {}
+	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapcity) : TArrayCollection(capacity) {}
 	virtual ~ArrayStack() noexcept {}
 
 	void Push(const T& data) {
@@ -64,7 +64,7 @@ public:
 	}
 
 	virtual TEnumerator End() const {
-		return MakeShared<TArrayStackIterator>(this->GetOwner(), this->Size() - 1);
+		return MakeShared<TArrayStackIterator>(this->GetOwner(), this->Size());
 	}
 
 protected:

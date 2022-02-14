@@ -65,12 +65,12 @@ TEST(ArrayStackTest, TotalTest) {
 		auto stackFit = stack.Begin();
 		auto stackRit = stack.End();
 
-		while (stackFit->HasValue()) {
+		while (stackFit->HasNext()) {
 			EXPECT_TRUE(stackFit->Next() == (*fit));
 			fit++;
 		}
 
-		while (stackFit->HasValue()) {
+		while (stackFit->HasNext()) {
 			EXPECT_TRUE(stackFit->Previous() == (*fit));
 			rit++;
 		}

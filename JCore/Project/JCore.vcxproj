@@ -69,11 +69,11 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Collection.h" />
-    <ClInclude Include="..\Sources\JCore\Container\DynamicArray.h">
+    <ClInclude Include="..\Sources\JCore\Container\ArrayCollection.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Container\DynamicArrayIterator.h">
+    <ClInclude Include="..\Sources\JCore\Container\ArrayCollectionIterator.h">
       <SubType>
       </SubType>
     </ClInclude>

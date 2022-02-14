@@ -148,8 +148,8 @@ TEST(ArraysTest, LowerBound) {
 
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 1) == 0);
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 2) == 1);
-		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == -1);
-		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 3) == -1);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == 0);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 3) == 2);
 	}
 
 	// 데이터가 3개만 있는 경우
@@ -162,8 +162,8 @@ TEST(ArraysTest, LowerBound) {
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 1) == 0);
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 2) == 1);
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 3) == 2);
-		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == -1);
-		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 4) == -1);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == 0);
+		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 4) == 3);
 	}
 }
 

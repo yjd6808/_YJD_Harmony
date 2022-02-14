@@ -40,10 +40,12 @@
 
 #if ContainerTestEnabled == ON
 
-    #define	TEST_ArraysTest					    ON
+    
     #define	TEST_ArrayStackTest				    ON
     #define	TEST_ArrayQueueTest				    ON
-
+    #define	TEST_ArraysTest					    ON
+    #define	TEST_VectorTest					    ON
+    
     #if ContainerImplTestEnabled == ON
         #define	TEST_AVLTreeImplTest			OFF
         #define	TEST_AVLTreeMemoImplTest		OFF

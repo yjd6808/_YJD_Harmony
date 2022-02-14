@@ -39,19 +39,9 @@ class Collection : public Iterable<T>
 public:
 	Collection() : TIterable(), m_Owner(this, true) {}
 	virtual ~Collection() noexcept { m_Owner.~VoidOwner(); }
-public:
-	void ForEach(std::function<void(T&)> fn) {
-		TEnumerator it = this->Begin();
-		while (it->HasValue()) {
-			fn(it->Next());
-		}
-	}
-
 protected:
 	inline VoidOwner& GetOwner() const { return const_cast<VoidOwner&>(m_Owner); }
 public:
-	//inline SharedPointer<TCollection> ToCollection() = 0;
-
 	bool IsEmpty() const { 
 		return m_iSize == 0; 
 	}

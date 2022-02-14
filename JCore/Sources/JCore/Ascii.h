@@ -1,9 +1,9 @@
-#pragma once
-
 /*
 	작성자 : 윤정도
 	아스키 문자 관련
 */
+
+#pragma once
 
 namespace JCore {
 	namespace Ascii {

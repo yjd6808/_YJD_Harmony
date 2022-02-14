@@ -3,7 +3,6 @@
 	난수 생성기
 */
 
-
 #pragma once
 
 #include <JCore/Exception.h>

@@ -50,6 +50,8 @@ protected:
 	virtual void A() {
 		cout << "a\n";
 	}
+protected:
+	int a;
 };
 
 
@@ -62,6 +64,12 @@ public:
 	void A() override {
 		Test::A();
 		cout << "derived\n";
+	}
+};
+
+class Legendary : public Derived
+{
+	void A() override {
 	}
 };
 

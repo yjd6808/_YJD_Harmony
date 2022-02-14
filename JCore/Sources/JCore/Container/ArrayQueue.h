@@ -7,7 +7,7 @@
 #include <JCore/Math.h>
 
 #include <JCore/Container/ArrayQueueIterator.h>
-#include <JCore/Container/DynamicArray.h>
+#include <JCore/Container/ArrayCollection.h>
 
 
 namespace JCore {
@@ -17,14 +17,14 @@ namespace JCore {
 =====================================================================================*/
 
 template <typename T>
-class ArrayQueue : public DynamicArray<T>
+class ArrayQueue : public ArrayCollection<T>
 {
 	using TEnumerator			= typename Enumerator<T>;
-	using TDynamicArray			= typename DynamicArray<T>;
+	using TArrayCollection		= typename ArrayCollection<T>;
 	using TArrayQueue			= typename ArrayQueue<T>;
 	using TArrayQueueIterator	= typename ArrayQueueIterator<T>;
 public:
-	ArrayQueue(int capacity = TDynamicArray::ms_iDefaultCapcity) : TDynamicArray(capacity) {
+	ArrayQueue(int capacity = TArrayCollection::ms_iDefaultCapcity) : TArrayCollection(capacity) {
 		m_iHead = 0;
 		m_iTail = 0;
 	}
@@ -73,7 +73,7 @@ public:
 	/// 큐 내의 원소들 모두 제거
 	/// 
 	/// [오버라이딩]
-	/// - From DynamicArray
+	/// - From ArrayCollection
 	/// </summary>
 	virtual void Clear() {
 		if (this->IsEmpty()) {
@@ -81,7 +81,7 @@ public:
 		}
 
 		if (IsForwardedHead()) {
-			this->DestroyAtRange(m_iHead , this->Capacity() - 1);
+			this->DestroyAtRange(m_iHead , this->Capacity() - 2);
 			this->DestroyAtRange(0		 , m_iTail - 1);
 		} else {
 			this->DestroyAtRange(m_iHead, m_iTail - 1);
@@ -101,7 +101,7 @@ public:
 
 	// 꼬리위치는 데이터가 삽입될 위치이므로 마지막 원소의 위치는 꼬리에서 1칸 이전의 인덱스이다.
 	virtual TEnumerator End() const {
-		return MakeShared<TArrayQueueIterator>(this->GetOwner(), PrevTailValue(1));	
+		return MakeShared<TArrayQueueIterator>(this->GetOwner(), m_iTail);	
 	}
 
 	
@@ -174,7 +174,7 @@ protected:
 
 	/// <summary>
 	/// [오버라이딩]
-	/// - From DynamicArray
+	/// - From ArrayCollection
 	///   큐는 용량을 기준으로 유효 인덱스 범위를 판단해야한다.
 	/// </summary>
 	/// <param name="startIdx"></param>
@@ -186,7 +186,7 @@ protected:
 
 	/// <summary>
 	/// [오버라이딩]
-	/// - From DynamicArray
+	/// - From ArrayCollection
 	///   큐는 용량을 기준으로 유효 인덱스 범위를 판단해야한다.
 	/// </summary>
 	/// <param name="startIdx"></param>
@@ -203,7 +203,7 @@ protected:
 
 	/// <summary>
 	/// [오버라이딩]
-	/// - From DynamicArray
+	/// - From ArrayCollection
 	/// </summary>
 	virtual void DestroyAtRange(const int startIdx, const int endIdx) {
 		// m_iTail이 0을 가리키고 있는 경우
@@ -211,12 +211,12 @@ protected:
 			return;
 		}
 		
-		TDynamicArray::DestroyAtRange(startIdx, endIdx);
+		TArrayCollection::DestroyAtRange(startIdx, endIdx);
 	}
 
 	/// <summary>
 	/// [오버라이딩]
-	///  - From DynamicArray
+	///  - From ArrayCollection
 	/// </summary>
 	virtual bool IsFull() const {
 		return this->m_iSize == this->m_iCapacity - 1;
@@ -282,6 +282,7 @@ protected:
 	bool IsForwardedTail() const {
 		return m_iTail > m_iHead;
 	}
+
 
 protected:
 	int m_iHead;		// index inclusive position

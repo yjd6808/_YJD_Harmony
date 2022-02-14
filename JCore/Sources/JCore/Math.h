@@ -1,9 +1,9 @@
-#pragma once
-
 /*
 	작성자 : 윤정도
 	간단한 수학 학수
 */
+
+#pragma once
 
 #include <JCore/Type.h>
 

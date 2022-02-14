@@ -50,14 +50,14 @@ TEST(ArrayQueueTest, FullCaseTest) {
 
 	auto it = q.Begin();
 	int i = 0;
-	while (it->HasValue()) {
+	while (it->HasNext()) {
 		it->Next();
 		i++;
 	}
 
 	it = q.End();
 
-	while (it->HasValue()) {
+	while (it->HasPrevious()) {
 		it->Previous();
 		i--;
 	}
@@ -121,12 +121,12 @@ TEST(ArrayQueueTest, TotalTest) {
 			}
 
 			// 반복자 정방향
-			while (it->HasValue()) {
+			while (it->HasNext()) {
 				v.push_back(it->Next());
 			}
 
 			// 반복자 역방향
-			while (rit->HasValue()) {
+			while (rit->HasPrevious()) {
 				rv.push_back(rit->Previous());
 			}
 			
@@ -148,14 +148,14 @@ TEST(ArrayQueueTest, TotalTest) {
 
 			it = queue.Begin();
 			int k = 0;
-			while (it->HasValue()) {
+			while (it->HasNext()) {
 				EXPECT_TRUE(v[k++] == it->Next());
 			}
 
 			auto rvIt = rv.begin();
 			rit = queue.End();
 			k = 0;
-			while (rit->HasValue()) {
+			while (rit->HasPrevious()) {
 				int value = rit->Previous();
 				int vv = *rvIt;
 				EXPECT_TRUE(vv == value);
@@ -172,14 +172,14 @@ TEST(ArrayQueueTest, TotalTest) {
 		auto backward_listit = backward_list.begin();
 		auto myqueueit = queue.Begin();
 
-		while (myqueueit->HasValue()) {
+		while (myqueueit->HasNext()) {
 			int lval = *forward_listit;
 			EXPECT_TRUE(myqueueit->Next() == lval);
 			forward_listit++;
 		}
 
 		myqueueit = queue.End();
-		while (myqueueit->HasValue()) {
+		while (myqueueit->HasPrevious()) {
 			int lval = *backward_listit;
 			EXPECT_TRUE(myqueueit->Previous() == lval);
 			backward_listit++;

@@ -29,6 +29,10 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayQueueTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\VectorTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\CoreTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
