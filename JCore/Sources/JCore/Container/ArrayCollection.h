@@ -23,9 +23,9 @@ namespace JCore {
 template <typename T>
 class ArrayCollection : public Collection<T>
 {
-	using TCollection				= Collection<T>;
-	using TArrayCollection			= ArrayCollection<T>;
-	using TArrayCollectionIterator  = ArrayCollectionIterator<T>;
+	using TCollection				= typename Collection<T>;
+	using TArrayCollection			= typename ArrayCollection<T>;
+	using TArrayCollectionIterator  = typename ArrayCollectionIterator<T>;
 public:
 	ArrayCollection(int capacity) : TCollection()  {
 		if (capacity < 1) {

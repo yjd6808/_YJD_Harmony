@@ -74,7 +74,25 @@ class Legendary : public Derived
 };
 
 
+struct Zizon
+{
+	Zizon(){}
+	~Zizon() {}
+	union { Model model; };
+};
+
+
 int main() {
+	{
+		MemoryLeakDetector detector;
+		LinkedList<Model> m;
+		m.PushBack({ 1 });
+		m.PushBack({ 2 });
+		m.PushBack({ 3 });
+		m.PushBack({ 4 });
+	}
+	
+
 
 	Vector<int> vec;
 	vec.PushBack(1);

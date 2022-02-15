@@ -45,6 +45,15 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\VectorTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\LinkedListTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\ListQueueTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\ListStackTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

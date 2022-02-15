@@ -30,7 +30,7 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->SetAt(this->m_iSize++, data);
+		this->SetAtUnsafe(this->m_iSize++, data);
 	}
 
 	void Push(const T&& data) {
@@ -38,7 +38,7 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->SetAt(this->m_iSize++, Move(data));
+		this->SetAtUnsafe(this->m_iSize++, Move(data));
 	}
 
 	T& Top() const {

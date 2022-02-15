@@ -44,6 +44,9 @@
     #define	TEST_ArrayStackTest				    ON
     #define	TEST_ArrayQueueTest				    ON
     #define	TEST_ArraysTest					    ON
+    #define	TEST_LinkedListTest					ON
+    #define	TEST_ListQueueTest					ON
+    #define	TEST_ListStackTest					ON
     #define	TEST_VectorTest					    ON
     
     #if ContainerImplTestEnabled == ON

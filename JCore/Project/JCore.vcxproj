@@ -85,6 +85,30 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\LinkedList.h" />
+    <ClInclude Include="..\Sources\JCore\Container\LinkedListIterator.h" />
+    <ClInclude Include="..\Sources\JCore\Container\ListCollection.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ListCollectionIterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ListNode.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ListQueue.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ListQueueIterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ListStack.h" />
+    <ClInclude Include="..\Sources\JCore\Container\ListStackIterator.h" />
     <ClInclude Include="..\Sources\JCore\Container\Vector.h">
       <SubType>
       </SubType>

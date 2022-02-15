@@ -7,6 +7,7 @@
 
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
+#include <JCore/Exception.h>
 
 namespace JCore {
 
@@ -40,7 +41,11 @@ public:
 	template <typename R>
 	static R Allocate(const int size) {
 		static_assert(IsPointerType_v<R>, "only cast to pointer type");
-		return (R)::operator new(size);
+		try {
+			return (R)::operator new(size);
+		} catch (std::bad_alloc&) {
+			throw InvalidOperationException("메모리 할당에 실패하였습니다.");
+		}
 	}
 
 	static void Deallocate(void* ptr) {

@@ -57,8 +57,6 @@ protected:
 	}
 protected:
 	int m_iPos;
-
-	friend class TArrayCollection;
 };
 
 } // namespace JCore
