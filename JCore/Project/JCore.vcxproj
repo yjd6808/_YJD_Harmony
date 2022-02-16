@@ -77,11 +77,27 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\HashMap.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\HashMapIterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\MapCollectionIterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Iterable.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Iterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\KeyValuePair.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -109,6 +125,10 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\ListStack.h" />
     <ClInclude Include="..\Sources\JCore\Container\ListStackIterator.h" />
+    <ClInclude Include="..\Sources\JCore\Container\MapCollection.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Vector.h">
       <SubType>
       </SubType>

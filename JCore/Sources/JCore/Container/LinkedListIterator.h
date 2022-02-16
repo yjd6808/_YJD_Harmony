@@ -38,6 +38,8 @@ public:
 	virtual T& Previous() {
 		return TListCollectionIterator::Previous();
 	}
+
+	friend class TLinkedList;
 };
 
 } // namespace JCore

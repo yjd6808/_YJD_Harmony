@@ -76,6 +76,22 @@ public:
 		return true;
 	}
 
+	bool Remove(const TLinkedListIterator& iter) {
+		if (iter->m_pHead != this->m_pHead) {
+			throw InvalidOperationException("해당 이터레이터가 소속된 컨테이너를 제대로 지정해주세요.");
+		}
+
+		if (iter->m_pCurrent == this->m_pHead || iter->m_pCurrent == this->m_pTail) {
+			throw InvalidOperationException("이터레이터가 처음 또는 끝을 가리키고 있습니다.");
+		}
+
+		TListNode* pDel = iter->m_pCurrent;
+		iter->m_pCurrent = pDel->Next;
+		this->Connect(pDel->Previous, pDel->Next);
+		delete pDel;
+		return true;
+	}
+
 	virtual TEnumerator Begin() const {
 		return MakeShared<TLinkedListIterator>(this->GetOwner(), this->m_pHead->Next);
 	}
@@ -97,6 +113,7 @@ protected:
 
 protected:
 	friend class TLinkedListIterator;
+	template <typename, typename> friend class HashMapIterator;
 };
 
 } // namespace JCore

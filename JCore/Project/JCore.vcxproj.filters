@@ -100,5 +100,20 @@
     <ClInclude Include="..\Sources\JCore\Container\ListStackIterator.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\MapCollection.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\KeyValuePair.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\HashMap.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\MapCollectionIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\HashMapIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

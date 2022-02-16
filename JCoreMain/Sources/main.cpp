@@ -82,33 +82,60 @@ struct Zizon
 };
 
 
+struct A
+{
+	A(){}
+	A(A&&) { cout << "이동생성자\n"; }
+};
+
+struct B
+{
+	A le;
+	A le2;
+};
+#include <JCore/Container/HashMap.h>
+
+HashMap<int, int> map;
+
+struct FT
+{
+	bool operator() (const Model& m) {
+		return m.a == 0;
+	}
+};
+
+template <typename Fn>
+bool Tefasefesast(const Model& m, Fn fn) {
+	return fn(m);
+}
+
 int main() {
-	{
-		MemoryLeakDetector detector;
-		LinkedList<Model> m;
-		m.PushBack({ 1 });
-		m.PushBack({ 2 });
-		m.PushBack({ 3 });
-		m.PushBack({ 4 });
+	cout << Tefasefesast({ 0 }, [](const Model& m) {return m.a == 0; }) << "\n";
+	cout << Tefasefesast({ 0 }, FT()) << "\n";
+
+	unordered_map<int, int> gggg;
+	int b = 4;
+	std::pair<int, int> fdsfdscsd = make_pair(1, b);
+	gggg.insert(make_pair(1, 5));
+
+
+
+	for (int i = 0; i < 50; i++) {
+		map.Insert(MakePair(i, i));
 	}
-	
 
+	map.PrintInfo();
 
-	Vector<int> vec;
-	vec.PushBack(1);
-	vec.PushBack(2);
-	vec.PushBack(3);
-	vec.PushBack(4);
-	vec.PushBack(5);
-	vec.PushBack(6);
+	SharedPointer<HashMapIterator<int, int>> it = map.Begin();
 
-	vec.Insert(0, 1);
-	vec.Insert(0, 2);
-	vec.Insert(0, 3);
-
-	for (int i = 0; i < vec.Size(); i++) {
-		cout << vec[i] << "\n";
+	cout << "=================\n";
+	int i = 0;
+	while (it->HasNext()) {
+		KeyValuePair<int, int> val = it->Next();
+		printf("\t키 : %d, 값 : %d\n", val.Key, val.Value);
+		i++;
 	}
+	cout << i << "\n";
 
 	_CrtDumpMemoryLeaks();
 	return 0;

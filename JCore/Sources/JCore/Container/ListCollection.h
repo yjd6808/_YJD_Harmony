@@ -25,9 +25,17 @@ class ListCollection : public Collection<T>
 	using TListCollection			= typename ListCollection<T>;
 	using TListCollectionIterator   = typename ListCollectionIterator<T>;
 public:
-	ListCollection() {
+	ListCollection() : TCollection()  {
+		/* [더미노드 방법 1]
 		m_pHead = Memory::Allocate<TListNode*>(sizeof(TListNode) * 2);	// 양쪽 더미를 한번에 생성하자.
 		m_pTail = &m_pHead[1];
+
+		--> 더미를 굳이 동적할당할 필요가 없지않나..?
+		*/
+
+		// [더미노드 대안]
+		m_pHead = &_ValtyHead;
+		m_pTail = &_ValtyTail;
 
 		// 어차피 더미노드는 Next와 Previous만 쓸 것이므로.. 굳이 TListNode의 Value의 디폴트 생성자를 호출해줄 필요가 없다.
 		// Memory::PlacementAllocate(m_pHead[0]);
@@ -36,10 +44,9 @@ public:
 		m_pHead->Previous = nullptr;
 		m_pTail->Next = nullptr;
 
-		Connect(m_pHead, m_pTail);
-
-		
+		ConnectNode(m_pHead, m_pTail);
 	}
+
 	ListCollection(std::initializer_list<T> list) {}
 	virtual ~ListCollection() noexcept = 0;
 public:
@@ -64,7 +71,7 @@ public:
 			delete pTemp;
 		}
 
-		Connect(m_pHead, m_pTail);
+		ConnectNode(m_pHead, m_pTail);
 		this->m_iSize = 0;
 	}
 protected:
@@ -115,8 +122,8 @@ protected:
 
 		TListNode* pNodePrev = node->Previous;
 
-		Connect(pNodePrev, newNode);
-		Connect(newNode, node);
+		ConnectNode(pNodePrev, newNode);
+		ConnectNode(newNode, node);
 	}
 
 	virtual void PushFront(const T& data) {
@@ -157,8 +164,8 @@ protected:
 
 		TListNode* pNodeNext = node->Next;
 
-		Connect(node, newNode);
-		Connect(newNode, pNodeNext);
+		ConnectNode(node, newNode);
+		ConnectNode(newNode, pNodeNext);
 	}
 
 	template <typename... Args>
@@ -180,7 +187,7 @@ protected:
 		ThrowIfNoElements();
 		
 		TListNode* pDel = m_pHead->Next;
-		Connect(m_pHead, pDel->Next);
+		ConnectNode(m_pHead, pDel->Next);
 		delete pDel;
 		this->m_iSize--;
 	}
@@ -189,7 +196,7 @@ protected:
 		ThrowIfNoElements();
 
 		TListNode* pDel = m_pTail->Previous;
-		Connect(pDel->Previous, m_pTail);
+		ConnectNode(pDel->Previous, m_pTail);
 		delete pDel;
 		this->m_iSize--;
 	}
@@ -229,7 +236,7 @@ protected:
 	/// lhs의 다음 노드는 rhs로 설정하고
 	/// rhs의 이전 노드는 lhs로 설정한다.
 	/// </summary>
-	void Connect(TListNode* lhs, TListNode* rhs) {
+	void ConnectNode(TListNode* lhs, TListNode* rhs) {
 		lhs->Next = rhs;
 		rhs->Previous = lhs;
 	}
@@ -240,11 +247,12 @@ protected:
 		}
 	}
 
-
-
 protected:
 	TListNode* m_pHead = nullptr;
 	TListNode* m_pTail = nullptr;
+private:
+	TListNode _ValtyHead;
+	TListNode _ValtyTail;
 
 	friend class TListCollectionIterator;
 };
@@ -255,7 +263,7 @@ ListCollection<T>::~ListCollection() noexcept {
 	Clear();
 
 	// 더미노드 제거
-	Memory::Deallocate(m_pHead);
+	// Memory::Deallocate(m_pHead);
 }
 
 

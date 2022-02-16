@@ -76,6 +76,16 @@ abstract class ArrayCollection extends Collection {
     배열기반 선형 컨테이너의 인터페이스
 }
 
+abstract class MapCollection {}
+
+note bottom of MapCollection
+    MapCollection도 다른 마찬가지로
+    MapCollectionIterator을 가지고 있고
+
+    HashMap은 HashMapIterator
+    TreeMap은 TreeMapIterator를 반복자로 가진다.
+end note
+
 rectangle 배열의_이터레이터 {
     abstract class ArrayCollectionIterator {
         배열 기반 컨테이너 이터레이터의 인터페이스
@@ -129,6 +139,8 @@ Iterable -u-> Iterator
 ListCollection -l-> ListIterator
 ListIterator -u-|> Iterator
 ArrayCollectionIterator -u-|> Iterator
+MapCollection -u-|> Collection
+
 
 
 VectorIterator -u-|> ArrayCollectionIterator
@@ -143,6 +155,11 @@ ArrayStack ..> ArrayStackIterator
 ArrayQueue ..> ArrayQueueIterator
 Vector ..> VectorIterator
 
+HashMap -u-|> MapCollection
+TreeMap -u-|> MapCollection
+
+
+
 ArrayStackIterator --> ArrayStack
 ArrayQueueIterator --> ArrayQueue
 VectorIterator --> Vector
@@ -154,6 +171,7 @@ VectorIterator --> Vector
 ' 노드간 포지션을 잡기를 위한 연결 '
 Collection -[hidden]r-> ListIterator         
 Collection -[hidden]l-> ArrayCollectionIterator
+ArrayCollection -[hidden]r-> MapCollection
 
 
 @enduml
