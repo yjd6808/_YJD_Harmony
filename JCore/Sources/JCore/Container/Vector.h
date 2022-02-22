@@ -23,8 +23,43 @@ class Vector : public ArrayCollection<T>
 	using TVector				= typename Vector<T>;
 	using TVectorIterator		= typename VectorIterator<T>;
 public:
-	Vector(int capacity = TArrayCollection::ms_iDefaultCapcity) : TArrayCollection(capacity) {}
+	Vector(int capacity = TArrayCollection::ms_iDefaultCapcity) 
+		: TArrayCollection(capacity, ContainerType::Vector) 
+	{
+	}
+
+	Vector(const TVector& other) 
+		: TArrayCollection(other, ContainerType::Vector) 
+	{
+	}
+
+	Vector(TVector&& other) 
+		: TArrayCollection(Move(other), ContainerType::Vector) 
+	{
+	}
+
+	Vector(std::initializer_list<T> ilist) 
+		: TArrayCollection(ilist, ContainerType::Vector) 
+	{
+	}
+
 	virtual ~Vector() noexcept {}
+
+public:
+	TVector& operator=(const TVector& other) {
+		this->CopyFrom(other);
+		return *this;
+	}
+
+	TVector& operator=(TVector&& other) {
+		this->CopyFrom(Move(other));
+		return *this;
+	}
+
+	TVector& operator=(std::initializer_list<T> ilist) {
+		this->CopyFrom(ilist);
+		return *this;
+	}
 
 	void PushBack(const T& data) {
 		if (this->IsFull()) {
@@ -264,6 +299,24 @@ public:
 			iMoveBlockSize);
 
 		this->m_iSize--;
+	}
+
+	void Sort() {
+		TArrayCollection::Sort(NaturalOrder{});
+	}
+
+	template <typename Predicate>
+	void Sort(Predicate predicate) {
+		TArrayCollection::Sort(predicate);
+	}
+
+	void SortRange(const int startIdx, const int endIdx) {
+		TArrayCollection::SortRange(startIdx, endIdx, NaturalOrder{});
+	}
+
+	template <typename Predicate>
+	void SortRange(const int startIdx, const int endIdx, Predicate predicate) {
+		TArrayCollection::SortRange(startIdx, endIdx, predicate);
 	}
 
 	T& operator[](const int idx) const {

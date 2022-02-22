@@ -104,39 +104,36 @@ struct FT
 	}
 };
 
+struct FT2
+{
+	void operator() (int& m) {
+		cout << m << "\n";
+	}
+};
+
 template <typename Fn>
 bool Tefasefesast(const Model& m, Fn fn) {
 	return fn(m);
 }
 
+void fasfesaf(int& m, std::function<void(int&)> fn) {
+	fn(m);
+}
+
+
 int main() {
-	cout << Tefasefesast({ 0 }, [](const Model& m) {return m.a == 0; }) << "\n";
-	cout << Tefasefesast({ 0 }, FT()) << "\n";
-
-	unordered_map<int, int> gggg;
-	int b = 4;
-	std::pair<int, int> fdsfdscsd = make_pair(1, b);
-	gggg.insert(make_pair(1, 5));
-
-
-
-	for (int i = 0; i < 50; i++) {
-		map.Insert(MakePair(i, i));
+	for (int i = 0; i < 10; i++) {
+		Vector<int> g(10000000);
+		Random rand;
+		for (int i = 0; i < 1000000; i++) {
+			g.PushBack(rand.GenerateInt(0, 1000000000));
+		}
+		DateTime begin = DateTime::Now();
+		g.Extension()
+			.Sorted(ReverseOrder{})
+			.ForEach([](const int& k) { int z = k; });
+		cout << DateTime::Now().Diff(begin).GetTotalSeconds() << "\n";
 	}
-
-	map.PrintInfo();
-
-	SharedPointer<HashMapIterator<int, int>> it = map.Begin();
-
-	cout << "=================\n";
-	int i = 0;
-	while (it->HasNext()) {
-		KeyValuePair<int, int> val = it->Next();
-		printf("\tÅ° : %d, °ª : %d\n", val.Key, val.Value);
-		i++;
-	}
-	cout << i << "\n";
-
 	_CrtDumpMemoryLeaks();
 	return 0;
 }
@@ -146,4 +143,6 @@ int main() {
 
 		
 		
+
+
 

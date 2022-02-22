@@ -25,7 +25,7 @@ class ListCollection : public Collection<T>
 	using TListCollection			= typename ListCollection<T>;
 	using TListCollectionIterator   = typename ListCollectionIterator<T>;
 public:
-	ListCollection() : TCollection()  {
+	ListCollection(ContainerType containerType) : TCollection(CollectionType::List, containerType)  {
 		/* [더미노드 방법 1]
 		m_pHead = Memory::Allocate<TListNode*>(sizeof(TListNode) * 2);	// 양쪽 더미를 한번에 생성하자.
 		m_pTail = &m_pHead[1];
@@ -47,7 +47,23 @@ public:
 		ConnectNode(m_pHead, m_pTail);
 	}
 
-	ListCollection(std::initializer_list<T> list) {}
+	ListCollection(const TListCollection& other, ContainerType containerType) 
+		: TListCollection(containerType)
+	{
+		CopyFrom(other);
+	}
+
+	ListCollection(TListCollection&& other, ContainerType containerType) 
+		: TListCollection(containerType)
+	{
+		CopyFrom(Move(other));
+	}
+
+	ListCollection(std::initializer_list<T> ilist, ContainerType containerType)
+		: TListCollection(containerType)
+	{
+		CopyFrom(ilist);
+	}
 	virtual ~ListCollection() noexcept = 0;
 public:
 	virtual void Clear() {
@@ -75,6 +91,102 @@ public:
 		this->m_iSize = 0;
 	}
 protected:
+	virtual void CopyFrom(const ListCollection& other) {
+		this->ThrowIfAssignSelf(other);
+
+		TListNode* pCur = m_pHead->Next;
+		TListNode* pOtherCur = other.m_pHead->Next;
+
+		// 기존에 이미 메모리 할당된 녀석은 데이터만 복사해준다.
+		while (pCur != m_pTail && pOtherCur != other.m_pTail) {
+			Memory::PlacementDeallocate(pCur->Value);
+			pCur->Value = pOtherCur->Value;
+			pCur = pCur->Next;
+			pOtherCur = pOtherCur->Next;
+		}
+
+		// [Case 1] 만약 기존에 할당된 데이터가 더 많다면 
+		//             = pOtherCur이 other.m_pTail이 충족되어 먼저 반복문을 빠져나온 경우
+		// 복사된 마지막 노드 다음 노드부터 삭제를 해준다.
+		//    = pCur->Previous가 복사된 마지막 노드이고
+		//    = pCur : 삭제되어야할 노드들이다.
+		if (this->m_iSize > other.m_iSize) {
+			RemoveNodesBetween(pCur->Previous, m_pTail);
+		}
+
+		// [Case 2] 만약 복사할 데이터가 더 많다면
+		while (pOtherCur != other.m_pTail) {
+			PushBack(pOtherCur->Value);
+			pOtherCur = pOtherCur->Next;
+		}
+
+		this->m_iSize = other.m_iSize;
+	}
+
+	virtual void CopyFrom(ListCollection&& other) {
+		this->ThrowIfAssignSelf(other);
+		Clear();
+
+		// 만약 비어있을 경우 other의 더미 헤드와 더미 테일을 참조하게 되는데
+		// 동적할당된 녀석이 아니기 때문에 나중에 오류를 일으키게 된다.
+		// 그래서 데이터가 없는 경우는 그냥 나가면 됨
+		if (other.m_iSize == 0) {
+			return;
+		}
+
+		m_pTail->Previous = other.m_pTail->Previous;
+		m_pHead->Next = other.m_pHead->Next;
+
+		m_pTail->Previous->Next = m_pTail;
+		m_pHead->Next->Previous = m_pHead;
+
+		this->m_iSize = other.m_iSize;
+
+		ConnectNode(other.m_pHead, other.m_pTail);
+		other.m_iSize = 0;
+	}
+
+	virtual void CopyFrom(std::initializer_list<T> ilist) {
+		TListNode* pCur = m_pHead->Next;
+		auto pOtherCur = ilist.begin();
+
+		// 기존에 이미 메모리 할당된 녀석은 데이터만 복사해준다.
+		while (pCur != m_pTail && pOtherCur != ilist.end()) {
+			Memory::PlacementDeallocate(pCur->Value);
+			pCur->Value = *pOtherCur;
+			pCur = pCur->Next;
+			pOtherCur++;
+		}
+
+		// [Case 1] 만약 기존에 할당된 데이터가 더 많다면 
+		if (this->m_iSize > ilist.size()) {
+			RemoveNodesBetween(pCur->Previous, m_pTail);
+		}
+
+		// [Case 2] 만약 복사할 데이터가 더 많다면
+		while (pOtherCur != ilist.end()) {
+			PushBack(*pOtherCur);
+			pOtherCur++;
+		}
+
+		this->m_iSize = ilist.size();
+	}
+
+	/// <summary>
+	/// exclusiveFirst와 exclusiveLast 노드 사이에 존재하는 노드들을 삭제한다.
+	/// </summary>
+	void RemoveNodesBetween(TListNode* exclusiveFirst, TListNode* exclusiveLast) {
+		TListNode* pDel = exclusiveFirst->Next;
+
+		while (pDel != m_pTail) {
+			TListNode* pTemp = pDel;
+			pDel = pDel->Next;
+			delete pTemp;
+		}
+
+		ConnectNode(exclusiveFirst, exclusiveLast);
+	}
+
 	virtual void PushBack(const T& data) {
 		TListNode* pNewNode = CreateNewNode(data);
 		InsertNodePrev(m_pTail, pNewNode);
@@ -138,6 +250,14 @@ protected:
 		this->m_iSize++;
 	}
 
+	virtual void PushFrontAll(const TCollection& collection) {
+		TEnumerator it = collection.Begin();
+		while (it->HasNext()) {
+			TListNode* pNewNode = CreateNewNode(it->Next());
+			InsertNodeNext(m_pHead, pNewNode);
+		}
+		this->m_iSize += collection.Size();
+	}
 
 	/// <summary>
 	/// node 바로 이후에 newNode를 삽입한다.
@@ -184,7 +304,7 @@ protected:
 
 
 	virtual void PopFront() {
-		ThrowIfNoElements();
+		this->ThrowIfNoElements();
 		
 		TListNode* pDel = m_pHead->Next;
 		ConnectNode(m_pHead, pDel->Next);
@@ -193,7 +313,7 @@ protected:
 	}
 
 	virtual void PopBack() {
-		ThrowIfNoElements();
+		this->ThrowIfNoElements();
 
 		TListNode* pDel = m_pTail->Previous;
 		ConnectNode(pDel->Previous, m_pTail);
@@ -202,12 +322,12 @@ protected:
 	}
 
 	virtual T& Front() const {
-		ThrowIfNoElements();
+		this->ThrowIfNoElements();
 		return m_pHead->Next->Value;
 	}
 
 	virtual T& Back() const {
-		ThrowIfNoElements();
+		this->ThrowIfNoElements();
 		return m_pTail->Previous->Value;
 	}
 
@@ -240,13 +360,6 @@ protected:
 		lhs->Next = rhs;
 		rhs->Previous = lhs;
 	}
-protected:
-	void ThrowIfNoElements() const {
-		if (this->m_iSize == 0) {
-			throw InvalidOperationException("데이터가 없습니다.");
-		}
-	}
-
 protected:
 	TListNode* m_pHead = nullptr;
 	TListNode* m_pTail = nullptr;

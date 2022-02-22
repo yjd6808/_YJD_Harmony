@@ -22,8 +22,41 @@ class ArrayStack : public ArrayCollection<T>
 	using TArrayStack			= typename ArrayStack<T>;
 	using TArrayStackIterator	= typename ArrayStackIterator<T>;
 public:
-	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapcity) : TArrayCollection(capacity) {}
+	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapcity) 
+		: TArrayCollection(capacity, ContainerType::ArrayStack) 
+	{
+	}
+
+	ArrayStack(const TArrayStack& other) 
+		: TArrayCollection(other, ContainerType::ArrayStack) 
+	{
+	}
+
+	ArrayStack(TArrayStack&& other) 
+		: TArrayCollection(Move(other), ContainerType::ArrayStack) 
+	{
+	}
+	ArrayStack(std::initializer_list<T> ilist) 
+		: TArrayCollection(ilist, ContainerType::ArrayStack) 
+	{
+	}
+
 	virtual ~ArrayStack() noexcept {}
+public:
+	TArrayStack& operator=(const TArrayStack& other) {
+		this->CopyFrom(other);
+		return *this;
+	}
+
+	TArrayStack& operator=(TArrayStack&& other) {
+		this->CopyFrom(Move(other));
+		return *this;
+	}
+
+	TArrayStack& operator=(std::initializer_list<T> ilist) {
+		this->CopyFrom(ilist);
+		return *this;
+	}
 
 	void Push(const T& data) {
 		if (this->IsFull()) {

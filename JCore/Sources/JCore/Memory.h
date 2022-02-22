@@ -22,6 +22,7 @@ public:
 	static void CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte);
 	static void CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte);
 
+
 	static void Set(void* src, const int srcCapacity, const Byte value);
 
 	// 자료형 T 크기 단위로 복사를 진행합니다.
@@ -49,7 +50,9 @@ public:
 	}
 
 	static void Deallocate(void* ptr) {
-		::operator delete(ptr);
+		if (ptr != nullptr) {
+			::operator delete(ptr);
+		}
 	}
 
 	template <typename T, typename... Args>
@@ -63,14 +66,16 @@ public:
 	}
 
 	template <typename T>
-	static void PlacementDeallocate(T& ref) {
-		ref.~T();
+	static void PlacementDeallocate(const T& ref) {
+		if constexpr (IsPointerType_v<T>) {
+			if (ref != nullptr) {
+				ref->~T();
+			}
+		} else {
+			ref.~T();
+		}
 	}
 
-	template <typename T>
-	static void PlacementDeallocate(const T* ref) {
-		ref->~T();
-	}
 };
 
 } // namespace JCore

@@ -13,19 +13,58 @@ template <typename T>
 class ListQueue	: public ListCollection<T>
 {
 	using TEnumerator			= typename Enumerator<T>;
+	using TCollection			= typename Collection<T>;
 	using TListCollection		= typename ListCollection<T>;
 	using TListQueue			= typename ListQueue<T>;
 	using TListQueueIterator	= typename ListQueueIterator<T>;
 public:
-	ListQueue() : TListCollection() {}
+	ListQueue() 
+		: TListCollection(ContainerType::ListQueue) 
+	{
+	}
+
+	ListQueue(const TListQueue& other) 
+		: TListCollection(other, ContainerType::ListQueue) 
+	{
+	}
+
+	ListQueue(TListQueue&& other) 
+		: TListCollection(Move(other), ContainerType::ListQueue) 
+	{
+	}
+
+	ListQueue(std::initializer_list<T> ilist)
+		: TListCollection(ilist, ContainerType::ListQueue)
+	{
+	}
+
 	virtual ~ListQueue() noexcept {}
 public:
+	TListQueue& operator=(const TListQueue& other) {
+		this->CopyFrom(other);
+		return *this;
+	}
+
+	TListQueue& operator=(TListQueue&& other) {
+		this->CopyFrom(Move(other));
+		return *this;
+	}
+	
+	TListQueue& operator=(std::initializer_list<T> ilist) {
+		this->CopyFrom(ilist);
+		return *this;
+	}
+
 	virtual void Enqueue(const T& data) {
 		TListCollection::PushBack(data);
 	}
 
 	virtual void Enqueue(T&& data) {
 		TListCollection::PushBack(Move(data));
+	}
+
+	virtual void EnqueueAll(const TCollection& collection) {
+		TListCollection::PushBackAll(collection);
 	}
 
 	template <typename... Args>

@@ -100,7 +100,72 @@ TEST(ArrayStackTest, TotalTest) {
 	}
 }
 
+// 생성자 테스트
+TEST(ArrayStackTest, ConstructorTest) {
+	MemoryLeakDetector detector;
 
+	// 이니셜라이저 테스트
+	ArrayStack<int> a{ 1, 2, 3 };
+
+	EXPECT_TRUE(a.Top() == 3); a.Pop();
+	EXPECT_TRUE(a.Top() == 2); a.Pop();
+
+	// 복사 생성자 테스트
+	ArrayStack<int> b(a);
+	for (int i = 0; i < 30; i++) {
+		b.Push(i);
+	}
+
+	ArrayStack<int> c(a);
+	EXPECT_TRUE(b.Top() == 29); b.Pop();
+	EXPECT_TRUE(b.Top() == 28); b.Pop();
+	EXPECT_TRUE(b.Size() == 29);
+	EXPECT_TRUE(c.Size() == 1);
+
+	// 이동 생성자 테스트
+	ArrayStack<int> d(Move(c));
+	EXPECT_TRUE(c.Size() == 0);
+	EXPECT_TRUE(d.Size() == 1);
+	EXPECT_TRUE(d.Top() == 1);
+}
+
+// 연산자 테스트
+TEST(ArrayStackTest, OperatorTest) {
+	MemoryLeakDetector detector;
+
+	ArrayStack<int> s{ 1, 2, 3 };
+
+	// 이니셜라이저 대입
+	s = { 1 };
+	EXPECT_TRUE(s.Top() == 1); s.Pop();
+
+	ArrayStack<int> t{ 1, 2, 3, 4, 5 };
+	s = t;
+
+	EXPECT_TRUE(s.Size() == 5);
+	EXPECT_TRUE(s.Top() == 5); s.Pop();
+	EXPECT_TRUE(s.Top() == 4); s.Pop();
+	EXPECT_TRUE(s.Top() == 3); s.Pop();
+	EXPECT_TRUE(s.Top() == 2); s.Pop();
+	EXPECT_TRUE(s.Top() == 1); s.Pop();
+	EXPECT_TRUE(s.Size() == 0); 
+
+	s.Push(5);
+	s.Push(4);
+	EXPECT_TRUE(s.Top() == 4);
+	s.Clear();
+	EXPECT_TRUE(s.Size() == 0);
+
+	s = Move(t);
+	EXPECT_TRUE(t.IsEmpty());
+	EXPECT_TRUE(s.Size() == 5);
+	EXPECT_TRUE(s.Top() == 5); s.Pop();
+	EXPECT_TRUE(s.Top() == 4); s.Pop();
+	EXPECT_TRUE(s.Top() == 3); s.Pop();
+	EXPECT_TRUE(s.Top() == 2); s.Pop();
+	EXPECT_TRUE(s.Top() == 1); s.Pop();
+	EXPECT_TRUE(s.Size() == 0);
+}
 
 #endif // TEST_ArrayStackTest == ON
 

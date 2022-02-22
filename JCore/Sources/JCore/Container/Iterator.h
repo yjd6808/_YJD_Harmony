@@ -25,6 +25,9 @@ struct Iterator
 	virtual bool HasNext() const = 0;
 	virtual bool HasPrevious() const = 0;
 
+	virtual bool IsEnd() const = 0;
+	virtual bool IsBegin() const = 0;
+
 	virtual T& Previous() = 0;
 	virtual T& Next() = 0;
 

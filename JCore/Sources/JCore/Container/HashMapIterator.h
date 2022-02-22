@@ -27,14 +27,10 @@ class HashMapIterator : public MapCollectionIterator<TKey, TValue>
 	using TMapCollectionIterator = typename MapCollectionIterator<TKey, TValue>;
 public:
 	HashMapIterator(VoidOwner& owner, TBucket* current) : TMapCollectionIterator(owner) {
-		THashMap* pMap = CastHashMap();
+		m_pMap = CastHashMap();
 
 		m_pCurrentBucket = current;
 		m_pCurrentNode = m_pCurrentBucket->Nodes.m_pHead->Next;
-
-		m_pHeadBucket = pMap->m_pHeadBucket;
-		m_pTailBucket = pMap->m_pTailBucket;
-		m_pTable = pMap->m_pTable;
 	}
 	virtual ~HashMapIterator() noexcept {}
 public:
@@ -64,7 +60,7 @@ public:
 
 	virtual TKeyValuePair& Next() {
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
-		if (m_pCurrentBucket == m_pTailBucket) {
+		if (m_pCurrentBucket == m_pMap->m_pTailBucket) {
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
@@ -74,7 +70,7 @@ public:
 		if (m_pCurrentNode == m_pCurrentBucket->Nodes.m_pTail) {
 			m_pCurrentBucket = m_pCurrentBucket->Next;
 
-			if (m_pCurrentBucket != m_pTailBucket) {
+			if (m_pCurrentBucket != m_pMap->m_pTailBucket) {
 				m_pCurrentNode = m_pCurrentBucket->Nodes.m_pHead->Next;
 			}
 		}
@@ -87,6 +83,13 @@ public:
 		return val.Pair;
 	}
 
+	virtual bool IsEnd() const {
+		return HasNext() == false;
+	}
+
+	virtual bool IsBegin() const {
+		return HasPrevious() == false;
+	}
 
 protected:
 	THashMap* CastHashMap() const {
@@ -94,15 +97,9 @@ protected:
 		return this->Watcher.Get<THashMap>();
 	}
 protected:
-
 	TListNode* m_pCurrentNode;
-
 	TBucket* m_pCurrentBucket;
-	TBucket* m_pHeadBucket;
-	TBucket* m_pTailBucket;
-
-	TBucket* m_pTable;
-
+	THashMap* m_pMap;
 	friend class THashMap;
 };
 

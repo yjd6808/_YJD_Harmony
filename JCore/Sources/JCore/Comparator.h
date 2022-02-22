@@ -39,4 +39,24 @@ struct Comparator<String>
 	}
 };
 
-} // namespace JCore
+struct NaturalOrder
+{
+	template <typename U>
+	bool operator()(U&& lhs, U&& rhs) {
+		return Comparator<NaturalType_t<U>>()(static_cast<U&&>(lhs), static_cast<U&&>(rhs)) < 0;
+	}
+};
+
+struct ReverseOrder
+{
+	template <typename U>
+	bool operator()(U&& lhs, U&& rhs) {
+		return Comparator<NaturalType_t<U>>()(static_cast<U&&>(lhs), static_cast<U&&>(rhs)) > 0;
+	}
+};
+
+
+
+
+
+} // namespace JCores

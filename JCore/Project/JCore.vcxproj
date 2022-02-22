@@ -35,6 +35,8 @@
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\JCore\Container\CollectionStream.h" />
+    <ClInclude Include="..\Sources\JCore\Functional.h" />
     <ClInclude Include="..\Sources\JCore\Allocator.h">
       <SubType>
       </SubType>
@@ -74,6 +76,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\ArrayCollectionIterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\CollectionExtension.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -16,17 +16,17 @@ struct Random final
 	Random();
 
 	template <typename T>
-	T Generate(T begin, T end) {
-		if (begin > end) {
+	T Generate(T inclusiveBegin, T inclusiveEnd) {
+		if (inclusiveBegin > inclusiveEnd) {
 			throw InvalidArgumentException("begin > end µÇ¸é ¾È´ï");
 		}
 
-		std::uniform_int_distribution<T> dist(begin, end - 1);
+		std::uniform_int_distribution<T> dist(inclusiveBegin, inclusiveEnd);
 		return dist(ms_DefaultRandomEngine);
 	}
 
-	int GenerateInt(int begin, int end);
-	double GenerateDouble(double begin, double end);
+	int GenerateInt(int inclusiveBegin, int exclusiveEnd);
+	double GenerateDouble(double inclusiveBegin, double inclusiveEnd);
 
 	static void EngineInitialize();
 private:

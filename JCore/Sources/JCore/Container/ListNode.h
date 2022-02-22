@@ -34,5 +34,11 @@ struct ListNode
 	TListNode* Previous = nullptr;
 };
 
+template <typename T>
+struct ListNode<T*> {  };
+
+template <typename T>
+struct ListNode<T&> {  };
+
 
 } // namespace JCore

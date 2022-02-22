@@ -63,6 +63,14 @@ public:
 
 		return pQueue->m_pArray[this->m_iPos];
 	}
+
+	virtual bool IsEnd() const {
+		return HasNext() == false;
+	}
+
+	virtual bool IsBegin() const {
+		return HasPrevious() == false;
+	}
 protected:
 
 	/// <summary>

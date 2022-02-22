@@ -6,6 +6,9 @@
 #pragma once
 
 #include <JCore/Memory.h>
+#include <JCore/AutoObject.h>
+#include <JCore/Deletor.h>
+#include <JCore/Comparator.h>
 
 #include <JCore/Container/Arrays.h>
 #include <JCore/Container/Collection.h>
@@ -27,13 +30,46 @@ class ArrayCollection : public Collection<T>
 	using TArrayCollection			= typename ArrayCollection<T>;
 	using TArrayCollectionIterator  = typename ArrayCollectionIterator<T>;
 public:
-	ArrayCollection(int capacity) : TCollection()  {
+	// [1]
+	ArrayCollection(ContainerType containerType) 
+		: TCollection(CollectionType::Array, containerType)
+	{
+		m_pArray = nullptr;
+		m_iCapacity = 0;
+	}
+
+	// [2]
+	ArrayCollection(int capacity, ContainerType containerType) 
+		: TCollection(CollectionType::Array, containerType)  
+	{
+
 		if (capacity < 1) {
 			throw InvalidArgumentException("컨테이너의 크기가 0이하가 될 수 없습니다.");
 		}
 
 		m_pArray = Memory::Allocate<T*>(sizeof(T) * capacity);
 		m_iCapacity = capacity;
+	}
+
+	// [3]
+	ArrayCollection(const TArrayCollection& other, ContainerType containerType) 
+		: TArrayCollection(other.Capacity(), containerType)	// -> Call [2]
+	{
+		CopyFrom(other);
+	}
+
+	// [4]
+	ArrayCollection(TArrayCollection&& other, ContainerType containerType) 
+		: TArrayCollection(containerType) // -> Call [1]
+	{
+		CopyFrom(Move(other));
+	}
+
+	// [5]
+	ArrayCollection(std::initializer_list<T> ilist, ContainerType containerType)
+		: TArrayCollection(ilist.size() + ms_iDefaultCapcity, containerType) // -> Call [2]
+	{
+		CopyFrom(ilist);
 	}
 
 	virtual ~ArrayCollection() noexcept = 0;
@@ -48,10 +84,23 @@ public:
 	/// [오버라이딩]
 	///  - ArrayQueue
 	/// </summary>
-	virtual void Clear() {
-		DestroyAtRange(0, this->Size() - 1);
+	virtual void Clear(bool removeHeap = false) {
+		if (this->m_iSize == 0) {
+			if (removeHeap) {
+				DeleteSafe(m_pArray);
+			}
+			return;
+		}
+
+
+		DestroyAtRange(0, this->m_iSize - 1);
 		this->m_iSize = 0;
+
+		if (removeHeap) {
+			DeleteSafe(m_pArray);
+		}
 	}
+
 
 	/// <summary>
 	/// [오버라이딩]
@@ -61,7 +110,52 @@ public:
 		return this->m_iSize == m_iCapacity;
 	}
 protected:
-	
+	/// <summary>
+	/// 다른 배열 컨테이너로부터 복사를 받는다.
+	/// 
+	/// [오버라이딩]
+	///  - ArrayQueue
+	/// </summary>
+	/// <param name="other"></param>
+	virtual void CopyFrom(const TArrayCollection& other) {
+		this->ThrowIfAssignSelf(other);
+
+		Clear();
+
+		int iCapacity = other.Capacity();
+
+		if (iCapacity > m_iCapacity) {
+			Expand(iCapacity);
+		}
+
+		this->m_iSize = other.m_iSize;
+		m_iCapacity = iCapacity;
+		Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
+	}
+
+	virtual void CopyFrom(TArrayCollection&& other) {
+		this->ThrowIfAssignSelf(other);
+
+		Clear(true);
+
+		this->m_pArray = other.m_pArray;
+		this->m_iSize = other.m_iSize;
+		this->m_iCapacity = other.m_iCapacity;
+
+		other.m_pArray = nullptr;
+		other.m_iSize = 0;
+	}
+
+	/// <summary>
+	/// 이니셜라이저 리스트로부터의 복사
+	/// </summary>
+	virtual void CopyFrom(std::initializer_list<T> other) {
+		Clear();
+		ExpandIfNeeded(other.size());
+		this->m_iSize = other.size();
+		Memory::CopyUnsafe(m_pArray, other.begin(), sizeof(T) * other.size());
+	}
+
 	// 용량 수정
 	virtual void Resize(int capacity) {
 		if (capacity >= this->m_iSize) {
@@ -71,6 +165,17 @@ protected:
 
 		DestroyAtRange(m_iCapacity, this->m_iSize - 1);
 		m_iCapacity = capacity;
+	}
+
+
+	virtual bool ExpandIfNeeded(int size) {
+		if (size < m_iCapacity) {
+			return false;
+		}
+
+		int iCapacity = CalculateExpandCapacity(size);
+		Expand(iCapacity);
+		return true;
 	}
 
 	
@@ -135,8 +240,26 @@ protected:
 		}
 	}
 
+	template <typename Predicate>
+	void Sort(Predicate predicate) {
+		Arrays::Sort(m_pArray, this->m_iSize, predicate);
+	}
 
-	
+	void Sort() {
+		Arrays::Sort(m_pArray, this->m_iSize, NaturalOrder{});
+	}
+
+	/// <summary>
+	/// startIdx 이상 endIdx이하에 위치한 원소들을 정렬한다.
+	/// </summary>
+	template <typename Predicate>
+	void SortRange(const int startIdx, const int endIdx, Predicate predicate) {
+		Arrays::SortRange(m_pArray, startIdx, endIdx, predicate);
+	}
+
+	void SortRange(const int startIdx, const int endIdx) {
+		Arrays::SortRange(m_pArray, startIdx, endIdx, NaturalOrder{});
+	}
 
 protected:
 	T& GetAt(const int idx) const {
@@ -244,6 +367,8 @@ protected:
 		}
 		return iExpectedCapacity;
 	}
+
+	
 protected:
 	virtual void ThrowIfContainerIsEmpty() const {
 		if (this->IsEmpty()) {
@@ -273,6 +398,14 @@ protected:
 		if (newCapacity < m_iCapacity) {
 			throw InvalidArgumentException("현재 용량보다 더 작은 용량입니다.");
 		}
+	}
+protected:
+	static T* _Source(const TArrayCollection& collection) {
+		return collection.m_pArray;
+	}
+
+	static T& _GetAtUnsafe(const TArrayCollection& collection, const int idx) {
+		return collection.m_pArray[idx];
 	}
 protected:
 	static constexpr int ms_iExpandingFactor = 4;	// 꽉차면 4배씩 확장

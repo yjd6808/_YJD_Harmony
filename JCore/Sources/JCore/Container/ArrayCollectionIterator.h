@@ -46,6 +46,14 @@ public:
 	virtual T& Previous() {
 		return CastArrayCollection()->m_pArray[--m_iPos];
 	}
+
+	virtual bool IsEnd() const {
+		return HasNext() == false;
+	}
+
+	virtual bool IsBegin() const {
+		return HasPrevious() == false;
+	}
 protected:
 	virtual bool IsValidIndex(int idx) const {
 		return idx >= 0 && idx < CastArrayCollection()->Size();

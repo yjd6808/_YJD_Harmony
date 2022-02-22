@@ -92,7 +92,9 @@ class HashMap : public MapCollection<TKey, TValue>
 	using THashMap			= typename HashMap<TKey, TValue>;
 	using THashMapIterator  = typename HashMapIterator<TKey, TValue>;
 public:
-	HashMap(int capacity = ms_iTableDefaultCapacity) : TMapCollection() {
+	HashMap(int capacity = ms_iTableDefaultCapacity) 
+		: TMapCollection(ContainerType::HashMap) 
+	{
 		m_pTable = new TBucket[capacity];
 
 		m_pHeadBucket = &_ValtyHead;
@@ -108,8 +110,7 @@ public:
 
 	virtual ~HashMap() noexcept {
 		Clear();
-
-		delete[] m_pTable;
+		DeleteArraySafe(m_pTable);
 	}
 public:
 	virtual void Insert(const TKeyValuePair& pair) {

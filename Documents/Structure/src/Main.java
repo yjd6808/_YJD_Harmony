@@ -1,35 +1,30 @@
 import java.lang.reflect.Array;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
+
     public static void main(String[] args) {
-        HashMap<Integer, Integer> i = new HashMap<>();
-        ArrayList<Integer> z2 = new ArrayList<>();
-        LinkedList<Integer> z = new LinkedList<>();
+        for (int z = 0; z < 10; z++) {
+            Random rand = new Random();
+            ArrayList<Integer> list = new ArrayList<>();
+            for (int i = 0; i < 1000000; i++) {
+                list.add(rand.nextInt());
+            }
+            Instant s = Instant.now();
+            list
+                    .stream()
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(x -> {
+                        int c = x;
+                    });
+            Instant e = Instant.now();
+            System.out.println(Duration.between(s, e));
+        }
 
-        z.add(5);
-        z.add(4);
-        z.add(3);
-        z.add(2);
-
-
-        var ggg = z.stream()
-                .sorted()
-                .toArray();
-        i.put(1, 1);
-        i.put(2, 2);
-        i.put(3, 3);
-        i.put(4, 4);
-        Stream<Integer> gg = i.values().stream();
-        System.out.printf("%s\n", gg.getClass().getName());
-        System.out.printf("%s\n", gg.sorted().getClass().getName());
-        System.out.printf("%s\n", z.stream().getClass().getName());
-        System.out.printf("%s\n", z.stream().sorted().getClass().getName());
-        System.out.printf("%s\n", z2.stream().getClass().getName());
-        System.out.printf("%s\n", z2.stream().sorted().getClass().getName());
-
-        var f= i.keySet();
-        var g = i.values();
+        int a = 40;
     }
 }

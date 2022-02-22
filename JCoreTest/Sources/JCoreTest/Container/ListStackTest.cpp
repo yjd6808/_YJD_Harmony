@@ -5,6 +5,8 @@
 
 
 #include <JCoreTest/CoreTest.h>
+#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/Random.h>
 #include <JCore/Container/ListStack.h>
 
@@ -100,6 +102,76 @@ TEST(ListStackTest, TotalTest) {
 	}
 }
 
+TEST(ListStackTest, ConstructorTest) {
+	MemoryLeakDetector detector;
+
+	ListStack<int> a{ 1, 2, 3 };
+
+	EXPECT_TRUE(a.Top() == 3); a.Pop();
+	EXPECT_TRUE(a.Top() == 2); a.Pop();
+
+	ListStack<int> b(a);
+	EXPECT_TRUE(b.Top() == 1); b.Pop();
+	EXPECT_TRUE(b.Size() == 0);
+	EXPECT_TRUE(a.Size() == 1);
+
+	b.Push(3);
+	b.Push(2);
+
+	EXPECT_TRUE(b.Top() == 2);
+	EXPECT_TRUE(b.Size() == 2);
+
+	ListStack<int> c(Move(b));
+	EXPECT_TRUE(b.Size() == 0);
+	EXPECT_TRUE(c.Top() == 2); c.Pop();
+	EXPECT_TRUE(c.Top() == 3); c.Pop();
+	EXPECT_TRUE(c.Size() == 0);
+}
+
+
+
+TEST(ListStackTest, OperatorTest) {
+	MemoryLeakDetector detector;
+
+	ListStack<Model> a{ 1, 2, 3 };
+
+	ListStack<Model> b{ 6, 5, 4, 3, 2, 1 };
+
+	// 복사 대입
+	b = a;
+
+	int i = 3;
+	while (!b.IsEmpty()) {
+		EXPECT_TRUE(b.Top().a == i);
+		b.Pop();
+		i--;
+	}
+
+	ListStack<Model> c{ 1, 2, 3 };
+	b.PushAll(c);
+	EXPECT_TRUE(b.Size() == 3);
+	EXPECT_TRUE(b.Top().a == 3); b.Pop();
+	EXPECT_TRUE(b.Top().a == 2); b.Pop();
+	EXPECT_TRUE(b.Size() == 1);
+
+
+	// 이니셜라이저 복사 대입
+	b = { 1, 3, 5, 6 };
+	EXPECT_TRUE(b.Size() == 4);
+	EXPECT_TRUE(b.Top().a == 6); b.Pop();
+	EXPECT_TRUE(b.Top().a == 5); b.Pop();
+	EXPECT_TRUE(b.Size() == 2);
+
+	ListStack<Model> d;
+	d = Move(b);
+	EXPECT_TRUE(b.Size() == 0);
+	EXPECT_TRUE(d.Size() == 2);
+
+	auto it = d.Begin();
+	EXPECT_TRUE(it->Next().a == 1);
+	EXPECT_TRUE(it->Next().a == 3);
+	EXPECT_TRUE(it->HasNext() == false);
+}
 
 
 #endif // TEST_ListStackTest == ON

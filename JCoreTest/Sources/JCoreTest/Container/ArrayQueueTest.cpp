@@ -185,7 +185,110 @@ TEST(ArrayQueueTest, TotalTest) {
 			backward_listit++;
 		}
 	}
-	
+}
+
+
+// 생성자 테스트
+TEST(ArrayQueueTest, ConstructorTest) {
+	MemoryLeakDetector detector;
+
+	// 이니셜라이저 테스트
+	ArrayQueue<int> a{ 1, 2, 3 };
+
+	EXPECT_TRUE(a.Front() == 1); a.Dequeue();
+	EXPECT_TRUE(a.Front() == 2); a.Dequeue();
+
+	// 복사 생성자 테스트
+	ArrayQueue<int> b(a);
+	for (int i = 0; i < 30; i++) {
+		b.Enqueue(i);
+	}
+
+	ArrayQueue<int> c(a);
+	EXPECT_TRUE(b.Front() == 3); b.Dequeue();
+	EXPECT_TRUE(b.Front() == 0); b.Dequeue();
+	EXPECT_TRUE(b.Size() == 29);
+	EXPECT_TRUE(c.Size() == 1);
+
+	// 이동 생성자 테스트
+	ArrayQueue<int> d(Move(c));
+	EXPECT_TRUE(c.Size() == 0);
+	EXPECT_TRUE(d.Size() == 1);
+	EXPECT_TRUE(d.Front() == 3);
+}
+
+
+template <typename T>
+void SetQueuePos(ArrayQueue<T>& q, int pos) {
+	q.Clear();
+
+	for (int i = 0; i < pos; i++) {
+		q.Enqueue(i);
+	}
+	while (!q.IsEmpty()) {
+		q.Dequeue();
+	}
+}
+
+// 연산자 테스트
+TEST(ArrayQueueTest, OperatorTest) {
+	MemoryLeakDetector detector;
+	// 꼬리가 머리보다 뒤에 있는 경우
+	{
+		ArrayQueue<int> a{ 1, 2 };
+		ArrayQueue<int> b{ 1, 2 };
+
+		// 이니셜라이저 테스트
+		a = { 3, 4 };
+
+		EXPECT_TRUE(a.Front() == 3); a.Dequeue();
+		EXPECT_TRUE(a.Front() == 4); a.Dequeue();
+		a.Enqueue(5);
+		EXPECT_TRUE(a.Front() == 5); a.Dequeue();
+
+		// 복사 대입 연산자 테스트
+		a = b;
+
+		EXPECT_TRUE(a.Front() == 1); a.Dequeue();
+		EXPECT_TRUE(a.Front() == 2); a.Dequeue();
+		a.Enqueue(5);
+		EXPECT_TRUE(a.Front() == 5); a.Dequeue();
+	}
+	// 머리가 꼬리보다 뒤에있는 경우
+	{
+		auto borderlineTest = [](int dataCount) {
+			ArrayQueue<int> a;
+			// 일부러 데이터를 넣어주고 뺌으로써 머리와 꼬리를 10에 위치시킨다.
+			SetQueuePos(a, 10);
+
+			for (int i = 0; i < dataCount; i++) {
+				a.Enqueue(i);
+			}
+
+			ArrayQueue<int> b;
+			b = a;
+			int i = 0;
+			while (!b.IsEmpty()) {
+				EXPECT_TRUE(b.Front() == i++);
+				b.Dequeue();
+			}
+			EXPECT_TRUE(i == dataCount);
+			ArrayQueue<int> c;
+			c = Move(a);
+			i = 0;
+			while (!c.IsEmpty()) {
+				EXPECT_TRUE(c.Front() == i++);
+				c.Dequeue();
+			}
+			EXPECT_TRUE(i == dataCount);
+		};
+
+		// Head를 10 Tail을 0으로 맞춰보자.
+		// 경계에서 제대로 복사가 되는지
+
+		borderlineTest(22);	// Head 10 : Tail 0
+		borderlineTest(23); // Head 10 : Tail 1
+	}
 }
 
 #endif // TEST_ArrayQueueTest == ON

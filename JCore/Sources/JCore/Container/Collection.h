@@ -9,10 +9,18 @@
 
 #include <JCore/Container/Iterable.h>
 #include <JCore/Container/Iterator.h>
+#include <JCore/Container/CollectionExtension.h>
 
-#include <functional>
 
 namespace JCore {
+
+enum class CollectionType
+{
+	Array,
+	List,
+	Map,
+	Stream
+};
 
 enum class ContainerType {
 	ArrayQueue,
@@ -22,7 +30,8 @@ enum class ContainerType {
 	ListStack,
 	LinkedList,
 	HashMap,
-	TreeMap
+	TreeMap,
+	ReferenceStream
 };
 
 /*=====================================================================================
@@ -39,12 +48,23 @@ enum class ContainerType {
 template <typename T>
 class Collection : public Iterable<T>
 {
-	using TIterable		= typename Iterable<T>;
-	using TCollection	= typename Collection<T>;
-	using TEnumerator	= typename Enumerator<T>;
+	using TCollectionExtension	= typename CollectionExtension<T>;
+	using TIterable				= typename Iterable<T>;
+	using TCollection			= typename Collection<T>;
+	using TEnumerator			= typename Enumerator<T>;
 public:
-	Collection() : TIterable(), m_Owner(this, true) {}
-	virtual ~Collection() noexcept { m_Owner.~VoidOwner(); }
+	Collection(CollectionType collectionType, ContainerType containerType) 
+		: TIterable(), 
+		m_eCollectionType(collectionType),
+		m_eContainerType(containerType),
+		m_Owner(this, true)
+	{
+	}
+	virtual ~Collection() noexcept { 
+		Memory::PlacementDeallocate(m_Owner);
+		if (m_bExtensionable)
+			Memory::PlacementDeallocate(m_Extension);
+	}
 protected:
 	inline VoidOwner& GetOwner() const { return const_cast<VoidOwner&>(m_Owner); }
 public:
@@ -55,9 +75,45 @@ public:
 	int Size() const { 
 		return m_iSize; 
 	}
+
+	TCollectionExtension& Extension() {
+		if (!m_bExtensionable) {
+			Memory::PlacementAllocate(m_Extension, this);
+			m_bExtensionable = true;
+		}
+		return m_Extension;
+	}
 protected:
+	void ThrowIfAssignSelf(const TCollection& other) {
+		if (this == &other) {
+			throw InvalidArgumentException("자기 자신에게 대입할 수 없습니다.");
+		}
+	}
+
+	void ThrowIfNoElements() const {
+		if (this->m_iSize == 0) {
+			throw InvalidOperationException("데이터가 없습니다.");
+		}
+	}
+protected:
+	// @참고 : https://stackoverflow.com/questions/4672438/how-to-access-protected-method-in-base-class-from-derived-class
+	// 부모의 자식1과 자식2가 있을때 자식1이 자식2의 부모 정보를 들고 올 수 없는데 이를 우회할 수 있는 방법
+	// 컨테이너 타입이 뭔지 public으로 굳이 공개할 필요는 없는데 자식 클래스에서 부모의 protected 멤버 변수에 접근하고 싶을 때 사용
+	static CollectionType _CollectionType(const TCollection& collection) {
+		return collection.m_eCollectionType;
+	}
+
+	static ContainerType _ContainerType(const TCollection& collection) {
+		return collection.m_eContainerType;
+	}
+protected:
+	CollectionType m_eCollectionType;
+	ContainerType m_eContainerType;
 	int m_iSize = 0;
 	union { VoidOwner m_Owner; };
+private:
+	bool m_bExtensionable = false;
+	union { TCollectionExtension m_Extension; };	// 포인터 참조용
 };
 
 } // namespace JCore

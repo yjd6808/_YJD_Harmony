@@ -226,5 +226,75 @@ TEST(VectorTest, Enumerator) {
 	}
 }
 
+// 생성자 테스트
+TEST(VectorTest, ConstructorTest) {
+	MemoryLeakDetector detector;
+
+	// 이니셜라이저 테스트
+	Vector<int> a{ 1, 2, 3 };
+
+	EXPECT_TRUE(a[0] == 1); a.Remove(1);
+	EXPECT_TRUE(a[0] == 2); a.Remove(2);
+
+	// 복사 생성자 테스트
+	Vector<int> b(a);
+	for (int i = 0; i < 30; i++) {
+		b.PushBack(i);
+	}
+
+	Vector<int> c(a);
+	int lastIdx = b.Size() - 1;
+
+	EXPECT_TRUE(b[lastIdx] == 29);		b.RemoveAt(lastIdx);
+	EXPECT_TRUE(b[lastIdx - 1] == 28);	b.RemoveAt(lastIdx - 1);
+	EXPECT_TRUE(b[0] == 3);
+	EXPECT_TRUE(b.Size() == 29);
+	EXPECT_TRUE(c.Size() == 1);
+	EXPECT_TRUE(c[0] == 3);
+
+	// 이동 생성자 테스트
+	Vector<int> d(Move(c));
+	EXPECT_TRUE(c.Size() == 0);
+	EXPECT_TRUE(d.Size() == 1);
+	EXPECT_TRUE(d[0] == 3);
+}
+
+// 연산자 테스트
+TEST(VectorTest, OperatorTest) {
+	MemoryLeakDetector detector;
+
+	Vector<int> s{ 1, 2, 3 };
+
+	// 이니셜라이저 대입
+	s = { 1 };
+	EXPECT_TRUE(s[0] == 1); s.RemoveAt(0);
+
+	Vector<int> t{ 1, 2, 3, 4, 5 };
+	s = t;
+
+	EXPECT_TRUE(s.Size() == 5);
+	EXPECT_TRUE(s[4] == 5); s.RemoveAt(4);
+	EXPECT_TRUE(s[3] == 4); s.RemoveAt(3);
+	EXPECT_TRUE(s[2] == 3); s.RemoveAt(2);
+	EXPECT_TRUE(s[1] == 2); s.RemoveAt(1);
+	EXPECT_TRUE(s[0] == 1); s.RemoveAt(0);
+	EXPECT_TRUE(s.Size() == 0);
+
+	s.PushBack(5);
+	s.PushBack(4);
+	EXPECT_TRUE(s[1] == 4);
+	s.Clear();
+	EXPECT_TRUE(s.Size() == 0);
+
+	s = Move(t);
+	EXPECT_TRUE(t.IsEmpty());
+	EXPECT_TRUE(s.Size() == 5);
+	EXPECT_TRUE(s[4] == 5); s.RemoveAt(4);
+	EXPECT_TRUE(s[3] == 4); s.RemoveAt(3);
+	EXPECT_TRUE(s[2] == 3); s.RemoveAt(2);
+	EXPECT_TRUE(s[1] == 2); s.RemoveAt(1);
+	EXPECT_TRUE(s[0] == 1); s.RemoveAt(0);
+	EXPECT_TRUE(s.Size() == 0);
+}
 
 #endif // TEST_VectorTest == ON

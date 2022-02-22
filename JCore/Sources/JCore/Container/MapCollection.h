@@ -21,7 +21,7 @@ class MapCollection : public Collection<KeyValuePair<TKey, TValue>>
 	using TCollection		= typename Collection<TKeyValuePair>;
 	using TMapCollection	= typename MapCollection<TKey, TValue>;
 public:
-	MapCollection() : TCollection() {}
+	MapCollection(ContainerType containerType) : TCollection(CollectionType::Map, containerType) {}
 	virtual ~MapCollection() noexcept = 0;
 public:
 	virtual void Insert(const TKeyValuePair& pair) = 0;

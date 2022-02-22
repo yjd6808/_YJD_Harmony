@@ -5,7 +5,10 @@
 
 
 #include <JCoreTest/CoreTest.h>
+#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/Random.h>
+
 #include <JCore/Container/ListQueue.h>
 
 using namespace JCore;
@@ -182,8 +185,80 @@ TEST(ListQueueTest, TotalTest) {
 			EXPECT_TRUE(myqueueit->Previous() == lval);
 			backward_listit++;
 		}
+	}	
+}
+
+TEST(ListQueueTest, ConstructorTest) {
+	MemoryLeakDetector detector;
+
+	ListQueue<int> a{ 1, 2, 3 };
+
+	EXPECT_TRUE(a.Front() == 1); a.Dequeue();
+	EXPECT_TRUE(a.Front() == 2); a.Dequeue();
+
+	ListQueue<int> b(a);
+	EXPECT_TRUE(b.Front() == 3); b.Dequeue();
+	EXPECT_TRUE(b.Size() == 0);
+	EXPECT_TRUE(a.Size() == 1);
+
+	b.Enqueue(1);
+	b.Enqueue(5);
+
+	EXPECT_TRUE(b.Front() == 1);
+	EXPECT_TRUE(b.Size() == 2);
+
+	ListQueue<int> c(Move(b));
+	EXPECT_TRUE(b.Size() == 0);
+	EXPECT_TRUE(c.Front() == 1);
+	EXPECT_TRUE(c.Size() == 2);
+}
+
+
+
+TEST(ListQueueTest, OperatorTest) {
+	MemoryLeakDetector detector;
+
+	ListQueue<Model> a{ 1, 2, 3 };
+
+	ListQueue<Model> b{ 6, 5, 4, 3, 2, 1 };
+
+	// 복사 대입
+	b = a;	// 1, 2, 3이 듶감
+
+	int i = 1;
+	while (!b.IsEmpty()) {
+		auto k = b.Front();
+		EXPECT_TRUE(k.a == i);
+		b.Dequeue();
+		i++;
 	}
+
+	ListQueue<Model> c{ 1, 2, 3 };
+	b.EnqueueAll(c);
+	EXPECT_TRUE(b.Size() == 3);
+	EXPECT_TRUE(b.Front().a == 1); b.Dequeue();
+	EXPECT_TRUE(b.Front().a == 2); b.Dequeue();
+	EXPECT_TRUE(b.Front().a == 3); b.Dequeue();
+	EXPECT_TRUE(b.Size() == 0);
+
+
+	// 이니셜라이저 복사 대입
+	b = { 1, 3, 5, 6 };
+	EXPECT_TRUE(b.Size() == 4);
+	EXPECT_TRUE(b.Front().a == 1); b.Dequeue();
+	EXPECT_TRUE(b.Front().a == 3); b.Dequeue();
+	EXPECT_TRUE(b.Size() == 2);
+
+
+	ListQueue<Model> d;
+	d = Move(b);
+	EXPECT_TRUE(b.Size() == 0);
+	EXPECT_TRUE(d.Size() == 2);
 	
+	auto it = d.Begin();
+	EXPECT_TRUE(it->Next().a == 5);
+	EXPECT_TRUE(it->Next().a == 6);
+	EXPECT_TRUE(it->HasNext() == false);
 }
 
 #endif // TEST_ListQueueTest == ON

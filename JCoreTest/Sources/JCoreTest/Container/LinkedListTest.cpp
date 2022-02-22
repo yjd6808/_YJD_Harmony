@@ -92,13 +92,74 @@ TEST(LinkedListTest, Enumerator) {
 			EXPECT_TRUE(begin->Next() == i);
 		}
 
-
-
 		for (int i = 5; begin->HasPrevious(); i--) {
 			EXPECT_TRUE(begin->Previous() == i);
 		}
 	}
 }
 
+
+TEST(LinkedListTest, ConstructorTest) {
+	MemoryLeakDetector detector;
+
+	LinkedList<int> a{ 1, 2, 3};
+
+	EXPECT_TRUE(a.Front() == 1); a.PopFront();
+	EXPECT_TRUE(a.Front() == 2); a.PopFront();
+
+	LinkedList<int> b(a);
+	EXPECT_TRUE(b.Front() == 3); b.PopFront();
+	EXPECT_TRUE(b.Size() == 0);
+	EXPECT_TRUE(a.Size() == 1);
+
+	b.PushBack(1);
+	b.PushFront(5);
+
+	EXPECT_TRUE(b.Back() == 1);
+	EXPECT_TRUE(b.Front() == 5);
+
+	LinkedList<int> c(Move(b));
+	EXPECT_TRUE(b.Size() == 0);
+	EXPECT_TRUE(c.Back() == 1);
+	EXPECT_TRUE(c.Front() == 5);
+}
+
+
+
+TEST(LinkedListTest, OperatorTest) {
+	MemoryLeakDetector detector;
+
+	LinkedList<Model> a{ 1, 2, 3 };
+
+	LinkedList<Model> b{ 6, 5, 4, 3, 2, 1 };
+
+	// 복사 대입
+	b = a;
+
+	int i = 1;
+	while (!b.IsEmpty()) {
+		EXPECT_TRUE(b.Front().a == i);
+		b.PopFront();
+		i++;
+	}
+
+	LinkedList<Model> c{ 1, 2, 3 };
+	b.PushBackAll(c);
+	EXPECT_TRUE(b.Size() == 3);
+	EXPECT_TRUE(b.Back().a == 3);
+	EXPECT_TRUE(b.Front().a == 1);
+
+	// 이니셜라이저 복사 대입
+	b = { 1, 3, 5, 6 };
+	EXPECT_TRUE(b.Size() == 4);
+	EXPECT_TRUE(b.Back().a == 6);
+	EXPECT_TRUE(b.Front().a == 1);
+
+	LinkedList<Model> d;
+	d = Move(b);
+	EXPECT_TRUE(d.Size() == 4);
+	EXPECT_TRUE(d.Back().a == 6);
+	EXPECT_TRUE(d.Front().a == 1);
+}
 
 #endif // TEST_LinkedListTest == ON

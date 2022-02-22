@@ -20,15 +20,70 @@ template <typename T>
 class ArrayQueue : public ArrayCollection<T>
 {
 	using TEnumerator			= typename Enumerator<T>;
+	using TCollection			= typename Collection<T>;
 	using TArrayCollection		= typename ArrayCollection<T>;
 	using TArrayQueue			= typename ArrayQueue<T>;
 	using TArrayQueueIterator	= typename ArrayQueueIterator<T>;
 public:
-	ArrayQueue(int capacity = TArrayCollection::ms_iDefaultCapcity) : TArrayCollection(capacity) {
-		m_iHead = 0;
-		m_iTail = 0;
+	ArrayQueue(int capacity = TArrayCollection::ms_iDefaultCapcity) 
+		: TArrayCollection(capacity, ContainerType::ArrayQueue) 
+	{
 	}
+
+	ArrayQueue(const TArrayQueue& other) 
+		: TArrayCollection(other.Capacity(), ContainerType::ArrayQueue) 
+	{
+		operator=(other);
+	}
+
+	ArrayQueue(TArrayQueue&& other) 
+		: TArrayCollection(ContainerType::ArrayQueue) 
+	{
+		operator=(Move(other));
+	}
+
+	ArrayQueue(std::initializer_list<T> ilist) 
+		: TArrayCollection(ilist, ContainerType::ArrayQueue) 
+	{
+		operator=(ilist);
+	}
+
 	virtual ~ArrayQueue() noexcept {}
+public:
+
+
+	TArrayQueue& operator=(const TArrayQueue& other) {
+		CopyFrom(other);
+
+		m_iHead = 0;
+		m_iTail = other.Size();
+		return *this;
+	}
+
+	TArrayQueue& operator=(TArrayQueue&& other) {
+		this->ThrowIfAssignSelf(other);
+
+		Clear(true);
+
+		this->m_pArray = other.m_pArray;
+		this->m_iSize = other.m_iSize;
+		this->m_iCapacity = other.m_iCapacity;
+		this->m_iHead = other.m_iHead;
+		this->m_iTail = other.m_iTail;
+
+
+		other.m_pArray = nullptr;
+		other.m_iSize = 0;
+		return *this;
+	}
+
+	TArrayQueue& operator=(std::initializer_list<T> ilist) {
+		this->CopyFrom(ilist);
+
+		m_iHead = 0;
+		m_iTail = ilist.size();
+		return *this;
+	}
 
 	virtual void Enqueue(const T& data) {
 		if (this->IsFull()) {
@@ -49,6 +104,26 @@ public:
 		this->SetAtUnsafe(m_iTail, Move(data));
 		m_iTail = NextTailValue(1);
 	}
+
+	virtual void EnqueueAll(const TCollection& collection) {
+		this->ExpandIfNeeded(this->m_iSize + collection.Size());
+		this->m_iSize += collection.Size();
+
+		// 배열 방식의 컬렉션은 더 효율적인 방식으로 넣어준다.
+		if (TCollection::_CollectionType(collection) == CollectionType::Array) {
+			EnqueueAllArrayCollection(dynamic_cast<const TArrayCollection&>(collection));
+			return;
+		}
+
+		auto it = collection.Begin();
+
+		while (it->HasNext()) {
+			this->SetAtUnsafe(m_iTail, it->Next());
+			m_iTail = NextTailValue(1);
+		}
+	}
+
+	
 
 	virtual void Dequeue() {
 		this->ThrowIfContainerIsEmpty();
@@ -75,24 +150,39 @@ public:
 	/// [오버라이딩]
 	/// - From ArrayCollection
 	/// </summary>
-	virtual void Clear() {
+	virtual void Clear(bool removeHeap = false) {
 		if (this->IsEmpty()) {
+			if (removeHeap) {
+				DeleteSafe(this->m_pArray);
+			}
 			return;
 		}
 
 		if (IsForwardedHead()) {
-			this->DestroyAtRange(m_iHead , this->Capacity() - 2);
+			this->DestroyAtRange(m_iHead , this->Capacity() - 1);
 			this->DestroyAtRange(0		 , m_iTail - 1);
 		} else {
 			this->DestroyAtRange(m_iHead, m_iTail - 1);
 		}
 
 		this->m_iSize = 0;
-		m_iTail = m_iHead;
+		
+		/*
+			원래 아래 대입연산 한번으로 끝내는데
 
-		// 굳이 위치를 둘다 바꿔줄 필요가 없다.
-		// m_iTail = 0;
-		// m_iHead = 0;
+			m_iTail = m_iHead;
+
+			큐와 큐간의 복사를 진행하는 CopyFrom() 함수에서 기존 큐는 머리와 꼬리가 0을 가리키고 있는 경우가
+			복사를 하기가 제일 쉽기 때문에 0으로 초기화 하도록한다.
+		*/
+
+
+		m_iTail = 0;
+		m_iHead = 0;
+
+		if (removeHeap) {
+			DeleteSafe(this->m_pArray);
+		}
 	}
 
 	virtual TEnumerator Begin() const {
@@ -104,15 +194,56 @@ public:
 		return MakeShared<TArrayQueueIterator>(this->GetOwner(), m_iTail);	
 	}
 
-	
-
-
 protected:
+	/// <summary>
+	/// 
+	/// [오버라이딩]
+	///  - From ArrayCollection
+	/// </summary>
+	/// <param name="other"></param>
+	virtual void CopyFrom(const TArrayCollection& arrayCollection) {
+		this->ThrowIfAssignSelf(arrayCollection);
+
+		const TArrayQueue& other = dynamic_cast<const TArrayQueue&>(arrayCollection);
+
+		Clear();
+
+		this->ExpandIfNeeded(other.m_iSize);	// 확장이 필요한 경우 확장 진행
+		this->m_iSize = other.m_iSize;
+
+		if (other.IsForwardedTail()) {
+			Memory::CopyUnsafe(
+				this->m_pArray,
+				other.m_pArray + other.m_iHead,
+				sizeof(T) * other.Size());
+
+			return;
+		}
+
+
+		int iHeadToEndSize = other.Capacity() - other.m_iHead;
+		int iBeginToTailSize = other.m_iTail;
+
+		Memory::CopyUnsafe(
+			this->m_pArray,
+			other.m_pArray + other.m_iHead,
+			sizeof(T) * iHeadToEndSize);
+
+		Memory::CopyUnsafe(
+			this->m_pArray + iHeadToEndSize,
+			other.m_pArray,
+			sizeof(T) * iBeginToTailSize);
+	}
+
+	virtual void CopyFrom(const std::initializer_list<T> ilist) {
+		TArrayCollection::CopyFrom(ilist);
+	}
+
 	// 크기 확장
 	virtual void Expand(int capacity) {
 		T* pNewArray = Memory::Allocate<T*>(sizeof(T) * capacity);
 
-		if (m_iTail > m_iHead) {
+		if (IsForwardedTail()) {
 			/*	  아래와 같은 상황에서의 배열 확장방법
 			
 				  - : 빈 데이터
@@ -123,7 +254,7 @@ protected:
 				 ========================================================
 				 ↑			     ↑                          ↑
 				 0              head                       tail
-								 └---- this->Size() -----┘
+								 └------ this->Size() ------┘
 
 			 */
 
@@ -223,6 +354,34 @@ protected:
 	}
 
 protected:
+	// 단독으로 호출 금지!
+	// EnqueueAll의 부분 함수
+	void EnqueueAllArrayCollection(const TArrayCollection& arrayCollection) {
+
+		// 같은 배열 큐인 경우 : 큐는 배열 스택과 벡터와 다른 방식으로 추가해줘야함
+		if (TCollection::_ContainerType(arrayCollection) == ContainerType::ArrayQueue) {
+			EnqueueAllArrayQueue(dynamic_cast<const TArrayQueue&>(arrayCollection));
+			return;
+		}
+		
+		for (int i = 0; i < arrayCollection.Size(); i++) {
+			this->SetAtUnsafe(m_iTail, TArrayCollection::_GetAtUnsafe(arrayCollection, i));
+			m_iTail = NextTailValue(1);
+		}
+	}
+
+	void EnqueueAllArrayQueue(const TArrayQueue& queue) {
+		int iOtherCur = queue.m_iHead;
+		int iOtherEnd = queue.m_iTail;
+
+		while (iOtherCur != iOtherEnd) {
+			int iOtherNext = NextValue(iOtherCur, 1);
+			this->SetAtUnsafe(m_iTail, queue.m_pArray[iOtherNext]);
+			m_iTail = NextTailValue(1);
+			iOtherCur = iOtherNext;
+		}
+	}
+
 
 	/// <summary>
 	/// 꼬리의 gap 만큼 다음 위치에 해당하는 값을 가져온다.
@@ -270,6 +429,16 @@ protected:
 		return m_iHead - gap;
 	}
 
+	int NextValue(int val, int gap) {
+		gap %= this->Capacity();
+
+		if (val + gap >= this->Capacity()) {
+			return val + gap - this->Capacity();
+		}
+
+		return val + gap;
+	}
+
 
 	// 머리가 꼬리보다 앞서는 상태인 경우
 	// 아래에 해당하는 그림의 컨테이너 상태
@@ -285,8 +454,8 @@ protected:
 
 
 protected:
-	int m_iHead;		// index inclusive position
-	int m_iTail;		// index exclusive position
+	int m_iHead = 0;		// index inclusive position
+	int m_iTail = 0 ;		// index exclusive position
 
 			/*
 			======================

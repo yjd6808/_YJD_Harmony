@@ -16,7 +16,7 @@ void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const i
 	Byte* pSrc = (Byte*)src;
 	
 
-	while (iCopiedBytes <= dstCapacityByte && iCopiedBytes <= srcCopyByte) {
+	while (iCopiedBytes < dstCapacityByte && iCopiedBytes < srcCopyByte) {
 		*pDst = *pSrc;
 		pSrc++;
 		pDst++;
@@ -32,7 +32,7 @@ void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
 	Byte* pSrc = (Byte*)src;
 	
 
-	while (iCopiedBytes <= srcCopyByte) {
+	while (iCopiedBytes < srcCopyByte) {
 		*pDst = *pSrc;
 		pSrc++;
 		pDst++;
@@ -46,10 +46,10 @@ void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, 
 	Byte* pDst = (Byte*)dst;
 	Byte* pSrc = (Byte*)src;
 
-	pDst += srcCopyByte;
-	pSrc += srcCopyByte;
+	pDst += srcCopyByte - 1;	// 마지막 원소가 pDst[srcCopyByte - 1] 이므로
+	pSrc += srcCopyByte - 1;
 
-	while (iCopiedBytes <= dstCapacityByte && iCopiedBytes <= srcCopyByte) {
+	while (iCopiedBytes < dstCapacityByte && iCopiedBytes < srcCopyByte) {
 		*pDst = *pSrc;
 		pSrc--;
 		pDst--;
@@ -63,10 +63,10 @@ void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte
 	Byte* pDst = (Byte*)dst;
 	Byte* pSrc = (Byte*)src;
 
-	pDst += srcCopyByte;
-	pSrc += srcCopyByte;
+	pDst += srcCopyByte - 1;
+	pSrc += srcCopyByte - 1;
 
-	while (iCopiedBytes <= srcCopyByte) {
+	while (iCopiedBytes < srcCopyByte) {
 		*pDst = *pSrc;
 		pSrc--;
 		pDst--;

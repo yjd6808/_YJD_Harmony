@@ -39,6 +39,14 @@ public:
 		return TListCollectionIterator::Previous();
 	}
 
+	virtual bool IsEnd() const {
+		return TListCollectionIterator::IsEnd();
+	}
+
+	virtual bool IsBegin() const {
+		return TListCollectionIterator::IsBegin();
+	}
+
 	friend class TLinkedList;
 };
 

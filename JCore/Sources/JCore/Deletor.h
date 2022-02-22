@@ -22,12 +22,32 @@ struct VoidDeletor
 	}
 };
 
+struct VoidDeletorSafe
+{
+	VoidDeletorSafe() = default;
+
+	void operator()(void** ptr) {
+		delete *ptr;
+		*ptr = nullptr;
+	}
+};
+
 struct ArrayVoidDeletor
 {
 	ArrayVoidDeletor() = default;
 
 	void operator()(void* ptr) {
 		delete[] ptr;
+	}
+};
+
+struct ArrayVoidDeletorSafe
+{
+	ArrayVoidDeletorSafe() = default;
+
+	void operator()(void** ptr) {
+		delete[] *ptr;
+		*ptr = nullptr;
 	}
 };
 

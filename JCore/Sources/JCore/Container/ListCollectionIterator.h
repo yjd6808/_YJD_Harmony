@@ -65,6 +65,14 @@ public:
 		m_pCurrent = m_pCurrent->Previous;
 		return m_pCurrent->Value;
 	}
+
+	virtual bool IsEnd() const {
+		return m_pCurrent == m_pTail;
+	}
+
+	virtual bool IsBegin() const {
+		return m_pCurrent == m_pHead->Next;
+	}
 protected:
 	TListCollection* CastListCollection() const {
 		this->ThrowIfIteratorIsNotValid();

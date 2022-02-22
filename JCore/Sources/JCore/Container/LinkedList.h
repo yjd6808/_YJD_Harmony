@@ -19,9 +19,42 @@ class LinkedList	: public ListCollection<T>
 	using TLinkedList			= typename LinkedList<T>;
 	using TLinkedListIterator	= typename LinkedListIterator<T>;
 public:
-	LinkedList() : TListCollection() {}
+	LinkedList() 
+		: TListCollection(ContainerType::LinkedList) 
+	{
+	}
+
+	LinkedList(const TLinkedList& other) 
+		: TListCollection(other, ContainerType::LinkedList) 
+	{
+	}
+
+	LinkedList(TLinkedList&& other) 
+		: TListCollection(Move(other), ContainerType::LinkedList) 
+	{
+	}
+
+	LinkedList(std::initializer_list<T> ilist)
+		: TListCollection(ilist, ContainerType::LinkedList) {
+	}
+
 	virtual ~LinkedList() noexcept {}
 public:
+	TLinkedList& operator=(const TLinkedList& other) {
+		this->CopyFrom(other);
+		return *this;
+	}
+
+	TLinkedList& operator=(TLinkedList&& other) {
+		this->CopyFrom(Move(other));
+		return *this;
+	}
+
+	TLinkedList& operator=(std::initializer_list<T> ilist) {
+		this->CopyFrom(ilist);
+		return *this;
+	}
+
 	virtual void PushBack(const T& data) {
 		TListCollection::PushBack(data);
 	}
@@ -32,6 +65,18 @@ public:
 
 	virtual void PushBackAll(const TCollection& collection) {
 		TListCollection::PushBackAll(collection);
+	}
+
+	virtual void PushFront(const T& data) {
+		TListCollection::PushFront(data);
+	}
+
+	virtual void PushFront(T&& data) {
+		TListCollection::PushFront(Move(data));
+	}
+
+	virtual void PushFrontAll(const TCollection& collection) {
+		TListCollection::PushFrontAll(collection);
 	}
 
 	template <typename... Args>

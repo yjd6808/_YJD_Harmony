@@ -18,7 +18,13 @@ struct Arrays final
 	// 길이를 아는 경우
 	template <typename T, Int32U ArraySize>
 	static void Sort(T(&arr)[ArraySize]) {
-		QuickSort(arr, 0, ArraySize - 1);
+		QuickSort(arr, 0, ArraySize - 1, NaturalOrder{});
+	}
+
+	// 길이를 아는 경우
+	template <typename T, Int32U ArraySize, typename Predicate>
+	static void Sort(T(&arr)[ArraySize], Predicate predicate) {
+		QuickSort(arr, 0, ArraySize - 1, predicate);
 	}
 
 	// 길이를 모르는 포인터타입인 경우
@@ -26,17 +32,32 @@ struct Arrays final
 	static void Sort(T* arr, const int arrSize) {
 		ThrowIfArrayIsNull(arr);
 		ThrowIfArraySizeIsInvalid(arrSize);
-		QuickSort(arr, 0, arrSize - 1);
+		QuickSort(arr, 0, arrSize - 1, NaturalOrder{});
+	}
+
+	// 길이를 모르는 포인터타입인 경우
+	template <typename T, typename Predicate>
+	static void Sort(T* arr, const int arrSize, Predicate predicate) {
+		ThrowIfArrayIsNull(arr);
+		ThrowIfArraySizeIsInvalid(arrSize);
+		QuickSort(arr, 0, arrSize - 1, predicate);
 	}
 
 	template <typename T>
 	static void SortRange(T* arr, const int startIdx, const int endIdx) {
 		ThrowIfArrayIsNull(arr);
 		ThrowIRangeIsInvalid(startIdx, endIdx);
-		QuickSort(arr, startIdx, endIdx);
+		QuickSort(arr, startIdx, endIdx, NaturalOrder{});
 	}
 
+	template <typename T, typename Predicate>
+	static void SortRange(T* arr, const int startIdx, const int endIdx, Predicate predicate) {
+		ThrowIfArrayIsNull(arr);
+		ThrowIRangeIsInvalid(startIdx, endIdx);
+		QuickSort(arr, startIdx, endIdx, predicate);
+	}
 
+	
 	/// <summary>
 	/// 첫 원소부터 선형 탐색
 	/// </summary>
@@ -163,10 +184,11 @@ private:
 		arr[l] = Move(tmp);
 	}
 
+
 	// @참고 : https://www.youtube.com/watch?v=PgBzjlCcFvc&t=45s&ab_channel=GeeksforGeeks
 	// 소스코드는 보지 않고 애니메이션만 보고 짜본 코드입니다.
-	template <typename T>
-	static void QuickSort(T* arr, int start, int end) {
+	template <typename T, typename Prdeicate>
+	static void QuickSort(T* arr, int start, int end, Prdeicate predicate) {
 		if (start >= end) {
 			return;
 		}
@@ -176,7 +198,7 @@ private:
 		int pivot = end;
 
 		while (i < pivot) {
-			if (arr[i] < arr[pivot]) {
+			if (predicate(arr[i], arr[pivot])) {
 				j++;
 				Swap(arr, j, i);
 			}
@@ -186,8 +208,8 @@ private:
 		Swap(arr, j, pivot);
 		pivot = j;
 		
-		QuickSort(arr, start, pivot - 1);
-		QuickSort(arr, pivot + 1, end);
+		QuickSort(arr, start, pivot - 1, predicate);
+		QuickSort(arr, pivot + 1, end, predicate);
 	}
 
 private: // Throws

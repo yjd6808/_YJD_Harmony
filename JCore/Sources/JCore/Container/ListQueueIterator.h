@@ -38,6 +38,14 @@ public:
 	virtual T& Previous() {
 		return TListCollectionIterator::Previous();
 	}
+
+	virtual bool IsEnd() const {
+		return TListCollectionIterator::IsEnd();
+	}
+
+	virtual bool IsBegin() const {
+		return TListCollectionIterator::IsBegin();
+	}
 };
 
 } // namespace JCore

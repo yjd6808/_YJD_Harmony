@@ -35,6 +35,14 @@ public:
 	virtual T& Previous() {
 		return TArrayCollectionIterator::Previous();
 	}
+
+	virtual bool IsEnd() const {
+		return TArrayCollectionIterator::IsEnd();
+	}
+
+	virtual bool IsBegin() const {
+		return TArrayCollectionIterator::IsBegin();
+	}
 };
 
 } // namespace JCore
