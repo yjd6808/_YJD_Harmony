@@ -388,6 +388,16 @@ constexpr bool IsRPBasedOf_v =  (IsPointerType_v<From> && IsPointerType_v<To>)  
 								:
 								false;
 
+
+template <typename From, typename To>
+constexpr bool IsAssignable_v = std::is_assignable_v<From, To>;
+
+template <typename From, typename To>
+constexpr bool IsCopyAssignable_v = std::is_copy_assignable_v<From>;
+
+template <typename From, typename To>
+constexpr bool IsMoveAssignable_v = std::is_move_assignable_v<From>;
+
 /*
 
 template <typename Lhs, typename Rhs>

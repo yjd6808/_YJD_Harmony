@@ -129,7 +129,7 @@ public:
 		}
 	}
 
-	bool Find(int data) {
+	bool Exist(int data) {
 		return FindNode(data) != nullptr;
 	}
 

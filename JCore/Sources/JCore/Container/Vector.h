@@ -203,7 +203,7 @@ public:
 	/// <summary>
 	/// 선향탐색으로 검색하여 데이터가 존재하는지 확인한다.
 	/// </summary>
-	bool Find(const T& data) const {
+	bool Exist(const T& data) const {
 		return Offset(data) >= 0;
 	}
 
@@ -211,7 +211,7 @@ public:
 	/// 이진탐색으로 검색하여 데이터가 존재하는지 확인한다.
 	/// 단, 정렬된 상태여야 정상적으로 동작한다.
 	/// </summary>
-	bool FindBinary(const T& data) const {
+	bool ExistBinary(const T& data) const {
 		return OffsetBinary(data) >= 0;
 	}
 

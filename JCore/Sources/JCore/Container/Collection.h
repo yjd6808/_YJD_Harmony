@@ -19,7 +19,9 @@ enum class CollectionType
 	Array,
 	List,
 	Map,
-	Stream
+	Stream,
+	KeyCollection,
+	ValueCollection
 };
 
 enum class ContainerType {
@@ -31,7 +33,9 @@ enum class ContainerType {
 	LinkedList,
 	HashMap,
 	TreeMap,
-	ReferenceStream
+	ReferenceStream,
+	HashMapKeyCollection,
+	HashMapValueCollection
 };
 
 /*=====================================================================================
@@ -68,11 +72,17 @@ public:
 protected:
 	inline VoidOwner& GetOwner() const { return const_cast<VoidOwner&>(m_Owner); }
 public:
-	bool IsEmpty() const { 
+	/// <summary>
+	/// 가상함수화할 생각 없었는데..
+	/// [오버라이딩]
+	///  - HashMapKeyCollection
+	///  - HashMapValueCollection
+	/// </summary>
+	virtual bool IsEmpty() const { 
 		return m_iSize == 0; 
 	}
 
-	int Size() const { 
+	virtual int Size() const {
 		return m_iSize; 
 	}
 

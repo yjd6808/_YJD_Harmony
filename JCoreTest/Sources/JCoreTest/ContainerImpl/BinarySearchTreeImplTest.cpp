@@ -71,7 +71,7 @@ public:
 		m_iSize++;
 	}
 
-	bool Find(int data) {
+	bool Exist(int data) {
 		// 자식이 없는 경우라도 상관없음 m_pVirtualRoot의 자식이 nullptr일테니까
 		Node* pCur = GetChildIfExist(m_pVirtualRoot);
 

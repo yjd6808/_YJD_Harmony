@@ -65,6 +65,7 @@ public:
 
 		Clear(true);
 
+		this->m_Owner = Move(other.m_Owner);
 		this->m_pArray = other.m_pArray;
 		this->m_iSize = other.m_iSize;
 		this->m_iCapacity = other.m_iCapacity;

@@ -32,10 +32,13 @@
 #define ON		1
 #define OFF		0
 
-#define Print	ON
+//출력 여부
+#define Print	OFF
 
-
+// 컨테이너 테스트를 진행할지
 #define ContainerTestEnabled        ON
+
+// 컨테이너 개발 테스트 코드를 실행 여부
 #define ContainerImplTestEnabled    OFF
 
 #if ContainerTestEnabled == ON
@@ -44,6 +47,7 @@
     #define	TEST_ArrayStackTest				    ON
     #define	TEST_ArrayQueueTest				    ON
     #define	TEST_ArraysTest					    ON
+    #define TEST_HashMapTest                    ON
     #define	TEST_LinkedListTest					ON
     #define	TEST_ListQueueTest					ON
     #define	TEST_ListStackTest					ON

@@ -58,7 +58,7 @@ public:
 	}
 
 	virtual T& Previous() {
-		if (m_pCurrent == m_pHead) {
+		if (m_pCurrent->Previous == m_pHead) {
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
@@ -82,6 +82,8 @@ protected:
 	TListNode* m_pCurrent;
 	TListNode* m_pHead;
 	TListNode* m_pTail;
+
+	friend class TListCollection;
 };
 
 

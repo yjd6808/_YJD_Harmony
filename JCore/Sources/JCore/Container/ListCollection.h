@@ -91,11 +91,17 @@ public:
 		this->m_iSize = 0;
 	}
 protected:
-	virtual void CopyFrom(const ListCollection& other) {
+
+	template <typename U = T>
+	void CopyFrom(const ListCollection<U>& other) {
+		static_assert(IsSameType_v<U, T>, "... U and T is difference type.");
+		static_assert(IsAssignable_v<U&, const T&>, "... U cannot be assign to T (T = U is impossible operation)");
+
+		using UListNode = ListNode<U>;
 		this->ThrowIfAssignSelf(other);
 
 		TListNode* pCur = m_pHead->Next;
-		TListNode* pOtherCur = other.m_pHead->Next;
+		UListNode* pOtherCur = other.m_pHead->Next;
 
 		// 기존에 이미 메모리 할당된 녀석은 데이터만 복사해준다.
 		while (pCur != m_pTail && pOtherCur != other.m_pTail) {
@@ -123,9 +129,11 @@ protected:
 		this->m_iSize = other.m_iSize;
 	}
 
-	virtual void CopyFrom(ListCollection&& other) {
+	virtual void CopyFrom(TListCollection&& other) {
 		this->ThrowIfAssignSelf(other);
 		Clear();
+
+		this->m_Owner = Move(other.m_Owner);
 
 		// 만약 비어있을 경우 other의 더미 헤드와 더미 테일을 참조하게 되는데
 		// 동적할당된 녀석이 아니기 때문에 나중에 오류를 일으키게 된다.
@@ -133,6 +141,7 @@ protected:
 		if (other.m_iSize == 0) {
 			return;
 		}
+		
 
 		m_pTail->Previous = other.m_pTail->Previous;
 		m_pHead->Next = other.m_pHead->Next;
@@ -146,7 +155,11 @@ protected:
 		other.m_iSize = 0;
 	}
 
-	virtual void CopyFrom(std::initializer_list<T> ilist) {
+	template <typename U = T>
+	void CopyFrom(std::initializer_list<U> ilist) {
+		static_assert(IsSameType_v<U, T>, "... U and T is difference type.");
+		static_assert(IsAssignable_v<U&, const T&>, "... U cannot be assign to T (T = U is impossible operation)");
+
 		TListNode* pCur = m_pHead->Next;
 		auto pOtherCur = ilist.begin();
 
@@ -206,6 +219,48 @@ protected:
 			InsertNodePrev(m_pTail, pNewNode);
 		}
 		this->m_iSize += collection.Size();
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="U">
+	///		템플릿 함수 인스턴스화를 방지하기위해 템플릿 함수로 만들었다.
+	///		
+	///		FindNode 함수에서 T 타입에 대해서 동등비교를 실행하는데 ListCollection의 자식 컨테이너가 템플릿 인스턴스화가 되면
+	///		비교 연산자가 없는 구조체나 클래스들에 대해서 오류를 발생시킨다.
+	/// 
+	///		그래서 Remove, FindNode 함수를 사용할 경우에만 동등 비교가 가능여부에 대해서 오류를 뛰우도록 하였다.
+	/// </typeparam>
+	template <typename U = T>
+	bool Remove(const U& data) {
+		TListNode* pDel = FindNode(data);
+
+		if (pDel == nullptr) {
+			return false;
+		}
+
+		this->ConnectNode(pDel->Previous, pDel->Next);
+		delete pDel;
+		this->m_iSize--;
+		return true;
+	}
+
+	virtual bool Remove(TListCollectionIterator& iter) {
+		if (iter.m_pHead != this->m_pHead) {
+			throw InvalidOperationException("해당 이터레이터가 소속된 컨테이너를 제대로 지정해주세요.");
+		}
+
+		if (iter.m_pCurrent == this->m_pHead || iter.m_pCurrent == this->m_pTail) {
+			throw InvalidOperationException("이터레이터가 처음 또는 끝을 가리키고 있습니다.");
+		}
+
+		TListNode* pDel = iter.m_pCurrent;
+		iter.m_pCurrent = pDel->Next;
+		this->ConnectNode(pDel->Previous, pDel->Next);
+		delete pDel;
+		this->m_iSize--;
+		return true;
 	}
 
 	/// <summary>
@@ -359,6 +414,32 @@ protected:
 	void ConnectNode(TListNode* lhs, TListNode* rhs) {
 		lhs->Next = rhs;
 		rhs->Previous = lhs;
+	}
+
+	template <typename U = T>
+	TListNode* FindNode(const U& data) const {
+		TListNode* pCur = m_pHead->Next;
+		while (pCur != m_pTail) {
+			if (pCur->Value == data) {
+				return pCur;
+			}
+			pCur = pCur->Next;
+		}
+
+		return nullptr;
+	}
+
+	template <typename Predicate>
+	TListNode* FindNodeIf(Predicate predicate) {
+		TListNode* pCur = m_pHead->Next;
+		while (pCur != m_pTail) {
+			if (predicate(pCur->Value)) {
+				return pCur;
+			}
+			pCur = pCur->Next;
+		}
+
+		return nullptr;
 	}
 protected:
 	TListNode* m_pHead = nullptr;

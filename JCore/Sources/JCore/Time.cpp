@@ -11,8 +11,8 @@
 #include <JCore/Hasher.h>
 #include <JCore/Ascii.h>
 #include <JCore/Exception.h>
+#include <JCore/Container/HashMap.h>
 
-#include <unordered_map>
 #include <chrono>
 #include <timezoneapi.h>
 
@@ -679,7 +679,7 @@ const char* DateTime::ms_szAMPMFullName[] = { "AM", "PM" };
 	그리고 y를 연속 5번 만나버린 경우. 즉 해당 포맷 문자에서 가증한 최대 문자 갯수를 초과한 경우는 오류를 뛰우기 위함
 */
 
-std::unordered_map<char, Tuple<char, DateFormat, int>, Hasher<char>> FormatTokenMap_v =
+HashMap<char, Tuple<char, DateFormat, int>> FormatTokenMap_v =
 {
 	{ 'd', {'d', DateFormat::d, 4 } },
 	{ 'h', {'h', DateFormat::h, 2 } },
@@ -728,7 +728,7 @@ String DateTime::Format(const char* fmt) const {
 	const DateAndTime currentDateAndTime = ToDateAndTime();
 
 	for (int i = 0; i < szFmt.Length(); i++) {
-		if (FormatTokenMap_v.find(szFmt[i]) != FormatTokenMap_v.end()) {
+		if (FormatTokenMap_v.Exist(szFmt[i])) {
 				
 			if (cContinuousToken != szFmt[i]) {
 				// 이전 토큰하고 다른 경우 = 처음 발견한 경우
@@ -1054,12 +1054,12 @@ void DateTime::ReflectFormat(const DateAndTime& time, String& ret, char token, i
 		return;
 	}
 
-	auto findIter = FormatTokenMap_v.find(token);
-	if (findIter == FormatTokenMap_v.end()) {
+	auto valuePtr = FormatTokenMap_v.Find(token);
+	if (valuePtr == nullptr) {
 		throw InvalidArgumentException("올바르지 않은 포맷 토큰입니다.");
 	}
 
-	auto tokenTuple = findIter->second;
+	auto tokenTuple = *valuePtr;
 
 	const DateFormat format = DateFormat(int(tokenTuple.item2) + count - 1);
 	const int iMaxCount = tokenTuple.item3;	// 연속으로 나열가능한 문자 최대 수

@@ -83,9 +83,17 @@ struct Zizon
 
 
 struct A
-{
-	A(){}
-	A(A&&) { cout << "이동생성자\n"; }
+{/*
+	A() { cout << "A 디폴트 생성자\n"; }
+	A(int a) : a(a) { cout << "A 일반 생성자\n"; }
+	A(const A&) { cout << "A 복사 생성자\n"; }
+	A(A&&) { cout << "A 이동 생성자\n"; }
+	~A() { cout << "A 소멸자\n"; }
+
+	A& operator=(const A&) = default;
+		A& operator=(A&&) = default;
+*/
+	int a;
 };
 
 struct B
@@ -122,17 +130,49 @@ void fasfesaf(int& m, std::function<void(int&)> fn) {
 
 
 int main() {
-	for (int i = 0; i < 10; i++) {
-		Vector<int> g(10000000);
-		Random rand;
-		for (int i = 0; i < 1000000; i++) {
-			g.PushBack(rand.GenerateInt(0, 1000000000));
-		}
-		DateTime begin = DateTime::Now();
-		g.Extension()
-			.Sorted(ReverseOrder{})
-			.ForEach([](const int& k) { int z = k; });
-		cout << DateTime::Now().Diff(begin).GetTotalSeconds() << "\n";
+	MemoryLeakDetector detector;
+
+	HashMap<int, Model> modelMap;
+
+	// Insert 테스트
+	// Key, Value 개별삽입
+	(modelMap.Insert(1, Model(3)));
+	(modelMap.Insert(1, Model(3)));	// 중복된 키값 삽입 실패
+	(modelMap.Insert(2, Model(4)));
+	(modelMap.Insert(3, Model(5)));
+	(modelMap.Insert(4, Model(6)));
+
+	// KeyValuePair로 삽입
+	(modelMap.Insert(MakePair(5, Model(7))));
+	(modelMap.Insert(MakePair(6, Model(8))));
+
+	(modelMap.Size() == 6);
+
+	// Remove 테스트
+	(modelMap.Remove(2));	// 삭제 성공
+	(modelMap.Remove(2));	// 삭제 실패해야함
+	(modelMap.Size() == 5);
+
+	// operator[] 테스트
+	//(modelMap[2]); // 키값이 2에 해당하는 데이터는 삭제했으므로 예외를 던짐
+	(modelMap[3].a == 5);
+
+	// Clear 테스트
+	modelMap.Clear();
+	(modelMap.Size() == 0);
+	(modelMap.Insert(2, Model(4)));	// 삭제 후 데이터 정상 삽입 되는지
+	(modelMap.Insert(3, Model(5)));
+	(modelMap.Insert(4, Model(6)));
+	(modelMap.Size() == 3);
+
+	auto z = modelMap.Keys().Begin();
+	while (z->HasNext()) {
+		cout << z->Next() << "\n";
+	}
+
+	auto z2 = modelMap.Values().Begin();
+	while (z2->HasNext()) {
+		cout << z2->Next().a << "\n";
 	}
 	_CrtDumpMemoryLeaks();
 	return 0;

@@ -9,8 +9,6 @@ namespace JCore {
 template <typename TKey, typename TValue>
 struct KeyValuePair
 {
-	using TKeyValuePair = typename KeyValuePair<TKey, TValue>;
-
 	TKey Key;
 	TValue Value;
 };

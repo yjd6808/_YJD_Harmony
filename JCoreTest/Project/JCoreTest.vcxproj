@@ -29,6 +29,7 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayQueueTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\HashMapTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\LinkedListTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ListQueueTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ListStackTest.cpp" />

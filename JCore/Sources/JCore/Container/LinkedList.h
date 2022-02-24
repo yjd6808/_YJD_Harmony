@@ -105,35 +105,29 @@ public:
 		TListCollection::PopFront();
 	}
 
-	bool Find(const T& data) const {
+	bool Exist(const T& data) const {
 		return FindNode(data) != nullptr;
 	}
 
 	bool Remove(const T& data) {
-		TListNode* pDel = FindNode(data);
+		return TListCollection::Remove(data);
+	}
+
+	bool Remove(const TLinkedListIterator& iter) {
+		return TListCollection::Remove(iter);;
+	}
+
+	template <typename Predicate>
+	bool RemoveIf(Predicate predicate) {
+		TListNode* pDel = TListCollection::FindNodeIf(predicate);
 
 		if (pDel == nullptr) {
 			return false;
 		}
 
-		this->Connect(pDel->Previous, pDel->Next);
+		this->ConnectNode(pDel->Previous, pDel->Next);
 		delete pDel;
-		return true;
-	}
-
-	bool Remove(const TLinkedListIterator& iter) {
-		if (iter->m_pHead != this->m_pHead) {
-			throw InvalidOperationException("해당 이터레이터가 소속된 컨테이너를 제대로 지정해주세요.");
-		}
-
-		if (iter->m_pCurrent == this->m_pHead || iter->m_pCurrent == this->m_pTail) {
-			throw InvalidOperationException("이터레이터가 처음 또는 끝을 가리키고 있습니다.");
-		}
-
-		TListNode* pDel = iter->m_pCurrent;
-		iter->m_pCurrent = pDel->Next;
-		this->Connect(pDel->Previous, pDel->Next);
-		delete pDel;
+		this->m_iSize--;
 		return true;
 	}
 
@@ -144,17 +138,7 @@ public:
 	virtual TEnumerator End() const {
 		return MakeShared<TLinkedListIterator>(this->GetOwner(), this->m_pTail);
 	}
-protected:
-	TListNode* FindNode(const T& data) const {
-		TListNode* pCur = this->m_pHead->Next;
-		while (pCur != this->m_pTail) {
-			if (pCur->Value == data) {
-				return pCur;
-			}
-		}
 
-		return nullptr;
-	}
 
 protected:
 	friend class TLinkedListIterator;

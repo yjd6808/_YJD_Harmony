@@ -25,12 +25,6 @@ class MapCollectionIterator : public Iterator<KeyValuePair<TKey, TValue>>
 public:
 	MapCollectionIterator(VoidOwner& owner) : TIterator(owner) {}
 	virtual ~MapCollectionIterator() noexcept = 0;
-public:
-	//virtual TKey& NextKey() = 0;
-	//virtual TValue& NextValue() = 0;
-
-	//virtual TKey& PreviousKey() = 0;
-	//virtual TValue& PreviousValue() = 0;
 };
 
 template <typename TKey, typename TValue>

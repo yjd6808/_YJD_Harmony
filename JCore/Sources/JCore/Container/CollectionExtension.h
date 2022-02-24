@@ -42,7 +42,7 @@ public:
 		}
 	}
 
-	bool Find(const T& val) {
+	bool Exist(const T& val) {
 		TEnumerator it = m_pCollection->Begin();
 		while (it->HasNext()) {
 			if (it->Next() == val) {
@@ -53,7 +53,7 @@ public:
 	}
 
 	template <typename Predicate>
-	bool FindIf(Predicate predicate) {
+	bool ExistIf(Predicate predicate) {
 		TEnumerator it = m_pCollection->Begin();
 		while (it->HasNext()) {
 			if (predicate(it->Next())) {
@@ -70,13 +70,40 @@ public:
 		return collection;
 	}
 
-	T& First() {
-		return m_pCollection->Begin()->Next();
+	T* First() {
+		if (m_pCollection->Size() == 0) {
+			return nullptr;
+		}
+
+		return Addressof(m_pCollection->Begin()->Next());
 	}
 
-	T& Last() {
-		return m_pCollection->End()->Previous();
+	T* Last() {
+		if (m_pCollection->Size() == 0) {
+			return nullptr;
+		}
+
+		return Addressof(m_pCollection->End()->Previous());
 	}
+
+	template <typename Predicate>
+	T* FindIf(Predicate predicate) {
+		if (m_pCollection->Size() == 0) {
+			return nullptr;
+		}
+
+		TEnumerator it = m_pCollection->Begin();
+		while (it->HasNext()) {
+			T& val = it->Next();
+			if (predicate(val)) {
+				return AddressOf(val);
+			}
+		}
+
+		return nullptr;
+	}
+
+
 
 	TCollectionStream Sorted() {
 		return Sorted(NaturalOrder{});

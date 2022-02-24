@@ -26,13 +26,13 @@ class HashMapIterator : public MapCollectionIterator<TKey, TValue>
 	using TKeyValuePair			 = typename KeyValuePair<TKey, TValue>;
 	using TMapCollectionIterator = typename MapCollectionIterator<TKey, TValue>;
 public:
-	HashMapIterator(VoidOwner& owner, TBucket* current) : TMapCollectionIterator(owner) {
+	HashMapIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode) : TMapCollectionIterator(owner) {
 		m_pMap = CastHashMap();
 
-		m_pCurrentBucket = current;
-		m_pCurrentNode = m_pCurrentBucket->Nodes.m_pHead->Next;
+		m_pCurrentBucket = currentBucket;
+		m_pCurrentNode = currentNode;
 	}
-	virtual ~HashMapIterator() noexcept {}
+	virtual ~HashMapIterator() noexcept = default;
 public:
 	virtual bool HasNext() const {
 		if (!this->IsValid()) {
@@ -51,11 +51,11 @@ public:
 			return false;
 		}
 
-		if (m_pCurrentNode->Previous == m_pCurrentBucket->Nodes.m_pHead) {
+		if (m_pCurrentNode->Previous == m_pCurrentBucket->m_pHead) {
 			return m_pCurrentBucket->Previous;
 		}
 
-		return m_pCurrentNode->Previous != m_pCurrentBucket->Nodes.m_pHead;
+		return m_pCurrentNode->Previous != m_pCurrentBucket->m_pHead;
 	}
 
 	virtual TKeyValuePair& Next() {
@@ -67,19 +67,27 @@ public:
 		TBucketNode& val = m_pCurrentNode->Value;
 		m_pCurrentNode = m_pCurrentNode->Next;
 
-		if (m_pCurrentNode == m_pCurrentBucket->Nodes.m_pTail) {
+		if (m_pCurrentNode == m_pCurrentBucket->m_pTail) {
 			m_pCurrentBucket = m_pCurrentBucket->Next;
-
-			if (m_pCurrentBucket != m_pMap->m_pTailBucket) {
-				m_pCurrentNode = m_pCurrentBucket->Nodes.m_pHead->Next;
-			}
+			m_pCurrentNode = m_pCurrentBucket->m_pHead->Next;
 		}
 
 		return val.Pair;
 	}
 
 	virtual TKeyValuePair& Previous() {
+		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
+		if (m_pCurrentNode->Previous == m_pMap->m_pHeadBucket->m_pHead) {
+			throw InvalidOperationException("데이터가 없습니다.");
+		}
+
+		m_pCurrentNode = m_pCurrentNode->Previous;
+
 		TBucketNode& val = m_pCurrentNode->Value;
+		if (m_pCurrentNode->Previous == m_pCurrentBucket->m_pHead) {
+			m_pCurrentBucket = m_pCurrentBucket->Previous;
+			m_pCurrentNode = m_pCurrentBucket->m_pTail;
+		}
 		return val.Pair;
 	}
 

@@ -165,6 +165,9 @@ public:
 	}
 
 	void operator=(const VoidOwner&) = delete;
+	void operator=(VoidOwner&& owner) {
+		OwnerMoveToOwner(owner);
+	}
 };
 
 

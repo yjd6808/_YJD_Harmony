@@ -142,7 +142,7 @@ TEST(VectorTest, Regular) {
 
 
 
-	// Remove / Find / Offset
+	// Remove / Exist / Offset
 	{
 		Vector<int> v;
 		for (int i = 0; i < 20; i++) {
@@ -150,12 +150,12 @@ TEST(VectorTest, Regular) {
 		}
 
 		for (int i = 0; i < 20; i++) {
-			EXPECT_TRUE(v.Find(i));
+			EXPECT_TRUE(v.Exist(i));
 			EXPECT_TRUE(v.Offset(i) == i);
 		}
 
 		for (int i = 0; i < 20; i++) {
-			EXPECT_TRUE(v.FindBinary(i));
+			EXPECT_TRUE(v.ExistBinary(i));
 			EXPECT_TRUE(v.OffsetBinary(i) == i);
 		}
 
