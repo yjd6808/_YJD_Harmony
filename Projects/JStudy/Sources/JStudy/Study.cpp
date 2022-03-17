@@ -1,1 +1,0 @@
-#include <JStudy/Study.h>
