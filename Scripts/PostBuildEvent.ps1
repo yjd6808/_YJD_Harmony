@@ -27,13 +27,25 @@ if (($Configuration -ne 'Debug') -and ($Configuration -ne 'Release')) {
 $SolutionPath = Resolve-Path (Join-Path $PSScriptRoot '..\')
 $SolutionOutputPath = Join-Path $SolutionPath 'Output'
 $OutputIncludePath = [Path]::Combine($SolutionOutputPath, 'include', $ProjectName, $ProjectName)
-$OutputLibraryPath = Join-Path $SolutionOutputPath 'lib'
-$OutputBinPath = Join-Path $SolutionOutputPath 'bin'
+$OutputLibraryPath = [Path]::Combine($SolutionOutputPath, 'lib', $Configuration)
+$OutputBinPath = [Path]::Combine($SolutionOutputPath, $Configuration, 'bin')
 
-$ProjectPath = Join-Path $SolutionPath $ProjectName
+$ProjectPath = [Path]::Combine($SolutionPath, 'Projects', $ProjectName)
 $SourcesPath = [Path]::Combine($ProjectPath, 'Sources', $ProjectName)
 $LibraryPath = [Path]::Combine($ProjectPath, 'Output', $Configuration) 
 $LibraryFilePath = Join-Path $LibraryPath ([String]::Format("{0}.lib", $ProjectName))
+
+Write-Host '[Post-Build Event 경로 정보]'
+Write-Host 'SolutionPath : ' $SolutionPath
+Write-Host 'SolutionOutputPath : ' $SolutionOutputPath
+Write-Host 'OutputIncludePath : ' $OutputIncludePath
+Write-Host 'OutputLibraryPath : ' $OutputLibraryPath
+Write-Host 'OutputBinPath : ' $OutputBinPath
+
+Write-Host 'ProjectPath : ' $ProjectPath
+Write-Host 'SourcesPath : ' $SourcesPath
+Write-Host 'LibraryPath : ' $LibraryPath
+Write-Host 'LibraryFilePath : ' $LibraryFilePath
 
 if (!(Test-Path $SourcesPath)) {
     Write-Host $SourcesPath 
@@ -79,6 +91,12 @@ foreach ($HeaderFile in [FileUtil]::GetChildrenInDirectory($SourcesPath, $True, 
 
 Write-Host '라이브러리 파일을 복사합니다.'
 $LibraryFileName = [Path]::GetFileName($LibraryFilePath)
+
+# lib/$Configuraton 경로 없을 수 있으니 생성
+if ((Test-Path $OutputLibraryPath) -eq $False) {
+    New-Item -Type Directory $OutputLibraryPath
+}
+
 Copy-Item $LibraryFilePath -Destination $OutputLibraryPath
 Write-Host (Join-Path $OutputLibraryPath $LibraryFileName) 복사완료
 

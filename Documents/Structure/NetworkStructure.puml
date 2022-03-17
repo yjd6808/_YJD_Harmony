@@ -1,0 +1,8 @@
+@startuml NetworkStructure
+
+class TcpClient
+class TcpServer
+class IServerListener
+
+
+@enduml

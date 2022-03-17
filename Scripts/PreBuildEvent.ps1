@@ -29,7 +29,7 @@ $OutputIncludePath = [Path]::Combine($SolutionOutputPath, 'include', $ProjectNam
 $OutputLibraryPath = Join-Path $SolutionOutputPath 'lib'
 $OutputBinPath = Join-Path $SolutionOutputPath 'bin'
 
-$ProjectPath = Join-Path $SolutionPath $ProjectName
+$ProjectPath = Join-Path $SolutionPath 'Projects' $ProjectName
 $SourcesPath = [Path]::Combine($ProjectPath, 'Sources', $ProjectName)
 $LibraryPath = [Path]::Combine($ProjectPath, 'Output', $Configuration) 
 $LibraryFilePath = Join-Path $LibraryPath ([String]::Format("{0}.lib", $ProjectName))
