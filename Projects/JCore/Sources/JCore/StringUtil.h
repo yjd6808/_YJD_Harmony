@@ -27,6 +27,19 @@ public:
 		return CTLengthRecursive(str, 0);
 	}
 
+	// 컴파일 타임용
+	static constexpr int CTLength2(const char* str) {
+		char* pStr = (char*)str;
+		int iLength = 0;
+
+		while (*pStr != NULL) {
+			iLength++;
+			pStr++;
+		}
+
+		return iLength;
+	}
+
 	template <Int32U Len>
 	static constexpr int CTLength(const char(&str)[Len]) {
 		return Len;

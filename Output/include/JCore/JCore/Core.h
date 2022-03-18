@@ -44,3 +44,16 @@ do {									\
 		x->~Type();						\
 	}									\
 } while (0);	
+
+
+#ifndef _In_
+	#define _In_
+#endif
+
+#ifndef _Out_
+	#define _Out_	
+#endif
+
+#ifndef _InOut_
+	#define _InOut_	
+#endif

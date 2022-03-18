@@ -6,42 +6,55 @@
 #pragma once
 
 #include <exception>
+#include <JCore/String.h>
 
 namespace JCore {
 
-struct NullPointerException : public std::exception
+struct Exception : public std::exception
 {
-	NullPointerException(const char* msg) : std::exception(msg) {}
+	Exception(const char* msg) : std::exception(msg) {}
 };
 
-struct RuntimeException : public std::exception
+struct NullPointerException : Exception
 {
-	RuntimeException(const char* msg) : std::exception(msg) {}
+	NullPointerException(const char* msg) : Exception(msg) {}
+	NullPointerException(const String& msg) : Exception(msg.Source()) {}
 };
 
-struct InvalidArgumentException : public std::exception
+struct RuntimeException : Exception
 {
-	InvalidArgumentException(const char* msg) : std::exception(msg) {}
+	RuntimeException(const char* msg) : Exception(msg) {}
+	RuntimeException(const String& msg) : Exception(msg.Source()) {}
 };
 
-struct OutOfRangeException : public std::exception
+struct InvalidArgumentException : Exception
 {
-	OutOfRangeException(const char* msg) : std::exception(msg) {}
+	InvalidArgumentException(const char* msg) : Exception(msg) {}
+	InvalidArgumentException(const String& msg) : Exception(msg.Source()) {}
 };
 
-struct OverFlowException : public std::exception
+struct OutOfRangeException : public Exception
 {
-	OverFlowException(const char* msg) : std::exception(msg) {}
+	OutOfRangeException(const char* msg) : Exception(msg) {}
+	OutOfRangeException(const String& msg) : Exception(msg.Source()) {}
 };
 
-struct UnderFlowException : public std::exception
+struct OverFlowException : public Exception
 {
-	UnderFlowException(const char* msg) : std::exception(msg) {}
+	OverFlowException(const char* msg) : Exception(msg) {}
+	OverFlowException(const String& msg) : Exception(msg.Source()) {}
 };
 
-struct InvalidOperationException : public std::exception
+struct UnderFlowException : public Exception
 {
-	InvalidOperationException(const char* msg) : std::exception(msg) {}
+	UnderFlowException(const char* msg) : Exception(msg) {}
+	UnderFlowException(const String& msg) : Exception(msg.Source()) {}
+};
+
+struct InvalidOperationException : public Exception
+{
+	InvalidOperationException(const char* msg) : Exception(msg) {}
+	InvalidOperationException(const String& msg) : Exception(msg.Source()) {}
 };
 
 

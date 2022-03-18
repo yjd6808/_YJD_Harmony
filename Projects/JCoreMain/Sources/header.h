@@ -36,6 +36,8 @@
 #include <JCore/Container/ListStack.h>
 #include <JCore/Container/ListQueue.h>
 #include <JCore/Container/LinkedList.h>
+#include <JCore/Mutex.h>
+#include <JCore/Mutex.h>
 
 using namespace JCore;
 using namespace JCore;

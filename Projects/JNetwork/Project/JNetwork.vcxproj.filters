@@ -1,2 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\JNetwork\Network.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\IPAddress.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\IPEndPoint.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\JNetwork\Network.h" />
+    <ClInclude Include="..\Sources\JNetwork\IPEndPoint.h" />
+    <ClInclude Include="..\Sources\JNetwork\IPAddress.h" />
+    <ClInclude Include="..\Sources\JNetwork\Protocol.h" />
+    <ClInclude Include="..\Sources\JNetwork\Socket.h" />
+    <ClInclude Include="..\Sources\JNetwork\ByteOrder.h" />
+  </ItemGroup>
+</Project>

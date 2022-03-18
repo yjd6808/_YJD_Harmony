@@ -14,6 +14,7 @@
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
     <ClCompile Include="..\Sources\JCore\PointerObserver.cpp" />
+    <ClCompile Include="..\Sources\JCore\Mutex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -122,5 +123,6 @@
     <ClInclude Include="..\Sources\JCore\Container\CollectionStream.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Mutex.h" />
   </ItemGroup>
 </Project>

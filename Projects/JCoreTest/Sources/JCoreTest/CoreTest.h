@@ -19,6 +19,7 @@
 #include <utility>
 #include <string_view>
 #include <crtdbg.h>
+#include <thread>
 #include <unordered_map>
 #include <set>
 #include <map>
@@ -69,9 +70,11 @@
 #define TEST_HasherTest					OFF
 #define TEST_MathTest					ON
 #define TEST_MemoryTest					ON
+#define TEST_MutexTest					ON
 #define TEST_PointerObserverTest		ON
 #define TEST_RandomTest					OFF
 #define TEST_SmartPointerTest			ON
+#define TEST_StaticStringTest           ON
 #define TEST_StringTest					ON
 #define TEST_StringUtilTest				ON
 #define TEST_TimeTest					ON

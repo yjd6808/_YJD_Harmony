@@ -10,7 +10,6 @@
 using namespace JCore;
 using namespace std;
 
-#if TEST_ComparatorTest == ON
 
 void CheckTest(int* ptr) {
 	if (ptr == nullptr)
@@ -23,4 +22,3 @@ TEST(ExceptionTest, ExceptionTest) {
 	EXPECT_NO_THROW(CheckTest(&f), NullPointerException);
 }
 
-#endif // TEST_ComparatorTest == ON

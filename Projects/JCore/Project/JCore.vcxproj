@@ -16,6 +16,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
+    <ClCompile Include="..\Sources\JCore\Mutex.cpp" />
     <ClCompile Include="..\Sources\JCore\PointerObserver.cpp">
       <SubType>
       </SubType>
@@ -144,6 +145,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Mutex.h" />
     <ClInclude Include="..\Sources\JCore\PointerObserver.h">
       <SubType>
       </SubType>

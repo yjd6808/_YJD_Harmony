@@ -45,13 +45,17 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)JCore\Output\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
+    <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)JCore\Output\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
+    <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -59,10 +63,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;JNetwork.lib;JCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,15 +79,21 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;JNetwork.lib;JCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

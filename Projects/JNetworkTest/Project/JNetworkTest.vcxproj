@@ -28,22 +28,25 @@
     <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)Output\include\JNetwork;$(SolutionDir)Output\include\JCore;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Output\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Output\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)Output\include\JNetwork;$(SolutionDir)Output\include\JCore;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Output\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Output\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\JNetworkTest\ByteOrderTest.cpp" />
+    <ClCompile Include="..\Sources\JNetworkTest\IPEndPointTest.cpp" />
     <ClCompile Include="..\Sources\JNetworkTest\NetworkTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetworkTest\test.cpp" />
+    <ClCompile Include="IPAddressTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetworkTest\NetworkTest.h" />
@@ -68,6 +71,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>JNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -85,6 +89,7 @@
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalDependencies>JNetwork.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

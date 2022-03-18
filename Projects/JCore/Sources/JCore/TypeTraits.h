@@ -326,10 +326,10 @@ constexpr auto CTType() {
 		pSrc++;
 	}
 
-	if (szResult.StartWith("class")) {
-		//return szResult.Remove("class");
-	} else if (szResult.StartWith("struct")) {
-		//return szResult.Remove("struct");
+	if (szResult.StartWith("class ")) {
+		return szResult.Remove("class ");
+	} else if (szResult.StartWith("struct ")) {
+		return szResult.Remove("struct ");
 	}
 
 	return szResult;

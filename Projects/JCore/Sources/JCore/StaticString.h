@@ -8,6 +8,7 @@
 
 #include <JCore/String.h>
 #include <JCore/Type.h>
+#include <JCore/Exception.h>
 #include <JCore/StringUtil.h>
 
 namespace JCore {
@@ -16,6 +17,7 @@ template <Int32U Size>
 struct StaticString
 {
 	char Source[Size] = "";
+
 
 	template <Int32U ParamSize>
 	constexpr bool operator==(const char(&str)[ParamSize]) const {
@@ -45,6 +47,18 @@ struct StaticString
 		return Compare(str) != 0;
 	}
 
+	constexpr char& operator[](const int idx) const {
+		return *const_cast<char*>(Source + idx);
+	}
+
+	constexpr int Length() const {
+		return StringUtil::CTLength2(Source);
+	}
+
+	constexpr int Capacity() const {
+		return Size;
+	}
+
 	constexpr int Compare(const char* str) const {
 		return StringUtil::CTCompare(Source, str);
 	}
@@ -55,9 +69,35 @@ struct StaticString
 	}
 
 	template <Int32U ParamSize>
+	constexpr void CopyFrom(const char(&str)[ParamSize]) const {
+		CopyFrom(0, StringUtil::CTLength2(str) - 1, str);
+	}
+
+	template <Int32U ParamSize>
+	constexpr void CopyFrom(int startIdx, int endIdx, const char(&str)[ParamSize]) const {
+		int iThisLen = Size - 1;
+		int iCopyCount = 0;
+
+		char* pDst = (char*)Source;
+		char* pSrc = (char*)str;
+		pSrc += startIdx;
+
+		for (int i = startIdx; i <= endIdx && iCopyCount < iThisLen; i++) {
+			*pDst = *pSrc;
+
+			pDst++;
+			pSrc++;
+			iCopyCount++;
+		}
+
+		*pDst = '\0';
+	}
+
+
+	template <Int32U ParamSize>
 	constexpr bool StartWith(const char(&str)[ParamSize]) const {
 		int iStrLen = ParamSize - 1;
-		int iThisLen = Size - 1;
+		int iThisLen = Length();
 
 		if (iStrLen > iThisLen) {
 			return false;
@@ -75,7 +115,7 @@ struct StaticString
 	template <Int32U ParamSize>
 	constexpr bool EndWith(const char(&str)[ParamSize]) const {
 		int iStrLen = ParamSize - 1;
-		int iThisLen = Size - 1;
+		int iThisLen = Length();
 
 		if (iStrLen > iThisLen) {
 			return false;
@@ -88,6 +128,10 @@ struct StaticString
 			if (*pStr != *pThis) {
 				return false;
 			}
+
+			pStr--;
+			pThis--;
+				
 		}
 		
 		return true;
@@ -101,6 +145,10 @@ struct StaticString
 
 	template <Int32U ParamSize>
 	constexpr int Find(const int startIdx, const int endIdx, const char(&str)[ParamSize]) const {
+		if (str[0] == '\0') {
+			return startIdx;
+		}
+
 		char* pSrc = (char*)Source + startIdx;
 
 		int iStrLen = StringUtil::CTLength(str);
@@ -144,7 +192,7 @@ struct StaticString
 
 	// 기존 문자열은 건드릴 수 없기때문에 새로 생성해서 반환함
 	template <Int32U ParamSize>
-	constexpr auto Remove(const char(&str)[ParamSize]) const {
+	constexpr StaticString<Size> Remove(const char(&str)[ParamSize]) const {
 		int iStartIdx = Find(str);
 
 		StaticString<Size> ret{};
@@ -154,16 +202,11 @@ struct StaticString
 			return ret;
 		}
 
-		int iEndIdx = iStartIdx > iStartIdx + ParamSize - 2;
+		int iEndIdx = iStartIdx + ParamSize - 2;
 
-		char* pSrc = (char*)str;
 		char* pDst = (char*)ret.Source;
 		char* pThis = (char*)Source;
 		
-		for (int i = 0; i < Size - 1; i++) {
-			*pDst = '\0';
-		}
-
 		for (int i = 0; i < Size - 1; i++, pThis++) {
 			if (i >= iStartIdx && i <= iEndIdx) {
 				continue;
@@ -176,10 +219,35 @@ struct StaticString
 		return ret;
 	}
 
-
+	/*==================================================================
+	 non-constexpr methods
+	===================================================================*/
 	String ToString() {
 		return Source;
 	}
+
+	void CopyFrom(const char* str) {
+		CopyFrom(0, StringUtil::Length(str) - 1, str);
+	}
+
+	void CopyFrom(const JCore::String& str) {
+		CopyFrom(0, str.Length() - 1, str.Source());
+	}
+
+	void CopyFrom(int startIdx, int endIdx, const char* str) {
+		if (startIdx > endIdx || startIdx < 0) {
+			throw InvalidArgumentException("인덱스 범위가 올바르지 않습니다.");
+		}
+
+		int iThisLen = Size - 1;
+		int iCopyIdx = 0;
+
+		for (int i = startIdx; i <= endIdx && iCopyIdx < iThisLen; i++) {
+			Source[iCopyIdx++] = str[i];
+		}
+		Source[iCopyIdx] = '\0';
+	}
+
 
 	template <Int32U ParamSize>
 	friend std::ostream& operator<<(std::ostream& os, const StaticString<ParamSize>& str);

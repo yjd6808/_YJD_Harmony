@@ -6,6 +6,7 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 #include <ostream>
 #include <vector>
 
@@ -36,11 +37,18 @@ public:
 		return startIdx <= endIdx && startIdx >= 0 && endIdx < m_iLen;
 	}
 public:
+	template <typename T>
+	void Append(const T& str) {
+		std::stringstream ss;
+		ss << str;
+		Append(ss.str());
+	}
 	void Append(const char ch);
 	void Append(const char* str);
 	void Append(const std::string& str);
 	void Append(const String& str);
 	void Append(const String&& str);
+	
 
 	void Resize(const int capacity);
 	int Compare(const String& str) const;
@@ -67,10 +75,19 @@ public:
 	void Initialize(int capacity = DEFAULT_BUFFER_SIZE);
 public:
 	char& operator[](const int idx);
+
+	template <typename T>
+	String operator+(const T& other) { 
+		String temp = *this;
+		temp.Append(other);
+		return temp;
+	}
 	String operator+(const String& other);
 	String operator+(const char ch);
 	String operator+(const char* str);
 
+	template <typename T>
+	String& operator+=(const T& other) { Append(other);  return *this; }
 	String& operator+=(const String& other);
 	String& operator+=(const char ch);
 	String& operator+=(const char* str);

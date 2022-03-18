@@ -57,14 +57,14 @@
     <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources</IncludePath>
-    <LibraryPath>$(SolutionDir)JCore\Output\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JCore\Output\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources</IncludePath>
-    <LibraryPath>$(SolutionDir)JCore\Output\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JCore\Output\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

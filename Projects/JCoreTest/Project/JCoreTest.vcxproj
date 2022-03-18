@@ -40,9 +40,11 @@
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MemoryTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\MutexTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\PointerObserverTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\StaticStringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\StringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\StringUtilTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TestUtil\Object.cpp" />
