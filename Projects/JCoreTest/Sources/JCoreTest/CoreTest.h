@@ -67,6 +67,7 @@
 #define TEST_AutoObjectTest				ON
 #define TEST_ComparatorTest				ON
 #define TEST_CoreTest					ON
+#define TEST_EventTest                  ON
 #define TEST_HasherTest					OFF
 #define TEST_MathTest					ON
 #define TEST_MemoryTest					ON

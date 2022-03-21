@@ -60,6 +60,7 @@
     <ClCompile Include="..\Sources\JCoreTest\LockTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\StaticStringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\LockGuardTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\EventTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

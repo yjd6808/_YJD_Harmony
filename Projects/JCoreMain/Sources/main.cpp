@@ -141,87 +141,6 @@ void fasfesaf(int& m, std::function<void(int&)> fn) {
 	*/
 
 
-template <typename... Args>
-class Event
-{
-private:
-	using TEvent  = typename Event<Args...>;
-	using TAction = typename Action<Args...>;
-private:
-	
-	struct Callback
-	{
-		void*	FnPointer;
-		TAction Action;
-
-		Callback() {}
-		Callback(const TAction& fn, void* fnptr) {
-			this->Action = fn; 
-			this->FnPointer = fnptr;
-		}
-
-		void Invoke(Args&&... args) {
-			this->Action(Forward<Args>(args)...);
-		}
-
-		const type_info& TargetType() {
-			return this->Action.target_type();
-		}
-	};
-
-public:
-
-	template <typename TInvoker>
-	void Register(const TInvoker& fn) {
-		m_MethodChain.PushBack({fn, (void*)AddressOf(fn)});
-	}
-
-	template <typename TInvoker>
-	bool Unregister(const TInvoker& fn) {
-		return m_MethodChain.RemoveIf([&fn](Callback& call) {
-			return AddressOf(fn) == call.FnPointer;
-		});
-	}
-
-	bool UnregisterByType(const type_info& fnType) {
-		return m_MethodChain.RemoveIf([&fnType](Callback& call) {
-			return fnType == call->TargetType();
-		});
-	}
-
-	void Clear() {
-		m_MethodChain.Clear();
-	}
-
-	void Invoke(Args&&... params) {
-		m_MethodChain.Extension().ForEach([&params...](Callback& fn) {
-			fn.Invoke(Forward<Args>(params)...);
-		});
-	}
-
-	int Size() const {
-		return m_MethodChain.Size();
-	}
-
-	template <typename TInvoker>
-	TEvent& operator+=(const TInvoker& fn) {
-		Register(fn);
-		return *this;
-	}
-
-	template <typename TInvoker>
-	TEvent& operator-=(const TInvoker& fn) {
-		Unregister(fn);
-		return *this;
-	}
-
-	void operator()(Args&&... args) {
-		Invoke(Forward<Args>(args)...);
-	}
-private:
-	LinkedList<Callback> m_MethodChain;
-};
-
 
 
 
@@ -241,29 +160,11 @@ struct Invoker3 {
 	}
 };
 
+
 int main() {
-	Event<int, int> e;
-	Invoker3 invoke3_;
-
-	// 각 타입별 넣기
-	e += invoke1_;
-	e += invoke2_;
-	e += invoke3_;
-	e(1, 2);
-	cout << "=================\n";
-
-	// 핸들러 제거
-	e -= invoke3_;
-	e(1, 2);
-	cout << "=================\n";
+	
 
 
-	// 기아 핸들러 추가했는데 뺄 수는 없음
-	{
-		e += [](int a, int b) {
-			cout << "invoke4_  " << a << " " << b << "\n";
-		};
-	}
-	e(1, 5);
+
 	return 0;
 }

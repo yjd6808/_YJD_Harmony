@@ -39,6 +39,7 @@
 #include <JCore/Lock.h>
 #include <JCore/Lock.h>
 #include <JCore/LockGuard.h>
+#include <JCore/Event.h>
 
 using namespace JCore;
 using namespace JCore;
