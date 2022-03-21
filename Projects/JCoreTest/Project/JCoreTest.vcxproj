@@ -40,7 +40,8 @@
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MemoryTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\MutexTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\LockGuardTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\LockTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\PointerObserverTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />

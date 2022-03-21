@@ -1,8 +1,44 @@
 @startuml NetworkStructure
 
-class TcpClient
-class TcpServer
-class IServerListener
+hide empty methods
+hide empty fields
+
+rectangle EndPoint {
+    interface IPEndPoint
+    class IPv4EndPoint
+    class IPv6EndPoint
+
+    interface IPAddress
+    class IPv4Address
+    class IPv6Address
+
+    IPv4EndPoint .u.|> IPEndPoint
+    IPv6EndPoint .u.|> IPEndPoint
+
+    IPv4Address .d.|> IPAddress
+    IPv6Address .d.|> IPAddress
+
+    IPv4EndPoint -d-> IPv4Address
+    IPv6EndPoint -d-> IPv6Address
+}
+
+rectangle Server {
+}
+
+rectangle Client {
+    class UdpHost
+    class TcpClient
+}
+
+rectangle ServerModel {
+}
+
+rectangle PacketHandler {
+}
+
+
+
+
 
 
 @enduml

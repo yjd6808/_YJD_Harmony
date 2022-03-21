@@ -57,8 +57,9 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\HashMapTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\MutexTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\LockTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\StaticStringTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\LockGuardTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

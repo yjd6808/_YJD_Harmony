@@ -227,10 +227,22 @@ struct StaticString
 	}
 
 	void CopyFrom(const char* str) {
-		CopyFrom(0, StringUtil::Length(str) - 1, str);
+		int iLen = StringUtil::Length(str);
+
+		if (iLen <= 0) {
+			Source[0] = '\0';
+			return;
+		}
+
+		CopyFrom(0, iLen - 1, str);
 	}
 
 	void CopyFrom(const JCore::String& str) {
+		if (str.Length() <= 0) {
+			Source[0] = '\0';
+			return;
+		}
+
 		CopyFrom(0, str.Length() - 1, str.Source());
 	}
 

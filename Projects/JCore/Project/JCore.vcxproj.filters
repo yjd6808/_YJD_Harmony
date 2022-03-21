@@ -14,7 +14,8 @@
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
     <ClCompile Include="..\Sources\JCore\PointerObserver.cpp" />
-    <ClCompile Include="..\Sources\JCore\Mutex.cpp" />
+    <ClCompile Include="..\Sources\JCore\Lock.cpp" />
+    <ClCompile Include="..\Sources\JCore\LockGuard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\Sources\JCore\Container\CollectionStream.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Mutex.h" />
+    <ClInclude Include="..\Sources\JCore\Lock.h" />
+    <ClInclude Include="..\Sources\JCore\LockGuard.h" />
   </ItemGroup>
 </Project>

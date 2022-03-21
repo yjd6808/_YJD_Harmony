@@ -1,15 +1,35 @@
 #pragma once
 
+#include <JNetwork/IPAddress.h>
+
 #include <Windows.h>
 
-class RawSocket
+
+
+class Socket
 {
 	
 public:
-	void Bind();
-	void Listen();
-	void Connet();
-	void 
+	DWORD Bind();
+	DWORD Listen();
+	DWORD Accept();
+	DWORD Connet();
+	DWORD Send();
+	DWORD SendTo();
+	DWORD Receive();
+	DWORD ReceiveFrom();
 
-	SOCKET socket;
+	DWORD SetSendBufferSize();
+	DWORD SetRecvBufferSize();
+	DWORD GetSendBufferSize();
+	DWORD GetRecvBufferSize();
+	DWORD GetLingerTimeout();
+	DWORD SetNonBlockingMode();
+	DWORD SetLinger();
+
+
+	bool IsNagleEnabled();
+	bool IsReuseAddressEnabled();
+	bool IsExclusiveReuseAddressEnabled();
+	bool IsLingerEnabled();
 };

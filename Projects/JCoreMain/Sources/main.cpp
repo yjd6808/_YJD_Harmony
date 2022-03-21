@@ -129,25 +129,141 @@ void fasfesaf(int& m, std::function<void(int&)> fn) {
 }
 
 
-int main() {
-	MemoryLeakDetector detector;
+/* 쓸모 없음
+	struct ICallback
+	{
+		int*	FnPointer;
+		TAction Action;
 
-	int k = 0xaabbccdd;
-	int* z = &k;
+		virtual void	  		 Invoke(Args&&...) = 0;
+		virtual const type_info& TargetType() = 0;
+	};
+	*/
 
-	CriticalSectionMutex mutex;
-	mutex.Lock();
 
-	mutex.Unlock();
+template <typename... Args>
+class Event
+{
+private:
+	using TEvent  = typename Event<Args...>;
+	using TAction = typename Action<Args...>;
+private:
+	
+	struct Callback
+	{
+		void*	FnPointer;
+		TAction Action;
 
-	return 0;
+		Callback() {}
+		Callback(const TAction& fn, void* fnptr) {
+			this->Action = fn; 
+			this->FnPointer = fnptr;
+		}
+
+		void Invoke(Args&&... args) {
+			this->Action(Forward<Args>(args)...);
+		}
+
+		const type_info& TargetType() {
+			return this->Action.target_type();
+		}
+	};
+
+public:
+
+	template <typename TInvoker>
+	void Register(const TInvoker& fn) {
+		m_MethodChain.PushBack({fn, (void*)AddressOf(fn)});
+	}
+
+	template <typename TInvoker>
+	bool Unregister(const TInvoker& fn) {
+		return m_MethodChain.RemoveIf([&fn](Callback& call) {
+			return AddressOf(fn) == call.FnPointer;
+		});
+	}
+
+	bool UnregisterByType(const type_info& fnType) {
+		return m_MethodChain.RemoveIf([&fnType](Callback& call) {
+			return fnType == call->TargetType();
+		});
+	}
+
+	void Clear() {
+		m_MethodChain.Clear();
+	}
+
+	void Invoke(Args&&... params) {
+		m_MethodChain.Extension().ForEach([&params...](Callback& fn) {
+			fn.Invoke(Forward<Args>(params)...);
+		});
+	}
+
+	int Size() const {
+		return m_MethodChain.Size();
+	}
+
+	template <typename TInvoker>
+	TEvent& operator+=(const TInvoker& fn) {
+		Register(fn);
+		return *this;
+	}
+
+	template <typename TInvoker>
+	TEvent& operator-=(const TInvoker& fn) {
+		Unregister(fn);
+		return *this;
+	}
+
+	void operator()(Args&&... args) {
+		Invoke(Forward<Args>(args)...);
+	}
+private:
+	LinkedList<Callback> m_MethodChain;
+};
+
+
+
+
+
+
+void invoke1_(int a, int b) {
+	cout << "invoke1_  " << a << " " << b << "\n";
 }
 
+auto invoke2_ = [](int a, int b) {
+	cout << "invoke2_  " << a << " " << b << "\n";
+};
 
-		
+struct Invoker3 {
+	void operator()(int a, int b) {
+		cout << "invoke3_  " << a << " " << b << "\n";
+	}
+};
 
-		
-		
+int main() {
+	Event<int, int> e;
+	Invoker3 invoke3_;
+
+	// 각 타입별 넣기
+	e += invoke1_;
+	e += invoke2_;
+	e += invoke3_;
+	e(1, 2);
+	cout << "=================\n";
+
+	// 핸들러 제거
+	e -= invoke3_;
+	e(1, 2);
+	cout << "=================\n";
 
 
-
+	// 기아 핸들러 추가했는데 뺄 수는 없음
+	{
+		e += [](int a, int b) {
+			cout << "invoke4_  " << a << " " << b << "\n";
+		};
+	}
+	e(1, 5);
+	return 0;
+}

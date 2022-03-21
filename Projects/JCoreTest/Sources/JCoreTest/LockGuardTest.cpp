@@ -5,76 +5,75 @@
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/Mutex.h>
+#include <JCore/LockGuard.h>
 
 using namespace JCore;
 using namespace std;
 
 
-#if TEST_MutexTest == ON
+#if TEST_LockGuardTest == ON
+
+namespace LockGuardTest {
 
 int number;
 CriticalSectionMutex csMtx;
 EventMutex evMtx;
 
-TEST(MutexTest, CriticalSectionMutex) {
+TEST(LockGuardTest, CriticalSectionMutex) {
 	number = 0;
 
 	std::thread increaser{ []() {
-		for (int i = 0; i < 200000; i++) {
-			csMtx.Lock();
+		for (int i = 0; i < 2000000; i++) {
+			CriticalSectionLockGuard guard(csMtx);
 			number++;
 			number++;
 			number++;
-			csMtx.Unlock();
-		}
-	}};
-
-	std::thread decreaser{ []() {
-		for (int i = 0; i < 200000; i++) {
-			csMtx.Lock();
-			number--;
-			number--;
-			number--;
-			csMtx.Unlock();
 		}
 	} };
-	
+
+	std::thread decreaser{ []() {
+		for (int i = 0; i < 2000000; i++) {
+			CriticalSectionLockGuard guard(csMtx);
+			number--;
+			number--;
+			number--;
+		}
+	} };
+
 	increaser.join();
 	decreaser.join();
 
 	EXPECT_TRUE(number == 0);
 }
 
-TEST(MutexTest, EventMutex) {
+TEST(LockGuardTest, EventMutex) {
 	number = 0;
 
 	std::thread increaser{ []() {
-		for (int i = 0; i < 20000; i++) {
-			evMtx.Lock();
+		for (int i = 0; i < 200000; i++) {
+			EventLockGuard guard(evMtx);
 			number += 1;
 			number += 1;
 			number += 1;
-			evMtx.Unlock();
 		}
 	} };
 
 	std::thread decreaser{ []() {
-		for (int i = 0; i < 20000; i++) {
-			evMtx.Lock();
+		for (int i = 0; i < 200000; i++) {
+			EventLockGuard guard(evMtx);
 			number -= 1;
 			number -= 1;
 			number -= 1;
-			evMtx.Unlock();
 		}
 	} };
 
-	
+
 	increaser.join();
 	decreaser.join();
 
 	EXPECT_TRUE(number == 0);
 }
 
+} // namespace LockGuardTest
 
 #endif

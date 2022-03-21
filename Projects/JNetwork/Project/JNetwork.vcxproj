@@ -25,6 +25,7 @@
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
     <ClInclude Include="..\Sources\JNetwork\Protocol.h" />
     <ClInclude Include="..\Sources\JNetwork\Socket.h" />
+    <ClInclude Include="..\Sources\JNetwork\SocketOption.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

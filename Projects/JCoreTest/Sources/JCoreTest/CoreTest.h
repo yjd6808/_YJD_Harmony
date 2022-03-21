@@ -70,7 +70,8 @@
 #define TEST_HasherTest					OFF
 #define TEST_MathTest					ON
 #define TEST_MemoryTest					ON
-#define TEST_MutexTest					ON
+#define TEST_LockTest					ON
+#define TEST_LockGuardTest              OFF
 #define TEST_PointerObserverTest		ON
 #define TEST_RandomTest					OFF
 #define TEST_SmartPointerTest			ON
