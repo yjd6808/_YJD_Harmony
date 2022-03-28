@@ -1,35 +1,150 @@
 #pragma once
 
-#include <JNetwork/IPAddress.h>
+#include <JNetwork/IPEndPoint.h>
+#include <WinSock2.h>
 
-#include <Windows.h>
+namespace JNetwork {
 
+class SocketOption
+{
+public:
+	SocketOption(SOCKET sock) : m_Socket(sock) {}
+	~SocketOption() {}
 
+	// 성공시 : 0
+	// 실패시 : SOCKET_ERROR(-1) 반환
 
+	int SetBroadcastEnabled(bool enabled) const;
+	int SetSendBufferSize(int size) const;
+	int SetRecvBufferSize(int size) const;
+	int SetNonBlockingEnabled(bool enabled) const;
+	int SetNagleEnabled(bool enabled) const;
+	int SetLingerEnabled(bool enabled) const;
+	int SetReuseAddrEnabled(bool enabled) const;
+	int SetExclusiveReuseAddrEnabled(bool enabled) const;
+	int SetLingerTimeout(int timeout) const;
+	int SetKeepAliveEnabled(bool enabled) const;
+	int SetUpdateAcceptContext(SOCKET hListeningSocket) const;
+	
+	// 성공시 : 수치값
+	// 실패시 : SOCKET_ERROR(-1) 반환
+
+	int GetSendBufferSize() const;
+	int GetRecvBufferSize() const;
+	int GetLingerTimeout() const;
+	int GetMaximumSegmentSize() const;
+	
+	// 활성화된 경우 TRUE(1), 비활성화된 경우 FALSE(0)을 반환
+	// 오류로 실패한 경우 SOCKET_ERROR(-1) 반환
+
+	int IsNagleEnabled() const;
+	int IsReuseAddressEnabled() const;
+	int IsExclusiveReuseAddressEnabled() const;
+	int IsLingerEnabled() const;
+	int IsKeepAliveEnabled() const;
+private:
+	SOCKET m_Socket;
+};
+
+class TcpSocketv4;
+class Socketv6;
+class Socketv4;
 class Socket
 {
-	
 public:
-	DWORD Bind();
-	DWORD Listen();
-	DWORD Accept();
-	DWORD Connet();
-	DWORD Send();
-	DWORD SendTo();
-	DWORD Receive();
-	DWORD ReceiveFrom();
+	Socket() : Socket(TransportProtocol::None, INVALID_SOCKET) {}
+	Socket(TransportProtocol tpproto, SOCKET socket) :
+		m_Socket(socket),
+		m_SocketOption(socket),
+		m_TransportProtocol(tpproto)
+	{
+	}
+	virtual ~Socket() {}
 
-	DWORD SetSendBufferSize();
-	DWORD SetRecvBufferSize();
-	DWORD GetSendBufferSize();
-	DWORD GetRecvBufferSize();
-	DWORD GetLingerTimeout();
-	DWORD SetNonBlockingMode();
-	DWORD SetLinger();
-
-
-	bool IsNagleEnabled();
-	bool IsReuseAddressEnabled();
-	bool IsExclusiveReuseAddressEnabled();
-	bool IsLingerEnabled();
+	SocketOption Option() const { return m_SocketOption; }
+	SOCKET Handle() const { return m_Socket; };
+	bool IsValid() const { return m_Socket != INVALID_SOCKET; }
+	int ShutdownBoth() const;
+	int ShutdownWrite() const;
+	int ShutdownRead() const;
+	int Close(); 
+public:
+	static Socketv4 CreateV4(TransportProtocol tpproto, bool overlapped);
+	static TcpSocketv4 CreateTcpV4(bool overlapped);
+	static Socketv6 CreateV6(TransportProtocol tpproto, bool overlapped);
+protected:
+	SOCKET m_Socket;
+	SocketOption m_SocketOption;
+	TransportProtocol m_TransportProtocol;
 };
+
+
+class Socketv4 : public Socket
+{
+public:
+	Socketv4() : Socket() {}
+	Socketv4(TransportProtocol tpproto, SOCKET socket) : Socket(tpproto, socket) {}
+	~Socketv4() override {}
+
+	int Bind(const IPv4EndPoint& ipv4EndPoint);
+	int BindAny();
+
+	int Listen(int connectionWaitingQueueSize = 15);
+
+	Socketv4 Accept();
+
+	// 반환값 실패시 FALSE, WSAGetLastError로 확인
+	//       성공시 TRUE
+	int AcceptEx(SOCKET listenSocket, void* outputBuffer, DWORD receiveDatalen, Out_ LPDWORD receivedBytes, LPOVERLAPPED overlapped);
+	void AcceptExResult(char* buff, DWORD receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp);
+
+	int Connect(const IPv4EndPoint& ipv4EndPoint);
+	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, DWORD sendbufSize, Out_ LPDWORD sentBytes); 
+	 
+	int Send(char* buff, Int32U len, Int32U flag = 0);
+	int SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag = 0);
+	int Receive(char* buff, Int32U buffSize, Int32U flag = 0);
+	int ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag = 0);
+
+	int SendEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesSent, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, Int32U flag = 0);
+	int SendToEx() {}	// NOT IMPLEMENTED, UNUSED
+	int ReceiveEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesReceived, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, Int32U flag = 0);
+	int ReceiveFromEx() {} // NOT IMPLEMENTED, UNUSED
+
+	IPv4EndPoint GetLocalEndPoint() const;
+	IPv4EndPoint GetRemoteEndPoint() const;
+
+	TransportProtocol GetTransportProtocol() const { return m_TransportProtocol; }
+	InternetProtocol GetInternetProtocol() const { return InternetProtocol::IPv4; }
+};
+
+class TcpSocketv4 : public Socketv4
+{
+public:
+	TcpSocketv4(SOCKET socket) : Socketv4(TransportProtocol::TCP, socket) {}
+	~TcpSocketv4() override {}
+};
+
+class Socketv6 final : public Socket
+{
+	// not implemented : unused
+	/*
+	Socketv6() : Socket() {}
+	Socketv6(TransportProtocol tpproto, SOCKET socket) : Socket(tpproto, socket) {}
+	~Socketv6() override {}
+
+	int Bind(const IPv6EndPoint& ipv6EndPoint);
+	int Listen(int connectionWaitingQueueSize = 15);
+	int Accept(Socketv6& serverSocket);
+	int Connet(const IPv6EndPoint& ipv6EndPoint);
+	int Send(char* buff, Int32U len, Int32U flag = 0);
+	int SendTo(char* buff, Int32U len, const IPv6EndPoint& ipv6EndPoint, Int32U flag = 0);
+	int Receive(char* buff, Int32U buffSize, Int32U flag = 0);
+	int ReceiveFrom(char* buff, Int32U buffSize, Int32U flag = 0);
+	*/
+};
+
+
+
+}
+

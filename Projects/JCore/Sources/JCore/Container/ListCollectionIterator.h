@@ -12,7 +12,7 @@ namespace JCore {
 // 전방 선언
 					class VoidOwner;
 template <typename> class ListCollection;
-template <typename> class ListNode;
+template <typename> struct ListNode;
 template <typename T>
 class ListCollectionIterator : public Iterator<T>
 {

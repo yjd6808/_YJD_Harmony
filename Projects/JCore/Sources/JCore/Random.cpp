@@ -18,7 +18,7 @@ Random::Random() {
 	// 처음 한번만 초기화를 하자.
 	if (!ms_bInitialized) {
 		ms_bInitialized = true;
-		ms_DefaultRandomEngine.seed(time(0));
+		ms_DefaultRandomEngine.seed((unsigned)time(0));
 	}
 }
 
@@ -28,7 +28,7 @@ Random::Random() {
     ======================================================= */
 
 void Random::EngineInitialize() {
-	ms_DefaultRandomEngine.seed(time(0));
+	ms_DefaultRandomEngine.seed((unsigned)time(0));
 }
 
 int Random::GenerateInt(int begin, int end) {

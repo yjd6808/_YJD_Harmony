@@ -1,16 +1,19 @@
 #pragma once
 
 namespace JNetwork {
+
 	enum class InternetProtocol
 	{
-		IPv4,
-		IPv6
+		None = 0,
+		IPv4 = AF_INET,
+		IPv6 = AF_INET6
 	};
 
 	enum class TransportProtocol
 	{
-		TCP,
-		UDP
+		None = 0,
+		TCP  = IPPROTO_TCP,
+		UDP  = IPPROTO_UDP 
 	};
 }
 

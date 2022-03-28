@@ -64,6 +64,7 @@ TEST(EventTest, ClassMethod) {
 
 		static void test(int a, int b) { g_event_test_val++; }
 		void member_test(int a, int b) { g_event_test_val++; }
+		void member_test2(int a, int b) { g_event_test_val++; }
 	};
 
 	Legend t1{ "t1" };
@@ -83,6 +84,9 @@ TEST(EventTest, ClassMethod) {
 	e += [&t2](int a, int b) {
 		t2.member_test(a, b);
 	};
+	
+	
+
 
 	// È£Ãâ
 	e(1, 5);

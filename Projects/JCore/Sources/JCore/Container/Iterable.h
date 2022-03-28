@@ -13,7 +13,7 @@ namespace JCore {
 =====================================================================================*/
 
 // 전방 선언
-template <typename> class Iterator;
+template <typename> struct Iterator;
 template <typename T>
 struct Iterable
 {

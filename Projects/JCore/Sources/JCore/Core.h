@@ -9,8 +9,10 @@
 
 #pragma warning (disable : 4267)		// conversion from 'size_t' to 'type', possible loss of data
 #pragma warning (disable : 26439)		// This kind of function may not throw.Declare it 'noexcept' (f.6)
+#pragma warning (disable : 4018)		// '<': signed / unsigned mismatch
 
 #define _CRT_SECURE_NO_WARNINGS
+#define WIN32_LEAN_AND_MEAN	
 
 #include <iostream>
 #include <thread>
@@ -46,14 +48,18 @@ do {									\
 } while (0);	
 
 
-#ifndef _In_
-	#define _In_
+#ifndef In_
+	#define In_
 #endif
 
-#ifndef _Out_
-	#define _Out_	
+#ifndef Out_
+	#define Out_
 #endif
 
-#ifndef _InOut_
-	#define _InOut_	
+#ifndef InOut_
+	#define InOut_
+#endif
+
+#ifndef InOpt_
+	#define InOpt_
 #endif

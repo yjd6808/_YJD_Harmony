@@ -11,6 +11,8 @@
 #include <JCore/Exception.h>
 #include <JCore/StringUtil.h>
 
+#pragma warning (disable : 4200) // nonstandard extension used : zero - sized array in struct / union -> Source[0] °°Àº°Å
+
 namespace JCore {
 
 template <Int32U Size>

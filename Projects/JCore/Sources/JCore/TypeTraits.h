@@ -358,8 +358,85 @@ constexpr bool IsBaseOf_v = std::is_base_of_v<Base, Derived>;
 
 
 
+// Base 타입들이 모두 Derived를 자식으로 두고 있는지 검사
+template <typename Derived, typename Base, typename... BaseArgs>
+struct IsBaseOfMultipleBase
+{
+	static constexpr bool Value() {
+		if constexpr (sizeof...(BaseArgs) == 0) {
+			return IsBaseOf_v<Base, Derived>;
+		} else {
+			return IsBaseOf_v<Base, Derived> && IsBaseOfMultipleBase<Derived, BaseArgs...>::Value();
+		}
+	}
+};
+
+// Derived 타입들이 모두 Base를 부모로 두고 있는지 검사
+template <typename Base, typename Derived, typename... DerivedArgs>
+struct IsBaseOfMultipleDrived
+{
+	static constexpr bool Value() {
+		if constexpr (sizeof...(DerivedArgs) == 0) {
+			return IsBaseOf_v<Base, Derived>;
+		} else {
+			return IsBaseOf_v<Base, Derived> && IsBaseOfMultipleDrived<Base, DerivedArgs...>::Value();
+		}
+	}
+};
+
+// 템플릿 파리미터 팩(DerivedArgs)으로 전달한 타입들이 모두 Base의 자식인지 여부
+/*
+ 테스트 코드(아래 6줄 그대로 복붙)
+ struct A{}   ;
+ struct B:A{} ;
+ struct C:A{} ;
+ struct D{}   ;
+ IsBaseOf_1Base_MultipleDerived_v<A, B, B, C>; // true	B, B, C 모두 자식이 맞음
+ IsBaseOf_1Base_MultipleDerived_v<A, B, B, D>; // false	B, B는 자식이 맞지만 D가 아님
+ */
+
+template <typename Base, typename... DerivedArgs>
+constexpr const bool IsBaseOf_1Base_MultipleDerived_v 
+	= IsBaseOfMultipleDrived<Base, DerivedArgs...>::Value();
+
+// 템플릿 파라미터 팩(BaseArgs)으로 전달한 타입들이 모두 Derived의 부모인지 여부
+/*
+ 테스트 코드(아래 8줄 그대로 복붙)
+ struct A{}			;
+ struct B{}			;
+ struct C{}			;
+ struct D:A,B,C{}	;
+ struct E{}			;
+ IsBaseOf_1Derived_MultipleBase_v<D, A, B>;		  // true	A, B 모두 D의 부모이므로 
+ IsBaseOf_1Derived_MultipleBase_v<D, A, B, C>;	  // true	A, B, C 모두 D의 부모이므로 
+ IsBaseOf_1Derived_MultipleBase_v<D, A, B, C, E>; // false   A, B, C 모두 D의 부모이지만 E는 아님
+ */
+
+template <typename Derived, typename... BaseArgs>
+constexpr bool IsBaseOf_1Derived_MultipleBase_v = IsBaseOfMultipleBase<Derived, BaseArgs...>::Value();
+
 template <typename T>
 constexpr bool IsPrimitiveType_v = std::is_fundamental<T>::value;
+
+
+template <typename T, typename... Rest>
+struct IsAllPrimitiveType
+{
+	// 이건 왜 안되지;
+	// static constexpr bool value = (sizeof...(Rest)) == 0 ? IsPrimitiveType_v<T> : IsPrimitiveType_v<T> && IsPrimitiveTypes<Rest...>::value;
+
+	static constexpr bool Value() {
+		if constexpr (sizeof...(Rest) == 0) {
+			return IsPrimitiveType_v<T>;
+		} else {
+			return IsPrimitiveType_v<T> && IsAllPrimitiveType<Rest...>::Value();
+		}
+	}
+};
+
+
+template <typename T, typename... Rest>
+constexpr bool IsAllPrimitiveType_v = IsAllPrimitiveType<T, Rest...>::Value();
 
 
 

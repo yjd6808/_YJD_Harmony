@@ -57,19 +57,16 @@ public:
 
 	template <typename T, typename... Args>
 	static void PlacementAllocate(T& ref, Args&&... args) {
-		::new (__builtin_addressof(ref)) T(Forward<Args>(args)...);
+		if constexpr (!IsPointerType_v<T>)	// 포인터 타입이 아닌 녀석만..
+			::new (__builtin_addressof(ref)) T(Forward<Args>(args)...);
 	}
 
-	template <typename T, typename... Args>
-	static void PlacementAllocate(T* ref, Args&&... args) {
-		::new (ref) T(Forward<Args>(args)...);
-	}
-
+	
 	template <typename T>
 	static void PlacementDeallocate(const T& ref) {
 		if constexpr (IsPointerType_v<T>) {
 			if (ref != nullptr) {
-				ref->~T();
+				ref.~T();
 			}
 		} else {
 			ref.~T();

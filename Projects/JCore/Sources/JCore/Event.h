@@ -20,7 +20,7 @@ private:
 	
 	struct Callback
 	{
-		void*	FnPointer;
+		void*	FnPointer = nullptr;
 		TAction Action;
 
 		Callback() {}

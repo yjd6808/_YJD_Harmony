@@ -53,9 +53,16 @@ public:
 	///     GetAddressOctet(4) -> ¿¹¿Ü ´øÁü
 	/// </summary>
 	Byte GetAddressOctet(int idx) const;
+
+	bool operator==(const IPv4Address& other) const { return m_Addr.Addr == other.m_Addr.Addr; }
+	bool operator==(const char* other) const { return m_Addr.Addr == Parse(other).m_Addr.Addr; }
+	bool operator==(const JCore::String& other) const { return m_Addr.Addr == Parse(other).m_Addr.Addr; }
+	bool operator!=(const IPv4Address& other) const { return !this->operator==(other); }
+	bool operator!=(const char* other) const { return !this->operator==(other); }
+	bool operator!=(const JCore::String& other) const { return !this->operator==(other); }
 public:
 	static IPv4Address Any() {
-		return { (Int32UL)0 };
+		return { INADDR_ANY };
 	}
 	static IPv4Address Parse(const char* addrString);
 	static IPv4Address Parse(const JCore::String& addrString) { Parse(addrString.Source()); }
@@ -71,6 +78,7 @@ private:
 
 class IPv6Address
 {
+	// UNUSED
 public:
 	InternetProtocol GetProtocol() const { return InternetProtocol::IPv6; }
 private:

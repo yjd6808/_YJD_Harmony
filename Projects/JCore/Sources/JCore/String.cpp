@@ -44,7 +44,7 @@ String::String(const char* str, const int capacity) {
 	}
 
 	if (iLen == 0) {
-		Initialize();
+		Initialize(capacity);
 		return;
 	}
 

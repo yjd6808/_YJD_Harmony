@@ -31,7 +31,7 @@ public:
 	inline char* Source() const { return m_pBuffer; }
 	inline const int Capacity() const { return m_iCapacity; }
 	inline const int Length() const { return m_iLen; }
-	inline const int Empty() const { m_iLen == 0; }
+	inline const bool Empty() const { return m_iLen == 0; }
 	inline bool IsValidIndex(const int idx) const { return idx >= 0 || idx < m_iLen; }
 	inline bool IsValidIndexRange(const int startIdx, const int endIdx) const {
 		return startIdx <= endIdx && startIdx >= 0 && endIdx < m_iLen;

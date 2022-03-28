@@ -9,7 +9,7 @@ namespace JCore {
 template <typename T>
 struct ListNode
 {
-	using TListNode = ListNode<T>;
+	using TListNode = typename ListNode<T>;
 
 	template <typename... Args>
 	explicit ListNode(Args&&... args) {

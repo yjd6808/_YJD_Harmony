@@ -37,16 +37,13 @@
     <LibraryPath>$(SolutionDir)Output\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\Sources\JNetworkTest\ByteOrderTest.cpp" />
+    <ClCompile Include="..\Sources\JNetworkTest\IPAddressTest.cpp" />
     <ClCompile Include="..\Sources\JNetworkTest\IPEndPointTest.cpp" />
     <ClCompile Include="..\Sources\JNetworkTest\NetworkTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetworkTest\test.cpp" />
-    <ClCompile Include="IPAddressTest.cpp" />
+    <ClCompile Include="..\Sources\JNetworkTest\SocketTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetworkTest\NetworkTest.h" />

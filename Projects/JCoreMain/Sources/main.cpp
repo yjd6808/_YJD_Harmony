@@ -163,6 +163,7 @@ struct Invoker3 {
 
 int main() {
 	
+	Vector<Model*> g;
 
 
 

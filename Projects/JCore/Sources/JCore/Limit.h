@@ -7,6 +7,11 @@
 
 #include <JCore/Type.h>
 
+#pragma warning (disable : 4307)	// '+': signed integral constant overflow
+#pragma warning (disable : 4309)	// 'initializing': truncation of constant value
+#pragma warning (disable : 26450)	// Arithmetic overflow : '+' operation causes overflow at compile time.Use a wider type to store the operands -> MinInt32_v 이런거처럼 내가 고의로 오버플로 일으킨 것 땜에
+
+
 namespace JCore {
 
 constexpr char		MaxChar_v = (1 << 7) - 1;

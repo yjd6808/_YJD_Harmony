@@ -143,10 +143,8 @@ namespace JCore {
 		int m_iAcquiredThreadCount;		// 잠금을 획득한 쓰레드 수
 	};
 
-	template <Int32U AllowReaderThreadCount>
-	class _ReaderWriterLockSlim final : public ReaderWriterLock
+	class ReaderWriterLockSlim final : public ReaderWriterLock
 	{
-		static_assert(AllowReaderThreadCount >= 1, "... AllowReaderThreadCount must be greater than 0");
 	public:
 		void WriteLock() override {
 		}
@@ -181,14 +179,8 @@ namespace JCore {
 			return true;
 		}
 	public:
-		std::mutex m_ReadLock;				// 동시에 여러 함수가 실행되는 걸 막자.
-		std::mutex m_WriteLock;				// 동시에 여러 함수가 실행되는 걸 막자.
-		std::atomic<int> m_iReaderCount;
-		std::atomic<bool> m_bWriting;
-		std::condition_variable m_Cv;
+
 	};
 
-
-	using ReaderWriterLockSlim = typename _ReaderWriterLockSlim<3>;
 }
 

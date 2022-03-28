@@ -165,7 +165,7 @@ public:
 	}
 
 	void operator=(const VoidOwner&) = delete;
-	void operator=(VoidOwner&& owner) {
+	void operator=(VoidOwner&& owner) noexcept {
 		OwnerMoveToOwner(owner);
 	}
 };
@@ -237,7 +237,7 @@ struct PointerCounter
 };
 
 
-template <typename> class OwnerObject;
+template <typename> struct OwnerObject;
 template <typename> class Owner;
 template <typename> class Watcher;
 

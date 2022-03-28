@@ -9,6 +9,8 @@
 #include <JCore/Limit.h>
 #include <JCore/String.h>
 
+#pragma warning (disable : 4244)  // 'argument': conversion from 'double' to 'float', possible loss of data, double을 강제로 float으로 바꿀라캐서 Hasher<double>  땜에
+
 namespace JCore {
 	
 constexpr Int32U PrimeInt32U_v = 0x087b840FU;			// 1억 부근 암거나 - 142,312,463

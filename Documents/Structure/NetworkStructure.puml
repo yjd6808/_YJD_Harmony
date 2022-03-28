@@ -3,14 +3,33 @@
 hide empty methods
 hide empty fields
 
-rectangle EndPoint {
-    interface IPEndPoint
-    class IPv4EndPoint
-    class IPv6EndPoint
+rectangle EndPoint_Implementation {
+    interface IPEndPoint {
+        GetProtocol() = 0
+        ToString() = 0
+    }
 
-    interface IPAddress
-    class IPv4Address
-    class IPv6Address
+    class IPv4EndPoint {
+        GetAddress()
+        GetPort()
+        ---
+        Parse()
+    }
+    class IPv6EndPoint {
+        NOT IMPLEMENTED
+    }
+
+    interface IPAddress {
+        ToString() = 0
+        GetProtocol() = 0
+    }
+    class IPv4Address {
+        GetAddress()
+        GetAddressOctet()
+    }
+    class IPv6Address {
+        NOT IMPLEMENTED
+    }
 
     IPv4EndPoint .u.|> IPEndPoint
     IPv6EndPoint .u.|> IPEndPoint
@@ -22,22 +41,211 @@ rectangle EndPoint {
     IPv6EndPoint -d-> IPv6Address
 }
 
-rectangle Server {
+rectangle Server_Implementation {
+    abstract Server {
+       "서버"가 가지는 공통 인터페이스를 정의한다.
+       ---
+       virtual Start() = 0
+       virtual Puase() = 0
+       virtual Resume() = 0
+       virtual Stop() = 0
+    }
+    class TcpServer {
+        IOCP 모델의 TCP 서버이다.
+    }
+
+    class TcpSession {
+        1. 서버측에서는 접속한 클라이언트를 의미한다.
+        2. 클라이언트 측에서는 클라이언트의 기능 대부분을
+        가진 부모 클래스를 의미한다.
+        ---
+        SendAsync()
+        ReceiveAsync()
+        virtual Disconnect()
+    }
+
+    class TcpSessionContainer {
+        TcpSession을 관리하는 컨테이너이다.
+    }
+
+    interface TcpServerEventListener {
+        virtual OnStarted() = 0
+        virtual OnConnected() = 0
+        virtual OnDisconnected() = 0
+        virtual OnPaused() = 0
+        virtual OnResumed() = 0
+        virtual OnSent() = 0
+        virtual OnReceived() = 0
+        virtual OnStopped() = 0
+    }
+
+    TcpServer .u.|> Server
+    TcpServer --> TcpSessionContainer
+    TcpSessionContainer *--> TcpSession
+    TcpServer -r-> TcpServerEventListener
+    TcpSession .r.> TcpServerEventListener
 }
 
-rectangle Client {
-    class UdpHost
-    class TcpClient
+rectangle Client_Implementation {
+    class TcpClient {
+        ConnectAsync()
+        virtual Disconnect()
+    }
+    class TcpClientEventListener {
+        virtual OnConnected() = 0
+        virtual OnSent() = 0
+        virtual OnReceived() = 0
+        virtual OnDisconnected() = 0
+    }
+
+    TcpClient -r-> TcpClientEventListener
 }
 
-rectangle ServerModel {
+rectangle IOCP_Implementation {
+    class IOCP {
+        Create(int threadCount);
+        Destroy();
+        Run();
+        Pause();
+        Resume();
+        Join();
+        ---
+        CreateIoCompletionPort()
+        GetQueuedCompletionStatus()
+        PostQueuedCompletionStatus()
+    }
+
+    class WorkerManager {
+        Run()
+        Pause()
+        Resume()
+        Join()
+        ---
+        워커들을 생성한 후 매니저를 반환 하는 정적함수
+        static Create(int threadCount)
+    }
+
+    interface Worker {
+        virtual Run() = 0
+        virtual Pause() = 0
+        virtual Resume() = 0
+        virtual JoinWait() = 0
+        virtual Join() = 0
+        virtual WorkerThread(void* param) = 0
+    }
+    class IOCPWorker
+    class IOCPPostOrder {
+        Process()
+        Release()
+    }
+
+    interface IOCPOverlapped {
+        virtual Process() = 0
+        virtual Release() { delete this; }
+    }
+
+    IOCP --> WorkerManager
+    IOCPWorker .u.|> Worker
+    WorkerManager *--> Worker
+
+    IOCPWorker *-l-> IOCPOverlapped
+    IOCPWorker -r-> IOCPPostOrder
+
+    IOCPOverlappedSend .u.|> IOCPOverlapped
+    IOCPOverlappedConnect .u.|> IOCPOverlapped
+    IOCPOverlappedReceive .u.|> IOCPOverlapped
+    IOCPOverlappedAccept .u.|> IOCPOverlapped
 }
 
-rectangle PacketHandler {
+rectangle Socket_Implementation {
+    class Socket {
+        Option()
+        Handle()
+        ShutdownBoth()
+        ShutdownWrite()
+        ShutdownRead()
+        Close()
+        ---
+        static CreateV4()
+        static CreateV6()
+        static CreateTcpV4()
+    }
+    class Socketv4 {
+        GetLocalEndPoint()
+        GetRemoteEndPoint()
+        ---
+        Bind()
+        BindAny()
+        Listen()
+        Accept()
+        AcceptEx()
+        AcceptExResult()
+        Connect()
+        ConnectEx()
+        Send()
+        SendTo()
+        Receive()
+        ReceiveFrom()
+        SendEx()
+        SendToEx()
+        ReceiveEx()
+        ReceiveFromEx()
+    }
+
+    class Socketv6 {
+        NOT IMPLEMENTED
+    }
+
+    class TcpSocketv4
+    class SocketOption {
+         SetBroadcastEnabled()
+         SetSendBufferSize()
+         SetRecvBufferSize()
+         SetNonBlockingEnabled()
+         SetNagleEnabled()
+         SetLingerEnabled()
+         SetReuseAddrEnabled()
+         SetExclusiveReuseAddrEnabled()
+         SetLingerTimeout()
+         SetKeepAliveEnabled()
+         SetUpdateAcceptContext()
+    }
+
+    Socketv4 -u-|> Socket
+    Socketv6 -u-|> Socket
+    TcpSocketv4 -u-|> Socketv4
+    Socket -r-> SocketOption
 }
 
 
+rectangle Packet_Implementation {
+    interface ICommand {
+        short Cmd
+        short CmdLen
+    }
 
+    class Command<T>
+
+    interface IPacket {
+        virtual GetBuf() = 0
+        virtual GetPacketLength() = 0
+        virtual GetCommandCount() = 0
+        virtual GetWSABuf() = 0
+        virtual Release() { delete this; }
+    }
+
+    class PacketHeader<Types...>
+    class Packet<CommandArgs...>
+
+    Command -u-|> ICommand
+    PacketHeader .u.|> IPacket
+    Packet -u-|> PacketHeader
+    Packet *-r-> ICommand
+}
+
+TcpClient -u-|> TcpSession
+TcpServer -l-> IOCP
+TcpClient -r-> IOCP
 
 
 

@@ -22,6 +22,11 @@ namespace JNetwork {
 								IPv4EndPoint
 	=======================================================================================*/
 
+	IPv4EndPoint::IPv4EndPoint() {
+		m_Address = IPv4Address::Any();
+		m_uiPort = 0;
+	}
+
 	IPv4EndPoint::IPv4EndPoint(const IPv4Address& ipAddr, const Int16U port) {
 		m_Address = ipAddr;
 		m_uiPort = port;

@@ -9,6 +9,8 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/IPAddress.h>
 #include <JNetwork/IPEndPoint.h>
+#include <JNetwork/Socket.h>
+#include <JNetwork/Winsock.h>
 #include <JCore/Container/Vector.h>
 
 
@@ -24,6 +26,7 @@ using namespace JNetwork;
 #define TEST_IPEndPointTest     ON
 #define TEST_IPAddressTest      ON
 #define TEST_ByteOrderTest      ON
+#define TEST_SocketTest         ON
 
 
 // 범위 메모리릭 체크
