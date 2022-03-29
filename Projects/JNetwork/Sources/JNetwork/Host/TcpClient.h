@@ -26,8 +26,8 @@ public:
 protected:
 	virtual void Connected();
 	virtual void ConnectWait();
-	virtual void Received(Int32UL receivedBytes);
-	virtual void Sent(IPacket* sentPacket, Int32UL sentBytes);
+	virtual void NotifyCommand(ICommand* cmd);								// 세션 입장에서는 ServerEventListener에 커맨드를 전달하고 클라이언트 입장에서는 ClientEventListener에 커맨드를 전달하도록 한다.
+	virtual void Sent(ISendPacket* sentPacket, Int32UL sentBytes);
 protected:
 	TcpClientEventListener* m_pClientEventListener;
 };

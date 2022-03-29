@@ -13,13 +13,13 @@ namespace JNetwork {
 class IOCPOverlappedSend : public IOCPOverlapped
 {
 public:
-	IOCPOverlappedSend(TcpSession* session, IOCP* iocp, IPacket* sentPacket);
+	IOCPOverlappedSend(TcpSession* session, IOCP* iocp, ISendPacket* sentPacket);
 	~IOCPOverlappedSend() override;
 public:
 	virtual void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey);
 private:
 	TcpSession* m_pSentSession;	
-	IPacket* m_pSentPacket;
+	ISendPacket* m_pSentPacket;
 };
 
 } // namespace JNetwork

@@ -91,12 +91,28 @@ public:
 			m_iWritePos - m_iReadPos);
 	}
 
+	/* ======================================================================
+	   ※※※※※※※※※※※※ □□□□□□□□□□□□□□□□□□□□□□□□□
+	 * ======================================================================
+	   0               ↑                         ↑
+	                ReadPos                  WritePos
+				       <--  ReadableBufferSize --> <--- RemainBufferSize --->
+
+	   ( ※ ) : 이미 읽은 영역
+	   ( □ ) : 아직 읽지 않은 영역
+	   (   ) : 아직 축적된 데이터가 없음
+	 */
+
 	WSABUF GetRemainBuffer() {
 		return { BufferSize - m_iWritePos, reinterpret_cast<char*>(m_Buffer + m_iWritePos) };
 	}
 
 	int GetRemainBufferSize() const {
 		return BufferSize - m_iWritePos;
+	}
+
+	int GetReadableBufferSize() const {
+		return m_iWritePos - m_iReadPos;
 	}
 
 	int GetBufferCapacity() const { return BufferSize; }
@@ -130,7 +146,7 @@ private:
 	int m_iWritePos = 0;
 };
 
-using SessionBuffer = typename Buffer<8192U>;
+using SessionBuffer = typename Buffer<4096UL>;
 
 }
 

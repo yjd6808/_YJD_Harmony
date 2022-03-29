@@ -127,5 +127,6 @@
     <ClInclude Include="..\Sources\JCore\Lock.h" />
     <ClInclude Include="..\Sources\JCore\LockGuard.h" />
     <ClInclude Include="..\Sources\JCore\Event.h" />
+    <ClInclude Include="..\Sources\JCore\RefCount.h" />
   </ItemGroup>
 </Project>

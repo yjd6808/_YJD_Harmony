@@ -10,6 +10,12 @@ namespace JCore {
 
 // memcpy_s와 기능이 동일합니다.
 void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
+#ifdef _DEBUG
+	if (dst == nullptr || src == nullptr || dstCapacityByte <= 0 || srcCopyByte <= 0) {
+		DebugAssert(false, "인자를 똑띠 전달해주세요");
+	}
+#endif
+
 	int iCopiedBytes = 0;
 
 	Byte* pDst = (Byte*)dst;
@@ -26,6 +32,12 @@ void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const i
 
 // memcpy와 기능이 동일합니다.
 void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
+#ifdef _DEBUG
+	if (dst == nullptr || src == nullptr || srcCopyByte <= 0) {
+		DebugAssert(false, "인자를 똑띠 전달해주세요");
+	}
+#endif
+
 	int iCopiedBytes = 0;
 
 	Byte* pDst = (Byte*)dst;
@@ -41,6 +53,12 @@ void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
 }
 
 void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
+#ifdef _DEBUG
+	if (dst == nullptr || src == nullptr || dstCapacityByte <= 0 || srcCopyByte <= 0) {
+		DebugAssert(false, "인자를 똑띠 전달해주세요");
+	}
+#endif
+
 	int iCopiedBytes = 0;
 
 	Byte* pDst = (Byte*)dst;
@@ -58,6 +76,12 @@ void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, 
 }
 
 void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte) {
+#ifdef _DEBUG
+	if (dst == nullptr || src == nullptr || srcCopyByte <= 0) {
+		DebugAssert(false, "인자를 똑띠 전달해주세요");
+	}
+#endif
+
 	int iCopiedBytes = 0;
 
 	Byte* pDst = (Byte*)dst;
@@ -76,6 +100,12 @@ void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte
 
 // memset과 기능이 동일합니다.
 void Memory::Set(void* src, const int srcCapacity, const Byte value) {
+#ifdef _DEBUG
+	if (src == nullptr || srcCapacity <= 0) {
+		DebugAssert(false, "인자를 똑띠 전달해주세요");
+	}
+#endif
+
 	Byte* pSrc = (Byte*)src;
 
 	for (int i = 0; i < srcCapacity; i++) {

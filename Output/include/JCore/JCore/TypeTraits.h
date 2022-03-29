@@ -356,18 +356,7 @@ constexpr bool IsConvertible_v = std::is_convertible_v<From, To>;
 template <typename Base, typename Derived>
 constexpr bool IsBaseOf_v = std::is_base_of_v<Base, Derived>;
 
-// Derived 타입들이 모두 Base를 부모로 두고 있는지 검사
-template <typename Base, typename Derived, typename... DerivedArgs>
-struct IsBaseOfMultipleDrived
-{
-	static constexpr bool Value() {
-		if constexpr (sizeof...(DerivedArgs) == 0) {
-			return IsBaseOf_v<Base, Derived>;
-		} else {
-			return IsBaseOf_v<Base, Derived> && IsBaseOfMultipleDrived<Base, DerivedArgs...>::Value();
-		}
-	}
-};
+
 
 // Base 타입들이 모두 Derived를 자식으로 두고 있는지 검사
 template <typename Derived, typename Base, typename... BaseArgs>
@@ -382,6 +371,18 @@ struct IsBaseOfMultipleBase
 	}
 };
 
+// Derived 타입들이 모두 Base를 부모로 두고 있는지 검사
+template <typename Base, typename Derived, typename... DerivedArgs>
+struct IsBaseOfMultipleDrived
+{
+	static constexpr bool Value() {
+		if constexpr (sizeof...(DerivedArgs) == 0) {
+			return IsBaseOf_v<Base, Derived>;
+		} else {
+			return IsBaseOf_v<Base, Derived> && IsBaseOfMultipleDrived<Base, DerivedArgs...>::Value();
+		}
+	}
+};
 
 // 템플릿 파리미터 팩(DerivedArgs)으로 전달한 타입들이 모두 Base의 자식인지 여부
 /*
@@ -395,7 +396,8 @@ struct IsBaseOfMultipleBase
  */
 
 template <typename Base, typename... DerivedArgs>
-constexpr const bool IsBaseOf_1Base_MultipleDerived_v = IsBaseOfMultipleDrived<Base, DerivedArgs...>::Value();
+constexpr const bool IsBaseOf_1Base_MultipleDerived_v 
+	= IsBaseOfMultipleDrived<Base, DerivedArgs...>::Value();
 
 // 템플릿 파라미터 팩(BaseArgs)으로 전달한 타입들이 모두 Derived의 부모인지 여부
 /*

@@ -80,13 +80,13 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& localEndPoint) {
 	// 패킷은 모두 오버랩 Process에서 해제하도록 한다.
 	DWORD dwSentBytes = 0;
 	auto* dummyPacket = new Packet<Command<int>, Command<int>>;
-	dummyPacket->Get<0>()->Cmd = 9999;
-	dummyPacket->Get<0>()->Value = 30;
-	dummyPacket->Get<1>()->Cmd = 10000;
-	dummyPacket->Get<1>()->Value = 31;
+	dummyPacket->Get<0>()->SetCommand(1);
+	dummyPacket->Get<0>()->Value = 2;
+	dummyPacket->Get<1>()->SetCommand(3);
+	dummyPacket->Get<1>()->Value = 4;
 
 	IOCPOverlapped* pOverlapped = new IOCPOverlappedConnect(this, m_pIocp, dummyPacket);
-	if (m_ClientSocket.ConnectEx(localEndPoint, pOverlapped, dummyPacket->GetBuf(), TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
+	if (m_ClientSocket.ConnectEx(localEndPoint, pOverlapped, dummyPacket->GetWSABuf().buf, TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
 
 		if (Winsock::LastError() != WSA_IO_PENDING) {
 			Winsock::AssertWinsockMessage("서버 접속에 실패하였습니다.");
@@ -148,20 +148,11 @@ void TcpClient::ConnectWait() {
 	m_eState = State::ConnectWait;
 }
 
-void TcpClient::Received(Int32UL receivedBytes) {
-	m_ReceiveBuffer.MoveWritePos(receivedBytes);
-	m_pClientEventListener->OnReceived(&m_ReceiveBuffer, receivedBytes);
-
-	if (m_ReceiveBuffer.GetReadPos() == m_ReceiveBuffer.GetWritePos()) {
-		// 만약 수신한 데이터를 모두 읽었으면 포지션을 그냥 0으로 옮긴다.
-		m_ReceiveBuffer.Clear();
-	} else {
-		// 읽은 위치만큼은 이제 다시 쓰일일이 없으므로 버퍼를 앞으로 당긴다. WritePos 이후로 데이터를 쌓을 수 있도록하기 위해
-		m_ReceiveBuffer.Pop(m_ReceiveBuffer.GetReadPos(), true);
-	}
+void TcpClient::NotifyCommand(ICommand* cmd) {
+	m_pClientEventListener->OnReceived(cmd);
 }
 
-void TcpClient::Sent(IPacket* sentPacket, Int32UL sentBytes) {
+void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
 	m_pClientEventListener->OnSent(sentPacket, sentBytes);
 }
 

@@ -21,12 +21,14 @@ protected:
 		std::cout << disconnetedSession->GetRemoteEndPoint().ToString() << " 클라이언트가 접속을 종료하였습니다.\n";
 	}
 
-	virtual void OnSent(TcpSession* sender, IPacket* packet, Int32UL sentBytes) {
+	virtual void OnSent(TcpSession* sender, ISendPacket* packet, Int32UL sentBytes) {
 		Winsock::Message("송신 : %d 바이트", packet->GetPacketLength());
 	}
 
-	virtual void OnReceived(TcpSession* receiver, Int32UL receivedBytes) {
-		Winsock::Message("수신 : %d 바이트", receivedBytes);
+	virtual void OnReceived(TcpSession* receiver, ICommand* cmd) {
+		static int cnt = 0;
+
+		Winsock::Message("%d번째 커맨드 길이 : %d", ++cnt, cmd->GetCommandLen());
 	}
 
 	virtual void OnPaused() {

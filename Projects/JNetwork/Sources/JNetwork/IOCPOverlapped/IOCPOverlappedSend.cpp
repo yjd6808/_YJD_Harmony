@@ -8,7 +8,7 @@
 
 namespace JNetwork {
 
-IOCPOverlappedSend::IOCPOverlappedSend(TcpSession* session, IOCP* iocp, IPacket* sentPacket) :
+IOCPOverlappedSend::IOCPOverlappedSend(TcpSession* session, IOCP* iocp, ISendPacket* sentPacket) :
 	m_pSentSession(session),
 	m_pSentPacket(sentPacket),
 	IOCPOverlapped(iocp, Type::Send)

@@ -8,16 +8,19 @@
 
 namespace JNetwork {
 
+struct ICommand;
+struct ISendPacket;
 class TcpClient;
 class TcpClientEventListener
 {
+public:
+	TcpClientEventListener() {}
+	virtual ~TcpClientEventListener() {}
 protected:
 	virtual void OnConnected() = 0;
 	virtual void OnDisconnected() = 0;
-	virtual void OnSent(IPacket* sentPacket, Int32UL sentBytes) = 0;
-	virtual void OnReceived(SessionBuffer* buffer, Int32UL receivedBytes) = 0;
-
-
+	virtual void OnSent(ISendPacket* sentPacket, Int32UL sentBytes) = 0;
+	virtual void OnReceived(ICommand* cmd) = 0;
 
 	friend class TcpClient;
 };
