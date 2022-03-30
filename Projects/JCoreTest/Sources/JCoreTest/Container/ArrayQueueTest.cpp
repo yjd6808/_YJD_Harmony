@@ -16,7 +16,7 @@ using namespace std;
 TEST(ArrayQueueTest, Regular) {
 	MemoryLeakDetector detector;
 	ArrayQueue<int> queue;
-	int count = 320;
+	const int count = 320;
 
 	for (int i = 0; i < count; i++) {
 		queue.Enqueue(i);
@@ -42,7 +42,7 @@ TEST(ArrayQueueTest, FullCaseTest) {
 
 	// 큐가 꽉찬 상태에서 이터레이터가 무한 순회하는 상황
 	ArrayQueue<int> q;
-	int z = q.Capacity();
+	const int z = q.Capacity();
 
 	for (int i = 0; i < z; i++) {
 		q.Enqueue(i);
@@ -236,7 +236,7 @@ TEST(ArrayQueueTest, OperatorTest) {
 	// 꼬리가 머리보다 뒤에 있는 경우
 	{
 		ArrayQueue<int> a{ 1, 2 };
-		ArrayQueue<int> b{ 1, 2 };
+		const ArrayQueue<int> b{ 1, 2 };
 
 		// 이니셜라이저 테스트
 		a = { 3, 4 };

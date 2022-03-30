@@ -16,34 +16,34 @@ template <typename> class  LinkedList;
 template <typename T>
 class LinkedListIterator : public ListCollectionIterator<T>
 {
-	using TListNode					= typename ListNode<T>;
-	using TListCollectionIterator	= typename ListCollectionIterator<T>;
-	using TLinkedList				= typename LinkedList<T>;
+	using TListNode					= ListNode<T>;
+	using TListCollectionIterator	= ListCollectionIterator<T>;
+	using TLinkedList				= LinkedList<T>;
 public:
 	LinkedListIterator(VoidOwner& owner, TListNode* current) : TListCollectionIterator(owner, current) {}
-	virtual ~LinkedListIterator() noexcept {}
+	~LinkedListIterator() noexcept override {}
 public:
-	virtual bool HasNext() const {
+	bool HasNext() const override {
 		return TListCollectionIterator::HasNext();
 	}
 
-	virtual bool HasPrevious() const {
+	bool HasPrevious() const override {
 		return TListCollectionIterator::HasPrevious();
 	}
 
-	virtual T& Next() {
+	T& Next() override {
 		return TListCollectionIterator::Next();
 	}
 
-	virtual T& Previous() {
+	T& Previous() override {
 		return TListCollectionIterator::Previous();
 	}
 
-	virtual bool IsEnd() const {
+	bool IsEnd() const override {
 		return TListCollectionIterator::IsEnd();
 	}
 
-	virtual bool IsBegin() const {
+	bool IsBegin() const override {
 		return TListCollectionIterator::IsBegin();
 	}
 

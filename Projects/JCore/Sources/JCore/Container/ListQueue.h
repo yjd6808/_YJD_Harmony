@@ -12,11 +12,11 @@ namespace JCore {
 template <typename T>
 class ListQueue	: public ListCollection<T>
 {
-	using TEnumerator			= typename Enumerator<T>;
-	using TCollection			= typename Collection<T>;
-	using TListCollection		= typename ListCollection<T>;
-	using TListQueue			= typename ListQueue<T>;
-	using TListQueueIterator	= typename ListQueueIterator<T>;
+	using TEnumerator			= Enumerator<T>;
+	using TCollection			= Collection<T>;
+	using TListCollection		= ListCollection<T>;
+	using TListQueue			= ListQueue<T>;
+	using TListQueueIterator	= ListQueueIterator<T>;
 public:
 	ListQueue() 
 		: TListCollection(ContainerType::ListQueue) 
@@ -28,7 +28,7 @@ public:
 	{
 	}
 
-	ListQueue(TListQueue&& other) 
+	ListQueue(TListQueue&& other) noexcept
 		: TListCollection(Move(other), ContainerType::ListQueue) 
 	{
 	}
@@ -38,14 +38,14 @@ public:
 	{
 	}
 
-	virtual ~ListQueue() noexcept {}
+	~ListQueue() noexcept override {}
 public:
 	TListQueue& operator=(const TListQueue& other) {
 		this->CopyFrom(other);
 		return *this;
 	}
 
-	TListQueue& operator=(TListQueue&& other) {
+	TListQueue& operator=(TListQueue&& other) noexcept {
 		this->CopyFrom(Move(other));
 		return *this;
 	}
@@ -76,15 +76,15 @@ public:
 		TListCollection::PopFront();
 	}
 
-	virtual T& Front() const {
+	T& Front() const override {
 		return TListCollection::Front();
 	}
 
-	virtual TEnumerator Begin() const {
+	TEnumerator Begin() const override {
 		return MakeShared<TListQueueIterator>(this->GetOwner(), this->m_pHead->Next);
 	}
 
-	virtual TEnumerator End() const {
+	TEnumerator End() const override {
 		return MakeShared<TListQueueIterator>(this->GetOwner(), this->m_pTail);
 	}
 protected:

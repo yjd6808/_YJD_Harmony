@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <JCore/Functional.h>
 #include <JCore/Container/CollectionStream.h>
 
 namespace JCore {
@@ -21,11 +20,11 @@ class LinkedList;
 template <typename T>
 class CollectionExtension
 {
-	using TCollectionExtension  = typename CollectionExtension<T>;
-	using TCollectionStream		= typename CollectionStream<T>;
-	using TIterator				= typename Iterator<T>;
-	using TEnumerator			= typename SharedPointer<TIterator>;
-	using TCollection			= typename Collection<T>;
+	using TCollectionExtension  = CollectionExtension<T>;
+	using TCollectionStream		= CollectionStream<T>;
+	using TIterator				= Iterator<T>;
+	using TEnumerator			= SharedPointer<TIterator>;
+	using TCollection			= Collection<T>;
 
 public:
 	CollectionExtension(TCollection* collection) {

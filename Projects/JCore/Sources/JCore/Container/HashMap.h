@@ -16,15 +16,13 @@ namespace JCore {
 template <typename TKey, typename TValue>
 struct BucketNode
 {
-	using TKeyValuePair	 = typename KeyValuePair<TKey, TValue>;
-	using TBucketNode	 = typename BucketNode<TKey, TValue>;
+	using TKeyValuePair	 = KeyValuePair<TKey, TValue>;
+	using TBucketNode	 = BucketNode<TKey, TValue>;
 
 	bool operator==(const TBucketNode& other) {
 		return Pair == other.Pair && Hash == other.Hash;
 	}
 	
-	
-
 	/*
 	그냥 디폴트 쓰면 될 듯?
 	BucketNode() {}
@@ -55,15 +53,15 @@ struct BucketNode
 	BucketNode& operator=(BucketNode&& other) = default;
 
 	TKeyValuePair Pair;
-	Int32U Hash;				// 처음에 한번 계산해놓으면 편할 듯?
+	Int32U Hash{};				// 처음에 한번 계산해놓으면 편할 듯?
 };
 
 template <typename TKey, typename TValue>
 struct Bucket : public LinkedList<BucketNode<TKey, TValue>>
 {
 private:
-	using TBucketNode = typename BucketNode<TKey, TValue>;
-	using TLinkedList = typename LinkedList<BucketNode<TKey, TValue>>;
+	using TBucketNode = BucketNode<TKey, TValue>;
+	using TLinkedList = LinkedList<BucketNode<TKey, TValue>>;
 public:
 	bool ExistByKey(const TKey& key) {
 
@@ -103,14 +101,14 @@ class HashMap : public MapCollection<TKey, TValue>
 			-> 검색 도움 없이 해결완료
 	*/
 
-	using THasher					= typename Hasher<TKey>;
-	using TBucket					= typename Bucket<TKey, TValue>;
-	using TBucketNode				= typename BucketNode<TKey, TValue>;
-	using TMapCollection			= typename MapCollection<TKey, TValue>;
-	using TKeyValuePair				= typename KeyValuePair<TKey, TValue>;
-	using TIterator					= typename Iterator<TKeyValuePair>;
-	using THashMap					= typename HashMap<TKey, TValue>;
-	using THashMapIterator			= typename HashMapIterator<TKey, TValue>;
+	using THasher					= Hasher<TKey>;
+	using TBucket					= Bucket<TKey, TValue>;
+	using TBucketNode				= BucketNode<TKey, TValue>;
+	using TMapCollection			= MapCollection<TKey, TValue>;
+	using TKeyValuePair				= KeyValuePair<TKey, TValue>;
+	using TIterator					= Iterator<TKeyValuePair>;
+	using THashMap					= HashMap<TKey, TValue>;
+	using THashMapIterator			= HashMapIterator<TKey, TValue>;
 	using TKeyCollection			= typename TMapCollection::KeyCollection;
 	using TValueCollection			= typename TMapCollection::ValueCollection;
 	using TKeyCollectionIterator	= typename TMapCollection::KeyCollectionIterator;
@@ -142,7 +140,7 @@ public:
 		operator=(other);
 	}
 
-	HashMap(THashMap&& other)
+	HashMap(THashMap&& other) noexcept
 		: TMapCollection(ContainerType::HashMap),
 		m_KeyCollection(this),
 		m_ValueCollection(this)
@@ -156,7 +154,7 @@ public:
 		operator=(ilist);
 	}
 
-	virtual ~HashMap() noexcept {
+	~HashMap() noexcept override {
 		Clear();
 		DeleteArraySafe(m_pTable);
 	}
@@ -230,8 +228,8 @@ public:
 	}
 
 
-	template <typename _Ky, typename _Vy>
-	bool Insert(_Ky&& key, _Vy&& value) {
+	template <typename Ky, typename Vy>
+	bool Insert(Ky&& key, Vy&& value) {
 		if (IsFull()) {
 			Expand(m_iCapacity * ms_iTableExpandingFactor);
 		}
@@ -247,11 +245,12 @@ public:
 			InsertBucketPrev(m_pTailBucket, &m_pTable[uiBucket]);
 		}
 
-		m_pTable[uiBucket].PushBack({ { Forward<_Ky>(key), Forward<_Vy>(value)}, uiHash });
+		m_pTable[uiBucket].PushBack({ { Forward<Ky>(key), Forward<Vy>(value)}, uiHash });
 		this->m_iSize++;
+		return true;
 	}
 
-	virtual bool Insert(const TKeyValuePair& pair) {
+	bool Insert(const TKeyValuePair& pair) override {
 		if (IsFull()) {
 			Expand(m_iCapacity * ms_iTableExpandingFactor);
 		}
@@ -272,7 +271,7 @@ public:
 		return true;
 	}
 
-	virtual bool Insert(TKeyValuePair&& pair) {
+	bool Insert(TKeyValuePair&& pair) override {
 		if (IsFull()) {
 			Expand(m_iCapacity * ms_iTableExpandingFactor);
 		}
@@ -293,7 +292,7 @@ public:
 		return true;
 	}
 
-	virtual bool Exist(const TKey& key) const {
+	bool Exist(const TKey& key) const override {
 		return m_pTable[HashBucket(key)].ExistByKey(key);
 	}
 
@@ -307,7 +306,7 @@ public:
 		return pVal;
 	}
 
-	virtual TValue& Get(const TKey& key) const {
+	TValue& Get(const TKey& key) const override {
 		TValue* pVal = m_pTable[HashBucket(key)].FindByKey(key);
 
 		if (pVal == nullptr) {
@@ -317,7 +316,7 @@ public:
 		return *pVal;
 	}
 
-	virtual bool Remove(const TKey& key) {
+	bool Remove(const TKey& key) override {
 		TBucket& bucket = m_pTable[HashBucket(key)];
 		if (!bucket.RemoveByKey(key)) {
 			return false;
@@ -332,7 +331,7 @@ public:
 		return true;
 	}
 
-	virtual void Clear() {
+	void Clear() override {
 		if (this->m_iSize == 0) {
 			return;
 		}
@@ -365,25 +364,25 @@ public:
 		}
 	}
 
-	virtual SharedPointer<TIterator> Begin() const {
+	SharedPointer<TIterator> Begin() const override {
 		return MakeShared<THashMapIterator>(this->GetOwner(), m_pHeadBucket->Next, m_pHeadBucket->Next->m_pHead->Next);
 	}
 
-	virtual SharedPointer<TIterator> End() const {
+	SharedPointer<TIterator> End() const override {
 		return MakeShared<THashMapIterator>(this->GetOwner(), m_pTailBucket->Previous, m_pTailBucket->Previous->m_pTail);
 	}
 
-	virtual TKeyCollection& Keys() {
+	TKeyCollection& Keys() override {
 		return m_KeyCollection;
 	}
 
-	virtual TValueCollection& Values() {
+	TValueCollection& Values() override {
 		return m_ValueCollection;
 	}
 protected:
 	void Expand(int capacity) {
 		TBucket* pNewTable = new TBucket[capacity];
-		int iPrevCapacity = m_iCapacity;
+		const int iPrevCapacity = m_iCapacity;
 
 		m_iCapacity = capacity;
 
@@ -419,7 +418,7 @@ protected:
 			return false;
 		}
 
-		int iCapacity = CalculateExpandCapacity(size);
+		const int iCapacity = CalculateExpandCapacity(size);
 		Expand(iCapacity);
 		return true;
 	}
@@ -427,7 +426,7 @@ protected:
 	/// <summary>
 	/// 전달받은 사이즈 크기에 맞는 배열 크기를 반환해준다.
 	/// </summary>
-	int CalculateExpandCapacity(int size) {
+	int CalculateExpandCapacity(int size) const {
 		if (size < m_iCapacity) {
 			return m_iCapacity;
 		}
@@ -443,7 +442,7 @@ protected:
 		return iExpectedCapacity;
 	}
 
-	void ConnectBucket(TBucket* lhs, TBucket* rhs) {
+	static void ConnectBucket(TBucket* lhs, TBucket* rhs) {
 		lhs->Next = rhs;
 		rhs->Previous = lhs;
 	}
@@ -451,8 +450,6 @@ protected:
 	/// <summary>
 	/// bucket 바로 전에 다른 bucket을 삽입한다.
 	/// </summary>
-	/// <param name="tailPrev"></param>
-	/// <param name="newNode"></param>
 	void InsertBucketPrev(TBucket* bucket, TBucket* otherBucket) {
 		if (bucket == m_pHeadBucket) {
 			throw InvalidArgumentException("헤드 이전에는 노드를 삽입하면 안되요!");
@@ -499,20 +496,20 @@ protected:
 	static constexpr Int32U	ms_iTableDefaultCapacity = 16;	// 테이블 초기 크기
 protected:
 	TBucket* m_pTable = nullptr;
-	TBucket* m_pHeadBucket = &_ValtyHead;
-	TBucket* m_pTailBucket = &_ValtyTail;
+	TBucket* m_pHeadBucket = &m_ValtyHead;
+	TBucket* m_pTailBucket = &m_ValtyTail;
 	Int32U m_iCapacity = 0;
 
 	HashMapKeyCollection m_KeyCollection;
 	HashMapValueCollection m_ValueCollection;
 private:
-	TBucket _ValtyHead;		// 머리 더미노드
-	TBucket _ValtyTail;		// 꼬리 더미노드
+	TBucket m_ValtyHead;		// 머리 더미노드
+	TBucket m_ValtyTail;		// 꼬리 더미노드
 public:
 	struct HashMapKeyCollection : public TKeyCollection
 	{
-		using TEnumerator		= typename SharedPointer<Iterator<TKey>>;
-		using TCollection		= typename Collection<TKey>;
+		using TEnumerator		= SharedPointer<Iterator<TKey>>;
+		using TCollection		= Collection<TKey>;
 
 		HashMapKeyCollection(THashMap* hashMap) 
 			: TKeyCollection(hashMap, ContainerType::HashMapKeyCollection)
@@ -526,7 +523,7 @@ public:
 			return *this;
 		}
 
-		virtual ~HashMapKeyCollection() noexcept = default;
+		virtual ~HashMapKeyCollection() noexcept override = default;
 
 		int Size() const override {
 			return TKeyCollection::Size();
@@ -555,12 +552,12 @@ public:
 		THashMap* m_pHashMap;
 	};
 
-	struct HashMapKeyCollectionIterator : public TKeyCollectionIterator
+	struct HashMapKeyCollectionIterator final : public TKeyCollectionIterator
 	{
-		using TListNode = typename ListNode<BucketNode<TKey, TValue>>;
+		using TListNode = ListNode<BucketNode<TKey, TValue>>;
 
 		HashMapKeyCollectionIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode)
-			: m_HashMapIterator(owner, currentBucket, currentNode), TKeyCollectionIterator(owner, &m_HashMapIterator)
+			: TKeyCollectionIterator(owner, &m_HashMapIterator), m_HashMapIterator(owner, currentBucket, currentNode)
 		{
 		}
 		virtual ~HashMapKeyCollectionIterator() noexcept = default;
@@ -568,10 +565,10 @@ public:
 		THashMapIterator m_HashMapIterator;
 	};
 
-	struct HashMapValueCollection : public TValueCollection
+	struct HashMapValueCollection final : public TValueCollection
 	{
-		using TEnumerator		= typename SharedPointer<Iterator<TValue>>;
-		using TCollection		= typename Collection<TValue>;
+		using TEnumerator		= SharedPointer<Iterator<TValue>>;
+		using TCollection		= Collection<TValue>;
 
 		HashMapValueCollection(THashMap* hashMap)
 			: TMapCollection::ValueCollection(hashMap, ContainerType::HashMapValueCollection)
@@ -579,7 +576,7 @@ public:
 			m_pHashMap = hashMap;
 		}
 
-		virtual ~HashMapValueCollection() noexcept = default;
+		virtual ~HashMapValueCollection() noexcept override = default;
 
 		HashMapValueCollection& operator=(const HashMapValueCollection& other) {
 			this->m_pHashMap = other.m_pHashMap;
@@ -606,16 +603,16 @@ public:
 		THashMap* m_pHashMap;
 	};
 
-	struct HashMapValueCollectionIterator : public TValueCollectionIterator
+	struct HashMapValueCollectionIterator final : public TValueCollectionIterator
 	{
-		using TListNode = typename ListNode<BucketNode<TKey, TValue>>;
+		using TListNode = ListNode<BucketNode<TKey, TValue>>;
 
 		HashMapValueCollectionIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode)
-			: m_HashMapIterator(owner, currentBucket, currentNode), TValueCollectionIterator(owner, &m_HashMapIterator)
+			: TValueCollectionIterator(owner, &m_HashMapIterator), m_HashMapIterator(owner, currentBucket, currentNode)
 		{
 		}
 
-		virtual ~HashMapValueCollectionIterator() noexcept = default;
+		virtual ~HashMapValueCollectionIterator() noexcept override = default;
 
 		THashMapIterator m_HashMapIterator;
 	};

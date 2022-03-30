@@ -6,7 +6,6 @@
 
 #include <WinSock2.h>
 
-#include <JNetwork/Packet.h>
 #include <JNetwork/IOCP/IOCP.h>
 #include <JNetwork/IOCP/IOCPPostOrder.h>
 
@@ -23,8 +22,8 @@ public:
 		Send
 	};
 public:
-	IOCPOverlapped(IOCP* iocp, Type type) : m_pIocp(iocp), m_eType(type) {}
-	virtual ~IOCPOverlapped() {}
+	IOCPOverlapped(IOCP* iocp, Type type) : m_eType(type), m_pIocp(iocp) {}
+	virtual ~IOCPOverlapped() = default;
 public:
 	virtual void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) = 0;
 	virtual void Release() { delete this; }

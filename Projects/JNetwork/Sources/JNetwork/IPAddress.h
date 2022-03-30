@@ -25,8 +25,8 @@ namespace JNetwork {
 class IPAddress 
 {
 public:
-	IPAddress() {}
-	virtual ~IPAddress() = 0;
+	IPAddress() = default;
+	virtual ~IPAddress() = default;
 	virtual InternetProtocol GetProtocol() const = 0;
 	virtual JCore::String ToString() const = 0;
 };
@@ -34,10 +34,10 @@ public:
 class IPv4Address : public IPAddress
 {
 public:
-	IPv4Address() { m_Addr.Addr = 0; }
+	IPv4Address() = default;
 	IPv4Address(Int32UL hostOrderedAddress) { m_Addr.Addr = hostOrderedAddress; }
 	IPv4Address(const char* hostOrderedAddressString);
-	virtual ~IPv4Address() = default;
+	~IPv4Address() override = default;
 public:
 	JCore::String ToString() const override;
 	InternetProtocol GetProtocol() const override { return InternetProtocol::IPv4; }
@@ -64,15 +64,15 @@ public:
 	static IPv4Address Any() {
 		return { INADDR_ANY };
 	}
-	static IPv4Address Parse(const char* addrString);
-	static IPv4Address Parse(const JCore::String& addrString) { Parse(addrString.Source()); }
+	static IPv4Address Parse(const char* hostOrderedAddressString);
+	static IPv4Address Parse(const JCore::String& hostOrderedAddressString) { return Parse(hostOrderedAddressString.Source()); }
 
 private:
 	union
 	{
 		Byte Seg[4];
-		Int32UL Addr = 0;
-	} m_Addr;
+		Int32UL Addr{};
+	} m_Addr{};
 };
 
 
@@ -80,7 +80,7 @@ class IPv6Address
 {
 	// UNUSED
 public:
-	InternetProtocol GetProtocol() const { return InternetProtocol::IPv6; }
+	static InternetProtocol GetProtocol() { return InternetProtocol::IPv6; }
 private:
 	Int64U m_uiAddrHigh = 0;
 	Int64U m_uiAddrLow = 0;

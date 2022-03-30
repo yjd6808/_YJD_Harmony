@@ -17,13 +17,13 @@ namespace JCore { // namespace JCore
 template <typename T>
 class Vector : public ArrayCollection<T>
 {
-	using TEnumerator			= typename Enumerator<T>;
-	using TCollection			= typename Collection<T>;
-	using TArrayCollection		= typename ArrayCollection<T>;
-	using TVector				= typename Vector<T>;
-	using TVectorIterator		= typename VectorIterator<T>;
+	using TEnumerator			= Enumerator<T>;
+	using TCollection			= Collection<T>;
+	using TArrayCollection		= ArrayCollection<T>;
+	using TVector				= Vector<T>;
+	using TVectorIterator		= VectorIterator<T>;
 public:
-	Vector(int capacity = TArrayCollection::ms_iDefaultCapcity) 
+	Vector(int capacity = TArrayCollection::ms_iDefaultCapacity) 
 		: TArrayCollection(capacity, ContainerType::Vector) 
 	{
 	}
@@ -43,7 +43,7 @@ public:
 	{
 	}
 
-	virtual ~Vector() noexcept {}
+	~Vector() noexcept override = default;
 
 public:
 	TVector& operator=(const TVector& other) {
@@ -324,11 +324,11 @@ public:
 		return this->GetAt(idx);
 	}
 
-	virtual TEnumerator Begin() const {
+	TEnumerator Begin() const override {
 		return MakeShared<TVectorIterator>(this->GetOwner(), 0);
 	}
 
-	virtual TEnumerator End() const {
+	TEnumerator End() const override {
 		return MakeShared<TVectorIterator>(this->GetOwner(), this->Size());
 	}
 protected:

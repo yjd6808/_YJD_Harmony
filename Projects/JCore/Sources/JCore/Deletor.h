@@ -17,7 +17,7 @@ struct VoidDeletor
 {
 	VoidDeletor() = default;
 
-	void operator()(void * ptr) {
+	void operator()(void * ptr) const {
 		delete ptr;
 	}
 };
@@ -26,7 +26,7 @@ struct VoidDeletorSafe
 {
 	VoidDeletorSafe() = default;
 
-	void operator()(void** ptr) {
+	void operator()(void** ptr) const {
 		delete *ptr;
 		*ptr = nullptr;
 	}
@@ -36,7 +36,7 @@ struct ArrayVoidDeletor
 {
 	ArrayVoidDeletor() = default;
 
-	void operator()(void* ptr) {
+	void operator()(void* ptr) const {
 		delete[] ptr;
 	}
 };
@@ -45,7 +45,7 @@ struct ArrayVoidDeletorSafe
 {
 	ArrayVoidDeletorSafe() = default;
 
-	void operator()(void** ptr) {
+	void operator()(void** ptr) const {
 		delete[] *ptr;
 		*ptr = nullptr;
 	}
@@ -83,7 +83,7 @@ enum class DeletorOption
 template <typename T>
 struct PlacementDeletorBase
 {
-	void DestroyObject(T* ptr) {
+	static void DestroyObject(T* ptr) {
 		ptr->~T();
 	}
 
@@ -101,7 +101,7 @@ struct PlacementDeletorBase
 template <typename T>
 struct PlacementDeletorBase<T[]>
 {
-	void DestroyObject(T* ptr, Int32U size) {
+	static void DestroyObject(T* ptr, Int32U size) {
 		for (Int32U i = 0; i < size; i++) {
 			ptr[i].~T();
 		}
@@ -124,7 +124,7 @@ struct PlacementDeletorBase<T[]>
 template <typename T, Int32U ArraySize>
 struct PlacementDeletorBase<T[ArraySize]>
 {
-	void DestroyObject(T* ptr) {
+	static void DestroyObject(T* ptr) {
 		for (Int32U i = 0; i < ArraySize; i++) {
 			ptr[i].~T();
 		}

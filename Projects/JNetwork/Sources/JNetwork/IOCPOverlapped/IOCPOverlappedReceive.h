@@ -15,7 +15,7 @@ public:
 	IOCPOverlappedReceive(TcpSession* session, IOCP* iocp);
 	~IOCPOverlappedReceive() override;
 public:
-	virtual void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey);
+	void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	TcpSession* m_pReceivedSession;	
 };

@@ -1,7 +1,6 @@
 
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Memory.h>
-#include <JCore/Type.h>
 
 using namespace JCore;
 
@@ -55,7 +54,7 @@ TEST(MemoryTest, AssemblyTest) {
 TEST(MemoryTest, MemoryCopy) {
 
 	int* c = new int[4];
-	int d[4] = { 0, 1, 2, 3};
+	const int d[4] = { 0, 1, 2, 3};
 
 	Memory::Copy(c, sizeof(int) * 4, d, sizeof(d));
 
@@ -71,8 +70,17 @@ struct TestStruct {
 	int c;
 
 	int Val() { return a + b + c; }
-	TestStruct() { a = 5; b = 5; c = 5; }
-	TestStruct(int d) { a = d; b = d; c = d; }
+	TestStruct() :
+		  a(5)
+		, b(5)
+		, c(5) {
+	}
+
+	TestStruct(int d) :
+		a(d),
+		b(d),
+		c(d) {
+	}
 };
 
 
@@ -91,9 +99,9 @@ TEST(MemoryTest, MemorySet) {
 
 TEST(MemoryTest, MemorySetT) {
 
-	const int kiArraySize = 32;
+	constexpr int kiArraySize = 32;
 	TestStruct* c = new TestStruct[kiArraySize];
-	TestStruct d(10);
+	const TestStruct d(10);
 
 	Memory::Set<TestStruct>(c, kiArraySize, d);
 

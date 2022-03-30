@@ -6,8 +6,6 @@
 #include <JCore/Core.h>
 #include <JCore/String.h>
 #include <JCore/StringUtil.h>
-#include <JCore/Math.h>
-#include <JCore/StaticString.h>
 #include <JCore/Exception.h>
 
 namespace JCore {
@@ -20,7 +18,7 @@ String StringUtil::Format(const char* format, ...) {
 	va_list args;
 	va_start(args, format);
 
-	int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
+	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
 
 	if (iExpectedLen <= 0) {
 		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
@@ -34,7 +32,7 @@ String StringUtil::Format(const char* format, ...) {
 	return szResult;
 }
 
-const int StringUtil::Length(const char* str) {
+int StringUtil::Length(const char* str) {
 	if (str == nullptr) {
 		return -1;
 	}
@@ -48,7 +46,7 @@ const int StringUtil::Length(const char* str) {
 }
 
 
-const int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy) {
+int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy) {
 	if (buffer == nullptr || copy == nullptr) {
 		return -1;
 	}
@@ -67,7 +65,7 @@ const int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy)
 	return iSize;
 }
 
-const bool StringUtil::IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen) {
+bool StringUtil::IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen) {
 	for (int i = 0, j = 0; i < srcLen && j < dstLen; i++, j++) {
 		if (*(src + i) != *(dst + j)) {
 			return false;

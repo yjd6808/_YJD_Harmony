@@ -11,15 +11,14 @@
 
 namespace JNetwork {
 	TcpSession::TcpSession(IOCP* iocp, TcpServerEventListener* listener) :
-	m_pIocp(iocp),
+	m_pServerEventListener(listener),
 	m_eState(State::Uninitialized),
 	m_ClientSocket(INVALID_SOCKET),
-	m_pServerEventListener(listener)
+	m_pIocp(iocp)
 {
 }
 
-TcpSession::~TcpSession() {
-}
+TcpSession::~TcpSession() = default;
 
 bool TcpSession::Disconnect() {
 	if (CheckState(State::Disconnected)) {
@@ -46,7 +45,7 @@ bool TcpSession::SendAsync(ISendPacket* packet) {
 	Int32UL uiSendBytes = 0;
 	IOCPOverlapped* pOverlapped = new IOCPOverlappedSend(this, m_pIocp, packet);
 
-	int iResult = m_ClientSocket.SendEx(&buf, &uiSendBytes, pOverlapped);
+	const int iResult = m_ClientSocket.SendEx(&buf, &uiSendBytes, pOverlapped);
 	if (iResult == SOCKET_ERROR) {
 		if (Winsock::LastError() != WSA_IO_PENDING) {
 			Winsock::WinsockMessage("SendAsync() 실패");
@@ -64,7 +63,7 @@ bool TcpSession::ReceiveAsync() {
 	Int32UL uiReceivedBytes = 0;
 	IOCPOverlapped* pOverlapped = new IOCPOverlappedReceive(this, m_pIocp);
 
-	int iResult = m_ClientSocket.ReceiveEx(&buf, &uiReceivedBytes, pOverlapped);
+	const int iResult = m_ClientSocket.ReceiveEx(&buf, &uiReceivedBytes, pOverlapped);
 	if (iResult == SOCKET_ERROR) {
 		if (Winsock::LastError() != WSA_IO_PENDING) {
 			Winsock::WinsockMessage("ReceiveAsync() 실패");
@@ -143,7 +142,7 @@ void TcpSession::Received(Int32UL receivedBytes) {
 			return;
 
 		// 패킷 헤더 길이 + 패킷 길이 만큼 수신하지 않았으면 다시 모일때까지 기다린다.
-		IRecvPacket* packet = m_ReceiveBuffer.Peek<IRecvPacket*>();
+		const IRecvPacket* packet = m_ReceiveBuffer.Peek<IRecvPacket*>();
 		if (m_ReceiveBuffer.GetReadableBufferSize() < (PACKET_HEADER_SIZE + packet->GetPacketLength())) {
 			return;
 		}

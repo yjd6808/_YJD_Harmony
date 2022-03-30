@@ -113,7 +113,7 @@ namespace JNetwork {
 	}
 
 	int Socket::Close() {
-		int ret = closesocket(m_Socket);
+		const int ret = closesocket(m_Socket);
 
 		if (ret == 0) {
 			m_Socket = INVALID_SOCKET;
@@ -150,14 +150,14 @@ namespace JNetwork {
 
 	Socketv6 Socket::CreateV6(TransportProtocol tpproto, bool overlapped) {
 		// UNUSED
-		return Socketv6();
+		return {};
 	}
 
 	/*=====================================================================================
 								Socketv4
 	=======================================================================================*/
 
-	int Socketv4::Bind(const IPv4EndPoint& ipv4EndPoint) {
+	int Socketv4::Bind(const IPv4EndPoint& ipv4EndPoint) const {
 		SOCKADDR_IN addr;
 		addr.sin_family = AF_INET;
 		addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
@@ -165,11 +165,11 @@ namespace JNetwork {
 		return bind(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
 	}
 
-	int Socketv4::BindAny() {
+	int Socketv4::BindAny() const {
 		return Bind({IPv4Address::Any(), 0});
 	}
 
-	int Socketv4::Listen(int connectionWaitingQueueSize) {
+	int Socketv4::Listen(int connectionWaitingQueueSize) const {
 		
 		return listen(m_Socket, connectionWaitingQueueSize);
 	}
@@ -178,7 +178,7 @@ namespace JNetwork {
 		return { this->m_TransportProtocol, accept(m_Socket, nullptr, nullptr) };
 	}
 
-	int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, DWORD receiveDatalen, Out_ LPDWORD receivedBytes, LPOVERLAPPED overlapped) {
+	int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, DWORD receiveDatalen, Out_ LPDWORD receivedBytes, LPOVERLAPPED overlapped) const {
 
 		// @참고 : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
 		// sListenSocket : 서버 소켓
@@ -233,21 +233,21 @@ namespace JNetwork {
 			&iRemoteAddrLen);
 
 		if (localEp) {
-			IPv4Address v4Address{ ByteOrder::NetworkToHost(pSockLocalAddrIn->sin_addr.S_un.S_addr) };
-			IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(pSockLocalAddrIn->sin_port) };
+			const IPv4Address v4Address{ ByteOrder::NetworkToHost(pSockLocalAddrIn->sin_addr.S_un.S_addr) };
+			const IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(pSockLocalAddrIn->sin_port) };
 
 			*localEp = v4EndPoint;
 		}
 
 		if (remoteEp) {
-			IPv4Address v4Address{ ByteOrder::NetworkToHost(pSockRemoteAddrIn->sin_addr.S_un.S_addr) };
-			IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(pSockRemoteAddrIn->sin_port) };
+			const IPv4Address v4Address{ ByteOrder::NetworkToHost(pSockRemoteAddrIn->sin_addr.S_un.S_addr) };
+			const IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(pSockRemoteAddrIn->sin_port) };
 
 			*remoteEp = v4EndPoint;
 		}
 	}
 
-	int Socketv4::Connect(const IPv4EndPoint& ipv4EndPoint) {
+	int Socketv4::Connect(const IPv4EndPoint& ipv4EndPoint) const {
 		SOCKADDR_IN addr;
 		addr.sin_family = AF_INET;
 		addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
@@ -255,7 +255,7 @@ namespace JNetwork {
 		return connect(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
 	}
 
-	int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, DWORD sendbufSize, Out_ LPDWORD sentBytes) {
+	int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, DWORD sendbufSize, Out_ LPDWORD sentBytes) const {
 		SOCKADDR_IN addr;
 		addr.sin_family = AF_INET;
 		addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
@@ -263,11 +263,11 @@ namespace JNetwork {
 		return Winsock::ConnectEx_(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN), sendbuf, sendbufSize, sentBytes, overlapped);
 	}
 
-	int Socketv4::Send(char* buff, Int32U len, Int32U flag) {
+	int Socketv4::Send(char* buff, Int32U len, Int32U flag) const {
 		return send(m_Socket, buff, len, flag);
 	}
 
-	int Socketv4::SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag) {
+	int Socketv4::SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag) const {
 		SOCKADDR_IN addr;
 		addr.sin_family = AF_INET;
 		addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
@@ -275,27 +275,27 @@ namespace JNetwork {
 		return sendto(m_Socket, buff, len, flag, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
 	}
 
-	int Socketv4::Receive(char* buff, Int32U buffSize, Int32U flag) {
+	int Socketv4::Receive(char* buff, Int32U buffSize, Int32U flag) const {
 		return recv(m_Socket, buff, buffSize, flag);
 	}
 
-	int Socketv4::ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag) {
+	int Socketv4::ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag) const {
 		SOCKADDR_IN addr;
 		int sz = sizeof(SOCKADDR_IN);
-		int recvBytes = recvfrom(m_Socket, buff, buffSize, flag, (sockaddr*)&addr, &sz);
-		
-		IPv4Address v4Address { ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr) };
-		IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(addr.sin_port) };
+		const int recvBytes = recvfrom(m_Socket, buff, buffSize, flag, (sockaddr*)&addr, &sz);
+
+		const IPv4Address v4Address { ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr) };
+		const IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(addr.sin_port) };
 
 		*ipv4EndPoint = v4EndPoint;
 		return recvBytes;
 	}
 
-	int Socketv4::SendEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesSent, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, Int32U flag) {
+	int Socketv4::SendEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesSent, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, Int32U flag) const {
 		return WSASend(m_Socket, lpBuf, 1, pBytesSent, flag, lpOverlapped, lpCompRoutine);
 	}
 
-	int Socketv4::ReceiveEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesReceived, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, Int32U flag) {
+	int Socketv4::ReceiveEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesReceived, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, Int32U flag) const {
 		return WSARecv(m_Socket, lpBuf, 1, pBytesReceived, (LPDWORD)&flag, lpOverlapped, lpCompRoutine);
 	}
 
@@ -306,7 +306,7 @@ namespace JNetwork {
 		ZeroMemory(&addr, sizeof(SOCKADDR_IN));
 
 		if (getsockname(m_Socket, (SOCKADDR*)&addr, &size) != SOCKET_ERROR) {
-			IPv4Address v4Address{ ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr) };
+			const IPv4Address v4Address{ ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr) };
 			IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(addr.sin_port) };
 
 			return v4EndPoint;
@@ -321,7 +321,7 @@ namespace JNetwork {
 		ZeroMemory(&addr, sizeof(SOCKADDR_IN));
 
 		if (getpeername(m_Socket, (SOCKADDR*)&addr, &size) != SOCKET_ERROR) {
-			IPv4Address v4Address{ ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr) };
+			const IPv4Address v4Address{ ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr) };
 			IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(addr.sin_port) };
 
 			return v4EndPoint;
@@ -378,12 +378,10 @@ namespace JNetwork {
 		return setsockopt(m_Socket, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char*)&op, sizeof(BOOL));
 	}
 
-	int SocketOption::SetLingerTimeout(int timeout) const {
+	int SocketOption::SetLingerTimeout(Int16U timeout) const {
 		LINGER linger;
-		int lingerSize = sizeof(LINGER);
 		linger.l_onoff = TRUE;
 		linger.l_linger = timeout;
-
 		return setsockopt(m_Socket, SOL_SOCKET, SO_LINGER, (char*)&linger, sizeof(LINGER));
 	}
 
@@ -399,7 +397,7 @@ namespace JNetwork {
 	int SocketOption::GetSendBufferSize() const {
 		int snd_size;
 		int sz = sizeof(int);
-		int ret = getsockopt(m_Socket, SOL_SOCKET, SO_SNDBUF, (char*)&snd_size, &sz);
+		const int ret = getsockopt(m_Socket, SOL_SOCKET, SO_SNDBUF, (char*)&snd_size, &sz);
 
 		if (ret == SOCKET_ERROR) {
 			return SOCKET_ERROR;
@@ -411,7 +409,7 @@ namespace JNetwork {
 	int SocketOption::GetRecvBufferSize() const {
 		int recv_size;
 		int sz = sizeof(int);
-		int ret = getsockopt(m_Socket, SOL_SOCKET, SO_RCVBUF, (char*)&recv_size, &sz);
+		const int ret = getsockopt(m_Socket, SOL_SOCKET, SO_RCVBUF, (char*)&recv_size, &sz);
 
 		if (ret == SOCKET_ERROR) {
 			return SOCKET_ERROR;
@@ -425,7 +423,7 @@ namespace JNetwork {
 		int sz = sizeof(LINGER);
 		ZeroMemory(&linger, sizeof(LINGER));
 
-		int ret = getsockopt(m_Socket, SOL_SOCKET, SO_LINGER, (char*)&linger, &sz);
+		const int ret = getsockopt(m_Socket, SOL_SOCKET, SO_LINGER, (char*)&linger, &sz);
 
 		if (ret == SOCKET_ERROR) {
 			return SOCKET_ERROR;
@@ -437,7 +435,7 @@ namespace JNetwork {
 	int SocketOption::GetMaximumSegmentSize() const {
 		int mss;
 		int sz = sizeof(int);
-		int ret = getsockopt(m_Socket, IPPROTO_TCP, TCP_MAXSEG, (char*)&mss, &sz);
+		const int ret = getsockopt(m_Socket, IPPROTO_TCP, TCP_MAXSEG, (char*)&mss, &sz);
 
 		if (ret == SOCKET_ERROR) {
 			return SOCKET_ERROR;
@@ -449,7 +447,7 @@ namespace JNetwork {
 	int SocketOption::IsNagleEnabled() const {
 		int op;
 		int sz = sizeof(int);
-		int ret = getsockopt(m_Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&op, &sz);
+		const int ret = getsockopt(m_Socket, IPPROTO_TCP, TCP_NODELAY, (char*)&op, &sz);
 
 		if (ret == SOCKET_ERROR)
 			return SOCKET_ERROR;
@@ -460,7 +458,7 @@ namespace JNetwork {
 	int SocketOption::IsReuseAddressEnabled() const {
 		int op;
 		int sz = sizeof(int);
-		int ret = getsockopt(m_Socket, SOL_SOCKET, SO_REUSEADDR, (char*)&op, &sz);
+		const int ret = getsockopt(m_Socket, SOL_SOCKET, SO_REUSEADDR, (char*)&op, &sz);
 
 		if (ret == SOCKET_ERROR)
 			return SOCKET_ERROR;
@@ -471,7 +469,7 @@ namespace JNetwork {
 	int SocketOption::IsExclusiveReuseAddressEnabled() const {
 		int op;
 		int sz = sizeof(int);
-		int ret = getsockopt(m_Socket, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char*)&op, &sz);
+		const int ret = getsockopt(m_Socket, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char*)&op, &sz);
 
 		if (ret == SOCKET_ERROR)
 			return SOCKET_ERROR;
@@ -482,7 +480,7 @@ namespace JNetwork {
 	int SocketOption::IsLingerEnabled() const {
 		int op;
 		int sz = sizeof(int);
-		int ret = getsockopt(m_Socket, SOL_SOCKET, SO_DONTLINGER, (char*)&op, &sz);
+		const int ret = getsockopt(m_Socket, SOL_SOCKET, SO_DONTLINGER, (char*)&op, &sz);
 
 		if (ret == SOCKET_ERROR)
 			return SOCKET_ERROR;
@@ -493,7 +491,7 @@ namespace JNetwork {
 	int SocketOption::IsKeepAliveEnabled() const {
 		int op;
 		int sz = sizeof(int);
-		int ret = getsockopt(m_Socket, SOL_SOCKET, SO_KEEPALIVE, (char*)&op, &sz);
+		const int ret = getsockopt(m_Socket, SOL_SOCKET, SO_KEEPALIVE, (char*)&op, &sz);
 
 		if (ret == SOCKET_ERROR)
 			return SOCKET_ERROR;

@@ -1,5 +1,5 @@
-/*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+ï»¿/*
+	ï¿½Û¼ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 */
 
 #pragma once
@@ -9,7 +9,7 @@ namespace JCore {
 template <typename T>
 struct ListNode
 {
-	using TListNode = typename ListNode<T>;
+	using TListNode = ListNode<T>;
 
 	template <typename... Args>
 	explicit ListNode(Args&&... args) {
@@ -29,7 +29,7 @@ struct ListNode
 		Value.~T();
 	}
 
-	union { T Value; };	// Lazy InitializationÀ» À§ÇØ
+	union { T Value; };	// Lazy Initializationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	TListNode* Next = nullptr;
 	TListNode* Previous = nullptr;
 };

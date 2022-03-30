@@ -13,7 +13,6 @@ int IOCPPostOrder::Process(IOCPWorker* worker) {
 	JCore::AutoPointer<IOCPPostOrder> autoPtrRelease(this, [](IOCPPostOrder* po) {po->Release(); });
 
 	switch (Order) {
-	
 	case IOCP_POST_ORDER_TERMINATE:
 		SetEvent(Handle);
 		return IOCP_POST_ORDER_TERMINATE;
@@ -27,6 +26,8 @@ int IOCPPostOrder::Process(IOCPWorker* worker) {
 		SetEvent(Handle);										// WorkerManager의 WaitForMultipleObjects에 신호를 보내줌 / 해당 쓰레드가 계속 진행을 시작했음을 알려준다.
 		worker->m_eState = Worker::State::Running;
 		return IOCP_POST_ORDER_PAUSE;
+	default: 
+		return -1;
 	}
 }
 

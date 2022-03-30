@@ -1,13 +1,7 @@
 #pragma once
 
 
-#include <JNetwork/Network.h>
-#include <JNetwork/Winsock.h>
-#include <JNetwork/Socket.h>
 #include <JNetwork/Host/TcpServer.h>
-#include <JNetwork/Host/TcpClient.h>
-
-#include <JCore/Container/ArrayQueue.h>
 
 using namespace JCore;
 using namespace JNetwork;
@@ -24,7 +18,7 @@ public:
     ~MemoryLeakDetector() {
         _CrtMemState stateNow, stateDiff;
         _CrtMemCheckpoint(&stateNow);
-        int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
+        const int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
 
         if (diffResult) {
             reportFailure(stateDiff.lSizes[1]);

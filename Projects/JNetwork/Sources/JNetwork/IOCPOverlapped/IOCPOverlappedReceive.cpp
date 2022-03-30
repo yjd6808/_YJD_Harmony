@@ -10,17 +10,15 @@
 namespace JNetwork {
 
 IOCPOverlappedReceive::IOCPOverlappedReceive(TcpSession* session, IOCP* iocp) :
-	m_pReceivedSession(session),
-	IOCPOverlapped(iocp, Type::Receive)
+	IOCPOverlapped(iocp, Type::Receive),
+	m_pReceivedSession(session)
 {
 }
 
-IOCPOverlappedReceive::~IOCPOverlappedReceive() {
-
-}
+IOCPOverlappedReceive::~IOCPOverlappedReceive() = default;
 
 void IOCPOverlappedReceive::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	SOCKET hReceiveSock = m_pReceivedSession->Socket().Handle();
+	const SOCKET hReceiveSock = m_pReceivedSession->Socket().Handle();
 
 	if (IsFailed(hReceiveSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
 		m_pReceivedSession->Disconnect();

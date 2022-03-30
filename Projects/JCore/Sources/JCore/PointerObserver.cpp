@@ -25,7 +25,7 @@ void VoidBase::OwnerMoveToOwner(VoidOwner& owner) {
 	owner.m_pCounter = nullptr;
 }
 
-void VoidBase::WatcherCopyToOwner(VoidOwner& owner) {
+void VoidBase::WatcherCopyToOwner(const VoidOwner& owner) {
 	SubtractWatcherCount();
 
 	m_pPointer = owner.m_pPointer;
@@ -34,7 +34,7 @@ void VoidBase::WatcherCopyToOwner(VoidOwner& owner) {
 	AddWatcherCount();
 }
 
-void VoidBase::WatcherCopyToWatcher(VoidWatcher& watcher) {
+void VoidBase::WatcherCopyToWatcher(const VoidWatcher& watcher) {
 	SubtractWatcherCount();
 
 	m_pPointer = watcher.m_pPointer;

@@ -28,7 +28,7 @@ namespace JCore {
 	}
 
 	bool CriticalSectionMutex::TryLock() {
-		BOOL ret = TryEnterCriticalSection(&m_CriticalSection);
+		const BOOL ret = TryEnterCriticalSection(&m_CriticalSection);
 		return m_bLocked = (bool)ret;
 	}
 
@@ -39,8 +39,9 @@ namespace JCore {
 	/*=====================================================================================
 								EventMutex
 	=======================================================================================*/
-	EventMutex::EventMutex() {
-		m_LockEvent = CreateEvent(NULL, FALSE, TRUE, NULL);
+	EventMutex::EventMutex()
+		: m_LockEvent(CreateEvent(NULL, FALSE, TRUE, NULL)) {
+
 	}
 
 	EventMutex::~EventMutex() {
@@ -48,7 +49,7 @@ namespace JCore {
 	}
 
 	void EventMutex::Lock() {
-		DWORD dwResult = WaitForSingleObject(m_LockEvent, INFINITE);
+		const DWORD dwResult = WaitForSingleObject(m_LockEvent, INFINITE);
 
 
 		if (dwResult == WAIT_FAILED) {
@@ -91,8 +92,7 @@ namespace JCore {
 	SpinLock::SpinLock() : m_bLocked(false) {
 	}
 
-	SpinLock::~SpinLock() {
-	}
+	SpinLock::~SpinLock() = default;
 
 	// @참고1 : https://en.cppreference.com/w/cpp/atomic/atomic/compare_exchange - compare_exchange_weak
 	// @참고2 : https://jacking75.github.io/C++_std_atomic_compare_exchange_strong/ - 한글로 설명된 것(잭킹75)

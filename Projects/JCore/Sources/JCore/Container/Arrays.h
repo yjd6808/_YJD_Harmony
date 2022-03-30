@@ -87,7 +87,7 @@ struct Arrays final
 	/// </summary>
 	template <typename T, Int32U ArraySize>
 	static int LinearSearchReverse(T(&arr)[ArraySize], const T& data) {
-		LinearSearchReverse(arr, ArraySize, data);
+		return LinearSearchReverse(arr, ArraySize, data);
 	}
 
 
@@ -122,7 +122,7 @@ struct Arrays final
 
 		while (iStart <= iEnd) {
 			int iMid = (iStart + iEnd) / 2;
-			int iComp = Comparator<T>()(arr[iMid], data);
+			const int iComp = Comparator<T>()(arr[iMid], data);
 
 			if (arr[iMid] == data) {
 				return iMid;

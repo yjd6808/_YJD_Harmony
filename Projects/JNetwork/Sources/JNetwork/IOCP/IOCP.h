@@ -4,6 +4,7 @@
 
 #define IOCP_POST_ORDER_TERMINATE	0x01
 #define IOCP_POST_ORDER_PAUSE		0x02
+#define IOCP_POST_ORDER_ERROR	   -0x01
 
 namespace JNetwork {
 
@@ -32,9 +33,9 @@ public:
 	void Resume();
 	void Join();
 
-	bool Connect(HANDLE handle, ULONG_PTR completionKey);
-	BOOL GetStatus(LPDWORD numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped);
-	BOOL Post(DWORD dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped);
+	bool Connect(HANDLE handle, ULONG_PTR completionKey) const;
+	BOOL GetStatus(LPDWORD numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const;
+	BOOL Post(DWORD dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const;
 private:
 	State m_eState;
 	HANDLE m_hIOCP;

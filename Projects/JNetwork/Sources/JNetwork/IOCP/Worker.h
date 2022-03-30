@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <JCore/LockGuard.h>
-
 #include <thread>
 #include <Windows.h>
 
@@ -23,8 +21,10 @@ public:
 		Joined
 	};
 
-	Worker() : m_eState(State::Prepared) { m_hPauseEvent = CreateEvent(NULL, FALSE, FALSE, NULL); };
-	virtual ~Worker() {};
+	Worker() : m_eState(State::Prepared)
+	         , m_hPauseEvent(CreateEvent(NULL, FALSE, FALSE, NULL)) {
+	};
+	virtual ~Worker() = default;;
 
 	virtual void Run(void* param = nullptr) = 0;
 	virtual void JoinWait(HANDLE waitHandle) = 0;

@@ -1,3 +1,4 @@
+// ReSharper disable CppClangTidyCppcoreguidelinesProTypeStaticCastDowncast
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/IOCP/IOCPWorker.h>
@@ -9,13 +10,10 @@ using namespace JCore;
 namespace JNetwork {
 	IOCPWorker::IOCPWorker(IOCP* iocp) : 
 		Worker(), 
-		m_pIocp(iocp)
-	{
-		
+		m_pIocp(iocp) {
 	}
 
-	IOCPWorker::~IOCPWorker() {
-	}
+	IOCPWorker::~IOCPWorker() = default;
 
 	void IOCPWorker::Run(void* param) {
 		// std::thread 멤버 함수로 실행하는 법
@@ -26,12 +24,12 @@ namespace JNetwork {
 	}
 
 	void IOCPWorker::JoinWait(HANDLE waitHandle) {
-		ULONG_PTR completionKey = (ULONG_PTR)new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
+		const ULONG_PTR completionKey = (ULONG_PTR)new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
 		m_pIocp->Post(0, completionKey, nullptr);	// 어느 쓰레드가 꺠어날지 모르기 때문에 여기서 join을 수행하면 안됨
 		
 	}
 
-	void IOCPWorker::Join(void) {
+	void IOCPWorker::Join() {
 		if (m_Thread.joinable())
 			m_Thread.join();
 		m_eState = State::Joined;
@@ -39,7 +37,7 @@ namespace JNetwork {
 
 	void IOCPWorker::Pause(HANDLE waitHandle) {
 		// 주의!> 이 워커 쓰레드가 Pause 된게 아니라 IOCP에서 관리중인 쓰레드들 중하나가 Pause됨
-		ULONG_PTR completionKey = (ULONG_PTR)new IOCPPostOrder{ IOCP_POST_ORDER_PAUSE, waitHandle };
+		const ULONG_PTR completionKey = (ULONG_PTR)new IOCPPostOrder{ IOCP_POST_ORDER_PAUSE, waitHandle };
 		ResetEvent(m_hPauseEvent);
 		m_pIocp->Post(0, completionKey, nullptr);
 	}
@@ -57,10 +55,10 @@ namespace JNetwork {
 			ULONG_PTR completionKey = NULL;
 			OVERLAPPED* pOverlapped = nullptr;
 
-			BOOL bResult = m_pIocp->GetStatus(&numberOfBytesTransffered, &completionKey, (LPOVERLAPPED*)&pOverlapped);
+			const BOOL bResult = m_pIocp->GetStatus(&numberOfBytesTransffered, &completionKey, (LPOVERLAPPED*)&pOverlapped);
 
 			IOCPPostOrder* pIOCPPostOrder = reinterpret_cast<IOCPPostOrder*>(completionKey);
-			IOCPOverlapped* pIOCPOverlapped = static_cast<IOCPOverlapped*>(pOverlapped);
+			IOCPOverlapped* pIOCPOverlapped = static_cast<IOCPOverlapped*>(pOverlapped);		// dynamic_cast를 하고싶지만 OVERLAPPED는 가상 구조체가 아님
 
 			if (numberOfBytesTransffered == 0 && completionKey != NULL) {
 
@@ -69,8 +67,10 @@ namespace JNetwork {
 				switch (pIOCPPostOrder->Process(this)) {
 					case IOCP_POST_ORDER_TERMINATE: 
 						goto THREAD_END;
-					case IOCP_POST_ORDER_PAUSE: 
+					case IOCP_POST_ORDER_PAUSE:
 						continue;
+					case IOCP_POST_ORDER_ERROR:
+						DebugAssert(false, "... WTF?");
 				}
 			}
 

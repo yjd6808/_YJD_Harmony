@@ -17,12 +17,12 @@ namespace JCore {
 template <typename T>
 class ArrayStack : public ArrayCollection<T>
 {
-	using TEnumerator			= typename Enumerator<T>;
-	using TArrayCollection		= typename ArrayCollection<T>;
-	using TArrayStack			= typename ArrayStack<T>;
-	using TArrayStackIterator	= typename ArrayStackIterator<T>;
+	using TEnumerator			= Enumerator<T>;
+	using TArrayCollection		= ArrayCollection<T>;
+	using TArrayStack			= ArrayStack<T>;
+	using TArrayStackIterator	= ArrayStackIterator<T>;
 public:
-	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapcity) 
+	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapacity) 
 		: TArrayCollection(capacity, ContainerType::ArrayStack) 
 	{
 	}
@@ -32,7 +32,7 @@ public:
 	{
 	}
 
-	ArrayStack(TArrayStack&& other) 
+	ArrayStack(TArrayStack&& other) noexcept
 		: TArrayCollection(Move(other), ContainerType::ArrayStack) 
 	{
 	}
@@ -41,14 +41,14 @@ public:
 	{
 	}
 
-	virtual ~ArrayStack() noexcept {}
+	~ArrayStack() noexcept override {}
 public:
 	TArrayStack& operator=(const TArrayStack& other) {
 		this->CopyFrom(other);
 		return *this;
 	}
 
-	TArrayStack& operator=(TArrayStack&& other) {
+	TArrayStack& operator=(TArrayStack&& other) noexcept {
 		this->CopyFrom(Move(other));
 		return *this;
 	}
@@ -92,11 +92,11 @@ public:
 		this->EmplaceAt(this->m_iSize++, Forward<Args>(args)...);
 	}
 
-	virtual TEnumerator Begin() const {
+	TEnumerator Begin() const override {
 		return MakeShared<TArrayStackIterator>(this->GetOwner(), 0);
 	}
 
-	virtual TEnumerator End() const {
+	TEnumerator End() const override {
 		return MakeShared<TArrayStackIterator>(this->GetOwner(), this->Size());
 	}
 

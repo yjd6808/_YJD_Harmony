@@ -19,8 +19,8 @@ using namespace std;
 TEST(SmartPointerTest, UniquePointer) {
 	MemoryLeakDetector leak;
 
-	UniquePointer<int> g1 = MakeUnique<int>();
-	UniquePointer<int> g2 = MakeUnique<int>();
+	const UniquePointer<int> g1 = MakeUnique<int>();
+	const UniquePointer<int> g2 = MakeUnique<int>();
 	*g1 = 30;
 	*g2 = 40;
 

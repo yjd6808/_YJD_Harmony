@@ -67,14 +67,14 @@ public:
 	bool Contain(const String& str) const;
 	void Format(const char* format, ...);
 	void ReplaceAll(const char* from, const char* to);
-	void SetAt(const int idx, const char ch);
+	void SetAt(const int idx, const char ch) const;
 	const char GetAt(const int idx) const;
 	String GetRange(const int startIdx, const int endIdx) const;
 	char* GetRangeUnsafe(const int startIdx, const int endIdx) const;
 	std::vector<String> Split(const char* delimiter, const bool includeEmpty = false) const;
 	void Initialize(int capacity = DEFAULT_BUFFER_SIZE);
 public:
-	char& operator[](const int idx);
+	char& operator[](const int idx) const;
 
 	template <typename T>
 	String operator+(const T& other) { 
@@ -82,9 +82,9 @@ public:
 		temp.Append(other);
 		return temp;
 	}
-	String operator+(const String& other);
-	String operator+(const char ch);
-	String operator+(const char* str);
+	String operator+(const String& other) const;
+	String operator+(const char ch) const;
+	String operator+(const char* str) const;
 
 	template <typename T>
 	String& operator+=(const T& other) { Append(other);  return *this; }
@@ -95,29 +95,29 @@ public:
 	String& operator=(const String& other);
 	String& operator=(String&& other) noexcept;
 	String& operator=(const char* other);
-	bool operator==(const String& other);
-	bool operator==(const char* other);
-	bool operator!=(const String& other);
-	bool operator!=(const char* other);
+	bool operator==(const String& other) const;
+	bool operator==(const char* other) const;
+	bool operator!=(const String& other) const;
+	bool operator!=(const char* other) const;
 
-	bool operator<(const String& other);
-	bool operator<(const char* other);
-	bool operator>(const String& other);
-	bool operator>(const char* other);
-	bool operator<=(const String& other);
-	bool operator<=(const char* other);
-	bool operator>=(const String& other);
-	bool operator>=(const char* other);
+	bool operator<(const String& other) const;
+	bool operator<(const char* other) const;
+	bool operator>(const String& other) const;
+	bool operator>(const char* other) const;
+	bool operator<=(const String& other) const;
+	bool operator<=(const char* other) const;
+	bool operator>=(const String& other) const;
+	bool operator>=(const char* other) const;
 
 	friend std::ostream& operator<<(std::ostream& os, const String& src);
 private:
-	void ReplaceAllWithEqualLen(const char* to, const int fromLen, std::vector<int>& offsets);
+	void ReplaceAllWithEqualLen(const char* to, const int fromLen, std::vector<int>& offsets) const;
 	void ReplaceAllWithDifferentLen(const char* from, const char* to, const int fromLen, const int toLen);
 		
 private:
-	char* m_pBuffer;
-	int m_iLen;
-	int m_iCapacity;
+	char* m_pBuffer{};
+	int m_iLen{};
+	int m_iCapacity{};
 	
 	friend class StringUtil;
 };

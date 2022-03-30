@@ -15,7 +15,7 @@ public:
 	IOCPOverlappedAccept(TcpServer* tcpServer, TcpSession* session, IOCP* iocp);
 	~IOCPOverlappedAccept() override;
 public:
-	virtual void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey);
+	void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	TcpSession* m_pAcceptedSession;	
 	TcpServer* m_pListeningServer;

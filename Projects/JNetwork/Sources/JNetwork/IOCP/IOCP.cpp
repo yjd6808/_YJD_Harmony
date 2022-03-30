@@ -6,10 +6,10 @@
 namespace JNetwork {
 
 	IOCP::IOCP() :
-		m_pWorkerManager(nullptr),
+		m_eState(State::Uninitialized),
 		m_hIOCP(INVALID_HANDLE_VALUE),
 		m_iThreadCount(0),
-		m_eState(State::Uninitialized)
+		m_pWorkerManager(nullptr)
 	{
 	}
 
@@ -97,15 +97,15 @@ namespace JNetwork {
 		m_eState = State::Joined;
 	}
 
-	bool IOCP::Connect(HANDLE handle, ULONG_PTR completionKey) {
+	bool IOCP::Connect(HANDLE handle, ULONG_PTR completionKey) const {
 		return CreateIoCompletionPort(handle, m_hIOCP, completionKey, m_iThreadCount) != 0;
 	}
 
-	BOOL IOCP::GetStatus(LPDWORD numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) {
+	BOOL IOCP::GetStatus(LPDWORD numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const {
 		return GetQueuedCompletionStatus(m_hIOCP, numberOfBytesTransffered, completionKey, ppOverlapped, INFINITE);
 	}
 
-	BOOL IOCP::Post(DWORD dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) {
+	BOOL IOCP::Post(DWORD dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const {
 		return PostQueuedCompletionStatus(m_hIOCP, dwNumberOfBytesTransferred, dwCompletionKey, pOverlapped);
 	}
 }

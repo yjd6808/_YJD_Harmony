@@ -6,8 +6,6 @@
 #pragma once
 
 #include <JCore/Memory.h>
-#include <JCore/AutoObject.h>
-#include <JCore/Deletor.h>
 #include <JCore/Comparator.h>
 
 #include <JCore/Container/Arrays.h>
@@ -26,9 +24,9 @@ namespace JCore {
 template <typename T>
 class ArrayCollection : public Collection<T>
 {
-	using TCollection				= typename Collection<T>;
-	using TArrayCollection			= typename ArrayCollection<T>;
-	using TArrayCollectionIterator  = typename ArrayCollectionIterator<T>;
+	using TCollection				= Collection<T>;
+	using TArrayCollection			= ArrayCollection<T>;
+	using TArrayCollectionIterator  = ArrayCollectionIterator<T>;
 public:
 	// [1]
 	ArrayCollection(ContainerType containerType) 
@@ -47,7 +45,7 @@ public:
 			throw InvalidArgumentException("컨테이너의 크기가 0이하가 될 수 없습니다.");
 		}
 
-		m_pArray = Memory::Allocate<T*>(sizeof(T) * capacity);
+		m_pArray = Memory::Allocate<T*>(capacity * sizeof(T));
 		m_iCapacity = capacity;
 	}
 
@@ -67,12 +65,12 @@ public:
 
 	// [5]
 	ArrayCollection(std::initializer_list<T> ilist, ContainerType containerType)
-		: TArrayCollection(ilist.size() + ms_iDefaultCapcity, containerType) // -> Call [2]
+		: TArrayCollection(ilist.size() + ms_iDefaultCapacity, containerType) // -> Call [2]
 	{
 		CopyFrom(ilist);
 	}
 
-	virtual ~ArrayCollection() noexcept = 0;
+	~ArrayCollection() noexcept override = 0;
 
 	int Capacity() const {
 		return m_iCapacity;
@@ -122,7 +120,7 @@ protected:
 
 		Clear();
 
-		int iCapacity = other.Capacity();
+		const int iCapacity = other.Capacity();
 
 		if (iCapacity > m_iCapacity) {
 			Expand(iCapacity);
@@ -134,7 +132,7 @@ protected:
 	}
 
 	virtual void CopyFrom(TArrayCollection&& other) {
-		this->ThrowIfAssignSelf(other);
+		// this->ThrowIfAssignSelf(other);
 
 		Clear(true);
 
@@ -174,7 +172,7 @@ protected:
 			return false;
 		}
 
-		int iCapacity = CalculateExpandCapacity(size);
+		const int iCapacity = CalculateExpandCapacity(size);
 		Expand(iCapacity);
 		return true;
 	}
@@ -312,7 +310,7 @@ protected:
 	/// </summary>
 	/// <param name="blockIdx"> 블록 시작 위치 </param>
 	/// <param name="blockSize"> 블록 크기 </param>
-	/// <param name="moveCount"> 이동할 위치 </param>
+	/// <param name="moveIdx"> 이동할 위치 </param>
 	void MoveBlock(const int blockIdx, const int moveIdx, const int blockSize) {
 		if (blockSize < 0) {
 			throw InvalidArgumentException("복사할 블록 크기가 0보다 작을 수 없습니다.");
@@ -353,7 +351,7 @@ protected:
 	/// <summary>
 	/// 전달받은 사이즈 크기에 맞는 배열 크기를 반환해준다.
 	/// </summary>
-	int CalculateExpandCapacity(int size) {
+	int CalculateExpandCapacity(int size) const {
 		if (size < m_iCapacity) {
 			return m_iCapacity;
 		}
@@ -401,16 +399,16 @@ protected:
 		}
 	}
 protected:
-	static T* _Source(const TArrayCollection& collection) {
+	static T* Source(const TArrayCollection& collection) {
 		return collection.m_pArray;
 	}
 
-	static T& _GetAtUnsafe(const TArrayCollection& collection, const int idx) {
+	static T& GetAtUnsafe(const TArrayCollection& collection, const int idx) {
 		return collection.m_pArray[idx];
 	}
 protected:
 	static constexpr int ms_iExpandingFactor = 4;	// 꽉차면 4배씩 확장
-	static constexpr int ms_iDefaultCapcity = 32;	// 초기 배열 크기
+	static constexpr int ms_iDefaultCapacity = 32;	// 초기 배열 크기
 protected:
 	T* m_pArray;
 	int m_iCapacity;

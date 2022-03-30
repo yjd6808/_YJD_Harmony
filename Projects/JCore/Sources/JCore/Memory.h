@@ -31,7 +31,7 @@ public:
 		const int kiDataTypeSize = sizeof(T);
 
 		Byte* pSrc = (Byte*)src;
-		Byte* pValue = (Byte*)&value;
+		const Byte* pValue = (Byte*)&value;
 
 		for (int i = 0; i < srcCapacity; i++) {
 			Copy(pSrc, kiDataTypeSize, pValue, kiDataTypeSize);

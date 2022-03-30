@@ -18,25 +18,25 @@ const int String::DEFAULT_BUFFER_SIZE = 32;
 const float String::EXPANDING_FACTOR = 1.5f;
 const char* String::EMPTY = "";
 
-String::String() {
-	m_pBuffer = nullptr;
-	m_iLen = 0;
-	m_iCapacity = 0;
-
+String::String() :
+	m_pBuffer(nullptr),
+	m_iLen(0),
+	m_iCapacity(0) {
 	Initialize();
 }
 
 String::String(const int capacity) : String(EMPTY, capacity) {
 }
 
-String::String(const char* str, const int capacity) {
-	m_pBuffer = nullptr;
+String::String(const char* str, const int capacity)
+	: m_pBuffer(nullptr) {
+
 
 	if (str == nullptr) {
 		throw NullPointerException("문자열이 nullptr 입니다.");
 	}
 
-	int iLen = StringUtil::Length(str);
+	const int iLen = StringUtil::Length(str);
 	int iExpectedCapcity = int(iLen * EXPANDING_FACTOR);
 
 	if (iExpectedCapcity < capacity) {
@@ -78,8 +78,8 @@ String::~String() {
 /* ========================================================== */
 
 void String::Append(const char ch) {
-	int iDstLen = m_iLen + 1;
-	int iDstCapacity = int(iDstLen * EXPANDING_FACTOR);
+	const int iDstLen = m_iLen + 1;
+	const int iDstCapacity = int(iDstLen * EXPANDING_FACTOR);
 
 	if (iDstLen >= m_iCapacity) {
 		Resize(iDstCapacity);
@@ -95,9 +95,9 @@ void String::Append(const char* str) {
 		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
 	}
 
-	int iStrLen = StringUtil::Length(str);
-	int iDstLen = m_iLen + iStrLen;
-	int iDstCapacity = int(iDstLen * EXPANDING_FACTOR);
+	const int iStrLen = StringUtil::Length(str);
+	const int iDstLen = m_iLen + iStrLen;
+	const int iDstCapacity = int(iDstLen * EXPANDING_FACTOR);
 
 	if (iDstLen >= m_iCapacity) {
 		Resize(iDstCapacity);
@@ -110,7 +110,7 @@ void String::Append(const char* str) {
 
 
 void String::Append(const std::string& str) {
-	if (str.size() == 0) {
+	if (str.empty()) {
 		return;
 	}
 
@@ -154,7 +154,7 @@ int String::Compare(const String& str) const {
 // -1 : 비교 문자열(str)이 우선순위가 더 큼
 // O(n)
 int String::Compare(const char* str, const int strLen) const {
-	int iStrLen = strLen == -1 ? StringUtil::Length(str) : strLen;
+	const int iStrLen = strLen == -1 ? StringUtil::Length(str) : strLen;
 	char* pSrc = m_pBuffer;
 
 	while (*pSrc != NULL && *str != NULL) {
@@ -179,7 +179,7 @@ std::vector<int> String::FindAll(int startIdx, int endIdx, const char* str) cons
 	std::vector<int> offsets;
 	char* pSrc = m_pBuffer + startIdx;
 
-	int iStrLen = StringUtil::Length(str);
+	const int iStrLen = StringUtil::Length(str);
 	int iContinuousCount = 0;
 	int iOffset = startIdx;
 
@@ -233,7 +233,7 @@ std::vector<int> String::FindAll(const String& str) const {
 int String::Find(int startIdx, int endIdx, const char* str) const {
 	char* pSrc = m_pBuffer + startIdx;
 
-	int iStrLen = StringUtil::Length(str);
+	const int iStrLen = StringUtil::Length(str);
 	int iContinuousCount = 0;
 	int iOffset = startIdx;
 
@@ -287,7 +287,7 @@ int String::Find(const String& str) const {
 int String::FindReverse(int startIdx, int endIdx, const char* str) const {
 	char* pSrc = m_pBuffer + endIdx;
 
-	int iStrLen = StringUtil::Length(str);
+	const int iStrLen = StringUtil::Length(str);
 	int iContinuousCount = 0;
 	int iOffset = endIdx;
 
@@ -348,7 +348,7 @@ void String::Format(const char* format, ...) {
 	va_list args;
 	va_start(args, format);
 
-	int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
+	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
 
 	if (iExpectedLen <= 0) {
 		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
@@ -368,7 +368,7 @@ void String::Format(const char* format, ...) {
 // 문자열 버퍼(m_pBuffer)에서 from 문자열을 검색하여 to 문자열로 변환합니다.
 // O(n)
 void String::ReplaceAll(const char* from, const char* to) {
-	int iFromLen = StringUtil::Length(from);
+	const int iFromLen = StringUtil::Length(from);
 	
 	if (iFromLen == 0) {
 		*this = to;
@@ -376,9 +376,9 @@ void String::ReplaceAll(const char* from, const char* to) {
 	}
 
 	std::vector<int> iFindOffsets = FindAll(from);
-	int iToLen = StringUtil::Length(to);
+	const int iToLen = StringUtil::Length(to);
 
-	if (iFindOffsets.size() == 0) {
+	if (iFindOffsets.empty()) {
 		return;
 	}
 
@@ -391,17 +391,17 @@ void String::ReplaceAll(const char* from, const char* to) {
 	ReplaceAllWithDifferentLen(from, to, iFromLen, iToLen);
 }
 
-void String::ReplaceAllWithEqualLen(const char* to, const int len, std::vector<int>& offsets) {
+void String::ReplaceAllWithEqualLen(const char* to, const int len, std::vector<int>& offsets) const {
 	for (int i = 0; i < offsets.size(); i++) {
 		Memory::CopyUnsafe(&m_pBuffer[offsets[i]], to, len);
 	}
 }
 
 void String::ReplaceAllWithDifferentLen(const char* from, const char* to, const int fromLen, const int toLen) {
-	std::vector<String> vecTokens = Split(from, true);
+	const std::vector<String> vecTokens = Split(from, true);
 
-	int iExceededSize = toLen * vecTokens.size() - fromLen * vecTokens.size();		// 추가로 확장되어야할 버퍼 크기
-	int iExpectedCapaity = iExceededSize + m_iLen + 1;
+	const int iExceededSize = toLen * vecTokens.size() - fromLen * vecTokens.size();		// 추가로 확장되어야할 버퍼 크기
+	const int iExpectedCapaity = iExceededSize + m_iLen + 1;
 
 	if (iExpectedCapaity > m_iCapacity) {
 		Initialize(iExpectedCapaity + DEFAULT_BUFFER_SIZE);
@@ -416,7 +416,7 @@ void String::ReplaceAllWithDifferentLen(const char* from, const char* to, const 
 	Append(vecTokens[vecTokens.size() - 1]);
 }
 
-void String::SetAt(const int idx, const char ch) {
+void String::SetAt(const int idx, const char ch) const {
 	if (!IsValidIndex(idx)) {
 		throw OutOfRangeException("인덱스가 범위를 벗어났습니다.");
 	}
@@ -469,7 +469,7 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 		return vecTokens;
 	}
 
-	int iDelimiterLen = StringUtil::Length(delimiter);
+	const int iDelimiterLen = StringUtil::Length(delimiter);
 	if (iOffset - 1 < 0) {
 		if (includeEmpty) {
 			vecTokens.emplace_back(EMPTY);
@@ -481,7 +481,7 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 	iOffset += iDelimiterLen;
 
 	while (iOffset < m_iLen) {
-		int iNextOffset = Find(iOffset, m_iLen - 1, delimiter);
+		const int iNextOffset = Find(iOffset, m_iLen - 1, delimiter);
 
 		if (iNextOffset == -1) {
 			break;
@@ -517,7 +517,7 @@ void String::Initialize(int capacity) {
 	m_pBuffer[0] = NULL;
 }
 
-char& String::operator[](const int idx) {
+char& String::operator[](const int idx) const {
 	if (!IsValidIndex(idx)) {
 		throw OutOfRangeException("인덱스가 범위를 벗어났습니다.");
 	}
@@ -525,19 +525,19 @@ char& String::operator[](const int idx) {
 	return m_pBuffer[idx];
 }
 
-String String::operator+(const String& other) {
+String String::operator+(const String& other) const {
 	String temp = *this;
 	temp.Append(other);
 	return temp;
 }
 
-String String::operator+(const char ch) {
+String String::operator+(const char ch) const {
 	String temp = *this;
 	temp.Append(ch);
 	return temp;
 }
 
-String String::operator+(const char* str) {
+String String::operator+(const char* str) const {
 	String temp = *this;
 	temp.Append(str);
 	return temp;
@@ -575,8 +575,8 @@ String& String::operator=(String&& other) noexcept {
 }
 
 String& String::operator=(const char* other) {
-	int iToLen = StringUtil::Length(other);
-	int iExpectedCapaity = iToLen + 10;
+	const int iToLen = StringUtil::Length(other);
+	const int iExpectedCapaity = iToLen + 10;
 
 	if (iExpectedCapaity > m_iCapacity) {
 		Initialize(iExpectedCapaity + DEFAULT_BUFFER_SIZE);
@@ -588,51 +588,51 @@ String& String::operator=(const char* other) {
 	return *this;
 }
 
-bool String::operator==(const String& other) {
+bool String::operator==(const String& other) const {
 	return Compare(other) == 0;
 }
 
-bool String::operator==(const char* other) {
+bool String::operator==(const char* other) const {
 	return Compare(other) == 0;
 }
 
-bool String::operator!=(const String& other) {
+bool String::operator!=(const String& other) const {
 	return Compare(other) != 0;
 }
 
-bool String::operator!=(const char* other) {
+bool String::operator!=(const char* other) const {
 	return Compare(other) != 0;
 }
 
-bool String::operator<(const String& other) {
+bool String::operator<(const String& other) const {
 	return Compare(other) < 0;
 }
 
-bool String::operator<(const char* other) {
+bool String::operator<(const char* other) const {
 	return Compare(other) < 0;
 }
 
-bool String::operator>(const String& other) {
+bool String::operator>(const String& other) const {
 	return Compare(other) > 0;
 }
 
-bool String::operator>(const char* other) {
+bool String::operator>(const char* other) const {
 	return Compare(other) > 0;
 }
 
-bool String::operator<=(const String& other) {
+bool String::operator<=(const String& other) const {
 	return Compare(other) <= 0;
 }
 
-bool String::operator<=(const char* other) {
+bool String::operator<=(const char* other) const {
 	return Compare(other) <= 0;
 }
 
-bool String::operator>=(const String& other) {
+bool String::operator>=(const String& other) const {
 	return Compare(other) >= 0;
 }
 
-bool String::operator>=(const char* other) {
+bool String::operator>=(const char* other) const {
 	return Compare(other) >= 0;
 }
 

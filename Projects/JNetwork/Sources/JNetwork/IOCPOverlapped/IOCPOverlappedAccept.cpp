@@ -10,19 +10,17 @@
 namespace JNetwork {
 
 IOCPOverlappedAccept::IOCPOverlappedAccept(TcpServer* tcpServer, TcpSession* session, IOCP* iocp) :
-	m_pListeningServer(tcpServer),
+	IOCPOverlapped(iocp, Type::Accept),
 	m_pAcceptedSession(session),
-	IOCPOverlapped(iocp, Type::Accept)
+	m_pListeningServer(tcpServer)
 {
 }
 
-IOCPOverlappedAccept::~IOCPOverlappedAccept() {
-
-}
+IOCPOverlappedAccept::~IOCPOverlappedAccept() = default;
 
 void IOCPOverlappedAccept::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	SOCKET hAcceptedSock = m_pAcceptedSession->Socket().Handle();
-	SOCKET hListeningSock = m_pListeningServer->Socket().Handle();
+	const SOCKET hAcceptedSock = m_pAcceptedSession->Socket().Handle();
+	const SOCKET hListeningSock = m_pListeningServer->Socket().Handle();
 
 	if (IsFailed(hAcceptedSock, result, numberOfBytesTransffered)) {
 		m_pAcceptedSession->Disconnect();

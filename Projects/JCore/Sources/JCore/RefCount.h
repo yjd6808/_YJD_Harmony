@@ -10,8 +10,8 @@ namespace JCore {
 
 struct RefCount
 {
-	RefCount() {}
-	virtual ~RefCount() {}
+	RefCount() = default;
+	virtual ~RefCount() = default;
 
 	void AddRef()				{ m_Ref++; }
 	void AddRef(int cnt)		{ m_Ref += cnt; }
@@ -24,6 +24,7 @@ struct RefCount
 			delete this;
 		}
 	}
+
 protected:
 	std::atomic<int> m_Ref = 0;
 };

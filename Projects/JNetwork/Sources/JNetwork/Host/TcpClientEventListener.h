@@ -14,8 +14,8 @@ class TcpClient;
 class TcpClientEventListener
 {
 public:
-	TcpClientEventListener() {}
-	virtual ~TcpClientEventListener() {}
+	TcpClientEventListener() = default;
+	virtual ~TcpClientEventListener() = default;
 protected:
 	virtual void OnConnected() = 0;
 	virtual void OnDisconnected() = 0;

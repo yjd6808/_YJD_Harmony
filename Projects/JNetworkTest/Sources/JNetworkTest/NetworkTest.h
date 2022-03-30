@@ -41,7 +41,7 @@ public:
     ~MemoryLeakDetector() {
         _CrtMemState stateNow, stateDiff;
         _CrtMemCheckpoint(&stateNow);
-        int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
+        const int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
 
         if (diffResult) {
             reportFailure(stateDiff.lSizes[1]);

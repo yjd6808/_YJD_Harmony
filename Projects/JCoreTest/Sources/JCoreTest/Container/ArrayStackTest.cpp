@@ -16,7 +16,7 @@ using namespace std;
 TEST(ArrayStackTest, Regular) {
 	MemoryLeakDetector detector;
 	ArrayStack<int> stack;
-	int count = 320;
+	const int count = 320;
 
 	for (int i = 0; i < count; i++) {
 		stack.Push(i);

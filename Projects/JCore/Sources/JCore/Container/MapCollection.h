@@ -18,15 +18,15 @@ namespace JCore {
 template <typename TKey, typename TValue>
 class MapCollection : public Collection<KeyValuePair<TKey, TValue>>
 {
-	using TKeyValuePair			 = typename KeyValuePair<TKey, TValue>;
-	using TCollection			 = typename Collection<TKeyValuePair>;
-	using TMapCollection		 = typename MapCollection<TKey, TValue>;
-	using TMapCollectionIterator = typename MapCollectionIterator<TKey, TValue>;
+	using TKeyValuePair			 = KeyValuePair<TKey, TValue>;
+	using TCollection			 = Collection<TKeyValuePair>;
+	using TMapCollection		 = MapCollection<TKey, TValue>;
+	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue>;
 
 
 public:
 	MapCollection(ContainerType containerType) : TCollection(CollectionType::Map, containerType) {}
-	virtual ~MapCollection() noexcept = 0;
+	~MapCollection() noexcept override = 0;
 
 	// 전방 선언 및 HashMap과 TreeMap에서 접근할 수 있도록 public으로 선언함
 	struct KeyCollection;
@@ -43,20 +43,21 @@ public:
 
 	struct KeyCollection : public Collection<TKey>
 	{
-		using TkeyCollection = typename Collection<TKey>;
+		using TkeyCollection = Collection<TKey>;
 
 		KeyCollection(TMapCollection* map, ContainerType containerType)
 			: TkeyCollection(CollectionType::KeyCollection, containerType) 
 		{
 			m_pMap = map;
 		}
-		virtual ~KeyCollection() noexcept = default;
 
-		virtual int Size() const {
+		~KeyCollection() noexcept override = default;
+
+		int Size() const override {
 			return m_pMap->Size();
 		}
 
-		virtual bool IsEmpty() const {
+		bool IsEmpty() const override {
 			return m_pMap->IsEmpty();
 		}
 
@@ -65,37 +66,38 @@ public:
 
 	struct KeyCollectionIterator : public Iterator<TKey>
 	{
-		using TKeyIterator = typename Iterator<TKey>;
+		using TKeyIterator = Iterator<TKey>;
 
 		KeyCollectionIterator(VoidOwner& owner, TMapCollectionIterator* iterator) 
 			: TKeyIterator(owner)
 		{
 			m_pMapIterator = iterator;
 		}
-		virtual ~KeyCollectionIterator() noexcept = default;
+
+		~KeyCollectionIterator() noexcept override = default;
 
 
-		virtual bool HasPrevious() const {
+		bool HasPrevious() const override {
 			return m_pMapIterator->HasPrevious();
 		}
 
-		virtual bool HasNext() const {
+		bool HasNext() const override {
 			return m_pMapIterator->HasNext();
 		}
 
-		virtual TKey& Next() {
+		TKey& Next() override {
 			return m_pMapIterator->Next().Key;
 		}
 
-		virtual TKey& Previous() {
+		TKey& Previous() override {
 			return m_pMapIterator->Previous().Key;
 		}
 
-		virtual bool IsBegin() const {
+		bool IsBegin() const override {
 			return m_pMapIterator->IsBegin();
 		}
 
-		virtual bool IsEnd() const {
+		bool IsEnd() const override {
 			return m_pMapIterator->IsEnd();
 		}
 
@@ -104,19 +106,20 @@ public:
 
 	struct ValueCollection : public Collection<TValue>
 	{
-		using TValueCollection = typename Collection<TValue>;
+		using TValueCollection = Collection<TValue>;
 
 		ValueCollection(TMapCollection* map, ContainerType containerType)
 			: TValueCollection(CollectionType::ValueCollection, containerType) {
 			m_pMap = map;
 		}
-		virtual ~ValueCollection() noexcept = default;
 
-		virtual int Size() const {
+		~ValueCollection() noexcept override = default;
+
+		int Size() const override {
 			return m_pMap->Size();
 		}
 
-		virtual bool IsEmpty() const {
+		bool IsEmpty() const override {
 			return m_pMap->IsEmpty();
 		}
 
@@ -125,35 +128,36 @@ public:
 
 	struct ValueCollectionIterator : public Iterator<TValue>
 	{
-		using TValueIterator = typename Iterator<TValue>;
+		using TValueIterator = Iterator<TValue>;
 
 		ValueCollectionIterator(VoidOwner& owner, TMapCollectionIterator* iterator)
 			: TValueIterator(owner) {
 			m_pMapIterator = iterator;
 		}
-		virtual ~ValueCollectionIterator() noexcept = default;
 
-		virtual bool HasPrevious() const {
+		~ValueCollectionIterator() noexcept override = default;
+
+		bool HasPrevious() const override {
 			return m_pMapIterator->HasPrevious();
 		}
 
-		virtual bool HasNext() const {
+		bool HasNext() const override {
 			return m_pMapIterator->HasNext();
 		}
 
-		virtual TValue& Next() {
+		TValue& Next() override {
 			return m_pMapIterator->Next().Value;
 		}
 
-		virtual TValue& Previous() {
+		TValue& Previous() override {
 			return m_pMapIterator->Previous().Value;
 		}
 
-		virtual bool IsBegin() const {
+		bool IsBegin() const override {
 			return m_pMapIterator->IsBegin();
 		}
 
-		virtual bool IsEnd() const {
+		bool IsEnd() const override {
 			return m_pMapIterator->IsEnd();
 		}
 

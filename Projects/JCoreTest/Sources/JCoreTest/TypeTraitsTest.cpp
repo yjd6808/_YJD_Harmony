@@ -8,7 +8,6 @@
 
 #include <JCore/TypeTraits.h>
 #include <JCore/String.h>
-#include <JCore/StringUtil.h>
 #include <JCore/Core.h>
 
 using namespace JCore;

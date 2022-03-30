@@ -13,8 +13,8 @@ TEST(EventTest, General) {
 	auto lmb1 = [&test]() { test += 1; };
 	auto lmb2 = [&test]() { test += 2; };
 
-	struct functor1 { int& ref; void operator()() { ref += 3; } };
-	struct functor2 { int& ref; void operator()() { ref += 4; } };
+	struct functor1 { int& ref; void operator()() const { ref += 3; } };
+	struct functor2 { int& ref; void operator()() const { ref += 4; } };
 
 	e += lmb1;				// named lambda
 	e += lmb2;				// named lambda

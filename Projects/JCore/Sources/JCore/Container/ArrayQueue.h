@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <JCore/Math.h>
-
 #include <JCore/Container/ArrayQueueIterator.h>
 #include <JCore/Container/ArrayCollection.h>
 
@@ -19,13 +17,13 @@ namespace JCore {
 template <typename T>
 class ArrayQueue : public ArrayCollection<T>
 {
-	using TEnumerator			= typename Enumerator<T>;
-	using TCollection			= typename Collection<T>;
-	using TArrayCollection		= typename ArrayCollection<T>;
-	using TArrayQueue			= typename ArrayQueue<T>;
-	using TArrayQueueIterator	= typename ArrayQueueIterator<T>;
+	using TEnumerator			= Enumerator<T>;
+	using TCollection			= Collection<T>;
+	using TArrayCollection		= ArrayCollection<T>;
+	using TArrayQueue			= ArrayQueue<T>;
+	using TArrayQueueIterator	= ArrayQueueIterator<T>;
 public:
-	ArrayQueue(int capacity = TArrayCollection::ms_iDefaultCapcity) 
+	ArrayQueue(int capacity = TArrayCollection::ms_iDefaultCapacity) 
 		: TArrayCollection(capacity, ContainerType::ArrayQueue) 
 	{
 	}
@@ -36,7 +34,7 @@ public:
 		operator=(other);
 	}
 
-	ArrayQueue(TArrayQueue&& other) 
+	ArrayQueue(TArrayQueue&& other) noexcept
 		: TArrayCollection(ContainerType::ArrayQueue) 
 	{
 		operator=(Move(other));
@@ -48,7 +46,7 @@ public:
 		operator=(ilist);
 	}
 
-	virtual ~ArrayQueue() noexcept {}
+	~ArrayQueue() noexcept override {}
 public:
 
 
@@ -60,8 +58,8 @@ public:
 		return *this;
 	}
 
-	TArrayQueue& operator=(TArrayQueue&& other) {
-		this->ThrowIfAssignSelf(other);
+	TArrayQueue& operator=(TArrayQueue&& other) noexcept {
+		// this->ThrowIfAssignSelf(other);
 
 		Clear(true);
 
@@ -111,7 +109,7 @@ public:
 		this->m_iSize += collection.Size();
 
 		// 배열 방식의 컬렉션은 더 효율적인 방식으로 넣어준다.
-		if (TCollection::_CollectionType(collection) == CollectionType::Array) {
+		if (TCollection::GetCollectionType(collection) == CollectionType::Array) {
 			EnqueueAllArrayCollection(dynamic_cast<const TArrayCollection&>(collection));
 			return;
 		}
@@ -151,7 +149,7 @@ public:
 	/// [오버라이딩]
 	/// - From ArrayCollection
 	/// </summary>
-	virtual void Clear(bool removeHeap = false) {
+	void Clear(bool removeHeap = false) override {
 		if (this->IsEmpty()) {
 			if (removeHeap) {
 				DeleteSafe(this->m_pArray);
@@ -186,12 +184,12 @@ public:
 		}
 	}
 
-	virtual TEnumerator Begin() const {
+	TEnumerator Begin() const override {
 		return MakeShared<TArrayQueueIterator>(this->GetOwner(), m_iHead);
 	}
 
 	// 꼬리위치는 데이터가 삽입될 위치이므로 마지막 원소의 위치는 꼬리에서 1칸 이전의 인덱스이다.
-	virtual TEnumerator End() const {
+	TEnumerator End() const override {
 		return MakeShared<TArrayQueueIterator>(this->GetOwner(), m_iTail);	
 	}
 
@@ -201,8 +199,7 @@ protected:
 	/// [오버라이딩]
 	///  - From ArrayCollection
 	/// </summary>
-	/// <param name="other"></param>
-	virtual void CopyFrom(const TArrayCollection& arrayCollection) {
+	void CopyFrom(const TArrayCollection& arrayCollection) override {
 		this->ThrowIfAssignSelf(arrayCollection);
 
 		const TArrayQueue& other = dynamic_cast<const TArrayQueue&>(arrayCollection);
@@ -223,7 +220,7 @@ protected:
 
 
 		int iHeadToEndSize = other.Capacity() - other.m_iHead;
-		int iBeginToTailSize = other.m_iTail;
+		const int iBeginToTailSize = other.m_iTail;
 
 		Memory::CopyUnsafe(
 			this->m_pArray,
@@ -236,12 +233,12 @@ protected:
 			sizeof(T) * iBeginToTailSize);
 	}
 
-	virtual void CopyFrom(const std::initializer_list<T> ilist) {
+	void CopyFrom(const std::initializer_list<T> ilist) override {
 		TArrayCollection::CopyFrom(ilist);
 	}
 
 	// 크기 확장
-	virtual void Expand(int capacity) {
+	void Expand(int capacity) override {
 		T* pNewArray = Memory::Allocate<T*>(sizeof(T) * capacity);
 
 		if (IsForwardedTail()) {
@@ -280,7 +277,7 @@ protected:
 			 */
 
 			int iHeadToEndSize		= this->Capacity() - m_iHead;
-			int iBeginToTailSize	= m_iTail; 
+			const int iBeginToTailSize	= m_iTail; 
 
 			Memory::CopyUnsafe(
 				pNewArray,
@@ -311,7 +308,7 @@ protected:
 	/// </summary>
 	/// <param name="startIdx"></param>
 	/// <param name="endIdx"></param>
-	virtual bool IsValidRange(int startIdx, int endIdx) const {
+	bool IsValidRange(int startIdx, int endIdx) const override {
 		return startIdx <= endIdx && startIdx >= 0 && endIdx < this->Capacity();
 	}
 
@@ -321,9 +318,7 @@ protected:
 	/// - From ArrayCollection
 	///   큐는 용량을 기준으로 유효 인덱스 범위를 판단해야한다.
 	/// </summary>
-	/// <param name="startIdx"></param>
-	/// <param name="endIdx"></param>
-	virtual bool IsValidIndex(int idx) const {
+	bool IsValidIndex(int idx) const override {
 		if (IsForwardedHead()) {
 			return (idx >= m_iHead && idx < this->Capacity()) ||
 				   (idx >= 0       && idx < m_iTail);
@@ -337,7 +332,7 @@ protected:
 	/// [오버라이딩]
 	/// - From ArrayCollection
 	/// </summary>
-	virtual void DestroyAtRange(const int startIdx, const int endIdx) {
+	void DestroyAtRange(const int startIdx, const int endIdx) override {
 		// m_iTail이 0을 가리키고 있는 경우
 		if (endIdx < 0) {
 			return;
@@ -350,7 +345,7 @@ protected:
 	/// [오버라이딩]
 	///  - From ArrayCollection
 	/// </summary>
-	virtual bool IsFull() const {
+	bool IsFull() const override {
 		return this->m_iSize == this->m_iCapacity - 1;
 	}
 
@@ -360,20 +355,20 @@ protected:
 	void EnqueueAllArrayCollection(const TArrayCollection& arrayCollection) {
 
 		// 같은 배열 큐인 경우 : 큐는 배열 스택과 벡터와 다른 방식으로 추가해줘야함
-		if (TCollection::_ContainerType(arrayCollection) == ContainerType::ArrayQueue) {
+		if (TCollection::GetContainerType(arrayCollection) == ContainerType::ArrayQueue) {
 			EnqueueAllArrayQueue(dynamic_cast<const TArrayQueue&>(arrayCollection));
 			return;
 		}
 		
 		for (int i = 0; i < arrayCollection.Size(); i++) {
-			this->SetAtUnsafe(m_iTail, TArrayCollection::_GetAtUnsafe(arrayCollection, i));
+			this->SetAtUnsafe(m_iTail, TArrayCollection::GetAtUnsafe(arrayCollection, i));
 			m_iTail = NextTailValue(1);
 		}
 	}
 
 	void EnqueueAllArrayQueue(const TArrayQueue& queue) {
 		int iOtherCur = queue.m_iHead;
-		int iOtherEnd = queue.m_iTail;
+		const int iOtherEnd = queue.m_iTail;
 
 		while (iOtherCur != iOtherEnd) {
 			int iOtherNext = NextValue(iOtherCur, 1);

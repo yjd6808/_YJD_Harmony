@@ -11,10 +11,11 @@
 
 #pragma once
 
-#include <JCore/Type.h>
 #include <JCore/Exception.h>
 #include <JCore/Deletor.h>
 #include <JCore/TypeTraits.h>
+
+#include <cassert>
 
 #ifndef DeleteSafe
 #define DeleteSafe(x)			\
@@ -34,6 +35,11 @@ do {							\
 	}							\
 	x = nullptr;				\
 } while (0);		
+#endif
+
+
+#ifndef DebugAssert
+	#define DebugAssert(exp, msg)		assert((exp) && msg)
 #endif
 
 namespace JCore {
@@ -75,20 +81,21 @@ constexpr decltype(auto) MakeUnique(Args&&... args) {
 
 struct __declspec(novtable) UniqueBase
 {
-	virtual ~UniqueBase() { }
+	virtual ~UniqueBase() = default;
 	virtual void DeleteSelf() = 0;
 };
 
 template <typename T>
 struct UniqueObject : UniqueBase
 {
-	using TDeletor = typename PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
+	using TDeletor = PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
 	explicit UniqueObject(Args&&... args) {
 		::new (reinterpret_cast<void*>(AddressOf(Object))) T(Forward<Args>(args)...);
 	}
-	virtual ~UniqueObject() {}
+
+	~UniqueObject() override {}
 
 	void DeleteSelf() override {
 		TDeletor()(AddressOf(Object));
@@ -105,7 +112,7 @@ struct UniqueObject : UniqueBase
 template <typename T, int Size>
 struct UniqueObject<T[Size]> : UniqueBase
 {
-	using TDeletor = typename PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
+	using TDeletor = PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
 	explicit UniqueObject(Args&&... args) {
@@ -114,7 +121,7 @@ struct UniqueObject<T[Size]> : UniqueBase
 		}
 	}
 
-	virtual ~UniqueObject() {}
+	~UniqueObject() override {}
 
 	void DeleteSelf() override {
 		TDeletor()(Object);
@@ -131,7 +138,7 @@ struct UniqueObject<T[Size]> : UniqueBase
 template <typename T>
 struct UniqueObject<T[]> : UniqueBase
 {
-	using TDeletor = typename PlacementDeletor<T[], DeletorOption::Both>;
+	using TDeletor = PlacementDeletor<T[], DeletorOption::Both>;
 
 	template <typename... Args>
 	explicit UniqueObject(int Size, Args&&... args) {
@@ -144,7 +151,8 @@ struct UniqueObject<T[]> : UniqueBase
 
 		m_Size = Size;
 	}
-	virtual ~UniqueObject() {}
+
+	~UniqueObject() override {}
 
 	void DeleteSelf() override {
 		TDeletor()(Pointer, m_Size);
@@ -162,7 +170,7 @@ struct UniqueObject<T[]> : UniqueBase
 template <typename T>
 class UniquePointer
 {
-	using TUniquePointer	= typename UniquePointer<T>;
+	using TUniquePointer	= UniquePointer<T>;
 
 	template <typename U>
 	void SetUniquePointer(U* ptr, UniqueBase* base, int size) {
@@ -269,8 +277,8 @@ class UniqueMaker
 {
 	static const int ms_uiArraySize = 1;		// 기본적으로 길이는 무조건 1
 
-	using TUniquePointer = typename UniquePointer<T>;
-	using TUniqueObject = typename UniqueObject<T>;
+	using TUniquePointer = UniquePointer<T>;
+	using TUniqueObject = UniqueObject<T>;
 public:
 	template <typename... Args>
 	static constexpr TUniquePointer Create(Args&&... args) {
@@ -284,8 +292,8 @@ public:
 template <typename T, int ArraySize>
 class UniqueMaker<T[ArraySize]>
 {
-	using TUniquePointer = typename UniquePointer<T[ArraySize]>;
-	using TUniqueObject = typename UniqueObject<T[ArraySize]>;
+	using TUniquePointer = UniquePointer<T[ArraySize]>;
+	using TUniqueObject = UniqueObject<T[ArraySize]>;
 public:
 	template <typename... Args>
 	static constexpr TUniquePointer Create(Args&&... args) {
@@ -300,8 +308,8 @@ public:
 template <typename T>
 class UniqueMaker<T[]>
 {
-	using TUniquePointer = typename UniquePointer<T[]>;
-	using TUniqueObject = typename UniqueObject<T[]>;
+	using TUniquePointer = UniquePointer<T[]>;
+	using TUniqueObject = UniqueObject<T[]>;
 public:
 	template <typename... Args>
 	static constexpr TUniquePointer Create(int Size, Args&&... args) {
@@ -316,8 +324,8 @@ public:
 
 struct __declspec(novtable) ControlBlock
 {	
-	ControlBlock() {}
-	virtual ~ControlBlock() {}
+	ControlBlock() = default;
+	virtual ~ControlBlock() = default;
 
 	virtual void DeleteSelf() = 0;
 	virtual void DestroyObject() = 0;
@@ -354,13 +362,14 @@ struct __declspec(novtable) ControlBlock
 template <typename T>
 struct SharedObject : ControlBlock
 {
-	using TDeletor = typename PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
+	using TDeletor = PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
 	explicit SharedObject(Args&&... args) {
 		::new (reinterpret_cast<void*>(AddressOf(Object))) T(Forward<Args>(args)...);
 	}
-	virtual ~SharedObject() {}
+
+	~SharedObject() override {}
 
 	void DestroyObject() override {
 		TDeletor()(AddressOf(Object));
@@ -380,7 +389,7 @@ struct SharedObject : ControlBlock
 template <typename T, int Size>
 struct SharedObject<T[Size]> : ControlBlock
 {
-	using TDeletor = typename PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
+	using TDeletor = PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
 	explicit SharedObject(Args&&... args) {
@@ -389,7 +398,7 @@ struct SharedObject<T[Size]> : ControlBlock
 		}
 	}
 
-	virtual ~SharedObject() {}
+	~SharedObject() override {}
 
 	void DestroyObject() override {
 		TDeletor()(Object);
@@ -409,7 +418,7 @@ struct SharedObject<T[Size]> : ControlBlock
 template <typename T>
 struct SharedObject<T[]> : ControlBlock
 {
-	using TDeletor = typename PlacementDeletor<T[], DeletorOption::Both>;
+	using TDeletor = PlacementDeletor<T[], DeletorOption::Both>;
 
 	template <typename... Args>
 	explicit SharedObject(int Size, Args&&... args) {
@@ -422,7 +431,8 @@ struct SharedObject<T[]> : ControlBlock
 
 		m_Size = Size;
 	}
-	virtual ~SharedObject() {}
+
+	~SharedObject() override {}
 
 	void DestroyObject() override {
 		TDeletor()(Pointer, m_Size);
@@ -444,8 +454,8 @@ struct SharedObject<T[]> : ControlBlock
 template <typename T>
 class BasePointer
 {
-	using TSharedPointer	= typename SharedPointer<T>;
-	using TWeakPointer		= typename WeakPointer<T>;
+	using TSharedPointer	= SharedPointer<T>;
+	using TWeakPointer		= WeakPointer<T>;
 public:
 	int RefCount() const {
 		if (m_ControlBlock == nullptr) {
@@ -603,7 +613,7 @@ protected:
 	}
 
 	template <typename U>
-	void WeakMoveToShared(SharedPointer<U>& shared) {
+	static void WeakMoveToShared(SharedPointer<U>& shared) {
 		// 필요 없음
 		DebugAssert(true, "멍미");
 	}
@@ -622,7 +632,7 @@ protected:
 	}
 
 
-	void AddReferenceCount() {
+	void AddReferenceCount() const {
 		if (m_ControlBlock == nullptr) {
 			return;
 		}
@@ -631,7 +641,7 @@ protected:
 		m_ControlBlock->IncreaseWeakCount();
 	}
 
-	void AddWeakCount() {
+	void AddWeakCount() const {
 		if (m_ControlBlock == nullptr) {
 			return;
 		}
@@ -639,7 +649,7 @@ protected:
 		m_ControlBlock->IncreaseWeakCount();
 	}
 
-	void SubtractReferenceCount() {
+	void SubtractReferenceCount() const {
 		if (m_ControlBlock == nullptr) {
 			return;
 		}
@@ -648,7 +658,7 @@ protected:
 		m_ControlBlock->DecreaseWeakCount();
 	}
 
-	void SubtractWeakCount() {
+	void SubtractWeakCount() const {
 		if (m_ControlBlock == nullptr) {
 			return;
 		}
@@ -684,7 +694,7 @@ protected:
 template <typename T>
 class SharedPointer : public BasePointer<T>
 {
-	using TSharedPointer = typename SharedPointer<T>;
+	using TSharedPointer = SharedPointer<T>;
 public:
 	SharedPointer() {}
 	SharedPointer(std::nullptr_t nulptr) {}
@@ -755,7 +765,7 @@ public:
 template <typename T>
 class WeakPointer : public BasePointer<T>
 {
-	using TWeakPointer = typename WeakPointer<T>;
+	using TWeakPointer = WeakPointer<T>;
 public:
 	WeakPointer() {}
 	WeakPointer(std::nullptr_t nulptr) {}
@@ -825,8 +835,8 @@ class SharedMaker
 {
 	static const int ms_uiArraySize = 1;		// 기본적으로 길이는 무조건 1
 
-	using TSharedPointer = typename SharedPointer<T>;
-	using TSharedObject = typename SharedObject<T>;
+	using TSharedPointer = SharedPointer<T>;
+	using TSharedObject = SharedObject<T>;
 public:
 	template <typename... Args>
 	static constexpr TSharedPointer Create(Args&&... args) {
@@ -840,8 +850,8 @@ public:
 template <typename T, int ArraySize>
 class SharedMaker<T[ArraySize]>
 {
-	using TSharedPointer = typename SharedPointer<T[ArraySize]>;
-	using TSharedObject = typename SharedObject<T[ArraySize]>;
+	using TSharedPointer = SharedPointer<T[ArraySize]>;
+	using TSharedObject = SharedObject<T[ArraySize]>;
 public:
 	template <typename... Args>
 	static constexpr TSharedPointer Create(Args&&... args) {
@@ -856,8 +866,8 @@ public:
 template <typename T>
 class SharedMaker<T[]>
 {
-	using TSharedPointer = typename SharedPointer<T[]>;
-	using TSharedObject = typename SharedObject<T[]>;
+	using TSharedPointer = SharedPointer<T[]>;
+	using TSharedObject = SharedObject<T[]>;
 public:
 	template <typename... Args>
 	static constexpr TSharedPointer Create(int size, Args&&... args) {

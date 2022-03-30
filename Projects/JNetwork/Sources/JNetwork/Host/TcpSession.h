@@ -12,13 +12,10 @@
 
 #pragma once
 
-#include <JCore/Event.h>
-
 #include <JNetwork/Buffer.h>
 #include <JNetwork/Socket.h>
-#include <JNetwork/Host/Server.h>
-#include <JNetwork/Host/TcpServerEventListener.h>
 #include <JNetwork/Packet.h>
+#include <JNetwork/Host/TcpServerEventListener.h>
 #include <JNetwork/IOCP/IOCP.h>
 
 
@@ -51,7 +48,7 @@ protected:
 	
 	bool ReceiveAsync();
 	bool AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped);
-	bool CheckState(State state) { return m_eState == state; }
+	bool CheckState(State state) const { return m_eState == state; }
 	
 	
 	TcpSocketv4 Socket() const { return m_ClientSocket; }

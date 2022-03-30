@@ -14,33 +14,33 @@ template <typename> class ArrayStack;
 template <typename T>
 class ArrayStackIterator : public ArrayCollectionIterator<T>
 {
-	using TArrayCollectionIterator  = typename ArrayCollectionIterator<T>;
-	using TArrayStack				= typename ArrayStack<T>;
+	using TArrayCollectionIterator  = ArrayCollectionIterator<T>;
+	using TArrayStack				= ArrayStack<T>;
 public:
 	ArrayStackIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
-	virtual ~ArrayStackIterator() noexcept {}
+	~ArrayStackIterator() noexcept override {}
 public:
-	virtual bool HasNext() const {
+	bool HasNext() const override {
 		return TArrayCollectionIterator::HasNext();
 	}
 
-	virtual bool HasPrevious() const {
+	bool HasPrevious() const override {
 		return TArrayCollectionIterator::HasPrevious();
 	}
 
-	virtual T& Next() {
+	T& Next() override {
 		return TArrayCollectionIterator::Next();
 	}
 
-	virtual T& Previous() {
+	T& Previous() override {
 		return TArrayCollectionIterator::Previous();
 	}
 
-	virtual bool IsEnd() const {
+	bool IsEnd() const override {
 		return TArrayCollectionIterator::IsEnd();
 	}
 
-	virtual bool IsBegin() const {
+	bool IsBegin() const override {
 		return TArrayCollectionIterator::IsBegin();
 	}
 };

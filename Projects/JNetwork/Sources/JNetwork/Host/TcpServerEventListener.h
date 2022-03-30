@@ -20,8 +20,8 @@ class TcpSession;
 class TcpServerEventListener
 {
 public:
-	TcpServerEventListener() {}
-	virtual ~TcpServerEventListener() {}
+	TcpServerEventListener() = default;
+	virtual ~TcpServerEventListener() = default;
 protected:
 	virtual void OnStarted() = 0;
 	virtual void OnConnected(TcpSession* connectedSession) = 0;

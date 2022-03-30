@@ -12,11 +12,11 @@ namespace JCore {
 template <typename T>
 class ListStack	: public ListCollection<T>
 {
-	using TEnumerator			= typename Enumerator<T>;
-	using TCollection			= typename Collection<T>;
-	using TListCollection		= typename ListCollection<T>;
-	using TListStack			= typename ListStack<T>;
-	using TListStackIterator	= typename ListStackIterator<T>;
+	using TEnumerator			= Enumerator<T>;
+	using TCollection			= Collection<T>;
+	using TListCollection		= ListCollection<T>;
+	using TListStack			= ListStack<T>;
+	using TListStackIterator	= ListStackIterator<T>;
 public:
 	ListStack() 
 		: TListCollection(ContainerType::ListStack) 
@@ -28,7 +28,7 @@ public:
 	{
 	}
 
-	ListStack(TListStack&& other) 
+	ListStack(TListStack&& other) noexcept
 		: TListCollection(Move(other), ContainerType::ListStack) 
 	{
 	}
@@ -38,14 +38,14 @@ public:
 	{
 	}
 
-	virtual ~ListStack() noexcept {}
+	~ListStack() noexcept override {}
 public:
 	TListStack& operator=(const TListStack& other) {
 		this->CopyFrom(other);
 		return *this;
 	}
 
-	TListStack& operator=(TListStack&& other) {
+	TListStack& operator=(TListStack&& other) noexcept {
 		this->CopyFrom(Move(other));
 		return *this;
 	}
@@ -80,11 +80,11 @@ public:
 		return TListCollection::Back();
 	}
 
-	virtual TEnumerator Begin() const {
+	TEnumerator Begin() const override {
 		return MakeShared<TListStackIterator>(this->GetOwner(), this->m_pHead->Next);
 	}
 
-	virtual TEnumerator End() const {
+	TEnumerator End() const override {
 		return MakeShared<TListStackIterator>(this->GetOwner(), this->m_pTail);
 	}
 protected:

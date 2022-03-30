@@ -5,13 +5,7 @@
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/Core.h>
-#include <JCore/Container/Arrays.h>
-#include <JCore/Random.h>
-#include <JCore/Math.h>
-#include <JCore/Type.h>
 #include <JCore/Hasher.h>
-#include <JCore/Limit.h>
 
 using namespace JCore;
 using namespace std;

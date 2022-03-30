@@ -11,7 +11,7 @@
 #pragma warning (disable : 26439)		// This kind of function may not throw.Declare it 'noexcept' (f.6)
 #pragma warning (disable : 4018)		// '<': signed / unsigned mismatch
 
-#define _CRT_SECURE_NO_WARNINGS
+#define CRT_SECURE_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN	
 
 #include <iostream>

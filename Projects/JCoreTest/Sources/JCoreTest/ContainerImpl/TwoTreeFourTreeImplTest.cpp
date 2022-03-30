@@ -4,14 +4,7 @@
 */
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/Core.h>
-#include <JCore/StringUtil.h>
 #include <JCore/String.h>
-#include <JCore/Tuple.h>
-#include <JCore/TypeTraits.h>
-#include <JCore/Random.h>
-
-#include <stack>
 
 using namespace std;
 using namespace JCore;

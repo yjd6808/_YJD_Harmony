@@ -6,7 +6,6 @@
 
 #include <JCoreTest/CoreTest.h>
 #include <JCore/String.h>
-#include <JCore/Comparator.h>
 #include <JCore/Exception.h>
 #include <JCore/Time.h>
 
@@ -164,7 +163,7 @@ TEST(DateTimeTest, Operation_Day_Hour_Minute_Second_Mili_Micro) {
 
 // DateTime, DateAndTime, TimeSpan과 연산
 TEST(DateTimeTest, ComparisonOperation_DateTime_DateAndTime_TimeSpan) {
-	DateTime dt = g_TestCleanTime;
+	const DateTime dt = g_TestCleanTime;
 
 	EXPECT_TRUE(dt >= DateAndTime(2022, 1, 30, 23, 59, 59, 999, 999));
 	EXPECT_TRUE(dt >= g_TestCleanTime);
@@ -192,19 +191,19 @@ TEST(DateTimeTest, ComparisonOperation_DateTime_DateAndTime_TimeSpan) {
 
 // DateTime, DateAndTime, TimeSpan과 연산
 TEST(DateTimeTest, CalculationOperation_DateTime_DateAndTime_TimeSpan) {
-	DateTime dt = g_TestTime;
-	DateTime dt2 = g_TestCleanTime;
-	DateTime v2 = dt - g_TestCleanTime;
+	const DateTime dt = g_TestTime;
+	const DateTime dt2 = g_TestCleanTime;
+	const DateTime v2 = dt - g_TestCleanTime;
 
 	// 2022년 2월 1일 16시 11분 33초 715 716
 	// 2022년 1월 31일 0시 0분 0초 0.0
 	// ts1 = 서로 시간 차이
-	TimeSpan ts1 = dt.Diff(g_TestCleanTime);
+	const TimeSpan ts1 = dt.Diff(g_TestCleanTime);
 
 	// 2022년 1월 31일 0시 0분 0초 0.0
 	// 2022년 2월 1일 16시 11분 33초 715 716
 	// ts2 = 서로 시간 차이
-	TimeSpan ts2 = dt2.Diff(dt);
+	const TimeSpan ts2 = dt2.Diff(dt);
 
 	EXPECT_TRUE(v2.GetYear() == 1);
 	EXPECT_TRUE(v2.GetMonth() == 1);

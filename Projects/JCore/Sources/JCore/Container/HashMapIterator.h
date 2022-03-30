@@ -19,12 +19,12 @@ template <typename, typename> struct KeyValuePair;
 template <typename TKey, typename TValue>
 class HashMapIterator : public MapCollectionIterator<TKey, TValue>
 {
-	using TBucket				 = typename Bucket<TKey, TValue>;
-	using TBucketNode			 = typename BucketNode<TKey, TValue>;
-	using TListNode				 = typename ListNode<BucketNode<TKey, TValue>>;
-	using THashMap				 = typename HashMap<TKey, TValue>;
-	using TKeyValuePair			 = typename KeyValuePair<TKey, TValue>;
-	using TMapCollectionIterator = typename MapCollectionIterator<TKey, TValue>;
+	using TBucket				 = Bucket<TKey, TValue>;
+	using TBucketNode			 = BucketNode<TKey, TValue>;
+	using TListNode				 = ListNode<BucketNode<TKey, TValue>>;
+	using THashMap				 = HashMap<TKey, TValue>;
+	using TKeyValuePair			 = KeyValuePair<TKey, TValue>;
+	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue>;
 public:
 	HashMapIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode) : TMapCollectionIterator(owner) {
 		m_pMap = CastHashMap();
@@ -32,9 +32,10 @@ public:
 		m_pCurrentBucket = currentBucket;
 		m_pCurrentNode = currentNode;
 	}
-	virtual ~HashMapIterator() noexcept = default;
+
+	~HashMapIterator() noexcept override = default;
 public:
-	virtual bool HasNext() const {
+	bool HasNext() const override {
 		if (!this->IsValid()) {
 			return false;
 		}
@@ -46,7 +47,7 @@ public:
 		return m_pCurrentNode->Next != nullptr;
 	}
 
-	virtual bool HasPrevious() const {
+	bool HasPrevious() const override {
 		if (!this->IsValid()) {
 			return false;
 		}
@@ -58,7 +59,7 @@ public:
 		return m_pCurrentNode->Previous != m_pCurrentBucket->m_pHead;
 	}
 
-	virtual TKeyValuePair& Next() {
+	TKeyValuePair& Next() override {
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
 		if (m_pCurrentBucket == m_pMap->m_pTailBucket) {
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -75,7 +76,7 @@ public:
 		return val.Pair;
 	}
 
-	virtual TKeyValuePair& Previous() {
+	TKeyValuePair& Previous() override {
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
 		if (m_pCurrentNode->Previous == m_pMap->m_pHeadBucket->m_pHead) {
 			throw InvalidOperationException("데이터가 없습니다.");
@@ -91,11 +92,11 @@ public:
 		return val.Pair;
 	}
 
-	virtual bool IsEnd() const {
+	bool IsEnd() const override {
 		return HasNext() == false;
 	}
 
-	virtual bool IsBegin() const {
+	bool IsBegin() const override {
 		return HasPrevious() == false;
 	}
 

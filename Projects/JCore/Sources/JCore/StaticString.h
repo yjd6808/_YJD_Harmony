@@ -57,7 +57,7 @@ struct StaticString
 		return StringUtil::CTLength2(Source);
 	}
 
-	constexpr int Capacity() const {
+	static constexpr int Capacity() {
 		return Size;
 	}
 
@@ -77,7 +77,7 @@ struct StaticString
 
 	template <Int32U ParamSize>
 	constexpr void CopyFrom(int startIdx, int endIdx, const char(&str)[ParamSize]) const {
-		int iThisLen = Size - 1;
+		const int iThisLen = Size - 1;
 		int iCopyCount = 0;
 
 		char* pDst = (char*)Source;
@@ -98,8 +98,8 @@ struct StaticString
 
 	template <Int32U ParamSize>
 	constexpr bool StartWith(const char(&str)[ParamSize]) const {
-		int iStrLen = ParamSize - 1;
-		int iThisLen = Length();
+		const int iStrLen = ParamSize - 1;
+		const int iThisLen = Length();
 
 		if (iStrLen > iThisLen) {
 			return false;
@@ -116,8 +116,8 @@ struct StaticString
 
 	template <Int32U ParamSize>
 	constexpr bool EndWith(const char(&str)[ParamSize]) const {
-		int iStrLen = ParamSize - 1;
-		int iThisLen = Length();
+		const int iStrLen = ParamSize - 1;
+		const int iThisLen = Length();
 
 		if (iStrLen > iThisLen) {
 			return false;
@@ -153,7 +153,7 @@ struct StaticString
 
 		char* pSrc = (char*)Source + startIdx;
 
-		int iStrLen = StringUtil::CTLength(str);
+		const int iStrLen = StringUtil::CTLength(str);
 		int iContinuousCount = 0;
 		int iOffset = startIdx;
 
@@ -195,7 +195,7 @@ struct StaticString
 	// 기존 문자열은 건드릴 수 없기때문에 새로 생성해서 반환함
 	template <Int32U ParamSize>
 	constexpr StaticString<Size> Remove(const char(&str)[ParamSize]) const {
-		int iStartIdx = Find(str);
+		const int iStartIdx = Find(str);
 
 		StaticString<Size> ret{};
 		ret.Source[Size - 1] = '\0';
@@ -204,7 +204,7 @@ struct StaticString
 			return ret;
 		}
 
-		int iEndIdx = iStartIdx + ParamSize - 2;
+		const int iEndIdx = iStartIdx + ParamSize - 2;
 
 		char* pDst = (char*)ret.Source;
 		char* pThis = (char*)Source;
@@ -229,7 +229,7 @@ struct StaticString
 	}
 
 	void CopyFrom(const char* str) {
-		int iLen = StringUtil::Length(str);
+		const int iLen = StringUtil::Length(str);
 
 		if (iLen <= 0) {
 			Source[0] = '\0';
@@ -253,7 +253,7 @@ struct StaticString
 			throw InvalidArgumentException("인덱스 범위가 올바르지 않습니다.");
 		}
 
-		int iThisLen = Size - 1;
+		const int iThisLen = Size - 1;
 		int iCopyIdx = 0;
 
 		for (int i = startIdx; i <= endIdx && iCopyIdx < iThisLen; i++) {

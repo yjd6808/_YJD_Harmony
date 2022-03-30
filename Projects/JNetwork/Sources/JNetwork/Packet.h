@@ -2,6 +2,10 @@
 	작성자 : 윤정도
 */
 
+
+// ISendPacket은 생성시 바로 Packet에서 멤버 초기화를 진행해주므로 해당 인스펙션은 무시하도록하자.
+// ReSharper disable CppUninitializedNonStaticDataMember
+
 #pragma once
 
 #include <JCore/Type.h>
@@ -39,9 +43,9 @@ struct ICommand
 	Int16U GetCommand() const			{ return this->Cmd;		}
 	Int16U GetCommandLen() const		{ return this->CmdLen;	}
 protected:
-	Int16U Cmd;		// 사용자 지정 커맨드 ID값
-	Int16U CmdLen;	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
-					// ex) Commnad<char>의 CmdLen은 1이 아니고 5임
+	Int16U Cmd{};		// 사용자 지정 커맨드 ID값
+	Int16U CmdLen{};	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
+						// ex) Commnad<char>의 CmdLen은 1이 아니고 5임
 };
 
 template <typename T>
@@ -88,6 +92,9 @@ struct Command : ICommand
 // 패킷을 받을 때는 가상 함수 테이블이 없는 구조체로 받자.
 struct IRecvPacket
 {
+	IRecvPacket() = delete;
+	~IRecvPacket() = delete;
+
 	Int16U	GetPacketLength() const { return m_iPacketLen;		}
 	Int16U	GetCommandCount() const { return m_iCommandCount;	}
 protected:
@@ -98,6 +105,13 @@ protected:
 
 struct ISendPacket : JCore::RefCount
 {
+	ISendPacket(Int16U iCommandCount, Int16U iPacketLen)
+		: m_iCommandCount(iCommandCount)
+		, m_iPacketLen(iPacketLen) {
+	}
+
+	~ISendPacket() override = default;
+
 	Int16U	GetPacketLength() const { return m_iPacketLen; }
 	Int16U	GetCommandCount() const { return m_iCommandCount; }
 	WSABUF	GetWSABuf() const { 
@@ -119,8 +133,8 @@ struct ISendPacket : JCore::RefCount
 		return wsaBuf;
 	}
 protected:
-	Int16U m_iCommandCount;
-	Int16U m_iPacketLen;		// IPacket 크기를 제외한 커맨드들의 총 크기
+	Int16U m_iCommandCount{};
+	Int16U m_iPacketLen{};		// IPacket 크기를 제외한 커맨드들의 총 크기
 								// ICommand의 CmdLen은 헤더 포함이지만 이녀석은 포함안됨
 };
 
@@ -138,21 +152,19 @@ class Packet : public ISendPacket
 
 	// 인자로 전달받은 커맨드 타입
 	template <int Index>
-	using TypeAt		= typename std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	
+	using TypeAt		= std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	
 public:
-	Packet() {
+	Packet() : ISendPacket(sizeof...(CommandArgs), (... + sizeof(CommandArgs))) {
+
 		// m_pBuf에 각 커맨드의 시작주소 마다 디폴트 초기화를 수행해준다.
 		// 예를들어서 Packet<Commant<A>, Command<B>> 패킷을 생성했다면
 		// 
 		// m_pBuf + 0		  에다가 A를 디폴트 초기화하고
 		// m_pBuf + sizeof(A) 에다가 B를 디폴트 초기화하도록 한다.
 		PlacementDefaultAllocateRecursive<COMMAND_CNT - 1, CommandArgs...>();
-
-		this->m_iCommandCount = sizeof...(CommandArgs);
-		this->m_iPacketLen = (... + sizeof(CommandArgs));
 	}
-	virtual ~Packet() {
 
+	~Packet() override {
 	}
 private:
 	template <int Index, typename Cmd, typename... CmdArgs>

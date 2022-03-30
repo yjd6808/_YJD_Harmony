@@ -9,18 +9,16 @@
 namespace JNetwork {
 
 IOCPOverlappedSend::IOCPOverlappedSend(TcpSession* session, IOCP* iocp, ISendPacket* sentPacket) :
+	IOCPOverlapped(iocp, Type::Send),
 	m_pSentSession(session),
-	m_pSentPacket(sentPacket),
-	IOCPOverlapped(iocp, Type::Send)
+	m_pSentPacket(sentPacket)
 {
 }
 
-IOCPOverlappedSend::~IOCPOverlappedSend() {
-
-}
+IOCPOverlappedSend::~IOCPOverlappedSend() = default;
 
 void IOCPOverlappedSend::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	SOCKET hSentSock = m_pSentSession->Socket().Handle();
+	const SOCKET hSentSock = m_pSentSession->Socket().Handle();
 
 	if (IsFailed(hSentSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
 		m_pSentSession->Disconnect();

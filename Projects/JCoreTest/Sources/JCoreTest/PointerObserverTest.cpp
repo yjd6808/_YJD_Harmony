@@ -7,8 +7,6 @@
 #include <JCoreTest/CoreTest.h>
 #include <JCoreTest/TestUtil/Object.h>
 
-#include <JCore/String.h>
-#include <JCore/Comparator.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/PointerObserver.h>
 
@@ -32,7 +30,7 @@ TEST(PointerObserverTest, VoidOwner_VoidWatcher) {
 	// 오너는 감시자이기도 하다. 따라서 초기 1로 설정
 	EXPECT_TRUE(owner.WatcherCount() == 1);
 
-	VoidWatcher watch1(owner);
+	const VoidWatcher watch1(owner);
 	VoidWatcher watch2;
 
 	// watch1은 owner를 감시한다.

@@ -4,12 +4,12 @@
 
 namespace JCore {
 
-	template <typename _Lock>
+	template <typename Lock>
 	class LockGuard final
 	{
-		using TLockGuard = typename LockGuard<_Lock>;
+		using TLockGuard = LockGuard<Lock>;
 	public:
-		LockGuard(_Lock& mtx) : m_Mtx(&mtx) {
+		LockGuard(Lock& mtx) : m_Mtx(&mtx) {
 			m_Mtx->Lock();
 		}
 
@@ -18,9 +18,9 @@ namespace JCore {
 		}
 
 		LockGuard(const TLockGuard& mtx) = delete;
-		_Lock& operator=(const TLockGuard& mtx) = delete;
+		Lock& operator=(const TLockGuard& mtx) = delete;
 	private:
-		_Lock* m_Mtx;
+		Lock* m_Mtx;
 	};
 
 
@@ -33,12 +33,12 @@ namespace JCore {
 		Write
 	};
 
-	template <typename _ReaderWriterLock, ReaderWriterLockMode Mode>
+	template <typename ReaderWriterLock, ReaderWriterLockMode Mode>
 	class ReaderWriterLockGuard final
 	{
-		using TLockGuard = typename ReaderWriterLockGuard<_ReaderWriterLock, Mode>;
+		using TLockGuard = ReaderWriterLockGuard<ReaderWriterLock, Mode>;
 	public:
-		ReaderWriterLockGuard(_ReaderWriterLock& mtx) : m_Mtx(&mtx) {
+		ReaderWriterLockGuard(ReaderWriterLock& mtx) : m_Mtx(&mtx) {
 			if constexpr (Mode == ReaderWriterLockMode::Read)
 				m_Mtx->ReadLock();
 			else 
@@ -56,7 +56,7 @@ namespace JCore {
 		ReaderWriterLockGuard(TLockGuard&& mtx) = delete;
 		void operator=(const TLockGuard& mtx) = delete;
 	private:
-		_ReaderWriterLock* m_Mtx;
+		ReaderWriterLock* m_Mtx;
 	};
 
 

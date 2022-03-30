@@ -12,7 +12,7 @@ struct Dog : Animal
 {
 	int GetAge() const override { return Age; };
 
-	virtual ~Dog();
+	~Dog() override;
 
 	int Age = 300;
 };
@@ -21,7 +21,7 @@ struct Bird : Animal
 {
 	int GetAge() const override { return Age; };
 
-	virtual ~Bird();
+	~Bird() override;
 
 	int Dummy = 0;
 	int Age = 400;
@@ -41,7 +41,7 @@ struct SuperModel : Model
 {
 	SuperModel(int a) : Model(a) {}
 	SuperModel() : Model(0) {}
-	~SuperModel();
+	~SuperModel() override;
 };
 
 

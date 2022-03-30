@@ -16,7 +16,7 @@ public:
 	IOCPOverlappedConnect(TcpSession* session, IOCP* iocp, ISendPacket* sentPacket);
 	~IOCPOverlappedConnect() override;
 public:
-	virtual void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey);
+	void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	TcpSession* m_pConnectedSession;	
 	ISendPacket* m_pSentPacket;

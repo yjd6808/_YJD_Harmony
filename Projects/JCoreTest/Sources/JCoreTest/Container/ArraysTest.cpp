@@ -19,7 +19,7 @@ TEST(ArraysTest, Sort) {
 	vector<int> normal;
 	Random random;
 	for (int i = 0; i < 500; i++) {
-		int r = random.GenerateInt(1, 10);
+		const int r = random.GenerateInt(1, 10);
 		int* myArray = new int[r];
 		for (int j = 0; j < r; j++) {
 			int gen = random.GenerateInt(0, 50);
@@ -104,7 +104,7 @@ TEST(ArraysTest, BinarySearch) {
 
 		for (int i = 0; i < vec.size(); i++) {
 
-			int search = Arrays::BinarySearch(&vec[0], vec.size(), vec[i]);
+			const int search = Arrays::BinarySearch(&vec[0], vec.size(), vec[i]);
 			EXPECT_TRUE(search >= 0);
 		}
 	}
@@ -122,7 +122,7 @@ TEST(ArraysTest, BinarySearch) {
 
 		for (int i = 0; i < vec.size(); i++) {
 
-			int search = Arrays::BinarySearch(&vec[0], vec.size(), vec[i]);
+			const int search = Arrays::BinarySearch(&vec[0], vec.size(), vec[i]);
 			EXPECT_TRUE(search >= 0);
 		}
 	}

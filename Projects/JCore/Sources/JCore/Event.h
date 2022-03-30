@@ -14,8 +14,8 @@ template <typename... Args>
 class Event
 {
 private:
-	using TEvent  = typename Event<Args...>;
-	using TAction = typename Action<Args...>;
+	using TEvent  = Event<Args...>;
+	using TAction = Action<Args...>;
 private:
 	
 	struct Callback

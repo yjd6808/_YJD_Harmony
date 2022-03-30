@@ -19,11 +19,11 @@ namespace JCore {
 template <typename T>
 class ListCollection : public Collection<T>
 {
-	using TEnumerator				= typename Enumerator<T>;
-	using TListNode					= typename ListNode<T>;
-	using TCollection				= typename Collection<T>;
-	using TListCollection			= typename ListCollection<T>;
-	using TListCollectionIterator   = typename ListCollectionIterator<T>;
+	using TEnumerator				= Enumerator<T>;
+	using TListNode					= ListNode<T>;
+	using TCollection				= Collection<T>;
+	using TListCollection			= ListCollection<T>;
+	using TListCollectionIterator   = ListCollectionIterator<T>;
 public:
 	ListCollection(ContainerType containerType) : TCollection(CollectionType::List, containerType)  {
 		/* [더미노드 방법 1]
@@ -34,8 +34,8 @@ public:
 		*/
 
 		// [더미노드 대안]
-		m_pHead = &_ValtyHead;
-		m_pTail = &_ValtyTail;
+		m_pHead = &m_ValtyHead;
+		m_pTail = &m_ValtyTail;
 
 		// 어차피 더미노드는 Next와 Previous만 쓸 것이므로.. 굳이 TListNode의 Value의 디폴트 생성자를 호출해줄 필요가 없다.
 		// Memory::PlacementAllocate(m_pHead[0]);
@@ -53,7 +53,7 @@ public:
 		CopyFrom(other);
 	}
 
-	ListCollection(TListCollection&& other, ContainerType containerType) 
+	ListCollection(TListCollection&& other, ContainerType containerType) noexcept
 		: TListCollection(containerType)
 	{
 		CopyFrom(Move(other));
@@ -64,7 +64,8 @@ public:
 	{
 		CopyFrom(ilist);
 	}
-	virtual ~ListCollection() noexcept = 0;
+
+	~ListCollection() noexcept override = 0;
 public:
 	virtual void Clear() {
 		/*
@@ -82,7 +83,7 @@ public:
 		TListNode* pCur = m_pTail->Previous;
 
 		while (pCur != m_pHead) {
-			TListNode* pTemp = pCur;
+			const TListNode* pTemp = pCur;
 			pCur = pCur->Previous;
 			delete pTemp;
 		}
@@ -130,7 +131,7 @@ protected:
 	}
 
 	virtual void CopyFrom(TListCollection&& other) {
-		this->ThrowIfAssignSelf(other);
+		// this->ThrowIfAssignSelf(other);
 		Clear();
 
 		this->m_Owner = Move(other.m_Owner);
@@ -192,7 +193,7 @@ protected:
 		TListNode* pDel = exclusiveFirst->Next;
 
 		while (pDel != m_pTail) {
-			TListNode* pTemp = pDel;
+			const TListNode* pTemp = pDel;
 			pDel = pDel->Next;
 			delete pTemp;
 		}
@@ -266,8 +267,6 @@ protected:
 	/// <summary>
 	/// node 바로 전에 newNode를 삽입한다.
 	/// </summary>
-	/// <param name="tailPrev"></param>
-	/// <param name="newNode"></param>
 	void InsertNodePrev(TListNode* node, TListNode*  newNode) {
 		if (node == m_pHead) {
 			throw InvalidArgumentException("헤드 이전에는 노드를 삽입하면 안되요!");
@@ -317,8 +316,6 @@ protected:
 	/// <summary>
 	/// node 바로 이후에 newNode를 삽입한다.
 	/// </summary>
-	/// <param name="tailPrev"></param>
-	/// <param name="newNode"></param>
 	void InsertNodeNext(TListNode* node, TListNode* newNode) {
 		if (node == m_pTail) {
 			throw InvalidArgumentException("테일 이후에는 노드를 삽입하면 안되요!");
@@ -386,14 +383,12 @@ protected:
 		return m_pTail->Previous->Value;
 	}
 
-	template <typename T>
 	TListNode* CreateNewNode(const T& data) {
 		TListNode* pNewNode = new TListNode;
 		pNewNode->Value = data;
 		return pNewNode;
 	}
 
-	template <typename T>
 	TListNode* CreateNewNode(T&& data) {
 		TListNode* pNewNode = new TListNode;
 		pNewNode->Value = Move(data);
@@ -411,7 +406,7 @@ protected:
 	/// lhs의 다음 노드는 rhs로 설정하고
 	/// rhs의 이전 노드는 lhs로 설정한다.
 	/// </summary>
-	void ConnectNode(TListNode* lhs, TListNode* rhs) {
+	static void ConnectNode(TListNode* lhs, TListNode* rhs) {
 		lhs->Next = rhs;
 		rhs->Previous = lhs;
 	}
@@ -445,8 +440,8 @@ protected:
 	TListNode* m_pHead = nullptr;
 	TListNode* m_pTail = nullptr;
 private:
-	TListNode _ValtyHead;
-	TListNode _ValtyTail;
+	TListNode m_ValtyHead;
+	TListNode m_ValtyTail;
 
 	friend class TListCollectionIterator;
 };

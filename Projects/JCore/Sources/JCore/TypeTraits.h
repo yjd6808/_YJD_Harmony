@@ -24,19 +24,19 @@ struct FalseType : IntegralConstant<bool, false> {};
 template <typename T>
 struct RemoveReference
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
 struct RemoveReference<T&>
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
 struct RemoveReference<T&&>
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
@@ -51,25 +51,25 @@ using RemoveReference_t = typename RemoveReference<T>::Type;
 template <typename T>
 struct RemoveQulifier
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
 struct RemoveQulifier<const T>
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
 struct RemoveQulifier<volatile T>
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
 struct RemoveQulifier<volatile const T>
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
@@ -83,19 +83,19 @@ using RemoveQulifier_t = typename RemoveQulifier<T>::Type;
 template <typename T>
 struct RemoveArray
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
 struct RemoveArray<T[]>
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T, Int32U ArraySize>
 struct RemoveArray<T[ArraySize]>
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
@@ -109,13 +109,13 @@ using RemoveArray_t = typename RemoveArray<T>::Type;
 template <typename T>
 struct RevmovePointer
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 template <typename T>
 struct RevmovePointer<T*>
 {
-	using Type = typename T;
+	using Type = T;
 };
 
 
@@ -179,7 +179,7 @@ constexpr bool IsReferenceType_v = IsReferenceType<T>::value;
 template <typename T>
 struct NaturalType
 {
-	using Type = typename RemoveQulifier_t<RemoveReference_t<T>>;
+	using Type = RemoveQulifier_t<RemoveReference_t<T>>;
 };
 
 template <typename T>
@@ -299,7 +299,7 @@ constexpr bool IsArrayType_v = IsArrayType<NaturalType_t<T>>::value;
 // 런타임에 타입명을 가져올 때 사용합니다.
 template <typename T>
 String Type() {
-	String szFuncSig(__FUNCSIG__);
+	const String szFuncSig(__FUNCSIG__);
 
 	const int kiLeftIdx = szFuncSig.Find("<");
 	const int kiRightIdx = szFuncSig.FindReverse(">");
@@ -416,7 +416,7 @@ template <typename Derived, typename... BaseArgs>
 constexpr bool IsBaseOf_1Derived_MultipleBase_v = IsBaseOfMultipleBase<Derived, BaseArgs...>::Value();
 
 template <typename T>
-constexpr bool IsPrimitiveType_v = std::is_fundamental<T>::value;
+constexpr bool IsPrimitiveType_v = std::is_fundamental_v<T>;
 
 
 template <typename T, typename... Rest>

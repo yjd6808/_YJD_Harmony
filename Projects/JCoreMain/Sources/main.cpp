@@ -5,8 +5,10 @@
 
 struct Model
 {
-	Model() { }
-	Model(int da) { a = da; cout << StringUtil::Format("¸ðµ¨ %dÈ£ »ý¼º\n", da); }
+	Model() = default;
+	Model(int da)
+		: a(da) {
+		cout << StringUtil::Format("¸ðµ¨ %dÈ£ »ý¼º\n", da); }
 	virtual ~Model() { cout << StringUtil::Format("¸ðµ¨ %dÈ£ ¼Ò¸ê\n", a); }
 
 	int a = 3;
@@ -41,7 +43,9 @@ struct SuperModelTempalte : ModelTemplate<T>
 class Test
 {
 public:
-	Test() : owner(this, true) {}
+	Test() : owner(this, true)
+	=
+	default;
 	virtual ~Test() { owner.~VoidOwner(); }
 
 	
@@ -59,7 +63,7 @@ class Derived : public Test
 {
 public:
 	Derived() : Test() {}
-	virtual ~Derived() {  }
+	~Derived() override = default;
 public:
 	void A() override {
 		Test::A();
@@ -76,8 +80,9 @@ class Legendary : public Derived
 
 struct Zizon
 {
-	Zizon(){}
-	~Zizon() {}
+	Zizon() = default;
+	~Zizon() = default;
+
 	union { Model model; };
 };
 
@@ -107,7 +112,7 @@ HashMap<int, int> map;
 
 struct FT
 {
-	bool operator() (const Model& m) {
+	bool operator() (const Model& m) const {
 		return m.a == 0;
 	}
 };

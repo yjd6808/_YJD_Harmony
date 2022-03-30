@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <JCore/Container/Collection.h>
-
 #include <JCore/Memory.h>
 #include <JCore/Comparator.h>
 
@@ -17,7 +15,7 @@ template <typename T>
 struct StreamNode
 {
 private:
-	using TStreamNode = typename StreamNode<T>;
+	using TStreamNode = StreamNode<T>;
 public:
 	T* Pointer = nullptr;					// 다른 콜렉션의 데이터를 참조
 	TStreamNode* Next = nullptr;
@@ -40,10 +38,10 @@ public:
 template <typename T>
 class CollectionStream
 {
-	using TEnumerator			= typename Enumerator<T>;
-	using TStreamNode			= typename StreamNode<T>;
-	using TCollection			= typename Collection<T>;
-	using TCollectionStream		= typename CollectionStream<T>;
+	using TEnumerator			= Enumerator<T>;
+	using TStreamNode			= StreamNode<T>;
+	using TCollection			= Collection<T>;
+	using TCollectionStream		= CollectionStream<T>;
 
 private: 
 	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
@@ -164,12 +162,12 @@ public:
 	}
 
 protected:
-	void ConnectNode(TStreamNode* lhs, TStreamNode* rhs) {
+	static void ConnectNode(TStreamNode* lhs, TStreamNode* rhs) {
 		lhs->Next = rhs;
 		rhs->Previous = lhs;
 	}
 
-	TStreamNode* EndNode(TStreamNode* begin) const {
+	static TStreamNode* EndNode(TStreamNode* begin) {
 		while (begin->Next != nullptr) {
 			begin = begin->Next;
 		}
@@ -238,7 +236,7 @@ protected:
 
 	template <typename Predicate>
 	TStreamNode* Merge(TStreamNode* leftBegin, TStreamNode* rightBegin, Predicate predicate) {
-		TStreamNode* pTemp = &_ValtyTemp;
+		TStreamNode* pTemp = &m_ValtyTemp;
 
 		while (leftBegin != nullptr && rightBegin != nullptr) {
 			if (predicate(leftBegin->Ref(), rightBegin->Ref())) {
@@ -258,8 +256,8 @@ protected:
 			ConnectNode(pTemp, rightBegin);
 		}
 
-		_ValtyTemp.Next->Previous = nullptr;
-		return _ValtyTemp.Next;
+		m_ValtyTemp.Next->Previous = nullptr;
+		return m_ValtyTemp.Next;
 	}
 
 	
@@ -268,13 +266,13 @@ protected:
 protected:
 	TCollection* m_pCollection = nullptr;
 	TStreamNode* m_pArray = nullptr;
-	TStreamNode* m_pHead = &_ValtyHead;
-	TStreamNode* m_pTail = &_ValtyTail;
+	TStreamNode* m_pHead = &m_ValtyHead;
+	TStreamNode* m_pTail = &m_ValtyTail;
 	int m_iSize;
 private:
-	TStreamNode _ValtyHead;
-	TStreamNode _ValtyTail;
-	TStreamNode _ValtyTemp;
+	TStreamNode m_ValtyHead;
+	TStreamNode m_ValtyTail;
+	TStreamNode m_ValtyTemp;
 
 	friend class CollectionExtension<T>;
 };

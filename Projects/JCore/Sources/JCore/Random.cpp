@@ -36,7 +36,7 @@ int Random::GenerateInt(int begin, int end) {
 		throw InvalidArgumentException("begin > end µÇ¸é ¾È´ï");
 	}
 
-	std::uniform_int_distribution<> dist(begin, end - 1);
+	const std::uniform_int_distribution<> dist(begin, end - 1);
 	return dist(ms_DefaultRandomEngine);
 }
 
@@ -45,7 +45,7 @@ double Random::GenerateDouble(double begin, double end) {
 		throw InvalidArgumentException("begin > end µÇ¸é ¾È´ï");
 	}
 
-	std::uniform_real_distribution<> dist(begin, end);
+	const std::uniform_real_distribution<> dist(begin, end);
 	return dist(ms_DefaultRandomEngine);
 }
 

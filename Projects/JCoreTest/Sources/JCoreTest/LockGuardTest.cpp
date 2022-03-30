@@ -5,7 +5,6 @@
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/LockGuard.h>
 
 using namespace JCore;
 using namespace std;

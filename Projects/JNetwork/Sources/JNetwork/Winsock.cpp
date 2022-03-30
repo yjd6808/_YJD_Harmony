@@ -25,7 +25,7 @@ bool Winsock::Initialize(Byte highVersion, Byte lowVersion) {
 	const WORD wRequestVersion = MAKEWORD(lowVersion, highVersion);
 
 	WSADATA wsaData;
-	Int32UL ret = WSAStartup(wRequestVersion, &wsaData);
+	const Int32UL ret = WSAStartup(wRequestVersion, &wsaData);
 	WSASetLastError(ret);
 
 	const BYTE retLowVersion = LOBYTE(wsaData.wVersion);
@@ -55,7 +55,7 @@ Int32U Winsock::LastError() {
 JCore::String Winsock::LastErrorMessage() {
 	char buf[1024];
 
-	Int32U errorCode = WSAGetLastError();
+	const Int32U errorCode = WSAGetLastError();
 
 	FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL, errorCode,

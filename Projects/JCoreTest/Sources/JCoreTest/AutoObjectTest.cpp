@@ -7,7 +7,6 @@
 #include <JCoreTest/CoreTest.h>
 #include <JCoreTest/TestUtil/Object.h>
 
-#include <JCore/Exception.h>
 #include <JCore/Deletor.h>
 #include <JCore/AutoObject.h>
 
@@ -22,7 +21,7 @@ int g_iValue = 100;
 
 struct Increaser
 {
-	void operator()(int& val) {
+	void operator()(int& val) const {
 		val++;
 	}
 };

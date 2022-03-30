@@ -1,7 +1,15 @@
+
+
+
 #pragma once
 
 #include <JCore/TypeTraits.h>
 #include <JCore/Memory.h>
+
+// 컴파일하는 컴터마다 달라서 ㄱㅊ지 않나
+// ReSharper disable CppClangTidyClangDiagnosticInvalidConstexpr
+// ReSharper disable CppIfCanBeReplacedByConstexprIf
+// ReSharper disable CppUnreachableCode
 
 enum class Endianness
 {
@@ -14,7 +22,7 @@ struct ByteOrder final
 	// 엔디안 체크 방법
 	// @참고 : https://sites.google.com/site/insideoscore/endianness
 	constexpr static Endianness HostEndianness() {
-		const int iEndianness = 0x00000001;
+		constexpr int iEndianness = 0x00000001;
 		return (*(char*)&iEndianness == 0x01) ? Endianness::Little : Endianness::Big;
 	}
 
@@ -40,10 +48,10 @@ struct ByteOrder final
 		}
 
 		T ret = 0;
-		int iSize = sizeof(T);
+		const int iSize = sizeof(T);
 
 		Byte* pDst = (Byte*)&ret;
-		Byte* pSrc = (Byte*)&val;
+		const Byte* pSrc = (Byte*)&val;
 
 		for (int i = iSize - 1, j = 0; i >= 0; i--, j++) {
 			pDst[j] = pSrc[i];
@@ -62,10 +70,10 @@ struct ByteOrder final
 		}
 
 		T ret = 0;
-		int iSize = sizeof(T);
+		const int iSize = sizeof(T);
 
 		Byte* pDst = (Byte*)&ret;
-		Byte* pSrc = (Byte*)&val;
+		const Byte* pSrc = (Byte*)&val;
 
 		for (int i = iSize - 1, j = 0; i >= 0; i--, j++) {
 			pDst[j] = pSrc[i];

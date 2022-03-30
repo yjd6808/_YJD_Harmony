@@ -11,8 +11,7 @@ TcpSessionContainer::TcpSessionContainer(int maxSize) :
 {
 }
 
-TcpSessionContainer::~TcpSessionContainer() {
-}
+TcpSessionContainer::~TcpSessionContainer() = default;
 
 bool TcpSessionContainer::AddSession(TcpSession* session) {
 	CriticalSectionLockGuard guard(m_ContainerLock);

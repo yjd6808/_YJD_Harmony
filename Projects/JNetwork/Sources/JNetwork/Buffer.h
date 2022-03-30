@@ -2,7 +2,6 @@
 
 #include <ws2def.h>
 
-#include <JCore/Event.h>
 #include <JCore/Memory.h>
 #include <JCore/Math.h>
 
@@ -15,7 +14,7 @@ namespace JNetwork {
 template <Int32U BufferSize>
 class Buffer
 {
-	using TBuffer = typename Buffer<BufferSize>;
+	using TBuffer = Buffer<BufferSize>;
 public:
 	template <typename T>
 	T Read() {
@@ -78,9 +77,8 @@ public:
 		m_iWritePos -= len;
 
 		if (forceMove && m_iReadPos < 0) {
-			int iOverFlow = JCore::Math::Abs(m_iReadPos);
+			const int iOverFlow = JCore::Math::Abs(m_iReadPos);
 
-			len -= iOverFlow;
 			m_iWritePos += iOverFlow;
 			m_iReadPos = 0;
 		}
@@ -115,9 +113,10 @@ public:
 		return m_iWritePos - m_iReadPos;
 	}
 
-	int GetBufferCapacity() const { return BufferSize; }
+	
 	int GetReadPos() const { return m_iReadPos; }
 	int GetWritePos() const { return m_iWritePos; }
+	static int GetBufferCapacity() { return BufferSize; }
 	
 
 	void Clear() {
@@ -125,7 +124,7 @@ public:
 		m_iReadPos = 0;
 	}
 private:
-	bool IsReadable(int size) {
+	bool IsReadable(int size) const {
 		if (m_iReadPos + size > m_iWritePos) {
 			return false;
 		}
@@ -133,7 +132,7 @@ private:
 		return true;
 	}
 
-	bool IsWriteable(int size) {
+	bool IsWriteable(int size) const {
 		if (m_iWritePos + size > BufferSize) {
 			return false;
 		}
@@ -141,12 +140,12 @@ private:
 		return true;
 	}
 private:
-	char m_Buffer[BufferSize];
+	char m_Buffer[BufferSize] = {};
 	int m_iReadPos = 0;
 	int m_iWritePos = 0;
 };
 
-using SessionBuffer = typename Buffer<4096UL>;
+using SessionBuffer = Buffer<4096UL>;
 
 }
 

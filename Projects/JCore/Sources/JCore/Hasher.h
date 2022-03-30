@@ -6,7 +6,6 @@
 #pragma once
 
 #include <JCore/Type.h>
-#include <JCore/Limit.h>
 #include <JCore/String.h>
 
 #pragma warning (disable : 4244)  // 'argument': conversion from 'double' to 'float', possible loss of data, double을 강제로 float으로 바꿀라캐서 Hasher<double>  땜에
@@ -31,7 +30,7 @@ struct Hasher<float>
 {
 	union Bit
 	{
-		float val;
+		float val{};
 		Int32U u;
 	};
 
@@ -45,7 +44,7 @@ struct Hasher<double>
 {
 	union Bit
 	{
-		double val;
+		double val{};
 		Int64U u;
 	};
 
@@ -58,9 +57,9 @@ struct Hasher<double>
 template <>
 struct Hasher<String>
 {
-	Int32U operator()(String& val) {
+	Int32U operator()(String& val) const {
 		Int32U uiConv = PrimeInt32U_v;
-		char* pBuffer = val.Source();
+		const char* pBuffer = val.Source();
  
 		for (int i = 0; i < val.Length(); i++) {
 			uiConv ^= pBuffer[i] ^ HashXorKey_v;

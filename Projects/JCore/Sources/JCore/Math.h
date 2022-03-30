@@ -5,15 +5,13 @@
 
 #pragma once
 
-#include <JCore/Type.h>
-
 namespace JCore {
 
 class Math final
 {
 public:
-	Math(){}
-	~Math(){}
+	Math() = default;
+	~Math() = default;
 public:
 	template <typename T>
 	static T Pow(T base, const int exponent) {

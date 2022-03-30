@@ -22,8 +22,8 @@ public:
 		Udp
 	};
 public:
-	Server() : m_ServerSocket(INVALID_SOCKET), m_eState(State::Initialized), m_eServerType(Type::None) {}
-	virtual ~Server() {}
+	Server() : m_eServerType(Type::None), m_eState(State::Initialized), m_ServerSocket(INVALID_SOCKET) {}
+	virtual ~Server() = default;
 
 	virtual bool Start(const IPv4EndPoint& localEndPoint) = 0;
 	virtual bool Stop() = 0;

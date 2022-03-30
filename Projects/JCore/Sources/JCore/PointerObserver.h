@@ -6,11 +6,14 @@
 
 #pragma once
 
-#include <JCore/Type.h>
 #include <JCore/Exception.h>
 #include <JCore/TypeTraits.h>
 
-#include <atomic>
+#include <cassert>
+
+#ifndef DebugAssert
+	#define DebugAssert(exp, msg)		assert((exp) && msg)
+#endif
 
 #define DeleteSafe(x)			\
 do {							\
@@ -51,8 +54,8 @@ struct VoidPointerCounter {
  =====================================================================================*/
 class VoidBase {
 public:
-	VoidBase() {}
-	virtual ~VoidBase() noexcept {}
+	VoidBase() = default;
+	virtual ~VoidBase() noexcept = default;
 
 	template <typename T>
 	T* Get() const {
@@ -99,7 +102,7 @@ protected:
 		}
 	}
 
-	void SubtractWatcherCount() {
+	void SubtractWatcherCount() const {
 		if (m_pCounter == nullptr) {
 			return;
 		}
@@ -110,7 +113,7 @@ protected:
 		}
 	}
 
-	void AddWatcherCount() {
+	void AddWatcherCount() const {
 		if (m_pCounter == nullptr) {
 			return;
 		}
@@ -119,8 +122,8 @@ protected:
 	}
 
 	void OwnerMoveToOwner(VoidOwner& owner);
-	void WatcherCopyToOwner(VoidOwner& owner);
-	void WatcherCopyToWatcher(VoidWatcher& watcher);
+	void WatcherCopyToOwner(const VoidOwner& owner);
+	void WatcherCopyToWatcher(const VoidWatcher& watcher);
 	void WatcherMoveToWatcher(VoidWatcher& watcher);
 protected:
 	bool m_bNoDelete = false;
@@ -151,7 +154,7 @@ public:
 		OwnerMoveToOwner(owner);
 	}
 
-	virtual ~VoidOwner() override {
+	~VoidOwner() override {
 		DeletePointer();
 	}
 
@@ -180,7 +183,8 @@ class VoidWatcher : public VoidBase
 {
 	friend class VoidOwner;
 public:
-	VoidWatcher() {}
+	VoidWatcher() = default;
+
 	VoidWatcher(VoidOwner& owner) {
 		WatcherCopyToOwner(owner);
 	}
@@ -266,9 +270,9 @@ struct OwnerObject : PointerCounter
 template <typename T>
 class Base
 {
-	using TBase				= typename Base<T>;
-	using TOwner			= typename Owner<T>;
-	using TWatcher			= typename Watcher<T>;
+	using TBase				= Base<T>;
+	using TOwner			= Owner<T>;
+	using TWatcher			= Watcher<T>;
 public:
 	Base() {}
 	virtual ~Base() {}
@@ -285,7 +289,7 @@ public:
 			ThrowIfDynamicCastingFailed<T*>(pCasted);
 			return pCasted;
 		} else {
-			static_assert(false, "... cannot conver to T_T");
+			DebugAssert(false, "... cannot conver to T_T");//static_assert(false, "... cannot conver to T_T");
 		}
 		return nullptr;
 	}
@@ -298,7 +302,7 @@ public:
 		return *m_pPointer;
 	}
 
-	void* GetRaw() {
+	void* GetRaw() const {
 		return (void*)m_pPointer;
 	}
 
@@ -310,7 +314,7 @@ public:
 		return m_pCounter->Alive;
 	}
 
-	int WatcherCount() {
+	int WatcherCount() const {
 		if (m_pCounter == nullptr) {
 			return false;
 		}
@@ -348,7 +352,7 @@ protected:
 		SubtractWatcherCount();
 	}
 
-	void SubtractWatcherCount() {
+	void SubtractWatcherCount() const {
 		if (m_pCounter == nullptr) {
 			return;
 		}
@@ -359,7 +363,7 @@ protected:
 		}
 	}
 
-	void AddWatcherCount() {
+	void AddWatcherCount() const {
 		if (m_pCounter == nullptr) {
 			return;
 		}
@@ -368,14 +372,14 @@ protected:
 	}
 
 	template <typename T>	// 함수 정보 제공을 위해 일부러 달음
-	void ThrowIfDynamicCastingFailed(void* ptr) {
+	static void ThrowIfDynamicCastingFailed(void* ptr) {
 		if (ptr == nullptr) {
 			throw NullPointerException("다이나믹 캐스팅에 실패하였습니다.");
 		}
 	}
 
 	template <typename U>
-	void ThrowIfOwnerNotExist(Owner<U>& owner) {
+	static void ThrowIfOwnerNotExist(Owner<U>& owner) {
 		if (!owner.Exist()) {
 			throw InvalidArgumentException("전달받은 오너의 정보가 비어있습니다.");
 		}
@@ -474,9 +478,9 @@ protected:
 template <typename T>
 class Owner : public Base<T>
 {
-	using TBase			= typename Base<T>;
-	using TOwner		= typename Owner<T>;
-	using TWatcher		= typename Watcher<T>;
+	using TBase			= Base<T>;
+	using TOwner		= Owner<T>;
+	using TWatcher		= Watcher<T>;
 
 	friend class TWatcher;
 
@@ -533,7 +537,7 @@ public:
 		} else if constexpr (PointerObserver::IsDynamicCastable<T, U>()) {
 			this->OwnerMoveToOwner<U, TBase::Cast::DynamicCastable>(owner);
 		} else {
-			static_assert(false, "cannot convert each other");
+			DebugAssert(false, "... cannot convert each other"); // static_assert(false, "cannot convert each other");
 		}
 	}
 };
@@ -543,9 +547,9 @@ public:
 template <typename T>
 class Watcher : public Base<T>
 {
-	using TBase			= typename Base<T>;
-	using TOwner		= typename Owner<T>;
-	using TWatcher		= typename Watcher<T>;
+	using TBase			= Base<T>;
+	using TOwner		= Owner<T>;
+	using TWatcher		= Watcher<T>;
 
 	friend class TOwner;
 public:
@@ -609,10 +613,10 @@ public:
 		} else if constexpr (PointerObserver::IsDynamicCastable<T, U>()) {
 			this->WatcherCopyToOwner<U, TBase::Cast::DynamicCastable>(owner);
 		} else {
-			static_assert(false, "cannot convert each other");
+			DebugAssert(false, "... cannot convert each other"); //static_assert(false, "cannot convert each other");
 		}
 	}
-
+	 
 	template <typename U>
 	void CopyToWatcher(Watcher<U>& watcher) {
 		if (!watcher.Exist()) {
@@ -625,7 +629,7 @@ public:
 		} else if constexpr (PointerObserver::IsDynamicCastable<T, U>()) {
 			this->WatcherCopyToWatcher<U, TBase::Cast::DynamicCastable>(watcher);
 		} else {
-			static_assert(false, "cannot convert each other");
+			DebugAssert(false, "... cannot convert each other");
 		}
 	}
 
@@ -641,7 +645,7 @@ public:
 		} else if constexpr (PointerObserver::IsDynamicCastable<T, U>()) {
 			this->WatcherMoveToWatcher<U, TBase::Cast::DynamicCastable>(watcher);
 		} else {
-			static_assert(false, "cannot convert each other");
+			DebugAssert(false, "... cannot convert each other");
 		}
 	}
 };

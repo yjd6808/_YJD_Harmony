@@ -3,13 +3,17 @@
 #include <JNetwork/IPEndPoint.h>
 #include <WinSock2.h>
 
+#ifndef Out_
+	#define Out_
+#endif
+
 namespace JNetwork {
 
 class SocketOption
 {
 public:
 	SocketOption(SOCKET sock) : m_Socket(sock) {}
-	~SocketOption() {}
+	~SocketOption() = default;
 
 	// 성공시 : 0
 	// 실패시 : SOCKET_ERROR(-1) 반환
@@ -22,7 +26,7 @@ public:
 	int SetLingerEnabled(bool enabled) const;
 	int SetReuseAddrEnabled(bool enabled) const;
 	int SetExclusiveReuseAddrEnabled(bool enabled) const;
-	int SetLingerTimeout(int timeout) const;
+	int SetLingerTimeout(Int16U timeout) const;
 	int SetKeepAliveEnabled(bool enabled) const;
 	int SetUpdateAcceptContext(SOCKET hListeningSocket) const;
 	
@@ -59,10 +63,10 @@ public:
 		m_TransportProtocol(tpproto)
 	{
 	}
-	virtual ~Socket() {}
+	virtual ~Socket() = default;
 
 	SocketOption Option() const { return m_SocketOption; }
-	SOCKET Handle() const { return m_Socket; };
+	SOCKET Handle() const { return m_Socket; }
 	bool IsValid() const { return m_Socket != INVALID_SOCKET; }
 	int ShutdownBoth() const;
 	int ShutdownWrite() const;
@@ -84,45 +88,45 @@ class Socketv4 : public Socket
 public:
 	Socketv4() : Socket() {}
 	Socketv4(TransportProtocol tpproto, SOCKET socket) : Socket(tpproto, socket) {}
-	~Socketv4() override {}
+	~Socketv4() override = default;
 
-	int Bind(const IPv4EndPoint& ipv4EndPoint);
-	int BindAny();
+	int Bind(const IPv4EndPoint& ipv4EndPoint) const;
+	int BindAny() const;
 
-	int Listen(int connectionWaitingQueueSize = 15);
+	int Listen(int connectionWaitingQueueSize = 15) const;
 
 	Socketv4 Accept();
 
 	// 반환값 실패시 FALSE, WSAGetLastError로 확인
 	//       성공시 TRUE
-	int AcceptEx(SOCKET listenSocket, void* outputBuffer, DWORD receiveDatalen, Out_ LPDWORD receivedBytes, LPOVERLAPPED overlapped);
-	void AcceptExResult(char* buff, DWORD receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp);
+	int AcceptEx(SOCKET listenSocket, void* outputBuffer, DWORD receiveDatalen, Out_ LPDWORD receivedBytes, LPOVERLAPPED overlapped) const;
+	static void AcceptExResult(char* buff, DWORD receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp);
 
-	int Connect(const IPv4EndPoint& ipv4EndPoint);
-	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, DWORD sendbufSize, Out_ LPDWORD sentBytes); 
+	int Connect(const IPv4EndPoint& ipv4EndPoint) const;
+	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, DWORD sendbufSize, Out_ LPDWORD sentBytes) const; 
 	 
-	int Send(char* buff, Int32U len, Int32U flag = 0);
-	int SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag = 0);
-	int Receive(char* buff, Int32U buffSize, Int32U flag = 0);
-	int ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag = 0);
+	int Send(char* buff, Int32U len, Int32U flag = 0) const;
+	int SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag = 0) const;
+	int Receive(char* buff, Int32U buffSize, Int32U flag = 0) const;
+	int ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag = 0) const;
 
-	int SendEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesSent, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, Int32U flag = 0);
-	int SendToEx() {}	// NOT IMPLEMENTED, UNUSED
-	int ReceiveEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesReceived, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, Int32U flag = 0);
-	int ReceiveFromEx() {} // NOT IMPLEMENTED, UNUSED
+	int SendEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesSent, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, Int32U flag = 0) const;
+	 // int SendToEx() { return 0; } // NOT IMPLEMENTED, UNUSED
+	int ReceiveEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesReceived, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, Int32U flag = 0) const;
+	//  int ReceiveFromEx() {} // NOT IMPLEMENTED, UNUSED
 
 	IPv4EndPoint GetLocalEndPoint() const;
 	IPv4EndPoint GetRemoteEndPoint() const;
 
 	TransportProtocol GetTransportProtocol() const { return m_TransportProtocol; }
-	InternetProtocol GetInternetProtocol() const { return InternetProtocol::IPv4; }
+	static InternetProtocol GetInternetProtocol() { return InternetProtocol::IPv4; }
 };
 
 class TcpSocketv4 : public Socketv4
 {
 public:
 	TcpSocketv4(SOCKET socket) : Socketv4(TransportProtocol::TCP, socket) {}
-	~TcpSocketv4() override {}
+	~TcpSocketv4() override = default;
 };
 
 class Socketv6 final : public Socket

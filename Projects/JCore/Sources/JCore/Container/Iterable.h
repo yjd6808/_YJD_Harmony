@@ -17,7 +17,7 @@ template <typename> struct Iterator;
 template <typename T>
 struct Iterable
 {
-	using TIterator = typename Iterator<T>;
+	using TIterator = Iterator<T>;
 
 	Iterable() {}
 	virtual ~Iterable() noexcept {}

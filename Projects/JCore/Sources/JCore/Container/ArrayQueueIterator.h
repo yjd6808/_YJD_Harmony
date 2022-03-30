@@ -15,13 +15,13 @@ template <typename> class ArrayQueue;
 template <typename T>
 class ArrayQueueIterator : public ArrayCollectionIterator<T>
 {
-	using TArrayCollectionIterator	= typename ArrayCollectionIterator<T>;
-	using TArrayQueue				= typename ArrayQueue<T>;
+	using TArrayCollectionIterator	= ArrayCollectionIterator<T>;
+	using TArrayQueue				= ArrayQueue<T>;
 public:
 	ArrayQueueIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
-	virtual ~ArrayQueueIterator() noexcept {}
+	~ArrayQueueIterator() noexcept override {}
 public:
-	virtual bool HasNext() const {
+	bool HasNext() const override {
 		if (!this->IsValid()) {
 			return false;
 		}
@@ -29,7 +29,7 @@ public:
 		return IsValidIndex(this->m_iPos);
 	}
 
-	virtual bool HasPrevious() const {
+	bool HasPrevious() const override {
 		if (!this->IsValid()) {
 			return false;
 		}
@@ -43,7 +43,7 @@ public:
 		return IsValidIndex(iPos);
 	}
 
-	virtual T& Next() {
+	T& Next() override {
 		TArrayQueue* pQueue = CastArrayQueue();
 		T& val = pQueue->m_pArray[this->m_iPos++];
 
@@ -54,7 +54,7 @@ public:
 		return val;
 	}
 
-	virtual T& Previous() {
+	T& Previous() override {
 		TArrayQueue* pQueue = CastArrayQueue();
 		this->m_iPos -= 1;
 		if (this->m_iPos == -1) {
@@ -64,11 +64,11 @@ public:
 		return pQueue->m_pArray[this->m_iPos];
 	}
 
-	virtual bool IsEnd() const {
+	bool IsEnd() const override {
 		return HasNext() == false;
 	}
 
-	virtual bool IsBegin() const {
+	bool IsBegin() const override {
 		return HasPrevious() == false;
 	}
 protected:
@@ -77,8 +77,8 @@ protected:
 	/// [오버라이딩]
 	/// - From ArrayCollectionIterator
 	/// </summary>
-	
-	virtual bool IsValidIndex(int idx) const {
+
+	bool IsValidIndex(int idx) const override {
 		TArrayQueue* pQueue = CastArrayQueue();
 
 		if (pQueue->IsEmpty()) {

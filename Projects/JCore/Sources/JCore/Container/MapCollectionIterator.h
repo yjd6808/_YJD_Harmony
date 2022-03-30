@@ -20,11 +20,11 @@ struct KeyValuePair;
 template <typename TKey, typename TValue>
 class MapCollectionIterator : public Iterator<KeyValuePair<TKey, TValue>>
 {
-	using TKeyValuePair = typename KeyValuePair<TKey, TValue>;
-	using TIterator		= typename Iterator<TKeyValuePair>;
+	using TKeyValuePair = KeyValuePair<TKey, TValue>;
+	using TIterator		= Iterator<TKeyValuePair>;
 public:
 	MapCollectionIterator(VoidOwner& owner) : TIterator(owner) {}
-	virtual ~MapCollectionIterator() noexcept = 0;
+	~MapCollectionIterator() noexcept override = 0;
 };
 
 template <typename TKey, typename TValue>

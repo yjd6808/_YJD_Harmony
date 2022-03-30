@@ -17,7 +17,6 @@ using namespace JCore;
 							IPAddress
 =======================================================================================*/
 
-IPAddress::~IPAddress() {}
 
 /*=====================================================================================
 							IPv4Address
@@ -79,7 +78,7 @@ IPv4Address IPv4Address::Parse(const char* hostOrderedAddressString) {
 
 		if (hostOrderedAddressString[addr_idx] == '.') {
 			temp.Source[temp_idx] = '\0';
-			int val = atoi(temp.Source);
+			const int val = atoi(temp.Source);
 			if (val > 255) {
 				throw InvalidArgumentException("올바른 IPv4 주소를 전달해주세요. 255.255.255.255보다 큰 IP 주소입니다.");
 			}
@@ -101,7 +100,7 @@ IPv4Address IPv4Address::Parse(const char* hostOrderedAddressString) {
 	//             ---
 	// 마지막 xxx에 대한 정보를 정수로 변경함
 	temp.Source[temp_idx] = '\0';
-	int val = atoi(temp.Source);
+	const int val = atoi(temp.Source);
 	if (val > 255) {
 		throw InvalidArgumentException("올바른 IPv4 주소를 전달해주세요. 255.255.255.255보다 큰 IP 주소입니다.");
 	}

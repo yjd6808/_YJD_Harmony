@@ -17,7 +17,7 @@ template <typename> class Collection;
 template <typename T>
 struct Iterator
 {
-	using TCollection = typename Collection<T>;
+	using TCollection = Collection<T>;
 
 	Iterator(VoidOwner& owner) : Watcher(owner) {}
 	virtual ~Iterator() noexcept { Watcher.~VoidWatcher(); }

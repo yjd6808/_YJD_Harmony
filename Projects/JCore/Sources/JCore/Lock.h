@@ -50,7 +50,7 @@ namespace JCore {
 		bool TryLock() override;
 		bool IsLocked() override;
 	private:
-		CRITICAL_SECTION m_CriticalSection;
+		CRITICAL_SECTION m_CriticalSection{};
 		std::atomic<bool> m_bLocked;
 	};
 

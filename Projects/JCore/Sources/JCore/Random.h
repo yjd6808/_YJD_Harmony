@@ -25,8 +25,8 @@ struct Random final
 		return dist(ms_DefaultRandomEngine);
 	}
 
-	int GenerateInt(int inclusiveBegin, int exclusiveEnd);
-	double GenerateDouble(double inclusiveBegin, double inclusiveEnd);
+	static int GenerateInt(int inclusiveBegin, int exclusiveEnd);
+	static double GenerateDouble(double inclusiveBegin, double inclusiveEnd);
 
 	static void EngineInitialize();
 private:

@@ -7,10 +7,11 @@
 
 
 namespace JNetwork {
-	TcpServer::TcpServer(int maxConn) {
-		m_pContainer = new TcpSessionContainer(maxConn);
-		m_pIocp = new IOCP();
-		m_pEventListener = nullptr;
+	TcpServer::TcpServer(int maxConn) :
+		m_pEventListener(nullptr),
+		m_pContainer(new TcpSessionContainer(maxConn)),
+		m_pIocp(new IOCP()) {
+
 	}
 
 	TcpServer::~TcpServer() {
@@ -85,7 +86,7 @@ namespace JNetwork {
 		// 세션을 미리 생성해놓고 연결 대기 상태로 둠
 		for (int i = 0; i < MaxConnection(); i++) {
 			TcpSession* session = new TcpSession(m_pIocp, m_pEventListener);
-			SOCKET hListeningSock = this->Socket().Handle();
+			const SOCKET hListeningSock = this->Socket().Handle();
 
 			if (!session->Initialize()) {
 				Winsock::AssertWinsockMessage("세션 초기화 실패");

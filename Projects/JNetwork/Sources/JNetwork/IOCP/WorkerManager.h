@@ -44,7 +44,7 @@ private:	// IOCP 클래스에서만 삭제 가능하도록 한다.
 		});
 	}
 
-	void Join() {
+	void Join() const {
 		for (int i = 0; i < m_Workers.Size(); i++) {
 			m_Workers[i]->JoinWait(m_pHandles[i]);
 		}
@@ -58,7 +58,7 @@ private:	// IOCP 클래스에서만 삭제 가능하도록 한다.
 		}
 	}
 
-	void Pause() {
+	void Pause() const {
 		for (int i = 0; i < m_Workers.Size(); i++) {
 			m_Workers[i]->Pause(m_pHandles[i]);
 		}

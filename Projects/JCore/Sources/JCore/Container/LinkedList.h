@@ -12,12 +12,12 @@ namespace JCore {
 template <typename T>
 class LinkedList	: public ListCollection<T>
 {
-	using TListNode				= typename ListNode<T>;
-	using TEnumerator			= typename Enumerator<T>;
-	using TCollection			= typename Collection<T>;
-	using TListCollection		= typename ListCollection<T>;
-	using TLinkedList			= typename LinkedList<T>;
-	using TLinkedListIterator	= typename LinkedListIterator<T>;
+	using TListNode				= ListNode<T>;
+	using TEnumerator			= Enumerator<T>;
+	using TCollection			= Collection<T>;
+	using TListCollection		= ListCollection<T>;
+	using TLinkedList			= LinkedList<T>;
+	using TLinkedListIterator	= LinkedListIterator<T>;
 public:
 	LinkedList() 
 		: TListCollection(ContainerType::LinkedList) 
@@ -29,7 +29,7 @@ public:
 	{
 	}
 
-	LinkedList(TLinkedList&& other) 
+	LinkedList(TLinkedList&& other) noexcept
 		: TListCollection(Move(other), ContainerType::LinkedList) 
 	{
 	}
@@ -38,14 +38,14 @@ public:
 		: TListCollection(ilist, ContainerType::LinkedList) {
 	}
 
-	virtual ~LinkedList() noexcept {}
+	~LinkedList() noexcept override {}
 public:
 	TLinkedList& operator=(const TLinkedList& other) {
 		this->CopyFrom(other);
 		return *this;
 	}
 
-	TLinkedList& operator=(TLinkedList&& other) {
+	TLinkedList& operator=(TLinkedList&& other) noexcept {
 		this->CopyFrom(Move(other));
 		return *this;
 	}
@@ -55,27 +55,27 @@ public:
 		return *this;
 	}
 
-	virtual void PushBack(const T& data) {
+	void PushBack(const T& data) override {
 		TListCollection::PushBack(data);
 	}
 
-	virtual void PushBack(T&& data) {
+	void PushBack(T&& data) override {
 		TListCollection::PushBack(Move(data));
 	}
 
-	virtual void PushBackAll(const TCollection& collection) {
+	void PushBackAll(const TCollection& collection) override {
 		TListCollection::PushBackAll(collection);
 	}
 
-	virtual void PushFront(const T& data) {
+	void PushFront(const T& data) override {
 		TListCollection::PushFront(data);
 	}
 
-	virtual void PushFront(T&& data) {
+	void PushFront(T&& data) override {
 		TListCollection::PushFront(Move(data));
 	}
 
-	virtual void PushFrontAll(const TCollection& collection) {
+	void PushFrontAll(const TCollection& collection) override {
 		TListCollection::PushFrontAll(collection);
 	}
 
@@ -89,19 +89,19 @@ public:
 		TListCollection::EmplaceFront(Forward<Args>(args)...);
 	}
 
-	virtual T& Back() const {
+	T& Back() const override {
 		return TListCollection::Back();
 	}
 
-	virtual T& Front() const {
+	T& Front() const override {
 		return TListCollection::Front();
 	}
 
-	virtual void PopBack() {
+	void PopBack() override {
 		TListCollection::PopBack();
 	}
 
-	virtual void PopFront() {
+	void PopFront() override {
 		TListCollection::PopFront();
 	}
 
@@ -109,12 +109,12 @@ public:
 		return FindNode(data) != nullptr;
 	}
 
-	bool Remove(const T& data) {
+	bool Remove(const T& data) { 
 		return TListCollection::Remove(data);
 	}
 
 	bool Remove(const TLinkedListIterator& iter) {
-		return TListCollection::Remove(iter);;
+		return TListCollection::Remove(iter);
 	}
 
 	template <typename Predicate>
@@ -131,11 +131,11 @@ public:
 		return true;
 	}
 
-	virtual TEnumerator Begin() const {
+	TEnumerator Begin() const override {
 		return MakeShared<TLinkedListIterator>(this->GetOwner(), this->m_pHead->Next);
 	}
 
-	virtual TEnumerator End() const {
+	TEnumerator End() const override {
 		return MakeShared<TLinkedListIterator>(this->GetOwner(), this->m_pTail);
 	}
 

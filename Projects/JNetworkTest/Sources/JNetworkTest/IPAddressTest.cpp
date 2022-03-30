@@ -1,7 +1,5 @@
 #include <JNetworkTest/NetworkTest.h>
 
-#include <JCore/Exception.h>
-
 #include <JNetwork/IPAddress.h>
 
 
@@ -16,7 +14,7 @@ TEST(IPAddressTest, IPv4) {
 	EXPECT_NO_THROW(IPv4Address("255.255.255.255"));
 	EXPECT_NO_THROW(IPv4Address("0.0.0.0"));
 
-	IPv4Address ip("121.122.123.124");
+	const IPv4Address ip("121.122.123.124");
 
 	EXPECT_ANY_THROW(ip.GetAddressOctet(-1));
 	auto k = ip.GetAddressOctet(0);
@@ -33,7 +31,7 @@ TEST(IPAddressTest, IPv4) {
 	addr.sin_addr.S_un.S_addr = htonl(ip.GetAddress());
 
 	char buff[22];
-	String s = inet_ntoa(addr.sin_addr);
+	const String s = inet_ntoa(addr.sin_addr);
 	String s2 = inet_ntop(AF_INET, &addr, buff, 22);
 	EXPECT_TRUE(s == "121.122.123.124");
 }

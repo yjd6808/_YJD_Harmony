@@ -16,34 +16,34 @@ template <typename> class  ListQueue;
 template <typename T>
 class ListQueueIterator : public ListCollectionIterator<T>
 {
-	using TListNode					= typename ListNode<T>;
-	using TListCollectionIterator	= typename ListCollectionIterator<T>;
-	using TListQueue				= typename ListQueue<T>;
+	using TListNode					= ListNode<T>;
+	using TListCollectionIterator	= ListCollectionIterator<T>;
+	using TListQueue				= ListQueue<T>;
 public:
 	ListQueueIterator(VoidOwner& owner, TListNode* current) : TListCollectionIterator(owner, current) {}
-	virtual ~ListQueueIterator() noexcept {}
+	~ListQueueIterator() noexcept override {}
 public:
-	virtual bool HasNext() const {
+	bool HasNext() const override {
 		return TListCollectionIterator::HasNext();
 	}
 
-	virtual bool HasPrevious() const {
+	bool HasPrevious() const override {
 		return TListCollectionIterator::HasPrevious();
 	}
 
-	virtual T& Next() {
+	T& Next() override {
 		return TListCollectionIterator::Next();
 	}
 
-	virtual T& Previous() {
+	T& Previous() override {
 		return TListCollectionIterator::Previous();
 	}
 
-	virtual bool IsEnd() const {
+	bool IsEnd() const override {
 		return TListCollectionIterator::IsEnd();
 	}
 
-	virtual bool IsBegin() const {
+	bool IsBegin() const override {
 		return TListCollectionIterator::IsBegin();
 	}
 };

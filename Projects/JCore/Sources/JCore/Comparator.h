@@ -26,7 +26,7 @@ struct Comparator
 template <>
 struct Comparator<const char*>
 {
-	int operator()(const char* lhs, const char* rhs) {
+	int operator()(const char* lhs, const char* rhs) const {
 		return StringUtil::CTCompare(lhs, rhs);
 	}
 };
@@ -34,7 +34,7 @@ struct Comparator<const char*>
 template <>
 struct Comparator<String>
 {
-	int operator()(const String& lhs, const String& rhs) {
+	int operator()(const String& lhs, const String& rhs) const {
 		return lhs.Compare(rhs);
 	}
 };

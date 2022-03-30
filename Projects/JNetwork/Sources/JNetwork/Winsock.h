@@ -4,6 +4,10 @@
 #include <JCore/String.h>
 #include <JCore/LockGuard.h>
 
+#ifndef FORMAT_STR
+	#define FORMAT_STR(fmt)  JCore::StringUtil::Format(fmt)
+#endif
+
 namespace JNetwork {
 
 struct Winsock

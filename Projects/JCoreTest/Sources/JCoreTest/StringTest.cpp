@@ -51,9 +51,9 @@ TEST(StringTest, Compare) {
 
 // String::operator> < >= <= 함수 테스트
 TEST(StringTest, ComparisonOperator) {
-	String str1 = "abcd";
-	String str2 = "abc";
-	String str3 = "ab";
+	const String str1 = "abcd";
+	const String str2 = "abc";
+	const String str3 = "ab";
 
 	EXPECT_FALSE(str2 > str2);
 	EXPECT_TRUE(str2 >= str2);

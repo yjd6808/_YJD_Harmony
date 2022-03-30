@@ -5,10 +5,7 @@
 */
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/Core.h>
 #include <JCore/TypeTraits.h>
-#include <JCore/Random.h>
-#include <JCore/Math.h>
 
 using namespace std;
 using namespace JCore;

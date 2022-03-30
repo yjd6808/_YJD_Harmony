@@ -15,15 +15,17 @@ template <typename> class ArrayCollection;
 template <typename T>
 class ArrayCollectionIterator : public Iterator<T>
 {
-	using TIterator			= typename Iterator<T>;
-	using TArrayCollection  = typename ArrayCollection<T>;
+	using TIterator			= Iterator<T>;
+	using TArrayCollection  = ArrayCollection<T>;
 public:
-	ArrayCollectionIterator(VoidOwner& owner, int pos) : TIterator(owner) {
-		m_iPos = pos;
+	ArrayCollectionIterator(VoidOwner& owner, int pos) : TIterator(owner)
+	                                                   , m_iPos(pos) {
+
 	}
-	virtual ~ArrayCollectionIterator() noexcept {}
+
+	~ArrayCollectionIterator() noexcept override = default;
 public:
-	virtual bool HasNext() const {
+	bool HasNext() const override {
 		if (!this->IsValid()) {
 			return false;
 		}
@@ -31,7 +33,7 @@ public:
 		return IsValidIndex(m_iPos);
 	}
 
-	virtual bool HasPrevious() const {
+	bool HasPrevious() const override {
 		if (!this->IsValid()) {
 			return false;
 		}
@@ -39,19 +41,19 @@ public:
 		return IsValidIndex(m_iPos - 1);
 	}
 
-	virtual T& Next() {
+	T& Next() override {
 		return CastArrayCollection()->m_pArray[m_iPos++];
 	}
 
-	virtual T& Previous() {
+	T& Previous() override {
 		return CastArrayCollection()->m_pArray[--m_iPos];
 	}
 
-	virtual bool IsEnd() const {
+	bool IsEnd() const override {
 		return HasNext() == false;
 	}
 
-	virtual bool IsBegin() const {
+	bool IsBegin() const override {
 		return HasPrevious() == false;
 	}
 protected:

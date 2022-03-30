@@ -3,7 +3,7 @@
 class MyEventListener : public TcpServerEventListener
 {
 protected:
-	virtual void OnStarted() {
+	void OnStarted() override {
 		Winsock::Message("서버가 시작되었습니다.");
 	}
 
@@ -13,33 +13,33 @@ protected:
 		char a[30];
 	};
 
-	virtual void OnConnected(TcpSession* connectedSession) {
+	void OnConnected(TcpSession* connectedSession) override {
 		std::cout << connectedSession->GetRemoteEndPoint().ToString() << " 클라이언트가 접속하였습니다.\n";
 	}
 
-	virtual void OnDisconnected(TcpSession* disconnetedSession) {
+	void OnDisconnected(TcpSession* disconnetedSession) override {
 		std::cout << disconnetedSession->GetRemoteEndPoint().ToString() << " 클라이언트가 접속을 종료하였습니다.\n";
 	}
 
-	virtual void OnSent(TcpSession* sender, ISendPacket* packet, Int32UL sentBytes) {
+	void OnSent(TcpSession* sender, ISendPacket* packet, Int32UL sentBytes) override {
 		Winsock::Message("송신 : %d 바이트", packet->GetPacketLength());
 	}
 
-	virtual void OnReceived(TcpSession* receiver, ICommand* cmd) {
+	void OnReceived(TcpSession* receiver, ICommand* cmd) override {
 		static int cnt = 0;
 
 		Winsock::Message("%d번째 커맨드 길이 : %d", ++cnt, cmd->GetCommandLen());
 	}
 
-	virtual void OnPaused() {
+	void OnPaused() override {
 		Winsock::Message("서버가 일시정지되었습니다.");
 	}
 
-	virtual void OnResume() {
+	void OnResume() override {
 		Winsock::Message("서버가 다시 가동 되었습니다.");
 	}
 
-	virtual void OnStopped() {
+	void OnStopped() override {
 		Winsock::Message("서버가 종료되었습니다.");
 	}
 

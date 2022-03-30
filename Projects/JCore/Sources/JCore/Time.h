@@ -183,10 +183,10 @@ public:
 	inline Int32 GetMonth() const { return Int32(Month); }
 	inline Int32 GetDay() const { return Int32(Day); }
 
-	inline int Compare(const Date& other) { return Comparator<Int64>()(ToTick(), other.ToTick()); }
+	inline int Compare(const Date& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
-	Date operator-(const Date& other);
-	Date operator+(const Date& other);
+	Date operator-(const Date& other) const;
+	Date operator+(const Date& other) const;
 	Date& operator-=(const Date& other);
 	Date& operator+=(const Date& other);
 	bool operator>(const Date& other);
@@ -197,9 +197,9 @@ public:
 
 	Int64 ToTick() const;
 protected:
-	Int16	Year;
-	Int8	Month;
-	Int8	Day;
+	Int16	Year{};
+	Int8	Month{};
+	Int8	Day{};
 
 	friend class DateTime;
 };
@@ -225,32 +225,32 @@ public:
 	virtual void SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
 	virtual void SubtractTime(const Time& other);
 
-	inline Int32 GetHour() const { return Int32(Hour); }
-	inline Int32 GetMinute() const { return Int32(Minute); }
-	inline Int32 GetSecond() const { return Int32(Second); }
-	inline Int32 GetMiliSecond() const { return Int32(MiliSecond); }
-	inline Int32 GetMicroSecond() const { return Int32(MicroSecond); }
+	inline Int32 GetHour() const { return Hour; }
+	inline Int32 GetMinute() const { return Minute; }
+	inline Int32 GetSecond() const { return Second; }
+	inline Int32 GetMiliSecond() const { return MiliSecond; }
+	inline Int32 GetMicroSecond() const { return MicroSecond; }
 
-	inline int Compare(const Time& other) { return Comparator<Int64>()(ToTick(), other.ToTick()); }
+	inline int Compare(const Time& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
-	Time operator-(const Time& other);
-	Time operator+(const Time& other);
+	Time operator-(const Time& other) const;
+	Time operator+(const Time& other) const;
 	Time& operator-=(const Time& other);
 	Time& operator+=(const Time& other);
-	bool operator>(const Time& other);
-	bool operator<(const Time& other);
-	bool operator>=(const Time& other);
-	bool operator<=(const Time& other);
-	bool operator==(const Time& other);
+	bool operator>(const Time& other) const;
+	bool operator<(const Time& other) const;
+	bool operator>=(const Time& other) const;
+	bool operator<=(const Time& other) const;
+	bool operator==(const Time& other) const;
 
 
 	Int64 ToTick() const;
 protected:
-	Int8 Hour;
-	Int8 Minute;
-	Int8 Second;
-	Int16 MiliSecond;
-	Int16 MicroSecond;
+	Int8 Hour{};
+	Int8 Minute{};
+	Int8 Second{};
+	Int16 MiliSecond{};
+	Int16 MicroSecond{};
 
 	friend class DateTime;
 };
@@ -286,15 +286,15 @@ struct DateAndTime : Date, Time {
 	void SubtractTime(const Time& other) override;
 	void SubtractDateAndTime(const DateAndTime& other);
 
-	inline int Compare(const DateAndTime& other) { return Comparator<Int64>()(ToTick(), other.ToTick()); }
+	inline int Compare(const DateAndTime& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
-	DateAndTime operator-(const DateAndTime& other);
-	DateAndTime operator+(const DateAndTime& other);
+	DateAndTime operator-(const DateAndTime& other) const;
+	DateAndTime operator+(const DateAndTime& other) const;
 	DateAndTime& operator-=(const DateAndTime& other);
 	DateAndTime& operator+=(const DateAndTime& other);
 
-	DateAndTime operator-(const DateTime& other);
-	DateAndTime operator+(const DateTime& other);
+	DateAndTime operator-(const DateTime& other) const;
+	DateAndTime operator+(const DateTime& other) const;
 	DateAndTime& operator-=(const DateTime& other);
 	DateAndTime& operator+=(const DateTime& other);
 
@@ -304,11 +304,11 @@ struct DateAndTime : Date, Time {
 	bool operator<=(const DateAndTime& other);
 	bool operator==(const DateAndTime& other);
 
-	bool operator>(const DateTime& other);
-	bool operator<(const DateTime& other);
-	bool operator>=(const DateTime& other);
-	bool operator<=(const DateTime& other);
-	bool operator==(const DateTime& other);
+	bool operator>(const DateTime& other) const;
+	bool operator<(const DateTime& other) const;
+	bool operator>=(const DateTime& other) const;
+	bool operator<=(const DateTime& other) const;
+	bool operator==(const DateTime& other) const;
 
 	DateTime ToDateTime() const;
 	Int64 ToTick() const;
@@ -338,20 +338,20 @@ struct TimeSpan
 	inline TimeSpan operator+(const TimeSpan& other) const { return { Tick + other.Tick }; }
 	inline TimeSpan& operator+=(const TimeSpan& other) { Tick += other.Tick; return *this; }
 	inline TimeSpan& operator-=(const TimeSpan& other) { Tick -= other.Tick; return *this; }
-	inline bool operator>(const TimeSpan& other) { Tick > other.Tick; }
-	inline bool operator<(const TimeSpan& other) { Tick < other.Tick; }
-	inline bool operator>=(const TimeSpan& other) { Tick >= other.Tick; }
-	inline bool operator<=(const TimeSpan& other) { Tick <= other.Tick; }
-	inline bool operator==(const TimeSpan& other) { Tick == other.Tick; }
+	inline bool operator>(const TimeSpan& other) const { Tick > other.Tick; }
+	inline bool operator<(const TimeSpan& other) const { Tick < other.Tick; }
+	inline bool operator>=(const TimeSpan& other) const { Tick >= other.Tick; }
+	inline bool operator<=(const TimeSpan& other) const { Tick <= other.Tick; }
+	inline bool operator==(const TimeSpan& other) const { Tick == other.Tick; }
 
-	Int64 Tick;
+	Int64 Tick{};
 };
 
 class String;
 class DateTime
 {
 public: // constructors
-	DateTime() : m_Tick(0ULL) {}
+	DateTime() = default;
 	DateTime(Int64 tick) : m_Tick(tick) {}
 
 public: // public non-static
@@ -408,7 +408,7 @@ public: // public non-static
 	DateTime SubtractDateTime(const DateTime& other);
 
 	inline int Compare(const DateTime& other) const { return Comparator<Int64>()(m_Tick, other.m_Tick); }
-	TimeSpan Diff(const DateTime& other);
+	TimeSpan Diff(const DateTime& other) const;
 
 	DateTime operator-(const DateTime& other) const;
 	DateTime operator+(const DateTime& other) const;
@@ -446,7 +446,6 @@ private: // private static
 private: // private non-static
 	inline int GetDatePart(const DatePart part) const { return DateTime::GetDatePart(m_Tick, part); }
 	void ReflectFormat(const DateAndTime& time, String& ret, char token, int count) const;
-	void CheckUnderFlow() const;
 	void CheckOverFlow() const;
 public: // public static
 	static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
@@ -477,7 +476,7 @@ public: // public static
 		return ms_szAMPMAbbrevName[int(ampm)];
 	}
 private:
-	Int64U m_Tick;
+	Int64U m_Tick{};
 
 	static const char* ms_szWeekAbbrevName[];
 	static const char* ms_szWeekFullName[];

@@ -14,33 +14,33 @@ template <typename> class Vector;
 template <typename T>
 class VectorIterator : public ArrayCollectionIterator<T>
 {
-	using TArrayCollectionIterator  = typename ArrayCollectionIterator<T>;
-	using TVector					= typename Vector<T>;
+	using TArrayCollectionIterator  = ArrayCollectionIterator<T>;
+	using TVector					= Vector<T>;
 public:
 	VectorIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
-	virtual ~VectorIterator() noexcept {}
+	~VectorIterator() noexcept override = default;
 public:
-	virtual bool HasNext() const {
+	bool HasNext() const override {
 		return TArrayCollectionIterator::HasNext();
 	}
 
-	virtual bool HasPrevious() const {
+	bool HasPrevious() const override {
 		return TArrayCollectionIterator::HasPrevious();
 	}
 
-	virtual T& Next() {
+	T& Next() override {
 		return TArrayCollectionIterator::Next();
 	}
 
-	virtual T& Previous() {
+	T& Previous() override {
 		return TArrayCollectionIterator::Previous();
 	}
 
-	virtual bool IsEnd() const {
+	bool IsEnd() const override {
 		return TArrayCollectionIterator::IsEnd();
 	}
 
-	virtual bool IsBegin() const {
+	bool IsBegin() const override {
 		return TArrayCollectionIterator::IsBegin();
 	}
 };
