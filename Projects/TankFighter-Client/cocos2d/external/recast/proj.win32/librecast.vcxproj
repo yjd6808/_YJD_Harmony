@@ -55,7 +55,6 @@
     <ProjectGuid>{41E34993-647E-4282-8384-4AB1AE31A452}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>librecast</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -91,12 +90,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)Projects/TankFighter-Client/Output/$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)Projects/TankFighter-Client/Intermediate/$(Configuration)</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration).win32\</OutDir>
+    <IntDir>$(Configuration).win32\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)Projects/TankFighter-Client/Output/$(Configuration)</OutDir>
-    <IntDir>$(SolutionDir)Projects/TankFighter-Client/Intermediate/$(Configuration)</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration).win32\</OutDir>
+    <IntDir>$(Configuration).win32\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
