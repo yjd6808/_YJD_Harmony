@@ -1,7 +1,10 @@
 #pragma once
 
 
+
+#include <JNetwork/Winsock.h>
 #include <JNetwork/Host/TcpServer.h>
+#include <JNetwork/Host/TcpClient.h>
 
 using namespace JCore;
 using namespace JNetwork;

@@ -6,14 +6,15 @@
 class MyEventListener : public TcpClientEventListener
 {
 protected:
-	virtual void OnConnected() {
+	void OnConnected() override {
 		Winsock::Message("서버와 연결되었습니다.");
 	}
-	virtual void OnDisconnected() {
+
+	void OnDisconnected() override {
 		Winsock::Message("서버와 연결이 끊어졌습니다.");
 	}
 
-	virtual void OnSent(ISendPacket* packet, Int32UL sentBytes) {
+	void OnSent(ISendPacket* packet, Int32UL sentBytes) override {
 		static int cnt = 0;
 		static CriticalSectionMutex mtx;
 		mtx.Lock();
@@ -21,7 +22,7 @@ protected:
 		mtx.Unlock();
 	}
 
-	virtual void OnReceived(ICommand* command) {
+	void OnReceived(ICommand* command) override {
 		Winsock::Message("수신 : %d", command->GetCommandLen());
 	}
 };

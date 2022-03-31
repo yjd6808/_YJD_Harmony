@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Database">
+      <UniqueIdentifier>{1f03423b-ab14-4176-8a54-e9c32980b2fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Mysql">
+      <UniqueIdentifier>{922a8915-f068-44bf-8a5d-5549c8f427c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Overlapped">
+      <UniqueIdentifier>{c287f929-f98e-4b55-af88-75dd684c8251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{55c95da0-89be-41c0-a0bf-da993ec09b51}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\TF\Util\Console.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Util\ConsoleColor.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\header.h" />
+    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlConnection.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlConnectionPool.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlQuery.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\DataBaseManager.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\TF\Util\Console.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlConnection.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlConnectionPool.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlQuery.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\DataBaseManager.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\main.cpp" />
+  </ItemGroup>
+</Project>
