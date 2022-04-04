@@ -156,16 +156,16 @@ protected:
 	}
 
 	// 용량 수정
+	// 만약 현재 용량보다 더 작은 용량을 넣어줄 경우
 	virtual void Resize(int capacity) {
 		if (capacity >= this->m_iSize) {
-			Expand(capacity);
+			Expand(capacity, false);
 			return;
 		} 
 
-		DestroyAtRange(m_iCapacity, this->m_iSize - 1);
+		DestroyAtRange(capacity, this->m_iSize - 1);
 		m_iCapacity = capacity;
 	}
-
 
 	virtual bool ExpandIfNeeded(int size) {
 		if (size < m_iCapacity) {
@@ -185,8 +185,9 @@ protected:
 	/// - ArrayQueue
 	/// </summary>
 	/// <param name="newCapacity">기존 용량보다 더 큰 값</param>
-	virtual void Expand(int newCapacity) {
-		ThrowIfNewCapacityIsSmallerThanBefore(newCapacity);
+	virtual void Expand(int newCapacity, bool throwException = true) {
+		if (throwException)
+			ThrowIfNewCapacityIsSmallerThanBefore(newCapacity);
 		T* pNewArray = Memory::Allocate<T*>(sizeof(T) * newCapacity);
 		Memory::Copy(pNewArray, sizeof(T) * newCapacity, m_pArray, sizeof(T) * this->m_iSize);
 		Memory::Deallocate(m_pArray);

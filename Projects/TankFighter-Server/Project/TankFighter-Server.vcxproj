@@ -11,30 +11,102 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\main.cpp" />
-    <ClCompile Include="..\Sources\TF\Database\DataBaseManager.cpp" />
-    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlConnection.cpp">
+    <ClCompile Include="..\Sources\TF\Database\MysqlConnection.cpp" />
+    <ClCompile Include="..\Sources\TF\Database\MysqlConnectionPool.cpp" />
+    <ClCompile Include="..\Sources\TF\Database\MysqlDatabase.cpp" />
+    <ClCompile Include="..\Sources\TF\Database\MysqlQuery.cpp" />
+    <ClCompile Include="..\Sources\TF\Database\MysqlQueryFuture.cpp" />
+    <ClCompile Include="..\Sources\TF\Game\Channel.cpp" />
+    <ClCompile Include="..\Sources\TF\Game\Player.cpp" />
+    <ClCompile Include="..\Sources\TF\Game\PlayerMap.cpp" />
+    <ClCompile Include="..\Sources\TF\Game\Room.cpp" />
+    <ClCompile Include="..\Sources\TF\Game\World.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlConnectionPool.cpp">
+    <ClCompile Include="..\Sources\TF\Host\GameServer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlQuery.cpp">
+    <ClCompile Include="..\Sources\TF\Host\GameServerEventListener.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Util\Console.cpp" />
+    <ClCompile Include="..\Sources\TF\main.cpp" />
+    <ClCompile Include="..\Sources\TF\Overlapped\IOCPOverlappedQuery.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Parser\CommandFn.cpp" />
+    <ClCompile Include="..\Sources\TF\Parser\CommandParser.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Parser\QueryFn.cpp" />
+    <ClCompile Include="..\Sources\TF\Parser\SendFn.cpp" />
+    <ClCompile Include="..\Sources\TF\Util\Console.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\TF\Database\DataBaseManager.h" />
-    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlConnection.h" />
-    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlConnectionPool.h" />
-    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlQuery.h" />
-    <ClInclude Include="..\Sources\TF\header.h" />
-    <ClInclude Include="..\Sources\TF\Util\Console.h" />
-    <ClInclude Include="..\Sources\TF\Util\ConsoleColor.h" />
+    <ClInclude Include="..\Sources\TF\Database\MysqlConnection.h" />
+    <ClInclude Include="..\Sources\TF\Database\MysqlConnectionPool.h" />
+    <ClInclude Include="..\Sources\TF\Database\MysqlDatabase.h" />
+    <ClInclude Include="..\Sources\TF\Database\MysqlQuery.h" />
+    <ClInclude Include="..\Sources\TF\Database\MysqlQueryFuture.h" />
+    <ClInclude Include="..\Sources\TF\Database\MysqlStatementBuilder.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\StatementType.h" />
+    <ClInclude Include="..\Sources\TF\Game\Channel.h" />
+    <ClInclude Include="..\Sources\TF\Game\Player.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Game\PlayerMap.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Game\Room.h" />
+    <ClInclude Include="..\Sources\TF\Game\World.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Host\GameServerEventListener.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Overlapped\IOCPOverlappedQuery.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Parser\CommandFn.h" />
+    <ClInclude Include="..\Sources\TF\Parser\CommandParser.h">
+      <SubType>
+      </SubType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Parser\QueryFn.h" />
+    <ClInclude Include="..\Sources\TF\Parser\SendFn.h" />
+    <ClInclude Include="..\Sources\TF\ServerConfiguration.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Host\GameServer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Util\Console.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Util\ConsoleColor.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -74,15 +146,15 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;$(ProjectDir)..\MysqlLibrary\include</IncludePath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;$(ProjectDir)..\MysqlLibrary\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Configuration)\;$(ProjectDir)..\MysqlLibrary\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;C:\Program Files\MySQL\MySQL Server 5.7\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Configuration)\;C:\Program Files\MySQL\MySQL Server 5.7\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;$(ProjectDir)..\MysqlLibrary\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Configuration)\;$(ProjectDir)..\MysqlLibrary\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -95,7 +167,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JNetwork.lib;JCore.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>JNetwork.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,7 +176,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCKAPI_</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -113,7 +185,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JNetwork.lib;JCore.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>JNetwork.lib;libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,14 +1,16 @@
 #pragma once
 
+#include <JCore/Type.h>
+
+#include <JNetwork/Protocol.h>
 #include <JNetwork/IPEndPoint.h>
-#include <WinSock2.h>
+
 
 #ifndef Out_
 	#define Out_
 #endif
 
 namespace JNetwork {
-
 class SocketOption
 {
 public:

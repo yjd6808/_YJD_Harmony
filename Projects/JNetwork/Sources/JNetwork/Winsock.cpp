@@ -6,8 +6,6 @@
 
 namespace JNetwork {
 
-	JCore::CriticalSectionMutex Winsock::s_consoleLock;
-
 	bool Winsock::ms_bFinalized = false;
 	bool Winsock::ms_bInitailized = false;
 

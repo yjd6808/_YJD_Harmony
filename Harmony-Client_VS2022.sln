@@ -10,6 +10,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetworkMain-Client", "Proj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork", "Projects\JNetwork\Project\JNetwork.vcxproj", "{5ADBA306-F356-4E21-B037-9EF477DC321E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Client", "Projects\TankFighter-Client\Projects\TankFighter-Client.vcxproj", "{76A39BB2-9B84-4C65-98A5-654D86B86F2A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JCore", "Projects\JCore\Project\JCore.vcxproj", "{16059BC9-855E-4B24-B3E9-C885EC453CEC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Common", "Projects\TankFighter-Common\Project\TankFighter-Common.vcxproj", "{6F539DD7-E908-4AE4-BDD1-57704B859C70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -24,6 +34,18 @@ Global
 		{5ADBA306-F356-4E21-B037-9EF477DC321E}.Debug|x86.Build.0 = Debug|Win32
 		{5ADBA306-F356-4E21-B037-9EF477DC321E}.Release|x86.ActiveCfg = Release|Win32
 		{5ADBA306-F356-4E21-B037-9EF477DC321E}.Release|x86.Build.0 = Release|Win32
+		{76A39BB2-9B84-4C65-98A5-654D86B86F2A}.Debug|x86.ActiveCfg = Debug|Win32
+		{76A39BB2-9B84-4C65-98A5-654D86B86F2A}.Debug|x86.Build.0 = Debug|Win32
+		{76A39BB2-9B84-4C65-98A5-654D86B86F2A}.Release|x86.ActiveCfg = Release|Win32
+		{76A39BB2-9B84-4C65-98A5-654D86B86F2A}.Release|x86.Build.0 = Release|Win32
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC}.Debug|x86.ActiveCfg = Debug|Win32
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC}.Debug|x86.Build.0 = Debug|Win32
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC}.Release|x86.ActiveCfg = Release|Win32
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC}.Release|x86.Build.0 = Release|Win32
+		{6F539DD7-E908-4AE4-BDD1-57704B859C70}.Debug|x86.ActiveCfg = Debug|Win32
+		{6F539DD7-E908-4AE4-BDD1-57704B859C70}.Debug|x86.Build.0 = Debug|Win32
+		{6F539DD7-E908-4AE4-BDD1-57704B859C70}.Release|x86.ActiveCfg = Release|Win32
+		{6F539DD7-E908-4AE4-BDD1-57704B859C70}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,11 @@
 #pragma once
 
-#include <ws2def.h>
+#define _WINSOCKAPI_	// winsock.h 연속 include 방지
 
 #include <JCore/Memory.h>
 #include <JCore/Math.h>
+
+#include <WinSock2.h>
 
 #ifndef Out_
 #define Out_

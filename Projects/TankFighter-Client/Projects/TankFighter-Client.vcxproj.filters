@@ -10,32 +10,203 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scenes">
+      <UniqueIdentifier>{ff040e24-1abd-4fbc-bacd-e028c54946fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Object">
+      <UniqueIdentifier>{bcf580f0-d021-4e5f-b370-2a4648b85304}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Util">
+      <UniqueIdentifier>{f0f6745f-276e-400c-b9ab-0150586664ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Network">
+      <UniqueIdentifier>{b16801e3-77b0-4597-8602-2cb6fa7d5480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\UI">
+      <UniqueIdentifier>{668a6277-3581-4af3-8ade-5b20fdbb2f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\Channel">
+      <UniqueIdentifier>{3650a70b-e13c-400e-8c9b-fd7f25c3e8d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\CharacterSelect">
+      <UniqueIdentifier>{d8775397-5e34-43ac-982f-d4c356ecd701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\Lobby">
+      <UniqueIdentifier>{c16871c5-3d90-4a86-9fe8-3491805ab564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\Login">
+      <UniqueIdentifier>{4a6c1c66-40f5-40ea-afaa-53a614e2bf2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\AppDelegate.cpp">
+    <ClCompile Include="..\Classes\TF\Object\Tank.cpp">
+      <Filter>src\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\UniformScenes.cpp">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\AppDelegate.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\Classes\TF\Object\UniformObjects.cpp">
+      <Filter>src\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Object\Obstacle.cpp">
+      <Filter>src\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\GridLayer.cpp">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\UI\TextButton.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\UI\UniformUI.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\UI\PopUp.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Util\ColorUtil.cpp">
+      <Filter>src\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Network\GameClient.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Network\CommandFn.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Network\CommandParser.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Network\GameClientEventListener.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Network\UniformNetwork.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\UI\ColoredListView.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Network\SendFn.cpp">
+      <Filter>src\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\ChannelScene.cpp">
+      <Filter>src\Scenes\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\ChannelLayer.cpp">
+      <Filter>src\Scenes\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\CharacterSelectLayer.cpp">
+      <Filter>src\Scenes\CharacterSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\CharacterSelectScene.cpp">
+      <Filter>src\Scenes\CharacterSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\LobbyLayer.cpp">
+      <Filter>src\Scenes\Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\LobbyScene.cpp">
+      <Filter>src\Scenes\Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\LoginLayer.cpp">
+      <Filter>src\Scenes\Login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\LoginScene.cpp">
+      <Filter>src\Scenes\Login</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
       <Filter>win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\AppDelegate.h">
+    <ClInclude Include="..\Classes\TF\SourceHeader.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\HelloWorldScene.h">
+    <ClInclude Include="..\Classes\TF\Object\Tank.h">
+      <Filter>src\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\AppDelegate.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Object\Obstacle.h">
+      <Filter>src\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\GridLayer.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Util\NodeUtil.h">
+      <Filter>src\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\UI\TextButton.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\UI\PopUp.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Util\ColorUtil.h">
+      <Filter>src\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Network\GameClient.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Network\CommandFn.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Network\CommandParser.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Network\GameClientEventListener.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Network\ClientConfiguration.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Network\SynchronizedScene.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\UI\ColoredListView.h">
+      <Filter>src\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Util\SendUtil.h">
+      <Filter>src\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Network\SendFn.h">
+      <Filter>src\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\ChannelScene.h">
+      <Filter>src\Scenes\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\ChannelLayer.h">
+      <Filter>src\Scenes\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\CharacterSelectLayer.h">
+      <Filter>src\Scenes\CharacterSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\CharacterSelectScene.h">
+      <Filter>src\Scenes\CharacterSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\LobbyLayer.h">
+      <Filter>src\Scenes\Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\LobbyScene.h">
+      <Filter>src\Scenes\Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\LoginLayer.h">
+      <Filter>src\Scenes\Login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\LoginScene.h">
+      <Filter>src\Scenes\Login</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

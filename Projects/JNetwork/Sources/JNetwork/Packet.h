@@ -13,6 +13,7 @@
 #include <JCore/RefCount.h>
 
 #include <tuple>
+#include <WinSock2.h>
 
 #define PACKET_HEADER_SIZE		4UL		// IPacket  크기
 #define COMMAND_HEADER_SIZE		4UL		// ICommand 크기
@@ -33,15 +34,28 @@ struct ICommand
 	// virtual Int16U GetCommand() const = 0;
 	// virtual Int16U GetCommandLen() const = 0;
 
+	
+
+	void SetCommand(const Int16U cmd)			{ Cmd = cmd;			}
+	void SetCommandLen(const Int16U cmdlen)		{ CmdLen = cmdlen;		}
+	void AddCommandLen(const Int16U cmdlen)		{ CmdLen += cmdlen;		}
+	Int16U GetCommand() const					{ return this->Cmd;		}
+	Int16U GetCommandLen() const				{ return this->CmdLen;	}
+
+	// ICommand 통틀어서 캐스팅 - ICommand를 상속받은 커스텀 커맨드 전용
 	template <typename T>
-	T GetValuePtr() {
+	T CastCommand() {
+		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer command type");
+		return reinterpret_cast<T>(this);
+	}
+
+	// ICommandㄷ를 제외하고 뒷부분만 캐스팅 - Command<T> 전용
+	template <typename T>
+	T CastValue() {
 		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
 		return reinterpret_cast<T>(((char*)this) + sizeof(ICommand));
 	}
 
-	void SetCommand(const Int16U cmd)	{ Cmd = cmd; }
-	Int16U GetCommand() const			{ return this->Cmd;		}
-	Int16U GetCommandLen() const		{ return this->CmdLen;	}
 protected:
 	Int16U Cmd{};		// 사용자 지정 커맨드 ID값
 	Int16U CmdLen{};	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
@@ -206,5 +220,39 @@ private:
 
 	char m_pBuf[PACKET_LEN];
 };
+
+
+/*
+template <typename Cmd>
+class DynamicSinglePacket : public JCore::RefCount
+{
+public:
+	DynamicSinglePacket(int packetLen) {
+		m_pBuf = new char[packetLen + PACKET_HEADER_SIZE];
+
+		*reinterpret_cast<Int16U*>(m_pBuf	+ 0				) = 1;
+		*reinterpret_cast<Int16U*>(m_pBuf	+ sizeof(Int16U)) = packetLen;
+
+		:: new (Get()) Cmd();
+	}
+
+	~DynamicSinglePacket() override { delete[] m_pBuf; }
+
+	
+
+	Cmd* Get() {
+		return reinterpret_cast<Cmd*>(m_pBuf + PACKET_HEADER_SIZE);
+	}
+
+	WSABUF GetWSABuf() {
+		WSABUF wsaBuf;
+		wsaBuf.len = PACKET_HEADER_SIZE + m_iPacketLen;
+		wsaBuf.buf = m_pBuf;
+		return wsaBuf;
+	}
+	
+	char* m_pBuf;
+};
+*/
 
 } // namespace JNetwork

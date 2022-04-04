@@ -36,15 +36,15 @@ namespace JCore {
 
 // 반환값이 없는 대리자
 template <typename... Args>
-using Action = std::function<void(Args&&...)>;
+using Action = std::function<void(Args...)>;
 
 // 반환값이 있는 대리자
 template <typename R, typename... Args>
-using Func = std::function<R(Args&&...)>;
+using Func = std::function<R(Args...)>;
 
 // 참/거짓을 판별하는 대리자
 template <typename... Args>
-using Predicate = std::function<bool(Args&&...)>;
+using Predicate = std::function<bool(Args...)>;
 
 
 

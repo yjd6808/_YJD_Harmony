@@ -73,6 +73,12 @@ public:
 	char* GetRangeUnsafe(const int startIdx, const int endIdx) const;
 	std::vector<String> Split(const char* delimiter, const bool includeEmpty = false) const;
 	void Initialize(int capacity = DEFAULT_BUFFER_SIZE);
+
+	String ToAnsiString();
+	String ToUTF8String();
+
+	String ToLowerCase() const;
+	String ToUpperCase() const;
 public:
 	char& operator[](const int idx) const;
 

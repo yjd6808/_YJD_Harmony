@@ -2,6 +2,10 @@
 	작성자 : 윤정도
 	간단한 시간을 다룰 수 있는 기능을 추가합니다.
 	스톱워치 기능
+
+	시간 관련지식이 전무해서
+	C# DateTime 클래스의 년도 계산 로직 일부를 참고하였습니다.
+	구현다보니 좀 자세히 알게됨 ㅋ
 */
 
 #pragma once
@@ -20,12 +24,12 @@ namespace Detail {
 	constexpr Int64 MaxMicroSecond_v	= 1000;
 		
 	// 1틱당 1마이크로초
-	constexpr Int64 TicksPerMicroSecond	= 1;											// 마이크로초당 몇 틱인지 	1틱당					1마이크로초
-	constexpr Int64 TicksPerMiliSecond		= TicksPerMicroSecond * MaxMicroSecond_v;	// 밀리초당 몇 틱인지		1000틱당					1밀리초
-	constexpr Int64 TicksPerSecond			= TicksPerMiliSecond * MaxMiliSecond_v;		// 초당 몇 틱인지			1000000틱당				1초
-	constexpr Int64 TicksPerMinute			= TicksPerSecond * MaxSecond_v;				// 1분당 몇 틱인지		1000000 * 60			1분
-	constexpr Int64 TicksPerHour			= TicksPerMinute * MaxMinute_v;				// 1시간당 몇 틱인지		1000000 * 60 * 60		1시간
-	constexpr Int64 TicksPerDay			= TicksPerHour * MaxHour_v;						// 1일당 몇 틱인지		1000000 * 60 * 60 * 24	1일
+	constexpr Int64 TicksPerMicroSecond	= 1;										// 마이크로초당 몇 틱인지 	1틱당					1마이크로초
+	constexpr Int64 TicksPerMiliSecond	= TicksPerMicroSecond * MaxMicroSecond_v;	// 밀리초당 몇 틱인지		1000틱당					1밀리초
+	constexpr Int64 TicksPerSecond		= TicksPerMiliSecond * MaxMiliSecond_v;		// 초당 몇 틱인지			1000000틱당				1초
+	constexpr Int64 TicksPerMinute		= TicksPerSecond * MaxSecond_v;				// 1분당 몇 틱인지		1000000 * 60			1분
+	constexpr Int64 TicksPerHour		= TicksPerMinute * MaxMinute_v;				// 1시간당 몇 틱인지		1000000 * 60 * 60		1시간
+	constexpr Int64 TicksPerDay			= TicksPerHour * MaxHour_v;					// 1일당 몇 틱인지		1000000 * 60 * 60 * 24	1일
 
 	constexpr int DaysPer1Years_v = MaxDay_v;
 	constexpr int DaysPer4Years_v = MaxDay_v * 4 + 1;				// 4년이 몇일인지 : 1461일
@@ -50,7 +54,7 @@ namespace Detail {
 		
 	// [AD 0001년 1월 1일 ~ 1969년 12월 31일까지의 마이크로초 계산]
 	constexpr Int64 ADBegin	 = (DaysPer400Years_v * 1969) / 400;	// Epoch 시간 1970년 1월 1일까지의 일 수
-	constexpr Int64 ADBeginTick = ADBegin * TicksPerDay;				// Epoch 시간 1970년 1월 1일까지의 마이크로초
+	constexpr Int64 ADBeginTick = ADBegin * TicksPerDay;			// Epoch 시간 1970년 1월 1일까지의 마이크로초
 }
 
 
@@ -255,7 +259,7 @@ protected:
 	friend class DateTime;
 };
 
-struct DateTime;
+class DateTime;
 struct DateAndTime : Date, Time {
 	DateAndTime() = delete;
 	DateAndTime(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 miliSecond, Int32 microSecond)
@@ -327,7 +331,7 @@ struct TimeSpan
 	inline double GetTotalMiliSeconds() const { return (double)Tick / Detail::TicksPerMiliSecond; }
 	inline double GetTotalMicroSeconds() const { return (double)Tick; }
 
-	inline int GetDay() const { return Tick / Detail::TicksPerDay; }
+	inline int GetDay() const { return int(Tick / Detail::TicksPerDay); }
 	inline int GetHour() const { return (Tick / Detail::TicksPerHour) % Detail::MaxHour_v; }
 	inline int GetMinute() const { return (Tick / Detail::TicksPerMinute) % Detail::MaxMinute_v; }
 	inline int GetSecond() const { return (Tick / Detail::TicksPerSecond) % Detail::MaxSecond_v; }
@@ -338,11 +342,11 @@ struct TimeSpan
 	inline TimeSpan operator+(const TimeSpan& other) const { return { Tick + other.Tick }; }
 	inline TimeSpan& operator+=(const TimeSpan& other) { Tick += other.Tick; return *this; }
 	inline TimeSpan& operator-=(const TimeSpan& other) { Tick -= other.Tick; return *this; }
-	inline bool operator>(const TimeSpan& other) const { Tick > other.Tick; }
-	inline bool operator<(const TimeSpan& other) const { Tick < other.Tick; }
-	inline bool operator>=(const TimeSpan& other) const { Tick >= other.Tick; }
-	inline bool operator<=(const TimeSpan& other) const { Tick <= other.Tick; }
-	inline bool operator==(const TimeSpan& other) const { Tick == other.Tick; }
+	inline bool operator>(const TimeSpan& other) const { return Tick > other.Tick; }
+	inline bool operator<(const TimeSpan& other) const { return Tick < other.Tick; }
+	inline bool operator>=(const TimeSpan& other) const { return Tick >= other.Tick; }
+	inline bool operator<=(const TimeSpan& other) const { return Tick <= other.Tick; }
+	inline bool operator==(const TimeSpan& other) const { return Tick == other.Tick; }
 
 	Int64 Tick{};
 };
@@ -439,6 +443,7 @@ public: // public non-static
 	bool operator==(const DateAndTime& other) const;
 
 	String Format(const char* fmt) const;
+	String FormatMysqlTime() const { return Format("yyyy-MM-dd hh:mm:ss.ffffff"); };
 
 private: // private static
 	static Tuple<int, int, int, int, int> GetYearsFromDays(int days);		// 단위 년도별로 일수를 가져옴

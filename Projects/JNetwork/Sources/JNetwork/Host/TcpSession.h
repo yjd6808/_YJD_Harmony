@@ -12,11 +12,11 @@
 
 #pragma once
 
-#include <JNetwork/Buffer.h>
 #include <JNetwork/Socket.h>
 #include <JNetwork/Packet.h>
 #include <JNetwork/Host/TcpServerEventListener.h>
 #include <JNetwork/IOCP/IOCP.h>
+#include <JNetwork/Buffer.h>
 
 
 namespace JNetwork {
@@ -41,10 +41,20 @@ public:
 	SessionBuffer* GetReceiveBuffer() { return &m_ReceiveBuffer; }
 	State GetState() const { return m_eState; }
 	bool SendAsync(ISendPacket* packet);
+	virtual bool Disconnect();
+	
+	// 커스텀 정보 저장 기능 추가
+	void SetTag(void* ptr) { m_pTag = ptr; }
+
+	template <typename T>
+	T GetTag() {
+		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
+		return reinterpret_cast<T>(m_pTag);
+	}
 protected:
 	TcpSession(IOCP* iocp, TcpServerEventListener* listener = nullptr);
 	virtual ~TcpSession();
-	virtual bool Disconnect();
+	
 	
 	bool ReceiveAsync();
 	bool AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped);
@@ -71,6 +81,8 @@ protected:
 	IOCP* m_pIocp;															// TcpClient 입장에서는 생성/소멸을 해줘야하는 객체이지만 TcpSession 입장에서는 TcpServer의 IOCP를 단순히 참조하는 용도이다.
 	IPv4EndPoint m_RemoteEndPoint;
 	IPv4EndPoint m_LocalEndPoint;
+	void* m_pTag{};
+	bool m_bReuseSession;
 	
 	friend class TcpServer;
 	friend class TcpSessionContainer;

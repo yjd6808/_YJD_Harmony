@@ -17,6 +17,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JCoreTest", "Projects\JCoreTest\Project\JCoreTest.vcxproj", "{5CE6FAB1-0D87-4FB7-BDFE-B959B47F974E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork", "Projects\JNetwork\Project\JNetwork.vcxproj", "{5ADBA306-F356-4E21-B037-9EF477DC321E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetworkTest", "Projects\JNetworkTest\Project\JNetworkTest.vcxproj", "{0AD5B4F2-6455-4106-A8D3-FD177F2FD00B}"
 EndProject
@@ -43,8 +46,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Server", "Proje
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Common", "Projects\TankFighter-Common\Project\TankFighter-Common.vcxproj", "{6F539DD7-E908-4AE4-BDD1-57704B859C70}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Client", "Projects\TankFighter-Client\Projects\TankFighter-Client.vcxproj", "{76A39BB2-9B84-4C65-98A5-654D86B86F2A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcocos2d", "Projects\TankFighter-Client\cocos2d\cocos\2d\libcocos2d.vcxproj", "{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}"
 EndProject

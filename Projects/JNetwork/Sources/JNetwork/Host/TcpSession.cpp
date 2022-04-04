@@ -26,9 +26,9 @@ bool TcpSession::Disconnect() {
 	}
 
 	m_ClientSocket.ShutdownBoth();
+	m_ClientSocket.Close();
 	m_eState = State::Disconnected;
 	m_pServerEventListener->OnDisconnected(this);
-	m_ClientSocket.Close();
 	
 	return true;
 }

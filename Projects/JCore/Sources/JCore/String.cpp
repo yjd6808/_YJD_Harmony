@@ -8,7 +8,9 @@
 #include <JCore/StringUtil.h>
 #include <JCore/Memory.h>
 #include <JCore/Exception.h>
+#include <JCore/Ascii.h>
 
+#include <OleAuto.h>
 
 namespace JCore {
 
@@ -365,6 +367,7 @@ void String::Format(const char* format, ...) {
 	va_end(args);
 }
 
+
 // 문자열 버퍼(m_pBuffer)에서 from 문자열을 검색하여 to 문자열로 변환합니다.
 // O(n)
 void String::ReplaceAll(const char* from, const char* to) {
@@ -515,6 +518,52 @@ void String::Initialize(int capacity) {
 	m_iLen = 0;
 	m_iCapacity = capacity;
 	m_pBuffer[0] = NULL;
+}
+
+String String::ToAnsiString() {
+	int nLen = Length();
+	wchar_t warr[256];
+	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)m_pBuffer, -1, warr, 256);
+	char carr[256];
+	memset(carr, '\0', sizeof(carr));
+	WideCharToMultiByte(CP_UTF8, 0, warr, -1, carr, 256, NULL, NULL);
+	return carr;
+}
+
+String String::ToUTF8String() {
+	wchar_t warr[256];
+	int nLen = Length();
+	memset(warr, '\0', sizeof(warr));
+	MultiByteToWideChar(CP_UTF8, 0, m_pBuffer, -1, warr, 256);
+	char carr[256];
+	memset(carr, '\0', sizeof(carr));
+	WideCharToMultiByte(CP_ACP, 0, warr, -1, carr, 256, NULL, NULL);
+	return carr;
+}
+
+
+String String::ToLowerCase() const {
+	String copy = *this;
+
+	for (int i = 0; i < copy.Length(); i++) {
+		if (IsUpperCaseAlphabat(copy[i])) {
+			copy[i] -= static_cast<char>(32);
+		}
+	}
+
+	return copy;
+}
+
+String String::ToUpperCase() const {
+	String copy = *this;
+
+	for (int i = 0; i < copy.Length(); i++) {
+		if (IsLowerCaseAlphabat(copy[i])) {
+			copy[i] += static_cast<char>(32);
+		}
+	}
+
+	return copy;
 }
 
 char& String::operator[](const int idx) const {

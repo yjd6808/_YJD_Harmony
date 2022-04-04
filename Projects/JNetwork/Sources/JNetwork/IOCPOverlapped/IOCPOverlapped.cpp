@@ -19,7 +19,7 @@ namespace JNetwork {
 	bool IOCPOverlapped::IsFailed(SOCKET hSocket, BOOL result, DWORD numberOfBytesTransffered) {
 		// 오버랩이 실패했거나 0바이트를 수신한 경우 실패로 간주
 
-		if (result == FALSE && numberOfBytesTransffered == 0) {
+		if (result == FALSE) {
 
 			// GetQueuedCompletionStatus이 실패한 경우 GetLastError()로 오류 코드를 얻을 수 있다.
 			// 하지만 이 코드는 일반적인 윈도우 오류 코드이다. (윈도우 오류 코드 표 : https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--500-999-)

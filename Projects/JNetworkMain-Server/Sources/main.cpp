@@ -48,7 +48,9 @@ protected:
 
 
 int main() {
+	CriticalSectionMutex mtx;
 
+	Winsock::SetMutex(&mtx);
 	Winsock::Initialize(2, 2);
 
 	TcpServer server;

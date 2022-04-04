@@ -24,9 +24,13 @@ namespace JNetwork {
 	}
 
 	void IOCPWorker::JoinWait(HANDLE waitHandle) {
-		const ULONG_PTR completionKey = (ULONG_PTR)new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
-		m_pIocp->Post(0, completionKey, nullptr);	// 어느 쓰레드가 꺠어날지 모르기 때문에 여기서 join을 수행하면 안됨
-		
+		IOCPPostOrder* pPostOrder = new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
+		const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
+
+		if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {  // 어느 쓰레드가 꺠어날지 모르기 때문에 여기서 join을 수행하면 안됨
+			DebugAssert(false, "IOCPWorker::Pause() Failed");
+			pPostOrder->Release();
+		}
 	}
 
 	void IOCPWorker::Join() {
@@ -37,9 +41,14 @@ namespace JNetwork {
 
 	void IOCPWorker::Pause(HANDLE waitHandle) {
 		// 주의!> 이 워커 쓰레드가 Pause 된게 아니라 IOCP에서 관리중인 쓰레드들 중하나가 Pause됨
-		const ULONG_PTR completionKey = (ULONG_PTR)new IOCPPostOrder{ IOCP_POST_ORDER_PAUSE, waitHandle };
+		IOCPPostOrder* pPostOrder = new IOCPPostOrder{ IOCP_POST_ORDER_PAUSE, waitHandle };
+		const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
 		ResetEvent(m_hPauseEvent);
-		m_pIocp->Post(0, completionKey, nullptr);
+
+		if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {
+			DebugAssert(false, "IOCPWorker::Pause() Failed");
+			pPostOrder->Release();
+		}
 	}
 
 	void IOCPWorker::Resume() {

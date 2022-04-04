@@ -4,14 +4,20 @@
     <Filter Include="Database">
       <UniqueIdentifier>{1f03423b-ab14-4176-8a54-e9c32980b2fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Database\Mysql">
-      <UniqueIdentifier>{922a8915-f068-44bf-8a5d-5549c8f427c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Overlapped">
       <UniqueIdentifier>{c287f929-f98e-4b55-af88-75dd684c8251}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{55c95da0-89be-41c0-a0bf-da993ec09b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{2a392ee0-9bf1-484e-93b2-6a13c4154eb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parser">
+      <UniqueIdentifier>{ad7b475a-81b3-4f40-8455-673f8597fc06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{98be4a22-3f00-4a27-b6a0-09a8ea1ccc14}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,36 +27,120 @@
     <ClInclude Include="..\Sources\TF\Util\ConsoleColor.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\TF\header.h" />
-    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlConnection.h">
-      <Filter>Database\Mysql</Filter>
+    <ClInclude Include="..\Sources\TF\ServerConfiguration.h" />
+    <ClInclude Include="..\Sources\TF\Host\GameServer.h">
+      <Filter>Host</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlConnectionPool.h">
-      <Filter>Database\Mysql</Filter>
+    <ClInclude Include="..\Sources\TF\Host\GameServerEventListener.h">
+      <Filter>Host</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\Mysql\MysqlQuery.h">
-      <Filter>Database\Mysql</Filter>
+    <ClInclude Include="..\Sources\TF\Parser\CommandParser.h">
+      <Filter>Parser</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\DataBaseManager.h">
+    <ClInclude Include="..\Sources\TF\Game\Player.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Game\PlayerMap.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Game\World.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Overlapped\IOCPOverlappedQuery.h">
+      <Filter>Overlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlConnection.h">
       <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlConnectionPool.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlQuery.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlQueryFuture.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\StatementType.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlStatementBuilder.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Parser\CommandFn.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Game\Channel.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Game\Room.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Parser\SendFn.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Parser\QueryFn.h">
+      <Filter>Parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\TF\Util\Console.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlConnection.cpp">
-      <Filter>Database\Mysql</Filter>
+    <ClCompile Include="..\Sources\TF\Host\GameServerEventListener.cpp">
+      <Filter>Host</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlConnectionPool.cpp">
-      <Filter>Database\Mysql</Filter>
+    <ClCompile Include="..\Sources\TF\main.cpp" />
+    <ClCompile Include="..\Sources\TF\Host\GameServer.cpp">
+      <Filter>Host</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\Mysql\MysqlQuery.cpp">
-      <Filter>Database\Mysql</Filter>
+    <ClCompile Include="..\Sources\TF\Parser\CommandParser.cpp">
+      <Filter>Parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\DataBaseManager.cpp">
+    <ClCompile Include="..\Sources\TF\Game\World.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Overlapped\IOCPOverlappedQuery.cpp">
+      <Filter>Overlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlConnection.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\main.cpp" />
+    <ClCompile Include="..\Sources\TF\Database\MysqlConnectionPool.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlDatabase.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlQuery.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlQueryFuture.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Parser\CommandFn.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Game\PlayerMap.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Game\Player.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Game\Channel.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Game\Room.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Parser\SendFn.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Parser\QueryFn.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -32,6 +32,10 @@ void IOCPOverlappedConnect::Process(BOOL result, DWORD numberOfBytesTransffered,
 		m_pConnectedSession->Sent(m_pSentPacket, numberOfBytesTransffered);
 		m_pSentPacket->Release();
 	}
+
+	if (m_pConnectedSession->ReceiveAsync() == false) {
+		m_pConnectedSession->Disconnect();
+	}
 }
 
 } // namespace JNetwork

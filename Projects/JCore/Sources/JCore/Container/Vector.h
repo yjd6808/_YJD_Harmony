@@ -77,6 +77,14 @@ public:
 		this->SetAtUnsafe(this->m_iSize++, data);
 	}
 
+	/**
+	 * \brief 용량을 수정하도록 한다. 만약 기존에 담긴 데이터 수가 전달해준
+	 * 용량보다 많을 경우 소멸자를 호출하여 넘치는 만큼 삭제해줌
+	 */
+	void Resize(int capacity) override {
+		return TArrayCollection::Resize(capacity);
+	}
+
 	/// <summary>>a
 	/// 여러개의 데이터를 뒤에 추가하고자할 때
 	/// </summary>

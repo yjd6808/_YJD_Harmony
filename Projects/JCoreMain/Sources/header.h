@@ -3,8 +3,11 @@
 
 
 #include <JCore/Random.h>
+#include <JCore/TypeTraits.h>
+#include <JCore/Time.h>
+#include <iostream>
 
-using namespace JCore;
+
 using namespace JCore;
 using namespace std;
 

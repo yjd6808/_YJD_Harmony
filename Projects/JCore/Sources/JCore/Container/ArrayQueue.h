@@ -238,7 +238,7 @@ protected:
 	}
 
 	// 크기 확장
-	void Expand(int capacity) override {
+	void Expand(int capacity, bool _ = false) override {
 		T* pNewArray = Memory::Allocate<T*>(sizeof(T) * capacity);
 
 		if (IsForwardedTail()) {

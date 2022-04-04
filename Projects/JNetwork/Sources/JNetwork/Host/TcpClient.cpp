@@ -14,6 +14,13 @@ TcpClient::TcpClient() :
 }
 
 TcpClient::~TcpClient() {
+
+	m_pIocp->Join();
+
+	if (m_pIocp->Destroy() == false) {
+		Winsock::Message("IOCP 삭제에 실패하였습니다.");
+	}
+
 	DeleteSafe(m_pIocp);
 }
 
@@ -115,13 +122,6 @@ bool TcpClient::Disconnect() {
 		return true;
 	}
 
-	m_pIocp->Join();
-
-	if (m_pIocp->Destroy() == false) {
-		Winsock::Message("IOCP 삭제에 실패하였습니다.");
-		return false;
-	}
-
 	m_ReceiveBuffer.Clear();
 	m_ClientSocket.ShutdownBoth();		// ConnectWait 상태에서 시도하는 경우 오류를 뱉음. 그냥 무시하자.
 
@@ -176,6 +176,8 @@ void TcpClient::Connected() {
 		return;
 	}
 
+	m_RemoteEndPoint = m_ClientSocket.GetRemoteEndPoint();
+	m_LocalEndPoint = m_ClientSocket.GetLocalEndPoint();
 	m_pClientEventListener->OnConnected();
 }
 

@@ -13,6 +13,8 @@
 
 #include <TF/Util/Console.h>
 
+using namespace JCore;
+
 	Vec2Int Console::ms_CursorPosition;
 	ConsoleColor Console::ms_iDefaultColor;
 
@@ -36,9 +38,15 @@
 		va_start(ap, format);
 		vsprintf(buf, format, ap);
 		va_end(ap);
+		if (ms_ConsoleLock)
+			ms_ConsoleLock->Lock();
+
 		SetColor(color);
 		fprintf(stdout, "%s", buf);
 		SetColor(ms_iDefaultColor);
+
+		if (ms_ConsoleLock)
+			ms_ConsoleLock->Unlock();
 	}
 
 	void Console::Write(const char *format, ...)
@@ -48,7 +56,12 @@
 		va_start(ap, format);
 		vsprintf(buf, format, ap);
 		va_end(ap);
+
+		if (ms_ConsoleLock)
+			ms_ConsoleLock->Lock();
 		fprintf(stdout, "%s", buf);
+		if (ms_ConsoleLock)
+			ms_ConsoleLock->Unlock();
 	}
 
 	void Console::WriteLine(ConsoleColor color, const char *format, ...)
@@ -58,9 +71,15 @@
 		va_start(ap, format);
 		vsprintf(buf, format, ap);
 		va_end(ap);
+		if (ms_ConsoleLock)
+			ms_ConsoleLock->Lock();
+
 		SetColor(color);
 		fprintf(stdout, "%s\n", buf);
 		SetColor(ms_iDefaultColor);
+
+		if (ms_ConsoleLock)
+			ms_ConsoleLock->Unlock();
 	}
 
 	void Console::WriteLine(const char *format, ...)
@@ -70,45 +89,15 @@
 		va_start(ap, format);
 		vsprintf(buf, format, ap);
 		va_end(ap);
+
+		if (ms_ConsoleLock)
+			ms_ConsoleLock->Lock();
+
 		fprintf(stdout, "%s\n", buf);
+
+		if (ms_ConsoleLock)
+			ms_ConsoleLock->Unlock();
 	}
-
-
-
-	void Console::ErrorWriteLine(const char *format, ...)
-	{
-		SetColor(ConsoleColor::LIGHTRED);
-		va_list ap;
-		char buf[1024];
-		va_start(ap, format);
-		vsprintf(buf, format, ap);
-		va_end(ap);
-		fprintf(stdout, "[Error] %s\n", buf);
-
-	}
-
-	void Console::InfoWriteLine(const char *format, ...)
-	{
-		SetColor(ConsoleColor::GREEN);
-		va_list ap;
-		char buf[1024];
-		va_start(ap, format);
-		vsprintf(buf, format, ap);
-		va_end(ap);
-		fprintf(stdout, "[Info] %s\n", buf);
-	}
-
-	void Console::DebugWriteLine(const char *format, ...)
-	{
-		SetColor(ConsoleColor::DARKGRAY);
-		va_list ap;
-		char buf[1024];
-		va_start(ap, format);
-		vsprintf(buf, format, ap);
-		va_end(ap);
-		fprintf(stdout, "[Debug] %s\n", buf);
-	}
-
 
 	void Console::Init()
 	{

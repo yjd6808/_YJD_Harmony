@@ -16,6 +16,7 @@ class IOCPOverlapped : public OVERLAPPED
 public:
 	enum class Type
 	{
+		Custom,
 		Accept,
 		Connect,
 		Receive,

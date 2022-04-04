@@ -1,0 +1,77 @@
+@startuml
+
+'theme 목록 : https://plantuml.com/ko/theme'
+!theme vibrant
+
+'skinparam 목록 : https://plantuml.com/ko/skinparam'
+skinparam ClassFontSize 20
+skinparam ClassFontColor Black
+skinparam ClassAttributeFontSize 15
+skinparam ArrowColor Black
+skinparam ArrowThickness 2
+
+hide empty methods
+hide empty fields
+hide circle
+
+class t_channel {
+    c_uid
+    c_name
+    c_max_player_count
+    c_time
+}
+
+class t_account {
+    c_uid
+    c_id
+    c_pass
+    c_last_logout_time
+    c_last_login_time
+}
+
+class t_character {
+    채널마다 캐릭터를 생성가능
+    캐릭터는 계정마다 여러개 소지가능
+    --
+    c_uid
+    c_account_uid
+    c_channel_uid
+	c_win
+    c_lose
+    c_kill
+    c_death
+    c_money
+}
+
+class t_friendship {
+    c_req_character_uid
+    c_ack_character_uid
+}
+
+class t_inventory  {
+    캐릭터는 인벤토리를 최소 1개 가지고 여러개 소지할 수 있음
+    --
+    c_uid
+    c_character_uid
+    c_size
+}
+
+class t_inventoryitem {
+    인벤토리에는 아이템이 여러개 들어있을 수 있음
+    --
+    c_character_uid
+    c_inventory_uid
+    c_item_uid
+    c_quantity
+}
+
+
+'entity relation ship 참고 : https://plantuml.com/ko/ie-diagram'
+t_character }o-u-|| t_channel
+t_character }o-u-|| t_account
+t_inventory |o-u-|| t_character
+t_friendship }o-u-|| t_character
+t_inventoryitem }o-l-|| t_inventory
+t_inventoryitem }o-u-|| t_character
+
+@enduml

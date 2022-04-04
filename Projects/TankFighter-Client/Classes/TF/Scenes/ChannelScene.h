@@ -1,0 +1,22 @@
+#pragma once
+
+#include <TF/SourceHeader.h>
+#include <TF/Scenes/ChannelLayer.h>
+#include <TF/Scenes/GridLayer.h>
+#include <TF/Network/SynchronizedScene.h>
+
+class ChannelScene : public SynchronizedScene
+{
+public:
+    static Scene* createScene();
+
+    bool init() override;
+    CREATE_FUNC(ChannelScene);
+
+    void SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
+
+private:
+    ChannelLayer* m_pChannelLayer;
+    GridLayer* m_pGridLayer;
+};
+
