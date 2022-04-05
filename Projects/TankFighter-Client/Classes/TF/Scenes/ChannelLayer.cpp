@@ -13,7 +13,9 @@ bool ChannelLayer::init() {
 	}
 
 	// 채널씬에 진입하면 채널 정보를 받기위해 바로 패킷을 보낸다.
-	SendFn::SendLoadChannelInfoSyn();
+	if (SendFn::SendLoadChannelInfoSyn() == false) {
+		PopUp::createInParent("채널 정보 요청이 실패하였습니다.", this, false);
+	}
 
 	return true;
 }
@@ -39,21 +41,22 @@ void ChannelLayer::CmdLoadChannelInfoAck(ICommand* cmd) {
 		ChannelInfo* pChannelInfo = &pChannelInfoAck->Info[i];
 
 		TextButton* btn = TextButton::create(200, 45, StringUtils::format("%s (%d/%d)", pChannelInfo->Name, pChannelInfo->PlayerCount, pChannelInfo->MaxPlayerCount), 14);
-		btn->setPosition(400, 450 - 50 * i);
+		btn->setAnchorPoint(Vec2::ZERO);
+		btn->setPosition({ 400, float(450 - 50 * i )});
 		btn->setColor(ColorList::Ashgray_v);
 		btn->setFontColor(ColorList::Black_v);
 		btn->setClickEvent(CC_CALLBACK_1(ChannelLayer::OnChannelClick, this));
-		this->addChild(btn, 0, pChannelInfo->UID);		// 태그로 채널 UID를 지정하자.
+		this->addChild(btn, 0, pChannelInfo->ChannelUID);		// 태그로 채널 UID를 지정하자.
 	}
 
 	PopUp::createInParent("접속 성공!", this, false);
 }
 
 void ChannelLayer::CmdSelectChannelAck(ICommand* cmd) {
-	SelectChannelAck* pChannelInfoAck = cmd->CastCommand<SelectChannelAck*>();
+	const SelectChannelAck* pChannelInfoAck = cmd->CastCommand<SelectChannelAck*>();
 
 	if (pChannelInfoAck->Result) {
-		// 채널 UID 설정
+		// 채널 CharacterUID 설정
 		GameClient::GetInstance()->SetChannelUID(pChannelInfoAck->ChanneldUID);
 
 		this->unscheduleUpdate();

@@ -7,7 +7,9 @@
 
 #include <MSWSock.h>
 
+#include <JCore/LockGuard.h>
 
+using namespace JCore;
 
 namespace JNetwork {
 	TcpSession::TcpSession(IOCP* iocp, TcpServerEventListener* listener) :
@@ -21,6 +23,7 @@ namespace JNetwork {
 TcpSession::~TcpSession() = default;
 
 bool TcpSession::Disconnect() {
+	CriticalSectionLockGuard guard(m_Lock);
 	if (CheckState(State::Disconnected)) {
 		return false;
 	}
@@ -96,7 +99,13 @@ bool TcpSession::AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped) {
 	return true;
 }
 
+bool TcpSession::CheckState(State state) {
+	CriticalSectionLockGuard guard(m_Lock);
+	return m_eState == state;
+}
+
 bool TcpSession::Initialize() {
+	CriticalSectionLockGuard guard(m_Lock);
 	if (m_ClientSocket.IsValid()) {
 		m_ClientSocket.Close();
 	}
@@ -112,6 +121,7 @@ bool TcpSession::Initialize() {
 }
 
 void TcpSession::AcceptWait() {
+	CriticalSectionLockGuard guard(m_Lock);
 	m_eState = State::AcceptWait;
 }
 

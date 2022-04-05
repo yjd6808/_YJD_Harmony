@@ -17,7 +17,7 @@ using namespace JCore;
 
 bool QueryFn::IsCharacterExistByName(const JCore::String& characterName) {
 	auto spQuery = _Database->Query("select count(*) from t_character where c_name = ?", characterName);
-	return spQuery->GetResultRowCount() > 0;
+	return spQuery->GetInt(0, 0) > 0;
 }
 
 bool QueryFn::IsCharacterExistByIDs(const int accountUID, const int channelUID, const int characterUID) {

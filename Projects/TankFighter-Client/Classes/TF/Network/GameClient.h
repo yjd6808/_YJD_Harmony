@@ -17,8 +17,8 @@ public:
 	int	 GetAccountUID() const					{ return m_iAccountUID; }
 	void SetChannelUID(int channelUID)			{ m_iChannelUID = channelUID; }
 	int  GetChannelUID() const					{ return m_iChannelUID; }
-	void SetCharacterUID(int characterUID)		{ m_CharacterInfo.UID = characterUID; }
-	int  GetCharacterUID() const				{ return m_CharacterInfo.UID; }
+	void SetCharacterUID(int characterUID)		{ m_CharacterInfo.CharacterUID = characterUID; }
+	int  GetCharacterUID() const				{ return m_CharacterInfo.CharacterUID; }
 	void UpdateCharacterInfo(CharacterInfo& info);
 private:
 	CommandParser* m_Parser;

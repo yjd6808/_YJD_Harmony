@@ -62,6 +62,7 @@ namespace JCore {
 
 	using EventLockGuard = LockGuard<EventMutex>;
 	using CriticalSectionLockGuard = LockGuard<CriticalSectionMutex>;
+	using SpinLockGuard = LockGuard<SpinLock>;
 
 	template <ReaderWriterLockMode Mode>
 	using ReaderWriterLockSlimGuard = ReaderWriterLockGuard<ReaderWriterLockSlim, Mode>;

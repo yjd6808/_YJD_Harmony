@@ -1,5 +1,5 @@
 ﻿/*
-	�ۼ��� : ������
+	작성자 : 윤정도
 */
 
 #pragma once
@@ -29,16 +29,18 @@ struct ListNode
 		Value.~T();
 	}
 
-	union { T Value; };	// Lazy Initialization�� ����
+	union { T Value; };	// Lazy Instantiation
 	TListNode* Next = nullptr;
 	TListNode* Previous = nullptr;
 };
 
+
+/*
 template <typename T>
 struct ListNode<T*> {  };
 
 template <typename T>
 struct ListNode<T&> {  };
-
+*/
 
 } // namespace JCore

@@ -6,6 +6,8 @@
 #include <TF/UI/ColoredListView.h>
 #include <TF/Network/GameClient.h>
 
+#include "TF/Network/ClientConfiguration.h"
+
 #define EDITBOX_ID				16
 #define EDITBOX_PW				17
 
@@ -18,6 +20,9 @@ bool LoginLayer::init() {
 	}
 
 
+
+	//return true;
+	///return true;
 	// 탱크 바디 - 바퀴 달린 부분
 	m_pTank = Tank::create();
 	this->addChild(m_pTank);
@@ -33,23 +38,31 @@ bool LoginLayer::init() {
 
 	TextButton* loginBtn = TextButton::create(200, 45, "로그인", 15);
 	loginBtn->setAnchorPoint(Vec2::ZERO);
-	loginBtn->setPosition({ 350, 200 });
-	loginBtn->setColor(Color3B::GRAY);
+	loginBtn->setPosition({ 400, 200 });
+	loginBtn->setBackgroundColor(Color3B::GRAY);
 	loginBtn->setFontColor(Color3B::BLUE);
-	loginBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::LoginButton_Click, this));
+	loginBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::OnClickedLoginButton, this));
 	this->addChild(loginBtn);
-
+	Button::create();
 
 	TextButton* registerBtn = TextButton::create(200, 45, "회원가입", 15);
 	registerBtn->setAnchorPoint(Vec2::ZERO);
-	registerBtn->setPosition({ 350, 150 });
-	registerBtn->setColor(Color3B::GRAY);
+	registerBtn->setPosition({ 400, 150 });
+	registerBtn->setBackgroundColor(Color3B::GRAY);
 	registerBtn->setFontColor(Color3B::GREEN);
-	registerBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::RegisterButton_Click, this));
+	registerBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::OnClickedRegisterButton, this));
 	this->addChild(registerBtn);
 
+	TextButton* reconnectBtn = TextButton::create(200, 45, "서버 재접속 시도", 15);
+	reconnectBtn->setAnchorPoint(Vec2::ZERO);
+	reconnectBtn->setPosition({ 400, 100 });
+	reconnectBtn->setBackgroundColor(Color3B::GRAY);
+	reconnectBtn->setFontColor(Color3B::BLACK);
+	reconnectBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::OnClickedReconnectButton, this));
+	this->addChild(reconnectBtn);
+
 	EditBox* pIDEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(RECT_IMG_FILENAME));
-	pIDEditBox->setPosition({ 350, 300 });
+	pIDEditBox->setPosition({ 400, 300 });
 	pIDEditBox->setFontColor(Color4B::WHITE);
 	pIDEditBox->setColor(ColorList::Africanviolet_v);
 	pIDEditBox->setFontSize(18.0f);
@@ -61,7 +74,7 @@ bool LoginLayer::init() {
 	pIDEditBox->setText("wjdeh515");
 	
 	EditBox* pPasswordEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(RECT_IMG_FILENAME));
-	pPasswordEditBox->setPosition(Vec2(350, 250));
+	pPasswordEditBox->setPosition(Vec2(400, 250));
 	pPasswordEditBox->setFontColor(Color4B::BLACK);
 	pPasswordEditBox->setFontSize(18.0f);
 	pPasswordEditBox->setColor(ColorList::Etonblue_v);
@@ -122,7 +135,7 @@ bool IsAvailableIDPW(std::string& id)
 	return iter != id.end() ? false : true;
 }
 
-void LoginLayer::LoginButton_Click(TextButton* sender) {
+void LoginLayer::OnClickedLoginButton(TextButton* sender) {
 	EditBox* pIDEditBox = (EditBox*)this->getChildByTag(EDITBOX_ID);
 	EditBox* pPWEditBox = (EditBox*)this->getChildByTag(EDITBOX_PW);
 
@@ -140,7 +153,7 @@ void LoginLayer::LoginButton_Click(TextButton* sender) {
 		strcpy_s(pCmdLoginSyn->Id, ID_LEN, id.c_str());
 		strcpy_s(pCmdLoginSyn->Password, PASS_LEN, pw.c_str());
 
-		if (GameClient::GetInstance()->SendAsync(pPacket) == false) {
+		if (_Client->SendAsync(pPacket) == false) {
 			PopUp::createInParent("로그인 패킷 전송 실패", this, false);
 		}
 		return;
@@ -149,7 +162,7 @@ void LoginLayer::LoginButton_Click(TextButton* sender) {
 	PopUp::createInParent("아이디 비밀번호를 똑바로 입력해주세요.", this, false);
 }
 
-void LoginLayer::RegisterButton_Click(TextButton* sender) {
+void LoginLayer::OnClickedRegisterButton(TextButton* sender) {
 
 	EditBox* pIDEditBox = (EditBox*)this->getChildByTag(EDITBOX_ID);
 	EditBox* pPWEditBox = (EditBox*)this->getChildByTag(EDITBOX_PW);
@@ -168,13 +181,20 @@ void LoginLayer::RegisterButton_Click(TextButton* sender) {
 		strcpy_s(pCmdRegisterSyn->Id, ID_LEN, id.c_str());
 		strcpy_s(pCmdRegisterSyn->Password, PASS_LEN, pw.c_str());
 
-		if (GameClient::GetInstance()->SendAsync(pPacket) == false) {
+		if (_Client->SendAsync(pPacket) == false) {
 			PopUp::createInParent("로그인 패킷 전송 실패", this, false);
 		}
 		return;
 	}
 
 	PopUp::createInParent("아이디 비밀번호를 똑바로 입력해주세요.", this, false);
+}
+
+
+void LoginLayer::OnClickedReconnectButton(TextButton* sender) {
+	if (_Client->ConnectAsync(JCore::StringUtil::Format("%s:%d", SERVER_ADDR, SERVER_PORT)) == false) {
+		PopUp::createInParent("재접속에 실패하였습니다.", this, false);
+	}
 }
 
 
@@ -197,6 +217,7 @@ void LoginLayer::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 void LoginLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 }
 
+
 /* =================================================================================
  *
  *                             통신 패킷 처리 
@@ -208,7 +229,7 @@ void LoginLayer::CmdLoginAck(ICommand* cmd) {
 
 	// 로그인 성공
 	if (pLoginAck->Result) {
-		GameClient::GetInstance()->SetAccountUID(pLoginAck->UID);
+		_Client->SetAccountUID(pLoginAck->UID);
 
 		this->unscheduleUpdate();
 		this->_eventDispatcher->removeAllEventListeners();

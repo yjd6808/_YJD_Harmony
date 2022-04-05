@@ -13,7 +13,7 @@
 #include <TF/SourceHeader.h>
 #include <JCore/Functional.h>
 
-class TextButton : public Scale9Sprite
+class TextButton : public Button
 {
 public:
 	CREATE_FUNC(TextButton);
@@ -22,7 +22,6 @@ public:
 	static TextButton* create(float width, float height, const std::string& content, float fontSize);
 
 	void setFontColor(const Color3B& color);
-	
 	void onMouseMove(EventMouse* mouseEvent);
 
 	bool IsMouseOver() const { return m_bMouseOver; }
@@ -30,11 +29,17 @@ public:
 
 	bool onTouchBegin(Touch* touch, Event* touchEvent);
 	void onTouchEnded(Touch* touch, Event* touchEvent);
+	void setBackgroundColor(const Color3B& color);
 
+	void onMouseClick(Ref* ref);
 	void setClickEvent(JCore::Action<TextButton*> clientEvent) { m_ClickEvent = clientEvent; }
 private:
 	JCore::Action<TextButton*> m_ClickEvent;
+	Scale9Sprite* m_pBackground;
+	Button* m_pButton;
 	Text* m_pTextUI;
+
+
 	bool m_bMouseOver = false;;
 	bool m_bMousePressed = false;
 };

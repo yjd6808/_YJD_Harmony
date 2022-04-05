@@ -106,7 +106,7 @@ public:
 	}
 
 	bool Exist(const T& data) const {
-		return FindNode(data) != nullptr;
+		return this->FindNode(data) != nullptr;
 	}
 
 	bool Remove(const T& data) { 

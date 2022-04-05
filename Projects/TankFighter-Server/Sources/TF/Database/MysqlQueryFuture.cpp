@@ -50,3 +50,8 @@ void MysqlQueryFuture::ExecuteQuery() {
 		break;
 	}
 }
+
+void MysqlQueryFuture::CallbackExecute() {
+	if (m_Callback != nullptr)
+		m_Callback(&m_Result);
+}

@@ -70,6 +70,9 @@ create table t_character (
 ) character set utf8 collate utf8_unicode_520_ci;
 
 
+
+
+
 # 친구 관계
 create table t_friendship (
 	c_req_character_uid		int				not null				comment	'친구를 요청한 캐릭터의 고유 ID',

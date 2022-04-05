@@ -5,18 +5,18 @@
 
 using namespace std;
 
-unique_ptr<MysqlConnectionPool> MysqlConnectionPool::s_instance;
+unique_ptr<MysqlConnectionPool> MysqlConnectionPool::ms_spInstance;
 
 MysqlConnectionPool::MysqlConnectionPool(const JCore::String& sHostname, const uint16_t& wPort, const JCore::String& sUsername, const JCore::String& sPassword, const JCore::String& sDB, const uint32_t wMaxConn) :
-	m_hostname(sHostname),
-	m_dbport(wPort),
-	m_username(sUsername),
-	m_password(sPassword),
-	m_maxconnection(wMaxConn),
-	m_dbname(sDB),
-	m_curConnSize(0)
+	m_HostName(sHostname),
+	m_DatabasePort(wPort),
+	m_UserName(sUsername),
+	m_Password(sPassword),
+	m_MaxConnection(wMaxConn),
+	m_DatabaseName(sDB),
+	m_iCurConnSize(0)
 {
-	const int initConnCount = m_maxconnection / 2;
+	const int initConnCount = m_MaxConnection / 2;
 
 }
 
@@ -28,41 +28,41 @@ MysqlConnectionPool::~MysqlConnectionPool()
 
 MysqlConnectionPool& MysqlConnectionPool::GetInstance()
 {
-	if (s_instance.get() == nullptr)
-		s_instance.reset(new MysqlConnectionPool(DB_HOST, DB_PORT, DB_ID, DB_PASS, DB_NAME, 50));
+	if (ms_spInstance.get() == nullptr)
+		ms_spInstance.reset(new MysqlConnectionPool(DB_HOST, DB_PORT, DB_ID, DB_PASS, DB_NAME, 50));
 
-	return *(s_instance.get());
+	return *(ms_spInstance.get());
 }
 
 bool MysqlConnectionPool::Init(const uint32_t initConn)
 {
 	MysqlConnection* pConn;
-	m_mtx.lock();
+	m_Mtx.lock();
 	for (int i = 0; i < initConn; ++i) {
 		pConn = CreateConnection();
 		if (pConn) {
-			m_connList.push_back(pConn);
-			++m_curConnSize;
+			m_ConnectionList.push_back(pConn);
+			++m_iCurConnSize;
 		}
 		else {
 			return false;
 		}
 	}
-	m_mtx.unlock();
+	m_Mtx.unlock();
 	return true;
 }
 
 void MysqlConnectionPool::TerminateAllConnections()
 {
 	list<MysqlConnection*>::iterator conn;
-	m_mtx.lock();
-	for (conn = m_connList.begin(); conn != m_connList.end(); ++conn)
+	m_Mtx.lock();
+	for (conn = m_ConnectionList.begin(); conn != m_ConnectionList.end(); ++conn)
 	{
 		this->TerminateConnection(*conn);
 	}
-	m_curConnSize = 0;
-	m_connList.clear();
-	m_mtx.unlock();
+	m_iCurConnSize = 0;
+	m_ConnectionList.clear();
+	m_Mtx.unlock();
 }
 
 void MysqlConnectionPool::TerminateConnection(MysqlConnection* conn)
@@ -79,12 +79,12 @@ void MysqlConnectionPool::TerminateConnection(MysqlConnection* conn)
 MysqlConnection* MysqlConnectionPool::GetConnection()
 {
 	MysqlConnection* pConn;
-	std::lock_guard<std::mutex> guard(m_mtx);
+	std::lock_guard<std::mutex> guard(m_Mtx);
 
-	if (m_connList.size() > 0) 
+	if (m_ConnectionList.size() > 0) 
 	{
-		pConn = m_connList.front();
-		m_connList.pop_front();
+		pConn = m_ConnectionList.front();
+		m_ConnectionList.pop_front();
 
 		if (pConn->IsConnected() == false)
 		{
@@ -93,7 +93,7 @@ MysqlConnection* MysqlConnectionPool::GetConnection()
 		}
 
 		if (pConn == nullptr) 
-			--m_curConnSize;
+			--m_iCurConnSize;
 		return pConn;
 	}
 	else 
@@ -101,8 +101,8 @@ MysqlConnection* MysqlConnectionPool::GetConnection()
 		pConn = CreateConnection();
 		if (pConn) 
 		{
-			m_connList.push_back(pConn);
-			++m_curConnSize;
+			m_ConnectionList.push_back(pConn);
+			++m_iCurConnSize;
 		}
 		else 
 		{
@@ -116,15 +116,15 @@ void MysqlConnectionPool::ReleaseConnection(MysqlConnection* conn)
 {
 	if (conn) 
 	{
-		m_mtx.lock();
-		m_connList.push_back(conn);
-		m_mtx.unlock();
+		m_Mtx.lock();
+		m_ConnectionList.push_back(conn);
+		m_Mtx.unlock();
 	}
 }
 
 MysqlConnection* MysqlConnectionPool::CreateConnection()
 {
 	MysqlConnection* connection = new MysqlConnection();
-	connection->Connect(m_hostname, m_dbport, m_username, m_password, m_dbname);
+	connection->Connect(m_HostName, m_DatabasePort, m_UserName, m_Password, m_DatabaseName);
 	return connection;
 }

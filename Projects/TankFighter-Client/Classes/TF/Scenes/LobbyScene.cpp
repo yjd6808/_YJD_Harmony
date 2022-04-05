@@ -22,7 +22,9 @@ bool LobbyScene::init()
 void LobbyScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
     CCLOG("%d 커맨드 수신", cmd->GetCommand());
     switch (cmd->GetCommand()) {
-    case LOAD_CHANNEL_INFO_ACK: m_pLobbyLayer->CmdLoadChannelInfoAck(cmd); break;
+    case UPDATE_CHARACTER_INFO_ACK: m_pLobbyLayer->CmdUpdateCharacterInfoAck(cmd); break;
+    case UPDATE_ROOMLIST_ACK: m_pLobbyLayer->CmdUpdateRoomListAck(cmd); break;
+    case UPDATE_FRIENDLIST_ACK: m_pLobbyLayer->CmdUpdateFriendListAck(cmd); break;
     }
 }
 

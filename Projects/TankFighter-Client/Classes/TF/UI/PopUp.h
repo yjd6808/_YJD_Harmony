@@ -34,7 +34,9 @@ public:
 
 	bool init(bool bgClickable);
 	bool init() override;
+
 	CREATE_FUNC(PopUp);
+	
 };
 
 #endif // _DF_POPUP_H__

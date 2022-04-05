@@ -5,7 +5,7 @@ select * from t_account;
 
 update t_channel set c_max_player_count = 5 where c_name = '초고수 정도 채널';
 select count(*) from t_character where c_name = 'fse';
-
+delete from t_channel where c_name like '%정도%';
 
 
 select now(6);

@@ -17,18 +17,20 @@ public:
 	int GetTotalRoomCount();
 	int GetTotalPlayerCount();
 	int GetTotalChannelCount() const;
+	Player* GetPlayerByAccountIdx(const int accountIdx);
 
 	bool IsPlayerExist(int accountUID);
 
 	void AddNewPlayer(Player* player);
 	bool RemovePlayer(Player* player);
+	Player* FindIfPlayer(JCore::Func<bool, Player*> predicate);
 
 	int GetChannelCount() const { return m_ChannelMap.Size(); }
 	Channel* GetChannel(int channelUID);
 	JCore::Vector<Channel*> GetChannels() { return m_ChannelMap.Values().Extension().ToVector(); }
 private:
 	PlayerMap m_PlayerMap;
-	JCore::HashMap<int, Channel*> m_ChannelMap;
+	JCore::HashMap<int, Channel*> m_ChannelMap;		// 불변 - 락 불필요
 
 	inline static World* ms_pInstance = nullptr;
 };

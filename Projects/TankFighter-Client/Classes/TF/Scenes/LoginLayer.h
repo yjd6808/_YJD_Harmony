@@ -15,8 +15,9 @@ public:
 	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) override;
 	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) override;
 
-	void LoginButton_Click(TextButton* sender);
-	void RegisterButton_Click(TextButton* sender);
+	void OnClickedReconnectButton(TextButton* sender);
+	void OnClickedLoginButton(TextButton* sender);
+	void OnClickedRegisterButton(TextButton* sender);
 
 	void CmdLoginAck(ICommand* cmd);
 	void CmdRegisterAck(ICommand* cmd);

@@ -65,14 +65,14 @@ public:
 	bool ExecuteAuto();
 
 	const JCore::String GetFieldName(const unsigned int &field);
-	const JCore::String GetString(const unsigned int &row, const unsigned int &field);
-	const JCore::String GetString(const unsigned int &row, const JCore::String &field);
-	int GetInt(const unsigned int &row, const unsigned int &field);
-	int GetInt(const unsigned int &row, const JCore::String &field);
-	double GetDouble(const unsigned int &row, const unsigned int &field);
-	double GetDouble(const unsigned int &row, const JCore::String &field);
-	JCore::DateTime GetTime(const unsigned int &row, const unsigned int &field);
-	JCore::DateTime GetTime(const unsigned int &row, const JCore::String &field);
+	JCore::String GetString(const unsigned int& rowIdx, const unsigned int& fieldIdx);
+	JCore::String GetString(const unsigned int& rowIdx, const JCore::String& fieldName);
+	int GetInt(const unsigned int &rowIdx, const unsigned int &fieldIdx);
+	int GetInt(const unsigned int &rowIdx, const JCore::String &fieldName);
+	double GetDouble(const unsigned int &rowIdx, const unsigned int &fieldIdx);
+	double GetDouble(const unsigned int &rowIdx, const JCore::String &fieldName);
+	JCore::DateTime GetTime(const unsigned int &rowIdx, const unsigned int &fieldIdx);
+	JCore::DateTime GetTime(const unsigned int &rowIdx, const JCore::String &fieldName);
 
 	unsigned int GetResultRowCount();
 	unsigned int GetFieldCount();

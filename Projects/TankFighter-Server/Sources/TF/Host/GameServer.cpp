@@ -32,6 +32,8 @@ bool GameServer::StartServer() {
 	m_Parser.AddCommand(LOGIN_SYN, CommandFn::CmdLoginSyn);
 	m_Parser.AddCommand(REGISTER_SYN, CommandFn::CmdRegisterSyn);
 	m_Parser.AddCommand(LOAD_CHANNEL_INFO_SYN, CommandFn::CmdLoadChannelInfoSyn);
+	m_Parser.AddCommand(SELECT_CHANNEL_SYN, CommandFn::CmdSelectChannelSyn);
+
 	m_Parser.AddCommand(LOAD_CHARACTER_INFO_SYN, CommandFn::CmdLoadCharacterInfoSyn);
 	m_Parser.AddCommand(SELECT_CHARACTER_SYN, CommandFn::CmdSelectCharacterSyn);
 	m_Parser.AddCommand(DELETE_CHARACTER_SYN, CommandFn::CmdDeleteCharacterSyn);

@@ -5,6 +5,7 @@
 
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedConnect.h>
 
+using namespace JCore;
 
 namespace JNetwork {
 
@@ -118,6 +119,7 @@ void TcpClient::Resume() {
 }
 
 bool TcpClient::Disconnect() {
+	CriticalSectionLockGuard guard(m_Lock);
 	if (CheckState(State::Disconnected)) {
 		return true;
 	}

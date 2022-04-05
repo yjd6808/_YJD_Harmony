@@ -25,7 +25,7 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(960, 640);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1000, 600);
 
 AppDelegate::AppDelegate()
 {
@@ -39,7 +39,7 @@ AppDelegate::~AppDelegate()
         DebugAssert(false, " 연결 해제 실패");
 	}
 
-    DeleteSafe(pClient);
+	DeleteSafe(pClient);
 
     if (!Winsock::Finalize()) {
         DebugAssert(false, " 윈속 파이날라이즈 실패");

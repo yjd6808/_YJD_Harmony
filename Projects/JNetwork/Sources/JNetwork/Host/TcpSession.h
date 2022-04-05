@@ -58,9 +58,9 @@ protected:
 	
 	bool ReceiveAsync();
 	bool AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped);
-	bool CheckState(State state) const { return m_eState == state; }
-	
-	
+	bool CheckState(State state);
+
+
 	TcpSocketv4 Socket() const { return m_ClientSocket; }
 
 	virtual bool Initialize();
@@ -83,6 +83,7 @@ protected:
 	IPv4EndPoint m_LocalEndPoint;
 	void* m_pTag{};
 	bool m_bReuseSession;
+	JCore::CriticalSectionMutex m_Lock;
 	
 	friend class TcpServer;
 	friend class TcpSessionContainer;

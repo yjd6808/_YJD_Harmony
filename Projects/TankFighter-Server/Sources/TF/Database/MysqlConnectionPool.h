@@ -34,17 +34,16 @@ private:
 private:
 	MysqlConnectionPool(const JCore::String& sHostname, const uint16_t& wPort, const JCore::String& sUsername, const JCore::String& sPassword, const JCore::String& sDB, const uint32_t wMaxConn);
 	
-	JCore::String m_hostname;
-	JCore::String m_username;
-	JCore::String m_password;
-	JCore::String m_dbname;
-	uint16_t m_dbport;
-	uint32_t m_maxconnection;
+	JCore::String m_HostName;
+	JCore::String m_UserName;
+	JCore::String m_Password;
+	JCore::String m_DatabaseName;
+	uint16_t m_DatabasePort;
+	uint32_t m_MaxConnection;
 
-	int m_curConnSize;
-	static std::unique_ptr<MysqlConnectionPool> s_instance;
-	std::mutex m_mtx;
-	std::list<MysqlConnection*> m_connList;
-	friend class std::unique_ptr<MysqlConnectionPool>;
+	int m_iCurConnSize;
+	static std::unique_ptr<MysqlConnectionPool> ms_spInstance;
+	std::mutex m_Mtx;
+	std::list<MysqlConnection*> m_ConnectionList;
 };
 

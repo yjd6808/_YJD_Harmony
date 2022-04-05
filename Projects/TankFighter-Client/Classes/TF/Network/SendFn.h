@@ -1,14 +1,20 @@
 #pragma once
 
 #include <string>
+#include <JCore/String.h>
 
 struct SendFn
 {
-	static void SendLoadChannelInfoSyn();
-	static void SendChannelSelectSyn(int selectedChannelUID);
-	static void SendLoadCharacterInfoSyn();
-	static void SendSelectCharacterSyn(const int selectedCharacterUID);
-	static void SendCreateCharacterSyn(std::string& nick);
-	static void SendDeleteCharacterSyn(std::string& nick);
+	static bool SendLoadChannelInfoSyn();
+	static bool SendChannelSelectSyn(int selectedChannelUID);
+	static bool SendLoadCharacterInfoSyn();
+	static bool SendSelectCharacterSyn(const int selectedCharacterUID);
+	static bool SendCreateCharacterSyn(std::string& nick);
+	static bool SendDeleteCharacterSyn(std::string& nick);
+	static bool SendJoinLobbySyn();
+	static bool SendCreateRoomSyn(const JCore::String& roomName);
+	static bool SendJoinRoomSyn(const int roomUID);
+	static bool SendAddFriendSyn(const JCore::String& friendName);
+	static bool SendDeleteFriendSyn(const int friendCharacterUID);
 };
 

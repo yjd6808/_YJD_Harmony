@@ -34,191 +34,136 @@ StatementType MysqlQuery::ParseStatement(const JCore::String& statement) {
 
 const JCore::String MysqlQuery::GetFieldName(const unsigned int &field)
 {
-	if (field < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The field index has to be over 1!");
-		return NULL;
-	}
-	else if (m_FieldMap.size() < field) {
-		Console::WriteLine(ConsoleColor::RED, "There are only %d fields available!", m_FieldMap.size());
+	if (m_FieldMap.size() < field) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 필드밖에 없습니다.", m_FieldMap.size());
 		return NULL;
 	}
 
-	JCore::String sFieldName = m_FieldMap[field];
-	return sFieldName;
+	return m_FieldMap[field];
 }
 
-const JCore::String MysqlQuery::GetString(const unsigned int &row, const unsigned int &field)
-{
-	if (GetResultRowCount() < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The query didn't return any rows!");
-		return NULL;
-	}
-	else if (GetResultRowCount() < row)
-	{
-		Console::WriteLine(ConsoleColor::RED, "There are only %d rows available!", GetResultRowCount());
-		return NULL;
-	}
-	else if (row < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The selected row has to be > 1");
+JCore::String MysqlQuery::GetString(const unsigned int& rowIdx, const unsigned int& fieldIdx) {
+	if (GetResultRowCount() < 1) {
+		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return NULL;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[row - 1];
+	if (GetResultRowCount() <= rowIdx) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
+		return NULL;
+	}
 
-	JCore::String sValue = rSelectedRow[field];
+	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	JCore::String sValue = rSelectedRow[fieldIdx];
 
 	return sValue;
 }
 
-const JCore::String MysqlQuery::GetString(const unsigned int &row, const JCore::String &field)
-{
-	if (GetResultRowCount() < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The query didn't return any rows!");
-		return NULL;
-	}
-	else if (GetResultRowCount() < row)
-	{
-		Console::WriteLine(ConsoleColor::RED, "There are only %d rows available!", GetResultRowCount());
-		return NULL;
-	}
-	else if (row < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The selected row has to be > 1");
+JCore::String MysqlQuery::GetString(const unsigned int& rowIdx, const JCore::String& fieldName) {
+	if (GetResultRowCount() < 1) {
+		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return NULL;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[row - 1];
+	if (GetResultRowCount() <= rowIdx) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
+		return NULL;
+	}
 
-	const int iFieldID = m_FieldStringToIntMap[field];
+	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	const int iFieldID = m_FieldStringToIntMap[fieldName];
 	JCore::String sValue = rSelectedRow[iFieldID];
 
 	return sValue;
 }
 
-int MysqlQuery::GetInt(const unsigned int &row, const unsigned int &field)
+int MysqlQuery::GetInt(const unsigned int &rowIdx, const unsigned int &fieldIdx)
 {
-	if (GetResultRowCount() < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The query didn't return any rows!");
-		return NULL;
-	}
-	else if (GetResultRowCount() < row)
-	{
-		Console::WriteLine(ConsoleColor::RED, "There are only %d rows available!", GetResultRowCount());
-		return NULL;
-	}
-	else if (row < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The selected row has to be > 1");
+	if (GetResultRowCount() < 1) {
+		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return NULL;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[row - 1];
-	const int iValue = atoi(rSelectedRow[field].Source());
+	if (GetResultRowCount() <= rowIdx) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
+		return NULL;
+	}
+
+	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	const int iValue = atoi(rSelectedRow[fieldIdx].Source());
 
 	return iValue;
 }
 
-int MysqlQuery::GetInt(const unsigned int &row, const JCore::String &field)
+int MysqlQuery::GetInt(const unsigned int &rowIdx, const JCore::String &fieldName)
 {
-	if (GetResultRowCount() < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The query didn't return any rows!");
-		return NULL;
-	}
-	else if (GetResultRowCount() < row)
-	{
-		Console::WriteLine(ConsoleColor::RED, "There are only %d rows available!", GetResultRowCount());
-		return NULL;
-	}
-	else if (row < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The selected row has to be > 1");
+	if (GetResultRowCount() < 1) {
+		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return NULL;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[row - 1];
+	if (GetResultRowCount() <= rowIdx) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
+		return NULL;
+	}
+	TResultRow rSelectedRow = m_ResultMap[rowIdx];
 
-	const int iFieldID = m_FieldStringToIntMap[field];
+	const int iFieldID = m_FieldStringToIntMap[fieldName];
 	const int iValue = atoi(rSelectedRow[iFieldID].Source());
 	return iValue;
 }
 
-double MysqlQuery::GetDouble(const unsigned int &row, const unsigned int &field)
+double MysqlQuery::GetDouble(const unsigned int &rowIdx, const unsigned int &fieldIdx)
 {
-	if (GetResultRowCount() < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The query didn't return any rows!");
-		return NULL;
-	}
-	else if (GetResultRowCount() < row)
-	{
-		Console::WriteLine(ConsoleColor::RED, "There are only %d rows available!", GetResultRowCount());
-		return NULL;
-	}
-	else if (row < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The selected row has to be > 1");
-		return NULL;
+	if (GetResultRowCount() < 1) {
+		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
+		return 0;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[row - 1];
+	if (GetResultRowCount() <= rowIdx) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
+		return 0;
+	}
 
-	const double dValue = atof(rSelectedRow[field].Source());
+	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+
+	const double dValue = atof(rSelectedRow[fieldIdx].Source());
 
 	return dValue;
 }
 
-double MysqlQuery::GetDouble(const unsigned int &row, const JCore::String &field)
+double MysqlQuery::GetDouble(const unsigned int &rowIdx, const JCore::String &fieldName)
 {
-	if (GetResultRowCount() < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The query didn't return any rows!");
-		return NULL;
+	if (GetResultRowCount() < 1) {
+		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
+		return 0;
 	}
-	else if (GetResultRowCount() < row)
-	{
-		Console::WriteLine(ConsoleColor::RED, "There are only %d rows available!", GetResultRowCount());
-		return NULL;
-	}
-	else if (row < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The selected row has to be > 1");
-		return NULL;
+	if (GetResultRowCount() <= rowIdx) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
+		return 0;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[row - 1];
+	TResultRow rSelectedRow = m_ResultMap[rowIdx];
 
-	const int iFieldID = m_FieldStringToIntMap[field];
+	const int iFieldID = m_FieldStringToIntMap[fieldName];
 	const double dValue = atof(rSelectedRow[iFieldID].Source());
 
 	return dValue;
 }
 
-JCore::DateTime MysqlQuery::GetTime(const unsigned int &row, const unsigned int &field)
+JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const unsigned int &fieldIdx)
 {
-	if (GetResultRowCount() < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The query didn't return any rows!");
-		return NULL;
+	if (GetResultRowCount() < 1) {
+		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
+		return 0;
 	}
-	else if (GetResultRowCount() < row)
-	{
-		Console::WriteLine(ConsoleColor::RED, "There are only %d rows available!", GetResultRowCount());
-		return NULL;
-	}
-	else if (row < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The selected row has to be > 1");
-		return NULL;
+	if (GetResultRowCount() <= rowIdx) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
+		return 0;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[row - 1];
-	JCore::String val = rSelectedRow[field];
+	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	JCore::String val = rSelectedRow[fieldIdx];
 
 	int precision = atoi(val.GetRange(20, 5).Source());
 	int mili = precision / 1000;
@@ -237,27 +182,20 @@ JCore::DateTime MysqlQuery::GetTime(const unsigned int &row, const unsigned int 
 	).ToDateTime();
 }
 
-JCore::DateTime MysqlQuery::GetTime(const unsigned int &row, const JCore::String &field)
+JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const JCore::String &fieldName)
 {
-	if (GetResultRowCount() < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The query didn't return any rows!");
-		return NULL;
+	if (GetResultRowCount() < 1) {
+		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
+		return 0;
 	}
-	else if (GetResultRowCount() < row)
-	{
-		Console::WriteLine(ConsoleColor::RED, "There are only %d rows available!", GetResultRowCount());
-		return NULL;
-	}
-	else if (row < 1)
-	{
-		Console::WriteLine(ConsoleColor::RED, "The selected row has to be > 1");
-		return NULL;
+	if (GetResultRowCount() <= rowIdx) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
+		return 0;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[row - 1];
+	TResultRow rSelectedRow = m_ResultMap[rowIdx];
 
-	const int iFieldID = m_FieldStringToIntMap[field];
+	const int iFieldID = m_FieldStringToIntMap[fieldName];
 	JCore::String val = rSelectedRow[iFieldID];
 	int precision = atoi(val.GetRange(20, 25).Source());
 	int mili = precision / 1000;
@@ -301,7 +239,7 @@ bool MysqlQuery::ExecuteQuery()
 	{
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
-			Console::WriteLine(ConsoleColor::RED, "MySQL Error: %s", m_sqlConn->GetLastError().Source());
+			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
 		
 		return false;
 	}
@@ -312,7 +250,7 @@ bool MysqlQuery::ExecuteQuery()
 	{
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
-			Console::WriteLine(ConsoleColor::RED, "MySQL Error: %s", m_sqlConn->GetLastError().Source());
+			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
 		return false;
 	}
 
@@ -321,7 +259,8 @@ bool MysqlQuery::ExecuteQuery()
 	MYSQL_ROW row;
 	MYSQL_FIELD *field;
 
-	// Get field names and store it in the map
+	// 필드 이름에서 필드 인덱스를 얻을 수 있도록 하고
+	// 필드 인덱스에서 필드 이름을 얻을 수 있도록 한다.
 	int i = 0;
 	while ((field = mysql_fetch_field(result)))
 	{
@@ -330,7 +269,7 @@ bool MysqlQuery::ExecuteQuery()
 		i++;
 	}
 
-	// Get Rows
+	// 쿼리 실행 결과로 출력된 행들을 가져온다.
 	i = 0;
 	while ((row = mysql_fetch_row(result)))
 	{
@@ -353,7 +292,7 @@ bool MysqlQuery::ExecuteUpdate()
 	{
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
-			Console::WriteLine(ConsoleColor::RED, "MySQL Error: %s", m_sqlConn->GetLastError().Source());
+			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
 		return false;
 	}
 
@@ -366,7 +305,7 @@ int MysqlQuery::ExecuteInsert()
 	{
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
-			Console::WriteLine(ConsoleColor::RED, "MySQL Error: %s", m_sqlConn->GetLastError().Source());
+			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
 		return 0;
 	}
 

@@ -23,7 +23,7 @@ public:
 };
 
 // 색상 표 : https://en.wikipedia.org/wiki/Lists_of_colors 링크 들어가서 A-F 에있는거 뽑음
-// 파싱 소스코드는 맨아래에 붙여놓음
+// 작성한 파싱 소스코드는 맨아래에 붙여놓음 C# 6.0
 struct ColorList
 {
 	static cocos2d::Color3B AbsoluteZero_v ;       

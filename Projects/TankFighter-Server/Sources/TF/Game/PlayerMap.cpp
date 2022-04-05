@@ -25,6 +25,18 @@ bool PlayerMap::IsPlayerExist(int accountUID) {
 	return false;
 }
 
+
+Player* PlayerMap::FindIf(Func<bool, Player*> predicate) {
+	CriticalSectionLockGuard guard(m_Mutex);
+
+	const auto find = m_PlayerMap.Values().Extension().FindIf(predicate);
+	if (find != nullptr) {
+		return *find;
+	}
+
+	return nullptr;
+}
+
 int PlayerMap::Count() {
 	CriticalSectionLockGuard guard(m_Mutex);
 	return m_PlayerMap.Size();

@@ -3,8 +3,6 @@
 	statement 빌더
 
 	상당히 까다로운 Forwarding 로직이므로 수정시 주의해야한다.
-
-	<설명>
 */
 
 #pragma once
@@ -25,8 +23,6 @@
 	#include <cassert>
 	#define DebugAssert(exp, msg)		assert((exp) && msg)
 #endif
-
-
 
 
 class MysqlStatementBuilder
@@ -135,16 +131,16 @@ private:
 	// Setter 펑터는 기본 타입으로바꿔줘야함
 	template <typename T>
 	constexpr static void Set(TFieldMap& refArgMap, int idx, T&& arg) {
-		using NaturalT = JCore::NaturalType_t<T>;
+		using TNatural = JCore::NaturalType_t<T>;
 
-		Setter<NaturalT>()(refArgMap, idx, JCore::Forward<T>(arg));
+		Setter<TNatural>()(refArgMap, idx, JCore::Forward<T>(arg));
 	}
 
 	template <typename T, typename... Args>
 	constexpr static void Set(TFieldMap& refArgMap, int idx, T&& arg, Args&&... args) {
-		using NaturalT		= JCore::NaturalType_t<T>;
+		using TNatural = JCore::NaturalType_t<T>;
 
-		Setter<NaturalT>()(refArgMap, idx, JCore::Forward<T>(arg));
+		Setter<TNatural>()(refArgMap, idx, JCore::Forward<T>(arg));
 		Set(refArgMap, idx + 1, JCore::Forward<Args>(args)...);
 	}
 

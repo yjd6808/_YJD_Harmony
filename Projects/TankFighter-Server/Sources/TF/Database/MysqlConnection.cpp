@@ -41,7 +41,7 @@ bool MysqlConnection::Connect(const JCore::String &sHostname, const uint16_t &wP
 	if (MySQLConnRet == NULL)
 	{
 		m_bIsConnected = false;
-		Console::WriteLine(ConsoleColor::LIGHTRED, "[Error] Connection failed: %s", mysql_error(m_MySQLConn));
+		Console::WriteLine(ConsoleColor::LIGHTRED, "MySQL 데이터베이스 연결 실패 : %s", mysql_error(m_MySQLConn));
 	}
 	else {
 		m_bIsConnected = true;
@@ -67,18 +67,18 @@ bool MysqlConnection::SelectDB(const JCore::String &sSchemaName)
 {
 	if (!m_bIsConnected)
 	{
-		Console::WriteLine(ConsoleColor::LIGHTRED, "[Error] Not connected to MySQL DB!");
+		Console::WriteLine(ConsoleColor::LIGHTRED, "SelectDB() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
 		return false;
 	}
 
 	if (mysql_select_db(m_MySQLConn, sSchemaName.Source()) != 0)
 	{
-		Console::WriteLine(ConsoleColor::LIGHTRED, "[Error] Failed to select DB! Error: %s", mysql_error(m_MySQLConn));
+		Console::WriteLine(ConsoleColor::LIGHTRED, "SelectDB() 실패 : mysql_select_db() 호출 실패 : %s", mysql_error(m_MySQLConn));
 		return false;
 	}
 	else {
 		m_sSchemaName = sSchemaName.Source();
-		Console::WriteLine(ConsoleColor::GREEN, "[Info] Selected database \"%s\"", sSchemaName.Source());
+		Console::WriteLine(ConsoleColor::GREEN, "SelectDB() 성공 : \"%s\"", sSchemaName.Source());
 		return true;
 	}
 }
@@ -87,8 +87,8 @@ const JCore::String MysqlConnection::GetLastError() const
 {
 	if (!m_bIsConnected)
 	{
-		Console::WriteLine(ConsoleColor::LIGHTRED, "[Error] Not connected to MySQL DB!");
-		return "Not connected";
+		Console::WriteLine(ConsoleColor::LIGHTRED, "GetLastError() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
+		return "연결 안되있음";
 	}
 
 	return (char*)mysql_error(m_MySQLConn);

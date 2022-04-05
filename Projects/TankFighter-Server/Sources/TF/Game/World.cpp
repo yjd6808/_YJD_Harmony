@@ -23,7 +23,7 @@ bool World::Initialize() {
 	
 	auto spChannelInfos = MysqlDatabase::GetInstance()->Query("select * from t_channel");
 
-	for (int i = 1; i <= spChannelInfos->GetResultRowCount(); i++) {
+	for (int i = 0; i < spChannelInfos->GetResultRowCount(); i++) {
 		int iChannedUID = spChannelInfos->GetInt(i, 0);
 		String szChannelName = spChannelInfos->GetString(i, 1);
 		int iMaxPlayerCount = spChannelInfos->GetInt(i, 2);
@@ -77,6 +77,10 @@ bool World::RemovePlayer(Player* player) {
 	}
 
 	return m_PlayerMap.RemovePlayer(player->GetAccountUID());
+}
+
+Player* World::FindIfPlayer(Func<bool, Player*> predicate) {
+	return m_PlayerMap.FindIf(predicate);
 }
 
 Channel* World::GetChannel(int channelUID) {

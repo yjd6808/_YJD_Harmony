@@ -27,14 +27,15 @@ enum class PlayerState
 	Disconnected	= -1,
 	LoginStage		= 0,
 	ChannelSelect	= 1,
-	Lobby			= 2,
-	Room			= 3
+	CharacterSelect = 2,
+	Lobby			= 3,
+	RoomReady		= 4,
+	RoomPlaying		= 5
 };
 
 enum class RoomState
 {
 	ReadyWait,		// 모든 플레이어가 준비하기를 기다리는 단계
-	StartWait,		// 게임 진입 전
 	Playing			// 게임 진입 후
 };
 

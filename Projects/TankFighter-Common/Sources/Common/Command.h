@@ -31,7 +31,28 @@
 #define JOIN_LOBBY_SYN					116		// 클라 -> 서버 / (로비 진입시) 각종 로비 정보를 요청한다.
 #define UPDATE_CHARACTER_INFO_ACK		117		// 서버 -> 클라 / 업데이트된 캐릭터 정보를 전송한다.
 #define UPDATE_ROOMLIST_ACK				118		// 서버 -> 클라 / 업데트된 방 정보들을 전송한다.
-#define UPDATE_FRIENDSHOP_INFO_ACK		119		// 서버 -> 클라 / 친구 관계 정보를 전송한다.
+#define UPDATE_FRIENDLIST_ACK			119		// 서버 -> 클라 / 친구 관계 정보를 전송한다.
+
+#define CREATE_ROOM_SYN					120		// 클라 -> 서버 / 방 생성 버튼 클릭시
+#define CREATE_ROOM_ACK					124		// 서버 -> 클라
+
+#define JOIN_ROOM_SYN					121		// 클라 -> 서버 / 방 참가 / 방 목록(리스트뷰)의 방 버튼 클릭시
+#define JOIN_ROOM_ACK					125		// 서버 -> 클라
+
+#define UPDATE_ROOMINFO_ACK				126		// 서버 -> 클라 / 다른 유저가 방에 참가하거나, 방에 있던 유저가 나가는 경우
+
+#define ADD_FRIEND_SYN					122		// 클라 -> 서버 / 친구 추가 버튼 클릭시
+#define ADD_FRIEND_ACK					127		// 서버 -> 클라 / 친구 추가 요청에 대한 결과를 보낸다.
+#define ADD_FRIEND_REQUEST_SYN			128		// 서버 -> 클라 / 친구 추가 요청 대상에게 요청정보를 전달한다.
+#define ADD_FRIEND_REQUEST_ACK			128		// 클라 -> 서버 / 친구 요청을 받은 클라이언트가 수락/거부의 결과를 서버로 전송한다.
+#define ADD_FRIEND_REQUESTR_RESULT_SYN  129		// 서버 -> 클라 / 친구 요청자에게 요청 결과를 전송한다.
+
+
+#define DELETE_FRIEND_SYN				123		// 클라 -> 서버 / 친구 삭제 / 친구 목록(리스트뷰)의 친구 버튼 클릭시
+#define DELETE_FRIEND_ACK				130		// 서버 -> 클라 / 삭제된 대상이 접속중인 경우 대상에게도 삭제되었다고 송신하고 삭제한 사람에게도 송신한다. 그리고 친구 목록도 갱신해줌
+
+#define SERVER_MESSAGE_SYN				400		// 서버 -> 클라로 특정 메시지 전송
+
 
 #define HARD_DISCONNECT_SYN				250		// 서버 -> 클라 / 서버가 해당 클라의 연결을 강제로 끊는 경우
 
@@ -101,7 +122,7 @@ struct LoadChannelInfoAck : JNetwork::ICommand
 	CMD_DEFAULT_CONSTRUCTOR(LoadChannelInfoAck, LOAD_CHANNEL_INFO_ACK)
 
 	int Count = 0;
-	ChannelInfo Info[10];
+	ChannelInfo Info[COMMAND_ARRAY_LEN];
 };
 
 
@@ -134,7 +155,7 @@ struct LoadCharacterInfoAck : JNetwork::ICommand
 	CMD_DEFAULT_CONSTRUCTOR(LoadCharacterInfoAck, LOAD_CHARACTER_INFO_ACK)
 
 	int Count;
-	CharacterInfo Info[10];
+	CharacterInfo Info[COMMAND_ARRAY_LEN];
 };
 
 struct CreateCharacterSyn : JNetwork::ICommand
@@ -188,6 +209,156 @@ struct SelectCharacterAck : JNetwork::ICommand
 	bool Result{};
 	char Reason[REASON_LEN]{};
 };
+
+
+
+struct JoinLobbySyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(JoinLobbySyn, JOIN_LOBBY_SYN)
+
+	int AccountUID = INVALID_UID;
+	int ChannelUID = INVALID_UID;
+	int CharacterUID = INVALID_UID;
+};
+
+struct UpdateCharacterInfoAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(UpdateCharacterInfoAck, UPDATE_CHARACTER_INFO_ACK)
+
+	bool Result{};
+	char Reason[REASON_LEN];
+	CharacterInfo Info{};
+};
+
+struct UpdateRoomListAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(UpdateRoomListAck, UPDATE_ROOMLIST_ACK)
+
+	int Count = 0;
+	bool Result{};
+	char Reason[REASON_LEN];
+	RoomInfo Info[COMMAND_ARRAY_LEN];
+};
+
+struct UpdateFriendListAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(UpdateFriendListAck, UPDATE_FRIENDLIST_ACK)
+
+	int Count = 0;
+	CharacterInfo Info[COMMAND_ARRAY_LEN];
+};
+
+struct CreateRoomSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(CreateRoomSyn, CREATE_ROOM_SYN)
+
+	char RoomName[NAME_LEN];
+};
+
+struct CreateRoomAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(CreateRoomAck, CREATE_ROOM_ACK)
+
+	bool Result{};
+	int RoomUID = INVALID_UID;
+	char Reason[REASON_LEN];
+};
+
+
+
+struct JoinRoomSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(JoinRoomSyn, JOIN_ROOM_SYN)
+
+	int RoomUID = INVALID_UID;
+};
+
+
+struct JoinRoomAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(JoinRoomAck, JOIN_ROOM_ACK)
+
+	int RoomUID = INVALID_UID;
+	bool Result{};
+	char Reason[REASON_LEN];
+};
+
+
+struct UpdateRoomInfoAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(UpdateRoomInfoAck, JOIN_ROOM_ACK)
+
+	int Count = 0;
+	int HostCharacterUID = INVALID_UID;		// 방장
+	RoomCharacterInfo Info[COMMAND_ARRAY_LEN];
+};
+
+
+struct AddFriendSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(AddFriendSyn, ADD_FRIEND_SYN)
+
+	char FriendName[NAME_LEN];
+};
+
+struct AddFriendAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(AddFriendAck, ADD_FRIEND_ACK)
+
+	bool Result;
+	char Reason[REASON_LEN];
+};
+
+struct AddFriendRequestSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestSyn, ADD_FRIEND_REQUEST_SYN)
+
+	int RequestCharacterUID;	// 친구 요청을 보낸 사람의 UID
+};
+
+struct AddFriendRequestAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestAck, ADD_FRIEND_REQUEST_ACK)
+
+	bool Accept = false;				// 친구 요청 수락/거부 여부
+	int RequestCharacterUID;
+	int AcceptedCharacterUID;
+};
+
+struct AddFriendRequestResultSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestResultSyn, ADD_FRIEND_REQUESTR_RESULT_SYN)
+
+	bool Result = false;				// 친구 요청 수락/거부 여부
+	char Reason[REASON_LEN];
+};
+
+
+struct DeleteFriendSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(DeleteFriendSyn, DELETE_FRIEND_SYN)
+
+	int DeleteCharacterUID = INVALID_UID;
+};
+
+
+struct DeleteFriendAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(DeleteFriendAck, DELETE_FRIEND_ACK)
+
+	
+	bool Result = false;				// 친구 삭제 성공/실패 여부
+	char Reason[REASON_LEN];
+};
+
+struct ServerMessageSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(ServerMessageSyn, SERVER_MESSAGE_SYN)
+
+
+	char Message[MESSAGE_LEN];
+};
+
 
 struct HardDisconnectSyn : JNetwork::ICommand
 {

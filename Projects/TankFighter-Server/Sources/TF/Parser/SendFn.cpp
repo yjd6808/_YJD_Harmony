@@ -20,25 +20,158 @@ void SendFn::SendHardDisconnectSyn(Player* player) {
 	
 }
 
+void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
+	const auto pPacket = new Packet<UpdateFriendListAck>;
+	UpdateFriendListAck* pUpdateFriendListAck = pPacket->Get<0>();
+
+	// 쿼리가 좀 길어서 용량 180으로 설정
+	std::string query(180, '\0');
+	query = query + "select * from t_character where c_uid = ( " +
+						"select c_ack_character_uid from t_friendship where c_req_character_uid = ? " +
+						"union all " +
+						"select c_req_character_uid from t_friendship where c_ack_character_uid = ? " +
+					")";
+	
+	const auto spQueryResult = _Database->Query(query, characterUID, characterUID);
+	pUpdateFriendListAck->Count = spQueryResult->GetResultRowCount();
+
+	for (int i = 0; i < pUpdateFriendListAck->Count; i++) {
+		CharacterInfo* info = &pUpdateFriendListAck->Info[i];
+		info->CharacterUID = spQueryResult->GetInt(i, 0);
+		strcpy_s(info->Name, NAME_LEN, spQueryResult->GetString(i, 3).Source());
+		info->Win = spQueryResult->GetInt(i, 4);
+		info->Lose = spQueryResult->GetInt(i, 5);
+		info->Kill = spQueryResult->GetInt(i, 6);
+		info->Death = spQueryResult->GetInt(i, 7);
+		info->Money = spQueryResult->GetInt(i, 8);
+
+		int iFriendUID = info->CharacterUID;
+		Player* pFriendPlayer = _World->FindIfPlayer([&iFriendUID](Player* p)->bool { return p->GetCharacterUID() == iFriendUID; });
+		info->PlayerState = pFriendPlayer ? static_cast<int>(pFriendPlayer->GetPlayerState()) : static_cast<int>(PlayerState::Disconnected);
+	}
+
+	player->Session()->SendAsync(pPacket);
+}
+
+void SendFn::SendServerMessageSyn(Player* player, const String& message) {
+	const auto pPacket = new Packet<ServerMessageSyn>;
+	ServerMessageSyn* pServerMessageSyn = pPacket->Get<0>();
+	strcpy_s(pServerMessageSyn->Message, MESSAGE_LEN, message.Source());
+	player->Session()->SendAsync(pPacket);
+}
+
+
 // LoadCharacterInfoAck 패킷 전달
 // 캐릭터 정보들을 클라한테 전달함
 void SendFn::SendLoadCharacterInfoAck(Player* player) {
 	const auto pPacket = new Packet<LoadCharacterInfoAck>;
 	LoadCharacterInfoAck* pLoadCharacterInfoAck = pPacket->Get<0>();
 
-	const auto spQueryResult = _Database->Query("select * from t_character where c_account_id = ? and c_channed_uid = ?", player->GetAccountUID(), player->GetChannelUID());
+	const auto spQueryResult = _Database->Query("select * from t_character where c_account_uid = ? and c_channel_uid = ?", player->GetAccountUID(), player->GetChannelUID());
 	const int iCharacterCount = spQueryResult->GetResultRowCount();
 	pLoadCharacterInfoAck->Count = iCharacterCount;
-	for (int i = 1; i <= iCharacterCount; i++) {
+	for (int i = 0; i < iCharacterCount; i++) {
 		CharacterInfo* pCharacterInfo = &pLoadCharacterInfoAck->Info[i];
 
-		pCharacterInfo->UID = spQueryResult->GetInt(i, 0);
+		pCharacterInfo->CharacterUID = spQueryResult->GetInt(i, 0);
 		strcpy_s(pCharacterInfo->Name, NAME_LEN, spQueryResult->GetString(i, 3).Source());
 		pCharacterInfo->Win = spQueryResult->GetInt(i, 4);
 		pCharacterInfo->Lose = spQueryResult->GetInt(i, 5);
 		pCharacterInfo->Kill = spQueryResult->GetInt(i, 6);
 		pCharacterInfo->Death = spQueryResult->GetInt(i, 7);
+		pCharacterInfo->Money = spQueryResult->GetInt(i, 8);
 	}
 
 	player->Session()->SendAsync(pPacket);
+}
+
+
+
+void SendFn::SendUpdateCharacterInfoAck(Player* player) {
+	const auto pPacket = new Packet<UpdateCharacterInfoAck>;
+	UpdateCharacterInfoAck* pUpdateCharacterInfoAck = pPacket->Get<0>();
+
+	const auto spQueryResult = _Database->Query("select * from t_character where c_account_uid = ? and c_channel_uid = ? and c_uid = ?", 
+		player->GetAccountUID(), player->GetChannelUID(), player->GetChannelUID());
+
+	if(spQueryResult->GetResultRowCount()) {
+		pUpdateCharacterInfoAck->Result = true;
+		CharacterInfo* pMyInfo = &pUpdateCharacterInfoAck->Info;
+		pMyInfo->CharacterUID = spQueryResult->GetInt(0, 0);
+		strcpy_s(pMyInfo->Name, NAME_LEN, spQueryResult->GetString(0, 3).Source());
+		pMyInfo->PlayerState = static_cast<int>(player->GetPlayerState());
+		pMyInfo->Win = spQueryResult->GetInt(0, 4);
+		pMyInfo->Lose = spQueryResult->GetInt(0, 5);
+		pMyInfo->Kill = spQueryResult->GetInt(0, 6);
+		pMyInfo->Death = spQueryResult->GetInt(0, 7);
+		pMyInfo->Money = spQueryResult->GetInt(0, 8);
+		player->UpdateCharacterInfo(*pMyInfo);
+	} else {
+		pUpdateCharacterInfoAck->Result = false;
+		strcpy_s(pUpdateCharacterInfoAck->Reason, REASON_LEN, u8"캐릭터 정보가 없습니다. account_uid, channel_uid, character_uid mismatch");
+	}
+
+	player->Session()->SendAsync(pPacket);
+}
+
+void SendFn::SendUpdateRoomListAck(Player* player, int channelUID) {
+	const auto pPacket = new Packet<UpdateRoomListAck>;
+	UpdateRoomListAck* pUpdateRoomListAck = pPacket->Get<0>();
+	Channel* pChannel = _World->GetChannel(channelUID);
+	int iIndexer = 0;
+
+	if (pChannel == nullptr) {
+		pUpdateRoomListAck->Result = false;
+		strcpy_s(pUpdateRoomListAck->Reason, REASON_LEN, u8"채널 정보가 이상합니다.");
+		goto SEND;
+	}
+
+	pChannel->RoomForEach([&iIndexer, &pUpdateRoomListAck](Room* room) {
+		RoomInfo* pRoomInfo = &pUpdateRoomListAck->Info[iIndexer];
+		pRoomInfo->PlayerCount = room->GetPlayerCount();
+		pRoomInfo->MaxPlayerCount = room->GetMaxPlayerCount();
+		pRoomInfo->RoomUID = room->GetRoomUID();
+		strcpy_s(pRoomInfo->Name, NAME_LEN, room->GetRoomName().Source());
+		iIndexer++;
+	});
+	pUpdateRoomListAck->Count = iIndexer;
+
+
+SEND:
+	player->Session()->SendAsync(pPacket);
+}
+
+
+
+void SendFn::BroadcastUpdateRoomListAck(Channel* channel) {
+	const auto pPacket = new Packet<UpdateRoomListAck>;
+	UpdateRoomListAck* pUpdateRoomListAck = pPacket->Get<0>();
+	int iIndexer = 0;
+
+	channel->RoomForEach([&iIndexer, &pUpdateRoomListAck](Room* room) {
+		RoomInfo* pRoomInfo = &pUpdateRoomListAck->Info[iIndexer];
+		pRoomInfo->PlayerCount = room->GetPlayerCount();
+		pRoomInfo->MaxPlayerCount = room->GetMaxPlayerCount();
+		pRoomInfo->RoomUID = room->GetRoomUID();
+		strcpy_s(pRoomInfo->Name, NAME_LEN, room->GetRoomName().Source());
+		iIndexer++;
+	});
+	pUpdateRoomListAck->Count = iIndexer;
+
+	channel->BroadcastLobbyPacket(pPacket);
+}
+
+void SendFn::BroadcastUpdateRoomUserAck(Room* room) {
+	const auto pPacket = new Packet<UpdateRoomInfoAck>;
+	UpdateRoomInfoAck* pUpdateRoomInfoAck = pPacket->Get<0>();
+	int iIndexer = 0;
+	pUpdateRoomInfoAck->HostCharacterUID = room->GetHost()->GetCharacterUID();
+
+	room->ForEach([&iIndexer, pUpdateRoomInfoAck](Player* player) {
+		player->LoadRoomCharacterInfo(pUpdateRoomInfoAck->Info[iIndexer]);
+		iIndexer++;
+	});
+
+	pUpdateRoomInfoAck->Count = iIndexer;
+	room->BroadcastPacket(pPacket);
 }

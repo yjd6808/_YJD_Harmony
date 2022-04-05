@@ -14,7 +14,6 @@
 #define BUTTON_POPUP_YES		3
 #define BUTTON_POPUP_NO 		4
 
-
 PopUp* PopUp::createInParent(const char * text, Node* parent, bool bgClickable, std::function<void()> callback)
 {
 	PopUp *ret = new (std::nothrow) PopUp();
@@ -97,6 +96,7 @@ bool PopUp::init(bool bgClickable)
 			auto func = this->getConfirm();
 			if (func != nullptr) 
 				this->getConfirm()();
+
 			this->getParent()->removeChild(this);
 		});
 		confBtn->setAnchorPoint(CENTER);

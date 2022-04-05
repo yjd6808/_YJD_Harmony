@@ -24,4 +24,8 @@ void GameClient::InitializeParser() {
 	// 쓸일이 없다.
 }
 
+void GameClient::UpdateCharacterInfo(CharacterInfo& info) {
+	Memory::CopyUnsafe(&m_CharacterInfo, &info, sizeof(info));
+}
+
 

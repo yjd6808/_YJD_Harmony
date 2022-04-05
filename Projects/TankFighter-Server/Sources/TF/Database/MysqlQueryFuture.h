@@ -29,7 +29,7 @@ private:
 	void ExecuteQuery();
 	void SetReady() { m_bReady = true; }
 	void Signal() const { SetEvent(m_WaitHandle); }
-	void CallbackExecute() { m_Callback(&m_Result); }
+	void CallbackExecute();
 private:
 	HANDLE m_WaitHandle;
 	std::atomic<bool> m_bReady;

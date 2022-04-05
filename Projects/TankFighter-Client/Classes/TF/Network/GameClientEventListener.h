@@ -11,7 +11,10 @@ protected:
 	void OnDisconnected() override;
 	void OnSent(JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::ICommand* cmd) override;
-	void SyncrhonizedOnReceived();
+
+	void SynchronizedOnConnected();
+	void SynchronizedOnReceived();
+	void SynchronizedOnDisconnected();
 private:
 	// JCore::CriticalSectionMutex m_CommandQueueMtx;
 	JCore::ArrayQueue<char*> m_CommandQueue;
