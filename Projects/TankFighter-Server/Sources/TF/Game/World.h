@@ -1,7 +1,7 @@
 #pragma once
 
 #include <TF/Game/PlayerMap.h>
-
+#include <JCore/Container/LinkedList.h>
 
 class Channel;
 

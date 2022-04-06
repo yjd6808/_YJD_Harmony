@@ -39,7 +39,11 @@ TcpSession* TcpSessionContainer::GetSession(SOCKET socket) {
 void TcpSessionContainer::Clear() {
 	CriticalSectionLockGuard guard(m_ContainerLock);
 
-	m_Container.Values().Extension().ForEach([](TcpSession* session) { session->Disconnect();  });
+	// 일단 삭제를 여기서 시켜주자.
+	m_Container.Values().Extension().ForEach([](TcpSession* session) {
+		session->Disconnect();
+		delete session;
+	});
 	m_Container.Clear();
 }
 

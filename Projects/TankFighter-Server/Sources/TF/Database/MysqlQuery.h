@@ -64,7 +64,7 @@ public:
 	// 스테이트먼트 앞 6글자를 파싱해서 select, delete 등에 맞게 알아서 실행
 	bool ExecuteAuto();
 
-	const JCore::String GetFieldName(const unsigned int &field);
+	JCore::String GetFieldName(const unsigned int& field);
 	JCore::String GetString(const unsigned int& rowIdx, const unsigned int& fieldIdx);
 	JCore::String GetString(const unsigned int& rowIdx, const JCore::String& fieldName);
 	int GetInt(const unsigned int &rowIdx, const unsigned int &fieldIdx);

@@ -2,16 +2,13 @@
 #include <TF/Util/Console.h>
 
 
-MysqlQuery::MysqlQuery(MysqlConnection *mConn, const JCore::String& preparedStatement)
-{
+MysqlQuery::MysqlQuery(MysqlConnection *mConn, const JCore::String& preparedStatement) {
 	m_sqlConn = mConn;
 	m_PreparedStatement = preparedStatement;
 	m_bSuccess = false;
 }
 
-MysqlQuery::~MysqlQuery()
-{
-}
+MysqlQuery::~MysqlQuery() {}
 
 StatementType MysqlQuery::ParseStatement(const JCore::String& statement) {
 	StatementType eStatement = StatementType::None;
@@ -32,8 +29,7 @@ StatementType MysqlQuery::ParseStatement(const JCore::String& statement) {
 }
 
 
-const JCore::String MysqlQuery::GetFieldName(const unsigned int &field)
-{
+JCore::String MysqlQuery::GetFieldName(const unsigned int& field) {
 	if (m_FieldMap.size() < field) {
 		Console::WriteLine(ConsoleColor::RED, "%d개의 필드밖에 없습니다.", m_FieldMap.size());
 		return NULL;
@@ -113,8 +109,7 @@ int MysqlQuery::GetInt(const unsigned int &rowIdx, const JCore::String &fieldNam
 	return iValue;
 }
 
-double MysqlQuery::GetDouble(const unsigned int &rowIdx, const unsigned int &fieldIdx)
-{
+double MysqlQuery::GetDouble(const unsigned int &rowIdx, const unsigned int &fieldIdx) {
 	if (GetResultRowCount() < 1) {
 		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return 0;
@@ -132,8 +127,7 @@ double MysqlQuery::GetDouble(const unsigned int &rowIdx, const unsigned int &fie
 	return dValue;
 }
 
-double MysqlQuery::GetDouble(const unsigned int &rowIdx, const JCore::String &fieldName)
-{
+double MysqlQuery::GetDouble(const unsigned int &rowIdx, const JCore::String &fieldName) {
 	if (GetResultRowCount() < 1) {
 		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return 0;
@@ -151,8 +145,7 @@ double MysqlQuery::GetDouble(const unsigned int &rowIdx, const JCore::String &fi
 	return dValue;
 }
 
-JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const unsigned int &fieldIdx)
-{
+JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const unsigned int &fieldIdx) {
 	if (GetResultRowCount() < 1) {
 		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return 0;
@@ -182,8 +175,7 @@ JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const unsigned i
 	).ToDateTime();
 }
 
-JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const JCore::String &fieldName)
-{
+JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const JCore::String &fieldName) {
 	if (GetResultRowCount() < 1) {
 		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return 0;
@@ -215,14 +207,12 @@ JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const JCore::Str
 }
 
 
-unsigned int MysqlQuery::GetResultRowCount()
-{
+unsigned int MysqlQuery::GetResultRowCount() {
 	const int iRowCount = m_ResultMap.size();
 	return iRowCount;
 }
 
-unsigned int MysqlQuery::GetFieldCount()
-{
+unsigned int MysqlQuery::GetFieldCount() {
 	const int iFieldCount = m_FieldMap.size();
 	return iFieldCount;
 }
@@ -233,10 +223,8 @@ MysqlQueryResult MysqlQuery::Result() {
 
 
 
-bool MysqlQuery::ExecuteQuery()
-{
-	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source()))
-	{
+bool MysqlQuery::ExecuteQuery() {
+	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
 			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
@@ -246,8 +234,7 @@ bool MysqlQuery::ExecuteQuery()
 
 	MYSQL_RES *result = mysql_store_result(m_sqlConn->getConn());
 
-	if (result == NULL)
-	{
+	if (result == NULL) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
 			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
@@ -262,8 +249,7 @@ bool MysqlQuery::ExecuteQuery()
 	// 필드 이름에서 필드 인덱스를 얻을 수 있도록 하고
 	// 필드 인덱스에서 필드 이름을 얻을 수 있도록 한다.
 	int i = 0;
-	while ((field = mysql_fetch_field(result)))
-	{
+	while ((field = mysql_fetch_field(result))) {
 		m_FieldMap.insert(std::pair<int, JCore::String>(i, field->name));
 		m_FieldStringToIntMap.insert(std::pair<JCore::String, int>(field->name, i));
 		i++;
@@ -271,8 +257,7 @@ bool MysqlQuery::ExecuteQuery()
 
 	// 쿼리 실행 결과로 출력된 행들을 가져온다.
 	i = 0;
-	while ((row = mysql_fetch_row(result)))
-	{
+	while ((row = mysql_fetch_row(result))) {
 		TResultRow resRow;
 		for (int n = 0; n < iNumFields; n++)
 			resRow.insert(std::pair<int, JCore::String>(n, row[n] ? row[n] : "NULL"));
@@ -286,10 +271,8 @@ bool MysqlQuery::ExecuteQuery()
 	return m_bSuccess = true;
 }
 
-bool MysqlQuery::ExecuteUpdate()
-{
-	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source()))
-	{
+bool MysqlQuery::ExecuteUpdate() {
+	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
 			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
@@ -299,10 +282,8 @@ bool MysqlQuery::ExecuteUpdate()
 	return m_bSuccess = true;
 }
 
-int MysqlQuery::ExecuteInsert()
-{
-	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source()))
-	{
+int MysqlQuery::ExecuteInsert() {
+	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
 			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());

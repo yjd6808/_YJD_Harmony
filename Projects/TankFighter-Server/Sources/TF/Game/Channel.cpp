@@ -97,8 +97,11 @@ Room* Channel::CreateRoom(Player* creator, const String& roomName, int maxPlayer
 	if (!m_RoomMap.Insert(pNewRoom->GetRoomUID(), pNewRoom))
 		return nullptr;
 
-	creator->SetRoomHost(true);
-	creator->SetPlayerState(PlayerState::RoomReady);
+	creator->Lock();
+	creator->m_iRoomUID = pNewRoom->GetRoomUID();
+	creator->m_bRoomHost = true;
+	creator->m_ePlayerState = PlayerState::RoomReady;
+	creator->Unlock();
 	return pNewRoom;
 }
 

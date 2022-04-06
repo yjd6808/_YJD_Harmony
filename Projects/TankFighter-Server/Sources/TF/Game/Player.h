@@ -22,6 +22,7 @@
 
 class Player
 {
+	Player() {}
 public:
 	Player(JNetwork::TcpSession* session) : m_pSession(session) {}
 
@@ -29,6 +30,10 @@ public:
 	void Lock()							  { m_PlayerMtx.Lock(); }
 	void Unlock()						  { m_PlayerMtx.Unlock(); }
 
+	bool SendAsync(JNetwork::ISendPacket* packet);
+	bool Disconnect();
+
+	void Initialize();
 	void SetAccountUID(int accountUID);
 	void UpdateLoggedInTime();
 	JCore::DateTime GetLoggedInTime();
@@ -47,7 +52,6 @@ public:
 	void SetReady(bool ready);
 	void LoadCharacterInfo(Out_ CharacterInfo& info);			// 정보를 얻을 때 사용
 	void LoadRoomCharacterInfo(Out_ RoomCharacterInfo& info);	// 정보를 얻을 때 사용
-
 	bool CheckNameEqual(const JCore::String& name);
 private:
 	int m_iAccountUID = INVALID_UID;
@@ -65,6 +69,7 @@ private:
 
 	friend class Channel;
 	friend class Room;
+	friend class PlayerPool;
 };
 
 

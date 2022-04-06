@@ -6,23 +6,19 @@
 
 #pragma once
 
-#include <memory>
-#include <list>
-#include <mutex>
 
+#include <JCore/Container/LinkedList.h>
+#include <JCore/LockGuard.h>
 #include <JCore/String.h>
 
 class MysqlConnection;
 
-#define TFDBConnPool MysqlConnectionPool::GetInstance()
 
 class MysqlConnectionPool
 {
 public:
 	MysqlConnection* GetConnection();
 	void ReleaseConnection(MysqlConnection* conn);
-
-	static MysqlConnectionPool& GetInstance();
 	~MysqlConnectionPool();
 
 	bool Init(const uint32_t initConn);
@@ -42,8 +38,10 @@ private:
 	uint32_t m_MaxConnection;
 
 	int m_iCurConnSize;
-	static std::unique_ptr<MysqlConnectionPool> ms_spInstance;
-	std::mutex m_Mtx;
-	std::list<MysqlConnection*> m_ConnectionList;
+	inline static MysqlConnectionPool* ms_pInstance = nullptr;
+	JCore::CriticalSectionMutex m_Mtx;
+	JCore::LinkedList<MysqlConnection*> m_ConnectionList;
+
+	friend class MysqlDatabase;
 };
 

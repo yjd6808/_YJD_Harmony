@@ -51,6 +51,8 @@
 #define DELETE_FRIEND_SYN				123		// 클라 -> 서버 / 친구 삭제 / 친구 목록(리스트뷰)의 친구 버튼 클릭시
 #define DELETE_FRIEND_ACK				130		// 서버 -> 클라 / 삭제된 대상이 접속중인 경우 대상에게도 삭제되었다고 송신하고 삭제한 사람에게도 송신한다. 그리고 친구 목록도 갱신해줌
 
+#define LOAD_ROOM_INFO_SYN				131		// 클라 -> 서버 / (방 진입 시) 각종 방 정보를 요청한다.
+
 #define SERVER_MESSAGE_SYN				400		// 서버 -> 클라로 특정 메시지 전송
 
 
@@ -355,9 +357,23 @@ struct ServerMessageSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(ServerMessageSyn, SERVER_MESSAGE_SYN)
 
-
 	char Message[MESSAGE_LEN];
 };
+
+
+struct LoadRoomInfoSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(LoadRoomInfoSyn, LOAD_ROOM_INFO_SYN)
+
+	int AccountUID = INVALID_UID;
+	int ChannelUID = INVALID_UID;
+	int CharacterUID = INVALID_UID;
+	int RoomUID = INVALID_UID;
+};
+
+
+
+
 
 
 struct HardDisconnectSyn : JNetwork::ICommand

@@ -54,7 +54,7 @@ void CommandFn::CmdLoginSyn(Player* player, ICommand* cmd) {
 	}
 
 SEND:
-	player->Session()->SendAsync(pLoginAckPacket);
+	player->SendAsync(pLoginAckPacket);
 }
 
 
@@ -81,7 +81,7 @@ void CommandFn::CmdRegisterSyn(Player* player, ICommand* cmd) {
 		}
 	} 
 
-	player->Session()->SendAsync(pRegisterAckPacket);
+	player->SendAsync(pRegisterAckPacket);
 }
 
 
@@ -105,7 +105,7 @@ void CommandFn::CmdLoadChannelInfoSyn(Player* player, ICommand* cmd) {
 		pLoadChannelInfoAck->Info[i].PlayerCount = channels[i]->GetPlayerCount();
 	}
 
-	player->Session()->SendAsync(pReplyPacket);
+	player->SendAsync(pReplyPacket);
 }
 
 // SELECT_CHANNEL_SYN 106
@@ -126,7 +126,7 @@ void CommandFn::CmdSelectChannelSyn(Player* player, ICommand* cmd) {
 		strcpy_s(pSelectChannelAck->Reason, REASON_LEN, u8"인원이 꽉 찼습니다.");
 	}
 
-	player->Session()->SendAsync(pReplyPacket);
+	player->SendAsync(pReplyPacket);
 }
 
 
@@ -140,7 +140,7 @@ void CommandFn::CmdLoadCharacterInfoSyn(Player* player, ICommand* cmd) {
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
 		Console::WriteLine(ConsoleColor::LIGHTGRAY, "잘못된 유저입니다.");
-		player->Session()->Disconnect();
+		player->Disconnect();
 		return;
 	}
 
@@ -160,7 +160,7 @@ void CommandFn::CmdSelectCharacterSyn(Player* player, ICommand* cmd) {
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
 		Console::WriteLine(ConsoleColor::LIGHTGRAY, "잘못된 유저입니다.");
-		player->Session()->Disconnect();
+		player->Disconnect();
 		return;
 	}
 
@@ -177,7 +177,7 @@ void CommandFn::CmdSelectCharacterSyn(Player* player, ICommand* cmd) {
 	}
 
 	
-	player->Session()->SendAsync(pReplyPacket);
+	player->SendAsync(pReplyPacket);
 }
 
 
@@ -191,7 +191,7 @@ void CommandFn::CmdCreateCharacterSyn(Player* player, ICommand* cmd) {
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
 		Console::WriteLine(ConsoleColor::LIGHTGRAY, "잘못된 유저입니다.");
-		player->Session()->Disconnect();
+		player->Disconnect();
 		return;
 	}
 
@@ -218,7 +218,7 @@ void CommandFn::CmdCreateCharacterSyn(Player* player, ICommand* cmd) {
 	}
 
 SEND:
-	player->Session()->SendAsync(pReplyPacket);
+	player->SendAsync(pReplyPacket);
 }
 
 
@@ -232,7 +232,7 @@ void CommandFn::CmdDeleteCharacterSyn(Player* player, ICommand* cmd) {
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
 		Console::WriteLine(ConsoleColor::LIGHTGRAY, "잘못된 유저입니다.");
-		player->Session()->Disconnect();
+		player->Disconnect();
 		return;
 	}
 
@@ -256,7 +256,7 @@ void CommandFn::CmdDeleteCharacterSyn(Player* player, ICommand* cmd) {
 
 	
 SEND:
-	player->Session()->SendAsync(pReplyPacket);
+	player->SendAsync(pReplyPacket);
 }
 
 // JOIN_LOBBY_SYN 116
@@ -270,7 +270,7 @@ void CommandFn::CmdJoinLobbySyn(Player* player, ICommand* cmd) {
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
 		Console::WriteLine(ConsoleColor::LIGHTGRAY, "잘못된 유저입니다.");
-		player->Session()->Disconnect();
+		player->Disconnect();
 		return;
 	}
 
@@ -309,7 +309,7 @@ void CommandFn::CmdCreateRoomSyn(Player* player, ICommand* cmd) {
 		pCreateRoomAck->RoomUID = pRoom->GetRoomUID();
 	}
 
-	player->Session()->SendAsync(pReplyPacket);
+	player->SendAsync(pReplyPacket);
 
 	// 채널의 로비에 있는 모든 유저들에게 방리스트 목록 업데이트 패킷을 전송한다.
 	SendFn::BroadcastUpdateRoomListAck(pChannel);
@@ -332,14 +332,14 @@ void CommandFn::CmdJoinRoomSyn(Player* player, ICommand* cmd) {
 	} else {
 		pJoinRoomAck->Result = true;
 		pJoinRoomAck->RoomUID = pCreateRoomSyn->RoomUID;
+
+		// 방에 있는 모든 유저들에게 해당 방에 있는 플레이어 정보들을 전달한다.
+		SendFn::BroadcastUpdateRoomUserAck(pRoom);
+
+		// 채널의 로비에 있는 모든 유저들에게 방리스트 목록 업데이트 패킷을 전송한다.
+		SendFn::BroadcastUpdateRoomListAck(pChannel);
 	}
-	player->Session()->SendAsync(pReplyPacket);
-
-	// 채널의 로비에 있는 모든 유저들에게 방리스트 목록 업데이트 패킷을 전송한다.
-	SendFn::BroadcastUpdateRoomListAck(pChannel);
-
-	// 방에 있는 모든 유저들에게 해당 방에 있는 플레이어 정보들을 전달한다.
-	SendFn::BroadcastUpdateRoomUserAck(pRoom);
+	player->SendAsync(pReplyPacket);
 }
 
 // ADD_FRIEND_SYN 122
@@ -365,11 +365,11 @@ void CommandFn::CmdAddFriendSyn(Player* player, ICommand* cmd) {
 		const auto pRequestPacket = new Packet<AddFriendRequestSyn>;
 		AddFriendRequestSyn* pAddFriendRequestSyn = pRequestPacket->Get<0>();
 		pAddFriendRequestSyn->RequestCharacterUID = player->GetCharacterUID();
-		pFind->Session()->SendAsync(pRequestPacket);
+		pFind->SendAsync(pRequestPacket);
 	}
 
 	// 플레이어에게 요청 보낸 결과를 송신한다.
-	player->Session()->SendAsync(pReplyPacket);
+	player->SendAsync(pReplyPacket);
 }
 
 // DELETE_FRIEND_SYN 123
@@ -409,11 +409,11 @@ void CommandFn::CmdDeleteFriendSyn(Player* player, ICommand* cmd) {
 		strcpy_s(pDeleteFriendAck->Reason, REASON_LEN, u8"요청을 성공적으로 보냈습니다.");
 	}
 
-	player->Session()->SendAsync(pReplyPacket);
+	player->SendAsync(pReplyPacket);
 }
 
 // ADD_FRIEND_REQUEST_ACK 128
-void CommandFn::CmdFriendRequestAck(Player* player, ICommand* cmd) {
+void CommandFn::CmdAddFriendRequestAck(Player* player, ICommand* cmd) {
 	const AddFriendRequestAck* pAddFriendRequestAck = cmd->CastCommand<AddFriendRequestAck*>();
 
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
@@ -435,7 +435,7 @@ void CommandFn::CmdFriendRequestAck(Player* player, ICommand* cmd) {
 			strcpy_s(pAddFriendRequestResultSyn->Reason, REASON_LEN, u8"상대방이 친구 요청을 거절하였습니다.");
 		}
 
-		pRequester->Session()->SendAsync(pRequestPacket);
+		pRequester->SendAsync(pRequestPacket);
 	}
 
 	// 1. 수락한 경우 친구 요청/수락자 모두 친구 목록을 갱신해준다.
@@ -448,6 +448,26 @@ void CommandFn::CmdFriendRequestAck(Player* player, ICommand* cmd) {
 		SendFn::SendUpdateFriendListAck(pAccepter, pAccepter->GetCharacterUID());
 		SendFn::SendUpdateFriendListAck(pRequester, pRequester->GetCharacterUID());
 	}
+}
+
+void CommandFn::CmdLoadRoomInfoSyn(Player* player, ICommand* cmd) {
+	const LoadRoomInfoSyn* pLoadRoomInfoSyn = cmd->CastCommand<LoadRoomInfoSyn*>();
+
+	const int iAccountUID = pLoadRoomInfoSyn->AccountUID;
+	const int iChannelUID = pLoadRoomInfoSyn->ChannelUID;
+	const int iCharacterUID = pLoadRoomInfoSyn->CharacterUID;
+	const int RoomUID = pLoadRoomInfoSyn->RoomUID;
+
+	if (iAccountUID != player->GetAccountUID() ||
+		iChannelUID != player->GetChannelUID() ||
+		iCharacterUID != player->GetCharacterUID() ||
+		RoomUID != player->GetRoomUID()) {
+		Console::WriteLine(ConsoleColor::LIGHTGRAY, "잘못된 유저입니다.");
+		player->Disconnect();
+		return;
+	}
+
+
 }
 
 

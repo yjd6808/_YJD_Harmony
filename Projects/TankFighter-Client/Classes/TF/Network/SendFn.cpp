@@ -113,7 +113,19 @@ bool SendFn::SendAddFriendSyn(const JCore::String& friendName) {
 bool SendFn::SendDeleteFriendSyn(const int friendCharacterUID) {
 	auto* pPacket = new Packet<DeleteFriendSyn>();
 	DeleteFriendSyn* pJoinRoomSyn = pPacket->Get<0>();
-	pJoinRoomSyn->FriendCharacterUID = friendCharacterUID;
+	pJoinRoomSyn->DeleteCharacterUID = friendCharacterUID;
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+// LOAD_ROOM_INFO_SYN 131
+bool SendFn::SendLoadRoomSyn() {
+	auto* pPacket = new Packet<LoadRoomInfoSyn>();
+	LoadRoomInfoSyn* pJoinRoomSyn = pPacket->Get<0>();
+	pJoinRoomSyn->RoomUID = _Client->GetRoomUID();
+	pJoinRoomSyn->AccountUID = _Client->GetAccountUID();
+	pJoinRoomSyn->ChannelUID = _Client->GetChannelUID();
+	pJoinRoomSyn->CharacterUID = _Client->GetCharacterUID();
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }

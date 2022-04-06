@@ -85,6 +85,9 @@
     <ClInclude Include="..\Sources\TF\Parser\QueryFn.h">
       <Filter>Parser</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\TF\Game\PlayerPool.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\TF\Util\Console.cpp">
@@ -141,6 +144,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\TF\Parser\QueryFn.cpp">
       <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Game\PlayerPool.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

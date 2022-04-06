@@ -36,6 +36,11 @@ bool World::Initialize() {
 }
 
 bool World::Finalize() {
+
+	m_ChannelMap.Values().Extension().ForEach([](Channel* channel) {
+		delete channel;
+	});
+
 	return true;
 }
 

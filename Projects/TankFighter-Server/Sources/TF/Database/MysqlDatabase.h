@@ -10,16 +10,25 @@
 #include <TF/Database/MysqlStatementBuilder.h>
 #include <TF/Database/MysqlQuery.h>
 
+#define _MysqlConnPool MysqlDatabase::GetInstance()->GetConnectionPool()
+
 class MysqlQueryFuture;
 class MysqlDatabase
 {
 private:
-	MysqlDatabase() : m_pIocp(new JNetwork::IOCP) {}
+	MysqlDatabase()
+		: m_pIocp(new JNetwork::IOCP)
+		, m_pConnectionPool(nullptr) {
+	}
+	
 public:
+	virtual ~MysqlDatabase();
 	static MysqlDatabase* GetInstance();
-
+	
 	bool Initialize();
 	bool Finalize();
+
+	MysqlConnectionPool* GetConnectionPool() const { return m_pConnectionPool; }
 
 	/*
 	 * 비동기 Query 실행 후 Wait() 함수를 호출해서 결과값을 원할 때 받아볼 수 있다.
@@ -44,6 +53,8 @@ public:
 			future->Release(2);
 			return nullptr;
 		}
+
+		
 		return future;
 	}
 
@@ -54,7 +65,7 @@ public:
 
 	template <typename... Args>
 	JCore::SharedPointer<MysqlQuery> Query(const std::string& statement, Args&&... args) {
-		auto pConn = TFDBConnPool.GetConnection();
+		auto pConn = _MysqlConnPool->GetConnection();
 
 		if (pConn == nullptr) {
 			// 실패
@@ -71,11 +82,12 @@ public:
 		JCore::SharedPointer<MysqlQuery> spQuery = JCore::MakeShared<MysqlQuery>(pConn, preparedStatement);
 		spQuery->ExecuteAuto();
 
-		TFDBConnPool.ReleaseConnection(pConn);
+		_MysqlConnPool->ReleaseConnection(pConn);
 		return spQuery;
 	}
 private:
 	JNetwork::IOCP* m_pIocp;
+	MysqlConnectionPool* m_pConnectionPool;
 	
 	// 쿼리 수행 통계
 	// 실패 등 처리할 것들은 여기다가 추가 하면 된다

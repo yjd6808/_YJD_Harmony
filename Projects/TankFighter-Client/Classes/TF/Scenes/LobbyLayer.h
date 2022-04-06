@@ -28,6 +28,7 @@ public:
 	void CmdUpdateCharacterInfoAck(ICommand* cmd);
 	void CmdUpdateRoomListAck(ICommand* cmd);
 	void CmdUpdateFriendListAck(ICommand* cmd);
+	void CmdCreateRoomAck(ICommand* cmd);
 private:
 	ColoredListView* m_pRoomListView;
 	EditBox* m_pRoomTitleEditBox;

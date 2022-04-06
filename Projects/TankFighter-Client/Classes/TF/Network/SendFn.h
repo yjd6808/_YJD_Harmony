@@ -16,5 +16,6 @@ struct SendFn
 	static bool SendJoinRoomSyn(const int roomUID);
 	static bool SendAddFriendSyn(const JCore::String& friendName);
 	static bool SendDeleteFriendSyn(const int friendCharacterUID);
+	static bool SendLoadRoomSyn();
 };
 

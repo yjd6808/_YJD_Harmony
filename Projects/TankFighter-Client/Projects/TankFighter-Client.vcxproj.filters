@@ -37,6 +37,12 @@
     <Filter Include="src\Scenes\Login">
       <UniqueIdentifier>{4a6c1c66-40f5-40ea-afaa-53a614e2bf2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scenes\Room">
+      <UniqueIdentifier>{53be5c28-7a96-4b1a-9009-2b4f2368ee29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\BattleField">
+      <UniqueIdentifier>{1002e3b8-d7cc-45b1-8623-24c15f14d902}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,6 +122,18 @@
     </ClCompile>
     <ClCompile Include="..\Classes\TF\Scenes\LoginScene.cpp">
       <Filter>src\Scenes\Login</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\RoomLayer.cpp">
+      <Filter>src\Scenes\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\RoomScene.cpp">
+      <Filter>src\Scenes\Room</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\BattleFieldLayer.cpp">
+      <Filter>src\Scenes\BattleField</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\BattleFieldScene.cpp">
+      <Filter>src\Scenes\BattleField</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +217,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\TF\Scenes\LoginScene.h">
       <Filter>src\Scenes\Login</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\RoomLayer.h">
+      <Filter>src\Scenes\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\RoomScene.h">
+      <Filter>src\Scenes\Room</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\BattleFieldLayer.h">
+      <Filter>src\Scenes\BattleField</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\BattleFieldScene.h">
+      <Filter>src\Scenes\BattleField</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -55,6 +55,7 @@ void MysqlConnection::Disconnect()
 	if (m_bIsConnected)
 	{
 		mysql_close(m_MySQLConn);
+		m_MySQLConn = nullptr;
 		//std::clog << "Disconnected from MySQL DB!" << std::endl;
 	}
 

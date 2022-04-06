@@ -5,6 +5,22 @@
 using namespace JNetwork;
 using namespace JCore;
 
+void Player::Initialize() {
+	SpinLockGuard guard(m_PlayerMtx);
+
+	m_iAccountUID = INVALID_UID;
+	m_iChanneldUID = INVALID_UID;
+	m_iRoomUID = INVALID_UID;
+	m_bRoomHost = false;
+	m_bReady = false;
+
+	m_CharacterInfo = {};
+	m_TankState = {};
+	m_ePlayerState = PlayerState::Disconnected;
+	m_LoggedInTime = 0;
+	m_pSession = nullptr;
+}
+
 void Player::SetAccountUID(int accountUID) {
 	SpinLockGuard guard(m_PlayerMtx);
 	m_iAccountUID = accountUID;
@@ -94,6 +110,26 @@ void Player::LoadRoomCharacterInfo(Out_ RoomCharacterInfo& info) {
 	SpinLockGuard guard(m_PlayerMtx);
 	Memory::CopyUnsafe(&info, &m_CharacterInfo, sizeof(CharacterInfo));
 	info.Ready = m_bReady;
+}
+
+bool Player::SendAsync(ISendPacket* packet) {
+	SpinLockGuard guard(m_PlayerMtx);
+
+	if (m_pSession == nullptr) {
+		return false;
+	}
+
+	return m_pSession->SendAsync(packet);
+}
+
+bool Player::Disconnect() {
+	SpinLockGuard guard(m_PlayerMtx);
+
+	if (m_pSession == nullptr) {
+		return false;
+	}
+
+	return m_pSession->Disconnect();
 }
 
 bool Player::CheckNameEqual(const String& name) {

@@ -3,7 +3,7 @@
 */
 
 #include <TF/Overlapped/IOCPOverlappedQuery.h>
-#include <TF/Database/MysqlConnectionPool.h>
+#include <TF/Database/MysqlDatabase.h>
 
 #include <JCore/AutoObject.h>
 
@@ -21,7 +21,7 @@ IOCPOverlappedQuery::~IOCPOverlappedQuery() = default;
 void IOCPOverlappedQuery::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
 	JCore::AutoPointer<MysqlQueryFuture> autoPtrRelease(m_pMysqlQueryFuture, [](MysqlQueryFuture* future) { future->Release(); });
 
-	auto pConn = TFDBConnPool.GetConnection();
+	auto pConn = _MysqlConnPool->GetConnection();
 
 	if (pConn == nullptr) {
 		// 풀링 실패
@@ -35,5 +35,5 @@ void IOCPOverlappedQuery::Process(BOOL result, DWORD numberOfBytesTransffered, I
 	m_pMysqlQueryFuture->CallbackExecute();
 	m_pMysqlQueryFuture->Signal();
 
-	TFDBConnPool.ReleaseConnection(pConn);
+	_MysqlConnPool->ReleaseConnection(pConn);
 }

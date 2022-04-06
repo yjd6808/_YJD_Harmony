@@ -5,10 +5,12 @@
 #include <TF/Database/MysqlDatabase.h>
 #include <TF/Util/Console.h>
 #include <TF/Game/World.h>
+#include <TF/Game/PlayerPool.h>
 
 #include <JNetwork/Host/TcpSession.h>
 
 #define _Database	MysqlDatabase::GetInstance()
+#define _PlayerPool PlayerPool::GetInstance()
 #define _World		World::GetInstance()
 
 void GameServerEventListener::OnStarted() {
@@ -17,18 +19,23 @@ void GameServerEventListener::OnStarted() {
 
 void GameServerEventListener::OnConnected(JNetwork::TcpSession* connectedSession) {
 	Console::WriteLine(ConsoleColor::CYAN, "유저 : %s 접속", connectedSession->GetRemoteEndPoint().ToString().Source());
-	connectedSession->SetTag(new Player(connectedSession));
+	connectedSession->SetTag(_PlayerPool->PopPlayer(connectedSession));
 }
 
 void GameServerEventListener::OnDisconnected(JNetwork::TcpSession* disconnetedSession) {
 	Console::WriteLine(ConsoleColor::LIGHTGRAY, "유저 : %s 접속 종료", disconnetedSession->GetRemoteEndPoint().ToString().Source());
 	Player* player = disconnetedSession->GetTag<Player*>();
 
+	if (player == nullptr) {
+		return;
+	}
+
 	if (_World->RemovePlayer(player)) {
 		Console::WriteLine("월드에서 플레이어 정보 안전하게 제거완료");
 	}
 
-	delete player;
+	_PlayerPool->ReleasePlayer(player);
+
 	disconnetedSession->SetTag(nullptr);
 }
 
@@ -48,4 +55,5 @@ void GameServerEventListener::OnResume() {
 }
 
 void GameServerEventListener::OnStopped() {
+	Console::WriteLine("서버가 종료되었습니다.");
 }

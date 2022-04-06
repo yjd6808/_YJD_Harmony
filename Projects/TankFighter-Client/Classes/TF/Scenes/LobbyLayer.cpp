@@ -229,11 +229,6 @@ void LobbyLayer::CmdUpdateRoomListAck(ICommand* cmd) {
 void LobbyLayer::CmdUpdateFriendListAck(ICommand* cmd) {
 	UpdateFriendListAck* pUpdateFriendListAck = cmd->CastCommand<UpdateFriendListAck*>();
 
-	if (!pUpdateFriendListAck->Result) {
-		PopUp::createInParent(pUpdateFriendListAck->Reason, this, false);
-		return;
-	}
-
 	m_pFriendListView->GetListView()->removeAllItems();
 
 	for (int i = 0; i < pUpdateFriendListAck->Count; i++) {
@@ -246,4 +241,16 @@ void LobbyLayer::CmdUpdateFriendListAck(ICommand* cmd) {
 		m_pRoomListView->GetListView()->pushBackCustomItem(pRoomButton);
 	}
 	
+}
+
+void LobbyLayer::CmdCreateRoomAck(ICommand* cmd) {
+	CreateRoomAck* pCreateRoomAck = cmd->CastCommand<CreateRoomAck*>();
+
+	if (pCreateRoomAck->Result) {
+		_Client->SetRoomUID(pCreateRoomAck->RoomUID);
+
+		this->unscheduleUpdate();
+		this->_eventDispatcher->removeAllEventListeners();
+		Director::getInstance()->replaceScene(RoomScene::createScene());
+	}
 }

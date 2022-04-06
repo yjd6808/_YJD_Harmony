@@ -14,8 +14,13 @@
 #include <TF/Scenes/ChannelLayer.h>
 #include <TF/Scenes/CharacterSelectScene.h>
 #include <TF/Scenes/CharacterSelectLayer.h>
-#include <TF/Scenes/LobbyLayer.h>
 #include <TF/Scenes/LobbyScene.h>
+#include <TF/Scenes/LobbyLayer.h>
+#include <TF/Scenes/RoomScene.h>
+#include <TF/Scenes/RoomLayer.h>
+#include <TF/Scenes/BattleFieldScene.h>
+#include <TF/Scenes/BattleFieldLayer.h>
+
 
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
@@ -32,3 +37,7 @@
 #include <TF/Scenes/CharacterSelectLayer.cpp>
 #include <TF/Scenes/LobbyLayer.cpp>
 #include <TF/Scenes/LobbyScene.cpp>
+#include <TF/Scenes/RoomScene.cpp>
+#include <TF/Scenes/RoomLayer.cpp>
+#include <TF/Scenes/BattleFieldScene.cpp>
+#include <TF/Scenes/BattleFieldLayer.cpp>

@@ -50,14 +50,14 @@ void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 		info->PlayerState = pFriendPlayer ? static_cast<int>(pFriendPlayer->GetPlayerState()) : static_cast<int>(PlayerState::Disconnected);
 	}
 
-	player->Session()->SendAsync(pPacket);
+	player->SendAsync(pPacket);
 }
 
 void SendFn::SendServerMessageSyn(Player* player, const String& message) {
 	const auto pPacket = new Packet<ServerMessageSyn>;
 	ServerMessageSyn* pServerMessageSyn = pPacket->Get<0>();
 	strcpy_s(pServerMessageSyn->Message, MESSAGE_LEN, message.Source());
-	player->Session()->SendAsync(pPacket);
+	player->SendAsync(pPacket);
 }
 
 
@@ -82,7 +82,7 @@ void SendFn::SendLoadCharacterInfoAck(Player* player) {
 		pCharacterInfo->Money = spQueryResult->GetInt(i, 8);
 	}
 
-	player->Session()->SendAsync(pPacket);
+	player->SendAsync(pPacket);
 }
 
 
@@ -111,7 +111,7 @@ void SendFn::SendUpdateCharacterInfoAck(Player* player) {
 		strcpy_s(pUpdateCharacterInfoAck->Reason, REASON_LEN, u8"캐릭터 정보가 없습니다. account_uid, channel_uid, character_uid mismatch");
 	}
 
-	player->Session()->SendAsync(pPacket);
+	player->SendAsync(pPacket);
 }
 
 void SendFn::SendUpdateRoomListAck(Player* player, int channelUID) {
@@ -138,7 +138,7 @@ void SendFn::SendUpdateRoomListAck(Player* player, int channelUID) {
 
 
 SEND:
-	player->Session()->SendAsync(pPacket);
+	player->SendAsync(pPacket);
 }
 
 

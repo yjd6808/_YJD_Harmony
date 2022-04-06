@@ -50,7 +50,10 @@ public:
 	static void CmdDeleteFriendSyn(Player* player, JNetwork::ICommand* cmd);
 
 	// 클라로부터 친구 요청 수락/거부 결과 수신
-	static void CmdFriendRequestAck(Player* player, JNetwork::ICommand* cmd);
+	static void CmdAddFriendRequestAck(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라로부터 방 씬 로딩을 완료해서 정보 요청 수신
+	static void CmdLoadRoomInfoSyn(Player* player, JNetwork::ICommand* cmd);
 
 	static void CmdTankMoveSyn(Player* player, JNetwork::ICommand* cmd);
 	static void CmdTankMoveAck(Player* player, JNetwork::ICommand* cmd);

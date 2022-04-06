@@ -188,6 +188,14 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Classes\TF\Object\UniformObjects.cpp" />
+    <ClCompile Include="..\Classes\TF\Scenes\BattleFieldLayer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\BattleFieldScene.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Classes\TF\Scenes\ChannelLayer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -224,6 +232,14 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\RoomLayer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\RoomScene.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Classes\TF\Scenes\UniformScenes.cpp" />
     <ClCompile Include="..\Classes\TF\UI\ColoredListView.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -252,6 +268,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\TF\Network\SynchronizedScene.h" />
     <ClInclude Include="..\Classes\TF\Object\Obstacle.h" />
     <ClInclude Include="..\Classes\TF\Object\Tank.h" />
+    <ClInclude Include="..\Classes\TF\Scenes\BattleFieldLayer.h" />
+    <ClInclude Include="..\Classes\TF\Scenes\BattleFieldScene.h" />
     <ClInclude Include="..\Classes\TF\Scenes\ChannelLayer.h" />
     <ClInclude Include="..\Classes\TF\Scenes\ChannelScene.h" />
     <ClInclude Include="..\Classes\TF\Scenes\CharacterSelectLayer.h" />
@@ -261,6 +279,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\TF\Scenes\LobbyScene.h" />
     <ClInclude Include="..\Classes\TF\Scenes\LoginLayer.h" />
     <ClInclude Include="..\Classes\TF\Scenes\LoginScene.h" />
+    <ClInclude Include="..\Classes\TF\Scenes\RoomLayer.h" />
+    <ClInclude Include="..\Classes\TF\Scenes\RoomScene.h" />
     <ClInclude Include="..\Classes\TF\SourceHeader.h" />
     <ClInclude Include="..\Classes\TF\UI\ColoredListView.h" />
     <ClInclude Include="..\Classes\TF\UI\PopUp.h" />

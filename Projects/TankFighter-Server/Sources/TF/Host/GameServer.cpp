@@ -39,6 +39,14 @@ bool GameServer::StartServer() {
 	m_Parser.AddCommand(DELETE_CHARACTER_SYN, CommandFn::CmdDeleteCharacterSyn);
 	m_Parser.AddCommand(CREATE_CHARACTER_SYN, CommandFn::CmdCreateCharacterSyn);
 
+	m_Parser.AddCommand(JOIN_LOBBY_SYN, CommandFn::CmdJoinLobbySyn);
+	m_Parser.AddCommand(CREATE_ROOM_SYN, CommandFn::CmdCreateRoomSyn);
+	m_Parser.AddCommand(JOIN_ROOM_SYN, CommandFn::CmdJoinRoomSyn);
+	m_Parser.AddCommand(ADD_FRIEND_SYN, CommandFn::CmdAddFriendSyn);
+	m_Parser.AddCommand(ADD_FRIEND_REQUEST_ACK, CommandFn::CmdAddFriendRequestAck);
+	m_Parser.AddCommand(DELETE_FRIEND_SYN, CommandFn::CmdDeleteFriendSyn);
+	
+
 	m_Parser.AddCommand(TANK_MOVE_SYN, CommandFn::CmdTankMoveSyn);
 	m_Parser.AddCommand(TANK_MOVE_ACK, CommandFn::CmdTankMoveAck);
 

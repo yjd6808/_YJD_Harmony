@@ -100,6 +100,7 @@ namespace JNetwork {
 			m_pContainer->AddSession(session);
 		}
 
+
 		m_pEventListener->OnStarted();
 		return bool(m_eState = State::Running);
 	}
