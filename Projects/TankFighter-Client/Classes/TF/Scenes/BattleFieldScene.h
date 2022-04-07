@@ -3,7 +3,7 @@
 #include <TF/SourceHeader.h>
 #include <TF/Scenes/BattleFieldLayer.h>
 #include <TF/Scenes/GridLayer.h>
-#include <TF/Network/SynchronizedScene.h>
+#include <TF/Scenes/SynchronizedScene.h>
 
 class BattleFieldScene : public SynchronizedScene
 {
@@ -16,7 +16,7 @@ public:
     void SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
 
 private:
-    BattleFieldLayer* m_pRoomPlayer;
+    BattleFieldLayer* m_pBattleFieldLayer;
     GridLayer* m_pGridLayer;
 };
 

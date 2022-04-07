@@ -19,6 +19,10 @@ public:
 	void OnClickedLoginButton(TextButton* sender);
 	void OnClickedRegisterButton(TextButton* sender);
 
+	/* =================================================================================
+	 *                             통신 패킷 처리
+	 * ================================================================================*/
+
 	void CmdLoginAck(ICommand* cmd);
 	void CmdRegisterAck(ICommand* cmd);
 private:

@@ -14,7 +14,7 @@ using namespace std;
 #if TEST_ArrayQueueTest == ON
 
 TEST(ArrayQueueTest, Regular) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 	ArrayQueue<int> queue;
 	const int count = 320;
 
@@ -76,7 +76,7 @@ TEST(ArrayQueueTest, TotalTest) {
 
 		int dataCount = random.GenerateInt(0, 100) + 1;
 		int suffleCount = 20;
-		MemoryLeakDetector detector;
+		AutoMemoryLeakDetector detector;
 		ArrayQueue<int> queue;
 
 		list<int> forward_list;		// 데이터 추적 - 정방향 용
@@ -190,7 +190,7 @@ TEST(ArrayQueueTest, TotalTest) {
 
 // 생성자 테스트
 TEST(ArrayQueueTest, ConstructorTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	// 이니셜라이저 테스트
 	ArrayQueue<int> a{ 1, 2, 3 };
@@ -232,7 +232,7 @@ void SetQueuePos(ArrayQueue<T>& q, int pos) {
 
 // 연산자 테스트
 TEST(ArrayQueueTest, OperatorTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 	// 꼬리가 머리보다 뒤에 있는 경우
 	{
 		ArrayQueue<int> a{ 1, 2 };

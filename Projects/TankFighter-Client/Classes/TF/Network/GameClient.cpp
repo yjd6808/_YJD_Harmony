@@ -28,7 +28,4 @@ void GameClient::UpdateCharacterInfo(CharacterInfo& info) {
 	Memory::CopyUnsafe(&m_CharacterInfo, &info, sizeof(info));
 }
 
-void GameClient::UpdateRoomInfo(RoomInfo& info) {
-}
-
 

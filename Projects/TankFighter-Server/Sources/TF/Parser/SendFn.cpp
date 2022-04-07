@@ -25,15 +25,23 @@ void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 	UpdateFriendListAck* pUpdateFriendListAck = pPacket->Get<0>();
 
 	// 쿼리가 좀 길어서 용량 180으로 설정
-	std::string query(180, '\0');
-	query = query + "select * from t_character where c_uid = ( " +
-						"select c_ack_character_uid from t_friendship where c_req_character_uid = ? " +
-						"union all " +
-						"select c_req_character_uid from t_friendship where c_ack_character_uid = ? " +
+	std::string query(250, '\0');
+	query = "select * from t_character where c_uid = ( "
+						"select c_ack_character_uid from t_friendship where c_req_character_uid = ? "
+						"union all "
+						"select c_req_character_uid from t_friendship where c_ack_character_uid = ? "
 					")";
 	
 	const auto spQueryResult = _Database->Query(query, characterUID, characterUID);
 	pUpdateFriendListAck->Count = spQueryResult->GetResultRowCount();
+
+	const int iCharacterUID = player->GetChannelUID();
+	Channel* pChannel = _World->GetChannel(iCharacterUID);
+
+	if (pChannel == nullptr) {
+		SendFn::SendServerMessageSyn(player, "당신의 채널 정보가 이상합니다.");
+		return;
+	}
 
 	for (int i = 0; i < pUpdateFriendListAck->Count; i++) {
 		CharacterInfo* info = &pUpdateFriendListAck->Info[i];
@@ -46,7 +54,9 @@ void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 		info->Money = spQueryResult->GetInt(i, 8);
 
 		int iFriendUID = info->CharacterUID;
-		Player* pFriendPlayer = _World->FindIfPlayer([&iFriendUID](Player* p)->bool { return p->GetCharacterUID() == iFriendUID; });
+
+		// 현재 접속중인지 확인하기 위햇 현재 채널에서 해당 플레이어를 찾는다.
+		Player* pFriendPlayer = pChannel->FindPlayerByCharacterUID(iCharacterUID);
 		info->PlayerState = pFriendPlayer ? static_cast<int>(pFriendPlayer->GetPlayerState()) : static_cast<int>(PlayerState::Disconnected);
 	}
 
@@ -54,9 +64,28 @@ void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 }
 
 void SendFn::SendServerMessageSyn(Player* player, const String& message) {
+	if (player == nullptr) {
+		return;
+	}
+
 	const auto pPacket = new Packet<ServerMessageSyn>;
 	ServerMessageSyn* pServerMessageSyn = pPacket->Get<0>();
 	strcpy_s(pServerMessageSyn->Message, MESSAGE_LEN, message.Source());
+	player->SendAsync(pPacket);
+}
+
+// 플레이어에게 방 정보 전송
+void SendFn::SendRoomInfoAck(Room* room, Player* player) {
+	const auto pPacket = new Packet<LoadRoomInfoAck>;
+	LoadRoomInfoAck* pLoadRoomInfoAck = pPacket->Get<0>();
+
+	if (room == nullptr) {
+		pLoadRoomInfoAck->Result = false;
+		strcpy_s(pLoadRoomInfoAck->Reason, REASON_LEN, u8"참가한 방 정보가 없습니다.");
+	} else {
+		pLoadRoomInfoAck->Result = true;
+		room->LoadRoomInfo(pLoadRoomInfoAck->Info);
+	}
 	player->SendAsync(pPacket);
 }
 
@@ -92,7 +121,7 @@ void SendFn::SendUpdateCharacterInfoAck(Player* player) {
 	UpdateCharacterInfoAck* pUpdateCharacterInfoAck = pPacket->Get<0>();
 
 	const auto spQueryResult = _Database->Query("select * from t_character where c_account_uid = ? and c_channel_uid = ? and c_uid = ?", 
-		player->GetAccountUID(), player->GetChannelUID(), player->GetChannelUID());
+		player->GetAccountUID(), player->GetChannelUID(), player->GetCharacterUID());
 
 	if(spQueryResult->GetResultRowCount()) {
 		pUpdateCharacterInfoAck->Result = true;
@@ -123,21 +152,19 @@ void SendFn::SendUpdateRoomListAck(Player* player, int channelUID) {
 	if (pChannel == nullptr) {
 		pUpdateRoomListAck->Result = false;
 		strcpy_s(pUpdateRoomListAck->Reason, REASON_LEN, u8"채널 정보가 이상합니다.");
-		goto SEND;
+	} else {
+		pUpdateRoomListAck->Result = true;
+		pChannel->RoomForEach([&iIndexer, &pUpdateRoomListAck](Room* room) {
+			RoomInfo* pRoomInfo = &pUpdateRoomListAck->Info[iIndexer];
+			pRoomInfo->PlayerCount = room->GetPlayerCount();
+			pRoomInfo->MaxPlayerCount = room->GetMaxPlayerCount();
+			pRoomInfo->RoomUID = room->GetRoomUID();
+			strcpy_s(pRoomInfo->Name, NAME_LEN, room->GetRoomName().Source());
+			iIndexer++;
+		});
+		pUpdateRoomListAck->Count = iIndexer;
 	}
 
-	pChannel->RoomForEach([&iIndexer, &pUpdateRoomListAck](Room* room) {
-		RoomInfo* pRoomInfo = &pUpdateRoomListAck->Info[iIndexer];
-		pRoomInfo->PlayerCount = room->GetPlayerCount();
-		pRoomInfo->MaxPlayerCount = room->GetMaxPlayerCount();
-		pRoomInfo->RoomUID = room->GetRoomUID();
-		strcpy_s(pRoomInfo->Name, NAME_LEN, room->GetRoomName().Source());
-		iIndexer++;
-	});
-	pUpdateRoomListAck->Count = iIndexer;
-
-
-SEND:
 	player->SendAsync(pPacket);
 }
 
@@ -147,6 +174,7 @@ void SendFn::BroadcastUpdateRoomListAck(Channel* channel) {
 	const auto pPacket = new Packet<UpdateRoomListAck>;
 	UpdateRoomListAck* pUpdateRoomListAck = pPacket->Get<0>();
 	int iIndexer = 0;
+	pUpdateRoomListAck->Result = true;
 
 	channel->RoomForEach([&iIndexer, &pUpdateRoomListAck](Room* room) {
 		RoomInfo* pRoomInfo = &pUpdateRoomListAck->Info[iIndexer];
@@ -161,10 +189,16 @@ void SendFn::BroadcastUpdateRoomListAck(Channel* channel) {
 	channel->BroadcastLobbyPacket(pPacket);
 }
 
+// 방에 있는 모든 유저들에게 해당 방에 있는 플레이어 정보들을 전달한다.
 void SendFn::BroadcastUpdateRoomUserAck(Room* room) {
+	if (room == nullptr) {
+		return;
+	}
+
 	const auto pPacket = new Packet<UpdateRoomInfoAck>;
 	UpdateRoomInfoAck* pUpdateRoomInfoAck = pPacket->Get<0>();
 	int iIndexer = 0;
+
 	pUpdateRoomInfoAck->HostCharacterUID = room->GetHost()->GetCharacterUID();
 
 	room->ForEach([&iIndexer, pUpdateRoomInfoAck](Player* player) {

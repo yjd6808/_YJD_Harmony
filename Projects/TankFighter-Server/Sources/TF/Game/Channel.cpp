@@ -40,7 +40,7 @@ bool Channel::RemovePlayer(Player* player) {
 	const int iRoomUID = player->GetRoomUID();
 
 	if (iRoomUID != INVALID_UID) {
-		if (!LeaveRoom(iRoomUID, player)) {
+		if (!LeaveRoom(player)) {
 			DebugAssert(false, "플레이어가 속한 방의 UID가 이상합니다.");
 			return false;
 		}
@@ -129,7 +129,17 @@ bool Channel::RemoveRoom(const int roomUID) {
 	return m_RoomMap.Remove(roomUID);;
 }
 
-Room* Channel::GetRoom(const int roomUID) {
+bool Channel::RemoveRoomIfEmpty(Room* room) {
+	CriticalSectionLockGuard guard(m_RoomMapLock);
+
+	if (room->IsEmpty()) {
+		return RemoveRoom(room->GetRoomUID());
+	}
+
+	return false;
+}
+
+Room* Channel::GetRoomByRoomUID(const int roomUID) {
 	CriticalSectionLockGuard guard(m_RoomMapLock);
 
 	if (!m_RoomMap.Exist(roomUID)) {
@@ -137,6 +147,17 @@ Room* Channel::GetRoom(const int roomUID) {
 	}
 
 	return m_RoomMap[roomUID];
+}
+
+Room* Channel::GetRoomByPlayer(Player* player) {
+	CriticalSectionLockGuard guard(m_RoomMapLock);
+
+	int iRoomUID = player->GetRoomUID();
+	if (!m_RoomMap.Exist(iRoomUID)) {
+		return nullptr;
+	}
+
+	return m_RoomMap[iRoomUID];
 }
 
 // nullptr : 방이 존재하지 않거나 꽉 찬 경우
@@ -156,31 +177,38 @@ Room* Channel::JoinRoom(const int roomUID, Player* player) {
 	return nullptr;
 }
 
-bool Channel::LeaveRoom(const int roomUID, Player* player) {
+bool Channel::LeaveRoom(Player* player) {
 	CriticalSectionLockGuard guard(m_RoomMapLock);
 
-	if (!m_RoomMap.Exist(roomUID)) {
+	const int iRoomUID = player->GetRoomUID();
+
+	if (!m_RoomMap.Exist(iRoomUID)) {
 		return false;
 	}
 
-	Room* pRoom = m_RoomMap[roomUID];
+	Room* pRoom = m_RoomMap[iRoomUID];
 	if (!pRoom->RemovePlayer(player)) {
 		DebugAssert(false, "방안에 해당 플레이어가 없습니다. ㄷㄷ");
 		return false;
 	}
 
-	player->Lock();
-	player->m_iRoomUID = INVALID_UID;				// 속한 방 정보 없앰
-	player->m_bRoomHost = false;					// 방 호스트 정보 없앰
-	player->m_ePlayerState = PlayerState::Lobby;	// 로비 상태로 변경
-	player->m_bReady = false;						// 준비 안됨 상태로 변경
-	player->Unlock();
+	if (pRoom->IsEmpty()) {
+		DeleteSafe(pRoom);
+		return m_RoomMap.Remove(iRoomUID);
+	}
+	
 	return true;
 }
 
 void Channel::RoomForEach(Action<Room*> foreachAction) {
 	CriticalSectionLockGuard guard(m_RoomMapLock);
 	m_RoomMap.Values().Extension().ForEach(foreachAction);
+}
+
+
+int Channel::GetRoomCount() {
+	CriticalSectionLockGuard guard(m_RoomMapLock);
+	return m_RoomMap.Size();
 }
 
 

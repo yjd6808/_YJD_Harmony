@@ -30,10 +30,14 @@ public:
 
 	Room* CreateRoom(Player* creator, const JCore::String& roomName, int maxPlayerCount);
 	bool RemoveRoom(const int roomUID);
-	Room* GetRoom(const int roomUID);
+	bool RemoveRoomIfEmpty(Room* room);
+	Room* GetRoomByRoomUID(const int roomUID);
+	Room* GetRoomByPlayer(Player* player);
 	Room* JoinRoom(const int roomUID, Player* player);
-	bool LeaveRoom(const int roomUID, Player* player);
+	bool LeaveRoom(Player* player);
 	void RoomForEach(JCore::Action<Room*> foreachAction);
+	int GetRoomCount();
+	
 	
 private:
 	int m_ChannelUID;

@@ -3,7 +3,7 @@
 #include <TF/SourceHeader.h>
 #include <TF/Scenes/LobbyLayer.h>
 #include <TF/Scenes/GridLayer.h>
-#include <TF/Network/SynchronizedScene.h>
+#include <TF/Scenes/SynchronizedScene.h>
 
 class LobbyScene : public SynchronizedScene
 {

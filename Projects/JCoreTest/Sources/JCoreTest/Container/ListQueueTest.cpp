@@ -17,7 +17,7 @@ using namespace std;
 #if TEST_ListQueueTest == ON
 
 TEST(ListQueueTest, Regular) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 	ListQueue<int> queue;
 	const int count = 320;
 
@@ -77,7 +77,7 @@ TEST(ListQueueTest, TotalTest) {
 
 		int dataCount = random.GenerateInt(0, 100) + 1;
 		int suffleCount = 20;
-		MemoryLeakDetector detector;
+		AutoMemoryLeakDetector detector;
 		ListQueue<int> queue;
 
 		list<int> forward_list;		// 데이터 추적 - 정방향 용
@@ -189,7 +189,7 @@ TEST(ListQueueTest, TotalTest) {
 }
 
 TEST(ListQueueTest, ConstructorTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	ListQueue<int> a{ 1, 2, 3 };
 
@@ -216,7 +216,7 @@ TEST(ListQueueTest, ConstructorTest) {
 
 
 TEST(ListQueueTest, OperatorTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	ListQueue<Model> a{ 1, 2, 3 };
 

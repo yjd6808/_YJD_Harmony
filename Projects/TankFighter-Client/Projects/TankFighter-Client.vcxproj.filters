@@ -135,6 +135,9 @@
     <ClCompile Include="..\Classes\TF\Scenes\BattleFieldScene.cpp">
       <Filter>src\Scenes\BattleField</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Scenes\SynchronizedScene.cpp">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -182,9 +185,6 @@
     <ClInclude Include="..\Classes\TF\Network\ClientConfiguration.h">
       <Filter>src\Network</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\TF\Network\SynchronizedScene.h">
-      <Filter>src\Network</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\TF\UI\ColoredListView.h">
       <Filter>src\UI</Filter>
     </ClInclude>
@@ -229,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\TF\Scenes\BattleFieldScene.h">
       <Filter>src\Scenes\BattleField</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Scenes\SynchronizedScene.h">
+      <Filter>src\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

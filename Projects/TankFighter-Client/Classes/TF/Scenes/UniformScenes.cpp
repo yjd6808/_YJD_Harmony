@@ -7,6 +7,7 @@
 
 // Scenes | Layers
 
+#include <TF/Scenes/SynchronizedScene.h>
 #include <TF/Scenes/LoginScene.h>
 #include <TF/Scenes/LoginLayer.h>
 #include <TF/Scenes/GridLayer.h>
@@ -28,6 +29,7 @@
 #endif
 
 // Scenes | Layers
+#include <TF/Scenes/SynchronizedScene.cpp>
 #include <TF/Scenes/LoginLayer.cpp>
 #include <TF/Scenes/LoginScene.cpp>
 #include <TF/Scenes/GridLayer.cpp>

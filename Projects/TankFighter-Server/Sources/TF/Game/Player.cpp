@@ -98,7 +98,7 @@ void Player::SetRoomHost(bool isHost) {
 
 void Player::SetReady(bool ready) {
 	SpinLockGuard guard(m_PlayerMtx);
-	m_bReady = true;
+	m_bReady = ready;
 }
 
 void Player::LoadCharacterInfo(Out_ CharacterInfo& info) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <JNetwork/IOCP/WorkerManager.h>
+#include <JNetwork/WorkerManager.h>
 
 #define IOCP_POST_ORDER_TERMINATE	0x01
 #define IOCP_POST_ORDER_PAUSE		0x02

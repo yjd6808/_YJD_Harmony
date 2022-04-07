@@ -16,6 +16,8 @@ namespace JNetwork
 
 class SynchronizedScene : public Scene
 {
+
+	void CmdServerMessageSyn(ICommand* cmd);
 public:
-	virtual void SynchronizedOnReceived(JNetwork::ICommand* cmd) = 0;
+	virtual void SynchronizedOnReceived(ICommand* cmd);
 };

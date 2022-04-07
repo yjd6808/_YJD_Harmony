@@ -45,16 +45,30 @@
 #define ADD_FRIEND_ACK					127		// 서버 -> 클라 / 친구 추가 요청에 대한 결과를 보낸다.
 #define ADD_FRIEND_REQUEST_SYN			128		// 서버 -> 클라 / 친구 추가 요청 대상에게 요청정보를 전달한다.
 #define ADD_FRIEND_REQUEST_ACK			128		// 클라 -> 서버 / 친구 요청을 받은 클라이언트가 수락/거부의 결과를 서버로 전송한다.
-#define ADD_FRIEND_REQUESTR_RESULT_SYN  129		// 서버 -> 클라 / 친구 요청자에게 요청 결과를 전송한다.
+// #define ADD_FRIEND_REQUESTR_RESULT_SYN  129	// 서버 -> 클라 / 친구 요청자에게 요청 결과를 전송한다. - 필요 없음
 
 
 #define DELETE_FRIEND_SYN				123		// 클라 -> 서버 / 친구 삭제 / 친구 목록(리스트뷰)의 친구 버튼 클릭시
 #define DELETE_FRIEND_ACK				130		// 서버 -> 클라 / 삭제된 대상이 접속중인 경우 대상에게도 삭제되었다고 송신하고 삭제한 사람에게도 송신한다. 그리고 친구 목록도 갱신해줌
 
 #define LOAD_ROOM_INFO_SYN				131		// 클라 -> 서버 / (방 진입 시) 각종 방 정보를 요청한다.
+#define LOAD_ROOM_INFO_ACK				132		// 서버 -> 클라
+
+
+
+#define ROOM_GAME_START_SYN				133		// 클라 -> 서버 / 게임 시작 버튼 클릭
+#define ROOM_GAME_START_ACK				137		// 서버 -> 클라 / 방 안의 멤버들에게 게임 시작 패킷 전송
+
+#define ROOM_GAME_READY_SYN				134		// 클라 -> 서버 / 게임 준비 버튼 클릭
+#define ROOM_GAME_READY_ACK				137		// 서버 -> 클라 / 준비 요청에 대한 응답
+
+#define ROOM_GAME_READY_CANCEL_SYN		135		// 클라 -> 서버 / 준비 해제 버튼 클릭
+#define ROOM_GAME_READY_CANCEL_ACK		138		// 서버 -> 클라 / 준비 해제에 대한 응답
+
+#define ROOM_LEAVE_SYN					136		// 클라 -> 서버 / 방 나가기 버튼 클릭
+#define ROOM_LEAVE_ACK					139		// 서버 -> 클라 / 방 나가기에 대한 응답
 
 #define SERVER_MESSAGE_SYN				400		// 서버 -> 클라로 특정 메시지 전송
-
 
 #define HARD_DISCONNECT_SYN				250		// 서버 -> 클라 / 서버가 해당 클라의 연결을 강제로 끊는 경우
 
@@ -181,8 +195,8 @@ struct DeleteCharacterSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(DeleteCharacterSyn, DELETE_CHARACTER_SYN)
 
-	int AccountUID = INVALID_UID;
-	int ChannelUID = INVALID_UID;
+	int AccountUID		= INVALID_UID;
+	int ChannelUID		= INVALID_UID;
 	char CharacterName[NAME_LEN];
 };
 
@@ -190,7 +204,6 @@ struct DeleteCharacterAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(DeleteCharacterAck, DELETE_CHARACTER_ACK)
 
-	bool Result{};
 	char Reason[REASON_LEN]{};
 };
 
@@ -198,9 +211,9 @@ struct SelectCharacterSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(SelectCharacterSyn, SELECT_CHARACTER_SYN)
 
-	int AccountUID = INVALID_UID;
-	int ChannelUID = INVALID_UID;
-	int CharacterUID = INVALID_UID;
+	int AccountUID		= INVALID_UID;
+	int ChannelUID		= INVALID_UID;
+	int CharacterUID	= INVALID_UID;
 };
 
 struct SelectCharacterAck : JNetwork::ICommand
@@ -288,11 +301,11 @@ struct JoinRoomAck : JNetwork::ICommand
 
 struct UpdateRoomInfoAck : JNetwork::ICommand
 {
-	CMD_DEFAULT_CONSTRUCTOR(UpdateRoomInfoAck, JOIN_ROOM_ACK)
+	CMD_DEFAULT_CONSTRUCTOR(UpdateRoomInfoAck, UPDATE_ROOMINFO_ACK)
 
 	int Count = 0;
 	int HostCharacterUID = INVALID_UID;		// 방장
-	RoomCharacterInfo Info[COMMAND_ARRAY_LEN];
+	RoomCharacterInfo Info[ROOM_MAX_PLAYER_COUNT];
 };
 
 
@@ -316,6 +329,7 @@ struct AddFriendRequestSyn : JNetwork::ICommand
 	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestSyn, ADD_FRIEND_REQUEST_SYN)
 
 	int RequestCharacterUID;	// 친구 요청을 보낸 사람의 UID
+	CharacterInfo Info;
 };
 
 struct AddFriendRequestAck : JNetwork::ICommand
@@ -326,15 +340,6 @@ struct AddFriendRequestAck : JNetwork::ICommand
 	int RequestCharacterUID;
 	int AcceptedCharacterUID;
 };
-
-struct AddFriendRequestResultSyn : JNetwork::ICommand
-{
-	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestResultSyn, ADD_FRIEND_REQUESTR_RESULT_SYN)
-
-	bool Result = false;				// 친구 요청 수락/거부 여부
-	char Reason[REASON_LEN];
-};
-
 
 struct DeleteFriendSyn : JNetwork::ICommand
 {
@@ -365,12 +370,64 @@ struct LoadRoomInfoSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoadRoomInfoSyn, LOAD_ROOM_INFO_SYN)
 
-	int AccountUID = INVALID_UID;
-	int ChannelUID = INVALID_UID;
-	int CharacterUID = INVALID_UID;
-	int RoomUID = INVALID_UID;
+	int AccountUID		= INVALID_UID;
+	int ChannelUID		= INVALID_UID;
+	int CharacterUID	= INVALID_UID;
+	int RoomUID			= INVALID_UID;
 };
 
+struct LoadRoomInfoAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(LoadRoomInfoAck, LOAD_ROOM_INFO_ACK)
+
+	bool Result;
+	char Reason[REASON_LEN];
+	RoomInfo Info;
+};
+
+
+struct RoomGameStartSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(RoomGameStartSyn, ROOM_GAME_START_SYN)
+
+	int AccountUID		= INVALID_UID;
+	int ChannelUID		= INVALID_UID;
+	int CharacterUID	= INVALID_UID;
+	int RoomUID			= INVALID_UID;
+};
+
+struct RoomGameStartAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(RoomGameStartAck, ROOM_GAME_START_ACK)
+
+	bool Result;
+	char Reason[REASON_LEN];
+};
+
+
+struct RoomGameReadySyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(RoomGameReadySyn, ROOM_GAME_READY_SYN)
+};
+
+struct RoomGameReadyCancelSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(RoomGameReadyCancelSyn, ROOM_GAME_READY_CANCEL_SYN)
+};
+
+
+struct RoomLeaveSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(RoomLeaveSyn, ROOM_LEAVE_SYN)
+};
+
+struct RoomLeaveAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(RoomLeaveAck, ROOM_LEAVE_ACK)
+
+	bool Result;
+	char Reason[REASON_LEN];
+};
 
 
 

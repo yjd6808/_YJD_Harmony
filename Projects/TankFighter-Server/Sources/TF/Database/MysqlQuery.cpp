@@ -217,11 +217,6 @@ unsigned int MysqlQuery::GetFieldCount() {
 	return iFieldCount;
 }
 
-MysqlQueryResult MysqlQuery::Result() {
-	return { this, m_bSuccess };
-}
-
-
 
 bool MysqlQuery::ExecuteQuery() {
 	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source())) {

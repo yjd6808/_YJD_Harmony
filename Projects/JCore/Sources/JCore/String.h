@@ -12,6 +12,10 @@
 
 namespace JCore {
 
+// variadic template forward declaration
+template <typename...>
+struct Tuple;
+
 class String final
 {
 public:
@@ -70,12 +74,11 @@ public:
 	void SetAt(const int idx, const char ch) const;
 	const char GetAt(const int idx) const;
 	String GetRange(const int startIdx, const int endIdx) const;
-	char* GetRangeUnsafe(const int startIdx, const int endIdx) const;
+
+	// 동적할당된 문자열, 길이, 할당된 크기를 반환한다.
+	Tuple<char*, int, int> GetRangeUnsafe(const int startIdx, const int endIdx) const;
 	std::vector<String> Split(const char* delimiter, const bool includeEmpty = false) const;
 	void Initialize(int capacity = DEFAULT_BUFFER_SIZE);
-
-	String ToAnsiString();
-	String ToUTF8String();
 
 	String ToLowerCase() const;
 	String ToUpperCase() const;

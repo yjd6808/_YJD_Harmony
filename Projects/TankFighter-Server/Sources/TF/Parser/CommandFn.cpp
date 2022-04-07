@@ -29,7 +29,7 @@ void CommandFn::CmdLoginSyn(Player* player, ICommand* cmd) {
 	LoginAck* pLoginAck = pLoginAckPacket->Get<0>();
 
 	if (spQuery->GetResultRowCount()) {
-		int iAccountUID = spQuery->Result().GetInt(0, 0);
+		int iAccountUID = spQuery->GetInt(0, 0);
 
 		pLoginAck->UID = iAccountUID;
 
@@ -91,6 +91,15 @@ void CommandFn::CmdLoadChannelInfoSyn(Player* player, ICommand* cmd) {
 
 	const Vector<Channel*> channels = _World->GetChannels();
 
+	// 클라가 로비에서 채널선택으로 이동한 경우
+	const int iChannelUID = player->GetChannelUID();
+	if (iChannelUID != INVALID_UID) {
+		Channel* pChannel = _World->GetChannel(iChannelUID);
+		if (pChannel && pChannel->RemovePlayer(player)) {
+
+		}
+	}
+
 	player->SetPlayerState(PlayerState::ChannelSelect);
 
 
@@ -136,6 +145,8 @@ void CommandFn::CmdLoadCharacterInfoSyn(Player* player, ICommand* cmd) {
 
 	const int iAccountUID = pLoadCharacterInfoSyn->AccountUID;
 	const int iChannelUID = pLoadCharacterInfoSyn->ChannelUID;
+
+	
 
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
@@ -239,23 +250,21 @@ void CommandFn::CmdDeleteCharacterSyn(Player* player, ICommand* cmd) {
 	const auto pReplyPacket = new Packet<DeleteCharacterAck>;
 	DeleteCharacterAck* pDeleteCharacterAck = pReplyPacket->Get<0>();
 
-	pDeleteCharacterAck->Result = false;
-
 	const String szCharacterName = pDeleteCharacterSyn->CharacterName;
 	if (QueryFn::IsCharacterExistByName(szCharacterName)) {
 		if (_Database->Query("delete from t_character where c_name = ? and c_account_uid = ? and c_channel_uid = ?",
 			szCharacterName, iAccountUID, iChannelUID)->IsFailed()) {
 			strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, u8"캐릭터 삭제에 실패하였습니다. account_uid, channel_uid mismatch");
-			goto SEND;
-		}
+		} else {
+			strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, u8"캐릭터가 성공적으로 삭제되었습니다.");
 
-		pDeleteCharacterAck->Result = true;
+			// 캐릭터가 삭제되면 캐릭목록을 재전송해주자.
+			SendFn::SendLoadCharacterInfoAck(player);
+		}
 	} else {
 		strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, u8"해당 닉네임의 캐릭터가 존재하지 않습니다.");
 	}
 
-	
-SEND:
 	player->SendAsync(pReplyPacket);
 }
 
@@ -266,6 +275,21 @@ void CommandFn::CmdJoinLobbySyn(Player* player, ICommand* cmd) {
 	const int iAccountUID = pJoinLobbySyn->AccountUID;
 	const int iChannelUID = pJoinLobbySyn->ChannelUID;
 	const int iCharacterUID = pJoinLobbySyn->CharacterUID;
+
+	// 클라에서 씬 전환 지멋대로 한 경우를 대비해서
+	if (player->GetRoomUID() != INVALID_UID) {
+		Room* pRoom = _World->GetRoomByPlayer(player);
+		if (pRoom) {
+			Channel* pChannel = pRoom->GetChannel();
+			if (pRoom && pRoom->RemovePlayer(player)) {
+				if (pRoom->IsEmpty()) {
+					pChannel->RemoveRoom(pRoom->GetRoomUID());
+				} else {
+					SendFn::BroadcastUpdateRoomUserAck(pRoom);
+				}
+			}
+		}
+	}
 
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
@@ -280,10 +304,10 @@ void CommandFn::CmdJoinLobbySyn(Player* player, ICommand* cmd) {
 	// player에게 자신의 캐릭터 정보 전송
 	SendFn::SendUpdateCharacterInfoAck(player);
 
-	// player에게 방 리스트 정보 전송
+	// player에게 친구로 등록된 캐릭터 정보들 전송
 	SendFn::SendUpdateFriendListAck(player, iCharacterUID);
 
-	// player에게 친구로 등록된 캐릭터 정보들 전송
+	// player에게 방 리스트 정보 전송
 	SendFn::SendUpdateRoomListAck(player, iChannelUID);
 }
 
@@ -333,8 +357,6 @@ void CommandFn::CmdJoinRoomSyn(Player* player, ICommand* cmd) {
 		pJoinRoomAck->Result = true;
 		pJoinRoomAck->RoomUID = pCreateRoomSyn->RoomUID;
 
-		// 방에 있는 모든 유저들에게 해당 방에 있는 플레이어 정보들을 전달한다.
-		SendFn::BroadcastUpdateRoomUserAck(pRoom);
 
 		// 채널의 로비에 있는 모든 유저들에게 방리스트 목록 업데이트 패킷을 전송한다.
 		SendFn::BroadcastUpdateRoomListAck(pChannel);
@@ -348,24 +370,43 @@ void CommandFn::CmdAddFriendSyn(Player* player, ICommand* cmd) {
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 
 	// 플레이어가 속한 채널의 유저들을 확인하면서 친구 요청 패킷을 보낸다.
-	Player* pFind =pChannel->PlayerFindIf([pAddFriendSyn](Player* playerInChannel)->bool {
+	Player* pTargetPlayer =pChannel->PlayerFindIf([pAddFriendSyn](Player* playerInChannel)->bool {
 		return playerInChannel->CheckNameEqual(pAddFriendSyn->FriendName);
 	});
 
+
+
 	const auto pReplyPacket = new Packet<AddFriendAck>;
 	AddFriendAck* pAddFriendAck = pReplyPacket->Get<0>();
-	if (pFind == nullptr) {
+	if (pTargetPlayer == nullptr) {
 		pAddFriendAck->Result = false;
 		strcpy_s(pAddFriendAck->Reason, REASON_LEN, u8"해당 플레이어가 현재 채널에 접속중이지 않습니다.");
 	} else {
-		pAddFriendAck->Result = true;
-		strcpy_s(pAddFriendAck->Reason, REASON_LEN, u8"요청을 성공적으로 보냈습니다.");
+		// 자기 자신인 경우
+		if (pTargetPlayer == player) {
+			pAddFriendAck->Result = false;
+			strcpy_s(pAddFriendAck->Reason, REASON_LEN, u8"허허.. 자기자신은 불가능하다네");
+		} else {
+			int iRequestCharacterUID = player->GetCharacterUID();			// 요청자
+			int iTargetCharacterUID = pTargetPlayer->GetCharacterUID();		// 수락/거부 예정자
 
-		// 친구 요청 대상에게 누군가 친구 요청했음을 알려준다.
-		const auto pRequestPacket = new Packet<AddFriendRequestSyn>;
-		AddFriendRequestSyn* pAddFriendRequestSyn = pRequestPacket->Get<0>();
-		pAddFriendRequestSyn->RequestCharacterUID = player->GetCharacterUID();
-		pFind->SendAsync(pRequestPacket);
+			// 373번줄에서 성공해서 플레이저 정보를 가져왔는데
+			// 여기까지 오기전에 플레이어가 나가버리면 INVALID_UID로 초기화 되버리는데.. 예외처리를 너무 빡시게 해야하는데 그러면
+			// 이걸 어떻게하면 해결해야 좋을지 모르겠다.
+			// 이전에 스키드러쉬 서버 분석했을때 채널 서버, 로비 서버 이렇게 전부 나눠놨었던데 관리가 어려워서 그랬던건가
+
+			if (QueryFn::IsCharacterFriend(iTargetCharacterUID, iRequestCharacterUID)) {
+				pAddFriendAck->Result = false;
+				strcpy_s(pAddFriendAck->Reason, REASON_LEN, u8"이미 친구입니다.");
+			} else {
+				// 친구 요청 대상에게 누군가 친구 요청했음을 알려준다.
+				const auto pRequestPacket = new Packet<AddFriendRequestSyn>;
+				AddFriendRequestSyn* pAddFriendRequestSyn = pRequestPacket->Get<0>();
+				pAddFriendRequestSyn->RequestCharacterUID = iRequestCharacterUID;
+				player->LoadCharacterInfo(pAddFriendRequestSyn->Info);
+				pTargetPlayer->SendAsync(pRequestPacket);
+			}
+		}
 	}
 
 	// 플레이어에게 요청 보낸 결과를 송신한다.
@@ -388,7 +429,7 @@ void CommandFn::CmdDeleteFriendSyn(Player* player, ICommand* cmd) {
 	DeleteFriendAck* pDeleteFriendAck = pReplyPacket->Get<0>();
 
 	if (_Database->Query("delete from t_friendship where (c_req_character_uid = ? and c_ack_character_uid = ?) or (c_ack_character_uid = ? and c_req_character_uid = ?)",
-		iRequesterCharacterUID, iDeletedCharacterUID, iDeletedCharacterUID, iRequesterCharacterUID)->IsSuccess()) {
+		iRequesterCharacterUID, iDeletedCharacterUID, iRequesterCharacterUID, iDeletedCharacterUID)->IsSuccess()) {
 		pDeleteFriendAck->Result = true;
 		strcpy_s(pDeleteFriendAck->Reason, REASON_LEN, u8"성공적으로 친구가 삭제되었습니다.");
 
@@ -420,36 +461,36 @@ void CommandFn::CmdAddFriendRequestAck(Player* player, ICommand* cmd) {
 
 	Player* pAccepter = player;	// 친구 요청을 수락 또는 거부한사람
 	Player* pRequester = pChannel->FindPlayerByCharacterUID(pAddFriendRequestAck->RequestCharacterUID);
-	 
-	// 요청 보낸 사람이 현재 접속중이고
-	if (pRequester) {
-		const auto pRequestPacket = new Packet<AddFriendRequestResultSyn>;
-		AddFriendRequestResultSyn* pAddFriendRequestResultSyn = pRequestPacket->Get<0>();
 
-		// 수락한 경우
-		if (pAddFriendRequestAck->Accept) {
-			pAddFriendRequestResultSyn->Result = true;
-			strcpy_s(pAddFriendRequestResultSyn->Reason, REASON_LEN, u8"상대방이 친구 요청을 수락하였습니다.");
-		} else { // 거절한 경우
-			pAddFriendRequestResultSyn->Result = false;
-			strcpy_s(pAddFriendRequestResultSyn->Reason, REASON_LEN, u8"상대방이 친구 요청을 거절하였습니다.");
-		}
+	// 둘다 접속중이어야 보내야함
+	if (pRequester == nullptr || pAccepter == nullptr) {
+		// 내부에서 null 체크함
 
-		pRequester->SendAsync(pRequestPacket);
+		SendFn::SendServerMessageSyn(pAccepter, "상대방이 접속중이지 않습니다.");
+		SendFn::SendServerMessageSyn(pRequester, "상대방이 접속중이지 않습니다.");
 	}
+
+	// 수락한 경우
+	if (pAddFriendRequestAck->Accept) 
+		SendFn::SendServerMessageSyn(pRequester, u8"상대방이 친구 요청을 수락하였습니다.");
+	else
+		SendFn::SendServerMessageSyn(pRequester, u8"상대방이 친구 요청을 거절하였습니다.");
 
 	// 1. 수락한 경우 친구 요청/수락자 모두 친구 목록을 갱신해준다.
 	// 2. 데이버베이스에 친구 관계를 추가해준다.
 	if (pAddFriendRequestAck->Accept) {
-		_Database->QueryAsync("insert into t_friendship (c_req_character_uid, c_ack_character_uid) values (?, ?)", 
-			pRequester->GetCharacterUID(), pAccepter->GetCharacterUID())->Release();
+		if (_Database->Query("insert into t_friendship (c_req_character_uid, c_ack_character_uid) values (?, ?)",
+			pRequester->GetCharacterUID(), pAccepter->GetCharacterUID())->IsSuccess()) {
 
-		// 한번에 보내는게 효율적이긴 한데 코드 다시 짜야해서 일단.. 이렇게
-		SendFn::SendUpdateFriendListAck(pAccepter, pAccepter->GetCharacterUID());
-		SendFn::SendUpdateFriendListAck(pRequester, pRequester->GetCharacterUID());
+			// 한번에 보내는게 효율적이긴 한데 코드 다시 짜야해서 일단.. 이렇게
+			SendFn::SendUpdateFriendListAck(pAccepter, pAccepter->GetCharacterUID());
+			SendFn::SendUpdateFriendListAck(pRequester, pRequester->GetCharacterUID());
+		}
 	}
 }
 
+
+// LOAD_ROOM_INFO_SYN 131
 void CommandFn::CmdLoadRoomInfoSyn(Player* player, ICommand* cmd) {
 	const LoadRoomInfoSyn* pLoadRoomInfoSyn = cmd->CastCommand<LoadRoomInfoSyn*>();
 
@@ -467,7 +508,110 @@ void CommandFn::CmdLoadRoomInfoSyn(Player* player, ICommand* cmd) {
 		return;
 	}
 
+	Room* pRoom = _World->GetRoomByPlayer(player);
 
+	// 방 정보를 전달
+	SendFn::SendRoomInfoAck(pRoom, player);
+
+	// 방에 있는 모든 유저들에게 해당 방에 있는 플레이어 정보들을 전달한다.
+	SendFn::BroadcastUpdateRoomUserAck(pRoom);
+}
+
+// ROOM_GAME_START_SYN 133
+void CommandFn::CmdRoomGameStartSyn(Player* player, ICommand* cmd) {
+	const RoomGameStartSyn* pRoomGameStartSyn = cmd->CastCommand<RoomGameStartSyn*>();
+
+	const int iAccountUID = pRoomGameStartSyn->AccountUID;
+	const int iChannelUID = pRoomGameStartSyn->ChannelUID;
+	const int iCharacterUID = pRoomGameStartSyn->CharacterUID;
+	const int RoomUID = pRoomGameStartSyn->RoomUID;
+
+	if (iAccountUID != player->GetAccountUID() ||
+		iChannelUID != player->GetChannelUID() ||
+		iCharacterUID != player->GetCharacterUID() ||
+		RoomUID != player->GetRoomUID()) {
+		Console::WriteLine(ConsoleColor::LIGHTGRAY, "잘못된 유저입니다.");
+		player->Disconnect();
+		return;
+	}
+
+
+	Room* pRoom = _World->GetRoomByPlayer(player);
+
+	const auto pReplyPacket = new Packet<RoomGameStartAck>;
+	RoomGameStartAck* pRoomGameStartAck = pReplyPacket->Get<0>();
+
+	
+	if (pRoom == nullptr) {
+		// 플레이어가 속한 방이 존재하지 않을 경우 
+		pRoomGameStartAck->Result = false;
+		strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"당신이 속한 방 정보가 없습니다.");
+		player->SendAsync(pReplyPacket);
+	} else {
+		// 방에 있는 모든 유저들에게 게임 시작 패킷을 전송한다.
+		pRoomGameStartAck->Result = true;
+		pRoom->BroadcastPacket(pReplyPacket);
+	}
+}
+
+// ROOM_GAME_READY_SYN 134
+void CommandFn::CmdRoomGameReadySyn(Player* player, ICommand* cmd) {
+	const RoomGameReadySyn* pRoomGameReadySyn = cmd->CastCommand<RoomGameReadySyn*>();
+
+	Room* pRoom = _World->GetRoomByPlayer(player);
+
+	if (pRoom) {
+		player->SetReady(true);
+		SendFn::BroadcastUpdateRoomUserAck(pRoom);
+	} else {
+		SendFn::SendServerMessageSyn(player, u8"당신이 속한 방 정보가 없습니다.");
+	}
+}
+
+// ROOM_GAME_READY_CANCEL_SYN 135
+void CommandFn::CmdRoomGameReadyCancelSyn(Player* player, ICommand* cmd) {
+	const RoomGameReadyCancelSyn* pRoomGameReadyCancelSyn = cmd->CastCommand<RoomGameReadyCancelSyn*>();
+
+	Room* pRoom = _World->GetRoomByPlayer(player);
+
+	if (pRoom) {
+		player->SetReady(false);
+		SendFn::BroadcastUpdateRoomUserAck(pRoom);
+	} else {
+		SendFn::SendServerMessageSyn(player, u8"당신이 속한 방 정보가 없습니다.");
+	}
+}
+
+
+// ROOM_LEAVE_SYN 136
+void CommandFn::CmdRoomLeaveSyn(Player* player, ICommand* cmd) {
+	const RoomLeaveSyn* pRoomLeaveSyn = cmd->CastCommand<RoomLeaveSyn*>();
+
+	Room* pRoom = _World->GetRoomByPlayer(player);
+	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
+
+	const auto pPacket = new Packet<RoomLeaveAck>;
+	RoomLeaveAck* pRoomLeaveAck = pPacket->Get<0>();
+
+	if (pRoom && pRoom->RemovePlayer(player)) {
+		pRoomLeaveAck->Result = true;
+
+		if (pRoom->IsEmpty()) {
+			// 빈 방이 된 경우 없애주자.
+			pChannel->RemoveRoom(pRoom->GetRoomUID());
+		} else {
+			// 기존에 방에 있던 사람에게 나갔다고 알려주자.
+			SendFn::BroadcastUpdateRoomUserAck(pRoom);
+		}
+
+		// 로비에 있는 플레이어들에게 방 정보를 전달해주자.
+		SendFn::BroadcastUpdateRoomListAck(pChannel);
+	} else {
+		pRoomLeaveAck->Result = false;
+		strcpy_s(pRoomLeaveAck->Reason, REASON_LEN, u8"당신이 속한 방 정보가 없습니다.");
+	}
+
+	player->SendAsync(pPacket);
 }
 
 

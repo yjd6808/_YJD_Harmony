@@ -7,6 +7,9 @@
 
 #include <Common/Enum.h>
 
+#ifndef Out_
+#define Out_
+#endif
 
 
 /*
@@ -21,6 +24,7 @@
 
 
 namespace JNetwork { struct ISendPacket; }
+struct RoomInfo;
 class Player;
 class Channel;
 class Room
@@ -33,9 +37,11 @@ public:
 	JCore::String GetRoomName() const			{ return m_RoomName; }
 	int GetRoomUID() const						{ return m_iRoomUID; }
 	int GetMaxPlayerCount() const				{ return m_iMaxPlayerCount; }
-
+	void Lock()									{ m_RoomLock.Lock();}
+	void Unlock()								{ m_RoomLock.Unlock();}
 
 	// 가변 정보
+	bool IsEmpty()								{ return GetPlayerCount() == 0; }
 	int GetPlayerCount();
 	bool TryAddPlayer(Player* player);
 	bool RemovePlayer(Player* player);
@@ -45,6 +51,8 @@ public:
 	void BroadcastPacket(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
 	void SetRoomState(RoomState state);
 	void ForEach(JCore::Action<Player*> foreachAction);
+
+	void LoadRoomInfo(Out_ RoomInfo& info);
 private:
 	int m_iRoomUID;
 	int m_iMaxPlayerCount;
@@ -56,5 +64,6 @@ private:
 	void* m_pHost;
 
 	inline static std::atomic<int> ms_iRoomSeq = 0;
+	friend class Channel;
 };
 

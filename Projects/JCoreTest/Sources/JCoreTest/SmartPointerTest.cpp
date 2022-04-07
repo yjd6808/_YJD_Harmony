@@ -17,7 +17,7 @@ using namespace std;
 
 // 유니크 포인터 테스트
 TEST(SmartPointerTest, UniquePointer) {
-	MemoryLeakDetector leak;
+	AutoMemoryLeakDetector leak;
 
 	const UniquePointer<int> g1 = MakeUnique<int>();
 	const UniquePointer<int> g2 = MakeUnique<int>();
@@ -198,7 +198,7 @@ TEST(SmartPointerTest, WeakPointer) {
 
 // 다이나믹 캐스팅 테스트
 TEST(SmartPointerTest, DynamicCastingTest) {
-	MemoryLeakDetector leak;
+	AutoMemoryLeakDetector leak;
 
 	WeakPointer<Model> w1;
 	{
@@ -220,7 +220,7 @@ TEST(SmartPointerTest, DynamicCastingTest) {
 // 인덱싱 테스트
 // 배열처럼 동작가능한지.
 TEST(SmartPointerTest, Indexing) {
-	MemoryLeakDetector leak;
+	AutoMemoryLeakDetector leak;
 
 	constexpr int ArraySize = 3;
 	constexpr int Value = 30;

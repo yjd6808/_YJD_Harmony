@@ -15,7 +15,7 @@ using namespace std;
 #if TEST_LinkedListTest == ON
 
 TEST(LinkedListTest, Regular) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	// PushBackAll 테스트
 	{
@@ -40,7 +40,7 @@ TEST(LinkedListTest, Regular) {
 }
 
 TEST(LinkedListTest, Enumerator) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	// 데이터가 없는 경우
 	{
@@ -100,7 +100,7 @@ TEST(LinkedListTest, Enumerator) {
 
 
 TEST(LinkedListTest, ConstructorTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	LinkedList<int> a{ 1, 2, 3};
 
@@ -127,7 +127,7 @@ TEST(LinkedListTest, ConstructorTest) {
 
 
 TEST(LinkedListTest, OperatorTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	LinkedList<Model> a{ 1, 2, 3 };
 

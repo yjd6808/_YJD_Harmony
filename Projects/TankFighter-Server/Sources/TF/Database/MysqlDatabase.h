@@ -65,6 +65,11 @@ public:
 
 	template <typename... Args>
 	JCore::SharedPointer<MysqlQuery> Query(const std::string& statement, Args&&... args) {
+		if (statement.length() <= 6) {
+			DebugAssert(false, "MysqlDatabase::Query() 쿼리를 똑바로 입력해주세요.");
+			return nullptr;
+		}
+
 		auto pConn = _MysqlConnPool->GetConnection();
 
 		if (pConn == nullptr) {
@@ -73,24 +78,25 @@ public:
 			return nullptr;
 		}
 
+		AutoReleaseConnection autoRelease(pConn, _MysqlConnPool);
 		const JCore::String preparedStatement = MysqlStatementBuilder::Build(statement, JCore::Forward<Args>(args)...);
 
 		if (preparedStatement == "")
 			return nullptr;
 
-
+		
 		JCore::SharedPointer<MysqlQuery> spQuery = JCore::MakeShared<MysqlQuery>(pConn, preparedStatement);
 		spQuery->ExecuteAuto();
 
-		_MysqlConnPool->ReleaseConnection(pConn);
 		return spQuery;
 	}
 private:
 	JNetwork::IOCP* m_pIocp;
 	MysqlConnectionPool* m_pConnectionPool;
-	
+
 	// 쿼리 수행 통계
 	// 실패 등 처리할 것들은 여기다가 추가 하면 된다
 
 	inline static MysqlDatabase* ms_pInstance = nullptr;
+
 };

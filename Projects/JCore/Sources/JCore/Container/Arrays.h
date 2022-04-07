@@ -71,7 +71,6 @@ struct Arrays final
 	template <typename T>
 	static int LinearSearch(T* arr, const int arrSize, const T& data) {
 		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
 
 		for (int i = 0; i < arrSize; i++) {
 			if (arr[i] == data) {

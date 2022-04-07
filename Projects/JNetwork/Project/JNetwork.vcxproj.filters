@@ -15,17 +15,11 @@
     <ClCompile Include="..\Sources\JNetwork\Host\TcpSessionContainer.cpp">
       <Filter>Host</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.cpp">
-      <Filter>IOCPOverlapped</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCP\IOCP.cpp">
       <Filter>IOCP</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCP\IOCPWorker.cpp">
       <Filter>IOCP</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.cpp">
-      <Filter>IOCPOverlapped</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Host\TcpClient.cpp">
       <Filter>Host</Filter>
@@ -33,13 +27,19 @@
     <ClCompile Include="..\Sources\JNetwork\IOCP\IOCPPostOrder.cpp">
       <Filter>IOCP</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.cpp">
+      <Filter>IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedConnect.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.cpp">
-      <Filter>IOCPOverlapped</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedConnect.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,18 +70,6 @@
     <ClInclude Include="..\Sources\JNetwork\IOCP\IOCP.h">
       <Filter>IOCP</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\IOCP\Worker.h">
-      <Filter>IOCP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\IOCP\WorkerManager.h">
-      <Filter>IOCP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.h">
-      <Filter>IOCPOverlapped</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.h">
-      <Filter>IOCPOverlapped</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\TcpServerEventListener.h">
       <Filter>Host</Filter>
     </ClInclude>
@@ -94,16 +82,7 @@
     <ClInclude Include="..\Sources\JNetwork\IOCP\IOCPPostOrder.h">
       <Filter>IOCP</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.h">
-      <Filter>IOCPOverlapped</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.h">
-      <Filter>IOCPOverlapped</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Packet.h" />
-    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedConnect.h">
-      <Filter>IOCPOverlapped</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Database\MySQL\MySQLConnection.h">
       <Filter>Database\MySQL</Filter>
     </ClInclude>
@@ -112,6 +91,23 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Database\MySQL\IDatabase.h">
       <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Worker.h" />
+    <ClInclude Include="..\Sources\JNetwork\WorkerManager.h" />
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedConnect.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.h">
+      <Filter>IOCPOverlapped</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

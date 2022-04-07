@@ -40,7 +40,7 @@ struct RefCount
 
 protected:
 	CriticalSectionMutex m_Mtx;
-	int m_iRef;
+	int m_iRef = 0;
 };
 
 } // namespace JCore

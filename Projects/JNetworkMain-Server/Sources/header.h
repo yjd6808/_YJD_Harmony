@@ -10,14 +10,14 @@ using namespace JNetwork;
 
 // 범위 메모리릭 체크
 // @코드 획득 주소 : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
-class MemoryLeakDetector
+class AutoMemoryLeakDetector
 {
 public:
-    MemoryLeakDetector() {
+    AutoMemoryLeakDetector() {
         _CrtMemCheckpoint(&memState_);
     }
 
-    ~MemoryLeakDetector() {
+    ~AutoMemoryLeakDetector() {
         _CrtMemState stateNow, stateDiff;
         _CrtMemCheckpoint(&stateNow);
         const int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);

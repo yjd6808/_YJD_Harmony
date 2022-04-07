@@ -9,6 +9,8 @@
 #include "Game/PlayerPool.h"
 #include <Common/MemoryLeakDetector.h>
 
+#include "JNetwork/IOCPOverlapped/IOCPOverlappedAccept.h"
+
 
 using namespace JNetwork;
 
@@ -29,17 +31,17 @@ int main() {
 
 	JCore::CriticalSectionMutex mtx;
 	
-	
+
 	// 콘솔창 출력 동기화
 	Winsock::SetMutex(&mtx);
 	Console::SetMutex(&mtx);
 
 	{
+		AutoMemoryLeakDetector leak;
 		GameServer* pGameServer = GameServer::GetInstance();
 		MysqlDatabase* pDatabase = MysqlDatabase::GetInstance();
 		PlayerPool* pPlayerPool = PlayerPool::GetInstance();
 		World* pWorld = World::GetInstance();
-
 
 		// 윈속 초기화
 		if (!Winsock::Initialize(2, 2)) {
@@ -52,34 +54,54 @@ int main() {
 		}
 
 		// 플레이어 풀 초기화
+		
 		if (!pPlayerPool->Initialize(25)) {
 			return ABNORMAL_EXIT_PLAYERPOOL_INIT_FAILED;
 		}
+		
 
 		// 월드 초기화
-		// 문제 없음
 		if (!pWorld->Initialize()) {
 			return ABNORMAL_EXIT_WORLD_INIT_FAILED;
 		}
 
+		
 
 		// 게임 서버 시작
 		if (!pGameServer->StartServer()) {
 			return ABNORMAL_EXIT_GAMESERVER_START_FAILED;
 		}
 
-
+		volatile int run = true;
+		std::thread th([&]() {
+			while (run) {
+				auto channels = pWorld->GetChannels();
+				Console::WriteLine("채널1(%d명/%d개의 방) 채널2(%d명/%d개의 방) 채널3(%d명/%d개의 방) 채널4(%d명/%d개의 방)", 
+					channels[0]->GetPlayerCount(), channels[0]->GetRoomCount(),
+					channels[1]->GetPlayerCount(), channels[1]->GetRoomCount(), 
+					channels[2]->GetPlayerCount(), channels[2]->GetRoomCount(), 
+					channels[3]->GetPlayerCount(), channels[3]->GetRoomCount());
+				for (int i = 0; i < 450 && run; i++)
+					Sleep(1);
+			}
+			run++;
+		});
+		
 
 		// c 입력시 종료
 		while (getchar() != 'c') {}
+		run = false;
+		th.join();
 
 		if (!pGameServer->Stop()) {
 			return ABNORMAL_EXIT_GAMESERVER_STOP_FAILED;
 		}
 
+		
 		if (!pPlayerPool->Finalize()) {
 			return ABNORMAL_EXIT_PLAYERPOOL_FINALIZE_FAILED;
 		}
+		
 
 		// 데이터베이스 초기화
 		if (!pDatabase->Finalize()) {

@@ -17,12 +17,24 @@ Room::Room(Channel* channel, Player* host, const String& roomName, int maxPlayer
 
 int Room::GetPlayerCount() {
 	CriticalSectionLockGuard guard(m_RoomLock);
-	return m_PlayerList.Size() + 1;		// 호스트 포함해서
+
+	if (m_pHost) {
+		return m_PlayerList.Size() + 1;
+	}
+
+	return m_PlayerList.Size();
 }
 
+// 이미 방안에 있는 경우 또는 꽉 찬 경우 실패
 bool Room::TryAddPlayer(Player* player) {
 	CriticalSectionLockGuard guard(m_RoomLock);
-	const int iPlayerCount = m_PlayerList.Size() + 1;
+	const int iPlayerCount = m_PlayerList.Size() + (m_pHost ? 1 : 0);
+
+	// 이러면 안댐
+	if (m_PlayerList.Exist(player)) {
+		DebugAssert(false, "이미 방안에 당신이 들어있습니다.");
+		return false;
+	}
 
 	if (iPlayerCount < m_iMaxPlayerCount) {
 		player->Lock();
@@ -40,12 +52,30 @@ bool Room::TryAddPlayer(Player* player) {
 bool Room::RemovePlayer(Player* player) {
 	CriticalSectionLockGuard guard(m_RoomLock);
 
-	if (player == m_pHost) {
-		m_pHost = m_PlayerList.Front();
-		m_PlayerList.PopFront();
+	if (player == m_pHost || m_PlayerList.Exist(player)) {
+		player->Lock();
+		player->m_iRoomUID = INVALID_UID;				// 속한 방 정보 없앰
+		player->m_bRoomHost = false;					// 방 호스트 정보 없앰
+		player->m_ePlayerState = PlayerState::Lobby;	// 로비 상태로 변경
+		player->m_bReady = false;						// 준비 안됨 상태로 변경
+		player->Unlock();
+
+		if (m_pHost == player) {
+			m_pHost = nullptr;
+
+			if (!m_PlayerList.IsEmpty()) {
+				// 먼저 접속한 유저 순서대로 방장 교체해줌
+				m_pHost = m_PlayerList.Front();
+				m_PlayerList.PopFront();
+			}
+			
+		} else {
+			m_PlayerList.Remove(player);
+		}
+		return true;
 	}
 
-	return m_PlayerList.Remove(player);
+	return false;
 }
 
 bool Room::ChangeHost(Player* player) {
@@ -85,7 +115,10 @@ void Room::BroadcastPacket(JNetwork::ISendPacket* packet, Player* exceptPlayer) 
 
 		p->Session()->SendAsync(packet);
 	});
-	static_cast<Player*>(m_pHost)->Session()->SendAsync(packet);
+
+	if (m_pHost)
+		GetHost()->Session()->SendAsync(packet);
+
 	packet->Release();
 }
 
@@ -97,4 +130,17 @@ void Room::SetRoomState(RoomState state) {
 void Room::ForEach(Action<Player*> foreachAction) {
 	CriticalSectionLockGuard guard(m_RoomLock);
 	m_PlayerList.Extension().ForEach(foreachAction);
+
+	if (m_pHost) {
+		foreachAction(GetHost());
+	}
+}
+
+
+void Room::LoadRoomInfo(Out_ RoomInfo& info) {
+	CriticalSectionLockGuard guard(m_RoomLock);
+	info.RoomUID = m_iRoomUID;
+	strcpy_s(info.Name, NAME_LEN, m_RoomName.Source());
+	info.MaxPlayerCount = m_iMaxPlayerCount;
+	info.PlayerCount = m_PlayerList.Size() + 1;
 }

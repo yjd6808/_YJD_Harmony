@@ -55,6 +55,18 @@ public:
 	// 클라로부터 방 씬 로딩을 완료해서 정보 요청 수신
 	static void CmdLoadRoomInfoSyn(Player* player, JNetwork::ICommand* cmd);
 
+	// 클라로부터 게임 시작 요청 수신
+	static void CmdRoomGameStartSyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라로부터 게임 준비 요청 수신
+	static void CmdRoomGameReadySyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라로부터 준비 해제 요청 수신
+	static void CmdRoomGameReadyCancelSyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라로부터 방 나가기 요청 수신
+	static void CmdRoomLeaveSyn(Player* player, JNetwork::ICommand* cmd);
+
 	static void CmdTankMoveSyn(Player* player, JNetwork::ICommand* cmd);
 	static void CmdTankMoveAck(Player* player, JNetwork::ICommand* cmd);
 };

@@ -30,6 +30,7 @@ public:
 	bool onTouchBegin(Touch* touch, Event* touchEvent);
 	void onTouchEnded(Touch* touch, Event* touchEvent);
 	void setBackgroundColor(const Color3B& color);
+	void setText(const std::string& text) { m_pTextUI->setText(text); }
 
 	void onMouseClick(Ref* ref);
 	void setClickEvent(JCore::Action<TextButton*> clientEvent) { m_ClickEvent = clientEvent; }

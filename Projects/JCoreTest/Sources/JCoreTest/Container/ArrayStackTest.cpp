@@ -14,7 +14,7 @@ using namespace std;
 #if TEST_ArrayStackTest == ON
 
 TEST(ArrayStackTest, Regular) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 	ArrayStack<int> stack;
 	const int count = 320;
 
@@ -45,7 +45,7 @@ TEST(ArrayStackTest, TotalTest) {
 	int testCount = 50;
 	while (testCount--) {
 		int dc = rand.GenerateInt(0, 100) + 1;
-		MemoryLeakDetector detector;
+		AutoMemoryLeakDetector detector;
 		ArrayStack<int> stack;
 		std::stack<int> stl;
 
@@ -102,7 +102,7 @@ TEST(ArrayStackTest, TotalTest) {
 
 // 생성자 테스트
 TEST(ArrayStackTest, ConstructorTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	// 이니셜라이저 테스트
 	ArrayStack<int> a{ 1, 2, 3 };
@@ -131,7 +131,7 @@ TEST(ArrayStackTest, ConstructorTest) {
 
 // 연산자 테스트
 TEST(ArrayStackTest, OperatorTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 
 	ArrayStack<int> s{ 1, 2, 3 };
 

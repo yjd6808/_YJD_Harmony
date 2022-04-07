@@ -6,6 +6,8 @@
 class Channel;
 
 // 게임의 전체적인 구조를 나타낸다.
+
+class Room;
 class World
 {
 public:
@@ -28,6 +30,7 @@ public:
 	int GetChannelCount() const { return m_ChannelMap.Size(); }
 	Channel* GetChannel(int channelUID);
 	JCore::Vector<Channel*> GetChannels() { return m_ChannelMap.Values().Extension().ToVector(); }
+	Room* GetRoomByPlayer(Player* player);
 private:
 	PlayerMap m_PlayerMap;
 	JCore::HashMap<int, Channel*> m_ChannelMap;		// 불변 - 락 불필요

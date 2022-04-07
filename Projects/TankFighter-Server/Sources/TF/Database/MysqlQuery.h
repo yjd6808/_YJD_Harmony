@@ -22,16 +22,9 @@
 	#define DebugAssert(exp, msg)		assert((exp) && msg)
 #endif
 
-class MysqlQuery;
-
-
-
-class MysqlQueryResult;
 class MysqlQuery
 {
 	using TResultRow = std::map<int, JCore::String>;
-
-
 public:
 	MysqlQuery(MysqlConnection *mConn, const JCore::String& preparedStatement);
 	~MysqlQuery();
@@ -80,8 +73,6 @@ public:
 	bool IsSuccess() const { return m_bSuccess; }
 	bool IsFailed() const { return !m_bSuccess; }
 
-
-	MysqlQueryResult Result();
 private:
 	MysqlConnection* m_sqlConn;
 	JCore::String m_PreparedStatement;
@@ -89,32 +80,5 @@ private:
 	std::map<int, TResultRow> m_ResultMap;
 	std::map<int, JCore::String> m_FieldMap;
 	std::map<JCore::String, int> m_FieldStringToIntMap;
-};
-
-
-// MysqlQuery가 실행, 결과 모두 보여주기땜에 결과만 보여주는 녀석 추가
-// MysqlQuery의 ExecuteQuery, ExecuteUpdate 로 실행 후에 이 녀석을 얻어서 쓰면 편함
-class MysqlQueryResult
-{
-public:
-	MysqlQueryResult(MysqlQuery* ref, bool success) : m_pQuery(ref), m_bSuccess(success) {}
-
-	bool IsSuccess() const { return m_bSuccess; }
-	bool IsFailed() const { return !m_bSuccess; }
-
-	unsigned int GetResultRowCount();
-	unsigned int GetFieldCount();
-	const JCore::String GetFieldName(const unsigned int& field) { return m_pQuery->GetFieldName(field);  }
-	const JCore::String GetString(const unsigned int& row, const unsigned int& field) { return m_pQuery->GetString(row, field); }
-	const JCore::String GetString(const unsigned int& row, const JCore::String& field) { return m_pQuery->GetString(row, field); }
-	int GetInt(const unsigned int& row, const unsigned int& field) { return m_pQuery->GetInt(row, field); }
-	int GetInt(const unsigned int& row, const JCore::String& field) { return m_pQuery->GetInt(row, field); }
-	double GetDouble(const unsigned int& row, const unsigned int& field) { return m_pQuery->GetDouble(row, field); }
-	double GetDouble(const unsigned int& row, const JCore::String& field) { return m_pQuery->GetDouble(row, field); }
-	JCore::DateTime GetTime(const unsigned int& row, const unsigned int& field) { return  m_pQuery->GetTime(row, field); }
-	JCore::DateTime GetTime(const unsigned int& row, const JCore::String& field) { return  m_pQuery->GetTime(row, field); }
-private:
-	MysqlQuery* m_pQuery;
-	bool m_bSuccess;
 };
 

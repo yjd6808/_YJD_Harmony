@@ -94,3 +94,12 @@ Channel* World::GetChannel(int channelUID) {
 
 	return m_ChannelMap[channelUID];
 }
+
+Room* World::GetRoomByPlayer(Player* player) {
+	Channel* pChannel = GetChannel(player->GetChannelUID());
+	if (pChannel == nullptr) {
+		return nullptr;
+	}
+
+	return pChannel->GetRoomByPlayer(player);
+}

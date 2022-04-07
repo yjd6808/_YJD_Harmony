@@ -9,8 +9,7 @@
 #include <JCore/Memory.h>
 #include <JCore/Exception.h>
 #include <JCore/Ascii.h>
-
-#include <OleAuto.h>
+#include <JCore/Tuple.h>
 
 namespace JCore {
 
@@ -20,20 +19,21 @@ const int String::DEFAULT_BUFFER_SIZE = 32;
 const float String::EXPANDING_FACTOR = 1.5f;
 const char* String::EMPTY = "";
 
-String::String() :
-	m_pBuffer(nullptr),
-	m_iLen(0),
-	m_iCapacity(0) {
+String::String() {
 	Initialize();
 }
 
-String::String(const int capacity) : String(EMPTY, capacity) {
+String::String(const int capacity)  {
+	if (capacity == 0) {
+		m_pBuffer = nullptr;
+		m_iCapacity = 0;
+		m_iLen = 0;
+	} else {
+		*this = String(EMPTY, capacity);
+	}
 }
 
-String::String(const char* str, const int capacity)
-	: m_pBuffer(nullptr) {
-
-
+String::String(const char* str, const int capacity) {
 	if (str == nullptr) {
 		throw NullPointerException("문자열이 nullptr 입니다.");
 	}
@@ -436,11 +436,19 @@ const char String::GetAt(const int idx) const {
 }
 
 String String::GetRange(const int startIdx, const int endIdx) const {
-	return String(GetRangeUnsafe(startIdx, endIdx));
+	String dummy(0);
+
+	auto [ pBuffer, iLen, iCapacity ] = GetRangeUnsafe(startIdx, endIdx);
+
+	dummy.m_pBuffer = pBuffer;
+	dummy.m_iLen = iLen;
+	dummy.m_iCapacity = iCapacity;
+
+	return dummy;
 }
 
 // 기존 문자열의 시작인덱스(포함)부터 종료인덱스(포함)까지의 부분 문자열을 반환합니다.
-char* String::GetRangeUnsafe(const int startIdx, const int endIdx) const {
+Tuple<char*, int, int> String::GetRangeUnsafe(const int startIdx, const int endIdx) const {
 	if (!IsValidIndexRange(startIdx, endIdx)) {
 		throw OutOfRangeException("올바르지 않은 인덱스 범위입니다.");
 	}
@@ -448,7 +456,8 @@ char* String::GetRangeUnsafe(const int startIdx, const int endIdx) const {
 	char* pStr = m_pBuffer + startIdx;
 	int iCurIdx = startIdx;
 	int iIdx = 0;
-	char* szRange = new char[endIdx - startIdx + 10];
+	int iAllocCapacity = endIdx - startIdx + 10;
+	char* szRange = new char[iAllocCapacity];
 
 	while (iCurIdx <= endIdx) {
 		szRange[iIdx] = m_pBuffer[iCurIdx];
@@ -457,7 +466,7 @@ char* String::GetRangeUnsafe(const int startIdx, const int endIdx) const {
 	}
 
 	szRange[iIdx] = NULL;
-	return szRange;
+	return { szRange, iIdx - 1, iAllocCapacity };
 }
 
 // delimiter 문자열 기준으로 분리합니다.
@@ -478,7 +487,7 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 			vecTokens.emplace_back(EMPTY);
 		}
 	} else {
-		vecTokens.emplace_back(GetRangeUnsafe(0, iOffset - 1));
+		vecTokens.emplace_back(GetRange(0, iOffset - 1));
 	}
 
 	iOffset += iDelimiterLen;
@@ -495,13 +504,13 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 				vecTokens.emplace_back(EMPTY);
 			}
 		} else {
-			vecTokens.emplace_back(GetRangeUnsafe(iOffset, iNextOffset - 1));
+			vecTokens.emplace_back(GetRange(iOffset, iNextOffset - 1));
 		}
 		iOffset = iNextOffset + 1;
 	}
 
 	if (iOffset < m_iLen) {
-		vecTokens.emplace_back(GetRangeUnsafe(iOffset, m_iLen - 1));
+		vecTokens.emplace_back(GetRange(iOffset, m_iLen - 1));
 	} else {
 		if (includeEmpty) {
 			vecTokens.emplace_back(EMPTY);
@@ -518,27 +527,6 @@ void String::Initialize(int capacity) {
 	m_iLen = 0;
 	m_iCapacity = capacity;
 	m_pBuffer[0] = NULL;
-}
-
-String String::ToAnsiString() {
-	int nLen = Length();
-	wchar_t warr[256];
-	MultiByteToWideChar(CP_ACP, 0, (LPCSTR)m_pBuffer, -1, warr, 256);
-	char carr[256];
-	memset(carr, '\0', sizeof(carr));
-	WideCharToMultiByte(CP_UTF8, 0, warr, -1, carr, 256, NULL, NULL);
-	return carr;
-}
-
-String String::ToUTF8String() {
-	wchar_t warr[256];
-	int nLen = Length();
-	memset(warr, '\0', sizeof(warr));
-	MultiByteToWideChar(CP_UTF8, 0, m_pBuffer, -1, warr, 256);
-	char carr[256];
-	memset(carr, '\0', sizeof(carr));
-	WideCharToMultiByte(CP_ACP, 0, warr, -1, carr, 256, NULL, NULL);
-	return carr;
 }
 
 

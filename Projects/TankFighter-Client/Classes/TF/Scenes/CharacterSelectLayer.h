@@ -10,10 +10,13 @@ public:
 	bool init() override;
 	CREATE_FUNC(CharacterSelectLayer);
 
+	void onEnterTransitionDidFinish() override;
+
 	bool IsValidNickName(std::string& nick);
 	void OnClickedCharacterButton(TextButton* btn);
 	void OnClickedCreateCharacterButton(TextButton* sender);
 	void OnClickedDeleteCharacterButton(TextButton* sender);
+	void OnClickedChannelSelectButton(TextButton* sender);
 
 
 	/* =================================================================================
@@ -29,6 +32,7 @@ private:
 	EditBox* m_pCharacterNickNameEditBox;
 	TextButton* m_pCreateCharacterButton;
 	TextButton* m_pDeleteCharacterButton;
+	TextButton* m_pChannelSelectButton;
 
 	// 로딩된 캐릭터 ID와 캐릭터 정보
 	JCore::Vector<TextButton*> m_CharacterSelectButtonVec;

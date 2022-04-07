@@ -5,16 +5,36 @@
 
 #include <JCore/Ascii.h>
 
+
+
+void CharacterSelectLayer::onEnterTransitionDidFinish() {
+	// 캐릭터 선택씬에 진입하면 캐릭터 정보를 받기위해 바로 패킷을 보낸다.
+
+	if (SendFn::SendLoadCharacterInfoSyn() == false) {
+		PopUp::createInParent("캐릭터 정보 요청이 실패하였습니다.", this, false);
+	}
+}
+
+
 bool CharacterSelectLayer::init() {
 	if (!Layer::init()) {
 		return false;
 	}
 
-	// 캐릭터 선택씬에 진입하면 캐릭터 정보를 받기위해 바로 패킷을 보낸다.
-	SendFn::SendLoadCharacterInfoSyn();
+	m_pCharacterNickNameEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(RECT_IMG_FILENAME));
+	m_pCharacterNickNameEditBox->setPosition({ 600, 350 });
+	m_pCharacterNickNameEditBox->setFontColor(Color4B::WHITE);
+	m_pCharacterNickNameEditBox->setColor(ColorList::Africanviolet_v);
+	m_pCharacterNickNameEditBox->setFontSize(15);
+	m_pCharacterNickNameEditBox->setPlaceHolder("삭제 또는 생성할 캐릭터명 입력");
+	m_pCharacterNickNameEditBox->setPlaceholderFontSize(15);
+	m_pCharacterNickNameEditBox->setAnchorPoint(Vec2::ZERO);
+	m_pCharacterNickNameEditBox->setPlaceholderFontColor(Color4B::BLACK);
+	m_pCharacterNickNameEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
+	this->addChild(m_pCharacterNickNameEditBox);
 
 	m_pCreateCharacterButton = TextButton::create(200, 45, "캐릭터 생성", 16);
-	m_pCreateCharacterButton->setPosition({ 550, 300 });
+	m_pCreateCharacterButton->setPosition({ 600, 300 });
 	m_pCreateCharacterButton->setAnchorPoint(Vec2::ZERO);
 	m_pCreateCharacterButton->setColor(ColorList::Babypink_v);
 	m_pCreateCharacterButton->setFontColor(ColorList::Black_v);
@@ -22,24 +42,20 @@ bool CharacterSelectLayer::init() {
 	this->addChild(m_pCreateCharacterButton);
 
 	m_pDeleteCharacterButton = TextButton::create(200, 45, "캐릭터 삭제", 16);
-	m_pDeleteCharacterButton->setPosition({ 550, 250 });
+	m_pDeleteCharacterButton->setPosition({ 600, 250 });
 	m_pDeleteCharacterButton->setAnchorPoint(Vec2::ZERO);
 	m_pDeleteCharacterButton->setColor(ColorList::Babypink_v);
 	m_pDeleteCharacterButton->setFontColor(ColorList::Black_v);
 	m_pDeleteCharacterButton->setClickEvent(CC_CALLBACK_1(CharacterSelectLayer::OnClickedDeleteCharacterButton, this));
 	this->addChild(m_pDeleteCharacterButton);
 
-	m_pCharacterNickNameEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(RECT_IMG_FILENAME));
-	m_pCharacterNickNameEditBox->setPosition({ 550, 350 });
-	m_pCharacterNickNameEditBox->setFontColor(Color4B::WHITE);
-	m_pCharacterNickNameEditBox->setColor(ColorList::Africanviolet_v);
-	m_pCharacterNickNameEditBox->setFontSize(15);
-	m_pCharacterNickNameEditBox->setPlaceHolder("삭제 또는 생성할 캐릭터명 입력");
-	m_pCharacterNickNameEditBox->setPlaceholderFontSize(15);
-	m_pCharacterNickNameEditBox->setAnchorPoint(Vec2::ZERO);
-	m_pCharacterNickNameEditBox->setPlaceholderFontColor(Color4B::GRAY);
-	m_pCharacterNickNameEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
-	this->addChild(m_pCharacterNickNameEditBox);
+	m_pChannelSelectButton = TextButton::create(200, 45, "채널 선택", 16);
+	m_pChannelSelectButton->setPosition({ 600, 200 });
+	m_pChannelSelectButton->setAnchorPoint(Vec2::ZERO);
+	m_pChannelSelectButton->setColor(ColorList::Babypink_v);
+	m_pChannelSelectButton->setFontColor(ColorList::Black_v);
+	m_pChannelSelectButton->setClickEvent(CC_CALLBACK_1(CharacterSelectLayer::OnClickedChannelSelectButton, this));
+	this->addChild(m_pChannelSelectButton);
 
 	return true;
 }
@@ -105,9 +121,15 @@ void CharacterSelectLayer::OnClickedDeleteCharacterButton(TextButton* sender) {
 	SendFn::SendDeleteCharacterSyn(nickName);
 }
 
+void CharacterSelectLayer::OnClickedChannelSelectButton(TextButton* sender) {
+	_Client->SetChannelUID(INVALID_UID);
+	_Client->SetCharacterUID(INVALID_UID);
+	_Client->SetRoomUID(INVALID_UID);
 
-
-
+	this->unscheduleUpdate();
+	this->_eventDispatcher->removeAllEventListeners();
+	Director::getInstance()->replaceScene(ChannelScene::createScene());
+}
 
 
 /* =================================================================================

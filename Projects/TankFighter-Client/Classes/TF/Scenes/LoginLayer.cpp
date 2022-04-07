@@ -19,10 +19,20 @@ bool LoginLayer::init() {
 		return false;
 	}
 
+	Text* pLogoText = Text::create("탱크 파이터!", FONT_PATH_DEFAULT, 72);
+	pLogoText->setSkewX(30.0f);
+	pLogoText->setPosition({ 500, 500 });
+	this->addChild(pLogoText);
 
+	Text* pInfoText = Text::create("개발자 : 윤정도", FONT_PATH_DEFAULT, 25);
+	pInfoText->enableGlow(Color4B::GRAY);
+	pInfoText->setColor(ColorList::AbsoluteZero_v);
+	pInfoText->setAnchorPoint(Vec2::ANCHOR_MIDDLE_BOTTOM);
+	pInfoText->setSkewX(30.0f);
+	pInfoText->setPosition({ 500, 400 });
+	this->addChild(pInfoText);
 
-	//return true;
-	///return true;
+	
 	// 탱크 바디 - 바퀴 달린 부분
 	m_pTank = Tank::create();
 	this->addChild(m_pTank);
@@ -39,8 +49,8 @@ bool LoginLayer::init() {
 	TextButton* loginBtn = TextButton::create(200, 45, "로그인", 15);
 	loginBtn->setAnchorPoint(Vec2::ZERO);
 	loginBtn->setPosition({ 400, 200 });
-	loginBtn->setBackgroundColor(Color3B::GRAY);
-	loginBtn->setFontColor(Color3B::BLUE);
+	loginBtn->setBackgroundColor(ColorList::Camel_v);
+	loginBtn->setFontColor(Color3B::BLACK);
 	loginBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::OnClickedLoginButton, this));
 	this->addChild(loginBtn);
 	Button::create();
@@ -48,15 +58,15 @@ bool LoginLayer::init() {
 	TextButton* registerBtn = TextButton::create(200, 45, "회원가입", 15);
 	registerBtn->setAnchorPoint(Vec2::ZERO);
 	registerBtn->setPosition({ 400, 150 });
-	registerBtn->setBackgroundColor(Color3B::GRAY);
-	registerBtn->setFontColor(Color3B::GREEN);
+	registerBtn->setBackgroundColor(ColorList::Camel_v);
+	registerBtn->setFontColor(Color3B::BLACK);
 	registerBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::OnClickedRegisterButton, this));
 	this->addChild(registerBtn);
 
 	TextButton* reconnectBtn = TextButton::create(200, 45, "서버 재접속 시도", 15);
 	reconnectBtn->setAnchorPoint(Vec2::ZERO);
 	reconnectBtn->setPosition({ 400, 100 });
-	reconnectBtn->setBackgroundColor(Color3B::GRAY);
+	reconnectBtn->setBackgroundColor(ColorList::Camel_v);
 	reconnectBtn->setFontColor(Color3B::BLACK);
 	reconnectBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::OnClickedReconnectButton, this));
 	this->addChild(reconnectBtn);
@@ -121,28 +131,31 @@ bool LoginLayer::init() {
 	return true;
 }
 
-bool IsAvailableIDPW(std::string& id)
+bool IsAvailableIDPW(JCore::String& id)
 {
-	std::string::iterator iter = std::find_if(id.begin(), id.end(),
-		[](const char s)
-		{
-			if (s >= 'A' && s <= 'Z') return false;
-			else if (s >= 'a' && s <= 'z') return false;
-			else if (s >= '0' && s <= '9') return false;
-			return true;
-		});
+	for (int i = 0; i < id.Length(); i++) {
+		char& s = id[i];
 
-	return iter != id.end() ? false : true;
+		if (s >= 'A' && s <= 'Z' ||
+			s >= 'a' && s <= 'z' ||
+			s >= '0' && s <= '9')
+			continue;
+
+		return false;
+	}
+
+	return true;
 }
 
 void LoginLayer::OnClickedLoginButton(TextButton* sender) {
 	EditBox* pIDEditBox = (EditBox*)this->getChildByTag(EDITBOX_ID);
 	EditBox* pPWEditBox = (EditBox*)this->getChildByTag(EDITBOX_PW);
 
-	std::string id = pIDEditBox->getText();
-	std::string pw = pPWEditBox->getText();
+	JCore::String id = pIDEditBox->getText();
+	JCore::String pw = pPWEditBox->getText();
 
-	if (id.length() > ID_LEN || pw.length() > PASS_LEN) {
+	if (id.Length() > ID_LEN || pw.Length() > PASS_LEN) {
+		PopUp::createInParent("아이디 비밀번호는 영문 + 숫자만 가능", this, false);
 		return;
 	}
 
@@ -150,8 +163,8 @@ void LoginLayer::OnClickedLoginButton(TextButton* sender) {
 
 		auto pPacket = new Packet<LoginSyn>();
 		LoginSyn* pCmdLoginSyn = pPacket->Get<0>();
-		strcpy_s(pCmdLoginSyn->Id, ID_LEN, id.c_str());
-		strcpy_s(pCmdLoginSyn->Password, PASS_LEN, pw.c_str());
+		strcpy_s(pCmdLoginSyn->Id, ID_LEN, id.Source());
+		strcpy_s(pCmdLoginSyn->Password, PASS_LEN, pw.Source());
 
 		if (_Client->SendAsync(pPacket) == false) {
 			PopUp::createInParent("로그인 패킷 전송 실패", this, false);
@@ -167,10 +180,10 @@ void LoginLayer::OnClickedRegisterButton(TextButton* sender) {
 	EditBox* pIDEditBox = (EditBox*)this->getChildByTag(EDITBOX_ID);
 	EditBox* pPWEditBox = (EditBox*)this->getChildByTag(EDITBOX_PW);
 
-	std::string id = pIDEditBox->getText();
-	std::string pw = pPWEditBox->getText();
+	JCore::String id = pIDEditBox->getText();
+	JCore::String pw = pPWEditBox->getText();
 
-	if (id.length() > ID_LEN || pw.length() > PASS_LEN) {
+	if (id.Length() > ID_LEN || pw.Length() > PASS_LEN) {
 		return;
 	}
 
@@ -178,11 +191,11 @@ void LoginLayer::OnClickedRegisterButton(TextButton* sender) {
 
 		auto pPacket = new Packet<RegisterSyn>();
 		RegisterSyn* pCmdRegisterSyn = pPacket->Get<0>();
-		strcpy_s(pCmdRegisterSyn->Id, ID_LEN, id.c_str());
-		strcpy_s(pCmdRegisterSyn->Password, PASS_LEN, pw.c_str());
+		strcpy_s(pCmdRegisterSyn->Id, ID_LEN, id.Source());
+		strcpy_s(pCmdRegisterSyn->Password, PASS_LEN, pw.Source());
 
 		if (_Client->SendAsync(pPacket) == false) {
-			PopUp::createInParent("로그인 패킷 전송 실패", this, false);
+			PopUp::createInParent("회원가입 패킷 전송 실패", this, false);
 		}
 		return;
 	}

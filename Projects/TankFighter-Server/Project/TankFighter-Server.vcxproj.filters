@@ -19,6 +19,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{98be4a22-3f00-4a27-b6a0-09a8ea1ccc14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Workder">
+      <UniqueIdentifier>{8fd42be0-dec0-4b59-b47f-eafd6c89150c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Util\Console.h">
@@ -49,27 +52,6 @@
     <ClInclude Include="..\Sources\TF\Overlapped\IOCPOverlappedQuery.h">
       <Filter>Overlapped</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\MysqlConnection.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\MysqlConnectionPool.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\MysqlDatabase.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\MysqlQuery.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\MysqlQueryFuture.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\StatementType.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\TF\Database\MysqlStatementBuilder.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\TF\Parser\CommandFn.h">
       <Filter>Parser</Filter>
     </ClInclude>
@@ -87,6 +69,30 @@
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Game\PlayerPool.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Worker\BackgroundWorker.h">
+      <Filter>Workder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlConnection.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlConnectionPool.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlQuery.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlQueryFuture.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlStatementBuilder.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\StatementType.h">
+      <Filter>Database</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -108,21 +114,6 @@
     </ClCompile>
     <ClCompile Include="..\Sources\TF\Overlapped\IOCPOverlappedQuery.cpp">
       <Filter>Overlapped</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\MysqlConnection.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\MysqlConnectionPool.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\MysqlDatabase.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\MysqlQuery.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\TF\Database\MysqlQueryFuture.cpp">
-      <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\TF\Parser\CommandFn.cpp">
       <Filter>Parser</Filter>
@@ -147,6 +138,24 @@
     </ClCompile>
     <ClCompile Include="..\Sources\TF\Game\PlayerPool.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Worker\BackgroundWorker.cpp">
+      <Filter>Workder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlConnection.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlConnectionPool.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlDatabase.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlQuery.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Database\MysqlQueryFuture.cpp">
+      <Filter>Database</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

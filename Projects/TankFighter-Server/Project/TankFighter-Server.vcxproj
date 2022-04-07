@@ -49,6 +49,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\Sources\TF\Worker\BackgroundWorker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Database\MysqlConnection.h" />
@@ -56,10 +57,7 @@
     <ClInclude Include="..\Sources\TF\Database\MysqlDatabase.h" />
     <ClInclude Include="..\Sources\TF\Database\MysqlQuery.h" />
     <ClInclude Include="..\Sources\TF\Database\MysqlQueryFuture.h" />
-    <ClInclude Include="..\Sources\TF\Database\MysqlStatementBuilder.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Database\MysqlStatementBuilder.h" />
     <ClInclude Include="..\Sources\TF\Database\StatementType.h" />
     <ClInclude Include="..\Sources\TF\Game\Channel.h" />
     <ClInclude Include="..\Sources\TF\Game\Player.h">
@@ -109,6 +107,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="..\Sources\TF\Worker\BackgroundWorker.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

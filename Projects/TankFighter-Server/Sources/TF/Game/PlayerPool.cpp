@@ -44,6 +44,7 @@ Player* PlayerPool::PopPlayer(TcpSession* session) {
 
 
 	Player* pop = m_PlayerPool.Front();
+	m_PlayerPool.PopFront();
 	pop->m_pSession = session;
 	return pop;
 }

@@ -7,16 +7,20 @@
 #include <JCore/Ascii.h>
 
 
+void BattleFieldLayer::onEnterTransitionDidFinish() {
+	// 배틀필드에 들어오면 
+	// SendFn::SendLoadCharacterInfoSyn();
+}
 
 bool BattleFieldLayer::init() {
 	if (!Layer::init()) {
 		return false;
 	}
 
-	// 배틀필드에 들어오면 
-	SendFn::SendLoadCharacterInfoSyn();
+	
 	
 }
+
 
 /* =================================================================================
  *

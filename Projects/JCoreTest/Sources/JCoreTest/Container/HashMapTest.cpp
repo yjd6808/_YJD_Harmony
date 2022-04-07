@@ -16,7 +16,7 @@ using namespace std;
 #if TEST_HashMapTest == ON
 
 TEST(HashMapTest, Regular) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 	HashMap<int, Model> modelMap;
 	
 	// Insert Å×½ºÆ®

@@ -8,6 +8,7 @@ class BattleFieldLayer : public Layer
 public:
 	BattleFieldLayer(){}
 	bool init() override;
+	void onEnterTransitionDidFinish() override;
 	CREATE_FUNC(BattleFieldLayer);
 
 

@@ -7,15 +7,22 @@
 #include <TF/Network/GameClient.h>
 #include <TF/Network/SendFn.h>
 
-bool ChannelLayer::init() {
-	if (!Layer::init()) {
-		return false;
-	}
+
+void ChannelLayer::onEnterTransitionDidFinish() {
 
 	// 채널씬에 진입하면 채널 정보를 받기위해 바로 패킷을 보낸다.
 	if (SendFn::SendLoadChannelInfoSyn() == false) {
 		PopUp::createInParent("채널 정보 요청이 실패하였습니다.", this, false);
 	}
+}
+
+
+bool ChannelLayer::init() {
+	if (!Layer::init()) {
+		return false;
+	}
+
+	
 
 	return true;
 }
@@ -42,7 +49,7 @@ void ChannelLayer::CmdLoadChannelInfoAck(ICommand* cmd) {
 
 		TextButton* btn = TextButton::create(200, 45, StringUtils::format("%s (%d/%d)", pChannelInfo->Name, pChannelInfo->PlayerCount, pChannelInfo->MaxPlayerCount), 14);
 		btn->setAnchorPoint(Vec2::ZERO);
-		btn->setPosition({ 400, float(450 - 50 * i )});
+		btn->setPosition({ 400, float(350 - 50 * i )});
 		btn->setColor(ColorList::Ashgray_v);
 		btn->setFontColor(ColorList::Black_v);
 		btn->setClickEvent(CC_CALLBACK_1(ChannelLayer::OnChannelClick, this));

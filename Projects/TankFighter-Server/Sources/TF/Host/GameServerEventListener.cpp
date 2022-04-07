@@ -9,6 +9,8 @@
 
 #include <JNetwork/Host/TcpSession.h>
 
+#include <TF/Parser/SendFn.h>
+
 #define _Database	MysqlDatabase::GetInstance()
 #define _PlayerPool PlayerPool::GetInstance()
 #define _World		World::GetInstance()
@@ -30,12 +32,25 @@ void GameServerEventListener::OnDisconnected(JNetwork::TcpSession* disconnetedSe
 		return;
 	}
 
+	// 이게 플레이어가 강종해버리면 이 플레이어 정보를 사용중인 IOCP 쓰레드에서 오류가 날텐데..
+	// 이걸 어떻게 처리하면 좋을까?
+
+	Room* pRoom = _World->GetRoomByPlayer(player);
+	
+	if (pRoom && pRoom->RemovePlayer(player)) {
+		bool bRemoveSuccess = pRoom->GetChannel()->RemoveRoomIfEmpty(pRoom);
+
+		// 안 비어있어서 방이 삭제안된 경우 남아있는 유저들에게 브로드캐스트
+		if (bRemoveSuccess == false) {
+			SendFn::BroadcastUpdateRoomUserAck(pRoom);
+		}
+	}
+
 	if (_World->RemovePlayer(player)) {
 		Console::WriteLine("월드에서 플레이어 정보 안전하게 제거완료");
 	}
 
 	_PlayerPool->ReleasePlayer(player);
-
 	disconnetedSession->SetTag(nullptr);
 }
 

@@ -17,7 +17,7 @@ using namespace std;
 
 // 보이드 타입의 포인터 테스트
 TEST(PointerObserverTest, VoidOwner_VoidWatcher) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 	int* pNew = new int(1000);
 	VoidOwner owner(pNew);
 
@@ -70,7 +70,7 @@ TEST(PointerObserverTest, VoidOwner_VoidWatcher) {
 
 // 타입을 가지는 오너
 TEST(PointerObserverTest, Owner_Watcher) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 	Owner<Model> owner = MakeOwner<Model>(1000);
 
 	// 간접 참조 연산자 오버로딩
@@ -129,7 +129,7 @@ TEST(PointerObserverTest, Owner_Watcher) {
 
 // 다이나믹 캐스팅
 TEST(PointerObserverTest, DynamicCastingTest) {
-	MemoryLeakDetector detector;
+	AutoMemoryLeakDetector detector;
 	
 	{
 		PrintFormat("[Owner 이동 생성자 Test]\n");

@@ -129,3 +129,50 @@ bool SendFn::SendLoadRoomSyn() {
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }
+
+// ROOM_GAME_START_SYN 133
+bool SendFn::SendRoomGameStartSyn() {
+	auto* pPacket = new Packet<RoomGameStartSyn>();
+	RoomGameStartSyn* pRoomGameStartSyn = pPacket->Get<0>();
+	pRoomGameStartSyn->RoomUID = _Client->GetRoomUID();
+	pRoomGameStartSyn->AccountUID = _Client->GetAccountUID();
+	pRoomGameStartSyn->ChannelUID = _Client->GetChannelUID();
+	pRoomGameStartSyn->CharacterUID = _Client->GetCharacterUID();
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+// ROOM_GAME_READY_SYN 134
+bool SendFn::SendRoomGameReadySyn() {
+	auto* pPacket = new Packet<RoomGameReadySyn>();
+	RoomGameReadySyn* pRoomGameReadySyn = pPacket->Get<0>();
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+
+// ROOM_GAME_READY_CANCEL_SYN 135
+bool SendFn::SendRoomGameReadyCancelSyn() {
+	auto* pPacket = new Packet<RoomGameReadyCancelSyn>();
+	RoomGameReadyCancelSyn* pRoomGameReadyCancelSyn = pPacket->Get<0>();
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+// ROOM_LEAVE_SYN 136
+bool SendFn::SendRoomLeaveSyn() {
+	auto* pPacket = new Packet<RoomLeaveSyn>();
+	RoomLeaveSyn* pRoomLeaveSyn = pPacket->Get<0>();
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+bool SendFn::SendAddFriendRequestAck(int requestCharacterUID, bool accept) {
+	auto* pPacket = new Packet<AddFriendRequestAck>();
+	AddFriendRequestAck* pAddFriendRequestAck = pPacket->Get<0>();
+	pAddFriendRequestAck->AcceptedCharacterUID = _Client->GetCharacterUID();
+	pAddFriendRequestAck->RequestCharacterUID = requestCharacterUID;
+	pAddFriendRequestAck->Accept = accept;
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}

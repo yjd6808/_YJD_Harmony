@@ -1,6 +1,6 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/IOCP/IOCP.h>
-#include <JNetwork/IOCP/WorkerManager.h>
+#include <JNetwork/WorkerManager.h>
 #include <JNetwork/IOCP/IOCPWorker.h>
 
 namespace JNetwork {

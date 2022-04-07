@@ -6,7 +6,7 @@
 
 
 #include <JCore/Container/Vector.h>
-#include <JNetwork/IOCP/Worker.h>
+#include <JNetwork/Worker.h>
 
 namespace JNetwork {
 

@@ -33,7 +33,7 @@ int main() {
 
 
 	{
-		MemoryLeakDetector detector;
+		AutoMemoryLeakDetector detector;
 		TcpClient client;
 		MyEventListener eventListener;
 		client.SetEventListener(&eventListener);

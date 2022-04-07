@@ -29,11 +29,11 @@ void IOCPOverlappedQuery::Process(BOOL result, DWORD numberOfBytesTransffered, I
 		return;
 	}
 
+	AutoReleaseConnection autoRelease(pConn, _MysqlConnPool);
+
 	m_pMysqlQueryFuture->InitializeQuery(pConn);
 	m_pMysqlQueryFuture->ExecuteQuery();
 	m_pMysqlQueryFuture->SetReady();
 	m_pMysqlQueryFuture->CallbackExecute();
 	m_pMysqlQueryFuture->Signal();
-
-	_MysqlConnPool->ReleaseConnection(pConn);
 }

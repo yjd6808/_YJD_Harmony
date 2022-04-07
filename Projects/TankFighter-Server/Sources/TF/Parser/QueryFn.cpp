@@ -16,12 +16,27 @@ using namespace JCore;
 #define _World		World::GetInstance()
 
 bool QueryFn::IsCharacterExistByName(const JCore::String& characterName) {
-	auto spQuery = _Database->Query("select count(*) from t_character where c_name = ?", characterName);
+	const auto spQuery = _Database->Query("select count(*) from t_character where c_name = ?", characterName);
 	return spQuery->GetInt(0, 0) > 0;
 }
 
 bool QueryFn::IsCharacterExistByIDs(const int accountUID, const int channelUID, const int characterUID) {
-	auto spQuery = _Database->Query("select count(*) from t_character where c_account_uid = ? and c_channel_uid = ? and c_uid = ?", 
-		accountUID, channelUID, characterUID);
+	const auto spQuery = _Database->Query("select count(*) from t_character where c_account_uid = ? and c_channel_uid = ? and c_uid = ?", 
+	                                      accountUID, channelUID, characterUID);
 	return spQuery->GetResultRowCount() > 0;
+}
+
+bool QueryFn::IsCharacterFriend(int characterUID1, int characterUID2) {
+	return _Database->Query("select * from t_friendship where (c_req_character_uid = ? and c_ack_character_uid = ?) or (c_ack_character_uid = ? and c_req_character_uid = ?)",
+		characterUID1, characterUID2, characterUID1, characterUID2)->GetResultRowCount() > 0;
+}
+
+int QueryFn::GetCharacterUIDByNickName(const JCore::String& nickName) {
+	const auto spQuery = _Database->Query("select u_id from t_character where c_name = ?", nickName);
+
+	if (spQuery->GetResultRowCount()) {
+		return spQuery->GetInt(0, 0);
+	}
+
+	return INVALID_UID;
 }

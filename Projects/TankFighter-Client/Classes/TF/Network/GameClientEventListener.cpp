@@ -7,7 +7,7 @@
 #define _WINSOCKAPI_
 
 #include <TF/Network/GameClientEventListener.h>
-#include <TF/Network/SynchronizedScene.h>
+#include <TF/Scenes/SynchronizedScene.h>
 #include <TF/AppDelegate.h>
 
 #include <TF/Scenes/LoginScene.h>
@@ -37,6 +37,7 @@ void GameClientEventListener::OnDisconnected() {
 
 void GameClientEventListener::OnSent(ISendPacket* sentPacket, Int32UL sentBytes) {
 	// Overalapped Send 결과
+	CCLOG("패킷 전송");
 }
 
 /*
