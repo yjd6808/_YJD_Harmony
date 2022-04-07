@@ -66,5 +66,7 @@ bool MysqlDatabase::Finalize() {
 		DeleteSafe(m_pConnectionPool);
 
 
+	MysqlStatementBuilder::Finalize();
+
 	return true;
 }

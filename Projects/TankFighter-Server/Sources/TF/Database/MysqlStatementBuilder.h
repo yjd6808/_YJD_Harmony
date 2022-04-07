@@ -196,6 +196,7 @@ public:
 	static void Finalize() {
 		if (ms_pConn) {
 			ms_pConn->Disconnect();
+			delete ms_pConn;
 			ms_pConn = nullptr;
 		}
 	}
