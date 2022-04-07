@@ -162,20 +162,20 @@ void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
 void TcpClient::Connected() {
 	m_eState = State::Connected;
 
+	// 일정주기마다 "나 살아있소" 전송
 	if (m_ClientSocket.Option().SetKeepAliveEnabled(true) == SOCKET_ERROR) {
 		Winsock::AssertWinsockMessage("클라이언트 소켓 Keep Alive 활성화 실패");
-		return;
 	}
 
+	// 빠른 반응을 위해 Nagle 알고리즘을 꺼준다.
 	if (m_ClientSocket.Option().SetNagleEnabled(false) == SOCKET_ERROR) {
 		Winsock::AssertWinsockMessage("클라이언트 소켓 Nagle 비활성화 실패");
-		return;
 	}
 
-	// 린저 ON / 타임아웃 0 연결끊으면 버퍼 데이터 바로 버리고 종료
-	if (m_ClientSocket.Option().SetLingerTimeout(0) == SOCKET_ERROR) {
+	// 클라이언트는 린저를 꺼주자.
+	// 송신 버퍼에 있는 데이터를 모두 보내고 안전하게 종료할 수 있도록
+	if (m_ClientSocket.Option().SetLingerEnabled(false) == SOCKET_ERROR) {
 		Winsock::AssertWinsockMessage("클라이언트 소켓 린저 타임아웃 설정 실패");
-		return;
 	}
 
 	m_RemoteEndPoint = m_ClientSocket.GetRemoteEndPoint();

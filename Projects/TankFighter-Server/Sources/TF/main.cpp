@@ -30,7 +30,6 @@ using namespace JNetwork;
 int main() {
 
 	JCore::CriticalSectionMutex mtx;
-	
 
 	// 콘솔창 출력 동기화
 	Winsock::SetMutex(&mtx);
@@ -54,7 +53,6 @@ int main() {
 		}
 
 		// 플레이어 풀 초기화
-		
 		if (!pPlayerPool->Initialize(25)) {
 			return ABNORMAL_EXIT_PLAYERPOOL_INIT_FAILED;
 		}
@@ -64,8 +62,6 @@ int main() {
 		if (!pWorld->Initialize()) {
 			return ABNORMAL_EXIT_WORLD_INIT_FAILED;
 		}
-
-		
 
 		// 게임 서버 시작
 		if (!pGameServer->StartServer()) {

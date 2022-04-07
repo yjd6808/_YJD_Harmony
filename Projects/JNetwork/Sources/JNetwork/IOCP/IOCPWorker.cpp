@@ -55,6 +55,9 @@ namespace JNetwork {
 		SetEvent(m_hPauseEvent);
 	}
 
+	// 문재점!
+	// IOCPAcceptOverlapeed 동적할당을 해제 해주도록 하는 로직이 필요하다.
+	// 지금 Join() 함수 호출 후 PostQueue로 쓰레드에 신호를 주면 반복문을 나와버려서 남은 오버랩이 처리 안되서 해제 불가능하게된다.
 
 	void IOCPWorker::WorkerThread(void* param) {
 		Winsock::Message("IOCPWorker 쓰레드가 실행되었습니다. (%d)", std::this_thread::get_id());
@@ -69,20 +72,6 @@ namespace JNetwork {
 			IOCPPostOrder* pIOCPPostOrder = reinterpret_cast<IOCPPostOrder*>(completionKey);
 			IOCPOverlapped* pIOCPOverlapped = static_cast<IOCPOverlapped*>(pOverlapped);		// dynamic_cast를 하고싶지만 OVERLAPPED는 가상 구조체가 아님
 
-			if (numberOfBytesTransffered == 0 && completionKey != NULL) {
-
-				// 실제 로직처리는 IOCPPostOrder의 Process() 함수에서 진행
-				// pIOCPPostOrder 메모리 해제는 Process 내부에서 처리
-				switch (pIOCPPostOrder->Process(this)) {
-					case IOCP_POST_ORDER_TERMINATE: 
-						goto THREAD_END;
-					case IOCP_POST_ORDER_PAUSE:
-						continue;
-					case IOCP_POST_ORDER_ERROR:
-						DebugAssert(false, "... WTF?");
-				}
-			}
-
 			if (pIOCPOverlapped) {
 				// 역할
 				// 1. 오버랩 동정할당 해제는 오버랩 내부에서 수행
@@ -90,7 +79,21 @@ namespace JNetwork {
 				pIOCPOverlapped->Process(bResult, numberOfBytesTransffered, pIOCPPostOrder);
 				pIOCPOverlapped->Release();
 				continue;
-			} 
+			}
+
+			if (numberOfBytesTransffered == 0 && completionKey != NULL) {
+
+				// 실제 로직처리는 IOCPPostOrder의 Process() 함수에서 진행
+				// pIOCPPostOrder 메모리 해제는 Process 내부에서 처리
+				switch (pIOCPPostOrder->Process(this)) {
+				case IOCP_POST_ORDER_TERMINATE:
+					goto THREAD_END;
+				case IOCP_POST_ORDER_PAUSE:
+					continue;
+				case IOCP_POST_ORDER_ERROR:
+					DebugAssert(false, "... WTF?");
+				}
+			}
 
 			break;
 		}

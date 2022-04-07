@@ -24,12 +24,11 @@ public:
 		Send
 	};
 public:
-	IOCPOverlapped(IOCP* iocp, Type type) : m_eType(type), m_pIocp(iocp) {}
+	IOCPOverlapped(IOCP* iocp, Type type);
 	virtual ~IOCPOverlapped() = default;
 public:
 	virtual void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) = 0;
-	virtual void Release() { delete this; }
-
+	virtual void Release();
 	Type GetType() const { return m_eType; }
 	bool IsFailed(SOCKET hSocket, BOOL result, DWORD numberOfBytesTransffered);
 protected:

@@ -22,7 +22,9 @@ public:
 	int MaxConnection() const { return m_iMaxConnection; }
 	bool AddSession(TcpSession* session);
 	TcpSession* GetSession(SOCKET socket);
+	void DisconnectAllSessions();
 	void Clear();
+	
 private:
 	int m_iMaxConnection;
 	JCore::CriticalSectionMutex m_ContainerLock;

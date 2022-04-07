@@ -37,7 +37,6 @@ namespace JNetwork {
 
 	bool IOCP::Destroy() {
 		if (m_eState == State::Paused || 
-			m_eState == State::Running || 
 			m_eState == State::Destroyed) {
 			return false;
 		}

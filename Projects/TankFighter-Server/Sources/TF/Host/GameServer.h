@@ -12,7 +12,7 @@
 class GameServer : public JNetwork::TcpServer
 {
 public:
-	GameServer() : JNetwork::TcpServer(TCP_MAXIMUM_CONNECTION) {}
+	GameServer() : TcpServer(TCP_MAXIMUM_CONNECTION) {}
 
 	static GameServer* GetInstance();
 	~GameServer() override;
