@@ -54,6 +54,8 @@ bool MysqlDatabase::Initialize() {
 }
 
 bool MysqlDatabase::Finalize() {
+	while (m_pIocp->GetPendingCount() != 0) {}
+
 	m_pIocp->Join();
 
 	if (!m_pIocp->Destroy()) {

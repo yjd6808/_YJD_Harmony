@@ -19,7 +19,7 @@ IOCPOverlappedQuery::IOCPOverlappedQuery(JNetwork::IOCP* iocp, MysqlQueryFuture*
 IOCPOverlappedQuery::~IOCPOverlappedQuery() = default;
 
 void IOCPOverlappedQuery::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	JCore::AutoPointer<MysqlQueryFuture> autoPtrRelease(m_pMysqlQueryFuture, [](MysqlQueryFuture* future) { future->Release(); });
+	JCore::AutoPointer<MysqlQueryFuture> autoReleaseFuture(m_pMysqlQueryFuture, [](MysqlQueryFuture* future) { future->Release(); });
 
 	auto pConn = _MysqlConnPool->GetConnection();
 
@@ -29,7 +29,7 @@ void IOCPOverlappedQuery::Process(BOOL result, DWORD numberOfBytesTransffered, I
 		return;
 	}
 
-	AutoReleaseConnection autoRelease(pConn, _MysqlConnPool);
+	AutoReleaseConnection autoReleaseConnection(pConn, _MysqlConnPool);
 
 	m_pMysqlQueryFuture->InitializeQuery(pConn);
 	m_pMysqlQueryFuture->ExecuteQuery();

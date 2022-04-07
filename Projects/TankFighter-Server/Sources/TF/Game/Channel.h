@@ -3,7 +3,7 @@
 #include <JCore/Container/HashMap.h>
 #include <JCore/Container/Vector.h>
 #include <JCore/Functional.h>
-#include <TF/Game/Room.h>
+#include <TF/Game/RoomPool.h>
 
 namespace JNetwork { struct ISendPacket; }
 
@@ -12,6 +12,10 @@ class Channel
 {
 public:
 	Channel(int channedUID, const JCore::String& channemName, int maxPlayerCount);
+	virtual ~Channel();
+
+	bool Initialize();
+	bool Finalize();
 
 	// 불변 정보
 	JCore::String GetChnnelName()	   			{ return m_ChannelName; }
@@ -48,5 +52,6 @@ private:
 
 	JCore::CriticalSectionMutex m_RoomMapLock;
 	JCore::HashMap<int, Room*> m_RoomMap;
+	RoomPool m_RoomPool;
 };
 

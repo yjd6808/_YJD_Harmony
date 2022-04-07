@@ -53,7 +53,7 @@ int main() {
 		}
 
 		// 플레이어 풀 초기화
-		if (!pPlayerPool->Initialize(25)) {
+		if (!pPlayerPool->Initialize(PLAYER_POOL_SIZE)) {
 			return ABNORMAL_EXIT_PLAYERPOOL_INIT_FAILED;
 		}
 		
@@ -72,7 +72,7 @@ int main() {
 		std::thread th([&]() {
 			while (run) {
 				auto channels = pWorld->GetChannels();
-				Console::WriteLine("채널1(%d명/%d개의 방) 채널2(%d명/%d개의 방) 채널3(%d명/%d개의 방) 채널4(%d명/%d개의 방)", 
+				Console::WriteLine("채널1(%d명 / %d개의 방) 채널2(%d명 / %d개의 방) 채널3(%d명 / %d개의 방) 채널4(%d명 / %d개의 방)", 
 					channels[0]->GetPlayerCount(), channels[0]->GetRoomCount(),
 					channels[1]->GetPlayerCount(), channels[1]->GetRoomCount(), 
 					channels[2]->GetPlayerCount(), channels[2]->GetRoomCount(), 

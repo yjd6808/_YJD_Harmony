@@ -3,6 +3,7 @@
 #include <TF/Game/Channel.h>
 #include <TF/Util/Console.h>
 #include <TF/Game/Player.h>
+#include <TF/ServerConfiguration.h>
 #include <JNetwork/Packet.h>
 
 using namespace JCore;
@@ -12,9 +13,21 @@ Channel::Channel(int channedUID, const String& channelName, int maxPlayerCount)
 	: m_ChannelUID(channedUID)
 	, m_ChannelName(channelName)
 	, m_iMaxPlayerCount(maxPlayerCount)
-	, m_PlayerList(30) {
+	, m_PlayerList(PLAYER_POOL_SIZE)
+	, m_RoomPool(this)
+{
 }
 
+Channel::~Channel() {
+}
+
+bool Channel::Initialize() {
+	return m_RoomPool.Initialize(ROOM_POOL_SIZE);
+}
+
+bool Channel::Finalize() {
+	return m_RoomPool.Finalize();
+}
 
 
 int Channel::GetPlayerCount() {
@@ -92,8 +105,8 @@ Player* Channel::PlayerFindIf(Func<bool, Player*> predicate) {
 }
 
 Room* Channel::CreateRoom(Player* creator, const String& roomName, int maxPlayerCount) {
-	Room* pNewRoom = new Room(this, creator, roomName, maxPlayerCount);
 	CriticalSectionLockGuard guard(m_RoomMapLock);
+	Room* pNewRoom = m_RoomPool.PopRoom(creator, roomName, maxPlayerCount);
 	if (!m_RoomMap.Insert(pNewRoom->GetRoomUID(), pNewRoom))
 		return nullptr;
 
@@ -124,9 +137,8 @@ bool Channel::RemoveRoom(const int roomUID) {
 	}
 
 	Room* pRoom = m_RoomMap[roomUID];
-	DeleteSafe(pRoom);
-
-	return m_RoomMap.Remove(roomUID);;
+	m_RoomPool.ReleaseRoom(pRoom);
+	return m_RoomMap.Remove(roomUID);
 }
 
 bool Channel::RemoveRoomIfEmpty(Room* room) {
@@ -193,7 +205,7 @@ bool Channel::LeaveRoom(Player* player) {
 	}
 
 	if (pRoom->IsEmpty()) {
-		DeleteSafe(pRoom);
+		m_RoomPool.ReleaseRoom(pRoom);
 		return m_RoomMap.Remove(iRoomUID);
 	}
 	

@@ -49,7 +49,6 @@ void TcpSessionContainer::Clear() {
 	m_Container.Values().Extension().ForEach([](TcpSession* session) {
 		delete session;
 	});
-	// 일단 삭제를 여기서 시켜주자.
 	m_Container.Clear();
 }
 

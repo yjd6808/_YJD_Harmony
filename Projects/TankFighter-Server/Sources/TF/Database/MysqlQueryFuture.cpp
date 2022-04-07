@@ -17,6 +17,9 @@ MysqlQueryFuture::MysqlQueryFuture(const JCore::String& statement) :
 MysqlQueryFuture::~MysqlQueryFuture() {
 	if (m_WaitHandle != INVALID_HANDLE_VALUE)
 		CloseHandle(m_WaitHandle);
+
+	// 여기서 해제 안해주면 MysqlQuery이녀석 크기만큼 동적할당 해제가 안된다. 그래서 수동으로 호출해줘야함 / 22/04/07 저녁 8시
+	Memory::PlacementDeallocate(m_Result);
 }
 
 MysqlQuery& MysqlQueryFuture::Wait() {

@@ -94,6 +94,9 @@
     <ClInclude Include="..\Sources\TF\Database\StatementType.h">
       <Filter>Database</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\TF\Game\RoomPool.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\TF\Util\Console.cpp">
@@ -156,6 +159,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\TF\Database\MysqlQueryFuture.cpp">
       <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Game\RoomPool.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

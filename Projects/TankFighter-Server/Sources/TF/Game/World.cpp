@@ -20,15 +20,23 @@ World* World::GetInstance() {
 
 
 bool World::Initialize() {
-	
-	auto spChannelInfos = MysqlDatabase::GetInstance()->Query("select * from t_channel");
+
+	const auto spChannelInfos = MysqlDatabase::GetInstance()->Query("select * from t_channel");
 
 	for (int i = 0; i < spChannelInfos->GetResultRowCount(); i++) {
 		int iChannedUID = spChannelInfos->GetInt(i, 0);
 		String szChannelName = spChannelInfos->GetString(i, 1);
-		int iMaxPlayerCount = spChannelInfos->GetInt(i, 2);
+		const int iMaxPlayerCount = spChannelInfos->GetInt(i, 2);
 
-		m_ChannelMap.Insert(iChannedUID, new Channel(iChannedUID, szChannelName, iMaxPlayerCount));
+
+		Channel* pChannel = new Channel(iChannedUID, szChannelName, iMaxPlayerCount);
+
+		if (!pChannel->Initialize()) {
+			Console::WriteLine(ConsoleColor::BROWN, "%d 채널 초기화 중 오류 발생!", iChannedUID);
+			return false;
+		}
+
+		m_ChannelMap.Insert(iChannedUID, pChannel);
 		Console::WriteLine(ConsoleColor::LIGHTCYAN, "%d 채널 초기화 완료", iChannedUID);
 	}
 
@@ -38,6 +46,7 @@ bool World::Initialize() {
 bool World::Finalize() {
 
 	m_ChannelMap.Values().Extension().ForEach([](Channel* channel) {
+		channel->Finalize();
 		delete channel;
 	});
 
@@ -45,7 +54,12 @@ bool World::Finalize() {
 }
 
 int World::GetTotalRoomCount() {
-	return 1;
+	int iTotalRoomCount = 0;
+	m_ChannelMap.Values().Extension().ForEach([&iTotalRoomCount](Channel* channel) {
+		iTotalRoomCount += channel->GetRoomCount();
+	});
+
+	return iTotalRoomCount;
 }
 
 int World::GetTotalPlayerCount() {

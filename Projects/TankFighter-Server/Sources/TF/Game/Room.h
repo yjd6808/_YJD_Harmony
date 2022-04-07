@@ -24,14 +24,19 @@
 
 
 namespace JNetwork { struct ISendPacket; }
+
+class RoomPool;
 struct RoomInfo;
 class Player;
 class Channel;
 class Room
 {
-public:
-	Room(Channel* channel, Player* host, const JCore::String& roomName, int maxPlayerCount);
+	// 생성/소멸은 RoomPool에서 관장한다.
+	Room();
+	virtual ~Room() = default;
 
+	void Initialize(Channel* channel, Player* host, const JCore::String& roomName, int maxPlayerCount);
+public:
 	// 불변 정보는 락 안함
 	Channel* GetChannel() const					{ return static_cast<Channel*>(m_pChannel); }
 	JCore::String GetRoomName() const			{ return m_RoomName; }
@@ -39,6 +44,7 @@ public:
 	int GetMaxPlayerCount() const				{ return m_iMaxPlayerCount; }
 	void Lock()									{ m_RoomLock.Lock();}
 	void Unlock()								{ m_RoomLock.Unlock();}
+	
 
 	// 가변 정보
 	bool IsEmpty()								{ return GetPlayerCount() == 0; }
@@ -64,6 +70,8 @@ private:
 	void* m_pHost;
 
 	inline static std::atomic<int> ms_iRoomSeq = 0;
+
 	friend class Channel;
+	friend class RoomPool;
 };
 

@@ -21,6 +21,7 @@
     <ClCompile Include="..\Sources\TF\Game\PlayerMap.cpp" />
     <ClCompile Include="..\Sources\TF\Game\PlayerPool.cpp" />
     <ClCompile Include="..\Sources\TF\Game\Room.cpp" />
+    <ClCompile Include="..\Sources\TF\Game\RoomPool.cpp" />
     <ClCompile Include="..\Sources\TF\Game\World.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -70,6 +71,7 @@
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Game\PlayerPool.h" />
     <ClInclude Include="..\Sources\TF\Game\Room.h" />
+    <ClInclude Include="..\Sources\TF\Game\RoomPool.h" />
     <ClInclude Include="..\Sources\TF\Game\World.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>

@@ -5,14 +5,25 @@
 
 using namespace JCore;
 
-Room::Room(Channel* channel, Player* host, const String& roomName, int maxPlayerCount)
-	: m_iRoomUID(ms_iRoomSeq++)
-	, m_iMaxPlayerCount(maxPlayerCount)
-	, m_pChannel(channel)
-	, m_RoomName(roomName)
-	, m_pHost(host) {
 
+Room::Room()
+	: m_iRoomUID(INVALID_UID)
+	, m_iMaxPlayerCount(0)
+	, m_pChannel(nullptr)
+	, m_RoomName(0)					// ºó ¹®ÀÚ¿­·Î µÒ - Ç®¿¡¼­ ²¨³¾¶§ ¹®ÀÚ¿­ ÇÒ´çµÊ
+	, m_pHost(nullptr)
+{
+}
 
+void Room::Initialize(Channel* channel, Player* host, const JCore::String& roomName, int maxPlayerCount) {
+	CriticalSectionLockGuard guard(m_RoomLock);
+	m_iRoomUID = ms_iRoomSeq++;
+	m_iMaxPlayerCount = maxPlayerCount;
+	m_pChannel = Move(channel);
+	m_RoomName = roomName;
+	m_pHost = host;
+	m_PlayerList.Clear();
+	m_eRoomState = RoomState::ReadyWait;
 }
 
 int Room::GetPlayerCount() {
