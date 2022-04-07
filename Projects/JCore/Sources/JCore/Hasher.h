@@ -62,7 +62,7 @@ struct Hasher<double>
 template <>
 struct Hasher<String>
 {
-	Int32U operator()(String& val) const {
+	Int32U operator()(const String& val) const {
 		Int32U uiConv = PrimeInt32U_v;
 		const char* pBuffer = val.Source();
  
@@ -72,10 +72,6 @@ struct Hasher<String>
 		}
 
 		return uiConv;
-	}
-
-	Int32U operator()(String&& val) {
-		return operator()(val);
 	}
 };
 

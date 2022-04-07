@@ -384,14 +384,12 @@ protected:
 	}
 
 	TListNode* CreateNewNode(const T& data) {
-		TListNode* pNewNode = new TListNode;
-		pNewNode->Value = data;
+		TListNode* pNewNode = new TListNode(data);
 		return pNewNode;
 	}
 
 	TListNode* CreateNewNode(T&& data) {
-		TListNode* pNewNode = new TListNode;
-		pNewNode->Value = Move(data);
+		TListNode* pNewNode = new TListNode(Move(data));
 		return pNewNode;
 	}
 

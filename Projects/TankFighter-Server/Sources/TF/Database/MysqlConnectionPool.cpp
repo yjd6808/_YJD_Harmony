@@ -58,8 +58,7 @@ MysqlConnection* MysqlConnectionPool::GetConnection() {
 	MysqlConnection* pConn;
 	CriticalSectionLockGuard guard(m_Mtx);
 
-	if (m_ConnectionList.Size() > 0) 
-	{
+	if (m_ConnectionList.Size() > 0) {
 		pConn = m_ConnectionList.Front();
 		m_ConnectionList.PopFront();
 

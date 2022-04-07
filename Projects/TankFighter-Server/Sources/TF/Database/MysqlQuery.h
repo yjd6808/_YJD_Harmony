@@ -12,8 +12,11 @@
 #include <map>
 #include <sstream>
 
-#include <TF/Database/MysqlConnection.h>
+#include <JCore/Container/HashMap.h>
 #include <JCore/Time.h>
+
+#include <TF/Database/MysqlConnection.h>
+
 #include <TF/Database/MysqlStatementBuilder.h>
 #include <TF/Database/StatementType.h>
 
@@ -24,7 +27,7 @@
 
 class MysqlQuery
 {
-	using TResultRow = std::map<int, JCore::String>;
+	using TResultRow = JCore::HashMap<int, JCore::String>;
 public:
 	MysqlQuery(MysqlConnection *mConn, const JCore::String& preparedStatement);
 	~MysqlQuery();
@@ -67,8 +70,8 @@ public:
 	JCore::DateTime GetTime(const unsigned int &rowIdx, const unsigned int &fieldIdx);
 	JCore::DateTime GetTime(const unsigned int &rowIdx, const JCore::String &fieldName);
 
-	unsigned int GetResultRowCount();
-	unsigned int GetFieldCount();
+	unsigned int GetResultRowCount() const;
+	unsigned int GetFieldCount() const;
 
 	bool IsSuccess() const { return m_bSuccess; }
 	bool IsFailed() const { return !m_bSuccess; }
@@ -77,8 +80,8 @@ private:
 	MysqlConnection* m_sqlConn;
 	JCore::String m_PreparedStatement;
 	bool m_bSuccess;
-	std::map<int, TResultRow> m_ResultMap;
-	std::map<int, JCore::String> m_FieldMap;
-	std::map<JCore::String, int> m_FieldStringToIntMap;
+	JCore::HashMap<int, TResultRow> m_ResultMap;
+	JCore::HashMap<int, JCore::String> m_FieldMap;
+	JCore::HashMap<JCore::String, int> m_FieldStringToIntMap;
 };
 

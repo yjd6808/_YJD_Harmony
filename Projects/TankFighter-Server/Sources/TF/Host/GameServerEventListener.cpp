@@ -34,6 +34,7 @@ void GameServerEventListener::OnDisconnected(JNetwork::TcpSession* disconnetedSe
 
 	// 이게 플레이어가 강종해버리면 이 플레이어 정보를 사용중인 IOCP 쓰레드에서 오류가 날텐데..
 	// 이걸 어떻게 처리하면 좋을까?
+	// 일단 지금 상태로는 전부 뜯어 고쳐야하기 땜에 지금은 수정하긴 힘들다.
 
 	Room* pRoom = _World->GetRoomByPlayer(player);
 	

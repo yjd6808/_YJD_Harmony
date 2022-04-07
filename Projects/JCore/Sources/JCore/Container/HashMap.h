@@ -159,16 +159,9 @@ public:
 		DeleteArraySafe(m_pTable);
 	}
 public:
-	//Lazy Template Method Instantiation을 위해.. 템플릿으로 처리
-	//template <typename UKey, typename UValue>
-	THashMap& operator=(const THashMap& other) {
-		// static_assert(IsSameType_v<UKey, TKey>, "... UKey and TKey is difference type.");
-		// static_assert(IsSameType_v<UValue, TValue>, "... UValue and TValue is difference type.");
-		// static_assert(IsAssignable_v<UKey, TKey>, "... UKey cannot be assign to TKey. (UKey = TKey is impossible operation)");
-		// static_assert(IsAssignable_v<UValue, TValue>, "... UValue cannot be assign to TValue. (UValue = TValue is impossible operation)");
 
-		// using UBucket	= Bucket<UKey, UValue>;
-		// using UListNode  = ListNode<BucketNode<UKey, UValue>>;
+
+	THashMap& operator=(const THashMap& other) {
 
 		Clear();
 		ExpandIfNeeded(other.m_iSize);
@@ -245,7 +238,54 @@ public:
 			InsertBucketPrev(m_pTailBucket, &m_pTable[uiBucket]);
 		}
 
-		m_pTable[uiBucket].PushBack({ { Forward<Ky>(key), Forward<Vy>(value)}, uiHash });
+		
+		/*
+		 *  [문제 발생]
+		 *	m_pTable[uiBucket].PushBack({ { Forward<Ky>(key), Forward<Vy>(value)}, uiHash });
+		 *	첨에 이렇게 구현했는데 메모리릭 발생한다. ㄷㄷㄷ
+		 *  HashMap<int, int> 같은 원시타입은 해제가 잘 되는데 HashMap<int, String> 과 같은 녀석이 문자열은 동적할당이 해제가 안되고 있었다.
+		 *
+		 *
+		 *  [정도의 고민과 해결 과정]
+		 *	내가 구현한 ListCollection.h의 함수에서 ListNode를 new TListNode로 생성하면서 Placement Allocation을 생성자에서 수행해버린다.
+		 *
+		 *	TListNode* CreateNewNode(const T& data) {
+		 *		TListNode* pNewNode = new TListNode;			--> 여기서 Placement Allocation을 수행해버린다.
+		 *		pNewNode->Value = data;							--> 이때 이걸로 덮어써버리는데 new TListNoed를 하면서 Placement Allocate한 
+		 *		return pNewNode;									녀석을 해제해줘야하는데 덮어 써버렸기 땜에 이제 해제할 수가 없게됨
+		 *	}
+		 *
+		 *  그래서 아래와 같은 연결리스트를 만들면 오류가 발생한다.
+		 * 	LinkedList<Tuple<int, String>> list;
+		 * 	list.PushBack({ 1, "abfd" });		// 메모리릭 32bytes
+		 * 	list.EmplaceBack( 1, "abfd" );		// 메모리릭 없음
+		 * 										   이건 EmplaceBack 함수에서 new TListNode{Forward<Args>(args)...}로 바로 Placement Allocate를 수행하기 때문에
+		 *	
+		 *
+		 *	m_pTable[uiBucket].EmplaceBack({ Forward<Ky>(key), Forward<Vy>(value) }, uiHash);
+		 *	그래서 이렇게 수정했는데 이러면 {}이걸 Initalizer_list로 컴파일러가 해석하나보다. 그래서
+		 *
+		 *  근데 일단 LinkedList<Tuple<int, String>>과 같은 문제를 해결해야한다.
+		 *	ListNode에 단순히 PlacementAllocation을 사용할지 안할지를 확인하는 변수를 생성자로 추가로 받을 수 있도록 했다.
+		 *
+		 *	이렇게 수정하면 일단 동작은 잘했다.
+		 *  m_pTable[uiBucket].EmplaceBack(TKeyValuePair{ Forward<Ky>(key), Forward<Vy>(value) }, uiHash);
+		 *
+		 *  근본적으로 해결하기 위해서
+		 *	이렇게 인자로 전달해줘서 생성하도록 변경함
+		 *   TListNode* CreateNewNode(const T& data) {
+		 * 	 	TListNode* pNewNode = new TListNode(data);	
+		 *	 	return pNewNode;						
+		 *	 }
+		 *
+		 *	 이제 메모리릭 발생안함
+		 *	 LinkedList<Tuple<int, String>> list;
+		 *	 list.PushBack({ 1, "abfd" });			 
+		 *	 list.EmplaceBack( 1, "abfd" );		
+		 */
+
+		
+		m_pTable[uiBucket].EmplaceBack(TKeyValuePair{ Forward<Ky>(key), Forward<Vy>(value) }, uiHash);
 		this->m_iSize++;
 		return true;
 	}

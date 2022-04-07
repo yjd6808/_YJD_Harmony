@@ -456,7 +456,7 @@ Tuple<char*, int, int> String::GetRangeUnsafe(const int startIdx, const int endI
 	char* pStr = m_pBuffer + startIdx;
 	int iCurIdx = startIdx;
 	int iIdx = 0;
-	int iAllocCapacity = endIdx - startIdx + 10;
+	const int iAllocCapacity = endIdx - startIdx + 10;
 	char* szRange = new char[iAllocCapacity];
 
 	while (iCurIdx <= endIdx) {
@@ -466,7 +466,7 @@ Tuple<char*, int, int> String::GetRangeUnsafe(const int startIdx, const int endI
 	}
 
 	szRange[iIdx] = NULL;
-	return { szRange, iIdx - 1, iAllocCapacity };
+	return { szRange, iIdx, iAllocCapacity };
 }
 
 // delimiter 문자열 기준으로 분리합니다.

@@ -30,8 +30,8 @@ StatementType MysqlQuery::ParseStatement(const JCore::String& statement) {
 
 
 JCore::String MysqlQuery::GetFieldName(const unsigned int& field) {
-	if (m_FieldMap.size() < field) {
-		Console::WriteLine(ConsoleColor::RED, "%d개의 필드밖에 없습니다.", m_FieldMap.size());
+	if (m_FieldMap.Size() < field) {
+		Console::WriteLine(ConsoleColor::RED, "%d개의 필드밖에 없습니다.", m_FieldMap.Size());
 		return NULL;
 	}
 
@@ -49,7 +49,7 @@ JCore::String MysqlQuery::GetString(const unsigned int& rowIdx, const unsigned i
 		return NULL;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
 	JCore::String sValue = rSelectedRow[fieldIdx];
 
 	return sValue;
@@ -66,7 +66,7 @@ JCore::String MysqlQuery::GetString(const unsigned int& rowIdx, const JCore::Str
 		return NULL;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
 	const int iFieldID = m_FieldStringToIntMap[fieldName];
 	JCore::String sValue = rSelectedRow[iFieldID];
 
@@ -85,7 +85,7 @@ int MysqlQuery::GetInt(const unsigned int &rowIdx, const unsigned int &fieldIdx)
 		return NULL;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
 	const int iValue = atoi(rSelectedRow[fieldIdx].Source());
 
 	return iValue;
@@ -102,7 +102,7 @@ int MysqlQuery::GetInt(const unsigned int &rowIdx, const JCore::String &fieldNam
 		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
 		return NULL;
 	}
-	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
 
 	const int iFieldID = m_FieldStringToIntMap[fieldName];
 	const int iValue = atoi(rSelectedRow[iFieldID].Source());
@@ -120,8 +120,7 @@ double MysqlQuery::GetDouble(const unsigned int &rowIdx, const unsigned int &fie
 		return 0;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[rowIdx];
-
+	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
 	const double dValue = atof(rSelectedRow[fieldIdx].Source());
 
 	return dValue;
@@ -137,7 +136,7 @@ double MysqlQuery::GetDouble(const unsigned int &rowIdx, const JCore::String &fi
 		return 0;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
 
 	const int iFieldID = m_FieldStringToIntMap[fieldName];
 	const double dValue = atof(rSelectedRow[iFieldID].Source());
@@ -150,18 +149,20 @@ JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const unsigned i
 		Console::WriteLine(ConsoleColor::RED, "쿼리 수행결과가 존재하지 않습니다");
 		return 0;
 	}
+
 	if (GetResultRowCount() <= rowIdx) {
 		Console::WriteLine(ConsoleColor::RED, "%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
 		return 0;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[rowIdx];
-	JCore::String val = rSelectedRow[fieldIdx];
+	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
+	const JCore::String& val = rSelectedRow[fieldIdx];
 
 	int precision = atoi(val.GetRange(20, 5).Source());
-	int mili = precision / 1000;
+	const int mili = precision / 1000;
+
 	precision -= precision * mili;
-	int micro = precision;
+	const int micro = precision;
 
 	return JCore::DateAndTime(
 		atoi(val.GetRange(0, 3).Source()),
@@ -185,14 +186,15 @@ JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const JCore::Str
 		return 0;
 	}
 
-	TResultRow rSelectedRow = m_ResultMap[rowIdx];
+	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
 
 	const int iFieldID = m_FieldStringToIntMap[fieldName];
-	JCore::String val = rSelectedRow[iFieldID];
+	const JCore::String& val = rSelectedRow[iFieldID];
 	int precision = atoi(val.GetRange(20, 25).Source());
-	int mili = precision / 1000;
+	const int mili = precision / 1000;
+
 	precision -= precision * mili;
-	int micro = precision;
+	const int micro = precision;
 
 	return JCore::DateAndTime(
 		atoi(val.GetRange(0, 3).Source()),
@@ -207,13 +209,13 @@ JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const JCore::Str
 }
 
 
-unsigned int MysqlQuery::GetResultRowCount() {
-	const int iRowCount = m_ResultMap.size();
+unsigned int MysqlQuery::GetResultRowCount() const {
+	const int iRowCount = m_ResultMap.Size();
 	return iRowCount;
 }
 
-unsigned int MysqlQuery::GetFieldCount() {
-	const int iFieldCount = m_FieldMap.size();
+unsigned int MysqlQuery::GetFieldCount() const {
+	const int iFieldCount = m_FieldMap.Size();
 	return iFieldCount;
 }
 
@@ -245,8 +247,8 @@ bool MysqlQuery::ExecuteQuery() {
 	// 필드 인덱스에서 필드 이름을 얻을 수 있도록 한다.
 	int i = 0;
 	while ((field = mysql_fetch_field(result))) {
-		m_FieldMap.insert(std::pair<int, JCore::String>(i, field->name));
-		m_FieldStringToIntMap.insert(std::pair<JCore::String, int>(field->name, i));
+		m_FieldMap.Insert(i, field->name);
+		m_FieldStringToIntMap.Insert(field->name, i);
 		i++;
 	}
 
@@ -255,9 +257,9 @@ bool MysqlQuery::ExecuteQuery() {
 	while ((row = mysql_fetch_row(result))) {
 		TResultRow resRow;
 		for (int n = 0; n < iNumFields; n++)
-			resRow.insert(std::pair<int, JCore::String>(n, row[n] ? row[n] : "NULL"));
+			resRow.Insert(n, row[n] ? row[n] : "NULL");
 
-		m_ResultMap.insert(std::pair<int, TResultRow>(i, resRow));
+		m_ResultMap.Insert(i, resRow);
 
 		i++;
 	}

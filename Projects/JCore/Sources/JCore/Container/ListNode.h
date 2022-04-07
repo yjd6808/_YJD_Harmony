@@ -22,7 +22,7 @@ struct ListNode
 
 	template <typename... Args>
 	void Construct(Args&&... args) {
-		new (__builtin_addressof(Value)) T(Forward<Args>(args)...);
+		new (__builtin_addressof(Value)) T{ Forward<Args>(args)... };
 	}
 
 	void Destroy() {

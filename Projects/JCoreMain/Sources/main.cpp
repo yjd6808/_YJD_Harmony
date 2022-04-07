@@ -60,12 +60,19 @@ struct A
 
 
 int main() {
-	constexpr int k = sizeof(A);
-	const int afs = 500;
+	AutoMemoryLeakDetector detector;
 
-	const JCore::String& fds = "sda";
-	String b = "fdsfdsfd";
-	JCore::String& ffdsds = b;
-	Arg("abd");
+	HashMap<int, String> nodes;
+	nodes.Insert( 0, "abcd" );
+
+
+	LinkedList<Tuple<int, String>> list;
+	list.PushBack({ 1, "abfd" });		// 메모리릭 32bytes
+	list.EmplaceBack(1, "abfd");		// 메모리릭 없음
+
+
+
+
+
 	return 0;
 }

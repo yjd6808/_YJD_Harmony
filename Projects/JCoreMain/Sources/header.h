@@ -5,6 +5,8 @@
 #include <JCore/Random.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Time.h>
+
+#include <JCore/Container/HashMap.h>
 #include <iostream>
 
 
