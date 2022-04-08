@@ -322,7 +322,7 @@ public:
 
 
 
-struct /*__declspec(novtable) */ ControlBlock
+struct __declspec(novtable)  ControlBlock
 {	
 	ControlBlock() = default;
 	virtual ~ControlBlock() = default;
@@ -330,8 +330,10 @@ struct /*__declspec(novtable) */ ControlBlock
 	virtual void DeleteSelf() = 0;
 	virtual void DestroyObject() = 0;
 
+	// 레퍼런스 카운트 올릴 때 위크 카운트도 같이 올려준다.
 	void IncreaseRefCount() {
 		ReferenceCount++;
+		WeakCount++;
 	}
 
 	void IncreaseWeakCount() {
@@ -638,7 +640,6 @@ protected:
 		}
 
 		m_ControlBlock->IncreaseRefCount();
-		m_ControlBlock->IncreaseWeakCount();
 	}
 
 	void AddWeakCount() const {
@@ -654,8 +655,12 @@ protected:
 			return;
 		}
 
+		// 레퍼런스 카운트 줄일때 위크 카운트도 같이 줄이도록 하므로 이 코드 없어야함 ㄷㄷ;
+		// 이거땜에 계속 서버 팅겼나보다.. ㅠㅠ
+		// 잘못된 메모리참조로 튕길때도 있고 안튕길때도 있어서 찾기가 넘 어려웠다. ㄷㄷ
+		// m_ControlBlock->DecreaseWeakCount();
 		m_ControlBlock->DecreaseRefCount();
-		m_ControlBlock->DecreaseWeakCount();
+		
 	}
 
 	void SubtractWeakCount() const {

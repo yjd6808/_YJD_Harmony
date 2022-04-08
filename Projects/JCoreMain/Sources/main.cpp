@@ -63,12 +63,22 @@ int main() {
 	AutoMemoryLeakDetector detector;
 
 	HashMap<int, String> nodes;
-	nodes.Insert( 0, "abcd" );
 
+	Random  rand;
+	int a = rand.GenerateInt(0, 300);
+	for (int i = 0; i < a; i++) {
+		String z = "abcd";
+		nodes.Insert(i, z + i);
+		nodes.Values().Extension().ForEach([](String& str) {
+			std::cout << str << "\n";
+			});
+	}
 
-	LinkedList<Tuple<int, String>> list;
-	list.PushBack({ 1, "abfd" });		// 메모리릭 32bytes
-	list.EmplaceBack(1, "abfd");		// 메모리릭 없음
+	for (int i = 0; i < a; i++) {
+		if (!nodes.Remove(i)) {
+			DebugAssert(false, "fdsf");
+		}
+	}
 
 
 
