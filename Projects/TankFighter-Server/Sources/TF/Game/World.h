@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #include <TF/Game/PlayerMap.h>
@@ -17,8 +21,10 @@ public:
 	bool Finalize();
 
 	int GetTotalRoomCount();
+	int GetTotalPlayingRoomCount();
 	int GetTotalPlayerCount();
 	int GetTotalChannelCount() const;
+	
 	Player* GetPlayerByAccountIdx(const int accountIdx);
 
 	bool IsPlayerExist(int accountUID);

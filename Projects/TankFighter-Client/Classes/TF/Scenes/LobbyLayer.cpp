@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/Scenes/LobbyLayer.h>
 #include <TF/Object/Obstacle.h>
 #include <TF/UI/TextButton.h>
@@ -152,10 +156,7 @@ void LobbyLayer::OnClickedSelectChannelButton(TextButton* btn) {
 	_Client->SetChannelUID(INVALID_UID);
 	_Client->SetCharacterUID(INVALID_UID);
 	_Client->SetRoomUID(INVALID_UID);
-
-	this->unscheduleUpdate();
-	this->_eventDispatcher->removeAllEventListeners();
-	Director::getInstance()->replaceScene(ChannelScene::createScene());
+	_Client->ChangeScene(SceneType::Channel);
 }
 
 // 방 참가 / JOIN_ROOM_SYN 121
@@ -231,10 +232,7 @@ void LobbyLayer::CmdUpdateCharacterInfoAck(ICommand* cmd) {
 		_Client->SetChannelUID(INVALID_UID);
 		_Client->SetCharacterUID(INVALID_UID);
 		_Client->SetRoomUID(INVALID_UID);
-
-		this->unscheduleUpdate();
-		this->_eventDispatcher->removeAllEventListeners();
-		Director::getInstance()->replaceScene(ChannelScene::createScene());
+		_Client->ChangeScene(SceneType::Channel);
 	});
 }
 
@@ -279,10 +277,7 @@ void LobbyLayer::CmdCreateRoomAck(ICommand* cmd) {
 
 	if (pCreateRoomAck->Result) {
 		_Client->SetRoomUID(pCreateRoomAck->RoomUID);
-
-		this->unscheduleUpdate();
-		this->_eventDispatcher->removeAllEventListeners();
-		Director::getInstance()->replaceScene(RoomScene::createScene());
+		_Client->ChangeScene(SceneType::Room);
 		return;
 	}
 
@@ -295,10 +290,7 @@ void LobbyLayer::CmdJoinRoomAck(ICommand* cmd) {
 
 	if (pJoinRoomAck->Result) {
 		_Client->SetRoomUID(pJoinRoomAck->RoomUID);
-
-		this->unscheduleUpdate();
-		this->_eventDispatcher->removeAllEventListeners();
-		Director::getInstance()->replaceScene(RoomScene::createScene());
+		_Client->ChangeScene(SceneType::Room);
 		return;
 	}
 
@@ -314,7 +306,8 @@ void LobbyLayer::CmdAddFriendAck(ICommand* cmd) {
 // 상대방에게 요청 도착
 void LobbyLayer::CmdAddFriendRequestSyn(ICommand* cmd) {
 	const AddFriendRequestSyn* pAddFriendRequestSyn = cmd->CastCommand<AddFriendRequestSyn*>();
-	// 이거 패킷은 시간 지나면 사라지므로 복사해서 전달해야함
+
+	// 이거 패킷은 이 함수 벗어나면 사라지므로 콜백 전달시에 복사해서 전달해야함
 	int iRequestCharacterUID = pAddFriendRequestSyn->RequestCharacterUID;
 
 	PopUp::createInParent(StringUtils::format("%s 님이 친구 요청을 보냈습니다. 수락하십니까?", pAddFriendRequestSyn->Info.Name).c_str(), this, false,

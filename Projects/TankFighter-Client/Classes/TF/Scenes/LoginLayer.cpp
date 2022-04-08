@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/Scenes/LoginLayer.h>
 #include <TF/Object/Obstacle.h>
 #include <TF/UI/TextButton.h>
@@ -32,14 +36,6 @@ bool LoginLayer::init() {
 	pInfoText->setPosition({ 500, 400 });
 	this->addChild(pInfoText);
 
-	
-	// 탱크 바디 - 바퀴 달린 부분
-	m_pTank = Tank::create();
-	this->addChild(m_pTank);
-
-	m_pObstacle = Obstacle::create(ObstacleShape::Rhombus, 100, 100, 20);
-	m_pObstacle->setPosition(150, 150);
-	this->addChild(m_pObstacle);
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = CC_CALLBACK_2(LoginLayer::onKeyPressed, this);
@@ -95,38 +91,7 @@ bool LoginLayer::init() {
 	pPasswordEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
 	this->addChild(pPasswordEditBox, 0, EDITBOX_PW);
 	pPasswordEditBox->setText("wjdeh414");
-/*
-	ColoredListView* pListView= ColoredListView::create(ColorUtil::To4B(ColorList::AoEnglish_v));
-	pListView->SetContantSize({ 300, 300 });
-	pListView->setPosition(300, 300);
-	this->addChild(pListView);
-	*/
 
-/*
-	TextScrollViewer* pView = TextScrollViewer::create();
-	pView->setPosition(150, 150);
-	pView->setColor(ColorList::Amethyst_v);
-	pView->setContentSize({ 300, 300 });
-	this->addChild(pView);
-	*/
-
-	/*
-	LayerColor* l = LayerColor::create(Color4B::YELLOW);
-	l->setContentSize({ 300, 300 });
-	l->setPosition(300, 100);
-	this->addChild(l);
-
-	ListView* m_pLabelListView = ListView::create();
-	m_pLabelListView->setDirection(ScrollView::Direction::VERTICAL);
-	m_pLabelListView->setContentSize({300, 300});
-	m_pLabelListView->setScrollBarEnabled(true);
-	m_pLabelListView->setScrollBarAutoHideEnabled(false);
-	m_pLabelListView->setAnchorPoint(Vec2::ZERO);
-	//m_pLabelListView->addEventListener(CC_CALLBACK_2(TextScrollViewer::OnScrollViewEvent, this));
-	l->addChild(m_pLabelListView);
-
-	
-	*/
 	this->scheduleUpdate();
 	return true;
 }
@@ -212,16 +177,7 @@ void LoginLayer::OnClickedReconnectButton(TextButton* sender) {
 
 
 void LoginLayer::update(float delta) {
-	m_pTank->updatePosition(delta);
-
-	if (m_pObstacle->IsCollide(m_pTank)) {
-		m_pTank->setPosition(m_pTank->GetPrevPos());
-	}
-
-	m_pTank->updateRotation(delta);
-	if (m_pObstacle->IsCollide(m_pTank)) {
-		m_pTank->setRotation(m_pTank->GetPrevRotation());
-	}
+	
 }
 
 void LoginLayer::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
@@ -243,10 +199,7 @@ void LoginLayer::CmdLoginAck(ICommand* cmd) {
 	// 로그인 성공
 	if (pLoginAck->Result) {
 		_Client->SetAccountUID(pLoginAck->UID);
-
-		this->unscheduleUpdate();
-		this->_eventDispatcher->removeAllEventListeners();
-		Director::getInstance()->replaceScene(ChannelScene::createScene());
+		_Client->ChangeScene(SceneType::Channel);
 		return;
 	}
 

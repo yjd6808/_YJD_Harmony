@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 
@@ -38,7 +42,9 @@ bool TcpSession::Disconnect() {
 
 
 bool TcpSession::SendAsync(ISendPacket* packet) {
-	if (packet->GetPacketLength() >= MAX_MSS - PACKET_HEADER_SIZE) {
+
+	// 너무 쌔리 큰 패킷은 이상한 패킷이므로 수신 버퍼 크기보다 큰 패킷을 보낼려고 할 경우 막자.
+	if (packet->GetPacketLength() >= SessionBuffer::GetBufferCapacity()) {
 		Winsock::Message("송신할 패킷의 크기를 제대로 잡아주세요");
 		return false;
 	}

@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #include <TF/SourceHeader.h>
@@ -26,6 +30,7 @@ public:
 	void CmdLoadRoomInfoAck(ICommand* cmd);
 	void CmdUpdateRoomInfoAck(ICommand* cmd);
 	void CmdRoomLeaveAck(ICommand* cmd);
+	void CmdRoomGameStartAck(ICommand* cmd);
 private:
 	TextButton* m_pGameStartBtn;
 	TextButton* m_pGameReadyBtn;

@@ -1,5 +1,8 @@
-#define _WINSOCKAPI_
+/*
+ * 작성자 : 윤정도
+ */
 
+#include <TF/PrecompiledHeader.h>
 #include <TF/Game/Player.h>
 
 using namespace JNetwork;
@@ -14,11 +17,15 @@ void Player::Initialize() {
 	m_bRoomHost = false;
 	m_bReady = false;
 
-	m_CharacterInfo = {};
-	m_TankState = {};
 	m_ePlayerState = PlayerState::Disconnected;
 	m_LoggedInTime = 0;
 	m_pSession = nullptr;
+
+	Memory::Set(&m_CharacterInfo, sizeof(m_CharacterInfo), NULL);
+	m_CharacterInfo.CharacterUID = INVALID_UID;
+	Memory::Set(&m_TankMove, sizeof(m_TankMove), NULL);
+	Memory::Set(&m_BattleInfo, sizeof(m_BattleInfo), NULL);
+	m_BattleInfo.CharacterUID = INVALID_UID;
 }
 
 void Player::SetAccountUID(int accountUID) {
@@ -101,6 +108,11 @@ void Player::SetReady(bool ready) {
 	m_bReady = ready;
 }
 
+bool Player::IsReady() {
+	SpinLockGuard guard(m_PlayerMtx);
+	return m_bReady;
+}
+
 void Player::LoadCharacterInfo(Out_ CharacterInfo& info) {
 	SpinLockGuard guard(m_PlayerMtx);
 	Memory::CopyUnsafe(&info, &m_CharacterInfo, sizeof(CharacterInfo));
@@ -135,4 +147,48 @@ bool Player::Disconnect() {
 bool Player::CheckNameEqual(const String& name) {
 	SpinLockGuard guard(m_PlayerMtx);
 	return name == m_CharacterInfo.Name;
+}
+
+void Player::LoadBattileInfo(BattleInfo& battleInfo) {
+	SpinLockGuard guard(m_PlayerMtx);
+	Memory::CopyUnsafe(&battleInfo, &m_BattleInfo, sizeof(BattleInfo));
+}
+
+void Player::AddBattleKillCount(int killCount) {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_BattleInfo.Kill += killCount;
+}
+
+void Player::AddBattleDeathCount(int deathCount) {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_BattleInfo.Death += deathCount;
+}
+
+void Player::AddFireCount(int fireCount) {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_BattleInfo.FireCount += fireCount;
+}
+
+void Player::AddHitCount(int hitCount) {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_BattleInfo.HitCount += hitCount;
+}
+
+
+void Player::InitializeBattleInfo() {
+	SpinLockGuard guard(m_PlayerMtx);
+	Memory::Set(&m_BattleInfo, sizeof(m_BattleInfo), NULL);
+}
+
+void Player::UnsafeInitializeBattleInfo() {
+	Memory::Set(&m_BattleInfo, sizeof(m_BattleInfo), NULL);
+}
+
+void Player::UnsafeInitializeTankMove() {
+	Memory::Set(&m_TankMove, sizeof(m_TankMove), NULL);
+}
+
+void Player::UpdateTankMove(TankMove& move) {
+	SpinLockGuard guard(m_PlayerMtx);
+	Memory::CopyUnsafe(&m_TankMove, &move, sizeof(TankMove));
 }

@@ -1,9 +1,14 @@
+/*
+ *	작성자 : 윤정도
+ */
+
 #pragma once
 
 #pragma comment(lib, "Mswsock.lib")	// AcceptEx 사용을 위해서 추가
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "JCore.lib")
 
+#define _WINSOCKAPI_
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 

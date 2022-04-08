@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/Scenes/ChannelLayer.h>
 #include <TF/Object/Obstacle.h>
 #include <TF/UI/TextButton.h>
@@ -64,11 +68,8 @@ void ChannelLayer::CmdSelectChannelAck(ICommand* cmd) {
 
 	if (pChannelInfoAck->Result) {
 		// 채널 CharacterUID 설정
-		GameClient::GetInstance()->SetChannelUID(pChannelInfoAck->ChanneldUID);
-
-		this->unscheduleUpdate();
-		this->_eventDispatcher->removeAllEventListeners();
-		Director::getInstance()->replaceScene(CharacterSelectScene::createScene());
+		_Client->SetChannelUID(pChannelInfoAck->ChanneldUID);
+		_Client->ChangeScene(SceneType::CharacterSelect);
 		return;
 	}
 

@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 // ReSharper disable CppClangTidyCppcoreguidelinesProTypeStaticCastDowncast
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>

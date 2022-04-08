@@ -1,3 +1,6 @@
+/*
+ * 작성자 : 윤정도
+ */
 #pragma once
 
 #include <TF/SourceHeader.h>

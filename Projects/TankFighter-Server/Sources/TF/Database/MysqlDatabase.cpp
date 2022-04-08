@@ -1,7 +1,4 @@
-#include <mysql.h>
-
-#define _WINSOCK2API_		// winsock2 중복 인클루드 방지
-
+#include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlDatabase.h>
 #include <TF/Database/MysqlConnectionPool.h>
 #include <TF/ServerConfiguration.h>

@@ -1,3 +1,4 @@
+#include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlQueryFuture.h>
 
 #include <JCore/Memory.h>

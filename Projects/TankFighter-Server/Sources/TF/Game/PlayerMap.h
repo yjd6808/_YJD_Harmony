@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #include <JCore/Container/HashMap.h>

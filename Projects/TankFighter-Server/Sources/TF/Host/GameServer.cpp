@@ -1,6 +1,8 @@
-#define _WINSOCKAPI_		// winsock.h 연속 include 방지
-							// 아니 근데, 에바아닙니까 ㄹㅇ; 이거 땜에 1시간 동안 손발 덜덜떨렸네
+/*
+ * 작성자 : 윤정도
+ */
 
+#include <TF/PrecompiledHeader.h>
 #include <TF/Host/GameServer.h>
 #include <TF/Host/GameServerEventListener.h>
 #include <TF/ServerConfiguration.h>
@@ -51,10 +53,10 @@ bool GameServer::StartServer() {
 	m_Parser.AddCommand(ROOM_GAME_READY_CANCEL_SYN, CommandFn::CmdRoomGameReadyCancelSyn);
 	m_Parser.AddCommand(ROOM_LEAVE_SYN, CommandFn::CmdRoomLeaveSyn);
 
+	m_Parser.AddCommand(BATTLE_FIELD_LOAD_SYN, CommandFn::CmdBattleFieldLoadSyn);
+	m_Parser.AddCommand(BATTLE_FIELD_TANK_MOVE_SYN, CommandFn::CmdBattileFieldTankMoveSyn);
+	m_Parser.AddCommand(BATTLE_FIELD_LEAVE_SYN, CommandFn::CmdBattleFieldLeaveSyn);
 	
-	m_Parser.AddCommand(TANK_MOVE_SYN, CommandFn::CmdTankMoveSyn);
-	m_Parser.AddCommand(TANK_MOVE_ACK, CommandFn::CmdTankMoveAck);
-
 	this->SetEventListener(m_pListener);
 
 	return GameServer::Start(StringUtil::Format("%s:%d", TCP_BIND_ADDR, TCP_BIND_PORT).Source());

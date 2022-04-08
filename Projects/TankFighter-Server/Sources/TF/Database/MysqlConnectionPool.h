@@ -37,10 +37,11 @@ private:
 	Int32U m_MaxConnection;
 
 	int m_iCurConnSize;
-	inline static MysqlConnectionPool* ms_pInstance = nullptr;
 	JCore::CriticalSectionMutex m_Mtx;
 	JCore::LinkedList<MysqlConnection*> m_ConnectionList;
 
+
+	inline static MysqlConnectionPool* ms_pInstance = nullptr;
 	friend class MysqlDatabase;
 };
 

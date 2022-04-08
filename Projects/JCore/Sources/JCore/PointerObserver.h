@@ -90,7 +90,7 @@ protected:
 		}
 
 		if (!m_bNoDelete) {
-			delete m_pPointer;
+			DeleteSafe(m_pPointer);
 		}
 
 		m_pPointer = nullptr;
@@ -98,18 +98,18 @@ protected:
 		m_pCounter->Counter--;
 
 		if (m_pCounter->Counter == 0) {
-			delete m_pCounter;
+			DeleteSafe(m_pCounter);
 		}
 	}
 
-	void SubtractWatcherCount() const {
+	void SubtractWatcherCount() {
 		if (m_pCounter == nullptr) {
 			return;
 		}
 
 		m_pCounter->Counter--;
 		if (m_pCounter->Counter == 0) {
-			delete m_pCounter;
+			DeleteSafe(m_pCounter);
 		}
 	}
 
@@ -352,14 +352,14 @@ protected:
 		SubtractWatcherCount();
 	}
 
-	void SubtractWatcherCount() const {
+	void SubtractWatcherCount() {
 		if (m_pCounter == nullptr) {
 			return;
 		}
 
 		m_pCounter->Counter--;
 		if (m_pCounter->Counter == 0) {
-			delete m_pCounter;
+			DeleteSafe(m_pCounter);
 		}
 	}
 

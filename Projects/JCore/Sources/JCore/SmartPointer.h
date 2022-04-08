@@ -322,7 +322,7 @@ public:
 
 
 
-struct __declspec(novtable) ControlBlock
+struct /*__declspec(novtable) */ ControlBlock
 {	
 	ControlBlock() = default;
 	virtual ~ControlBlock() = default;
@@ -366,7 +366,7 @@ struct SharedObject : ControlBlock
 
 	template <typename... Args>
 	explicit SharedObject(Args&&... args) {
-		::new (reinterpret_cast<void*>(AddressOf(Object))) T(Forward<Args>(args)...);
+		::new (AddressOf(Object)) T(Forward<Args>(args)...);
 	}
 
 	~SharedObject() override {}

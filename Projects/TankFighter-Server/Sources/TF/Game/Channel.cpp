@@ -1,5 +1,8 @@
-#define _WINSOCKAPI_
+/*
+ * 작성자 : 윤정도
+ */
 
+#include <TF/PrecompiledHeader.h>
 #include <TF/Game/Channel.h>
 #include <TF/Util/Console.h>
 #include <TF/Game/Player.h>
@@ -15,6 +18,7 @@ Channel::Channel(int channedUID, const String& channelName, int maxPlayerCount)
 	, m_iMaxPlayerCount(maxPlayerCount)
 	, m_PlayerList(PLAYER_POOL_SIZE)
 	, m_RoomPool(this)
+	, m_BattleFieldWorker(m_ChannelUID, BATTLE_FIELD_WORKER_DELAY)
 {
 }
 
@@ -22,10 +26,17 @@ Channel::~Channel() {
 }
 
 bool Channel::Initialize() {
-	return m_RoomPool.Initialize(ROOM_POOL_SIZE);
+	if (!m_RoomPool.Initialize(ROOM_POOL_SIZE)) {
+		return false;
+	}
+
+	m_BattleFieldWorker.Run();
+	return true;
 }
 
 bool Channel::Finalize() {
+	m_BattleFieldWorker.Join();		// 방삭제전 먼저 조인 해줘야함
+
 	return m_RoomPool.Finalize();
 }
 
@@ -113,7 +124,7 @@ Room* Channel::CreateRoom(Player* creator, const String& roomName, int maxPlayer
 	creator->Lock();
 	creator->m_iRoomUID = pNewRoom->GetRoomUID();
 	creator->m_bRoomHost = true;
-	creator->m_ePlayerState = PlayerState::RoomReady;
+	creator->m_ePlayerState = PlayerState::RoomLobby;
 	creator->Unlock();
 	return pNewRoom;
 }
@@ -137,6 +148,11 @@ bool Channel::RemoveRoom(const int roomUID) {
 	}
 
 	Room* pRoom = m_RoomMap[roomUID];
+
+	if (pRoom->IsBattleFieldState()) {
+		m_BattleFieldWorker.RemoveBattleFieldRoom(pRoom);
+	}
+
 	m_RoomPool.ReleaseRoom(pRoom);
 	return m_RoomMap.Remove(roomUID);
 }
@@ -205,6 +221,12 @@ bool Channel::LeaveRoom(Player* player) {
 	}
 
 	if (pRoom->IsEmpty()) {
+		if (pRoom->IsBattleFieldState()) {
+			if (!m_BattleFieldWorker.RemoveBattleFieldRoom(pRoom)) {
+				DebugAssert(false, "배틀 필드 상태인데 배틀필드 워커에 없는 방입니다.");
+			}
+		}
+
 		m_RoomPool.ReleaseRoom(pRoom);
 		return m_RoomMap.Remove(iRoomUID);
 	}
@@ -221,6 +243,38 @@ void Channel::RoomForEach(Action<Room*> foreachAction) {
 int Channel::GetRoomCount() {
 	CriticalSectionLockGuard guard(m_RoomMapLock);
 	return m_RoomMap.Size();
+}
+
+int Channel::GetPlayingRoomCount() {
+	int iCnt = 0;
+	RoomForEach([&iCnt](Room* r) {
+		if (r->IsBattleFieldState())
+			iCnt++;
+	});
+	return iCnt;
+}
+
+bool Channel::StartBattle(Room* pRoom) {
+
+	if (pRoom->IsBattleFieldState()) {
+		return false;
+	}
+
+	pRoom->Lock();
+
+	pRoom->m_eRoomState = RoomState::PlayWait;
+	pRoom->m_iTimerTime = BATTLE_PLAYWAIT_TIME;
+	pRoom->UnsafeForEach([](Player* p) {
+		p->Lock();
+		p->m_bReady = false;		// 이제 플레이어 준비는 배틀에 모두 진입했는지 여부를 확인하는데 사용함
+		p->m_ePlayerState = PlayerState::RoomBattle;
+		p->UnsafeInitializeBattleInfo();
+		p->UnsafeInitializeTankMove();
+		p->Unlock();
+	});
+	pRoom->Unlock();
+	m_BattleFieldWorker.AddBattleFieldRoom(pRoom);
+	return true;
 }
 
 

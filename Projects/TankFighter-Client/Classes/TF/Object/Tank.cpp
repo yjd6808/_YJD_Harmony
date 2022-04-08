@@ -1,7 +1,7 @@
 #include <TF/Object/Tank.h>
 
-Tank* Tank::create() {
-	Tank* sprite = new Tank();
+Tank* Tank::create(int characterUID, Layer* activeLayer) {
+	Tank* sprite = new Tank(characterUID, activeLayer);
 
 	if (sprite->init() && sprite->initWithFile(RECT_IMG_FILENAME) && sprite->init2()) {
 		sprite->autorelease();
@@ -57,26 +57,29 @@ bool Tank::init2() {
 
 
 void Tank::updatePosition(float delta) {
-	if (m_KeyPressedMap.Exist(EventKeyboard::KeyCode::KEY_UP_ARROW)) {
-		m_eMoveDir = MoveDirection::Forward;
-	} else if (m_KeyPressedMap.Exist(EventKeyboard::KeyCode::KEY_DOWN_ARROW)) {
-		m_eMoveDir = MoveDirection::Backward;
-	} else {
-		m_eMoveDir = MoveDirection::None;
+	if (m_iCharacterUID == _Client->GetCharacterUID()) {
+		if (m_KeyPressedMap.Exist(EventKeyboard::KeyCode::KEY_UP_ARROW)) {
+			m_TankMove.MoveDir = static_cast<Int8>(MoveDirection::Forward);
+		} else if (m_KeyPressedMap.Exist(EventKeyboard::KeyCode::KEY_DOWN_ARROW)) {
+			m_TankMove.MoveDir = static_cast<Int8>(MoveDirection::Backward);
+		} else {
+			m_TankMove.MoveDir = static_cast<Int8>(MoveDirection::None);
+		}
 	}
 
 	m_PrevPos = this->getPosition();;
 	auto nextPos = this->getPosition();
-	float curRotation = this->getRotation();
-	// CCLOG("%f", sinf(CC_DEGREES_TO_RADIANS(m_fCurRotation)));
-	switch (m_eMoveDir) {
+	const float curRotation = this->getRotation();
+
+	const MoveDirection dir = static_cast<MoveDirection>(m_TankMove.MoveDir);
+	switch (dir) {
 	case MoveDirection::Forward:
-		nextPos.x += m_fTankMoveSpeed * sinf(CC_DEGREES_TO_RADIANS(curRotation)) * delta;
-		nextPos.y += m_fTankMoveSpeed * cosf(CC_DEGREES_TO_RADIANS(curRotation)) * delta;
+		nextPos.x += m_TankMove.MoveSpeed * sinf(CC_DEGREES_TO_RADIANS(curRotation)) * delta;
+		nextPos.y += m_TankMove.MoveSpeed * cosf(CC_DEGREES_TO_RADIANS(curRotation)) * delta;
 		break;
 	case MoveDirection::Backward:
-		nextPos.x -= m_fTankMoveSpeed * sinf(CC_DEGREES_TO_RADIANS(curRotation)) * delta;
-		nextPos.y -= m_fTankMoveSpeed * cosf(CC_DEGREES_TO_RADIANS(curRotation)) * delta;
+		nextPos.x -= m_TankMove.MoveSpeed * sinf(CC_DEGREES_TO_RADIANS(curRotation)) * delta;
+		nextPos.y -= m_TankMove.MoveSpeed * cosf(CC_DEGREES_TO_RADIANS(curRotation)) * delta;
 		break;
 	}
 
@@ -84,22 +87,25 @@ void Tank::updatePosition(float delta) {
 }
 
 void Tank::updateRotation(float delta) {
-	if (m_KeyPressedMap.Exist(EventKeyboard::KeyCode::KEY_LEFT_ARROW)) {
-		m_eRotateDir = RotateDirection::Left;
-	} else if (m_KeyPressedMap.Exist(EventKeyboard::KeyCode::KEY_RIGHT_ARROW)) {
-		m_eRotateDir = RotateDirection::Right;
-	} else {
-		m_eRotateDir = RotateDirection::None;
+	if (m_iCharacterUID == _Client->GetCharacterUID()) {
+		if (m_KeyPressedMap.Exist(EventKeyboard::KeyCode::KEY_LEFT_ARROW)) {
+			m_TankMove.RotationDir = static_cast<Int8>(RotateDirection::Left);
+		} else if (m_KeyPressedMap.Exist(EventKeyboard::KeyCode::KEY_RIGHT_ARROW)) {
+			m_TankMove.RotationDir = static_cast<Int8>(RotateDirection::Right);
+		} else {
+			m_TankMove.RotationDir = static_cast<Int8>(RotateDirection::None);
+		}
 	}
 
 	m_fPrevRot = this->getRotation();
 	float fNextRot = this->getRotation();
-	switch (m_eRotateDir) {
+	const RotateDirection dir = static_cast<RotateDirection>(m_TankMove.RotationDir);
+	switch (dir) {
 	case RotateDirection::Left:
-		fNextRot -= m_fTankRotationSpeed * delta;
+		fNextRot -= m_TankMove.RotationSpeed * delta;
 		break;
 	case RotateDirection::Right:
-		fNextRot += m_fTankRotationSpeed * delta;
+		fNextRot += m_TankMove.RotationSpeed * delta;
 		break;
 	}
 
@@ -107,10 +113,40 @@ void Tank::updateRotation(float delta) {
 }
 
 void Tank::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
-	m_KeyPressedMap.Insert(keyCode, true);
+
+	// 자기자신의 탱크만 몰 수 있도록 한다.
+	if (m_iCharacterUID == _Client->GetCharacterUID()) {
+		switch (keyCode) {
+		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
+		case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
+		case EventKeyboard::KeyCode::KEY_UP_ARROW:
+		case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
+			if (m_bMoveable) {
+				m_KeyPressedMap.Insert(keyCode, true);
+			}
+			break;
+
+		case EventKeyboard::KeyCode::KEY_SPACE:
+			if (m_bFireable) {
+				m_KeyPressedMap.Insert(keyCode, true);
+			}
+			break;
+		}
+		
+	}
 }
 
 void Tank::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
-	if (m_KeyPressedMap.Exist(keyCode))
+
+	// 자기자신의 탱크만 몰 수 있도록 한다.
+	if (m_iCharacterUID == _Client->GetCharacterUID() && m_KeyPressedMap.Exist(keyCode))
 		m_KeyPressedMap.Remove(keyCode);
+}
+
+void Tank::UpdateTankMove(TankMove& move) {
+	Memory::CopyUnsafe(&m_TankMove, &move, sizeof(TankMove));
+
+	this->setPosition(m_TankMove.X, m_TankMove.Y);
+	this->setRotation(m_TankMove.Rotation);
+	m_bUpdated = true;
 }

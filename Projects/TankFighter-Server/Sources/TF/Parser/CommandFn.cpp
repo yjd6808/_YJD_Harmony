@@ -1,12 +1,17 @@
-#define _WINSOCKAPI_
+/*
+ * 작성자 : 윤정도
+ */
 
+#include <TF/PrecompiledHeader.h>
 #include <TF/Parser/CommandFn.h>
 #include <TF/Parser/SendFn.h>
 #include <TF/Parser/QueryFn.h>
 
+#include <JCore/Random.h>
 #include <Common/Command.h>
-#include <TF/Game/Player.h>
+#include <Common/GameConfiguration.h>
 
+#include <TF/Game/Player.h>
 #include <TF/Database/MysqlDatabase.h>
 #include <TF/Game/World.h>
 #include <TF/Game/Channel.h>
@@ -549,8 +554,14 @@ void CommandFn::CmdRoomGameStartSyn(Player* player, ICommand* cmd) {
 		player->SendAsync(pReplyPacket);
 	} else {
 		// 방에 있는 모든 유저들에게 게임 시작 패킷을 전송한다.
-		pRoomGameStartAck->Result = true;
-		pRoom->BroadcastPacket(pReplyPacket);
+		if (pRoom->GetChannel()->StartBattle(pRoom)) {
+			pRoomGameStartAck->Result = true;
+		} else {
+			pRoomGameStartAck->Result = false;
+			strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"이미 게임이 진행중입니다. 문제가 있네요.");
+		}
+
+		pRoom->Broadcast(pReplyPacket);
 	}
 }
 
@@ -614,7 +625,64 @@ void CommandFn::CmdRoomLeaveSyn(Player* player, ICommand* cmd) {
 	player->SendAsync(pPacket);
 }
 
+// BATTLE_FIELD_LOAD_SYN 150
+void CommandFn::CmdBattleFieldLoadSyn(Player* player, ICommand* cmd) {
+	const BattleFieldLoadSyn* pBattleFieldLoadSyn = cmd->CastCommand<BattleFieldLoadSyn*>();
 
+	// 플레이어가 배틀 필드에 진입하면 레디 상태로 바꾸고 맵에서 랜덤한 위치를 뽑아서 준다.
+	Room* pRoom = _World->GetRoomByPlayer(player);
+	const auto pReplyPacket = new Packet<BattleFieldLoadAck>;
+	BattleFieldLoadAck* pBattleFieldLoadAck = pReplyPacket->Get<0>();
+
+	Random rand;
+	TankMove initialMove{};
+	pBattleFieldLoadAck->InitialMove.X = rand.GenerateInt(0 + 50, MAP_WIDTH - 50);
+	pBattleFieldLoadAck->InitialMove.Y = rand.GenerateInt(0 + 50, MAP_HEIGHT - 50);
+	pBattleFieldLoadAck->InitialMove.MoveDir = static_cast<Int8>(MoveDirection::None);
+	pBattleFieldLoadAck->InitialMove.RotationDir = static_cast<Int8>(RotateDirection::None);
+	pBattleFieldLoadAck->InitialMove.MoveSpeed = TANK_MOVE_SPEED;
+	pBattleFieldLoadAck->InitialMove.Rotation = 0.0f;
+	pBattleFieldLoadAck->InitialMove.RotationSpeed = TANK_ROTATION_SPEED;
+	pBattleFieldLoadAck->LeftTime = pRoom->GetTimerTime() / 1000.0f;
+
+	player->SetReady(true);
+	player->UpdateTankMove(pBattleFieldLoadAck->InitialMove);
+	player->SendAsync(pReplyPacket);
+}
+
+void CommandFn::CmdBattileFieldTankMoveSyn(Player* player, ICommand* cmd) {
+	BattileFieldTankMoveSyn* pBattileFieldTankMoveSyn = cmd->CastCommand<BattileFieldTankMoveSyn*>();
+	player->UpdateTankMove(pBattileFieldTankMoveSyn->Move);
+}
+
+void CommandFn::CmdBattleFieldLeaveSyn(Player* player, ICommand* cmd) {
+	BattleFieldLeaveSyn* pBattleFieldLeaveSyn = cmd->CastCommand<BattleFieldLeaveSyn*>();
+
+	Room* pRoom = _World->GetRoomByPlayer(player);
+	Channel* pChannel = pRoom->GetChannel();
+
+	if (pRoom == nullptr || pChannel == nullptr) {
+		DebugAssert(false, "플레이 중인 채널 또는 방이 없습니다.");
+		return;
+	}
+
+	if (!pChannel->LeaveRoom(player)) {
+		DebugAssert(false, "플레이어가 방을 떠나는데 실패했습니다. 방에 플레이어가 없습니다.");
+	}
+
+	if (!pRoom->IsEmpty()) {
+		const auto pRoomBroadcastPacket = new Packet<BattleFieldLeaveAck>;
+		BattleFieldLeaveAck* pBattleFieldLeaveAck = pRoomBroadcastPacket->Get<0>();
+		pBattleFieldLeaveAck->CharacterUID = player->GetCharacterUID();
+		pRoom->Broadcast(pRoomBroadcastPacket);
+	}
+
+	// 배틀필드 방을 나간거니 로비 유저들에게 변경사항을 알려준다.
+	SendFn::BroadcastUpdateRoomListAck(pChannel);
+}
+
+
+/*
 void CommandFn::CmdTankMoveSyn(Player* session, ICommand* cmd) {
 	TcpTankMoveSyn* pTankMoveSyn =  cmd->CastCommand<TcpTankMoveSyn*>();
 }
@@ -626,3 +694,5 @@ void CommandFn::CmdTankMoveAck(Player* session, ICommand* cmd) {
 
 
 
+
+*/

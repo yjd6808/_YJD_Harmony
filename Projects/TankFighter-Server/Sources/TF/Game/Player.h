@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #include <Common/Enum.h>
@@ -50,9 +54,20 @@ public:
 	void SetRoomUID(int roomUID);
 	void SetRoomHost(bool isHost);
 	void SetReady(bool ready);
+	bool IsReady();
 	void LoadCharacterInfo(Out_ CharacterInfo& info);			// 정보를 얻을 때 사용
 	void LoadRoomCharacterInfo(Out_ RoomCharacterInfo& info);	// 정보를 얻을 때 사용
 	bool CheckNameEqual(const JCore::String& name);
+
+	void LoadBattileInfo(Out_ BattleInfo& battleInfo);
+	void AddBattleKillCount(int killCount);
+	void AddBattleDeathCount(int deathCount);
+	void AddFireCount(int fireCount);
+	void AddHitCount(int hitCount);
+	void InitializeBattleInfo();
+	void UnsafeInitializeBattleInfo();
+	void UnsafeInitializeTankMove();
+	void UpdateTankMove(TankMove& move);
 private:
 	int m_iAccountUID = INVALID_UID;
 	int m_iChanneldUID = INVALID_UID;
@@ -61,8 +76,9 @@ private:
 	bool m_bReady = false;
 
 	CharacterInfo m_CharacterInfo;
-	TankMove m_TankState{};
+	TankMove m_TankMove{};
 	PlayerState m_ePlayerState = PlayerState::LoginStage;	// 세션 생성시 바로 로그인 씬이므로
+	BattleInfo m_BattleInfo;
 	JCore::DateTime m_LoggedInTime;
 	JNetwork::TcpSession* m_pSession = nullptr;
 	JCore::SpinLock m_PlayerMtx;

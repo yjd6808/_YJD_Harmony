@@ -22,28 +22,9 @@ struct BucketNode
 	bool operator==(const TBucketNode& other) {
 		return Pair == other.Pair && Hash == other.Hash;
 	}
-	
-	/*
-	그냥 디폴트 쓰면 될 듯?
-	BucketNode() {}
-	~BucketNode() {}
 
-	BucketNode& operator=(const BucketNode& other) {
-		Hash = other.Hash;
-		Pair.Key = other.Pair.Key;
-		Pair.Value = other.Pair.Value;
-		return *this;
-	}
-
-	BucketNode& operator=(BucketNode&& other) {
-		Hash = other.Hash;
-		Pair.Key = Move(other.Pair.Key);
-		Pair.Value = Move(other.Pair.Value);
-		return *this;
-	}
-	*/
-
-	BucketNode() = default; // LinkedList 더미 헤드/테일 생성시 필요한 디폴트 생성자
+	// LinkedList 더미 헤드/테일 생성시 필요한 디폴트 생성자
+	BucketNode() = default; 
 	~BucketNode() noexcept = default;
 	BucketNode(const TBucketNode& other) = default;
 	BucketNode(TBucketNode&& other) = default;
@@ -53,7 +34,7 @@ struct BucketNode
 	BucketNode& operator=(BucketNode&& other) = default;
 
 	TKeyValuePair Pair;
-	Int32U Hash{};				// 처음에 한번 계산해놓으면 편할 듯?
+	Int32U Hash{};				// 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
 };
 
 template <typename TKey, typename TValue>
@@ -91,15 +72,19 @@ public:
 template <typename TKey, typename TValue>
 class HashMap : public MapCollection<TKey, TValue>
 {
-	/*
-		[해결해야할 문제]
-		1. 빈 버킷을 아예 검사하지 않고 어떻게 키셋과 벨류셋을 얻을까?
-			-> 모르겠다.
-			-> 잠시만 이거 와 방법 생각남
-			-> 검색 도움 없이 해결완료
-		2. 어떻게 이터레이팅을 해야할까?
-			-> 검색 도움 없이 해결완료
-	*/
+	/* =====================================================================
+	 *
+	 *
+	 *		[해결해야할 문제]
+	 *		1. 빈 버킷을 아예 검사하지 않고 어떻게 키셋과 벨류셋을 얻을까?
+	 *			-> 모르겠다.
+	 *			-> 잠시만 이거 와 방법 생각남
+	 *			-> 검색 도움 없이 해결완료
+	 *		2. 어떻게 이터레이팅을 해야할까?
+	 *			-> 검색 도움 없이 해결완료
+	 *
+	 *
+	 * ==================================================================== */
 
 	using THasher					= Hasher<TKey>;
 	using TBucket					= Bucket<TKey, TValue>;
@@ -272,7 +257,7 @@ public:
 		 *  m_pTable[uiBucket].EmplaceBack(TKeyValuePair{ Forward<Ky>(key), Forward<Vy>(value) }, uiHash);
 		 *
 		 *  근본적으로 해결하기 위해서
-		 *	이렇게 인자로 전달해줘서 생성하도록 변경함
+		 *	이렇게 인자로 전달해줘서 복사 or 이동 생성하도록 변경함
 		 *   TListNode* CreateNewNode(const T& data) {
 		 * 	 	TListNode* pNewNode = new TListNode(data);	
 		 *	 	return pNewNode;						
@@ -597,7 +582,7 @@ public:
 		using TListNode = ListNode<BucketNode<TKey, TValue>>;
 
 		HashMapKeyCollectionIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode)
-			: TKeyCollectionIterator(owner, &m_HashMapIterator), m_HashMapIterator(owner, currentBucket, currentNode)
+			: m_HashMapIterator(owner, currentBucket, currentNode), TKeyCollectionIterator(owner, &m_HashMapIterator)
 		{
 		}
 		virtual ~HashMapKeyCollectionIterator() noexcept = default;
@@ -648,7 +633,7 @@ public:
 		using TListNode = ListNode<BucketNode<TKey, TValue>>;
 
 		HashMapValueCollectionIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode)
-			: TValueCollectionIterator(owner, &m_HashMapIterator), m_HashMapIterator(owner, currentBucket, currentNode)
+			: m_HashMapIterator(owner, currentBucket, currentNode), TValueCollectionIterator(owner, &m_HashMapIterator)
 		{
 		}
 

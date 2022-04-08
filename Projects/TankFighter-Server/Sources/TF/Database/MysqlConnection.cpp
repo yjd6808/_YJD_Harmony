@@ -1,3 +1,4 @@
+#include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlConnection.h>
 #include <TF/Util/Console.h>
 
@@ -11,22 +12,19 @@ MysqlConnection::MysqlConnection()
 MysqlConnection::~MysqlConnection()
 {
 	if (m_MySQLConn != NULL)
-	{
-		//std::clog << "Closing MySQL Connection" << std::endl;
 		mysql_close(m_MySQLConn);
-	}
 }
 
-bool MysqlConnection::Connect(const JCore::String &sHostname, const uint16_t &wPort, const JCore::String &sUsername, const JCore::String &sPassword, const JCore::String &sDB = NULL)
+bool MysqlConnection::Connect(const JCore::String &hostname, const uint16_t &port, const JCore::String &username, const JCore::String &password, const JCore::String &dbname = NULL)
 {
-	// If we're already connected, we should close the first connection
+	// 이미 연결된 경우 우선 연결을 끊어준다.
 	Disconnect();
 
-	m_sHostname = sHostname;
-	m_sUsername = sUsername;
-	m_sPassword = sPassword;
-	m_wPort = wPort;
-	m_sSchemaName = sDB;
+	m_sHostname = hostname;
+	m_sUsername = username;
+	m_sPassword = password;
+	m_wPort = port;
+	m_sSchemaName = dbname;
 	m_bIsConnected = false;
 
 	MYSQL *MySQLConnRet = NULL;
@@ -38,56 +36,45 @@ bool MysqlConnection::Connect(const JCore::String &sHostname, const uint16_t &wP
 
 	MySQLConnRet = mysql_real_connect(m_MySQLConn, m_sHostname.Source(), m_sUsername.Source(), m_sPassword.Source(), m_sSchemaName.Source(), m_wPort, NULL, 0);
 
-	if (MySQLConnRet == NULL)
-	{
+	if (MySQLConnRet == NULL) {
 		m_bIsConnected = false;
 		Console::WriteLine(ConsoleColor::LIGHTRED, "MySQL 데이터베이스 연결 실패 : %s", mysql_error(m_MySQLConn));
-	}
-	else {
+	} else {
 		m_bIsConnected = true;
 	}
 
 	return m_bIsConnected;
 }
 
-void MysqlConnection::Disconnect()
-{
-	if (m_bIsConnected)
-	{
+void MysqlConnection::Disconnect() {
+	if (m_bIsConnected) {
 		mysql_close(m_MySQLConn);
 		m_MySQLConn = nullptr;
-		//std::clog << "Disconnected from MySQL DB!" << std::endl;
 	}
-
 
 	m_bIsConnected = false;
 
 }
 
-bool MysqlConnection::SelectDB(const JCore::String &sSchemaName)
+bool MysqlConnection::SelectDB(const JCore::String &schemaName)
 {
-	if (!m_bIsConnected)
-	{
+	if (!m_bIsConnected) {
 		Console::WriteLine(ConsoleColor::LIGHTRED, "SelectDB() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
 		return false;
 	}
 
-	if (mysql_select_db(m_MySQLConn, sSchemaName.Source()) != 0)
-	{
+	if (mysql_select_db(m_MySQLConn, schemaName.Source()) != 0) {
 		Console::WriteLine(ConsoleColor::LIGHTRED, "SelectDB() 실패 : mysql_select_db() 호출 실패 : %s", mysql_error(m_MySQLConn));
 		return false;
 	}
-	else {
-		m_sSchemaName = sSchemaName.Source();
-		Console::WriteLine(ConsoleColor::GREEN, "SelectDB() 성공 : \"%s\"", sSchemaName.Source());
-		return true;
-	}
+
+	m_sSchemaName = schemaName.Source();
+	Console::WriteLine(ConsoleColor::GREEN, "SelectDB() 성공 : \"%s\"", schemaName.Source());
+	return true;
 }
 
-const JCore::String MysqlConnection::GetLastError() const
-{
-	if (!m_bIsConnected)
-	{
+JCore::String MysqlConnection::GetLastError() const {
+	if (!m_bIsConnected) {
 		Console::WriteLine(ConsoleColor::LIGHTRED, "GetLastError() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
 		return "연결 안되있음";
 	}
@@ -95,30 +82,22 @@ const JCore::String MysqlConnection::GetLastError() const
 	return (char*)mysql_error(m_MySQLConn);
 }
 
-MYSQL *MysqlConnection::getConn()
-{
+MYSQL *MysqlConnection::GetConnection() const {
 	return m_MySQLConn;
 }
 
-bool MysqlConnection::IsConnected()
-{
+bool MysqlConnection::IsConnected() const {
 	return m_bIsConnected;
 }
 
-const JCore::String MysqlConnection::EscapeString(const JCore::String& value) const
-{
-	if (!m_bIsConnected)
-	{
+JCore::String MysqlConnection::EscapeString(const JCore::String& value) const {
+	if (!m_bIsConnected) {
 		Console::WriteLine("DB에 연결되어있지 않습니다.");
 		return "";
 	}
 
-	char *cValue = new char[(value.Length() * 2) + 1];
-	mysql_real_escape_string(m_MySQLConn, cValue, value.Source(), value.Length());
-
-	JCore::String sRet = cValue;
-	delete[] cValue;
-
-	return sRet;
+	JCore::String escapedString(value.Length() * 2 + 1);
+	mysql_real_escape_string(m_MySQLConn, escapedString.Source(), value.Source(), value.Length());
+	return escapedString;
 }
 

@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #define _WINSOCKAPI_	// winsock.h 연속 include 방지

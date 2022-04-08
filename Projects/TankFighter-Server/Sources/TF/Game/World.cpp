@@ -1,6 +1,8 @@
-#define _WINSOCKAPI_		// winsock.h 연속 include 방지
+/*
+ * 작성자 : 윤정도
+ */
 
-
+#include <TF/PrecompiledHeader.h>
 #include <TF/Game/World.h>
 #include <TF/Game/Channel.h>
 #include <TF/Database/MysqlDatabase.h>
@@ -60,6 +62,15 @@ int World::GetTotalRoomCount() {
 	});
 
 	return iTotalRoomCount;
+}
+
+int World::GetTotalPlayingRoomCount() {
+	int iTotalPlayingRoomCount = 0;
+	m_ChannelMap.Values().Extension().ForEach([&iTotalPlayingRoomCount](Channel* channel) {
+		iTotalPlayingRoomCount += channel->GetPlayingRoomCount();
+	});
+
+	return iTotalPlayingRoomCount;
 }
 
 int World::GetTotalPlayerCount() {

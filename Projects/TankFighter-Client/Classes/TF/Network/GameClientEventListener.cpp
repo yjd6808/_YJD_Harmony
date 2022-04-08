@@ -28,6 +28,10 @@ void GameClientEventListener::OnConnected() {
 }
 
 void GameClientEventListener::OnDisconnected() {
+	// 클라 서버 강제로 끊기면 여기서 릭 생길 수 잇는데..
+	// 결국 Command Lock 필요하겠네.. 수정해야할 것같다.
+	// 완성하고 시간남으면 ㄱ
+
 	m_CommandQueue.Clear();
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread(
 		CC_CALLBACK_0(GameClientEventListener::SynchronizedOnDisconnected, this)

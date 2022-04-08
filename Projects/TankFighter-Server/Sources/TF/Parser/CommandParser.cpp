@@ -1,6 +1,8 @@
+/*
+ * 작성자 : 윤정도
+ */
 
-#define _WINSOCKAPI_
-
+#include <TF/PrecompiledHeader.h>
 #include <TF/Parser/CommandParser.h>
 #include <TF/Game/Player.h>
 #include <TF/Util/Console.h>

@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #include <JCore/Container/LinkedList.h>
@@ -54,24 +58,36 @@ public:
 	bool ChangeHost(Player* player);
 	bool ChangeNextHost();
 	Player* GetHost();
-	void BroadcastPacket(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
+	void Broadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
+	void UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
+	void UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
 	void SetRoomState(RoomState state);
 	void ForEach(JCore::Action<Player*> foreachAction);
-
+	void UnsafeForEach(JCore::Action<Player*> foreachAction);
+	RoomState GetRoomState();
+	bool IsBattleFieldState();
 	void LoadRoomInfo(Out_ RoomInfo& info);
+
+	void SetTimerTime(int time);
+	int SubtractTimerTime(int time);
+	int AddTimerTime(int time);
+	int GetTimerTime();
 private:
 	int m_iRoomUID;
 	int m_iMaxPlayerCount;
 	JCore::String m_RoomName;
 	JCore::CriticalSectionMutex m_RoomLock;
 	JCore::LinkedList<Player*> m_PlayerList;
-	RoomState m_eRoomState;
-	void* m_pChannel;
-	void* m_pHost;
+	RoomState m_eRoomState;						// 방 상태 : 배틀 중/로비인지 등을 나타냄
+	int m_iTimerTime;							// 배틀진중에 사용하는 타이머 변수
+	void* m_pChannel;							// 이 방이 속한 채널
+	void* m_pHost;								// 이 방의 방장
+
 
 	inline static std::atomic<int> ms_iRoomSeq = 0;
 
 	friend class Channel;
 	friend class RoomPool;
+	friend class BattleFieldWorker;
 };
 

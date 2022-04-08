@@ -70,7 +70,7 @@
     <ClInclude Include="..\Sources\TF\Game\PlayerPool.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\TF\Worker\BackgroundWorker.h">
+    <ClInclude Include="..\Sources\TF\Worker\SystemWorker.h">
       <Filter>Workder</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Database\MysqlConnection.h">
@@ -96,6 +96,10 @@
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Game\RoomPool.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\PrecompiledHeader.h" />
+    <ClInclude Include="..\Sources\TF\Worker\BattleFieldWorker.h">
+      <Filter>Workder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +146,7 @@
     <ClCompile Include="..\Sources\TF\Game\PlayerPool.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Worker\BackgroundWorker.cpp">
+    <ClCompile Include="..\Sources\TF\Worker\SystemWorker.cpp">
       <Filter>Workder</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\TF\Database\MysqlConnection.cpp">
@@ -162,6 +166,10 @@
     </ClCompile>
     <ClCompile Include="..\Sources\TF\Game\RoomPool.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\PrecompiledHeader.cpp" />
+    <ClCompile Include="..\Sources\TF\Worker\BattleFieldWorker.cpp">
+      <Filter>Workder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

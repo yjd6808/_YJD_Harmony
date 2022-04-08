@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #include <JCore/Type.h>
@@ -80,4 +84,13 @@ struct RoomInfo
 	int RoomUID = INVALID_UID;
 	int PlayerCount;
 	int MaxPlayerCount;
+};
+
+struct BattleInfo
+{
+	int CharacterUID;
+	int Kill;
+	int Death;
+	int FireCount;
+	int HitCount;
 };

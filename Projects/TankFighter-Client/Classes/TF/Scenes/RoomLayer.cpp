@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/Scenes/RoomLayer.h>
 #include <TF/UI/TextButton.h>
 #include <TF/Util/ColorUtil.h>
@@ -188,9 +192,8 @@ void RoomLayer::CmdLoadRoomInfoAck(ICommand* cmd) {
 	}
 
 	// 방 정보를 못받은 경우 로비로 이동
-	this->unscheduleUpdate();
-	this->_eventDispatcher->removeAllEventListeners();
-	Director::getInstance()->replaceScene(LobbyScene::createScene());
+	_Client->SetRoomUID(INVALID_UID);
+	_Client->ChangeScene(SceneType::Lobby);
 }
 
 void RoomLayer::CmdUpdateRoomInfoAck(ICommand* cmd) {
@@ -244,7 +247,17 @@ void RoomLayer::CmdUpdateRoomInfoAck(ICommand* cmd) {
 }
 
 void RoomLayer::CmdRoomLeaveAck(ICommand* cmd) {
-	this->unscheduleUpdate();
-	this->_eventDispatcher->removeAllEventListeners();
-	Director::getInstance()->replaceScene(LobbyScene::createScene());
+	_Client->SetRoomUID(INVALID_UID);
+	_Client->ChangeScene(SceneType::Lobby);
+}
+
+void RoomLayer::CmdRoomGameStartAck(ICommand* cmd) {
+	RoomGameStartAck* pRoomGameStartAck = cmd->CastCommand<RoomGameStartAck*>();
+
+	if (!pRoomGameStartAck->Result) {
+		PopUp::createInParent(pRoomGameStartAck->Reason, this, false);
+		return;
+	}
+
+	_Client->ChangeScene(SceneType::BattleField);
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <mysql.h>
-#include <string>
 #include <JCore/String.h>
 
 class MysqlConnection
@@ -12,21 +11,22 @@ public:
 	~MysqlConnection();
 
 	// MySQL 접속
-	bool Connect(const JCore::String &sHostname, const uint16_t &wPort, const JCore::String &sUsername, const JCore::String &sPassword, const JCore::String &sDB);
+	bool Connect(const JCore::String &hostname, const uint16_t &port, const JCore::String &username, const JCore::String &password, const JCore::String &dbname);
 
 	// DB 선택
-	bool SelectDB(const JCore::String &sSchemaName);
+	bool SelectDB(const JCore::String &schemaName);
 
 	// 연결 끊기
 	void Disconnect();
 
 	// 제일 마지막 오류
-	const JCore::String GetLastError() const;
+	JCore::String GetLastError() const;
 
-	MYSQL *getConn();
-	bool IsConnected();
-	// returns an escaped string
-	const JCore::String EscapeString(const JCore::String& value) const;
+	MYSQL *GetConnection() const;
+	bool IsConnected() const;
+
+	// 이스케이프 스트링 반환
+	JCore::String EscapeString(const JCore::String& value) const;
 
 private:
 	MYSQL *m_MySQLConn;

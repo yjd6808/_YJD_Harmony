@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/UI/ColoredListView.h>
 
 #define SCROLLVIEW_BOX				0	

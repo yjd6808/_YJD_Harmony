@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/Scenes/CharacterSelectLayer.h>
 #include <TF/UI/TextButton.h>
 #include <TF/Util/ColorUtil.h>
@@ -125,10 +129,7 @@ void CharacterSelectLayer::OnClickedChannelSelectButton(TextButton* sender) {
 	_Client->SetChannelUID(INVALID_UID);
 	_Client->SetCharacterUID(INVALID_UID);
 	_Client->SetRoomUID(INVALID_UID);
-
-	this->unscheduleUpdate();
-	this->_eventDispatcher->removeAllEventListeners();
-	Director::getInstance()->replaceScene(ChannelScene::createScene());
+	_Client->ChangeScene(SceneType::CharacterSelect);
 }
 
 
@@ -190,10 +191,7 @@ void CharacterSelectLayer::CmdSelectCharacterAck(ICommand* cmd) {
 	if (pSelectCharacterAck->Result) {
 		// 캐릭터 CharacterUID 세팅
 		_Client->SetCharacterUID(pSelectCharacterAck->CharacterUID);
-
-		this->unscheduleUpdate();
-		this->_eventDispatcher->removeAllEventListeners();
-		Director::getInstance()->replaceScene(LobbyScene::createScene());
+		_Client->ChangeScene(SceneType::Lobby);
 		return;
 	}
 

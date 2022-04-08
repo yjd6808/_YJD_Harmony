@@ -46,11 +46,16 @@
     </ClCompile>
     <ClCompile Include="..\Sources\TF\Parser\QueryFn.cpp" />
     <ClCompile Include="..\Sources\TF\Parser\SendFn.cpp" />
+    <ClCompile Include="..\Sources\TF\PrecompiledHeader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Sources\TF\Util\Console.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\Sources\TF\Worker\BackgroundWorker.cpp" />
+    <ClCompile Include="..\Sources\TF\Worker\BattleFieldWorker.cpp" />
+    <ClCompile Include="..\Sources\TF\Worker\SystemWorker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Database\MysqlConnection.h" />
@@ -93,6 +98,7 @@
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Parser\QueryFn.h" />
     <ClInclude Include="..\Sources\TF\Parser\SendFn.h" />
+    <ClInclude Include="..\Sources\TF\PrecompiledHeader.h" />
     <ClInclude Include="..\Sources\TF\ServerConfiguration.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -109,7 +115,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\Sources\TF\Worker\BackgroundWorker.h" />
+    <ClInclude Include="..\Sources\TF\Worker\BattleFieldWorker.h" />
+    <ClInclude Include="..\Sources\TF\Worker\SystemWorker.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -166,6 +173,9 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeaderFile>TF/PrecompiledHeader.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(IntDir)PrecompiledHeader.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -182,6 +192,9 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_WINSOCKAPI_</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeaderFile>TF/PrecompiledHeader.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(IntDir)PrecompiledHeader.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

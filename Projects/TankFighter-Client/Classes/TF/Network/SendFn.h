@@ -21,6 +21,9 @@ struct SendFn
 	static bool SendRoomGameReadySyn();
 	static bool SendRoomGameReadyCancelSyn();
 	static bool SendRoomLeaveSyn();
+	static bool SendBattleFieldLoadSyn();
+	static bool SendBattleFieldLeaveSyn();
 	static bool SendAddFriendRequestAck(int requestCharacterUID, bool accept);
+	static bool SendBattileFieldTankMoveSyn(TankMove& move);
 };
 

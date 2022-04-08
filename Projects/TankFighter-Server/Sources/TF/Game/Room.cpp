@@ -1,5 +1,8 @@
-#define _WINSOCKAPI_
+/*
+ * 작성자 : 윤정도
+ */
 
+#include <TF/PrecompiledHeader.h>
 #include <TF/Game/Room.h>
 #include <TF/Game/Player.h>
 
@@ -50,7 +53,7 @@ bool Room::TryAddPlayer(Player* player) {
 	if (iPlayerCount < m_iMaxPlayerCount) {
 		player->Lock();
 		player->m_iRoomUID = m_iRoomUID;
-		player->m_ePlayerState = PlayerState::RoomReady;
+		player->m_ePlayerState = PlayerState::RoomLobby;
 		player->m_bReady = false;
 		player->Unlock();
 		m_PlayerList.PushBack(player);
@@ -118,7 +121,8 @@ Player* Room::GetHost() {
 	return static_cast<Player*>(m_pHost);
 }
 
-void Room::BroadcastPacket(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
+void Room::Broadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
+	CriticalSectionLockGuard guard(m_RoomLock);
 	packet->AddRef(); // 패킷 베리어
 	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
 		if (p == exceptPlayer)
@@ -133,18 +137,64 @@ void Room::BroadcastPacket(JNetwork::ISendPacket* packet, Player* exceptPlayer) 
 	packet->Release();
 }
 
+void Room::UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
+	packet->AddRef(); // 패킷 베리어
+	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
+		if (p == exceptPlayer)
+			return;
+
+		p->Session()->SendAsync(packet);
+		});
+
+	if (m_pHost)
+		GetHost()->Session()->SendAsync(packet);
+	packet->Release();
+}
+
+void Room::UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
+	packet->AddRef(); // 패킷 베리어
+	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
+		if (p == exceptPlayer)
+			return;
+
+		if (p->GetPlayerState() == PlayerState::RoomBattle && p->IsReady())
+			p->Session()->SendAsync(packet);
+		});
+
+	if (m_pHost)
+		GetHost()->Session()->SendAsync(packet);
+	packet->Release();
+}
+
 void Room::SetRoomState(RoomState state) {
 	CriticalSectionLockGuard guard(m_RoomLock);
 	m_eRoomState = state;
 }
 
 void Room::ForEach(Action<Player*> foreachAction) {
-	CriticalSectionLockGuard guard(m_RoomLock);
 	m_PlayerList.Extension().ForEach(foreachAction);
 
 	if (m_pHost) {
 		foreachAction(GetHost());
 	}
+}
+
+void Room::UnsafeForEach(JCore::Action<Player*> foreachAction) {
+	m_PlayerList.Extension().ForEach(foreachAction);
+
+	if (m_pHost) {
+		foreachAction(GetHost());
+	}
+}
+
+RoomState Room::GetRoomState() {
+	CriticalSectionLockGuard guard(m_RoomLock);
+	return m_eRoomState;
+}
+
+bool Room::IsBattleFieldState() {
+	CriticalSectionLockGuard guard(m_RoomLock);
+	return m_eRoomState >= RoomState::PlayWait;
 }
 
 
@@ -155,3 +205,25 @@ void Room::LoadRoomInfo(Out_ RoomInfo& info) {
 	info.MaxPlayerCount = m_iMaxPlayerCount;
 	info.PlayerCount = m_PlayerList.Size() + 1;
 }
+
+void Room::SetTimerTime(int time) {
+	CriticalSectionLockGuard guard(m_RoomLock);
+	m_iTimerTime = time;
+}
+
+int Room::AddTimerTime(int time) {
+	CriticalSectionLockGuard guard(m_RoomLock);
+	return m_iTimerTime += time;
+}
+
+int Room::GetTimerTime() {
+	CriticalSectionLockGuard guard(m_RoomLock);
+	return m_iTimerTime;
+}
+
+int Room::SubtractTimerTime(int time) {
+	CriticalSectionLockGuard guard(m_RoomLock);
+	return m_iTimerTime -= time;
+}
+
+

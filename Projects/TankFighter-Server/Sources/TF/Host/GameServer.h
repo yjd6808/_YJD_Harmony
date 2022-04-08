@@ -1,6 +1,8 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
-
-
 
 #include <TF/ServerConfiguration.h>
 #include <TF/Game/Player.h>

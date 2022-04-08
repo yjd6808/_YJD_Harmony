@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 class Player;
@@ -67,6 +71,17 @@ public:
 	// 클라로부터 방 나가기 요청 수신
 	static void CmdRoomLeaveSyn(Player* player, JNetwork::ICommand* cmd);
 
+	// 클라로부터 배틀 필드에 진입했다 수신
+	static void CmdBattleFieldLoadSyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라가 배틀필드에서 자신의 상태정보를 주기적으로 서버로 송신해줌
+	static void CmdBattileFieldTankMoveSyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라가 배틀필드에서 강제로 탈주를 시도한다고 함
+	static void CmdBattleFieldLeaveSyn(Player* player, JNetwork::ICommand* cmd);
+	
+
 	static void CmdTankMoveSyn(Player* player, JNetwork::ICommand* cmd);
 	static void CmdTankMoveAck(Player* player, JNetwork::ICommand* cmd);
+	
 };

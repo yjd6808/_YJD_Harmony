@@ -13,6 +13,10 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\Common\Command.h" />
     <ClInclude Include="..\Sources\Common\Enum.h" />
+    <ClInclude Include="..\Sources\Common\GameConfiguration.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\Common\MemoryLeakDetector.h">
       <SubType>
       </SubType>

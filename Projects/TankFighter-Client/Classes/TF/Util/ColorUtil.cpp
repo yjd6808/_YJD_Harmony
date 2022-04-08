@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/Util/ColorUtil.h>
 
 using namespace cocos2d;

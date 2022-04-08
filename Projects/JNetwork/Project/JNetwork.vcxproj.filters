@@ -27,9 +27,6 @@
     <ClCompile Include="..\Sources\JNetwork\IOCP\IOCPPostOrder.cpp">
       <Filter>IOCP</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.cpp">
-      <Filter>IOCP</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
@@ -40,6 +37,9 @@
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
   </ItemGroup>
@@ -94,9 +94,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Worker.h" />
     <ClInclude Include="..\Sources\JNetwork\WorkerManager.h" />
-    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.h">
-      <Filter>IOCP</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.h">
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
@@ -107,6 +104,9 @@
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.h">
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
   </ItemGroup>

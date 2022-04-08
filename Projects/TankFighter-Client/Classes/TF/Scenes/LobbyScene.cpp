@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/Scenes/LobbyScene.h>
 #include <Common/Command.h>
 

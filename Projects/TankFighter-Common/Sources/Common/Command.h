@@ -1,7 +1,13 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #include <JNetwork/Packet.h>
 #include <Common/Structure.h>
+#include <Common/GameConfiguration.h>
+#include <Common/Enum.h>
 
 // TCP Commands
 #define LOGIN_SYN						100		// 클라 -> 서버
@@ -45,7 +51,6 @@
 #define ADD_FRIEND_ACK					127		// 서버 -> 클라 / 친구 추가 요청에 대한 결과를 보낸다.
 #define ADD_FRIEND_REQUEST_SYN			128		// 서버 -> 클라 / 친구 추가 요청 대상에게 요청정보를 전달한다.
 #define ADD_FRIEND_REQUEST_ACK			128		// 클라 -> 서버 / 친구 요청을 받은 클라이언트가 수락/거부의 결과를 서버로 전송한다.
-// #define ADD_FRIEND_REQUESTR_RESULT_SYN  129	// 서버 -> 클라 / 친구 요청자에게 요청 결과를 전송한다. - 필요 없음
 
 
 #define DELETE_FRIEND_SYN				123		// 클라 -> 서버 / 친구 삭제 / 친구 목록(리스트뷰)의 친구 버튼 클릭시
@@ -53,7 +58,6 @@
 
 #define LOAD_ROOM_INFO_SYN				131		// 클라 -> 서버 / (방 진입 시) 각종 방 정보를 요청한다.
 #define LOAD_ROOM_INFO_ACK				132		// 서버 -> 클라
-
 
 
 #define ROOM_GAME_START_SYN				133		// 클라 -> 서버 / 게임 시작 버튼 클릭
@@ -68,12 +72,19 @@
 #define ROOM_LEAVE_SYN					136		// 클라 -> 서버 / 방 나가기 버튼 클릭
 #define ROOM_LEAVE_ACK					139		// 서버 -> 클라 / 방 나가기에 대한 응답
 
+#define BATTLE_FIELD_LOAD_SYN			150		// 클라 -> 서버 / 방에 진입하면 서버로 난 준비됐소! 라고 알려준다.
+#define BATTLE_FIELD_LOAD_ACK			151		// 게임 시작까지 남은 시간과 맵 정보그리고 이 플레이어가 스폰될 위치 정보를 보내준다.
+
+#define BATTLE_FIELD_TANK_MOVE_SYN		161		// 클라 -> 서버 / 클라에서 움직일때마다 일정 주기마다 서버로 자신의 위치를 전송한다. - 서버는 이를 업데이트한다.
+#define BATTLE_FIELD_TANK_UPDATE_SYN	162		// 서버 -> 클라 / 서버는 일정주기마다 플레이어 위치를 플레이중인 방의 유저들에게 브로드캐스팅 해준다.
+#define BATTLE_FIELD_PLAYWAIT_END_SYN	163		// 서버 -> 클라 / 서버는 클라이언트가 모두
+
+#define BATTLE_FIELD_LEAVE_SYN			170		// 클라 -> 서버 / 방나가기 클릭
+#define BATTLE_FIELD_LEAVE_ACK			171		// 클라 -> 서버 / 나간놈 제외하고 남아있는 놈들에게 나갔다고 알려줌
+
 #define SERVER_MESSAGE_SYN				400		// 서버 -> 클라로 특정 메시지 전송
 
 #define HARD_DISCONNECT_SYN				250		// 서버 -> 클라 / 서버가 해당 클라의 연결을 강제로 끊는 경우
-
-#define TANK_MOVE_SYN					150
-#define TANK_MOVE_ACK					151
 
 #define TCP_PING_SYN					200
 #define TCP_PING_ACK					201
@@ -430,6 +441,65 @@ struct RoomLeaveAck : JNetwork::ICommand
 };
 
 
+struct BattleFieldLoadSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLoadSyn, BATTLE_FIELD_LOAD_SYN);
+};
+
+struct BattleFieldLoadAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLoadAck, BATTLE_FIELD_LOAD_ACK);
+
+	float LeftTime;			// (초단위) 게임 진행까지 남은시간 - 이시간동안 다른 플레이어가 접속할때까지 기다림
+	TankMove InitialMove;	// 플레이어 초기 위치 정보
+};
+
+
+//클라는 일정주기마다 서버로 자신의 탱크 정보를 서버로 전송한다.
+//서버는 이 정보를 받아서 업데이트 시켜준다.
+struct BattileFieldTankMoveSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattileFieldTankMoveSyn, BATTLE_FIELD_TANK_MOVE_SYN)
+
+	TankMove Move{};
+};
+
+//서버는 일정주기마다 클라이언트들의 위치정보를 클라이언트들로 전송해주도록한다.
+struct BattileFieldTankUpdateSyn : JNetwork::ICommand
+{
+	BattileFieldTankUpdateSyn() {
+		Cmd = BATTLE_FIELD_TANK_UPDATE_SYN;
+		CmdLen = sizeof(BattileFieldTankUpdateSyn);
+		
+		for (int i = 0; i < ROOM_MAX_PLAYER_COUNT; i++) {
+			CharacterUID[i] = INVALID_UID;
+		}
+	}
+
+	int Count{};
+	int CharacterUID[ROOM_MAX_PLAYER_COUNT]{};
+	TankMove Move[ROOM_MAX_PLAYER_COUNT]{};
+};
+
+struct BattleFieldLeaveSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLeaveSyn, BATTLE_FIELD_LEAVE_SYN);
+};
+
+struct BattleFieldLeaveAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLeaveAck, BATTLE_FIELD_LEAVE_ACK);
+	int CharacterUID = INVALID_UID;		// 나간 유저의 UID 이걸 확인해서 필드의 탱크를 삭제시켜주도록 하자
+										// 자기자신은 씬을 바꿔주도록 하자
+};
+
+
+
+
+
+
+
+
 
 
 
@@ -460,21 +530,3 @@ struct TcpPingAck : JNetwork::ICommand
 	CMD_DEFAULT_CONSTRUCTOR(TcpPingAck, TCP_PING_ACK)
 };
 
-// 클라는 일정주기마다 서버로 자신의 위치/속도등의 정보를 서버로 전송한다.
-// 서버는 해당 UUID의 클라이언트의 상태정보를 저장한다.
-struct TcpTankMoveSyn : JNetwork::ICommand
-{
-	CMD_DEFAULT_CONSTRUCTOR(TcpTankMoveSyn, TANK_MOVE_SYN)
-
-	Int32 UUID;
-	TankMove Move;
-};
-
-// 서버는 일정주기마다 클라이언트들의 위치정보를 클라이언트들로 전송해주도록한다.
-struct TcpTankMoveAck : JNetwork::ICommand
-{
-	CMD_DEFAULT_CONSTRUCTOR(TcpTankMoveAck, TANK_MOVE_ACK)
-
-	Int32 UUID;
-	TankMove Move;
-};

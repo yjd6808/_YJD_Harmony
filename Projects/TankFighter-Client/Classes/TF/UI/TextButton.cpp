@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/UI/TextButton.h>
 
 TextButton* TextButton::create(float width, float height, const std::string& content, float fontSize) {

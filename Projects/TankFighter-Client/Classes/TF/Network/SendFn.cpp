@@ -167,12 +167,34 @@ bool SendFn::SendRoomLeaveSyn() {
 	return bSendRet;
 }
 
+bool SendFn::SendBattleFieldLoadSyn() {
+	auto* pPacket = new Packet<BattleFieldLoadSyn>();
+	BattleFieldLoadSyn* pBattleFieldLoadSyn = pPacket->Get<0>();
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+bool SendFn::SendBattleFieldLeaveSyn() {
+	auto* pPacket = new Packet<BattleFieldLeaveSyn>();
+	BattleFieldLeaveSyn* pBattleFieldLeaveSyn = pPacket->Get<0>();
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
 bool SendFn::SendAddFriendRequestAck(int requestCharacterUID, bool accept) {
 	auto* pPacket = new Packet<AddFriendRequestAck>();
 	AddFriendRequestAck* pAddFriendRequestAck = pPacket->Get<0>();
 	pAddFriendRequestAck->AcceptedCharacterUID = _Client->GetCharacterUID();
 	pAddFriendRequestAck->RequestCharacterUID = requestCharacterUID;
 	pAddFriendRequestAck->Accept = accept;
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+bool SendFn::SendBattileFieldTankMoveSyn(TankMove& move) {
+	auto* pPacket = new Packet<BattileFieldTankMoveSyn>();
+	BattileFieldTankMoveSyn* pBattileFieldTankMoveSyn = pPacket->Get<0>();
+	Memory::CopyUnsafe(&pBattileFieldTankMoveSyn->Move, &move, sizeof(TankMove));
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }

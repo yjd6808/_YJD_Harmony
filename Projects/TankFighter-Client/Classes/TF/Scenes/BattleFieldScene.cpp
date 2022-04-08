@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <TF/Scenes/RoomScene.h>
 #include <Common/Command.h>
 
@@ -19,14 +23,15 @@ bool BattleFieldScene::init()
     return true;
 }
 
-void BattleFieldScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+void BattleFieldScene::SynchronizedOnReceived(ICommand* cmd) {
     CCLOG("%d 커맨드 수신 (%s)", cmd->GetCommand(), "BattleFieldScene");
     SynchronizedScene::SynchronizedOnReceived(cmd);
 
 
     switch (cmd->GetCommand()) {
-        //case 
-    //case LOAD_CHARACTER_INFO_ACK: m_pCharacterSelectLayer->CmdLoadCharacterInfoAck(cmd); break;
+    case BATTLE_FIELD_LOAD_ACK:             m_pBattleFieldLayer->CmdBattleFieldLoadAck(cmd); break;
+    case BATTLE_FIELD_LEAVE_ACK:            m_pBattleFieldLayer->CmdBattleFieldLeaveAck(cmd); break;
+    case BATTLE_FIELD_TANK_UPDATE_SYN:      m_pBattleFieldLayer->CmdBattleFieldTankUpdateSyn(cmd); break;
     }
 }
 

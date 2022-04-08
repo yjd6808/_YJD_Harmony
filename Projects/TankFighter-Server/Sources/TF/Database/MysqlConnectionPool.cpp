@@ -1,3 +1,4 @@
+#include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlConnectionPool.h>
 #include <TF/Database/MysqlQuery.h>
 #include <TF/Util/Console.h>

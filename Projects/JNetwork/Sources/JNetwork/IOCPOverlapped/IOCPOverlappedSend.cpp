@@ -1,6 +1,6 @@
 /*
-	작성자 : 윤정도
-*/
+ * 작성자 : 윤정도
+ */
 
 #include <JNetwork/Network.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>

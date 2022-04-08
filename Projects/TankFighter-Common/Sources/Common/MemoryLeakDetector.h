@@ -37,20 +37,18 @@ public:
     void StartDetect() {
         _CrtMemCheckpoint(&memState_);
     }
-    void StopDetect() {
+    int StopDetect() const {
         _CrtMemState stateNow, stateDiff;
         _CrtMemCheckpoint(&stateNow);
 
         const int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
 
         if (diffResult) {
-            reportFailure(stateDiff.lSizes[1]);
-            _CrtMemDumpStatistics(&stateDiff);
+            return stateDiff.lSizes[1];
         }
+
+        return 0;
     }
 private:
-    static void reportFailure(unsigned int unfreedBytes) {
-        printf("메모리 릭 발생 : %d bytes!!!\n", unfreedBytes);
-    }
     _CrtMemState memState_;
 };

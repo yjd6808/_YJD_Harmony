@@ -4,6 +4,7 @@
 #include <TF/Scenes/LoginScene.h>
 #include <TF/Network/GameClient.h>
 #include <TF/Network/ClientConfiguration.h>
+#include <Common/GameConfiguration.h>
 #include <JNetwork/Winsock.h>
 
 using namespace JNetwork;
@@ -25,7 +26,7 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(1000, 600);
+static cocos2d::Size designResolutionSize = cocos2d::Size(MAP_WIDTH, MAP_HEIGHT);
 
 AppDelegate::AppDelegate()
 {

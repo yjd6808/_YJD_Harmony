@@ -1,9 +1,14 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #pragma once
 
 #include <JCore/Container/HashMap.h>
 #include <JCore/Container/Vector.h>
 #include <JCore/Functional.h>
 #include <TF/Game/RoomPool.h>
+#include <TF/Worker/BattleFieldWorker.h>
 
 namespace JNetwork { struct ISendPacket; }
 
@@ -41,14 +46,16 @@ public:
 	bool LeaveRoom(Player* player);
 	void RoomForEach(JCore::Action<Room*> foreachAction);
 	int GetRoomCount();
-	
-	
+	int GetPlayingRoomCount();
+
+	bool StartBattle(Room* pRoom);
 private:
 	int m_ChannelUID;
 	int m_iMaxPlayerCount;
 	JCore::String m_ChannelName;
 	JCore::CriticalSectionMutex m_ChannelLock;
 	JCore::Vector<Player*> m_PlayerList;
+	BattleFieldWorker m_BattleFieldWorker;
 
 	JCore::CriticalSectionMutex m_RoomMapLock;
 	JCore::HashMap<int, Room*> m_RoomMap;

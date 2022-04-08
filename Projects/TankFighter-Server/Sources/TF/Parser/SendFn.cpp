@@ -1,5 +1,8 @@
-#define _WINSOCKAPI_
+/*
+ * 작성자 : 윤정도
+ */
 
+#include <TF/PrecompiledHeader.h>
 #include <TF/Parser/SendFn.h>
 #include <Common/Command.h>
 #include <TF/Game/Player.h>
@@ -24,7 +27,6 @@ void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 	const auto pPacket = new Packet<UpdateFriendListAck>;
 	UpdateFriendListAck* pUpdateFriendListAck = pPacket->Get<0>();
 
-	// 쿼리가 좀 길어서 용량 180으로 설정
 	std::string query(250, '\0');
 	query = "select * from t_character where c_uid = ( "
 						"select c_ack_character_uid from t_friendship where c_req_character_uid = ? "
@@ -207,5 +209,5 @@ void SendFn::BroadcastUpdateRoomUserAck(Room* room) {
 	});
 
 	pUpdateRoomInfoAck->Count = iIndexer;
-	room->BroadcastPacket(pPacket);
+	room->Broadcast(pPacket);
 }

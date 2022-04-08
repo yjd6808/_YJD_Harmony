@@ -1,3 +1,4 @@
+#include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlQuery.h>
 #include <TF/Util/Console.h>
 
@@ -221,7 +222,7 @@ unsigned int MysqlQuery::GetFieldCount() const {
 
 
 bool MysqlQuery::ExecuteQuery() {
-	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source())) {
+	if (mysql_query(m_sqlConn->GetConnection(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
 			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
@@ -229,7 +230,7 @@ bool MysqlQuery::ExecuteQuery() {
 		return false;
 	}
 
-	MYSQL_RES *result = mysql_store_result(m_sqlConn->getConn());
+	MYSQL_RES *result = mysql_store_result(m_sqlConn->GetConnection());
 
 	if (result == NULL) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
@@ -269,7 +270,7 @@ bool MysqlQuery::ExecuteQuery() {
 }
 
 bool MysqlQuery::ExecuteUpdate() {
-	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source())) {
+	if (mysql_query(m_sqlConn->GetConnection(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
 			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
@@ -280,14 +281,14 @@ bool MysqlQuery::ExecuteUpdate() {
 }
 
 int MysqlQuery::ExecuteInsert() {
-	if (mysql_query(m_sqlConn->getConn(), m_PreparedStatement.Source())) {
+	if (mysql_query(m_sqlConn->GetConnection(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
 			Console::WriteLine(ConsoleColor::RED, "MySQL 오류 : %s", m_sqlConn->GetLastError().Source());
 		return 0;
 	}
 
-	const int iLastInsertID = mysql_insert_id(m_sqlConn->getConn());
+	const int iLastInsertID = mysql_insert_id(m_sqlConn->GetConnection());
 
 	m_bSuccess = true;
 	return iLastInsertID;

@@ -2,6 +2,7 @@
 	작성자 : 윤정도
 */
 
+#include <TF/PrecompiledHeader.h>
 #include <TF/Overlapped/IOCPOverlappedQuery.h>
 #include <TF/Database/MysqlDatabase.h>
 
@@ -10,7 +11,7 @@
 using namespace JNetwork;
 
 
-IOCPOverlappedQuery::IOCPOverlappedQuery(JNetwork::IOCP* iocp, MysqlQueryFuture* future) :
+IOCPOverlappedQuery::IOCPOverlappedQuery(IOCP* iocp, MysqlQueryFuture* future) :
 	IOCPOverlapped(iocp, Type::Custom),
 	m_pMysqlQueryFuture(future)
 {

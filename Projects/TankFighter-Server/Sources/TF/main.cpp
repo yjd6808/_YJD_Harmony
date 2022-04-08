@@ -1,15 +1,14 @@
-#define _WINSOCKAPI_		// winsock.h 연속 include 방지
-
-#include <JNetwork/Winsock.h>
+#include <TF/PrecompiledHeader.h>
 #include <TF/Host/GameServer.h>
 #include <TF/Util/Console.h>
 #include <TF/Database/MysqlDatabase.h>
+#include <TF/Game/PlayerPool.h>
 #include <TF/Game/World.h>
+#include <TF/Worker/SystemWorker.h>
 
-#include "Game/PlayerPool.h"
+#include <JNetwork/Winsock.h>
 #include <Common/MemoryLeakDetector.h>
 
-#include "JNetwork/IOCPOverlapped/IOCPOverlappedAccept.h"
 
 
 using namespace JNetwork;
@@ -28,7 +27,6 @@ using namespace JNetwork;
 
 
 int main() {
-
 	JCore::CriticalSectionMutex mtx;
 
 	// 콘솔창 출력 동기화
@@ -36,11 +34,15 @@ int main() {
 	Console::SetMutex(&mtx);
 
 	{
-		AutoMemoryLeakDetector leak;
+		MemoryLeakDetector detector;
+
+		detector.StartDetect();
+
 		GameServer* pGameServer = GameServer::GetInstance();
 		MysqlDatabase* pDatabase = MysqlDatabase::GetInstance();
 		PlayerPool* pPlayerPool = PlayerPool::GetInstance();
 		World* pWorld = World::GetInstance();
+		SystemWorker* pSystemWorker = SystemWorker::GetInstance();
 
 		// 윈속 초기화
 		if (!Winsock::Initialize(2, 2)) {
@@ -57,7 +59,6 @@ int main() {
 			return ABNORMAL_EXIT_PLAYERPOOL_INIT_FAILED;
 		}
 		
-
 		// 월드 초기화
 		if (!pWorld->Initialize()) {
 			return ABNORMAL_EXIT_WORLD_INIT_FAILED;
@@ -68,38 +69,22 @@ int main() {
 			return ABNORMAL_EXIT_GAMESERVER_START_FAILED;
 		}
 
-		volatile int run = true;
-		std::thread th([&]() {
-			while (run) {
-				auto channels = pWorld->GetChannels();
-				Console::WriteLine("채널1(%d명 / %d개의 방) 채널2(%d명 / %d개의 방) 채널3(%d명 / %d개의 방) 채널4(%d명 / %d개의 방)", 
-					channels[0]->GetPlayerCount(), channels[0]->GetRoomCount(),
-					channels[1]->GetPlayerCount(), channels[1]->GetRoomCount(), 
-					channels[2]->GetPlayerCount(), channels[2]->GetRoomCount(), 
-					channels[3]->GetPlayerCount(), channels[3]->GetRoomCount());
-				for (int i = 0; i < 450 && run; i++)
-					Sleep(1);
-			}
-			run++;
-		});
-		
+		// 시스템 커맨드 입력을 받기 위한 
+		pSystemWorker->Run();
 
-		// c 입력시 종료
-		while (getchar() != 'c') {}
-		run = false;
-		th.join();
+		// ======================================
+		WaitForSingleObject(pSystemWorker->CreateExitHandle(), INFINITE);	
 
 		if (!pGameServer->Stop()) {
 			return ABNORMAL_EXIT_GAMESERVER_STOP_FAILED;
 		}
 
-		
+		// 플레이어 풀 정리
 		if (!pPlayerPool->Finalize()) {
 			return ABNORMAL_EXIT_PLAYERPOOL_FINALIZE_FAILED;
 		}
 		
-
-		// 데이터베이스 초기화
+		// 데이터베이스 정리
 		if (!pDatabase->Finalize()) {
 			return ABNORMAL_EXIT_DATABASE_FINALIZE_FAIED;
 		}
@@ -113,10 +98,21 @@ int main() {
 		}
 
 		// 제거 순서를 지키기 위해 수동으로 삭제해주도록 하자.
+		DeleteSafe(pSystemWorker);
 		DeleteSafe(pDatabase);
 		DeleteSafe(pPlayerPool);
 		DeleteSafe(pWorld);
 		DeleteSafe(pGameServer);
+
+		// 메모리 누수 확인
+		const int iLeakMemory = detector.StopDetect();
+		if (iLeakMemory == 0) {
+			Console::WriteLine(ConsoleColor::LIGHTGREEN, "[축하합니다!] 메모리 누수가 없네요 우왕!!!!!!!");
+			Console::WriteLine(ConsoleColor::LIGHTGREEN, "[축하합니다!] 참 잘하셨어요 ㅎㅎ (자화자찬)");
+		} else {
+			Console::WriteLine(ConsoleColor::LIGHTMAGENTA, "[이런..] %d 바이트 만큼 누수가 있어요! 얼른 고치세요.\n", iLeakMemory);
+		}
+		Console::SetColor(ConsoleColor::LIGHTGRAY);
 	}
 	return 0;
 }

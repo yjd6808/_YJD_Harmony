@@ -1,3 +1,7 @@
+/*
+ * 작성자 : 윤정도
+ */
+
 #include <JNetwork/Network.h>
 #include <JNetwork/IOCP/IOCP.h>
 #include <JNetwork/WorkerManager.h>
