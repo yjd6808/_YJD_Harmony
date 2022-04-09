@@ -6,7 +6,6 @@
 
 #include <TF/SourceHeader.h>
 #include <TF/Scenes/RoomLayer.h>
-#include <TF/Scenes/GridLayer.h>
 #include <TF/Scenes/SynchronizedScene.h>
 
 class RoomScene : public SynchronizedScene
@@ -21,6 +20,5 @@ public:
 
 private:
     RoomLayer* m_pRoomLayer;
-    GridLayer* m_pGridLayer;
 };
 

@@ -21,6 +21,5 @@ public:
 
 private:
     BattleFieldLayer* m_pBattleFieldLayer;
-    GridLayer* m_pGridLayer;
 };
 

@@ -6,6 +6,7 @@
 // Objects
 #include <TF/Object/Tank.h>
 #include <TF/Object/Obstacle.h>
+#include <TF/Object/Bullet.h>
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #pragma execution_character_set("utf-8")
@@ -13,3 +14,4 @@
 
 #include <TF/Object/Tank.cpp>
 #include <TF/Object/Obstacle.cpp>
+#include <TF/Object/Bullet.cpp>

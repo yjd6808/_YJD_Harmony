@@ -10,3 +10,5 @@
 
 #define TANK_MOVE_SPEED		70.0f
 #define TANK_ROTATION_SPEED	70.0f
+#define TANK_FIRE_DELAY		0.3f		// 총 발사는 0.1초에 한번만 가능
+#define TANK_BULLET_SPEED	300.0f		// 총알 속도

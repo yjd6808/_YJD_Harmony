@@ -5,6 +5,7 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <Common/Enum.h>
 
 #define INVALID_UID				-1
 
@@ -30,27 +31,19 @@
 
 struct TankMove
 {
+	int CharacterUID = INVALID_UID;
+	bool IsDeath;
 	float X;
 	float Y;
 	float MoveSpeed;
-	Int8 MoveDir;
-
-	Int8 RotationDir;
+	MoveDirection MoveDir;
+	
+	RotateDirection RotationDir;
 	float Rotation;
 	float RotationSpeed;
 };
 
-struct BulletMove
-{
-	float X;
-	float Y;
-	float Rotation;
-};
 
-struct BulletInfo
-{
-	int BulletType;
-};
 
 struct CharacterInfo
 {
@@ -62,7 +55,7 @@ struct CharacterInfo
 	int Kill;
 	int Death;
 	int Money;
-	int PlayerState;
+	PlayerState PlayerState;
 };
 
 struct RoomCharacterInfo : CharacterInfo
@@ -84,6 +77,19 @@ struct RoomInfo
 	int RoomUID = INVALID_UID;
 	int PlayerCount;
 	int MaxPlayerCount;
+	RoomState RoomState;
+
+	bool IsBattleEndingState() const {
+		return RoomState >= RoomState::EndWait;
+	}
+
+	bool IsBattlePlayingState() const {
+		return RoomState >= RoomState::PlayWait && RoomState <= RoomState::Playing;
+	}
+
+	bool IsLobbyState() const {
+		return RoomState >= RoomState::ReadyWait;
+	}
 };
 
 struct BattleInfo
@@ -92,5 +98,15 @@ struct BattleInfo
 	int Kill;
 	int Death;
 	int FireCount;
-	int HitCount;
+};
+
+struct BulletInfo
+{
+	int CharacterUID = INVALID_UID;		// ¹ß»çÇÑ³ð
+	float X;
+	float Y;
+	float Rotation;
+	float Diameter;
+	float MoveSpeed;
+	Int32U Color;
 };

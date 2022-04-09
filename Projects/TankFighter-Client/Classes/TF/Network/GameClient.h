@@ -21,8 +21,10 @@ public:
 	int  GetCharacterUID() const				{ return m_CharacterInfo.CharacterUID; }
 	void SetRoomUID(int roomUID)				{ m_iRoomUID = roomUID; }
 	int  GetRoomUID() const						{ return m_iRoomUID; }
+	PlayerState  GetPlayerState() const			{ return m_CharacterInfo.PlayerState; }
 	void UpdateCharacterInfo(CharacterInfo& info);
 
+	JCore::String GetName()						{ return m_CharacterInfo.Name; }
 	void ChangeScene(SceneType sceneType);
 private:
 	CommandParser* m_Parser;

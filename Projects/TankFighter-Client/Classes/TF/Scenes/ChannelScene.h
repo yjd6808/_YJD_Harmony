@@ -21,6 +21,5 @@ public:
 
 private:
     ChannelLayer* m_pChannelLayer;
-    GridLayer* m_pGridLayer;
 };
 

@@ -1,5 +1,14 @@
 /*
  * 작성자 : 윤정도
+ *
+ * Syn : 보냄
+ * Ack : 보낸거에 대한 응답
+ *
+ * 이렇게 구성해봤는데 별로같네..
+ *
+ * 단점
+ * 1. 이름이 좀 길어진다. 한눈에 잘 안들어옴
+ * 2. 올때 갈때 똑같은 내용이 있을 수 있다
  */
 
 #pragma once
@@ -7,7 +16,6 @@
 #include <JNetwork/Packet.h>
 #include <Common/Structure.h>
 #include <Common/GameConfiguration.h>
-#include <Common/Enum.h>
 
 // TCP Commands
 #define LOGIN_SYN						100		// 클라 -> 서버
@@ -77,12 +85,23 @@
 
 #define BATTLE_FIELD_TANK_MOVE_SYN		161		// 클라 -> 서버 / 클라에서 움직일때마다 일정 주기마다 서버로 자신의 위치를 전송한다. - 서버는 이를 업데이트한다.
 #define BATTLE_FIELD_TANK_UPDATE_SYN	162		// 서버 -> 클라 / 서버는 일정주기마다 플레이어 위치를 플레이중인 방의 유저들에게 브로드캐스팅 해준다.
-#define BATTLE_FIELD_PLAYWAIT_END_SYN	163		// 서버 -> 클라 / 서버는 클라이언트가 모두
+#define BATTLE_FIELD_PLAYWAIT_END_SYN	163		// 서버 -> 클라 / 게임 시작 대기 상태가 끝난경우 이제 시작해도 된다고 알려준다. (이제 총을 쏠 수 있음)
+#define BATTLE_FIELD_PLAYING_END_SYN	164		// 서버 -> 클라 / 게임 진행 시간이 끝난 경우 알려준다. (이제 총을 못뽐)
+#define BATTLE_FIELD_ENDWAIT_END_SYN	165		// 서버 -> 클라 / 게임 마무리 시간이 끝난 경우 알려준다. 모든 플레이어를 로비 상태로 변경해준다.
 
-#define BATTLE_FIELD_LEAVE_SYN			170		// 클라 -> 서버 / 방나가기 클릭
-#define BATTLE_FIELD_LEAVE_ACK			171		// 클라 -> 서버 / 나간놈 제외하고 남아있는 놈들에게 나갔다고 알려줌
+#define BATTLE_FIELD_FIRE_SYN			166		// 클라 -> 서버 / 플레이어 총알 발사 후 위치 정보 전달
+#define BATTLE_FIELD_FIRE_ACK			167		// 서버 -> 클라 / 총알 발사했다고 브로드캐스팅
+
+#define BATTLE_FIELD_DEATH_SYN			168		// 클라 -> 서버 / 
+#define BATTLE_FIELD_DEATH_ACK			169		// 서버 -> 클라 / 다른 플레이어에게 브로드캐스팅 및 본인에 해당하는 경우 리바이벌 타이머 설정을 진행한다.
+#define BATTLE_FIELD_REVIVAL_SYN		170		// 서버 -> 클라 / 부활시간이 다되서 캐릭터를 리스폰시킨다.
+
+#define BATTLE_FIELD_LEAVE_SYN			180		// 클라 -> 서버 / 방나가기 클릭
+#define BATTLE_FIELD_LEAVE_ACK			181		// 클라 -> 서버 / 나간놈 제외하고 남아있는 놈들에게 나갔다고 알려줌
 
 #define SERVER_MESSAGE_SYN				400		// 서버 -> 클라로 특정 메시지 전송
+#define CHAT_MESSAGE_SYN				401		// 클라 -> 채팅 메시지 전송
+#define CHAT_MESSAGE_ACK				402		// 서버 -> 클라 브로드캐스트 전송
 
 #define HARD_DISCONNECT_SYN				250		// 서버 -> 클라 / 서버가 해당 클라의 연결을 강제로 끊는 경우
 
@@ -99,6 +118,7 @@
 		Cmd = __cmd__;								 \
 		CmdLen = sizeof(__struct__);				 \
 	}
+
 
 
 
@@ -397,6 +417,8 @@ struct LoadRoomInfoAck : JNetwork::ICommand
 };
 
 
+// 게임 시작/게임 난입 기능 동시에 처리하도록 함
+// 패킷 하나더 추가하면 되는데 귀찮기도 하고 걍 이래처리함
 struct RoomGameStartSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomGameStartSyn, ROOM_GAME_START_SYN)
@@ -405,12 +427,16 @@ struct RoomGameStartSyn : JNetwork::ICommand
 	int ChannelUID		= INVALID_UID;
 	int CharacterUID	= INVALID_UID;
 	int RoomUID			= INVALID_UID;
+	bool Intrude		= false;
 };
 
+// 게임 시작으로 동작할 경우 Result와 Reason만 사용됨
+// 게임 난입으로 동작할 경우 BattleFieldScene에서 해당 패킷을 모든 플레이어가 수신하여 난입자를 확인할 수 있도록 한다.
 struct RoomGameStartAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomGameStartAck, ROOM_GAME_START_ACK)
 
+	RoomCharacterInfo IntruderInfo{};
 	bool Result;
 	char Reason[REASON_LEN];
 };
@@ -450,8 +476,9 @@ struct BattleFieldLoadAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLoadAck, BATTLE_FIELD_LOAD_ACK);
 
-	float LeftTime;			// (초단위) 게임 진행까지 남은시간 - 이시간동안 다른 플레이어가 접속할때까지 기다림
-	TankMove InitialMove;	// 플레이어 초기 위치 정보
+	RoomState	RoomState;		// 방상태
+	float		LeftTime;		// (초단위) 게임 진행까지 남은시간 - 이시간동안 다른 플레이어가 접속할때까지 기다림
+	TankMove	InitialMove;	// 플레이어 초기 위치 정보
 };
 
 
@@ -467,19 +494,37 @@ struct BattileFieldTankMoveSyn : JNetwork::ICommand
 //서버는 일정주기마다 클라이언트들의 위치정보를 클라이언트들로 전송해주도록한다.
 struct BattileFieldTankUpdateSyn : JNetwork::ICommand
 {
-	BattileFieldTankUpdateSyn() {
-		Cmd = BATTLE_FIELD_TANK_UPDATE_SYN;
-		CmdLen = sizeof(BattileFieldTankUpdateSyn);
-		
-		for (int i = 0; i < ROOM_MAX_PLAYER_COUNT; i++) {
-			CharacterUID[i] = INVALID_UID;
-		}
-	}
+	CMD_DEFAULT_CONSTRUCTOR(BattileFieldTankUpdateSyn, BATTLE_FIELD_TANK_UPDATE_SYN)
 
 	int Count{};
-	int CharacterUID[ROOM_MAX_PLAYER_COUNT]{};
 	TankMove Move[ROOM_MAX_PLAYER_COUNT]{};
 };
+
+
+
+struct BattleFieldPlayWaitEndSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldPlayWaitEndSyn, BATTLE_FIELD_PLAYWAIT_END_SYN)
+
+	RoomState RoomState;
+	float LeftTime;
+};
+
+struct BattleFieldPlayingEndSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldPlayingEndSyn, BATTLE_FIELD_PLAYING_END_SYN)
+
+	RoomState RoomState;
+	float LeftTime;
+};
+
+struct BattleFieldEndWaitEndSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldEndWaitEndSyn, BATTLE_FIELD_ENDWAIT_END_SYN)
+
+	RoomState RoomState;
+};
+
 
 struct BattleFieldLeaveSyn : JNetwork::ICommand
 {
@@ -493,11 +538,51 @@ struct BattleFieldLeaveAck : JNetwork::ICommand
 										// 자기자신은 씬을 바꿔주도록 하자
 };
 
+struct ChatMessageSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(ChatMessageSyn, CHAT_MESSAGE_SYN);
+	PlayerState PlayerState;
+	char Message[MESSAGE_LEN];
+};
+
+struct ChatMessageAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(ChatMessageAck, CHAT_MESSAGE_ACK);
+	char Message[MESSAGE_LEN];
+};
+
+struct BattleFieldFireSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldFireSyn, BATTLE_FIELD_FIRE_SYN);
+	BulletInfo BulletInfo;
+};
+
+struct BattleFieldFireAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldFireAck, BATTLE_FIELD_FIRE_ACK);
+	BulletInfo BulletInfo;
+};
 
 
+struct BattleFieldDeathSyn : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldDeathSyn, BATTLE_FIELD_DEATH_SYN);
+	int CharacterUID = INVALID_UID;		// 누구한테 죽었는지
+};
 
+struct BattleFieldDeathAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldDeathAck, BATTLE_FIELD_DEATH_ACK);
+	int CharacterUID = INVALID_UID;		// 누가 죽었는지
+	float RevivalLeftTime;				// 부활까지 남은 시간
+};
 
-
+struct BattleFieldRevivalAck : JNetwork::ICommand
+{
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldRevivalAck, BATTLE_FIELD_REVIVAL_SYN);
+	int CharacterUID = INVALID_UID;		// 누가 부활했는지
+	TankMove Move;						// 부활 위치
+};
 
 
 

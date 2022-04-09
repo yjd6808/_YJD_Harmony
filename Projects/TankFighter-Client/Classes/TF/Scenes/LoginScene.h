@@ -21,6 +21,5 @@ public:
 
 private:
     LoginLayer* m_pLoginLayer;
-    GridLayer* m_pGridLayer;
 };
 

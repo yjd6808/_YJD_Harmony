@@ -26,6 +26,7 @@ void Player::Initialize() {
 	Memory::Set(&m_TankMove, sizeof(m_TankMove), NULL);
 	Memory::Set(&m_BattleInfo, sizeof(m_BattleInfo), NULL);
 	m_BattleInfo.CharacterUID = INVALID_UID;
+	m_TankMove.CharacterUID = INVALID_UID;
 }
 
 void Player::SetAccountUID(int accountUID) {
@@ -61,6 +62,7 @@ int Player::GetChannelUID() {
 void Player::SetCharacterUID(int characterUID) {
 	SpinLockGuard guard(m_PlayerMtx);
 	m_CharacterInfo.CharacterUID = characterUID;
+	m_TankMove.CharacterUID = characterUID;
 }
 
 int Player::GetCharacterUID() {
@@ -149,7 +151,7 @@ bool Player::CheckNameEqual(const String& name) {
 	return name == m_CharacterInfo.Name;
 }
 
-void Player::LoadBattileInfo(BattleInfo& battleInfo) {
+void Player::LoadBattleInfo(BattleInfo& battleInfo) {
 	SpinLockGuard guard(m_PlayerMtx);
 	Memory::CopyUnsafe(&battleInfo, &m_BattleInfo, sizeof(BattleInfo));
 }
@@ -169,15 +171,46 @@ void Player::AddFireCount(int fireCount) {
 	m_BattleInfo.FireCount += fireCount;
 }
 
-void Player::AddHitCount(int hitCount) {
-	SpinLockGuard guard(m_PlayerMtx);
-	m_BattleInfo.HitCount += hitCount;
-}
-
 
 void Player::InitializeBattleInfo() {
 	SpinLockGuard guard(m_PlayerMtx);
 	Memory::Set(&m_BattleInfo, sizeof(m_BattleInfo), NULL);
+}
+
+void Player::LoadMoveInfo(TankMove& move) {
+	SpinLockGuard guard(m_PlayerMtx);
+	Memory::CopyUnsafe(&move, &m_TankMove, sizeof(TankMove));
+	move.IsDeath = UnsafeIsDeath();
+}
+
+bool Player::IsBattleState() {
+	SpinLockGuard guard(m_PlayerMtx);
+	return m_ePlayerState >= PlayerState::RoomBattle;
+}
+
+void Player::InitializeRoomLobbyState(int roomUID) {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_iRoomUID = roomUID;
+	m_ePlayerState = PlayerState::RoomLobby;
+	m_bReady = false;
+}
+
+void Player::InitializeRoomBattleState() {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_bReady = false;		// 이제 플레이어 준비는 배틀에 모두 진입했는지 여부를 확인하는데 사용함
+	m_ePlayerState = PlayerState::RoomBattle;
+	UnsafeInitializeBattleInfo();
+	UnsafeInitializeTankMove();
+}
+
+void Player::SetRevivalLeftTime(int time) {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_iRevivalLeftTime = time;
+}
+
+int Player::GetRevivalLeftTime() {
+	SpinLockGuard guard(m_PlayerMtx);
+	return m_iRevivalLeftTime;
 }
 
 void Player::UnsafeInitializeBattleInfo() {
@@ -186,6 +219,10 @@ void Player::UnsafeInitializeBattleInfo() {
 
 void Player::UnsafeInitializeTankMove() {
 	Memory::Set(&m_TankMove, sizeof(m_TankMove), NULL);
+}
+
+bool Player::UnsafeIsDeath() const {
+	return m_iRevivalLeftTime > 0;		// 부활까지 남은시간이 0보다 크면 죽어있다고 함
 }
 
 void Player::UpdateTankMove(TankMove& move) {

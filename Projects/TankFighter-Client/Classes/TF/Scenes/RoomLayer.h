@@ -41,6 +41,7 @@ private:
 	TextButton* m_pSlot[ROOM_MAX_PLAYER_COUNT];
 	TextButton* m_pMarkSlot[ROOM_MAX_PLAYER_COUNT];
 
+	// 자기 자신 포함
 	int m_iRoomMemberCount = 0;
 	int m_iHostCharacterUID = INVALID_UID;
 	RoomCharacterInfo m_RoomMember[ROOM_MAX_PLAYER_COUNT]{};

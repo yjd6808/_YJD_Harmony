@@ -31,6 +31,7 @@ protected:
 
 	void Run();
 	void Join();
+	
 	void WorkerThread();
 
 	~BattleFieldWorker();
@@ -47,7 +48,7 @@ protected:
 	void ProcessRoomPlayingState(Room* room);
 	void ProcessRoomEndWaitState(Room* room);
 	void ProcessBattleFieldRoutineForRoom(Room* room);		// ProcessBattleFieldRoutine 내부에서 각 방에 대해 수행할 서브 함수
-	void ProcessEndRoutine();								// End 상태에 접어든 방들에 대해서 최종정리 작업을 진행하도록 한다.
+	void CollectReadyWaitRooms();
 
 	// 처리 안된 시그널들 정리
 	static void DeleteUnprocessedSignal(Signal* unProcessedSignal);

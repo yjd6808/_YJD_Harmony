@@ -9,5 +9,8 @@ update t_channel set c_max_player_count = 5 where c_name = '초고수 정도 채
 select count(*) from t_character where c_name = 'fse';
 delete from t_channel where c_name like '%정도%';
 
-
+delete from t_friendship where 
+	(c_req_character_uid = 1 and c_ack_character_uid = 2) or (c_ack_character_uid = 2 and c_req_character_uid = 1);
+    
+    
 select now(6);

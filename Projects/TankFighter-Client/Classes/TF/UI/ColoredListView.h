@@ -7,8 +7,6 @@
 
 #include <TF/SourceHeader.h>
 
-#include <JCore/Container/ArrayQueue.h>
-
 class ColoredListView : public LayerColor
 {
 public:

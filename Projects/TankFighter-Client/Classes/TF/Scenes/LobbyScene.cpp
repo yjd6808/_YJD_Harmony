@@ -12,14 +12,11 @@ Scene* LobbyScene::createScene()
 
 bool LobbyScene::init()
 {
-    if ( !Scene::init() )
+    if ( !SynchronizedScene::init() )
         return false;
 
     m_pLobbyLayer = LobbyLayer::create();
-    m_pGridLayer = GridLayer::create(50, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
-
 	this->addChild(m_pLobbyLayer, 0);
-    this->addChild(m_pGridLayer, 1);
     return true;
 }
 

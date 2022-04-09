@@ -39,6 +39,8 @@ using namespace JCore;
 #define TRANSPARENT_RECT_IMG_FILENAME	"blank.png"
 #define FONT_PATH_DNF					"fonts/dffont.ttf"	// 던파 폰트
 #define FONT_PATH_DEFAULT				"fonts/dffont.ttf"	// 기존 폰트
+#define CIRCLE_BIG_IMG_FILENAME			"white_circle_big.png"
+#define CIRCLE_BIG_IMG_SIZE				300.0f
 
 // 높이는 무조건 너비의 2배가 되도록 할 것
 #define TANK_WIDTH	30.0f

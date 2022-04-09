@@ -7,10 +7,11 @@
 #include <TF/UI/TextButton.h>
 #include <TF/Util/ColorUtil.h>
 #include <TF/UI/PopUp.h>
+#include <TF/UI/ChatBox.h>
 #include <TF/UI/ColoredListView.h>
 #include <TF/Network/GameClient.h>
-
-#include "TF/Network/ClientConfiguration.h"
+#include <JCore/Random.h>
+#include <TF/Network/ClientConfiguration.h>
 
 #define EDITBOX_ID				16
 #define EDITBOX_PW				17
@@ -77,7 +78,24 @@ bool LoginLayer::init() {
 	pIDEditBox->setPlaceholderFontColor(Color4B::GRAY);
 	pIDEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
 	this->addChild(pIDEditBox, 0, EDITBOX_ID);
-	pIDEditBox->setText("wjdeh515");
+
+	// 빠른 로그인을 위해 복붙
+	HashMap<int, Tuple<std::string, std::string>> randIdPwMap{
+		{1, { "wjdeh515", "wjdeh414" }},
+		{2, { "wjdeh616", "wjdeh515" }},
+		{3, { "wjdeh717", "wjdeh616" }},
+		{4, { "wjdeh818", "wjdeh717" }},
+		{5, { "wjdeh919", "wjdeh818" }},
+		{6, { "wjdeh10110", "wjdeh919" }},
+		{7 ,{ "wjdeh11111", "wjdeh10110" }},
+	};
+
+
+	
+
+
+	int r =	Random().GenerateInt(1, 8);
+	pIDEditBox->setText(randIdPwMap[r].item1.c_str());
 	
 	EditBox* pPasswordEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(RECT_IMG_FILENAME));
 	pPasswordEditBox->setPosition(Vec2(400, 250));
@@ -90,7 +108,7 @@ bool LoginLayer::init() {
 	pPasswordEditBox->setInputFlag(EditBox::InputFlag::PASSWORD);
 	pPasswordEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
 	this->addChild(pPasswordEditBox, 0, EDITBOX_PW);
-	pPasswordEditBox->setText("wjdeh414");
+	pPasswordEditBox->setText(randIdPwMap[r].item2.c_str());
 
 	this->scheduleUpdate();
 	return true;

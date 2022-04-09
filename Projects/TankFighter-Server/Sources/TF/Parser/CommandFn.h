@@ -79,6 +79,15 @@ public:
 
 	// 클라가 배틀필드에서 강제로 탈주를 시도한다고 함
 	static void CmdBattleFieldLeaveSyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라로부터 채팅 메시지 수신
+	static void CmdChatMessageSyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라가 총을 쐇다고 함
+	static void CmdBattleFieldFireSyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라가 총알 맞았다고 함
+	static void CmdBattleFieldDeathSyn(Player* player, JNetwork::ICommand* cmd);
 	
 
 	static void CmdTankMoveSyn(Player* player, JNetwork::ICommand* cmd);

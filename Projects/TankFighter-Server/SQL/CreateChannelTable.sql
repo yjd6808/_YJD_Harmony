@@ -50,7 +50,14 @@ create table t_account (
     c_last_login_time		timestamp(6)									comment '마지막으로 로그인한 시간'
 ) character set utf8 collate utf8_unicode_520_ci;
 
-
+# 임시 계정 넣기
+insert into t_account values (1, 'wjdeh515', md5('wjdeh414'), now(6), now(6));
+insert into t_account values (2, 'wjdeh616', md5('wjdeh515'), now(6), now(6));
+insert into t_account values (3, 'wjdeh717', md5('wjdeh616'), now(6), now(6));
+insert into t_account values (4, 'wjdeh818', md5('wjdeh717'), now(6), now(6));
+insert into t_account values (5, 'wjdeh919', md5('wjdeh818'), now(6), now(6));
+insert into t_account values (6, 'wjdeh10110', md5('wjdeh919'), now(6), now(6));
+insert into t_account values (7, 'wjdeh11111', md5('wjdeh10110'), now(6), now(6));
 
 # 캐릭터 테이블
 # 계정이 삭제되면 관련 캐릭터들도 모두 삭제 처리 되도록 on delete cascade 사용

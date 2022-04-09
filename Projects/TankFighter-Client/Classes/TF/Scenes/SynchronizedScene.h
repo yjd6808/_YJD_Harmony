@@ -10,6 +10,7 @@
 #pragma once
 
 #include <TF/SourceHeader.h>
+#include <TF/Scenes/GridLayer.h>
 
 namespace JNetwork
 {
@@ -18,8 +19,12 @@ namespace JNetwork
 
 class SynchronizedScene : public Scene
 {
-
+protected:
+	bool init() override;
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
 	void CmdServerMessageSyn(ICommand* cmd);
 public:
 	virtual void SynchronizedOnReceived(ICommand* cmd);
+protected:
+	GridLayer* m_pGridLayer;
 };

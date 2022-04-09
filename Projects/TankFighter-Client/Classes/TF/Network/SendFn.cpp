@@ -131,13 +131,14 @@ bool SendFn::SendLoadRoomSyn() {
 }
 
 // ROOM_GAME_START_SYN 133
-bool SendFn::SendRoomGameStartSyn() {
+bool SendFn::SendRoomGameStartSyn(bool intrude) {
 	auto* pPacket = new Packet<RoomGameStartSyn>();
 	RoomGameStartSyn* pRoomGameStartSyn = pPacket->Get<0>();
 	pRoomGameStartSyn->RoomUID = _Client->GetRoomUID();
 	pRoomGameStartSyn->AccountUID = _Client->GetAccountUID();
 	pRoomGameStartSyn->ChannelUID = _Client->GetChannelUID();
 	pRoomGameStartSyn->CharacterUID = _Client->GetCharacterUID();
+	pRoomGameStartSyn->Intrude = intrude;
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }
@@ -195,6 +196,27 @@ bool SendFn::SendBattileFieldTankMoveSyn(TankMove& move) {
 	auto* pPacket = new Packet<BattileFieldTankMoveSyn>();
 	BattileFieldTankMoveSyn* pBattileFieldTankMoveSyn = pPacket->Get<0>();
 	Memory::CopyUnsafe(&pBattileFieldTankMoveSyn->Move, &move, sizeof(TankMove));
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+bool SendFn::SendChatMessage(JCore::String message) {
+	auto* pPacket = new Packet<ChatMessageSyn>();
+	ChatMessageSyn* pChatMessageSyn = pPacket->Get<0>();
+	pChatMessageSyn->PlayerState = _Client->GetPlayerState();
+	JCore::String msg(MESSAGE_LEN);
+	msg = _Client->GetName();
+	msg += " : ";
+	msg += message;
+	strcpy_s(pChatMessageSyn->Message, MESSAGE_LEN, msg.Source());
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}
+
+bool SendFn::SendBattleFieldFireSyn(BulletInfo& info) {
+	auto* pPacket = new Packet<BattleFieldFireSyn>();
+	BattleFieldFireSyn* pBattleFieldFireSyn = pPacket->Get<0>();
+	Memory::CopyUnsafe(&pBattleFieldFireSyn->BulletInfo, &info, sizeof(BulletInfo));
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }

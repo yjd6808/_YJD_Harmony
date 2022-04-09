@@ -21,6 +21,5 @@ public:
 
 private:
     LobbyLayer* m_pLobbyLayer;
-    GridLayer* m_pGridLayer;
 };
 

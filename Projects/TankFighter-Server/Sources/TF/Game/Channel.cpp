@@ -198,7 +198,7 @@ Room* Channel::JoinRoom(const int roomUID, Player* player) {
 
 	Room* pRoom = m_RoomMap[roomUID];
 
-	if (pRoom->TryAddPlayer(player)) {
+	if (pRoom->TryJoin(player)) {
 		return pRoom;
 	}
 
@@ -263,14 +263,9 @@ bool Channel::StartBattle(Room* pRoom) {
 	pRoom->Lock();
 
 	pRoom->m_eRoomState = RoomState::PlayWait;
-	pRoom->m_iTimerTime = BATTLE_PLAYWAIT_TIME;
+	pRoom->m_iTimerTime = BATTLE_FIELD_PLAYWAIT_TIME;
 	pRoom->UnsafeForEach([](Player* p) {
-		p->Lock();
-		p->m_bReady = false;		// 이제 플레이어 준비는 배틀에 모두 진입했는지 여부를 확인하는데 사용함
-		p->m_ePlayerState = PlayerState::RoomBattle;
-		p->UnsafeInitializeBattleInfo();
-		p->UnsafeInitializeTankMove();
-		p->Unlock();
+		p->InitializeRoomBattleState();
 	});
 	pRoom->Unlock();
 	m_BattleFieldWorker.AddBattleFieldRoom(pRoom);

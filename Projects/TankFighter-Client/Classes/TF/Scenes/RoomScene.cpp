@@ -16,10 +16,7 @@ bool RoomScene::init()
         return false;
 
     m_pRoomLayer = RoomLayer::create();
-    m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
-
 	this->addChild(m_pRoomLayer, 0);
-    this->addChild(m_pGridLayer, 1);
     return true;
 }
 

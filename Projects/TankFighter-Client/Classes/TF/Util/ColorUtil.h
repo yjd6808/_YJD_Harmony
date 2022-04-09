@@ -24,6 +24,21 @@ public:
 	static cocos2d::Color3B To3B(const cocos2d::Color4B& _4bColor) {
 		return { _4bColor.r, _4bColor.g, _4bColor.b  };
 	}
+
+	static Int32U ToIn32U(const cocos2d::Color3B& _3bColor) {
+		Int32U color;
+		color |= _3bColor.r << 16;
+		color |= _3bColor.g << 8;
+		color |= _3bColor.b << 0;
+		return color;
+	}
+
+	static cocos2d::Color3B To3B(const Int32U _int32uColor) {
+		return cocos2d::Color3B((_int32uColor >> 16) & 0xff,
+								(_int32uColor >> 8) & 0xff,
+								(_int32uColor >> 0) & 0xff );
+	}
+
 };
 
 // 색상 표 : https://en.wikipedia.org/wiki/Lists_of_colors 링크 들어가서 A-F 에있는거 뽑음

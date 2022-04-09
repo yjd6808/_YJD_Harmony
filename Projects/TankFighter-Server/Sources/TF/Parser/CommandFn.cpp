@@ -353,7 +353,9 @@ void CommandFn::CmdJoinRoomSyn(Player* player, ICommand* cmd) {
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 	const auto pReplyPacket = new Packet<JoinRoomAck>;
 	JoinRoomAck* pJoinRoomAck = pReplyPacket->Get<0>();
-	Room* pRoom = pChannel->JoinRoom(pCreateRoomSyn->RoomUID, player);
+	Room* pRoom = pChannel->GetRoomByRoomUID(pCreateRoomSyn->RoomUID);
+
+	pRoom = pChannel->JoinRoom(pCreateRoomSyn->RoomUID, player);
 
 	if (pRoom == nullptr) {
 		pJoinRoomAck->Result = false;
@@ -540,28 +542,44 @@ void CommandFn::CmdRoomGameStartSyn(Player* player, ICommand* cmd) {
 		return;
 	}
 
-
 	Room* pRoom = _World->GetRoomByPlayer(player);
 
 	const auto pReplyPacket = new Packet<RoomGameStartAck>;
 	RoomGameStartAck* pRoomGameStartAck = pReplyPacket->Get<0>();
 
-	
-	if (pRoom == nullptr) {
-		// 플레이어가 속한 방이 존재하지 않을 경우 
-		pRoomGameStartAck->Result = false;
-		strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"당신이 속한 방 정보가 없습니다.");
-		player->SendAsync(pReplyPacket);
-	} else {
-		// 방에 있는 모든 유저들에게 게임 시작 패킷을 전송한다.
-		if (pRoom->GetChannel()->StartBattle(pRoom)) {
-			pRoomGameStartAck->Result = true;
-		} else {
+	if (pRoomGameStartSyn->Intrude) {
+		// 난입하여 들어오는 경우
+		// 사실 이미 방안에 있고 방 상태만 배틀필드 상태인 것이기땜에 플레이어 상태만 바까주면 됨 ^_^
+		if (player->IsBattleState()) {
 			pRoomGameStartAck->Result = false;
-			strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"이미 게임이 진행중입니다. 문제가 있네요.");
+			strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"난입에 실패하였습니다.\n이미 당신이 배틀중입니다.(멍미)");
+			player->SendAsync(pReplyPacket);
+		} else {
+			
+			pRoomGameStartAck->Result = true;
+			player->SetPlayerState(PlayerState::RoomBattle);
+			player->SetReady(true);
+			player->LoadRoomCharacterInfo(pRoomGameStartAck->IntruderInfo);
+			pRoom->Broadcast(pReplyPacket);
 		}
-
-		pRoom->Broadcast(pReplyPacket);
+	} else {
+		if (pRoom == nullptr) {
+			// 플레이어가 속한 방이 존재하지 않을 경우 
+			pRoomGameStartAck->Result = false;
+			strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"당신이 속한 방 정보가 없습니다.");
+			player->SendAsync(pReplyPacket);
+		}
+		else {
+			// 방에 있는 모든 유저들에게 게임 시작 패킷을 전송한다.
+			if (pRoom->GetChannel()->StartBattle(pRoom)) {
+				pRoomGameStartAck->Result = true;
+			}
+			else {
+				pRoomGameStartAck->Result = false;
+				strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"이미 게임이 진행중입니다. 문제가 있네요.");
+			}
+			pRoom->Broadcast(pReplyPacket);
+		}
 	}
 }
 
@@ -638,12 +656,13 @@ void CommandFn::CmdBattleFieldLoadSyn(Player* player, ICommand* cmd) {
 	TankMove initialMove{};
 	pBattleFieldLoadAck->InitialMove.X = rand.GenerateInt(0 + 50, MAP_WIDTH - 50);
 	pBattleFieldLoadAck->InitialMove.Y = rand.GenerateInt(0 + 50, MAP_HEIGHT - 50);
-	pBattleFieldLoadAck->InitialMove.MoveDir = static_cast<Int8>(MoveDirection::None);
-	pBattleFieldLoadAck->InitialMove.RotationDir = static_cast<Int8>(RotateDirection::None);
+	pBattleFieldLoadAck->InitialMove.MoveDir = MoveDirection::None;
+	pBattleFieldLoadAck->InitialMove.RotationDir = RotateDirection::None;
 	pBattleFieldLoadAck->InitialMove.MoveSpeed = TANK_MOVE_SPEED;
 	pBattleFieldLoadAck->InitialMove.Rotation = 0.0f;
 	pBattleFieldLoadAck->InitialMove.RotationSpeed = TANK_ROTATION_SPEED;
 	pBattleFieldLoadAck->LeftTime = pRoom->GetTimerTime() / 1000.0f;
+	pBattleFieldLoadAck->RoomState = pRoom->GetRoomState();
 
 	player->SetReady(true);
 	player->UpdateTankMove(pBattleFieldLoadAck->InitialMove);
@@ -679,6 +698,75 @@ void CommandFn::CmdBattleFieldLeaveSyn(Player* player, ICommand* cmd) {
 
 	// 배틀필드 방을 나간거니 로비 유저들에게 변경사항을 알려준다.
 	SendFn::BroadcastUpdateRoomListAck(pChannel);
+}
+
+void CommandFn::CmdChatMessageSyn(Player* player, ICommand* cmd) {
+	ChatMessageSyn* pChatMessageSyn = cmd->CastCommand<ChatMessageSyn*>();
+
+	if (player->GetPlayerState() != pChatMessageSyn->PlayerState) {
+		SendFn::SendServerMessageSyn(player, "채팅이 가능한 위치가 아닙니다.");
+		return;
+	}
+
+	const auto pBroadcastPacket = new Packet<ChatMessageAck>;
+	ChatMessageAck* pChatMessageAck = pBroadcastPacket->Get<0>();
+
+	// 채팅 가능한 위치 추가될때마다 여기 추가해줄 것
+	switch (player->GetPlayerState()) {
+	case PlayerState::Lobby:
+		Channel* pChannel = _World->GetChannel(player->GetChannelUID());
+		if (pChannel) {
+			strcpy_s(pChatMessageAck->Message, MESSAGE_LEN, pChatMessageSyn->Message);
+			pChannel->BroadcastLobbyPacket(pBroadcastPacket);
+		}
+		break;
+	case PlayerState::RoomBattle:
+		Room* pRoom = _World->GetRoomByPlayer(player);
+		if (pRoom && pRoom->IsBattleFieldState()) {
+			pRoom->Broadcast(pBroadcastPacket);
+		}
+		break;
+	default:
+		SendFn::SendServerMessageSyn(player, "채팅 전송에 실패했습니다.");
+		pBroadcastPacket->Release();
+	}
+}
+
+
+void CommandFn::CmdBattleFieldFireSyn(Player* player, ICommand* cmd) {
+	BattleFieldFireSyn* pBattleFieldFireSyn = cmd->CastCommand<BattleFieldFireSyn*>();
+	player->AddFireCount(1);
+
+	// 총알을 쏘면 해당 방의 유저들에게 브로드캐스팅 해준다.
+	Room* pBattleFieldRoom = _World->GetRoomByPlayer(player);
+	if (pBattleFieldRoom && pBattleFieldRoom->IsBattleFieldState()) {
+		const auto pBroadcastPacket = new Packet<BattleFieldFireAck>;
+		BattleFieldFireAck* pBattleFieldFireAck = pBroadcastPacket->Get<0>();
+		Memory::CopyUnsafe(&pBattleFieldFireAck->BulletInfo, &pBattleFieldFireSyn->BulletInfo, sizeof(BulletInfo));
+		pBattleFieldRoom->Broadcast(pBroadcastPacket);
+	}
+}
+
+void CommandFn::CmdBattleFieldDeathSyn(Player* player, ICommand* cmd) {
+	BattleFieldDeathSyn* pBattleFieldDeathSyn = cmd->CastCommand<BattleFieldDeathSyn*>();
+
+	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
+	Room* pRoom = pChannel->GetRoomByPlayer(player);
+	if (pRoom && pRoom->IsBattleFieldState()) {
+		Player* pKiller = pChannel->FindPlayerByCharacterUID(pBattleFieldDeathSyn->CharacterUID);
+		if (pKiller) {
+			pKiller->AddBattleKillCount(1);
+			player->AddBattleDeathCount(1);
+			player->SetRevivalLeftTime(BATTLE_REVIVAL_TIME);
+
+			const auto pBroadcastPacket = new Packet<BattleFieldDeathAck>;
+			BattleFieldDeathAck* pBattleFieldDeathAck = pBroadcastPacket->Get<0>();
+			pBattleFieldDeathAck->CharacterUID = player->GetCharacterUID();
+			pBattleFieldDeathAck->RevivalLeftTime = BATTLE_REVIVAL_TIME;
+			pRoom->Broadcast(pBroadcastPacket);
+		}
+	}
+	
 }
 
 

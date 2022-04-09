@@ -59,7 +59,7 @@ void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 
 		// 현재 접속중인지 확인하기 위햇 현재 채널에서 해당 플레이어를 찾는다.
 		Player* pFriendPlayer = pChannel->FindPlayerByCharacterUID(iCharacterUID);
-		info->PlayerState = pFriendPlayer ? static_cast<int>(pFriendPlayer->GetPlayerState()) : static_cast<int>(PlayerState::Disconnected);
+		info->PlayerState = pFriendPlayer ? pFriendPlayer->GetPlayerState() : PlayerState::Disconnected;
 	}
 
 	player->SendAsync(pPacket);
@@ -130,7 +130,7 @@ void SendFn::SendUpdateCharacterInfoAck(Player* player) {
 		CharacterInfo* pMyInfo = &pUpdateCharacterInfoAck->Info;
 		pMyInfo->CharacterUID = spQueryResult->GetInt(0, 0);
 		strcpy_s(pMyInfo->Name, NAME_LEN, spQueryResult->GetString(0, 3).Source());
-		pMyInfo->PlayerState = static_cast<int>(player->GetPlayerState());
+		pMyInfo->PlayerState = player->GetPlayerState();
 		pMyInfo->Win = spQueryResult->GetInt(0, 4);
 		pMyInfo->Lose = spQueryResult->GetInt(0, 5);
 		pMyInfo->Kill = spQueryResult->GetInt(0, 6);

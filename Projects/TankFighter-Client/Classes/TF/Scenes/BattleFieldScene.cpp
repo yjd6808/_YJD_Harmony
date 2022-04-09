@@ -12,14 +12,11 @@ Scene* BattleFieldScene::createScene()
 
 bool BattleFieldScene::init()
 {
-    if ( !Scene::init() )
+    if ( !SynchronizedScene::init() )
         return false;
 
     m_pBattleFieldLayer = BattleFieldLayer::create();
-    m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
-
 	this->addChild(m_pBattleFieldLayer, 0);
-    this->addChild(m_pGridLayer, 1);
     return true;
 }
 
@@ -29,9 +26,14 @@ void BattleFieldScene::SynchronizedOnReceived(ICommand* cmd) {
 
 
     switch (cmd->GetCommand()) {
-    case BATTLE_FIELD_LOAD_ACK:             m_pBattleFieldLayer->CmdBattleFieldLoadAck(cmd); break;
-    case BATTLE_FIELD_LEAVE_ACK:            m_pBattleFieldLayer->CmdBattleFieldLeaveAck(cmd); break;
-    case BATTLE_FIELD_TANK_UPDATE_SYN:      m_pBattleFieldLayer->CmdBattleFieldTankUpdateSyn(cmd); break;
+    case ROOM_GAME_START_ACK:               m_pBattleFieldLayer->CmdRoomGameStartAck(cmd);          break;
+    case BATTLE_FIELD_LOAD_ACK:             m_pBattleFieldLayer->CmdBattleFieldLoadAck(cmd);        break;
+    case BATTLE_FIELD_LEAVE_ACK:            m_pBattleFieldLayer->CmdBattleFieldLeaveAck(cmd);       break;
+    case BATTLE_FIELD_TANK_UPDATE_SYN:      m_pBattleFieldLayer->CmdBattleFieldTankUpdateSyn(cmd);  break;
+    case BATTLE_FIELD_PLAYWAIT_END_SYN:     m_pBattleFieldLayer->CmdBattleFieldPlayWaitEndSyn(cmd); break;
+    case BATTLE_FIELD_PLAYING_END_SYN:      m_pBattleFieldLayer->CmdBattleFieldPlayingEndSyn(cmd);  break;
+    case BATTLE_FIELD_ENDWAIT_END_SYN:      m_pBattleFieldLayer->CmdBattleFieldEndWaitEndSyn(cmd);  break;
+    case CHAT_MESSAGE_ACK:                  m_pBattleFieldLayer->CmdChatMessageAck(cmd);            break;
     }
 }
 

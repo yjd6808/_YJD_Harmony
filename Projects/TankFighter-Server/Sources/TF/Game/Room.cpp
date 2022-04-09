@@ -40,8 +40,14 @@ int Room::GetPlayerCount() {
 }
 
 // 이미 방안에 있는 경우 또는 꽉 찬 경우 실패
-bool Room::TryAddPlayer(Player* player) {
+bool Room::TryJoin(Player* player) {
 	CriticalSectionLockGuard guard(m_RoomLock);
+
+	// 게임이 끝나가고 있는 경우에는 참가 못하도록 함
+	if (UnsafeIsBattleFieldEndingState()) {
+		return false;
+	}
+
 	const int iPlayerCount = m_PlayerList.Size() + (m_pHost ? 1 : 0);
 
 	// 이러면 안댐
@@ -51,11 +57,7 @@ bool Room::TryAddPlayer(Player* player) {
 	}
 
 	if (iPlayerCount < m_iMaxPlayerCount) {
-		player->Lock();
-		player->m_iRoomUID = m_iRoomUID;
-		player->m_ePlayerState = PlayerState::RoomLobby;
-		player->m_bReady = false;
-		player->Unlock();
+		player->InitializeRoomLobbyState(m_iRoomUID);
 		m_PlayerList.PushBack(player);
 		return true;
 	}
@@ -166,6 +168,28 @@ void Room::UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* except
 	packet->Release();
 }
 
+bool Room::UnsafeIsBattleFieldState() const {
+	return m_eRoomState >= RoomState::PlayWait;
+}
+
+bool Room::UnsafeIsBattleFieldPlayingState() const {
+	return m_eRoomState >= RoomState::PlayWait && m_eRoomState <= RoomState::Playing;
+}
+
+
+bool Room::UnsafeIsBattleFieldEndingState() const {
+	return m_eRoomState >= RoomState::EndWait;
+}
+
+void Room::UnsafeForEach(JCore::Action<Player*> foreachAction) {
+	m_PlayerList.Extension().ForEach(foreachAction);
+
+	if (m_pHost) {
+		foreachAction(GetHost());
+	}
+}
+
+
 void Room::SetRoomState(RoomState state) {
 	CriticalSectionLockGuard guard(m_RoomLock);
 	m_eRoomState = state;
@@ -179,13 +203,6 @@ void Room::ForEach(Action<Player*> foreachAction) {
 	}
 }
 
-void Room::UnsafeForEach(JCore::Action<Player*> foreachAction) {
-	m_PlayerList.Extension().ForEach(foreachAction);
-
-	if (m_pHost) {
-		foreachAction(GetHost());
-	}
-}
 
 RoomState Room::GetRoomState() {
 	CriticalSectionLockGuard guard(m_RoomLock);
@@ -198,12 +215,15 @@ bool Room::IsBattleFieldState() {
 }
 
 
+
+
 void Room::LoadRoomInfo(Out_ RoomInfo& info) {
 	CriticalSectionLockGuard guard(m_RoomLock);
 	info.RoomUID = m_iRoomUID;
 	strcpy_s(info.Name, NAME_LEN, m_RoomName.Source());
 	info.MaxPlayerCount = m_iMaxPlayerCount;
 	info.PlayerCount = m_PlayerList.Size() + 1;
+	info.RoomState = m_eRoomState;
 }
 
 void Room::SetTimerTime(int time) {

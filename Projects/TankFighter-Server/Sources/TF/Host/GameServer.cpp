@@ -56,7 +56,11 @@ bool GameServer::StartServer() {
 	m_Parser.AddCommand(BATTLE_FIELD_LOAD_SYN, CommandFn::CmdBattleFieldLoadSyn);
 	m_Parser.AddCommand(BATTLE_FIELD_TANK_MOVE_SYN, CommandFn::CmdBattileFieldTankMoveSyn);
 	m_Parser.AddCommand(BATTLE_FIELD_LEAVE_SYN, CommandFn::CmdBattleFieldLeaveSyn);
-	
+
+	m_Parser.AddCommand(CHAT_MESSAGE_SYN, CommandFn::CmdChatMessageSyn);
+	m_Parser.AddCommand(BATTLE_FIELD_FIRE_SYN, CommandFn::CmdBattleFieldFireSyn);
+	m_Parser.AddCommand(BATTLE_FIELD_DEATH_SYN, CommandFn::CmdBattleFieldDeathSyn);
+
 	this->SetEventListener(m_pListener);
 
 	return GameServer::Start(StringUtil::Format("%s:%d", TCP_BIND_ADDR, TCP_BIND_PORT).Source());

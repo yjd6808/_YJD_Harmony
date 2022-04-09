@@ -44,7 +44,6 @@ void ColoredListView::SetContantSize(const Size& size) {
 }
 
 void ColoredListView::OnScrollViewEvent(Ref* pref, ScrollView::EventType type) {
-	CCLOG("%d\n", type);
 }
 
 /*

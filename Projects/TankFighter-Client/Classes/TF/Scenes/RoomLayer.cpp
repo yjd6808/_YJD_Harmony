@@ -105,7 +105,25 @@ RoomCharacterInfo* RoomLayer::MyInfo() {
 }
 
 void RoomLayer::OnClickedGameStartButton(TextButton* btn) {
-	// 방장 여부 체크 후 방장이면 서버에 게임시작 패킷 전송
+	RoomCharacterInfo* pMyInfo = MyInfo();
+
+	if (m_RoomInfo.IsBattleEndingState()) {
+		PopUp::createInParent("게임이 거의 끝나갑니다. 기다려주세요!!", this, false);
+		return;
+	}
+
+	if (m_RoomInfo.IsBattlePlayingState()) {
+		PopUp::createInParent("이미 게임이 진행중입니다. 난입하시겠습니까?", this, false,
+			[]() { SendFn::SendRoomGameStartSyn(true); },			// 수락
+			[](){});		// 거절
+		return;
+	}
+
+	if (pMyInfo->CharacterUID != m_iHostCharacterUID) {
+		PopUp::createInParent("방장만 게임을 시작할 수 있습니다.", this, false);
+		return;
+	}
+
 	if (m_iRoomMemberCount == 0) {
 
 		// 방 정보를 못받은 경우 로비로 이동
@@ -132,7 +150,7 @@ void RoomLayer::OnClickedGameStartButton(TextButton* btn) {
 	}
 
 	if (iReadyCount == m_iRoomMemberCount - 1) {
-		SendFn::SendRoomGameStartSyn();
+		SendFn::SendRoomGameStartSyn(false);
 	}
 }
 
@@ -188,6 +206,12 @@ void RoomLayer::CmdLoadRoomInfoAck(ICommand* cmd) {
 	if (pLoadRoomInfoAck->Result) {
 		Memory::CopyUnsafe(&m_RoomInfo, &pLoadRoomInfoAck->Info, sizeof(RoomInfo));
 		m_pRoomTitle->setText(StringUtils::format("[%d] %s (%d/%d)", m_RoomInfo.RoomUID, m_RoomInfo.Name, m_RoomInfo.PlayerCount, m_RoomInfo.MaxPlayerCount));
+
+		if (m_RoomInfo.IsBattlePlayingState()) {
+			m_pGameStartBtn->setText("게임 난입");
+		} else if (m_RoomInfo.IsLobbyState()) {
+			m_pGameStartBtn->setText("게임 시작");
+		}
 		return;
 	}
 

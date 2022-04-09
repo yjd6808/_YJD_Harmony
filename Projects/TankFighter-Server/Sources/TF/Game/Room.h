@@ -9,7 +9,7 @@
 #include <JCore/Functional.h>
 #include <JCore/LockGuard.h>
 
-#include <Common/Enum.h>
+#include <Common/Structure.h>
 
 #ifndef Out_
 #define Out_
@@ -48,22 +48,29 @@ public:
 	int GetMaxPlayerCount() const				{ return m_iMaxPlayerCount; }
 	void Lock()									{ m_RoomLock.Lock();}
 	void Unlock()								{ m_RoomLock.Unlock();}
-	
+
+	// 락 안한 함수 (외부에서 락을 수행한 경우)
+	void UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
+	void UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
+	bool UnsafeIsBattleFieldState() const;
+	bool UnsafeIsBattleFieldPlayingState() const;
+	bool UnsafeIsBattleFieldEndingState() const;
+	void UnsafeForEach(JCore::Action<Player*> foreachAction);
+
 
 	// 가변 정보
 	bool IsEmpty()								{ return GetPlayerCount() == 0; }
 	int GetPlayerCount();
-	bool TryAddPlayer(Player* player);
+	bool TryJoin(Player* player);
 	bool RemovePlayer(Player* player);
 	bool ChangeHost(Player* player);
 	bool ChangeNextHost();
 	Player* GetHost();
 	void Broadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
-	void UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
-	void UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
+	
 	void SetRoomState(RoomState state);
 	void ForEach(JCore::Action<Player*> foreachAction);
-	void UnsafeForEach(JCore::Action<Player*> foreachAction);
+	
 	RoomState GetRoomState();
 	bool IsBattleFieldState();
 	void LoadRoomInfo(Out_ RoomInfo& info);
@@ -82,7 +89,6 @@ private:
 	int m_iTimerTime;							// 배틀진중에 사용하는 타이머 변수
 	void* m_pChannel;							// 이 방이 속한 채널
 	void* m_pHost;								// 이 방의 방장
-
 
 	inline static std::atomic<int> ms_iRoomSeq = 0;
 

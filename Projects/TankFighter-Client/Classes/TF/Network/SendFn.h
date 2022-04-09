@@ -17,7 +17,7 @@ struct SendFn
 	static bool SendAddFriendSyn(const JCore::String& friendName);
 	static bool SendDeleteFriendSyn(const int friendCharacterUID);
 	static bool SendLoadRoomSyn();
-	static bool SendRoomGameStartSyn();
+	static bool SendRoomGameStartSyn(bool intrude);
 	static bool SendRoomGameReadySyn();
 	static bool SendRoomGameReadyCancelSyn();
 	static bool SendRoomLeaveSyn();
@@ -25,5 +25,7 @@ struct SendFn
 	static bool SendBattleFieldLeaveSyn();
 	static bool SendAddFriendRequestAck(int requestCharacterUID, bool accept);
 	static bool SendBattileFieldTankMoveSyn(TankMove& move);
+	static bool SendChatMessage(JCore::String message);
+	static bool SendBattleFieldFireSyn(BulletInfo& info);
 };
 

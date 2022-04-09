@@ -21,6 +21,5 @@ public:
 
 private:
     CharacterSelectLayer* m_pCharacterSelectLayer;
-    GridLayer* m_pGridLayer;
 };
 

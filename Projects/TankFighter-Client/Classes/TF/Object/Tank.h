@@ -6,16 +6,17 @@
 
 #include <JCore/Container/HashMap.h>
 
-
+class Bullet;
 class Tank : public Scale9Sprite
 {
 public:
-	Tank(int characterUID, Layer* activeLayer) : m_iCharacterUID(characterUID), m_pActiveLayer(activeLayer) {}
+	Tank(int characterUID, Layer* activeLayer) : m_pActiveLayer(activeLayer) { SetCharacterUID(characterUID); }
 	bool init2();
 	static Tank* create(int characterUID, Layer* playingScene);	// 이 탱크가 활동하는 레이어를 지정해준다.
 
 	void updateRotation(float delta);
 	void updatePosition(float delta);
+	void updateShotDelay(float delta);
 	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
 	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
 	void setMoveable(bool enabled)								{ m_bMoveable = enabled; }
@@ -25,36 +26,38 @@ public:
 	bool IsFireable() const										{ return m_bFireable; }
 
 	JCore::Vector<Sprite*> GetColliders() const					{ return { m_pBodyCollidors[0], m_pBodyCollidors[1] }; }
-	Vec2 GetPrevPos() const { return m_PrevPos; }
-	float GetPrevRotation() const { return m_fPrevRot; }
-
 	void UpdateTankMove(TankMove& move);
-	bool HasOwner() const										{ return m_iCharacterUID != INVALID_UID; }
-	void SetCharacterUID(int characterUID)						{ m_iCharacterUID = characterUID; }
-	int	 GetCharacterUID() const								{ return m_iCharacterUID; }
+	bool HasOwner() const										{ return m_TankMove.CharacterUID != INVALID_UID; }
+	void SetCharacterUID(int characterUID)						{ m_TankMove.CharacterUID = characterUID; }
+	int	 GetCharacterUID() const								{ return m_TankMove.CharacterUID; }
 
 	// UpdateTankMove() 함수가 호출되면 true로됨
 	bool IsUpdated() const										{ return m_bUpdated;}
 	TankMove& GetMove()											{ return m_TankMove; }
+	void SetFireCallback(JCore::Action<Bullet*> callback)		{ m_FilreCallBack = callback; }
+	void Fire();
 private:
-	int m_iCharacterUID;			// 이 탱크를 모는놈
-	bool m_bMoveable = false;		// 움직일 수 있는지.
-	bool m_bFireable = false;		// 쏠 수 있는지
+	bool m_bMoveable = false;		// 탱크를 키보드로 움직일 수 있는지
+	bool m_bFireable = false;		// 탱크를 키보드를 눌러서 총을 쏠 수 있는지
 	bool m_bUpdated = false;		// 업데이트 되었는지
 
 	Layer* m_pActiveLayer = nullptr;
 	Sprite* m_pBodyCollidors[2] = { nullptr, nullptr };
 	Scale9Sprite* m_pTower = nullptr;
 	Scale9Sprite* m_pGun = nullptr;
+	Node* m_pFirePos;
 
-	float m_fPrevRot = 0.0f;			// 다음 틱에서 변경될 수 있는 회전
-	Vec2 m_PrevPos;						// 다음 틱에서 변경될 수 있는 위치
+	float m_fShotDelay = 0.0f;			// 총 쏠수 있는
+	bool m_bShotable = false;			// 딜레이시간이 경과해서 이제 총을 쏠 수 있는지
+	JCore::Action<Bullet*> m_FilreCallBack = nullptr; // 총 발사할때마다 호출할 콜백 함수
 
 	TankMove m_TankMove{
+		INVALID_UID,
+		false,
 		0.0, 0.0,
 		TANK_MOVE_SPEED,
-		static_cast<Int8>(MoveDirection::None),
-		static_cast<Int8>(RotateDirection::None),
+		MoveDirection::None,
+		RotateDirection::None,
 		0.0f,
 		TANK_ROTATION_SPEED };
 	HashMap<EventKeyboard::KeyCode, bool> m_KeyPressedMap;

@@ -179,6 +179,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Classes\TF\Network\UniformNetwork.cpp" />
+    <ClCompile Include="..\Classes\TF\Object\Bullet.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Classes\TF\Object\Obstacle.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -245,6 +249,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Classes\TF\Scenes\UniformScenes.cpp" />
+    <ClCompile Include="..\Classes\TF\UI\ChatBox.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Classes\TF\UI\ColoredListView.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -270,6 +278,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\TF\Network\GameClientEventListener.h" />
     <ClInclude Include="..\Classes\TF\Network\SendFn.h" />
     <ClInclude Include="..\Classes\TF\Object\Obstacle.h" />
+    <ClInclude Include="..\Classes\TF\Object\Bullet.h" />
     <ClInclude Include="..\Classes\TF\Object\Tank.h" />
     <ClInclude Include="..\Classes\TF\Scenes\BattleFieldLayer.h" />
     <ClInclude Include="..\Classes\TF\Scenes\BattleFieldScene.h" />
@@ -286,6 +295,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\TF\Scenes\RoomScene.h" />
     <ClInclude Include="..\Classes\TF\Scenes\SynchronizedScene.h" />
     <ClInclude Include="..\Classes\TF\SourceHeader.h" />
+    <ClInclude Include="..\Classes\TF\UI\ChatBox.h" />
     <ClInclude Include="..\Classes\TF\UI\ColoredListView.h" />
     <ClInclude Include="..\Classes\TF\UI\PopUp.h" />
     <ClInclude Include="..\Classes\TF\UI\TextButton.h" />
