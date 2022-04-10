@@ -20,12 +20,16 @@ bool LobbyScene::init()
     return true;
 }
 
-void LobbyScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+bool LobbyScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+    if (!SynchronizedScene::SynchronizedOnReceived(cmd)) {
+        return false;
+    }
+
     CCLOG("%d 커맨드 수신 (%s)", cmd->GetCommand(), "LobbyScene");
-    SynchronizedScene::SynchronizedOnReceived(cmd);
 
     switch (cmd->GetCommand()) {
     case UPDATE_CHARACTER_INFO_ACK:  m_pLobbyLayer->CmdUpdateCharacterInfoAck(cmd); break;
+    case CHAT_MESSAGE_ACK:           m_pLobbyLayer->CmdChatMessageAck(cmd); break;
     case UPDATE_ROOMLIST_ACK:        m_pLobbyLayer->CmdUpdateRoomListAck(cmd); break;
     case UPDATE_FRIENDLIST_ACK:      m_pLobbyLayer->CmdUpdateFriendListAck(cmd); break;
     case CREATE_ROOM_ACK:            m_pLobbyLayer->CmdCreateRoomAck(cmd); break;
@@ -33,6 +37,8 @@ void LobbyScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
     case ADD_FRIEND_ACK:             m_pLobbyLayer->CmdAddFriendAck(cmd); break;
     case ADD_FRIEND_REQUEST_SYN:     m_pLobbyLayer->CmdAddFriendRequestSyn(cmd); break;
     }
+
+    return true;
 }
 
 

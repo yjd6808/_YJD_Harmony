@@ -63,9 +63,9 @@ JCore::String Winsock::LastErrorMessage() {
 		NULL, errorCode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		buf, 1024, NULL);
-	
-	JCore::String ret = buf;
-	return ret + "(" + errorCode + ")";
+
+	Winsock::Message("%d", Winsock::LastError());
+	return buf;
 }
 
 }

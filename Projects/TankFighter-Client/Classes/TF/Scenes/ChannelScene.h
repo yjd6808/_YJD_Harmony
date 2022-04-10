@@ -17,7 +17,7 @@ public:
     bool init() override;
     CREATE_FUNC(ChannelScene);
 
-    void SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
+    bool SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
 
 private:
     ChannelLayer* m_pChannelLayer;

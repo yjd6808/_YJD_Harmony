@@ -24,6 +24,7 @@ bool LoginLayer::init() {
 		return false;
 	}
 
+
 	Text* pLogoText = Text::create("ÅÊÅ© ÆÄÀÌÅÍ!", FONT_PATH_DEFAULT, 72);
 	pLogoText->setSkewX(30.0f);
 	pLogoText->setPosition({ 500, 500 });

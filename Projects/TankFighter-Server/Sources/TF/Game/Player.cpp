@@ -13,16 +13,17 @@ void Player::Initialize() {
 
 	m_iAccountUID = INVALID_UID;
 	m_iChanneldUID = INVALID_UID;
-	m_iRoomUID = INVALID_UID;
 	m_bRoomHost = false;
-	m_bReady = false;
 
-	m_ePlayerState = PlayerState::Disconnected;
+	
 	m_LoggedInTime = 0;
 	m_pSession = nullptr;
 
 	Memory::Set(&m_CharacterInfo, sizeof(m_CharacterInfo), NULL);
 	m_CharacterInfo.CharacterUID = INVALID_UID;
+	m_CharacterInfo.RoomUID = INVALID_UID;
+	m_CharacterInfo.PlayerState = PlayerState::Disconnected;
+
 	Memory::Set(&m_TankMove, sizeof(m_TankMove), NULL);
 	Memory::Set(&m_BattleInfo, sizeof(m_BattleInfo), NULL);
 	m_BattleInfo.CharacterUID = INVALID_UID;
@@ -63,6 +64,7 @@ void Player::SetCharacterUID(int characterUID) {
 	SpinLockGuard guard(m_PlayerMtx);
 	m_CharacterInfo.CharacterUID = characterUID;
 	m_TankMove.CharacterUID = characterUID;
+	m_BattleInfo.CharacterUID = characterUID;
 }
 
 int Player::GetCharacterUID() {
@@ -72,32 +74,33 @@ int Player::GetCharacterUID() {
 
 void Player::SetPlayerState(PlayerState playerState) {
 	SpinLockGuard guard(m_PlayerMtx);
-	m_ePlayerState = playerState;
+	m_CharacterInfo.PlayerState = playerState;
 }
 
 PlayerState Player::GetPlayerState() {
 	SpinLockGuard guard(m_PlayerMtx);
-	return m_ePlayerState;
-}
-
-CharacterInfo Player::GetCharacterInfo() {
-	SpinLockGuard guard(m_PlayerMtx);
-	return  m_CharacterInfo;
+	return m_CharacterInfo.PlayerState;
 }
 
 void Player::UpdateCharacterInfo(const CharacterInfo& info) {
 	SpinLockGuard guard(m_PlayerMtx);
-	Memory::CopyUnsafe(&m_CharacterInfo, &info, sizeof(info));
+	m_CharacterInfo.CharacterUID = info.CharacterUID;
+	m_CharacterInfo.Kill = info.Kill;
+	m_CharacterInfo.Death = info.Death;
+	m_CharacterInfo.Win = info.Win;
+	m_CharacterInfo.Lose = info.Lose;
+	m_CharacterInfo.Money = info.Money;
+	strcpy_s(m_CharacterInfo.Name, NAME_LEN, info.Name);
 }
 
 int Player::GetRoomUID() {
 	SpinLockGuard guard(m_PlayerMtx);
-	return m_iRoomUID;
+	return m_CharacterInfo.RoomUID;
 }
 
 void Player::SetRoomUID(int roomUID) {
 	SpinLockGuard guard(m_PlayerMtx);
-	m_iRoomUID = roomUID;
+	m_CharacterInfo.RoomUID = roomUID;
 }
 
 void Player::SetRoomHost(bool isHost) {
@@ -107,12 +110,12 @@ void Player::SetRoomHost(bool isHost) {
 
 void Player::SetReady(bool ready) {
 	SpinLockGuard guard(m_PlayerMtx);
-	m_bReady = ready;
+	m_CharacterInfo.Ready = ready;
 }
 
 bool Player::IsReady() {
 	SpinLockGuard guard(m_PlayerMtx);
-	return m_bReady;
+	return m_CharacterInfo.Ready;
 }
 
 void Player::LoadCharacterInfo(Out_ CharacterInfo& info) {
@@ -122,8 +125,7 @@ void Player::LoadCharacterInfo(Out_ CharacterInfo& info) {
 
 void Player::LoadRoomCharacterInfo(Out_ RoomCharacterInfo& info) {
 	SpinLockGuard guard(m_PlayerMtx);
-	Memory::CopyUnsafe(&info, &m_CharacterInfo, sizeof(CharacterInfo));
-	info.Ready = m_bReady;
+	Memory::CopyUnsafe(&info, &m_CharacterInfo, sizeof(RoomCharacterInfo));
 }
 
 bool Player::SendAsync(ISendPacket* packet) {
@@ -180,32 +182,43 @@ void Player::InitializeBattleInfo() {
 void Player::LoadMoveInfo(TankMove& move) {
 	SpinLockGuard guard(m_PlayerMtx);
 	Memory::CopyUnsafe(&move, &m_TankMove, sizeof(TankMove));
-	move.IsDeath = UnsafeIsDeath();
 }
 
 bool Player::IsBattleState() {
 	SpinLockGuard guard(m_PlayerMtx);
-	return m_ePlayerState >= PlayerState::RoomBattle;
+	return m_CharacterInfo.PlayerState >= PlayerState::RoomBattle;
 }
 
 void Player::InitializeRoomLobbyState(int roomUID) {
 	SpinLockGuard guard(m_PlayerMtx);
-	m_iRoomUID = roomUID;
-	m_ePlayerState = PlayerState::RoomLobby;
-	m_bReady = false;
+	UnsafeSetRoomUID(roomUID);
+	m_CharacterInfo.PlayerState = PlayerState::RoomLobby;
+	UnsafeSetReady(false);
 }
 
+// 플레이가 정상적으로 배틀을 진행하게 되는 경우
 void Player::InitializeRoomBattleState() {
 	SpinLockGuard guard(m_PlayerMtx);
-	m_bReady = false;		// 이제 플레이어 준비는 배틀에 모두 진입했는지 여부를 확인하는데 사용함
-	m_ePlayerState = PlayerState::RoomBattle;
+	UnsafeSetReady(false); // 이제 플레이어 준비는 배틀에 모두 진입했는지 여부를 확인하는데 사용함
 	UnsafeInitializeBattleInfo();
 	UnsafeInitializeTankMove();
+	m_CharacterInfo.PlayerState = PlayerState::RoomBattle;
+	m_CharacterInfo.IsDeath = false;
 }
 
-void Player::SetRevivalLeftTime(int time) {
+// 플레이어가 난입하게 된느 경우 초기화
+void Player::InitializeRoomBattleIntruderState() {
 	SpinLockGuard guard(m_PlayerMtx);
-	m_iRevivalLeftTime = time;
+	UnsafeSetReady(true);	// 난입하는 경우는 바로 레디 상태
+	UnsafeInitializeBattleInfo();
+	UnsafeInitializeTankMove();
+	m_CharacterInfo.PlayerState = PlayerState::RoomBattle;
+	m_CharacterInfo.IsDeath = false;
+}
+
+int Player::SetRevivalLeftTime(int time) {
+	SpinLockGuard guard(m_PlayerMtx);
+	return m_iRevivalLeftTime = time;
 }
 
 int Player::GetRevivalLeftTime() {
@@ -214,18 +227,65 @@ int Player::GetRevivalLeftTime() {
 }
 
 void Player::UnsafeInitializeBattleInfo() {
-	Memory::Set(&m_BattleInfo, sizeof(m_BattleInfo), NULL);
+	m_BattleInfo = {};
+	m_BattleInfo.CharacterUID = m_CharacterInfo.CharacterUID;
+}
+
+int Player::UnsafeGetRoomUID() const {
+	return m_CharacterInfo.RoomUID;
+}
+
+void Player::UnsafeSetRoomUID(int roomUID) {
+	m_CharacterInfo.RoomUID = roomUID;
+}
+
+void Player::UnsafeSetReady(bool ready) {
+	m_CharacterInfo.Ready = ready;
+}
+
+bool Player::UnsafeGetReady() const {
+	return m_CharacterInfo.Ready;
 }
 
 void Player::UnsafeInitializeTankMove() {
 	Memory::Set(&m_TankMove, sizeof(m_TankMove), NULL);
+	m_TankMove.CharacterUID = m_CharacterInfo.CharacterUID;
+}
+
+void Player::UnsafeSetPlayerState(PlayerState state) {
+	m_CharacterInfo.PlayerState = state;
+}
+
+PlayerState Player::UnsafeGetPlayerState() {
+	return m_CharacterInfo.PlayerState;
 }
 
 bool Player::UnsafeIsDeath() const {
-	return m_iRevivalLeftTime > 0;		// 부활까지 남은시간이 0보다 크면 죽어있다고 함
+	return m_CharacterInfo.IsDeath;		// 부활까지 남은시간이 0보다 크면 죽어있다고 함
+}
+
+
+bool Player::IsDeath() {
+	SpinLockGuard guard(m_PlayerMtx);
+	return m_CharacterInfo.IsDeath;		// 부활까지 남은시간이 0보다 크면 죽어있다고 함
+}
+
+void Player::SetDeath(bool isDeath) {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_CharacterInfo.IsDeath = isDeath;
 }
 
 void Player::UpdateTankMove(TankMove& move) {
 	SpinLockGuard guard(m_PlayerMtx);
 	Memory::CopyUnsafe(&m_TankMove, &move, sizeof(TankMove));
+}
+
+void Player::SetLatency(TimeSpan latency) {
+	SpinLockGuard guard(m_PlayerMtx);
+	m_Latency = latency;
+}
+
+JCore::TimeSpan Player::GetLatency() {
+	SpinLockGuard guard(m_PlayerMtx);
+	return m_Latency;
 }

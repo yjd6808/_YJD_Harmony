@@ -95,6 +95,7 @@
 #define BATTLE_FIELD_DEATH_SYN			168		// 클라 -> 서버 / 
 #define BATTLE_FIELD_DEATH_ACK			169		// 서버 -> 클라 / 다른 플레이어에게 브로드캐스팅 및 본인에 해당하는 경우 리바이벌 타이머 설정을 진행한다.
 #define BATTLE_FIELD_REVIVAL_SYN		170		// 서버 -> 클라 / 부활시간이 다되서 캐릭터를 리스폰시킨다.
+#define BATTLE_FILED_STATISTICS_UPDATE_SYN 171	// ㅅ버 -> 클라 / 주기적으로 
 
 #define BATTLE_FIELD_LEAVE_SYN			180		// 클라 -> 서버 / 방나가기 클릭
 #define BATTLE_FIELD_LEAVE_ACK			181		// 클라 -> 서버 / 나간놈 제외하고 남아있는 놈들에게 나갔다고 알려줌
@@ -103,10 +104,8 @@
 #define CHAT_MESSAGE_SYN				401		// 클라 -> 채팅 메시지 전송
 #define CHAT_MESSAGE_ACK				402		// 서버 -> 클라 브로드캐스트 전송
 
-#define HARD_DISCONNECT_SYN				250		// 서버 -> 클라 / 서버가 해당 클라의 연결을 강제로 끊는 경우
-
-#define TCP_PING_SYN					200
-#define TCP_PING_ACK					201
+#define TCP_RTT_SYN						200		// 클라 -> 서버 / RTT/레이턴시 계산을 위해 현재 시간을 담아서 전달
+#define TCP_RTT_ACK						201		// 서버 -> 클라 / 
 
 // UDP Commands
 #define UDP_PING_SYN					2000
@@ -516,6 +515,9 @@ struct BattleFieldPlayingEndSyn : JNetwork::ICommand
 
 	RoomState RoomState;
 	float LeftTime;
+	int Count;
+	BattleInfo Info[ROOM_MAX_PLAYER_COUNT]{};
+	int WinnerCharacetrUID = INVALID_UID;		// 승자 UID
 };
 
 struct BattleFieldEndWaitEndSyn : JNetwork::ICommand
@@ -577,41 +579,40 @@ struct BattleFieldDeathAck : JNetwork::ICommand
 	float RevivalLeftTime;				// 부활까지 남은 시간
 };
 
-struct BattleFieldRevivalAck : JNetwork::ICommand
+struct BattleFieldRevivalSyn : JNetwork::ICommand
 {
-	CMD_DEFAULT_CONSTRUCTOR(BattleFieldRevivalAck, BATTLE_FIELD_REVIVAL_SYN);
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldRevivalSyn, BATTLE_FIELD_REVIVAL_SYN);
 	int CharacterUID = INVALID_UID;		// 누가 부활했는지
-	TankMove Move;						// 부활 위치
+	TankMove RevivalMove;						// 부활 위치
 };
 
-
-
-
-
-struct HardDisconnectSyn : JNetwork::ICommand
+struct BattleFieldStatisticsUpdateSyn : JNetwork::ICommand
 {
-	CMD_DEFAULT_CONSTRUCTOR(HardDisconnectSyn, HARD_DISCONNECT_SYN)
-	char Reason[REASON_LEN]{};
+	CMD_DEFAULT_CONSTRUCTOR(BattleFieldStatisticsUpdateSyn, BATTLE_FILED_STATISTICS_UPDATE_SYN);
+
+	int Count;
+	BattleInfo Info[ROOM_MAX_PLAYER_COUNT];
 };
 
 
 
-// 일정 주기마다 클라가 TCP 서버로 핑을 전송한다.
+// 일정 주기마다 클라가 TCP 서버로 시간을 전송한다.
 // 서버는 이를 수신하고 수신한 시각을 클라이언트 정보에 기록한다.
 // 서버는 지속적으로 클라이언트의 시간을 체크하고 핑전송이 시간내로 않는 경우 강제로 연결을 끊어버리도록 한다.
-// 이러 서버가 혼잡해지는 것을 막을 수 있지 않을까?
-struct TcpPingSyn : JNetwork::ICommand
+// 이러면 유령 플레이어가 생기는것을 막을 수 있을 듯 서버도 덜 혼잡해지고
+struct TcpRTTSyn : JNetwork::ICommand
 {
-	CMD_DEFAULT_CONSTRUCTOR(TcpPingSyn, TCP_PING_SYN)
-
-	Int32 UID;
-	Int64U Tick;
+	CMD_DEFAULT_CONSTRUCTOR(TcpRTTSyn, TCP_RTT_SYN)
+	Int64U Tick;			// 클라이언트 측에서 발송한 시각을 전달
 };
 
 // 핑을 수신하면 곧바로 대상에게 Ack를 전송해준다.
 // 클라는 이를 수신하고 클라이언트에 기록한다. 클라도 정해진 시간내로 ACK를 수신하지 않으면 연결을 끊도록 한다.
-struct TcpPingAck : JNetwork::ICommand
+struct TcpRTTAck : JNetwork::ICommand
 {
-	CMD_DEFAULT_CONSTRUCTOR(TcpPingAck, TCP_PING_ACK)
+	CMD_DEFAULT_CONSTRUCTOR(TcpRTTAck, TCP_RTT_ACK)
+	Int64U Tick;			// 서버에서 수신한 시각을 담아서 클라로 전달
+							// 전달한 시각과 이 Tick과의 차이를 비교해서 Latency를 구하고
+							// 이전에보낸시각과 수신한 시각을 비교해서 RTT를 구할 수 있겠다.
 };
 

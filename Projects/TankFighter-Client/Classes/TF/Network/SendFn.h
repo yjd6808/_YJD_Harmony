@@ -27,5 +27,7 @@ struct SendFn
 	static bool SendBattileFieldTankMoveSyn(TankMove& move);
 	static bool SendChatMessage(JCore::String message);
 	static bool SendBattleFieldFireSyn(BulletInfo& info);
+	static bool SendBattleFieldDeathSyn(int characterUID);
+
 };
 

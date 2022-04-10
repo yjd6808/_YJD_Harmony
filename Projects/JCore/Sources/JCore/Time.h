@@ -321,7 +321,7 @@ struct DateAndTime : Date, Time {
 // 음수 시간을 다룰 수 있는 구조체
 struct TimeSpan
 {
-	TimeSpan(Int64 tick) : Tick(tick) {}
+	TimeSpan(Int64 tick = 0) : Tick(tick) {}
 	TimeSpan(Int32 days, Int64 hours, Int64 minutes, Int64 seconds, Int64 miliSeconds, Int64 microSeconds);
 
 	inline double GetTotalDays() const { return (double)Tick / Detail::TicksPerDay; }

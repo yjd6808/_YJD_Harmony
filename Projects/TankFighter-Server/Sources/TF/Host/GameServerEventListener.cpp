@@ -45,7 +45,7 @@ void GameServerEventListener::OnDisconnected(JNetwork::TcpSession* disconnetedSe
 
 		// 안 비어있어서 방이 삭제안된 경우 남아있는 유저들에게 브로드캐스트
 		if (bRemoveSuccess == false) {
-			SendFn::BroadcastUpdateRoomUserAck(pRoom);
+			SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 		}
 	}
 

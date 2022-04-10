@@ -32,7 +32,6 @@
 struct TankMove
 {
 	int CharacterUID = INVALID_UID;
-	bool IsDeath;
 	float X;
 	float Y;
 	float MoveSpeed;
@@ -48,7 +47,6 @@ struct TankMove
 struct CharacterInfo
 {
 	int CharacterUID = INVALID_UID;
-	int RoomUID = INVALID_UID;
 	char Name[NAME_LEN];
 	int Win;
 	int Lose;
@@ -60,7 +58,9 @@ struct CharacterInfo
 
 struct RoomCharacterInfo : CharacterInfo
 {
+	int RoomUID = INVALID_UID;
 	bool Ready;
+	bool IsDeath;
 };
 
 struct ChannelInfo
@@ -94,7 +94,7 @@ struct RoomInfo
 
 struct BattleInfo
 {
-	int CharacterUID;
+	int CharacterUID = INVALID_UID;
 	int Kill;
 	int Death;
 	int FireCount;

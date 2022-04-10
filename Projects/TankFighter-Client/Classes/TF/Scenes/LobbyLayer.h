@@ -7,12 +7,15 @@
 #include <TF/SourceHeader.h>
 #include <TF/UI/TextButton.h>
 #include <TF/UI/ColoredListView.h>
+#include <TF/UI/ChatBox.h>
 
 class LobbyLayer : public Layer
 {
 public:
+	
 	bool init() override;
 	void onEnterTransitionDidFinish() override;
+	
 	CREATE_FUNC(LobbyLayer);
 
 	void OnClickedCreateRoomButton(TextButton* btn);				// 방생성	
@@ -23,6 +26,7 @@ public:
 	void OnClickedAddFriendButton(TextButton* btn);					// 친구 추가
 	void OnClickedDeleteFriendButton(TextButton* btn);				// 친구 제거
 	void OnClickedMyInfoButton(TextButton* btn);					// 내 정보 클릭시
+	void OnClickedChatSendButton(ChatBox* chatBox);
 
 	/* =================================================================================
 	 *                             통신 패킷 처리
@@ -35,7 +39,9 @@ public:
 	void CmdJoinRoomAck(ICommand* cmd);
 	void CmdAddFriendAck(ICommand* cmd);
 	void CmdAddFriendRequestSyn(ICommand* cmd);
+	void CmdChatMessageAck(ICommand* cmd);
 private:
+	ChatBox* m_pChatBox;
 	ColoredListView* m_pRoomListView;
 	EditBox* m_pRoomTitleEditBox;
 	TextButton* m_pCreateRoomBtn;

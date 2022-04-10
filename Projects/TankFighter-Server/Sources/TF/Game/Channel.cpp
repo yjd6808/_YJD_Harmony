@@ -122,9 +122,9 @@ Room* Channel::CreateRoom(Player* creator, const String& roomName, int maxPlayer
 		return nullptr;
 
 	creator->Lock();
-	creator->m_iRoomUID = pNewRoom->GetRoomUID();
+	creator->UnsafeSetRoomUID(pNewRoom->GetRoomUID());
 	creator->m_bRoomHost = true;
-	creator->m_ePlayerState = PlayerState::RoomLobby;
+	creator->UnsafeSetPlayerState(PlayerState::RoomLobby);
 	creator->Unlock();
 	return pNewRoom;
 }

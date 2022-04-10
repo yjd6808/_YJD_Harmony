@@ -20,14 +20,19 @@ bool ChannelScene::init()
     return true;
 }
 
-void ChannelScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+bool ChannelScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+    if (!SynchronizedScene::SynchronizedOnReceived(cmd)) {
+        return false;
+    }
+
     CCLOG("%d 커맨드 수신 (%s)", cmd->GetCommand(), "ChannelScene");
-    SynchronizedScene::SynchronizedOnReceived(cmd);
     
     switch (cmd->GetCommand()) {
     case LOAD_CHANNEL_INFO_ACK: m_pChannelLayer->CmdLoadChannelInfoAck(cmd);    break;
     case SELECT_CHANNEL_ACK:    m_pChannelLayer->CmdSelectChannelAck(cmd);      break;
     }
+
+    return true;
 }
 
 

@@ -220,6 +220,23 @@ void RoomLayer::CmdLoadRoomInfoAck(ICommand* cmd) {
 	_Client->ChangeScene(SceneType::Lobby);
 }
 
+void RoomLayer::CmdUpdateCharacterInfoAck(ICommand* cmd) {
+	UpdateCharacterInfoAck* pUpdateCharacterInfoAck = cmd->CastCommand<UpdateCharacterInfoAck*>();
+
+	// 캐릭터 정보 업데이트
+	if (pUpdateCharacterInfoAck->Result) {
+		_Client->UpdateCharacterInfo(pUpdateCharacterInfoAck->Info);
+		return;
+	}
+
+	PopUp::createInParent(pUpdateCharacterInfoAck->Reason, this, false, [this]() {
+		_Client->SetChannelUID(INVALID_UID);
+		_Client->SetCharacterUID(INVALID_UID);
+		_Client->SetRoomUID(INVALID_UID);
+		_Client->ChangeScene(SceneType::Channel);
+	});
+}
+
 void RoomLayer::CmdUpdateRoomInfoAck(ICommand* cmd) {
 	for (int i = 0; i < ROOM_MAX_PLAYER_COUNT; i++) {
 		m_pSlot[i]->setVisible(false);

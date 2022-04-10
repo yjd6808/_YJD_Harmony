@@ -17,7 +17,7 @@ public:
     bool init() override;
     CREATE_FUNC(BattleFieldScene);
 
-    void SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
+    bool SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
 
 private:
     BattleFieldLayer* m_pBattleFieldLayer;

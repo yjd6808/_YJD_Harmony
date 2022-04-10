@@ -16,7 +16,7 @@ public:
     bool init() override;
     CREATE_FUNC(RoomScene);
 
-    void SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
+    bool SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
 
 private:
     RoomLayer* m_pRoomLayer;

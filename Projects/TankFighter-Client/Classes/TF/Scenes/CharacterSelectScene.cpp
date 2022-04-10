@@ -20,9 +20,12 @@ bool CharacterSelectScene::init()
     return true;
 }
 
-void CharacterSelectScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+bool CharacterSelectScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+    if (!SynchronizedScene::SynchronizedOnReceived(cmd)) {
+        return false;
+    }
+
     CCLOG("%d 커맨드 수신 (%s)", cmd->GetCommand(), "CharacterSelectScene");
-	SynchronizedScene::SynchronizedOnReceived(cmd);
 
     switch (cmd->GetCommand()) {
     case LOAD_CHARACTER_INFO_ACK: m_pCharacterSelectLayer->CmdLoadCharacterInfoAck(cmd); break;
@@ -30,6 +33,8 @@ void CharacterSelectScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
     case DELETE_CHARACTER_ACK: m_pCharacterSelectLayer->CmdDeleteCharacterAck(cmd); break;
     case SELECT_CHARACTER_ACK: m_pCharacterSelectLayer->CmdSelectCharacterAck(cmd); break;
     }
+
+    return true;
 }
 
 

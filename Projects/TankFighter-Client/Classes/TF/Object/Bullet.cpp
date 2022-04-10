@@ -41,8 +41,8 @@ void Bullet::UpdateBulletInfo(BulletInfo& info) {
 
 	this->setPosition({ info.X, info.Y });
 	this->setRotation(info.Rotation);
-	this->setContentSize({ info.Diameter, info.Diameter });
-	this->setColor(ColorUtil::To3B(info.Color));
+	Color3B z = ColorUtil::To3B(info.Color);
+	this->setColor(z);
 	this->setScale(info.Diameter / CIRCLE_BIG_IMG_SIZE);
 }
 

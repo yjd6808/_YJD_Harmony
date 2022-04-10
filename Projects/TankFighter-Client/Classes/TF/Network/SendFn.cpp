@@ -220,3 +220,11 @@ bool SendFn::SendBattleFieldFireSyn(BulletInfo& info) {
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }
+
+bool SendFn::SendBattleFieldDeathSyn(int characterUID) {
+	auto* pPacket = new Packet<BattleFieldDeathSyn>();
+	BattleFieldDeathSyn* pBattleFieldDeathSyn = pPacket->Get<0>();
+	pBattleFieldDeathSyn->CharacterUID = characterUID;
+	bool bSendRet = _Client->SendAsync(pPacket);
+	return bSendRet;
+}

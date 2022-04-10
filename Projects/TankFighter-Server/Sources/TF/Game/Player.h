@@ -48,7 +48,6 @@ public:
 	int GetCharacterUID();
 	void SetPlayerState(PlayerState playerState);
 	PlayerState GetPlayerState();
-	CharacterInfo GetCharacterInfo();
 	void UpdateCharacterInfo(const CharacterInfo& info);
 	int GetRoomUID();
 	void SetRoomUID(int roomUID);
@@ -66,32 +65,41 @@ public:
 	void InitializeBattleInfo();
 	void UpdateTankMove(TankMove& move);
 	void LoadMoveInfo(Out_ TankMove& move);
+	bool IsDeath();
+	void SetDeath(bool isDeath);
 	bool IsBattleState();
 
 	void InitializeRoomLobbyState(int roomUID);
 	void InitializeRoomBattleState();
+	void InitializeRoomBattleIntruderState();
 
-	void SetRevivalLeftTime(int time);
+	int SetRevivalLeftTime(int time);
 	int GetRevivalLeftTime();
 
 	// 락을 안한 함수 (외부에서 락을 수행한 경우)
 	void UnsafeInitializeBattleInfo();
+	int UnsafeGetRoomUID() const;
+	void UnsafeSetRoomUID(int roomUID);
+	void UnsafeSetReady(bool ready);
+	bool UnsafeGetReady() const;
 	void UnsafeInitializeTankMove();
+	void UnsafeSetPlayerState(PlayerState state);
+	PlayerState UnsafeGetPlayerState();
 	bool UnsafeIsDeath() const;
+	void SetLatency(JCore::TimeSpan latency);
+	JCore::TimeSpan GetLatency();
 private:
 	int m_iAccountUID = INVALID_UID;
 	int m_iChanneldUID = INVALID_UID;
-	int m_iRoomUID = INVALID_UID;
 	bool m_bRoomHost = false;
-	bool m_bReady = false;
 	int m_iRevivalLeftTime = 0;
 
-	CharacterInfo m_CharacterInfo;
+	RoomCharacterInfo m_CharacterInfo;
 	TankMove m_TankMove{};
-	PlayerState m_ePlayerState = PlayerState::LoginStage;	// 세션 생성시 바로 로그인 씬이므로
 	BattleInfo m_BattleInfo;
-	JCore::DateTime m_LoggedInTime;
+	JCore::TimeSpan m_Latency;
 	JNetwork::TcpSession* m_pSession = nullptr;
+	JCore::DateTime m_LoggedInTime;
 	JCore::SpinLock m_PlayerMtx;
 
 	friend class Channel;

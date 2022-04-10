@@ -6,6 +6,7 @@
 #include <TF/Parser/CommandParser.h>
 #include <TF/Game/Player.h>
 #include <TF/Util/Console.h>
+#include <Common/Command.h>
 
 using namespace JCore;
 using namespace JNetwork;
@@ -26,9 +27,11 @@ bool CommandParser::RunCommand(Player* session, ICommand* cmd) const {
 		return false;
 	}
 
-	Console::WriteLine(ConsoleColor::LIGHTCYAN, "커맨드 실행 (Command ID : %d)", cmd->GetCommand());
+	if (cmd->GetCommand() != BATTLE_FIELD_TANK_MOVE_SYN && cmd->GetCommand() != TCP_RTT_SYN) {
+		Console::WriteLine(ConsoleColor::LIGHTCYAN, "커맨드 실행 (Command ID : %d)", cmd->GetCommand());
+	}
+	
 	m_CommandMap.Get(uiCmd)(session, cmd);
-
 
 	return true;
 }

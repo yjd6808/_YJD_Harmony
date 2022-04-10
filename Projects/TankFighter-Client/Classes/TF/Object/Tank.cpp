@@ -1,6 +1,7 @@
 #include <TF/Object/Tank.h>
 #include <JCore/Random.h>
 #include <TF/Util/ColorUtil.h>
+#include <TF/Util/NodeUtil.h>
 
 Tank* Tank::create(int characterUID, Layer* activeLayer) {
 	Tank* sprite = new Tank(characterUID, activeLayer);
@@ -171,18 +172,52 @@ void Tank::UpdateTankMove(TankMove& move) {
 
 	this->setPosition(m_TankMove.X, m_TankMove.Y);
 	this->setRotation(m_TankMove.Rotation);
-	m_bUpdated = true;
 }
 
 void Tank::Fire() {
+	// 색깔중 아무거나 뽑아서 발사
+	static constexpr int RAND_COLOR = 12;
+	static Color3B colorList[RAND_COLOR]{
+		ColorList::Alloyorange_v,
+		ColorList::Androidgreen_v,
+		ColorList::Amaranthpink_v,
+		ColorList::Bitterlemon_v,
+		ColorList::BlueNCS_v,
+		ColorList::Bottlegreen_v,
+		ColorList::Brightlilac_v,
+		ColorList::Canary_v,
+		ColorList::Celeste_v,
+		ColorList::Chartreuseweb_v,
+		ColorList::Coolgrey_v,
+		ColorList::Cybergrape_v
+	};
+
+
 	Vec2 firePos = this->convertToWorldSpace(m_pFirePos->getPosition());
 
 	Bullet* pBullet = Bullet::create(10.0f, _Client->GetCharacterUID());
 	pBullet->setPosition(firePos);
 	pBullet->setRotation(this->getRotation());
-	pBullet->setColor(ColorList::Africanviolet_v);
+	pBullet->setColor(colorList[Random().GenerateInt(0, RAND_COLOR)]);
 	m_pActiveLayer->addChild(pBullet);
 
 	if (m_FilreCallBack)
 		m_FilreCallBack(pBullet);
+}
+
+// 탱크와 총알이 충돌했는지
+bool Tank::IsCollide(Bullet* bullet) {
+	const auto tankColliders = GetColliders();
+
+	for (int i = 0; i < tankColliders.Size(); i++) {
+		const Sprite* tankCollider = tankColliders[i];
+		const Vec2 tankColliderWorldPos = convertToWorldSpace(tankCollider->getPosition());
+ 		const Vec2 bulletWorldPos = bullet->getPosition();	// 총알은 애초에 최상단 레이어에 AddChild 했으므로 걍 가져오면댐
+
+		if (NodeUtil::IsCollideCircle(tankColliderWorldPos, TANK_WIDTH / 2.0f, bulletWorldPos, bullet->GetDiameter() / 2.0f)) {
+			return true;
+		}
+	}
+
+	return false;
 }

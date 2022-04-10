@@ -28,6 +28,7 @@ public:
 	 * ================================================================================*/
 
 	void CmdLoadRoomInfoAck(ICommand* cmd);
+	void CmdUpdateCharacterInfoAck(ICommand* cmd);
 	void CmdUpdateRoomInfoAck(ICommand* cmd);
 	void CmdRoomLeaveAck(ICommand* cmd);
 	void CmdRoomGameStartAck(ICommand* cmd);

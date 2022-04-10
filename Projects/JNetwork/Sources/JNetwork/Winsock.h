@@ -6,6 +6,7 @@
 
 #include <JCore/Type.h>
 #include <JCore/String.h>
+#include <JCore/StringUtil.h>
 #include <JCore/LockGuard.h>
 
 #include <iostream>

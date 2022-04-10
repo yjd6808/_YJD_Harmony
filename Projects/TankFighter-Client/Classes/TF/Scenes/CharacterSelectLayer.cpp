@@ -129,7 +129,7 @@ void CharacterSelectLayer::OnClickedChannelSelectButton(TextButton* sender) {
 	_Client->SetChannelUID(INVALID_UID);
 	_Client->SetCharacterUID(INVALID_UID);
 	_Client->SetRoomUID(INVALID_UID);
-	_Client->ChangeScene(SceneType::CharacterSelect);
+	_Client->ChangeScene(SceneType::Channel);
 }
 
 

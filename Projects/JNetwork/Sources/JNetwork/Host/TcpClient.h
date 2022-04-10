@@ -18,7 +18,7 @@ public:
 	// 초기 IOCP 쓰레드 수
 	virtual int DefaultIocpThreadCount() const;
 
-	virtual bool ConnectAsync(const IPv4EndPoint& localEndPoint);
+	virtual bool ConnectAsync(const IPv4EndPoint& destination);
 	void Pause();
 	void Resume();
 	bool Disconnect() override;

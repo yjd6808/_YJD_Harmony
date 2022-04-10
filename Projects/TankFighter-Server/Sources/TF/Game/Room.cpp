@@ -6,6 +6,8 @@
 #include <TF/Game/Room.h>
 #include <TF/Game/Player.h>
 
+#include "TF/Util/Console.h"
+
 using namespace JCore;
 
 
@@ -70,10 +72,10 @@ bool Room::RemovePlayer(Player* player) {
 
 	if (player == m_pHost || m_PlayerList.Exist(player)) {
 		player->Lock();
-		player->m_iRoomUID = INVALID_UID;				// 속한 방 정보 없앰
-		player->m_bRoomHost = false;					// 방 호스트 정보 없앰
-		player->m_ePlayerState = PlayerState::Lobby;	// 로비 상태로 변경
-		player->m_bReady = false;						// 준비 안됨 상태로 변경
+		player->UnsafeSetRoomUID(INVALID_UID);				// 속한 방 정보 없앰
+		player->m_bRoomHost = false;						// 방 호스트 정보 없앰
+		player->UnsafeSetPlayerState(PlayerState::Lobby);	// 로비 상태로 변경
+		player->UnsafeSetReady(false);						// 준비 안됨 상태로 변경
 		player->Unlock();
 
 		if (m_pHost == player) {
@@ -84,7 +86,6 @@ bool Room::RemovePlayer(Player* player) {
 				m_pHost = m_PlayerList.Front();
 				m_PlayerList.PopFront();
 			}
-			
 		} else {
 			m_PlayerList.Remove(player);
 		}
@@ -146,7 +147,7 @@ void Room::UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) 
 			return;
 
 		p->Session()->SendAsync(packet);
-		});
+	});
 
 	if (m_pHost)
 		GetHost()->Session()->SendAsync(packet);

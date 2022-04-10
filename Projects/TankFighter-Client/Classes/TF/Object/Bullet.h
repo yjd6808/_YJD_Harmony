@@ -12,6 +12,7 @@ public:
 	void UpdateBulletInfo(BulletInfo& info);
 	int GetCharacterUID() const					{ return m_BulletInfo.CharacterUID; }
 	void LoadBulletInfo(Out_ BulletInfo& info);
+	float GetDiameter() const					{ return m_BulletInfo.Diameter;}
 private:
 	BulletInfo m_BulletInfo{
 		INVALID_UID,

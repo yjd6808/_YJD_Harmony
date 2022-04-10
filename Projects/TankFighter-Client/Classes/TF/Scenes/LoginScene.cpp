@@ -21,14 +21,19 @@ bool LoginScene::init()
     return true;
 }
 
-void LoginScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+bool LoginScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+    if (!SynchronizedScene::SynchronizedOnReceived(cmd)) {
+        return false;
+    }
+
     CCLOG("%d 커맨드 수신 (%s)", cmd->GetCommand(), "LoginScene");
-    SynchronizedScene::SynchronizedOnReceived(cmd);
 
     switch (cmd->GetCommand()) {
     case LOGIN_ACK: m_pLoginLayer->CmdLoginAck(cmd); break;
     case REGISTER_ACK: m_pLoginLayer->CmdRegisterAck(cmd); break;
     }
+
+    return true;
 }
 
 

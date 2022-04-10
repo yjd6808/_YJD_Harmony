@@ -19,10 +19,6 @@ using namespace JCore;
 #define _World		World::GetInstance()
 
 
-void SendFn::SendHardDisconnectSyn(Player* player) {
-	
-}
-
 void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 	const auto pPacket = new Packet<UpdateFriendListAck>;
 	UpdateFriendListAck* pUpdateFriendListAck = pPacket->Get<0>();
@@ -130,8 +126,8 @@ void SendFn::SendUpdateCharacterInfoAck(Player* player) {
 		CharacterInfo* pMyInfo = &pUpdateCharacterInfoAck->Info;
 		pMyInfo->CharacterUID = spQueryResult->GetInt(0, 0);
 		strcpy_s(pMyInfo->Name, NAME_LEN, spQueryResult->GetString(0, 3).Source());
-		pMyInfo->PlayerState = player->GetPlayerState();
 		pMyInfo->Win = spQueryResult->GetInt(0, 4);
+		pMyInfo->PlayerState = player->GetPlayerState();
 		pMyInfo->Lose = spQueryResult->GetInt(0, 5);
 		pMyInfo->Kill = spQueryResult->GetInt(0, 6);
 		pMyInfo->Death = spQueryResult->GetInt(0, 7);
@@ -191,8 +187,11 @@ void SendFn::BroadcastUpdateRoomListAck(Channel* channel) {
 	channel->BroadcastLobbyPacket(pPacket);
 }
 
+
+
+
 // 방에 있는 모든 유저들에게 해당 방에 있는 플레이어 정보들을 전달한다.
-void SendFn::BroadcastUpdateRoomUserAck(Room* room) {
+void SendFn::BroadcastUpdateRoomUserAck(Room* room, bool unsafe) {
 	if (room == nullptr) {
 		return;
 	}
@@ -203,11 +202,31 @@ void SendFn::BroadcastUpdateRoomUserAck(Room* room) {
 
 	pUpdateRoomInfoAck->HostCharacterUID = room->GetHost()->GetCharacterUID();
 
-	room->ForEach([&iIndexer, pUpdateRoomInfoAck](Player* player) {
-		player->LoadRoomCharacterInfo(pUpdateRoomInfoAck->Info[iIndexer]);
-		iIndexer++;
-	});
-
+	if (unsafe) {
+		room->UnsafeForEach([&iIndexer, pUpdateRoomInfoAck](Player* player) {
+			player->LoadRoomCharacterInfo(pUpdateRoomInfoAck->Info[iIndexer]);
+			iIndexer++;
+		});
+		
+	} else {
+		room->ForEach([&iIndexer, pUpdateRoomInfoAck](Player* player) {
+			player->LoadRoomCharacterInfo(pUpdateRoomInfoAck->Info[iIndexer]);
+			iIndexer++;
+		});
+	}
 	pUpdateRoomInfoAck->Count = iIndexer;
-	room->Broadcast(pPacket);
+
+	if (unsafe) {
+		room->UnsafeBroadcast(pPacket);
+	} else {
+		room->Broadcast(pPacket);
+	}
+}
+
+
+void SendFn::SendRTTAck(Player* player, Int64U tick) {
+	const auto pPacket = new Packet<TcpRTTAck>;
+	TcpRTTAck* pTcpRTTAck = pPacket->Get<0>();
+	pTcpRTTAck->Tick = tick;
+	player->SendAsync(pPacket);
 }

@@ -12,6 +12,8 @@
 #include <TF/SourceHeader.h>
 #include <TF/Scenes/GridLayer.h>
 
+#include <JCore/Time.h>
+
 namespace JNetwork
 {
 	struct ICommand;
@@ -22,9 +24,24 @@ class SynchronizedScene : public Scene
 protected:
 	bool init() override;
 	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
+	void update(float delta) override;
+
+
+	/* =================================================================================
+	 *                             통신 패킷 처리
+	 * ================================================================================*/
+
 	void CmdServerMessageSyn(ICommand* cmd);
+	void CmdTcpRTTAck(ICommand* cmd);
 public:
-	virtual void SynchronizedOnReceived(ICommand* cmd);
+	
+	virtual bool SynchronizedOnReceived(ICommand* cmd);
 protected:
+	float m_fPingDelay = 0.0f;
+
+	TimeSpan m_Latency;
+	TimeSpan m_RTT;
+	DateTime m_previousSentTime;
 	GridLayer* m_pGridLayer;
+	Text* m_pNetInfo;
 };

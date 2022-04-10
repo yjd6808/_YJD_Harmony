@@ -61,6 +61,8 @@ bool GameServer::StartServer() {
 	m_Parser.AddCommand(BATTLE_FIELD_FIRE_SYN, CommandFn::CmdBattleFieldFireSyn);
 	m_Parser.AddCommand(BATTLE_FIELD_DEATH_SYN, CommandFn::CmdBattleFieldDeathSyn);
 
+	m_Parser.AddCommand(TCP_RTT_SYN, CommandFn::CmdTcpRTTSyn);
+
 	this->SetEventListener(m_pListener);
 
 	return GameServer::Start(StringUtil::Format("%s:%d", TCP_BIND_ADDR, TCP_BIND_PORT).Source());

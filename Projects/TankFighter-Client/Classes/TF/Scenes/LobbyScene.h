@@ -17,7 +17,7 @@ public:
     bool init() override;
     CREATE_FUNC(LobbyScene);
 
-    void SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
+    bool SynchronizedOnReceived(JNetwork::ICommand* cmd) override;
 
 private:
     LobbyLayer* m_pLobbyLayer;

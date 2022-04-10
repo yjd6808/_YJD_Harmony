@@ -34,8 +34,8 @@ private:
 	EditBox* m_pChatEditBox;
 	TextButton* m_pSendButton;
 
-	inline static constexpr float ms_fChatEditBoxHeight = 40.0f;
-	inline static constexpr float ms_fChatSendButtonWidth = 40.0f;
+	inline static constexpr float ms_fChatEditBoxHeight = 50.0f;
+	inline static constexpr float ms_fChatSendButtonWidth = 60.0f;
 };
 
 

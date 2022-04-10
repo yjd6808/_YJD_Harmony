@@ -1,5 +1,10 @@
 /*
  * 작성자 : 윤정도
+ *
+ * 1. 수신한 패킷에 대한 처리를 하도록합니다.
+ * 2. 패킷 통신 코드는 모두 여기만 작성합니다.
+ * 3. 단, 예외적으로 BattleFieldWorkder.cpp 에서도 패킷 송신에 대한 처리를 합니다.
+ *
  */
 
 #include <TF/PrecompiledHeader.h>
@@ -47,7 +52,7 @@ void CommandFn::CmdLoginSyn(Player* player, ICommand* cmd) {
 		pLoginAck->Result = true;
 
 		// 로그인 시간 업데이트 해줌 - 여기서 결과 볼 필요 없으므로 바로 Release
-		_Database->QueryAsync("update t_account set c_last_login_time = ? where c_UID = ?", DateTime::Now(), iAccountUID)->Release();
+		_Database->QueryAsync("update t_account set c_last_login_time = ? where c_uid = ?", DateTime::Now(), iAccountUID)->Release();
 
 		// 이제 해당 플레이어는 월드에 속한다.
 		player->SetAccountUID(iAccountUID);
@@ -290,7 +295,7 @@ void CommandFn::CmdJoinLobbySyn(Player* player, ICommand* cmd) {
 				if (pRoom->IsEmpty()) {
 					pChannel->RemoveRoom(pRoom->GetRoomUID());
 				} else {
-					SendFn::BroadcastUpdateRoomUserAck(pRoom);
+					SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 				}
 			}
 		}
@@ -473,8 +478,8 @@ void CommandFn::CmdAddFriendRequestAck(Player* player, ICommand* cmd) {
 	if (pRequester == nullptr || pAccepter == nullptr) {
 		// 내부에서 null 체크함
 
-		SendFn::SendServerMessageSyn(pAccepter, "상대방이 접속중이지 않습니다.");
-		SendFn::SendServerMessageSyn(pRequester, "상대방이 접속중이지 않습니다.");
+		SendFn::SendServerMessageSyn(pAccepter, u8"상대방이 접속중이지 않습니다.");
+		SendFn::SendServerMessageSyn(pRequester, u8"상대방이 접속중이지 않습니다.");
 	}
 
 	// 수락한 경우
@@ -521,7 +526,10 @@ void CommandFn::CmdLoadRoomInfoSyn(Player* player, ICommand* cmd) {
 	SendFn::SendRoomInfoAck(pRoom, player);
 
 	// 방에 있는 모든 유저들에게 해당 방에 있는 플레이어 정보들을 전달한다.
-	SendFn::BroadcastUpdateRoomUserAck(pRoom);
+	SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
+
+	// player에게 자신의 캐릭터 정보 전송
+	SendFn::SendUpdateCharacterInfoAck(player);
 }
 
 // ROOM_GAME_START_SYN 133
@@ -557,8 +565,7 @@ void CommandFn::CmdRoomGameStartSyn(Player* player, ICommand* cmd) {
 		} else {
 			
 			pRoomGameStartAck->Result = true;
-			player->SetPlayerState(PlayerState::RoomBattle);
-			player->SetReady(true);
+			player->InitializeRoomBattleIntruderState();
 			player->LoadRoomCharacterInfo(pRoomGameStartAck->IntruderInfo);
 			pRoom->Broadcast(pReplyPacket);
 		}
@@ -591,7 +598,7 @@ void CommandFn::CmdRoomGameReadySyn(Player* player, ICommand* cmd) {
 
 	if (pRoom) {
 		player->SetReady(true);
-		SendFn::BroadcastUpdateRoomUserAck(pRoom);
+		SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 	} else {
 		SendFn::SendServerMessageSyn(player, u8"당신이 속한 방 정보가 없습니다.");
 	}
@@ -605,7 +612,7 @@ void CommandFn::CmdRoomGameReadyCancelSyn(Player* player, ICommand* cmd) {
 
 	if (pRoom) {
 		player->SetReady(false);
-		SendFn::BroadcastUpdateRoomUserAck(pRoom);
+		SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 	} else {
 		SendFn::SendServerMessageSyn(player, u8"당신이 속한 방 정보가 없습니다.");
 	}
@@ -630,7 +637,7 @@ void CommandFn::CmdRoomLeaveSyn(Player* player, ICommand* cmd) {
 			pChannel->RemoveRoom(pRoom->GetRoomUID());
 		} else {
 			// 기존에 방에 있던 사람에게 나갔다고 알려주자.
-			SendFn::BroadcastUpdateRoomUserAck(pRoom);
+			SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 		}
 
 		// 로비에 있는 플레이어들에게 방 정보를 전달해주자.
@@ -654,6 +661,7 @@ void CommandFn::CmdBattleFieldLoadSyn(Player* player, ICommand* cmd) {
 
 	Random rand;
 	TankMove initialMove{};
+	pBattleFieldLoadAck->InitialMove.CharacterUID = player->GetCharacterUID();
 	pBattleFieldLoadAck->InitialMove.X = rand.GenerateInt(0 + 50, MAP_WIDTH - 50);
 	pBattleFieldLoadAck->InitialMove.Y = rand.GenerateInt(0 + 50, MAP_HEIGHT - 50);
 	pBattleFieldLoadAck->InitialMove.MoveDir = MoveDirection::None;
@@ -667,6 +675,12 @@ void CommandFn::CmdBattleFieldLoadSyn(Player* player, ICommand* cmd) {
 	player->SetReady(true);
 	player->UpdateTankMove(pBattleFieldLoadAck->InitialMove);
 	player->SendAsync(pReplyPacket);
+
+	// 배틀필드 씬에 유저 정보를 알려준다.
+	SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
+
+	// player에게 자신의 캐릭터 정보 전송
+	SendFn::SendUpdateCharacterInfoAck(player);
 }
 
 void CommandFn::CmdBattileFieldTankMoveSyn(Player* player, ICommand* cmd) {
@@ -704,30 +718,32 @@ void CommandFn::CmdChatMessageSyn(Player* player, ICommand* cmd) {
 	ChatMessageSyn* pChatMessageSyn = cmd->CastCommand<ChatMessageSyn*>();
 
 	if (player->GetPlayerState() != pChatMessageSyn->PlayerState) {
-		SendFn::SendServerMessageSyn(player, "채팅이 가능한 위치가 아닙니다.");
+		SendFn::SendServerMessageSyn(player, u8"채팅이 가능한 위치가 아닙니다.");
 		return;
 	}
 
 	const auto pBroadcastPacket = new Packet<ChatMessageAck>;
 	ChatMessageAck* pChatMessageAck = pBroadcastPacket->Get<0>();
+	strcpy_s(pChatMessageAck->Message, MESSAGE_LEN, pChatMessageSyn->Message);
 
 	// 채팅 가능한 위치 추가될때마다 여기 추가해줄 것
 	switch (player->GetPlayerState()) {
-	case PlayerState::Lobby:
+	case PlayerState::Lobby: {
 		Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 		if (pChannel) {
-			strcpy_s(pChatMessageAck->Message, MESSAGE_LEN, pChatMessageSyn->Message);
 			pChannel->BroadcastLobbyPacket(pBroadcastPacket);
 		}
 		break;
-	case PlayerState::RoomBattle:
+	}
+	case PlayerState::RoomBattle: {
 		Room* pRoom = _World->GetRoomByPlayer(player);
 		if (pRoom && pRoom->IsBattleFieldState()) {
 			pRoom->Broadcast(pBroadcastPacket);
 		}
 		break;
+	}
 	default:
-		SendFn::SendServerMessageSyn(player, "채팅 전송에 실패했습니다.");
+		SendFn::SendServerMessageSyn(player, u8"채팅 전송에 실패했습니다.");
 		pBroadcastPacket->Release();
 	}
 }
@@ -752,21 +768,41 @@ void CommandFn::CmdBattleFieldDeathSyn(Player* player, ICommand* cmd) {
 
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 	Room* pRoom = pChannel->GetRoomByPlayer(player);
+	// 플레잉 스테이트에만 킬/데스 기록 - EndWait에는 반영안하도록 한다.
 	if (pRoom && pRoom->IsBattleFieldState()) {
 		Player* pKiller = pChannel->FindPlayerByCharacterUID(pBattleFieldDeathSyn->CharacterUID);
 		if (pKiller) {
 			pKiller->AddBattleKillCount(1);
 			player->AddBattleDeathCount(1);
 			player->SetRevivalLeftTime(BATTLE_REVIVAL_TIME);
+			player->SetDeath(true);
+
+			// 쿼리 반영은 비동기로 진행
+			QueryFn::AddKillCountAsync(pKiller->GetCharacterUID(), 1);
+			QueryFn::AddDeathCountAsync(player->GetCharacterUID(), 1);
 
 			const auto pBroadcastPacket = new Packet<BattleFieldDeathAck>;
 			BattleFieldDeathAck* pBattleFieldDeathAck = pBroadcastPacket->Get<0>();
 			pBattleFieldDeathAck->CharacterUID = player->GetCharacterUID();
 			pBattleFieldDeathAck->RevivalLeftTime = BATTLE_REVIVAL_TIME;
 			pRoom->Broadcast(pBroadcastPacket);
+
+			SendFn::BroadcastUpdateRoomUserAck(pRoom);
 		}
 	}
 	
+}
+
+
+// TCP_RTT_SYN 200
+void CommandFn::CmdTcpRTTSyn(Player* player, JNetwork::ICommand* cmd) {
+	const TcpRTTSyn* pTcpRTTSyn = cmd->CastCommand<TcpRTTSyn*>();
+
+	const DateTime clientSentTime(pTcpRTTSyn->Tick);
+	const DateTime serverSentTime = DateTime::Now();
+
+	player->SetLatency(serverSentTime.Diff(clientSentTime));
+	SendFn::SendRTTAck(player, serverSentTime.GetTick());
 }
 
 

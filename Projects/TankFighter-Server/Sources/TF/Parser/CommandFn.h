@@ -88,9 +88,9 @@ public:
 
 	// 클라가 총알 맞았다고 함
 	static void CmdBattleFieldDeathSyn(Player* player, JNetwork::ICommand* cmd);
+
+	// 클라가 RTT와 레이턴시 계산을 위해
+	static void CmdTcpRTTSyn(Player* player, JNetwork::ICommand* cmd);
 	
 
-	static void CmdTankMoveSyn(Player* player, JNetwork::ICommand* cmd);
-	static void CmdTankMoveAck(Player* player, JNetwork::ICommand* cmd);
-	
 };

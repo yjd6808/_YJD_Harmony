@@ -43,3 +43,19 @@ int QueryFn::GetCharacterUIDByNickName(const JCore::String& nickName) {
 
 	return INVALID_UID;
 }
+
+void QueryFn::AddKillCountAsync(int characterUID, int count) {
+	_Database->QueryAsync("update t_character set c_kill = c_kill + ? where c_uid = ?", count, characterUID)->Release();
+}
+
+void QueryFn::AddDeathCountAsync(int characterUID, int count) {
+	_Database->QueryAsync("update t_character set c_death = c_death + ? where c_uid = ?", count, characterUID)->Release();
+}
+
+void QueryFn::AddWinCountAsync(int characterUID, int count) {
+	_Database->QueryAsync("update t_character set c_win = c_win + ? where c_uid = ?", count, characterUID)->Release();
+}
+
+void QueryFn::AddLoseCountAsync(int characterUID, int count) {
+	_Database->QueryAsync("update t_character set c_lose = c_lose + ? where c_uid = ?", count, characterUID)->Release();
+}

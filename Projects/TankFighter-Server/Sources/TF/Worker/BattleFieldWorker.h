@@ -15,6 +15,8 @@
 #include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/Vector.h>
 
+#include <TF/ServerConfiguration.h>
+
 class StopSignal;
 class PacketSignal;
 class Signal;
@@ -54,7 +56,10 @@ protected:
 	static void DeleteUnprocessedSignal(Signal* unProcessedSignal);
 private:
 	int m_iChannelUID;
-	int m_iDelay;
+	int m_iDelay;							// 몇ms동안 Sleep 할지
+	int m_iStatisticsUpdateDelayCount = 0;	// 딜레이 몇번당 한번씩 전송할지 - 4로 설정하고 m_iDelay 100이면 400ms당 한번씩 보냄
+
+
 	std::thread m_Thread;
 
 	JCore::ArrayQueue<Signal*> m_SignalQueue;

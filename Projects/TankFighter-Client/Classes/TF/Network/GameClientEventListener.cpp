@@ -28,7 +28,7 @@ void GameClientEventListener::OnConnected() {
 }
 
 void GameClientEventListener::OnDisconnected() {
-	// 클라 서버 강제로 끊기면 여기서 릭 생길 수 잇는데..
+	// 서버 강제로 끊기면 여기서 릭 생길 수 잇는데..
 	// 결국 Command Lock 필요하겠네.. 수정해야할 것같다.
 	// 완성하고 시간남으면 ㄱ
 
@@ -41,7 +41,14 @@ void GameClientEventListener::OnDisconnected() {
 
 void GameClientEventListener::OnSent(ISendPacket* sentPacket, Int32UL sentBytes) {
 	// Overalapped Send 결과
-	CCLOG("패킷 전송");
+
+	Int16U* cmd = reinterpret_cast<Int16U*>(sentPacket->GetWSABuf().buf + PACKET_HEADER_SIZE);
+
+	// 움직이는거 업데이트는 출력안함
+	// RTT 핑 패킷 전송 출력안함
+	if ((*cmd != BATTLE_FIELD_TANK_MOVE_SYN) && (*cmd != TCP_RTT_SYN)) {
+		CCLOG("%d 커맨드 전송", *cmd);
+	}
 }
 
 /*

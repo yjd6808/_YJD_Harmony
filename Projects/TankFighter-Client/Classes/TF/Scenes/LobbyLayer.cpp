@@ -33,8 +33,8 @@ bool LobbyLayer::init() {
 	}
 
 	m_pRoomListView = ColoredListView::create(ColorUtil::To4B(ColorList::AoEnglish_v));
-	m_pRoomListView->SetContantSize({ 600, Director::getInstance()->getWinSize().height });
-	m_pRoomListView->setPosition(0, 0);
+	m_pRoomListView->SetContantSize({ 600, Director::getInstance()->getWinSize().height - 200.0f });
+	m_pRoomListView->setPosition(0, 200.0);
 	m_pRoomListView->GetListView()->setInnerContainerPosition(Vec2::ZERO);
 	m_pRoomListView->setAnchorPoint(Vec2::ZERO);
 	m_pRoomListView->GetListView()->setPadding(10.0f, 10.0f, 10.0f, 10.0f);
@@ -81,8 +81,8 @@ bool LobbyLayer::init() {
 	this->addChild(m_AddFriendNameButton);
 
 	m_pFriendListText = TextButton::create(400, 50, "친구 목록", 16);
-	m_pFriendListText->setBackgroundColor(ColorList::Babyblue_v);
-	m_pFriendListText->setFontColor(ColorList::Bistrebrown_v);
+	m_pFriendListText->setBackgroundColor(ColorList::Bittersweet_v);
+	m_pFriendListText->setFontColor(ColorList::Black_v);
 	m_pFriendListText->setAnchorPoint(Vec2::ZERO);
 	m_pFriendListText->setPosition({ 600, 450 });
 	m_pFriendListText->setClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedFriendListButton, this));
@@ -97,16 +97,16 @@ bool LobbyLayer::init() {
 	this->addChild(m_pFriendListView);
 
 	m_pTerminateGameButton = TextButton::create(200, 50, "게임 종료", 16);
-	m_pTerminateGameButton->setBackgroundColor(ColorList::Cadmiumgreen_v);
-	m_pTerminateGameButton->setFontColor(ColorList::Darkorange_v);
+	m_pTerminateGameButton->setBackgroundColor(ColorList::Beaublue_v);
+	m_pTerminateGameButton->setFontColor(ColorList::Black_v);
 	m_pTerminateGameButton->setAnchorPoint(Vec2::ZERO);
 	m_pTerminateGameButton->setPosition({ 600, 0 });
 	m_pTerminateGameButton->setClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedTerminateGameButton, this));
 	this->addChild(m_pTerminateGameButton);
 
 	m_pSelectChannelButton = TextButton::create(200, 50, "채널 선택", 16);
-	m_pSelectChannelButton->setBackgroundColor(ColorList::Bluegray_v);
-	m_pSelectChannelButton->setFontColor(ColorList::Darkorange_v);
+	m_pSelectChannelButton->setBackgroundColor(ColorList::Beaublue_v);
+	m_pSelectChannelButton->setFontColor(ColorList::Black_v);
 	m_pSelectChannelButton->setAnchorPoint(Vec2::ZERO);
 	m_pSelectChannelButton->setPosition({ 800, 0 });
 	m_pSelectChannelButton->setClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedSelectChannelButton, this));
@@ -121,7 +121,21 @@ bool LobbyLayer::init() {
 	m_pNyInfoButton->setClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedMyInfoButton, this));
 	this->addChild(m_pNyInfoButton);
 
+	m_pChatBox = ChatBox::create(ColorList::BlackShadows_v, { 600, 200 });
+	m_pChatBox->setAnchorPoint(Vec2::ZERO);
+	m_pChatBox->SetSendButtonClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedChatSendButton, this));
+	m_pChatBox->SetContentSize({ 600, 200 });
+	this->addChild(m_pChatBox);
+
 	return true;
+}
+
+void LobbyLayer::OnClickedChatSendButton(ChatBox* chatBox) {
+	JCore::String message = chatBox->GetEditBox()->getText();
+	if (message.Length() == 0) {
+		return;
+	}
+	SendFn::SendChatMessage(message);
 }
 
 
@@ -244,7 +258,7 @@ void LobbyLayer::CmdUpdateRoomListAck(ICommand* cmd) {
 
 	for (int i = 0; i < pUpdateRoomListAck->Count; i++) {
 		const RoomInfo* pInfo = &pUpdateRoomListAck->Info[i];
-		const auto pRoomButton = TextButton::create(580, 70, StringUtils::format("%s (%d/%d)", pInfo->Name, pInfo->PlayerCount, pInfo->MaxPlayerCount), 16);
+		const auto pRoomButton = TextButton::create(580, 40, StringUtils::format("%s (%d/%d)", pInfo->Name, pInfo->PlayerCount, pInfo->MaxPlayerCount), 16);
 		pRoomButton->setAnchorPoint(Vec2::ZERO);
 		pRoomButton->setBackgroundColor(ColorList::Aero_v);
 		pRoomButton->setTag(pInfo->RoomUID);	// 방번호 CharacterUID 지정
@@ -262,7 +276,7 @@ void LobbyLayer::CmdUpdateFriendListAck(ICommand* cmd) {
 
 	for (int i = 0; i < pUpdateFriendListAck->Count; i++) {
 		const CharacterInfo* pInfo = &pUpdateFriendListAck->Info[i];
-		const auto pFriendButton = TextButton::create(580, 70, pInfo->Name, 16);
+		const auto pFriendButton = TextButton::create(380, 40, pInfo->Name, 16);
 		pFriendButton->setAnchorPoint(Vec2::ZERO);
 		pFriendButton->setBackgroundColor(ColorList::Aero_v);
 		pFriendButton->setTag(pInfo->CharacterUID);	// 방번호 CharacterUID 지정
@@ -300,7 +314,10 @@ void LobbyLayer::CmdJoinRoomAck(ICommand* cmd) {
 // 친구 추가 요청
 void LobbyLayer::CmdAddFriendAck(ICommand* cmd) {
 	const AddFriendAck* pUpdateFriendListAck = cmd->CastCommand<AddFriendAck*>();
-	PopUp::createInParent(pUpdateFriendListAck->Reason, this, false);
+	if (!pUpdateFriendListAck->Result)
+		PopUp::createInParent(pUpdateFriendListAck->Reason, this, false);
+	else
+		PopUp::createInParent("친구 요청을 성공적으로 보냈습니다.", this, false);
 }
 
 // 상대방에게 요청 도착
@@ -313,4 +330,9 @@ void LobbyLayer::CmdAddFriendRequestSyn(ICommand* cmd) {
 	PopUp::createInParent(StringUtils::format("%s 님이 친구 요청을 보냈습니다. 수락하십니까?", pAddFriendRequestSyn->Info.Name).c_str(), this, false,
 		[iRequestCharacterUID]() { SendFn::SendAddFriendRequestAck(iRequestCharacterUID, true);  },	 // 수락
 		[iRequestCharacterUID]() { SendFn::SendAddFriendRequestAck(iRequestCharacterUID, false); }); // 거절 
+}
+
+void LobbyLayer::CmdChatMessageAck(ICommand* cmd) {
+	const ChatMessageAck* pChatMessageAck = cmd->CastCommand<ChatMessageAck*>();
+	m_pChatBox->AddChatMessage(pChatMessageAck->Message);
 }

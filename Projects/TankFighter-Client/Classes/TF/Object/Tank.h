@@ -32,14 +32,15 @@ public:
 	int	 GetCharacterUID() const								{ return m_TankMove.CharacterUID; }
 
 	// UpdateTankMove() 함수가 호출되면 true로됨
-	bool IsUpdated() const										{ return m_bUpdated;}
+	//bool IsUpdated() const										{ return m_bUpdated;}
 	TankMove& GetMove()											{ return m_TankMove; }
 	void SetFireCallback(JCore::Action<Bullet*> callback)		{ m_FilreCallBack = callback; }
 	void Fire();
+
+	bool IsCollide(Bullet* bullet);
 private:
 	bool m_bMoveable = false;		// 탱크를 키보드로 움직일 수 있는지
 	bool m_bFireable = false;		// 탱크를 키보드를 눌러서 총을 쏠 수 있는지
-	bool m_bUpdated = false;		// 업데이트 되었는지
 
 	Layer* m_pActiveLayer = nullptr;
 	Sprite* m_pBodyCollidors[2] = { nullptr, nullptr };
@@ -53,7 +54,6 @@ private:
 
 	TankMove m_TankMove{
 		INVALID_UID,
-		false,
 		0.0, 0.0,
 		TANK_MOVE_SPEED,
 		MoveDirection::None,

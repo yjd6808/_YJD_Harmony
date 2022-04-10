@@ -20,16 +20,22 @@ bool RoomScene::init()
     return true;
 }
 
-void RoomScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+bool RoomScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
+    if (!SynchronizedScene::SynchronizedOnReceived(cmd)) {
+        return false;
+    }
+
     CCLOG("%d 커맨드 수신 (%s)", cmd->GetCommand(), "RoomScene");
-    SynchronizedScene::SynchronizedOnReceived(cmd);
 
     switch (cmd->GetCommand()) {
-	case LOAD_ROOM_INFO_ACK:     m_pRoomLayer->CmdLoadRoomInfoAck(cmd);     break;
-    case UPDATE_ROOMINFO_ACK:    m_pRoomLayer->CmdUpdateRoomInfoAck(cmd);   break;
-    case ROOM_LEAVE_ACK:         m_pRoomLayer->CmdRoomLeaveAck(cmd);        break;
-    case ROOM_GAME_START_ACK:    m_pRoomLayer->CmdRoomGameStartAck(cmd);    break;
+	case LOAD_ROOM_INFO_ACK:             m_pRoomLayer->CmdLoadRoomInfoAck(cmd);         break;
+    case UPDATE_CHARACTER_INFO_ACK:      m_pRoomLayer->CmdUpdateCharacterInfoAck(cmd);  break;
+    case UPDATE_ROOMINFO_ACK:            m_pRoomLayer->CmdUpdateRoomInfoAck(cmd);       break;
+    case ROOM_LEAVE_ACK:                 m_pRoomLayer->CmdRoomLeaveAck(cmd);            break;
+    case ROOM_GAME_START_ACK:            m_pRoomLayer->CmdRoomGameStartAck(cmd);        break;
     }
+
+    return true;
 }
 
 

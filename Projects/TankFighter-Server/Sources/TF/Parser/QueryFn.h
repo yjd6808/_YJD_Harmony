@@ -20,4 +20,8 @@ struct QueryFn
 	static int GetCharacterUIDByNickName(const JCore::String& nickName);
 
 	//static void Callback(MysqlQuery* query);
+	static void AddKillCountAsync(int characterUID, int count);
+	static void AddDeathCountAsync(int characterUID, int count);
+	static void AddWinCountAsync(int characterUID, int count);
+	static void AddLoseCountAsync(int characterUID, int count);
 };

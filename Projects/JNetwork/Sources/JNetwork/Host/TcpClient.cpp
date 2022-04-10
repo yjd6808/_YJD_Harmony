@@ -37,7 +37,7 @@ int TcpClient::DefaultIocpThreadCount() const {
 	return (int)info.dwNumberOfProcessors;
 }
 
-bool TcpClient::ConnectAsync(const IPv4EndPoint& localEndPoint) {
+bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	if (CheckState(State::Connected)) {
 		return false;
 	}
@@ -97,13 +97,16 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& localEndPoint) {
 	dummyPacket->Get<1>()->SetCommand(3);
 	dummyPacket->Get<1>()->Value = 4;
 
+	m_RemoteEndPoint = destination;
+
 	IOCPOverlapped* pOverlapped = new IOCPOverlappedConnect(this, m_pIocp, dummyPacket);
-	if (m_ClientSocket.ConnectEx(localEndPoint, pOverlapped, dummyPacket->GetWSABuf().buf, TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
+	if (m_ClientSocket.ConnectEx(destination, pOverlapped, dummyPacket->GetWSABuf().buf, TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
 
 		if (Winsock::LastError() != WSA_IO_PENDING) {
 			Winsock::AssertWinsockMessage("서버 접속에 실패하였습니다.");
 			Disconnect();
 			pOverlapped->Release();
+			m_RemoteEndPoint = IPv4EndPoint{IPv4Address::Any(), 0};
 			return false;
 		}
 	}
@@ -138,6 +141,9 @@ bool TcpClient::Disconnect() {
 
 	m_eState = State::Disconnected;
 	m_pClientEventListener->OnDisconnected();
+
+	m_RemoteEndPoint = IPv4EndPoint{ IPv4Address::Any(), 0 };
+	m_LocalEndPoint = IPv4EndPoint{ IPv4Address::Any(), 0 };
 	return true;
 }
 
@@ -182,8 +188,8 @@ void TcpClient::Connected() {
 		Winsock::AssertWinsockMessage("클라이언트 소켓 린저 타임아웃 설정 실패");
 	}
 
-	m_RemoteEndPoint = m_ClientSocket.GetRemoteEndPoint();
 	m_LocalEndPoint = m_ClientSocket.GetLocalEndPoint();
+	
 	m_pClientEventListener->OnConnected();
 }
 
