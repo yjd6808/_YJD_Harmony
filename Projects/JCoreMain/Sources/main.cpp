@@ -58,6 +58,43 @@ struct A
 	B f[0];
 };
 
+struct G
+{
+	char a[512];
+};
+
+template <typename T>
+struct ListNodeA
+{
+
+	using TListNodeA = ListNodeA<T>;
+
+	template <typename... Args>
+	ListNodeA(Args&&... args) {
+		Construct(Forward<Args>(args)...);
+	}
+	virtual ~ListNodeA() noexcept {
+		Value.~T();
+	}
+
+	template <typename... Args>
+	void Construct(Args&&... args) {
+		new (__builtin_addressof(Value)) T{ Forward<Args>(args)... };
+	}
+
+	void DeleteSelf() const {
+		Value.~T();
+		delete this;
+	}
+
+	union { T Value; };	// Lazy Instantiation
+	TListNodeA* Next = nullptr;
+	TListNodeA* Previous = nullptr;
+};
+
+
+
+
 
 int main() {
 	AutoMemoryLeakDetector detector;
@@ -66,26 +103,9 @@ int main() {
 	list.EmplaceBack(1, "abfd"); 
 
 
-	HashMap<int, String> nodes;
+	ListNode<String>* z = new ListNode<String>("abcd");
 
-	Random  rand;
-	int a = rand.GenerateInt(0, 300);
-	for (int i = 0; i < a; i++) {
-		String z = "abcd";
-		nodes.Insert(i, z + i);
-		nodes.Values().Extension().ForEach([](String& str) {
-			std::cout << str << "\n";
-			});
-	}
-
-	for (int i = 0; i < a; i++) {
-		if (!nodes.Remove(i)) {
-			DebugAssert(false, "fdsf");
-		}
-	}
-
-
-
+	delete z;
 
 
 	return 0;

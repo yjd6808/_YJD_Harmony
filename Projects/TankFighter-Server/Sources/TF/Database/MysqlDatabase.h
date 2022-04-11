@@ -40,7 +40,7 @@ public:
 		const JCore::String preparedStatement = MysqlStatementBuilder::Build(statement, JCore::Forward<Args>(args)...);
 
 		if (preparedStatement == "")
-			return false;
+			return nullptr;
 
 		MysqlQueryFuture* future = new MysqlQueryFuture(preparedStatement);
 		future->AddRef(2);	
