@@ -85,7 +85,7 @@ public:
 		while (pCur != m_pHead) {
 			const TListNode* pTemp = pCur;
 			pCur = pCur->Previous;
-			delete pTemp;
+			pTemp->DeleteSelf();
 		}
 
 		ConnectNode(m_pHead, m_pTail);
@@ -242,7 +242,7 @@ protected:
 		}
 
 		this->ConnectNode(pDel->Previous, pDel->Next);
-		delete pDel;
+		pDel->DeleteSelf();
 		this->m_iSize--;
 		return true;
 	}
@@ -259,7 +259,7 @@ protected:
 		TListNode* pDel = iter.m_pCurrent;
 		iter.m_pCurrent = pDel->Next;
 		this->ConnectNode(pDel->Previous, pDel->Next);
-		delete pDel;
+		pDel->DeleteSelf();
 		this->m_iSize--;
 		return true;
 	}
@@ -360,7 +360,7 @@ protected:
 		
 		TListNode* pDel = m_pHead->Next;
 		ConnectNode(m_pHead, pDel->Next);
-		delete pDel;
+		pDel->DeleteSelf();
 		this->m_iSize--;
 	}
 
@@ -369,7 +369,7 @@ protected:
 
 		TListNode* pDel = m_pTail->Previous;
 		ConnectNode(pDel->Previous, m_pTail);
-		delete pDel;
+		pDel->DeleteSelf();
 		this->m_iSize--;
 	}
 
@@ -384,18 +384,22 @@ protected:
 	}
 
 	TListNode* CreateNewNode(const T& data) {
-		TListNode* pNewNode = new TListNode(data);
+		TListNode* pNewNode = new TListNode();
+		pNewNode->Construct(data);
 		return pNewNode;
 	}
 
 	TListNode* CreateNewNode(T&& data) {
-		TListNode* pNewNode = new TListNode(Move(data));
+		TListNode* pNewNode = new TListNode();
+		pNewNode->Construct(Move(data));
 		return pNewNode;
 	}
 
 	template <typename... Args>
 	TListNode* EmplaceNewNode(Args&&... args) {
-		return new TListNode(Forward<Args>(args)...);
+		TListNode* pNewNode = new TListNode;
+		pNewNode->Construct(Forward<Args>(args)...);
+		return pNewNode;
 	}
 
 	/// <summary>

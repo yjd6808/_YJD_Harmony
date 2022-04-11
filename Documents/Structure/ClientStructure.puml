@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+hide empty methods
+hide empty fields
+
+
+
+rectangle IOCP {
+    rectangle 패킷1 {
+    }
+    rectangle 패킷2 {
+    }
+
+    circle 설명
+    note bottom of 설명
+        IOCP 쓰레드에서 수신한 패킷을
+        복사하여 Cocos2d-x 쓰레드로 전달
+    end note
+}
+
+rectangle Cocos2d-x {
+    class SynchronizedScene {
+        virtual bool OnReceivedSynchronized(ICommand*)
+    }
+
+    IOCP --> SynchronizedScene
+    LoginScene -u-|> SynchronizedScene
+    ChannelScene -u-|> SynchronizedScene
+    CharacterSelectScene -u-|> SynchronizedScene
+
+
+    circle 설명2
+    note bottom of 설명2
+        IOCP 쓰레드에서 수신한 패킷을
+        복사하여 Cocos2d-x 쓰레드로 전달
+
+        모든 씬은 SynchronizedScene을 상속받아 구현하고
+        공통적으로 처리해야하는 패킷은 이 SynchronizedScene에서
+        직접적으로 처리하도록 한다.
+
+        그리고 각 씬별로 처리해야하는 패킷에 대한 처리함수를 작성하도록 한다.
+    end note
+
+    설명2 -[hidden]u-> ChannelScene
+}
+
+
+
+
+@enduml

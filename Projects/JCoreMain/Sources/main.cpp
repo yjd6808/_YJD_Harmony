@@ -61,6 +61,10 @@ struct A
 
 int main() {
 	AutoMemoryLeakDetector detector;
+	LinkedList<Tuple<int, String>> list;
+	list.PushBack({ 1, "abfd" }); 
+	list.EmplaceBack(1, "abfd"); 
+
 
 	HashMap<int, String> nodes;
 

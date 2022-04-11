@@ -126,7 +126,7 @@ public:
 		}
 
 		this->ConnectNode(pDel->Previous, pDel->Next);
-		delete pDel;
+		pDel->DeleteSelf();
 		this->m_iSize--;
 		return true;
 	}
