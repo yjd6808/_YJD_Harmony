@@ -25,13 +25,15 @@ bool SynchronizedScene::init() {
 	m_pGridLayer->setAnchorPoint(Vec2::ZERO);
 	m_pGridLayer->setVisible(false);
 	this->addChild(m_pGridLayer, 99999);
-	this->scheduleUpdate();
+	
 
-	m_pNetInfo = Text::create("", FONT_PATH_DEFAULT, 13);
+	m_pNetInfo = Text::create("fdsfdsfspfmjsdopdjsmivosdjfoisjfiosjfdosi;fjdsio;fdjs;oifsjiof;sdjfio;sdjfi;odsjfdsi;lfjdsli;fdsjlf;ji", FONT_PATH_DEFAULT, 13);
+	m_pNetInfo->setVisible(false);
 	m_pNetInfo->setColor(ColorList::Arcticlime_v);
 	m_pNetInfo->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
 	m_pNetInfo->setPosition({ 0, MAP_HEIGHT });
 	this->addChild(m_pNetInfo, 43434);
+	this->scheduleUpdate();
 
 
 	return Scene::init();
@@ -94,8 +96,11 @@ void SynchronizedScene::CmdTcpRTTAck(ICommand* cmd) {
 	szNetInfo += _Client->GetRemoteEndPoint().ToString() + "\n";
 	szNetInfo += "Bind Port : ";
 	szNetInfo += _Client->GetLocalEndPoint().GetPort();
-							
-	m_pNetInfo->setText(szNetInfo.Source());
+
+	if (m_pNetInfo) {
+		m_pNetInfo->setText(szNetInfo.Source());
+		m_pNetInfo->setVisible(true);
+	}
 }
 
 // false 반환하는경우 Derived 씬에서 처리를 금함

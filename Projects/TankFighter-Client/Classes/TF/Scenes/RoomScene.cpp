@@ -12,7 +12,7 @@ Scene* RoomScene::createScene()
 
 bool RoomScene::init()
 {
-    if ( !Scene::init() )
+    if ( !SynchronizedScene::init() )
         return false;
 
     m_pRoomLayer = RoomLayer::create();
