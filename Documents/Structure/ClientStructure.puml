@@ -28,6 +28,9 @@ rectangle Cocos2d-x {
     LoginScene -u-|> SynchronizedScene
     ChannelScene -u-|> SynchronizedScene
     CharacterSelectScene -u-|> SynchronizedScene
+    LobbyScene --|> SynchronizedScene
+    RoomScene --|> SynchronizedScene
+    BattleFieldScene --|> SynchronizedScene
 
 
     circle 설명2
