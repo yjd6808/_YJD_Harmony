@@ -16,20 +16,20 @@
 
 ### JNetwork 주요 기능 사용 간단한 예시
 
-####< IPv4EndPoint >
-아이피 주소 포트정보 쉽게 다루기
+ - #### IPv4EndPoint
+아이피 주소 포트정보 쉽게 다루기  
 ![IPEndPoint](Images/JNetwork/IPEndPoint.png)
 
 <br>
 <br>
 
-####<패킷에 여러개의 커맨드 담기>
+- #### 패킷에 여러개의 커맨드 담기  
 ![MultiCommand](Images/JNetwork/MultiCommand.png)
 
 <br>
 <br>
 
-####<에코 클라이언트>
+ * 에코 클라이언트  
 ```cpp
 
 #define _WINSOCKAPI_			// Winsock.h include 방지
@@ -121,7 +121,7 @@ int main() {
 <br>
 <br>
 
-###에코 서버  
+ - ###에코 서버    
 ```cpp
 
 #include <JNetwork/Network.h>
@@ -224,7 +224,10 @@ int main() {
 } 
 ```
 
-####<실행 결과>
+<br>
+<br>
+
+ - #### 실행 결과
 ![에코 서버/클라 예시](Images/JNetwork/EchoServerExample.png)
 
 <br>
