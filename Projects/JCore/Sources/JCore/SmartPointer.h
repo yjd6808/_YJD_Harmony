@@ -342,10 +342,12 @@ struct __declspec(novtable)  ControlBlock
 
 	void DecreaseRefCount() {
 		ReferenceCount--;
-		if (ReferenceCount == 0) {
+		WeakCount--;				// 22-04-13 / WeakCountµµ ∞∞¿Ã ª©¡‡æﬂ«‘
+
+		if (ReferenceCount == 0)
 			DestroyObject();
-			DecreaseWeakCount();
-		}
+		if (WeakCount == 0)
+			DeleteSelf();
 	}
 
 	void DecreaseWeakCount() {
