@@ -4,6 +4,7 @@
 *.pdb
 *.exe
 *.user
+.editorconfig
 
 packages/
 Output/
