@@ -29,11 +29,17 @@
 원하는 설정으로 변경후 저장합니다.
 2. 클라이언트 연결 설정은 [ClientConfiguration.h](../Projects/TankFighter-Client/Classes/TF/Network/ClientConfiguration.h)파일에서 수정이 가능합니다.
 원하는 설정으로 변경 후 저장합니다.
-3. 통합 SQL 스크립트는 Projects/TankFighter-Server/SQL/TankFighter.sql을 MySQL로 실행합니다.
-4. 솔루션에서 TankFighter-Server 프로젝트를 선택하고 Ctrl + F5를 눌러서 실행합니다.
-5. 솔루션에서 TankFighter-Client 프로젝트를 선택하고 Ctrl + F5를 눌러서 실행합니다.
+3. 통합 SQL 스크립트는 Projects/TankFighter-Server/SQL/TankFighter.sql을 MySQL로 실행합니다. 
+5. 솔루션에서 TankFighter-Server 프로젝트를 선택하고 Ctrl + F5를 눌러서 실행합니다.
+6. 솔루션에서 TankFighter-Client 프로젝트를 선택하고 Ctrl + F5를 눌러서 실행합니다.
 
 <br>
 
 ### 그 외의 프로젝트
-F5를 눌러서 간단하게 빌드 & 실행 할 수 있습니다. 
+F5를 눌러서 간단하게 빌드 & 실행 할 수 있습니다.
+
+<br>
+
+### 주의사항
+빌드 플랫폼은 무조건 x86 아키텍쳐를 선택합니다.  
+x64는 프로젝트 세팅을 해놓지 않아서 빌드에 실패합니다.
