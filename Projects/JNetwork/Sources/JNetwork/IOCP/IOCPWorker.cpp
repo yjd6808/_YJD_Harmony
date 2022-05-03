@@ -62,6 +62,7 @@ namespace JNetwork {
 	// 문재점!
 	// IOCPAcceptOverlapeed 동적할당을 해제 해주도록 하는 로직이 필요하다.
 	// 지금 Join() 함수 호출 후 PostQueue로 쓰레드에 신호를 주면 반복문을 나와버려서 남은 오버랩이 처리 안되서 해제 불가능하게된다.
+	// --> 해결함
 
 	void IOCPWorker::WorkerThread(void* param) {
 		Winsock::Message("IOCPWorker 쓰레드가 실행되었습니다. (%d)", std::this_thread::get_id());
@@ -77,9 +78,7 @@ namespace JNetwork {
 			IOCPOverlapped* pIOCPOverlapped = static_cast<IOCPOverlapped*>(pOverlapped);		// dynamic_cast를 하고싶지만 OVERLAPPED는 가상 구조체가 아님
 
 			if (pIOCPOverlapped) {
-				// 역할
-				// 1. 오버랩 동정할당 해제는 오버랩 내부에서 수행
-				// 2. 각 오버랩 타입에 맞게 작업 처리
+				// 각 오버랩 타입에 맞게 작업 처리
 				pIOCPOverlapped->Process(bResult, numberOfBytesTransffered, pIOCPPostOrder);
 				pIOCPOverlapped->Release();
 				continue;
