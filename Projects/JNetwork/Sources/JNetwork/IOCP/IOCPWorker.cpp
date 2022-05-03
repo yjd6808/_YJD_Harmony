@@ -62,7 +62,7 @@ namespace JNetwork {
 	// 문재점!
 	// IOCPAcceptOverlapeed 동적할당을 해제 해주도록 하는 로직이 필요하다.
 	// 지금 Join() 함수 호출 후 PostQueue로 쓰레드에 신호를 주면 반복문을 나와버려서 남은 오버랩이 처리 안되서 해제 불가능하게된다.
-	// --> 해결함
+	// --> 서버 종료시를 제외하고는 Join() 함수 호출을 하면안됨
 
 	void IOCPWorker::WorkerThread(void* param) {
 		Winsock::Message("IOCPWorker 쓰레드가 실행되었습니다. (%d)", std::this_thread::get_id());
