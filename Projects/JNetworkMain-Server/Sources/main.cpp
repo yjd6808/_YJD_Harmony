@@ -10,15 +10,40 @@
 using namespace JCore;
 using namespace JNetwork;
 
-struct Message : ICommand
+#define CMD_STATIC_MESSAGE	0
+#define CMD_DYNAMIC_MESSAGE	1
+
+struct StaticMessage : ICommand
 {
-	Message() {
-		this->Cmd = 0;	// 명령어 코드값 (개발시 사용)
-		this->CmdLen = sizeof(Message);
+	StaticMessage() {
+		this->Cmd = CMD_STATIC_MESSAGE;	// 명령어 코드값 (개발시 사용)
+		this->CmdLen = sizeof(StaticMessage);
 	}
 
 	char Chat[512];
 };
+
+
+struct DynamicMessage : ICommand
+{
+	DynamicMessage(int len, char* msg) {
+		this->Length = len;
+		this->Cmd = CMD_DYNAMIC_MESSAGE;
+
+		char* g = Chat;
+		memcpy_s(g, len, msg, len);
+		Chat[len] = NULL;
+	}
+
+	static int CmdSizeOf(int len) {
+		return sizeof(DynamicMessage) + sizeof(char) * len;
+	}
+
+	int Length;
+	char Chat[0];
+};
+
+
 
 class MyServerEventListener : public TcpServerEventListener
 {
@@ -43,16 +68,31 @@ protected:
 
 	void OnReceived(TcpSession* receiver, ICommand* cmd) override {
 		// 수신한 메시지 출력
-		Message* pMsg = cmd->CastCommand<Message*>();
-		Winsock::Message("[서버] 메시지 수신 : %s", pMsg->Chat);
+		if (cmd->GetCommand() == CMD_STATIC_MESSAGE) {
+			StaticMessage* pMsg = cmd->CastCommand<StaticMessage*>();
+			Winsock::Message("[서버] 스태틱 메시지를 수신했습니다. : %s", pMsg->Chat);
 
-		// 에코 진행
-		auto pPacket = new Packet<Message>();
-		Message* arg1 = pPacket->Get<0>();
-		strcpy_s(arg1->Chat, 512, pMsg->Chat);
+			// 스태틱 패킷 에코 진행
+			auto pPacket = new StaticPacket<StaticMessage>();
+			StaticMessage* arg1 = pPacket->Get<0>();
+			strcpy_s(arg1->Chat, 512, pMsg->Chat);
 
-		if (!receiver->SendAsync(pPacket)) {
-			Winsock::Message("[서버] 에코 실패");
+			if (!receiver->SendAsync(pPacket)) {
+				Winsock::Message("[서버] 스태틱 에코 실패");
+			}
+		} else if (cmd->GetCommand() == CMD_DYNAMIC_MESSAGE) {
+			DynamicMessage* pDynamicMessage = cmd->CastCommand<DynamicMessage*>();
+			int iLen = pDynamicMessage->Length;
+			Winsock::Message("[서버] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", pDynamicMessage->Chat, pDynamicMessage->Length);
+
+			// 다이나믹 패킷 에코 진행
+			auto pPacket = new DynamicPacket<DynamicMessage>(DynamicMessage::CmdSizeOf(iLen + 1));
+			pPacket->Construct<0>(iLen, pDynamicMessage->Chat);
+
+			if (!receiver->SendAsync(pPacket)) {
+				Winsock::Message("[서버] 다이나믹 에코 실패");
+			}
+			
 		}
 	}
 

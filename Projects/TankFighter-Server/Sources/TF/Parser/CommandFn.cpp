@@ -35,7 +35,7 @@ void CommandFn::CmdLoginSyn(Player* player, ICommand* cmd) {
 	LoginSyn* pLoginSyn = cmd->CastCommand<LoginSyn*>();
 
 	const auto spQuery = _Database->Query("select * from t_account where c_id = ? and c_pass = md5(?)", pLoginSyn->Id, pLoginSyn->Password);
-	auto* pLoginAckPacket = new Packet<LoginAck>;
+	auto* pLoginAckPacket = new StaticPacket<LoginAck>;
 	LoginAck* pLoginAck = pLoginAckPacket->Get<0>();
 
 	if (spQuery->GetResultRowCount()) {
@@ -73,7 +73,7 @@ void CommandFn::CmdRegisterSyn(Player* player, ICommand* cmd) {
 	RegisterSyn* pRegisterSyn = cmd->CastCommand<RegisterSyn*>();
 
 	const auto spIdCheckQuery = _Database->Query("select * from t_account where c_id = ?", pRegisterSyn->Id);
-	auto* pRegisterAckPacket = new Packet<RegisterAck>;
+	auto* pRegisterAckPacket = new StaticPacket<RegisterAck>;
 
 	RegisterAck* pRegisterAck = pRegisterAckPacket->Get<0>();
 	if (spIdCheckQuery->GetResultRowCount()) {
@@ -113,7 +113,7 @@ void CommandFn::CmdLoadChannelInfoSyn(Player* player, ICommand* cmd) {
 	player->SetPlayerState(PlayerState::ChannelSelect);
 
 
-	const auto pReplyPacket = new Packet<LoadChannelInfoAck>();
+	const auto pReplyPacket = new StaticPacket<LoadChannelInfoAck>();
 	LoadChannelInfoAck* pLoadChannelInfoAck = pReplyPacket->Get<0>();
 	pLoadChannelInfoAck->Count = channels.Size();
 
@@ -130,7 +130,7 @@ void CommandFn::CmdLoadChannelInfoSyn(Player* player, ICommand* cmd) {
 // SELECT_CHANNEL_SYN 106
 void CommandFn::CmdSelectChannelSyn(Player* player, ICommand* cmd) {
 	const SelectChannelSyn* pSelectChannelSyn = cmd->CastCommand<SelectChannelSyn*>();
-	const auto pReplyPacket = new Packet<SelectChannelAck>();
+	const auto pReplyPacket = new StaticPacket<SelectChannelAck>();
 	SelectChannelAck* pSelectChannelAck = pReplyPacket->Get<0>();
 
 	Channel* pSelectedChannel =  _World->GetChannel(pSelectChannelSyn->ChanneldUID);
@@ -185,7 +185,7 @@ void CommandFn::CmdSelectCharacterSyn(Player* player, ICommand* cmd) {
 		return;
 	}
 
-	const auto pReplyPacket = new Packet<SelectCharacterAck>;
+	const auto pReplyPacket = new StaticPacket<SelectCharacterAck>;
 	SelectCharacterAck* pSelectCharacterAck = pReplyPacket->Get<0>();
 
 	if (QueryFn::IsCharacterExistByIDs(iAccountUID, iChannelUID, iCharacterUID)) {
@@ -216,7 +216,7 @@ void CommandFn::CmdCreateCharacterSyn(Player* player, ICommand* cmd) {
 		return;
 	}
 
-	const auto pReplyPacket = new Packet<CreateCharacterAck>;
+	const auto pReplyPacket = new StaticPacket<CreateCharacterAck>;
 	CreateCharacterAck* pCreateCharacterAck = pReplyPacket->Get<0>();
 	const String szCharacterName = pCreateCharacterSyn->CharacterName;
 
@@ -257,7 +257,7 @@ void CommandFn::CmdDeleteCharacterSyn(Player* player, ICommand* cmd) {
 		return;
 	}
 
-	const auto pReplyPacket = new Packet<DeleteCharacterAck>;
+	const auto pReplyPacket = new StaticPacket<DeleteCharacterAck>;
 	DeleteCharacterAck* pDeleteCharacterAck = pReplyPacket->Get<0>();
 
 	const String szCharacterName = pDeleteCharacterSyn->CharacterName;
@@ -332,7 +332,7 @@ void CommandFn::CmdCreateRoomSyn(Player* player, ICommand* cmd) {
 
 
 	// 해당 플레이어는 방으로 이동할 수 있도록 ACK를 전송한다.
-	const auto pReplyPacket = new Packet<CreateRoomAck>;
+	const auto pReplyPacket = new StaticPacket<CreateRoomAck>;
 	CreateRoomAck* pCreateRoomAck = pReplyPacket->Get<0>();
 	
 	if (pRoom == nullptr) {
@@ -356,7 +356,7 @@ void CommandFn::CmdJoinRoomSyn(Player* player, ICommand* cmd) {
 
 	// 속한 채널에서 방을 생성한다.
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
-	const auto pReplyPacket = new Packet<JoinRoomAck>;
+	const auto pReplyPacket = new StaticPacket<JoinRoomAck>;
 	JoinRoomAck* pJoinRoomAck = pReplyPacket->Get<0>();
 	Room* pRoom = pChannel->GetRoomByRoomUID(pCreateRoomSyn->RoomUID);
 
@@ -388,7 +388,7 @@ void CommandFn::CmdAddFriendSyn(Player* player, ICommand* cmd) {
 
 
 
-	const auto pReplyPacket = new Packet<AddFriendAck>;
+	const auto pReplyPacket = new StaticPacket<AddFriendAck>;
 	AddFriendAck* pAddFriendAck = pReplyPacket->Get<0>();
 	if (pTargetPlayer == nullptr) {
 		pAddFriendAck->Result = false;
@@ -412,7 +412,7 @@ void CommandFn::CmdAddFriendSyn(Player* player, ICommand* cmd) {
 				strcpy_s(pAddFriendAck->Reason, REASON_LEN, u8"이미 친구입니다.");
 			} else {
 				// 친구 요청 대상에게 누군가 친구 요청했음을 알려준다.
-				const auto pRequestPacket = new Packet<AddFriendRequestSyn>;
+				const auto pRequestPacket = new StaticPacket<AddFriendRequestSyn>;
 				AddFriendRequestSyn* pAddFriendRequestSyn = pRequestPacket->Get<0>();
 				pAddFriendRequestSyn->RequestCharacterUID = iRequestCharacterUID;
 				player->LoadCharacterInfo(pAddFriendRequestSyn->Info);
@@ -437,7 +437,7 @@ void CommandFn::CmdDeleteFriendSyn(Player* player, ICommand* cmd) {
 	int iRequesterCharacterUID = pRequest->GetCharacterUID();
 	int iDeletedCharacterUID = pDeleted->GetCharacterUID();
 
-	const auto pReplyPacket = new Packet<DeleteFriendAck>;
+	const auto pReplyPacket = new StaticPacket<DeleteFriendAck>;
 	DeleteFriendAck* pDeleteFriendAck = pReplyPacket->Get<0>();
 
 	if (_Database->Query("delete from t_friendship where (c_req_character_uid = ? and c_ack_character_uid = ?) or (c_ack_character_uid = ? and c_req_character_uid = ?)",
@@ -552,7 +552,7 @@ void CommandFn::CmdRoomGameStartSyn(Player* player, ICommand* cmd) {
 
 	Room* pRoom = _World->GetRoomByPlayer(player);
 
-	const auto pReplyPacket = new Packet<RoomGameStartAck>;
+	const auto pReplyPacket = new StaticPacket<RoomGameStartAck>;
 	RoomGameStartAck* pRoomGameStartAck = pReplyPacket->Get<0>();
 
 	if (pRoomGameStartSyn->Intrude) {
@@ -626,7 +626,7 @@ void CommandFn::CmdRoomLeaveSyn(Player* player, ICommand* cmd) {
 	Room* pRoom = _World->GetRoomByPlayer(player);
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 
-	const auto pPacket = new Packet<RoomLeaveAck>;
+	const auto pPacket = new StaticPacket<RoomLeaveAck>;
 	RoomLeaveAck* pRoomLeaveAck = pPacket->Get<0>();
 
 	if (pRoom && pRoom->RemovePlayer(player)) {
@@ -656,7 +656,7 @@ void CommandFn::CmdBattleFieldLoadSyn(Player* player, ICommand* cmd) {
 
 	// 플레이어가 배틀 필드에 진입하면 레디 상태로 바꾸고 맵에서 랜덤한 위치를 뽑아서 준다.
 	Room* pRoom = _World->GetRoomByPlayer(player);
-	const auto pReplyPacket = new Packet<BattleFieldLoadAck>;
+	const auto pReplyPacket = new StaticPacket<BattleFieldLoadAck>;
 	BattleFieldLoadAck* pBattleFieldLoadAck = pReplyPacket->Get<0>();
 
 	Random rand;
@@ -704,7 +704,7 @@ void CommandFn::CmdBattleFieldLeaveSyn(Player* player, ICommand* cmd) {
 	}
 
 	if (!pRoom->IsEmpty()) {
-		const auto pRoomBroadcastPacket = new Packet<BattleFieldLeaveAck>;
+		const auto pRoomBroadcastPacket = new StaticPacket<BattleFieldLeaveAck>;
 		BattleFieldLeaveAck* pBattleFieldLeaveAck = pRoomBroadcastPacket->Get<0>();
 		pBattleFieldLeaveAck->CharacterUID = player->GetCharacterUID();
 		pRoom->Broadcast(pRoomBroadcastPacket);
@@ -722,7 +722,7 @@ void CommandFn::CmdChatMessageSyn(Player* player, ICommand* cmd) {
 		return;
 	}
 
-	const auto pBroadcastPacket = new Packet<ChatMessageAck>;
+	const auto pBroadcastPacket = new StaticPacket<ChatMessageAck>;
 	ChatMessageAck* pChatMessageAck = pBroadcastPacket->Get<0>();
 	strcpy_s(pChatMessageAck->Message, MESSAGE_LEN, pChatMessageSyn->Message);
 
@@ -756,7 +756,7 @@ void CommandFn::CmdBattleFieldFireSyn(Player* player, ICommand* cmd) {
 	// 총알을 쏘면 해당 방의 유저들에게 브로드캐스팅 해준다.
 	Room* pBattleFieldRoom = _World->GetRoomByPlayer(player);
 	if (pBattleFieldRoom && pBattleFieldRoom->IsBattleFieldState()) {
-		const auto pBroadcastPacket = new Packet<BattleFieldFireAck>;
+		const auto pBroadcastPacket = new StaticPacket<BattleFieldFireAck>;
 		BattleFieldFireAck* pBattleFieldFireAck = pBroadcastPacket->Get<0>();
 		Memory::CopyUnsafe(&pBattleFieldFireAck->BulletInfo, &pBattleFieldFireSyn->BulletInfo, sizeof(BulletInfo));
 		pBattleFieldRoom->Broadcast(pBroadcastPacket);
@@ -781,7 +781,7 @@ void CommandFn::CmdBattleFieldDeathSyn(Player* player, ICommand* cmd) {
 			QueryFn::AddKillCountAsync(pKiller->GetCharacterUID(), 1);
 			QueryFn::AddDeathCountAsync(player->GetCharacterUID(), 1);
 
-			const auto pBroadcastPacket = new Packet<BattleFieldDeathAck>;
+			const auto pBroadcastPacket = new StaticPacket<BattleFieldDeathAck>;
 			BattleFieldDeathAck* pBattleFieldDeathAck = pBroadcastPacket->Get<0>();
 			pBattleFieldDeathAck->CharacterUID = player->GetCharacterUID();
 			pBattleFieldDeathAck->RevivalLeftTime = BATTLE_REVIVAL_TIME;

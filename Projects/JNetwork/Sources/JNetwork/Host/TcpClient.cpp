@@ -91,7 +91,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	// 연결 후 곧장 데이터 전송 테스트
 	// 패킷은 모두 오버랩 Process에서 해제하도록 한다.
 	DWORD dwSentBytes = 0;
-	auto* dummyPacket = new Packet<Command<int>, Command<int>>;
+	auto* dummyPacket = new StaticPacket<Command<int>, Command<int>>;
 	dummyPacket->Get<0>()->SetCommand(1);
 	dummyPacket->Get<0>()->Value = 2;
 	dummyPacket->Get<1>()->SetCommand(3);

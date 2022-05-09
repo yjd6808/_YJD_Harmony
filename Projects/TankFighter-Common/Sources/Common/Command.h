@@ -493,10 +493,17 @@ struct BattileFieldTankMoveSyn : JNetwork::ICommand
 //서버는 일정주기마다 클라이언트들의 위치정보를 클라이언트들로 전송해주도록한다.
 struct BattileFieldTankUpdateSyn : JNetwork::ICommand
 {
-	CMD_DEFAULT_CONSTRUCTOR(BattileFieldTankUpdateSyn, BATTLE_FIELD_TANK_UPDATE_SYN)
+	BattileFieldTankUpdateSyn(int count) {
+		Cmd = BATTLE_FIELD_TANK_UPDATE_SYN;
+		Count = count;
+	}
 
-	int Count{};
-	TankMove Move[ROOM_MAX_PLAYER_COUNT]{};
+	static Int16U CmdSizeOf(int count) {
+		return sizeof(BattileFieldTankUpdateSyn) + sizeof(TankMove) * count;
+	}
+	
+	int Count;
+	TankMove Move[0];
 };
 
 

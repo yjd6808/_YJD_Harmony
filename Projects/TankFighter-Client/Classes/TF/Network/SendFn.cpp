@@ -14,14 +14,14 @@ using namespace cocos2d;
 
 // LOAD_CHANNEL_INFO_SYN 104
 bool SendFn::SendLoadChannelInfoSyn() {
-	auto* pPacket = new Packet<LoadChannelInfoSyn>();
+	auto* pPacket = new StaticPacket<LoadChannelInfoSyn>();
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }
 
 // SELECT_CHANNEL_SYN 106
 bool SendFn::SendChannelSelectSyn(int selectedChannelUID) {
-	auto* pPacket = new Packet<SelectChannelSyn>();
+	auto* pPacket = new StaticPacket<SelectChannelSyn>();
 	pPacket->Get<0>()->ChanneldUID = selectedChannelUID;
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
@@ -29,7 +29,7 @@ bool SendFn::SendChannelSelectSyn(int selectedChannelUID) {
 
 // CREATE_CHARACTER_SYN 110
 bool SendFn::SendCreateCharacterSyn(std::string& nick) {
-	auto* pPacket = new Packet<CreateCharacterSyn>();
+	auto* pPacket = new StaticPacket<CreateCharacterSyn>();
 	CreateCharacterSyn* pCreateCharacterSyn = pPacket->Get<0>();
 	pCreateCharacterSyn->AccountUID = _Client->GetAccountUID();
 	pCreateCharacterSyn->ChannelUID = _Client->GetChannelUID();
@@ -39,7 +39,7 @@ bool SendFn::SendCreateCharacterSyn(std::string& nick) {
 
 // DELETE_CHARACTER_SYN 112
 bool SendFn::SendDeleteCharacterSyn(std::string& nick) {
-	auto* pPacket = new Packet<DeleteCharacterSyn>();
+	auto* pPacket = new StaticPacket<DeleteCharacterSyn>();
 	DeleteCharacterSyn* pDeleteCharacterSyn = pPacket->Get<0>();
 	pDeleteCharacterSyn->AccountUID = _Client->GetAccountUID();
 	pDeleteCharacterSyn->ChannelUID = _Client->GetChannelUID();
@@ -49,7 +49,7 @@ bool SendFn::SendDeleteCharacterSyn(std::string& nick) {
 
 // LOAD_CHARACTER_INFO_SYN 108
 bool SendFn::SendLoadCharacterInfoSyn() {
-	auto* pPacket = new Packet<LoadCharacterInfoSyn>();
+	auto* pPacket = new StaticPacket<LoadCharacterInfoSyn>();
 	LoadCharacterInfoSyn* pLoadCharacterInfoSyn = pPacket->Get<0>();
 	pLoadCharacterInfoSyn->AccountUID = _Client->GetAccountUID();
 	pLoadCharacterInfoSyn->ChannelUID = _Client->GetChannelUID();
@@ -59,7 +59,7 @@ bool SendFn::SendLoadCharacterInfoSyn() {
 
 // SELECT_CHARACTER_SYN 114
 bool SendFn::SendSelectCharacterSyn(const int selectedCharacterUID) {
-	auto* pPacket = new Packet<SelectCharacterSyn>();
+	auto* pPacket = new StaticPacket<SelectCharacterSyn>();
 	SelectCharacterSyn* pSelectCharacterSyn = pPacket->Get<0>();
 	pSelectCharacterSyn->AccountUID = _Client->GetAccountUID();
 	pSelectCharacterSyn->ChannelUID = _Client->GetChannelUID();
@@ -71,7 +71,7 @@ bool SendFn::SendSelectCharacterSyn(const int selectedCharacterUID) {
 
 // JOIN_LOBBY_SYN 116
 bool SendFn::SendJoinLobbySyn() {
-	auto* pPacket = new Packet<JoinLobbySyn>();
+	auto* pPacket = new StaticPacket<JoinLobbySyn>();
 	JoinLobbySyn* pJoinLobbySyn = pPacket->Get<0>();
 	pJoinLobbySyn->AccountUID = _Client->GetAccountUID();
 	pJoinLobbySyn->ChannelUID = _Client->GetChannelUID();
@@ -83,7 +83,7 @@ bool SendFn::SendJoinLobbySyn() {
 
 // CREATE_ROOM_SYN 120
 bool SendFn::SendCreateRoomSyn(const JCore::String& roomName) {
-	auto* pPacket = new Packet<CreateRoomSyn>();
+	auto* pPacket = new StaticPacket<CreateRoomSyn>();
 	CreateRoomSyn* pCreateRoomSyn = pPacket->Get<0>();
 	strcpy_s(pCreateRoomSyn->RoomName, NAME_LEN, roomName.Source());
 	bool bSendRet = _Client->SendAsync(pPacket);
@@ -92,7 +92,7 @@ bool SendFn::SendCreateRoomSyn(const JCore::String& roomName) {
 
 // JOIN_ROOM_SYN 121
 bool SendFn::SendJoinRoomSyn(const int roomUID) {
-	auto* pPacket = new Packet<JoinRoomSyn>();
+	auto* pPacket = new StaticPacket<JoinRoomSyn>();
 	JoinRoomSyn* pJoinRoomSyn = pPacket->Get<0>();
 	pJoinRoomSyn->RoomUID = roomUID;
 	bool bSendRet = _Client->SendAsync(pPacket);
@@ -101,7 +101,7 @@ bool SendFn::SendJoinRoomSyn(const int roomUID) {
 
 // ADD_FRIEND_SYN 122
 bool SendFn::SendAddFriendSyn(const JCore::String& friendName) {
-	auto* pPacket = new Packet<AddFriendSyn>();
+	auto* pPacket = new StaticPacket<AddFriendSyn>();
 	AddFriendSyn* pAddFriendSyn = pPacket->Get<0>();
 	strcpy_s(pAddFriendSyn->FriendName, NAME_LEN, friendName.Source());
 	bool bSendRet = _Client->SendAsync(pPacket);
@@ -111,7 +111,7 @@ bool SendFn::SendAddFriendSyn(const JCore::String& friendName) {
 
 // DELETE_FRIEND_SYN 123
 bool SendFn::SendDeleteFriendSyn(const int friendCharacterUID) {
-	auto* pPacket = new Packet<DeleteFriendSyn>();
+	auto* pPacket = new StaticPacket<DeleteFriendSyn>();
 	DeleteFriendSyn* pJoinRoomSyn = pPacket->Get<0>();
 	pJoinRoomSyn->DeleteCharacterUID = friendCharacterUID;
 	bool bSendRet = _Client->SendAsync(pPacket);
@@ -120,7 +120,7 @@ bool SendFn::SendDeleteFriendSyn(const int friendCharacterUID) {
 
 // LOAD_ROOM_INFO_SYN 131
 bool SendFn::SendLoadRoomSyn() {
-	auto* pPacket = new Packet<LoadRoomInfoSyn>();
+	auto* pPacket = new StaticPacket<LoadRoomInfoSyn>();
 	LoadRoomInfoSyn* pJoinRoomSyn = pPacket->Get<0>();
 	pJoinRoomSyn->RoomUID = _Client->GetRoomUID();
 	pJoinRoomSyn->AccountUID = _Client->GetAccountUID();
@@ -132,7 +132,7 @@ bool SendFn::SendLoadRoomSyn() {
 
 // ROOM_GAME_START_SYN 133
 bool SendFn::SendRoomGameStartSyn(bool intrude) {
-	auto* pPacket = new Packet<RoomGameStartSyn>();
+	auto* pPacket = new StaticPacket<RoomGameStartSyn>();
 	RoomGameStartSyn* pRoomGameStartSyn = pPacket->Get<0>();
 	pRoomGameStartSyn->RoomUID = _Client->GetRoomUID();
 	pRoomGameStartSyn->AccountUID = _Client->GetAccountUID();
@@ -145,7 +145,7 @@ bool SendFn::SendRoomGameStartSyn(bool intrude) {
 
 // ROOM_GAME_READY_SYN 134
 bool SendFn::SendRoomGameReadySyn() {
-	auto* pPacket = new Packet<RoomGameReadySyn>();
+	auto* pPacket = new StaticPacket<RoomGameReadySyn>();
 	RoomGameReadySyn* pRoomGameReadySyn = pPacket->Get<0>();
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
@@ -154,7 +154,7 @@ bool SendFn::SendRoomGameReadySyn() {
 
 // ROOM_GAME_READY_CANCEL_SYN 135
 bool SendFn::SendRoomGameReadyCancelSyn() {
-	auto* pPacket = new Packet<RoomGameReadyCancelSyn>();
+	auto* pPacket = new StaticPacket<RoomGameReadyCancelSyn>();
 	RoomGameReadyCancelSyn* pRoomGameReadyCancelSyn = pPacket->Get<0>();
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
@@ -162,28 +162,28 @@ bool SendFn::SendRoomGameReadyCancelSyn() {
 
 // ROOM_LEAVE_SYN 136
 bool SendFn::SendRoomLeaveSyn() {
-	auto* pPacket = new Packet<RoomLeaveSyn>();
+	auto* pPacket = new StaticPacket<RoomLeaveSyn>();
 	RoomLeaveSyn* pRoomLeaveSyn = pPacket->Get<0>();
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }
 
 bool SendFn::SendBattleFieldLoadSyn() {
-	auto* pPacket = new Packet<BattleFieldLoadSyn>();
+	auto* pPacket = new StaticPacket<BattleFieldLoadSyn>();
 	BattleFieldLoadSyn* pBattleFieldLoadSyn = pPacket->Get<0>();
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }
 
 bool SendFn::SendBattleFieldLeaveSyn() {
-	auto* pPacket = new Packet<BattleFieldLeaveSyn>();
+	auto* pPacket = new StaticPacket<BattleFieldLeaveSyn>();
 	BattleFieldLeaveSyn* pBattleFieldLeaveSyn = pPacket->Get<0>();
 	bool bSendRet = _Client->SendAsync(pPacket);
 	return bSendRet;
 }
 
 bool SendFn::SendAddFriendRequestAck(int requestCharacterUID, bool accept) {
-	auto* pPacket = new Packet<AddFriendRequestAck>();
+	auto* pPacket = new StaticPacket<AddFriendRequestAck>();
 	AddFriendRequestAck* pAddFriendRequestAck = pPacket->Get<0>();
 	pAddFriendRequestAck->AcceptedCharacterUID = _Client->GetCharacterUID();
 	pAddFriendRequestAck->RequestCharacterUID = requestCharacterUID;
@@ -193,7 +193,7 @@ bool SendFn::SendAddFriendRequestAck(int requestCharacterUID, bool accept) {
 }
 
 bool SendFn::SendBattileFieldTankMoveSyn(TankMove& move) {
-	auto* pPacket = new Packet<BattileFieldTankMoveSyn>();
+	auto* pPacket = new StaticPacket<BattileFieldTankMoveSyn>();
 	BattileFieldTankMoveSyn* pBattileFieldTankMoveSyn = pPacket->Get<0>();
 	Memory::CopyUnsafe(&pBattileFieldTankMoveSyn->Move, &move, sizeof(TankMove));
 	bool bSendRet = _Client->SendAsync(pPacket);
@@ -201,7 +201,7 @@ bool SendFn::SendBattileFieldTankMoveSyn(TankMove& move) {
 }
 
 bool SendFn::SendChatMessage(JCore::String message) {
-	auto* pPacket = new Packet<ChatMessageSyn>();
+	auto* pPacket = new StaticPacket<ChatMessageSyn>();
 	ChatMessageSyn* pChatMessageSyn = pPacket->Get<0>();
 	pChatMessageSyn->PlayerState = _Client->GetPlayerState();
 	JCore::String msg(MESSAGE_LEN);
@@ -214,7 +214,7 @@ bool SendFn::SendChatMessage(JCore::String message) {
 }
 
 bool SendFn::SendBattleFieldFireSyn(BulletInfo& info) {
-	auto* pPacket = new Packet<BattleFieldFireSyn>();
+	auto* pPacket = new StaticPacket<BattleFieldFireSyn>();
 	BattleFieldFireSyn* pBattleFieldFireSyn = pPacket->Get<0>();
 	Memory::CopyUnsafe(&pBattleFieldFireSyn->BulletInfo, &info, sizeof(BulletInfo));
 	bool bSendRet = _Client->SendAsync(pPacket);
@@ -222,7 +222,7 @@ bool SendFn::SendBattleFieldFireSyn(BulletInfo& info) {
 }
 
 bool SendFn::SendBattleFieldDeathSyn(int characterUID) {
-	auto* pPacket = new Packet<BattleFieldDeathSyn>();
+	auto* pPacket = new StaticPacket<BattleFieldDeathSyn>();
 	BattleFieldDeathSyn* pBattleFieldDeathSyn = pPacket->Get<0>();
 	pBattleFieldDeathSyn->CharacterUID = characterUID;
 	bool bSendRet = _Client->SendAsync(pPacket);

@@ -55,6 +55,7 @@ public:
 	bool UnsafeIsBattleFieldState() const;
 	bool UnsafeIsBattleFieldPlayingState() const;
 	bool UnsafeIsBattleFieldEndingState() const;
+	int	 UnsafeGetRoomBattleStateUserCount();
 	void UnsafeForEach(JCore::Action<Player*> foreachAction);
 
 

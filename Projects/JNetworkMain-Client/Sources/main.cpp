@@ -12,15 +12,39 @@
 using namespace JCore;
 using namespace JNetwork;
 
-struct Message : ICommand
+#define CMD_STATIC_MESSAGE	0
+#define CMD_DYNAMIC_MESSAGE	1
+
+struct StaticMessage : ICommand
 {
-	Message() {
-		this->Cmd = 0;	// 명령어 코드값 (개발시 사용)
-		this->CmdLen = sizeof(Message);
+	StaticMessage() {
+		this->Cmd = CMD_STATIC_MESSAGE;	// 명령어 코드값 (개발시 사용)
+		this->CmdLen = sizeof(StaticMessage);
 	}
 
 	char Chat[512];
 };
+
+
+struct DynamicMessage : ICommand
+{
+	DynamicMessage(int len, char* msg) {
+		this->Length = len;
+		this->Cmd = CMD_DYNAMIC_MESSAGE;
+
+		char* g = Chat;
+		memcpy_s(g, len, msg, len);
+		Chat[len] = NULL;
+	}
+
+	static int CmdSizeOf(int len) {
+		return sizeof(DynamicMessage) + sizeof(char) * len;
+	}
+
+	int Length;
+	char Chat[0];
+};
+
 
 
 class MyClientEventListener : public TcpClientEventListener
@@ -38,7 +62,12 @@ protected:
 	}
 
 	virtual void OnReceived(ICommand* cmd) {
-		Winsock::Message("[클라] 커맨드를 수신했습니다. : %s", cmd->CastCommand<Message*>()->Chat);
+		if (cmd->GetCommand() == CMD_STATIC_MESSAGE)
+			Winsock::Message("[클라] 스태틱 메시지를 수신했습니다. : %s", cmd->CastCommand<StaticMessage*>()->Chat);
+		else if (cmd->GetCommand() == CMD_DYNAMIC_MESSAGE) {
+			DynamicMessage* pDynamicMessage = cmd->CastCommand<DynamicMessage*>();
+			Winsock::Message("[클라] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", pDynamicMessage->Chat, pDynamicMessage->Length);
+		}
 	}
 };
 
@@ -46,9 +75,11 @@ protected:
 int main() {
 	CriticalSectionMutex mtx;
 
-	auto pPakcet = new Packet<Command<int>, Message, Command<float>>();
+
+	// 멀티 패킷 예시
+	auto pPakcet = new StaticPacket<Command<int>, StaticMessage, Command<float>>();
 	Command<int>* arg1		= pPakcet->Get<0>();
-	Message* arg2			= pPakcet->Get<1>();
+	StaticMessage* arg2		= pPakcet->Get<1>();
 	Command<float>* arg3	= pPakcet->Get<2>();
 
 	arg1->Value = 30;
@@ -69,18 +100,35 @@ int main() {
 		while (1) {
 
 
-			// 패킷에는 여러개의 커맨드를 담아서 한번에 전송가능
-			auto pPacket = new Packet<Message>();
-			Message* arg1 = pPacket->Get<0>();
+			auto pStaticPacket = new StaticPacket<StaticMessage>();
+			StaticMessage* arg1 = pStaticPacket->Get<0>();
 			std::cin >> arg1->Chat;
+
+			int iLen = StringUtil::Length(arg1->Chat);
+
+			// Dynamic 패킷 예시
+			auto pDynamicPacket = new DynamicPacket<DynamicMessage, DynamicMessage>(
+				DynamicMessage::CmdSizeOf(iLen + 1),
+				DynamicMessage::CmdSizeOf(iLen + 1)
+			);
+
+			
+			pDynamicPacket->Construct<0>(iLen, arg1->Chat);
+			pDynamicPacket->Construct<1>(iLen, arg1->Chat);
+			auto g = pDynamicPacket->Get<0>();
+			auto g1 = pDynamicPacket->Get<1>();
+
 
 			// 클라이언트 종료
 			if (arg1->Chat[0] == 'c') {
 				break;
 			}
-
-			if (!client.SendAsync(pPacket)) {
-				std::cout << "[클라] 송신 실패\n";
+			
+			if (!client.SendAsync(pStaticPacket)) {
+				std::cout << "[클라] Static 패킷 송신 실패\n";
+			}
+			if (!client.SendAsync(pDynamicPacket)) {
+				std::cout << "[클라] Dyanmic 송신 실패\n";
 			}
 		}
 	}

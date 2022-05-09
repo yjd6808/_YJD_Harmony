@@ -56,7 +56,7 @@ void SynchronizedScene::update(float delta) {
 	m_fPingDelay += delta;
 
 	if (m_fPingDelay >= PING_DELAY) {
-		auto pPacket = new Packet<TcpRTTSyn>;
+		auto pPacket = new StaticPacket<TcpRTTSyn>;
 		TcpRTTSyn* pTcpRTTSyn = pPacket->Get<0>();
 		m_previousSentTime = DateTime::Now();
 		pTcpRTTSyn->Tick = m_previousSentTime.GetTick();

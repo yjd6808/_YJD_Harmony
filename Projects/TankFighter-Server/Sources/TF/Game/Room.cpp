@@ -20,7 +20,7 @@ Room::Room()
 {
 }
 
-void Room::Initialize(Channel* channel, Player* host, const JCore::String& roomName, int maxPlayerCount) {
+void Room::Initialize(Channel* channel, Player* host, const String& roomName, int maxPlayerCount) {
 	CriticalSectionLockGuard guard(m_RoomLock);
 	m_iRoomUID = ms_iRoomSeq++;
 	m_iMaxPlayerCount = maxPlayerCount;
@@ -182,7 +182,17 @@ bool Room::UnsafeIsBattleFieldEndingState() const {
 	return m_eRoomState >= RoomState::EndWait;
 }
 
-void Room::UnsafeForEach(JCore::Action<Player*> foreachAction) {
+int Room::UnsafeGetRoomBattleStateUserCount() {
+	int iCount = 0;
+	UnsafeForEach([&iCount](Player* p) {
+		if (p->GetPlayerState() == PlayerState::RoomBattle && !p->IsDeath()) {
+			iCount++;
+		}
+	});
+	return iCount;
+}
+
+void Room::UnsafeForEach(Action<Player*> foreachAction) {
 	m_PlayerList.Extension().ForEach(foreachAction);
 
 	if (m_pHost) {

@@ -20,7 +20,7 @@ using namespace JCore;
 
 
 void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
-	const auto pPacket = new Packet<UpdateFriendListAck>;
+	const auto pPacket = new StaticPacket<UpdateFriendListAck>;
 	UpdateFriendListAck* pUpdateFriendListAck = pPacket->Get<0>();
 
 	std::string query(250, '\0');
@@ -66,7 +66,7 @@ void SendFn::SendServerMessageSyn(Player* player, const String& message) {
 		return;
 	}
 
-	const auto pPacket = new Packet<ServerMessageSyn>;
+	const auto pPacket = new StaticPacket<ServerMessageSyn>;
 	ServerMessageSyn* pServerMessageSyn = pPacket->Get<0>();
 	strcpy_s(pServerMessageSyn->Message, MESSAGE_LEN, message.Source());
 	player->SendAsync(pPacket);
@@ -74,7 +74,7 @@ void SendFn::SendServerMessageSyn(Player* player, const String& message) {
 
 // 플레이어에게 방 정보 전송
 void SendFn::SendRoomInfoAck(Room* room, Player* player) {
-	const auto pPacket = new Packet<LoadRoomInfoAck>;
+	const auto pPacket = new StaticPacket<LoadRoomInfoAck>;
 	LoadRoomInfoAck* pLoadRoomInfoAck = pPacket->Get<0>();
 
 	if (room == nullptr) {
@@ -91,7 +91,7 @@ void SendFn::SendRoomInfoAck(Room* room, Player* player) {
 // LoadCharacterInfoAck 패킷 전달
 // 캐릭터 정보들을 클라한테 전달함
 void SendFn::SendLoadCharacterInfoAck(Player* player) {
-	const auto pPacket = new Packet<LoadCharacterInfoAck>;
+	const auto pPacket = new StaticPacket<LoadCharacterInfoAck>;
 	LoadCharacterInfoAck* pLoadCharacterInfoAck = pPacket->Get<0>();
 
 	const auto spQueryResult = _Database->Query("select * from t_character where c_account_uid = ? and c_channel_uid = ?", player->GetAccountUID(), player->GetChannelUID());
@@ -115,7 +115,7 @@ void SendFn::SendLoadCharacterInfoAck(Player* player) {
 
 
 void SendFn::SendUpdateCharacterInfoAck(Player* player) {
-	const auto pPacket = new Packet<UpdateCharacterInfoAck>;
+	const auto pPacket = new StaticPacket<UpdateCharacterInfoAck>;
 	UpdateCharacterInfoAck* pUpdateCharacterInfoAck = pPacket->Get<0>();
 
 	const auto spQueryResult = _Database->Query("select * from t_character where c_account_uid = ? and c_channel_uid = ? and c_uid = ?", 
@@ -142,7 +142,7 @@ void SendFn::SendUpdateCharacterInfoAck(Player* player) {
 }
 
 void SendFn::SendUpdateRoomListAck(Player* player, int channelUID) {
-	const auto pPacket = new Packet<UpdateRoomListAck>;
+	const auto pPacket = new StaticPacket<UpdateRoomListAck>;
 	UpdateRoomListAck* pUpdateRoomListAck = pPacket->Get<0>();
 	Channel* pChannel = _World->GetChannel(channelUID);
 	int iIndexer = 0;
@@ -169,7 +169,7 @@ void SendFn::SendUpdateRoomListAck(Player* player, int channelUID) {
 
 
 void SendFn::BroadcastUpdateRoomListAck(Channel* channel) {
-	const auto pPacket = new Packet<UpdateRoomListAck>;
+	const auto pPacket = new StaticPacket<UpdateRoomListAck>;
 	UpdateRoomListAck* pUpdateRoomListAck = pPacket->Get<0>();
 	int iIndexer = 0;
 	pUpdateRoomListAck->Result = true;
@@ -196,7 +196,7 @@ void SendFn::BroadcastUpdateRoomUserAck(Room* room, bool unsafe) {
 		return;
 	}
 
-	const auto pPacket = new Packet<UpdateRoomInfoAck>;
+	const auto pPacket = new StaticPacket<UpdateRoomInfoAck>;
 	UpdateRoomInfoAck* pUpdateRoomInfoAck = pPacket->Get<0>();
 	int iIndexer = 0;
 
@@ -225,7 +225,7 @@ void SendFn::BroadcastUpdateRoomUserAck(Room* room, bool unsafe) {
 
 
 void SendFn::SendRTTAck(Player* player, Int64U tick) {
-	const auto pPacket = new Packet<TcpRTTAck>;
+	const auto pPacket = new StaticPacket<TcpRTTAck>;
 	TcpRTTAck* pTcpRTTAck = pPacket->Get<0>();
 	pTcpRTTAck->Tick = tick;
 	player->SendAsync(pPacket);

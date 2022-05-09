@@ -226,21 +226,26 @@ rectangle Packet_Implementation {
 
     class Command<T>
 
-    interface IPacket {
-        virtual GetBuf() = 0
-        virtual GetPacketLength() = 0
-        virtual GetCommandCount() = 0
-        virtual GetWSABuf() = 0
-        virtual Release() { delete this; }
+    class RefCount
+    class ISendPacket {
+    }
+    class IRecvPacket {
+        패킷 수신시 캐스팅용
+    }
+    class StaticPacket<CommandArgs...> {
+        고정 길이의 커맨드들을 처리할 때 사용하는 패킷
     }
 
-    class PacketHeader<Types...>
-    class Packet<CommandArgs...>
+    class DynamicPacket<CommandArgs...> {
+        가변 길이의 커맨드들을 처리할 때 사용하는 패킷
+    }
 
     Command -u-|> ICommand
-    PacketHeader .u.|> IPacket
-    Packet -u-|> PacketHeader
-    Packet *-r-> ICommand
+    ISendPacket -u-|> RefCount
+    StaticPacket -u-|> ISendPacket
+    DynamicPacket -u-|> ISendPacket
+    DynamicPacket *-d-> ICommand
+    StaticPacket *-d-> ICommand
 }
 
 TcpClient -u-|> TcpSession

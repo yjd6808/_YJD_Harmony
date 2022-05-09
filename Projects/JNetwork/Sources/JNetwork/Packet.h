@@ -79,6 +79,7 @@ struct Command : ICommand
 };
 
 
+
 /*=====================================================================================
 								패킷 객체
 		1개 이상의 커맨드를 담아서 전송할 수 있도록한다.
@@ -118,6 +119,7 @@ protected:
 
 struct ISendPacket : JCore::RefCount
 {
+	ISendPacket() {}
 	ISendPacket(Int16U iCommandCount, Int16U iPacketLen)
 		: m_iCommandCount(iCommandCount)
 		, m_iPacketLen(iPacketLen) {
@@ -127,24 +129,7 @@ struct ISendPacket : JCore::RefCount
 
 	Int16U	GetPacketLength() const { return m_iPacketLen; }
 	Int16U	GetCommandCount() const { return m_iCommandCount; }
-	WSABUF	GetWSABuf() const { 
-		/*
-		
-		<---------------    Packet<Command<A>, Command<B>> ----------------------->
-		<------------------ ISendPacket ---------------- >
-		<-- RefCount--> <-------- IRecvPacket -----------> 
-		===========================================================================
-		 vfptr | m_Ref | m_iCommandCount | m_iPacketCount | Command<A> | Command<B>
-		===========================================================================
-	    ↑              ↑ <----------------- 전송해줘야하는 구간 ---------------------->
-	   this     this + sizeof(RefCount)
-
-		*/
-		WSABUF wsaBuf;
-		wsaBuf.len = PACKET_HEADER_SIZE + m_iPacketLen;
-		wsaBuf.buf = (char*)this + sizeof(JCore::RefCount);
-		return wsaBuf;
-	}
+	virtual WSABUF GetWSABuf() const = 0;
 protected:
 	Int16U m_iCommandCount{};
 	Int16U m_iPacketLen{};		// IPacket 크기를 제외한 커맨드들의 총 크기
@@ -153,21 +138,15 @@ protected:
 
 
 template <typename... CommandArgs>
-class Packet : public ISendPacket
+class StaticPacket : public ISendPacket
 {
-	// 커맨드는 최소 1개 이상 전달하도록 하자.
-	static_assert(sizeof...(CommandArgs) > 0, 
-		"... Packet must have one more command");		
+	static_assert(sizeof...(CommandArgs) > 0,  "... Packet must have one more command"); // 커맨드는 최소 1개 이상 전달하도록 하자.
+	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>,  "... CommandArgs must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
 
-	// 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
-	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>, 
-		"... CommandArgs must be derived type of \"ICommand\"");		
-
-	// 인자로 전달받은 커맨드 타입
 	template <int Index>
-	using TypeAt		= std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	
+	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // 인자로 전달받은 커맨드 타입
 public:
-	Packet() : ISendPacket(sizeof...(CommandArgs), (... + sizeof(CommandArgs))) {
+	StaticPacket() : ISendPacket(COMMAND_CNT, PACKET_LEN) {
 
 		// m_pBuf에 각 커맨드의 시작주소 마다 디폴트 초기화를 수행해준다.
 		// 예를들어서 Packet<Commant<A>, Command<B>> 패킷을 생성했다면
@@ -177,7 +156,25 @@ public:
 		PlacementDefaultAllocateRecursive<COMMAND_CNT - 1, CommandArgs...>();
 	}
 
-	~Packet() override {
+	~StaticPacket() override = default;
+
+	WSABUF GetWSABuf() const override {
+		/*
+
+		<---------------    Packet<Command<A>, Command<B>> ----------------------->
+		<------------------ ISendPacket ---------------- >
+		<-- RefCount--> <-------- IRecvPacket ----------->
+		===========================================================================
+		 vfptr | m_Ref | m_iCommandCount | m_iPacketCount | Command<A> | Command<B>
+		===========================================================================
+		↑              ↑ <----------------- 전송해줘야하는 구간 ---------------------->
+	   this     this + sizeof(RefCount)
+
+		*/
+		WSABUF wsaBuf;
+		wsaBuf.len = PACKET_HEADER_SIZE + m_iPacketLen;
+		wsaBuf.buf = (char*)this + sizeof(RefCount);
+		return wsaBuf;
 	}
 private:
 	template <int Index, typename Cmd, typename... CmdArgs>
@@ -203,10 +200,7 @@ public:
 	
 	template <int Index>
 	constexpr TypeAt<Index>* Get() {
-
-		static_assert(Index < sizeof...(CommandArgs), 
-			"... Index must be less than parameter pack count");
-
+		static_assert(Index < sizeof...(CommandArgs),  "... Index must be less than parameter pack count");
 		if constexpr (Index == 0) {
 			return (TypeAt<Index>*)m_pBuf;
 		} else {
@@ -218,6 +212,98 @@ private:
 	static constexpr int COMMAND_CNT = sizeof...(CommandArgs);
 
 	char m_pBuf[PACKET_LEN];
+};
+
+
+template <typename... CommandArgs>
+class DynamicPacket : public ISendPacket
+{
+	static_assert(sizeof...(CommandArgs) > 0, "... Packet must have one more command"); // 커맨드는 최소 1개 이상 전달하도록 하자.
+	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>, "... CommandArgs must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+
+	template <int Index>
+	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // 인자로 전달받은 커맨드 타입
+public:
+	template <typename... Ints>
+	DynamicPacket(Ints... sizes) : ISendPacket() {
+		static_assert(COMMAND_CNT == sizeof...(sizes), "... Invalid command size count");
+		const int iPacketLen = (... + sizes);
+		this->m_iPacketLen = iPacketLen;
+		this->m_iCommandCount = COMMAND_CNT;
+		this->m_pDynamicBuf = new char[PACKET_HEADER_SIZE + iPacketLen];
+
+		InitializeCommandLenRecursive<0>(sizes...);
+	}
+	~DynamicPacket() override {
+		DeleteArraySafe(m_pDynamicBuf);
+	}
+
+
+	WSABUF GetWSABuf() const override {
+		*(Int16U*)(m_pDynamicBuf + 0) = m_iCommandCount;
+		*(Int16U*)(m_pDynamicBuf + sizeof(Int16U)) = m_iPacketLen;
+
+		WSABUF wsaBuf;
+		wsaBuf.len = PACKET_HEADER_SIZE + m_iPacketLen;
+		wsaBuf.buf = m_pDynamicBuf;
+		return wsaBuf;
+	}
+
+	template <int Index, typename... Args>
+	void Construct(Args&&... args) {
+		static_assert(Index < COMMAND_CNT, "... Index must less then command count");
+		auto pCmd = ::new (CommandBuf() + CommandPos(Index)) TypeAt<Index>{ JCore::Forward<Args>(args)... };
+		pCmd->SetCommandLen(m_pCommandSizes[Index]);
+	}
+
+	template <int Index>
+	TypeAt<Index>* Get() {
+		static_assert(Index < COMMAND_CNT, "... Index must less then command count");
+		return reinterpret_cast<TypeAt<Index>*>(CommandBuf() + CommandPos(Index));
+	}
+private:
+	template <int Index>
+	void InitializeCommandLenRecursive(int size) {
+		m_pCommandSizes[Index] = size;
+		reinterpret_cast<TypeAt<Index>*>(CommandBuf() + CommandPos(Index))->SetCommandLen(size);
+	}
+
+	template <int Index, typename... Ints>
+	void InitializeCommandLenRecursive(int size, Ints... sizes) {
+		m_pCommandSizes[Index] = size;
+		reinterpret_cast<TypeAt<Index>*>(CommandBuf() + CommandPos(Index))->SetCommandLen(size);
+		InitializeCommandLenRecursive<Index + 1>(sizes...);
+	}
+
+	int CommandPos(const int idx) const {
+		if (idx == 0) {
+			return 0;
+		}
+
+		char* pCurBuf = CommandBuf();
+		int iCommandPos = 0;
+
+		for (int i = 1; i <= idx; ++i) {
+			const int iCurCommandLen = reinterpret_cast<ICommand*>(pCurBuf)->GetCommandLen();
+			iCommandPos += iCurCommandLen;
+			pCurBuf = pCurBuf + iCurCommandLen;
+		}
+
+		return iCommandPos;
+	}
+
+
+
+	char* CommandBuf() const {
+		return m_pDynamicBuf + PACKET_HEADER_SIZE; // m_pDynamicBuf의 상위 4바이트는 헤더로 사용하기 때문에
+	}
+
+	
+private:
+	static constexpr int COMMAND_CNT = sizeof...(CommandArgs);
+
+	int m_pCommandSizes[COMMAND_CNT]{};		// 각 커맨드 길이 임시 기록용
+	char* m_pDynamicBuf;
 };
 
 

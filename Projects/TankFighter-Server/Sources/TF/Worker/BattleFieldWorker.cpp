@@ -180,18 +180,20 @@ void BattleFieldWorker::ProcessBattleFieldRoutineForRoom(Room* room) {
 	// 배틀필드에 진입한 유저모두에 해당한다.
 	// 딜레이시마다 보내준다.
 	if (room->UnsafeIsBattleFieldState()) {
-		const auto pLocationPacket = new Packet<BattileFieldTankUpdateSyn>();
+
+		const int iRoomBattleStateUserCount = room->UnsafeGetRoomBattleStateUserCount();
+		const auto pLocationPacket = new DynamicPacket<BattileFieldTankUpdateSyn>(
+			BattileFieldTankUpdateSyn::CmdSizeOf(iRoomBattleStateUserCount)
+		);
+		pLocationPacket->Construct<0>(iRoomBattleStateUserCount);
 		BattileFieldTankUpdateSyn* pBattileFieldTankUpdateSyn = pLocationPacket->Get<0>();
 		int iIndexer = 0;
 		room->UnsafeForEach([&iIndexer, pBattileFieldTankUpdateSyn](Player* p) {
-
 			// 배틀필드에 있고 아직 사망상태가 아닌 경우
 			if (p->GetPlayerState() == PlayerState::RoomBattle && !p->IsDeath()) {
 				p->LoadMoveInfo(pBattileFieldTankUpdateSyn->Move[iIndexer++]);
 			}
-
 		});
-		pBattileFieldTankUpdateSyn->Count = iIndexer;
 		room->UnsafeBroadcastInBattle(pLocationPacket);
 	}
 
@@ -228,7 +230,7 @@ void BattleFieldWorker::ProcessRoomPlayWaitState(Room* room) {
 	if (room->m_iTimerTime <= 0) {
 		room->m_iTimerTime = BATTLE_FIELD_PLAYING_TIME;
 		room->m_eRoomState = RoomState::Playing;
-		const auto pPacket = new Packet<BattleFieldPlayWaitEndSyn>();
+		const auto pPacket = new StaticPacket<BattleFieldPlayWaitEndSyn>();
 		BattleFieldPlayWaitEndSyn* pBattleFieldPlayWaitEndSyn = pPacket->Get<0>();
 		pBattleFieldPlayWaitEndSyn->RoomState = room->m_eRoomState;
 		pBattleFieldPlayWaitEndSyn->LeftTime = BATTLE_FIELD_PLAYING_TIME;
@@ -245,7 +247,7 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 	// 게임이 진행중인 동안에만 전적 갱신을 일정 주기마다 해준다.
 	// 딜레이 4번 마다 한번씩 보내준다. (4:1)
 	if (m_iStatisticsUpdateDelayCount >= BATTLE_FIELD_STATISTICS_UPDATE_DELAY) {
-		const auto pBattleStatisticsPacket = new Packet<BattleFieldStatisticsUpdateSyn>();
+		const auto pBattleStatisticsPacket = new StaticPacket<BattleFieldStatisticsUpdateSyn>();
 		BattleFieldStatisticsUpdateSyn* pBattleFieldStatisticsUpdateSyn = pBattleStatisticsPacket->Get<0>();
 		int iRoomMemberCount = 0;
 		room->UnsafeForEach([&iRoomMemberCount, pBattleFieldStatisticsUpdateSyn](Player* p) {
@@ -267,7 +269,7 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 			
 			if (iLeftTime <= 0) {
 				p->SetDeath(false);
-				const auto pRevivalPacket = new Packet<BattleFieldRevivalSyn>();
+				const auto pRevivalPacket = new StaticPacket<BattleFieldRevivalSyn>();
 				BattleFieldRevivalSyn* pBattleFieldRevivalSyn = pRevivalPacket->Get<0>();
 
 				Random rand;
@@ -297,7 +299,7 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 		// 2. 승자/패자 정보를 확인하고 전달하고 DB에 기록한다.
 		room->m_iTimerTime = BATTLE_FIELD_ENDWAIT_TIME;
 		room->m_eRoomState = RoomState::EndWait;
-		const auto pPacket = new Packet<BattleFieldPlayingEndSyn>();
+		const auto pPacket = new StaticPacket<BattleFieldPlayingEndSyn>();
 		BattleFieldPlayingEndSyn* pBattleFieldPlayingEndSyn = pPacket->Get<0>();
 		pBattleFieldPlayingEndSyn->RoomState = room->m_eRoomState;
 		pBattleFieldPlayingEndSyn->LeftTime = BATTLE_FIELD_ENDWAIT_TIME;
@@ -354,7 +356,7 @@ void BattleFieldWorker::ProcessRoomEndWaitState(Room* room) {
 		room->UnsafeForEach([room](Player* p) {
 			p->InitializeRoomLobbyState(room->m_iRoomUID);
 		});
-		const auto pPacket = new Packet<BattleFieldEndWaitEndSyn>();
+		const auto pPacket = new StaticPacket<BattleFieldEndWaitEndSyn>();
 		BattleFieldEndWaitEndSyn* pBattleFieldPlayingEndSyn = pPacket->Get<0>();
 		pBattleFieldPlayingEndSyn->RoomState = room->m_eRoomState;
 		room->UnsafeBroadcast(pPacket);

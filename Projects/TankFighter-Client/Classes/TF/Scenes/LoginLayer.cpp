@@ -145,7 +145,7 @@ void LoginLayer::OnClickedLoginButton(TextButton* sender) {
 
 	if (IsAvailableIDPW(id) && IsAvailableIDPW(pw)) {
 
-		auto pPacket = new Packet<LoginSyn>();
+		auto pPacket = new StaticPacket<LoginSyn>();
 		LoginSyn* pCmdLoginSyn = pPacket->Get<0>();
 		strcpy_s(pCmdLoginSyn->Id, ID_LEN, id.Source());
 		strcpy_s(pCmdLoginSyn->Password, PASS_LEN, pw.Source());
@@ -173,7 +173,7 @@ void LoginLayer::OnClickedRegisterButton(TextButton* sender) {
 
 	if (IsAvailableIDPW(id) && IsAvailableIDPW(pw)) {
 
-		auto pPacket = new Packet<RegisterSyn>();
+		auto pPacket = new StaticPacket<RegisterSyn>();
 		RegisterSyn* pCmdRegisterSyn = pPacket->Get<0>();
 		strcpy_s(pCmdRegisterSyn->Id, ID_LEN, id.Source());
 		strcpy_s(pCmdRegisterSyn->Password, PASS_LEN, pw.Source());

@@ -78,6 +78,8 @@ namespace JNetwork {
 			return false;
 		}
 
+		// https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
+		// AcceptEx 사용시 리슨 소켓을 IOCP와 연결해줘야 클라이언트 접속을 통보받을 수 있다.
 		if (m_pIocp->Connect(reinterpret_cast<HANDLE>(m_ServerSocket.Handle()), NULL) == false) {
 			Winsock::AssertWinsockMessage("서버소켓을 IOCP에 연결하는데 실패하였습니다.");
 			return false;
