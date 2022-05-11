@@ -8,7 +8,10 @@
 #pragma warning ( disable : 4244 )
 
 #include <random>
+
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
 #include <mutex>
 
 #include <TF/Util/Console.h>

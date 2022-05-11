@@ -1,3 +1,4 @@
+#include <JCore/LockGuard.h>
 #include <JNetwork/Network.h>	// 1. JCore.lib 링크
 								// 2. Mswsock.lib 링크
 								// 3. ws2_32.lib 링크

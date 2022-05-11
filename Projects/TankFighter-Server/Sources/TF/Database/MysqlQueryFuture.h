@@ -14,6 +14,8 @@
 #include <TF/Database/StatementType.h>
 #include <JCore/RefCount.h>
 #include <JCore/Functional.h>
+
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 // ReSharper disable CppPossiblyUninitializedMember

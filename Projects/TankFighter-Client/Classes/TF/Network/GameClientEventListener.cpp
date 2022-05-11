@@ -32,16 +32,19 @@ void GameClientEventListener::OnDisconnected() {
 	// 결국 Command Lock 필요하겠네.. 수정해야할 것같다.
 	// 완성하고 시간남으면 ㄱ
 	// => 수정완료
-	CriticalSectionLockGuard guard(m_CommandQueueMtx);
 
-	// 이게 내가 선택지가 2개다.
-	// 1. 강종됬을 때 큐에 커맨드들이 있을 때 이게 모두 처리될때까지 기다리든지
-	// 2. 처리하지 않고 그냥 큐에 담긴 모든 커맨드들을 삭제한다.
-	while (!m_CommandQueue.IsEmpty()) {
-		char* pCmd = m_CommandQueue.Front();
-		m_CommandQueue.Dequeue();
+	{
+		CriticalSectionLockGuard guard(m_CommandQueueMtx);
 
-		DeleteArraySafe(pCmd);
+		// 이게 내가 선택지가 2개다.
+		// 1. 강종됬을 때 큐에 커맨드들이 있을 때 이게 모두 처리될때까지 기다리든지
+		// 2. 처리하지 않고 그냥 큐에 담긴 모든 커맨드들을 삭제한다. (이걸로 함)
+		while (!m_CommandQueue.IsEmpty()) {
+			char* pCmd = m_CommandQueue.Front();
+			m_CommandQueue.Dequeue();
+
+			DeleteArraySafe(pCmd);
+		}
 	}
 
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread(
@@ -71,7 +74,6 @@ void GameClientEventListener::OnReceived(ICommand* cmd) {
 	// 커맨드는 클라이언트의 ReceiveBuffer의 일부로 사용중이므로
 	// 코코스 쓰레드에서 받는 중에 해당 메모리가 덮어쒸워질 우려가 있다.
 	// 락을 사용해주거나 동적할당한 데이터를 넘겨주는 식으로 처리해야할 것으로보인다.
-	// m_CommandQueueMtx.Lock();
 	int iNewAllocCapacity = cmd->GetCommandLen();
 	char* pNewAlloc = new char[iNewAllocCapacity];
 	Memory::Copy(pNewAlloc, iNewAllocCapacity, cmd, iNewAllocCapacity);
@@ -95,7 +97,6 @@ void GameClientEventListener::OnReceived(ICommand* cmd) {
  * Cocos 쓰레드에서 돌아감
  */
 void GameClientEventListener::SynchronizedOnReceived() {
-	// m_CommandQueueMtx.Unlock();
 	char* pNewAlloc = nullptr;
 
 	{
