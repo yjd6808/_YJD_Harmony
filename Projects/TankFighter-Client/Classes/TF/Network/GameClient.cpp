@@ -1,5 +1,3 @@
-#define _WINSOCKAPI_
-
 #include <TF/Network/GameClient.h>
 #include <Common/Enum.h>
 

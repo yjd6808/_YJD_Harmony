@@ -1,5 +1,3 @@
-#define _WINSOCKAPI_
-
 #include "AppDelegate.h"
 #include <TF/Scenes/LoginScene.h>
 #include <TF/Network/GameClient.h>

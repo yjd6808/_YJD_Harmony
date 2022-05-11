@@ -4,14 +4,14 @@
  *  
  */
 
-#define _WINSOCKAPI_
-
 #include <TF/Network/GameClientEventListener.h>
 #include <TF/Scenes/SynchronizedScene.h>
 #include <TF/AppDelegate.h>
 
 #include <TF/Scenes/LoginScene.h>
 #include <TF/UI/PopUp.h>
+
+#include <JCore/AutoObject.h>
 
 #include <cocos2d.h>
 
@@ -31,8 +31,19 @@ void GameClientEventListener::OnDisconnected() {
 	// 서버 강제로 끊기면 여기서 릭 생길 수 잇는데..
 	// 결국 Command Lock 필요하겠네.. 수정해야할 것같다.
 	// 완성하고 시간남으면 ㄱ
+	// => 수정완료
+	CriticalSectionLockGuard guard(m_CommandQueueMtx);
 
-	m_CommandQueue.Clear();
+	// 이게 내가 선택지가 2개다.
+	// 1. 강종됬을 때 큐에 커맨드들이 있을 때 이게 모두 처리될때까지 기다리든지
+	// 2. 처리하지 않고 그냥 큐에 담긴 모든 커맨드들을 삭제한다.
+	while (!m_CommandQueue.IsEmpty()) {
+		char* pCmd = m_CommandQueue.Front();
+		m_CommandQueue.Dequeue();
+
+		DeleteArraySafe(pCmd);
+	}
+
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread(
 		CC_CALLBACK_0(GameClientEventListener::SynchronizedOnDisconnected, this)
 	);
@@ -66,8 +77,12 @@ void GameClientEventListener::OnReceived(ICommand* cmd) {
 	Memory::Copy(pNewAlloc, iNewAllocCapacity, cmd, iNewAllocCapacity);
 
 	// 커맨드를 전달할 방법이 없으므로 큐에 담아서 동기화된 쓰레드에서 빼도록 해준다.
-	m_CommandQueue.Enqueue(pNewAlloc);
 
+	{
+		CriticalSectionLockGuard guard(m_CommandQueueMtx);
+		m_CommandQueue.Enqueue(pNewAlloc);
+	}
+	
 	// 인자를 전달할 수 없는 std::functin<void()> 타입이므로 동기화 큐에 커맨드를 넣어준 후 빼주는 식으로 해야한다.
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread(
 		CC_CALLBACK_0(GameClientEventListener::SynchronizedOnReceived, this)
@@ -81,9 +96,22 @@ void GameClientEventListener::OnReceived(ICommand* cmd) {
  */
 void GameClientEventListener::SynchronizedOnReceived() {
 	// m_CommandQueueMtx.Unlock();
-	char* pNewAlloc =  m_CommandQueue.Front();
+	char* pNewAlloc = nullptr;
+
+	{
+		CriticalSectionLockGuard guard(m_CommandQueueMtx);
+
+		// 함수 실행중 갑자기 서버가 닫혀서 커맨드 큐가 모두 비어버리게 될 수 있다.
+		if (m_CommandQueue.IsEmpty())
+			return;
+
+		pNewAlloc = m_CommandQueue.Front();
+		m_CommandQueue.Dequeue();
+	}
+
+	// 명령 수행 후 삭제를 해주도록 하자.
+	AutoPointer<char> autoDelete(pNewAlloc, Deletor<char[]>());		
 	ICommand* pCmd = reinterpret_cast<ICommand*>(pNewAlloc);
-	m_CommandQueue.Dequeue();
 
 	// 현재 실행중인 씬을 가져온다.
 	Scene* runningScene = Director::getInstance()->getRunningScene();
@@ -104,10 +132,6 @@ void GameClientEventListener::SynchronizedOnReceived() {
 
 	if (synchronizedScene != nullptr)
 		synchronizedScene->SynchronizedOnReceived(pCmd);
-
-
-	// 명령을 수행하고 삭제해주도록 하자.
-	DeleteArraySafe(pNewAlloc);
 }
 
 void GameClientEventListener::SynchronizedOnDisconnected() {

@@ -5,9 +5,6 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 
-#include <MSWSock.h>
-
-
 namespace JNetwork {
 
 	bool Winsock::ms_bFinalized = false;

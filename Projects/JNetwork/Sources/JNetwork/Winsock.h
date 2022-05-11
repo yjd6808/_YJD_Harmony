@@ -8,6 +8,7 @@
 #include <JCore/String.h>
 #include <JCore/StringUtil.h>
 #include <JCore/LockGuard.h>
+#include <WinSock2.h>
 
 #include <iostream>
 

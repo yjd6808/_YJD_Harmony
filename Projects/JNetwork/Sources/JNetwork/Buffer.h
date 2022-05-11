@@ -4,8 +4,6 @@
 
 #pragma once
 
-#define _WINSOCKAPI_	// winsock.h 연속 include 방지
-
 #include <JCore/Memory.h>
 #include <JCore/Math.h>
 

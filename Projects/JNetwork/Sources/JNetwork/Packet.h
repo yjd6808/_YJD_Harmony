@@ -161,7 +161,7 @@ public:
 	WSABUF GetWSABuf() const override {
 		/*
 
-		<---------------    Packet<Command<A>, Command<B>> ----------------------->
+		<---------------    StaticPacket<Command<A>, Command<B>> ----------------------->
 		<------------------ ISendPacket ---------------- >
 		<-- RefCount--> <-------- IRecvPacket ----------->
 		===========================================================================
@@ -240,6 +240,7 @@ public:
 
 
 	WSABUF GetWSABuf() const override {
+		// 패킷 상위 4바이트는 패킷 헤더로 사용한다.
 		*(Int16U*)(m_pDynamicBuf + 0) = m_iCommandCount;
 		*(Int16U*)(m_pDynamicBuf + sizeof(Int16U)) = m_iPacketLen;
 
@@ -306,38 +307,5 @@ private:
 	char* m_pDynamicBuf;
 };
 
-
-/*
-template <typename Cmd>
-class DynamicSinglePacket : public JCore::RefCount
-{
-public:
-	DynamicSinglePacket(int packetLen) {
-		m_pBuf = new char[packetLen + PACKET_HEADER_SIZE];
-
-		*reinterpret_cast<Int16U*>(m_pBuf	+ 0				) = 1;
-		*reinterpret_cast<Int16U*>(m_pBuf	+ sizeof(Int16U)) = packetLen;
-
-		:: new (Get()) Cmd();
-	}
-
-	~DynamicSinglePacket() override { delete[] m_pBuf; }
-
-	
-
-	Cmd* Get() {
-		return reinterpret_cast<Cmd*>(m_pBuf + PACKET_HEADER_SIZE);
-	}
-
-	WSABUF GetWSABuf() {
-		WSABUF wsaBuf;
-		wsaBuf.len = PACKET_HEADER_SIZE + m_iPacketLen;
-		wsaBuf.buf = m_pBuf;
-		return wsaBuf;
-	}
-	
-	char* m_pBuf;
-};
-*/
 
 } // namespace JNetwork

@@ -16,7 +16,8 @@ protected:
 	void SynchronizedOnReceived();
 	void SynchronizedOnDisconnected();
 private:
-	// JCore::CriticalSectionMutex m_CommandQueueMtx;
+	JCore::CriticalSectionMutex m_CommandQueueMtx;
 	JCore::ArrayQueue<char*> m_CommandQueue;
+	//std::atomic<int> m_iPendingCommandCount;
 };
 

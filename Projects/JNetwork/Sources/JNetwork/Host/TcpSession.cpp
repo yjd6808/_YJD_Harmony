@@ -9,8 +9,6 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedReceive.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
 
-#include <MSWSock.h>
-
 #include <JCore/LockGuard.h>
 
 using namespace JCore;

@@ -3,9 +3,8 @@
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/TcpServer.h>
 
-#define _WINSOCKAPI_
-
 #include <JCore/LockGuard.h>
+#include <JCore/Time.h>
 
 using namespace JCore;
 using namespace JNetwork;
@@ -30,9 +29,9 @@ struct DynamicMessage : ICommand
 		this->Length = len;
 		this->Cmd = CMD_DYNAMIC_MESSAGE;
 
-		char* g = Chat;
-		memcpy_s(g, len, msg, len);
-		Chat[len] = NULL;
+		char* pChat = Chat;
+		memcpy_s(pChat, len, msg, len);
+		pChat[len] = NULL;
 	}
 
 	static int CmdSizeOf(int len) {
@@ -108,7 +107,6 @@ protected:
 		Winsock::Message("[서버] 종료되었습니다.");
 	}
 };
-
 
 
 int main() {

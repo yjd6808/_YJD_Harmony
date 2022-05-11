@@ -1,11 +1,8 @@
-#define _WINSOCKAPI_			// Winsock.h include 规瘤
-
-#include <JCore/LockGuard.h>
-
 #include <JNetwork/Network.h>	// 1. JCore.lib 傅农
 								// 2. Mswsock.lib 傅农
 								// 3. ws2_32.lib 傅农
 
+#include <JCore/LockGuard.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/TcpClient.h>
 
@@ -32,9 +29,9 @@ struct DynamicMessage : ICommand
 		this->Length = len;
 		this->Cmd = CMD_DYNAMIC_MESSAGE;
 
-		char* g = Chat;
-		memcpy_s(g, len, msg, len);
-		Chat[len] = NULL;
+		char* pChat = Chat;
+		memcpy_s(pChat, len, msg, len);
+		pChat[len] = NULL;
 	}
 
 	static int CmdSizeOf(int len) {
