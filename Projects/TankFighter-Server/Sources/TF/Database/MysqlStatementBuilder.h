@@ -149,8 +149,6 @@ public:
 		for (int i = 1; i <= argCount; i++)
 			argMap.Insert(i, "");
 
-		
-		
 		if constexpr (sizeof...(Args) > 0) {
 			// 각 필드별로 맞는 타입 세팅
 			// 1번째 부터 재귀적으로 세팅해나간다.
@@ -163,8 +161,7 @@ public:
 		// 빌드 진행
 		int iNextOffset = 0;
 		for (int i = 1; i <= argMap.Size(); i++) {
-			iNextOffset = statement.Find(iNextOffset, "?");
-			iNextOffset = statement.Replace(iNextOffset, 1, argMap[i]);
+			iNextOffset = statement.Replace(iNextOffset, "?", argMap[i]);
 		}
 
 		return statement;

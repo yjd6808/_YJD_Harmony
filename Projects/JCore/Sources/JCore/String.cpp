@@ -403,12 +403,14 @@ int String::Count(const int startIdx, const int endIdx, const char* str) const {
 	ThrowIfNotInitialized();
 	ThrowIfInvalidRangeIndex(startIdx, endIdx);
 
+	const int iStrLen = StringUtil::Length(str);
+
 	int iOffset = 0;
 	int iCount = 0;
 
 	while (iOffset <= endIdx && (iOffset = Find(iOffset, endIdx, str)) != -1) {
 		iCount++;
-		iOffset++;
+		iOffset += iStrLen;
 	}
 	return iCount;
 }
@@ -464,8 +466,16 @@ int String::Replace(int offset, int len, const String& to) {
 	}
 
 	m_pBuffer[m_iLen] = NULL;
+	const int iNextOffset = offset + to.Length();
+	return iNextOffset >= m_iLen ? -1 : iNextOffset;	// 다음 포지션 반환
+}
 
-	return offset + to.Length();
+int String::Replace(int offset, const char* from, const String& to) {
+	return Replace(Find(offset, from), StringUtil::Length(from), to);
+}
+
+int String::Replace(int offset, const String& from, const String& to) {
+	return Replace(Find(offset, from), from.Length(), to);
 }
 
 bool String::Contain(const char* str) const {
@@ -510,45 +520,10 @@ void String::ReplaceAll(const char* from, const char* to) {
 		return;
 	}
 
-	std::vector<int> iFindOffsets = FindAll(from);
-	const int iToLen = StringUtil::Length(to);
-
-	if (iFindOffsets.empty()) {
-		return;
+	int iReplaceOffset = 0;
+	while ((iReplaceOffset = Replace(iReplaceOffset, from, to)) != -1) {
+		// EMPTY
 	}
-
-	// 길이가 같을 경우 그냥 바꾸면 된다.
-	if (iFromLen == iToLen) {
-		ReplaceAllWithEqualLen(to, iFromLen, iFindOffsets);
-		return;
-	}
-
-	ReplaceAllWithDifferentLen(from, to, iFromLen, iToLen);
-}
-
-void String::ReplaceAllWithEqualLen(const char* to, const int len, std::vector<int>& offsets) const {
-	for (int i = 0; i < offsets.size(); i++) {
-		Memory::CopyUnsafe(&m_pBuffer[offsets[i]], to, len);
-	}
-}
-
-void String::ReplaceAllWithDifferentLen(const char* from, const char* to, const int fromLen, const int toLen) {
-	const std::vector<String> vecTokens = Split(from, true);
-
-	const int iExceededSize = toLen * vecTokens.size() - fromLen * vecTokens.size();		// 추가로 확장되어야할 버퍼 크기
-	const int iExpectedCapaity = iExceededSize + m_iLen + 1;
-
-	if (iExpectedCapaity > m_iCapacity) {
-		Initialize(iExpectedCapaity + DEFAULT_BUFFER_SIZE);
-	}
-
-	m_iLen = 0;
-
-	for (size_t i = 0; i < vecTokens.size() - 1; i++) {
-		Append(vecTokens[i]);
-		Append(to);
-	}
-	Append(vecTokens[vecTokens.size() - 1]);
 }
 
 void String::SetAt(const int idx, const char ch) {

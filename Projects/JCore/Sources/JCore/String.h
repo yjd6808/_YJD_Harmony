@@ -84,12 +84,20 @@ public:
 
 	int Replace(const char* from, const String& to);
 	int Replace(const String& from, const String& to);
-	int Replace(int offset, int len, const String& to);				// offset 인덱스에서 len길이만큼 to문자열로 변경 후 offset + len을 반환
+
+	// offset 인덱스에서 len길이만큼 to문자열로 변경 후 offset + len(이후 위치)을 반환
+	// from을 찾지 못했거나 마지막 위치에 도달한 경우 -1을 반환
+	int Replace(int offset, int len, const String& to);
+
+	// offset 인덱스부터 from을 찾아서 to로 바꿈
+	int Replace(int offset, const char* from, const String& to);	
+	int Replace(int offset, const String& from, const String& to);
+	void ReplaceAll(const char* from, const char* to);
 
 	bool Contain(const char* str) const;
 	bool Contain(const String& str) const;
 	void Format(const char* format, ...);
-	void ReplaceAll(const char* from, const char* to);
+	
 	void SetAt(const int idx, const char ch);
 	char& GetAt(const int idx);
 	String GetRange(const int startIdx, const int endIdx) const;
@@ -150,9 +158,6 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const String& src);
 private:
-	void ReplaceAllWithEqualLen(const char* to, const int fromLen, std::vector<int>& offsets) const;
-	void ReplaceAllWithDifferentLen(const char* from, const char* to, const int fromLen, const int toLen);
-
 	void ThrowIfInvalidRangeIndex(const int startIdx, const int endIdx) const;
 	void ThrowIfNotInitialized() const;
 	void ThrowIfInvalidIndex(const int idx) const;

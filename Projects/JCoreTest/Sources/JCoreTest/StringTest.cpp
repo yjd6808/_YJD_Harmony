@@ -308,6 +308,14 @@ TEST(StringTest, Count) {
 	EXPECT_TRUE(szSource.Count("3") == 2);
 	EXPECT_TRUE(szSource.Count("4") == 2);
 	EXPECT_TRUE(szSource.Count("5") == 1);
+
+	szSource = "aabbcc";
+	EXPECT_TRUE(szSource.Count("a") == 2);
+	EXPECT_TRUE(szSource.Count("b") == 2);
+	EXPECT_TRUE(szSource.Count("c") == 2);
+
+	szSource = "a";
+	EXPECT_TRUE(szSource.Count("a") == 1);
 }
 
 TEST(StringTest, Insert) {
@@ -337,7 +345,7 @@ TEST(StringTest, Replace) {
 	// 빈 문자열로 바꾸는 경우
 	int ret = szSource.Replace("a", "");
 	EXPECT_TRUE(szSource == "");
-	EXPECT_TRUE(ret == 0);
+	EXPECT_TRUE(ret == -1);	// 마지막 위치에 도달해서 -1을 반환
 
 
 	// 맨 앞에서 긴 문자열로 바꾸는 경우
@@ -349,7 +357,7 @@ TEST(StringTest, Replace) {
 	// 맨뒤에서 긴 문자열로 바꾸는 경우
 	ret = szSource.Replace("dd", "zzzz");
 	EXPECT_TRUE(szSource == "zzzzbczzzz");
-	EXPECT_TRUE(ret == 10);
+	EXPECT_TRUE(ret == -1);	// 마지막 위치에 도달해서 -1 반환
 
 	// 중간에서 긴 문자열로 바꾸는 경우
 	ret = szSource.Replace("bc", "zzzz");
@@ -386,6 +394,42 @@ TEST(StringTest, Replace) {
 	// 맨뒤에서 짧은 길이로 치환
 	szSource.Replace("cc", "c");
 	EXPECT_TRUE(szSource == "abc");
+
+
+	// 반복 Replace 테스트
+	int iReplaceOffset = 0;
+	int iReplaceCount = 0;
+	szSource = "aaaaaaaa";
+
+	while ((iReplaceOffset = szSource.Replace(iReplaceOffset, "a", "b")) != -1) {
+		iReplaceCount++;
+	}
+	EXPECT_TRUE(szSource == "bbbbbbbb");
+	EXPECT_TRUE(iReplaceCount == 7);	// 한번은 카운트 안되서 7로 뜸
+
+
+	szSource = "aaaaaaaa";
+	iReplaceOffset = 0;
+	iReplaceCount = 0;
+
+	// 길게 반복 Replace
+	while ((iReplaceOffset = szSource.Replace(iReplaceOffset, "a", "cc")) != -1) {
+		iReplaceCount++;
+	}
+
+	EXPECT_TRUE(szSource == "cccccccccccccccc");
+	EXPECT_TRUE(iReplaceCount == 7);	// 한번은 카운트 안되서 7로 뜸
+
+	iReplaceOffset = 0;
+	iReplaceCount = 0;
+
+	// 짧게 반복 Replace
+	while ((iReplaceOffset = szSource.Replace(iReplaceOffset, "cc", "a")) != -1) {
+		iReplaceCount++;
+	}
+
+	EXPECT_TRUE(szSource == "aaaaaaaa");
+	EXPECT_TRUE(iReplaceCount == 7);	// 한번은 카운트 안되서 7로 뜸
 }
 
 TEST(StringTest, Clear) {
