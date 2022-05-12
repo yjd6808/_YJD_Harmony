@@ -10,9 +10,9 @@
 #include <map>
 #include <string>
 #include <sstream>
-#include <mysql.h>
 
 #include <JCore/Time.h>
+#include <JCore/Container/HashMap.h>
 
 #include <TF/Util/Console.h>
 #include <TF/Database/MysqlConnection.h>
@@ -27,7 +27,7 @@
 
 class MysqlStatementBuilder
 {
-	using TFieldMap = std::map<int, std::string>;
+	using TFieldMap = JCore::HashMap<int, JCore::String>;
 private:
 
 	// 각각에 추가하고 싶은 인자 있을때마다 템플릿 특수화 해줄 것
@@ -39,10 +39,7 @@ private:
 	struct Setter<const char[Size]>
 	{
 		void operator()(TFieldMap& refArgMap, int idx, const char(str)[Size]) const {
-			std::stringstream ss;
-			const JCore::String escapedValue = MysqlStatementBuilder::ms_pConn->EscapeString(JCore::String(str));
-			ss << "\"" << escapedValue << "\"";
-			refArgMap[idx] = ss.str();
+			refArgMap[idx] = MysqlStatementBuilder::ms_pConn->EscapeString(JCore::String(str));
 		}
 	};
 
@@ -50,21 +47,15 @@ private:
 	struct Setter<char[Size]>
 	{
 		void operator()(TFieldMap& refArgMap, int idx, char(str)[Size]) const {
-			std::stringstream ss;
-			const JCore::String escapedValue = MysqlStatementBuilder::ms_pConn->EscapeString(JCore::String(str));
-			ss << "\"" << escapedValue << "\"";
-			refArgMap[idx] = ss.str();
+			refArgMap[idx] = MysqlStatementBuilder::ms_pConn->EscapeString(JCore::String(str));
 		}
 	};
 
 	template <>
 	struct Setter<const char*>
 	{
-		void operator()(TFieldMap& refArgMap, int idx, const char* val) const {
-			std::stringstream ss;
-			const JCore::String escapedValue = MysqlStatementBuilder::ms_pConn->EscapeString(JCore::String(val));
-			ss << "\"" << escapedValue << "\"";
-			refArgMap[idx] = ss.str();
+		void operator()(TFieldMap& refArgMap, int idx, const char* str) const {
+			refArgMap[idx] = MysqlStatementBuilder::ms_pConn->EscapeString(JCore::String(str));
 		}
 	};
 
@@ -72,9 +63,7 @@ private:
 	struct Setter<Int64>
 	{
 		void operator()(TFieldMap& refArgMap, int idx, const Int64 val) const {
-			std::stringstream ss;
-			ss << val;
-			refArgMap[idx] = ss.str();
+			refArgMap[idx] = val;
 		}
 	};
 
@@ -82,10 +71,11 @@ private:
 	struct Setter<JCore::String>
 	{
 		void operator()(TFieldMap& refArgMap , int idx, const JCore::String& val) const {
-			std::stringstream ss;
-			const JCore::String escapedValue = MysqlStatementBuilder::ms_pConn->EscapeString(val);
-			ss << "\"" << escapedValue << "\"";
-			refArgMap[idx] = ss.str();
+			refArgMap[idx] = MysqlStatementBuilder::ms_pConn->EscapeString(val);
+		}
+
+		void operator()(TFieldMap& refArgMap, int idx, JCore::String&& val) const {
+			refArgMap[idx] = Move(MysqlStatementBuilder::ms_pConn->EscapeString(val));
 		}
 	};
 
@@ -93,9 +83,7 @@ private:
 	struct Setter<double>
 	{
 		void operator()(TFieldMap& refArgMap , int idx, const double& val) const {
-			std::stringstream ss;
-			ss << val;
-			refArgMap[idx] = ss.str();
+			refArgMap[idx] = val;
 		}
 	};
 
@@ -104,9 +92,7 @@ private:
 	struct Setter<int>
 	{
 		void operator()(TFieldMap& refArgMap, int idx, const int& val) const {
-			std::stringstream ss;
-			ss << val;
-			refArgMap[idx] = ss.str();
+			refArgMap[idx] = val;
 		}
 	};
 
@@ -147,21 +133,21 @@ private:
 public:
 
 	template <typename... Args>
-	constexpr static JCore::String Build(std::string statement, Args&&... args) {
+	constexpr static JCore::String Build(JCore::String statement, Args&&... args) {
 		if (ms_pConn == nullptr) {
 			DebugAssert(false, "우선 빌더의 Initailize를 호출해주세요");
 			return "";
 		}
 
 		TFieldMap argMap;
-		const int argCount = std::count(statement.begin(), statement.end(), '?');
+		const int argCount = statement.Count("?");
 
 		if (argCount != sizeof...(args))
 			return "";
 
 		// 필드 수만큼 할당
 		for (int i = 1; i <= argCount; i++)
-			argMap.insert(std::pair<int, std::string>(i, ""));
+			argMap.Insert(i, "");
 
 		
 		
@@ -170,15 +156,15 @@ public:
 			// 1번째 부터 재귀적으로 세팅해나간다.
 			Set(argMap, 1, JCore::Forward<Args>(args)...);	
 		} else {
-			// 컴파일타임 리턴 - 수정해줄 값이 없을 경우 걍 바로 끝내도록 하자.
+			// 컴파일타임에 리턴 상태가 결정댐 - 수정해줄 값이 없을 경우 걍 바로 끝내도록 하자.
 			return statement;
 		}
 		
 		// 빌드 진행
-		for (unsigned int i = 1; i <= argMap.size(); i++) {
-			const int iLastFoundPos = statement.find('?');
-			statement.replace(iLastFoundPos, 1, "");
-			statement.insert(iLastFoundPos, argMap[i]);
+		int iNextOffset = 0;
+		for (int i = 1; i <= argMap.Size(); i++) {
+			iNextOffset = statement.Find(iNextOffset, "?");
+			iNextOffset = statement.Replace(iNextOffset, 1, argMap[i]);
 		}
 
 		return statement;

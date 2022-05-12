@@ -19,9 +19,10 @@ struct Tuple;
 class String final
 {
 public:
-	static const int DEFAULT_BUFFER_SIZE;
-	static const float EXPANDING_FACTOR;
-	static const char* EMPTY;
+	
+	inline static const int DEFAULT_BUFFER_SIZE = 32;	// 초기 버퍼의 크기
+	inline static const int EXPANDING_FACTOR = 2;		// 더해준 문자열과 기존 문자열의 길이를 합쳤을 때 용량을 초과할 경우 배열 크기를 몇배 확장시켜줄지
+	inline static const char* EMPTY = "";
 
 	String();
 	String(const int capacity);
@@ -32,12 +33,12 @@ public:
 	String(String&& str) noexcept;
 	~String();
 public:
-	inline char* Source() const { return m_pBuffer; }
-	inline const int Capacity() const { return m_iCapacity; }
-	inline const int Length() const { return m_iLen; }
-	inline const bool Empty() const { return m_iLen == 0; }
-	inline bool IsValidIndex(const int idx) const { return idx >= 0 || idx < m_iLen; }
-	inline bool IsValidIndexRange(const int startIdx, const int endIdx) const {
+	char* Source() const { return m_pBuffer; }
+	int Capacity() const { return m_iCapacity; }
+	int Length() const { return m_iLen; }
+	bool Empty() const { return m_iLen == 0; }
+	bool IsValidIndex(const int idx) const { return idx >= 0 || idx < m_iLen; }
+	bool IsValidIndexRange(const int startIdx, const int endIdx) const {
 		return startIdx <= endIdx && startIdx >= 0 && endIdx < m_iLen;
 	}
 public:
@@ -51,28 +52,46 @@ public:
 	void Append(const char* str);
 	void Append(const std::string& str);
 	void Append(const String& str);
-	void Append(const String&& str);
-	
+	void Append(String&& str);
+
+	void Insert(const int idx, const char* str);
+	void Insert(const int idx, const String& str);
 
 	void Resize(const int capacity);
+	void ResizeIfNeeded(int len);		// len이 m_iCapcity 이상일 경우에 x2해서 확장
+
 	int Compare(const String& str) const;
 	int Compare(const char* str, const int strLen = -1) const;
 	std::vector<int> FindAll(int startIdx, int endIdx, const char* str) const;
 	std::vector<int> FindAll(const char* str) const;
 	std::vector<int> FindAll(const String& str) const;
 	int Find(int startIdx, int endIdx, const char* str) const;
+	int Find(int startIdx, const char* str) const;
+	int Find(int startIdx, const String& str) const;
 	int Find(const char* str) const;
 	int Find(const String& str) const;
 	int FindReverse(int startIdx, int endIdx, const char* str) const;
 	int FindReverse(const String& str) const;
 	int FindReverse(const char* str) const;
 
+	void Clear();
+	void Clear(int offset, int len);		// offset 인덱스에서 len만큼 없앰
+
+	int Count(const char* str) const;
+	int Count(const String& val) const;
+	int Count(const int startIdx, const int endIdx, const char* str) const;
+	int Count(const int startIdx, const int endIdx, const String& val) const;
+
+	int Replace(const char* from, const String& to);
+	int Replace(const String& from, const String& to);
+	int Replace(int offset, int len, const String& to);				// offset 인덱스에서 len길이만큼 to문자열로 변경 후 offset + len을 반환
+
 	bool Contain(const char* str) const;
 	bool Contain(const String& str) const;
 	void Format(const char* format, ...);
 	void ReplaceAll(const char* from, const char* to);
-	void SetAt(const int idx, const char ch) const;
-	const char GetAt(const int idx) const;
+	void SetAt(const int idx, const char ch);
+	char& GetAt(const int idx);
 	String GetRange(const int startIdx, const int endIdx) const;
 
 	// 동적할당된 문자열, 길이, 할당된 크기를 반환한다.
@@ -91,6 +110,7 @@ public:
 		temp.Append(other);
 		return temp;
 	}
+
 	String operator+(const String& other) const;
 	String operator+(const char ch) const;
 	String operator+(const char* str) const;
@@ -100,6 +120,16 @@ public:
 	String& operator+=(const String& other);
 	String& operator+=(const char ch);
 	String& operator+=(const char* str);
+
+	template <typename T>
+	String& operator=(const T& other) {
+		if (m_pBuffer == nullptr)
+			Initialize();
+
+		Clear();
+		Append(other);
+		return *this;
+	}
 
 	String& operator=(const String& other);
 	String& operator=(String&& other) noexcept;
@@ -122,7 +152,10 @@ public:
 private:
 	void ReplaceAllWithEqualLen(const char* to, const int fromLen, std::vector<int>& offsets) const;
 	void ReplaceAllWithDifferentLen(const char* from, const char* to, const int fromLen, const int toLen);
-		
+
+	void ThrowIfInvalidRangeIndex(const int startIdx, const int endIdx) const;
+	void ThrowIfNotInitialized() const;
+	void ThrowIfInvalidIndex(const int idx) const;
 private:
 	char* m_pBuffer{};
 	int m_iLen{};
@@ -130,7 +163,6 @@ private:
 	
 	friend class StringUtil;
 };
-
 
 
 } // namespace JCore

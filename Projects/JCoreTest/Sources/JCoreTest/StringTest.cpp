@@ -296,6 +296,115 @@ TEST(StringTest, FindReverse) {
 
 }
 
+TEST(StringTest, Count) {
+	String szSource = " ";
+	EXPECT_TRUE(szSource.Count(" ") == 1);
+	EXPECT_TRUE(szSource.Count("a") == 0);
+
+	// 은근슬쩍 operator=T 테스트
+	szSource = 123454321;
+	EXPECT_TRUE(szSource.Count("1") == 2);
+	EXPECT_TRUE(szSource.Count("2") == 2);
+	EXPECT_TRUE(szSource.Count("3") == 2);
+	EXPECT_TRUE(szSource.Count("4") == 2);
+	EXPECT_TRUE(szSource.Count("5") == 1);
+}
+
+TEST(StringTest, Insert) {
+	String szSource("", 1);
+	szSource.Insert(0, "a");
+	EXPECT_TRUE(szSource == "a");
+
+	szSource.Insert(0, "b");
+	EXPECT_TRUE(szSource == "ba");
+
+	szSource.Insert(0, "c");
+	EXPECT_TRUE(szSource == "cba");
+
+	szSource.Insert(3, "b");
+	EXPECT_TRUE(szSource == "cbab");
+	szSource.Insert(4, "c");
+	EXPECT_TRUE(szSource == "cbabc");
+
+	szSource.Insert(1, "zz");
+	EXPECT_TRUE(szSource == "czzbabc");
+}
+
+
+TEST(StringTest, Replace) {
+	AutoMemoryLeakDetector detector;
+	String szSource = "a";
+	// 빈 문자열로 바꾸는 경우
+	int ret = szSource.Replace("a", "");
+	EXPECT_TRUE(szSource == "");
+	EXPECT_TRUE(ret == 0);
+
+
+	// 맨 앞에서 긴 문자열로 바꾸는 경우
+	szSource = String("aabcdd", 7);
+	ret = szSource.Replace("aa", "zzzz");
+	EXPECT_TRUE(szSource == "zzzzbcdd");
+	EXPECT_TRUE(ret == 4);
+
+	// 맨뒤에서 긴 문자열로 바꾸는 경우
+	ret = szSource.Replace("dd", "zzzz");
+	EXPECT_TRUE(szSource == "zzzzbczzzz");
+	EXPECT_TRUE(ret == 10);
+
+	// 중간에서 긴 문자열로 바꾸는 경우
+	ret = szSource.Replace("bc", "zzzz");
+	EXPECT_TRUE(szSource == "zzzzzzzzzzzz");
+	EXPECT_TRUE(ret == 8);
+
+	// 확장 잘 되는지 확인
+	szSource = String("a", 2);
+	szSource.Replace("a", "zzzzzz");
+	EXPECT_TRUE(szSource == "zzzzzz");
+
+	// 맨 앞에서 같은 길이로 치환
+	szSource = "aabbcc";
+	szSource.Replace("aa", "gg");
+	EXPECT_TRUE(szSource == "ggbbcc");
+
+	// 중간에서 같은 길이로 치환
+	szSource.Replace("bb", "gg");
+	EXPECT_TRUE(szSource == "ggggcc");
+
+	// 뒤에서 같은 길이로 치환
+	szSource.Replace("cc", "gg");
+	EXPECT_TRUE(szSource == "gggggg");
+
+	// 맨 앞에서 짧은 길이로 치환
+	szSource = "aabbcc";
+	szSource.Replace("aa", "a");
+	EXPECT_TRUE(szSource == "abbcc");
+
+	// 중간에서 짧은 길이로 치환
+	szSource.Replace("bb", "b");
+	EXPECT_TRUE(szSource == "abcc");
+
+	// 맨뒤에서 짧은 길이로 치환
+	szSource.Replace("cc", "c");
+	EXPECT_TRUE(szSource == "abc");
+}
+
+TEST(StringTest, Clear) {
+	String szSource = "abcd";
+	szSource.Clear();
+	EXPECT_TRUE(szSource == "");
+
+	szSource = "abcd";
+	szSource.Clear(1, 2);
+	EXPECT_TRUE(szSource == "ad");
+
+	szSource = "abcd";
+	szSource.Clear(1, 3);
+	EXPECT_TRUE(szSource == "a");
+
+	szSource = "abcd";
+	szSource.Clear(1, 4);
+	EXPECT_TRUE(szSource == "a");
+}
 
 #endif // TEST_StringTest == ON
 

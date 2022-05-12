@@ -89,7 +89,6 @@ void GameClientEventListener::OnReceived(ICommand* cmd) {
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread(
 		CC_CALLBACK_0(GameClientEventListener::SynchronizedOnReceived, this)
 	);
-
 }
 
 

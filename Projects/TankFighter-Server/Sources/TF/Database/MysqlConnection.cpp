@@ -96,8 +96,15 @@ JCore::String MysqlConnection::EscapeString(const JCore::String& value) const {
 		return "";
 	}
 
+	char temp[1024];
 	JCore::String escapedString(value.Length() * 2 + 1);
-	mysql_real_escape_string(m_MySQLConn, escapedString.Source(), value.Source(), value.Length());
+
+	mysql_real_escape_string(m_MySQLConn, temp, value.Source(), value.Length());
+
+	// 여기서 걍 따옴표 달아주면 대네
+	escapedString += "\"";
+	escapedString += temp;
+	escapedString += "\"";
 	return escapedString;
 }
 

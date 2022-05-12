@@ -36,7 +36,7 @@ public:
 	 * 퓨쳐는 이 함수 밖에서 꼭 Release를 해줄 것
 	*/
 	template <typename... Args>
-	MysqlQueryFuture* QueryAsync(const std::string& statement, Args&&... args) {
+	MysqlQueryFuture* QueryAsync(const JCore::String& statement, Args&&... args) {
 		const JCore::String preparedStatement = MysqlStatementBuilder::Build(statement, JCore::Forward<Args>(args)...);
 
 		if (preparedStatement == "")
@@ -63,8 +63,8 @@ public:
 	 */
 
 	template <typename... Args>
-	JCore::SharedPointer<MysqlQuery> Query(const std::string& statement, Args&&... args) {
-		if (statement.length() <= 6) {
+	JCore::SharedPointer<MysqlQuery> Query(const JCore::String& statement, Args&&... args) {
+		if (statement.Length() <= 6) {
 			DebugAssert(false, "MysqlDatabase::Query() 쿼리를 똑바로 입력해주세요.");
 			return nullptr;
 		}
