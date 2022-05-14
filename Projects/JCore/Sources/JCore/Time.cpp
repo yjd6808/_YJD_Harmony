@@ -728,38 +728,38 @@ namespace JCore
 	// 포맷에 따라 시간 문자열을 얻도록 한다.
 	// @형식 레퍼런스 : https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
 	// C# 기준 포맷 형식을 따릅니다.
-
 	// O(n)
+	// 개선 가능성 : template<char[Size]>를 추가해서 리터럴 문자열에 대해서 길이 계산을 할 수 있다.
 	String DateTime::Format(const char* fmt) const {
-		const String szFmt(fmt);
-		String szRet(szFmt.Capacity() * 2);
+		const int iFmtLen = StringUtil::Length(fmt);
+		String szRet(iFmtLen * 2);
 
 		int iContinuousCount = 0;
 		char cContinuousToken = '\0';
 
 		const DateAndTime currentDateAndTime = ToDateAndTime();
 
-		for (int i = 0; i < szFmt.Length(); i++) {
-			if (FormatTokenMap_v.Exist(szFmt[i])) {
+		for (int i = 0; i < iFmtLen; i++) {
+			if (FormatTokenMap_v.Exist(fmt[i])) {
 
-				if (cContinuousToken != szFmt[i]) {
+				if (cContinuousToken != fmt[i]) {
 					// 이전 토큰하고 다른 경우 = 처음 발견한 경우
 					ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
-					cContinuousToken = szFmt[i];
+					cContinuousToken = fmt[i];
 					iContinuousCount = 1;
 				} else {
 					// 이전 토큰하고 일치하고 있는 경우
 					iContinuousCount++;
 				}
 			} else {
-				if (IsAlphabat(szFmt[i])) {
+				if (IsAlphabat(fmt[i])) {
 					throw InvalidArgumentException("토큰 문자외의 알파벳 문자가 포맷문자열에 포함되어 있습니다.");
 				}
 
 				// 토큰이 아닌 다른 문자를 발견한 경우
 				ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
 				cContinuousToken = '\0';
-				szRet += szFmt[i];
+				szRet += fmt[i];
 				iContinuousCount = 0;
 			}
 		}
@@ -832,38 +832,44 @@ namespace JCore
 	}
 
 	DateTime DateTime::AddDay(Int32 day) {
-		m_Tick += day * TicksPerDay;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick + day * TicksPerDay;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddHour(Int64 hour) {
-		m_Tick += hour * TicksPerHour;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick + hour * TicksPerHour;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddMinute(Int64 minute) {
-		m_Tick += minute * TicksPerMinute;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick + minute * TicksPerMinute;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddSecond(Int64 second) {
-		m_Tick += second * TicksPerSecond;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick + second * TicksPerSecond;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddMiliSecond(Int64 miliSecond) {
-		m_Tick += miliSecond * TicksPerMiliSecond;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick + miliSecond * TicksPerMiliSecond;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddMicroSecond(Int64 microSecond) {
-		m_Tick += microSecond;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick + microSecond;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
@@ -885,38 +891,44 @@ namespace JCore
 	}
 
 	DateTime DateTime::SubtractDay(Int32 day) {
-		m_Tick -= day * TicksPerDay;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick - day * TicksPerDay;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractHour(const Int64 hour) {
-		m_Tick -= hour * TicksPerHour;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick - hour * TicksPerHour;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractMinute(const Int64 minute) {
-		m_Tick -= minute * TicksPerMinute;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick - minute * TicksPerMinute;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractSecond(const Int64 second) {
-		m_Tick -= second * TicksPerSecond;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick - second * TicksPerSecond;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractMiliSecond(const Int64 miliSecond) {
-		m_Tick -= miliSecond * TicksPerMiliSecond;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick - miliSecond * TicksPerMiliSecond;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractMicroSecond(const Int64 microSecond) {
-		m_Tick -= microSecond;
-		CheckOverFlow();
+		const Int64U uiTick = m_Tick - microSecond;
+		CheckOverFlow(uiTick);
+		m_Tick = uiTick;
 		return *this;
 	}
 
@@ -1187,15 +1199,18 @@ namespace JCore
 		}
 	}
 
-	void DateTime::CheckOverFlow() const {
-		if (m_Tick >= Ticks10000Years) {
-			throw UnderFlowException("1만년을 넘길 수 없습니다.");
-		}
-	}
+	
 
 	/*=====================================================================================
 		private static
-		=====================================================================================*/
+	=====================================================================================*/
+
+	void DateTime::CheckOverFlow(Int64U tick) {
+		if (tick >= Ticks10000Years) {
+			throw OverFlowException("1만년을 넘길 수 없습니다.");
+		}
+	}
+
 	Tuple<int, int, int, int, int> DateTime::GetYearsFromDays(int days) {
 		using namespace Detail;
 

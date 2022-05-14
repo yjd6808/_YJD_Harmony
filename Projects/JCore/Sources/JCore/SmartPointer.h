@@ -7,6 +7,18 @@
 
 	코딩을 신경써서 하는 수밖에..
 	쓰레드 세이프하지 않으므로 나중에 뮤텍스 버전을 만들든 해야할 듯
+
+	<=============>
+	
+	면접시 설명을 다 할 수 있어야하기 땜에 작성한 코드 다시 한번씩 보는 중;
+	배열 스마트 포인터 추가로 코드가 바로바로 머리속으로 안들어옴 그래서 정리를 좀 한다.
+	22/05/14
+	
+	UniqueObject<T>			단일 포인터 (동적할당 1회)
+	UniqueObject<T[Size]>	컴파일타임에 크기가 결정되는 배열 포인터	(동적할당 1회)
+	UniqueObject<T[]>		런타임에 크기가 결정되는 배열 포인터	(동적할당 2회 UniqueObject 생성할 때 1번, 내부에서 배열 동적할당 할 때 1번)
+	
+	SharedObject도 마찬가지로 방식으로 구현함
 */
 
 #pragma once
@@ -92,7 +104,7 @@ struct UniqueObject : UniqueBase
 
 	template <typename... Args>
 	explicit UniqueObject(Args&&... args) {
-		::new (reinterpret_cast<void*>(AddressOf(Object))) T(Forward<Args>(args)...);
+		::new (AddressOf(Object)) T(Forward<Args>(args)...);
 	}
 
 	~UniqueObject() override {}

@@ -7,11 +7,12 @@
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Core.h>
 #include <JCore/String.h>
+#include <JCore/Container/Vector.h>
 
 using namespace JCore;
 using namespace std;
 
-std::vector<int> g_vec;
+Vector<int> g_vec;
 
 #if TEST_StringTest == ON
 
@@ -72,65 +73,65 @@ TEST(StringTest, Split) {
 	String szStr4 = "_bbbbb";
 	String szStr5 = "_";
 
-	vector<String> tokens1_1 = szStr1.Split("_", true);
-	vector<String> tokens1_2 = szStr1.Split("_", false);
+	Vector<String> tokens1_1 = szStr1.Split("_", true);
+	Vector<String> tokens1_2 = szStr1.Split("_", false);
 
-	vector<String> tokens2_1 = szStr2.Split("_", true);
+	Vector<String> tokens2_1 = szStr2.Split("_", true);
 
-	vector<String> tokens3_1 = szStr3.Split("_", true);
-	vector<String> tokens3_2 = szStr3.Split("_", false);
+	Vector<String> tokens3_1 = szStr3.Split("_", true);
+	Vector<String> tokens3_2 = szStr3.Split("_", false);
 
-	vector<String> tokens4_1 = szStr4.Split("_", true);
+	Vector<String> tokens4_1 = szStr4.Split("_", true);
 
-	vector<String> tokens5_1 = szStr5.Split("_", true);
-	vector<String> tokens5_2 = szStr5.Split("_", false);
+	Vector<String> tokens5_1 = szStr5.Split("_", true);
+	Vector<String> tokens5_2 = szStr5.Split("_", false);
 	
 
-	EXPECT_TRUE(tokens1_1.size() == 3);
-	if (tokens1_1.size() == 3) {
+	EXPECT_TRUE(tokens1_1.Size() == 3);
+	if (tokens1_1.Size() == 3) {
 		EXPECT_TRUE(tokens1_1[0] == "abcd");
 		EXPECT_TRUE(tokens1_1[1] == "cd");
 		EXPECT_TRUE(tokens1_1[2] == "efg");
 	}
 	
-	EXPECT_TRUE(tokens1_2.size() == 3);
-	if (tokens1_2.size() == 3) {
+	EXPECT_TRUE(tokens1_2.Size() == 3);
+	if (tokens1_2.Size() == 3) {
 		EXPECT_TRUE(tokens1_2[0] == "abcd");
 		EXPECT_TRUE(tokens1_2[1] == "cd");
 		EXPECT_TRUE(tokens1_2[2] == "efg");
 	}
 	
 
-	EXPECT_TRUE(tokens2_1.size() == 4);
-	if (tokens2_1.size() == 4) {
+	EXPECT_TRUE(tokens2_1.Size() == 4);
+	if (tokens2_1.Size() == 4) {
 		EXPECT_TRUE(tokens2_1[0] == "");
 		EXPECT_TRUE(tokens2_1[1] == "");
 		EXPECT_TRUE(tokens2_1[2] == "");
 		EXPECT_TRUE(tokens2_1[3] == "");
 	}
 
-	EXPECT_TRUE(tokens3_1.size() == 3);
-	if (tokens3_1.size() == 3) {
+	EXPECT_TRUE(tokens3_1.Size() == 3);
+	if (tokens3_1.Size() == 3) {
 		EXPECT_TRUE(tokens3_1[0] == "");
 		EXPECT_TRUE(tokens3_1[1] == "bbbbb");
 		EXPECT_TRUE(tokens3_1[2] == "");
 	}
 	
 
-	EXPECT_TRUE(tokens4_1.size() == 2);
-	if (tokens4_1.size() == 2) {
+	EXPECT_TRUE(tokens4_1.Size() == 2);
+	if (tokens4_1.Size() == 2) {
 		EXPECT_TRUE(tokens4_1[0] == "");
 		EXPECT_TRUE(tokens4_1[1] == "bbbbb");
 	}
 	
 
-	EXPECT_TRUE(tokens5_1.size() == 2);
-	if (tokens5_1.size() == 2) {
+	EXPECT_TRUE(tokens5_1.Size() == 2);
+	if (tokens5_1.Size() == 2) {
 		EXPECT_TRUE(tokens5_1[0] == "");
 		EXPECT_TRUE(tokens5_1[1] == "");
 	}
 
-	EXPECT_TRUE(tokens5_2.size() == 0);
+	EXPECT_TRUE(tokens5_2.Size() == 0);
 }
 
 

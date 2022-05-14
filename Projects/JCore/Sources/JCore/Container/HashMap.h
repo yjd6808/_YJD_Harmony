@@ -167,7 +167,7 @@ public:
 		return *this;
 	}
 
-	THashMap& operator=(THashMap&& other) {
+	THashMap& operator=(THashMap&& other) noexcept {
 		Clear();
 		DeleteArraySafe(m_pTable);
 
@@ -310,7 +310,7 @@ public:
 		return true;
 	}
 
-	void Clear() override {
+	void Clear() noexcept override {
 		if (this->m_iSize == 0) {
 			return;
 		}
@@ -421,7 +421,7 @@ protected:
 		return iExpectedCapacity;
 	}
 
-	static void ConnectBucket(TBucket* lhs, TBucket* rhs) {
+	static void ConnectBucket(TBucket* lhs, TBucket* rhs) noexcept {
 		lhs->Next = rhs;
 		rhs->Previous = lhs;
 	}

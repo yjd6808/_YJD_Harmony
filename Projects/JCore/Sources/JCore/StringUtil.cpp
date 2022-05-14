@@ -7,10 +7,11 @@
 #include <JCore/String.h>
 #include <JCore/StringUtil.h>
 #include <JCore/Exception.h>
+#include <JCore/Container/Vector.h>
 
 namespace JCore {
 
-std::vector<String> StringUtil::Split(String& src, const char* delimiter) {
+Vector<String> StringUtil::Split(String& src, const char* delimiter) {
 	return src.Split(delimiter);
 }
 

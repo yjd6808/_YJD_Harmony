@@ -5,17 +5,16 @@
 
 #pragma once
 
-#include <vector>
-
 #include <JCore/Type.h>
 
 namespace JCore {
 
+template <typename> class Vector;
 class String;
 class StringUtil final
 {
 public:
-	static std::vector<String> Split(String& src, const char* delimiter);
+	static Vector<String> Split(String& src, const char* delimiter);
 	static String Format(const char* format, ...);
 	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);

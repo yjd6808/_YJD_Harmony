@@ -183,11 +183,11 @@ public:
 	virtual void SubtractDay(Int32 years);
 	virtual void SubtractDate(const Date& other);
 
-	inline Int32 GetYear() const { return Int32(Year); }
-	inline Int32 GetMonth() const { return Int32(Month); }
-	inline Int32 GetDay() const { return Int32(Day); }
+	Int32 GetYear() const { return Int32(Year); }
+	Int32 GetMonth() const { return Int32(Month); }
+	Int32 GetDay() const { return Int32(Day); }
 
-	inline int Compare(const Date& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
+	int Compare(const Date& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
 	Date operator-(const Date& other) const;
 	Date operator+(const Date& other) const;
@@ -229,13 +229,13 @@ public:
 	virtual void SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit = TimeUnit::MicroSecond);
 	virtual void SubtractTime(const Time& other);
 
-	inline Int32 GetHour() const { return Hour; }
-	inline Int32 GetMinute() const { return Minute; }
-	inline Int32 GetSecond() const { return Second; }
-	inline Int32 GetMiliSecond() const { return MiliSecond; }
-	inline Int32 GetMicroSecond() const { return MicroSecond; }
+	Int32 GetHour() const { return Hour; }
+	Int32 GetMinute() const { return Minute; }
+	Int32 GetSecond() const { return Second; }
+	Int32 GetMiliSecond() const { return MiliSecond; }
+	Int32 GetMicroSecond() const { return MicroSecond; }
 
-	inline int Compare(const Time& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
+	int Compare(const Time& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
 	Time operator-(const Time& other) const;
 	Time operator+(const Time& other) const;
@@ -290,7 +290,7 @@ struct DateAndTime : Date, Time {
 	void SubtractTime(const Time& other) override;
 	void SubtractDateAndTime(const DateAndTime& other);
 
-	inline int Compare(const DateAndTime& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
+	int Compare(const DateAndTime& other) const { return Comparator<Int64>()(ToTick(), other.ToTick()); }
 
 	DateAndTime operator-(const DateAndTime& other) const;
 	DateAndTime operator+(const DateAndTime& other) const;
@@ -324,29 +324,29 @@ struct TimeSpan
 	TimeSpan(Int64 tick = 0) : Tick(tick) {}
 	TimeSpan(Int32 days, Int64 hours, Int64 minutes, Int64 seconds, Int64 miliSeconds, Int64 microSeconds);
 
-	inline double GetTotalDays() const { return (double)Tick / Detail::TicksPerDay; }
-	inline double GetTotalHours() const { return (double)Tick / Detail::TicksPerHour; }
-	inline double GetTotalMinutes() const { return (double)Tick / Detail::TicksPerMinute; }
-	inline double GetTotalSeconds() const { return (double)Tick / Detail::TicksPerSecond; }
-	inline double GetTotalMiliSeconds() const { return (double)Tick / Detail::TicksPerMiliSecond; }
-	inline double GetTotalMicroSeconds() const { return (double)Tick; }
+	double GetTotalDays() const { return (double)Tick / Detail::TicksPerDay; }
+	double GetTotalHours() const { return (double)Tick / Detail::TicksPerHour; }
+	double GetTotalMinutes() const { return (double)Tick / Detail::TicksPerMinute; }
+	double GetTotalSeconds() const { return (double)Tick / Detail::TicksPerSecond; }
+	double GetTotalMiliSeconds() const { return (double)Tick / Detail::TicksPerMiliSecond; }
+	double GetTotalMicroSeconds() const { return (double)Tick; }
 
-	inline int GetDay() const { return int(Tick / Detail::TicksPerDay); }
-	inline int GetHour() const { return (Tick / Detail::TicksPerHour) % Detail::MaxHour_v; }
-	inline int GetMinute() const { return (Tick / Detail::TicksPerMinute) % Detail::MaxMinute_v; }
-	inline int GetSecond() const { return (Tick / Detail::TicksPerSecond) % Detail::MaxSecond_v; }
-	inline int GetMiliSecond() const { return (Tick / Detail::TicksPerMiliSecond) % Detail::MaxMiliSecond_v; }
-	inline int GetMicroSecond() const { return Tick % Detail::MaxMicroSecond_v; }
+	int GetDay() const { return int(Tick / Detail::TicksPerDay); }
+	int GetHour() const { return (Tick / Detail::TicksPerHour) % Detail::MaxHour_v; }
+	int GetMinute() const { return (Tick / Detail::TicksPerMinute) % Detail::MaxMinute_v; }
+	int GetSecond() const { return (Tick / Detail::TicksPerSecond) % Detail::MaxSecond_v; }
+	int GetMiliSecond() const { return (Tick / Detail::TicksPerMiliSecond) % Detail::MaxMiliSecond_v; }
+	int GetMicroSecond() const { return Tick % Detail::MaxMicroSecond_v; }
 
-	inline TimeSpan operator-(const TimeSpan& other) const { return { Tick - other.Tick }; }
-	inline TimeSpan operator+(const TimeSpan& other) const { return { Tick + other.Tick }; }
-	inline TimeSpan& operator+=(const TimeSpan& other) { Tick += other.Tick; return *this; }
-	inline TimeSpan& operator-=(const TimeSpan& other) { Tick -= other.Tick; return *this; }
-	inline bool operator>(const TimeSpan& other) const { return Tick > other.Tick; }
-	inline bool operator<(const TimeSpan& other) const { return Tick < other.Tick; }
-	inline bool operator>=(const TimeSpan& other) const { return Tick >= other.Tick; }
-	inline bool operator<=(const TimeSpan& other) const { return Tick <= other.Tick; }
-	inline bool operator==(const TimeSpan& other) const { return Tick == other.Tick; }
+	TimeSpan operator-(const TimeSpan& other) const { return { Tick - other.Tick }; }
+	TimeSpan operator+(const TimeSpan& other) const { return { Tick + other.Tick }; }
+	TimeSpan& operator+=(const TimeSpan& other) { Tick += other.Tick; return *this; }
+	TimeSpan& operator-=(const TimeSpan& other) { Tick -= other.Tick; return *this; }
+	bool operator>(const TimeSpan& other) const { return Tick > other.Tick; }
+	bool operator<(const TimeSpan& other) const { return Tick < other.Tick; }
+	bool operator>=(const TimeSpan& other) const { return Tick >= other.Tick; }
+	bool operator<=(const TimeSpan& other) const { return Tick <= other.Tick; }
+	bool operator==(const TimeSpan& other) const { return Tick == other.Tick; }
 
 	Int64 Tick{};
 };
@@ -360,35 +360,35 @@ public: // constructors
 
 public: // public non-static
 	// 특정 타입유닛에 해당하는 전체시간 얻기
-	inline Int64 GetTick() const { return m_Tick; }
-	inline Int64 GetTotalDays() const { return m_Tick / Detail::TicksPerDay; }
-	inline Int64 GetTotalHours() const { return m_Tick / Detail::TicksPerHour; }
-	inline Int64 GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute; }
-	inline Int64 GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond; }
-	inline Int64 GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond; }
-	inline Int64 GetTotalMicroSeconds() const { return m_Tick; }
+	Int64 GetTick() const { return m_Tick; }
+	Int64 GetTotalDays() const { return m_Tick / Detail::TicksPerDay; }
+	Int64 GetTotalHours() const { return m_Tick / Detail::TicksPerHour; }
+	Int64 GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute; }
+	Int64 GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond; }
+	Int64 GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond; }
+	Int64 GetTotalMicroSeconds() const { return m_Tick; }
 
-	// 특정 타입유닛별로 시간 얻기
-	inline int GetYear() const { return GetDatePart(DatePart::Year); }
-	inline int GetMonth() const { return GetDatePart(DatePart::Month); }
-	inline int GetDay() const { return GetDatePart(DatePart::Day); }
-	inline int GetHour() const { return GetTotalHours() % Detail::MaxHour_v; }
-	inline int GetMinute() const { return GetTotalMinutes() % Detail::MaxMinute_v; }
-	inline int GetSecond() const { return GetTotalSeconds() % Detail::MaxSecond_v; }
-	inline int GetMiliSecond() const { return GetTotalMiliSeconds() % Detail::MaxMiliSecond_v; }
-	inline int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
+	// 타입유닛별로 시간 얻기
+	int GetYear() const { return GetDatePart(DatePart::Year); }
+	int GetMonth() const { return GetDatePart(DatePart::Month); }
+	int GetDay() const { return GetDatePart(DatePart::Day); }
+	int GetHour() const { return GetTotalHours() % Detail::MaxHour_v; }
+	int GetMinute() const { return GetTotalMinutes() % Detail::MaxMinute_v; }
+	int GetSecond() const { return GetTotalSeconds() % Detail::MaxSecond_v; }
+	int GetMiliSecond() const { return GetTotalMiliSeconds() % Detail::MaxMiliSecond_v; }
+	int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
 
-			
-	inline DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }			// 무슨 요일인지
-	inline MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }			// 몇달인지
-	inline int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }			// 일년기준으로 몇일인지
-	inline int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }	// 이번달이 최대 몇일인지
-	inline AMPM GetAMPM() const { return (GetHour() / 12) > 0 ? AMPM::PM : AMPM::AM; }		// 오전인지 오후인지
+	
+	DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }			// 무슨 요일인지
+	MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }			// 몇달인지
+	int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }			// 일년기준으로 몇일인지
+	int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }	// 이번달이 최대 몇일인지
+	AMPM GetAMPM() const { return (GetHour() / 12) > 0 ? AMPM::PM : AMPM::AM; }		// 오전인지 오후인지
 
 	// 타입 변환
-	inline DateAndTime ToDateAndTime() const;
-	inline Date ToDate() const;
-	inline Time ToTime() const;
+	DateAndTime ToDateAndTime() const;
+	Date ToDate() const;
+	Time ToTime() const;
 
 	// 시간 연산
 	DateTime AddYear(Int32 year);
@@ -411,7 +411,7 @@ public: // public non-static
 	DateTime SubtractMicroSecond(Int64 microSecond);
 	DateTime SubtractDateTime(const DateTime& other);
 
-	inline int Compare(const DateTime& other) const { return Comparator<Int64>()(m_Tick, other.m_Tick); }
+	int Compare(const DateTime& other) const { return Comparator<Int64>()(m_Tick, other.m_Tick); }
 	TimeSpan Diff(const DateTime& other) const;
 
 	DateTime operator-(const DateTime& other) const;
@@ -449,35 +449,36 @@ private: // private static
 	static Tuple<int, int, int, int, int> GetYearsFromDays(int days);		// 단위 년도별로 일수를 가져옴
 	static int GetDatePart(const Int64 tick, const DatePart part);
 private: // private non-static
-	inline int GetDatePart(const DatePart part) const { return DateTime::GetDatePart(m_Tick, part); }
+	int GetDatePart(const DatePart part) const { return DateTime::GetDatePart(m_Tick, part); }
 	void ReflectFormat(const DateAndTime& time, String& ret, char token, int count) const;
-	void CheckOverFlow() const;
+
+	static void CheckOverFlow(Int64U tick);
 public: // public static
 	static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
 	static Int32 TimeZoneBiasMinute();
 	static bool IsLeapYear(int year);
 
-	inline static const char* GetAbbreviationWeekendName(DayOfWeek week) {
+	static const char* GetAbbreviationWeekendName(DayOfWeek week) {
 		return ms_szWeekAbbrevName[int(week)];
 	}
 
-	inline static const char* GetFullWeekendName(DayOfWeek week) {
+	static const char* GetFullWeekendName(DayOfWeek week) {
 		return ms_szWeekFullName[int(week)];
 	}
 
-	inline static const char* GetAbbreviationMonthName(MonthOfYear month) {
+	static const char* GetAbbreviationMonthName(MonthOfYear month) {
 		return ms_szMonthAbbrevName[int(month)];
 	}
 
-	inline static const char* GetFullMonthName(MonthOfYear month) {
+	static const char* GetFullMonthName(MonthOfYear month) {
 		return ms_szMonthFullName[int(month)];
 	}
 
-	inline static const char* GetFullAMPMName(AMPM ampm) {
+	static const char* GetFullAMPMName(AMPM ampm) {
 		return ms_szAMPMFullName[int(ampm)];
 	}
 
-	inline static const char* GetAbbreviationAMPMName(AMPM ampm) {
+	static const char* GetAbbreviationAMPMName(AMPM ampm) {
 		return ms_szAMPMAbbrevName[int(ampm)];
 	}
 private:
@@ -494,6 +495,7 @@ private:
 	friend struct Date;
 	friend struct Time;
 };
+
 
 } // namespace JCore
 

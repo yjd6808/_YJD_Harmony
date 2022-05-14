@@ -3,6 +3,7 @@
 	operator 함수 학습을 위해 제작해본 문자열 클래스입니다.
 */
 
+
 #include <JCore/Core.h>
 #include <JCore/String.h>
 #include <JCore/StringUtil.h>
@@ -10,6 +11,7 @@
 #include <JCore/Exception.h>
 #include <JCore/Ascii.h>
 #include <JCore/Tuple.h>
+#include <JCore/Container/Vector.h>
 
 namespace JCore {
 
@@ -204,9 +206,9 @@ int String::Compare(const char* str, const int strLen) const {
 	return 0;
 }
 
-std::vector<int> String::FindAll(int startIdx, int endIdx, const char* str) const {
+Vector<int> String::FindAll(int startIdx, int endIdx, const char* str) const {
 
-	std::vector<int> offsets;
+	Vector<int> offsets;
 	char* pSrc = m_pBuffer + startIdx;
 
 	const int iStrLen = StringUtil::Length(str);
@@ -229,7 +231,7 @@ std::vector<int> String::FindAll(int startIdx, int endIdx, const char* str) cons
 		}
 
 		if (iContinuousCount == iStrLen && iOffset + iContinuousCount - 1 <= endIdx) {
-			offsets.push_back(iOffset);
+			offsets.PushBack(iOffset);
 		}
 
 		if (iContinuousCount == 0) {
@@ -247,11 +249,11 @@ std::vector<int> String::FindAll(int startIdx, int endIdx, const char* str) cons
 
 // 문자열을 찾음 : 시작 인덱스 반환
 // 문자열을 못찾음 : -1을 반환
-std::vector<int> String::FindAll(const char* str) const {
+Vector<int> String::FindAll(const char* str) const {
 	return FindAll(0, m_iLen - 1, str);
 }
 
-std::vector<int> String::FindAll(const String& str) const {
+Vector<int> String::FindAll(const String& str) const {
 	return FindAll(str.m_pBuffer);
 }
 
@@ -571,22 +573,22 @@ Tuple<char*, int, int> String::GetRangeUnsafe(const int startIdx, const int endI
 // delimiter 문자열 기준으로 분리합니다.
 // includeEmpty가 true일 경우 분리된 토큰 문자열이 비어있더라도 포함 시킵니다.
 // O(n)
-std::vector<String> String::Split(const char* delimiter, const bool includeEmpty) const {
-	std::vector<String> vecTokens;
+Vector<String> String::Split(const char* delimiter, const bool includeEmpty) const {
+	Vector<String> vecTokens;
 	int iOffset = Find(delimiter);
 
 	if (iOffset == -1) {
-		vecTokens.emplace_back(m_pBuffer);
+		vecTokens.EmplaceBack(m_pBuffer);
 		return vecTokens;
 	}
 
 	const int iDelimiterLen = StringUtil::Length(delimiter);
 	if (iOffset - 1 < 0) {
 		if (includeEmpty) {
-			vecTokens.emplace_back(EMPTY);
+			vecTokens.EmplaceBack(EMPTY);
 		}
 	} else {
-		vecTokens.emplace_back(GetRange(0, iOffset - 1));
+		vecTokens.EmplaceBack(GetRange(0, iOffset - 1));
 	}
 
 	iOffset += iDelimiterLen;
@@ -600,19 +602,19 @@ std::vector<String> String::Split(const char* delimiter, const bool includeEmpty
 		
 		if (iNextOffset <= iOffset) {
 			if (includeEmpty) {
-				vecTokens.emplace_back(EMPTY);
+				vecTokens.EmplaceBack(EMPTY);
 			}
 		} else {
-			vecTokens.emplace_back(GetRange(iOffset, iNextOffset - 1));
+			vecTokens.EmplaceBack(GetRange(iOffset, iNextOffset - 1));
 		}
 		iOffset = iNextOffset + 1;
 	}
 
 	if (iOffset < m_iLen) {
-		vecTokens.emplace_back(GetRange(iOffset, m_iLen - 1));
+		vecTokens.EmplaceBack(GetRange(iOffset, m_iLen - 1));
 	} else {
 		if (includeEmpty) {
-			vecTokens.emplace_back(EMPTY);
+			vecTokens.EmplaceBack(EMPTY);
 		}
 	}
 
