@@ -69,10 +69,8 @@ protected:
 	}
 };
 
-
 int main() {
 	CriticalSectionMutex mtx;
-
 
 	// 멀티 패킷 예시
 	auto pPakcet = new StaticPacket<Command<int>, StaticMessage, Command<float>>();

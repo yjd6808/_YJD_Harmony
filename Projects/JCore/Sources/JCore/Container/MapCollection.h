@@ -16,7 +16,7 @@ namespace JCore {
 =====================================================================================*/
 
 template <typename TKey, typename TValue>
-class MapCollection : public Collection<KeyValuePair<TKey, TValue>>
+class JCORE_NOVTABLE MapCollection : public Collection<KeyValuePair<TKey, TValue>>
 {
 	using TKeyValuePair			 = KeyValuePair<TKey, TValue>;
 	using TCollection			 = Collection<TKeyValuePair>;

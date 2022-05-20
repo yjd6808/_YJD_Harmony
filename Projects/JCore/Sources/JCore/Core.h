@@ -1,7 +1,7 @@
 /*
-	작성자 : 윤정도
-	PCH 파일입니다.
-*/
+ *	작성자 : 윤정도
+ *	PCH 파일입니다.
+ */
 
 #pragma once
 
@@ -16,39 +16,6 @@
 #include <Windows.h>
 #include <exception>
 #include <random>
-#include <cassert>
+#include <JCore/Define.h>
+#include <JCore/Assert.h>
 
-#define DebugAssert(exp, msg)		assert((exp) && msg)
-
-#define DeleteSafe(x)			\
-do {							\
-	if (x) {					\
-		delete x;				\
-	}							\
-	x = nullptr;				\
-} while (0);					
-
-#define DeleteArraySafe(x)		\
-do {							\
-	if (x) {					\
-		delete[] x;				\
-	}							\
-	x = nullptr;				\
-} while (0);					
-
-
-#ifndef In_
-	#define In_
-#endif
-
-#ifndef Out_
-	#define Out_
-#endif
-
-#ifndef InOut_
-	#define InOut_
-#endif
-
-#ifndef InOpt_
-	#define InOpt_
-#endif

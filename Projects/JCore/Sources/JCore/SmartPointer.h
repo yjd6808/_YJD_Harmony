@@ -23,36 +23,11 @@
 
 #pragma once
 
+#include <JCore/Declspec.h>
 #include <JCore/Exception.h>
 #include <JCore/Deletor.h>
 #include <JCore/TypeTraits.h>
-
-#include <cassert>
-
-#ifndef DeleteSafe
-#define DeleteSafe(x)			\
-do {							\
-	if (x) {					\
-		delete x;				\
-	}							\
-	x = nullptr;				\
-} while (0);					
-#endif
-
-#ifndef DeleteArraySafe
-#define DeleteArraySafe(x)		\
-do {							\
-	if (x) {					\
-		delete[] x;				\
-	}							\
-	x = nullptr;				\
-} while (0);		
-#endif
-
-
-#ifndef DebugAssert
-	#define DebugAssert(exp, msg)		assert((exp) && msg)
-#endif
+#include <JCore/Assert.h>
 
 namespace JCore {
 	namespace StaticAssert {
@@ -91,7 +66,7 @@ constexpr decltype(auto) MakeUnique(Args&&... args) {
 }
 
 
-struct __declspec(novtable) UniqueBase
+struct JCORE_NOVTABLE UniqueBase
 {
 	virtual ~UniqueBase() = default;
 	virtual void DeleteSelf() = 0;

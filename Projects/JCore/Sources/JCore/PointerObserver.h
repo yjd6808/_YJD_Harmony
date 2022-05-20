@@ -9,23 +9,11 @@
 
 #pragma once
 
+#include <JCore/Declspec.h>
 #include <JCore/Exception.h>
 #include <JCore/TypeTraits.h>
-
-#include <cassert>
-
-#ifndef DebugAssert
-	#define DebugAssert(exp, msg)		assert((exp) && msg)
-#endif
-
-#define DeleteSafe(x)			\
-do {							\
-	if (x) {					\
-		delete x;				\
-	}							\
-	x = nullptr;				\
-} while (0);	
-
+#include <JCore/Assert.h>
+#include <JCore/Define.h>
 
 namespace JCore {
 
@@ -235,7 +223,7 @@ public:
  =====================================================================================*/
 
 
-struct PointerCounter
+struct JCORE_NOVTABLE PointerCounter
 {
 	virtual void DestroyObject() = 0;
 

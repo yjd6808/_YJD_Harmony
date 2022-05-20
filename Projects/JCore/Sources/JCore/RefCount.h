@@ -29,6 +29,8 @@ struct RefCount
 		return m_iRef;
 	}
 
+	// 계산을 똑바로해서 Release 호출하도록 할 것
+	// m_iRef가 0이하가 되는 순간이 2회 이상인 경우 오류가 발생할 수 있겠다.
 	virtual void Release(int cnt = 1) {
 		CriticalSectionLockGuard g(m_Mtx);
 		m_iRef -= cnt;
@@ -41,6 +43,7 @@ struct RefCount
 protected:
 	CriticalSectionMutex m_Mtx;
 	int m_iRef = 0;
+	// std::atomic<int> m_iRef;
 };
 
 } // namespace JCore

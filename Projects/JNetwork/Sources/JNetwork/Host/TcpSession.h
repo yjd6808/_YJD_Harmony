@@ -61,7 +61,7 @@ protected:
 	bool CheckState(State state);
 
 
-	TcpSocketv4 Socket() const { return m_ClientSocket; }
+	Socketv4 Socket() const { return m_ClientSocket; }
 
 	virtual bool Initialize();
 	virtual void AcceptWait();												// 미리 생성된 TcpSession이 AcceptEx를 호출하기 직전에 호출될 함수 - 연결 수락 대기상태
@@ -77,7 +77,7 @@ private:
 protected:
 	State m_eState;
 	SessionBuffer m_ReceiveBuffer;
-	TcpSocketv4 m_ClientSocket;
+	Socketv4 m_ClientSocket;
 	IOCP* m_pIocp;															// TcpClient 입장에서는 생성/소멸을 해줘야하는 객체이지만 TcpSession 입장에서는 TcpServer의 IOCP를 단순히 참조하는 용도이다.
 	IPv4EndPoint m_RemoteEndPoint;
 	IPv4EndPoint m_LocalEndPoint;

@@ -1,10 +1,11 @@
 #pragma once
 
+#include <JCore/Declspec.h>
 #include <JNetwork/Socket.h>
 
 namespace JNetwork {
 
-class Server
+class JCORE_NOVTABLE Server
 {
 public:
 	enum class State
@@ -22,17 +23,17 @@ public:
 		Udp
 	};
 public:
-	Server() : m_eServerType(Type::None), m_eState(State::Initialized), m_ServerSocket(INVALID_SOCKET) {}
+	Server() : m_eServerType(Type::None), m_eState(State::Initialized), m_ServerSocket(TransportProtocol::None, INVALID_SOCKET) {}
 	virtual ~Server() = default;
 
 	virtual bool Start(const IPv4EndPoint& localEndPoint) = 0;
 	virtual bool Stop() = 0;
 
-	TcpSocketv4 Socket() const { return m_ServerSocket; }
+	Socketv4 Socket() const { return m_ServerSocket; }
 protected:
 	Type m_eServerType;
 	State m_eState;
-	TcpSocketv4 m_ServerSocket;
+	Socketv4 m_ServerSocket;
 };
 
 }

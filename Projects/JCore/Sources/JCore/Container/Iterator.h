@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <JCore/Declspec.h>
 #include <JCore/PointerObserver.h>
 
 namespace JCore {
@@ -15,7 +16,7 @@ namespace JCore {
 // 전방 선언
 template <typename> class Collection;
 template <typename T>
-struct Iterator
+struct JCORE_NOVTABLE Iterator
 {
 	using TCollection = Collection<T>;
 

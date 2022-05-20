@@ -52,7 +52,7 @@ namespace JNetwork {
 			
 			if (lpfnConnectEx == nullptr) {
 				// WSAIoctl 함수 사용을 위한 더미 소켓 생성
-				TcpSocketv4 dummySock = Socket::CreateTcpV4(false);
+				Socketv4 dummySock = Socket::CreateTcpV4(false);
 				int iResult;
 				
 				if (!dummySock.IsValid())
@@ -140,7 +140,7 @@ namespace JNetwork {
 	}
 
 
-	TcpSocketv4 Socket::CreateTcpV4(bool overlapped) {
+	Socketv4 Socket::CreateTcpV4(bool overlapped) {
 		SOCKET hSocket = WSASocketW(
 			AF_INET,
 			SOCK_STREAM,
@@ -149,7 +149,7 @@ namespace JNetwork {
 			0,
 			overlapped ? WSA_FLAG_OVERLAPPED : 0);
 
-		return { hSocket };
+		return { TransportProtocol::TCP, hSocket };
 	}
 
 	Socketv6 Socket::CreateV6(TransportProtocol tpproto, bool overlapped) {

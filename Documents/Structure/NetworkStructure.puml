@@ -196,7 +196,6 @@ rectangle Socket_Implementation {
         NOT IMPLEMENTED
     }
 
-    class TcpSocketv4
     class SocketOption {
          SetBroadcastEnabled()
          SetSendBufferSize()
@@ -213,7 +212,6 @@ rectangle Socket_Implementation {
 
     Socketv4 -u-|> Socket
     Socketv6 -u-|> Socket
-    TcpSocketv4 -u-|> Socketv4
     Socket -r-> SocketOption
 }
 

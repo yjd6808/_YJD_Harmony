@@ -29,7 +29,13 @@
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\JCore\Assert.h" />
     <ClInclude Include="..\Sources\JCore\Container\CollectionStream.h" />
+    <ClInclude Include="..\Sources\JCore\Declspec.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Define.h" />
     <ClInclude Include="..\Sources\JCore\Event.h">
       <SubType>
       </SubType>

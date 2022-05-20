@@ -17,7 +17,7 @@ namespace JNetwork {
 	TcpSession::TcpSession(IOCP* iocp, TcpServerEventListener* listener) :
 	m_pServerEventListener(listener),
 	m_eState(State::Uninitialized),
-	m_ClientSocket(INVALID_SOCKET),
+	m_ClientSocket(TransportProtocol::None, INVALID_SOCKET),
 	m_pIocp(iocp)
 {
 }

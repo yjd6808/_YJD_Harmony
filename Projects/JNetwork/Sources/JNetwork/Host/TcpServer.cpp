@@ -162,7 +162,7 @@ namespace JNetwork {
 	void TcpServer::Resume() {
 		m_pIocp->Resume();
 		m_pEventListener->OnResume();
-		m_eState = State::Paused;
+		m_eState = State::Running;
 	}
 
 	void TcpServer::SetEventListener(TcpServerEventListener* listener) {

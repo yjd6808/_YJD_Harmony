@@ -14,7 +14,7 @@ namespace JCore {
 template <typename> class ListCollection;
 template <typename> struct ListNode;
 template <typename T>
-class ListCollectionIterator : public Iterator<T>
+class JCORE_NOVTABLE ListCollectionIterator : public Iterator<T>
 {
 	using TIterator		   = Iterator<T>;
 	using TListNode		   = ListNode<T>;
@@ -23,12 +23,12 @@ public:
 	ListCollectionIterator(VoidOwner& owner, TListNode* current) : TIterator(owner) {
 		m_pCurrent = current;
 
-		TListCollection* pList = CastListCollection();
+		TListCollection* pList = owner.Get<TListCollection>();
 		m_pHead = pList->m_pHead;
 		m_pTail = pList->m_pTail;
 	}
 
-	~ListCollectionIterator() noexcept override {}
+	~ListCollectionIterator() noexcept override = 0;
 public:
 	bool HasNext() const override {
 		if (!this->IsValid()) {
@@ -86,6 +86,12 @@ protected:
 
 	friend class TListCollection;
 };
+
+
+template <typename T>
+ListCollectionIterator<T>::~ListCollectionIterator() noexcept {
+	
+}
 
 
 } // namespace JCore

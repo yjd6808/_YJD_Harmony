@@ -1,5 +1,6 @@
 #pragma once
 
+#include <JCore/Declspec.h>
 #include <JCore/Type.h>
 
 #define WIN32_LEAN_AND_MEAN
@@ -11,7 +12,7 @@
 
 namespace JCore {
 
-	struct Locker
+	struct JCORE_NOVTABLE Locker
 	{
 		Locker() = default;
 		virtual ~Locker() = default;
@@ -22,7 +23,7 @@ namespace JCore {
 		virtual bool IsLocked() = 0;
 	};
 
-	struct ReaderWriterLock
+	struct JCORE_NOVTABLE ReaderWriterLock
 	{
 		ReaderWriterLock() = default;
 		virtual ~ReaderWriterLock() = default;

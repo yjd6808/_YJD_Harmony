@@ -128,5 +128,8 @@
     <ClInclude Include="..\Sources\JCore\LockGuard.h" />
     <ClInclude Include="..\Sources\JCore\Event.h" />
     <ClInclude Include="..\Sources\JCore\RefCount.h" />
+    <ClInclude Include="..\Sources\JCore\Declspec.h" />
+    <ClInclude Include="..\Sources\JCore\Define.h" />
+    <ClInclude Include="..\Sources\JCore\Assert.h" />
   </ItemGroup>
 </Project>

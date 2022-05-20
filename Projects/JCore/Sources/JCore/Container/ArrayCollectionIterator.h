@@ -13,17 +13,15 @@ namespace JCore {
 					class VoidOwner;
 template <typename> class ArrayCollection;
 template <typename T>
-class ArrayCollectionIterator : public Iterator<T>
+class JCORE_NOVTABLE ArrayCollectionIterator : public Iterator<T>
 {
 	using TIterator			= Iterator<T>;
 	using TArrayCollection  = ArrayCollection<T>;
 public:
-	ArrayCollectionIterator(VoidOwner& owner, int pos) : TIterator(owner)
-	                                                   , m_iPos(pos) {
-
-	}
-
-	~ArrayCollectionIterator() noexcept override = default;
+	ArrayCollectionIterator(VoidOwner& owner, int pos)
+		: TIterator(owner)
+		, m_iPos(pos) {}
+	~ArrayCollectionIterator() noexcept override = 0;
 public:
 	bool HasNext() const override {
 		if (!this->IsValid()) {
@@ -68,5 +66,11 @@ protected:
 protected:
 	int m_iPos;
 };
+
+template <typename T>
+ArrayCollectionIterator<T>::~ArrayCollectionIterator() noexcept {
+	// UNUSED
+}
+
 
 } // namespace JCore

@@ -80,7 +80,7 @@ public:
 	int Close(); 
 public:
 	static Socketv4 CreateV4(TransportProtocol tpproto, bool overlapped);
-	static TcpSocketv4 CreateTcpV4(bool overlapped);
+	static Socketv4 CreateTcpV4(bool overlapped);
 	static Socketv6 CreateV6(TransportProtocol tpproto, bool overlapped);
 protected:
 	SOCKET m_Socket;
@@ -126,13 +126,6 @@ public:
 
 	TransportProtocol GetTransportProtocol() const { return m_TransportProtocol; }
 	static InternetProtocol GetInternetProtocol() { return InternetProtocol::IPv4; }
-};
-
-class TcpSocketv4 : public Socketv4
-{
-public:
-	TcpSocketv4(SOCKET socket) : Socketv4(TransportProtocol::TCP, socket) {}
-	~TcpSocketv4() override = default;
 };
 
 class Socketv6 final : public Socket

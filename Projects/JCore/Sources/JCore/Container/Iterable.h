@@ -5,6 +5,7 @@
 #pragma once
 
 #include <JCore/SmartPointer.h>
+#include <JCore/Declspec.h>
 
 namespace JCore {
 
@@ -15,7 +16,7 @@ namespace JCore {
 // 전방 선언
 template <typename> struct Iterator;
 template <typename T>
-struct Iterable
+struct JCORE_NOVTABLE Iterable
 {
 	using TIterator = Iterator<T>;
 
