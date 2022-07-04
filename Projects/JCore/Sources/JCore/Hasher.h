@@ -9,6 +9,7 @@
 #include <JCore/String.h>
 #include <JCore/TypeTraits.h>
 
+#pragma warning (push)
 #pragma warning (disable : 4244)  // 'argument': conversion from 'double' to 'float', possible loss of data, double을 강제로 float으로 바꿀라캐서 Hasher<double>  땜에
 
 namespace JCore {
@@ -76,3 +77,5 @@ struct Hasher<String>
 };
 
 } // namespace JCore
+
+#pragma warning (pop)

@@ -7,6 +7,7 @@
 
 #include <JCore/Type.h>
 
+#pragma warning (push)
 #pragma warning (disable : 4307)	// '+': signed integral constant overflow
 #pragma warning (disable : 4309)	// 'initializing': truncation of constant value
 #pragma warning (disable : 26450)	// Arithmetic overflow : '+' operation causes overflow at compile time.Use a wider type to store the operands -> MinInt32_v 이런거처럼 내가 고의로 오버플로 일으킨 것 땜에
@@ -46,4 +47,6 @@ constexpr int BitCount(T&& val) {
 }
 
 } // namespace JCore
+
+#pragma warning (pop)
 

@@ -191,7 +191,7 @@ int String::Compare(const char* str, const int strLen) const {
 	while (*pSrc != NULL && *str != NULL) {
 		if (*pSrc > *str)
 			return 1;
-		else if (*pSrc < *str)
+		if (*pSrc < *str)
 			return -1;
 
 		pSrc++;
@@ -200,7 +200,7 @@ int String::Compare(const char* str, const int strLen) const {
 
 	if (m_iLen > iStrLen)
 		return 1;
-	else if (m_iLen < iStrLen)
+	if (m_iLen < iStrLen)
 		return -1;
 
 	return 0;
@@ -209,41 +209,26 @@ int String::Compare(const char* str, const int strLen) const {
 Vector<int> String::FindAll(int startIdx, int endIdx, const char* str) const {
 
 	Vector<int> offsets;
-	char* pSrc = m_pBuffer + startIdx;
-
 	const int iStrLen = StringUtil::Length(str);
-	int iContinuousCount = 0;
-	int iOffset = startIdx;
 
 	if (iStrLen == 0) {
-		return {};
+		return offsets;
 	}
 
 	ThrowIfInvalidRangeIndex(startIdx, endIdx);
 
-	while (iOffset <= endIdx) {
-		char* pDst = const_cast<char*>(str);
+	for (int i = startIdx; i <= endIdx; ) {
+		int iFind = Find(i, endIdx, str);
 
-		while (*pDst != NULL && *pSrc == *pDst) {
-			iContinuousCount++;
-			pSrc++;
-			pDst++;
+		if (iFind == -1) {
+			break;
 		}
 
-		if (iContinuousCount == iStrLen && iOffset + iContinuousCount - 1 <= endIdx) {
-			offsets.PushBack(iOffset);
-		}
-
-		if (iContinuousCount == 0) {
-			pSrc++;
-			iOffset++;
-		} else {
-			iOffset += iContinuousCount;
-		}
-
-		iContinuousCount = 0;
+		offsets.PushBack(iFind);
+		i += iFind + iStrLen;
 	}
 
+	
 	return offsets;
 }
 
@@ -261,39 +246,29 @@ Vector<int> String::FindAll(const String& str) const {
 // 문자열의 startIdx(시작인덱스 - 포함)부터 endIdx(종료인덱스 - 포함) 포함하여 str문자열이 있을 경우의 위치 인덱스를 반환해줍니다.
 // O(n)
 int String::Find(int startIdx, int endIdx, const char* str) const {
-	char* pSrc = m_pBuffer + startIdx;
+	const int iFindStrLen = StringUtil::Length(str);
+	const int iSrcLen = endIdx - startIdx + 1;
 
-	const int iStrLen = StringUtil::Length(str);
-	int iContinuousCount = 0;
-	int iOffset = startIdx;
-
-	if (iStrLen == 0) {
-		return -1;
+	if (iFindStrLen == 0) {
+		return 0;
 	}
 
 	ThrowIfInvalidRangeIndex(startIdx, endIdx);
 
-	while (iOffset <= endIdx) {
-		char* pDst = const_cast<char*>(str);
+	if (iFindStrLen > iSrcLen) {
+		return -1;
+	}
 
-		while (*pDst != NULL && *pSrc == *pDst) {
-			iContinuousCount++;
-			pSrc++;
-			pDst++;
+	for (int i = startIdx; i <= endIdx; i++) {
+		int iContinuous = 0;
+
+		while (iContinuous < iFindStrLen && m_pBuffer[i + iContinuous] == str[iContinuous]) {
+			iContinuous++;
 		}
 
-		if (iContinuousCount == iStrLen && iOffset + iContinuousCount - 1 <= endIdx) {
-			return iOffset;
+		if (iContinuous == iFindStrLen) {
+			return i;
 		}
-
-		if (iContinuousCount == 0) {
-			pSrc++;
-			iOffset++;
-		} else {
-			iOffset += iContinuousCount;
-		}
-
-		iContinuousCount = 0;
 	}
 
 	return -1;
@@ -321,39 +296,29 @@ int String::Find(int startIdx, const String& str) const {
 // Find 함수와 결과는 완전히 동일하지만 탐색 방향이 반대입니다.
 // O(n)
 int String::FindReverse(int startIdx, int endIdx, const char* str) const {
-	char* pSrc = m_pBuffer + endIdx;
+	const int iFindStrLen = StringUtil::Length(str);
+	const int iSrcLen = endIdx - startIdx + 1;
 
-	const int iStrLen = StringUtil::Length(str);
-	int iContinuousCount = 0;
-	int iOffset = endIdx;
-
-	if (iStrLen == 0) {
-		return -1;
+	if (iFindStrLen == 0) {
+		return 0;
 	}
 
 	ThrowIfInvalidRangeIndex(startIdx, endIdx);
 
-	while (iOffset >= startIdx) {
-		char* pDst = const_cast<char*>(str) + iStrLen - 1;
+	if (iFindStrLen > iSrcLen) {
+		return -1;
+	}
 
-		while (*pDst != NULL && *pSrc == *pDst) {
-			iContinuousCount++;
-			pSrc--;
-			pDst--;
+	for (int i = endIdx; i >= startIdx; i--) {
+		int iContinuous = 0;
+
+		while (iContinuous < iFindStrLen && m_pBuffer[i + iContinuous] == str[iContinuous]) {
+			iContinuous++;
 		}
 
-		if (iContinuousCount == iStrLen && iOffset - iContinuousCount + 1 >= startIdx) {
-			return iOffset - iContinuousCount + 1;
+		if (iContinuous == iFindStrLen) {
+			return i;
 		}
-
-		if (iContinuousCount == 0) {
-			pSrc--;
-			iOffset--;
-		} else {
-			iOffset -= iContinuousCount;
-		}
-
-		iContinuousCount = 0;
 	}
 
 	return -1;

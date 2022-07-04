@@ -180,7 +180,7 @@ public:
 		m_iHead = 0;
 
 		if (removeHeap) {
-			DeleteSafe(this->m_pArray);
+			DeleteArraySafe(this->m_pArray);
 		}
 	}
 
