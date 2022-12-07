@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -15,7 +15,7 @@ public:
 	TcpClient();
 	~TcpClient() override;
 public:
-	// ÃÊ±â IOCP ¾²·¹µå ¼ö
+	// ì´ˆê¸° IOCP ì“°ë ˆë“œ ìˆ˜
 	virtual int DefaultIocpThreadCount() const;
 
 	virtual bool ConnectAsync(const IPv4EndPoint& destination);
@@ -26,7 +26,7 @@ public:
 protected:
 	void Connected() override;
 	void ConnectWait() override;
-	void NotifyCommand(ICommand* cmd) override;								// ¼¼¼Ç ÀÔÀå¿¡¼­´Â ServerEventListener¿¡ Ä¿¸Çµå¸¦ Àü´ŞÇÏ°í Å¬¶óÀÌ¾ğÆ® ÀÔÀå¿¡¼­´Â ClientEventListener¿¡ Ä¿¸Çµå¸¦ Àü´ŞÇÏµµ·Ï ÇÑ´Ù.
+	void NotifyCommand(ICommand* cmd) override;								// ì„¸ì…˜ ì…ì¥ì—ì„œëŠ” ServerEventListenerì— ì»¤ë§¨ë“œë¥¼ ì „ë‹¬í•˜ê³  í´ë¼ì´ì–¸íŠ¸ ì…ì¥ì—ì„œëŠ” ClientEventListenerì— ì»¤ë§¨ë“œë¥¼ ì „ë‹¬í•˜ë„ë¡ í•œë‹¤.
 	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;
 protected:
 	TcpClientEventListener* m_pClientEventListener;

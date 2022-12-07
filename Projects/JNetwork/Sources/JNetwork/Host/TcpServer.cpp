@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -24,8 +24,8 @@ namespace JNetwork {
 	}
 
 	int TcpServer::DefaultIocpThreadCount() const {
-		// ±âº»ÀûÀ¸·Î ¾²·¹µå °³¼ö¸¸Å­ »ı¼ºÇÏµµ·Ï ÇÏÀÚ.
-		// dwNumberOfProcessors ÀÌ¸§¶«¿¡ ÄÚ¾î °¹¼ö·Î Âø°¢ÇÏ±â ½¬¿îµ¥ CPU ¾²·¹µå °¹¼ö¶ó°í ÇÑ´Ù.
+		// ê¸°ë³¸ì ìœ¼ë¡œ ì“°ë ˆë“œ ê°œìˆ˜ë§Œí¼ ìƒì„±í•˜ë„ë¡ í•˜ì.
+		// dwNumberOfProcessors ì´ë¦„ë•œì— ì½”ì–´ ê°¯ìˆ˜ë¡œ ì°©ê°í•˜ê¸° ì‰¬ìš´ë° CPU ì“°ë ˆë“œ ê°¯ìˆ˜ë¼ê³  í•œë‹¤.
 		SYSTEM_INFO info;
 		GetSystemInfo(&info);
 		return (int)info.dwNumberOfProcessors; 
@@ -38,12 +38,12 @@ namespace JNetwork {
 		}
 
 		if (!Winsock::IsInitialized()) {
-			Winsock::Message("À©¼Ó ÃÊ±âÈ­¸¦ ¸ÕÀú ÇØÁÖ¼¼¿ä. Winsock::Initialize()");
+			DebugAssertMessage(false, "ìœˆì† ì´ˆê¸°í™”ë¥¼ ë¨¼ì € í•´ì£¼ì„¸ìš”. Winsock::Initialize()");
 			return false;
 		}
 
 		if (m_pEventListener == nullptr) {
-			Winsock::AssertWinsockMessage("ÀÌº¥Æ® ¸®½º³Ê¸¦ ¼³Á¤ÇØÁÖ¼¼¿ä.");
+			DebugAssertMessage(false, "ì´ë²¤íŠ¸ ë¦¬ìŠ¤ë„ˆë¥¼ ì„¤ì •í•´ì£¼ì„¸ìš”.");
 			return false;
 		}
 
@@ -51,51 +51,51 @@ namespace JNetwork {
 		m_ServerSocket = Socket::CreateTcpV4(true);
 
 		if (!m_ServerSocket.IsValid()) {
-			Winsock::AssertWinsockMessage("¼­¹ö ¼ÒÄÏ Create ½ÇÆĞ");
+			DebugAssertMessage(false, "ì„œë²„ ì†Œì¼“ Create ì‹¤íŒ¨");
 			return false;
 		}
 
 		if (m_ServerSocket.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR) {
-			Winsock::AssertWinsockMessage("¼­¹ö ¼ÒÄÏ SetReuseAddrEnabled(true) ½ÇÆĞ");
+			DebugAssertMessage(false, "ì„œë²„ ì†Œì¼“ SetReuseAddrEnabled(true) ì‹¤íŒ¨");
 		}
 
 		if (m_ServerSocket.Bind(localEndPoint) == SOCKET_ERROR) {
-			Winsock::AssertWinsockMessage("¼­¹ö ¼ÒÄÏ Bind ½ÇÆĞ");
+			DebugAssertMessage(false, "ì„œë²„ ì†Œì¼“ Bind ì‹¤íŒ¨");
 			return false;
 		}
 
 		if (m_ServerSocket.Listen() == SOCKET_ERROR) {
-			Winsock::AssertWinsockMessage("¼­¹ö ¼ÒÄÏ Listen ½ÇÆĞ");
+			DebugAssertMessage(false, "ì„œë²„ ì†Œì¼“ Listen ì‹¤íŒ¨");
 			return false;
 		}
 
 		if (m_ServerSocket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
-			Winsock::AssertWinsockMessage("¼­¹ö ¼ÒÄÏ SetNonBlockingEnabled(true) ½ÇÆĞ");
+			DebugAssertMessage(false, "ì„œë²„ ì†Œì¼“ SetNonBlockingEnabled(true) ì‹¤íŒ¨");
 		}
 
 		if (m_pIocp->Create(DefaultIocpThreadCount()) == false) {
-			Winsock::AssertWinsockMessage("¼­¹ö IOCP »ı¼º ½ÇÆĞ");
+			DebugAssertMessage(false, "ì„œë²„ IOCP ìƒì„± ì‹¤íŒ¨");
 			return false;
 		}
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
-		// AcceptEx »ç¿ë½Ã ¸®½¼ ¼ÒÄÏÀ» IOCP¿Í ¿¬°áÇØÁà¾ß Å¬¶óÀÌ¾ğÆ® Á¢¼ÓÀ» Åëº¸¹ŞÀ» ¼ö ÀÖ´Ù.
-		if (m_pIocp->Connect(reinterpret_cast<HANDLE>(m_ServerSocket.Handle()), NULL) == false) {
-			Winsock::AssertWinsockMessage("¼­¹ö¼ÒÄÏÀ» IOCP¿¡ ¿¬°áÇÏ´Âµ¥ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+		// AcceptEx ì‚¬ìš©ì‹œ ë¦¬ìŠ¨ ì†Œì¼“ì„ IOCPì™€ ì—°ê²°í•´ì¤˜ì•¼ í´ë¼ì´ì–¸íŠ¸ ì ‘ì†ì„ í†µë³´ë°›ì„ ìˆ˜ ìˆë‹¤.
+		if (m_pIocp->Connect(reinterpret_cast<WinHandle>(m_ServerSocket.Handle()), NULL) == false) {
+			DebugAssertMessage(false, "ì„œë²„ì†Œì¼“ì„ IOCPì— ì—°ê²°í•˜ëŠ”ë° ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 			return false;
 		}
 
 		
-		m_pIocp->Run();	// IOCP ¿öÄ¿ ¾²·¹µå ½ÇÇà
+		m_pIocp->Run();	// IOCP ì›Œì»¤ ì“°ë ˆë“œ ì‹¤í–‰
 		m_pContainer->Clear();
 
-		// ¼¼¼ÇÀ» ¹Ì¸® »ı¼ºÇØ³õ°í ¿¬°á ´ë±â »óÅÂ·Î µÒ
+		// ì„¸ì…˜ì„ ë¯¸ë¦¬ ìƒì„±í•´ë†“ê³  ì—°ê²° ëŒ€ê¸° ìƒíƒœë¡œ ë‘ 
 		for (int i = 0; i < MaxConnection(); i++) {
 			TcpSession* session = new TcpSession(m_pIocp, m_pEventListener);
 			const SOCKET hListeningSock = this->Socket().Handle();
 
 			if (!session->Initialize()) {
-				Winsock::AssertWinsockMessage("¼¼¼Ç ÃÊ±âÈ­ ½ÇÆĞ");
+				DebugAssertMessage(false, "ì„¸ì…˜ ì´ˆê¸°í™” ì‹¤íŒ¨");
 				return false;
 			}
 
@@ -111,43 +111,43 @@ namespace JNetwork {
 		return bool(m_eState = State::Running);
 	}
 
-	// [¾ÈÀüÇÑ ¼­¹ö Á¾·á¸¦ ¼öÇàÇÏ±â À§ÇÑ Á¤µµÀÇ »ı°¢ Èå¸§]
-	// 1. ¼¼¼ÇÀÇ ¿¬°áÀ» ¸ğµÎ ²÷¾îÁØ´Ù.
-	//   --> ¿À¹ö·¦µéÀÌ ¸ğµÎ ½ÇÆĞ·Î ºüÁ®³ª¿Ã °ÍÀÌ´Ù. Áï, IOCP¿¡¼­ ´ë±âÁßÀÎ Pending I/OµéÀÌ ÇÏ³ª¾¿ ¿Ï·áµÇ¸é¼­ IOCP¿¡ Á¤ÀÇµÈ PendingCount¸¦ 1¾¿ ÁÙ¿©ÁÙ °ÍÀÌ´Ù.
-	//   --> ÀÌ¶§ ¸¸¾à ¼­¹ö Á¾·á¸¦ ¼öÇàÇÏ´Â main ¾²·¹µå¿¡¼­ m_pIocp->JoinÀ» ¼öÇàÇØ¹ö¸®¸é °ğ¹Ù·Î ¹İº¹¹®À» ºüÁ® ³ª¿Í¼­ Ã³¸® µÇ¾î¾ßÇÒ I/OµéÀÌ ¹«½ÃµÈ´Ù.
-	// 2. ±×·¡¼­ Pending »óÅÂÀÎ Overlapped I/OÀÇ °¹¼ö¸¦ È®ÀÎÇØ¼­ ÀÌ ¿À¹ö·¦µéÀÌ ¸ğµÎ µ¿ÀûÇÒ´çÀÌ ÇØÁ¦µÇ¾î IOCPÀÇ PendingCount°¡ 0ÀÌ µÉ¶§±îÁö ±â´Ù¸°´Ù.
-	// 3. Pending I/OµéÀÌ ¸ğµÎ Ã³¸® µÇ¾ú´Ù. ÇÏÁö¸¸ ¾ÆÁ÷ IOCP ÇÚµé°ú ¼­¹ö ¼ÒÄÏÀº ¿¬°áµÇ¾îÀÖ°í ÇØÁ¦µÈ °ÍÀÌ ¾Æ´Ï¹Ç·Î GetQueuedCompletionStatus¿¡¼­ ´ë±âÁßÀÎ »óÅÂ°¡ µÈ´Ù.
-	// 4. ÀÌ¶§ m_pIocp->Join()À¸·Î PostQueuedCompletionStatus·Î ¿öÄ¿ ¾²·¹µåÀÇ ¹İº¹¹®À» ºüÁ®³ª¿Í¶ó°í ¸í·ÉÀ» º¸³½´Ù.
-	// 5. ÀÌÁ¦ ¾ÈÀüÇÏ°Ô IOCP ÇÚµéÀ» ÇØÁ¦ÇØÁØ´Ù.
-	// 6. ¼­¹ö ¼ÒÄÏµµ ¾ÈÀüÇÏ°Ô ´İ¾ÆÁØ´Ù.
-	// 7. ÄÁÅ×ÀÌ³ÊÀÇ ¼¼¼ÇµéÀ» ¸ğµÎ Á¤¸®ÇØÁØ´Ù.
+	// [ì•ˆì „í•œ ì„œë²„ ì¢…ë£Œë¥¼ ìˆ˜í–‰í•˜ê¸° ìœ„í•œ ì •ë„ì˜ ìƒê° íë¦„]
+	// 1. ì„¸ì…˜ì˜ ì—°ê²°ì„ ëª¨ë‘ ëŠì–´ì¤€ë‹¤.
+	//   --> ì˜¤ë²„ë©ë“¤ì´ ëª¨ë‘ ì‹¤íŒ¨ë¡œ ë¹ ì ¸ë‚˜ì˜¬ ê²ƒì´ë‹¤. ì¦‰, IOCPì—ì„œ ëŒ€ê¸°ì¤‘ì¸ Pending I/Oë“¤ì´ í•˜ë‚˜ì”© ì™„ë£Œë˜ë©´ì„œ IOCPì— ì •ì˜ëœ PendingCountë¥¼ 1ì”© ì¤„ì—¬ì¤„ ê²ƒì´ë‹¤.
+	//   --> ì´ë•Œ ë§Œì•½ ì„œë²„ ì¢…ë£Œë¥¼ ìˆ˜í–‰í•˜ëŠ” main ì“°ë ˆë“œì—ì„œ m_pIocp->Joinì„ ìˆ˜í–‰í•´ë²„ë¦¬ë©´ ê³§ë°”ë¡œ ë°˜ë³µë¬¸ì„ ë¹ ì ¸ ë‚˜ì™€ì„œ ì²˜ë¦¬ ë˜ì–´ì•¼í•  I/Oë“¤ì´ ë¬´ì‹œëœë‹¤.
+	// 2. ê·¸ë˜ì„œ Pending ìƒíƒœì¸ Overlapped I/Oì˜ ê°¯ìˆ˜ë¥¼ í™•ì¸í•´ì„œ ì´ ì˜¤ë²„ë©ë“¤ì´ ëª¨ë‘ ë™ì í• ë‹¹ì´ í•´ì œë˜ì–´ IOCPì˜ PendingCountê°€ 0ì´ ë ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤.
+	// 3. Pending I/Oë“¤ì´ ëª¨ë‘ ì²˜ë¦¬ ë˜ì—ˆë‹¤. í•˜ì§€ë§Œ ì•„ì§ IOCP í•¸ë“¤ê³¼ ì„œë²„ ì†Œì¼“ì€ ì—°ê²°ë˜ì–´ìˆê³  í•´ì œëœ ê²ƒì´ ì•„ë‹ˆë¯€ë¡œ GetQueuedCompletionStatusì—ì„œ ëŒ€ê¸°ì¤‘ì¸ ìƒíƒœê°€ ëœë‹¤.
+	// 4. ì´ë•Œ m_pIocp->Join()ìœ¼ë¡œ PostQueuedCompletionStatusë¡œ ì›Œì»¤ ì“°ë ˆë“œì˜ ë°˜ë³µë¬¸ì„ ë¹ ì ¸ë‚˜ì™€ë¼ê³  ëª…ë ¹ì„ ë³´ë‚¸ë‹¤.
+	// 5. ì´ì œ ì•ˆì „í•˜ê²Œ IOCP í•¸ë“¤ì„ í•´ì œí•´ì¤€ë‹¤.
+	// 6. ì„œë²„ ì†Œì¼“ë„ ì•ˆì „í•˜ê²Œ ë‹«ì•„ì¤€ë‹¤.
+	// 7. ì»¨í…Œì´ë„ˆì˜ ì„¸ì…˜ë“¤ì„ ëª¨ë‘ ì •ë¦¬í•´ì¤€ë‹¤.
 	bool TcpServer::Stop() {
-		m_pContainer->DisconnectAllSessions();	// ¼¼¼ÇµéÀ» Á¤¸®ÇØÁÖÀÚ. ÀÌ°É iocp joinº¸´Ù ¸ÕÀúÇÏ¸é GetQueuedCompletionStatus¿¡¼­ 995¹ø¿¡·¯¸¦ ¹ñÀ½ (I/O operation has been aborted)
+		m_pContainer->DisconnectAllSessions();	// ì„¸ì…˜ë“¤ì„ ì •ë¦¬í•´ì£¼ì. ì´ê±¸ iocp joinë³´ë‹¤ ë¨¼ì €í•˜ë©´ GetQueuedCompletionStatusì—ì„œ 995ë²ˆì—ëŸ¬ë¥¼ ë±‰ìŒ (I/O operation has been aborted)
 
 		
-		// PendingCount°¡ 0ÀÌ µÉ¶§±îÁö ±â´Ù¸°´Ù. (Busy Waiting)
+		// PendingCountê°€ 0ì´ ë ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤. (Busy Waiting)
 		while (m_pIocp->GetPendingCount() != 0) {
 		}
 
-		// ¿öÄ¿ ¾²·¹µåµé¿¡°Ô Post I/O¸¦ Àü´ŞÇØ¼­ ¿öÄ¿ ¾²·¹µå°¡ joinable »óÅÂ°¡ µÇµµ·Ï ¹İº¹¹®À» Å»Ãâ½ÃÄÑÁÖÀÚ
+		// ì›Œì»¤ ì“°ë ˆë“œë“¤ì—ê²Œ Post I/Oë¥¼ ì „ë‹¬í•´ì„œ ì›Œì»¤ ì“°ë ˆë“œê°€ joinable ìƒíƒœê°€ ë˜ë„ë¡ ë°˜ë³µë¬¸ì„ íƒˆì¶œì‹œì¼œì£¼ì
 		m_pIocp->Join();
 
-		// IOCP ÇÚµéÀ» ÇØÁ¦ÇØÁÖÀÚ.
+		// IOCP í•¸ë“¤ì„ í•´ì œí•´ì£¼ì.
 		if (m_pIocp->Destroy() == false) {
-			Winsock::Message("IOCP »èÁ¦¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			DebugAssertMessage(false, "IOCP ì‚­ì œì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 			return false;
 		}
 
-		// ¼­¹ö ¼ÒÄÏÀ» ´İ¾ÆÁÖÀÚ.
+		// ì„œë²„ ì†Œì¼“ì„ ë‹«ì•„ì£¼ì.
 		if (m_ServerSocket.Close() == SOCKET_ERROR) {
-			Winsock::AssertWinsockMessage("¼­¹ö ¼ÒÄÏÀ» ´İ´Âµ¥ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			DebugAssertMessage(false, "ì„œë²„ ì†Œì¼“ì„ ë‹«ëŠ”ë° ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 			return false;
 		}
 
-		// µ¿ÀûÇÒ´çµÈ ¼¼¼ÇµéÀ» ¸ğµÎ ÇØÁ¦ÇØÁÖÀÚ.
+		// ë™ì í• ë‹¹ëœ ì„¸ì…˜ë“¤ì„ ëª¨ë‘ í•´ì œí•´ì£¼ì.
 		m_pContainer->Clear();
 
-		// [[[ ¼­¹ö ¿Ïº® ÁßÁö ]]]
+		// [[[ ì„œë²„ ì™„ë²½ ì¤‘ì§€ ]]]
 		m_eState = State::Stopped;
 		m_pEventListener->OnStopped();
 		return true;
@@ -167,7 +167,7 @@ namespace JNetwork {
 
 	void TcpServer::SetEventListener(TcpServerEventListener* listener) {
 		if (m_eState == State::Running || m_eState == State::Paused) {
-			Winsock::Message("ÀÌº¥Æ® ¸®½º³Ê´Â ¼­¹ö°¡ ½ÇÇà/ÀÏ½Ã Á¤ÁöÁßÀÎ »óÅÂ¿¡¼­´Â º¯°æÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù.");
+			DebugAssertMessage(false, "ì´ë²¤íŠ¸ ë¦¬ìŠ¤ë„ˆëŠ” ì„œë²„ê°€ ì‹¤í–‰/ì¼ì‹œ ì •ì§€ì¤‘ì¸ ìƒíƒœì—ì„œëŠ” ë³€ê²½ì´ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤.");
 			return;
 		}
 

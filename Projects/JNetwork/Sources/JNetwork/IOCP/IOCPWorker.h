@@ -1,12 +1,11 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 	
-	IOCPWorker ¾²·¹µå´Â IOCPWorkerManager¿¡¼­¸¸ »ı¼ºÇÏ°í ´Ù·ê ¼ö ÀÖ´Ù.
+	IOCPWorker ì“°ë ˆë“œëŠ” IOCPWorkerManagerì—ì„œë§Œ ìƒì„±í•˜ê³  ë‹¤ë£° ìˆ˜ ìˆë‹¤.
 */
 
 #pragma once
 
-#include <Windows.h>
 #include <JNetwork/IOCP/IOCP.h>
 #include <JNetwork/Worker.h>
 
@@ -19,9 +18,9 @@ protected:
 	~IOCPWorker() override;
 
 	void Run(void* param = nullptr) override;
-	void JoinWait(HANDLE waitHandle) override;
+	void JoinWait(WinHandle waitHandle) override;
 	void Join() override;
-	void Pause(HANDLE waitHandle) override;
+	void Pause(WinHandle waitHandle) override;
 	void Resume() override;
 
 	void WorkerThread(void* param) override;
@@ -30,7 +29,7 @@ private:
 	IOCP* m_pIocp;
 
 	friend class WorkerManager;
-	friend class IOCPPostOrder;
+	friend struct IOCPPostOrder;
 };
 
 } // namespace JNetwork

@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 
@@ -24,7 +24,7 @@ public:
 
 	void UpdateTankMove(TankMove& move);
 
-	void OnFireTank(Bullet* bullet);				// ³» ÅÊÅ©°¡ ÃÑÀ» ½ğ °æ¿ì
+	void OnFireTank(Bullet* bullet);				// ë‚´ íƒ±í¬ê°€ ì´ì„ ìœ ê²½ìš°
 	void OnClickedChatSendButton(ChatBox* chatBox);
 	void OnClickedLeaveGameButton(TextButton* btn);
 	JCore::String GetRoomMemberName(int characterUID) const;
@@ -33,7 +33,7 @@ public:
 	void UpdateUIModeByRoomState();
 
 	/* =================================================================================
-	 *                             Åë½Å ÆĞÅ¶ Ã³¸®
+	 *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬
 	 * ================================================================================*/
 
 	void CmdUpdateRoomInfoAck(ICommand* cmd);
@@ -53,32 +53,32 @@ public:
 private:
 	float m_fLeftTime = 0;
 	float m_fSendTankMoveSynTime = 0;
-	float m_fRevivalLeftTime = 0.0f;		// Á×°í³ª¼­ ºÎÈ°ÇÒ¶§±îÁö ³²Àº ½Ã°£
+	float m_fRevivalLeftTime = 0.0f;		// ì£½ê³ ë‚˜ì„œ ë¶€í™œí• ë•Œê¹Œì§€ ë‚¨ì€ ì‹œê°„
 
 	RoomState m_eRoomState;
 	Tank* m_pTank;
-	Text* m_pTimeText;						// ³²Àº½Ã°£ º¸¿©ÁÖ´Â ÅØ½ºÆ®
-	Text* m_pNoticeText;					// ¹èÆ²ÇÊµå ÀÌº¥Æ® °øÁö ÅØ½ºÆ®
-	Text* m_pRevivalText;					// Á×°í³ª¼­ ºÎÈ°ÇÒ¶§±îÁö ¶ß´Â ÅØ½ºÆ®
+	Text* m_pTimeText;						// ë‚¨ì€ì‹œê°„ ë³´ì—¬ì£¼ëŠ” í…ìŠ¤íŠ¸
+	Text* m_pNoticeText;					// ë°°í‹€í•„ë“œ ì´ë²¤íŠ¸ ê³µì§€ í…ìŠ¤íŠ¸
+	Text* m_pRevivalText;					// ì£½ê³ ë‚˜ì„œ ë¶€í™œí• ë•Œê¹Œì§€ ëœ¨ëŠ” í…ìŠ¤íŠ¸
 	TextButton* m_pLeaveChannelButton;
 	ChatBox* m_pChatBox;
-	Button* m_pClickPrevenButton;			// Á×°í³ª¼­ ¸ğµç È°µ¿À» ¸øÇÏ°ÔÇÏ±â À§ÇØ ÆÇ¶§±â Á¦ÀÏÀ§¿¡ ¾¯¿î´Ù.
+	Button* m_pClickPrevenButton;			// ì£½ê³ ë‚˜ì„œ ëª¨ë“  í™œë™ì„ ëª»í•˜ê²Œí•˜ê¸° ìœ„í•´ íŒë•Œê¸° ì œì¼ìœ„ì— ì’¸ìš´ë‹¤.
 
 	Text* m_pNameText[ROOM_MAX_PLAYER_COUNT];
 	Text* m_pKillText[ROOM_MAX_PLAYER_COUNT];
 	Text* m_pDeathText[ROOM_MAX_PLAYER_COUNT];
 
-	JCore::Vector<Bullet*>	m_MyBullets;	// ³»°¡ ½ğ ÃÑ¾Ëµé
-	JCore::Vector<Tank*>	m_OtherPlayers;	// ´Ù¸¥ ÇÃ·¹ÀÌ¾î ÅÊÅ©
-	JCore::Vector<Bullet*>	m_OtherBullets;	// ´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ ½ğ ÃÑ¾Ëµé
+	JCore::Vector<Bullet*>	m_MyBullets;	// ë‚´ê°€ ìœ ì´ì•Œë“¤
+	JCore::Vector<Tank*>	m_OtherPlayers;	// ë‹¤ë¥¸ í”Œë ˆì´ì–´ íƒ±í¬
+	JCore::Vector<Bullet*>	m_OtherBullets;	// ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€ ìœ ì´ì•Œë“¤
 
-	// RoomLayer¿¡ ÀÖ´Â ¹æ Á¤º¸ ±×´ë·Î ÇÊ¿ä
-	// ¹èÆ²ÇÊµåµµ °á±¹ ¹æÀÌ¹Ç·Î
+	// RoomLayerì— ìˆëŠ” ë°© ì •ë³´ ê·¸ëŒ€ë¡œ í•„ìš”
+	// ë°°í‹€í•„ë“œë„ ê²°êµ­ ë°©ì´ë¯€ë¡œ
 	int m_iRoomMemberCount = 0;
 	int m_iHostCharacterUID = INVALID_UID;
 	RoomCharacterInfo m_RoomMember[ROOM_MAX_PLAYER_COUNT]{};
 
-	inline static const int ms_iPlayerSendMoveStatePacketDelay = 0.1f;		// ÇÃ·¹ÀÌ¾î°¡ ¸îÃÊ¸¶´Ù ÀÚ½ÅÀÇ À§Ä¡¸¦ ¼­¹ö¿¡ Àü¼ÛÇÒÁö
+	inline static const int ms_iPlayerSendMoveStatePacketDelay = 0.1f;		// í”Œë ˆì´ì–´ê°€ ëª‡ì´ˆë§ˆë‹¤ ìì‹ ì˜ ìœ„ì¹˜ë¥¼ ì„œë²„ì— ì „ì†¡í• ì§€
 
 	static const char* ms_pPlayWaitLeftTimeFormat;
 	static const char* ms_pPlayingLeftTimeFormat;

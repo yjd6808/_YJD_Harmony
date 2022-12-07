@@ -12,21 +12,21 @@ MysqlQueryFuture::MysqlQueryFuture(const JCore::String& statement) :
 {
 	m_eStatement = MysqlQuery::ParseStatement(statement);
 	if (m_WaitHandle == INVALID_HANDLE_VALUE)
-		DebugAssert(false, "ÇÚµéÀÌ Á¦´ë·Î »ı¼ºµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+		DebugAssertMessage(false, "í•¸ë“¤ì´ ì œëŒ€ë¡œ ìƒì„±ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.");
 }
 
 MysqlQueryFuture::~MysqlQueryFuture() {
 	if (m_WaitHandle != INVALID_HANDLE_VALUE)
 		CloseHandle(m_WaitHandle);
 
-	// ¿©±â¼­ ÇØÁ¦ ¾ÈÇØÁÖ¸é MysqlQueryÀÌ³à¼® Å©±â¸¸Å­ µ¿ÀûÇÒ´ç ÇØÁ¦°¡ ¾ÈµÈ´Ù. ±×·¡¼­ ¼öµ¿À¸·Î È£ÃâÇØÁà¾ßÇÔ / 22/04/07 Àú³á 8½Ã
+	// ì—¬ê¸°ì„œ í•´ì œ ì•ˆí•´ì£¼ë©´ MysqlQueryì´ë…€ì„ í¬ê¸°ë§Œí¼ ë™ì í• ë‹¹ í•´ì œê°€ ì•ˆëœë‹¤. ê·¸ë˜ì„œ ìˆ˜ë™ìœ¼ë¡œ í˜¸ì¶œí•´ì¤˜ì•¼í•¨ / 22/04/07 ì €ë… 8ì‹œ
 	Memory::PlacementDeallocate(m_Result);
 }
 
 MysqlQuery& MysqlQueryFuture::Wait() {
-	DebugAssert(m_WaitHandle != INVALID_HANDLE_VALUE, "ÇÚµéÀÌ nullptr ÀÔ´Ï´Ù.");
+	DebugAssertMessage(m_WaitHandle != INVALID_HANDLE_VALUE, "í•¸ë“¤ì´ nullptr ì…ë‹ˆë‹¤.");
 	if (m_bReady == false) {
-		// IOCPOverlappedQuery¿¡¼­ ¾ÆÁ÷ Äõ¸® °á°ú°¡ ÁØºñ°¡ ¾ÈµÈ °æ¿ì ½Ã±×³ÎÀ» º¸³¾¶§±îÁö ±â´Ù¸°´Ù.
+		// IOCPOverlappedQueryì—ì„œ ì•„ì§ ì¿¼ë¦¬ ê²°ê³¼ê°€ ì¤€ë¹„ê°€ ì•ˆëœ ê²½ìš° ì‹œê·¸ë„ì„ ë³´ë‚¼ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤.
 		WaitForSingleObject(m_WaitHandle, INFINITE);
 	}
 

@@ -1,15 +1,15 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/Container/LinkedList.h>
 
 
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_LinkedListTest == ON
@@ -17,7 +17,7 @@ using namespace std;
 TEST(LinkedListTest, Regular) {
 	AutoMemoryLeakDetector detector;
 
-	// PushBackAll Å×½ºÆ®
+	// PushBackAll í…ŒìŠ¤íŠ¸
 	{
 		LinkedList<int> v;
 		LinkedList<int> temp;
@@ -42,7 +42,7 @@ TEST(LinkedListTest, Regular) {
 TEST(LinkedListTest, Enumerator) {
 	AutoMemoryLeakDetector detector;
 
-	// µ¥ÀÌÅÍ°¡ ¾ø´Â °æ¿ì
+	// ë°ì´í„°ê°€ ì—†ëŠ” ê²½ìš°
 	{
 		LinkedList<int> v;
 		EXPECT_TRUE(v.Begin()->IsValid());
@@ -51,7 +51,7 @@ TEST(LinkedListTest, Enumerator) {
 		EXPECT_TRUE(v.End()->HasNext() == false);
 	}
 
-	// µ¥ÀÌÅÍ°¡ ÇÑ°³¸¸ ÀÖ´Â °æ¿ì
+	// ë°ì´í„°ê°€ í•œê°œë§Œ ìˆëŠ” ê²½ìš°
 	{
 		LinkedList<int> v;
 		v.PushBack(1);
@@ -71,7 +71,7 @@ TEST(LinkedListTest, Enumerator) {
 		EXPECT_TRUE(end->HasPrevious() == false);
 	}
 
-	// µ¥ÀÌÅÍ 5°³
+	// ë°ì´í„° 5ê°œ
 	{
 		LinkedList<int> v;
 		v.PushBack(1);
@@ -133,7 +133,7 @@ TEST(LinkedListTest, OperatorTest) {
 
 	LinkedList<Model> b{ 6, 5, 4, 3, 2, 1 };
 
-	// º¹»ç ´ëÀÔ
+	// ë³µì‚¬ ëŒ€ì…
 	b = a;
 
 	int i = 1;
@@ -149,7 +149,7 @@ TEST(LinkedListTest, OperatorTest) {
 	EXPECT_TRUE(b.Back().a == 3);
 	EXPECT_TRUE(b.Front().a == 1);
 
-	// ÀÌ´Ï¼È¶óÀÌÀú º¹»ç ´ëÀÔ
+	// ì´ë‹ˆì…œë¼ì´ì € ë³µì‚¬ ëŒ€ì…
 	b = { 1, 3, 5, 6 };
 	EXPECT_TRUE(b.Size() == 4);
 	EXPECT_TRUE(b.Back().a == 6);

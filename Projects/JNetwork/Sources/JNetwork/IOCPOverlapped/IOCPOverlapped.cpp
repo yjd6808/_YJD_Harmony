@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -22,20 +22,19 @@ namespace JNetwork {
 		delete this;
 	}
 
-	void IOCPOverlapped::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {}
+	void IOCPOverlapped::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {}
 
-	bool IOCPOverlapped::IsFailed(SOCKET hSocket, BOOL result, DWORD numberOfBytesTransffered) {
+	bool IOCPOverlapped::IsFailed(SOCKET hSocket, BOOL result, Int32UL numberOfBytesTransffered) {
 
 		if (result == FALSE) {
-			// GetQueuedCompletionStatusÀÌ ½ÇÆĞÇÑ °æ¿ì GetLastError()·Î ¿À·ù ÄÚµå¸¦ ¾òÀ» ¼ö ÀÖ´Ù.
-			// ÇÏÁö¸¸ ÀÌ ÄÚµå´Â ÀÏ¹İÀûÀÎ À©µµ¿ì ¿À·ù ÄÚµåÀÌ´Ù. (À©µµ¿ì ¿À·ù ÄÚµå Ç¥ : https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--500-999-)
-			// µû¶ó¼­ WSAGetOverlappedResultÇÔ¼ö·Î ¿Ã¹Ù¸¥ ¼ÒÄÏ ¿À·ù ÄÚµå¸¦ ¾ò¾î¾ßÇÑ´Ù.
-			// @Âü°í : TCP/IP À©µµ¿ì ¼ÒÄÏ ÇÁ·Î±×·¡¹Ö 463p
+			// GetQueuedCompletionStatusì´ ì‹¤íŒ¨í•œ ê²½ìš° GetLastError()ë¡œ ì˜¤ë¥˜ ì½”ë“œë¥¼ ì–»ì„ ìˆ˜ ìˆë‹¤.
+			// í•˜ì§€ë§Œ ì´ ì½”ë“œëŠ” ì¼ë°˜ì ì¸ ìœˆë„ìš° ì˜¤ë¥˜ ì½”ë“œì´ë‹¤. (ìœˆë„ìš° ì˜¤ë¥˜ ì½”ë“œ í‘œ : https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--500-999-)
+			// ë”°ë¼ì„œ WSAGetOverlappedResultí•¨ìˆ˜ë¡œ ì˜¬ë°”ë¥¸ ì†Œì¼“ ì˜¤ë¥˜ ì½”ë“œë¥¼ ì–»ì–´ì•¼í•œë‹¤.
+			// @ì°¸ê³  : TCP/IP ìœˆë„ìš° ì†Œì¼“ í”„ë¡œê·¸ë˜ë° 463p
 
-			DWORD dwTransfer = 0;
-			DWORD dwFlag = 0;
+			Int32UL dwTransfer = 0;
+			Int32UL dwFlag = 0;
 			WSAGetOverlappedResult(hSocket, this, &dwTransfer, FALSE, &dwFlag);
-			Winsock::WinsockMessage("¿À¹ö·¦ÀÌ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
 			return true;
 		}
 

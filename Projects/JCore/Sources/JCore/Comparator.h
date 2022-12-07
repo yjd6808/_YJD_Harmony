@@ -1,12 +1,13 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	ºñ±³ ÆãÅÍ
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë¹„êµ í‘í„°
 */
 
 #pragma once
 
-#include <JCore/StringUtil.h>
-#include <JCore/String.h>
+#include <JCore/Primitives/StringUtil.h>
+#include <JCore/Primitives/String.h>
+#include <JCore/TypeTraits.h>
 
 namespace JCore {
 
@@ -16,9 +17,12 @@ struct Comparator
 	int operator()(const T& lhs, const T& rhs) {
 		if (lhs < rhs) {
 			return -1;
-		} else if (lhs > rhs) {
+		}
+
+	    if (lhs > rhs) {
 			return 1;
 		}
+
 		return 0;
 	}
 };

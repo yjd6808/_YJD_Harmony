@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -8,21 +8,11 @@
 #include <Common/Structure.h>
 
 #include <JCore/Time.h>
-#include <JCore/LockGuard.h>
+#include <JCore/Sync/SpinLock.h>
 #include <JNetwork/Host/TcpSession.h>
 
 #include <TF/Game/Channel.h>
 #include <TF/Game/Room.h>
-
-#define INVALID_UID		-1
-
-#ifndef Out_
-#define Out_
-#endif
-
-#ifndef In_
-#define In_
-#endif
 
 class Player
 {
@@ -54,8 +44,8 @@ public:
 	void SetRoomHost(bool isHost);
 	void SetReady(bool ready);
 	bool IsReady();
-	void LoadCharacterInfo(Out_ CharacterInfo& info);			// Á¤º¸¸¦ ¾òÀ» ¶§ »ç¿ë
-	void LoadRoomCharacterInfo(Out_ RoomCharacterInfo& info);	// Á¤º¸¸¦ ¾òÀ» ¶§ »ç¿ë
+	void LoadCharacterInfo(Out_ CharacterInfo& info);			// ì •ë³´ë¥¼ ì–»ì„ ë•Œ ì‚¬ìš©
+	void LoadRoomCharacterInfo(Out_ RoomCharacterInfo& info);	// ì •ë³´ë¥¼ ì–»ì„ ë•Œ ì‚¬ìš©
 	bool CheckNameEqual(const JCore::String& name);
 
 	void LoadBattleInfo(Out_ BattleInfo& battleInfo);
@@ -76,7 +66,7 @@ public:
 	int SetRevivalLeftTime(int time);
 	int GetRevivalLeftTime();
 
-	// ¶ôÀ» ¾ÈÇÑ ÇÔ¼ö (¿ÜºÎ¿¡¼­ ¶ôÀ» ¼öÇàÇÑ °æ¿ì)
+	// ë½ì„ ì•ˆí•œ í•¨ìˆ˜ (ì™¸ë¶€ì—ì„œ ë½ì„ ìˆ˜í–‰í•œ ê²½ìš°)
 	void UnsafeInitializeBattleInfo();
 	int UnsafeGetRoomUID() const;
 	void UnsafeSetRoomUID(int roomUID);

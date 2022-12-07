@@ -83,15 +83,6 @@
       <Filter>IOCP</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Packet.h" />
-    <ClInclude Include="..\Sources\JNetwork\Database\MySQL\MySQLConnection.h">
-      <Filter>Database\MySQL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Database\IConnection.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Database\MySQL\IDatabase.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Worker.h" />
     <ClInclude Include="..\Sources\JNetwork\WorkerManager.h" />
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.h">
@@ -119,12 +110,6 @@
     </Filter>
     <Filter Include="IOCPOverlapped">
       <UniqueIdentifier>{d1067032-1442-4f1d-9a8c-7a577b68be80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Database">
-      <UniqueIdentifier>{fe1129b4-e1a5-4a58-98f9-2d6539c9ae08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Database\MySQL">
-      <UniqueIdentifier>{fbeb9c7b-55b2-4446-a2c6-4471e9148796}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

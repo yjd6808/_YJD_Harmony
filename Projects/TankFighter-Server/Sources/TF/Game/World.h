@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -9,7 +9,7 @@
 
 class Channel;
 
-// °ÔÀÓÀÇ ÀüÃ¼ÀûÀÎ ±¸Á¶¸¦ ³ªÅ¸³½´Ù.
+// ê²Œì„ì˜ ì „ì²´ì ì¸ êµ¬ì¡°ë¥¼ ë‚˜íƒ€ë‚¸ë‹¤.
 
 class Room;
 class World
@@ -39,7 +39,7 @@ public:
 	Room* GetRoomByPlayer(Player* player);
 private:
 	PlayerMap m_PlayerMap;
-	JCore::HashMap<int, Channel*> m_ChannelMap;		// ºÒº¯ - ¶ô ºÒÇÊ¿ä
+	JCore::HashMap<int, Channel*> m_ChannelMap;		// ë¶ˆë³€ - ë½ ë¶ˆí•„ìš”
 
 	inline static World* ms_pInstance = nullptr;
 };

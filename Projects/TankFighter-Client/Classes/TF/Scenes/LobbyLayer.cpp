@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/LobbyLayer.h>
@@ -16,14 +16,14 @@ using namespace JCore;
 
 void LobbyLayer::onEnterTransitionDidFinish() {
 	/*
-	 * ·Îºñ¿¡ ÁøÀÔÇÏ¸é ´ÙÀ½ Á¤º¸¸¦ ¼­¹öÃø¿¡ ¿äÃ»ÇØ¾ßÇÑ´Ù.
+	 * ë¡œë¹„ì— ì§„ì…í•˜ë©´ ë‹¤ìŒ ì •ë³´ë¥¼ ì„œë²„ì¸¡ì— ìš”ì²­í•´ì•¼í•œë‹¤.
 	 *
-	 * 1. ÀÚ½ÅÀÇ Á¤º¸
-	 * 2. ¹æ¸®½ºÆ®
-	 * 3. Ä£±¸¸ñ·Ï
+	 * 1. ìì‹ ì˜ ì •ë³´
+	 * 2. ë°©ë¦¬ìŠ¤íŠ¸
+	 * 3. ì¹œêµ¬ëª©ë¡
 	 */
 	if (SendFn::SendJoinLobbySyn() == false) {
-		PopUp::createInParent("·Îºñ Á¤º¸ ¿äÃ»ÀÌ ½ÇÆĞÇÏ¿´½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ë¡œë¹„ ì •ë³´ ìš”ì²­ì´ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.", this, false);
 	}
 }
 
@@ -48,11 +48,11 @@ bool LobbyLayer::init() {
 	m_pRoomTitleEditBox->setFontSize(15);
 	m_pRoomTitleEditBox->setPlaceholderFontSize(15);
 	m_pRoomTitleEditBox->setPlaceholderFontColor(Color3B::BLACK);
-	m_pRoomTitleEditBox->setPlaceHolder("»ı¼ºÇÒ ¹æ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+	m_pRoomTitleEditBox->setPlaceHolder("ìƒì„±í•  ë°© ì´ë¦„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.");
 	m_pRoomTitleEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
 	this->addChild(m_pRoomTitleEditBox);
 
-	m_pCreateRoomBtn = TextButton::create(200, 50, "¹æ ¸¸µé±â", 16);
+	m_pCreateRoomBtn = TextButton::create(200, 50, "ë°© ë§Œë“¤ê¸°", 16);
 	m_pCreateRoomBtn->setBackgroundColor(ColorList::Babyblue_v);
 	m_pCreateRoomBtn->setFontColor(ColorList::Bistrebrown_v);
 	m_pCreateRoomBtn->setAnchorPoint(Vec2::ZERO);
@@ -68,11 +68,11 @@ bool LobbyLayer::init() {
 	m_pFriendNameEditBox->setFontSize(15);
 	m_pFriendNameEditBox->setPlaceholderFontSize(15);
 	m_pFriendNameEditBox->setPlaceholderFontColor(Color3B::BLACK);
-	m_pFriendNameEditBox->setPlaceHolder("Ä£±¸ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+	m_pFriendNameEditBox->setPlaceHolder("ì¹œêµ¬ ì´ë¦„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.");
 	m_pFriendNameEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
 	this->addChild(m_pFriendNameEditBox);
 
-	m_AddFriendNameButton = TextButton::create(200, 50, "Ä£±¸ Ãß°¡ÇÏ±â", 16);
+	m_AddFriendNameButton = TextButton::create(200, 50, "ì¹œêµ¬ ì¶”ê°€í•˜ê¸°", 16);
 	m_AddFriendNameButton->setBackgroundColor(ColorList::Babyblue_v);
 	m_AddFriendNameButton->setFontColor(ColorList::Bistrebrown_v);
 	m_AddFriendNameButton->setAnchorPoint(Vec2::ZERO);
@@ -80,7 +80,7 @@ bool LobbyLayer::init() {
 	m_AddFriendNameButton->setClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedAddFriendButton, this));
 	this->addChild(m_AddFriendNameButton);
 
-	m_pFriendListText = TextButton::create(400, 50, "Ä£±¸ ¸ñ·Ï", 16);
+	m_pFriendListText = TextButton::create(400, 50, "ì¹œêµ¬ ëª©ë¡", 16);
 	m_pFriendListText->setBackgroundColor(ColorList::Bittersweet_v);
 	m_pFriendListText->setFontColor(ColorList::Black_v);
 	m_pFriendListText->setAnchorPoint(Vec2::ZERO);
@@ -96,7 +96,7 @@ bool LobbyLayer::init() {
 	m_pFriendListView->GetListView()->setPadding(10.0f, 10.0f, 10.0f, 10.0f);
 	this->addChild(m_pFriendListView);
 
-	m_pTerminateGameButton = TextButton::create(200, 50, "°ÔÀÓ Á¾·á", 16);
+	m_pTerminateGameButton = TextButton::create(200, 50, "ê²Œì„ ì¢…ë£Œ", 16);
 	m_pTerminateGameButton->setBackgroundColor(ColorList::Beaublue_v);
 	m_pTerminateGameButton->setFontColor(ColorList::Black_v);
 	m_pTerminateGameButton->setAnchorPoint(Vec2::ZERO);
@@ -104,7 +104,7 @@ bool LobbyLayer::init() {
 	m_pTerminateGameButton->setClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedTerminateGameButton, this));
 	this->addChild(m_pTerminateGameButton);
 
-	m_pSelectChannelButton = TextButton::create(200, 50, "Ã¤³Î ¼±ÅÃ", 16);
+	m_pSelectChannelButton = TextButton::create(200, 50, "ì±„ë„ ì„ íƒ", 16);
 	m_pSelectChannelButton->setBackgroundColor(ColorList::Beaublue_v);
 	m_pSelectChannelButton->setFontColor(ColorList::Black_v);
 	m_pSelectChannelButton->setAnchorPoint(Vec2::ZERO);
@@ -113,7 +113,7 @@ bool LobbyLayer::init() {
 	this->addChild(m_pSelectChannelButton);
 
 
-	m_pNyInfoButton = TextButton::create(200, 150, "³» Á¤º¸", 16);
+	m_pNyInfoButton = TextButton::create(200, 150, "ë‚´ ì •ë³´", 16);
 	m_pNyInfoButton->setBackgroundColor(ColorList::Blackcoral_v);
 	m_pNyInfoButton->setFontColor(ColorList::BlackShadows_v);
 	m_pNyInfoButton->setAnchorPoint(Vec2::ZERO);
@@ -140,24 +140,24 @@ void LobbyLayer::OnClickedChatSendButton(ChatBox* chatBox) {
 
 
 
-// ¹æ »ı¼º / CREATE_ROOM_SYN 120
+// ë°© ìƒì„± / CREATE_ROOM_SYN 120
 void LobbyLayer::OnClickedCreateRoomButton(TextButton* btn) {
 	const JCore::String roomName = m_pRoomTitleEditBox->getText();
 
 	if (roomName.Length() == 0) {
-		PopUp::createInParent("»ı¼ºÇÒ ¹æ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.", this, false);
+		PopUp::createInParent("ìƒì„±í•  ë°© ì´ë¦„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.", this, false);
 		return;
 	}
 
 	if (roomName.Length() + 1 >= NAME_LEN) {
-		PopUp::createInParent("¹æ ÀÌ¸§Àº 40¹ÙÀÌÆ® ÀÌÇÏ·Î ÀÔ·ÂÇØÁÖ¼¼¿ä", this, false);
+		PopUp::createInParent("ë°© ì´ë¦„ì€ 40ë°”ì´íŠ¸ ì´í•˜ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”", this, false);
 		return;
 	}
 
 	SendFn::SendCreateRoomSyn(roomName);
 }
 
-// °ÔÀÓ Á¾·á
+// ê²Œì„ ì¢…ë£Œ
 void LobbyLayer::OnClickedTerminateGameButton(TextButton* btn) {
 
 	if (_Client->Disconnect()) {
@@ -165,7 +165,7 @@ void LobbyLayer::OnClickedTerminateGameButton(TextButton* btn) {
 	}
 }
 
-// Ã¤³Î ¼±ÅÃ
+// ì±„ë„ ì„ íƒ
 void LobbyLayer::OnClickedSelectChannelButton(TextButton* btn) {
 	_Client->SetChannelUID(INVALID_UID);
 	_Client->SetCharacterUID(INVALID_UID);
@@ -173,53 +173,53 @@ void LobbyLayer::OnClickedSelectChannelButton(TextButton* btn) {
 	_Client->ChangeScene(SceneType::Channel);
 }
 
-// ¹æ Âü°¡ / JOIN_ROOM_SYN 121
+// ë°© ì°¸ê°€ / JOIN_ROOM_SYN 121
 void LobbyLayer::OnClickedJoinRoomButton(TextButton* btn) {
 
-	// ¹öÆ°¿¡ ÁöÁ¤µÈ ÅÂ±×¿¡ ÇØ´ç Âü°¡ÇÏ°íÀÚ ÇÏ´Â ¹æÀÇ CharacterUID Á¤º¸¸¦ ÀúÀåÇØ³õÀ½
+	// ë²„íŠ¼ì— ì§€ì •ëœ íƒœê·¸ì— í•´ë‹¹ ì°¸ê°€í•˜ê³ ì í•˜ëŠ” ë°©ì˜ CharacterUID ì •ë³´ë¥¼ ì €ì¥í•´ë†“ìŒ
 	SendFn::SendJoinRoomSyn(btn->getTag());
 }
 
 
-// ¹æ ¸ñ·Ï Å¬¸¯½Ã
+// ë°© ëª©ë¡ í´ë¦­ì‹œ
 void LobbyLayer::OnClickedFriendListButton(TextButton* btn) {
-	PopUp::createInParent("°³¹ßÀÚ : À±Á¤µµ", this, false);
+	PopUp::createInParent("ê°œë°œì : ìœ¤ì •ë„", this, false);
 }
 
-// Ä£±¸ Ãß°¡ / ADD_FRIEND_SYN 122
+// ì¹œêµ¬ ì¶”ê°€ / ADD_FRIEND_SYN 122
 void LobbyLayer::OnClickedAddFriendButton(TextButton* btn) {
 	const JCore::String friendName = m_pFriendNameEditBox->getText();
 
 	if (friendName.Length() == 0) {
-		PopUp::createInParent("Ä£±¸ Ãß°¡ÇÒ ´Ğ³×ÀÓÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.", this, false);
+		PopUp::createInParent("ì¹œêµ¬ ì¶”ê°€í•  ë‹‰ë„¤ì„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.", this, false);
 		return;
 	}
 
 	if (friendName.Length() + 1 >= NAME_LEN) {
-		PopUp::createInParent("Ä£±¸ Ãß°¡ÇÒ ´Ğ³×ÀÓ ÀÌ¸§Àº 40¹ÙÀÌÆ® ÀÌÇÏ·Î ÀÔ·ÂÇØÁÖ¼¼¿ä", this, false);
+		PopUp::createInParent("ì¹œêµ¬ ì¶”ê°€í•  ë‹‰ë„¤ì„ ì´ë¦„ì€ 40ë°”ì´íŠ¸ ì´í•˜ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”", this, false);
 		return;
 	}
 
 	SendFn::SendAddFriendSyn(friendName);
 }
 
-// Ä£±¸ »èÁ¦ / DELETE_FRIEND_SYN 123
+// ì¹œêµ¬ ì‚­ì œ / DELETE_FRIEND_SYN 123
 void LobbyLayer::OnClickedDeleteFriendButton(TextButton* btn) {
 
-	// ¹öÆ°¿¡ ÁöÁ¤µÈ ÅÂ±×¿¡ ÇØ´ç Ä³¸¯ÅÍ CharacterUID Á¤º¸¸¦ ÀúÀåÇØ³õÀ½
+	// ë²„íŠ¼ì— ì§€ì •ëœ íƒœê·¸ì— í•´ë‹¹ ìºë¦­í„° CharacterUID ì •ë³´ë¥¼ ì €ì¥í•´ë†“ìŒ
 	SendFn::SendDeleteFriendSyn(btn->getTag());
 
 	
 }
 
 void LobbyLayer::OnClickedMyInfoButton(TextButton* btn) {
-	PopUp::createInParent("¤§¤§", this, false);
+	PopUp::createInParent("ã„·ã„·", this, false);
 }
 
 
 /* =================================================================================
  *
- *                             Åë½Å ÆĞÅ¶ Ã³¸®
+ *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬
  *
  * ================================================================================*/
 
@@ -227,11 +227,11 @@ void LobbyLayer::OnClickedMyInfoButton(TextButton* btn) {
 void LobbyLayer::CmdUpdateCharacterInfoAck(ICommand* cmd) {
 	UpdateCharacterInfoAck* pUpdateCharacterInfoAck = cmd->CastCommand<UpdateCharacterInfoAck*>();
 
-	// Ä³¸¯ÅÍ Á¤º¸ ¾÷µ¥ÀÌÆ®
+	// ìºë¦­í„° ì •ë³´ ì—…ë°ì´íŠ¸
 	if (pUpdateCharacterInfoAck->Result) {
 		_Client->UpdateCharacterInfo(pUpdateCharacterInfoAck->Info);
 
-		m_pNyInfoButton->setText(StringUtils::format("%s\n%dÅ³ %dµ¥½º\n%d½Â¸® %dÆĞ¹è\n%d °ñµå",
+		m_pNyInfoButton->setText(StringUtils::format("%s\n%dí‚¬ %dë°ìŠ¤\n%dìŠ¹ë¦¬ %díŒ¨ë°°\n%d ê³¨ë“œ",
 			pUpdateCharacterInfoAck->Info.Name,
 			pUpdateCharacterInfoAck->Info.Kill,
 			pUpdateCharacterInfoAck->Info.Death,
@@ -261,7 +261,7 @@ void LobbyLayer::CmdUpdateRoomListAck(ICommand* cmd) {
 		const auto pRoomButton = TextButton::create(580, 40, StringUtils::format("%s (%d/%d)", pInfo->Name, pInfo->PlayerCount, pInfo->MaxPlayerCount), 16);
 		pRoomButton->setAnchorPoint(Vec2::ZERO);
 		pRoomButton->setBackgroundColor(ColorList::Aero_v);
-		pRoomButton->setTag(pInfo->RoomUID);	// ¹æ¹øÈ£ CharacterUID ÁöÁ¤
+		pRoomButton->setTag(pInfo->RoomUID);	// ë°©ë²ˆí˜¸ CharacterUID ì§€ì •
 		pRoomButton->setClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedJoinRoomButton, this));
 		m_pRoomListView->GetListView()->pushBackCustomItem(pRoomButton);
 	}
@@ -279,7 +279,7 @@ void LobbyLayer::CmdUpdateFriendListAck(ICommand* cmd) {
 		const auto pFriendButton = TextButton::create(380, 40, pInfo->Name, 16);
 		pFriendButton->setAnchorPoint(Vec2::ZERO);
 		pFriendButton->setBackgroundColor(ColorList::Aero_v);
-		pFriendButton->setTag(pInfo->CharacterUID);	// ¹æ¹øÈ£ CharacterUID ÁöÁ¤
+		pFriendButton->setTag(pInfo->CharacterUID);	// ë°©ë²ˆí˜¸ CharacterUID ì§€ì •
 		pFriendButton->setClickEvent(CC_CALLBACK_1(LobbyLayer::OnClickedDeleteFriendButton, this));
 		m_pFriendListView->GetListView()->pushBackCustomItem(pFriendButton);
 	}
@@ -311,25 +311,25 @@ void LobbyLayer::CmdJoinRoomAck(ICommand* cmd) {
 	PopUp::createInParent(pJoinRoomAck->Reason, this, false);
 }
 
-// Ä£±¸ Ãß°¡ ¿äÃ»
+// ì¹œêµ¬ ì¶”ê°€ ìš”ì²­
 void LobbyLayer::CmdAddFriendAck(ICommand* cmd) {
 	const AddFriendAck* pUpdateFriendListAck = cmd->CastCommand<AddFriendAck*>();
 	if (!pUpdateFriendListAck->Result)
 		PopUp::createInParent(pUpdateFriendListAck->Reason, this, false);
 	else
-		PopUp::createInParent("Ä£±¸ ¿äÃ»À» ¼º°øÀûÀ¸·Î º¸³Â½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ì¹œêµ¬ ìš”ì²­ì„ ì„±ê³µì ìœ¼ë¡œ ë³´ëƒˆìŠµë‹ˆë‹¤.", this, false);
 }
 
-// »ó´ë¹æ¿¡°Ô ¿äÃ» µµÂø
+// ìƒëŒ€ë°©ì—ê²Œ ìš”ì²­ ë„ì°©
 void LobbyLayer::CmdAddFriendRequestSyn(ICommand* cmd) {
 	const AddFriendRequestSyn* pAddFriendRequestSyn = cmd->CastCommand<AddFriendRequestSyn*>();
 
-	// ÀÌ°Å ÆĞÅ¶Àº ÀÌ ÇÔ¼ö ¹ş¾î³ª¸é »ç¶óÁö¹Ç·Î Äİ¹é Àü´Ş½Ã¿¡ º¹»çÇØ¼­ Àü´ŞÇØ¾ßÇÔ
+	// ì´ê±° íŒ¨í‚·ì€ ì´ í•¨ìˆ˜ ë²—ì–´ë‚˜ë©´ ì‚¬ë¼ì§€ë¯€ë¡œ ì½œë°± ì „ë‹¬ì‹œì— ë³µì‚¬í•´ì„œ ì „ë‹¬í•´ì•¼í•¨
 	int iRequestCharacterUID = pAddFriendRequestSyn->RequestCharacterUID;
 
-	PopUp::createInParent(StringUtils::format("%s ´ÔÀÌ Ä£±¸ ¿äÃ»À» º¸³Â½À´Ï´Ù. ¼ö¶ôÇÏ½Ê´Ï±î?", pAddFriendRequestSyn->Info.Name).c_str(), this, false,
-		[iRequestCharacterUID]() { SendFn::SendAddFriendRequestAck(iRequestCharacterUID, true);  },	 // ¼ö¶ô
-		[iRequestCharacterUID]() { SendFn::SendAddFriendRequestAck(iRequestCharacterUID, false); }); // °ÅÀı 
+	PopUp::createInParent(StringUtils::format("%s ë‹˜ì´ ì¹œêµ¬ ìš”ì²­ì„ ë³´ëƒˆìŠµë‹ˆë‹¤. ìˆ˜ë½í•˜ì‹­ë‹ˆê¹Œ?", pAddFriendRequestSyn->Info.Name).c_str(), this, false,
+		[iRequestCharacterUID]() { SendFn::SendAddFriendRequestAck(iRequestCharacterUID, true);  },	 // ìˆ˜ë½
+		[iRequestCharacterUID]() { SendFn::SendAddFriendRequestAck(iRequestCharacterUID, false); }); // ê±°ì ˆ 
 }
 
 void LobbyLayer::CmdChatMessageAck(ICommand* cmd) {

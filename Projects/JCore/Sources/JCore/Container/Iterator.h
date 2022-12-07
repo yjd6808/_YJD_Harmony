@@ -1,19 +1,19 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
 
 #include <JCore/Declspec.h>
-#include <JCore/PointerObserver.h>
+#include <JCore/Primitives/ObserverPtr.h>
 
 namespace JCore {
 
 /*=====================================================================================
-						¹İº¹ÀÚ ÃÖ»óÀ§ ÀÎÅÍÆäÀÌ½º
+						ë°˜ë³µì ìµœìƒìœ„ ì¸í„°í˜ì´ìŠ¤
 =====================================================================================*/
 
-// Àü¹æ ¼±¾ğ
+// ì „ë°© ì„ ì–¸
 template <typename> class Collection;
 template <typename T>
 struct JCORE_NOVTABLE Iterator
@@ -44,7 +44,7 @@ protected:
 
 	void ThrowIfIteratorIsNotValid() const {
 		if (!IsValid()) {
-			throw NullPointerException("ÇØ´ç ÀÌÅÍ·¹ÀÌÅÍ´Â ´õÀÌ»ó Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			throw NullPointerException("í•´ë‹¹ ì´í„°ë ˆì´í„°ëŠ” ë”ì´ìƒ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		}
 	}
 protected:

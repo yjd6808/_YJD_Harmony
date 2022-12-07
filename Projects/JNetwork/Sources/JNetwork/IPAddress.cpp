@@ -1,14 +1,15 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
 #include <JNetwork/IPAddress.h>
 
+#include <JCore/Primitives/StaticString.h>
 #include <JCore/Ascii.h>
 #include <JCore/Exception.h>
 #include <JCore/Limit.h>
-#include <JCore/StaticString.h>
+
 
 
 
@@ -32,7 +33,7 @@ IPv4Address::IPv4Address(const char* hostOrderedAddressString) {
 
 Byte IPv4Address::GetAddressOctet(int idx) const {
 	if (idx < 0 || idx > 3) {
-		throw InvalidArgumentException("ÀÎµ¦½º´Â 0ÀÌ»ó 3ÀÌÇÏ¸¸ ÀÎÀÚ·Î ¹ŞÀ» ¼ö ÀÖ½À´Ï´Ù.");
+		throw InvalidArgumentException("ì¸ë±ìŠ¤ëŠ” 0ì´ìƒ 3ì´í•˜ë§Œ ì¸ìë¡œ ë°›ì„ ìˆ˜ ìˆìŠµë‹ˆë‹¤.");
 	}
 
 	return m_Addr.Seg[3 - idx];
@@ -44,17 +45,17 @@ String IPv4Address::ToString() const {
 	std::ostringstream o;
 	
 	for (int i = 0; i < 4; i++) {
-		// tip : << ¿¬»êÀÚ°¡ &º¸´Ù ¿ì¼±¼øÀ§°¡ ³ô¾Æ¼­ ±»ÀÌ ()·Î ¾È¹­À½
+		// tip : << ì—°ì‚°ìê°€ &ë³´ë‹¤ ìš°ì„ ìˆœìœ„ê°€ ë†’ì•„ì„œ êµ³ì´ ()ë¡œ ì•ˆë¬¶ìŒ
 		o << (int)GetAddressOctet(i);
 		if (i == 3)
 			s.Append(o.str());
 		else
 			s.Append(o.str() + '.');
 
-		// tip : ostringstream ºñ¿ì´Â ¹ı
-		// @Âü°í : https://stackoverflow.com/questions/5288036/how-to-clear-ostringstream
-		o.str("");		// ³»ºÎ ¹®ÀÚ¿­À» ºó¹®ÀÚ¿­·Î ¹Ù²ãÁÜ
-		// o.clear();	// È°¼ºÈ­µÈ ¿¡·¯ ÇÃ·¡±×¸¦ Áö¿öÁÜ
+		// tip : ostringstream ë¹„ìš°ëŠ” ë²•
+		// @ì°¸ê³  : https://stackoverflow.com/questions/5288036/how-to-clear-ostringstream
+		o.str("");		// ë‚´ë¶€ ë¬¸ìì—´ì„ ë¹ˆë¬¸ìì—´ë¡œ ë°”ê¿”ì¤Œ
+		// o.clear();	// í™œì„±í™”ëœ ì—ëŸ¬ í”Œë˜ê·¸ë¥¼ ì§€ì›Œì¤Œ
 	}
 
 	return s;
@@ -66,25 +67,25 @@ IPv4Address IPv4Address::Parse(const char* hostOrderedAddressString) {
 	int addr_idx = 0;
 	int temp_idx = 0;
 
-	// xxx.xxx.xxx.xxx¶ó´Â IPÁÖ¼Ò ¹®ÀÚ¿­À» ÆÄ½ÌÇÒ ¶§
-	// stepÀÌ 0ÀÏ¶§´Â Á¦ÀÏ ¿ŞÂÊÀÇ xxx Á¤¼ö¸¦ °¡Á®¿Àµµ·Ï ÇÏ°í
-	// stepÀÌ 1ÀÏ¶§´Â µÎ¹øÂ° xxx ¹®ÀÚ¿­À» Á¤¼ö·Î º¯°æÇØ¼­ °¡Á®¿Àµµ·Ï ÇÏ´Â ¹æ½Ä
+	// xxx.xxx.xxx.xxxë¼ëŠ” IPì£¼ì†Œ ë¬¸ìì—´ì„ íŒŒì‹±í•  ë•Œ
+	// stepì´ 0ì¼ë•ŒëŠ” ì œì¼ ì™¼ìª½ì˜ xxx ì •ìˆ˜ë¥¼ ê°€ì ¸ì˜¤ë„ë¡ í•˜ê³ 
+	// stepì´ 1ì¼ë•ŒëŠ” ë‘ë²ˆì§¸ xxx ë¬¸ìì—´ì„ ì •ìˆ˜ë¡œ ë³€ê²½í•´ì„œ ê°€ì ¸ì˜¤ë„ë¡ í•˜ëŠ” ë°©ì‹
 	int step = 0;		
 	StaticString<4> temp;
 
 	// xxx.xxx.xxx.xxx
 	// -----------
-	// ¾Õ¿¡ 3°³ÀÇ xxx¿¡ ´ëÇÑ Á¤º¸¸¦ Á¤¼ö·Î º¯°æÇÔ
+	// ì•ì— 3ê°œì˜ xxxì— ëŒ€í•œ ì •ë³´ë¥¼ ì •ìˆ˜ë¡œ ë³€ê²½í•¨
 
 	while (hostOrderedAddressString[addr_idx] != NULL) {
 		if (!IsNumeric(hostOrderedAddressString[addr_idx]) && hostOrderedAddressString[addr_idx] != '.')
-			throw InvalidArgumentException("¿Ã¹Ù¸¥ IPv4 ÁÖ¼Ò¸¦ Àü´ŞÇØÁÖ¼¼¿ä. ¼ıÀÚ ¶Ç´Â Á¡(.)ÀÌ ¾Æ´Ñ ¹®ÀÚ°¡ Æ÷ÇÔµÇ¾î ÀÖ½À´Ï´Ù.");
+			throw InvalidArgumentException("ì˜¬ë°”ë¥¸ IPv4 ì£¼ì†Œë¥¼ ì „ë‹¬í•´ì£¼ì„¸ìš”. ìˆ«ì ë˜ëŠ” ì (.)ì´ ì•„ë‹Œ ë¬¸ìê°€ í¬í•¨ë˜ì–´ ìˆìŠµë‹ˆë‹¤.");
 
 		if (hostOrderedAddressString[addr_idx] == '.') {
 			temp.Source[temp_idx] = '\0';
 			const int val = atoi(temp.Source);
 			if (val > 255) {
-				throw InvalidArgumentException("¿Ã¹Ù¸¥ IPv4 ÁÖ¼Ò¸¦ Àü´ŞÇØÁÖ¼¼¿ä. 255.255.255.255º¸´Ù Å« IP ÁÖ¼ÒÀÔ´Ï´Ù.");
+				throw InvalidArgumentException("ì˜¬ë°”ë¥¸ IPv4 ì£¼ì†Œë¥¼ ì „ë‹¬í•´ì£¼ì„¸ìš”. 255.255.255.255ë³´ë‹¤ í° IP ì£¼ì†Œì…ë‹ˆë‹¤.");
 			}
 			result.m_Addr.Seg[3 - step] = (Byte)val;
 			step++;
@@ -98,15 +99,15 @@ IPv4Address IPv4Address::Parse(const char* hostOrderedAddressString) {
 	}
 
 	if (step != 3)
-		throw InvalidArgumentException("¿Ã¹Ù¸¥ IPv4 ÁÖ¼Ò¸¦ Àü´ŞÇØÁÖ¼¼¿ä. Á¡(.)ÀÌ 3°³¿©¾ß ÇÕ´Ï´Ù.");
+		throw InvalidArgumentException("ì˜¬ë°”ë¥¸ IPv4 ì£¼ì†Œë¥¼ ì „ë‹¬í•´ì£¼ì„¸ìš”. ì (.)ì´ 3ê°œì—¬ì•¼ í•©ë‹ˆë‹¤.");
 
 	// xxx.xxx.xxx.xxx
 	//             ---
-	// ¸¶Áö¸· xxx¿¡ ´ëÇÑ Á¤º¸¸¦ Á¤¼ö·Î º¯°æÇÔ
+	// ë§ˆì§€ë§‰ xxxì— ëŒ€í•œ ì •ë³´ë¥¼ ì •ìˆ˜ë¡œ ë³€ê²½í•¨
 	temp.Source[temp_idx] = '\0';
 	const int val = atoi(temp.Source);
 	if (val > 255) {
-		throw InvalidArgumentException("¿Ã¹Ù¸¥ IPv4 ÁÖ¼Ò¸¦ Àü´ŞÇØÁÖ¼¼¿ä. 255.255.255.255º¸´Ù Å« IP ÁÖ¼ÒÀÔ´Ï´Ù.");
+		throw InvalidArgumentException("ì˜¬ë°”ë¥¸ IPv4 ì£¼ì†Œë¥¼ ì „ë‹¬í•´ì£¼ì„¸ìš”. 255.255.255.255ë³´ë‹¤ í° IP ì£¼ì†Œì…ë‹ˆë‹¤.");
 	}
 	result.m_Addr.Seg[0] = (Byte)val;
 

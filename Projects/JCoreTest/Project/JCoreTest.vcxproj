@@ -5,23 +5,31 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCoreTest\AutoObjectTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ComparatorTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeImplTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeMemoImplTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\BinarySearchTreeImplTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\DynamicHashMapImplTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\TwoTreeFourTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayQueueTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\HashMapTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\AVLTreeImplTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\AVLTreeMemoImplTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\BinarySearchTreeImplTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\DynamicHashMapImplTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\TwoTreeFourTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\LinkedListTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ListQueueTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ListStackTest.cpp" />
@@ -31,7 +39,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\CoreTest.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\EventTest.cpp">
       <SubType>
@@ -44,21 +54,24 @@
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MemoryTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\LockGuardTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\LockTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\PointerObserverTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\ObserverPtrTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\SmartPtrTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\StaticStringTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\StringTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\StringUtilTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\StaticStringTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\StringTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\StringUtilTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\TestUtil\Object.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Sync\EventLockTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Sync\LockGuardTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Sync\NormalLockTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Sync\NormalRwLockTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Sync\RecursiveLockTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Sync\SemaphoreTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Sync\SpinLockTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
-    <ClInclude Include="..\Sources\JCoreTest\TestUtil\Object.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5ce6fab1-0d87-4fb7-bdfe-b959b47f974e}</ProjectGuid>
@@ -75,16 +88,28 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)Output\include\JCore;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Output\lib\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Output\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)Output\include\JCore;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Output\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IncludePath>$(SolutionDir)Output\include\JCore;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Output\lib\$(Configuration);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Output\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)Output\include\JCore;$(ProjectDir)..\Sources;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Output\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
@@ -96,12 +121,32 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>JCoreTest/CoreTest.h</PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeaderOutputFile>$(IntDir)CoreTest.pch</PrecompiledHeaderOutputFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>JCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>JCoreTest/CoreTest.h</PrecompiledHeaderFile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeaderOutputFile>$(IntDir)CoreTest.pch</PrecompiledHeaderOutputFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,7 +163,28 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PrecompiledHeaderOutputFile>$(IntDir)CoreTest.pch</PrecompiledHeaderOutputFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalDependencies>JCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>JCoreTest/CoreTest.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PrecompiledHeaderOutputFile>$(IntDir)CoreTest.pch</PrecompiledHeaderOutputFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

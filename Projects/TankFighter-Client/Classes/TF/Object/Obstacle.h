@@ -6,9 +6,9 @@
 #include <JCore/Container/HashMap.h>
 
 /*
- * Àå¾Ö¹° Å¬·¡½º
- * ³»ºÎ¿¡ µ¿±×¶õ ÄÃ¶óÀÌ´õµéÀ» ²Ë Ã¤¿ö¼­ Ãæµ¹Ã¼Å©¸¦ ÇÒ ¼ö ÀÖµµ·Ï ÇÑ´Ù.
- * ¹°¸® Body¸¦ ¾²¸é °£´ÜÇÏ°Ô °¡´ÉÇÒ °Í °°Àºµ¥ ÄÚµå°¡ º¹ÀâÇØÁú °Í °°´Ù.
+ * ìž¥ì• ë¬¼ í´ëž˜ìŠ¤
+ * ë‚´ë¶€ì— ë™ê·¸ëž€ ì»¬ë¼ì´ë”ë“¤ì„ ê½‰ ì±„ì›Œì„œ ì¶©ëŒì²´í¬ë¥¼ í•  ìˆ˜ ìžˆë„ë¡ í•œë‹¤.
+ * ë¬¼ë¦¬ Bodyë¥¼ ì“°ë©´ ê°„ë‹¨í•˜ê²Œ ê°€ëŠ¥í•  ê²ƒ ê°™ì€ë° ì½”ë“œê°€ ë³µìž¡í•´ì§ˆ ê²ƒ ê°™ë‹¤.
  */
 
 class Tank;
@@ -21,9 +21,9 @@ public:
 
 	bool IsCollide(Tank* node);
 private:
-	float m_fPrecisionCircleDiametor;		// Á¤¹Ðµµ - 10ÀÌ¸é Áö¸§ÀÌ 10.0fÀÎ ¿øµé·Î ³»ºÎ¸¦ ²Ë Ã¤¿ò
-	ObstacleShape m_eShape;					// ¸ð¾ç
-	JCore::Vector<Scale9Sprite*> m_Colliders;		// ±×³É Node·Î ÇØµµµÇ´Âµ¥ ´«À¸·Î Á÷Á¢ÀûÀ¸·Î È®ÀÎÇÏ¸é¼­ Å×½ºÆ®ÇÒ·Á°í °Á Sprite¸¦ ¾¸
+	float m_fPrecisionCircleDiametor;		// ì •ë°€ë„ - 10ì´ë©´ ì§€ë¦„ì´ 10.0fì¸ ì›ë“¤ë¡œ ë‚´ë¶€ë¥¼ ê½‰ ì±„ì›€
+	ObstacleShape m_eShape;					// ëª¨ì–‘
+	JCore::Vector<Scale9Sprite*> m_Colliders;		// ê·¸ëƒ¥ Nodeë¡œ í•´ë„ë˜ëŠ”ë° ëˆˆìœ¼ë¡œ ì§ì ‘ì ìœ¼ë¡œ í™•ì¸í•˜ë©´ì„œ í…ŒìŠ¤íŠ¸í• ë ¤ê³  ê± Spriteë¥¼ ì”€
 };
 
 

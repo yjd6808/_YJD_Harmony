@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -18,7 +18,7 @@ TcpSessionContainer::TcpSessionContainer(int maxSize) :
 TcpSessionContainer::~TcpSessionContainer() = default;
 
 bool TcpSessionContainer::AddSession(TcpSession* session) {
-	CriticalSectionLockGuard guard(m_ContainerLock);
+	NormalLockGuard guard(m_ContainerLock);
 
 	if (m_Container.Size() >= m_iMaxConnection) {
 		return false;
@@ -33,7 +33,7 @@ bool TcpSessionContainer::AddSession(TcpSession* session) {
 }
 
 TcpSession* TcpSessionContainer::GetSession(SOCKET socket) {
-	CriticalSectionLockGuard guard(m_ContainerLock);
+	NormalLockGuard guard(m_ContainerLock);
 	if (!m_Container.Exist(socket))
 		return nullptr;
 
@@ -41,14 +41,14 @@ TcpSession* TcpSessionContainer::GetSession(SOCKET socket) {
 }
 
 void TcpSessionContainer::DisconnectAllSessions() {
-	CriticalSectionLockGuard guard(m_ContainerLock);
+	NormalLockGuard guard(m_ContainerLock);
 	m_Container.Values().Extension().ForEach([](TcpSession* session) {
 		session->Disconnect();
 	});
 }
 
 void TcpSessionContainer::Clear() {
-	CriticalSectionLockGuard guard(m_ContainerLock);
+	NormalLockGuard guard(m_ContainerLock);
 
 	m_Container.Values().Extension().ForEach([](TcpSession* session) {
 		delete session;

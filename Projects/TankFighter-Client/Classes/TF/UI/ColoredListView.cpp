@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/UI/ColoredListView.h>
@@ -57,7 +57,7 @@ void ColoredListView::InsertErrorLog(std::string str)
 EditBox* sendEditBox = EditBox::create(Size(size.width - 100, 30), Scale9Sprite::create("blank.png"));
 	sendEditBox->setFontColor(Color4B::WHITE);
 	sendEditBox->setFontSize(18.0f);
-	sendEditBox->setPlaceHolder("Ã¤ÆÃÀ» ÀÔ·ÂÇÏ¼¼¿ä");
+	sendEditBox->setPlaceHolder("ì±„íŒ…ì„ ì…ë ¥í•˜ì„¸ìš”");
 	sendEditBox->setAnchorPoint(Vec2::ZERO);
 	sendEditBox->setPlaceholderFontColor(Color4B::GRAY);
 	sendEditBox->setInputMode(EditBox::InputMode::ANY);
@@ -69,13 +69,13 @@ EditBox* sendEditBox = EditBox::create(Size(size.width - 100, 30), Scale9Sprite:
 void ColoredListView::InsertChatLog(DFPlayerChatLog log)
 {
 	ScrollView* scrollView = (ScrollView*)this->getChildByTag(SCROLLVIEE_CHATVIEWER);
-	float nickSizeX = 80.0f; //´Ğ³×ÀÓ °¡·Î±æÀÌ
-	float textSizeX = this->m_ViewerSize.width - nickSizeX; //ÅØ½ºÆ® °¡·Î±æÀÌ
-	const float oneWordSizeX = 10.555f;	//ÇÑ±Û ÇÑÀÚ´ç °¡·Î±æÀÌ
-	const int nextLineLimit = textSizeX / oneWordSizeX;	//ÇÑÁÙ¿¡ ÇÑ±Û ¸îÀÚ°¡ µé¾î°¡¾ß ´ÙÀ½ÁÙÀÌµÇ´ÂÁö
-	const int expandLimitLineCount = (int)(this->m_ViewerSize.height / 15.0f);	//ÀÌ ½ºÅ©·Ñºä°¡ ¸îÁÙÀÌ»óÀÏ °æ¿ì Ã¹ È®ÀåµÇ¾ßÇÏ´ÂÁö
+	float nickSizeX = 80.0f; //ë‹‰ë„¤ì„ ê°€ë¡œê¸¸ì´
+	float textSizeX = this->m_ViewerSize.width - nickSizeX; //í…ìŠ¤íŠ¸ ê°€ë¡œê¸¸ì´
+	const float oneWordSizeX = 10.555f;	//í•œê¸€ í•œìë‹¹ ê°€ë¡œê¸¸ì´
+	const int nextLineLimit = textSizeX / oneWordSizeX;	//í•œì¤„ì— í•œê¸€ ëª‡ìê°€ ë“¤ì–´ê°€ì•¼ ë‹¤ìŒì¤„ì´ë˜ëŠ”ì§€
+	const int expandLimitLineCount = (int)(this->m_ViewerSize.height / 15.0f);	//ì´ ìŠ¤í¬ë¡¤ë·°ê°€ ëª‡ì¤„ì´ìƒì¼ ê²½ìš° ì²« í™•ì¥ë˜ì•¼í•˜ëŠ”ì§€
 	int expandLineNum = 2;
-	int lineCount = getLineCount(); //ÇöÀç ÁÙ¼ö
+	int lineCount = getLineCount(); //í˜„ì¬ ì¤„ìˆ˜
 
 	Text
 

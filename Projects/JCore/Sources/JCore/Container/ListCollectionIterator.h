@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -9,7 +9,7 @@
 namespace JCore {
 
 		
-// Àü¹æ ¼±¾ğ
+// ì „ë°© ì„ ì–¸
 					class VoidOwner;
 template <typename> class ListCollection;
 template <typename> struct ListNode;
@@ -35,7 +35,7 @@ public:
 			return false;
 		}
 
-		return m_pCurrent->Next != nullptr;		// Çìµå±îÁö µµ´ŞÇß´Âµ¥ Previous¸¦ ÇØ¹ö¸®´Â °æ¿ì°¡ ÀÖÀ» ¼ö ÀÖÀ¸¹Ç·Î;
+		return m_pCurrent->Next != nullptr;		// í—¤ë“œê¹Œì§€ ë„ë‹¬í–ˆëŠ”ë° Previousë¥¼ í•´ë²„ë¦¬ëŠ” ê²½ìš°ê°€ ìˆì„ ìˆ˜ ìˆìœ¼ë¯€ë¡œ;
 	}
 
 	bool HasPrevious() const override {
@@ -48,9 +48,9 @@ public:
 	}
 
 	T& Next() override {
-		// ¹İº¹ÀÚ°¡ ²¿¸®±îÁö µµ´ŞÇß´Âµ¥ µ¥ÀÌÅÍ¸¦ °¡Á®¿Ã·Á°í ½ÃµµÇÏ´Â °æ¿ì
+		// ë°˜ë³µìê°€ ê¼¬ë¦¬ê¹Œì§€ ë„ë‹¬í–ˆëŠ”ë° ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¬ë ¤ê³  ì‹œë„í•˜ëŠ” ê²½ìš°
 		if (m_pCurrent == m_pTail) {
-			throw InvalidOperationException("µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù.");
+			throw InvalidOperationException("ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
 		T& val = m_pCurrent->Value;
@@ -60,7 +60,7 @@ public:
 
 	T& Previous() override {
 		if (m_pCurrent->Previous == m_pHead) {
-			throw InvalidOperationException("µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù.");
+			throw InvalidOperationException("ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
 		m_pCurrent = m_pCurrent->Previous;

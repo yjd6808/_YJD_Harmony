@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -17,7 +17,7 @@ IOCPOverlappedSend::IOCPOverlappedSend(TcpSession* session, IOCP* iocp, ISendPac
 
 IOCPOverlappedSend::~IOCPOverlappedSend() = default;
 
-void IOCPOverlappedSend::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedSend::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hSentSock = m_pSentSession->Socket().Handle();
 
 	if (IsFailed(hSentSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {

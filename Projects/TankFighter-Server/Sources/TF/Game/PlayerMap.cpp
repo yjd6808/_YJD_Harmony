@@ -1,5 +1,5 @@
 /*
- * ¿€º∫¿⁄ : ¿±¡§µµ
+ * ÏûëÏÑ±Ïûê : Ïú§Ï†ïÎèÑ
  */
 
 #include <TF/PrecompiledHeader.h>
@@ -8,12 +8,12 @@
 using namespace JCore;
 
 void PlayerMap::AddNewPlayer(int accountUID, Player* player) {
-	CriticalSectionLockGuard guard(m_Mutex);
+	NormalLockGuard guard(m_Mutex);
 	m_PlayerMap.Insert(accountUID, player);
 }
 
 bool PlayerMap::RemovePlayer(int accountUID) {
-	CriticalSectionLockGuard guard(m_Mutex);
+	NormalLockGuard guard(m_Mutex);
 	if (!m_PlayerMap.Exist(accountUID))
 		return false;
 
@@ -21,7 +21,7 @@ bool PlayerMap::RemovePlayer(int accountUID) {
 }
 
 bool PlayerMap::IsPlayerExist(int accountUID) {
-	CriticalSectionLockGuard guard(m_Mutex);
+	NormalLockGuard guard(m_Mutex);
 	if (m_PlayerMap.Exist(accountUID))
 		return true;
 
@@ -30,7 +30,7 @@ bool PlayerMap::IsPlayerExist(int accountUID) {
 
 
 Player* PlayerMap::FindIf(Func<bool, Player*> predicate) {
-	CriticalSectionLockGuard guard(m_Mutex);
+	NormalLockGuard guard(m_Mutex);
 
 	const auto find = m_PlayerMap.Values().Extension().FindIf(predicate);
 	if (find != nullptr) {
@@ -41,7 +41,7 @@ Player* PlayerMap::FindIf(Func<bool, Player*> predicate) {
 }
 
 int PlayerMap::Count() {
-	CriticalSectionLockGuard guard(m_Mutex);
+	NormalLockGuard guard(m_Mutex);
 	return m_PlayerMap.Size();
 }
 

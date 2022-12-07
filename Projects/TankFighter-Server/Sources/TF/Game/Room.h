@@ -1,14 +1,13 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
 
 #include <JCore/Container/LinkedList.h>
 #include <JCore/Container/HashMap.h>
+#include <JCore/Sync/NormalLock.h>
 #include <JCore/Functional.h>
-#include <JCore/LockGuard.h>
-
 #include <Common/Structure.h>
 
 #ifndef Out_
@@ -17,13 +16,13 @@
 
 
 /*
- * Çì´õ ÀÇÁ¸¼º¶«¿¡ »°´Ù.
- * ¿ø·¡ ÀÎÅÍÆäÀÌ½º ±¸Á¶·Î Â¥¸é Çì´õ ÀÇÁ¸¼º °ü¸®°¡ ÆíÇÏ±äÇÑµ¥.. ½Ã°£ÀÌ ºÎÁ·ÇÏ´Ù.
+ * í—¤ë” ì˜ì¡´ì„±ë•œì— ëºë‹¤.
+ * ì›ë˜ ì¸í„°í˜ì´ìŠ¤ êµ¬ì¡°ë¡œ ì§œë©´ í—¤ë” ì˜ì¡´ì„± ê´€ë¦¬ê°€ í¸í•˜ê¸´í•œë°.. ì‹œê°„ì´ ë¶€ì¡±í•˜ë‹¤.
  *
  * #include <TF/Game/Player.h>
  * #include <TF/Game/Channel.h>
  *
- * ÀÌ 2°³ÀÇ Çì´õ ÆÄÀÏÀ» ÂüÁ¶ ¸øÇÏ±â ¶«¿¡ m_pChannel°ú m_pHost´Â Ä³½ºÆÃÇØ¼­ »ç¿ëÇÏ´Â°É·Î..
+ * ì´ 2ê°œì˜ í—¤ë” íŒŒì¼ì„ ì°¸ì¡° ëª»í•˜ê¸° ë•œì— m_pChannelê³¼ m_pHostëŠ” ìºìŠ¤íŒ…í•´ì„œ ì‚¬ìš©í•˜ëŠ”ê±¸ë¡œ..
  */
 
 
@@ -35,13 +34,13 @@ class Player;
 class Channel;
 class Room
 {
-	// »ı¼º/¼Ò¸êÀº RoomPool¿¡¼­ °üÀåÇÑ´Ù.
+	// ìƒì„±/ì†Œë©¸ì€ RoomPoolì—ì„œ ê´€ì¥í•œë‹¤.
 	Room();
 	virtual ~Room() = default;
 
 	void Initialize(Channel* channel, Player* host, const JCore::String& roomName, int maxPlayerCount);
 public:
-	// ºÒº¯ Á¤º¸´Â ¶ô ¾ÈÇÔ
+	// ë¶ˆë³€ ì •ë³´ëŠ” ë½ ì•ˆí•¨
 	Channel* GetChannel() const					{ return static_cast<Channel*>(m_pChannel); }
 	JCore::String GetRoomName() const			{ return m_RoomName; }
 	int GetRoomUID() const						{ return m_iRoomUID; }
@@ -49,7 +48,7 @@ public:
 	void Lock()									{ m_RoomLock.Lock();}
 	void Unlock()								{ m_RoomLock.Unlock();}
 
-	// ¶ô ¾ÈÇÑ ÇÔ¼ö (¿ÜºÎ¿¡¼­ ¶ôÀ» ¼öÇàÇÑ °æ¿ì)
+	// ë½ ì•ˆí•œ í•¨ìˆ˜ (ì™¸ë¶€ì—ì„œ ë½ì„ ìˆ˜í–‰í•œ ê²½ìš°)
 	void UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
 	void UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
 	bool UnsafeIsBattleFieldState() const;
@@ -59,7 +58,7 @@ public:
 	void UnsafeForEach(JCore::Action<Player*> foreachAction);
 
 
-	// °¡º¯ Á¤º¸
+	// ê°€ë³€ ì •ë³´
 	bool IsEmpty()								{ return GetPlayerCount() == 0; }
 	int GetPlayerCount();
 	bool TryJoin(Player* player);
@@ -84,12 +83,12 @@ private:
 	int m_iRoomUID;
 	int m_iMaxPlayerCount;
 	JCore::String m_RoomName;
-	JCore::CriticalSectionMutex m_RoomLock;
+	JCore::NormalLock m_RoomLock;
 	JCore::LinkedList<Player*> m_PlayerList;
-	RoomState m_eRoomState;						// ¹æ »óÅÂ : ¹èÆ² Áß/·ÎºñÀÎÁö µîÀ» ³ªÅ¸³¿
-	int m_iTimerTime;							// ¹èÆ²ÁøÁß¿¡ »ç¿ëÇÏ´Â Å¸ÀÌ¸Ó º¯¼ö
-	void* m_pChannel;							// ÀÌ ¹æÀÌ ¼ÓÇÑ Ã¤³Î
-	void* m_pHost;								// ÀÌ ¹æÀÇ ¹æÀå
+	RoomState m_eRoomState;						// ë°© ìƒíƒœ : ë°°í‹€ ì¤‘/ë¡œë¹„ì¸ì§€ ë“±ì„ ë‚˜íƒ€ëƒ„
+	int m_iTimerTime;							// ë°°í‹€ì§„ì¤‘ì— ì‚¬ìš©í•˜ëŠ” íƒ€ì´ë¨¸ ë³€ìˆ˜
+	void* m_pChannel;							// ì´ ë°©ì´ ì†í•œ ì±„ë„
+	void* m_pHost;								// ì´ ë°©ì˜ ë°©ì¥
 
 	inline static std::atomic<int> ms_iRoomSeq = 0;
 

@@ -1,19 +1,20 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
 #include <TF/Parser/CommandParser.h>
 #include <TF/Game/Player.h>
-#include <TF/Util/Console.h>
 #include <Common/Command.h>
+
+#include <JCore/Utils/Console.h>
 
 using namespace JCore;
 using namespace JNetwork;
 
 void CommandParser::AddCommand(Int16 cmd, Action<Player*, ICommand*> fn) {
 	if (m_CommandMap.Exist(cmd)) {
-		DebugAssert(false, "ÇØ´ç Ä¿¸Çµå°¡ ÀÌ¹Ì ÀÖ½À´Ï´Ù.");
+		DebugAssertMessage(false, "í•´ë‹¹ ì»¤ë§¨ë“œê°€ ì´ë¯¸ ìˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 
@@ -28,7 +29,7 @@ bool CommandParser::RunCommand(Player* session, ICommand* cmd) const {
 	}
 
 	if (cmd->GetCommand() != BATTLE_FIELD_TANK_MOVE_SYN && cmd->GetCommand() != TCP_RTT_SYN) {
-		Console::WriteLine(ConsoleColor::LIGHTCYAN, "Ä¿¸Çµå ½ÇÇà (Command ID : %d)", cmd->GetCommand());
+		SafeConsole::WriteLine(ConsoleColor::LightCyan, "ì»¤ë§¨ë“œ ì‹¤í–‰ (Command ID : %d)", cmd->GetCommand());
 	}
 	
 	m_CommandMap.Get(uiCmd)(session, cmd);

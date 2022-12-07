@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¹è¿­±â¹İ ½ºÅÃ Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë°°ì—´ê¸°ë°˜ ìŠ¤íƒ í…ŒìŠ¤íŠ¸
 */
 
 
@@ -8,7 +8,7 @@
 #include <JCore/Random.h>
 #include <JCore/Container/ArrayStack.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_ArrayStackTest == ON
@@ -38,7 +38,7 @@ TEST(ArrayStackTest, Regular) {
 	EXPECT_TRUE(stack.Size() == 0);
 }
 
-// Ãß°¡, »èÁ¦, ¹İº¹ÀÚ Å×½ºÆ®
+// ì¶”ê°€, ì‚­ì œ, ë°˜ë³µì í…ŒìŠ¤íŠ¸
 TEST(ArrayStackTest, TotalTest) {
 	Random rand;
 
@@ -67,12 +67,12 @@ TEST(ArrayStackTest, TotalTest) {
 
 		while (stackFit->HasNext()) {
 			EXPECT_TRUE(stackFit->Next() == (*fit));
-			fit++;
+			++fit;
 		}
 
 		while (stackFit->HasNext()) {
 			EXPECT_TRUE(stackFit->Previous() == (*fit));
-			rit++;
+			++rit;
 		}
 
 		EXPECT_TRUE(stack.Size() == dc);
@@ -100,17 +100,17 @@ TEST(ArrayStackTest, TotalTest) {
 	}
 }
 
-// »ı¼ºÀÚ Å×½ºÆ®
+// ìƒì„±ì í…ŒìŠ¤íŠ¸
 TEST(ArrayStackTest, ConstructorTest) {
 	AutoMemoryLeakDetector detector;
 
-	// ÀÌ´Ï¼È¶óÀÌÀú Å×½ºÆ®
+	// ì´ë‹ˆì…œë¼ì´ì € í…ŒìŠ¤íŠ¸
 	ArrayStack<int> a{ 1, 2, 3 };
 
 	EXPECT_TRUE(a.Top() == 3); a.Pop();
 	EXPECT_TRUE(a.Top() == 2); a.Pop();
 
-	// º¹»ç »ı¼ºÀÚ Å×½ºÆ®
+	// ë³µì‚¬ ìƒì„±ì í…ŒìŠ¤íŠ¸
 	ArrayStack<int> b(a);
 	for (int i = 0; i < 30; i++) {
 		b.Push(i);
@@ -122,20 +122,20 @@ TEST(ArrayStackTest, ConstructorTest) {
 	EXPECT_TRUE(b.Size() == 29);
 	EXPECT_TRUE(c.Size() == 1);
 
-	// ÀÌµ¿ »ı¼ºÀÚ Å×½ºÆ®
+	// ì´ë™ ìƒì„±ì í…ŒìŠ¤íŠ¸
 	ArrayStack<int> d(Move(c));
 	EXPECT_TRUE(c.Size() == 0);
 	EXPECT_TRUE(d.Size() == 1);
 	EXPECT_TRUE(d.Top() == 1);
 }
 
-// ¿¬»êÀÚ Å×½ºÆ®
+// ì—°ì‚°ì í…ŒìŠ¤íŠ¸
 TEST(ArrayStackTest, OperatorTest) {
 	AutoMemoryLeakDetector detector;
 
 	ArrayStack<int> s{ 1, 2, 3 };
 
-	// ÀÌ´Ï¼È¶óÀÌÀú ´ëÀÔ
+	// ì´ë‹ˆì…œë¼ì´ì € ëŒ€ì…
 	s = { 1 };
 	EXPECT_TRUE(s.Top() == 1); s.Pop();
 

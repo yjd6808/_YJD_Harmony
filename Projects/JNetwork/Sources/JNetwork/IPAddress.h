@@ -1,14 +1,14 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 
-	IPÁÖ¼Ò¸¦ ±âº»ÀûÀ¸·Î Host Byte Order·Î ÀúÀåÇÑ´Ù.
-	IPv4 ÁÖ¼Ò, IPv6 ÁÖ¼Ò¸¦ ´Ù·ç´Â Å¬·¡½º
+	IPì£¼ì†Œë¥¼ ê¸°ë³¸ì ìœ¼ë¡œ Host Byte Orderë¡œ ì €ì¥í•œë‹¤.
+	IPv4 ì£¼ì†Œ, IPv6 ì£¼ì†Œë¥¼ ë‹¤ë£¨ëŠ” í´ë˜ìŠ¤
  */
 
 #pragma once
 
 #include <JCore/Type.h>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 
 #include <JNetwork/Protocol.h>
 
@@ -38,6 +38,7 @@ public:
 	IPv4Address(Int32UL hostOrderedAddress) { m_Addr.Addr = hostOrderedAddress; }
 	IPv4Address(const char* hostOrderedAddressString);
 	~IPv4Address() override = default;
+
 public:
 	JCore::String ToString() const override;
 	InternetProtocol GetProtocol() const override { return InternetProtocol::IPv4; }
@@ -50,7 +51,7 @@ public:
 	///     GetAddressOctet(1) -> 0
 	///     GetAddressOctet(2) -> 0
 	///     GetAddressOctet(3) -> 1
-	///     GetAddressOctet(4) -> ¿¹¿Ü ´øÁü
+	///     GetAddressOctet(4) -> ì˜ˆì™¸ ë˜ì§
 	/// </summary>
 	Byte GetAddressOctet(int idx) const;
 

@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -9,7 +9,7 @@
 namespace JCore {
 
 
-// Àü¹æ ¼±¾ğ
+// ì „ë°© ì„ ì–¸
 					class VoidOwner;
 template <typename> class ArrayQueue;
 template <typename T>
@@ -74,7 +74,7 @@ public:
 protected:
 
 	/// <summary>
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	/// - From ArrayCollectionIterator
 	/// </summary>
 

@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -14,82 +14,82 @@ namespace JNetwork {
 class CommandFn
 {
 public:
-	// Å¬¶ó·ÎºÎÅÍ ·Î±×ÀÎ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ë¡œê·¸ì¸ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdLoginSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ È¸¿ø°¡ÀÔ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° íšŒì›ê°€ì… ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdRegisterSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ã¤³Î Á¤º¸ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ì±„ë„ ì •ë³´ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdLoadChannelInfoSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ã¤³Î ¼±ÅÃ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ì±„ë„ ì„ íƒ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdSelectChannelSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ ÇöÀç Ã¤³ÎÀÇ Ä³¸¯ÅÍ Á¤º¸ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° í˜„ì¬ ì±„ë„ì˜ ìºë¦­í„° ì •ë³´ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdLoadCharacterInfoSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ä³¸¯ÅÍ ¼±ÅÃ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ìºë¦­í„° ì„ íƒ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdSelectCharacterSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ä³¸¯ÅÍ »ı¼º ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ìºë¦­í„° ìƒì„± ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdCreateCharacterSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ä³¸¯ÅÍ »èÁ¦ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ìºë¦­í„° ì‚­ì œ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdDeleteCharacterSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ ·Îºñ Âü°¡ Çß´Ù ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ë¡œë¹„ ì°¸ê°€ í–ˆë‹¤ ìˆ˜ì‹ 
 	static void CmdJoinLobbySyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ ¹æ »ı¼º ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ë°© ìƒì„± ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdCreateRoomSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ ¹æ Âü°¡ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ë°© ì°¸ê°€ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdJoinRoomSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ä£±¸ Ãß°¡ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ì¹œêµ¬ ì¶”ê°€ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdAddFriendSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ä£±¸ »èÁ¦ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ì¹œêµ¬ ì‚­ì œ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdDeleteFriendSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ä£±¸ ¿äÃ» ¼ö¶ô/°ÅºÎ °á°ú ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ì¹œêµ¬ ìš”ì²­ ìˆ˜ë½/ê±°ë¶€ ê²°ê³¼ ìˆ˜ì‹ 
 	static void CmdAddFriendRequestAck(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ ¹æ ¾À ·ÎµùÀ» ¿Ï·áÇØ¼­ Á¤º¸ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ë°© ì”¬ ë¡œë”©ì„ ì™„ë£Œí•´ì„œ ì •ë³´ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdLoadRoomInfoSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ °ÔÀÓ ½ÃÀÛ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ê²Œì„ ì‹œì‘ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdRoomGameStartSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ °ÔÀÓ ÁØºñ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ê²Œì„ ì¤€ë¹„ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdRoomGameReadySyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ ÁØºñ ÇØÁ¦ ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ì¤€ë¹„ í•´ì œ ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdRoomGameReadyCancelSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ ¹æ ³ª°¡±â ¿äÃ» ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ë°© ë‚˜ê°€ê¸° ìš”ì²­ ìˆ˜ì‹ 
 	static void CmdRoomLeaveSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ ¹èÆ² ÇÊµå¿¡ ÁøÀÔÇß´Ù ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ë°°í‹€ í•„ë“œì— ì§„ì…í–ˆë‹¤ ìˆ˜ì‹ 
 	static void CmdBattleFieldLoadSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó°¡ ¹èÆ²ÇÊµå¿¡¼­ ÀÚ½ÅÀÇ »óÅÂÁ¤º¸¸¦ ÁÖ±âÀûÀ¸·Î ¼­¹ö·Î ¼Û½ÅÇØÁÜ
+	// í´ë¼ê°€ ë°°í‹€í•„ë“œì—ì„œ ìì‹ ì˜ ìƒíƒœì •ë³´ë¥¼ ì£¼ê¸°ì ìœ¼ë¡œ ì„œë²„ë¡œ ì†¡ì‹ í•´ì¤Œ
 	static void CmdBattileFieldTankMoveSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó°¡ ¹èÆ²ÇÊµå¿¡¼­ °­Á¦·Î Å»ÁÖ¸¦ ½ÃµµÇÑ´Ù°í ÇÔ
+	// í´ë¼ê°€ ë°°í‹€í•„ë“œì—ì„œ ê°•ì œë¡œ íƒˆì£¼ë¥¼ ì‹œë„í•œë‹¤ê³  í•¨
 	static void CmdBattleFieldLeaveSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó·ÎºÎÅÍ Ã¤ÆÃ ¸Ş½ÃÁö ¼ö½Å
+	// í´ë¼ë¡œë¶€í„° ì±„íŒ… ë©”ì‹œì§€ ìˆ˜ì‹ 
 	static void CmdChatMessageSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó°¡ ÃÑÀ» œi´Ù°í ÇÔ
+	// í´ë¼ê°€ ì´ì„ ì‡ë‹¤ê³  í•¨
 	static void CmdBattleFieldFireSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó°¡ ÃÑ¾Ë ¸Â¾Ò´Ù°í ÇÔ
+	// í´ë¼ê°€ ì´ì•Œ ë§ì•˜ë‹¤ê³  í•¨
 	static void CmdBattleFieldDeathSyn(Player* player, JNetwork::ICommand* cmd);
 
-	// Å¬¶ó°¡ RTT¿Í ·¹ÀÌÅÏ½Ã °è»êÀ» À§ÇØ
+	// í´ë¼ê°€ RTTì™€ ë ˆì´í„´ì‹œ ê³„ì‚°ì„ ìœ„í•´
 	static void CmdTcpRTTSyn(Player* player, JNetwork::ICommand* cmd);
 	
 

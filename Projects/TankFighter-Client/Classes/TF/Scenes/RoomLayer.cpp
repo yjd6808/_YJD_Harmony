@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/RoomLayer.h>
@@ -11,9 +11,9 @@
 #include <JCore/Ascii.h>
 
 void RoomLayer::onEnterTransitionDidFinish() {
-	// ¹æ¿¡ µé¾î¿À¸é ¹æÁ¤º¸¸¦ ¿äÃ»ÇÑ´Ù.
+	// ë°©ì— ë“¤ì–´ì˜¤ë©´ ë°©ì •ë³´ë¥¼ ìš”ì²­í•œë‹¤.
 	if (SendFn::SendLoadRoomSyn() == false) {
-		PopUp::createInParent("¹æ Á¤º¸ ¿äÃ»ÀÌ ½ÇÆĞÇÏ¿´½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ë°© ì •ë³´ ìš”ì²­ì´ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.", this, false);
 	}
 }
 
@@ -23,12 +23,12 @@ bool RoomLayer::init() {
 		return false;
 	}
 
-	// 700 350 - °ÔÀÓ ½ÃÀÛ
-	// 700 300 - ½ÃÀÛ ÁØºñ
-	// 700 250 - ÁØºñ ÇØÁ¦
-	// 700 200 - ¹æ ³ª°¡±â
+	// 700 350 - ê²Œì„ ì‹œì‘
+	// 700 300 - ì‹œì‘ ì¤€ë¹„
+	// 700 250 - ì¤€ë¹„ í•´ì œ
+	// 700 200 - ë°© ë‚˜ê°€ê¸°
 
-	m_pGameStartBtn = TextButton::create(200, 45, "°ÔÀÓ ½ÃÀÛ", 15);
+	m_pGameStartBtn = TextButton::create(200, 45, "ê²Œì„ ì‹œì‘", 15);
 	m_pGameStartBtn->setAnchorPoint(Vec2::ZERO);
 	m_pGameStartBtn->setPosition({ 700, 350 });
 	m_pGameStartBtn->setBackgroundColor(ColorList::Babypink_v);
@@ -36,7 +36,7 @@ bool RoomLayer::init() {
 	m_pGameStartBtn->setClickEvent(CC_CALLBACK_1(RoomLayer::OnClickedGameStartButton, this));
 	this->addChild(m_pGameStartBtn);
 
-	m_pGameReadyBtn = TextButton::create(200, 45, "½ÃÀÛ ÁØºñ", 15);
+	m_pGameReadyBtn = TextButton::create(200, 45, "ì‹œì‘ ì¤€ë¹„", 15);
 	m_pGameReadyBtn->setAnchorPoint(Vec2::ZERO);
 	m_pGameReadyBtn->setPosition({ 700, 300 });
 	m_pGameReadyBtn->setBackgroundColor(ColorList::Ashgray_v);
@@ -44,7 +44,7 @@ bool RoomLayer::init() {
 	m_pGameReadyBtn->setClickEvent(CC_CALLBACK_1(RoomLayer::OnClickedGameReadyButton, this));
 	this->addChild(m_pGameReadyBtn);
 
-	m_pGameReadyCancelBtn = TextButton::create(200, 45, "ÁØºñ ÇØÁ¦", 15);
+	m_pGameReadyCancelBtn = TextButton::create(200, 45, "ì¤€ë¹„ í•´ì œ", 15);
 	m_pGameReadyCancelBtn->setAnchorPoint(Vec2::ZERO);
 	m_pGameReadyCancelBtn->setPosition({ 700, 250 });
 	m_pGameReadyCancelBtn->setBackgroundColor(ColorList::Ashgray_v);
@@ -52,7 +52,7 @@ bool RoomLayer::init() {
 	m_pGameReadyCancelBtn->setClickEvent(CC_CALLBACK_1(RoomLayer::OnClickedGameReadyCancelButton, this));
 	this->addChild(m_pGameReadyCancelBtn);
 
-	m_pLeaveRoomBtn = TextButton::create(200, 45, "¹æ ³ª°¡±â", 15);
+	m_pLeaveRoomBtn = TextButton::create(200, 45, "ë°© ë‚˜ê°€ê¸°", 15);
 	m_pLeaveRoomBtn->setAnchorPoint(Vec2::ZERO);
 	m_pLeaveRoomBtn->setPosition({ 700, 200 });
 	m_pLeaveRoomBtn->setBackgroundColor(ColorList::Ashgray_v);
@@ -61,14 +61,14 @@ bool RoomLayer::init() {
 	this->addChild(m_pLeaveRoomBtn);
 
 	for (int i = 0; i < ROOM_MAX_PLAYER_COUNT; i++) {
-		m_pSlot[i] = TextButton::create(180, 135, "´Ğ³×ÀÓ", 15);
+		m_pSlot[i] = TextButton::create(180, 135, "ë‹‰ë„¤ì„", 15);
 		m_pSlot[i]->setAnchorPoint(Vec2::ZERO);
 		m_pSlot[i]->setBackgroundColor(ColorList::Ashgray_v);
 		m_pSlot[i]->setFontColor(ColorList::Bistre_v);
 		m_pSlot[i]->setVisible(false);
 		this->addChild(m_pSlot[i]);
 
-		m_pMarkSlot[i] = TextButton::create(180, 45, "¹æÀå/ÁØºñ¿Ï·á", 15);
+		m_pMarkSlot[i] = TextButton::create(180, 45, "ë°©ì¥/ì¤€ë¹„ì™„ë£Œ", 15);
 		m_pMarkSlot[i]->setAnchorPoint(Vec2::ZERO);
 		m_pMarkSlot[i]->setBackgroundColor(ColorList::BlackShadows_v);
 		m_pMarkSlot[i]->setFontColor(ColorList::Bluegreen_v);
@@ -86,7 +86,7 @@ bool RoomLayer::init() {
 	m_pMarkSlot[2]->setPosition({ 210, 110 + 135 });
 	m_pMarkSlot[3]->setPosition({ 410, 110 + 135 });
 
-	m_pRoomTitle = TextButton::create(200, 50, "¹æ Á¦¸ñ (1/4)", 16);
+	m_pRoomTitle = TextButton::create(200, 50, "ë°© ì œëª© (1/4)", 16);
 	m_pRoomTitle->setPosition({ 500, 550 });
 	m_pRoomTitle->setBackgroundColor(ColorList::Caribbeangreen_v);
 	m_pRoomTitle->setFontColor(ColorList::Black_v);
@@ -108,33 +108,33 @@ void RoomLayer::OnClickedGameStartButton(TextButton* btn) {
 	RoomCharacterInfo* pMyInfo = MyInfo();
 
 	if (m_RoomInfo.IsBattleEndingState()) {
-		PopUp::createInParent("°ÔÀÓÀÌ °ÅÀÇ ³¡³ª°©´Ï´Ù. ±â´Ù·ÁÁÖ¼¼¿ä!!", this, false);
+		PopUp::createInParent("ê²Œì„ì´ ê±°ì˜ ëë‚˜ê°‘ë‹ˆë‹¤. ê¸°ë‹¤ë ¤ì£¼ì„¸ìš”!!", this, false);
 		return;
 	}
 
 	if (m_RoomInfo.IsBattlePlayingState()) {
-		PopUp::createInParent("ÀÌ¹Ì °ÔÀÓÀÌ ÁøÇàÁßÀÔ´Ï´Ù. ³­ÀÔÇÏ½Ã°Ú½À´Ï±î?", this, false,
-			[]() { SendFn::SendRoomGameStartSyn(true); },			// ¼ö¶ô
-			[](){});		// °ÅÀı
+		PopUp::createInParent("ì´ë¯¸ ê²Œì„ì´ ì§„í–‰ì¤‘ì…ë‹ˆë‹¤. ë‚œì…í•˜ì‹œê² ìŠµë‹ˆê¹Œ?", this, false,
+			[]() { SendFn::SendRoomGameStartSyn(true); },			// ìˆ˜ë½
+			[](){});		// ê±°ì ˆ
 		return;
 	}
 
 	if (pMyInfo->CharacterUID != m_iHostCharacterUID) {
-		PopUp::createInParent("¹æÀå¸¸ °ÔÀÓÀ» ½ÃÀÛÇÒ ¼ö ÀÖ½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ë°©ì¥ë§Œ ê²Œì„ì„ ì‹œì‘í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.", this, false);
 		return;
 	}
 
 	if (m_iRoomMemberCount == 0) {
 
-		// ¹æ Á¤º¸¸¦ ¸ø¹ŞÀº °æ¿ì ·Îºñ·Î ÀÌµ¿
-		PopUp::createInParent("¹æ Á¤º¸¸¦ ¹ŞÁö ¸øÇß½À´Ï´Ù. ´Ù½Ã Á¢¼ÓÇØÁÖ¼¼¿ä.", this, false);
+		// ë°© ì •ë³´ë¥¼ ëª»ë°›ì€ ê²½ìš° ë¡œë¹„ë¡œ ì´ë™
+		PopUp::createInParent("ë°© ì •ë³´ë¥¼ ë°›ì§€ ëª»í–ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì ‘ì†í•´ì£¼ì„¸ìš”.", this, false);
 		return;
 	}
 
 	/*
-	// È¥ÀÚ¼­µµ °¡´ÉÇÏµµ·Ï ÇÔ
+	// í˜¼ìì„œë„ ê°€ëŠ¥í•˜ë„ë¡ í•¨
 	if (m_iRoomMemberCount == 1) {
-		PopUp::createInParent("È¥ÀÚ¼­´Â ½ÃÀÛÇÒ ¼ö ¾ø½À´Ï´Ù.", this, false);
+		PopUp::createInParent("í˜¼ìì„œëŠ” ì‹œì‘í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", this, false);
 		return;
 	}
 	*/
@@ -158,12 +158,12 @@ void RoomLayer::OnClickedGameReadyButton(TextButton* btn) {
 	RoomCharacterInfo* pMyInfo = MyInfo();
 
 	if (pMyInfo == nullptr) {
-		PopUp::createInParent("ÀÚ½ÅÀÌ ´©±ºÁö ¾Ë ¼ö ¾ø½À´Ï´Ù. ´Ù½Ã Á¢¼ÓÇØÁÖ¼¼¿ä.", this, false);
+		PopUp::createInParent("ìì‹ ì´ ëˆ„êµ°ì§€ ì•Œ ìˆ˜ ì—†ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì ‘ì†í•´ì£¼ì„¸ìš”.", this, false);
 		return;
 	}
 
 	if (pMyInfo->CharacterUID == m_iHostCharacterUID) {
-		PopUp::createInParent("¹æÀåÀº °ÔÀÓ ÁØºñ¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ë°©ì¥ì€ ê²Œì„ ì¤€ë¹„ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", this, false);
 		return;
 	}
 
@@ -171,16 +171,16 @@ void RoomLayer::OnClickedGameReadyButton(TextButton* btn) {
 }
 
 void RoomLayer::OnClickedGameReadyCancelButton(TextButton* btn) {
-	// ¹æÀå ¿©ºÎ Ã¼Å© ÈÄ ¹æÀåÀÌ ¾Æ´Ï¸é °ÔÀÓÁØºñÇØÁ¦ ÆĞÅ¶ Àü¼Û
+	// ë°©ì¥ ì—¬ë¶€ ì²´í¬ í›„ ë°©ì¥ì´ ì•„ë‹ˆë©´ ê²Œì„ì¤€ë¹„í•´ì œ íŒ¨í‚· ì „ì†¡
 	RoomCharacterInfo* pMyInfo = MyInfo();
 
 	if (pMyInfo == nullptr) {
-		PopUp::createInParent("ÀÚ½ÅÀÌ ´©±ºÁö ¾Ë ¼ö ¾ø½À´Ï´Ù. ´Ù½Ã Á¢¼ÓÇØÁÖ¼¼¿ä.", this, false);
+		PopUp::createInParent("ìì‹ ì´ ëˆ„êµ°ì§€ ì•Œ ìˆ˜ ì—†ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì ‘ì†í•´ì£¼ì„¸ìš”.", this, false);
 		return;
 	}
 
 	if (pMyInfo->CharacterUID == m_iHostCharacterUID) {
-		PopUp::createInParent("¹æÀåÀº °ÔÀÓ ÁØºñ¸¦ ÇÒ ¼ö ¾ø½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ë°©ì¥ì€ ê²Œì„ ì¤€ë¹„ë¥¼ í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.", this, false);
 		return;
 	}
 
@@ -188,14 +188,14 @@ void RoomLayer::OnClickedGameReadyCancelButton(TextButton* btn) {
 }
 
 void RoomLayer::OnClickedGameLeaveRoomButton(TextButton* btn) {
-	// ¹æ ³ª°¡±â ÆĞÅ¶ ¼­¹ö·Î Àü¼Û
+	// ë°© ë‚˜ê°€ê¸° íŒ¨í‚· ì„œë²„ë¡œ ì „ì†¡
 	SendFn::SendRoomLeaveSyn();
 }
 
 
 /* =================================================================================
  *
- *                             Åë½Å ÆĞÅ¶ Ã³¸®
+ *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬
  *
  * ================================================================================*/
 
@@ -208,14 +208,14 @@ void RoomLayer::CmdLoadRoomInfoAck(ICommand* cmd) {
 		m_pRoomTitle->setText(StringUtils::format("[%d] %s (%d/%d)", m_RoomInfo.RoomUID, m_RoomInfo.Name, m_RoomInfo.PlayerCount, m_RoomInfo.MaxPlayerCount));
 
 		if (m_RoomInfo.IsBattlePlayingState()) {
-			m_pGameStartBtn->setText("°ÔÀÓ ³­ÀÔ");
+			m_pGameStartBtn->setText("ê²Œì„ ë‚œì…");
 		} else if (m_RoomInfo.IsLobbyState()) {
-			m_pGameStartBtn->setText("°ÔÀÓ ½ÃÀÛ");
+			m_pGameStartBtn->setText("ê²Œì„ ì‹œì‘");
 		}
 		return;
 	}
 
-	// ¹æ Á¤º¸¸¦ ¸ø¹ŞÀº °æ¿ì ·Îºñ·Î ÀÌµ¿
+	// ë°© ì •ë³´ë¥¼ ëª»ë°›ì€ ê²½ìš° ë¡œë¹„ë¡œ ì´ë™
 	_Client->SetRoomUID(INVALID_UID);
 	_Client->ChangeScene(SceneType::Lobby);
 }
@@ -223,7 +223,7 @@ void RoomLayer::CmdLoadRoomInfoAck(ICommand* cmd) {
 void RoomLayer::CmdUpdateCharacterInfoAck(ICommand* cmd) {
 	UpdateCharacterInfoAck* pUpdateCharacterInfoAck = cmd->CastCommand<UpdateCharacterInfoAck*>();
 
-	// Ä³¸¯ÅÍ Á¤º¸ ¾÷µ¥ÀÌÆ®
+	// ìºë¦­í„° ì •ë³´ ì—…ë°ì´íŠ¸
 	if (pUpdateCharacterInfoAck->Result) {
 		_Client->UpdateCharacterInfo(pUpdateCharacterInfoAck->Info);
 		return;
@@ -246,7 +246,7 @@ void RoomLayer::CmdUpdateRoomInfoAck(ICommand* cmd) {
 	UpdateRoomInfoAck* pUpdateRoomInfoAck = cmd->CastCommand<UpdateRoomInfoAck*>();
 
 	if (pUpdateRoomInfoAck->Count > ROOM_MAX_PLAYER_COUNT) {
-		DebugAssert(false, "ROOM_MAX_PLAYER_COUNT ¼öÄ¡ ÃÊ°úÇÏ´Â Count¸¦ ¹ŞÀ½");
+		DebugAssertMessage(false, "ROOM_MAX_PLAYER_COUNT ìˆ˜ì¹˜ ì´ˆê³¼í•˜ëŠ” Countë¥¼ ë°›ìŒ");
 		pUpdateRoomInfoAck->Count = ROOM_MAX_PLAYER_COUNT;
 	}
 
@@ -266,17 +266,17 @@ void RoomLayer::CmdUpdateRoomInfoAck(ICommand* cmd) {
 
 		if (pRoomCharacterInfo->CharacterUID != m_iHostCharacterUID) {
 			if (_Client->GetCharacterUID() == pRoomCharacterInfo->CharacterUID)
-				m_pMarkSlot[i]->setText(m_RoomMember[i].Ready ? "(³ª) ÁØºñ ¿Ï·á" : "(³ª)");
+				m_pMarkSlot[i]->setText(m_RoomMember[i].Ready ? "(ë‚˜) ì¤€ë¹„ ì™„ë£Œ" : "(ë‚˜)");
 			else
-				m_pMarkSlot[i]->setText(m_RoomMember[i].Ready ? "ÁØºñ ¿Ï·á" : "");
+				m_pMarkSlot[i]->setText(m_RoomMember[i].Ready ? "ì¤€ë¹„ ì™„ë£Œ" : "");
 		} else {
 			if (_Client->GetCharacterUID() == pRoomCharacterInfo->CharacterUID)
-				m_pMarkSlot[i]->setText("(³ª) ¹æÀå");
+				m_pMarkSlot[i]->setText("(ë‚˜) ë°©ì¥");
 			else
-				m_pMarkSlot[i]->setText("¹æÀå");
+				m_pMarkSlot[i]->setText("ë°©ì¥");
 		}
 
-		m_pSlot[i]->setText(StringUtils::format("%s\n%dÅ³ %dµ¥½º\n%d½Â¸® %dÆĞ¹è\n%d °ñµå", 
+		m_pSlot[i]->setText(StringUtils::format("%s\n%dí‚¬ %dë°ìŠ¤\n%dìŠ¹ë¦¬ %díŒ¨ë°°\n%d ê³¨ë“œ", 
 			m_RoomMember[i].Name,
 			m_RoomMember[i].Kill,
 			m_RoomMember[i].Death,

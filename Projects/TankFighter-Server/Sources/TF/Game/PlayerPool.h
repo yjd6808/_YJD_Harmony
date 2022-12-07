@@ -1,7 +1,7 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
- * Åë½Å ÁøÇàÁßÀÎ Player Æ÷ÀÎÅÍ¸¦ »èÁ¦ÇØ¹ö¸®¸é NullPointerExceptionÀÌ ¹ß»ıÇÒ ¼ö ÀÖ±â ¶§¹®¿¡
- * Ç®À» ¸¸µé¾î¼­ Á¦¾î°¡ °¡´ÉÇÏµµ·Ï ÇÏÀÚ.
+ * ì‘ì„±ì : ìœ¤ì •ë„
+ * í†µì‹  ì§„í–‰ì¤‘ì¸ Player í¬ì¸í„°ë¥¼ ì‚­ì œí•´ë²„ë¦¬ë©´ NullPointerExceptionì´ ë°œìƒí•  ìˆ˜ ìˆê¸° ë•Œë¬¸ì—
+ * í’€ì„ ë§Œë“¤ì–´ì„œ ì œì–´ê°€ ê°€ëŠ¥í•˜ë„ë¡ í•˜ì.
  */
 #pragma once
 
@@ -19,15 +19,15 @@ public:
 	bool Initialize(int size);
 	bool Finalize();
 
-	// Ç®¿¡¼­ »ç¿ëÇÒ ÇÃ·¹ÀÌ¾î¿¡ ¼¼¼ÇÀ» ¼¼ÆÃÇØ¼­ ¹İÈ¯¹Ş´Â´Ù.
+	// í’€ì—ì„œ ì‚¬ìš©í•  í”Œë ˆì´ì–´ì— ì„¸ì…˜ì„ ì„¸íŒ…í•´ì„œ ë°˜í™˜ë°›ëŠ”ë‹¤.
 	Player* PopPlayer(JNetwork::TcpSession* session);
 
-	// ¿¬°áÀÌ Á¾·áµÈ ÇÃ·¹ÀÌ¾î Á¤º¸¸¦ Ç®¿¡ ´Ù½Ã µ¹·Á³õ´Â´Ù.
+	// ì—°ê²°ì´ ì¢…ë£Œëœ í”Œë ˆì´ì–´ ì •ë³´ë¥¼ í’€ì— ë‹¤ì‹œ ëŒë ¤ë†“ëŠ”ë‹¤.
 	void ReleasePlayer(Player* releasePlayer);
 	int Count();
 private:
 	JCore::LinkedList<Player*> m_PlayerPool;
-	JCore::CriticalSectionMutex m_Mutex;
+	JCore::NormalLock m_Mutex;
 
 	inline static PlayerPool* ms_pInstance = nullptr;
 };

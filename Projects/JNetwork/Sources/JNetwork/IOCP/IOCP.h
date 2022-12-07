@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -37,22 +37,22 @@ public:
 	void Resume();
 	void Join();
 
-	void AddPendingCount()				{ m_iPendingOverlappedCount++;}
-	void DecreasePendingCount()			{ m_iPendingOverlappedCount--;}
+	void AddPendingCount()				{ ++m_iPendingOverlappedCount;}
+	void DecreasePendingCount()			{ --m_iPendingOverlappedCount;}
 	int GetPendingCount()				{ return m_iPendingOverlappedCount;}
 
-	bool Connect(HANDLE handle, ULONG_PTR completionKey) const;
-	BOOL GetStatus(LPDWORD numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const;
-	BOOL Post(DWORD dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const;
+	bool Connect(WinHandle handle, ULONG_PTR completionKey) const;
+	BOOL GetStatus(PInt32UL numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const;
+	BOOL Post(Int32UL dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const;
 private:
 	State m_eState;
-	HANDLE m_hIOCP;
-	DWORD m_iThreadCount;
+	WinHandle m_hIOCP;
+	Int32UL m_uiThreadCount;
 	WorkerManager* m_pWorkerManager;
 	std::atomic<int> m_iPendingOverlappedCount = 0;
 
-	// ÇöÀç I/O ¿Ï·á¸¦ ´ë±âÁßÀÎ ¿À¹ö·¦ ¼ö¸¦ ±â·ÏÇÑ´Ù.
-	// IOCP¸¦ Á¾·áÇÒ ¶§ ÀÌ ÆÒµù Ä«¿îÆ®°¡ 0ÀÌ µÇ¸é IOCP ¾²·¹µå¸¦ ÇØÁ¦ÇÏµµ·Ï ÇÑ´Ù.
+	// í˜„ì¬ I/O ì™„ë£Œë¥¼ ëŒ€ê¸°ì¤‘ì¸ ì˜¤ë²„ë© ìˆ˜ë¥¼ ê¸°ë¡í•œë‹¤.
+	// IOCPë¥¼ ì¢…ë£Œí•  ë•Œ ì´ íŒ¬ë”© ì¹´ìš´íŠ¸ê°€ 0ì´ ë˜ë©´ IOCP ì“°ë ˆë“œë¥¼ í•´ì œí•˜ë„ë¡ í•œë‹¤.
 };
 
 }

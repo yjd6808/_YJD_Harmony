@@ -1,5 +1,5 @@
 /*
- * ¿€º∫¿⁄ : ¿±¡§µµ
+ * ÏûëÏÑ±Ïûê : Ïú§Ï†ïÎèÑ
  */
 
 #include <JNetwork/Network.h>
@@ -12,28 +12,28 @@ namespace JNetwork {
 	IOCP::IOCP() :
 		m_eState(State::Uninitialized),
 		m_hIOCP(INVALID_HANDLE_VALUE),
-		m_iThreadCount(0),
+		m_uiThreadCount(0),
 		m_pWorkerManager(nullptr)
 	{
 	}
 
 	IOCP::~IOCP()  {
 		if (m_eState == State::Running) {
-			DebugAssert(false, "∏’¿˙ ¡∂¿Œ¿ª «ÿ¡÷ººø‰");
+			DebugAssertMessage(false, "Î®ºÏ†Ä Ï°∞Ïù∏ÏùÑ Ìï¥Ï£ºÏÑ∏Ïöî");
 		}
 
 		if (m_eState != State::Destroyed && !Destroy()) {
-			DebugAssert(false, "IOCP ªË¡¶ Ω«∆–");
+			DebugAssertMessage(false, "IOCP ÏÇ≠Ï†ú Ïã§Ìå®");
 		}
 	}
 
 
 	bool IOCP::Create(int threadCount) {
-		if ((m_hIOCP = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, (DWORD)threadCount)) == INVALID_HANDLE_VALUE) {
+		if ((m_hIOCP = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, (Int32UL)threadCount)) == INVALID_HANDLE_VALUE) {
 			return false;
 		}
 
-		m_iThreadCount = threadCount;
+		m_uiThreadCount = threadCount;
 		m_pWorkerManager = WorkerManager::Create<IOCPWorker>(threadCount, this);
 		m_eState = State::Initialized;
 		return true;
@@ -57,7 +57,7 @@ namespace JNetwork {
 
 	void IOCP::Run() {
 		if (m_eState != State::Initialized) {
-			DebugAssert(false, "Initialized ªÛ≈¬¿« IOCP∏∏ Run«“ ºˆ ¿÷Ω¿¥œ¥Ÿ.");
+			DebugAssertMessage(false, "Initialized ÏÉÅÌÉúÏùò IOCPÎßå RunÌï† Ïàò ÏûàÏäµÎãàÎã§.");
 			return;
 		}
 
@@ -67,7 +67,7 @@ namespace JNetwork {
 
 	void IOCP::Pause() {
 		if (m_eState != State::Running) {
-			DebugAssert(false, "Running ªÛ≈¬¿« IOCP∏∏ Pause«“ ºˆ ¿÷Ω¿¥œ¥Ÿ.");
+			DebugAssertMessage(false, "Running ÏÉÅÌÉúÏùò IOCPÎßå PauseÌï† Ïàò ÏûàÏäµÎãàÎã§.");
 			return;
 		}
 
@@ -77,7 +77,7 @@ namespace JNetwork {
 
 	void IOCP::Resume() {
 		if (m_eState != State::Paused) {
-			DebugAssert(false, "Paused ªÛ≈¬¿« IOCP∏∏ Resume«“ ºˆ ¿÷Ω¿¥œ¥Ÿ.");
+			DebugAssertMessage(false, "Paused ÏÉÅÌÉúÏùò IOCPÎßå ResumeÌï† Ïàò ÏûàÏäµÎãàÎã§.");
 			return;
 		}
 
@@ -87,11 +87,11 @@ namespace JNetwork {
 
 	void IOCP::Join() {
 		if (m_eState != State::Running && m_eState != State::Paused) {
-			DebugAssert(false, "Paused ∂«¥¬ Running ªÛ≈¬¿« IOCP∏∏ Join «“ ºˆ ¿÷Ω¿¥œ¥Ÿ.");
+			DebugAssertMessage(false, "Paused ÎòêÎäî Running ÏÉÅÌÉúÏùò IOCPÎßå Join Ìï† Ïàò ÏûàÏäµÎãàÎã§.");
 			return;
 		}
 
-		// ¿œΩ√¡§¡ˆ ªÛ≈¬¿Œ ∞ÊøÏ ∏µŒ ¡¯«‡Ω√ƒ—¡÷¿⁄.
+		// ÏùºÏãúÏ†ïÏßÄ ÏÉÅÌÉúÏù∏ Í≤ΩÏö∞ Î™®Îëê ÏßÑÌñâÏãúÏºúÏ£ºÏûê.
 		if (m_eState == State::Paused) {
 			m_pWorkerManager->Resume();
 		}
@@ -100,15 +100,15 @@ namespace JNetwork {
 		m_eState = State::Joined;
 	}
 
-	bool IOCP::Connect(HANDLE handle, ULONG_PTR completionKey) const {
-		return CreateIoCompletionPort(handle, m_hIOCP, completionKey, m_iThreadCount) != 0;
+	bool IOCP::Connect(WinHandle handle, ULONG_PTR completionKey) const {
+		return CreateIoCompletionPort(handle, m_hIOCP, completionKey, m_uiThreadCount) != 0;
 	}
 
-	BOOL IOCP::GetStatus(LPDWORD numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const {
+	BOOL IOCP::GetStatus(PInt32UL numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const {
 		return GetQueuedCompletionStatus(m_hIOCP, numberOfBytesTransffered, completionKey, ppOverlapped, INFINITE);
 	}
 
-	BOOL IOCP::Post(DWORD dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const {
+	BOOL IOCP::Post(Int32UL dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const {
 		return PostQueuedCompletionStatus(m_hIOCP, dwNumberOfBytesTransferred, dwCompletionKey, pOverlapped);
 	}
 }

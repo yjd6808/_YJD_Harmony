@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
@@ -196,20 +196,20 @@ void Player::InitializeRoomLobbyState(int roomUID) {
 	UnsafeSetReady(false);
 }
 
-// ÇÃ·¹ÀÌ°¡ Á¤»óÀûÀ¸·Î ¹èÆ²À» ÁøÇàÇÏ°Ô µÇ´Â °æ¿ì
+// í”Œë ˆì´ê°€ ì •ìƒì ìœ¼ë¡œ ë°°í‹€ì„ ì§„í–‰í•˜ê²Œ ë˜ëŠ” ê²½ìš°
 void Player::InitializeRoomBattleState() {
 	SpinLockGuard guard(m_PlayerMtx);
-	UnsafeSetReady(false); // ÀÌÁ¦ ÇÃ·¹ÀÌ¾î ÁØºñ´Â ¹èÆ²¿¡ ¸ğµÎ ÁøÀÔÇß´ÂÁö ¿©ºÎ¸¦ È®ÀÎÇÏ´Âµ¥ »ç¿ëÇÔ
+	UnsafeSetReady(false); // ì´ì œ í”Œë ˆì´ì–´ ì¤€ë¹„ëŠ” ë°°í‹€ì— ëª¨ë‘ ì§„ì…í–ˆëŠ”ì§€ ì—¬ë¶€ë¥¼ í™•ì¸í•˜ëŠ”ë° ì‚¬ìš©í•¨
 	UnsafeInitializeBattleInfo();
 	UnsafeInitializeTankMove();
 	m_CharacterInfo.PlayerState = PlayerState::RoomBattle;
 	m_CharacterInfo.IsDeath = false;
 }
 
-// ÇÃ·¹ÀÌ¾î°¡ ³­ÀÔÇÏ°Ô µÈ´À °æ¿ì ÃÊ±âÈ­
+// í”Œë ˆì´ì–´ê°€ ë‚œì…í•˜ê²Œ ëœëŠ ê²½ìš° ì´ˆê¸°í™”
 void Player::InitializeRoomBattleIntruderState() {
 	SpinLockGuard guard(m_PlayerMtx);
-	UnsafeSetReady(true);	// ³­ÀÔÇÏ´Â °æ¿ì´Â ¹Ù·Î ·¹µğ »óÅÂ
+	UnsafeSetReady(true);	// ë‚œì…í•˜ëŠ” ê²½ìš°ëŠ” ë°”ë¡œ ë ˆë”” ìƒíƒœ
 	UnsafeInitializeBattleInfo();
 	UnsafeInitializeTankMove();
 	m_CharacterInfo.PlayerState = PlayerState::RoomBattle;
@@ -261,13 +261,13 @@ PlayerState Player::UnsafeGetPlayerState() {
 }
 
 bool Player::UnsafeIsDeath() const {
-	return m_CharacterInfo.IsDeath;		// ºÎÈ°±îÁö ³²Àº½Ã°£ÀÌ 0º¸´Ù Å©¸é Á×¾îÀÖ´Ù°í ÇÔ
+	return m_CharacterInfo.IsDeath;		// ë¶€í™œê¹Œì§€ ë‚¨ì€ì‹œê°„ì´ 0ë³´ë‹¤ í¬ë©´ ì£½ì–´ìˆë‹¤ê³  í•¨
 }
 
 
 bool Player::IsDeath() {
 	SpinLockGuard guard(m_PlayerMtx);
-	return m_CharacterInfo.IsDeath;		// ºÎÈ°±îÁö ³²Àº½Ã°£ÀÌ 0º¸´Ù Å©¸é Á×¾îÀÖ´Ù°í ÇÔ
+	return m_CharacterInfo.IsDeath;		// ë¶€í™œê¹Œì§€ ë‚¨ì€ì‹œê°„ì´ 0ë³´ë‹¤ í¬ë©´ ì£½ì–´ìˆë‹¤ê³  í•¨
 }
 
 void Player::SetDeath(bool isDeath) {

@@ -1,6 +1,6 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
- *	PCH ÆÄÀÏÀÔ´Ï´Ù.
+ *	ì‘ì„±ì : ìœ¤ì •ë„
+ *	PCH íŒŒì¼ì…ë‹ˆë‹¤.
  */
 
 #pragma once
@@ -13,9 +13,12 @@
 
 #include <iostream>
 #include <thread>
+
 #include <Windows.h>
+#include <winnt.h>
 #include <exception>
 #include <random>
+
 #include <JCore/Define.h>
 #include <JCore/Assert.h>
 

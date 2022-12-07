@@ -1,6 +1,6 @@
 /*
- * Cocos2d-x & Socket Programming »ùÇÃ Âü°íÁ»ÇÔ
- * @Âü°í : https://github.com/AlexanderShniperson/cocos2dx_socket_example
+ * Cocos2d-x & Socket Programming ìƒ˜í”Œ ì°¸ê³ ì¢€í•¨
+ * @ì°¸ê³  : https://github.com/AlexanderShniperson/cocos2dx_socket_example
  *  
  */
 
@@ -28,17 +28,17 @@ void GameClientEventListener::OnConnected() {
 }
 
 void GameClientEventListener::OnDisconnected() {
-	// ¼­¹ö °­Á¦·Î ²÷±â¸é ¿©±â¼­ ¸¯ »ı±æ ¼ö ÀÕ´Âµ¥..
-	// °á±¹ Command Lock ÇÊ¿äÇÏ°Ú³×.. ¼öÁ¤ÇØ¾ßÇÒ °Í°°´Ù.
-	// ¿Ï¼ºÇÏ°í ½Ã°£³²À¸¸é ¤¡
-	// => ¼öÁ¤¿Ï·á
+	// ì„œë²„ ê°•ì œë¡œ ëŠê¸°ë©´ ì—¬ê¸°ì„œ ë¦­ ìƒê¸¸ ìˆ˜ ì‡ëŠ”ë°..
+	// ê²°êµ­ Command Lock í•„ìš”í•˜ê² ë„¤.. ìˆ˜ì •í•´ì•¼í•  ê²ƒê°™ë‹¤.
+	// ì™„ì„±í•˜ê³  ì‹œê°„ë‚¨ìœ¼ë©´ ã„±
+	// => ìˆ˜ì •ì™„ë£Œ
 
 	{
-		CriticalSectionLockGuard guard(m_CommandQueueMtx);
+		NormalLockGuard guard(m_CommandQueueMtx);
 
-		// ÀÌ°Ô ³»°¡ ¼±ÅÃÁö°¡ 2°³´Ù.
-		// 1. °­Á¾‰çÀ» ¶§ Å¥¿¡ Ä¿¸ÇµåµéÀÌ ÀÖÀ» ¶§ ÀÌ°Ô ¸ğµÎ Ã³¸®µÉ¶§±îÁö ±â´Ù¸®µçÁö
-		// 2. Ã³¸®ÇÏÁö ¾Ê°í ±×³É Å¥¿¡ ´ã±ä ¸ğµç Ä¿¸ÇµåµéÀ» »èÁ¦ÇÑ´Ù. (ÀÌ°É·Î ÇÔ)
+		// ì´ê²Œ ë‚´ê°€ ì„ íƒì§€ê°€ 2ê°œë‹¤.
+		// 1. ê°•ì¢…ë¬ì„ ë•Œ íì— ì»¤ë§¨ë“œë“¤ì´ ìˆì„ ë•Œ ì´ê²Œ ëª¨ë‘ ì²˜ë¦¬ë ë•Œê¹Œì§€ ê¸°ë‹¤ë¦¬ë“ ì§€
+		// 2. ì²˜ë¦¬í•˜ì§€ ì•Šê³  ê·¸ëƒ¥ íì— ë‹´ê¸´ ëª¨ë“  ì»¤ë§¨ë“œë“¤ì„ ì‚­ì œí•œë‹¤. (ì´ê±¸ë¡œ í•¨)
 		while (!m_CommandQueue.IsEmpty()) {
 			char* pCmd = m_CommandQueue.Front();
 			m_CommandQueue.Dequeue();
@@ -54,38 +54,38 @@ void GameClientEventListener::OnDisconnected() {
 }
 
 void GameClientEventListener::OnSent(ISendPacket* sentPacket, Int32UL sentBytes) {
-	// Overalapped Send °á°ú
+	// Overalapped Send ê²°ê³¼
 
 	Int16U* cmd = reinterpret_cast<Int16U*>(sentPacket->GetWSABuf().buf + PACKET_HEADER_SIZE);
 
-	// ¿òÁ÷ÀÌ´Â°Å ¾÷µ¥ÀÌÆ®´Â Ãâ·Â¾ÈÇÔ
-	// RTT ÇÎ ÆĞÅ¶ Àü¼Û Ãâ·Â¾ÈÇÔ
+	// ì›€ì§ì´ëŠ”ê±° ì—…ë°ì´íŠ¸ëŠ” ì¶œë ¥ì•ˆí•¨
+	// RTT í•‘ íŒ¨í‚· ì „ì†¡ ì¶œë ¥ì•ˆí•¨
 	if ((*cmd != BATTLE_FIELD_TANK_MOVE_SYN) && (*cmd != TCP_RTT_SYN)) {
-		CCLOG("%d Ä¿¸Çµå Àü¼Û", *cmd);
+		CCLOG("%d ì»¤ë§¨ë“œ ì „ì†¡", *cmd);
 	}
 }
 
 /*
- * IOCP ¾²·¹µå¿¡¼­ µ¹¾Æ°¨
- * Cocos ¾À¿¡¼­ Ã³¸®ÇÏ±â À§ÇØ Cocos ¾²·¹µå¿Í µ¿±âÈ­ ÇÊ¿ä
+ * IOCP ì“°ë ˆë“œì—ì„œ ëŒì•„ê°
+ * Cocos ì”¬ì—ì„œ ì²˜ë¦¬í•˜ê¸° ìœ„í•´ Cocos ì“°ë ˆë“œì™€ ë™ê¸°í™” í•„ìš”
  */
 void GameClientEventListener::OnReceived(ICommand* cmd) {
 
-	// Ä¿¸Çµå´Â Å¬¶óÀÌ¾ğÆ®ÀÇ ReceiveBufferÀÇ ÀÏºÎ·Î »ç¿ëÁßÀÌ¹Ç·Î
-	// ÄÚÄÚ½º ¾²·¹µå¿¡¼­ ¹Ş´Â Áß¿¡ ÇØ´ç ¸Ş¸ğ¸®°¡ µ¤¾î¾¯¿öÁú ¿ì·Á°¡ ÀÖ´Ù.
-	// ¶ôÀ» »ç¿ëÇØÁÖ°Å³ª µ¿ÀûÇÒ´çÇÑ µ¥ÀÌÅÍ¸¦ ³Ñ°ÜÁÖ´Â ½ÄÀ¸·Î Ã³¸®ÇØ¾ßÇÒ °ÍÀ¸·Îº¸ÀÎ´Ù.
+	// ì»¤ë§¨ë“œëŠ” í´ë¼ì´ì–¸íŠ¸ì˜ ReceiveBufferì˜ ì¼ë¶€ë¡œ ì‚¬ìš©ì¤‘ì´ë¯€ë¡œ
+	// ì½”ì½”ìŠ¤ ì“°ë ˆë“œì—ì„œ ë°›ëŠ” ì¤‘ì— í•´ë‹¹ ë©”ëª¨ë¦¬ê°€ ë®ì–´ì’¸ì›Œì§ˆ ìš°ë ¤ê°€ ìˆë‹¤.
+	// ë½ì„ ì‚¬ìš©í•´ì£¼ê±°ë‚˜ ë™ì í• ë‹¹í•œ ë°ì´í„°ë¥¼ ë„˜ê²¨ì£¼ëŠ” ì‹ìœ¼ë¡œ ì²˜ë¦¬í•´ì•¼í•  ê²ƒìœ¼ë¡œë³´ì¸ë‹¤.
 	int iNewAllocCapacity = cmd->GetCommandLen();
 	char* pNewAlloc = new char[iNewAllocCapacity];
 	Memory::Copy(pNewAlloc, iNewAllocCapacity, cmd, iNewAllocCapacity);
 
-	// Ä¿¸Çµå¸¦ Àü´ŞÇÒ ¹æ¹ıÀÌ ¾øÀ¸¹Ç·Î Å¥¿¡ ´ã¾Æ¼­ µ¿±âÈ­µÈ ¾²·¹µå¿¡¼­ »©µµ·Ï ÇØÁØ´Ù.
+	// ì»¤ë§¨ë“œë¥¼ ì „ë‹¬í•  ë°©ë²•ì´ ì—†ìœ¼ë¯€ë¡œ íì— ë‹´ì•„ì„œ ë™ê¸°í™”ëœ ì“°ë ˆë“œì—ì„œ ë¹¼ë„ë¡ í•´ì¤€ë‹¤.
 
 	{
-		CriticalSectionLockGuard guard(m_CommandQueueMtx);
+		NormalLockGuard guard(m_CommandQueueMtx);
 		m_CommandQueue.Enqueue(pNewAlloc);
 	}
 	
-	// ÀÎÀÚ¸¦ Àü´ŞÇÒ ¼ö ¾ø´Â std::functin<void()> Å¸ÀÔÀÌ¹Ç·Î µ¿±âÈ­ Å¥¿¡ Ä¿¸Çµå¸¦ ³Ö¾îÁØ ÈÄ »©ÁÖ´Â ½ÄÀ¸·Î ÇØ¾ßÇÑ´Ù.
+	// ì¸ìë¥¼ ì „ë‹¬í•  ìˆ˜ ì—†ëŠ” std::functin<void()> íƒ€ì…ì´ë¯€ë¡œ ë™ê¸°í™” íì— ì»¤ë§¨ë“œë¥¼ ë„£ì–´ì¤€ í›„ ë¹¼ì£¼ëŠ” ì‹ìœ¼ë¡œ í•´ì•¼í•œë‹¤.
 	Director::getInstance()->getScheduler()->performFunctionInCocosThread(
 		CC_CALLBACK_0(GameClientEventListener::SynchronizedOnReceived, this)
 	);
@@ -93,15 +93,15 @@ void GameClientEventListener::OnReceived(ICommand* cmd) {
 
 
 /*
- * Cocos ¾²·¹µå¿¡¼­ µ¹¾Æ°¨
+ * Cocos ì“°ë ˆë“œì—ì„œ ëŒì•„ê°
  */
 void GameClientEventListener::SynchronizedOnReceived() {
 	char* pNewAlloc = nullptr;
 
 	{
-		CriticalSectionLockGuard guard(m_CommandQueueMtx);
+		NormalLockGuard guard(m_CommandQueueMtx);
 
-		// ÇÔ¼ö ½ÇÇàÁß °©ÀÚ±â ¼­¹ö°¡ ´İÇô¼­ Ä¿¸Çµå Å¥°¡ ¸ğµÎ ºñ¾î¹ö¸®°Ô µÉ ¼ö ÀÖ´Ù.
+		// í•¨ìˆ˜ ì‹¤í–‰ì¤‘ ê°‘ìê¸° ì„œë²„ê°€ ë‹«í˜€ì„œ ì»¤ë§¨ë“œ íê°€ ëª¨ë‘ ë¹„ì–´ë²„ë¦¬ê²Œ ë  ìˆ˜ ìˆë‹¤.
 		if (m_CommandQueue.IsEmpty())
 			return;
 
@@ -109,24 +109,24 @@ void GameClientEventListener::SynchronizedOnReceived() {
 		m_CommandQueue.Dequeue();
 	}
 
-	// ¸í·É ¼öÇà ÈÄ »èÁ¦¸¦ ÇØÁÖµµ·Ï ÇÏÀÚ.
+	// ëª…ë ¹ ìˆ˜í–‰ í›„ ì‚­ì œë¥¼ í•´ì£¼ë„ë¡ í•˜ì.
 	AutoPointer<char> autoDelete(pNewAlloc, Deletor<char[]>());		
 	ICommand* pCmd = reinterpret_cast<ICommand*>(pNewAlloc);
 
-	// ÇöÀç ½ÇÇàÁßÀÎ ¾ÀÀ» °¡Á®¿Â´Ù.
+	// í˜„ì¬ ì‹¤í–‰ì¤‘ì¸ ì”¬ì„ ê°€ì ¸ì˜¨ë‹¤.
 	Scene* runningScene = Director::getInstance()->getRunningScene();
 
 	if (runningScene == nullptr) {
-		CCLOG("ÇöÀç µ¿ÀÛÁßÀÎ ¾ÀÀÌ ¾ø½À´Ï´Ù.");
+		CCLOG("í˜„ì¬ ë™ì‘ì¤‘ì¸ ì”¬ì´ ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	SynchronizedScene* synchronizedScene = dynamic_cast<SynchronizedScene*>(runningScene);
 
 	if (synchronizedScene == nullptr) {
-		// Âü°í ÄÚµåº¸¸é TransitionSceneÀÌ Å¸ÀÔÀÌ ÀÖ´øµ¥.. ±×°Ç ¾À ÀüÈ¯ÇÒ¶§ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÀÖÀ¸¸é Àá±ñ »ı¼ºµÇ´Â ±×·±°Ç°¡?
-		// ³»°¡ ±¸ÇöÇÑ ¾ÀÀº ¸ğµÎ SynchronizedSceneÀ» »ó¼Ó¹Ş¾Æ ±¸ÇöÇÏ±â ¶«¿¡ ¿©±â µé¾î¿À¸é ¾È´î µí?
-		CCLOG("µ¿±âÈ­ ¾ÀÀÌ nullptrÀÔ´Ï´Ù. ¾À Å¸ÀÔÀ» È®ÀÎÇØÁÖ¼¼¿ä.");
+		// ì°¸ê³  ì½”ë“œë³´ë©´ TransitionSceneì´ íƒ€ì…ì´ ìˆë˜ë°.. ê·¸ê±´ ì”¬ ì „í™˜í• ë•Œ ì• ë‹ˆë©”ì´ì…˜ì´ ìˆìœ¼ë©´ ì ê¹ ìƒì„±ë˜ëŠ” ê·¸ëŸ°ê±´ê°€?
+		// ë‚´ê°€ êµ¬í˜„í•œ ì”¬ì€ ëª¨ë‘ SynchronizedSceneì„ ìƒì†ë°›ì•„ êµ¬í˜„í•˜ê¸° ë•œì— ì—¬ê¸° ë“¤ì–´ì˜¤ë©´ ì•ˆëŒˆ ë“¯?
+		CCLOG("ë™ê¸°í™” ì”¬ì´ nullptrì…ë‹ˆë‹¤. ì”¬ íƒ€ì…ì„ í™•ì¸í•´ì£¼ì„¸ìš”.");
 		return;
 	}
 
@@ -148,7 +148,7 @@ void GameClientEventListener::SynchronizedOnDisconnected() {
 	LoginScene* pLoginScene = dynamic_cast<LoginScene*>(pScene);
 
 	if (pLoginScene) {
-		PopUp::createInParent("¼­¹ö¿Í ¿¬°áÀÌ ²÷¾îÁ³½À´Ï´Ù.", pLoginScene, false);
+		PopUp::createInParent("ì„œë²„ì™€ ì—°ê²°ì´ ëŠì–´ì¡ŒìŠµë‹ˆë‹¤.", pLoginScene, false);
 	}
 }
 
@@ -156,5 +156,5 @@ void GameClientEventListener::SynchronizedOnConnected() {
 	Scene* runningScene = Director::getInstance()->getRunningScene();
 
 	if (runningScene)
-		PopUp::createInParent("¼­¹ö¿¡ ¼º°øÀûÀ¸·Î Á¢¼ÓÇÏ¿´½À´Ï´Ù.", runningScene, false);
+		PopUp::createInParent("ì„œë²„ì— ì„±ê³µì ìœ¼ë¡œ ì ‘ì†í•˜ì˜€ìŠµë‹ˆë‹¤.", runningScene, false);
 }

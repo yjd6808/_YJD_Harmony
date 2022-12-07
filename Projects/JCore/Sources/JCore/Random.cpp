@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	³­¼ö »ı¼º±â
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë‚œìˆ˜ ìƒì„±ê¸°
 */
 
 #include <JCore/Core.h>
@@ -10,15 +10,11 @@
 
 namespace JCore {
 
-std::default_random_engine Random::ms_DefaultRandomEngine;
-bool Random::ms_bInitialized = false;
-
-
 Random::Random() {
-	// Ã³À½ ÇÑ¹ø¸¸ ÃÊ±âÈ­¸¦ ÇÏÀÚ.
+	// ì²˜ìŒ í•œë²ˆë§Œ ì´ˆê¸°í™”ë¥¼ í•˜ì.
 	if (!ms_bInitialized) {
 		ms_bInitialized = true;
-		ms_DefaultRandomEngine.seed((unsigned)time(0));
+		ms_DefaultRandomEngine.seed(ms_RandomDevice());
 	}
 }
 
@@ -28,24 +24,24 @@ Random::Random() {
     ======================================================= */
 
 void Random::EngineInitialize() {
-	ms_DefaultRandomEngine.seed((unsigned)time(0));
+	ms_DefaultRandomEngine.seed(ms_RandomDevice());
 }
 
 int Random::GenerateInt(int begin, int end) {
 	if (begin > end) {
-		throw InvalidArgumentException("begin > end µÇ¸é ¾È´ï");
+		throw InvalidArgumentException("begin > end ë˜ë©´ ì•ˆëŒ");
 	}
 
-	const std::uniform_int_distribution<> dist(begin, end - 1);
+	std::uniform_int_distribution<> dist(begin, end - 1);
 	return dist(ms_DefaultRandomEngine);
 }
 
 double Random::GenerateDouble(double begin, double end) {
 	if (begin > end) {
-		throw InvalidArgumentException("begin > end µÇ¸é ¾È´ï");
+		throw InvalidArgumentException("begin > end ë˜ë©´ ì•ˆëŒ");
 	}
 
-	const std::uniform_real_distribution<> dist(begin, end);
+	std::uniform_real_distribution<> dist(begin, end);
 	return dist(ms_DefaultRandomEngine);
 }
 

@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -24,7 +24,7 @@ public:
 
 
 	/* =================================================================================
-	 *                             Åë½Å ÆĞÅ¶ Ã³¸®
+	 *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬
 	 * ================================================================================*/
 
 	void CmdLoadCharacterInfoAck(ICommand* cmd);
@@ -38,6 +38,6 @@ private:
 	TextButton* m_pDeleteCharacterButton;
 	TextButton* m_pChannelSelectButton;
 
-	// ·ÎµùµÈ Ä³¸¯ÅÍ ID¿Í Ä³¸¯ÅÍ Á¤º¸
+	// ë¡œë”©ëœ ìºë¦­í„° IDì™€ ìºë¦­í„° ì •ë³´
 	JCore::Vector<TextButton*> m_CharacterSelectButtonVec;
 };

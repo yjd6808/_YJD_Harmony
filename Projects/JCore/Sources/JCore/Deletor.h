@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	Á¦°ÅÀÚ ÆãÅÍ
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ì œê±°ì í‘í„°
 */
 
 #pragma once
@@ -9,9 +9,9 @@
 
 namespace JCore {
 
-// void Å¸ÀÔÀ¸·Î »èÁ¦ÇÒ °æ¿ì ¼Ò¸êÀÚ°¡ È£ÃâµÇÁö ¾Ê´Â´Ù
-// ¼Ò¸êÀÚ°¡ È£ÃâµÉ ÇÊ¿ä¾ø´Â °æ¿ì¿¡ »ç¿ëÇÏµµ·Ï ÇÏÀÚ.
-// @Âü°í : https://stackoverflow.com/questions/941832/is-it-safe-to-delete-a-void-pointer
+// void íƒ€ì…ìœ¼ë¡œ ì‚­ì œí•  ê²½ìš° ì†Œë©¸ìê°€ í˜¸ì¶œë˜ì§€ ì•ŠëŠ”ë‹¤
+// ì†Œë©¸ìê°€ í˜¸ì¶œë  í•„ìš”ì—†ëŠ” ê²½ìš°ì— ì‚¬ìš©í•˜ë„ë¡ í•˜ì.
+// @ì°¸ê³  : https://stackoverflow.com/questions/941832/is-it-safe-to-delete-a-void-pointer
 
 struct VoidDeletor
 {

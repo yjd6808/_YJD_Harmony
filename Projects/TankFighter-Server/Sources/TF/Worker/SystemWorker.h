@@ -1,20 +1,18 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 	
-	±×³É ´Ü¼øÈ÷ ¼­ºê ÀÛ¾÷¿ëÀ¸·Î »ç¿ëÇÏ´Â ¿öÄ¿ ¾²·¹µå
+	ê·¸ëƒ¥ ë‹¨ìˆœíˆ ì„œë¸Œ ì‘ì—…ìš©ìœ¼ë¡œ ì‚¬ìš©í•˜ëŠ” ì›Œì»¤ ì“°ë ˆë“œ
 */
 
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 #include <JNetwork/Worker.h>
 
 class SystemWorker
 {
 public:
 	static SystemWorker* GetInstance();
-	HANDLE CreateExitHandle();
+	WinHandle CreateExitHandle();
 	void Run();
 	void WorkerThread() const;
 
@@ -23,7 +21,7 @@ protected:
 	SystemWorker();
 private:
 	std::thread m_Thread;
-	HANDLE m_hExitHandle = INVALID_HANDLE_VALUE;
+	WinHandle m_hExitHandle = INVALID_HANDLE_VALUE;
 
 	inline static SystemWorker* ms_pInstance;
 };

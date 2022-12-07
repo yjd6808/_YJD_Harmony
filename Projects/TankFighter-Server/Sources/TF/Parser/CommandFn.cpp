@@ -1,9 +1,9 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  *
- * 1. ¼ö½ÅÇÑ ÆĞÅ¶¿¡ ´ëÇÑ Ã³¸®¸¦ ÇÏµµ·ÏÇÕ´Ï´Ù.
- * 2. ÆĞÅ¶ Åë½Å ÄÚµå´Â ¸ğµÎ ¿©±â¸¸ ÀÛ¼ºÇÕ´Ï´Ù.
- * 3. ´Ü, ¿¹¿ÜÀûÀ¸·Î BattleFieldWorkder.cpp ¿¡¼­µµ ÆĞÅ¶ ¼Û½Å¿¡ ´ëÇÑ Ã³¸®¸¦ ÇÕ´Ï´Ù.
+ * 1. ìˆ˜ì‹ í•œ íŒ¨í‚·ì— ëŒ€í•œ ì²˜ë¦¬ë¥¼ í•˜ë„ë¡í•©ë‹ˆë‹¤.
+ * 2. íŒ¨í‚· í†µì‹  ì½”ë“œëŠ” ëª¨ë‘ ì—¬ê¸°ë§Œ ì‘ì„±í•©ë‹ˆë‹¤.
+ * 3. ë‹¨, ì˜ˆì™¸ì ìœ¼ë¡œ BattleFieldWorkder.cpp ì—ì„œë„ íŒ¨í‚· ì†¡ì‹ ì— ëŒ€í•œ ì²˜ë¦¬ë¥¼ í•©ë‹ˆë‹¤.
  *
  */
 
@@ -30,7 +30,7 @@ using namespace JCore;
 #define _World		World::GetInstance()
 
 
-// LOGIN_SYN 100 Ä¿¸Çµå
+// LOGIN_SYN 100 ì»¤ë§¨ë“œ
 void CommandFn::CmdLoginSyn(Player* player, ICommand* cmd) {
 	LoginSyn* pLoginSyn = cmd->CastCommand<LoginSyn*>();
 
@@ -44,23 +44,23 @@ void CommandFn::CmdLoginSyn(Player* player, ICommand* cmd) {
 		pLoginAck->UID = iAccountUID;
 
 		if (_World->IsPlayerExist(iAccountUID)) {
-			strcpy_s(pLoginAck->Reason, REASON_LEN, u8"·Î±×ÀÎ¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù. ÀÌ¹Ì Á¢¼ÓÁßÀÔ´Ï´Ù.");
+			strcpy_s(pLoginAck->Reason, REASON_LEN, "ë¡œê·¸ì¸ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤. ì´ë¯¸ ì ‘ì†ì¤‘ì…ë‹ˆë‹¤.");
 			pLoginAck->Result = false;
 			goto SEND;
 		} 
 
 		pLoginAck->Result = true;
 
-		// ·Î±×ÀÎ ½Ã°£ ¾÷µ¥ÀÌÆ® ÇØÁÜ - ¿©±â¼­ °á°ú º¼ ÇÊ¿ä ¾øÀ¸¹Ç·Î ¹Ù·Î Release
+		// ë¡œê·¸ì¸ ì‹œê°„ ì—…ë°ì´íŠ¸ í•´ì¤Œ - ì—¬ê¸°ì„œ ê²°ê³¼ ë³¼ í•„ìš” ì—†ìœ¼ë¯€ë¡œ ë°”ë¡œ Release
 		_Database->QueryAsync("update t_account set c_last_login_time = ? where c_uid = ?", DateTime::Now(), iAccountUID)->Release();
 
-		// ÀÌÁ¦ ÇØ´ç ÇÃ·¹ÀÌ¾î´Â ¿ùµå¿¡ ¼ÓÇÑ´Ù.
+		// ì´ì œ í•´ë‹¹ í”Œë ˆì´ì–´ëŠ” ì›”ë“œì— ì†í•œë‹¤.
 		player->SetAccountUID(iAccountUID);
 		player->UpdateLoggedInTime();
 		_World->AddNewPlayer(player);
 	} else {
 		pLoginAck->Result = false;
-		strcpy_s(pLoginAck->Reason, REASON_LEN, u8"·Î±×ÀÎ¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù. ÀÏÄ¡ÇÏ´Â ID/PW°¡ ¾ø½À´Ï´Ù.");
+		strcpy_s(pLoginAck->Reason, REASON_LEN, "ë¡œê·¸ì¸ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤. ì¼ì¹˜í•˜ëŠ” ID/PWê°€ ì—†ìŠµë‹ˆë‹¤.");
 	}
 
 SEND:
@@ -78,16 +78,16 @@ void CommandFn::CmdRegisterSyn(Player* player, ICommand* cmd) {
 	RegisterAck* pRegisterAck = pRegisterAckPacket->Get<0>();
 	if (spIdCheckQuery->GetResultRowCount()) {
 		pRegisterAck->Result = false;
-		strcpy_s(pRegisterAck->Reason, REASON_LEN, u8"ÀÌ¹Ì Á¸ÀçÇÏ´Â IDÀÔ´Ï´Ù.");
+		strcpy_s(pRegisterAck->Reason, REASON_LEN, "ì´ë¯¸ ì¡´ì¬í•˜ëŠ” IDì…ë‹ˆë‹¤.");
 	} else {
 		auto spIdCheckQuery = _Database->Query("insert into t_account (c_id, c_pass) values (?, md5(?))", pRegisterSyn->Id, pRegisterSyn->Password);
 
 		if (spIdCheckQuery->IsSuccess()) {
 			pRegisterAck->Result = true;
-			strcpy_s(pRegisterAck->Reason, REASON_LEN, u8"È¸¿ø°¡ÀÔ¿¡ ¼º°øÇÏ¿´½À´Ï´Ù.");
+			strcpy_s(pRegisterAck->Reason, REASON_LEN, "íšŒì›ê°€ì…ì— ì„±ê³µí•˜ì˜€ìŠµë‹ˆë‹¤.");
 		} else {
 			pRegisterAck->Result = true;
-			strcpy_s(pRegisterAck->Reason, REASON_LEN, u8"È¸¿ø°¡ÀÔ¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù. (insert ½ÇÆĞ)");
+			strcpy_s(pRegisterAck->Reason, REASON_LEN, "íšŒì›ê°€ì…ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤. (insert ì‹¤íŒ¨)");
 		}
 	} 
 
@@ -101,7 +101,7 @@ void CommandFn::CmdLoadChannelInfoSyn(Player* player, ICommand* cmd) {
 
 	const Vector<Channel*> channels = _World->GetChannels();
 
-	// Å¬¶ó°¡ ·Îºñ¿¡¼­ Ã¤³Î¼±ÅÃÀ¸·Î ÀÌµ¿ÇÑ °æ¿ì
+	// í´ë¼ê°€ ë¡œë¹„ì—ì„œ ì±„ë„ì„ íƒìœ¼ë¡œ ì´ë™í•œ ê²½ìš°
 	const int iChannelUID = player->GetChannelUID();
 	if (iChannelUID != INVALID_UID) {
 		Channel* pChannel = _World->GetChannel(iChannelUID);
@@ -135,14 +135,14 @@ void CommandFn::CmdSelectChannelSyn(Player* player, ICommand* cmd) {
 
 	Channel* pSelectedChannel =  _World->GetChannel(pSelectChannelSyn->ChanneldUID);
 
-	// ÇÃ·¹ÀÌ¾î Ã¤³Î UID ¼³Á¤ ¹× Ã¤³Î¿¡ Ãß°¡
+	// í”Œë ˆì´ì–´ ì±„ë„ UID ì„¤ì • ë° ì±„ë„ì— ì¶”ê°€
 	if (pSelectedChannel->TryAddPlayer(player)) {
 		pSelectChannelAck->Result = true;
 		pSelectChannelAck->ChanneldUID = pSelectChannelSyn->ChanneldUID;
-		strcpy_s(pSelectChannelAck->Reason, REASON_LEN, u8"Ã¤³Î ÁøÀÔ ¼º°ø");
+		strcpy_s(pSelectChannelAck->Reason, REASON_LEN, "ì±„ë„ ì§„ì… ì„±ê³µ");
 	} else {
 		pSelectChannelAck->Result = false;
-		strcpy_s(pSelectChannelAck->Reason, REASON_LEN, u8"ÀÎ¿øÀÌ ²Ë Ã¡½À´Ï´Ù.");
+		strcpy_s(pSelectChannelAck->Reason, REASON_LEN, "ì¸ì›ì´ ê½‰ ì°¼ìŠµë‹ˆë‹¤.");
 	}
 
 	player->SendAsync(pReplyPacket);
@@ -160,7 +160,7 @@ void CommandFn::CmdLoadCharacterInfoSyn(Player* player, ICommand* cmd) {
 
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "Àß¸øµÈ À¯ÀúÀÔ´Ï´Ù.");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "ì˜ëª»ëœ ìœ ì €ì…ë‹ˆë‹¤.");
 		player->Disconnect();
 		return;
 	}
@@ -180,7 +180,7 @@ void CommandFn::CmdSelectCharacterSyn(Player* player, ICommand* cmd) {
 
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "Àß¸øµÈ À¯ÀúÀÔ´Ï´Ù.");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "ì˜ëª»ëœ ìœ ì €ì…ë‹ˆë‹¤.");
 		player->Disconnect();
 		return;
 	}
@@ -193,7 +193,7 @@ void CommandFn::CmdSelectCharacterSyn(Player* player, ICommand* cmd) {
 		pSelectCharacterAck->CharacterUID = iCharacterUID;
 	} else {
 		pSelectCharacterAck->Result = false;
-		strcpy_s(pSelectCharacterAck->Reason, REASON_LEN, u8"¼±ÅÃÇÏ½Å Ä³¸¯ÅÍÀÇ Á¤º¸°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+		strcpy_s(pSelectCharacterAck->Reason, REASON_LEN, "ì„ íƒí•˜ì‹  ìºë¦­í„°ì˜ ì •ë³´ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		SendFn::SendLoadCharacterInfoAck(player);
 	}
 
@@ -211,7 +211,7 @@ void CommandFn::CmdCreateCharacterSyn(Player* player, ICommand* cmd) {
 
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "Àß¸øµÈ À¯ÀúÀÔ´Ï´Ù.");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "ì˜ëª»ëœ ìœ ì €ì…ë‹ˆë‹¤.");
 		player->Disconnect();
 		return;
 	}
@@ -222,19 +222,19 @@ void CommandFn::CmdCreateCharacterSyn(Player* player, ICommand* cmd) {
 
 	pCreateCharacterAck->Result = false;
 	if (QueryFn::IsCharacterExistByName(szCharacterName)) {
-		strcpy_s(pCreateCharacterAck->Reason, REASON_LEN, u8"ÀÌ¹Ì ÇØ´ç Ä³¸¯ÅÍ ¸íÀÌ ÀÌ¹Ì Á¸ÀçÇÕ´Ï´Ù.");
+		strcpy_s(pCreateCharacterAck->Reason, REASON_LEN, "ì´ë¯¸ í•´ë‹¹ ìºë¦­í„° ëª…ì´ ì´ë¯¸ ì¡´ì¬í•©ë‹ˆë‹¤.");
 	} else {
 
-		// ÀÏºÎ·¯ µ¿±â·Î ÁøÇàÇØÁÜ
+		// ì¼ë¶€ëŸ¬ ë™ê¸°ë¡œ ì§„í–‰í•´ì¤Œ
 		if (_Database->Query("insert into t_character (c_account_uid, c_channel_uid, c_name, c_win, c_lose, c_kill, c_death, c_money) values (?, ?, ?, ?, ?, ?, ?, ?)",
 			iAccountUID, iChannelUID, szCharacterName, 0, 0, 0, 0, 1000000)->IsFailed()) {
-			strcpy_s(pCreateCharacterAck->Reason, REASON_LEN, u8"Ä³¸¯ÅÍ »ı¼º¿¡ ½ÇÆĞÇß½À´Ï´Ù. (select failed)");
+			strcpy_s(pCreateCharacterAck->Reason, REASON_LEN, "ìºë¦­í„° ìƒì„±ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤. (select failed)");
 			goto SEND;
 		}
 
 		pCreateCharacterAck->Result = true;
-		strcpy_s(pCreateCharacterAck->Reason, REASON_LEN, u8"Ä³¸¯ÅÍ°¡ ¼º°øÀûÀ¸·Î »ı¼ºµÇ¾ú½À´Ï´Ù!");
-		// Ä³¸¯ÅÍ »ı¼ºµÇ¸é Ä³¸¯¸ñ·ÏÀ» ÀçÀü¼ÛÇØÁÖÀÚ.
+		strcpy_s(pCreateCharacterAck->Reason, REASON_LEN, "ìºë¦­í„°ê°€ ì„±ê³µì ìœ¼ë¡œ ìƒì„±ë˜ì—ˆìŠµë‹ˆë‹¤!");
+		// ìºë¦­í„° ìƒì„±ë˜ë©´ ìºë¦­ëª©ë¡ì„ ì¬ì „ì†¡í•´ì£¼ì.
 		SendFn::SendLoadCharacterInfoAck(player);
 	}
 
@@ -252,7 +252,7 @@ void CommandFn::CmdDeleteCharacterSyn(Player* player, ICommand* cmd) {
 
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "Àß¸øµÈ À¯ÀúÀÔ´Ï´Ù.");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "ì˜ëª»ëœ ìœ ì €ì…ë‹ˆë‹¤.");
 		player->Disconnect();
 		return;
 	}
@@ -264,15 +264,15 @@ void CommandFn::CmdDeleteCharacterSyn(Player* player, ICommand* cmd) {
 	if (QueryFn::IsCharacterExistByName(szCharacterName)) {
 		if (_Database->Query("delete from t_character where c_name = ? and c_account_uid = ? and c_channel_uid = ?",
 			szCharacterName, iAccountUID, iChannelUID)->IsFailed()) {
-			strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, u8"Ä³¸¯ÅÍ »èÁ¦¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù. account_uid, channel_uid mismatch");
+			strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, "ìºë¦­í„° ì‚­ì œì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤. account_uid, channel_uid mismatch");
 		} else {
-			strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, u8"Ä³¸¯ÅÍ°¡ ¼º°øÀûÀ¸·Î »èÁ¦µÇ¾ú½À´Ï´Ù.");
+			strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, "ìºë¦­í„°ê°€ ì„±ê³µì ìœ¼ë¡œ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
 
-			// Ä³¸¯ÅÍ°¡ »èÁ¦µÇ¸é Ä³¸¯¸ñ·ÏÀ» ÀçÀü¼ÛÇØÁÖÀÚ.
+			// ìºë¦­í„°ê°€ ì‚­ì œë˜ë©´ ìºë¦­ëª©ë¡ì„ ì¬ì „ì†¡í•´ì£¼ì.
 			SendFn::SendLoadCharacterInfoAck(player);
 		}
 	} else {
-		strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, u8"ÇØ´ç ´Ğ³×ÀÓÀÇ Ä³¸¯ÅÍ°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+		strcpy_s(pDeleteCharacterAck->Reason, REASON_LEN, "í•´ë‹¹ ë‹‰ë„¤ì„ì˜ ìºë¦­í„°ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 	}
 
 	player->SendAsync(pReplyPacket);
@@ -286,7 +286,7 @@ void CommandFn::CmdJoinLobbySyn(Player* player, ICommand* cmd) {
 	const int iChannelUID = pJoinLobbySyn->ChannelUID;
 	const int iCharacterUID = pJoinLobbySyn->CharacterUID;
 
-	// Å¬¶ó¿¡¼­ ¾À ÀüÈ¯ Áö¸Ú´ë·Î ÇÑ °æ¿ì¸¦ ´ëºñÇØ¼­
+	// í´ë¼ì—ì„œ ì”¬ ì „í™˜ ì§€ë©‹ëŒ€ë¡œ í•œ ê²½ìš°ë¥¼ ëŒ€ë¹„í•´ì„œ
 	if (player->GetRoomUID() != INVALID_UID) {
 		Room* pRoom = _World->GetRoomByPlayer(player);
 		if (pRoom) {
@@ -303,7 +303,7 @@ void CommandFn::CmdJoinLobbySyn(Player* player, ICommand* cmd) {
 
 	if (iAccountUID != player->GetAccountUID() ||
 		iChannelUID != player->GetChannelUID()) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "Àß¸øµÈ À¯ÀúÀÔ´Ï´Ù.");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "ì˜ëª»ëœ ìœ ì €ì…ë‹ˆë‹¤.");
 		player->Disconnect();
 		return;
 	}
@@ -311,13 +311,13 @@ void CommandFn::CmdJoinLobbySyn(Player* player, ICommand* cmd) {
 	player->SetCharacterUID(iCharacterUID);
 	player->SetPlayerState(PlayerState::Lobby);
 
-	// player¿¡°Ô ÀÚ½ÅÀÇ Ä³¸¯ÅÍ Á¤º¸ Àü¼Û
+	// playerì—ê²Œ ìì‹ ì˜ ìºë¦­í„° ì •ë³´ ì „ì†¡
 	SendFn::SendUpdateCharacterInfoAck(player);
 
-	// player¿¡°Ô Ä£±¸·Î µî·ÏµÈ Ä³¸¯ÅÍ Á¤º¸µé Àü¼Û
+	// playerì—ê²Œ ì¹œêµ¬ë¡œ ë“±ë¡ëœ ìºë¦­í„° ì •ë³´ë“¤ ì „ì†¡
 	SendFn::SendUpdateFriendListAck(player, iCharacterUID);
 
-	// player¿¡°Ô ¹æ ¸®½ºÆ® Á¤º¸ Àü¼Û
+	// playerì—ê²Œ ë°© ë¦¬ìŠ¤íŠ¸ ì •ë³´ ì „ì†¡
 	SendFn::SendUpdateRoomListAck(player, iChannelUID);
 }
 
@@ -326,18 +326,18 @@ void CommandFn::CmdJoinLobbySyn(Player* player, ICommand* cmd) {
 void CommandFn::CmdCreateRoomSyn(Player* player, ICommand* cmd) {
 	const CreateRoomSyn* pCreateRoomSyn = cmd->CastCommand<CreateRoomSyn*>();
 
-	// ¼ÓÇÑ Ã¤³Î¿¡¼­ ¹æÀ» »ı¼ºÇÑ´Ù.
+	// ì†í•œ ì±„ë„ì—ì„œ ë°©ì„ ìƒì„±í•œë‹¤.
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 	Room* pRoom = pChannel->CreateRoom(player, pCreateRoomSyn->RoomName, ROOM_MAX_PLAYER_COUNT);
 
 
-	// ÇØ´ç ÇÃ·¹ÀÌ¾î´Â ¹æÀ¸·Î ÀÌµ¿ÇÒ ¼ö ÀÖµµ·Ï ACK¸¦ Àü¼ÛÇÑ´Ù.
+	// í•´ë‹¹ í”Œë ˆì´ì–´ëŠ” ë°©ìœ¼ë¡œ ì´ë™í•  ìˆ˜ ìˆë„ë¡ ACKë¥¼ ì „ì†¡í•œë‹¤.
 	const auto pReplyPacket = new StaticPacket<CreateRoomAck>;
 	CreateRoomAck* pCreateRoomAck = pReplyPacket->Get<0>();
 	
 	if (pRoom == nullptr) {
 		pCreateRoomAck->Result = false;
-		strcpy_s(pCreateRoomAck->Reason, REASON_LEN, u8"¹æ »ı¼º¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+		strcpy_s(pCreateRoomAck->Reason, REASON_LEN, "ë°© ìƒì„±ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 	} else {
 		pCreateRoomAck->Result = true;
 		pCreateRoomAck->RoomUID = pRoom->GetRoomUID();
@@ -345,7 +345,7 @@ void CommandFn::CmdCreateRoomSyn(Player* player, ICommand* cmd) {
 
 	player->SendAsync(pReplyPacket);
 
-	// Ã¤³ÎÀÇ ·Îºñ¿¡ ÀÖ´Â ¸ğµç À¯Àúµé¿¡°Ô ¹æ¸®½ºÆ® ¸ñ·Ï ¾÷µ¥ÀÌÆ® ÆĞÅ¶À» Àü¼ÛÇÑ´Ù.
+	// ì±„ë„ì˜ ë¡œë¹„ì— ìˆëŠ” ëª¨ë“  ìœ ì €ë“¤ì—ê²Œ ë°©ë¦¬ìŠ¤íŠ¸ ëª©ë¡ ì—…ë°ì´íŠ¸ íŒ¨í‚·ì„ ì „ì†¡í•œë‹¤.
 	SendFn::BroadcastUpdateRoomListAck(pChannel);
 }
 
@@ -354,7 +354,7 @@ void CommandFn::CmdCreateRoomSyn(Player* player, ICommand* cmd) {
 void CommandFn::CmdJoinRoomSyn(Player* player, ICommand* cmd) {
 	const JoinRoomSyn* pCreateRoomSyn = cmd->CastCommand<JoinRoomSyn*>();
 
-	// ¼ÓÇÑ Ã¤³Î¿¡¼­ ¹æÀ» »ı¼ºÇÑ´Ù.
+	// ì†í•œ ì±„ë„ì—ì„œ ë°©ì„ ìƒì„±í•œë‹¤.
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 	const auto pReplyPacket = new StaticPacket<JoinRoomAck>;
 	JoinRoomAck* pJoinRoomAck = pReplyPacket->Get<0>();
@@ -364,13 +364,13 @@ void CommandFn::CmdJoinRoomSyn(Player* player, ICommand* cmd) {
 
 	if (pRoom == nullptr) {
 		pJoinRoomAck->Result = false;
-		strcpy_s(pJoinRoomAck->Reason, REASON_LEN, u8"ÇØ´ç ¹æÀÌ Á¸ÀçÇÏÁö ¾Ê°Å³ª ²Ë Ã¡½À´Ï´Ù.");
+		strcpy_s(pJoinRoomAck->Reason, REASON_LEN, "í•´ë‹¹ ë°©ì´ ì¡´ì¬í•˜ì§€ ì•Šê±°ë‚˜ ê½‰ ì°¼ìŠµë‹ˆë‹¤.");
 	} else {
 		pJoinRoomAck->Result = true;
 		pJoinRoomAck->RoomUID = pCreateRoomSyn->RoomUID;
 
 
-		// Ã¤³ÎÀÇ ·Îºñ¿¡ ÀÖ´Â ¸ğµç À¯Àúµé¿¡°Ô ¹æ¸®½ºÆ® ¸ñ·Ï ¾÷µ¥ÀÌÆ® ÆĞÅ¶À» Àü¼ÛÇÑ´Ù.
+		// ì±„ë„ì˜ ë¡œë¹„ì— ìˆëŠ” ëª¨ë“  ìœ ì €ë“¤ì—ê²Œ ë°©ë¦¬ìŠ¤íŠ¸ ëª©ë¡ ì—…ë°ì´íŠ¸ íŒ¨í‚·ì„ ì „ì†¡í•œë‹¤.
 		SendFn::BroadcastUpdateRoomListAck(pChannel);
 	}
 	player->SendAsync(pReplyPacket);
@@ -381,7 +381,7 @@ void CommandFn::CmdAddFriendSyn(Player* player, ICommand* cmd) {
 	const AddFriendSyn* pAddFriendSyn = cmd->CastCommand<AddFriendSyn*>();
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 
-	// ÇÃ·¹ÀÌ¾î°¡ ¼ÓÇÑ Ã¤³ÎÀÇ À¯ÀúµéÀ» È®ÀÎÇÏ¸é¼­ Ä£±¸ ¿äÃ» ÆĞÅ¶À» º¸³½´Ù.
+	// í”Œë ˆì´ì–´ê°€ ì†í•œ ì±„ë„ì˜ ìœ ì €ë“¤ì„ í™•ì¸í•˜ë©´ì„œ ì¹œêµ¬ ìš”ì²­ íŒ¨í‚·ì„ ë³´ë‚¸ë‹¤.
 	Player* pTargetPlayer =pChannel->PlayerFindIf([pAddFriendSyn](Player* playerInChannel)->bool {
 		return playerInChannel->CheckNameEqual(pAddFriendSyn->FriendName);
 	});
@@ -392,26 +392,26 @@ void CommandFn::CmdAddFriendSyn(Player* player, ICommand* cmd) {
 	AddFriendAck* pAddFriendAck = pReplyPacket->Get<0>();
 	if (pTargetPlayer == nullptr) {
 		pAddFriendAck->Result = false;
-		strcpy_s(pAddFriendAck->Reason, REASON_LEN, u8"ÇØ´ç ÇÃ·¹ÀÌ¾î°¡ ÇöÀç Ã¤³Î¿¡ Á¢¼ÓÁßÀÌÁö ¾Ê½À´Ï´Ù.");
+		strcpy_s(pAddFriendAck->Reason, REASON_LEN, "í•´ë‹¹ í”Œë ˆì´ì–´ê°€ í˜„ì¬ ì±„ë„ì— ì ‘ì†ì¤‘ì´ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 	} else {
-		// ÀÚ±â ÀÚ½ÅÀÎ °æ¿ì
+		// ìê¸° ìì‹ ì¸ ê²½ìš°
 		if (pTargetPlayer == player) {
 			pAddFriendAck->Result = false;
-			strcpy_s(pAddFriendAck->Reason, REASON_LEN, u8"ÇãÇã.. ÀÚ±âÀÚ½ÅÀº ºÒ°¡´ÉÇÏ´Ù³×");
+			strcpy_s(pAddFriendAck->Reason, REASON_LEN, "í—ˆí—ˆ.. ìê¸°ìì‹ ì€ ë¶ˆê°€ëŠ¥í•˜ë‹¤ë„¤");
 		} else {
-			int iRequestCharacterUID = player->GetCharacterUID();			// ¿äÃ»ÀÚ
-			int iTargetCharacterUID = pTargetPlayer->GetCharacterUID();		// ¼ö¶ô/°ÅºÎ ¿¹Á¤ÀÚ
+			int iRequestCharacterUID = player->GetCharacterUID();			// ìš”ì²­ì
+			int iTargetCharacterUID = pTargetPlayer->GetCharacterUID();		// ìˆ˜ë½/ê±°ë¶€ ì˜ˆì •ì
 
-			// 373¹øÁÙ¿¡¼­ ¼º°øÇØ¼­ ÇÃ·¹ÀÌÀú Á¤º¸¸¦ °¡Á®¿Ô´Âµ¥
-			// ¿©±â±îÁö ¿À±âÀü¿¡ ÇÃ·¹ÀÌ¾î°¡ ³ª°¡¹ö¸®¸é INVALID_UID·Î ÃÊ±âÈ­ µÇ¹ö¸®´Âµ¥.. ¿¹¿ÜÃ³¸®¸¦ ³Ê¹« ºı½Ã°Ô ÇØ¾ßÇÏ´Âµ¥ ±×·¯¸é
-			// ÀÌ°É ¾î¶»°ÔÇÏ¸é ÇØ°áÇØ¾ß ÁÁÀ»Áö ¸ğ¸£°Ú´Ù.
-			// ÀÌÀü¿¡ ½ºÅ°µå·¯½¬ ¼­¹ö ºĞ¼®ÇßÀ»¶§ Ã¤³Î ¼­¹ö, ·Îºñ ¼­¹ö ÀÌ·¸°Ô ÀüºÎ ³ª´²³ù¾ú´øµ¥ °ü¸®°¡ ¾î·Á¿ö¼­ ±×·¨´ø°Ç°¡
+			// 373ë²ˆì¤„ì—ì„œ ì„±ê³µí•´ì„œ í”Œë ˆì´ì € ì •ë³´ë¥¼ ê°€ì ¸ì™”ëŠ”ë°
+			// ì—¬ê¸°ê¹Œì§€ ì˜¤ê¸°ì „ì— í”Œë ˆì´ì–´ê°€ ë‚˜ê°€ë²„ë¦¬ë©´ INVALID_UIDë¡œ ì´ˆê¸°í™” ë˜ë²„ë¦¬ëŠ”ë°.. ì˜ˆì™¸ì²˜ë¦¬ë¥¼ ë„ˆë¬´ ë¹¡ì‹œê²Œ í•´ì•¼í•˜ëŠ”ë° ê·¸ëŸ¬ë©´
+			// ì´ê±¸ ì–´ë–»ê²Œí•˜ë©´ í•´ê²°í•´ì•¼ ì¢‹ì„ì§€ ëª¨ë¥´ê² ë‹¤.
+			// ì´ì „ì— ìŠ¤í‚¤ë“œëŸ¬ì‰¬ ì„œë²„ ë¶„ì„í–ˆì„ë•Œ ì±„ë„ ì„œë²„, ë¡œë¹„ ì„œë²„ ì´ë ‡ê²Œ ì „ë¶€ ë‚˜ëˆ ë†¨ì—ˆë˜ë° ê´€ë¦¬ê°€ ì–´ë ¤ì›Œì„œ ê·¸ë¬ë˜ê±´ê°€
 
 			if (QueryFn::IsCharacterFriend(iTargetCharacterUID, iRequestCharacterUID)) {
 				pAddFriendAck->Result = false;
-				strcpy_s(pAddFriendAck->Reason, REASON_LEN, u8"ÀÌ¹Ì Ä£±¸ÀÔ´Ï´Ù.");
+				strcpy_s(pAddFriendAck->Reason, REASON_LEN, "ì´ë¯¸ ì¹œêµ¬ì…ë‹ˆë‹¤.");
 			} else {
-				// Ä£±¸ ¿äÃ» ´ë»ó¿¡°Ô ´©±º°¡ Ä£±¸ ¿äÃ»ÇßÀ½À» ¾Ë·ÁÁØ´Ù.
+				// ì¹œêµ¬ ìš”ì²­ ëŒ€ìƒì—ê²Œ ëˆ„êµ°ê°€ ì¹œêµ¬ ìš”ì²­í–ˆìŒì„ ì•Œë ¤ì¤€ë‹¤.
 				const auto pRequestPacket = new StaticPacket<AddFriendRequestSyn>;
 				AddFriendRequestSyn* pAddFriendRequestSyn = pRequestPacket->Get<0>();
 				pAddFriendRequestSyn->RequestCharacterUID = iRequestCharacterUID;
@@ -421,7 +421,7 @@ void CommandFn::CmdAddFriendSyn(Player* player, ICommand* cmd) {
 		}
 	}
 
-	// ÇÃ·¹ÀÌ¾î¿¡°Ô ¿äÃ» º¸³½ °á°ú¸¦ ¼Û½ÅÇÑ´Ù.
+	// í”Œë ˆì´ì–´ì—ê²Œ ìš”ì²­ ë³´ë‚¸ ê²°ê³¼ë¥¼ ì†¡ì‹ í•œë‹¤.
 	player->SendAsync(pReplyPacket);
 }
 
@@ -431,7 +431,7 @@ void CommandFn::CmdDeleteFriendSyn(Player* player, ICommand* cmd) {
 
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 
-	Player* pRequest = player;	// Ä£±¸ »èÁ¦¸¦ ¿äÃ»ÇÑ »ç¶÷
+	Player* pRequest = player;	// ì¹œêµ¬ ì‚­ì œë¥¼ ìš”ì²­í•œ ì‚¬ëŒ
 	Player* pDeleted = pChannel->FindPlayerByCharacterUID(pDeleteFriendSyn->DeleteCharacterUID);
 
 	int iRequesterCharacterUID = pRequest->GetCharacterUID();
@@ -443,23 +443,23 @@ void CommandFn::CmdDeleteFriendSyn(Player* player, ICommand* cmd) {
 	if (_Database->Query("delete from t_friendship where (c_req_character_uid = ? and c_ack_character_uid = ?) or (c_ack_character_uid = ? and c_req_character_uid = ?)",
 		iRequesterCharacterUID, iDeletedCharacterUID, iRequesterCharacterUID, iDeletedCharacterUID)->IsSuccess()) {
 		pDeleteFriendAck->Result = true;
-		strcpy_s(pDeleteFriendAck->Reason, REASON_LEN, u8"¼º°øÀûÀ¸·Î Ä£±¸°¡ »èÁ¦µÇ¾ú½À´Ï´Ù.");
+		strcpy_s(pDeleteFriendAck->Reason, REASON_LEN, "ì„±ê³µì ìœ¼ë¡œ ì¹œêµ¬ê°€ ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
 
 
-		// »èÁ¦ ´ë»óÀÌ Á¢¼ÓÁßÀÎ °æ¿ì ¾Ë·ÁÁØ´Ù.
+		// ì‚­ì œ ëŒ€ìƒì´ ì ‘ì†ì¤‘ì¸ ê²½ìš° ì•Œë ¤ì¤€ë‹¤.
 		if (pDeleted) {
-			// ´©°¡ ³Î Ä£±¸ »èÁ¦Çß´Ù°í
-			SendFn::SendServerMessageSyn(pDeleted, u8"´©±º°¡ ´ç½ÅÀ» Ä£±¸»èÁ¦ ÇÏ¿´½À´Ï´Ù.");
+			// ëˆ„ê°€ ë„ ì¹œêµ¬ ì‚­ì œí–ˆë‹¤ê³ 
+			SendFn::SendServerMessageSyn(pDeleted, "ëˆ„êµ°ê°€ ë‹¹ì‹ ì„ ì¹œêµ¬ì‚­ì œ í•˜ì˜€ìŠµë‹ˆë‹¤.");
 
-			// Ä£±¸ ¸ñ·Ïµµ °»½ÅÇØÁØ´Ù.
+			// ì¹œêµ¬ ëª©ë¡ë„ ê°±ì‹ í•´ì¤€ë‹¤.
 			SendFn::SendUpdateFriendListAck(pDeleted, iDeletedCharacterUID );
 		}
 
-		// »èÁ¦¸¦ ¿äÃ»ÇÑ »ç¶÷µµ °»½ÅÇØÁÜ
+		// ì‚­ì œë¥¼ ìš”ì²­í•œ ì‚¬ëŒë„ ê°±ì‹ í•´ì¤Œ
 		SendFn::SendUpdateFriendListAck(pRequest, iRequesterCharacterUID);
 	} else {
 		pDeleteFriendAck->Result = false;
-		strcpy_s(pDeleteFriendAck->Reason, REASON_LEN, u8"¿äÃ»À» ¼º°øÀûÀ¸·Î º¸³Â½À´Ï´Ù.");
+		strcpy_s(pDeleteFriendAck->Reason, REASON_LEN, "ìš”ì²­ì„ ì„±ê³µì ìœ¼ë¡œ ë³´ëƒˆìŠµë‹ˆë‹¤.");
 	}
 
 	player->SendAsync(pReplyPacket);
@@ -471,30 +471,30 @@ void CommandFn::CmdAddFriendRequestAck(Player* player, ICommand* cmd) {
 
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 
-	Player* pAccepter = player;	// Ä£±¸ ¿äÃ»À» ¼ö¶ô ¶Ç´Â °ÅºÎÇÑ»ç¶÷
+	Player* pAccepter = player;	// ì¹œêµ¬ ìš”ì²­ì„ ìˆ˜ë½ ë˜ëŠ” ê±°ë¶€í•œì‚¬ëŒ
 	Player* pRequester = pChannel->FindPlayerByCharacterUID(pAddFriendRequestAck->RequestCharacterUID);
 
-	// µÑ´Ù Á¢¼ÓÁßÀÌ¾î¾ß º¸³»¾ßÇÔ
+	// ë‘˜ë‹¤ ì ‘ì†ì¤‘ì´ì–´ì•¼ ë³´ë‚´ì•¼í•¨
 	if (pRequester == nullptr || pAccepter == nullptr) {
-		// ³»ºÎ¿¡¼­ null Ã¼Å©ÇÔ
+		// ë‚´ë¶€ì—ì„œ null ì²´í¬í•¨
 
-		SendFn::SendServerMessageSyn(pAccepter, u8"»ó´ë¹æÀÌ Á¢¼ÓÁßÀÌÁö ¾Ê½À´Ï´Ù.");
-		SendFn::SendServerMessageSyn(pRequester, u8"»ó´ë¹æÀÌ Á¢¼ÓÁßÀÌÁö ¾Ê½À´Ï´Ù.");
+		SendFn::SendServerMessageSyn(pAccepter, "ìƒëŒ€ë°©ì´ ì ‘ì†ì¤‘ì´ì§€ ì•ŠìŠµë‹ˆë‹¤.");
+		SendFn::SendServerMessageSyn(pRequester, "ìƒëŒ€ë°©ì´ ì ‘ì†ì¤‘ì´ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 	}
 
-	// ¼ö¶ôÇÑ °æ¿ì
+	// ìˆ˜ë½í•œ ê²½ìš°
 	if (pAddFriendRequestAck->Accept) 
-		SendFn::SendServerMessageSyn(pRequester, u8"»ó´ë¹æÀÌ Ä£±¸ ¿äÃ»À» ¼ö¶ôÇÏ¿´½À´Ï´Ù.");
+		SendFn::SendServerMessageSyn(pRequester, "ìƒëŒ€ë°©ì´ ì¹œêµ¬ ìš”ì²­ì„ ìˆ˜ë½í•˜ì˜€ìŠµë‹ˆë‹¤.");
 	else
-		SendFn::SendServerMessageSyn(pRequester, u8"»ó´ë¹æÀÌ Ä£±¸ ¿äÃ»À» °ÅÀıÇÏ¿´½À´Ï´Ù.");
+		SendFn::SendServerMessageSyn(pRequester, "ìƒëŒ€ë°©ì´ ì¹œêµ¬ ìš”ì²­ì„ ê±°ì ˆí•˜ì˜€ìŠµë‹ˆë‹¤.");
 
-	// 1. ¼ö¶ôÇÑ °æ¿ì Ä£±¸ ¿äÃ»/¼ö¶ôÀÚ ¸ğµÎ Ä£±¸ ¸ñ·ÏÀ» °»½ÅÇØÁØ´Ù.
-	// 2. µ¥ÀÌ¹öº£ÀÌ½º¿¡ Ä£±¸ °ü°è¸¦ Ãß°¡ÇØÁØ´Ù.
+	// 1. ìˆ˜ë½í•œ ê²½ìš° ì¹œêµ¬ ìš”ì²­/ìˆ˜ë½ì ëª¨ë‘ ì¹œêµ¬ ëª©ë¡ì„ ê°±ì‹ í•´ì¤€ë‹¤.
+	// 2. ë°ì´ë²„ë² ì´ìŠ¤ì— ì¹œêµ¬ ê´€ê³„ë¥¼ ì¶”ê°€í•´ì¤€ë‹¤.
 	if (pAddFriendRequestAck->Accept) {
 		if (_Database->Query("insert into t_friendship (c_req_character_uid, c_ack_character_uid) values (?, ?)",
 			pRequester->GetCharacterUID(), pAccepter->GetCharacterUID())->IsSuccess()) {
 
-			// ÇÑ¹ø¿¡ º¸³»´Â°Ô È¿À²ÀûÀÌ±ä ÇÑµ¥ ÄÚµå ´Ù½Ã Â¥¾ßÇØ¼­ ÀÏ´Ü.. ÀÌ·¸°Ô
+			// í•œë²ˆì— ë³´ë‚´ëŠ”ê²Œ íš¨ìœ¨ì ì´ê¸´ í•œë° ì½”ë“œ ë‹¤ì‹œ ì§œì•¼í•´ì„œ ì¼ë‹¨.. ì´ë ‡ê²Œ
 			SendFn::SendUpdateFriendListAck(pAccepter, pAccepter->GetCharacterUID());
 			SendFn::SendUpdateFriendListAck(pRequester, pRequester->GetCharacterUID());
 		}
@@ -515,20 +515,20 @@ void CommandFn::CmdLoadRoomInfoSyn(Player* player, ICommand* cmd) {
 		iChannelUID != player->GetChannelUID() ||
 		iCharacterUID != player->GetCharacterUID() ||
 		RoomUID != player->GetRoomUID()) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "Àß¸øµÈ À¯ÀúÀÔ´Ï´Ù.");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "ì˜ëª»ëœ ìœ ì €ì…ë‹ˆë‹¤.");
 		player->Disconnect();
 		return;
 	}
 
 	Room* pRoom = _World->GetRoomByPlayer(player);
 
-	// ¹æ Á¤º¸¸¦ Àü´Ş
+	// ë°© ì •ë³´ë¥¼ ì „ë‹¬
 	SendFn::SendRoomInfoAck(pRoom, player);
 
-	// ¹æ¿¡ ÀÖ´Â ¸ğµç À¯Àúµé¿¡°Ô ÇØ´ç ¹æ¿¡ ÀÖ´Â ÇÃ·¹ÀÌ¾î Á¤º¸µéÀ» Àü´ŞÇÑ´Ù.
+	// ë°©ì— ìˆëŠ” ëª¨ë“  ìœ ì €ë“¤ì—ê²Œ í•´ë‹¹ ë°©ì— ìˆëŠ” í”Œë ˆì´ì–´ ì •ë³´ë“¤ì„ ì „ë‹¬í•œë‹¤.
 	SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 
-	// player¿¡°Ô ÀÚ½ÅÀÇ Ä³¸¯ÅÍ Á¤º¸ Àü¼Û
+	// playerì—ê²Œ ìì‹ ì˜ ìºë¦­í„° ì •ë³´ ì „ì†¡
 	SendFn::SendUpdateCharacterInfoAck(player);
 }
 
@@ -545,7 +545,7 @@ void CommandFn::CmdRoomGameStartSyn(Player* player, ICommand* cmd) {
 		iChannelUID != player->GetChannelUID() ||
 		iCharacterUID != player->GetCharacterUID() ||
 		RoomUID != player->GetRoomUID()) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "Àß¸øµÈ À¯ÀúÀÔ´Ï´Ù.");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "ì˜ëª»ëœ ìœ ì €ì…ë‹ˆë‹¤.");
 		player->Disconnect();
 		return;
 	}
@@ -556,11 +556,11 @@ void CommandFn::CmdRoomGameStartSyn(Player* player, ICommand* cmd) {
 	RoomGameStartAck* pRoomGameStartAck = pReplyPacket->Get<0>();
 
 	if (pRoomGameStartSyn->Intrude) {
-		// ³­ÀÔÇÏ¿© µé¾î¿À´Â °æ¿ì
-		// »ç½Ç ÀÌ¹Ì ¹æ¾È¿¡ ÀÖ°í ¹æ »óÅÂ¸¸ ¹èÆ²ÇÊµå »óÅÂÀÎ °ÍÀÌ±â¶«¿¡ ÇÃ·¹ÀÌ¾î »óÅÂ¸¸ ¹Ù±îÁÖ¸é µÊ ^_^
+		// ë‚œì…í•˜ì—¬ ë“¤ì–´ì˜¤ëŠ” ê²½ìš°
+		// ì‚¬ì‹¤ ì´ë¯¸ ë°©ì•ˆì— ìˆê³  ë°© ìƒíƒœë§Œ ë°°í‹€í•„ë“œ ìƒíƒœì¸ ê²ƒì´ê¸°ë•œì— í”Œë ˆì´ì–´ ìƒíƒœë§Œ ë°”ê¹Œì£¼ë©´ ë¨ ^_^
 		if (player->IsBattleState()) {
 			pRoomGameStartAck->Result = false;
-			strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"³­ÀÔ¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.\nÀÌ¹Ì ´ç½ÅÀÌ ¹èÆ²ÁßÀÔ´Ï´Ù.(¸Û¹Ì)");
+			strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, "ë‚œì…ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.\nì´ë¯¸ ë‹¹ì‹ ì´ ë°°í‹€ì¤‘ì…ë‹ˆë‹¤.(ë©ë¯¸)");
 			player->SendAsync(pReplyPacket);
 		} else {
 			
@@ -571,19 +571,19 @@ void CommandFn::CmdRoomGameStartSyn(Player* player, ICommand* cmd) {
 		}
 	} else {
 		if (pRoom == nullptr) {
-			// ÇÃ·¹ÀÌ¾î°¡ ¼ÓÇÑ ¹æÀÌ Á¸ÀçÇÏÁö ¾ÊÀ» °æ¿ì 
+			// í”Œë ˆì´ì–´ê°€ ì†í•œ ë°©ì´ ì¡´ì¬í•˜ì§€ ì•Šì„ ê²½ìš° 
 			pRoomGameStartAck->Result = false;
-			strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"´ç½ÅÀÌ ¼ÓÇÑ ¹æ Á¤º¸°¡ ¾ø½À´Ï´Ù.");
+			strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, "ë‹¹ì‹ ì´ ì†í•œ ë°© ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤.");
 			player->SendAsync(pReplyPacket);
 		}
 		else {
-			// ¹æ¿¡ ÀÖ´Â ¸ğµç À¯Àúµé¿¡°Ô °ÔÀÓ ½ÃÀÛ ÆĞÅ¶À» Àü¼ÛÇÑ´Ù.
+			// ë°©ì— ìˆëŠ” ëª¨ë“  ìœ ì €ë“¤ì—ê²Œ ê²Œì„ ì‹œì‘ íŒ¨í‚·ì„ ì „ì†¡í•œë‹¤.
 			if (pRoom->GetChannel()->StartBattle(pRoom)) {
 				pRoomGameStartAck->Result = true;
 			}
 			else {
 				pRoomGameStartAck->Result = false;
-				strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, u8"ÀÌ¹Ì °ÔÀÓÀÌ ÁøÇàÁßÀÔ´Ï´Ù. ¹®Á¦°¡ ÀÖ³×¿ä.");
+				strcpy_s(pRoomGameStartAck->Reason, REASON_LEN, "ì´ë¯¸ ê²Œì„ì´ ì§„í–‰ì¤‘ì…ë‹ˆë‹¤. ë¬¸ì œê°€ ìˆë„¤ìš”.");
 			}
 			pRoom->Broadcast(pReplyPacket);
 		}
@@ -600,7 +600,7 @@ void CommandFn::CmdRoomGameReadySyn(Player* player, ICommand* cmd) {
 		player->SetReady(true);
 		SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 	} else {
-		SendFn::SendServerMessageSyn(player, u8"´ç½ÅÀÌ ¼ÓÇÑ ¹æ Á¤º¸°¡ ¾ø½À´Ï´Ù.");
+		SendFn::SendServerMessageSyn(player, "ë‹¹ì‹ ì´ ì†í•œ ë°© ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤.");
 	}
 }
 
@@ -614,7 +614,7 @@ void CommandFn::CmdRoomGameReadyCancelSyn(Player* player, ICommand* cmd) {
 		player->SetReady(false);
 		SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 	} else {
-		SendFn::SendServerMessageSyn(player, u8"´ç½ÅÀÌ ¼ÓÇÑ ¹æ Á¤º¸°¡ ¾ø½À´Ï´Ù.");
+		SendFn::SendServerMessageSyn(player, "ë‹¹ì‹ ì´ ì†í•œ ë°© ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤.");
 	}
 }
 
@@ -633,18 +633,18 @@ void CommandFn::CmdRoomLeaveSyn(Player* player, ICommand* cmd) {
 		pRoomLeaveAck->Result = true;
 
 		if (pRoom->IsEmpty()) {
-			// ºó ¹æÀÌ µÈ °æ¿ì ¾ø¾ÖÁÖÀÚ.
+			// ë¹ˆ ë°©ì´ ëœ ê²½ìš° ì—†ì• ì£¼ì.
 			pChannel->RemoveRoom(pRoom->GetRoomUID());
 		} else {
-			// ±âÁ¸¿¡ ¹æ¿¡ ÀÖ´ø »ç¶÷¿¡°Ô ³ª°¬´Ù°í ¾Ë·ÁÁÖÀÚ.
+			// ê¸°ì¡´ì— ë°©ì— ìˆë˜ ì‚¬ëŒì—ê²Œ ë‚˜ê°”ë‹¤ê³  ì•Œë ¤ì£¼ì.
 			SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 		}
 
-		// ·Îºñ¿¡ ÀÖ´Â ÇÃ·¹ÀÌ¾îµé¿¡°Ô ¹æ Á¤º¸¸¦ Àü´ŞÇØÁÖÀÚ.
+		// ë¡œë¹„ì— ìˆëŠ” í”Œë ˆì´ì–´ë“¤ì—ê²Œ ë°© ì •ë³´ë¥¼ ì „ë‹¬í•´ì£¼ì.
 		SendFn::BroadcastUpdateRoomListAck(pChannel);
 	} else {
 		pRoomLeaveAck->Result = false;
-		strcpy_s(pRoomLeaveAck->Reason, REASON_LEN, u8"´ç½ÅÀÌ ¼ÓÇÑ ¹æ Á¤º¸°¡ ¾ø½À´Ï´Ù.");
+		strcpy_s(pRoomLeaveAck->Reason, REASON_LEN, "ë‹¹ì‹ ì´ ì†í•œ ë°© ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤.");
 	}
 
 	player->SendAsync(pPacket);
@@ -654,7 +654,7 @@ void CommandFn::CmdRoomLeaveSyn(Player* player, ICommand* cmd) {
 void CommandFn::CmdBattleFieldLoadSyn(Player* player, ICommand* cmd) {
 	const BattleFieldLoadSyn* pBattleFieldLoadSyn = cmd->CastCommand<BattleFieldLoadSyn*>();
 
-	// ÇÃ·¹ÀÌ¾î°¡ ¹èÆ² ÇÊµå¿¡ ÁøÀÔÇÏ¸é ·¹µğ »óÅÂ·Î ¹Ù²Ù°í ¸Ê¿¡¼­ ·£´ıÇÑ À§Ä¡¸¦ »Ì¾Æ¼­ ÁØ´Ù.
+	// í”Œë ˆì´ì–´ê°€ ë°°í‹€ í•„ë“œì— ì§„ì…í•˜ë©´ ë ˆë”” ìƒíƒœë¡œ ë°”ê¾¸ê³  ë§µì—ì„œ ëœë¤í•œ ìœ„ì¹˜ë¥¼ ë½‘ì•„ì„œ ì¤€ë‹¤.
 	Room* pRoom = _World->GetRoomByPlayer(player);
 	const auto pReplyPacket = new StaticPacket<BattleFieldLoadAck>;
 	BattleFieldLoadAck* pBattleFieldLoadAck = pReplyPacket->Get<0>();
@@ -662,8 +662,8 @@ void CommandFn::CmdBattleFieldLoadSyn(Player* player, ICommand* cmd) {
 	Random rand;
 	TankMove initialMove{};
 	pBattleFieldLoadAck->InitialMove.CharacterUID = player->GetCharacterUID();
-	pBattleFieldLoadAck->InitialMove.X = rand.GenerateInt(0 + 50, MAP_WIDTH - 50);
-	pBattleFieldLoadAck->InitialMove.Y = rand.GenerateInt(0 + 50, MAP_HEIGHT - 50);
+	pBattleFieldLoadAck->InitialMove.X = (float)rand.GenerateInt(0 + 50, MAP_WIDTH - 50);
+	pBattleFieldLoadAck->InitialMove.Y = (float)rand.GenerateInt(0 + 50, MAP_HEIGHT - 50);
 	pBattleFieldLoadAck->InitialMove.MoveDir = MoveDirection::None;
 	pBattleFieldLoadAck->InitialMove.RotationDir = RotateDirection::None;
 	pBattleFieldLoadAck->InitialMove.MoveSpeed = TANK_MOVE_SPEED;
@@ -676,10 +676,10 @@ void CommandFn::CmdBattleFieldLoadSyn(Player* player, ICommand* cmd) {
 	player->UpdateTankMove(pBattleFieldLoadAck->InitialMove);
 	player->SendAsync(pReplyPacket);
 
-	// ¹èÆ²ÇÊµå ¾À¿¡ À¯Àú Á¤º¸¸¦ ¾Ë·ÁÁØ´Ù.
+	// ë°°í‹€í•„ë“œ ì”¬ì— ìœ ì € ì •ë³´ë¥¼ ì•Œë ¤ì¤€ë‹¤.
 	SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 
-	// player¿¡°Ô ÀÚ½ÅÀÇ Ä³¸¯ÅÍ Á¤º¸ Àü¼Û
+	// playerì—ê²Œ ìì‹ ì˜ ìºë¦­í„° ì •ë³´ ì „ì†¡
 	SendFn::SendUpdateCharacterInfoAck(player);
 }
 
@@ -695,12 +695,12 @@ void CommandFn::CmdBattleFieldLeaveSyn(Player* player, ICommand* cmd) {
 	Channel* pChannel = pRoom->GetChannel();
 
 	if (pRoom == nullptr || pChannel == nullptr) {
-		DebugAssert(false, "ÇÃ·¹ÀÌ ÁßÀÎ Ã¤³Î ¶Ç´Â ¹æÀÌ ¾ø½À´Ï´Ù.");
+		DebugAssertMessage(false, "í”Œë ˆì´ ì¤‘ì¸ ì±„ë„ ë˜ëŠ” ë°©ì´ ì—†ìŠµë‹ˆë‹¤.");
 		return;
 	}
 
 	if (!pChannel->LeaveRoom(player)) {
-		DebugAssert(false, "ÇÃ·¹ÀÌ¾î°¡ ¹æÀ» ¶°³ª´Âµ¥ ½ÇÆĞÇß½À´Ï´Ù. ¹æ¿¡ ÇÃ·¹ÀÌ¾î°¡ ¾ø½À´Ï´Ù.");
+		DebugAssertMessage(false, "í”Œë ˆì´ì–´ê°€ ë°©ì„ ë– ë‚˜ëŠ”ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤. ë°©ì— í”Œë ˆì´ì–´ê°€ ì—†ìŠµë‹ˆë‹¤.");
 	}
 
 	if (!pRoom->IsEmpty()) {
@@ -710,7 +710,7 @@ void CommandFn::CmdBattleFieldLeaveSyn(Player* player, ICommand* cmd) {
 		pRoom->Broadcast(pRoomBroadcastPacket);
 	}
 
-	// ¹èÆ²ÇÊµå ¹æÀ» ³ª°£°Å´Ï ·Îºñ À¯Àúµé¿¡°Ô º¯°æ»çÇ×À» ¾Ë·ÁÁØ´Ù.
+	// ë°°í‹€í•„ë“œ ë°©ì„ ë‚˜ê°„ê±°ë‹ˆ ë¡œë¹„ ìœ ì €ë“¤ì—ê²Œ ë³€ê²½ì‚¬í•­ì„ ì•Œë ¤ì¤€ë‹¤.
 	SendFn::BroadcastUpdateRoomListAck(pChannel);
 }
 
@@ -718,7 +718,7 @@ void CommandFn::CmdChatMessageSyn(Player* player, ICommand* cmd) {
 	ChatMessageSyn* pChatMessageSyn = cmd->CastCommand<ChatMessageSyn*>();
 
 	if (player->GetPlayerState() != pChatMessageSyn->PlayerState) {
-		SendFn::SendServerMessageSyn(player, u8"Ã¤ÆÃÀÌ °¡´ÉÇÑ À§Ä¡°¡ ¾Æ´Õ´Ï´Ù.");
+		SendFn::SendServerMessageSyn(player, "ì±„íŒ…ì´ ê°€ëŠ¥í•œ ìœ„ì¹˜ê°€ ì•„ë‹™ë‹ˆë‹¤.");
 		return;
 	}
 
@@ -726,7 +726,7 @@ void CommandFn::CmdChatMessageSyn(Player* player, ICommand* cmd) {
 	ChatMessageAck* pChatMessageAck = pBroadcastPacket->Get<0>();
 	strcpy_s(pChatMessageAck->Message, MESSAGE_LEN, pChatMessageSyn->Message);
 
-	// Ã¤ÆÃ °¡´ÉÇÑ À§Ä¡ Ãß°¡µÉ¶§¸¶´Ù ¿©±â Ãß°¡ÇØÁÙ °Í
+	// ì±„íŒ… ê°€ëŠ¥í•œ ìœ„ì¹˜ ì¶”ê°€ë ë•Œë§ˆë‹¤ ì—¬ê¸° ì¶”ê°€í•´ì¤„ ê²ƒ
 	switch (player->GetPlayerState()) {
 	case PlayerState::Lobby: {
 		Channel* pChannel = _World->GetChannel(player->GetChannelUID());
@@ -743,7 +743,7 @@ void CommandFn::CmdChatMessageSyn(Player* player, ICommand* cmd) {
 		break;
 	}
 	default:
-		SendFn::SendServerMessageSyn(player, u8"Ã¤ÆÃ Àü¼Û¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+		SendFn::SendServerMessageSyn(player, "ì±„íŒ… ì „ì†¡ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		pBroadcastPacket->Release();
 	}
 }
@@ -753,7 +753,7 @@ void CommandFn::CmdBattleFieldFireSyn(Player* player, ICommand* cmd) {
 	BattleFieldFireSyn* pBattleFieldFireSyn = cmd->CastCommand<BattleFieldFireSyn*>();
 	player->AddFireCount(1);
 
-	// ÃÑ¾ËÀ» ½î¸é ÇØ´ç ¹æÀÇ À¯Àúµé¿¡°Ô ºê·ÎµåÄ³½ºÆÃ ÇØÁØ´Ù.
+	// ì´ì•Œì„ ì˜ë©´ í•´ë‹¹ ë°©ì˜ ìœ ì €ë“¤ì—ê²Œ ë¸Œë¡œë“œìºìŠ¤íŒ… í•´ì¤€ë‹¤.
 	Room* pBattleFieldRoom = _World->GetRoomByPlayer(player);
 	if (pBattleFieldRoom && pBattleFieldRoom->IsBattleFieldState()) {
 		const auto pBroadcastPacket = new StaticPacket<BattleFieldFireAck>;
@@ -768,7 +768,7 @@ void CommandFn::CmdBattleFieldDeathSyn(Player* player, ICommand* cmd) {
 
 	Channel* pChannel = _World->GetChannel(player->GetChannelUID());
 	Room* pRoom = pChannel->GetRoomByPlayer(player);
-	// ÇÃ·¹À× ½ºÅ×ÀÌÆ®¿¡¸¸ Å³/µ¥½º ±â·Ï - EndWait¿¡´Â ¹İ¿µ¾ÈÇÏµµ·Ï ÇÑ´Ù.
+	// í”Œë ˆì‰ ìŠ¤í…Œì´íŠ¸ì—ë§Œ í‚¬/ë°ìŠ¤ ê¸°ë¡ - EndWaitì—ëŠ” ë°˜ì˜ì•ˆí•˜ë„ë¡ í•œë‹¤.
 	if (pRoom && pRoom->IsBattleFieldState()) {
 		Player* pKiller = pChannel->FindPlayerByCharacterUID(pBattleFieldDeathSyn->CharacterUID);
 		if (pKiller) {
@@ -777,7 +777,7 @@ void CommandFn::CmdBattleFieldDeathSyn(Player* player, ICommand* cmd) {
 			player->SetRevivalLeftTime(BATTLE_REVIVAL_TIME);
 			player->SetDeath(true);
 
-			// Äõ¸® ¹İ¿µÀº ºñµ¿±â·Î ÁøÇà
+			// ì¿¼ë¦¬ ë°˜ì˜ì€ ë¹„ë™ê¸°ë¡œ ì§„í–‰
 			QueryFn::AddKillCountAsync(pKiller->GetCharacterUID(), 1);
 			QueryFn::AddDeathCountAsync(player->GetCharacterUID(), 1);
 

@@ -1,12 +1,13 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¸Ş¸ğ¸® Á¶ÀÛÀ» µµ¿ÍÁÖ´Â Å¬·¡½ºÀÔ´Ï´Ù.
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë©”ëª¨ë¦¬ ì¡°ì‘ì„ ë„ì™€ì£¼ëŠ” í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
 */
 
 #pragma once
 
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
+#include <JCore/TypeTraits.h>
 #include <JCore/Exception.h>
 
 namespace JCore {
@@ -14,17 +15,17 @@ namespace JCore {
 class Memory final
 {
 public:
-	// ½ÃÀÛ ¹ÙÀÌÆ®ºÎÅÍ º¹»ç ½ÃÀÛ
+	// ì‹œì‘ ë°”ì´íŠ¸ë¶€í„° ë³µì‚¬ ì‹œì‘
 	static void Copy(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte);
 	static void CopyUnsafe(void* dst, const void* src, const int srcCopyByte);
 
-	// ¸¶Áö¸· ¹ÙÀÌÆ®ºÎÅÍ º¹»ç ½ÃÀÛ
+	// ë§ˆì§€ë§‰ ë°”ì´íŠ¸ë¶€í„° ë³µì‚¬ ì‹œì‘
 	static void CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte);
 	static void CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte);
 
 	static void Set(void* src, const int srcCapacity, const Byte value);
 
-	// ÀÚ·áÇü T Å©±â ´ÜÀ§·Î º¹»ç¸¦ ÁøÇàÇÕ´Ï´Ù.
+	// ìë£Œí˜• T í¬ê¸° ë‹¨ìœ„ë¡œ ë³µì‚¬ë¥¼ ì§„í–‰í•©ë‹ˆë‹¤.
 	template <typename T>
 	static void Set(T* src, const int srcCapacity, const T value) {
 		const int kiDataTypeSize = sizeof(T);
@@ -42,21 +43,21 @@ public:
 	static R Allocate(const int size) {
 		static_assert(IsPointerType_v<R>, "only cast to pointer type");
 		try {
-			return (R)::operator new(size);
+			return (R)operator new(size);
 		} catch (std::bad_alloc&) {
-			throw InvalidOperationException("¸Ş¸ğ¸® ÇÒ´ç¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			throw InvalidOperationException("ë©”ëª¨ë¦¬ í• ë‹¹ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 		}
 	}
 
 	static void Deallocate(void* ptr) {
 		if (ptr != nullptr) {
-			::operator delete(ptr);
+            operator delete(ptr);
 		}
 	}
 
 	template <typename T, typename... Args>
 	static void PlacementAllocate(T& ref, Args&&... args) {
-		if constexpr (!IsPointerType_v<T>)	// Æ÷ÀÎÅÍ Å¸ÀÔÀÌ ¾Æ´Ñ ³à¼®¸¸..
+		if constexpr (!IsPointerType_v<T>)	// í¬ì¸í„° íƒ€ì…ì´ ì•„ë‹Œ ë…€ì„ë§Œ..
 			::new (__builtin_addressof(ref)) T(Forward<Args>(args)...);
 	}
 

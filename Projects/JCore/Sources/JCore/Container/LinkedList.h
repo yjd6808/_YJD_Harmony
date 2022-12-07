@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ìž‘ì„±ìž : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -127,7 +127,7 @@ public:
 
 		this->ConnectNode(pDel->Previous, pDel->Next);
 		pDel->DeleteSelf();
-		this->m_iSize--;
+		--this->m_iSize;
 		return true;
 	}
 

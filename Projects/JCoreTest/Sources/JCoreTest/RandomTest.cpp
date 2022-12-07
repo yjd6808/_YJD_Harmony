@@ -1,77 +1,50 @@
 #include <JCoreTest/CoreTest.h>
+#include <JCore/Random.h>
 
-using namespace JCore;
 using namespace std;
 
 #if TEST_RandomTest == ON
 
+static constexpr int Max_v = 1'000'000;
+
 TEST(RandomTest, RandomTestInt) {
-	constexpr int MAX = 100;
+	
+	vector vec(Max_v, 0);
 
-	Random rand;
-	vector<int> vec[MAX];
-	for (int k = 0; k < MAX; k++) {
-		for (int i = 0; i < MAX; i++) {
-			vec[k].push_back(rand.GenerateInt(0, 1000000));
-		}
+    Random::EngineInitialize();
+	for (int i = 0; i < Max_v; ++i) {
+        ++vec[JCore::Random::GenerateInt(0, Max_v)];
 	}
 
-	auto comp = [MAX](auto& lhs, auto& rhs)->int {
-		int diffCount = MAX;
-		for (int i = 0; i < lhs.size(); i++) {
-			for (int j = 0; j < rhs.size(); j++) {
-				if (lhs[i] == rhs[j]) {
-					diffCount--;
-					break;
-				}
-			}
-		}
-		return diffCount;
-	};
-
-	for (int i = 0; i < MAX; i++) {
-		for (int j = i + 1; j < MAX; j++) {
-			int diff = comp(vec[i], vec[j]);
-			if (diff <= 97) {
-				EXPECT_TRUE(false);
-			}
-		}
-	}
+    int equal = 0;
+    for (int i = 0; i < Max_v; ++i) {
+        if ((vec[i] - 1) > 0) {
+            equal += vec[i] - 1;
+        }
+    }
+    EXPECT_TRUE(double(Max_v - equal) / Max_v > 0.6);
 }
 
 
 TEST(RandomTest, RandomTestDouble) {
-	constexpr int MAX = 100;
+    union Gr {
+        Int64U conv;
+        double original;
+    } a;
+    vector vec(Max_v, 0);
+    for (int i = 0; i < Max_v; ++i) {
+        a.original = JCore::Random::GenerateDouble(0, Max_v);
+        ++vec[a.conv % Max_v];
+    }
 
-	Random rand;
-	vector<double> vec[MAX];
-	for (int k = 0; k < MAX; k++) {
-		for (int i = 0; i < MAX; i++) {
-			vec[k].push_back(rand.GenerateDouble(0, 1000000));
-		}
-	}
+    int equal = 0;
+    for (int i = 0; i < Max_v; ++i) {
+        if ((vec[i] - 1) > 0) {
+            equal += vec[i] - 1;
+        }
+    }
 
-	auto comp = [MAX](auto& lhs, auto& rhs)->int {
-		int diffCount = MAX;
-		for (int i = 0; i < lhs.size(); i++) {
-			for (int j = 0; j < rhs.size(); j++) {
-				if (std::abs(lhs[i] - rhs[j]) <= 0.01) {
-					diffCount--;
-					break;
-				}
-			}
-		}
-		return diffCount;
-	};
-
-	for (int i = 0; i < MAX; i++) {
-		for (int j = i + 1; j < MAX; j++) {
-			int diff = comp(vec[i], vec[j]);
-			if (diff <= 98) {
-				EXPECT_TRUE(false);
-			}
-		}
-	}
+    EXPECT_TRUE(double(Max_v - equal) / Max_v > 0.6);
 }
 
 #endif // TEST_RandomTest == ON

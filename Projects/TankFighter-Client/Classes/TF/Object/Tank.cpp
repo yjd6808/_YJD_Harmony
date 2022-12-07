@@ -34,18 +34,18 @@ bool Tank::init2() {
 	}
 
 
-	// ÅÊÅ© Æ÷´ë - ´ëÆ÷ ¹ß»ç´ë°¡ ÀåÂøµÇ´Â ºÎºĞ
+	// íƒ±í¬ í¬ëŒ€ - ëŒ€í¬ ë°œì‚¬ëŒ€ê°€ ì¥ì°©ë˜ëŠ” ë¶€ë¶„
 	m_pTower = Scale9Sprite::create(RECT_IMG_FILENAME);
 	m_pTower->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	m_pTower->setContentSize({ TANK_WIDTH * 2.0 / 3.0f, TANK_WIDTH * 2.0 / 3.0f }); // ³ÊºñÀÇ 3ºĞÀÇ 2
+	m_pTower->setContentSize({ TANK_WIDTH * 2.0 / 3.0f, TANK_WIDTH * 2.0 / 3.0f }); // ë„ˆë¹„ì˜ 3ë¶„ì˜ 2
 	m_pTower->setColor(Color3B::ORANGE);
 	m_pTower->setPosition(this->getContentSize() / 2);
 	this->addChild(m_pTower);
 
-	// ÅÊÅ© Æ÷½Å - ÅÊÅ© Æ÷´ë¿¡ ÀåÂøµÇ´Â ºÎºĞ
+	// íƒ±í¬ í¬ì‹  - íƒ±í¬ í¬ëŒ€ì— ì¥ì°©ë˜ëŠ” ë¶€ë¶„
 	m_pGun = Scale9Sprite::create(RECT_IMG_FILENAME);
 	m_pGun->setAnchorPoint(Vec2::ANCHOR_MIDDLE_BOTTOM);
-	m_pGun->setContentSize({ TANK_WIDTH / 6.0f, TANK_WIDTH });	// Æ÷½Å ³Êºñ´Â ÅÊÅ© ³ÊºñÀÇ 6ºĞÀÇ 1, ³ôÀÌ´Â ÅÊÅ© ¼¼·Î±æÀÌ
+	m_pGun->setContentSize({ TANK_WIDTH / 6.0f, TANK_WIDTH });	// í¬ì‹  ë„ˆë¹„ëŠ” íƒ±í¬ ë„ˆë¹„ì˜ 6ë¶„ì˜ 1, ë†’ì´ëŠ” íƒ±í¬ ì„¸ë¡œê¸¸ì´
 	m_pGun->setPosition(m_pTower->getContentSize().width / 2, m_pTower->getContentSize().height);
 	m_pTower->addChild(m_pGun);
 
@@ -135,7 +135,7 @@ void Tank::updateRotation(float delta) {
 
 void Tank::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 
-	// ÀÚ±âÀÚ½ÅÀÇ ÅÊÅ©¸¸ ¸ô ¼ö ÀÖµµ·Ï ÇÑ´Ù.
+	// ìê¸°ìì‹ ì˜ íƒ±í¬ë§Œ ëª° ìˆ˜ ìˆë„ë¡ í•œë‹¤.
 	if (GetCharacterUID() == _Client->GetCharacterUID()) {
 		switch (keyCode) {
 		case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
@@ -162,7 +162,7 @@ void Tank::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 
 void Tank::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 
-	// ÀÚ±âÀÚ½ÅÀÇ ÅÊÅ©¸¸ ¸ô ¼ö ÀÖµµ·Ï ÇÑ´Ù.
+	// ìê¸°ìì‹ ì˜ íƒ±í¬ë§Œ ëª° ìˆ˜ ìˆë„ë¡ í•œë‹¤.
 	if (GetCharacterUID() == _Client->GetCharacterUID() && m_KeyPressedMap.Exist(keyCode))
 		m_KeyPressedMap.Remove(keyCode);
 }
@@ -175,7 +175,7 @@ void Tank::UpdateTankMove(TankMove& move) {
 }
 
 void Tank::Fire() {
-	// »ö±òÁß ¾Æ¹«°Å³ª »Ì¾Æ¼­ ¹ß»ç
+	// ìƒ‰ê¹”ì¤‘ ì•„ë¬´ê±°ë‚˜ ë½‘ì•„ì„œ ë°œì‚¬
 	static constexpr int RAND_COLOR = 12;
 	static Color3B colorList[RAND_COLOR]{
 		ColorList::Alloyorange_v,
@@ -205,14 +205,14 @@ void Tank::Fire() {
 		m_FilreCallBack(pBullet);
 }
 
-// ÅÊÅ©¿Í ÃÑ¾ËÀÌ Ãæµ¹Çß´ÂÁö
+// íƒ±í¬ì™€ ì´ì•Œì´ ì¶©ëŒí–ˆëŠ”ì§€
 bool Tank::IsCollide(Bullet* bullet) {
 	const auto tankColliders = GetColliders();
 
 	for (int i = 0; i < tankColliders.Size(); i++) {
 		const Sprite* tankCollider = tankColliders[i];
 		const Vec2 tankColliderWorldPos = convertToWorldSpace(tankCollider->getPosition());
- 		const Vec2 bulletWorldPos = bullet->getPosition();	// ÃÑ¾ËÀº ¾ÖÃÊ¿¡ ÃÖ»ó´Ü ·¹ÀÌ¾î¿¡ AddChild ÇßÀ¸¹Ç·Î °Á °¡Á®¿À¸é´ï
+ 		const Vec2 bulletWorldPos = bullet->getPosition();	// ì´ì•Œì€ ì• ì´ˆì— ìµœìƒë‹¨ ë ˆì´ì–´ì— AddChild í–ˆìœ¼ë¯€ë¡œ ê± ê°€ì ¸ì˜¤ë©´ëŒ
 
 		if (NodeUtil::IsCollideCircle(tankColliderWorldPos, TANK_WIDTH / 2.0f, bulletWorldPos, bullet->GetDiameter() / 2.0f)) {
 			return true;

@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/RoomScene.h>
@@ -25,10 +25,10 @@ bool BattleFieldScene::SynchronizedOnReceived(ICommand* cmd) {
         return false;
     }
 
-    // Ä³¸¯ÅÍ ¿òÁ÷ÀÌ´Â ÆĞÅ¶Àº Ãâ·Â¾ÈÇÔ
-    // Åë°è °»½Åµµ Ãâ·Â¾ÈÇÔ
+    // ìºë¦­í„° ì›€ì§ì´ëŠ” íŒ¨í‚·ì€ ì¶œë ¥ì•ˆí•¨
+    // í†µê³„ ê°±ì‹ ë„ ì¶œë ¥ì•ˆí•¨
     if (cmd->GetCommand() != BATTLE_FIELD_TANK_UPDATE_SYN && cmd->GetCommand() != BATTLE_FILED_STATISTICS_UPDATE_SYN) {
-        CCLOG("%d Ä¿¸Çµå ¼ö½Å (%s)", cmd->GetCommand(), "BattleFieldScene");
+        CCLOG("%d ì»¤ë§¨ë“œ ìˆ˜ì‹  (%s)", cmd->GetCommand(), "BattleFieldScene");
     }
 
 

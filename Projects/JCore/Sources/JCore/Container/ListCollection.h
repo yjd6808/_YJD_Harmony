@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -11,33 +11,33 @@
 namespace JCore {
 
 /*=====================================================================================
-									¸®½ºÆ® Äİ·º¼Ç
-					     ¿¬°á¸®½ºÆ® ±â¹İ Å¥, ½ºÅÃ, ¿¬°á¸®½ºÆ® ÀÎÅÍÆäÀÌ½º
-						      ¾çÂÊ ´õ¹Ì ¾ç¹æÇâ ¿¬°á¸®½ºÆ®·Î ±¸Çö
+									ë¦¬ìŠ¤íŠ¸ ì½œë ‰ì…˜
+					     ì—°ê²°ë¦¬ìŠ¤íŠ¸ ê¸°ë°˜ í, ìŠ¤íƒ, ì—°ê²°ë¦¬ìŠ¤íŠ¸ ì¸í„°í˜ì´ìŠ¤
+						      ì–‘ìª½ ë”ë¯¸ ì–‘ë°©í–¥ ì—°ê²°ë¦¬ìŠ¤íŠ¸ë¡œ êµ¬í˜„
 =====================================================================================*/
 
 template <typename T>
 class ListCollection : public Collection<T>
 {
-	using TEnumerator				= Enumerator<T>;
-	using TListNode					= ListNode<T>;
-	using TCollection				= Collection<T>;
-	using TListCollection			= ListCollection<T>;
+	using TEnumerator				        = Enumerator<T>;
+	using TListNode					        = ListNode<T>;
+	using TCollection				        = Collection<T>;
+	using TListCollection			      = ListCollection<T>;
 	using TListCollectionIterator   = ListCollectionIterator<T>;
 public:
 	ListCollection(ContainerType containerType) : TCollection(CollectionType::List, containerType)  {
-		/* [´õ¹Ì³ëµå ¹æ¹ı 1]
-		m_pHead = Memory::Allocate<TListNode*>(sizeof(TListNode) * 2);	// ¾çÂÊ ´õ¹Ì¸¦ ÇÑ¹ø¿¡ »ı¼ºÇÏÀÚ.
+		/* [ë”ë¯¸ë…¸ë“œ ë°©ë²• 1]
+		m_pHead = Memory::Allocate<TListNode*>(sizeof(TListNode) * 2);	// ì–‘ìª½ ë”ë¯¸ë¥¼ í•œë²ˆì— ìƒì„±í•˜ì.
 		m_pTail = &m_pHead[1];
 
-		--> ´õ¹Ì¸¦ ±»ÀÌ µ¿ÀûÇÒ´çÇÒ ÇÊ¿ä°¡ ¾øÁö¾Ê³ª..?
+		--> ë”ë¯¸ë¥¼ êµ³ì´ ë™ì í• ë‹¹í•  í•„ìš”ê°€ ì—†ì§€ì•Šë‚˜..?
 		*/
 
-		// [´õ¹Ì³ëµå ´ë¾È]
+		// [ë”ë¯¸ë…¸ë“œ ëŒ€ì•ˆ]
 		m_pHead = &m_ValtyHead;
 		m_pTail = &m_ValtyTail;
 
-		// ¾îÂ÷ÇÇ ´õ¹Ì³ëµå´Â Next¿Í Previous¸¸ ¾µ °ÍÀÌ¹Ç·Î.. ±»ÀÌ TListNodeÀÇ ValueÀÇ µğÆúÆ® »ı¼ºÀÚ¸¦ È£ÃâÇØÁÙ ÇÊ¿ä°¡ ¾ø´Ù.
+		// ì–´ì°¨í”¼ ë”ë¯¸ë…¸ë“œëŠ” Nextì™€ Previousë§Œ ì“¸ ê²ƒì´ë¯€ë¡œ.. êµ³ì´ TListNodeì˜ Valueì˜ ë””í´íŠ¸ ìƒì„±ìë¥¼ í˜¸ì¶œí•´ì¤„ í•„ìš”ê°€ ì—†ë‹¤.
 		// Memory::PlacementAllocate(m_pHead[0]);
 		// Memory::PlacementAllocate(m_pHead[1]);
 
@@ -70,14 +70,14 @@ public:
 	virtual void Clear() {
 		/*
 		 
-		     ¡á <- ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á
-		     ¡è                                        ¡è     ¡è
+		     â–  <- â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â– 
+		     â†‘                                        â†‘     â†‘
 		    Head                                    pCur  Tail
 			      <----------------------------------->
-				           ÀÌ ¿µ¿ª¸¸ »èÁ¦ÇØÁØ´Ù.
+				           ì´ ì˜ì—­ë§Œ ì‚­ì œí•´ì¤€ë‹¤.
 
 
-			±×¸®°í ³²Àº ´õ¹Ì ³ëµå 2°³(¸Ó¸®, ²¿¸®)¸¦ ¿¬°áÇØÁØ´Ù.
+			ê·¸ë¦¬ê³  ë‚¨ì€ ë”ë¯¸ ë…¸ë“œ 2ê°œ(ë¨¸ë¦¬, ê¼¬ë¦¬)ë¥¼ ì—°ê²°í•´ì¤€ë‹¤.
 		 */
 
 		TListNode* pCur = m_pTail->Previous;
@@ -104,7 +104,7 @@ protected:
 		TListNode* pCur = m_pHead->Next;
 		UListNode* pOtherCur = other.m_pHead->Next;
 
-		// ±âÁ¸¿¡ ÀÌ¹Ì ¸Ş¸ğ¸® ÇÒ´çµÈ ³à¼®Àº µ¥ÀÌÅÍ¸¸ º¹»çÇØÁØ´Ù.
+		// ê¸°ì¡´ì— ì´ë¯¸ ë©”ëª¨ë¦¬ í• ë‹¹ëœ ë…€ì„ì€ ë°ì´í„°ë§Œ ë³µì‚¬í•´ì¤€ë‹¤.
 		while (pCur != m_pTail && pOtherCur != other.m_pTail) {
 			Memory::PlacementDeallocate(pCur->Value);
 			pCur->Value = pOtherCur->Value;
@@ -112,16 +112,16 @@ protected:
 			pOtherCur = pOtherCur->Next;
 		}
 
-		// [Case 1] ¸¸¾à ±âÁ¸¿¡ ÇÒ´çµÈ µ¥ÀÌÅÍ°¡ ´õ ¸¹´Ù¸é 
-		//             = pOtherCurÀÌ other.m_pTailÀÌ ÃæÁ·µÇ¾î ¸ÕÀú ¹İº¹¹®À» ºüÁ®³ª¿Â °æ¿ì
-		// º¹»çµÈ ¸¶Áö¸· ³ëµå ´ÙÀ½ ³ëµåºÎÅÍ »èÁ¦¸¦ ÇØÁØ´Ù.
-		//    = pCur->Previous°¡ º¹»çµÈ ¸¶Áö¸· ³ëµåÀÌ°í
-		//    = pCur : »èÁ¦µÇ¾î¾ßÇÒ ³ëµåµéÀÌ´Ù.
+		// [Case 1] ë§Œì•½ ê¸°ì¡´ì— í• ë‹¹ëœ ë°ì´í„°ê°€ ë” ë§ë‹¤ë©´ 
+		//             = pOtherCurì´ other.m_pTailì´ ì¶©ì¡±ë˜ì–´ ë¨¼ì € ë°˜ë³µë¬¸ì„ ë¹ ì ¸ë‚˜ì˜¨ ê²½ìš°
+		// ë³µì‚¬ëœ ë§ˆì§€ë§‰ ë…¸ë“œ ë‹¤ìŒ ë…¸ë“œë¶€í„° ì‚­ì œë¥¼ í•´ì¤€ë‹¤.
+		//    = pCur->Previousê°€ ë³µì‚¬ëœ ë§ˆì§€ë§‰ ë…¸ë“œì´ê³ 
+		//    = pCur : ì‚­ì œë˜ì–´ì•¼í•  ë…¸ë“œë“¤ì´ë‹¤.
 		if (this->m_iSize > other.m_iSize) {
 			RemoveNodesBetween(pCur->Previous, m_pTail);
 		}
 
-		// [Case 2] ¸¸¾à º¹»çÇÒ µ¥ÀÌÅÍ°¡ ´õ ¸¹´Ù¸é
+		// [Case 2] ë§Œì•½ ë³µì‚¬í•  ë°ì´í„°ê°€ ë” ë§ë‹¤ë©´
 		while (pOtherCur != other.m_pTail) {
 			PushBack(pOtherCur->Value);
 			pOtherCur = pOtherCur->Next;
@@ -136,9 +136,9 @@ protected:
 
 		this->m_Owner = Move(other.m_Owner);
 
-		// ¸¸¾à ºñ¾îÀÖÀ» °æ¿ì otherÀÇ ´õ¹Ì Çìµå¿Í ´õ¹Ì Å×ÀÏÀ» ÂüÁ¶ÇÏ°Ô µÇ´Âµ¥
-		// µ¿ÀûÇÒ´çµÈ ³à¼®ÀÌ ¾Æ´Ï±â ¶§¹®¿¡ ³ªÁß¿¡ ¿À·ù¸¦ ÀÏÀ¸Å°°Ô µÈ´Ù.
-		// ±×·¡¼­ µ¥ÀÌÅÍ°¡ ¾ø´Â °æ¿ì´Â ±×³É ³ª°¡¸é µÊ
+		// ë§Œì•½ ë¹„ì–´ìˆì„ ê²½ìš° otherì˜ ë”ë¯¸ í—¤ë“œì™€ ë”ë¯¸ í…Œì¼ì„ ì°¸ì¡°í•˜ê²Œ ë˜ëŠ”ë°
+		// ë™ì í• ë‹¹ëœ ë…€ì„ì´ ì•„ë‹ˆê¸° ë•Œë¬¸ì— ë‚˜ì¤‘ì— ì˜¤ë¥˜ë¥¼ ì¼ìœ¼í‚¤ê²Œ ëœë‹¤.
+		// ê·¸ë˜ì„œ ë°ì´í„°ê°€ ì—†ëŠ” ê²½ìš°ëŠ” ê·¸ëƒ¥ ë‚˜ê°€ë©´ ë¨
 		if (other.m_iSize == 0) {
 			return;
 		}
@@ -164,30 +164,30 @@ protected:
 		TListNode* pCur = m_pHead->Next;
 		auto pOtherCur = ilist.begin();
 
-		// ±âÁ¸¿¡ ÀÌ¹Ì ¸Ş¸ğ¸® ÇÒ´çµÈ ³à¼®Àº µ¥ÀÌÅÍ¸¸ º¹»çÇØÁØ´Ù.
+		// ê¸°ì¡´ì— ì´ë¯¸ ë©”ëª¨ë¦¬ í• ë‹¹ëœ ë…€ì„ì€ ë°ì´í„°ë§Œ ë³µì‚¬í•´ì¤€ë‹¤.
 		while (pCur != m_pTail && pOtherCur != ilist.end()) {
 			Memory::PlacementDeallocate(pCur->Value);
 			pCur->Value = *pOtherCur;
 			pCur = pCur->Next;
-			pOtherCur++;
+			++pOtherCur;
 		}
 
-		// [Case 1] ¸¸¾à ±âÁ¸¿¡ ÇÒ´çµÈ µ¥ÀÌÅÍ°¡ ´õ ¸¹´Ù¸é 
+		// [Case 1] ë§Œì•½ ê¸°ì¡´ì— í• ë‹¹ëœ ë°ì´í„°ê°€ ë” ë§ë‹¤ë©´ 
 		if (this->m_iSize > ilist.size()) {
 			RemoveNodesBetween(pCur->Previous, m_pTail);
 		}
 
-		// [Case 2] ¸¸¾à º¹»çÇÒ µ¥ÀÌÅÍ°¡ ´õ ¸¹´Ù¸é
+		// [Case 2] ë§Œì•½ ë³µì‚¬í•  ë°ì´í„°ê°€ ë” ë§ë‹¤ë©´
 		while (pOtherCur != ilist.end()) {
 			PushBack(*pOtherCur);
-			pOtherCur++;
+			++pOtherCur;
 		}
 
 		this->m_iSize = ilist.size();
 	}
 
 	/// <summary>
-	/// exclusiveFirst¿Í exclusiveLast ³ëµå »çÀÌ¿¡ Á¸ÀçÇÏ´Â ³ëµåµéÀ» »èÁ¦ÇÑ´Ù.
+	/// exclusiveFirstì™€ exclusiveLast ë…¸ë“œ ì‚¬ì´ì— ì¡´ì¬í•˜ëŠ” ë…¸ë“œë“¤ì„ ì‚­ì œí•œë‹¤.
 	/// </summary>
 	void RemoveNodesBetween(TListNode* exclusiveFirst, TListNode* exclusiveLast) {
 		TListNode* pDel = exclusiveFirst->Next;
@@ -204,13 +204,13 @@ protected:
 	virtual void PushBack(const T& data) {
 		TListNode* pNewNode = CreateNewNode(data);
 		InsertNodePrev(m_pTail, pNewNode);
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 	virtual void PushBack(T&& data) {
 		TListNode* pNewNode = CreateNewNode(Move(data));
 		InsertNodePrev(m_pTail, pNewNode);
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 	virtual void PushBackAll(const TCollection& collection) {
@@ -226,12 +226,12 @@ protected:
 	/// 
 	/// </summary>
 	/// <typeparam name="U">
-	///		ÅÛÇÃ¸´ ÇÔ¼ö ÀÎ½ºÅÏ½ºÈ­¸¦ ¹æÁöÇÏ±âÀ§ÇØ ÅÛÇÃ¸´ ÇÔ¼ö·Î ¸¸µé¾ú´Ù.
+	///		í…œí”Œë¦¿ í•¨ìˆ˜ ì¸ìŠ¤í„´ìŠ¤í™”ë¥¼ ë°©ì§€í•˜ê¸°ìœ„í•´ í…œí”Œë¦¿ í•¨ìˆ˜ë¡œ ë§Œë“¤ì—ˆë‹¤.
 	///		
-	///		FindNode ÇÔ¼ö¿¡¼­ T Å¸ÀÔ¿¡ ´ëÇØ¼­ µ¿µîºñ±³¸¦ ½ÇÇàÇÏ´Âµ¥ ListCollectionÀÇ ÀÚ½Ä ÄÁÅ×ÀÌ³Ê°¡ ÅÛÇÃ¸´ ÀÎ½ºÅÏ½ºÈ­°¡ µÇ¸é
-	///		ºñ±³ ¿¬»êÀÚ°¡ ¾ø´Â ±¸Á¶Ã¼³ª Å¬·¡½ºµé¿¡ ´ëÇØ¼­ ¿À·ù¸¦ ¹ß»ı½ÃÅ²´Ù.
+	///		FindNode í•¨ìˆ˜ì—ì„œ T íƒ€ì…ì— ëŒ€í•´ì„œ ë™ë“±ë¹„êµë¥¼ ì‹¤í–‰í•˜ëŠ”ë° ListCollectionì˜ ìì‹ ì»¨í…Œì´ë„ˆê°€ í…œí”Œë¦¿ ì¸ìŠ¤í„´ìŠ¤í™”ê°€ ë˜ë©´
+	///		ë¹„êµ ì—°ì‚°ìê°€ ì—†ëŠ” êµ¬ì¡°ì²´ë‚˜ í´ë˜ìŠ¤ë“¤ì— ëŒ€í•´ì„œ ì˜¤ë¥˜ë¥¼ ë°œìƒì‹œí‚¨ë‹¤.
 	/// 
-	///		±×·¡¼­ Remove, FindNode ÇÔ¼ö¸¦ »ç¿ëÇÒ °æ¿ì¿¡¸¸ µ¿µî ºñ±³°¡ °¡´É¿©ºÎ¿¡ ´ëÇØ¼­ ¿À·ù¸¦ ¶Ù¿ìµµ·Ï ÇÏ¿´´Ù.
+	///		ê·¸ë˜ì„œ Remove, FindNode í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•  ê²½ìš°ì—ë§Œ ë™ë“± ë¹„êµê°€ ê°€ëŠ¥ì—¬ë¶€ì— ëŒ€í•´ì„œ ì˜¤ë¥˜ë¥¼ ë›°ìš°ë„ë¡ í•˜ì˜€ë‹¤.
 	/// </typeparam>
 	template <typename U = T>
 	bool Remove(const U& data) {
@@ -243,45 +243,45 @@ protected:
 
 		this->ConnectNode(pDel->Previous, pDel->Next);
 		pDel->DeleteSelf();
-		this->m_iSize--;
+		--this->m_iSize;
 		return true;
 	}
 
 	virtual bool Remove(TListCollectionIterator& iter) {
 		if (iter.m_pHead != this->m_pHead) {
-			throw InvalidOperationException("ÇØ´ç ÀÌÅÍ·¹ÀÌÅÍ°¡ ¼Ò¼ÓµÈ ÄÁÅ×ÀÌ³Ê¸¦ Á¦´ë·Î ÁöÁ¤ÇØÁÖ¼¼¿ä.");
+			throw InvalidOperationException("í•´ë‹¹ ì´í„°ë ˆì´í„°ê°€ ì†Œì†ëœ ì»¨í…Œì´ë„ˆë¥¼ ì œëŒ€ë¡œ ì§€ì •í•´ì£¼ì„¸ìš”.");
 		}
 
 		if (iter.m_pCurrent == this->m_pHead || iter.m_pCurrent == this->m_pTail) {
-			throw InvalidOperationException("ÀÌÅÍ·¹ÀÌÅÍ°¡ Ã³À½ ¶Ç´Â ³¡À» °¡¸®Å°°í ÀÖ½À´Ï´Ù.");
+			throw InvalidOperationException("ì´í„°ë ˆì´í„°ê°€ ì²˜ìŒ ë˜ëŠ” ëì„ ê°€ë¦¬í‚¤ê³  ìˆìŠµë‹ˆë‹¤.");
 		}
 
 		TListNode* pDel = iter.m_pCurrent;
 		iter.m_pCurrent = pDel->Next;
 		this->ConnectNode(pDel->Previous, pDel->Next);
 		pDel->DeleteSelf();
-		this->m_iSize--;
+		--this->m_iSize;
 		return true;
 	}
 
 	/// <summary>
-	/// node ¹Ù·Î Àü¿¡ newNode¸¦ »ğÀÔÇÑ´Ù.
+	/// node ë°”ë¡œ ì „ì— newNodeë¥¼ ì‚½ì…í•œë‹¤.
 	/// </summary>
 	void InsertNodePrev(TListNode* node, TListNode*  newNode) {
 		if (node == m_pHead) {
-			throw InvalidArgumentException("Çìµå ÀÌÀü¿¡´Â ³ëµå¸¦ »ğÀÔÇÏ¸é ¾ÈµÇ¿ä!");
+			throw InvalidArgumentException("í—¤ë“œ ì´ì „ì—ëŠ” ë…¸ë“œë¥¼ ì‚½ì…í•˜ë©´ ì•ˆë˜ìš”!");
 		}
 
 		/*
-			[»ğÀÔ Àü]
-			 ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á
-							         ¡è     ¡è
+			[ì‚½ì… ì „]
+			 â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â– 
+							         â†‘     â†‘
 								          node
 							      node->prev
 
-			[»ğÀÔ ÈÄ]
-			 ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á
-							         ¡è     ¡è     ¡è
+			[ì‚½ì… í›„]
+			 â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â– 
+							         â†‘     â†‘     â†‘
 							     node->prev     node
 									     newNode
 		 */
@@ -295,13 +295,13 @@ protected:
 	virtual void PushFront(const T& data) {
 		TListNode* pNewNode = CreateNewNode(data);
 		InsertNodeNext(m_pHead, pNewNode);
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 	virtual void PushFront(T&& data) {
 		TListNode* pNewNode = CreateNewNode(Move(data));
 		InsertNodeNext(m_pHead, pNewNode);
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 	virtual void PushFrontAll(const TCollection& collection) {
@@ -314,22 +314,22 @@ protected:
 	}
 
 	/// <summary>
-	/// node ¹Ù·Î ÀÌÈÄ¿¡ newNode¸¦ »ğÀÔÇÑ´Ù.
+	/// node ë°”ë¡œ ì´í›„ì— newNodeë¥¼ ì‚½ì…í•œë‹¤.
 	/// </summary>
 	void InsertNodeNext(TListNode* node, TListNode* newNode) {
 		if (node == m_pTail) {
-			throw InvalidArgumentException("Å×ÀÏ ÀÌÈÄ¿¡´Â ³ëµå¸¦ »ğÀÔÇÏ¸é ¾ÈµÇ¿ä!");
+			throw InvalidArgumentException("í…Œì¼ ì´í›„ì—ëŠ” ë…¸ë“œë¥¼ ì‚½ì…í•˜ë©´ ì•ˆë˜ìš”!");
 		}
 
 		/*
-			[»ğÀÔ Àü]
-			 ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á
-			 ¡è     ¡è
+			[ì‚½ì… ì „]
+			 â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â– 
+			 â†‘     â†‘
 			node node->next
 
-			[»ğÀÔ ÈÄ]
-			 ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á
-			 ¡è     ¡è     ¡è
+			[ì‚½ì… í›„]
+			 â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â– 
+			 â†‘     â†‘     â†‘
 			node      node->next
 				newNode
 		 */
@@ -344,14 +344,14 @@ protected:
 	void EmplaceBack(Args&&... args) {
 		TListNode* pNewNode = EmplaceNewNode(Forward<Args>(args)...);
 		InsertNodePrev(m_pTail, pNewNode);
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 	template <typename... Args>
 	void EmplaceFront(Args&&... args) {
 		TListNode* pNewNode = EmplaceNewNode(Forward<Args>(args)...);
 		InsertNodeNext(m_pHead, pNewNode);
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 
@@ -361,7 +361,7 @@ protected:
 		TListNode* pDel = m_pHead->Next;
 		ConnectNode(m_pHead, pDel->Next);
 		pDel->DeleteSelf();
-		this->m_iSize--;
+		--this->m_iSize;
 	}
 
 	virtual void PopBack() {
@@ -370,7 +370,7 @@ protected:
 		TListNode* pDel = m_pTail->Previous;
 		ConnectNode(pDel->Previous, m_pTail);
 		pDel->DeleteSelf();
-		this->m_iSize--;
+		--this->m_iSize;
 	}
 
 	virtual T& Front() const {
@@ -403,10 +403,10 @@ protected:
 	}
 
 	/// <summary>
-	/// ³ëµå³¢¸® ¼­·Î ¿¬°áÇÑ´Ù.
+	/// ë…¸ë“œë¼ë¦¬ ì„œë¡œ ì—°ê²°í•œë‹¤.
 	/// 
-	/// lhsÀÇ ´ÙÀ½ ³ëµå´Â rhs·Î ¼³Á¤ÇÏ°í
-	/// rhsÀÇ ÀÌÀü ³ëµå´Â lhs·Î ¼³Á¤ÇÑ´Ù.
+	/// lhsì˜ ë‹¤ìŒ ë…¸ë“œëŠ” rhsë¡œ ì„¤ì •í•˜ê³ 
+	/// rhsì˜ ì´ì „ ë…¸ë“œëŠ” lhsë¡œ ì„¤ì •í•œë‹¤.
 	/// </summary>
 	static void ConnectNode(TListNode* lhs, TListNode* rhs) {
 		lhs->Next = rhs;
@@ -453,7 +453,7 @@ template <typename T>
 ListCollection<T>::~ListCollection() noexcept {
 	Clear();
 
-	// ´õ¹Ì³ëµå Á¦°Å
+	// ë”ë¯¸ë…¸ë“œ ì œê±°
 	// Memory::Deallocate(m_pHead);
 }
 

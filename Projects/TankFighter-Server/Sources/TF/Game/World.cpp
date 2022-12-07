@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
@@ -7,7 +7,7 @@
 #include <TF/Game/Channel.h>
 #include <TF/Database/MysqlDatabase.h>
 #include <TF/Database/MysqlQueryFuture.h>
-#include <TF/Util/Console.h>
+#include <JCore/Utils/Console.h>
 
 
 using namespace JCore;
@@ -34,12 +34,12 @@ bool World::Initialize() {
 		Channel* pChannel = new Channel(iChannedUID, szChannelName, iMaxPlayerCount);
 
 		if (!pChannel->Initialize()) {
-			Console::WriteLine(ConsoleColor::BROWN, "%d Ã¤³Î ÃÊ±âÈ­ Áß ¿À·ù ¹ß»ı!", iChannedUID);
+			SafeConsole::WriteLine(ConsoleColor::Brown, "%d ì±„ë„ ì´ˆê¸°í™” ì¤‘ ì˜¤ë¥˜ ë°œìƒ!", iChannedUID);
 			return false;
 		}
 
 		m_ChannelMap.Insert(iChannedUID, pChannel);
-		Console::WriteLine(ConsoleColor::LIGHTCYAN, "%d Ã¤³Î ÃÊ±âÈ­ ¿Ï·á", iChannedUID);
+		SafeConsole::WriteLine(ConsoleColor::LightCyan, "%d ì±„ë„ ì´ˆê¸°í™” ì™„ë£Œ", iChannedUID);
 	}
 
 	return true;
@@ -96,12 +96,12 @@ bool World::RemovePlayer(Player* player) {
 		const int iChannedUID = player->GetChannelUID();
 
 		if (!m_ChannelMap.Exist(iChannedUID)) {
-			DebugAssert(false, "ÇÃ·¹ÀÌ¾î°¡ ¼ÓÇÑ Ã¤³Î UID°¡ ÀÌ»óÇÕ´Ï´Ù.");
+			DebugAssertMessage(false, "í”Œë ˆì´ì–´ê°€ ì†í•œ ì±„ë„ UIDê°€ ì´ìƒí•©ë‹ˆë‹¤.");
 			return false;
 		}
 
 		if (!m_ChannelMap[iChannedUID]->RemovePlayer(player)) {
-			DebugAssert(false, "ÇÃ·¹ÀÌ¾î°¡ ¼ÓÇÑ Ã¤³Î¿¡ ¾ø½À´Ï´Ù.");
+			DebugAssertMessage(false, "í”Œë ˆì´ì–´ê°€ ì†í•œ ì±„ë„ì— ì—†ìŠµë‹ˆë‹¤.");
 			return false;
 		}
 	}

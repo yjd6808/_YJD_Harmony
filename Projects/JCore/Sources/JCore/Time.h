@@ -1,11 +1,11 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	°£´ÜÇÑ ½Ã°£À» ´Ù·ê ¼ö ÀÖ´Â ±â´ÉÀ» Ãß°¡ÇÕ´Ï´Ù.
-	½ºÅé¿öÄ¡ ±â´É
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ê°„ë‹¨í•œ ì‹œê°„ì„ ë‹¤ë£° ìˆ˜ ìˆëŠ” ê¸°ëŠ¥ì„ ì¶”ê°€í•©ë‹ˆë‹¤.
+	ìŠ¤í†±ì›Œì¹˜ ê¸°ëŠ¥
 
-	½Ã°£ °ü·ÃÁö½ÄÀÌ Àü¹«ÇØ¼­
-	C# DateTime Å¬·¡½ºÀÇ ³âµµ °è»ê ·ÎÁ÷ ÀÏºÎ¸¦ Âü°íÇÏ¿´½À´Ï´Ù.
-	±¸Çö´Ùº¸´Ï Á» ÀÚ¼¼È÷ ¾Ë°ÔµÊ ¤»
+	ì‹œê°„ ê´€ë ¨ì§€ì‹ì´ ì „ë¬´í•´ì„œ
+	C# DateTime í´ë˜ìŠ¤ì˜ ë…„ë„ ê³„ì‚° ë¡œì§ ì¼ë¶€ë¥¼ ì°¸ê³ í•˜ì˜€ìŠµë‹ˆë‹¤.
+	êµ¬í˜„ë‹¤ë³´ë‹ˆ ì¢€ ìì„¸íˆ ì•Œê²Œë¨ ã…‹
 */
 
 #pragma once
@@ -23,18 +23,18 @@ namespace Detail {
 	constexpr Int64 MaxMiliSecond_v		= 1000;
 	constexpr Int64 MaxMicroSecond_v	= 1000;
 		
-	// 1Æ½´ç 1¸¶ÀÌÅ©·ÎÃÊ
-	constexpr Int64 TicksPerMicroSecond	= 1;										// ¸¶ÀÌÅ©·ÎÃÊ´ç ¸î Æ½ÀÎÁö 	1Æ½´ç					1¸¶ÀÌÅ©·ÎÃÊ
-	constexpr Int64 TicksPerMiliSecond	= TicksPerMicroSecond * MaxMicroSecond_v;	// ¹Ğ¸®ÃÊ´ç ¸î Æ½ÀÎÁö		1000Æ½´ç					1¹Ğ¸®ÃÊ
-	constexpr Int64 TicksPerSecond		= TicksPerMiliSecond * MaxMiliSecond_v;		// ÃÊ´ç ¸î Æ½ÀÎÁö			1000000Æ½´ç				1ÃÊ
-	constexpr Int64 TicksPerMinute		= TicksPerSecond * MaxSecond_v;				// 1ºĞ´ç ¸î Æ½ÀÎÁö		1000000 * 60			1ºĞ
-	constexpr Int64 TicksPerHour		= TicksPerMinute * MaxMinute_v;				// 1½Ã°£´ç ¸î Æ½ÀÎÁö		1000000 * 60 * 60		1½Ã°£
-	constexpr Int64 TicksPerDay			= TicksPerHour * MaxHour_v;					// 1ÀÏ´ç ¸î Æ½ÀÎÁö		1000000 * 60 * 60 * 24	1ÀÏ
+	// 1í‹±ë‹¹ 1ë§ˆì´í¬ë¡œì´ˆ
+	constexpr Int64 TicksPerMicroSecond	= 1;										// ë§ˆì´í¬ë¡œì´ˆë‹¹ ëª‡ í‹±ì¸ì§€ 	1í‹±ë‹¹					1ë§ˆì´í¬ë¡œì´ˆ
+	constexpr Int64 TicksPerMiliSecond	= TicksPerMicroSecond * MaxMicroSecond_v;	// ë°€ë¦¬ì´ˆë‹¹ ëª‡ í‹±ì¸ì§€		1000í‹±ë‹¹					1ë°€ë¦¬ì´ˆ
+	constexpr Int64 TicksPerSecond		= TicksPerMiliSecond * MaxMiliSecond_v;		// ì´ˆë‹¹ ëª‡ í‹±ì¸ì§€			1000000í‹±ë‹¹				1ì´ˆ
+	constexpr Int64 TicksPerMinute		= TicksPerSecond * MaxSecond_v;				// 1ë¶„ë‹¹ ëª‡ í‹±ì¸ì§€		1000000 * 60			1ë¶„
+	constexpr Int64 TicksPerHour		= TicksPerMinute * MaxMinute_v;				// 1ì‹œê°„ë‹¹ ëª‡ í‹±ì¸ì§€		1000000 * 60 * 60		1ì‹œê°„
+	constexpr Int64 TicksPerDay			= TicksPerHour * MaxHour_v;					// 1ì¼ë‹¹ ëª‡ í‹±ì¸ì§€		1000000 * 60 * 60 * 24	1ì¼
 
 	constexpr int DaysPer1Years_v = MaxDay_v;
-	constexpr int DaysPer4Years_v = MaxDay_v * 4 + 1;				// 4³âÀÌ ¸îÀÏÀÎÁö : 1461ÀÏ
-	constexpr int DaysPer100Years_v = DaysPer4Years_v * 25 - 1;		// 100³âÀÌ ¸îÀÏÀÎÁö : 36524ÀÏ
-	constexpr int DaysPer400Years_v = DaysPer100Years_v * 4 + 1;	// 400³âÀÌ ¸îÀÏÀÎÁö : 146097ÀÏ
+	constexpr int DaysPer4Years_v = MaxDay_v * 4 + 1;				// 4ë…„ì´ ëª‡ì¼ì¸ì§€ : 1461ì¼
+	constexpr int DaysPer100Years_v = DaysPer4Years_v * 25 - 1;		// 100ë…„ì´ ëª‡ì¼ì¸ì§€ : 36524ì¼
+	constexpr int DaysPer400Years_v = DaysPer100Years_v * 4 + 1;	// 400ë…„ì´ ëª‡ì¼ì¸ì§€ : 146097ì¼
 		
 	constexpr int DaysUntilMonth365[13] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
 	constexpr int DaysUntilMonth366[13] = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
@@ -47,24 +47,24 @@ namespace Detail {
 
 
 	/*
-		After Christ 1970³âµµ±îÁöÀÇ ½Ã°£À» ±¸ÇÑ´ÙÀ½¿¡ ÇØºÃ´Âµ¥ ¿ÀÂ÷°¡ »ı±è;
-		¾Æ·¡ Ã³·³ ÀÏ ¼öÀÇ ¼Ò¼öÁ¡ ´ÜÀ§±îÁö µé°í°¡¸é ¾ÈµÈ´Ù.
-		constexpr long double EpochTimeBeginAC = long double(DaysPer400Years_v * 1969) / 400; // ÀÏ ¼öÀÇ ¼Ò¼öÁ¡ ´ÜÀ§´Â ¹ö·Á¾ßÇÔ
+		After Christ 1970ë…„ë„ê¹Œì§€ì˜ ì‹œê°„ì„ êµ¬í•œë‹¤ìŒì— í•´ë´¤ëŠ”ë° ì˜¤ì°¨ê°€ ìƒê¹€;
+		ì•„ë˜ ì²˜ëŸ¼ ì¼ ìˆ˜ì˜ ì†Œìˆ˜ì  ë‹¨ìœ„ê¹Œì§€ ë“¤ê³ ê°€ë©´ ì•ˆëœë‹¤.
+		constexpr long double EpochTimeBeginAC = long double(DaysPer400Years_v * 1969) / 400; // ì¼ ìˆ˜ì˜ ì†Œìˆ˜ì  ë‹¨ìœ„ëŠ” ë²„ë ¤ì•¼í•¨
 	*/
 		
-	// [AD 0001³â 1¿ù 1ÀÏ ~ 1969³â 12¿ù 31ÀÏ±îÁöÀÇ ¸¶ÀÌÅ©·ÎÃÊ °è»ê]
-	constexpr Int64 ADBegin	 = (DaysPer400Years_v * 1969) / 400;	// Epoch ½Ã°£ 1970³â 1¿ù 1ÀÏ±îÁöÀÇ ÀÏ ¼ö
-	constexpr Int64 ADBeginTick = ADBegin * TicksPerDay;			// Epoch ½Ã°£ 1970³â 1¿ù 1ÀÏ±îÁöÀÇ ¸¶ÀÌÅ©·ÎÃÊ
+	// [AD 0001ë…„ 1ì›” 1ì¼ ~ 1969ë…„ 12ì›” 31ì¼ê¹Œì§€ì˜ ë§ˆì´í¬ë¡œì´ˆ ê³„ì‚°]
+	constexpr Int64 ADBegin	 = (DaysPer400Years_v * 1969) / 400;	// Epoch ì‹œê°„ 1970ë…„ 1ì›” 1ì¼ê¹Œì§€ì˜ ì¼ ìˆ˜
+	constexpr Int64 ADBeginTick = ADBegin * TicksPerDay;			// Epoch ì‹œê°„ 1970ë…„ 1ì›” 1ì¼ê¹Œì§€ì˜ ë§ˆì´í¬ë¡œì´ˆ
 }
 
 
 enum class DatePart
 {
-	Year,			// ¸î³âµµÀÎÁö				1 ~ 9999
-	Month,			// 1³âÁß¿¡ ¸î¿ùÀÎÁö		1 ~ 12
-	Day,			// ÇöÀç´Ş¿¡ ¸îÀÏÀÎÁö		1 ~ (28 or 29 or 30 or 31)
-	DayOfYear,		// 1³âÁß¿¡ ¸î¹øÂ° ÀÏÀÎÁö	1 ~ (355 or 366)
-	MaxDayOfMonth	// ÀÌ¹ø¿¡ ÃÖ´ë ¸îÀÏ		(28 or 29 or 30 or 31)
+	Year,			// ëª‡ë…„ë„ì¸ì§€				1 ~ 9999
+	Month,			// 1ë…„ì¤‘ì— ëª‡ì›”ì¸ì§€		1 ~ 12
+	Day,			// í˜„ì¬ë‹¬ì— ëª‡ì¼ì¸ì§€		1 ~ (28 or 29 or 30 or 31)
+	DayOfYear,		// 1ë…„ì¤‘ì— ëª‡ë²ˆì§¸ ì¼ì¸ì§€	1 ~ (355 or 366)
+	MaxDayOfMonth	// ì´ë²ˆì— ìµœëŒ€ ëª‡ì¼		(28 or 29 or 30 or 31)
 };
 
 enum class DayOfWeek
@@ -100,50 +100,50 @@ enum class AMPM
 
 enum class TimeStandard
 {
-	Local,			// ÇöÀç ÄÄÇ»ÅÍ ½Ã½ºÅÛ ±âÁØ ½Ã°£
-	Universal		// UTC ±âÁØ½Ã°£
+	Local,			// í˜„ì¬ ì»´í“¨í„° ì‹œìŠ¤í…œ ê¸°ì¤€ ì‹œê°„
+	Universal		// UTC ê¸°ì¤€ì‹œê°„
 };
 
 // https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
 enum class DateFormat
 {
-	d,			// ÀÏ Ç¥½Ã -> 1 ~ 31
-	dd,			// ÀÏ Ç¥½Ã -> 01 ~ 31
-	ddd,		// ¿äÀÏ Ãà¾à ÀÌ¸§-> Mon, Tue, Wed 
-	dddd,		// ¿äÀÏ ÀüÃ¼ ÀÌ¸§ -> Monday, Tuesday, Wednesday
-	h,			// 12½Ã°£ ´ÜÀ§ ½Ã°£ -> 2
-	hh,			// 12½Ã°£ ´ÜÀ§ ½Ã°£ -> 02
-	H,			// 24½Ã°£ ´ÜÀ§ ½Ã°£ -> 2, 23
-	HH,			// 24½Ã°£ ´ÜÀ§ ½Ã°£ -> 02, 23
-	m,			// ºĞ -> 5
-	mm,			// ºĞ -> 05
-	M,			// ´Ş -> 1
-	MM,			// ´Ş -> 01
-	MMM,		// ´Ş Ãà¾à ÀÌ¸§ -> Dec, Sep
-	MMMM,		// ´Ş ÀüÃ¼ ÀÌ¸§ -> December
-	s,			// ÃÊ -> 5ÃÊ
-	ss,			// ÃÊ -> 05ÃÊ
-	t,			// ¿ÀÀü ¿ÀÈÄ -> A, P
-	tt,			// ¿ÀÀü ¿ÀÈÄ -> AM, PM
-	y,			// 2ÀÚ¸®³âµµ -> 2009 -> 9
-	yy,			// 2ÀÚ¸®³âµµ -> 2009 -> 09
-	yyy,		// 4ÀÚ¸®³âµµ -> 2022 -> 2022
-	yyyy,		// 4ÀÚ¸®³âµµ -> 2022 -> 2022
-	K,			// Å¸ÀÓÁ¸ ½Ã°£ (½Ã°£:ºĞ) -> +09:00
-	z,			// Å¸ÀÓÁ¸ ½Ã°£ (½Ã°£) -> +9
-	zz,			// Å¸ÀÓÁ¸ ½Ã°£ (½Ã°£) -> +09
-	zzz,		// Å¸ÀÓÁ¸ ½Ã°£ (½Ã°£:ºĞ) -> +09:00
-	f,			// ¹Ğ¸®ÃÊ 100ÀÇ ÀÚ¸®±îÁö Ç¥½Ã		10.123456 -> 1
-	ff,			// ¹Ğ¸®ÃÊ 10ÀÇ ÀÚ¸®±îÁö Ç¥½Ã		10.123456 -> 12
-	fff,		// ¹Ğ¸®ÃÊ 1ÀÇ ÀÚ¸®±îÁö Ç¥½Ã			10.123456 -> 123
-	ffff,		// ¸¶ÀÌÅ©·ÎÃÊ 100ÀÇ ÀÚ¸®±îÁö Ç¥½Ã	10.123456 -> 1234
-	fffff,		// ¸¶ÀÌÅ©·ÎÃÊ 10ÀÇ ÀÚ¸®±îÁö Ç¥½Ã	10.123456 -> 12345
-	ffffff,		// ¸¶ÀÌÅ©·ÎÃÊ 1ÀÇ ÀÚ¸®±îÁö Ç¥½Ã		10.123456 -> 123456
-	// fffffff  // ³ª³ëÃÊ 100ÀÇ ÀÚ¸®±îÁö Ç¥½Ã -> ¸¶ÀÌÅ©·ÎÃÊ ±îÁö¸¸ Áö¿øÇÏ¹Ç·Î Á¦¿ÜÇÑ´Ù.
+	d,			// ì¼ í‘œì‹œ -> 1 ~ 31
+	dd,			// ì¼ í‘œì‹œ -> 01 ~ 31
+	ddd,		// ìš”ì¼ ì¶•ì•½ ì´ë¦„-> Mon, Tue, Wed 
+	dddd,		// ìš”ì¼ ì „ì²´ ì´ë¦„ -> Monday, Tuesday, Wednesday
+	h,			// 12ì‹œê°„ ë‹¨ìœ„ ì‹œê°„ -> 2
+	hh,			// 12ì‹œê°„ ë‹¨ìœ„ ì‹œê°„ -> 02
+	H,			// 24ì‹œê°„ ë‹¨ìœ„ ì‹œê°„ -> 2, 23
+	HH,			// 24ì‹œê°„ ë‹¨ìœ„ ì‹œê°„ -> 02, 23
+	m,			// ë¶„ -> 5
+	mm,			// ë¶„ -> 05
+	M,			// ë‹¬ -> 1
+	MM,			// ë‹¬ -> 01
+	MMM,		// ë‹¬ ì¶•ì•½ ì´ë¦„ -> Dec, Sep
+	MMMM,		// ë‹¬ ì „ì²´ ì´ë¦„ -> December
+	s,			// ì´ˆ -> 5ì´ˆ
+	ss,			// ì´ˆ -> 05ì´ˆ
+	t,			// ì˜¤ì „ ì˜¤í›„ -> A, P
+	tt,			// ì˜¤ì „ ì˜¤í›„ -> AM, PM
+	y,			// 2ìë¦¬ë…„ë„ -> 2009 -> 9
+	yy,			// 2ìë¦¬ë…„ë„ -> 2009 -> 09
+	yyy,		// 4ìë¦¬ë…„ë„ -> 2022 -> 2022
+	yyyy,		// 4ìë¦¬ë…„ë„ -> 2022 -> 2022
+	K,			// íƒ€ì„ì¡´ ì‹œê°„ (ì‹œê°„:ë¶„) -> +09:00
+	z,			// íƒ€ì„ì¡´ ì‹œê°„ (ì‹œê°„) -> +9
+	zz,			// íƒ€ì„ì¡´ ì‹œê°„ (ì‹œê°„) -> +09
+	zzz,		// íƒ€ì„ì¡´ ì‹œê°„ (ì‹œê°„:ë¶„) -> +09:00
+	f,			// ë°€ë¦¬ì´ˆ 100ì˜ ìë¦¬ê¹Œì§€ í‘œì‹œ		10.123456 -> 1
+	ff,			// ë°€ë¦¬ì´ˆ 10ì˜ ìë¦¬ê¹Œì§€ í‘œì‹œ		10.123456 -> 12
+	fff,		// ë°€ë¦¬ì´ˆ 1ì˜ ìë¦¬ê¹Œì§€ í‘œì‹œ			10.123456 -> 123
+	ffff,		// ë§ˆì´í¬ë¡œì´ˆ 100ì˜ ìë¦¬ê¹Œì§€ í‘œì‹œ	10.123456 -> 1234
+	fffff,		// ë§ˆì´í¬ë¡œì´ˆ 10ì˜ ìë¦¬ê¹Œì§€ í‘œì‹œ	10.123456 -> 12345
+	ffffff,		// ë§ˆì´í¬ë¡œì´ˆ 1ì˜ ìë¦¬ê¹Œì§€ í‘œì‹œ		10.123456 -> 123456
+	// fffffff  // ë‚˜ë…¸ì´ˆ 100ì˜ ìë¦¬ê¹Œì§€ í‘œì‹œ -> ë§ˆì´í¬ë¡œì´ˆ ê¹Œì§€ë§Œ ì§€ì›í•˜ë¯€ë¡œ ì œì™¸í•œë‹¤.
 };
 
 /* =================================================================================== 
-	½Ã°£ ´ÜÀ§
+	ì‹œê°„ ë‹¨ìœ„
 	=================================================================================== */
 
 enum class TimeUnit
@@ -161,10 +161,10 @@ enum class TimeUnit
 
 		
 /* =================================================================================== 
-	½Ã°£ °è»ê ¹× °ü¸®
+	ì‹œê°„ ê³„ì‚° ë° ê´€ë¦¬
 
-	Date¿Í Time, DateAndTimeÀÇ DateTimedml µ¡¼À »¬¼À ¿¬»ê ¼öÇà°á°ú·Î ³¯Â¥, ½Ã°£, Æ½ÀÌ À½¼ö°¡ ³ª¿Ã °æ¿ì ¿¹¿Ü¸¦ ´øÁö¹Ç·Î
-	À½¼öÀÇ ½Ã°£ Â÷ÀÌ¸¦ °è»êÇÏ°í ½ÍÀº °æ¿ì¿¡´Â DateTimeÀÇ Diff ÇÔ¼ö¸¦ »ç¿ëÇÏ¿© TimeSpan ±¸Á¶Ã¼¸¦ ÅëÇØ È®ÀÎÇÒ °Í
+	Dateì™€ Time, DateAndTimeì˜ DateTimedml ë§ì…ˆ ëº„ì…ˆ ì—°ì‚° ìˆ˜í–‰ê²°ê³¼ë¡œ ë‚ ì§œ, ì‹œê°„, í‹±ì´ ìŒìˆ˜ê°€ ë‚˜ì˜¬ ê²½ìš° ì˜ˆì™¸ë¥¼ ë˜ì§€ë¯€ë¡œ
+	ìŒìˆ˜ì˜ ì‹œê°„ ì°¨ì´ë¥¼ ê³„ì‚°í•˜ê³  ì‹¶ì€ ê²½ìš°ì—ëŠ” DateTimeì˜ Diff í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•˜ì—¬ TimeSpan êµ¬ì¡°ì²´ë¥¼ í†µí•´ í™•ì¸í•  ê²ƒ
 	=================================================================================== */
 struct Date
 {
@@ -266,8 +266,8 @@ struct DateAndTime : Date, Time {
 		: Date(year, month, day), Time(hour, minute, second, miliSecond, microSecond)
 	{}
 
-	void AddYear(Int32 years) override;				// Date::AddYear¿Í µ¿ÀÏ
-	void AddMonth(Int32 months) override;			// Date::AddMonth¿Í µ¿ÀÏ
+	void AddYear(Int32 years) override;				// Date::AddYearì™€ ë™ì¼
+	void AddMonth(Int32 months) override;			// Date::AddMonthì™€ ë™ì¼
 	void AddDay(Int32 days) override;				
 	void AddHour(Int64 hours) override;				
 	void AddMinute(Int64 minutes) override;			
@@ -318,7 +318,7 @@ struct DateAndTime : Date, Time {
 	Int64 ToTick() const;
 };
 
-// À½¼ö ½Ã°£À» ´Ù·ê ¼ö ÀÖ´Â ±¸Á¶Ã¼
+// ìŒìˆ˜ ì‹œê°„ì„ ë‹¤ë£° ìˆ˜ ìˆëŠ” êµ¬ì¡°ì²´
 struct TimeSpan
 {
 	TimeSpan(Int64 tick = 0) : Tick(tick) {}
@@ -359,7 +359,7 @@ public: // constructors
 	DateTime(Int64 tick) : m_Tick(tick) {}
 
 public: // public non-static
-	// Æ¯Á¤ Å¸ÀÔÀ¯´Ö¿¡ ÇØ´çÇÏ´Â ÀüÃ¼½Ã°£ ¾ò±â
+	// íŠ¹ì • íƒ€ì…ìœ ë‹›ì— í•´ë‹¹í•˜ëŠ” ì „ì²´ì‹œê°„ ì–»ê¸°
 	Int64 GetTick() const { return m_Tick; }
 	Int64 GetTotalDays() const { return m_Tick / Detail::TicksPerDay; }
 	Int64 GetTotalHours() const { return m_Tick / Detail::TicksPerHour; }
@@ -368,7 +368,7 @@ public: // public non-static
 	Int64 GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond; }
 	Int64 GetTotalMicroSeconds() const { return m_Tick; }
 
-	// Å¸ÀÔÀ¯´Öº°·Î ½Ã°£ ¾ò±â
+	// íƒ€ì…ìœ ë‹›ë³„ë¡œ ì‹œê°„ ì–»ê¸°
 	int GetYear() const { return GetDatePart(DatePart::Year); }
 	int GetMonth() const { return GetDatePart(DatePart::Month); }
 	int GetDay() const { return GetDatePart(DatePart::Day); }
@@ -379,18 +379,18 @@ public: // public non-static
 	int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
 
 	
-	DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }			// ¹«½¼ ¿äÀÏÀÎÁö
-	MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }			// ¸î´ŞÀÎÁö
-	int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }			// ÀÏ³â±âÁØÀ¸·Î ¸îÀÏÀÎÁö
-	int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }	// ÀÌ¹ø´ŞÀÌ ÃÖ´ë ¸îÀÏÀÎÁö
-	AMPM GetAMPM() const { return (GetHour() / 12) > 0 ? AMPM::PM : AMPM::AM; }		// ¿ÀÀüÀÎÁö ¿ÀÈÄÀÎÁö
+	DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }			// ë¬´ìŠ¨ ìš”ì¼ì¸ì§€
+	MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }			// ëª‡ë‹¬ì¸ì§€
+	int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }			// ì¼ë…„ê¸°ì¤€ìœ¼ë¡œ ëª‡ì¼ì¸ì§€
+	int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }	// ì´ë²ˆë‹¬ì´ ìµœëŒ€ ëª‡ì¼ì¸ì§€
+	AMPM GetAMPM() const { return (GetHour() / 12) > 0 ? AMPM::PM : AMPM::AM; }		// ì˜¤ì „ì¸ì§€ ì˜¤í›„ì¸ì§€
 
-	// Å¸ÀÔ º¯È¯
+	// íƒ€ì… ë³€í™˜
 	DateAndTime ToDateAndTime() const;
 	Date ToDate() const;
 	Time ToTime() const;
 
-	// ½Ã°£ ¿¬»ê
+	// ì‹œê°„ ì—°ì‚°
 	DateTime AddYear(Int32 year);
 	DateTime AddMonth(Int32 month);
 	DateTime AddDay(Int32 day);
@@ -446,10 +446,10 @@ public: // public non-static
 	String FormatMysqlTime() const { return Format("yyyy-MM-dd hh:mm:ss.ffffff"); };
 
 private: // private static
-	static Tuple<int, int, int, int, int> GetYearsFromDays(int days);		// ´ÜÀ§ ³âµµº°·Î ÀÏ¼ö¸¦ °¡Á®¿È
+	static Tuple<int, int, int, int, int> GetYearsFromDays(int days);		// ë‹¨ìœ„ ë…„ë„ë³„ë¡œ ì¼ìˆ˜ë¥¼ ê°€ì ¸ì˜´
 	static int GetDatePart(const Int64 tick, const DatePart part);
 private: // private non-static
-	int GetDatePart(const DatePart part) const { return DateTime::GetDatePart(m_Tick, part); }
+	int GetDatePart(const DatePart part) const { return GetDatePart(m_Tick, part); }
 	void ReflectFormat(const DateAndTime& time, String& ret, char token, int count) const;
 
 	static void CheckOverFlow(Int64U tick);

@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ìž‘ì„±ìž : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -11,7 +11,7 @@
 namespace JCore {
 
 /*=====================================================================================
-								¹è¿­ Å¥
+								ë°°ì—´ í
 =====================================================================================*/
 
 template <typename T>
@@ -89,7 +89,7 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->m_iSize++;
+		++this->m_iSize;
 		this->SetAtUnsafe(m_iTail, data);
 		m_iTail = NextTailValue(1);
 	}
@@ -99,7 +99,7 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->m_iSize++;
+		++this->m_iSize;
 		this->SetAtUnsafe(m_iTail, Move(data));
 		m_iTail = NextTailValue(1);
 	}
@@ -108,7 +108,7 @@ public:
 		this->ExpandIfNeeded(this->m_iSize + collection.Size());
 		this->m_iSize += collection.Size();
 
-		// ¹è¿­ ¹æ½ÄÀÇ ÄÃ·º¼ÇÀº ´õ È¿À²ÀûÀÎ ¹æ½ÄÀ¸·Î ³Ö¾îÁØ´Ù.
+		// ë°°ì—´ ë°©ì‹ì˜ ì»¬ë ‰ì…˜ì€ ë” íš¨ìœ¨ì ì¸ ë°©ì‹ìœ¼ë¡œ ë„£ì–´ì¤€ë‹¤.
 		if (TCollection::GetCollectionType(collection) == CollectionType::Array) {
 			EnqueueAllArrayCollection(dynamic_cast<const TArrayCollection&>(collection));
 			return;
@@ -128,7 +128,7 @@ public:
 		this->ThrowIfContainerIsEmpty();
 		this->DestroyAt(m_iHead);
 		m_iHead = NextHeadValue(1);
-		this->m_iSize--;
+		--this->m_iSize;
 	}
 
 	T& Front() const {
@@ -144,9 +144,9 @@ public:
 	*/
 
 	/// <summary>
-	/// Å¥ ³»ÀÇ ¿ø¼Òµé ¸ðµÎ Á¦°Å
+	/// í ë‚´ì˜ ì›ì†Œë“¤ ëª¨ë‘ ì œê±°
 	/// 
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	/// - From ArrayCollection
 	/// </summary>
 	void Clear(bool removeHeap = false) override {
@@ -167,12 +167,12 @@ public:
 		this->m_iSize = 0;
 		
 		/*
-			¿ø·¡ ¾Æ·¡ ´ëÀÔ¿¬»ê ÇÑ¹øÀ¸·Î ³¡³»´Âµ¥
+			ì›ëž˜ ì•„ëž˜ ëŒ€ìž…ì—°ì‚° í•œë²ˆìœ¼ë¡œ ëë‚´ëŠ”ë°
 
 			m_iTail = m_iHead;
 
-			Å¥¿Í Å¥°£ÀÇ º¹»ç¸¦ ÁøÇàÇÏ´Â CopyFrom() ÇÔ¼ö¿¡¼­ ±âÁ¸ Å¥´Â ¸Ó¸®¿Í ²¿¸®°¡ 0À» °¡¸®Å°°í ÀÖ´Â °æ¿ì°¡
-			º¹»ç¸¦ ÇÏ±â°¡ Á¦ÀÏ ½±±â ¶§¹®¿¡ 0À¸·Î ÃÊ±âÈ­ ÇÏµµ·ÏÇÑ´Ù.
+			íì™€ íê°„ì˜ ë³µì‚¬ë¥¼ ì§„í–‰í•˜ëŠ” CopyFrom() í•¨ìˆ˜ì—ì„œ ê¸°ì¡´ íëŠ” ë¨¸ë¦¬ì™€ ê¼¬ë¦¬ê°€ 0ì„ ê°€ë¦¬í‚¤ê³  ìžˆëŠ” ê²½ìš°ê°€
+			ë³µì‚¬ë¥¼ í•˜ê¸°ê°€ ì œì¼ ì‰½ê¸° ë•Œë¬¸ì— 0ìœ¼ë¡œ ì´ˆê¸°í™” í•˜ë„ë¡í•œë‹¤.
 		*/
 
 
@@ -188,7 +188,7 @@ public:
 		return MakeShared<TArrayQueueIterator>(this->GetOwner(), m_iHead);
 	}
 
-	// ²¿¸®À§Ä¡´Â µ¥ÀÌÅÍ°¡ »ðÀÔµÉ À§Ä¡ÀÌ¹Ç·Î ¸¶Áö¸· ¿ø¼ÒÀÇ À§Ä¡´Â ²¿¸®¿¡¼­ 1Ä­ ÀÌÀüÀÇ ÀÎµ¦½ºÀÌ´Ù.
+	// ê¼¬ë¦¬ìœ„ì¹˜ëŠ” ë°ì´í„°ê°€ ì‚½ìž…ë  ìœ„ì¹˜ì´ë¯€ë¡œ ë§ˆì§€ë§‰ ì›ì†Œì˜ ìœ„ì¹˜ëŠ” ê¼¬ë¦¬ì—ì„œ 1ì¹¸ ì´ì „ì˜ ì¸ë±ìŠ¤ì´ë‹¤.
 	TEnumerator End() const override {
 		return MakeShared<TArrayQueueIterator>(this->GetOwner(), m_iTail);	
 	}
@@ -196,7 +196,7 @@ public:
 protected:
 	/// <summary>
 	/// 
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	///  - From ArrayCollection
 	/// </summary>
 	void CopyFrom(const TArrayCollection& arrayCollection) override {
@@ -206,7 +206,7 @@ protected:
 
 		Clear();
 
-		this->ExpandIfNeeded(other.m_iSize);	// È®ÀåÀÌ ÇÊ¿äÇÑ °æ¿ì È®Àå ÁøÇà
+		this->ExpandIfNeeded(other.m_iSize);	// í™•ìž¥ì´ í•„ìš”í•œ ê²½ìš° í™•ìž¥ ì§„í–‰
 		this->m_iSize = other.m_iSize;
 
 		if (other.IsForwardedTail()) {
@@ -237,22 +237,22 @@ protected:
 		TArrayCollection::CopyFrom(ilist);
 	}
 
-	// Å©±â È®Àå
+	// í¬ê¸° í™•ìž¥
 	void Expand(int capacity, bool _ = false) override {
 		T* pNewArray = Memory::Allocate<T*>(sizeof(T) * capacity);
 
 		if (IsForwardedTail()) {
-			/*	  ¾Æ·¡¿Í °°Àº »óÈ²¿¡¼­ÀÇ ¹è¿­ È®Àå¹æ¹ý
+			/*	  ì•„ëž˜ì™€ ê°™ì€ ìƒí™©ì—ì„œì˜ ë°°ì—´ í™•ìž¥ë°©ë²•
 			
-				  - : ºó µ¥ÀÌÅÍ
-				  ¡à : µ¥ÀÌÅÍ
+				  - : ë¹ˆ ë°ì´í„°
+				  â–¡ : ë°ì´í„°
 
 				 ========================================================
-				 -----------------¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à------------
+				 -----------------â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡------------
 				 ========================================================
-				 ¡è			     ¡è                          ¡è
+				 â†‘			     â†‘                          â†‘
 				 0              head                       tail
-								 ¦¦------ this->Size() ------¦¥
+								 â””------ this->Size() ------â”˜
 
 			 */
 
@@ -262,17 +262,17 @@ protected:
 				sizeof(T) * this->Size());
 		} else {
 
-			/*	  ¾Æ·¡¿Í °°Àº »óÈ²¿¡¼­ÀÇ ¹è¿­ È®Àå¹æ¹ý
+			/*	  ì•„ëž˜ì™€ ê°™ì€ ìƒí™©ì—ì„œì˜ ë°°ì—´ í™•ìž¥ë°©ë²•
 			
-				  - : ºó µ¥ÀÌÅÍ
-				  ¡à : µ¥ÀÌÅÍ
+				  - : ë¹ˆ ë°ì´í„°
+				  â–¡ : ë°ì´í„°
 
 				 ========================================================
-				 ¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à------------------¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à
+				 â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡------------------â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡
 				 ========================================================
-				 ¡è			         ¡è                  ¡è
+				 â†‘			         â†‘                  â†‘
 				 0                  tail              head
-				 ¦¦--iBeginToTail-----¦¥					¦¦---iHeadToEnd--¦¥
+				 â””--iBeginToTail-----â”˜					â””---iHeadToEnd--â”˜
 
 			 */
 
@@ -295,16 +295,16 @@ protected:
 		this->m_pArray = pNewArray;
 		this->m_iCapacity = capacity;
 
-		// È®Àå ÈÄ ²¿¸® Çìµå À§Ä¡ º¯°æÇØÁà¾ßÇÔ
+		// í™•ìž¥ í›„ ê¼¬ë¦¬ í—¤ë“œ ìœ„ì¹˜ ë³€ê²½í•´ì¤˜ì•¼í•¨
 		m_iHead = 0;
 		m_iTail = this->Size();
 	}
 
 
 	/// <summary>
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	/// - From ArrayCollection
-	///   Å¥´Â ¿ë·®À» ±âÁØÀ¸·Î À¯È¿ ÀÎµ¦½º ¹üÀ§¸¦ ÆÇ´ÜÇØ¾ßÇÑ´Ù.
+	///   íëŠ” ìš©ëŸ‰ì„ ê¸°ì¤€ìœ¼ë¡œ ìœ íš¨ ì¸ë±ìŠ¤ ë²”ìœ„ë¥¼ íŒë‹¨í•´ì•¼í•œë‹¤.
 	/// </summary>
 	/// <param name="startIdx"></param>
 	/// <param name="endIdx"></param>
@@ -314,9 +314,9 @@ protected:
 
 
 	/// <summary>
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	/// - From ArrayCollection
-	///   Å¥´Â ¿ë·®À» ±âÁØÀ¸·Î À¯È¿ ÀÎµ¦½º ¹üÀ§¸¦ ÆÇ´ÜÇØ¾ßÇÑ´Ù.
+	///   íëŠ” ìš©ëŸ‰ì„ ê¸°ì¤€ìœ¼ë¡œ ìœ íš¨ ì¸ë±ìŠ¤ ë²”ìœ„ë¥¼ íŒë‹¨í•´ì•¼í•œë‹¤.
 	/// </summary>
 	bool IsValidIndex(int idx) const override {
 		if (IsForwardedHead()) {
@@ -329,11 +329,11 @@ protected:
 
 
 	/// <summary>
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	/// - From ArrayCollection
 	/// </summary>
 	void DestroyAtRange(const int startIdx, const int endIdx) override {
-		// m_iTailÀÌ 0À» °¡¸®Å°°í ÀÖ´Â °æ¿ì
+		// m_iTailì´ 0ì„ ê°€ë¦¬í‚¤ê³  ìžˆëŠ” ê²½ìš°
 		if (endIdx < 0) {
 			return;
 		}
@@ -342,7 +342,7 @@ protected:
 	}
 
 	/// <summary>
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	///  - From ArrayCollection
 	/// </summary>
 	bool IsFull() const override {
@@ -350,11 +350,11 @@ protected:
 	}
 
 protected:
-	// ´Üµ¶À¸·Î È£Ãâ ±ÝÁö!
-	// EnqueueAllÀÇ ºÎºÐ ÇÔ¼ö
+	// ë‹¨ë…ìœ¼ë¡œ í˜¸ì¶œ ê¸ˆì§€!
+	// EnqueueAllì˜ ë¶€ë¶„ í•¨ìˆ˜
 	void EnqueueAllArrayCollection(const TArrayCollection& arrayCollection) {
 
-		// °°Àº ¹è¿­ Å¥ÀÎ °æ¿ì : Å¥´Â ¹è¿­ ½ºÅÃ°ú º¤ÅÍ¿Í ´Ù¸¥ ¹æ½ÄÀ¸·Î Ãß°¡ÇØÁà¾ßÇÔ
+		// ê°™ì€ ë°°ì—´ íì¸ ê²½ìš° : íëŠ” ë°°ì—´ ìŠ¤íƒê³¼ ë²¡í„°ì™€ ë‹¤ë¥¸ ë°©ì‹ìœ¼ë¡œ ì¶”ê°€í•´ì¤˜ì•¼í•¨
 		if (TCollection::GetContainerType(arrayCollection) == ContainerType::ArrayQueue) {
 			EnqueueAllArrayQueue(dynamic_cast<const TArrayQueue&>(arrayCollection));
 			return;
@@ -380,7 +380,7 @@ protected:
 
 
 	/// <summary>
-	/// ²¿¸®ÀÇ gap ¸¸Å­ ´ÙÀ½ À§Ä¡¿¡ ÇØ´çÇÏ´Â °ªÀ» °¡Á®¿Â´Ù.
+	/// ê¼¬ë¦¬ì˜ gap ë§Œí¼ ë‹¤ìŒ ìœ„ì¹˜ì— í•´ë‹¹í•˜ëŠ” ê°’ì„ ê°€ì ¸ì˜¨ë‹¤.
 	/// </summary>
 	int NextTailValue(int gap) const {
 		gap %= this->Capacity();
@@ -403,7 +403,7 @@ protected:
 	}
 
 	/// <summary>
-	/// ²¿¸®ÀÇ gap ¸¸Å­ ÀÌÀü À§Ä¡¿¡ ÇØ´çÇÏ´Â °ªÀ» °¡Á®¿Â´Ù.
+	/// ê¼¬ë¦¬ì˜ gap ë§Œí¼ ì´ì „ ìœ„ì¹˜ì— í•´ë‹¹í•˜ëŠ” ê°’ì„ ê°€ì ¸ì˜¨ë‹¤.
 	/// </summary>
 	int PrevTailValue(int gap) const {
 		gap %= this->Capacity();
@@ -436,14 +436,14 @@ protected:
 	}
 
 
-	// ¸Ó¸®°¡ ²¿¸®º¸´Ù ¾Õ¼­´Â »óÅÂÀÎ °æ¿ì
-	// ¾Æ·¡¿¡ ÇØ´çÇÏ´Â ±×¸²ÀÇ ÄÁÅ×ÀÌ³Ê »óÅÂ
+	// ë¨¸ë¦¬ê°€ ê¼¬ë¦¬ë³´ë‹¤ ì•žì„œëŠ” ìƒíƒœì¸ ê²½ìš°
+	// ì•„ëž˜ì— í•´ë‹¹í•˜ëŠ” ê·¸ë¦¼ì˜ ì»¨í…Œì´ë„ˆ ìƒíƒœ
 	bool IsForwardedHead() const {
 		return m_iTail <= m_iHead;
 	}
 
-	// ²¿¸®°¡ ¸Ó¸®º¸´Ù ¾Õ¼­´Â »óÅÂÀÎ °æ¿ì
-	// À§¿¡ ÇØ´çÇÏ´Â ±×¸²ÀÇ ÄÁÅ×ÀÌ³Ê »óÅÂ
+	// ê¼¬ë¦¬ê°€ ë¨¸ë¦¬ë³´ë‹¤ ì•žì„œëŠ” ìƒíƒœì¸ ê²½ìš°
+	// ìœ„ì— í•´ë‹¹í•˜ëŠ” ê·¸ë¦¼ì˜ ì»¨í…Œì´ë„ˆ ìƒíƒœ
 	bool IsForwardedTail() const {
 		return m_iTail > m_iHead;
 	}
@@ -455,14 +455,14 @@ protected:
 
 			/*
 			======================
-			¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à---------
+			â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡---------
 			======================
-			¡è		     ¡è
+			â†‘		     â†‘
 		  head          tail
 	   (inclusive)   (exclusive)
 
-	   ¸Ó¸®´Â ½ÃÀÛ ÀÎµ¦½º (ÃÊ±â : 0) µ¥ÀÌÅÍ°¡ Æ÷ÇÔµÇ¾îÀÖ±â ¶§¹®¿¡ inclusive
-	   ²¿¸®´Â ¸¶Áö¸· ÀÎµ¦½º + 1·Î ´ÙÀ½¿¡ »ðÀÔµÉ À§Ä¡¸¦ ³ªÅ¸³½´Ù. Áï ²¿¸®ÀÇ ÀÎµ¦½º¿¡´Â µ¥ÀÌÅÍ°¡ Æ÷ÇÔµÇ¾îÀÖÁö ¾Ê±â ¶§¹®¿¡ exclusive
+	   ë¨¸ë¦¬ëŠ” ì‹œìž‘ ì¸ë±ìŠ¤ (ì´ˆê¸° : 0) ë°ì´í„°ê°€ í¬í•¨ë˜ì–´ìžˆê¸° ë•Œë¬¸ì— inclusive
+	   ê¼¬ë¦¬ëŠ” ë§ˆì§€ë§‰ ì¸ë±ìŠ¤ + 1ë¡œ ë‹¤ìŒì— ì‚½ìž…ë  ìœ„ì¹˜ë¥¼ ë‚˜íƒ€ë‚¸ë‹¤. ì¦‰ ê¼¬ë¦¬ì˜ ì¸ë±ìŠ¤ì—ëŠ” ë°ì´í„°ê°€ í¬í•¨ë˜ì–´ìžˆì§€ ì•Šê¸° ë•Œë¬¸ì— exclusive
 
 	*/
 

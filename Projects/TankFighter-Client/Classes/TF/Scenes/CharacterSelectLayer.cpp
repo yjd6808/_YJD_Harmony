@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/CharacterSelectLayer.h>
@@ -12,10 +12,10 @@
 
 
 void CharacterSelectLayer::onEnterTransitionDidFinish() {
-	// Ä³¸¯ÅÍ ¼±ÅÃ¾À¿¡ ÁøÀÔÇÏ¸é Ä³¸¯ÅÍ Á¤º¸¸¦ ¹Ş±âÀ§ÇØ ¹Ù·Î ÆĞÅ¶À» º¸³½´Ù.
+	// ìºë¦­í„° ì„ íƒì”¬ì— ì§„ì…í•˜ë©´ ìºë¦­í„° ì •ë³´ë¥¼ ë°›ê¸°ìœ„í•´ ë°”ë¡œ íŒ¨í‚·ì„ ë³´ë‚¸ë‹¤.
 
 	if (SendFn::SendLoadCharacterInfoSyn() == false) {
-		PopUp::createInParent("Ä³¸¯ÅÍ Á¤º¸ ¿äÃ»ÀÌ ½ÇÆĞÇÏ¿´½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ìºë¦­í„° ì •ë³´ ìš”ì²­ì´ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.", this, false);
 	}
 }
 
@@ -30,14 +30,14 @@ bool CharacterSelectLayer::init() {
 	m_pCharacterNickNameEditBox->setFontColor(Color4B::WHITE);
 	m_pCharacterNickNameEditBox->setColor(ColorList::Africanviolet_v);
 	m_pCharacterNickNameEditBox->setFontSize(15);
-	m_pCharacterNickNameEditBox->setPlaceHolder("»èÁ¦ ¶Ç´Â »ı¼ºÇÒ Ä³¸¯ÅÍ¸í ÀÔ·Â");
+	m_pCharacterNickNameEditBox->setPlaceHolder("ì‚­ì œ ë˜ëŠ” ìƒì„±í•  ìºë¦­í„°ëª… ì…ë ¥");
 	m_pCharacterNickNameEditBox->setPlaceholderFontSize(15);
 	m_pCharacterNickNameEditBox->setAnchorPoint(Vec2::ZERO);
 	m_pCharacterNickNameEditBox->setPlaceholderFontColor(Color4B::BLACK);
 	m_pCharacterNickNameEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
 	this->addChild(m_pCharacterNickNameEditBox);
 
-	m_pCreateCharacterButton = TextButton::create(200, 45, "Ä³¸¯ÅÍ »ı¼º", 16);
+	m_pCreateCharacterButton = TextButton::create(200, 45, "ìºë¦­í„° ìƒì„±", 16);
 	m_pCreateCharacterButton->setPosition({ 600, 300 });
 	m_pCreateCharacterButton->setAnchorPoint(Vec2::ZERO);
 	m_pCreateCharacterButton->setColor(ColorList::Babypink_v);
@@ -45,7 +45,7 @@ bool CharacterSelectLayer::init() {
 	m_pCreateCharacterButton->setClickEvent(CC_CALLBACK_1(CharacterSelectLayer::OnClickedCreateCharacterButton, this));
 	this->addChild(m_pCreateCharacterButton);
 
-	m_pDeleteCharacterButton = TextButton::create(200, 45, "Ä³¸¯ÅÍ »èÁ¦", 16);
+	m_pDeleteCharacterButton = TextButton::create(200, 45, "ìºë¦­í„° ì‚­ì œ", 16);
 	m_pDeleteCharacterButton->setPosition({ 600, 250 });
 	m_pDeleteCharacterButton->setAnchorPoint(Vec2::ZERO);
 	m_pDeleteCharacterButton->setColor(ColorList::Babypink_v);
@@ -53,7 +53,7 @@ bool CharacterSelectLayer::init() {
 	m_pDeleteCharacterButton->setClickEvent(CC_CALLBACK_1(CharacterSelectLayer::OnClickedDeleteCharacterButton, this));
 	this->addChild(m_pDeleteCharacterButton);
 
-	m_pChannelSelectButton = TextButton::create(200, 45, "Ã¤³Î ¼±ÅÃ", 16);
+	m_pChannelSelectButton = TextButton::create(200, 45, "ì±„ë„ ì„ íƒ", 16);
 	m_pChannelSelectButton->setPosition({ 600, 200 });
 	m_pChannelSelectButton->setAnchorPoint(Vec2::ZERO);
 	m_pChannelSelectButton->setColor(ColorList::Babypink_v);
@@ -75,7 +75,7 @@ bool CharacterSelectLayer::IsValidNickName(std::string& nick) {
 }
 
 void CharacterSelectLayer::OnClickedCharacterButton(TextButton* btn) {
-	// ¹öÆ°ÀÇ ÅÂ±×¿¡ Ä³¸¯ÅÍ CharacterUID Á¤º¸°¡ µé¾îÀÖÀ¸¹Ç·Î
+	// ë²„íŠ¼ì˜ íƒœê·¸ì— ìºë¦­í„° CharacterUID ì •ë³´ê°€ ë“¤ì–´ìˆìœ¼ë¯€ë¡œ
 	SendFn::SendSelectCharacterSyn(btn->getTag());
 }
 
@@ -85,17 +85,17 @@ void CharacterSelectLayer::OnClickedCreateCharacterButton(TextButton* sender) {
 	std::string nickName = m_pCharacterNickNameEditBox->getText();
 
 	if (nickName.length() == 0) {
-		PopUp::createInParent("»ı¼ºÇÒ Ä³¸¯ÅÍ ¸íÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.", this, false);
+		PopUp::createInParent("ìƒì„±í•  ìºë¦­í„° ëª…ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.", this, false);
 		return;
 	}
 
 	if (!IsValidNickName(nickName)) {
-		PopUp::createInParent("°ø¹éÀÌ Æ÷ÇÔµÇ¾î ÀÖ½À´Ï´Ù", this, false);
+		PopUp::createInParent("ê³µë°±ì´ í¬í•¨ë˜ì–´ ìˆìŠµë‹ˆë‹¤", this, false);
 		return;
 	}
 
 	if (nickName.length() + 1 >= NAME_LEN) {
-		PopUp::createInParent("´Ğ³×ÀÓÀº 40¹ÙÀÌÆ® ÀÌÇÏ·Î ÀÔ·ÂÇØÁÖ¼¼¿ä", this, false);
+		PopUp::createInParent("ë‹‰ë„¤ì„ì€ 40ë°”ì´íŠ¸ ì´í•˜ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”", this, false);
 		return;
 	}
 
@@ -108,17 +108,17 @@ void CharacterSelectLayer::OnClickedDeleteCharacterButton(TextButton* sender) {
 	std::string nickName = m_pCharacterNickNameEditBox->getText();
 
 	if (nickName.length() == 0) {
-		PopUp::createInParent("»ı¼ºÇÒ Ä³¸¯ÅÍ ¸íÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.", this, false);
+		PopUp::createInParent("ìƒì„±í•  ìºë¦­í„° ëª…ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.", this, false);
 		return;
 	}
 
 	if (!IsValidNickName(nickName)) {
-		PopUp::createInParent("°ø¹éÀÌ Æ÷ÇÔµÇ¾î ÀÖ½À´Ï´Ù", this, false);
+		PopUp::createInParent("ê³µë°±ì´ í¬í•¨ë˜ì–´ ìˆìŠµë‹ˆë‹¤", this, false);
 		return;
 	}
 
 	if (nickName.length() + 1 >= NAME_LEN) {
-		PopUp::createInParent("´Ğ³×ÀÓÀº 40¹ÙÀÌÆ® ÀÌÇÏ·Î ÀÔ·ÂÇØÁÖ¼¼¿ä", this, false);
+		PopUp::createInParent("ë‹‰ë„¤ì„ì€ 40ë°”ì´íŠ¸ ì´í•˜ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”", this, false);
 		return;
 	}
 
@@ -135,7 +135,7 @@ void CharacterSelectLayer::OnClickedChannelSelectButton(TextButton* sender) {
 
 /* =================================================================================
  *
- *                             Åë½Å ÆĞÅ¶ Ã³¸® 
+ *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬ 
  *	
  * ================================================================================*/
 
@@ -144,7 +144,7 @@ void CharacterSelectLayer::OnClickedChannelSelectButton(TextButton* sender) {
 
 void CharacterSelectLayer::CmdLoadCharacterInfoAck(ICommand* cmd) {
 
-	// Ä³¸¯ÅÍ Á¤º¸°¡ °»½ÅµÉ ¼ö ÀÖÀ¸¹Ç·Î ¸ÕÀú ´Ù ºñ¿öÁØ´Ù.
+	// ìºë¦­í„° ì •ë³´ê°€ ê°±ì‹ ë  ìˆ˜ ìˆìœ¼ë¯€ë¡œ ë¨¼ì € ë‹¤ ë¹„ì›Œì¤€ë‹¤.
 	for (int i = 0; i < m_CharacterSelectButtonVec.Size(); i++) {
 		m_CharacterSelectButtonVec[i]->getParent()->removeChild(m_CharacterSelectButtonVec[i]);
 	}
@@ -153,7 +153,7 @@ void CharacterSelectLayer::CmdLoadCharacterInfoAck(ICommand* cmd) {
 	LoadCharacterInfoAck* pLoadCharacterInfoAck = cmd->CastCommand<LoadCharacterInfoAck*>();
 
 	if (pLoadCharacterInfoAck->Count == 0) {
-		PopUp::createInParent("Ä³¸¯ÅÍ°¡ ¾ø½À´Ï´Ù. »ı¼ºÇØÁÖ¼¼¿ä.", this, false);
+		PopUp::createInParent("ìºë¦­í„°ê°€ ì—†ìŠµë‹ˆë‹¤. ìƒì„±í•´ì£¼ì„¸ìš”.", this, false);
 	}
 
 	float iXpos = 100;
@@ -163,7 +163,7 @@ void CharacterSelectLayer::CmdLoadCharacterInfoAck(ICommand* cmd) {
 	for (int i = 0, j = 0; i < pLoadCharacterInfoAck->Count; i++, j++) {
 		CharacterInfo* info = &pLoadCharacterInfoAck->Info[i];
 
-		// 2¿­ Á¾´ëÇü ¹èÄ¡¸¦ À§ÇØ
+		// 2ì—´ ì¢…ëŒ€í˜• ë°°ì¹˜ë¥¼ ìœ„í•´
 		if (i != 0 && i % 2 == 0) {
 			iYpos -= 50;
 		}
@@ -175,7 +175,7 @@ void CharacterSelectLayer::CmdLoadCharacterInfoAck(ICommand* cmd) {
 			j = -1;
 		}
 
-		// ÅÂ±×¿¡ Ä³¸¯ÅÍ UID¸¦ ³Ö¾îÁÜ
+		// íƒœê·¸ì— ìºë¦­í„° UIDë¥¼ ë„£ì–´ì¤Œ
 		TextButton* pCharacterBtn = TextButton::create(190, 45, StringUtils::format("%s\n%d Gold", info->Name, info->Money), 16);
 		pCharacterBtn->setPosition({ iXpos, iYpos });
 		pCharacterBtn->setAnchorPoint(Vec2::ZERO);
@@ -189,7 +189,7 @@ void CharacterSelectLayer::CmdSelectCharacterAck(ICommand* cmd) {
 	SelectCharacterAck* pSelectCharacterAck = cmd->CastCommand<SelectCharacterAck*>();
 
 	if (pSelectCharacterAck->Result) {
-		// Ä³¸¯ÅÍ CharacterUID ¼¼ÆÃ
+		// ìºë¦­í„° CharacterUID ì„¸íŒ…
 		_Client->SetCharacterUID(pSelectCharacterAck->CharacterUID);
 		_Client->ChangeScene(SceneType::Lobby);
 		return;

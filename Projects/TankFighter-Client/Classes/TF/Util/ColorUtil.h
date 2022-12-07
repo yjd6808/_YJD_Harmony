@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -41,8 +41,8 @@ public:
 
 };
 
-// »ö»ó Ç¥ : https://en.wikipedia.org/wiki/Lists_of_colors ¸µÅ© µé¾î°¡¼­ A-F ¿¡ÀÖ´Â°Å »ÌÀ½
-// ÀÛ¼ºÇÑ ÆÄ½Ì ¼Ò½ºÄÚµå´Â ¸Ç¾Æ·¡¿¡ ºÙ¿©³õÀ½ C# 6.0
+// ìƒ‰ìƒ í‘œ : https://en.wikipedia.org/wiki/Lists_of_colors ë§í¬ ë“¤ì–´ê°€ì„œ A-F ì—ìˆëŠ”ê±° ë½‘ìŒ
+// ì‘ì„±í•œ íŒŒì‹± ì†ŒìŠ¤ì½”ë“œëŠ” ë§¨ì•„ë˜ì— ë¶™ì—¬ë†“ìŒ C# 6.0
 struct ColorList
 {
 	static cocos2d::Color3B AbsoluteZero_v ;       
@@ -389,7 +389,7 @@ struct ColorList
 
 
 /*
-ÆÄ½Ì ¼Ò½ºÄÚµå (.net6.0 ¹Ù·Î º¹ºÙÇØ¼­ ºôµåÇÏ¸é´ï)
+íŒŒì‹± ì†ŒìŠ¤ì½”ë“œ (.net6.0 ë°”ë¡œ ë³µë¶™í•´ì„œ ë¹Œë“œí•˜ë©´ëŒ)
 
 using System.Net;
 

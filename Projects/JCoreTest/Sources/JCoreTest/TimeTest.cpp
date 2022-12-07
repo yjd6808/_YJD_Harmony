@@ -1,15 +1,15 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	½Ã°£ °ü·Ã ±â´É Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ì‹œê°„ ê´€ë ¨ ê¸°ëŠ¥ í…ŒìŠ¤íŠ¸
 */
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 #include <JCore/Exception.h>
 #include <JCore/Time.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #define Print ON
@@ -20,10 +20,10 @@ using namespace std;
 									DateTime
  =====================================================================================*/
 
-// 2022³â 2¿ù 1ÀÏ 16½Ã 11ºĞ 33ÃÊ 715 716
+// 2022ë…„ 2ì›” 1ì¼ 16ì‹œ 11ë¶„ 33ì´ˆ 715 716
 const DateTime g_TestTime(63779328693715716);
 
-// 2022³â 1¿ù 31ÀÏ 0½Ã 0ºĞ 0ÃÊ 0.0
+// 2022ë…„ 1ì›” 31ì¼ 0ì‹œ 0ë¶„ 0ì´ˆ 0.0
 const DateTime g_TestCleanTime(63779184000000000);
 
 void PrintDate(DateTime& dt) {
@@ -54,7 +54,7 @@ TEST(DateTimeTest, Get) {
 	EXPECT_TRUE(g_TestTime.GetMicroSecond() == 716);
 }
 
-// ³â, ¿ù ¿¬»ê Å×½ºÆ®
+// ë…„, ì›” ì—°ì‚° í…ŒìŠ¤íŠ¸
 TEST(DateTimeTest, Operation_Year_Month) {
 	DateTime dt = g_TestTime;
 
@@ -82,7 +82,7 @@ TEST(DateTimeTest, Operation_Year_Month) {
 	EXPECT_TRUE(dt.SubtractMonth(4).ToDate() == Date(2021, 10, 1)); ResetDate(dt);
 }
 
-// ³â, ¿ù ¿¬»ê
+// ë…„, ì›” ì—°ì‚°
 TEST(DateTimeTest, Operation_Day_Hour_Minute_Second_Mili_Micro) {
 	DateTime dt = g_TestTime;
 
@@ -96,8 +96,8 @@ TEST(DateTimeTest, Operation_Day_Hour_Minute_Second_Mili_Micro) {
 	EXPECT_TRUE(dt.AddHour(24).ToDate() == Date(2022, 2, 2)); ResetDate(dt);
 	EXPECT_TRUE(dt.AddHour(-24).ToDate() == Date(2022, 1, 31)); ResetDate(dt);
 
-	EXPECT_TRUE(dt.SubtractHour(17).ToDate() < Date(2022, 2, 1)); ResetDate(dt);  // 17½Ã°£»©¸é 1¿ù 31ÀÏ µÊ
-	EXPECT_TRUE(dt.SubtractHour(16).ToDate() == Date(2022, 2, 1)); ResetDate(dt); // 16½Ã°£»©¸é 2¿ù 1ÀÏ 00½Ã xx
+	EXPECT_TRUE(dt.SubtractHour(17).ToDate() < Date(2022, 2, 1)); ResetDate(dt);  // 17ì‹œê°„ë¹¼ë©´ 1ì›” 31ì¼ ë¨
+	EXPECT_TRUE(dt.SubtractHour(16).ToDate() == Date(2022, 2, 1)); ResetDate(dt); // 16ì‹œê°„ë¹¼ë©´ 2ì›” 1ì¼ 00ì‹œ xx
 
 	EXPECT_TRUE(dt.ToDateAndTime() == DateAndTime(2022, 2, 1, 16, 11, 33, 715, 716)); ResetDate(dt);
 	EXPECT_TRUE(dt.SubtractMinute(30).ToDateAndTime() == DateAndTime(2022, 2, 1, 15, 41, 33, 715, 716)); ResetDate(dt);
@@ -161,7 +161,7 @@ TEST(DateTimeTest, Operation_Day_Hour_Minute_Second_Mili_Micro) {
 } 
 
 
-// DateTime, DateAndTime, TimeSpan°ú ¿¬»ê
+// DateTime, DateAndTime, TimeSpanê³¼ ì—°ì‚°
 TEST(DateTimeTest, ComparisonOperation_DateTime_DateAndTime_TimeSpan) {
 	const DateTime dt = g_TestCleanTime;
 
@@ -189,20 +189,20 @@ TEST(DateTimeTest, ComparisonOperation_DateTime_DateAndTime_TimeSpan) {
 	EXPECT_TRUE(dt <= TimeSpan(DateAndTime(2022, 1, 31, 0, 0, 0, 0, 1).ToTick()));
 }
 
-// DateTime, DateAndTime, TimeSpan°ú ¿¬»ê
+// DateTime, DateAndTime, TimeSpanê³¼ ì—°ì‚°
 TEST(DateTimeTest, CalculationOperation_DateTime_DateAndTime_TimeSpan) {
 	const DateTime dt = g_TestTime;
 	const DateTime dt2 = g_TestCleanTime;
 	const DateTime v2 = dt - g_TestCleanTime;
 
-	// 2022³â 2¿ù 1ÀÏ 16½Ã 11ºĞ 33ÃÊ 715 716
-	// 2022³â 1¿ù 31ÀÏ 0½Ã 0ºĞ 0ÃÊ 0.0
-	// ts1 = ¼­·Î ½Ã°£ Â÷ÀÌ
+	// 2022ë…„ 2ì›” 1ì¼ 16ì‹œ 11ë¶„ 33ì´ˆ 715 716
+	// 2022ë…„ 1ì›” 31ì¼ 0ì‹œ 0ë¶„ 0ì´ˆ 0.0
+	// ts1 = ì„œë¡œ ì‹œê°„ ì°¨ì´
 	const TimeSpan ts1 = dt.Diff(g_TestCleanTime);
 
-	// 2022³â 1¿ù 31ÀÏ 0½Ã 0ºĞ 0ÃÊ 0.0
-	// 2022³â 2¿ù 1ÀÏ 16½Ã 11ºĞ 33ÃÊ 715 716
-	// ts2 = ¼­·Î ½Ã°£ Â÷ÀÌ
+	// 2022ë…„ 1ì›” 31ì¼ 0ì‹œ 0ë¶„ 0ì´ˆ 0.0
+	// 2022ë…„ 2ì›” 1ì¼ 16ì‹œ 11ë¶„ 33ì´ˆ 715 716
+	// ts2 = ì„œë¡œ ì‹œê°„ ì°¨ì´
 	const TimeSpan ts2 = dt2.Diff(dt);
 
 	EXPECT_TRUE(v2.GetYear() == 1);
@@ -229,15 +229,15 @@ TEST(DateTimeTest, CalculationOperation_DateTime_DateAndTime_TimeSpan) {
 	EXPECT_TRUE(ts2.GetMicroSecond() == -716);
 }
 
-// DateTime Æ÷¸ÅÆÃ Å×½ºÆ®
+// DateTime í¬ë§¤íŒ… í…ŒìŠ¤íŠ¸
 TEST(DateTimeTest, Format) {
-	// dt = 2022³â 2¿ù 1ÀÏ(È­) 6½Ã 1ºĞ 3ÃÊ 715 716
+	// dt = 2022ë…„ 2ì›” 1ì¼(í™”) 6ì‹œ 1ë¶„ 3ì´ˆ 715 716
 	DateTime dt = g_TestTime - TimeSpan(0, 10, 10, 30, 0, 0);
 
-	// dt2 = 2022³â 2¿ù 1ÀÏ(È­) 12½Ã 1ºĞ 3ÃÊ 715 716
+	// dt2 = 2022ë…„ 2ì›” 1ì¼(í™”) 12ì‹œ 1ë¶„ 3ì´ˆ 715 716
 	DateTime dt2 = dt + TimeSpan(0, 6, 0, 0, 0, 0);
 
-	// dt3 = 2022³â 2¿ù 1ÀÏ(È­) 13½Ã 1ºĞ 3ÃÊ 715 716
+	// dt3 = 2022ë…„ 2ì›” 1ì¼(í™”) 13ì‹œ 1ë¶„ 3ì´ˆ 715 716
 	DateTime dt3 = dt + TimeSpan(0, 7, 0, 0, 0, 0);
 	
 	EXPECT_TRUE(dt.Format("d") == "1");

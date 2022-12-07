@@ -1,14 +1,14 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	Comparator ÆãÅÍ Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	Comparator í‘í„° í…ŒìŠ¤íŠ¸
 */
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 #include <JCore/Comparator.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_ComparatorTest == ON

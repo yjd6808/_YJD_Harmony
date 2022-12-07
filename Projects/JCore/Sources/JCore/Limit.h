@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	ÃÖ´ë ÃÖ¼Ò ¼öÄ¡¸¦ Ç¥Çö
+	ìž‘ì„±ìž : ìœ¤ì •ë„
+	ìµœëŒ€ ìµœì†Œ ìˆ˜ì¹˜ë¥¼ í‘œí˜„
 */
 
 #pragma once
@@ -8,9 +8,9 @@
 #include <JCore/Type.h>
 
 #pragma warning (push)
-#pragma warning (disable : 4307)	// '+': signed integral constant overflow
-#pragma warning (disable : 4309)	// 'initializing': truncation of constant value
-#pragma warning (disable : 26450)	// Arithmetic overflow : '+' operation causes overflow at compile time.Use a wider type to store the operands -> MinInt32_v ÀÌ·±°ÅÃ³·³ ³»°¡ °íÀÇ·Î ¿À¹öÇÃ·Î ÀÏÀ¸Å² °Í ¶«¿¡
+  #pragma warning (disable : 4307)	// '+': signed integral constant overflow
+  #pragma warning (disable : 4309)	// 'initializing': truncation of constant value
+  #pragma warning (disable : 26450)	// Arithmetic overflow : '+' operation causes overflow at compile time.Use a wider type to store the operands -> MinInt32_v ì´ëŸ°ê±°ì²˜ëŸ¼ ë‚´ê°€ ê³ ì˜ë¡œ ì˜¤ë²„í”Œë¡œ ì¼ìœ¼í‚¨ ê²ƒ ë•œì—
 
 
 namespace JCore {

@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -22,11 +22,11 @@
 #include <TF/Network/GameClient.h>
 
 
-// °£ÆíÇÑ È£ÃâÀ» À§ÇØ
+// ê°„í¸í•œ í˜¸ì¶œì„ ìœ„í•´
 #define _Client GameClient::GetInstance()
 
 /*
- * ¶óÀÌºê·¯¸® È°¿ëÀ» À§ÇÑ ¿¹Á¦ ÇÁ·ÎÁ§Æ®ÀÌ¹Ç·Î namespace¸¦ »ı·«ÇÏµµ·Ï ÇÕ´Ï´Ù.
+ * ë¼ì´ë¸ŒëŸ¬ë¦¬ í™œìš©ì„ ìœ„í•œ ì˜ˆì œ í”„ë¡œì íŠ¸ì´ë¯€ë¡œ namespaceë¥¼ ìƒëµí•˜ë„ë¡ í•©ë‹ˆë‹¤.
  */
 
 using namespace cocos2d;
@@ -37,12 +37,12 @@ using namespace JCore;
 #define RECT_IMG_FILENAME				"white_rect.png"
 #define CIRCLE_IMG_FILENAME				"white_circle.png"
 #define TRANSPARENT_RECT_IMG_FILENAME	"blank.png"
-#define FONT_PATH_DNF					"fonts/dffont.ttf"	// ´øÆÄ ÆùÆ®
-#define FONT_PATH_DEFAULT				"fonts/dffont.ttf"	// ±âÁ¸ ÆùÆ®
+#define FONT_PATH_DNF					"fonts/dffont.ttf"	// ë˜íŒŒ í°íŠ¸
+#define FONT_PATH_DEFAULT				"fonts/dffont.ttf"	// ê¸°ì¡´ í°íŠ¸
 #define CIRCLE_BIG_IMG_FILENAME			"white_circle_big.png"
 #define CIRCLE_BIG_IMG_SIZE				300.0f
 
-// ³ôÀÌ´Â ¹«Á¶°Ç ³ÊºñÀÇ 2¹è°¡ µÇµµ·Ï ÇÒ °Í
+// ë†’ì´ëŠ” ë¬´ì¡°ê±´ ë„ˆë¹„ì˜ 2ë°°ê°€ ë˜ë„ë¡ í•  ê²ƒ
 #define TANK_WIDTH	30.0f
 #define TANK_HEIGHT	60.0f
 

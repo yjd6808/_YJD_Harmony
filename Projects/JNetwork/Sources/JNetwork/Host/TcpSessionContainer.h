@@ -1,12 +1,12 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 
 #pragma once
 
 #include <JCore/Container/HashMap.h>
-#include <JCore/LockGuard.h>
+#include <JCore/Sync/NormalLock.h>
 
 #include <JNetwork/Host/TcpSession.h>
 
@@ -27,7 +27,7 @@ public:
 	
 private:
 	int m_iMaxConnection;
-	JCore::CriticalSectionMutex m_ContainerLock;
+	JCore::NormalLock m_ContainerLock;
 	JCore::HashMap<SOCKET, TcpSession*> m_Container;
 
 	friend class TcpServer;

@@ -2,9 +2,12 @@
 #include <TF/Database/MysqlDatabase.h>
 #include <TF/Database/MysqlConnectionPool.h>
 #include <TF/ServerConfiguration.h>
-#include <TF/Util/Console.h>
 #include <TF/ServerConfiguration.h>
 #include <TF/Database/MysqlStatementBuilder.h>
+
+#include <JCore/Utils/Console.h>
+
+using namespace JCore;
 
 MysqlDatabase::~MysqlDatabase() {
 	DeleteSafe(m_pIocp);
@@ -23,28 +26,28 @@ bool MysqlDatabase::Initialize() {
 	if (m_pConnectionPool == nullptr)
 		m_pConnectionPool = new MysqlConnectionPool(DB_HOST, DB_PORT, DB_ID, DB_PASS, DB_NAME, 50);
 
-	// Ä¿³Ø¼Ç 25°³ Ç® ÃÊ±âÈ­
-	// ÇÁ·Î±×·¥ Á¾·á µÉ¶§ ¾Ë¾Æ¼­ ¿¬°áµé ¸ðµÎ Á¾·áÇÔ
+	// ì»¤ë„¥ì…˜ 25ê°œ í’€ ì´ˆê¸°í™”
+	// í”„ë¡œê·¸ëž¨ ì¢…ë£Œ ë ë•Œ ì•Œì•„ì„œ ì—°ê²°ë“¤ ëª¨ë‘ ì¢…ë£Œí•¨
 	if (!m_pConnectionPool->Init(DB_CONN_POOL_SIZE)) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "DB Ä¿³Ø¼Ç Ç® ÃÊ±âÈ­ ½ÇÆÐ");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "DB ì»¤ë„¥ì…˜ í’€ ì´ˆê¸°í™” ì‹¤íŒ¨");
 		return false;
 	}
 
-	// ºô´õ Ä¿³Ø¼Ç ÃÊ±âÈ­
-	// ¤©¤·; String Escape ÇÏ³ª¸¦ À§ÇØ¼­ ¾îÂ¿¼ö¾øÀÌ ÃÊ±âÈ­ÇÔ;
+	// ë¹Œë” ì»¤ë„¥ì…˜ ì´ˆê¸°í™”
+	// ã„¹ã…‡; String Escape í•˜ë‚˜ë¥¼ ìœ„í•´ì„œ ì–´ì©”ìˆ˜ì—†ì´ ì´ˆê¸°í™”í•¨;
 	if (!MysqlStatementBuilder::Initialize()) {
-		Console::WriteLine(ConsoleColor::LIGHTGRAY, "DB ½ºÅ×ÀÌÆ®¸ÕÆ® ºô´õ ÃÊ±âÈ­ ½ÇÆÐ");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "DB ìŠ¤í…Œì´íŠ¸ë¨¼íŠ¸ ë¹Œë” ì´ˆê¸°í™” ì‹¤íŒ¨");
 		return false;
 	}
 
-	Console::WriteLine(ConsoleColor::GREEN, "µ¥ÀÌÅÍº£ÀÌ½º Ä¿³Ø¼Ç Ç®(%d)ÀÌ ¼º°øÀûÀ¸·Î ÃÊ±âÈ­µÇ¾ú½À´Ï´Ù. [localhost/%d]", DB_CONN_POOL_SIZE, DB_PORT);
+	SafeConsole::WriteLine(ConsoleColor::Green, "ë°ì´í„°ë² ì´ìŠ¤ ì»¤ë„¥ì…˜ í’€(%d)ì´ ì„±ê³µì ìœ¼ë¡œ ì´ˆê¸°í™”ë˜ì—ˆìŠµë‹ˆë‹¤. [localhost/%d]", DB_CONN_POOL_SIZE, DB_PORT);
 
 	if (!m_pIocp->Create(4)) {
 		return false;
 	}
 
 
-	Console::WriteLine(ConsoleColor::GREEN, "µ¥ÀÌÅÍº£ÀÌ½º IOCP°¡ ¼º°øÀûÀ¸·Î »ý¼­µÇ¾ú½À´Ï´Ù.");
+	SafeConsole::WriteLine(ConsoleColor::Green, "ë°ì´í„°ë² ì´ìŠ¤ IOCPê°€ ì„±ê³µì ìœ¼ë¡œ ìƒì„œë˜ì—ˆìŠµë‹ˆë‹¤.");
 
 	m_pIocp->Run();
 	return true;

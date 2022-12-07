@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -16,7 +16,7 @@ struct KeyValuePair
 template <typename TKey, typename TValue>
 constexpr KeyValuePair<NaturalType_t<TKey>, NaturalType_t<TValue>> MakePair(TKey&& key, TValue&& value) {
 	return { static_cast<TKey&&>(key), static_cast<TValue&&>(value) };
-	// return { Forward<TKey>(key), Forward<TValue>(value) };	// °Ü¿ì ÀÌ°Å ÇÏ³ª¶«¿¡ Çì´õÆÄÀÏ Æ÷ÇÔ½ÃÅ°±ä Á»
+	// return { Forward<TKey>(key), Forward<TValue>(value) };	// ê²¨ìš° ì´ê±° í•˜ë‚˜ë•œì— í—¤ë”íŒŒì¼ í¬í•¨ì‹œí‚¤ê¸´ ì¢€
 }
 
 

@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -24,7 +24,7 @@ public:
 	void OnClickedGameLeaveRoomButton(TextButton* btn);
 
 	/* =================================================================================
-	 *                             Åë½Å ÆĞÅ¶ Ã³¸®
+	 *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬
 	 * ================================================================================*/
 
 	void CmdLoadRoomInfoAck(ICommand* cmd);
@@ -42,7 +42,7 @@ private:
 	TextButton* m_pSlot[ROOM_MAX_PLAYER_COUNT];
 	TextButton* m_pMarkSlot[ROOM_MAX_PLAYER_COUNT];
 
-	// ÀÚ±â ÀÚ½Å Æ÷ÇÔ
+	// ìê¸° ìì‹  í¬í•¨
 	int m_iRoomMemberCount = 0;
 	int m_iHostCharacterUID = INVALID_UID;
 	RoomCharacterInfo m_RoomMember[ROOM_MAX_PLAYER_COUNT]{};

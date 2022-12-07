@@ -1,13 +1,17 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	PCH ÆÄÀÏÀÔ´Ï´Ù.
+	ì‘ì„±ì : ìœ¤ì •ë„
+	PCH íŒŒì¼ì…ë‹ˆë‹¤.
 */
 
 
 #pragma once
 
-#pragma warning(disable 26495) //  is uninitialized.Always initialize a member variable(type.6)
-#pragma warning(disable 26812) //  is unscoped.Prefer 'enum class' over 'enum' (Enum.3)
+#pragma warning(push, 0)
+    //26495: is uninitialized.Always initialize a member variable(type.6)
+    //26812: is unscoped.Prefer 'enum class' over 'enum' (Enum.3)
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 #include "gtest/gtest.h"
 
@@ -29,21 +33,29 @@
 #include <array>
 
 #include <JCore/TypeTraits.h>
+#include <JCore/Limit.h>
+
+using namespace JCore;
 
 #define ON		1
 #define OFF		0
 
-//Ãâ·Â ¿©ºÎ
+//ì¶œë ¥ ì—¬ë¶€
 #define Print	OFF
 
-// ÄÁÅ×ÀÌ³Ê Å×½ºÆ®¸¦ ÁøÇàÇÒÁö
+// JCore::Container í…ŒìŠ¤íŠ¸ ìˆ˜í–‰ ì—¬ë¶€
 #define ContainerTestEnabled        ON
-
-// ÄÁÅ×ÀÌ³Ê °³¹ß Å×½ºÆ® ÄÚµå¸¦ ½ÇÇà ¿©ºÎ
+// ì»¨í…Œì´ë„ˆ ê°œë°œ í…ŒìŠ¤íŠ¸ ì½”ë“œë¥¼ ì‹¤í–‰ ì—¬ë¶€
 #define ContainerImplTestEnabled    OFF
 
-#if ContainerTestEnabled == ON
+// JCore::Primitives í…ŒìŠ¤íŠ¸ ìˆ˜í–‰ ì—¬ë¶€
+#define PrimitivesTestEnabled       ON
 
+// JCore::Sync í…ŒìŠ¤íŠ¸ ìˆ˜í–‰ ì—¬ë¶€
+#define SyncTestEnabled             ON
+
+
+#if ContainerTestEnabled == ON
     
     #define	TEST_ArrayStackTest				    ON
     #define	TEST_ArrayQueueTest				    ON
@@ -55,30 +67,49 @@
     #define	TEST_VectorTest					    ON
     
     #if ContainerImplTestEnabled == ON
+
         #define	TEST_AVLTreeImplTest			OFF
         #define	TEST_AVLTreeMemoImplTest		OFF
         #define TEST_BinarySearchTreeImplTest	OFF
         #define TEST_DynamicHashMapImplTest		OFF
         #define TEST_SmartVectorImplTest		ON
         #define TEST_TwoThreeFourTreeImplTest	OFF
+
     #endif
 #endif
+
+
+#if PrimitivesTestEnabled == ON
+
+    #define TEST_ObserverPtrTest		    ON
+    #define TEST_SmartPtrTest			    ON
+    #define TEST_StaticStringTest           ON
+    #define TEST_StringTest					ON
+    #define TEST_StringUtilTest				ON
+
+#endif
+
+#if SyncTestEnabled == ON
+
+    #define TEST_EventLockTest              ON
+    #define TEST_LockGuardTest              ON
+    #define TEST_NormalLockTest             ON
+    #define TEST_NormalRwLockTest           ON
+    #define TEST_SemaphoreTest              ON
+    #define TEST_SpinLockTest               ON
+    #define TEST_RecursiveLockTest          ON
+#endif
+
+
 
 #define TEST_AutoObjectTest				ON
 #define TEST_ComparatorTest				ON
 #define TEST_CoreTest					ON
 #define TEST_EventTest                  ON
-#define TEST_HasherTest					OFF
+#define TEST_HasherTest					ON
 #define TEST_MathTest					ON
 #define TEST_MemoryTest					ON
-#define TEST_LockTest					ON
-#define TEST_LockGuardTest              OFF
-#define TEST_PointerObserverTest		ON
-#define TEST_RandomTest					OFF
-#define TEST_SmartPointerTest			ON
-#define TEST_StaticStringTest           ON
-#define TEST_StringTest					ON
-#define TEST_StringUtilTest				ON
+#define TEST_RandomTest					ON
 #define TEST_TimeTest					ON
 #define TEST_TypeTraitsTest				ON
 
@@ -99,8 +130,8 @@ void PrintFormat(Args&&... args) {
 }
 
 
-// ¹üÀ§ ¸Ş¸ğ¸®¸¯ Ã¼Å©
-// @ÄÚµå È¹µæ ÁÖ¼Ò : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
+// ë²”ìœ„ ë©”ëª¨ë¦¬ë¦­ ì²´í¬
+// @ì½”ë“œ íšë“ ì£¼ì†Œ : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
 class AutoMemoryLeakDetector
 {
 public:
@@ -124,3 +155,94 @@ private:
     }
     _CrtMemState memState_;
 };
+
+
+// í…ŒìŠ¤íŠ¸ìš© ì˜¤ë¸Œì íŠ¸ë“¤
+struct Animal
+{
+    virtual int GetAge() const = 0;
+
+    Animal();
+    virtual ~Animal();
+};
+
+struct Dog : Animal
+{
+    int GetAge() const override { return Age; };
+
+    ~Dog() override;
+
+    int Age = 300;
+};
+
+struct Bird : Animal
+{
+    int GetAge() const override { return Age; };
+
+    ~Bird() override;
+
+    int Dummy = 0;
+    int Age = 400;
+};
+
+struct Model
+{
+    Model();
+    Model(int _);
+    virtual ~Model();
+
+    int a = 3;
+    int b = 3;
+};
+
+struct SuperModel : Model
+{
+    SuperModel(int a) : Model(a) {}
+    SuperModel() : Model(0) {}
+    ~SuperModel() override;
+};
+
+
+template <typename T>
+struct Template
+{
+    Template() { }
+    Template(T _) { a = _; }
+    virtual ~Template() {}
+
+    T a = 3;
+    T b = 3;
+};
+
+template <typename T>
+struct ChildTemplate : Template<T>
+{
+    ChildTemplate() {}
+    ChildTemplate(T o) : Template<T>(o) {}
+    ~ChildTemplate() override {}
+};
+
+
+
+inline Animal::Animal() {
+    PrintFormat("ì• ë‹ˆë©€ ìƒì„±\n");
+}
+
+inline Animal::~Animal() {
+    PrintFormat("ì• ë‹ˆë©€ ì†Œë©¸\n");
+}
+
+inline Dog::~Dog() {
+    PrintFormat("ê°œ ì†Œë©¸\n");
+}
+
+inline Bird::~Bird() {
+    PrintFormat("ë‚ ê°œ ì†Œë©¸\n");
+}
+
+inline Model::Model() { PrintFormat("ëª¨ë¸ ë””í´íŠ¸ ìƒì„±\n"); }
+inline Model::Model(int _) : a(_) { PrintFormat("ëª¨ë¸ %d ìƒì„±\n", a); }
+inline Model::~Model() { PrintFormat("ëª¨ë¸ %d ì†Œë©¸\n", a); }
+inline SuperModel::~SuperModel() { PrintFormat("ìŠˆí¼ëª¨ë¸ %d ì†Œë©¸\n", a); }
+
+#pragma warning(pop)

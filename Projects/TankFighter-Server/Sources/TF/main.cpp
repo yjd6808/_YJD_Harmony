@@ -1,41 +1,42 @@
 #include <TF/PrecompiledHeader.h>
 #include <TF/Host/GameServer.h>
-#include <TF/Util/Console.h>
 #include <TF/Database/MysqlDatabase.h>
 #include <TF/Game/PlayerPool.h>
 #include <TF/Game/World.h>
 #include <TF/Worker/SystemWorker.h>
 
+#include <JCore/Utils/Console.h>
+#include <JCore/Encoding/CodePage.h>
+
 #include <JNetwork/Winsock.h>
 #include <Common/MemoryLeakDetector.h>
 
+#ifdef _WIN64
+  #error ì´ ì˜ˆì œëŠ” x86 í”Œë«í¼ìœ¼ë¡œë§Œ ë¹Œë“œ ê°€ëŠ¥í•©ë‹ˆë‹¤.
+#endif
 
-
+using namespace JCore;
 using namespace JNetwork;
 
-// ºñÁ¤»ó Á¾·á ¹İÈ¯°ªµé
-#define ABNORMAL_EXIT_WINSOCK_INIT_FAIED			-0x01;
-#define ABNORMAL_EXIT_WINSOCK_FINALIZE_FAIED		-0x0a;
-#define ABNORMAL_EXIT_DATABASE_INIT_FAIED			-0x02;
-#define ABNORMAL_EXIT_DATABASE_FINALIZE_FAIED		-0x0b;
-#define ABNORMAL_EXIT_WORLD_INIT_FAILED				-0x06;
-#define ABNORMAL_EXIT_WORLD_FINALIZE_FAILED			-0x08;
-#define ABNORMAL_EXIT_PLAYERPOOL_INIT_FAILED		-0x07;
+// ë¹„ì •ìƒ ì¢…ë£Œ ë°˜í™˜ê°’ë“¤
+#define ABNORMAL_EXIT_WINSOCK_INIT_FAIED			    -0x01;
+#define ABNORMAL_EXIT_WINSOCK_FINALIZE_FAIED		  -0x0a;
+#define ABNORMAL_EXIT_DATABASE_INIT_FAIED			    -0x02;
+#define ABNORMAL_EXIT_DATABASE_FINALIZE_FAIED		  -0x0b;
+#define ABNORMAL_EXIT_WORLD_INIT_FAILED				    -0x06;
+#define ABNORMAL_EXIT_WORLD_FINALIZE_FAILED			  -0x08;
+#define ABNORMAL_EXIT_PLAYERPOOL_INIT_FAILED		  -0x07;
 #define ABNORMAL_EXIT_PLAYERPOOL_FINALIZE_FAILED	-0x09;
-#define ABNORMAL_EXIT_GAMESERVER_START_FAILED		-0x03;
-#define ABNORMAL_EXIT_GAMESERVER_STOP_FAILED		-0x04;
+#define ABNORMAL_EXIT_GAMESERVER_START_FAILED		  -0x03;
+#define ABNORMAL_EXIT_GAMESERVER_STOP_FAILED		  -0x04;
 
 
 int main() {
-	JCore::CriticalSectionMutex mtx;
-
-	// ÄÜ¼ÖÃ¢ Ãâ·Â µ¿±âÈ­
-	Winsock::SetMutex(&mtx);
-	Console::SetMutex(&mtx);
+    SafeConsole::Init();
+	SafeConsole::SetOutputCodePage(CodePage::UTF8);
 
 	{
 		MemoryLeakDetector detector;
-
 		detector.StartDetect();
 
 		GameServer* pGameServer = GameServer::GetInstance();
@@ -44,32 +45,32 @@ int main() {
 		World* pWorld = World::GetInstance();
 		SystemWorker* pSystemWorker = SystemWorker::GetInstance();
 
-		// À©¼Ó ÃÊ±âÈ­
+		// ìœˆì† ì´ˆê¸°í™”
 		if (!Winsock::Initialize(2, 2)) {
 			return ABNORMAL_EXIT_WINSOCK_INIT_FAIED;
 		}
 
-		// µ¥ÀÌÅÍº£ÀÌ½º ÃÊ±âÈ­
+		// ë°ì´í„°ë² ì´ìŠ¤ ì´ˆê¸°í™”
 		if (!pDatabase->Initialize()) {
 			return ABNORMAL_EXIT_DATABASE_INIT_FAIED;
 		}
 
-		// ÇÃ·¹ÀÌ¾î Ç® ÃÊ±âÈ­
+		// í”Œë ˆì´ì–´ í’€ ì´ˆê¸°í™”
 		if (!pPlayerPool->Initialize(PLAYER_POOL_SIZE)) {
 			return ABNORMAL_EXIT_PLAYERPOOL_INIT_FAILED;
 		}
 		
-		// ¿ùµå ÃÊ±âÈ­
+		// ì›”ë“œ ì´ˆê¸°í™”
 		if (!pWorld->Initialize()) {
 			return ABNORMAL_EXIT_WORLD_INIT_FAILED;
 		}
 
-		// °ÔÀÓ ¼­¹ö ½ÃÀÛ
+		// ê²Œì„ ì„œë²„ ì‹œì‘
 		if (!pGameServer->StartServer()) {
 			return ABNORMAL_EXIT_GAMESERVER_START_FAILED;
 		}
 
-		// ½Ã½ºÅÛ Ä¿¸Çµå ÀÔ·ÂÀ» ¹Ş±â À§ÇÑ 
+		// ì‹œìŠ¤í…œ ì»¤ë§¨ë“œ ì…ë ¥ì„ ë°›ê¸° ìœ„í•œ 
 		pSystemWorker->Run();
 
 		// ======================================
@@ -79,12 +80,12 @@ int main() {
 			return ABNORMAL_EXIT_GAMESERVER_STOP_FAILED;
 		}
 
-		// ÇÃ·¹ÀÌ¾î Ç® Á¤¸®
+		// í”Œë ˆì´ì–´ í’€ ì •ë¦¬
 		if (!pPlayerPool->Finalize()) {
 			return ABNORMAL_EXIT_PLAYERPOOL_FINALIZE_FAILED;
 		}
 		
-		// µ¥ÀÌÅÍº£ÀÌ½º Á¤¸®
+		// ë°ì´í„°ë² ì´ìŠ¤ ì •ë¦¬
 		if (!pDatabase->Finalize()) {
 			return ABNORMAL_EXIT_DATABASE_FINALIZE_FAIED;
 		}
@@ -97,22 +98,22 @@ int main() {
 			return ABNORMAL_EXIT_WINSOCK_FINALIZE_FAIED;
 		}
 
-		// Á¦°Å ¼ø¼­¸¦ ÁöÅ°±â À§ÇØ ¼öµ¿À¸·Î »èÁ¦ÇØÁÖµµ·Ï ÇÏÀÚ.
+		// ì œê±° ìˆœì„œë¥¼ ì§€í‚¤ê¸° ìœ„í•´ ìˆ˜ë™ìœ¼ë¡œ ì‚­ì œí•´ì£¼ë„ë¡ í•˜ì.
 		DeleteSafe(pSystemWorker);
 		DeleteSafe(pDatabase);
 		DeleteSafe(pPlayerPool);
 		DeleteSafe(pWorld);
 		DeleteSafe(pGameServer);
 
-		// ¸Ş¸ğ¸® ´©¼ö È®ÀÎ
+		// ë©”ëª¨ë¦¬ ëˆ„ìˆ˜ í™•ì¸
 		const int iLeakMemory = detector.StopDetect();
 		if (iLeakMemory == 0) {
-			Console::WriteLine(ConsoleColor::LIGHTGREEN, "[ÃàÇÏÇÕ´Ï´Ù!] ¸Ş¸ğ¸® ´©¼ö°¡ ¾ø³×¿ä ¿ì¿Õ!!!!!!!");
-			Console::WriteLine(ConsoleColor::LIGHTGREEN, "[ÃàÇÏÇÕ´Ï´Ù!] Âü ÀßÇÏ¼Ì¾î¿ä ¤¾¤¾ (ÀÚÈ­ÀÚÂù)");
+			SafeConsole::WriteLine(ConsoleColor::LightGreen, "[ì¶•í•˜í•©ë‹ˆë‹¤!] ë©”ëª¨ë¦¬ ëˆ„ìˆ˜ê°€ ì—†ë„¤ìš” ìš°ì™•!!!!!!!");
+			SafeConsole::WriteLine(ConsoleColor::LightGreen, "[ì¶•í•˜í•©ë‹ˆë‹¤!] ì°¸ ì˜í•˜ì…¨ì–´ìš” ã…ã… (ìí™”ìì°¬)");
 		} else {
-			Console::WriteLine(ConsoleColor::LIGHTMAGENTA, "[ÀÌ·±..] %d ¹ÙÀÌÆ® ¸¸Å­ ´©¼ö°¡ ÀÖ¾î¿ä! ¾ó¸¥ °íÄ¡¼¼¿ä.\n", iLeakMemory);
+			SafeConsole::WriteLine(ConsoleColor::LightMagenta, "[ì´ëŸ°..] %d ë°”ì´íŠ¸ ë§Œí¼ ëˆ„ìˆ˜ê°€ ìˆì–´ìš”! ì–¼ë¥¸ ê³ ì¹˜ì„¸ìš”.\n", iLeakMemory);
 		}
-		Console::SetColor(ConsoleColor::LIGHTGRAY);
+		SafeConsole::SetColor(ConsoleColor::LightGray);
 	}
 	return 0;
 }

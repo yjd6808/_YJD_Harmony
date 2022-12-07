@@ -1,7 +1,9 @@
 #include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlConnection.h>
-#include <TF/Util/Console.h>
 
+#include <JCore/Utils/Console.h>
+
+using namespace JCore;
 
 MysqlConnection::MysqlConnection()
 	: m_MySQLConn(NULL)
@@ -17,7 +19,7 @@ MysqlConnection::~MysqlConnection()
 
 bool MysqlConnection::Connect(const JCore::String &hostname, const uint16_t &port, const JCore::String &username, const JCore::String &password, const JCore::String &dbname = NULL)
 {
-	// ÀÌ¹Ì ¿¬°áµÈ °æ¿ì ¿ì¼± ¿¬°áÀ» ²÷¾îÁØ´Ù.
+	// ì´ë¯¸ ì—°ê²°ëœ ê²½ìš° ìš°ì„  ì—°ê²°ì„ ëŠì–´ì¤€ë‹¤.
 	Disconnect();
 
 	m_sHostname = hostname;
@@ -38,7 +40,7 @@ bool MysqlConnection::Connect(const JCore::String &hostname, const uint16_t &por
 
 	if (MySQLConnRet == NULL) {
 		m_bIsConnected = false;
-		Console::WriteLine(ConsoleColor::LIGHTRED, "MySQL µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á ½ÇÆĞ : %s", mysql_error(m_MySQLConn));
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "MySQL ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²° ì‹¤íŒ¨ : %s", mysql_error(m_MySQLConn));
 	} else {
 		m_bIsConnected = true;
 	}
@@ -59,24 +61,24 @@ void MysqlConnection::Disconnect() {
 bool MysqlConnection::SelectDB(const JCore::String &schemaName)
 {
 	if (!m_bIsConnected) {
-		Console::WriteLine(ConsoleColor::LIGHTRED, "SelectDB() ½ÇÆĞ : MySQL µ¥ÀÌÅÍº£ÀÌ½º¿¡ ¿¬°áµÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "SelectDB() ì‹¤íŒ¨ : MySQL ë°ì´í„°ë² ì´ìŠ¤ì— ì—°ê²°ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		return false;
 	}
 
 	if (mysql_select_db(m_MySQLConn, schemaName.Source()) != 0) {
-		Console::WriteLine(ConsoleColor::LIGHTRED, "SelectDB() ½ÇÆĞ : mysql_select_db() È£Ãâ ½ÇÆĞ : %s", mysql_error(m_MySQLConn));
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "SelectDB() ì‹¤íŒ¨ : mysql_select_db() í˜¸ì¶œ ì‹¤íŒ¨ : %s", mysql_error(m_MySQLConn));
 		return false;
 	}
 
 	m_sSchemaName = schemaName.Source();
-	Console::WriteLine(ConsoleColor::GREEN, "SelectDB() ¼º°ø : \"%s\"", schemaName.Source());
+	SafeConsole::WriteLine(ConsoleColor::Green, "SelectDB() ì„±ê³µ : \"%s\"", schemaName.Source());
 	return true;
 }
 
 JCore::String MysqlConnection::GetLastError() const {
 	if (!m_bIsConnected) {
-		Console::WriteLine(ConsoleColor::LIGHTRED, "GetLastError() ½ÇÆĞ : MySQL µ¥ÀÌÅÍº£ÀÌ½º¿¡ ¿¬°áµÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
-		return "¿¬°á ¾ÈµÇÀÖÀ½";
+		SafeConsole::WriteLine(ConsoleColor::LightGray, "GetLastError() ì‹¤íŒ¨ : MySQL ë°ì´í„°ë² ì´ìŠ¤ì— ì—°ê²°ë˜ì–´ ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
+		return "ì—°ê²° ì•ˆë˜ìˆìŒ";
 	}
 
 	return (char*)mysql_error(m_MySQLConn);
@@ -92,7 +94,7 @@ bool MysqlConnection::IsConnected() const {
 
 JCore::String MysqlConnection::EscapeString(const JCore::String& value) const {
 	if (!m_bIsConnected) {
-		Console::WriteLine("DB¿¡ ¿¬°áµÇ¾îÀÖÁö ¾Ê½À´Ï´Ù.");
+		SafeConsole::WriteLine("DBì— ì—°ê²°ë˜ì–´ìˆì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		return "";
 	}
 
@@ -101,7 +103,7 @@ JCore::String MysqlConnection::EscapeString(const JCore::String& value) const {
 
 	mysql_real_escape_string(m_MySQLConn, temp, value.Source(), value.Length());
 
-	// ¿©±â¼­ °Á µû¿ÈÇ¥ ´Ş¾ÆÁÖ¸é ´ë³×
+	// ì—¬ê¸°ì„œ ê± ë”°ì˜´í‘œ ë‹¬ì•„ì£¼ë©´ ëŒ€ë„¤
 	escapedString += "\"";
 	escapedString += temp;
 	escapedString += "\"";

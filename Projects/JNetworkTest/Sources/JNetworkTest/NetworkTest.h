@@ -20,7 +20,7 @@ using namespace JNetwork;
 #define ON		1
 #define OFF		0
 
-//Ãâ·Â ¿©ºÎ
+//ì¶œë ¥ ì—¬ë¶€
 #define Print	OFF
 
 #define TEST_IPEndPointTest     ON
@@ -29,8 +29,8 @@ using namespace JNetwork;
 #define TEST_SocketTest         ON
 
 
-// ¹üÀ§ ¸Ş¸ğ¸®¸¯ Ã¼Å©
-// @ÄÚµå È¹µæ ÁÖ¼Ò : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
+// ë²”ìœ„ ë©”ëª¨ë¦¬ë¦­ ì²´í¬
+// @ì½”ë“œ íšë“ ì£¼ì†Œ : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
 class AutoMemoryLeakDetector
 {
 public:

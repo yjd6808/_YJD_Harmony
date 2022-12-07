@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -18,18 +18,18 @@ public:
 	
 	CREATE_FUNC(LobbyLayer);
 
-	void OnClickedCreateRoomButton(TextButton* btn);				// ¹æ»ı¼º	
-	void OnClickedTerminateGameButton(TextButton* btn);				// °ÔÀÓ Á¾·á 
-	void OnClickedSelectChannelButton(TextButton* btn);				// Ã¤³Î ¼±ÅÃ 
-	void OnClickedJoinRoomButton(TextButton* btn);					// ¹æ Âü°¡
-	void OnClickedFriendListButton(TextButton* btn);				// Ä£±¸ ¸ñ·Ï Å¬¸¯½Ã
-	void OnClickedAddFriendButton(TextButton* btn);					// Ä£±¸ Ãß°¡
-	void OnClickedDeleteFriendButton(TextButton* btn);				// Ä£±¸ Á¦°Å
-	void OnClickedMyInfoButton(TextButton* btn);					// ³» Á¤º¸ Å¬¸¯½Ã
+	void OnClickedCreateRoomButton(TextButton* btn);				// ë°©ìƒì„±	
+	void OnClickedTerminateGameButton(TextButton* btn);				// ê²Œì„ ì¢…ë£Œ 
+	void OnClickedSelectChannelButton(TextButton* btn);				// ì±„ë„ ì„ íƒ 
+	void OnClickedJoinRoomButton(TextButton* btn);					// ë°© ì°¸ê°€
+	void OnClickedFriendListButton(TextButton* btn);				// ì¹œêµ¬ ëª©ë¡ í´ë¦­ì‹œ
+	void OnClickedAddFriendButton(TextButton* btn);					// ì¹œêµ¬ ì¶”ê°€
+	void OnClickedDeleteFriendButton(TextButton* btn);				// ì¹œêµ¬ ì œê±°
+	void OnClickedMyInfoButton(TextButton* btn);					// ë‚´ ì •ë³´ í´ë¦­ì‹œ
 	void OnClickedChatSendButton(ChatBox* chatBox);
 
 	/* =================================================================================
-	 *                             Åë½Å ÆĞÅ¶ Ã³¸®
+	 *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬
 	 * ================================================================================*/
 
 	void CmdUpdateCharacterInfoAck(ICommand* cmd);

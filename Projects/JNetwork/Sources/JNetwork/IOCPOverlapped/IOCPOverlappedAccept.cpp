@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -17,7 +17,7 @@ IOCPOverlappedAccept::IOCPOverlappedAccept(TcpServer* tcpServer, TcpSession* ses
 
 IOCPOverlappedAccept::~IOCPOverlappedAccept() = default;
 
-void IOCPOverlappedAccept::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedAccept::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hAcceptedSock = m_pAcceptedSession->Socket().Handle();
 	const SOCKET hListeningSock = m_pListeningServer->Socket().Handle();
 
@@ -27,7 +27,7 @@ void IOCPOverlappedAccept::Process(BOOL result, DWORD numberOfBytesTransffered, 
 	}
 
 	if (m_pAcceptedSession->Accepted(hListeningSock, numberOfBytesTransffered)) {
-		if (m_pIocp->Connect(reinterpret_cast<HANDLE>(hAcceptedSock), 0) == false || m_pAcceptedSession->ReceiveAsync() == false) {
+		if (m_pIocp->Connect(reinterpret_cast<WinHandle>(hAcceptedSock), 0) == false || m_pAcceptedSession->ReceiveAsync() == false) {
 			m_pAcceptedSession->Disconnect();
 		}
 		return;

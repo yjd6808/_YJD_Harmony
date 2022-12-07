@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -16,7 +16,7 @@ IOCPOverlappedReceive::IOCPOverlappedReceive(TcpSession* session, IOCP* iocp) :
 
 IOCPOverlappedReceive::~IOCPOverlappedReceive() = default;
 
-void IOCPOverlappedReceive::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedReceive::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hReceiveSock = m_pReceivedSession->Socket().Handle();
 
 	if (IsFailed(hReceiveSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {

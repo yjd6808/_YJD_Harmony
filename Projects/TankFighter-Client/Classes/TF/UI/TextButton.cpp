@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ìž‘ì„±ìž : ìœ¤ì •ë„
  */
 
 #include <TF/UI/TextButton.h>
@@ -55,7 +55,7 @@ bool TextButton::init2(float width, float height, const std::string& content, fl
 	mouseLietener->onMouseMove = CC_CALLBACK_1(TextButton::onMouseMove, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(mouseLietener, this);
 
-	// ¹öÆ°ÀÇ ±â´ÉÀº ÀÌ³à¼®ÀÌ ¼öÇà
+	// ë²„íŠ¼ì˜ ê¸°ëŠ¥ì€ ì´ë…€ì„ì´ ìˆ˜í–‰
 	Button* m_pButton = Button::create(TRANSPARENT_RECT_IMG_FILENAME);
 	m_pButton->setAnchorPoint(Vec2::ZERO);
 	m_pButton->setSize(btnSize);
@@ -92,7 +92,7 @@ bool TextButton::onTouchBegin(Touch* touch, Event* touchEvent) {
 	return true;
 	Rect thisRect = this->getBoundingBox();
 	thisRect.origin = this->getPosition();
-	//thisRect.origin = this->getParent()->convertToWorldSpace(thisRect.origin);	// Perfect Location ¾ò±â
+	//thisRect.origin = this->getParent()->convertToWorldSpace(thisRect.origin);	// Perfect Location ì–»ê¸°
 	Vec2 touchPoint = touch->getStartLocation();
 	if (thisRect.containsPoint(touchPoint)) {
 		m_pBackground->setScale(1.1f);

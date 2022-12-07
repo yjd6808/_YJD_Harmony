@@ -1,13 +1,11 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
+ *	ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
 
+#include <JCore/Type.h>
 #include <thread>
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 
 namespace JNetwork {
 
@@ -29,15 +27,15 @@ public:
 	virtual ~Worker() = default;;
 
 	virtual void Run(void* param = nullptr) = 0;
-	virtual void JoinWait(HANDLE waitHandle) = 0;
+	virtual void JoinWait(WinHandle waitHandle) = 0;
 	virtual void Join() = 0;
-	virtual void Pause(HANDLE waitHandle) = 0;
+	virtual void Pause(WinHandle waitHandle) = 0;
 	virtual void Resume() = 0;
 	virtual void WorkerThread(void* param) = 0;
 protected:
 	std::thread m_Thread;
 	State m_eState;
-	HANDLE m_hPauseEvent;
+	WinHandle m_hPauseEvent;
 };
 
 } // namespace JNetwork

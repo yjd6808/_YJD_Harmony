@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	±âº» ¹è¿­À» ´Ù·çµµ·Ï µµ¿ÍÁÖ´Â Å¬·¡½º
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ê¸°ë³¸ ë°°ì—´ì„ ë‹¤ë£¨ë„ë¡ ë„ì™€ì£¼ëŠ” í´ë˜ìŠ¤
 */
 
 #pragma once
@@ -15,19 +15,19 @@ namespace JCore {
 
 struct Arrays final
 {
-	// ±æÀÌ¸¦ ¾Æ´Â °æ¿ì
+	// ê¸¸ì´ë¥¼ ì•„ëŠ” ê²½ìš°
 	template <typename T, Int32U ArraySize>
 	static void Sort(T(&arr)[ArraySize]) {
 		QuickSort(arr, 0, ArraySize - 1, NaturalOrder{});
 	}
 
-	// ±æÀÌ¸¦ ¾Æ´Â °æ¿ì
+	// ê¸¸ì´ë¥¼ ì•„ëŠ” ê²½ìš°
 	template <typename T, Int32U ArraySize, typename Predicate>
 	static void Sort(T(&arr)[ArraySize], Predicate predicate) {
 		QuickSort(arr, 0, ArraySize - 1, predicate);
 	}
 
-	// ±æÀÌ¸¦ ¸ğ¸£´Â Æ÷ÀÎÅÍÅ¸ÀÔÀÎ °æ¿ì
+	// ê¸¸ì´ë¥¼ ëª¨ë¥´ëŠ” í¬ì¸í„°íƒ€ì…ì¸ ê²½ìš°
 	template <typename T>
 	static void Sort(T* arr, const int arrSize) {
 		ThrowIfArrayIsNull(arr);
@@ -35,7 +35,7 @@ struct Arrays final
 		QuickSort(arr, 0, arrSize - 1, NaturalOrder{});
 	}
 
-	// ±æÀÌ¸¦ ¸ğ¸£´Â Æ÷ÀÎÅÍÅ¸ÀÔÀÎ °æ¿ì
+	// ê¸¸ì´ë¥¼ ëª¨ë¥´ëŠ” í¬ì¸í„°íƒ€ì…ì¸ ê²½ìš°
 	template <typename T, typename Predicate>
 	static void Sort(T* arr, const int arrSize, Predicate predicate) {
 		ThrowIfArrayIsNull(arr);
@@ -59,7 +59,7 @@ struct Arrays final
 
 	
 	/// <summary>
-	/// Ã¹ ¿ø¼ÒºÎÅÍ ¼±Çü Å½»ö
+	/// ì²« ì›ì†Œë¶€í„° ì„ í˜• íƒìƒ‰
 	/// </summary>
 	template <typename T, Int32U ArraySize>
 	static int LinearSearch(T(&arr)[ArraySize], const T& data) {
@@ -67,7 +67,7 @@ struct Arrays final
 	}
 
 
-	// ±æÀÌ¸¦ ¸ğ¸£´Â Æ÷ÀÎÅÍ Å¸ÀÔÀÎ °æ¿ì
+	// ê¸¸ì´ë¥¼ ëª¨ë¥´ëŠ” í¬ì¸í„° íƒ€ì…ì¸ ê²½ìš°
 	template <typename T>
 	static int LinearSearch(T* arr, const int arrSize, const T& data) {
 		ThrowIfArrayIsNull(arr);
@@ -82,7 +82,7 @@ struct Arrays final
 	}
 
 	/// <summary>
-	/// ¸¶Áö¸· ¿ø¼ÒºÎÅÍ ¼±Çü Å½»ö
+	/// ë§ˆì§€ë§‰ ì›ì†Œë¶€í„° ì„ í˜• íƒìƒ‰
 	/// </summary>
 	template <typename T, Int32U ArraySize>
 	static int LinearSearchReverse(T(&arr)[ArraySize], const T& data) {
@@ -138,7 +138,7 @@ struct Arrays final
 	}
 
 	/// <summary>
-	/// data°¡ Ã³À½À¸·Î ½ÃÀÛµÇ´Â À§Ä¡(ÀÎµ¦½º)¸¦ ¹İÈ¯ÇÑ´Ù.
+	/// dataê°€ ì²˜ìŒìœ¼ë¡œ ì‹œì‘ë˜ëŠ” ìœ„ì¹˜(ì¸ë±ìŠ¤)ë¥¼ ë°˜í™˜í•œë‹¤.
 	/// </summary>
 	template <typename T, Int32U ArraySize>
 	static int LowerBound(T(&arr)[ArraySize], const T& data) {
@@ -146,9 +146,9 @@ struct Arrays final
 	}
 
 
-	// @Âü°í : https://12bme.tistory.com/120
-	// LowerBound´Â °æ°èÁ¶°Ç Ã³¸®°¡ ¸Å¿ì ±î´Ù·Ó´Ù.
-	// ¸Ó¸®°¡ ÇÎÇÎµ¹¾Æ¼­ ±¸ÇöÀ» ¸øÇÏ°Ú´Ù.
+	// @ì°¸ê³  : https://12bme.tistory.com/120
+	// LowerBoundëŠ” ê²½ê³„ì¡°ê±´ ì²˜ë¦¬ê°€ ë§¤ìš° ê¹Œë‹¤ë¡­ë‹¤.
+	// ë¨¸ë¦¬ê°€ í•‘í•‘ëŒì•„ì„œ êµ¬í˜„ì„ ëª»í•˜ê² ë‹¤.
 	template <typename T>
 	static int LowerBound(T* arr, const int arrSize, const T& data) {
 		ThrowIfArrayIsNull(arr);
@@ -159,7 +159,7 @@ struct Arrays final
 
 
 	/// <summary>
-	/// data º¸´Ù Å« °ªµé Áß¿¡¼­ °¡Àå ÀÛÀº °ªÀÇ À§Ä¡(ÀÎµ¦½º)¸¦ ¹İÈ¯ÇÑ´Ù.
+	/// data ë³´ë‹¤ í° ê°’ë“¤ ì¤‘ì—ì„œ ê°€ì¥ ì‘ì€ ê°’ì˜ ìœ„ì¹˜(ì¸ë±ìŠ¤)ë¥¼ ë°˜í™˜í•œë‹¤.
 	/// </summary>
 	template <typename T, Int32U ArraySize>
 	static int UpperBound(T(&arr)[ArraySize], const T& data) {
@@ -184,8 +184,8 @@ private:
 	}
 
 
-	// @Âü°í : https://www.youtube.com/watch?v=PgBzjlCcFvc&t=45s&ab_channel=GeeksforGeeks
-	// ¼Ò½ºÄÚµå´Â º¸Áö ¾Ê°í ¾Ö´Ï¸ŞÀÌ¼Ç¸¸ º¸°í Â¥º» ÄÚµåÀÔ´Ï´Ù.
+	// @ì°¸ê³  : https://www.youtube.com/watch?v=PgBzjlCcFvc&t=45s&ab_channel=GeeksforGeeks
+	// ì†ŒìŠ¤ì½”ë“œëŠ” ë³´ì§€ ì•Šê³  ì• ë‹ˆë©”ì´ì…˜ë§Œ ë³´ê³  ì§œë³¸ ì½”ë“œì…ë‹ˆë‹¤.
 	template <typename T, typename Prdeicate>
 	static void QuickSort(T* arr, int start, int end, Prdeicate predicate) {
 		if (start >= end) {
@@ -221,13 +221,13 @@ private: // Throws
 
 	static void ThrowIfArraySizeIsInvalid(const int arrSize) {
 		if (arrSize < 1) {
-			throw InvalidArgumentException("arrSize´Â ¹«Á¶°Ç 1ÀÌ»óÀÌ¾î¾ßÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("arrSizeëŠ” ë¬´ì¡°ê±´ 1ì´ìƒì´ì–´ì•¼í•©ë‹ˆë‹¤.");
 		}
 	}
 
 	static void ThrowIRangeIsInvalid(const int startIdx, const int endIdx) {
 		if (startIdx < 0 || startIdx > endIdx) {
-			throw InvalidArgumentException("¿Ã¹Ù¸£Áö ¾ÊÀº ÀÎµ¦½º ¹üÀ§ÀÔ´Ï´Ù.");
+			throw InvalidArgumentException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ ì¸ë±ìŠ¤ ë²”ìœ„ì…ë‹ˆë‹¤.");
 		}
 	}
 };

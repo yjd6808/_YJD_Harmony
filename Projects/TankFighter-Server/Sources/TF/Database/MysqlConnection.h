@@ -1,7 +1,7 @@
 #pragma once
 
 #include <mysql.h>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 
 class MysqlConnection
 {
@@ -10,22 +10,22 @@ public:
 	MysqlConnection();
 	~MysqlConnection();
 
-	// MySQL Á¢¼Ó
+	// MySQL ì ‘ì†
 	bool Connect(const JCore::String &hostname, const uint16_t &port, const JCore::String &username, const JCore::String &password, const JCore::String &dbname);
 
-	// DB ¼±ÅÃ
+	// DB ì„ íƒ
 	bool SelectDB(const JCore::String &schemaName);
 
-	// ¿¬°á ²÷±â
+	// ì—°ê²° ëŠê¸°
 	void Disconnect();
 
-	// Á¦ÀÏ ¸¶Áö¸· ¿À·ù
+	// ì œì¼ ë§ˆì§€ë§‰ ì˜¤ë¥˜
 	JCore::String GetLastError() const;
 
 	MYSQL *GetConnection() const;
 	bool IsConnected() const;
 
-	// ÀÌ½ºÄÉÀÌÇÁ ½ºÆ®¸µ ¹İÈ¯
+	// ì´ìŠ¤ì¼€ì´í”„ ìŠ¤íŠ¸ë§ ë°˜í™˜
 	JCore::String EscapeString(const JCore::String& value) const;
 
 private:

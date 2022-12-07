@@ -6,11 +6,10 @@
 *.user
 .editorconfig
 
+x64/
+Win32/
+
 packages/
 Output/
 Projects/*/Output/
 Projects/*/Intermediate/
-
-# mysql 라이브러리는 허용시켜주자. - Projects/TankFighter-Server/Output 경로에 있음
-!Projects/TankFighter-Server/Output/Debug/libmysql.dll
-!Projects/TankFighter-Server/Output/Release/libmysql.dll

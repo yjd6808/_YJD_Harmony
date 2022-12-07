@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 
@@ -12,14 +12,14 @@
 
 #include "TF/Object/Bullet.h"
 
-const char* BattleFieldLayer::ms_pPlayWaitLeftTimeFormat = "´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ ¸ğµÎ ÀÔÀåÇÒ¶§±îÁö ±â´Ù·ÁÁÖ¼¼¿ä.\n³²Àº½Ã°£ : %.1fÃÊ";
-const char* BattleFieldLayer::ms_pPlayingLeftTimeFormat = "°ÔÀÓ Á¾·á±îÁö ³²Àº½Ã°£ : %.1fÃÊ";
-const char* BattleFieldLayer::ms_pEndWaitLeftTimeFormat = "¹æÀ¸·Î ÀÌµ¿ÇÏ±â±îÁö ³²Àº½Ã°£ : % .1fÃÊ";
+const char* BattleFieldLayer::ms_pPlayWaitLeftTimeFormat = "ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€ ëª¨ë‘ ì…ì¥í• ë•Œê¹Œì§€ ê¸°ë‹¤ë ¤ì£¼ì„¸ìš”.\në‚¨ì€ì‹œê°„ : %.1fì´ˆ";
+const char* BattleFieldLayer::ms_pPlayingLeftTimeFormat = "ê²Œì„ ì¢…ë£Œê¹Œì§€ ë‚¨ì€ì‹œê°„ : %.1fì´ˆ";
+const char* BattleFieldLayer::ms_pEndWaitLeftTimeFormat = "ë°©ìœ¼ë¡œ ì´ë™í•˜ê¸°ê¹Œì§€ ë‚¨ì€ì‹œê°„ : % .1fì´ˆ";
 
 void BattleFieldLayer::onEnterTransitionDidFinish() {
-	// ¹èÆ²ÇÊµå¿¡ µé¾î¿À¸é 
+	// ë°°í‹€í•„ë“œì— ë“¤ì–´ì˜¤ë©´ 
 	if (!SendFn::SendBattleFieldLoadSyn()) {
-		PopUp::createInParent("¹èÆ²ÇÊµå Á¤º¸ ¿äÃ»¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ë°°í‹€í•„ë“œ ì •ë³´ ìš”ì²­ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.", this, false);
 	}
 }
 
@@ -30,7 +30,7 @@ bool BattleFieldLayer::init() {
 		return false;
 	}
 
-	// ÅÊÅ©¸¦ ¾Æ¹«°Íµµ ¸øÇÏ´Â ¹Ì¸® ¸¸µé¾î³õ´Â´Ù.
+	// íƒ±í¬ë¥¼ ì•„ë¬´ê²ƒë„ ëª»í•˜ëŠ” ë¯¸ë¦¬ ë§Œë“¤ì–´ë†“ëŠ”ë‹¤.
 	m_pTank = Tank::create(_Client->GetCharacterUID(), this);
 	m_pTank->setVisible(false);
 	m_pTank->SetFireCallback(CC_CALLBACK_1(BattleFieldLayer::OnFireTank, this));
@@ -58,7 +58,7 @@ bool BattleFieldLayer::init() {
 	m_pNoticeText->setPosition({ 500, 450 });
 	this->addChild(m_pNoticeText);
 	
-	// ÀÚ±â ÀÚ½ÅÀ» Á¦¿ÜÇÑ ÃÖ´ë ¼ö¸¸Å­ ¹Ì¸® ÅÊÅ©¸¦ »ı¼ºÇØ³õ´Â´Ù.
+	// ìê¸° ìì‹ ì„ ì œì™¸í•œ ìµœëŒ€ ìˆ˜ë§Œí¼ ë¯¸ë¦¬ íƒ±í¬ë¥¼ ìƒì„±í•´ë†“ëŠ”ë‹¤.
 	for (int i = 0; i < ROOM_MAX_PLAYER_COUNT - 1; i++) {
 		Tank* pTank = Tank::create(INVALID_UID, this);
 		pTank->setVisible(false);
@@ -76,8 +76,8 @@ bool BattleFieldLayer::init() {
 	m_pClickPrevenButton->setScale9Enabled(true);
 	m_pClickPrevenButton->setColor(Color3B::GRAY);
 	m_pClickPrevenButton->setOpacity(60);
-	m_pClickPrevenButton->setEnabled(false);			// ÀÌ·¸°Ô µÎ¸é Å¬¸¯ °¡´É
-	m_pClickPrevenButton->setVisible(false);			// Ã³À½ ¾Èº¸ÀÌµµ·Ï
+	m_pClickPrevenButton->setEnabled(false);			// ì´ë ‡ê²Œ ë‘ë©´ í´ë¦­ ê°€ëŠ¥
+	m_pClickPrevenButton->setVisible(false);			// ì²˜ìŒ ì•ˆë³´ì´ë„ë¡
 	m_pClickPrevenButton->setContentSize({ MAP_WIDTH, MAP_HEIGHT });
 	m_pClickPrevenButton->setSize({ MAP_WIDTH, MAP_HEIGHT });
 	m_pClickPrevenButton->setAnchorPoint(Vec2::ZERO);
@@ -85,7 +85,7 @@ bool BattleFieldLayer::init() {
 
 
 
-	m_pLeaveChannelButton = TextButton::create(200, 50, "°ÔÀÓ ³ª°¡±â", 16);
+	m_pLeaveChannelButton = TextButton::create(200, 50, "ê²Œì„ ë‚˜ê°€ê¸°", 16);
 	m_pLeaveChannelButton->setBackgroundColor(ColorList::Bluegray_v);
 	m_pLeaveChannelButton->setFontColor(ColorList::Black_v);
 	m_pLeaveChannelButton->setAnchorPoint(Vec2::ZERO);
@@ -94,7 +94,7 @@ bool BattleFieldLayer::init() {
 	this->addChild(m_pLeaveChannelButton);
 
 	for (int i = 0; i < 4; i++) {
-		m_pNameText[i] = Text::create("¸»µ¿¹« µ¿¹«", FONT_PATH_DEFAULT, 14);
+		m_pNameText[i] = Text::create("ë§ë™ë¬´ ë™ë¬´", FONT_PATH_DEFAULT, 14);
 		m_pNameText[i]->setColor(ColorList::Blizzardblue_v);
 		m_pNameText[i]->setAnchorPoint(Vec2::ZERO);
 		m_pNameText[i]->setContentSize({ 100.0f, 0.0 });
@@ -102,14 +102,14 @@ bool BattleFieldLayer::init() {
 		m_pNameText[i]->setPosition({ 0, 400.0f - i * 20.0f });
 		this->addChild(m_pNameText[i], 100);
 
-		m_pKillText[i] = Text::create("0Å³", FONT_PATH_DEFAULT, 14);
+		m_pKillText[i] = Text::create("0í‚¬", FONT_PATH_DEFAULT, 14);
 		m_pKillText[i]->setColor(ColorList::Amber_v);
 		m_pKillText[i]->setAnchorPoint(Vec2::ZERO);
 		m_pKillText[i]->setVisible(false);
 		m_pKillText[i]->setPosition({ m_pNameText[i]->getPosition().x + m_pNameText[i]->getContentSize().width + 20.0f, 400.0f - i * 20.0f });
 		this->addChild(m_pKillText[i], 100);
 
-		m_pDeathText[i] = Text::create("0µ¥½º", FONT_PATH_DEFAULT, 14);
+		m_pDeathText[i] = Text::create("0ë°ìŠ¤", FONT_PATH_DEFAULT, 14);
 		m_pDeathText[i]->setColor(ColorList::Alabaster_v);
 		m_pDeathText[i]->setAnchorPoint(Vec2::ZERO);
 		m_pDeathText[i]->setVisible(false);
@@ -122,7 +122,7 @@ bool BattleFieldLayer::init() {
 }
 
 void BattleFieldLayer::update(float delta) {
-	// ====================================================== ÅÊÅ©µé À§Ä¡ ¾÷µ¥ÀÌÆ®
+	// ====================================================== íƒ±í¬ë“¤ ìœ„ì¹˜ ì—…ë°ì´íŠ¸
 	m_fSendTankMoveSynTime += delta;
 
 	m_pTank->updatePosition(delta);
@@ -131,7 +131,7 @@ void BattleFieldLayer::update(float delta) {
 
 	Vec2 myPos = m_pTank->getPosition();
 
-	// ¸Ê ¹ÛÀ¸·Î ³ª°¡´Â°Å ¹æÁö
+	// ë§µ ë°–ìœ¼ë¡œ ë‚˜ê°€ëŠ”ê±° ë°©ì§€
 	if (myPos.x <= 0) {
 		m_pTank->setPositionX(1);
 	} else if (myPos.x >= MAP_WIDTH) {
@@ -144,7 +144,7 @@ void BattleFieldLayer::update(float delta) {
 		m_pTank->setPositionY(MAP_HEIGHT - 1);
 	}
 
-	// ÀÏÁ¤ ÁÖ±â¸¶´Ù ¼­¹ö·Î ÅÊÅ© Á¤º¸¸¦ Àü¼ÛÇØÁÖÀÚ. ¾ÈÁ×¾îÀÖ´Â °æ¿ì
+	// ì¼ì • ì£¼ê¸°ë§ˆë‹¤ ì„œë²„ë¡œ íƒ±í¬ ì •ë³´ë¥¼ ì „ì†¡í•´ì£¼ì. ì•ˆì£½ì–´ìˆëŠ” ê²½ìš°
 	if (m_fSendTankMoveSynTime >= ms_iPlayerSendMoveStatePacketDelay && !IsDeath(m_pTank->GetCharacterUID())) {
 		SendFn::SendBattileFieldTankMoveSyn(m_pTank->GetMove());
 		m_fSendTankMoveSynTime = 0.0f;
@@ -157,7 +157,7 @@ void BattleFieldLayer::update(float delta) {
 		}
 	}
 
-	// ====================================================== ³²Àº½Ã°£ ÅØ½ºÆ® ¾÷µ¥ÀÌÆ®
+	// ====================================================== ë‚¨ì€ì‹œê°„ í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸
 	m_fLeftTime -= delta;
 	if (m_fLeftTime >= 0) {
 		m_pTimeText->setVisible(true);
@@ -171,18 +171,18 @@ void BattleFieldLayer::update(float delta) {
 	}
 
 
-	// ====================================================== ºÎÈ°½Ã°£ ¾÷µ¥ÀÌÆ®
+	// ====================================================== ë¶€í™œì‹œê°„ ì—…ë°ì´íŠ¸
 	m_fRevivalLeftTime -= delta;
 
 	if (m_fRevivalLeftTime >= 0.0f) {
 		m_pRevivalText->setVisible(true);
-		m_pRevivalText->setText(StringUtils::format("%.1fÃÊµÚ ºÎÈ°ÇÕ´Ï´Ù.", m_fRevivalLeftTime));
+		m_pRevivalText->setText(StringUtils::format("%.1fì´ˆë’¤ ë¶€í™œí•©ë‹ˆë‹¤.", m_fRevivalLeftTime));
 	} else {
 		m_pRevivalText->setVisible(false);
 	}
 
 
-	// ====================================================== ÃÑ¾Ë Ãæµ¹ Ã¼Å©
+	// ====================================================== ì´ì•Œ ì¶©ëŒ ì²´í¬
 
 
 	for (int i = 0; i < m_MyBullets.Size(); ) {
@@ -200,7 +200,7 @@ void BattleFieldLayer::update(float delta) {
 	for (int i = 0; i < m_OtherBullets.Size(); i++) {
 		Bullet* pBullet = m_OtherBullets[i];
 
-		// ÃÑ¾ËÀÌ ¸Ê ¹üÀ§¸¦ ¹ş¾î³­ °æ¿ì »èÁ¦½ÃÅ²´Ù.
+		// ì´ì•Œì´ ë§µ ë²”ìœ„ë¥¼ ë²—ì–´ë‚œ ê²½ìš° ì‚­ì œì‹œí‚¨ë‹¤.
 		if (pBullet->getPosition().x < 0 || pBullet->getPosition().x > MAP_WIDTH ||
 			pBullet->getPosition().y < 0 || pBullet->getPosition().y > MAP_HEIGHT) {
 
@@ -212,7 +212,7 @@ void BattleFieldLayer::update(float delta) {
 
 		if (m_pTank->IsCollide(pBullet) && !IsDeath(m_pTank->GetCharacterUID())) {
 
-			// ³» ÅÊÅ©¸¦ ÀÌÁ¦ ÄÁÆ®·Ñ ¸øÇÏ°Ô ÇÑ´Ù.
+			// ë‚´ íƒ±í¬ë¥¼ ì´ì œ ì»¨íŠ¸ë¡¤ ëª»í•˜ê²Œ í•œë‹¤.
 			m_pTank->setVisible(false);
 			m_pTank->setMoveable(false);
 			m_pTank->setFireable(false);
@@ -221,7 +221,7 @@ void BattleFieldLayer::update(float delta) {
 			SendFn::SendBattleFieldDeathSyn(pBullet->GetCharacterUID());
 
 
-			// ÃÑ¾ËÀ» Á¦°ÅÇÑ´Ù.
+			// ì´ì•Œì„ ì œê±°í•œë‹¤.
 			m_OtherBullets.Remove(pBullet);
 			this->removeChild(pBullet);
 			i--;
@@ -231,7 +231,7 @@ void BattleFieldLayer::update(float delta) {
 		for (int j = 0; j < m_OtherPlayers.Size(); j++) {
 			Tank* pOther = m_OtherPlayers[j];
 
-			// ´Ù¸¥ ÅÊÅ©¿Í ºÎ‹HÈù °æ¿ì¿¡´Â ÃÑ¾Ë¸¸ ¾ø¾Ø´Ù.
+			// ë‹¤ë¥¸ íƒ±í¬ì™€ ë¶€ë”«íŒ ê²½ìš°ì—ëŠ” ì´ì•Œë§Œ ì—†ì•¤ë‹¤.
 			if (pOther->IsCollide(pBullet) && !IsDeath(pOther->GetCharacterUID()) ) {
 				m_OtherBullets.Remove(pBullet);
 				this->removeChild(pBullet);
@@ -260,7 +260,7 @@ void BattleFieldLayer::UpdateTankMove(TankMove& move)  {
 	for (int i = 0; i < m_OtherPlayers.Size(); i++) {
 		Tank* pOtherTank = m_OtherPlayers[i];
 
-		// Á×Àº³à¼®Àº °Ç³Ê¶Ü
+		// ì£½ì€ë…€ì„ì€ ê±´ë„ˆëœ€
 		if (IsDeath(pOtherTank->GetCharacterUID())) {
 			continue;
 		}
@@ -276,14 +276,14 @@ void BattleFieldLayer::UpdateTankMove(TankMove& move)  {
 
 
 void BattleFieldLayer::OnClickedLeaveGameButton(TextButton* btn) {
-	PopUp::createInParent("Á¤¸»·Î Å»ÁÖÇÏ½Ã°Ú½À´Ï±î?", this, false,
+	PopUp::createInParent("ì •ë§ë¡œ íƒˆì£¼í•˜ì‹œê² ìŠµë‹ˆê¹Œ?", this, false,
 		[]() {
-			// ¼ö¶ô½Ã ·Îºñ·Î ÀÌµ¿½ÃÄÑÁÖÀÚ.
+			// ìˆ˜ë½ì‹œ ë¡œë¹„ë¡œ ì´ë™ì‹œì¼œì£¼ì.
 			SendFn::SendBattleFieldLeaveSyn();
 			_Client->SetRoomUID(INVALID_UID);
 			_Client->ChangeScene(SceneType::Lobby);
 		},	 
-		[]() { }); // °ÅÀı 
+		[]() { }); // ê±°ì ˆ 
 }
 
 JCore::String BattleFieldLayer::GetRoomMemberName(int characterUID) const {
@@ -361,16 +361,16 @@ void BattleFieldLayer::OnClickedChatSendButton(ChatBox* chatBox) {
 
 /* =================================================================================
  *
- *                             Åë½Å ÆĞÅ¶ Ã³¸®
+ *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬
  *
  * ================================================================================*/
 
-// ¹æ ¸â¹ö º¯°æ½Ã °©ÀÚ±â ´©°¡ ³ª°¡°Å³ª ÇÒ °æ¿ì ¾÷µ¥ÀÌÆ® ÇØÁà¾ßÇÔ
+// ë°© ë©¤ë²„ ë³€ê²½ì‹œ ê°‘ìê¸° ëˆ„ê°€ ë‚˜ê°€ê±°ë‚˜ í•  ê²½ìš° ì—…ë°ì´íŠ¸ í•´ì¤˜ì•¼í•¨
 void BattleFieldLayer::CmdUpdateRoomInfoAck(ICommand* cmd) {
 	UpdateRoomInfoAck* pUpdateRoomInfoAck = cmd->CastCommand<UpdateRoomInfoAck*>();
 
 	if (pUpdateRoomInfoAck->Count > ROOM_MAX_PLAYER_COUNT) {
-		DebugAssert(false, "ROOM_MAX_PLAYER_COUNT ¼öÄ¡ ÃÊ°úÇÏ´Â Count¸¦ ¹ŞÀ½");
+		DebugAssertMessage(false, "ROOM_MAX_PLAYER_COUNT ìˆ˜ì¹˜ ì´ˆê³¼í•˜ëŠ” Countë¥¼ ë°›ìŒ");
 		pUpdateRoomInfoAck->Count = ROOM_MAX_PLAYER_COUNT;
 	}
 
@@ -402,7 +402,7 @@ void BattleFieldLayer::CmdUpdateRoomInfoAck(ICommand* cmd) {
 void BattleFieldLayer::CmdUpdateCharacterInfoAck(ICommand* cmd) {
 	UpdateCharacterInfoAck* pUpdateCharacterInfoAck = cmd->CastCommand<UpdateCharacterInfoAck*>();
 
-	// Ä³¸¯ÅÍ Á¤º¸ ¾÷µ¥ÀÌÆ®
+	// ìºë¦­í„° ì •ë³´ ì—…ë°ì´íŠ¸
 	if (pUpdateCharacterInfoAck->Result) {
 		_Client->UpdateCharacterInfo(pUpdateCharacterInfoAck->Info);
 		return;
@@ -423,7 +423,7 @@ void BattleFieldLayer::CmdBattleFieldLoadAck(ICommand* cmd) {
 	m_eRoomState = pBattleFieldLoadAck->RoomState;
 	m_fLeftTime = pBattleFieldLoadAck->LeftTime;
 
-	// ³­ÀÔÇÏ¿© µé¾î¿À´Â °æ¿ì ¹æ»óÅÂ¿¡ µû¶ó m_pTimeText ÆùÆ®Å©±â¿Í À§Ä¡°¡ ´Ù¸§
+	// ë‚œì…í•˜ì—¬ ë“¤ì–´ì˜¤ëŠ” ê²½ìš° ë°©ìƒíƒœì— ë”°ë¼ m_pTimeText í°íŠ¸í¬ê¸°ì™€ ìœ„ì¹˜ê°€ ë‹¤ë¦„
 	UpdateUIModeByRoomState();
 
 	m_pTank->setVisible(true);
@@ -448,11 +448,11 @@ void BattleFieldLayer::CmdBattleFieldTankUpdateSyn(ICommand* cmd) {
 	BattileFieldTankUpdateSyn* pBattileFieldTankUpdateSyn = cmd->CastCommand<BattileFieldTankUpdateSyn*>();
 
 	for (int i = 0; i < pBattileFieldTankUpdateSyn->Count; i++) {
-		// Á×Àº »ç¶÷Àº ¾÷µ¥ÀÌÆ® ¾ÈÇÔ
+		// ì£½ì€ ì‚¬ëŒì€ ì—…ë°ì´íŠ¸ ì•ˆí•¨
 		UpdateTankMove(pBattileFieldTankUpdateSyn->Move[i]);
 	}
 
-	// ¾÷µ¥ÀÌÆ® ¾ÈµÈ ¾ÖµéÀº ¾ø´Â ¾ÖµéÀÌ¹Ç·Î ¾Èº¸ÀÌµµ·Ï ÇÔ
+	// ì—…ë°ì´íŠ¸ ì•ˆëœ ì• ë“¤ì€ ì—†ëŠ” ì• ë“¤ì´ë¯€ë¡œ ì•ˆë³´ì´ë„ë¡ í•¨
 	for (int i = 0; i < m_OtherPlayers.Size(); i++) {
 		if (!m_OtherPlayers[i]->HasOwner()) {
 			m_OtherPlayers[i]->setVisible(false);
@@ -461,7 +461,7 @@ void BattleFieldLayer::CmdBattleFieldTankUpdateSyn(ICommand* cmd) {
 	}
 }
 
-// ›”¶×¸Â°Ô ¹æ ±â´ÉÀÌ ÀÖÁö¸¸ °ÔÀÓ ÇÃ·¹ÀÌÁß¿¡ ´Ù¸¥ À¯Àú°¡ °ÔÀÓ ³­ÀÔÀ» ÇÒ °æ¿ì¿¡ ÀÌ Ä¿¸Çµå¸¦ ¼öÇàÇÑ´Ù.
+// ì¡ëš±ë§ê²Œ ë°© ê¸°ëŠ¥ì´ ìˆì§€ë§Œ ê²Œì„ í”Œë ˆì´ì¤‘ì— ë‹¤ë¥¸ ìœ ì €ê°€ ê²Œì„ ë‚œì…ì„ í•  ê²½ìš°ì— ì´ ì»¤ë§¨ë“œë¥¼ ìˆ˜í–‰í•œë‹¤.
 void BattleFieldLayer::CmdRoomGameStartAck(ICommand* cmd) const {
 	RoomGameStartAck* pRoomGameStartAck = cmd->CastCommand<RoomGameStartAck*>();
 	FadeOut* pFadeOutAnimation = FadeOut::create(5.0f);
@@ -469,7 +469,7 @@ void BattleFieldLayer::CmdRoomGameStartAck(ICommand* cmd) const {
 	m_pNoticeText->runAction(pFadeOutAnimation);
 	
 
-	const JCore::String message = StringUtil::Format("%s ´ÔÀÌ ¡Ù ³­ÀÔ ¡Ù ÇÏ¼Ì½À´Ï´Ù.", pRoomGameStartAck->IntruderInfo.Name);
+	const JCore::String message = StringUtil::Format("%s ë‹˜ì´ â˜† ë‚œì… â˜† í•˜ì…¨ìŠµë‹ˆë‹¤.", pRoomGameStartAck->IntruderInfo.Name);
 	m_pNoticeText->setText(message.Source());
 	m_pChatBox->AddNoticeMessage(message);
 }
@@ -481,8 +481,8 @@ void BattleFieldLayer::CmdBattleFieldPlayWaitEndSyn(ICommand* cmd) {
 	m_pNoticeText->setOpacity(255);
 	m_pNoticeText->runAction(pFadeOutAnimation);
 
-	m_pNoticeText->setText("°ÔÀÓ ½ÃÀÛ");
-	m_pChatBox->AddNoticeMessage("°ÔÀÓ ½ÃÀÛ");
+	m_pNoticeText->setText("ê²Œì„ ì‹œì‘");
+	m_pChatBox->AddNoticeMessage("ê²Œì„ ì‹œì‘");
 	m_pTank->setFireable(true);
 	m_eRoomState = pBattleFieldPlayWaitEndSyn->RoomState;
 	m_fLeftTime = pBattleFieldPlayWaitEndSyn->LeftTime / 1000.0f;
@@ -495,8 +495,8 @@ void BattleFieldLayer::CmdBattleFieldPlayingEndSyn(ICommand* cmd) {
 	FadeOut* pFadeOutAnimation = FadeOut::create(5.0f);
 	m_pNoticeText->setOpacity(255);
 	m_pNoticeText->runAction(pFadeOutAnimation);
-	m_pNoticeText->setText("°ÔÀÓ Á¾·á - Àá½Ã µÚ ·Îºñ·Î ÀÌµ¿ÇÕ´Ï´Ù.");
-	m_pChatBox->AddNoticeMessage("°ÔÀÓ Á¾·á - Àá½Ã µÚ ·Îºñ·Î ÀÌµ¿ÇÕ´Ï´Ù.");
+	m_pNoticeText->setText("ê²Œì„ ì¢…ë£Œ - ì ì‹œ ë’¤ ë¡œë¹„ë¡œ ì´ë™í•©ë‹ˆë‹¤.");
+	m_pChatBox->AddNoticeMessage("ê²Œì„ ì¢…ë£Œ - ì ì‹œ ë’¤ ë¡œë¹„ë¡œ ì´ë™í•©ë‹ˆë‹¤.");
 	m_pTank->setFireable(false);
 	m_eRoomState = pBattleFieldPlayWaitEndSyn->RoomState;
 	m_fLeftTime = pBattleFieldPlayWaitEndSyn->LeftTime / 1000.0f;
@@ -516,7 +516,7 @@ void BattleFieldLayer::CmdChatMessageAck(ICommand* cmd) const {
 void BattleFieldLayer::CmdBattleFieldFireAck(ICommand* cmd) {
 	BattleFieldFireAck* pBattleFieldFireAck = cmd->CastCommand<BattleFieldFireAck*>();
 
-	// ³»°¡ ½ğ ÃÑ¾ËÀº ¾÷µ¥ÀÌÆ® ¾ÈÇÔ
+	// ë‚´ê°€ ìœ ì´ì•Œì€ ì—…ë°ì´íŠ¸ ì•ˆí•¨
 	if (pBattleFieldFireAck->BulletInfo.CharacterUID == _Client->GetCharacterUID()) {
 		return;
 	}
@@ -530,20 +530,20 @@ void BattleFieldLayer::CmdBattleFieldFireAck(ICommand* cmd) {
 void BattleFieldLayer::CmdBattleFieldDeathAck(ICommand* cmd) {
 	const BattleFieldDeathAck* pBattleFieldDeathAck = cmd->CastCommand<BattleFieldDeathAck*>();
 
-	// ÀÚ±â ÀÚ½ÅÀÎ °æ¿ì
+	// ìê¸° ìì‹ ì¸ ê²½ìš°
 	if (_Client->GetCharacterUID() == pBattleFieldDeathAck->CharacterUID) {
 		m_fRevivalLeftTime = pBattleFieldDeathAck->RevivalLeftTime / 1000.0f;
-		m_pChatBox->AddNoticeMessage("»ç¸Á - Àá½Ã µÚ ºÎÈ°ÇÕ´Ï´Ù.");
+		m_pChatBox->AddNoticeMessage("ì‚¬ë§ - ì ì‹œ ë’¤ ë¶€í™œí•©ë‹ˆë‹¤.");
 
 		m_pTank->setMoveable(false);
 		m_pTank->setFireable(false);
 		m_pTank->setVisible(false);
 
-		// ÆÇ¶§±â À§¿¡ ¾¯¿ö¼­ ¸ğµç È°µ¿ ¸·À½
+		// íŒë•Œê¸° ìœ„ì— ì’¸ì›Œì„œ ëª¨ë“  í™œë™ ë§‰ìŒ
 		m_pClickPrevenButton->setEnabled(true);
 		m_pClickPrevenButton->setVisible(true);
 	} else {
-		// ´Ù¸¥ »ç¶÷ÀÌ °æ¿ì
+		// ë‹¤ë¥¸ ì‚¬ëŒì´ ê²½ìš°
 		for (int i = 0; i < m_OtherPlayers.Size(); i++) {
 			if (m_OtherPlayers[i]->GetCharacterUID() == pBattleFieldDeathAck->CharacterUID) {
 				m_OtherPlayers[i]->setVisible(false);
@@ -555,12 +555,12 @@ void BattleFieldLayer::CmdBattleFieldDeathAck(ICommand* cmd) {
 
 void BattleFieldLayer::CmdBattleFieldRevivalSyn(ICommand* cmd) {
 	BattleFieldRevivalSyn* pBattleFieldRevivalSyn = cmd->CastCommand<BattleFieldRevivalSyn*>();
-	// ÀÚ±â ÀÚ½ÅÀÎ °æ¿ì
+	// ìê¸° ìì‹ ì¸ ê²½ìš°
 	if (_Client->GetCharacterUID() == pBattleFieldRevivalSyn->CharacterUID) {
 
-		// ÆÇ¶§±â Á¦°ÅÇØ¼­ È°µ¿°¡´ÉÇÏµµ·Ï ÇÔ
-		m_pClickPrevenButton->setEnabled(false);			// ÀÌ·¸°Ô µÎ¸é Å¬¸¯ °¡´É
-		m_pClickPrevenButton->setVisible(false);			// Ã³À½ ¾Èº¸ÀÌµµ·Ï
+		// íŒë•Œê¸° ì œê±°í•´ì„œ í™œë™ê°€ëŠ¥í•˜ë„ë¡ í•¨
+		m_pClickPrevenButton->setEnabled(false);			// ì´ë ‡ê²Œ ë‘ë©´ í´ë¦­ ê°€ëŠ¥
+		m_pClickPrevenButton->setVisible(false);			// ì²˜ìŒ ì•ˆë³´ì´ë„ë¡
 
 		m_pTank->setVisible(true);
 		m_pTank->setMoveable(true);
@@ -569,11 +569,11 @@ void BattleFieldLayer::CmdBattleFieldRevivalSyn(ICommand* cmd) {
 
 
 		if (m_eRoomState == RoomState::Playing) {
-			m_pTank->setFireable(true);		// °ÔÀÓ ÁßÀÎ °æ¿ì¿¡¸¸ ÃÑ¾Ë ½î±â Çã¿ë
+			m_pTank->setFireable(true);		// ê²Œì„ ì¤‘ì¸ ê²½ìš°ì—ë§Œ ì´ì•Œ ì˜ê¸° í—ˆìš©
 		} 
 		
 	} else {
-		// ´Ù¸¥ »ç¶÷ÀÌ °æ¿ì
+		// ë‹¤ë¥¸ ì‚¬ëŒì´ ê²½ìš°
 		for (int i = 0; i < m_OtherPlayers.Size(); i++) {
 			if (m_OtherPlayers[i]->GetCharacterUID() == pBattleFieldRevivalSyn->CharacterUID) {
 				UpdateTankMove(pBattleFieldRevivalSyn->RevivalMove);
@@ -587,7 +587,7 @@ void BattleFieldLayer::CmdBattleFieldRevivalSyn(ICommand* cmd) {
 void BattleFieldLayer::CmdBattleFieldStatisticsUpdateSyn(ICommand* cmd) const {
 	const BattleFieldStatisticsUpdateSyn* pBattleFieldStatisticsUpdateSyn = cmd->CastCommand<BattleFieldStatisticsUpdateSyn*>();
 
-	// std::array ¾²¸é ÁÁ±äÇÑµ¥ ±×·¡µµ ³»°¡ ±¸ÇöÇÑ°Å ½áº¸ÀÚ.
+	// std::array ì“°ë©´ ì¢‹ê¸´í•œë° ê·¸ë˜ë„ ë‚´ê°€ êµ¬í˜„í•œê±° ì¨ë³´ì.
 	JCore::Vector<BattleInfo> sortVector(pBattleFieldStatisticsUpdateSyn->Count);
 
 	for (int i = 0; i < pBattleFieldStatisticsUpdateSyn->Count; i++) {
@@ -600,14 +600,14 @@ void BattleFieldLayer::CmdBattleFieldStatisticsUpdateSyn(ICommand* cmd) const {
 				ForEach([&iIndexer, this](BattleInfo& info) {
 					m_pNameText[iIndexer]->setText(GetRoomMemberName(info.CharacterUID).Source());
 					m_pNameText[iIndexer]->setVisible(true);
-					m_pKillText[iIndexer]->setText(StringUtils::format("%dÅ³", info.Kill));
+					m_pKillText[iIndexer]->setText(StringUtils::format("%dí‚¬", info.Kill));
 					m_pKillText[iIndexer]->setVisible(true);
-					m_pDeathText[iIndexer]->setText(StringUtils::format("%dµ¥½º", info.Death));
+					m_pDeathText[iIndexer]->setText(StringUtils::format("%dë°ìŠ¤", info.Death));
 					m_pDeathText[iIndexer]->setVisible(true);
 					iIndexer++;
 				});
 
-	// À¯Àú°¡ ²Ë ¾ÈÂù °æ¿ì ³ª¸ÓÁö Åë°èÁ¤º¸´Â ¾Èº¸ÀÌµµ·Ï ÇÑ´Ù.
+	// ìœ ì €ê°€ ê½‰ ì•ˆì°¬ ê²½ìš° ë‚˜ë¨¸ì§€ í†µê³„ì •ë³´ëŠ” ì•ˆë³´ì´ë„ë¡ í•œë‹¤.
 	for (int i = iIndexer; i < ROOM_MAX_PLAYER_COUNT; i++) {
 		m_pNameText[i]->setVisible(false);
 		m_pKillText[i]->setVisible(false);

@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	í…ŒìŠ¤íŠ¸
 */
 
 #include <JCoreTest/CoreTest.h>
@@ -8,7 +8,7 @@
 
 #if TEST_MathTest == ON
 
-using namespace JCore;
+
 using namespace std;
 
 TEST(MathTest, Pow) {

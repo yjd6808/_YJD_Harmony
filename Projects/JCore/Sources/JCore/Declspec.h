@@ -1,17 +1,19 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
+ *	ì‘ì„±ì : ìœ¤ì •ë„
  *
- *	__declspec : ¸¶ÀÌÅ©·Î¼ÒÇÁÆ® È®Àå ±â´ÉÀ¸·Î Å¸ÀÔ ¶Ç´Â ÇÔ¼ö¿¡ Storage Class ¼Ó¼ºÀ» ºÎ¿©ÇÏ´Â °ÍÀ» Çã¿ëÇÏ´Â Å°¿öµåÀÌ´Ù.
- *			     ¹º ¸»ÀÌÁö, ÀÏ´Ü MSVC Àü¿ë±â´É Á¤µµ·Î ¾Ë¾ÆµÎÀÚ.
- *				 dllimport, dllexport ÀÌ°Å 2°³´Â
- *	Storage Class : ÀúÀå¼Ò Á¾·ù?´Â º¯¼ö ¶Ç´Â ÇÔ¼öÀÇ ¼ö¸í°ú °ø°³ ¹üÀ§?(Visibility)¸¦ Á¤ÀÇÇÑ´Ù.
+ *	__declspec : ë§ˆì´í¬ë¡œì†Œí”„íŠ¸ í™•ì¥ ê¸°ëŠ¥ìœ¼ë¡œ íƒ€ì… ë˜ëŠ” í•¨ìˆ˜ì— Storage Class ì†ì„±ì„ ë¶€ì—¬í•˜ëŠ” ê²ƒì„ í—ˆìš©í•˜ëŠ” í‚¤ì›Œë“œì´ë‹¤.
+ *			     ë­” ë§ì´ì§€, ì¼ë‹¨ MSVC ì „ìš©ê¸°ëŠ¥ ì •ë„ë¡œ ì•Œì•„ë‘ì.
+ *				 dllimport, dllexport ì´ê±° 2ê°œëŠ”
+ *	Storage Class : ì €ì¥ì†Œ ì¢…ë¥˜?ëŠ” ë³€ìˆ˜ ë˜ëŠ” í•¨ìˆ˜ì˜ ìˆ˜ëª…ê³¼ ê³µê°œ ë²”ìœ„?(Visibility)ë¥¼ ì •ì˜í•œë‹¤.
  *
- *	@Âü°í1 : https://stackoverflow.com/questions/2284610/what-is-declspec-and-when-do-i-need-to-use-it
- *	@Âü°í2 : https://www.tutorialspoint.com/cplusplus/cpp_storage_classes.htm
+ *	@ì°¸ê³ 1 : https://stackoverflow.com/questions/2284610/what-is-declspec-and-when-do-i-need-to-use-it
+ *	@ì°¸ê³ 2 : https://www.tutorialspoint.com/cplusplus/cpp_storage_classes.htm
  */
 
 #pragma once
 
- // novtableÀÌ¶õ?
- // @³»°¡ ¾´ ±Û : https://blog.naver.com/wjdeh313/222733324896
+ // novtableì´ë€?
+ // @ë‚´ê°€ ì“´ ê¸€ : https://blog.naver.com/wjdeh313/222733324896
 #define JCORE_NOVTABLE	__declspec(novtable)
+#define JCORE_EXPORT    __declspec(dllexport)
+#define JCORE_IMPORT    __declspec(dllimport)

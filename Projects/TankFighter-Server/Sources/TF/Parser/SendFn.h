@@ -1,6 +1,6 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
- * ÀÚÁÖ »ç¿ëÇÏ´Â ÆĞÅ¶ ¼Û½Å ÇÔ¼ö
+ * ì‘ì„±ì : ìœ¤ì •ë„
+ * ìì£¼ ì‚¬ìš©í•˜ëŠ” íŒ¨í‚· ì†¡ì‹  í•¨ìˆ˜
  */
 
 #pragma once
@@ -15,26 +15,26 @@ struct SendFn
 {
 	static void SendLoadCharacterInfoAck(Player* player);
 
-	// player¿¡°Ô ÀÚ½ÅÀÇ Ä³¸¯ÅÍ Á¤º¸ Àü¼Û
+	// playerì—ê²Œ ìì‹ ì˜ ìºë¦­í„° ì •ë³´ ì „ì†¡
 	static void SendUpdateCharacterInfoAck(Player* player);
 
-	// player¿¡°Ô ¹æ ¸®½ºÆ® Á¤º¸ Àü¼Û
+	// playerì—ê²Œ ë°© ë¦¬ìŠ¤íŠ¸ ì •ë³´ ì „ì†¡
 	static void SendUpdateRoomListAck(Player* player, int channelUID);
 
-	// player¿¡°Ô Ä£±¸·Î µî·ÏµÈ Ä³¸¯ÅÍ Á¤º¸µé Àü¼Û
+	// playerì—ê²Œ ì¹œêµ¬ë¡œ ë“±ë¡ëœ ìºë¦­í„° ì •ë³´ë“¤ ì „ì†¡
 	static void SendUpdateFriendListAck(Player* player, int characterUID);
 
-	// player¿¡°Ô ¼­¹ö ¸Ş½ÃÁö Àü¼Û
+	// playerì—ê²Œ ì„œë²„ ë©”ì‹œì§€ ì „ì†¡
 	static void SendServerMessageSyn(Player* player, const JCore::String& message);
 
-	// player ¹æ Á¤º¸ Àü¼Û
+	// player ë°© ì •ë³´ ì „ì†¡
 	static void SendRoomInfoAck(Room* room, Player* player);
 
-	// ·Îºñ¿¡ ÀÖ´Â ¸ğµç ÇÃ·¹ÀÌ¾î¿¡°Ô ¹æ ¸®½ºÆ® Á¤º¸ Àü¼Û
+	// ë¡œë¹„ì— ìˆëŠ” ëª¨ë“  í”Œë ˆì´ì–´ì—ê²Œ ë°© ë¦¬ìŠ¤íŠ¸ ì •ë³´ ì „ì†¡
 	static void BroadcastUpdateRoomListAck(Channel* channel);
 	static void SendRTTAck(Player* player, Int64U tick);
 
-	// ¹æ¿¡ ÀÖ´Â ¸ğµç ÇÃ¿¡ÀÌ¾î¿¡°Ô ÇöÀç ¹æ¿¡ µé¾îÀÖ´Â ÇÃ·¹ÀÌ¾î Á¤º¸µé Àü¼Û
+	// ë°©ì— ìˆëŠ” ëª¨ë“  í”Œì—ì´ì–´ì—ê²Œ í˜„ì¬ ë°©ì— ë“¤ì–´ìˆëŠ” í”Œë ˆì´ì–´ ì •ë³´ë“¤ ì „ì†¡
 	static void BroadcastUpdateRoomUserAck(Room* room, bool unsafe = false);
 	
 };

@@ -35,13 +35,13 @@ AppDelegate::~AppDelegate()
     GameClient* pClient = GameClient::GetInstance();
 
 	if (!pClient->Disconnect()) {
-        DebugAssert(false, " ¿¬°á ÇØÁ¦ ½ÇÆĞ");
+        DebugAssertMessage(false, " ì—°ê²° í•´ì œ ì‹¤íŒ¨");
 	}
 
 	DeleteSafe(pClient);
 
     if (!Winsock::Finalize()) {
-        DebugAssert(false, " À©¼Ó ÆÄÀÌ³¯¶óÀÌÁî ½ÇÆĞ");
+        DebugAssertMessage(false, " ìœˆì† íŒŒì´ë‚ ë¼ì´ì¦ˆ ì‹¤íŒ¨");
     }
 
 #if USE_AUDIO_ENGINE
@@ -71,7 +71,7 @@ static int register_all_packages()
 bool AppDelegate::applicationDidFinishLaunching() {
 
     if (!Winsock::Initialize(2, 2)) {
-        DebugAssert(false, "À©¼Ó ÃÊ±âÈ­ ½ÇÆĞ");
+        DebugAssertMessage(false, "ìœˆì† ì´ˆê¸°í™” ì‹¤íŒ¨");
         return false;
     }
 

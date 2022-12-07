@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/CharacterSelectScene.h>
@@ -25,7 +25,7 @@ bool CharacterSelectScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
         return false;
     }
 
-    CCLOG("%d Ä¿¸Çµå ¼ö½Å (%s)", cmd->GetCommand(), "CharacterSelectScene");
+    CCLOG("%d ì»¤ë§¨ë“œ ìˆ˜ì‹  (%s)", cmd->GetCommand(), "CharacterSelectScene");
 
     switch (cmd->GetCommand()) {
     case LOAD_CHARACTER_INFO_ACK: m_pCharacterSelectLayer->CmdLoadCharacterInfoAck(cmd); break;

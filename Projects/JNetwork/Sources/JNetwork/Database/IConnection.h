@@ -1,10 +1,10 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
 
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 
 namespace JNetwork {
 

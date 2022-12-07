@@ -6,9 +6,9 @@
 bool Obstacle::init2(float width, float height) {
 	
 
-	int iColliderCount = 0;			// ÃÑ Äİ¶óÀÌ´õ ¼ö
-	int iHorizontalCount = 0;		// °¡·Î 1ÁÙÀ» Ã¤¿ì´Âµ¥ ÇÊ¿äÇÑ Äİ¶óÀÌ´õ ¼ö
-	int iVerticalCount = 0;			// ¼¼·Î 1ÁÙÀ» Ã¤¿ì´Âµ¥ ÇÊ¿äÇÑ Äİ¶óÀÌ´õ ¼ö
+	int iColliderCount = 0;			// ì´ ì½œë¼ì´ë” ìˆ˜
+	int iHorizontalCount = 0;		// ê°€ë¡œ 1ì¤„ì„ ì±„ìš°ëŠ”ë° í•„ìš”í•œ ì½œë¼ì´ë” ìˆ˜
+	int iVerticalCount = 0;			// ì„¸ë¡œ 1ì¤„ì„ ì±„ìš°ëŠ”ë° í•„ìš”í•œ ì½œë¼ì´ë” ìˆ˜
 
 	this->setContentSize({ width, height });
 
@@ -17,7 +17,7 @@ bool Obstacle::init2(float width, float height) {
 		iColliderCount = 1;
 		break;
 	case ObstacleShape::Rhombus:
-		// ¸¶¸§¸ğ ²ÃÀº Å©±â¸¦ ·çÆ®2·Î ³ª´²¼­ ´ë°¢¼±ÀÌ Áö¸§ÀÌ µÇµµ·Ï ÀÛ°Ô ¸¸µé¾îÁÖÀÚ. break ³ÖÀ¸¸é ¾ÈµÊ
+		// ë§ˆë¦„ëª¨ ê¼´ì€ í¬ê¸°ë¥¼ ë£¨íŠ¸2ë¡œ ë‚˜ëˆ ì„œ ëŒ€ê°ì„ ì´ ì§€ë¦„ì´ ë˜ë„ë¡ ì‘ê²Œ ë§Œë“¤ì–´ì£¼ì. break ë„£ìœ¼ë©´ ì•ˆë¨
 		this->setContentSize({ this->getContentSize() / sqrt(2) });		
 	case ObstacleShape::Rectangle:
 		iHorizontalCount = round(this->getContentSize().width / m_fPrecisionCircleDiametor) ;
@@ -34,11 +34,11 @@ bool Obstacle::init2(float width, float height) {
 		if (iVerticalCount == 0)
 			iVerticalCount = 1;
 
-		// °¡·Î ¼¼·Î ÇÑÁÙ¾¿ µü ¸ÂÃçÁÖ±â À§ÇØ ³Ö¾îÁÜ
+		// ê°€ë¡œ ì„¸ë¡œ í•œì¤„ì”© ë”± ë§ì¶°ì£¼ê¸° ìœ„í•´ ë„£ì–´ì¤Œ
 		m_Colliders.Resize(iColliderCount + iVerticalCount + iHorizontalCount);
 
-		Vec2 stdPos = this->getPosition();									// ½ÃÀÛ ²ÀÁöÁ¡ À§Ä¡, Äİ¶óÀÌ´õ¸¦ Ã¤¿ì±â ½ÃÀÛÇÒ ±âÁØ À§Ä¡
-		Vec2 stdReversePos = this->getPosition() + this->getContentSize();  // ¹İ´ë ²ÀÁöÁ¡ À§Ä¡
+		Vec2 stdPos = this->getPosition();									// ì‹œì‘ ê¼­ì§€ì  ìœ„ì¹˜, ì½œë¼ì´ë”ë¥¼ ì±„ìš°ê¸° ì‹œì‘í•  ê¸°ì¤€ ìœ„ì¹˜
+		Vec2 stdReversePos = this->getPosition() + this->getContentSize();  // ë°˜ëŒ€ ê¼­ì§€ì  ìœ„ì¹˜
 		float fRadious = m_fPrecisionCircleDiametor / 2.0f;
 
 		for (int i = 0; i < iVerticalCount; i++) {
@@ -98,7 +98,7 @@ Obstacle* Obstacle::create(ObstacleShape shape, float width, float height, float
 bool Obstacle::IsCollide(Tank* tank) {
 	const auto tankColliders = tank->GetColliders();
 
-	// ³»ºÎ ÄÃ¶óÀÌ´õµéÀÌ ¸ğµÎ 
+	// ë‚´ë¶€ ì»¬ë¼ì´ë”ë“¤ì´ ëª¨ë‘ 
 	for (int i = 0; i < tankColliders.Size(); i++) {
 		const Sprite* tankCollider = tankColliders[i];
 		const Vec2 tankColliderWorldPos = tank->convertToWorldSpace(tankCollider->getPosition());

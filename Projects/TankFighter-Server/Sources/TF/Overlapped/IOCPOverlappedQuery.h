@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -16,7 +16,7 @@ public:
 	IOCPOverlappedQuery(JNetwork::IOCP* iocp, MysqlQueryFuture* future);
 	~IOCPOverlappedQuery() override;
 public:
-	void Process(BOOL result, DWORD numberOfBytesTransffered, JNetwork::IOCPPostOrder* completionKey) override;
+	void Process(BOOL result, Int32UL numberOfBytesTransffered, JNetwork::IOCPPostOrder* completionKey) override;
 private:
 	MysqlQueryFuture* m_pMysqlQueryFuture;
 };

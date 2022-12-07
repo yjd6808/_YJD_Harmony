@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	Arrays Å¬·¡½º¸¦ Å×½ºÆ®ÇÕ´Ï´Ù.
+	ì‘ì„±ì : ìœ¤ì •ë„
+	Arrays í´ë˜ìŠ¤ë¥¼ í…ŒìŠ¤íŠ¸í•©ë‹ˆë‹¤.
 */
 
 
@@ -9,12 +9,12 @@
 #include <JCore/Container/Arrays.h>
 #include <JCore/Random.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_ArraysTest == ON
 
-// Arrays::Sort ÇÔ¼ö Å×½ºÆ®
+// Arrays::Sort í•¨ìˆ˜ í…ŒìŠ¤íŠ¸
 TEST(ArraysTest, Sort) {
 	vector<int> normal;
 	Random random;
@@ -45,7 +45,7 @@ TEST(ArraysTest, Sort) {
 		}
 		PrintFormat();
 		
-		std::cout << r << "°³ÀÇ µ¥ÀÌÅÍ Á¤·Ä°á°ú ÀÏÄ¡\n";
+		std::cout << r << "ê°œì˜ ë°ì´í„° ì •ë ¬ê²°ê³¼ ì¼ì¹˜\n";
 		*/
 		normal.clear();
 	}
@@ -57,7 +57,7 @@ FAILED:
 TEST(ArraysTest, BinarySearch) {
 	std::vector<int> vec;
 
-	// µ¥ÀÌÅÍ°¡ 1°³¸¸ ÀÖ´Â °æ¿ì
+	// ë°ì´í„°ê°€ 1ê°œë§Œ ìˆëŠ” ê²½ìš°
 	{
 		vec.push_back(1);
 		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 1) == 0);
@@ -65,7 +65,7 @@ TEST(ArraysTest, BinarySearch) {
 		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 0) == -1);
 	}
 	
-	// µ¥ÀÌÅÍ°¡ 2°³¸¸ ÀÖ´Â °æ¿ì
+	// ë°ì´í„°ê°€ 2ê°œë§Œ ìˆëŠ” ê²½ìš°
 	{
 		vec.clear();
 		vec.push_back(1);
@@ -77,7 +77,7 @@ TEST(ArraysTest, BinarySearch) {
 		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 3) == -1);
 	}
 
-	// µ¥ÀÌÅÍ°¡ 3°³¸¸ ÀÖ´Â °æ¿ì
+	// ë°ì´í„°ê°€ 3ê°œë§Œ ìˆëŠ” ê²½ìš°
 	{
 		vec.clear();
 		vec.push_back(1);
@@ -91,7 +91,7 @@ TEST(ArraysTest, BinarySearch) {
 		EXPECT_TRUE(Arrays::BinarySearch(&vec[0], vec.size(), 4) == -1);
 	}
 
-	// °ãÄ¡´Â ¼ıÀÚ°¡ ¸¹Àº °æ¿ì
+	// ê²¹ì¹˜ëŠ” ìˆ«ìê°€ ë§ì€ ê²½ìš°
 	for (int i = 0; i < 50; i++) {
 		vec.clear();
 		Random rand;
@@ -109,7 +109,7 @@ TEST(ArraysTest, BinarySearch) {
 		}
 	}
 
-	// °ãÄ¡´Â ¼ıÀÚ°¡ °ÅÀÇ ¾ø´Â °æ¿ì
+	// ê²¹ì¹˜ëŠ” ìˆ«ìê°€ ê±°ì˜ ì—†ëŠ” ê²½ìš°
 	for (int i = 0; i < 50; i++) {
 		vec.clear();
 		Random rand;
@@ -131,7 +131,7 @@ TEST(ArraysTest, BinarySearch) {
 TEST(ArraysTest, LowerBound) {
 	std::vector<int> vec;
 
-	// µ¥ÀÌÅÍ°¡ 1°³¸¸ ÀÖ´Â °æ¿ì
+	// ë°ì´í„°ê°€ 1ê°œë§Œ ìˆëŠ” ê²½ìš°
 	{
 		vec.push_back(1);
 
@@ -140,7 +140,7 @@ TEST(ArraysTest, LowerBound) {
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == 0);
 	}
 
-	// µ¥ÀÌÅÍ°¡ 2°³¸¸ ÀÖ´Â °æ¿ì
+	// ë°ì´í„°ê°€ 2ê°œë§Œ ìˆëŠ” ê²½ìš°
 	{
 		vec.clear();
 		vec.push_back(1);
@@ -152,7 +152,7 @@ TEST(ArraysTest, LowerBound) {
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 3) == 2);
 	}
 
-	// µ¥ÀÌÅÍ°¡ 3°³¸¸ ÀÖ´Â °æ¿ì
+	// ë°ì´í„°ê°€ 3ê°œë§Œ ìˆëŠ” ê²½ìš°
 	{
 		vec.clear();
 		vec.push_back(1);

@@ -1,15 +1,15 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/Container/Vector.h>
 
 
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_VectorTest == ON
@@ -17,7 +17,7 @@ using namespace std;
 TEST(VectorTest, Regular) {
 	AutoMemoryLeakDetector detector;
 
-	// PushBackAll Å×½ºÆ®
+	// PushBackAll í…ŒìŠ¤íŠ¸
 	{
 		Vector<int> v;
 		Vector<int> temp;
@@ -170,7 +170,7 @@ TEST(VectorTest, Regular) {
 TEST(VectorTest, Enumerator) {
 	AutoMemoryLeakDetector detector;
 
-	// µ¥ÀÌÅÍ°¡ ¾ø´Â °æ¿ì
+	// ë°ì´í„°ê°€ ì—†ëŠ” ê²½ìš°
 	{
 		Vector<int> v;
 		EXPECT_TRUE(v.Begin()->IsValid());
@@ -179,7 +179,7 @@ TEST(VectorTest, Enumerator) {
 		EXPECT_TRUE(v.End()->HasNext() == false);
 	}
 
-	// µ¥ÀÌÅÍ°¡ ÇÑ°³¸¸ ÀÖ´Â °æ¿ì
+	// ë°ì´í„°ê°€ í•œê°œë§Œ ìˆëŠ” ê²½ìš°
 	{
 		Vector<int> v;
 		v.PushBack(1);
@@ -199,7 +199,7 @@ TEST(VectorTest, Enumerator) {
 		EXPECT_TRUE(end->HasPrevious() == false);
 	}
 
-	// µ¥ÀÌÅÍ 5°³
+	// ë°ì´í„° 5ê°œ
 	{
 		Vector<int> v;
 		v.PushBack(1);
@@ -226,17 +226,17 @@ TEST(VectorTest, Enumerator) {
 	}
 }
 
-// »ı¼ºÀÚ Å×½ºÆ®
+// ìƒì„±ì í…ŒìŠ¤íŠ¸
 TEST(VectorTest, ConstructorTest) {
 	AutoMemoryLeakDetector detector;
 
-	// ÀÌ´Ï¼È¶óÀÌÀú Å×½ºÆ®
+	// ì´ë‹ˆì…œë¼ì´ì € í…ŒìŠ¤íŠ¸
 	Vector<int> a{ 1, 2, 3 };
 
 	EXPECT_TRUE(a[0] == 1); a.Remove(1);
 	EXPECT_TRUE(a[0] == 2); a.Remove(2);
 
-	// º¹»ç »ı¼ºÀÚ Å×½ºÆ®
+	// ë³µì‚¬ ìƒì„±ì í…ŒìŠ¤íŠ¸
 	Vector<int> b(a);
 	for (int i = 0; i < 30; i++) {
 		b.PushBack(i);
@@ -252,20 +252,20 @@ TEST(VectorTest, ConstructorTest) {
 	EXPECT_TRUE(c.Size() == 1);
 	EXPECT_TRUE(c[0] == 3);
 
-	// ÀÌµ¿ »ı¼ºÀÚ Å×½ºÆ®
+	// ì´ë™ ìƒì„±ì í…ŒìŠ¤íŠ¸
 	Vector<int> d(Move(c));
 	EXPECT_TRUE(c.Size() == 0);
 	EXPECT_TRUE(d.Size() == 1);
 	EXPECT_TRUE(d[0] == 3);
 }
 
-// ¿¬»êÀÚ Å×½ºÆ®
+// ì—°ì‚°ì í…ŒìŠ¤íŠ¸
 TEST(VectorTest, OperatorTest) {
 	AutoMemoryLeakDetector detector;
 
 	Vector<int> s{ 1, 2, 3 };
 
-	// ÀÌ´Ï¼È¶óÀÌÀú ´ëÀÔ
+	// ì´ë‹ˆì…œë¼ì´ì € ëŒ€ì…
 	s = { 1 };
 	EXPECT_TRUE(s[0] == 1); s.RemoveAt(0);
 

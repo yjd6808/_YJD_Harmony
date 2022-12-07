@@ -1,7 +1,7 @@
 #include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlConnectionPool.h>
 #include <TF/Database/MysqlQuery.h>
-#include <TF/Util/Console.h>
+#include <JCore/Utils/Console.h>
 
 using namespace JCore;
 
@@ -24,7 +24,7 @@ MysqlConnectionPool::~MysqlConnectionPool() {
 
 
 bool MysqlConnectionPool::Init(const uint32_t initConn) {
-	CriticalSectionLockGuard guard(m_Mtx);
+	NormalLockGuard guard(m_Mtx);
 	for (int i = 0; i < initConn; ++i) {
 		MysqlConnection* pConn = CreateConnection();
 		if (pConn) {
@@ -38,7 +38,7 @@ bool MysqlConnectionPool::Init(const uint32_t initConn) {
 }
 
 void MysqlConnectionPool::TerminateAllConnections() {
-	CriticalSectionLockGuard guard(m_Mtx);
+	NormalLockGuard guard(m_Mtx);
 	m_ConnectionList.Extension().ForEach([this](MysqlConnection* conn) {
 		this->TerminateConnection(conn);
 	});
@@ -57,7 +57,7 @@ void MysqlConnectionPool::TerminateConnection(MysqlConnection* conn) {
 
 MysqlConnection* MysqlConnectionPool::GetConnection() {
 	MysqlConnection* pConn;
-	CriticalSectionLockGuard guard(m_Mtx);
+	NormalLockGuard guard(m_Mtx);
 
 	if (m_ConnectionList.Size() > 0) {
 		pConn = m_ConnectionList.Front();
@@ -85,7 +85,7 @@ MysqlConnection* MysqlConnectionPool::GetConnection() {
 
 void MysqlConnectionPool::ReleaseConnection(MysqlConnection* conn) {
 	if (conn)  {
-		CriticalSectionLockGuard guard(m_Mtx);
+		NormalLockGuard guard(m_Mtx);
 		m_ConnectionList.PushBack(conn);
 	}
 }

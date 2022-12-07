@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #include <TF/PrecompiledHeader.h>
@@ -19,14 +19,14 @@ IOCPOverlappedQuery::IOCPOverlappedQuery(IOCP* iocp, MysqlQueryFuture* future) :
 
 IOCPOverlappedQuery::~IOCPOverlappedQuery() = default;
 
-void IOCPOverlappedQuery::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedQuery::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
 	JCore::AutoPointer<MysqlQueryFuture> autoReleaseFuture(m_pMysqlQueryFuture, [](MysqlQueryFuture* future) { future->Release(); });
 
 	auto pConn = _MysqlConnPool->GetConnection();
 
 	if (pConn == nullptr) {
-		// Ç®¸µ ½ÇÆĞ
-		DebugAssert(false, "IOCPOverlappedQuery::Process() Failed Ä¿³Ø¼Ç Ç®¸µ ½ÇÆĞ");
+		// í’€ë§ ì‹¤íŒ¨
+		DebugAssertMessage(false, "IOCPOverlappedQuery::Process() Failed ì»¤ë„¥ì…˜ í’€ë§ ì‹¤íŒ¨");
 		return;
 	}
 

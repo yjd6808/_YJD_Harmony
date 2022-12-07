@@ -1,12 +1,12 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¿¹¿Ü ¸ğÀ½
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ì˜ˆì™¸ ëª¨ìŒ
 */
 
 #pragma once
 
 #include <exception>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 
 namespace JCore {
 
@@ -55,6 +55,12 @@ struct InvalidOperationException : public Exception
 {
 	InvalidOperationException(const char* msg) : Exception(msg) {}
 	InvalidOperationException(const String& msg) : Exception(msg.Source()) {}
+};
+
+struct NotImplementedException : public Exception
+{
+  NotImplementedException(const char* msg) : Exception(msg) {}
+  NotImplementedException(const String& msg) : Exception(msg.Source()) {}
 };
 
 

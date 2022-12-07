@@ -1,14 +1,14 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  *
- * Syn : º¸³¿
- * Ack : º¸³½°Å¿¡ ´ëÇÑ ÀÀ´ä
+ * Syn : ë³´ëƒ„
+ * Ack : ë³´ë‚¸ê±°ì— ëŒ€í•œ ì‘ë‹µ
  *
- * ÀÌ·¸°Ô ±¸¼ºÇØºÃ´Âµ¥ º°·Î°°³×..
+ * ì´ë ‡ê²Œ êµ¬ì„±í•´ë´¤ëŠ”ë° ë³„ë¡œê°™ë„¤..
  *
- * ´ÜÁ¡
- * 1. ÀÌ¸§ÀÌ Á» ±æ¾îÁø´Ù. ÇÑ´«¿¡ Àß ¾Èµé¾î¿È
- * 2. ¿Ã¶§ °¥¶§ ¶È°°Àº ³»¿ëÀÌ ÀÖÀ» ¼ö ÀÖ´Ù
+ * ë‹¨ì 
+ * 1. ì´ë¦„ì´ ì¢€ ê¸¸ì–´ì§„ë‹¤. í•œëˆˆì— ì˜ ì•ˆë“¤ì–´ì˜´
+ * 2. ì˜¬ë•Œ ê°ˆë•Œ ë˜‘ê°™ì€ ë‚´ìš©ì´ ìˆì„ ìˆ˜ ìˆë‹¤
  */
 
 #pragma once
@@ -18,94 +18,94 @@
 #include <Common/GameConfiguration.h>
 
 // TCP Commands
-#define LOGIN_SYN						100		// Å¬¶ó -> ¼­¹ö
-#define LOGIN_ACK						101		// ¼­¹ö -> Å¬¶ó
+#define LOGIN_SYN						100		// í´ë¼ -> ì„œë²„
+#define LOGIN_ACK						101		// ì„œë²„ -> í´ë¼
 
-#define REGISTER_SYN					102		// Å¬¶ó -> ¼­¹ö
-#define REGISTER_ACK					103		// ¼­¹ö -> Å¬¶ó
+#define REGISTER_SYN					102		// í´ë¼ -> ì„œë²„
+#define REGISTER_ACK					103		// ì„œë²„ -> í´ë¼
 
-#define LOAD_CHANNEL_INFO_SYN			104		// Å¬¶ó -> ¼­¹ö / (Ã¤³Î ÁøÀÔ½Ã)
-#define LOAD_CHANNEL_INFO_ACK			105		// ¼­¹ö -> Å¬¶ó
+#define LOAD_CHANNEL_INFO_SYN			104		// í´ë¼ -> ì„œë²„ / (ì±„ë„ ì§„ì…ì‹œ)
+#define LOAD_CHANNEL_INFO_ACK			105		// ì„œë²„ -> í´ë¼
 
-#define SELECT_CHANNEL_SYN				106		// Å¬¶ó -> ¼­¹ö / (ChannelLayer¿¡¼­ Ã¤³Î ¹öÆ° Å¬¸¯½Ã)
-#define SELECT_CHANNEL_ACK				107		// ¼­¹ö -> Å¬¶ó
+#define SELECT_CHANNEL_SYN				106		// í´ë¼ -> ì„œë²„ / (ChannelLayerì—ì„œ ì±„ë„ ë²„íŠ¼ í´ë¦­ì‹œ)
+#define SELECT_CHANNEL_ACK				107		// ì„œë²„ -> í´ë¼
 
-#define LOAD_CHARACTER_INFO_SYN			108		// Å¬¶ó -> ¼­¹ö / (Ä³¸¯ÅÍ ¼±ÅÃ ÁøÀÔ½Ã)
-#define LOAD_CHARACTER_INFO_ACK			109		// ¼­¹ö -> Å¬¶ó
+#define LOAD_CHARACTER_INFO_SYN			108		// í´ë¼ -> ì„œë²„ / (ìºë¦­í„° ì„ íƒ ì§„ì…ì‹œ)
+#define LOAD_CHARACTER_INFO_ACK			109		// ì„œë²„ -> í´ë¼
 
-#define CREATE_CHARACTER_SYN			110		// Å¬¶ó -> ¼­¹ö / (CharacterSelectLayer¿¡¼­ Ä³¸¯ÅÍ »ı¼º ¹öÆ° Å¬¸¯½Ã Àü¼Û)
-#define CREATE_CHARACTER_ACK			111		// ¼­¹ö -> Å¬¶ó
+#define CREATE_CHARACTER_SYN			110		// í´ë¼ -> ì„œë²„ / (CharacterSelectLayerì—ì„œ ìºë¦­í„° ìƒì„± ë²„íŠ¼ í´ë¦­ì‹œ ì „ì†¡)
+#define CREATE_CHARACTER_ACK			111		// ì„œë²„ -> í´ë¼
 
-#define DELETE_CHARACTER_SYN			112		// Å¬¶ó -> ¼­¹ö / (CharacterSelectLayer¿¡¼­ Ä³¸¯ÅÍ Á¦°Å ¹öÆ° Å¬¸¯½Ã Àü¼Û)
-#define DELETE_CHARACTER_ACK			113		// ¼­¹ö -> Å¬¶ó
+#define DELETE_CHARACTER_SYN			112		// í´ë¼ -> ì„œë²„ / (CharacterSelectLayerì—ì„œ ìºë¦­í„° ì œê±° ë²„íŠ¼ í´ë¦­ì‹œ ì „ì†¡)
+#define DELETE_CHARACTER_ACK			113		// ì„œë²„ -> í´ë¼
 
-#define SELECT_CHARACTER_SYN			114		// Å¬¶ó -> ¼­¹ö / (CharacterSelectLayer¿¡¼­ ·ÎµùµÈ Ä³¸¯ÅÍ ¹öÆ° Å¬¸¯½Ã Àü¼Û)
-#define SELECT_CHARACTER_ACK			115		// ¼­¹ö -> Å¬¶ó
+#define SELECT_CHARACTER_SYN			114		// í´ë¼ -> ì„œë²„ / (CharacterSelectLayerì—ì„œ ë¡œë”©ëœ ìºë¦­í„° ë²„íŠ¼ í´ë¦­ì‹œ ì „ì†¡)
+#define SELECT_CHARACTER_ACK			115		// ì„œë²„ -> í´ë¼
 
-#define JOIN_LOBBY_SYN					116		// Å¬¶ó -> ¼­¹ö / (·Îºñ ÁøÀÔ½Ã) °¢Á¾ ·Îºñ Á¤º¸¸¦ ¿äÃ»ÇÑ´Ù.
-#define UPDATE_CHARACTER_INFO_ACK		117		// ¼­¹ö -> Å¬¶ó / ¾÷µ¥ÀÌÆ®µÈ Ä³¸¯ÅÍ Á¤º¸¸¦ Àü¼ÛÇÑ´Ù.
-#define UPDATE_ROOMLIST_ACK				118		// ¼­¹ö -> Å¬¶ó / ¾÷µ¥Æ®µÈ ¹æ Á¤º¸µéÀ» Àü¼ÛÇÑ´Ù.
-#define UPDATE_FRIENDLIST_ACK			119		// ¼­¹ö -> Å¬¶ó / Ä£±¸ °ü°è Á¤º¸¸¦ Àü¼ÛÇÑ´Ù.
+#define JOIN_LOBBY_SYN					116		// í´ë¼ -> ì„œë²„ / (ë¡œë¹„ ì§„ì…ì‹œ) ê°ì¢… ë¡œë¹„ ì •ë³´ë¥¼ ìš”ì²­í•œë‹¤.
+#define UPDATE_CHARACTER_INFO_ACK		117		// ì„œë²„ -> í´ë¼ / ì—…ë°ì´íŠ¸ëœ ìºë¦­í„° ì •ë³´ë¥¼ ì „ì†¡í•œë‹¤.
+#define UPDATE_ROOMLIST_ACK				118		// ì„œë²„ -> í´ë¼ / ì—…ë°íŠ¸ëœ ë°© ì •ë³´ë“¤ì„ ì „ì†¡í•œë‹¤.
+#define UPDATE_FRIENDLIST_ACK			119		// ì„œë²„ -> í´ë¼ / ì¹œêµ¬ ê´€ê³„ ì •ë³´ë¥¼ ì „ì†¡í•œë‹¤.
 
-#define CREATE_ROOM_SYN					120		// Å¬¶ó -> ¼­¹ö / ¹æ »ı¼º ¹öÆ° Å¬¸¯½Ã
-#define CREATE_ROOM_ACK					124		// ¼­¹ö -> Å¬¶ó
+#define CREATE_ROOM_SYN					120		// í´ë¼ -> ì„œë²„ / ë°© ìƒì„± ë²„íŠ¼ í´ë¦­ì‹œ
+#define CREATE_ROOM_ACK					124		// ì„œë²„ -> í´ë¼
 
-#define JOIN_ROOM_SYN					121		// Å¬¶ó -> ¼­¹ö / ¹æ Âü°¡ / ¹æ ¸ñ·Ï(¸®½ºÆ®ºä)ÀÇ ¹æ ¹öÆ° Å¬¸¯½Ã
-#define JOIN_ROOM_ACK					125		// ¼­¹ö -> Å¬¶ó
+#define JOIN_ROOM_SYN					121		// í´ë¼ -> ì„œë²„ / ë°© ì°¸ê°€ / ë°© ëª©ë¡(ë¦¬ìŠ¤íŠ¸ë·°)ì˜ ë°© ë²„íŠ¼ í´ë¦­ì‹œ
+#define JOIN_ROOM_ACK					125		// ì„œë²„ -> í´ë¼
 
-#define UPDATE_ROOMINFO_ACK				126		// ¼­¹ö -> Å¬¶ó / ´Ù¸¥ À¯Àú°¡ ¹æ¿¡ Âü°¡ÇÏ°Å³ª, ¹æ¿¡ ÀÖ´ø À¯Àú°¡ ³ª°¡´Â °æ¿ì
+#define UPDATE_ROOMINFO_ACK				126		// ì„œë²„ -> í´ë¼ / ë‹¤ë¥¸ ìœ ì €ê°€ ë°©ì— ì°¸ê°€í•˜ê±°ë‚˜, ë°©ì— ìˆë˜ ìœ ì €ê°€ ë‚˜ê°€ëŠ” ê²½ìš°
 
-#define ADD_FRIEND_SYN					122		// Å¬¶ó -> ¼­¹ö / Ä£±¸ Ãß°¡ ¹öÆ° Å¬¸¯½Ã
-#define ADD_FRIEND_ACK					127		// ¼­¹ö -> Å¬¶ó / Ä£±¸ Ãß°¡ ¿äÃ»¿¡ ´ëÇÑ °á°ú¸¦ º¸³½´Ù.
-#define ADD_FRIEND_REQUEST_SYN			128		// ¼­¹ö -> Å¬¶ó / Ä£±¸ Ãß°¡ ¿äÃ» ´ë»ó¿¡°Ô ¿äÃ»Á¤º¸¸¦ Àü´ŞÇÑ´Ù.
-#define ADD_FRIEND_REQUEST_ACK			128		// Å¬¶ó -> ¼­¹ö / Ä£±¸ ¿äÃ»À» ¹ŞÀº Å¬¶óÀÌ¾ğÆ®°¡ ¼ö¶ô/°ÅºÎÀÇ °á°ú¸¦ ¼­¹ö·Î Àü¼ÛÇÑ´Ù.
-
-
-#define DELETE_FRIEND_SYN				123		// Å¬¶ó -> ¼­¹ö / Ä£±¸ »èÁ¦ / Ä£±¸ ¸ñ·Ï(¸®½ºÆ®ºä)ÀÇ Ä£±¸ ¹öÆ° Å¬¸¯½Ã
-#define DELETE_FRIEND_ACK				130		// ¼­¹ö -> Å¬¶ó / »èÁ¦µÈ ´ë»óÀÌ Á¢¼ÓÁßÀÎ °æ¿ì ´ë»ó¿¡°Ôµµ »èÁ¦µÇ¾ú´Ù°í ¼Û½ÅÇÏ°í »èÁ¦ÇÑ »ç¶÷¿¡°Ôµµ ¼Û½ÅÇÑ´Ù. ±×¸®°í Ä£±¸ ¸ñ·Ïµµ °»½ÅÇØÁÜ
-
-#define LOAD_ROOM_INFO_SYN				131		// Å¬¶ó -> ¼­¹ö / (¹æ ÁøÀÔ ½Ã) °¢Á¾ ¹æ Á¤º¸¸¦ ¿äÃ»ÇÑ´Ù.
-#define LOAD_ROOM_INFO_ACK				132		// ¼­¹ö -> Å¬¶ó
+#define ADD_FRIEND_SYN					122		// í´ë¼ -> ì„œë²„ / ì¹œêµ¬ ì¶”ê°€ ë²„íŠ¼ í´ë¦­ì‹œ
+#define ADD_FRIEND_ACK					127		// ì„œë²„ -> í´ë¼ / ì¹œêµ¬ ì¶”ê°€ ìš”ì²­ì— ëŒ€í•œ ê²°ê³¼ë¥¼ ë³´ë‚¸ë‹¤.
+#define ADD_FRIEND_REQUEST_SYN			128		// ì„œë²„ -> í´ë¼ / ì¹œêµ¬ ì¶”ê°€ ìš”ì²­ ëŒ€ìƒì—ê²Œ ìš”ì²­ì •ë³´ë¥¼ ì „ë‹¬í•œë‹¤.
+#define ADD_FRIEND_REQUEST_ACK			128		// í´ë¼ -> ì„œë²„ / ì¹œêµ¬ ìš”ì²­ì„ ë°›ì€ í´ë¼ì´ì–¸íŠ¸ê°€ ìˆ˜ë½/ê±°ë¶€ì˜ ê²°ê³¼ë¥¼ ì„œë²„ë¡œ ì „ì†¡í•œë‹¤.
 
 
-#define ROOM_GAME_START_SYN				133		// Å¬¶ó -> ¼­¹ö / °ÔÀÓ ½ÃÀÛ ¹öÆ° Å¬¸¯
-#define ROOM_GAME_START_ACK				137		// ¼­¹ö -> Å¬¶ó / ¹æ ¾ÈÀÇ ¸â¹öµé¿¡°Ô °ÔÀÓ ½ÃÀÛ ÆĞÅ¶ Àü¼Û
+#define DELETE_FRIEND_SYN				123		// í´ë¼ -> ì„œë²„ / ì¹œêµ¬ ì‚­ì œ / ì¹œêµ¬ ëª©ë¡(ë¦¬ìŠ¤íŠ¸ë·°)ì˜ ì¹œêµ¬ ë²„íŠ¼ í´ë¦­ì‹œ
+#define DELETE_FRIEND_ACK				130		// ì„œë²„ -> í´ë¼ / ì‚­ì œëœ ëŒ€ìƒì´ ì ‘ì†ì¤‘ì¸ ê²½ìš° ëŒ€ìƒì—ê²Œë„ ì‚­ì œë˜ì—ˆë‹¤ê³  ì†¡ì‹ í•˜ê³  ì‚­ì œí•œ ì‚¬ëŒì—ê²Œë„ ì†¡ì‹ í•œë‹¤. ê·¸ë¦¬ê³  ì¹œêµ¬ ëª©ë¡ë„ ê°±ì‹ í•´ì¤Œ
 
-#define ROOM_GAME_READY_SYN				134		// Å¬¶ó -> ¼­¹ö / °ÔÀÓ ÁØºñ ¹öÆ° Å¬¸¯
-#define ROOM_GAME_READY_ACK				137		// ¼­¹ö -> Å¬¶ó / ÁØºñ ¿äÃ»¿¡ ´ëÇÑ ÀÀ´ä
+#define LOAD_ROOM_INFO_SYN				131		// í´ë¼ -> ì„œë²„ / (ë°© ì§„ì… ì‹œ) ê°ì¢… ë°© ì •ë³´ë¥¼ ìš”ì²­í•œë‹¤.
+#define LOAD_ROOM_INFO_ACK				132		// ì„œë²„ -> í´ë¼
 
-#define ROOM_GAME_READY_CANCEL_SYN		135		// Å¬¶ó -> ¼­¹ö / ÁØºñ ÇØÁ¦ ¹öÆ° Å¬¸¯
-#define ROOM_GAME_READY_CANCEL_ACK		138		// ¼­¹ö -> Å¬¶ó / ÁØºñ ÇØÁ¦¿¡ ´ëÇÑ ÀÀ´ä
 
-#define ROOM_LEAVE_SYN					136		// Å¬¶ó -> ¼­¹ö / ¹æ ³ª°¡±â ¹öÆ° Å¬¸¯
-#define ROOM_LEAVE_ACK					139		// ¼­¹ö -> Å¬¶ó / ¹æ ³ª°¡±â¿¡ ´ëÇÑ ÀÀ´ä
+#define ROOM_GAME_START_SYN				133		// í´ë¼ -> ì„œë²„ / ê²Œì„ ì‹œì‘ ë²„íŠ¼ í´ë¦­
+#define ROOM_GAME_START_ACK				137		// ì„œë²„ -> í´ë¼ / ë°© ì•ˆì˜ ë©¤ë²„ë“¤ì—ê²Œ ê²Œì„ ì‹œì‘ íŒ¨í‚· ì „ì†¡
 
-#define BATTLE_FIELD_LOAD_SYN			150		// Å¬¶ó -> ¼­¹ö / ¹æ¿¡ ÁøÀÔÇÏ¸é ¼­¹ö·Î ³­ ÁØºñµÆ¼Ò! ¶ó°í ¾Ë·ÁÁØ´Ù.
-#define BATTLE_FIELD_LOAD_ACK			151		// °ÔÀÓ ½ÃÀÛ±îÁö ³²Àº ½Ã°£°ú ¸Ê Á¤º¸±×¸®°í ÀÌ ÇÃ·¹ÀÌ¾î°¡ ½ºÆùµÉ À§Ä¡ Á¤º¸¸¦ º¸³»ÁØ´Ù.
+#define ROOM_GAME_READY_SYN				134		// í´ë¼ -> ì„œë²„ / ê²Œì„ ì¤€ë¹„ ë²„íŠ¼ í´ë¦­
+#define ROOM_GAME_READY_ACK				137		// ì„œë²„ -> í´ë¼ / ì¤€ë¹„ ìš”ì²­ì— ëŒ€í•œ ì‘ë‹µ
 
-#define BATTLE_FIELD_TANK_MOVE_SYN		161		// Å¬¶ó -> ¼­¹ö / Å¬¶ó¿¡¼­ ¿òÁ÷ÀÏ¶§¸¶´Ù ÀÏÁ¤ ÁÖ±â¸¶´Ù ¼­¹ö·Î ÀÚ½ÅÀÇ À§Ä¡¸¦ Àü¼ÛÇÑ´Ù. - ¼­¹ö´Â ÀÌ¸¦ ¾÷µ¥ÀÌÆ®ÇÑ´Ù.
-#define BATTLE_FIELD_TANK_UPDATE_SYN	162		// ¼­¹ö -> Å¬¶ó / ¼­¹ö´Â ÀÏÁ¤ÁÖ±â¸¶´Ù ÇÃ·¹ÀÌ¾î À§Ä¡¸¦ ÇÃ·¹ÀÌÁßÀÎ ¹æÀÇ À¯Àúµé¿¡°Ô ºê·ÎµåÄ³½ºÆÃ ÇØÁØ´Ù.
-#define BATTLE_FIELD_PLAYWAIT_END_SYN	163		// ¼­¹ö -> Å¬¶ó / °ÔÀÓ ½ÃÀÛ ´ë±â »óÅÂ°¡ ³¡³­°æ¿ì ÀÌÁ¦ ½ÃÀÛÇØµµ µÈ´Ù°í ¾Ë·ÁÁØ´Ù. (ÀÌÁ¦ ÃÑÀ» ½ò ¼ö ÀÖÀ½)
-#define BATTLE_FIELD_PLAYING_END_SYN	164		// ¼­¹ö -> Å¬¶ó / °ÔÀÓ ÁøÇà ½Ã°£ÀÌ ³¡³­ °æ¿ì ¾Ë·ÁÁØ´Ù. (ÀÌÁ¦ ÃÑÀ» ¸ø»Ë)
-#define BATTLE_FIELD_ENDWAIT_END_SYN	165		// ¼­¹ö -> Å¬¶ó / °ÔÀÓ ¸¶¹«¸® ½Ã°£ÀÌ ³¡³­ °æ¿ì ¾Ë·ÁÁØ´Ù. ¸ğµç ÇÃ·¹ÀÌ¾î¸¦ ·Îºñ »óÅÂ·Î º¯°æÇØÁØ´Ù.
+#define ROOM_GAME_READY_CANCEL_SYN		135		// í´ë¼ -> ì„œë²„ / ì¤€ë¹„ í•´ì œ ë²„íŠ¼ í´ë¦­
+#define ROOM_GAME_READY_CANCEL_ACK		138		// ì„œë²„ -> í´ë¼ / ì¤€ë¹„ í•´ì œì— ëŒ€í•œ ì‘ë‹µ
 
-#define BATTLE_FIELD_FIRE_SYN			166		// Å¬¶ó -> ¼­¹ö / ÇÃ·¹ÀÌ¾î ÃÑ¾Ë ¹ß»ç ÈÄ À§Ä¡ Á¤º¸ Àü´Ş
-#define BATTLE_FIELD_FIRE_ACK			167		// ¼­¹ö -> Å¬¶ó / ÃÑ¾Ë ¹ß»çÇß´Ù°í ºê·ÎµåÄ³½ºÆÃ
+#define ROOM_LEAVE_SYN					136		// í´ë¼ -> ì„œë²„ / ë°© ë‚˜ê°€ê¸° ë²„íŠ¼ í´ë¦­
+#define ROOM_LEAVE_ACK					139		// ì„œë²„ -> í´ë¼ / ë°© ë‚˜ê°€ê¸°ì— ëŒ€í•œ ì‘ë‹µ
 
-#define BATTLE_FIELD_DEATH_SYN			168		// Å¬¶ó -> ¼­¹ö / 
-#define BATTLE_FIELD_DEATH_ACK			169		// ¼­¹ö -> Å¬¶ó / ´Ù¸¥ ÇÃ·¹ÀÌ¾î¿¡°Ô ºê·ÎµåÄ³½ºÆÃ ¹× º»ÀÎ¿¡ ÇØ´çÇÏ´Â °æ¿ì ¸®¹ÙÀÌ¹ú Å¸ÀÌ¸Ó ¼³Á¤À» ÁøÇàÇÑ´Ù.
-#define BATTLE_FIELD_REVIVAL_SYN		170		// ¼­¹ö -> Å¬¶ó / ºÎÈ°½Ã°£ÀÌ ´ÙµÇ¼­ Ä³¸¯ÅÍ¸¦ ¸®½ºÆù½ÃÅ²´Ù.
-#define BATTLE_FILED_STATISTICS_UPDATE_SYN 171	// ¤µ¹ö -> Å¬¶ó / ÁÖ±âÀûÀ¸·Î 
+#define BATTLE_FIELD_LOAD_SYN			150		// í´ë¼ -> ì„œë²„ / ë°©ì— ì§„ì…í•˜ë©´ ì„œë²„ë¡œ ë‚œ ì¤€ë¹„ëì†Œ! ë¼ê³  ì•Œë ¤ì¤€ë‹¤.
+#define BATTLE_FIELD_LOAD_ACK			151		// ê²Œì„ ì‹œì‘ê¹Œì§€ ë‚¨ì€ ì‹œê°„ê³¼ ë§µ ì •ë³´ê·¸ë¦¬ê³  ì´ í”Œë ˆì´ì–´ê°€ ìŠ¤í°ë  ìœ„ì¹˜ ì •ë³´ë¥¼ ë³´ë‚´ì¤€ë‹¤.
 
-#define BATTLE_FIELD_LEAVE_SYN			180		// Å¬¶ó -> ¼­¹ö / ¹æ³ª°¡±â Å¬¸¯
-#define BATTLE_FIELD_LEAVE_ACK			181		// Å¬¶ó -> ¼­¹ö / ³ª°£³ğ Á¦¿ÜÇÏ°í ³²¾ÆÀÖ´Â ³ğµé¿¡°Ô ³ª°¬´Ù°í ¾Ë·ÁÁÜ
+#define BATTLE_FIELD_TANK_MOVE_SYN		161		// í´ë¼ -> ì„œë²„ / í´ë¼ì—ì„œ ì›€ì§ì¼ë•Œë§ˆë‹¤ ì¼ì • ì£¼ê¸°ë§ˆë‹¤ ì„œë²„ë¡œ ìì‹ ì˜ ìœ„ì¹˜ë¥¼ ì „ì†¡í•œë‹¤. - ì„œë²„ëŠ” ì´ë¥¼ ì—…ë°ì´íŠ¸í•œë‹¤.
+#define BATTLE_FIELD_TANK_UPDATE_SYN	162		// ì„œë²„ -> í´ë¼ / ì„œë²„ëŠ” ì¼ì •ì£¼ê¸°ë§ˆë‹¤ í”Œë ˆì´ì–´ ìœ„ì¹˜ë¥¼ í”Œë ˆì´ì¤‘ì¸ ë°©ì˜ ìœ ì €ë“¤ì—ê²Œ ë¸Œë¡œë“œìºìŠ¤íŒ… í•´ì¤€ë‹¤.
+#define BATTLE_FIELD_PLAYWAIT_END_SYN	163		// ì„œë²„ -> í´ë¼ / ê²Œì„ ì‹œì‘ ëŒ€ê¸° ìƒíƒœê°€ ëë‚œê²½ìš° ì´ì œ ì‹œì‘í•´ë„ ëœë‹¤ê³  ì•Œë ¤ì¤€ë‹¤. (ì´ì œ ì´ì„ ì  ìˆ˜ ìˆìŒ)
+#define BATTLE_FIELD_PLAYING_END_SYN	164		// ì„œë²„ -> í´ë¼ / ê²Œì„ ì§„í–‰ ì‹œê°„ì´ ëë‚œ ê²½ìš° ì•Œë ¤ì¤€ë‹¤. (ì´ì œ ì´ì„ ëª»ë½)
+#define BATTLE_FIELD_ENDWAIT_END_SYN	165		// ì„œë²„ -> í´ë¼ / ê²Œì„ ë§ˆë¬´ë¦¬ ì‹œê°„ì´ ëë‚œ ê²½ìš° ì•Œë ¤ì¤€ë‹¤. ëª¨ë“  í”Œë ˆì´ì–´ë¥¼ ë¡œë¹„ ìƒíƒœë¡œ ë³€ê²½í•´ì¤€ë‹¤.
 
-#define SERVER_MESSAGE_SYN				400		// ¼­¹ö -> Å¬¶ó·Î Æ¯Á¤ ¸Ş½ÃÁö Àü¼Û
-#define CHAT_MESSAGE_SYN				401		// Å¬¶ó -> Ã¤ÆÃ ¸Ş½ÃÁö Àü¼Û
-#define CHAT_MESSAGE_ACK				402		// ¼­¹ö -> Å¬¶ó ºê·ÎµåÄ³½ºÆ® Àü¼Û
+#define BATTLE_FIELD_FIRE_SYN			166		// í´ë¼ -> ì„œë²„ / í”Œë ˆì´ì–´ ì´ì•Œ ë°œì‚¬ í›„ ìœ„ì¹˜ ì •ë³´ ì „ë‹¬
+#define BATTLE_FIELD_FIRE_ACK			167		// ì„œë²„ -> í´ë¼ / ì´ì•Œ ë°œì‚¬í–ˆë‹¤ê³  ë¸Œë¡œë“œìºìŠ¤íŒ…
 
-#define TCP_RTT_SYN						200		// Å¬¶ó -> ¼­¹ö / RTT/·¹ÀÌÅÏ½Ã °è»êÀ» À§ÇØ ÇöÀç ½Ã°£À» ´ã¾Æ¼­ Àü´Ş
-#define TCP_RTT_ACK						201		// ¼­¹ö -> Å¬¶ó / 
+#define BATTLE_FIELD_DEATH_SYN			168		// í´ë¼ -> ì„œë²„ / 
+#define BATTLE_FIELD_DEATH_ACK			169		// ì„œë²„ -> í´ë¼ / ë‹¤ë¥¸ í”Œë ˆì´ì–´ì—ê²Œ ë¸Œë¡œë“œìºìŠ¤íŒ… ë° ë³¸ì¸ì— í•´ë‹¹í•˜ëŠ” ê²½ìš° ë¦¬ë°”ì´ë²Œ íƒ€ì´ë¨¸ ì„¤ì •ì„ ì§„í–‰í•œë‹¤.
+#define BATTLE_FIELD_REVIVAL_SYN		170		// ì„œë²„ -> í´ë¼ / ë¶€í™œì‹œê°„ì´ ë‹¤ë˜ì„œ ìºë¦­í„°ë¥¼ ë¦¬ìŠ¤í°ì‹œí‚¨ë‹¤.
+#define BATTLE_FILED_STATISTICS_UPDATE_SYN 171	// ã……ë²„ -> í´ë¼ / ì£¼ê¸°ì ìœ¼ë¡œ 
+
+#define BATTLE_FIELD_LEAVE_SYN			180		// í´ë¼ -> ì„œë²„ / ë°©ë‚˜ê°€ê¸° í´ë¦­
+#define BATTLE_FIELD_LEAVE_ACK			181		// í´ë¼ -> ì„œë²„ / ë‚˜ê°„ë†ˆ ì œì™¸í•˜ê³  ë‚¨ì•„ìˆëŠ” ë†ˆë“¤ì—ê²Œ ë‚˜ê°”ë‹¤ê³  ì•Œë ¤ì¤Œ
+
+#define SERVER_MESSAGE_SYN				400		// ì„œë²„ -> í´ë¼ë¡œ íŠ¹ì • ë©”ì‹œì§€ ì „ì†¡
+#define CHAT_MESSAGE_SYN				401		// í´ë¼ -> ì±„íŒ… ë©”ì‹œì§€ ì „ì†¡
+#define CHAT_MESSAGE_ACK				402		// ì„œë²„ -> í´ë¼ ë¸Œë¡œë“œìºìŠ¤íŠ¸ ì „ì†¡
+
+#define TCP_RTT_SYN						200		// í´ë¼ -> ì„œë²„ / RTT/ë ˆì´í„´ì‹œ ê³„ì‚°ì„ ìœ„í•´ í˜„ì¬ ì‹œê°„ì„ ë‹´ì•„ì„œ ì „ë‹¬
+#define TCP_RTT_ACK						201		// ì„œë²„ -> í´ë¼ / 
 
 // UDP Commands
 #define UDP_PING_SYN					2000
@@ -120,7 +120,8 @@
 
 
 
-
+#pragma warning (push)
+  #pragma warning (disable: 4200) // nonstandard extension used: zero-sized array in struct/union
 
 struct LoginSyn : JNetwork::ICommand
 {
@@ -162,7 +163,7 @@ struct LoadChannelInfoSyn : JNetwork::ICommand
 	// Empty
 };
 
-// ÃÖ´ë 10°³ÀÇ Ã¤³Î Á¤º¸±îÁö ¹ŞÀ» ¼ö ÀÖµµ·Ï.
+// ìµœëŒ€ 10ê°œì˜ ì±„ë„ ì •ë³´ê¹Œì§€ ë°›ì„ ìˆ˜ ìˆë„ë¡.
 struct LoadChannelInfoAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoadChannelInfoAck, LOAD_CHANNEL_INFO_ACK)
@@ -334,7 +335,7 @@ struct UpdateRoomInfoAck : JNetwork::ICommand
 	CMD_DEFAULT_CONSTRUCTOR(UpdateRoomInfoAck, UPDATE_ROOMINFO_ACK)
 
 	int Count = 0;
-	int HostCharacterUID = INVALID_UID;		// ¹æÀå
+	int HostCharacterUID = INVALID_UID;		// ë°©ì¥
 	RoomCharacterInfo Info[ROOM_MAX_PLAYER_COUNT];
 };
 
@@ -358,7 +359,7 @@ struct AddFriendRequestSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestSyn, ADD_FRIEND_REQUEST_SYN)
 
-	int RequestCharacterUID;	// Ä£±¸ ¿äÃ»À» º¸³½ »ç¶÷ÀÇ UID
+	int RequestCharacterUID;	// ì¹œêµ¬ ìš”ì²­ì„ ë³´ë‚¸ ì‚¬ëŒì˜ UID
 	CharacterInfo Info;
 };
 
@@ -366,7 +367,7 @@ struct AddFriendRequestAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestAck, ADD_FRIEND_REQUEST_ACK)
 
-	bool Accept = false;				// Ä£±¸ ¿äÃ» ¼ö¶ô/°ÅºÎ ¿©ºÎ
+	bool Accept = false;				// ì¹œêµ¬ ìš”ì²­ ìˆ˜ë½/ê±°ë¶€ ì—¬ë¶€
 	int RequestCharacterUID;
 	int AcceptedCharacterUID;
 };
@@ -384,7 +385,7 @@ struct DeleteFriendAck : JNetwork::ICommand
 	CMD_DEFAULT_CONSTRUCTOR(DeleteFriendAck, DELETE_FRIEND_ACK)
 
 	
-	bool Result = false;				// Ä£±¸ »èÁ¦ ¼º°ø/½ÇÆĞ ¿©ºÎ
+	bool Result = false;				// ì¹œêµ¬ ì‚­ì œ ì„±ê³µ/ì‹¤íŒ¨ ì—¬ë¶€
 	char Reason[REASON_LEN];
 };
 
@@ -416,8 +417,8 @@ struct LoadRoomInfoAck : JNetwork::ICommand
 };
 
 
-// °ÔÀÓ ½ÃÀÛ/°ÔÀÓ ³­ÀÔ ±â´É µ¿½Ã¿¡ Ã³¸®ÇÏµµ·Ï ÇÔ
-// ÆĞÅ¶ ÇÏ³ª´õ Ãß°¡ÇÏ¸é µÇ´Âµ¥ ±ÍÂú±âµµ ÇÏ°í °Á ÀÌ·¡Ã³¸®ÇÔ
+// ê²Œì„ ì‹œì‘/ê²Œì„ ë‚œì… ê¸°ëŠ¥ ë™ì‹œì— ì²˜ë¦¬í•˜ë„ë¡ í•¨
+// íŒ¨í‚· í•˜ë‚˜ë” ì¶”ê°€í•˜ë©´ ë˜ëŠ”ë° ê·€ì°®ê¸°ë„ í•˜ê³  ê± ì´ë˜ì²˜ë¦¬í•¨
 struct RoomGameStartSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomGameStartSyn, ROOM_GAME_START_SYN)
@@ -429,8 +430,8 @@ struct RoomGameStartSyn : JNetwork::ICommand
 	bool Intrude		= false;
 };
 
-// °ÔÀÓ ½ÃÀÛÀ¸·Î µ¿ÀÛÇÒ °æ¿ì Result¿Í Reason¸¸ »ç¿ëµÊ
-// °ÔÀÓ ³­ÀÔÀ¸·Î µ¿ÀÛÇÒ °æ¿ì BattleFieldScene¿¡¼­ ÇØ´ç ÆĞÅ¶À» ¸ğµç ÇÃ·¹ÀÌ¾î°¡ ¼ö½ÅÇÏ¿© ³­ÀÔÀÚ¸¦ È®ÀÎÇÒ ¼ö ÀÖµµ·Ï ÇÑ´Ù.
+// ê²Œì„ ì‹œì‘ìœ¼ë¡œ ë™ì‘í•  ê²½ìš° Resultì™€ Reasonë§Œ ì‚¬ìš©ë¨
+// ê²Œì„ ë‚œì…ìœ¼ë¡œ ë™ì‘í•  ê²½ìš° BattleFieldSceneì—ì„œ í•´ë‹¹ íŒ¨í‚·ì„ ëª¨ë“  í”Œë ˆì´ì–´ê°€ ìˆ˜ì‹ í•˜ì—¬ ë‚œì…ìë¥¼ í™•ì¸í•  ìˆ˜ ìˆë„ë¡ í•œë‹¤.
 struct RoomGameStartAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomGameStartAck, ROOM_GAME_START_ACK)
@@ -475,14 +476,14 @@ struct BattleFieldLoadAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLoadAck, BATTLE_FIELD_LOAD_ACK);
 
-	RoomState	RoomState;		// ¹æ»óÅÂ
-	float		LeftTime;		// (ÃÊ´ÜÀ§) °ÔÀÓ ÁøÇà±îÁö ³²Àº½Ã°£ - ÀÌ½Ã°£µ¿¾È ´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ Á¢¼ÓÇÒ¶§±îÁö ±â´Ù¸²
-	TankMove	InitialMove;	// ÇÃ·¹ÀÌ¾î ÃÊ±â À§Ä¡ Á¤º¸
+	RoomState	RoomState;		// ë°©ìƒíƒœ
+	float		LeftTime;		// (ì´ˆë‹¨ìœ„) ê²Œì„ ì§„í–‰ê¹Œì§€ ë‚¨ì€ì‹œê°„ - ì´ì‹œê°„ë™ì•ˆ ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€ ì ‘ì†í• ë•Œê¹Œì§€ ê¸°ë‹¤ë¦¼
+	TankMove	InitialMove;	// í”Œë ˆì´ì–´ ì´ˆê¸° ìœ„ì¹˜ ì •ë³´
 };
 
 
-//Å¬¶ó´Â ÀÏÁ¤ÁÖ±â¸¶´Ù ¼­¹ö·Î ÀÚ½ÅÀÇ ÅÊÅ© Á¤º¸¸¦ ¼­¹ö·Î Àü¼ÛÇÑ´Ù.
-//¼­¹ö´Â ÀÌ Á¤º¸¸¦ ¹Ş¾Æ¼­ ¾÷µ¥ÀÌÆ® ½ÃÄÑÁØ´Ù.
+//í´ë¼ëŠ” ì¼ì •ì£¼ê¸°ë§ˆë‹¤ ì„œë²„ë¡œ ìì‹ ì˜ íƒ±í¬ ì •ë³´ë¥¼ ì„œë²„ë¡œ ì „ì†¡í•œë‹¤.
+//ì„œë²„ëŠ” ì´ ì •ë³´ë¥¼ ë°›ì•„ì„œ ì—…ë°ì´íŠ¸ ì‹œì¼œì¤€ë‹¤.
 struct BattileFieldTankMoveSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattileFieldTankMoveSyn, BATTLE_FIELD_TANK_MOVE_SYN)
@@ -490,7 +491,7 @@ struct BattileFieldTankMoveSyn : JNetwork::ICommand
 	TankMove Move{};
 };
 
-//¼­¹ö´Â ÀÏÁ¤ÁÖ±â¸¶´Ù Å¬¶óÀÌ¾ğÆ®µéÀÇ À§Ä¡Á¤º¸¸¦ Å¬¶óÀÌ¾ğÆ®µé·Î Àü¼ÛÇØÁÖµµ·ÏÇÑ´Ù.
+//ì„œë²„ëŠ” ì¼ì •ì£¼ê¸°ë§ˆë‹¤ í´ë¼ì´ì–¸íŠ¸ë“¤ì˜ ìœ„ì¹˜ì •ë³´ë¥¼ í´ë¼ì´ì–¸íŠ¸ë“¤ë¡œ ì „ì†¡í•´ì£¼ë„ë¡í•œë‹¤.
 struct BattileFieldTankUpdateSyn : JNetwork::ICommand
 {
 	BattileFieldTankUpdateSyn(int count) {
@@ -524,7 +525,7 @@ struct BattleFieldPlayingEndSyn : JNetwork::ICommand
 	float LeftTime;
 	int Count;
 	BattleInfo Info[ROOM_MAX_PLAYER_COUNT]{};
-	int WinnerCharacetrUID = INVALID_UID;		// ½ÂÀÚ UID
+	int WinnerCharacetrUID = INVALID_UID;		// ìŠ¹ì UID
 };
 
 struct BattleFieldEndWaitEndSyn : JNetwork::ICommand
@@ -543,8 +544,8 @@ struct BattleFieldLeaveSyn : JNetwork::ICommand
 struct BattleFieldLeaveAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLeaveAck, BATTLE_FIELD_LEAVE_ACK);
-	int CharacterUID = INVALID_UID;		// ³ª°£ À¯ÀúÀÇ UID ÀÌ°É È®ÀÎÇØ¼­ ÇÊµåÀÇ ÅÊÅ©¸¦ »èÁ¦½ÃÄÑÁÖµµ·Ï ÇÏÀÚ
-										// ÀÚ±âÀÚ½ÅÀº ¾ÀÀ» ¹Ù²ãÁÖµµ·Ï ÇÏÀÚ
+	int CharacterUID = INVALID_UID;		// ë‚˜ê°„ ìœ ì €ì˜ UID ì´ê±¸ í™•ì¸í•´ì„œ í•„ë“œì˜ íƒ±í¬ë¥¼ ì‚­ì œì‹œì¼œì£¼ë„ë¡ í•˜ì
+										// ìê¸°ìì‹ ì€ ì”¬ì„ ë°”ê¿”ì£¼ë„ë¡ í•˜ì
 };
 
 struct ChatMessageSyn : JNetwork::ICommand
@@ -576,21 +577,21 @@ struct BattleFieldFireAck : JNetwork::ICommand
 struct BattleFieldDeathSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldDeathSyn, BATTLE_FIELD_DEATH_SYN);
-	int CharacterUID = INVALID_UID;		// ´©±¸ÇÑÅ× Á×¾ú´ÂÁö
+	int CharacterUID = INVALID_UID;		// ëˆ„êµ¬í•œí…Œ ì£½ì—ˆëŠ”ì§€
 };
 
 struct BattleFieldDeathAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldDeathAck, BATTLE_FIELD_DEATH_ACK);
-	int CharacterUID = INVALID_UID;		// ´©°¡ Á×¾ú´ÂÁö
-	float RevivalLeftTime;				// ºÎÈ°±îÁö ³²Àº ½Ã°£
+	int CharacterUID = INVALID_UID;		// ëˆ„ê°€ ì£½ì—ˆëŠ”ì§€
+	float RevivalLeftTime;				// ë¶€í™œê¹Œì§€ ë‚¨ì€ ì‹œê°„
 };
 
 struct BattleFieldRevivalSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldRevivalSyn, BATTLE_FIELD_REVIVAL_SYN);
-	int CharacterUID = INVALID_UID;		// ´©°¡ ºÎÈ°Çß´ÂÁö
-	TankMove RevivalMove;						// ºÎÈ° À§Ä¡
+	int CharacterUID = INVALID_UID;		// ëˆ„ê°€ ë¶€í™œí–ˆëŠ”ì§€
+	TankMove RevivalMove;						// ë¶€í™œ ìœ„ì¹˜
 };
 
 struct BattleFieldStatisticsUpdateSyn : JNetwork::ICommand
@@ -603,23 +604,25 @@ struct BattleFieldStatisticsUpdateSyn : JNetwork::ICommand
 
 
 
-// ÀÏÁ¤ ÁÖ±â¸¶´Ù Å¬¶ó°¡ TCP ¼­¹ö·Î ½Ã°£À» Àü¼ÛÇÑ´Ù.
-// ¼­¹ö´Â ÀÌ¸¦ ¼ö½ÅÇÏ°í ¼ö½ÅÇÑ ½Ã°¢À» Å¬¶óÀÌ¾ğÆ® Á¤º¸¿¡ ±â·ÏÇÑ´Ù.
-// ¼­¹ö´Â Áö¼ÓÀûÀ¸·Î Å¬¶óÀÌ¾ğÆ®ÀÇ ½Ã°£À» Ã¼Å©ÇÏ°í ÇÎÀü¼ÛÀÌ ½Ã°£³»·Î ¾Ê´Â °æ¿ì °­Á¦·Î ¿¬°áÀ» ²÷¾î¹ö¸®µµ·Ï ÇÑ´Ù.
-// ÀÌ·¯¸é À¯·É ÇÃ·¹ÀÌ¾î°¡ »ı±â´Â°ÍÀ» ¸·À» ¼ö ÀÖÀ» µí ¼­¹öµµ ´ú È¥ÀâÇØÁö°í
+// ì¼ì • ì£¼ê¸°ë§ˆë‹¤ í´ë¼ê°€ TCP ì„œë²„ë¡œ ì‹œê°„ì„ ì „ì†¡í•œë‹¤.
+// ì„œë²„ëŠ” ì´ë¥¼ ìˆ˜ì‹ í•˜ê³  ìˆ˜ì‹ í•œ ì‹œê°ì„ í´ë¼ì´ì–¸íŠ¸ ì •ë³´ì— ê¸°ë¡í•œë‹¤.
+// ì„œë²„ëŠ” ì§€ì†ì ìœ¼ë¡œ í´ë¼ì´ì–¸íŠ¸ì˜ ì‹œê°„ì„ ì²´í¬í•˜ê³  í•‘ì „ì†¡ì´ ì‹œê°„ë‚´ë¡œ ì•ŠëŠ” ê²½ìš° ê°•ì œë¡œ ì—°ê²°ì„ ëŠì–´ë²„ë¦¬ë„ë¡ í•œë‹¤.
+// ì´ëŸ¬ë©´ ìœ ë ¹ í”Œë ˆì´ì–´ê°€ ìƒê¸°ëŠ”ê²ƒì„ ë§‰ì„ ìˆ˜ ìˆì„ ë“¯ ì„œë²„ë„ ëœ í˜¼ì¡í•´ì§€ê³ 
 struct TcpRTTSyn : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(TcpRTTSyn, TCP_RTT_SYN)
-	Int64U Tick;			// Å¬¶óÀÌ¾ğÆ® Ãø¿¡¼­ ¹ß¼ÛÇÑ ½Ã°¢À» Àü´Ş
+	Int64U Tick;			// í´ë¼ì´ì–¸íŠ¸ ì¸¡ì—ì„œ ë°œì†¡í•œ ì‹œê°ì„ ì „ë‹¬
 };
 
-// ÇÎÀ» ¼ö½ÅÇÏ¸é °ğ¹Ù·Î ´ë»ó¿¡°Ô Ack¸¦ Àü¼ÛÇØÁØ´Ù.
-// Å¬¶ó´Â ÀÌ¸¦ ¼ö½ÅÇÏ°í Å¬¶óÀÌ¾ğÆ®¿¡ ±â·ÏÇÑ´Ù. Å¬¶óµµ Á¤ÇØÁø ½Ã°£³»·Î ACK¸¦ ¼ö½ÅÇÏÁö ¾ÊÀ¸¸é ¿¬°áÀ» ²÷µµ·Ï ÇÑ´Ù.
+// í•‘ì„ ìˆ˜ì‹ í•˜ë©´ ê³§ë°”ë¡œ ëŒ€ìƒì—ê²Œ Ackë¥¼ ì „ì†¡í•´ì¤€ë‹¤.
+// í´ë¼ëŠ” ì´ë¥¼ ìˆ˜ì‹ í•˜ê³  í´ë¼ì´ì–¸íŠ¸ì— ê¸°ë¡í•œë‹¤. í´ë¼ë„ ì •í•´ì§„ ì‹œê°„ë‚´ë¡œ ACKë¥¼ ìˆ˜ì‹ í•˜ì§€ ì•Šìœ¼ë©´ ì—°ê²°ì„ ëŠë„ë¡ í•œë‹¤.
 struct TcpRTTAck : JNetwork::ICommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(TcpRTTAck, TCP_RTT_ACK)
-	Int64U Tick;			// ¼­¹ö¿¡¼­ ¼ö½ÅÇÑ ½Ã°¢À» ´ã¾Æ¼­ Å¬¶ó·Î Àü´Ş
-							// Àü´ŞÇÑ ½Ã°¢°ú ÀÌ Tick°úÀÇ Â÷ÀÌ¸¦ ºñ±³ÇØ¼­ Latency¸¦ ±¸ÇÏ°í
-							// ÀÌÀü¿¡º¸³½½Ã°¢°ú ¼ö½ÅÇÑ ½Ã°¢À» ºñ±³ÇØ¼­ RTT¸¦ ±¸ÇÒ ¼ö ÀÖ°Ú´Ù.
+	Int64U Tick;			// ì„œë²„ì—ì„œ ìˆ˜ì‹ í•œ ì‹œê°ì„ ë‹´ì•„ì„œ í´ë¼ë¡œ ì „ë‹¬
+							// ì „ë‹¬í•œ ì‹œê°ê³¼ ì´ Tickê³¼ì˜ ì°¨ì´ë¥¼ ë¹„êµí•´ì„œ Latencyë¥¼ êµ¬í•˜ê³ 
+							// ì´ì „ì—ë³´ë‚¸ì‹œê°ê³¼ ìˆ˜ì‹ í•œ ì‹œê°ì„ ë¹„êµí•´ì„œ RTTë¥¼ êµ¬í•  ìˆ˜ ìˆê² ë‹¤.
 };
 
+
+#pragma warning(pop)

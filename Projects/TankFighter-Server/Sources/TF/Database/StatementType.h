@@ -1,7 +1,6 @@
 /*
- * À±Á¤µµ
+ * ì‘ì„±ì: ìœ¤ì •ë„
  */
-
 #pragma once
 
 enum class StatementType

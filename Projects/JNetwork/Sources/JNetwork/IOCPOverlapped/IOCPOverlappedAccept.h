@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -15,7 +15,7 @@ public:
 	IOCPOverlappedAccept(TcpServer* tcpServer, TcpSession* session, IOCP* iocp);
 	~IOCPOverlappedAccept() override;
 public:
-	void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
+	void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	TcpSession* m_pAcceptedSession;	
 	TcpServer* m_pListeningServer;

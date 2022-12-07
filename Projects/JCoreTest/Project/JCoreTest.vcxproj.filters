@@ -5,39 +5,17 @@
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeImplTest.cpp">
-      <Filter>ContainerImpl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\AVLTreeMemoImplTest.cpp">
-      <Filter>ContainerImpl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\BinarySearchTreeImplTest.cpp">
-      <Filter>ContainerImpl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\TwoTreeFourTreeImplTest.cpp">
-      <Filter>ContainerImpl</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp">
       <Filter>Container</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\ContainerImpl\DynamicHashMapImplTest.cpp">
-      <Filter>ContainerImpl</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ComparatorTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ExceptionTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\SmartPointerTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\PointerObserverTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MemoryTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\StringTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\StringUtilTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\AutoObjectTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp">
       <Filter>Container</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\TestUtil\Object.cpp">
-      <Filter>TestUtil</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayQueueTest.cpp">
       <Filter>Container</Filter>
@@ -57,26 +35,74 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\HashMapTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCoreTest\LockTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\StaticStringTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\LockGuardTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\EventTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\AVLTreeImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\AVLTreeMemoImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\BinarySearchTreeImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\DynamicHashMapImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\Impl\TwoTreeFourTreeImplTest.cpp">
+      <Filter>Container\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\ObserverPtrTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\SmartPtrTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\StaticStringTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\StringTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\StringUtilTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Sync\SemaphoreTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Sync\NormalLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Sync\NormalRwLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Sync\RecursiveLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Sync\SpinLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Sync\EventLockTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Sync\LockGuardTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
-    <ClInclude Include="..\Sources\JCoreTest\TestUtil\Object.h">
-      <Filter>TestUtil</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Container">
       <UniqueIdentifier>{bf264a65-8776-4297-ba02-ad0ca1dd182b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ContainerImpl">
-      <UniqueIdentifier>{5b1b6a66-dd38-4023-937b-462eb518f03a}</UniqueIdentifier>
+    <Filter Include="Sync">
+      <UniqueIdentifier>{6e14e343-e06a-4c87-b20a-33516f0f9cfa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TestUtil">
-      <UniqueIdentifier>{4d31eb33-c343-46a5-a6ca-9e1f6040344f}</UniqueIdentifier>
+    <Filter Include="Container\Impl">
+      <UniqueIdentifier>{c88e3723-2243-4465-8fec-87869d63ee1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitives">
+      <UniqueIdentifier>{78719c96-fd9b-4bdf-b710-9854706255fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

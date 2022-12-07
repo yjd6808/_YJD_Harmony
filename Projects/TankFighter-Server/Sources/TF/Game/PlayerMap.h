@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -17,6 +17,6 @@ public:
 	int Count();
 private:
 	JCore::HashMap<int, Player*> m_PlayerMap;
-	JCore::CriticalSectionMutex m_Mutex;
+	JCore::NormalLock m_Mutex;
 };
 

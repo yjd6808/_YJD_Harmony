@@ -1,16 +1,16 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	Arrays Å¬·¡½º¸¦ Å×½ºÆ®ÇÕ´Ï´Ù.
+	ì‘ì„±ì : ìœ¤ì •ë„
+	Arrays í´ë˜ìŠ¤ë¥¼ í…ŒìŠ¤íŠ¸í•©ë‹ˆë‹¤.
 */
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCoreTest/TestUtil/Object.h>
+
 #include <JCore/Core.h>
 #include <JCore/Container/HashMap.h>
 #include <JCore/Random.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_HashMapTest == ON
@@ -19,33 +19,33 @@ TEST(HashMapTest, Regular) {
 	AutoMemoryLeakDetector detector;
 	HashMap<int, Model> modelMap;
 	
-	// Insert Å×½ºÆ®
-	// Key, Value °³º°»ğÀÔ
+	// Insert í…ŒìŠ¤íŠ¸
+	// Key, Value ê°œë³„ì‚½ì…
 	EXPECT_TRUE(modelMap.Insert(1, Model(3)));	
-	EXPECT_FALSE(modelMap.Insert(1, Model(3)));	// Áßº¹µÈ Å°°ª »ğÀÔ ½ÇÆĞ
+	EXPECT_FALSE(modelMap.Insert(1, Model(3)));	// ì¤‘ë³µëœ í‚¤ê°’ ì‚½ì… ì‹¤íŒ¨
 	EXPECT_TRUE(modelMap.Insert(2, Model(4)));
 	EXPECT_TRUE(modelMap.Insert(3, Model(5)));
 	EXPECT_TRUE(modelMap.Insert(4, Model(6)));
 
-	// KeyValuePair·Î »ğÀÔ
+	// KeyValuePairë¡œ ì‚½ì…
 	EXPECT_TRUE(modelMap.Insert(MakePair(5, Model(7))));
 	EXPECT_TRUE(modelMap.Insert(MakePair(6, Model(8))));
 
 	EXPECT_TRUE(modelMap.Size() == 6);
 
-	// Remove Å×½ºÆ®
-	EXPECT_TRUE(modelMap.Remove(2));	// »èÁ¦ ¼º°ø
-	EXPECT_FALSE(modelMap.Remove(2));	// »èÁ¦ ½ÇÆĞÇØ¾ßÇÔ
+	// Remove í…ŒìŠ¤íŠ¸
+	EXPECT_TRUE(modelMap.Remove(2));	// ì‚­ì œ ì„±ê³µ
+	EXPECT_FALSE(modelMap.Remove(2));	// ì‚­ì œ ì‹¤íŒ¨í•´ì•¼í•¨
 	EXPECT_TRUE(modelMap.Size() == 5);
 	
-	// operator[] Å×½ºÆ®
-	EXPECT_THROW(modelMap[2], InvalidArgumentException); // Å°°ªÀÌ 2¿¡ ÇØ´çÇÏ´Â µ¥ÀÌÅÍ´Â »èÁ¦ÇßÀ¸¹Ç·Î ¿¹¿Ü¸¦ ´øÁü
+	// operator[] í…ŒìŠ¤íŠ¸
+	EXPECT_THROW(modelMap[2], InvalidArgumentException); // í‚¤ê°’ì´ 2ì— í•´ë‹¹í•˜ëŠ” ë°ì´í„°ëŠ” ì‚­ì œí–ˆìœ¼ë¯€ë¡œ ì˜ˆì™¸ë¥¼ ë˜ì§
 	EXPECT_TRUE(modelMap[3].a == 5);
 	
-	// Clear Å×½ºÆ®
+	// Clear í…ŒìŠ¤íŠ¸
 	modelMap.Clear();
 	EXPECT_TRUE(modelMap.Size() == 0);
-	EXPECT_TRUE(modelMap.Insert(2, Model(4)));	// »èÁ¦ ÈÄ µ¥ÀÌÅÍ Á¤»ó »ğÀÔ µÇ´ÂÁö
+	EXPECT_TRUE(modelMap.Insert(2, Model(4)));	// ì‚­ì œ í›„ ë°ì´í„° ì •ìƒ ì‚½ì… ë˜ëŠ”ì§€
 	EXPECT_TRUE(modelMap.Insert(3, Model(5)));
 	EXPECT_TRUE(modelMap.Insert(4, Model(6)));
 	EXPECT_TRUE(modelMap.Size() == 3);	
@@ -57,7 +57,7 @@ TEST(HashMapTest, EnumeratorTest) {
 		map.Insert(i, i + 1);
 	}
 
-	// Á¤¹æÇâ ¹İº¹ÀÚ Å×½ºÆ®
+	// ì •ë°©í–¥ ë°˜ë³µì í…ŒìŠ¤íŠ¸
 	const auto mapIter = map.Begin();
 	for (int i = 0; i < mapIter->HasNext(); i++) {
 		KeyValuePair<int, int>& pair = mapIter->Next();
@@ -75,7 +75,7 @@ TEST(HashMapTest, EnumeratorTest) {
 		EXPECT_TRUE(map.Values().Extension().Exist(i + 1));
 	}
 
-	// ¹İ´ë¹æÇâ ¹İº¹ÀÚ Å×½ºÆ®
+	// ë°˜ëŒ€ë°©í–¥ ë°˜ë³µì í…ŒìŠ¤íŠ¸
 	const auto mapRIter = map.End();
 	for (int i = 9; mapRIter->HasPrevious(); i--) {
 		KeyValuePair<int, int>& pair = mapRIter->Previous();
@@ -85,7 +85,7 @@ TEST(HashMapTest, EnumeratorTest) {
 }
 
 TEST(HashMapTest, ConstructorTest) {
-	// À¯´ÏÆû ÀÌ´Ï¼È¶óÀÌÀú »ı¼ºÀÚ
+	// ìœ ë‹ˆí¼ ì´ë‹ˆì…œë¼ì´ì € ìƒì„±ì
 	HashMap<int, Model> modelMap
 	{
 		{ 1, Model(3) },
@@ -100,7 +100,7 @@ TEST(HashMapTest, ConstructorTest) {
 	EXPECT_TRUE(modelMap[4].a == 6);
 	EXPECT_TRUE(modelMap.Size() == 4);
 
-	// º¹»ç »ı¼ºÀÚ
+	// ë³µì‚¬ ìƒì„±ì
 	HashMap<int, Model> copy1(modelMap);
 	EXPECT_TRUE(copy1[1].a == 3);
 	EXPECT_TRUE(copy1[2].a == 4);
@@ -108,7 +108,7 @@ TEST(HashMapTest, ConstructorTest) {
 	EXPECT_TRUE(copy1[4].a == 6);
 	EXPECT_TRUE(copy1.Size() == 4);
 
-	// ÀÌµ¿ »ı¼ºÀÚ
+	// ì´ë™ ìƒì„±ì
 	HashMap<int, Model> move1(Move(modelMap));
 	EXPECT_TRUE(modelMap.Size() == 0);
 	EXPECT_TRUE(move1[1].a == 3);
@@ -125,9 +125,9 @@ TEST(HashMapTest, OperatorTest) {
 	HashMap<int, Model> modelMap
 	{
 		{ 1, Model(1) }
-	}; // ÃÊ±â ¾Æ¹«µ¥ÀÌÅÍ³ª ³Ö¾îµÒ
+	}; // ì´ˆê¸° ì•„ë¬´ë°ì´í„°ë‚˜ ë„£ì–´ë‘ 
 
-	// À¯´ÏÆû ÀÌ´Ï¼È¶óÀÌÀú ´ëÀÔ ¿¬»êÀÚ
+	// ìœ ë‹ˆí¼ ì´ë‹ˆì…œë¼ì´ì € ëŒ€ì… ì—°ì‚°ì
 	modelMap = 
 	{
 		{ 1, Model(3) },
@@ -142,11 +142,11 @@ TEST(HashMapTest, OperatorTest) {
 	EXPECT_TRUE(modelMap[4].a == 6);
 	EXPECT_TRUE(modelMap.Size() == 4);
 
-	// º¹»ç »ı¼ºÀÚ
+	// ë³µì‚¬ ìƒì„±ì
 	HashMap<int, Model> copy1
 	{
 		{ 1, Model(1) }
-	}; // ÃÊ±â ¾Æ¹«µ¥ÀÌÅÍ³ª ³Ö¾îµÒ
+	}; // ì´ˆê¸° ì•„ë¬´ë°ì´í„°ë‚˜ ë„£ì–´ë‘ 
 
 	copy1 = modelMap;
 	EXPECT_TRUE(copy1[1].a == 3);
@@ -155,11 +155,11 @@ TEST(HashMapTest, OperatorTest) {
 	EXPECT_TRUE(copy1[4].a == 6);
 	EXPECT_TRUE(copy1.Size() == 4);
 
-	// ÀÌµ¿ »ı¼ºÀÚ
+	// ì´ë™ ìƒì„±ì
 	HashMap<int, Model> move1
 	{ 
 		{ 1, Model(1) }
-	}; // ÃÊ±â ¾Æ¹«µ¥ÀÌÅÍ³ª ³Ö¾îµÒ
+	}; // ì´ˆê¸° ì•„ë¬´ë°ì´í„°ë‚˜ ë„£ì–´ë‘ 
 
 	move1 = Move(modelMap);
 	EXPECT_TRUE(modelMap.Size() == 0);

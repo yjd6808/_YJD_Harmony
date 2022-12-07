@@ -1,7 +1,7 @@
 /*
-	»ı¼ºÀÏ : 2019/05/17
-	¼öÁ¤ÀÏ : 2022/04/03
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ìƒì„±ì¼ : 2019/05/17
+	ìˆ˜ì •ì¼ : 2022/04/03
+	ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 
@@ -9,8 +9,8 @@
 
 
 #include <JCore/Container/LinkedList.h>
-#include <JCore/LockGuard.h>
-#include <JCore/String.h>
+#include <JCore/Sync/NormalLock.h>
+#include <JCore/Primitives/String.h>
 
 class MysqlConnection;
 class MysqlConnectionPool
@@ -37,7 +37,7 @@ private:
 	Int32U m_MaxConnection;
 
 	int m_iCurConnSize;
-	JCore::CriticalSectionMutex m_Mtx;
+	JCore::NormalLock m_Mtx;
 	JCore::LinkedList<MysqlConnection*> m_ConnectionList;
 
 
@@ -45,13 +45,13 @@ private:
 	friend class MysqlDatabase;
 };
 
-// ¼Ò¸êÀÚ È£Ãâ½Ã ÄÁ³Ø¼Ç Ç®·Î ´Ù½Ã µÇµ¹¸²
+// ì†Œë©¸ì í˜¸ì¶œì‹œ ì»¨ë„¥ì…˜ í’€ë¡œ ë‹¤ì‹œ ë˜ëŒë¦¼
 struct AutoReleaseConnection
 {
 	AutoReleaseConnection(MysqlConnection* conn, MysqlConnectionPool* pool) : m_pConn(conn), m_pConnPool(pool) {}
 	~AutoReleaseConnection() {
-		DebugAssert(m_pConn != nullptr, "AutoReleaseConn ¼Ò¸êÀÚ ¿À·ù ¹ß»ı / ÄÁ³Ø¼ÇÀÌ NULLÀÔ´Ï´Ù.");
-		DebugAssert(m_pConnPool != nullptr, "AutoReleaseConn ¼Ò¸êÀÚ ¿À·ù ¹ß»ı / Ç®ÀÌ NULLÀÔ´Ï´Ù.");
+		DebugAssertMessage(m_pConn != nullptr, "AutoReleaseConn ì†Œë©¸ì ì˜¤ë¥˜ ë°œìƒ / ì»¨ë„¥ì…˜ì´ NULLì…ë‹ˆë‹¤.");
+		DebugAssertMessage(m_pConnPool != nullptr, "AutoReleaseConn ì†Œë©¸ì ì˜¤ë¥˜ ë°œìƒ / í’€ì´ NULLì…ë‹ˆë‹¤.");
 		m_pConnPool->ReleaseConnection(m_pConn);
 	}
 private:

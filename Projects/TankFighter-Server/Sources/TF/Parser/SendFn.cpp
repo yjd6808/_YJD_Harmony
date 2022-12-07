@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
@@ -37,7 +37,7 @@ void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 	Channel* pChannel = _World->GetChannel(iCharacterUID);
 
 	if (pChannel == nullptr) {
-		SendFn::SendServerMessageSyn(player, "´ç½ÅÀÇ Ã¤³Î Á¤º¸°¡ ÀÌ»óÇÕ´Ï´Ù.");
+		SendFn::SendServerMessageSyn(player, "ë‹¹ì‹ ì˜ ì±„ë„ ì •ë³´ê°€ ì´ìƒí•©ë‹ˆë‹¤.");
 		return;
 	}
 
@@ -53,7 +53,7 @@ void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 
 		int iFriendUID = info->CharacterUID;
 
-		// ÇöÀç Á¢¼ÓÁßÀÎÁö È®ÀÎÇÏ±â À§ÇŞ ÇöÀç Ã¤³Î¿¡¼­ ÇØ´ç ÇÃ·¹ÀÌ¾î¸¦ Ã£´Â´Ù.
+		// í˜„ì¬ ì ‘ì†ì¤‘ì¸ì§€ í™•ì¸í•˜ê¸° ìœ„í–‡ í˜„ì¬ ì±„ë„ì—ì„œ í•´ë‹¹ í”Œë ˆì´ì–´ë¥¼ ì°¾ëŠ”ë‹¤.
 		Player* pFriendPlayer = pChannel->FindPlayerByCharacterUID(iCharacterUID);
 		info->PlayerState = pFriendPlayer ? pFriendPlayer->GetPlayerState() : PlayerState::Disconnected;
 	}
@@ -72,14 +72,14 @@ void SendFn::SendServerMessageSyn(Player* player, const String& message) {
 	player->SendAsync(pPacket);
 }
 
-// ÇÃ·¹ÀÌ¾î¿¡°Ô ¹æ Á¤º¸ Àü¼Û
+// í”Œë ˆì´ì–´ì—ê²Œ ë°© ì •ë³´ ì „ì†¡
 void SendFn::SendRoomInfoAck(Room* room, Player* player) {
 	const auto pPacket = new StaticPacket<LoadRoomInfoAck>;
 	LoadRoomInfoAck* pLoadRoomInfoAck = pPacket->Get<0>();
 
 	if (room == nullptr) {
 		pLoadRoomInfoAck->Result = false;
-		strcpy_s(pLoadRoomInfoAck->Reason, REASON_LEN, u8"Âü°¡ÇÑ ¹æ Á¤º¸°¡ ¾ø½À´Ï´Ù.");
+		strcpy_s(pLoadRoomInfoAck->Reason, REASON_LEN, "ì°¸ê°€í•œ ë°© ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤.");
 	} else {
 		pLoadRoomInfoAck->Result = true;
 		room->LoadRoomInfo(pLoadRoomInfoAck->Info);
@@ -88,8 +88,8 @@ void SendFn::SendRoomInfoAck(Room* room, Player* player) {
 }
 
 
-// LoadCharacterInfoAck ÆĞÅ¶ Àü´Ş
-// Ä³¸¯ÅÍ Á¤º¸µéÀ» Å¬¶óÇÑÅ× Àü´ŞÇÔ
+// LoadCharacterInfoAck íŒ¨í‚· ì „ë‹¬
+// ìºë¦­í„° ì •ë³´ë“¤ì„ í´ë¼í•œí…Œ ì „ë‹¬í•¨
 void SendFn::SendLoadCharacterInfoAck(Player* player) {
 	const auto pPacket = new StaticPacket<LoadCharacterInfoAck>;
 	LoadCharacterInfoAck* pLoadCharacterInfoAck = pPacket->Get<0>();
@@ -135,7 +135,7 @@ void SendFn::SendUpdateCharacterInfoAck(Player* player) {
 		player->UpdateCharacterInfo(*pMyInfo);
 	} else {
 		pUpdateCharacterInfoAck->Result = false;
-		strcpy_s(pUpdateCharacterInfoAck->Reason, REASON_LEN, u8"Ä³¸¯ÅÍ Á¤º¸°¡ ¾ø½À´Ï´Ù. account_uid, channel_uid, character_uid mismatch");
+		strcpy_s(pUpdateCharacterInfoAck->Reason, REASON_LEN, "ìºë¦­í„° ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤. account_uid, channel_uid, character_uid mismatch");
 	}
 
 	player->SendAsync(pPacket);
@@ -149,7 +149,7 @@ void SendFn::SendUpdateRoomListAck(Player* player, int channelUID) {
 
 	if (pChannel == nullptr) {
 		pUpdateRoomListAck->Result = false;
-		strcpy_s(pUpdateRoomListAck->Reason, REASON_LEN, u8"Ã¤³Î Á¤º¸°¡ ÀÌ»óÇÕ´Ï´Ù.");
+		strcpy_s(pUpdateRoomListAck->Reason, REASON_LEN, "ì±„ë„ ì •ë³´ê°€ ì´ìƒí•©ë‹ˆë‹¤.");
 	} else {
 		pUpdateRoomListAck->Result = true;
 		pChannel->RoomForEach([&iIndexer, &pUpdateRoomListAck](Room* room) {
@@ -190,7 +190,7 @@ void SendFn::BroadcastUpdateRoomListAck(Channel* channel) {
 
 
 
-// ¹æ¿¡ ÀÖ´Â ¸ğµç À¯Àúµé¿¡°Ô ÇØ´ç ¹æ¿¡ ÀÖ´Â ÇÃ·¹ÀÌ¾î Á¤º¸µéÀ» Àü´ŞÇÑ´Ù.
+// ë°©ì— ìˆëŠ” ëª¨ë“  ìœ ì €ë“¤ì—ê²Œ í•´ë‹¹ ë°©ì— ìˆëŠ” í”Œë ˆì´ì–´ ì •ë³´ë“¤ì„ ì „ë‹¬í•œë‹¤.
 void SendFn::BroadcastUpdateRoomUserAck(Room* room, bool unsafe) {
 	if (room == nullptr) {
 		return;

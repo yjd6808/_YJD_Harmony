@@ -1,6 +1,6 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
- * ÀÚÁÖ »ç¿ëÇÏ´Â Äõ¸® ÇÔ¼ö
+ * ì‘ì„±ì : ìœ¤ì •ë„
+ * ìì£¼ ì‚¬ìš©í•˜ëŠ” ì¿¼ë¦¬ í•¨ìˆ˜
  */
 
 #pragma once
@@ -13,10 +13,10 @@ struct QueryFn
 	static bool IsCharacterExistByName(const JCore::String& name);
 	static bool IsCharacterExistByIDs(int accountUID, int channelUID, int characterUID);
 
-	// µÎ Ä³¸¯ÅÍ°¡ ¼­·Î Ä£±¸ÀÎÁö.
+	// ë‘ ìºë¦­í„°ê°€ ì„œë¡œ ì¹œêµ¬ì¸ì§€.
 	static bool IsCharacterFriend(int characterUID1, int characterUID2);
 
-	// Ä³¸¯ÅÍ ´Ğ³×ÀÓÀ¸·Î Ä³¸¯ÅÍ UID°¡Á®¿À±â
+	// ìºë¦­í„° ë‹‰ë„¤ì„ìœ¼ë¡œ ìºë¦­í„° UIDê°€ì ¸ì˜¤ê¸°
 	static int GetCharacterUIDByNickName(const JCore::String& nickName);
 
 	//static void Callback(MysqlQuery* query);

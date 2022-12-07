@@ -1,18 +1,22 @@
-﻿/*
+/*
 	작성자 : 윤정도
+	LinkedList에서 사용할 노드
 */
 
 #pragma once
 
+#pragma warning(push)
+  #pragma warning (disable: 26495) // member variable 'Value' is not initialized
+
 namespace JCore {
 
 template <typename T>
-struct ListNode
+struct ListNode final
 {
 	using TListNode = ListNode<T>;
 
 	ListNode() {}
-	virtual ~ListNode() noexcept {}
+	~ListNode() noexcept {}
 
 	template <typename... Args>
 	void Construct(Args&&... args) {
@@ -39,3 +43,6 @@ struct ListNode<T&> {  };
 */
 
 } // namespace JCore
+
+
+#pragma warning(pop)

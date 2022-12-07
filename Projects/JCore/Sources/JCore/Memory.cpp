@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¸Ş¸ğ¸® Á¶ÀÛÀ» µµ¿ÍÁÖ´Â Å¬·¡½ºÀÔ´Ï´Ù.
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë©”ëª¨ë¦¬ ì¡°ì‘ì„ ë„ì™€ì£¼ëŠ” í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
 */
 
 #include <JCore/Core.h>
@@ -8,11 +8,11 @@
 
 namespace JCore {
 
-// memcpy_s¿Í ±â´ÉÀÌ µ¿ÀÏÇÕ´Ï´Ù.
+// memcpy_sì™€ ê¸°ëŠ¥ì´ ë™ì¼í•©ë‹ˆë‹¤.
 void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
 #ifdef _DEBUG
 	if (dst == nullptr || src == nullptr || dstCapacityByte <= 0) {
-		DebugAssert(false, "ÀÎÀÚ¸¦ ¶È¶ì Àü´ŞÇØÁÖ¼¼¿ä");
+		DebugAssertMessage(false, "ì¸ìë¥¼ ë˜‘ë  ì „ë‹¬í•´ì£¼ì„¸ìš”");
 	}
 #endif
 
@@ -30,11 +30,11 @@ void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const i
 	}
 }
 
-// memcpy¿Í ±â´ÉÀÌ µ¿ÀÏÇÕ´Ï´Ù.
+// memcpyì™€ ê¸°ëŠ¥ì´ ë™ì¼í•©ë‹ˆë‹¤.
 void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
 #ifdef _DEBUG
 	if (dst == nullptr || src == nullptr) {
-		DebugAssert(false, "ÀÎÀÚ¸¦ ¶È¶ì Àü´ŞÇØÁÖ¼¼¿ä");
+		DebugAssertMessage(false, "ì¸ìë¥¼ ë˜‘ë  ì „ë‹¬í•´ì£¼ì„¸ìš”");
 	}
 #endif
 
@@ -55,7 +55,7 @@ void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
 void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
 #ifdef _DEBUG
 	if (dst == nullptr || src == nullptr || dstCapacityByte <= 0) {
-		DebugAssert(false, "ÀÎÀÚ¸¦ ¶È¶ì Àü´ŞÇØÁÖ¼¼¿ä");
+		DebugAssertMessage(false, "ì¸ìë¥¼ ë˜‘ë  ì „ë‹¬í•´ì£¼ì„¸ìš”");
 	}
 #endif
 
@@ -64,7 +64,7 @@ void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, 
 	Byte* pDst = (Byte*)dst;
 	Byte* pSrc = (Byte*)src;
 
-	pDst += srcCopyByte - 1;	// ¸¶Áö¸· ¿ø¼Ò°¡ pDst[srcCopyByte - 1] ÀÌ¹Ç·Î
+	pDst += srcCopyByte - 1;	// ë§ˆì§€ë§‰ ì›ì†Œê°€ pDst[srcCopyByte - 1] ì´ë¯€ë¡œ
 	pSrc += srcCopyByte - 1;
 
 	while (iCopiedBytes < dstCapacityByte && iCopiedBytes < srcCopyByte) {
@@ -78,7 +78,7 @@ void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, 
 void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte) {
 #ifdef _DEBUG
 	if (dst == nullptr || src == nullptr) {
-		DebugAssert(false, "ÀÎÀÚ¸¦ ¶È¶ì Àü´ŞÇØÁÖ¼¼¿ä");
+		DebugAssertMessage(false, "ì¸ìë¥¼ ë˜‘ë  ì „ë‹¬í•´ì£¼ì„¸ìš”");
 	}
 #endif
 
@@ -98,11 +98,11 @@ void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte
 	}
 }
 
-// memset°ú ±â´ÉÀÌ µ¿ÀÏÇÕ´Ï´Ù.
+// memsetê³¼ ê¸°ëŠ¥ì´ ë™ì¼í•©ë‹ˆë‹¤.
 void Memory::Set(void* src, const int srcCapacity, const Byte value) {
 #ifdef _DEBUG
 	if (src == nullptr || srcCapacity <= 0) {
-		DebugAssert(false, "ÀÎÀÚ¸¦ ¶È¶ì Àü´ŞÇØÁÖ¼¼¿ä");
+		DebugAssertMessage(false, "ì¸ìë¥¼ ë˜‘ë  ì „ë‹¬í•´ì£¼ì„¸ìš”");
 	}
 #endif
 

@@ -1,35 +1,35 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
 
-#include <JCore/SmartPointer.h>
+#include <JCore/Primitives/SmartPtr.h>
 #include <JCore/Declspec.h>
 
 namespace JCore {
 
 /*=====================================================================================
-						¼øÈ¸ °¡´ÉÇÑ = ÄÁÅ×ÀÌ³Ê ÃÖ»óÀ§ ÀÎÅÍÆäÀÌ½º
+						ìˆœíšŒ ê°€ëŠ¥í•œ = ì»¨í…Œì´ë„ˆ ìµœìƒìœ„ ì¸í„°í˜ì´ìŠ¤
 =====================================================================================*/
 
-// Àü¹æ ¼±¾ğ
+// ì „ë°© ì„ ì–¸
 template <typename> struct Iterator;
 template <typename T>
 struct JCORE_NOVTABLE Iterable
 {
 	using TIterator = Iterator<T>;
 
-	Iterable() {}
-	virtual ~Iterable() noexcept {}
+	Iterable() = default;
+	virtual ~Iterable() noexcept = default;
 
-	virtual SharedPointer<TIterator> Begin() const = 0;
-	virtual SharedPointer<TIterator> End() const = 0;
+	virtual SharedPtr<TIterator> Begin() const = 0;
+	virtual SharedPtr<TIterator> End() const = 0;
 };
 
-// ½º¸¶Æ® Æ÷ÀÎÅÍ Àû±â°¡ Èûµå¹Ç·Î...
+// ìŠ¤ë§ˆíŠ¸ í¬ì¸í„° ì ê¸°ê°€ í˜ë“œë¯€ë¡œ...
 template <typename T>
-using Enumerator = SharedPointer<Iterator<T>>;
+using Enumerator = SharedPtr<Iterator<T>>;
 
 
 } // namespace JCore

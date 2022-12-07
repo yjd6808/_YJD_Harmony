@@ -1,12 +1,12 @@
 /*
- * ¿€º∫¿⁄ : ¿±¡§µµ
+ * ÏûëÏÑ±Ïûê : Ïú§Ï†ïÎèÑ
  */
 
 #include <TF/PrecompiledHeader.h>
 #include <TF/Game/Room.h>
 #include <TF/Game/Player.h>
 
-#include "TF/Util/Console.h"
+#include "JCore/Utils/Console.h"
 
 using namespace JCore;
 
@@ -15,13 +15,13 @@ Room::Room()
 	: m_iRoomUID(INVALID_UID)
 	, m_iMaxPlayerCount(0)
 	, m_pChannel(nullptr)
-	, m_RoomName(0)					// ∫Û πÆ¿⁄ø≠∑Œ µ“ - «Æø°º≠ ≤®≥æ∂ß πÆ¿⁄ø≠ «“¥Áµ 
+	, m_RoomName(0)					// Îπà Î¨∏ÏûêÏó¥Î°ú Îë† - ÌíÄÏóêÏÑú Í∫ºÎÇºÎïå Î¨∏ÏûêÏó¥ Ìï†ÎãπÎê®
 	, m_pHost(nullptr)
 {
 }
 
 void Room::Initialize(Channel* channel, Player* host, const String& roomName, int maxPlayerCount) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	m_iRoomUID = ms_iRoomSeq++;
 	m_iMaxPlayerCount = maxPlayerCount;
 	m_pChannel = Move(channel);
@@ -32,7 +32,7 @@ void Room::Initialize(Channel* channel, Player* host, const String& roomName, in
 }
 
 int Room::GetPlayerCount() {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 
 	if (m_pHost) {
 		return m_PlayerList.Size() + 1;
@@ -41,20 +41,20 @@ int Room::GetPlayerCount() {
 	return m_PlayerList.Size();
 }
 
-// ¿ÃπÃ πÊæ»ø° ¿÷¥¬ ∞ÊøÏ ∂«¥¬ ≤À ¬˘ ∞ÊøÏ Ω«∆–
+// Ïù¥ÎØ∏ Î∞©ÏïàÏóê ÏûàÎäî Í≤ΩÏö∞ ÎòêÎäî ÍΩâ Ï∞¨ Í≤ΩÏö∞ Ïã§Ìå®
 bool Room::TryJoin(Player* player) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 
-	// ∞‘¿”¿Ã ≥°≥™∞°∞Ì ¿÷¥¬ ∞ÊøÏø°¥¬ ¬¸∞° ∏¯«œµµ∑œ «‘
+	// Í≤åÏûÑÏù¥ ÎÅùÎÇòÍ∞ÄÍ≥† ÏûàÎäî Í≤ΩÏö∞ÏóêÎäî Ï∞∏Í∞Ä Î™ªÌïòÎèÑÎ°ù Ìï®
 	if (UnsafeIsBattleFieldEndingState()) {
 		return false;
 	}
 
 	const int iPlayerCount = m_PlayerList.Size() + (m_pHost ? 1 : 0);
 
-	// ¿Ã∑Ø∏È æ»¥Ô
+	// Ïù¥Îü¨Î©¥ ÏïàÎåê
 	if (m_PlayerList.Exist(player)) {
-		DebugAssert(false, "¿ÃπÃ πÊæ»ø° ¥ÁΩ≈¿Ã µÈæÓ¿÷Ω¿¥œ¥Ÿ.");
+		DebugAssertMessage(false, "Ïù¥ÎØ∏ Î∞©ÏïàÏóê ÎãπÏã†Ïù¥ Îì§Ïñ¥ÏûàÏäµÎãàÎã§.");
 		return false;
 	}
 
@@ -68,21 +68,21 @@ bool Room::TryJoin(Player* player) {
 }
 
 bool Room::RemovePlayer(Player* player) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 
 	if (player == m_pHost || m_PlayerList.Exist(player)) {
 		player->Lock();
-		player->UnsafeSetRoomUID(INVALID_UID);				// º”«— πÊ ¡§∫∏ æ¯æ⁄
-		player->m_bRoomHost = false;						// πÊ »£Ω∫∆Æ ¡§∫∏ æ¯æ⁄
-		player->UnsafeSetPlayerState(PlayerState::Lobby);	// ∑Œ∫Ò ªÛ≈¬∑Œ ∫Ø∞Ê
-		player->UnsafeSetReady(false);						// ¡ÿ∫Ò æ»µ  ªÛ≈¬∑Œ ∫Ø∞Ê
+		player->UnsafeSetRoomUID(INVALID_UID);				// ÏÜçÌïú Î∞© Ï†ïÎ≥¥ ÏóÜÏï∞
+		player->m_bRoomHost = false;						// Î∞© Ìò∏Ïä§Ìä∏ Ï†ïÎ≥¥ ÏóÜÏï∞
+		player->UnsafeSetPlayerState(PlayerState::Lobby);	// Î°úÎπÑ ÏÉÅÌÉúÎ°ú Î≥ÄÍ≤Ω
+		player->UnsafeSetReady(false);						// Ï§ÄÎπÑ ÏïàÎê® ÏÉÅÌÉúÎ°ú Î≥ÄÍ≤Ω
 		player->Unlock();
 
 		if (m_pHost == player) {
 			m_pHost = nullptr;
 
 			if (!m_PlayerList.IsEmpty()) {
-				// ∏’¿˙ ¡¢º”«— ¿Ø¿˙ º¯º≠¥Î∑Œ πÊ¿Â ±≥√º«ÿ¡‹
+				// Î®ºÏ†Ä Ï†ëÏÜçÌïú Ïú†Ï†Ä ÏàúÏÑúÎåÄÎ°ú Î∞©Ïû• ÍµêÏ≤¥Ìï¥Ï§å
 				m_pHost = m_PlayerList.Front();
 				m_PlayerList.PopFront();
 			}
@@ -96,7 +96,7 @@ bool Room::RemovePlayer(Player* player) {
 }
 
 bool Room::ChangeHost(Player* player) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 
 	if (!m_PlayerList.Exist(player))
 		return false;
@@ -108,7 +108,7 @@ bool Room::ChangeHost(Player* player) {
 }
 
 bool Room::ChangeNextHost() {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 
 	if (m_PlayerList.Size() == 0) {
 		return false;
@@ -120,13 +120,13 @@ bool Room::ChangeNextHost() {
 }
 
 Player* Room::GetHost() {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	return static_cast<Player*>(m_pHost);
 }
 
 void Room::Broadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
-	CriticalSectionLockGuard guard(m_RoomLock);
-	packet->AddRef(); // ∆–≈∂ ∫£∏ÆæÓ
+	NormalLockGuard guard(m_RoomLock);
+	packet->AddRef(); // Ìå®ÌÇ∑ Î≤†Î¶¨Ïñ¥
 	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
 		if (p == exceptPlayer)
 			return;
@@ -141,7 +141,7 @@ void Room::Broadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
 }
 
 void Room::UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
-	packet->AddRef(); // ∆–≈∂ ∫£∏ÆæÓ
+	packet->AddRef(); // Ìå®ÌÇ∑ Î≤†Î¶¨Ïñ¥
 	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
 		if (p == exceptPlayer)
 			return;
@@ -155,7 +155,7 @@ void Room::UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) 
 }
 
 void Room::UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
-	packet->AddRef(); // ∆–≈∂ ∫£∏ÆæÓ
+	packet->AddRef(); // Ìå®ÌÇ∑ Î≤†Î¶¨Ïñ¥
 	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
 		if (p == exceptPlayer)
 			return;
@@ -202,7 +202,7 @@ void Room::UnsafeForEach(Action<Player*> foreachAction) {
 
 
 void Room::SetRoomState(RoomState state) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	m_eRoomState = state;
 }
 
@@ -216,12 +216,12 @@ void Room::ForEach(Action<Player*> foreachAction) {
 
 
 RoomState Room::GetRoomState() {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	return m_eRoomState;
 }
 
 bool Room::IsBattleFieldState() {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	return m_eRoomState >= RoomState::PlayWait;
 }
 
@@ -229,7 +229,7 @@ bool Room::IsBattleFieldState() {
 
 
 void Room::LoadRoomInfo(Out_ RoomInfo& info) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	info.RoomUID = m_iRoomUID;
 	strcpy_s(info.Name, NAME_LEN, m_RoomName.Source());
 	info.MaxPlayerCount = m_iMaxPlayerCount;
@@ -238,22 +238,22 @@ void Room::LoadRoomInfo(Out_ RoomInfo& info) {
 }
 
 void Room::SetTimerTime(int time) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	m_iTimerTime = time;
 }
 
 int Room::AddTimerTime(int time) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	return m_iTimerTime += time;
 }
 
 int Room::GetTimerTime() {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	return m_iTimerTime;
 }
 
 int Room::SubtractTimerTime(int time) {
-	CriticalSectionLockGuard guard(m_RoomLock);
+	NormalLockGuard guard(m_RoomLock);
 	return m_iTimerTime -= time;
 }
 

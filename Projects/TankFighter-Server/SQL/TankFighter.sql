@@ -6,27 +6,10 @@
 # encoding : utf8
 # encdoing collation : utf8_unicode_520_ci
 
-
-/* 참고사항 1
-Mysql 디폴트 인코딩 변경 방법 :
-C:\ProgramData\MySQL\MySQL Server 5.7 경로 들어가서 my.ini에 아래 옵션들 추가 해준 후 서버 껏다 키면됨
-
-[client]
-default-character-set=utf8
-
-[mysql]
-default-character-set=utf8
-
-
-[mysqld]
-collation-server = utf8_unicode_520_ci
-init-connect='SET NAMES utf8'
-character-set-server = utf8
-*/
-
 drop schema if exists tankfighter ;											# 만약 스키마가 존재한다면 제거하도록 한다.
 create schema tankfighter character set utf8 collate utf8_unicode_520_ci;	# 스키마를 utf8 인코딩으로 생성한다.
 use tankfighter;
+set sql_mode='allow_invalid_dates';											# timestamp 디폴트 값 설정가능하도록 https://stackoverflow.com/questions/9192027/invalid-default-value-for-create-date-timestamp-field
 
 create table t_channel (
 	c_uid				int				primary key auto_increment		comment '채널 고유 아이디',
@@ -109,3 +92,21 @@ create table t_inventoryitem (
 	constraint t_inventoryitem_fk_inventory_uid foreign key (c_inventory_uid) references t_inventory(c_uid) on delete cascade,
     constraint t_inventoryitem_fk_character_uid foreign key (c_character_uid) references t_character(c_uid) on delete cascade   
 ) character set utf8 collate utf8_unicode_520_ci
+
+
+/* 참고사항 1
+Mysql 디폴트 인코딩 변경 방법 :
+C:\ProgramData\MySQL\MySQL Server 5.7 경로 들어가서 my.ini에 아래 옵션들 추가 해준 후 서버 껏다 키면됨
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+
+[mysqld]
+collation-server = utf8_unicode_520_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+*/

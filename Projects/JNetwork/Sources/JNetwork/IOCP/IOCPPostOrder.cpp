@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -23,11 +23,11 @@ int IOCPPostOrder::Process(IOCPWorker* worker) {
 
 	case IOCP_POST_ORDER_PAUSE:
 		worker->m_eState = Worker::State::Paused;
-		Winsock::Message("IOCPWorker ¾²·¹µå°¡ ÀÏ½Ã Á¤ÁöµÇ¾ú½À´Ï´Ù. (%d)", std::this_thread::get_id());
-		SetEvent(Handle);										// WorkerManagerÀÇ WaitForMultipleObjects¿¡ ½ÅÈ£¸¦ º¸³»ÁÜ / ÇØ´ç ¾²·¹µå°¡ Á¤ÁöµÇ¾úÀ½À» ¾Ë·ÁÁØ´Ù.
-		WaitForSingleObject(worker->m_hPauseEvent, INFINITE);	// ¿öÄ¿¾²·¹µåÀÇ ÀÌº¥Æ® ÇÚµé·Î ÀÌ ¾²·¹µå¸¦ Á¤ÁöÇØÁÜ
-		Winsock::Message("IOCPWorker ¾²·¹µå¸¦ ´Ù½Ã °è¼Ó ½ÇÇàÇÕ´Ï´Ù. (%d)", std::this_thread::get_id());
-		SetEvent(Handle);										// WorkerManagerÀÇ WaitForMultipleObjects¿¡ ½ÅÈ£¸¦ º¸³»ÁÜ / ÇØ´ç ¾²·¹µå°¡ °è¼Ó ÁøÇàÀ» ½ÃÀÛÇßÀ½À» ¾Ë·ÁÁØ´Ù.
+		// "IOCPWorker ì“°ë ˆë“œê°€ ì¼ì‹œ ì •ì§€ë˜ì—ˆìŠµë‹ˆë‹¤. (%d)", std::this_thread::get_id()
+		SetEvent(Handle);										// WorkerManagerì˜ WaitForMultipleObjectsì— ì‹ í˜¸ë¥¼ ë³´ë‚´ì¤Œ / í•´ë‹¹ ì“°ë ˆë“œê°€ ì •ì§€ë˜ì—ˆìŒì„ ì•Œë ¤ì¤€ë‹¤.
+		WaitForSingleObject(worker->m_hPauseEvent, INFINITE);	// ì›Œì»¤ì“°ë ˆë“œì˜ ì´ë²¤íŠ¸ í•¸ë“¤ë¡œ ì´ ì“°ë ˆë“œë¥¼ ì •ì§€í•´ì¤Œ
+		// "IOCPWorker ì“°ë ˆë“œë¥¼ ë‹¤ì‹œ ê³„ì† ì‹¤í–‰í•©ë‹ˆë‹¤. (%d)", std::this_thread::get_id()
+		SetEvent(Handle);										// WorkerManagerì˜ WaitForMultipleObjectsì— ì‹ í˜¸ë¥¼ ë³´ë‚´ì¤Œ / í•´ë‹¹ ì“°ë ˆë“œê°€ ê³„ì† ì§„í–‰ì„ ì‹œì‘í–ˆìŒì„ ì•Œë ¤ì¤€ë‹¤.
 		worker->m_eState = Worker::State::Running;
 		return IOCP_POST_ORDER_PAUSE;
 	default: 

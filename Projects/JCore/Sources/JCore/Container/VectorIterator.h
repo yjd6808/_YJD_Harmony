@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -8,7 +8,7 @@
 
 namespace JCore {
 
-// Àü¹æ ¼±¾ğ
+// ì „ë°© ì„ ì–¸
 					class VoidOwner;
 template <typename> class Vector;
 template <typename T>

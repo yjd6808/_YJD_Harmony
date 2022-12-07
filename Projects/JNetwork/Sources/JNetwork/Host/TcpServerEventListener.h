@@ -1,10 +1,10 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¼­¹öÀÇ ÀÌº¥Æ®¸®½º³Ê
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ì„œë²„ì˜ ì´ë²¤íŠ¸ë¦¬ìŠ¤ë„ˆ
 
-	»ç¿ë¹ı
-	1. ÀÚ½Å¸¸ÀÇ Ä¿½ºÅÒ ¸®½º³Ê Å¬·¡½º¸¦ ¸¸µç ÈÄ ÀÌ ÀÎÅÍÆäÀÌ½º Å¬·¡½º¸¦ »ó¼Ó¹Ş¾Æ¼­ ¿À¹ö¶óÀÌµùÇÑ ÈÄ ±¸ÇöÇÑ´Ù.
-	2. ¼­¹ö¿¡ SetEventListener·Î Ä¿½ºÅÒ ¸®½º³Ê¸¦ µî·ÏÇØÁØ´Ù.
+	ì‚¬ìš©ë²•
+	1. ìì‹ ë§Œì˜ ì»¤ìŠ¤í…€ ë¦¬ìŠ¤ë„ˆ í´ë˜ìŠ¤ë¥¼ ë§Œë“  í›„ ì´ ì¸í„°í˜ì´ìŠ¤ í´ë˜ìŠ¤ë¥¼ ìƒì†ë°›ì•„ì„œ ì˜¤ë²„ë¼ì´ë”©í•œ í›„ êµ¬í˜„í•œë‹¤.
+	2. ì„œë²„ì— SetEventListenerë¡œ ì»¤ìŠ¤í…€ ë¦¬ìŠ¤ë„ˆë¥¼ ë“±ë¡í•´ì¤€ë‹¤.
 */
 
 #pragma once
@@ -28,9 +28,9 @@ protected:
 	virtual void OnDisconnected(TcpSession* disconnetedSession) = 0;
 	virtual void OnSent(TcpSession* sender, ISendPacket* sentPacket, Int32UL sentBytes) = 0;
 	virtual void OnReceived(TcpSession* receiver, ICommand* cmd) = 0;
-	virtual void OnPaused() = 0;		// TCP ¼­¹öÀÇ IOCP°¡ °ü¸®ÁßÀÎ ¸ğµç ¾²·¹µå°¡ ÀÏ½ÃÁ¤Áö°¡ µÉ ¶§ È£ÃâµÈ´Ù.
-	virtual void OnResume() = 0;		// TCP ¼­¹öÀÇ IOCP°¡ °ü¸®ÁßÀÎ ¸ğµç ¾²·¹µå°¡ ¸ğµÎ ½ÃÀÛµÈ ÈÄ È£ÃâµÈ´Ù.
-	virtual void OnStopped() = 0;		// TCP ¼­¹ö¸¦ Á¾·áÇÑ ÈÄ È£ÃâµÈ´Ù.
+	virtual void OnPaused() = 0;		// TCP ì„œë²„ì˜ IOCPê°€ ê´€ë¦¬ì¤‘ì¸ ëª¨ë“  ì“°ë ˆë“œê°€ ì¼ì‹œì •ì§€ê°€ ë  ë•Œ í˜¸ì¶œëœë‹¤.
+	virtual void OnResume() = 0;		// TCP ì„œë²„ì˜ IOCPê°€ ê´€ë¦¬ì¤‘ì¸ ëª¨ë“  ì“°ë ˆë“œê°€ ëª¨ë‘ ì‹œì‘ëœ í›„ í˜¸ì¶œëœë‹¤.
+	virtual void OnStopped() = 0;		// TCP ì„œë²„ë¥¼ ì¢…ë£Œí•œ í›„ í˜¸ì¶œëœë‹¤.
 
 	friend class TcpSession;
 	friend class TcpServer;

@@ -1,33 +1,31 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
+ *	ì‘ì„±ì : ìœ¤ì •ë„
+ * ================
  *
- *  [³»°¡ ²Ş²Ù´ø È¸»çÀÇ ¸éÁ¢À» ¾ÕµĞ Á¤µµ°¡ 22/05/11 ÀûÀ½]
- *	ÀÌ Çì´õÆÄÀÏÀ» ÂüÁ¶ÇÒ ½Ã ¿Ø¸¸ÇÏ¸é ÃÖ»ó´Ü¿¡ À§Ä¡ÇÏµµ·Ï ÇÒ °Í
- *  Windows.h°¡ ÀÌ ÆÄÀÏº¸´Ù À§¿¡¼­ include µÇ¸é _WINSOCKAPI_ µğÆÄÀÎ¶«¿¡ Ãæµ¹¹ß»ıÇÔ ^^
- *	==> ¾Æ´Ï ÀÌÁ¦ ±×·² ÇÊ¿ä ¾ø´Ù. Windows.hÇì´õ¸¦ include½ÃÅ°´Â ÆÄÀÏµé ÀüºÎ WIN32_LEAN_AND_MEAN µğÆÄÀÎ Ã³¸® ÇØµÒ
+ *	ì´ í—¤ë”íŒŒì¼ì„ ì°¸ì¡°í•  ì‹œ ì™ ë§Œí•˜ë©´ ìµœìƒë‹¨ì— ìœ„ì¹˜í•˜ë„ë¡ í•  ê²ƒ
+ *  Windows.hê°€ ì´ íŒŒì¼ë³´ë‹¤ ìœ„ì—ì„œ include ë˜ë©´ _WINSOCKAPI_ ë””íŒŒì¸ë•œì— ì¶©ëŒë°œìƒí•¨ ^^
+ *	==> ì•„ë‹ˆ ì´ì œ ê·¸ëŸ´ í•„ìš” ì—†ë‹¤. Windows.hí—¤ë”ë¥¼ includeì‹œí‚¤ëŠ” íŒŒì¼ë“¤ ì „ë¶€ WIN32_LEAN_AND_MEAN ë””íŒŒì¸ ì²˜ë¦¬ í•´ë‘ 
  *
- *	Å×½ºÆ®ÇØº¸°í ½Í´Ù¸é
- *	TankFighterMain-Client ÇÁ·ÎÁ§Æ®ÀÇ main.cpp ÃÖ»ó´Ü¿¡ Windows.h ÆÄÀÏÀ» Æ÷ÇÔÇÏ°íÀÖ´Â Çì´õÆÄÀÏ ¾Æ¹«°Å³ª include ½ÃÅ² ÈÄ
- *	±× ¾Æ·¡ ÀÌ Çì´õ ÆÄÀÏ include ÇØº» ÈÄ ºôµåÇØº¸¸é ¾Ë ¼ö ÀÖ´ç!
+ *	í…ŒìŠ¤íŠ¸í•´ë³´ê³  ì‹¶ë‹¤ë©´ TankFighterMain-Client í”„ë¡œì íŠ¸ì˜ main.cpp ìµœìƒë‹¨ì— Windows.h íŒŒì¼ì„ í¬í•¨í•˜ê³ ìˆëŠ” í—¤ë”íŒŒì¼ ì•„ë¬´ê±°ë‚˜ include ì‹œí‚¨ í›„
+ *	ê·¸ ì•„ë˜ ì´ í—¤ë” íŒŒì¼ include í•´ë³¸ í›„ ë¹Œë“œí•´ë³´ë©´ ì•Œ ìˆ˜ ìˆë‹¹!
  */
 
 #pragma once
 
-#pragma comment(lib, "Mswsock.lib")	// AcceptEx »ç¿ëÀ» À§ÇØ¼­ Ãß°¡
+#pragma comment(lib, "Mswsock.lib")	// AcceptEx ì‚¬ìš©ì„ ìœ„í•´ì„œ ì¶”ê°€
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "JCore.lib")
-
 
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 
 #include <sstream>
 
-#define WIN32_LEAN_AND_MEAN			// Windows.h Çì´õ¿¡ Winsock.h Çì´õ°¡ Æ÷ÇÔµÇ´Â °ÍÀ» ¸·´Â´Ù. ±× ¿Ü¿¡ Çì´õµéÀÌ ¸¹ÀÌ Ãß°¡µÇ´Â °ÍÀ» ¹æÁö // https://social.msdn.microsoft.com/Forums/vstudio/en-US/6177f9bc-db75-4317-9904-02ef55b527d0/linking-problem-with-winsock2?forum=vcgeneral
+// Windows.h í—¤ë”ì— Winsock.h í—¤ë”ê°€ í¬í•¨ë˜ëŠ” ê²ƒì„ ë§‰ëŠ”ë‹¤. ê·¸ ì™¸ì— í—¤ë”ë“¤ì´ ë§ì´ ì¶”ê°€ë˜ëŠ” ê²ƒì„ ë°©ì§€ 
+// https://social.msdn.microsoft.com/Forums/vstudio/en-US/6177f9bc-db75-4317-9904-02ef55b527d0/linking-problem-with-winsock2?forum=vcgeneral
+#define WIN32_LEAN_AND_MEAN			
 #include <JCore/Core.h>
 
-
-#define FORMAT_STR(fmt)  JCore::StringUtil::Format(fmt)
 #define MAX_MSS 1460
 #define MAX_MTU 1500
 #define TEST_DUMMY_PACKET_SIZE	20

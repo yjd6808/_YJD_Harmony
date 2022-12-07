@@ -1,11 +1,11 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
 #include <TF/Game/RoomPool.h>
 #include <TF/Game/Channel.h>
-#include <TF/Util/Console.h>
+#include <JCore/Utils/Console.h>
 
 using namespace JCore;
 using namespace JNetwork;
@@ -24,13 +24,13 @@ bool RoomPool::Initialize(int size) {
 	}
 
 	m_iCurRoomCount = size;
-	Console::WriteLine("[%d Ã¤³Î] ·ë Ç® %d ÃÊ±âÈ­¿Ï·á", GetChannel()->GetChannelUID(), size);
+	SafeConsole::WriteLine("[%d ì±„ë„] ë£¸ í’€ %d ì´ˆê¸°í™”ì™„ë£Œ", GetChannel()->GetChannelUID(), size);
 	return true;
 }
 
 bool RoomPool::Finalize() {
 	m_RoomPool.Extension().ForEach([](Room* p) { delete  p; });
-	Console::WriteLine("[%d Ã¤³Î] ·ë Ç® ºñ¿ì±â ¿Ï·á", GetChannel()->GetChannelUID());
+	SafeConsole::WriteLine("[%d ì±„ë„] ë£¸ í’€ ë¹„ìš°ê¸° ì™„ë£Œ", GetChannel()->GetChannelUID());
 	return true;
 }
 

@@ -1,19 +1,20 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	ÇØ½¬ »ı¼º±â Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	í•´ì‰¬ ìƒì„±ê¸° í…ŒìŠ¤íŠ¸
 */
 
 
 #include <JCoreTest/CoreTest.h>
+#include <JCore/Random.h>
 #include <JCore/Hasher.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_HasherTest == ON
 
-constexpr int MaxDataCount_v = 1000000;// ÃÖ´ë·Î Å×½ºÆ®ÇÒ µ¥ÀÌÅÍ ¼ö
-constexpr float SuccessRatio_v = 50.0;	 // Áßº¹·ü Åë°ú À²
+constexpr int MaxDataCount_v = 1000000;// ìµœëŒ€ë¡œ í…ŒìŠ¤íŠ¸í•  ë°ì´í„° ìˆ˜
+constexpr float SuccessRatio_v = 50.0;	 // ì¤‘ë³µë¥  í†µê³¼ ìœ¨
 vector<Int32U> g_vec;
 Random g_rand;
 
@@ -23,7 +24,7 @@ bool CheckDuplicateRatio(vector<Int32U>& vec) {
 	vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 
 	double dupRatio = (double)(iOriginalSize - vec.size()) / iOriginalSize * 100.0;
-	PrintFormat("(%s)Áßº¹ ¹ß»ı·ü : %.2f%%(%d°³Áß %d°³°¡ Áßº¹µÈ µ¥ÀÌÅÍ·Î »èÁ¦µÊ)\n",
+	PrintFormat("(%s)ì¤‘ë³µ ë°œìƒë¥  : %.2f%%(%dê°œì¤‘ %dê°œê°€ ì¤‘ë³µëœ ë°ì´í„°ë¡œ ì‚­ì œë¨)\n",
 		Type<T>().Source(),
 		dupRatio, 
 		iOriginalSize, 

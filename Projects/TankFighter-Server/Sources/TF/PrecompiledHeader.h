@@ -1,11 +1,9 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ìž‘ì„±ìž : ìœ¤ì •ë„
  */
 
 #pragma once
 
-//#define _WINSOCKAPI_		// winsock.h ¿¬¼Ó include ¹æÁö
-							// ¾Æ´Ï ±Ùµ¥, ¿¡¹Ù¾Æ´Õ´Ï±î ¤©¤·; ÀÌ°Å ¶«¿¡ 1½Ã°£ µ¿¾È ¼Õ¹ß ´ú´ú¶³·È³×
 #include <JNetwork/Network.h>
-
 #include <mysql.h>
+

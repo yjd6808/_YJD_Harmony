@@ -1,13 +1,13 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	°£´ÜÇÑ ½Ã°£À» ´Ù·ê ¼ö ÀÖ´Â ±â´ÉÀ» Ãß°¡ÇÕ´Ï´Ù.
-	½ºÅé¿öÄ¡ ±â´É
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ê°„ë‹¨í•œ ì‹œê°„ì„ ë‹¤ë£° ìˆ˜ ìˆëŠ” ê¸°ëŠ¥ì„ ì¶”ê°€í•©ë‹ˆë‹¤.
+	ìŠ¤í†±ì›Œì¹˜ ê¸°ëŠ¥
 */
 
 #include <JCore/Core.h>
 #include <JCore/Time.h>
 #include <JCore/Math.h>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 #include <JCore/Ascii.h>
 #include <JCore/Exception.h>
 #include <JCore/Container/HashMap.h>
@@ -27,11 +27,11 @@ namespace JCore
 
 	Date::Date(Int32 year, Int32 month, Int32 day) {
 		if (year < 1 || year > 9999)
-			throw InvalidArgumentException("³âÀº 1 ~ 9999³â±îÁö °¡´ÉÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ë…„ì€ 1 ~ 9999ë…„ê¹Œì§€ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 		if (month < 1 || month > 12)
-			throw InvalidArgumentException("¿ùÀº 1 ~ 12±îÁö °¡´ÉÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ì›”ì€ 1 ~ 12ê¹Œì§€ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 		if (day < 1 || day > 31)
-			throw InvalidArgumentException("ÀÏÀº 1 ~ 31±îÁö °¡´ÉÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ì¼ì€ 1 ~ 31ê¹Œì§€ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 
 		Year = year;
 		Month = month;
@@ -62,15 +62,15 @@ namespace JCore
 		}
 
 		if (iTempYear >= 10000) {
-			throw OverFlowException("Date ´Ş µ¡¼À ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. 1¸¸³âÀ» ³Ñ±æ ¼ö ¾ø½À´Ï´Ù.");
+			throw OverFlowException("Date ë‹¬ ë§ì…ˆ ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. 1ë§Œë…„ì„ ë„˜ê¸¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
 		Month = iTempMonth;
 		Year = iTempYear;
 
-		// ¸¸¾à 1¿ù 31ÀÏ³¯ 13°³¿ùÀ» ´õÇß´Ù°í ÇßÀ» ¶§ 
-		// ´Ş ´ÜÀ§¸¸ º¯°æÇØ¹ö¸®¸é 2¿ù 31ÀÏÀÌ µÇ¾î¹ö¸°´Ù. (2¿ùÀº ¸¶Áö¸·ÀÏÀÌ À±³âÀÏ °æ¿ì 29ÀÏ Æò³âÀÏ °æ¿ì 28ÀÏ ÀÓ)
-		// ±×·¡¼­ À±³â/Æò³â¿¡ µû¶ó ÇØ´ç ´ŞÀÇ ÃÖ´ëÀÏ ¼ö¸¦ ÃÊ°úÇÏ´Â °æ¿ì ÃÖ´ë ÀÏ¼ö·Î º¯°æÇØÁà¾ßÇÔ
+		// ë§Œì•½ 1ì›” 31ì¼ë‚  13ê°œì›”ì„ ë”í–ˆë‹¤ê³  í–ˆì„ ë•Œ 
+		// ë‹¬ ë‹¨ìœ„ë§Œ ë³€ê²½í•´ë²„ë¦¬ë©´ 2ì›” 31ì¼ì´ ë˜ì–´ë²„ë¦°ë‹¤. (2ì›”ì€ ë§ˆì§€ë§‰ì¼ì´ ìœ¤ë…„ì¼ ê²½ìš° 29ì¼ í‰ë…„ì¼ ê²½ìš° 28ì¼ ì„)
+		// ê·¸ë˜ì„œ ìœ¤ë…„/í‰ë…„ì— ë”°ë¼ í•´ë‹¹ ë‹¬ì˜ ìµœëŒ€ì¼ ìˆ˜ë¥¼ ì´ˆê³¼í•˜ëŠ” ê²½ìš° ìµœëŒ€ ì¼ìˆ˜ë¡œ ë³€ê²½í•´ì¤˜ì•¼í•¨
 		if (DateTime::IsLeapYear(Year)) {
 			Day = Day > DaysForMonth366[Month - 1] ? DaysForMonth366[Month - 1] : Day;
 		} else {
@@ -82,7 +82,7 @@ namespace JCore
 		const Int64 tick = ToTick() + day * TicksPerDay;
 
 		if (tick < 0) {
-			throw UnderFlowException("Date ÀÏ µ¡¼À ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. ÀÏ ¿¬»ê ¼öÇà°á°ú·Î À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("Date ì¼ ë§ì…ˆ ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ì¼ ì—°ì‚° ìˆ˜í–‰ê²°ê³¼ë¡œ ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		const Date date = DateTime(tick).ToDate();
@@ -123,7 +123,7 @@ namespace JCore
 		}
 
 		if (iTempYear <= 0 || iTempMonth <= 0) {
-			throw UnderFlowException("Date ´Ş »¡¼À ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. ³âµµ¿Í ´ŞÀÌ 0ÀÌÇÏ°¡ µÉ ¼ö ¾ø½À´Ï´Ù.");
+			throw UnderFlowException("Date ë‹¬ ë¹¨ì…ˆ ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ë…„ë„ì™€ ë‹¬ì´ 0ì´í•˜ê°€ ë  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
 		Year = static_cast<Int16>(iTempYear);
@@ -214,7 +214,7 @@ namespace JCore
 		iTotalDays += i4Years * DaysPer4Years_v;
 		iTotalDays += i1Years * DaysPer1Years_v;
 
-		// ÇöÀç °è»êµÈ ´Ş, ÀÏÀº 0ÀÏ, 0¿ùºÎÅÍ ½ÃÀÛ¾Æ´Ï¶ó 1ÀÏ, 1¿ù ºÎÅÍ ½ÃÀÛÀÌ±â¶§¹®¿¡ 1¾¿ »©Áà¾ßÇÑ´Ù.
+		// í˜„ì¬ ê³„ì‚°ëœ ë‹¬, ì¼ì€ 0ì¼, 0ì›”ë¶€í„° ì‹œì‘ì•„ë‹ˆë¼ 1ì¼, 1ì›” ë¶€í„° ì‹œì‘ì´ê¸°ë•Œë¬¸ì— 1ì”© ë¹¼ì¤˜ì•¼í•œë‹¤.
 		if (DateTime::IsLeapYear(Year)) {
 			iTotalDays += DaysUntilMonth366[Month - 1] + Day - 1;
 		} else {
@@ -232,15 +232,15 @@ namespace JCore
 	Time::Time(Int32 hour, Int32 minute, Int32 second, Int32 miliSecond, Int32 microSecond) {
 
 		if (hour < 0 || hour > 23)
-			throw InvalidArgumentException("½Ã°£Àº 0 ~ 23±îÁö¸¸ °¡´ÉÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ì‹œê°„ì€ 0 ~ 23ê¹Œì§€ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 		if (minute < 0 || minute > 59)
-			throw InvalidArgumentException("ºĞÀº 0 ~ 59±îÁö¸¸ °¡´ÉÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ë¶„ì€ 0 ~ 59ê¹Œì§€ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 		if (second < 0 || second > 59)
-			throw InvalidArgumentException("ÃÊ´Â 0 ~ 59±îÁö¸¸ °¡´ÉÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ì´ˆëŠ” 0 ~ 59ê¹Œì§€ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 		if (miliSecond < 0 || miliSecond > 999)
-			throw InvalidArgumentException("¹Ğ¸®ÃÊ´Â 0 ~ 999±îÁö¸¸ °¡´ÉÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ë°€ë¦¬ì´ˆëŠ” 0 ~ 999ê¹Œì§€ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 		if (microSecond < 0 || microSecond > 999)
-			throw InvalidArgumentException("¸¶ÀÌÅ©·ÎÃÊ´Â 0 ~ 999±îÁö¸¸ °¡´ÉÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ë§ˆì´í¬ë¡œì´ˆëŠ” 0 ~ 999ê¹Œì§€ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 
 		Hour = hour;
 		Minute = minute;
@@ -269,7 +269,7 @@ namespace JCore
 		const Int64 iTick = ToTick() + microSeconds;
 
 		if (iTick < 0) {
-			throw UnderFlowException("Time ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("Time ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		const Int64 uiHour = iTick / TicksPerHour;
@@ -304,7 +304,7 @@ namespace JCore
 		const Int64 iTick = ToTick() + other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("Time ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("Time ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		*this = DateTime(iTick).ToTime();
@@ -339,7 +339,7 @@ namespace JCore
 		const Int64 iTick = ToTick() - other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("Time ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("Time ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		*this = DateTime(iTick).ToTime();
@@ -443,11 +443,11 @@ namespace JCore
 		const Int64 iTick = ToTick() + microSeconds;
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		if (iTick >= Ticks10000Years) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. 1¸¸³â ÀÌ»óÀÌ µÉ ¼ö ¾ø½À´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. 1ë§Œë…„ ì´ìƒì´ ë  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 		const DateTime current(iTick);
 		*this = current.ToDateAndTime();
@@ -457,11 +457,11 @@ namespace JCore
 		const Int64 iTick = ToTick() + other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		if (iTick >= Ticks10000Years) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. 1¸¸³â ÀÌ»óÀÌ µÉ ¼ö ¾ø½À´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. 1ë§Œë…„ ì´ìƒì´ ë  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 		const DateTime current(iTick);
 		*this = current.ToDateAndTime();
@@ -471,7 +471,7 @@ namespace JCore
 		const Int64 iTick = ToTick() + other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		const DateTime current(iTick);
@@ -482,11 +482,11 @@ namespace JCore
 		const Int64 iTick = ToTick() + other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		if (iTick >= Ticks10000Years) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. 1¸¸³â ÀÌ»óÀÌ µÉ ¼ö ¾ø½À´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. 1ë§Œë…„ ì´ìƒì´ ë  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
 		const DateTime current(iTick);
@@ -525,7 +525,7 @@ namespace JCore
 		const Int64 iTick = ToTick() - microSeconds;
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 		const DateTime current(iTick);
 		*this = current.ToDateAndTime();
@@ -535,7 +535,7 @@ namespace JCore
 		const Int64 iTick = ToTick() - other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		const DateTime current(iTick);
@@ -546,7 +546,7 @@ namespace JCore
 		const Int64 iTick = ToTick() - other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		const DateTime current(iTick);
@@ -561,7 +561,7 @@ namespace JCore
 		const Int64 iTick = ToTick() - other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		return DateTime(iTick).ToDateAndTime();
@@ -571,7 +571,7 @@ namespace JCore
 		const Int64 iTick = ToTick() + other.ToTick();
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		return DateTime(iTick).ToDateAndTime();
@@ -592,7 +592,7 @@ namespace JCore
 		const Int64 iTick = ToTick() - other.m_Tick;
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		return DateTime(iTick).ToDateAndTime();
@@ -602,7 +602,7 @@ namespace JCore
 		const Int64 iTick = ToTick() + other.m_Tick;
 
 		if (iTick < 0) {
-			throw UnderFlowException("DateAndTime ¿¬»ê ¼öÇàÁß ¿À·ù°¡ ¹ß»ıÇÏ¿´½À´Ï´Ù. À½¼ö°¡ ³ª¿À¸é ¾ÈµË´Ï´Ù.");
+			throw UnderFlowException("DateAndTime ì—°ì‚° ìˆ˜í–‰ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì˜€ìŠµë‹ˆë‹¤. ìŒìˆ˜ê°€ ë‚˜ì˜¤ë©´ ì•ˆë©ë‹ˆë‹¤.");
 		}
 
 		return DateTime(iTick).ToDateAndTime();
@@ -677,15 +677,15 @@ namespace JCore
 	const char* DateTime::ms_szAMPMFullName[] = {"AM", "PM"};
 
 	/*
-		Å° : char (Æ÷¸Ë ½ÃÀÛ ¾Õ¹®ÀÚ)
-		°ª : Tuple<char, Format, int>
+		í‚¤ : char (í¬ë§· ì‹œì‘ ì•ë¬¸ì)
+		ê°’ : Tuple<char, Format, int>
 	
-				char : Æ÷¸Ë ½ÃÀÛ ¾Õ¹®ÀÚ
-				Format : Æ÷¸Ë ÀÌ³Ñ ½ÃÀÛ Á¤¼ö
-				int : Æ÷¸ÅÆÃ °¡´ÉÇÑ ÃÖ´ë ¹®ÀÚ °¹¼ö
+				char : í¬ë§· ì‹œì‘ ì•ë¬¸ì
+				Format : í¬ë§· ì´ë„˜ ì‹œì‘ ì •ìˆ˜
+				int : í¬ë§¤íŒ… ê°€ëŠ¥í•œ ìµœëŒ€ ë¬¸ì ê°¯ìˆ˜
 	
-		¿¹¸¦µé¾î¼­ Æ÷¸Ë ºĞ¼®Áß y¸¦ ¿¬¼Ó ¼¼¹ø ¸¸³­ °æ¿ì Format::y + 2¸¦ ÇØ´ç Æ÷¸Ë Á¶°ÇÀ» Ã£¾Æ°¡µµ·Ï ÇÑ´Ù.
-		±×¸®°í y¸¦ ¿¬¼Ó 5¹ø ¸¸³ª¹ö¸° °æ¿ì. Áï ÇØ´ç Æ÷¸Ë ¹®ÀÚ¿¡¼­ °¡ÁõÇÑ ÃÖ´ë ¹®ÀÚ °¹¼ö¸¦ ÃÊ°úÇÑ °æ¿ì´Â ¿À·ù¸¦ ¶Ù¿ì±â À§ÇÔ
+		ì˜ˆë¥¼ë“¤ì–´ì„œ í¬ë§· ë¶„ì„ì¤‘ yë¥¼ ì—°ì† ì„¸ë²ˆ ë§Œë‚œ ê²½ìš° Format::y + 2ë¥¼ í•´ë‹¹ í¬ë§· ì¡°ê±´ì„ ì°¾ì•„ê°€ë„ë¡ í•œë‹¤.
+		ê·¸ë¦¬ê³  yë¥¼ ì—°ì† 5ë²ˆ ë§Œë‚˜ë²„ë¦° ê²½ìš°. ì¦‰ í•´ë‹¹ í¬ë§· ë¬¸ìì—ì„œ ê°€ì¦í•œ ìµœëŒ€ ë¬¸ì ê°¯ìˆ˜ë¥¼ ì´ˆê³¼í•œ ê²½ìš°ëŠ” ì˜¤ë¥˜ë¥¼ ë›°ìš°ê¸° ìœ„í•¨
 	*/
 
 	HashMap<char, Tuple<char, DateFormat, int>> FormatTokenMap_v =
@@ -709,10 +709,10 @@ namespace JCore
 		=====================================================================================*/
 	inline DateAndTime DateTime::ToDateAndTime() const {
 		return DateAndTime(static_cast<Int32U>(GetYear()), static_cast<Int32U>(GetMonth()),
-		                   static_cast<Int32U>(GetDay()), // Date Á¤º¸
+		                   static_cast<Int32U>(GetDay()), // Date ì •ë³´
 		                   static_cast<Int32U>(GetHour()), static_cast<Int32U>(GetMinute()),
 		                   static_cast<Int32U>(GetSecond()), static_cast<Int32U>(GetMiliSecond()),
-		                   static_cast<Int32U>(GetMicroSecond())); // Time Á¤º¸
+		                   static_cast<Int32U>(GetMicroSecond())); // Time ì •ë³´
 	}
 
 	inline Date DateTime::ToDate() const {
@@ -725,11 +725,11 @@ namespace JCore
 	}
 
 
-	// Æ÷¸Ë¿¡ µû¶ó ½Ã°£ ¹®ÀÚ¿­À» ¾òµµ·Ï ÇÑ´Ù.
-	// @Çü½Ä ·¹ÆÛ·±½º : https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
-	// C# ±âÁØ Æ÷¸Ë Çü½ÄÀ» µû¸¨´Ï´Ù.
+	// í¬ë§·ì— ë”°ë¼ ì‹œê°„ ë¬¸ìì—´ì„ ì–»ë„ë¡ í•œë‹¤.
+	// @í˜•ì‹ ë ˆí¼ëŸ°ìŠ¤ : https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
+	// C# ê¸°ì¤€ í¬ë§· í˜•ì‹ì„ ë”°ë¦…ë‹ˆë‹¤.
 	// O(n)
-	// °³¼± °¡´É¼º : template<char[Size]>¸¦ Ãß°¡ÇØ¼­ ¸®ÅÍ·² ¹®ÀÚ¿­¿¡ ´ëÇØ¼­ ±æÀÌ °è»êÀ» ÇÒ ¼ö ÀÖ´Ù.
+	// ê°œì„  ê°€ëŠ¥ì„± : template<char[Size]>ë¥¼ ì¶”ê°€í•´ì„œ ë¦¬í„°ëŸ´ ë¬¸ìì—´ì— ëŒ€í•´ì„œ ê¸¸ì´ ê³„ì‚°ì„ í•  ìˆ˜ ìˆë‹¤.
 	String DateTime::Format(const char* fmt) const {
 		const int iFmtLen = StringUtil::Length(fmt);
 		String szRet(iFmtLen * 2);
@@ -743,20 +743,20 @@ namespace JCore
 			if (FormatTokenMap_v.Exist(fmt[i])) {
 
 				if (cContinuousToken != fmt[i]) {
-					// ÀÌÀü ÅäÅ«ÇÏ°í ´Ù¸¥ °æ¿ì = Ã³À½ ¹ß°ßÇÑ °æ¿ì
+					// ì´ì „ í† í°í•˜ê³  ë‹¤ë¥¸ ê²½ìš° = ì²˜ìŒ ë°œê²¬í•œ ê²½ìš°
 					ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
 					cContinuousToken = fmt[i];
 					iContinuousCount = 1;
 				} else {
-					// ÀÌÀü ÅäÅ«ÇÏ°í ÀÏÄ¡ÇÏ°í ÀÖ´Â °æ¿ì
+					// ì´ì „ í† í°í•˜ê³  ì¼ì¹˜í•˜ê³  ìˆëŠ” ê²½ìš°
 					iContinuousCount++;
 				}
 			} else {
 				if (IsAlphabat(fmt[i])) {
-					throw InvalidArgumentException("ÅäÅ« ¹®ÀÚ¿ÜÀÇ ¾ËÆÄºª ¹®ÀÚ°¡ Æ÷¸Ë¹®ÀÚ¿­¿¡ Æ÷ÇÔµÇ¾î ÀÖ½À´Ï´Ù.");
+					throw InvalidArgumentException("í† í° ë¬¸ìì™¸ì˜ ì•ŒíŒŒë²³ ë¬¸ìê°€ í¬ë§·ë¬¸ìì—´ì— í¬í•¨ë˜ì–´ ìˆìŠµë‹ˆë‹¤.");
 				}
 
-				// ÅäÅ«ÀÌ ¾Æ´Ñ ´Ù¸¥ ¹®ÀÚ¸¦ ¹ß°ßÇÑ °æ¿ì
+				// í† í°ì´ ì•„ë‹Œ ë‹¤ë¥¸ ë¬¸ìë¥¼ ë°œê²¬í•œ ê²½ìš°
 				ReflectFormat(currentDateAndTime, szRet, cContinuousToken, iContinuousCount);
 				cContinuousToken = '\0';
 				szRet += fmt[i];
@@ -770,8 +770,8 @@ namespace JCore
 	}
 
 
-	// Å¸ÀÓÁ¸ ½Ã°£ ÆíÂ÷ ¾ò´Â ÇÔ¼ö
-	// @Âü°í : https://docs.microsoft.com/ko-kr/windows/win32/api/timezoneapi/nf-timezoneapi-gettimezoneinformation?redirectedfrom=MSDN (Å¸ÀÓÁ¸ Á¤º¸ ¾ò´Â¹ı)
+	// íƒ€ì„ì¡´ ì‹œê°„ í¸ì°¨ ì–»ëŠ” í•¨ìˆ˜
+	// @ì°¸ê³  : https://docs.microsoft.com/ko-kr/windows/win32/api/timezoneapi/nf-timezoneapi-gettimezoneinformation?redirectedfrom=MSDN (íƒ€ì„ì¡´ ì •ë³´ ì–»ëŠ”ë²•)
 	Int32 DateTime::TimeZoneBiasMinute() {
 		TIME_ZONE_INFORMATION timeZoneInformation;
 		GetTimeZoneInformation(&timeZoneInformation);
@@ -779,21 +779,21 @@ namespace JCore
 		return bias;
 	}
 
-	// ÇöÀç½Ã°£ ¾ò´Â ÇÔ¼ö
-	// @Âü°í : https://stackoverflow.com/questions/15957805/extract-year-month-day-etc-from-stdchronotime-point-in-c (ÇöÀç½Ã°£ ¾ò´Â ¹æ¹ı)
-	// @Âü°í : https://stackoverflow.com/questions/32811729/add-time-duration-to-c-timepoint (½Ã°£ ¿¬»ê¹æ¹ı)
+	// í˜„ì¬ì‹œê°„ ì–»ëŠ” í•¨ìˆ˜
+	// @ì°¸ê³  : https://stackoverflow.com/questions/15957805/extract-year-month-day-etc-from-stdchronotime-point-in-c (í˜„ì¬ì‹œê°„ ì–»ëŠ” ë°©ë²•)
+	// @ì°¸ê³  : https://stackoverflow.com/questions/32811729/add-time-duration-to-c-timepoint (ì‹œê°„ ì—°ì‚°ë°©ë²•)
 	DateTime DateTime::Now(TimeStandard timeStandard) {
 		const chrono::system_clock::time_point now = chrono::system_clock::now();
 
-		// Unix Epoch UTC ½Ã°£À» ¸¶ÀÌÅ©·ÎÃÊ ´ÜÀ§·Î ±¸ÇÑ´Ù.
-		//  = 1970³â 1¿ù 1ÀÏºÎÅÍ ÇöÀç±îÁöÀÇ ¸¶ÀÌÅ©·ÎÃÊ
+		// Unix Epoch UTC ì‹œê°„ì„ ë§ˆì´í¬ë¡œì´ˆ ë‹¨ìœ„ë¡œ êµ¬í•œë‹¤.
+		//  = 1970ë…„ 1ì›” 1ì¼ë¶€í„° í˜„ì¬ê¹Œì§€ì˜ ë§ˆì´í¬ë¡œì´ˆ
 		Int64 epoch = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()).count();
 
-		// After Christ (0001³â 1¿ù 1ÀÏ ~ 1969³â 12¿ù 31ÀÏ)±îÁöÀÇ ¸¶ÀÌÅ©·ÎÃÊ¸¦ ´õÇØÁÜÀ¸·Î½á
-		// 0001³â 1¿ù 1ÀÏ ~ ÇöÀç±îÁöÀÇ After Chirst UTC ½Ã°£À» ±¸ÇÑ´Ù.
+		// After Christ (0001ë…„ 1ì›” 1ì¼ ~ 1969ë…„ 12ì›” 31ì¼)ê¹Œì§€ì˜ ë§ˆì´í¬ë¡œì´ˆë¥¼ ë”í•´ì¤Œìœ¼ë¡œì¨
+		// 0001ë…„ 1ì›” 1ì¼ ~ í˜„ì¬ê¹Œì§€ì˜ After Chirst UTC ì‹œê°„ì„ êµ¬í•œë‹¤.
 		epoch += ADBeginTick;
 
-		// ·ÎÄÃ ½Ã°£Àº Å¸ÀÓÁ¸ ÆíÂ÷¸¸Å­ ´õÇØÁØ´Ù.
+		// ë¡œì»¬ ì‹œê°„ì€ íƒ€ì„ì¡´ í¸ì°¨ë§Œí¼ ë”í•´ì¤€ë‹¤.
 		if (timeStandard == TimeStandard::Local) {
 			const Int32 uiBias = TimeZoneBiasMinute();
 			epoch += (uiBias * -1) * TicksPerMinute;
@@ -801,7 +801,7 @@ namespace JCore
 		return DateTime(epoch);
 	}
 
-	// @À±³â Á¶°Ç Âü°í : https://ko.wikipedia.org/wiki/%EC%9C%A4%EB%85%84 
+	// @ìœ¤ë…„ ì¡°ê±´ ì°¸ê³  : https://ko.wikipedia.org/wiki/%EC%9C%A4%EB%85%84 
 	bool DateTime::IsLeapYear(const int year) {
 		if (year <= 0) {
 			return false;
@@ -1072,16 +1072,16 @@ namespace JCore
 
 		const auto valuePtr = FormatTokenMap_v.Find(token);
 		if (valuePtr == nullptr) {
-			throw InvalidArgumentException("¿Ã¹Ù¸£Áö ¾ÊÀº Æ÷¸Ë ÅäÅ«ÀÔ´Ï´Ù.");
+			throw InvalidArgumentException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ í¬ë§· í† í°ì…ë‹ˆë‹¤.");
 		}
 
 		auto [item1, item2, item3] = *valuePtr;
 
 		const DateFormat format = static_cast<DateFormat>(static_cast<int>(item2) + count - 1);
-		const int iMaxCount = item3; // ¿¬¼ÓÀ¸·Î ³ª¿­°¡´ÉÇÑ ¹®ÀÚ ÃÖ´ë ¼ö
+		const int iMaxCount = item3; // ì—°ì†ìœ¼ë¡œ ë‚˜ì—´ê°€ëŠ¥í•œ ë¬¸ì ìµœëŒ€ ìˆ˜
 
 		if (count > iMaxCount) {
-			throw OutOfRangeException("ÅäÅ« °¹¼ö°¡ ÀÌ»óÇÕ´Ï´Ù. È®ÀÎÇÏ°í ´Ù½Ã ÀÔÇØÁÖ¼¼¿ä.");
+			throw OutOfRangeException("í† í° ê°¯ìˆ˜ê°€ ì´ìƒí•©ë‹ˆë‹¤. í™•ì¸í•˜ê³  ë‹¤ì‹œ ì…í•´ì£¼ì„¸ìš”.");
 		}
 
 		switch (format) {
@@ -1207,24 +1207,24 @@ namespace JCore
 
 	void DateTime::CheckOverFlow(Int64U tick) {
 		if (tick >= Ticks10000Years) {
-			throw OverFlowException("1¸¸³âÀ» ³Ñ±æ ¼ö ¾ø½À´Ï´Ù.");
+			throw OverFlowException("1ë§Œë…„ì„ ë„˜ê¸¸ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 	}
 
 	Tuple<int, int, int, int, int> DateTime::GetYearsFromDays(int days) {
 		using namespace Detail;
 
-		const int i400Years = days / DaysPer400Years_v; // ÃÑ ÀÏ¼ö¿¡¼­ 400³âÀÇ ¼ö¸¦ ±¸ÇÑ´Ù.
-		days -= DaysPer400Years_v * i400Years; // 400³âÀÇ ¼ö¸¦ »©ÁØ´Ù.
+		const int i400Years = days / DaysPer400Years_v; // ì´ ì¼ìˆ˜ì—ì„œ 400ë…„ì˜ ìˆ˜ë¥¼ êµ¬í•œë‹¤.
+		days -= DaysPer400Years_v * i400Years; // 400ë…„ì˜ ìˆ˜ë¥¼ ë¹¼ì¤€ë‹¤.
 
-		const int i100Years = days / DaysPer100Years_v; // ÃÑ ÀÏ¼ö¿¡¼­ 100³âÀÇ ¼ö¸¦ ±¸ÇÑ´Ù.
-		days -= DaysPer100Years_v * i100Years; // 100³âÀÇ ¼ö¸¦ »©ÁØ´Ù.
+		const int i100Years = days / DaysPer100Years_v; // ì´ ì¼ìˆ˜ì—ì„œ 100ë…„ì˜ ìˆ˜ë¥¼ êµ¬í•œë‹¤.
+		days -= DaysPer100Years_v * i100Years; // 100ë…„ì˜ ìˆ˜ë¥¼ ë¹¼ì¤€ë‹¤.
 
-		const int i4Years = days / DaysPer4Years_v; // ÃÑ ÀÏ¼ö¿¡¼­ 4³âÀÇ ¼ö¸¦ ±¸ÇÑ´Ù.
-		days -= DaysPer4Years_v * i4Years; // 4³âÀÇ ¼ö¸¦ »©ÁØ´Ù.
+		const int i4Years = days / DaysPer4Years_v; // ì´ ì¼ìˆ˜ì—ì„œ 4ë…„ì˜ ìˆ˜ë¥¼ êµ¬í•œë‹¤.
+		days -= DaysPer4Years_v * i4Years; // 4ë…„ì˜ ìˆ˜ë¥¼ ë¹¼ì¤€ë‹¤.
 
-		const int i1Years = days / DaysPer1Years_v; // ³²Àº ÀÏ¼ö¿¡¼­ 1³âÀÇ ¼ö¸¦ ±¸ÇÑ´Ù.
-		days -= DaysPer1Years_v * i1Years; // ³â´ÜÀ§´Â ¸ğµÎ ¼Ò°ÅµÇ°í 366ÀÏ ÀÌ³»ÀÇ °ªÀÌ ³²À½
+		const int i1Years = days / DaysPer1Years_v; // ë‚¨ì€ ì¼ìˆ˜ì—ì„œ 1ë…„ì˜ ìˆ˜ë¥¼ êµ¬í•œë‹¤.
+		days -= DaysPer1Years_v * i1Years; // ë…„ë‹¨ìœ„ëŠ” ëª¨ë‘ ì†Œê±°ë˜ê³  366ì¼ ì´ë‚´ì˜ ê°’ì´ ë‚¨ìŒ
 
 		return {i400Years, i100Years, i4Years, i1Years, days};
 	}
@@ -1232,25 +1232,19 @@ namespace JCore
 	int DateTime::GetDatePart(const Int64 tick, const DatePart part) {
 		const DateTime dateTime(tick);
 
-		const auto years = GetYearsFromDays(dateTime.GetTotalDays());
+		auto [i400Years, i100Years, i4Years, i1Years, iLeftDays] = GetYearsFromDays(static_cast<int>(dateTime.GetTotalDays()));
 
-		const int i400Years = years.item1;
-		const int i100Years = years.item2;
-		const int i4Years = years.item3;
-		int i1Years = years.item4;
-		const int iLeftDays = years.item5;
-
-		// 1³âÀÌ 365.2545ÀÏÀÌ¹Ç·Î 366ÀÏ Â°¿¡ 1ÀÏÀÌ ³²´Â °æ¿ì ¶§¹®¿¡
+		// 1ë…„ì´ 365.2545ì¼ì´ë¯€ë¡œ 366ì¼ ì§¸ì— 1ì¼ì´ ë‚¨ëŠ” ê²½ìš° ë•Œë¬¸ì—
 		if (i1Years == 4)
 			i1Years = 3;
 
-		// 4³â, Áï ¸¶Áö¸·³âÀº 366ÀÏÀÌ¹Ç·Î
+		// 4ë…„, ì¦‰ ë§ˆì§€ë§‰ë…„ì€ 366ì¼ì´ë¯€ë¡œ
 		const int* pUntilDays = i1Years == 3 ? (int*)DaysUntilMonth366 : (int*)DaysUntilMonth365;
 		const int* pForDays = i1Years == 3 ? (int*)DaysForMonth366 : (int*)DaysForMonth365;
 
 
 		if (part == DatePart::Year) {
-			return i400Years * 400 + i100Years * 100 + i4Years * 4 + i1Years + 1; // ³âµµµµ 1³âºÎÅÍ ½ÃÀÛÀÌ±â ¶§¹®¿¡ + 1
+			return i400Years * 400 + i100Years * 100 + i4Years * 4 + i1Years + 1; // ë…„ë„ë„ 1ë…„ë¶€í„° ì‹œì‘ì´ê¸° ë•Œë¬¸ì— + 1
 		}
 		if (part == DatePart::DayOfYear) {
 			return iLeftDays + 1;
@@ -1266,10 +1260,10 @@ namespace JCore
 		}
 
 		if (part == DatePart::Month) {
-			return iMonth + 1; // 1¿ùºÎÅÍ ½ÃÀÛÀÌ¹Ç·Î
+			return iMonth + 1; // 1ì›”ë¶€í„° ì‹œì‘ì´ë¯€ë¡œ
 		}
 		if (part == DatePart::Day) {
-			return iLeftDays - pUntilDays[iMonth] + 1; // 1ÀÏºÎÅÍ ½ÃÀÛÀÌ¹Ç·Î
+			return iLeftDays - pUntilDays[iMonth] + 1; // 1ì¼ë¶€í„° ì‹œì‘ì´ë¯€ë¡œ
 		}
 		if (part == DatePart::MaxDayOfMonth) {
 			return pForDays[iMonth];

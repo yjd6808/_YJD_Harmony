@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/ChannelScene.h>
@@ -25,7 +25,7 @@ bool ChannelScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
         return false;
     }
 
-    CCLOG("%d Ä¿¸Çµå ¼ö½Å (%s)", cmd->GetCommand(), "ChannelScene");
+    CCLOG("%d ì»¤ë§¨ë“œ ìˆ˜ì‹  (%s)", cmd->GetCommand(), "ChannelScene");
     
     switch (cmd->GetCommand()) {
     case LOAD_CHANNEL_INFO_ACK: m_pChannelLayer->CmdLoadChannelInfoAck(cmd);    break;

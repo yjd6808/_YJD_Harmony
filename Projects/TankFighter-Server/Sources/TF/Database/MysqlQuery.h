@@ -1,32 +1,24 @@
 /*
-	»ı¼ºÀÏ : 2019/03/06
-	¼öÁ¤ÀÏ : 2022/04/03 - ´ë°Å ¼öÁ¤ÇÔ
+	ìƒì„±ì¼ : 2019/03/06
+	ìˆ˜ì •ì¼ : 2022/04/03 - ëŒ€ê±° ìˆ˜ì •í•¨
 	
-	ÀÌ°Ô ¿¾³¯¿¡ ±êÇãºê¿¡¼­ °Ë»ö µµÁß ¹ß°ßÇß´ø°Çµ¥ ´ë°Å ¼öÁ¤ÇÔ
-	¿À·ùµµ Á» ÀÖ¾ú°í ´Ù ¶â¾î°íÄ§
+	ì´ê²Œ ì˜›ë‚ ì— ê¹ƒí—ˆë¸Œì—ì„œ ê²€ìƒ‰ ë„ì¤‘ ë°œê²¬í–ˆë˜ê±´ë° ëŒ€ê±° ìˆ˜ì •í•¨
+	ì˜¤ë¥˜ë„ ì¢€ ìˆì—ˆê³  ë‹¤ ëœ¯ì–´ê³ ì¹¨
  */
 
 
 #pragma once
 
 
-#include <algorithm>
-#include <string>
-#include <map>
-#include <sstream>
 
-#include <JCore/Container/HashMap.h>
+#include <JCore/Assert.h>
 #include <JCore/Time.h>
+#include <JCore/Container/HashMap.h>
 
 #include <TF/Database/MysqlConnection.h>
-
 #include <TF/Database/MysqlStatementBuilder.h>
 #include <TF/Database/StatementType.h>
 
-#ifndef DebugAssert
-	#include <cassert>
-	#define DebugAssert(exp, msg)		assert((exp) && msg)
-#endif
 
 class MysqlQuery
 {
@@ -35,11 +27,11 @@ public:
 	MysqlQuery(MysqlConnection *mConn, const JCore::String& preparedStatement);
 	~MysqlQuery();
 
-	// ¾Õ 6±ÛÀÚ¸¦ È®ÀÎÇØ¼­ ¾î¶² Å¸ÀÔÀÇ StatementÀÎÁö È®ÀÎ
-	// ¹®ÀÚ¿­ÀÌ select·Î ½ÃÀÛÇÏ¸é SELECT Å¸ÀÔ - ¹¹ ÀÌ·±½Ä
+	// ì• 6ê¸€ìë¥¼ í™•ì¸í•´ì„œ ì–´ë–¤ íƒ€ì…ì˜ Statementì¸ì§€ í™•ì¸
+	// ë¬¸ìì—´ì´ selectë¡œ ì‹œì‘í•˜ë©´ SELECT íƒ€ì… - ë­ ì´ëŸ°ì‹
 	static StatementType ParseStatement(const JCore::String& statement);
 
-	// ¸¸µé¸é¼­ µ¿½Ã¿¡ ÀÎÀÚ¸¦ ³Ö¾îÁÖµµ·Ï...
+	// ë§Œë“¤ë©´ì„œ ë™ì‹œì— ì¸ìë¥¼ ë„£ì–´ì£¼ë„ë¡...
 	template <typename... Args>
 	static MysqlQuery* Create(MysqlConnection* conn, const JCore::String& statement, Args&&... args) {
 		JCore::String preparedStatement = MysqlStatementBuilder::Build(statement, JCore::Forward<Args>(args)...);
@@ -54,13 +46,13 @@ public:
 	// SELECT
 	bool ExecuteQuery();
 
-	// DELETE | UDDATE ¿ë
+	// DELETE | UDDATE ìš©
 	bool ExecuteUpdate();
 
-	// INSERT ½ÇÇàÈÄ ¸¶Áö¸· ID°ª ¾òÀ½
-	int ExecuteInsert();
+	// INSERT ì‹¤í–‰í›„ ë§ˆì§€ë§‰ IDê°’ ì–»ìŒ
+	Int64U ExecuteInsert();
 
-	// ½ºÅ×ÀÌÆ®¸ÕÆ® ¾Õ 6±ÛÀÚ¸¦ ÆÄ½ÌÇØ¼­ select, delete µî¿¡ ¸Â°Ô ¾Ë¾Æ¼­ ½ÇÇà
+	// ìŠ¤í…Œì´íŠ¸ë¨¼íŠ¸ ì• 6ê¸€ìë¥¼ íŒŒì‹±í•´ì„œ select, delete ë“±ì— ë§ê²Œ ì•Œì•„ì„œ ì‹¤í–‰
 	bool ExecuteAuto();
 
 	JCore::String GetFieldName(const unsigned int& field);

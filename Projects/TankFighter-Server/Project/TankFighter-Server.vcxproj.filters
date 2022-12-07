@@ -7,9 +7,6 @@
     <Filter Include="Overlapped">
       <UniqueIdentifier>{c287f929-f98e-4b55-af88-75dd684c8251}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{55c95da0-89be-41c0-a0bf-da993ec09b51}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Host">
       <UniqueIdentifier>{2a392ee0-9bf1-484e-93b2-6a13c4154eb1}</UniqueIdentifier>
     </Filter>
@@ -24,12 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\TF\Util\Console.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\TF\Util\ConsoleColor.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\TF\ServerConfiguration.h" />
     <ClInclude Include="..\Sources\TF\Host\GameServer.h">
       <Filter>Host</Filter>
@@ -103,9 +94,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\TF\Util\Console.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\TF\Host\GameServerEventListener.cpp">
       <Filter>Host</Filter>
     </ClCompile>

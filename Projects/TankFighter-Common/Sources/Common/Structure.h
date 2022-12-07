@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -7,25 +7,19 @@
 #include <JCore/Type.h>
 #include <Common/Enum.h>
 
-#define INVALID_UID				-1
+ // disable all warnings
+#pragma warning(push, 0)
 
-#define ID_LEN					40
-#define PASS_LEN				40
-#define NAME_LEN				40
+#define INVALID_UID			(-1)
 
-#ifndef REASON_LEN
+#define ID_LEN            40
+#define PASS_LEN			    40
+#define NAME_LEN				  40
 #define REASON_LEN				150
-#endif
-
-#ifndef MESSAGE_LEN
 #define MESSAGE_LEN				300
-#endif
 
-// °¡º¯ Ä¿¸Çµå Àü´Ş ±¸ÇöÇØ¾ßÇÏ´Âµ¥ ½Ã°£ÀÌ ºÎÁ·ÇØ¼­ ÀÏ´Ü ÀÌ·¸°Ô ¸¸µç´Ù.
-#ifndef COMMAND_ARRAY_LEN
+// ê°€ë³€ ì»¤ë§¨ë“œ ì „ë‹¬ êµ¬í˜„í•´ì•¼í•˜ëŠ”ë° ì‹œê°„ì´ ë¶€ì¡±í•´ì„œ ì¼ë‹¨ ì´ë ‡ê²Œ ë§Œë“ ë‹¤.
 #define COMMAND_ARRAY_LEN		10
-#endif
-
 #define ROOM_MAX_PLAYER_COUNT	4
 
 
@@ -102,7 +96,7 @@ struct BattleInfo
 
 struct BulletInfo
 {
-	int CharacterUID = INVALID_UID;		// ¹ß»çÇÑ³ğ
+	int CharacterUID = INVALID_UID;		// ë°œì‚¬í•œë†ˆ
 	float X;
 	float Y;
 	float Rotation;
@@ -110,3 +104,5 @@ struct BulletInfo
 	float MoveSpeed;
 	Int32U Color;
 };
+
+#pragma warning(pop)

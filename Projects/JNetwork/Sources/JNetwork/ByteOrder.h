@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 
@@ -7,11 +7,6 @@
 
 #include <JCore/TypeTraits.h>
 #include <JCore/Memory.h>
-
-// ÄÄÆÄÀÏÇÏ´Â ÄÄÅÍ¸¶´Ù ´Ş¶ó¼­ ¤¡¤ºÁö ¾Ê³ª
-// ReSharper disable CppClangTidyClangDiagnosticInvalidConstexpr
-// ReSharper disable CppIfCanBeReplacedByConstexprIf
-// ReSharper disable CppUnreachableCode
 
 enum class Endianness
 {
@@ -21,20 +16,20 @@ enum class Endianness
 
 struct ByteOrder final
 {
-	// ¿£µğ¾È Ã¼Å© ¹æ¹ı
-	// @Âü°í : https://sites.google.com/site/insideoscore/endianness
+	// ì—”ë””ì•ˆ ì²´í¬ ë°©ë²•
+	// @ì°¸ê³  : https://sites.google.com/site/insideoscore/endianness
 	constexpr static Endianness HostEndianness() {
 		constexpr int iEndianness = 0x00000001;
 		return (*(char*)&iEndianness == 0x01) ? Endianness::Little : Endianness::Big;
 	}
 
-	// ¸®Æ²¿£µğ¾È : 4¹ÙÀÌÆ® Á¤¼ö 0xaabbccdd°¡ ¸Ş¸ğ¸®¿¡ ¾Æ·¡¿Í °°ÀÌ ÀúÀåµÊ
+	// ë¦¬í‹€ì—”ë””ì•ˆ : 4ë°”ì´íŠ¸ ì •ìˆ˜ 0xaabbccddê°€ ë©”ëª¨ë¦¬ì— ì•„ë˜ì™€ ê°™ì´ ì €ì¥ë¨
 	// 0x100 : dd
 	// 0x101 : cc
 	// 0x102 : bb
 	// 0x103 : aa
 	// 
-	// ºò¿£µğ¾È : 4¹ÙÀÌÆ® Á¤¼ö 0xaabbccdd°¡ ¸Ş¸ğ¸®¿¡ ¾Æ·¡¿Í °°ÀÌ ÀúÀåµÊ
+	// ë¹…ì—”ë””ì•ˆ : 4ë°”ì´íŠ¸ ì •ìˆ˜ 0xaabbccddê°€ ë©”ëª¨ë¦¬ì— ì•„ë˜ì™€ ê°™ì´ ì €ì¥ë¨
 	// 0x100 : aa
 	// 0x101 : bb
 	// 0x102 : cc
@@ -44,7 +39,7 @@ struct ByteOrder final
 	constexpr static T NetworkToHost(const T val) {
 		static_assert(JCore::IsPrimitiveType_v<T>, "... T muse be primitive type");
 
-		// È£½ºÆ®°¡ ºò ¿£µğ¾ğÀÌ¸é ±×³É ¹İÈ¯
+		// í˜¸ìŠ¤íŠ¸ê°€ ë¹… ì—”ë””ì–¸ì´ë©´ ê·¸ëƒ¥ ë°˜í™˜
 		if (HostEndianness() == Endianness::Big) {
 			return val;
 		}
@@ -55,7 +50,7 @@ struct ByteOrder final
 		Byte* pDst = (Byte*)&ret;
 		const Byte* pSrc = (Byte*)&val;
 
-		for (int i = iSize - 1, j = 0; i >= 0; i--, j++) {
+		for (int i = iSize - 1, j = 0; i >= 0; --i, j++) {
 			pDst[j] = pSrc[i];
 		}
 
@@ -66,7 +61,7 @@ struct ByteOrder final
 	constexpr static T HostToNetwork(const T val) {
 		static_assert(JCore::IsPrimitiveType_v<T>, "... T muse be primitive type");
 
-		// È£½ºÆ®°¡ ºò ¿£µğ¾ğÀÌ¸é ±×³É ¹İÈ¯
+		// í˜¸ìŠ¤íŠ¸ê°€ ë¹… ì—”ë””ì–¸ì´ë©´ ê·¸ëƒ¥ ë°˜í™˜
 		if (HostEndianness() == Endianness::Big) {
 			return val;
 		}
@@ -77,7 +72,7 @@ struct ByteOrder final
 		Byte* pDst = (Byte*)&ret;
 		const Byte* pSrc = (Byte*)&val;
 
-		for (int i = iSize - 1, j = 0; i >= 0; i--, j++) {
+		for (int i = iSize - 1, j = 0; i >= 0; --i, j++) {
 			pDst[j] = pSrc[i];
 		}
 

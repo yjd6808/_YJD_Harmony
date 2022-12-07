@@ -1,13 +1,18 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
+
+
+
 
 #include <TF/PrecompiledHeader.h>
 #include <TF/Game/Channel.h>
-#include <TF/Util/Console.h>
 #include <TF/Game/Player.h>
 #include <TF/ServerConfiguration.h>
+
+#include <JCore/Utils/Console.h>
 #include <JNetwork/Packet.h>
+
 
 using namespace JCore;
 using namespace JNetwork;
@@ -35,20 +40,20 @@ bool Channel::Initialize() {
 }
 
 bool Channel::Finalize() {
-	m_BattleFieldWorker.Join();		// ¹æ»èÁ¦Àü ¸ÕÀú Á¶ÀÎ ÇØÁà¾ßÇÔ
+	m_BattleFieldWorker.Join();		// ë°©ì‚­ì œì „ ë¨¼ì € ì¡°ì¸ í•´ì¤˜ì•¼í•¨
 
 	return m_RoomPool.Finalize();
 }
 
 
 int Channel::GetPlayerCount() {
-	CriticalSectionLockGuard guard(m_ChannelLock);
+	NormalLockGuard guard(m_ChannelLock);
 	return m_PlayerList.Size();
 }
 
 
 bool Channel::TryAddPlayer(Player* player) {
-	CriticalSectionLockGuard guard(m_ChannelLock);
+	NormalLockGuard guard(m_ChannelLock);
 	if (m_PlayerList.Size() < m_iMaxPlayerCount) {
 		player->SetChannelUID(m_ChannelUID);
 		m_PlayerList.PushBack(player);
@@ -59,13 +64,13 @@ bool Channel::TryAddPlayer(Player* player) {
 }
 
 bool Channel::RemovePlayer(Player* player) {
-	CriticalSectionLockGuard guard(m_ChannelLock);
+	NormalLockGuard guard(m_ChannelLock);
 
 	const int iRoomUID = player->GetRoomUID();
 
 	if (iRoomUID != INVALID_UID) {
 		if (!LeaveRoom(player)) {
-			DebugAssert(false, "ÇÃ·¹ÀÌ¾î°¡ ¼ÓÇÑ ¹æÀÇ UID°¡ ÀÌ»óÇÕ´Ï´Ù.");
+			DebugAssertMessage(false, "í”Œë ˆì´ì–´ê°€ ì†í•œ ë°©ì˜ UIDê°€ ì´ìƒí•©ë‹ˆë‹¤.");
 			return false;
 		}
 	}
@@ -76,7 +81,7 @@ bool Channel::RemovePlayer(Player* player) {
 }
 
 bool Channel::IsPlayerExistByCharacterUID(int characterUID) {
-	CriticalSectionLockGuard guard(m_ChannelLock);
+	NormalLockGuard guard(m_ChannelLock);
 
 	for (int i = 0; i < m_PlayerList.Size(); i++) {
 		if (m_PlayerList[i]->GetCharacterUID() == characterUID) {
@@ -88,7 +93,7 @@ bool Channel::IsPlayerExistByCharacterUID(int characterUID) {
 }
 
 Player* Channel::FindPlayerByCharacterUID(int characterUID) {
-	CriticalSectionLockGuard guard(m_ChannelLock);
+	NormalLockGuard guard(m_ChannelLock);
 
 	for (int i = 0; i < m_PlayerList.Size(); i++) {
 		if (m_PlayerList[i]->GetCharacterUID() == characterUID) {
@@ -100,12 +105,12 @@ Player* Channel::FindPlayerByCharacterUID(int characterUID) {
 }
 
 void Channel::PlayerForEach(Action<Player*> foreachAction) {
-	CriticalSectionLockGuard guard(m_ChannelLock);
+	NormalLockGuard guard(m_ChannelLock);
 	m_PlayerList.Extension().ForEach(foreachAction);
 }
 
 Player* Channel::PlayerFindIf(Func<bool, Player*> predicate) {
-	CriticalSectionLockGuard guard(m_ChannelLock);
+	NormalLockGuard guard(m_ChannelLock);
 	const auto ppFind = m_PlayerList.Extension().FindIf(predicate);
 
 	if (ppFind == nullptr) {
@@ -116,7 +121,7 @@ Player* Channel::PlayerFindIf(Func<bool, Player*> predicate) {
 }
 
 Room* Channel::CreateRoom(Player* creator, const String& roomName, int maxPlayerCount) {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 	Room* pNewRoom = m_RoomPool.PopRoom(creator, roomName, maxPlayerCount);
 	if (!m_RoomMap.Insert(pNewRoom->GetRoomUID(), pNewRoom))
 		return nullptr;
@@ -130,9 +135,9 @@ Room* Channel::CreateRoom(Player* creator, const String& roomName, int maxPlayer
 }
 
 void Channel::BroadcastLobbyPacket(ISendPacket* packet) {
-	CriticalSectionLockGuard guard(m_ChannelLock);
+	NormalLockGuard guard(m_ChannelLock);
 
-	packet->AddRef(); // ÆĞÅ¶ º£¸®¾î
+	packet->AddRef(); // íŒ¨í‚· ë² ë¦¬ì–´
 	m_PlayerList.Extension().ForEach([packet](Player* p) {
 		if (p->GetPlayerState() == PlayerState::Lobby)
 			p->Session()->SendAsync(packet);
@@ -141,7 +146,7 @@ void Channel::BroadcastLobbyPacket(ISendPacket* packet) {
 }
 
 bool Channel::RemoveRoom(const int roomUID) {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 
 	if (!m_RoomMap.Exist(roomUID)) {
 		return false;
@@ -158,7 +163,7 @@ bool Channel::RemoveRoom(const int roomUID) {
 }
 
 bool Channel::RemoveRoomIfEmpty(Room* room) {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 
 	if (room->IsEmpty()) {
 		return RemoveRoom(room->GetRoomUID());
@@ -168,7 +173,7 @@ bool Channel::RemoveRoomIfEmpty(Room* room) {
 }
 
 Room* Channel::GetRoomByRoomUID(const int roomUID) {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 
 	if (!m_RoomMap.Exist(roomUID)) {
 		return nullptr;
@@ -178,7 +183,7 @@ Room* Channel::GetRoomByRoomUID(const int roomUID) {
 }
 
 Room* Channel::GetRoomByPlayer(Player* player) {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 
 	int iRoomUID = player->GetRoomUID();
 	if (!m_RoomMap.Exist(iRoomUID)) {
@@ -188,9 +193,9 @@ Room* Channel::GetRoomByPlayer(Player* player) {
 	return m_RoomMap[iRoomUID];
 }
 
-// nullptr : ¹æÀÌ Á¸ÀçÇÏÁö ¾Ê°Å³ª ²Ë Âù °æ¿ì
+// nullptr : ë°©ì´ ì¡´ì¬í•˜ì§€ ì•Šê±°ë‚˜ ê½‰ ì°¬ ê²½ìš°
 Room* Channel::JoinRoom(const int roomUID, Player* player) {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 
 	if (!m_RoomMap.Exist(roomUID)) {
 		return nullptr;
@@ -206,7 +211,7 @@ Room* Channel::JoinRoom(const int roomUID, Player* player) {
 }
 
 bool Channel::LeaveRoom(Player* player) {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 
 	const int iRoomUID = player->GetRoomUID();
 
@@ -216,14 +221,14 @@ bool Channel::LeaveRoom(Player* player) {
 
 	Room* pRoom = m_RoomMap[iRoomUID];
 	if (!pRoom->RemovePlayer(player)) {
-		DebugAssert(false, "¹æ¾È¿¡ ÇØ´ç ÇÃ·¹ÀÌ¾î°¡ ¾ø½À´Ï´Ù. ¤§¤§");
+		DebugAssertMessage(false, "ë°©ì•ˆì— í•´ë‹¹ í”Œë ˆì´ì–´ê°€ ì—†ìŠµë‹ˆë‹¤. ã„·ã„·");
 		return false;
 	}
 
 	if (pRoom->IsEmpty()) {
 		if (pRoom->IsBattleFieldState()) {
 			if (!m_BattleFieldWorker.RemoveBattleFieldRoom(pRoom)) {
-				DebugAssert(false, "¹èÆ² ÇÊµå »óÅÂÀÎµ¥ ¹èÆ²ÇÊµå ¿öÄ¿¿¡ ¾ø´Â ¹æÀÔ´Ï´Ù.");
+				DebugAssertMessage(false, "ë°°í‹€ í•„ë“œ ìƒíƒœì¸ë° ë°°í‹€í•„ë“œ ì›Œì»¤ì— ì—†ëŠ” ë°©ì…ë‹ˆë‹¤.");
 			}
 		}
 
@@ -235,13 +240,13 @@ bool Channel::LeaveRoom(Player* player) {
 }
 
 void Channel::RoomForEach(Action<Room*> foreachAction) {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 	m_RoomMap.Values().Extension().ForEach(foreachAction);
 }
 
 
 int Channel::GetRoomCount() {
-	CriticalSectionLockGuard guard(m_RoomMapLock);
+	NormalLockGuard guard(m_RoomMapLock);
 	return m_RoomMap.Size();
 }
 

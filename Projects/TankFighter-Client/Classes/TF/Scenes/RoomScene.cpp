@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/RoomScene.h>
@@ -25,7 +25,7 @@ bool RoomScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
         return false;
     }
 
-    CCLOG("%d Ä¿¸Çµå ¼ö½Å (%s)", cmd->GetCommand(), "RoomScene");
+    CCLOG("%d ì»¤ë§¨ë“œ ìˆ˜ì‹  (%s)", cmd->GetCommand(), "RoomScene");
 
     switch (cmd->GetCommand()) {
 	case LOAD_ROOM_INFO_ACK:             m_pRoomLayer->CmdLoadRoomInfoAck(cmd);         break;

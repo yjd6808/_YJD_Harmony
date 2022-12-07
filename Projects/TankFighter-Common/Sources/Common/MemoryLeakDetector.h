@@ -3,8 +3,11 @@
 #include <crtdbg.h>
 #include <cstdio>
 
-// ¹üÀ§ ¸Ş¸ğ¸®¸¯ Ã¼Å©
-// @ÄÚµå È¹µæ ÁÖ¼Ò : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
+// disable all warnings
+#pragma warning(push, 0)
+
+// ë²”ìœ„ ë©”ëª¨ë¦¬ë¦­ ì²´í¬
+// @ì½”ë“œ íšë“ ì£¼ì†Œ : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
 class AutoMemoryLeakDetector
 {
 public:
@@ -23,11 +26,13 @@ public:
             _CrtMemDumpStatistics(&stateDiff);
         }
     }
+    
 private:
     static void reportFailure(unsigned int unfreedBytes) {
-        printf("¸Ş¸ğ¸® ¸¯ ¹ß»ı : %d bytes!!!\n", unfreedBytes);
+        printf("ë©”ëª¨ë¦¬ ë¦­ ë°œìƒ : %d bytes!!!\n", unfreedBytes);
     }
-    _CrtMemState memState_;
+
+    _CrtMemState memState_{};
 };
 
 
@@ -50,5 +55,8 @@ public:
         return 0;
     }
 private:
-    _CrtMemState memState_;
+
+    _CrtMemState memState_{};
 };
+
+#pragma warning(pop)

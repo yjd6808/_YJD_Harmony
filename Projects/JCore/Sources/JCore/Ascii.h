@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¾Æ½ºÅ° ¹®ÀÚ °ü·Ã
+	ìž‘ì„±ìž : ìœ¤ì •ë„
+	ì•„ìŠ¤í‚¤ ë¬¸ìž ê´€ë ¨
 */
 
 #pragma once
@@ -11,12 +11,12 @@ namespace JCore {
 		return ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z';
 	}
 
-	// ¼Ò¹®ÀÚ ¾ËÆÄºªÀÎÁö
+	// ì†Œë¬¸ìž ì•ŒíŒŒë²³ì¸ì§€
 	inline bool IsLowerCaseAlphabat(const char ch) {	
 		return ch >= 'a' && ch <= 'z';
 	}
 
-	// ´ë¹®ÀÚ ¾ËÆÄºªÀÎÁö
+	// ëŒ€ë¬¸ìž ì•ŒíŒŒë²³ì¸ì§€
 	inline bool IsUpperCaseAlphabat(const char ch) {
 		return ch >= 'A' && ch <= 'Z';
 	}

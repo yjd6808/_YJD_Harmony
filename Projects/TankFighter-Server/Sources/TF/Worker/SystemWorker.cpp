@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
@@ -7,11 +7,10 @@
 #include <JNetwork/Winsock.h>
 
 #include <TF/Worker/SystemWorker.h>
-#include <TF/Util/Console.h>
+#include <JCore/Utils/Console.h>
 #include <TF/Game/World.h>
 
 using namespace JCore;
-
 
 SystemWorker* SystemWorker::GetInstance() {
 	if (ms_pInstance == nullptr) {
@@ -27,46 +26,47 @@ SystemWorker::~SystemWorker() {
 	}
 };
 
-HANDLE SystemWorker::CreateExitHandle() {
+WinHandle SystemWorker::CreateExitHandle() {
 	return m_hExitHandle = CreateEventA(NULL, FALSE, FALSE, NULL);
 }
 
 void SystemWorker::Run() {
-	// std::thread ¸â¹ö ÇÔ¼ö·Î ½ÇÇàÇÏ´Â ¹ı
-	// @Âü°í : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
+	// std::thread ë©¤ë²„ í•¨ìˆ˜ë¡œ ì‹¤í–‰í•˜ëŠ” ë²•
+	// @ì°¸ê³  : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
 
 	m_Thread = std::thread{ [this] { WorkerThread(); } };
 	m_Thread.detach();
 }
 
 void SystemWorker::WorkerThread() const {
-	Console::WriteLine("SystemWorker ¾²·¹µå°¡ ½ÇÇàµÇ¾ú½À´Ï´Ù. (%d)", std::this_thread::get_id());
+	SafeConsole::WriteLine("SystemWorker ì“°ë ˆë“œê°€ ì‹¤í–‰ë˜ì—ˆìŠµë‹ˆë‹¤. (%d)", std::this_thread::get_id());
 
 	for (;;) {
 		char com;
-		std::cout << "[¼­¹ö Ä¿¸Çµå] Á¾·á[c], ¿ùµåÁ¤º¸[i] > ";
+		std::cout << "[ì„œë²„ ì»¤ë§¨ë“œ] ì¢…ë£Œ[c], ì›”ë“œì •ë³´[i] > ";
 
 		if (std::cin >> com) {
 			if (com == 'c' || com == 'C') {
 				SetEvent(m_hExitHandle);
 				break;
-			} else if (com == 'i' || com == 'I') {
+			}
+
+		  if (com == 'i' || com == 'I') {
 				World* pWorld = World::GetInstance();
 				auto channels = pWorld->GetChannels();
 
-				Console::WriteLine(ConsoleColor::LIGHTBLUE, "[ÅëÇÕ] : ÀÎ¿ø : %d¸í / ¹æÀÇ ¼ö : %d°³ / °ÔÀÓÁßÀÎ ¹æÀÇ ¼ö : %d", 
+				SafeConsole::WriteLine(ConsoleColor::LightGray, "[í†µí•©] : ì¸ì› : %dëª… / ë°©ì˜ ìˆ˜ : %dê°œ / ê²Œì„ì¤‘ì¸ ë°©ì˜ ìˆ˜ : %d",
 					pWorld->GetTotalPlayerCount(), pWorld->GetTotalRoomCount(), pWorld->GetTotalPlayingRoomCount());
 
 				for (int i = 0; i < channels.Size(); i++) {
-					Console::WriteLine(ConsoleColor::GREEN, "[Ã¤³Î %d] : ÀÎ¿ø : %d¸í / ¹æÀÇ ¼ö : %d°³ / °ÔÀÓÁßÀÎ ¹æÀÇ ¼ö : %d", 
+					SafeConsole::WriteLine(ConsoleColor::Green, "[ì±„ë„ %d] : ì¸ì› : %dëª… / ë°©ì˜ ìˆ˜ : %dê°œ / ê²Œì„ì¤‘ì¸ ë°©ì˜ ìˆ˜ : %d", 
 						channels[i]->GetChannelUID(), channels[i]->GetPlayerCount(), channels[i]->GetRoomCount(), channels[i]->GetPlayingRoomCount());
 				}
 
-				Console::SetColor(ConsoleColor::LIGHTGRAY);
+				SafeConsole::SetColor(ConsoleColor::LightGray);
 			}
 		}
 	}
 
-THREAD_END:
-	Console::WriteLine("SystemWorker ¾²·¹µå°¡ Á¾·áµÇ¾ú½À´Ï´Ù. (%d)", std::this_thread::get_id());
+	SafeConsole::WriteLine("SystemWorker ì“°ë ˆë“œê°€ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤. (%d)", std::this_thread::get_id());
 }

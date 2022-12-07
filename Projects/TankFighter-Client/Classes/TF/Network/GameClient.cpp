@@ -27,7 +27,7 @@ GameClient* GameClient::GetInstance() {
 }
 
 void GameClient::InitializeParser() {
-	// ¾µÀÏÀÌ ¾ø´Ù.
+	// ì“¸ì¼ì´ ì—†ë‹¤.
 }
 
 void GameClient::UpdateCharacterInfo(CharacterInfo& info) {
@@ -38,7 +38,7 @@ void GameClient::ChangeScene(SceneType sceneType) {
 	Scene* pScene = Director::getInstance()->getRunningScene();
 
 	if (pScene == nullptr) {
-		DebugAssert(false, "¸Û¹Ì? ¾ÀÀÌ ¾ø¾î¿ä");
+		DebugAssertMessage(false, "ë©ë¯¸? ì”¬ì´ ì—†ì–´ìš”");
 		return;
 	}
 

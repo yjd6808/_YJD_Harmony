@@ -12,7 +12,7 @@ class Tank : public Scale9Sprite
 public:
 	Tank(int characterUID, Layer* activeLayer) : m_pActiveLayer(activeLayer) { SetCharacterUID(characterUID); }
 	bool init2();
-	static Tank* create(int characterUID, Layer* playingScene);	// ÀÌ ÅÊÅ©°¡ È°µ¿ÇÏ´Â ·¹ÀÌ¾î¸¦ ÁöÁ¤ÇØÁØ´Ù.
+	static Tank* create(int characterUID, Layer* playingScene);	// ì´ íƒ±í¬ê°€ í™œë™í•˜ëŠ” ë ˆì´ì–´ë¥¼ ì§€ì •í•´ì¤€ë‹¤.
 
 	void updateRotation(float delta);
 	void updatePosition(float delta);
@@ -31,7 +31,7 @@ public:
 	void SetCharacterUID(int characterUID)						{ m_TankMove.CharacterUID = characterUID; }
 	int	 GetCharacterUID() const								{ return m_TankMove.CharacterUID; }
 
-	// UpdateTankMove() ÇÔ¼ö°¡ È£ÃâµÇ¸é true·ÎµÊ
+	// UpdateTankMove() í•¨ìˆ˜ê°€ í˜¸ì¶œë˜ë©´ trueë¡œë¨
 	//bool IsUpdated() const										{ return m_bUpdated;}
 	TankMove& GetMove()											{ return m_TankMove; }
 	void SetFireCallback(JCore::Action<Bullet*> callback)		{ m_FilreCallBack = callback; }
@@ -39,8 +39,8 @@ public:
 
 	bool IsCollide(Bullet* bullet);
 private:
-	bool m_bMoveable = false;		// ÅÊÅ©¸¦ Å°º¸µå·Î ¿òÁ÷ÀÏ ¼ö ÀÖ´ÂÁö
-	bool m_bFireable = false;		// ÅÊÅ©¸¦ Å°º¸µå¸¦ ´­·¯¼­ ÃÑÀ» ½ò ¼ö ÀÖ´ÂÁö
+	bool m_bMoveable = false;		// íƒ±í¬ë¥¼ í‚¤ë³´ë“œë¡œ ì›€ì§ì¼ ìˆ˜ ìˆëŠ”ì§€
+	bool m_bFireable = false;		// íƒ±í¬ë¥¼ í‚¤ë³´ë“œë¥¼ ëˆŒëŸ¬ì„œ ì´ì„ ì  ìˆ˜ ìˆëŠ”ì§€
 
 	Layer* m_pActiveLayer = nullptr;
 	Sprite* m_pBodyCollidors[2] = { nullptr, nullptr };
@@ -48,9 +48,9 @@ private:
 	Scale9Sprite* m_pGun = nullptr;
 	Node* m_pFirePos;
 
-	float m_fShotDelay = 0.0f;			// ÃÑ ½ò¼ö ÀÖ´Â
-	bool m_bShotable = false;			// µô·¹ÀÌ½Ã°£ÀÌ °æ°úÇØ¼­ ÀÌÁ¦ ÃÑÀ» ½ò ¼ö ÀÖ´ÂÁö
-	JCore::Action<Bullet*> m_FilreCallBack = nullptr; // ÃÑ ¹ß»çÇÒ¶§¸¶´Ù È£ÃâÇÒ Äİ¹é ÇÔ¼ö
+	float m_fShotDelay = 0.0f;			// ì´ ì ìˆ˜ ìˆëŠ”
+	bool m_bShotable = false;			// ë”œë ˆì´ì‹œê°„ì´ ê²½ê³¼í•´ì„œ ì´ì œ ì´ì„ ì  ìˆ˜ ìˆëŠ”ì§€
+	JCore::Action<Bullet*> m_FilreCallBack = nullptr; // ì´ ë°œì‚¬í• ë•Œë§ˆë‹¤ í˜¸ì¶œí•  ì½œë°± í•¨ìˆ˜
 
 	TankMove m_TankMove{
 		INVALID_UID,

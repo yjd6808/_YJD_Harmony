@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/LoginScene.h>
@@ -26,7 +26,7 @@ bool LoginScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
         return false;
     }
 
-    CCLOG("%d Ä¿¸Çµå ¼ö½Å (%s)", cmd->GetCommand(), "LoginScene");
+    CCLOG("%d ì»¤ë§¨ë“œ ìˆ˜ì‹  (%s)", cmd->GetCommand(), "LoginScene");
 
     switch (cmd->GetCommand()) {
     case LOGIN_ACK: m_pLoginLayer->CmdLoginAck(cmd); break;

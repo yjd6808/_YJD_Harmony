@@ -1,9 +1,9 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	IOCP¸¦ È°¿ëÇÑ ºñµ¿±â Äõ¸® Ã³¸®¸¦ Áö¿øÇÏµµ·Ï ¸¸µéÀÚ.
-	°á°ú¸¦ ¿øÇÏ¸é ¹Ş¾Æº¼ ¼ö ÀÖµµ·ÏÇÔ
+	ì‘ì„±ì : ìœ¤ì •ë„
+	IOCPë¥¼ í™œìš©í•œ ë¹„ë™ê¸° ì¿¼ë¦¬ ì²˜ë¦¬ë¥¼ ì§€ì›í•˜ë„ë¡ ë§Œë“¤ì.
+	ê²°ê³¼ë¥¼ ì›í•˜ë©´ ë°›ì•„ë³¼ ìˆ˜ ìˆë„ë¡í•¨
 
-	MysqlDatabase Å¬·¡½ºÀÇ QueryAsync¸¦ È°¿ëÇÏ¿© »ç¿ëÇÒ ¼ö ÀÖ´Ù.
+	MysqlDatabase í´ë˜ìŠ¤ì˜ QueryAsyncë¥¼ í™œìš©í•˜ì—¬ ì‚¬ìš©í•  ìˆ˜ ìˆë‹¤.
 */
 
 
@@ -12,15 +12,11 @@
 
 #include <TF/Database/MysqlQuery.h>
 #include <TF/Database/StatementType.h>
-#include <JCore/RefCount.h>
+
+#include <JCore/SafeRefCount.h>
 #include <JCore/Functional.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-// ReSharper disable CppPossiblyUninitializedMember
-
-class MysqlQueryFuture : public JCore::RefCount
+class MysqlQueryFuture : public JCore::SafeRefCount
 {
 public:
 	MysqlQueryFuture(const JCore::String& statement);
@@ -28,18 +24,19 @@ public:
 public:
 	MysqlQuery& Wait();
 private:	
-	// ¾Æ·¡ 4Á¾ ÇÔ¼öµéÀº ¸ğµÎ IOCPOverlappedQuery ¿¡¼­ »ç¿ëµÊ
+	// ì•„ë˜ 4ì¢… í•¨ìˆ˜ë“¤ì€ ëª¨ë‘ IOCPOverlappedQuery ì—ì„œ ì‚¬ìš©ë¨
 	void InitializeQuery(MysqlConnection* conn);
 	void ExecuteQuery();
 	void SetReady() { m_bReady = true; }
 	void Signal() const { SetEvent(m_WaitHandle); }
 	void CallbackExecute();
+    void ReleaseAction() override { delete this; }
 private:
-	HANDLE m_WaitHandle;
+	WinHandle m_WaitHandle;
 	std::atomic<bool> m_bReady;
-	JCore::String m_Statement;		// ¾²°í³ª¸é Äõ¸®°¡ ½ÇÇàµÈ ÀÌÈÄ·Î´Â »ç¿ë ºÒ°¡´ÉÇÏ´Ï ÁÖÀÇ (move·Î MysqlQuery·Î ¿Å°Ü¼­ ¾µ°Å¶ó¼­)
+	JCore::String m_Statement;		// ì“°ê³ ë‚˜ë©´ ì¿¼ë¦¬ê°€ ì‹¤í–‰ëœ ì´í›„ë¡œëŠ” ì‚¬ìš© ë¶ˆê°€ëŠ¥í•˜ë‹ˆ ì£¼ì˜ (moveë¡œ MysqlQueryë¡œ ì˜®ê²¨ì„œ ì“¸ê±°ë¼ì„œ)
 	StatementType m_eStatement;
-	union { MysqlQuery m_Result; };	// IOCPOverlappedQueryÀÇ Process ÇÔ¼ö¿¡¼­ ÃÊ±âÈ­°¡ µÇµµ·Ï ÇÏ±â À§ÇØ »ı¼ºÀÚ unionÀ¸·Î »ı¼ºÀÚ È£ÃâÀ» ¸·´Â´Ù. (¼­¹ö IOCP ¾²·¹µå ºÎÇÏ¸¦ Á¶±İÀÌ³ª¸¶ µ¥ÀÌÅÍº£ÀÌ½º IOCP ¾²·¹µå·Î ¿Å±â±â À§ÇÔ)
+	union { MysqlQuery m_Result; };	// IOCPOverlappedQueryì˜ Process í•¨ìˆ˜ì—ì„œ ì´ˆê¸°í™”ê°€ ë˜ë„ë¡ í•˜ê¸° ìœ„í•´ ìƒì„±ì unionìœ¼ë¡œ ìƒì„±ì í˜¸ì¶œì„ ë§‰ëŠ”ë‹¤. (ì„œë²„ IOCP ì“°ë ˆë“œ ë¶€í•˜ë¥¼ ì¡°ê¸ˆì´ë‚˜ë§ˆ ë°ì´í„°ë² ì´ìŠ¤ IOCP ì“°ë ˆë“œë¡œ ì˜®ê¸°ê¸° ìœ„í•¨)
 	JCore::Action<MysqlQuery*> m_Callback;
 	
 	friend class IOCPOverlappedQuery;

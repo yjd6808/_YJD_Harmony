@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -30,10 +30,10 @@ public:
 	MysqlConnectionPool* GetConnectionPool() const { return m_pConnectionPool; }
 
 	/*
-	 * ºñµ¿±â Query ½ÇÇà ÈÄ Wait() ÇÔ¼ö¸¦ È£ÃâÇØ¼­ °á°ú°ªÀ» ¿øÇÒ ¶§ ¹Ş¾Æº¼ ¼ö ÀÖ´Ù.
+	 * ë¹„ë™ê¸° Query ì‹¤í–‰ í›„ Wait() í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•´ì„œ ê²°ê³¼ê°’ì„ ì›í•  ë•Œ ë°›ì•„ë³¼ ìˆ˜ ìˆë‹¤.
      *	
-	 * °á°ú·Î ¹Ş¾Æ¼­ »ç¿ëÇÒ ¶§ ±×¸®°í ¿À¹ö·¦¿¡¼­ »ç¿ëÇÏ±â À§ÇØ 2·Î ¼³Á¤ÇØÁÜ
-	 * Ç»ÃÄ´Â ÀÌ ÇÔ¼ö ¹Û¿¡¼­ ²À Release¸¦ ÇØÁÙ °Í
+	 * ê²°ê³¼ë¡œ ë°›ì•„ì„œ ì‚¬ìš©í•  ë•Œ ê·¸ë¦¬ê³  ì˜¤ë²„ë©ì—ì„œ ì‚¬ìš©í•˜ê¸° ìœ„í•´ 2ë¡œ ì„¤ì •í•´ì¤Œ
+	 * í“¨ì³ëŠ” ì´ í•¨ìˆ˜ ë°–ì—ì„œ ê¼­ Releaseë¥¼ í•´ì¤„ ê²ƒ
 	*/
 	template <typename... Args>
 	MysqlQueryFuture* QueryAsync(const JCore::String& statement, Args&&... args) {
@@ -47,7 +47,7 @@ public:
 		IOCPOverlappedQuery* pOverlapped = new IOCPOverlappedQuery(m_pIocp, future);
 
 		if (m_pIocp->Post(0, NULL, pOverlapped) == FALSE) {
-			DebugAssert(false, "MysqlDatabase::QueryAsync() Failed");
+			DebugAssertMessage(false, "MysqlDatabase::QueryAsync() Failed");
 			pOverlapped->Release();
 			future->Release(2);
 			return nullptr;
@@ -58,22 +58,22 @@ public:
 	}
 
 	/*
-	 * µ¿±âÈ­ Query ½ÇÇà
-	 * ½º¸¶Æ® Æ÷ÀÎÅÍ·Î ¾Ë¾Æ¼­ ÇØÁ¦ÇØÁÖ¹Ç·Î »ó°ü¾ø´Ù.
+	 * ë™ê¸°í™” Query ì‹¤í–‰
+	 * ìŠ¤ë§ˆíŠ¸ í¬ì¸í„°ë¡œ ì•Œì•„ì„œ í•´ì œí•´ì£¼ë¯€ë¡œ ìƒê´€ì—†ë‹¤.
 	 */
 
 	template <typename... Args>
-	JCore::SharedPointer<MysqlQuery> Query(const JCore::String& statement, Args&&... args) {
+	JCore::SharedPtr<MysqlQuery> Query(const JCore::String& statement, Args&&... args) {
 		if (statement.Length() <= 6) {
-			DebugAssert(false, "MysqlDatabase::Query() Äõ¸®¸¦ ¶È¹Ù·Î ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+			DebugAssertMessage(false, "MysqlDatabase::Query() ì¿¼ë¦¬ë¥¼ ë˜‘ë°”ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”.");
 			return nullptr;
 		}
 
 		auto pConn = _MysqlConnPool->GetConnection();
 
 		if (pConn == nullptr) {
-			// ½ÇÆĞ
-			DebugAssert(false, "MysqlDatabase::Query() Ä¿³Ø¼Ç Ç®¿¡¼­ °¡Á®¿À±â ½ÇÆĞ");
+			// ì‹¤íŒ¨
+			DebugAssertMessage(false, "MysqlDatabase::Query() ì»¤ë„¥ì…˜ í’€ì—ì„œ ê°€ì ¸ì˜¤ê¸° ì‹¤íŒ¨");
 			return nullptr;
 		}
 
@@ -84,7 +84,7 @@ public:
 			return nullptr;
 
 		
-		JCore::SharedPointer<MysqlQuery> spQuery = JCore::MakeShared<MysqlQuery>(pConn, preparedStatement);
+		JCore::SharedPtr<MysqlQuery> spQuery = JCore::MakeShared<MysqlQuery>(pConn, preparedStatement);
 		spQuery->ExecuteAuto();
 
 		return spQuery;
@@ -93,8 +93,8 @@ private:
 	JNetwork::IOCP* m_pIocp;
 	MysqlConnectionPool* m_pConnectionPool;
 
-	// Äõ¸® ¼öÇà Åë°è
-	// ½ÇÆĞ µî Ã³¸®ÇÒ °ÍµéÀº ¿©±â´Ù°¡ Ãß°¡ ÇÏ¸é µÈ´Ù
+	// ì¿¼ë¦¬ ìˆ˜í–‰ í†µê³„
+	// ì‹¤íŒ¨ ë“± ì²˜ë¦¬í•  ê²ƒë“¤ì€ ì—¬ê¸°ë‹¤ê°€ ì¶”ê°€ í•˜ë©´ ëœë‹¤
 
 	inline static MysqlDatabase* ms_pInstance = nullptr;
 

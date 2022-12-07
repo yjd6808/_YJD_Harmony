@@ -1,0 +1,73 @@
+/*
+ * 작성자: 윤정도
+ * =====================
+ */
+
+
+
+#include <JCore/Core.h>
+#include <JCore/Sync/LockGuard.h>
+#include <JCore/Sync/RecursiveLock.h>
+#include <JCore/Exception.h>
+
+#include <cassert>
+
+namespace JCore {
+
+	template class LockGuard<RecursiveLock>;
+
+	RecursiveLock::RecursiveLock() :
+		m_uiLockedThreadId(0),
+		m_iRecursion(0) {}
+
+	void RecursiveLock::Lock() {
+		const size_t m_uiId = GetCurrentThreadId();
+
+		if (m_uiLockedThreadId != m_uiId) {
+			m_Lock.Lock();
+			m_uiLockedThreadId = m_uiId;
+			m_iRecursion = 1;
+			return;
+		}
+
+		++m_iRecursion;
+	}
+
+	bool RecursiveLock::TryLock() {
+		const size_t m_uiId = GetCurrentThreadId();
+
+		if (m_Lock.TryLock()) {
+			m_uiLockedThreadId = m_uiId;
+			m_iRecursion = 1;
+			return true;
+		}
+
+		if (m_uiLockedThreadId == m_uiId) {
+			++m_iRecursion;
+			return true;
+		}
+
+		return false;
+	}
+
+	void RecursiveLock::Unlock() {
+		const size_t m_uiId = GetCurrentThreadId();
+		DebugAssert(m_uiLockedThreadId == m_uiId);
+        DebugAssert(m_iRecursion > 0);
+
+		if ((--m_iRecursion) == 0)
+		{
+			m_uiLockedThreadId = 0;
+			m_Lock.Unlock();
+		}
+	}
+
+    // 
+	bool RecursiveLock::IsLocked() {
+		throw NotImplementedException("RecursiveLock::IsLocked()");
+	}
+
+	size_t RecursiveLock::GetCurrentThreadId() {
+		return std::hash<std::thread::id>{}(std::this_thread::get_id());
+	}
+} // namespace JCore

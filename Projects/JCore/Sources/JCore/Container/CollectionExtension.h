@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -23,7 +23,7 @@ class CollectionExtension
 	using TCollectionExtension  = CollectionExtension<T>;
 	using TCollectionStream		= CollectionStream<T>;
 	using TIterator				= Iterator<T>;
-	using TEnumerator			= SharedPointer<TIterator>;
+	using TEnumerator			= SharedPtr<TIterator>;
 	using TCollection			= Collection<T>;
 
 public:

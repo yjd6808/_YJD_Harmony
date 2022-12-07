@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -12,7 +12,7 @@ class IPEndPoint
 {
 public:
 	IPEndPoint() = default;
-	virtual ~IPEndPoint() = 0;
+	virtual ~IPEndPoint();
 	virtual InternetProtocol GetProtocol() const = 0;
 	virtual JCore::String ToString() const = 0;
 };
@@ -24,7 +24,7 @@ public:
 	IPv4EndPoint(const IPv4Address& ipAddr, Int16U port);
 	IPv4EndPoint(const char* endPointAddrString);
 	IPv4EndPoint(const JCore::String& endPointAddrString);
-	~IPv4EndPoint() override = default;
+	~IPv4EndPoint() override {}
 public:
 	IPv4Address GetAddress() const { return m_Address;  }
 	Int16U GetPort() const { return m_uiPort; }

@@ -1,16 +1,16 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¹è¿­±â¹İ ½ºÅÃ Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë°°ì—´ê¸°ë°˜ ìŠ¤íƒ í…ŒìŠ¤íŠ¸
 */
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCoreTest/TestUtil/Object.h>
+
 
 #include <JCore/Random.h>
 #include <JCore/Container/ListStack.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_ListStackTest == ON
@@ -40,7 +40,7 @@ TEST(ListStackTest, Regular) {
 	EXPECT_TRUE(stack.Size() == 0);
 }
 
-// Ãß°¡, »èÁ¦, ¹İº¹ÀÚ Å×½ºÆ®
+// ì¶”ê°€, ì‚­ì œ, ë°˜ë³µì í…ŒìŠ¤íŠ¸
 TEST(ListStackTest, TotalTest) {
 	Random rand;
 
@@ -69,12 +69,12 @@ TEST(ListStackTest, TotalTest) {
 
 		while (stackFit->HasNext()) {
 			EXPECT_TRUE(stackFit->Next() == (*fit));
-			fit++;
+			++fit;
 		}
 
 		while (stackFit->HasNext()) {
 			EXPECT_TRUE(stackFit->Previous() == (*fit));
-			rit++;
+			++rit;
 		}
 
 		EXPECT_TRUE(stack.Size() == dc);
@@ -137,7 +137,7 @@ TEST(ListStackTest, OperatorTest) {
 
 	ListStack<Model> b{ 6, 5, 4, 3, 2, 1 };
 
-	// º¹»ç ´ëÀÔ
+	// ë³µì‚¬ ëŒ€ì…
 	b = a;
 
 	int i = 3;
@@ -155,7 +155,7 @@ TEST(ListStackTest, OperatorTest) {
 	EXPECT_TRUE(b.Size() == 1);
 
 
-	// ÀÌ´Ï¼È¶óÀÌÀú º¹»ç ´ëÀÔ
+	// ì´ë‹ˆì…œë¼ì´ì € ë³µì‚¬ ëŒ€ì…
 	b = { 1, 3, 5, 6 };
 	EXPECT_TRUE(b.Size() == 4);
 	EXPECT_TRUE(b.Top().a == 6); b.Pop();

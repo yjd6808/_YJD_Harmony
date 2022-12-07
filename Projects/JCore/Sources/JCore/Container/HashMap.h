@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -23,7 +23,7 @@ struct BucketNode
 		return Pair == other.Pair && Hash == other.Hash;
 	}
 
-	// LinkedList ´õ¹Ì Çìµå/Å×ÀÏ »ı¼º½Ã ÇÊ¿äÇÑ µğÆúÆ® »ı¼ºÀÚ
+	// LinkedList ë”ë¯¸ í—¤ë“œ/í…Œì¼ ìƒì„±ì‹œ í•„ìš”í•œ ë””í´íŠ¸ ìƒì„±ì
 	BucketNode() = default; 
 	~BucketNode() noexcept = default;
 	BucketNode(const TBucketNode& other) = default;
@@ -34,7 +34,7 @@ struct BucketNode
 	BucketNode& operator=(BucketNode&& other) = default;
 
 	TKeyValuePair Pair;
-	Int32U Hash{};				// Ã³À½¿¡ ÇÑ¹ø °è»êÇØ³õÀ¸¸é ¼º´ÉÀÌ Á»´õ °³¼±µÉ µí?
+	Int32U Hash{};				// ì²˜ìŒì— í•œë²ˆ ê³„ì‚°í•´ë†“ìœ¼ë©´ ì„±ëŠ¥ì´ ì¢€ë” ê°œì„ ë  ë“¯?
 };
 
 template <typename TKey, typename TValue>
@@ -75,13 +75,13 @@ class HashMap : public MapCollection<TKey, TValue>
 	/* =====================================================================
 	 *
 	 *
-	 *		[ÇØ°áÇØ¾ßÇÒ ¹®Á¦]
-	 *		1. ºó ¹öÅ¶À» ¾Æ¿¹ °Ë»çÇÏÁö ¾Ê°í ¾î¶»°Ô Å°¼Â°ú º§·ù¼ÂÀ» ¾òÀ»±î?
-	 *			-> ¸ğ¸£°Ú´Ù.
-	 *			-> Àá½Ã¸¸ ÀÌ°Å ¿Í ¹æ¹ı »ı°¢³²
-	 *			-> °Ë»ö µµ¿ò ¾øÀÌ ÇØ°á¿Ï·á
-	 *		2. ¾î¶»°Ô ÀÌÅÍ·¹ÀÌÆÃÀ» ÇØ¾ßÇÒ±î?
-	 *			-> °Ë»ö µµ¿ò ¾øÀÌ ÇØ°á¿Ï·á
+	 *		[í•´ê²°í•´ì•¼í•  ë¬¸ì œ]
+	 *		1. ë¹ˆ ë²„í‚·ì„ ì•„ì˜ˆ ê²€ì‚¬í•˜ì§€ ì•Šê³  ì–´ë–»ê²Œ í‚¤ì…‹ê³¼ ë²¨ë¥˜ì…‹ì„ ì–»ì„ê¹Œ?
+	 *			-> ëª¨ë¥´ê² ë‹¤.
+	 *			-> ì ì‹œë§Œ ì´ê±° ì™€ ë°©ë²• ìƒê°ë‚¨
+	 *			-> ê²€ìƒ‰ ë„ì›€ ì—†ì´ í•´ê²°ì™„ë£Œ
+	 *		2. ì–´ë–»ê²Œ ì´í„°ë ˆì´íŒ…ì„ í•´ì•¼í• ê¹Œ?
+	 *			-> ê²€ìƒ‰ ë„ì›€ ì—†ì´ í•´ê²°ì™„ë£Œ
 	 *
 	 *
 	 * ==================================================================== */
@@ -99,7 +99,7 @@ class HashMap : public MapCollection<TKey, TValue>
 	using TKeyCollectionIterator	= typename TMapCollection::KeyCollectionIterator;
 	using TValueCollectionIterator	= typename TMapCollection::ValueCollectionIterator;
 public:
-	// ³»ºÎ ±¸Á¶Ã¼ Àü¹æ ¼±¾ğ (inner struct forward declaration)
+	// ë‚´ë¶€ êµ¬ì¡°ì²´ ì „ë°© ì„ ì–¸ (inner struct forward declaration)
 	struct HashMapKeyCollection;
 	struct HashMapKeyCollectionIterator;
 	struct HashMapValueCollection;
@@ -178,7 +178,7 @@ public:
 		this->m_KeyCollection = other.m_KeyCollection;
 		this->m_ValueCollection = other.m_ValueCollection;
 
-		// Head ¹öÅ¶°ú Tail ¹öÅ¶ »çÀÌ¿¡ ¿¬°áµÈ ¹öÅ¶ÀÌ ÀÖ´Â °æ¿ì¿¡¸¸ ¿¬°áÇØÁà¾ßÇÔ
+		// Head ë²„í‚·ê³¼ Tail ë²„í‚· ì‚¬ì´ì— ì—°ê²°ëœ ë²„í‚·ì´ ìˆëŠ” ê²½ìš°ì—ë§Œ ì—°ê²°í•´ì¤˜ì•¼í•¨
 		if (this->m_iSize > 0) {
 			ConnectBucket(m_pHeadBucket, other.m_pHeadBucket->Next);
 			ConnectBucket(other.m_pTailBucket->Previous, m_pTailBucket);
@@ -194,7 +194,7 @@ public:
 		Clear();
 		ExpandIfNeeded(ilist.size());
 
-		for (auto it = ilist.begin(); it != ilist.end(); it++) {
+		for (auto it = ilist.begin(); it != ilist.end(); ++it) {
 			Insert((*it));
 		}
 
@@ -225,7 +225,7 @@ public:
 
 
 		m_pTable[uiBucket].EmplaceBack(TKeyValuePair{ Forward<Ky>(key), Forward<Vy>(value) }, uiHash);
-		this->m_iSize++;
+		++this->m_iSize;
 		return true;
 	}
 
@@ -246,7 +246,7 @@ public:
 		} 
 
 		m_pTable[uiBucket].EmplaceBack(pair, uiHash);
-		this->m_iSize++;
+		++this->m_iSize;
 		return true;
 	}
 
@@ -267,7 +267,7 @@ public:
 		}
 
 		m_pTable[uiBucket].EmplaceBack(Move(pair), uiHash);
-		this->m_iSize++;
+		++this->m_iSize;
 		return true;
 	}
 
@@ -289,7 +289,7 @@ public:
 		TValue* pVal = m_pTable[HashBucket(key)].FindByKey(key);
 
 		if (pVal == nullptr) {
-			throw InvalidArgumentException("ÇØ´ç Å°°ª¿¡ ´ëÀÀÇÏ´Â °ªÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			throw InvalidArgumentException("í•´ë‹¹ í‚¤ê°’ì— ëŒ€ì‘í•˜ëŠ” ê°’ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		}
 
 		return *pVal;
@@ -301,12 +301,12 @@ public:
 			return false;
 		}
 
-		// ¹öÅ¶ÀÌ ºñ¾úÀ¸¸é ¿¬°áÀ» ²÷¾îÁØ´Ù.
+		// ë²„í‚·ì´ ë¹„ì—ˆìœ¼ë©´ ì—°ê²°ì„ ëŠì–´ì¤€ë‹¤.
 		if (bucket.IsEmpty()) {
 			ConnectBucket(bucket.Previous, bucket.Next);
 		}
 	
-		this->m_iSize--;
+		--this->m_iSize;
 		return true;
 	}
 
@@ -332,22 +332,22 @@ public:
 				continue;
 			}
 
-			printf("[%d] µ¥ÀÌÅÍ ¼ö : %d\n", i, m_pTable[i].Size());
+			printf("[%d] ë°ì´í„° ìˆ˜ : %d\n", i, m_pTable[i].Size());
 
 			auto it = m_pTable[i].Begin();
 
 			while (it->HasNext()) {
 				auto v = it->Next();
-				printf("\tÅ° : %d, °ª : %d\n", v.Pair.Key, v.Pair.Value);
+				printf("\tí‚¤ : %d, ê°’ : %d\n", v.Pair.Key, v.Pair.Value);
 			}
 		}
 	}
 
-	SharedPointer<TIterator> Begin() const override {
+	SharedPtr<TIterator> Begin() const override {
 		return MakeShared<THashMapIterator>(this->GetOwner(), m_pHeadBucket->Next, m_pHeadBucket->Next->m_pHead->Next);
 	}
 
-	SharedPointer<TIterator> End() const override {
+	SharedPtr<TIterator> End() const override {
 		return MakeShared<THashMapIterator>(this->GetOwner(), m_pTailBucket->Previous, m_pTailBucket->Previous->m_pTail);
 	}
 
@@ -375,7 +375,7 @@ protected:
 			TBucket& prevBucket = m_pTable[i];
 			auto prevBucketIterator = prevBucket.Begin();
 
-			// ±âÁ¸ ¹öÅ¶À» ¼øÈ¸ÇÏ¸ç »õ·Î¿î ¹öÅ¶¿¡ µ¥ÀÌÅÍ¸¦ ´ã¾ÆÁØ´Ù.
+			// ê¸°ì¡´ ë²„í‚·ì„ ìˆœíšŒí•˜ë©° ìƒˆë¡œìš´ ë²„í‚·ì— ë°ì´í„°ë¥¼ ë‹´ì•„ì¤€ë‹¤.
 			while (prevBucketIterator->HasNext()) {
 				TBucketNode& bucketNode = prevBucketIterator->Next();
 				Int32U uiBucket = BucketIndex(bucketNode.Hash);
@@ -403,7 +403,7 @@ protected:
 	}
 
 	/// <summary>
-	/// Àü´Ş¹ŞÀº »çÀÌÁî Å©±â¿¡ ¸Â´Â ¹è¿­ Å©±â¸¦ ¹İÈ¯ÇØÁØ´Ù.
+	/// ì „ë‹¬ë°›ì€ ì‚¬ì´ì¦ˆ í¬ê¸°ì— ë§ëŠ” ë°°ì—´ í¬ê¸°ë¥¼ ë°˜í™˜í•´ì¤€ë‹¤.
 	/// </summary>
 	int CalculateExpandCapacity(int size) const {
 		if (size < m_iCapacity) {
@@ -427,23 +427,23 @@ protected:
 	}
 
 	/// <summary>
-	/// bucket ¹Ù·Î Àü¿¡ ´Ù¸¥ bucketÀ» »ğÀÔÇÑ´Ù.
+	/// bucket ë°”ë¡œ ì „ì— ë‹¤ë¥¸ bucketì„ ì‚½ì…í•œë‹¤.
 	/// </summary>
 	void InsertBucketPrev(TBucket* bucket, TBucket* otherBucket) {
 		if (bucket == m_pHeadBucket) {
-			throw InvalidArgumentException("Çìµå ÀÌÀü¿¡´Â ³ëµå¸¦ »ğÀÔÇÏ¸é ¾ÈµÇ¿ä!");
+			throw InvalidArgumentException("í—¤ë“œ ì´ì „ì—ëŠ” ë…¸ë“œë¥¼ ì‚½ì…í•˜ë©´ ì•ˆë˜ìš”!");
 		}
 
 		/*
-			[»ğÀÔ Àü]
-			 ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á
-									 ¡è     ¡è
+			[ì‚½ì… ì „]
+			 â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â– 
+									 â†‘     â†‘
 										  node
 								  node->prev
 
-			[»ğÀÔ ÈÄ]
-			 ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á <=> ¡á
-									 ¡è     ¡è     ¡è
+			[ì‚½ì… í›„]
+			 â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â–  <=> â– 
+									 â†‘     â†‘     â†‘
 								 node->prev     node
 										 newNode
 		 */
@@ -471,8 +471,8 @@ protected:
 		return this->m_iSize == m_iCapacity;
 	}
 	
-	static constexpr Int32U	ms_iTableExpandingFactor = 8;	// Å×ÀÌºí Å©±â¸¸Å­ µ¥ÀÌÅÍ°¡ µé¾î°¡¸é È®ÀåÇÏ´Âµ¥ ¸î¹è³ª È®ÀåÇÒ Áö
-	static constexpr Int32U	ms_iTableDefaultCapacity = 16;	// Å×ÀÌºí ÃÊ±â Å©±â
+	static constexpr Int32U	ms_iTableExpandingFactor = 8;	// í…Œì´ë¸” í¬ê¸°ë§Œí¼ ë°ì´í„°ê°€ ë“¤ì–´ê°€ë©´ í™•ì¥í•˜ëŠ”ë° ëª‡ë°°ë‚˜ í™•ì¥í•  ì§€
+	static constexpr Int32U	ms_iTableDefaultCapacity = 16;	// í…Œì´ë¸” ì´ˆê¸° í¬ê¸°
 protected:
 	TBucket* m_pTable = nullptr;
 	TBucket* m_pHeadBucket = &m_ValtyHead;
@@ -482,12 +482,12 @@ protected:
 	HashMapKeyCollection m_KeyCollection;
 	HashMapValueCollection m_ValueCollection;
 private:
-	TBucket m_ValtyHead;		// ¸Ó¸® ´õ¹Ì³ëµå
-	TBucket m_ValtyTail;		// ²¿¸® ´õ¹Ì³ëµå
+	TBucket m_ValtyHead;		// ë¨¸ë¦¬ ë”ë¯¸ë…¸ë“œ
+	TBucket m_ValtyTail;		// ê¼¬ë¦¬ ë”ë¯¸ë…¸ë“œ
 public:
 	struct HashMapKeyCollection : public TKeyCollection
 	{
-		using TEnumerator		= SharedPointer<Iterator<TKey>>;
+		using TEnumerator		= SharedPtr<Iterator<TKey>>;
 		using TCollection		= Collection<TKey>;
 
 		HashMapKeyCollection(THashMap* hashMap) 
@@ -546,7 +546,7 @@ public:
 
 	struct HashMapValueCollection final : public TValueCollection
 	{
-		using TEnumerator		= SharedPointer<Iterator<TValue>>;
+		using TEnumerator		= SharedPtr<Iterator<TValue>>;
 		using TCollection		= Collection<TValue>;
 
 		HashMapValueCollection(THashMap* hashMap)

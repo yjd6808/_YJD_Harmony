@@ -2,17 +2,17 @@
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Memory.h>
 
-using namespace JCore;
+
 
 #if TEST_MemoryTest == ON
 
-// ¾î¼Àºí¸®¾î ¾à°£ º¹½À
+// ì–´ì…ˆë¸”ë¦¬ì–´ ì•½ê°„ ë³µìŠµ
 TEST(MemoryTest, AssemblyTest) {
 
 	int k = 5;
 
-	// mov ¿¬»êÀÚ Å×½ºÆ®
-	// 3°¡Áö ¹æ¹ıÀ¸·Î ¹ÙÀÌÆ®´ÜÀ§ º¹»ç¸¦ ÇØº½
+	// mov ì—°ì‚°ì í…ŒìŠ¤íŠ¸
+	// 3ê°€ì§€ ë°©ë²•ìœ¼ë¡œ ë°”ì´íŠ¸ë‹¨ìœ„ ë³µì‚¬ë¥¼ í•´ë´„
 	int a = 0x62636465;
 	char c[4];
 	__asm {
@@ -38,7 +38,7 @@ TEST(MemoryTest, AssemblyTest) {
 
 	/* =============================================================== */
 
-	// add ¿¬»êÀÚ Å×½ºÆ®
+	// add ì—°ì‚°ì í…ŒìŠ¤íŠ¸
 	char* d = (char*) & a;
 	__asm {
 		add		d,				1					; d = d + 1;

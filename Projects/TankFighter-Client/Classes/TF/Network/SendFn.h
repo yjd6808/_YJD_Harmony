@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 
 struct SendFn
 {

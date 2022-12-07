@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -16,7 +16,7 @@ public:
 	IOCPOverlappedSend(TcpSession* session, IOCP* iocp, ISendPacket* sentPacket);
 	~IOCPOverlappedSend() override;
 public:
-	void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
+	void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	TcpSession* m_pSentSession;	
 	ISendPacket* m_pSentPacket;

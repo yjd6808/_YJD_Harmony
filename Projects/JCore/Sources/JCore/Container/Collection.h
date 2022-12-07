@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -10,6 +10,8 @@
 #include <JCore/Container/Iterator.h>
 #include <JCore/Container/CollectionExtension.h>
 
+#pragma warning(push)
+  #pragma warning(disable: 26495) // Member variable is uninitialized
 
 namespace JCore {
 
@@ -38,10 +40,10 @@ enum class ContainerType {
 };
 
 /*=====================================================================================
-									Äİ·º¼Ç
-							¸ğµç ÄÁÅ×ÀÌ³ÊÀÇ ±âº» ÀÎÅÍÆäÀÌ½º
+									ì½œë ‰ì…˜
+							ëª¨ë“  ì»¨í…Œì´ë„ˆì˜ ê¸°ë³¸ ì¸í„°í˜ì´ìŠ¤
 							 
-							         ÀÚ½Ä
+							         ìì‹
 							  1. ListCollection<T>
 							  2. ArrayCollection<T>
 							  3. MapCollection<T>
@@ -58,9 +60,9 @@ class Collection : public Iterable<T>
 public:
 	Collection(CollectionType collectionType, ContainerType containerType) 
 		: TIterable(), 
-		m_eCollectionType(collectionType),
-		m_eContainerType(containerType),
-		m_Owner(this, true)
+		  m_eCollectionType(collectionType),
+		  m_eContainerType(containerType),
+		  m_Owner(this, true)
 	{
 	}
 
@@ -70,11 +72,11 @@ public:
 			Memory::PlacementDeallocate(m_Extension);
 	}
 protected:
-	inline VoidOwner& GetOwner() const { return const_cast<VoidOwner&>(m_Owner); }
+	VoidOwner& GetOwner() const { return const_cast<VoidOwner&>(m_Owner); }
 public:
 	/// <summary>
-	/// °¡»óÇÔ¼öÈ­ÇÒ »ı°¢ ¾ø¾ú´Âµ¥..
-	/// [¿À¹ö¶óÀÌµù]
+	/// ê°€ìƒí•¨ìˆ˜í™”í•  ìƒê° ì—†ì—ˆëŠ”ë°..
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	///  - HashMapKeyCollection
 	///  - HashMapValueCollection
 	/// </summary>
@@ -96,19 +98,19 @@ public:
 protected:
 	void ThrowIfAssignSelf(const TCollection& other) {
 		if (this == &other) {
-			throw InvalidArgumentException("ÀÚ±â ÀÚ½Å¿¡°Ô ´ëÀÔÇÒ ¼ö ¾ø½À´Ï´Ù.");
+			throw InvalidArgumentException("ìê¸° ìì‹ ì—ê²Œ ëŒ€ì…í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 	}
 
 	void ThrowIfNoElements() const {
 		if (this->m_iSize == 0) {
-			throw InvalidOperationException("µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù.");
+			throw InvalidOperationException("ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤.");
 		}
 	}
 protected:
-	// @Âü°í : https://stackoverflow.com/questions/4672438/how-to-access-protected-method-in-base-class-from-derived-class
-	// ºÎ¸ğÀÇ ÀÚ½Ä1°ú ÀÚ½Ä2°¡ ÀÖÀ»¶§ ÀÚ½Ä1ÀÌ ÀÚ½Ä2ÀÇ ºÎ¸ğ Á¤º¸¸¦ µé°í ¿Ã ¼ö ¾ø´Âµ¥ ÀÌ¸¦ ¿ìÈ¸ÇÒ ¼ö ÀÖ´Â ¹æ¹ı
-	// ÄÁÅ×ÀÌ³Ê Å¸ÀÔÀÌ ¹ºÁö publicÀ¸·Î ±»ÀÌ °ø°³ÇÒ ÇÊ¿ä´Â ¾ø´Âµ¥ ÀÚ½Ä Å¬·¡½º¿¡¼­ ºÎ¸ğÀÇ protected ¸â¹ö º¯¼ö¿¡ Á¢±ÙÇÏ°í ½ÍÀ» ¶§ »ç¿ë
+	// @ì°¸ê³  : https://stackoverflow.com/questions/4672438/how-to-access-protected-method-in-base-class-from-derived-class
+	// ë¶€ëª¨ì˜ ìì‹1ê³¼ ìì‹2ê°€ ìˆì„ë•Œ ìì‹1ì´ ìì‹2ì˜ ë¶€ëª¨ ì •ë³´ë¥¼ ë“¤ê³  ì˜¬ ìˆ˜ ì—†ëŠ”ë° ì´ë¥¼ ìš°íšŒí•  ìˆ˜ ìˆëŠ” ë°©ë²•
+	// ì»¨í…Œì´ë„ˆ íƒ€ì…ì´ ë­”ì§€ publicìœ¼ë¡œ êµ³ì´ ê³µê°œí•  í•„ìš”ëŠ” ì—†ëŠ”ë° ìì‹ í´ë˜ìŠ¤ì—ì„œ ë¶€ëª¨ì˜ protected ë©¤ë²„ ë³€ìˆ˜ì— ì ‘ê·¼í•˜ê³  ì‹¶ì„ ë•Œ ì‚¬ìš©
 	static CollectionType GetCollectionType(const TCollection& collection) {
 		return collection.m_eCollectionType;
 	}
@@ -123,7 +125,9 @@ protected:
 	union { VoidOwner m_Owner; };
 private:
 	bool m_bExtensionable = false;
-	union { TCollectionExtension m_Extension; };	// Æ÷ÀÎÅÍ ÂüÁ¶¿ë
+	union { TCollectionExtension m_Extension; };	// í¬ì¸í„° ì°¸ì¡°ìš©
 };
 
 } // namespace JCore
+
+#pragma warning(pop)

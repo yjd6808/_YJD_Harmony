@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -17,7 +17,7 @@ struct StreamNode
 private:
 	using TStreamNode = StreamNode<T>;
 public:
-	T* Pointer = nullptr;					// ´Ù¸¥ Äİ·º¼ÇÀÇ µ¥ÀÌÅÍ¸¦ ÂüÁ¶
+	T* Pointer = nullptr;					// ë‹¤ë¥¸ ì½œë ‰ì…˜ì˜ ë°ì´í„°ë¥¼ ì°¸ì¡°
 	TStreamNode* Next = nullptr;
 	TStreamNode* Previous = nullptr;
 
@@ -31,8 +31,8 @@ public:
 
 
 /*=====================================================================================
-									Äİ·º¼Ç ½ºÆ®¸²
-           ´Ù¸¥ Äİ·º¼ÇÀ» ÂüÁ¶ÇÏ´Â ¹°¸®Àû ¹è¿­, ³í¸®ÀûÀÎ ¿¬°á¸®½ºÆ® ±â¹İÀÇ ÀÚ·á±¸Á¶ÀÌ´Ù.
+									ì½œë ‰ì…˜ ìŠ¤íŠ¸ë¦¼
+           ë‹¤ë¥¸ ì½œë ‰ì…˜ì„ ì°¸ì¡°í•˜ëŠ” ë¬¼ë¦¬ì  ë°°ì—´, ë…¼ë¦¬ì ì¸ ì—°ê²°ë¦¬ìŠ¤íŠ¸ ê¸°ë°˜ì˜ ìë£Œêµ¬ì¡°ì´ë‹¤.
 =====================================================================================*/
 
 template <typename T>
@@ -44,7 +44,7 @@ class CollectionStream
 	using TCollectionStream		= CollectionStream<T>;
 
 private: 
-	// [1] : CollectionStreamÀº CollectionExtension ¿¡¼­¸¸ Á÷Á¢»ı¼º °¡´ÉÇÏµµ·Ï ÇÑ´Ù.
+	// [1] : CollectionStreamì€ CollectionExtension ì—ì„œë§Œ ì§ì ‘ìƒì„± ê°€ëŠ¥í•˜ë„ë¡ í•œë‹¤.
 	CollectionStream(TCollection* collection)  {
 		m_pCollection = collection;
 		m_iSize = collection->Size();
@@ -54,28 +54,28 @@ private:
 			return;
 		}
 
-		// ¹°¸®Àû ¹è¿­ »ı¼º
+		// ë¬¼ë¦¬ì  ë°°ì—´ ìƒì„±
 		m_pArray = Memory::Allocate<TStreamNode*>(sizeof(TStreamNode) * m_iSize);
 
-		// ³í¸®Àû ¿¬°á¸®½ºÆ® ±¸¼º
+		// ë…¼ë¦¬ì  ì—°ê²°ë¦¬ìŠ¤íŠ¸ êµ¬ì„±
 		ConnectNode(m_pHead, &m_pArray[0]);
 		ConnectNode(&m_pArray[m_iSize - 1], m_pTail);
 
 		TEnumerator it = collection->Begin();
 		for (int i = 0; i < m_iSize - 1; i++) {
-			// ½ÇÁúÀûÀÎ ÂüÁ¶ µ¥ÀÌÅÍÀÇ Æ÷ÀÎÅÍ¸¦ ´ã¾ÆÁØ´Ù.
+			// ì‹¤ì§ˆì ì¸ ì°¸ì¡° ë°ì´í„°ì˜ í¬ì¸í„°ë¥¼ ë‹´ì•„ì¤€ë‹¤.
 			m_pArray[i].Pointer = AddressOf(it->Next());	
 
-			// ÃÊ±â¿¡´Â ¹Ù·Î ´ÙÀ½ ÀÎµ¦½º¿¡ À§Ä¡ÇÏ´Â ³ëµå°¡ ´ÙÀ½ ¿ø¼ÒÀÌ¹Ç·Î ¿¬°áÇØÁØ´Ù.
+			// ì´ˆê¸°ì—ëŠ” ë°”ë¡œ ë‹¤ìŒ ì¸ë±ìŠ¤ì— ìœ„ì¹˜í•˜ëŠ” ë…¸ë“œê°€ ë‹¤ìŒ ì›ì†Œì´ë¯€ë¡œ ì—°ê²°í•´ì¤€ë‹¤.
 			ConnectNode(&m_pArray[i], &m_pArray[i + 1]);		
 		}
 
-		// ¸¶Áö¸· ¿ø¼ÒÀÇ ÂüÁ¶ Á¤º¸¸¦ ÀúÀåÇÑ´Ù.
+		// ë§ˆì§€ë§‰ ì›ì†Œì˜ ì°¸ì¡° ì •ë³´ë¥¼ ì €ì¥í•œë‹¤.
 		m_pArray[m_iSize - 1].Pointer = AddressOf(it->Next());
 
 		
 		/*
-		¼º´ÉÀÌ Á» ´õ ¾ÈÁÁÀ½
+		ì„±ëŠ¥ì´ ì¢€ ë” ì•ˆì¢‹ìŒ
 		for (int i = 0; i < m_iSize - 1; i++) {
 			ConnectNode(&m_pArray[i], &m_pArray[i + 1]);
 		}
@@ -88,7 +88,7 @@ private:
 	}
 
 public:
-	// º¹»ç »ı¼º ±İÁö
+	// ë³µì‚¬ ìƒì„± ê¸ˆì§€
 	CollectionStream(const TCollectionStream& CollectionStream) = delete;
 	CollectionStream(TCollectionStream&& CollectionStream) {
 		m_pArray = CollectionStream.m_pArray;
@@ -176,7 +176,7 @@ protected:
 
 	template <typename Predicate>
 	void MergeSort(Predicate predicate) {
-		// µ¥ÀÌÅÍ°¡ 1°³ ÀÌÇÏÀÎ °æ¿ì´Â Á¤·Ä ÀÚÃ¼¸¦ ÇØÁÙ ÇÊ¿ä°¡ ¾ø´Ù.
+		// ë°ì´í„°ê°€ 1ê°œ ì´í•˜ì¸ ê²½ìš°ëŠ” ì •ë ¬ ìì²´ë¥¼ í•´ì¤„ í•„ìš”ê°€ ì—†ë‹¤.
 		if (m_iSize <= 1) {
 			return;
 		}
@@ -184,7 +184,7 @@ protected:
 		TStreamNode* pBegin = m_pHead->Next;
 		TStreamNode* pEnd = m_pTail->Previous;
 
-		// ÀÓ½Ã·Î ´õ¹Ì³ëµå¿Í ¿¬°áÀ» ²÷¾îÁØ´Ù.
+		// ì„ì‹œë¡œ ë”ë¯¸ë…¸ë“œì™€ ì—°ê²°ì„ ëŠì–´ì¤€ë‹¤.
 		pBegin->Previous = nullptr;
 		pEnd->Next = nullptr;
 
@@ -194,7 +194,7 @@ protected:
 			return;
 		}
 
-		// ´Ù½Ã ´õ¹Ì³ëµå¿Í ¿¬°áÇØÁØ´Ù.
+		// ë‹¤ì‹œ ë”ë¯¸ë…¸ë“œì™€ ì—°ê²°í•´ì¤€ë‹¤.
 		ConnectNode(m_pHead, pSorted);
 		ConnectNode(EndNode(pSorted), m_pTail);
 	}

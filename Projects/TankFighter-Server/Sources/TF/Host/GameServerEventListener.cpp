@@ -1,11 +1,11 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
 #include <TF/Host/GameServerEventListener.h>
 #include <TF/Database/MysqlDatabase.h>
-#include <TF/Util/Console.h>
+#include <JCore/Utils/Console.h>
 #include <TF/Game/World.h>
 #include <TF/Game/PlayerPool.h>
 
@@ -17,40 +17,42 @@
 #define _PlayerPool PlayerPool::GetInstance()
 #define _World		World::GetInstance()
 
+using namespace JCore;
+
 void GameServerEventListener::OnStarted() {
-	Console::WriteLine(ConsoleColor::LIGHTGRAY, "°ÔÀÓ ¼­¹ö ½ÃÀÛµÊ");
+	SafeConsole::WriteLine(ConsoleColor::LightGray, "ê²Œì„ ì„œë²„ ì‹œì‘ë¨");
 }
 
 void GameServerEventListener::OnConnected(JNetwork::TcpSession* connectedSession) {
-	Console::WriteLine(ConsoleColor::CYAN, "À¯Àú : %s Á¢¼Ó", connectedSession->GetRemoteEndPoint().ToString().Source());
+	SafeConsole::WriteLine(ConsoleColor::Cyan, "ìœ ì € : %s ì ‘ì†", connectedSession->GetRemoteEndPoint().ToString().Source());
 	connectedSession->SetTag(_PlayerPool->PopPlayer(connectedSession));
 }
 
 void GameServerEventListener::OnDisconnected(JNetwork::TcpSession* disconnetedSession) {
-	Console::WriteLine(ConsoleColor::LIGHTGRAY, "À¯Àú : %s Á¢¼Ó Á¾·á", disconnetedSession->GetRemoteEndPoint().ToString().Source());
+	SafeConsole::WriteLine(ConsoleColor::LightGray, "ìœ ì € : %s ì ‘ì† ì¢…ë£Œ", disconnetedSession->GetRemoteEndPoint().ToString().Source());
 	Player* player = disconnetedSession->GetTag<Player*>();
 
 	if (player == nullptr) {
 		return;
 	}
 
-	// ÀÌ°Ô ÇÃ·¹ÀÌ¾î°¡ °­Á¾ÇØ¹ö¸®¸é ÀÌ ÇÃ·¹ÀÌ¾î Á¤º¸¸¦ »ç¿ëÁßÀÎ IOCP ¾²·¹µå¿¡¼­ ¿À·ù°¡ ³¯ÅÙµ¥..
-	// ÀÌ°É ¾î¶»°Ô Ã³¸®ÇÏ¸é ÁÁÀ»±î?
-	// ÀÏ´Ü Áö±İ »óÅÂ·Î´Â ÀüºÎ ¶â¾î °íÃÄ¾ßÇÏ±â ¶«¿¡ Áö±İÀº ¼öÁ¤ÇÏ±ä Èûµé´Ù.
+	// ì´ê²Œ í”Œë ˆì´ì–´ê°€ ê°•ì¢…í•´ë²„ë¦¬ë©´ ì´ í”Œë ˆì´ì–´ ì •ë³´ë¥¼ ì‚¬ìš©ì¤‘ì¸ IOCP ì“°ë ˆë“œì—ì„œ ì˜¤ë¥˜ê°€ ë‚ í…ë°..
+	// ì´ê±¸ ì–´ë–»ê²Œ ì²˜ë¦¬í•˜ë©´ ì¢‹ì„ê¹Œ?
+	// ì¼ë‹¨ ì§€ê¸ˆ ìƒíƒœë¡œëŠ” ì „ë¶€ ëœ¯ì–´ ê³ ì³ì•¼í•˜ê¸° ë•œì— ì§€ê¸ˆì€ ìˆ˜ì •í•˜ê¸´ í˜ë“¤ë‹¤.
 
 	Room* pRoom = _World->GetRoomByPlayer(player);
 	
 	if (pRoom && pRoom->RemovePlayer(player)) {
 		bool bRemoveSuccess = pRoom->GetChannel()->RemoveRoomIfEmpty(pRoom);
 
-		// ¾È ºñ¾îÀÖ¾î¼­ ¹æÀÌ »èÁ¦¾ÈµÈ °æ¿ì ³²¾ÆÀÖ´Â À¯Àúµé¿¡°Ô ºê·ÎµåÄ³½ºÆ®
+		// ì•ˆ ë¹„ì–´ìˆì–´ì„œ ë°©ì´ ì‚­ì œì•ˆëœ ê²½ìš° ë‚¨ì•„ìˆëŠ” ìœ ì €ë“¤ì—ê²Œ ë¸Œë¡œë“œìºìŠ¤íŠ¸
 		if (bRemoveSuccess == false) {
 			SendFn::BroadcastUpdateRoomUserAck(pRoom, false);
 		}
 	}
 
 	if (_World->RemovePlayer(player)) {
-		Console::WriteLine("¿ùµå¿¡¼­ ÇÃ·¹ÀÌ¾î Á¤º¸ ¾ÈÀüÇÏ°Ô Á¦°Å¿Ï·á");
+		SafeConsole::WriteLine("ì›”ë“œì—ì„œ í”Œë ˆì´ì–´ ì •ë³´ ì•ˆì „í•˜ê²Œ ì œê±°ì™„ë£Œ");
 	}
 
 	_PlayerPool->ReleasePlayer(player);
@@ -62,7 +64,7 @@ void GameServerEventListener::OnSent(JNetwork::TcpSession* sender, JNetwork::ISe
 
 void GameServerEventListener::OnReceived(JNetwork::TcpSession* receiver, JNetwork::ICommand* cmd) {
 	if (!m_pParser->RunCommand(receiver->GetTag<Player*>(), cmd)) {
-		Console::WriteLine(ConsoleColor::BROWN, "Ä¿¸Çµå ÆÄ½Ì ½ÇÆĞ(Command ID : %d)", cmd->GetCommand());
+		SafeConsole::WriteLine(ConsoleColor::Brown, "ì»¤ë§¨ë“œ íŒŒì‹± ì‹¤íŒ¨(Command ID : %d)", cmd->GetCommand());
 	}
 }
 
@@ -73,5 +75,5 @@ void GameServerEventListener::OnResume() {
 }
 
 void GameServerEventListener::OnStopped() {
-	Console::WriteLine("¼­¹ö°¡ Á¾·áµÇ¾ú½À´Ï´Ù.");
+	SafeConsole::WriteLine("ì„œë²„ê°€ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
 }

@@ -1,11 +1,11 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	°£´ÜÇÑ Æ©ÇÃ
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ê°„ë‹¨í•œ íŠœí”Œ
 */
 
 #pragma once
 
-#include <JCore/TypeTraits.h>
+#include <JCore/TypeCast.h>
 
 namespace JCore {
 
@@ -15,7 +15,7 @@ struct Tuple;
 template <>
 struct Tuple<>;
 
-// 4°³ ÀÌ»óÀº ¾È¾²°ÚÁö..?
+// 4ê°œ ì´ìƒì€ ì•ˆì“°ê² ì§€..?
 template <typename T1>
 struct Tuple<T1>
 {

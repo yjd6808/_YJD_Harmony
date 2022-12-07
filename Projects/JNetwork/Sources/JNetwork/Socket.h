@@ -1,5 +1,5 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
+ *	ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -21,8 +21,8 @@ public:
 	SocketOption(SOCKET sock) : m_Socket(sock) {}
 	~SocketOption() = default;
 
-	// ¼º°ø½Ã : 0
-	// ½ÇÆĞ½Ã : SOCKET_ERROR(-1) ¹İÈ¯
+	// ì„±ê³µì‹œ : 0
+	// ì‹¤íŒ¨ì‹œ : SOCKET_ERROR(-1) ë°˜í™˜
 
 	int SetBroadcastEnabled(bool enabled) const;
 	int SetSendBufferSize(int size) const;
@@ -36,16 +36,16 @@ public:
 	int SetKeepAliveEnabled(bool enabled) const;
 	int SetUpdateAcceptContext(SOCKET hListeningSocket) const;
 	
-	// ¼º°ø½Ã : ¼öÄ¡°ª
-	// ½ÇÆĞ½Ã : SOCKET_ERROR(-1) ¹İÈ¯
+	// ì„±ê³µì‹œ : ìˆ˜ì¹˜ê°’
+	// ì‹¤íŒ¨ì‹œ : SOCKET_ERROR(-1) ë°˜í™˜
 
 	int GetSendBufferSize() const;
 	int GetRecvBufferSize() const;
 	int GetLingerTimeout() const;
 	int GetMaximumSegmentSize() const;
 	
-	// È°¼ºÈ­µÈ °æ¿ì TRUE(1), ºñÈ°¼ºÈ­µÈ °æ¿ì FALSE(0)À» ¹İÈ¯
-	// ¿À·ù·Î ½ÇÆĞÇÑ °æ¿ì SOCKET_ERROR(-1) ¹İÈ¯
+	// í™œì„±í™”ëœ ê²½ìš° TRUE(1), ë¹„í™œì„±í™”ëœ ê²½ìš° FALSE(0)ì„ ë°˜í™˜
+	// ì˜¤ë¥˜ë¡œ ì‹¤íŒ¨í•œ ê²½ìš° SOCKET_ERROR(-1) ë°˜í™˜
 
 	int IsNagleEnabled() const;
 	int IsReuseAddressEnabled() const;
@@ -103,13 +103,13 @@ public:
 
 	Socketv4 Accept();
 
-	// ¹İÈ¯°ª ½ÇÆĞ½Ã FALSE, WSAGetLastError·Î È®ÀÎ
-	//       ¼º°ø½Ã TRUE
-	int AcceptEx(SOCKET listenSocket, void* outputBuffer, DWORD receiveDatalen, Out_ LPDWORD receivedBytes, LPOVERLAPPED overlapped) const;
-	static void AcceptExResult(char* buff, DWORD receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp);
+	// ë°˜í™˜ê°’ ì‹¤íŒ¨ì‹œ FALSE, WSAGetLastErrorë¡œ í™•ì¸
+	//       ì„±ê³µì‹œ TRUE
+	int AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ PInt32UL receivedBytes, LPOVERLAPPED overlapped) const;
+	static void AcceptExResult(char* buff, Int32UL receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp);
 
 	int Connect(const IPv4EndPoint& ipv4EndPoint) const;
-	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, DWORD sendbufSize, Out_ LPDWORD sentBytes) const; 
+	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ PInt32UL sentBytes) const; 
 	 
 	int Send(char* buff, Int32U len, Int32U flag = 0) const;
 	int SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag = 0) const;

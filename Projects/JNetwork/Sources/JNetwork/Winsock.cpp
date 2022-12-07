@@ -1,5 +1,5 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
+ *	ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -11,14 +11,14 @@ namespace JNetwork {
 	bool Winsock::ms_bInitailized = false;
 
 /*
-	Âü°í : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsastartup
+	ì°¸ê³  : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsastartup
 
-	µ¿ÀÛ°úÁ¤
-	1. »ç¿ëÇÏ°íÀÚÇÏ´Â À©µµ¿ì ¼ÒÄÏ ¶óÀÌºê·¯¸®ÀÇ ¹öÀü Á¤º¸¸¦ ¿äÃ»ÇÑ´Ù.
-	2. Winsock DLL¿¡¼­ À©µµ¿ì OS(È£ÃâÀÚ)¿Í Áö¿ø°¡´ÉÇÑ ¹öÀü Á¤º¸¿Í ºñ±³ÇÏ¿© WSADATA¿¡ »ç¿ë°¡´ÉÇÑ ¹öÀü °á°ú¸¦ ¹İÈ¯ÇØÁØ´Ù.
-	±Ù·¡ À¯¸íÇÑ ´ëºÎºĞÀÇ OSÀÇ °æ¿ì ¸ğµÎ 2.2¹öÀü(ÃÖ»óÀ§)ÀÇ À©µµ¿ì ¼ÒÄÏ ¹öÀüÀ» Áö¿øÇÑ´Ù.
+	ë™ì‘ê³¼ì •
+	1. ì‚¬ìš©í•˜ê³ ìí•˜ëŠ” ìœˆë„ìš° ì†Œì¼“ ë¼ì´ë¸ŒëŸ¬ë¦¬ì˜ ë²„ì „ ì •ë³´ë¥¼ ìš”ì²­í•œë‹¤.
+	2. Winsock DLLì—ì„œ ìœˆë„ìš° OS(í˜¸ì¶œì)ì™€ ì§€ì›ê°€ëŠ¥í•œ ë²„ì „ ì •ë³´ì™€ ë¹„êµí•˜ì—¬ WSADATAì— ì‚¬ìš©ê°€ëŠ¥í•œ ë²„ì „ ê²°ê³¼ë¥¼ ë°˜í™˜í•´ì¤€ë‹¤.
+	ê·¼ë˜ ìœ ëª…í•œ ëŒ€ë¶€ë¶„ì˜ OSì˜ ê²½ìš° ëª¨ë‘ 2.2ë²„ì „(ìµœìƒìœ„)ì˜ ìœˆë„ìš° ì†Œì¼“ ë²„ì „ì„ ì§€ì›í•œë‹¤.
 
-	ÇÔ¼ö ¼³¸í : À©µµ¿ì ¼ÒÄÏ ¶óÀÌºê·¯¸® »ç¿ëÀ» À§ÇÑ ÃÊ±â ÀÛ¾÷À» ÁøÇàÇÕ´Ï´Ù.
+	í•¨ìˆ˜ ì„¤ëª… : ìœˆë„ìš° ì†Œì¼“ ë¼ì´ë¸ŒëŸ¬ë¦¬ ì‚¬ìš©ì„ ìœ„í•œ ì´ˆê¸° ì‘ì—…ì„ ì§„í–‰í•©ë‹ˆë‹¤.
 */
 bool Winsock::Initialize(Byte highVersion, Byte lowVersion) {
 	const WORD wRequestVersion = MAKEWORD(lowVersion, highVersion);
@@ -38,7 +38,7 @@ bool Winsock::Initialize(Byte highVersion, Byte lowVersion) {
 	return ms_bInitailized = true;
 }
 
-// À©¼Ó »ç¿ëÀ» Á¾·áÇÏ¸é¼­ ÇÒ´çµÈ ¸®¼Ò½º Á¤º¸¸¦ ÇØÁ¦ÇÑ´Ù.
+// ìœˆì† ì‚¬ìš©ì„ ì¢…ë£Œí•˜ë©´ì„œ í• ë‹¹ëœ ë¦¬ì†ŒìŠ¤ ì •ë³´ë¥¼ í•´ì œí•œë‹¤.
 bool Winsock::Finalize() {
 	if (WSACleanup() != 0) {
 		return false;
@@ -61,7 +61,6 @@ JCore::String Winsock::LastErrorMessage() {
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		buf, 1024, NULL);
 
-	Winsock::Message("%d", Winsock::LastError());
 	return buf;
 }
 

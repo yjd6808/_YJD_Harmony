@@ -1,17 +1,17 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¹è¿­±â¹İ ½ºÅÃ Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë°°ì—´ê¸°ë°˜ ìŠ¤íƒ í…ŒìŠ¤íŠ¸
 */
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCoreTest/TestUtil/Object.h>
+
 
 #include <JCore/Random.h>
 
 #include <JCore/Container/ListQueue.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_ListQueueTest == ON
@@ -40,10 +40,10 @@ TEST(ListQueueTest, Regular) {
 	EXPECT_TRUE(queue.Size() == 0);
 }
 
-// Å¥°¡ ²ËÂù »óÈ²¿¡¼­ÀÇ Å×½ºÆ®
+// íê°€ ê½‰ì°¬ ìƒí™©ì—ì„œì˜ í…ŒìŠ¤íŠ¸
 TEST(ListQueueTest, FullCaseTest) {
 
-	// Å¥°¡ ²ËÂù »óÅÂ¿¡¼­ ÀÌÅÍ·¹ÀÌÅÍ°¡ ¹«ÇÑ ¼øÈ¸ÇÏ´Â »óÈ²
+	// íê°€ ê½‰ì°¬ ìƒíƒœì—ì„œ ì´í„°ë ˆì´í„°ê°€ ë¬´í•œ ìˆœíšŒí•˜ëŠ” ìƒí™©
 	ListQueue<int> q;
 	for (int i = 0; i < 32; i++) {
 		q.Enqueue(i);
@@ -68,7 +68,7 @@ TEST(ListQueueTest, FullCaseTest) {
 
 
 
-// ¹è¿­ Å¥ ¿ª¹æÇâ ¹İº¹ÀÚ, Á¤¹æÇâ ¹İº¹ÀÚ, »ğÀÔ »èÁ¦ µîµî ¸ğµÎ Å×½ºÆ®
+// ë°°ì—´ í ì—­ë°©í–¥ ë°˜ë³µì, ì •ë°©í–¥ ë°˜ë³µì, ì‚½ì… ì‚­ì œ ë“±ë“± ëª¨ë‘ í…ŒìŠ¤íŠ¸
 TEST(ListQueueTest, TotalTest) {
 	Random random;
 
@@ -80,8 +80,8 @@ TEST(ListQueueTest, TotalTest) {
 		AutoMemoryLeakDetector detector;
 		ListQueue<int> queue;
 
-		list<int> forward_list;		// µ¥ÀÌÅÍ ÃßÀû - Á¤¹æÇâ ¿ë
-									// Å¥¿Í µ¥ÀÌÅÍ °è¼Ó ¶È°°ÀÌ »©°í ³ÖÀ¸¸é¼­ ÃÖÁ¾ÀûÀ¸·Î ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ
+		list<int> forward_list;		// ë°ì´í„° ì¶”ì  - ì •ë°©í–¥ ìš©
+									// íì™€ ë°ì´í„° ê³„ì† ë˜‘ê°™ì´ ë¹¼ê³  ë„£ìœ¼ë©´ì„œ ìµœì¢…ì ìœ¼ë¡œ ì¼ì¹˜í•˜ëŠ”ì§€ í™•ì¸
 		list<int> backward_list;
 
 		
@@ -92,9 +92,9 @@ TEST(ListQueueTest, TotalTest) {
 		}
 
 		EXPECT_TRUE(queue.Size() == dataCount);
-		int r = dataCount;	// °¹¼ö ÃßÃ´
+		int r = dataCount;	// ê°¯ìˆ˜ ì¶”ì²™
 		
-		// 2°³ ³Ö°í 2°³ »©°í ´Ù½Ã 32°³¸¦ ³Ö¾î¼­ ²ËÃ¤¿î´Ù.
+		// 2ê°œ ë„£ê³  2ê°œ ë¹¼ê³  ë‹¤ì‹œ 32ê°œë¥¼ ë„£ì–´ì„œ ê½‰ì±„ìš´ë‹¤.
 
 		while (suffleCount-- > 0) {
 			int popSize = random.GenerateInt(1, queue.Size() + 1);
@@ -107,13 +107,13 @@ TEST(ListQueueTest, TotalTest) {
 			}
 			int queueSize1 = queue.Size();
 			
-			vector<int> v;	// µ¥ÀÌÅÍ ÃßÀû
-							// ÀÌ¹ø ¼ÅÇÃ ´Ü°è¿¡¼­ µ¥ÀÌÅÍ°¡ ÀÏÄ¡ÇÏ´ÂÁö
-			list<int> rv; // ¹İ´ë¹æÇâÀ¸·Î µ¥ÀÌÅÍ ÃßÀû
+			vector<int> v;	// ë°ì´í„° ì¶”ì 
+							// ì´ë²ˆ ì…”í”Œ ë‹¨ê³„ì—ì„œ ë°ì´í„°ê°€ ì¼ì¹˜í•˜ëŠ”ì§€
+			list<int> rv; // ë°˜ëŒ€ë°©í–¥ìœ¼ë¡œ ë°ì´í„° ì¶”ì 
 			
 			
-			//PrintFormat("¼ÅÇÃ/Å¥ µ¥ÀÌÅÍ ¼ö : %d/%d\n", suffleCount, queueSize1);
-			//»©°í ³²¾ÆÀÖ´Â °ÍµéÀ» ³Ö¾îÁÜ
+			//PrintFormat("ì…”í”Œ/í ë°ì´í„° ìˆ˜ : %d/%d\n", suffleCount, queueSize1);
+			//ë¹¼ê³  ë‚¨ì•„ìˆëŠ” ê²ƒë“¤ì„ ë„£ì–´ì¤Œ
 			Enumerator<int> it = queue.Begin();
 			Enumerator<int> rit = queue.End();
 
@@ -121,12 +121,12 @@ TEST(ListQueueTest, TotalTest) {
 				int a = 40;
 			}
 
-			// ¹İº¹ÀÚ Á¤¹æÇâ
+			// ë°˜ë³µì ì •ë°©í–¥
 			while (it->HasNext()) {
 				v.push_back(it->Next());
 			}
 
-			// ¹İº¹ÀÚ ¿ª¹æÇâ
+			// ë°˜ë³µì ì—­ë°©í–¥
 			while (rit->HasPrevious()) {
 				rv.push_back(rit->Previous());
 			}
@@ -134,7 +134,7 @@ TEST(ListQueueTest, TotalTest) {
 			int enqueueSize = random.GenerateInt(1, 50);
 			r += enqueueSize;
 
-			// Å¥¿¡ 1 ~ ³²¾ÆÀÖ´Â °Íµé ¼ö»çÀÌ ·£´ı °¹¼ö¸¸Å­ ´Ù½Ã ³Ö¾îÁÜ
+			// íì— 1 ~ ë‚¨ì•„ìˆëŠ” ê²ƒë“¤ ìˆ˜ì‚¬ì´ ëœë¤ ê°¯ìˆ˜ë§Œí¼ ë‹¤ì‹œ ë„£ì–´ì¤Œ
 			for (int i = 0; i < enqueueSize; i++) {
 				queue.Enqueue(i);
 
@@ -160,7 +160,7 @@ TEST(ListQueueTest, TotalTest) {
 				int value = rit->Previous();
 				int vv = *rvIt;
 				EXPECT_TRUE(vv == value);
-				rvIt++;
+				++rvIt;
 			}
 
 			EXPECT_TRUE(forward_list.size() == queue.Size());
@@ -176,14 +176,14 @@ TEST(ListQueueTest, TotalTest) {
 		while (myqueueit->HasNext()) {
 			int lval = *forward_listit;
 			EXPECT_TRUE(myqueueit->Next() == lval);
-			forward_listit++;
+			++forward_listit;
 		}
 
 		myqueueit = queue.End();
 		while (myqueueit->HasPrevious()) {
 			int lval = *backward_listit;
 			EXPECT_TRUE(myqueueit->Previous() == lval);
-			backward_listit++;
+			++backward_listit;
 		}
 	}	
 }
@@ -222,8 +222,8 @@ TEST(ListQueueTest, OperatorTest) {
 
 	ListQueue<Model> b{ 6, 5, 4, 3, 2, 1 };
 
-	// º¹»ç ´ëÀÔ
-	b = a;	// 1, 2, 3ÀÌ Šİ°¨
+	// ë³µì‚¬ ëŒ€ì…
+	b = a;	// 1, 2, 3ì´ ë“¶ê°
 
 	int i = 1;
 	while (!b.IsEmpty()) {
@@ -242,7 +242,7 @@ TEST(ListQueueTest, OperatorTest) {
 	EXPECT_TRUE(b.Size() == 0);
 
 
-	// ÀÌ´Ï¼È¶óÀÌÀú º¹»ç ´ëÀÔ
+	// ì´ë‹ˆì…œë¼ì´ì € ë³µì‚¬ ëŒ€ì…
 	b = { 1, 3, 5, 6 };
 	EXPECT_TRUE(b.Size() == 4);
 	EXPECT_TRUE(b.Front().a == 1); b.Dequeue();

@@ -1,5 +1,5 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
+ *	ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -12,20 +12,20 @@ namespace JNetwork {
 
 	namespace Winsock {
 
-		// Windows Vista ÀÌÀü¿¡¼­´Â AcceptEx ÇÔ¼öÀÇ ÁÖ¼Ò¸¦ ¾ò¾î¿Í¼­ »ç¿ëÇØ¾ßÇß´Âµ¥ ¹Ù²î¾ú´Ù°í ÇÑ´Ù.
-		// ±×³É ½áµµ Àß µ¿ÀÛÇÑ´Ù.
-		// ´ë½Å AcceptEx°¡ MSWSock.h¿Í Winsock.h ÀÌ 2°³¿¡¸¸ ÀÖ¾î¼­ »ç¿ëÇÒ·Á¸é MSWSock.h¸¦ includeÇÏ°í MSWSock.libÀ» ¸µÅ© ÇØÁà¾ßÇÔ.
-		// @Âü°í : https://jacking75.github.io/cpp_iocp_extension_method/
-		// @AcceptEx ÇÔ¼ö¿¡ ´ëÇÑ ¼³¸í : https://programmingdiary.tistory.com/4
+		// Windows Vista ì´ì „ì—ì„œëŠ” AcceptEx í•¨ìˆ˜ì˜ ì£¼ì†Œë¥¼ ì–»ì–´ì™€ì„œ ì‚¬ìš©í•´ì•¼í–ˆëŠ”ë° ë°”ë€Œì—ˆë‹¤ê³  í•œë‹¤.
+		// ê·¸ëƒ¥ ì¨ë„ ì˜ ë™ì‘í•œë‹¤.
+		// ëŒ€ì‹  AcceptExê°€ MSWSock.hì™€ Winsock.h ì´ 2ê°œì—ë§Œ ìˆì–´ì„œ ì‚¬ìš©í• ë ¤ë©´ MSWSock.hë¥¼ includeí•˜ê³  MSWSock.libì„ ë§í¬ í•´ì¤˜ì•¼í•¨.
+		// @ì°¸ê³  : https://jacking75.github.io/cpp_iocp_extension_method/
+		// @AcceptEx í•¨ìˆ˜ì— ëŒ€í•œ ì„¤ëª… : https://programmingdiary.tistory.com/4
 		
-		// µ¿¸íÇÔ¼ö ¶§¹®¿¡ ¹ÛÀ¸·Î »­
+		// ë™ëª…í•¨ìˆ˜ ë•Œë¬¸ì— ë°–ìœ¼ë¡œ ëºŒ
 		int AcceptEx_(SOCKET sListenSocket,
 			SOCKET sAcceptSocket,
 			PVOID lpOutputBuffer,
-			DWORD dwReceiveDataLength,
-			DWORD dwLocalAddressLength,
-			DWORD dwRemoteAddressLength,
-			LPDWORD lpdwBytesReceived,
+			Int32UL dwReceiveDataLength,
+			Int32UL dwLocalAddressLength,
+			Int32UL dwRemoteAddressLength,
+			PInt32UL lpdwBytesReceived,
 			LPOVERLAPPED lpOverlapped) {
 			
 			return AcceptEx(sListenSocket,
@@ -43,15 +43,15 @@ namespace JNetwork {
 			sockaddr* pConnectAddr, 
 			int ConnectAddrSize,
 			PVOID lpSendBuffer, 
-			DWORD dwSendDataLength,
-			LPDWORD lpdwBytesSent, 
+			Int32UL dwSendDataLength,
+			PInt32UL lpdwBytesSent, 
 			LPOVERLAPPED lpOverlapped) {
 
 			static LPFN_CONNECTEX lpfnConnectEx = nullptr;
 
 			
 			if (lpfnConnectEx == nullptr) {
-				// WSAIoctl ÇÔ¼ö »ç¿ëÀ» À§ÇÑ ´õ¹Ì ¼ÒÄÏ »ı¼º
+				// WSAIoctl í•¨ìˆ˜ ì‚¬ìš©ì„ ìœ„í•œ ë”ë¯¸ ì†Œì¼“ ìƒì„±
 				Socketv4 dummySock = Socket::CreateTcpV4(false);
 				int iResult;
 				
@@ -59,7 +59,7 @@ namespace JNetwork {
 					return FALSE;
 
 				{
-					DWORD dwBytes;
+					Int32UL dwBytes;
 					GUID guid = WSAID_CONNECTEX;
 					iResult = WSAIoctl(dummySock.Handle(), SIO_GET_EXTENSION_FUNCTION_POINTER,
 						&guid, sizeof(guid),
@@ -76,17 +76,17 @@ namespace JNetwork {
 
 			}
 
-			// @Âü°í : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nc-mswsock-lpfn_connectex
-			// ConnectEx »ç¿ë ¿¹½Ã ÄÚµå : https://gist.github.com/joeyadams/4158972
+			// @ì°¸ê³  : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nc-mswsock-lpfn_connectex
+			// ConnectEx ì‚¬ìš© ì˜ˆì‹œ ì½”ë“œ : https://gist.github.com/joeyadams/4158972
 			// 
-			// [in] s :		connect()ÀÇ s¿Í µ¿ÀÏ
-			// [in] name :	connect()ÀÇ name°ú µµÀÏ
-			// [in] namelen : connect()ÀÇ namelen°ú µµÀÏ
-			// [in, opt]	lpSendBuffer : ConnectionÀÌ Established µÈ ÈÄ¿¡ Àü´ŞÇÑ ¹öÆÛÀÇ µ¥ÀÌÅÍ¸¦ Àü¼ÛÇÑ´Ù.
-			//								 ¼ÒÄÏ s¿¡ TCP_FASTOPENÀÌ ConnectEx() È£ÃâÀü¿¡ È°¼ºÈ­ µÇ¾î ÀÖÀ¸¸é ¿¬°á ¼º¸³ Áß¿¡ ÀÏºÎ µ¥ÀÌÅÍ°¡ Àü¼ÛµÉ ¼ö ÀÖ´Ù.
-			// [in]			dwSendDataLength : lpSendBufferÀÇ ¹ÙÀÌÆ® Å©±â¸¦ Àü´ŞÇÑ´Ù ¸¸¾à lpSendBuffer¸¦ NULL·Î Àü´ŞÇÏ¸é ÀÌ °ªÀº ¹«½ÃµÈ´Ù.
-			// [out]		lpdwBytesSent : ÇÔ¼ö ¹İÈ¯°ªÀÌ TRUE µÈ °æ¿ì ÀÌ ¿¬°áÀÌ ¼º¸³µÈ ÈÄ Àü¼ÛµÈ ¹ÙÀÌÆ® Å©±â¸¦ ¹İÈ¯ÇØÁØ´Ù. lpSendBuffer¸¦ NULL·Î Àü´ŞÇÏ¸é ÀÌ °ªÀº ¹«½ÃµÈ´Ù.
-			// [in]			lpOverlapped : Àı´ë NULL Àü´ŞÇÏ¸é ¾ÈµÊ
+			// [in] s :		connect()ì˜ sì™€ ë™ì¼
+			// [in] name :	connect()ì˜ nameê³¼ ë„ì¼
+			// [in] namelen : connect()ì˜ namelenê³¼ ë„ì¼
+			// [in, opt]	lpSendBuffer : Connectionì´ Established ëœ í›„ì— ì „ë‹¬í•œ ë²„í¼ì˜ ë°ì´í„°ë¥¼ ì „ì†¡í•œë‹¤.
+			//								 ì†Œì¼“ sì— TCP_FASTOPENì´ ConnectEx() í˜¸ì¶œì „ì— í™œì„±í™” ë˜ì–´ ìˆìœ¼ë©´ ì—°ê²° ì„±ë¦½ ì¤‘ì— ì¼ë¶€ ë°ì´í„°ê°€ ì „ì†¡ë  ìˆ˜ ìˆë‹¤.
+			// [in]			dwSendDataLength : lpSendBufferì˜ ë°”ì´íŠ¸ í¬ê¸°ë¥¼ ì „ë‹¬í•œë‹¤ ë§Œì•½ lpSendBufferë¥¼ NULLë¡œ ì „ë‹¬í•˜ë©´ ì´ ê°’ì€ ë¬´ì‹œëœë‹¤.
+			// [out]		lpdwBytesSent : í•¨ìˆ˜ ë°˜í™˜ê°’ì´ TRUE ëœ ê²½ìš° ì´ ì—°ê²°ì´ ì„±ë¦½ëœ í›„ ì „ì†¡ëœ ë°”ì´íŠ¸ í¬ê¸°ë¥¼ ë°˜í™˜í•´ì¤€ë‹¤. lpSendBufferë¥¼ NULLë¡œ ì „ë‹¬í•˜ë©´ ì´ ê°’ì€ ë¬´ì‹œëœë‹¤.
+			// [in]			lpOverlapped : ì ˆëŒ€ NULL ì „ë‹¬í•˜ë©´ ì•ˆë¨
 
 
 			return lpfnConnectEx(
@@ -182,22 +182,22 @@ namespace JNetwork {
 		return { this->m_TransportProtocol, accept(m_Socket, nullptr, nullptr) };
 	}
 
-	int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, DWORD receiveDatalen, Out_ LPDWORD receivedBytes, LPOVERLAPPED overlapped) const {
+	int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ PInt32UL receivedBytes, LPOVERLAPPED overlapped) const {
 
-		// @Âü°í : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
-		// sListenSocket : ¼­¹ö ¼ÒÄÏ
-		// sAcceptSocket : ¿¬°áÀ» ¼ö¶ô¹ŞÀ» ¼¼¼Ç ¼ÒÄÏ
-		// lpOutputBuffer : ¹öÆÛÀÇ ¿ÀÇÁ¼Â 0¹ÙÀÌÆ® ºÎÅÍ »ó´ë Å¬¶óÀÌ¾ğÆ®°¡ ConnectÇÏ¸é¼­ Àü´ŞÇÑ µ¥ÀÌÅÍ¸¦ ¼ö½ÅÇÏµµ·Ï ÇÏ°í ±× µÚ¿¡ ÀÌ¾î¼­ ·ÎÄÃ ÁÖ¼Ò, ¿ø°İ ÁÖ¼Ò Á¤º¸°¡ ÀúÀåµÈ´Ù.
-		//					lpOutputBuffer Å©±â >= dwLocalAddressLength + dwRemoteAddressLength°¡ µÇ¾î¾ßÇÑ´Ù.
-		// dwReceiveDataLength : ÀÌ »çÀÌÁî´Â »ó´ë ¼ÒÄÏÀÌ ¿¬°áÇÏ¸é¼­ Àü´ŞÇÑ Á¤º¸¸¦ ´ãÀ» Å©±â¸¦ ³ªÅ¸³½´Ù. ÀÌ°Ô 0ÀÏ °æ¿ì µ¥ÀÌÅÍ¸¦ ¹ŞÁö ¾Ê´Âµí?
-		//						 ConnectEx¿¡ Àü¼ÛÇÏ´Â ±â´ÉÀÌ ÀÖ´øµ¥ °Å±â¼­ Àü¼ÛÇÑ µ¥ÀÌÅÍ¸¦ lpOutputBuffer¿©±â·Î ¹Ş´Â °ÍÀ¸·Î ÃßÃøµÈ´Ù. Å×½ºÆ®´Â ¾ÈÇØº½
-		//						 lpOutputBufferÀÇ ½ÃÀÛ ÁÖ¼ÒºÎÅÍ µ¥ÀÌÅÍ¸¦ ¹Ş°í ±× ÀÌÈÄ¿¡ ·ÎÄÃ ÁÖ¼Ò, ¿ø°İ ÁÖ¼Ò Á¤º¸°¡ ´ã±â´Â°¡º¸´Ù.
-		//					     ·ÎÄÃ ÁÖ¼Ò, ¿ø°İ ÁÖ¼Ò¸¦ Á¦¿ÜÇÑ Å©±â¸¦ Àü´ŞÇØÁà¾ßÇÑ´Ù.
-		// dwLocalAddressLength : ·ÎÄÃ ÁÖ¼Ò Á¤º¸ Å©±â¸¦ Àü´ŞÇÑ´Ù. Àü¼Û ÇÁ·ÎÅäÄİÀÇ ÃÖ´ë ÁÖ¼Ò Å©±âº¸´Ù 16¹ÙÀÌÆ® ÀÌ»ó Ä¿¾ßÇÑ´Ù.
-		// dwRemoteAddressLength : ¿ø°İ ÁÖ¼Ò Á¤º¸ Å©±â¸¦ Àü´ŞÇÑ´Ù. Àü¼Û ÇÁ·ÎÅäÄİÀÇ ÃÖ´ë ÁÖ¼Ò Å©±âº¸´Ù 16¹ÙÀÌÆ® ÀÌ»ó Ä¿¾ßÇÑ´Ù.
-		// lpdwBytesReceived : Àü¼Û¹ŞÀº µ¥ÀÌÅÍ Å©±â¸¦ ÀúÀåÇÒ LPDWORD¸¦ Àü´ŞÇÑ´Ù. ¸¸¾à ¹Ù·Î ¿Ï·áµÈ °æ¿ì ¿©±â µ¥ÀÌÅÍ°¡ ´ã±æ °ÍÀÌ´Ù.
-		//					   GetLastError()ÀÇ ERROR_IO_PENDING ¿À·ù¸¦ ¹Ş´Â °æ¿ì¿¡´Â ¿Ï·á ÅëÁö ¹æ½ÄÀ¸·Î µ¥ÀÌÅÍ¸¦ ÀĞ¾î¾ßÇÑ´Ù. (¿À¹ö·¦ ¸»ÇÏ´Â µí?)
-		// lpOverlapped : NULLÀ» Àı´ë Àü´ŞÇÏ¸é ¾ÈµÈ´Ù. ¼ö½ÅÇÑ Á¤º¸°¡ ºñµ¿±âÀûÀ¸·Î ¿Ï·áµÉ ¼ö ÀÖÀ¸¹Ç·Î ¿À¹ö·¦ Á¤º¸¸¦ Àü´ŞÇØ¾ßÇÔ.
+		// @ì°¸ê³  : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
+		// sListenSocket : ì„œë²„ ì†Œì¼“
+		// sAcceptSocket : ì—°ê²°ì„ ìˆ˜ë½ë°›ì„ ì„¸ì…˜ ì†Œì¼“
+		// lpOutputBuffer : ë²„í¼ì˜ ì˜¤í”„ì…‹ 0ë°”ì´íŠ¸ ë¶€í„° ìƒëŒ€ í´ë¼ì´ì–¸íŠ¸ê°€ Connectí•˜ë©´ì„œ ì „ë‹¬í•œ ë°ì´í„°ë¥¼ ìˆ˜ì‹ í•˜ë„ë¡ í•˜ê³  ê·¸ ë’¤ì— ì´ì–´ì„œ ë¡œì»¬ ì£¼ì†Œ, ì›ê²© ì£¼ì†Œ ì •ë³´ê°€ ì €ì¥ëœë‹¤.
+		//					lpOutputBuffer í¬ê¸° >= dwLocalAddressLength + dwRemoteAddressLengthê°€ ë˜ì–´ì•¼í•œë‹¤.
+		// dwReceiveDataLength : ì´ ì‚¬ì´ì¦ˆëŠ” ìƒëŒ€ ì†Œì¼“ì´ ì—°ê²°í•˜ë©´ì„œ ì „ë‹¬í•œ ì •ë³´ë¥¼ ë‹´ì„ í¬ê¸°ë¥¼ ë‚˜íƒ€ë‚¸ë‹¤. ì´ê²Œ 0ì¼ ê²½ìš° ë°ì´í„°ë¥¼ ë°›ì§€ ì•ŠëŠ”ë“¯?
+		//						 ConnectExì— ì „ì†¡í•˜ëŠ” ê¸°ëŠ¥ì´ ìˆë˜ë° ê±°ê¸°ì„œ ì „ì†¡í•œ ë°ì´í„°ë¥¼ lpOutputBufferì—¬ê¸°ë¡œ ë°›ëŠ” ê²ƒìœ¼ë¡œ ì¶”ì¸¡ëœë‹¤. í…ŒìŠ¤íŠ¸ëŠ” ì•ˆí•´ë´„
+		//						 lpOutputBufferì˜ ì‹œì‘ ì£¼ì†Œë¶€í„° ë°ì´í„°ë¥¼ ë°›ê³  ê·¸ ì´í›„ì— ë¡œì»¬ ì£¼ì†Œ, ì›ê²© ì£¼ì†Œ ì •ë³´ê°€ ë‹´ê¸°ëŠ”ê°€ë³´ë‹¤.
+		//					     ë¡œì»¬ ì£¼ì†Œ, ì›ê²© ì£¼ì†Œë¥¼ ì œì™¸í•œ í¬ê¸°ë¥¼ ì „ë‹¬í•´ì¤˜ì•¼í•œë‹¤.
+		// dwLocalAddressLength : ë¡œì»¬ ì£¼ì†Œ ì •ë³´ í¬ê¸°ë¥¼ ì „ë‹¬í•œë‹¤. ì „ì†¡ í”„ë¡œí† ì½œì˜ ìµœëŒ€ ì£¼ì†Œ í¬ê¸°ë³´ë‹¤ 16ë°”ì´íŠ¸ ì´ìƒ ì»¤ì•¼í•œë‹¤.
+		// dwRemoteAddressLength : ì›ê²© ì£¼ì†Œ ì •ë³´ í¬ê¸°ë¥¼ ì „ë‹¬í•œë‹¤. ì „ì†¡ í”„ë¡œí† ì½œì˜ ìµœëŒ€ ì£¼ì†Œ í¬ê¸°ë³´ë‹¤ 16ë°”ì´íŠ¸ ì´ìƒ ì»¤ì•¼í•œë‹¤.
+		// lpdwBytesReceived : ì „ì†¡ë°›ì€ ë°ì´í„° í¬ê¸°ë¥¼ ì €ì¥í•  PInt32ULë¥¼ ì „ë‹¬í•œë‹¤. ë§Œì•½ ë°”ë¡œ ì™„ë£Œëœ ê²½ìš° ì—¬ê¸° ë°ì´í„°ê°€ ë‹´ê¸¸ ê²ƒì´ë‹¤.
+		//					   GetLastError()ì˜ ERROR_IO_PENDING ì˜¤ë¥˜ë¥¼ ë°›ëŠ” ê²½ìš°ì—ëŠ” ì™„ë£Œ í†µì§€ ë°©ì‹ìœ¼ë¡œ ë°ì´í„°ë¥¼ ì½ì–´ì•¼í•œë‹¤. (ì˜¤ë²„ë© ë§í•˜ëŠ” ë“¯?)
+		// lpOverlapped : NULLì„ ì ˆëŒ€ ì „ë‹¬í•˜ë©´ ì•ˆëœë‹¤. ìˆ˜ì‹ í•œ ì •ë³´ê°€ ë¹„ë™ê¸°ì ìœ¼ë¡œ ì™„ë£Œë  ìˆ˜ ìˆìœ¼ë¯€ë¡œ ì˜¤ë²„ë© ì •ë³´ë¥¼ ì „ë‹¬í•´ì•¼í•¨.
 		
 		return Winsock::AcceptEx_(listenSocket,
 			m_Socket, 
@@ -210,23 +210,23 @@ namespace JNetwork {
 		);
 	}
 
-	void Socketv4::AcceptExResult(char* buff, DWORD receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp) {
+	void Socketv4::AcceptExResult(char* buff, Int32UL receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp) {
 
 		LPSOCKADDR_IN pSockLocalAddrIn;
 		LPSOCKADDR_IN pSockRemoteAddrIn;
 		INT iLocalAddrLen;
 		INT iRemoteAddrLen;
 
-		// @Âü°í : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-getacceptexsockaddrs
-		// AcceptEx ÇÔ¼ö È£Ãâ°á°ú·Î ¿¬°áµÈ ¼ÒÄÏÀÇ ·ÎÄÃ ÁÖ¼Ò¿Í ¸®¸ğÆ® ÁÖ¼Ò¸¦ ¾òÀ» ¼ö ÀÖµµ·Ï ÇÑ´Ù.
-		// lpOutputBuffer : AcceptEx ÇÔÈÄ È£Ãâ°Ü°ú·Î µ¥ÀÌÅÍ°¡ ´ã±æ Ã¹ ½ÃÀÛ ÁÖ¼Ò°ª, AcceptEx¿¡¼­ Àü´ŞÇÑ lpOutputBuffer¿Í °°Àº °ªÀ» ³Ö¾îÁØ´Ù.
-		// dwReceiveDataLength : lpOutputBuffer¿¡¼­ ¼ö½ÅÇÑ µ¥ÀÌÅÍÀÇ ±æÀÌ¸¦ ³ªÅ¸³½´Ù.  AcceptEx¿¡¼­ Àü´ŞÇÑ dwReceiveDataLength¿Í °°Àº °ªÀ» ³Ö¾îÁØ´Ù.
-		// dwLocalAddressLength : ·ÎÄÃ ÁÖ¼Ò ÀúÀå¿ëÀ¸·Î ¿¹¾àµÈ ¹ÙÀÌÆ® ¼ö¸¦ Àü´ŞÇÑ´Ù. AcceptEx¿¡¼­ Àü´ŞÇÑ dwLocalAddressLength¿Í °°Àº °ªÀ» ³Ö¾îÁØ´Ù.
-		// dwRemoteAddressLength : ¿ø°İ ÁÖ¼Ò ÀúÀå¿ëÀ¸·Î ¿¹¾àµÈ ¹ÙÀÌÆ® ¼ö¸¦ Àü´ŞÇÑ´Ù. AcceptEx¿¡¼­ Àü´ŞÇÑ dwRemoteAddressLength¿Í °°Àº °ªÀ» ³Ö¾îÁØ´Ù.
-		// LocalSockaddr : ·ÎÄÃ ÁÖ¼Ò Á¤º¸´Ù ´ã±æ ±¸Á¶Ã¼ Æ÷ÀÎÅÍ¸¦ Àü´ŞÇÑ´Ù.
-		// LocalSockaddrLength : ·ÎÄÃ ÁÖ¼Ò Á¤º¸ÀÇ Å©±â¸¦ ¹İÈ¯¹Ş´Â´Ù.
-		// RemoteSockaddr : ¿¬°áµÈ ¼ÒÄÏÀÇ ¿ø°İ ÁÖ¼Ò Á¤º¸¸¦ ÀúÀåÇÒ ±¸Á¶Ã¼ Æ÷ÀÎÅÍ¸¦ Àü´ŞÇÑ´Ù.
-		// RemoteSockaddrLength : ¿ø°İ ÁÖ¼Ò Á¤º¸ÀÇ Å©±â¸¦ ¹İÈ¯¹Ş´Â´Ù.
+		// @ì°¸ê³  : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-getacceptexsockaddrs
+		// AcceptEx í•¨ìˆ˜ í˜¸ì¶œê²°ê³¼ë¡œ ì—°ê²°ëœ ì†Œì¼“ì˜ ë¡œì»¬ ì£¼ì†Œì™€ ë¦¬ëª¨íŠ¸ ì£¼ì†Œë¥¼ ì–»ì„ ìˆ˜ ìˆë„ë¡ í•œë‹¤.
+		// lpOutputBuffer : AcceptEx í•¨í›„ í˜¸ì¶œê²¨ê³¼ë¡œ ë°ì´í„°ê°€ ë‹´ê¸¸ ì²« ì‹œì‘ ì£¼ì†Œê°’, AcceptExì—ì„œ ì „ë‹¬í•œ lpOutputBufferì™€ ê°™ì€ ê°’ì„ ë„£ì–´ì¤€ë‹¤.
+		// dwReceiveDataLength : lpOutputBufferì—ì„œ ìˆ˜ì‹ í•œ ë°ì´í„°ì˜ ê¸¸ì´ë¥¼ ë‚˜íƒ€ë‚¸ë‹¤.  AcceptExì—ì„œ ì „ë‹¬í•œ dwReceiveDataLengthì™€ ê°™ì€ ê°’ì„ ë„£ì–´ì¤€ë‹¤.
+		// dwLocalAddressLength : ë¡œì»¬ ì£¼ì†Œ ì €ì¥ìš©ìœ¼ë¡œ ì˜ˆì•½ëœ ë°”ì´íŠ¸ ìˆ˜ë¥¼ ì „ë‹¬í•œë‹¤. AcceptExì—ì„œ ì „ë‹¬í•œ dwLocalAddressLengthì™€ ê°™ì€ ê°’ì„ ë„£ì–´ì¤€ë‹¤.
+		// dwRemoteAddressLength : ì›ê²© ì£¼ì†Œ ì €ì¥ìš©ìœ¼ë¡œ ì˜ˆì•½ëœ ë°”ì´íŠ¸ ìˆ˜ë¥¼ ì „ë‹¬í•œë‹¤. AcceptExì—ì„œ ì „ë‹¬í•œ dwRemoteAddressLengthì™€ ê°™ì€ ê°’ì„ ë„£ì–´ì¤€ë‹¤.
+		// LocalSockaddr : ë¡œì»¬ ì£¼ì†Œ ì •ë³´ë‹¤ ë‹´ê¸¸ êµ¬ì¡°ì²´ í¬ì¸í„°ë¥¼ ì „ë‹¬í•œë‹¤.
+		// LocalSockaddrLength : ë¡œì»¬ ì£¼ì†Œ ì •ë³´ì˜ í¬ê¸°ë¥¼ ë°˜í™˜ë°›ëŠ”ë‹¤.
+		// RemoteSockaddr : ì—°ê²°ëœ ì†Œì¼“ì˜ ì›ê²© ì£¼ì†Œ ì •ë³´ë¥¼ ì €ì¥í•  êµ¬ì¡°ì²´ í¬ì¸í„°ë¥¼ ì „ë‹¬í•œë‹¤.
+		// RemoteSockaddrLength : ì›ê²© ì£¼ì†Œ ì •ë³´ì˜ í¬ê¸°ë¥¼ ë°˜í™˜ë°›ëŠ”ë‹¤.
 		GetAcceptExSockaddrs(buff,
 			receiveDatalen,
 			sizeof(SOCKADDR_IN) + 16,
@@ -259,7 +259,7 @@ namespace JNetwork {
 		return connect(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
 	}
 
-	int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, DWORD sendbufSize, Out_ LPDWORD sentBytes) const {
+	int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ PInt32UL sentBytes) const {
 		SOCKADDR_IN addr;
 		addr.sin_family = AF_INET;
 		addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
@@ -300,23 +300,23 @@ namespace JNetwork {
 	}
 
 	int Socketv4::ReceiveEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesReceived, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, Int32U flag) const {
-		return WSARecv(m_Socket, lpBuf, 1, pBytesReceived, (LPDWORD)&flag, lpOverlapped, lpCompRoutine);
+		return WSARecv(m_Socket, lpBuf, 1, pBytesReceived, (PInt32UL)&flag, lpOverlapped, lpCompRoutine);
 	}
 
-	IPv4EndPoint Socketv4::GetLocalEndPoint() const {
+  IPv4EndPoint Socketv4::GetLocalEndPoint() const {
 
-		SOCKADDR_IN addr;
-		int size = sizeof(SOCKADDR_IN);
-		ZeroMemory(&addr, sizeof(SOCKADDR_IN));
+    SOCKADDR_IN addr;
+    int size = sizeof(SOCKADDR_IN);
+    ZeroMemory(&addr, sizeof(SOCKADDR_IN));
 
-		if (getsockname(m_Socket, (SOCKADDR*)&addr, &size) != SOCKET_ERROR) {
-			const IPv4Address v4Address{ ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr) };
-			IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(addr.sin_port) };
+    if (getsockname(m_Socket, (SOCKADDR*)&addr, &size) != SOCKET_ERROR) {
+      const IPv4Address v4Address{ ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr) };
+      IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(addr.sin_port) };
 
-			return v4EndPoint;
-		}
+      return v4EndPoint;
+    }
 
-		return { INVALID_SOCKET, 0 };
+    return { IPv4Address{}, 0 };
 	}
 
 	IPv4EndPoint Socketv4::GetRemoteEndPoint() const {
@@ -331,7 +331,7 @@ namespace JNetwork {
 			return v4EndPoint;
 		}
 
-		return { INVALID_SOCKET, 0 };
+    return { IPv4Address{}, 0 };
 	}
 
 	/*=====================================================================================

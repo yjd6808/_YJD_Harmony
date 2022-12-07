@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -8,7 +8,7 @@
 
 namespace JCore {
 
-// Àü¹æ ¼±¾ğ
+// ì „ë°© ì„ ì–¸
 class VoidOwner; 
 template <typename> struct Hasher;
 template <typename, typename> class  HashMap; 
@@ -60,9 +60,9 @@ public:
 	}
 
 	TKeyValuePair& Next() override {
-		// ¹İº¹ÀÚ°¡ ²¿¸®±îÁö µµ´ŞÇß´Âµ¥ µ¥ÀÌÅÍ¸¦ °¡Á®¿Ã·Á°í ½ÃµµÇÏ´Â °æ¿ì
+		// ë°˜ë³µìê°€ ê¼¬ë¦¬ê¹Œì§€ ë„ë‹¬í–ˆëŠ”ë° ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¬ë ¤ê³  ì‹œë„í•˜ëŠ” ê²½ìš°
 		if (m_pCurrentBucket == m_pMap->m_pTailBucket) {
-			throw InvalidOperationException("µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù.");
+			throw InvalidOperationException("ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
 		TBucketNode& val = m_pCurrentNode->Value;
@@ -77,9 +77,9 @@ public:
 	}
 
 	TKeyValuePair& Previous() override {
-		// ¹İº¹ÀÚ°¡ ²¿¸®±îÁö µµ´ŞÇß´Âµ¥ µ¥ÀÌÅÍ¸¦ °¡Á®¿Ã·Á°í ½ÃµµÇÏ´Â °æ¿ì
+		// ë°˜ë³µìê°€ ê¼¬ë¦¬ê¹Œì§€ ë„ë‹¬í–ˆëŠ”ë° ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¬ë ¤ê³  ì‹œë„í•˜ëŠ” ê²½ìš°
 		if (m_pCurrentNode->Previous == m_pMap->m_pHeadBucket->m_pHead) {
-			throw InvalidOperationException("µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù.");
+			throw InvalidOperationException("ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
 		m_pCurrentNode = m_pCurrentNode->Previous;

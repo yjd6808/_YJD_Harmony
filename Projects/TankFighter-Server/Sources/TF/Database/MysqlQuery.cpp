@@ -1,7 +1,8 @@
 #include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlQuery.h>
-#include <TF/Util/Console.h>
+#include <JCore/Utils/Console.h>
 
+using namespace JCore;
 
 MysqlQuery::MysqlQuery(MysqlConnection *mConn, const JCore::String& preparedStatement) {
 	m_sqlConn = mConn;
@@ -15,7 +16,7 @@ StatementType MysqlQuery::ParseStatement(const JCore::String& statement) {
 	StatementType eStatement = StatementType::None;
 	const JCore::String statementPrefix = statement.GetRange(0, 5).ToLowerCase();
 
-	// °¢ ½ºÅ×ÀÌÆ®¸ÕÆ®°¡ °¢ ¹®ÀÚ¿­·Î ½ÃÀÛÇÏ´ÂÁö È®ÀÎ
+	// ê° ìŠ¤í…Œì´íŠ¸ë¨¼íŠ¸ê°€ ê° ë¬¸ìì—´ë¡œ ì‹œì‘í•˜ëŠ”ì§€ í™•ì¸
 	if (statementPrefix.Find("select") == 0) {
 		eStatement = StatementType::Select;
 	} else if (statementPrefix.Find("update") == 0) {
@@ -32,7 +33,7 @@ StatementType MysqlQuery::ParseStatement(const JCore::String& statement) {
 
 JCore::String MysqlQuery::GetFieldName(const unsigned int& field) {
 	if (m_FieldMap.Size() < field) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ ÇÊµå¹Û¿¡ ¾ø½À´Ï´Ù.", m_FieldMap.Size());
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ í•„ë“œë°–ì— ì—†ìŠµë‹ˆë‹¤.", m_FieldMap.Size());
 		return NULL;
 	}
 
@@ -41,12 +42,12 @@ JCore::String MysqlQuery::GetFieldName(const unsigned int& field) {
 
 JCore::String MysqlQuery::GetString(const unsigned int& rowIdx, const unsigned int& fieldIdx) {
 	if (GetResultRowCount() < 1) {
-		Console::WriteLine(ConsoleColor::RED, "Äõ¸® ¼öÇà°á°ú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+		SafeConsole::WriteLine(ConsoleColor::Red, "ì¿¼ë¦¬ ìˆ˜í–‰ê²°ê³¼ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		return NULL;
 	}
 
 	if (GetResultRowCount() <= rowIdx) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ Äõ¸® °á°ú¸¸ Á¸ÀçÇÕ´Ï´Ù. ÀÔ·ÂÇÏ½Å Çà ÀÎµ¦½º°ªÀÌ %dÀÔ´Ï´Ù.", GetResultRowCount(), rowIdx);
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ ì¿¼ë¦¬ ê²°ê³¼ë§Œ ì¡´ì¬í•©ë‹ˆë‹¤. ì…ë ¥í•˜ì‹  í–‰ ì¸ë±ìŠ¤ê°’ì´ %dì…ë‹ˆë‹¤.", GetResultRowCount(), rowIdx);
 		return NULL;
 	}
 
@@ -58,12 +59,12 @@ JCore::String MysqlQuery::GetString(const unsigned int& rowIdx, const unsigned i
 
 JCore::String MysqlQuery::GetString(const unsigned int& rowIdx, const JCore::String& fieldName) {
 	if (GetResultRowCount() < 1) {
-		Console::WriteLine(ConsoleColor::RED, "Äõ¸® ¼öÇà°á°ú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+		SafeConsole::WriteLine(ConsoleColor::Red, "ì¿¼ë¦¬ ìˆ˜í–‰ê²°ê³¼ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		return NULL;
 	}
 
 	if (GetResultRowCount() <= rowIdx) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ Äõ¸® °á°ú¸¸ Á¸ÀçÇÕ´Ï´Ù. ÀÔ·ÂÇÏ½Å Çà ÀÎµ¦½º°ªÀÌ %dÀÔ´Ï´Ù.", GetResultRowCount(), rowIdx);
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ ì¿¼ë¦¬ ê²°ê³¼ë§Œ ì¡´ì¬í•©ë‹ˆë‹¤. ì…ë ¥í•˜ì‹  í–‰ ì¸ë±ìŠ¤ê°’ì´ %dì…ë‹ˆë‹¤.", GetResultRowCount(), rowIdx);
 		return NULL;
 	}
 
@@ -77,12 +78,12 @@ JCore::String MysqlQuery::GetString(const unsigned int& rowIdx, const JCore::Str
 int MysqlQuery::GetInt(const unsigned int &rowIdx, const unsigned int &fieldIdx)
 {
 	if (GetResultRowCount() < 1) {
-		Console::WriteLine(ConsoleColor::RED, "Äõ¸® ¼öÇà°á°ú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+		SafeConsole::WriteLine(ConsoleColor::Red, "ì¿¼ë¦¬ ìˆ˜í–‰ê²°ê³¼ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		return NULL;
 	}
 
 	if (GetResultRowCount() <= rowIdx) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ Äõ¸® °á°ú¸¸ Á¸ÀçÇÕ´Ï´Ù. ÀÔ·ÂÇÏ½Å Çà ÀÎµ¦½º°ªÀÌ %dÀÔ´Ï´Ù.", GetResultRowCount(), rowIdx);
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ ì¿¼ë¦¬ ê²°ê³¼ë§Œ ì¡´ì¬í•©ë‹ˆë‹¤. ì…ë ¥í•˜ì‹  í–‰ ì¸ë±ìŠ¤ê°’ì´ %dì…ë‹ˆë‹¤.", GetResultRowCount(), rowIdx);
 		return NULL;
 	}
 
@@ -95,12 +96,12 @@ int MysqlQuery::GetInt(const unsigned int &rowIdx, const unsigned int &fieldIdx)
 int MysqlQuery::GetInt(const unsigned int &rowIdx, const JCore::String &fieldName)
 {
 	if (GetResultRowCount() < 1) {
-		Console::WriteLine(ConsoleColor::RED, "Äõ¸® ¼öÇà°á°ú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+		SafeConsole::WriteLine(ConsoleColor::Red, "ì¿¼ë¦¬ ìˆ˜í–‰ê²°ê³¼ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		return NULL;
 	}
 
 	if (GetResultRowCount() <= rowIdx) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ Äõ¸® °á°ú¸¸ Á¸ÀçÇÕ´Ï´Ù. ÀÔ·ÂÇÏ½Å Çà ÀÎµ¦½º°ªÀÌ %dÀÔ´Ï´Ù.", GetResultRowCount(), rowIdx);
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ ì¿¼ë¦¬ ê²°ê³¼ë§Œ ì¡´ì¬í•©ë‹ˆë‹¤. ì…ë ¥í•˜ì‹  í–‰ ì¸ë±ìŠ¤ê°’ì´ %dì…ë‹ˆë‹¤.", GetResultRowCount(), rowIdx);
 		return NULL;
 	}
 	TResultRow& rSelectedRow = m_ResultMap[rowIdx];
@@ -112,12 +113,12 @@ int MysqlQuery::GetInt(const unsigned int &rowIdx, const JCore::String &fieldNam
 
 double MysqlQuery::GetDouble(const unsigned int &rowIdx, const unsigned int &fieldIdx) {
 	if (GetResultRowCount() < 1) {
-		Console::WriteLine(ConsoleColor::RED, "Äõ¸® ¼öÇà°á°ú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+		SafeConsole::WriteLine(ConsoleColor::Red, "ì¿¼ë¦¬ ìˆ˜í–‰ê²°ê³¼ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		return 0;
 	}
 
 	if (GetResultRowCount() <= rowIdx) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ Äõ¸® °á°ú¸¸ Á¸ÀçÇÕ´Ï´Ù. ÀÔ·ÂÇÏ½Å Çà ÀÎµ¦½º°ªÀÌ %dÀÔ´Ï´Ù.", GetResultRowCount(), rowIdx);
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ ì¿¼ë¦¬ ê²°ê³¼ë§Œ ì¡´ì¬í•©ë‹ˆë‹¤. ì…ë ¥í•˜ì‹  í–‰ ì¸ë±ìŠ¤ê°’ì´ %dì…ë‹ˆë‹¤.", GetResultRowCount(), rowIdx);
 		return 0;
 	}
 
@@ -129,11 +130,11 @@ double MysqlQuery::GetDouble(const unsigned int &rowIdx, const unsigned int &fie
 
 double MysqlQuery::GetDouble(const unsigned int &rowIdx, const JCore::String &fieldName) {
 	if (GetResultRowCount() < 1) {
-		Console::WriteLine(ConsoleColor::RED, "Äõ¸® ¼öÇà°á°ú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+		SafeConsole::WriteLine(ConsoleColor::Red, "ì¿¼ë¦¬ ìˆ˜í–‰ê²°ê³¼ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		return 0;
 	}
 	if (GetResultRowCount() <= rowIdx) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ Äõ¸® °á°ú¸¸ Á¸ÀçÇÕ´Ï´Ù. ÀÔ·ÂÇÏ½Å Çà ÀÎµ¦½º°ªÀÌ %dÀÔ´Ï´Ù.", GetResultRowCount(), rowIdx);
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ ì¿¼ë¦¬ ê²°ê³¼ë§Œ ì¡´ì¬í•©ë‹ˆë‹¤. ì…ë ¥í•˜ì‹  í–‰ ì¸ë±ìŠ¤ê°’ì´ %dì…ë‹ˆë‹¤.", GetResultRowCount(), rowIdx);
 		return 0;
 	}
 
@@ -147,12 +148,12 @@ double MysqlQuery::GetDouble(const unsigned int &rowIdx, const JCore::String &fi
 
 JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const unsigned int &fieldIdx) {
 	if (GetResultRowCount() < 1) {
-		Console::WriteLine(ConsoleColor::RED, "Äõ¸® ¼öÇà°á°ú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+		SafeConsole::WriteLine(ConsoleColor::Red, "ì¿¼ë¦¬ ìˆ˜í–‰ê²°ê³¼ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		return 0;
 	}
 
 	if (GetResultRowCount() <= rowIdx) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ Äõ¸® °á°ú¸¸ Á¸ÀçÇÕ´Ï´Ù. ÀÔ·ÂÇÏ½Å Çà ÀÎµ¦½º°ªÀÌ %dÀÔ´Ï´Ù.", GetResultRowCount(), rowIdx);
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ ì¿¼ë¦¬ ê²°ê³¼ë§Œ ì¡´ì¬í•©ë‹ˆë‹¤. ì…ë ¥í•˜ì‹  í–‰ ì¸ë±ìŠ¤ê°’ì´ %dì…ë‹ˆë‹¤.", GetResultRowCount(), rowIdx);
 		return 0;
 	}
 
@@ -179,11 +180,11 @@ JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const unsigned i
 
 JCore::DateTime MysqlQuery::GetTime(const unsigned int &rowIdx, const JCore::String &fieldName) {
 	if (GetResultRowCount() < 1) {
-		Console::WriteLine(ConsoleColor::RED, "Äõ¸® ¼öÇà°á°ú°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+		SafeConsole::WriteLine(ConsoleColor::Red, "ì¿¼ë¦¬ ìˆ˜í–‰ê²°ê³¼ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
 		return 0;
 	}
 	if (GetResultRowCount() <= rowIdx) {
-		Console::WriteLine(ConsoleColor::RED, "%d°³ÀÇ Äõ¸® °á°ú¸¸ Á¸ÀçÇÕ´Ï´Ù. ÀÔ·ÂÇÏ½Å Çà ÀÎµ¦½º°ªÀÌ %dÀÔ´Ï´Ù.", GetResultRowCount(), rowIdx);
+		SafeConsole::WriteLine(ConsoleColor::Red, "%dê°œì˜ ì¿¼ë¦¬ ê²°ê³¼ë§Œ ì¡´ì¬í•©ë‹ˆë‹¤. ì…ë ¥í•˜ì‹  í–‰ ì¸ë±ìŠ¤ê°’ì´ %dì…ë‹ˆë‹¤.", GetResultRowCount(), rowIdx);
 		return 0;
 	}
 
@@ -225,7 +226,7 @@ bool MysqlQuery::ExecuteQuery() {
 	if (mysql_query(m_sqlConn->GetConnection(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
-			Console::WriteLine(ConsoleColor::RED, "MySQL ¿À·ù : %s", m_sqlConn->GetLastError().Source());
+			SafeConsole::WriteLine(ConsoleColor::Red, "MySQL ì˜¤ë¥˜ : %s", m_sqlConn->GetLastError().Source());
 		
 		return false;
 	}
@@ -235,7 +236,7 @@ bool MysqlQuery::ExecuteQuery() {
 	if (result == NULL) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
-			Console::WriteLine(ConsoleColor::RED, "MySQL ¿À·ù : %s", m_sqlConn->GetLastError().Source());
+			SafeConsole::WriteLine(ConsoleColor::Red, "MySQL ì˜¤ë¥˜ : %s", m_sqlConn->GetLastError().Source());
 		return false;
 	}
 
@@ -244,8 +245,8 @@ bool MysqlQuery::ExecuteQuery() {
 	MYSQL_ROW row;
 	MYSQL_FIELD *field;
 
-	// ÇÊµå ÀÌ¸§¿¡¼­ ÇÊµå ÀÎµ¦½º¸¦ ¾òÀ» ¼ö ÀÖµµ·Ï ÇÏ°í
-	// ÇÊµå ÀÎµ¦½º¿¡¼­ ÇÊµå ÀÌ¸§À» ¾òÀ» ¼ö ÀÖµµ·Ï ÇÑ´Ù.
+	// í•„ë“œ ì´ë¦„ì—ì„œ í•„ë“œ ì¸ë±ìŠ¤ë¥¼ ì–»ì„ ìˆ˜ ìˆë„ë¡ í•˜ê³ 
+	// í•„ë“œ ì¸ë±ìŠ¤ì—ì„œ í•„ë“œ ì´ë¦„ì„ ì–»ì„ ìˆ˜ ìˆë„ë¡ í•œë‹¤.
 	int i = 0;
 	while ((field = mysql_fetch_field(result))) {
 		m_FieldMap.Insert(i, field->name);
@@ -253,7 +254,7 @@ bool MysqlQuery::ExecuteQuery() {
 		i++;
 	}
 
-	// Äõ¸® ½ÇÇà °á°ú·Î Ãâ·ÂµÈ ÇàµéÀ» °¡Á®¿Â´Ù.
+	// ì¿¼ë¦¬ ì‹¤í–‰ ê²°ê³¼ë¡œ ì¶œë ¥ëœ í–‰ë“¤ì„ ê°€ì ¸ì˜¨ë‹¤.
 	i = 0;
 	while ((row = mysql_fetch_row(result))) {
 		TResultRow resRow;
@@ -273,22 +274,22 @@ bool MysqlQuery::ExecuteUpdate() {
 	if (mysql_query(m_sqlConn->GetConnection(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
-			Console::WriteLine(ConsoleColor::RED, "MySQL ¿À·ù : %s", m_sqlConn->GetLastError().Source());
+			SafeConsole::WriteLine(ConsoleColor::Red, "MySQL ì˜¤ë¥˜ : %s", m_sqlConn->GetLastError().Source());
 		return false;
 	}
 
 	return m_bSuccess = true;
 }
 
-int MysqlQuery::ExecuteInsert() {
+Int64U MysqlQuery::ExecuteInsert() {
 	if (mysql_query(m_sqlConn->GetConnection(), m_PreparedStatement.Source())) {
 		const JCore::String erstr = m_sqlConn->GetLastError();
 		if (erstr.Length() > 2)
-			Console::WriteLine(ConsoleColor::RED, "MySQL ¿À·ù : %s", m_sqlConn->GetLastError().Source());
+			SafeConsole::WriteLine(ConsoleColor::Red, "MySQL ì˜¤ë¥˜ : %s", m_sqlConn->GetLastError().Source());
 		return 0;
 	}
 
-	const int iLastInsertID = mysql_insert_id(m_sqlConn->GetConnection());
+	const Int64U iLastInsertID = mysql_insert_id(m_sqlConn->GetConnection());
 
 	m_bSuccess = true;
 	return iLastInsertID;

@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -21,17 +21,13 @@ TcpClient::TcpClient() :
 TcpClient::~TcpClient() {
 
 	m_pIocp->Join();
-
-	if (m_pIocp->Destroy() == false) {
-		Winsock::Message("IOCP »èÁ¦¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
-	}
-
+	DebugAssertMessage(m_pIocp->Destroy(), "IOCP ì‚­ì œì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 	DeleteSafe(m_pIocp);
 }
 
 int TcpClient::DefaultIocpThreadCount() const {
-	// ±âº»ÀûÀ¸·Î ¾²·¹µå °³¼ö¸¸Å­ »ı¼ºÇÏµµ·Ï ÇÏÀÚ.
-	// dwNumberOfProcessors ÀÌ¸§¶«¿¡ ÄÚ¾î °¹¼ö·Î Âø°¢ÇÏ±â ½¬¿îµ¥ CPU ¾²·¹µå °¹¼ö¶ó°í ÇÑ´Ù.
+	// ê¸°ë³¸ì ìœ¼ë¡œ ì“°ë ˆë“œ ê°œìˆ˜ë§Œí¼ ìƒì„±í•˜ë„ë¡ í•˜ì.
+	// dwNumberOfProcessors ì´ë¦„ë•œì— ì½”ì–´ ê°¯ìˆ˜ë¡œ ì°©ê°í•˜ê¸° ì‰¬ìš´ë° CPU ì“°ë ˆë“œ ê°¯ìˆ˜ë¼ê³  í•œë‹¤.
 	SYSTEM_INFO info;
 	GetSystemInfo(&info);
 	return (int)info.dwNumberOfProcessors;
@@ -43,54 +39,54 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	}
 
 	if (!Winsock::IsInitialized()) {
-		Winsock::Message("À©¼Ó ÃÊ±âÈ­¸¦ ¸ÕÀú ÇØÁÖ¼¼¿ä. Winsock::Initialize()");
+		DebugAssertMessage(false, "ìœˆì† ì´ˆê¸°í™”ë¥¼ ë¨¼ì € í•´ì£¼ì„¸ìš”. Winsock::Initialize()");
 		return false;
 	}
 
 	if (m_pClientEventListener == nullptr) {
-		Winsock::Message("ÀÌº¥Æ® ¸®½º³Ê¸¦ ¼³Á¤ÇØÁÖ¼¼¿ä.");
+		DebugAssertMessage(false, "ì´ë²¤íŠ¸ ë¦¬ìŠ¤ë„ˆë¥¼ ì„¤ì •í•´ì£¼ì„¸ìš”.");
 		return false;
 	}
 
 	if (!Initialize()) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® ÃÊ±âÈ­¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ ì´ˆê¸°í™”ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 		return false;
 	}
 
-	// ConnectEx¸¦ »ç¿ëÇÏ±â À§ÇØ¼­ Å¬¶óÀÌ¾ğÆ®´õ¶óµµ ¹ÙÀÎµùÀ» ÇØÁà¾ßÇÑ´Ù.
+	// ConnectExë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ì„œ í´ë¼ì´ì–¸íŠ¸ë”ë¼ë„ ë°”ì¸ë”©ì„ í•´ì¤˜ì•¼í•œë‹¤.
 	if (m_ClientSocket.BindAny() == SOCKET_ERROR) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® Any ¹ÙÀÎµù¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ Any ë°”ì¸ë”©ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 		return false;
 	}
 
 	if (m_pIocp->Create(DefaultIocpThreadCount()) == false) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® IOCP »ı¼º ½ÇÆĞ");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ IOCP ìƒì„± ì‹¤íŒ¨");
 		return false;
 	}
 
-	if (m_pIocp->Connect(reinterpret_cast<HANDLE>(m_ClientSocket.Handle()), NULL) == false) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏÀ» IOCP¿¡ ¿¬°áÇÏ´Âµ¥ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+	if (m_pIocp->Connect(reinterpret_cast<WinHandle>(m_ClientSocket.Handle()), NULL) == false) {
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“ì„ IOCPì— ì—°ê²°í•˜ëŠ”ë° ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 		return false;
 	}
 
 	m_pIocp->Run();
 
 	if (m_ClientSocket.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏ SetReuseAddrEnabled(true) ½ÇÆĞ");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“ SetReuseAddrEnabled(true) ì‹¤íŒ¨");
 		return false;
 	}
 
 	if (m_ClientSocket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏ SetNonBlockingEnabled(true) ½ÇÆĞ");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“ SetNonBlockingEnabled(true) ì‹¤íŒ¨");
 		return false;
 	}
 
 
 	ConnectWait();
 
-	// ¿¬°á ÈÄ °ğÀå µ¥ÀÌÅÍ Àü¼Û Å×½ºÆ®
-	// ÆĞÅ¶Àº ¸ğµÎ ¿À¹ö·¦ Process¿¡¼­ ÇØÁ¦ÇÏµµ·Ï ÇÑ´Ù.
-	DWORD dwSentBytes = 0;
+	// ì—°ê²° í›„ ê³§ì¥ ë°ì´í„° ì „ì†¡ í…ŒìŠ¤íŠ¸
+	// íŒ¨í‚·ì€ ëª¨ë‘ ì˜¤ë²„ë© Processì—ì„œ í•´ì œí•˜ë„ë¡ í•œë‹¤.
+	Int32UL dwSentBytes = 0;
 	auto* dummyPacket = new StaticPacket<Command<int>, Command<int>>;
 	dummyPacket->Get<0>()->SetCommand(1);
 	dummyPacket->Get<0>()->Value = 2;
@@ -103,7 +99,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	if (m_ClientSocket.ConnectEx(destination, pOverlapped, dummyPacket->GetWSABuf().buf, TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
 
 		if (Winsock::LastError() != WSA_IO_PENDING) {
-			Winsock::AssertWinsockMessage("¼­¹ö Á¢¼Ó¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			DebugAssertMessage(false, "ì„œë²„ ì ‘ì†ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 			Disconnect();
 			pOverlapped->Release();
 			m_RemoteEndPoint = IPv4EndPoint{IPv4Address::Any(), 0};
@@ -116,26 +112,24 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 }
 
 void TcpClient::Pause() {
-	// NOT IMPLEMENT, UNUSED
-	// µüÈ÷ ¾µÀÏ ¾øÀ» °Í °°´Ù. ±¸Çö ¾ÈÇÔ
+	// ë”±íˆ ì“¸ì¼ ì—†ì„ ê²ƒ ê°™ë‹¤. êµ¬í˜„ ì•ˆí•¨
 }
 
 void TcpClient::Resume() {
-	// NOT IMPLEMENT, UNUSED
-	// µüÈ÷ ¾µÀÏ ¾øÀ» °Í °°´Ù. ±¸Çö ¾ÈÇÔ
+	// ë”±íˆ ì“¸ì¼ ì—†ì„ ê²ƒ ê°™ë‹¤. êµ¬í˜„ ì•ˆí•¨
 }
 
 bool TcpClient::Disconnect() {
-	CriticalSectionLockGuard guard(m_Lock);
+	NormalLockGuard guard(m_Lock);
 	if (CheckState(State::Disconnected)) {
 		return true;
 	}
 
 	m_ReceiveBuffer.Clear();
-	m_ClientSocket.ShutdownBoth();		// ConnectWait »óÅÂ¿¡¼­ ½ÃµµÇÏ´Â °æ¿ì ¿À·ù¸¦ ¹ñÀ½. ±×³É ¹«½ÃÇÏÀÚ.
+	m_ClientSocket.ShutdownBoth();		// ConnectWait ìƒíƒœì—ì„œ ì‹œë„í•˜ëŠ” ê²½ìš° ì˜¤ë¥˜ë¥¼ ë±‰ìŒ. ê·¸ëƒ¥ ë¬´ì‹œí•˜ì.
 
 	if (m_ClientSocket.Close() == SOCKET_ERROR) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏ Close() ½ÇÆĞ");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“ Close() ì‹¤íŒ¨");
 		return false;
 	}
 
@@ -149,7 +143,7 @@ bool TcpClient::Disconnect() {
 
 void TcpClient::SetEventListener(TcpClientEventListener* listener) {
 	if (!CheckState(State::Uninitialized) && !CheckState(State::Disconnected)) {
-		Winsock::Message("¿¬°áÀÌ ²÷±ä »óÅÂ ¶Ç´Â ¼­¹ö¿Í ¿¬°áÀü¿¡¸¸ ¸®½º³Ê ¼³Á¤À» ÇÒ ¼ö ÀÖ½À´Ï´Ù.");
+		DebugAssertMessage(false, "ì—°ê²°ì´ ëŠê¸´ ìƒíƒœ ë˜ëŠ” ì„œë²„ì™€ ì—°ê²°ì „ì—ë§Œ ë¦¬ìŠ¤ë„ˆ ì„¤ì •ì„ í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.");
 		return;
 	}
 
@@ -172,24 +166,23 @@ void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
 void TcpClient::Connected() {
 	m_eState = State::Connected;
 
-	// ÀÏÁ¤ÁÖ±â¸¶´Ù "³ª »ì¾ÆÀÖ¼Ò" Àü¼Û
+	// ì¼ì •ì£¼ê¸°ë§ˆë‹¤ "ë‚˜ ì‚´ì•„ìˆì†Œ" ì „ì†¡
 	if (m_ClientSocket.Option().SetKeepAliveEnabled(true) == SOCKET_ERROR) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏ Keep Alive È°¼ºÈ­ ½ÇÆĞ");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“ Keep Alive í™œì„±í™” ì‹¤íŒ¨");
 	}
 
-	// ºü¸¥ ¹İÀÀÀ» À§ÇØ Nagle ¾Ë°í¸®ÁòÀ» ²¨ÁØ´Ù.
+	// ë¹ ë¥¸ ë°˜ì‘ì„ ìœ„í•´ Nagle ì•Œê³ ë¦¬ì¦˜ì„ êº¼ì¤€ë‹¤.
 	if (m_ClientSocket.Option().SetNagleEnabled(false) == SOCKET_ERROR) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏ Nagle ºñÈ°¼ºÈ­ ½ÇÆĞ");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“ Nagle ë¹„í™œì„±í™” ì‹¤íŒ¨");
 	}
 
-	// Å¬¶óÀÌ¾ğÆ®´Â ¸°Àú¸¦ ²¨ÁÖÀÚ.
-	// ¼Û½Å ¹öÆÛ¿¡ ÀÖ´Â µ¥ÀÌÅÍ¸¦ ¸ğµÎ º¸³»°í ¾ÈÀüÇÏ°Ô Á¾·áÇÒ ¼ö ÀÖµµ·Ï
+	// í´ë¼ì´ì–¸íŠ¸ëŠ” ë¦°ì €ë¥¼ êº¼ì£¼ì.
+	// ì†¡ì‹  ë²„í¼ì— ìˆëŠ” ë°ì´í„°ë¥¼ ëª¨ë‘ ë³´ë‚´ê³  ì•ˆì „í•˜ê²Œ ì¢…ë£Œí•  ìˆ˜ ìˆë„ë¡
 	if (m_ClientSocket.Option().SetLingerEnabled(false) == SOCKET_ERROR) {
-		Winsock::AssertWinsockMessage("Å¬¶óÀÌ¾ğÆ® ¼ÒÄÏ ¸°Àú Å¸ÀÓ¾Æ¿ô ¼³Á¤ ½ÇÆĞ");
+		DebugAssertMessage(false, "í´ë¼ì´ì–¸íŠ¸ ì†Œì¼“ ë¦°ì € íƒ€ì„ì•„ì›ƒ ì„¤ì • ì‹¤íŒ¨");
 	}
 
 	m_LocalEndPoint = m_ClientSocket.GetLocalEndPoint();
-	
 	m_pClientEventListener->OnConnected();
 }
 

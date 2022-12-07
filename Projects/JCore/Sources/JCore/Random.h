@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	³­¼ö »ı¼º±â
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë‚œìˆ˜ ìƒì„±ê¸°
 */
 
 #pragma once
@@ -18,7 +18,7 @@ struct Random final
 	template <typename T>
 	T Generate(T inclusiveBegin, T inclusiveEnd) {
 		if (inclusiveBegin > inclusiveEnd) {
-			throw InvalidArgumentException("begin > end µÇ¸é ¾È´ï");
+			throw InvalidArgumentException("begin > end ë˜ë©´ ì•ˆëŒ");
 		}
 
 		std::uniform_int_distribution<T> dist(inclusiveBegin, inclusiveEnd);
@@ -30,8 +30,9 @@ struct Random final
 
 	static void EngineInitialize();
 private:
-	static bool ms_bInitialized;
-	static std::default_random_engine ms_DefaultRandomEngine;
+	inline static bool ms_bInitialized;
+    inline static std::mt19937 ms_DefaultRandomEngine;
+    inline static std::random_device ms_RandomDevice;
 };
 
 } // namespace JCore

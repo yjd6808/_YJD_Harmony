@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/ChannelLayer.h>
@@ -14,9 +14,9 @@
 
 void ChannelLayer::onEnterTransitionDidFinish() {
 
-	// Ã¤³Î¾À¿¡ ÁøÀÔÇÏ¸é Ã¤³Î Á¤º¸¸¦ ¹Ş±âÀ§ÇØ ¹Ù·Î ÆĞÅ¶À» º¸³½´Ù.
+	// ì±„ë„ì”¬ì— ì§„ì…í•˜ë©´ ì±„ë„ ì •ë³´ë¥¼ ë°›ê¸°ìœ„í•´ ë°”ë¡œ íŒ¨í‚·ì„ ë³´ë‚¸ë‹¤.
 	if (SendFn::SendLoadChannelInfoSyn() == false) {
-		PopUp::createInParent("Ã¤³Î Á¤º¸ ¿äÃ»ÀÌ ½ÇÆĞÇÏ¿´½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ì±„ë„ ì •ë³´ ìš”ì²­ì´ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.", this, false);
 	}
 }
 
@@ -32,7 +32,7 @@ bool ChannelLayer::init() {
 }
 
 void ChannelLayer::OnChannelClick(TextButton* textButton) {
-	SendFn::SendChannelSelectSyn(textButton->getTag());	// ¹öÆ° ÅÂ±×°¡ Ã¤³Î UIDÀÓ CmdLoadChannelInfoAck() Âü°í
+	SendFn::SendChannelSelectSyn(textButton->getTag());	// ë²„íŠ¼ íƒœê·¸ê°€ ì±„ë„ UIDì„ CmdLoadChannelInfoAck() ì°¸ê³ 
 }
 
 
@@ -40,7 +40,7 @@ void ChannelLayer::OnChannelClick(TextButton* textButton) {
 
 /* =================================================================================
  *
- *                             Åë½Å ÆĞÅ¶ Ã³¸® 
+ *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬ 
  *	
  * ================================================================================*/
 
@@ -57,17 +57,17 @@ void ChannelLayer::CmdLoadChannelInfoAck(ICommand* cmd) {
 		btn->setColor(ColorList::Ashgray_v);
 		btn->setFontColor(ColorList::Black_v);
 		btn->setClickEvent(CC_CALLBACK_1(ChannelLayer::OnChannelClick, this));
-		this->addChild(btn, 0, pChannelInfo->ChannelUID);		// ÅÂ±×·Î Ã¤³Î UID¸¦ ÁöÁ¤ÇÏÀÚ.
+		this->addChild(btn, 0, pChannelInfo->ChannelUID);		// íƒœê·¸ë¡œ ì±„ë„ UIDë¥¼ ì§€ì •í•˜ì.
 	}
 
-	PopUp::createInParent("Á¢¼Ó ¼º°ø!", this, false);
+	PopUp::createInParent("ì ‘ì† ì„±ê³µ!", this, false);
 }
 
 void ChannelLayer::CmdSelectChannelAck(ICommand* cmd) {
 	const SelectChannelAck* pChannelInfoAck = cmd->CastCommand<SelectChannelAck*>();
 
 	if (pChannelInfoAck->Result) {
-		// Ã¤³Î CharacterUID ¼³Á¤
+		// ì±„ë„ CharacterUID ì„¤ì •
 		_Client->SetChannelUID(pChannelInfoAck->ChanneldUID);
 		_Client->ChangeScene(SceneType::CharacterSelect);
 		return;

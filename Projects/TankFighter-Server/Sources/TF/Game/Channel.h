@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -22,12 +22,12 @@ public:
 	bool Initialize();
 	bool Finalize();
 
-	// ºÒº¯ Á¤º¸
+	// ë¶ˆë³€ ì •ë³´
 	JCore::String GetChnnelName()	   			{ return m_ChannelName; }
 	int GetChannelUID()	const 					{ return m_ChannelUID; }
 	int GetMaxPlayerCount()	const				{ return m_iMaxPlayerCount; }
 
-	// °¡º¯ Á¤º¸
+	// ê°€ë³€ ì •ë³´
 	int GetPlayerCount();
 	bool TryAddPlayer(Player* player);
 	bool RemovePlayer(Player* player);
@@ -53,11 +53,11 @@ private:
 	int m_ChannelUID;
 	int m_iMaxPlayerCount;
 	JCore::String m_ChannelName;
-	JCore::CriticalSectionMutex m_ChannelLock;
+	JCore::NormalLock m_ChannelLock;
 	JCore::Vector<Player*> m_PlayerList;
 	BattleFieldWorker m_BattleFieldWorker;
 
-	JCore::CriticalSectionMutex m_RoomMapLock;
+	JCore::NormalLock m_RoomMapLock;
 	JCore::HashMap<int, Room*> m_RoomMap;
 	RoomPool m_RoomPool;
 };

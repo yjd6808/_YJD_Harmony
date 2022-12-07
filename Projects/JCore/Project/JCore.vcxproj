@@ -5,30 +5,52 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
-    <ClCompile Include="..\Sources\JCore\Lock.cpp" />
-    <ClCompile Include="..\Sources\JCore\LockGuard.cpp" />
-    <ClCompile Include="..\Sources\JCore\PointerObserver.cpp">
+    <ClCompile Include="..\Sources\JCore\Primitives\ObserverPtr.cpp" />
+    <ClCompile Include="..\Sources\JCore\Primitives\String.cpp" />
+    <ClCompile Include="..\Sources\JCore\Primitives\StringUtil.cpp" />
+    <ClCompile Include="..\Sources\JCore\Random.cpp" />
+    <ClCompile Include="..\Sources\JCore\Sync\EventLock.cpp" />
+    <ClCompile Include="..\Sources\JCore\Sync\NormalLock.cpp" />
+    <ClCompile Include="..\Sources\JCore\Sync\RecursiveLock.cpp" />
+    <ClCompile Include="..\Sources\JCore\Sync\NormalRwLock.cpp" />
+    <ClCompile Include="..\Sources\JCore\Sync\Semaphore.cpp" />
+    <ClCompile Include="..\Sources\JCore\Sync\SpinLock.cpp" />
+    <ClCompile Include="..\Sources\JCore\Sync\UnusedLock.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Random.cpp" />
-    <ClCompile Include="..\Sources\JCore\String.cpp" />
-    <ClCompile Include="..\Sources\JCore\StringUtil.cpp" />
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
+    <ClCompile Include="..\Sources\JCore\Utils\Console.cpp" />
+    <ClCompile Include="..\Sources\JCore\Wrapper\StdLib.cpp" />
+    <ClCompile Include="..\Sources\JCore\Wrapper\WinApi.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\JCore\Allocator\DefaultAllocator.h" />
     <ClInclude Include="..\Sources\JCore\Assert.h" />
     <ClInclude Include="..\Sources\JCore\Container\CollectionStream.h" />
     <ClInclude Include="..\Sources\JCore\Declspec.h">
@@ -36,15 +58,15 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Define.h" />
+    <ClInclude Include="..\Sources\JCore\Encoding\CodePage.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Event.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Functional.h" />
-    <ClInclude Include="..\Sources\JCore\Allocator.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Ascii.h">
       <SubType>
       </SubType>
@@ -156,21 +178,16 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Lock.h" />
-    <ClInclude Include="..\Sources\JCore\LockGuard.h" />
-    <ClInclude Include="..\Sources\JCore\PointerObserver.h">
+    <ClInclude Include="..\Sources\JCore\Primitives\Atomic.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\RefCount.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\SmartPointer.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\StaticString.h">
+    <ClInclude Include="..\Sources\JCore\Primitives\ObserverPtr.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\SmartPtr.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\StaticString.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\String.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\StringUtil.h" />
+    <ClInclude Include="..\Sources\JCore\SafeRefCount.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -182,15 +199,51 @@
     <ClInclude Include="..\Sources\JCore\Limit.h" />
     <ClInclude Include="..\Sources\JCore\Memory.h" />
     <ClInclude Include="..\Sources\JCore\Random.h" />
-    <ClInclude Include="..\Sources\JCore\String.h" />
-    <ClInclude Include="..\Sources\JCore\StringUtil.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\EventLock.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\UnusedLock.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\ILock.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\IRwLock.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\LockGuard.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\NormalLock.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\RecursiveLock.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\NormalRwLock.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\Semaphore.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\SpinLock.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\ManualResetEvent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\Thread.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Time.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Tuple.h" />
     <ClInclude Include="..\Sources\JCore\Type.h" />
+    <ClInclude Include="..\Sources\JCore\TypeCast.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
+    <ClInclude Include="..\Sources\JCore\Utils\Console.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\ConsoleColor.h" />
+    <ClInclude Include="..\Sources\JCore\Wrapper\StdLib.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Wrapper\WinApi.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -206,7 +259,20 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -221,32 +287,51 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)..\Sources</IncludePath>
-    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)..\Sources</IncludePath>
+    <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\Sources</IncludePath>
     <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\Output\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)..\Sources</IncludePath>
+    <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>JCore/Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -254,7 +339,28 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>powershell $(SolutionDir)Scripts\PostBuildEvent.ps1 -c $(Configuration) -p $(ProjectName)</Command>
+      <Command>powershell $(SolutionDir)Scripts\BuildEvent\PostBuildEvent.ps1 -c $(Configuration) -f $(Platform) -p $(ProjectName)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>JCore/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>powershell $(SolutionDir)Scripts\BuildEvent\PostBuildEvent.ps1 -c $(Configuration) -f $(Platform) -p $(ProjectName)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -268,7 +374,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>JCore/Core.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -278,7 +385,32 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>powershell $(SolutionDir)Scripts\PostBuildEvent.ps1 -c $(Configuration) -p $(ProjectName)</Command>
+      <Command>powershell $(SolutionDir)Scripts\BuildEvent\PostBuildEvent.ps1 -c $(Configuration) -f $(Platform) -p $(ProjectName)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>JCore/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>powershell $(SolutionDir)Scripts\BuildEvent\PostBuildEvent.ps1 -c $(Configuration) -f $(Platform) -p $(ProjectName)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

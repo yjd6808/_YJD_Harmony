@@ -1,8 +1,8 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
- * Ã¤³Î¿¡¼­ »ç¿ëÇÒ ¹æ Ç®À» ¹Ì¸® ¸¸µé¾î³õÀÚ.
- * °¢ Ã¤³Î¿¡ ±Í¼ÓµÈ ·ëÇ®ÀÌ´Ù.
- * ±×¸®°í Channel¿¡¼­ Ç®¿¡¼­ ²¨³¾¶§¿Í ³ÖÀ» ¶§ ¸ğµÎ ¶ôÀ» ¼öÇàÇØÁÖ°í ÀÖ±â ‹š¹®¿¡ ÀÌ Å¬·¡½º¿¡¼­ µû·Î ¶ôÀº ¾È½áµµ µÈ´Ù.
+ * ì‘ì„±ì : ìœ¤ì •ë„
+ * ì±„ë„ì—ì„œ ì‚¬ìš©í•  ë°© í’€ì„ ë¯¸ë¦¬ ë§Œë“¤ì–´ë†“ì.
+ * ê° ì±„ë„ì— ê·€ì†ëœ ë£¸í’€ì´ë‹¤.
+ * ê·¸ë¦¬ê³  Channelì—ì„œ í’€ì—ì„œ êº¼ë‚¼ë•Œì™€ ë„£ì„ ë•Œ ëª¨ë‘ ë½ì„ ìˆ˜í–‰í•´ì£¼ê³  ìˆê¸° ë–„ë¬¸ì— ì´ í´ë˜ìŠ¤ì—ì„œ ë”°ë¡œ ë½ì€ ì•ˆì¨ë„ ëœë‹¤.
  */
 #pragma once
 
@@ -17,19 +17,19 @@ class RoomPool
 	RoomPool(Channel* channel) : m_iCurRoomCount(0), m_pChannel(channel) {}
 	Channel* GetChannel() const { return static_cast<Channel*>(m_pChannel); }
 public:
-	// Ç®¿¡¼­ »ç¿ëÇÒ ÇÃ·¹ÀÌ¾î¿¡ ¼¼¼ÇÀ» ¼¼ÆÃÇØ¼­ ¹İÈ¯¹Ş´Â´Ù.
+	// í’€ì—ì„œ ì‚¬ìš©í•  í”Œë ˆì´ì–´ì— ì„¸ì…˜ì„ ì„¸íŒ…í•´ì„œ ë°˜í™˜ë°›ëŠ”ë‹¤.
 	bool Initialize(int size);
 	bool Finalize();
 	Room* PopRoom(Player* host, const JCore::String& roomName, int maxPlayerCount);
 
-	// ¿¬°áÀÌ Á¾·áµÈ ÇÃ·¹ÀÌ¾î Á¤º¸¸¦ Ç®¿¡ ´Ù½Ã µ¹·Á³õ´Â´Ù.
+	// ì—°ê²°ì´ ì¢…ë£Œëœ í”Œë ˆì´ì–´ ì •ë³´ë¥¼ í’€ì— ë‹¤ì‹œ ëŒë ¤ë†“ëŠ”ë‹¤.
 	void ReleaseRoom(Room* releaseRoom);
 	
 	int Count() const;
 private:
 	JCore::LinkedList<Room*> m_RoomPool;
 	int m_iCurRoomCount;
-	void* m_pChannel;		// Çì´õ ÀÇÁ¸¼º ¶«¿¡ void·Î µÒ
+	void* m_pChannel;		// í—¤ë” ì˜ì¡´ì„± ë•œì— voidë¡œ ë‘ 
 
 	friend class Channel;
 };

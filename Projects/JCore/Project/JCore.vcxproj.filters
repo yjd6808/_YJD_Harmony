@@ -4,18 +4,82 @@
     <Filter Include="Container">
       <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{a943bf96-41ea-4b46-a660-1db5bcc34f35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{36d4b024-e19e-412b-bdcc-a3dc80d37bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileSystem">
+      <UniqueIdentifier>{7038d21b-e1c5-4d79-9ab6-814f1c623e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{8b2b9f39-68d8-4130-8e89-71764baa9a09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitives">
+      <UniqueIdentifier>{25408a68-942e-4dc1-9634-f31dbe27dc37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Allocator">
+      <UniqueIdentifier>{b8f3edc0-97cc-4c1b-94fe-f84eca33e502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sync">
+      <UniqueIdentifier>{242d12f0-1702-4b90-bccc-46c7e380585d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Encoding">
+      <UniqueIdentifier>{a408b418-d008-4f12-8691-75e917f7e4c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Wrapper">
+      <UniqueIdentifier>{c2275cf1-f97a-4d55-a437-b03c86e58f56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{fb9cb62a-b9c7-48ff-a4bc-1d1163a7ec26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp" />
     <ClCompile Include="..\Sources\JCore\Random.cpp" />
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
-    <ClCompile Include="..\Sources\JCore\String.cpp" />
-    <ClCompile Include="..\Sources\JCore\StringUtil.cpp" />
     <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
-    <ClCompile Include="..\Sources\JCore\PointerObserver.cpp" />
-    <ClCompile Include="..\Sources\JCore\Lock.cpp" />
-    <ClCompile Include="..\Sources\JCore\LockGuard.cpp" />
+    <ClCompile Include="..\Sources\JCore\Primitives\String.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Primitives\StringUtil.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\EventLock.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\NormalLock.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\RecursiveLock.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\NormalRwLock.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\Semaphore.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\SpinLock.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\UnusedLock.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Utils\Console.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Primitives\ObserverPtr.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Wrapper\StdLib.cpp">
+      <Filter>Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Wrapper\WinApi.cpp">
+      <Filter>Wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -24,8 +88,6 @@
     <ClInclude Include="..\Sources\JCore\Random.h" />
     <ClInclude Include="..\Sources\JCore\Tuple.h" />
     <ClInclude Include="..\Sources\JCore\Math.h" />
-    <ClInclude Include="..\Sources\JCore\String.h" />
-    <ClInclude Include="..\Sources\JCore\StringUtil.h" />
     <ClInclude Include="..\Sources\JCore\Container\Arrays.h">
       <Filter>Container</Filter>
     </ClInclude>
@@ -33,14 +95,10 @@
     <ClInclude Include="..\Sources\JCore\Limit.h" />
     <ClInclude Include="..\Sources\JCore\Hasher.h" />
     <ClInclude Include="..\Sources\JCore\Time.h" />
-    <ClInclude Include="..\Sources\JCore\StaticString.h" />
     <ClInclude Include="..\Sources\JCore\Comparator.h" />
     <ClInclude Include="..\Sources\JCore\Ascii.h" />
     <ClInclude Include="..\Sources\JCore\Exception.h" />
-    <ClInclude Include="..\Sources\JCore\SmartPointer.h" />
-    <ClInclude Include="..\Sources\JCore\Allocator.h" />
     <ClInclude Include="..\Sources\JCore\Deletor.h" />
-    <ClInclude Include="..\Sources\JCore\PointerObserver.h" />
     <ClInclude Include="..\Sources\JCore\AutoObject.h" />
     <ClInclude Include="..\Sources\JCore\Container\Collection.h">
       <Filter>Container</Filter>
@@ -124,12 +182,83 @@
     <ClInclude Include="..\Sources\JCore\Container\CollectionStream.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Lock.h" />
-    <ClInclude Include="..\Sources\JCore\LockGuard.h" />
     <ClInclude Include="..\Sources\JCore\Event.h" />
-    <ClInclude Include="..\Sources\JCore\RefCount.h" />
+    <ClInclude Include="..\Sources\JCore\SafeRefCount.h" />
     <ClInclude Include="..\Sources\JCore\Declspec.h" />
     <ClInclude Include="..\Sources\JCore\Define.h" />
     <ClInclude Include="..\Sources\JCore\Assert.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\String.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\StringUtil.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Allocator\DefaultAllocator.h">
+      <Filter>Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\Console.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\StaticString.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\EventLock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\ILock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\IRwLock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\LockGuard.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\NormalLock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\RecursiveLock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\NormalRwLock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\Semaphore.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\SpinLock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\ConsoleColor.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\UnusedLock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\TypeCast.h" />
+    <ClInclude Include="..\Sources\JCore\Encoding\CodePage.h">
+      <Filter>Encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\ObserverPtr.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\SmartPtr.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\ManualResetEvent.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Wrapper\StdLib.h">
+      <Filter>Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Wrapper\WinApi.h">
+      <Filter>Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\Atomic.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\Thread.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

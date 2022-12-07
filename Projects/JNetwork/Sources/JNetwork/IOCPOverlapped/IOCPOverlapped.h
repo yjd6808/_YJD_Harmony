@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -27,10 +27,10 @@ public:
 	IOCPOverlapped(IOCP* iocp, Type type);
 	virtual ~IOCPOverlapped() = default;
 public:
-	virtual void Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) = 0;
+	virtual void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) = 0;
 	virtual void Release();
 	Type GetType() const { return m_eType; }
-	bool IsFailed(SOCKET hSocket, BOOL result, DWORD numberOfBytesTransffered);
+	bool IsFailed(SOCKET hSocket, BOOL result, Int32UL numberOfBytesTransffered);
 protected:
 	Type m_eType;
 	IOCP* m_pIocp;

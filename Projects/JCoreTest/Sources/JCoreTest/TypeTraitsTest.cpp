@@ -1,16 +1,16 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	PCH °â.. JCore Å×½ºÆ®ÀÔ´Ï´Ù.
+	ì‘ì„±ì : ìœ¤ì •ë„
+	PCH ê²¸.. JCore í…ŒìŠ¤íŠ¸ì…ë‹ˆë‹¤.
 */
 
 #include <JCoreTest/CoreTest.h>
-#include <JCoreTest/TestUtil/Object.h>
+
 
 #include <JCore/TypeTraits.h>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 #include <JCore/Core.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_TypeTraitsTest == ON
@@ -19,7 +19,7 @@ TEST(TypeTraitsTest, Type) {
 	EXPECT_TRUE(Type<int&>() == "int&");
 	EXPECT_TRUE(Type<const int&>() == "const int&");
 	EXPECT_TRUE(Type<int&&>() == "int&&");
-	// º¯¼ö¸íÀ§¿¡ ¸¶¿ì½º ¿Ã·Á¼­ È®ÀÎ ¤¡
+	// ë³€ìˆ˜ëª…ìœ„ì— ë§ˆìš°ìŠ¤ ì˜¬ë ¤ì„œ í™•ì¸ ã„±
 }
 
 TEST(TypeTraitsTest, CTType) {
@@ -37,11 +37,11 @@ TEST(TypeTraitsTest, Type_v) {
 }
 
 TEST(TypeTraitsTest, IsSameType_v) {
-	EXPECT_TRUE((IsSameType_v<int, int>));	// ÀÏÄ¡
+	EXPECT_TRUE((IsSameType_v<int, int>));	// ì¼ì¹˜
 	EXPECT_TRUE((IsSameType_v<int, int*>) == false);
 	EXPECT_TRUE((IsSameType_v<int*, int>) == false);
 	EXPECT_TRUE((IsSameType_v<int, char>) == false);
-	EXPECT_TRUE((IsSameType_v<char*, char*>));	// ÀÏÄ¡
+	EXPECT_TRUE((IsSameType_v<char*, char*>));	// ì¼ì¹˜
 	EXPECT_TRUE((IsSameType_v<char*, char**>) == false);
 	EXPECT_TRUE((IsSameType_v<const char&, const char>) == false);
 }
@@ -108,20 +108,20 @@ TEST(TypeTraitsTest, DynamicCastable_v) {
 	EXPECT_TRUE((DynamicCastable_v<SuperModel&, SuperModel&>));
 	EXPECT_TRUE((DynamicCastable_v<SuperModel&, Model&>));
 
-	// ºÎ¸ğ ÀÚ½Ä°ü°è°¡ ¾Æ´Ñ °æ¿ì¿¡´Â ¾ÈµÊ
+	// ë¶€ëª¨ ìì‹ê´€ê³„ê°€ ì•„ë‹Œ ê²½ìš°ì—ëŠ” ì•ˆë¨
 	EXPECT_FALSE((DynamicCastable_v<NoobModel*, SuperModel*>));
 	EXPECT_FALSE((DynamicCastable_v<Model*, NoobModel*>));
 	EXPECT_FALSE((DynamicCastable_v<NoobModel*, Model*>));
-	EXPECT_TRUE((DynamicCastable_v<NoobModel*, NoobModel*>));	// ¼­·Î °°Àº Å¸ÀÔÀÌ¹Ç·Î OK
+	EXPECT_TRUE((DynamicCastable_v<NoobModel*, NoobModel*>));	// ì„œë¡œ ê°™ì€ íƒ€ì…ì´ë¯€ë¡œ OK
 	
 
-	// °ª Å¸ÀÔÀº ¹«Á¶°Ç ½ÇÆĞ
+	// ê°’ íƒ€ì…ì€ ë¬´ì¡°ê±´ ì‹¤íŒ¨
 	EXPECT_FALSE((DynamicCastable_v<Model, SuperModel>));
 	EXPECT_FALSE((DynamicCastable_v<Model, Model>));
 	EXPECT_FALSE((DynamicCastable_v<SuperModel, SuperModel>));
 	EXPECT_FALSE((DynamicCastable_v<SuperModel, Model>));
 
-	// ¿ø½ÃÅ¸ÀÔÀº µ¿ÀÏÇÑ Å¸ÀÔ³¢¸®¸¸ Çã¿ë / ±×·¡µµ °ªÅ¸ÀÔÀº ¾È´ï
+	// ì›ì‹œíƒ€ì…ì€ ë™ì¼í•œ íƒ€ì…ë¼ë¦¬ë§Œ í—ˆìš© / ê·¸ë˜ë„ ê°’íƒ€ì…ì€ ì•ˆëŒ
 	EXPECT_FALSE((DynamicCastable_v<int, int>));
 	EXPECT_TRUE((DynamicCastable_v<int*, int*>));
 	EXPECT_TRUE((DynamicCastable_v<int&, int&>));

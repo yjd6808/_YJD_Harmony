@@ -1,8 +1,8 @@
 /**
- *  ÀÛ¼ºÀÚ : À±Á¤µµ
- *	µ¿±âÈ­µÈ ¾²·¹µå¿¡¼­ ÆÐÅ¶ ¼ö½Å
- *  °³¹ßÇÏ´Â ¸ðµç ¾ÀÀº ÀÌ³à¼®À» »ó¼Ó¹Þµµ·Ï ÇÕ½Ã´Ù.
- *	¼ö½ÅÇÑ ÆÐÅ¶À» Ã³¸®ÇØ¾ßÇÏ´Ï±î..
+ *  ìž‘ì„±ìž : ìœ¤ì •ë„
+ *	ë™ê¸°í™”ëœ ì“°ë ˆë“œì—ì„œ íŒ¨í‚· ìˆ˜ì‹ 
+ *  ê°œë°œí•˜ëŠ” ëª¨ë“  ì”¬ì€ ì´ë…€ì„ì„ ìƒì†ë°›ë„ë¡ í•©ì‹œë‹¤.
+ *	ìˆ˜ì‹ í•œ íŒ¨í‚·ì„ ì²˜ë¦¬í•´ì•¼í•˜ë‹ˆê¹Œ..
  */
 
 #include <TF/Scenes/SynchronizedScene.h>
@@ -39,7 +39,7 @@ bool SynchronizedScene::init() {
 	return Scene::init();
 }
 
-// ESC ´©¸£¸é Á¤º¸µé ´Ù¾çÇÏ°Ô º¸¿©ÁÖ°Ô ÇÔ ¹úÅØ½º Á¤º¸ º¸¿©ÁÖµµ·Ï ÇÔ
+// ESC ëˆ„ë¥´ë©´ ì •ë³´ë“¤ ë‹¤ì–‘í•˜ê²Œ ë³´ì—¬ì£¼ê²Œ í•¨ ë²Œí…ìŠ¤ ì •ë³´ ë³´ì—¬ì£¼ë„ë¡ í•¨
 void SynchronizedScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 	switch (keyCode) {
 	case EventKeyboard::KeyCode::KEY_ESCAPE:
@@ -51,7 +51,7 @@ void SynchronizedScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* even
 }
 
 
-// 0.5ÃÊ¸¶´Ù ÇÎÀü¼Û
+// 0.5ì´ˆë§ˆë‹¤ í•‘ì „ì†¡
 void SynchronizedScene::update(float delta) {
 	m_fPingDelay += delta;
 
@@ -68,7 +68,7 @@ void SynchronizedScene::update(float delta) {
 
 /* =================================================================================
  *
- *                             Åë½Å ÆÐÅ¶ Ã³¸®
+ *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬
  *
  * ================================================================================*/
 
@@ -103,7 +103,7 @@ void SynchronizedScene::CmdTcpRTTAck(ICommand* cmd) {
 	}
 }
 
-// false ¹ÝÈ¯ÇÏ´Â°æ¿ì Derived ¾À¿¡¼­ Ã³¸®¸¦ ±ÝÇÔ
+// false ë°˜í™˜í•˜ëŠ”ê²½ìš° Derived ì”¬ì—ì„œ ì²˜ë¦¬ë¥¼ ê¸ˆí•¨
 bool SynchronizedScene::SynchronizedOnReceived(ICommand* cmd) {
 	switch (cmd->GetCommand()) {
 	case SERVER_MESSAGE_SYN: 

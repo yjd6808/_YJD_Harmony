@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 // ReSharper disable CppClangTidyCppcoreguidelinesProTypeStaticCastDowncast
@@ -12,27 +12,26 @@
 using namespace JCore;
 
 namespace JNetwork {
-	IOCPWorker::IOCPWorker(IOCP* iocp) : 
-		Worker(), 
-		m_pIocp(iocp) {
+	IOCPWorker::IOCPWorker(IOCP* iocp)  : Worker()
+                                        ,  m_pIocp(iocp) {
 	}
 
 	IOCPWorker::~IOCPWorker() = default;
 
 	void IOCPWorker::Run(void* param) {
-		// std::thread ¸â¹ö ÇÔ¼ö·Î ½ÇÇàÇÏ´Â ¹ı
-		// @Âü°í : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
+		// std::thread ë©¤ë²„ í•¨ìˆ˜ë¡œ ì‹¤í–‰í•˜ëŠ” ë²•
+		// @ì°¸ê³  : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
 
 		m_eState = State::Running;
 		m_Thread = std::thread{ [this, param]() { WorkerThread(param); }};
 	}
 
-	void IOCPWorker::JoinWait(HANDLE waitHandle) {
+	void IOCPWorker::JoinWait(WinHandle waitHandle) {
 		IOCPPostOrder* pPostOrder = new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
 		const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
 
-		if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {  // ¾î´À ¾²·¹µå°¡ ƒÆ¾î³¯Áö ¸ğ¸£±â ¶§¹®¿¡ ¿©±â¼­ joinÀ» ¼öÇàÇÏ¸é ¾ÈµÊ
-			DebugAssert(false, "IOCPWorker::Pause() Failed");
+		if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {  // ì–´ëŠ ì“°ë ˆë“œê°€ êº ì–´ë‚ ì§€ ëª¨ë¥´ê¸° ë•Œë¬¸ì— ì—¬ê¸°ì„œ joinì„ ìˆ˜í–‰í•˜ë©´ ì•ˆë¨
+			DebugAssertMessage(false, "IOCPWorker::Pause() Failed");
 			pPostOrder->Release();
 		}
 	}
@@ -43,14 +42,14 @@ namespace JNetwork {
 		m_eState = State::Joined;
 	}
 
-	void IOCPWorker::Pause(HANDLE waitHandle) {
-		// ÁÖÀÇ!> ÀÌ ¿öÄ¿ ¾²·¹µå°¡ Pause µÈ°Ô ¾Æ´Ï¶ó IOCP¿¡¼­ °ü¸®ÁßÀÎ ¾²·¹µåµé ÁßÇÏ³ª°¡ PauseµÊ
+	void IOCPWorker::Pause(WinHandle waitHandle) {
+		// ì£¼ì˜!> ì´ ì›Œì»¤ ì“°ë ˆë“œê°€ Pause ëœê²Œ ì•„ë‹ˆë¼ IOCPì—ì„œ ê´€ë¦¬ì¤‘ì¸ ì“°ë ˆë“œë“¤ ì¤‘í•˜ë‚˜ê°€ Pauseë¨
 		IOCPPostOrder* pPostOrder = new IOCPPostOrder{ IOCP_POST_ORDER_PAUSE, waitHandle };
 		const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
 		ResetEvent(m_hPauseEvent);
 
 		if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {
-			DebugAssert(false, "IOCPWorker::Pause() Failed");
+			DebugAssertMessage(false, "IOCPWorker::Pause() Failed");
 			pPostOrder->Release();
 		}
 	}
@@ -59,26 +58,26 @@ namespace JNetwork {
 		SetEvent(m_hPauseEvent);
 	}
 
-	// ¹®ÀçÁ¡!
-	// IOCPAcceptOverlapeed µ¿ÀûÇÒ´çÀ» ÇØÁ¦ ÇØÁÖµµ·Ï ÇÏ´Â ·ÎÁ÷ÀÌ ÇÊ¿äÇÏ´Ù.
-	// Áö±İ Join() ÇÔ¼ö È£Ãâ ÈÄ PostQueue·Î ¾²·¹µå¿¡ ½ÅÈ£¸¦ ÁÖ¸é ¹İº¹¹®À» ³ª¿Í¹ö·Á¼­ ³²Àº ¿À¹ö·¦ÀÌ Ã³¸® ¾ÈµÇ¼­ ÇØÁ¦ ºÒ°¡´ÉÇÏ°ÔµÈ´Ù.
-	// --> ¼­¹ö Á¾·á½Ã¸¦ Á¦¿ÜÇÏ°í´Â Join() ÇÔ¼ö È£ÃâÀ» ÇÏ¸é¾ÈµÊ
+	// ë¬¸ì¬ì !
+	// IOCPAcceptOverlapeed ë™ì í• ë‹¹ì„ í•´ì œ í•´ì£¼ë„ë¡ í•˜ëŠ” ë¡œì§ì´ í•„ìš”í•˜ë‹¤.
+	// ì§€ê¸ˆ Join() í•¨ìˆ˜ í˜¸ì¶œ í›„ PostQueueë¡œ ì“°ë ˆë“œì— ì‹ í˜¸ë¥¼ ì£¼ë©´ ë°˜ë³µë¬¸ì„ ë‚˜ì™€ë²„ë ¤ì„œ ë‚¨ì€ ì˜¤ë²„ë©ì´ ì²˜ë¦¬ ì•ˆë˜ì„œ í•´ì œ ë¶ˆê°€ëŠ¥í•˜ê²Œëœë‹¤.
+	// --> ì„œë²„ ì¢…ë£Œì‹œë¥¼ ì œì™¸í•˜ê³ ëŠ” Join() í•¨ìˆ˜ í˜¸ì¶œì„ í•˜ë©´ì•ˆë¨
 
 	void IOCPWorker::WorkerThread(void* param) {
-		Winsock::Message("IOCPWorker ¾²·¹µå°¡ ½ÇÇàµÇ¾ú½À´Ï´Ù. (%d)", std::this_thread::get_id());
+		// "IOCPWorker ì“°ë ˆë“œê°€ ì‹¤í–‰ë˜ì—ˆìŠµë‹ˆë‹¤. (%d)", std::this_thread::get_id()
 
 		for (;;) {
-			DWORD numberOfBytesTransffered;
+			Int32UL numberOfBytesTransffered;
 			ULONG_PTR completionKey = NULL;
 			OVERLAPPED* pOverlapped = nullptr;
 
 			const BOOL bResult = m_pIocp->GetStatus(&numberOfBytesTransffered, &completionKey, (LPOVERLAPPED*)&pOverlapped);
 
 			IOCPPostOrder* pIOCPPostOrder = reinterpret_cast<IOCPPostOrder*>(completionKey);
-			IOCPOverlapped* pIOCPOverlapped = static_cast<IOCPOverlapped*>(pOverlapped);		// dynamic_cast¸¦ ÇÏ°í½ÍÁö¸¸ OVERLAPPED´Â °¡»ó ±¸Á¶Ã¼°¡ ¾Æ´Ô
+			IOCPOverlapped* pIOCPOverlapped = static_cast<IOCPOverlapped*>(pOverlapped);		// dynamic_castë¥¼ í•˜ê³ ì‹¶ì§€ë§Œ OVERLAPPEDëŠ” ê°€ìƒ êµ¬ì¡°ì²´ê°€ ì•„ë‹˜
 
 			if (pIOCPOverlapped) {
-				// °¢ ¿À¹ö·¦ Å¸ÀÔ¿¡ ¸Â°Ô ÀÛ¾÷ Ã³¸®
+				// ê° ì˜¤ë²„ë© íƒ€ì…ì— ë§ê²Œ ì‘ì—… ì²˜ë¦¬
 				pIOCPOverlapped->Process(bResult, numberOfBytesTransffered, pIOCPPostOrder);
 				pIOCPOverlapped->Release();
 				continue;
@@ -86,15 +85,15 @@ namespace JNetwork {
 
 			if (numberOfBytesTransffered == 0 && completionKey != NULL) {
 
-				// ½ÇÁ¦ ·ÎÁ÷Ã³¸®´Â IOCPPostOrderÀÇ Process() ÇÔ¼ö¿¡¼­ ÁøÇà
-				// pIOCPPostOrder ¸Ş¸ğ¸® ÇØÁ¦´Â Process ³»ºÎ¿¡¼­ Ã³¸®
+				// ì‹¤ì œ ë¡œì§ì²˜ë¦¬ëŠ” IOCPPostOrderì˜ Process() í•¨ìˆ˜ì—ì„œ ì§„í–‰
+				// pIOCPPostOrder ë©”ëª¨ë¦¬ í•´ì œëŠ” Process ë‚´ë¶€ì—ì„œ ì²˜ë¦¬
 				switch (pIOCPPostOrder->Process(this)) {
 				case IOCP_POST_ORDER_TERMINATE:
 					goto THREAD_END;
 				case IOCP_POST_ORDER_PAUSE:
 					continue;
 				case IOCP_POST_ORDER_ERROR:
-					DebugAssert(false, "... WTF?");
+					DebugAssertMessage(false, "... WTF?");
 				}
 			}
 
@@ -102,7 +101,7 @@ namespace JNetwork {
 		}
 
 	THREAD_END:
-		Winsock::Message("IOCPWorker ¾²·¹µå°¡ Á¾·áµÇ¾ú½À´Ï´Ù. (%d)", std::this_thread::get_id());
+		// "IOCPWorker ì“°ë ˆë“œê°€ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤. (%d)", std::this_thread::get_id()
 		m_eState = State::JoinWait;
 	}
 }

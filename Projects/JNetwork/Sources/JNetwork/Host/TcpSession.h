@@ -1,22 +1,25 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	TcpClientÀÇ ºÎ¸ğ Å¬·¡½º
+	ì‘ì„±ì : ìœ¤ì •ë„
+	TcpClientì˜ ë¶€ëª¨ í´ë˜ìŠ¤
 	
-	2°¡Áö ¿ªÇÒÀ» ¼öÇàÇÑ´Ù.
-	1. ¼­¹öÃø¿¡¼­ ¿¬°áÀ» ¼ö¶ôµÈ Å¬¶óÀÌ¾ğÆ®ÀÇ ¿ªÇÒ ¼öÇàÇÑ´Ù. - TcpSession
-	2. Å¬¶óÀÌ¾ğÆ®ÀÇ °øÅë±â´ÉÀ» ¼öÇàÇÑ´Ù.					 - TcpClient
+	2ê°€ì§€ ì—­í• ì„ ìˆ˜í–‰í•œë‹¤.
+	1. ì„œë²„ì¸¡ì—ì„œ ì—°ê²°ì„ ìˆ˜ë½ëœ í´ë¼ì´ì–¸íŠ¸ì˜ ì—­í•  ìˆ˜í–‰í•œë‹¤. - TcpSession
+	2. í´ë¼ì´ì–¸íŠ¸ì˜ ê³µí†µê¸°ëŠ¥ì„ ìˆ˜í–‰í•œë‹¤.					 - TcpClient
 
-	¸â¹ö ÇÔ¼ö, º¯¼ö´Â ¸ğµÎ protected·Î µÎ¾ú´Ù.
-	friend class·Î Çã¿ëµÈ ³à¼­µé¸¸ Á¢±ÙÇÏ¿© Á¦¾îÇÒ ¼ö ÀÖµµ·ÏÇÔ
+	ë©¤ë²„ í•¨ìˆ˜, ë³€ìˆ˜ëŠ” ëª¨ë‘ protectedë¡œ ë‘ì—ˆë‹¤.
+	friend classë¡œ í—ˆìš©ëœ ë…€ì„œë“¤ë§Œ ì ‘ê·¼í•˜ì—¬ ì œì–´í•  ìˆ˜ ìˆë„ë¡í•¨
 */
 
 #pragma once
 
+
+#include <JCore/Sync/NormalLock.h>
 #include <JNetwork/Socket.h>
 #include <JNetwork/Packet.h>
 #include <JNetwork/Host/TcpServerEventListener.h>
 #include <JNetwork/IOCP/IOCP.h>
 #include <JNetwork/Buffer.h>
+
 
 
 namespace JNetwork {
@@ -28,10 +31,10 @@ public:
 	{
 		Uninitialized	= 0,
 		Initailized		= 1,
-		AcceptWait		= 2,		// ¼­¹ö¿¡¼­ ¿¬°á ¼ö¶ô ´ë±â
-		ConnectWait		= 2,		// Å¬¶ó¿¡¼­ ¿¬°á ½Ãµµ ´ë±â - ConnectEx¸¦ È°¿ëÇÑ ¿À¹ö·¦ ¿¬°á ½Ãµµ½Ã¿¡ »ç¿ëÇÒ µí?
-		Accepted		= 3,		// ¼­¹ö¿¡¼­ ¿¬°á ¼ö·« ¿Ï·á
-		Connected		= 3,		// Å¬¶ó¿¡¼­ ¿¬°á ¿Ï·á
+		AcceptWait		= 2,		// ì„œë²„ì—ì„œ ì—°ê²° ìˆ˜ë½ ëŒ€ê¸°
+		ConnectWait		= 2,		// í´ë¼ì—ì„œ ì—°ê²° ì‹œë„ ëŒ€ê¸° - ConnectExë¥¼ í™œìš©í•œ ì˜¤ë²„ë© ì—°ê²° ì‹œë„ì‹œì— ì‚¬ìš©í•  ë“¯?
+		Accepted		= 3,		// ì„œë²„ì—ì„œ ì—°ê²° ìˆ˜ëµ ì™„ë£Œ
+		Connected		= 3,		// í´ë¼ì—ì„œ ì—°ê²° ì™„ë£Œ
 		Disconnected	= 4
 	};
 
@@ -43,7 +46,7 @@ public:
 	bool SendAsync(ISendPacket* packet);
 	virtual bool Disconnect();
 	
-	// Ä¿½ºÅÒ Á¤º¸ ÀúÀå ±â´É Ãß°¡
+	// ì»¤ìŠ¤í…€ ì •ë³´ ì €ì¥ ê¸°ëŠ¥ ì¶”ê°€
 	void SetTag(void* ptr) { m_pTag = ptr; }
 
 	template <typename T>
@@ -64,26 +67,26 @@ protected:
 	Socketv4 Socket() const { return m_ClientSocket; }
 
 	virtual bool Initialize();
-	virtual void AcceptWait();												// ¹Ì¸® »ı¼ºµÈ TcpSessionÀÌ AcceptEx¸¦ È£ÃâÇÏ±â Á÷Àü¿¡ È£ÃâµÉ ÇÔ¼ö - ¿¬°á ¼ö¶ô ´ë±â»óÅÂ
-	virtual void ConnectWait() {};											// Å¬¶óÀÌ¾ğÆ®°¡ ¼­¹ö¿Í ¿¬°áÀ» ¿äÃ»½Ã È£ÃâµÉ ÇÔ¼ö			(TcpSession¿¡¼­´Â »ç¿ëÇÏÁö ¾ÊÀ½)
-	virtual bool Accepted(SOCKET listeningSocket, Int32UL receivedBytes);	// ¼­¹ö°¡ ÇØ´ç¼¼¼ÇÀÇ ¿¬°áÀ» ¼ö¶ô½Ã ÃÖÁ¾ÀûÀ¸·Î È£ÃâµÉ ÇÔ¼ö
-	virtual void Connected() {};											// Å¬¶óÀÌ¾ğÆ®°¡ ¼­¹ö¿Í ¿¬°á‰çÀ» ½Ã ÃÖÁ¾ÀûÀ¸·Î È£ÃâµÉ ÇÔ¼ö	(TcpSession¿¡¼­´Â »ç¿ëÇÏÁö ¾ÊÀ½)
-	virtual void Received(Int32UL receivedBytes);							// ¼¼¼Ç ¶Ç´Â Å¬¶óÀÌ¾ğÆ®°¡ µ¥ÀÌÅÍ¸¦ ¼ö½ÅÇßÀ» ¶§ ÃÖÁ¾ÀûÀ¸·Î È£ÃâµÉ ÇÔ¼ö
-	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes);			// ¼¼¼Ç ¶Ç´Â Å¬¶óÀÌ¾ğÆ®°¡ µ¥ÀÌÅÍ¸¦ ¼Û½ÅÇßÀ» ¶§ ÃÖÁ¾ÀûÀ¸·Î È£ÃâµÉ ÇÔ¼ö
+	virtual void AcceptWait();												// ë¯¸ë¦¬ ìƒì„±ëœ TcpSessionì´ AcceptExë¥¼ í˜¸ì¶œí•˜ê¸° ì§ì „ì— í˜¸ì¶œë  í•¨ìˆ˜ - ì—°ê²° ìˆ˜ë½ ëŒ€ê¸°ìƒíƒœ
+	virtual void ConnectWait() {};											// í´ë¼ì´ì–¸íŠ¸ê°€ ì„œë²„ì™€ ì—°ê²°ì„ ìš”ì²­ì‹œ í˜¸ì¶œë  í•¨ìˆ˜			(TcpSessionì—ì„œëŠ” ì‚¬ìš©í•˜ì§€ ì•ŠìŒ)
+	virtual bool Accepted(SOCKET listeningSocket, Int32UL receivedBytes);	// ì„œë²„ê°€ í•´ë‹¹ì„¸ì…˜ì˜ ì—°ê²°ì„ ìˆ˜ë½ì‹œ ìµœì¢…ì ìœ¼ë¡œ í˜¸ì¶œë  í•¨ìˆ˜
+	virtual void Connected() {};											// í´ë¼ì´ì–¸íŠ¸ê°€ ì„œë²„ì™€ ì—°ê²°ë¬ì„ ì‹œ ìµœì¢…ì ìœ¼ë¡œ í˜¸ì¶œë  í•¨ìˆ˜	(TcpSessionì—ì„œëŠ” ì‚¬ìš©í•˜ì§€ ì•ŠìŒ)
+	virtual void Received(Int32UL receivedBytes);							// ì„¸ì…˜ ë˜ëŠ” í´ë¼ì´ì–¸íŠ¸ê°€ ë°ì´í„°ë¥¼ ìˆ˜ì‹ í–ˆì„ ë•Œ ìµœì¢…ì ìœ¼ë¡œ í˜¸ì¶œë  í•¨ìˆ˜
+	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes);			// ì„¸ì…˜ ë˜ëŠ” í´ë¼ì´ì–¸íŠ¸ê°€ ë°ì´í„°ë¥¼ ì†¡ì‹ í–ˆì„ ë•Œ ìµœì¢…ì ìœ¼ë¡œ í˜¸ì¶œë  í•¨ìˆ˜
 
-	virtual void NotifyCommand(ICommand* cmd);								// ¼¼¼Ç ÀÔÀå¿¡¼­´Â ServerEventListener¿¡ Ä¿¸Çµå¸¦ Àü´ŞÇÏ°í Å¬¶óÀÌ¾ğÆ® ÀÔÀå¿¡¼­´Â ClientEventListener¿¡ Ä¿¸Çµå¸¦ Àü´ŞÇÏµµ·Ï ÇÑ´Ù.
+	virtual void NotifyCommand(ICommand* cmd);								// ì„¸ì…˜ ì…ì¥ì—ì„œëŠ” ServerEventListenerì— ì»¤ë§¨ë“œë¥¼ ì „ë‹¬í•˜ê³  í´ë¼ì´ì–¸íŠ¸ ì…ì¥ì—ì„œëŠ” ClientEventListenerì— ì»¤ë§¨ë“œë¥¼ ì „ë‹¬í•˜ë„ë¡ í•œë‹¤.
 private:
-	TcpServerEventListener* m_pServerEventListener;							// TcpClient ÀÔÀå¿¡¼­´Â nullptr·Î »ç¿ëÇÏÁö ¾ÊÀ½ / ±×·¡¼­ privateÀ¸·Î µÒ
+	TcpServerEventListener* m_pServerEventListener;							// TcpClient ì…ì¥ì—ì„œëŠ” nullptrë¡œ ì‚¬ìš©í•˜ì§€ ì•ŠìŒ / ê·¸ë˜ì„œ privateìœ¼ë¡œ ë‘ 
 protected:
 	State m_eState;
 	SessionBuffer m_ReceiveBuffer;
 	Socketv4 m_ClientSocket;
-	IOCP* m_pIocp;															// TcpClient ÀÔÀå¿¡¼­´Â »ı¼º/¼Ò¸êÀ» ÇØÁà¾ßÇÏ´Â °´Ã¼ÀÌÁö¸¸ TcpSession ÀÔÀå¿¡¼­´Â TcpServerÀÇ IOCP¸¦ ´Ü¼øÈ÷ ÂüÁ¶ÇÏ´Â ¿ëµµÀÌ´Ù.
+	IOCP* m_pIocp;															// TcpClient ì…ì¥ì—ì„œëŠ” ìƒì„±/ì†Œë©¸ì„ í•´ì¤˜ì•¼í•˜ëŠ” ê°ì²´ì´ì§€ë§Œ TcpSession ì…ì¥ì—ì„œëŠ” TcpServerì˜ IOCPë¥¼ ë‹¨ìˆœíˆ ì°¸ì¡°í•˜ëŠ” ìš©ë„ì´ë‹¤.
 	IPv4EndPoint m_RemoteEndPoint;
 	IPv4EndPoint m_LocalEndPoint;
 	void* m_pTag{};
 	bool m_bReuseSession;
-	JCore::CriticalSectionMutex m_Lock;
+	JCore::NormalLock m_Lock;
 	
 	friend class TcpServer;
 	friend class TcpSessionContainer;

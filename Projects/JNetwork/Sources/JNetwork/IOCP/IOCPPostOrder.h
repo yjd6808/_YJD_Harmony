@@ -1,14 +1,13 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 
-	IOCP ¿öÄ¿¾²·¹µå¿¡ PostQueuedCompletionStatusÀÇ CompletionKey°ªÀ¸·Î Àü´ŞÇØÁÙ °´Ã¼
-	Pause Resume Join°ú °°Àº ¸í·ÉÀ» º¸³¾ ¶§ »ç¿ëÇÔ
+	IOCP ì›Œì»¤ì“°ë ˆë“œì— PostQueuedCompletionStatusì˜ CompletionKeyê°’ìœ¼ë¡œ ì „ë‹¬í•´ì¤„ ê°ì²´
+	Pause Resume Joinê³¼ ê°™ì€ ëª…ë ¹ì„ ë³´ë‚¼ ë•Œ ì‚¬ìš©í•¨
 */
 
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <JCore/Type.h>
 
 namespace JNetwork {
 
@@ -16,10 +15,10 @@ class IOCPWorker;
 struct IOCPPostOrder
 {
 	int Order = 0;
-	HANDLE Handle = nullptr;
+	WinHandle Handle = nullptr;
 
-	// Order°ª ±×´ë·Î ¹İÈ¯ÇØÁÜ
-	// ¼¼ºÎÀûÀÎ Ã³¸®¸¦ ÁøÇàÇÏ°í ÀÌÈÄ Worker¾²·¹µå¿¡¼­ ÀÌ ¹İÈ¯°ªÀ» È®ÀÎÇÏ¿© °è¼Ó ÁøÇàÇÒÁö ¾Æ´Ï¸é Á¾·áÇÒÁö µîÀÇ ¿©ºÎ¸¦ °áÁ¤ÇÏµµ·Ï ÇÑ´Ù.
+	// Orderê°’ ê·¸ëŒ€ë¡œ ë°˜í™˜í•´ì¤Œ
+	// ì„¸ë¶€ì ì¸ ì²˜ë¦¬ë¥¼ ì§„í–‰í•˜ê³  ì´í›„ Workerì“°ë ˆë“œì—ì„œ ì´ ë°˜í™˜ê°’ì„ í™•ì¸í•˜ì—¬ ê³„ì† ì§„í–‰í• ì§€ ì•„ë‹ˆë©´ ì¢…ë£Œí• ì§€ ë“±ì˜ ì—¬ë¶€ë¥¼ ê²°ì •í•˜ë„ë¡ í•œë‹¤.
 	int Process(IOCPWorker* worker);	
 	void Release() const { delete this; }
 };

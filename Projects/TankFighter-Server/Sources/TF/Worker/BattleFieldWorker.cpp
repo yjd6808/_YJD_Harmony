@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
@@ -11,7 +11,7 @@
 
 #include <TF/Worker/BattleFieldWorker.h>
 #include <TF/Parser/SendFn.h>
-#include <TF/Util/Console.h>
+#include <JCore/Utils/Console.h>
 #include <TF/Game/World.h>
 #include <TF/Parser/QueryFn.h>
 #include <TF/ServerConfiguration.h>
@@ -25,7 +25,7 @@ using namespace JCore;
 using namespace JNetwork;
 
 Signal* BattleFieldWorker::DequeueSignal() {
-	CriticalSectionLockGuard guard(m_SignalQueueLock);
+	NormalLockGuard guard(m_SignalQueueLock);
 	if (!m_SignalQueue.IsEmpty()) {
 		Signal* pSignal = m_SignalQueue.Front();
 		m_SignalQueue.Dequeue();
@@ -39,33 +39,33 @@ Signal* BattleFieldWorker::DequeueSignal() {
 BattleFieldWorker::~BattleFieldWorker() = default;
 
 void BattleFieldWorker::EnqueueSignal(Signal* signal) {
-	CriticalSectionLockGuard guard(m_SignalQueueLock);
+	NormalLockGuard guard(m_SignalQueueLock);
 	m_SignalQueue.Enqueue(signal);
 }
 
 void BattleFieldWorker::AddBattleFieldRoom(Room* room) {
-	CriticalSectionLockGuard guard(m_BattleFieldRoomMapLock);
+	NormalLockGuard guard(m_BattleFieldRoomMapLock);
 
 	if (m_BattleFieldRoomMap.Insert(room->GetRoomUID(), room) == false) {
-		DebugAssert(false, "ÀÌ¹Ì ¹èÆ²ÇÊµå ¸ñ·Ï¿¡ ¹æÀÌ ÀÖ½À´Ï´Ù.");
+		DebugAssertMessage(false, "ì´ë¯¸ ë°°í‹€í•„ë“œ ëª©ë¡ì— ë°©ì´ ìˆìŠµë‹ˆë‹¤.");
 	}
 }
 
 bool BattleFieldWorker::RemoveBattleFieldRoom(Room* room) {
-	CriticalSectionLockGuard guard(m_BattleFieldRoomMapLock);
+	NormalLockGuard guard(m_BattleFieldRoomMapLock);
 
 	if (m_BattleFieldRoomMap.Remove(room->GetRoomUID())) {
 		return true;
 	}
 
-	DebugAssert(false, "¹èÆ²ÇÊµå¸¦ ÁøÇàÁßÀÎ ¹æÀÌ ¾Æ´Õ´Ï´Ù.");
+	DebugAssertMessage(false, "ë°°í‹€í•„ë“œë¥¼ ì§„í–‰ì¤‘ì¸ ë°©ì´ ì•„ë‹™ë‹ˆë‹¤.");
 	return false;
 }
 
 
 void BattleFieldWorker::Run() {
-	// std::thread ¸â¹ö ÇÔ¼ö·Î ½ÇÇàÇÏ´Â ¹ı
-	// @Âü°í : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
+	// std::thread ë©¤ë²„ í•¨ìˆ˜ë¡œ ì‹¤í–‰í•˜ëŠ” ë²•
+	// @ì°¸ê³  : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
 
 	m_Thread = std::thread{ [this] { WorkerThread(); } };
 }
@@ -76,12 +76,12 @@ void BattleFieldWorker::Join() {
 }
 
 void BattleFieldWorker::WorkerThread()  {
-	Console::WriteLine("BattleFieldWorker ¾²·¹µå°¡ ½ÇÇàµÇ¾ú½À´Ï´Ù. (%d)", std::this_thread::get_id());
+	SafeConsole::WriteLine("BattleFieldWorker ì“°ë ˆë“œê°€ ì‹¤í–‰ë˜ì—ˆìŠµë‹ˆë‹¤. (%d)", std::this_thread::get_id());
 
 	for (;;) {
 		DateTime start = DateTime::Now();
 
-		// Å¥¿¡ ½×ÀÎ ½Ã±×³ÎÀ» ¸ğµÎ ÁøÇàÇÒ¶§±îÁö ±â´Ş
+		// íì— ìŒ“ì¸ ì‹œê·¸ë„ì„ ëª¨ë‘ ì§„í–‰í• ë•Œê¹Œì§€ ê¸°ë‹¬
 		for (;;) {
 			Signal* pSignal = this->DequeueSignal();
 
@@ -92,20 +92,20 @@ void BattleFieldWorker::WorkerThread()  {
 			switch (pSignal->GetType()) {
 				case Signal::Type::Stop:	DeleteSafe(pSignal);										goto THREAD_END;
 				case Signal::Type::Packet:	ProcessPacketSignal(dynamic_cast<PacketSignal*>(pSignal));	break;
-				default: DebugAssert(false, "½Ã±×³Î Å¸ÀÔÀ» ¶È¹Ù·Î ÁöÁ¤ÇØÁÖ¼¼¿ä.");							break;
+				default: DebugAssertMessage(false, "ì‹œê·¸ë„ íƒ€ì…ì„ ë˜‘ë°”ë¡œ ì§€ì •í•´ì£¼ì„¸ìš”.");							break;
 			}
 
 			DeleteSafe(pSignal);
 		}
 
-		// ¹èÆ²ÇÊµå¿¡¼­ °ÔÀÓÀÌ ÁøÇàÁßÀÎ ¹æµé¿¡ ´ëÇØ¼­ Æò»ó½Ã ·çÆ¾À» ÁøÇàÇÏµµ·Ï ÇÔ
+		// ë°°í‹€í•„ë“œì—ì„œ ê²Œì„ì´ ì§„í–‰ì¤‘ì¸ ë°©ë“¤ì— ëŒ€í•´ì„œ í‰ìƒì‹œ ë£¨í‹´ì„ ì§„í–‰í•˜ë„ë¡ í•¨
 		ProcessBattleFieldRoutine();
 
-		// ¹èÆ²ÁøÇàÀÌ ¸ğµÎ ³¡³­ ¹æµéÀº ¹èÆ²ÇÊµå ¿öÄ¿¿¡¼­ Á¦°ÅÇØÁØ´Ù.
+		// ë°°í‹€ì§„í–‰ì´ ëª¨ë‘ ëë‚œ ë°©ë“¤ì€ ë°°í‹€í•„ë“œ ì›Œì»¤ì—ì„œ ì œê±°í•´ì¤€ë‹¤.
 		CollectReadyWaitRooms();
 
-		// ÀÛ¾÷ ÁøÇà½Ã°£ÀÌ µô·¹ÀÌº¸´Ù ±ä °æ¿ì¿¡´Â ±×³É Sleep ÇÏÁö ¾Ê°í Áö³ª°¡µµ·Ï ÇÔ
-		const int iJobTime = DateTime::Now().Diff(start).GetTotalMiliSeconds();
+		// ì‘ì—… ì§„í–‰ì‹œê°„ì´ ë”œë ˆì´ë³´ë‹¤ ê¸´ ê²½ìš°ì—ëŠ” ê·¸ëƒ¥ Sleep í•˜ì§€ ì•Šê³  ì§€ë‚˜ê°€ë„ë¡ í•¨
+		const int iJobTime = static_cast<int>(DateTime::Now().Diff(start).GetTotalMiliSeconds());
 		if (iJobTime > m_iDelay)
 			continue;
 
@@ -114,7 +114,7 @@ void BattleFieldWorker::WorkerThread()  {
 
 THREAD_END:
 
-	// ´Ù¸¥ ½Ã±×³ÎÀÌ ÁøÇàµÇ±âÀü¿¡ Stop Signal·Î ³ª¿Â °æ¿ì ³²¾ÆÀÖ´Â °Íµé¿¡ ´ëÇØ¼­ Ã³¸®ÇØÁÖÀÚ.
+	// ë‹¤ë¥¸ ì‹œê·¸ë„ì´ ì§„í–‰ë˜ê¸°ì „ì— Stop Signalë¡œ ë‚˜ì˜¨ ê²½ìš° ë‚¨ì•„ìˆëŠ” ê²ƒë“¤ì— ëŒ€í•´ì„œ ì²˜ë¦¬í•´ì£¼ì.
 	for (;;) {
 		Signal* pSignal = this->DequeueSignal();
 
@@ -125,14 +125,14 @@ THREAD_END:
 		DeleteUnprocessedSignal(pSignal);
 	}
 
-	Console::WriteLine("BattleFieldWorker ¾²·¹µå°¡ Á¾·áµÇ¾ú½À´Ï´Ù. (%d)", std::this_thread::get_id());
+	SafeConsole::WriteLine("BattleFieldWorker ì“°ë ˆë“œê°€ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤. (%d)", std::this_thread::get_id());
 }
 
 
 void BattleFieldWorker::ProcessPacketSignal(PacketSignal* packetSignal) {
 	auto pPacket =  packetSignal->GetPacket();
-	CriticalSectionLockGuard guard(m_BattleFieldRoomMapLock);
-	pPacket->AddRef();	// º£¸®¾î
+	NormalLockGuard guard(m_BattleFieldRoomMapLock);
+	pPacket->AddRef();	// ë² ë¦¬ì–´
 	m_BattleFieldRoomMap.Values().Extension().ForEach([pPacket](Room* room) {
 		room->Broadcast(pPacket);
 	});
@@ -141,7 +141,7 @@ void BattleFieldWorker::ProcessPacketSignal(PacketSignal* packetSignal) {
 
 
 void BattleFieldWorker::ProcessBattleFieldRoutine() {
-	CriticalSectionLockGuard guard(m_BattleFieldRoomMapLock);
+	NormalLockGuard guard(m_BattleFieldRoomMapLock);
 	m_BattleFieldRoomMap.Values().Extension().ForEach([this](Room* room) {
 		this->ProcessBattleFieldRoutineForRoom(room);
 	});
@@ -151,10 +151,10 @@ void BattleFieldWorker::ProcessBattleFieldRoutine() {
 
 
 void BattleFieldWorker::ProcessBattleFieldRoutineForRoom(Room* room) {
-	CriticalSectionLockGuard roomGuard(room->m_RoomLock);
+	NormalLockGuard roomGuard(room->m_RoomLock);
 
 	// =====================================================================================
-	// RoomState °¢°¢¿¡ Ã³¸®ÇØÁà¾ßÇÒ ±â´ÉÀ» ¼öÇàÇÑ´Ù.
+	// RoomState ê°ê°ì— ì²˜ë¦¬í•´ì¤˜ì•¼í•  ê¸°ëŠ¥ì„ ìˆ˜í–‰í•œë‹¤.
 	// =====================================================================================
 	switch (room->m_eRoomState) {
 	case RoomState::PlayWait: {
@@ -173,12 +173,12 @@ void BattleFieldWorker::ProcessBattleFieldRoutineForRoom(Room* room) {
 
 
 	// =====================================================================================
-	// RoomState º°·Î °øÅëÀûÀ¸·Î Ã³¸®ÇØÁà¾ßÇÒ ±â´ÉÀ» ¼öÇàÇÑ´Ù.
+	// RoomState ë³„ë¡œ ê³µí†µì ìœ¼ë¡œ ì²˜ë¦¬í•´ì¤˜ì•¼í•  ê¸°ëŠ¥ì„ ìˆ˜í–‰í•œë‹¤.
 	// =====================================================================================
 
-	// °øÅëÀûÀ¸·Î ÀÏÁ¤ÁÖ±â¸¶´Ù ¹æ À¯Àúµé¿¡°Ô ÇÃ·¹ÀÌ¾î À§Ä¡ Á¤º¸¸¦ ºê·Îµå Ä³½ºÆÃÇØÁØ´Ù.
-	// ¹èÆ²ÇÊµå¿¡ ÁøÀÔÇÑ À¯Àú¸ğµÎ¿¡ ÇØ´çÇÑ´Ù.
-	// µô·¹ÀÌ½Ã¸¶´Ù º¸³»ÁØ´Ù.
+	// ê³µí†µì ìœ¼ë¡œ ì¼ì •ì£¼ê¸°ë§ˆë‹¤ ë°© ìœ ì €ë“¤ì—ê²Œ í”Œë ˆì´ì–´ ìœ„ì¹˜ ì •ë³´ë¥¼ ë¸Œë¡œë“œ ìºìŠ¤íŒ…í•´ì¤€ë‹¤.
+	// ë°°í‹€í•„ë“œì— ì§„ì…í•œ ìœ ì €ëª¨ë‘ì— í•´ë‹¹í•œë‹¤.
+	// ë”œë ˆì´ì‹œë§ˆë‹¤ ë³´ë‚´ì¤€ë‹¤.
 	if (room->UnsafeIsBattleFieldState()) {
 
 		const int iRoomBattleStateUserCount = room->UnsafeGetRoomBattleStateUserCount();
@@ -189,7 +189,7 @@ void BattleFieldWorker::ProcessBattleFieldRoutineForRoom(Room* room) {
 		BattileFieldTankUpdateSyn* pBattileFieldTankUpdateSyn = pLocationPacket->Get<0>();
 		int iIndexer = 0;
 		room->UnsafeForEach([&iIndexer, pBattileFieldTankUpdateSyn](Player* p) {
-			// ¹èÆ²ÇÊµå¿¡ ÀÖ°í ¾ÆÁ÷ »ç¸Á»óÅÂ°¡ ¾Æ´Ñ °æ¿ì
+			// ë°°í‹€í•„ë“œì— ìˆê³  ì•„ì§ ì‚¬ë§ìƒíƒœê°€ ì•„ë‹Œ ê²½ìš°
 			if (p->GetPlayerState() == PlayerState::RoomBattle && !p->IsDeath()) {
 				p->LoadMoveInfo(pBattileFieldTankUpdateSyn->Move[iIndexer++]);
 			}
@@ -205,7 +205,7 @@ void BattleFieldWorker::ProcessBattleFieldRoutineForRoom(Room* room) {
 }
 
 void BattleFieldWorker::CollectReadyWaitRooms() {
-	CriticalSectionLockGuard guard(m_BattleFieldRoomMapLock);
+	NormalLockGuard guard(m_BattleFieldRoomMapLock);
 	m_BattleFieldRoomMap.Values().Extension().ForEach([this](Room* room) {
 		if (!room->IsBattleFieldState()) {
 			this->RemoveBattleFieldRoom(room);
@@ -216,15 +216,15 @@ void BattleFieldWorker::CollectReadyWaitRooms() {
 void BattleFieldWorker::ProcessRoomPlayWaitState(Room* room) {
 	
 	// =====================================================================================
-	// PlaytWait »óÅÂ¿¡¼­ ÁÖ±âÀûÀ¸·Î ÁøÇàÇÒ ÀÌº¥Æ®¸¦ ¿©±â ÀÛ¼º ¤¡
-	// ¡Ø roomÀº ÀÌ¹Ì LockÀÌ µÇ¾îÀÖÀ¸¹Ç·Î ´Ù½Ã Lock ÇÏÁö ¸»°Í
+	// PlaytWait ìƒíƒœì—ì„œ ì£¼ê¸°ì ìœ¼ë¡œ ì§„í–‰í•  ì´ë²¤íŠ¸ë¥¼ ì—¬ê¸° ì‘ì„± ã„±
+	// â€» roomì€ ì´ë¯¸ Lockì´ ë˜ì–´ìˆìœ¼ë¯€ë¡œ ë‹¤ì‹œ Lock í•˜ì§€ ë§ê²ƒ
 	// =====================================================================================
 
 
 
 	// =====================================================================================
-	// PlayWait ½Ã°£ÀÌ ³¡³µÀ» °æ¿ì ÇÑ¹ø¸¸ ÁøÇàÇÒ ÀÌº¥Æ® ¿©±â ÀÛ¼º ¤¡
-	// ¡Ø roomÀº ÀÌ¹Ì LockÀÌ µÇ¾îÀÖÀ¸¹Ç·Î ´Ù½Ã Lock ÇÏÁö ¸»°Í
+	// PlayWait ì‹œê°„ì´ ëë‚¬ì„ ê²½ìš° í•œë²ˆë§Œ ì§„í–‰í•  ì´ë²¤íŠ¸ ì—¬ê¸° ì‘ì„± ã„±
+	// â€» roomì€ ì´ë¯¸ Lockì´ ë˜ì–´ìˆìœ¼ë¯€ë¡œ ë‹¤ì‹œ Lock í•˜ì§€ ë§ê²ƒ
 	// =====================================================================================
 
 	if (room->m_iTimerTime <= 0) {
@@ -240,12 +240,12 @@ void BattleFieldWorker::ProcessRoomPlayWaitState(Room* room) {
 
 void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 	// =====================================================================================
-	// Playing »óÅÂ¿¡¼­ ÁÖ±âÀûÀ¸·Î ÁøÇàÇÒ ÀÌº¥Æ®¸¦ ¿©±â ÀÛ¼º ¤¡
-	// ¡Ø roomÀº ÀÌ¹Ì LockÀÌ µÇ¾îÀÖÀ¸¹Ç·Î ´Ù½Ã Lock ÇÏÁö ¸»°Í
+	// Playing ìƒíƒœì—ì„œ ì£¼ê¸°ì ìœ¼ë¡œ ì§„í–‰í•  ì´ë²¤íŠ¸ë¥¼ ì—¬ê¸° ì‘ì„± ã„±
+	// â€» roomì€ ì´ë¯¸ Lockì´ ë˜ì–´ìˆìœ¼ë¯€ë¡œ ë‹¤ì‹œ Lock í•˜ì§€ ë§ê²ƒ
 	// =====================================================================================
 
-	// °ÔÀÓÀÌ ÁøÇàÁßÀÎ µ¿¾È¿¡¸¸ ÀüÀû °»½ÅÀ» ÀÏÁ¤ ÁÖ±â¸¶´Ù ÇØÁØ´Ù.
-	// µô·¹ÀÌ 4¹ø ¸¶´Ù ÇÑ¹ø¾¿ º¸³»ÁØ´Ù. (4:1)
+	// ê²Œì„ì´ ì§„í–‰ì¤‘ì¸ ë™ì•ˆì—ë§Œ ì „ì  ê°±ì‹ ì„ ì¼ì • ì£¼ê¸°ë§ˆë‹¤ í•´ì¤€ë‹¤.
+	// ë”œë ˆì´ 4ë²ˆ ë§ˆë‹¤ í•œë²ˆì”© ë³´ë‚´ì¤€ë‹¤. (4:1)
 	if (m_iStatisticsUpdateDelayCount >= BATTLE_FIELD_STATISTICS_UPDATE_DELAY) {
 		const auto pBattleStatisticsPacket = new StaticPacket<BattleFieldStatisticsUpdateSyn>();
 		BattleFieldStatisticsUpdateSyn* pBattleFieldStatisticsUpdateSyn = pBattleStatisticsPacket->Get<0>();
@@ -262,8 +262,8 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 
 
 	room->UnsafeForEach([this, room](Player* p) {
-		// °ÔÀÓ ÇÃ·¹ÀÌÁß¿¡ Á×Àº °æ¿ì ºÎÈ° ºÎÈ° ½Ã°£À»¾÷µ¥ÀÌÆ® ÇØÁØ´Ù.
-		// ±×¸®°í ºÎÈ°½Ã°£ÀÌ ³¡³­ °æ¿ì ´Ù½Ã »ì·Á³»ÁÖ°í ¹æ À¯Àúµé¿¡°Ô °øÁöÇØÁØ´Ù.
+		// ê²Œì„ í”Œë ˆì´ì¤‘ì— ì£½ì€ ê²½ìš° ë¶€í™œ ë¶€í™œ ì‹œê°„ì„ì—…ë°ì´íŠ¸ í•´ì¤€ë‹¤.
+		// ê·¸ë¦¬ê³  ë¶€í™œì‹œê°„ì´ ëë‚œ ê²½ìš° ë‹¤ì‹œ ì‚´ë ¤ë‚´ì£¼ê³  ë°© ìœ ì €ë“¤ì—ê²Œ ê³µì§€í•´ì¤€ë‹¤.
 		if (p->GetPlayerState() == PlayerState::RoomBattle && p->GetRevivalLeftTime() > 0 && p->IsDeath()) {
 			const int iLeftTime = p->SetRevivalLeftTime(p->GetRevivalLeftTime() - m_iDelay);
 			
@@ -274,8 +274,8 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 
 				Random rand;
 				pBattleFieldRevivalSyn->CharacterUID = p->GetCharacterUID();
-				pBattleFieldRevivalSyn->RevivalMove.X = rand.GenerateInt(0 + 50, MAP_WIDTH - 50);
-				pBattleFieldRevivalSyn->RevivalMove.Y = rand.GenerateInt(0 + 50, MAP_HEIGHT - 50);
+				pBattleFieldRevivalSyn->RevivalMove.X = (float)rand.GenerateInt(0 + 50, MAP_WIDTH - 50);
+				pBattleFieldRevivalSyn->RevivalMove.Y = (float)rand.GenerateInt(0 + 50, MAP_HEIGHT - 50);
 				pBattleFieldRevivalSyn->RevivalMove.MoveDir = MoveDirection::None;
 				pBattleFieldRevivalSyn->RevivalMove.RotationDir = RotateDirection::None;
 				pBattleFieldRevivalSyn->RevivalMove.MoveSpeed = TANK_MOVE_SPEED;
@@ -289,14 +289,14 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 	});
 
 	// =====================================================================================
-	// Playing ½Ã°£ÀÌ ³¡³µÀ» °æ¿ì ÇÑ¹ø¸¸ ÁøÇàÇÒ ÀÌº¥Æ® ¿©±â ÀÛ¼º ¤¡
-	// ¡Ø roomÀº ÀÌ¹Ì LockÀÌ µÇ¾îÀÖÀ¸¹Ç·Î ´Ù½Ã Lock ÇÏÁö ¸»°Í
+	// Playing ì‹œê°„ì´ ëë‚¬ì„ ê²½ìš° í•œë²ˆë§Œ ì§„í–‰í•  ì´ë²¤íŠ¸ ì—¬ê¸° ì‘ì„± ã„±
+	// â€» roomì€ ì´ë¯¸ Lockì´ ë˜ì–´ìˆìœ¼ë¯€ë¡œ ë‹¤ì‹œ Lock í•˜ì§€ ë§ê²ƒ
 	// =====================================================================================
 
 	if (room->m_iTimerTime <= 0) {
 
-		// 1. ÃÖÁ¾ Åë°èÁ¤º¸¸¦ Àü´ŞÇÏ°í Åë°èÁ¤º¸¸¦ º¼ ½Ã°£À» ÁØ´Ù.
-		// 2. ½ÂÀÚ/ÆĞÀÚ Á¤º¸¸¦ È®ÀÎÇÏ°í Àü´ŞÇÏ°í DB¿¡ ±â·ÏÇÑ´Ù.
+		// 1. ìµœì¢… í†µê³„ì •ë³´ë¥¼ ì „ë‹¬í•˜ê³  í†µê³„ì •ë³´ë¥¼ ë³¼ ì‹œê°„ì„ ì¤€ë‹¤.
+		// 2. ìŠ¹ì/íŒ¨ì ì •ë³´ë¥¼ í™•ì¸í•˜ê³  ì „ë‹¬í•˜ê³  DBì— ê¸°ë¡í•œë‹¤.
 		room->m_iTimerTime = BATTLE_FIELD_ENDWAIT_TIME;
 		room->m_eRoomState = RoomState::EndWait;
 		const auto pPacket = new StaticPacket<BattleFieldPlayingEndSyn>();
@@ -321,7 +321,7 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 		}
 		pBattleFieldPlayingEndSyn->WinnerCharacetrUID = iWinnerCharacterUID;
 
-		// ÀÌ±ä»ç¶÷°ú Áø»ç¶÷¿¡ ´ëÇÑ ÀüÀûÀ» DB¿¡ ¹İ¿µÇÑ´Ù.
+		// ì´ê¸´ì‚¬ëŒê³¼ ì§„ì‚¬ëŒì— ëŒ€í•œ ì „ì ì„ DBì— ë°˜ì˜í•œë‹¤.
 		QueryFn::AddWinCountAsync(iWinnerCharacterUID, 1);
 		for (int i = 0; i < iRommMemberCount; i++) {
 			if (pBattleFieldPlayingEndSyn->Info[i].CharacterUID != iWinnerCharacterUID) {
@@ -329,7 +329,7 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 			}
 		}
 
-		// ¹æ¿¡ »ç¶÷ÀÌ ÀÖÀ» °æ¿ì ÆĞÅ¶À» Àü´ŞÇÏ°í ¾øÀ¸¸é ¹ö¸°´Ù.
+		// ë°©ì— ì‚¬ëŒì´ ìˆì„ ê²½ìš° íŒ¨í‚·ì„ ì „ë‹¬í•˜ê³  ì—†ìœ¼ë©´ ë²„ë¦°ë‹¤.
 		if (iRommMemberCount > 0)
 			room->UnsafeBroadcastInBattle(pPacket);
 		else
@@ -339,16 +339,16 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 
 void BattleFieldWorker::ProcessRoomEndWaitState(Room* room) {
 	// =====================================================================================
-	// EndWait »óÅÂ¿¡¼­ ÁÖ±âÀûÀ¸·Î ÁøÇàÇÒ ÀÌº¥Æ®¸¦ ¿©±â ÀÛ¼º ¤¡
-	// ¡Ø roomÀº ÀÌ¹Ì LockÀÌ µÇ¾îÀÖÀ¸¹Ç·Î ´Ù½Ã Lock ÇÏÁö ¸»°Í
+	// EndWait ìƒíƒœì—ì„œ ì£¼ê¸°ì ìœ¼ë¡œ ì§„í–‰í•  ì´ë²¤íŠ¸ë¥¼ ì—¬ê¸° ì‘ì„± ã„±
+	// â€» roomì€ ì´ë¯¸ Lockì´ ë˜ì–´ìˆìœ¼ë¯€ë¡œ ë‹¤ì‹œ Lock í•˜ì§€ ë§ê²ƒ
 	// =====================================================================================
 
 
 
 
 	// =====================================================================================
-	// EndWait ½Ã°£ÀÌ ³¡³µÀ» °æ¿ì ÇÑ¹ø¸¸ ÁøÇàÇÒ ÀÌº¥Æ® ¿©±â ÀÛ¼º ¤¡
-	// ¡Ø roomÀº ÀÌ¹Ì LockÀÌ µÇ¾îÀÖÀ¸¹Ç·Î ´Ù½Ã Lock ÇÏÁö ¸»°Í
+	// EndWait ì‹œê°„ì´ ëë‚¬ì„ ê²½ìš° í•œë²ˆë§Œ ì§„í–‰í•  ì´ë²¤íŠ¸ ì—¬ê¸° ì‘ì„± ã„±
+	// â€» roomì€ ì´ë¯¸ Lockì´ ë˜ì–´ìˆìœ¼ë¯€ë¡œ ë‹¤ì‹œ Lock í•˜ì§€ ë§ê²ƒ
 	// =====================================================================================
 
 	if (room->m_iTimerTime <= 0) {
@@ -369,7 +369,7 @@ void BattleFieldWorker::DeleteUnprocessedSignal(Signal* unProcessedSignal) {
 		case Signal::Type::Packet: {
 			const PacketSignal* pPacketSignal = dynamic_cast<PacketSignal*>(unProcessedSignal);
 			pPacketSignal->GetPacket()->Release();
-		// case ´Ù¸¥ ½Ã±×³Îµé Ãß°¡µÇ¸é Ã³¸®
+		// case ë‹¤ë¥¸ ì‹œê·¸ë„ë“¤ ì¶”ê°€ë˜ë©´ ì²˜ë¦¬
 		}
 	}
 

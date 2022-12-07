@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -20,18 +20,18 @@ public:
 	TcpServer(int maxConn = 8);
 	~TcpServer() override;
 
-	// ÃÊ±â IOCP ¾²·¹µå ¼ö
-	// TcpServer¸¦ »ó¼Ó¹ŞÀº ¼­¹ö¿¡¼­ ÀÌ ÇÔ¼ö¸¦ ¿À¹ö¶óÀÌµù ÇØ¼­ IOCP¿¡¼­ °ü¸®ÇÒ ¾²·¹µå ¼ö¸¦ Á¶Àı ÇÒ ¼ö ÀÖµµ·Ï ÇÏÀÚ.
+	// ì´ˆê¸° IOCP ì“°ë ˆë“œ ìˆ˜
+	// TcpServerë¥¼ ìƒì†ë°›ì€ ì„œë²„ì—ì„œ ì´ í•¨ìˆ˜ë¥¼ ì˜¤ë²„ë¼ì´ë”© í•´ì„œ IOCPì—ì„œ ê´€ë¦¬í•  ì“°ë ˆë“œ ìˆ˜ë¥¼ ì¡°ì ˆ í•  ìˆ˜ ìˆë„ë¡ í•˜ì.
 	virtual int DefaultIocpThreadCount() const;		
 
-	// Á¢¼Ó °¡´ÉÇÑ ÃÖ´ë »ç¿ëÀÚ ¼ö
+	// ì ‘ì† ê°€ëŠ¥í•œ ìµœëŒ€ ì‚¬ìš©ì ìˆ˜
 	virtual int MaxConnection() const { return m_pContainer->MaxConnection(); }
 	bool Start(const IPv4EndPoint& localEndPoint) override;
 	bool Stop() override;
 	virtual void Pause();
 	virtual void Resume();
 	
-	// ¼­¹ö´Â ÀÌº¥Æ®¸®½º³Ê µî·ÏÀ» ÇÊ¼öÀûÀ¸·Î ÇØÁÖµµ·Ï ÇÔ
+	// ì„œë²„ëŠ” ì´ë²¤íŠ¸ë¦¬ìŠ¤ë„ˆ ë“±ë¡ì„ í•„ìˆ˜ì ìœ¼ë¡œ í•´ì£¼ë„ë¡ í•¨
 	virtual void SetEventListener(TcpServerEventListener* listener);
 	IPv4EndPoint GetBindEndPoint() const { return m_ServerSocket.GetLocalEndPoint(); }
 protected:

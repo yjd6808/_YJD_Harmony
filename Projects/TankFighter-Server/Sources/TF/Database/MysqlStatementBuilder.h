@@ -1,25 +1,24 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	statement ºô´õ
+	ì‘ì„±ì : ìœ¤ì •ë„
+	statement ë¹Œë”
 
-	»ó´çÈ÷ ±î´Ù·Î¿î Forwarding ·ÎÁ÷ÀÌ¹Ç·Î ¼öÁ¤½Ã ÁÖÀÇÇØ¾ßÇÑ´Ù.
+	ìƒë‹¹íˆ ê¹Œë‹¤ë¡œìš´ Forwarding ë¡œì§ì´ë¯€ë¡œ ìˆ˜ì •ì‹œ ì£¼ì˜í•´ì•¼í•œë‹¤.
 */
 
 #pragma once
 
 #include <map>
-#include <string>
 #include <sstream>
 
 #include <JCore/Time.h>
 #include <JCore/Container/HashMap.h>
+#include <JCore/Utils/Console.h>
 
-#include <TF/Util/Console.h>
 #include <TF/Database/MysqlConnection.h>
 #include <TF/ServerConfiguration.h>
 
 
-#ifndef DebugAssert
+#ifndef DebugAssertMessage
 	#include <cassert>
 	#define DebugAssert(exp, msg)		assert((exp) && msg)
 #endif
@@ -30,7 +29,7 @@ class MysqlStatementBuilder
 	using TFieldMap = JCore::HashMap<int, JCore::String>;
 private:
 
-	// °¢°¢¿¡ Ãß°¡ÇÏ°í ½ÍÀº ÀÎÀÚ ÀÖÀ»¶§¸¶´Ù ÅÛÇÃ¸´ Æ¯¼öÈ­ ÇØÁÙ °Í
+	// ê°ê°ì— ì¶”ê°€í•˜ê³  ì‹¶ì€ ì¸ì ìˆì„ë•Œë§ˆë‹¤ í…œí”Œë¦¿ íŠ¹ìˆ˜í™” í•´ì¤„ ê²ƒ
 	template <typename T>
 	struct Setter;
 
@@ -113,8 +112,8 @@ private:
 		}
 	};
 
-	// Forward½Ã¿¡´Â ÇØ´ç Å¸ÀÔ ±×´ë·Î ³Ñ°ÜÁÖ°í
-	// Setter ÆãÅÍ´Â ±âº» Å¸ÀÔÀ¸·Î¹Ù²ãÁà¾ßÇÔ
+	// Forwardì‹œì—ëŠ” í•´ë‹¹ íƒ€ì… ê·¸ëŒ€ë¡œ ë„˜ê²¨ì£¼ê³ 
+	// Setter í‘í„°ëŠ” ê¸°ë³¸ íƒ€ì…ìœ¼ë¡œë°”ê¿”ì¤˜ì•¼í•¨
 	template <typename T>
 	constexpr static void Set(TFieldMap& refArgMap, int idx, T&& arg) {
 		using TNatural = JCore::NaturalType_t<T>;
@@ -135,7 +134,7 @@ public:
 	template <typename... Args>
 	constexpr static JCore::String Build(JCore::String statement, Args&&... args) {
 		if (ms_pConn == nullptr) {
-			DebugAssert(false, "¿ì¼± ºô´õÀÇ Initailize¸¦ È£ÃâÇØÁÖ¼¼¿ä");
+			DebugAssertMessage(false, "ìš°ì„  ë¹Œë”ì˜ Initailizeë¥¼ í˜¸ì¶œí•´ì£¼ì„¸ìš”");
 			return "";
 		}
 
@@ -145,20 +144,20 @@ public:
 		if (argCount != sizeof...(args))
 			return "";
 
-		// ÇÊµå ¼ö¸¸Å­ ÇÒ´ç
+		// í•„ë“œ ìˆ˜ë§Œí¼ í• ë‹¹
 		for (int i = 1; i <= argCount; i++)
 			argMap.Insert(i, "");
 
 		if constexpr (sizeof...(Args) > 0) {
-			// °¢ ÇÊµåº°·Î ¸Â´Â Å¸ÀÔ ¼¼ÆÃ
-			// 1¹øÂ° ºÎÅÍ Àç±ÍÀûÀ¸·Î ¼¼ÆÃÇØ³ª°£´Ù.
+			// ê° í•„ë“œë³„ë¡œ ë§ëŠ” íƒ€ì… ì„¸íŒ…
+			// 1ë²ˆì§¸ ë¶€í„° ì¬ê·€ì ìœ¼ë¡œ ì„¸íŒ…í•´ë‚˜ê°„ë‹¤.
 			Set(argMap, 1, JCore::Forward<Args>(args)...);	
 		} else {
-			// ÄÄÆÄÀÏÅ¸ÀÓ¿¡ ¸®ÅÏ »óÅÂ°¡ °áÁ¤´ï - ¼öÁ¤ÇØÁÙ °ªÀÌ ¾øÀ» °æ¿ì °Á ¹Ù·Î ³¡³»µµ·Ï ÇÏÀÚ.
+			// ì»´íŒŒì¼íƒ€ì„ì— ë¦¬í„´ ìƒíƒœê°€ ê²°ì •ëŒ - ìˆ˜ì •í•´ì¤„ ê°’ì´ ì—†ì„ ê²½ìš° ê± ë°”ë¡œ ëë‚´ë„ë¡ í•˜ì.
 			return statement;
 		}
 		
-		// ºôµå ÁøÇà
+		// ë¹Œë“œ ì§„í–‰
 		int iNextOffset = 0;
 		for (int i = 1; i <= argMap.Size(); i++) {
 			iNextOffset = statement.Replace(iNextOffset, "?", argMap[i]);
@@ -171,7 +170,7 @@ public:
 		if (ms_pConn != nullptr)
 			return true;
 
-		// mysql_real_escape_string ÀÌ ÇÔ¼ö »ç¿ëÇÏ±âÀ§ÇØ¼­ ¾îÂ¿¼ö¾øÀÌ Ä¿³Ø¼Ç »ç¿ëÇÏµµ·Ï ÇÔ
+		// mysql_real_escape_string ì´ í•¨ìˆ˜ ì‚¬ìš©í•˜ê¸°ìœ„í•´ì„œ ì–´ì©”ìˆ˜ì—†ì´ ì»¤ë„¥ì…˜ ì‚¬ìš©í•˜ë„ë¡ í•¨
 		ms_pConn = new MysqlConnection();
 		return ms_pConn->Connect(DB_HOST, DB_PORT, DB_ID, DB_PASS, DB_NAME);
 	}
@@ -185,5 +184,5 @@ public:
 	}
 
 private:
-	inline static MysqlConnection* ms_pConn = nullptr;	// escape¿ë ¿¬°á
+	inline static MysqlConnection* ms_pConn = nullptr;	// escapeìš© ì—°ê²°
 };

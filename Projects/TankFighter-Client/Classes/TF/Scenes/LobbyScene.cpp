@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/LobbyScene.h>
@@ -25,7 +25,7 @@ bool LobbyScene::SynchronizedOnReceived(JNetwork::ICommand* cmd) {
         return false;
     }
 
-    CCLOG("%d Ä¿¸Çµå ¼ö½Å (%s)", cmd->GetCommand(), "LobbyScene");
+    CCLOG("%d ì»¤ë§¨ë“œ ìˆ˜ì‹  (%s)", cmd->GetCommand(), "LobbyScene");
 
     switch (cmd->GetCommand()) {
     case UPDATE_CHARACTER_INFO_ACK:  m_pLobbyLayer->CmdUpdateCharacterInfoAck(cmd); break;

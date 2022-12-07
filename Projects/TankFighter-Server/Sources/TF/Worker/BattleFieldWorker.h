@@ -1,10 +1,10 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 
-	°¢ Ã¤³Îº°·Î ÇÏ³ª¾¿ °¡Áö°í ÀÖ°í µ¿ÀÛÇÏ´Â ¹èÆ²ÇÊµå ¿öÄ¿ ¾²·¹µå
-	µû¶ó¼­ Ã¤³Î Å¬·¡½º¿¡¼­¸¸ ÀÌ Å¬·¡½º¿¡ ´ëÇØ¼­ Á÷Á¢ Á¢±ÙÀÌ °¡´Éµµ·ÏÇÏ¿´´Ù. (friend ¼±¾ğ)
+	ê° ì±„ë„ë³„ë¡œ í•˜ë‚˜ì”© ê°€ì§€ê³  ìˆê³  ë™ì‘í•˜ëŠ” ë°°í‹€í•„ë“œ ì›Œì»¤ ì“°ë ˆë“œ
+	ë”°ë¼ì„œ ì±„ë„ í´ë˜ìŠ¤ì—ì„œë§Œ ì´ í´ë˜ìŠ¤ì— ëŒ€í•´ì„œ ì§ì ‘ ì ‘ê·¼ì´ ê°€ëŠ¥ë„ë¡í•˜ì˜€ë‹¤. (friend ì„ ì–¸)
 	
-	ÀÏÁ¤ ÁÖ±â¸¶´Ù ¹æ À¯Àúµé¿¡°Ô À§Ä¡ Á¤º¸³ª °ÔÀÓ ÁøÇàÁßÀÎ ¹æ¿¡´Ù°¡ ¸Ş½ÃÁö¸¦ Àü´ŞÇÏ°í ½ÍÀ» ¶§ »ç¿ëÇÑ´Ù.
+	ì¼ì • ì£¼ê¸°ë§ˆë‹¤ ë°© ìœ ì €ë“¤ì—ê²Œ ìœ„ì¹˜ ì •ë³´ë‚˜ ê²Œì„ ì§„í–‰ì¤‘ì¸ ë°©ì—ë‹¤ê°€ ë©”ì‹œì§€ë¥¼ ì „ë‹¬í•˜ê³  ì‹¶ì„ ë•Œ ì‚¬ìš©í•œë‹¤.
 */
 
 #pragma once
@@ -26,8 +26,8 @@ protected:
 	BattleFieldWorker(int channelUID, int delay)
 		: m_iChannelUID(channelUID)
 		, m_iDelay(delay)
-		, m_SignalQueue(100)			// ½Ã±×³Î Å¥ ÃÊ±â ¿ë·®
-		, m_BattleFieldRoomMap(10)		// ¹èÆ²ÇÊµå ·ë ÃÊ±â ¿ë·®
+		, m_SignalQueue(100)			// ì‹œê·¸ë„ í ì´ˆê¸° ìš©ëŸ‰
+		, m_BattleFieldRoomMap(10)		// ë°°í‹€í•„ë“œ ë£¸ ì´ˆê¸° ìš©ëŸ‰
 	{
 	}
 
@@ -45,28 +45,28 @@ protected:
 	Signal* DequeueSignal();
 
 	void ProcessPacketSignal(PacketSignal* packetSignal);
-	void ProcessBattleFieldRoutine();						// PlayWait, Playing, EndWait »óÅÂÀÇ ¹æµé¿¡ ´ëÇØ¼­ °¢ ½ºÅ×ÀÌÆ®¿¡ Ã³¸®ÇØ¾ßÇÒ ·çÆ¾À» ½ÇÇàÇÏµµ·Ï ÇÑ´Ù.
+	void ProcessBattleFieldRoutine();						// PlayWait, Playing, EndWait ìƒíƒœì˜ ë°©ë“¤ì— ëŒ€í•´ì„œ ê° ìŠ¤í…Œì´íŠ¸ì— ì²˜ë¦¬í•´ì•¼í•  ë£¨í‹´ì„ ì‹¤í–‰í•˜ë„ë¡ í•œë‹¤.
 	void ProcessRoomPlayWaitState(Room* room);
 	void ProcessRoomPlayingState(Room* room);
 	void ProcessRoomEndWaitState(Room* room);
-	void ProcessBattleFieldRoutineForRoom(Room* room);		// ProcessBattleFieldRoutine ³»ºÎ¿¡¼­ °¢ ¹æ¿¡ ´ëÇØ ¼öÇàÇÒ ¼­ºê ÇÔ¼ö
+	void ProcessBattleFieldRoutineForRoom(Room* room);		// ProcessBattleFieldRoutine ë‚´ë¶€ì—ì„œ ê° ë°©ì— ëŒ€í•´ ìˆ˜í–‰í•  ì„œë¸Œ í•¨ìˆ˜
 	void CollectReadyWaitRooms();
 
-	// Ã³¸® ¾ÈµÈ ½Ã±×³Îµé Á¤¸®
+	// ì²˜ë¦¬ ì•ˆëœ ì‹œê·¸ë„ë“¤ ì •ë¦¬
 	static void DeleteUnprocessedSignal(Signal* unProcessedSignal);
 private:
 	int m_iChannelUID;
-	int m_iDelay;							// ¸îmsµ¿¾È Sleep ÇÒÁö
-	int m_iStatisticsUpdateDelayCount = 0;	// µô·¹ÀÌ ¸î¹ø´ç ÇÑ¹ø¾¿ Àü¼ÛÇÒÁö - 4·Î ¼³Á¤ÇÏ°í m_iDelay 100ÀÌ¸é 400ms´ç ÇÑ¹ø¾¿ º¸³¿
+	int m_iDelay;							// ëª‡msë™ì•ˆ Sleep í• ì§€
+	int m_iStatisticsUpdateDelayCount = 0;	// ë”œë ˆì´ ëª‡ë²ˆë‹¹ í•œë²ˆì”© ì „ì†¡í• ì§€ - 4ë¡œ ì„¤ì •í•˜ê³  m_iDelay 100ì´ë©´ 400msë‹¹ í•œë²ˆì”© ë³´ëƒ„
 
 
 	std::thread m_Thread;
 
 	JCore::ArrayQueue<Signal*> m_SignalQueue;
-	JCore::CriticalSectionMutex m_SignalQueueLock;
+	JCore::NormalLock m_SignalQueueLock;
 
-	JCore::HashMap<int, Room*> m_BattleFieldRoomMap;			// ¹èÆ²ÇÊµå ·çÆ¾À» ÁøÇàÇÏ´Â ¹æµé
-	JCore::CriticalSectionMutex m_BattleFieldRoomMapLock;
+	JCore::HashMap<int, Room*> m_BattleFieldRoomMap;			// ë°°í‹€í•„ë“œ ë£¨í‹´ì„ ì§„í–‰í•˜ëŠ” ë°©ë“¤
+	JCore::NormalLock m_BattleFieldRoomMapLock;
 	inline static BattleFieldWorker* ms_pInstance;
 
 	friend class Channel;
@@ -75,8 +75,8 @@ private:
 
 /* ===============================================================
  *
- * ¿ÜºÎ ¾²·¹µå¿Í BattleField ¾²·¹µå¿Í Åë½ÅÇÏ±â À§ÇØ¼­ »ç¿ëÇÒ Signal Å¬·¡½º
- * Ãß°¡ÀûÀ¸·Î ÇÊ¿äÇÑ Type Ãß°¡ÇÏ°í »ó¼Ó¹Ş¾Æ¼­ ±¸ÇöÇÒ °Í
+ * ì™¸ë¶€ ì“°ë ˆë“œì™€ BattleField ì“°ë ˆë“œì™€ í†µì‹ í•˜ê¸° ìœ„í•´ì„œ ì‚¬ìš©í•  Signal í´ë˜ìŠ¤
+ * ì¶”ê°€ì ìœ¼ë¡œ í•„ìš”í•œ Type ì¶”ê°€í•˜ê³  ìƒì†ë°›ì•„ì„œ êµ¬í˜„í•  ê²ƒ
  *
  * ============================================================== */
 
@@ -92,8 +92,8 @@ class Signal
 public:
 	enum class Type
 	{
-		Stop,			// ¾²·¹µå Á¾·á
-		Packet			// ¸ğµç ¹èÆ² ÁøÇàÁßÀÎ ¹æ¿¡´Ù°¡ Àü¼Û
+		Stop,			// ì“°ë ˆë“œ ì¢…ë£Œ
+		Packet			// ëª¨ë“  ë°°í‹€ ì§„í–‰ì¤‘ì¸ ë°©ì—ë‹¤ê°€ ì „ì†¡
 	};
 
 	Type GetType() const { return m_eType; }

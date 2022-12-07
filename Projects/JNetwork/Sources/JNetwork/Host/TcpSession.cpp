@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -9,7 +9,7 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedReceive.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
 
-#include <JCore/LockGuard.h>
+#include <JCore/Sync/NormalLock.h>
 
 using namespace JCore;
 
@@ -25,7 +25,7 @@ namespace JNetwork {
 TcpSession::~TcpSession() = default;
 
 bool TcpSession::Disconnect() {
-	CriticalSectionLockGuard guard(m_Lock);
+	NormalLockGuard guard(m_Lock);
 	if (CheckState(State::Disconnected)) {
 		return false;
 	}
@@ -41,9 +41,9 @@ bool TcpSession::Disconnect() {
 
 bool TcpSession::SendAsync(ISendPacket* packet) {
 
-	// ³Ê¹« ½Ø¸® Å« ÆĞÅ¶Àº ÀÌ»óÇÑ ÆĞÅ¶ÀÌ¹Ç·Î ¼ö½Å ¹öÆÛ Å©±âº¸´Ù Å« ÆĞÅ¶À» º¸³¾·Á°í ÇÒ °æ¿ì ¸·ÀÚ.
+	// ë„ˆë¬´ ìŒ”ë¦¬ í° íŒ¨í‚·ì€ ì´ìƒí•œ íŒ¨í‚·ì´ë¯€ë¡œ ìˆ˜ì‹  ë²„í¼ í¬ê¸°ë³´ë‹¤ í° íŒ¨í‚·ì„ ë³´ë‚¼ë ¤ê³  í•  ê²½ìš° ë§‰ì.
 	if (packet->GetPacketLength() >= SessionBuffer::GetBufferCapacity()) {
-		Winsock::Message("¼Û½ÅÇÒ ÆĞÅ¶ÀÇ Å©±â¸¦ Á¦´ë·Î Àâ¾ÆÁÖ¼¼¿ä");
+		DebugAssertMessage(false, "ì†¡ì‹ í•  íŒ¨í‚·ì˜ í¬ê¸°ë¥¼ ì œëŒ€ë¡œ ì¡ì•„ì£¼ì„¸ìš”");
 		return false;
 	}
 
@@ -55,7 +55,7 @@ bool TcpSession::SendAsync(ISendPacket* packet) {
 	const int iResult = m_ClientSocket.SendEx(&buf, &uiSendBytes, pOverlapped);
 	if (iResult == SOCKET_ERROR) {
 		if (Winsock::LastError() != WSA_IO_PENDING) {
-			Winsock::WinsockMessage("SendAsync() ½ÇÆĞ");
+			DebugAssertMessage(false, "SendAsync() ì‹¤íŒ¨");
 			pOverlapped->Release();
 			packet->Release();
 			return false;
@@ -73,7 +73,7 @@ bool TcpSession::ReceiveAsync() {
 	const int iResult = m_ClientSocket.ReceiveEx(&buf, &uiReceivedBytes, pOverlapped);
 	if (iResult == SOCKET_ERROR) {
 		if (Winsock::LastError() != WSA_IO_PENDING) {
-			Winsock::WinsockMessage("ReceiveAsync() ½ÇÆĞ");
+			DebugAssertMessage(false, "ReceiveAsync() ì‹¤íŒ¨");
 			pOverlapped->Release();
 			return false;
 		}
@@ -83,18 +83,18 @@ bool TcpSession::ReceiveAsync() {
 }
 
 bool TcpSession::AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped) {
-	DWORD receivedBytes = 0;
+	Int32UL receivedBytes = 0;
 
 	if (m_ClientSocket.AcceptEx(
 		hListeningSock,
 		m_ReceiveBuffer.GetRemainBuffer().buf,
-		TEST_DUMMY_PACKET_SIZE,	// TcpClient¿¡¼­ Å×½ºÆ® ´õ¹Ì ÆĞÅ¶À» º¸³»±â ¶«¿¡ 8·Î ¼¼ÆÃ
+		TEST_DUMMY_PACKET_SIZE,	// TcpClientì—ì„œ í…ŒìŠ¤íŠ¸ ë”ë¯¸ íŒ¨í‚·ì„ ë³´ë‚´ê¸° ë•œì— 8ë¡œ ì„¸íŒ…
 		&receivedBytes,
 		pOverlapped
 	) == FALSE) {
 
 		if (Winsock::LastError() != WSA_IO_PENDING) {
-			Winsock::WinsockMessage("¼¼¼Ç AcceptEx ½ÇÆĞ");
+			DebugAssertMessage(false, "ì„¸ì…˜ AcceptEx ì‹¤íŒ¨");
 			((IOCPOverlapped*)pOverlapped)->Release();
 			return false;
 		}
@@ -104,12 +104,12 @@ bool TcpSession::AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped) {
 }
 
 bool TcpSession::CheckState(State state) {
-	CriticalSectionLockGuard guard(m_Lock);
+	NormalLockGuard guard(m_Lock);
 	return m_eState == state;
 }
 
 bool TcpSession::Initialize() {
-	CriticalSectionLockGuard guard(m_Lock);
+	NormalLockGuard guard(m_Lock);
 	if (m_ClientSocket.IsValid()) {
 		m_ClientSocket.Close();
 	}
@@ -125,15 +125,15 @@ bool TcpSession::Initialize() {
 }
 
 void TcpSession::AcceptWait() {
-	CriticalSectionLockGuard guard(m_Lock);
+	NormalLockGuard guard(m_Lock);
 	m_eState = State::AcceptWait;
 }
 
 bool TcpSession::Accepted(SOCKET listeningSocket, Int32UL receivedBytes) {
 	char* pReads = m_ReceiveBuffer.Peek<char*>();
-	// AcceptEx ÇÔ¼ö  È£Ãâ ÈÄ ¿¬°áµÈ ¼ÒÄÏ¿¡ ´ëÇØ¼­ ·ÎÄÃ ÁÖ¼Ò¿Í ¸®¸ğÆ® ÁÖ¼Ò¸¦ °¡Á®¿Ã ¼ö ÀÖµµ·Ï ¾÷µ¥ÀÌÆ® ÇØÁØ´Ù.
-	// ÀÌ°É ½ÇÇàÇÏÁö ¾ÊÀ¸¸é ÇØ´ç ¼ÒÄÏ¿¡ ¹ÙÀÎµùµÈ ·ÎÄÃ ÁÖ¼Ò¿Í ¸®¸ğÆ® ÁÖ¼Ò¸¦ ¸ø°¡Á®¿È
-	//    = getsockname(), getpeername() ¾È¸ÔÈû
+	// AcceptEx í•¨ìˆ˜  í˜¸ì¶œ í›„ ì—°ê²°ëœ ì†Œì¼“ì— ëŒ€í•´ì„œ ë¡œì»¬ ì£¼ì†Œì™€ ë¦¬ëª¨íŠ¸ ì£¼ì†Œë¥¼ ê°€ì ¸ì˜¬ ìˆ˜ ìˆë„ë¡ ì—…ë°ì´íŠ¸ í•´ì¤€ë‹¤.
+	// ì´ê±¸ ì‹¤í–‰í•˜ì§€ ì•Šìœ¼ë©´ í•´ë‹¹ ì†Œì¼“ì— ë°”ì¸ë”©ëœ ë¡œì»¬ ì£¼ì†Œì™€ ë¦¬ëª¨íŠ¸ ì£¼ì†Œë¥¼ ëª»ê°€ì ¸ì˜´
+	//    = getsockname(), getpeername() ì•ˆë¨¹í˜
 	if (m_ClientSocket.Option().SetUpdateAcceptContext(listeningSocket) == SOCKET_ERROR) {
 		return false;
 	}
@@ -151,11 +151,11 @@ void TcpSession::Received(Int32UL receivedBytes) {
 
 	
 	for (;;) {
-		// ÆĞÅ¶ÀÇ Çì´õ Å©±â¸¸Å­ µ¥ÀÌÅÍ¸¦ ¼ö½ÅÇÏÁö ¾Ê¾ÒÀ¸¸é ¸ğÀÏ¶§±îÁö ±â´Ş
+		// íŒ¨í‚·ì˜ í—¤ë” í¬ê¸°ë§Œí¼ ë°ì´í„°ë¥¼ ìˆ˜ì‹ í•˜ì§€ ì•Šì•˜ìœ¼ë©´ ëª¨ì¼ë•Œê¹Œì§€ ê¸°ë‹¬
 		if (m_ReceiveBuffer.GetReadableBufferSize() < PACKET_HEADER_SIZE)
 			return;
 
-		// ÆĞÅ¶ Çì´õ ±æÀÌ + ÆĞÅ¶ ±æÀÌ ¸¸Å­ ¼ö½ÅÇÏÁö ¾Ê¾ÒÀ¸¸é ´Ù½Ã ¸ğÀÏ¶§±îÁö ±â´Ù¸°´Ù.
+		// íŒ¨í‚· í—¤ë” ê¸¸ì´ + íŒ¨í‚· ê¸¸ì´ ë§Œí¼ ìˆ˜ì‹ í•˜ì§€ ì•Šì•˜ìœ¼ë©´ ë‹¤ì‹œ ëª¨ì¼ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤.
 		const IRecvPacket* packet = m_ReceiveBuffer.Peek<IRecvPacket*>();
 		if (m_ReceiveBuffer.GetReadableBufferSize() < (PACKET_HEADER_SIZE + packet->GetPacketLength())) {
 			return;
@@ -166,23 +166,23 @@ void TcpSession::Received(Int32UL receivedBytes) {
 		for (int i = 0; i < packet->GetCommandCount(); i++) {
 			ICommand* pCmd = m_ReceiveBuffer.Peek<ICommand*>();
 
-			// ¼¼¼ÇÀº TcpServerEventListener·Î Ä¿¸Çµå Àü´Ş
-			// Å¬¶ó´Â TcpClientEventListener·Î Ä¿¸Çµå Àü´Ş
+			// ì„¸ì…˜ì€ TcpServerEventListenerë¡œ ì»¤ë§¨ë“œ ì „ë‹¬
+			// í´ë¼ëŠ” TcpClientEventListenerë¡œ ì»¤ë§¨ë“œ ì „ë‹¬
 			NotifyCommand(pCmd);
 
 			if (m_ReceiveBuffer.MoveReadPos(pCmd->GetCommandLen()) == false) {
-				Winsock::Message("Ä¿¸Çµå Å©±â°¡ ÀÌ»óÇÕ´Ï´Ù.");
+				DebugAssertMessage(false, "ì»¤ë§¨ë“œ í¬ê¸°ê°€ ì´ìƒí•©ë‹ˆë‹¤.");
 				m_ReceiveBuffer.Clear();
 				return;
 			}
 		}
 
 		if (m_ReceiveBuffer.GetReadPos() == m_ReceiveBuffer.GetWritePos()) {
-			// ¸¸¾à ¼ö½ÅÇÑ µ¥ÀÌÅÍ¸¦ ¸ğµÎ ÀĞ¾úÀ¸¸é Æ÷Áö¼ÇÀ» ±×³É 0À¸·Î ¿Å±ä´Ù.
+			// ë§Œì•½ ìˆ˜ì‹ í•œ ë°ì´í„°ë¥¼ ëª¨ë‘ ì½ì—ˆìœ¼ë©´ í¬ì§€ì…˜ì„ ê·¸ëƒ¥ 0ìœ¼ë¡œ ì˜®ê¸´ë‹¤.
 			m_ReceiveBuffer.Clear();
 		} else {
-			// ÀĞÀº À§Ä¡¸¸Å­Àº ÀÌÁ¦ ´Ù½Ã ¾²ÀÏÀÏÀÌ ¾øÀ¸¹Ç·Î ¹öÆÛ¸¦ ¾ÕÀ¸·Î ´ç±ä´Ù. 
-			// WritePos ÀÌÈÄ·Î µ¥ÀÌÅÍ¸¦ ½×À» ¼ö ÀÖµµ·ÏÇÏ±â À§ÇØ
+			// ì½ì€ ìœ„ì¹˜ë§Œí¼ì€ ì´ì œ ë‹¤ì‹œ ì“°ì¼ì¼ì´ ì—†ìœ¼ë¯€ë¡œ ë²„í¼ë¥¼ ì•ìœ¼ë¡œ ë‹¹ê¸´ë‹¤. 
+			// WritePos ì´í›„ë¡œ ë°ì´í„°ë¥¼ ìŒ“ì„ ìˆ˜ ìˆë„ë¡í•˜ê¸° ìœ„í•´
 			m_ReceiveBuffer.Pop(m_ReceiveBuffer.GetReadPos(), true);
 		}
 	}

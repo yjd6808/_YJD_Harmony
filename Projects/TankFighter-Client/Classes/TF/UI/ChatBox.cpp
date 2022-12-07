@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/UI/ChatBox.h>
@@ -23,7 +23,7 @@ ChatBox* ChatBox::create(const Color3B& color, const Size& size)
 bool ChatBox::init(const Size& size)
 {
 	if (size.height <= ms_fChatEditBoxHeight || size.width <= ms_fChatSendButtonWidth) {
-		DebugAssert(false, "Ã¤ÆÃÃ¢ ³ôÀÌ°¡ 40ÀÌ±â ¶§¹®¿¡ Ã¤ÆÃ ¹Ú½ºÀÇ ³ôÀÌ´Â ÃÖ¼Ò 40ÀÌ»óÀ¸·Î ÇØÁÖ¼¼¿ä");
+		DebugAssertMessage(false, "ì±„íŒ…ì°½ ë†’ì´ê°€ 40ì´ê¸° ë•Œë¬¸ì— ì±„íŒ… ë°•ìŠ¤ì˜ ë†’ì´ëŠ” ìµœì†Œ 40ì´ìƒìœ¼ë¡œ í•´ì£¼ì„¸ìš”");
 		return false; 
 	}
 
@@ -48,7 +48,7 @@ bool ChatBox::init(const Size& size)
 	m_pChatEditBox->setFontColor(Color4B::WHITE);
 	m_pChatEditBox->setColor(ColorList::Africanviolet_v);
 	m_pChatEditBox->setFontSize(15.0f);
-	m_pChatEditBox->setPlaceHolder("Àü¼ÛÇÒ Ã¤ÆÃ ¸Ş½ÃÁö ÀÔ·Â");
+	m_pChatEditBox->setPlaceHolder("ì „ì†¡í•  ì±„íŒ… ë©”ì‹œì§€ ì…ë ¥");
 	m_pChatEditBox->setPosition(Vec2::ZERO);
 	m_pChatEditBox->setAnchorPoint(Vec2::ZERO);
 	m_pChatEditBox->setReturnType(EditBox::KeyboardReturnType::SEND);
@@ -56,7 +56,7 @@ bool ChatBox::init(const Size& size)
 	m_pChatEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
 	this->addChild(m_pChatEditBox);
 
-	m_pSendButton = TextButton::create(ms_fChatSendButtonWidth, ms_fChatEditBoxHeight, "Àü¼Û", 16);
+	m_pSendButton = TextButton::create(ms_fChatSendButtonWidth, ms_fChatEditBoxHeight, "ì „ì†¡", 16);
 	m_pSendButton->setPosition({ fullSize.width - ms_fChatSendButtonWidth , 0.0f });
 	m_pSendButton->setAnchorPoint(Vec2::ZERO);
 	m_pSendButton->setClickEvent(CC_CALLBACK_1(ChatBox::OnClickedSendButton, this));
@@ -72,14 +72,14 @@ bool ChatBox::init(const Size& size)
 
 void ChatBox::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 
-	// ÀÌ°Å ¾ÈµÊ ¤§¤§ Æ÷Ä¿½ÌÀÌ ¾È¸ÔÈ÷³× ¤Ğ¤Ğ
-	// ¿£ÅÍÅ° Ä¡¸é Active Inacitve ÀüÈ¯µÇµµ·Ï
+	// ì´ê±° ì•ˆë¨ ã„·ã„· í¬ì»¤ì‹±ì´ ì•ˆë¨¹íˆë„¤ ã… ã… 
+	// ì—”í„°í‚¤ ì¹˜ë©´ Active Inacitve ì „í™˜ë˜ë„ë¡
 	switch (keyCode) {
 	case EventKeyboard::KeyCode::KEY_ENTER: {
 		if (!m_pChatEditBox->isFocused()) {
 			m_pChatEditBox->setFocused(true);
 		} else {
-			// Ã¤ÆÃ ³»¿ëÀÌ ºñ¾îÁ®ÀÖ°Å³ª Àü¼Û ÀÌº¥Æ® µî·ÏÀÌ ¾ÈµÈ°æ¿ì Æ÷Ä¿½Ì ºñÈ°¼ºÈ­
+			// ì±„íŒ… ë‚´ìš©ì´ ë¹„ì–´ì ¸ìˆê±°ë‚˜ ì „ì†¡ ì´ë²¤íŠ¸ ë“±ë¡ì´ ì•ˆëœê²½ìš° í¬ì»¤ì‹± ë¹„í™œì„±í™”
 			if (!OnClickedSendButton(m_pSendButton)) {
 				m_pChatEditBox->setFocused(false);
 			}
@@ -142,7 +142,7 @@ void ChatBox::AddNoticeMessage(const JCore::String& message) {
 
 bool ChatBox::OnClickedSendButton(TextButton* btn) {
 
-	// ÅØ½ºÆ® ÀÔ·ÂÀÌ ¾ÈµÈ °æ¿ì ½ºÅµ
+	// í…ìŠ¤íŠ¸ ì…ë ¥ì´ ì•ˆëœ ê²½ìš° ìŠ¤í‚µ
 	if (StringUtil::Length(m_pChatEditBox->getText()) <= 0) {
 		return false;
 	}

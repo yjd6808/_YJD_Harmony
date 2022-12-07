@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
@@ -17,7 +17,7 @@ IOCPOverlappedConnect::IOCPOverlappedConnect(TcpSession* session, IOCP* iocp, IS
 
 IOCPOverlappedConnect::~IOCPOverlappedConnect() = default;
 
-void IOCPOverlappedConnect::Process(BOOL result, DWORD numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedConnect::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hConnectedSock = m_pConnectedSession->Socket().Handle();
 
 	if (IsFailed(hConnectedSock, result, numberOfBytesTransffered)) {

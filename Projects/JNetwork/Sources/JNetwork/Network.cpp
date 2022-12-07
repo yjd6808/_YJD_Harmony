@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ìž‘ì„±ìž : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>

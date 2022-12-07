@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ìž‘ì„±ìž : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -11,7 +11,7 @@
 namespace JCore { // namespace JCore
 
 /*=====================================================================================
-								  º¤ÅÍ
+								  ë²¡í„°
 =====================================================================================*/
 
 template <typename T>
@@ -78,15 +78,15 @@ public:
 	}
 
 	/**
-	 * \brief ¿ë·®À» ¼öÁ¤ÇÏµµ·Ï ÇÑ´Ù. ¸¸¾à ±âÁ¸¿¡ ´ã±ä µ¥ÀÌÅÍ ¼ö°¡ Àü´ÞÇØÁØ
-	 * ¿ë·®º¸´Ù ¸¹À» °æ¿ì ¼Ò¸êÀÚ¸¦ È£ÃâÇÏ¿© ³ÑÄ¡´Â ¸¸Å­ »èÁ¦ÇØÁÜ
+	 * \brief ìš©ëŸ‰ì„ ìˆ˜ì •í•˜ë„ë¡ í•œë‹¤. ë§Œì•½ ê¸°ì¡´ì— ë‹´ê¸´ ë°ì´í„° ìˆ˜ê°€ ì „ë‹¬í•´ì¤€
+	 * ìš©ëŸ‰ë³´ë‹¤ ë§Žì„ ê²½ìš° ì†Œë©¸ìžë¥¼ í˜¸ì¶œí•˜ì—¬ ë„˜ì¹˜ëŠ” ë§Œí¼ ì‚­ì œí•´ì¤Œ
 	 */
 	void Resize(int capacity) override {
 		return TArrayCollection::Resize(capacity);
 	}
 
 	/// <summary>>a
-	/// ¿©·¯°³ÀÇ µ¥ÀÌÅÍ¸¦ µÚ¿¡ Ãß°¡ÇÏ°íÀÚÇÒ ¶§
+	/// ì—¬ëŸ¬ê°œì˜ ë°ì´í„°ë¥¼ ë’¤ì— ì¶”ê°€í•˜ê³ ìží•  ë•Œ
 	/// </summary>
 	void PushBackAll(const TCollection& collection) {
 		int iExpandSize = this->CalculateExpandCapacity(this->m_iSize + collection.Size());
@@ -102,7 +102,7 @@ public:
 	}
 
 	void Insert(int idx, const T& data) {
-		// ¸¶Áö¸· À§Ä¡¿¡ »ðÀÔÇÏ´Â °æ¿ì ±×³É PushBackÀ» ¼öÇàÇÏÀÚ.
+		// ë§ˆì§€ë§‰ ìœ„ì¹˜ì— ì‚½ìž…í•˜ëŠ” ê²½ìš° ê·¸ëƒ¥ PushBackì„ ìˆ˜í–‰í•˜ìž.
 		if (idx == this->m_iSize) {
 			PushBack(data);
 		}
@@ -118,11 +118,11 @@ public:
 			idx + 1, 
 			iMoveBlockSize);
 		this->SetAt(idx, data);
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 	void Insert(int idx, T&& data) {
-		// ¸¶Áö¸· À§Ä¡¿¡ »ðÀÔÇÏ´Â °æ¿ì ±×³É PushBackÀ» ¼öÇàÇÏÀÚ.
+		// ë§ˆì§€ë§‰ ìœ„ì¹˜ì— ì‚½ìž…í•˜ëŠ” ê²½ìš° ê·¸ëƒ¥ PushBackì„ ìˆ˜í–‰í•˜ìž.
 		if (idx == this->m_iSize) {
 			PushBack(Move(data));
 			return;
@@ -139,11 +139,11 @@ public:
 			idx + 1,
 			iMoveBlockSize);
 		this->SetAt(idx, Move(data));
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 	/// <summary>
-	/// Æ¯Á¤ À§Ä¡¿¡ µ¥ÀÌÅÍ¸¦ ¸¹ÀÌ »ðÀÔÇÏ°íÀÚ ÇÒ ¶§
+	/// íŠ¹ì • ìœ„ì¹˜ì— ë°ì´í„°ë¥¼ ë§Žì´ ì‚½ìž…í•˜ê³ ìž í•  ë•Œ
 	/// </summary>
 	void InsertAll(int idx, const TCollection& collection) {
 		if (idx == this->m_iSize) {
@@ -175,7 +175,7 @@ public:
 
 
 	/// <summary>
-	/// ÀÎÀÚ¸¦ ¹Þ¾Æ¼­ ³»ºÎ¿¡¼­ »ý¼ºÇÑ´Ù.
+	/// ì¸ìžë¥¼ ë°›ì•„ì„œ ë‚´ë¶€ì—ì„œ ìƒì„±í•œë‹¤.
 	/// </summary>
 	template <typename... Args>
 	void EmplaceBack(Args&&... args) {
@@ -187,7 +187,7 @@ public:
 	}
 
 	/// <summary>
-	/// Æ¯Á¤ À§Ä¡¿¡ ÄÁÅ×ÀÌ³Ê ³»ºÎ¿¡¼­ »ý¼ºÇÑ´Ù.
+	/// íŠ¹ì • ìœ„ì¹˜ì— ì»¨í…Œì´ë„ˆ ë‚´ë¶€ì—ì„œ ìƒì„±í•œë‹¤.
 	/// </summary>
 	template <typename... Args>
 	void EmplaceInsert(int idx, Args&&... args) {
@@ -205,34 +205,34 @@ public:
 			idx + 1,
 			this->m_iSize - idx);
 		this->EmplaceAt(idx, Forward<Args>(args)...);
-		this->m_iSize++;
+		++this->m_iSize;
 	}
 
 	/// <summary>
-	/// ¼±ÇâÅ½»öÀ¸·Î °Ë»öÇÏ¿© µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎÇÑ´Ù.
+	/// ì„ í–¥íƒìƒ‰ìœ¼ë¡œ ê²€ìƒ‰í•˜ì—¬ ë°ì´í„°ê°€ ì¡´ìž¬í•˜ëŠ”ì§€ í™•ì¸í•œë‹¤.
 	/// </summary>
 	bool Exist(const T& data) const {
 		return Offset(data) >= 0;
 	}
 
 	/// <summary>
-	/// ÀÌÁøÅ½»öÀ¸·Î °Ë»öÇÏ¿© µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎÇÑ´Ù.
-	/// ´Ü, Á¤·ÄµÈ »óÅÂ¿©¾ß Á¤»óÀûÀ¸·Î µ¿ÀÛÇÑ´Ù.
+	/// ì´ì§„íƒìƒ‰ìœ¼ë¡œ ê²€ìƒ‰í•˜ì—¬ ë°ì´í„°ê°€ ì¡´ìž¬í•˜ëŠ”ì§€ í™•ì¸í•œë‹¤.
+	/// ë‹¨, ì •ë ¬ëœ ìƒíƒœì—¬ì•¼ ì •ìƒì ìœ¼ë¡œ ë™ìž‘í•œë‹¤.
 	/// </summary>
 	bool ExistBinary(const T& data) const {
 		return OffsetBinary(data) >= 0;
 	}
 
 	/// <summary>
-	/// ¼±ÇâÅ½»öÀ¸·Î °Ë»öÇÏ¿© µ¥ÀÌÅÍ°¡ Ã³À½À¸·Î ½ÃÀÛµÇ´Â À§Ä¡(ÀÎµ¦½º)¸¦ ¹ÝÈ¯ÇÑ´Ù.
+	/// ì„ í–¥íƒìƒ‰ìœ¼ë¡œ ê²€ìƒ‰í•˜ì—¬ ë°ì´í„°ê°€ ì²˜ìŒìœ¼ë¡œ ì‹œìž‘ë˜ëŠ” ìœ„ì¹˜(ì¸ë±ìŠ¤)ë¥¼ ë°˜í™˜í•œë‹¤.
 	/// </summary>
 	int Offset(const T& data) const {
 		return Arrays::LinearSearch(this->m_pArray, this->m_iSize, data);
 	}
 
 	/// <summary>
-	/// ÀÌºÐÅ½»öÀ¸·Î °Ë»öÇÏ¿© µ¥ÀÌÅÍ°¡ Ã³À½À¸·Î ½ÃÀÛµÇ´Â À§Ä¡(ÀÎµ¦½º)¸¦ ¹ÝÈ¯ÇÑ´Ù.
-	/// ´Ü, Á¤·ÄµÈ »óÅÂ¿©¾ß Á¤»óÀûÀ¸·Î µ¿ÀÛÇÑ´Ù.
+	/// ì´ë¶„íƒìƒ‰ìœ¼ë¡œ ê²€ìƒ‰í•˜ì—¬ ë°ì´í„°ê°€ ì²˜ìŒìœ¼ë¡œ ì‹œìž‘ë˜ëŠ” ìœ„ì¹˜(ì¸ë±ìŠ¤)ë¥¼ ë°˜í™˜í•œë‹¤.
+	/// ë‹¨, ì •ë ¬ëœ ìƒíƒœì—¬ì•¼ ì •ìƒì ìœ¼ë¡œ ë™ìž‘í•œë‹¤.
 	/// </summary>
 	int OffsetBinary(const T& data) const {
 		int iOffset = Arrays::LowerBound(this->m_pArray, this->m_iSize, data);
@@ -249,7 +249,7 @@ public:
 	}
 	
 	/// <summary>
-	/// ¼±ÇüÅ½»öÀ¸·Î µ¥ÀÌÅÍ¸¦ °Ë»öÇÏ¿© »èÁ¦ÇÑ´Ù.
+	/// ì„ í˜•íƒìƒ‰ìœ¼ë¡œ ë°ì´í„°ë¥¼ ê²€ìƒ‰í•˜ì—¬ ì‚­ì œí•œë‹¤.
 	/// </summary>
 	bool Remove(const T& data) {
 		int iOffset = Offset(data);
@@ -266,12 +266,12 @@ public:
 			iOffset,
 			iMoveBlockSize);
 
-		this->m_iSize--;
+		--this->m_iSize;
 		return true;
 	}
 
 	/// <summary>
-	/// ÀÌÁøÅ½»öÀ¸·Î µ¥ÀÌÅÍ¸¦ °Ë»öÇÏ¿© »èÁ¦ÇÑ´Ù.
+	/// ì´ì§„íƒìƒ‰ìœ¼ë¡œ ë°ì´í„°ë¥¼ ê²€ìƒ‰í•˜ì—¬ ì‚­ì œí•œë‹¤.
 	/// </summary>
 	bool RemoveBinary(const T& data) {
 		int iOffset = OffsetBinary(data);
@@ -288,12 +288,12 @@ public:
 			iOffset,
 			iMoveBlockSize);
 
-		this->m_iSize--;
+		--this->m_iSize;
 		return true;
 	}
 
 	/// <summary>
-	/// Æ¯Á¤ ÀÎµ¦½ºÀÇ µ¥ÀÌÅÍ¸¦ »èÁ¦ÇÑ´Ù.
+	/// íŠ¹ì • ì¸ë±ìŠ¤ì˜ ë°ì´í„°ë¥¼ ì‚­ì œí•œë‹¤.
 	/// </summary>
 	void RemoveAt(const int idx) {
 		this->ThrowIfIndexIsInvalid(idx);
@@ -306,7 +306,7 @@ public:
 			idx,
 			iMoveBlockSize);
 
-		this->m_iSize--;
+		--this->m_iSize;
 	}
 
 	void Sort() {

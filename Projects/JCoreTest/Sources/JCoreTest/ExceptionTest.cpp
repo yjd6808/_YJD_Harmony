@@ -1,13 +1,13 @@
 /*
-	юш╪╨юз : ю╠а╓╣╣
-	д©╫╨ер ©╧©э ев╫╨ф╝
+	Л·▒Л└╠Л·░ : Л°╓Л═∙К▐└
+	Л╩╓Л┼╓М┘─ Л≤┬Л≥╦ М┘▄Л┼╓М┼╦
 */
 
 
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Exception.h>
 
-using namespace JCore;
+
 using namespace std;
 
 

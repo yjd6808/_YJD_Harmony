@@ -1,5 +1,5 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
+	ì‘ì„±ì : ìœ¤ì •ë„
 */
 
 #pragma once
@@ -11,8 +11,8 @@
 namespace JCore {
 
 /*=====================================================================================
-									¸Ê Äİ·º¼Ç
-					      Æ®¸® ¸Ê, ÇØ½¬ ¸Ê °øÅë ÀÎÅÍÆäÀÌ½º Á¤ÀÇ
+									ë§µ ì½œë ‰ì…˜
+					      íŠ¸ë¦¬ ë§µ, í•´ì‰¬ ë§µ ê³µí†µ ì¸í„°í˜ì´ìŠ¤ ì •ì˜
 =====================================================================================*/
 
 template <typename TKey, typename TValue>
@@ -28,7 +28,7 @@ public:
 	MapCollection(ContainerType containerType) : TCollection(CollectionType::Map, containerType) {}
 	~MapCollection() noexcept override = 0;
 
-	// Àü¹æ ¼±¾ğ ¹× HashMap°ú TreeMap¿¡¼­ Á¢±ÙÇÒ ¼ö ÀÖµµ·Ï publicÀ¸·Î ¼±¾ğÇÔ
+	// ì „ë°© ì„ ì–¸ ë° HashMapê³¼ TreeMapì—ì„œ ì ‘ê·¼í•  ìˆ˜ ìˆë„ë¡ publicìœ¼ë¡œ ì„ ì–¸í•¨
 	struct KeyCollection;
 	struct ValueCollection;
 public:

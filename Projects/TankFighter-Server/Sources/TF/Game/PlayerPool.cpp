@@ -1,10 +1,10 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/PrecompiledHeader.h>
 #include <TF/Game/PlayerPool.h>
-#include <TF/Util/Console.h>
+#include <JCore/Utils/Console.h>
 
 using namespace JCore;
 using namespace JNetwork;
@@ -28,18 +28,18 @@ bool PlayerPool::Initialize(int size) {
 		m_PlayerPool.PushBack(pNewPlayer);
 	}
 
-	Console::WriteLine("ÇÃ·¹ÀÌ¾î Ç® %d ÃÊ±âÈ­¿Ï·á", size);
+	SafeConsole::WriteLine("í”Œë ˆì´ì–´ í’€ %d ì´ˆê¸°í™”ì™„ë£Œ", size);
 	return true;
 }
 
 bool PlayerPool::Finalize() {
 	m_PlayerPool.Extension().ForEach([](Player* p) { delete  p; });
-	Console::WriteLine("ÇÃ·¹ÀÌ¾î Ç® ºñ¿ì±â ¿Ï·á");
+	SafeConsole::WriteLine("í”Œë ˆì´ì–´ í’€ ë¹„ìš°ê¸° ì™„ë£Œ");
 	return true;
 }
 
 Player* PlayerPool::PopPlayer(TcpSession* session) {
-	CriticalSectionLockGuard guard(m_Mutex);
+	NormalLockGuard guard(m_Mutex);
 
 	if (m_PlayerPool.IsEmpty()) {
 		return new Player(session);
@@ -55,11 +55,11 @@ Player* PlayerPool::PopPlayer(TcpSession* session) {
 
 void PlayerPool::ReleasePlayer(Player* releasePlayer) {
 	releasePlayer->Initialize();
-	CriticalSectionLockGuard guard(m_Mutex);
+	NormalLockGuard guard(m_Mutex);
 	m_PlayerPool.PushBack(releasePlayer);
 }
 
 int PlayerPool::Count() {
-	CriticalSectionLockGuard guard(m_Mutex);
+	NormalLockGuard guard(m_Mutex);
 	return m_PlayerPool.Size();
 }

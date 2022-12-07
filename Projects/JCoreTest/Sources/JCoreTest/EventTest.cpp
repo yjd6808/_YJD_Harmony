@@ -1,7 +1,7 @@
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Event.h>
 
-using namespace JCore;
+
 
 #if TEST_EventTest == ON
 
@@ -36,7 +36,7 @@ TEST(EventTest, General) {
 	e();	
 	EXPECT_TRUE(test == 29);
 
-	e.UnregisterByType(typeid(functor2)); // (+0) ¾øÀ½
+	e.UnregisterByType(typeid(functor2)); // (+0) ì—†ìŒ
 	e();
 	EXPECT_TRUE(test == 29);
 
@@ -70,14 +70,14 @@ TEST(EventTest, ClassMethod) {
 	Legend t1{ "t1" };
 	Legend t2{ "t2" };
 
-	e += Legend::test;		// Á¤Àû ÇÔ¼ö´Â °¡´É
-	// e += t1.member_test;	// ÀÌ·¸°Ô ¸â¹ö ÇÔ¼ö´Â Ãß°¡ÇÒ ¼ö°¡ ¾øÀ½
+	e += Legend::test;		// ì •ì  í•¨ìˆ˜ëŠ” ê°€ëŠ¥
+	// e += t1.member_test;	// ì´ë ‡ê²Œ ë©¤ë²„ í•¨ìˆ˜ëŠ” ì¶”ê°€í•  ìˆ˜ê°€ ì—†ìŒ
 
-	// ¹æ¹ı1
+	// ë°©ë²•1
 	e += std::bind(&Legend::member_test, &t1, std::placeholders::_1, std::placeholders::_2);
 	e += std::bind(&Legend::member_test, &t2, std::placeholders::_1, std::placeholders::_2);
 
-	// ¹æ¹ı2
+	// ë°©ë²•2
 	e += [&t1](int a, int b) {
 		t1.member_test(a, b);
 	};
@@ -88,7 +88,7 @@ TEST(EventTest, ClassMethod) {
 	
 
 
-	// È£Ãâ
+	// í˜¸ì¶œ
 	e(1, 5);
 	EXPECT_TRUE(g_event_test_val == 5);
 

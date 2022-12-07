@@ -1,16 +1,14 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¿ÀÅä ¿ÀºêÁ§Æ® Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ì˜¤í†  ì˜¤ë¸Œì íŠ¸ í…ŒìŠ¤íŠ¸
 */
 
 
 #include <JCoreTest/CoreTest.h>
-#include <JCoreTest/TestUtil/Object.h>
-
 #include <JCore/Deletor.h>
 #include <JCore/AutoObject.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_AutoObjectTest == ON
@@ -31,7 +29,7 @@ TEST(AutoObjectTest, AutoRef) {
 	{
 		AutoRef<int, Increaser> ref(g_iValue);
 	}
-	// »èÁ¦µÇ¸é¼­ g_iValue °ªÀÌ 1¿Ã¶ó°£´Ù.
+	// ì‚­ì œë˜ë©´ì„œ g_iValue ê°’ì´ 1ì˜¬ë¼ê°„ë‹¤.
 	EXPECT_TRUE(g_iValue == 101);
 }
 

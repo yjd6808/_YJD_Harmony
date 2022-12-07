@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¹è¿­ ±â¹İ ÄÁÅ×ÀÌ³ÊÀÇ Ãß»óÈ­ Å¬·¡½º
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë°°ì—´ ê¸°ë°˜ ì»¨í…Œì´ë„ˆì˜ ì¶”ìƒí™” í´ë˜ìŠ¤
 */
 
 #pragma once
@@ -17,8 +17,8 @@ namespace JCore {
 
 
 /*=====================================================================================
-									´ÙÀÌ³ª¹Í ¹è¿­
-					¹è¿­ ½ºÅÃ, ¹è¿­ Å¥, ¹è¿­ ¸®½ºÆ®ÀÇ °øÅë ÀÎÅÍÆäÀÌ½º Á¤ÀÇ
+									ë‹¤ì´ë‚˜ë¯¹ ë°°ì—´
+					ë°°ì—´ ìŠ¤íƒ, ë°°ì—´ í, ë°°ì—´ ë¦¬ìŠ¤íŠ¸ì˜ ê³µí†µ ì¸í„°í˜ì´ìŠ¤ ì •ì˜
 =====================================================================================*/
 
 template <typename T>
@@ -42,7 +42,7 @@ public:
 	{
 
 		if (capacity < 1) {
-			throw InvalidArgumentException("ÄÁÅ×ÀÌ³ÊÀÇ Å©±â°¡ 0ÀÌÇÏ°¡ µÉ ¼ö ¾ø½À´Ï´Ù.");
+			throw InvalidArgumentException("ì»¨í…Œì´ë„ˆì˜ í¬ê¸°ê°€ 0ì´í•˜ê°€ ë  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
 		m_pArray = Memory::Allocate<T*>(capacity * sizeof(T));
@@ -77,9 +77,9 @@ public:
 	}
 
 	/// <summary>
-	/// ³»ºÎ ¿ø¼Ò ¸ğµÎ Á¦°Å
+	/// ë‚´ë¶€ ì›ì†Œ ëª¨ë‘ ì œê±°
 	/// 
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	///  - ArrayQueue
 	/// </summary>
 	virtual void Clear(bool removeHeap = false) {
@@ -101,17 +101,17 @@ public:
 
 
 	/// <summary>
-	/// [¿À¹ö¶óÀÌµù]
-	///  - ArrayQueue : ÇÑÄ­ÀÌ ´ú Âù »óÅÂ¸¦ ²ËÂù »óÅÂ·Î Ã³¸®ÇØ¾ßÇÏ±â ¶§¹®¿¡ ¿À¹ö¶óÀÌµù ÇØ¾ßÇÔ
+	/// [ì˜¤ë²„ë¼ì´ë”©]
+	///  - ArrayQueue : í•œì¹¸ì´ ëœ ì°¬ ìƒíƒœë¥¼ ê½‰ì°¬ ìƒíƒœë¡œ ì²˜ë¦¬í•´ì•¼í•˜ê¸° ë•Œë¬¸ì— ì˜¤ë²„ë¼ì´ë”© í•´ì•¼í•¨
 	/// </summary>
 	virtual bool IsFull() const {
 		return this->m_iSize == m_iCapacity;
 	}
 protected:
 	/// <summary>
-	/// ´Ù¸¥ ¹è¿­ ÄÁÅ×ÀÌ³Ê·ÎºÎÅÍ º¹»ç¸¦ ¹Ş´Â´Ù.
+	/// ë‹¤ë¥¸ ë°°ì—´ ì»¨í…Œì´ë„ˆë¡œë¶€í„° ë³µì‚¬ë¥¼ ë°›ëŠ”ë‹¤.
 	/// 
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	///  - ArrayQueue
 	/// </summary>
 	/// <param name="other"></param>
@@ -146,7 +146,7 @@ protected:
 	}
 
 	/// <summary>
-	/// ÀÌ´Ï¼È¶óÀÌÀú ¸®½ºÆ®·ÎºÎÅÍÀÇ º¹»ç
+	/// ì´ë‹ˆì…œë¼ì´ì € ë¦¬ìŠ¤íŠ¸ë¡œë¶€í„°ì˜ ë³µì‚¬
 	/// </summary>
 	virtual void CopyFrom(std::initializer_list<T> other) {
 		Clear();
@@ -155,8 +155,8 @@ protected:
 		Memory::CopyUnsafe(m_pArray, other.begin(), sizeof(T) * other.size());
 	}
 
-	// ¿ë·® ¼öÁ¤
-	// ¸¸¾à ÇöÀç ¿ë·®º¸´Ù ´õ ÀÛÀº ¿ë·®À» ³Ö¾îÁÙ °æ¿ì
+	// ìš©ëŸ‰ ìˆ˜ì •
+	// ë§Œì•½ í˜„ì¬ ìš©ëŸ‰ë³´ë‹¤ ë” ì‘ì€ ìš©ëŸ‰ì„ ë„£ì–´ì¤„ ê²½ìš°
 	virtual void Resize(int capacity) {
 		if (capacity >= this->m_iSize) {
 			Expand(capacity, false);
@@ -179,12 +179,12 @@ protected:
 
 	
 	/// <summary>
-	/// ÇöÀç ¿ë·®º¸´Ù ´õ Å« ¿ë·®À¸·Î È®Àå
+	/// í˜„ì¬ ìš©ëŸ‰ë³´ë‹¤ ë” í° ìš©ëŸ‰ìœ¼ë¡œ í™•ì¥
 	/// 
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	/// - ArrayQueue
 	/// </summary>
-	/// <param name="newCapacity">±âÁ¸ ¿ë·®º¸´Ù ´õ Å« °ª</param>
+	/// <param name="newCapacity">ê¸°ì¡´ ìš©ëŸ‰ë³´ë‹¤ ë” í° ê°’</param>
 	virtual void Expand(int newCapacity, bool throwException = true) {
 		if (throwException)
 			ThrowIfNewCapacityIsSmallerThanBefore(newCapacity);
@@ -196,21 +196,21 @@ protected:
 	}
 	
 	/// <summary>
-	/// »çÀÌÁî ³»ºÎ¿¡ Á¸ÀçÇÏ´Â À¯È¿ÇÑ ÀÎµ¦½º ¹üÀ§ÀÎÁö
-	/// Áï, µ¥ÀÌÅÍ°¡ ÇÒ´çµÈ À§Ä¡ÀÎÁö
-	/// [¿À¹ö¶óÀÌµù]
+	/// ì‚¬ì´ì¦ˆ ë‚´ë¶€ì— ì¡´ì¬í•˜ëŠ” ìœ íš¨í•œ ì¸ë±ìŠ¤ ë²”ìœ„ì¸ì§€
+	/// ì¦‰, ë°ì´í„°ê°€ í• ë‹¹ëœ ìœ„ì¹˜ì¸ì§€
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	///  - ArrayQueue
 	/// </summary>
-	/// <param name="idx">»çÀÌÁî ³»ºÎÀÇ ÀÎµ¦½º</param>
+	/// <param name="idx">ì‚¬ì´ì¦ˆ ë‚´ë¶€ì˜ ì¸ë±ìŠ¤</param>
 	/// <returns></returns>
 	virtual bool IsValidIndex(const int idx) const {
 		return idx >= 0 && idx < this->m_iSize;
 	}
 
 	/// <summary>
-	/// ÇÒ´çµÈ ¹è¿­ ³»ºÎ¿¡ Á¸ÀçÇÏ´Â ÀÎµ¦½º °ªÀÎÁö
+	/// í• ë‹¹ëœ ë°°ì—´ ë‚´ë¶€ì— ì¡´ì¬í•˜ëŠ” ì¸ë±ìŠ¤ ê°’ì¸ì§€
 	/// </summary>
-	/// <param name="idx">ÇÒ´çµÈ ¹è¿­ ³»ºÎÀÇ ÀÎµ¦½º</param>
+	/// <param name="idx">í• ë‹¹ëœ ë°°ì—´ ë‚´ë¶€ì˜ ì¸ë±ìŠ¤</param>
 	virtual bool IsValidIndexCapacity(const int idx) const {
 		return idx >= 0 && idx < this->Capacity();
 	}
@@ -229,7 +229,7 @@ protected:
 
 	
 	/// <summary>
-	/// [¿À¹ö¶óÀÌµù]
+	/// [ì˜¤ë²„ë¼ì´ë”©]
 	///  - ArrayQueue
 	/// </summary>
 	virtual void DestroyAtRange(const int startIdx, const int endIdx) {
@@ -250,7 +250,7 @@ protected:
 	}
 
 	/// <summary>
-	/// startIdx ÀÌ»ó endIdxÀÌÇÏ¿¡ À§Ä¡ÇÑ ¿ø¼ÒµéÀ» Á¤·ÄÇÑ´Ù.
+	/// startIdx ì´ìƒ endIdxì´í•˜ì— ìœ„ì¹˜í•œ ì›ì†Œë“¤ì„ ì •ë ¬í•œë‹¤.
 	/// </summary>
 	template <typename Predicate>
 	void SortRange(const int startIdx, const int endIdx, Predicate predicate) {
@@ -274,8 +274,8 @@ protected:
 	}
 
 	/// <summary>
-	/// ¸¸µç ÀÌÀ¯ : ArrayQueue´Â TailÀÌ ´ÙÀ½ »ğÀÔµÉ À§Ä¡ÀÎµ¥ »ğÀÔ½ÃÀÇ À§Ä¡°¡ À¯È¿ÇÑÁö Ã¼Å©ÇÒ °æ¿ì
-	///            ¿¹¿Ü¸¦ ´øÁö±â ¶§¹®¿¡..
+	/// ë§Œë“  ì´ìœ  : ArrayQueueëŠ” Tailì´ ë‹¤ìŒ ì‚½ì…ë  ìœ„ì¹˜ì¸ë° ì‚½ì…ì‹œì˜ ìœ„ì¹˜ê°€ ìœ íš¨í•œì§€ ì²´í¬í•  ê²½ìš°
+	///            ì˜ˆì™¸ë¥¼ ë˜ì§€ê¸° ë•Œë¬¸ì—..
 	/// </summary>
 	void SetAtUnsafe(const int idx, const T& data) noexcept {
 		Memory::PlacementAllocate(m_pArray[idx]);
@@ -306,18 +306,18 @@ protected:
 	}
 
 	/// <summary>
-	/// ºí·ÏÀ» ¿øÇÏ´Â À§Ä¡·Î ÀÌµ¿ÇÑ´Ù.
-	/// ºí·ÏÀº ¹è¿­ÀÇ Æ¯Á¤ ÀÎµ¦½ººÎÅÍ Á¤ÇØÁø °¹¼ö±îÁöÀÇ ±¸°£À» ºí·ÏÀÌ¶ó ÇÑ´Ù.
+	/// ë¸”ë¡ì„ ì›í•˜ëŠ” ìœ„ì¹˜ë¡œ ì´ë™í•œë‹¤.
+	/// ë¸”ë¡ì€ ë°°ì—´ì˜ íŠ¹ì • ì¸ë±ìŠ¤ë¶€í„° ì •í•´ì§„ ê°¯ìˆ˜ê¹Œì§€ì˜ êµ¬ê°„ì„ ë¸”ë¡ì´ë¼ í•œë‹¤.
 	/// </summary>
-	/// <param name="blockIdx"> ºí·Ï ½ÃÀÛ À§Ä¡ </param>
-	/// <param name="blockSize"> ºí·Ï Å©±â </param>
-	/// <param name="moveIdx"> ÀÌµ¿ÇÒ À§Ä¡ </param>
+	/// <param name="blockIdx"> ë¸”ë¡ ì‹œì‘ ìœ„ì¹˜ </param>
+	/// <param name="blockSize"> ë¸”ë¡ í¬ê¸° </param>
+	/// <param name="moveIdx"> ì´ë™í•  ìœ„ì¹˜ </param>
 	void MoveBlock(const int blockIdx, const int moveIdx, const int blockSize) {
 		if (blockSize < 0) {
-			throw InvalidArgumentException("º¹»çÇÒ ºí·Ï Å©±â°¡ 0º¸´Ù ÀÛÀ» ¼ö ¾ø½À´Ï´Ù.");
+			throw InvalidArgumentException("ë³µì‚¬í•  ë¸”ë¡ í¬ê¸°ê°€ 0ë³´ë‹¤ ì‘ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 		}
 
-		// Á¦ÀÚ¸® º¹»ç´Â ±×³É ¹İÈ¯ÇÏÀÚ.
+		// ì œìë¦¬ ë³µì‚¬ëŠ” ê·¸ëƒ¥ ë°˜í™˜í•˜ì.
 		if (moveIdx == blockIdx) {
 			return;
 		}
@@ -326,11 +326,11 @@ protected:
 			return;
 		}
 
-		// µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏ´ÂÁö
+		// ë°ì´í„°ê°€ ì¡´ì¬í•˜ëŠ”ì§€
 		ThrowIfIndexIsInvalid(blockIdx);
 		ThrowIfIndexIsInvalid(blockIdx + blockSize - 1);
 
-		// ºí·ÏÀÌ ÀÌµ¿ÇÒ À§Ä¡°¡ ¹è¿­ ³»ºÎ¿¡ µÑ ¼ö ÀÖ´ÂÁö Ã¼Å©
+		// ë¸”ë¡ì´ ì´ë™í•  ìœ„ì¹˜ê°€ ë°°ì—´ ë‚´ë¶€ì— ë‘˜ ìˆ˜ ìˆëŠ”ì§€ ì²´í¬
 		ThrowIfIndexIsNotCapacityIndex(moveIdx);
 		ThrowIfIndexIsNotCapacityIndex(moveIdx + blockSize - 1);
 
@@ -350,7 +350,7 @@ protected:
 
 
 	/// <summary>
-	/// Àü´Ş¹ŞÀº »çÀÌÁî Å©±â¿¡ ¸Â´Â ¹è¿­ Å©±â¸¦ ¹İÈ¯ÇØÁØ´Ù.
+	/// ì „ë‹¬ë°›ì€ ì‚¬ì´ì¦ˆ í¬ê¸°ì— ë§ëŠ” ë°°ì—´ í¬ê¸°ë¥¼ ë°˜í™˜í•´ì¤€ë‹¤.
 	/// </summary>
 	int CalculateExpandCapacity(int size) const {
 		if (size < m_iCapacity) {
@@ -372,31 +372,31 @@ protected:
 protected:
 	virtual void ThrowIfContainerIsEmpty() const {
 		if (this->IsEmpty()) {
-			throw InvalidOperationException("µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+			throw InvalidOperationException("ë°ì´í„°ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 		}
 	}
 
 	virtual void ThrowIfIndexIsInvalid(int idx) const {
 		if (!IsValidIndex(idx)) {
-			throw OutOfRangeException("¿Ã¹Ù¸£Áö ¾ÊÀº µ¥ÀÌÅÍ ÀÎµ¦½º ÀÔ´Ï´Ù.");
+			throw OutOfRangeException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë°ì´í„° ì¸ë±ìŠ¤ ì…ë‹ˆë‹¤.");
 		}
 	}
 
 	virtual void ThrowIfIndexIsNotCapacityIndex(int capacityIdx) const {
 		if (!IsValidIndexCapacity(capacityIdx)) {
-			throw OutOfRangeException("¿Ã¹Ù¸£Áö ¾ÊÀº ¹è¿­ ÀÎµ¦½º ÀÔ´Ï´Ù.");
+			throw OutOfRangeException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ ë°°ì—´ ì¸ë±ìŠ¤ ì…ë‹ˆë‹¤.");
 		}
 	}
 
 	virtual void ThrowIfRangeIsInvalid(int startIdx, int endIdx) const {
 		if (!IsValidRange(startIdx, endIdx)) {
-			throw OutOfRangeException("¿Ã¹Ù¸£Áö ¾ÊÀº ÀÎµ¦½º ¹üÀ§ÀÔ´Ï´Ù.");
+			throw OutOfRangeException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ ì¸ë±ìŠ¤ ë²”ìœ„ì…ë‹ˆë‹¤.");
 		}
 	}
 
 	virtual void ThrowIfNewCapacityIsSmallerThanBefore(int newCapacity) const {
 		if (newCapacity < m_iCapacity) {
-			throw InvalidArgumentException("ÇöÀç ¿ë·®º¸´Ù ´õ ÀÛÀº ¿ë·®ÀÔ´Ï´Ù.");
+			throw InvalidArgumentException("í˜„ì¬ ìš©ëŸ‰ë³´ë‹¤ ë” ì‘ì€ ìš©ëŸ‰ì…ë‹ˆë‹¤.");
 		}
 	}
 protected:
@@ -408,8 +408,8 @@ protected:
 		return collection.m_pArray[idx];
 	}
 protected:
-	static constexpr int ms_iExpandingFactor = 4;	// ²ËÂ÷¸é 4¹è¾¿ È®Àå
-	static constexpr int ms_iDefaultCapacity = 32;	// ÃÊ±â ¹è¿­ Å©±â
+	static constexpr int ms_iExpandingFactor = 4;	// ê½‰ì°¨ë©´ 4ë°°ì”© í™•ì¥
+	static constexpr int ms_iDefaultCapacity = 32;	// ì´ˆê¸° ë°°ì—´ í¬ê¸°
 protected:
 	T* m_pArray;
 	int m_iCapacity;

@@ -1,6 +1,6 @@
 /*
-	ÀÛ¼ºÀÚ : À±Á¤µµ
-	¹è¿­±â¹İ ½ºÅÃ Å×½ºÆ®
+	ì‘ì„±ì : ìœ¤ì •ë„
+	ë°°ì—´ê¸°ë°˜ ìŠ¤íƒ í…ŒìŠ¤íŠ¸
 */
 
 
@@ -8,7 +8,7 @@
 #include <JCore/Random.h>
 #include <JCore/Container/ArrayQueue.h>
 
-using namespace JCore;
+
 using namespace std;
 
 #if TEST_ArrayQueueTest == ON
@@ -37,10 +37,10 @@ TEST(ArrayQueueTest, Regular) {
 	EXPECT_TRUE(queue.Size() == 0);
 }
 
-// Å¥°¡ ²ËÂù »óÈ²¿¡¼­ÀÇ Å×½ºÆ®
+// íê°€ ê½‰ì°¬ ìƒí™©ì—ì„œì˜ í…ŒìŠ¤íŠ¸
 TEST(ArrayQueueTest, FullCaseTest) {
 
-	// Å¥°¡ ²ËÂù »óÅÂ¿¡¼­ ÀÌÅÍ·¹ÀÌÅÍ°¡ ¹«ÇÑ ¼øÈ¸ÇÏ´Â »óÈ²
+	// íê°€ ê½‰ì°¬ ìƒíƒœì—ì„œ ì´í„°ë ˆì´í„°ê°€ ë¬´í•œ ìˆœíšŒí•˜ëŠ” ìƒí™©
 	ArrayQueue<int> q;
 	const int z = q.Capacity();
 
@@ -67,7 +67,7 @@ TEST(ArrayQueueTest, FullCaseTest) {
 
 
 
-// ¹è¿­ Å¥ ¿ª¹æÇâ ¹İº¹ÀÚ, Á¤¹æÇâ ¹İº¹ÀÚ, »ğÀÔ »èÁ¦ µîµî ¸ğµÎ Å×½ºÆ®
+// ë°°ì—´ í ì—­ë°©í–¥ ë°˜ë³µì, ì •ë°©í–¥ ë°˜ë³µì, ì‚½ì… ì‚­ì œ ë“±ë“± ëª¨ë‘ í…ŒìŠ¤íŠ¸
 TEST(ArrayQueueTest, TotalTest) {
 	Random random;
 
@@ -79,8 +79,8 @@ TEST(ArrayQueueTest, TotalTest) {
 		AutoMemoryLeakDetector detector;
 		ArrayQueue<int> queue;
 
-		list<int> forward_list;		// µ¥ÀÌÅÍ ÃßÀû - Á¤¹æÇâ ¿ë
-									// Å¥¿Í µ¥ÀÌÅÍ °è¼Ó ¶È°°ÀÌ »©°í ³ÖÀ¸¸é¼­ ÃÖÁ¾ÀûÀ¸·Î ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ
+		list<int> forward_list;		// ë°ì´í„° ì¶”ì  - ì •ë°©í–¥ ìš©
+									// íì™€ ë°ì´í„° ê³„ì† ë˜‘ê°™ì´ ë¹¼ê³  ë„£ìœ¼ë©´ì„œ ìµœì¢…ì ìœ¼ë¡œ ì¼ì¹˜í•˜ëŠ”ì§€ í™•ì¸
 		list<int> backward_list;
 
 		
@@ -91,9 +91,9 @@ TEST(ArrayQueueTest, TotalTest) {
 		}
 
 		EXPECT_TRUE(queue.Size() == dataCount);
-		int r = dataCount;	// °¹¼ö ÃßÃ´
+		int r = dataCount;	// ê°¯ìˆ˜ ì¶”ì²™
 		
-		// 2°³ ³Ö°í 2°³ »©°í ´Ù½Ã 32°³¸¦ ³Ö¾î¼­ ²ËÃ¤¿î´Ù.
+		// 2ê°œ ë„£ê³  2ê°œ ë¹¼ê³  ë‹¤ì‹œ 32ê°œë¥¼ ë„£ì–´ì„œ ê½‰ì±„ìš´ë‹¤.
 
 		while (suffleCount-- > 0) {
 			int popSize = random.GenerateInt(1, queue.Size() + 1);
@@ -106,13 +106,13 @@ TEST(ArrayQueueTest, TotalTest) {
 			}
 			int queueSize1 = queue.Size();
 			
-			vector<int> v;	// µ¥ÀÌÅÍ ÃßÀû
-							// ÀÌ¹ø ¼ÅÇÃ ´Ü°è¿¡¼­ µ¥ÀÌÅÍ°¡ ÀÏÄ¡ÇÏ´ÂÁö
-			list<int> rv; // ¹İ´ë¹æÇâÀ¸·Î µ¥ÀÌÅÍ ÃßÀû
+			vector<int> v;	// ë°ì´í„° ì¶”ì 
+							// ì´ë²ˆ ì…”í”Œ ë‹¨ê³„ì—ì„œ ë°ì´í„°ê°€ ì¼ì¹˜í•˜ëŠ”ì§€
+			list<int> rv; // ë°˜ëŒ€ë°©í–¥ìœ¼ë¡œ ë°ì´í„° ì¶”ì 
 			
 			
-			//PrintFormat("¼ÅÇÃ/Å¥ µ¥ÀÌÅÍ ¼ö : %d/%d\n", suffleCount, queueSize1);
-			//»©°í ³²¾ÆÀÖ´Â °ÍµéÀ» ³Ö¾îÁÜ
+			//PrintFormat("ì…”í”Œ/í ë°ì´í„° ìˆ˜ : %d/%d\n", suffleCount, queueSize1);
+			//ë¹¼ê³  ë‚¨ì•„ìˆëŠ” ê²ƒë“¤ì„ ë„£ì–´ì¤Œ
 			Enumerator<int> it = queue.Begin();
 			Enumerator<int> rit = queue.End();
 
@@ -120,12 +120,12 @@ TEST(ArrayQueueTest, TotalTest) {
 				int a = 40;
 			}
 
-			// ¹İº¹ÀÚ Á¤¹æÇâ
+			// ë°˜ë³µì ì •ë°©í–¥
 			while (it->HasNext()) {
 				v.push_back(it->Next());
 			}
 
-			// ¹İº¹ÀÚ ¿ª¹æÇâ
+			// ë°˜ë³µì ì—­ë°©í–¥
 			while (rit->HasPrevious()) {
 				rv.push_back(rit->Previous());
 			}
@@ -133,7 +133,7 @@ TEST(ArrayQueueTest, TotalTest) {
 			int enqueueSize = random.GenerateInt(1, 50);
 			r += enqueueSize;
 
-			// Å¥¿¡ 1 ~ ³²¾ÆÀÖ´Â °Íµé ¼ö»çÀÌ ·£´ı °¹¼ö¸¸Å­ ´Ù½Ã ³Ö¾îÁÜ
+			// íì— 1 ~ ë‚¨ì•„ìˆëŠ” ê²ƒë“¤ ìˆ˜ì‚¬ì´ ëœë¤ ê°¯ìˆ˜ë§Œí¼ ë‹¤ì‹œ ë„£ì–´ì¤Œ
 			for (int i = 0; i < enqueueSize; i++) {
 				queue.Enqueue(i);
 
@@ -159,7 +159,7 @@ TEST(ArrayQueueTest, TotalTest) {
 				int value = rit->Previous();
 				int vv = *rvIt;
 				EXPECT_TRUE(vv == value);
-				rvIt++;
+				++rvIt;
 			}
 
 			EXPECT_TRUE(forward_list.size() == queue.Size());
@@ -175,30 +175,30 @@ TEST(ArrayQueueTest, TotalTest) {
 		while (myqueueit->HasNext()) {
 			int lval = *forward_listit;
 			EXPECT_TRUE(myqueueit->Next() == lval);
-			forward_listit++;
+			++forward_listit;
 		}
 
 		myqueueit = queue.End();
 		while (myqueueit->HasPrevious()) {
 			int lval = *backward_listit;
 			EXPECT_TRUE(myqueueit->Previous() == lval);
-			backward_listit++;
+			++backward_listit;
 		}
 	}
 }
 
 
-// »ı¼ºÀÚ Å×½ºÆ®
+// ìƒì„±ì í…ŒìŠ¤íŠ¸
 TEST(ArrayQueueTest, ConstructorTest) {
 	AutoMemoryLeakDetector detector;
 
-	// ÀÌ´Ï¼È¶óÀÌÀú Å×½ºÆ®
+	// ì´ë‹ˆì…œë¼ì´ì € í…ŒìŠ¤íŠ¸
 	ArrayQueue<int> a{ 1, 2, 3 };
 
 	EXPECT_TRUE(a.Front() == 1); a.Dequeue();
 	EXPECT_TRUE(a.Front() == 2); a.Dequeue();
 
-	// º¹»ç »ı¼ºÀÚ Å×½ºÆ®
+	// ë³µì‚¬ ìƒì„±ì í…ŒìŠ¤íŠ¸
 	ArrayQueue<int> b(a);
 	for (int i = 0; i < 30; i++) {
 		b.Enqueue(i);
@@ -210,7 +210,7 @@ TEST(ArrayQueueTest, ConstructorTest) {
 	EXPECT_TRUE(b.Size() == 29);
 	EXPECT_TRUE(c.Size() == 1);
 
-	// ÀÌµ¿ »ı¼ºÀÚ Å×½ºÆ®
+	// ì´ë™ ìƒì„±ì í…ŒìŠ¤íŠ¸
 	ArrayQueue<int> d(Move(c));
 	EXPECT_TRUE(c.Size() == 0);
 	EXPECT_TRUE(d.Size() == 1);
@@ -230,15 +230,15 @@ void SetQueuePos(ArrayQueue<T>& q, int pos) {
 	}
 }
 
-// ¿¬»êÀÚ Å×½ºÆ®
+// ì—°ì‚°ì í…ŒìŠ¤íŠ¸
 TEST(ArrayQueueTest, OperatorTest) {
 	AutoMemoryLeakDetector detector;
-	// ²¿¸®°¡ ¸Ó¸®º¸´Ù µÚ¿¡ ÀÖ´Â °æ¿ì
+	// ê¼¬ë¦¬ê°€ ë¨¸ë¦¬ë³´ë‹¤ ë’¤ì— ìˆëŠ” ê²½ìš°
 	{
 		ArrayQueue<int> a{ 1, 2 };
 		const ArrayQueue<int> b{ 1, 2 };
 
-		// ÀÌ´Ï¼È¶óÀÌÀú Å×½ºÆ®
+		// ì´ë‹ˆì…œë¼ì´ì € í…ŒìŠ¤íŠ¸
 		a = { 3, 4 };
 
 		EXPECT_TRUE(a.Front() == 3); a.Dequeue();
@@ -246,7 +246,7 @@ TEST(ArrayQueueTest, OperatorTest) {
 		a.Enqueue(5);
 		EXPECT_TRUE(a.Front() == 5); a.Dequeue();
 
-		// º¹»ç ´ëÀÔ ¿¬»êÀÚ Å×½ºÆ®
+		// ë³µì‚¬ ëŒ€ì… ì—°ì‚°ì í…ŒìŠ¤íŠ¸
 		a = b;
 
 		EXPECT_TRUE(a.Front() == 1); a.Dequeue();
@@ -254,11 +254,11 @@ TEST(ArrayQueueTest, OperatorTest) {
 		a.Enqueue(5);
 		EXPECT_TRUE(a.Front() == 5); a.Dequeue();
 	}
-	// ¸Ó¸®°¡ ²¿¸®º¸´Ù µÚ¿¡ÀÖ´Â °æ¿ì
+	// ë¨¸ë¦¬ê°€ ê¼¬ë¦¬ë³´ë‹¤ ë’¤ì—ìˆëŠ” ê²½ìš°
 	{
 		auto borderlineTest = [](int dataCount) {
 			ArrayQueue<int> a;
-			// ÀÏºÎ·¯ µ¥ÀÌÅÍ¸¦ ³Ö¾îÁÖ°í »­À¸·Î½á ¸Ó¸®¿Í ²¿¸®¸¦ 10¿¡ À§Ä¡½ÃÅ²´Ù.
+			// ì¼ë¶€ëŸ¬ ë°ì´í„°ë¥¼ ë„£ì–´ì£¼ê³  ëºŒìœ¼ë¡œì¨ ë¨¸ë¦¬ì™€ ê¼¬ë¦¬ë¥¼ 10ì— ìœ„ì¹˜ì‹œí‚¨ë‹¤.
 			SetQueuePos(a, 10);
 
 			for (int i = 0; i < dataCount; i++) {
@@ -283,8 +283,8 @@ TEST(ArrayQueueTest, OperatorTest) {
 			EXPECT_TRUE(i == dataCount);
 		};
 
-		// Head¸¦ 10 TailÀ» 0À¸·Î ¸ÂÃçº¸ÀÚ.
-		// °æ°è¿¡¼­ Á¦´ë·Î º¹»ç°¡ µÇ´ÂÁö
+		// Headë¥¼ 10 Tailì„ 0ìœ¼ë¡œ ë§ì¶°ë³´ì.
+		// ê²½ê³„ì—ì„œ ì œëŒ€ë¡œ ë³µì‚¬ê°€ ë˜ëŠ”ì§€
 
 		borderlineTest(22);	// Head 10 : Tail 0
 		borderlineTest(23); // Head 10 : Tail 1

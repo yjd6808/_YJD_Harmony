@@ -1,5 +1,5 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <TF/Scenes/LoginLayer.h>
@@ -25,12 +25,12 @@ bool LoginLayer::init() {
 	}
 
 
-	Text* pLogoText = Text::create("ÅÊÅ© ÆÄÀÌÅÍ!", FONT_PATH_DEFAULT, 72);
+	Text* pLogoText = Text::create("íƒ±í¬ íŒŒì´í„°!", FONT_PATH_DEFAULT, 72);
 	pLogoText->setSkewX(30.0f);
 	pLogoText->setPosition({ 500, 500 });
 	this->addChild(pLogoText);
 
-	Text* pInfoText = Text::create("°³¹ßÀÚ : À±Á¤µµ", FONT_PATH_DEFAULT, 25);
+	Text* pInfoText = Text::create("ê°œë°œì : ìœ¤ì •ë„", FONT_PATH_DEFAULT, 25);
 	pInfoText->enableGlow(Color4B::GRAY);
 	pInfoText->setColor(ColorList::AbsoluteZero_v);
 	pInfoText->setAnchorPoint(Vec2::ANCHOR_MIDDLE_BOTTOM);
@@ -44,7 +44,7 @@ bool LoginLayer::init() {
 	keyboardListener->onKeyReleased = CC_CALLBACK_2(LoginLayer::onKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
-	TextButton* loginBtn = TextButton::create(200, 45, "·Î±×ÀÎ", 15);
+	TextButton* loginBtn = TextButton::create(200, 45, "ë¡œê·¸ì¸", 15);
 	loginBtn->setAnchorPoint(Vec2::ZERO);
 	loginBtn->setPosition({ 400, 200 });
 	loginBtn->setBackgroundColor(ColorList::Camel_v);
@@ -53,7 +53,7 @@ bool LoginLayer::init() {
 	this->addChild(loginBtn);
 	Button::create();
 
-	TextButton* registerBtn = TextButton::create(200, 45, "È¸¿ø°¡ÀÔ", 15);
+	TextButton* registerBtn = TextButton::create(200, 45, "íšŒì›ê°€ì…", 15);
 	registerBtn->setAnchorPoint(Vec2::ZERO);
 	registerBtn->setPosition({ 400, 150 });
 	registerBtn->setBackgroundColor(ColorList::Camel_v);
@@ -61,7 +61,7 @@ bool LoginLayer::init() {
 	registerBtn->setClickEvent(CC_CALLBACK_1(LoginLayer::OnClickedRegisterButton, this));
 	this->addChild(registerBtn);
 
-	TextButton* reconnectBtn = TextButton::create(200, 45, "¼­¹ö ÀçÁ¢¼Ó ½Ãµµ", 15);
+	TextButton* reconnectBtn = TextButton::create(200, 45, "ì„œë²„ ì¬ì ‘ì† ì‹œë„", 15);
 	reconnectBtn->setAnchorPoint(Vec2::ZERO);
 	reconnectBtn->setPosition({ 400, 100 });
 	reconnectBtn->setBackgroundColor(ColorList::Camel_v);
@@ -80,7 +80,7 @@ bool LoginLayer::init() {
 	pIDEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
 	this->addChild(pIDEditBox, 0, EDITBOX_ID);
 
-	// ºü¸¥ ·Î±×ÀÎÀ» À§ÇØ º¹ºÙ
+	// ë¹ ë¥¸ ë¡œê·¸ì¸ì„ ìœ„í•´ ë³µë¶™
 	HashMap<int, Tuple<std::string, std::string>> randIdPwMap{
 		{1, { "wjdeh515", "wjdeh414" }},
 		{2, { "wjdeh616", "wjdeh515" }},
@@ -139,7 +139,7 @@ void LoginLayer::OnClickedLoginButton(TextButton* sender) {
 	JCore::String pw = pPWEditBox->getText();
 
 	if (id.Length() > ID_LEN || pw.Length() > PASS_LEN) {
-		PopUp::createInParent("¾ÆÀÌµğ ºñ¹Ğ¹øÈ£´Â ¿µ¹® + ¼ıÀÚ¸¸ °¡´É", this, false);
+		PopUp::createInParent("ì•„ì´ë”” ë¹„ë°€ë²ˆí˜¸ëŠ” ì˜ë¬¸ + ìˆ«ìë§Œ ê°€ëŠ¥", this, false);
 		return;
 	}
 
@@ -151,12 +151,12 @@ void LoginLayer::OnClickedLoginButton(TextButton* sender) {
 		strcpy_s(pCmdLoginSyn->Password, PASS_LEN, pw.Source());
 
 		if (_Client->SendAsync(pPacket) == false) {
-			PopUp::createInParent("·Î±×ÀÎ ÆĞÅ¶ Àü¼Û ½ÇÆĞ", this, false);
+			PopUp::createInParent("ë¡œê·¸ì¸ íŒ¨í‚· ì „ì†¡ ì‹¤íŒ¨", this, false);
 		}
 		return;
 	}
 
-	PopUp::createInParent("¾ÆÀÌµğ ºñ¹Ğ¹øÈ£¸¦ ¶È¹Ù·Î ÀÔ·ÂÇØÁÖ¼¼¿ä.", this, false);
+	PopUp::createInParent("ì•„ì´ë”” ë¹„ë°€ë²ˆí˜¸ë¥¼ ë˜‘ë°”ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”.", this, false);
 }
 
 void LoginLayer::OnClickedRegisterButton(TextButton* sender) {
@@ -179,18 +179,18 @@ void LoginLayer::OnClickedRegisterButton(TextButton* sender) {
 		strcpy_s(pCmdRegisterSyn->Password, PASS_LEN, pw.Source());
 
 		if (_Client->SendAsync(pPacket) == false) {
-			PopUp::createInParent("È¸¿ø°¡ÀÔ ÆĞÅ¶ Àü¼Û ½ÇÆĞ", this, false);
+			PopUp::createInParent("íšŒì›ê°€ì… íŒ¨í‚· ì „ì†¡ ì‹¤íŒ¨", this, false);
 		}
 		return;
 	}
 
-	PopUp::createInParent("¾ÆÀÌµğ ºñ¹Ğ¹øÈ£¸¦ ¶È¹Ù·Î ÀÔ·ÂÇØÁÖ¼¼¿ä.", this, false);
+	PopUp::createInParent("ì•„ì´ë”” ë¹„ë°€ë²ˆí˜¸ë¥¼ ë˜‘ë°”ë¡œ ì…ë ¥í•´ì£¼ì„¸ìš”.", this, false);
 }
 
 
 void LoginLayer::OnClickedReconnectButton(TextButton* sender) {
 	if (_Client->ConnectAsync(JCore::StringUtil::Format("%s:%d", SERVER_ADDR, SERVER_PORT)) == false) {
-		PopUp::createInParent("ÀçÁ¢¼Ó¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.", this, false);
+		PopUp::createInParent("ì¬ì ‘ì†ì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.", this, false);
 	}
 }
 
@@ -208,14 +208,14 @@ void LoginLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 
 /* =================================================================================
  *
- *                             Åë½Å ÆĞÅ¶ Ã³¸® 
+ *                             í†µì‹  íŒ¨í‚· ì²˜ë¦¬ 
  *	
  * ================================================================================*/
 
 void LoginLayer::CmdLoginAck(ICommand* cmd) {
 	LoginAck* pLoginAck = cmd->CastCommand<LoginAck*>();
 
-	// ·Î±×ÀÎ ¼º°ø
+	// ë¡œê·¸ì¸ ì„±ê³µ
 	if (pLoginAck->Result) {
 		_Client->SetAccountUID(pLoginAck->UID);
 		_Client->ChangeScene(SceneType::Channel);

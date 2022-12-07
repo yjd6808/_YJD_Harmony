@@ -1,39 +1,35 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
+ *	ì‘ì„±ì : ìœ¤ì •ë„
  *
- *	ISendPacketÀº »ı¼º½Ã ¹Ù·Î Packet¿¡¼­ ¸â¹ö ÃÊ±âÈ­¸¦ ÁøÇàÇØÁÖ¹Ç·Î ÇØ´ç ÀÎ½ºÆå¼ÇÀº ¹«½ÃÇÏµµ·ÏÇÏÀÚ.
- *	ReSharper disable CppUninitializedNonStaticDataMember
+ *	ISendPacketì€ ìƒì„±ì‹œ ë°”ë¡œ Packetì—ì„œ ë©¤ë²„ ì´ˆê¸°í™”ë¥¼ ì§„í–‰í•´ì£¼ë¯€ë¡œ í•´ë‹¹ ì¸ìŠ¤í™ì…˜ì€ ë¬´ì‹œí•˜ë„ë¡í•˜ì.
  */
 
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/Define.h>
 #include <JCore/TypeTraits.h>
-#include <JCore/RefCount.h>
+#include <JCore/SafeRefCount.h>
 
 #include <tuple>
 #include <WinSock2.h>
 
-#define PACKET_HEADER_SIZE		4UL		// IPacket  Å©±â
-#define COMMAND_HEADER_SIZE		4UL		// ICommand Å©±â
+#define PACKET_HEADER_SIZE		4UL		// IPacket  í¬ê¸°
+#define COMMAND_HEADER_SIZE		4UL		// ICommand í¬ê¸°
 
 namespace JNetwork {
 
 /*=====================================================================================
-									Ä¿¸Çµå °´Ã¼
-						 ÆĞÅ¶¿¡ Ä¿¸Çµå¸¦ ´ã¾Æ¼­ Àü¼ÛÇÑ´Ù.
+									ì»¤ë§¨ë“œ ê°ì²´
+						 íŒ¨í‚·ì— ì»¤ë§¨ë“œë¥¼ ë‹´ì•„ì„œ ì „ì†¡í•œë‹¤.
  =====================================================================================*/
 
 
 struct ICommand
 {
-	// Çì´õ¸¸ »ı¼ºÇÒ ¼ö ¾øµµ·Ï °Á virtual·Î µÒ
-	// °¡»ó ÇÔ¼ö Å×ÀÌºí¶«¿¡ 4¹ÙÀÌÆ®¾¿ ¸ÔÀ½; °Á ¾ø¾İ´Ù.
-	// 
+	// ê°€ìƒ í•¨ìˆ˜ í…Œì´ë¸”ë•œì— 4ë°”ì´íŠ¸ì”© ë¨¹ìŒ; ê± ì—†ì•´ë‹¤.
 	// virtual Int16U GetCommand() const = 0;
 	// virtual Int16U GetCommandLen() const = 0;
-
-	
 
 	void SetCommand(const Int16U cmd)			{ Cmd = cmd;			}
 	void SetCommandLen(const Int16U cmdlen)		{ CmdLen = cmdlen;		}
@@ -41,14 +37,14 @@ struct ICommand
 	Int16U GetCommand() const					{ return this->Cmd;		}
 	Int16U GetCommandLen() const				{ return this->CmdLen;	}
 
-	// ICommand ÅëÆ²¾î¼­ Ä³½ºÆÃ - ICommand¸¦ »ó¼Ó¹ŞÀº Ä¿½ºÅÒ Ä¿¸Çµå Àü¿ë
+	// ICommand í†µí‹€ì–´ì„œ ìºìŠ¤íŒ… - ICommandë¥¼ ìƒì†ë°›ì€ ì»¤ìŠ¤í…€ ì»¤ë§¨ë“œ ì „ìš©
 	template <typename T>
 	T CastCommand() {
 		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer command type");
 		return reinterpret_cast<T>(this);
 	}
 
-	// ICommand¤§¸¦ Á¦¿ÜÇÏ°í µŞºÎºĞ¸¸ Ä³½ºÆÃ - Command<T> Àü¿ë
+	// ICommandã„·ë¥¼ ì œì™¸í•˜ê³  ë’·ë¶€ë¶„ë§Œ ìºìŠ¤íŒ… - Command<T> ì „ìš©
 	template <typename T>
 	T CastValue() {
 		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
@@ -56,9 +52,9 @@ struct ICommand
 	}
 
 protected:
-	Int16U Cmd{};		// »ç¿ëÀÚ ÁöÁ¤ Ä¿¸Çµå ID°ª
-	Int16U CmdLen{};	// Ä¿¸Çµå ±æÀÌ ÀÌ¶§ CmdLenÀº Ä¿¸Çµå Çì´õÀÇ Å©±â¸¦ ´õÇÑ °ªÀ¸·Î ¼³Á¤ÇÏµµ·ÏÇÑ´Ù.
-						// ex) Commnad<char>ÀÇ CmdLenÀº 1ÀÌ ¾Æ´Ï°í 5ÀÓ
+	Int16U Cmd{};		// ì‚¬ìš©ì ì§€ì • ì»¤ë§¨ë“œ IDê°’
+	Int16U CmdLen{};	// ì»¤ë§¨ë“œ ê¸¸ì´ ì´ë•Œ CmdLenì€ ì»¤ë§¨ë“œ í—¤ë”ì˜ í¬ê¸°ë¥¼ ë”í•œ ê°’ìœ¼ë¡œ ì„¤ì •í•˜ë„ë¡í•œë‹¤.
+						// ex) Commnad<char>ì˜ CmdLenì€ 1ì´ ì•„ë‹ˆê³  5ì„
 };
 
 template <typename T>
@@ -66,7 +62,7 @@ struct Command : ICommand
 { 
 	Command() {
 		Cmd		= 0;
-		CmdLen  = sizeof(Command<T>);		// sizeof(T)·Î ÇÒ °æ¿ì alignment ¹®Á¦ ¶§¹®¿¡ Ä¿¸Çµå±æÀÌ´Â TÀÇ ±æÀÌ±îÁö Æ÷ÇÔÇØ¼­ Àü¼ÛÇÏµµ·Ï ÇÏÀÚ.
+		CmdLen  = sizeof(Command<T>);		// sizeof(T)ë¡œ í•  ê²½ìš° alignment ë¬¸ì œ ë•Œë¬¸ì— ì»¤ë§¨ë“œê¸¸ì´ëŠ” Tì˜ ê¸¸ì´ê¹Œì§€ í¬í•¨í•´ì„œ ì „ì†¡í•˜ë„ë¡ í•˜ì.
 		Value   = T();
 	}
 	Command(const Int16U cmd) {
@@ -81,12 +77,12 @@ struct Command : ICommand
 
 
 /*=====================================================================================
-								ÆĞÅ¶ °´Ã¼
-		1°³ ÀÌ»óÀÇ Ä¿¸Çµå¸¦ ´ã¾Æ¼­ Àü¼ÛÇÒ ¼ö ÀÖµµ·ÏÇÑ´Ù.
-		ÅÛÇÃ¸´ ÆÄ¶ó¹ÌÅÍ·Î ¸ğµÎ Command¸¦ »ó¼Ó¹ŞÀº Å¸ÀÔÀ» Àü´ŞÇÏµµ·Ï ÇØ¾ßÇÑ´Ù. 
-		(´Ù¸¥ Å¸ÀÔÀº Àü´Ş ¸øÇÏµµ·Ï ¸·¾Æ³õÀ½)
+								íŒ¨í‚· ê°ì²´
+		1ê°œ ì´ìƒì˜ ì»¤ë§¨ë“œë¥¼ ë‹´ì•„ì„œ ì „ì†¡í•  ìˆ˜ ìˆë„ë¡í•œë‹¤.
+		í…œí”Œë¦¿ íŒŒë¼ë¯¸í„°ë¡œ ëª¨ë‘ Commandë¥¼ ìƒì†ë°›ì€ íƒ€ì…ì„ ì „ë‹¬í•˜ë„ë¡ í•´ì•¼í•œë‹¤. 
+		(ë‹¤ë¥¸ íƒ€ì…ì€ ì „ë‹¬ ëª»í•˜ë„ë¡ ë§‰ì•„ë†“ìŒ)
 
-		SendAsync()·Î ÆĞÅ¶À» ¼Û½ÅÇÏ°Ô µÇ¸é IOCPOverlappedSend¿¡¼­ ÇØ´ç ÆĞÅ¶À» ¼Ò¸ê½ÃÅ°µµ·Ï ÇÑ´Ù.
+		SendAsync()ë¡œ íŒ¨í‚·ì„ ì†¡ì‹ í•˜ê²Œ ë˜ë©´ IOCPOverlappedSendì—ì„œ í•´ë‹¹ íŒ¨í‚·ì„ ì†Œë©¸ì‹œí‚¤ë„ë¡ í•œë‹¤.
 
 		
 
@@ -96,14 +92,14 @@ struct Command : ICommand
 	   ISendPacket  |  Command<A>  |  Command<B> | ISendPacket | Command<C>  |
 		===========================================================================
 	    PACKET_HEADER_SIZE      GetPacketLength()
-		       ¡é                        ¡é
+		       â†“                        â†“
 		       4      sizeof(Command<A>) + sizeof(Command<B>)
 
  =====================================================================================*/
 
 
 
-// ÆĞÅ¶À» ¹ŞÀ» ¶§´Â °¡»ó ÇÔ¼ö Å×ÀÌºíÀÌ ¾ø´Â ±¸Á¶Ã¼·Î ¹ŞÀÚ.
+// íŒ¨í‚·ì„ ë°›ì„ ë•ŒëŠ” ê°€ìƒ í•¨ìˆ˜ í…Œì´ë¸”ì´ ì—†ëŠ” êµ¬ì¡°ì²´ë¡œ ë°›ì.
 struct IRecvPacket
 {
 	IRecvPacket() = delete;
@@ -117,7 +113,7 @@ protected:
 };
 
 
-struct ISendPacket : JCore::RefCount
+struct ISendPacket : JCore::SafeRefCount
 {
 	ISendPacket() {}
 	ISendPacket(Int16U iCommandCount, Int16U iPacketLen)
@@ -130,29 +126,30 @@ struct ISendPacket : JCore::RefCount
 	Int16U	GetPacketLength() const { return m_iPacketLen; }
 	Int16U	GetCommandCount() const { return m_iCommandCount; }
 	virtual WSABUF GetWSABuf() const = 0;
+    void ReleaseAction() override { delete this; }
 protected:
 	Int16U m_iCommandCount{};
-	Int16U m_iPacketLen{};		// IPacket Å©±â¸¦ Á¦¿ÜÇÑ Ä¿¸ÇµåµéÀÇ ÃÑ Å©±â
-								// ICommandÀÇ CmdLenÀº Çì´õ Æ÷ÇÔÀÌÁö¸¸ ÀÌ³à¼®Àº Æ÷ÇÔ¾ÈµÊ
+	Int16U m_iPacketLen{};		// IPacket í¬ê¸°ë¥¼ ì œì™¸í•œ ì»¤ë§¨ë“œë“¤ì˜ ì´ í¬ê¸°
+								// ICommandì˜ CmdLenì€ í—¤ë” í¬í•¨ì´ì§€ë§Œ ì´ë…€ì„ì€ í¬í•¨ì•ˆë¨
 };
 
 
 template <typename... CommandArgs>
 class StaticPacket : public ISendPacket
 {
-	static_assert(sizeof...(CommandArgs) > 0,  "... Packet must have one more command"); // Ä¿¸Çµå´Â ÃÖ¼Ò 1°³ ÀÌ»ó Àü´ŞÇÏµµ·Ï ÇÏÀÚ.
-	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>,  "... CommandArgs must be derived type of \"ICommand\""); // ÅÛÇÃ¸´ ÆÄ¶ó¹ÌÅÍ·Î Àü´ŞÇÑ ¸ğµç Å¸ÀÔÀº ICommand¸¦ »ó¼Ó¹Ş¾Æ¾ßÇÑ´Ù.
+	static_assert(sizeof...(CommandArgs) > 0,  "... Packet must have one more command"); // ì»¤ë§¨ë“œëŠ” ìµœì†Œ 1ê°œ ì´ìƒ ì „ë‹¬í•˜ë„ë¡ í•˜ì.
+	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>,  "... CommandArgs must be derived type of \"ICommand\""); // í…œí”Œë¦¿ íŒŒë¼ë¯¸í„°ë¡œ ì „ë‹¬í•œ ëª¨ë“  íƒ€ì…ì€ ICommandë¥¼ ìƒì†ë°›ì•„ì•¼í•œë‹¤.
 
 	template <int Index>
-	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // ÀÎÀÚ·Î Àü´Ş¹ŞÀº Ä¿¸Çµå Å¸ÀÔ
+	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // ì¸ìë¡œ ì „ë‹¬ë°›ì€ ì»¤ë§¨ë“œ íƒ€ì…
 public:
 	StaticPacket() : ISendPacket(COMMAND_CNT, PACKET_LEN) {
 
-		// m_pBuf¿¡ °¢ Ä¿¸ÇµåÀÇ ½ÃÀÛÁÖ¼Ò ¸¶´Ù µğÆúÆ® ÃÊ±âÈ­¸¦ ¼öÇàÇØÁØ´Ù.
-		// ¿¹¸¦µé¾î¼­ Packet<Commant<A>, Command<B>> ÆĞÅ¶À» »ı¼ºÇß´Ù¸é
+		// m_pBufì— ê° ì»¤ë§¨ë“œì˜ ì‹œì‘ì£¼ì†Œ ë§ˆë‹¤ ë””í´íŠ¸ ì´ˆê¸°í™”ë¥¼ ìˆ˜í–‰í•´ì¤€ë‹¤.
+		// ì˜ˆë¥¼ë“¤ì–´ì„œ Packet<Commant<A>, Command<B>> íŒ¨í‚·ì„ ìƒì„±í–ˆë‹¤ë©´
 		// 
-		// m_pBuf + 0		  ¿¡´Ù°¡ A¸¦ µğÆúÆ® ÃÊ±âÈ­ÇÏ°í
-		// m_pBuf + sizeof(A) ¿¡´Ù°¡ B¸¦ µğÆúÆ® ÃÊ±âÈ­ÇÏµµ·Ï ÇÑ´Ù.
+		// m_pBuf + 0		  ì—ë‹¤ê°€ Aë¥¼ ë””í´íŠ¸ ì´ˆê¸°í™”í•˜ê³ 
+		// m_pBuf + sizeof(A) ì—ë‹¤ê°€ Bë¥¼ ë””í´íŠ¸ ì´ˆê¸°í™”í•˜ë„ë¡ í•œë‹¤.
 		PlacementDefaultAllocateRecursive<COMMAND_CNT - 1, CommandArgs...>();
 	}
 
@@ -167,13 +164,13 @@ public:
 		===========================================================================
 		 vfptr | m_Ref | m_iCommandCount | m_iPacketCount | Command<A> | Command<B>
 		===========================================================================
-		¡è              ¡è <----------------- Àü¼ÛÇØÁà¾ßÇÏ´Â ±¸°£ ---------------------->
+		â†‘              â†‘ <----------------- ì „ì†¡í•´ì¤˜ì•¼í•˜ëŠ” êµ¬ê°„ ---------------------->
 	   this     this + sizeof(RefCount)
 
 		*/
 		WSABUF wsaBuf;
 		wsaBuf.len = PACKET_HEADER_SIZE + m_iPacketLen;
-		wsaBuf.buf = (char*)this + sizeof(RefCount);
+		wsaBuf.buf = (char*)this + sizeof(SafeRefCount);
 		return wsaBuf;
 	}
 private:
@@ -218,11 +215,11 @@ private:
 template <typename... CommandArgs>
 class DynamicPacket : public ISendPacket
 {
-	static_assert(sizeof...(CommandArgs) > 0, "... Packet must have one more command"); // Ä¿¸Çµå´Â ÃÖ¼Ò 1°³ ÀÌ»ó Àü´ŞÇÏµµ·Ï ÇÏÀÚ.
-	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>, "... CommandArgs must be derived type of \"ICommand\""); // ÅÛÇÃ¸´ ÆÄ¶ó¹ÌÅÍ·Î Àü´ŞÇÑ ¸ğµç Å¸ÀÔÀº ICommand¸¦ »ó¼Ó¹Ş¾Æ¾ßÇÑ´Ù.
+	static_assert(sizeof...(CommandArgs) > 0, "... Packet must have one more command"); // ì»¤ë§¨ë“œëŠ” ìµœì†Œ 1ê°œ ì´ìƒ ì „ë‹¬í•˜ë„ë¡ í•˜ì.
+	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>, "... CommandArgs must be derived type of \"ICommand\""); // í…œí”Œë¦¿ íŒŒë¼ë¯¸í„°ë¡œ ì „ë‹¬í•œ ëª¨ë“  íƒ€ì…ì€ ICommandë¥¼ ìƒì†ë°›ì•„ì•¼í•œë‹¤.
 
 	template <int Index>
-	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // ÀÎÀÚ·Î Àü´Ş¹ŞÀº Ä¿¸Çµå Å¸ÀÔ
+	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // ì¸ìë¡œ ì „ë‹¬ë°›ì€ ì»¤ë§¨ë“œ íƒ€ì…
 public:
 	template <typename... Ints>
 	DynamicPacket(Ints... sizes) : ISendPacket() {
@@ -240,7 +237,7 @@ public:
 
 
 	WSABUF GetWSABuf() const override {
-		// ÆĞÅ¶ »óÀ§ 4¹ÙÀÌÆ®´Â ÆĞÅ¶ Çì´õ·Î »ç¿ëÇÑ´Ù.
+		// íŒ¨í‚· ìƒìœ„ 4ë°”ì´íŠ¸ëŠ” íŒ¨í‚· í—¤ë”ë¡œ ì‚¬ìš©í•œë‹¤.
 		*(Int16U*)(m_pDynamicBuf + 0) = m_iCommandCount;
 		*(Int16U*)(m_pDynamicBuf + sizeof(Int16U)) = m_iPacketLen;
 
@@ -296,14 +293,14 @@ private:
 
 
 	char* CommandBuf() const {
-		return m_pDynamicBuf + PACKET_HEADER_SIZE; // m_pDynamicBufÀÇ »óÀ§ 4¹ÙÀÌÆ®´Â Çì´õ·Î »ç¿ëÇÏ±â ¶§¹®¿¡
+		return m_pDynamicBuf + PACKET_HEADER_SIZE; // m_pDynamicBufì˜ ìƒìœ„ 4ë°”ì´íŠ¸ëŠ” í—¤ë”ë¡œ ì‚¬ìš©í•˜ê¸° ë•Œë¬¸ì—
 	}
 
 	
 private:
 	static constexpr int COMMAND_CNT = sizeof...(CommandArgs);
 
-	int m_pCommandSizes[COMMAND_CNT]{};		// °¢ Ä¿¸Çµå ±æÀÌ ÀÓ½Ã ±â·Ï¿ë
+	int m_pCommandSizes[COMMAND_CNT]{};		// ê° ì»¤ë§¨ë“œ ê¸¸ì´ ì„ì‹œ ê¸°ë¡ìš©
 	char* m_pDynamicBuf;
 };
 

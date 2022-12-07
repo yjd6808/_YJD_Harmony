@@ -1,15 +1,16 @@
 #pragma once
 
-#include <JCore/String.h>
-#include <JCore/StringUtil.h>
-#include <JCore/StaticString.h>
+#include <JCore/Primitives/String.h>
+#include <JCore/Primitives/StringUtil.h>
+#include <JCore/Primitives/StaticString.h>
+#include <JCore/TypeCast.h>
 
 #include <type_traits>
 
 namespace JCore {
 
 /* =============================================================== */
-// °ªÀ» Å¸ÀÔÀ¸·Î ¾µ¼ö ÀÖµµ·Ï ÇÏ´Â ÅÛÇÃ¸´
+// ê°’ì„ íƒ€ì…ìœ¼ë¡œ ì“¸ìˆ˜ ìˆë„ë¡ í•˜ëŠ” í…œí”Œë¦¿
 template <typename T, T Value>
 struct IntegralConstant { static constexpr T value = Value; };
 
@@ -17,37 +18,9 @@ struct TrueType : IntegralConstant<bool, true> {};
 struct FalseType : IntegralConstant<bool, false> {};
 /* =============================================================== */
 
-
-
 /* =============================================================== */
-// ÂüÁ¶ÀÚ Á¦°ÅÇØÁÖ´Â ÅÛÇÃ¸´
-template <typename T>
-struct RemoveReference
-{
-	using Type = T;
-};
-
-template <typename T>
-struct RemoveReference<T&>
-{
-	using Type = T;
-};
-
-template <typename T>
-struct RemoveReference<T&&>
-{
-	using Type = T;
-};
-
-template <typename T>
-using RemoveReference_t = typename RemoveReference<T>::Type;
-/* =============================================================== */
-
-
-
-/* =============================================================== */
-// ÇÑÁ¤ÀÚ Á¦°ÅÇØÁÖ´Â ÅÛÇÃ¸´
-// Æ÷ÀÎÅÍ Å¸ÀÔÀº Á¦°Å°¡ ¾È´ï
+// í•œì •ì ì œê±°í•´ì£¼ëŠ” í…œí”Œë¦¿
+// í¬ì¸í„° íƒ€ì…ì€ ì œê±°ê°€ ì•ˆëŒ
 template <typename T>
 struct RemoveQulifier
 {
@@ -79,7 +52,7 @@ using RemoveQulifier_t = typename RemoveQulifier<T>::Type;
 
 
 /* =============================================================== */
-// ¹è¿­ °ıÈ£ Á¦°ÅÇØ¼­ ±âº» Å¸ÀÔ¸¸ ¾òµµ·Ï ÇÏ´Â ÅÛÇÃ¸´
+// ë°°ì—´ ê´„í˜¸ ì œê±°í•´ì„œ ê¸°ë³¸ íƒ€ì…ë§Œ ì–»ë„ë¡ í•˜ëŠ” í…œí”Œë¦¿
 template <typename T>
 struct RemoveArray
 {
@@ -104,8 +77,8 @@ using RemoveArray_t = typename RemoveArray<T>::Type;
 
 
 /* =============================================================== */
-// ÇÑÁ¤ÀÚ Á¦°ÅÇØÁÖ´Â ÅÛÇÃ¸´
-// Æ÷ÀÎÅÍ Å¸ÀÔÀº Á¦°Å°¡ ¾È´ï
+// í•œì •ì ì œê±°í•´ì£¼ëŠ” í…œí”Œë¦¿
+// í¬ì¸í„° íƒ€ì…ì€ ì œê±°ê°€ ì•ˆëŒ
 template <typename T>
 struct RevmovePointer
 {
@@ -124,27 +97,8 @@ using RemovePointer_t = typename RevmovePointer<T>::Type;
 /* =============================================================== */
 
 
-
 /* =============================================================== */
-// ¹«ºê ½Ã¸àÆ½°ú ¿Ïº®ÇÑ Àü´Ş
-template <typename T>
-inline constexpr RemoveReference_t<T>&& Move(T&& arg) {
-	return static_cast<RemoveReference_t<T>&&>(arg);
-}
-
-template <typename T>
-inline constexpr T&& Forward(RemoveReference_t<T>& arg) {
-	return static_cast<T&&>(arg);
-}
-/* =============================================================== */
-
-
-
-
-
-
-/* =============================================================== */
-// Æ÷ÀÎÅÍ Å¸ÀÔÀÎÁö È®ÀÎÇÏ´Â ÅÛÇÃ¸´
+// í¬ì¸í„° íƒ€ì…ì¸ì§€ í™•ì¸í•˜ëŠ” í…œí”Œë¦¿
 template <typename T> 
 struct IsPointerType : FalseType {};
 
@@ -157,7 +111,7 @@ constexpr bool IsPointerType_v = IsPointerType<T>::value;
 
 
 /* =============================================================== */
-// ÂüÁ¶ Å¸ÀÔÀÎÁö È®ÀÎÇÏ´Â ÅÛÇÃ¸´
+// ì°¸ì¡° íƒ€ì…ì¸ì§€ í™•ì¸í•˜ëŠ” í…œí”Œë¦¿
 template <typename T> 
 struct IsReferenceType : FalseType {};
 
@@ -174,8 +128,8 @@ constexpr bool IsReferenceType_v = IsReferenceType<T>::value;
 
 
 /* =============================================================== */
-// ÇÑÁ¤ÀÚ, ÂüÁ¶Å¸ÀÔÀ» ¸ğµÎ Á¦°ÅÇØÁÖ´Â ÅÛÇÃ¸´
-// ex) const voaltile int&& -> intÅ¸ÀÔÀ¸·Î´ï
+// í•œì •ì, ì°¸ì¡°íƒ€ì…ì„ ëª¨ë‘ ì œê±°í•´ì£¼ëŠ” í…œí”Œë¦¿
+// ex) const voaltile int&& -> intíƒ€ì…ìœ¼ë¡œëŒ
 template <typename T>
 struct NaturalType
 {
@@ -189,7 +143,7 @@ using NaturalType_t = typename NaturalType<T>::Type;
 
 
 /* =============================================================== */
-// Á¤¼ö Å¸ÀÔÀÎÁö È®ÀÎÇÏ´Â ÅÛÇÃ¸´
+// ì •ìˆ˜ íƒ€ì…ì¸ì§€ í™•ì¸í•˜ëŠ” í…œí”Œë¦¿
 template <typename T>
 struct IsIntegerType : FalseType {};
 
@@ -223,7 +177,7 @@ constexpr bool IsIntegerType_v = IsIntegerType<NaturalType_t<T>>::value;
 
 
 /* =============================================================== */
-// ½Ç¼ö Å¸ÀÔÀÎÁö È®ÀÎÇÏ´Â ÅÛÇÃ¸´
+// ì‹¤ìˆ˜ íƒ€ì…ì¸ì§€ í™•ì¸í•˜ëŠ” í…œí”Œë¦¿
 template <typename T>
 struct IsFloatingPointType : FalseType {};
 
@@ -240,7 +194,7 @@ constexpr bool IsFloatingPointType_v = IsFloatingPointType<NaturalType_t<T>>::va
 
 
 /* =============================================================== */
-// ¹®ÀÚÇü Å¸ÀÔÀÎÁö È®ÀÎÇÏ´Â ÅÛÇÃ¸´
+// ë¬¸ìí˜• íƒ€ì…ì¸ì§€ í™•ì¸í•˜ëŠ” í…œí”Œë¦¿
 template <typename T>
 struct IsCharaterType : FalseType {};
 
@@ -254,7 +208,7 @@ constexpr bool IsCharaterType_v = IsCharaterType<NaturalType_t<T>>::value;
 /* =============================================================== */
 
 /* =============================================================== */
-// ¹®ÀÚ¿­ Å¸ÀÔÀÎÁö È®ÀÎÇÏ´Â ÅÛÇÃ¸´
+// ë¬¸ìì—´ íƒ€ì…ì¸ì§€ í™•ì¸í•˜ëŠ” í…œí”Œë¦¿
 
 template <typename T>
 struct IsStringType : FalseType {};
@@ -280,7 +234,7 @@ constexpr bool IsStringType_v = IsStringType<NaturalType_t<T>>::value;
 
 
 /* =============================================================== */
-// ¹®ÀÚ¿­ Å¸ÀÔÀÎÁö È®ÀÎÇÏ´Â ÅÛÇÃ¸´
+// ë¬¸ìì—´ íƒ€ì…ì¸ì§€ í™•ì¸í•˜ëŠ” í…œí”Œë¦¿
 
 template <typename T>
 struct IsArrayType : FalseType {};
@@ -296,7 +250,7 @@ constexpr bool IsArrayType_v = IsArrayType<NaturalType_t<T>>::value;
 /* =============================================================== */
 
 
-// ·±Å¸ÀÓ¿¡ Å¸ÀÔ¸íÀ» °¡Á®¿Ã ¶§ »ç¿ëÇÕ´Ï´Ù.
+// ëŸ°íƒ€ì„ì— íƒ€ì…ëª…ì„ ê°€ì ¸ì˜¬ ë•Œ ì‚¬ìš©í•©ë‹ˆë‹¤.
 template <typename T>
 String Type() {
 	const String szFuncSig(__FUNCSIG__);
@@ -307,8 +261,8 @@ String Type() {
 	return szFuncSig.GetRange(kiLeftIdx + 1, kiRightIdx - 1);
 }
 
-// ÄÄÆÄÀÏÅ¸ÀÓ¿¡ Å¸ÀÔ¸íÀ» °¡Á®¿Ã ¶§ »ç¿ëÇÕ´Ï´Ù.
-// ¹İÈ¯Å¸ÀÔ : StaticString<Size>
+// ì»´íŒŒì¼íƒ€ì„ì— íƒ€ì…ëª…ì„ ê°€ì ¸ì˜¬ ë•Œ ì‚¬ìš©í•©ë‹ˆë‹¤.
+// ë°˜í™˜íƒ€ì… : StaticString<Size>
 template <typename T>
 constexpr auto CTType() {
 	constexpr int iStartIdx = StringUtil::CTFindChar(__FUNCSIG__, '<') + 1;
@@ -346,9 +300,9 @@ constexpr auto Type_v = CTType<T>();
 template <typename T1, typename T2>
 constexpr bool IsSameType_v = IsSameType<T1, T2>();
 
-// From¿¡¼­ To·Î ¾Ï¹¬Àû º¯È¯ÀÌ °¡´ÉÇÑÁö
-// Áï To ? = FromÀÌ °¡´ÉÇÑÁö
-// @Âü°í : https://docs.microsoft.com/ko-kr/cpp/standard-library/is-convertible-class?view=msvc-170
+// Fromì—ì„œ Toë¡œ ì•”ë¬µì  ë³€í™˜ì´ ê°€ëŠ¥í•œì§€
+// ì¦‰ To ? = Fromì´ ê°€ëŠ¥í•œì§€
+// @ì°¸ê³  : https://docs.microsoft.com/ko-kr/cpp/standard-library/is-convertible-class?view=msvc-170
 template <typename From, typename To>
 constexpr bool IsConvertible_v = std::is_convertible_v<From, To>;
 
@@ -358,7 +312,7 @@ constexpr bool IsBaseOf_v = std::is_base_of_v<Base, Derived>;
 
 
 
-// Base Å¸ÀÔµéÀÌ ¸ğµÎ Derived¸¦ ÀÚ½ÄÀ¸·Î µÎ°í ÀÖ´ÂÁö °Ë»ç
+// Base íƒ€ì…ë“¤ì´ ëª¨ë‘ Derivedë¥¼ ìì‹ìœ¼ë¡œ ë‘ê³  ìˆëŠ”ì§€ ê²€ì‚¬
 template <typename Derived, typename Base, typename... BaseArgs>
 struct IsBaseOfMultipleBase
 {
@@ -371,7 +325,7 @@ struct IsBaseOfMultipleBase
 	}
 };
 
-// Derived Å¸ÀÔµéÀÌ ¸ğµÎ Base¸¦ ºÎ¸ğ·Î µÎ°í ÀÖ´ÂÁö °Ë»ç
+// Derived íƒ€ì…ë“¤ì´ ëª¨ë‘ Baseë¥¼ ë¶€ëª¨ë¡œ ë‘ê³  ìˆëŠ”ì§€ ê²€ì‚¬
 template <typename Base, typename Derived, typename... DerivedArgs>
 struct IsBaseOfMultipleDrived
 {
@@ -384,32 +338,32 @@ struct IsBaseOfMultipleDrived
 	}
 };
 
-// ÅÛÇÃ¸´ ÆÄ¸®¹ÌÅÍ ÆÑ(DerivedArgs)À¸·Î Àü´ŞÇÑ Å¸ÀÔµéÀÌ ¸ğµÎ BaseÀÇ ÀÚ½ÄÀÎÁö ¿©ºÎ
+// í…œí”Œë¦¿ íŒŒë¦¬ë¯¸í„° íŒ©(DerivedArgs)ìœ¼ë¡œ ì „ë‹¬í•œ íƒ€ì…ë“¤ì´ ëª¨ë‘ Baseì˜ ìì‹ì¸ì§€ ì—¬ë¶€
 /*
- Å×½ºÆ® ÄÚµå(¾Æ·¡ 6ÁÙ ±×´ë·Î º¹ºÙ)
+ í…ŒìŠ¤íŠ¸ ì½”ë“œ(ì•„ë˜ 6ì¤„ ê·¸ëŒ€ë¡œ ë³µë¶™)
  struct A{}   ;
  struct B:A{} ;
  struct C:A{} ;
  struct D{}   ;
- IsBaseOf_1Base_MultipleDerived_v<A, B, B, C>; // true	B, B, C ¸ğµÎ ÀÚ½ÄÀÌ ¸ÂÀ½
- IsBaseOf_1Base_MultipleDerived_v<A, B, B, D>; // false	B, B´Â ÀÚ½ÄÀÌ ¸ÂÁö¸¸ D°¡ ¾Æ´Ô
+ IsBaseOf_1Base_MultipleDerived_v<A, B, B, C>; // true	B, B, C ëª¨ë‘ ìì‹ì´ ë§ìŒ
+ IsBaseOf_1Base_MultipleDerived_v<A, B, B, D>; // false	B, BëŠ” ìì‹ì´ ë§ì§€ë§Œ Dê°€ ì•„ë‹˜
  */
 
 template <typename Base, typename... DerivedArgs>
 constexpr const bool IsBaseOf_1Base_MultipleDerived_v 
 	= IsBaseOfMultipleDrived<Base, DerivedArgs...>::Value();
 
-// ÅÛÇÃ¸´ ÆÄ¶ó¹ÌÅÍ ÆÑ(BaseArgs)À¸·Î Àü´ŞÇÑ Å¸ÀÔµéÀÌ ¸ğµÎ DerivedÀÇ ºÎ¸ğÀÎÁö ¿©ºÎ
+// í…œí”Œë¦¿ íŒŒë¼ë¯¸í„° íŒ©(BaseArgs)ìœ¼ë¡œ ì „ë‹¬í•œ íƒ€ì…ë“¤ì´ ëª¨ë‘ Derivedì˜ ë¶€ëª¨ì¸ì§€ ì—¬ë¶€
 /*
- Å×½ºÆ® ÄÚµå(¾Æ·¡ 8ÁÙ ±×´ë·Î º¹ºÙ)
+ í…ŒìŠ¤íŠ¸ ì½”ë“œ(ì•„ë˜ 8ì¤„ ê·¸ëŒ€ë¡œ ë³µë¶™)
  struct A{}			;
  struct B{}			;
  struct C{}			;
  struct D:A,B,C{}	;
  struct E{}			;
- IsBaseOf_1Derived_MultipleBase_v<D, A, B>;		  // true	A, B ¸ğµÎ DÀÇ ºÎ¸ğÀÌ¹Ç·Î 
- IsBaseOf_1Derived_MultipleBase_v<D, A, B, C>;	  // true	A, B, C ¸ğµÎ DÀÇ ºÎ¸ğÀÌ¹Ç·Î 
- IsBaseOf_1Derived_MultipleBase_v<D, A, B, C, E>; // false   A, B, C ¸ğµÎ DÀÇ ºÎ¸ğÀÌÁö¸¸ E´Â ¾Æ´Ô
+ IsBaseOf_1Derived_MultipleBase_v<D, A, B>;		  // true	A, B ëª¨ë‘ Dì˜ ë¶€ëª¨ì´ë¯€ë¡œ 
+ IsBaseOf_1Derived_MultipleBase_v<D, A, B, C>;	  // true	A, B, C ëª¨ë‘ Dì˜ ë¶€ëª¨ì´ë¯€ë¡œ 
+ IsBaseOf_1Derived_MultipleBase_v<D, A, B, C, E>; // false   A, B, C ëª¨ë‘ Dì˜ ë¶€ëª¨ì´ì§€ë§Œ EëŠ” ì•„ë‹˜
  */
 
 template <typename Derived, typename... BaseArgs>
@@ -422,7 +376,7 @@ constexpr bool IsPrimitiveType_v = std::is_fundamental_v<T>;
 template <typename T, typename... Rest>
 struct IsAllPrimitiveType
 {
-	// ÀÌ°Ç ¿Ö ¾ÈµÇÁö;
+	// ì´ê±´ ì™œ ì•ˆë˜ì§€;
 	// static constexpr bool value = (sizeof...(Rest)) == 0 ? IsPrimitiveType_v<T> : IsPrimitiveType_v<T> && IsPrimitiveTypes<Rest...>::value;
 
 	static constexpr bool Value() {
@@ -440,14 +394,14 @@ constexpr bool IsAllPrimitiveType_v = IsAllPrimitiveType<T, Rest...>::Value();
 
 
 
-// ¼­·Î ´ÙÀÌ³ª¹Í Ä³½ºÆÃÀÌ °¡´ÉÇÑÁö ¾Ë·ÁÁÖ´Â ³à¼®
-// ÅÛÇÃ¸´ ÀÎÀÚ·Î Àü´ŞÇÑ ³à¼®ÀÌ µÑ ¸ğµÎ Æ÷ÀÎÅÍ Å¸ÀÔ ¶Ç´Â ·¹ÆÛ·±½º Å¸ÀÔÀÎ °æ¿ì
-// ¿ø½Ã Å¸ÀÔÀº ¿ø·¡ ´ÙÀÌ³ª¹Í Ä³½ºÆÃÀÌ ¾ÈµÇÁö¸¸ °°Àº Å¸ÀÔ³¢¸®´Â °Á µÈ´Ù°í Ã³¸®
+// ì„œë¡œ ë‹¤ì´ë‚˜ë¯¹ ìºìŠ¤íŒ…ì´ ê°€ëŠ¥í•œì§€ ì•Œë ¤ì£¼ëŠ” ë…€ì„
+// í…œí”Œë¦¿ ì¸ìë¡œ ì „ë‹¬í•œ ë…€ì„ì´ ë‘˜ ëª¨ë‘ í¬ì¸í„° íƒ€ì… ë˜ëŠ” ë ˆí¼ëŸ°ìŠ¤ íƒ€ì…ì¸ ê²½ìš°
+// ì›ì‹œ íƒ€ì…ì€ ì›ë˜ ë‹¤ì´ë‚˜ë¯¹ ìºìŠ¤íŒ…ì´ ì•ˆë˜ì§€ë§Œ ê°™ì€ íƒ€ì…ë¼ë¦¬ëŠ” ê± ëœë‹¤ê³  ì²˜ë¦¬
 template <typename Lhs, typename Rhs>
 constexpr bool DynamicCastable_v = (IsPointerType_v<Lhs> && IsPointerType_v<Rhs>)  ||
 								   (IsReferenceType_v<Lhs> && IsReferenceType_v<Rhs>) 
 								   ?
-										IsSameType_v<Lhs, Rhs>	// ±×³É ¼­·Î µ¿ÀÏÇÑ Å¸ÀÔÀÌ¸é ¹«Á¶°Ç OK
+										IsSameType_v<Lhs, Rhs>	// ê·¸ëƒ¥ ì„œë¡œ ë™ì¼í•œ íƒ€ì…ì´ë©´ ë¬´ì¡°ê±´ OK
 										? 
 										true
 										:
@@ -456,7 +410,7 @@ constexpr bool DynamicCastable_v = (IsPointerType_v<Lhs> && IsPointerType_v<Rhs>
 								   :
 								   false;
 
-// FromÀÌ ToÀÇ ºÎ¸ğ Å¸ÀÔÀÎÁö Æ÷ÀÎÅÍ, ÂüÁ¶Å¸ÀÔ ÀÎ°æ¿ì¿¡ ºñ±³
+// Fromì´ Toì˜ ë¶€ëª¨ íƒ€ì…ì¸ì§€ í¬ì¸í„°, ì°¸ì¡°íƒ€ì… ì¸ê²½ìš°ì— ë¹„êµ
 template <typename From, typename To>
 constexpr bool IsRPBasedOf_v =  (IsPointerType_v<From> && IsPointerType_v<To>)  ||
 								(IsReferenceType_v<From> && IsReferenceType_v<To>)
@@ -502,7 +456,7 @@ constexpr T* AddressOf(T& arg) {
 
 
 /* ====================================================================== */
-// Á¦ÀÏ Ã³À½¿¡ ±¸ÇöÇÑ Á¤¼ö, ½Ç¼ö, ¹®ÀÚ¿­ Å¸ÀÔ Ã¼Å© ÇÔ¼ö
+// ì œì¼ ì²˜ìŒì— êµ¬í˜„í•œ ì •ìˆ˜, ì‹¤ìˆ˜, ë¬¸ìì—´ íƒ€ì… ì²´í¬ í•¨ìˆ˜
 /*
 template <typename T>
 constexpr bool IsIntegerType() {

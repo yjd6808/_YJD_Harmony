@@ -1,5 +1,5 @@
 /*
- *	ÀÛ¼ºÀÚ : À±Á¤µµ
+ *	ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #pragma once
@@ -12,12 +12,12 @@ namespace JNetwork {
 
 class WorkerManager final
 {
-private:	// IOCP Å¬·¡½º¿¡¼­¸¸ »èÁ¦ °¡´ÉÇÏµµ·Ï ÇÑ´Ù.
+private:	// IOCP í´ë˜ìŠ¤ì—ì„œë§Œ ì‚­ì œ ê°€ëŠ¥í•˜ë„ë¡ í•œë‹¤.
 	WorkerManager(int threadCount) : m_Workers(threadCount), m_pHandles(nullptr) {}
 	~WorkerManager() {
 		for (int i = 0; i < m_Workers.Size(); i++) {
 			if (CloseHandle(m_pHandles[i]) == FALSE) {
-				DebugAssert(false, "¿öÄ¿ ¸Å´ÏÀú ÇÚµéÀ» ´İ´Âµ¥ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+				DebugAssertMessage(false, "ì›Œì»¤ ë§¤ë‹ˆì € í•¸ë“¤ì„ ë‹«ëŠ”ë° ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 			}
 
 			DeleteSafe(m_Workers[i]);
@@ -28,7 +28,7 @@ private:	// IOCP Å¬·¡½º¿¡¼­¸¸ »èÁ¦ °¡´ÉÇÏµµ·Ï ÇÑ´Ù.
 	template <typename TWorker, typename... Args>
 	static WorkerManager* Create(int threadCount, Args&&... args) {
 		WorkerManager* pManager = new WorkerManager(threadCount);
-		pManager->m_pHandles = new HANDLE[threadCount];
+		pManager->m_pHandles = new WinHandle[threadCount];
 
 		for (int i = 0; i < threadCount; i++) {
 			pManager->m_pHandles[i] = CreateEvent(NULL, FALSE, FALSE, NULL);
@@ -49,7 +49,7 @@ private:	// IOCP Å¬·¡½º¿¡¼­¸¸ »èÁ¦ °¡´ÉÇÏµµ·Ï ÇÑ´Ù.
 			m_Workers[i]->JoinWait(m_pHandles[i]);
 		}
 
-		// ¸ğµç IOCPWorker ¾²·¹µåµéÀÌ Á¾·áÇÒ¶§±îÁö ±â´Ù¸°´Ù.
+		// ëª¨ë“  IOCPWorker ì“°ë ˆë“œë“¤ì´ ì¢…ë£Œí• ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤.
 		WaitForMultipleObjects(m_Workers.Size(), m_pHandles, TRUE, INFINITE);
 
 		for (int i = 0; i < m_Workers.Size(); i++) {
@@ -63,7 +63,7 @@ private:	// IOCP Å¬·¡½º¿¡¼­¸¸ »èÁ¦ °¡´ÉÇÏµµ·Ï ÇÑ´Ù.
 			m_Workers[i]->Pause(m_pHandles[i]);
 		}
 
-		// ¸ğµç IOCPWorker ¾²·¹µåµéÀÌ Á¤ÁöµÉ¶§±îÁö ±â´Ù¸°´Ù.
+		// ëª¨ë“  IOCPWorker ì“°ë ˆë“œë“¤ì´ ì •ì§€ë ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤.
 		WaitForMultipleObjects(m_Workers.Size(), m_pHandles, TRUE, INFINITE);
 
 		for (int i = 0; i < m_Workers.Size(); i++) {
@@ -76,7 +76,7 @@ private:	// IOCP Å¬·¡½º¿¡¼­¸¸ »èÁ¦ °¡´ÉÇÏµµ·Ï ÇÑ´Ù.
 			worker->Resume();
 		});
 
-		// ¸ğµç IOCPWorker ¾²·¹µåµéÀÌ ½ÃÀÛµÉ¶§±îÁö ±â´Ù¸°´Ù.
+		// ëª¨ë“  IOCPWorker ì“°ë ˆë“œë“¤ì´ ì‹œì‘ë ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤.
 		WaitForMultipleObjects(m_Workers.Size(), m_pHandles, TRUE, INFINITE);
 
 		for (int i = 0; i < m_Workers.Size(); i++) {
@@ -85,7 +85,7 @@ private:	// IOCP Å¬·¡½º¿¡¼­¸¸ »èÁ¦ °¡´ÉÇÏµµ·Ï ÇÑ´Ù.
 	}
 private:
 	JCore::Vector<Worker*> m_Workers;
-	HANDLE* m_pHandles;
+	WinHandle* m_pHandles;
 	
 	friend class IOCP;
 };

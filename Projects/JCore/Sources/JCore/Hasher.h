@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	해쉬 생성기
 */
@@ -6,7 +6,7 @@
 #pragma once
 
 #include <JCore/Type.h>
-#include <JCore/String.h>
+#include <JCore/Primitives/String.h>
 #include <JCore/TypeTraits.h>
 
 #pragma warning (push)

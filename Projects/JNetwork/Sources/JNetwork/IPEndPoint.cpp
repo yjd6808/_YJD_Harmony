@@ -1,12 +1,12 @@
 /*
- * ÀÛ¼ºÀÚ : À±Á¤µµ
+ * ì‘ì„±ì : ìœ¤ì •ë„
  */
 
 #include <JNetwork/Network.h>
 #include <JNetwork/IPEndPoint.h>
 
-#include <JCore/StaticString.h>
-#include <JCore/StringUtil.h>
+#include <JCore/Primitives/StaticString.h>
+#include <JCore/Primitives/StringUtil.h>
 #include <JCore/Exception.h>
 #include <JCore/Ascii.h>
 
@@ -17,12 +17,15 @@ namespace JNetwork {
 	/*=====================================================================================
 								IPEndPoint
 	=======================================================================================*/
-	IPEndPoint::~IPEndPoint() = default;
 
 
 	/*=====================================================================================
 								IPv4EndPoint
 	=======================================================================================*/
+
+  IPEndPoint::~IPEndPoint()
+  {
+  }
 
 	IPv4EndPoint::IPv4EndPoint() {
 		m_Address = IPv4Address::Any();
@@ -49,13 +52,13 @@ namespace JNetwork {
 	}
 
 	IPv4EndPoint IPv4EndPoint::Parse(const char* endPointAddr) {
-		constexpr int EndPointLen = IPv4Len_v + 6; // +6 : Æ÷Æ® ÃÖ´ë 5ÀÚ¸® + ¹®ÀÚ ':'¸¦ Æ÷ÇÔÇÑ ±æÀÌ
+		constexpr int EndPointLen = IPv4Len_v + 6; // +6 : í¬íŠ¸ ìµœëŒ€ 5ìë¦¬ + ë¬¸ì ':'ë¥¼ í¬í•¨í•œ ê¸¸ì´
 		using IPv4EndPointString = StaticString<EndPointLen>;
 
 		const int iLen = StringUtil::Length(endPointAddr);
 
 		if (iLen > EndPointLen) {
-			throw InvalidArgumentException("¿Ã¹Ù¸£Áö ¾ÊÀº EndPoint Çü½ÄÀÔ´Ï´Ù. ¹®ÀÚ¿­ ±æÀÌ°¡ ÃÖ´ë·Î °¡´ÉÇÑ EndPoint ±æÀÌ¸¦ ÃÊ°úÇÕ´Ï´Ù.");
+			throw InvalidArgumentException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ EndPoint í˜•ì‹ì…ë‹ˆë‹¤. ë¬¸ìì—´ ê¸¸ì´ê°€ ìµœëŒ€ë¡œ ê°€ëŠ¥í•œ EndPoint ê¸¸ì´ë¥¼ ì´ˆê³¼í•©ë‹ˆë‹¤.");
 		}
 
 		IPv4EndPointString ep{};
@@ -63,7 +66,7 @@ namespace JNetwork {
 		const int idx = ep.Find(":");
 
 		if (idx == -1) {
-			throw InvalidArgumentException("¿Ã¹Ù¸£Áö ¾ÊÀº EndPoint Çü½ÄÀÔ´Ï´Ù. ±¸ºĞÀÚ ':'¸¦ Ã£Áö ¸øÇß½À´Ï´Ù.");
+			throw InvalidArgumentException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ EndPoint í˜•ì‹ì…ë‹ˆë‹¤. êµ¬ë¶„ì ':'ë¥¼ ì°¾ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
 		}
 
 		IPv4EndPointString ipAddrString{};
@@ -75,16 +78,15 @@ namespace JNetwork {
 
 		for (int i = 0; i < iPortStrLen; i++) {
 			if (!IsNumeric(portString[i])) {
-				throw InvalidArgumentException("¿Ã¹Ù¸£Áö ¾ÊÀº EndPoint Çü½ÄÀÔ´Ï´Ù. Àß¸øµÈ ¹®ÀÚ°¡ Æ÷ÇÔµÇ¾îÀÖ½À´Ï´Ù.");
+				throw InvalidArgumentException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ EndPoint í˜•ì‹ì…ë‹ˆë‹¤. ì˜ëª»ëœ ë¬¸ìê°€ í¬í•¨ë˜ì–´ìˆìŠµë‹ˆë‹¤.");
 			}
 		}
 
-		const int iPort = atoi(portString.Source);
-		if (iPort < 0 || iPort > 0xffff) {
-			throw InvalidArgumentException("¿Ã¹Ù¸£Áö ¾ÊÀº EndPoint Çü½ÄÀÔ´Ï´Ù. Æ÷Æ®¹øÈ£´Â 0ÀÌ»ó 65535ÀÌÇÏ¸¸ °¡´ÉÇÕ´Ï´Ù.");
+    if (const int iPort = atoi(portString.Source); iPort < 0 || iPort > 0xffff) {
+			throw InvalidArgumentException("ì˜¬ë°”ë¥´ì§€ ì•Šì€ EndPoint í˜•ì‹ì…ë‹ˆë‹¤. í¬íŠ¸ë²ˆí˜¸ëŠ” 0ì´ìƒ 65535ì´í•˜ë§Œ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 		}
 
-		return IPv4EndPoint(ipAddrString.Source, atoi(portString.Source));
+		return IPv4EndPoint(ipAddrString.Source, static_cast<short>(atoi(portString.Source)));
 	}
 
 	IPv4EndPoint IPv4EndPoint::Parse(const JCore::String& endPointAddr) {
