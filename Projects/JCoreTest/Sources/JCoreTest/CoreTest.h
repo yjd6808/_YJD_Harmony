@@ -43,6 +43,12 @@ using namespace JCore;
 //출력 여부
 #define Print	OFF
 
+// 테스트 수행 여부
+#define TestEnabled                 OFF
+
+// JCore 테스트 수행 여부
+#define BaseTestEnabled             ON
+
 // JCore::Container 테스트 수행 여부
 #define ContainerTestEnabled        ON
 // 컨테이너 개발 테스트 코드를 실행 여부
@@ -54,65 +60,75 @@ using namespace JCore;
 // JCore::Sync 테스트 수행 여부
 #define SyncTestEnabled             ON
 
+// 개별 테스트 수행시 사용
+#if TestEnabled == OFF
+    #define TEST_AtomicTest         ON
+#endif
 
-#if ContainerTestEnabled == ON
-    
-    #define	TEST_ArrayStackTest				    ON
-    #define	TEST_ArrayQueueTest				    ON
-    #define	TEST_ArraysTest					    ON
-    #define TEST_HashMapTest                    ON
-    #define	TEST_LinkedListTest					ON
-    #define	TEST_ListQueueTest					ON
-    #define	TEST_ListStackTest					ON
-    #define	TEST_VectorTest					    ON
-    
-    #if ContainerImplTestEnabled == ON
+#if TestEnabled == ON
 
-        #define	TEST_AVLTreeImplTest			OFF
-        #define	TEST_AVLTreeMemoImplTest		OFF
-        #define TEST_BinarySearchTreeImplTest	OFF
-        #define TEST_DynamicHashMapImplTest		OFF
-        #define TEST_SmartVectorImplTest		ON
-        #define TEST_TwoThreeFourTreeImplTest	OFF
+    #if ContainerTestEnabled == ON
+        
+        #define	TEST_ArrayStackTest				    ON
+        #define	TEST_ArrayQueueTest				    ON
+        #define	TEST_ArraysTest					    ON
+        #define TEST_HashMapTest                    ON
+        #define	TEST_LinkedListTest					ON
+        #define	TEST_ListQueueTest					ON
+        #define	TEST_ListStackTest					ON
+        #define	TEST_VectorTest					    ON
+        
+        #if ContainerImplTestEnabled == ON
+
+            #define	TEST_AVLTreeImplTest			OFF
+            #define	TEST_AVLTreeMemoImplTest		OFF
+            #define TEST_BinarySearchTreeImplTest	OFF
+            #define TEST_DynamicHashMapImplTest		OFF
+            #define TEST_SmartVectorImplTest		ON
+            #define TEST_TwoThreeFourTreeImplTest	OFF
+
+        #endif
+    #endif
+
+
+    #if PrimitivesTestEnabled == ON
+
+        #define TEST_AtomicTest                 ON
+        #define TEST_ObserverPtrTest		    ON
+        #define TEST_SmartPtrTest			    ON
+        #define TEST_StaticStringTest           ON
+        #define TEST_StringTest					ON
+        #define TEST_StringUtilTest				ON
 
     #endif
-#endif
 
+    #if SyncTestEnabled == ON
 
-#if PrimitivesTestEnabled == ON
+        #define TEST_EventLockTest              ON
+        #define TEST_LockGuardTest              ON
+        #define TEST_NormalLockTest             ON
+        #define TEST_NormalRwLockTest           ON
+        #define TEST_SemaphoreTest              ON
+        #define TEST_SpinLockTest               ON
+        #define TEST_RecursiveLockTest          ON
+    #endif
 
-    #define TEST_ObserverPtrTest		    ON
-    #define TEST_SmartPtrTest			    ON
-    #define TEST_StaticStringTest           ON
-    #define TEST_StringTest					ON
-    #define TEST_StringUtilTest				ON
+    #if BaseTestEnabled == ON
 
-#endif
+        #define TEST_AutoObjectTest				ON
+        #define TEST_ComparatorTest				ON
+        #define TEST_CoreTest					ON
+        #define TEST_EventTest                  ON
+        #define TEST_ExceptionTest              ON
+        #define TEST_HasherTest					ON
+        #define TEST_MathTest					ON
+        #define TEST_MemoryTest					ON
+        #define TEST_RandomTest					ON
+        #define TEST_TimeTest					ON
+        #define TEST_TypeTraitsTest				ON
 
-#if SyncTestEnabled == ON
-
-    #define TEST_EventLockTest              ON
-    #define TEST_LockGuardTest              ON
-    #define TEST_NormalLockTest             ON
-    #define TEST_NormalRwLockTest           ON
-    #define TEST_SemaphoreTest              ON
-    #define TEST_SpinLockTest               ON
-    #define TEST_RecursiveLockTest          ON
-#endif
-
-
-
-#define TEST_AutoObjectTest				ON
-#define TEST_ComparatorTest				ON
-#define TEST_CoreTest					ON
-#define TEST_EventTest                  ON
-#define TEST_HasherTest					ON
-#define TEST_MathTest					ON
-#define TEST_MemoryTest					ON
-#define TEST_RandomTest					ON
-#define TEST_TimeTest					ON
-#define TEST_TypeTraitsTest				ON
-
+    #endif
+#endif 
 template <typename... Args>
 void PrintFormat(const char* fmt, Args&&... args) {
 #if Print == ON

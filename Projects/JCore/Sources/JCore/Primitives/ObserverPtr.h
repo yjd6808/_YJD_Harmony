@@ -17,11 +17,11 @@
 
 namespace JCore {
 
-	namespace PtrObserver {
+	namespace Detail {
 
 		template <typename T, typename U>
 		constexpr bool IsStaticCastable() {
-			return IsPrimitiveType_v<T> && IsPrimitiveType_v<U>;
+			return IsFundamentalType_v<T> && IsFundamentalType_v<U>;
 		}
 
 		template <typename U, typename T>
@@ -273,9 +273,9 @@ public:
 		static_assert(!IsReferenceType_v<U>, "... cannot cast to reference type");	// Get<int&>와 같은 캐스팅을 방지
 		static_assert(IsPointerType_v<U>, "... only cast to pointer type.");		// Get<int>	와 같은 방식을 방지
 
-		if constexpr (PtrObserver::IsStaticCastable<RemovePointer_t<U>, T>())
+		if constexpr (Detail::IsStaticCastable<RemovePointer_t<U>, T>())
 			return static_cast<U>(m_pPointer);
-		else if constexpr (PtrObserver::IsDynamicCastable<RemovePointer_t<U>, T>()) {
+		else if constexpr (Detail::IsDynamicCastable<RemovePointer_t<U>, T>()) {
 			U pCasted = dynamic_cast<U>(m_pPointer);
 			ThrowIfDynamicCastingFailed<T*>(pCasted);
 			return pCasted;
@@ -523,9 +523,9 @@ public:
 
 	template <typename U>
 	void MoveToOwner(Owner<U>& owner) {
-		if constexpr (PtrObserver::IsStaticCastable<T, U>()) {
+		if constexpr (Detail::IsStaticCastable<T, U>()) {
 			this->OwnerMoveToOwner<U, TBase::Cast::StaticCastable>(owner);
-		} else if constexpr (PtrObserver::IsDynamicCastable<T, U>()) {
+		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
 			this->OwnerMoveToOwner<U, TBase::Cast::DynamicCastable>(owner);
 		} else {
 			DebugAssertMessage(false, "... cannot convert each other"); // static_assert(false, "cannot convert each other");
@@ -599,9 +599,9 @@ public:
 
 	template <typename U>
 	void CopyToOwner(Owner<U>& owner) {
-		if constexpr (PtrObserver::IsStaticCastable<T, U>()) {
+		if constexpr (Detail::IsStaticCastable<T, U>()) {
 			this->WatcherCopyToOwner<U, TBase::Cast::StaticCastable>(owner);
-		} else if constexpr (PtrObserver::IsDynamicCastable<T, U>()) {
+		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
 			this->WatcherCopyToOwner<U, TBase::Cast::DynamicCastable>(owner);
 		} else {
 			DebugAssertMessage(false, "... cannot convert each other"); //static_assert(false, "cannot convert each other");
@@ -615,9 +615,9 @@ public:
 			return;
 		}
 
-		if constexpr (PtrObserver::IsStaticCastable<T, U>()) {
+		if constexpr (Detail::IsStaticCastable<T, U>()) {
 			this->WatcherCopyToWatcher<U, TBase::Cast::StaticCastable>(watcher);
-		} else if constexpr (PtrObserver::IsDynamicCastable<T, U>()) {
+		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
 			this->WatcherCopyToWatcher<U, TBase::Cast::DynamicCastable>(watcher);
 		} else {
 			DebugAssertMessage(false, "... cannot convert each other");
@@ -631,9 +631,9 @@ public:
 			return;
 		}
 
-		if constexpr (PtrObserver::IsStaticCastable<T, U>()) {
+		if constexpr (Detail::IsStaticCastable<T, U>()) {
 			this->WatcherMoveToWatcher<U, TBase::Cast::StaticCastable>(watcher);
-		} else if constexpr (PtrObserver::IsDynamicCastable<T, U>()) {
+		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
 			this->WatcherMoveToWatcher<U, TBase::Cast::DynamicCastable>(watcher);
 		} else {
 			DebugAssertMessage(false, "... cannot convert each other");

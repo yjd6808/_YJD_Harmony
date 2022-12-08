@@ -90,7 +90,7 @@ private:
 	void* m_pChannel;							// 이 방이 속한 채널
 	void* m_pHost;								// 이 방의 방장
 
-	inline static std::atomic<int> ms_iRoomSeq = 0;
+	inline static JCore::Atomic<int> ms_iRoomSeq = 0;
 
 	friend class Channel;
 	friend class RoomPool;

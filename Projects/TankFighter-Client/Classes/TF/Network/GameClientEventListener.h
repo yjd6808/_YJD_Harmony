@@ -18,6 +18,6 @@ protected:
 private:
 	JCore::NormalLock m_CommandQueueMtx;
 	JCore::ArrayQueue<char*> m_CommandQueue;
-	//std::atomic<int> m_iPendingCommandCount;
+	//JCore::Atomic<int> m_iPendingCommandCount;
 };
 

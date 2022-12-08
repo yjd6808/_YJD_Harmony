@@ -1,4 +1,5 @@
 #include <JCoreTest/CoreTest.h>
+#include <JCore/Primitives/Atomic.h>
 #include <JCore/Sync/NormalRwLock.h>
 
 #if TEST_NormalRwLockTest == ON
@@ -6,7 +7,7 @@
 namespace NormalRwLockTest {
 
 static int number = 0;
-static std::atomic<bool> detectInvalid;
+static Atomic<bool> detectInvalid;
 static NormalRwLock lk;
 
 TEST(NormalRwLockTest, NormalRwLock) {

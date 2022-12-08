@@ -28,5 +28,4 @@ using PInt8U	= unsigned char*;
 using PChar		= char*;
 using PByte		= unsigned char*;
 
-
 using WinHandle = void*;

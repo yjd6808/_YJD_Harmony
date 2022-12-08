@@ -10,7 +10,5 @@
 
 
 namespace JCore {
-
     int __cdecl System(const char* cmd);
-
 } // namespace JCore

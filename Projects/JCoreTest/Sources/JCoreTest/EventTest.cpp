@@ -54,7 +54,7 @@ TEST(EventTest, General) {
 }
 
 
-int g_event_test_val;
+int g_event_testal;
 TEST(EventTest, ClassMethod) {
 	Event<int, int> e;
 
@@ -62,9 +62,9 @@ TEST(EventTest, ClassMethod) {
 	{
 		String name[20];
 
-		static void test(int a, int b) { g_event_test_val++; }
-		void member_test(int a, int b) { g_event_test_val++; }
-		void member_test2(int a, int b) { g_event_test_val++; }
+		static void test(int a, int b) { g_event_testal++; }
+		void member_test(int a, int b) { g_event_testal++; }
+		void member_test2(int a, int b) { g_event_testal++; }
 	};
 
 	Legend t1{ "t1" };
@@ -90,11 +90,11 @@ TEST(EventTest, ClassMethod) {
 
 	// 호출
 	e(1, 5);
-	EXPECT_TRUE(g_event_test_val == 5);
+	EXPECT_TRUE(g_event_testal == 5);
 
 	e -= Legend::test;
 	e(1, 5);
-	EXPECT_TRUE(g_event_test_val == 9);
+	EXPECT_TRUE(g_event_testal == 9);
 }
 
 

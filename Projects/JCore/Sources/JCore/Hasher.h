@@ -22,7 +22,7 @@ template <typename T>
 struct Hasher
 {
 	constexpr Int32U operator()(T val) const {
-		if constexpr (JCore::IsPrimitiveType_v<T>)
+		if constexpr (JCore::IsFundamentalType_v<T>)
 			return ((val ^ HashXorKey_v) % PrimeInt32U_v) * PrimeInt32U_v;
 		else {	// 다른 타입이면 강제로 형변환 후 진행
 			return ((static_cast<int>(val) ^ HashXorKey_v) % PrimeInt32U_v) * PrimeInt32U_v;

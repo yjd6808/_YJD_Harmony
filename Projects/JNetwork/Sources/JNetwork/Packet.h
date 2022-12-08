@@ -8,6 +8,7 @@
 
 #include <JCore/Type.h>
 #include <JCore/Define.h>
+#include <JCore/TypeCast.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/SafeRefCount.h>
 
@@ -138,7 +139,7 @@ template <typename... CommandArgs>
 class StaticPacket : public ISendPacket
 {
 	static_assert(sizeof...(CommandArgs) > 0,  "... Packet must have one more command"); // 커맨드는 최소 1개 이상 전달하도록 하자.
-	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>,  "... CommandArgs must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+	static_assert(JCore::IsMultipleDerived<ICommand, CommandArgs...>,  "... CommandArgs must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
 
 	template <int Index>
 	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // 인자로 전달받은 커맨드 타입
@@ -216,7 +217,7 @@ template <typename... CommandArgs>
 class DynamicPacket : public ISendPacket
 {
 	static_assert(sizeof...(CommandArgs) > 0, "... Packet must have one more command"); // 커맨드는 최소 1개 이상 전달하도록 하자.
-	static_assert(JCore::IsBaseOf_1Base_MultipleDerived_v<ICommand, CommandArgs...>, "... CommandArgs must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+	static_assert(JCore::IsMultipleDerived<ICommand, CommandArgs...>, "... CommandArgs must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
 
 	template <int Index>
 	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // 인자로 전달받은 커맨드 타입

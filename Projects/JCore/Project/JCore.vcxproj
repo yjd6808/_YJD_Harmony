@@ -41,7 +41,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
-    <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
     <ClCompile Include="..\Sources\JCore\Utils\Console.cpp" />
     <ClCompile Include="..\Sources\JCore\Wrapper\StdLib.cpp" />
     <ClCompile Include="..\Sources\JCore\Wrapper\WinApi.cpp">
@@ -226,11 +225,11 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Tuple.h" />
     <ClInclude Include="..\Sources\JCore\Type.h" />
-    <ClInclude Include="..\Sources\JCore\TypeCast.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\TypeCast.h" />
     <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
+    <ClInclude Include="..\Sources\JCore\TypeTraits\Checker.h" />
+    <ClInclude Include="..\Sources\JCore\TypeTraits\Eliminator.h" />
+    <ClInclude Include="..\Sources\JCore\TypeTraits\IntegralConstant.h" />
     <ClInclude Include="..\Sources\JCore\Utils\Console.h">
       <SubType>
       </SubType>
@@ -376,6 +375,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -401,6 +401,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>

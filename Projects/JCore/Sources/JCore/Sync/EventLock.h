@@ -10,6 +10,7 @@
 #include <JCore/Type.h>
 #include <JCore/Sync/ILock.h>
 #include <JCore/Sync/LockGuard.h>
+#include <JCore/Primitives/Atomic.h>
 
 namespace JCore {
 
@@ -31,7 +32,7 @@ namespace JCore {
 		bool IsLocked() override;
 	private:
 		WinHandle m_LockEvent;
-		std::atomic<bool> m_bLocked;
+		Atomic<bool> m_bLocked;
 	};
 
 	using EventLockGuard = LockGuard<EventLock>;

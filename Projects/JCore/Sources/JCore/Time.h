@@ -24,25 +24,25 @@ namespace Detail {
 	constexpr Int64 MaxMicroSecond_v	= 1000;
 		
 	// 1틱당 1마이크로초
-	constexpr Int64 TicksPerMicroSecond	= 1;										// 마이크로초당 몇 틱인지 	1틱당					1마이크로초
-	constexpr Int64 TicksPerMiliSecond	= TicksPerMicroSecond * MaxMicroSecond_v;	// 밀리초당 몇 틱인지		1000틱당					1밀리초
-	constexpr Int64 TicksPerSecond		= TicksPerMiliSecond * MaxMiliSecond_v;		// 초당 몇 틱인지			1000000틱당				1초
-	constexpr Int64 TicksPerMinute		= TicksPerSecond * MaxSecond_v;				// 1분당 몇 틱인지		1000000 * 60			1분
-	constexpr Int64 TicksPerHour		= TicksPerMinute * MaxMinute_v;				// 1시간당 몇 틱인지		1000000 * 60 * 60		1시간
-	constexpr Int64 TicksPerDay			= TicksPerHour * MaxHour_v;					// 1일당 몇 틱인지		1000000 * 60 * 60 * 24	1일
+	constexpr Int64 TicksPerMicroSecond_v	= 1;										// 마이크로초당 몇 틱인지 	1틱당					1마이크로초
+	constexpr Int64 TicksPerMiliSecond_v	= TicksPerMicroSecond_v * MaxMicroSecond_v;	// 밀리초당 몇 틱인지		1000틱당					1밀리초
+	constexpr Int64 TicksPerSecond_v		= TicksPerMiliSecond_v * MaxMiliSecond_v;		// 초당 몇 틱인지			1000000틱당				1초
+	constexpr Int64 TicksPerMinute_v		= TicksPerSecond_v * MaxSecond_v;				// 1분당 몇 틱인지		1000000 * 60			1분
+	constexpr Int64 TicksPerHour_v		    = TicksPerMinute_v * MaxMinute_v;				// 1시간당 몇 틱인지		1000000 * 60 * 60		1시간
+	constexpr Int64 TicksPerDay_v			= TicksPerHour_v * MaxHour_v;					// 1일당 몇 틱인지		1000000 * 60 * 60 * 24	1일
 
 	constexpr int DaysPer1Years_v = MaxDay_v;
 	constexpr int DaysPer4Years_v = MaxDay_v * 4 + 1;				// 4년이 몇일인지 : 1461일
 	constexpr int DaysPer100Years_v = DaysPer4Years_v * 25 - 1;		// 100년이 몇일인지 : 36524일
 	constexpr int DaysPer400Years_v = DaysPer100Years_v * 4 + 1;	// 400년이 몇일인지 : 146097일
 		
-	constexpr int DaysUntilMonth365[13] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
-	constexpr int DaysUntilMonth366[13] = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
+	constexpr int DaysUntilMonth365_v[13] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
+	constexpr int DaysUntilMonth366_v[13] = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
 
-	constexpr int DaysForMonth365[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-	constexpr int DaysForMonth366[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	constexpr int DaysForMonth365_v[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	constexpr int DaysForMonth366_v[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-	constexpr Int64 Ticks10000Years = DaysPer400Years_v * 25 * TicksPerDay;
+	constexpr Int64 Ticks10000Years_v = DaysPer400Years_v * 25 * TicksPerDay_v;
 
 
 
@@ -53,8 +53,8 @@ namespace Detail {
 	*/
 		
 	// [AD 0001년 1월 1일 ~ 1969년 12월 31일까지의 마이크로초 계산]
-	constexpr Int64 ADBegin	 = (DaysPer400Years_v * 1969) / 400;	// Epoch 시간 1970년 1월 1일까지의 일 수
-	constexpr Int64 ADBeginTick = ADBegin * TicksPerDay;			// Epoch 시간 1970년 1월 1일까지의 마이크로초
+	constexpr Int64 ADBegin_v	  = (DaysPer400Years_v * 1969) / 400;	// Epoch 시간 1970년 1월 1일까지의 일 수
+	constexpr Int64 ADBeginTick_v = ADBegin_v * TicksPerDay_v;			// Epoch 시간 1970년 1월 1일까지의 마이크로초
 }
 
 
@@ -324,18 +324,18 @@ struct TimeSpan
 	TimeSpan(Int64 tick = 0) : Tick(tick) {}
 	TimeSpan(Int32 days, Int64 hours, Int64 minutes, Int64 seconds, Int64 miliSeconds, Int64 microSeconds);
 
-	double GetTotalDays() const { return (double)Tick / Detail::TicksPerDay; }
-	double GetTotalHours() const { return (double)Tick / Detail::TicksPerHour; }
-	double GetTotalMinutes() const { return (double)Tick / Detail::TicksPerMinute; }
-	double GetTotalSeconds() const { return (double)Tick / Detail::TicksPerSecond; }
-	double GetTotalMiliSeconds() const { return (double)Tick / Detail::TicksPerMiliSecond; }
+	double GetTotalDays() const { return (double)Tick / Detail::TicksPerDay_v; }
+	double GetTotalHours() const { return (double)Tick / Detail::TicksPerHour_v; }
+	double GetTotalMinutes() const { return (double)Tick / Detail::TicksPerMinute_v; }
+	double GetTotalSeconds() const { return (double)Tick / Detail::TicksPerSecond_v; }
+	double GetTotalMiliSeconds() const { return (double)Tick / Detail::TicksPerMiliSecond_v; }
 	double GetTotalMicroSeconds() const { return (double)Tick; }
 
-	int GetDay() const { return int(Tick / Detail::TicksPerDay); }
-	int GetHour() const { return (Tick / Detail::TicksPerHour) % Detail::MaxHour_v; }
-	int GetMinute() const { return (Tick / Detail::TicksPerMinute) % Detail::MaxMinute_v; }
-	int GetSecond() const { return (Tick / Detail::TicksPerSecond) % Detail::MaxSecond_v; }
-	int GetMiliSecond() const { return (Tick / Detail::TicksPerMiliSecond) % Detail::MaxMiliSecond_v; }
+	int GetDay() const { return int(Tick / Detail::TicksPerDay_v); }
+	int GetHour() const { return (Tick / Detail::TicksPerHour_v) % Detail::MaxHour_v; }
+	int GetMinute() const { return (Tick / Detail::TicksPerMinute_v) % Detail::MaxMinute_v; }
+	int GetSecond() const { return (Tick / Detail::TicksPerSecond_v) % Detail::MaxSecond_v; }
+	int GetMiliSecond() const { return (Tick / Detail::TicksPerMiliSecond_v) % Detail::MaxMiliSecond_v; }
 	int GetMicroSecond() const { return Tick % Detail::MaxMicroSecond_v; }
 
 	TimeSpan operator-(const TimeSpan& other) const { return { Tick - other.Tick }; }
@@ -361,11 +361,11 @@ public: // constructors
 public: // public non-static
 	// 특정 타입유닛에 해당하는 전체시간 얻기
 	Int64 GetTick() const { return m_Tick; }
-	Int64 GetTotalDays() const { return m_Tick / Detail::TicksPerDay; }
-	Int64 GetTotalHours() const { return m_Tick / Detail::TicksPerHour; }
-	Int64 GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute; }
-	Int64 GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond; }
-	Int64 GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond; }
+	Int64 GetTotalDays() const { return m_Tick / Detail::TicksPerDay_v; }
+	Int64 GetTotalHours() const { return m_Tick / Detail::TicksPerHour_v; }
+	Int64 GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute_v; }
+	Int64 GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond_v; }
+	Int64 GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond_v; }
 	Int64 GetTotalMicroSeconds() const { return m_Tick; }
 
 	// 타입유닛별로 시간 얻기

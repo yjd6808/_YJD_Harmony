@@ -34,12 +34,14 @@
     <Filter Include="Threading">
       <UniqueIdentifier>{fb9cb62a-b9c7-48ff-a4bc-1d1163a7ec26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TypeTraits">
+      <UniqueIdentifier>{4a9cda0d-0713-4d88-9cb8-58c348e3d522}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp" />
     <ClCompile Include="..\Sources\JCore\Random.cpp" />
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
-    <ClCompile Include="..\Sources\JCore\TypeTraits.cpp" />
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\String.cpp">
       <Filter>Primitives</Filter>
@@ -84,7 +86,6 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
     <ClInclude Include="..\Sources\JCore\Type.h" />
-    <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
     <ClInclude Include="..\Sources\JCore\Random.h" />
     <ClInclude Include="..\Sources\JCore\Tuple.h" />
     <ClInclude Include="..\Sources\JCore\Math.h" />
@@ -235,7 +236,6 @@
     <ClInclude Include="..\Sources\JCore\Sync\UnusedLock.h">
       <Filter>Sync</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\TypeCast.h" />
     <ClInclude Include="..\Sources\JCore\Encoding\CodePage.h">
       <Filter>Encoding</Filter>
     </ClInclude>
@@ -260,5 +260,16 @@
     <ClInclude Include="..\Sources\JCore\Threading\Thread.h">
       <Filter>Threading</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\TypeTraits\Eliminator.h">
+      <Filter>TypeTraits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\TypeTraits\IntegralConstant.h">
+      <Filter>TypeTraits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\TypeCast.h" />
+    <ClInclude Include="..\Sources\JCore\TypeTraits\Checker.h">
+      <Filter>TypeTraits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
   </ItemGroup>
 </Project>

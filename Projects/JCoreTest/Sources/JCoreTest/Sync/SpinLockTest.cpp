@@ -11,28 +11,22 @@ static SpinLock lk;
 TEST(SpinLockTest, SpinLock) {
     number = 0;
 
-    std::thread increaser{ [] {
-        for (int i = 0; i < 200'000; i++) {
-            lk.Lock();
-            number++;
-            number++;
-            number++;
-            lk.Unlock();
-        }
-    }};
+    std::vector<std::thread> vec;
 
-    std::thread decreaser{ [] {
-        for (int i = 0; i < 200'000; i++) {
-            lk.Lock();
-            number--;
-            number--;
-            number--;
-            lk.Unlock();
-        }
-    }};
+    for (int i = 0; i < 8; i++) {
+        vec.emplace_back([i] {
+            for (int j = 0; j < 80'000; j++) {
+                SpinLockGuard lg(lk);
+                if (i < 4)
+                    number++;
+                else
+                    number--;
+            }
+        });
+    }
 
-    increaser.join();
-    decreaser.join();
+    for (int i = 0; i < 8; i++)
+        vec[i].join();
 
     EXPECT_TRUE(number == 0);
 }

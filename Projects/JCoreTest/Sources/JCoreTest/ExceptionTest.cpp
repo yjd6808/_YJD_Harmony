@@ -5,11 +5,13 @@
 
 
 #include <JCoreTest/CoreTest.h>
+
+#if TEST_ExceptionTest == ON
+
 #include <JCore/Exception.h>
 
 
 using namespace std;
-
 
 void CheckTest(int* ptr) {
 	if (ptr == nullptr)
@@ -22,3 +24,4 @@ TEST(ExceptionTest, ExceptionTest) {
 	EXPECT_NO_THROW(CheckTest(&f), NullPointerException);
 }
 
+#endif

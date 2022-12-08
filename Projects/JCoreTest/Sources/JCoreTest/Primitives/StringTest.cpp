@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Vector<int> g_vec;
+Vector<int> gec;
 
 #if TEST_StringTest == ON
 

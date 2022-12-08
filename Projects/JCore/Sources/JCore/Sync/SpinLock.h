@@ -9,8 +9,7 @@
 
 #include <JCore/Sync/ILock.h>
 #include <JCore/Sync/LockGuard.h>
-
-#include <atomic>
+#include <JCore/Primitives/Atomic.h>
 
 namespace JCore {
 
@@ -25,7 +24,7 @@ namespace JCore {
 		bool TryLock() override;
 		bool IsLocked() override;
 	private:
-		std::atomic<bool> m_bLocked;
+		Atomic<bool> m_bLocked;
 	};
 
 	using SpinLockGuard = LockGuard<SpinLock>;

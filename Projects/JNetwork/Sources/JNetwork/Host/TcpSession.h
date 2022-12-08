@@ -72,7 +72,7 @@ protected:
 	virtual bool Accepted(SOCKET listeningSocket, Int32UL receivedBytes);	// 서버가 해당세션의 연결을 수락시 최종적으로 호출될 함수
 	virtual void Connected() {};											// 클라이언트가 서버와 연결됬을 시 최종적으로 호출될 함수	(TcpSession에서는 사용하지 않음)
 	virtual void Received(Int32UL receivedBytes);							// 세션 또는 클라이언트가 데이터를 수신했을 때 최종적으로 호출될 함수
-	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes);			// 세션 또는 클라이언트가 데이터를 송신했을 때 최종적으로 호출될 함수
+	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes);		// 세션 또는 클라이언트가 데이터를 송신했을 때 최종적으로 호출될 함수
 
 	virtual void NotifyCommand(ICommand* cmd);								// 세션 입장에서는 ServerEventListener에 커맨드를 전달하고 클라이언트 입장에서는 ClientEventListener에 커맨드를 전달하도록 한다.
 private:

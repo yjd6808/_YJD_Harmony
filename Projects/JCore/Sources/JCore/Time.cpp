@@ -72,14 +72,14 @@ namespace JCore
 		// 달 단위만 변경해버리면 2월 31일이 되어버린다. (2월은 마지막일이 윤년일 경우 29일 평년일 경우 28일 임)
 		// 그래서 윤년/평년에 따라 해당 달의 최대일 수를 초과하는 경우 최대 일수로 변경해줘야함
 		if (DateTime::IsLeapYear(Year)) {
-			Day = Day > DaysForMonth366[Month - 1] ? DaysForMonth366[Month - 1] : Day;
+			Day = Day > DaysForMonth366_v[Month - 1] ? DaysForMonth366_v[Month - 1] : Day;
 		} else {
-			Day = Day > DaysForMonth365[Month - 1] ? DaysForMonth365[Month - 1] : Day;
+			Day = Day > DaysForMonth365_v[Month - 1] ? DaysForMonth365_v[Month - 1] : Day;
 		}
 	}
 
 	void Date::AddDay(Int32 day) {
-		const Int64 tick = ToTick() + day * TicksPerDay;
+		const Int64 tick = ToTick() + day * TicksPerDay_v;
 
 		if (tick < 0) {
 			throw UnderFlowException("Date 일 덧셈 수행중 오류가 발생하였습니다. 일 연산 수행결과로 음수가 나오면 안됩니다.");
@@ -130,9 +130,9 @@ namespace JCore
 		Month = static_cast<Int8>(iTempMonth);
 
 		if (DateTime::IsLeapYear(Year)) {
-			Day = Day > DaysForMonth366[Month - 1] ? DaysForMonth366[Month - 1] : Day;
+			Day = Day > DaysForMonth366_v[Month - 1] ? DaysForMonth366_v[Month - 1] : Day;
 		} else {
-			Day = Day > DaysForMonth365[Month - 1] ? DaysForMonth365[Month - 1] : Day;
+			Day = Day > DaysForMonth365_v[Month - 1] ? DaysForMonth365_v[Month - 1] : Day;
 		}
 	}
 
@@ -216,12 +216,12 @@ namespace JCore
 
 		// 현재 계산된 달, 일은 0일, 0월부터 시작아니라 1일, 1월 부터 시작이기때문에 1씩 빼줘야한다.
 		if (DateTime::IsLeapYear(Year)) {
-			iTotalDays += DaysUntilMonth366[Month - 1] + Day - 1;
+			iTotalDays += DaysUntilMonth366_v[Month - 1] + Day - 1;
 		} else {
-			iTotalDays += DaysUntilMonth365[Month - 1] + Day - 1;
+			iTotalDays += DaysUntilMonth365_v[Month - 1] + Day - 1;
 		}
 
-		return iTotalDays * TicksPerDay;
+		return iTotalDays * TicksPerDay_v;
 	}
 
 
@@ -250,19 +250,19 @@ namespace JCore
 	}
 
 	void Time::AddHour(const Int64 hours) {
-		AddMicroSecond(hours * TicksPerHour, TimeUnit::Hour);
+		AddMicroSecond(hours * TicksPerHour_v, TimeUnit::Hour);
 	}
 
 	void Time::AddMinute(const Int64 minutes) {
-		AddMicroSecond(minutes * TicksPerMinute, TimeUnit::Minute);
+		AddMicroSecond(minutes * TicksPerMinute_v, TimeUnit::Minute);
 	}
 
 	void Time::AddSecond(Int64 seconds) {
-		AddMicroSecond(seconds * TicksPerSecond, TimeUnit::Second);
+		AddMicroSecond(seconds * TicksPerSecond_v, TimeUnit::Second);
 	}
 
 	void Time::AddMiliSecond(Int64 miliSeconds) {
-		AddMicroSecond(miliSeconds * TicksPerMiliSecond, TimeUnit::MiliSecond);
+		AddMicroSecond(miliSeconds * TicksPerMiliSecond_v, TimeUnit::MiliSecond);
 	}
 
 	void Time::AddMicroSecond(Int64 microSeconds, TimeUnit timeUnit) {
@@ -272,25 +272,25 @@ namespace JCore
 			throw UnderFlowException("Time 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
 		}
 
-		const Int64 uiHour = iTick / TicksPerHour;
+		const Int64 uiHour = iTick / TicksPerHour_v;
 		Hour = uiHour % MaxHour_v;
 
 		if (timeUnit == TimeUnit::Hour)
 			return;
 
-		const Int64 uiMinute = iTick / TicksPerMinute;
+		const Int64 uiMinute = iTick / TicksPerMinute_v;
 		Minute = uiMinute % MaxMinute_v;
 
 		if (timeUnit == TimeUnit::Minute)
 			return;
 
-		const Int64 uiSecond = iTick / TicksPerSecond;
+		const Int64 uiSecond = iTick / TicksPerSecond_v;
 		Second = uiSecond % MaxSecond_v;
 
 		if (timeUnit == TimeUnit::Second)
 			return;
 
-		const Int64 uiMiliSecond = iTick / TicksPerMiliSecond;
+		const Int64 uiMiliSecond = iTick / TicksPerMiliSecond_v;
 		MiliSecond = uiMiliSecond % MaxMiliSecond_v;
 
 		if (timeUnit == TimeUnit::MiliSecond)
@@ -311,19 +311,19 @@ namespace JCore
 	}
 
 	void Time::SubtractHour(const Int64 hours) {
-		SubtractMicroSecond(hours * TicksPerHour, TimeUnit::Hour);
+		SubtractMicroSecond(hours * TicksPerHour_v, TimeUnit::Hour);
 	}
 
 	void Time::SubtractMinute(const Int64 minutes) {
-		SubtractMicroSecond(minutes * TicksPerMinute, TimeUnit::Minute);
+		SubtractMicroSecond(minutes * TicksPerMinute_v, TimeUnit::Minute);
 	}
 
 	void Time::SubtractSecond(const Int64 seconds) {
-		SubtractMicroSecond(seconds * TicksPerSecond, TimeUnit::Second);
+		SubtractMicroSecond(seconds * TicksPerSecond_v, TimeUnit::Second);
 	}
 
 	void Time::SubtractMiliSecond(const Int64 miliSeconds) {
-		SubtractMicroSecond(miliSeconds * TicksPerMiliSecond, TimeUnit::MiliSecond);
+		SubtractMicroSecond(miliSeconds * TicksPerMiliSecond_v, TimeUnit::MiliSecond);
 	}
 
 	void Time::SubtractMicroSecond(Int64 microSeconds, TimeUnit timeUnit) {
@@ -390,11 +390,11 @@ namespace JCore
 
 	Int64 Time::ToTick() const {
 		Int64 uiTotalTick = 0;
-		uiTotalTick += Hour * TicksPerHour;
-		uiTotalTick += Minute * TicksPerMinute;
-		uiTotalTick += Second * TicksPerSecond;
-		uiTotalTick += MiliSecond * TicksPerMiliSecond;
-		uiTotalTick += MicroSecond * TicksPerMicroSecond;
+		uiTotalTick += Hour * TicksPerHour_v;
+		uiTotalTick += Minute * TicksPerMinute_v;
+		uiTotalTick += Second * TicksPerSecond_v;
+		uiTotalTick += MiliSecond * TicksPerMiliSecond_v;
+		uiTotalTick += MicroSecond * TicksPerMicroSecond_v;
 		return uiTotalTick;
 	}
 
@@ -420,23 +420,23 @@ namespace JCore
 	}
 
 	void DateAndTime::AddDay(const Int32 days) {
-		AddMicroSecond(days * TicksPerDay);
+		AddMicroSecond(days * TicksPerDay_v);
 	}
 
 	void DateAndTime::AddHour(const Int64 hours) {
-		AddMicroSecond(hours * TicksPerHour);
+		AddMicroSecond(hours * TicksPerHour_v);
 	}
 
 	void DateAndTime::AddMinute(const Int64 minutes) {
-		AddMicroSecond(minutes * TicksPerMinute);
+		AddMicroSecond(minutes * TicksPerMinute_v);
 	}
 
 	void DateAndTime::AddSecond(const Int64 seconds) {
-		AddMicroSecond(seconds * TicksPerSecond);
+		AddMicroSecond(seconds * TicksPerSecond_v);
 	}
 
 	void DateAndTime::AddMiliSecond(const Int64 miliSeconds) {
-		AddMicroSecond(miliSeconds * TicksPerMiliSecond);
+		AddMicroSecond(miliSeconds * TicksPerMiliSecond_v);
 	}
 
 	void DateAndTime::AddMicroSecond(Int64 microSeconds, TimeUnit timeUnit) {
@@ -446,7 +446,7 @@ namespace JCore
 			throw UnderFlowException("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
 		}
 
-		if (iTick >= Ticks10000Years) {
+		if (iTick >= Ticks10000Years_v) {
 			throw UnderFlowException("DateAndTime 연산 수행중 오류가 발생하였습니다. 1만년 이상이 될 수 없습니다.");
 		}
 		const DateTime current(iTick);
@@ -460,7 +460,7 @@ namespace JCore
 			throw UnderFlowException("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
 		}
 
-		if (iTick >= Ticks10000Years) {
+		if (iTick >= Ticks10000Years_v) {
 			throw UnderFlowException("DateAndTime 연산 수행중 오류가 발생하였습니다. 1만년 이상이 될 수 없습니다.");
 		}
 		const DateTime current(iTick);
@@ -485,7 +485,7 @@ namespace JCore
 			throw UnderFlowException("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
 		}
 
-		if (iTick >= Ticks10000Years) {
+		if (iTick >= Ticks10000Years_v) {
 			throw UnderFlowException("DateAndTime 연산 수행중 오류가 발생하였습니다. 1만년 이상이 될 수 없습니다.");
 		}
 
@@ -502,23 +502,23 @@ namespace JCore
 	}
 
 	void DateAndTime::SubtractDay(const Int32 days) {
-		SubtractMicroSecond(days * TicksPerDay);
+		SubtractMicroSecond(days * TicksPerDay_v);
 	}
 
 	void DateAndTime::SubtractHour(const Int64 hours) {
-		SubtractMicroSecond(hours * TicksPerHour);
+		SubtractMicroSecond(hours * TicksPerHour_v);
 	}
 
 	void DateAndTime::SubtractMinute(const Int64 minutes) {
-		SubtractMicroSecond(minutes * TicksPerMinute);
+		SubtractMicroSecond(minutes * TicksPerMinute_v);
 	}
 
 	void DateAndTime::SubtractSecond(const Int64 seconds) {
-		SubtractMicroSecond(seconds * TicksPerSecond);
+		SubtractMicroSecond(seconds * TicksPerSecond_v);
 	}
 
 	void DateAndTime::SubtractMiliSecond(const Int64 miliSeconds) {
-		SubtractMicroSecond(miliSeconds * TicksPerMiliSecond);
+		SubtractMicroSecond(miliSeconds * TicksPerMiliSecond_v);
 	}
 
 	void DateAndTime::SubtractMicroSecond(const Int64 microSeconds, TimeUnit timeUnit) {
@@ -791,12 +791,12 @@ namespace JCore
 
 		// After Christ (0001년 1월 1일 ~ 1969년 12월 31일)까지의 마이크로초를 더해줌으로써
 		// 0001년 1월 1일 ~ 현재까지의 After Chirst UTC 시간을 구한다.
-		epoch += ADBeginTick;
+		epoch += ADBeginTick_v;
 
 		// 로컬 시간은 타임존 편차만큼 더해준다.
 		if (timeStandard == TimeStandard::Local) {
 			const Int32 uiBias = TimeZoneBiasMinute();
-			epoch += (uiBias * -1) * TicksPerMinute;
+			epoch += (uiBias * -1) * TicksPerMinute_v;
 		}
 		return DateTime(epoch);
 	}
@@ -832,35 +832,35 @@ namespace JCore
 	}
 
 	DateTime DateTime::AddDay(Int32 day) {
-		const Int64U uiTick = m_Tick + day * TicksPerDay;
+		const Int64U uiTick = m_Tick + day * TicksPerDay_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddHour(Int64 hour) {
-		const Int64U uiTick = m_Tick + hour * TicksPerHour;
+		const Int64U uiTick = m_Tick + hour * TicksPerHour_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddMinute(Int64 minute) {
-		const Int64U uiTick = m_Tick + minute * TicksPerMinute;
+		const Int64U uiTick = m_Tick + minute * TicksPerMinute_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddSecond(Int64 second) {
-		const Int64U uiTick = m_Tick + second * TicksPerSecond;
+		const Int64U uiTick = m_Tick + second * TicksPerSecond_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::AddMiliSecond(Int64 miliSecond) {
-		const Int64U uiTick = m_Tick + miliSecond * TicksPerMiliSecond;
+		const Int64U uiTick = m_Tick + miliSecond * TicksPerMiliSecond_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
@@ -891,35 +891,35 @@ namespace JCore
 	}
 
 	DateTime DateTime::SubtractDay(Int32 day) {
-		const Int64U uiTick = m_Tick - day * TicksPerDay;
+		const Int64U uiTick = m_Tick - day * TicksPerDay_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractHour(const Int64 hour) {
-		const Int64U uiTick = m_Tick - hour * TicksPerHour;
+		const Int64U uiTick = m_Tick - hour * TicksPerHour_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractMinute(const Int64 minute) {
-		const Int64U uiTick = m_Tick - minute * TicksPerMinute;
+		const Int64U uiTick = m_Tick - minute * TicksPerMinute_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractSecond(const Int64 second) {
-		const Int64U uiTick = m_Tick - second * TicksPerSecond;
+		const Int64U uiTick = m_Tick - second * TicksPerSecond_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
 	}
 
 	DateTime DateTime::SubtractMiliSecond(const Int64 miliSecond) {
-		const Int64U uiTick = m_Tick - miliSecond * TicksPerMiliSecond;
+		const Int64U uiTick = m_Tick - miliSecond * TicksPerMiliSecond_v;
 		CheckOverFlow(uiTick);
 		m_Tick = uiTick;
 		return *this;
@@ -1206,7 +1206,7 @@ namespace JCore
 	=====================================================================================*/
 
 	void DateTime::CheckOverFlow(Int64U tick) {
-		if (tick >= Ticks10000Years) {
+		if (tick >= Ticks10000Years_v) {
 			throw OverFlowException("1만년을 넘길 수 없습니다.");
 		}
 	}
@@ -1239,8 +1239,8 @@ namespace JCore
 			i1Years = 3;
 
 		// 4년, 즉 마지막년은 366일이므로
-		const int* pUntilDays = i1Years == 3 ? (int*)DaysUntilMonth366 : (int*)DaysUntilMonth365;
-		const int* pForDays = i1Years == 3 ? (int*)DaysForMonth366 : (int*)DaysForMonth365;
+		const int* pUntilDays = i1Years == 3 ? (int*)DaysUntilMonth366_v : (int*)DaysUntilMonth365_v;
+		const int* pForDays = i1Years == 3 ? (int*)DaysForMonth366_v : (int*)DaysForMonth365_v;
 
 
 		if (part == DatePart::Year) {
@@ -1278,11 +1278,11 @@ namespace JCore
 	=====================================================================================*/
 	TimeSpan::TimeSpan(Int32 days, Int64 hours, Int64 minutes, Int64 seconds, Int64 miliSeconds, Int64 microSeconds) {
 		Tick = 0;
-		Tick += days * TicksPerDay;
-		Tick += hours * TicksPerHour;
-		Tick += minutes * TicksPerMinute;
-		Tick += seconds * TicksPerSecond;
-		Tick += miliSeconds * TicksPerMiliSecond;
-		Tick += microSeconds * TicksPerMicroSecond;
+		Tick += days * TicksPerDay_v;
+		Tick += hours * TicksPerHour_v;
+		Tick += minutes * TicksPerMinute_v;
+		Tick += seconds * TicksPerSecond_v;
+		Tick += miliSeconds * TicksPerMiliSecond_v;
+		Tick += microSeconds * TicksPerMicroSecond_v;
 	}
 } // namespace JCore

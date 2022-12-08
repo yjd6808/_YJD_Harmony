@@ -6,7 +6,7 @@
 	실패하는 경우에 대한 처리를 하지 못했다.
 
 	코딩을 신경써서 하는 수밖에..
-	쓰레드 세이프하지 않으므로 나중에 뮤텍스 버전을 만들든 해야할 듯
+	쓰레드 세이프하지 않으므로 세이프 버전을 만들든 해야할 듯
 
 	<=============>
 	
@@ -22,22 +22,19 @@
 #include <JCore/Declspec.h>
 #include <JCore/Exception.h>
 #include <JCore/Deletor.h>
+#include <JCore/TypeCast.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Assert.h>
 
 namespace JCore {
-	namespace StaticAssert {
+	namespace Detail {
 		// 스마트포인터는 배열타입은 기본 타입으로 붕괴해서 체크하자.. ㅠ
 		template <typename Lhs, typename Rhs>
-		constexpr bool SmartPointer_Castable_v = DynamicCastable_v<RemoveArray_t<Lhs>*, RemoveArray_t<Rhs>*>;
-
-		// 안씀
-		template <typename From, typename To>
-		constexpr bool SmartPointer_BaseOf_v = IsRPBasedOf_v<RemoveArray_t<From>*, RemoveArray_t<To>*>;
+		constexpr bool IsSmartPtrCastable_v = IsDynamicCastable_v<RemoveArray_t<Lhs>*, RemoveArray_t<Rhs>*>;
 
 		template <typename Lhs, typename Rhs>
 		void CheckDynamicCastable() {
-			static_assert(SmartPointer_Castable_v<Lhs, Rhs>, 
+			static_assert(IsSmartPtrCastable_v<Lhs, Rhs>, 
 				"... cannot convert! Type T* and U* must be dynamic castable each other");
 		}
 	}
@@ -170,7 +167,7 @@ public:
 
 	template <typename U>
 	UniquePtr(UniquePtr<U>&& other) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 
 		m_Pointer = (T*)other.m_Pointer;
 		m_Base = other.m_Base;
@@ -235,7 +232,7 @@ public:
 
 		// U -> int* -> 포인터를 없애주고 비교해야함
 		// T -> int
-		StaticAssert::CheckDynamicCastable<RemovePointer_t<U>, T>();
+		Detail::CheckDynamicCastable<RemovePointer_t<U>, T>();
 		return (U)m_Pointer;
 	}
 
@@ -493,7 +490,7 @@ public:
 
 		// U -> int* -> 포인터를 없애주고 비교해야함
 		// T -> int
-		StaticAssert::CheckDynamicCastable<RemovePointer_t<U>, T>();
+		Detail::CheckDynamicCastable<RemovePointer_t<U>, T>();
 		return (U)m_Pointer;
 	}
 
@@ -691,25 +688,25 @@ public:
 
 	template <typename U>
 	SharedPtr(WeakPtr<U>& weak) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->SharedChangeToWeak(weak);
 	}
 	
 	template <typename U>
 	SharedPtr(WeakPtr<U>&& weak) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->SharedMoveToWeak(weak);
 	}
 
 	template <typename U>
 	SharedPtr(SharedPtr<U>& shared) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->SharedChangeToShared(shared);
 	}
 
 	template <typename U>
 	SharedPtr(SharedPtr<U>&& shared) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->SharedMoveToShared(shared);
 	}
 
@@ -724,28 +721,28 @@ public:
 
 	template <typename U>
 	TSharedPtr& operator=(SharedPtr<U>& other) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->SharedChangeToShared(other);
 		return *this;
 	}
 
 	template <typename U>
 	TSharedPtr& operator=(SharedPtr<U>&& other) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->SharedMoveToShared(other);
 		return *this;
 	}
 
 	template <typename U>
 	TSharedPtr& operator=(WeakPtr<U>& other) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->SharedChangeToWeak(other);
 		return *this;
 	}
 
 	template <typename U>
 	TSharedPtr& operator=(WeakPtr<U>&& other) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->SharedMoveToWeak(other);
 		return *this;
 	}
@@ -762,19 +759,19 @@ public:
 
 	template <typename U>
 	WeakPtr(WeakPtr<U>& weak) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->WeakChangeToWeak(weak);
 	}
 
 	template <typename U>
 	WeakPtr(WeakPtr<U>&& weak) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->WeakMoveToWeak(weak);
 	}
 
 	template <typename U>
 	WeakPtr(SharedPtr<U>& shared) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->WeakChangeToShared(shared);
 	}
 
@@ -796,21 +793,21 @@ public:
 
 	template <typename U>
 	TWeakPtr& operator=(SharedPtr<U>& other) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->WeakChangeToShared(other);
 		return *this;
 	}
 
 	template <typename U>
 	TWeakPtr& operator=(WeakPtr<U>& other) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->WeakChangeToWeak(other);
 		return *this;
 	}
 
 	template <typename U>
 	TWeakPtr& operator=(WeakPtr<U>&& other) {
-		StaticAssert::CheckDynamicCastable<U, T>();
+		Detail::CheckDynamicCastable<U, T>();
 		this->WeakMoveToWeak(other);
 		return *this;
 	}

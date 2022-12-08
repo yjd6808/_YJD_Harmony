@@ -7,7 +7,7 @@
 #include <JCoreTest/CoreTest.h>
 
 
-#include <JCore/TypeTraits.h>
+#include <JCore/TypeCast.h>
 #include <JCore/Primitives/ObserverPtr.h>
 
 

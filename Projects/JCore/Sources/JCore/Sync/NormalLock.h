@@ -9,6 +9,7 @@
 
 #include <JCore/Sync/ILock.h>
 #include <JCore/Sync/LockGuard.h>
+#include <JCore/Primitives/Atomic.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -27,7 +28,7 @@ namespace JCore {
 		bool IsLocked() override;
 	private:
 		CRITICAL_SECTION m_CriticalSection;
-		std::atomic<bool> m_bLocked;
+		Atomic<bool> m_bLocked;
 	};
 
 	/* ================================================================================= */

@@ -6,8 +6,8 @@
 #include <JCore/Utils/Console.h>
 
 namespace JCore {
-
-    template class Console<RecursiveLock>;
-    template class Console<UnusedLock>;
-
+    namespace Detail {
+        template class Console<RecursiveLock>;
+        template class Console<UnusedLock>;
+    } // namespace Detail
 } // namespace JCore

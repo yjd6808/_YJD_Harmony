@@ -7,7 +7,7 @@
 
 #include <JCore/Primitives/StringUtil.h>
 #include <JCore/Primitives/String.h>
-#include <JCore/TypeTraits.h>
+#include <JCore/TypeCast.h>
 
 namespace JCore {
 
@@ -47,7 +47,7 @@ struct NaturalOrder
 {
 	template <typename U>
 	bool operator()(U&& lhs, U&& rhs) {
-		return Comparator<NaturalType_t<U>>()(static_cast<U&&>(lhs), static_cast<U&&>(rhs)) < 0;
+		return Comparator<NaturalType_t<U>>()(Forward<U>(lhs), Forward<U>(rhs)) < 0;
 	}
 };
 
@@ -55,7 +55,7 @@ struct ReverseOrder
 {
 	template <typename U>
 	bool operator()(U&& lhs, U&& rhs) {
-		return Comparator<NaturalType_t<U>>()(static_cast<U&&>(lhs), static_cast<U&&>(rhs)) > 0;
+		return Comparator<NaturalType_t<U>>()(Forward<U>(lhs), Forward<U>(rhs)) > 0;
 	}
 };
 

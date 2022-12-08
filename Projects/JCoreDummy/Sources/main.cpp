@@ -1,64 +1,69 @@
+#include <filesystem>
+
 #include "header.h"
 
 
 using namespace JCore;
 using namespace std;
 
-template <typename T>
-struct Adder
+//template <typename T>
+//struct Adder
+//{
+//    T value = 0;
+//    Adder(const T& val) : value(val) {}
+//
+//    void Print()
+//    {
+//        std::cout << hex;
+//        std::cout << __FUNCSIG__ << "\n";
+//
+//        for (int i = 0; i < 0x300; i++) {
+//            Interlocked<T>::Add(&value, 1);
+//            printf("%lld\n", value);
+//        }
+//
+//        for (int i = 0; i < 0x300; i++) {
+//            Interlocked<T>::Add(&value, -1);
+//            printf("%lld\n", value);
+//        }
+//
+//        std::cout << dec;
+//
+//        NormalConsole::WriteLine("======================");
+//    }
+//};
+
+
+using Console = NormalConsole;
+
+struct A
 {
-    T value = 0;
-    Adder(const T& val) : value(val) {}
-
-    void Print()
-    {
-        std::cout << hex;
-        std::cout << __FUNCSIG__ << "\n";
-
-        for (int i = 0; i < 0x300; i++) {
-            Interlocked64Api<T>::Add(&value, 1);
-            printf("%lld\n", value);
-        }
-
-        for (int i = 0; i < 0x300; i++) {
-            Interlocked64Api<T>::Add(&value, -1);
-            printf("%lld\n", value);
-        }
-
-        std::cout << dec;
-
-        NormalConsole::WriteLine("======================");
-    }
 };
 
+struct B : A {};
+
+struct C{};
+
+
 int main() {
-	AutoMemoryLeakDetector detector;
-    NormalConsole::Init();
-    NormalConsole::SetOutputCodePage(CodePage::UTF8);
+    Console::Init();
+    Console::SetOutputCodePage(CodePage::UTF8);
+
+    B ff;
+
+    Atomic<A*> k1 = new A();
+    Atomic<B*> k2 = new B();
+    Atomic<C*> k3;
+    k1 = k2;
+    Console::WriteLine("%p", k1.Load());
+    Console::WriteLine("%p", k2.Load());
+
+    std::atomic<A*> k4;
+    std::atomic<B*> k5;
+    std::atomic<C*> k6;
+
+    k4 = k5;
     
-    vector<thread> threads;
-    //for (int i = 0; i < 4; i++)
-    //    threads.emplace_back([] {
-    //        for (int i = 0; i < 1'100'000; i++) {
-    //            Interlocked32Api<Int32>::Add(&k, 1);
-    //        }
-    //    });
-
-    //for (int i = 0; i < 4; i++)
-    //    threads.emplace_back([] {
-    //        for (int i = 0; i < 1'100'000; i++) {
-    //            Interlocked32Api<Int32>::Add(&k, -1);
-    //        }
-    //    });
-
-
-    Atomic<int*> s;
-
-    Adder<Int64> k { MaxInt64_v - 0x100 };
-    k.Print();
-   /* for (int i = 0; i < 8; i++ )
-        threads[i].join();*/
-    //NormalConsole::WriteLine("k: %d(%d)", k, k == result);
-    this_thread::sleep_for(10s);
 	return 0;
-} 
+}
+

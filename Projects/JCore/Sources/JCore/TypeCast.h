@@ -4,47 +4,33 @@
  *
  */
 
-
 #pragma once
+
+#include <JCore/TypeTraits/Eliminator.h>
 
 namespace JCore {
 
   /* =============================================================== */
- // 참조자 제거해주는 템플릿
-  template <typename T>
-  struct RemoveReference
-  {
-    using Type = T;
-  };
-
-  template <typename T>
-  struct RemoveReference<T&>
-  {
-    using Type = T;
-  };
-
-  template <typename T>
-  struct RemoveReference<T&&>
-  {
-    using Type = T;
-  };
-
-  template <typename T>
-  using RemoveReference_t = typename RemoveReference<T>::Type;
-
-  /* =============================================================== */
   // 무브 시멘틱과 완벽한 전달
   template <typename T>
-  inline constexpr RemoveReference_t<T>&& Move(T&& arg) {
+  constexpr RemoveReference_t<T>&& Move(T&& arg) {
     return static_cast<RemoveReference_t<T>&&>(arg);
   }
 
   template <typename T>
-  inline constexpr T&& Forward(RemoveReference_t<T>& arg) {
+  constexpr T&& Forward(RemoveReference_t<T>& arg) {
     return static_cast<T&&>(arg);
   }
 
+  template <typename T>
+  constexpr T* AddressOf(T& arg) {
+      return __builtin_addressof((RemoveQulifier_t<T>&)arg);
+  }
 
+  template<typename T>
+  T* ToPtr(T& obj) { return &obj; }
+  template<typename T>
+  T* ToPtr(T* obj) { return obj; } 
 }
 
  

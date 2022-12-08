@@ -37,7 +37,7 @@ struct ByteOrder final
 
 	template <typename T>
 	constexpr static T NetworkToHost(const T val) {
-		static_assert(JCore::IsPrimitiveType_v<T>, "... T muse be primitive type");
+		static_assert(JCore::IsFundamentalType_v<T>, "... T muse be primitive type");
 
 		// 호스트가 빅 엔디언이면 그냥 반환
 		if (HostEndianness() == Endianness::Big) {
@@ -59,7 +59,7 @@ struct ByteOrder final
 
 	template <typename T>
 	constexpr static T HostToNetwork(const T val) {
-		static_assert(JCore::IsPrimitiveType_v<T>, "... T muse be primitive type");
+		static_assert(JCore::IsFundamentalType_v<T>, "... T muse be primitive type");
 
 		// 호스트가 빅 엔디언이면 그냥 반환
 		if (HostEndianness() == Endianness::Big) {

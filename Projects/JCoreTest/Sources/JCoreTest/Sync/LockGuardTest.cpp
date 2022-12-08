@@ -15,8 +15,6 @@
 #include <JCore/Sync/Semaphore.h>
 #include <JCore/Sync/SpinLock.h>
 
-
-
 namespace LockGuardTest {
 
     TEST(LockGuardTest, LockGuard) {

@@ -87,6 +87,9 @@
     <ClCompile Include="..\Sources\JCoreTest\Sync\LockGuardTest.cpp">
       <Filter>Sync</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\AtomicTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
@@ -103,6 +106,12 @@
     </Filter>
     <Filter Include="Primitives">
       <UniqueIdentifier>{78719c96-fd9b-4bdf-b710-9854706255fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Wrapper">
+      <UniqueIdentifier>{9e783c3e-69d3-4eeb-99dc-75b71bd1e6a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{cd77f4b5-5afd-4c58-9ca6-d06729e946e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

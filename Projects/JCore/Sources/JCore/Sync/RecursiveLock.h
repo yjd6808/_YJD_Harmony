@@ -31,6 +31,6 @@ namespace JCore {
 	};
 
 	using RecursiveLockGuard = LockGuard<RecursiveLock>;
-	extern template             LockGuard<RecursiveLock>;
+	extern template            LockGuard<RecursiveLock>;
 
 } // namespace JCore
