@@ -74,7 +74,7 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->SetAtUnsafe(this->m_iSize++, data);
+		this->SetAtUnsafe(this->m_iSize++, Move(data));
 	}
 
 	/**

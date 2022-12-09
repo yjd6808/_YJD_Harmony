@@ -28,4 +28,11 @@ using PInt8U	= unsigned char*;
 using PChar		= char*;
 using PByte		= unsigned char*;
 
+#ifdef _WIN64
+using IntPtr = Int64;
+#else
+using IntPtr = Int32U;
+#endif
+
 using WinHandle = void*;
+

@@ -85,6 +85,19 @@ public:
 		return Addressof(m_pCollection->End()->Previous());
 	}
 
+    T* IndexOf(int at) {
+	    int idx = 0;
+
+        auto it = m_pCollection->Begin();
+        while (it->HasNext()) {
+            T& cur = it->Next();
+            if (idx++ == at) {
+                return AddressOf(cur);
+            }
+        }
+        return nullptr;
+	}
+
 	template <typename Predicate>
 	T* FindIf(Predicate predicate) {
 		if (m_pCollection->Size() == 0) {

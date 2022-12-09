@@ -28,6 +28,6 @@ namespace JCore {
 	};
 
 	using SpinLockGuard = LockGuard<SpinLock>;
-	extern template         LockGuard<SpinLock>;
+	extern template       LockGuard<SpinLock>;
 
 } // namespace JCore

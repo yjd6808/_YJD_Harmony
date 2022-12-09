@@ -8,10 +8,16 @@
 #include <JCore/TypeTraits/Checker.h>
 #include <type_traits>
 
+
 namespace JCore {
 
+    
     // 외부에 감추고자하는 구현
     namespace Detail {   
+
+        
+        struct __Start__ {};    // 템플릿 파라미터의 시작을 표시하는 용도로 쓰임
+        struct __End__ {};      // 템플릿 파라미터의 끝을 표시하는 용도로 쓰임
 
         // 템플릿 파라미터 팩(BaseArgs)으로 전달한 타입들이 모두 Derived의 부모인지 여부
         /*
@@ -21,9 +27,9 @@ namespace JCore {
          struct C{}			;
          struct D:A,B,C{}	;
          struct E{}			;
-         IsBaseOf_1Derived_MultipleBase_v<D, A, B>;		  // true	A, B 모두 D의 부모이므로
-         IsBaseOf_1Derived_MultipleBase_v<D, A, B, C>;	  // true	A, B, C 모두 D의 부모이므로
-         IsBaseOf_1Derived_MultipleBase_v<D, A, B, C, E>; // false   A, B, C 모두 D의 부모이지만 E는 아님
+         IsMultipleBase<D, A, B>;		  // true	A, B 모두 D의 부모이므로
+         IsMultipleBase<D, A, B, C>;	  // true	A, B, C 모두 D의 부모이므로
+         IsMultipleBase<D, A, B, C, E>; // false   A, B, C 모두 D의 부모이지만 E는 아님
          */
         // Base 타입들이 모두 Derived를 자식으로 두고 있는지 검사
         template <typename Derived, typename Base, typename... BaseArgs>
@@ -90,18 +96,21 @@ namespace JCore {
             static constexpr bool Value = Left >= Right;
         };
 
+        // SFINAE를 활용하기 위함
         template<bool Test, typename T = void>
         struct EnableIf {};
 
         template<typename T>
         struct EnableIf<true, T> { using Type = T; };
 
-        // Test가 참이면 T1 False면 T2
+        // Conditional<true, T1, T2> = T1
+        // Conditional<false, T1, T2> = T2
         template <bool Test, typename T1, typename T2>
         struct Conditional { using Type = T1; };
         template <typename T1, typename T2>
         struct Conditional<false, T1, T2> { using Type = T2; };
 
+        // Or<false, true, false> = true
         template <bool Test, bool... RestTests>
         struct Or { static constexpr bool Value = Test || Or<RestTests...>::Value; };
         template <>
@@ -109,12 +118,53 @@ namespace JCore {
         template <>
         struct Or<false> { static const bool Value = false; };
 
+        // And<false, true, false> = false
         template <bool Test, bool... RestTests>
         struct And { static constexpr bool Value = Test && Or<RestTests...>::Value; };
         template <>
         struct And<true> { static const bool Value = true; };
         template <>
         struct And<false> { static const bool Value = false; };
+
+
+        template <typename... Args>
+        struct ParameterPack
+        {
+            using Type = ParameterPack<Args...>;
+            static constexpr int Value = sizeof...(Args);
+        };
+
+        // ParameterPackCountOf<
+        //      ParameterPack<int, int>,
+        //      ParameterPack<double, long, float>,
+        //      ParameterPack<int>,
+        //      __End__> = 6
+        template <typename FirstParameterPack, typename... RestParameterPacks>
+        struct ParameterPackCountOf {
+            static constexpr int Value = FirstParameterPack::Value + ParameterPackCountOf<RestParameterPacks>::Value;
+        };
+
+        template <>
+        struct ParameterPackCountOf<__End__> { static constexpr int Value = 0; };
+
+        
+        // IndexOf_t<0, int, long, double> = int
+        // IndexOf_t<1, int, long, double> = long
+        // IndexOf_t<2, int, long, double> = double
+        // IndexOf_t<3, int, long, double> = __End__
+        template <Int Index, Int TargetIndex, typename First, typename... Rest>
+        struct IndexOf {
+            using Type = typename Conditional<Index == TargetIndex,
+                First,
+                typename IndexOf<Index + 1, TargetIndex, Rest...>::Type>::Type;
+        };
+
+        template <Int Index, Int TargetIndex>
+        struct IndexOf<Index, TargetIndex, __End__> {
+            using Type = __End__;
+        };
+
+
     }
 
 
@@ -126,6 +176,9 @@ namespace JCore {
     // @참고 : https://docs.microsoft.com/ko-kr/cpp/standard-library/is-convertible-class?view=msvc-170
     template <typename From, typename To>
     constexpr bool IsConvertible_v = std::is_convertible_v<From, To>;
+
+    template <typename From, typename... Args>
+    constexpr bool IsConstructible_v = std::is_constructible_v<From, Args...>;
 
 
     template <typename Base, typename Derived>
@@ -176,11 +229,17 @@ namespace JCore {
     template <typename From, typename To>
     constexpr bool IsAssignable_v = std::is_assignable_v<From, To>;
 
-    template <typename From, typename To>
+    template <typename From>
     constexpr bool IsCopyAssignable_v = std::is_copy_assignable_v<From>;
 
-    template <typename From, typename To>
+    template <typename From>
     constexpr bool IsMoveAssignable_v = std::is_move_assignable_v<From>;
+
+    template <typename From>
+    constexpr bool IsCopyConstructible_v = std::is_copy_constructible_v<From>;
+
+    template <typename From>
+    constexpr bool IsMoveConstructible_v = std::is_move_constructible_v<From>;
 
 
     template<bool Test, typename T = void>
@@ -194,4 +253,12 @@ namespace JCore {
 
     template<bool... Tests>
     constexpr bool And_v = Detail::And<Tests...>::Value;
+
+    template <typename... Args>
+    constexpr bool CountOf_v = Detail::ParameterPack<Args...>::Value;
+
+    template<Int Index, typename... Args>
+    using IndexOf_t = typename Detail::IndexOf<0, Index, Args..., Detail::__End__>::Type;
+
+
 } // namespace JCore

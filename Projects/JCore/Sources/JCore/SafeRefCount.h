@@ -46,7 +46,7 @@ struct SafeRefCount
 	}
 protected:
     virtual void ReleaseAction() = 0;
-protected:
+private:
     Atomic<int> m_iRef;
 };
 

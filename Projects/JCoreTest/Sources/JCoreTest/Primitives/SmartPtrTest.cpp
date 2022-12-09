@@ -40,55 +40,69 @@ struct ModelA
 
 // 쉐어드 포인터 테스트
 TEST(SmartPointerTest, SharedPointer) {
-	
+    auto test = [](SharedPtr<int>& g1, SharedPtr<int>& g2) {
+        *g1 = 30;
 
-	SharedPtr<int> g1 = MakeShared<int>(2);
-	SharedPtr<int> g2 = MakeShared<int>(3);
+        // 기존 g1 소멸
+        g2 = g1;
+        EXPECT_TRUE(g2.RefCount() == 2);
+        EXPECT_TRUE(g1.RefCount() == 2);
 
-	*g1 = 30;
+        {
+            SharedPtr<int> g3(g2);
+            EXPECT_TRUE(g1.RefCount() == 3);
+        }
 
-	// 기존 g1 소멸
-	g2 = g1;
-	EXPECT_TRUE(g2.RefCount() == 2);
-	EXPECT_TRUE(g1.RefCount() == 2);
+        EXPECT_TRUE(g1.RefCount() == 2);
 
-	{
-		SharedPtr<int> g3(g2);
-		EXPECT_TRUE(g1.RefCount() == 3);
-	}
+        SharedPtr<int> g3;
+        g3 = g2;
 
-	EXPECT_TRUE(g1.RefCount() == 2);
+        EXPECT_TRUE(g1.RefCount() == 3);
 
-	SharedPtr<int> g3;
-	g3 = g2;
-
-	EXPECT_TRUE(g1.RefCount() == 3);
-
-	SharedPtr<int> g4(Move(g3));	// 이동생성자 호출
-	EXPECT_TRUE(g1.RefCount() == 3);	// 카운트 유지 되어야함
+        SharedPtr<int> g4(Move(g3));	// 이동생성자 호출
+        EXPECT_TRUE(g1.RefCount() == 3);	// 카운트 유지 되어야함
 
 
-	SharedPtr<int> g5(g4);			// 복사생성자 호출
-	EXPECT_TRUE(g1.RefCount() == 4);	// 올라감
+        SharedPtr<int> g5(g4);			// 복사생성자 호출
+        EXPECT_TRUE(g1.RefCount() == 4);	// 올라감
 
 
-	SharedPtr<ModelA> m1 = MakeShared<ModelA>();
+        SharedPtr<ModelA> m1 = MakeShared<ModelA>();
 
-	{
-		SharedPtr<ModelA> m2(Move(m1));
-	}
+        {
+            SharedPtr<ModelA> m2(Move(m1));
+        }
 
-	// move 하고 난 뒤라서 없어야함
-	EXPECT_TRUE(m1.Exist() == false);
-	EXPECT_TRUE(m1.Get() == nullptr);
+        // move 하고 난 뒤라서 없어야함
+        EXPECT_TRUE(m1.Exist() == false);
+        EXPECT_TRUE(m1.Get() == nullptr);
 
-	{
-		m1 = MakeShared<ModelA>(); // operator=(&&) 호출
-	}
-	EXPECT_TRUE(m1.Exist());
-	EXPECT_TRUE(m1.Get() != nullptr);
-	EXPECT_TRUE(m1.RefCount() == 1);
-	EXPECT_TRUE(m1.WeakCount() == 1);
+        {
+            m1 = MakeShared<ModelA>(); // operator=(&&) 호출
+        }
+        EXPECT_TRUE(m1.Exist());
+        EXPECT_TRUE(m1.Get() != nullptr);
+        EXPECT_TRUE(m1.RefCount() == 1);
+        EXPECT_TRUE(m1.WeakCount() == 1);
+    };
+
+
+    // 내부에서 만드는 경우
+    {
+        SharedPtr<int> g1 = MakeShared<int>(2);
+        SharedPtr<int> g2 = MakeShared<int>(3);
+        test(g1, g2);
+    }
+
+    // 외부에서 주입 해주는 경우
+    {
+
+
+        //SharedPtr<int> g1 = SharedPtr<int>(new int(2));
+        //SharedPtr<int> g2 = SharedPtr<int>(new int(3));
+        //test(g1, g2);
+    }
 }
 
 
@@ -110,11 +124,22 @@ TEST(SmartPointerTest, WeakPointer) {
 		EXPECT_TRUE(w1.Exist() == false);
 		EXPECT_TRUE(s1.Exist() == false);
 
-		s1 = MakeShared<ModelA>();	// SharedPointer::operator=(&&) 호출
-		w1 = s1;
+        // 내부에서 생성하는 경우
+	    {
+            s1 = MakeShared<ModelA>();	// SharedPointer::operator=(&&) 호출
+            w1 = s1;
 
-		EXPECT_TRUE(w1.RefCount() == 1);
-		EXPECT_TRUE(w1.WeakCount() == 2);
+            EXPECT_TRUE(w1.RefCount() == 1);
+            EXPECT_TRUE(w1.WeakCount() == 2);
+        }
+        // 외부에서 주입 해주는 경우
+		{
+		    s1 = SharedPtr<ModelA>(new ModelA());
+            w1 = s1;
+
+            EXPECT_TRUE(w1.RefCount() == 1);
+            EXPECT_TRUE(w1.WeakCount() == 2);
+		}
 	}
 
 	PrintFormat("===========================================\n");
@@ -202,16 +227,31 @@ TEST(SmartPointerTest, DynamicCastingTest) {
 
 	WeakPtr<Model> w1;
 	{
-		SharedPtr<SuperModel> s1 = MakeShared<SuperModel>();
-		
-		Model* z = s1.Get<Model*>();		// Get 다이나믹 캐스팅 지원
-		SuperModel* z2 = s1.Get();			// 기본타입은 그냥 들고오면 됨
 
-		SharedPtr<Model> s2 = s1;
-		SharedPtr<SuperModel> s3 = s2;
+        // 내부에서 만드는 경우
+        {
+            SharedPtr<SuperModel> s1 = MakeShared<SuperModel>();
+
+            Model* z = s1.Get<Model*>();		// Get 다이나믹 캐스팅 지원
+            SuperModel* z2 = s1.Get();			// 기본타입은 그냥 들고오면 됨
+
+            SharedPtr<Model> s2 = s1;
+            SharedPtr<SuperModel> s3 = s2;
+            w1 = s1;
+        }
 
 
-		w1 = s1;
+        // 외부에서 주입 해주는 경우
+        {
+            SharedPtr<SuperModel> s1 = SharedPtr(new SuperModel());
+
+            Model* z = s1.Get<Model*>();		// Get 다이나믹 캐스팅 지원
+            SuperModel* z2 = s1.Get();			// 기본타입은 그냥 들고오면 됨
+
+            SharedPtr<Model> s2 = s1;
+            SharedPtr<SuperModel> s3 = s2;
+            w1 = s1;
+        }
 	}
 
 

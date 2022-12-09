@@ -198,9 +198,6 @@ namespace JCore {
             bool before = expected;
             bool initial = TInterlocked::CompareExchange(&m_Value, expected, desired);
 
-            // 바꾸고자 하는 값이 초기값이랑 일치했다는건
-            // 교환이 되기전 값과 일치한다는 것은
-            // 교환이 성공했다는 것이다.
             if (before == initial)
                 return true;
 

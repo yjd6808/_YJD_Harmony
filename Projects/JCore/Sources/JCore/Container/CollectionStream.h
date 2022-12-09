@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <JCore/Memory.h>
 #include <JCore/Comparator.h>
+
 
 namespace JCore {
 
@@ -36,33 +36,37 @@ public:
 =====================================================================================*/
 
 template <typename T>
-class CollectionStream
+class CollectionStream : public Collection<T>
 {
 	using TEnumerator			= Enumerator<T>;
 	using TStreamNode			= StreamNode<T>;
 	using TCollection			= Collection<T>;
 	using TCollectionStream		= CollectionStream<T>;
+    using TIterator             = Iterator<T>;
 
 private: 
 	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
-	CollectionStream(TCollection* collection)  {
+	CollectionStream(TCollection* collection): TCollection() {
 		m_pCollection = collection;
-		m_iSize = collection->Size();
+        int size = collection->Size();
+	    this->m_iSize = size;
 
-		if (m_iSize == 0) {
+
+
+		if (size == 0) {
 			ConnectNode(m_pHead, m_pTail);
 			return;
 		}
 
 		// 물리적 배열 생성
-		m_pArray = Memory::Allocate<TStreamNode*>(sizeof(TStreamNode) * m_iSize);
+		m_pArray = Memory::Allocate<TStreamNode*>(sizeof(TStreamNode) * size);
 
 		// 논리적 연결리스트 구성
 		ConnectNode(m_pHead, &m_pArray[0]);
-		ConnectNode(&m_pArray[m_iSize - 1], m_pTail);
+		ConnectNode(&m_pArray[size - 1], m_pTail);
 
 		TEnumerator it = collection->Begin();
-		for (int i = 0; i < m_iSize - 1; i++) {
+		for (int i = 0; i < size - 1; i++) {
 			// 실질적인 참조 데이터의 포인터를 담아준다.
 			m_pArray[i].Pointer = AddressOf(it->Next());	
 
@@ -71,20 +75,7 @@ private:
 		}
 
 		// 마지막 원소의 참조 정보를 저장한다.
-		m_pArray[m_iSize - 1].Pointer = AddressOf(it->Next());
-
-		
-		/*
-		성능이 좀 더 안좋음
-		for (int i = 0; i < m_iSize - 1; i++) {
-			ConnectNode(&m_pArray[i], &m_pArray[i + 1]);
-		}
-
-		TEnumerator it = collection->Begin();
-		for (int i = 0; it->HasNext(); i++) {
-			m_pArray[i].Pointer = AddressOf(it->Next());
-		}
-		*/
+		m_pArray[size - 1].Pointer = AddressOf(it->Next());
 	}
 
 public:
@@ -92,13 +83,13 @@ public:
 	CollectionStream(const TCollectionStream& CollectionStream) = delete;
 	CollectionStream(TCollectionStream&& CollectionStream) {
 		m_pArray = CollectionStream.m_pArray;
-		m_iSize = CollectionStream.m_iSize;
+		this->m_iSize = CollectionStream.m_iSize;
 		m_pCollection = CollectionStream.m_pCollection;
 
 		CollectionStream.m_pArray = nullptr;
 		CollectionStream.m_iSize = 0;
 
-		if (m_iSize == 0) {
+		if (this->m_iSize == 0) {
 			ConnectNode(m_pHead, m_pTail);
 			return;
 		}
@@ -110,10 +101,17 @@ public:
 	virtual ~CollectionStream() noexcept {
 		Memory::Deallocate(m_pArray);
 	}
-public:
-	int Size() const {
-		return m_iSize;
+
+    TEnumerator Begin() const override {
+		return nullptr;
 	}
+
+	TEnumerator End() const override {
+		return nullptr;
+	}
+
+public:
+	
 
 	template <typename Consumer>
 	void ForEach(Consumer consumer) const {
@@ -137,7 +135,7 @@ public:
 			pCur = pCur->Next;
 		}
 
-		m_iSize = iSize;
+		this->m_iSize = iSize;
 		return *this;
 	}
 
@@ -177,7 +175,7 @@ protected:
 	template <typename Predicate>
 	void MergeSort(Predicate predicate) {
 		// 데이터가 1개 이하인 경우는 정렬 자체를 해줄 필요가 없다.
-		if (m_iSize <= 1) {
+		if (this->m_iSize <= 1) {
 			return;
 		}
 
@@ -260,15 +258,13 @@ protected:
 		return m_ValtyTemp.Next;
 	}
 
-	
-
+    
 	
 protected:
 	TCollection* m_pCollection = nullptr;
 	TStreamNode* m_pArray = nullptr;
 	TStreamNode* m_pHead = &m_ValtyHead;
 	TStreamNode* m_pTail = &m_ValtyTail;
-	int m_iSize;
 private:
 	TStreamNode m_ValtyHead;
 	TStreamNode m_ValtyTail;

@@ -92,6 +92,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	dummyPacket->Get<0>()->Value = 2;
 	dummyPacket->Get<1>()->SetCommand(3);
 	dummyPacket->Get<1>()->Value = 4;
+    dummyPacket->AddRef();
 
 	m_RemoteEndPoint = destination;
 

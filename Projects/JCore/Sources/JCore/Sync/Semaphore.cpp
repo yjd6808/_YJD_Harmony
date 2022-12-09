@@ -29,8 +29,6 @@ namespace JCore {
 
 	void Semaphore::Unlock() {
 		std::unique_lock ul(m_Mtx);
-        if (m_iUsableCount == m_iMaxCount)
-            int a = 40;
 
         if (m_iUsableCount < m_iMaxCount) {
             ++m_iUsableCount;

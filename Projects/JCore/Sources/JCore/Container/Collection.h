@@ -5,10 +5,12 @@
 #pragma once
 
 #include <JCore/Memory.h>
+#include <JCore/TypeTraits.h>
 
 #include <JCore/Container/Iterable.h>
 #include <JCore/Container/Iterator.h>
 #include <JCore/Container/CollectionExtension.h>
+
 
 #pragma warning(push)
   #pragma warning(disable: 26495) // Member variable is uninitialized

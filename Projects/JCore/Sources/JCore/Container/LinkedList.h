@@ -67,9 +67,9 @@ public:
 		TListCollection::PushBackAll(collection);
 	}
 
-	void PushFront(const T& data) override {
+	/*void PushFront(const T& data) override {
 		TListCollection::PushFront(data);
-	}
+	}*/
 
 	void PushFront(T&& data) override {
 		TListCollection::PushFront(Move(data));
@@ -109,8 +109,8 @@ public:
 		return this->FindNode(data) != nullptr;
 	}
 
-	bool Remove(const T& data) { 
-		return TListCollection::Remove(data);
+	bool Remove(const T& data) {
+            return TListCollection::Remove(data);
 	}
 
 	bool Remove(const TLinkedListIterator& iter) {

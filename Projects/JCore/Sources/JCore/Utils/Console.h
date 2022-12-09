@@ -8,7 +8,7 @@
 #include <JCore/Sync/UnusedLock.h>
 #include <JCore/Utils/ConsoleColor.h>
 
-#include <JCore/Wrapper/StdLib.h>
+#include <JCore/Wrapper/CRuntime.h>
 #include <JCore/Wrapper/WinApi.h>
 #include <JCore/Tuple.h>
 
@@ -29,13 +29,13 @@ namespace JCore {
         public:
             static void Init() {
                 TLockGuard guard(ms_ConsoleLock);
-                ms_hStdout = GetStdoutHandle();
+                ms_hStdout = WinApi::GetStdoutHandle();
             }
 
             static void SetConsoleSize(int width, int height) {
                 char cmd[TempBufferLen];
                 sprintf_s(cmd, " mode  con lines=%d   cols=%d ", height, width);
-                System(cmd);
+                CRuntime::System(cmd);
             }
 
             static void SetColor(ConsoleColor color) {
@@ -117,7 +117,7 @@ namespace JCore {
 
             static void Clear() {
                 TLockGuard guard(ms_ConsoleLock);
-                System("cls");
+                CRuntime::System("cls");
             }
 
             static void SetCursorPosition(int x, int y) {
@@ -125,25 +125,25 @@ namespace JCore {
                 DebugAssert(ms_hStdout != INVALID_HANDLE_VALUE);
                 ms_iCursorPosX = x;
                 ms_iCursorPosY = y;
-                SetConsoleCursorPosition(ms_hStdout, x, y);
+                WinApi::SetConsoleCursorPosition(ms_hStdout, x, y);
             }
 
             static Tuple<int, int> GetCursorPosition() {
                 DebugAssert(ms_hStdout != INVALID_HANDLE_VALUE);
                 int x;
                 int y;
-                if (GetConsoleCursorPosition(ms_hStdout, x, y)) {
+                if (WinApi::GetConsoleCursorPosition(ms_hStdout, x, y)) {
                     return { x,  y };
                 }
                 return { -1, -1 };
             }
 
             static void SetOutputCodePage(int codePage) {
-                SetConsoleOutputCodePage(codePage);
+                WinApi::SetConsoleOutputCodePage(codePage);
             }
 
             static int GetOutputCodePage() {
-                return GetConsoleOutputCodePage();
+                return WinApi::GetConsoleOutputCodePage();
             }
         };
     } // namespace Detail

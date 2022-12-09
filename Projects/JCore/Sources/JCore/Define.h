@@ -17,9 +17,10 @@
 	    }						\
     } while (0);		
 
-    #define JCoreWinApi         __stdcall
-    #define JCoreSystem         __cdecl
+    #define JCoreStdCall        __stdcall
+    #define JCoreCdecl          __cdecl
     #define JCoreForceInline    __forceinline
+    #define JCoreInfinite       0xffffffff
 
     #define In_
     #define Out_

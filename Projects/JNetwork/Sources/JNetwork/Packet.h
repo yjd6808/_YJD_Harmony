@@ -218,9 +218,8 @@ class DynamicPacket : public ISendPacket
 {
 	static_assert(sizeof...(CommandArgs) > 0, "... Packet must have one more command"); // 커맨드는 최소 1개 이상 전달하도록 하자.
 	static_assert(JCore::IsMultipleDerived<ICommand, CommandArgs...>, "... CommandArgs must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
-
 	template <int Index>
-	using TypeAt = std::tuple_element_t<Index, std::tuple<CommandArgs...>>;	 // 인자로 전달받은 커맨드 타입
+	using TypeAt = JCore::IndexOf_t<Index, CommandArgs...>;	 // 인자로 전달받은 커맨드 타입
 public:
 	template <typename... Ints>
 	DynamicPacket(Ints... sizes) : ISendPacket() {

@@ -1,13 +1,12 @@
 /*
 	작성자 : 윤정도
-	스마트 포인터 만들어보기
+	스마트 포인터 
 
 	배열 타입까지 구현해버리는 바람에 다이나믹 캐스팅이
 	실패하는 경우에 대한 처리를 하지 못했다.
 
 	코딩을 신경써서 하는 수밖에..
 	쓰레드 세이프하지 않으므로 세이프 버전을 만들든 해야할 듯
-
 	<=============>
 	
 	UniqueObject<T>			단일 포인터 (동적할당 1회)
@@ -370,6 +369,34 @@ struct SharedObject : ControlBlock
 	union { T Object; };
 };
 
+
+// 외부에서 직접 포인터를 넣어주는 경우때문에 추가해줌
+template <typename T>
+struct SharedObject<T*> : ControlBlock
+{
+	using TDeletor = PlacementDeletor<T, DeletorOption::OnlyDeletePointer>;
+
+	explicit SharedObject(T* ptr) {
+        Object = ptr;
+	}
+
+	~SharedObject() override {}
+
+	void DestroyObject() override {
+		TDeletor()(Object);
+	}
+
+	void DeleteSelf() override {
+		delete this;
+	}
+
+	T* Address() const {
+		return Object;
+	}
+
+    T* Object;
+};
+
 template <typename T, int Size>
 struct SharedObject<T[Size]> : ControlBlock
 {
@@ -442,34 +469,34 @@ class BasePointer
 	using TWeakPtr		= WeakPtr<T>;
 public:
 	int RefCount() const {
-		if (m_ControlBlock == nullptr) {
+		if (m_pControlBlock == nullptr) {
 			return 0;
 		}
 
-		return m_ControlBlock->ReferenceCount;
+		return m_pControlBlock->ReferenceCount;
 	}
 
 	int WeakCount() const {
-		if (m_ControlBlock == nullptr) {
+		if (m_pControlBlock == nullptr) {
 			return 0;
 		}
 
-		return m_ControlBlock->WeakCount;
+		return m_pControlBlock->WeakCount;
 	}
 
 
 	bool Exist() const {
-		if (m_ControlBlock == nullptr)
+		if (m_pControlBlock == nullptr)
 			return false;
 
-		return m_ControlBlock->ReferenceCount > 0;
+		return m_pControlBlock->ReferenceCount > 0;
 	}
 
 	T& GetObj() const {
 		return *m_Pointer;
 	}
 
-	T* GetPointer() const {
+	T* GetPtr() const {
 		return m_Pointer;
 	}
 
@@ -507,7 +534,7 @@ public:
 			throw NullPointerException("포인터가 존재하지 않습니다.");
 		}
 
-		return GetPointer();
+		return GetPtr();
 	}
 
 	T& operator[](const int idx) const {
@@ -523,11 +550,18 @@ public:
 	}
 protected:
 	void MakeSharedEmpty() {
-		m_ControlBlock->DecreaseRefCount();
+		m_pControlBlock->DecreaseRefCount();
 
 		m_Pointer = nullptr;
-		m_ControlBlock = nullptr;
+		m_pControlBlock = nullptr;
 		m_Size = 0;
+	}
+
+    void MakeShared(T* ptr) {
+        // T*  => T*
+	    m_pControlBlock = new SharedObject<T*>(ptr); 
+        m_Pointer = ptr;
+        m_Size = 1;
 	}
 
 	// Shared로 Shared 복사
@@ -535,7 +569,7 @@ protected:
 	void SharedChangeToShared(SharedPtr<U>& shared) {
 		SubtractReferenceCount();
 		m_Pointer = (T*)(shared.m_Pointer);
-		m_ControlBlock = shared.m_ControlBlock;
+		m_pControlBlock = shared.m_pControlBlock;
 		m_Size = shared.m_Size;
 		AddReferenceCount();
 	}
@@ -545,7 +579,7 @@ protected:
 	void SharedChangeToWeak(WeakPtr<U>& weak) {
 		SubtractReferenceCount();
 		m_Pointer = (T*)(weak.m_Pointer);
-		m_ControlBlock = weak.m_ControlBlock;
+		m_pControlBlock = weak.m_pControlBlock;
 		m_Size = weak.m_Size;
 		AddReferenceCount();
 	}
@@ -555,7 +589,7 @@ protected:
 	void WeakChangeToShared(SharedPtr<U>& shared) {
 		SubtractWeakCount();
 		m_Pointer = (T*)(shared.m_Pointer);
-		m_ControlBlock = shared.m_ControlBlock;
+		m_pControlBlock = shared.m_pControlBlock;
 		m_Size = shared.m_Size;
 		AddWeakCount();
 	}
@@ -565,7 +599,7 @@ protected:
 	void WeakChangeToWeak(WeakPtr<U>& weak) {
 		SubtractWeakCount();
 		m_Pointer = (T*)(weak.m_Pointer);
-		m_ControlBlock = weak.m_ControlBlock;
+		m_pControlBlock = weak.m_pControlBlock;
 		m_Size = weak.m_Size;
 		AddWeakCount();
 	}
@@ -576,11 +610,11 @@ protected:
 		SubtractReferenceCount();
 
 		m_Pointer = (T*)(shared.m_Pointer);
-		m_ControlBlock = shared.m_ControlBlock;
+		m_pControlBlock = shared.m_pControlBlock;
 		m_Size = shared.m_Size;
 
 		shared.m_Pointer = nullptr;
-		shared.m_ControlBlock = nullptr;
+		shared.m_pControlBlock = nullptr;
 		shared.m_Size = 0;
 	}
 
@@ -589,10 +623,10 @@ protected:
 	void SharedMoveToWeak(WeakPtr<U>& weak) {
 		SubtractReferenceCount();
 		m_Pointer = weak.m_Pointer;
-		m_ControlBlock = weak.m_ControlBlock;
+		m_pControlBlock = weak.m_pControlBlock;
 
 		weak.m_Pointer = nullptr;
-		weak.m_ControlBlock = nullptr;
+		weak.m_pControlBlock = nullptr;
 		weak.m_Size = 0;
 	}
 
@@ -607,33 +641,33 @@ protected:
 		SubtractWeakCount();
 
 		m_Pointer = weak.m_Pointer;
-		m_ControlBlock = weak.m_ControlBlock;
-		m_ControlBlock = weak.m_Size;
+		m_pControlBlock = weak.m_pControlBlock;
+		m_pControlBlock = weak.m_Size;
 
 		weak.m_Pointer = nullptr;
-		weak.m_ControlBlock = nullptr;
+		weak.m_pControlBlock = nullptr;
 		weak.m_Size = 0;
 	}
 
 
 	void AddReferenceCount() const {
-		if (m_ControlBlock == nullptr) {
+		if (m_pControlBlock == nullptr) {
 			return;
 		}
 
-		m_ControlBlock->IncreaseRefCount();
+		m_pControlBlock->IncreaseRefCount();
 	}
 
 	void AddWeakCount() const {
-		if (m_ControlBlock == nullptr) {
+		if (m_pControlBlock == nullptr) {
 			return;
 		}
 
-		m_ControlBlock->IncreaseWeakCount();
+		m_pControlBlock->IncreaseWeakCount();
 	}
 
 	void SubtractReferenceCount() const {
-		if (m_ControlBlock == nullptr) {
+		if (m_pControlBlock == nullptr) {
 			return;
 		}
 
@@ -641,16 +675,16 @@ protected:
 		// 이거땜에 계속 서버 팅겼나보다.. ㅠㅠ
 		// 잘못된 메모리참조로 튕길때도 있고 안튕길때도 있어서 찾기가 넘 어려웠다. ㄷㄷ
 		// m_ControlBlock->DecreaseWeakCount();
-		m_ControlBlock->DecreaseRefCount();
+		m_pControlBlock->DecreaseRefCount();
 		
 	}
 
 	void SubtractWeakCount() const {
-		if (m_ControlBlock == nullptr) {
+		if (m_pControlBlock == nullptr) {
 			return;
 		}
 
-		m_ControlBlock->DecreaseWeakCount();
+		m_pControlBlock->DecreaseWeakCount();
 	}
 
 	template <typename U>
@@ -664,13 +698,13 @@ protected:
 //		std::cout << Type_v<U> << "\n";
 
 		m_Pointer = (T*)(ptr);
-		m_ControlBlock = controlBlock;
+		m_pControlBlock = controlBlock;
 		m_Size = size;
 	}
 
 protected:
 	T* m_Pointer = nullptr;
-	ControlBlock* m_ControlBlock = nullptr;
+	ControlBlock* m_pControlBlock = nullptr;
 	int m_Size = 0;
 
 	template <typename> friend class SharedMaker;
@@ -685,6 +719,20 @@ class SharedPtr : public BasePointer<T>
 public:
 	SharedPtr() {}
 	SharedPtr(std::nullptr_t nulptr) {}
+
+    // 외부에서 포인터를 직접 넣어주는 경우
+    // 밖에서 포인터 생성하고 안에서 또 제어블록을 생성해서 비효율적이지만
+    // 생성자가 private으로 선언된 경우 이 방식으로 초기화해야함
+    // 
+    // ┌ SharedPtr<int[20]>(new int);  ==> 지원안함
+    // │ SharedPtr<int[]>(new int[20]);==> 지원안함
+    // └ SharedPtr<int>(new int);      ==> 이거만 가능
+    //
+    // 진짜 라이브러리 만드는게 쉬운게 아니구나;; 혼자서는 이런거 하나하나 다 캐치해낼 수가 없다.
+
+    SharedPtr(T* ptr) {
+        this->MakeShared(ptr);
+	}
 
 	template <typename U>
 	SharedPtr(WeakPtr<U>& weak) {

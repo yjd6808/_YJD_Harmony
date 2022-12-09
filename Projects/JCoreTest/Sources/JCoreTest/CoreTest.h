@@ -35,6 +35,7 @@
 #include <JCore/TypeTraits.h>
 #include <JCore/Limit.h>
 
+using namespace std;
 using namespace JCore;
 
 #define ON		1
@@ -44,7 +45,7 @@ using namespace JCore;
 #define Print	OFF
 
 // 테스트 수행 여부
-#define TestEnabled                 OFF
+#define TestEnabled                 ON
 
 // JCore 테스트 수행 여부
 #define BaseTestEnabled             ON
@@ -111,6 +112,7 @@ using namespace JCore;
         #define TEST_SemaphoreTest              ON
         #define TEST_SpinLockTest               ON
         #define TEST_RecursiveLockTest          ON
+        #define TEST_WaitHandleTest             ON
     #endif
 
     #if BaseTestEnabled == ON

@@ -71,6 +71,10 @@
     <ClCompile Include="..\Sources\JCoreTest\Sync\RecursiveLockTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Sync\SemaphoreTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Sync\SpinLockTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Sync\WaitHandleTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\TypeTraitsTest.cpp" />
   </ItemGroup>

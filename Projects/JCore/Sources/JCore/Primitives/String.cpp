@@ -31,7 +31,10 @@ String::String(const int capacity)  {
 
 String::String(const char* str, const int capacity) {
 	if (str == nullptr) {
-		throw NullPointerException("문자열이 nullptr 입니다.");
+        m_pBuffer = nullptr;
+        m_iCapacity = 0;
+        m_iLen = 0;
+        return;
 	}
 
 	const int iLen = StringUtil::Length(str);

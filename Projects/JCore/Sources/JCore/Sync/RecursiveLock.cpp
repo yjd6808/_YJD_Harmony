@@ -23,7 +23,9 @@ namespace JCore {
 	void RecursiveLock::Lock() {
 		const size_t m_uiId = GetCurrentThreadId();
 
-		if (m_uiLockedThreadId != m_uiId) {
+        // 일반 변수를 여러 쓰레드에서 접근해서 undefined behavior라고 생각할 수 있지만
+        // 동시에 여러 쓰레드가 Lock()을 통과하더라도 결국 m_Lock.Lock()에서 하나의 쓰레드만 통과 가능하므로 문제가 안된다.
+		if (m_uiLockedThreadId != m_uiId) {     
 			m_Lock.Lock();
 			m_uiLockedThreadId = m_uiId;
 			m_iRecursion = 1;
@@ -62,7 +64,6 @@ namespace JCore {
 		}
 	}
 
-    // 
 	bool RecursiveLock::IsLocked() {
 		throw NotImplementedException("RecursiveLock::IsLocked()");
 	}

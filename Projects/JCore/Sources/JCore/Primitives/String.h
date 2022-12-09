@@ -40,6 +40,7 @@ public:
 	int Capacity() const { return m_iCapacity; }
 	int Length() const { return m_iLen; }
 	bool Empty() const { return m_iLen == 0; }
+    bool IsNull() const { return m_pBuffer == nullptr; }
 	bool IsValidIndex(const int idx) const { return idx >= 0 || idx < m_iLen; }
 	bool IsValidIndexRange(const int startIdx, const int endIdx) const {
 		return startIdx <= endIdx && startIdx >= 0 && endIdx < m_iLen;

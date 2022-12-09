@@ -10,7 +10,7 @@ namespace JCore {
     namespace Detail {
         // 포인터 타입인지 확인하는 템플릿
         template <typename T>
-        struct IsPointerType : FalseType {};
+        struct IsPointerType : FalseType {}; 
 
         template <typename T>
         struct IsPointerType<T*> : TrueType {};
@@ -102,6 +102,21 @@ namespace JCore {
         template <typename T, Int32U ArraySize>
         struct IsArrayType<T[ArraySize]> : TrueType {};
 
+        // 정적 배열 타입인지
+        template <typename T>
+        struct IsStaticArrayType : FalseType {};
+
+        template <typename T, Int32U ArraySize>
+        struct IsStaticArrayType<T[ArraySize]> : TrueType {};
+
+        // 동적 배열 타입인지
+        template <typename T>
+        struct IsDynamicArrayType : FalseType {};
+
+        template <typename T>
+        struct IsDynamicArrayType<T[]> : TrueType {};
+
+
 
         // Void 타입인지 확인
         template <typename T>
@@ -132,6 +147,12 @@ namespace JCore {
    
     template <typename T>
     constexpr bool IsArrayType_v = Detail::IsArrayType<NaturalType_t<T>>::Value;
+
+    template <typename T>
+    constexpr bool IsStaticArrayType_v = Detail::IsStaticArrayType<NaturalType_t<T>>::Value;
+
+    template <typename T>
+    constexpr bool IsDyanmicArrayType_v = Detail::IsDynamicArrayType<NaturalType_t<T>>::Value;
 
     template <typename T>
     constexpr bool IsVoidType_v = Detail::IsVoid<NaturalType_t<T>>::Value;

@@ -90,6 +90,9 @@
     <ClCompile Include="..\Sources\JCoreTest\Primitives\AtomicTest.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Sync\WaitHandleTest.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

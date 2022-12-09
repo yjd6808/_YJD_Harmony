@@ -76,11 +76,23 @@
     <ClCompile Include="..\Sources\JCore\Primitives\ObserverPtr.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Wrapper\StdLib.cpp">
+    <ClCompile Include="..\Sources\JCore\Wrapper\CRuntime.cpp">
       <Filter>Wrapper</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Wrapper\WinApi.cpp">
       <Filter>Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\WaitHandle.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\AutoResetEvent.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\ManualResetEvent.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Threading\Thread.cpp">
+      <Filter>Threading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -248,7 +260,7 @@
     <ClInclude Include="..\Sources\JCore\Sync\ManualResetEvent.h">
       <Filter>Sync</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Wrapper\StdLib.h">
+    <ClInclude Include="..\Sources\JCore\Wrapper\CRuntime.h">
       <Filter>Wrapper</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Wrapper\WinApi.h">
@@ -271,5 +283,11 @@
       <Filter>TypeTraits</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
+    <ClInclude Include="..\Sources\JCore\Sync\WaitHandle.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\AutoResetEvent.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

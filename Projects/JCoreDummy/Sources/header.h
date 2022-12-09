@@ -7,20 +7,23 @@
 #include <JCore/Time.h>
 #include <JCore/Limit.h>
 
+#include <JCore/Container/HashMap.h>
+#include <JCore/Container/Vector.h>
+
 #include <JCore/Primitives/Atomic.h>
 #include <JCore/Primitives/SmartPtr.h>
 #include <JCore/Primitives/String.h>
 
+#include <JCore/Sync/WaitHandle.h>
+
 #include <JCore/Encoding/CodePage.h>
 
-#include <JCore/Container/HashMap.h>
-#include <JCore/Container/Vector.h>
-#include <thread>
 
 #include <JCore/Wrapper/WinApi.h>
-#include <JCore/Wrapper/StdLib.h>
+#include <JCore/Wrapper/CRuntime.h>
 
 #include <JCore/Utils/Console.h>
+#include <JCore/Threading/Thread.h>
 
 using namespace JCore;
 using namespace std;

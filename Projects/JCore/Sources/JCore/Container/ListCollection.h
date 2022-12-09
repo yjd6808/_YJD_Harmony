@@ -202,10 +202,11 @@ protected:
 	}
 
 	virtual void PushBack(const T& data) {
-		TListNode* pNewNode = CreateNewNode(data);
-		InsertNodePrev(m_pTail, pNewNode);
-		++this->m_iSize;
+        TListNode* pNewNode = CreateNewNode(data);
+        InsertNodePrev(m_pTail, pNewNode);
+        ++this->m_iSize;
 	}
+
 
 	virtual void PushBack(T&& data) {
 		TListNode* pNewNode = CreateNewNode(Move(data));
@@ -384,15 +385,25 @@ protected:
 	}
 
 	TListNode* CreateNewNode(const T& data) {
-		TListNode* pNewNode = new TListNode();
-		pNewNode->Construct(data);
-		return pNewNode;
+		if constexpr (!IsCopyConstructible_v<T>) {
+            DebugAssertMessage(false, "복사 생성할 수 없는 객체입니다.");
+            return nullptr;
+		} else {
+            TListNode* pNewNode = new TListNode();
+            pNewNode->Construct(data);
+            return pNewNode;
+		}
 	}
 
 	TListNode* CreateNewNode(T&& data) {
-		TListNode* pNewNode = new TListNode();
-		pNewNode->Construct(Move(data));
-		return pNewNode;
+        if constexpr (!IsMoveConstructible_v<T>) {
+            DebugAssertMessage(false, "이동 생성할 수 없는 객체입니다.");
+            return nullptr;
+        } else {
+            TListNode* pNewNode = new TListNode();
+            pNewNode->Construct(Move(data));
+            return pNewNode;
+        }
 	}
 
 	template <typename... Args>

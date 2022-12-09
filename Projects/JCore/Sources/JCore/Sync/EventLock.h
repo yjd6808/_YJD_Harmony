@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <JCore/Type.h>
 #include <JCore/Sync/ILock.h>
 #include <JCore/Sync/LockGuard.h>
+#include <JCore/Sync/WaitHandle.h>
 #include <JCore/Primitives/Atomic.h>
 
 namespace JCore {
@@ -31,7 +31,7 @@ namespace JCore {
 		bool TryLock() override;
 		bool IsLocked() override;
 	private:
-		WinHandle m_LockEvent;
+		WaitHandle m_LockEvent;
 		Atomic<bool> m_bLocked;
 	};
 
