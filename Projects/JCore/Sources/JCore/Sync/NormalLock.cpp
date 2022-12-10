@@ -5,6 +5,7 @@
  */
 
 #include <JCore/Core.h>
+#include <JCore/Exception.h>
 #include <JCore/Sync/LockGuard.h>
 #include <JCore/Sync/NormalLock.h>
 
@@ -22,26 +23,33 @@ namespace JCore {
 	}
 
 	void NormalLock::Lock() {
-        // TODO: 쓰레드 ID 초기화
+		Int32U uiThreadId = WinApi::GetCurrentThreadId();
+		if (uiThreadId == m_uiThreadId.Load())
+			throw RuntimeException("이미 잠겨있습니다.");
+
 		EnterCriticalSection(&m_CriticalSection);
-		m_bLocked = true;
+		m_uiThreadId = uiThreadId;
 	}
 
 	void NormalLock::Unlock() {
 		LeaveCriticalSection(&m_CriticalSection);
-		m_bLocked = false;
+		m_uiThreadId = 0;
 	}
 
 	bool NormalLock::TryLock() {
-        if (m_bLocked) 
+		
+        if (IsLocked())
             return false;
 
-		BOOL ret = TryEnterCriticalSection(&m_CriticalSection);
-		return m_bLocked = (bool)ret;
+		if ((bool)TryEnterCriticalSection(&m_CriticalSection)) {
+			m_uiThreadId = WinApi::GetCurrentThreadId();
+			return true;
+		}
+		return false;
 	}
 
 	bool NormalLock::IsLocked() {
-		return m_bLocked;
+		return m_uiThreadId.Load() != 0;
 	}
 
 } // namespace JCore

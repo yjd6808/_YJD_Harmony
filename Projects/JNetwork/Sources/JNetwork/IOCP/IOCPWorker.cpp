@@ -21,9 +21,10 @@ namespace JNetwork {
 	void IOCPWorker::Run(void* param) {
 		// std::thread 멤버 함수로 실행하는 법
 		// @참고 : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
+		//  ==> 내가 구현한 쓰레드로 변경
 
 		m_eState = State::Running;
-		m_Thread = std::thread{ [this, param]() { WorkerThread(param); }};
+		m_Thread = Thread([this](void* param) { WorkerThread(param); });
 	}
 
 	void IOCPWorker::JoinWait(WinHandle waitHandle) {
@@ -37,8 +38,7 @@ namespace JNetwork {
 	}
 
 	void IOCPWorker::Join() {
-		if (m_Thread.joinable())
-			m_Thread.join();
+		m_Thread.Join();
 		m_eState = State::Joined;
 	}
 

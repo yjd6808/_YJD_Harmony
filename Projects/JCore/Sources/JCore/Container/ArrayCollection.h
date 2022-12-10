@@ -83,19 +83,12 @@ public:
 	///  - ArrayQueue
 	/// </summary>
 	virtual void Clear(bool removeHeap = false) {
-		if (this->m_iSize == 0) {
-			if (removeHeap) {
-				DeleteSafe(m_pArray);
-			}
-			return;
-		}
-
-
-		DestroyAtRange(0, this->m_iSize - 1);
+		if (this->m_iSize > 0) DestroyAtRange(0, this->m_iSize - 1);
 		this->m_iSize = 0;
 
 		if (removeHeap) {
-			DeleteSafe(m_pArray);
+			Memory::Deallocate(m_pArray);
+			m_pArray = nullptr;
 		}
 	}
 
@@ -418,8 +411,6 @@ protected:
 };
 
 template <typename T>
-ArrayCollection<T>::~ArrayCollection() noexcept {
-	Memory::Deallocate(m_pArray);
-}
+ArrayCollection<T>::~ArrayCollection() noexcept {}
 
 } // namespace JCore

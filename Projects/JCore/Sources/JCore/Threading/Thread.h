@@ -11,15 +11,26 @@
 
 #include <JCore/Type.h>
 #include <JCore/Functional.h>
+#include <JCore/Event.h>
+#include <JCore/Sync/Semaphore.h>
 #include <JCore/Primitives/Atomic.h>
 #include <JCore/Primitives/String.h>
-#include <JCore/Primitives/SmartPtr.h>
 
 // https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread
 namespace JCore {
 
     class Thread
     {
+        enum State
+        {
+            Uninitialized,
+	        RunningWait,
+            Running,
+            JoinWait,
+            Joined,
+            Aborted
+        };
+
         using TRunnable = Action<void*>;
 
         struct ThreadParam
@@ -29,33 +40,39 @@ namespace JCore {
             void* Param;
         };
     public:
+        Thread(const char* name = nullptr) : m_hHandle(nullptr), m_Name(name), m_uiThreadId(0), m_eState(Uninitialized), m_RunningSignal(1, 0), m_bAutoJoin(false) {}
+        Thread(TRunnable&& fn, void* param = nullptr, const char* name = nullptr); 
+    	Thread(const Thread& other) = delete;
         Thread(Thread&& other) noexcept;
-        Thread(const Thread& other) = delete;
+        ~Thread() noexcept;
 
         Thread& operator=(const Thread& other) = delete;
         Thread& operator=(Thread&&) noexcept;               // 초기화 안된 경우만 이동복사 허용
-    private: // 생성자로 생성을 금함
-        Thread(const char* name = nullptr) : m_hHandle(nullptr), m_Name(name), m_uiThreadId(0) {}
-        Thread(TRunnable&& fn, void* param = nullptr, const char* name = nullptr);
-
+        
+    public:
         int Start(TRunnable&& fn, void* param = nullptr);
-        void Join();
+        void AutoJoin(bool enabled) { m_bAutoJoin = enabled; }
+        bool Join();
+        bool Joinable();
+        void Abort();
         bool SetPriority(int priority);
         int GetPriority();
-        Int32U GetId() { return m_uiThreadId; }
-    public:
-        static SharedPtr<Thread> Create(const char* name = nullptr);
-        static SharedPtr<Thread> Create(TRunnable&& fn, void* param = nullptr, const char* name = nullptr);
+        int GetState() { return m_eState; }
+        Int32U GetId();
+
         static Int32U GetThreadId();
+		static void Sleep(Int32U ms);
     private:
         static Int32U JCoreStdCall ThreadRoutine(void* param);
     private:
         WinHandle m_hHandle;
         String m_Name;
         Int32U m_uiThreadId;
+        Atomic<int> m_eState;
+        Semaphore m_RunningSignal;
+        bool m_bAutoJoin;
     };
 
     
-
-
+    
 } // namespace JCore;

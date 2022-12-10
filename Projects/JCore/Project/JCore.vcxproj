@@ -68,6 +68,14 @@
     <ClInclude Include="..\Sources\JCore\Allocator\DefaultAllocator.h" />
     <ClInclude Include="..\Sources\JCore\Assert.h" />
     <ClInclude Include="..\Sources\JCore\Container\CollectionStream.h" />
+    <ClInclude Include="..\Sources\JCore\Container\CollectionType.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ContainerType.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Declspec.h">
       <SubType>
       </SubType>
@@ -83,10 +91,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Functional.h" />
     <ClInclude Include="..\Sources\JCore\Ascii.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\AutoObject.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -202,6 +206,8 @@
     <ClInclude Include="..\Sources\JCore\Primitives\StaticString.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\String.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\StringUtil.h" />
+    <ClInclude Include="..\Sources\JCore\RAII\AutoPtr.h" />
+    <ClInclude Include="..\Sources\JCore\RAII\AutoRef.h" />
     <ClInclude Include="..\Sources\JCore\SafeRefCount.h">
       <SubType>
       </SubType>

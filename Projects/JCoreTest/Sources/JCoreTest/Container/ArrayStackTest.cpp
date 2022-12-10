@@ -14,7 +14,7 @@ using namespace std;
 #if TEST_ArrayStackTest == ON
 
 TEST(ArrayStackTest, Regular) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 	ArrayStack<int> stack;
 	const int count = 320;
 
@@ -45,7 +45,7 @@ TEST(ArrayStackTest, TotalTest) {
 	int testCount = 50;
 	while (testCount--) {
 		int dc = rand.GenerateInt(0, 100) + 1;
-		AutoMemoryLeakDetector detector;
+		LeakCheck;
 		ArrayStack<int> stack;
 		std::stack<int> stl;
 
@@ -102,7 +102,7 @@ TEST(ArrayStackTest, TotalTest) {
 
 // 생성자 테스트
 TEST(ArrayStackTest, ConstructorTest) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	// 이니셜라이저 테스트
 	ArrayStack<int> a{ 1, 2, 3 };
@@ -131,7 +131,7 @@ TEST(ArrayStackTest, ConstructorTest) {
 
 // 연산자 테스트
 TEST(ArrayStackTest, OperatorTest) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	ArrayStack<int> s{ 1, 2, 3 };
 
@@ -165,6 +165,21 @@ TEST(ArrayStackTest, OperatorTest) {
 	EXPECT_TRUE(s.Top() == 2); s.Pop();
 	EXPECT_TRUE(s.Top() == 1); s.Pop();
 	EXPECT_TRUE(s.Size() == 0);
+}
+
+
+
+TEST(ArrayStackTest, InnerDestructorTest) {
+	LeakCheck;
+
+	ArrayStack<String> aq;
+	for (int i = 0; i < 1024; i++) {
+		if (i && i % 4 == 0) {
+			aq.Pop();
+		} else {
+			aq.Push("ab");
+		}
+	}
 }
 
 #endif // TEST_ArrayStackTest == ON

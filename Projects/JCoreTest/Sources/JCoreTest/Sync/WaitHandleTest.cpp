@@ -15,24 +15,25 @@
 
 namespace WaitHandleTest {
 
-Vector<WaitHandle> handles;
 
 TEST(WaitHandleTest, WaitHandle) {
-    handles.PushBack(WaitHandle{ false, true, "A"});
-    handles.PushBack(WaitHandle{ false, true, "B"});
-    handles.PushBack(WaitHandle{ false, true, "C"});
-    handles.PushBack(WaitHandle{ false, true, "D"});
-    handles.PushBack(WaitHandle{ false, true, "E"});
-    handles.PushBack(WaitHandle{ false, true, "F"});
+    LeakCheck;
+    Vector<WaitHandle> handles;
+    handles.PushBack(WaitHandle{ false, true, "A" });
+    handles.PushBack(WaitHandle{ false, true, "B" });
+    handles.PushBack(WaitHandle{ false, true, "C" });
+    handles.PushBack(WaitHandle{ false, true, "D" });
+    handles.PushBack(WaitHandle{ false, true, "E" });
+    handles.PushBack(WaitHandle{ false, true, "F" });
 
-    std::thread th([] {
-        this_thread::sleep_for(10ms);
+    std::thread th([&handles] {
+        this_thread::sleep_for(100ms);
         handles[0].Signal();
 
-        this_thread::sleep_for(10ms);
-        handles.Extension().ForEach([](WaitHandle& handle) { handle.Signal();});
+        this_thread::sleep_for(100ms);
+        handles.Extension().ForEach([](WaitHandle& handle) { handle.Signal(); });
 
-        this_thread::sleep_for(10ms);
+        this_thread::sleep_for(100ms);
         handles[0].Signal();
         handles[handles.Size() - 1].Signal();
     });
@@ -40,7 +41,7 @@ TEST(WaitHandleTest, WaitHandle) {
     EXPECT_TRUE(handles[0].Wait());
     EXPECT_TRUE(handles[0].Reset());
     EXPECT_TRUE(WaitHandle::WaitAll(handles));
-    EXPECT_TRUE(WaitHandle::WaitAll(handles)); 
+    EXPECT_TRUE(WaitHandle::WaitAll(handles));
     EXPECT_TRUE(WaitHandle::WaitAll(handles));
 
     handles.Extension().ForEach([](WaitHandle& handle) { handle.Reset(); });
@@ -53,6 +54,7 @@ TEST(WaitHandleTest, WaitHandle) {
 
     EXPECT_TRUE(movedHandle.Name() == "A");
     EXPECT_TRUE(handles[0].Name().IsNull());
+    th.join();
 }
 
 } // namespace NormalLockTest

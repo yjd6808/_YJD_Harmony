@@ -74,7 +74,7 @@ public:
 			return nullptr;
 		}
 
-		return Addressof(m_pCollection->Begin()->Next());
+		return AddressOf(m_pCollection->Begin()->Next());
 	}
 
 	T* Last() {
@@ -82,7 +82,7 @@ public:
 			return nullptr;
 		}
 
-		return Addressof(m_pCollection->End()->Previous());
+		return AddressOf(m_pCollection->End()->Previous());
 	}
 
     T* IndexOf(int at) {

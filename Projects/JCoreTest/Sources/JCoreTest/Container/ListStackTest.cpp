@@ -16,7 +16,7 @@ using namespace std;
 #if TEST_ListStackTest == ON
 
 TEST(ListStackTest, Regular) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 	ListStack<int> stack;
 	const int count = 320;
 
@@ -47,7 +47,7 @@ TEST(ListStackTest, TotalTest) {
 	int testCount = 50;
 	while (testCount--) {
 		int dc = rand.GenerateInt(0, 100) + 1;
-		AutoMemoryLeakDetector detector;
+		LeakCheck;
 		ListStack<int> stack;
 		std::stack<int> stl;
 
@@ -103,7 +103,7 @@ TEST(ListStackTest, TotalTest) {
 }
 
 TEST(ListStackTest, ConstructorTest) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	ListStack<int> a{ 1, 2, 3 };
 
@@ -131,7 +131,7 @@ TEST(ListStackTest, ConstructorTest) {
 
 
 TEST(ListStackTest, OperatorTest) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	ListStack<Model> a{ 1, 2, 3 };
 
@@ -173,6 +173,19 @@ TEST(ListStackTest, OperatorTest) {
 	EXPECT_TRUE(it->HasNext() == false);
 }
 
+
+TEST(ListStackTest, InnerDestructorTest) {
+	LeakCheck;
+
+	ListStack<String> aq;
+	for (int i = 0; i < 1024; i++) {
+		if (i && i % 4 == 0) {
+			aq.Pop();
+		} else {
+			aq.Push("fsvgfsrdvsrdrsf");
+		}
+	}
+}
 
 #endif // TEST_ListStackTest == ON
 

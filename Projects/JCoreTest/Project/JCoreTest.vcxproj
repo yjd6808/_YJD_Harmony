@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\JCoreTest\AutoObjectTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ComparatorTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayQueueTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp" />
@@ -63,6 +62,8 @@
     <ClCompile Include="..\Sources\JCoreTest\Primitives\StaticStringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Primitives\StringTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Primitives\StringUtilTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\RAII\AutoPtrTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\RAII\AutoRefTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\RandomTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Sync\EventLockTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Sync\LockGuardTest.cpp" />
@@ -72,6 +73,10 @@
     <ClCompile Include="..\Sources\JCoreTest\Sync\SemaphoreTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Sync\SpinLockTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Sync\WaitHandleTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadTest.cpp">
       <SubType>
       </SubType>
     </ClCompile>

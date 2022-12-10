@@ -15,7 +15,7 @@ using namespace std;
 #if TEST_VectorTest == ON
 
 TEST(VectorTest, Regular) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	// PushBackAll 테스트
 	{
@@ -168,7 +168,7 @@ TEST(VectorTest, Regular) {
 }
 
 TEST(VectorTest, Enumerator) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	// 데이터가 없는 경우
 	{
@@ -228,7 +228,7 @@ TEST(VectorTest, Enumerator) {
 
 // 생성자 테스트
 TEST(VectorTest, ConstructorTest) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	// 이니셜라이저 테스트
 	Vector<int> a{ 1, 2, 3 };
@@ -261,7 +261,7 @@ TEST(VectorTest, ConstructorTest) {
 
 // 연산자 테스트
 TEST(VectorTest, OperatorTest) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	Vector<int> s{ 1, 2, 3 };
 

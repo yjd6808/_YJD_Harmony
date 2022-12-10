@@ -203,7 +203,7 @@ void SendFn::BroadcastUpdateRoomUserAck(Room* room, bool unsafe) {
 	pUpdateRoomInfoAck->HostCharacterUID = room->GetHost()->GetCharacterUID();
 
 	if (unsafe) {
-		room->UnsafeForEach([&iIndexer, pUpdateRoomInfoAck](Player* player) {
+		room->ForEach([&iIndexer, pUpdateRoomInfoAck](Player* player) {
 			player->LoadRoomCharacterInfo(pUpdateRoomInfoAck->Info[iIndexer]);
 			iIndexer++;
 		});
@@ -217,7 +217,7 @@ void SendFn::BroadcastUpdateRoomUserAck(Room* room, bool unsafe) {
 	pUpdateRoomInfoAck->Count = iIndexer;
 
 	if (unsafe) {
-		room->UnsafeBroadcast(pPacket);
+		room->Broadcast(pPacket);
 	} else {
 		room->Broadcast(pPacket);
 	}

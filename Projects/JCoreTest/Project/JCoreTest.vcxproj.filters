@@ -13,7 +13,6 @@
     <ClCompile Include="..\Sources\JCoreTest\TimeTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\ExceptionTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MemoryTest.cpp" />
-    <ClCompile Include="..\Sources\JCoreTest\AutoObjectTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
@@ -93,6 +92,15 @@
     <ClCompile Include="..\Sources\JCoreTest\Sync\WaitHandleTest.cpp">
       <Filter>Sync</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\RAII\AutoPtrTest.cpp">
+      <Filter>RAII</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\RAII\AutoRefTest.cpp">
+      <Filter>RAII</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
@@ -115,6 +123,9 @@
     </Filter>
     <Filter Include="Threading">
       <UniqueIdentifier>{cd77f4b5-5afd-4c58-9ca6-d06729e946e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RAII">
+      <UniqueIdentifier>{bc47146e-bb48-4abc-bdb8-f2e59d2f8296}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@ using Int8		= char;
 using Int8U		= unsigned char;
 using Char		= char;
 using Byte		= unsigned char;
+using WChar		= wchar_t;
 
 using PInt64	= long long*;
 using PInt64U	= unsigned long long*;
@@ -27,6 +28,7 @@ using PInt8		= char*;
 using PInt8U	= unsigned char*;
 using PChar		= char*;
 using PByte		= unsigned char*;
+using PWChar	= wchar_t*;
 
 #ifdef _WIN64
 using IntPtr = Int64;

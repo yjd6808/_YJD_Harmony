@@ -6,7 +6,8 @@
 
 #pragma once
 
-#include <JNetwork/Worker.h>
+#include <JCore/Type.h>
+#include <JCore/Threading/Thread.h>
 
 class SystemWorker
 {
@@ -20,7 +21,7 @@ public:
 protected:
 	SystemWorker();
 private:
-	std::thread m_Thread;
+	JCore::Thread m_Thread;
 	WinHandle m_hExitHandle = INVALID_HANDLE_VALUE;
 
 	inline static SystemWorker* ms_pInstance;

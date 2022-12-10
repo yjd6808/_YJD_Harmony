@@ -16,7 +16,7 @@ using namespace std;
 #if TEST_HashMapTest == ON
 
 TEST(HashMapTest, Regular) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 	HashMap<int, Model> modelMap;
 	
 	// Insert 테스트
@@ -170,6 +170,22 @@ TEST(HashMapTest, OperatorTest) {
 	EXPECT_TRUE(move1.Size() == 4);
 }
 
+TEST(HashMapTest, InnerDestructorTest) {
+	LeakCheck;
+
+	HashMap<int, String> aq;
+	bool toggle = false;
+	for (int i = 0; i < 1024; i++) {
+		if (i && i % 4 == 0) {
+			if ((toggle = !toggle))
+				aq.Remove(*aq.Keys().Extension().First());
+			else
+				aq.Remove(*aq.Keys().Extension().Last());
+		} else {
+			aq.Insert(i, "fsefesfesfesf");
+		}
+	}
+}
 
 #endif // TEST_HashMapTest == ON
 

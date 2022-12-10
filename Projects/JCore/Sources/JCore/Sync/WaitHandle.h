@@ -40,6 +40,7 @@ namespace JCore {
     protected:
         WinHandle m_hHandle;
         String m_Name;
+        bool m_bSignaled;
     };
 }
 

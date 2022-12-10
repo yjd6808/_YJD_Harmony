@@ -41,7 +41,9 @@ public:
 	{
 	}
 
-	~ArrayStack() noexcept override {}
+	~ArrayStack() noexcept override {
+		this->Clear(true);
+	}
 public:
 	TArrayStack& operator=(const TArrayStack& other) {
 		this->CopyFrom(other);

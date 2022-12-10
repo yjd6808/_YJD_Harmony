@@ -6,7 +6,7 @@
 
 #include <JCore/Container/LinkedList.h>
 #include <JCore/Container/HashMap.h>
-#include <JCore/Sync/NormalLock.h>
+#include <JCore/Sync/RecursiveLock.h>
 #include <JCore/Functional.h>
 #include <Common/Structure.h>
 
@@ -49,30 +49,28 @@ public:
 	void Unlock()								{ m_RoomLock.Unlock();}
 
 	// 락 안한 함수 (외부에서 락을 수행한 경우)
-	void UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
-	void UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
-	bool UnsafeIsBattleFieldState() const;
-	bool UnsafeIsBattleFieldPlayingState() const;
-	bool UnsafeIsBattleFieldEndingState() const;
-	int	 UnsafeGetRoomBattleStateUserCount();
-	void UnsafeForEach(JCore::Action<Player*> foreachAction);
-
+	
+	
 
 	// 가변 정보
 	bool IsEmpty()								{ return GetPlayerCount() == 0; }
 	int GetPlayerCount();
+	int	 GetRoomBattleStateUserCount();
 	bool TryJoin(Player* player);
 	bool RemovePlayer(Player* player);
 	bool ChangeHost(Player* player);
 	bool ChangeNextHost();
 	Player* GetHost();
 	void Broadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
+	void BroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer = nullptr);
 	
 	void SetRoomState(RoomState state);
 	void ForEach(JCore::Action<Player*> foreachAction);
 	
 	RoomState GetRoomState();
 	bool IsBattleFieldState();
+	bool IsBattleFieldPlayingState();
+	bool IsBattleFieldEndingState();
 	void LoadRoomInfo(Out_ RoomInfo& info);
 
 	void SetTimerTime(int time);
@@ -83,7 +81,7 @@ private:
 	int m_iRoomUID;
 	int m_iMaxPlayerCount;
 	JCore::String m_RoomName;
-	JCore::NormalLock m_RoomLock;
+	JCore::RecursiveLock m_RoomLock;
 	JCore::LinkedList<Player*> m_PlayerList;
 	RoomState m_eRoomState;						// 방 상태 : 배틀 중/로비인지 등을 나타냄
 	int m_iTimerTime;							// 배틀진중에 사용하는 타이머 변수

@@ -21,7 +21,7 @@ namespace JCore {
 		m_iRecursion(0) {}
 
 	void RecursiveLock::Lock() {
-		const size_t m_uiId = GetCurrentThreadId();
+		const Int32U m_uiId = WinApi::GetCurrentThreadId();
 
         // 일반 변수를 여러 쓰레드에서 접근해서 undefined behavior라고 생각할 수 있지만
         // 동시에 여러 쓰레드가 Lock()을 통과하더라도 결국 m_Lock.Lock()에서 하나의 쓰레드만 통과 가능하므로 문제가 안된다.
@@ -36,7 +36,7 @@ namespace JCore {
 	}
 
 	bool RecursiveLock::TryLock() {
-		const size_t m_uiId = GetCurrentThreadId();
+		const Int32U m_uiId = WinApi::GetCurrentThreadId();
 
 		if (m_Lock.TryLock()) {
 			m_uiLockedThreadId = m_uiId;
@@ -53,7 +53,7 @@ namespace JCore {
 	}
 
 	void RecursiveLock::Unlock() {
-		const size_t m_uiId = GetCurrentThreadId();
+		const Int32U m_uiId = WinApi::GetCurrentThreadId();
 		DebugAssert(m_uiLockedThreadId == m_uiId);
         DebugAssert(m_iRecursion > 0);
 
@@ -68,7 +68,7 @@ namespace JCore {
 		throw NotImplementedException("RecursiveLock::IsLocked()");
 	}
 
-	size_t RecursiveLock::GetCurrentThreadId() {
+	/*size_t RecursiveLock::GetCurrentThreadId() {
 		return std::hash<std::thread::id>{}(std::this_thread::get_id());
-	}
+	}*/
 } // namespace JCore

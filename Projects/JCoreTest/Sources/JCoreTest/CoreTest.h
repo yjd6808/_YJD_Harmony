@@ -44,26 +44,18 @@ using namespace JCore;
 //출력 여부
 #define Print	OFF
 
-// 테스트 수행 여부
-#define TestEnabled                 ON
-
-// JCore 테스트 수행 여부
-#define BaseTestEnabled             ON
-
-// JCore::Container 테스트 수행 여부
-#define ContainerTestEnabled        ON
-// 컨테이너 개발 테스트 코드를 실행 여부
-#define ContainerImplTestEnabled    OFF
-
-// JCore::Primitives 테스트 수행 여부
-#define PrimitivesTestEnabled       ON
-
-// JCore::Sync 테스트 수행 여부
-#define SyncTestEnabled             ON
+#define TestEnabled                 ON      // 전체 테스트 수행 여부
+#define BaseTestEnabled             ON      // JCore 테스트 수행 여부
+#define ContainerTestEnabled        ON      // JCore::Container 테스트 수행 여부
+#define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 실행 여부
+#define PrimitivesTestEnabled       ON      // JCore::Primitives 테스트 수행 여부
+#define RAIITestEnabled             ON      // JCore::RAII 테스트 수행 여부
+#define SyncTestEnabled             ON      // JCore::Sync 테스트 수행 여부
+#define ThreadingTest               ON      // JCore::Threading 테스트 수행 여부
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-    #define TEST_AtomicTest         ON
+	#define TEST_WaitHandleTest     ON
 #endif
 
 #if TestEnabled == ON
@@ -91,6 +83,11 @@ using namespace JCore;
         #endif
     #endif
 
+	#if RAIITestEnabled == ON
+		#define TEST_AutoPtrTest                ON
+		#define TEST_AutoRefTest                ON
+	#endif
+
 
     #if PrimitivesTestEnabled == ON
 
@@ -114,6 +111,10 @@ using namespace JCore;
         #define TEST_RecursiveLockTest          ON
         #define TEST_WaitHandleTest             ON
     #endif
+
+	#if ThreadingTest == ON
+		#define TEST_ThreadTest                 ON
+	#endif
 
     #if BaseTestEnabled == ON
 
@@ -174,6 +175,11 @@ private:
     _CrtMemState memState_;
 };
 
+
+// https://stackoverflow.com/questions/1082192/how-to-generate-random-variable-names-in-c-using-macros
+#define CONCAT(a, b) CONCAT_INNER(a, b)
+#define CONCAT_INNER(a, b) a ## b
+#define LeakCheck AutoMemoryLeakDetector CONCAT(LeakCheck, __COUNTER__)
 
 // 테스트용 오브젝트들
 struct Animal

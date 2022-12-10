@@ -5,7 +5,8 @@
 #pragma once
 
 #include <JCore/Comparator.h>
-
+#include <JCore/Container/CollectionType.h>
+#include <JCore/Container/ContainerType.h>
 
 namespace JCore {
 
@@ -46,7 +47,7 @@ class CollectionStream : public Collection<T>
 
 private: 
 	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
-	CollectionStream(TCollection* collection): TCollection() {
+	CollectionStream(TCollection* collection): TCollection(CollectionType::Stream, ContainerType::ReferenceStream) {
 		m_pCollection = collection;
         int size = collection->Size();
 	    this->m_iSize = size;
@@ -81,7 +82,7 @@ private:
 public:
 	// 복사 생성 금지
 	CollectionStream(const TCollectionStream& CollectionStream) = delete;
-	CollectionStream(TCollectionStream&& CollectionStream) {
+	CollectionStream(TCollectionStream&& CollectionStream): TCollection(CollectionType::Stream, ContainerType::ReferenceStream) {
 		m_pArray = CollectionStream.m_pArray;
 		this->m_iSize = CollectionStream.m_iSize;
 		m_pCollection = CollectionStream.m_pCollection;

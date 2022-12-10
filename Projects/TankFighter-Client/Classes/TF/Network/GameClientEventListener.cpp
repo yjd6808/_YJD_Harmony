@@ -11,7 +11,7 @@
 #include <TF/Scenes/LoginScene.h>
 #include <TF/UI/PopUp.h>
 
-#include <JCore/AutoObject.h>
+#include <JCore/RAII/AutoPtr.h>
 
 #include <cocos2d.h>
 
@@ -110,7 +110,7 @@ void GameClientEventListener::SynchronizedOnReceived() {
 	}
 
 	// 명령 수행 후 삭제를 해주도록 하자.
-	AutoPointer<char> autoDelete(pNewAlloc, Deletor<char[]>());		
+	AutoPtr<char> autoDelete(pNewAlloc, Deletor<char[]>());		
 	ICommand* pCmd = reinterpret_cast<ICommand*>(pNewAlloc);
 
 	// 현재 실행중인 씬을 가져온다.

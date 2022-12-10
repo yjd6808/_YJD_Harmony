@@ -63,7 +63,7 @@ namespace JCore {
     WinHandle
     JCoreStdCall
     WinApi::CreateEvent(bool initialState, bool manualReset, const char* name) {
-        return ::CreateEvent(NULL, manualReset ? TRUE : FALSE, initialState ? TRUE : FALSE, name);
+        return ::CreateEventA(NULL, manualReset ? TRUE : FALSE, initialState ? TRUE : FALSE, name);
     }
 
     Int32U
@@ -161,7 +161,11 @@ namespace JCore {
             return static_cast<TOperand>(::_InterlockedExchange(reinterpret_cast<volatile Boundary32*>(destination), value));
         }
 
+#ifdef _WIN64
+        return static_cast<TOperand>(::_InterlockedExchange64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#else
         return static_cast<TOperand>(::_InlineInterlockedExchange64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#endif
     }
 
     template <typename TOperand>
@@ -179,7 +183,11 @@ namespace JCore {
             return static_cast<TOperand>(::_InterlockedExchangeAdd(reinterpret_cast<volatile Boundary32*>(destination), value));
         }
 
+#ifdef _WIN64
+        return static_cast<TOperand>(::_InterlockedExchangeAdd64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#else
         return static_cast<TOperand>(::_InlineInterlockedExchangeAdd64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#endif
     }
 
     template <typename TOperand>
@@ -196,8 +204,11 @@ namespace JCore {
         if constexpr (sizeof(TOperand) == sizeof(Boundary32)) {
             return static_cast<TOperand>(::_InterlockedIncrement(reinterpret_cast<volatile Boundary32*>(destination)));
         }
-
+#ifdef _WIN64
+        return static_cast<TOperand>(::_InterlockedIncrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+#else
         return static_cast<TOperand>(::_InlineInterlockedIncrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+#endif
     }
 
     template <typename TOperand>
@@ -215,7 +226,11 @@ namespace JCore {
             return static_cast<TOperand>(::_InterlockedDecrement(reinterpret_cast<volatile Boundary32*>(destination)));
         }
 
-        return static_cast<TOperand>(::_InlineInterlockedIncrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+#ifdef _WIN64
+        return static_cast<TOperand>(::_InterlockedDecrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+#else
+        return static_cast<TOperand>(::_InlineInterlockedDecrement64(reinterpret_cast<volatile Boundary64*>(destination)));
+#endif
     }
 
     template <typename TOperand>
@@ -233,7 +248,11 @@ namespace JCore {
             return static_cast<TOperand>(::_InterlockedAnd(reinterpret_cast<volatile Boundary32*>(destination), value));
         }
 
+#ifdef _WIN64
+        return static_cast<TOperand>(::_InterlockedAnd64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#else
         return static_cast<TOperand>(::_InlineInterlockedAnd64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#endif
     }
 
     template <typename TOperand>
@@ -251,7 +270,11 @@ namespace JCore {
             return static_cast<TOperand>(::_InterlockedOr(reinterpret_cast<volatile Boundary32*>(destination), value));
         }
 
+#ifdef _WIN64
+        return static_cast<TOperand>(::_InterlockedOr64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#else
         return static_cast<TOperand>(::_InlineInterlockedOr64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#endif
     }
 
     template <typename TOperand>
@@ -269,7 +292,11 @@ namespace JCore {
             return static_cast<TOperand>(::_InterlockedXor(reinterpret_cast<volatile Boundary32*>(destination), value));
         }
 
+#ifdef _WIN64
+        return static_cast<TOperand>(::_InterlockedXor64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#else
         return static_cast<TOperand>(::_InlineInterlockedXor64(reinterpret_cast<volatile Boundary64*>(destination), value));
+#endif
     }
 
 
@@ -291,6 +318,7 @@ namespace JCore {
     template struct Interlocked<Int8U>;
     template struct Interlocked<Int16>;
     template struct Interlocked<Int16U>;
+    template struct Interlocked<WChar>;
     template struct Interlocked<Int32>;
     template struct Interlocked<Int32U>;
     template struct Interlocked<Int32L>;

@@ -9,12 +9,11 @@
 
 #pragma once
 
-#include <thread>
-#include <TF/Game/Room.h>
-
+#include <JCore/Threading/Thread.h>
 #include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/Vector.h>
 
+#include <TF/Game/Room.h>
 #include <TF/ServerConfiguration.h>
 
 class StopSignal;
@@ -60,8 +59,7 @@ private:
 	int m_iStatisticsUpdateDelayCount = 0;	// 딜레이 몇번당 한번씩 전송할지 - 4로 설정하고 m_iDelay 100이면 400ms당 한번씩 보냄
 
 
-	std::thread m_Thread;
-
+	JCore::Thread m_Thread;
 	JCore::ArrayQueue<Signal*> m_SignalQueue;
 	JCore::NormalLock m_SignalQueueLock;
 

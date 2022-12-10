@@ -9,8 +9,6 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedReceive.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
 
-#include <JCore/Sync/NormalLock.h>
-
 using namespace JCore;
 
 namespace JNetwork {
@@ -25,7 +23,7 @@ namespace JNetwork {
 TcpSession::~TcpSession() = default;
 
 bool TcpSession::Disconnect() {
-	NormalLockGuard guard(m_Lock);
+	RecursiveLockGuard guard(m_Lock);
 	if (CheckState(State::Disconnected)) {
 		return false;
 	}
@@ -104,12 +102,12 @@ bool TcpSession::AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped) {
 }
 
 bool TcpSession::CheckState(State state) {
-	NormalLockGuard guard(m_Lock);
+	RecursiveLockGuard guard(m_Lock);
 	return m_eState == state;
 }
 
 bool TcpSession::Initialize() {
-	NormalLockGuard guard(m_Lock);
+	RecursiveLockGuard guard(m_Lock);
 	if (m_ClientSocket.IsValid()) {
 		m_ClientSocket.Close();
 	}
@@ -125,7 +123,7 @@ bool TcpSession::Initialize() {
 }
 
 void TcpSession::AcceptWait() {
-	NormalLockGuard guard(m_Lock);
+	RecursiveLockGuard guard(m_Lock);
 	m_eState = State::AcceptWait;
 }
 

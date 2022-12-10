@@ -269,7 +269,7 @@ bool Channel::StartBattle(Room* pRoom) {
 
 	pRoom->m_eRoomState = RoomState::PlayWait;
 	pRoom->m_iTimerTime = BATTLE_FIELD_PLAYWAIT_TIME;
-	pRoom->UnsafeForEach([](Player* p) {
+	pRoom->ForEach([](Player* p) {
 		p->InitializeRoomBattleState();
 	});
 	pRoom->Unlock();

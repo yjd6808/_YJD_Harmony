@@ -21,7 +21,7 @@ Room::Room()
 }
 
 void Room::Initialize(Channel* channel, Player* host, const String& roomName, int maxPlayerCount) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	m_iRoomUID = ms_iRoomSeq++;
 	m_iMaxPlayerCount = maxPlayerCount;
 	m_pChannel = Move(channel);
@@ -32,7 +32,7 @@ void Room::Initialize(Channel* channel, Player* host, const String& roomName, in
 }
 
 int Room::GetPlayerCount() {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 
 	if (m_pHost) {
 		return m_PlayerList.Size() + 1;
@@ -43,10 +43,10 @@ int Room::GetPlayerCount() {
 
 // 이미 방안에 있는 경우 또는 꽉 찬 경우 실패
 bool Room::TryJoin(Player* player) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 
 	// 게임이 끝나가고 있는 경우에는 참가 못하도록 함
-	if (UnsafeIsBattleFieldEndingState()) {
+	if (IsBattleFieldEndingState()) {
 		return false;
 	}
 
@@ -68,7 +68,7 @@ bool Room::TryJoin(Player* player) {
 }
 
 bool Room::RemovePlayer(Player* player) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 
 	if (player == m_pHost || m_PlayerList.Exist(player)) {
 		player->Lock();
@@ -96,7 +96,7 @@ bool Room::RemovePlayer(Player* player) {
 }
 
 bool Room::ChangeHost(Player* player) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 
 	if (!m_PlayerList.Exist(player))
 		return false;
@@ -108,7 +108,7 @@ bool Room::ChangeHost(Player* player) {
 }
 
 bool Room::ChangeNextHost() {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 
 	if (m_PlayerList.Size() == 0) {
 		return false;
@@ -120,12 +120,12 @@ bool Room::ChangeNextHost() {
 }
 
 Player* Room::GetHost() {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	return static_cast<Player*>(m_pHost);
 }
 
 void Room::Broadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	packet->AddRef(); // 패킷 베리어
 	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
 		if (p == exceptPlayer)
@@ -140,21 +140,8 @@ void Room::Broadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
 	packet->Release();
 }
 
-void Room::UnsafeBroadcast(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
-	packet->AddRef(); // 패킷 베리어
-	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
-		if (p == exceptPlayer)
-			return;
-
-		p->Session()->SendAsync(packet);
-	});
-
-	if (m_pHost)
-		GetHost()->Session()->SendAsync(packet);
-	packet->Release();
-}
-
-void Room::UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
+void Room::BroadcastInBattle(JNetwork::ISendPacket* packet, Player* exceptPlayer) {
+	RecursiveLockGuard guard(m_RoomLock);
 	packet->AddRef(); // 패킷 베리어
 	m_PlayerList.Extension().ForEach([packet, exceptPlayer](Player* p) {
 		if (p == exceptPlayer)
@@ -169,41 +156,26 @@ void Room::UnsafeBroadcastInBattle(JNetwork::ISendPacket* packet, Player* except
 	packet->Release();
 }
 
-bool Room::UnsafeIsBattleFieldState() const {
-	return m_eRoomState >= RoomState::PlayWait;
-}
-
-bool Room::UnsafeIsBattleFieldPlayingState() const {
+bool Room::IsBattleFieldPlayingState() {
+	RecursiveLockGuard guard(m_RoomLock);
 	return m_eRoomState >= RoomState::PlayWait && m_eRoomState <= RoomState::Playing;
 }
 
 
-bool Room::UnsafeIsBattleFieldEndingState() const {
+bool Room::IsBattleFieldEndingState() {
+	RecursiveLockGuard guard(m_RoomLock);
 	return m_eRoomState >= RoomState::EndWait;
 }
 
-int Room::UnsafeGetRoomBattleStateUserCount() {
+int Room::GetRoomBattleStateUserCount() {
+	RecursiveLockGuard guard(m_RoomLock);
 	int iCount = 0;
-	UnsafeForEach([&iCount](Player* p) {
+	ForEach([&iCount](Player* p) {
 		if (p->GetPlayerState() == PlayerState::RoomBattle && !p->IsDeath()) {
 			iCount++;
 		}
 	});
 	return iCount;
-}
-
-void Room::UnsafeForEach(Action<Player*> foreachAction) {
-	m_PlayerList.Extension().ForEach(foreachAction);
-
-	if (m_pHost) {
-		foreachAction(GetHost());
-	}
-}
-
-
-void Room::SetRoomState(RoomState state) {
-	NormalLockGuard guard(m_RoomLock);
-	m_eRoomState = state;
 }
 
 void Room::ForEach(Action<Player*> foreachAction) {
@@ -215,13 +187,18 @@ void Room::ForEach(Action<Player*> foreachAction) {
 }
 
 
+void Room::SetRoomState(RoomState state) {
+	RecursiveLockGuard guard(m_RoomLock);
+	m_eRoomState = state;
+}
+
 RoomState Room::GetRoomState() {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	return m_eRoomState;
 }
 
 bool Room::IsBattleFieldState() {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	return m_eRoomState >= RoomState::PlayWait;
 }
 
@@ -229,7 +206,7 @@ bool Room::IsBattleFieldState() {
 
 
 void Room::LoadRoomInfo(Out_ RoomInfo& info) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	info.RoomUID = m_iRoomUID;
 	strcpy_s(info.Name, NAME_LEN, m_RoomName.Source());
 	info.MaxPlayerCount = m_iMaxPlayerCount;
@@ -238,22 +215,22 @@ void Room::LoadRoomInfo(Out_ RoomInfo& info) {
 }
 
 void Room::SetTimerTime(int time) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	m_iTimerTime = time;
 }
 
 int Room::AddTimerTime(int time) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	return m_iTimerTime += time;
 }
 
 int Room::GetTimerTime() {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	return m_iTimerTime;
 }
 
 int Room::SubtractTimerTime(int time) {
-	NormalLockGuard guard(m_RoomLock);
+	RecursiveLockGuard guard(m_RoomLock);
 	return m_iTimerTime -= time;
 }
 

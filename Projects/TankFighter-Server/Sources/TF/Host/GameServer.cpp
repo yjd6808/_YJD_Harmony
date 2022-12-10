@@ -7,7 +7,6 @@
 #include <TF/Host/GameServerEventListener.h>
 #include <TF/ServerConfiguration.h>
 
-#include <JCore/AutoObject.h>
 #include <TF/Parser/CommandFn.h>
 #include <Common/Command.h>
 

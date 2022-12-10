@@ -23,10 +23,8 @@ namespace JCore {
 		void Unlock() override;
 		bool IsLocked() override;
 	private:
-		static size_t GetCurrentThreadId();
-	private:
 		NormalLock m_Lock;
-		size_t m_uiLockedThreadId;
+		Int32U m_uiLockedThreadId;
 		int m_iRecursion;
 	};
 

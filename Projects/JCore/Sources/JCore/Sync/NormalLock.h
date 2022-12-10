@@ -28,7 +28,7 @@ namespace JCore {
 		bool IsLocked() override;
 	private:
 		CRITICAL_SECTION m_CriticalSection;
-		Atomic<bool> m_bLocked;
+		Atomic<Int32U> m_uiThreadId;
 	};
 
 	/* ================================================================================= */

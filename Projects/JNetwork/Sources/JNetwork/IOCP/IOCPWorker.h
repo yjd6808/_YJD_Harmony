@@ -25,7 +25,6 @@ protected:
 
 	void WorkerThread(void* param) override;
 private:
-	std::thread m_Thread;
 	IOCP* m_pIocp;
 
 	friend class WorkerManager;

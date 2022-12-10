@@ -14,7 +14,8 @@
 namespace JCore {
     WaitHandle::WaitHandle(bool initialState, bool manualReset, const char* name) :
         m_hHandle(WinApi::CreateEvent(initialState, manualReset, name)),
-        m_Name(name == nullptr ? 0 : name) // 이름을 지정하지 않는 경우 String 디폴트 동적할당 방지
+        m_Name(name),
+        m_bSignaled(initialState)
     {}
 
     WaitHandle::WaitHandle(WaitHandle&& handle) noexcept {
@@ -23,7 +24,7 @@ namespace JCore {
 
     WaitHandle::~WaitHandle() {
         if (m_hHandle) {
-            DebugAssertMessage(WinApi::CloseHandle(m_hHandle), "WaitHandle Close 실패");
+            WinApi::CloseHandle(m_hHandle);
         }
     }
 
@@ -57,7 +58,6 @@ namespace JCore {
             return;
 
         m_Name = Move(other.m_Name);
-        other.m_hHandle = nullptr;
     }
 
     // =====================================================================

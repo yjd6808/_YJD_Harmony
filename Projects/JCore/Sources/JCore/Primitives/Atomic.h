@@ -2,6 +2,8 @@
  * 작성자: 윤정도
  * 생성일: 12/6/2022 3:54:27 PM
  * =====================
+ * enum, enum class는 아직 지원안함..
+ * 만들고보니까 enum이 있었네;;
  */
 
 
@@ -31,7 +33,7 @@ namespace JCore {
                 return 0;
             }
 
-            return expected;
+            return static_cast<T>(expected);
         }
 
         T Add(T operand) { return TInterlocked::Add(&m_Value, operand); }

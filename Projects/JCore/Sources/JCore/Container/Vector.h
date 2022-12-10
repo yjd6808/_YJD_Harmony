@@ -43,7 +43,9 @@ public:
 	{
 	}
 
-	~Vector() noexcept override = default;
+	~Vector() noexcept override {
+		this->Clear(true);
+	}
 
 public:
 	TVector& operator=(const TVector& other) {

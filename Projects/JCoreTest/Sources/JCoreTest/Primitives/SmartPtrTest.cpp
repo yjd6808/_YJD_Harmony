@@ -9,6 +9,7 @@
 
 #include <JCore/Primitives/SmartPtr.h>
 
+#include "JCore/Primitives/StaticString.h"
 
 
 using namespace std;
@@ -39,7 +40,7 @@ struct ModelA
 };
 
 // 쉐어드 포인터 테스트
-TEST(SmartPointerTest, SharedPointer) {
+TEST(SharedPointer, SmartPointerTest) {
     auto test = [](SharedPtr<int>& g1, SharedPtr<int>& g2) {
         *g1 = 30;
 
@@ -87,27 +88,30 @@ TEST(SmartPointerTest, SharedPointer) {
         EXPECT_TRUE(m1.WeakCount() == 1);
     };
 
+	{
+		LeakCheck;
+		// 내부에서 만드는 경우
+		{
+			SharedPtr<int> g1 = MakeShared<int>(2);
+			SharedPtr<int> g2 = MakeShared<int>(3);
+			test(g1, g2);
+		}
+	}
 
-    // 내부에서 만드는 경우
-    {
-        SharedPtr<int> g1 = MakeShared<int>(2);
-        SharedPtr<int> g2 = MakeShared<int>(3);
-        test(g1, g2);
-    }
-
-    // 외부에서 주입 해주는 경우
-    {
-
-
-        //SharedPtr<int> g1 = SharedPtr<int>(new int(2));
-        //SharedPtr<int> g2 = SharedPtr<int>(new int(3));
-        //test(g1, g2);
-    }
+	{
+		LeakCheck;
+		// 외부에서 주입 해주는 경우
+		{
+			SharedPtr<int> g1 = SharedPtr<int>(new int(2));
+			SharedPtr<int> g2 = SharedPtr<int>(new int(3));
+			test(g1, g2);
+		}
+	}
 }
 
 
 // 워크 포인터 테스트
-TEST(SmartPointerTest, WeakPointer) {
+TEST(WeakPointer, SmartPointerTest) {
 	PrintFormat("[기본 테스트]\n");
 	{
 		WeakPtr<ModelA> w1;
@@ -222,36 +226,45 @@ TEST(SmartPointerTest, WeakPointer) {
 
 
 // 다이나믹 캐스팅 테스트
-TEST(SmartPointerTest, DynamicCastingTest) {
-	AutoMemoryLeakDetector leak;
+TEST(DynamicCastingTest, SmartPointerTest) {
+	
 
-	WeakPtr<Model> w1;
+	
 	{
+		{
+			AutoMemoryLeakDetector leak;
+			WeakPtr<Model> w1;
+			// 내부에서 만드는 경우
+			{
+				SharedPtr<SuperModel> s1 = MakeShared<SuperModel>();
 
-        // 내부에서 만드는 경우
-        {
-            SharedPtr<SuperModel> s1 = MakeShared<SuperModel>();
+				Model* z = s1.Get<Model*>();		// Get 다이나믹 캐스팅 지원
+				SuperModel* z2 = s1.Get();			// 기본타입은 그냥 들고오면 됨
 
-            Model* z = s1.Get<Model*>();		// Get 다이나믹 캐스팅 지원
-            SuperModel* z2 = s1.Get();			// 기본타입은 그냥 들고오면 됨
+				SharedPtr<Model> s2 = s1;
+				SharedPtr<SuperModel> s3 = s2;
+				w1 = s1;
+			}
+		}
 
-            SharedPtr<Model> s2 = s1;
-            SharedPtr<SuperModel> s3 = s2;
-            w1 = s1;
-        }
+		{
+			AutoMemoryLeakDetector leak;
+			WeakPtr<Model> w1;
+			// 외부에서 주입 해주는 경우
+			{
+				SharedPtr<SuperModel> s1 = SharedPtr<Model>(new SuperModel());
+
+				Model* z = s1.Get<Model*>();		// Get 다이나믹 캐스팅 지원
+				SuperModel* z2 = s1.Get();			// 기본타입은 그냥 들고오면 됨
+
+				SharedPtr<Model> s2 = s1;
+				SharedPtr<SuperModel> s3 = s2;
+				w1 = s1;
+			}
+		}
 
 
-        // 외부에서 주입 해주는 경우
-        {
-            SharedPtr<SuperModel> s1 = SharedPtr(new SuperModel());
-
-            Model* z = s1.Get<Model*>();		// Get 다이나믹 캐스팅 지원
-            SuperModel* z2 = s1.Get();			// 기본타입은 그냥 들고오면 됨
-
-            SharedPtr<Model> s2 = s1;
-            SharedPtr<SuperModel> s3 = s2;
-            w1 = s1;
-        }
+       
 	}
 
 
@@ -259,7 +272,7 @@ TEST(SmartPointerTest, DynamicCastingTest) {
 
 // 인덱싱 테스트
 // 배열처럼 동작가능한지.
-TEST(SmartPointerTest, Indexing) {
+TEST(Indexing, SmartPointerTest) {
 	AutoMemoryLeakDetector leak;
 
 	constexpr int ArraySize = 3;
@@ -385,5 +398,77 @@ TEST(SmartPointerTest, Indexing) {
 	EXPECT_THROW(mf[1], OutOfRangeException);
 }
 
+struct IRunnable {};
+struct MyThread: MakeSharedFromThis<MyThread>, IRunnable
+{
+	MyThread() {}
+	~MyThread() {
+#if Print == ON
+		std::cout << "~MyThread()\n";
+#endif
+	}
+	int a = 1;
+	int b = 2;
+};
+
+TEST(SharedPtr, MakeSharedFromThis) {
+	{
+		LeakCheck;
+		WeakPtr<IRunnable> wp;
+		{
+			auto p = new MyThread;
+			SharedPtr<IRunnable> sp(p); // 제대로 m_pWeak 초기화 되는지
+			wp = sp;
+			{
+				auto sp2 = sp.Get<MyThread*>()->Shared();
+			}
+		}
+		EXPECT_TRUE(wp.WeakCount() == 1 && wp.RefCount() == 0);
+	}
+
+	//{
+	//	LeakCheck;
+	//	WeakPtr<IRunnable> wp;
+	//	{
+	//		SharedPtr<IRunnable> sp = MakeShared<MyThread[10]>();
+	//		EXPECT_TRUE(sp.WeakCount() == 11 && sp.RefCount() == 1); // 10개 모두 WeakCounter를 가지고 있으므로
+
+	//		{
+	//			{
+	//				WeakPtr<IRunnable> lwp = sp;
+	//				EXPECT_TRUE(lwp.WeakCount() == 12);
+	//			}
+	//			SharedPtr<MyThread> sp2 = sp;
+	//			EXPECT_TRUE(sp2.WeakCount() == 12 && sp2.RefCount() == 2);
+	//			wp = sp2;
+	//			EXPECT_TRUE(sp2.WeakCount() == 13 && sp.RefCount() == 2);
+	//		}
+	//		EXPECT_TRUE(sp.WeakCount() == 12 && sp.RefCount() == 1);
+	//	}
+	//}
+
+	{
+		LeakCheck;
+		WeakPtr<IRunnable> wp;
+		{
+			SharedPtr<IRunnable> sp = MakeShared<MyThread[]>(10);
+			EXPECT_TRUE(sp.WeakCount() == 11 && sp.RefCount() == 1); // 10개 모두 WeakCounter를 가지고 있으므로
+
+			{
+				{
+					WeakPtr<IRunnable> lwp = sp;
+					EXPECT_TRUE(lwp.WeakCount() == 12);
+				}
+				SharedPtr<MyThread> sp2 = sp;
+				EXPECT_TRUE(sp2.WeakCount() == 12 && sp2.RefCount() == 2);
+				wp = sp2;
+				EXPECT_TRUE(sp2.WeakCount() == 13 && sp.RefCount() == 2);
+			}
+			EXPECT_TRUE(sp.WeakCount() == 12 && sp.RefCount() == 1);
+		}
+	}
+}
+
 #endif // TEST_SmartPointerTest == ON
+
 

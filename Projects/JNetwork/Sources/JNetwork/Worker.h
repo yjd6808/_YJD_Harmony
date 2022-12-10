@@ -5,7 +5,7 @@
 #pragma once
 
 #include <JCore/Type.h>
-#include <thread>
+#include <JCore/Threading/Thread.h>
 
 namespace JNetwork {
 
@@ -23,8 +23,8 @@ public:
 
 	Worker() : m_eState(State::Prepared)
 	         , m_hPauseEvent(CreateEvent(NULL, FALSE, FALSE, NULL)) {
-	};
-	virtual ~Worker() = default;;
+	}
+	virtual ~Worker() = default;
 
 	virtual void Run(void* param = nullptr) = 0;
 	virtual void JoinWait(WinHandle waitHandle) = 0;
@@ -33,7 +33,7 @@ public:
 	virtual void Resume() = 0;
 	virtual void WorkerThread(void* param) = 0;
 protected:
-	std::thread m_Thread;
+	JCore::Thread m_Thread;
 	State m_eState;
 	WinHandle m_hPauseEvent;
 };

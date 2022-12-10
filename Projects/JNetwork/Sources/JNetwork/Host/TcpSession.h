@@ -13,7 +13,7 @@
 #pragma once
 
 
-#include <JCore/Sync/NormalLock.h>
+#include <JCore/Sync/RecursiveLock.h>
 #include <JNetwork/Socket.h>
 #include <JNetwork/Packet.h>
 #include <JNetwork/Host/TcpServerEventListener.h>
@@ -86,7 +86,7 @@ protected:
 	IPv4EndPoint m_LocalEndPoint;
 	void* m_pTag{};
 	bool m_bReuseSession;
-	JCore::NormalLock m_Lock;
+	JCore::RecursiveLock m_Lock;
 	
 	friend class TcpServer;
 	friend class TcpSessionContainer;

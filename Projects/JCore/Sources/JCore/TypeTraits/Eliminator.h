@@ -82,8 +82,6 @@ namespace JCore {
 
 
     /* =============================================================== */
-    // 한정자 제거해주는 템플릿
-    // 포인터 타입은 제거가 안댐
     template <typename T>
     struct RevmovePointer
     {
@@ -109,6 +107,15 @@ namespace JCore {
         using Type = RemoveQulifier_t<RemoveReference_t<T>>;
     };
 
+    // 한정자/참조자 제거
+    // const volatile int&  => int
+    // const volatile int*  => int*
+    // const volatile int[] => int[]
     template <typename T>
     using NaturalType_t = typename NaturalType<T>::Type;
+
+    // 걍 다 벗김
+    // const volatile int[] => int
+    template <typename T>
+    using NakedType_t= RemoveArray_t<RemovePointer_t<NaturalType_t<T>>>;
 } // namespace JCore

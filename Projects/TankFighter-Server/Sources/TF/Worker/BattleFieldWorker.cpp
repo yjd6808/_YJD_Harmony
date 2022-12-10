@@ -66,13 +66,13 @@ bool BattleFieldWorker::RemoveBattleFieldRoom(Room* room) {
 void BattleFieldWorker::Run() {
 	// std::thread 멤버 함수로 실행하는 법
 	// @참고 : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
-
-	m_Thread = std::thread{ [this] { WorkerThread(); } };
+	//   ==> 내가 만든 쓰레드로 변경
+	m_Thread = Thread { [this](void*) { WorkerThread(); }};
 }
 
 void BattleFieldWorker::Join() {
 	EnqueueSignal(new StopSignal);
-	m_Thread.join();
+	m_Thread.Join();
 }
 
 void BattleFieldWorker::WorkerThread()  {
@@ -151,7 +151,7 @@ void BattleFieldWorker::ProcessBattleFieldRoutine() {
 
 
 void BattleFieldWorker::ProcessBattleFieldRoutineForRoom(Room* room) {
-	NormalLockGuard roomGuard(room->m_RoomLock);
+	RecursiveLockGuard roomGuard(room->m_RoomLock);
 
 	// =====================================================================================
 	// RoomState 각각에 처리해줘야할 기능을 수행한다.
@@ -179,22 +179,22 @@ void BattleFieldWorker::ProcessBattleFieldRoutineForRoom(Room* room) {
 	// 공통적으로 일정주기마다 방 유저들에게 플레이어 위치 정보를 브로드 캐스팅해준다.
 	// 배틀필드에 진입한 유저모두에 해당한다.
 	// 딜레이시마다 보내준다.
-	if (room->UnsafeIsBattleFieldState()) {
+	if (room->IsBattleFieldState()) {
 
-		const int iRoomBattleStateUserCount = room->UnsafeGetRoomBattleStateUserCount();
+		const int iRoomBattleStateUserCount = room->GetRoomBattleStateUserCount();
 		const auto pLocationPacket = new DynamicPacket<BattileFieldTankUpdateSyn>(
 			BattileFieldTankUpdateSyn::CmdSizeOf(iRoomBattleStateUserCount)
 		);
 		pLocationPacket->Construct<0>(iRoomBattleStateUserCount);
 		BattileFieldTankUpdateSyn* pBattileFieldTankUpdateSyn = pLocationPacket->Get<0>();
 		int iIndexer = 0;
-		room->UnsafeForEach([&iIndexer, pBattileFieldTankUpdateSyn](Player* p) {
+		room->ForEach([&iIndexer, pBattileFieldTankUpdateSyn](Player* p) {
 			// 배틀필드에 있고 아직 사망상태가 아닌 경우
 			if (p->GetPlayerState() == PlayerState::RoomBattle && !p->IsDeath()) {
 				p->LoadMoveInfo(pBattileFieldTankUpdateSyn->Move[iIndexer++]);
 			}
 		});
-		room->UnsafeBroadcastInBattle(pLocationPacket);
+		room->BroadcastInBattle(pLocationPacket);
 	}
 
 	
@@ -234,7 +234,7 @@ void BattleFieldWorker::ProcessRoomPlayWaitState(Room* room) {
 		BattleFieldPlayWaitEndSyn* pBattleFieldPlayWaitEndSyn = pPacket->Get<0>();
 		pBattleFieldPlayWaitEndSyn->RoomState = room->m_eRoomState;
 		pBattleFieldPlayWaitEndSyn->LeftTime = BATTLE_FIELD_PLAYING_TIME;
-		room->UnsafeBroadcastInBattle(pPacket);
+		room->BroadcastInBattle(pPacket);
 	}
 }
 
@@ -250,18 +250,18 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 		const auto pBattleStatisticsPacket = new StaticPacket<BattleFieldStatisticsUpdateSyn>();
 		BattleFieldStatisticsUpdateSyn* pBattleFieldStatisticsUpdateSyn = pBattleStatisticsPacket->Get<0>();
 		int iRoomMemberCount = 0;
-		room->UnsafeForEach([&iRoomMemberCount, pBattleFieldStatisticsUpdateSyn](Player* p) {
+		room->ForEach([&iRoomMemberCount, pBattleFieldStatisticsUpdateSyn](Player* p) {
 			if (p->GetPlayerState() == PlayerState::RoomBattle) {
 				p->LoadBattleInfo(pBattleFieldStatisticsUpdateSyn->Info[iRoomMemberCount++]);
 			}
 		});
 		pBattleFieldStatisticsUpdateSyn->Count = iRoomMemberCount;
-		room->UnsafeBroadcastInBattle(pBattleStatisticsPacket);
+		room->BroadcastInBattle(pBattleStatisticsPacket);
 		m_iStatisticsUpdateDelayCount = -1;
 	}
 
 
-	room->UnsafeForEach([this, room](Player* p) {
+	room->ForEach([this, room](Player* p) {
 		// 게임 플레이중에 죽은 경우 부활 부활 시간을업데이트 해준다.
 		// 그리고 부활시간이 끝난 경우 다시 살려내주고 방 유저들에게 공지해준다.
 		if (p->GetPlayerState() == PlayerState::RoomBattle && p->GetRevivalLeftTime() > 0 && p->IsDeath()) {
@@ -281,7 +281,7 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 				pBattleFieldRevivalSyn->RevivalMove.MoveSpeed = TANK_MOVE_SPEED;
 				pBattleFieldRevivalSyn->RevivalMove.Rotation = 0.0f;
 				pBattleFieldRevivalSyn->RevivalMove.RotationSpeed = TANK_ROTATION_SPEED;
-				room->UnsafeBroadcastInBattle(pRevivalPacket);
+				room->BroadcastInBattle(pRevivalPacket);
 
 				SendFn::BroadcastUpdateRoomUserAck(room, true);
 			}
@@ -304,7 +304,7 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 		pBattleFieldPlayingEndSyn->RoomState = room->m_eRoomState;
 		pBattleFieldPlayingEndSyn->LeftTime = BATTLE_FIELD_ENDWAIT_TIME;
 		int iRommMemberCount = 0;
-		room->UnsafeForEach([&iRommMemberCount, pBattleFieldPlayingEndSyn](Player* p) {
+		room->ForEach([&iRommMemberCount, pBattleFieldPlayingEndSyn](Player* p) {
 			if (p->GetPlayerState() == PlayerState::RoomBattle) {
 				p->LoadBattleInfo(pBattleFieldPlayingEndSyn->Info[iRommMemberCount++]);
 			}
@@ -331,7 +331,7 @@ void BattleFieldWorker::ProcessRoomPlayingState(Room* room) {
 
 		// 방에 사람이 있을 경우 패킷을 전달하고 없으면 버린다.
 		if (iRommMemberCount > 0)
-			room->UnsafeBroadcastInBattle(pPacket);
+			room->BroadcastInBattle(pPacket);
 		else
 			pPacket->Release();
 	}
@@ -353,13 +353,13 @@ void BattleFieldWorker::ProcessRoomEndWaitState(Room* room) {
 
 	if (room->m_iTimerTime <= 0) {
 		room->m_eRoomState = RoomState::ReadyWait;
-		room->UnsafeForEach([room](Player* p) {
+		room->ForEach([room](Player* p) {
 			p->InitializeRoomLobbyState(room->m_iRoomUID);
 		});
 		const auto pPacket = new StaticPacket<BattleFieldEndWaitEndSyn>();
 		BattleFieldEndWaitEndSyn* pBattleFieldPlayingEndSyn = pPacket->Get<0>();
 		pBattleFieldPlayingEndSyn->RoomState = room->m_eRoomState;
-		room->UnsafeBroadcast(pPacket);
+		room->Broadcast(pPacket);
 		this->RemoveBattleFieldRoom(room);
 	}
 }

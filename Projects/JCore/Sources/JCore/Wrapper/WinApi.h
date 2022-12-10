@@ -114,10 +114,11 @@ namespace JCore {
 
 
 
-    using Boundary8 = Int8;         // 8  bit 레지스터 (al)
+    using Boundary8 = Int8;          // 8  bit 레지스터 (al)
     using Boundary16 = Int16;        // 16 bit 레지스터 (ax)
     using Boundary32 = Int32L;       // 32 bit 레지스터 (eax)
     using Boundary64 = Int64;        // 64 bit 레지스터 (rax)
+
     // 함수는 부분 특수화 땜에 클래스로 만듬
     // 함수 인자/반환값 설명은 마이크로소프트 웹에서 복사해옴
     // MSVC 어셈블리 확인해봤는데 문제 없어보인다.
@@ -255,7 +256,7 @@ namespace JCore {
     {
         using TInterlocked = Interlocked<Boundary8>;
 
-        static bool CompareExchange(InOut_ bool* destination, In_ bool expected, In_ bool desired) ;
+        static bool CompareExchange(InOut_ bool* destination, In_ bool expected, In_ bool desired);
         static bool Exchange(InOut_ bool* destination, In_ bool value);
     }; // struct Interlocked final
 
@@ -264,6 +265,7 @@ namespace JCore {
     extern template struct Interlocked<Int8U>;
     extern template struct Interlocked<Int16>;
     extern template struct Interlocked<Int16U>;
+    extern template struct Interlocked<WChar>;
     extern template struct Interlocked<Int32>;
     extern template struct Interlocked<Int32U>;
     extern template struct Interlocked<Int32L>;

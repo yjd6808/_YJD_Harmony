@@ -37,6 +37,9 @@
     <Filter Include="TypeTraits">
       <UniqueIdentifier>{4a9cda0d-0713-4d88-9cb8-58c348e3d522}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RAII">
+      <UniqueIdentifier>{6bbbfc96-8265-48d9-bf09-eaf309673f0b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp" />
@@ -112,7 +115,6 @@
     <ClInclude Include="..\Sources\JCore\Ascii.h" />
     <ClInclude Include="..\Sources\JCore\Exception.h" />
     <ClInclude Include="..\Sources\JCore\Deletor.h" />
-    <ClInclude Include="..\Sources\JCore\AutoObject.h" />
     <ClInclude Include="..\Sources\JCore\Container\Collection.h">
       <Filter>Container</Filter>
     </ClInclude>
@@ -288,6 +290,18 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Sync\AutoResetEvent.h">
       <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\RAII\AutoPtr.h">
+      <Filter>RAII</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\RAII\AutoRef.h">
+      <Filter>RAII</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\CollectionType.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\ContainerType.h">
+      <Filter>Container</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

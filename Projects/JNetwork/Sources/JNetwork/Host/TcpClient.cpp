@@ -121,7 +121,7 @@ void TcpClient::Resume() {
 }
 
 bool TcpClient::Disconnect() {
-	NormalLockGuard guard(m_Lock);
+	RecursiveLockGuard guard(m_Lock);
 	if (CheckState(State::Disconnected)) {
 		return true;
 	}

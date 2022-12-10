@@ -195,6 +195,8 @@ namespace JCore {
     template <typename T>
     constexpr bool IsFundamentalType_v = std::is_fundamental_v<T>;
 
+	template <typename T>
+    constexpr bool IsEnumType_v = std::is_enum_v<T>;
 
     template <typename T, typename... Rest>
     constexpr bool IsPrimitiveTypes_v = Detail::IsPrimitiveTypes<T, Rest...>::Value();

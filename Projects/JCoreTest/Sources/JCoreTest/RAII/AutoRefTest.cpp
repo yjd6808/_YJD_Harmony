@@ -6,14 +6,14 @@
 
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Deletor.h>
-#include <JCore/AutoObject.h>
+#include <JCore/RAII/AutoRef.h>
 
 
 using namespace std;
 
-#if TEST_AutoObjectTest == ON
+#if TEST_AutoRefTest == ON
 
-namespace AutoObject {
+namespace AutoRefTest {
 
 int g_iValue = 100;
 
@@ -34,16 +34,10 @@ TEST(AutoObjectTest, AutoRef) {
 }
 
 
-TEST(AutoObjectTest, AutoPointer) {
-	{
-		Model* ptr = new Model();
-		AutoPointer<Model, Deletor<Model>> ref(ptr);
-	}
-}
 
 
 } // namespace AutoObject
 
 
 
-#endif // TEST_AutoObjectTest == ON
+#endif // TEST_AutoRefTest == ON

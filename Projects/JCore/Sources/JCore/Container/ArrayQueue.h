@@ -15,7 +15,7 @@ namespace JCore {
 =====================================================================================*/
 
 template <typename T>
-class ArrayQueue : public ArrayCollection<T>
+class ArrayQueue final : public ArrayCollection<T>
 {
 	using TEnumerator			= Enumerator<T>;
 	using TCollection			= Collection<T>;
@@ -46,7 +46,9 @@ public:
 		operator=(ilist);
 	}
 
-	~ArrayQueue() noexcept override {}
+	~ArrayQueue() noexcept override {
+		Clear(true);
+	}
 public:
 
 
@@ -180,7 +182,8 @@ public:
 		m_iHead = 0;
 
 		if (removeHeap) {
-			DeleteArraySafe(this->m_pArray);
+			Memory::Deallocate(this->m_pArray);
+			this->m_pArray = nullptr;
 		}
 	}
 

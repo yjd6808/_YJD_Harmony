@@ -3,11 +3,13 @@
  */
 
 #include <TF/PrecompiledHeader.h>
+#include <JCore/Wrapper/WinApi.h>
+#include <JCore/Utils/Console.h>
+
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 
 #include <TF/Worker/SystemWorker.h>
-#include <JCore/Utils/Console.h>
 #include <TF/Game/World.h>
 
 using namespace JCore;
@@ -21,8 +23,10 @@ SystemWorker* SystemWorker::GetInstance() {
 
 SystemWorker::SystemWorker() {}
 SystemWorker::~SystemWorker() {
+	m_Thread.Join();
+
 	if (m_hExitHandle != INVALID_HANDLE_VALUE) {
-		CloseHandle(m_hExitHandle);
+		WinApi::CloseHandle(m_hExitHandle);
 	}
 };
 
@@ -34,8 +38,7 @@ void SystemWorker::Run() {
 	// std::thread 멤버 함수로 실행하는 법
 	// @참고 : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
 
-	m_Thread = std::thread{ [this] { WorkerThread(); } };
-	m_Thread.detach();
+	m_Thread = Thread([this](void*) { WorkerThread(); });
 }
 
 void SystemWorker::WorkerThread() const {

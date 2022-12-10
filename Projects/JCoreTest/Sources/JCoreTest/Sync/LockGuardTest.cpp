@@ -14,6 +14,7 @@
 #include <JCore/Sync/RecursiveLock.h>
 #include <JCore/Sync/Semaphore.h>
 #include <JCore/Sync/SpinLock.h>
+#include <JCore/Exception.h>
 
 namespace LockGuardTest {
 
@@ -35,6 +36,7 @@ namespace LockGuardTest {
                 LockGuard lg(lk);
                 EXPECT_TRUE(lk.IsLocked());
                 EXPECT_FALSE(lk.TryLock());
+                EXPECT_THROW(lk.Lock(), RuntimeException);
             }
             EXPECT_FALSE(lk.IsLocked());
         }
@@ -43,13 +45,14 @@ namespace LockGuardTest {
             RecursiveLock lk;
             {
                 LockGuard lg(lk);
-                EXPECT_TRUE(lk.IsLocked());
+                EXPECT_TRUE(lk.TryLock());
+                lk.Unlock();
                 {
                     LockGuard lg2(lk);
-                    EXPECT_TRUE(lk.IsLocked());
+                    EXPECT_TRUE(lk.TryLock());
+                    lk.Unlock();
                 }
             }
-            EXPECT_FALSE(lk.IsLocked());
         }
 
         {

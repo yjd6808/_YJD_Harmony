@@ -15,7 +15,7 @@ using namespace std;
 #if TEST_LinkedListTest == ON
 
 TEST(LinkedListTest, Regular) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	// PushBackAll 테스트
 	{
@@ -40,7 +40,7 @@ TEST(LinkedListTest, Regular) {
 }
 
 TEST(LinkedListTest, Enumerator) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	// 데이터가 없는 경우
 	{
@@ -100,7 +100,7 @@ TEST(LinkedListTest, Enumerator) {
 
 
 TEST(LinkedListTest, ConstructorTest) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	LinkedList<int> a{ 1, 2, 3};
 
@@ -127,7 +127,7 @@ TEST(LinkedListTest, ConstructorTest) {
 
 
 TEST(LinkedListTest, OperatorTest) {
-	AutoMemoryLeakDetector detector;
+	LeakCheck;
 
 	LinkedList<Model> a{ 1, 2, 3 };
 
@@ -160,6 +160,23 @@ TEST(LinkedListTest, OperatorTest) {
 	EXPECT_TRUE(d.Size() == 4);
 	EXPECT_TRUE(d.Back().a == 6);
 	EXPECT_TRUE(d.Front().a == 1);
+}
+
+TEST(LinkedListTest, InnerDestructorTest) {
+	LeakCheck;
+
+	LinkedList<String> aq;
+	bool toggle = false;
+	for (int i = 0; i < 1024; i++) {
+		if (i && i % 4 == 0) {
+			if ((toggle = !toggle))
+				aq.Remove(*aq.Extension().First());
+			else
+				aq.Remove(*aq.Extension().Last());
+		} else {
+			aq.PushBack("fsefesfesfesf");
+		}
+	}
 }
 
 #endif // TEST_LinkedListTest == ON

@@ -10,6 +10,9 @@
 #include <JCore/Container/Iterable.h>
 #include <JCore/Container/Iterator.h>
 #include <JCore/Container/CollectionExtension.h>
+#include <JCore/Container/CollectionType.h>
+#include <JCore/Container/ContainerType.h>
+
 
 
 #pragma warning(push)
@@ -17,29 +20,9 @@
 
 namespace JCore {
 
-enum class CollectionType
-{
-	Array,
-	List,
-	Map,
-	Stream,
-	KeyCollection,
-	ValueCollection
-};
 
-enum class ContainerType {
-	ArrayQueue,
-	ArrayStack,
-	Vector,
-	ListQueue,
-	ListStack,
-	LinkedList,
-	HashMap,
-	TreeMap,
-	ReferenceStream,
-	HashMapKeyCollection,
-	HashMapValueCollection
-};
+
+
 
 /*=====================================================================================
 									콜렉션

@@ -14,7 +14,7 @@
 
 
 namespace JCore {
-
+	namespace Detail { enum class ForSizeCheck {}; }
 constexpr char		MaxChar_v = (1 << 7) - 1;
 constexpr char		MinChar_v = (1 << 7);
 constexpr char		MaxInt8_v = (1 << 7) - 1;
@@ -35,6 +35,7 @@ constexpr Int64		MaxInt64_v = 0x7fffffffffffffffLL;
 constexpr Int64		MinInt64_v = MaxInt64_v + 1LL;
 constexpr Int64U	MaxInt64U_v = 0xffffffffffffffffLLU;
 constexpr int		BytePerBit_v = 8;
+constexpr int		EnumSize_v = sizeof(Detail::ForSizeCheck);
 
 template <typename T>
 constexpr int BitCount() {
