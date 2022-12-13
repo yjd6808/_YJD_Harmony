@@ -199,10 +199,10 @@ void LoginLayer::update(float delta) {
 	
 }
 
-void LoginLayer::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
+void LoginLayer::onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 }
 
-void LoginLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
+void LoginLayer::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 }
 
 

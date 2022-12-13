@@ -40,8 +40,8 @@ namespace JCore {
             void* Param;
         };
     public:
-        Thread(const char* name = nullptr) : m_hHandle(nullptr), m_Name(name), m_uiThreadId(0), m_eState(Uninitialized), m_RunningSignal(1, 0), m_bAutoJoin(false) {}
-        Thread(TRunnable&& fn, void* param = nullptr, const char* name = nullptr); 
+        Thread(const char* name = nullptr, bool autoJoin = false) : m_hHandle(nullptr), m_Name(name), m_uiThreadId(0), m_eState(Uninitialized), m_RunningSignal(1, 0), m_bAutoJoin(autoJoin) {}
+        Thread(TRunnable&& fn, void* param = nullptr, const char* name = nullptr, bool autoJoin = false); 
     	Thread(const Thread& other) = delete;
         Thread(Thread&& other) noexcept;
         ~Thread() noexcept;

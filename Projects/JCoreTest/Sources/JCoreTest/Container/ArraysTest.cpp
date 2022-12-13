@@ -165,6 +165,36 @@ TEST(ArraysTest, LowerBound) {
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 0) == 0);
 		EXPECT_TRUE(Arrays::LowerBound(&vec[0], vec.size(), 4) == 3);
 	}
+
+	// 인덱스 테스트
+	{
+		int arr[]
+		{
+			1 << 0, // 1
+			1 << 1,	// 2
+			1 << 2,	// 4
+			1 << 3,	// 8 
+			1 << 4,	// 16
+			1 << 5,	// 32
+			1 << 6,	// 64
+			1 << 7,	// 128
+			1 << 8,	// 256
+			1 << 9	// 512
+		};
+		int max_size = sizeof(arr) / sizeof(int); // 10
+
+		int idx = Arrays::LowerBound(arr, 56);
+		EXPECT_TRUE(idx == 6);
+		
+		idx = Arrays::LowerBound(arr, 1 << 9);
+		EXPECT_TRUE(idx == 9);
+
+		idx = Arrays::LowerBound(arr, 1 << 9 + 1);
+		EXPECT_TRUE(idx == max_size);
+
+		idx = Arrays::LowerBound(arr, 0);
+		EXPECT_TRUE(idx == 0);
+	}
 }
 
 #endif // TEST_ArraysTest == ON

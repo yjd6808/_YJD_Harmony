@@ -23,7 +23,7 @@ class SynchronizedScene : public Scene
 {
 protected:
 	bool init() override;
-	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void update(float delta) override;
 
 

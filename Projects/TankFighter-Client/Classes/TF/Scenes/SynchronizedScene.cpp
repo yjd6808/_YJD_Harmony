@@ -40,7 +40,7 @@ bool SynchronizedScene::init() {
 }
 
 // ESC 누르면 정보들 다양하게 보여주게 함 벌텍스 정보 보여주도록 함
-void SynchronizedScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
+void SynchronizedScene::onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 	switch (keyCode) {
 	case EventKeyboard::KeyCode::KEY_ESCAPE:
 		Director::getInstance()->setDisplayStats(!Director::getInstance()->isDisplayStats());

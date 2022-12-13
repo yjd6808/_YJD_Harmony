@@ -13,8 +13,9 @@
 
 namespace JNetwork {
 
-struct ISendPacket;
+
 struct ICommand;
+struct ISendPacket;
 class TcpServer;
 class TcpSession;
 class TcpServerEventListener

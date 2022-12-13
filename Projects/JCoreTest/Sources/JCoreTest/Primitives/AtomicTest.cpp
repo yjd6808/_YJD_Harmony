@@ -14,7 +14,7 @@ using namespace JCore;
 
 #if TEST_AtomicTest == ON
 
-TEST(Function, AtomicTest) {
+TEST(AtomicTest, Integer) {
 
     {
         Atomic<int> s;
@@ -85,7 +85,7 @@ TEST(Function, AtomicTest) {
     }
 }
 
-TEST(bool, AtomicTest) {
+TEST(AtomicTest, bool) {
     Atomic<bool> b;
     bool k = b.Load();
     EXPECT_FALSE(k);
@@ -117,6 +117,39 @@ TEST(bool, AtomicTest) {
     EXPECT_TRUE(!b == true);
 }
 
+
+TEST(AtomicTest, Pointer) {
+    int* orignal = new int{5};
+    void* base = orignal;
+
+    Atomic<void*> a1(orignal);
+
+    EXPECT_TRUE(a1 == base);
+    EXPECT_TRUE(a1 == orignal);
+    EXPECT_TRUE(a1.Load() == orignal);
+    EXPECT_TRUE(a1.Load() == orignal);
+
+    EXPECT_FALSE(a1 != base);
+    EXPECT_FALSE(a1 != orignal);
+    EXPECT_FALSE(a1.Load() != orignal);
+    EXPECT_FALSE(a1.Load() != orignal);
+
+    a1.Add(1);
+    EXPECT_TRUE(a1 == orignal + 1);
+
+    a1.Exchange(orignal + 4);
+    EXPECT_TRUE(a1 == orignal + 4);
+
+    a1 = nullptr;
+    EXPECT_TRUE(a1 == nullptr);
+    EXPECT_TRUE(a1.Load() == nullptr);
+
+    a1 = orignal;
+    EXPECT_TRUE(a1 == base);
+
+    a1.Store(nullptr);
+    EXPECT_TRUE(a1 == nullptr);
+}
 
 
 #endif

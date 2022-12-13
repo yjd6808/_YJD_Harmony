@@ -15,25 +15,24 @@ namespace JCore {
 	template class LockGuard<NormalLock>;
 
 	NormalLock::NormalLock() {
-		InitializeCriticalSection(&m_CriticalSection);
+		InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
 	}
 
 	NormalLock::~NormalLock() {
-		DeleteCriticalSection(&m_CriticalSection);
+		DeleteCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
 	}
 
 	void NormalLock::Lock() {
-		Int32U uiThreadId = WinApi::GetCurrentThreadId();
-		if (uiThreadId == m_uiThreadId.Load())
+		if (m_hOwnThread != nullptr)
 			throw RuntimeException("이미 잠겨있습니다.");
 
-		EnterCriticalSection(&m_CriticalSection);
-		m_uiThreadId = uiThreadId;
+		EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
+		m_hOwnThread = m_CriticalSection.OwningThread;
 	}
 
 	void NormalLock::Unlock() {
-		LeaveCriticalSection(&m_CriticalSection);
-		m_uiThreadId = 0;
+		m_hOwnThread.Store(nullptr);
+		LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
 	}
 
 	bool NormalLock::TryLock() {
@@ -41,15 +40,15 @@ namespace JCore {
         if (IsLocked())
             return false;
 
-		if ((bool)TryEnterCriticalSection(&m_CriticalSection)) {
-			m_uiThreadId = WinApi::GetCurrentThreadId();
+		if ((bool)TryEnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection))) {
+			m_hOwnThread = m_CriticalSection.OwningThread;
 			return true;
 		}
 		return false;
 	}
 
 	bool NormalLock::IsLocked() {
-		return m_uiThreadId.Load() != 0;
+		return m_hOwnThread != nullptr;
 	}
 
 } // namespace JCore

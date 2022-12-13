@@ -133,7 +133,7 @@ void Tank::updateRotation(float delta) {
 
 
 
-void Tank::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
+void Tank::onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 
 	// 자기자신의 탱크만 몰 수 있도록 한다.
 	if (GetCharacterUID() == _Client->GetCharacterUID()) {
@@ -160,7 +160,7 @@ void Tank::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 	}
 }
 
-void Tank::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
+void Tank::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 
 	// 자기자신의 탱크만 몰 수 있도록 한다.
 	if (GetCharacterUID() == _Client->GetCharacterUID() && m_KeyPressedMap.Exist(keyCode))

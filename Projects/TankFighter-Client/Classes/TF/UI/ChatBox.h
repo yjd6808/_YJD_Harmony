@@ -16,8 +16,8 @@ public:
 	static ChatBox* create(const Color3B& color, const Size& size);
 	bool init(const Size& size);
 
-	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) override;
-	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) override;
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
+	void onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
 	void SetContentSize(const Size& size);
 
 	ListView* GetListView() const { return m_pListView; }

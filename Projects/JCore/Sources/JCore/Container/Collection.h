@@ -44,17 +44,18 @@ class Collection : public Iterable<T>
 	using TEnumerator			= Enumerator<T>;
 public:
 	Collection(CollectionType collectionType, ContainerType containerType) 
-		: TIterable(), 
-		  m_eCollectionType(collectionType),
-		  m_eContainerType(containerType),
-		  m_Owner(this, true)
+		: TIterable()
+	    , m_eCollectionType(collectionType)
+		, m_eContainerType(containerType)
+		, m_Extension(this)
+		, m_Owner(this, true)
 	{
 	}
 
 	~Collection() noexcept override { 
-		Memory::PlacementDeallocate(m_Owner);
+		Memory::PlacementDelete(m_Owner);
 		if (m_bExtensionable)
-			Memory::PlacementDeallocate(m_Extension);
+			Memory::PlacementDelete(m_Extension);
 	}
 protected:
 	VoidOwner& GetOwner() const { return const_cast<VoidOwner&>(m_Owner); }
@@ -74,10 +75,6 @@ public:
 	}
 
 	TCollectionExtension& Extension() {
-		if (!m_bExtensionable) {
-			Memory::PlacementAllocate(m_Extension, this);
-			m_bExtensionable = true;
-		}
 		return m_Extension;
 	}
 protected:
@@ -106,11 +103,13 @@ protected:
 protected:
 	CollectionType m_eCollectionType;
 	ContainerType m_eContainerType;
+	TCollectionExtension m_Extension;
 	int m_iSize = 0;
+
 	union { VoidOwner m_Owner; };
 private:
 	bool m_bExtensionable = false;
-	union { TCollectionExtension m_Extension; };	// 포인터 참조용
+	
 };
 
 } // namespace JCore

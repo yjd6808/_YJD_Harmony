@@ -7,7 +7,7 @@
 		    delete (x);			\
         (x) = nullptr;			\
 	    }						\
-    } while (0);
+    } while (0)
 
     #define DeleteArraySafe(x)	\
     do {						\
@@ -15,7 +15,7 @@
 		    delete[] (x);		\
         (x) = nullptr;		  	\
 	    }						\
-    } while (0);		
+    } while (0)		
 
     #define JCoreStdCall        __stdcall
     #define JCoreCdecl          __cdecl

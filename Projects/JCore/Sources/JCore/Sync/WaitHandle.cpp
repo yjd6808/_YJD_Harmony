@@ -14,8 +14,7 @@
 namespace JCore {
     WaitHandle::WaitHandle(bool initialState, bool manualReset, const char* name) :
         m_hHandle(WinApi::CreateEvent(initialState, manualReset, name)),
-        m_Name(name),
-        m_bSignaled(initialState)
+        m_Name(name)
     {}
 
     WaitHandle::WaitHandle(WaitHandle&& handle) noexcept {

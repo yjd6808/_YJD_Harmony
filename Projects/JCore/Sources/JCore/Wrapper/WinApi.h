@@ -4,6 +4,7 @@
  * =====================
  * 윈도우 헤더파일은 너무 묵직해서 진짜 필요한 경우가 아니면
  * 내가 만든 헤더파일에는 포함시키기 싫다. 그래서 따로 필요한 기능만 빼줌
+ * 
  */
 
 
@@ -16,6 +17,43 @@
 
 namespace JCore {
     struct WinApi {
+
+		#pragma region Win32 Struct
+        struct ListEntry {
+            ListEntry* Flink;
+            ListEntry* Blink;
+        };
+
+        struct CriticalSection;
+        struct CriticalSectionDebug {
+            Int16       Type;
+            Int16       CreatorBackTraceIndex;
+            CriticalSection* CriticalSection;
+            ListEntry   ProcessLocksList;
+            Int32UL     EntryCount;
+            Int32UL     ContentionCount;
+            Int32UL     Flags;
+            Int16       CreatorBackTraceIndexHigh;
+            Int16       SpareWORD;
+        };
+		#pragma pack(push, 8)
+        struct CriticalSection {
+            CriticalSectionDebug DebugInfo;
+
+            //
+            //  The following three fields control entering and exiting the critical
+            //  section for the resource
+            //
+
+            Int32L LockCount;
+            Int32L RecursionCount;
+            WinHandle OwningThread;        // from the thread's ClientId->UniqueThread
+            WinHandle LockSemaphore;
+            IntPtr SpinCount;            // force size on 64-bit systems when packed
+        };
+		#pragma pack(pop)
+		#pragma endregion
+
         static bool            JCoreStdCall SetConsoleCursorPosition(In_ WinHandle hStdoutHandle, In_ int x, In_ int y);
         static bool            JCoreStdCall GetConsoleCursorPosition(In_ WinHandle hStdoutHandle, Out_ int& x, Out_ int& y);
         static bool            JCoreStdCall SetConsoleTextAttribute(In_ WinHandle hStdoutHandle, In_ Int16 attribute);
@@ -217,7 +255,7 @@ namespace JCore {
     {
         // 포인터는 x86, x64 플랫폼에 따라서 32비트, 64비트 정수형으로 각각 강제 형변환해서 사용
         // 딱히 다른 방법은 떠오르지 않는다.
-        inline static constexpr int PtrSize = sizeof(TOperand);
+        inline static constexpr int PtrSize = sizeof(TOperand*);
         inline static constexpr int PlatformPtrSize = sizeof(TOperand*);
 
         using TOperandPtr = TOperand*;
@@ -230,7 +268,7 @@ namespace JCore {
                 PtrSize * value));
         }
 
-        static TOperand* CompareExchange(InOut_ TOperand** destination, In_ TOperand* expected, TOperand* desired) {
+        static TOperand* CompareExchange(InOut_ TOperand** destination, In_ TOperand* expected, In_ TOperand* desired) {
             return reinterpret_cast<TOperand*>(TInterlocked::CompareExchange(
                 reinterpret_cast<TReinterpretedType*>(destination),
                 reinterpret_cast<TReinterpretedType>(expected),

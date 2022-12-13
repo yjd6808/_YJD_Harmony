@@ -5,18 +5,20 @@
 
 #pragma once
 
+#include <JCore/Memory.h>
+
 namespace JCore {
 
 template <typename T>
 struct DefaultAllocator
 {
-	template <typename... Args>
-    static T* Allocate(Args&&... args) {
-		return new T{ static_cast<Args&&>(args)... };
+    static T* Allocate(const Int32U size) {
+		return Memory::Allocate<T*>(size);
 	}
 
-    static void Deallocate(const T* del) {
-        delete del;
+    static void Deallocate(T** del) {
+		Memory::Deallocate(*del);
+		*del = nullptr;
     }
 };
 

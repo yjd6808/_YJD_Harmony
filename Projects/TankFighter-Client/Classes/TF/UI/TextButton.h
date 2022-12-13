@@ -27,8 +27,8 @@ public:
 	bool IsMouseOver() const { return m_bMouseOver; }
 	bool IsMousePressed() const { return m_bMousePressed; }
 
-	bool onTouchBegin(Touch* touch, Event* touchEvent);
-	void onTouchEnded(Touch* touch, Event* touchEvent);
+	bool onTouchBegin(Touch* touch, cocos2d::Event* touchEvent);
+	void onTouchEnded(Touch* touch, cocos2d::Event* touchEvent);
 	void setBackgroundColor(const Color3B& color);
 	void setText(const std::string& text) { m_pTextUI->setText(text); }
 

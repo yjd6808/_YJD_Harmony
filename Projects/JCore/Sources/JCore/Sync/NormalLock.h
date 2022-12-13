@@ -1,7 +1,7 @@
 /*
  * 작성자: 윤정도
  * =====================
- *
+ * CriticalSection 자체가 RecursiveLock인듯?
  */
 
 
@@ -10,9 +10,7 @@
 #include <JCore/Sync/ILock.h>
 #include <JCore/Sync/LockGuard.h>
 #include <JCore/Primitives/Atomic.h>
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <JCore/Wrapper/WinApi.h>
 
 namespace JCore {
 
@@ -27,8 +25,8 @@ namespace JCore {
 		bool TryLock() override;
 		bool IsLocked() override;
 	private:
-		CRITICAL_SECTION m_CriticalSection;
-		Atomic<Int32U> m_uiThreadId;
+		WinApi::CriticalSection m_CriticalSection;
+		Atomic<WinHandle> m_hOwnThread;
 	};
 
 	/* ================================================================================= */

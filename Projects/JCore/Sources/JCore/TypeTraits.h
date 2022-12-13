@@ -1,5 +1,5 @@
 /*
- * 직접 구현가능한 기능들은 구현하도록 하자.
+ * 직접 구현가능한 기능들은 최대한 구현하도록 하자.
  */
 
 #pragma once
@@ -18,6 +18,24 @@ namespace JCore {
         
         struct __Start__ {};    // 템플릿 파라미터의 시작을 표시하는 용도로 쓰임
         struct __End__ {};      // 템플릿 파라미터의 끝을 표시하는 용도로 쓰임
+
+        template <typename T>
+        struct IsEnd : FalseType {};
+        template<>
+        struct IsEnd<__End__> : TrueType {};
+
+        template <typename T>
+        struct EndAssert
+        {
+            static_assert(!IsEnd<T>::Value, "... it's out of range! cannot find valid type");
+	        using Type = T;
+        };
+
+        template <typename T>
+        struct IsStart : FalseType {};
+
+        template<>
+        struct IsStart<__Start__> : TrueType {};
 
         // 템플릿 파라미터 팩(BaseArgs)으로 전달한 타입들이 모두 Derived의 부모인지 여부
         /*
@@ -103,6 +121,13 @@ namespace JCore {
         template<typename T>
         struct EnableIf<true, T> { using Type = T; };
 
+        // SFINAE를 활용하기 위함
+        template<bool Test>
+        struct DefaultEnableIf {};
+
+        template<>
+        struct DefaultEnableIf<true> { using Type = void*; };
+
         // Conditional<true, T1, T2> = T1
         // Conditional<false, T1, T2> = T2
         template <bool Test, typename T1, typename T2>
@@ -163,8 +188,6 @@ namespace JCore {
         struct IndexOf<Index, TargetIndex, __End__> {
             using Type = __End__;
         };
-
-
     }
 
 
@@ -186,7 +209,7 @@ namespace JCore {
 
 
     template <typename Base, typename... DerivedArgs>
-    constexpr bool IsMultipleDerived 
+    constexpr bool IsMultipleDerived_v 
 	    = Detail::IsMultipleDerived<Base, DerivedArgs...>::Value();
 
     template <typename Derived, typename... BaseArgs>
@@ -243,9 +266,15 @@ namespace JCore {
     template <typename From>
     constexpr bool IsMoveConstructible_v = std::is_move_constructible_v<From>;
 
+    template <typename Fn>
+    constexpr bool IsFunction_v = std::is_function_v<Fn>;
+
 
     template<bool Test, typename T = void>
     using EnableIf_t = typename Detail::EnableIf<Test, T>::Type;
+
+    template<bool Test>
+    using DefaultEnableIf_t = typename Detail::DefaultEnableIf<Test>::Type;
 
     template<bool Test, typename T1, typename T2>
     using Conditional_t = typename Detail::Conditional<Test, T1, T2>::Type;
@@ -259,8 +288,14 @@ namespace JCore {
     template <typename... Args>
     constexpr bool CountOf_v = Detail::ParameterPack<Args...>::Value;
 
+    template <typename T>
+    constexpr bool IsEnd_v = Detail::IsEnd<T>::Value;
+
+    template <typename T>
+    constexpr bool IsStart_v = Detail::IsStart<T>::Value;
+
     template<Int Index, typename... Args>
-    using IndexOf_t = typename Detail::IndexOf<0, Index, Args..., Detail::__End__>::Type;
+    using IndexOf_t = typename Detail::EndAssert<typename Detail::IndexOf<0, Index, Args..., Detail::__End__>::Type>::Type;
 
 
 } // namespace JCore

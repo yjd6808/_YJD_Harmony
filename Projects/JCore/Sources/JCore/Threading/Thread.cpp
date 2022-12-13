@@ -13,7 +13,7 @@
 
 namespace JCore {
 
-    Thread::Thread(TRunnable&& fn, void* param, const char* name): Thread(name) {
+    Thread::Thread(TRunnable&& fn, void* param, const char* name, bool autoJoin): Thread(name, autoJoin) {
         Start(Move(fn), param);
     }
 

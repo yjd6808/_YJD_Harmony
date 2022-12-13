@@ -128,7 +128,7 @@ namespace JCore {
 
     
     template <typename T>
-    constexpr bool IsPointerType_v = Detail::IsPointerType<T>::Value;
+    constexpr bool IsPointerType_v = Detail::IsPointerType<RemoveReference_t<T>>::Value;
 
     template <typename T>
     constexpr bool IsReferenceType_v = Detail::IsReferenceType<T>::Value;

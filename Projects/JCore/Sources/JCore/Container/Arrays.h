@@ -141,7 +141,7 @@ struct Arrays final
 	/// data가 처음으로 시작되는 위치(인덱스)를 반환한다.
 	/// </summary>
 	template <typename T, Int32U ArraySize>
-	static int LowerBound(T(&arr)[ArraySize], const T& data) {
+	static int LowerBound(const T(&arr)[ArraySize], const T& data) {
 		return LowerBound(arr, ArraySize, data);
 	}
 
@@ -150,7 +150,7 @@ struct Arrays final
 	// LowerBound는 경계조건 처리가 매우 까다롭다.
 	// 머리가 핑핑돌아서 구현을 못하겠다.
 	template <typename T>
-	static int LowerBound(T* arr, const int arrSize, const T& data) {
+	static int LowerBound(const T* arr, const int arrSize, const T& data) {
 		ThrowIfArrayIsNull(arr);
 		ThrowIfArraySizeIsInvalid(arrSize);
 

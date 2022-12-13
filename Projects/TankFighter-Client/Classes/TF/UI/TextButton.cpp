@@ -88,7 +88,7 @@ void TextButton::onMouseMove(EventMouse* mouseEvent) {
 
 
 
-bool TextButton::onTouchBegin(Touch* touch, Event* touchEvent) {
+bool TextButton::onTouchBegin(Touch* touch, cocos2d::Event* touchEvent) {
 	return true;
 	Rect thisRect = this->getBoundingBox();
 	thisRect.origin = this->getPosition();
@@ -102,7 +102,7 @@ bool TextButton::onTouchBegin(Touch* touch, Event* touchEvent) {
 	return true;
 }
 
-void TextButton::onTouchEnded(Touch* touch, Event* touchEvent) {
+void TextButton::onTouchEnded(Touch* touch, cocos2d::Event* touchEvent) {
 	m_pBackground->setScale(1.0f);
 	m_bMouseOver = false;
 	m_bMousePressed = false;

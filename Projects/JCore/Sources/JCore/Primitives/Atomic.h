@@ -2,8 +2,11 @@
  * 작성자: 윤정도
  * 생성일: 12/6/2022 3:54:27 PM
  * =====================
- * enum, enum class는 아직 지원안함..
  * 만들고보니까 enum이 있었네;;
+ * 하......
+ * 여기서 enum 추가할려면 TypeTraits 를 써야해서
+ * 코드가 아름다워지지가 않는다.
+ * 깔끔하게 구현할만한 방법이 떠오르면 그때 하는걸로
  */
 
 
@@ -118,7 +121,8 @@ namespace JCore {
 
         T* Load() {
             T* expected = nullptr;
-            if (CompareExchange(expected, nullptr)) {
+            T* desired = nullptr;
+            if (CompareExchange(expected, desired)) {
                 return nullptr;
             }
 
@@ -166,9 +170,9 @@ namespace JCore {
         T* operator-=(int other) { return ExchangeAdd(other * -1) - other; }
 
         template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
-        T* operator==(U other) { return Load() == other; }
+        bool operator==(U other) { return Load() == other; }
         template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
-        T* operator!=(U other) { return Load() != other; }
+        bool operator!=(U other) { return Load() != other; }
     private:
         T* m_pValue;
     };

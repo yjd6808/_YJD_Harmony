@@ -229,7 +229,7 @@ protected:
 		ThrowIfRangeIsInvalid(startIdx, endIdx);
 
 		for (int i = startIdx; i <= endIdx; i++) {
-			Memory::PlacementDeallocate(m_pArray[i]);
+			Memory::PlacementDelete<IsPointerType_v<T>>(m_pArray[i]);
 		}
 	}
 
@@ -262,7 +262,7 @@ protected:
 
 	void SetAt(const int idx, const T& data) {
 		ThrowIfIndexIsInvalid(idx);
-		Memory::PlacementAllocate(m_pArray[idx]);
+		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
 		m_pArray[idx] = data;
 	}
 
@@ -271,31 +271,31 @@ protected:
 	///            예외를 던지기 때문에..
 	/// </summary>
 	void SetAtUnsafe(const int idx, const T& data) noexcept {
-		Memory::PlacementAllocate(m_pArray[idx]);
+		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
 		m_pArray[idx] = data;
 	}
 
 	void SetAtUnsafe(const int idx, T&& data) noexcept {
-		Memory::PlacementAllocate(m_pArray[idx]);
+		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
 		m_pArray[idx] = Move(data);
 	}
 
 	
 
 	void SetAt(const int idx, T&& data) {
-		Memory::PlacementAllocate(m_pArray[idx]);
+		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
 		m_pArray[idx] = Move(data);
 	}
 
 	template <typename... Args>
 	void EmplaceAt(const int idx, Args&&... args) {
 		ThrowIfIndexIsInvalid(idx);
-		Memory::PlacementAllocate(m_pArray[idx], Forward<Args>(args)...);
+		Memory::PlacementNew(m_pArray[idx], Forward<Args>(args)...);
 	}
 
 	void DestroyAt(const int idx) {
 		ThrowIfIndexIsInvalid(idx);
-		Memory::PlacementDeallocate(m_pArray[idx]);
+		Memory::PlacementDelete<IsPointerType_v<T>>(m_pArray[idx]);
 	}
 
 	/// <summary>

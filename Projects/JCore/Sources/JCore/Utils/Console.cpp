@@ -7,7 +7,8 @@
 
 namespace JCore {
     namespace Detail {
-        template class Console<RecursiveLock>;
-        template class Console<UnusedLock>;
     } // namespace Detail
+
+    template class Detail::Console<RecursiveLock>;
+    template class Detail::Console<UnusedLock>;
 } // namespace JCore

@@ -4,9 +4,6 @@
     <Filter Include="Container">
       <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Memory">
-      <UniqueIdentifier>{a943bf96-41ea-4b46-a660-1db5bcc34f35}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Logger">
       <UniqueIdentifier>{36d4b024-e19e-412b-bdcc-a3dc80d37bf6}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,12 @@
     </Filter>
     <Filter Include="RAII">
       <UniqueIdentifier>{6bbbfc96-8265-48d9-bf09-eaf309673f0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pool">
+      <UniqueIdentifier>{a943bf96-41ea-4b46-a660-1db5bcc34f35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{f90aa830-b8c1-49d3-a5a4-6a0870a7d2c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +99,12 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Threading\Thread.cpp">
       <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\System\JCoreSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\System\System.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,6 +311,33 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\ContainerType.h">
       <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPool.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolManager.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\ObjectPool.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStrategy.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolAllocationAlgorithm.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\IMemoryPool.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\System\JCoreSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\System\SingletonLifeCycle.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\System\System.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

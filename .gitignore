@@ -13,3 +13,4 @@ packages/
 Output/
 Projects/*/Output/
 Projects/*/Intermediate/
+ThirdParty/Build/

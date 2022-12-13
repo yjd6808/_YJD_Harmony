@@ -52,6 +52,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\System\JCoreSystem.cpp" />
+    <ClCompile Include="..\Sources\JCore\System\System.cpp" />
     <ClCompile Include="..\Sources\JCore\Threading\Thread.cpp">
       <SubType>
       </SubType>
@@ -197,6 +199,15 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\IMemoryPool.h" />
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPool.h" />
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolAllocationAlgorithm.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolManager.h" />
+    <ClInclude Include="..\Sources\JCore\Pool\ObjectPool.h" />
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStrategy.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\Atomic.h">
       <SubType>
       </SubType>
@@ -245,6 +256,9 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\System\JCoreSystem.h" />
+    <ClInclude Include="..\Sources\JCore\System\SingletonLifeCycle.h" />
+    <ClInclude Include="..\Sources\JCore\System\System.h" />
     <ClInclude Include="..\Sources\JCore\Threading\Thread.h">
       <SubType>
       </SubType>
@@ -341,7 +355,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\Sources</IncludePath>
-    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

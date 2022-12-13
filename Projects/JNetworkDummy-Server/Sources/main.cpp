@@ -1,6 +1,7 @@
 
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
+#include <JNetwork/PacketGenerator.h>
 #include <JNetwork/Host/TcpServer.h>
 
 #include <JCore/Utils/Console.h>
@@ -12,7 +13,7 @@ using namespace JNetwork;
 #define CMD_STATIC_MESSAGE	0
 #define CMD_DYNAMIC_MESSAGE	1
 
-struct StaticMessage : ICommand
+struct StaticMessage : StaticCommand
 {
 	StaticMessage() {
 		this->Cmd = CMD_STATIC_MESSAGE;	// 명령어 코드값 (개발시 사용)
@@ -23,7 +24,7 @@ struct StaticMessage : ICommand
 };
 
 
-struct DynamicMessage : ICommand
+struct DynamicMessage : DynamicCommand
 {
 	DynamicMessage(int len, char* msg) {
 		this->Length = len;
@@ -34,7 +35,7 @@ struct DynamicMessage : ICommand
 		pChat[len] = NULL;
 	}
 
-	static int CmdSizeOf(int len) {
+	static int SetAllocationSize(int len) {
 		return sizeof(DynamicMessage) + sizeof(char) * len;
 	}
 
@@ -85,7 +86,7 @@ protected:
 			SafeConsole::WriteLine("[서버] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", pDynamicMessage->Chat, pDynamicMessage->Length);
 
 			// 다이나믹 패킷 에코 진행
-			auto pPacket = new DynamicPacket<DynamicMessage>(DynamicMessage::CmdSizeOf(iLen + 1));
+			auto pPacket = new DynamicPacket<DynamicMessage>(DynamicMessage::SetAllocationSize(iLen + 1));
 			pPacket->Construct<0>(iLen, pDynamicMessage->Chat);
 
 			if (!receiver->SendAsync(pPacket)) {

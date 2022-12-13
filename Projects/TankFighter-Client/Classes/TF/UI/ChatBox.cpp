@@ -70,7 +70,7 @@ bool ChatBox::init(const Size& size)
 	return true;
 }
 
-void ChatBox::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
+void ChatBox::onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 
 	// 이거 안됨 ㄷㄷ 포커싱이 안먹히네 ㅠㅠ
 	// 엔터키 치면 Active Inacitve 전환되도록
@@ -89,7 +89,7 @@ void ChatBox::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 	}
 }
 
-void ChatBox::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
+void ChatBox::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 	// Not Implemented, Unused
 }
 

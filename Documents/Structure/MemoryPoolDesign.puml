@@ -1,0 +1,24 @@
+@startuml
+
+
+participant Vector [
+    <size:14><b>Vector</b></size>
+    ----
+]
+
+participant Allocator [
+    <size:14><b>Allocator</b></size>
+    ----
+]
+participant MemoryPool [
+    <size:14><b>MemoryPool</b></size>
+    ----
+]
+
+
+Vector --> Allocator: 객체 생성 요청
+Allocator --> MemoryPool: 객체 크기만큼의 메모리 요청
+MemoryPool --> Allocator: 객체 크기만큼의 메모리 반환
+Allocator --> Vector: 객체 생성 후 반환
+
+@enduml

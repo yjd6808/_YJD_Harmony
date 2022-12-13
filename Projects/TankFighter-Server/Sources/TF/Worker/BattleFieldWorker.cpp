@@ -183,7 +183,7 @@ void BattleFieldWorker::ProcessBattleFieldRoutineForRoom(Room* room) {
 
 		const int iRoomBattleStateUserCount = room->GetRoomBattleStateUserCount();
 		const auto pLocationPacket = new DynamicPacket<BattileFieldTankUpdateSyn>(
-			BattileFieldTankUpdateSyn::CmdSizeOf(iRoomBattleStateUserCount)
+			BattileFieldTankUpdateSyn::SetAllocationSize(iRoomBattleStateUserCount)
 		);
 		pLocationPacket->Construct<0>(iRoomBattleStateUserCount);
 		BattileFieldTankUpdateSyn* pBattileFieldTankUpdateSyn = pLocationPacket->Get<0>();

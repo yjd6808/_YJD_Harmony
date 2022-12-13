@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <JCore/Assert.h>
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
 #include <JCore/TypeTraits.h>
@@ -38,39 +39,67 @@ public:
 			pSrc += kiDataTypeSize;
 		}
 	}
-	
-	template <typename R>
-	static R Allocate(const int size) {
-		static_assert(IsPointerType_v<R>, "only cast to pointer type");
-		try {
-			return (R)operator new(size);
-		} catch (std::bad_alloc&) {
-			throw InvalidOperationException("메모리 할당에 실패하였습니다.");
-		}
+
+	// 메모리풀 구현전 임시로 사용할 메모리 할당 해제 함수
+	template <typename T>
+	static T Allocate(const Int32U size) {
+		static_assert(IsPointerType_v<T>, "only cast to pointer type");
+
+		try { return (T)operator new(size); }
+		catch (std::bad_alloc&) { throw InvalidOperationException("메모리 할당에 실패하였습니다."); }
 	}
 
 	static void Deallocate(void* ptr) {
-		if (ptr != nullptr) {
-            operator delete(ptr);
-		}
+		DebugAssertMessage(ptr != nullptr, "널 포인터를 해제하려고 하고 있어요");
+        operator delete(ptr);
 	}
 
-	template <typename T, typename... Args>
-	static void PlacementAllocate(T& ref, Args&&... args) {
-		if constexpr (!IsPointerType_v<T>)	// 포인터 타입이 아닌 녀석만..
-			::new (__builtin_addressof(ref)) T(Forward<Args>(args)...);
+
+	/*
+	 * Data  t1(0, 0)
+	 * Data* t2 = new Data(1, 1)
+	 *
+	 * PlacementAllocate(t1, 10, 10)
+	 *	 T	= Data
+	 *   T&	= Data&
+	 *	   => (2)를 수행해줘야함
+	 * PlacementAllocate(t2, 20, 20)
+	 *   T	= Data*
+	 *	 T& = Data*&
+	 *	   == (1)을 수행해줘야함
+	 *
+	 * Igore은 PlacementNew 기능이 필요없는 대상을 상대로 적용
+	 *  => Vector<Data> 는 PlacementNew 기능이 필요하다.
+	 *  => Vector<Data*>는 PlacementNew 기능이 필요없다.
+	 *
+	 *	그리고 인터페이스 클래스의 생성자/소멸자를 통해 직접적으로 생성 불가능한경우 이 함수를 호출하지 않도록 할 수 있다.
+	 *	  => private 혹은 protected로 보호된 경우
+	 *	  => 순수가상함수가 구현되어서 인스턴스를 생성할 수 없는 상태인 경우
+	 *	
+	 */
+	template <bool Ignore = false, typename T, typename... Args >
+	static void PlacementNew(T& ref, Args&&... args) {
+		using GenType = NakedType_t<T>;
+
+		if constexpr (Ignore)
+			return;
+		else if constexpr (IsPointerType_v<T>)								
+			::new (ref) GenType{ Forward<Args>(args)... };	// (1)
+		else															
+			::new (AddressOf(ref)) GenType(Forward<Args>(args)...); // (2)
 	}
 
-	
-	template <typename T>
-	static void PlacementDeallocate(const T& ref) {
-		if constexpr (IsPointerType_v<T>) {
-			if (ref != nullptr) {
-				ref.~T();
-			}
-		} else {
-			ref.~T();
-		}
+
+	template <bool Ignore = false, typename T, typename... Args >
+	static void PlacementDelete(T& ref, Args&&... args) {
+		using DelType = NakedType_t<T>;
+
+		if constexpr (Ignore)
+			return;
+		else if constexpr (IsPointerType_v<T>)
+			ref->~DelType();
+		else
+			ref.~DelType();
 	}
 
 };

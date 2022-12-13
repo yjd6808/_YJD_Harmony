@@ -22,9 +22,7 @@ using namespace JCore;
 void SendFn::SendUpdateFriendListAck(Player* player, int characterUID) {
 	const auto pPacket = new StaticPacket<UpdateFriendListAck>;
 	UpdateFriendListAck* pUpdateFriendListAck = pPacket->Get<0>();
-
-	std::string query(250, '\0');
-	query = "select * from t_character where c_uid = ( "
+	String query = "select * from t_character where c_uid = ( "
 						"select c_ack_character_uid from t_friendship where c_req_character_uid = ? "
 						"union all "
 						"select c_req_character_uid from t_friendship where c_ack_character_uid = ? "
@@ -91,6 +89,8 @@ void SendFn::SendRoomInfoAck(Room* room, Player* player) {
 // LoadCharacterInfoAck 패킷 전달
 // 캐릭터 정보들을 클라한테 전달함
 void SendFn::SendLoadCharacterInfoAck(Player* player) {
+	// PacketGenerator::Create<LoadCharacterInfoAck>()
+	//
 	const auto pPacket = new StaticPacket<LoadCharacterInfoAck>;
 	LoadCharacterInfoAck* pLoadCharacterInfoAck = pPacket->Get<0>();
 

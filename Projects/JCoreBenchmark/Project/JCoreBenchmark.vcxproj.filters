@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Research">
+      <UniqueIdentifier>{33aad24f-8892-4b0e-9aaf-b514ee916c2d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\JCoreBenchmark\CoreBenchmark.cpp" />
+    <ClCompile Include="..\Sources\JCoreBenchmark\Research\AllocationTest.cpp">
+      <Filter>Research</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreBenchmark\Research\VirtualAllocTest.cpp">
+      <Filter>Research</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\JCoreBenchmark\CoreBenchmark.h" />
+  </ItemGroup>
+</Project>

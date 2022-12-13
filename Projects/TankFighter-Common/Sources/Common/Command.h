@@ -123,7 +123,7 @@
 #pragma warning (push)
   #pragma warning (disable: 4200) // nonstandard extension used: zero-sized array in struct/union
 
-struct LoginSyn : JNetwork::ICommand
+struct LoginSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoginSyn, LOGIN_SYN)
 
@@ -131,7 +131,7 @@ struct LoginSyn : JNetwork::ICommand
 	char Password[PASS_LEN]{};
 };
 
-struct LoginAck : JNetwork::ICommand
+struct LoginAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoginAck, LOGIN_ACK)
 
@@ -140,7 +140,7 @@ struct LoginAck : JNetwork::ICommand
 	char Reason[REASON_LEN]{};
 };
 
-struct RegisterSyn : JNetwork::ICommand
+struct RegisterSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RegisterSyn, REGISTER_SYN)
 
@@ -148,7 +148,7 @@ struct RegisterSyn : JNetwork::ICommand
 	char Password[PASS_LEN]{};
 };
 
-struct RegisterAck : JNetwork::ICommand
+struct RegisterAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RegisterAck, REGISTER_ACK)
 
@@ -156,7 +156,7 @@ struct RegisterAck : JNetwork::ICommand
 	char Reason[REASON_LEN]{};
 };
 
-struct LoadChannelInfoSyn : JNetwork::ICommand
+struct LoadChannelInfoSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoadChannelInfoSyn, LOAD_CHANNEL_INFO_SYN)
 
@@ -164,7 +164,7 @@ struct LoadChannelInfoSyn : JNetwork::ICommand
 };
 
 // 최대 10개의 채널 정보까지 받을 수 있도록.
-struct LoadChannelInfoAck : JNetwork::ICommand
+struct LoadChannelInfoAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoadChannelInfoAck, LOAD_CHANNEL_INFO_ACK)
 
@@ -173,14 +173,14 @@ struct LoadChannelInfoAck : JNetwork::ICommand
 };
 
 
-struct SelectChannelSyn : JNetwork::ICommand
+struct SelectChannelSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(SelectChannelSyn, SELECT_CHANNEL_SYN)
 
 	int ChanneldUID = INVALID_UID;
 };
 
-struct SelectChannelAck : JNetwork::ICommand
+struct SelectChannelAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(SelectChannelAck, SELECT_CHANNEL_ACK)
 
@@ -189,7 +189,7 @@ struct SelectChannelAck : JNetwork::ICommand
 	int ChanneldUID{};
 };
 
-struct LoadCharacterInfoSyn : JNetwork::ICommand
+struct LoadCharacterInfoSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoadCharacterInfoSyn, LOAD_CHARACTER_INFO_SYN)
 
@@ -197,7 +197,7 @@ struct LoadCharacterInfoSyn : JNetwork::ICommand
 	int ChannelUID = INVALID_UID;
 };
 
-struct LoadCharacterInfoAck : JNetwork::ICommand
+struct LoadCharacterInfoAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoadCharacterInfoAck, LOAD_CHARACTER_INFO_ACK)
 
@@ -205,7 +205,7 @@ struct LoadCharacterInfoAck : JNetwork::ICommand
 	CharacterInfo Info[COMMAND_ARRAY_LEN];
 };
 
-struct CreateCharacterSyn : JNetwork::ICommand
+struct CreateCharacterSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(CreateCharacterSyn, CREATE_CHARACTER_SYN)
 
@@ -214,7 +214,7 @@ struct CreateCharacterSyn : JNetwork::ICommand
 	char CharacterName[NAME_LEN];
 };
 
-struct CreateCharacterAck : JNetwork::ICommand
+struct CreateCharacterAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(CreateCharacterAck, CREATE_CHARACTER_ACK)
 
@@ -222,7 +222,7 @@ struct CreateCharacterAck : JNetwork::ICommand
 	char Reason[REASON_LEN]{};
 };
 
-struct DeleteCharacterSyn : JNetwork::ICommand
+struct DeleteCharacterSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(DeleteCharacterSyn, DELETE_CHARACTER_SYN)
 
@@ -231,14 +231,14 @@ struct DeleteCharacterSyn : JNetwork::ICommand
 	char CharacterName[NAME_LEN];
 };
 
-struct DeleteCharacterAck : JNetwork::ICommand
+struct DeleteCharacterAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(DeleteCharacterAck, DELETE_CHARACTER_ACK)
 
 	char Reason[REASON_LEN]{};
 };
 
-struct SelectCharacterSyn : JNetwork::ICommand
+struct SelectCharacterSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(SelectCharacterSyn, SELECT_CHARACTER_SYN)
 
@@ -247,7 +247,7 @@ struct SelectCharacterSyn : JNetwork::ICommand
 	int CharacterUID	= INVALID_UID;
 };
 
-struct SelectCharacterAck : JNetwork::ICommand
+struct SelectCharacterAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(SelectCharacterAck, SELECT_CHARACTER_ACK)
 
@@ -258,7 +258,7 @@ struct SelectCharacterAck : JNetwork::ICommand
 
 
 
-struct JoinLobbySyn : JNetwork::ICommand
+struct JoinLobbySyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(JoinLobbySyn, JOIN_LOBBY_SYN)
 
@@ -267,7 +267,7 @@ struct JoinLobbySyn : JNetwork::ICommand
 	int CharacterUID = INVALID_UID;
 };
 
-struct UpdateCharacterInfoAck : JNetwork::ICommand
+struct UpdateCharacterInfoAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(UpdateCharacterInfoAck, UPDATE_CHARACTER_INFO_ACK)
 
@@ -276,7 +276,7 @@ struct UpdateCharacterInfoAck : JNetwork::ICommand
 	CharacterInfo Info{};
 };
 
-struct UpdateRoomListAck : JNetwork::ICommand
+struct UpdateRoomListAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(UpdateRoomListAck, UPDATE_ROOMLIST_ACK)
 
@@ -286,7 +286,7 @@ struct UpdateRoomListAck : JNetwork::ICommand
 	RoomInfo Info[COMMAND_ARRAY_LEN];
 };
 
-struct UpdateFriendListAck : JNetwork::ICommand
+struct UpdateFriendListAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(UpdateFriendListAck, UPDATE_FRIENDLIST_ACK)
 
@@ -294,14 +294,14 @@ struct UpdateFriendListAck : JNetwork::ICommand
 	CharacterInfo Info[COMMAND_ARRAY_LEN];
 };
 
-struct CreateRoomSyn : JNetwork::ICommand
+struct CreateRoomSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(CreateRoomSyn, CREATE_ROOM_SYN)
 
 	char RoomName[NAME_LEN];
 };
 
-struct CreateRoomAck : JNetwork::ICommand
+struct CreateRoomAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(CreateRoomAck, CREATE_ROOM_ACK)
 
@@ -312,7 +312,7 @@ struct CreateRoomAck : JNetwork::ICommand
 
 
 
-struct JoinRoomSyn : JNetwork::ICommand
+struct JoinRoomSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(JoinRoomSyn, JOIN_ROOM_SYN)
 
@@ -320,7 +320,7 @@ struct JoinRoomSyn : JNetwork::ICommand
 };
 
 
-struct JoinRoomAck : JNetwork::ICommand
+struct JoinRoomAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(JoinRoomAck, JOIN_ROOM_ACK)
 
@@ -330,7 +330,7 @@ struct JoinRoomAck : JNetwork::ICommand
 };
 
 
-struct UpdateRoomInfoAck : JNetwork::ICommand
+struct UpdateRoomInfoAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(UpdateRoomInfoAck, UPDATE_ROOMINFO_ACK)
 
@@ -340,14 +340,14 @@ struct UpdateRoomInfoAck : JNetwork::ICommand
 };
 
 
-struct AddFriendSyn : JNetwork::ICommand
+struct AddFriendSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(AddFriendSyn, ADD_FRIEND_SYN)
 
 	char FriendName[NAME_LEN];
 };
 
-struct AddFriendAck : JNetwork::ICommand
+struct AddFriendAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(AddFriendAck, ADD_FRIEND_ACK)
 
@@ -355,7 +355,7 @@ struct AddFriendAck : JNetwork::ICommand
 	char Reason[REASON_LEN];
 };
 
-struct AddFriendRequestSyn : JNetwork::ICommand
+struct AddFriendRequestSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestSyn, ADD_FRIEND_REQUEST_SYN)
 
@@ -363,7 +363,7 @@ struct AddFriendRequestSyn : JNetwork::ICommand
 	CharacterInfo Info;
 };
 
-struct AddFriendRequestAck : JNetwork::ICommand
+struct AddFriendRequestAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(AddFriendRequestAck, ADD_FRIEND_REQUEST_ACK)
 
@@ -372,7 +372,7 @@ struct AddFriendRequestAck : JNetwork::ICommand
 	int AcceptedCharacterUID;
 };
 
-struct DeleteFriendSyn : JNetwork::ICommand
+struct DeleteFriendSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(DeleteFriendSyn, DELETE_FRIEND_SYN)
 
@@ -380,7 +380,7 @@ struct DeleteFriendSyn : JNetwork::ICommand
 };
 
 
-struct DeleteFriendAck : JNetwork::ICommand
+struct DeleteFriendAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(DeleteFriendAck, DELETE_FRIEND_ACK)
 
@@ -389,7 +389,7 @@ struct DeleteFriendAck : JNetwork::ICommand
 	char Reason[REASON_LEN];
 };
 
-struct ServerMessageSyn : JNetwork::ICommand
+struct ServerMessageSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(ServerMessageSyn, SERVER_MESSAGE_SYN)
 
@@ -397,7 +397,7 @@ struct ServerMessageSyn : JNetwork::ICommand
 };
 
 
-struct LoadRoomInfoSyn : JNetwork::ICommand
+struct LoadRoomInfoSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoadRoomInfoSyn, LOAD_ROOM_INFO_SYN)
 
@@ -407,7 +407,7 @@ struct LoadRoomInfoSyn : JNetwork::ICommand
 	int RoomUID			= INVALID_UID;
 };
 
-struct LoadRoomInfoAck : JNetwork::ICommand
+struct LoadRoomInfoAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(LoadRoomInfoAck, LOAD_ROOM_INFO_ACK)
 
@@ -419,7 +419,7 @@ struct LoadRoomInfoAck : JNetwork::ICommand
 
 // 게임 시작/게임 난입 기능 동시에 처리하도록 함
 // 패킷 하나더 추가하면 되는데 귀찮기도 하고 걍 이래처리함
-struct RoomGameStartSyn : JNetwork::ICommand
+struct RoomGameStartSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomGameStartSyn, ROOM_GAME_START_SYN)
 
@@ -432,7 +432,7 @@ struct RoomGameStartSyn : JNetwork::ICommand
 
 // 게임 시작으로 동작할 경우 Result와 Reason만 사용됨
 // 게임 난입으로 동작할 경우 BattleFieldScene에서 해당 패킷을 모든 플레이어가 수신하여 난입자를 확인할 수 있도록 한다.
-struct RoomGameStartAck : JNetwork::ICommand
+struct RoomGameStartAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomGameStartAck, ROOM_GAME_START_ACK)
 
@@ -442,23 +442,23 @@ struct RoomGameStartAck : JNetwork::ICommand
 };
 
 
-struct RoomGameReadySyn : JNetwork::ICommand
+struct RoomGameReadySyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomGameReadySyn, ROOM_GAME_READY_SYN)
 };
 
-struct RoomGameReadyCancelSyn : JNetwork::ICommand
+struct RoomGameReadyCancelSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomGameReadyCancelSyn, ROOM_GAME_READY_CANCEL_SYN)
 };
 
 
-struct RoomLeaveSyn : JNetwork::ICommand
+struct RoomLeaveSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomLeaveSyn, ROOM_LEAVE_SYN)
 };
 
-struct RoomLeaveAck : JNetwork::ICommand
+struct RoomLeaveAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(RoomLeaveAck, ROOM_LEAVE_ACK)
 
@@ -467,12 +467,12 @@ struct RoomLeaveAck : JNetwork::ICommand
 };
 
 
-struct BattleFieldLoadSyn : JNetwork::ICommand
+struct BattleFieldLoadSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLoadSyn, BATTLE_FIELD_LOAD_SYN);
 };
 
-struct BattleFieldLoadAck : JNetwork::ICommand
+struct BattleFieldLoadAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLoadAck, BATTLE_FIELD_LOAD_ACK);
 
@@ -484,7 +484,7 @@ struct BattleFieldLoadAck : JNetwork::ICommand
 
 //클라는 일정주기마다 서버로 자신의 탱크 정보를 서버로 전송한다.
 //서버는 이 정보를 받아서 업데이트 시켜준다.
-struct BattileFieldTankMoveSyn : JNetwork::ICommand
+struct BattileFieldTankMoveSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattileFieldTankMoveSyn, BATTLE_FIELD_TANK_MOVE_SYN)
 
@@ -492,14 +492,14 @@ struct BattileFieldTankMoveSyn : JNetwork::ICommand
 };
 
 //서버는 일정주기마다 클라이언트들의 위치정보를 클라이언트들로 전송해주도록한다.
-struct BattileFieldTankUpdateSyn : JNetwork::ICommand
+struct BattileFieldTankUpdateSyn : JNetwork::DynamicCommand
 {
 	BattileFieldTankUpdateSyn(int count) {
 		Cmd = BATTLE_FIELD_TANK_UPDATE_SYN;
 		Count = count;
 	}
 
-	static Int16U CmdSizeOf(int count) {
+	static Int16U SetAllocationSize(int count) {
 		return sizeof(BattileFieldTankUpdateSyn) + sizeof(TankMove) * count;
 	}
 	
@@ -509,7 +509,7 @@ struct BattileFieldTankUpdateSyn : JNetwork::ICommand
 
 
 
-struct BattleFieldPlayWaitEndSyn : JNetwork::ICommand
+struct BattleFieldPlayWaitEndSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldPlayWaitEndSyn, BATTLE_FIELD_PLAYWAIT_END_SYN)
 
@@ -517,7 +517,7 @@ struct BattleFieldPlayWaitEndSyn : JNetwork::ICommand
 	float LeftTime;
 };
 
-struct BattleFieldPlayingEndSyn : JNetwork::ICommand
+struct BattleFieldPlayingEndSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldPlayingEndSyn, BATTLE_FIELD_PLAYING_END_SYN)
 
@@ -528,7 +528,7 @@ struct BattleFieldPlayingEndSyn : JNetwork::ICommand
 	int WinnerCharacetrUID = INVALID_UID;		// 승자 UID
 };
 
-struct BattleFieldEndWaitEndSyn : JNetwork::ICommand
+struct BattleFieldEndWaitEndSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldEndWaitEndSyn, BATTLE_FIELD_ENDWAIT_END_SYN)
 
@@ -536,65 +536,65 @@ struct BattleFieldEndWaitEndSyn : JNetwork::ICommand
 };
 
 
-struct BattleFieldLeaveSyn : JNetwork::ICommand
+struct BattleFieldLeaveSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLeaveSyn, BATTLE_FIELD_LEAVE_SYN);
 };
 
-struct BattleFieldLeaveAck : JNetwork::ICommand
+struct BattleFieldLeaveAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldLeaveAck, BATTLE_FIELD_LEAVE_ACK);
 	int CharacterUID = INVALID_UID;		// 나간 유저의 UID 이걸 확인해서 필드의 탱크를 삭제시켜주도록 하자
 										// 자기자신은 씬을 바꿔주도록 하자
 };
 
-struct ChatMessageSyn : JNetwork::ICommand
+struct ChatMessageSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(ChatMessageSyn, CHAT_MESSAGE_SYN);
 	PlayerState PlayerState;
 	char Message[MESSAGE_LEN];
 };
 
-struct ChatMessageAck : JNetwork::ICommand
+struct ChatMessageAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(ChatMessageAck, CHAT_MESSAGE_ACK);
 	char Message[MESSAGE_LEN];
 };
 
-struct BattleFieldFireSyn : JNetwork::ICommand
+struct BattleFieldFireSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldFireSyn, BATTLE_FIELD_FIRE_SYN);
 	BulletInfo BulletInfo;
 };
 
-struct BattleFieldFireAck : JNetwork::ICommand
+struct BattleFieldFireAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldFireAck, BATTLE_FIELD_FIRE_ACK);
 	BulletInfo BulletInfo;
 };
 
 
-struct BattleFieldDeathSyn : JNetwork::ICommand
+struct BattleFieldDeathSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldDeathSyn, BATTLE_FIELD_DEATH_SYN);
 	int CharacterUID = INVALID_UID;		// 누구한테 죽었는지
 };
 
-struct BattleFieldDeathAck : JNetwork::ICommand
+struct BattleFieldDeathAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldDeathAck, BATTLE_FIELD_DEATH_ACK);
 	int CharacterUID = INVALID_UID;		// 누가 죽었는지
 	float RevivalLeftTime;				// 부활까지 남은 시간
 };
 
-struct BattleFieldRevivalSyn : JNetwork::ICommand
+struct BattleFieldRevivalSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldRevivalSyn, BATTLE_FIELD_REVIVAL_SYN);
 	int CharacterUID = INVALID_UID;		// 누가 부활했는지
 	TankMove RevivalMove;						// 부활 위치
 };
 
-struct BattleFieldStatisticsUpdateSyn : JNetwork::ICommand
+struct BattleFieldStatisticsUpdateSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(BattleFieldStatisticsUpdateSyn, BATTLE_FILED_STATISTICS_UPDATE_SYN);
 
@@ -608,7 +608,7 @@ struct BattleFieldStatisticsUpdateSyn : JNetwork::ICommand
 // 서버는 이를 수신하고 수신한 시각을 클라이언트 정보에 기록한다.
 // 서버는 지속적으로 클라이언트의 시간을 체크하고 핑전송이 시간내로 않는 경우 강제로 연결을 끊어버리도록 한다.
 // 이러면 유령 플레이어가 생기는것을 막을 수 있을 듯 서버도 덜 혼잡해지고
-struct TcpRTTSyn : JNetwork::ICommand
+struct TcpRTTSyn : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(TcpRTTSyn, TCP_RTT_SYN)
 	Int64U Tick;			// 클라이언트 측에서 발송한 시각을 전달
@@ -616,7 +616,7 @@ struct TcpRTTSyn : JNetwork::ICommand
 
 // 핑을 수신하면 곧바로 대상에게 Ack를 전송해준다.
 // 클라는 이를 수신하고 클라이언트에 기록한다. 클라도 정해진 시간내로 ACK를 수신하지 않으면 연결을 끊도록 한다.
-struct TcpRTTAck : JNetwork::ICommand
+struct TcpRTTAck : JNetwork::StaticCommand
 {
 	CMD_DEFAULT_CONSTRUCTOR(TcpRTTAck, TCP_RTT_ACK)
 	Int64U Tick;			// 서버에서 수신한 시각을 담아서 클라로 전달

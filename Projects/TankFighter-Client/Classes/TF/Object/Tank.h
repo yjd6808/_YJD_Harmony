@@ -17,8 +17,8 @@ public:
 	void updateRotation(float delta);
 	void updatePosition(float delta);
 	void updateShotDelay(float delta);
-	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
-	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void setMoveable(bool enabled)								{ m_bMoveable = enabled; }
 	void setFireable(bool enabled)								{ m_bFireable = enabled; }
 
@@ -60,6 +60,6 @@ private:
 		RotateDirection::None,
 		0.0f,
 		TANK_ROTATION_SPEED };
-	HashMap<EventKeyboard::KeyCode, bool> m_KeyPressedMap;
+	JCore::HashMap<EventKeyboard::KeyCode, bool> m_KeyPressedMap;
 };
 

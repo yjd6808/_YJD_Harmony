@@ -67,6 +67,12 @@ Visual Studio 2022 or 2019 [필수]
 
 <br>
 
+## JCoreBenchmark 빌드 방법
+Scripts/BuildBenchmark/BuildVS2022.bat을 실행하여 구글 벤치마크 라이브러리를 뽑은 후  
+F5를 눌러서 간단하게 빌드 & 실행 할 수 있습니다.
+
+<br>
+
 ## 그 외의 프로젝트
 F5를 눌러서 간단하게 빌드 & 실행 할 수 있습니다.
 

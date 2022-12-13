@@ -106,7 +106,7 @@ protected:
 
 		// 기존에 이미 메모리 할당된 녀석은 데이터만 복사해준다.
 		while (pCur != m_pTail && pOtherCur != other.m_pTail) {
-			Memory::PlacementDeallocate(pCur->Value);
+			Memory::PlacementDelete(pCur->Value);
 			pCur->Value = pOtherCur->Value;
 			pCur = pCur->Next;
 			pOtherCur = pOtherCur->Next;
@@ -166,7 +166,7 @@ protected:
 
 		// 기존에 이미 메모리 할당된 녀석은 데이터만 복사해준다.
 		while (pCur != m_pTail && pOtherCur != ilist.end()) {
-			Memory::PlacementDeallocate(pCur->Value);
+			Memory::PlacementDelete(pCur->Value);
 			pCur->Value = *pOtherCur;
 			pCur = pCur->Next;
 			++pOtherCur;

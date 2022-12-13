@@ -14,16 +14,20 @@
 #include <JCore/Primitives/SmartPtr.h>
 #include <JCore/Primitives/String.h>
 
-#include <JCore/Sync/WaitHandle.h>
 
 #include <JCore/Encoding/CodePage.h>
 
+#include <JCore/Pool/MemoryPoolManager.h>
+
+
+#include <JCore/Sync/WaitHandle.h>
 
 #include <JCore/Wrapper/WinApi.h>
 #include <JCore/Wrapper/CRuntime.h>
 
 #include <JCore/Utils/Console.h>
 #include <JCore/Threading/Thread.h>
+#include <JCore/System/JCoreSystem.h>
 
 using namespace JCore;
 using namespace std;

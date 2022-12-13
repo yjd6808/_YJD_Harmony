@@ -15,8 +15,8 @@ public:
 	CREATE_FUNC(LoginLayer);
 
 	void update(float delta) override;
-	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) override;
-	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) override;
+	void onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
+	void onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
 
 	void OnClickedReconnectButton(TextButton* sender);
 	void OnClickedLoginButton(TextButton* sender);

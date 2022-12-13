@@ -11,7 +11,6 @@
 #include <JCore/Container/HashMap.h>
 #include <JCore/Container/ArrayQueue.h>
 
-
 #include <Common/Command.h>
 #include <Common/MemoryLeakDetector.h>
 #include <Common/Enum.h>
@@ -23,7 +22,7 @@
 
 
 // 간편한 호출을 위해
-#define _Client GameClient::GetInstance()
+inline GameClient* _Client = GameClient::GetInstance();
 
 /*
  * 라이브러리 활용을 위한 예제 프로젝트이므로 namespace를 생략하도록 합니다.

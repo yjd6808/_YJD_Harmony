@@ -2,15 +2,13 @@
 #include <TF/Network/GameClient.h>
 #include <Common/Command.h>
 
+extern class GameClient* _Client;
+
 #include <cocos2d.h>
 
 using namespace JCore;
 using namespace JNetwork;
 using namespace cocos2d;
-
-#ifndef _Client
-#define _Client GameClient::GetInstance()
-#endif
 
 // LOAD_CHANNEL_INFO_SYN 104
 bool SendFn::SendLoadChannelInfoSyn() {
