@@ -149,6 +149,8 @@ TEST(AtomicTest, Pointer) {
 
     a1.Store(nullptr);
     EXPECT_TRUE(a1 == nullptr);
+
+    delete orignal;
 }
 
 

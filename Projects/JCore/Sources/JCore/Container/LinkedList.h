@@ -117,9 +117,9 @@ public:
 		return TListCollection::Remove(iter);
 	}
 
-	template <typename Predicate>
-	bool RemoveIf(Predicate predicate) {
-		TListNode* pDel = TListCollection::FindNodeIf(predicate);
+	template <typename TPredicate>
+	bool RemoveIf(TPredicate&& predicate) {
+		TListNode* pDel = TListCollection::FindNodeIf(Move(predicate));
 
 		if (pDel == nullptr) {
 			return false;

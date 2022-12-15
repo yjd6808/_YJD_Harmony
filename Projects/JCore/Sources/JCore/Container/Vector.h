@@ -315,18 +315,18 @@ public:
 		TArrayCollection::Sort(NaturalOrder{});
 	}
 
-	template <typename Predicate>
-	void Sort(Predicate predicate) {
-		TArrayCollection::Sort(predicate);
+	template <typename TPredicate>
+	void Sort(TPredicate&& predicate) {
+		TArrayCollection::Sort(Move(predicate));
 	}
 
 	void SortRange(const int startIdx, const int endIdx) {
 		TArrayCollection::SortRange(startIdx, endIdx, NaturalOrder{});
 	}
 
-	template <typename Predicate>
-	void SortRange(const int startIdx, const int endIdx, Predicate predicate) {
-		TArrayCollection::SortRange(startIdx, endIdx, predicate);
+	template <typename TPredicate>
+	void SortRange(const int startIdx, const int endIdx, TPredicate&& predicate) {
+		TArrayCollection::SortRange(startIdx, endIdx, Move(predicate));
 	}
 
 	T& operator[](const int idx) const {

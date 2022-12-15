@@ -303,7 +303,7 @@ namespace JCore {
     extern template struct Interlocked<Int8U>;
     extern template struct Interlocked<Int16>;
     extern template struct Interlocked<Int16U>;
-    extern template struct Interlocked<WChar>;
+    extern template struct Interlocked<WideChar>;
     extern template struct Interlocked<Int32>;
     extern template struct Interlocked<Int32U>;
     extern template struct Interlocked<Int32L>;

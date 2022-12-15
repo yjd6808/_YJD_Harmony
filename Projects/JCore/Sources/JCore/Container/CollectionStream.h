@@ -123,8 +123,8 @@ public:
 		}
 	}
 
-	template <typename Predicate>
-	TCollectionStream& Filter(Predicate predicate) {
+	template <typename TPredicate>
+	TCollectionStream& Filter(TPredicate&& predicate) {
 		TStreamNode* pCur = m_pHead->Next;
 		int iSize = 0;
 		while (pCur != m_pTail) {
@@ -144,9 +144,9 @@ public:
 		return Sorted(NaturalOrder{});
 	}
 
-	template <typename Predicate>
-	TCollectionStream& Sorted(Predicate predicate) {
-		MergeSort(predicate);
+	template <typename TPredicate>
+	TCollectionStream& Sorted(TPredicate&& predicate) {
+		MergeSort(Move(predicate));
 		return *this;
 	}
 
@@ -173,8 +173,8 @@ protected:
 		return begin;
 	}
 
-	template <typename Predicate>
-	void MergeSort(Predicate predicate) {
+	template <typename TPredicate>
+	void MergeSort(TPredicate&& predicate) {
 		// 데이터가 1개 이하인 경우는 정렬 자체를 해줄 필요가 없다.
 		if (this->m_iSize <= 1) {
 			return;
@@ -187,7 +187,7 @@ protected:
 		pBegin->Previous = nullptr;
 		pEnd->Next = nullptr;
 
-		TStreamNode* pSorted = MergeSort(pBegin, predicate);
+		TStreamNode* pSorted = MergeSort(pBegin, Move(predicate));
 
 		if (pSorted == nullptr) {
 			return;
@@ -198,8 +198,8 @@ protected:
 		ConnectNode(EndNode(pSorted), m_pTail);
 	}
 
-	template <typename Predicate>
-	TStreamNode* MergeSort(TStreamNode* begin, Predicate predicate) {
+	template <typename TPredicate>
+	TStreamNode* MergeSort(TStreamNode* begin, TPredicate&& predicate) {
 		if (begin == nullptr) {
 			return nullptr;
 		}
@@ -227,14 +227,14 @@ protected:
 		if (pRightBegin != nullptr)
 			pRightBegin->Previous = nullptr;
 
-		pLeftBegin = MergeSort(pLeftBegin, predicate);
-		pRightBegin = MergeSort(pRightBegin, predicate);
+		pLeftBegin = MergeSort(pLeftBegin, Move(predicate));
+		pRightBegin = MergeSort(pRightBegin, Move(predicate));
 
-		return Merge(pLeftBegin, pRightBegin, predicate);
+		return Merge(pLeftBegin, pRightBegin, Move(predicate));
 	}
 
-	template <typename Predicate>
-	TStreamNode* Merge(TStreamNode* leftBegin, TStreamNode* rightBegin, Predicate predicate) {
+	template <typename TPredicate>
+	TStreamNode* Merge(TStreamNode* leftBegin, TStreamNode* rightBegin, TPredicate&& predicate) {
 		TStreamNode* pTemp = &m_ValtyTemp;
 
 		while (leftBegin != nullptr && rightBegin != nullptr) {

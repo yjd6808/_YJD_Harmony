@@ -7,9 +7,9 @@
 
 #include <JCore/Utils/Console.h>
 #include <JCore/Encoding/CodePage.h>
+#include <JCore/Debug/MemoryLeakDetector.h>
 
 #include <JNetwork/Winsock.h>
-#include <Common/MemoryLeakDetector.h>
 
 #ifdef _WIN64
   #error 이 예제는 x86 플랫폼으로만 빌드 가능합니다.

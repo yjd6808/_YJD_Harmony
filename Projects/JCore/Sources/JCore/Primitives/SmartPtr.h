@@ -1,6 +1,15 @@
 /*
  *	작성자 : 윤정도
  *	스마트 포인터 구현해보기
+ *
+ *	[현재 구현 사항]
+ *	  1. 유니크 포인터
+ *	  2. 위크 포인터
+ *	  3. 쉐어드 포인터
+ *	  4. 모두 배열 기능 지원
+ *	  5. Atomic 추가
+ *	  6. MakeSharedFromThis 구현
+ *	  7. 메모리풀링 지원
  *	=======================================================================================================================
  *
  *	배열 타입까지 구현해버리는 바람에 다이나믹 캐스팅이
@@ -56,6 +65,7 @@
 #include <JCore/TypeCast.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Assert.h>
+#include <JCore/Allocator/DefaultAllocator.h>
 #include <JCore/Primitives/Atomic.h>
 
 namespace JCore {
@@ -75,20 +85,20 @@ namespace JCore {
 
 // 전방 선언
 template <typename>	class SharedMaker;
-template <typename>	class UniqueMaker;
+template <typename, typename>	class UniqueMaker;
 template <typename>	class WeakPtr;
 template <typename>	class SharedPtr;
 template <typename>	class UniquePtr;
 template <typename>	class MakeSharedFromThis;
 
-template <typename T, typename... Args>
+template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
 constexpr decltype(auto) MakeShared(Args&&... args) {
 	return SharedMaker<T>::Create(Forward<Args>(args)...);
 }
 
-template <typename T, typename... Args>
+template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
 constexpr decltype(auto) MakeUnique(Args&&... args) {
-	return UniqueMaker<T>::Create(Forward<Args>(args)...);
+	return UniqueMaker<T, TAllocator>::Create(Forward<Args>(args)...);
 }
 
 
@@ -98,7 +108,7 @@ struct JCORE_NOVTABLE UniqueBase
 	virtual void DeleteSelf() = 0;
 };
 
-template <typename T>
+template <typename T, typename TAllocator>
 struct UniqueObject : UniqueBase
 {
 	using TDeletor = PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
@@ -112,7 +122,8 @@ struct UniqueObject : UniqueBase
 
 	void DeleteSelf() override {
 		TDeletor()(AddressOf(Object));
-		delete this;
+
+		TAllocator::template Deallocate<decltype(*this)>(this);		// static push
 	}
 
 	T* Address() const {
@@ -122,8 +133,8 @@ struct UniqueObject : UniqueBase
 	union { T Object; };
 };
 
-template <typename T, int Size>
-struct UniqueObject<T[Size]> : UniqueBase
+template <typename T, int Size, typename TAllocator>
+struct UniqueObject<T[Size], TAllocator> : UniqueBase
 {
 	using TDeletor = PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
 
@@ -138,7 +149,7 @@ struct UniqueObject<T[Size]> : UniqueBase
 
 	void DeleteSelf() override {
 		TDeletor()(Object);
-		delete this;
+		TAllocator::template Deallocate<decltype(*this)>(this);
 	}
 
 	T* Address() const {
@@ -148,15 +159,14 @@ struct UniqueObject<T[Size]> : UniqueBase
 	union { T Object[Size]; };
 };
 
-template <typename T>
-struct UniqueObject<T[]> : UniqueBase
+template <typename T, typename TAllocator>
+struct UniqueObject<T[], TAllocator> : UniqueBase
 {
-	using TDeletor = PlacementDeletor<T[], DeletorOption::Both>;
+	using TDeletor = PlacementDeletor<T[], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
 	explicit UniqueObject(int Size, Args&&... args) {
-		void* pRawMemory = operator new[](sizeof(T)* Size);
-		Pointer = (T*)(pRawMemory);
+		Pointer = TAllocator::template Allocate<T*>(sizeof(T) * Size, m_Allocated);
 
 		for (int i = 0; i < Size; i++) {
 			::new (Pointer + i) T{ Forward<Args>(args)... };
@@ -168,8 +178,13 @@ struct UniqueObject<T[]> : UniqueBase
 	~UniqueObject() override {}
 
 	void DeleteSelf() override {
+		// Pointer가 가리키는 배열 원소들 명시적으로 소멸자 호출
 		TDeletor()(Pointer, m_Size);
-		delete this;
+		// Pointer메모리 해제
+		TAllocator::Deallocate(Pointer, m_Allocated);		// dynamic push
+
+		// 이 객체의 메모리를 해제
+		TAllocator::template Deallocate<decltype(*this)>(this);		// static push
 	}
 
 	T* Address() const {
@@ -178,6 +193,7 @@ struct UniqueObject<T[]> : UniqueBase
 
 	union { T* Pointer; };
 	int m_Size;
+	int m_Allocated;
 };
 
 template <typename T>
@@ -277,7 +293,7 @@ private:
 	UniqueBase* m_Base = nullptr;
 	int m_Size = 0;
 
-	template <typename> friend class UniqueMaker;
+	template <typename, typename> friend class UniqueMaker;
 	template <typename> friend class UniquePtr;
 };
 
@@ -286,32 +302,34 @@ private:
 
 
 
-template <typename T>
+template <typename T, typename TAllocator>
 class UniqueMaker
 {
 	static const int ms_uiArraySize = 1;		// 기본적으로 길이는 무조건 1
 
 	using TUniquePtr = UniquePtr<T>;
-	using TUniqueObject = UniqueObject<T>;
+	using TUniqueObject = UniqueObject<T, TAllocator>;
 public:
 	template <typename... Args>
 	static constexpr TUniquePtr Create(Args&&... args) {
-		auto obj = new TUniqueObject(Forward<Args>(args)...);
+		auto obj = TAllocator::template Allocate<TUniqueObject>();
+		Memory::PlacementNew(obj, Forward<Args>(args)...);
 		TUniquePtr sp;
 		sp.SetUniquePtr(obj->Address(), obj, ms_uiArraySize);
 		return sp;
 	}
 };
 
-template <typename T, int ArraySize>
-class UniqueMaker<T[ArraySize]>
+template <typename T, int ArraySize, typename TAllocator>
+class UniqueMaker<T[ArraySize], TAllocator>
 {
 	using TUniquePtr = UniquePtr<T[ArraySize]>;
-	using TUniqueObject = UniqueObject<T[ArraySize]>;
+	using TUniqueObject = UniqueObject<T[ArraySize], TAllocator>;
 public:
 	template <typename... Args>
 	static constexpr TUniquePtr Create(Args&&... args) {
-		auto obj = new TUniqueObject(Forward<Args>(args)...);
+		auto obj = TAllocator::template Allocate<TUniqueObject>();
+		Memory::PlacementNew(obj, Forward<Args>(args)...);
 		TUniquePtr sp;
 		sp.SetUniquePtr(obj->Address(), obj, ArraySize);
 		return sp;
@@ -319,15 +337,16 @@ public:
 };
 
 
-template <typename T>
-class UniqueMaker<T[]>
+template <typename T, typename TAllocator>
+class UniqueMaker<T[], TAllocator>
 {
 	using TUniquePtr = UniquePtr<T[]>;
-	using TUniqueObject = UniqueObject<T[]>;
+	using TUniqueObject = UniqueObject<T[], TAllocator>;
 public:
 	template <typename... Args>
 	static constexpr TUniquePtr Create(int Size, Args&&... args) {
-		auto obj = new TUniqueObject(Size, Forward<Args>(args)...);
+		auto obj = TAllocator::template Allocate<TUniqueObject>();
+		Memory::PlacementNew(obj, Size, Forward<Args>(args)...);
 		TUniquePtr sp;
 		sp.SetUniquePtr(obj->Address(), obj, Size);
 		return sp;

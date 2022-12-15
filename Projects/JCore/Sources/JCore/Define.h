@@ -24,6 +24,7 @@
 
     #define In_
     #define Out_
+	#define OutOpt_
     #define InOut_
     #define InOpt_
 

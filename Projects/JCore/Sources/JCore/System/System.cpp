@@ -5,10 +5,26 @@
  */
 
 #include <JCore/Core.h>
-#include <JCore/System/SingletonLifeCycle.h>
+#include <JCore/Debug/MemoryLeakDetector.h>
+#include <JCore/System/PrioritySingleton.h>
 #include <JCore/System/System.h>
 
 namespace JCore {
+
+	MemoryLeakDetector leakDetector;
+
+	SystemAbstract::~SystemAbstract() {
+		SystemAbstract::OnTerminate();
+	}
+
+	void SystemAbstract::OnStartUp() {
+		ConstructGlobalObject();
+	}
+
+	void SystemAbstract::OnTerminate() {
+		DestroyGlobalObject();
+	}
+
 	void SystemAbstract::ConstructGlobalObject() {
 
 		// 우선순위대로 생성
@@ -40,8 +56,8 @@ namespace JCore {
 	}
 
 	// 명시된 클래스 생성 순서대로 삽입
-	void SystemAbstract::CreateClassConstructionOrder(ISingletonLifeCycle* cycledClass) {
-		auto pNewNode = new Detail::ManagedClassNode{ cycledClass, nullptr };
+	void SystemAbstract::CreateClassConstructionOrder(IPrioritySingleton* priorityClass) {
+		auto pNewNode = new Detail::ManagedClassNode{ priorityClass, nullptr };
 
 		if (m_pConstructionOrderHead == nullptr) {
 			m_pConstructionOrderHead = pNewNode;
@@ -73,8 +89,8 @@ namespace JCore {
 		m_pConstructionOrderTail = pNewNode;
 	}
 
-	void SystemAbstract::CreateClassDestructionOrder(ISingletonLifeCycle* cycledClass) {
-		auto pNewNode = new Detail::ManagedClassNode{ cycledClass, nullptr };
+	void SystemAbstract::CreateClassDestructionOrder(IPrioritySingleton* priorityClass) {
+		auto pNewNode = new Detail::ManagedClassNode{ priorityClass, nullptr };
 
 		if (m_pDestructionOrderHead == nullptr) {
 			m_pDestructionOrderHead = pNewNode;

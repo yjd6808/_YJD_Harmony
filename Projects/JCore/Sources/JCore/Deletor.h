@@ -13,43 +13,6 @@ namespace JCore {
 // 소멸자가 호출될 필요없는 경우에 사용하도록 하자.
 // @참고 : https://stackoverflow.com/questions/941832/is-it-safe-to-delete-a-void-pointer
 
-struct VoidDeletor
-{
-	VoidDeletor() = default;
-
-	void operator()(void * ptr) const {
-		delete ptr;
-	}
-};
-
-struct VoidDeletorSafe
-{
-	VoidDeletorSafe() = default;
-
-	void operator()(void** ptr) const {
-		delete *ptr;
-		*ptr = nullptr;
-	}
-};
-
-struct ArrayVoidDeletor
-{
-	ArrayVoidDeletor() = default;
-
-	void operator()(void* ptr) const {
-		delete[] ptr;
-	}
-};
-
-struct ArrayVoidDeletorSafe
-{
-	ArrayVoidDeletorSafe() = default;
-
-	void operator()(void** ptr) const {
-		delete[] *ptr;
-		*ptr = nullptr;
-	}
-};
 
 template <typename T>
 struct Deletor {

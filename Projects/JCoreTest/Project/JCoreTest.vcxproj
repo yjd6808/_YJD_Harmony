@@ -53,6 +53,10 @@
     <ClCompile Include="..\Sources\JCoreTest\HasherTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MathTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\MemoryTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Pool\MemoryPoolTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\Primitives\AtomicTest.cpp">
       <SubType>
       </SubType>

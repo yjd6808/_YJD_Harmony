@@ -4,9 +4,6 @@
     <Filter Include="Container">
       <UniqueIdentifier>{308c2458-ce51-462e-8870-446b4f833f96}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Logger">
-      <UniqueIdentifier>{36d4b024-e19e-412b-bdcc-a3dc80d37bf6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FileSystem">
       <UniqueIdentifier>{7038d21b-e1c5-4d79-9ab6-814f1c623e62}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,12 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{f90aa830-b8c1-49d3-a5a4-6a0870a7d2c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging">
+      <UniqueIdentifier>{9f02d35e-b4b6-4b98-a6dc-712183c2882f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{c6bcc2b2-c8c8-4f1d-83c8-c0e10e3f66f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -187,7 +190,7 @@
     <ClInclude Include="..\Sources\JCore\Container\MapCollection.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Container\KeyValuePair.h">
+    <ClInclude Include="..\Sources\JCore\Container\Pair.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\HashMap.h">
@@ -327,17 +330,33 @@
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolAllocationAlgorithm.h">
       <Filter>Pool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\IMemoryPool.h">
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolAbstract.h">
       <Filter>Pool</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\System\JCoreSystem.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\System\SingletonLifeCycle.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JCore\System\System.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\System\PrioritySingleton.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Debug\MemoryLeakDetector.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Allocator\DefaultPoolAllocator.h">
+      <Filter>Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStatistics.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolDetail.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\ByteUnit.h" />
+    <ClInclude Include="..\Sources\JCore\Debug\MemoryPoolLeakDetector.h">
+      <Filter>Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

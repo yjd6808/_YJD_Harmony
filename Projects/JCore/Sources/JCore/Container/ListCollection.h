@@ -437,8 +437,8 @@ protected:
 		return nullptr;
 	}
 
-	template <typename Predicate>
-	TListNode* FindNodeIf(Predicate predicate) {
+	template <typename TPredicate>
+	TListNode* FindNodeIf(TPredicate&& predicate) {
 		TListNode* pCur = m_pHead->Next;
 		while (pCur != m_pTail) {
 			if (predicate(pCur->Value)) {

@@ -16,7 +16,7 @@ namespace JCore {
 template <typename TKey, typename TValue>
 struct BucketNode
 {
-	using TKeyValuePair	 = KeyValuePair<TKey, TValue>;
+	using TKeyValuePair	 = Pair<TKey, TValue>;
 	using TBucketNode	 = BucketNode<TKey, TValue>;
 
 	bool operator==(const TBucketNode& other) {
@@ -90,7 +90,7 @@ class HashMap : public MapCollection<TKey, TValue>
 	using TBucket					= Bucket<TKey, TValue>;
 	using TBucketNode				= BucketNode<TKey, TValue>;
 	using TMapCollection			= MapCollection<TKey, TValue>;
-	using TKeyValuePair				= KeyValuePair<TKey, TValue>;
+	using TKeyValuePair				= Pair<TKey, TValue>;
 	using TIterator					= Iterator<TKeyValuePair>;
 	using THashMap					= HashMap<TKey, TValue>;
 	using THashMapIterator			= HashMapIterator<TKey, TValue>;

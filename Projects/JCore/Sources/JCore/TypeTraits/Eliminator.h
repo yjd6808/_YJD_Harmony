@@ -115,7 +115,7 @@ namespace JCore {
     using NaturalType_t = typename NaturalType<T>::Type;
 
     // 걍 다 벗김
-    // const volatile int[] => int
+    // const volatile int*[] => int
     template <typename T>
     using NakedType_t= RemoveArray_t<RemovePointer_t<NaturalType_t<T>>>;
 } // namespace JCore

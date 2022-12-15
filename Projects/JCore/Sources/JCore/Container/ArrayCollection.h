@@ -86,7 +86,7 @@ public:
 		if (this->m_iSize > 0) DestroyAtRange(0, this->m_iSize - 1);
 		this->m_iSize = 0;
 
-		if (removeHeap) {
+		if (removeHeap && m_pArray) {
 			Memory::Deallocate(m_pArray);
 			m_pArray = nullptr;
 		}
@@ -233,9 +233,9 @@ protected:
 		}
 	}
 
-	template <typename Predicate>
-	void Sort(Predicate predicate) {
-		Arrays::Sort(m_pArray, this->m_iSize, predicate);
+	template <typename TPredicate>
+	void Sort(TPredicate&& predicate) {
+		Arrays::Sort(m_pArray, this->m_iSize, Move(predicate));
 	}
 
 	void Sort() {
@@ -245,9 +245,9 @@ protected:
 	/// <summary>
 	/// startIdx 이상 endIdx이하에 위치한 원소들을 정렬한다.
 	/// </summary>
-	template <typename Predicate>
-	void SortRange(const int startIdx, const int endIdx, Predicate predicate) {
-		Arrays::SortRange(m_pArray, startIdx, endIdx, predicate);
+	template <typename TPredicate>
+	void SortRange(const int startIdx, const int endIdx, TPredicate&& predicate) {
+		Arrays::SortRange(m_pArray, startIdx, endIdx, Move(predicate));
 	}
 
 	void SortRange(const int startIdx, const int endIdx) {

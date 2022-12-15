@@ -14,7 +14,7 @@ template <typename> struct Hasher;
 template <typename, typename> class  HashMap; 
 template <typename, typename> struct Bucket;
 template <typename, typename> struct BucketNode;
-template <typename, typename> struct KeyValuePair;
+template <typename, typename> struct Pair;
 
 template <typename TKey, typename TValue>
 class HashMapIterator : public MapCollectionIterator<TKey, TValue>
@@ -23,7 +23,7 @@ class HashMapIterator : public MapCollectionIterator<TKey, TValue>
 	using TBucketNode			 = BucketNode<TKey, TValue>;
 	using TListNode				 = ListNode<BucketNode<TKey, TValue>>;
 	using THashMap				 = HashMap<TKey, TValue>;
-	using TKeyValuePair			 = KeyValuePair<TKey, TValue>;
+	using TKeyValuePair			 = Pair<TKey, TValue>;
 	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue>;
 public:
 	HashMapIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode) : TMapCollectionIterator(owner) {

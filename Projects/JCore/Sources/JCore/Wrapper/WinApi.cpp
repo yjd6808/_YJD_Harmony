@@ -318,7 +318,7 @@ namespace JCore {
     template struct Interlocked<Int8U>;
     template struct Interlocked<Int16>;
     template struct Interlocked<Int16U>;
-    template struct Interlocked<WChar>;
+    template struct Interlocked<WideChar>;
     template struct Interlocked<Int32>;
     template struct Interlocked<Int32U>;
     template struct Interlocked<Int32L>;

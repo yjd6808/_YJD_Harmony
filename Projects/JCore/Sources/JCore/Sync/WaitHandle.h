@@ -28,7 +28,7 @@ namespace JCore {
         bool Wait(Int32U timeout = JCoreInfinite);
         bool Signal();
         bool Reset();
-        String Name() const { return m_Name; }
+        const String& Name() { return m_Name; }
 
         void operator=(const WaitHandle& other) = delete;
         void operator=(WaitHandle&& other) noexcept;

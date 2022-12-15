@@ -14,16 +14,13 @@
 #pragma once
 
 
-#include <JCore/TypeTraits.h>
-
-
 namespace JCore {
-	struct ISingletonLifeCycle;
+	struct IPrioritySingleton;
 	namespace Detail {
 
-		// 시스템에서 직접 관리하는 클래스들
+		// 시스템에서 직접 생성/소멸을 관리하는 클래스들
 		struct ManagedClassNode {
-			ISingletonLifeCycle* Class{};
+			IPrioritySingleton* Class{};
 			ManagedClassNode* Next{};
 		};
 	}
@@ -32,13 +29,15 @@ namespace JCore {
 	struct SystemAbstract
 	{
 	public:
-		virtual ~SystemAbstract() = default;
+		virtual ~SystemAbstract();
 	protected:
-		virtual void RegisterSingletonLifeCycle(ISingletonLifeCycle* cycledClass) = 0;
+		virtual void OnStartUp();
+		virtual void OnTerminate();
+		virtual void RegisterPrioritySingleton(IPrioritySingleton* priorityClass) = 0;
 		void ConstructGlobalObject();
 		void DestroyGlobalObject();
-		void CreateClassConstructionOrder(ISingletonLifeCycle* cycledClass);
-		void CreateClassDestructionOrder(ISingletonLifeCycle* cycledClass);
+		void CreateClassConstructionOrder(IPrioritySingleton* priorityClass);
+		void CreateClassDestructionOrder(IPrioritySingleton* priorityClass);
 
 		Detail::ManagedClassNode* m_pConstructionOrderHead{};
 		Detail::ManagedClassNode* m_pConstructionOrderTail{};

@@ -25,10 +25,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\Common\MemoryLeakDetector.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\Common\Structure.h" />
     <ClInclude Include="..\Sources\Common\Vec2Template.h">
       <SubType>

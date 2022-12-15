@@ -34,6 +34,9 @@
 
 #include <JCore/TypeTraits.h>
 #include <JCore/Limit.h>
+#include <JCore/System/JCoreSystem.h>
+#include <JCore/Debug/MemoryLeakDetector.h>
+#include <JCore/Debug/MemoryPoolLeakDetector.h>
 
 using namespace std;
 using namespace JCore;
@@ -44,10 +47,11 @@ using namespace JCore;
 //출력 여부
 #define Print	OFF
 
-#define TestEnabled                 ON      // 전체 테스트 수행 여부
+#define TestEnabled                 OFF      // 전체 테스트 수행 여부
 #define BaseTestEnabled             ON      // JCore 테스트 수행 여부
 #define ContainerTestEnabled        ON      // JCore::Container 테스트 수행 여부
-#define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 실행 여부
+#define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 수행 여부
+#define PoolTestEnabled             ON      // JCore::Pool 테스트 코드 수행 여부
 #define PrimitivesTestEnabled       ON      // JCore::Primitives 테스트 수행 여부
 #define RAIITestEnabled             ON      // JCore::RAII 테스트 수행 여부
 #define SyncTestEnabled             ON      // JCore::Sync 테스트 수행 여부
@@ -55,7 +59,7 @@ using namespace JCore;
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-	#define TEST_AtomicTest     ON
+	#define TEST_MemoryPoolTest     ON
 #endif
 
 #if TestEnabled == ON
@@ -88,6 +92,9 @@ using namespace JCore;
 		#define TEST_AutoRefTest                ON
 	#endif
 
+	#if PoolTestEnabled == ON
+		#define TEST_MemoryPoolTest             ON
+	#endif
 
     #if PrimitivesTestEnabled == ON
 
@@ -149,37 +156,23 @@ void PrintFormat(Args&&... args) {
 }
 
 
-// 범위 메모리릭 체크
-// @코드 획득 주소 : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks
-class AutoMemoryLeakDetector
-{
-public:
-    AutoMemoryLeakDetector() {
-        _CrtMemCheckpoint(&memState_);
-    }
-
-    ~AutoMemoryLeakDetector() {
-        _CrtMemState stateNow, stateDiff;
-        _CrtMemCheckpoint(&stateNow);
-        const int diffResult = _CrtMemDifference(&stateDiff, &memState_, &stateNow);
-        
-        if (diffResult) {
-            reportFailure(stateDiff.lSizes[1]);
-            _CrtMemDumpStatistics(&stateDiff);
-        }
-    }
-private:
-    void reportFailure(unsigned int unfreedBytes) {
-        FAIL() << "Memory leak of " << unfreedBytes << " byte(s) detected.";
-    }
-    _CrtMemState memState_;
-};
-
 
 // https://stackoverflow.com/questions/1082192/how-to-generate-random-variable-names-in-c-using-macros
-#define CONCAT(a, b) CONCAT_INNER(a, b)
-#define CONCAT_INNER(a, b) a ## b
-#define LeakCheck AutoMemoryLeakDetector CONCAT(LeakCheck, __COUNTER__)
+#define LeakCheckConcat(a, b) LeakCheckConcatInner(a, b)
+#define LeakCheckConcatInner(a, b) a##b {[](Int32U unfreedBytes) { FAIL() << unfreedBytes << " 바이트 메모리릭\n"; }}
+#define LeakCheck AutoMemoryLeakDetector LeakCheckConcat(LeakCheck, __COUNTER__)
+
+
+#define MemoryPoolLeakCheckConcat(a, b) MemoryPoolLeakCheckConcatInner(a, b)
+#define MemoryPoolLeakCheckConcatInner(a, b) a##b {&JCoreMemPoolManager_v, [](Int64U unDeallocatedBytes, LinkedList<Pair<MemoryPoolAbstract*, Int64U>>& detail) {      \
+    String text(320);                                                                                                                          \
+    detail.Extension().ForEach([&text](Pair<MemoryPoolAbstract*, Int64U>& info) {                                                               \
+        text += StringUtil::Format("%s: %llu 바이트 메모리 릭\n", info.Key->Name().Source(), info.Value);                                         \
+    });                                                                                                                                         \
+    if (unDeallocatedBytes > 0)                                                                                                                 \
+		FAIL() << unDeallocatedBytes << " 바이트 메모리릭" << "\n" << text.Source() << "\n";                                                      \
+}};
+#define MemoryPoolLeakCheck AutMemoryPoolLeakDetector MemoryPoolLeakCheckConcat(MemoryPoolLeakCheck, __COUNTER__)
 
 // 테스트용 오브젝트들
 struct Animal

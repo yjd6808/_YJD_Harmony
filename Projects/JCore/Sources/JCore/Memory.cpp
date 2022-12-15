@@ -1,7 +1,7 @@
 /*
-	작성자 : 윤정도
-	메모리 조작을 도와주는 클래스입니다.
-*/
+ *	작성자 : 윤정도
+ *	메모리 조작을 도와주는 클래스입니다.
+ */
 
 #include <JCore/Core.h>
 #include <JCore/Memory.h>
@@ -10,12 +10,7 @@ namespace JCore {
 
 // memcpy_s와 기능이 동일합니다.
 void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
-#ifdef _DEBUG
-	if (dst == nullptr || src == nullptr || dstCapacityByte <= 0) {
-		DebugAssertMessage(false, "인자를 똑띠 전달해주세요");
-	}
-#endif
-
+	DebugAssertMessage(dst && src && dstCapacityByte > 0, "인자를 똑띠 전달해주세요");
 	int iCopiedBytes = 0;
 
 	Byte* pDst = static_cast<Byte*>(dst);
@@ -32,12 +27,7 @@ void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const i
 
 // memcpy와 기능이 동일합니다.
 void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
-#ifdef _DEBUG
-	if (dst == nullptr || src == nullptr) {
-		DebugAssertMessage(false, "인자를 똑띠 전달해주세요");
-	}
-#endif
-
+	DebugAssertMessage(dst && src, "인자를 똑띠 전달해주세요");
 	int iCopiedBytes = 0;
 
 	Byte* pDst = static_cast<Byte*>(dst);
@@ -53,12 +43,7 @@ void Memory::CopyUnsafe(void* dst, const void* src, const int srcCopyByte) {
 }
 
 void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
-#ifdef _DEBUG
-	if (dst == nullptr || src == nullptr || dstCapacityByte <= 0) {
-		DebugAssertMessage(false, "인자를 똑띠 전달해주세요");
-	}
-#endif
-
+	DebugAssertMessage(dst && src && dstCapacityByte > 0, "인자를 똑띠 전달해주세요");
 	int iCopiedBytes = 0;
 
 	Byte* pDst = (Byte*)dst;
@@ -76,12 +61,7 @@ void Memory::CopyReverse(void* dst, const int dstCapacityByte, const void* src, 
 }
 
 void Memory::CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte) {
-#ifdef _DEBUG
-	if (dst == nullptr || src == nullptr) {
-		DebugAssertMessage(false, "인자를 똑띠 전달해주세요");
-	}
-#endif
-
+	DebugAssertMessage(dst && src, "인자를 똑띠 전달해주세요");
 	int iCopiedBytes = 0;
 
 	Byte* pDst = (Byte*)dst;

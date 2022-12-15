@@ -44,87 +44,27 @@
 #include <JCore/Container/Arrays.h>
 #include <JCore/Container/HashMap.h>
 
-#include <JCore/Pool/IMemoryPool.h>
+#include <JCore/Pool/MemoryPoolAbstract.h>
 #include <JCore/Pool/MemoryPoolStrategy.h>
 #include <JCore/Pool/MemoryPoolAllocationAlgorithm.h>
 
 
 namespace JCore {
-	namespace Detail {
-
-		// 53바이트, 73바이트 뭐 이런식으로 정밀하게 할당해줄 수 없기때문에
-		// 53바이트를 요청하면 64바이트를
-		// 74바이트를 요청하면 128바이트를 할당해주는 식으로 처리
-
-		// C는 컴파일타임에 사용하는 용도
-		// R은 런타임에 사용하는 용도
-
-		// 1, 2, 4, 8, 16 ... 8'388'608, 16'777'216
-		inline constexpr int CAllocationLengthMap_v[]{
-			1 << 0,  1 << 1,  1 << 2,  1 << 3,  1 << 4,
-			1 << 5,  1 << 6,  1 << 7,  1 << 8,  1 << 9,
-			1 << 10, 1 << 11, 1 << 12, 1 << 13, 1 << 14,
-			1 << 15, 1 << 16, 1 << 17, 1 << 18, 1 << 19,
-			1 << 20, 1 << 21, 1 << 22, 1 << 23, 1 << 24
-		};
-
-		inline const int RAllocationLengthMap_v[]{
-			1 << 0,  1 << 1,  1 << 2,  1 << 3,  1 << 4,
-			1 << 5,  1 << 6,  1 << 7,  1 << 8,  1 << 9,
-			1 << 10, 1 << 11, 1 << 12, 1 << 13, 1 << 14,
-			1 << 15, 1 << 16, 1 << 17, 1 << 18, 1 << 19,
-			1 << 20, 1 << 21, 1 << 22, 1 << 23, 1 << 24
-		};
-
-		inline constexpr int AllocationLegthMapSize_v = sizeof(CAllocationLengthMap_v) / sizeof(int);
-
-		// 예를들어서
-		// 64바이트 -> 6으로 변환
-		//  6을    -> 64바이트로 변환 해주는 기능 수행
-		struct AllocationLengthMapConverter {
-			template <Int32 Size, Int32 Index = 0>
-			static constexpr int ToIndex() {
-				static_assert(Index >= 0 && Index < AllocationLegthMapSize_v, "... cannot find valid index [AllocationLengthMapConverter]");
-				if constexpr (Size <= CAllocationLengthMap_v[Index])
-					return Index;
-				else
-					return ToIndex<Size, Index + 1>();
-			}
-
-
-			template <Int32 Index>
-			static constexpr int ToSize() {
-				static_assert(Index >= 0 && Index < AllocationLegthMapSize_v, "... cannot find valid size [AllocationLengthMapConverter]");
-				return CAllocationLengthMap_v[Index];
-			}
-
-			static int ToIndex(Int32 size) {
-				int iIndex = Arrays::LowerBound(Detail::RAllocationLengthMap_v, size);
-				DebugAssertMessage(iIndex >= 0 && iIndex < AllocationLegthMapSize_v, "전달한 Size로 할당가능한 사이즈에 맞는 풀이 없어요");
-				return iIndex;
-			}
-
-			static int ToSize(Int32 index) {
-				DebugAssertMessage(index >= 0 && index < AllocationLegthMapSize_v, "전달한 Index에 해당하는 풀이 없어요");
-				return Detail::CAllocationLengthMap_v[index];
-			}
-		};
-	}
-
-
-
+	
 	template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm>
 	class MemoryPool {};
 
-	template<>
-	class MemoryPool<eSingle, eBinarySearch> : public IMemoryPool
+
+	
+	template <>
+	class MemoryPool<eSingle, eBinarySearch> : public MemoryPoolAbstract
 	{
 	private:
-		MemoryPool() = default;
+		MemoryPool(int slot, const String& name, bool skipInitialize = false): MemoryPoolAbstract(slot, name, skipInitialize) {}
 	public:
-		template <int PopSize>
+		template <int RequestSize>
 		void* StaticPop()  {
-			constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<PopSize>();
+			constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
 			constexpr int iFitSize = Detail::AllocationLengthMapConverter::ToSize<iIndex>();
 
 			void* pMemoryBlock = nullptr;
@@ -132,68 +72,91 @@ namespace JCore {
 				LockGuard<NormalLock> guard(m_Lock);
 
 				if (m_Pool[iIndex].IsEmpty()) {
+					AddAllocated(iIndex, true);
 					return Memory::Allocate<void*>(iFitSize);
 				}
 
 				pMemoryBlock = m_Pool[iIndex].Top();
 				m_Pool[iIndex].Pop();
 			}
+			AddAllocated(iIndex, false);
 			return pMemoryBlock;
 		}
 
-		void* DynamicPop(int size) override {
-			int iIndex = Detail::AllocationLengthMapConverter::ToIndex(size);
+		void* DynamicPop(int requestSize, int& realAllocatedSize) override {
+			int iIndex = Detail::AllocationLengthMapConverter::ToIndex(requestSize);
+			int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);
+
+			realAllocatedSize = iFitSize;
 			void* pMemoryBlock = nullptr;
+
 			{
 				LockGuard<NormalLock> guard(m_Lock);
 
 				if (m_Pool[iIndex].IsEmpty()) {
-					int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);
+					AddAllocated(iIndex, true);
 					return Memory::Allocate<void*>(iFitSize);
 				}
 
 				pMemoryBlock = m_Pool[iIndex].Top();
 				m_Pool[iIndex].Pop();
 			}
+			AddAllocated(iIndex, false);
 			return pMemoryBlock;
 		}
 
 		template <int PushSize>
 		void StaticPush(void* memory) {
+			static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
 			int index = Detail::AllocationLengthMapConverter::ToIndex<PushSize>();
 			LockGuard<NormalLock> guard(m_Lock);
+			AddDeallocated(index);
 			m_Pool[index].Push(memory);
 		}
 
-		void DynamicPush(void* memory, int size) override {
-			int index = Detail::AllocationLengthMapConverter::ToIndex(size);
+		void DynamicPush(void* memory, int returnSize) override {
+			DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(returnSize), "뭐야! 사이즈가 안맞자나!");
+			int index = Detail::AllocationLengthMapConverter::ToIndex(returnSize);
 			LockGuard<NormalLock> guard(m_Lock);
+			AddDeallocated(index);
 			m_Pool[index].Push(memory);
 		}
 
-		void Initialize(const HashMap<int, int>& Counter) override {
-			const_cast<HashMap<int, int>&>(Counter).Extension().ForEach([this](KeyValuePair<int, int>& count) {
+
+		void Initialize(const HashMap<int, int>& allocationMap) override {
+			const_cast<HashMap<int, int>&>(allocationMap).Extension().ForEach([this](Pair<int, int>& count) {
 				int iSize = count.Key;
 				int iCount = count.Value;
 				int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iSize);
+				DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
 
 				for (int i = 0; i < iCount; ++i) {
 					m_Pool[iIndex].Push(Memory::Allocate<void*>(iSize));
 				}
+
+				AddInitBlock(iIndex);
 			});
+
+			m_bInitialized = true;
 		}
 
 		// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
 		void Finalize() override {
-			for (int i = 0; i < Detail::AllocationLegthMapSize_v; ++i) {
+			DebugAssertMessage(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
+
+			for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
 				while (!m_Pool[i].IsEmpty()) {
 					Memory::Deallocate(m_Pool[i].Top());
 					m_Pool[i].Pop();
 				}
 			}
 		}
+
+		int Strategy() override { return eSingle; }
+		int Algorithm() override { return eBinarySearch; }
+		
 	private:
-		ArrayStack<void*> m_Pool[Detail::AllocationLegthMapSize_v];
+		ArrayStack<void*> m_Pool[Detail::MemoryBlockSizeMapSize_v];
 		NormalLock m_Lock;
 
 		friend class MemoryPoolManager;

@@ -101,6 +101,9 @@
     <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadTest.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Pool\MemoryPoolTest.cpp">
+      <Filter>Pool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
@@ -126,6 +129,9 @@
     </Filter>
     <Filter Include="RAII">
       <UniqueIdentifier>{bc47146e-bb48-4abc-bdb8-f2e59d2f8296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pool">
+      <UniqueIdentifier>{eda00c72-9c10-42f4-be6b-7eb4293c1bad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

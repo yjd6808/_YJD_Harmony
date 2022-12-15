@@ -18,7 +18,7 @@ using namespace std;
 
 // 유니크 포인터 테스트
 TEST(SmartPointerTest, UniquePointer) {
-	AutoMemoryLeakDetector leak;
+	LeakCheck;
 
 	const UniquePtr<int> g1 = MakeUnique<int>();
 	const UniquePtr<int> g2 = MakeUnique<int>();

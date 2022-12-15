@@ -1,3 +1,8 @@
+/*
+ * 작성자: 윤정도
+ * 내가 보기좋은 데이터 타입
+ */
+
 #pragma once
 
 using Int64		= long long;
@@ -15,7 +20,7 @@ using Char		= char;
 using Double	= double;
 using LDouble	= long double;
 using Byte		= unsigned char;
-using WChar		= wchar_t;
+using WideChar	= wchar_t;
 
 using PInt64	= long long*;
 using PInt64U	= unsigned long long*;

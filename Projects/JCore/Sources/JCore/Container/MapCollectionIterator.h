@@ -15,12 +15,12 @@ template <typename>
 class ListCollection;
 
 template <typename, typename> 
-struct KeyValuePair;
+struct Pair;
 
 template <typename TKey, typename TValue>
-class JCORE_NOVTABLE MapCollectionIterator : public Iterator<KeyValuePair<TKey, TValue>>
+class JCORE_NOVTABLE MapCollectionIterator : public Iterator<Pair<TKey, TValue>>
 {
-	using TKeyValuePair = KeyValuePair<TKey, TValue>;
+	using TKeyValuePair = Pair<TKey, TValue>;
 	using TIterator		= Iterator<TKeyValuePair>;
 public:
 	MapCollectionIterator(VoidOwner& owner) : TIterator(owner) {}

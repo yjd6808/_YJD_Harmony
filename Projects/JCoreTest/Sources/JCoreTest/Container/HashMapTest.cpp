@@ -60,7 +60,7 @@ TEST(HashMapTest, EnumeratorTest) {
 	// 정방향 반복자 테스트
 	const auto mapIter = map.Begin();
 	for (int i = 0; i < mapIter->HasNext(); i++) {
-		KeyValuePair<int, int>& pair = mapIter->Next();
+		Pair<int, int>& pair = mapIter->Next();
 		EXPECT_TRUE(map.Exist(pair.Key));
 		EXPECT_TRUE(map.Values().Extension().Exist(i + 1));	
 	}
@@ -78,7 +78,7 @@ TEST(HashMapTest, EnumeratorTest) {
 	// 반대방향 반복자 테스트
 	const auto mapRIter = map.End();
 	for (int i = 9; mapRIter->HasPrevious(); i--) {
-		KeyValuePair<int, int>& pair = mapRIter->Previous();
+		Pair<int, int>& pair = mapRIter->Previous();
 		EXPECT_TRUE(map.Exist(pair.Key));
 		EXPECT_TRUE(map.Values().Extension().Exist(pair.Value));
 	}

@@ -34,7 +34,7 @@ public:
 
 
 	template <typename Consumer>
-	void ForEach(Consumer consumer) {
+	void ForEach(Consumer&& consumer) {
 		TEnumerator it = m_pCollection->Begin();
 		while (it->HasNext()) {
 			consumer(it->Next());
@@ -51,8 +51,8 @@ public:
 		return false;
 	}
 
-	template <typename Predicate>
-	bool ExistIf(Predicate predicate) {
+	template <typename TPredicate>
+	bool ExistIf(TPredicate&& predicate) {
 		TEnumerator it = m_pCollection->Begin();
 		while (it->HasNext()) {
 			if (predicate(it->Next())) {
@@ -62,10 +62,10 @@ public:
 		return false;
 	}
 
-	template <typename Predicate>
-	TCollectionStream Filter(Predicate predicate) {
+	template <typename TPredicate>
+	TCollectionStream Filter(TPredicate&& predicate) {
 		TCollectionStream collection(m_pCollection);
-		collection.Filter(predicate);
+		collection.Filter(Move(predicate));
 		return collection;
 	}
 
@@ -98,8 +98,8 @@ public:
         return nullptr;
 	}
 
-	template <typename Predicate>
-	T* FindIf(Predicate predicate) {
+	template <typename TPredicate>
+	T* FindIf(TPredicate&& predicate) {
 		if (m_pCollection->Size() == 0) {
 			return nullptr;
 		}
@@ -121,10 +121,10 @@ public:
 		return Sorted(NaturalOrder{});
 	}
 
-	template <typename Predicate>
-	TCollectionStream Sorted(Predicate predicate) {
+	template <typename TPredicate>
+	TCollectionStream Sorted(TPredicate&& predicate) {
 		TCollectionStream collection(m_pCollection);
-		collection.Sorted(predicate);
+		collection.Sorted(Move(predicate));
 		return collection;
 	}
 

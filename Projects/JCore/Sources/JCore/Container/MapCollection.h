@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <JCore/Container/KeyValuePair.h>
+#include <JCore/Container/Pair.h>
 #include <JCore/Container/Collection.h>
 #include <JCore/Container/MapCollectionIterator.h>
 
@@ -16,9 +16,9 @@ namespace JCore {
 =====================================================================================*/
 
 template <typename TKey, typename TValue>
-class JCORE_NOVTABLE MapCollection : public Collection<KeyValuePair<TKey, TValue>>
+class JCORE_NOVTABLE MapCollection : public Collection<Pair<TKey, TValue>>
 {
-	using TKeyValuePair			 = KeyValuePair<TKey, TValue>;
+	using TKeyValuePair			 = Pair<TKey, TValue>;
 	using TCollection			 = Collection<TKeyValuePair>;
 	using TMapCollection		 = MapCollection<TKey, TValue>;
 	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue>;
