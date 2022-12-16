@@ -5,6 +5,7 @@
  * 내가 사용할 통합 싱글톤 기능 구현
  * 따로 우선순위 싱글톤 자료를 참고하지 않고 내 생각대로만 구현한 것이므로 이것도
  * 나중에 실제 구현 참고해봐야할 듯?
+ * 근데 우선순위 싱글톤이란게 있나?
  *
  *  - Singleton<T> 상속시에는 단순한 더블체크드롹킹 싱글톤
  *  - ConstructionPrioritySingleton<T, Int>를 상속시에는 생성자를 지정한 순서대로 호출해줌 (사용시 주의사항 읽을 것)
@@ -45,13 +46,16 @@
 
 #include <JCore/Sync/UnusedLock.h>
 #include <JCore/Sync/NormalLock.h>
-#include <JCore/System/JCoreSystem.h>
 
 namespace JCore {
+	struct IPrioritySingleton;
 	namespace Detail {
-		constexpr int NotUsePriority = -1;
-		
+		constexpr int IgnorePriority = -1;	// 생성: 생성자 우선순위 리스트에 등록안함. GetInstance() 호출시 즉시 생성
+											// 삭제: 우선순위가 -1로 소멸자 리스트에 등록 따라서 최상위 우선순위로 삭제.
+											// IgnorePriority 들끼리는 뭐가 먼저 삭제될지 모름
+		void RegisterPrioritySingleton(int SystemCode, IPrioritySingleton* managedSingleton);
 	}
+
 	struct IPrioritySingleton
 	{
 		virtual void Construct() = 0;
@@ -61,14 +65,15 @@ namespace JCore {
 		virtual ~IPrioritySingleton() = default;
 	};
 
-	template<typename T, Int32 ConstructionPriority, Int32 DestructionPriority>
+
+	template<Int32U SystemCode, typename T, Int32 ConstructionPriority, Int32 DestructionPriority>
 	class PrioritySingleton : public IPrioritySingleton
 	{
 		static constexpr bool IsEnabledConstruction = ConstructionPriority >= 0;		// 생성자 호출을 시스템에 위임한 경우
 		static constexpr bool IsEnabledDestruction = DestructionPriority >= 0;			// 소멸자 호출을 시스템에 위임한 경우
 
 		using TLock = Conditional_t<IsEnabledConstruction, UnusedLock, NormalLock>;
-		using TClassType = PrioritySingleton<T, ConstructionPriority, DestructionPriority>;
+		using Type = PrioritySingleton<SystemCode, T, ConstructionPriority, DestructionPriority>;
 	public:
 		static T& GetInstance() {
 
@@ -91,7 +96,7 @@ namespace JCore {
 		PrioritySingleton(){}
 
 		void Construct() override {
-			if constexpr (ConstructionPriority > Detail::NotUsePriority) {
+			if constexpr (ConstructionPriority > Detail::IgnorePriority) {
 				DebugAssertMessage(ms_pDefaultValue == nullptr, "무조건 한번만 호출되어야합니다.");
 				ms_pDefaultValue = new T();
 			}
@@ -101,11 +106,17 @@ namespace JCore {
 			DeleteSafe(ms_pDefaultValue);
 		}
 	private:
-		struct ConstructorCall {
-			ConstructorCall() {
-				if constexpr (IsEnabledConstruction) {
-					static TClassType s_TypeHolder;
-					JCoreSystem_v.RegisterPrioritySingleton(&s_TypeHolder);
+
+		struct ConstructorCall {																
+			ConstructorCall() {																	
+				if constexpr (IsEnabledConstruction) {											
+					static Type s_TypeHolder;													
+
+					// System.h 의존성을 없애고
+					// 여러 시스템에서 범용적으로 사용가능한 싱글톤 기능을 수행토록 하기 위해
+					// 어쩔수없이 소스파일로 기능을 뺏다.
+					// 우선순위 싱글톤 구현방법이 이 방식밖에 안떠올라서 마음에 안들지만 어쩔수가 없다.
+					Detail::RegisterPrioritySingleton(SystemCode, &s_TypeHolder); 
 				}
 			}
 		};
@@ -115,14 +126,17 @@ namespace JCore {
 		inline static TLock ms_Lock;
 	};
 
-	template <typename T, Int32 ConstructionPriority>
-	class ConstructionPrioritySingleton : public PrioritySingleton<T, ConstructionPriority, Detail::NotUsePriority> {};
+	template <Int32U SystemCode, typename T, Int32 ConstructionPriority, Int32 DestructionPriority>
+	using PSingleton = PrioritySingleton<SystemCode, T, ConstructionPriority, DestructionPriority>;
 
-	template <typename T, Int32 DestructionPriority>
-	class DestructionPrioritySingleton : public PrioritySingleton<T, Detail::NotUsePriority, DestructionPriority>{};
+	template <Int32U SystemCode, typename T, Int32 DestructionPriority>
+	using DPSingleton = PrioritySingleton<SystemCode, T, Detail::IgnorePriority, DestructionPriority>;
 
-	template <typename T>
-	class Singleton : public PrioritySingleton<T, Detail::NotUsePriority, Detail::NotUsePriority> {};
+	template <Int32U SystemCode, typename T, Int32 ConstructionPriority>
+	using CPSingleton = PrioritySingleton<SystemCode, T, ConstructionPriority, Detail::IgnorePriority>;
+
+	template <Int32U SystemCode, typename T>
+	using Singleton = PrioritySingleton<SystemCode, T, Detail::IgnorePriority, Detail::IgnorePriority>;
 
 	
 } // namespace JCore

@@ -13,8 +13,22 @@ namespace JCore {
 
 	MemoryLeakDetector leakDetector;
 
+	SystemAbstract::SystemAbstract(int code) {
+		DebugAssertMessage(code >= 0 && code <= Detail::MaxSystemCode_v, "시스템 코드번호는 0 ~ 64사이로만 지정가능합니다.");
+		DebugAssertMessage(SystemMap_v[code] == nullptr, "이미 해당 코드번호에 해당하는 시스템이 존재합니다.");
+		m_iCode = code;
+		SystemMap_v[code] = this;
+	}
+
 	SystemAbstract::~SystemAbstract() {
 		SystemAbstract::OnTerminate();
+	}
+
+	void SystemAbstract::RegisterPrioritySingleton(IPrioritySingleton* priorityClass) {
+		if (priorityClass->GetConstructionPriority() >= 0)
+			CreateClassConstructionOrder(priorityClass);
+
+		CreateClassDestructionOrder(priorityClass);
 	}
 
 	void SystemAbstract::OnStartUp() {
@@ -69,6 +83,7 @@ namespace JCore {
 		auto pPrevNode = pCurNode; pPrevNode = nullptr;
 
 		while (pCurNode != nullptr) {
+
 			if (pNewNode->Class->GetConstructionPriority() < pCurNode->Class->GetConstructionPriority()) {
 				if (pPrevNode == nullptr) {
 					m_pConstructionOrderHead = pNewNode;

@@ -47,7 +47,7 @@ using namespace JCore;
 //출력 여부
 #define Print	OFF
 
-#define TestEnabled                 OFF      // 전체 테스트 수행 여부
+#define TestEnabled                 ON      // 전체 테스트 수행 여부
 #define BaseTestEnabled             ON      // JCore 테스트 수행 여부
 #define ContainerTestEnabled        ON      // JCore::Container 테스트 수행 여부
 #define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 수행 여부
@@ -162,15 +162,17 @@ void PrintFormat(Args&&... args) {
 #define LeakCheckConcatInner(a, b) a##b {[](Int32U unfreedBytes) { FAIL() << unfreedBytes << " 바이트 메모리릭\n"; }}
 #define LeakCheck AutoMemoryLeakDetector LeakCheckConcat(LeakCheck, __COUNTER__)
 
-
 #define MemoryPoolLeakCheckConcat(a, b) MemoryPoolLeakCheckConcatInner(a, b)
-#define MemoryPoolLeakCheckConcatInner(a, b) a##b {&JCoreMemPoolManager_v, [](Int64U unDeallocatedBytes, LinkedList<Pair<MemoryPoolAbstract*, Int64U>>& detail) {      \
-    String text(320);                                                                                                                          \
-    detail.Extension().ForEach([&text](Pair<MemoryPoolAbstract*, Int64U>& info) {                                                               \
-        text += StringUtil::Format("%s: %llu 바이트 메모리 릭\n", info.Key->Name().Source(), info.Value);                                         \
-    });                                                                                                                                         \
-    if (unDeallocatedBytes > 0)                                                                                                                 \
-		FAIL() << unDeallocatedBytes << " 바이트 메모리릭" << "\n" << text.Source() << "\n";                                                      \
+#define MemoryPoolLeakCheckConcatInner(a, b) a##b {JCoreMemPoolManager_v, [](Int64U unDeallocatedBytes, LinkedList<SharedPtr<MemoryPoolCaptured>>& detail) { \
+    String text(320);  \
+    detail.Extension().ForEach([unDeallocatedBytes, &text](SharedPtr<MemoryPoolCaptured>& info) { \
+        text += StringUtil::Format("%s: %llu 바이트 메모리 릭(%.2f)\n", info->Pool->Name().Source(), info->TotalLeaks, (double(info->TotalLeaks) / unDeallocatedBytes)); \
+        for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) \
+			if (info->LeakBlocks[i] > 0) \
+				text += StringUtil::Format("\t%08d 바이트 블록: %d개 누수\n", Detail::AllocationLengthMapConverter::ToSize(i), info->LeakBlocks[i]); \
+    }); \
+    if (unDeallocatedBytes > 0) \
+		FAIL() << unDeallocatedBytes << " 바이트 메모리릭" << "\n" << text.Source() << "\n"; \
 }};
 #define MemoryPoolLeakCheck AutMemoryPoolLeakDetector MemoryPoolLeakCheckConcat(MemoryPoolLeakCheck, __COUNTER__)
 

@@ -9,7 +9,7 @@
 #include <JCore/ByteUnit.h>
 
 #include <JCore/Allocator/DefaultAllocator.h>
-#include <JCore/Allocator/DefaultPoolAllocator.h>
+#include <JCore/Allocator/DefaultArrayAllocator.h>
 
 #include <JCore/Container/HashMap.h>
 #include <JCore/Container/Vector.h>

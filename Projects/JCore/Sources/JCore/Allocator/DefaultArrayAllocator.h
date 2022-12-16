@@ -2,7 +2,7 @@
  * 작성자: 윤정도
  * 생성일: 12/14/2022 12:53:24 PM
  * =====================
- * 시스템 기본 메모리풀을 사용하는 할당자
+ * 시스템 배열관련 컨테이너 전용
  */
 
 
@@ -14,7 +14,7 @@
 
 namespace JCore {
 
-	struct DefaultPoolAllocator
+	struct DefaultArrayAllocator
 	{
 		// 명시적으로 사이즈 요청해서 반환하는 2가지 기능을 구현할 것
 		template <typename T>

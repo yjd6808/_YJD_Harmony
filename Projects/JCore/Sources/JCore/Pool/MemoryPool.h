@@ -134,7 +134,7 @@ namespace JCore {
 					m_Pool[iIndex].Push(Memory::Allocate<void*>(iSize));
 				}
 
-				AddInitBlock(iIndex);
+				AddInitBlock(iIndex, iCount);
 			});
 
 			m_bInitialized = true;
@@ -161,5 +161,7 @@ namespace JCore {
 
 		friend class MemoryPoolManager;
 	};
+
+	
 };
 

@@ -11,9 +11,9 @@
 #include <JCore/Container/HashMap.h>
 #include <JCore/Pool/MemoryPool.h>
 
-#define MemoryPoolTemplate									template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm>
-#define MemoryPoolTemplateSlot								template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm, Int32 SlotIndex>
-#define MemoryPoolTemplateType								MemoryPool<Strategy, Algorithm>
+#define MemoryPoolTemplate		template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm>
+#define MemoryPoolTemplateSlot	template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm, Int32 SlotIndex>
+#define MemoryPoolTemplateType	MemoryPool<Strategy, Algorithm>
 
 namespace JCore {
 	namespace Detail {
@@ -27,7 +27,6 @@ namespace JCore {
 	{
 	public:
 		MemoryPoolManager() = default;
-		virtual ~MemoryPoolManager() = default;
 	public:
 		MemoryPoolTemplate
 			void Register(int slot, const String& name, bool skipInitialize = false) {
@@ -96,7 +95,7 @@ namespace JCore {
 
 		void StartDetectLeak() {
 			auto pool = m_pRegisteredPool.Extension().FindIf([](MemoryPoolAbstract* pool) { return pool->Detecting(); });
-			DebugAssert(pool == nullptr, "현재 메모리릭을 검사중인 풀이 있습니다!");
+			DebugAssertMessage(pool == nullptr, "현재 메모리릭을 검사중인 풀이 있습니다!");
 			m_pRegisteredPool.Extension().ForEach([](MemoryPoolAbstract* pool) { pool->StartDetectLeak(); });
 			m_bDetecting = true;
 		}
@@ -105,14 +104,15 @@ namespace JCore {
 		 * \param leakedPools 각 풀마다 릭이 얼마나 있는지 확인하고자할 때
 		 * \return 전체 메모리풀의 메모리릭 크기
 		 */
-		Int64U StopDetectLeak(OutOpt_ LinkedList<Pair<MemoryPoolAbstract*, Int64U>>* leakedPools = nullptr) {
+		Int64U StopDetectLeak(OutOpt_ LinkedList<SharedPtr<MemoryPoolCaptured>>* leakedPools = nullptr) {
 			DebugAssertMessage(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
 			Int64U uiTotalLeakedBytes = 0;
 			m_pRegisteredPool.Extension().ForEach([&uiTotalLeakedBytes, &leakedPools](MemoryPoolAbstract* pool) {
-				Int64U uiLeakedBytes = pool->StopDetectLeak();
+				auto spMemPoolCaptured = MakeShared<MemoryPoolCaptured>();
+				Int64U uiLeakedBytes = pool->StopDetectLeak(spMemPoolCaptured->LeakBlocks);
 				uiTotalLeakedBytes += uiLeakedBytes;
 				if (uiLeakedBytes > 0 && leakedPools) {
-					leakedPools->EmplaceBack(pool, uiLeakedBytes);
+					leakedPools->PushBack(spMemPoolCaptured);
 				}
 			});
 
@@ -124,15 +124,13 @@ namespace JCore {
 	private:
 		MemoryPoolAbstract* m_pPool[eMemoryPoolStrategyMax | eMemoryPoolAllocationAlgorithmMax][Detail::MaxSlot_v]{};
 		LinkedList<MemoryPoolAbstract*> m_pRegisteredPool;
-
 		bool m_bDetecting{};
-		Int64U m_uiCapturedUsedBytes{};
 	};
 
 
 
 
-
+	
 } // namespace JCore
 
 

@@ -53,6 +53,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\System\JCoreSystem.cpp" />
+    <ClCompile Include="..\Sources\JCore\System\PrioritySingleton.cpp" />
     <ClCompile Include="..\Sources\JCore\System\System.cpp" />
     <ClCompile Include="..\Sources\JCore\Threading\Thread.cpp">
       <SubType>
@@ -68,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Allocator\DefaultAllocator.h" />
-    <ClInclude Include="..\Sources\JCore\Allocator\DefaultPoolAllocator.h">
+    <ClInclude Include="..\Sources\JCore\Allocator\DefaultArrayAllocator.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -217,6 +218,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolCaptured.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolDetail.h">
       <SubType>
       </SubType>
@@ -276,6 +281,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\System\JCorePrioritySingleton.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\System\JCoreSystem.h" />
     <ClInclude Include="..\Sources\JCore\System\PrioritySingleton.h" />
     <ClInclude Include="..\Sources\JCore\System\System.h" />
@@ -291,6 +300,10 @@
     <ClInclude Include="..\Sources\JCore\Type.h" />
     <ClInclude Include="..\Sources\JCore\TypeCast.h" />
     <ClInclude Include="..\Sources\JCore\TypeTraits.h" />
+    <ClInclude Include="..\Sources\JCore\TypeTraits\Adder.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\TypeTraits\Checker.h" />
     <ClInclude Include="..\Sources\JCore\TypeTraits\Eliminator.h" />
     <ClInclude Include="..\Sources\JCore\TypeTraits\IntegralConstant.h" />

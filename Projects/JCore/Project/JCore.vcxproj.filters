@@ -109,6 +109,9 @@
     <ClCompile Include="..\Sources\JCore\System\System.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\System\PrioritySingleton.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -345,7 +348,7 @@
     <ClInclude Include="..\Sources\JCore\Debug\MemoryLeakDetector.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Allocator\DefaultPoolAllocator.h">
+    <ClInclude Include="..\Sources\JCore\Allocator\DefaultArrayAllocator.h">
       <Filter>Allocator</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStatistics.h">
@@ -357,6 +360,15 @@
     <ClInclude Include="..\Sources\JCore\ByteUnit.h" />
     <ClInclude Include="..\Sources\JCore\Debug\MemoryPoolLeakDetector.h">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\TypeTraits\Adder.h">
+      <Filter>TypeTraits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\System\JCorePrioritySingleton.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolCaptured.h">
+      <Filter>Pool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

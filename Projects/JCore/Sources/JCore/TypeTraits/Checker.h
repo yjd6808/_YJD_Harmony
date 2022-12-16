@@ -124,6 +124,9 @@ namespace JCore {
 
         template <>
         struct IsVoid<void> : TrueType {};;
+
+
+        
     }
 
     

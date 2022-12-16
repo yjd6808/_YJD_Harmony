@@ -1,5 +1,6 @@
 /*
  * 직접 구현가능한 기능들은 최대한 구현하도록 하자.
+ * 만들어봐야 익숙해지니까...!
  */
 
 #pragma once
@@ -156,8 +157,15 @@ namespace JCore {
         struct ParameterPack
         {
             using Type = ParameterPack<Args...>;
-            static constexpr int Value = sizeof...(Args);
+            static constexpr int Count = sizeof...(Args);
         };
+
+        // 파라미터팩 타입인지 여부
+        template <typename T>
+        struct IsParameterPack : FalseType {};
+        template <typename... Args>
+        struct IsParameterPack<ParameterPack<Args...>> : TrueType {};
+        
 
         // ParameterPackCountOf<
         //      ParameterPack<int, int>,
@@ -166,13 +174,42 @@ namespace JCore {
         //      __End__> = 6
         template <typename FirstParameterPack, typename... RestParameterPacks>
         struct ParameterPackCountOf {
-            static constexpr int Value = FirstParameterPack::Value + ParameterPackCountOf<RestParameterPacks>::Value;
+            static constexpr int Count = FirstParameterPack::Count + ParameterPackCountOf<RestParameterPacks>::Count;
         };
 
         template <>
-        struct ParameterPackCountOf<__End__> { static constexpr int Value = 0; };
+        struct ParameterPackCountOf<__End__> { static constexpr int Count = 0; };
 
-        
+
+        template <typename Pack1, typename Pack2>
+        struct ParameterPackCombineImpl
+        {
+            static_assert(IsParameterPack<Pack1>::Value, "... Pack1 is not ParameterPack");
+            static_assert(IsParameterPack<Pack2>::Value, "... Pack2 is not ParameterPack");
+        };
+        template <typename... Pack1Args, template <typename...> typename Pack1
+    	         ,typename... Pack2Args, template <typename...> typename Pack2>
+        struct ParameterPackCombineImpl<Pack1<Pack1Args...>, Pack2<Pack2Args...>>
+        {
+            using Type = ParameterPack<Pack1Args..., Pack2Args...>;
+
+        };
+
+        // 전달한 파라미터팩 인자들을 합쳐주는 기능추가해보기
+        template < typename FirstPack
+    			 , typename... RestPacks>
+        struct ParameterPackCombine {
+            // 예를 들어서 ParameterPackCombine<P1, P2, P3, P4>가 전달됬다고 가정하고 흐름을 머릿속으로 그려보자.
+            using Type = typename ParameterPackCombineImpl<FirstPack, typename ParameterPackCombine<RestPacks...>::Type>::Type;
+        };
+
+
+        template <typename FirstPack>
+        struct ParameterPackCombine<FirstPack, __End__> {
+            using Type = FirstPack;
+        };
+
+
         // IndexOf_t<0, int, long, double> = int
         // IndexOf_t<1, int, long, double> = long
         // IndexOf_t<2, int, long, double> = double
@@ -187,6 +224,55 @@ namespace JCore {
         template <Int Index, Int TargetIndex>
         struct IndexOf<Index, TargetIndex, __End__> {
             using Type = __End__;
+        };
+
+
+        // 함수 반환타입/매개변수 타입 가져오기
+        // 람다는 어케해야할지 몰겠다.
+        // template <typename R, typename... Args>
+        // R fn(Args&&... args) { return R(); }
+        template <typename Fn>
+        struct FuncSig {};
+
+
+        template <typename R, typename... Args>
+        struct FuncSig<R(*)(Args...)>
+        {
+            using Parameters = Detail::ParameterPack<Args...>;
+            using Return = R;
+        };
+
+        template <typename R, typename... Args>
+        struct FuncSig<R(Args...)>
+        {
+            using Parameters = Detail::ParameterPack<Args...>;
+            using Return = R;
+        };
+
+        template <typename R, typename... Args>
+        struct FuncSig<R(&)(Args...)>
+        {
+            using Parameters = Detail::ParameterPack<Args...>;
+            using Return = R;
+        };
+
+       
+
+        // JCore::Allocator에서 정의된 할당자들이 규칙을 준수해서 제대로 정의되었는지 규칙 검사용도
+        template <typename T, typename TAllocator>
+        struct IsValidAllocator
+        {
+            using Type = NakedType_t<T>;
+            
+            static constexpr bool TestReturn1() { return IsPointerType<decltype(TAllocator::template Allocate<Type>())>::Value; }
+            static constexpr bool TestReturn2() { return IsPointerType<decltype(TAllocator::template Allocate<Type*>())>::Value; }
+            static constexpr bool TestReturn3(int ref) { return IsPointerType<decltype(TAllocator::template Allocate<Type>(ref, ref))>::Value; }
+            static constexpr bool TestReturn4(int ref) { return IsPointerType<decltype(TAllocator::template Allocate<Type*>(ref, ref))>::Value; }
+
+            static constexpr bool TestParam1() { return IsPointerType<decltype(TAllocator::template Allocate<Type>())>::Value; }
+            static constexpr bool TestParam2() { return IsPointerType<decltype(TAllocator::template Allocate<Type*>())>::Value; }
+            static constexpr bool TestParam3(int ref) { return IsPointerType<decltype(TAllocator::template Allocate<Type>(ref, ref))>::Value; }
+            static constexpr bool TestParam4(int ref) { return IsPointerType<decltype(TAllocator::template Allocate<Type*>(ref, ref))>::Value; }
         };
     }
 
@@ -286,7 +372,7 @@ namespace JCore {
     constexpr bool And_v = Detail::And<Tests...>::Value;
 
     template <typename... Args>
-    constexpr bool CountOf_v = Detail::ParameterPack<Args...>::Value;
+    constexpr bool CountOf_v = Detail::ParameterPack<Args...>::Count;
 
     template <typename T>
     constexpr bool IsEnd_v = Detail::IsEnd<T>::Value;
@@ -297,5 +383,20 @@ namespace JCore {
     template<Int Index, typename... Args>
     using IndexOf_t = typename Detail::EndAssert<typename Detail::IndexOf<0, Index, Args..., Detail::__End__>::Type>::Type;
 
+    template <typename Fn>
+    using FuncSigParam_t = typename Detail::FuncSig<Fn>::Parameters;
 
+    template <typename Fn>
+    using FuncSigReturn_t = typename Detail::FuncSig<Fn>::Return;
+
+
+    template<typename... Args>
+    using ParameterPack_t = typename Detail::ParameterPack<Args...>::Type;
+
+
+    // ParameterPackCombine_t<ParameterPack_t<int, int>, ParameterPack_t<double, double>, ParameterPack_t<long, long, long>>
+    //    = ParameterPack<int, int, double, double, long, long, long>
+    // 이렇게 합쳐줌
+    template<typename... ParameterPacks>
+    using ParameterPackCombine_t = typename Detail::ParameterPackCombine<ParameterPacks..., Detail::__End__>::Type;
 } // namespace JCore

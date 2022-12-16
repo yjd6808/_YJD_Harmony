@@ -53,15 +53,24 @@ struct TestData : IData{
 //};
 
 
-extern int main();
+struct A
+{
+	int a = 12;
+	int b = 34;
+};
 
 
+
+//JCoreMemoryPoolManager s;
 int main() {
 	JCore::Initialize();
 	JCore::NormalConsole::Init();
 	JCore::NormalConsole::SetOutputCodePage(CodePage::UTF8);
 
-
+	Detail::IsValidAllocator<int, DefaultAllocator>::TestReturn1();
+	Detail::IsValidAllocator<int, DefaultAllocator>::TestReturn2();
+	Detail::IsValidAllocator<int, DefaultAllocator>::TestReturn3(1);
+	Detail::IsValidAllocator<int, DefaultAllocator>::TestReturn4(1);
 
 	Vector<BucketNode<int, int>> s;
 	Vector<TestData> s1;
@@ -70,7 +79,7 @@ int main() {
 	delete s2[0];
 
 
-	
+	JCore::Finalize();
 	return 0;
 }
 

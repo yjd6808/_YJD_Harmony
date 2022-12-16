@@ -23,17 +23,21 @@ namespace JCore {
 			IPrioritySingleton* Class{};
 			ManagedClassNode* Next{};
 		};
+
+		constexpr int MaxSystemCode_v = 64;
 	}
 
 	// 전 시스템 공통 기능
 	struct SystemAbstract
 	{
 	public:
+		SystemAbstract(int code);
 		virtual ~SystemAbstract();
-	protected:
+		void RegisterPrioritySingleton(IPrioritySingleton* priorityClass);;
+
 		virtual void OnStartUp();
 		virtual void OnTerminate();
-		virtual void RegisterPrioritySingleton(IPrioritySingleton* priorityClass) = 0;
+	protected:
 		void ConstructGlobalObject();
 		void DestroyGlobalObject();
 		void CreateClassConstructionOrder(IPrioritySingleton* priorityClass);
@@ -43,7 +47,12 @@ namespace JCore {
 		Detail::ManagedClassNode* m_pConstructionOrderTail{};
 		Detail::ManagedClassNode* m_pDestructionOrderHead{};
 		Detail::ManagedClassNode* m_pDestructionOrderTail{};
+		int m_iCode;	// 시스템을 구분하는 ID값
+		bool m_bStarted{};
 	};
+
+
+	inline SystemAbstract* SystemMap_v[Detail::MaxSystemCode_v]{};
 
 	template <const char* = nullptr>
 	class System {};

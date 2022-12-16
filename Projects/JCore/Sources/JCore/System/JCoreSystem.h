@@ -12,20 +12,21 @@
 #include <JCore/System/System.h>
 #include <JCore/Pool/MemoryPoolManager.h>
 
+
 namespace JCore {
 	inline const char SystemName_v[] = "JCore";
+	inline const int SystemCode_v = 0;
 	
 	template <>
 	class System<SystemName_v> : public SystemAbstract
 	{
 	public:
-		System();
+		System(const int systemCode);
 		~System() override;
 
 		void EnableLeakCheck(bool enable);
 		void OnStartUp() override;
 		void OnTerminate() override;
-		void RegisterPrioritySingleton(IPrioritySingleton*) override;
 	private:
 		void InitializeMemoryPool();
 		void DestroyMemoryPool();
@@ -33,18 +34,21 @@ namespace JCore {
 		bool m_bLeakCheckEnabled;
 	};
 
+
+	
 	// 시스템 초기화 함수
 	// main 함수에서 호출해줘야 정상적으로 PrioritySingle의 생성순서대로 오브젝트가 생성된다.
-	// 이걸 없앨 수 있는 방법 구상
 	void Initialize();
 
-	using JCoreSystem = System<SystemName_v>;
-	inline JCoreSystem JCoreSystem_v;
+	// main 함수가 끝나기전 Finalize를 호출해줘야 PrioritySingle의 소멸순서대로 오브젝트가 소멸된다.
+	void Finalize();
 
-	inline MemoryPoolManager JCoreMemPoolManager_v;
-	inline MemoryPool<eSingle, eBinarySearch>* JCoreArrayAllocatorPool_v = nullptr;
-	inline MemoryPool<eSingle, eBinarySearch>* JCoreListAllocatorPool_v = nullptr;
-	inline MemoryPool<eSingle, eBinarySearch>* JCoreSmartPtrAllocatorPool_v = nullptr;
+	using JCoreSystem = System<SystemName_v>;
+	inline JCoreSystem JCoreSystem_v{SystemCode_v};
+	inline MemoryPoolManager* JCoreMemPoolManager_v{};
+	inline MemoryPool<eSingle, eBinarySearch>* JCoreArrayAllocatorPool_v{};
+	inline MemoryPool<eSingle, eBinarySearch>* JCoreListAllocatorPool_v{};
+	inline MemoryPool<eSingle, eBinarySearch>* JCoreSmartPtrAllocatorPool_v{};
 
 } // namespace JCore
 

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <JCore/Pool/MemoryPoolStatistics.h>
+#include <JCore/Pool/MemoryPoolCaptured.h>
 
 namespace JCore {
 
@@ -28,26 +29,19 @@ namespace JCore {
 		int Slot() { return m_iSlot; }
 		const String& Name() { return m_Name; }
 
-		Int64U TotalAllocatedBytes() { return m_Statistics.GetTotalAllocated();  }
-		Int64U TotalUsedBytes() { return m_Statistics.GetTotalUsed(); }
-		Int64U InitAllocatedBytes() { return m_Statistics.GetInitAllocated(); }
-		Int64U NewAllocatedBytes() { return m_Statistics.GetNewAllocated(); }
+		Int64U GetTotalAllocated() { return m_Statistics.GetTotalAllocated();  }
+		Int64U GetTotalUsed() { return m_Statistics.GetTotalUsed(); }
+		Int64U GetTotalReturned() { return m_Statistics.GetTotalReturned(); }
+		Int64U GetInitAllocated() { return m_Statistics.GetInitAllocated(); }
+		Int64U GetNewAllocated() { return m_Statistics.GetNewAllocated(); }
 		void ResetStatistics() { m_Statistics.Reset(); }
 
-		void AddInitBlock(Int32 blockIndex) { m_Statistics.AddInitBlock(blockIndex);  }
-		void AddAllocated(Int32 blockIndex, bool createNew) {
-			m_Statistics.AddAllocated(blockIndex, createNew);
-			if (m_bDetecting) ++m_pBlockUsedCounter[blockIndex];
-		}
-		void AddDeallocated(Int32 blockIndex) {
-			m_Statistics.AddDeallocated(blockIndex);
-			if (m_bDetecting) ++m_pBlockReturnedCounter[blockIndex];
-		}
+		
 		bool HasUsingBlock() { return m_Statistics.HasUsingBlock();  }
 		bool IsInitialized() { return m_bInitialized; }
 
 		void StartDetectLeak() {
-			CaencelDetectLeak();
+			CancelDetectLeak();
 			m_bDetecting = true;
 		}
 
@@ -65,7 +59,7 @@ namespace JCore {
 			return uiLeakedBytes;
 		}
 
-		void CaencelDetectLeak() {
+		void CancelDetectLeak() {
 			m_bDetecting = false;
 			Memory::Copy(m_pBlockUsedCounter, Detail::MemoryBlockSizeMapSize_v, m_pBlockUsedCounter, 0);
 			Memory::Copy(m_pBlockReturnedCounter, Detail::MemoryBlockSizeMapSize_v, m_pBlockReturnedCounter, 0);
@@ -74,6 +68,16 @@ namespace JCore {
 		
 		bool Detecting() { return m_bDetecting; }
 
+	protected:
+		void AddInitBlock(Int32 blockIndex, Int32 blockCount) { m_Statistics.AddInitBlock(blockIndex, blockCount); }
+		void AddAllocated(Int32 blockIndex, bool createNew) {
+			m_Statistics.AddAllocated(blockIndex, createNew);
+			if (m_bDetecting) ++m_pBlockUsedCounter[blockIndex];
+		}
+		void AddDeallocated(Int32 blockIndex) {
+			m_Statistics.AddDeallocated(blockIndex);
+			if (m_bDetecting) ++m_pBlockReturnedCounter[blockIndex];
+		}
 	protected:
 		int m_iSlot;
 		String m_Name;

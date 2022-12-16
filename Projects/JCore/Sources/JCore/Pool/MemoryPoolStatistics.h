@@ -18,9 +18,9 @@ namespace JCore {
 	class MemoryPoolStatistics
 	{
 	public:
-		void AddInitBlock(Int32 blockIndex) {
-			m_uiInitAllocted += Detail::AllocationLengthMapConverter::ToSize(blockIndex);
-			++m_pBlockTotalCounter[blockIndex];
+		void AddInitBlock(Int32 blockIndex, Int32 blockCount) {
+			m_uiInitAllocted += Detail::AllocationLengthMapConverter::ToSize(blockIndex) * blockCount;
+			m_pBlockTotalCounter[blockIndex] += blockCount;
 		}
 
 		void AddAllocated(Int32 blockIndex, bool createNew) {
