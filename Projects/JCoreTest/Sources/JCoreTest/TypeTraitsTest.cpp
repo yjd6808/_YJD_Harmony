@@ -8,6 +8,7 @@
 #include <JCore/TypeCast.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Primitives/String.h>
+#include <JCore/Allocator/DefaultArrayAllocator.h>
 #include <JCore/Core.h>
 
 
@@ -104,6 +105,14 @@ TEST(TypeTraitsTest, DynamicCastable) {
 	EXPECT_FALSE((IsDynamicCastable_v<int, int>));
 	EXPECT_TRUE((IsDynamicCastable_v<int*, int*>));
 	EXPECT_TRUE((IsDynamicCastable_v<int&, int&>));
+}
+
+TEST(TypeTraitsTest, IsValidAllocator) {
+	bool a = IsValidAllocator_v<int, DefaultAllocator>;
+	bool b = IsValidAllocator_v<int, DefaultArrayAllocator>;
+
+	EXPECT_TRUE(a);
+	EXPECT_TRUE(b);
 }
 
 #endif // TEST_TypeTraitsTest == ON

@@ -31,10 +31,10 @@ namespace JCore {
 		MemoryPoolTemplate
 			void Register(int slot, const String& name, bool skipInitialize = false) {
 			constexpr int iPoolIndex = Strategy | Algorithm;
-			DebugAssertMessage(slot < Detail::MaxSlot_v&& m_pPool[iPoolIndex][slot] == nullptr,
+			DebugAssertMessage(slot < Detail::MaxSlot_v&& m_pPool[iPoolIndex][slot].Get() == nullptr,
 				"해당 슬롯에 이미 메모리풀이 등록되어 있습니다.");
 
-			auto pNewRegisteredPool = new MemoryPoolTemplateType(slot, name, skipInitialize);
+			auto pNewRegisteredPool = MakeShared<MemoryPoolTemplateType>(slot, name, skipInitialize);
 			m_pPool[iPoolIndex][slot] = pNewRegisteredPool;
 			m_pRegisteredPool.PushBack(pNewRegisteredPool);
 		}
@@ -42,16 +42,16 @@ namespace JCore {
 		MemoryPoolTemplate
 			void Initialize(int slot, const JCore::HashMap<int, int>& Counters) {
 			constexpr int iPoolIndex = Strategy | Algorithm;
-			DebugAssertMessage(m_pPool[iPoolIndex][slot] != nullptr, "먼저 해당슬롯에 메모리 풀을 등록해주세요.");
+			DebugAssertMessage(m_pPool[iPoolIndex][slot].Get() != nullptr, "먼저 해당슬롯에 메모리 풀을 등록해주세요.");
 			DebugAssertMessage(m_pPool[iPoolIndex][slot]->IsInitialized() == false, "이미 초기화가 진행되었습니다.");
 			m_pPool[iPoolIndex][slot]->Initialize(Counters);
 		}
 
 		MemoryPoolTemplate
-			MemoryPoolTemplateType* Get(int slot) {
+		MemoryPoolAbstractPtr Get(int slot) {
 			constexpr int iPoolIndex = Strategy | Algorithm;
-			DebugAssertMessage(m_pPool[iPoolIndex][slot] != nullptr, "먼저 해당슬롯에 메모리 풀을 등록해주세요.");
-			return reinterpret_cast<MemoryPoolTemplateType*>(m_pPool[iPoolIndex][slot]);
+			DebugAssertMessage(m_pPool[iPoolIndex][slot].Get() != nullptr, "먼저 해당슬롯에 메모리 풀을 등록해주세요.");
+			return m_pPool[iPoolIndex][slot];
 		}
 
 
@@ -69,12 +69,12 @@ namespace JCore {
 			}
 			*/
 
-			m_pRegisteredPool.Extension().ForEach([this](MemoryPoolAbstract* pool) {
+			m_pRegisteredPool.Extension().ForEach([this](MemoryPoolAbstractPtr& pool) {
 				int iPoolIndex = pool->Strategy() | pool->Algorithm();
 				int iSlot = pool->Slot();
 
 				m_pPool[iPoolIndex][iSlot]->Finalize();
-				DeleteSafe(m_pPool[iPoolIndex][iSlot]);
+				m_pPool[iPoolIndex][iSlot] = nullptr;
 			});
 		}
 
@@ -94,9 +94,9 @@ namespace JCore {
 		}
 
 		void StartDetectLeak() {
-			auto pool = m_pRegisteredPool.Extension().FindIf([](MemoryPoolAbstract* pool) { return pool->Detecting(); });
+			auto pool = m_pRegisteredPool.Extension().FindIf([](MemoryPoolAbstractPtr& pool) { return pool->Detecting(); });
 			DebugAssertMessage(pool == nullptr, "현재 메모리릭을 검사중인 풀이 있습니다!");
-			m_pRegisteredPool.Extension().ForEach([](MemoryPoolAbstract* pool) { pool->StartDetectLeak(); });
+			m_pRegisteredPool.Extension().ForEach([](MemoryPoolAbstractPtr& pool) { pool->StartDetectLeak(); });
 			m_bDetecting = true;
 		}
 
@@ -104,10 +104,10 @@ namespace JCore {
 		 * \param leakedPools 각 풀마다 릭이 얼마나 있는지 확인하고자할 때
 		 * \return 전체 메모리풀의 메모리릭 크기
 		 */
-		Int64U StopDetectLeak(OutOpt_ LinkedList<SharedPtr<MemoryPoolCaptured>>* leakedPools = nullptr) {
+		Int64U StopDetectLeak(OutOpt_ LinkedList<MemoryPoolCapturedPtr>* leakedPools = nullptr) {
 			DebugAssertMessage(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
 			Int64U uiTotalLeakedBytes = 0;
-			m_pRegisteredPool.Extension().ForEach([&uiTotalLeakedBytes, &leakedPools](MemoryPoolAbstract* pool) {
+			m_pRegisteredPool.Extension().ForEach([&uiTotalLeakedBytes, &leakedPools](MemoryPoolAbstractPtr& pool) {
 				auto spMemPoolCaptured = MakeShared<MemoryPoolCaptured>();
 				Int64U uiLeakedBytes = pool->StopDetectLeak(spMemPoolCaptured->LeakBlocks);
 				uiTotalLeakedBytes += uiLeakedBytes;
@@ -122,13 +122,10 @@ namespace JCore {
 		bool Detecting() { return m_bDetecting; }
 
 	private:
-		MemoryPoolAbstract* m_pPool[eMemoryPoolStrategyMax | eMemoryPoolAllocationAlgorithmMax][Detail::MaxSlot_v]{};
-		LinkedList<MemoryPoolAbstract*> m_pRegisteredPool;
+		MemoryPoolAbstractPtr m_pPool[eMemoryPoolStrategyMax | eMemoryPoolAllocationAlgorithmMax][Detail::MaxSlot_v]{};
+		LinkedList<MemoryPoolAbstractPtr> m_pRegisteredPool;
 		bool m_bDetecting{};
 	};
-
-
-
 
 	
 } // namespace JCore

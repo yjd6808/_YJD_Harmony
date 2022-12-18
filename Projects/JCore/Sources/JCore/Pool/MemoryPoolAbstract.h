@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <JCore/Primitives/SmartPtr.h>
+#include <JCore/Primitives/Atomic.h>
+
 #include <JCore/Pool/MemoryPoolStatistics.h>
 #include <JCore/Pool/MemoryPoolCaptured.h>
 
@@ -17,7 +20,12 @@ namespace JCore {
 	class MemoryPoolAbstract
 	{
 	public:
-		MemoryPoolAbstract(int slot, const String& name, bool skipIntialize): m_iSlot(slot), m_Name(name), m_bInitialized(skipIntialize) {}
+		MemoryPoolAbstract(int slot, const String& name, bool skipIntialize) : m_iSlot(slot), m_Name(name), m_bInitialized(skipIntialize) {
+			m_uiID = ++ms_uiID;
+		}
+
+		MemoryPoolAbstract(bool skipIntialize) : MemoryPoolAbstract(Detail::InvalidSlot_v, nullptr, skipIntialize) {}
+		
 		virtual ~MemoryPoolAbstract() = default;
 
 		virtual void Initialize(const HashMap<int, int>& allocationMap) = 0;
@@ -34,6 +42,27 @@ namespace JCore {
 		Int64U GetTotalReturned() { return m_Statistics.GetTotalReturned(); }
 		Int64U GetInitAllocated() { return m_Statistics.GetInitAllocated(); }
 		Int64U GetNewAllocated() { return m_Statistics.GetNewAllocated(); }
+
+		int GetBlockTotalCounter(int blockIndex) {
+			DebugAssertMessage(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+			return m_Statistics.m_pBlockTotalCounter[blockIndex];
+		}
+
+		int GetBlockUsedCounter(int blockIndex) {
+			DebugAssertMessage(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+			return m_Statistics.m_pBlockUsedCounter[blockIndex];
+		}
+
+		int GetBlockNewAllocCounter(int blockIndex) {
+			DebugAssertMessage(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+			return m_Statistics.m_pBlockNewAllocCounter[blockIndex];
+		}
+
+		int GetBlockUsingCounter(int blockIndex) {
+			DebugAssertMessage(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+			return m_Statistics.m_pBlockUsingCounter[blockIndex];
+		}
+
 		void ResetStatistics() { m_Statistics.Reset(); }
 
 		
@@ -45,6 +74,7 @@ namespace JCore {
 			m_bDetecting = true;
 		}
 
+		template <bool KeepDetectingState = true>	// 릭 디텍팅 상태를 복구할지
 		Int64U StopDetectLeak(OutOpt_ int* detail = nullptr) {
 			DebugAssertMessage(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
 			Int64U uiLeakedBytes = 0;
@@ -55,7 +85,9 @@ namespace JCore {
 				if (detail) detail[i] = iLeakedBlockCount;
 			}
 
-			m_bDetecting = false;
+			if constexpr (!KeepDetectingState)
+				m_bDetecting = false;
+
 			return uiLeakedBytes;
 		}
 
@@ -65,7 +97,7 @@ namespace JCore {
 			Memory::Copy(m_pBlockReturnedCounter, Detail::MemoryBlockSizeMapSize_v, m_pBlockReturnedCounter, 0);
 		}
 
-		
+		Int64U GetId() { return m_uiID; }
 		bool Detecting() { return m_bDetecting; }
 
 	protected:
@@ -89,14 +121,16 @@ namespace JCore {
 		// TODO: 멀티 쓰레딩 디텍션을 수행할려면 쓰레드로컬처럼 동작해야함.
 		// 근데 멤버변수로는 쓰레드로컬로 둘 수 없으므로 다른 방식으로 구현해야함.
 		// 이거 해결안하면 멀티쓰레드기반환경에서 메모리릭 제대로 못잡아냄;
-		//
 		// 일단 싱글쓰레드로 가정하고 릭 감지기능 자체만 구현먼저 해놓자.
-		
-
 		int m_pBlockUsedCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 몇번 사용되었는지
-		int m_pBlockReturnedCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 사용되었는지
+		int m_pBlockReturnedCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 반환되었는지
 
+		Int64U m_uiID{};
+		inline static AtomicInt64U ms_uiID{};									// 모든 메모리풀은 고유 식별자를 가지도록한다.
 		friend class MemoryPoolManager;
 	};
+
+	using MemoryPoolAbstractPtr = SharedPtr<MemoryPoolAbstract>;
+
 
 } // namespace JCore

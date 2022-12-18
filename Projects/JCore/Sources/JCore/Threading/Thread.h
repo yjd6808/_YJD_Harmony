@@ -16,7 +16,6 @@
 #include <JCore/Primitives/Atomic.h>
 #include <JCore/Primitives/String.h>
 
-// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread
 namespace JCore {
 
     class Thread
@@ -61,6 +60,8 @@ namespace JCore {
         Int32U GetId();
 
         static Int32U GetThreadId();
+        static Int32U GetMainThreadId() { return ms_uiMainThreadId; }
+        static bool IsMainThread() { return ms_uiMainThreadId == GetThreadId(); }
 		static void Sleep(Int32U ms);
     private:
         static Int32U JCoreStdCall ThreadRoutine(void* param);
@@ -71,6 +72,9 @@ namespace JCore {
         Atomic<int> m_eState;
         Semaphore m_RunningSignal;
         bool m_bAutoJoin;
+
+        static Int32U ms_uiMainThreadId;
+        static thread_local Int32U tls_uiThreadId;
     };
 
     

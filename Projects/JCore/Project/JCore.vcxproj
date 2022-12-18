@@ -25,6 +25,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Debug\MemoryLeakDetector.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Debug\MemoryPoolLeakDetector.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\ObserverPtr.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\String.cpp" />
@@ -222,6 +230,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolDataAbstract.h" />
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolDetail.h">
       <SubType>
       </SubType>
@@ -292,6 +301,18 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocal.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalCopy.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Time.h">
       <SubType>
       </SubType>
@@ -316,6 +337,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Utils\ConsoleColor.h" />
+    <ClInclude Include="..\Sources\JCore\Utils\ConstructorCall.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Wrapper\CRuntime.h">
       <SubType>
       </SubType>

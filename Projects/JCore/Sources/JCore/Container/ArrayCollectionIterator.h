@@ -61,7 +61,7 @@ protected:
 
 	TArrayCollection* CastArrayCollection() const {
 		this->ThrowIfIteratorIsNotValid();
-		return this->Watcher.Get<TArrayCollection>();
+		return this->Watcher.Get<TArrayCollection*>();
 	}
 protected:
 	int m_iPos;

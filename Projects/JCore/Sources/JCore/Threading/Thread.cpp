@@ -13,6 +13,9 @@
 
 namespace JCore {
 
+    Int32U Thread::ms_uiMainThreadId = GetMainThreadId();
+    thread_local Int32U Thread::tls_uiThreadId = WinApi::GetCurrentThreadId();
+
     Thread::Thread(TRunnable&& fn, void* param, const char* name, bool autoJoin): Thread(name, autoJoin) {
         Start(Move(fn), param);
     }
@@ -66,6 +69,9 @@ namespace JCore {
     }
 
     Int32U Thread::GetThreadId() {
+        if (tls_uiThreadId != 0)
+            return tls_uiThreadId;
+
         return WinApi::GetCurrentThreadId();
     }
 

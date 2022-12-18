@@ -30,10 +30,14 @@
 #include <JCore/Wrapper/CRuntime.h>
 
 #include <JCore/Utils/Console.h>
+
 #include <JCore/Threading/Thread.h>
+#include <JCore/Threading/ThreadLocal.h>
 
 #include <JCore/System/PrioritySingleton.h>
 #include <JCore/System/JCoreSystem.h>
 
 using namespace JCore;
 using namespace std;
+
+using Console = SafeConsole;

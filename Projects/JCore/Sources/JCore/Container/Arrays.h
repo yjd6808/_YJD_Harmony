@@ -50,14 +50,14 @@ namespace JCore {
 		template <typename T>
 		static void SortRange(T* arr, const int startIdx, const int endIdx) {
 			ThrowIfArrayIsNull(arr);
-			ThrowIRangeIsInvalid(startIdx, endIdx);
+			ThrowIfRangeIsInvalid(startIdx, endIdx);
 			QuickSort(arr, startIdx, endIdx, NaturalOrder{});
 		}
 
 		template <typename T, typename TPredicate>
 		static void SortRange(T* arr, const int startIdx, const int endIdx, TPredicate&& predicate) {
 			ThrowIfArrayIsNull(arr);
-			ThrowIRangeIsInvalid(startIdx, endIdx);
+			ThrowIfRangeIsInvalid(startIdx, endIdx);
 			QuickSort(arr, startIdx, endIdx, Move(predicate));
 		}
 
@@ -207,8 +207,17 @@ namespace JCore {
 			return FindIf(arr, Size, Move(predicate));
 		}
 
-		
-	private:
+		template <typename T, Int32U Size>
+		static void Fill(T(&arr)[Size], T&& value) {
+			for (int i = 0; i < Size; ++i) arr[i] = Forward<T>(value);
+		}
+
+		template <typename T>
+		static void Fill(T* arr, int size, T&& value) {
+			for (int i = 0; i < size; ++i) arr[i] = Forward<T>(value);
+		}
+
+
 		template <typename T>
 		static void Swap(T* arr, int l, int r) {
 			T tmp = Move(arr[r]);
@@ -216,6 +225,15 @@ namespace JCore {
 			arr[l] = Move(tmp);
 		}
 
+		template <typename T>
+		static void SwapCheck(T* arr, int size, int l, int r) {
+			ThrowIfArrayIsNull(arr);
+			ThrowIfRangeIsInvalid(arr, size, l, r);
+
+			Swap(arr, l, r);
+		}
+
+	private:
 
 		// @참고 : https://www.youtube.com/watch?v=PgBzjlCcFvc&t=45s&ab_channel=GeeksforGeeks
 		// 영상에서 동작하는데로 만들기
@@ -259,10 +277,26 @@ namespace JCore {
 			}
 		}
 
-		static void ThrowIRangeIsInvalid(const int startIdx, const int endIdx) {
+		static void ThrowIfRangeIsInvalid(const int startIdx, const int endIdx) {
 			if (startIdx < 0 || startIdx > endIdx) {
 				throw InvalidArgumentException("올바르지 않은 인덱스 범위입니다.");
 			}
+		}
+
+		template <typename T, Int32U Size>
+		static void ThrowIfRangeIsInvalid(const T(&arr)[Size], const int startIdx, const int endIdx) {
+			if (startIdx <= endIdx && startIdx >= 0 && startIdx < Size && endIdx >= 0 && endIdx < Size)
+				return;
+
+			throw InvalidArgumentException("올바르지 않은 인덱스 범위입니다.");
+		}
+
+		template <typename T>
+		static void ThrowIfRangeIsInvalid(const T* arr, int size, const int startIdx, const int endIdx) {
+			if (startIdx <= endIdx && startIdx >= 0 && startIdx < size && endIdx >= 0 && endIdx < size)
+				return;
+
+			throw InvalidArgumentException("올바르지 않은 인덱스 범위입니다.");
 		}
 	};
 

@@ -11,14 +11,17 @@
 #include <JCore/Pool/MemoryPoolDetail.h>
 
 namespace JCore {
-
+	template <typename T>
+	class SharedPtr;
 	class MemoryPoolAbstract;
-	class MemoryPoolCaptured
+	struct MemoryPoolCaptured
 	{
-	public:
 		MemoryPoolAbstract* Pool{};
-		Int64U TotalLeaks;
-		Int32 LeakBlocks[Detail::MemoryBlockSizeMapSize_v];
+		Int64U TotalLeaks{};
+		Int32 LeakBlocks[Detail::MemoryBlockSizeMapSize_v]{};
 	};
+
+	using MemoryPoolCapturedPtr = SharedPtr<MemoryPoolCaptured>;
+
 } // namespace JCore
 

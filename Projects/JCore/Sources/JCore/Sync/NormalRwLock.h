@@ -8,8 +8,6 @@
 #pragma once
 
 #include <JCore/Sync/IRwLock.h>
-#include <JCore/Sync/LockGuard.h>
-
 #include <condition_variable>
 
 namespace JCore {

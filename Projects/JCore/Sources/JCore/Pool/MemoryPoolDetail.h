@@ -28,6 +28,7 @@ namespace JCore {
 		};
 
 		inline constexpr int MemoryBlockSizeMapSize_v = sizeof(MemoryBlockSizeMap_v) / sizeof(int);
+		inline constexpr int InvalidSlot_v = -1;
 
 		// 예를들어서
 		// 64바이트 -> 6으로 변환

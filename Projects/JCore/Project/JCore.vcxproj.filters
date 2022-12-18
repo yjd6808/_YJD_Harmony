@@ -112,6 +112,12 @@
     <ClCompile Include="..\Sources\JCore\System\PrioritySingleton.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Debug\MemoryLeakDetector.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Debug\MemoryPoolLeakDetector.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -369,6 +375,21 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolCaptured.h">
       <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\ConstructorCall.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolDataAbstract.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocal.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalManager.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalCopy.h">
+      <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,0 +1,49 @@
+@startuml
+
+'나만의 쓰레드로컬 동작시 객체간 실행흐름 구상
+'문법: https://plantuml.com/ko/sequence-diagram
+'글 길이 조절: https://github.com/plantuml/plantuml/issues/35
+skinparam maxMessageSize 200
+autonumber 1 1 "<b>[00]"
+
+participant ThreadLocal [
+    <size:14><b>ThreadLocal<T></b></size>
+    ----
+]
+
+
+participant ThreadLocalManager [
+    <size:14><b>ThreadLocalManager</b></size>
+    ----
+]
+
+participant ThreadLocalLoader [
+    <size:14><b>ThreadLocalLoader</b></size>
+    ----
+]
+
+participant ThreadLocalInlineLoader [
+    <size:14><b>ThreadLocalInlineLoader</b></size>
+    ----
+]
+
+
+ThreadLocal              --> ThreadLocalManager      :   ThreadLocal 객체의 생성자에서 객체 생성 후 매니저에 이동시킴
+ThreadLocalManager       --> ThreadLocalManager      :   전달받은 객체는 제일 처음 생성된 상태로 보관해놓고 추후 복사용으로 사용함
+ThreadLocal              --> ThreadLocal             :   현재 쓰레드에서 사용가능한 ThreadLocal 객체를 사용하고자한다.
+ThreadLocal              --> ThreadLocalInlineLoader :   thread_local 변수 InlineLoader 객체를 생성
+ThreadLocalInlineLoader  --> ThreadLocalManager      :   생성자에서 ThreadLocalManager에게 현재 <T> 타입으로 생성가능한 목록 참조본을 요청한다.
+activate ThreadLocalManager
+
+ThreadLocalManager       --> ThreadLocalInlineLoader :   **[02]**에서 저장된 참조본 목록을 가져온다.
+deactivate ThreadLocalManager
+ThreadLocal              --> ThreadLocalInlineLoader :   현재 쓰레드에서 사용가능한 객체를 가져오고자한다. 처음 사용하는 것이기 때문에 참조본 목록에서 복사하여 가져온다.
+
+
+
+
+
+
+
+
+@enduml

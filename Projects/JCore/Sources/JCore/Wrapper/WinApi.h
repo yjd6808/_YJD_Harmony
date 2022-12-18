@@ -19,7 +19,6 @@
 
 namespace JCore {
     struct WinApi {
-
 		#pragma region Win32 Struct
         struct ListEntry {
             ListEntry* Flink;

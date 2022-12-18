@@ -22,5 +22,10 @@ namespace JCore {
 		// eFixedSize		// O(?) / 자유롭게 할당가능
 	};
 
+	namespace Detail {
+
+		template <MemoryPoolAllocationAlgorithm Algorithm>
+		inline constexpr bool IsValidMemoryPoolAllocationAlgorithm = Algorithm >= eBinarySearch && Algorithm <= eMemoryPoolAllocationAlgorithmMax;
+	}
 	
 } // namespace JCore

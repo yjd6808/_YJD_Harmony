@@ -23,7 +23,7 @@ public:
 	ListCollectionIterator(VoidOwner& owner, TListNode* current) : TIterator(owner) {
 		m_pCurrent = current;
 
-		TListCollection* pList = owner.Get<TListCollection>();
+		TListCollection* pList = owner.Get<TListCollection*>();
 		m_pHead = pList->m_pHead;
 		m_pTail = pList->m_pTail;
 	}

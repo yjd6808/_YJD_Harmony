@@ -7,7 +7,11 @@
 
 #pragma once
 
+
 #include <JCore/Declspec.h>
+#include <JCore/Sync/LockGuard.h>
+
+
 
 namespace JCore {
 

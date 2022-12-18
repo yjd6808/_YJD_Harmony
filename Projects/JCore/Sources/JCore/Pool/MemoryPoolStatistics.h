@@ -10,7 +10,9 @@
 
 #pragma once
 
+#include <JCore/Sync/ILock.h>
 #include <JCore/Pool/MemoryPoolDetail.h>
+
 
 namespace JCore {
 
@@ -18,8 +20,19 @@ namespace JCore {
 	class MemoryPoolStatistics
 	{
 	public:
+		Int64U GetInitAllocated() { return m_uiInitAllocted; }
+		Int64U GetNewAllocated() { return m_uiNewAlloctaed; }
+		Int64U GetTotalAllocated() { return m_uiInitAllocted + m_uiNewAlloctaed; }	// 메모리풀이 관리중인 메모리 크기
+		Int64U GetTotalUsed() { return m_uiTotalUsed; }
+		Int64U GetTotalReturned() { return m_uiTotalReturned; }
+
+		int GetBlockTotalCounter(int blockIndex) { return m_pBlockTotalCounter[blockIndex]; }
+		int GetBlockUsedCounter(int blockIndex) { return m_pBlockUsedCounter[blockIndex]; }
+		int GetBlockNewAllocCounter(int blockIndex) { return m_pBlockNewAllocCounter[blockIndex]; }
+		int GetBlockUsingCounter(int blockIndex) { return m_pBlockUsingCounter[blockIndex]; }
+	protected:
 		void AddInitBlock(Int32 blockIndex, Int32 blockCount) {
-			m_uiInitAllocted += Detail::AllocationLengthMapConverter::ToSize(blockIndex) * blockCount;
+			m_uiInitAllocted += static_cast<Int64U>(Detail::AllocationLengthMapConverter::ToSize(blockIndex)) * blockCount;
 			m_pBlockTotalCounter[blockIndex] += blockCount;
 		}
 
@@ -42,11 +55,7 @@ namespace JCore {
 			m_uiTotalReturned += Detail::AllocationLengthMapConverter::ToSize(blockIndex);
 		}
 
-		Int64U GetInitAllocated() { return m_uiInitAllocted;  }
-		Int64U GetNewAllocated() { return m_uiNewAlloctaed; }
-		Int64U GetTotalAllocated() { return m_uiInitAllocted + m_uiNewAlloctaed; }	// 메모리풀이 관리중인 메모리 크기
-		Int64U GetTotalUsed() { return m_uiTotalUsed;  }
-		Int64U GetTotalReturned() { return m_uiTotalReturned; }	
+
 
 		void Reset() {
 			m_uiInitAllocted = 0;
@@ -62,7 +71,7 @@ namespace JCore {
 
 		// 현재 사용중인 블록이 있는지
 		bool HasUsingBlock() { return Arrays::FindIf(m_pBlockUsingCounter, [](const int& count) { return count > 0; }) != InvalidIndex_v; }
-	private:
+	protected:
 		Int64U m_uiInitAllocted{};		//	MemoryPool::Initialize()시 제일 처음 할당된 메모리양
 		Int64U m_uiNewAlloctaed{};		//	MemoryPool::Initialize()때 할당된 메모리외에! 추가로 새로 할당된 메모리양 (누적)
 		Int64U m_uiTotalUsed{};			//	메모리풀을 얼마나 사용했는지
@@ -73,6 +82,7 @@ namespace JCore {
 		int m_pBlockNewAllocCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 생성 할당되었는지 기록
 		int m_pBlockUsingCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 사용중인 블록 수 기록
 
+		ILock* m_pLock;
 		friend class MemoryPoolAbstract;
 	};
 } // namespace JCore

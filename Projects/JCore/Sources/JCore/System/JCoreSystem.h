@@ -24,7 +24,6 @@ namespace JCore {
 		System(const int systemCode);
 		~System() override;
 
-		void EnableLeakCheck(bool enable);
 		void OnStartUp() override;
 		void OnTerminate() override;
 	private:
@@ -46,9 +45,9 @@ namespace JCore {
 	using JCoreSystem = System<SystemName_v>;
 	inline JCoreSystem JCoreSystem_v{SystemCode_v};
 	inline MemoryPoolManager* JCoreMemPoolManager_v{};
-	inline MemoryPool<eSingle, eBinarySearch>* JCoreArrayAllocatorPool_v{};
-	inline MemoryPool<eSingle, eBinarySearch>* JCoreListAllocatorPool_v{};
-	inline MemoryPool<eSingle, eBinarySearch>* JCoreSmartPtrAllocatorPool_v{};
+	inline MemoryPoolSingleBinaryPtr JCoreArrayAllocatorPool_v{};
+	inline MemoryPoolSingleBinaryPtr JCoreListAllocatorPool_v{};
+	inline MemoryPoolSingleBinaryPtr JCoreSmartPtrAllocatorPool_v{};
 
 } // namespace JCore
 

@@ -18,19 +18,8 @@ namespace JCore {
 		using TOut = LinkedList<SharedPtr<MemoryPoolCaptured>>;
 		using TAction = Action<Int64U, TOut&>;
 	public:
-		AutMemoryPoolLeakDetector(MemoryPoolManager* manager, const TAction& action) : m_PoolManager(manager), m_Callback(action) {
-			m_PoolManager->StartDetectLeak();
-		}
-
-		~AutMemoryPoolLeakDetector() {
-			TOut detail;
-			Int64U uiTotalLeak = m_PoolManager->StopDetectLeak(&detail);
-
-			if (m_Callback) {
-				m_Callback(uiTotalLeak, detail);
-			}
-		}
-
+		AutMemoryPoolLeakDetector(MemoryPoolManager* manager, const TAction& action);
+		~AutMemoryPoolLeakDetector();
 	protected:
 		MemoryPoolManager* m_PoolManager;
 		TAction m_Callback;

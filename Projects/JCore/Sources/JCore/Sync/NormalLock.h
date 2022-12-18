@@ -8,7 +8,6 @@
 #pragma once
 
 #include <JCore/Sync/ILock.h>
-#include <JCore/Sync/LockGuard.h>
 #include <JCore/Primitives/Atomic.h>
 #include <JCore/Wrapper/WinApi.h>
 

@@ -1,6 +1,47 @@
 #if !defined(__JCORE_DEFINE_H__)
 
     #define __JCORE_DEFINE_H__
+
+	// __COUNTER__매크로는 리다이렉션 한번 필요하다캄
+	#define JCoreCounterConcatRedirection(a, b) a##b
+	#define JCoreCounterConcat(a) JCoreCounterConcatRedirection(a, __COUNTER__)
+
+
+	#ifdef DebugMode
+		#define JCoreInlineHeaderMessage(s, ...)	inline auto JCoreCounterConcat(_) = [] { return SafeConsole::WriteLine(s, __VA_ARGS__); }()
+		#define JCoreInlineClassMessage(s, ...)		inline static auto JCoreCounterConcat(_) = [] { return SafeConsole::WriteLine(s, __VA_ARGS__); }()
+	#else
+		#define JCoreInlineHeaderMessage(s) 
+		#define JCoreInlineClassMessage(s) 
+	#endif
+	/* !! 주의해서 쓸 것 !!
+	 * 헤더파일에서 사용시 멀티플 TU에서 정의되지 않도록 JCoreInlineHeaderMessage를 사용하고
+	 * 클래스내에서 사용시에는 JCoreInlineClassMessage를 사용하도록 한다.
+	 * 클래스내에서의 static 키워드와 글로벌 영역에서 static 키워드의 역할이 틀림!
+	 * 기초적인 내용인데 자주 까먹는다.
+	 *  - https://stackoverflow.com/questions/14349877/static-global-variables-in-c
+	 *  - https://stackoverflow.com/questions/18841414/declaring-a-global-and-a-static-variable
+	 *
+	 * [예시]
+	 * a.h에 inline static int test = 0; 을 선언하고
+	 * 1.cpp, 2.cpp, 3.cpp, 4.cpp에서 이 헤더파일을 포함시키면
+	 *
+	 * 1.cpp에도 test가 1개
+	 * 2.cpp에도 test가 1개
+	 * 3.cpp에도 test가 1개
+	 * 4.cpp에도 test가 1개
+	 * 프로그램에 총 4개의 test가 존재하게 된다.
+	 *
+	 * a.h에 inline int test = 0;와 같이 선언하면
+	 * 1.cpp ~ 4.cpp 통틀어서 1개를 만들게됨
+	 */
+
+
+    #define JCoreStdCall        __stdcall
+    #define JCoreCdecl          __cdecl
+    #define JCoreForceInline    __forceinline
+    #define JCoreInfinite       0xffffffff
+
     #define DeleteSafe(x)		\
     do {						\
 	    if (x) {				\
@@ -17,17 +58,10 @@
 	    }						\
     } while (0)		
 
-    #define JCoreStdCall        __stdcall
-    #define JCoreCdecl          __cdecl
-    #define JCoreForceInline    __forceinline
-    #define JCoreInfinite       0xffffffff
-
     #define In_
     #define Out_
 	#define OutOpt_
     #define InOut_
     #define InOpt_
-
-    
 
 #endif

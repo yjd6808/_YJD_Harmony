@@ -4,13 +4,18 @@
 
 #pragma once
 
+
+
 #include <JCore/Sync/RecursiveLock.h>
 #include <JCore/Sync/UnusedLock.h>
 #include <JCore/Utils/ConsoleColor.h>
 
 #include <JCore/Wrapper/CRuntime.h>
 #include <JCore/Wrapper/WinApi.h>
+
+#include <JCore/Math.h>
 #include <JCore/Tuple.h>
+#include <JCore/Assert.h>
 
 
 namespace JCore {
@@ -50,69 +55,72 @@ namespace JCore {
             }
 
             template <typename... TArgs>
-            static void Write(ConsoleColor color, char* format, TArgs&&... args) {
+            static int Write(ConsoleColor color, char* format, TArgs&&... args) {
                 TLockGuard guard(ms_ConsoleLock);
                 ConsoleColor prevColor = ms_iDefaultColor;
                 SetColor(color);
-                Write(format, Forward<TArgs>(args)...);
+                int iRet = Write(format, Forward<TArgs>(args)...);
                 SetColor(prevColor);
+                return iRet;
             }
 
             template <Int32U FormatBufferLen, typename... TArgs>
-            static void Write(ConsoleColor color, const char(&format)[FormatBufferLen], TArgs&&... args) {
+            static int Write(ConsoleColor color, const char(&format)[FormatBufferLen], TArgs&&... args) {
                 TLockGuard guard(ms_ConsoleLock);
                 ConsoleColor prevColor = ms_iDefaultColor;
                 SetColor(color);
-                Write(format, Forward<TArgs>(args)...);
+                int iRet = Write(format, Forward<TArgs>(args)...);
                 SetColor(prevColor);
+                return iRet;
             }
 
             template <typename... TArgs>
-            static void Write(char* format, TArgs&&... args) {
+            static int Write(char* format, TArgs&&... args) {
                 char buf[TempBufferLen];
                 sprintf_s(buf, TempBufferLen, format);
                 TLockGuard guard(ms_ConsoleLock);
-                printf_s(buf, Forward<TArgs>(args)...);
+                return printf_s(buf, Forward<TArgs>(args)...);
             }
 
             template <Int32U FormatBufferLen, typename... TArgs>
-            static void Write(const char(&format)[FormatBufferLen], TArgs&&... args) {
+            static int Write(const char(&format)[FormatBufferLen], TArgs&&... args) {
                 TLockGuard guard(ms_ConsoleLock);
-                printf_s(format, Forward<TArgs>(args)...);
+                return printf_s(format, Forward<TArgs>(args)...);
             }
 
             template <typename... TArgs>
-            static void WriteLine(ConsoleColor color, char* format, TArgs&&... args) {
+            static int WriteLine(ConsoleColor color, char* format, TArgs&&... args) {
                 TLockGuard guard(ms_ConsoleLock);
                 ConsoleColor prevColor = ms_iDefaultColor;
                 SetColor(color);
                 WriteLine(format, Forward<TArgs>(args)...);
                 SetColor(prevColor);
+                return 0;
             }
 
             template <Int32U FormatBufferLen, typename... TArgs>
-            static void WriteLine(ConsoleColor color, const char(&format)[FormatBufferLen], TArgs&&... args) {
+            static int WriteLine(ConsoleColor color, const char(&format)[FormatBufferLen], TArgs&&... args) {
                 TLockGuard guard(ms_ConsoleLock);
                 ConsoleColor prevColor = ms_iDefaultColor;
                 SetColor(color);
-                WriteLine(format, Forward<TArgs>(args)...);
+                int iRet = WriteLine(format, Forward<TArgs>(args)...);
                 SetColor(prevColor);
+                return iRet;
             }
 
             template <typename... TArgs>
-            static void WriteLine(char* format, TArgs&&... args) {
+            static int WriteLine(char* format, TArgs&&... args) {
+                
                 char buf[TempBufferLen + 1];
                 sprintf_s(buf, TempBufferLen + 1, format);
                 TLockGuard guard(ms_ConsoleLock);
-                printf_s(buf, Forward<TArgs>(args)...);
-                printf_s("\n");
+                return Math::Min(printf_s("\n"), printf_s(buf, Forward<TArgs>(args)...));
             }
 
             template <Int32U FormatBufferLen, typename... TArgs>
-            static void WriteLine(const char(&format)[FormatBufferLen], TArgs&&... args) {
+            static int WriteLine(const char(&format)[FormatBufferLen], TArgs&&... args) {
                 TLockGuard guard(ms_ConsoleLock);
-                printf_s(format, Forward<TArgs>(args)...);
-                printf_s("\n");
+                return Math::Min(printf_s("\n"), printf_s(format, Forward<TArgs>(args)...));
             }
 
             static void Clear() {
@@ -138,8 +146,10 @@ namespace JCore {
                 return { -1, -1 };
             }
 
-            static void SetOutputCodePage(int codePage) {
-                WinApi::SetConsoleOutputCodePage(codePage);
+            static bool SetOutputCodePage(int codePage) {
+                bool bRet = WinApi::SetConsoleOutputCodePage(codePage);
+                DebugAssertMessage(bRet, "인코딩 변경 실패");
+                return bRet;
             }
 
             static int GetOutputCodePage() {

@@ -44,24 +44,36 @@
 #include <JCore/Container/Arrays.h>
 #include <JCore/Container/HashMap.h>
 
-#include <JCore/Pool/MemoryPoolAbstract.h>
 #include <JCore/Pool/MemoryPoolStrategy.h>
 #include <JCore/Pool/MemoryPoolAllocationAlgorithm.h>
+#include <JCore/Pool/MemoryPoolAbstract.h>
 
 
 namespace JCore {
 	
+
+
 	template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm>
 	class MemoryPool {};
 
+	using MemoryPoolSingleBinary	  = MemoryPool<eSingle, eBinarySearch>;
+	using MemoryPoolSingleBinaryPtr   = SharedPtr<MemoryPoolSingleBinary>;
+	using MemoryPoolMultipleBinary	  = MemoryPool<eMultiple, eBinarySearch>;
+	using MemoryPoolMultipleBinaryPtr = SharedPtr<MemoryPoolMultipleBinary>;
 
-	
+
+
 	template <>
-	class MemoryPool<eSingle, eBinarySearch> : public MemoryPoolAbstract
+	class MemoryPool<eSingle, eBinarySearch> : 
+		public MemoryPoolAbstract, 
+		public MakeSharedFromThis<MemoryPoolSingleBinary>
 	{
-	private:
-		MemoryPool(int slot, const String& name, bool skipInitialize = false): MemoryPoolAbstract(slot, name, skipInitialize) {}
+		using Type = MemoryPoolSingleBinary;
 	public:
+		MemoryPool(bool skipInitialize = false) : MemoryPoolAbstract(skipInitialize) {}
+		MemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {}
+		~MemoryPool() override { Type::Finalize(); }
+
 		template <int RequestSize>
 		void* StaticPop()  {
 			constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
@@ -158,10 +170,8 @@ namespace JCore {
 	private:
 		ArrayStack<void*> m_Pool[Detail::MemoryBlockSizeMapSize_v];
 		NormalLock m_Lock;
-
-		friend class MemoryPoolManager;
 	};
 
-	
+
 };
 

@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <JCore/Sync/ILock.h>
 #include <JCore/Sync/NormalLock.h>
 
 #include <condition_variable>

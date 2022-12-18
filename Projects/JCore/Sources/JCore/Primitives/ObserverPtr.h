@@ -48,9 +48,9 @@ public:
 	VoidBase() = default;
 	virtual ~VoidBase() noexcept = default;
 
-	template <typename T>
-	T* Get() const {
-		return (T*)m_pPointer;
+	template <typename T, DefaultEnableIf_t<IsPointerType_v<T>> = nullptr>
+	T Get() const {
+		return (T)m_pPointer;
 	}
 
 	void* GetRaw() const {

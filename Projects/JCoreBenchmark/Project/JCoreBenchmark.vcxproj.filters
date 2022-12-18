@@ -4,6 +4,9 @@
     <Filter Include="Research">
       <UniqueIdentifier>{33aad24f-8892-4b0e-9aaf-b514ee916c2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Container">
+      <UniqueIdentifier>{65a3e965-cbea-4849-b815-c8292693dfa3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCoreBenchmark\CoreBenchmark.cpp" />
@@ -12,6 +15,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JCoreBenchmark\Research\VirtualAllocTest.cpp">
       <Filter>Research</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapTest.cpp">
+      <Filter>Container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

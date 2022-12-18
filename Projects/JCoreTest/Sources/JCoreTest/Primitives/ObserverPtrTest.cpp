@@ -21,7 +21,7 @@ TEST(ObserverPtrTest, VoidOwner_VoidWatcher) {
 	int* pNew = new int(1000);
 	VoidOwner owner(pNew);
 
-	*owner.Get<int>() = 300;			// 값 수정
+	*owner.Get<int*>() = 300;			// 값 수정
 	void* pVoidNew = owner.GetRaw();
 
 	EXPECT_TRUE(*pNew == 300);

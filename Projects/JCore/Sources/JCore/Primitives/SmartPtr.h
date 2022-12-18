@@ -778,6 +778,8 @@ protected:
 };
 
 
+
+
 template <typename T>
 class SharedPtr : public BasePtr<T>
 {
@@ -802,7 +804,7 @@ public:
 	// struct Thread: MakeSharedFromThis, IRunnable
 	// SharedPtr<IRunnable>(new Thread) -> 이렇게 해버릴 수 있음
 	// 따라서 IRunnable로는 MakeSharedFromThis를 상속받고 있는지 알 수가 없다.
-	template <typename U>
+	template <typename U, DefaultEnableIf_t<IsPointerType_v<U>> = nullptr>
     SharedPtr(U ptr) {
 		Detail::CheckDynamicCastable<U, T>();
         this->MakeShared(ptr);

@@ -18,10 +18,10 @@ constexpr int PageSize_v = 4'096;
 #if NoLoop == ON
 constexpr int MaxPageCount_v = 32'768;
 constexpr int MaxLoop_v = 1;
-#endif
+#else
 constexpr int MaxPageCount_v = 1'024;
 constexpr int MaxLoop_v = 30;
-#else
+#endif
 
 
 // MEM RESERVE와 동시에 MEM COMMIT을 수행한 경우와

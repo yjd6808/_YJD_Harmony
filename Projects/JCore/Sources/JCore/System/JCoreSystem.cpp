@@ -19,25 +19,12 @@ namespace JCore {
 			MemoryPoolManager,
 			PrioritySingleton<JCore::SystemCode_v, JCoreMemoryPoolManager, 0, 0> {};
 	}
-	/*
-	 * JCore 자체적으로 사용하는 변수들 여기 등록
-	 */
-	MemoryLeakDetector LeakDetector_v;
-	
-
 
 	JCoreSystem::System(const int systemCode): SystemAbstract(systemCode) {}
 	JCoreSystem::~System() {}
 
-	void JCoreSystem::EnableLeakCheck(bool enabled) {
-		DebugAssertMessage(m_bStarted == false, "JCore::Initialize를 호출하기전에 설정해주세요.");
-		m_bLeakCheckEnabled = enabled;
-	}
-
 	void JCoreSystem::OnStartUp() {
 		m_bStarted = true;
-		if (m_bLeakCheckEnabled) LeakDetector_v.StartDetect();
-
 		SystemAbstract::OnStartUp();		// 클래스 생성	┐
 		InitializeMemoryPool();				// ┐ 			│
 	}										// │			│
@@ -45,16 +32,6 @@ namespace JCore {
 	void JCoreSystem::OnTerminate() {		// │			│
 		DestroyMemoryPool();				// ┘			│
 		SystemAbstract::OnTerminate();		// 클래스 정리
-
-		if (LeakDetector_v.Detecting()) {
-			int unfreedMem = LeakDetector_v.StopDetect();
-#ifdef DebugMode
-			NormalConsole::WriteLine("%d 바이트 메모리 누수", unfreedMem);
-			DebugAssertMessage(unfreedMem <= 0, "메모리 누수가 있습니다. 덴져로스");
-#else
-			assert(false);
-#endif
-		}
 	}
 
 	void JCoreSystem::InitializeMemoryPool() {
@@ -100,6 +77,10 @@ namespace JCore {
 	}
 
 	void JCoreSystem::DestroyMemoryPool() {
+		JCoreArrayAllocatorPool_v = nullptr;
+		JCoreListAllocatorPool_v = nullptr;
+		JCoreSmartPtrAllocatorPool_v = nullptr;
+
 		JCoreMemPoolManager_v->FinalizeAll();
 	}
 	

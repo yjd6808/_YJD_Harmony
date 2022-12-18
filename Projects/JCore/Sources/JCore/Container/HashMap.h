@@ -182,6 +182,8 @@ public:
 		if (this->m_iSize > 0) {
 			ConnectBucket(m_pHeadBucket, other.m_pHeadBucket->Next);
 			ConnectBucket(other.m_pTailBucket->Previous, m_pTailBucket);
+		} else {
+			ConnectBucket(m_pHeadBucket, m_pTailBucket);
 		}
 
 		other.m_pTable = nullptr;

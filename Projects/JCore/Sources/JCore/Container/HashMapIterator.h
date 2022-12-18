@@ -103,7 +103,7 @@ public:
 protected:
 	THashMap* CastHashMap() const {
 		this->ThrowIfIteratorIsNotValid();
-		return this->Watcher.Get<THashMap>();
+		return this->Watcher.Get<THashMap*>();
 	}
 protected:
 	TListNode* m_pCurrentNode;

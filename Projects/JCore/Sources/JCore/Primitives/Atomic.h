@@ -223,6 +223,23 @@ namespace JCore {
         bool m_Value;
     };
 
+	using AtomicInt64    = Atomic<Int64>;
+	using AtomicInt64U   = Atomic<Int64U>;
+	using AtomicInt      = Atomic<Int>;
+	using AtomicInt32    = Atomic<Int32>;
+	using AtomicInt32U   = Atomic<Int32U>;
+	using AtomicInt32L   = Atomic<Int32L>;
+	using AtomicInt32UL  = Atomic<Int32UL>;
+	using AtomicInt16    = Atomic<Int16>;
+	using AtomicInt16U   = Atomic<Int16U>;
+	using AtomicInt8     = Atomic<Int8>;
+	using AtomicInt8U    = Atomic<Int8U>;
+	using AtomicChar     = Atomic<Char>;
+    using AtomicBool     = Atomic<bool>;
+	using AtomicByte     = Atomic<Byte>;
+	using AtomicWideChar = Atomic<WideChar>;
+    using AtomicIntPtr   = Atomic<IntPtr>;
+
 
 } // namespace JCore
 

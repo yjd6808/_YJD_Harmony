@@ -15,8 +15,6 @@
 #include <JCore/Functional.h>
 
 
-
-
 namespace JCore {
 
 
@@ -25,61 +23,22 @@ namespace JCore {
     class MemoryLeakDetector
     {
     public:
-        void StartDetect() {
-            _CrtMemCheckpoint(&m_State);
-            m_bDetecting = true;
-        }
-
-        bool Detecting() {
-            return m_bDetecting;
-        }
-
-        int StopDetect() {
-            _CrtMemState stateNow, stateDiff;
-            _CrtMemCheckpoint(&stateNow);
-
-            const int diffResult = _CrtMemDifference(&stateDiff, &m_State, &stateNow);
-            m_bDetecting = false;
-            if (diffResult) {
-                return stateDiff.lSizes[1];
-            }
-
-            return 0;
-        }
+        void StartDetect();
+        bool Detecting() { return m_bDetecting; }
+        int StopDetect();
     protected:
         _CrtMemState m_State{};
         bool m_bDetecting{};
     };
 
-    
-    class AutoMemoryLeakDetector : public MemoryLeakDetector
+	class AutoMemoryLeakDetector : public MemoryLeakDetector
     {
         using TAction = Action<Int32U>;
     public:
-        AutoMemoryLeakDetector() {
-	        _CrtMemCheckpoint(&m_State);
-        	m_bDetecting = true;
-        }
-        AutoMemoryLeakDetector(const TAction& action) : AutoMemoryLeakDetector() {
-            m_Callback = action;
-        }
-
-        AutoMemoryLeakDetector(TAction&& action) : AutoMemoryLeakDetector() {
-            m_Callback = Move(action);
-        }
-
-        ~AutoMemoryLeakDetector() {
-            _CrtMemState stateNow, stateDiff;
-            _CrtMemCheckpoint(&stateNow);
-            const int diffResult = _CrtMemDifference(&stateDiff, &m_State, &stateNow);
-
-            if (diffResult && m_Callback) {
-                m_Callback(stateDiff.lSizes[1]);
-                _CrtMemDumpStatistics(&stateDiff);
-            }
-
-            m_bDetecting = false;
-        }
+        AutoMemoryLeakDetector();
+        AutoMemoryLeakDetector(const TAction& action);
+        AutoMemoryLeakDetector(TAction&& action);
+        ~AutoMemoryLeakDetector();
     private:
         TAction m_Callback;
     };
