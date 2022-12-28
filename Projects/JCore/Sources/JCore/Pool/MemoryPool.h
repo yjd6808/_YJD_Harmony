@@ -70,9 +70,16 @@ namespace JCore {
 	{
 		using Type = MemoryPoolSingleBinary;
 	public:
-		MemoryPool(bool skipInitialize = false) : MemoryPoolAbstract(skipInitialize) {}
+		MemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
+			Type::Initialize(allocationMap);
+		}
+
+		MemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {}
 		MemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {}
-		~MemoryPool() override { Type::Finalize(); }
+		~MemoryPool() override {
+			auto dbg = this;
+			Type::Finalize();
+		}
 
 		template <int RequestSize>
 		void* StaticPop()  {
@@ -119,7 +126,7 @@ namespace JCore {
 
 		template <int PushSize>
 		void StaticPush(void* memory) {
-			static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
+			// static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
 			int index = Detail::AllocationLengthMapConverter::ToIndex<PushSize>();
 			LockGuard<NormalLock> guard(m_Lock);
 			AddDeallocated(index);
@@ -127,7 +134,7 @@ namespace JCore {
 		}
 
 		void DynamicPush(void* memory, int returnSize) override {
-			DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(returnSize), "뭐야! 사이즈가 안맞자나!");
+			// DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(returnSize), "뭐야! 사이즈가 안맞자나!");
 			int index = Detail::AllocationLengthMapConverter::ToIndex(returnSize);
 			LockGuard<NormalLock> guard(m_Lock);
 			AddDeallocated(index);

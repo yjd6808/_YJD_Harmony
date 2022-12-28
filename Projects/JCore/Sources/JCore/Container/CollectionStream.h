@@ -10,7 +10,8 @@
 
 namespace JCore {
 
-template <typename> class CollectionExtension;
+template <typename, typename>
+class CollectionExtension;
 
 template <typename T>
 struct StreamNode
@@ -29,21 +30,18 @@ public:
 
 
 
-
-
 /*=====================================================================================
 									콜렉션 스트림
            다른 콜렉션을 참조하는 물리적 배열, 논리적인 연결리스트 기반의 자료구조이다.
 =====================================================================================*/
 
-template <typename T>
-class CollectionStream : public Collection<T>
+template <typename T, typename TAllocator>
+class CollectionStream : public Collection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T>;
-	using TStreamNode			= StreamNode<T>;
-	using TCollection			= Collection<T>;
-	using TCollectionStream		= CollectionStream<T>;
-    using TIterator             = Iterator<T>;
+	using TStreamNode		= StreamNode<T>;
+	using TEnumerator		= Enumerator<T, TAllocator>;
+	using TCollection		= Collection<T, TAllocator>;
+	using TCollectionStream	= CollectionStream<T, TAllocator>;
 
 private: 
 	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
@@ -52,15 +50,14 @@ private:
         int size = collection->Size();
 	    this->m_iSize = size;
 
-
-
 		if (size == 0) {
 			ConnectNode(m_pHead, m_pTail);
 			return;
 		}
 
+		// Memory::Allocate<TStreamNode*>(sizeof(TStreamNode) * size);
 		// 물리적 배열 생성
-		m_pArray = Memory::Allocate<TStreamNode*>(sizeof(TStreamNode) * size);
+		m_pArray = TAllocator::template Allocate<TStreamNode*>(sizeof(TStreamNode) * size, m_iAllocatedSize);
 
 		// 논리적 연결리스트 구성
 		ConnectNode(m_pHead, &m_pArray[0]);
@@ -100,7 +97,7 @@ public:
 	}
 
 	virtual ~CollectionStream() noexcept {
-		Memory::Deallocate(m_pArray);
+		if (m_pArray) TAllocator::template Deallocate(m_pArray, m_iAllocatedSize);
 	}
 
     TEnumerator Begin() const override {
@@ -267,11 +264,12 @@ protected:
 	TStreamNode* m_pHead = &m_ValtyHead;
 	TStreamNode* m_pTail = &m_ValtyTail;
 private:
+	int m_iAllocatedSize{};
 	TStreamNode m_ValtyHead;
 	TStreamNode m_ValtyTail;
 	TStreamNode m_ValtyTemp;
 
-	friend class CollectionExtension<T>;
+	friend class CollectionExtension<T, TAllocator>;
 };
 
 } // namespace JCore

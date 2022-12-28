@@ -9,14 +9,17 @@
 
 namespace JCore {
 
-template <typename T>
-class ListStack	: public ListCollection<T>
+template <typename T, typename TAllocator = DefaultAllocator>
+class ListStack;
+
+template <typename T, typename TAllocator>
+class ListStack	: public ListCollection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T>;
-	using TCollection			= Collection<T>;
-	using TListCollection		= ListCollection<T>;
-	using TListStack			= ListStack<T>;
-	using TListStackIterator	= ListStackIterator<T>;
+	using TEnumerator			= Enumerator<T, TAllocator>;
+	using TCollection			= Collection<T, TAllocator>;
+	using TListCollection		= ListCollection<T, TAllocator>;
+	using TListStack			= ListStack<T, TAllocator>;
+	using TListStackIterator	= ListStackIterator<T, TAllocator>;
 public:
 	ListStack() 
 		: TListCollection(ContainerType::ListStack) 
@@ -81,11 +84,11 @@ public:
 	}
 
 	TEnumerator Begin() const override {
-		return MakeShared<TListStackIterator>(this->GetOwner(), this->m_pHead->Next);
+		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->m_pHead);
 	}
 
 	TEnumerator End() const override {
-		return MakeShared<TListStackIterator>(this->GetOwner(), this->m_pTail);
+		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->m_pTail);
 	}
 protected:
 	friend class TListStackIterator;

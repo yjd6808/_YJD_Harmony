@@ -14,14 +14,14 @@ namespace JCore {
 								배열 큐
 =====================================================================================*/
 
-template <typename T>
-class ArrayQueue final : public ArrayCollection<T>
+template <typename T, typename TAllocator = DefaultAllocator>
+class ArrayQueue final : public ArrayCollection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T>;
-	using TCollection			= Collection<T>;
-	using TArrayCollection		= ArrayCollection<T>;
-	using TArrayQueue			= ArrayQueue<T>;
-	using TArrayQueueIterator	= ArrayQueueIterator<T>;
+	using TEnumerator			= Enumerator<T, TAllocator>;
+	using TCollection			= Collection<T, TAllocator>;
+	using TArrayCollection		= ArrayCollection<T, TAllocator>;
+	using TArrayQueue			= ArrayQueue<T, TAllocator>;
+	using TArrayQueueIterator	= ArrayQueueIterator<T, TAllocator>;
 public:
 	ArrayQueue(int capacity = TArrayCollection::ms_iDefaultCapacity) 
 		: TArrayCollection(capacity, ContainerType::ArrayQueue) 
@@ -153,9 +153,7 @@ public:
 	/// </summary>
 	void Clear(bool removeHeap = false) override {
 		if (this->IsEmpty()) {
-			if (removeHeap) {
-				DeleteSafe(this->m_pArray);
-			}
+			if (removeHeap) AllocatorDynamicDeallocateSafe(this->m_pArray, sizeof(T) * this->m_iCapacity);
 			return;
 		}
 
@@ -181,19 +179,16 @@ public:
 		m_iTail = 0;
 		m_iHead = 0;
 
-		if (removeHeap) {
-			Memory::Deallocate(this->m_pArray);
-			this->m_pArray = nullptr;
-		}
+		if (removeHeap) AllocatorDynamicDeallocateSafe(this->m_pArray, sizeof(T) * this->m_iCapacity);
 	}
 
 	TEnumerator Begin() const override {
-		return MakeShared<TArrayQueueIterator>(this->GetOwner(), m_iHead);
+		return MakeShared<TArrayQueueIterator, TAllocator>(this->GetOwner(), m_iHead);
 	}
 
 	// 꼬리위치는 데이터가 삽입될 위치이므로 마지막 원소의 위치는 꼬리에서 1칸 이전의 인덱스이다.
 	TEnumerator End() const override {
-		return MakeShared<TArrayQueueIterator>(this->GetOwner(), m_iTail);	
+		return MakeShared<TArrayQueueIterator, TAllocator>(this->GetOwner(), m_iTail);
 	}
 
 protected:
@@ -242,7 +237,8 @@ protected:
 
 	// 크기 확장
 	void Expand(int capacity, bool _ = false) override {
-		T* pNewArray = Memory::Allocate<T*>(sizeof(T) * capacity);
+		int iAllocated;
+		T* pNewArray = TAllocator::template Allocate<T*>(sizeof(T) * capacity, iAllocated);
 
 		if (IsForwardedTail()) {
 			/*	  아래와 같은 상황에서의 배열 확장방법
@@ -293,7 +289,7 @@ protected:
 				sizeof(T) * iBeginToTailSize);
 		}
 
-		Memory::Deallocate(this->m_pArray);
+		AllocatorDynamicDeallocateSafe(this->m_pArray, sizeof(T) * this->m_iCapacity);
 
 		this->m_pArray = pNewArray;
 		this->m_iCapacity = capacity;

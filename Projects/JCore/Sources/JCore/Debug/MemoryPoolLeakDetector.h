@@ -15,13 +15,13 @@ namespace JCore {
 
 	class AutMemoryPoolLeakDetector
 	{
-		using TOut = LinkedList<SharedPtr<MemoryPoolCaptured>>;
-		using TAction = Action<Int64U, TOut&>;
+		using TOut = int*;
+		using TAction = Action<Int64U, int*>;
 	public:
-		AutMemoryPoolLeakDetector(MemoryPoolManager* manager, const TAction& action);
+		AutMemoryPoolLeakDetector(MemoryPoolAbstract* pool, const TAction& action);
 		~AutMemoryPoolLeakDetector();
 	protected:
-		MemoryPoolManager* m_PoolManager;
+		MemoryPoolAbstract* m_Pool;
 		TAction m_Callback;
 	};
 

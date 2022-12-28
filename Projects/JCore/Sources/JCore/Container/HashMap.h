@@ -23,29 +23,44 @@ struct BucketNode
 		return Pair == other.Pair && Hash == other.Hash;
 	}
 
-	// LinkedList 더미 헤드/테일 생성시 필요한 디폴트 생성자
-	BucketNode() = default; 
-	~BucketNode() noexcept = default;
+	
+	BucketNode() = default;
+	BucketNode(const TKeyValuePair& pair, const Int32U hash)
+		: Pair(pair)
+		, Hash(hash)
+	{}
+	
+	BucketNode(TKeyValuePair&& pair, const Int32U hash)
+		: Pair(Move(pair))
+		, Hash(hash)
+	{}
+
 	BucketNode(const TBucketNode& other) = default;
 	BucketNode(TBucketNode&& other) = default;
-	BucketNode(const TKeyValuePair& pair, const Int32U hash) : Pair(pair), Hash(hash) {}
-	BucketNode(TKeyValuePair&& pair, const Int32U hash) : Pair(Move(pair)), Hash(hash) {}
-	BucketNode& operator=(const BucketNode& other) = default;
-	BucketNode& operator=(BucketNode&& other) = default;
+	TBucketNode& operator=(const BucketNode& other) = default;
+	TBucketNode& operator=(BucketNode&& other) = default;
 
 	TKeyValuePair Pair;
-	Int32U Hash{};				// 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
+	Int32U Hash{};	// 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
 };
 
-template <typename TKey, typename TValue>
-struct Bucket : public LinkedList<BucketNode<TKey, TValue>>
+
+
+/* ==============================================================
+ *               
+ * 2022/12/25일까지 기존 연결리스트 확장해서 씀
+ * 하지만 성능이 안좋고 너무 무겁기 때문에 경량화해서 새로 작성이 필요하다.
+ *
+ * ============================================================== */
+/*
+template <typename TKey, typename TValue, typename TAllocator>
+struct Bucket : public LinkedList<BucketNode<TKey, TValue>, TAllocator>
 {
 private:
 	using TBucketNode = BucketNode<TKey, TValue>;
-	using TLinkedList = LinkedList<BucketNode<TKey, TValue>>;
+	using TLinkedList = LinkedList<BucketNode<TKey, TValue>, TAllocator>;
 public:
 	bool ExistByKey(const TKey& key) {
-
 		return TLinkedList::Extension().ExistIf([&key](const TBucketNode& node) { return node.Pair.Key == key; });
 	}
 
@@ -66,11 +81,162 @@ public:
 	Bucket* Next = nullptr;
 	Bucket* Previous = nullptr;
 
-	friend class HashMap<TKey, TValue>;
+	template <typename, typename, typename> friend class HashMap;
+};
+*/
+
+
+
+/* ==============================================================
+ *
+ * 12월 25일 일요일 크리스마스 기념! 버킷을 공허의 다이나믹 배열로 변경
+ * 공허의 다이나믹 배열?: 데이터를 넣을때 초기화를 진행한다!
+ * 보통 1개의 데이터를 넣게 되므로 초기 용량은 1로 설정하고 이후 +2씩 커지도록 하였다.
+ * 근데 3개까지 찰 확률은 거의 없다.
+ *
+ * ============================================================== */
+template <typename TKey, typename TValue, typename TAllocator>
+struct Bucket
+{
+	using TBucketNode = BucketNode<TKey, TValue>;
+
+	Bucket()
+	: Next(nullptr)
+	, Previous(nullptr)
+	, DynamicArray(nullptr)
+	, Capacity(1)
+	, Size(0) {}
+	~Bucket() {
+		PlacementDeleteArraySafe(DynamicArray, Size);
+		AllocatorDynamicDeallocateSafe(DynamicArray, sizeof(TBucketNode) * Capacity);
+	}
+
+	template <typename... Args>
+	void EmplaceBack(Args&&... args) {
+		if (!IsValid())
+			Initialize();
+
+		if (IsFull()) 
+			Expand(Capacity + 2);
+
+		Memory::PlacementNew(DynamicArray[Size++], Forward<Args>(args)...);
+	}
+
+	void PushBack(const TBucketNode& data) {
+		if (!IsValid())
+			Initialize();
+
+		if (IsFull())
+			Expand(Capacity + 2);
+
+		DynamicArray[Size++] = data;
+	}
+
+	void PushBack(TBucketNode&& data) {
+		if (!IsValid())
+			Initialize();
+
+		if (IsFull())
+			Expand(Capacity + 2);
+
+		DynamicArray[Size++] = Move(data);
+	}
+
+	void Initialize() {
+		int iAllocated;
+		DynamicArray = TAllocator::template Allocate<TBucketNode*>(sizeof(TBucketNode) * Capacity, iAllocated);
+		Memory::Set(DynamicArray, sizeof(TBucketNode) * Capacity, 0);
+	}
+
+	void Expand(int newCapacity) {
+		int iAllocated;
+		TBucketNode* pNewDynamicArray = TAllocator::template Allocate<TBucketNode*>(sizeof(TBucketNode) * newCapacity, iAllocated);
+		Memory::Set(pNewDynamicArray, sizeof(TBucketNode) * newCapacity, 0);
+
+		for (int i = 0; i < Size; i++) {
+			pNewDynamicArray[i] = Move(DynamicArray[i]);
+		}
+
+		TAllocator::Deallocate(DynamicArray, sizeof(TBucketNode) * Capacity);
+		DynamicArray = pNewDynamicArray;
+		Capacity = newCapacity;
+	}
+
+	void Clear() {
+		PlacementDeleteArraySafe(DynamicArray, Size);
+		Size = 0;
+	}
+
+	bool ExistByKey(const TKey& key) {
+		for (int i = 0; i < Size; i++) {
+			if (DynamicArray[i].Pair.Key == key) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	TValue* FindByKey(const TKey& key) {
+		for (int i = 0; i < Size; i++) {
+			if (DynamicArray[i].Pair.Key == key) {
+				return AddressOf(DynamicArray[i].Pair.Value);
+			}
+		}
+
+		return nullptr;
+	}
+
+	bool RemoveByKey(const TKey& key) {
+		int iFind = -1;
+		for (int i = 0; i < Size; i++) {
+			if (DynamicArray[i].Pair.Key == key) {
+				Memory::PlacementDelete(DynamicArray[i]);
+				iFind = i;
+				break;
+			}
+		}
+
+		if (iFind == -1) {
+			return false;
+		}
+
+		for (int i = iFind; i < Size - 1; i++) {
+			DynamicArray[i] = Move(DynamicArray[i + 1]);
+		}
+
+		--Size;
+		return true;
+	}
+
+	bool IsFull() {
+		return Size == Capacity;
+	}
+
+	bool IsEmpty() {
+		return Size == 0;
+	}
+
+	bool IsValid() {
+		return DynamicArray != nullptr;
+	}
+
+
+	TBucketNode& GetAt(const int idx) {
+		DebugAssert(DynamicArray);
+		DebugAssert(idx >= 0 && idx < Size);
+		return DynamicArray[idx];
+	}
+
+	Bucket* Next;
+	Bucket* Previous;
+	TBucketNode* DynamicArray;
+	int Capacity;
+	int Size;
 };
 
-template <typename TKey, typename TValue>
-class HashMap : public MapCollection<TKey, TValue>
+template <typename TKey, typename TValue, typename TAllocator = DefaultAllocator>
+class HashMap : public MapCollection<TKey, TValue, TAllocator>
 {
 	/* =====================================================================
 	 *
@@ -80,20 +246,20 @@ class HashMap : public MapCollection<TKey, TValue>
 	 *			-> 모르겠다.
 	 *			-> 잠시만 이거 와 방법 생각남
 	 *			-> 검색 도움 없이 해결완료
-	 *		2. 어떻게 이터레이팅을 해야할까?
+	 *		2. 어떻게 이터레이션을 해야할까?
 	 *			-> 검색 도움 없이 해결완료
 	 *
 	 *
 	 * ==================================================================== */
 
 	using THasher					= Hasher<TKey>;
-	using TBucket					= Bucket<TKey, TValue>;
+	using TBucket					= Bucket<TKey, TValue, TAllocator>;
 	using TBucketNode				= BucketNode<TKey, TValue>;
-	using TMapCollection			= MapCollection<TKey, TValue>;
+	using TMapCollection			= MapCollection<TKey, TValue, TAllocator>;
 	using TKeyValuePair				= Pair<TKey, TValue>;
-	using TIterator					= Iterator<TKeyValuePair>;
-	using THashMap					= HashMap<TKey, TValue>;
-	using THashMapIterator			= HashMapIterator<TKey, TValue>;
+	using TIterator					= Iterator<TKeyValuePair, TAllocator>;
+	using THashMap					= HashMap<TKey, TValue, TAllocator>;
+	using THashMapIterator			= HashMapIterator<TKey, TValue, TAllocator>;
 	using TKeyCollection			= typename TMapCollection::KeyCollection;
 	using TValueCollection			= typename TMapCollection::ValueCollection;
 	using TKeyCollectionIterator	= typename TMapCollection::KeyCollectionIterator;
@@ -107,16 +273,16 @@ public:
 public:
 	HashMap(int capacity = ms_iTableDefaultCapacity) 
 		: TMapCollection(ContainerType::HashMap),
+		m_pHeadBucket(nullptr),
+		m_pTailBucket(nullptr),
+		m_iCapacity(capacity),
 		m_KeyCollection(this),
 		m_ValueCollection(this)
+		
 	{
-		m_pTable = new TBucket[capacity];
-		m_pHeadBucket->Previous = nullptr;
-		m_pTailBucket->Next = nullptr;
-
-		m_iCapacity = capacity;
-
-		ConnectBucket(m_pHeadBucket, m_pTailBucket);
+		int iAllocatedSize;
+		m_pTable = TAllocator::template Allocate<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
+		Memory::PlacementNewArray(m_pTable, capacity);
 	}
 
 	HashMap(const THashMap& other)
@@ -127,6 +293,9 @@ public:
 
 	HashMap(THashMap&& other) noexcept
 		: TMapCollection(ContainerType::HashMap),
+		m_pTable(nullptr),
+		m_pHeadBucket(nullptr),
+		m_pTailBucket(nullptr),
 		m_KeyCollection(this),
 		m_ValueCollection(this)
 	{
@@ -134,32 +303,31 @@ public:
 	}
 
 	HashMap(std::initializer_list<TKeyValuePair> ilist)
-		: THashMap(ilist.size())
+		: THashMap(ilist.size() + 1) // 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
 	{
 		operator=(ilist);
 	}
 
 	~HashMap() noexcept override {
-		Clear();
-		DeleteArraySafe(m_pTable);
+		THashMap::Clear();
+
+		PlacementDeleteArraySafe(m_pTable, m_iCapacity);
+		AllocatorDynamicDeallocateSafe(m_pTable, m_iCapacity * sizeof(TBucket));
 	}
 public:
 
 
 	THashMap& operator=(const THashMap& other) {
-
-		Clear();
+		THashMap::Clear();
 		ExpandIfNeeded(other.m_iSize);
 
-		TBucket* pOtherBucketCur = other.m_pHeadBucket->Next;
-		while (pOtherBucketCur != other.m_pTailBucket) {
-			auto nodeIterator = pOtherBucketCur->Begin();
-			while (nodeIterator->HasNext()) {
-				TBucketNode& node = nodeIterator->Next();
+		TBucket* pOtherBucketCur = other.m_pHeadBucket;
+		while (pOtherBucketCur != nullptr) {
+			for (int i = 0; i < pOtherBucketCur->Size; i++) {
+				TBucketNode& node = pOtherBucketCur->GetAt(i);
 				Int32U uiBucket = BucketIndex(node.Hash);
 				m_pTable[uiBucket].PushBack(node);
 			}
-
 			pOtherBucketCur = pOtherBucketCur->Next;
 		}
 
@@ -169,7 +337,7 @@ public:
 
 	THashMap& operator=(THashMap&& other) noexcept {
 		Clear();
-		DeleteArraySafe(m_pTable);
+		AllocatorDynamicDeallocateSafe(m_pTable, sizeof(TBucket) * m_iCapacity);
 
 		this->m_Owner = Move(other.m_Owner);
 		this->m_iSize = other.m_iSize;
@@ -177,23 +345,19 @@ public:
 		this->m_pTable = other.m_pTable;
 		this->m_KeyCollection = other.m_KeyCollection;
 		this->m_ValueCollection = other.m_ValueCollection;
-
-		// Head 버킷과 Tail 버킷 사이에 연결된 버킷이 있는 경우에만 연결해줘야함
-		if (this->m_iSize > 0) {
-			ConnectBucket(m_pHeadBucket, other.m_pHeadBucket->Next);
-			ConnectBucket(other.m_pTailBucket->Previous, m_pTailBucket);
-		} else {
-			ConnectBucket(m_pHeadBucket, m_pTailBucket);
-		}
+		this->m_pHeadBucket = other.m_pHeadBucket;
+		this->m_pTailBucket = other.m_pTailBucket;;
 
 		other.m_pTable = nullptr;
+		other.m_pHeadBucket = nullptr;
+		other.m_pTailBucket = nullptr;
 		other.m_iSize = 0;
 
 		return *this;
 	}
 
 	THashMap& operator=(std::initializer_list<TKeyValuePair> ilist) {
-		Clear();
+		THashMap::Clear();
 		ExpandIfNeeded(ilist.size());
 
 		for (auto it = ilist.begin(); it != ilist.end(); ++it) {
@@ -222,9 +386,8 @@ public:
 		Int32U uiBucket = BucketIndex(uiHash);
 
 		if (m_pTable[uiBucket].IsEmpty()) {
-			InsertBucketPrev(m_pTailBucket, &m_pTable[uiBucket]);
+			PushBackNewBucket(&m_pTable[uiBucket]);
 		}
-
 
 		m_pTable[uiBucket].EmplaceBack(TKeyValuePair{ Forward<Ky>(key), Forward<Vy>(value) }, uiHash);
 		++this->m_iSize;
@@ -244,7 +407,7 @@ public:
 		Int32U uiBucket = BucketIndex(uiHash);
 
 		if (m_pTable[uiBucket].IsEmpty()) {
-			InsertBucketPrev(m_pTailBucket, &m_pTable[uiBucket]);
+			PushBackNewBucket(&m_pTable[uiBucket]);
 		} 
 
 		m_pTable[uiBucket].EmplaceBack(pair, uiHash);
@@ -265,7 +428,7 @@ public:
 		Int32U uiBucket = BucketIndex(uiHash);
 
 		if (m_pTable[uiBucket].IsEmpty()) {
-			InsertBucketPrev(m_pTailBucket, &m_pTable[uiBucket]);
+			PushBackNewBucket(&m_pTable[uiBucket]);
 		}
 
 		m_pTable[uiBucket].EmplaceBack(Move(pair), uiHash);
@@ -299,17 +462,32 @@ public:
 
 	bool Remove(const TKey& key) override {
 		TBucket& bucket = m_pTable[HashBucket(key)];
+
 		if (!bucket.RemoveByKey(key)) {
 			return false;
 		}
 
 		// 버킷이 비었으면 연결을 끊어준다.
 		if (bucket.IsEmpty()) {
-			ConnectBucket(bucket.Previous, bucket.Next);
+			RemoveBucket(&bucket);
 		}
 	
 		--this->m_iSize;
 		return true;
+	}
+
+	void RemoveBucket(TBucket* bucket) {
+		if (bucket == m_pHeadBucket) {
+			m_pHeadBucket = m_pHeadBucket->Next;
+			if (m_pHeadBucket == nullptr) m_pTailBucket = nullptr;
+			else m_pHeadBucket->Previous = nullptr;
+		} else if (bucket == m_pTailBucket) {
+			m_pTailBucket = m_pTailBucket->Previous;
+			if (m_pTailBucket == nullptr) m_pHeadBucket = nullptr;
+			else m_pTailBucket->Next = nullptr;
+		} else {
+			ConnectBucket(bucket->Previous, bucket->Next);
+		}
 	}
 
 	void Clear() noexcept override {
@@ -317,15 +495,21 @@ public:
 			return;
 		}
 
-		TBucket* pCur = m_pHeadBucket->Next;
-		while (pCur != m_pTailBucket) {
+		TBucket* pCur = m_pHeadBucket;
+		while (pCur != nullptr) {
+			TBucket* pTemp = pCur;
 			pCur->Clear();
 			pCur = pCur->Next;
 		}
 
 		this->m_iSize = 0;
 
-		ConnectBucket(m_pHeadBucket, m_pTailBucket);
+		m_pHeadBucket = nullptr;
+		m_pTailBucket = nullptr;
+	}
+
+	virtual bool Valid() const {
+		return m_pTable != nullptr;
 	}
 
 	void PrintInfo() {
@@ -346,11 +530,19 @@ public:
 	}
 
 	SharedPtr<TIterator> Begin() const override {
-		return MakeShared<THashMapIterator>(this->GetOwner(), m_pHeadBucket->Next, m_pHeadBucket->Next->m_pHead->Next);
+		return MakeShared<THashMapIterator, TAllocator>(
+			this->GetOwner(), 
+			m_pHeadBucket,
+			0
+		);
 	}
 
 	SharedPtr<TIterator> End() const override {
-		return MakeShared<THashMapIterator>(this->GetOwner(), m_pTailBucket->Previous, m_pTailBucket->Previous->m_pTail);
+		return MakeShared<THashMapIterator, TAllocator>(
+			this->GetOwner(), 
+			m_pTailBucket, 
+			m_pTailBucket ? m_pTailBucket->Size - 1 : -1
+		);
 	}
 
 	TKeyCollection& Keys() override {
@@ -362,35 +554,37 @@ public:
 	}
 protected:
 	void Expand(int capacity) {
-		TBucket* pNewTable = new TBucket[capacity];
+		int iAllocatedSize;
+		TBucket* pNewTable = TAllocator::template Allocate<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
+		Memory::PlacementNewArray(pNewTable, capacity);
 		const int iPrevCapacity = m_iCapacity;
 
 		m_iCapacity = capacity;
-
-		ConnectBucket(m_pHeadBucket, m_pTailBucket);
+		m_pHeadBucket = nullptr;
+		m_pTailBucket = nullptr;
 
 		for (int i = 0; i < iPrevCapacity; i++) {
-			if (m_pTable[i].Size() == 0) {
+			if (m_pTable[i].Size == 0) {
 				continue;
 			}
 
 			TBucket& prevBucket = m_pTable[i];
-			auto prevBucketIterator = prevBucket.Begin();
 
 			// 기존 버킷을 순회하며 새로운 버킷에 데이터를 담아준다.
-			while (prevBucketIterator->HasNext()) {
-				TBucketNode& bucketNode = prevBucketIterator->Next();
+			for (int j = 0; j < prevBucket.Size; j++) {
+				TBucketNode& bucketNode = prevBucket.GetAt(j);
 				Int32U uiBucket = BucketIndex(bucketNode.Hash);
 
 				if (pNewTable[uiBucket].IsEmpty()) {
-					InsertBucketPrev(m_pTailBucket, &pNewTable[uiBucket]);
+					PushBackNewBucket(&pNewTable[uiBucket]);
 				}
 
 				pNewTable[uiBucket].PushBack(Move(bucketNode));
 			}
 		}
 
-		DeleteArraySafe(m_pTable);
+		PlacementDeleteArraySafe(m_pTable, iPrevCapacity);
+		AllocatorDynamicDeallocateSafe(m_pTable, sizeof(TBucket) * iPrevCapacity);
 		m_pTable = pNewTable;
 	}
 
@@ -424,36 +618,34 @@ protected:
 	}
 
 	static void ConnectBucket(TBucket* lhs, TBucket* rhs) noexcept {
-		lhs->Next = rhs;
-		rhs->Previous = lhs;
+		if (lhs) lhs->Next = rhs;
+		if (rhs) rhs->Previous = lhs;
 	}
 
 	/// <summary>
 	/// bucket 바로 전에 다른 bucket을 삽입한다.
 	/// </summary>
-	void InsertBucketPrev(TBucket* bucket, TBucket* otherBucket) {
-		if (bucket == m_pHeadBucket) {
-			throw InvalidArgumentException("헤드 이전에는 노드를 삽입하면 안되요!");
+	void PushBackNewBucket(TBucket* bucket) {
+		if (m_pHeadBucket == nullptr) {
+			m_pHeadBucket = bucket;
+			m_pTailBucket = bucket;
+			return;
 		}
 
 		/*
 			[삽입 전]
 			 ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■
-									 ↑     ↑
-										  node
-								  node->prev
+									       ↑
+										  Tail
 
 			[삽입 후]
 			 ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■
-									 ↑     ↑     ↑
-								 node->prev     node
-										 newNode
+			                                     ↑
+									    	 newNode (tail)
 		 */
 
-		TBucket* pBucketPrev = bucket->Previous;
-
-		ConnectBucket(pBucketPrev, otherBucket);
-		ConnectBucket(otherBucket, bucket);
+		ConnectBucket(m_pTailBucket, bucket);
+		m_pTailBucket = bucket;
 	}
 
 
@@ -473,24 +665,21 @@ protected:
 		return this->m_iSize == m_iCapacity;
 	}
 	
-	static constexpr Int32U	ms_iTableExpandingFactor = 8;	// 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
+	static constexpr Int32U	ms_iTableExpandingFactor = 4;	// 테이블 크기만큼 데이터가 들어가면 확장하는데 몇배나 확장할 지
 	static constexpr Int32U	ms_iTableDefaultCapacity = 16;	// 테이블 초기 크기
 protected:
-	TBucket* m_pTable = nullptr;
-	TBucket* m_pHeadBucket = &m_ValtyHead;
-	TBucket* m_pTailBucket = &m_ValtyTail;
-	Int32U m_iCapacity = 0;
+	TBucket* m_pTable;
+	TBucket* m_pHeadBucket;
+	TBucket* m_pTailBucket;
+	Int32U m_iCapacity;
 
 	HashMapKeyCollection m_KeyCollection;
 	HashMapValueCollection m_ValueCollection;
-private:
-	TBucket m_ValtyHead;		// 머리 더미노드
-	TBucket m_ValtyTail;		// 꼬리 더미노드
 public:
 	struct HashMapKeyCollection : public TKeyCollection
 	{
-		using TEnumerator		= SharedPtr<Iterator<TKey>>;
-		using TCollection		= Collection<TKey>;
+		using TEnumerator		= SharedPtr<Iterator<TKey, TAllocator>>;
+		using TCollection		= Collection<TKey, TAllocator>;
 
 		HashMapKeyCollection(THashMap* hashMap) 
 			: TKeyCollection(hashMap, ContainerType::HashMapKeyCollection)
@@ -515,18 +704,18 @@ public:
 		}
 
 		TEnumerator Begin() const override {
-			return MakeShared<HashMapKeyCollectionIterator>(
+			return MakeShared<HashMapKeyCollectionIterator, TAllocator>(
 				m_pHashMap->GetOwner(), 
-				m_pHashMap->m_pHeadBucket->Next,
-				m_pHashMap->m_pHeadBucket->Next->m_pHead->Next
+				m_pHashMap->m_pHeadBucket,
+				0
 			);
 		}
 
 		TEnumerator End() const override {
-			return MakeShared<HashMapKeyCollectionIterator>(
+			return MakeShared<HashMapKeyCollectionIterator, TAllocator>(
 				m_pHashMap->GetOwner(), 
-				m_pHashMap->m_pTailBucket->Previous,
-				m_pHashMap->m_pTailBucket->Previous->m_pTail
+				m_pHashMap->m_pTailBucket,
+				m_pHashMap->m_pTailBucket ? m_pHashMap->m_pTailBucket->Size - 1 : -1
 			);
 		}
 
@@ -535,10 +724,10 @@ public:
 
 	struct HashMapKeyCollectionIterator final : public TKeyCollectionIterator
 	{
-		using TListNode = ListNode<BucketNode<TKey, TValue>>;
+		using TListNode = ListNode<BucketNode<TKey, TValue>, TAllocator>;
 
-		HashMapKeyCollectionIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode)
-			: m_HashMapIterator(owner, currentBucket, currentNode), TKeyCollectionIterator(owner, &m_HashMapIterator)
+		HashMapKeyCollectionIterator(VoidOwner& owner, TBucket* currentBucket, int currentBucketIndex)
+			: m_HashMapIterator(owner, currentBucket, currentBucketIndex), TKeyCollectionIterator(owner, &m_HashMapIterator)
 		{
 		}
 		virtual ~HashMapKeyCollectionIterator() noexcept = default;
@@ -548,8 +737,8 @@ public:
 
 	struct HashMapValueCollection final : public TValueCollection
 	{
-		using TEnumerator		= SharedPtr<Iterator<TValue>>;
-		using TCollection		= Collection<TValue>;
+		using TEnumerator		= SharedPtr<Iterator<TValue, TAllocator>>;
+		using TCollection		= Collection<TValue, TAllocator>;
 
 		HashMapValueCollection(THashMap* hashMap)
 			: TMapCollection::ValueCollection(hashMap, ContainerType::HashMapValueCollection)
@@ -566,18 +755,18 @@ public:
 		}
 
 		TEnumerator Begin() const override {
-			return MakeShared<HashMapValueCollectionIterator>(
+			return MakeShared<HashMapValueCollectionIterator, TAllocator>(
 				m_pHashMap->GetOwner(),
-				m_pHashMap->m_pHeadBucket->Next,
-				m_pHashMap->m_pHeadBucket->Next->m_pHead->Next
+				m_pHashMap->m_pHeadBucket,
+				0
 			);
 		}
 
 		TEnumerator End() const override {
-			return MakeShared<HashMapValueCollectionIterator>(
+			return MakeShared<HashMapValueCollectionIterator, TAllocator>(
 				m_pHashMap->GetOwner(),
-				m_pHashMap->m_pTailBucket->Previous,
-				m_pHashMap->m_pTailBucket->Previous->m_pTail
+				m_pHashMap->m_pTailBucket,
+				m_pHashMap->m_pTailBucket ? m_pHashMap->m_pTailBucket->Size - 1 : -1
 			);
 		}
 
@@ -586,10 +775,10 @@ public:
 
 	struct HashMapValueCollectionIterator final : public TValueCollectionIterator
 	{
-		using TListNode = ListNode<BucketNode<TKey, TValue>>;
+		using TListNode = ListNode<BucketNode<TKey, TValue>, TAllocator>;
 
-		HashMapValueCollectionIterator(VoidOwner& owner, TBucket* currentBucket, TListNode* currentNode)
-			: m_HashMapIterator(owner, currentBucket, currentNode), TValueCollectionIterator(owner, &m_HashMapIterator)
+		HashMapValueCollectionIterator(VoidOwner& owner, TBucket* currentBucket, int currentBucketIndex)
+			: m_HashMapIterator(owner, currentBucket, currentBucketIndex), TValueCollectionIterator(owner, &m_HashMapIterator)
 		{
 		}
 

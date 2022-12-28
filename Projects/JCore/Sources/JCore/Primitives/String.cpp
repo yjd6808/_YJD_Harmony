@@ -30,6 +30,7 @@ String::String(const int capacity)  {
 }
 
 String::String(const char* str, const int capacity) {
+	
 	if (str == nullptr) {
         m_pBuffer = nullptr;
         m_iCapacity = 0;
@@ -209,9 +210,9 @@ int String::Compare(const char* str, const int strLen) const {
 	return 0;
 }
 
-Vector<int> String::FindAll(int startIdx, int endIdx, const char* str) const {
+Vector<int, DefaultAllocator> String::FindAll(int startIdx, int endIdx, const char* str) const {
 
-	Vector<int> offsets;
+	Vector<int, DefaultAllocator> offsets;
 	const int iStrLen = StringUtil::Length(str);
 
 	if (iStrLen == 0) {
@@ -237,11 +238,11 @@ Vector<int> String::FindAll(int startIdx, int endIdx, const char* str) const {
 
 // 문자열을 찾음 : 시작 인덱스 반환
 // 문자열을 못찾음 : -1을 반환
-Vector<int> String::FindAll(const char* str) const {
+Vector<int, DefaultAllocator> String::FindAll(const char* str) const {
 	return FindAll(0, m_iLen - 1, str);
 }
 
-Vector<int> String::FindAll(const String& str) const {
+Vector<int, DefaultAllocator> String::FindAll(const String& str) const {
 	return FindAll(str.m_pBuffer);
 }
 

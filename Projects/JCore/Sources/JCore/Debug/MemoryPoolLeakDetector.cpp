@@ -14,15 +14,15 @@
 
 namespace JCore {
 
-	AutMemoryPoolLeakDetector::AutMemoryPoolLeakDetector(MemoryPoolManager* manager, const TAction& action)
-	: m_PoolManager(manager)
+	AutMemoryPoolLeakDetector::AutMemoryPoolLeakDetector(MemoryPoolAbstract* pool, const TAction& action)
+	: m_Pool(pool)
 	, m_Callback(action) {
-		m_PoolManager->StartDetectLeak();
+		m_Pool->StartDetectLeak();
 	}
 
 	AutMemoryPoolLeakDetector::~AutMemoryPoolLeakDetector() {
-		TOut detail;
-		Int64U uiTotalLeak = m_PoolManager->StopDetectLeak(&detail);
+		int detail[Detail::MemoryBlockSizeMapSize_v];
+		Int64U uiTotalLeak = m_Pool->StopDetectLeak(detail);
 
 		if (m_Callback) {
 			m_Callback(uiTotalLeak, detail);

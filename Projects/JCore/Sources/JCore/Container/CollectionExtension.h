@@ -8,23 +8,18 @@
 
 namespace JCore {
 
-template <typename>
-class Collection;
+template <typename, typename> class Vector;
+template <typename, typename> class LinkedList;
+template <typename, typename> class Collection;
 
-template <typename>
-class Vector;
-
-template <typename>
-class LinkedList;
-
-template <typename T>
+template <typename T, typename TAllocator>
 class CollectionExtension
 {
-	using TCollectionExtension  = CollectionExtension<T>;
-	using TCollectionStream		= CollectionStream<T>;
-	using TIterator				= Iterator<T>;
+	using TCollectionExtension  = CollectionExtension<T, TAllocator>;
+	using TCollectionStream		= CollectionStream<T, TAllocator>;
+	using TIterator				= Iterator<T, TAllocator>;
 	using TEnumerator			= SharedPtr<TIterator>;
-	using TCollection			= Collection<T>;
+	using TCollection			= Collection<T, TAllocator>;
 
 public:
 	CollectionExtension(TCollection* collection) {
@@ -128,14 +123,14 @@ public:
 		return collection;
 	}
 
-	Vector<T> ToVector() {
-		Vector<T> v;
+	Vector<T, TAllocator> ToVector() {
+		Vector<T, TAllocator> v;
 		v.PushBackAll(*m_pCollection);
 		return v;
 	}
 
-	LinkedList<T> ToLinkedList() {
-		LinkedList<T> l;
+	LinkedList<T, TAllocator> ToLinkedList() {
+		LinkedList<T, TAllocator> l;
 		l.PushBackAll(*m_pCollection);
 		return l;
 	}

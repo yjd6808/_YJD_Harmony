@@ -9,13 +9,13 @@
 namespace JCore {
 
 // 전방 선언
-					class VoidOwner;
-template <typename> class Vector;
-template <typename T>
-class VectorIterator : public ArrayCollectionIterator<T>
+class VoidOwner;
+template <typename, typename> class Vector;
+template <typename T, typename TAllocator>
+class VectorIterator : public ArrayCollectionIterator<T, TAllocator>
 {
-	using TArrayCollectionIterator  = ArrayCollectionIterator<T>;
-	using TVector					= Vector<T>;
+	using TArrayCollectionIterator  = ArrayCollectionIterator<T, TAllocator>;
+	using TVector					= Vector<T, TAllocator>;
 public:
 	VectorIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
 	~VectorIterator() noexcept override = default;

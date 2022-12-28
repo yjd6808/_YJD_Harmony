@@ -14,11 +14,11 @@ namespace JCore {
 =====================================================================================*/
 
 // 전방 선언
-template <typename> class Collection;
-template <typename T>
+template <typename, typename> class Collection;
+template <typename T, typename TAllocator>
 struct JCORE_NOVTABLE Iterator
 {
-	using TCollection = Collection<T>;
+	using TCollection = Collection<T, TAllocator>;
 
 	Iterator(VoidOwner& owner) : Watcher(owner) {}
 	virtual ~Iterator() noexcept { Watcher.~VoidWatcher(); }

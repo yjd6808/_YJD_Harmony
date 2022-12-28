@@ -14,14 +14,17 @@ namespace JCore { // namespace JCore
 								  벡터
 =====================================================================================*/
 
-template <typename T>
-class Vector : public ArrayCollection<T>
+
+template <typename T, typename TAllocator = DefaultAllocator>
+class Vector : public ArrayCollection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T>;
-	using TCollection			= Collection<T>;
-	using TArrayCollection		= ArrayCollection<T>;
-	using TVector				= Vector<T>;
-	using TVectorIterator		= VectorIterator<T>;
+	//static_assert(IsValidAllocator_v<T, TAllocator>, "... wrong allocator syntax !!");
+
+	using TEnumerator			= Enumerator<T, TAllocator>;
+	using TCollection			= Collection<T, TAllocator>;
+	using TArrayCollection		= ArrayCollection<T, TAllocator>;
+	using TVector				= Vector<T, TAllocator>;
+	using TVectorIterator		= VectorIterator<T, TAllocator>;
 public:
 	Vector(int capacity = TArrayCollection::ms_iDefaultCapacity) 
 		: TArrayCollection(capacity, ContainerType::Vector) 
@@ -335,11 +338,11 @@ public:
 	}
 
 	TEnumerator Begin() const override {
-		return MakeShared<TVectorIterator>(this->GetOwner(), 0);
+		return MakeShared<TVectorIterator, TAllocator>(this->GetOwner(), 0);
 	}
 
 	TEnumerator End() const override {
-		return MakeShared<TVectorIterator>(this->GetOwner(), this->Size());
+		return MakeShared<TVectorIterator, TAllocator>(this->GetOwner(), this->Size());
 	}
 protected:
 	friend class TVectorIterator;

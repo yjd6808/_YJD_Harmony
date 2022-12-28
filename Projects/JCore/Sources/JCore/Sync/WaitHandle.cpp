@@ -72,18 +72,7 @@ namespace JCore {
         return WinApi::WaitForMultipleObjectsEx(count, waitHandles, true) == WAIT_OBJECT_0;
     }
 
-    bool WaitHandle::WaitAll(Collection<WaitHandle>& handles) {
-        DebugAssert(handles.Size() <= MAXIMUM_WAIT_OBJECTS && handles.Size() > 0);
-        WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
-        auto it = handles.Begin();
-        int idx = 0;
-        while (it->HasNext()) {
-            waitHandles[idx++] = it->Next().m_hHandle;
-        }
-
-        return WinApi::WaitForMultipleObjectsEx(handles.Size(), waitHandles, true) == WAIT_OBJECT_0;
-    }
 
     WaitHandle* WaitHandle::WaitAny(WaitHandle* handles, Int32U count) {
         DebugAssert(count <= MAXIMUM_WAIT_OBJECTS);
@@ -101,21 +90,6 @@ namespace JCore {
         return nullptr;
     }
 
-    WaitHandle* WaitHandle::WaitAny(Collection<WaitHandle>& handles) {
-        DebugAssert(handles.Size() <= MAXIMUM_WAIT_OBJECTS && handles.Size() > 0);
-        WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
-        auto it = handles.Begin();
-        int idx = 0;
-        while (it->HasNext()) {
-            waitHandles[idx++] = it->Next().m_hHandle;
-        }
-
-        Int32U iResult = WinApi::WaitForMultipleObjectsEx(handles.Size(), waitHandles, false);
-
-        if (iResult >= WAIT_OBJECT_0 && iResult <= WAIT_OBJECT_0 + handles.Size() - 1)
-            return handles.Extension().IndexOf(static_cast<int>(iResult - WAIT_OBJECT_0));
-
-        return nullptr;
-    }
+  
 } // namespace JCore

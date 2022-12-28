@@ -80,6 +80,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadLocalTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadTest.cpp">
       <SubType>
       </SubType>

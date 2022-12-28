@@ -148,7 +148,7 @@ namespace JCore {
 
             static bool SetOutputCodePage(int codePage) {
                 bool bRet = WinApi::SetConsoleOutputCodePage(codePage);
-                DebugAssertMessage(bRet, "인코딩 변경 실패");
+                // DebugAssertMessage(bRet, "인코딩 변경 실패");
                 return bRet;
             }
 

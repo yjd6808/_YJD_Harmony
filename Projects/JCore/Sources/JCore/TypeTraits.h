@@ -146,7 +146,7 @@ namespace JCore {
 
         // And<false, true, false> = false
         template <bool Test, bool... RestTests>
-        struct And { static constexpr bool Value = Test && Or<RestTests...>::Value; };
+        struct And { static constexpr bool Value = Test && And<RestTests...>::Value; };
         template <>
         struct And<true> { static const bool Value = true; };
         template <>

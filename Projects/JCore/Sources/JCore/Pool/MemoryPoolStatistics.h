@@ -63,10 +63,10 @@ namespace JCore {
 			m_uiTotalUsed = 0;
 			m_uiTotalReturned = 0;
 
-			Memory::Copy(m_pBlockTotalCounter, Detail::MemoryBlockSizeMapSize_v, m_pBlockTotalCounter, 0);
-			Memory::Copy(m_pBlockUsedCounter, Detail::MemoryBlockSizeMapSize_v, m_pBlockUsedCounter, 0);
-			Memory::Copy(m_pBlockNewAllocCounter, Detail::MemoryBlockSizeMapSize_v, m_pBlockNewAllocCounter, 0);
-			Memory::Copy(m_pBlockUsingCounter, Detail::MemoryBlockSizeMapSize_v, m_pBlockUsingCounter, 0);
+			Arrays::Fill(m_pBlockTotalCounter, 0);
+			Arrays::Fill(m_pBlockUsedCounter, 0);
+			Arrays::Fill(m_pBlockNewAllocCounter, 0);
+			Arrays::Fill(m_pBlockUsingCounter, 0);
 		}
 
 		// 현재 사용중인 블록이 있는지
@@ -82,7 +82,6 @@ namespace JCore {
 		int m_pBlockNewAllocCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 생성 할당되었는지 기록
 		int m_pBlockUsingCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 사용중인 블록 수 기록
 
-		ILock* m_pLock;
 		friend class MemoryPoolAbstract;
 	};
 } // namespace JCore

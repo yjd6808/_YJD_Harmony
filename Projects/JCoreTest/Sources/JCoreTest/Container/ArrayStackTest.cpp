@@ -182,6 +182,14 @@ TEST(ArrayStackTest, InnerDestructorTest) {
 	}
 }
 
+
+TEST(ArrayStackTest, MemoryPool) {
+	MemoryPoolLeakCheck;
+
+	ArrayStack<String, DefaultArrayAllocator> q;
+	for (int i = 0; i < 100'000; i++) q.Push(1);
+}
+
 #endif // TEST_ArrayStackTest == ON
 
 

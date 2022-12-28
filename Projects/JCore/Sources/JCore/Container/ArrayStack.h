@@ -14,13 +14,13 @@ namespace JCore {
 								배열 스택
 =====================================================================================*/
 
-template <typename T>
-class ArrayStack : public ArrayCollection<T>
+template <typename T, typename TAllocator = DefaultAllocator>
+class ArrayStack : public ArrayCollection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T>;
-	using TArrayCollection		= ArrayCollection<T>;
-	using TArrayStack			= ArrayStack<T>;
-	using TArrayStackIterator	= ArrayStackIterator<T>;
+	using TEnumerator			= Enumerator<T, TAllocator>;
+	using TArrayCollection		= ArrayCollection<T, TAllocator>;
+	using TArrayStack			= ArrayStack<T, TAllocator>;
+	using TArrayStackIterator	= ArrayStackIterator<T, TAllocator>;
 public:
 	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapacity) 
 		: TArrayCollection(capacity, ContainerType::ArrayStack) 
@@ -95,11 +95,11 @@ public:
 	}
 
 	TEnumerator Begin() const override {
-		return MakeShared<TArrayStackIterator>(this->GetOwner(), 0);
+		return MakeShared<TArrayStackIterator, TAllocator>(this->GetOwner(), 0);
 	}
 
 	TEnumerator End() const override {
-		return MakeShared<TArrayStackIterator>(this->GetOwner(), this->Size());
+		return MakeShared<TArrayStackIterator, TAllocator>(this->GetOwner(), this->Size());
 	}
 
 protected:

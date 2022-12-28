@@ -14,11 +14,11 @@ namespace JCore {
 =====================================================================================*/
 
 // 전방 선언
-template <typename> struct Iterator;
-template <typename T>
+template <typename, typename> struct Iterator;
+template <typename T, typename TAllocator>
 struct JCORE_NOVTABLE Iterable
 {
-	using TIterator = Iterator<T>;
+	using TIterator = Iterator<T, TAllocator>;
 
 	Iterable() = default;
 	virtual ~Iterable() noexcept = default;
@@ -28,8 +28,8 @@ struct JCORE_NOVTABLE Iterable
 };
 
 // 스마트 포인터 적기가 힘드므로...
-template <typename T>
-using Enumerator = SharedPtr<Iterator<T>>;
+template <typename T, typename TAllocator = DefaultAllocator>
+using Enumerator = SharedPtr<Iterator<T, TAllocator>>;
 
 
 } // namespace JCore

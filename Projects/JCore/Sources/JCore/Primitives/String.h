@@ -9,14 +9,14 @@
 #include <sstream>
 #include <ostream>
 
-
 namespace JCore {
 
 // variadic template forward declaration
 template <typename...>
 struct Tuple;
+struct DefaultAllocator;
 
-template <typename>
+template <typename, typename>
 class Vector;
 
 class String final
@@ -66,9 +66,9 @@ public:
 
 	int Compare(const String& str) const;
 	int Compare(const char* str, const int strLen = -1) const;
-	Vector<int> FindAll(int startIdx, int endIdx, const char* str) const;
-	Vector<int> FindAll(const char* str) const;
-	Vector<int> FindAll(const String& str) const;
+	Vector<int, DefaultAllocator> FindAll(int startIdx, int endIdx, const char* str) const;
+	Vector<int, DefaultAllocator> FindAll(const char* str) const;
+	Vector<int, DefaultAllocator> FindAll(const String& str) const;
 	int Find(int startIdx, int endIdx, const char* str) const;
 	int Find(int startIdx, const char* str) const;
 	int Find(int startIdx, const String& str) const;
@@ -108,7 +108,7 @@ public:
 
 	// 동적할당된 문자열, 길이, 할당된 크기를 반환한다.
 	Tuple<char*, int, int> GetRangeUnsafe(const int startIdx, const int endIdx) const;
-	Vector<String> Split(const char* delimiter, const bool includeEmpty = false) const;
+	Vector<String, DefaultAllocator> Split(const char* delimiter, const bool includeEmpty = false) const;
 	void Initialize(int capacity = DEFAULT_BUFFER_SIZE);
 
 	String ToLowerCase() const;

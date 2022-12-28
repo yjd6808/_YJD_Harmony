@@ -12,7 +12,7 @@
 namespace JCore {
     ManualResetEvent::ManualResetEvent(ManualResetEvent&& other) noexcept : WaitHandle(Move(other)) {}
     ManualResetEvent& ManualResetEvent::operator=(ManualResetEvent&& other) noexcept {
-        this->operator=(Move(other));
+        WaitHandle::operator=(Move(other));
         return *this;
     }
 } // namespace JCore

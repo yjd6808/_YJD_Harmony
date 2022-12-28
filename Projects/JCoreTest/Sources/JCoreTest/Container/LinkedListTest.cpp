@@ -67,8 +67,8 @@ TEST(LinkedListTest, Enumerator) {
 		EXPECT_TRUE(begin->Next());
 		EXPECT_TRUE(begin->HasNext() == false);
 
-		EXPECT_TRUE(end->Previous());
-		EXPECT_TRUE(end->HasPrevious() == false);
+		// EXPECT_TRUE(end->Previous()); 한번 끝으로 이동하면 이제 더이상 복구불가능
+		// EXPECT_TRUE(end->HasPrevious() == false);
 	}
 
 	// 데이터 5개
@@ -177,6 +177,13 @@ TEST(LinkedListTest, InnerDestructorTest) {
 			aq.PushBack("fsefesfesfesf");
 		}
 	}
+}
+
+TEST(LinkedListTest, MemoryPool) {
+	MemoryPoolLeakCheck;
+
+	LinkedList<String, DefaultArrayAllocator> l;
+	for (int i = 0; i < 100'000; i++) l.PushBack(1);
 }
 
 #endif // TEST_LinkedListTest == ON

@@ -16,14 +16,14 @@ namespace JCore {
 						      양쪽 더미 양방향 연결리스트로 구현
 =====================================================================================*/
 
-template <typename T>
-class ListCollection : public Collection<T>
+template <typename T, typename TAllocator>
+class ListCollection : public Collection<T, TAllocator>
 {
-	using TEnumerator				        = Enumerator<T>;
-	using TListNode					        = ListNode<T>;
-	using TCollection				        = Collection<T>;
-	using TListCollection			      = ListCollection<T>;
-	using TListCollectionIterator   = ListCollectionIterator<T>;
+	using TEnumerator				= Enumerator<T, TAllocator>;
+	using TListNode					= ListNode<T, TAllocator>;
+	using TCollection				= Collection<T, TAllocator>;
+	using TListCollection			= ListCollection<T, TAllocator>;
+	using TListCollectionIterator   = ListCollectionIterator<T, TAllocator>;
 public:
 	ListCollection(ContainerType containerType) : TCollection(CollectionType::List, containerType)  {
 		/* [더미노드 방법 1]
@@ -34,17 +34,18 @@ public:
 		*/
 
 		// [더미노드 대안]
-		m_pHead = &m_ValtyHead;
-		m_pTail = &m_ValtyTail;
+		// m_pHead = &m_ValtyHead;
+		// m_pTail = &m_ValtyTail;
 
 		// 어차피 더미노드는 Next와 Previous만 쓸 것이므로.. 굳이 TListNode의 Value의 디폴트 생성자를 호출해줄 필요가 없다.
 		// Memory::PlacementAllocate(m_pHead[0]);
 		// Memory::PlacementAllocate(m_pHead[1]);
 
-		m_pHead->Previous = nullptr;
-		m_pTail->Next = nullptr;
-
-		ConnectNode(m_pHead, m_pTail);
+		// [더미노드가 너무 무겁다]
+		// 없는게 훨씬 메모리 관리측면에서 좋음
+		// 다루는 데이터가 무거워지니까 메모리뻥튀기가 너무심하다.
+		m_pHead = nullptr;
+		m_pTail = nullptr;
 	}
 
 	ListCollection(const TListCollection& other, ContainerType containerType) 
@@ -80,37 +81,43 @@ public:
 			그리고 남은 더미 노드 2개(머리, 꼬리)를 연결해준다.
 		 */
 
-		TListNode* pCur = m_pTail->Previous;
+		TListNode* pCur = m_pHead;
 
-		while (pCur != m_pHead) {
-			const TListNode* pTemp = pCur;
-			pCur = pCur->Previous;
+		while (pCur != nullptr) {
+			TListNode* pTemp = pCur;
+			pCur = pCur->Next;
 			pTemp->DeleteSelf();
 		}
 
-		ConnectNode(m_pHead, m_pTail);
+		m_pHead = nullptr;
+		m_pTail = nullptr;
+
 		this->m_iSize = 0;
 	}
 protected:
 
-	template <typename U = T>
-	void CopyFrom(const ListCollection<U>& other) {
+	template <typename U = T, typename UAllocator>
+	void CopyFrom(const ListCollection<U, UAllocator>& other) {
 		static_assert(IsSameType_v<U, T>, "... U and T is difference type.");
 		static_assert(IsAssignable_v<U&, const T&>, "... U cannot be assign to T (T = U is impossible operation)");
 
-		using UListNode = ListNode<U>;
+		using UListNode = ListNode<U, UAllocator>;
 		this->ThrowIfAssignSelf(other);
 
-		TListNode* pCur = m_pHead->Next;
-		UListNode* pOtherCur = other.m_pHead->Next;
+		TListNode* pPrev = nullptr;
+		TListNode* pCur = m_pHead;
+		UListNode* pOtherCur = other.m_pHead;
 
 		// 기존에 이미 메모리 할당된 녀석은 데이터만 복사해준다.
-		while (pCur != m_pTail && pOtherCur != other.m_pTail) {
+		while (pCur != nullptr && pOtherCur != nullptr) {
 			Memory::PlacementDelete(pCur->Value);
 			pCur->Value = pOtherCur->Value;
+			pPrev = pCur;
 			pCur = pCur->Next;
 			pOtherCur = pOtherCur->Next;
 		}
+
+		
 
 		// [Case 1] 만약 기존에 할당된 데이터가 더 많다면 
 		//             = pOtherCur이 other.m_pTail이 충족되어 먼저 반복문을 빠져나온 경우
@@ -118,11 +125,14 @@ protected:
 		//    = pCur->Previous가 복사된 마지막 노드이고
 		//    = pCur : 삭제되어야할 노드들이다.
 		if (this->m_iSize > other.m_iSize) {
-			RemoveNodesBetween(pCur->Previous, m_pTail);
+			RemoveNodesEnd(pCur);
+			m_pTail = pPrev;
+			m_pTail->Next = nullptr;
 		}
+		
 
 		// [Case 2] 만약 복사할 데이터가 더 많다면
-		while (pOtherCur != other.m_pTail) {
+		while (pOtherCur != nullptr) {
 			PushBack(pOtherCur->Value);
 			pOtherCur = pOtherCur->Next;
 		}
@@ -144,15 +154,13 @@ protected:
 		}
 		
 
-		m_pTail->Previous = other.m_pTail->Previous;
-		m_pHead->Next = other.m_pHead->Next;
-
-		m_pTail->Previous->Next = m_pTail;
-		m_pHead->Next->Previous = m_pHead;
+		m_pTail = other.m_pTail;
+		m_pHead = other.m_pHead;
 
 		this->m_iSize = other.m_iSize;
 
-		ConnectNode(other.m_pHead, other.m_pTail);
+		other.m_pHead = nullptr;
+		other.m_pTail = nullptr;
 		other.m_iSize = 0;
 	}
 
@@ -161,20 +169,24 @@ protected:
 		static_assert(IsSameType_v<U, T>, "... U and T is difference type.");
 		static_assert(IsAssignable_v<U&, const T&>, "... U cannot be assign to T (T = U is impossible operation)");
 
-		TListNode* pCur = m_pHead->Next;
+		TListNode* pPrev = nullptr;
+		TListNode* pCur = m_pHead;
 		auto pOtherCur = ilist.begin();
 
 		// 기존에 이미 메모리 할당된 녀석은 데이터만 복사해준다.
-		while (pCur != m_pTail && pOtherCur != ilist.end()) {
+		while (pCur != nullptr && pOtherCur != ilist.end()) {
 			Memory::PlacementDelete(pCur->Value);
 			pCur->Value = *pOtherCur;
+			pPrev = pCur;
 			pCur = pCur->Next;
 			++pOtherCur;
 		}
 
 		// [Case 1] 만약 기존에 할당된 데이터가 더 많다면 
 		if (this->m_iSize > ilist.size()) {
-			RemoveNodesBetween(pCur->Previous, m_pTail);
+			RemoveNodesEnd(pCur);
+			m_pTail = pPrev;
+			m_pTail->Next = nullptr;
 		}
 
 		// [Case 2] 만약 복사할 데이터가 더 많다면
@@ -186,31 +198,48 @@ protected:
 		this->m_iSize = ilist.size();
 	}
 
+	virtual bool Valid() const {
+		return true;
+	}
+
 	/// <summary>
 	/// exclusiveFirst와 exclusiveLast 노드 사이에 존재하는 노드들을 삭제한다.
 	/// </summary>
 	void RemoveNodesBetween(TListNode* exclusiveFirst, TListNode* exclusiveLast) {
 		TListNode* pDel = exclusiveFirst->Next;
 
-		while (pDel != m_pTail) {
-			const TListNode* pTemp = pDel;
+		while (pDel != exclusiveLast) {
+			TListNode* pTemp = pDel;
 			pDel = pDel->Next;
-			delete pTemp;
+			pTemp->DeleteSelf();
 		}
 
 		ConnectNode(exclusiveFirst, exclusiveLast);
 	}
 
+	/**
+	 * \brief exclusiveFirst부터 끝까지 모두 제거한다.
+	 */
+	void RemoveNodesEnd(TListNode* inclusiveFirst) {
+		TListNode* pDel = inclusiveFirst;
+
+		while (pDel != nullptr) {
+			TListNode* pTemp = pDel;
+			pDel = pDel->Next;
+			pTemp->DeleteSelf();
+		}
+	}
+
 	virtual void PushBack(const T& data) {
         TListNode* pNewNode = CreateNewNode(data);
-        InsertNodePrev(m_pTail, pNewNode);
+        PushBackNewNode(pNewNode);
         ++this->m_iSize;
 	}
 
 
 	virtual void PushBack(T&& data) {
 		TListNode* pNewNode = CreateNewNode(Move(data));
-		InsertNodePrev(m_pTail, pNewNode);
+		PushBackNewNode(pNewNode);
 		++this->m_iSize;
 	}
 
@@ -218,7 +247,7 @@ protected:
 		TEnumerator it = collection.Begin();
 		while (it->HasNext()) {
 			TListNode* pNewNode = CreateNewNode(it->Next());
-			InsertNodePrev(m_pTail, pNewNode);
+			PushBackNewNode(pNewNode);
 		}
 		this->m_iSize += collection.Size();
 	}
@@ -242,7 +271,7 @@ protected:
 			return false;
 		}
 
-		this->ConnectNode(pDel->Previous, pDel->Next);
+		RemoveNode(pDel);
 		pDel->DeleteSelf();
 		--this->m_iSize;
 		return true;
@@ -259,18 +288,34 @@ protected:
 
 		TListNode* pDel = iter.m_pCurrent;
 		iter.m_pCurrent = pDel->Next;
-		this->ConnectNode(pDel->Previous, pDel->Next);
+		RemoveNode(pDel);
 		pDel->DeleteSelf();
 		--this->m_iSize;
 		return true;
 	}
 
+	void RemoveNode(TListNode* delNode) {
+		if (delNode == m_pHead) {
+			m_pHead = m_pHead->Next;
+			if (m_pHead == nullptr) m_pTail = nullptr;
+			else m_pHead->Previous = nullptr;
+		} else if (delNode == m_pTail) {
+			m_pTail = m_pTail->Previous;
+			if (m_pTail == nullptr) m_pHead = nullptr;
+			else m_pTail->Next = nullptr;
+		} else {
+			this->ConnectNode(delNode->Previous, delNode->Next);
+		}
+	}
+
 	/// <summary>
 	/// node 바로 전에 newNode를 삽입한다.
 	/// </summary>
-	void InsertNodePrev(TListNode* node, TListNode*  newNode) {
-		if (node == m_pHead) {
-			throw InvalidArgumentException("헤드 이전에는 노드를 삽입하면 안되요!");
+	void PushBackNewNode(TListNode* newNode) {
+		if (m_pHead == nullptr) {
+			m_pHead = newNode;
+			m_pTail = newNode;
+			return;
 		}
 
 		/*
@@ -286,22 +331,21 @@ protected:
 							     node->prev     node
 									     newNode
 		 */
+		
+		ConnectNode(m_pTail, newNode);
 
-		TListNode* pNodePrev = node->Previous;
-
-		ConnectNode(pNodePrev, newNode);
-		ConnectNode(newNode, node);
+		m_pTail = newNode;
 	}
 
 	virtual void PushFront(const T& data) {
 		TListNode* pNewNode = CreateNewNode(data);
-		InsertNodeNext(m_pHead, pNewNode);
+		PushFrontNewNode(pNewNode);
 		++this->m_iSize;
 	}
 
 	virtual void PushFront(T&& data) {
 		TListNode* pNewNode = CreateNewNode(Move(data));
-		InsertNodeNext(m_pHead, pNewNode);
+		PushFrontNewNode(pNewNode);
 		++this->m_iSize;
 	}
 
@@ -309,7 +353,7 @@ protected:
 		TEnumerator it = collection.Begin();
 		while (it->HasNext()) {
 			TListNode* pNewNode = CreateNewNode(it->Next());
-			InsertNodeNext(m_pHead, pNewNode);
+			PushFrontNewNode(pNewNode);
 		}
 		this->m_iSize += collection.Size();
 	}
@@ -317,41 +361,37 @@ protected:
 	/// <summary>
 	/// node 바로 이후에 newNode를 삽입한다.
 	/// </summary>
-	void InsertNodeNext(TListNode* node, TListNode* newNode) {
-		if (node == m_pTail) {
-			throw InvalidArgumentException("테일 이후에는 노드를 삽입하면 안되요!");
+	void PushFrontNewNode(TListNode* newNode) {
+		if (m_pHead == nullptr) {
+			m_pHead = newNode;
+			m_pTail = newNode;
 		}
 
 		/*
 			[삽입 전]
 			 ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■
-			 ↑     ↑
-			node node->next
 
 			[삽입 후]
 			 ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■ <=> ■
-			 ↑     ↑     ↑
-			node      node->next
-				newNode
+			 ↑ 
+		   newNode
 		 */
 
-		TListNode* pNodeNext = node->Next;
-
-		ConnectNode(node, newNode);
-		ConnectNode(newNode, pNodeNext);
+		ConnectNode(newNode, m_pHead);
+		m_pHead = newNode;
 	}
 
 	template <typename... Args>
 	void EmplaceBack(Args&&... args) {
 		TListNode* pNewNode = EmplaceNewNode(Forward<Args>(args)...);
-		InsertNodePrev(m_pTail, pNewNode);
+		PushBackNewNode(pNewNode);
 		++this->m_iSize;
 	}
 
 	template <typename... Args>
 	void EmplaceFront(Args&&... args) {
 		TListNode* pNewNode = EmplaceNewNode(Forward<Args>(args)...);
-		InsertNodeNext(m_pHead, pNewNode);
+		PushFrontNewNode(pNewNode);
 		++this->m_iSize;
 	}
 
@@ -359,8 +399,10 @@ protected:
 	virtual void PopFront() {
 		this->ThrowIfNoElements();
 		
-		TListNode* pDel = m_pHead->Next;
-		ConnectNode(m_pHead, pDel->Next);
+		TListNode* pDel = m_pHead;
+		m_pHead = m_pHead->Next;
+		if (m_pHead == nullptr) m_pTail = nullptr;
+		else m_pHead->Previous = nullptr;
 		pDel->DeleteSelf();
 		--this->m_iSize;
 	}
@@ -368,20 +410,23 @@ protected:
 	virtual void PopBack() {
 		this->ThrowIfNoElements();
 
-		TListNode* pDel = m_pTail->Previous;
-		ConnectNode(pDel->Previous, m_pTail);
+		TListNode* pDel = m_pTail;
+		m_pTail = m_pTail->Previous;
+		if (m_pTail == nullptr) m_pHead = nullptr;
+		else m_pTail->Next = nullptr;
+
 		pDel->DeleteSelf();
 		--this->m_iSize;
 	}
 
 	virtual T& Front() const {
 		this->ThrowIfNoElements();
-		return m_pHead->Next->Value;
+		return m_pHead->Value;
 	}
 
 	virtual T& Back() const {
 		this->ThrowIfNoElements();
-		return m_pTail->Previous->Value;
+		return m_pTail->Value;
 	}
 
 	TListNode* CreateNewNode(const T& data) {
@@ -389,7 +434,7 @@ protected:
             DebugAssertMessage(false, "복사 생성할 수 없는 객체입니다.");
             return nullptr;
 		} else {
-            TListNode* pNewNode = new TListNode();
+			TListNode* pNewNode = TAllocator::template AllocateInit<TListNode>();
             pNewNode->Construct(data);
             return pNewNode;
 		}
@@ -400,7 +445,7 @@ protected:
             DebugAssertMessage(false, "이동 생성할 수 없는 객체입니다.");
             return nullptr;
         } else {
-            TListNode* pNewNode = new TListNode();
+			TListNode* pNewNode = TAllocator::template AllocateInit<TListNode>();
             pNewNode->Construct(Move(data));
             return pNewNode;
         }
@@ -408,7 +453,7 @@ protected:
 
 	template <typename... Args>
 	TListNode* EmplaceNewNode(Args&&... args) {
-		TListNode* pNewNode = new TListNode;
+		TListNode* pNewNode = TAllocator::template AllocateInit<TListNode>();
 		pNewNode->Construct(Forward<Args>(args)...);
 		return pNewNode;
 	}
@@ -420,14 +465,17 @@ protected:
 	/// rhs의 이전 노드는 lhs로 설정한다.
 	/// </summary>
 	static void ConnectNode(TListNode* lhs, TListNode* rhs) {
-		lhs->Next = rhs;
-		rhs->Previous = lhs;
+		if (lhs != nullptr)
+			lhs->Next = rhs;
+
+		if (rhs != nullptr)
+			rhs->Previous = lhs;
 	}
 
 	template <typename U = T>
 	TListNode* FindNode(const U& data) const {
-		TListNode* pCur = m_pHead->Next;
-		while (pCur != m_pTail) {
+		TListNode* pCur = m_pHead;
+		while (pCur != nullptr) {
 			if (pCur->Value == data) {
 				return pCur;
 			}
@@ -439,8 +487,8 @@ protected:
 
 	template <typename TPredicate>
 	TListNode* FindNodeIf(TPredicate&& predicate) {
-		TListNode* pCur = m_pHead->Next;
-		while (pCur != m_pTail) {
+		TListNode* pCur = m_pHead;
+		while (pCur != nullptr) {
 			if (predicate(pCur->Value)) {
 				return pCur;
 			}
@@ -450,18 +498,15 @@ protected:
 		return nullptr;
 	}
 protected:
-	TListNode* m_pHead = nullptr;
-	TListNode* m_pTail = nullptr;
-private:
-	TListNode m_ValtyHead;
-	TListNode m_ValtyTail;
+	TListNode* m_pHead;
+	TListNode* m_pTail;
 
 	friend class TListCollectionIterator;
 };
 
 
-template <typename T>
-ListCollection<T>::~ListCollection() noexcept {
+template <typename T, typename TAllocator>
+ListCollection<T, TAllocator>::~ListCollection() noexcept {
 	Clear();
 
 	// 더미노드 제거

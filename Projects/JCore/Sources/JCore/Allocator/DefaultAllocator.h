@@ -36,6 +36,20 @@ struct DefaultAllocator
 		return Memory::Allocate<RemovePointer_t<T>*>(size);
 	}
 
+	template <typename T, typename... Args>
+	static auto AllocateInit(Args&&... args) {	// Static
+		auto pRet = Memory::Allocate<RemovePointer_t<T>*>(sizeof(T));
+		Memory::PlacementNew(pRet, Forward<Args>(args)...);
+		return pRet;
+	}
+
+	template <typename T = void*, typename... Args>	// 명시하지 않을 경우 void* 반환
+	static auto AllocateInit(int size, int& allocatedSize, Args&&... args) {	// Dynamic
+		auto pRet = Memory::Allocate<RemovePointer_t<T>*>(size);
+		Memory::PlacementNew(pRet, Forward<Args>(args)...);
+		return pRet;
+	}
+
 	template <typename T>
     static void Deallocate(void* del) {
 		Memory::Deallocate(del);

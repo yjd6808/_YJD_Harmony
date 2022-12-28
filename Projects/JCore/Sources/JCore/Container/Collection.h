@@ -1,19 +1,14 @@
 /*
-	작성자 : 윤정도
-*/
+ * 작성자 : 윤정도
+ */
 
 #pragma once
-
-#include <JCore/Memory.h>
-#include <JCore/TypeTraits.h>
 
 #include <JCore/Container/Iterable.h>
 #include <JCore/Container/Iterator.h>
 #include <JCore/Container/CollectionExtension.h>
 #include <JCore/Container/CollectionType.h>
 #include <JCore/Container/ContainerType.h>
-
-
 
 #pragma warning(push)
   #pragma warning(disable: 26495) // Member variable is uninitialized
@@ -35,13 +30,13 @@ namespace JCore {
 				
 =====================================================================================*/
 
-template <typename T>
-class Collection : public Iterable<T>
+template <typename T, typename TAllocator>
+class Collection : public Iterable<T, TAllocator>
 {
-	using TCollectionExtension	= CollectionExtension<T>;
-	using TIterable				= Iterable<T>;
-	using TCollection			= Collection<T>;
-	using TEnumerator			= Enumerator<T>;
+	using TCollectionExtension	= CollectionExtension<T, TAllocator>;
+	using TIterable				= Iterable<T, TAllocator>;
+	using TCollection			= Collection<T, TAllocator>;
+	using TEnumerator			= Enumerator<T, TAllocator>;
 public:
 	Collection(CollectionType collectionType, ContainerType containerType) 
 		: TIterable()
@@ -52,11 +47,7 @@ public:
 	{
 	}
 
-	~Collection() noexcept override { 
-		Memory::PlacementDelete(m_Owner);
-		if (m_bExtensionable)
-			Memory::PlacementDelete(m_Extension);
-	}
+	~Collection() noexcept override = default;
 protected:
 	VoidOwner& GetOwner() const { return const_cast<VoidOwner&>(m_Owner); }
 public:
@@ -74,9 +65,14 @@ public:
 		return m_iSize; 
 	}
 
+	virtual bool Valid() {
+		return true;
+	}
+
 	TCollectionExtension& Extension() {
 		return m_Extension;
 	}
+
 protected:
 	void ThrowIfAssignSelf(const TCollection& other) {
 		if (this == &other) {
@@ -104,12 +100,8 @@ protected:
 	CollectionType m_eCollectionType;
 	ContainerType m_eContainerType;
 	TCollectionExtension m_Extension;
+	VoidOwner m_Owner;
 	int m_iSize = 0;
-
-	union { VoidOwner m_Owner; };
-private:
-	bool m_bExtensionable = false;
-	
 };
 
 } // namespace JCore

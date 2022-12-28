@@ -9,14 +9,17 @@
 
 namespace JCore {
 
-template <typename T>
-class ListQueue	: public ListCollection<T>
+template <typename T, typename TAllocator = DefaultAllocator>
+class ListQueue;
+
+template <typename T, typename TAllocator>
+class ListQueue	: public ListCollection<T, TAllocator>
 {
-	using TEnumerator			= Enumerator<T>;
-	using TCollection			= Collection<T>;
-	using TListCollection		= ListCollection<T>;
-	using TListQueue			= ListQueue<T>;
-	using TListQueueIterator	= ListQueueIterator<T>;
+	using TEnumerator			= Enumerator<T, TAllocator>;
+	using TCollection			= Collection<T, TAllocator>;
+	using TListCollection		= ListCollection<T, TAllocator>;
+	using TListQueue			= ListQueue<T, TAllocator>;
+	using TListQueueIterator	= ListQueueIterator<T, TAllocator>;
 public:
 	ListQueue() 
 		: TListCollection(ContainerType::ListQueue) 
@@ -81,11 +84,11 @@ public:
 	}
 
 	TEnumerator Begin() const override {
-		return MakeShared<TListQueueIterator>(this->GetOwner(), this->m_pHead->Next);
+		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->m_pHead);
 	}
 
 	TEnumerator End() const override {
-		return MakeShared<TListQueueIterator>(this->GetOwner(), this->m_pTail);
+		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->m_pTail);
 	}
 protected:
 	friend class TListQueueIterator;

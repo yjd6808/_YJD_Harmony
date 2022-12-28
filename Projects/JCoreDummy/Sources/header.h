@@ -12,6 +12,7 @@
 #include <JCore/Allocator/DefaultArrayAllocator.h>
 
 #include <JCore/Container/HashMap.h>
+#include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/Vector.h>
 
 #include <JCore/Primitives/Atomic.h>
@@ -24,6 +25,7 @@
 #include <JCore/Pool/MemoryPoolManager.h>
 
 
+#include <JCore/Sync/SpinLock.h>
 #include <JCore/Sync/WaitHandle.h>
 
 #include <JCore/Wrapper/WinApi.h>

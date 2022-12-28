@@ -126,8 +126,6 @@ namespace JCore {
 		LinkedList<MemoryPoolAbstractPtr> m_pRegisteredPool;
 		bool m_bDetecting{};
 	};
-
-	
 } // namespace JCore
 
 

@@ -104,6 +104,9 @@
     <ClCompile Include="..\Sources\JCoreTest\Pool\MemoryPoolTest.cpp">
       <Filter>Pool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadLocalTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

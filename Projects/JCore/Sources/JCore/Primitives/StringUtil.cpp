@@ -11,7 +11,7 @@
 
 namespace JCore {
 
-Vector<String> StringUtil::Split(String& src, const char* delimiter) {
+Vector<String, DefaultAllocator> StringUtil::Split(String& src, const char* delimiter) {
 	return src.Split(delimiter);
 }
 

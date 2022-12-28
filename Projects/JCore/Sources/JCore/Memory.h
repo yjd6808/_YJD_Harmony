@@ -89,9 +89,20 @@ public:
 			::new (AddressOf(ref)) GenType(Forward<Args>(args)...); // (2)
 	}
 
-
 	template <bool Ignore = false, typename T, typename... Args >
-	static void PlacementDelete(T& ref, Args&&... args) {
+	static void PlacementNewArray(T* ref, int size, Args&&... args) {
+		using GenType = NakedType_t<T>;
+
+		if constexpr (Ignore)
+			return;
+
+		for (int i = 0; i < size; ++i) {
+			PlacementNew(ref[i], Forward<Args>(args)...);
+		}
+	}
+
+	template <bool Ignore = false, typename T>
+	static void PlacementDelete(T& ref) {
 		using DelType = NakedType_t<T>;
 
 		if constexpr (Ignore)
@@ -100,6 +111,18 @@ public:
 			ref->~DelType();
 		else
 			ref.~DelType();
+	}
+
+	template <bool Ignore = false, typename T>
+	static void PlacementDeleteArray(T* arr, int size) {
+		using DelType = NakedType_t<T>;
+
+		if constexpr (Ignore)
+			return;
+
+		for (int i = 0; i < size; ++i) {
+			PlacementDelete(arr[i]);
+		}
 	}
 
 };

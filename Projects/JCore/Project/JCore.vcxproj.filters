@@ -379,16 +379,13 @@
     <ClInclude Include="..\Sources\JCore\Utils\ConstructorCall.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolDataAbstract.h">
-      <Filter>Pool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Threading\ThreadLocal.h">
       <Filter>Threading</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalManager.h">
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalCopy.h">
       <Filter>Threading</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalCopy.h">
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalManager.h">
       <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>

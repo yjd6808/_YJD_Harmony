@@ -15,15 +15,12 @@
 
 namespace JCore {
 
-	template <typename, typename>
+	template <typename, typename, typename>
 	class HashMap;
 	class MemoryPoolAbstract
 	{
 	public:
-		MemoryPoolAbstract(int slot, const String& name, bool skipIntialize) : m_iSlot(slot), m_Name(name), m_bInitialized(skipIntialize) {
-			m_uiID = ++ms_uiID;
-		}
-
+		MemoryPoolAbstract(int slot, const String& name, bool skipIntialize) : m_iSlot(slot), m_Name(name), m_bInitialized(skipIntialize) {}
 		MemoryPoolAbstract(bool skipIntialize) : MemoryPoolAbstract(Detail::InvalidSlot_v, nullptr, skipIntialize) {}
 		
 		virtual ~MemoryPoolAbstract() = default;
@@ -36,7 +33,9 @@ namespace JCore {
 		virtual int Algorithm() = 0;
 		int Slot() { return m_iSlot; }
 		const String& Name() { return m_Name; }
+		bool IsInitialized() { return m_bInitialized; }
 
+#if DebugMode 
 		Int64U GetTotalAllocated() { return m_Statistics.GetTotalAllocated();  }
 		Int64U GetTotalUsed() { return m_Statistics.GetTotalUsed(); }
 		Int64U GetTotalReturned() { return m_Statistics.GetTotalReturned(); }
@@ -67,7 +66,7 @@ namespace JCore {
 
 		
 		bool HasUsingBlock() { return m_Statistics.HasUsingBlock();  }
-		bool IsInitialized() { return m_bInitialized; }
+		
 
 		void StartDetectLeak() {
 			CancelDetectLeak();
@@ -83,6 +82,10 @@ namespace JCore {
 				int iLeakedBlockCount = m_pBlockUsedCounter[i] - m_pBlockReturnedCounter[i];
 				uiLeakedBytes += static_cast<Int64U>(iLeakedBlockCount) * Detail::AllocationLengthMapConverter::ToSize(i);
 				if (detail) detail[i] = iLeakedBlockCount;
+
+				if (i == 0) SafeConsole::WriteLine("┌ [릭 탐지 결과]");
+				if (iLeakedBlockCount > 0) SafeConsole::WriteLine("│ [%8d]: %d", Detail::AllocationLengthMapConverter::ToSize(i), iLeakedBlockCount);
+				if (i == Detail::MemoryBlockSizeMapSize_v - 1) SafeConsole::WriteLine("└──────────────── %llu바이트 릭 <", uiLeakedBytes);
 			}
 
 			if constexpr (!KeepDetectingState)
@@ -97,7 +100,6 @@ namespace JCore {
 			Memory::Copy(m_pBlockReturnedCounter, Detail::MemoryBlockSizeMapSize_v, m_pBlockReturnedCounter, 0);
 		}
 
-		Int64U GetId() { return m_uiID; }
 		bool Detecting() { return m_bDetecting; }
 
 	protected:
@@ -110,10 +112,6 @@ namespace JCore {
 			m_Statistics.AddDeallocated(blockIndex);
 			if (m_bDetecting) ++m_pBlockReturnedCounter[blockIndex];
 		}
-	protected:
-		int m_iSlot;
-		String m_Name;
-		bool m_bInitialized;
 
 		bool m_bDetecting{};
 		MemoryPoolStatistics m_Statistics;
@@ -124,9 +122,36 @@ namespace JCore {
 		// 일단 싱글쓰레드로 가정하고 릭 감지기능 자체만 구현먼저 해놓자.
 		int m_pBlockUsedCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 몇번 사용되었는지
 		int m_pBlockReturnedCounter[Detail::MemoryBlockSizeMapSize_v]{};		// 블록 종류별로 몇번 반환되었는지
+#else
+	public:
+		Int64U GetTotalAllocated() { return 0; }
+		Int64U GetTotalUsed() { return 0; }
+		Int64U GetTotalReturned() { return 0; }
+		Int64U GetInitAllocated() { return 0; }
+		Int64U GetNewAllocated() { return 0; }
 
-		Int64U m_uiID{};
-		inline static AtomicInt64U ms_uiID{};									// 모든 메모리풀은 고유 식별자를 가지도록한다.
+		int GetBlockTotalCounter(int blockIndex) { return 0; }
+		int GetBlockUsedCounter(int blockIndex) { return 0; }
+		int GetBlockNewAllocCounter(int blockIndex) { return 0;  }
+		int GetBlockUsingCounter(int blockIndex) { return 0; }
+		void ResetStatistics() { }
+		bool HasUsingBlock() { return false; }
+
+		void StartDetectLeak() {}
+		template <bool KeepDetectingState = true>
+		Int64U StopDetectLeak(OutOpt_ int* detail = nullptr) { return 0; }
+		bool Detecting() { return false; }
+		void CancelDetectLeak() {}
+	protected:
+		void AddInitBlock(Int32 blockIndex, Int32 blockCount) { }
+		void AddAllocated(Int32 blockIndex, bool createNew) { }
+		void AddDeallocated(Int32 blockIndex) { }
+#endif 
+	protected:
+		int m_iSlot;
+		String m_Name;
+		bool m_bInitialized;
+
 		friend class MemoryPoolManager;
 	};
 

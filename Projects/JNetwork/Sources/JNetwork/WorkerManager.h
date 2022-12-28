@@ -22,7 +22,7 @@ private:	// IOCP 클래스에서만 삭제 가능하도록 한다.
 
 			DeleteSafe(m_Workers[i]);
 		}
-		DeleteArraySafe(m_pHandles)
+		DeleteArraySafe(m_pHandles);
 	}
 
 	template <typename TWorker, typename... Args>

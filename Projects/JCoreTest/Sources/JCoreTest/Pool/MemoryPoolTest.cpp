@@ -18,15 +18,15 @@
 
 using namespace std;
 
-#if TEST_MemoryPoolTest == ON
+#if TEST_MemoryPoolTest == ON && DebugMode
 
 
 
 
 TEST(MemoryPoolTest, SingleBinarySearch) {
 	LeakCheck;
-	MemoryPool<eSingle, eBinarySearch> pool;
-	Int64U uiExpectTotalAllocated = (32 + 2 * 32 + 4 * 32 + 8 * 32 + 16 * 32);
+	MemoryPool<eSingle, eBinarySearch> pool{ false };
+	constexpr Int64U uiExpectTotalAllocated = (32 + 2 * 32 + 4 * 32 + 8 * 32 + 16 * 32);
 
 	// ========================================
 	// 할당이 제대로 이뤄지는지 테스트

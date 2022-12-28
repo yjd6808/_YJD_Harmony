@@ -304,6 +304,14 @@ TEST(ArrayQueueTest, InnerDestructorTest) {
 	}
 }
 
+
+TEST(ArrayQueueTest, MemoryPool) {
+	MemoryPoolLeakCheck;
+
+	ArrayQueue<String, DefaultArrayAllocator> q;
+	for (int i = 0; i < 100'000; i++) q.Enqueue(1);
+}
+
 #endif // TEST_ArrayQueueTest == ON
 
 

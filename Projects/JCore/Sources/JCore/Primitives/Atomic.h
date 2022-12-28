@@ -113,10 +113,10 @@ namespace JCore {
         using TInterlocked = Interlocked<T*>;
     public:
         Atomic() : m_pValue(nullptr) {}
-        template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
+        template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         Atomic(U ptr) : m_pValue(ptr) {}
 
-        template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
+        template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         void Store(U operand) { Exchange(operand); }
 
         T* Load() {
@@ -131,9 +131,9 @@ namespace JCore {
 
         T* Add(int operand) { return TInterlocked::Add(&m_pValue, operand); }
 
-        template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
+        template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         bool TryCompareExchange(U expected, U desired) { return CompareExchange(expected, desired); }
-        template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
+        template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         bool CompareExchange(U& expected, U desired) {
             T* before = expected;
             T* initial = TInterlocked::CompareExchange(&m_pValue, expected, desired);
@@ -146,7 +146,7 @@ namespace JCore {
         }
 
         T* ExchangeAdd(int operand) { return TInterlocked::ExchangeAdd(&m_pValue, operand); }
-        template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
+        template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         T* Exchange(U operand) { return TInterlocked::Exchange(&m_pValue, operand); }
 
 
@@ -169,9 +169,9 @@ namespace JCore {
         T* operator+=(int other) { return ExchangeAdd(other) + other; }
         T* operator-=(int other) { return ExchangeAdd(other * -1) - other; }
 
-        template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
+        template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         bool operator==(U other) { return Load() == other; }
-        template <typename U, EnableIf_t<IsConvertible_v<U, T*>, int> = 0>
+        template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         bool operator!=(U other) { return Load() != other; }
     private:
         T* m_pValue;

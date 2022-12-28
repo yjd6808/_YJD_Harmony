@@ -15,13 +15,13 @@ namespace JCore {
 					      트리 맵, 해쉬 맵 공통 인터페이스 정의
 =====================================================================================*/
 
-template <typename TKey, typename TValue>
-class JCORE_NOVTABLE MapCollection : public Collection<Pair<TKey, TValue>>
+template <typename TKey, typename TValue, typename TAllocator>
+class JCORE_NOVTABLE MapCollection : public Collection<Pair<TKey, TValue>, TAllocator>
 {
 	using TKeyValuePair			 = Pair<TKey, TValue>;
-	using TCollection			 = Collection<TKeyValuePair>;
-	using TMapCollection		 = MapCollection<TKey, TValue>;
-	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue>;
+	using TCollection			 = Collection<TKeyValuePair, TAllocator>;
+	using TMapCollection		 = MapCollection<TKey, TValue, TAllocator>;
+	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue, TAllocator>;
 
 
 public:
@@ -41,9 +41,9 @@ public:
 	virtual KeyCollection& Keys() = 0;
 	virtual ValueCollection& Values() = 0;
 
-	struct KeyCollection : public Collection<TKey>
+	struct KeyCollection : public Collection<TKey, TAllocator>
 	{
-		using TkeyCollection = Collection<TKey>;
+		using TkeyCollection = Collection<TKey, TAllocator>;
 
 		KeyCollection(TMapCollection* map, ContainerType containerType)
 			: TkeyCollection(CollectionType::KeyCollection, containerType) 
@@ -64,9 +64,9 @@ public:
 		TMapCollection* m_pMap;
 	};
 
-	struct KeyCollectionIterator : public Iterator<TKey>
+	struct KeyCollectionIterator : public Iterator<TKey, TAllocator>
 	{
-		using TKeyIterator = Iterator<TKey>;
+		using TKeyIterator = Iterator<TKey, TAllocator>;
 
 		KeyCollectionIterator(VoidOwner& owner, TMapCollectionIterator* iterator) 
 			: TKeyIterator(owner)
@@ -104,9 +104,9 @@ public:
 		TMapCollectionIterator* m_pMapIterator;
 	};
 
-	struct ValueCollection : public Collection<TValue>
+	struct ValueCollection : public Collection<TValue, TAllocator>
 	{
-		using TValueCollection = Collection<TValue>;
+		using TValueCollection = Collection<TValue, TAllocator>;
 
 		ValueCollection(TMapCollection* map, ContainerType containerType)
 			: TValueCollection(CollectionType::ValueCollection, containerType) {
@@ -126,9 +126,9 @@ public:
 		TMapCollection* m_pMap;
 	};
 
-	struct ValueCollectionIterator : public Iterator<TValue>
+	struct ValueCollectionIterator : public Iterator<TValue, TAllocator>
 	{
-		using TValueIterator = Iterator<TValue>;
+		using TValueIterator = Iterator<TValue, TAllocator>;
 
 		ValueCollectionIterator(VoidOwner& owner, TMapCollectionIterator* iterator)
 			: TValueIterator(owner) {
@@ -165,7 +165,7 @@ public:
 	};
 };
 
-template <typename TKey, typename TValue>
-MapCollection<TKey, TValue>::~MapCollection() noexcept {}
+template <typename TKey, typename TValue, typename TAllocator>
+MapCollection<TKey, TValue, TAllocator>::~MapCollection() noexcept {}
 
 } // namespace JCore

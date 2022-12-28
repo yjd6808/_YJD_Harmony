@@ -10,15 +10,15 @@ namespace JCore {
 
 
 // 전방 선언
-					class  VoidOwner;
-template <typename> struct ListNode;
-template <typename> class  LinkedList;
-template <typename T>
-class LinkedListIterator : public ListCollectionIterator<T>
+class  VoidOwner;
+template <typename, typename> struct ListNode;
+template <typename, typename> class  LinkedList;
+template <typename T, typename TAllocator>
+class LinkedListIterator : public ListCollectionIterator<T, TAllocator>
 {
-	using TListNode					= ListNode<T>;
-	using TListCollectionIterator	= ListCollectionIterator<T>;
-	using TLinkedList				= LinkedList<T>;
+	using TListNode					= ListNode<T, TAllocator>;
+	using TListCollectionIterator	= ListCollectionIterator<T, TAllocator>;
+	using TLinkedList				= LinkedList<T, TAllocator>;
 public:
 	LinkedListIterator(VoidOwner& owner, TListNode* current) : TListCollectionIterator(owner, current) {}
 	~LinkedListIterator() noexcept override {}

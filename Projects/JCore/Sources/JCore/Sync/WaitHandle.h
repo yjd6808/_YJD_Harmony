@@ -12,9 +12,10 @@
 #include <JCore/Define.h>
 #include <JCore/Primitives/String.h>
 
+
 namespace JCore {
 
-    template <typename T>
+    template <typename, typename>
     class Collection;
     class WaitHandle
     {
@@ -34,9 +35,42 @@ namespace JCore {
         void operator=(WaitHandle&& other) noexcept;
     public:
         static bool WaitAll(WaitHandle* handles, Int32U count);
-        static bool WaitAll(Collection<WaitHandle>& handles);
         static WaitHandle* WaitAny(WaitHandle* handles, Int32U count);
-        static WaitHandle* WaitAny(Collection<WaitHandle>& handles);
+
+        template <typename TAllocator>
+		static bool WaitAll(Collection<WaitHandle, TAllocator>& handles) {
+		    DebugAssert(handles.Size() <= MAXIMUM_WAIT_OBJECTS && handles.Size() > 0);
+		    WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+
+		    auto it = handles.Begin();
+		    int idx = 0;
+		    while (it->HasNext()) {
+		        waitHandles[idx++] = it->Next().m_hHandle;
+		    }
+
+		    return WinApi::WaitForMultipleObjectsEx(handles.Size(), waitHandles, true) == WAIT_OBJECT_0;
+		}
+
+		template <typename TAllocator>
+		static WaitHandle* WaitAny(Collection<WaitHandle, TAllocator>& handles) {
+	        DebugAssert(handles.Size() <= MAXIMUM_WAIT_OBJECTS && handles.Size() > 0);
+	        WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
+
+	        auto it = handles.Begin();
+	        int idx = 0;
+	        while (it->HasNext()) {
+	            waitHandles[idx++] = it->Next().m_hHandle;
+	        }
+
+	        Int32U iResult = WinApi::WaitForMultipleObjectsEx(handles.Size(), waitHandles, false);
+
+	        if (iResult >= WAIT_OBJECT_0 && iResult <= WAIT_OBJECT_0 + handles.Size() - 1)
+	            return handles.Extension().IndexOf(static_cast<int>(iResult - WAIT_OBJECT_0));
+
+	        return nullptr;
+	    }
+	    
+
     protected:
         WinHandle m_hHandle;
         String m_Name;

@@ -3,16 +3,19 @@
     #define __JCORE_DEFINE_H__
 
 	// __COUNTER__매크로는 리다이렉션 한번 필요하다캄
-	#define JCoreCounterConcatRedirection(a, b) a##b
+	#define JCoreCounterConcatRedirection(a, b) JCoreCounterConcatRedirectionImpl(a, b)
+	#define JCoreCounterConcatRedirectionImpl(a, b) a##b
 	#define JCoreCounterConcat(a) JCoreCounterConcatRedirection(a, __COUNTER__)
 
 
 	#ifdef DebugMode
-		#define JCoreInlineHeaderMessage(s, ...)	inline auto JCoreCounterConcat(_) = [] { return SafeConsole::WriteLine(s, __VA_ARGS__); }()
-		#define JCoreInlineClassMessage(s, ...)		inline static auto JCoreCounterConcat(_) = [] { return SafeConsole::WriteLine(s, __VA_ARGS__); }()
+		#define JCoreInlineHeaderMessage(format, ...)	inline auto JCoreCounterConcat(_) = [] { return SafeConsole::WriteLine(format, __VA_ARGS__); }()
+		#define JCoreInlineClassMessage(format, ...)	inline static auto JCoreCounterConcat(_) = [] { return SafeConsole::WriteLine(format, __VA_ARGS__); }()
+		#define JCoreInlineReturnMessage(type, value, format, ...)	[]()->type { SafeConsole::WriteLine(format, __VA_ARGS__); return value; }()
 	#else
-		#define JCoreInlineHeaderMessage(s) 
-		#define JCoreInlineClassMessage(s) 
+		#define JCoreInlineHeaderMessage(format) 
+		#define JCoreInlineClassMessage(format) 
+		#define JCoreInlineReturnMessage(type, value, format, ...)	value
 	#endif
 	/* !! 주의해서 쓸 것 !!
 	 * 헤더파일에서 사용시 멀티플 TU에서 정의되지 않도록 JCoreInlineHeaderMessage를 사용하고
@@ -57,6 +60,32 @@
         (x) = nullptr;		  	\
 	    }						\
     } while (0)		
+
+	#define AllocatorStaticDeallocateSafe(type, ptr)		\
+    do {													\
+	    if ((ptr)) {										\
+		    TAllocator::template Deallocate<type>(ptr);		\
+			(ptr) = nullptr;		  						\
+	    }													\
+    } while (0)		
+
+	#define AllocatorDynamicDeallocateSafe(ptr, size)		\
+	do {													\
+	    if ((ptr)) {										\
+		    TAllocator::Deallocate((ptr), (size));			\
+			(ptr) = nullptr;		 						\
+	    }													\
+    } while (0)		
+
+
+	#define	PlacementDeleteArraySafe(arr, size)				\
+	do {													\
+	    if ((arr)) {										\
+		    Memory::PlacementDeleteArray((arr), (size));	\
+	    }													\
+    } while (0)	
+	
+	#define LeakCheckAssert		AutoMemoryLeakDetector JCoreCounterConcat(_) {[](Int32U leakedBytes ) { DebugAssert(leakedBytes == 0); }}
 
     #define In_
     #define Out_

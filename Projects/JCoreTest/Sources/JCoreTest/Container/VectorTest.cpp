@@ -297,4 +297,11 @@ TEST(VectorTest, OperatorTest) {
 	EXPECT_TRUE(s.Size() == 0);
 }
 
+TEST(VectorTest, MemoryPool) {
+	MemoryPoolLeakCheck;
+
+	Vector<String, DefaultArrayAllocator> l;
+	for (int i = 0; i < 100'000; i++) l.PushBack(1);
+}
+
 #endif // TEST_VectorTest == ON

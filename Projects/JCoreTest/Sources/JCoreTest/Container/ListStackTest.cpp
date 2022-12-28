@@ -187,6 +187,14 @@ TEST(ListStackTest, InnerDestructorTest) {
 	}
 }
 
+TEST(ListStackTest, MemoryPool) {
+	MemoryPoolLeakCheck;
+
+	ListStack<String, DefaultArrayAllocator> l;
+	for (int i = 0; i < 100'000; i++) l.Push(1);
+}
+
+
 #endif // TEST_ListStackTest == ON
 
 

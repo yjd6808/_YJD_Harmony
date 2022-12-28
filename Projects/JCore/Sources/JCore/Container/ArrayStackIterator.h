@@ -9,13 +9,16 @@
 namespace JCore {
 
 // 전방 선언
-					class VoidOwner;
-template <typename> class ArrayStack;
-template <typename T>
-class ArrayStackIterator : public ArrayCollectionIterator<T>
+					
+template <typename, typename>
+class ArrayStack;
+class VoidOwner;
+
+template <typename T, typename TAllocator>
+class ArrayStackIterator : public ArrayCollectionIterator<T, TAllocator>
 {
-	using TArrayCollectionIterator  = ArrayCollectionIterator<T>;
-	using TArrayStack				= ArrayStack<T>;
+	using TArrayCollectionIterator  = ArrayCollectionIterator<T, TAllocator>;
+	using TArrayStack				= ArrayStack<T, TAllocator>;
 public:
 	ArrayStackIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
 	~ArrayStackIterator() noexcept override {}

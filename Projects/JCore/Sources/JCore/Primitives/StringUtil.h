@@ -9,12 +9,15 @@
 
 namespace JCore {
 
-template <typename> class Vector;
+struct DefaultAllocator;
+
+template <typename, typename>
+class Vector;
 class String;
 class StringUtil final
 {
 public:
-	static Vector<String> Split(String& src, const char* delimiter);
+	static Vector<String, DefaultAllocator> Split(String& src, const char* delimiter);
 	static String Format(const char* format, ...);
 	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);

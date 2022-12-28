@@ -15,18 +15,17 @@
 
 namespace JCore {
 
-
 /*=====================================================================================
 									다이나믹 배열
 					배열 스택, 배열 큐, 배열 리스트의 공통 인터페이스 정의
 =====================================================================================*/
 
-template <typename T>
-class ArrayCollection : public Collection<T>
+template <typename T, typename TAllocator>
+class ArrayCollection : public Collection<T, TAllocator>
 {
-	using TCollection				= Collection<T>;
-	using TArrayCollection			= ArrayCollection<T>;
-	using TArrayCollectionIterator  = ArrayCollectionIterator<T>;
+	using TCollection				= Collection<T, TAllocator>;
+	using TArrayCollection			= ArrayCollection<T, TAllocator>;
+	using TArrayCollectionIterator  = ArrayCollectionIterator<T, TAllocator>;
 public:
 	// [1]
 	ArrayCollection(ContainerType containerType) 
@@ -45,7 +44,9 @@ public:
 			throw InvalidArgumentException("컨테이너의 크기가 0이하가 될 수 없습니다.");
 		}
 
-		m_pArray = Memory::Allocate<T*>(capacity * sizeof(T));
+		int iAllocatedSize;
+		m_pArray = TAllocator::template Allocate<T*>(capacity * sizeof(T), iAllocatedSize);
+		// m_pArray = Memory::Allocate<T*>(capacity * sizeof(T));
 		m_iCapacity = capacity;
 	}
 
@@ -85,13 +86,12 @@ public:
 	virtual void Clear(bool removeHeap = false) {
 		if (this->m_iSize > 0) DestroyAtRange(0, this->m_iSize - 1);
 		this->m_iSize = 0;
-
-		if (removeHeap && m_pArray) {
-			Memory::Deallocate(m_pArray);
-			m_pArray = nullptr;
-		}
+		if (removeHeap)  AllocatorDynamicDeallocateSafe(m_pArray, sizeof(T) * m_iCapacity);
 	}
 
+	virtual bool Valid() const {
+		return m_pArray != nullptr;
+	}
 
 	/// <summary>
 	/// [오버라이딩]
@@ -181,9 +181,10 @@ protected:
 	virtual void Expand(int newCapacity, bool throwException = true) {
 		if (throwException)
 			ThrowIfNewCapacityIsSmallerThanBefore(newCapacity);
-		T* pNewArray = Memory::Allocate<T*>(sizeof(T) * newCapacity);
+		int iAllocatedSize;
+		T* pNewArray = TAllocator::template Allocate<T*>(newCapacity * sizeof(T), iAllocatedSize);
 		Memory::Copy(pNewArray, sizeof(T) * newCapacity, m_pArray, sizeof(T) * this->m_iSize);
-		Memory::Deallocate(m_pArray);
+		TAllocator::template Deallocate(m_pArray, sizeof(T) * m_iCapacity);
 		m_pArray = pNewArray;
 		m_iCapacity = newCapacity;
 	}
@@ -410,7 +411,7 @@ protected:
 	friend class TArrayCollectionIterator;
 };
 
-template <typename T>
-ArrayCollection<T>::~ArrayCollection() noexcept {}
+template <typename T, typename TAllocator>
+ArrayCollection<T, TAllocator>::~ArrayCollection() noexcept {}
 
 } // namespace JCore

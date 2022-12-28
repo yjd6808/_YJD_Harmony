@@ -10,10 +10,10 @@
 
 namespace JCore {
 
-template <typename T>
+template <typename T, typename TAllocator>
 struct ListNode final
 {
-	using TListNode = ListNode<T>;
+	using TListNode = ListNode<T, TAllocator>;
 
 	ListNode() {}
 	~ListNode() noexcept {}
@@ -23,9 +23,11 @@ struct ListNode final
 		new (__builtin_addressof(Value)) T{ Forward<Args>(args)... };
 	}
 
-	void DeleteSelf() const {
+	void DeleteSelf() {
 		Value.~T();
-		delete this;
+
+		TAllocator::template Deallocate<decltype(*this)>(this);
+		// delete this;
 	}
 
 	union { T Value; };	// Lazy Instantiation

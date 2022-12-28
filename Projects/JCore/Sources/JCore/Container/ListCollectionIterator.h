@@ -10,15 +10,15 @@ namespace JCore {
 
 		
 // 전방 선언
-					class VoidOwner;
-template <typename> class ListCollection;
-template <typename> struct ListNode;
-template <typename T>
-class JCORE_NOVTABLE ListCollectionIterator : public Iterator<T>
+class VoidOwner;
+template <typename, typename> class ListCollection;
+template <typename, typename> struct ListNode;
+template <typename T, typename TAllocator>
+class JCORE_NOVTABLE ListCollectionIterator : public Iterator<T, TAllocator>
 {
-	using TIterator		   = Iterator<T>;
-	using TListNode		   = ListNode<T>;
-	using TListCollection  = ListCollection<T>;
+	using TIterator		   = Iterator<T, TAllocator>;
+	using TListNode		   = ListNode<T, TAllocator>;
+	using TListCollection  = ListCollection<T, TAllocator>;
 public:
 	ListCollectionIterator(VoidOwner& owner, TListNode* current) : TIterator(owner) {
 		m_pCurrent = current;
@@ -35,7 +35,7 @@ public:
 			return false;
 		}
 
-		return m_pCurrent->Next != nullptr;		// 헤드까지 도달했는데 Previous를 해버리는 경우가 있을 수 있으므로;
+		return m_pCurrent != nullptr;		// 헤드까지 도달했는데 Previous를 해버리는 경우가 있을 수 있으므로;
 	}
 
 	bool HasPrevious() const override {
@@ -43,13 +43,13 @@ public:
 			return false;
 		}
 
-		return m_pCurrent->Previous != m_pHead;
+		return m_pCurrent != nullptr;
 
 	}
 
 	T& Next() override {
 		// 반복자가 꼬리까지 도달했는데 데이터를 가져올려고 시도하는 경우
-		if (m_pCurrent == m_pTail) {
+		if (m_pCurrent == nullptr) {
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
@@ -59,20 +59,21 @@ public:
 	}
 
 	T& Previous() override {
-		if (m_pCurrent->Previous == m_pHead) {
+		if (m_pCurrent == nullptr) {
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
+		T& val = m_pCurrent->Value;
 		m_pCurrent = m_pCurrent->Previous;
-		return m_pCurrent->Value;
+		return val;
 	}
 
 	bool IsEnd() const override {
-		return m_pCurrent == m_pTail;
+		return m_pCurrent == nullptr;
 	}
 
 	bool IsBegin() const override {
-		return m_pCurrent == m_pHead->Next;
+		return m_pCurrent == m_pHead;
 	}
 protected:
 	TListCollection* CastListCollection() const {
@@ -88,8 +89,8 @@ protected:
 };
 
 
-template <typename T>
-ListCollectionIterator<T>::~ListCollectionIterator() noexcept {
+template <typename T, typename TAllocator>
+ListCollectionIterator<T, TAllocator>::~ListCollectionIterator() noexcept {
 	
 }
 

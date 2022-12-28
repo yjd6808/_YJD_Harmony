@@ -13,7 +13,7 @@ namespace JCore {
     AutoResetEvent::AutoResetEvent(AutoResetEvent&& other) noexcept : WaitHandle(Move(other)) {}
 
     AutoResetEvent& AutoResetEvent::operator=(AutoResetEvent&& other) noexcept {
-        this->operator=(Move(other));
+        WaitHandle::operator=(Move(other));
         return *this;
     }
 

@@ -10,8 +10,8 @@
     //26495: is uninitialized.Always initialize a member variable(type.6)
     //26812: is unscoped.Prefer 'enum class' over 'enum' (Enum.3)
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+
+#include <JCore/Core.h>
 
 #include "gtest/gtest.h"
 
@@ -35,6 +35,7 @@
 #include <JCore/TypeTraits.h>
 #include <JCore/Limit.h>
 #include <JCore/System/JCoreSystem.h>
+#include <JCore/Allocator/DefaultArrayAllocator.h>
 #include <JCore/Debug/MemoryLeakDetector.h>
 #include <JCore/Debug/MemoryPoolLeakDetector.h>
 
@@ -59,7 +60,7 @@ using namespace JCore;
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-	#define TEST_MemoryPoolTest     ON
+#define TEST_HashMapTest                    ON
 #endif
 
 #if TestEnabled == ON
@@ -121,6 +122,7 @@ using namespace JCore;
 
 	#if ThreadingTest == ON
 		#define TEST_ThreadTest                 ON
+		#define TEST_ThreadLocalTest            ON
 	#endif
 
     #if BaseTestEnabled == ON
@@ -163,16 +165,9 @@ void PrintFormat(Args&&... args) {
 #define LeakCheck AutoMemoryLeakDetector LeakCheckConcat(LeakCheck, __COUNTER__)
 
 #define MemoryPoolLeakCheckConcat(a, b) MemoryPoolLeakCheckConcatInner(a, b)
-#define MemoryPoolLeakCheckConcatInner(a, b) a##b {JCoreMemPoolManager_v, [](Int64U unDeallocatedBytes, LinkedList<SharedPtr<MemoryPoolCaptured>>& detail) { \
-    String text(320);  \
-    detail.Extension().ForEach([unDeallocatedBytes, &text](SharedPtr<MemoryPoolCaptured>& info) { \
-        text += StringUtil::Format("%s: %llu 바이트 메모리 릭(%.2f)\n", info->Pool->Name().Source(), info->TotalLeaks, (double(info->TotalLeaks) / unDeallocatedBytes)); \
-        for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) \
-			if (info->LeakBlocks[i] > 0) \
-				text += StringUtil::Format("\t%08d 바이트 블록: %d개 누수\n", Detail::AllocationLengthMapConverter::ToSize(i), info->LeakBlocks[i]); \
-    }); \
+#define MemoryPoolLeakCheckConcatInner(a, b) a##b {&JCore::ArrayAllocatorPool_v, [](Int64U unDeallocatedBytes, int* detail) { \
     if (unDeallocatedBytes > 0) \
-		FAIL() << unDeallocatedBytes << " 바이트 메모리릭" << "\n" << text.Source() << "\n"; \
+		FAIL(); \
 }};
 #define MemoryPoolLeakCheck AutMemoryPoolLeakDetector MemoryPoolLeakCheckConcat(MemoryPoolLeakCheck, __COUNTER__)
 

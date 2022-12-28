@@ -230,7 +230,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolDataAbstract.h" />
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolDetail.h">
       <SubType>
       </SubType>
@@ -305,14 +304,8 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalCopy.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalCopy.h" />
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalManager.h" />
     <ClInclude Include="..\Sources\JCore\Time.h">
       <SubType>
       </SubType>

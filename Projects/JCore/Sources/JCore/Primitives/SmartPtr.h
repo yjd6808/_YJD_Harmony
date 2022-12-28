@@ -25,8 +25,10 @@
  *	SharedPtr은 객체가 생성될때마다 제어블록의 레퍼런스 카운트와 위크 카운트를 수정하게 되니 Atomic 해야된다.
  *
  *	레퍼런스 카운트가 0이되면 내부 객체의 소멸자 호출한다.
- *  SharedPtr끼리만 서로 복사되서 사용하는 객체라면 제어블록의 카운터들만 Atomic하다면 문제가 없을 것이다.
+ *  SharedPtr끼리만 서로 복사되서 사용하는 객체라면 제어블록만 Atomic하다면 문제가 없을 것이다.
+ *  서로다른 쓰레드간에 간섭하는건 제어블록 뿐이기 때문
  *  [상상의 쓰레드 흐름도]
+ *
  *
  *	쓰레드1					        | 쓰레드2
  *	struct Foo {};					|
@@ -84,7 +86,7 @@ namespace JCore {
 
 
 // 전방 선언
-template <typename>	class SharedMaker;
+template <typename, typename>	class SharedMaker;
 template <typename, typename>	class UniqueMaker;
 template <typename>	class WeakPtr;
 template <typename>	class SharedPtr;
@@ -93,7 +95,7 @@ template <typename>	class MakeSharedFromThis;
 
 template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
 constexpr decltype(auto) MakeShared(Args&&... args) {
-	return SharedMaker<T>::Create(Forward<Args>(args)...);
+	return SharedMaker<T, TAllocator>::Create(Forward<Args>(args)...);
 }
 
 template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
@@ -392,7 +394,7 @@ struct JCORE_NOVTABLE ControlBlock
 };
 
 
-template <typename T>
+template <typename T, typename TAllocator>
 struct SharedObject : ControlBlock
 {
 	using TDeletor = PlacementDeletor<T, DeletorOption::OnlyDestoryObject>;
@@ -409,7 +411,7 @@ struct SharedObject : ControlBlock
 	}
 
 	void DeleteSelf() override {
-		delete this;
+		TAllocator::template Deallocate<decltype(*this)>(this);
 	}
 
 	T* Address() const {
@@ -421,8 +423,8 @@ struct SharedObject : ControlBlock
 
 
 // 외부에서 직접 포인터를 넣어주는 경우때문에 추가해줌
-template <typename T>
-struct SharedObject<T*> : ControlBlock
+template <typename T, typename TAllocator>
+struct SharedObject<T*, TAllocator> : ControlBlock
 {
 	using TDeletor = PlacementDeletor<T, DeletorOption::Both>;
 
@@ -437,7 +439,7 @@ struct SharedObject<T*> : ControlBlock
 	}
 
 	void DeleteSelf() override {
-		delete this;
+		TAllocator::template Deallocate<decltype(*this)>(this);
 	}
 
 	T* Address() const {
@@ -447,8 +449,8 @@ struct SharedObject<T*> : ControlBlock
     T* Object;
 };
 
-template <typename T, int Size>
-struct SharedObject<T[Size]> : ControlBlock
+template <typename T, int Size, typename TAllocator>
+struct SharedObject<T[Size], TAllocator> : ControlBlock
 {
 	using TDeletor = PlacementDeletor<T[Size], DeletorOption::OnlyDestoryObject>;
 
@@ -466,7 +468,7 @@ struct SharedObject<T[Size]> : ControlBlock
 	}
 
 	void DeleteSelf() override {
-		delete this;
+		TAllocator::template Deallocate<decltype(*this)>(this);
 	}
 
 	T* Address() const {
@@ -476,15 +478,14 @@ struct SharedObject<T[Size]> : ControlBlock
 	union { T Object[Size]; };
 };
 
-template <typename T>
-struct SharedObject<T[]> : ControlBlock
+template <typename T, typename TAllocator>
+struct SharedObject<T[], TAllocator> : ControlBlock
 {
-	using TDeletor = PlacementDeletor<T[], DeletorOption::Both>;
+	using TDeletor = PlacementDeletor<T[], DeletorOption::OnlyDestoryObject>;
 
 	template <typename... Args>
 	explicit SharedObject(int Size, Args&&... args) {
-		void* pRawMemory = operator new[](sizeof(T)* Size);
-		Pointer = (T*)(pRawMemory);
+		Pointer = TAllocator::template Allocate<T*>(sizeof(T) * Size, m_Allocated);
 
 		for (int i = 0; i < Size; i++) {
 			::new (Pointer + i) T{ Forward<Args>(args)... };
@@ -500,7 +501,13 @@ struct SharedObject<T[]> : ControlBlock
 	}
 
 	void DeleteSelf() override {
-		delete this;
+		// Pointer가 가리키는 배열 원소들 명시적으로 소멸자 호출
+		TDeletor()(Pointer, m_Size);
+		// Pointer메모리 해제
+		TAllocator::Deallocate(Pointer, m_Allocated);		// dynamic push
+
+		// 이 객체의 메모리를 해제
+		TAllocator::template Deallocate<decltype(*this)>(this);		// static push
 	}
 
 	T* Address() const {
@@ -509,6 +516,7 @@ struct SharedObject<T[]> : ControlBlock
 
 	union { T* Pointer; };
 	int m_Size;
+	int m_Allocated;
 };
 
 
@@ -601,7 +609,8 @@ public:
 	}
 protected:
 	void MakeSharedEmpty() {
-		m_pControlBlock->DecreaseRefCount();
+		if (m_pControlBlock != nullptr)
+			m_pControlBlock->DecreaseRefCount();
 
 		m_pPtr = nullptr;
 		m_pControlBlock = nullptr;
@@ -611,7 +620,7 @@ protected:
 	// SharedPtr에서만 호출
 	template <typename U>
     void MakeShared(U ptr) {
-	    m_pControlBlock = new SharedObject<U>(ptr); 
+	    m_pControlBlock = new SharedObject<U, DefaultAllocator>(ptr); 
         m_pPtr = ptr;
         m_Size = 1;
 
@@ -697,7 +706,7 @@ protected:
 
 		m_pPtr = weak.m_pPtr;
 		m_pControlBlock = weak.m_pControlBlock;
-		m_pControlBlock = weak.m_Size;
+		m_Size = weak.m_Size;
 
 		weak.m_pPtr = nullptr;
 		weak.m_pControlBlock = nullptr;
@@ -773,7 +782,7 @@ protected:
 	ControlBlock* m_pControlBlock = nullptr;
 	int m_Size = 0;
 
-	template <typename> friend class SharedMaker;
+	template <typename, typename> friend class SharedMaker;
 	template <typename> friend class BasePtr;
 };
 
@@ -941,32 +950,34 @@ public:
 };
 
 
-template <typename T>
+template <typename T, typename TAllocator>
 class SharedMaker
 {
 	static const int ms_uiArraySize = 1;		// 기본적으로 길이는 무조건 1
 
 	using TSharedPtr = SharedPtr<T>;
-	using TSharedObject = SharedObject<T>;
+	using TSharedObject = SharedObject<T, TAllocator>;
 public:
 	template <typename... Args>
 	static constexpr TSharedPtr Create(Args&&... args) {
-		auto obj = new TSharedObject(Forward<Args>(args)...);
+		auto obj = TAllocator::template Allocate<TSharedObject>();
+		Memory::PlacementNew(obj, Forward<Args>(args)...);
 		TSharedPtr sp;
 		sp.SetSharedPtr(obj->Address(), obj, ms_uiArraySize);
 		return sp;
 	}
 };
 
-template <typename T, int ArraySize>
-class SharedMaker<T[ArraySize]>
+template <typename T, int ArraySize, typename TAllocator>
+class SharedMaker<T[ArraySize], TAllocator>
 {
 	using TSharedPtr = SharedPtr<T[ArraySize]>;
-	using TSharedObject = SharedObject<T[ArraySize]>;
+	using TSharedObject = SharedObject<T[ArraySize], TAllocator>;
 public:
 	template <typename... Args>
 	static constexpr TSharedPtr Create(Args&&... args) {
-		auto obj = new TSharedObject(Forward<Args>(args)...);
+		auto obj = TAllocator::template Allocate<TSharedObject>();
+		Memory::PlacementNew(obj, Forward<Args>(args)...);
 		TSharedPtr sp;
 		sp.SetSharedPtr(obj->Address(), obj, ArraySize);
 		return sp;
@@ -974,15 +985,16 @@ public:
 };
 
 
-template <typename T>
-class SharedMaker<T[]>
+template <typename T, typename TAllocator>
+class SharedMaker<T[], TAllocator>
 {
 	using TSharedPtr = SharedPtr<T[]>;
-	using TSharedObject = SharedObject<T[]>;
+	using TSharedObject = SharedObject<T[], TAllocator>;
 public:
 	template <typename... Args>
 	static constexpr TSharedPtr Create(int size, Args&&... args) {
-		auto obj = new TSharedObject(size, Forward<Args>(args)...);
+		auto obj = TAllocator::template Allocate<TSharedObject>();
+		Memory::PlacementNew(obj, size, Forward<Args>(args)...);
 		TSharedPtr sp;
 		sp.SetSharedPtr(obj->Address(), obj, size);
 		return sp;

@@ -10,13 +10,16 @@ namespace JCore {
 
 
 // 전방 선언
-					class VoidOwner;
-template <typename> class ArrayQueue;
-template <typename T>
-class ArrayQueueIterator : public ArrayCollectionIterator<T>
+							
+template <typename, typename>
+class ArrayQueue;
+class VoidOwner;
+
+template <typename T, typename TAllocator>
+class ArrayQueueIterator : public ArrayCollectionIterator<T, TAllocator>
 {
-	using TArrayCollectionIterator	= ArrayCollectionIterator<T>;
-	using TArrayQueue				= ArrayQueue<T>;
+	using TArrayCollectionIterator	= ArrayCollectionIterator<T, TAllocator>;
+	using TArrayQueue				= ArrayQueue<T, TAllocator>;
 public:
 	ArrayQueueIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
 	~ArrayQueueIterator() noexcept override {}
@@ -97,7 +100,7 @@ protected:
 
 	TArrayQueue* CastArrayQueue() const {
 		this->ThrowIfIteratorIsNotValid();
-		return this->Watcher.Get<TArrayQueue>();
+		return this->Watcher.Get<TArrayQueue*>();
 	}
 };
 

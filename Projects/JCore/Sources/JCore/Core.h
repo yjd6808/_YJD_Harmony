@@ -38,9 +38,10 @@ inline auto JCoreInitializer = [] {
 	//  - MSVC 컴파일러 옵션 설정도 변경함
 	JCore::NormalConsole::Init();
 	JCore::NormalConsole::SetOutputCodePage(JCore::UTF8);
+	
 
 	// 글로벌 메모리릭 체크
-	static JCore::AutoMemoryLeakDetector _{ [](Int32U uiLeaked) {
+	static JCore::AutoMemoryLeakDetector _2{ [](Int32U uiLeaked) {
 		JCore::NormalConsole::WriteLine("메모리릭 %u바이트", uiLeaked);
 	}};
 	return 0;

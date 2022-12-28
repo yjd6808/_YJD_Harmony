@@ -57,22 +57,28 @@ TEST(HashMapTest, EnumeratorTest) {
 		map.Insert(i, i + 1);
 	}
 
+	for (int i = 0; i < 10; i++) {
+		EXPECT_TRUE(map.Exist(i));
+	}
+
 	// 정방향 반복자 테스트
 	const auto mapIter = map.Begin();
-	for (int i = 0; i < mapIter->HasNext(); i++) {
+	for (int i = 0; mapIter->HasNext(); i++) {
 		Pair<int, int>& pair = mapIter->Next();
 		EXPECT_TRUE(map.Exist(pair.Key));
 		EXPECT_TRUE(map.Values().Extension().Exist(i + 1));	
 	}
 
 	const auto mapKeyIter = map.Keys().Begin();
-	for (int i = 0; i < mapKeyIter->HasNext(); i++) {
-		EXPECT_TRUE(map.Exist(mapKeyIter->Next()));
+	for (int i = 0; mapKeyIter->HasNext(); i++) {
+		int key = mapKeyIter->Next();
+		EXPECT_TRUE(map.Exist(key));
 	}
 
-	const auto mapValueIter = map.Values ().Begin();
-	for (int i = 0; i < mapValueIter->HasNext(); i++) {
-		EXPECT_TRUE(map.Values().Extension().Exist(i + 1));
+	const auto mapValueIter = map.Values().Begin();
+	for (int i = 0;  mapValueIter->HasNext(); i++) {
+		int value = mapValueIter->Next();
+		EXPECT_TRUE(map.Values().Extension().Exist(value));
 	}
 
 	// 반대방향 반복자 테스트
@@ -185,6 +191,15 @@ TEST(HashMapTest, InnerDestructorTest) {
 			aq.Insert(i, "fsefesfesfesf");
 		}
 	}
+}
+
+
+TEST(HashMapTest, MemoryPool) {
+	MemoryPoolLeakCheck;
+
+	HashMap<String, String, DefaultArrayAllocator> q;
+	for (int i = 0; i < 100'000; i++) 
+		q.Insert(StringUtil::Format("ss%d", i), StringUtil::Format("ss%d", i));
 }
 
 #endif // TEST_HashMapTest == ON

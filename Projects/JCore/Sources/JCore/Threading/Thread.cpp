@@ -59,11 +59,13 @@ namespace JCore {
         m_hHandle = other.m_hHandle;
         m_uiThreadId = other.m_uiThreadId;
         m_Name = Move(other.m_Name);
+        m_bAutoJoin = other.m_bAutoJoin;
         m_eState = other.m_eState;
 
         other.m_hHandle = nullptr;
         other.m_uiThreadId = 0;
         other.m_eState = Uninitialized;
+        other.m_bAutoJoin = false;
 
         return *this;
     }

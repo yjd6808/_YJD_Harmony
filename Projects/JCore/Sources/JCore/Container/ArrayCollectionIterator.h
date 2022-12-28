@@ -10,13 +10,13 @@ namespace JCore {
 
 		
 // 전방 선언
-					class VoidOwner;
-template <typename> class ArrayCollection;
-template <typename T>
-class JCORE_NOVTABLE ArrayCollectionIterator : public Iterator<T>
+class VoidOwner;
+template <typename, typename> class ArrayCollection;
+template <typename T, typename TAllocator>
+class JCORE_NOVTABLE ArrayCollectionIterator : public Iterator<T, TAllocator>
 {
-	using TIterator			= Iterator<T>;
-	using TArrayCollection  = ArrayCollection<T>;
+	using TIterator			= Iterator<T, TAllocator>;
+	using TArrayCollection  = ArrayCollection<T, TAllocator>;
 public:
 	ArrayCollectionIterator(VoidOwner& owner, int pos)
 		: TIterator(owner)
@@ -67,8 +67,8 @@ protected:
 	int m_iPos;
 };
 
-template <typename T>
-ArrayCollectionIterator<T>::~ArrayCollectionIterator() noexcept {
+template <typename T, typename TAllocator>
+ArrayCollectionIterator<T, TAllocator>::~ArrayCollectionIterator() noexcept {
 	// UNUSED
 }
 

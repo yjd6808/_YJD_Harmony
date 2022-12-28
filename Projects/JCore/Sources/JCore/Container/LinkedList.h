@@ -9,15 +9,15 @@
 
 namespace JCore {
 
-template <typename T>
-class LinkedList	: public ListCollection<T>
+template <typename T, typename TAllocator = DefaultAllocator>
+class LinkedList	: public ListCollection<T, TAllocator>
 {
-	using TListNode				= ListNode<T>;
-	using TEnumerator			= Enumerator<T>;
-	using TCollection			= Collection<T>;
-	using TListCollection		= ListCollection<T>;
-	using TLinkedList			= LinkedList<T>;
-	using TLinkedListIterator	= LinkedListIterator<T>;
+	using TListNode				= ListNode<T, TAllocator>;
+	using TEnumerator			= Enumerator<T, TAllocator>;
+	using TCollection			= Collection<T, TAllocator>;
+	using TListCollection		= ListCollection<T, TAllocator>;
+	using TLinkedList			= LinkedList<T, TAllocator>;
+	using TLinkedListIterator	= LinkedListIterator<T, TAllocator>;
 public:
 	LinkedList() 
 		: TListCollection(ContainerType::LinkedList) 
@@ -125,24 +125,24 @@ public:
 			return false;
 		}
 
-		this->ConnectNode(pDel->Previous, pDel->Next);
+		this->RemoveNode(pDel);
 		pDel->DeleteSelf();
 		--this->m_iSize;
 		return true;
 	}
 
 	TEnumerator Begin() const override {
-		return MakeShared<TLinkedListIterator>(this->GetOwner(), this->m_pHead->Next);
+		return MakeShared<TLinkedListIterator, TAllocator>(this->GetOwner(), this->m_pHead);
 	}
 
 	TEnumerator End() const override {
-		return MakeShared<TLinkedListIterator>(this->GetOwner(), this->m_pTail);
+		return MakeShared<TLinkedListIterator, TAllocator>(this->GetOwner(), this->m_pTail);
 	}
 
 
 protected:
 	friend class TLinkedListIterator;
-	template <typename, typename> friend class HashMapIterator;
+	template <typename, typename, typename> friend class HashMapIterator;
 };
 
 } // namespace JCore
