@@ -46,10 +46,10 @@ public:
 
 		int iAllocatedSize;
 		m_pArray = TAllocator::template Allocate<T*>(capacity * sizeof(T), iAllocatedSize);
-		// m_pArray = Memory::Allocate<T*>(capacity * sizeof(T));
 		m_iCapacity = capacity;
 	}
 
+	
 	// [3]
 	ArrayCollection(const TArrayCollection& other, ContainerType containerType) 
 		: TArrayCollection(other.Capacity(), containerType)	// -> Call [2]
@@ -70,6 +70,33 @@ public:
 	{
 		CopyFrom(ilist);
 	}
+
+	// [6]
+	ArrayCollection(int capacity, ContainerType containerType, const T& initData) 
+		: TArrayCollection(capacity, containerType) // -> Call [2]
+	{
+		this->m_iSize = capacity;
+
+		for (int i = 0; i < capacity; ++i) {
+			EmplaceAt(i, initData);
+		}
+	}
+
+	// [7]
+	ArrayCollection(int capacity, ContainerType containerType, T&& initData) 
+		: TArrayCollection(capacity, containerType) // -> Call [2]
+	{
+		this->m_iSize = capacity;
+
+		// Move에는 앞에 3개는 복사 해주고 마지막 1개만 이동해주면 된다.
+		// 만약 T가 많이 무거우면 이 작업은 효율이 좋을 것이고
+		// T가 엄청 가벼운데 반복문을 이렇게 돌면 효율이 더 안좋을 것 같다.
+		for (int i = 0; i < capacity; ++i) {
+			EmplaceAt(i, i < capacity - 1 ? initData : Move(initData));
+		}
+	}
+
+
 
 	~ArrayCollection() noexcept override = 0;
 

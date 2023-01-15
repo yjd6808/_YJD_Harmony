@@ -34,7 +34,7 @@ namespace JCore {
 		int Slot() { return m_iSlot; }
 		const String& Name() { return m_Name; }
 		bool IsInitialized() { return m_bInitialized; }
-
+		
 #if DebugMode 
 		Int64U GetTotalAllocated() { return m_Statistics.GetTotalAllocated();  }
 		Int64U GetTotalUsed() { return m_Statistics.GetTotalUsed(); }

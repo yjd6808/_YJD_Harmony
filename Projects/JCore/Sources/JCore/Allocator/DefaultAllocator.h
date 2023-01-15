@@ -10,8 +10,9 @@
 
 namespace JCore {
 
-struct DefaultAllocator
+class DefaultAllocator
 {
+public:
 	// 할당 규칙
 	// Allocate<Data> => sizeof(Data)크기로 생성해서 return Data* 
 	// Allocate<Data*> => sizeof(Data)크기로 생성해서 return Data*

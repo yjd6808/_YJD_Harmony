@@ -337,6 +337,7 @@ int String::FindReverse(const char* str) const {
 	return FindReverse(0, m_iLen - 1, str);
 }
 
+
 void String::Clear() {
 	ThrowIfNotInitialized();
 	m_iLen = 0;

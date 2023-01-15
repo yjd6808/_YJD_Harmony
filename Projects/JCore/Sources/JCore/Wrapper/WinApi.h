@@ -146,7 +146,12 @@ namespace JCore {
         static Int32U          JCoreStdCall GetCurrentThreadId();
 
 
-
+		/**
+		 * \brief https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamea
+		 * Retrieves the fully qualified path for the file that contains the specified module. The module must have been loaded by the current process.
+		 * \return the return value is the length of the string that is copied to the buffer
+		 */
+		static Int32U          JCoreStdCall GetModuleFilePath(InOpt_ WinModule module, Out_ char* filenameBuffer, In_ int filenameBufferCapacity);
         
     }; // struct WinApi
 

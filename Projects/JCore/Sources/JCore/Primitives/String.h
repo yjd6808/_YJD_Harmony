@@ -14,7 +14,7 @@ namespace JCore {
 // variadic template forward declaration
 template <typename...>
 struct Tuple;
-struct DefaultAllocator;
+class DefaultAllocator;
 
 template <typename, typename>
 class Vector;
@@ -39,6 +39,7 @@ public:
 	char* Source() const { return m_pBuffer; }
 	int Capacity() const { return m_iCapacity; }
 	int Length() const { return m_iLen; }
+	void SetLength(int len) { m_iLen = len; }
 	bool Empty() const { return m_iLen == 0; }
     bool IsNull() const { return m_pBuffer == nullptr; }
 	bool IsValidIndex(const int idx) const { return idx >= 0 || idx < m_iLen; }
@@ -77,6 +78,12 @@ public:
 	int FindReverse(int startIdx, int endIdx, const char* str) const;
 	int FindReverse(const String& str) const;
 	int FindReverse(const char* str) const;
+
+	bool EndWith(const String& str) { return FindReverse(str.Source()) == m_iLen - str.Length();  }
+	bool StartWith(const String& str) { return Find(str) == 0; }
+
+	char Last() { return GetAt(m_iLen - 1); }
+	char First() { return GetAt(0); }
 
 	void Clear();
 	void Clear(int offset, int len);		// offset 인덱스에서 len만큼 없앰

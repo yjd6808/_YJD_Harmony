@@ -41,7 +41,7 @@ struct ModelA
 
 // 쉐어드 포인터 테스트
 TEST(SharedPointer, SmartPointerTest) {
-    auto test = [](SharedPtr<int>& g1, SharedPtr<int>& g2) {
+    auto test = [](const SharedPtr<int>& g1, SharedPtr<int>& g2) {
         *g1 = 30;
 
         // 기존 g1 소멸
@@ -411,6 +411,8 @@ struct MyThread: MakeSharedFromThis<MyThread>, IRunnable
 	int b = 2;
 };
 
+struct Inherited : MyThread {};
+
 TEST(SharedPtr, MakeSharedFromThis) {
 	{
 		LeakCheck;
@@ -424,6 +426,14 @@ TEST(SharedPtr, MakeSharedFromThis) {
 			}
 		}
 		EXPECT_TRUE(wp.WeakCount() == 1 && wp.RefCount() == 0);
+	}
+
+	{
+		LeakCheck;
+		SharedPtr<IRunnable> sp = MakeShared<Inherited>();
+
+		// 상속관계시 제대로 생성되는지 테슽으
+		EXPECT_TRUE(sp.Get<MyThread*>()->Shared().Exist());
 	}
 
 	//{

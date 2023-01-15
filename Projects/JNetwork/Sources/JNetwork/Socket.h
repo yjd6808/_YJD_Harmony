@@ -105,11 +105,11 @@ public:
 
 	// 반환값 실패시 FALSE, WSAGetLastError로 확인
 	//       성공시 TRUE
-	int AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ PInt32UL receivedBytes, LPOVERLAPPED overlapped) const;
+	int AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ Int32UL* receivedBytes, LPOVERLAPPED overlapped) const;
 	static void AcceptExResult(char* buff, Int32UL receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp);
 
 	int Connect(const IPv4EndPoint& ipv4EndPoint) const;
-	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ PInt32UL sentBytes) const; 
+	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ Int32UL* sentBytes) const;
 	 
 	int Send(char* buff, Int32U len, Int32U flag = 0) const;
 	int SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag = 0) const;

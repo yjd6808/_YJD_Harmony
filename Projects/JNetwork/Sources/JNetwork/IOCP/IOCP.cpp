@@ -104,7 +104,7 @@ namespace JNetwork {
 		return CreateIoCompletionPort(handle, m_hIOCP, completionKey, m_uiThreadCount) != 0;
 	}
 
-	BOOL IOCP::GetStatus(PInt32UL numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const {
+	BOOL IOCP::GetStatus(Int32UL* numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const {
 		return GetQueuedCompletionStatus(m_hIOCP, numberOfBytesTransffered, completionKey, ppOverlapped, INFINITE);
 	}
 

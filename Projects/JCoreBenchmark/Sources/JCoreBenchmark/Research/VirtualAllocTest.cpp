@@ -1,3 +1,7 @@
+/*
+ * 작성자: 윤정도
+ */
+
 #include <JCoreBenchmark/CoreBenchmark.h>
 
 /*
@@ -7,9 +11,8 @@
  *			  1페이지당 4'096바이트임을 감안하면 
  */
 
+
 #if VirtualAllocTest == ON
-
-
 
 #define CalculateFree	OFF						// 해제하는 시간 포함할지
 #define NoLoop			OFF						// 연속 할당 테스트

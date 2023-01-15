@@ -9,7 +9,7 @@
 
 namespace JCore {
 
-struct DefaultAllocator;
+class DefaultAllocator;
 
 template <typename, typename>
 class Vector;
@@ -19,6 +19,8 @@ class StringUtil final
 public:
 	static Vector<String, DefaultAllocator> Split(String& src, const char* delimiter);
 	static String Format(const char* format, ...);
+	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, ...);
+
 	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);
 	static bool IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen);

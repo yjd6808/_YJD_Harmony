@@ -69,7 +69,7 @@ namespace JCore {
         WinHandle m_hHandle;
         String m_Name;
         Int32U m_uiThreadId;
-        Atomic<int> m_eState;
+        AtomicInt m_eState;
         Semaphore m_RunningSignal;
         bool m_bAutoJoin;
 

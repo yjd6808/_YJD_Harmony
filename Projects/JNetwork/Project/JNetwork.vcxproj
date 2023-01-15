@@ -250,7 +250,7 @@
     <LibraryPath>$(SolutionDir)Output\lib\$(Configuration);$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\Intermediate\$(Configuration)\</IntDir>
+    <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

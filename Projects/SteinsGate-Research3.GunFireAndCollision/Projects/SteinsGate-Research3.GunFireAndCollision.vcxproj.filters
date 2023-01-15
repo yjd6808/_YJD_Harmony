@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Action">
+      <UniqueIdentifier>{4811212e-a215-4545-90b1-d42941b6c07d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Character">
+      <UniqueIdentifier>{38986c31-f493-45bb-90bc-183e330b1bb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Action\Player">
+      <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\Player.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\PlayerController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\TestLayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\TestScene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\World.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\PackLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\ComboAction.cpp">
+      <Filter>src\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\ComboKeyList.cpp">
+      <Filter>src\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\ComboTree.cpp">
+      <Filter>src\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\CharacterPartAnimate.cpp">
+      <Filter>src\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\CharacterPartSprite.cpp">
+      <Filter>src\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\CharacterPartSpriteFrame.cpp">
+      <Filter>src\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\CharacterSprite.cpp">
+      <Filter>src\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\ActionAbstract.cpp">
+      <Filter>src\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionRun.cpp">
+      <Filter>src\Action\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionSliding.cpp">
+      <Filter>src\Action\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionGunFire.cpp">
+      <Filter>src\Action\Player</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Classes\SteinsGate\Research\Player.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\PlayerController.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\TestLayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\TestScene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\Tutturu.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\World.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\AppDelegate.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\Config.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\Enums.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\FrameTexture.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\PackLoader.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\ComboAction.h">
+      <Filter>src\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\ComboKeyList.h">
+      <Filter>src\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\ComboTree.h">
+      <Filter>src\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\CharacterPartAnimate.h">
+      <Filter>src\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\CharacterPartSprite.h">
+      <Filter>src\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\CharacterPartSpriteFrame.h">
+      <Filter>src\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\CharacterSprite.h">
+      <Filter>src\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionRun.h">
+      <Filter>src\Action\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\Actions.h">
+      <Filter>src\Action\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\ActionAbstract.h">
+      <Filter>src\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionSliding.h">
+      <Filter>src\Action\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionGunFire.h">
+      <Filter>src\Action\Player</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

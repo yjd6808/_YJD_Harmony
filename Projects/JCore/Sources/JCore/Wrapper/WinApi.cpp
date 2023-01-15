@@ -115,9 +115,14 @@ namespace JCore {
         return ::GetCurrentThreadId();
     }
 
-    
+	Int32U
+    JCoreStdCall
+	WinApi::GetModuleFilePath(WinModule module, char* filenameBuffer, int filenameBufferCapacity) {
+        return GetModuleFileNameA((HMODULE)module, filenameBuffer, filenameBufferCapacity);
+    }
 
-    // =========================================================================================
+
+	// =========================================================================================
     // Interlocked Api 
     // =========================================================================================
 

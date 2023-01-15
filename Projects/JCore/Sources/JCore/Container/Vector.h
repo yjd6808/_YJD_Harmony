@@ -31,6 +31,17 @@ public:
 	{
 	}
 
+	Vector(int size, const T& initData) 
+		: TArrayCollection(size, ContainerType::Vector, initData) 
+	{
+	}
+
+	Vector(int size, T&& initData) 
+		: TArrayCollection(size, ContainerType::Vector, Move(initData)) 
+	{
+	}
+
+
 	Vector(const TVector& other) 
 		: TArrayCollection(other, ContainerType::Vector) 
 	{

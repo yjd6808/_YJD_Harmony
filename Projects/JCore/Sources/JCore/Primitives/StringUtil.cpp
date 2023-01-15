@@ -33,6 +33,24 @@ String StringUtil::Format(const char* format, ...) {
 	return szResult;
 }
 
+void StringUtil::FormatBuffer(char* buff, const int buffCapacity, const char* format, ...) {
+	va_list args;
+	va_start(args, format);
+
+	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
+
+	if (iExpectedLen <= 0) {
+		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
+	}
+
+	if (iExpectedLen >= buffCapacity) {
+		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다. (문자열 길이가 버퍼의 용량을 초과합니다.)");
+	}
+
+	vsnprintf(buff, buffCapacity, format, args);
+	va_end(args);
+}
+
 int StringUtil::Length(const char* str) {
 	if (str == nullptr) {
 		return -1;

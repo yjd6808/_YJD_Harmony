@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes">
+      <UniqueIdentifier>{024fd094-24f1-47c3-8fb1-d8a97afec303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scenes\Test">
+      <UniqueIdentifier>{d8b44887-4383-4bdb-8ad8-5d85a529671b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\AppDelegate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Scenes\Test\LoginScene.cpp">
+      <Filter>src\Scenes\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Scenes\Test\LoginLayer.cpp">
+      <Filter>src\Scenes\Test</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\AppDelegate.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Scenes\Test\LoginLayer.h">
+      <Filter>src\Scenes\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Scenes\Test\LoginScene.h">
+      <Filter>src\Scenes\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Tutturu.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

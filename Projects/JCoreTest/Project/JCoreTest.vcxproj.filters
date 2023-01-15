@@ -107,6 +107,21 @@
     <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadLocalTest.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Wrapper\CRuntimeTest.cpp">
+      <Filter>Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\FileSystem\FileStreamTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\FileSystem\FileUtilTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\FileSystem\DirectoryUtilTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\FileSystem\PathUtilTest.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
@@ -135,6 +150,9 @@
     </Filter>
     <Filter Include="Pool">
       <UniqueIdentifier>{eda00c72-9c10-42f4-be6b-7eb4293c1bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileSystem">
+      <UniqueIdentifier>{750802d8-37fc-4cbb-89bb-cf423f2efea4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

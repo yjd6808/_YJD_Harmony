@@ -32,8 +32,9 @@ namespace JCore {
 		}
 	};
 
-	struct DefaultArrayAllocator
+	class DefaultArrayAllocator
 	{
+	public:
 		// 명시적으로 사이즈 요청해서 반환하는 2가지 기능을 구현할 것
 		template <typename T>
 		static auto Allocate() {	// Static

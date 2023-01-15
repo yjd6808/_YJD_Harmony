@@ -349,8 +349,10 @@ namespace JCore {
             static constexpr bool IsValidDeallocateReturnType = TestDeallocateReturn1() && TestDeallocateReturn1();
             static constexpr bool IsValidDeallocateParamType = TestDeallocateParam1() && TestDeallocateParam2();
             static constexpr bool Valid = IsValidAllocateReturnType && IsValidAllocateParamType && IsValidDeallocateParamType && IsValidDeallocateParamType;
-            
         };
+
+        
+       
     }
 
 

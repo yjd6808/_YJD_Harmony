@@ -48,19 +48,27 @@ using namespace JCore;
 //출력 여부
 #define Print	OFF
 
-#define TestEnabled                 ON      // 전체 테스트 수행 여부
+#define TestEnabled                 ON     // 전체 테스트 수행 여부
 #define BaseTestEnabled             ON      // JCore 테스트 수행 여부
 #define ContainerTestEnabled        ON      // JCore::Container 테스트 수행 여부
 #define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 수행 여부
+#define FileSystemTestEnabled       ON      // JCore::FileSystem 테스트 코드 수행 여부
 #define PoolTestEnabled             ON      // JCore::Pool 테스트 코드 수행 여부
 #define PrimitivesTestEnabled       ON      // JCore::Primitives 테스트 수행 여부
 #define RAIITestEnabled             ON      // JCore::RAII 테스트 수행 여부
 #define SyncTestEnabled             ON      // JCore::Sync 테스트 수행 여부
 #define ThreadingTest               ON      // JCore::Threading 테스트 수행 여부
+#define WrapperTest                 ON      // JCore::Wrapper 테스트 수행 여부
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-#define TEST_HashMapTest                    ON
+	#define TEST_CRuntimeTest                    ON
+	#define TEST_FileUtilTest                    ON
+	#define TEST_FileStreamTest                  ON
+	#define TEST_DirectoryTest               ON
+	#define TEST_PathTest                    ON
+    #define TEST_SmartPtrTest			         ON
+#define TEST_VectorTest ON
 #endif
 
 #if TestEnabled == ON
@@ -91,6 +99,13 @@ using namespace JCore;
 	#if RAIITestEnabled == ON
 		#define TEST_AutoPtrTest                ON
 		#define TEST_AutoRefTest                ON
+	#endif
+
+	#if FileSystemTestEnabled == ON 
+		#define TEST_DirectoryTest          ON
+		#define TEST_FileUtilTest               ON
+		#define TEST_FileStreamTest             ON
+		#define TEST_PathTest               ON
 	#endif
 
 	#if PoolTestEnabled == ON
@@ -125,6 +140,10 @@ using namespace JCore;
 		#define TEST_ThreadLocalTest            ON
 	#endif
 
+	#if WrapperTest == ON
+		#define TEST_CRuntimeTest ON
+	#endif
+
     #if BaseTestEnabled == ON
 
         #define TEST_AutoObjectTest				ON
@@ -140,6 +159,9 @@ using namespace JCore;
         #define TEST_TypeTraitsTest				ON
 
     #endif
+
+
+
 #endif 
 template <typename... Args>
 void PrintFormat(const char* fmt, Args&&... args) {

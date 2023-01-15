@@ -25,7 +25,7 @@ namespace JNetwork {
 			Int32UL dwReceiveDataLength,
 			Int32UL dwLocalAddressLength,
 			Int32UL dwRemoteAddressLength,
-			PInt32UL lpdwBytesReceived,
+			Int32UL* lpdwBytesReceived,
 			LPOVERLAPPED lpOverlapped) {
 			
 			return AcceptEx(sListenSocket,
@@ -44,7 +44,7 @@ namespace JNetwork {
 			int ConnectAddrSize,
 			PVOID lpSendBuffer, 
 			Int32UL dwSendDataLength,
-			PInt32UL lpdwBytesSent, 
+			Int32UL* lpdwBytesSent, 
 			LPOVERLAPPED lpOverlapped) {
 
 			static LPFN_CONNECTEX lpfnConnectEx = nullptr;
@@ -182,7 +182,7 @@ namespace JNetwork {
 		return { this->m_TransportProtocol, accept(m_Socket, nullptr, nullptr) };
 	}
 
-	int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ PInt32UL receivedBytes, LPOVERLAPPED overlapped) const {
+	int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ Int32UL* receivedBytes, LPOVERLAPPED overlapped) const {
 
 		// @참고 : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
 		// sListenSocket : 서버 소켓
@@ -195,7 +195,7 @@ namespace JNetwork {
 		//					     로컬 주소, 원격 주소를 제외한 크기를 전달해줘야한다.
 		// dwLocalAddressLength : 로컬 주소 정보 크기를 전달한다. 전송 프로토콜의 최대 주소 크기보다 16바이트 이상 커야한다.
 		// dwRemoteAddressLength : 원격 주소 정보 크기를 전달한다. 전송 프로토콜의 최대 주소 크기보다 16바이트 이상 커야한다.
-		// lpdwBytesReceived : 전송받은 데이터 크기를 저장할 PInt32UL를 전달한다. 만약 바로 완료된 경우 여기 데이터가 담길 것이다.
+		// lpdwBytesReceived : 전송받은 데이터 크기를 저장할 Int32UL*를 전달한다. 만약 바로 완료된 경우 여기 데이터가 담길 것이다.
 		//					   GetLastError()의 ERROR_IO_PENDING 오류를 받는 경우에는 완료 통지 방식으로 데이터를 읽어야한다. (오버랩 말하는 듯?)
 		// lpOverlapped : NULL을 절대 전달하면 안된다. 수신한 정보가 비동기적으로 완료될 수 있으므로 오버랩 정보를 전달해야함.
 		
@@ -259,7 +259,7 @@ namespace JNetwork {
 		return connect(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
 	}
 
-	int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ PInt32UL sentBytes) const {
+	int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ Int32UL* sentBytes) const {
 		SOCKADDR_IN addr;
 		addr.sin_family = AF_INET;
 		addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
@@ -300,7 +300,7 @@ namespace JNetwork {
 	}
 
 	int Socketv4::ReceiveEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesReceived, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, Int32U flag) const {
-		return WSARecv(m_Socket, lpBuf, 1, pBytesReceived, (PInt32UL)&flag, lpOverlapped, lpCompRoutine);
+		return WSARecv(m_Socket, lpBuf, 1, pBytesReceived, (Int32UL*)&flag, lpOverlapped, lpCompRoutine);
 	}
 
   IPv4EndPoint Socketv4::GetLocalEndPoint() const {

@@ -455,6 +455,7 @@ private: // private non-static
 	static void CheckOverFlow(Int64U tick);
 public: // public static
 	static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
+	static DateTime NowDetail(TimeStandard timeStandard = TimeStandard::Local);
 	static Int32 TimeZoneBiasMinute();
 	static bool IsLeapYear(int year);
 

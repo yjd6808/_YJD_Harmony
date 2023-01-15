@@ -80,6 +80,7 @@ namespace JCore {
 		void CheckDynamicCastable() {
 			static_assert(IsSmartPtrCastable_v<Lhs, Rhs>, 
 				"... cannot convert! Type T* and U* must be dynamic castable each other");
+
 		}
 	}
 
@@ -91,7 +92,7 @@ template <typename, typename>	class UniqueMaker;
 template <typename>	class WeakPtr;
 template <typename>	class SharedPtr;
 template <typename>	class UniquePtr;
-template <typename>	class MakeSharedFromThis;
+template <typename>	class MakeSharedFromThis; struct MakeSharedFromThisBase;
 
 template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
 constexpr decltype(auto) MakeShared(Args&&... args) {
@@ -297,6 +298,11 @@ private:
 
 	template <typename, typename> friend class UniqueMaker;
 	template <typename> friend class UniquePtr;
+
+	// template <typename U> friend bool operator==(const TUniquePtr&,		const UniquePtr<U>&);
+	// template <typename U> friend bool operator==(const UniquePtr<U>&,	const TUniquePtr&);
+	// template <typename U> friend bool operator!=(const TUniquePtr&,		const UniquePtr<U>&);
+	// template <typename U> friend bool operator!=(const UniquePtr<U>&,	const TUniquePtr&);
 };
 
 
@@ -523,10 +529,12 @@ struct SharedObject<T[], TAllocator> : ControlBlock
 template <typename T>
 class BasePtr
 {
-	using TSharedPtr	= SharedPtr<T>;
-	using TWeakPtr		= WeakPtr<T>;
-	using TPortable		= RemoveArray_t<T>;		// T[], T[20] -> T
 public:
+	using TType = T;
+	using TSharedPtr = SharedPtr<T>;
+	using TWeakPtr = WeakPtr<T>;
+	using TPortable = RemoveArray_t<T>;		// T[], T[20] -> T
+
 	int RefCount() const {
 		if (m_pControlBlock == nullptr) {
 			return 0;
@@ -555,7 +563,7 @@ public:
 		return *m_pPtr;
 	}
 
-	T* GetPtr() const {
+	TPortable* GetPtr() const {
 		return m_pPtr;
 	}
 
@@ -763,7 +771,7 @@ protected:
 
 		// MakeSharedFromThis를 상속받지 않은 경우 그만
 		// if constexpr 특성상 if else 분리가 불가능함 ㅠ
-		if constexpr (IsBaseOf_v<MakeSharedFromThis<TPortable>, TPortable>) {
+		if constexpr (IsBaseOf_v<MakeSharedFromThisBase, TPortable>) {
 			// 여기 들어오는 타입은 무조건 SharedPtr타입이므로 강제 케스팅 해줌
 			TSharedPtr& thisRef = static_cast<TSharedPtr&>(*this);
 
@@ -792,6 +800,7 @@ protected:
 template <typename T>
 class SharedPtr : public BasePtr<T>
 {
+
 	using TSharedPtr = SharedPtr<T>;
 public:
 	SharedPtr() {}
@@ -831,10 +840,18 @@ public:
 		this->SharedMoveToWeak(weak);
 	}
 
+	SharedPtr(const TSharedPtr& other) {
+		this->SharedChangeToShared(const_cast<TSharedPtr&>(other));
+	}
+
+	SharedPtr(TSharedPtr&& other) {
+		this->SharedMoveToShared(other);
+	}
+
 	template <typename U>
-	SharedPtr(SharedPtr<U>& shared) {
+	SharedPtr(const SharedPtr<U>& shared) {
 		Detail::CheckDynamicCastable<U, T>();
-		this->SharedChangeToShared(shared);
+		this->SharedChangeToShared(const_cast<SharedPtr<U>&>(shared));
 	}
 
 	template <typename U>
@@ -852,10 +869,20 @@ public:
 		return *this;
 	}
 
-	template <typename U>
-	TSharedPtr& operator=(SharedPtr<U>& other) {
-		Detail::CheckDynamicCastable<U, T>();
+	TSharedPtr& operator=(const TSharedPtr& other) {
+		this->SharedChangeToShared(const_cast<TSharedPtr&>(other));
+		return *this;
+	}
+
+	TSharedPtr& operator=(TSharedPtr&& other) {
 		this->SharedChangeToShared(other);
+		return *this;
+	}
+
+	template <typename U>
+	TSharedPtr& operator=(const SharedPtr<U>& other) {
+		Detail::CheckDynamicCastable<U, T>();
+		this->SharedMoveToShared(other);
 		return *this;
 	}
 
@@ -872,6 +899,7 @@ public:
 		this->SharedChangeToWeak(other);
 		return *this;
 	}
+	
 
 	template <typename U>
 	TSharedPtr& operator=(WeakPtr<U>&& other) {
@@ -879,21 +907,36 @@ public:
 		this->SharedMoveToWeak(other);
 		return *this;
 	}
+
+	// template <typename U> friend bool operator==(const TSharedPtr&,		const SharedPtr<U>&);
+	// template <typename U> friend bool operator==(const SharedPtr<U>&,	const TSharedPtr&);
+	// template <typename U> friend bool operator!=(const TSharedPtr&,		const SharedPtr<U>&);
+	// template <typename U> friend bool operator!=(const SharedPtr<U>&,	const TSharedPtr&);
 };
 
 
 template <typename T>
 class WeakPtr : public BasePtr<T>
 {
+	using TSharedPtr = SharedPtr<T>;
 	using TWeakPtr = WeakPtr<T>;
 public:
 	WeakPtr() {}
 	WeakPtr(std::nullptr_t nulptr) {}
 
+
+	WeakPtr(const TWeakPtr& other) {
+		this->WeakChangeToWeak(const_cast<TWeakPtr&>(other));
+	}
+
+	WeakPtr(TWeakPtr&& other) noexcept {
+		this->WeakMoveToWeak(other);
+	}
+
 	template <typename U>
-	WeakPtr(WeakPtr<U>& weak) {
+	WeakPtr(const WeakPtr<U>& weak) {
 		Detail::CheckDynamicCastable<U, T>();
-		this->WeakChangeToWeak(weak);
+		this->WeakChangeToWeak(const_cast<TWeakPtr&>(weak));
 	}
 
 	template <typename U>
@@ -903,15 +946,16 @@ public:
 	}
 
 	template <typename U>
-	WeakPtr(SharedPtr<U>& shared) {
+	WeakPtr(const SharedPtr<U>& shared) {
 		Detail::CheckDynamicCastable<U, T>();
-		this->WeakChangeToShared(shared);
+		this->WeakChangeToShared(const_cast<SharedPtr<U>&>(shared));
 	}
 
 	// 쉐어드 포인터의 이동은 막도록 하자.
 	// 본체가 사라진 녀석을 참조해버릴 수 있으니까
 	template <typename U>
 	WeakPtr(SharedPtr<U>&& shared) = delete;
+	WeakPtr(TSharedPtr&& other) = delete;
 
 
 	~WeakPtr() {
@@ -947,6 +991,11 @@ public:
 
 	template <typename U>
 	TWeakPtr& operator=(SharedPtr<U>&& other) = delete;
+
+	// template <typename U> friend bool operator==(const TWeakPtr&,		const WeakPtr<U>&);
+	// template <typename U> friend bool operator==(const WeakPtr<U>&,		const TWeakPtr&);
+	// template <typename U> friend bool operator!=(const TWeakPtr&,		const WeakPtr<U>&);
+	// template <typename U> friend bool operator!=(const WeakPtr<U>&,		const TWeakPtr&);
 };
 
 
@@ -1001,8 +1050,13 @@ public:
 	}
 };
 
+// 기존 C++ 표준 라이브러리 분석 후 내 라이브러리에도 적용
+// 엄청 편리한 기능인것같다.
+// 템플릿 제거용
+struct MakeSharedFromThisBase {};
+
 template <typename T>
-class MakeSharedFromThis
+class MakeSharedFromThis : MakeSharedFromThisBase
 {
 	using TSharedPtr = SharedPtr<T>;
 	using TWeakPtr = WeakPtr<T>;
@@ -1016,6 +1070,7 @@ protected:
 
 	TWeakPtr m_spWeak;
 	template <typename> friend class BasePtr;
+
 };
 
 // 글로벌 비교 오퍼레이터
@@ -1075,34 +1130,110 @@ bool operator==(const WeakPtr<T>& lhs, const WeakPtr<U>& rhs) {
 	return lhs.Get() == rhs.Get();
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator==(const UniquePtr<T>& lhs, std::nullptr_t) {
 	return lhs.Get() == nullptr;
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator==(std::nullptr_t, const UniquePtr<T>& rhs) {
 	return nullptr == rhs.Get();
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator==(const SharedPtr<T>& lhs, std::nullptr_t) {
 	return lhs.Get() == nullptr;
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator==(std::nullptr_t, const SharedPtr<T>& rhs) {
 	return nullptr == rhs.Get();
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator==(const WeakPtr<T>& lhs, std::nullptr_t) {
 	return lhs.Get() == nullptr;
 }
 
-template <typename T, typename U>
+template <typename T>
 bool operator==(std::nullptr_t, const WeakPtr<T>& rhs) {
 	return nullptr == rhs.Get();
+}
+
+
+template <typename T, typename U>
+bool operator!=(const UniquePtr<T>& lhs, const UniquePtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator!=(const UniquePtr<T>& lhs, const SharedPtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator!=(const SharedPtr<T>& lhs, const UniquePtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator!=(const UniquePtr<T>& lhs, const WeakPtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator!=(const WeakPtr<T>& lhs, const UniquePtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator!=(const SharedPtr<T>& lhs, const SharedPtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator!=(const SharedPtr<T>& lhs, const WeakPtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator!=(const WeakPtr<T>& lhs, const SharedPtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T, typename U>
+bool operator!=(const WeakPtr<T>& lhs, const WeakPtr<U>& rhs) {
+	return lhs.Get() != rhs.Get();
+}
+
+template <typename T>
+bool operator!=(const UniquePtr<T>& lhs, std::nullptr_t) {
+	return lhs.Get() != nullptr;
+}
+
+template <typename T>
+bool operator!=(std::nullptr_t, const UniquePtr<T>& rhs) {
+	return nullptr != rhs.Get();
+}
+
+template <typename T>
+bool operator!=(const SharedPtr<T>& lhs, std::nullptr_t) {
+	return lhs.Get() != nullptr;
+}
+
+template <typename T>
+bool operator!=(std::nullptr_t, const SharedPtr<T>& rhs) {
+	return nullptr != rhs.Get();
+}
+
+template <typename T>
+bool operator!=(const WeakPtr<T>& lhs, std::nullptr_t) {
+	return lhs.Get() != nullptr;
+}
+
+template <typename T>
+bool operator!=(std::nullptr_t, const WeakPtr<T>& rhs) {
+	return nullptr != rhs.Get();
 }
 
 

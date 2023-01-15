@@ -304,4 +304,14 @@ TEST(VectorTest, MemoryPool) {
 	for (int i = 0; i < 100'000; i++) l.PushBack(1);
 }
 
+// 생성자 테스트
+TEST(VectorTest, SizeInit) {
+	LeakCheck;
+	Vector<String> v(30, "a" );
+
+	for (int i = 0; i < 30; ++i) {
+		EXPECT_TRUE(v[i] == "a");
+	}
+}
+
 #endif // TEST_VectorTest == ON

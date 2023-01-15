@@ -43,7 +43,7 @@ public:
 	int GetPendingCount()				{ return m_iPendingOverlappedCount;}
 
 	bool Connect(WinHandle handle, ULONG_PTR completionKey) const;
-	BOOL GetStatus(PInt32UL numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const;
+	BOOL GetStatus(Int32UL* numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const;
 	BOOL Post(Int32UL dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const;
 private:
 	State m_eState;

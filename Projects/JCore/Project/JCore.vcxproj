@@ -33,11 +33,35 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Environment.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\FileSystem\Directory.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\FileSystem\FileStream.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\FileSystem\File.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\FileSystem\Path.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\ObserverPtr.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\String.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\StringUtil.cpp" />
     <ClCompile Include="..\Sources\JCore\Random.cpp" />
+    <ClCompile Include="..\Sources\JCore\Stream.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Sync\AutoResetEvent.cpp">
       <SubType>
       </SubType>
@@ -108,7 +132,29 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Environment.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Event.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\FileSystem\Directory.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\FileSystem\FileMode.h" />
+    <ClInclude Include="..\Sources\JCore\FileSystem\FileAccess.h" />
+    <ClInclude Include="..\Sources\JCore\FileSystem\FileStream.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\FileSystem\File.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\FileSystem\Path.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -241,6 +287,10 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\ObjectPool.h" />
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStrategy.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\ArraySegment.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Primitives\Atomic.h">
       <SubType>
       </SubType>
@@ -264,6 +314,10 @@
     <ClInclude Include="..\Sources\JCore\Limit.h" />
     <ClInclude Include="..\Sources\JCore\Memory.h" />
     <ClInclude Include="..\Sources\JCore\Random.h" />
+    <ClInclude Include="..\Sources\JCore\Stream.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Sync\AutoResetEvent.h">
       <SubType>
       </SubType>

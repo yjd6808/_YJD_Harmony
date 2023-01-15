@@ -17,7 +17,10 @@ namespace JCore {
 
 	struct Arrays final
 	{
-		
+		template <typename T, Int32U ArraySize>
+		static constexpr int Size(T(&)[ArraySize]) {
+			return ArraySize;
+		}
 
 		// 길이를 아는 경우
 		template <typename T, Int32U ArraySize>

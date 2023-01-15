@@ -86,6 +86,7 @@
     } while (0)	
 	
 	#define LeakCheckAssert		AutoMemoryLeakDetector JCoreCounterConcat(_) {[](Int32U leakedBytes ) { DebugAssert(leakedBytes == 0); }}
+	#define DefaultCodePage		CodePage::UTF8
 
     #define In_
     #define Out_

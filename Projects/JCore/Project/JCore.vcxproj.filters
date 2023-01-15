@@ -118,6 +118,20 @@
     <ClCompile Include="..\Sources\JCore\Debug\MemoryPoolLeakDetector.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Stream.cpp" />
+    <ClCompile Include="..\Sources\JCore\FileSystem\FileStream.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\FileSystem\File.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Environment.cpp" />
+    <ClCompile Include="..\Sources\JCore\FileSystem\Directory.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\FileSystem\Path.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -387,6 +401,29 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Threading\ThreadLocalManager.h">
       <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Stream.h" />
+    <ClInclude Include="..\Sources\JCore\FileSystem\FileStream.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\FileSystem\FileAccess.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\FileSystem\FileMode.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\FileSystem\File.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Environment.h" />
+    <ClInclude Include="..\Sources\JCore\FileSystem\Directory.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\FileSystem\Path.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\ArraySegment.h">
+      <Filter>Primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

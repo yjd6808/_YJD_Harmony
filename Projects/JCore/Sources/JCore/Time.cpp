@@ -801,6 +801,17 @@ namespace JCore
 		return DateTime(epoch);
 	}
 
+	DateTime DateTime::NowDetail(TimeStandard timeStandard) {
+		const chrono::high_resolution_clock::time_point now = chrono::high_resolution_clock::now();
+		Int64 epoch = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()).count();
+		epoch += ADBeginTick_v;
+		if (timeStandard == TimeStandard::Local) {
+			const Int32 uiBias = TimeZoneBiasMinute();
+			epoch += (uiBias * -1) * TicksPerMinute_v;
+		}
+		return DateTime(epoch);
+	}
+
 	// @윤년 조건 참고 : https://ko.wikipedia.org/wiki/%EC%9C%A4%EB%85%84 
 	bool DateTime::IsLeapYear(const int year) {
 		if (year <= 0) {

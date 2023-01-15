@@ -24,6 +24,8 @@ public:
 	static void CopyReverse(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte);
 	static void CopyUnsafeReverse(void* dst, const void* src, const int srcCopyByte);
 
+	
+
 	static void Set(void* src, const int srcCapacity, const Byte value);
 
 	// 자료형 T 크기 단위로 복사를 진행합니다.
