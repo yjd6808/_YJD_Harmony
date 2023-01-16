@@ -24,6 +24,14 @@ Gunner,
 Max
 SEnumEnd(CharacterType)
 
+SEnumBegin(ColliderType)
+Monster,
+Character,
+Obstable,
+Projectile,
+Max
+SEnumEnd(ColliderType)
+
 SEnumBegin(SpriteDirection)
 Right	,
 Left	,
@@ -228,7 +236,7 @@ static constexpr const char* Name[Max]{
 	"↑"	,
 	"↓"	,
 	"X",
-	"J"	
+	"C"	
 };
 
 static constexpr bool IsMoveKey[Max] {

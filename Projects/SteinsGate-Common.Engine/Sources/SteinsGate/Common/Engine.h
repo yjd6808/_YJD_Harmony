@@ -13,6 +13,7 @@
 
 #include <JCore/Assert.h>
 #include <JCore/TypeTraits.h>
+#include <JCore/Define.h>
 
 #include <JCore/Utils/Console.h>
 #include <JCore/Threading/Thread.h>

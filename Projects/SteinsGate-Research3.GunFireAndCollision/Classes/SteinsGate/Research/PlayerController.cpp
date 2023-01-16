@@ -22,6 +22,10 @@ PlayerController* PlayerController::create(Player* player, CharacterSprite* char
 	return pController;
 }
 
+PlayerController::~PlayerController() {
+	Log("플레이어 컨트롤러 소멸\n");
+}
+
 void PlayerController::init() {
 	for (int i = 0; i < int(cocos2d::EventKeyboard::KeyCode::MAX); i++) {
 		m_CocosKeyCodeToControlKeyMap[i] = ControlKey::None;
@@ -271,8 +275,10 @@ void PlayerController::updateDirection(ControlKey_t pressedKey) {
 	// 방향전환 가능 여부
 	if (pressedKey == ControlKey::Right) {
 		m_pCharacter->setForwardDirection();
+		m_eDir = SpriteDirection::Right;
 	} else if (pressedKey == ControlKey::Left) {
 		m_pCharacter->setBackwardDirection();
+		m_eDir = SpriteDirection::Left;
 	}
 }
 

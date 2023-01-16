@@ -265,6 +265,8 @@ protected:
 	TStreamNode* m_pTail = &m_ValtyTail;
 private:
 	int m_iAllocatedSize{};
+
+	// 이거 추후 없앨 것;
 	TStreamNode m_ValtyHead;
 	TStreamNode m_ValtyTail;
 	TStreamNode m_ValtyTemp;

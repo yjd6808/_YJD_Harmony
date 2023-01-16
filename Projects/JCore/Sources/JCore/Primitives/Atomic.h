@@ -109,6 +109,8 @@ namespace JCore {
     template <typename T>
     class Atomic<T*>
     {
+        static_assert(IsVoidType_v<T>, "보이드 포인터는 사용불가능합니다.");
+
         using TAtomic = Atomic<T*>;
         using TInterlocked = Interlocked<T*>;
     public:
@@ -129,7 +131,7 @@ namespace JCore {
             return expected;
         }
 
-        T* Add(int operand) { return TInterlocked::Add(&m_pValue, operand); }
+        T* Add(int operand) {  return TInterlocked::Add(&m_pValue, operand); }
 
         template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         bool TryCompareExchange(U expected, U desired) { return CompareExchange(expected, desired); }

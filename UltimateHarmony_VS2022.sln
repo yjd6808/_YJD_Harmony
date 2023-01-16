@@ -101,7 +101,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Research1.Avatar
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Research2.Movement", "Projects\SteinsGate-Research2.Movement\Projects\SteinsGate-Research2.Movement.vcxproj", "{3694053C-4BDB-405E-BF48-CF91BE2DB1A1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Research2.Movement", "Projects\SteinsGate-Research3.GunFireAndCollision\Projects\SteinsGate-Research3.GunFireAndCollision.vcxproj", "{490300CA-D470-45AB-A758-E63C08F00FFA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Research3.GunFireAndCollision", "Projects\SteinsGate-Research3.GunFireAndCollision\Projects\SteinsGate-Research3.GunFireAndCollision.vcxproj", "{490300CA-D470-45AB-A758-E63C08F00FFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{13FE9916-2585-4CE2-9ECC-5CFDDD3B7339} = {13FE9916-2585-4CE2-9ECC-5CFDDD3B7339}
+		{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E} = {98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

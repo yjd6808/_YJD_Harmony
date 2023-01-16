@@ -24,6 +24,3 @@ public:
 private:
 	SpriteDirection_t m_eDirection;
 };
-
-
-

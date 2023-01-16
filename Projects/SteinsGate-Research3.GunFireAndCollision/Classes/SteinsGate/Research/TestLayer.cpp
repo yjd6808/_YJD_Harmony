@@ -29,7 +29,9 @@ bool TestLayer::init() {
 		return false;
 	}
 
-	
+
+	Rect a;
+	Rect b;
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = CC_CALLBACK_2(TestLayer::onKeyPressed, this);

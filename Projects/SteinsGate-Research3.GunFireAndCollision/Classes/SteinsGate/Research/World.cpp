@@ -31,7 +31,12 @@ World::~World() {
 		Log("플레이어 안전하게 제거 완료\n");
 
 	CC_SAFE_RELEASE(m_pPlayer);
+
+	for (int i = 0; i < m_vTesters.Size(); ++i) {
+		CC_SAFE_RELEASE(m_vTesters[i]);
+	}
 }
+
 
 void World::init() {
 	m_pDirector = Director::getInstance();
@@ -39,9 +44,20 @@ void World::init() {
 	m_pScheduler = m_pDirector->getScheduler();
 	m_pEventDispatcher = m_pDirector->getEventDispatcher();
 
-	m_pPlayer = Player::create();
+
+
+	m_pPlayer = Player::create(ColliderType::Character, CharacterType::Gunner);
 	m_pPlayer->retain();
-	
+	m_vReorderNodes.PushBack(m_pPlayer);
+	for (int i = 0; i < 14; ++i) {
+		auto lb= Label::create(cocos2d::StringUtils::format("%d", i).c_str(), "", 16);
+		auto test = Collider::create(ColliderType::Obstable, CharacterType::Max);
+		test->retain();
+		test->addChild(lb);
+		m_vTesters.PushBack(test);
+		m_vReorderNodes.PushBack(test);
+	}
+
 	m_pScheduler->schedule(CC_CALLBACK_1(World::update, this), this, WorldFPS_v, false, "WorldUpdate");
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
@@ -50,15 +66,46 @@ void World::init() {
 	m_pEventDispatcher->addEventListenerWithFixedPriority(keyboardListener, 50);
 }
 
-float PosTime = 0.0f;
+void World::addCollider(Collider* col) {
+	m_pRunningScene->addChild(col);
+	m_vReorderNodes.PushBack(col);
+}
 
+// 임시
+// 나중에는 월드 업데이트 이후 수행해야할 이벤트를 처리하는 기능을 따로 만들어야할듯
+void World::removeProjectile(Collider* col) {
+	m_pRunningScene->removeChild(col);
+	m_vReorderNodes.Remove(col);
+}
+
+bool World::isCollide(Collider* collider) {
+	for (int i = 0; i < m_vTesters.Size(); ++i) {
+		if (m_vTesters[i]->isCollide(collider)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool World::isCollideTarget(Collider* collider, Out_ Collider** target) {
+	for (int i = 0; i < m_vTesters.Size(); ++i) {
+		if (m_vTesters[i]->isCollide(collider)) {
+			*target = m_vTesters[i];
+			return true;
+		}
+	}
+	return false;
+}
+
+float PosTime = 0.0f;
+float ZOrderTime = 0.0f;
 void World::update(float delta) {
 	if (isSceneLoading())
 		return;
 
-	m_pPlayer->update(delta);
+	ZOrderTime += delta;
 
-	PosTime += delta;
+	//PosTime += delta;
 	if (PosTime >= 3.0f) {
 		//PosTime = 0.0f;
 		Rect thickBox = m_pPlayer->getThicknessBox();
@@ -68,7 +115,27 @@ void World::update(float delta) {
 		Log("플레이어 히트박스 (x, y): %d, %d / (width, height)): %d, %d\n",
 			(int)hitBox.origin.x, int(hitBox.origin.y), int(hitBox.size.width), int(hitBox.size.height));
 	}
-	
+
+	if (m_pRunningScene == nullptr)
+		return;
+
+
+	if (ZOrderTime >= 0.1f) {
+		ZOrderTime = 0.0f;
+		auto playerThickBox = m_pPlayer->getThicknessBox();
+
+		m_vReorderNodes.Sort([](Collider* node1, Collider* node2) {
+			auto box1 = node1->getThicknessBox();
+			auto box2 = node2->getThicknessBox();
+			return box1.getMidY() > box2.getMidY();
+		});
+
+		for (int i = 0, iOrder = 1; i < m_vReorderNodes.Size(); ++i) {
+			m_pRunningScene->reorderChild(m_vReorderNodes[i], iOrder++);
+		}
+		
+	}
+
 }
 
 void World::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
@@ -91,7 +158,41 @@ void World::onSceneLoaded(cocos2d::Scene* scene) {
 
 	m_eState = Playing;
 	m_pPlayer->setRealPos(200.0f, 200.0f);
-	scene->addChild(m_pPlayer);
+
+	int zorderIdx = 0;
+
+
+	// 절반은 뛰엄뛰엄
+	for (int i = 0; i < m_vTesters.Size() / 2; ++i) {
+		m_vTesters[i]->setRealPos(200.0f * i, 50.0f * i);
+		scene->addChild(m_vTesters[i], ++zorderIdx);
+		Rect thickBox = m_vTesters[i]->getThicknessBox();
+		Rect hitBox = m_vTesters[i]->getHitBox();
+		Log("%d번 테스트 오브젝트 ZOrder: %d\n", i, m_vTesters[i]->getLocalZOrder());
+		Log("├ 두께박스 (x, y): %d, %d / (width, height)): %d, %d\n",
+			i, (int)thickBox.origin.x, int(thickBox.origin.y), int(thickBox.size.width), int(thickBox.size.height));
+		Log("└ 히트박스 (x, y): %d, %d / (width, height)): %d, %d\n",
+			i, (int)hitBox.origin.x, int(hitBox.origin.y), int(hitBox.size.width), int(hitBox.size.height));
+		
+	}
+
+
+	// 절반은 따닥따닥
+	for (int i = m_vTesters.Size() / 2; i < m_vTesters.Size(); ++i) {
+		m_vTesters[i]->setRealPos(50.0f + 20.0f * (i - m_vTesters.Size() / 2), 400.0f + 15.0f * (i - m_vTesters.Size() / 2));
+		scene->addChild(m_vTesters[i], ++zorderIdx);
+		Rect thickBox = m_vTesters[i]->getThicknessBox();
+		Rect hitBox = m_vTesters[i]->getHitBox();
+
+		Log("%d번 테스트 오브젝트 ZOrder: %d\n", i, m_vTesters[i]->getLocalZOrder());
+		Log("├ 두께박스 (x, y): %d, %d / (width, height)): %d, %d\n",
+			(int)thickBox.origin.x, int(thickBox.origin.y), int(thickBox.size.width), int(thickBox.size.height));
+		Log("└ 히트박스 (x, y): %d, %d / (width, height)): %d, %d\n",
+			(int)hitBox.origin.x, int(hitBox.origin.y), int(hitBox.size.width), int(hitBox.size.height));
+	}
+
+	scene->addChild(m_pPlayer, ++zorderIdx);
+	m_pRunningScene = scene;
 }
 
 

@@ -69,7 +69,7 @@ void PlayerActionGunFire::onAnimateBegin(
 
 	if (animate->getPartType() != CharacterPartType::Weapon)
 		return;
-
+	
 	const int iMotionState = animate->getMotionState();
 	if (iMotionState == MotionState::ShotRightBegin		||
 		iMotionState == MotionState::ShotRightDownBegin ||
@@ -213,3 +213,41 @@ void PlayerActionGunFire::shot(CharacterSprite* character, int motionState) {
 
 	
 }
+
+
+void PlayerActionGunFire::onFrameBegin(
+	CharacterSprite* character,
+	CharacterPartAnimate* animate,
+	CharacterPartSpriteFrame* frame) {
+
+	if (animate->getPartType() != CharacterPartType::Weapon)
+		return;
+
+	if (!frame->hasEvent()) {
+		return;
+	}
+
+	const MotionState_t iMotionState = (MotionState_t)animate->getMotionState();
+
+	if (frame->getFrameIndex() == 26) {
+		Log("진입\n");
+		m_pPlayer->createProjectile(0);
+
+	}
+
+	// 좌
+	else if (frame->getFrameIndex() == 35) {
+		m_pPlayer->createProjectile(1);
+	}
+
+	// 우(아)
+	else if (frame->getFrameIndex() == 42) {
+		m_pPlayer->createProjectile(2);
+	}
+
+	// 좌(아)
+	else if (frame->getFrameIndex() == 51) {
+		m_pPlayer->createProjectile(3);
+	}
+}
+

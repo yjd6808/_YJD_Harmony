@@ -39,7 +39,7 @@ bool CharacterSprite::init()
 	m_pCanvas = Sprite::create("rect.png");
 	m_pCanvas->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 	m_pCanvas->setCascadeOpacityEnabled(false);
-	m_pCanvas->setOpacity(90);
+	m_pCanvas->setOpacity(0);
 	m_pCanvas->setPosition(-250.0f, -250.0f);
 	m_pCanvas->setContentSize({ 500.0f, 500.0f });
 	this->addChild(m_pCanvas, 0);

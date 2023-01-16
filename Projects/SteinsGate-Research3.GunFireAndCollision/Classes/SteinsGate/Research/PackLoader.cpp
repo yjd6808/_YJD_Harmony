@@ -33,8 +33,8 @@ void PackLoader::Initialize() {
 			SafeConsole::WriteLine("%d %s 로딩완료", i, PackPathMap[i].Source());
 		});
 	}
-
-
+	Packs[11] = NpkLoader::LoadIndexOnly(Path::Combine(ImagePackPath, PackPathMap[11]));
+	SafeConsole::WriteLine("%d %s 로딩완료", 11, PackPathMap[11].Source());
 
 	for (int i = 0; i < CharacterPartType::Max; ++i) {
 		PackLoaders[i].Join();

@@ -11,6 +11,7 @@ TEST(MemoryTest, AssemblyTest) {
 
 	int k = 5;
 
+#if defined(_X64)
 	// mov 연산자 테스트
 	// 3가지 방법으로 바이트단위 복사를 해봄
 	int a = 0x62636465;
@@ -31,10 +32,12 @@ TEST(MemoryTest, AssemblyTest) {
 		mov		byte ptr[c + 3],bl					; c[3] = 0x62
 	}
 
+
 	EXPECT_TRUE(c[0] == 0x65);
 	EXPECT_TRUE(c[1] == 0x64);
 	EXPECT_TRUE(c[2] == 0x63);
 	EXPECT_TRUE(c[3] == 0x62);
+
 
 	/* =============================================================== */
 
@@ -48,6 +51,7 @@ TEST(MemoryTest, AssemblyTest) {
 		add		d,				1
 	}
 	EXPECT_TRUE(*d == 0x63);
+#endif
 }
 
 

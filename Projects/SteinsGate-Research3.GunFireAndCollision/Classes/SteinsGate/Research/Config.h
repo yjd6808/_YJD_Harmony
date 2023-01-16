@@ -14,7 +14,6 @@
 #include <JCore/TypeTraits.h>
 #include <JCore/Tuple.h>
 
-// 캐릭터 캔버스
 inline constexpr float WorldFPS_v = 1.0f / 60.0f;
 
 inline constexpr float CharacterSpriteFrameDelay_v = 0.1f;	// 0.1초
@@ -172,3 +171,6 @@ inline constexpr float SlidingDuration_v = 0.8f;			// SlidingMoveByDistance_v �
 inline constexpr float ThicknessBoxWidth_v = 80.0f;			// 두께박스 가로길이
 inline constexpr float ThicknessBoxHeight_v = 20.0f;		// 두께박스 세로길이
 inline constexpr float ThicknessRelativeY_v = -130.0f;		// 캐릭터 캔버스 중심에서부터 얼마나 떨어져 있는지(양수는 위로, 음수는 아래로)
+
+inline constexpr float BulletSpeed_v = 400.0f;
+inline constexpr float BulletSpeedFPS_v = BulletSpeed_v / 60.0f;

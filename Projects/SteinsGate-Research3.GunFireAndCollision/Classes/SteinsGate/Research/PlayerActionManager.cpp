@@ -23,6 +23,7 @@ PlayerActionManager::PlayerActionManager(Player* player)
 
 PlayerActionManager::~PlayerActionManager() {
 	m_Map.Values().Extension().ForEach([](ActionAbstract* action) {CC_SAFE_RELEASE(action);});
+	Log("액션 매니저 소멸\n");
 }
 
 void PlayerActionManager::init() {
@@ -33,6 +34,8 @@ void PlayerActionManager::init() {
 	m_Map.Insert(ActionType::SlidingLeft, PlayerActionSliding::createRetain(SpriteDirection::Left));
 	m_Map.Insert(ActionType::SlidingRight, PlayerActionSliding::createRetain(SpriteDirection::Right));
 	m_Map.Insert(ActionType::Shot, PlayerActionGunFire::createRetain());
+
+
 
 	m_Map.Values().Extension().ForEach([=](ActionAbstract* action) {
 		action->m_pPlayer = m_pPlayer;
@@ -75,7 +78,7 @@ void PlayerActionManager::onFrameBegin(CharacterSprite* character, CharacterPart
 
 void PlayerActionManager::onFrameEnd(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame) {
 	if (m_pRunningAction)
-		m_pRunningAction->onFrameBegin(character, animate, frame);
+		m_pRunningAction->onFrameEnd(character, animate, frame);
 }
 
 void PlayerActionManager::onAnimateBegin(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame) {

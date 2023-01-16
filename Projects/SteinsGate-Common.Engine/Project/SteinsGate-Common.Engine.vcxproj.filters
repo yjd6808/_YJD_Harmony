@@ -7,5 +7,7 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\GridLayer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Engine\RectEx.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Engine\RectPoly.h" />
   </ItemGroup>
 </Project>

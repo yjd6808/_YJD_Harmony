@@ -36,6 +36,7 @@ public:
 		: m_pActor(player)
 		, m_pCharacter(character)
 		, m_pActionManager(actionManager) {}
+	~PlayerController();
 
 	void init();
 	void update(float delta);
@@ -44,6 +45,7 @@ public:
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(ControlKey_t pressedKey);
 
+	SpriteDirection_t getSpriteDirection() { return m_eDir; }
 	ControlKey_t getLastestReleasedKey() { return m_LastestReleasedKey.ControlKey; }
 	ControlKey_t getLastestPressedKey() { return m_LastestPressedKey.ControlKey; }
 	ControlKey_t convertControlKey(cocos2d::EventKeyboard::KeyCode keyCode);
@@ -92,7 +94,7 @@ private:
 	InputWithTime m_ControlKeySequence[ComboSequenceCount_v]{}; // 맨 앞이 제일 최근에 입력한 키
 
 	bool m_bCabUseCommand{};
-	
+	SpriteDirection_t m_eDir = SpriteDirection::Right;
 	
 };
 

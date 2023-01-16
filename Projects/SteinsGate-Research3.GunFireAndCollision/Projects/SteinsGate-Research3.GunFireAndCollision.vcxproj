@@ -20,6 +20,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\ActionAbstract.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\BulletTarget.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\Collider.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\ColliderTarget.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionGunFire.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionManager.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
@@ -48,6 +60,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Research\ActionAbstract.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\BulletTarget.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\Collider.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\ColliderTarget.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionGunFire.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionManager.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\Actions.h">

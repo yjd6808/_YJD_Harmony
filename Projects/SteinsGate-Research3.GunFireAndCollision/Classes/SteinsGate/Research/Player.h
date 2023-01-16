@@ -8,17 +8,17 @@
 
 #pragma once
 
-
-#include <SteinsGate/Research/Tutturu.h>
-
+#include <SteinsGate/Research/Collider.h>
 #include <SteinsGate/Research/PlayerActionManager.h>
 #include <SteinsGate/Research/PlayerController.h>
 #include <SteinsGate/Research/CharacterSprite.h>
 
-class Player : public cocos2d::Node
+class Player : public Collider
 {
 public:
-	static Player* create();
+	static Player* create(int type, int id);
+
+	Player(int type, int id);
 	~Player() override;
 
 	bool init() override;
@@ -30,21 +30,17 @@ public:
 	CharacterSprite* getCharacterSprite() { return m_pCharacterSprite; }
 	PlayerActionManager* getPlayerActionManager() { return m_pActionManager; }
 	PlayerController* getController() { return m_pController; }
+	SpriteDirection_t getSpriteDirection();
 
-	cocos2d::Rect getThicknessBox();
-	cocos2d::Rect getHitBox();
-
-	// 두께박스가 진짜 플레이어 위치 기준이다.
-	void setRealPos(const cocos2d::Vec2& v) { setRealPos(v.x, v.y); }
-	void setRealPos(float x, float y);
-	cocos2d::Vec2 getRealPos();
-	float getRealPosX() { return getRealPos().x; }
-	float getRealPosY() { return getRealPos().y; }
+	cocos2d::Rect getThicknessBox() override;
+	cocos2d::Rect getHitBox() override;
+	void setRealPos(float x, float y) override;
+	cocos2d::Vec2 getRealPos() override;
+	cocos2d::Vec2 getTargetCanvasPosition() override;
 
 private:
 	CharacterSprite* m_pCharacterSprite{};
 	PlayerActionManager* m_pActionManager{};
 	PlayerController* m_pController{};
-	cocos2d::DrawNode* m_pThicknessBox;
 
 };

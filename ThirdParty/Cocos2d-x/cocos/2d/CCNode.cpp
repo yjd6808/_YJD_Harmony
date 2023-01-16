@@ -650,6 +650,21 @@ void Node::setContentSize(const Size & size)
     }
 }
 
+float Node::getContentWidth() const {
+    return _contentSize.width;
+}
+
+float Node::getContentHeight() const {
+    return _contentSize.height;
+}
+
+
+void Node::setContentSize(const float width, const float height) {
+    setContentSize({ width, height });
+}
+
+// is
+
 // isRunning getter
 bool Node::isRunning() const
 {

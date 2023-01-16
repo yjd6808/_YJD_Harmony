@@ -4,6 +4,8 @@
 #include <SteinsGate/Research/TestScene.h>
 #include <SteinsGate/Research/PackLoader.h>
 
+#include "SteinsGate/Common/Engine/RectEx.h"
+
 #define AppName "SteinsGate-Research.AvatarAnimation"
 
 USING_NS_CC;
@@ -28,6 +30,8 @@ void AppDelegate::initGLContextAttrs()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+
+
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();

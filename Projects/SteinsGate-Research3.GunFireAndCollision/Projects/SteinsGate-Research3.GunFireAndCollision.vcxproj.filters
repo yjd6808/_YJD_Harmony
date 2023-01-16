@@ -81,6 +81,15 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionGunFire.cpp">
       <Filter>src\Action\Player</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\Collider.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\ColliderTarget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\BulletTarget.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
@@ -159,6 +168,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionGunFire.h">
       <Filter>src\Action\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\Collider.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\ColliderTarget.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\BulletTarget.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

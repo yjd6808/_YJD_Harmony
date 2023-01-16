@@ -8,20 +8,29 @@
 
 using namespace cocos2d;
 
-Player* Player::create()
+Player* Player::create(int type, int id)
 {
-	Player* player = new Player;
+	Player* player = new (std::nothrow) Player(type, id);
 	player->init();
 	player->autorelease();
 	return player;
 }
 
+Player::Player(int type, int id) : Collider(type, id) {
+	
+}
+
 Player::~Player() {
 	CC_SAFE_RELEASE(m_pActionManager);
 	CC_SAFE_RELEASE(m_pController);
+	Log("플레이어 소멸\n");
 }
 
 bool Player::init() {
+
+	if (!Collider::init())
+		return false;
+
 	m_pActionManager = PlayerActionManager::create(this);
 	m_pActionManager->retain();
 
@@ -32,20 +41,7 @@ bool Player::init() {
 	m_pController = PlayerController::create(this, m_pCharacterSprite, m_pActionManager);
 	m_pController->retain();
 
-	Vec2 polygon[4];
-	polygon[0] = Vec2(-ThicknessBoxWidth_v / 2.0f,  ThicknessBoxHeight_v / 2.0f);
-	polygon[1] = Vec2( ThicknessBoxWidth_v / 2.0f , ThicknessBoxHeight_v / 2.0f);
-	polygon[2] = Vec2( ThicknessBoxWidth_v / 2.0f ,-ThicknessBoxHeight_v / 2.0f);
-	polygon[3] = Vec2(-ThicknessBoxWidth_v / 2.0f, -ThicknessBoxHeight_v / 2.0f);
-
-	// 앵커포인터 0, 0으로 초기화됨; 스프라이트만 0.5인듯
-	// 제발 살려줘 코코스야..
-	m_pThicknessBox = cocos2d::DrawNode::create();	
-	m_pThicknessBox->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-	m_pThicknessBox->setPositionY(ThicknessRelativeY_v);
-	m_pThicknessBox->drawPolygon(polygon, 4, {}, 1, Color4F::MAGENTA);
-	this->addChild(m_pThicknessBox);
-
+	
 	
 
 	return false;
@@ -55,6 +51,7 @@ bool Player::init() {
 float d = 0.0f;
 void Player::update(float dt) {
 	d += dt;
+
 	m_pController->update(dt);
 	if (d >= 0.5f) {
 		d = 0.0f;
@@ -68,6 +65,10 @@ void Player::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Even
 
 void Player::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 	m_pController->onKeyReleased(keyCode, event);
+}
+
+SpriteDirection_t Player::getSpriteDirection() {
+	return m_pController->getSpriteDirection();
 }
 
 cocos2d::Rect Player::getThicknessBox() {
@@ -99,6 +100,10 @@ cocos2d::Vec2 Player::getRealPos() {	// 두께박스 좌하단 좌표
 	thicknessOrigin.x -= ThicknessBoxWidth_v / 2.0f;
 	thicknessOrigin.y += (ThicknessRelativeY_v - (ThicknessBoxHeight_v / 2.0f));
 	return thicknessOrigin;
+}
+
+cocos2d::Vec2 Player::getTargetCanvasPosition() {
+	return (this->getPosition() + m_pCharacterSprite->getPosition() - m_pCharacterSprite->getCanvasSize() / 2);
 }
 
 

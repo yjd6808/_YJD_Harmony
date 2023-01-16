@@ -98,6 +98,9 @@ void ComboTree::AddComboNodeRecursive(
 	ComboTreeNode* pCur = parent->Next[eKey];
 
 	if (keyIndex == keyCount - 1) {
+
+		// 한줄이면 끝나는데
+		// 잘못된 코드 캐치하기 위함.
 		if (pCur == nullptr) 
 			parent->Next[eKey] = newNode;
 		else {

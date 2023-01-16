@@ -555,6 +555,9 @@ public:
      * @param contentSize   The untransformed size of the node.
      */
     virtual void setContentSize(const Size& contentSize);
+    
+    // 추가
+    virtual void setContentSize(const float width, const float height);
     /**
      * Returns the untransformed size of the node.
      *
@@ -563,6 +566,9 @@ public:
      * @return The untransformed size of the node.
      */
     virtual const Size& getContentSize() const;
+
+    virtual float getContentWidth() const;
+    virtual float getContentHeight() const;
 
 
     /**

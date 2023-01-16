@@ -32,6 +32,10 @@ public:
 	void setWorldState(State state) { m_eState = state; }
 	bool isSceneLoading() { return m_eState == State::SceneLoading; }
 	Player* getPlayer() { return m_pPlayer; }
+	void addCollider(Collider* col);
+	void removeProjectile(Collider* col);
+	bool isCollide(Collider* collider);
+	bool isCollideTarget(Collider* collider, Out_ Collider** target);
 private:
 	// 씬
 	// 플레이어
@@ -39,9 +43,12 @@ private:
 	cocos2d::Director* m_pDirector;
 	cocos2d::Scheduler* m_pScheduler;
 	cocos2d::EventDispatcher* m_pEventDispatcher;
-
+	cocos2d::Scene* m_pRunningScene;
 	Player* m_pPlayer;
+	JCore::Vector<Collider*> m_vTesters;
+	JCore::Vector<Collider*> m_vReorderNodes;
 	State m_eState;
+	
 };
 
 

@@ -46,6 +46,6 @@ public:
 private:
 	Player* m_pPlayer;
 	ComboTree m_ComboTree;
-	ActionAbstract* m_pRunningAction{};
+	ActionAbstract* m_pRunningAction{};		// 캐릭터 자체가 움직여서 사용하는 액션
 	JCore::HashMap<ActionType_t, ActionAbstract*> m_Map;
 };

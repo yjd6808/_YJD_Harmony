@@ -21,6 +21,7 @@ public:
 	void onActionEnd() override;
 	void onAnimateBegin(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame) override;
 	void onAnimateEnd(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame) override;
+	void onFrameBegin(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame) override;
 	void onKeyPressed(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) override;
 	void onUpdate(float dt);
 	void shot(CharacterSprite* character, int motionState);

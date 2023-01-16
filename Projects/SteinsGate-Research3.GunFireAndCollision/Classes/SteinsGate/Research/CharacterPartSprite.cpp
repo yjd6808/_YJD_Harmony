@@ -80,7 +80,9 @@ void CharacterPartSprite::onFrameBegin(CharacterPartAnimate* animate, CharacterP
 	}	
 
 
-	auto pActionManager = World::getInstance()->getPlayer()->getPlayerActionManager();
+	auto pWorld = World::getInstance();
+	auto pPlayer = pWorld->getPlayer();
+	auto pActionManager = pPlayer->getPlayerActionManager();
 
 	// 파츠가 10개 부착되어있으면 아래 함수들은 10번씩 수행됨
 	// 제일 처음 시작하는 경우

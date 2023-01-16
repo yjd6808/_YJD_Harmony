@@ -47,7 +47,8 @@ public:
 		{ CharacterPartType::Coat 	, "gunner/sprite_character_gunner_equipment_avatar_coat.NPK"  },
 		{ CharacterPartType::Cap 	, "gunner/sprite_character_gunner_equipment_avatar_cap.NPK"   },
 		{ CharacterPartType::Belt	, "gunner/sprite_character_gunner_equipment_avatar_belt.NPK"  },
-		{ CharacterPartType::Weapon  , "gunner/sprite_character_gunner_equipment_weapon_auto.NPK"  }
+		{ CharacterPartType::Weapon  , "gunner/sprite_character_gunner_equipment_weapon_auto.NPK"  },
+		{ 11, "gunner/sprite_character_gunner_effect_bullet_exs.NPK" }
 	};
 };
 

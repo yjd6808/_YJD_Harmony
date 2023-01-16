@@ -31,6 +31,7 @@ struct Hasher
 };
 
 
+// float, double은 꼼수로...
 template <>
 struct Hasher<float>
 {
@@ -55,19 +56,31 @@ struct Hasher<double>
 	};
 
 	constexpr Int32U operator()(double val) const {
-		return Hasher<float>()(val);
+		return Hasher<Int64U>()(val);
 	}
 };
 
 
 template <>
-struct Hasher<String>
-{
+struct Hasher<String> {
 	Int32U operator()(const String& val) const {
 		Int32U uiConv = PrimeInt32U_v;
-		const char* pBuffer = val.Source();
- 
-		for (int i = 0; i < val.Length(); i++) {
+		char* pBuffer = val.Source();
+#if defined(_WIN64)
+		using TStepType = Int64U;
+#else
+		using TStepType = Int32U;
+#endif
+		constexpr int iStep = sizeof(TStepType);	// 플랫폼에 따라.. 다르게
+		const int iStepCount = val.Length() / iStep;
+
+		int i = 0;
+		for (; i < iStepCount; i += iStep) {
+			uiConv ^= Hasher<TStepType>()(*reinterpret_cast<TStepType*>(pBuffer + i));
+			uiConv *= PrimeInt32U_v;
+		}
+
+		for (; i < val.Length(); ++i) {
 			uiConv ^= pBuffer[i] ^ HashXorKey_v;
 			uiConv *= PrimeInt32U_v;
 		}
