@@ -26,11 +26,12 @@ public:
 	void onUpdate(float dt);
 	void shot(CharacterSprite* character, int motionState);
 private:
-	bool m_bDownShotKeyPressed{};	// 아래 방향키가 눌렸는지
-	bool m_bNextFireCheck{};		// 
-	bool m_bNextFire{};
-	bool m_bShotEnd{};				// 오른쪽 총 쏠때 키입력이 없어서 총을 왼쪽 총을 꺼내지 않을지
-	int m_iRightShotCount{};		// 오른쪽 총으로 몇번 쏠지
+	bool m_bDownShotKeyPressedFirst{};	// 아래 방향키가 Shot[Down]Begin <--> ShotRight[Down]Begin 사이에 눌렸는지 체크용 처음에 한번만 체크함 / x를 누르고 아래방향을 누르는 경우가 잦음
+	bool m_bDownShotKeyPressed{};		// 아래 방향키가 눌렸는지
+	bool m_bNextFireCheck{};			// 
+	bool m_bNextFire{};					// 
+	bool m_bShotEnd{};					// 오른쪽 총 쏠때 키입력이 없어서 왼쪽 총을 꺼내지 않을지
+	int m_iRightShotCount{};			// 오른쪽 총으로 몇번 쏠지
 };
 
 

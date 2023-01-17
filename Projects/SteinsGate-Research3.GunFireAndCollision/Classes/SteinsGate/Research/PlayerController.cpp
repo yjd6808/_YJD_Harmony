@@ -251,8 +251,6 @@ void PlayerController::updateWalking(float dt) {
 	if (pRunningAction && pRunningAction->isMoveable() == false)
 		return;
 
-	Log("%d\n", (int)fSpeedX);
-
 	if (isKeyPressed(ControlKey::Left)) {
 		m_pActor->setPositionX(m_pActor->getPositionX() - fSpeedX);
 	}

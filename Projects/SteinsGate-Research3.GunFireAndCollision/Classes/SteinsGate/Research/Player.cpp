@@ -66,20 +66,20 @@ void Player::update(float dt) {
 		mapLayerPos.y -= playerNodePosOnScene.y - nineRect.getMaxY();
 	}
 
-		// 나인렉트 아래쪽 경계를 벗어난 경우
-		else if (playerNodePosOnScene.y < nineRect.getMinY()) {
-			mapLayerPos.y += nineRect.getMinY() - playerNodePosOnScene.y;
-		}
+	// 나인렉트 아래쪽 경계를 벗어난 경우
+	else if (playerNodePosOnScene.y < nineRect.getMinY()) {
+		mapLayerPos.y += nineRect.getMinY() - playerNodePosOnScene.y;
+	}
 
 	// 나인렉트 오른쪽 경계를 벗어난 경우
 	if (playerNodePosOnScene.x > nineRect.getMaxX()) {
 		mapLayerPos.x -= playerNodePosOnScene.x - nineRect.getMaxX();
 	}
 
-		// 나인렉트 왼쪽 경계를 벗어난 경우
-		else if (playerNodePosOnScene.x < nineRect.getMinX()) {
-			mapLayerPos.x += nineRect.getMinX() - playerNodePosOnScene.x;
-		}
+	// 나인렉트 왼쪽 경계를 벗어난 경우
+	else if (playerNodePosOnScene.x < nineRect.getMinX()) {
+		mapLayerPos.x += nineRect.getMinX() - playerNodePosOnScene.x;
+	}
 
 	/*if (d >= 0.3f) {
 		Log("씬 기준 플레이어 위치: %d, %d\n", int(playerNodePosOnScene.x), int(playerNodePosOnScene.y));

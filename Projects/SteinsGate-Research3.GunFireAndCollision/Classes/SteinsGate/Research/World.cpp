@@ -52,6 +52,7 @@ void World::init() {
 	m_pGridLayer->setVisible(false);
 	m_pWorldLayer->addChild(m_pGridLayer, 0);
 
+	
 	m_pPlayer = Player::create(ColliderType::Character, CharacterType::Gunner);
 
 	for (int i = 0; i < 14; ++i) {
@@ -63,6 +64,7 @@ void World::init() {
 		m_vReorderNodes.PushBack(test);
 	}
 
+	m_vReorderNodes.PushBack(m_pPlayer);
 	m_pScheduler->schedule(CC_CALLBACK_1(World::update, this), this, WorldFPS_v, false, "WorldUpdate");
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
@@ -157,7 +159,7 @@ void World::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Even
 }
 
 void World::onSceneLoaded(cocos2d::Scene* scene) {
-
+	
 	// 씬로딩 되면 캐릭터 위치랑
 	// 전반적으로 업데이트 해줘야함
 
@@ -167,7 +169,7 @@ void World::onSceneLoaded(cocos2d::Scene* scene) {
 
 
 	int zorderIdx = 0;
-
+	m_pWorldLayer->addChild(m_pPlayer, ++zorderIdx);
 
 	// 절반은 뛰엄뛰엄
 	for (int i = 0; i < m_vTesters.Size() / 2; ++i) {
@@ -199,7 +201,7 @@ void World::onSceneLoaded(cocos2d::Scene* scene) {
 	}
 
 	m_pRunningScene = scene;
-	m_pWorldLayer->addChild(m_pPlayer, ++zorderIdx);
+	
 	m_pRunningScene->addChild(m_pWorldLayer);
 }
 

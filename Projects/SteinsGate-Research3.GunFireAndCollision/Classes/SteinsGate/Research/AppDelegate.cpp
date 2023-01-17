@@ -6,7 +6,7 @@
 
 #include "SteinsGate/Common/Engine/RectEx.h"
 
-#define AppName "SteinsGate-Research.AvatarAnimation"
+#define AppName "SteinsGate-Research3.GunFireAndCollision"
 
 USING_NS_CC;
 

@@ -67,7 +67,7 @@ bool CharacterSprite::init()
 				iIndex == MotionState::ShotRightDownShot ||
 				iIndex == MotionState::ShotLeftShot ||
 				iIndex == MotionState::ShotLeftDownShot) {
-				pAnimation->setDelayPerUnit(FPS6_v);
+				pAnimation->setDelayPerUnit(FPS4_v);
 			} else if (iIndex == MotionState::IdleBreath) {
 				pAnimation->setDelayPerUnit(FPS9_v);
 			} else if (iIndex == MotionState::IdleReload) {

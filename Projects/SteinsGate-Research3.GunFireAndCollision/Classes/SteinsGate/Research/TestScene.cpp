@@ -26,7 +26,6 @@ bool TestScene::init()
     keyboardListener->onKeyPressed = CC_CALLBACK_2(TestScene::onKeyPressed, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
-  
 
 
 

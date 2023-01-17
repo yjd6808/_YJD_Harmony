@@ -33,10 +33,12 @@ bool PlayerActionGunFire::init() {
 
 	m_bMoveable = false;
 	m_bShotEnd = false;
+	m_bDownShotKeyPressedFirst = false;
 	m_bDownShotKeyPressed = false;
 	m_bNextFire = false;
 	m_bNextFireCheck = false;
 	m_bCancelable = false;
+	
 
 	// 유동 초기화
 	// 플레이어 무기 타입, 공격 속도 보정 고려서해서 애니메이션 프레임 수정 필요
@@ -51,9 +53,9 @@ void PlayerActionGunFire::onActionBegin() {
 
 	if (pController->isKeyPressed(ControlKey::Down)) {
 		m_bDownShotKeyPressed = true;
-		pCharacterSprite->runMotion(MotionState::ShotRightDownBegin, MotionState::ShotRightDownShot);
+		pCharacterSprite->runMotion(MotionState::ShotRightDownBegin);
 	} else {
-		pCharacterSprite->runMotion(MotionState::ShotRightBegin, MotionState::ShotRightShot);
+		pCharacterSprite->runMotion(MotionState::ShotRightBegin);
 	}
 }
 
@@ -75,7 +77,7 @@ void PlayerActionGunFire::onAnimateBegin(
 		iMotionState == MotionState::ShotRightDownBegin ||
 		iMotionState == MotionState::ShotLeftBegin		||
 		iMotionState == MotionState::ShotLeftDownBegin) {
-
+		
 		// 팔뚝 치기
 		// m_pPlayer->
 
@@ -101,6 +103,12 @@ void PlayerActionGunFire::onAnimateEnd(
 
 	if (iMotionState == MotionState::ShotRightBegin ||
 		iMotionState == MotionState::ShotRightDownBegin) {
+		if (m_bDownShotKeyPressedFirst) {
+			character->runMotion(MotionState::ShotRightDownShot);
+		} else {
+			character->runMotion(MotionState::ShotRightShot);
+		}
+
 		m_bNextFireCheck = false;
 	} else if (iMotionState == MotionState::ShotRightShot) {
 		if (m_bNextFire == false) {
@@ -156,6 +164,7 @@ void PlayerActionGunFire::onUpdate(float dt) {
 
 	// 방향키 누르고 있는지 여부는 계속 체크
 	if (controller->isKeyPressed(ControlKey::Down)) {
+		m_bDownShotKeyPressedFirst = true;
 		m_bDownShotKeyPressed = true;
 		return;
 	}
