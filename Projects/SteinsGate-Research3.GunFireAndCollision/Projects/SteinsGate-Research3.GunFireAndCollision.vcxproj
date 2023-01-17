@@ -33,6 +33,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionGunFire.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionJump.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionManager.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\CharacterPartAnimate.cpp" />
@@ -50,7 +54,7 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionSliding.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\PlayerController.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Research\TestLayer.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\WorldLayer.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\TestScene.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\World.cpp" />
     <ClCompile Include="main.cpp" />
@@ -73,6 +77,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionGunFire.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionJump.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionManager.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\Actions.h">
       <SubType>
@@ -97,7 +105,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionSliding.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\PlayerController.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\TestLayer.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\WorldLayer.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\TestScene.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\Tutturu.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\World.h" />

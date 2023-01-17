@@ -53,7 +53,7 @@ void PlayerActionSliding::onActionBegin() {
 	controller->setCommandable(false);
 
 	EaseCircleActionOut* pEaseOutByDirection = m_eDirection == SpriteDirection::Right ?
-		EaseCircleActionOut::create(MoveBy::create(SlidingDuration_v, Vec2{ SlidingMoveByDistance_v, 0.0 })) :
+		EaseCircleActionOut::create(MoveBy::create(SlidingDuration_v, Vec2{  SlidingMoveByDistance_v, 0.0 })) :
 		EaseCircleActionOut::create(MoveBy::create(SlidingDuration_v, Vec2{ -SlidingMoveByDistance_v, 0.0 }));
 
 	m_pPlayer->stopAllActions();
@@ -67,13 +67,4 @@ void PlayerActionSliding::onActionBegin() {
 	));
 
 	m_pPlayer->getCharacterSprite()->setSlide(m_eDirection);
-}
-
-void PlayerActionSliding::onActionEnd() {
-	auto controller = m_pPlayer->getController();
-	
-}
-
-void PlayerActionSliding::onAnimateBegin(CharacterSprite* character, CharacterPartAnimate* animate,
-	CharacterPartSpriteFrame* frame) {
 }

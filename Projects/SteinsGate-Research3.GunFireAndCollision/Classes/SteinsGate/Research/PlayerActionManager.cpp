@@ -34,8 +34,7 @@ void PlayerActionManager::init() {
 	m_Map.Insert(ActionType::SlidingLeft, PlayerActionSliding::createRetain(SpriteDirection::Left));
 	m_Map.Insert(ActionType::SlidingRight, PlayerActionSliding::createRetain(SpriteDirection::Right));
 	m_Map.Insert(ActionType::Shot, PlayerActionGunFire::createRetain());
-
-
+	m_Map.Insert(ActionType::Jump, PlayerActionJump::createRetain());
 
 	m_Map.Values().Extension().ForEach([=](ActionAbstract* action) {
 		action->m_pPlayer = m_pPlayer;
@@ -121,10 +120,13 @@ void PlayerActionManager::runAction(ActionType_t type) {
 		m_pRunningAction->stop();
 		m_pRunningAction = nullptr;
 	}
-	
+
+	m_pPreviousAction = m_pRunningAction;
 	m_pRunningAction = getAction(type);
 	m_pRunningAction->init();
 	m_pRunningAction->play();
+
+	
 }
 
 void PlayerActionManager::runAction(ActionAbstract* action) {
@@ -132,13 +134,15 @@ void PlayerActionManager::runAction(ActionAbstract* action) {
 		return;
 
 	if (m_pRunningAction) {
+		Log("현재 액션 캔슬");
 		m_pRunningAction->stop();
-		m_pRunningAction = nullptr;
 	}
 
+	m_pPreviousAction = m_pRunningAction;
 	m_pRunningAction = action;
 	m_pRunningAction->init();
 	m_pRunningAction->play();
+
 }
 
 

@@ -47,6 +47,7 @@ public:
 	void onAnimateEnd(int motionState);
 
 	void runMotion(int motionState1);
+	void runMotionRepeat(int motionState1);
 	void runMotion(int motionState1, int motionState2);
 	void runMotion(int motionState1, int motionState2, int motionState3);
 	void runMotion(int motionState1, int motionState2, int motionState3, int motionState4);

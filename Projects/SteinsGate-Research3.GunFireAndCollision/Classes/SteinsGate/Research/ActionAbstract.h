@@ -30,17 +30,20 @@ public:
 	virtual void onActionEnd(); 	// 정의안하면 해당 애니메이션 시퀀스가 끝나면 중단토록 한다.
 	virtual void onUpdate(float dt) {}
 	virtual bool isComboAction() = 0;
-	
+
+	int getActionType()		{ return m_iActionType;}
 	bool isCancelable()		{ return m_bCancelable;		}
 	bool isMoveable()		{ return m_bMoveable;		}
-	float getMoveSpeed()    { return m_fMoveSpeed;		}
+	float getMoveSpeedX()    { return m_fMoveSpeedFPSX;		}
+	float getMoveSpeedY()    { return m_fMoveSpeedFPSY;		}
 protected:
 
 	// 주입 하는 필드
 	int m_iActionType;
 	Player* m_pPlayer;
 	bool m_bMoveable{};			// 액션중 움직일 수 있는지
-	float m_fMoveSpeed{};		// 이때의 속도
+	float m_fMoveSpeedFPSX{};		// 이때의 X방향 속도
+	float m_fMoveSpeedFPSY{};		// 이때의 Y방향 속도
 
 	bool m_bCancelable{};		// 액션이 캔슬될 수 있는지
 

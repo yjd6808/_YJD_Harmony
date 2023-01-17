@@ -60,7 +60,23 @@ bool CharacterSprite::init()
 			DebugAssert(iBegin <= iEnd);
 
 			Animation* pAnimation = Animation::create();
-			pAnimation->setDelayPerUnit(CharacterSpriteFrameDelay_v);
+
+
+
+			if (iIndex == MotionState::ShotRightShot ||
+				iIndex == MotionState::ShotRightDownShot ||
+				iIndex == MotionState::ShotLeftShot ||
+				iIndex == MotionState::ShotLeftDownShot) {
+				pAnimation->setDelayPerUnit(FPS6_v);
+			} else if (iIndex == MotionState::IdleBreath) {
+				pAnimation->setDelayPerUnit(FPS9_v);
+			} else if (iIndex == MotionState::IdleReload) {
+				pAnimation->setDelayPerUnit(FPS9_v);
+
+			} else {
+				pAnimation->setDelayPerUnit(CharacterSpriteFrameDelay_v);
+			}
+			Log("%.1f\n", pAnimation->getDelayPerUnit());
 			
 			for (int iFrameIndex = iBegin, iFrameIndexInAnimation = 0; iFrameIndex <= iEnd; iFrameIndex++, iFrameIndexInAnimation++) {
 				pPart->getFrame(iFrameIndex)->m_iFrameIndexInAnimation = iFrameIndexInAnimation;
@@ -139,16 +155,39 @@ void CharacterSprite::onAnimateEnd(int motionState) {
 
 void CharacterSprite::runMotion(int motionState1) {
 	for (int ePartType = 0; ePartType < CharacterPartType::Max; ++ePartType) {
-		m_vParts[ePartType]->runSequenceOnce(Sequence::create(m_vParts[ePartType]->getAnimation(motionState1), nullptr));
+		auto animate = m_vParts[ePartType]->getAnimation(motionState1);
+		m_vParts[ePartType]->runSequenceOnce(
+			Sequence::create(
+				animate,
+				CallFunc::create([=]() {animate->onAnimateEnd2(); }),		// 콜펑으로 테스트
+				nullptr)
+		);
 	}
+}
+
+void CharacterSprite::runMotionRepeat(int motionState1) {
+	for (int ePartType = 0; ePartType < CharacterPartType::Max; ++ePartType) {
+		auto animate = m_vParts[ePartType]->getAnimation(motionState1);
+		m_vParts[ePartType]->runSequenceRepeat(
+			Sequence::create(
+				animate,
+				CallFunc::create([=]() {animate->onAnimateEnd2(); }),		// 콜펑으로 테스트
+				nullptr)
+		);
+	}
+	
 }
 
 void CharacterSprite::runMotion(int motionState1, int motionState2) {
 	cocos2d::Vector<FiniteTimeAction*> sequences{ CharacterPartType::Max };
 
 	for (int ePartType = 0; ePartType < CharacterPartType::Max; ++ePartType) {
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState1));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState2));
+		auto animate1 = m_vParts[ePartType]->getAnimation(motionState1);
+		auto animate2 = m_vParts[ePartType]->getAnimation(motionState2);
+		sequences.pushBack(animate1);
+		sequences.pushBack(CallFunc::create([=]() {animate1->onAnimateEnd2(); }));
+		sequences.pushBack(animate2);
+		sequences.pushBack(CallFunc::create([=]() {animate2->onAnimateEnd2(); }));
 		m_vParts[ePartType]->runSequenceOnce(Sequence::create(sequences));
 		sequences.clear();
 	}
@@ -158,9 +197,15 @@ void CharacterSprite::runMotion(int motionState1, int motionState2, int motionSt
 	cocos2d::Vector<FiniteTimeAction*> sequences{ CharacterPartType::Max };
 
 	for (int ePartType = 0; ePartType < CharacterPartType::Max; ++ePartType) {
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState1));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState2));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState3));
+		auto animate1 = m_vParts[ePartType]->getAnimation(motionState1);
+		auto animate2 = m_vParts[ePartType]->getAnimation(motionState2);
+		auto animate3 = m_vParts[ePartType]->getAnimation(motionState3);
+		sequences.pushBack(animate1);
+		sequences.pushBack(CallFunc::create([=]() {animate1->onAnimateEnd2(); }));
+		sequences.pushBack(animate2);
+		sequences.pushBack(CallFunc::create([=]() {animate2->onAnimateEnd2(); }));
+		sequences.pushBack(animate3);
+		sequences.pushBack(CallFunc::create([=]() {animate3->onAnimateEnd2(); }));
 		m_vParts[ePartType]->runSequenceOnce(Sequence::create(sequences));
 		sequences.clear();
 	}
@@ -170,10 +215,18 @@ void CharacterSprite::runMotion(int motionState1, int motionState2, int motionSt
 	cocos2d::Vector<FiniteTimeAction*> sequences{ CharacterPartType::Max };
 
 	for (int ePartType = 0; ePartType < CharacterPartType::Max; ++ePartType) {
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState1));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState2));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState3));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(motionState4));
+		auto animate1 = m_vParts[ePartType]->getAnimation(motionState1);
+		auto animate2 = m_vParts[ePartType]->getAnimation(motionState2);
+		auto animate3 = m_vParts[ePartType]->getAnimation(motionState3);
+		auto animate4 = m_vParts[ePartType]->getAnimation(motionState4);
+		sequences.pushBack(animate1);
+		sequences.pushBack(CallFunc::create([=]() {animate1->onAnimateEnd2(); }));
+		sequences.pushBack(animate2);
+		sequences.pushBack(CallFunc::create([=]() {animate2->onAnimateEnd2(); }));
+		sequences.pushBack(animate3);
+		sequences.pushBack(CallFunc::create([=]() {animate3->onAnimateEnd2(); }));
+		sequences.pushBack(animate4);
+		sequences.pushBack(CallFunc::create([=]() {animate4->onAnimateEnd2(); }));
 		m_vParts[ePartType]->runSequenceOnce(Sequence::create(sequences));
 		sequences.clear();
 	}
@@ -186,13 +239,12 @@ void CharacterSprite::setIdle() {
 
 	for (int ePartType = 0; ePartType < CharacterPartType::Max; ++ePartType) {
 		sequences.pushBack(m_vParts[ePartType]->getAnimation(MotionState::IdleBreath));
+		sequences.pushBack(DelayTime::create(1.0f));
 		sequences.pushBack(m_vParts[ePartType]->getAnimation(MotionState::IdleBreath));
+		sequences.pushBack(DelayTime::create(1.0f));
 		sequences.pushBack(m_vParts[ePartType]->getAnimation(MotionState::IdleBreath));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(MotionState::IdleBreath));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(MotionState::IdleBreath));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(MotionState::IdleBreath));
+		sequences.pushBack(DelayTime::create(1.0f));
 		sequences.pushBack(m_vParts[ePartType]->getAnimation(MotionState::IdleReload));
-		sequences.pushBack(m_vParts[ePartType]->getAnimation(MotionState::IdleGunRolling));
 
 		m_vParts[ePartType]->runSequenceRepeat(Sequence::create(sequences));
 		sequences.clear();

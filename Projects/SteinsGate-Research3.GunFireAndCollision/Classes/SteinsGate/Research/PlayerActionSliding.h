@@ -19,8 +19,6 @@ public:
 
 	bool init() override;
 	void onActionBegin() override;
-	void onActionEnd() override;
-	void onAnimateBegin(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame) override;
 private:
 	SpriteDirection_t m_eDirection;
 };

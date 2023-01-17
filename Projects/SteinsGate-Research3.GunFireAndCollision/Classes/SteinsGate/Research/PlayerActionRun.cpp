@@ -41,7 +41,9 @@ bool PlayerActionRun::init() {
 		default: return false;
 	}
 
-	m_fMoveSpeed = DefaultRunSpeedPerFPSX_v;
+	m_fMoveSpeedFPSX = DefaultRunSpeedPerFPSX_v;
+	m_fMoveSpeedFPSY = DefaultMoveSpeedPerFPSY_v;
+
 	m_bMoveable = true;
 	m_bCancelable = true;
 	return true;

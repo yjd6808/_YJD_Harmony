@@ -245,11 +245,14 @@ void PlayerController::walk() {
 void PlayerController::updateWalking(float dt) {
 	ActionAbstract* pRunningAction = m_pActionManager->getRunningAction();
 	// 액션중 이동가능한 액션인 경우 해당 액션의 이동속도로 움직일 수 있도록 한다.
-	const float fSpeedX = pRunningAction ? pRunningAction->getMoveSpeed() : DefaultMoveSpeedPerFPSX_v;
+	const float fSpeedX = pRunningAction ? pRunningAction->getMoveSpeedX() : DefaultMoveSpeedPerFPSX_v;
+	const float fSpeedY = pRunningAction ? pRunningAction->getMoveSpeedY() : DefaultMoveSpeedPerFPSY_v;
 
 	if (pRunningAction && pRunningAction->isMoveable() == false)
 		return;
-	
+
+	Log("%d\n", (int)fSpeedX);
+
 	if (isKeyPressed(ControlKey::Left)) {
 		m_pActor->setPositionX(m_pActor->getPositionX() - fSpeedX);
 	}
@@ -259,11 +262,11 @@ void PlayerController::updateWalking(float dt) {
 	}
 
 	if (isKeyPressed(ControlKey::Up)) {
-		m_pActor->setPositionY(m_pActor->getPositionY() + DefaultMoveSpeedPerFPSY_v);
+		m_pActor->setPositionY(m_pActor->getPositionY() + fSpeedY);
 	}
 
 	if (isKeyPressed(ControlKey::Down)) {
-		m_pActor->setPositionY(m_pActor->getPositionY() - DefaultMoveSpeedPerFPSY_v);
+		m_pActor->setPositionY(m_pActor->getPositionY() - fSpeedY);
 	}
 }
 

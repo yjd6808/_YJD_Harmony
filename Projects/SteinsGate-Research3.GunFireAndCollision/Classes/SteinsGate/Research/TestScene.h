@@ -6,7 +6,7 @@
 
 #include <SteinsGate/Common/Engine/GridLayer.h>
 #include <SteinsGate/Research/Tutturu.h>
-#include <SteinsGate/Research/TestLayer.h>
+#include <SteinsGate/Research/WorldLayer.h>
 
 class TestScene : cocos2d::Scene
 {
@@ -16,8 +16,10 @@ public:
 
     bool init() override;
     CREATE_FUNC(TestScene);
+
+    WorldLayer* getTestLayer() { return m_pTestLayer; }
 private:
-    TestLayer* m_pLoginLayer;
+    WorldLayer* m_pTestLayer;
     GridLayer* m_pGridLayer;
 };
 

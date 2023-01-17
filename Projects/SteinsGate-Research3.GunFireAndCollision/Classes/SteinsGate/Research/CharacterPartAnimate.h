@@ -29,8 +29,7 @@ public:
 public:
 	bool init();
 	void onFrameBegin();
-	void onAnimateEnd() override;
-	
+	void onAnimateEnd2();
 
 	void setDelayPerUnit(float unit);
 	int getMotionState() { return m_iMotionState; }

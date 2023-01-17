@@ -9,7 +9,7 @@
 
 
 #include <SteinsGate/Research/Config.h>
-
+#include <SteinsGate/Common/Engine/GridLayer.h>
 
 
 using namespace cocos2d;
@@ -30,7 +30,7 @@ World::~World() {
 	if (m_pPlayer->getReferenceCount() == 1)
 		Log("플레이어 안전하게 제거 완료\n");
 
-	CC_SAFE_RELEASE(m_pPlayer);
+	CC_SAFE_RELEASE(m_pWorldLayer);
 
 	for (int i = 0; i < m_vTesters.Size(); ++i) {
 		CC_SAFE_RELEASE(m_vTesters[i]);
@@ -44,11 +44,16 @@ void World::init() {
 	m_pScheduler = m_pDirector->getScheduler();
 	m_pEventDispatcher = m_pDirector->getEventDispatcher();
 
+	m_pWorldLayer = WorldLayer::create();
+	m_pWorldLayer->retain();
 
+	m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
+	m_pGridLayer->setAnchorPoint(Vec2::ZERO);
+	m_pGridLayer->setVisible(false);
+	m_pWorldLayer->addChild(m_pGridLayer, 0);
 
 	m_pPlayer = Player::create(ColliderType::Character, CharacterType::Gunner);
-	m_pPlayer->retain();
-	m_vReorderNodes.PushBack(m_pPlayer);
+
 	for (int i = 0; i < 14; ++i) {
 		auto lb= Label::create(cocos2d::StringUtils::format("%d", i).c_str(), "", 16);
 		auto test = Collider::create(ColliderType::Obstable, CharacterType::Max);
@@ -67,14 +72,14 @@ void World::init() {
 }
 
 void World::addCollider(Collider* col) {
-	m_pRunningScene->addChild(col);
+	m_pWorldLayer->addChild(col);
 	m_vReorderNodes.PushBack(col);
 }
 
 // 임시
 // 나중에는 월드 업데이트 이후 수행해야할 이벤트를 처리하는 기능을 따로 만들어야할듯
 void World::removeProjectile(Collider* col) {
-	m_pRunningScene->removeChild(col);
+	m_pWorldLayer->removeChild(col);
 	m_vReorderNodes.Remove(col);
 }
 
@@ -131,7 +136,7 @@ void World::update(float delta) {
 		});
 
 		for (int i = 0, iOrder = 1; i < m_vReorderNodes.Size(); ++i) {
-			m_pRunningScene->reorderChild(m_vReorderNodes[i], iOrder++);
+			m_pWorldLayer->reorderChild(m_vReorderNodes[i], iOrder++);
 		}
 		
 	}
@@ -157,7 +162,9 @@ void World::onSceneLoaded(cocos2d::Scene* scene) {
 	// 전반적으로 업데이트 해줘야함
 
 	m_eState = Playing;
-	m_pPlayer->setRealPos(200.0f, 200.0f);
+
+
+
 
 	int zorderIdx = 0;
 
@@ -165,7 +172,7 @@ void World::onSceneLoaded(cocos2d::Scene* scene) {
 	// 절반은 뛰엄뛰엄
 	for (int i = 0; i < m_vTesters.Size() / 2; ++i) {
 		m_vTesters[i]->setRealPos(200.0f * i, 50.0f * i);
-		scene->addChild(m_vTesters[i], ++zorderIdx);
+		m_pWorldLayer->addChild(m_vTesters[i], ++zorderIdx);
 		Rect thickBox = m_vTesters[i]->getThicknessBox();
 		Rect hitBox = m_vTesters[i]->getHitBox();
 		Log("%d번 테스트 오브젝트 ZOrder: %d\n", i, m_vTesters[i]->getLocalZOrder());
@@ -173,14 +180,14 @@ void World::onSceneLoaded(cocos2d::Scene* scene) {
 			i, (int)thickBox.origin.x, int(thickBox.origin.y), int(thickBox.size.width), int(thickBox.size.height));
 		Log("└ 히트박스 (x, y): %d, %d / (width, height)): %d, %d\n",
 			i, (int)hitBox.origin.x, int(hitBox.origin.y), int(hitBox.size.width), int(hitBox.size.height));
-		
+
 	}
 
 
 	// 절반은 따닥따닥
 	for (int i = m_vTesters.Size() / 2; i < m_vTesters.Size(); ++i) {
 		m_vTesters[i]->setRealPos(50.0f + 20.0f * (i - m_vTesters.Size() / 2), 400.0f + 15.0f * (i - m_vTesters.Size() / 2));
-		scene->addChild(m_vTesters[i], ++zorderIdx);
+		m_pWorldLayer->addChild(m_vTesters[i], ++zorderIdx);
 		Rect thickBox = m_vTesters[i]->getThicknessBox();
 		Rect hitBox = m_vTesters[i]->getHitBox();
 
@@ -191,8 +198,8 @@ void World::onSceneLoaded(cocos2d::Scene* scene) {
 			(int)hitBox.origin.x, int(hitBox.origin.y), int(hitBox.size.width), int(hitBox.size.height));
 	}
 
-	scene->addChild(m_pPlayer, ++zorderIdx);
 	m_pRunningScene = scene;
+	m_pWorldLayer->addChild(m_pPlayer, ++zorderIdx);
+	m_pRunningScene->addChild(m_pWorldLayer);
 }
-
 

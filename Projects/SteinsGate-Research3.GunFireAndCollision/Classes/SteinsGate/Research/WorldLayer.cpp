@@ -2,7 +2,7 @@
  * 작성자 : 윤정도
  */
 
-#include "TestLayer.h"
+#include "WorldLayer.h"
 
 #include <SteinsGate/Common/Core/Npk/NpkElementInitializer.h>
 #include <SteinsGate/Common/Core/Npk/NpkLoader.h>
@@ -23,32 +23,29 @@ using namespace JCore;
 
 
 
-bool TestLayer::init() {
+bool WorldLayer::init() {
 
 	if (!Layer::init()) {
 		return false;
 	}
 
-
-	Rect a;
-	Rect b;
-
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
-	keyboardListener->onKeyPressed = CC_CALLBACK_2(TestLayer::onKeyPressed, this);
-	keyboardListener->onKeyReleased = CC_CALLBACK_2(TestLayer::onKeyReleased, this);
+	keyboardListener->onKeyPressed = CC_CALLBACK_2(WorldLayer::onKeyPressed, this);
+	keyboardListener->onKeyReleased = CC_CALLBACK_2(WorldLayer::onKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
 	this->scheduleUpdate();
 	return true;
 }
 
-void TestLayer::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+void WorldLayer::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 
 }
 
 
 
 
-void TestLayer::update(float delta) {
+void WorldLayer::update(float delta) {
+	
 }
 

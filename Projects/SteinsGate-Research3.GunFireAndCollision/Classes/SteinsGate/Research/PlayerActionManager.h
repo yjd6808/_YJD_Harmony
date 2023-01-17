@@ -34,9 +34,10 @@ public:
 	bool canRunAction();
 	void setRunningAction(ActionAbstract* action);
 
-
+	bool hasPreviousAction() { return m_pPreviousAction != nullptr; }
 	bool hasRunningAction() { return m_pRunningAction != nullptr; }
 	ActionAbstract* getRunningAction() { return m_pRunningAction; }
+	ActionAbstract* getPreviousAction() { return m_pPreviousAction; }
 	ActionAbstract* getAction(ActionType_t type) ;
 	ComboAction* getComboAction(const ComboKeyList& keys) { return m_ComboTree.GetComboAction(keys); }
 	void runAction(ActionType_t type);
@@ -47,5 +48,8 @@ private:
 	Player* m_pPlayer;
 	ComboTree m_ComboTree;
 	ActionAbstract* m_pRunningAction{};		// 캐릭터 자체가 움직여서 사용하는 액션
+	ActionAbstract* m_pPreviousAction{};
 	JCore::HashMap<ActionType_t, ActionAbstract*> m_Map;
+	
 };
+

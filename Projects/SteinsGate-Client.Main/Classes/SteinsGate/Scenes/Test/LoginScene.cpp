@@ -7,6 +7,7 @@
 
 
 using namespace cocos2d;
+Camera* default_camera;
 
 Scene* LoginScene::createScene()
 {
@@ -24,6 +25,18 @@ void LoginScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::
 
 bool LoginScene::init()
 {
+    auto sp = Sprite::create("rect.png");
+    sp->setContentSize(Director::getInstance()->getWinSize());
+    sp->setOpacity(70.0f);
+    sp->setAnchorPoint(Vec2::ZERO);
+    this->addChild(sp);
+
+    auto sz =  Director::getInstance()->getWinSize();
+    default_camera = Camera::createOrthographic(sz.width, sz.height, 1, 1000);
+    default_camera->setPosition(Vec2{ 1000, 1000 });
+    _defaultCamera = default_camera;
+    this->addChild(default_camera);
+
     EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
     keyboardListener->onKeyPressed = CC_CALLBACK_2(LoginScene::onKeyPressed, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);

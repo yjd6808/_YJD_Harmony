@@ -11,9 +11,12 @@ public:
 	bool init() override;
 	CREATE_FUNC(LoginLayer);
 
-	void update(float delta) override;
 	void onKeyPressed2(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-	void onKeyReleased2(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onMouseDown(cocos2d::EventMouse* event);
 };
+
+
+
+
 
 

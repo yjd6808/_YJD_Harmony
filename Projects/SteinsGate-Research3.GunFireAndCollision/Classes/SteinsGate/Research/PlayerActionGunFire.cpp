@@ -80,19 +80,13 @@ void PlayerActionGunFire::onAnimateBegin(
 		// m_pPlayer->
 
 	} else if ( iMotionState == MotionState::ShotRightShot ||
-				iMotionState == MotionState::ShotRightDownShot) {
+				iMotionState == MotionState::ShotRightDownShot /*||
+				iMotionState == MotionState::ShotRightEnd ||
+				iMotionState == MotionState::ShotRightDownEnd*/) {
 		m_bNextFireCheck = true;
 	}
 
-
-	if (frame->getFrameIndex() == MotionStateBegin::ShotDownShot		+ 1 ||
-		frame->getFrameIndex() == MotionStateBegin::ShotOtherDownShot	+ 1 ||
-		frame->getFrameIndex() == MotionStateBegin::ShotShot			+ 1 || 
-		frame->getFrameIndex() == MotionStateBegin::ShotOtherShot		+ 1) {
-
-		// 
-		// m_pPlayer->fire();
-	}
+	Log("%s 시작\n", MotionState::Name[iMotionState]);
 }
 
 void PlayerActionGunFire::onAnimateEnd(
@@ -111,29 +105,37 @@ void PlayerActionGunFire::onAnimateEnd(
 	} else if (iMotionState == MotionState::ShotRightShot) {
 		if (m_bNextFire == false) {
 			character->runMotion(MotionState::ShotRightEnd);
+			Log("%s 오른쪽 쏘기 중지 종료 시퀀스 돌입\n", MotionState::Name[iMotionState]);
 			m_bShotEnd = true;
 			return;
 		}
-
+		Log("%s 오른쪽 쏘기 한번더 시작\n", MotionState::Name[iMotionState]);
 		shot(character, iMotionState);
 	} else if (iMotionState == MotionState::ShotRightDownShot) {
 		if (m_bNextFire == false) {
 			m_bShotEnd = true;
+			Log("%s 오른쪽 (아래) 총쏘기 중지 종료 시퀀스 돌입\n", MotionState::Name[iMotionState]);
 			character->runMotion(MotionState::ShotRightDownEnd);
 			return;
 		}
-
+		Log("%s 오른쪽 (아래) 쏘기 한번더 시작\n", MotionState::Name[iMotionState]);
 		shot(character, iMotionState);
 	} else if (iMotionState == MotionState::ShotRightEnd ||
 			   iMotionState == MotionState::ShotRightDownEnd) {
+		
 		if (m_bShotEnd) {
+			Log("%s 액션 완료\n", MotionState::Name[iMotionState]);
 			stop();
+		} else {
+			Log("%s 이어서 왼쪽 쏘기 진행\n", MotionState::Name[iMotionState]);
 		}
 	}
 	else if (iMotionState == MotionState::ShotLeftDownEnd ||
 			iMotionState == MotionState::ShotLeftEnd) {
 		stop();
 	}
+
+	Log("%s 종료\n", MotionState::Name[iMotionState]);
 }
 
 // 총쏘는건 꾹 누른게아니라 단발성이므로 update에서 처리할 필요가 없다.
@@ -166,7 +168,6 @@ void PlayerActionGunFire::shot(CharacterSprite* character, int motionState) {
 	// 아직 우측방향으로 쏠 수 있는 경우
 	if (m_iRightShotCount > 0) {
 		m_iRightShotCount--;
-
 		if (m_bDownShotKeyPressed)
 			character->runMotion(MotionState::ShotRightDownShot);
 		else
@@ -192,6 +193,8 @@ void PlayerActionGunFire::shot(CharacterSprite* character, int motionState) {
 				MotionState::ShotLeftDownShot,
 				MotionState::ShotLeftDownEnd
 			);
+		} else {
+			Log("이상한 State %s가 들어옴\n", MotionState::Name[motionState]);
 		}
 	} else {
 		if (motionState == MotionState::ShotRightShot)
@@ -208,6 +211,8 @@ void PlayerActionGunFire::shot(CharacterSprite* character, int motionState) {
 				MotionState::ShotLeftShot,
 				MotionState::ShotLeftEnd
 			);
+		} else {
+			Log("이상한 State %s가 들어옴\n", MotionState::Name[motionState]);
 		}
 	}
 
@@ -227,12 +232,20 @@ void PlayerActionGunFire::onFrameBegin(
 		return;
 	}
 
+
+	if (frame->getFrameIndex() == MotionStateBegin::ShotDownShot + 1 ||
+		frame->getFrameIndex() == MotionStateBegin::ShotOtherDownShot + 1 ||
+		frame->getFrameIndex() == MotionStateBegin::ShotShot + 1 ||
+		frame->getFrameIndex() == MotionStateBegin::ShotOtherShot + 1) {
+
+		// 
+		// m_pPlayer->fire();
+	}
+
 	const MotionState_t iMotionState = (MotionState_t)animate->getMotionState();
 
 	if (frame->getFrameIndex() == 26) {
-		Log("진입\n");
 		m_pPlayer->createProjectile(0);
-
 	}
 
 	// 좌

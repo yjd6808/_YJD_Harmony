@@ -36,6 +36,8 @@ public:
 	cocos2d::Rect getHitBox() override;
 	void setRealPos(float x, float y) override;
 	cocos2d::Vec2 getRealPos() override;
+	cocos2d::Vec2 getRealPosCenter() override;
+
 	cocos2d::Vec2 getTargetCanvasPosition() override;
 
 private:

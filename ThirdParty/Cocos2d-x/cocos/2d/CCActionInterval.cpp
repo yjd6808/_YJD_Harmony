@@ -2663,16 +2663,6 @@ void Animate::update(float t)
         // new t for animations
         t = fmodf(t, 1.0f);
     }
-    else 
-    {
-        if (_nextFrame >= numberOfFrames) {
-            onAnimateEnd();
-            return;
-        }
-    }
-    
-
-   
 
     
     for( int i=_nextFrame; i < numberOfFrames; i++ )

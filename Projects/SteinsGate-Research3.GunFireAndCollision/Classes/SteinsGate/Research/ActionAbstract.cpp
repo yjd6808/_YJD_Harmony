@@ -13,6 +13,9 @@
 #include "Player.h"
 
 void ActionAbstract::play() {
+	//m_fMoveSpeedFPSY = DefaultMoveSpeedPerFPSY_v;
+	//m_fMoveSpeedFPSX = DefaultMoveSpeedPerFPSX_v;
+
 	onActionBegin();
 }
 

@@ -30,7 +30,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\PlayerController.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\TestLayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Research\WorldLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\TestScene.cpp">
@@ -90,6 +90,9 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\BulletTarget.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\PlayerActionJump.cpp">
+      <Filter>src\Action\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
@@ -103,7 +106,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\PlayerController.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\TestLayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Research\WorldLayer.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\TestScene.h">
@@ -177,6 +180,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\BulletTarget.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\PlayerActionJump.h">
+      <Filter>src\Action\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

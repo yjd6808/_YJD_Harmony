@@ -56,6 +56,7 @@ public:
 	bool isVerticalKeyPressed();	// 위  , 아래 키가 모두 눌린 경우
 	bool isFreezedWalkState(ControlKey_t releasedKey);
 	bool hasRunningAction() { return m_pActionManager->hasRunningAction(); }	// 달리는 액션이 아니라 실행중인 액션이란 뜻
+	bool hasPreviousAction() { return m_pActionManager->hasPreviousAction(); }
 	bool fixFreezedWalkState(ControlKey_t releasedKey);
 
 	bool canUseCommand() { return m_bCabUseCommand; }

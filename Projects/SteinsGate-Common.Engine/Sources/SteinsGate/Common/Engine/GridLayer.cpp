@@ -38,10 +38,16 @@ void GridLayer::DrawGridWindow(const int interval, const Color4F& color)
 	const int WIN_HEIGHT = Director::getInstance()->getWinSize().height;
 
 	DrawNode* node = DrawNode::create();
+	for (int i = -10'000; i < 10'000; i += interval)
+		node->drawLine(Vec2(0, i), Vec2(WIN_WIDTH, i), color);
+	for (int i = -10'000; i < 10'000; i += interval)
+		node->drawLine(Vec2(i, 0), Vec2(i, WIN_HEIGHT), color);
+	/*
 	for (int i = interval; i < WIN_HEIGHT; i += interval)
 		node->drawLine(Vec2(0, i), Vec2(WIN_WIDTH, i), color);
 	for (int i = interval; i < WIN_WIDTH; i += interval)
 		node->drawLine(Vec2(i, 0), Vec2(i, WIN_HEIGHT), color);
+	*/
 	this->addChild(node, 0);
 }
 

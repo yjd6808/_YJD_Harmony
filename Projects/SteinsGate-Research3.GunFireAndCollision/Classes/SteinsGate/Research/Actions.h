@@ -11,3 +11,4 @@
 #include <SteinsGate/Research/PlayerActionRun.h>
 #include <SteinsGate/Research/PlayerActionSliding.h>
 #include <SteinsGate/Research/PlayerActionGunFire.h>
+#include <SteinsGate/Research/PlayerActionJump.h>

@@ -50,6 +50,7 @@ bool BulletTarget::init(int projectileId) {
 	}
 
 	auto box = m_pSkinPart->getBoundingBox();
+	m_pSkinPart->setPositionY(-box.origin.y); // 회전으로인한 보정
 
 	// 프로젝틸은 프레임사이즈, 크기 동일하다고 가정
 	float fWidth = box.size.width;
@@ -63,7 +64,7 @@ bool BulletTarget::init(int projectileId) {
 	m_pCanvas->addChild(m_pSkinPart);
 
 	
-	RectPoly poly = RectPoly::createFromLeftBottom(box.origin, box.size);
+	RectPoly poly = RectPoly::createFromLeftBottom({}, box.size);
 
 	m_pSkinBoundingBox = DrawNode::create();
 	m_pSkinBoundingBox->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);

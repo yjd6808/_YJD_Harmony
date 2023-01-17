@@ -32,25 +32,6 @@ CharacterPartAnimate::~CharacterPartAnimate() {
 bool CharacterPartAnimate::init() {
 
 	setFrameChangedCallback([this](int frameIndexInAnimation) { this->onFrameBegin(); });
-	
-	/*
-	이 방법을 쓰면 전역적으로 동작하기 땜에 고려해야될게 많아진다.
-	그냥 쉽게 엔진 코드를 조금 수정하자
-	auto& frames = getAnimation()->getFrames();
-
-	for (int i = 0; i < frames.size(); i++) {
-		cocos2d::ValueMap userData;
-		userData.insert(std::make_pair("FrameIndex", Value(i)));
-	}
-
-	auto _listener = EventListenerCustom::create(AnimationFrameDisplayedNotification,
-		[this](EventCustom* event) {
-			// event->valuemap
-		}	
-	);
-
-	Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(_listener, 1);
-	*/
 	return true;
 }
 
@@ -61,7 +42,7 @@ void CharacterPartAnimate::onFrameBegin() {
 	m_pParent->onFrameBegin(this, pCurrentRunningFrame);
 }
 
-void CharacterPartAnimate::onAnimateEnd() {
+void CharacterPartAnimate::onAnimateEnd2() {
 	m_pParent->onAnimateEnd(this, getLastFrame());
 }
 
