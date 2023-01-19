@@ -5,6 +5,7 @@
  *
  */
 
+#include <SteinsGate/Common/Core.h>
 #include <SteinsGate/Common/Core/Npk/NpkPackage.h>
 
 #include <JCore/FileSystem/FileStream.h>

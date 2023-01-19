@@ -212,7 +212,7 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -247,7 +247,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>JNetwork.lib;JCore.lib;Bass.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Engine.lib;Version.lib;libcocos2d.lib;librecast.lib;libcurl.lib;zlib.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
+      <AdditionalDependencies>JNetwork.lib;JCore.lib;Bass.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Engine.lib;Version.lib;libcocos2d.lib;librecast.lib;libcurl.lib;zlib.lib;jsoncpp.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories);$(_COCOS_LIB_PATH_WIN32_BEGIN);$(_COCOS_LIB_PATH_WIN32_END)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -257,7 +257,8 @@
     <PostBuildEvent>
       <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>

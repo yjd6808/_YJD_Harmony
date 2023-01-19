@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>SteinsGate_Tools.AnimationTool</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+	<BaseIntermediateOutputPath>..\Intermediate\</BaseIntermediateOutputPath>
+	<BaseOutputPath>..\Out\</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="image\1.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="image\1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>

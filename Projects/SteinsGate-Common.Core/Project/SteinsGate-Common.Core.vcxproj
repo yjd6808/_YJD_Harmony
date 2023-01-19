@@ -22,6 +22,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\Core.cpp">
       <SubType>
       </SubType>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Core\BassPlayer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElement.cpp" />
@@ -107,26 +111,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)ThirdParty\Bass24\include;$(SolutionDir)ThirdParty\Zlib12\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,10 +138,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>SteinsGate/Common/Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -153,10 +158,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>SteinsGate/Common/Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -172,10 +178,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>SteinsGate/Common/Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -191,10 +198,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>SteinsGate/Common/Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>

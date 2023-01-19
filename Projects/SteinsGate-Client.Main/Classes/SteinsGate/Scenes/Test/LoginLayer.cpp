@@ -9,11 +9,12 @@
 using namespace cocos2d;
 using namespace cocos2d::ui;
 
-Node* a;
+Sprite* a;
 constexpr float FPS1_v = 1.0f / 60.0f;
 
 bool jump_start;
 
+Sprite* s[5];
 
 float x_velocity = 0;
 float y_velocity = 0;
@@ -38,12 +39,13 @@ bool LoginLayer::init() {
 	}
 	// 아직 씬이 다 초기화가 안된 상태라서 Default 카메라가 세팅이 안되있다. ㄷㄷ
 	// Direction::getInstance()->getRunningScene() 이게 안먹힘
-	a = Sprite::create("rect.png");
-	a->setContentSize({ 50, 50 });
+	a = Sprite::create("rect1.png");
 	a->setColor(Color3B::GRAY);
 	a->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	a->setPosition({ 300, 300.0f });
 	this->addChild(a);
+
+	
 	ground_y = 300.0f;
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
@@ -123,6 +125,8 @@ bool LoginLayer::init() {
 		a->setPosition(curPos);
 	}
 
+	
+
 	}, this, 1/60.0f, true, "fsefe");
 	return true;
 
@@ -149,6 +153,7 @@ void LoginLayer::onKeyPressed2(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d:
 	}
 	if (keyCode == EventKeyboard::KeyCode::KEY_B) {
 		Camera::getDefaultCamera()->setPosition(Vec2{100, 100});
+		
 	}
 
 }

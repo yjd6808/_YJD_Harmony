@@ -6,6 +6,7 @@
  */
 
 
+#include <SteinsGate/Common/Core.h>
 #include <SteinsGate/Common/Core/BassPlayer.h>
 
 #include <JCore/Assert.h>

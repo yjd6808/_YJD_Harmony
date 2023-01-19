@@ -21,13 +21,15 @@ using namespace cocos2d::ui;
 using namespace JCore;
 
 
-
+#include <json/>
 
 bool WorldLayer::init() {
 
 	if (!Layer::init()) {
 		return false;
 	}
+
+	json::
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = CC_CALLBACK_2(WorldLayer::onKeyPressed, this);

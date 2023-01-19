@@ -5,6 +5,8 @@
 	이게 쓸일이 생기네
  */
 
+#include <SteinsGate/Common/Engine.h>
+
 #include "GridLayer.h"
 
 USING_NS_CC;

@@ -5,7 +5,6 @@
  * 
  */
 
-
 #include <SteinsGate/Common/Core.h>
 #include <SteinsGate/Common/Core/Npk/NpkLoader.h>
 #include <SteinsGate/Common/Core/Npk/NpkSprite.h>

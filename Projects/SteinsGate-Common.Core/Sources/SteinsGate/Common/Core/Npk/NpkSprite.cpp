@@ -5,6 +5,7 @@
  *
  */
 
+#include <SteinsGate/Common/Core.h>
 #include <SteinsGate/Common/Core/Npk/NpkSprite.h>
 #include <SteinsGate/Common/Core/Npk/NpkColorFormat.h>
 

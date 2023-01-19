@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>SteinsGate_Tools.Common</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <BaseIntermediateOutputPath>..\Intermediate\</BaseIntermediateOutputPath>
+    <BaseOutputPath>..\Out\</BaseOutputPath>
+  </PropertyGroup>
+
+</Project>
