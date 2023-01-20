@@ -19,5 +19,6 @@ namespace JCore {
 		static String FileName(const String& path);
 		static String Combine(const String& lhs, const String& rhs);
 		static String Combine(const String& lhs, const String& rhs, const String& khs);
+		static String Extension(const String& path);
 	};
 }

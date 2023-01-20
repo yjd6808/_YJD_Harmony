@@ -512,7 +512,7 @@ void String::SetAt(const int idx, const char ch) {
 	m_pBuffer[idx] = ch;
 }
 
-char& String::GetAt(const int idx) {
+char String::GetAt(const int idx) const {
 	ThrowIfInvalidIndex(idx);
 	return m_pBuffer[idx];
 }

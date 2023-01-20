@@ -27,17 +27,53 @@ namespace JCore {
 	}
 
 	String Path::Combine(const String& lhs, const String& rhs) {
-		//
-		//String szResult{ lhs.Length() + rhs.Length() + 10 };
 
-		//szResult += lhs;
-		//lhs.T
+		String szCombined{lhs.Source(), lhs.Length() + rhs.Length() + 1};
 
-		return (std::filesystem::path(lhs.Source()) / rhs.Source()).string().c_str();
+		int iLast = -1;
+		int iCount = 0;
+		for (int i = szCombined.Length() - 1; i >= 0; --i, ++iCount) {
+			if (szCombined[i] != '/' && szCombined[i] != '\\') {
+				iLast = i;
+				break;
+			}
+		}
+
+		if (iLast != -1)
+			szCombined.Clear(iLast + 1, iCount);
+
+		szCombined.Append('/');
+		iCount = 0;
+
+		for (iLast = 0; iLast < rhs.Length(); ++iLast, ++iCount) {
+			if (rhs.GetAt(iLast) != '/' && rhs.GetAt(iLast) != '\\') {
+				break;
+			}
+		}
+		szCombined.Append(rhs.Source() + iCount);
+		return szCombined;
 	}
 
 	String Path::Combine(const String& lhs, const String& rhs, const String& khs) {
-		return (std::filesystem::path(lhs.Source()) / rhs.Source() / khs.Source()).string().c_str();
+		return Combine(lhs, Combine(rhs, khs));
+	}
+
+	String Path::Extension(const String& path) {
+		int iLast = 0;
+		int iCount = 0;
+
+		for (int i = path.Length() - 1; i >= 0; --i, ++iCount) {
+
+			if (path.GetAt(i) == '.') {
+				return { path.Source() + i, iCount + 1};
+			}
+
+			if (path.GetAt(i) == '/' || path.GetAt(i) == '\\') {
+				return "";
+			}
+		}
+
+		return "";
 	}
 
 

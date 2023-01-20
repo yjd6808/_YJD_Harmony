@@ -57,7 +57,7 @@ struct Hasher<double>
 	};
 
 	constexpr Int32U operator()(double val) const {
-		return Hasher<Int64U>()(val);
+		return Hasher<Int64U>()(Bit{ val }.u);
 	}
 };
 

@@ -83,8 +83,8 @@ public:
 	bool EndWith(const String& str) { return FindReverse(str.Source()) == m_iLen - str.Length();  }
 	bool StartWith(const String& str) { return Find(str) == 0; }
 
-	char Last() { return GetAt(m_iLen - 1); }
-	char First() { return GetAt(0); }
+	char Last() const { return GetAt(m_iLen - 1); }
+	char First() const { return GetAt(0); }
 
 	void Clear();
 	void Clear(int offset, int len);		// offset 인덱스에서 len만큼 없앰
@@ -111,7 +111,7 @@ public:
 	void Format(const char* format, ...);
 	
 	void SetAt(const int idx, const char ch);
-	char& GetAt(const int idx);
+	char GetAt(const int idx) const ;
 	String GetRange(const int startIdx, const int endIdx) const;
 
 	// 동적할당된 문자열, 길이, 할당된 크기를 반환한다.
