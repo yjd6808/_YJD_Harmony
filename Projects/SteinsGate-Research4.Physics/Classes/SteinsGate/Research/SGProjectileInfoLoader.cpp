@@ -18,7 +18,7 @@
 #include <fstream>
 
 
-
+using namespace JCore;
 using namespace Json;
 
 void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap) {
@@ -31,11 +31,11 @@ void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 	reader >> root;
 	Json::Value projectiles = root["projectile"];
 
-	//for (Json::Value::ArrayIndex i = 0; i != root.size(); i++)
-		// if (root[i].isMember("attr1"))
 	for (Json::Value::ArrayIndex i = 0; i < projectiles.size(); i++) {
 		Value& projectile = projectiles[i];
-		SGProjectileInfo info;
+		Value& animationListRoot = projectile["animation"];
+		DebugAssertMessage(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
+		SGProjectileInfo info(animationListRoot.size());
 		info.Code = projectile["code"].asInt();
 		info.Name = SGJson::getString(projectile["name"]);
 		info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(projectile["npk"]));
@@ -59,9 +59,16 @@ void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 		info.ThicknessBoxHeight = projectile["thickness_box_height"].asFloat();
 		info.ThicknessBoxRelativeY = projectile["thickness_relative_y"].asFloat();
 
+		for (ArrayIndex j = 0; j < animationListRoot.size(); ++j) {
+			Value& animationRoot = animationListRoot[j];
+			SGAnimationInfo animationInfo(animationRoot["frames"].size());
+			SGJson::parseAnimationInfo(animationRoot, animationInfo);
+			info.Animations.PushBack(Move(animationInfo));
+		}
+
 		DebugAssertMessage(!projectileInfoMap.Exist(info.Code), "projectile에 해당 코드값이 이미 존재합니다.");
 		projectileInfoMap.Insert(info.Code, info);
 	}
 
-	Log("SGProjectileInfoLoader :: 로딩완료");
+	Log("SGProjectileInfoLoader :: 로딩완료\n");
 }

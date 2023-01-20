@@ -20,7 +20,9 @@
 
 
 SEnumBegin(CharacterType)
-Gunner,
+Begin,
+Gunner = 0,
+End = Gunner,
 Max
 SEnumEnd(CharacterType)
 
@@ -59,7 +61,7 @@ Coat,
 Cap,
 Belt,
 Weapon,
-End = Weapon,
+VisualMax = Weapon,
 Max
 SEnumEnd(AvatarType)
 
@@ -278,8 +280,8 @@ SEnumEnd(ActorType)
 
 
 SEnumBegin(WeaponType)
-None,
-Auto,
+Begin,
+Auto = Begin,
 Revolver,
 Bowgun,
 Musket,
@@ -288,7 +290,6 @@ Max
 SEnumMiddle(WeaponType)
 
 static constexpr const char* Name[] {
-	"none",
 	"auto",
 	"rev",
 	"bowgun",

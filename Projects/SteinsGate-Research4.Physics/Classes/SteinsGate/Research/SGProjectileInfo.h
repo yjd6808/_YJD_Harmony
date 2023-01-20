@@ -12,6 +12,8 @@
 
 struct SGProjectileInfo
 {
+	SGProjectileInfo(int animationSize) : Animations(animationSize) {}
+
 	int Code;
 	SGString Name;
 	int NpkIndex;

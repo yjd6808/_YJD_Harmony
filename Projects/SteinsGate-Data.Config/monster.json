@@ -4,115 +4,169 @@
     "__comment__1": "몬스터 관련 데이터",
     "__comment__2": "영문 이름 적은 이유는 전처리 파일 생성시 사용할 수 있을 것 같아서 넣음",
     "__comment__3": "파츠는 5개 이하로만 할 것 클라에 고정크기로 박음",
-    
-    "monsters": {
-        "goblin": {
-            "group_code": 1,
-            "skin_npk": "sprite_monster_goblin.NPK",
-            "parts_npk": [
-                "sprite_monster_goblin_equipment.NPK"
-            ],
-            "types": [
+    "monsters": [
+        {
+            "code": 1,
+            "eng_name": "normal_goblin",
+            "kor_name": "일반 고블린",
+            "hp": 100,
+            "mp": 0,
+            "physical_damage": 10,
+            "magical_damage": 0,
+            "armor": 0,
+            "magic_armor": 0,
+            "enhance_per_level": 110.0,
+            "weight": 200,
+            "parts": [
                 {
-                    "code": 1,
-                    "eng_name": "normal_goblin",
-                    "kor_name": "일반 고블린",
-                    "hp": 100,
-                    "mp": 0,
-                    "physics_attack_damage": 10,
-                    "magic_attack_damage": 0,
-                    "armor": 0,
-                    "magic_armor": 0,
-                    "enhance_per_level": 110.0,
-                    "weight": 200,
-                    "skin": "body0.img",
-                    "parts": [
-                        {
-                            "equipment": "weapon1.img"
-                        },
-                        {
-                            "equipment": "gcc-1-2.img"
-                        }
-                    ]
+                    "npk": "sprite_monster_goblin.NPK",
+                    "img": "body0.img",
+                    "z_order": 0
                 },
-    
                 {
-                    "code": 2,
-                    "eng_name": "dark_goblin",
-                    "kor_name": "깜장 고블린",
-                    "attack_damage": 12,
-                    "hp": 120,
-                    "mp": 0,
-                    "physics_attack_damage": 10,
-                    "magic_attack_damage": 0,
-                    "armor": 3,
-                    "magic_armor": 0,
-                    "enhance_per_level": 110.0,
-                    "weight": 200,
-                    "skin": "body1.img",
-                    "parts": [
-                        {
-                            "equipment": "weapon1-2.img"
-                        },
-                        {
-                            "equipment": "acc2.img"
-                        }
-                    ]
+                    "npk": "sprite_monster_goblin_equipment.NPK",
+                    "img": "weapon1.img",
+                    "z_order": 1
+                },
+                {
+                    "npk": "sprite_monster_goblin_equipment.NPK",
+                    "img": "gcc1-2.img",
+                    "z_order": 2
                 }
             ],
-            
             "animation": [
                 {
-                    "idle": {
-                        "loop": true,
-                        "frames": [
-                            "0 500"
-                        ]
-                    },
+                    "name": "idle",
+                    "loop": true,
+                    "frames": [
+                        "0 5000"
+                    ]
+                },
+                {
+                    "name": "attack",
+                    "loop": false,
+                    "frames": [
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "3 100 2 1",
+                        "4 100"
+                    ]
+                },
+                {
+                    "__comment__4": "맞은 후 정지상태 될떄까지 기다려야함",
+                    "name": "hit",
+                    "loop": false,
+                    "frames": [
+                        "5 0"
+                    ]
+                },
+                {
+                    "name": "die",
+                    "loop": false,
+                    "frames": [
+                        "5 100",
+                        "6 100",
+                        "7 0",
+                        "8 200",
+                        "9 200"
+                    ]
+                },
+                {
+                    "name": "walk",
+                    "loop": true,
+                    "frames": [
+                        "11 200",
+                        "12 200",
+                        "13 200",
+                        "14 200",
+                        "15 200",
+                        "16 200"
+                    ]
+                }
+            ]
+        },
 
-                    "attack": {
-                        "loop": false,
-                        "frames": [
-                            "0 100",
-                            "1 100",
-                            "2 100",
-                            "3 100 2 1",
-                            "4 100"
-                        ]
-                    },
 
-                    "__comment__1": "맞은 후 정지상태 될떄까지 기다려야함",
-                    "hit": [
-                        "5 -1"
-                    ],
-
-                    "__comment__2": "바닥에 있는지 체크해줘야함",
-
-                    "die": {
-                        "loop": false,
-                        "frames": [
-                            "5 100",
-                            "6 100",
-                            "7 0",
-                            "8 200",
-                            "9 200"
-                        ]
-                    },
-
-
-                    "walk": {
-                        "loop": true,
-                        "frames": [
-                            "11 200",
-                            "12 200",
-                            "13 200",
-                            "14 200",
-                            "15 200",
-                            "16 200"
-                        ]
-                    }
+        {
+            "code": 2,
+            "eng_name": "dark_goblin",
+            "kor_name": "깜장 고블린",
+            "hp": 120,
+            "mp": 0,
+            "physical_damage": 12,
+            "magical_damage": 0,
+            "armor": 3,
+            "magic_armor": 0,
+            "enhance_per_level": 110.0,
+            "weight": 200,
+            "parts": [
+                {
+                    "npk": "sprite_monster_goblin.NPK",
+                    "img": "body1.img",
+                    "z_order": 0
+                },
+                {
+                    "npk": "sprite_monster_goblin_equipment.NPK",
+                    "img": "weapon1-2.img",
+                    "z_order": 1
+                },
+                {
+                    "npk": "sprite_monster_goblin_equipment.NPK",
+                    "img": "acc2.img",
+                    "z_order": 2
+                }
+            ],
+            "animation": [
+                {
+                    "name": "idle",
+                    "loop": true,
+                    "frames": [
+                        "0 5000"
+                    ]
+                },
+                {
+                    "name": "attack",
+                    "loop": false,
+                    "frames": [
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "3 100 2 1",
+                        "4 100"
+                    ]
+                },
+                {
+                    "name": "hit",
+                    "loop": false,
+                    "frames": [
+                        "5 0"
+                    ]
+                },
+                {
+                    "name": "die",
+                    "loop": false,
+                    "frames": [
+                        "5 100",
+                        "6 100",
+                        "7 0",
+                        "8 200",
+                        "9 200"
+                    ]
+                },
+                {
+                    "name": "walk",
+                    "loop": true,
+                    "frames": [
+                        "11 200",
+                        "12 200",
+                        "13 200",
+                        "14 200",
+                        "15 200",
+                        "16 200"
+                    ]
                 }
             ]
         }
-    }
+    ]
 }

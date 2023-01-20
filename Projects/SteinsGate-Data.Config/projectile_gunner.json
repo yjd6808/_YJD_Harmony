@@ -33,12 +33,11 @@
             "thickness_relative_y": -1,
             "animation": [
                 {
-                    "fire": {
-                        "loop": true,
-                        "frames": [
-                            "0 9999"
-                        ]
-                    }
+                    "name": "fire",
+                    "loop": true,
+                    "frames": [
+                        "0 9999"
+                    ]
                 }
             ]
         },
@@ -67,12 +66,11 @@
             "thickness_relative_y": -1,
             "animation": [
                 {
-                    "fire": {
-                        "loop": true,
-                        "frames": [
-                            "0 9999"
-                        ]
-                    }
+                    "name": "fire",
+                    "loop": true,
+                    "frames": [
+                        "0 9999"
+                    ]
                 }
             ]
         },
@@ -101,12 +99,11 @@
             "thickness_relative_y": -1,
             "animation": [
                 {
-                    "fire": {
-                        "loop": true,
-                        "frames": [
-                            "0 9999"
-                        ]
-                    }
+                    "name": "fire",
+                    "loop": true,
+                    "frames": [
+                        "0 9999"
+                    ]
                 }
             ]
         },
@@ -135,20 +132,14 @@
             "thickness_relative_y": -1,
             "animation": [
                 {
-                    "fire": {
-                        "loop": true,
-                        "frames": [
-                            "0 9999"
-                        ]
-                    }
+                    "name": "fire",
+                    "loop": true,
+                    "frames": [
+                        "0 9999"
+                    ]
                 }
             ]
         }
     ]
-
-
-
-
-
 
 }

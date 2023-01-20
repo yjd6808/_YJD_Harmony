@@ -14,15 +14,17 @@ struct SGFrameInfo
 {
 	int FrameIndex;
 	float Delay;
-	int Event;
-	int EventId;
+	int FrameEvent;
+	int FrameEventId;
 };
 
 struct SGAnimationInfo
 {
-	int PackIndex;
-	int ImgIndex;
+	SGAnimationInfo() {}
+	SGAnimationInfo(int frameSize) : Frames(frameSize) {}
 
+	bool Loop;
 	SGString Name;
+
 	SGVector<SGFrameInfo> Frames;
 };

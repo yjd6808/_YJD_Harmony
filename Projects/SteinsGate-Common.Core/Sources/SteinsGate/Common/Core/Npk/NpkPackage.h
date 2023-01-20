@@ -39,6 +39,7 @@ public:
 	void LoadElementIndexOnly(const int index) { LoadElement(index, true); }
 	bool IsElementLoaded(const int index);
 	int GetElementIndex(const JCore::String& elementName);
+	bool HasElementIndex(const JCore::String& elementName);
 
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
 	NpkElement& operator[](const int idx)	{ return m_ElementMap[idx].GetRef(); }

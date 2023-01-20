@@ -25,8 +25,10 @@ public:
 	int count() { return m_Package->Count(); }
 	FrameTexture* createFrameTexture(int imgIndex, int frameIndex);
 	void releaseFrameTexture(int imgIndex, int frameIndex);
-	SGString getPath() { return m_Package->GetPath(); }
-	int getIndex(const SGString& name) { return m_Package->GetElementIndex(name); }
+	const SGString& getPath() { return m_Package->GetPath(); }
+	SGString getFileName();
+	int getIndex(const SGString& imgName) { return m_Package->GetElementIndex(imgName); }
+	bool hasIndex(const SGString& imgName);
 private:
 	NpkPackagePtr m_Package;
 	SGHashMap<Int64, FrameTexture*> m_TextureCacheMap;

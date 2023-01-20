@@ -25,7 +25,7 @@
         "sliding_force": 1000.0,
         "thickness_box_width": 80,
         "thickness_box_height": 20,
-        "thickness_relative_y": -130,
+        "thickness_box_relative_y": -130,
 
 
         "avatar_z_order": {
@@ -42,16 +42,16 @@
         },
 
         "default_avatar_img": {
-            "skin" : "gn_body0000",
-            "shoes" : "gn_shoes0000a", 
-            "pants" : "gn_pants0000a", 
-            "neck" : "gn_neck0000d", 
-            "hair" : "gn_hair0000a",
-            "face" : "gn_face0000b",
-            "coat" : "gn_coat0000a",
-            "cap" : "gn_cap0000a",
-            "belt" : "-1",
-            "weapon" : "auto0000c"
+            "skin" : "gn_body0000.img",
+            "shoes" : "gn_shoes0000a.img", 
+            "pants" : "gn_pants0000a.img", 
+            "neck" : "gn_neck0000d.img", 
+            "hair" : "gn_hair0000a.img",
+            "face" : "gn_face0000b.img",
+            "coat" : "gn_coat0000a.img",
+            "cap" : "gn_cap0000a.img",
+            "belt" : "",
+            "weapon" : "auto0000c.img"
         }
 
     },
@@ -251,3 +251,4 @@
         2121276324
     ]
 }
+

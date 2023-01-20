@@ -31,5 +31,6 @@ struct SGCharacterBaseInfo
 	float ThicknessBoxHeight;
 	float ThicknessBoxRelativeY;
 	int AvatarZOrder[AvatarType::Max];
-	SGString DefaultAvatarImg[AvatarType::Max];
+	int DefaultAvatarImgIndex[AvatarType::Max];
+	WeaponType_t DefaultWeaponType;
 };

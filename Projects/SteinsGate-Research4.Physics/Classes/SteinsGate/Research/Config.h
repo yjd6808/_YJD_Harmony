@@ -41,4 +41,7 @@ inline const char* ConfigDirectory_v = "D:/Programming/MyProjects/_DevCpp/Ultima
 inline constexpr int MaxNpkFileCount_v = 200;
 inline constexpr int MaxNpkParallelLoadingThreadCount_v = 8;
 inline constexpr int MaxMonsterPartsCount_v = 5;
+
+
 inline constexpr int ComboSequenceCount_v = 5;
+inline constexpr int MaxCommandCount_v = 3;	

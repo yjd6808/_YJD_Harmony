@@ -11,18 +11,31 @@
 #include <SteinsGate/Research/SGAnimationInfo.h>
 #include <SteinsGate/Research/Config.h>
 
+struct SGMonsterPartInfo
+{
+	int PackIndex;
+	int ImgIndex;
+	int ZOrder;
+};
+
 struct SGMonsterInfo
 {
+	SGMonsterInfo(int animationSize) : Animations(animationSize) {}
+
 	int Code;
+	SGString Name;
 	int PackIndex;
 	int SkinImgIndex;
 	int PartsIndex[MaxMonsterPartsCount_v];
 	int HP;
 	int MP;
-	int PhysicalAttackDamage;
+	int PhysicalDamage;
+	int MagicalDamage;
 	int Armor;
 	int MagicArmor;
 	float EnhancePerLevel;
 	float Weight;
+	int PartsCount;
+	SGMonsterPartInfo Parts[MaxMonsterPartsCount_v];
 	SGVector<SGAnimationInfo> Animations;
 };

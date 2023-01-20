@@ -45,7 +45,7 @@ void SGImagePackManager::loadAllPackages() {
 		loaderThread[i].Start([i, this, &paths](void*) {
 			for (int j = i; j < m_iLoadedPackageCount; j += MaxNpkParallelLoadingThreadCount_v) {
 				SGString szFileName =  Path::FileName(paths[j]);
-				NpkPackagePtr package = NpkLoader::LoadHeaderOnly(
+				NpkPackagePtr package = NpkLoader::LoadIndexOnly(
 					Path::Combine(DataDirectory_v, szFileName)
 				);
 				m_LoadedPackages[j] = new SGImagePack(package);
@@ -75,3 +75,4 @@ int SGImagePackManager::getPackIndex(const SGString& packPath) {
 	DebugAssertMessage(m_PathToIdMap.Exist(packPath), "해당 패키지가 존재하지 않습니다. (2)");
 	return m_PathToIdMap[packPath];
 }
+

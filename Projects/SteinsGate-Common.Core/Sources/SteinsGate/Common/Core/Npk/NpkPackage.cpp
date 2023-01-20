@@ -45,6 +45,12 @@ bool NpkPackage::IsElementLoaded(const int index) {
 }
 
 int NpkPackage::GetElementIndex(const JCore::String& elementName) {
-	DebugAssertMessage(m_ElementNameToIndex.Exist(elementName), "해당 엘리먼트 이름에 해당하는 인덱스가 없습니다.");
+	bool bExist = m_ElementNameToIndex.Exist(elementName);
+	DebugAssertMessage(bExist, "해당 엘리먼트 이름에 해당하는 인덱스가 없습니다.");
 	return m_ElementNameToIndex[elementName];
+}
+
+bool NpkPackage::HasElementIndex(const JCore::String& elementName) {
+	bool bExist = m_ElementNameToIndex.Exist(elementName);
+	return bExist;
 }
