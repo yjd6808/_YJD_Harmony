@@ -15,7 +15,8 @@ namespace JCore {
 	inline MemoryPool<eSingle, eBinarySearch> ArrayAllocatorPool_v
 	{
 		{
-			{ 4, 0 },
+			{ 4, 1 },
+			/* 테스트 완료, 봉인
 			{ 8, 0 },
 			{ 16, 64 },
 			{ 32, 128 },
@@ -29,6 +30,7 @@ namespace JCore {
 			{ 8192, 16 },
 			{ 8192 * 2, 8 },
 			{ 8192 * 4, 8 }
+			*/
 		}
 	};
 

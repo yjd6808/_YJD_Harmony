@@ -42,7 +42,7 @@ inline auto JCoreInitializer = [] {
 
 	// 글로벌 메모리릭 체크
 	static JCore::AutoMemoryLeakDetector _2{ [](Int32U uiLeaked) {
-		JCore::NormalConsole::WriteLine("메모리릭 %u바이트", uiLeaked);
+		JCore::NormalConsole::WriteLine("[메모리릭 %u바이트]", uiLeaked);
 	}};
 	return 0;
 }();

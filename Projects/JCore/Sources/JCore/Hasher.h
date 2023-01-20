@@ -31,6 +31,7 @@ struct Hasher
 };
 
 
+
 // float, double은 꼼수로...
 template <>
 struct Hasher<float>

@@ -22,9 +22,9 @@
 
 using namespace JCore;
 
-Vector<NpkLoader::NpkElementHeader> NpkLoader::ReadPackageIndex(Stream& stream, int elementCount) {
+Vector<NpkElement::Header> NpkLoader::ReadPackageIndex(Stream& stream, int elementCount) {
 	
-	Vector<NpkElementHeader> vHeaders{ elementCount, {} };
+	Vector<NpkElement::Header> vHeaders{ elementCount };
 
 	for (int i = 0; i < elementCount; ++i) {
 		int Offset = stream.ReadInt32();
@@ -32,22 +32,35 @@ Vector<NpkLoader::NpkElementHeader> NpkLoader::ReadPackageIndex(Stream& stream, 
 		String Path = ReadElementPath(stream);
 		String Name = Path::FileName(Path);
 
+		vHeaders.PushBack({
+			Offset,
+			0,
+			i,
+			Length,
+			Name
+		});
+
+
+		/*
+		이거 안됨 수정필요함. 일단 스킵한다.
+		Vector<NpkElement::Header> vHeaders{ elementCount, {} };
 		vHeaders[i] = {
 			NpkElement::Header
 			{
 				Offset,
+				0,
+				i,
 				Length,
-				Path,
 				Name
 			},
-			0
 		};
+		*/
 	}
 
 	// item1: NpkElement::Header
 	// item2: int
 	for (int i = 0; i < elementCount; ++i) {
-		vHeaders[i].item2 = i < elementCount - 1 ? vHeaders[i + 1].item1.Offset : stream.GetLength();
+		vHeaders[i].NextOffset = i < elementCount - 1 ? vHeaders[i + 1].Offset : stream.GetLength();
 	}
 
 	return vHeaders;
@@ -118,7 +131,7 @@ NpkElementPtr NpkLoader::ReadElement(Stream& stream, NpkElement::Header& header,
 	return nullptr;
 }
 
-NpkPackagePtr NpkLoader::Load(const JCore::String& npkPath, int indexOnly) {
+NpkPackagePtr NpkLoader::Load(const JCore::String& npkPath, int indexOnly, bool headerOnly) {
 	StreamPtr spStream = MakeShared<FileStream>(npkPath, FileAccess::eRead, FileMode::eOpen);
 	String szFlag = spStream->ReadString();
 
@@ -135,23 +148,37 @@ NpkPackagePtr NpkLoader::Load(const JCore::String& npkPath, int indexOnly) {
 	auto vHeaders = ReadPackageIndex(spStream.GetRef(), iElementCount);
 
 	for (int i = 0; i < vHeaders.Size(); ++i) {
-		NpkElementHeader& header = vHeaders[i];
-		NpkElementPtr spElement = ReadElement(spStream.GetRef(), header.item1, header.item2, indexOnly);
-		DebugAssertMessage(spElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
-		spElement->m_spParent = spPackage;
-		spPackage->Add(spElement);
+		spPackage->m_ElementNameToIndex.Insert(vHeaders[i].Name, vHeaders[i].IndexInPackage);
 	}
 
-	spPackage->m_bLoaded = true;
+	if (headerOnly) {
+		spPackage->m_ElementHeaders = Move(vHeaders);
+		return spPackage;
+	}
+
+
+	for (int i = 0; i < vHeaders.Size(); ++i) {
+		NpkElement::Header& header = vHeaders[i];
+		NpkElementPtr spElement = ReadElement(spStream.GetRef(), header, header.NextOffset, indexOnly);
+		DebugAssertMessage(spElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
+		spElement->m_spParent = spPackage;
+		spPackage->Add(header.IndexInPackage, spElement);
+	}
+
+	spPackage->m_ElementHeaders = Move(vHeaders);
 	return spPackage;
 }
 
 NpkPackagePtr NpkLoader::LoadPerfectly(const String& npkPath) {
-	return Load(npkPath, false);
+	return Load(npkPath, false, false);
 }
 
 NpkPackagePtr NpkLoader::LoadIndexOnly(const String& npkPath) {
-	return Load(npkPath, true);
+	return Load(npkPath, true, false);
+}
+
+NpkPackagePtr NpkLoader::LoadHeaderOnly(const JCore::String& npkPath) {
+	return Load(npkPath, true, true);
 }
 
 JCore::Vector<JCore::String> NpkLoader::LoadAllImagePackPaths() {

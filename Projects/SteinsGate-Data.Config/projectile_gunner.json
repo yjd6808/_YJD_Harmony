@@ -1,0 +1,154 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "spawner_type: 캐릭(1), 몬스터(2), 장애물(3), 투사체(4)",
+    "__comment__2": "spawner_type_code 캐릭터는 캐릭터 코드, 몬스터는 몬스터 코드...",
+    "__comment__3": "hit effect는 맞는 방향 중요 왼쪽에서 오른쪽, 오른쪽에서 왼쪽인지에따라",
+    "__comment__4": "공격 데미지기반은 물리 공격(1), 마법 공격(2), 고정 데미지(3) 1,2번은 데미지 비율 필요 attack_damage_ratio",
+    "__comment__5": "penetration_rate: 관통 확률 100분위, rehit_delay: 관통시 연속히트 방지용 같은 몬스터에게 다시 타격 주기까기 걸리는 시간 0은 다시 안때리도록 함",
+    "__comment__6": "두께박스의 -1은 텍스쳐 크기에 의존하겠다는 의미, 두께 relative y좌표 -1은 상대 ",
+
+    "projectile": [
+        {
+            "code": 1,
+            "name": "거너 오른쪽 공격 - 오토건",
+            "npk": "sprite_character_gunner_effect_bullet.NPK",
+            "img": "pistol.img",
+            "spawn_offset_x": 372.0,
+            "spawn_offset_y": 238.0,
+            "spawn_effect_code": 1,
+            "hit_effect_code": 2,
+            "rotation": 0.0,
+            "attack_damage_type": 1,
+            "attack_damage_ratio": 100.0,
+            "attack_x_force": 100.0,
+            "attack_y_force": 10.0,
+            "apply_physics": false,
+            "weight": 0,
+            "distance": 400.0,
+            "move_speed": 400.0,
+            "penetration_rate": 10.0,
+            "rehit_delay": 0.0,
+            "thickness_box_width": -1,
+            "thickness_box_height": 30,
+            "thickness_relative_y": -1,
+            "animation": [
+                {
+                    "fire": {
+                        "loop": true,
+                        "frames": [
+                            "0 9999"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "code": 2,
+            "name": "거너 왼쪽 공격 - 오토건",
+            "npk": "sprite_character_gunner_effect_bullet.NPK",
+            "img": "pistol.img",
+            "spawn_offset_x": 386.0,
+            "spawn_offset_y": 260.0,
+            "spawn_effect_code": 1,
+            "hit_effect_code": 2,
+            "rotation": 0.0,
+            "attack_damage_type": 1,
+            "attack_damage_ratio": 200.0,
+            "attack_x_force": 150.0,
+            "attack_y_force": 50.0,
+            "apply_physics": false,
+            "weight": 0,
+            "distance": 400.0,
+            "move_speed": 400.0,
+            "penetration_rate": 15.0,
+            "rehit_delay": 0.0,
+            "thickness_box_width": -1,
+            "thickness_box_height": 30,
+            "thickness_relative_y": -1,
+            "animation": [
+                {
+                    "fire": {
+                        "loop": true,
+                        "frames": [
+                            "0 9999"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "code": 3,
+            "name": "거너 오른쪽 아래 공격 - 오토건",
+            "npk": "sprite_character_gunner_effect_bullet.NPK",
+            "img": "pistol.img",
+            "spawn_offset_x": 346.0,
+            "spawn_offset_y": 196.0,
+            "spawn_effect_code": 1,
+            "hit_effect_code": 2,
+            "rotation": 30.0,
+            "attack_damage_type": 1,
+            "attack_damage_ratio": 100.0,
+            "attack_x_force": 100.0,
+            "attack_y_force": 10.0,
+            "apply_physics": false,
+            "weight": 0,
+            "distance": 400.0,
+            "move_speed": 400.0,
+            "penetration_rate": 10.0,
+            "rehit_delay": 0.0,
+            "thickness_box_width": -1,
+            "thickness_box_height": 30,
+            "thickness_relative_y": -1,
+            "animation": [
+                {
+                    "fire": {
+                        "loop": true,
+                        "frames": [
+                            "0 9999"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "code": 4,
+            "name": "거너 왼쪽 아래 공격 - 오토건",
+            "npk": "sprite_character_gunner_effect_bullet.NPK",
+            "img": "pistol.img",
+            "spawn_offset_x": 384.0,
+            "spawn_offset_y": 191.0,
+            "spawn_effect_code": 1,
+            "hit_effect_code": 2,
+            "rotation": 30.0,
+            "attack_damage_type": 1,
+            "attack_damage_ratio": 200.0,
+            "attack_x_force": 150.0,
+            "attack_y_force": 50.0,
+            "apply_physics": false,
+            "weight": 0,
+            "distance": 400.0,
+            "move_speed": 400.0,
+            "penetration_rate": 15.0,
+            "rehit_delay": 0.0,
+            "thickness_box_width": -1,
+            "thickness_box_height": 30,
+            "thickness_relative_y": -1,
+            "animation": [
+                {
+                    "fire": {
+                        "loop": true,
+                        "frames": [
+                            "0 9999"
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+
+
+
+
+
+
+}

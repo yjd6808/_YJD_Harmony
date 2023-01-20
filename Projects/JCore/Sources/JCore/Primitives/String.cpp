@@ -79,6 +79,15 @@ String::~String() {
 
 /* ========================================================== */
 
+void String::ExchangeSource(char* src, int len) {
+	DeleteArraySafe(m_pBuffer);
+	m_pBuffer = src;
+	m_iLen = len;
+	m_iCapacity = len + 1;
+}
+
+/* ========================================================== */
+
 void String::Append(const char ch) {
 	const int iDstLen = m_iLen + 1;
 	ResizeIfNeeded(iDstLen);

@@ -11,6 +11,12 @@ namespace JCore {
 
 	template class LockGuard<Semaphore>;
 
+	// 디폴트는 바이너리 세마포어로..
+	Semaphore::Semaphore():
+		m_iUsableCount(1),
+		m_iMaxCount(1) {
+	}
+
 	Semaphore::Semaphore(int maxCount, int initialUsableCount) :
 		m_iMaxCount(maxCount),
 		m_iUsableCount(initialUsableCount) {

@@ -14,37 +14,43 @@
 #include <JCore/Primitives/String.h>
 
 class NpkLoader;
-class NpkPackage
+class NpkPackage : public JCore::MakeSharedFromThis<NpkPackage>
 {
-	using NpkPackageElementList = JCore::Vector<NpkElementPtr>;
 	using NpkPackagePtr = JCore::SharedPtr<NpkPackage>;
 public:
 	NpkPackage(const JCore::StreamPtr& readOnlyStream,  const JCore::String& path, int capacity)
 		: m_szPath(path)
 		, m_spStream(readOnlyStream)
-		, m_Elements(capacity + 16)
-		, m_bLoaded(false) {}
+		, m_ElementNameToIndex(capacity + 1)
+		, m_ElementMap(capacity + 1) {}
+	~NpkPackage();
 
 	static NpkPackagePtr Create(const JCore::StreamPtr& readOnlyStream, const JCore::String& path, int capacity);
 public:
 	const JCore::String& GetPath()			{ return m_szPath; }
-	void Add(const NpkElementPtr& element)	{ m_Elements.PushBack(element); }
-	void Remove(const NpkElementPtr& image);
-	NpkElementPtr GetAt(const int idx)		{ return m_Elements[idx]; }
-	NpkElement& GetAtRef(const int idx)		{ return m_Elements[idx].GetRef(); }
+	void Add(int idx, const NpkElementPtr& element);
 	JCore::StreamPtr Stream()				{ return m_spStream; }
 	JCore::Stream& StreamRef()				{ return m_spStream.GetRef(); }
-	int Count()								{ return m_Elements.Size(); }
-	bool Loaded()							{ return m_bLoaded; }
+	int Count()								{ return m_ElementMap.Size(); }
+
+	NpkElement& GetAtRef(const int index) { return m_ElementMap[index].GetRef(); }
+	void LoadElement(const int index, bool indexOnly);
+	void LoadElementPerfect(const int index) { LoadElement(index, false); }
+	void LoadElementIndexOnly(const int index) { LoadElement(index, true); }
+	bool IsElementLoaded(const int index);
+	int GetElementIndex(const JCore::String& elementName);
 
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
-	NpkElement& operator[](const int idx)	{ return m_Elements[idx].GetRef(); }
+	NpkElement& operator[](const int idx)	{ return m_ElementMap[idx].GetRef(); }
 protected:
 	JCore::String m_szPath;
 	JCore::StreamPtr m_spStream;
 
-	bool m_bLoaded;							// 인덱스만 로딩되었는지, 전체 로딩되었는지 구분치 않음 수행되었는지 여부만 판단가능하다.
-	NpkPackageElementList m_Elements;
+	JCore::HashMap<int, NpkElementPtr> m_ElementMap;
+
+	// Lazy Loading을 위함
+	JCore::Vector<NpkElement::Header> m_ElementHeaders;
+	JCore::HashMap<JCore::String, int>  m_ElementNameToIndex;
 
 	friend class NpkLoader;
 };

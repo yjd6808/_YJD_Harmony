@@ -1,7 +1,9 @@
 
 {
-    "__comment__0": "작성자: 윤정도",
+    "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "몬스터 관련 데이터",
+    "__comment__2": "영문 이름 적은 이유는 전처리 파일 생성시 사용할 수 있을 것 같아서 넣음",
+    "__comment__3": "파츠는 5개 이하로만 할 것 클라에 고정크기로 박음",
     
     "monsters": {
         "goblin": {
@@ -14,42 +16,103 @@
                 {
                     "code": 1,
                     "eng_name": "normal_goblin",
-                    "kor_name": "고블린",
+                    "kor_name": "일반 고블린",
+                    "hp": 100,
+                    "mp": 0,
+                    "physics_attack_damage": 10,
+                    "magic_attack_damage": 0,
                     "armor": 0,
                     "magic_armor": 0,
-                    "hp": 100,
-                    "hp_per_level": 11000,
-                    "mp": 0,
+                    "enhance_per_level": 110.0,
                     "weight": 200,
                     "skin": "body0.img",
                     "parts": [
                         {
-                            "weapon": "",
+                            "equipment": "weapon1.img"
+                        },
+                        {
+                            "equipment": "gcc-1-2.img"
                         }
                     ]
                 },
     
                 {
                     "code": 2,
-                    "name": "깜장 고블린",
+                    "eng_name": "dark_goblin",
+                    "kor_name": "깜장 고블린",
+                    "attack_damage": 12,
+                    "hp": 120,
+                    "mp": 0,
+                    "physics_attack_damage": 10,
+                    "magic_attack_damage": 0,
                     "armor": 3,
                     "magic_armor": 0,
-                    "hp": 120,
-                    "hp_per_level": 11000,
-                    "mp": 0,
-                    "weight": 200
+                    "enhance_per_level": 110.0,
+                    "weight": 200,
+                    "skin": "body1.img",
+                    "parts": [
+                        {
+                            "equipment": "weapon1-2.img"
+                        },
+                        {
+                            "equipment": "acc2.img"
+                        }
+                    ]
                 }
             ],
             
-            "animation": {
+            "animation": [
                 {
-                    "idle_breath": [
-                        "0 200",
-                        "1 200",
-                        "2 200",
-                    ]
+                    "idle": {
+                        "loop": true,
+                        "frames": [
+                            "0 500"
+                        ]
+                    },
+
+                    "attack": {
+                        "loop": false,
+                        "frames": [
+                            "0 100",
+                            "1 100",
+                            "2 100",
+                            "3 100 2 1",
+                            "4 100"
+                        ]
+                    },
+
+                    "__comment__1": "맞은 후 정지상태 될떄까지 기다려야함",
+                    "hit": [
+                        "5 -1"
+                    ],
+
+                    "__comment__2": "바닥에 있는지 체크해줘야함",
+
+                    "die": {
+                        "loop": false,
+                        "frames": [
+                            "5 100",
+                            "6 100",
+                            "7 0",
+                            "8 200",
+                            "9 200"
+                        ]
+                    },
+
+
+                    "walk": {
+                        "loop": true,
+                        "frames": [
+                            "11 200",
+                            "12 200",
+                            "13 200",
+                            "14 200",
+                            "15 200",
+                            "16 200"
+                        ]
+                    }
                 }
-            }
+            ]
         }
     }
 }

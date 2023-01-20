@@ -67,7 +67,7 @@ public:
 		return *this;
 	}
 
-	TVector& operator=(TVector&& other) {
+	TVector& operator=(TVector&& other) noexcept {
 		this->CopyFrom(Move(other));
 		return *this;
 	}

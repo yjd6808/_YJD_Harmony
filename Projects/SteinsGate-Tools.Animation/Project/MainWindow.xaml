@@ -29,20 +29,19 @@
                         BorderBrush="Black"></Border>
             </Grid>
 
-            <Grid Grid.Column="1">
+
+            <Grid Grid.Column="1" Name="MainCanvasHolder">
                 <Border BorderThickness="0, 0, 2, 0"
                         BorderBrush="Black"></Border>
-                <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                              VerticalScrollBarVisibility="Auto">
-                    <Canvas Name="MainCanvas" MouseMove="MainCanvas_OnMouseMove" MouseDown="MainCanvas_OnMouseDown">
-                        <Canvas.LayoutTransform>
-                            <ScaleTransform ScaleX="1"
-                                            ScaleY="-1" />
-                        </Canvas.LayoutTransform>
-                        <Image Source="image/1.png"></Image>
-                        <Image Source="image/1.png"
-                               Canvas.Left="619"
-                               Canvas.Top="475"></Image>
+                <ScrollViewer Name="MainCanvasScrollViewer"
+                              HorizontalScrollBarVisibility="Visible"
+                              VerticalScrollBarVisibility="Visible">
+                    <Canvas Name="MainCanvas"
+                            Width="1000"
+                            Height="2000"
+                            MouseMove="MainCanvas_OnMouseMove"
+                            MouseDown="MainCanvas_OnMouseDown">
+                       
                     </Canvas>
                 </ScrollViewer>
 

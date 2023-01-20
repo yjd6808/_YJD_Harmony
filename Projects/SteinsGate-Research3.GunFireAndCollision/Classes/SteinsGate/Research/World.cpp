@@ -11,6 +11,7 @@
 #include <SteinsGate/Research/Config.h>
 #include <SteinsGate/Common/Engine/GridLayer.h>
 
+#include <json.h>
 
 using namespace cocos2d;
 

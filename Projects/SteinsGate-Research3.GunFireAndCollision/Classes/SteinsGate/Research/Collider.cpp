@@ -145,11 +145,11 @@ void Collider::createProjectile(int projectileId) {
 	if (projectileId == 0)
 		offset = { 372, 238 };
 	else if (projectileId == 1)
-		offset = { 343, 237 };
+		offset = { 386, 260 };
 	else if (projectileId == 2) {
-		offset = { 335, 200 };
+		offset = { 346, 196 };
 	} else if (projectileId == 3) {
-		offset = { 374, 191 };
+		offset = { 384, 191 };
 	}
 
 	

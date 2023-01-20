@@ -22,6 +22,7 @@ using namespace JCore;
 void BassPlayer::PlayOnce() {
 	DebugAssertMessage(m_iHandle, "핸들이 설정되지 않았습니다.");
 
+
 	if (m_bPlaying)
 		Stop(m_iHandle);
 

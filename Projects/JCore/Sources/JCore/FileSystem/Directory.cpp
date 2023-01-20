@@ -44,14 +44,15 @@ namespace JCore {
 	Vector<String, DefaultAllocator> Directory::Files(const char* path, bool recursive) {
         Vector<String, DefaultAllocator> result;
 
-        if (recursive)
-        	for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(path))
+        if (recursive) {
+            for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(path))
                 if (!std::filesystem::is_directory(dirEntry))
-					result.PushBack(dirEntry.path().string().c_str());
-        else
+                    result.PushBack(dirEntry.path().string().c_str());
+        } else {
             for (const auto& dirEntry : std::filesystem::directory_iterator(path))
                 if (!std::filesystem::is_directory(dirEntry))
-					result.PushBack(dirEntry.path().string().c_str());
+                    result.PushBack(dirEntry.path().string().c_str());
+        }
 
 
         return result;

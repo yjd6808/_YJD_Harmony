@@ -24,9 +24,10 @@ public:
 
 	struct Header
 	{
-		int Offset; // Npk 파일내에서의 위치
+		int Offset;			// Npk 파일내에서의 위치
+		int NextOffset;
+		int IndexInPackage;
 		int Length;
-		JCore::String Path{ 0 };
 		JCore::String Name{ 0 };
 	};
 
@@ -41,13 +42,13 @@ public:
 	Type GetType() { return m_eType; }
 	int GetOffset() { return m_Header.Offset;  }
 	int GetLength() { return m_Header.Length;  }
-	JCore::String& GetPath() { return m_Header.Path; }
 	JCore::String& GetName() { return m_Header.Name; }
 	NpkPackage* GetParent();
 
 	Int32 GetVersion() { return m_iVersion; }
 	Int32 GetIndexOffset() { return m_iIndexOffset; }
 	Int32 GetIndexLength() { return m_iIndexLength; }
+	const Header& GetHeader() { return m_Header; }
 
 
 	bool FullyLoaded() { return IndexLoaded() && DataLoaded(); }
@@ -79,6 +80,7 @@ protected:
 
 	template <Int32>
 	friend class NpkElementInitializerImpl;
+	friend class NpkPackage;
 	friend class NpkLoader;
 };
 

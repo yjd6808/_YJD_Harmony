@@ -25,4 +25,12 @@
 #include <JCore/Container/LinkedList.h>
 
 
-using Console = JCore::SafeConsole;
+using SGConsole = JCore::SafeConsole;
+
+using SGString = JCore::String;
+
+template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
+using SGHashMap = JCore::HashMap<TKey, TValue, TAllocator>;
+
+template <typename T, typename TAllocator = JCore::DefaultAllocator>
+using SGVector = JCore::Vector<T, TAllocator>;

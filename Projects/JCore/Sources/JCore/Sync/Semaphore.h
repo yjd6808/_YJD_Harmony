@@ -15,6 +15,7 @@ namespace JCore {
 	class Semaphore final : public ILock
 	{
 	public:
+		Semaphore();
 		Semaphore(int maxCount, int initialUsableCount);
 
 		void Lock() override;

@@ -14,7 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-
 using Path = System.IO.Path;
 
 namespace SteinsGate_Tools.AnimationTool
@@ -26,18 +25,47 @@ namespace SteinsGate_Tools.AnimationTool
     {
         private static string _binaryDir = Environment.CurrentDirectory;
 
+        public void AddChildBitmapImage(BitmapImage bitmap, double x, double y)
+        {
+            Image image = new Image() { Source = bitmap };
+            MainCanvas.Children.Add(image);
+            Canvas.SetLeft(image, x);
+            Canvas.SetTop(image, MainCanvas.Height - bitmap.PixelHeight);
+        }
+
+        public void SetVerticalScrollToEnd()
+        {
+            MainCanvasScrollViewer.ScrollToVerticalOffset(20000);
+        }
+
+        // 높이 변경은 다시 보정해줘야함
+        public void ChangeCanvasHeight(double width, double height)
+        {
+            double changedHeight = height - MainCanvas.Height;
+
+            foreach (UIElement child in MainCanvas.Children)
+            {
+                double beforeTop = Canvas.GetTop(child);
+                Canvas.SetTop(child, beforeTop + height);
+            }
+        }
+
         public MainWindow()
         {
+            
             InitializeComponent();
+            SetVerticalScrollToEnd();
             const double interval = 1.0f / 60.0f * 1000;
-
+            
+            
             DispatcherTimer timer = new();    //객체생성
             timer.Interval = TimeSpan.FromMilliseconds(interval); 
             timer.Tick += TimerOnTick;
             timer.Start();
 
-            //Image image = new Image() { Source = new BitmapImage(new Uri(Path.Combine(_binaryDir, "image/1.png") )) };
-            //MainCanvas.Children.Add(image);
+            var bitmap = new BitmapImage(new Uri(Path.Combine(_binaryDir, "image/1.png")));
+
+            AddChildBitmapImage(bitmap, 0, 0);
         }
 
         private void TimerOnTick(object? sender, EventArgs e)
@@ -47,7 +75,6 @@ namespace SteinsGate_Tools.AnimationTool
 
         private void MainCanvas_OnMouseMove(object sender, MouseEventArgs e)
         {
-            throw new NotImplementedException();
         }
 
         private void MainCanvas_OnMouseDown(object sender, MouseButtonEventArgs e)

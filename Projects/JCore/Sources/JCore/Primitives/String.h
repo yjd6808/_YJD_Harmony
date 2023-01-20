@@ -40,6 +40,7 @@ public:
 	int Capacity() const { return m_iCapacity; }
 	int Length() const { return m_iLen; }
 	void SetLength(int len) { m_iLen = len; }
+	void ExchangeSource(char* src, int len);
 	bool Empty() const { return m_iLen == 0; }
     bool IsNull() const { return m_pBuffer == nullptr; }
 	bool IsValidIndex(const int idx) const { return idx >= 0 || idx < m_iLen; }
@@ -179,6 +180,8 @@ private:
 	
 	friend class StringUtil;
 };
+
+
 
 
 } // namespace JCore

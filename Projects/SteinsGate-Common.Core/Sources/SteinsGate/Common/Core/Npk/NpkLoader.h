@@ -20,8 +20,6 @@ namespace JCore {
 class NpkLoader
 {
 public:
-	using NpkElementHeader = JCore::Tuple<NpkElement::Header, int>;	// 헤더 정보(현재 옵셋 포함) 및 다음 옵셋
-
 	inline static const char* NpkFlag = "NeoplePack_Bill";
     inline static const char* ImgFlag = "Neople Img File";
 	inline static const char* SpriteFlag = "Neople Image File";
@@ -56,21 +54,27 @@ public:
 	};
 
 	static NpkPackagePtr
-	Load(const JCore::String& npkPath, int indexOnly);
+	Load(const JCore::String& npkPath, int indexOnly, bool headerOnly);
 
+	// 로딩 레벨 3: 전부 로딩
 	static NpkPackagePtr
 	LoadPerfectly(const JCore::String& npkPath);
 
+	// 로딩 레벨 2: 이미지 인덱스까지 로딩
 	static NpkPackagePtr
 	LoadIndexOnly(const JCore::String& npkPath);
+
+	// 로딩 레벨 1: 패키지 인덱스까지 로딩
+	static NpkPackagePtr
+	LoadHeaderOnly(const JCore::String& npkPath);
 	
 	static JCore::Vector<JCore::String>
 	LoadAllImagePackPaths();
 
 	static JCore::Vector<JCore::String>
 	LoadAllSoundPackPaths();
-private:
-	static JCore::Vector<NpkElementHeader>
+
+	static JCore::Vector<NpkElement::Header>
 	ReadPackageIndex(JCore::Stream& stream, int elementCount);	// 패키지 목차읽기
 
 	static JCore::String
