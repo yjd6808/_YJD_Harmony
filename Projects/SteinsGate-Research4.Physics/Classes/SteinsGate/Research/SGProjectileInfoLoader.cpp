@@ -39,7 +39,7 @@ void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 		info.Code = projectile["code"].asInt();
 		info.Name = SGJson::getString(projectile["name"]);
 		info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(projectile["npk"]));
-		info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getIndex(SGJson::getString(projectile["img"]));
+		info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(projectile["img"]));
 		info.SpawnOffsetX = projectile["spawn_offset_x"].asFloat();
 		info.SpawnOffsetY = projectile["spawn_offset_y"].asFloat();
 		info.SpawnEffectCode = projectile["spawn_effect_code"].asInt();

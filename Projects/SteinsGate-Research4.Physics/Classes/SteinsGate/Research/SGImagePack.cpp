@@ -16,8 +16,9 @@ USING_NS_CC;
 USING_NS_JC;
 
 
-SGImagePack::SGImagePack(const NpkPackagePtr& npkPackage)
-	: m_Package(npkPackage)
+SGImagePack::SGImagePack(const NpkPackagePtr& npkPackage, int packIndex)
+	: m_iIndex(packIndex)
+	, m_Package(npkPackage)
 	, m_TextureCacheMap(1'000) {
 }
 
@@ -25,13 +26,13 @@ SGImagePack::~SGImagePack() {
 	m_TextureCacheMap
 	.Values()
 	.Extension()
-	.ForEach([](FrameTexture* tex) {
+	.ForEach([](SGFrameTexture* tex) {
 		CC_SAFE_RELEASE(tex);
 	});
 }
 
 
-FrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
+SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 	Int64 iCacheIndex = (Int64U)imgIndex << 32 | frameIndex;
 
 	if (m_TextureCacheMap.Exist(iCacheIndex)) {
@@ -56,7 +57,7 @@ FrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 	NpkSpriteAbstract& sprite = img.GetAtRef(frameIndex);
 
 	if (sprite.IsLink()) {
-		LinkFrameTexture* pLinkTexture = new LinkFrameTexture(sprite.GetTargetFrameIndex());
+		SGLinkFrameTexture* pLinkTexture = new SGLinkFrameTexture(sprite.GetTargetFrameIndex());
 		pLinkTexture->autorelease();
 		pLinkTexture->retain();
 		m_TextureCacheMap.Insert(iCacheIndex, pLinkTexture);
@@ -80,7 +81,7 @@ FrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 		sprite.GetHeight(), { sprite.GetWidthF(), sprite.GetHeightF() }
 	);
 
-	auto pSpriteTexture = new SpriteFrameTexture(pTexture, sprite.GetRect(), sprite.GetFrameIndex(), sprite.IsDummy());
+	auto pSpriteTexture = new SGSpriteFrameTexture(pTexture, sprite.GetRect(), sprite.GetFrameIndex(), sprite.IsDummy());
 	pSpriteTexture->autorelease();
 	pSpriteTexture->retain();
 	m_TextureCacheMap.Insert(iCacheIndex, pSpriteTexture);
@@ -97,7 +98,7 @@ SGString SGImagePack::getFileName() {
 	return Path::FileName(getPath());
 }
 
-bool SGImagePack::hasIndex(const SGString& imgName) {
+bool SGImagePack::hasImgIndex(const SGString& imgName) {
 	return m_Package->HasElementIndex(imgName);
 }
 

@@ -14,12 +14,18 @@
 class SGCharacter : public SGActor
 {
 public:
-	SGCharacter(int code);
+	SGCharacter(int code, const SGCharacterInfo& info);
 
-	static SGCharacter* create(int code);
+	static SGCharacter* create(int code, const SGCharacterInfo& info);
+
+	void initActorSprite() override;
+
+private:
+
 
 private:
 	SGCharacterBaseInfo* m_pBaseInfo;
+	SGCharacterInfo m_CharacterInfo;
 };
 
 

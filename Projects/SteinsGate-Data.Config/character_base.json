@@ -28,7 +28,7 @@
         "thickness_box_relative_y": -130,
 
 
-        "avatar_z_order": {
+        "visual_z_order": {
             "skin" : 0,
             "shoes" : 1,
             "pants" : 2,
@@ -41,7 +41,7 @@
             "weapon" : 7
         },
 
-        "default_avatar_img": {
+        "default_visual_img": {
             "skin" : "gn_body0000.img",
             "shoes" : "gn_shoes0000a.img", 
             "pants" : "gn_pants0000a.img", 

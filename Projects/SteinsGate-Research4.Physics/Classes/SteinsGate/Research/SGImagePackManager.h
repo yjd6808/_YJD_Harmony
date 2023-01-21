@@ -23,18 +23,26 @@ public:
 		return loader;
 	}
 
+	SGImagePackManager();
 	~SGImagePackManager();
 
 	void loadAllPackages();
 
 	SGImagePack* getPack(const SGString& packPath);
 	SGImagePack* getPack(const int idx);
+	SGImagePack* getAvatarPack(CharacterType_t characterType, AvatarType_t avatarType);
+	SGImagePack* getWeaponPack(CharacterType_t characterType, WeaponType_t weaponType);
+	int getAvatarPackIndex(CharacterType_t characterType, AvatarType_t avatarType);
+	int getWeaponPackIndex(CharacterType_t characterType, WeaponType_t weaponType);
 	int getPackIndex(const SGString& packPath);
+
 private:
 
-	// 주기적으로 텍스쳐풀 정리해주는 기능 필요
 	SGHashMap<SGString, int> m_PathToIdMap;
+	
 	SGImagePack* m_LoadedPackages[MaxNpkFileCount_v]{};
+	SGImagePack* m_AvatarPacks[CharacterType::Max][AvatarType::Max]{};
+	SGImagePack* m_WeaponPacks[CharacterType::Max][WeaponType::Max]{};
 	int m_iLoadedPackageCount{};
 };
 

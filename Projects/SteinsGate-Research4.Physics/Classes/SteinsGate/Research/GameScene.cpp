@@ -22,7 +22,11 @@ void GameScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::E
 
 bool GameScene::init()
 {
+    if (!Scene::init())
+        return false;
+    
     m_pWorldLayer = WorldLayer::create();
+    m_pWorldLayer->setAnchorPoint(Vec2::ZERO);
     this->addChild(m_pWorldLayer);
 
 

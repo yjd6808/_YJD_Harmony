@@ -12,12 +12,13 @@
 class WorldLayer : public cocos2d::Layer
 {
 public:
-	bool init() override;
-	CREATE_FUNC(WorldLayer);
+	~WorldLayer() override;
 
-	void update(float delta) override;
+	bool init() override;
+	static WorldLayer* create();
+
+	void update(float dt) override;
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
-	cocos2d::Sprite* CreateSprite(int imgIndex, int frameIndex);
 public:
 	SGPlayer* m_pPlayer;
 };

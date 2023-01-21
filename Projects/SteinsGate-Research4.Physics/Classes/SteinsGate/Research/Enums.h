@@ -48,7 +48,6 @@ Up = Direction::Up,
 Down
 SEnumEnd(JumpDirection)
 
-
 SEnumBegin(AvatarType)
 Begin,
 Skin = Begin,
@@ -60,10 +59,26 @@ Face,
 Coat,
 Cap,
 Belt,
-Weapon,
-VisualMax = Weapon,
-Max
+Max,
+None
 SEnumEnd(AvatarType)
+
+
+SEnumBegin(VisualType)
+Begin,
+Skin = Begin,
+Shoes,
+Pants,
+Neck,
+Hair,
+Face,
+Coat,
+Cap,
+Belt,
+Weapon,
+Max,
+None
+SEnumEnd(VisualType)
 
 SEnumBegin(MotionState)
 

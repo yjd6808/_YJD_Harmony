@@ -70,7 +70,7 @@ namespace JCore {
 		}
 
 		// 현재 사용중인 블록이 있는지
-		bool HasUsingBlock() { return Arrays::FindIf(m_pBlockUsingCounter, [](const int& count) { return count > 0; }) != InvalidIndex_v; }
+		bool HasUsingBlock() { return Arrays::FindIf(m_pBlockUsingCounter, [](const int& count) { return count > 0; }) != Detail::InvalidIndex_v; }
 	protected:
 		Int64U m_uiInitAllocted{};		//	MemoryPool::Initialize()시 제일 처음 할당된 메모리양
 		Int64U m_uiNewAlloctaed{};		//	MemoryPool::Initialize()때 할당된 메모리외에! 추가로 새로 할당된 메모리양 (누적)

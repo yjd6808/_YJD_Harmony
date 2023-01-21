@@ -19,6 +19,10 @@ void SGConfigManager::LoadAllConfigs() {
 	SGActionInfoLoader::LoadActionInfo(m_ActionInfoMap);
 	SGMonsterInfoLoader::LoadMonsterInfo(m_MonsterInfoMap);
 	SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(m_CharacterBaseInfoMap);
+
+	m_ActionInfoMap.Values().Extension().ForEach([this](SGActionInfo& info) {
+		m_ActionInfoNameMap.Insert(info.ActionName, &info);
+	});
 }
 
 SGMonsterInfo* SGConfigManager::getMonsterInfo(int mobCode) {
@@ -27,8 +31,13 @@ SGMonsterInfo* SGConfigManager::getMonsterInfo(int mobCode) {
 }
 
 SGActionInfo* SGConfigManager::getActionInfo(int actionCode) {
-	DebugAssertMessage(m_ActionInfoMap.Exist(actionCode), "해당 액션 정보가 존재하지 않습니다.");
+	DebugAssertMessage(m_ActionInfoMap.Exist(actionCode), "해당 액션 정보(코드)가 존재하지 않습니다.");
 	return &m_ActionInfoMap[actionCode];
+}
+
+SGActionInfo* SGConfigManager::getActionInfo(const SGString& actionName) {
+	DebugAssertMessage(m_ActionInfoNameMap.Exist(actionName), "해당 액션 정보(이름)가 존재하지 않습니다.");
+	return m_ActionInfoNameMap[actionName];
 }
 
 SGProjectileInfo* SGConfigManager::getProjectileInfo(int projectileCode) {

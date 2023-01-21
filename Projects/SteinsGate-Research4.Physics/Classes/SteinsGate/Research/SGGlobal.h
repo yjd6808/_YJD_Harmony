@@ -28,12 +28,12 @@ public:
 	int convertAvatarPartNameToType(const SGString& str);
 
 	const SGString& getAvatarNpkName(int characterType, int visualAvatarType);
-	const SGString& getWeaponNpkName(int characterType, int visualAvatarType);
+	const SGString& getWeaponNpkName(int characterType, int weaponType);
 private:
 	void initialize();
 
 	SGHashMap<SGString, int> AvatarPartNameToTypeMap;
 	SGHashMap<int, SGString> AvatarPrefix[CharacterType::Max];
-	SGString m_AvatarPackName[CharacterType::Max][AvatarType::VisualMax];	// 무기 제외
+	SGString m_AvatarPackName[CharacterType::Max][AvatarType::Max];	
 	SGString m_WeaponPackName[CharacterType::Max][WeaponType::Max];
 };

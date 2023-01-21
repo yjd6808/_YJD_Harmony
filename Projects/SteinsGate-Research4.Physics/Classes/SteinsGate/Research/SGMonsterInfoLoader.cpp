@@ -71,7 +71,7 @@ void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 
 			partInfo.ZOrder = partRoot["z_order"].asInt();
 			partInfo.PackIndex = pPackManager->getPackIndex(npkName);
-			partInfo.ImgIndex = pImgPack->getIndex(imgName);
+			partInfo.ImgIndex = pImgPack->getImgIndex(imgName);
 
 
 			monsterInfo.Parts[j] = Move(partInfo);

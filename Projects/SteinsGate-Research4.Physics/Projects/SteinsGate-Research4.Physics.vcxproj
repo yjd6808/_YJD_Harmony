@@ -26,11 +26,20 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorPartAnimation.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorSprite.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacter.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorPartSprite.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGConfigManager.cpp">
       <SubType>
       </SubType>
@@ -88,10 +97,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartAnimation.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorSprite.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacter.h">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartSprite.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonster.h">
       <SubType>
       </SubType>
@@ -122,7 +140,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\Config.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\Enums.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\FrameTexture.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGFrameTexture.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfo.h">
       <SubType>
       </SubType>

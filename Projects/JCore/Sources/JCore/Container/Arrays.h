@@ -12,8 +12,10 @@
 #include <JCore/Exception.h>
 
 namespace JCore {
-
-	constexpr int InvalidIndex_v = -1;
+	namespace Detail {
+		constexpr int InvalidIndex_v = -1;
+	}
+	
 
 	struct Arrays final
 	{
@@ -85,7 +87,7 @@ namespace JCore {
 				}
 			}
 
-			return InvalidIndex_v;
+			return Detail::InvalidIndex_v;
 		}
 
 		/// <summary>
@@ -109,7 +111,7 @@ namespace JCore {
 				}
 			}
 
-			return InvalidIndex_v;
+			return Detail::InvalidIndex_v;
 		}
 
 
@@ -141,7 +143,7 @@ namespace JCore {
 				iEnd = iMid - 1;
 			}
 
-			return InvalidIndex_v;
+			return Detail::InvalidIndex_v;
 		}
 
 		/// <summary>
@@ -202,7 +204,7 @@ namespace JCore {
 				if (predicate(arr[i]))
 					return i;
 
-			return InvalidIndex_v;
+			return Detail::InvalidIndex_v;
 		}
 
 		template <typename T, Int32U Size, typename TPredicate>
@@ -214,6 +216,12 @@ namespace JCore {
 		static void Fill(T(&arr)[Size], T&& value) {
 			for (int i = 0; i < Size; ++i) arr[i] = Forward<T>(value);
 		}
+
+		template <typename T, Int32U Size>
+		static void Fill(T(&arr)[Size], const T& value) {
+			for (int i = 0; i < Size; ++i) arr[i] = value;
+		}
+
 
 		template <typename T>
 		static void Fill(T* arr, int size, T&& value) {

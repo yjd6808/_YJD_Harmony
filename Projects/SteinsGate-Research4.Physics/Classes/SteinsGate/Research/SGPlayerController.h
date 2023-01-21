@@ -9,6 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Research/Tutturu.h>
+#include <SteinsGate/Research/Enums.h>
 
 #include <JCore/Time.h>
 

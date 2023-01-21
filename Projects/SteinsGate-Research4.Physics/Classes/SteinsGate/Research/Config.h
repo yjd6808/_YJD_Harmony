@@ -45,3 +45,4 @@ inline constexpr int MaxMonsterPartsCount_v = 5;
 
 inline constexpr int ComboSequenceCount_v = 5;
 inline constexpr int MaxCommandCount_v = 3;	
+inline constexpr int InvalidIndex_v = -1;

@@ -9,12 +9,15 @@
 #pragma once
 
 #include <SteinsGate/Common/Core/Npk/NpkSpriteRect.h>
+
+
+#include <SteinsGate/Research/Config.h>
 #include <SteinsGate/Research/Tutturu.h>
 
-class FrameTexture : public cocos2d::Ref
+class SGFrameTexture : public cocos2d::Ref
 {
 public:
-	~FrameTexture() override { Log("텍스쳐 소멸"); }
+	~SGFrameTexture() override { Log("텍스쳐 소멸"); }
 
 	virtual int getWidth()		 = 0;
 	virtual int getHeight()		 = 0;
@@ -38,11 +41,11 @@ public:
 	virtual bool isDummy() = 0;
 };
 
-class SpriteFrameTexture : public FrameTexture
+class SGSpriteFrameTexture : public SGFrameTexture
 {
 public:
-	SpriteFrameTexture(cocos2d::Texture2D* texture, const NpkSpriteRect& rect, int frameIndex, bool dummy)
-		: FrameTexture()
+	SGSpriteFrameTexture(cocos2d::Texture2D* texture, const NpkSpriteRect& rect, int frameIndex, bool dummy)
+		: SGFrameTexture()
 		, m_Rect(rect)
 		, m_pTexture(texture)
 		, m_iFrameIndex(frameIndex)
@@ -77,11 +80,11 @@ protected:
 };
 
 
-class LinkFrameTexture : public FrameTexture
+class SGLinkFrameTexture : public SGFrameTexture
 {
 public:
-	LinkFrameTexture(int targetFrameIndex)
-		: FrameTexture()
+	SGLinkFrameTexture(int targetFrameIndex)
+		: SGFrameTexture()
 		, m_iTargetFrameIndex(targetFrameIndex) {}
 
 	int getWidth()		 override { return 1; }
@@ -98,7 +101,7 @@ public:
 	float getFrameWidthF()	 override { return 0; }
 	float getFrameHeightF()  override { return 1; }
 
-	int getFrameIndex()				 override { return -1; }
+	int getFrameIndex()				 override { return InvalidIndex_v; }
 	int getTargetFrameIndex()		 override { return m_iTargetFrameIndex; }
 	const NpkSpriteRect& getRect() 	 override { return {}; }
 	cocos2d::Texture2D* getTexture() override { return nullptr; }
@@ -110,4 +113,4 @@ protected:
 };
 
 
-using FrameTexturePtr = JCore::SharedPtr<FrameTexture>;
+using FrameTexturePtr = JCore::SharedPtr<SGFrameTexture>;

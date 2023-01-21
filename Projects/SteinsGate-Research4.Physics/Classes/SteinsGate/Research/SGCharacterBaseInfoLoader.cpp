@@ -33,9 +33,18 @@ void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 	Json::Value root;
 	reader >> root;
 	Json::Value gunnerRoot = root["gunner"];
+
+
+	
+
 	
 	{
 		SGCharacterBaseInfo& gunnerBaseInfo = characterInfoMap[CharacterType::Gunner];
+
+		for (int i = 0; i < VisualType::Max; ++i) {
+			gunnerBaseInfo.DefaultVisualImgIndex[i] = InvalidIndex_v;
+			gunnerBaseInfo.DefaultVisualNpkIndex[i] = InvalidIndex_v;
+		}
 
 		gunnerBaseInfo.HP = gunnerRoot["hp"].asInt();
 		gunnerBaseInfo.MP = gunnerRoot["mp"].asInt();
@@ -63,42 +72,43 @@ void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 		gunnerBaseInfo.ThicknessBoxRelativeY = gunnerRoot["thickness_box_relative_y"].asFloat();
 
 		{
-			Json::Value& zOrderRoot = gunnerRoot["avatar_z_order"];
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Skin] = zOrderRoot["skin"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Shoes] = zOrderRoot["shoes"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Pants] = zOrderRoot["pants"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Neck] = zOrderRoot["neck"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Hair] = zOrderRoot["hair"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Face] = zOrderRoot["face"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Coat] = zOrderRoot["coat"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Cap] = zOrderRoot["cap"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Belt] = zOrderRoot["belt"].asInt();
-			gunnerBaseInfo.AvatarZOrder[AvatarType::Weapon] = zOrderRoot["weapon"].asInt();
+			Json::Value& zOrderRoot = gunnerRoot["visual_z_order"];
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Skin] = zOrderRoot["skin"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Shoes] = zOrderRoot["shoes"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Pants] = zOrderRoot["pants"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Neck] = zOrderRoot["neck"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Hair] = zOrderRoot["hair"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Face] = zOrderRoot["face"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Coat] = zOrderRoot["coat"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Cap] = zOrderRoot["cap"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Belt] = zOrderRoot["belt"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Weapon] = zOrderRoot["weapon"].asInt();
 		}
 
 		{
-			Json::Value& defaultAvatarImgRoot = gunnerRoot["default_avatar_img"];
+			Json::Value& defaultAvatarImgRoot = gunnerRoot["default_visual_img"];
 
 			gunnerBaseInfo.DefaultWeaponType = WeaponType::Auto;
 
-			SGString defaultAvatarPartImgName[AvatarType::Max];
+			SGString defaultAvatarPartImgName[VisualType::Max];
 
-			defaultAvatarPartImgName[AvatarType::Skin] =   SGJson::getString(defaultAvatarImgRoot["skin"]);
-			defaultAvatarPartImgName[AvatarType::Shoes] =  SGJson::getString(defaultAvatarImgRoot["shoes"]);
-			defaultAvatarPartImgName[AvatarType::Pants] =  SGJson::getString(defaultAvatarImgRoot["pants"]);
-			defaultAvatarPartImgName[AvatarType::Neck] =   SGJson::getString(defaultAvatarImgRoot["neck"]);
-			defaultAvatarPartImgName[AvatarType::Hair] =   SGJson::getString(defaultAvatarImgRoot["hair"]);
-			defaultAvatarPartImgName[AvatarType::Face] =   SGJson::getString(defaultAvatarImgRoot["face"]);
-			defaultAvatarPartImgName[AvatarType::Coat] =   SGJson::getString(defaultAvatarImgRoot["coat"]);
-			defaultAvatarPartImgName[AvatarType::Cap] =    SGJson::getString(defaultAvatarImgRoot["cap"]);
-			defaultAvatarPartImgName[AvatarType::Belt] =   SGJson::getString(defaultAvatarImgRoot["belt"]);
-			defaultAvatarPartImgName[AvatarType::Weapon] = SGJson::getString(defaultAvatarImgRoot["weapon"]);
+			defaultAvatarPartImgName[VisualType::Skin] =   SGJson::getString(defaultAvatarImgRoot["skin"]);
+			defaultAvatarPartImgName[VisualType::Shoes] =  SGJson::getString(defaultAvatarImgRoot["shoes"]);
+			defaultAvatarPartImgName[VisualType::Pants] =  SGJson::getString(defaultAvatarImgRoot["pants"]);
+			defaultAvatarPartImgName[VisualType::Neck] =   SGJson::getString(defaultAvatarImgRoot["neck"]);
+			defaultAvatarPartImgName[VisualType::Hair] =   SGJson::getString(defaultAvatarImgRoot["hair"]);
+			defaultAvatarPartImgName[VisualType::Face] =   SGJson::getString(defaultAvatarImgRoot["face"]);
+			defaultAvatarPartImgName[VisualType::Coat] =   SGJson::getString(defaultAvatarImgRoot["coat"]);
+			defaultAvatarPartImgName[VisualType::Cap] =    SGJson::getString(defaultAvatarImgRoot["cap"]);
+			defaultAvatarPartImgName[VisualType::Belt] =   SGJson::getString(defaultAvatarImgRoot["belt"]);
+			defaultAvatarPartImgName[VisualType::Weapon] = SGJson::getString(defaultAvatarImgRoot["weapon"]);
 
-			for (int iVisualType = AvatarType::Begin; iVisualType < AvatarType::VisualMax; ++iVisualType) {
+			for (int iVisualType = AvatarType::Begin; iVisualType < AvatarType::Max; ++iVisualType) {
 				const SGString& npkName = pGlobal->getAvatarNpkName(CharacterType::Gunner, iVisualType);
 				SGImagePack* pImgPack = pPackManager->getPack(npkName);
-				if (pImgPack->hasIndex(defaultAvatarPartImgName[iVisualType]))
-					gunnerBaseInfo.DefaultAvatarImgIndex[iVisualType] = pImgPack->getIndex(defaultAvatarPartImgName[iVisualType]);
+				gunnerBaseInfo.DefaultVisualNpkIndex[iVisualType] = pImgPack->getPackIndex();
+				if (pImgPack->hasImgIndex(defaultAvatarPartImgName[iVisualType]))
+					gunnerBaseInfo.DefaultVisualImgIndex[iVisualType] = pImgPack->getImgIndex(defaultAvatarPartImgName[iVisualType]);
 			}
 
 			bool bDefaultWeaponImgFound = false;
@@ -106,8 +116,9 @@ void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 				const SGString& npkName = pGlobal->getWeaponNpkName(CharacterType::Gunner, iWeaponType);
 				SGImagePack* pImgPack = pPackManager->getPack(npkName);
 
-				if (pImgPack->hasIndex(defaultAvatarPartImgName[AvatarType::Weapon])) {
-					gunnerBaseInfo.DefaultAvatarImgIndex[AvatarType::Weapon] = pImgPack->getIndex(defaultAvatarPartImgName[AvatarType::Weapon]);
+				if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::Weapon])) {
+					gunnerBaseInfo.DefaultVisualImgIndex[VisualType::Weapon] = pImgPack->getImgIndex(defaultAvatarPartImgName[VisualType::Weapon]);
+					gunnerBaseInfo.DefaultVisualNpkIndex[VisualType::Weapon] = pImgPack->getPackIndex();
 					bDefaultWeaponImgFound = true;
 					break;
 				}

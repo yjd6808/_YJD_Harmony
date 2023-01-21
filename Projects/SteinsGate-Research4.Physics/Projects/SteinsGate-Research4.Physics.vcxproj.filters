@@ -99,6 +99,15 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayerController.cpp">
       <Filter>src\Player</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorSprite.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorPartSprite.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorPartAnimation.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
@@ -121,7 +130,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\Enums.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\FrameTexture.h">
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGFrameTexture.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGImagePackManager.h">
@@ -198,6 +207,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGPlayerController.h">
       <Filter>src\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorSprite.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartSprite.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartAnimation.h">
+      <Filter>src\Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

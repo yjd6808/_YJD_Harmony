@@ -31,6 +31,7 @@ public:
 
 	SGMonsterInfo* getMonsterInfo(int mobCode);
 	SGActionInfo* getActionInfo(int actionCode);
+	SGActionInfo* getActionInfo(const SGString& actionName);
 	SGProjectileInfo* getProjectileInfo(int projectileCode);
 	SGCharacterBaseInfo* getCharacterBaseInfo(int characterCode);
 
@@ -38,6 +39,8 @@ private:
 	SGHashMap<int, SGMonsterInfo> m_MonsterInfoMap;
 	SGHashMap<int, SGActionInfo> m_ActionInfoMap;
 	SGHashMap<int, SGProjectileInfo> m_ProjectInfoMap;
+
+	SGHashMap<SGString, SGActionInfo*> m_ActionInfoNameMap;
 
 	SGCharacterBaseInfo m_CharacterBaseInfoMap[CharacterType::Max];
 };

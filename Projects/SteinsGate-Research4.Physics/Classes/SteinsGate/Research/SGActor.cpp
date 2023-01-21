@@ -18,10 +18,13 @@ SGActor::SGActor(ActorType_t type, int code)
 	, m_iCode(code)
 	, m_pThicknessBox(nullptr)
 
-
-
 {
-	
+}
+
+
+
+bool SGActor::init() {
+	return true;
 }
 
 void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
@@ -29,7 +32,7 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 	RectPoly poly = RectPoly::createFromCenter(Vec2{ 0, 0 }, thicknessBox.getSize());
 
 	m_pThicknessBox = cocos2d::DrawNode::create();
-	m_pThicknessBox->setAnchorPoint(Vec2::ANCHOR_MIDDLE);	// 필요업긴함
+	m_pThicknessBox->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	m_pThicknessBox->setPositionY(thicknessBox.RelativeY);
 	m_pThicknessBox->setOpacity(125);
 	m_pThicknessBox->setContentSize(thicknessBox.getSize());
@@ -64,6 +67,12 @@ cocos2d::Vec2 SGActor::getPositionRealCenter() {
 	return thisPos;
 }
 
+SGActorSprite* SGActor::getActorSprite() {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
+	return m_pActorSprite;
+}
+
+
 void SGActor::setPositionReal(float x, float y) {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
@@ -78,3 +87,4 @@ void SGActor::setPositionRealCenter(float x, float y) {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	setPosition(x, y -= m_pThicknessBox->getPositionY());
 }
+

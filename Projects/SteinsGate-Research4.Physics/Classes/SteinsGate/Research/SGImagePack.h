@@ -11,7 +11,7 @@
 
 #include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/Config.h>
-#include <SteinsGate/Research/FrameTexture.h>
+#include <SteinsGate/Research/SGFrameTexture.h>
 
 #include <SteinsGate/Common/Core/Npk/NpkPackage.h>
 #include <SteinsGate/Common/Core/Npk/NpkImage.h>
@@ -19,17 +19,19 @@
 class SGImagePack
 {
 public:
-	SGImagePack(const NpkPackagePtr& npkPackage);
+	SGImagePack(const NpkPackagePtr& npkPackage, int packIndex);
 	~SGImagePack();
 
 	int count() { return m_Package->Count(); }
-	FrameTexture* createFrameTexture(int imgIndex, int frameIndex);
+	SGFrameTexture* createFrameTexture(int imgIndex, int frameIndex);
 	void releaseFrameTexture(int imgIndex, int frameIndex);
 	const SGString& getPath() { return m_Package->GetPath(); }
 	SGString getFileName();
-	int getIndex(const SGString& imgName) { return m_Package->GetElementIndex(imgName); }
-	bool hasIndex(const SGString& imgName);
+	bool hasImgIndex(const SGString& imgName);
+	int getImgIndex(const SGString& imgName) { return m_Package->GetElementIndex(imgName); }
+	int getPackIndex() { return m_iIndex; }
 private:
+	int m_iIndex;
 	NpkPackagePtr m_Package;
-	SGHashMap<Int64, FrameTexture*> m_TextureCacheMap;
+	SGHashMap<Int64, SGFrameTexture*> m_TextureCacheMap;
 };

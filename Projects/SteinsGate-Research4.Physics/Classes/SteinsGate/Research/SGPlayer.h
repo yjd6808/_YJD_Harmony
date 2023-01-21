@@ -16,8 +16,13 @@ public:
 	SGPlayer();
 	~SGPlayer();
 
-	void setCharacter(SGCharacter* character) { m_pCharacter = character; }
-	SGCharacter* getCharacter() { return m_pCharacter; }
+	void update(float dt);
+	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+
+
+	void setCharacter(SGCharacter* character);
+	SGCharacter* getCharacter();
 private:
 	SGCharacter* m_pCharacter;
 
