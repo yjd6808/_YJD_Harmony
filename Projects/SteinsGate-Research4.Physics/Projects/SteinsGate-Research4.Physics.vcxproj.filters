@@ -28,6 +28,9 @@
     <Filter Include="src\Util">
       <UniqueIdentifier>{8999073e-667a-4980-89a7-1353515ef72b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Player">
+      <UniqueIdentifier>{0c149682-99b4-47ce-a598-7f8e8e05e211}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,6 +80,24 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGTextParser.cpp">
       <Filter>src\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActor.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacter.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectile.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMonster.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayer.cpp">
+      <Filter>src\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayerController.cpp">
+      <Filter>src\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +177,27 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGTextParser.h">
       <Filter>src\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGPlayer.h">
+      <Filter>src\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActor.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGStruct.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacter.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectile.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonster.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGPlayerController.h">
+      <Filter>src\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

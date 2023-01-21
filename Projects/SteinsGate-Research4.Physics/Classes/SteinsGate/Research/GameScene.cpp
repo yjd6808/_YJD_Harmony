@@ -25,6 +25,13 @@ bool GameScene::init()
     m_pWorldLayer = WorldLayer::create();
     this->addChild(m_pWorldLayer);
 
+
+    m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
+    m_pGridLayer->setAnchorPoint(Vec2::ZERO);
+    m_pGridLayer->setVisible(false);
+    this->addChild(m_pGridLayer, 1);
+
+
     EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
     keyboardListener->onKeyPressed = CC_CALLBACK_2(GameScene::onKeyPressed, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);

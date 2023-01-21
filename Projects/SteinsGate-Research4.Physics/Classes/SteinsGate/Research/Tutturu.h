@@ -10,6 +10,4 @@
 
 #include <SteinsGate/Common/Engine.h>
 
-
-
 #define Log(fmt, ...) printf(fmt, ##__VA_ARGS__)

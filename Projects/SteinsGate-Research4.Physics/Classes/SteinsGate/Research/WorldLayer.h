@@ -7,7 +7,7 @@
 
 #include <SteinsGate/Common/Core/Npk/NpkPackage.h>
 #include <SteinsGate/Research/Enums.h>
-// #include <SteinsGate/Research/Player.h>
+#include <SteinsGate/Research/SGPlayer.h>
 
 class WorldLayer : public cocos2d::Layer
 {
@@ -19,7 +19,7 @@ public:
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
 	cocos2d::Sprite* CreateSprite(int imgIndex, int frameIndex);
 public:
-	// Player* m_pPlayer;
+	SGPlayer* m_pPlayer;
 };
 
 

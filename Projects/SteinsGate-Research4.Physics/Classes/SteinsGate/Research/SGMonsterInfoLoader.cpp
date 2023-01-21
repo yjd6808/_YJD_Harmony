@@ -17,8 +17,8 @@
 #include <json.h>
 #include <fstream>
 
-using namespace Json;
-using namespace JCore;
+USING_NS_JS;
+USING_NS_JC;
 
 void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monsterInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
@@ -53,6 +53,10 @@ void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 		monsterInfo.MagicArmor = monterRoot.get("magic_armor", 0).asInt();
 		monsterInfo.EnhancePerLevel = monterRoot["enhance_per_level"].asFloat();
 		monsterInfo.Weight = monterRoot["weight"].asFloat();
+		
+		monsterInfo.ThicknessBoxWidth = monterRoot["thickness_box_width"].asFloat();
+		monsterInfo.ThicknessBoxHeight = monterRoot["thickness_box_height"].asFloat();
+		monsterInfo.ThicknessBoxRelativeY = monterRoot["thickness_relative_y"].asFloat();
 
 		Value& partListRoot = monterRoot["parts"];
 		monsterInfo.PartsCount = partListRoot.size();

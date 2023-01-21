@@ -19,7 +19,7 @@
 
 
 using namespace cocos2d;
-using namespace JCore;
+USING_NS_JC;
 
 SGImagePackManager::~SGImagePackManager() {
 	for (int i = 0; i < MaxNpkFileCount_v; ++i) {

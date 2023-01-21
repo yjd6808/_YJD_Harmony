@@ -13,7 +13,7 @@
 
 USING_NS_CC;
 
-using namespace JCore;
+USING_NS_JC;
 
 
 SGImagePack::SGImagePack(const NpkPackagePtr& npkPackage)

@@ -21,7 +21,7 @@
 
 
 
-using namespace Json;
+USING_NS_JS;
 
 void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&characterInfoMap)[CharacterType::Max]) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();

@@ -270,7 +270,7 @@ SEnumEnd(ActionType)
 
 SEnumBegin(ActorType)
 None,
-Player,
+Character,
 Monster,
 Npc,
 Projectile,

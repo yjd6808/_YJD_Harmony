@@ -18,8 +18,8 @@
 #include <fstream>
 
 
-using namespace JCore;
-using namespace Json;
+USING_NS_JC;
+USING_NS_JS;
 
 void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
@@ -67,7 +67,7 @@ void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 		}
 
 		DebugAssertMessage(!projectileInfoMap.Exist(info.Code), "projectile에 해당 코드값이 이미 존재합니다.");
-		projectileInfoMap.Insert(info.Code, info);
+		projectileInfoMap.Insert(info.Code, Move(info));
 	}
 
 	Log("SGProjectileInfoLoader :: 로딩완료\n");

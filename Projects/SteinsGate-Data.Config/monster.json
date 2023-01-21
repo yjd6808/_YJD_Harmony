@@ -17,6 +17,9 @@
             "magic_armor": 0,
             "enhance_per_level": 110.0,
             "weight": 200,
+            "thickness_box_width": 50,
+            "thickness_box_height": 30,
+            "thickness_relative_y": -50,
             "parts": [
                 {
                     "npk": "sprite_monster_goblin.NPK",
@@ -100,6 +103,9 @@
             "magic_armor": 0,
             "enhance_per_level": 110.0,
             "weight": 200,
+            "thickness_box_width": 50,
+            "thickness_box_height": 30,
+            "thickness_relative_y": -50,
             "parts": [
                 {
                     "npk": "sprite_monster_goblin.NPK",

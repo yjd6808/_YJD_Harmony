@@ -25,6 +25,11 @@
 #include <JCore/Container/LinkedList.h>
 
 
+#define USING_NS_JC using namespace JCore
+#define USING_NS_JN using namespace JNetwork
+#define USING_NS_JS using namespace Json
+#define USING_NS_CCUI using namespace cocos2d::ui
+
 using SGConsole = JCore::SafeConsole;
 
 using SGString = JCore::String;

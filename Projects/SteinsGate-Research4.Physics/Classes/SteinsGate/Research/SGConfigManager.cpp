@@ -21,15 +21,23 @@ void SGConfigManager::LoadAllConfigs() {
 	SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(m_CharacterBaseInfoMap);
 }
 
-SGMonsterInfo* SGConfigManager::getMonsterInfo(const int mobCode) {
-	return nullptr;
+SGMonsterInfo* SGConfigManager::getMonsterInfo(int mobCode) {
+	DebugAssertMessage(m_MonsterInfoMap.Exist(mobCode), "해당 몬스터 정보가 존재하지 않습니다.");
+	return &m_MonsterInfoMap[mobCode];
 }
 
-SGActionInfo* SGConfigManager::getActionInfo(const int actionCode) {
-	return nullptr;
+SGActionInfo* SGConfigManager::getActionInfo(int actionCode) {
+	DebugAssertMessage(m_ActionInfoMap.Exist(actionCode), "해당 액션 정보가 존재하지 않습니다.");
+	return &m_ActionInfoMap[actionCode];
 }
 
-SGProjectileInfo* SGConfigManager::getProjectileInfo(const int projectileCode) {
-	return nullptr;
+SGProjectileInfo* SGConfigManager::getProjectileInfo(int projectileCode) {
+	DebugAssertMessage(m_ProjectInfoMap.Exist(projectileCode), "해당 프로젝틸 정보가 존재하지 않습니다.");
+	return &m_ProjectInfoMap[projectileCode];
+}
+
+SGCharacterBaseInfo* SGConfigManager::getCharacterBaseInfo(int characterCode) {
+	DebugAssertMessage(characterCode >= CharacterType::Begin && characterCode <= CharacterType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
+	return &m_CharacterBaseInfoMap[characterCode];
 }
 

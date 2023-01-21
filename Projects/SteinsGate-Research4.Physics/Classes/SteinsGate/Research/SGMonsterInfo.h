@@ -20,7 +20,8 @@ struct SGMonsterPartInfo
 
 struct SGMonsterInfo
 {
-	SGMonsterInfo(int animationSize) : Animations(animationSize) {}
+	SGMonsterInfo(int animationSize) : Animations(animationSize) {
+	}
 
 	int Code;
 	SGString Name;
@@ -36,6 +37,9 @@ struct SGMonsterInfo
 	float EnhancePerLevel;
 	float Weight;
 	int PartsCount;
+	float ThicknessBoxWidth;
+	float ThicknessBoxHeight;
+	float ThicknessBoxRelativeY;
 	SGMonsterPartInfo Parts[MaxMonsterPartsCount_v];
 	SGVector<SGAnimationInfo> Animations;
 };

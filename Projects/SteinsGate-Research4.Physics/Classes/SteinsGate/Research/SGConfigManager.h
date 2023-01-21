@@ -13,7 +13,6 @@
 #include <SteinsGate/Research/SGActionInfo.h>
 #include <SteinsGate/Research/SGCharacterBaseInfo.h>
 #include <SteinsGate/Research/SGProjectileInfo.h>
-#include <JCore/Container/HashMap.h>
 
 struct SGConfigManager
 {
@@ -30,9 +29,10 @@ public:
 		return loader;
 	}
 
-	SGMonsterInfo* getMonsterInfo(const int mobCode);
-	SGActionInfo* getActionInfo(const int actionCode);
-	SGProjectileInfo* getProjectileInfo(const int projectileCode);
+	SGMonsterInfo* getMonsterInfo(int mobCode);
+	SGActionInfo* getActionInfo(int actionCode);
+	SGProjectileInfo* getProjectileInfo(int projectileCode);
+	SGCharacterBaseInfo* getCharacterBaseInfo(int characterCode);
 
 private:
 	SGHashMap<int, SGMonsterInfo> m_MonsterInfoMap;

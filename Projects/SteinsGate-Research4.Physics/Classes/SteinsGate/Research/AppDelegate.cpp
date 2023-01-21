@@ -3,6 +3,7 @@
 #include <SteinsGate/Research/GameScene.h>
 #include <SteinsGate/Research/SGConfigManager.h>
 #include <SteinsGate/Research/SGImagePackManager.h>
+#include <SteinsGate/Research/SGGlobal.h>
 
 #include "SteinsGate/Common/Engine/RectEx.h"
 
@@ -14,14 +15,16 @@ static cocos2d::Size designResolutionSize = cocos2d::Size(1280, 720);
 
 AppDelegate::AppDelegate()
 {
+    SGGlobal::getInstance();
     SGImagePackManager::getInstance();
     SGConfigManager::getInstance();
 }
 
 AppDelegate::~AppDelegate() 
 {
-    delete SGImagePackManager::getInstance();
     delete SGConfigManager::getInstance();
+    delete SGImagePackManager::getInstance();
+    delete SGGlobal::getInstance();
 }
 
 void AppDelegate::initGLContextAttrs()

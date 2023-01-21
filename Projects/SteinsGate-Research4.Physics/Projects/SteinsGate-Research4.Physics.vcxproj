@@ -22,6 +22,14 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\ComboKeyList.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacter.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGConfigManager.cpp">
       <SubType>
@@ -41,7 +49,23 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMonster.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayerController.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectile.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGTextParser.cpp">
       <SubType>
@@ -60,6 +84,22 @@
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Research\AppDelegate.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\ComboKeyList.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacter.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonster.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGPlayer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGlobal.h">
       <SubType>
       </SubType>
@@ -109,11 +149,23 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGPlayerController.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectile.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGStruct.h">
       <SubType>
       </SubType>
     </ClInclude>

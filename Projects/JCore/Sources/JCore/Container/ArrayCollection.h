@@ -148,7 +148,23 @@ protected:
 
 		this->m_iSize = other.m_iSize;
 		m_iCapacity = iCapacity;
-		Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
+
+
+		// !!!! Emergency !!!!
+		// 메모리만 복사해버리면 안된다.
+		// 깊은 복사가 발생하도록 대입연산을 수행해줘야한다.
+		// Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
+
+
+		// 해결책: Vector<String*> 같은건 메모리만 복사해줘도 된다.
+		if constexpr (IsPointerType_v<T>) {
+			Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
+		} else {
+			// 해결책: Vector<String> 같은건 대입 생성을 수행해줘야한다.
+			for (int i = 0; i < other.m_iSize; ++i) {
+				Memory::PlacementNew(m_pArray[i], other.m_pArray[i]);
+			}
+		}
 	}
 
 	virtual void CopyFrom(TArrayCollection&& other) {
@@ -162,6 +178,7 @@ protected:
 		this->m_iCapacity = other.m_iCapacity;
 
 		other.m_pArray = nullptr;
+		other.m_iCapacity = 0;
 		other.m_iSize = 0;
 	}
 

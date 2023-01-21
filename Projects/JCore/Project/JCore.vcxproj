@@ -84,9 +84,15 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\System\JCoreSystem.cpp" />
-    <ClCompile Include="..\Sources\JCore\System\PrioritySingleton.cpp" />
-    <ClCompile Include="..\Sources\JCore\System\System.cpp" />
+    <ClCompile Include="..\Sources\JCore\System\JCoreSystem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\System\PrioritySingleton.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\System\System.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Threading\Thread.cpp">
       <SubType>
       </SubType>

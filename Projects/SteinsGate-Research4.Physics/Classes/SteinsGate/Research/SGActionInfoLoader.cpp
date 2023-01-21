@@ -18,8 +18,8 @@
 #include <json.h>
 #include <fstream>
 
-using namespace Json;
-using namespace JCore;
+USING_NS_JS;
+USING_NS_JC;
 
 
 void SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfoMap) {
