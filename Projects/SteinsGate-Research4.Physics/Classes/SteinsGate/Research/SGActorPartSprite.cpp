@@ -13,6 +13,8 @@
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 
+#include "SGActor.h"
+
 USING_NS_CC;
 USING_NS_JC;
 
@@ -120,6 +122,10 @@ void SGActorPartSprite::runAnimation(int code) {
 	m_pRunningAnimation->run();
 }
 
+ActorType_t SGActorPartSprite::getActorType() {
+	return getActorSprite()->getActor()->getType();
+}
+
 void SGActorPartSprite::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
 	m_pActorSprite->onAnimationBegin(animation, texture);
 }
@@ -130,16 +136,13 @@ void SGActorPartSprite::onAnimationEnd(SGActorPartAnimation* animation, SGFrameT
 
 void SGActorPartSprite::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
 
-
 	const NpkSpriteRect& rect = texture->getRect();
 	const int iFrameIndex = texture->getFrameIndex();
 	const int iFrameIndexInAnimation = animation->getFrameIndexInAnimation();
 
 	float fFrameWidth = texture->getFrameWidthF();
 	float fFrameHeight = texture->getFrameHeightF();
-	
-	m_pCanvas->setPosition(-fFrameWidth / 2, -fFrameHeight / 2);
-	m_pCanvas->setContentSize(fFrameWidth, fFrameHeight);
+
 
 	// Coordinate-System(좌표계) 변경
 	float fWidth = rect.GetWidthF();
@@ -147,15 +150,35 @@ void SGActorPartSprite::onFrameBegin(SGActorPartAnimation* animation, SGFrameTex
 	float fAdjustX = rect.X;
 	float fAdjustY = fFrameHeight - rect.Y - fHeight;
 
-	this->setContentSize({ fWidth, fHeight });
-	this->setPosition(fAdjustX, fAdjustY);
+	bool bProjectile = getActorType() == ActorType::Projectile;
 
+	// 총알은 캔버스가 필요치 않다.
+	// 위치도 0, 0 고정임
+	if (bProjectile == false) {
+		m_pCanvas->setPosition(-fFrameWidth / 2, -fFrameHeight / 2);
+		m_pCanvas->setContentSize(fFrameWidth, fFrameHeight);
+
+		this->setContentSize({ fWidth, fHeight });
+		this->setPosition(fAdjustX, fAdjustY);
+	} 
+	
 	// 바디 파츠만 그려주자.
 	if (m_iPartIndex == 0) {
- 		RectPoly poly = RectPoly::createFromLeftBottom({0, 0}, { fWidth, fHeight });
+		SGRect boundingBox = getBoundingBox();
+
+		// initWithTexture 이후 앵커 포인트 초기화 되는것에 대한 처리는
+		// SGActorPartAnimation::changeTexture 함수에서 처리했다.
+		// 이거 모르면 헤매기 쉬움
+
+		// DrawNode는 앵커 포인터의 영향을 받지 않고
+		// 무조건 좌하단에서부터 그린다.
+		// 총알, 캔버스, 바운딩박스 모두 0, 0에 위치함
+		RectPoly poly = bProjectile ?
+			RectPoly::createFromCenter({ 0, 0 }, boundingBox.size) :	// 총알은 0,0에서 그려지므로 센터 기준으로 박스 만듬
+			RectPoly::createFromLeftBottom({ 0, 0 }, boundingBox.size);
 
 		m_pBoundingBox->clear();
-		m_pBoundingBox->setContentSize({ fWidth, fHeight });
+		m_pBoundingBox->setContentSize({ boundingBox.size });
 		m_pBoundingBox->drawPolygon(poly.source(), 4, {}, 1, Color4F::WHITE);
 
 		//Log("%d 프레임 종료\n", m_pRunningAnimation->getFrameIndex());

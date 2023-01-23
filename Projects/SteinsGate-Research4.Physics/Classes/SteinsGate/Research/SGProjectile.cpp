@@ -64,7 +64,7 @@ void SGProjectile::initActorSprite() {
 		spActorSpriteData->Animations.PushBack(&m_pBaseInfo->Animations[i]);
 	}
 
-	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData, true);
+	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
 	m_pActorSprite->getBodyPart()->setRotation(m_pBaseInfo->Rotation);
 

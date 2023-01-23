@@ -37,18 +37,18 @@ public:
 	virtual void initThicknessBox(const SGThicknessBox& thicknessBox);
 
 	bool init() override;
-	
 	void update(float dt) override;				// 자식에서도 오버라이딩시 이거 호출하도록
 
-	SGRect getThicknessBoxRect()		const;
-	SGVec2 getPositionReal()			const;// 두께박스 좌하단의 위치
-	SGVec2 getPositionRealCenter()		const;// 두께박스 중앙의 위치
-	SGVec2 getCanvasPositionReal()		const;// 엑터 스프라이트의 절대 캔버스 위치
-	SGSize getCanvasSize()				const;// 엑터 스프라이트의 바디 캔버스 사이즈
-	SGRect getHitbox()					const;
-	SGThicknessBox getThicknessBox()	const;
-	SGActorSprite* getActorSprite()		const;
-	SpriteDirection_t getSpriteDirection() const;
+	ActorType_t getType()					const;
+	SGRect getThicknessBoxRect()			const;
+	SGVec2 getPositionReal()				const;	// 두께박스 좌하단의 위치
+	SGVec2 getPositionRealCenter()			const;	// 두께박스 중앙의 위치
+	SGVec2 getCanvasPositionReal()			const;	// 엑터 스프라이트의 절대 캔버스 위치
+	SGSize getCanvasSize()					const;	// 엑터 스프라이트의 바디 캔버스 사이즈
+	SGRect getHitbox()						const;
+	SGThicknessBox getThicknessBox()		const;
+	SGActorSprite* getActorSprite()			const;
+	SpriteDirection_t getSpriteDirection()  const;
 
 	void setPositionReal(float x, float y);
 	void setPositionRealCenter(float x, float y);

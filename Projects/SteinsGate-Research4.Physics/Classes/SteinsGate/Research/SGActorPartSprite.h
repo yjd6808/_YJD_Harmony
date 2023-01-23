@@ -13,6 +13,7 @@
 #include <SteinsGate/Research/SGStruct.h>
 #include <SteinsGate/Research/SGActorPartAnimation.h>
 
+
 class SGActorSprite;
 class SGActorPartSprite : public SGSprite
 {
@@ -43,8 +44,9 @@ public:
 	void runAnimation(int code);
 
 	int getPartIndex() { return m_iPartIndex; }
+	ActorType_t getActorType();
 	SGNode* getCanvas() { return m_pCanvas; }
-	SGDrawNode* getBoundingBox() { return m_pBoundingBox; }
+	SGDrawNode* getPartBoundingBox() { return m_pBoundingBox; }
 	SGActorSprite* getActorSprite() { return m_pActorSprite; }
 	SGActorPartAnimation* getRunningAnimation() { return m_pRunningAnimation; }
 

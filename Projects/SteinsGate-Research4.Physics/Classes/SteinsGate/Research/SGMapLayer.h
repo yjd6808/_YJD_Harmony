@@ -38,6 +38,7 @@ public:
 public:
 	SGPlayer* m_pPlayer;
 	SGVector<SGActor*> m_vZOrderedActors;	// Z오더를 고유 ID처럼 사용해도 될듯? 이진탐색으로 삭제 함 댈것같다.
+	SGSet<SGActor*> m_s;
 	SGSet<SGActor*> m_sMyBullets;
 
 	float m_fZReorderTime;

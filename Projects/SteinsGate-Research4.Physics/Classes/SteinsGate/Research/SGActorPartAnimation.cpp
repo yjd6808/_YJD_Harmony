@@ -183,7 +183,7 @@ SGFrameTexture* SGActorPartAnimation::changeTexture(int frameIndexInAnimation) {
 	// 일단 문제 생기면 Sprite 풀을 구성해놓고 교체해주는 방식으로 바꾸는 걸로
 	// 이것도 완성하면 나중에... ㅋㅋ 뭔 전부 나중이야
 	m_pTarget->initWithTexture(pFrameTexture->getTexture());
-	m_pTarget->setAnchorPoint(SGVec2::ZERO);
+	m_pTarget->setAnchorPoint(m_pTarget->getActorType() == ActorType::Projectile ? SGVec2::ANCHOR_MIDDLE : SGVec2::ZERO);
 	m_pTarget->setOpacity(255);
 	return pFrameTexture;
 }

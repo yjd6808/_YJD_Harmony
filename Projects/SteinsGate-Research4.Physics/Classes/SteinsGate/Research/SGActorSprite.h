@@ -17,14 +17,12 @@ class SGActorSprite : public SGSprite
 public:
 	SGActorSprite(
 		SGActor* actor, 
-		const SGActorSpriteDataPtr& actorData, 
-		bool attachPartsBoundingBoxToCanvas 
+		const SGActorSpriteDataPtr& actorData
 	);
 
 	static SGActorSprite* create(
 		SGActor* actor, 
-		const SGActorSpriteDataPtr& actorData, 
-		bool attachPartsToCanvas = false
+		const SGActorSpriteDataPtr& actorData
 	);
 
 	bool init() override;
@@ -40,6 +38,7 @@ public:
 	void setBackwardDirection();
 
 	SGActorPartSprite* getBodyPart();
+	SGActor* getActor() { return m_pActor; }
 	SGNode* getBodyCanvas();
 	SGSize	getBodyCanvasSize();
 	SGSize	getBodyPartSize();
@@ -48,7 +47,6 @@ public:
 	SGVector<SGActorPartSprite*>& getParts() { return m_vParts; }
 	SpriteDirection_t getSpriteDirection();
 private:
-	bool m_bPartsBoundingBoxAttachedToCanvas;		// 파츠 바운딩박스노드들이 액터 스프라이트 파츠가 아닌 캔버스에 붙였는지
 
 	SGActor* m_pActor;
 	SGActorSpriteDataPtr m_spActorData;

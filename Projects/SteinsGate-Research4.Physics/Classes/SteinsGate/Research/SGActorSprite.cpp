@@ -17,11 +17,8 @@ USING_NS_JC;
 
 SGActorSprite::SGActorSprite(
 	SGActor* actor, 
-	const SGActorSpriteDataPtr& actorData, 
-	bool attachPartsBoundingBoxToCanvas
-)
-	: m_bPartsBoundingBoxAttachedToCanvas(attachPartsBoundingBoxToCanvas)
-	, m_pActor(actor)
+	const SGActorSpriteDataPtr& actorData)
+	: m_pActor(actor)
 	, m_spActorData(actorData)
 	, m_vPartsCanvas(actorData->Parts.Size(), nullptr)
 	, m_vParts(actorData->Parts.Size(), nullptr)
@@ -32,10 +29,9 @@ SGActorSprite::SGActorSprite(
 
 SGActorSprite* SGActorSprite::create(
 	SGActor* actor, const 
-	SGActorSpriteDataPtr& actorData, 
-	bool attachPartsBoundingBoxToCanvas)
+	SGActorSpriteDataPtr& actorData)
 {
-	SGActorSprite* pSprite = new SGActorSprite(actor, actorData, attachPartsBoundingBoxToCanvas);
+	SGActorSprite* pSprite = new SGActorSprite(actor, actorData);
 
 	if (pSprite && pSprite->init()) {
 		pSprite->autorelease();
@@ -64,6 +60,7 @@ bool SGActorSprite::init() {
 		m_vPartsCanvas[i]->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 		m_vPartsCanvas[i]->setCascadeOpacityEnabled(false);
 		m_vPartsCanvas[i]->setOpacity(0);
+		m_vPartsCanvas[i]->setContentSize({ 0, 0 });
 		if (i == 0)
 			m_vPartsCanvas[i]->setOpacity(80);
 		this->addChild(m_vPartsCanvas[i], i);	// 정렬된 순서대로 ZOrder 반영
@@ -79,13 +76,18 @@ bool SGActorSprite::init() {
 			m_spActorData->Animations
 		);
 
-		m_vParts[i]->setAnchorPoint(Vec2::ZERO);
-		m_vPartsCanvas[i]->addChild(m_vParts[i]);
+		// 프로젝틸은 캔버스를 사용하지 않을 거기 땜에
+		// 앵커를 0.5, 0.5로 하도록 한다.
+		// 캔버스 위에서 그려지는 캐릭터나 몬스터, 기타 오브젝트들은 ZERO로 처리하도록..
 
-		if (m_bPartsBoundingBoxAttachedToCanvas)
+		if (m_pActor->getType() == ActorType::Projectile) {
+			m_vParts[i]->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 			m_vPartsCanvas[i]->addChild(m_vPartsBoundingBox[i]);
-		else
+		} else {
+			m_vParts[i]->setAnchorPoint(Vec2::ZERO);
 			m_vParts[i]->addChild(m_vPartsBoundingBox[i]);
+		}
+		m_vPartsCanvas[i]->addChild(m_vParts[i]);
 	}
 
 	return true;
@@ -159,7 +161,7 @@ SGSize SGActorSprite::getBodyCanvasSize() {
 }
 
 SGSize SGActorSprite::getBodyPartSize() {
-	return m_vParts[0]->getBoundingBox()->getContentSize();
+	return m_vParts[0]->getPartBoundingBox()->getContentSize();
 }
 
 SGVec2 SGActorSprite::getBodyPartPosition() {

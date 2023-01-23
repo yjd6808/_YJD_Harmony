@@ -54,6 +54,10 @@ void SGActor::update(float dt) {
 		m_pThicknessBox->setOpacity(125);
 }
 
+ActorType_t SGActor::getType() const {
+	return m_eActorType;
+}
+
 SGThicknessBox SGActor::getThicknessBox() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	Size size = m_pThicknessBox->getContentSize();
@@ -149,6 +153,3 @@ void SGActor::setBackwardDirection() {
 	m_pActorSprite->setBackwardDirection();
 }
 
-void SGActor::setCollidable(bool enabled) {
-	m_bCollidable = enabled;
-}
