@@ -28,7 +28,7 @@ public:
 		, m_bLoaded(false) {}
 	~NpkSprite() override;
 public:
-	bool IsDummy() override			{ return m_Rect.Width * m_Rect.Height == 0; }
+	bool IsDummy() override			{ return m_Rect.Width * m_Rect.Height <= 10; }
 	int GetWidth() override			{ return m_Rect.Width;		  }
 	int GetHeight() override		{ return m_Rect.Height;		  }
 	int GetX() 	override			{ return m_Rect.X;			  }

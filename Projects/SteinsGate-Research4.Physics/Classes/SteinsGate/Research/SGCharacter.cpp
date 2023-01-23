@@ -8,7 +8,11 @@
 
 #include "SGCharacter.h"
 
-#include  <SteinsGate/Research/SGImagePackManager.h>
+#include <SteinsGate/Research/SGImagePackManager.h>
+#include <SteinsGate/Research/SGActorSprite.h>
+#include <SteinsGate/Research/SGAnimationDefine.h>
+#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Common/Engine/RectEx.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -23,7 +27,7 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 	SGCharacter* pCharacter = new SGCharacter(code, info);
 
 	if (pCharacter && pCharacter->init()) {
-		SGCharacterBaseInfo* pBaseInfo = SGConfigManager::getInstance()->getCharacterBaseInfo(code);
+		SGCharacterBaseInfo* pBaseInfo = SGDataManager::getInstance()->getCharacterBaseInfo(code);
 		pCharacter->m_pBaseInfo = pBaseInfo;
 		pCharacter->initThicknessBox({ pBaseInfo->ThicknessBoxWidth, pBaseInfo->ThicknessBoxHeight, pBaseInfo->ThicknessBoxRelativeY });
 		pCharacter->initActorSprite();
@@ -35,14 +39,13 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 }
 
 void SGCharacter::initActorSprite() {
-	SGConfigManager* pConfig = SGConfigManager::getInstance();
+	SGDataManager* pConfig = SGDataManager::getInstance();
 	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
-	
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>();
 
 	for (int i = 0; i < VisualType::Max; ++i) {
-		if (m_CharacterInfo.VisualInfo.ImgIndex[i] != InvalidIndex_v &&
-			m_CharacterInfo.VisualInfo.NpkIndex[i] != InvalidIndex_v) {
+		if (m_CharacterInfo.VisualInfo.ImgIndex[i] != InvalidValue_v &&
+			m_CharacterInfo.VisualInfo.NpkIndex[i] != InvalidValue_v) {
 			spActorSpriteData->Parts.PushBack({
 				m_pBaseInfo->DefaultVisualZOrder[i],
 				m_CharacterInfo.VisualInfo.NpkIndex[i],
@@ -60,6 +63,35 @@ void SGCharacter::initActorSprite() {
 		}
 	}
 
-	BB;
+	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
+	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
+	this->addChild(m_pActorSprite);
+}
+
+void SGCharacter::update(float dt) {
+	SGActor::update(dt);
+}
+
+extern SGPlayer* MainPlayer_v;
+
+
+void SGCharacter::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+	MainPlayer_v->onFrameBegin(animation, texture);
+}
+
+void SGCharacter::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+	MainPlayer_v->onFrameEnd(animation, texture);
+}
+
+void SGCharacter::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+	MainPlayer_v->onAnimationBegin(animation, texture);
+}
+
+void SGCharacter::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+	MainPlayer_v->onAnimationEnd(animation, texture);
+}
+
+SGCharacterBaseInfo* SGCharacter::getBaseInfo() {
+	return m_pBaseInfo;
 }
 

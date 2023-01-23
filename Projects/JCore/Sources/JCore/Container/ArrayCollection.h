@@ -78,7 +78,7 @@ public:
 		this->m_iSize = capacity;
 
 		for (int i = 0; i < capacity; ++i) {
-			EmplaceAt(i, initData);
+			SetAtUnsafe(i, initData);
 		}
 	}
 
@@ -92,7 +92,7 @@ public:
 		// 만약 T가 많이 무거우면 이 작업은 효율이 좋을 것이고
 		// T가 엄청 가벼운데 반복문을 이렇게 돌면 효율이 더 안좋을 것 같다.
 		for (int i = 0; i < capacity; ++i) {
-			EmplaceAt(i, i < capacity - 1 ? initData : Move(initData));
+			SetAtUnsafe(i, i < capacity - 1 ? initData : Move(initData));
 		}
 	}
 
@@ -335,7 +335,11 @@ protected:
 	template <typename... Args>
 	void EmplaceAt(const int idx, Args&&... args) {
 		ThrowIfIndexIsInvalid(idx);
-		Memory::PlacementNew(m_pArray[idx], Forward<Args>(args)...);
+
+		if constexpr (IsPointerType_v<T>)
+			DebugAssertMessage(false, "포인터 타입은 Emplace 기능 사용 금지...");
+		else
+			Memory::PlacementNew(m_pArray[idx], Forward<Args>(args)...);
 	}
 
 	void DestroyAt(const int idx) {

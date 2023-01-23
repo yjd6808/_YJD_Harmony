@@ -25,13 +25,16 @@ void SGTextParser::parserFrameInfo(const SGString& frameString,
 	int iBuffIdx = 0;
 	char buff[16];
 
-	for (int i = 0; i < frameString.Length() + 1; ++i, ++iBuffIdx) {
+	for (int i = 0; i < frameString.Length() + 1; ++i) {
 		buff[iBuffIdx] = pSoruce[i];
 
 		if (pSoruce[i] == ' ' || pSoruce[i] == NULL) {
 			buff[iBuffIdx] = NULL;
 			*p[iPtrIdx++] = std::atoi(buff);
 			iBuffIdx = 0;
+			continue;
 		}
+
+		++iBuffIdx;
 	}
 }

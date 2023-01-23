@@ -14,16 +14,16 @@
 #include <SteinsGate/Research/SGCharacterBaseInfo.h>
 #include <SteinsGate/Research/SGProjectileInfo.h>
 
-struct SGConfigManager
+struct SGDataManager
 {
 public:
 	void LoadAllConfigs();
 
-	static SGConfigManager* getInstance() {
-		static SGConfigManager* loader;
+	static SGDataManager* getInstance() {
+		static SGDataManager* loader;
 
 		if (loader == nullptr) {
-			loader = new SGConfigManager;
+			loader = new SGDataManager;
 			loader->LoadAllConfigs();
 		}
 		return loader;

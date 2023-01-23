@@ -59,7 +59,6 @@ namespace JCore {
 	}
 
 	String Path::Extension(const String& path) {
-		int iLast = 0;
 		int iCount = 0;
 
 		for (int i = path.Length() - 1; i >= 0; --i, ++iCount) {

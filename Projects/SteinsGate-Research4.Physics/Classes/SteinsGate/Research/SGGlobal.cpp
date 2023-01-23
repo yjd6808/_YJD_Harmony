@@ -9,38 +9,56 @@
 
 #include "SGGlobal.h"
 
+SGGlobal::SGGlobal()
+	: m_pDefaultTexture(nullptr)
+	, m_bDrawThicknessBox(false)
+	, m_bDrawBodyBoundingBox(false)
+{}
+
+SGGlobal::~SGGlobal() {
+	DeleteSafe(m_pDefaultTexture);
+}
+
 int SGGlobal::convertAvatarPartNameToType(const SGString& str) {
-	DebugAssertMessage(AvatarPartNameToTypeMap.Exist(str), "존재하지 않는 아바타 부위 이름입니다.");
-	return AvatarPartNameToTypeMap[str];
+	DebugAssertMessage(m_AvatarPartNameToTypeMap.Exist(str), "존재하지 않는 아바타 부위 이름입니다.");
+	return m_AvatarPartNameToTypeMap[str];
+}
+
+void SGGlobal::toggleDrawThicknessBox() {
+	m_bDrawThicknessBox = !m_bDrawThicknessBox;
+}
+
+void SGGlobal::toggleDrawBodyBoundingBox() {
+	m_bDrawBodyBoundingBox = !m_bDrawBodyBoundingBox;
 }
 
 void SGGlobal::initialize() {
 
 	{
-		AvatarPartNameToTypeMap.Insert("skin", VisualType::Skin);
-		AvatarPartNameToTypeMap.Insert("shoes", VisualType::Shoes);
-		AvatarPartNameToTypeMap.Insert("pants", VisualType::Pants);
-		AvatarPartNameToTypeMap.Insert("neck", VisualType::Neck);
-		AvatarPartNameToTypeMap.Insert("hair", VisualType::Hair);
-		AvatarPartNameToTypeMap.Insert("face", VisualType::Face);
-		AvatarPartNameToTypeMap.Insert("coat", VisualType::Coat);
-		AvatarPartNameToTypeMap.Insert("cap", VisualType::Cap);
-		AvatarPartNameToTypeMap.Insert("belt", VisualType::Belt);
-		AvatarPartNameToTypeMap.Insert("weapon", VisualType::Weapon);
+		m_AvatarPartNameToTypeMap.Insert("skin", VisualType::Skin);
+		m_AvatarPartNameToTypeMap.Insert("shoes", VisualType::Shoes);
+		m_AvatarPartNameToTypeMap.Insert("pants", VisualType::Pants);
+		m_AvatarPartNameToTypeMap.Insert("neck", VisualType::Neck);
+		m_AvatarPartNameToTypeMap.Insert("hair", VisualType::Hair);
+		m_AvatarPartNameToTypeMap.Insert("face", VisualType::Face);
+		m_AvatarPartNameToTypeMap.Insert("coat", VisualType::Coat);
+		m_AvatarPartNameToTypeMap.Insert("cap", VisualType::Cap);
+		m_AvatarPartNameToTypeMap.Insert("belt", VisualType::Belt);
+		m_AvatarPartNameToTypeMap.Insert("weapon", VisualType::Weapon);
 	}
 
 
 	{
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Skin, "gn_body");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Shoes, "gn_shoes");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Pants, "gn_pants");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Neck, "gn_neck");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Hair, "gn_hair");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Face, "gn_face");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Coat, "gn_coat");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Cap, "gn_cap");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Belt, "gn_belt");
-		AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Weapon, "gn_weapon");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Skin, "gn_body");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Shoes, "gn_shoes");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Pants, "gn_pants");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Neck, "gn_neck");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Hair, "gn_hair");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Face, "gn_face");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Coat, "gn_coat");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Cap, "gn_cap");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Belt, "gn_belt");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Weapon, "gn_weapon");
 	}
 
 	{
@@ -74,4 +92,27 @@ const SGString& SGGlobal::getWeaponNpkName(int characterType, int weaponType) {
 	DebugAssertMessage(characterType >= CharacterType::Begin && characterType >= CharacterType::End, "올바르지 않은 캐릭터 타입입니다.");
 	DebugAssertMessage(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
 	return m_WeaponPackName[characterType][weaponType];
+}
+
+SGTexture* SGGlobal::getDefaultTexture() {
+
+	static unsigned char White2x2TextureData_v[] = {
+		// RGBA8888
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF
+	};
+
+	if (m_pDefaultTexture) 
+		return m_pDefaultTexture;
+
+	// 그냥 데이터 긁어옴
+	// auto img = new Image();
+	// img->initWithImageFile("dummy.png");
+	// tex->initWithImage(img);
+
+	m_pDefaultTexture = new SGTexture;
+	m_pDefaultTexture->initWithData(White2x2TextureData_v, sizeof(White2x2TextureData_v), SGTexture::PixelFormat::RGB888, 2, 2, { 2, 2 });
+	return m_pDefaultTexture;
 }

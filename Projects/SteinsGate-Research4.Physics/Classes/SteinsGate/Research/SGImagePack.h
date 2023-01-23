@@ -22,14 +22,17 @@ public:
 	SGImagePack(const NpkPackagePtr& npkPackage, int packIndex);
 	~SGImagePack();
 
-	int count() { return m_Package->Count(); }
-	SGFrameTexture* createFrameTexture(int imgIndex, int frameIndex);
+	int getImgCount() { return m_Package->Count(); }
+	int getSpriteCount(int imgIndex);
+
+	SGFrameTexture* createFrameTextureRetain(int imgIndex, int frameIndex);
 	void releaseFrameTexture(int imgIndex, int frameIndex);
 	const SGString& getPath() { return m_Package->GetPath(); }
 	SGString getFileName();
 	bool hasImgIndex(const SGString& imgName);
 	int getImgIndex(const SGString& imgName) { return m_Package->GetElementIndex(imgName); }
 	int getPackIndex() { return m_iIndex; }
+	
 private:
 	int m_iIndex;
 	NpkPackagePtr m_Package;

@@ -9,6 +9,7 @@
 #include "SGActor.h"
 
 #include <SteinsGate/Common/Engine/RectPoly.h>
+#include <SteinsGate/Research/SGGlobal.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -29,29 +30,42 @@ bool SGActor::init() {
 
 void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 
-	RectPoly poly = RectPoly::createFromCenter(Vec2{ 0, 0 }, thicknessBox.getSize());
+	// DrawNode는 앵커포인트 신경안쓰고 컨텐츠박스 기준 좌하단부터 그림
+	RectPoly poly = RectPoly::createFromLeftBottom(Vec2{ 0, 0 }, thicknessBox.getSize());
 
-	m_pThicknessBox = cocos2d::DrawNode::create();
+	m_pThicknessBox = SGDrawNode::create();
 	m_pThicknessBox->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	m_pThicknessBox->setPositionY(thicknessBox.RelativeY);
 	m_pThicknessBox->setOpacity(125);
 	m_pThicknessBox->setContentSize(thicknessBox.getSize());
 	m_pThicknessBox->drawPolygon(poly.source(), 4, {}, 1, Color4F::MAGENTA);
+
 	this->addChild(m_pThicknessBox);
 }
 
-SGThicknessBox SGActor::getThicknessBox() {
+void SGActor::update(float dt) {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	m_pActorSprite->update(dt);
+
+
+	if (SGGlobal::getInstance()->isThicknessBoxDrawMode())
+		m_pThicknessBox->setOpacity(0);
+	else
+		m_pThicknessBox->setOpacity(125);
+}
+
+SGThicknessBox SGActor::getThicknessBox() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	Size size = m_pThicknessBox->getContentSize();
 	return { size.width, size.height, m_pThicknessBox->getPositionY() };
 }
 
-Rect SGActor::getThicknessBoxRect() {
+Rect SGActor::getThicknessBoxRect() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	return { getPositionReal(), m_pThicknessBox->getContentSize() };
 }
 
-cocos2d::Vec2 SGActor::getPositionReal() {
+SGVec2 SGActor::getPositionReal() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 	Vec2 thicknessOrigin = getPosition();
@@ -60,16 +74,42 @@ cocos2d::Vec2 SGActor::getPositionReal() {
 	return thicknessOrigin;
 }
 
-cocos2d::Vec2 SGActor::getPositionRealCenter() {
+SGVec2 SGActor::getPositionRealCenter() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	Vec2 thisPos = getPosition();
 	thisPos.y += m_pThicknessBox->getPositionY();
 	return thisPos;
 }
 
-SGActorSprite* SGActor::getActorSprite() {
+SGVec2 SGActor::getCanvasPositionReal() const {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	return this->getPosition() - (m_pActorSprite->getBodyCanvas()->getContentSize() / 2) + m_pActorSprite->getPosition();
+}
+
+SGSize SGActor::getCanvasSize() const {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	return m_pActorSprite->getBodyCanvasSize();
+}
+
+SGRect SGActor::getHitbox() const {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	// 위치: 캔버스 좌하단 절대 좌표 + 캔버스 좌하단 기준 스킨 파츠 좌표
+	//      캔버스 좌하단 절대 좌표 = 플레이어 Cocos 위치  + 캐릭터 위치 - (캔버스 사이즈 / 2)
+	Vec2 canvasPosition = getCanvasPositionReal();
+	Vec2 skinPartPos = m_pActorSprite->getBodyPartPosition(); // 캔버스 좌하단 기준 스킨 파츠 좌표
+	Rect hitBox{ getCanvasPositionReal() + skinPartPos, m_pActorSprite->getBodyPartSize() };
+	return hitBox;
+}
+
+
+SGActorSprite* SGActor::getActorSprite() const {
 	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
 	return m_pActorSprite;
+}
+
+SpriteDirection_t SGActor::getSpriteDirection() const {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
+	return m_pActorSprite->getSpriteDirection();
 }
 
 
@@ -88,3 +128,27 @@ void SGActor::setPositionRealCenter(float x, float y) {
 	setPosition(x, y -= m_pThicknessBox->getPositionY());
 }
 
+void SGActor::runAnimation(int animationCode) {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	m_pActorSprite->runAnimation(animationCode);
+}
+
+void SGActor::setSpriteDirection(SpriteDirection_t direction) {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	m_pActorSprite->setSpriteDirection(direction);
+}
+
+
+void SGActor::setForwardDirection() {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	m_pActorSprite->setForwardDirection();
+}
+
+void SGActor::setBackwardDirection() {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	m_pActorSprite->setBackwardDirection();
+}
+
+void SGActor::setCollidable(bool enabled) {
+	m_bCollidable = enabled;
+}

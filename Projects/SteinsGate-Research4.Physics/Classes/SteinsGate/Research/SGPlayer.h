@@ -9,23 +9,39 @@
 #pragma once
 
 #include <SteinsGate/Research/SGCharacter.h>
+#include <SteinsGate/Research/SGPlayerController.h>
+#include <SteinsGate/Research/SGActionManager.h>
 
+class SGMapLayer;
 class SGPlayer
 {
 public:
 	SGPlayer();
 	~SGPlayer();
 
-	void update(float dt);
-	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-
-
 	void setCharacter(SGCharacter* character);
+	void setMapLayer(SGMapLayer* mapLayer);
+	void initActionManager();
+	void initController();
+	void update(float dt);
+	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
+	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
+	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
+	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
+	void runAction(int actionCode);
+	void runBaseAction(BaseAction_t baseAction);
+	
 	SGCharacter* getCharacter();
+	SGActionManager* getActionManager();
+	SGPlayerController* getController();
+	SGMapLayer* getMapLayer();
 private:
+	SGMapLayer* m_pMapLayer;
 	SGCharacter* m_pCharacter;
-
+	SGActionManager* m_pActionManager;
+	SGPlayerController* m_pController;
 };
 
 

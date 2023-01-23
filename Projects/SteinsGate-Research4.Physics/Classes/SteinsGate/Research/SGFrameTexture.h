@@ -17,7 +17,7 @@
 class SGFrameTexture : public cocos2d::Ref
 {
 public:
-	~SGFrameTexture() override { Log("텍스쳐 소멸"); }
+	~SGFrameTexture() override;
 
 	virtual int getWidth()		 = 0;
 	virtual int getHeight()		 = 0;
@@ -35,21 +35,24 @@ public:
 	virtual float getYF()		 	= 0;
 	virtual float getFrameWidthF() 	= 0;
 	virtual float getFrameHeightF() = 0;
-	virtual cocos2d::Texture2D* getTexture() = 0;
+	virtual SGTexture* getTexture() = 0;
 
 	virtual bool isLink()  = 0;
 	virtual bool isDummy() = 0;
 };
 
+
+
 class SGSpriteFrameTexture : public SGFrameTexture
 {
 public:
-	SGSpriteFrameTexture(cocos2d::Texture2D* texture, const NpkSpriteRect& rect, int frameIndex, bool dummy)
+	SGSpriteFrameTexture(SGTexture* texture, const NpkSpriteRect& rect, int frameIndex, bool dummy)
 		: SGFrameTexture()
 		, m_Rect(rect)
 		, m_pTexture(texture)
 		, m_iFrameIndex(frameIndex)
 		, m_bDummy(dummy) {}
+	~SGSpriteFrameTexture() override;
 
 	int getWidth()		 override { return m_Rect.Width;  }
 	int getHeight()		 override { return m_Rect.Height; }
@@ -68,13 +71,15 @@ public:
 	int getFrameIndex()				override { return m_iFrameIndex; }
 	int getTargetFrameIndex()		override { return m_iFrameIndex; }
 	const NpkSpriteRect& getRect() 	override { return m_Rect; }
-	cocos2d::Texture2D* getTexture() { return m_pTexture; }
+	SGTexture* getTexture() { return m_pTexture; }
 
 	bool isLink()  override { return false;		}
 	bool isDummy() override { return m_bDummy;	}
+
+	static SGSpriteFrameTexture* createDefaultTextureRetain();
 protected:
 	NpkSpriteRect m_Rect;
-	cocos2d::Texture2D* m_pTexture;
+	SGTexture* m_pTexture;
 	int m_iFrameIndex;
 	bool m_bDummy;
 };
@@ -101,10 +106,10 @@ public:
 	float getFrameWidthF()	 override { return 0; }
 	float getFrameHeightF()  override { return 1; }
 
-	int getFrameIndex()				 override { return InvalidIndex_v; }
+	int getFrameIndex()				 override { return InvalidValue_v; }
 	int getTargetFrameIndex()		 override { return m_iTargetFrameIndex; }
 	const NpkSpriteRect& getRect() 	 override { return {}; }
-	cocos2d::Texture2D* getTexture() override { return nullptr; }
+	SGTexture* getTexture() override { return nullptr; }
 
 	bool isLink()  override { return true;	}
 	bool isDummy() override { return false;	}

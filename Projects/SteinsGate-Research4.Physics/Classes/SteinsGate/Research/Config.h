@@ -43,6 +43,18 @@ inline constexpr int MaxNpkParallelLoadingThreadCount_v = 8;
 inline constexpr int MaxMonsterPartsCount_v = 5;
 
 
-inline constexpr int ComboSequenceCount_v = 5;
+inline constexpr int ComboSequenceCount_v = 5;				// 콤보 가능키 최대 몇개?
+inline constexpr float ComboSequenceDelay_v = 0.4f;			// 콤보 입력 제한 시간
+
 inline constexpr int MaxCommandCount_v = 3;	
-inline constexpr int InvalidIndex_v = -1;
+inline constexpr int InvalidValue_v = -1;
+
+inline constexpr float DefaultMoveSpeedPerSecX_v = 150.0f;		// 기본 이동속도 (1초당 이동 가능한 픽셀 수)
+inline constexpr float DefaultMoveSpeedPerFPSX_v = DefaultMoveSpeedPerSecX_v / 60.0f;
+
+inline constexpr float DefaultMoveSpeedPerSecY_v = 30.0f;		// 기본 이동속도 (1초당 이동 가능한 픽셀 수)
+inline constexpr float DefaultMoveSpeedPerFPSY_v = DefaultMoveSpeedPerSecX_v / 60.0f;
+
+inline constexpr float DefaultRunSpeedPerSecX_v = 225.0f;		// 기본 달리기 속도 (1초당 이동 가능한 픽셀 수)
+inline constexpr float DefaultRunSpeedPerFPSX_v = DefaultRunSpeedPerSecX_v / 60.0f;
+

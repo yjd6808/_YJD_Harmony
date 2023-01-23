@@ -1,16 +1,16 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
-    "__comment__1": "spawner_type: 캐릭(1), 몬스터(2), 장애물(3), 투사체(4)",
-    "__comment__2": "spawner_type_code 캐릭터는 캐릭터 코드, 몬스터는 몬스터 코드...",
+    "__comment__1": "프레임 단위 프로젝틸 이벤트",
     "__comment__3": "hit effect는 맞는 방향 중요 왼쪽에서 오른쪽, 오른쪽에서 왼쪽인지에따라",
     "__comment__4": "공격 데미지기반은 물리 공격(1), 마법 공격(2), 고정 데미지(3) 1,2번은 데미지 비율 필요 attack_damage_ratio",
     "__comment__5": "penetration_rate: 관통 확률 100분위, rehit_delay: 관통시 연속히트 방지용 같은 몬스터에게 다시 타격 주기까기 걸리는 시간 0은 다시 안때리도록 함",
-    "__comment__6": "두께박스의 -1은 텍스쳐 크기에 의존하겠다는 의미, 두께 relative y좌표 -1은 상대 ",
+    "__comment__6": "두께 relative y좌표 -1은 소환자의 두께박스 위치와 소환 위치를 기준으로 자동지정",
+    "__comment__7": "애니메이션 코드는 무조건 1, 여러개 쓰는 경우는 없을 듯?",
 
     "projectile": [
         {
             "code": 1,
-            "name": "거너 오른쪽 공격 - 오토건",
+            "name": "gunner_auto_right",
             "npk": "sprite_character_gunner_effect_bullet.NPK",
             "img": "pistol.img",
             "spawn_offset_x": 372.0,
@@ -28,22 +28,26 @@
             "move_speed": 400.0,
             "penetration_rate": 10.0,
             "rehit_delay": 0.0,
-            "thickness_box_width": -1,
+            "thickness_box_width": 30,
             "thickness_box_height": 30,
-            "thickness_relative_y": -1,
+            "thickness_box_relative_y": -1,
             "animation": [
                 {
-                    "name": "fire",
+                    "code": 1,
+                    "name": "gunner_auto_right",
                     "loop": true,
                     "frames": [
-                        "0 9999"
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "3 100"
                     ]
                 }
             ]
         },
         {
             "code": 2,
-            "name": "거너 왼쪽 공격 - 오토건",
+            "name": "gunner_auto_left",
             "npk": "sprite_character_gunner_effect_bullet.NPK",
             "img": "pistol.img",
             "spawn_offset_x": 386.0,
@@ -61,22 +65,26 @@
             "move_speed": 400.0,
             "penetration_rate": 15.0,
             "rehit_delay": 0.0,
-            "thickness_box_width": -1,
+            "thickness_box_width": 30,
             "thickness_box_height": 30,
-            "thickness_relative_y": -1,
+            "thickness_box_relative_y": -1,
             "animation": [
                 {
-                    "name": "fire",
+                    "code": 1,
+                    "name": "gunner_auto_left",
                     "loop": true,
                     "frames": [
-                        "0 9999"
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "3 100"
                     ]
                 }
             ]
         },
         {
             "code": 3,
-            "name": "거너 오른쪽 아래 공격 - 오토건",
+            "name": "gunner_auto_right_down",
             "npk": "sprite_character_gunner_effect_bullet.NPK",
             "img": "pistol.img",
             "spawn_offset_x": 346.0,
@@ -94,22 +102,26 @@
             "move_speed": 400.0,
             "penetration_rate": 10.0,
             "rehit_delay": 0.0,
-            "thickness_box_width": -1,
+            "thickness_box_width": 30,
             "thickness_box_height": 30,
-            "thickness_relative_y": -1,
+            "thickness_box_relative_y": -1,
             "animation": [
                 {
-                    "name": "fire",
+                    "code": 1,
+                    "name": "gunner_auto_right_down",
                     "loop": true,
                     "frames": [
-                        "0 9999"
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "3 100"
                     ]
                 }
             ]
         },
         {
             "code": 4,
-            "name": "거너 왼쪽 아래 공격 - 오토건",
+            "name": "gunner_auto_left_down",
             "npk": "sprite_character_gunner_effect_bullet.NPK",
             "img": "pistol.img",
             "spawn_offset_x": 384.0,
@@ -127,15 +139,19 @@
             "move_speed": 400.0,
             "penetration_rate": 15.0,
             "rehit_delay": 0.0,
-            "thickness_box_width": -1,
+            "thickness_box_width": 30,
             "thickness_box_height": 30,
-            "thickness_relative_y": -1,
+            "thickness_box_relative_y": -1,
             "animation": [
                 {
-                    "name": "fire",
+                    "code": 1,
+                    "name": "gunner_auto_left_down",
                     "loop": true,
                     "frames": [
-                        "0 9999"
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "3 100"
                     ]
                 }
             ]

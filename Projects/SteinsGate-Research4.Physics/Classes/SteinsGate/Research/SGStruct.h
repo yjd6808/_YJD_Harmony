@@ -26,8 +26,8 @@ struct SGVisualInfo
 	int ImgIndex[VisualType::Max];
 
 	SGVisualInfo() {
-		JCore::Arrays::Fill(NpkIndex, InvalidIndex_v);
-		JCore::Arrays::Fill(ImgIndex, InvalidIndex_v);
+		JCore::Arrays::Fill(NpkIndex, InvalidValue_v);
+		JCore::Arrays::Fill(ImgIndex, InvalidValue_v);
 	}
 	SGVisualInfo(const SGVisualInfo& other) {
 		JCore::Memory::CopyUnsafe(NpkIndex, other.NpkIndex, sizeof(int) * VisualType::Max);

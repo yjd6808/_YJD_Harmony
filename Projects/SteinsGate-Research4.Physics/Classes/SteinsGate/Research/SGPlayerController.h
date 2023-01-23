@@ -9,12 +9,16 @@
 #pragma once
 
 #include <SteinsGate/Research/Tutturu.h>
-#include <SteinsGate/Research/Enums.h>
+#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGActionManager.h>
 
 #include <JCore/Time.h>
 
+#include "SGCharacter.h"
+
 class SGPlayer;
 class SGCharacter;
+class SGActionManager;
 class SGPlayerController
 {
 public:
@@ -24,36 +28,46 @@ public:
 		ControlKey_t ControlKey{};
 	};
 
-	//SGPlayerController(SGPlayer* player);
-public:
-	//void init();
-	//void update(float dt);
-	//void onKeyPressed(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode);
-	//void onKeyReleased(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode);
-	//void onKeyPressedBefore(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode);		// 키가 눌려진 상태가 수정되기전 호출
-	//void onKeyReleasedBefore(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode);	// 키가 안눌려진 상태가 수정되기전 호출
-	//void onFrameBegin(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame);
-	//void onFrameEnd(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame);
-	//void onAnimateBegin(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame);
-	//void onAnimateEnd(CharacterSprite* character, CharacterPartAnimate* animate, CharacterPartSpriteFrame* frame);
+	SGPlayerController(SGPlayer* player, SGCharacter* character, SGActionManager* actionManager);
+	~SGPlayerController();
 
-	//bool canRunAction();
-	//void setRunningAction(ActionAbstract* action);
+	static SGPlayerController* create(SGPlayer* player, SGCharacter* character, SGActionManager* actionManager);
 
-	//bool hasPreviousAction() { return m_pPreviousAction != nullptr; }
-	//bool hasRunningAction() { return m_pRunningAction != nullptr; }
-	//ActionAbstract* getRunningAction() { return m_pRunningAction; }
-	//ActionAbstract* getPreviousAction() { return m_pPreviousAction; }
-	//ActionAbstract* getAction(ActionType_t type);
-	//ComboAction* getComboAction(const ComboKeyList& keys) { return m_ComboTree.GetComboAction(keys); }
-	//void runAction(ActionType_t type);
-	//void runAction(ActionAbstract* action);
-	//void runComboAction(const ComboKeyList& keys);
+	void init();
+	void update(float delta);
+	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyPressed(ControlKey_t pressedKey);
+	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyReleased(ControlKey_t pressedKey);
 
+	SpriteDirection_t getSpriteDirection() { return m_pCharacter->getActorSprite()->getSpriteDirection(); }
+	ControlKey_t getLastestReleasedKey() { return m_LastestReleasedKey.ControlKey; }
+	ControlKey_t getLastestPressedKey() { return m_LastestPressedKey.ControlKey; }
+	ControlKey_t convertControlKey(cocos2d::EventKeyboard::KeyCode keyCode);
 
+	bool isKeyPressed(ControlKey_t controlKey);
+	bool isMoveKeyPressed();
+	bool isHorizontalKeyPressed();	// 우측, 왼쪽 키가 모두 눌린 경우
+	bool isVerticalKeyPressed();	// 위  , 아래 키가 모두 눌린 경우
+	bool isFreezedWalkState(ControlKey_t releasedKey);
+	bool hasRunningAction() { return m_pActionManager->hasRunningAction(); }	// 달리는 액션이 아니라 실행중인 액션이란 뜻
+	bool hasPreviousAction() { return m_pActionManager->hasPreviousAction(); }
+
+	bool canUseCommand() { return m_bCabUseCommand; }
+	bool cannotUseCommand() { return m_bCabUseCommand == false; }
+	void checkComboSequence();
+
+	void idle();
+	void walk();
+
+	void updateWalking(float dt);
+	void updateDirection(ControlKey_t pressedKey);
+	void reflectPressedMoveKeys();	// 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
+	void setCommandable(bool commandable) { m_bCabUseCommand = commandable; }
 private:
 	SGPlayer* m_pPlayer;
 	SGCharacter* m_pCharacter;
+	SGActionManager* m_pActionManager;
 
 	// ==================================================
 	// 기본 필드
@@ -63,7 +77,6 @@ private:
 	InputTime m_LastestPressedKey;							// 제일 최근에 누른 키
 	InputTime m_LastestReleasedKey;							// 제일 최근에 땐 키
 	InputTime m_ControlKeySequence[ComboSequenceCount_v]{}; // 맨 앞이 제일 최근에 입력한 키
-
 	bool m_bCabUseCommand{};
-	SpriteDirection_t m_eDir = SpriteDirection::Right;
 };
+

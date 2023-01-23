@@ -23,6 +23,7 @@ struct SGAnimationInfo
 	SGAnimationInfo() {}
 	SGAnimationInfo(int frameSize) : Frames(frameSize) {}
 
+	int Code;
 	bool Loop;
 	SGString Name;
 

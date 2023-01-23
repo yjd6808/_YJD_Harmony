@@ -29,6 +29,8 @@ public:
 public:
 	const JCore::String& GetPath()			{ return m_szPath; }
 	void Add(int idx, const NpkElementPtr& element);
+	NpkElementPtr Get(int idx);
+
 	JCore::StreamPtr Stream()				{ return m_spStream; }
 	JCore::Stream& StreamRef()				{ return m_spStream.GetRef(); }
 	int Count()								{ return m_ElementMap.Size(); }

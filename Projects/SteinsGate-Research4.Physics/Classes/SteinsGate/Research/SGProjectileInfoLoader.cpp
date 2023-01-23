@@ -24,9 +24,9 @@ USING_NS_JS;
 void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
 
-	SGString path = JCore::Path::Combine(ConfigDirectory_v, "projectile_gunner.json");
+	SGString path = JCore::Path::Combine(ConfigDirectory_v, "projectile.json");
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "projectile_gunner.json 파일을 여는데 실패했습니다.");
+	DebugAssertMessage(reader.is_open(), "projectile.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
 	reader >> root;
 	Json::Value projectiles = root["projectile"];
@@ -57,7 +57,7 @@ void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 		info.RehitDelay = projectile["rehit_delay"].asFloat();
 		info.ThicknessBoxWidth = projectile["thickness_box_width"].asFloat();
 		info.ThicknessBoxHeight = projectile["thickness_box_height"].asFloat();
-		info.ThicknessBoxRelativeY = projectile["thickness_relative_y"].asFloat();
+		info.ThicknessBoxRelativeY = projectile["thickness_box_relative_y"].asFloat();
 
 		for (ArrayIndex j = 0; j < animationListRoot.size(); ++j) {
 			Value& animationRoot = animationListRoot[j];

@@ -10,26 +10,29 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Action">
-      <UniqueIdentifier>{4811212e-a215-4545-90b1-d42941b6c07d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Action\Player">
-      <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Actor">
       <UniqueIdentifier>{29c9d34e-31c9-4a0e-a136-15bb7bcd3b91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Config">
-      <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Loader">
-      <UniqueIdentifier>{2c7479b6-6920-4f4d-8a18-d686a3dc17b1}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Util">
       <UniqueIdentifier>{8999073e-667a-4980-89a7-1353515ef72b}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Player">
       <UniqueIdentifier>{0c149682-99b4-47ce-a598-7f8e8e05e211}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Texture">
+      <UniqueIdentifier>{2c7479b6-6920-4f4d-8a18-d686a3dc17b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Player\Action">
+      <UniqueIdentifier>{4811212e-a215-4545-90b1-d42941b6c07d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Player\Action\Gunner">
+      <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Define">
+      <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data">
+      <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,40 +46,40 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGImagePackManager.cpp">
-      <Filter>src\Loader</Filter>
+      <Filter>src\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGImagePack.cpp">
-      <Filter>src\Loader</Filter>
+      <Filter>src\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGTexturePool.cpp">
-      <Filter>src\Loader</Filter>
+      <Filter>src\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGConfigManager.cpp">
-      <Filter>src\Config</Filter>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGDataManager.cpp">
+      <Filter>src\Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.cpp">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.cpp">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterInfoLoader.cpp">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.cpp">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGlobal.cpp">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGJson.cpp">
       <Filter>src\Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\WorldLayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMapLayer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\ComboKeyList.cpp">
-      <Filter>src\Action</Filter>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGComboKeyList.cpp">
+      <Filter>src\Player\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGTextParser.cpp">
       <Filter>src\Util</Filter>
@@ -108,6 +111,39 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGActorPartAnimation.cpp">
       <Filter>src\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGFrameTexture.cpp">
+      <Filter>src\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActionManager.cpp">
+      <Filter>src\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGAction.cpp">
+      <Filter>src\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGComboTree.cpp">
+      <Filter>src\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGComboAction.cpp">
+      <Filter>src\Player\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerIdle.cpp">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerJump.cpp">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerRun.cpp">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerSliding.cpp">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerWalk.cpp">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerGunShot.cpp">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
@@ -130,59 +166,56 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\Enums.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGFrameTexture.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGImagePackManager.h">
-      <Filter>src\Loader</Filter>
+      <Filter>src\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGImagePack.h">
-      <Filter>src\Loader</Filter>
+      <Filter>src\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGTexturePool.h">
-      <Filter>src\Loader</Filter>
+      <Filter>src\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAnimationInfo.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfo.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGConfigManager.h">
-      <Filter>src\Config</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGDataManager.h">
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfo.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterInfo.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterInfoLoader.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfo.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGlobal.h">
-      <Filter>src\Config</Filter>
+      <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGJson.h">
       <Filter>src\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\WorldLayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMapLayer.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\ComboKeyList.h">
-      <Filter>src\Action</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGComboKeyList.h">
+      <Filter>src\Player\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGTextParser.h">
       <Filter>src\Util</Filter>
@@ -216,6 +249,51 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartAnimation.h">
       <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGFrameTexture.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionManager.h">
+      <Filter>src\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAction.h">
+      <Filter>src\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGComboAction.h">
+      <Filter>src\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGComboTree.h">
+      <Filter>src\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAnimationDefine.h">
+      <Filter>src\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionDefine.h">
+      <Filter>src\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerIdle.h">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerGunShot.h">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerJump.h">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerRun.h">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerSliding.h">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerWalk.h">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAllActions.h">
+      <Filter>src\Player\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileDefine.h">
+      <Filter>src\Define</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

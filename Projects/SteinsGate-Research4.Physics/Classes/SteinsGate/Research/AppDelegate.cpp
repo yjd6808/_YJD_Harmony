@@ -1,7 +1,7 @@
 #include "AppDelegate.h"
 
 #include <SteinsGate/Research/GameScene.h>
-#include <SteinsGate/Research/SGConfigManager.h>
+#include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 
@@ -17,12 +17,12 @@ AppDelegate::AppDelegate()
 {
     SGGlobal::getInstance();
     SGImagePackManager::getInstance();
-    SGConfigManager::getInstance();
+    SGDataManager::getInstance();
 }
 
 AppDelegate::~AppDelegate() 
 {
-    delete SGConfigManager::getInstance();
+    delete SGDataManager::getInstance();
     delete SGImagePackManager::getInstance();
     delete SGGlobal::getInstance();
 }
@@ -40,7 +40,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::createWithRect(AppName, cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        glview = GLViewImpl::createWithRect(AppName, SGRect(0, 0, designResolutionSize.width, designResolutionSize.height));
         director->setOpenGLView(glview);
     }
 

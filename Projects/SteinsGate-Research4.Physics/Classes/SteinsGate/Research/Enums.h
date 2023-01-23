@@ -271,17 +271,6 @@ static constexpr ControlKey_t ReverseDirection[Direction::Max]{
 SEnumMiddleEnd(ControlKey)
 
 
-SEnumBegin(ActionType)
-Idle,
-Shot,
-SlidingLeft,
-SlidingRight,
-RunLeft,
-RunRight,
-Jump,
-Max
-SEnumEnd(ActionType)
-
 
 SEnumBegin(ActorType)
 None,
@@ -294,6 +283,15 @@ Max
 SEnumEnd(ActorType)
 
 
+SEnumBegin(FrameEventType)
+Projectile,
+Hitbox,
+Max
+SEnumEnd(FrameEventType)
+
+
+
+
 SEnumBegin(WeaponType)
 Begin,
 Auto = Begin,
@@ -303,6 +301,16 @@ Musket,
 HandCannon,
 Max
 SEnumMiddle(WeaponType)
+
+// 핸드캐논은 총 쏘는 방식이 히트박스임, 나머진 투사체 날림
+static constexpr FrameEventType_t FrameEventType[Max]{
+	FrameEventType::Projectile,
+	FrameEventType::Projectile,
+	FrameEventType::Projectile,
+	FrameEventType::Projectile,
+	FrameEventType::Hitbox
+};
+
 
 static constexpr const char* Name[] {
 	"auto",
@@ -322,4 +330,15 @@ Magic,
 Fixed,
 Max
 SEnumEnd(AttackDamangeType)
+
+
+SEnumBegin(BaseAction)
+Idle,
+Walk,
+Run,
+Sliding,
+Attack,
+Jump,
+Max
+SEnumEnd(BaseAction)
 

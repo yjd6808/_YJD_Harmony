@@ -11,7 +11,7 @@ Scene* GameScene::createScene()
     return GameScene::create();
 }
 
-void GameScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+void GameScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
     switch (keyCode) {
     case EventKeyboard::KeyCode::KEY_ESCAPE:
         Director::getInstance()->setDisplayStats(!Director::getInstance()->isDisplayStats());
@@ -25,7 +25,7 @@ bool GameScene::init()
     if (!Scene::init())
         return false;
     
-    m_pWorldLayer = WorldLayer::create();
+    m_pWorldLayer = SGMapLayer::create();
     m_pWorldLayer->setAnchorPoint(Vec2::ZERO);
     this->addChild(m_pWorldLayer);
 

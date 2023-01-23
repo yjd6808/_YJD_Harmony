@@ -13,13 +13,13 @@
 #include <SteinsGate/Research/Config.h>
 #include <JCore/Primitives/SmartPtr.h>
 
-struct ComboKeyList
+struct SGComboKeyList
 {
 public:
-	ComboKeyList();
-	ComboKeyList(std::initializer_list<ControlKey_t> list);
-	ComboKeyList(const ComboKeyList& other);
-	ComboKeyList& operator=(const ComboKeyList& other);
+	SGComboKeyList();
+	SGComboKeyList(std::initializer_list<ControlKey_t> list);
+	SGComboKeyList(const SGComboKeyList& other);
+	SGComboKeyList& operator=(const SGComboKeyList& other);
 	ControlKey_t& operator[](const int idx);
 	void Set(int idx, ControlKey_t key);
 
@@ -30,4 +30,4 @@ private:
 	ControlKey_t Keys[ComboSequenceCount_v];
 };
 
-using ComboKeyListPtr = JCore::SharedPtr<ComboKeyList>;
+using ComboKeyListPtr = JCore::SharedPtr<SGComboKeyList>;

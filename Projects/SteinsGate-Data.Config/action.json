@@ -1,62 +1,71 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "모든 모션은 인덱스 기준이다.",
-    "__comment__2": "인덱스, 딜레이, 발생 이벤트, 발생 이벤트 ID",
-    "__comment__4": "force_cancelable은 어떤 액션이라도 이 액션을 캔슬하고 실행할 수 있다는 뜻이다.",
+    
+    "__comment__2": "force_cancelable은 어떤 액션이라도 이 액션을 캔슬하고 실행할 수 있다는 뜻이다.",
+    "__comment__3": "23/01/23: TODO: 액션 툴 개발 필요, 노가다 너무 심하다. 매 프레임 눈으로 보면서 짜맞춰야함 우선 손으로 적음",
+    "__comment__4": "이 코멘트도 데이터에 포함되므로 추후 문서로 뺄 것",
+    "__comment__5": "change_direction은 액션 실행중 방향전환이 가능하다는 뜻",
+    "__comment__6": "인덱스, 딜레이, 발생 이벤트 타입1, 발생 이벤트 ID1, 발생 이벤트타입2, 발생 이벤트 ID2 ...",
+    "__comment__7": "이벤트 종류: projectile(1), hitbox(2) 총 발사의 경우 종류가 다양해서 여기서 표현은 힘들 듯 하드코딩 ㄱ",
+
     "gunner": [
         {
             "name": "idle",
             "code": 1,
             "force_cancelable": true,
             "moveable": true,
+            "change_direction": true,
             "animation": [
                 {
+                    "code": 1,
                     "name": "idle_breath",
                     "loop": true,
                     "frames": [
-                        "0 200",
-                        "1 200",
-                        "2 200",
-                        "2 200",
-                        "1 200",
-                        "0 3000",
-                        "0 200",
-                        "1 200",
-                        "2 200",
-                        "2 200",
-                        "1 200",
-                        "0 3000",
-                        "0 200",
-                        "1 200",
-                        "2 200",
-                        "2 200",
-                        "1 200",
-                        "0 3000",
-                        "4 200",
-                        "5 200",
-                        "6 200",
-                        "7 200",
-                        "8 200",
-                        "9 200",
-                        "10 200",
-                        "11 200",
-                        "12 200"
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "2 100",
+                        "1 100",
+                        "0 1000",
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "2 100",
+                        "1 100",
+                        "0 1000",
+                        "0 100",
+                        "1 100",
+                        "2 100",
+                        "2 100",
+                        "1 100",
+                        "0 1000",
+                        "4 100",
+                        "5 100",
+                        "6 100",
+                        "7 100",
+                        "8 100",
+                        "9 100",
+                        "10 100",
+                        "11 100",
+                        "12 100"
                     ]
                 },
                 {
+                    "code": 2,
                     "name": "idle_gun_rolling",
                     "loop": false,
                     "frames": [
-                        "13 200",
-                        "14 200",
-                        "15 200",
-                        "16 200",
-                        "17 200",
-                        "18 200",
-                        "19 200",
-                        "20 200",
-                        "21 200",
-                        "22 200"
+                        "13 100",
+                        "14 100",
+                        "15 100",
+                        "16 100",
+                        "17 100",
+                        "18 100",
+                        "19 100",
+                        "20 100",
+                        "21 100",
+                        "22 100"
                     ]
                 }
             ]
@@ -66,10 +75,12 @@
             "code": 2,
             "force_cancelable": true,
             "moveable": true,
+            "change_direction": true,
             "x_speed": 150,
             "y_speed": 70,
             "animation": [
                 {
+                    "code": 3,
                     "name": "walk",
                     "loop": true,
                     "frames": [
@@ -90,6 +101,7 @@
             "code": 3,
             "force_cancelable": true,
             "moveable": true,
+            "change_direction": false,
             "command": [
                 "rr",
                 "ll"
@@ -98,6 +110,7 @@
             "y_speed": 70,
             "animation": [
                 {
+                    "code": 4,
                     "name": "run",
                     "loop": true,
                     "frames": [
@@ -118,6 +131,7 @@
             "code": 4,
             "force_cancelable": false,
             "moveable": false,
+            "change_direction": false,
             "command": [
                 "rrx",
                 "llx"
@@ -126,6 +140,7 @@
             "y_speed": 70,
             "animation": [
                 {
+                    "code": 5,
                     "name": "sliding",
                     "loop": true,
                     "frames": [
@@ -142,20 +157,23 @@
             "code": 5,
             "force_cancelable": false,
             "moveable": false,
+            "change_direction": false,
             "command": [
                 "x"
             ],
             "animation": [
                 {
+                    "code": 6,
                     "name": "shot_right_begin",
                     "loop": false,
                     "frames": [
-                        "23 200",
-                        "24 200",
-                        "25 200"
+                        "23 100",
+                        "24 100",
+                        "25 100"
                     ]
                 },
                 {
+                    "code": 7,
                     "name": "shot_right_shot",
                     "loop": false,
                     "frames": [
@@ -164,6 +182,7 @@
                     ]
                 },
                 {
+                    "code": 8,
                     "name": "shot_right_end",
                     "loop": false,
                     "frames": [
@@ -172,15 +191,17 @@
                     ]
                 },
                 {
+                    "code": 9,
                     "name": "shot_right_down_begin",
                     "loop": false,
                     "frames": [
-                        "39 200",
-                        "40 200",
-                        "41 200"
+                        "39 100",
+                        "40 100",
+                        "41 100"
                     ]
                 },
                 {
+                    "code": 10,
                     "name": "shot_right_down_shot",
                     "loop": false,
                     "frames": [
@@ -189,14 +210,16 @@
                     ]
                 },
                 {
+                    "code": 11,
                     "name": "shot_right_down_end",
                     "loop": false,
                     "frames": [
-                        "53 100",
-                        "54 100"
+                        "44 100",
+                        "45 100"
                     ]
                 },
                 {
+                    "code": 12,
                     "name": "shot_left",
                     "loop": false,
                     "frames": [
@@ -212,6 +235,7 @@
                     ]
                 },
                 {
+                    "code": 13,
                     "name": "shot_left_down",
                     "loop": false,
                     "frames": [

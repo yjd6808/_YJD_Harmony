@@ -6,7 +6,8 @@
 #include <SteinsGate/Research/AppDelegate.h>
 #include <JCore/Debug/MemoryLeakDetector.h>
 
-#include "SteinsGate/Research/SGConfigManager.h"
+#include "SteinsGate/Research/SGDataManager.h"
+
 
 int main()
 {
@@ -14,7 +15,7 @@ int main()
     detector.StartDetect();
     AppDelegate app;
     int iResult = cocos2d::Application::getInstance()->run();
-    printf("릭 %d\n", detector.StopDetect());
+    printf("릭 %d(코코스땜에 제대로 안나옴) \n", detector.StopDetect());
     return iResult;
     
 }

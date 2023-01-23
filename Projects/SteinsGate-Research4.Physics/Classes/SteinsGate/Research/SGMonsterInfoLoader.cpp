@@ -56,7 +56,7 @@ void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 		
 		monsterInfo.ThicknessBoxWidth = monterRoot["thickness_box_width"].asFloat();
 		monsterInfo.ThicknessBoxHeight = monterRoot["thickness_box_height"].asFloat();
-		monsterInfo.ThicknessBoxRelativeY = monterRoot["thickness_relative_y"].asFloat();
+		monsterInfo.ThicknessBoxRelativeY = monterRoot["thickness_box_relative_y"].asFloat();
 
 		Value& partListRoot = monterRoot["parts"];
 		monsterInfo.PartsCount = partListRoot.size();

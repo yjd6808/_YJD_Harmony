@@ -6,15 +6,15 @@
  */
 
 
-#include "ComboKeyList.h"
+#include "SGComboKeyList.h"
 
-ComboKeyList::ComboKeyList() {
+SGComboKeyList::SGComboKeyList() {
 	for (int i = 0; i < ComboSequenceCount_v; ++i) {
 		Keys[i] = ControlKey::None;
 	}
 }
 
-ComboKeyList::ComboKeyList(std::initializer_list<ControlKey_t> list) {
+SGComboKeyList::SGComboKeyList(std::initializer_list<ControlKey_t> list) {
 	int iKeyCount = list.size();
 	DebugAssertMessage(iKeyCount <= ComboSequenceCount_v, "최대 콤보 가능한 컨트롤 키의 수를 벗어났습니다.");
 
@@ -28,30 +28,30 @@ ComboKeyList::ComboKeyList(std::initializer_list<ControlKey_t> list) {
 	}
 }
 
-ComboKeyList::ComboKeyList(const ComboKeyList& other) {
+SGComboKeyList::SGComboKeyList(const SGComboKeyList& other) {
 	this->operator=(other);
 }
 
-ComboKeyList& ComboKeyList::operator=(const ComboKeyList& other) {
+SGComboKeyList& SGComboKeyList::operator=(const SGComboKeyList& other) {
 	for (int i = 0; i < ComboSequenceCount_v; ++i) {
 		Keys[i] = other.Keys[i];
 	}
 	return *this;
 }
 
-ControlKey_t& ComboKeyList::operator[](const int idx) {
+ControlKey_t& SGComboKeyList::operator[](const int idx) {
 	return Keys[idx];
 }
 
-void ComboKeyList::Set(int idx, ControlKey_t key) {
+void SGComboKeyList::Set(int idx, ControlKey_t key) {
 	Keys[idx] = key;
 }
 
-ControlKey_t ComboKeyList::At(int idx) const {
+ControlKey_t SGComboKeyList::At(int idx) const {
 	return Keys[idx];
 }
 
-SGString ComboKeyList::String() {
+SGString SGComboKeyList::String() {
 	SGString szKey;
 	const int iCount = Count();
 
@@ -63,7 +63,7 @@ SGString ComboKeyList::String() {
 	return szKey;
 }
 
-int ComboKeyList::Count() const {
+int SGComboKeyList::Count() const {
 	int iCount = 0;
 	for (int i = 0; i < ComboSequenceCount_v; ++i) {
 		if (Keys[i] == ControlKey::None) {

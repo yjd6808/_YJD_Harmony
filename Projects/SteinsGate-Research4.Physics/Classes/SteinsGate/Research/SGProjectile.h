@@ -8,5 +8,29 @@
 
 #pragma once
 
+#include <SteinsGate/Research/SGActor.h>
+#include <SteinsGate/Research/SGProjectileInfo.h>
 
+class SGProjectile : public SGActor
+{
+public:
+	SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo);
+	static SGProjectile* create(SGActor* spawner, SGProjectileInfo* baseInfo);
+	void initActorSprite() override;
+	void initThicknessBox(const SGThicknessBox& thicknessBox) override;
 
+	void update(float dt) override;
+	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
+	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
+	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
+	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
+
+	SGActor* getSpawner();
+	SGProjectileInfo* getBaseInfo();
+private:
+	float m_fMoveDistance;
+
+	SGActor* m_pSpwawner;
+	SGProjectileInfo* m_pBaseInfo;
+	SGCharacterInfo m_CharacterInfo;
+};

@@ -13,7 +13,7 @@
 
 struct SGCharacterBaseInfo
 {
-	int Code;
+	int Type;		// 캐릭터 타입
 	int HP;
 	int MP;
 	int Strength;

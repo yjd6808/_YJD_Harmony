@@ -10,7 +10,7 @@
 
 #include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/SGAnimationInfo.h>
-#include <SteinsGate/Research/ComboKeyList.h>
+#include <SteinsGate/Research/SGComboKeyList.h>
 
 struct SGActionInfo
 {
@@ -19,10 +19,11 @@ struct SGActionInfo
 	int Code;
 	SGString ActionName;
 	bool ForceCancelable;
+	bool ChangeDirection;
 	bool Moveable;
 	float SpeedX;
 	float SpeedY;
 	int CommandCount;
-	ComboKeyList Commands[MaxCommandCount_v];
+	SGComboKeyList Commands[MaxCommandCount_v];
 	SGVector<SGAnimationInfo> Animations;
 };

@@ -1,0 +1,26 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "프레임 단위 히트 박스",
+
+
+    "hitbox": [
+        {
+            "code": 1,
+            "name": "우선 양식만",
+            "follow_actor": false,
+            "rehit": false,
+            "rehit_delay": 0.0,
+            "attack_damage_type": 1,
+            "attack_damage_ratio": 100.0,
+            "attack_x_force": 100.0,
+            "attack_y_force": 10.0,
+            "spawn_effect_code": 1,
+            "hit_effect_code": 2,
+            "thickness_box_width": 20,
+            "thickness_box_height": 30,
+            "thickness_box_relative_y": -1,
+            "hitbox_width": 50,
+            "hitbox_height": 50
+        }
+    ]
+}

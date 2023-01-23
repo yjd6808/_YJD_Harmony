@@ -4,6 +4,10 @@
     "__comment__1": "몬스터 관련 데이터",
     "__comment__2": "영문 이름 적은 이유는 전처리 파일 생성시 사용할 수 있을 것 같아서 넣음",
     "__comment__3": "파츠는 5개 이하로만 할 것 클라에 고정크기로 박음",
+    "__comment__4": "몬스터 애니메이션 기본 코드는 고정임 idle은 무조건 1, attack은 2, hit 3, die 4, walk 5 ",
+    "__comment__6": "인덱스, 딜레이, 발생 이벤트 타입1, 발생 이벤트 ID1, 발생 이벤트타입2, 발생 이벤트 ID2 ...",
+    "__comment__7": "이벤트 종류: projectile(1), hitbox(2), custom_event(3)",
+
     "monsters": [
         {
             "code": 1,
@@ -19,7 +23,7 @@
             "weight": 200,
             "thickness_box_width": 50,
             "thickness_box_height": 30,
-            "thickness_relative_y": -50,
+            "thickness_box_relative_y": -50,
             "parts": [
                 {
                     "npk": "sprite_monster_goblin.NPK",
@@ -39,6 +43,7 @@
             ],
             "animation": [
                 {
+                    "code": 1,
                     "name": "idle",
                     "loop": true,
                     "frames": [
@@ -46,6 +51,7 @@
                     ]
                 },
                 {
+                    "code": 2,
                     "name": "attack",
                     "loop": false,
                     "frames": [
@@ -58,6 +64,7 @@
                 },
                 {
                     "__comment__4": "맞은 후 정지상태 될떄까지 기다려야함",
+                    "code": 3,
                     "name": "hit",
                     "loop": false,
                     "frames": [
@@ -65,17 +72,19 @@
                     ]
                 },
                 {
+                    "code": 4,
                     "name": "die",
                     "loop": false,
                     "frames": [
                         "5 100",
                         "6 100",
-                        "7 0",
+                        "7 100",
                         "8 200",
                         "9 200"
                     ]
                 },
                 {
+                    "code": 5,
                     "name": "walk",
                     "loop": true,
                     "frames": [
@@ -105,7 +114,7 @@
             "weight": 200,
             "thickness_box_width": 50,
             "thickness_box_height": 30,
-            "thickness_relative_y": -50,
+            "thickness_box_relative_y": -50,
             "parts": [
                 {
                     "npk": "sprite_monster_goblin.NPK",
@@ -125,6 +134,7 @@
             ],
             "animation": [
                 {
+                    "code": 1,
                     "name": "idle",
                     "loop": true,
                     "frames": [
@@ -132,6 +142,7 @@
                     ]
                 },
                 {
+                    "code": 2,
                     "name": "attack",
                     "loop": false,
                     "frames": [
@@ -143,6 +154,7 @@
                     ]
                 },
                 {
+                    "code": 3,
                     "name": "hit",
                     "loop": false,
                     "frames": [
@@ -150,17 +162,19 @@
                     ]
                 },
                 {
+                    "code": 4,
                     "name": "die",
                     "loop": false,
                     "frames": [
                         "5 100",
                         "6 100",
-                        "7 0",
+                        "7 100",
                         "8 200",
                         "9 200"
                     ]
                 },
                 {
+                    "code": 5,
                     "name": "walk",
                     "loop": true,
                     "frames": [

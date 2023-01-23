@@ -34,18 +34,15 @@ void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 	reader >> root;
 	Json::Value gunnerRoot = root["gunner"];
 
-
-	
-
-	
 	{
 		SGCharacterBaseInfo& gunnerBaseInfo = characterInfoMap[CharacterType::Gunner];
 
 		for (int i = 0; i < VisualType::Max; ++i) {
-			gunnerBaseInfo.DefaultVisualImgIndex[i] = InvalidIndex_v;
-			gunnerBaseInfo.DefaultVisualNpkIndex[i] = InvalidIndex_v;
+			gunnerBaseInfo.DefaultVisualImgIndex[i] = InvalidValue_v;
+			gunnerBaseInfo.DefaultVisualNpkIndex[i] = InvalidValue_v;
 		}
 
+		gunnerBaseInfo.Type = CharacterType::Gunner;
 		gunnerBaseInfo.HP = gunnerRoot["hp"].asInt();
 		gunnerBaseInfo.MP = gunnerRoot["mp"].asInt();
 		gunnerBaseInfo.Strength = gunnerRoot["str"].asInt();

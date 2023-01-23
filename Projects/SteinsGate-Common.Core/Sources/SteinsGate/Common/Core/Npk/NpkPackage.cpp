@@ -13,16 +13,7 @@
 
 using namespace JCore;
 
-NpkPackage::~NpkPackage() {
-	auto g = this;
-	auto& mana = m_ElementHeaders;
-
-	int sz = mana.Size();
-	for (int j = 0; j < mana.Size(); ++j) {
-		auto& gdrg = mana[j];
-	}
-
-}
+NpkPackage::~NpkPackage() {}
 
 NpkPackagePtr NpkPackage::Create(const JCore::StreamPtr& readOnlyStream, const String& path, int capacity) {
 	return MakeShared<NpkPackage>(readOnlyStream, path, capacity);
@@ -30,6 +21,11 @@ NpkPackagePtr NpkPackage::Create(const JCore::StreamPtr& readOnlyStream, const S
 
 void NpkPackage::Add(const int idx, const NpkElementPtr& element) {
 	m_ElementMap.Insert(idx, element);
+}
+
+NpkElementPtr NpkPackage::Get(int idx) {
+	DebugAssertMessage(m_ElementMap.Exist(idx), "엘리먼트가 존재하지 않습니다.");
+	return m_ElementMap[idx];
 }
 
 void NpkPackage::LoadElement(const int index, bool indexOnly) {

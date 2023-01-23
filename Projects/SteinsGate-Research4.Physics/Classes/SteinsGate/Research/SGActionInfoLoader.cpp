@@ -46,6 +46,7 @@ void SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 		actionInfo.ActionName = SGJson::getString(actionRoot["name"]);
 		actionInfo.Code = actionRoot["code"].asInt();
 		actionInfo.ForceCancelable = actionRoot["force_cancelable"].asBool();
+		actionInfo.ChangeDirection = actionRoot["change_direction"].asBool();
 		actionInfo.Moveable = actionRoot["moveable"].asBool();
 		actionInfo.SpeedX = actionRoot.get("x_speed", 0.0f).asFloat();
 		actionInfo.SpeedY = actionRoot.get("y_speed", 0.0f).asFloat();
@@ -55,7 +56,7 @@ void SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 			actionInfo.CommandCount = commandRoot.size();
 			for (ArrayIndex j = 0; j < commandRoot.size(); ++j) {
 				SGString command = SGJson::getString(commandRoot[j]);
-				ComboKeyList keyList;
+				SGComboKeyList keyList;
 				 for (int k = 0; k < command.Length(); ++k) {
 					switch (command[k]) {
 					case 'r': keyList[k] = ControlKey::Right; break;
@@ -78,7 +79,6 @@ void SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 			SGJson::parseAnimationInfo(animationRoot, animationInfo);
 			actionInfo.Animations.PushBack(Move(animationInfo));
 		}
-
 		actionInfoMap.Insert(actionInfo.Code, Move(actionInfo));
 	}
 
