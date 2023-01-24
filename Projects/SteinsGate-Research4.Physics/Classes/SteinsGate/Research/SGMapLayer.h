@@ -31,6 +31,7 @@ public:
 	void runFrameEvent(SGActor* runner, FrameEventType_t frameEventType, int frameEventId);
 	void createProejctile(SGActor* spawner, int projectileId);
 	void createHitbox(SGActor* spawner, int hitBoxId);
+	void createMonster(float x, float y, int code);
 
 	void registerZOrderActor(SGActor* actor);
 

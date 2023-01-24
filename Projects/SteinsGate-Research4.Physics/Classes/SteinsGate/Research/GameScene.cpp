@@ -24,16 +24,17 @@ bool GameScene::init()
 {
     if (!Scene::init())
         return false;
-    
+
     m_pWorldLayer = SGMapLayer::create();
     m_pWorldLayer->setAnchorPoint(Vec2::ZERO);
+    m_pWorldLayer->setScale(SGDataManager::getInstance()->getClientInfo()->GameScale);
     this->addChild(m_pWorldLayer);
 
 
     m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
     m_pGridLayer->setAnchorPoint(Vec2::ZERO);
     m_pGridLayer->setVisible(false);
-    this->addChild(m_pGridLayer, 1);
+    m_pWorldLayer->addChild(m_pGridLayer, 1);
 
 
     EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();

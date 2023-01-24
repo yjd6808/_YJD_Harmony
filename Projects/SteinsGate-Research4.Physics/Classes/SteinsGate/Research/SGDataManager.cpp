@@ -12,6 +12,7 @@
 #include <SteinsGate/Research/SGMonsterInfoLoader.h>
 #include <SteinsGate/Research/SGCharacterBaseInfoLoader.h>
 #include <SteinsGate/Research/SGProjectileInfoLoader.h>
+#include <SteinsGate/Research/SGClientInfoLoader.h>
 
 void SGDataManager::LoadAllConfigs() {
 	// 내가 만든 설정파일 들은 아직 엄청 가벼워서 쓰레드가 필요없다.
@@ -19,6 +20,7 @@ void SGDataManager::LoadAllConfigs() {
 	SGActionInfoLoader::LoadActionInfo(m_ActionInfoMap);
 	SGMonsterInfoLoader::LoadMonsterInfo(m_MonsterInfoMap);
 	SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(m_CharacterBaseInfoMap);
+	SGClientInfoLoader::LoadClientInfo(m_ClientInfo);
 
 	m_ActionInfoMap.Values().Extension().ForEach([this](SGActionInfo& info) {
 		m_ActionInfoNameMap.Insert(info.ActionName, &info);

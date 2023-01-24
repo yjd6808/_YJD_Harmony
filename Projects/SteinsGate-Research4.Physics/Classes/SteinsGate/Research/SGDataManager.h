@@ -13,6 +13,7 @@
 #include <SteinsGate/Research/SGActionInfo.h>
 #include <SteinsGate/Research/SGCharacterBaseInfo.h>
 #include <SteinsGate/Research/SGProjectileInfo.h>
+#include <SteinsGate/Research/SGClientInfo.h>
 
 struct SGDataManager
 {
@@ -34,8 +35,10 @@ public:
 	SGActionInfo* getActionInfo(const SGString& actionName);
 	SGProjectileInfo* getProjectileInfo(int projectileCode);
 	SGCharacterBaseInfo* getCharacterBaseInfo(int characterCode);
+	SGClientInfo* getClientInfo() { return &m_ClientInfo; }
 
 private:
+	SGClientInfo m_ClientInfo;
 	SGHashMap<int, SGMonsterInfo> m_MonsterInfoMap;
 	SGHashMap<int, SGActionInfo> m_ActionInfoMap;
 	SGHashMap<int, SGProjectileInfo> m_ProjectInfoMap;

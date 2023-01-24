@@ -20,8 +20,7 @@ struct SGMonsterPartInfo
 
 struct SGMonsterInfo
 {
-	SGMonsterInfo(int animationSize) : Animations(animationSize) {
-	}
+	SGMonsterInfo(int animationSize) : Animations(animationSize) {}
 
 	int Code;
 	SGString Name;

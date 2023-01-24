@@ -1,0 +1,10 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "클라이언트 화면 정보",
+    "__comment__2": "game_scale: 화면내 보일 오브젝트 스케일 2.0 설정시 모든게 기존보다 2배 커짐",
+    "__comment__3": "resulution_width, height: 게임 화면 크기",
+
+    "game_scale": 1.0,
+    "resolution_width": 1280.0,
+    "resolution_height": 720.0
+}

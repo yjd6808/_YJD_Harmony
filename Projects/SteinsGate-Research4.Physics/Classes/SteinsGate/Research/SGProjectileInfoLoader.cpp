@@ -21,14 +21,20 @@
 USING_NS_JC;
 USING_NS_JS;
 
+#define JsonFileName "projectile.json"
+
 void SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
-
-	SGString path = JCore::Path::Combine(ConfigDirectory_v, "projectile.json");
+	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "projectile.json 파일을 여는데 실패했습니다.");
+	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
-	reader >> root;
+	try {
+		reader >> root;
+	}
+	catch (std::exception& ex) {
+		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+	}
 	Json::Value projectiles = root["projectile"];
 
 	for (Json::Value::ArrayIndex i = 0; i < projectiles.size(); i++) {

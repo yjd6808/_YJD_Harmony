@@ -10,10 +10,13 @@
 #include <SteinsGate/Common/Core/Npk/NpkPackage.h>
 
 #include <JCore/FileSystem/FileStream.h>
+#include <JCore/FileSystem/Path.h>
 
 using namespace JCore;
 
-NpkPackage::~NpkPackage() {}
+NpkPackage::~NpkPackage() {
+	printf("%s 패키지 소멸\n", JCore::Path::FileName(this->GetPath()).Source());
+}
 
 NpkPackagePtr NpkPackage::Create(const JCore::StreamPtr& readOnlyStream, const String& path, int capacity) {
 	return MakeShared<NpkPackage>(readOnlyStream, path, capacity);

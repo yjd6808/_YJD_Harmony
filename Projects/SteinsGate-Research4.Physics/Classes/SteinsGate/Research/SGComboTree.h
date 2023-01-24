@@ -33,8 +33,19 @@ public:
 	SGComboAction* GetComboAction(const SGComboKeyList& keys);
 private:
 	static void RemoveComboNodeRecursive(SGComboTreeNode* parent);
-	static void AddComboNodeRecursive(SGComboTreeNode* parent, SGComboTreeNode* newNode, const SGComboKeyList& keys, int keyIndex, int keyCount);
-	static SGComboTreeNode* FindComboNodeRecursive(SGComboTreeNode* parent, const SGComboKeyList& keys, int keyIndex, int keyCount);
+	static void AddComboNodeRecursive(
+		SGComboTreeNode* parent, 
+		SGComboTreeNode* newNode, 
+		const SGComboKeyList& keys, 
+		int keyIndex, 
+		int keyCount
+	);
+	static SGComboTreeNode* FindComboNodeRecursive(
+		SGComboTreeNode* parent, 
+		const SGComboKeyList& keys, 
+		int keyIndex, 
+		int keyCount
+	);
 private:
 	SGComboTreeNode* m_pRoot;
 	int m_iCount = 0;

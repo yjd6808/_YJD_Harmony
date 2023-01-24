@@ -60,12 +60,12 @@ void SGImagePackManager::loadAllPackages() {
 	for (int i = 0; i < MaxNpkParallelLoadingThreadCount_v; ++i) {
 		loaderThread[i].Join();
 	}
-	SGConsole::WriteLine("모든 NPK 헤더만 로딩 완료");
+	SGConsole::WriteLine("NPK파일들 인덱스 로딩 완료");
 }
 
-SGImagePack* SGImagePackManager::getPack(const SGString& packPath) {
-	DebugAssertMessage(m_PathToIdMap.Exist(packPath), "해당 패키지가 존재하지 않습니다.");
-	return m_LoadedPackages[m_PathToIdMap[packPath]];
+SGImagePack* SGImagePackManager::getPack(const SGString& packName) {
+	DebugAssertMessage(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다.");
+	return m_LoadedPackages[m_PathToIdMap[packName]];
 }
 SGImagePack* SGImagePackManager::getPack(const int idx) {
 	DebugAssertMessage(idx >= 0 && idx < m_iLoadedPackageCount, "올바르지 않은 패키지 인덱스 입니다.");

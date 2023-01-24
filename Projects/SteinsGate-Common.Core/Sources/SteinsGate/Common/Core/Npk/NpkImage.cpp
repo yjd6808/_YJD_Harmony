@@ -37,7 +37,6 @@ void NpkImage::Unload() {
 }
 
 NpkImage::~NpkImage() {
-
 }
 
 void NpkImage::Add(NpkSpriteAbstractPtr sprite) {

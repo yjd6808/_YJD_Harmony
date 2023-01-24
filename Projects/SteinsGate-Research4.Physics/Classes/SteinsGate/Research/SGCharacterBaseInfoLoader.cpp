@@ -20,18 +20,24 @@
 #include <fstream>
 
 
-
+USING_NS_CC;
 USING_NS_JS;
 
-void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&characterInfoMap)[CharacterType::Max]) {
-	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
-	SGGlobal* pGlobal = SGGlobal::getInstance();
+#define JsonFileName "character_base.json"
 
-	SGString path = JCore::Path::Combine(ConfigDirectory_v, "character_base.json");
+void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&characterInfoMap)[CharacterType::Max]) {
+	SGGlobal* pGlobal = SGGlobal::getInstance();
+	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
+	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "character_base.json 파일을 여는데 실패했습니다.");
+	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
-	reader >> root;
+	try {
+		reader >> root;
+	}
+	catch (std::exception& ex) {
+		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+	}
 	Json::Value gunnerRoot = root["gunner"];
 
 	{

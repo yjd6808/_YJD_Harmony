@@ -15,14 +15,19 @@ namespace JCore {
 
 	String Path::FileName(const String& path) {
 		String szFileName;
+		bool bSlashFound = false;
 
 		for (int i = path.Length() - 1; i >= 0; i--) {
 			char& ch = path[i];
 			if (ch == '\\' || ch == '/') {
 				szFileName += path.Source() + i + 1;
+				bSlashFound = true;
 				break;
 			}
 		}
+		if (bSlashFound == false)
+			return path;
+
 		return szFileName;
 	}
 

@@ -8,6 +8,7 @@
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 #include <SteinsGate/Research/SGProjectile.h>
+#include <SteinsGate/Research/SGMonster.h>
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -54,6 +55,14 @@ bool SGMapLayer::init() {
 	// =================================================
 	// 임시 데이터 주입
 	// =================================================
+
+	auto pack = SGImagePackManager::getInstance()->getPack("sprite_map.NPK");
+	int count = pack->getImgCount();
+	auto idx = pack->getImgIndex("00tile2.img");
+
+	auto tex = pack->createFrameTextureRetain(idx, 0);
+	this->addChild(Sprite::createWithTexture(tex->getTexture()));
+
 	SGCharacterInfo info;
 	SGDataManager* pConfig = SGDataManager::getInstance();
 	SGCharacterBaseInfo* pBaseInfo = pConfig->getCharacterBaseInfo(CharacterType::Gunner);
@@ -88,6 +97,10 @@ bool SGMapLayer::init() {
 	m_pPlayer->setMapLayer(this);
 	registerZOrderActor(pPlayerCharacter);
 
+	createMonster(100, 100, 1);
+	createMonster(200, 200, 2);
+
+	
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = CC_CALLBACK_2(SGMapLayer::onKeyPressed, this);
@@ -123,13 +136,20 @@ void SGMapLayer::runFrameEvent(SGActor* runner, FrameEventType_t frameEventType,
 }
 
 void SGMapLayer::createProejctile(SGActor* spawner, int projectileId) {
-	SGProjectileInfo* info = SGDataManager::getInstance()->getProjectileInfo(projectileId);
-	SGProjectile* projectile = SGProjectile::create(spawner, info);
-	registerZOrderActor(projectile);
+	SGProjectileInfo* pInfo = SGDataManager::getInstance()->getProjectileInfo(projectileId);
+	SGProjectile* pProjectile = SGProjectile::create(spawner, pInfo);
+	registerZOrderActor(pProjectile);
 }
 
 void SGMapLayer::createHitbox(SGActor* spawner, int hitBoxId) {
 	
+}
+
+void SGMapLayer::createMonster(float x, float y, int code) {
+	SGMonsterInfo* pInfo = SGDataManager::getInstance()->getMonsterInfo(code);
+	SGMonster* pMonster = SGMonster::create(pInfo);
+	pMonster->setPositionReal(x, y);
+	registerZOrderActor(pMonster);
 }
 
 void SGMapLayer::registerZOrderActor(SGActor* actor) {
@@ -162,7 +182,7 @@ void SGMapLayer::updateZOrder(float dt) {
 		int find = i;
 		for (int j = i - 1; j >= 0; --j) {
 
-			if (m_vZOrderedActors[j]->getThicknessBoxRect().getMidY() > 
+			if (m_vZOrderedActors[j]->getThicknessBoxRect().getMidY() < 
 				m_vZOrderedActors[find]->getThicknessBoxRect().getMidY()) 
 			{
 				CC_SWAP(m_vZOrderedActors[j], m_vZOrderedActors[find], SGActor*);
@@ -177,7 +197,7 @@ void SGMapLayer::updateZOrder(float dt) {
 	}
 
 
-	for (int iOrder = 1; iOrder < m_vZOrderedActors.Size(); ++iOrder) {
+	for (int iOrder = 1; iOrder <= m_vZOrderedActors.Size(); ++iOrder) {
 		reorderChild(m_vZOrderedActors[iOrder - 1], iOrder);
 	}
 }

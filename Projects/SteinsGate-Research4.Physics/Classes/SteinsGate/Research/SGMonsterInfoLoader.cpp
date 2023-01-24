@@ -20,9 +20,11 @@
 USING_NS_JS;
 USING_NS_JC;
 
+#define JsonFileName "monster.json"
+
 void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monsterInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
-	SGString path = JCore::Path::Combine(ConfigDirectory_v, "monster.json");
+	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
 	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
@@ -30,8 +32,7 @@ void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 		reader >> root;
 	}
 	catch (std::exception& ex) {
-		Log("action.json 파싱중 오류가 발생하였습니다. %s\n", ex.what());
-		return;
+		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
 	}
 
 	Json::Value monsterListRoot = root["monsters"];

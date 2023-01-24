@@ -14,6 +14,7 @@
 #include <JCore/Assert.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Define.h>
+#include <JCore/Primitives/StringUtil.h>
 
 #include <JCore/Utils/Console.h>
 #include <JCore/Threading/Thread.h>
@@ -37,6 +38,7 @@
 using SGConsole = JCore::SafeConsole;
 using SGString = JCore::String;
 using SGPath = JCore::Path;
+using SGStringUtil = JCore::StringUtil;
 
 template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
 using SGHashMap = JCore::HashMap<TKey, TValue, TAllocator>;

@@ -22,10 +22,10 @@ void SGGunnerGunShot::onActionBegin() {
 	m_bShotEnd = false;
 	m_bDownShotKeyPressedFirst = false;
 	m_bDownShotKeyPressed = false;
-	m_bNextFire = false;
 	m_bNextFireCheck = false;
 	m_bCancelable = false;
 	m_bFinalShot = false;
+	m_iContinuosCount = 0;
 
 	m_iRightShotCount = 5;
 
@@ -70,8 +70,6 @@ void SGGunnerGunShot::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTex
 	const int iAnimationCode = animation->getAnimationInfo()->Code;
 	SGActorSprite* pActorSprite = m_pPlayer->getCharacter()->getActorSprite();
 
-	Log("애니메이션 종료\n");
-
 	if (iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_BEGIN ||
 		iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_DOWN_BEGIN) {
 		if (m_bDownShotKeyPressedFirst) {
@@ -83,15 +81,16 @@ void SGGunnerGunShot::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTex
 		
 	}
 	else if (iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_SHOT) {
-		if (m_bNextFire == false) {
+		if (m_iContinuosCount <= 0) {
 			pActorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_END);
 			m_bShotEnd = true;
 			return;
 		}
+
 		shot(pActorSprite, iAnimationCode);
 	}
 	else if (iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT) {
-		if (m_bNextFire == false) {
+		if (m_iContinuosCount <= 0) {
 			pActorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_DOWN_END);
 			m_bShotEnd = true;
 			return;
@@ -167,7 +166,7 @@ void SGGunnerGunShot::onKeyPressed(SGPlayerController* controller, SGEventKeyboa
 		return;
 
 	if (key == ControlKey::Attack) {
-		m_bNextFire = true;
+		++m_iContinuosCount;
 	}
 }
 
@@ -188,12 +187,14 @@ void SGGunnerGunShot::shot(SGActorSprite* actorSprite, int animtionCode) {
 
 	// 아직 우측방향으로 쏠 수 있는 경우
 	if (m_iRightShotCount > 0) {
+
+
 		m_iRightShotCount--;
 		if (m_bDownShotKeyPressed)
 			actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT);
 		else
 			actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_SHOT);
-		m_bNextFire = false;
+		--m_iContinuosCount;
 		return;
 	}
 

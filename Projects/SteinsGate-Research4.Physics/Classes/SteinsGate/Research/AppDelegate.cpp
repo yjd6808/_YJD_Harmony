@@ -11,8 +11,6 @@
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(1280, 720);
-
 AppDelegate::AppDelegate()
 {
     SGGlobal::getInstance();
@@ -34,23 +32,23 @@ void AppDelegate::initGLContextAttrs()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
-
- 
+    SGDataManager* pDataManager = SGDataManager::getInstance();
+    SGClientInfo* pClientInfo = pDataManager->getClientInfo();
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLViewImpl::createWithRect(AppName, SGRect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        glview = GLViewImpl::createWithRect(AppName, SGRect(0, 0, pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight));
         director->setOpenGLView(glview);
     }
 
     director->setDisplayStats(false);
-    director->setAnimationInterval(1.0f / 60);
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
-    auto frameSize = glview->getFrameSize();
-    director->setContentScaleFactor(1.0f);
+    director->setAnimationInterval(1.0f / 120);
+    glview->setDesignResolutionSize(pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight, ResolutionPolicy::NO_BORDER);
+    director->setContentScaleFactor(pClientInfo->GameScale);
 
     auto scene = GameScene::createScene();
+    scene->setAnchorPoint(Vec2::ZERO);
     director->runWithScene(scene);
     return true;
 }

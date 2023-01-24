@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGClientInfoLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGComboAction.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGComboTree.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAction.cpp">
@@ -120,6 +124,14 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\AppDelegate.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActionDefine.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGClientInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGClientInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

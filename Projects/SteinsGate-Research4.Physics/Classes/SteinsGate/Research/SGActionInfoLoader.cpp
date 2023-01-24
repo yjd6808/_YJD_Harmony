@@ -21,17 +21,19 @@
 USING_NS_JS;
 USING_NS_JC;
 
+#define JsonFileName "action.json"
 
 void SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfoMap) {
-	SGString path = JCore::Path::Combine(ConfigDirectory_v, "action.json");
+	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
+	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "action.json 파일을 여는데 실패했습니다.");
+	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
 	try {
 		reader >> root;
-	} catch (std::exception& ex) {
-		Log("action.json 파싱중 오류가 발생하였습니다. %s\n", ex.what());
-		return;
+	}
+	catch (std::exception& ex) {
+		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
 	}
 	
 	Json::Value gunnerRoot = root["gunner"];

@@ -28,7 +28,7 @@ public:
 
 	void loadAllPackages();
 
-	SGImagePack* getPack(const SGString& packPath);
+	SGImagePack* getPack(const SGString& packName);
 	SGImagePack* getPack(const int idx);
 	SGImagePack* getAvatarPack(CharacterType_t characterType, AvatarType_t avatarType);
 	SGImagePack* getWeaponPack(CharacterType_t characterType, WeaponType_t weaponType);

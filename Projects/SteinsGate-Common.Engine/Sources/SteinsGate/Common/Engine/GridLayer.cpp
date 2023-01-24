@@ -58,6 +58,8 @@ bool GridLayer::initWithParams(const int interval, const Color4F & color)
 	if (!Layer::init())
 		return false;
 
+	float fScaleFactor = Director::getInstance()->getContentScaleFactor();
+
 	if (userGridEvent == GridEvent::ShowGridAndMousePoint || userGridEvent == GridEvent::ShowGrid)
 	{
 		DrawGridWindow(interval, color);
@@ -75,13 +77,13 @@ bool GridLayer::initWithParams(const int interval, const Color4F & color)
 		_eventDispatcher->addEventListenerWithSceneGraphPriority(listnerTouch, this);
 
 		Label* GridMousePos = Label::create();
-		GridMousePos->setPosition(Vec2(50.0f, Director::getInstance()->getWinSize().height - 50.0f));
+		GridMousePos->setPosition(Vec2(50.0f, Director::getInstance()->getWinSize().height / fScaleFactor - 50.0f));
 		GridMousePos->setAnchorPoint(Vec2::ZERO);
 		GridMousePos->setSystemFontSize(20);
 		this->addChild(GridMousePos, 1, (int)LabelTag::GridMousePosition);
 
 		Label* TouchMousePos = Label::create();
-		TouchMousePos->setPosition(Vec2(50.0f, Director::getInstance()->getWinSize().height - 70.0f));
+		TouchMousePos->setPosition(Vec2(50.0f, Director::getInstance()->getWinSize().height / fScaleFactor - 70.0f));
 		TouchMousePos->setAnchorPoint(Vec2::ZERO);
 		TouchMousePos->setSystemFontSize(20);
 		this->addChild(TouchMousePos, 1, (int)LabelTag::TouchMousePosition);
