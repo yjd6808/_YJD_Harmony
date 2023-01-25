@@ -14,7 +14,7 @@
 
 struct SGActionInfo
 {
-	SGActionInfo(int animationSize) : Animations(animationSize) {}
+	SGActionInfo(int animationSize) : AnimationList(animationSize) {}
 
 	int Code;
 	SGString ActionName;
@@ -25,5 +25,5 @@ struct SGActionInfo
 	float SpeedY;
 	int CommandCount;
 	SGComboKeyList Commands[MaxCommandCount_v];
-	SGVector<SGAnimationInfo> Animations;
+	SGVector<SGAnimationInfo> AnimationList;
 };

@@ -13,7 +13,7 @@
 struct SGProjectileInfo
 {
 	SGProjectileInfo(int animationSize)
-		: Animations(animationSize) {}
+		: AnimationList(animationSize) {}
 
 	int Code;
 	SGString Name;
@@ -34,8 +34,6 @@ struct SGProjectileInfo
 	float MoveSpeed;
 	float PenetrationRate;
 	float RehitDelay;
-	float ThicknessBoxWidth;
-	float ThicknessBoxHeight;
-	float ThicknessBoxRelativeY;
-	SGVector<SGAnimationInfo> Animations;
+	SGThicknessBox ThicknessBox;
+	SGVector<SGAnimationInfo> AnimationList;
 };

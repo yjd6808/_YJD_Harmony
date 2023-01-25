@@ -14,6 +14,10 @@
 #include <SteinsGate/Research/SGCharacterBaseInfo.h>
 #include <SteinsGate/Research/SGProjectileInfo.h>
 #include <SteinsGate/Research/SGClientInfo.h>
+#include <SteinsGate/Research/SGTileInfo.h>
+#include <SteinsGate/Research/SGObstacleInfo.h>
+#include <SteinsGate/Research/SGMapInfo.h>
+
 
 struct SGDataManager
 {
@@ -36,15 +40,23 @@ public:
 	SGProjectileInfo* getProjectileInfo(int projectileCode);
 	SGCharacterBaseInfo* getCharacterBaseInfo(int characterCode);
 	SGClientInfo* getClientInfo() { return &m_ClientInfo; }
+	SGTileInfo* getTileInfo(int tileCode);
+	SGObstacleInfo* getObstacleInfo(int obstacleCode);
+	SGMapInfo* getMapInfo(int mapCode);
+
 
 private:
 	SGClientInfo m_ClientInfo;
 	SGHashMap<int, SGMonsterInfo> m_MonsterInfoMap;
 	SGHashMap<int, SGActionInfo> m_ActionInfoMap;
-	SGHashMap<int, SGProjectileInfo> m_ProjectInfoMap;
+	SGHashMap<int, SGProjectileInfo> m_ProjectileInfoMap;
+	SGHashMap<int, SGTileInfo> m_TileInfoMap;
+	SGHashMap<int, SGObstacleInfo> m_ObstacleInfoMap;
+	SGHashMap<int, SGMapInfo> m_MapInfoMap;
 
 	SGHashMap<SGString, SGActionInfo*> m_ActionInfoNameMap;
 
 	SGCharacterBaseInfo m_CharacterBaseInfoMap[CharacterType::Max];
 };
+
 

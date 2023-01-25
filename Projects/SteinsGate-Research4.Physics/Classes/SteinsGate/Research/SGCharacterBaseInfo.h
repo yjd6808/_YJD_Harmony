@@ -9,7 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Research/Tutturu.h>
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGStruct.h>
 
 struct SGCharacterBaseInfo
 {
@@ -27,11 +27,9 @@ struct SGCharacterBaseInfo
 	float AttackSpeed[WeaponType::Max];
 	float JumpForce;
 	float SlidingForce;
-	float ThicknessBoxWidth;
-	float ThicknessBoxHeight;
-	float ThicknessBoxRelativeY;
 	int DefaultVisualZOrder[VisualType::Max];
 	int DefaultVisualNpkIndex[VisualType::Max];
 	int DefaultVisualImgIndex[VisualType::Max];
+	SGThicknessBox ThicknessBox;
 	WeaponType_t DefaultWeaponType;
 };

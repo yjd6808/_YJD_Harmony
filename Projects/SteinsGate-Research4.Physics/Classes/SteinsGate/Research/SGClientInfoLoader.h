@@ -16,7 +16,7 @@
 struct SGClientInfoLoader
 {
 public:
-	static void LoadClientInfo(SGClientInfo& clientInfo);
+	static bool LoadClientInfo(SGClientInfo& clientInfo);
 };
 
 

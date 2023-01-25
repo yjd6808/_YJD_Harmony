@@ -13,14 +13,21 @@
 #include <SteinsGate/Research/SGCharacterBaseInfoLoader.h>
 #include <SteinsGate/Research/SGProjectileInfoLoader.h>
 #include <SteinsGate/Research/SGClientInfoLoader.h>
+#include <SteinsGate/Research/SGTileInfoLoader.h>
+#include <SteinsGate/Research/SGObstacleInfoLoader.h>
+#include <SteinsGate/Research/SGMapInfoLoader.h>
+
 
 void SGDataManager::LoadAllConfigs() {
 	// 내가 만든 설정파일 들은 아직 엄청 가벼워서 쓰레드가 필요없다.
-	SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectInfoMap);
+	SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectileInfoMap);
 	SGActionInfoLoader::LoadActionInfo(m_ActionInfoMap);
 	SGMonsterInfoLoader::LoadMonsterInfo(m_MonsterInfoMap);
 	SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(m_CharacterBaseInfoMap);
 	SGClientInfoLoader::LoadClientInfo(m_ClientInfo);
+	SGTileInfoLoader::LoadTileInfo(m_TileInfoMap);
+	SGObstacleInfoLoader::LoadObstacleInfo(m_ObstacleInfoMap);
+	SGMapInfoLoader::LoadMapInfo(m_MapInfoMap);
 
 	m_ActionInfoMap.Values().Extension().ForEach([this](SGActionInfo& info) {
 		m_ActionInfoNameMap.Insert(info.ActionName, &info);
@@ -43,8 +50,8 @@ SGActionInfo* SGDataManager::getActionInfo(const SGString& actionName) {
 }
 
 SGProjectileInfo* SGDataManager::getProjectileInfo(int projectileCode) {
-	DebugAssertMessage(m_ProjectInfoMap.Exist(projectileCode), "해당 프로젝틸 정보가 존재하지 않습니다.");
-	return &m_ProjectInfoMap[projectileCode];
+	DebugAssertMessage(m_ProjectileInfoMap.Exist(projectileCode), "해당 프로젝틸 정보가 존재하지 않습니다.");
+	return &m_ProjectileInfoMap[projectileCode];
 }
 
 SGCharacterBaseInfo* SGDataManager::getCharacterBaseInfo(int characterCode) {
@@ -52,3 +59,17 @@ SGCharacterBaseInfo* SGDataManager::getCharacterBaseInfo(int characterCode) {
 	return &m_CharacterBaseInfoMap[characterCode];
 }
 
+SGTileInfo* SGDataManager::getTileInfo(int tileCode) {
+	DebugAssertMessage(m_TileInfoMap.Exist(tileCode), "해당 타일 정보가 존재하지 않습니다.");
+	return &m_TileInfoMap[tileCode];
+}
+
+SGObstacleInfo* SGDataManager::getObstacleInfo(int obstacleCode) {
+	DebugAssertMessage(m_ObstacleInfoMap.Exist(obstacleCode), "해당 옵스터클 정보가 존재하지 않습니다.");
+	return &m_ObstacleInfoMap[obstacleCode];
+}
+
+SGMapInfo* SGDataManager::getMapInfo(int mapCode) {
+	DebugAssertMessage(m_TileInfoMap.Exist(mapCode), "해당 맵 정보가 존재하지 않습니다.");
+	return &m_MapInfoMap[mapCode];
+}

@@ -9,7 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Research/SGAnimationInfo.h>
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGStruct.h>
 
 struct SGMonsterPartInfo
 {
@@ -20,7 +20,7 @@ struct SGMonsterPartInfo
 
 struct SGMonsterInfo
 {
-	SGMonsterInfo(int animationSize) : Animations(animationSize) {}
+	SGMonsterInfo(int animationSize) : AnimationList(animationSize) {}
 
 	int Code;
 	SGString Name;
@@ -36,9 +36,7 @@ struct SGMonsterInfo
 	float EnhancePerLevel;
 	float Weight;
 	int PartsCount;
-	float ThicknessBoxWidth;
-	float ThicknessBoxHeight;
-	float ThicknessBoxRelativeY;
+	SGThicknessBox ThicknessBox;
 	SGMonsterPartInfo Parts[MaxMonsterPartsCount_v];
-	SGVector<SGAnimationInfo> Animations;
+	SGVector<SGAnimationInfo> AnimationList;
 };

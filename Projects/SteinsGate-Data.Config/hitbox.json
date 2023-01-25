@@ -16,9 +16,7 @@
             "attack_y_force": 10.0,
             "spawn_effect_code": 1,
             "hit_effect_code": 2,
-            "thickness_box_width": 20,
-            "thickness_box_height": 30,
-            "thickness_box_relative_y": -1,
+            "thickness_box": "0 -50 50 30",
             "hitbox_width": 50,
             "hitbox_height": 50
         }

@@ -159,7 +159,7 @@ protected:
 		// 해결책: Vector<String*> 같은건 메모리만 복사해줘도 된다.
 		if constexpr (IsPointerType_v<T>) {
 			Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
-		} else {
+		} else if constexpr (IsCopyConstructible_v<T>) {	// 복사 생성이 가능해야함
 			// 해결책: Vector<String> 같은건 대입 생성을 수행해줘야한다.
 			for (int i = 0; i < other.m_iSize; ++i) {
 				Memory::PlacementNew(m_pArray[i], other.m_pArray[i]);

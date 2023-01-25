@@ -22,7 +22,7 @@ USING_NS_JC;
 
 #define JsonFileName "monster.json"
 
-void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monsterInfoMap) {
+bool SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monsterInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
@@ -33,6 +33,7 @@ void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 	}
 	catch (std::exception& ex) {
 		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		return false;
 	}
 
 	Json::Value monsterListRoot = root["monsters"];
@@ -54,10 +55,8 @@ void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 		monsterInfo.MagicArmor = monterRoot.get("magic_armor", 0).asInt();
 		monsterInfo.EnhancePerLevel = monterRoot["enhance_per_level"].asFloat();
 		monsterInfo.Weight = monterRoot["weight"].asFloat();
-		
-		monsterInfo.ThicknessBoxWidth = monterRoot["thickness_box_width"].asFloat();
-		monsterInfo.ThicknessBoxHeight = monterRoot["thickness_box_height"].asFloat();
-		monsterInfo.ThicknessBoxRelativeY = monterRoot["thickness_box_relative_y"].asFloat();
+
+		SGJson::parseThicknessInfo(monterRoot["thickness_box"], monsterInfo.ThicknessBox);
 
 		Value& partListRoot = monterRoot["parts"];
 		monsterInfo.PartsCount = partListRoot.size();
@@ -83,9 +82,10 @@ void SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 			Value& animationRoot = animationListRoot[j];
 			SGAnimationInfo animationInfo(animationRoot["frames"].size());
 			SGJson::parseAnimationInfo(animationRoot, animationInfo);
-			monsterInfo.Animations.PushBack(Move(animationInfo));
+			monsterInfo.AnimationList.PushBack(Move(animationInfo));
 		}
 		 monsterInfoMap.Insert(monsterInfo.Code, Move(monsterInfo));
 	}
 	Log("SGMonsterInfoLoader :: 로딩완료\n");
+	return true;
 }

@@ -58,3 +58,7 @@ inline constexpr float DefaultMoveSpeedPerFPSY_v = DefaultMoveSpeedPerSecX_v / 6
 inline constexpr float DefaultRunSpeedPerSecX_v = 225.0f;		// 기본 달리기 속도 (1초당 이동 가능한 픽셀 수)
 inline constexpr float DefaultRunSpeedPerFPSX_v = DefaultRunSpeedPerSecX_v / 60.0f;
 
+
+inline constexpr int TileWidth_v = 224;		// 맵 타일들 모두 가로길이가 224픽셀임
+inline constexpr int TileHeight_v= 184;
+inline constexpr int BlockSize_v = 16;		// 8은 너무 작고 224는 20으로 나눠지지 않아서 16으로 함

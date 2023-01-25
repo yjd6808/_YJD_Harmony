@@ -1,13 +1,13 @@
 /*
  * 작성자: 윤정도
- * 생성일: 1/20/2023 1:57:14 PM
+ * 생성일: 1/25/2023 11:32:31 AM
  * =====================
  *
  */
 
 
 
-#include "SGProjectileInfoLoader.h"
+#include "SGObstacleInfoLoader.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGJson.h>
@@ -21,9 +21,9 @@
 USING_NS_JC;
 USING_NS_JS;
 
-#define JsonFileName "projectile.json"
+#define JsonFileName "obstacle.json"
 
-bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap) {
+bool SGObstacleInfoLoader::LoadObstacleInfo(SGHashMap<int, SGObstacleInfo>& obstacleInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
@@ -36,33 +36,22 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
 		return false;
 	}
-	Json::Value projectiles = root["projectile"];
 
-	for (Json::Value::ArrayIndex i = 0; i < projectiles.size(); i++) {
-		Value& projectile = projectiles[i];
+	Json::Value obstacleListRoot = root["obstacle"];
+	for (int i = 0; i < obstacleListRoot.size(); ++i) {
+		Value& projectile = obstacleListRoot[i];
 		Value& animationListRoot = projectile["animation"];
 		DebugAssertMessage(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
-		SGProjectileInfo info(animationListRoot.size());
+		SGObstacleInfo info(animationListRoot.size());
 		info.Code = projectile["code"].asInt();
 		info.Name = SGJson::getString(projectile["name"]);
 		info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(projectile["npk"]));
 		info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(projectile["img"]));
-		info.SpawnOffsetX = projectile["spawn_offset_x"].asFloat();
-		info.SpawnOffsetY = projectile["spawn_offset_y"].asFloat();
-		info.SpawnEffectCode = projectile["spawn_effect_code"].asInt();
-		info.HitEffectCode = projectile["hit_effect_code"].asInt();
-		info.Rotation = projectile["rotation"].asFloat();
-		info.AttackDamageType = projectile["attack_damage_type"].asFloat();
-		info.AttackDamageRatio = projectile["attack_damage_ratio"].asFloat();
-		info.AttackXForce = projectile["attack_x_force"].asFloat();
-		info.AttackYForce = projectile["attack_y_force"].asFloat();
-		info.ApplyPhysics = projectile["apply_physics"].asBool();
-		info.Weight = projectile["weight"].asFloat();
-		info.Distance = projectile["distance"].asFloat();
-		info.MoveSpeed = projectile["move_speed"].asFloat();
-		info.PenetrationRate = projectile["penetration_rate"].asFloat();
-		info.RehitDelay = projectile["rehit_delay"].asFloat();
 		SGJson::parseThicknessInfo(projectile["thickness_box"], info.ThicknessBox);
+		info.Hitable = projectile["hitable"].asBool();
+		info.Colliadalble = projectile["collidable"].asBool();
+		info.ZOrederable = projectile["z_orderable"].asBool();
+		
 
 		for (ArrayIndex j = 0; j < animationListRoot.size(); ++j) {
 			Value& animationRoot = animationListRoot[j];
@@ -71,10 +60,9 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 			info.AnimationList.PushBack(Move(animationInfo));
 		}
 
-		DebugAssertMessage(!projectileInfoMap.Exist(info.Code), "projectile에 해당 코드값이 이미 존재합니다.");
-		projectileInfoMap.Insert(info.Code, Move(info));
+		obstacleInfoMap.Insert(info.Code, Move(info));
 	}
 
-	Log("SGProjectileInfoLoader :: 로딩완료\n");
+	Log("SGObstacleInfoLoader :: 로딩완료\n");
 	return true;
 }

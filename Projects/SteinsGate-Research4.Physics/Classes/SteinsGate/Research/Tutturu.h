@@ -11,5 +11,3 @@
 #include <SteinsGate/Common/Engine.h>
 
 #define Log(fmt, ...) printf(fmt, ##__VA_ARGS__)
-#define BB	int JCoreCounterConcat(_)
-#define BBB int JCoreCounterConcat(_)

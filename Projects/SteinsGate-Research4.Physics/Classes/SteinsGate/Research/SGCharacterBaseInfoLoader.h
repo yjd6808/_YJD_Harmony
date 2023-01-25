@@ -14,5 +14,5 @@ struct SGCharacterBaseInfo;
 struct SGCharacterBaseInfoLoader
 {
 public:
-	static void LoadCharacterBaseInfo(SGCharacterBaseInfo(&characterInfoMap)[CharacterType::Max]);
+	static bool LoadCharacterBaseInfo(SGCharacterBaseInfo(&characterInfoMap)[CharacterType::Max]);
 };

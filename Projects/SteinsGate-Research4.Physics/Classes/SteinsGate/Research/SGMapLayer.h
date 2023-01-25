@@ -20,6 +20,8 @@ public:
 	bool init() override;
 	static SGMapLayer* create();
 
+	void loadMap(int mapCode);
+
 	void update(float dt) override;
 	void updateZOrder(float dt);
 	void updateActors(float dt);
@@ -31,16 +33,21 @@ public:
 	void runFrameEvent(SGActor* runner, FrameEventType_t frameEventType, int frameEventId);
 	void createProejctile(SGActor* spawner, int projectileId);
 	void createHitbox(SGActor* spawner, int hitBoxId);
-	void createMonster(float x, float y, int code);
+	void createMonster(int code, float x, float y);
+	void createObstacle(int code, float x, float y);
 
 	void registerZOrderActor(SGActor* actor);
 
 	void unregisterZOrderActor(SGActor* actor);
 public:
+	// 맵관련 정보
+	SGMapInfo* m_pMapInfo;
+	SGVector<SGFrameTexture*> m_vTileTextures;
+
+
+	// 캐릭터 관련 정보
 	SGPlayer* m_pPlayer;
 	SGVector<SGActor*> m_vZOrderedActors;	// Z오더를 고유 ID처럼 사용해도 될듯? 이진탐색으로 삭제 함 댈것같다.
-	SGSet<SGActor*> m_s;
-	SGSet<SGActor*> m_sMyBullets;
 
 	float m_fZReorderTime;
 };

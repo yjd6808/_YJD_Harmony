@@ -40,3 +40,38 @@ void SGJson::parseAnimationInfo(Json::Value& animationRoot, SGAnimationInfo& inf
 		info.Frames.EmplaceBack(iFrameIndex, (float)iDelay / 1000.0f, iFrameEvent, iFrameEventId);
 	}
 }
+
+void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, SGThicknessBox& info) {
+
+	int num[4];
+	SGTextParser::parserNumbers(SGJson::getString(thicknessRoot), num, 4);
+
+	info.RelativeX = num[0];
+	info.RelativeY = num[1];
+	info.Width = num[2];
+	info.Height = num[3];
+}
+
+void SGJson::parseNumber3(Json::Value& root, int& num1, int& num2, int& num3) {
+	int num[3];
+	SGTextParser::parserNumbers(SGJson::getString(root), num, 3);
+
+	num1 = num[0];
+	num2 = num[1];
+	num3 = num[2];
+}
+
+void SGJson::parseNumber4(Json::Value& root, int& num1, int& num2, int& num3, int& num4) {
+	int num[4];
+	SGTextParser::parserNumbers(SGJson::getString(root), num, 4);
+
+	num1 = num[0];
+	num2 = num[1];
+	num3 = num[2];
+	num4 = num[3];
+}
+
+void SGJson::parseNumberN(Json::Value& root, int* numArr, int capacity) {
+	SGTextParser::parserNumbers(SGJson::getString(root), numArr, capacity);
+}
+

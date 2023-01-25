@@ -34,6 +34,30 @@
     <Filter Include="src\Data">
       <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Data\Action">
+      <UniqueIdentifier>{0520369f-7e38-45ca-a074-74c59d0d3cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data\CharacterBase">
+      <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data\Client">
+      <UniqueIdentifier>{1ae4d134-d671-4e48-8a61-797e06e17672}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data\Monster">
+      <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data\Projectile">
+      <UniqueIdentifier>{c8ab47bd-66a6-43b5-a4a9-eb39aec47249}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data\Tile">
+      <UniqueIdentifier>{2f9a977b-b328-4a02-baab-7ae19e2c593a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data\Map">
+      <UniqueIdentifier>{289afa04-b017-4b77-9941-fe0017a1a0ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Data\Obstacle">
+      <UniqueIdentifier>{2b54d70f-de2d-4218-b6da-f13abcaa0677}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -55,18 +79,6 @@
       <Filter>src\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGDataManager.cpp">
-      <Filter>src\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.cpp">
-      <Filter>src\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.cpp">
-      <Filter>src\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterInfoLoader.cpp">
-      <Filter>src\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.cpp">
       <Filter>src\Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGlobal.cpp">
@@ -144,8 +156,32 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerGunShot.cpp">
       <Filter>src\Player\Action\Gunner</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.cpp">
+      <Filter>src\Data\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.cpp">
+      <Filter>src\Data\CharacterBase</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGClientInfoLoader.cpp">
-      <Filter>src\Data</Filter>
+      <Filter>src\Data\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterInfoLoader.cpp">
+      <Filter>src\Data\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.cpp">
+      <Filter>src\Data\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGTileInfoLoader.cpp">
+      <Filter>src\Data\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGObstacleInfoLoader.cpp">
+      <Filter>src\Data\Obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMapInfoLoader.cpp">
+      <Filter>src\Data\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGObstacle.cpp">
+      <Filter>src\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,31 +217,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAnimationInfo.h">
       <Filter>src\Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfo.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGDataManager.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfo.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterInfo.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterInfoLoader.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfo.h">
-      <Filter>src\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.h">
       <Filter>src\Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGlobal.h">
@@ -298,11 +310,56 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileDefine.h">
       <Filter>src\Define</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.h">
+      <Filter>src\Data\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfo.h">
+      <Filter>src\Data\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.h">
+      <Filter>src\Data\CharacterBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfo.h">
+      <Filter>src\Data\CharacterBase</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGClientInfoLoader.h">
-      <Filter>src\Data</Filter>
+      <Filter>src\Data\Client</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGClientInfo.h">
-      <Filter>src\Data</Filter>
+      <Filter>src\Data\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterInfoLoader.h">
+      <Filter>src\Data\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterInfo.h">
+      <Filter>src\Data\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfo.h">
+      <Filter>src\Data\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.h">
+      <Filter>src\Data\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGTileInfoLoader.h">
+      <Filter>src\Data\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGTileInfo.h">
+      <Filter>src\Data\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGObstacleInfoLoader.h">
+      <Filter>src\Data\Obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGObstacleInfo.h">
+      <Filter>src\Data\Obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMapInfo.h">
+      <Filter>src\Data\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMapInfoLoader.h">
+      <Filter>src\Data\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGObstacle.h">
+      <Filter>src\Actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

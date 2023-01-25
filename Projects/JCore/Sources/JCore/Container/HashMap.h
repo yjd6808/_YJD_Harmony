@@ -129,7 +129,7 @@ struct Bucket
 		if (IsFull())
 			Expand(Capacity + 2);
 
-		DynamicArray[Size++] = data;
+		Memory::PlacementNew(DynamicArray[Size++], data);
 	}
 
 	void PushBack(TBucketNode&& data) {
@@ -139,7 +139,7 @@ struct Bucket
 		if (IsFull())
 			Expand(Capacity + 2);
 
-		DynamicArray[Size++] = Move(data);
+		Memory::PlacementNew(DynamicArray[Size++], Move(data));
 	}
 
 	void Initialize() {

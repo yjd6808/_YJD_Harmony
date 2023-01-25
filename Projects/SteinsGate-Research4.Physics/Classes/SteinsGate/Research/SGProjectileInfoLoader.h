@@ -15,5 +15,5 @@
 struct SGProjectileInfoLoader
 {
 public:
-	static void LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap);
+	static bool LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap);
 };

@@ -20,6 +20,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMapInfoLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGObstacle.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGObstacleInfoLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGClientInfoLoader.cpp">
       <SubType>
       </SubType>
@@ -112,6 +124,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMapLayer.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGTileInfoLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +192,27 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerRun.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerSliding.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerWalk.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMapInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMapInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonster.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGObstacle.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGObstacleInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGObstacleInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -262,6 +298,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGTexturePool.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGTileInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGTileInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

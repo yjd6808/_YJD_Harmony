@@ -29,7 +29,7 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 	if (pCharacter && pCharacter->init()) {
 		SGCharacterBaseInfo* pBaseInfo = SGDataManager::getInstance()->getCharacterBaseInfo(code);
 		pCharacter->m_pBaseInfo = pBaseInfo;
-		pCharacter->initThicknessBox({ pBaseInfo->ThicknessBoxWidth, pBaseInfo->ThicknessBoxHeight, pBaseInfo->ThicknessBoxRelativeY });
+		pCharacter->initThicknessBox(pBaseInfo->ThicknessBox);
 		pCharacter->initActorSprite();
 		pCharacter->autorelease();
 		return pCharacter;
@@ -39,9 +39,9 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 }
 
 void SGCharacter::initActorSprite() {
-	SGDataManager* pConfig = SGDataManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::getInstance();
 	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
-	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>();
+	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(15, m_CharacterInfo.ValidAction.Size());
 
 	for (int i = 0; i < VisualType::Max; ++i) {
 		if (m_CharacterInfo.VisualInfo.ImgIndex[i] != InvalidValue_v &&
@@ -57,9 +57,9 @@ void SGCharacter::initActorSprite() {
 	SGVector<int>& vActions = m_CharacterInfo.ValidAction;
 
 	for (int i = 0; i < vActions.Size(); ++i) {
-		SGActionInfo* pActionInfo = pConfig->getActionInfo(vActions[i]);
-		for (int j = 0; j < pActionInfo->Animations.Size(); ++j) {
-			spActorSpriteData->Animations.PushBack(&pActionInfo->Animations[j]);
+		SGActionInfo* pActionInfo = pDataManager->getActionInfo(vActions[i]);
+		for (int j = 0; j < pActionInfo->AnimationList.Size(); ++j) {
+			spActorSpriteData->Animations.PushBack(&pActionInfo->AnimationList[j]);
 		}
 	}
 

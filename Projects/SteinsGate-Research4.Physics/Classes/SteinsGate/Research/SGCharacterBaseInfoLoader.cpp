@@ -25,7 +25,7 @@ USING_NS_JS;
 
 #define JsonFileName "character_base.json"
 
-void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&characterInfoMap)[CharacterType::Max]) {
+bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&characterInfoMap)[CharacterType::Max]) {
 	SGGlobal* pGlobal = SGGlobal::getInstance();
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
@@ -37,6 +37,7 @@ void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 	}
 	catch (std::exception& ex) {
 		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		return false;
 	}
 	Json::Value gunnerRoot = root["gunner"];
 
@@ -70,9 +71,7 @@ void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 		gunnerBaseInfo.AttackSpeed[WeaponType::Musket] = gunnerRoot["musket_attack_speed"].asFloat();
 		gunnerBaseInfo.JumpForce = gunnerRoot["jump_force"].asFloat();
 		gunnerBaseInfo.SlidingForce = gunnerRoot["sliding_force"].asFloat();
-		gunnerBaseInfo.ThicknessBoxWidth = gunnerRoot["thickness_box_width"].asFloat();
-		gunnerBaseInfo.ThicknessBoxHeight = gunnerRoot["thickness_box_height"].asFloat();
-		gunnerBaseInfo.ThicknessBoxRelativeY = gunnerRoot["thickness_box_relative_y"].asFloat();
+		SGJson::parseThicknessInfo(gunnerRoot["thickness_box"], gunnerBaseInfo.ThicknessBox);
 
 		{
 			Json::Value& zOrderRoot = gunnerRoot["visual_z_order"];
@@ -135,4 +134,5 @@ void SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 
 
 	Log("SGCharacterBaseInfoLoader :: 로딩완료\n");
+	return true;
 }

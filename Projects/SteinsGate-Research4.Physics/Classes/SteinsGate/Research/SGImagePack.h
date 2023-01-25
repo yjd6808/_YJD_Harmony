@@ -25,7 +25,7 @@ public:
 	int getImgCount() { return m_Package->Count(); }
 	int getSpriteCount(int imgIndex);
 
-	SGFrameTexture* createFrameTextureRetain(int imgIndex, int frameIndex);
+	SGFrameTexture* createFrameTexture(int imgIndex, int frameIndex);
 	void releaseFrameTexture(int imgIndex, int frameIndex);
 	const SGString& getPath() { return m_Package->GetPath(); }
 	SGString getFileName();

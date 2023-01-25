@@ -9,6 +9,7 @@
 #include <SteinsGate/Research/SGGlobal.h>
 #include <SteinsGate/Research/SGProjectile.h>
 #include <SteinsGate/Research/SGMonster.h>
+#include <SteinsGate/Research/SGObstacle.h>
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -32,6 +33,7 @@ SGMapLayer* SGMapLayer::create() {
 }
 
 
+
 SGMapLayer::SGMapLayer()
 	: m_fZReorderTime(0.0f)
 	, m_pPlayer(nullptr)
@@ -51,16 +53,19 @@ bool SGMapLayer::init() {
 		return false;
 	}
 
-
 	// =================================================
 	// 임시 데이터 주입
 	// =================================================
+
+	loadMap(1);
+
+	
 
 	auto pack = SGImagePackManager::getInstance()->getPack("sprite_map.NPK");
 	int count = pack->getImgCount();
 	auto idx = pack->getImgIndex("00tile2.img");
 
-	auto tex = pack->createFrameTextureRetain(idx, 0);
+	auto tex = pack->createFrameTexture(idx, 0);
 	this->addChild(Sprite::createWithTexture(tex->getTexture()));
 
 	SGCharacterInfo info;
@@ -95,10 +100,10 @@ bool SGMapLayer::init() {
 	m_pPlayer->initController();
 	m_pPlayer->runBaseAction(BaseAction::Idle);
 	m_pPlayer->setMapLayer(this);
+	this->addChild(pPlayerCharacter);
 	registerZOrderActor(pPlayerCharacter);
 
-	createMonster(100, 100, 1);
-	createMonster(200, 200, 2);
+	createMonster(2, 200, 200);
 
 	
 
@@ -138,6 +143,7 @@ void SGMapLayer::runFrameEvent(SGActor* runner, FrameEventType_t frameEventType,
 void SGMapLayer::createProejctile(SGActor* spawner, int projectileId) {
 	SGProjectileInfo* pInfo = SGDataManager::getInstance()->getProjectileInfo(projectileId);
 	SGProjectile* pProjectile = SGProjectile::create(spawner, pInfo);
+	this->addChild(pProjectile);
 	registerZOrderActor(pProjectile);
 }
 
@@ -145,16 +151,29 @@ void SGMapLayer::createHitbox(SGActor* spawner, int hitBoxId) {
 	
 }
 
-void SGMapLayer::createMonster(float x, float y, int code) {
+void SGMapLayer::createMonster(int code, float x, float y) {
 	SGMonsterInfo* pInfo = SGDataManager::getInstance()->getMonsterInfo(code);
 	SGMonster* pMonster = SGMonster::create(pInfo);
 	pMonster->setPositionReal(x, y);
 	registerZOrderActor(pMonster);
+
+	this->addChild(pMonster);
+}
+
+void SGMapLayer::createObstacle(int code, float x, float y) {
+	SGObstacleInfo* pObstacleInfo = SGDataManager::getInstance()->getObstacleInfo(code);
+	SGObstacle* pObstacle = SGObstacle::create(pObstacleInfo);
+	pObstacle->setPositionReal(x, y);
+
+	if (pObstacleInfo->ZOrederable)
+		registerZOrderActor(pObstacle);
+
+	this->addChild(pObstacle);
 }
 
 void SGMapLayer::registerZOrderActor(SGActor* actor) {
 	m_vZOrderedActors.PushBack(actor);
-	this->addChild(actor);
+	
 }
 
 void SGMapLayer::unregisterZOrderActor(SGActor* actor) {
@@ -213,3 +232,37 @@ void SGMapLayer::updateCollision(float dt) {
 	
 }
 
+void SGMapLayer::loadMap(int mapCode) {
+	SGDataManager* pDataManager = SGDataManager::getInstance();
+	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
+	SGMapInfo* pMap = pDataManager->getMapInfo(mapCode);
+
+	// 배경 로딩
+
+	// 타일 로딩, 맨 밑에 타일들부터 차곡차곡 쌓아서 올린다.
+	for (int i = pMap->TileHeight - 1, k = 0; i >= 0; --i, ++k) {	
+		for (int j = 0; j < pMap->TileWidth; j++) {
+			float fTileXPos = float(TileWidth_v) * j;
+			float fTileYPos = float(TileHeight_v) * k;
+
+			SGTileInfo* pTileInfo = pDataManager->getTileInfo(pMap->TileArray[i][j]);
+			SGFrameTexture* pFrameTexture = pPackManager->getPack(pTileInfo->NpkIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
+			SGSprite* pTileSprite = SGSprite::createWithTexture(pFrameTexture->getTexture());
+			pTileSprite->setAnchorPoint(Vec2::ZERO);
+			pTileSprite->setPosition(fTileXPos, fTileYPos);
+			this->addChild(pTileSprite);
+		}
+	}
+
+	// 오브젝트 로딩
+	for (int i = 0; i < pMap->ObstacleList.Size(); ++i) {
+		SGMapObjectInfo& objInfo = pMap->ObstacleList[i];
+		createObstacle(objInfo.Code, objInfo.X, objInfo.Y);
+		
+	}
+
+	// NPC 로딩
+
+
+
+}

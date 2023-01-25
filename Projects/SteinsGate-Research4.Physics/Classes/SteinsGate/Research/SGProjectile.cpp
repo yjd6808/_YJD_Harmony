@@ -29,7 +29,7 @@ SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo)
 	SGProjectile* pProjectile = new SGProjectile(spawner, baseInfo);
 
 	if (pProjectile && pProjectile->init()) {
-		pProjectile->initThicknessBox({ baseInfo->ThicknessBoxWidth, baseInfo->ThicknessBoxHeight, baseInfo->ThicknessBoxRelativeY });
+		pProjectile->initThicknessBox(baseInfo->ThicknessBox);
 		pProjectile->initActorSprite();
 		pProjectile->autorelease();
 		return pProjectile;
@@ -53,15 +53,16 @@ void SGProjectile::initThicknessBox(const SGThicknessBox& thicknessBox) {
 	}
 }
 
+// 프로젝틸은 파츠, 애니메이션 다 1개씩임
 void SGProjectile::initActorSprite() {
-	SGDataManager* pConfig = SGDataManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::getInstance();
 	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
-	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>();
+	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, m_pBaseInfo->AnimationList.Size());
 
 	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });
 
-	for (int i = 0; i < m_pBaseInfo->Animations.Size(); ++i) {
-		spActorSpriteData->Animations.PushBack(&m_pBaseInfo->Animations[i]);
+	for (int i = 0; i < m_pBaseInfo->AnimationList.Size(); ++i) {
+		spActorSpriteData->Animations.PushBack(&m_pBaseInfo->AnimationList[i]);
 	}
 
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);

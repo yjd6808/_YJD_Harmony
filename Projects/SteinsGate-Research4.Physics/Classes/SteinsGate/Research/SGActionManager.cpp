@@ -149,7 +149,6 @@ bool SGActionManager::isRunnningActionIdleOrWalkAction() {
 	return false;
 }
 
-
 bool SGActionManager::canRunningActionChangeDirection() {
 	if (m_pRunningAction == nullptr)
 		return true;

@@ -12,11 +12,26 @@
 
 struct SGThicknessBox
 {
+	float RelativeX;
+	float RelativeY;
 	float Width;
 	float Height;
-	float RelativeY;
 
-	cocos2d::Size getSize() const { return { Width, Height }; }
+	SGThicknessBox() : RelativeX(0), RelativeY(0), Width(0), Height(0) {}
+	SGThicknessBox(const SGVec2& pt, const SGSize& size)
+		: RelativeX(pt.x)
+		, RelativeY(pt.y)
+		, Width(size.width)
+		, Height(size.height)
+	{}
+	SGThicknessBox(const SGRect& r)
+		: RelativeX(r.origin.x)
+		, RelativeY(r.origin.y)
+		, Width(r.size.width)
+		, Height(r.size.height)
+	{}
+
+	SGSize getSize() const { return SGSize{ Width, Height }; }
 };
 
 
@@ -52,6 +67,10 @@ struct SGActorPartSpriteData
 struct SGAnimationInfo;
 struct SGActorSpriteData
 {
+	SGActorSpriteData(int partCount, int animationCount)
+		: Parts(partCount)
+		, Animations(animationCount) {}
+
 	SGVector<SGActorPartSpriteData> Parts;
 	SGVector<SGAnimationInfo*> Animations;
 };

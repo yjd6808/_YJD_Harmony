@@ -39,14 +39,13 @@ int SGImagePack::getSpriteCount(int imgIndex) {
 		pImg->LoadIndexOnly();
 
 	return pImg->Count();
-
 }
 
 /*
  * 생성한 텍스쳐는 캐싱해놓자.
  * 같은 몬스터 수십마리를 매번 파일스트림에서 텍스쳐 데이터를 읽고 압축 해제하고 32bit 이미지화 시킬 수는 없자나?
  */
-SGFrameTexture* SGImagePack::createFrameTextureRetain(int imgIndex, int frameIndex) {
+SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 	Int64 iCacheIndex = (Int64U)imgIndex << 32 | frameIndex;
 
 	if (m_TextureCacheMap.Exist(iCacheIndex)) {
@@ -86,7 +85,6 @@ SGFrameTexture* SGImagePack::createFrameTextureRetain(int imgIndex, int frameInd
 	if (!sprite.Loaded())
 		sprite.Load();
 
-
 	auto spData = sprite.Decompress();
 	Texture2D* pTexture = new Texture2D;
 	pTexture->initWithData(
@@ -99,7 +97,7 @@ SGFrameTexture* SGImagePack::createFrameTextureRetain(int imgIndex, int frameInd
 
 	auto pSpriteTexture = new SGSpriteFrameTexture(pTexture, sprite.GetRect(), sprite.GetFrameIndex(), sprite.IsDummy());
 	pSpriteTexture->autorelease();
-	pSpriteTexture->retain();
+	pSpriteTexture->retain();	// m_TextureCacheMap에서 수명연장시키기 위한 용도
 	m_TextureCacheMap.Insert(iCacheIndex, pSpriteTexture);
 	return pSpriteTexture;
 }
@@ -108,6 +106,7 @@ void SGImagePack::releaseFrameTexture(int imgIndex, int frameIndex) {
 	Int64 iCacheIndex = imgIndex << 32 | frameIndex;
 	DebugAssertMessage(m_TextureCacheMap.Exist(iCacheIndex), "해당하는 프레임 데이터가 없습니다.");
 	CC_SAFE_RELEASE(m_TextureCacheMap[iCacheIndex]);
+	m_TextureCacheMap.Remove(iCacheIndex);
 }
 
 SGString SGImagePack::getFileName() {

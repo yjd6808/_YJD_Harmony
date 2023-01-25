@@ -35,6 +35,7 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 
 	m_pThicknessBox = SGDrawNode::create();
 	m_pThicknessBox->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	m_pThicknessBox->setPositionX(thicknessBox.RelativeX);
 	m_pThicknessBox->setPositionY(thicknessBox.RelativeY);
 	m_pThicknessBox->setOpacity(125);
 	m_pThicknessBox->setContentSize(thicknessBox.getSize());
@@ -60,8 +61,7 @@ ActorType_t SGActor::getType() const {
 
 SGThicknessBox SGActor::getThicknessBox() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	Size size = m_pThicknessBox->getContentSize();
-	return { size.width, size.height, m_pThicknessBox->getPositionY() };
+	return { m_pThicknessBox->getPosition(), m_pThicknessBox->getContentSize() };
 }
 
 Rect SGActor::getThicknessBoxRect() const {

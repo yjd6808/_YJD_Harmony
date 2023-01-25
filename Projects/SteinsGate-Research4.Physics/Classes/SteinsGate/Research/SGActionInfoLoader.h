@@ -18,5 +18,5 @@
 struct SGActionInfoLoader
 {
 public:
-	static void LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfoMap);
+	static bool LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfoMap);
 };

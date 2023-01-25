@@ -10,7 +10,7 @@
 
 
 #include <SteinsGate/Research/Tutturu.h>
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGStruct.h>
 #include <JCore/Primitives/SmartPtr.h>
 
 struct SGComboKeyList

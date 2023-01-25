@@ -19,6 +19,9 @@ public:
 		Out_ int& delay,
 		Out_ int& frameEvent,
 		Out_ int& frameEventCode);
+
+	static void parserNumbers(const SGString& numStr, Out_ int* numArr, int count);
 };
+
 
 

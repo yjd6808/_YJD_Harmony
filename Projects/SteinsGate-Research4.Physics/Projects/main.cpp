@@ -4,9 +4,9 @@
  */
 
 #include <SteinsGate/Research/AppDelegate.h>
-#include <JCore/Debug/MemoryLeakDetector.h>
+#include <SteinsGate/Research/SGDataManager.h>
 
-#include "SteinsGate/Research/SGDataManager.h"
+#include <JCore/Debug/MemoryLeakDetector.h>
 
 
 int main()

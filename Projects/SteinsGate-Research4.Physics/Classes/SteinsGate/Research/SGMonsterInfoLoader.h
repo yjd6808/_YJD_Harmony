@@ -15,5 +15,5 @@
 struct SGMonsterInfoLoader
 {
 public:
-	static void LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monsterInfoMap);
+	static bool LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monsterInfoMap);
 };

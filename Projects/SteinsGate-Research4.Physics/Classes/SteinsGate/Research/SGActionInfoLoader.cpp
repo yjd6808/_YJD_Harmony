@@ -23,7 +23,7 @@ USING_NS_JC;
 
 #define JsonFileName "action.json"
 
-void SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfoMap) {
+bool SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
@@ -34,6 +34,7 @@ void SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 	}
 	catch (std::exception& ex) {
 		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		return false;
 	}
 	
 	Json::Value gunnerRoot = root["gunner"];
@@ -79,11 +80,12 @@ void SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 			Value& animationRoot = animationListRoot[j];
 			SGAnimationInfo animationInfo(animationRoot["frames"].size());
 			SGJson::parseAnimationInfo(animationRoot, animationInfo);
-			actionInfo.Animations.PushBack(Move(animationInfo));
+			actionInfo.AnimationList.PushBack(Move(animationInfo));
 		}
 		actionInfoMap.Insert(actionInfo.Code, Move(actionInfo));
 	}
 
 	Log("SGActionInfoLoader :: 로딩완료\n");
+	return true;
 }
 

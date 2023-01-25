@@ -28,9 +28,7 @@
             "move_speed": 400.0,
             "penetration_rate": 10.0,
             "rehit_delay": 0.0,
-            "thickness_box_width": 30,
-            "thickness_box_height": 30,
-            "thickness_box_relative_y": -1,
+            "thickness_box": "0 -1 30 30",
             "animation": [
                 {
                     "code": 1,
@@ -65,9 +63,7 @@
             "move_speed": 400.0,
             "penetration_rate": 15.0,
             "rehit_delay": 0.0,
-            "thickness_box_width": 30,
-            "thickness_box_height": 30,
-            "thickness_box_relative_y": -1,
+            "thickness_box": "0 -1 30 30",
             "animation": [
                 {
                     "code": 1,
@@ -102,9 +98,7 @@
             "move_speed": 400.0,
             "penetration_rate": 10.0,
             "rehit_delay": 0.0,
-            "thickness_box_width": 30,
-            "thickness_box_height": 30,
-            "thickness_box_relative_y": -1,
+            "thickness_box": "0 -1 30 30",
             "animation": [
                 {
                     "code": 1,
@@ -139,9 +133,7 @@
             "move_speed": 400.0,
             "penetration_rate": 15.0,
             "rehit_delay": 0.0,
-            "thickness_box_width": 30,
-            "thickness_box_height": 30,
-            "thickness_box_relative_y": -1,
+            "thickness_box": "0 -1 30 30",
             "animation": [
                 {
                     "code": 1,
