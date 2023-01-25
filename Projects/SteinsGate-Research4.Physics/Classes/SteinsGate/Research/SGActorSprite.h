@@ -37,6 +37,9 @@ public:
 	void setForwardDirection();
 	void setBackwardDirection();
 
+	void pauseAnimation();
+	void resumeAnimation();
+
 	SGActorPartSprite* getBodyPart();
 	SGActor* getActor() { return m_pActor; }
 	SGNode* getBodyCanvas();

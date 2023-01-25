@@ -22,6 +22,15 @@ class SGActorPartSprite;
 class SGActorPartAnimation : public cocos2d::Ref
 {
 public:
+	enum State
+	{
+		einitialized,
+		eRunning,
+		ePaused,
+		eZeroFramePaused,
+		eFinished
+	};
+
 	static SGActorPartAnimation* create(
 		SGActorPartSprite* animationTarget, 
 		SGAnimationInfo* animationInfo,
@@ -36,6 +45,9 @@ public:
 	
 	void constructFrames(int npkIndex, int imgIndex);
 	void update(float dt);
+	void updateLoopSequence(float dt);
+	void updateAnimation(float currentdelayFrame, SGFrameTexture* currentFrameTexture, float dt);
+	void updateZeroDelayFrame(float currentFrameDelay, SGFrameTexture* currentFrameTexture);
 	void init();
 	void run();
 	void pause();
@@ -51,7 +63,8 @@ public:
 	int getPartIndex();
 
 	bool isFinished() { return m_bFinished; }
-	bool isPaused() { return m_bPaused; }
+	bool isPaused() { return m_bPaused || m_bZeroFramePaused; }
+	bool isZeroFramePaused() { return m_bZeroFramePaused; }
 
 private:
 	SGFrameTexture* changeTexture(int frameIndexInAnimation);
@@ -73,6 +86,7 @@ private:
 	int m_iFrameIndexInAnimation;
 	bool m_bFinished;
 	bool m_bPaused;
+	bool m_bZeroFramePaused;
 	bool m_bLoopSequence;		// 켜져있으면 한번 더 돔
 };
 

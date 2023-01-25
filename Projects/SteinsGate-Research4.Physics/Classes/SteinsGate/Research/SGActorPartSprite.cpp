@@ -76,7 +76,7 @@ bool SGActorPartSprite::init() {
 	SGImagePack* pImgPack = SGImagePackManager::getInstance()->getPack(m_pPartData->NpkIndex);
 
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
-		m_vFrames[i] = pImgPack->createFrameTextureRetain(m_pPartData->ImgIndex, i);
+		m_vFrames[i] = pImgPack->createFrameTexture(m_pPartData->ImgIndex, i);
 
 		if (m_vFrames[i] == nullptr) {
 			m_vFrames[i] = SGSpriteFrameTexture::createDefaultTextureRetain();

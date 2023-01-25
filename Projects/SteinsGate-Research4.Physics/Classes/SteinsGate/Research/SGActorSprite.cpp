@@ -148,6 +148,24 @@ void SGActorSprite::setBackwardDirection() {
 	m_eDirection = SpriteDirection::Left;
 }
 
+void SGActorSprite::pauseAnimation() {
+	for (int i = 0; i < m_vParts.Size(); ++i) {
+		SGActorPartAnimation* pAnimation = m_vParts[i]->getRunningAnimation();
+
+		if (pAnimation)
+			pAnimation->pause();
+	}
+}
+
+void SGActorSprite::resumeAnimation() {
+	for (int i = 0; i < m_vParts.Size(); ++i) {
+		SGActorPartAnimation* pAnimation = m_vParts[i]->getRunningAnimation();
+
+		if (pAnimation)
+			pAnimation->resume();
+	}
+}
+
 SGActorPartSprite* SGActorSprite::getBodyPart() {
 	return m_vParts[0];
 }

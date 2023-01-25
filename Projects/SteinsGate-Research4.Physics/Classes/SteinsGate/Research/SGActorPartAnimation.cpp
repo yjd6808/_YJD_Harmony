@@ -2,14 +2,18 @@
  * 작성자: 윤정도
  * 생성일: 1/21/2023 3:38:32 PM
  * =====================
- *
+ * 제로 프레임 처리시 onFrameBegin과 onFrameEnd 둘다 동시 호출이 이뤄지도록 구현했다.
+ * 둘중 어느 프레임에서 기능을 구현해도 되지만. isZeroFramePaused()의 결과값은
+ * 함수는 onFrameEnd, onAnimateEnd에서만 true로 관측된다.
+ * 따라서 제로 프레임처리시 왠만하면 Begin보단 End에서 처리하도록 하자.
+ * Begin, End 둘중 하나만 호출하도록 구현하면 뭔가 좀 깔끔하지 않아서. 일단 둘다 호출하도록 만듬
  */
 
 
 #include "SGActorPartAnimation.h"
 
 #include <SteinsGate/Research/SGActorPartSprite.h>
-#include  <SteinsGate/Research/SGImagePackManager.h>
+#include <SteinsGate/Research/SGImagePackManager.h>
 
 SGActorPartAnimation::SGActorPartAnimation(
 	SGActorPartSprite* animationTarget,
@@ -25,6 +29,8 @@ SGActorPartAnimation::SGActorPartAnimation(
 	, m_fPauseDelay(0.0f)
 	, m_iFrameIndexInAnimation(0)
 	, m_bFinished(false)
+	, m_bPaused(false)
+	, m_bZeroFramePaused(false)
 {}
 
 
@@ -50,6 +56,7 @@ void SGActorPartAnimation::init() {
 	m_iFrameIndexInAnimation = 0;
 	m_fPauseDelay = 0.0f;
 	m_bFinished = false;
+	m_bZeroFramePaused = false;
 	m_bPaused = false;
 	m_bLoopSequence = false;
 }
@@ -58,8 +65,12 @@ void SGActorPartAnimation::run() {
 	init();
 
 	SGFrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
+	float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
+
 	m_pTarget->onAnimationBegin(this, pStartFrameTexture);
 	m_pTarget->onFrameBegin(this, pStartFrameTexture);
+
+	updateZeroDelayFrame(fCurrentFrameDelay, pStartFrameTexture);
 }
 
 void SGActorPartAnimation::constructFrames(int npkIndex, int imgIndex) {
@@ -93,67 +104,128 @@ void SGActorPartAnimation::setLoopSequence() {
 
 void SGActorPartAnimation::update(float dt) {
 
-	if (m_bPaused || m_bFinished)
+	float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
+	SGFrameTexture* pCurrentFrameTexture = getTexture(m_iFrameIndexInAnimation);
+
+	updateLoopSequence(dt);
+	updateAnimation(fCurrentFrameDelay, pCurrentFrameTexture, dt);
+}
+
+
+void SGActorPartAnimation::updateLoopSequence(float dt) {
+
+	if (m_bLoopSequence == false)
 		return;
 
 	// 같은 애니메이션 연속 재생하는 경우땜에 추가함.
 	// 보기 너무 안좋은데 전부 다시 작성하기엔 시간이 너무 오래 걸릴 것 같아서.
 	// 일단 두고 넘어간다.
-	// 나중에 취직하고 여유 생기면 그때 느긋하게 고민하는걸로
+	// 나중에 인생에 여유가 생기면 그때 느긋하게 고민하는걸로
 	// 아니면 이코드 땜에 심각한 문제가 발생하거나..
-	if (m_bLoopSequence) {
-		m_iFrameIndexInAnimation = 0;
-		m_fRunningFrameTime = 0.0f;
-		SGFrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
-		m_pTarget->onAnimationBegin(this, pStartFrameTexture);
-		m_pTarget->onFrameBegin(this, pStartFrameTexture);
-		m_bLoopSequence = false;
+	m_iFrameIndexInAnimation = 0;
+	m_fRunningFrameTime = 0.0f;
+	SGFrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
+	m_pTarget->onAnimationBegin(this, pStartFrameTexture);
+	m_pTarget->onFrameBegin(this, pStartFrameTexture);
+	m_bLoopSequence = false;	// 토글
+}
+
+
+
+void SGActorPartAnimation::updateAnimation(float currentFrameDelay, SGFrameTexture* currentFrameTexture, float dt) {
+
+	if (m_pTarget->getPartIndex() == 0 && m_pAnimationInfo->Name.Contain("idle"))
+		int a = 40;
+
+	// Step Check. 애니메이션 실행가능 여부 체크
+	if (m_bPaused || m_bFinished || m_bZeroFramePaused)
+		return;
+
+	// ==========================================================
+	//  애니메이션 본격 업데이트 진행
+	// ==========================================================
+
+	// Step 1. 프레임 시간 체크
+	m_fRunningFrameTime += dt;
+
+	if (m_fRunningFrameTime < currentFrameDelay + m_fPauseDelay) {
+		return;
 	}
 
 
-	m_fRunningFrameTime += dt;
-	float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
-	SGFrameTexture* pCurrentFrameTexture = getTexture(m_iFrameIndexInAnimation);
+	// Step 2. 마지막 프레임이 아닌 경우
+	m_pTarget->onFrameEnd(this, currentFrameTexture);
+	m_fRunningFrameTime = 0;
+	m_fPauseDelay = 0;
 
-	if (m_fRunningFrameTime >= fCurrentFrameDelay + m_fPauseDelay) {
-		m_pTarget->onFrameEnd(this, pCurrentFrameTexture);
-
-		m_fRunningFrameTime = 0;
-		m_fPauseDelay = 0;
-
+	if (m_iFrameIndexInAnimation < m_vAnimationFrames.Size() - 1) {
 		++m_iFrameIndexInAnimation;
 
+		SGFrameTexture* pNextFrameTexture = changeTexture(m_iFrameIndexInAnimation);
+		float fNextFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
 
-		if (m_iFrameIndexInAnimation >= m_vAnimationFrames.Size()) {
+		m_pTarget->onFrameBegin(this, pNextFrameTexture);
 
-			// onAnimateEnd에서 데이터가 정상적으로 보이도록 하기위해 전처리 진행
-			//  - m_iFrameIndexInAnimation의 경우 프레임 내의 인덱스 값이 보장되어야한다.
-			//
-			//  - m_bFinished의 경우먼저 처리해주는 이유가 달리기 애니메이션 실행 후 onAnimateEnd에서
-			//	  다시 동일한 애니메이션을 실행해버리는 것 같은 경우가 있을 수 있는데
-			//    onAnimateEnd 함수 진입 -> runAction -> init(m_bFinshed = false) -> onAnimateEnd 함수 종료 -> m_bFinished = true로
-			//    만들어버버리기 떄문에 이런 상황이 나오지 않도록 하기위해 위에서 처리함
-			m_iFrameIndexInAnimation -= 1;
-			m_bFinished = m_pAnimationInfo->Loop ? false : true;
+		updateZeroDelayFrame(fNextFrameDelay, pNextFrameTexture);
+		return;
+	}
 
-			m_pTarget->onAnimationEnd(this, pCurrentFrameTexture);
-			m_iFrameIndexInAnimation += 1;	// 다시 원래대로...
+	// Step 3. 마지막 프레임인 경우
+	// onAnimateEnd에서 데이터가 정상적으로 보이도록 하기위해 전처리 진행
+	//  - m_bFinished의 경우먼저 처리해주는 이유가 예를 들어서 달리기 애니메이션 실행 후 onAnimateEnd에서
+	//	  다시 동일한 애니메이션을 실행해버리는 것 같은 경우가 있을 수 있는데
+	//    onAnimateEnd 함수 진입 -> runAction -> init(m_bFinshed = false) -> onAnimateEnd 함수 종료 -> m_bFinished = true로
+	//    만들어버버리기 떄문에 이런 상황이 나오지 않도록 하기위해 위에서 처리함
+	m_bFinished = m_pAnimationInfo->Loop ? false : true;
+	m_pTarget->onAnimationEnd(this, currentFrameTexture);
 
-			if (m_pAnimationInfo->Loop) {
-				m_iFrameIndexInAnimation = 0;
-				SGFrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
-				m_pTarget->onAnimationBegin(this, pStartFrameTexture);
-				m_pTarget->onFrameBegin(this, pStartFrameTexture);
-			}
-		}
+	if (m_pAnimationInfo->Loop) {
+		m_iFrameIndexInAnimation = 0;
+		SGFrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
+		float fStartFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
 
+		m_pTarget->onAnimationBegin(this, pStartFrameTexture);
+		m_pTarget->onFrameBegin(this, pStartFrameTexture);
 
-		if (m_iFrameIndexInAnimation < m_vAnimationFrames.Size()) {
-			SGFrameTexture* pNextFrameTexture = changeTexture(m_iFrameIndexInAnimation);
-			m_pTarget->onFrameBegin(this, pNextFrameTexture);
-		}
+		updateZeroDelayFrame(fStartFrameDelay, pStartFrameTexture);
 	}
 }
+
+void SGActorPartAnimation::updateZeroDelayFrame(float currentFrameDelay, SGFrameTexture* currentFrameTexture) {
+
+	// ==========================================================
+	// 일시정지 프레임 처리(기획 파일에 프레임 딜레이 0이하로 입력하면 애니메이션을 정지시키도록 한다.)
+	// 개발자가 resume 시키기 전까지는 애니메이션 멈춤
+	// 여기 작성했기 때문에 하나의 파츠에만 적용될거라고 생각할 수 있겠지만
+	// 모든 파츠는 동일한 애니메이션을 가지기 때문에 여기서 작성해도 무방하다.
+	// ==========================================================
+
+	// Step Check. 정지 프레임 여부 체크
+	if (currentFrameDelay > 0.0f)
+		return;
+
+
+	m_bZeroFramePaused = true;
+
+	// Step 1. 딜레이가 음수인 프레임이 마지막 프레임이 아닌 경우
+	m_pTarget->onFrameEnd(this, currentFrameTexture);
+
+	if (m_iFrameIndexInAnimation < m_vAnimationFrames.Size() - 1) {
+		m_iFrameIndexInAnimation++;
+		return;
+	}
+
+	// Step 2. 딜레이가 음수인 프레임이 마지막 프레임인 경우
+	m_pTarget->onAnimationEnd(this, currentFrameTexture);
+
+	if (m_pAnimationInfo->Loop) {
+		m_iFrameIndexInAnimation = 0;
+		return;
+	}
+
+	m_bFinished = true;
+}
+
 
 int SGActorPartAnimation::getPartIndex() {
 	return m_pTarget->getPartIndex();
@@ -216,6 +288,17 @@ void SGActorPartAnimation::pauseTime(float delay) {
 
 void SGActorPartAnimation::resume() {
 	m_bPaused = false;
+	
+
+	// 제로 딜레이 프레임을 해제한 경우 프레임 이벤트를 실행시켜 줘야함.
+	// updateZeroDelayFrame 함수에서 다음 프레임으로 인덱스 변경만 해놓고
+	// 프레임, 애니메이션 시작 콜백함수는 호출안해놓은 상태이기 때문이다.
+	if (m_bZeroFramePaused) {
+		SGFrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
+		m_pTarget->onAnimationBegin(this, pStartFrameTexture);
+		m_pTarget->onFrameBegin(this, pStartFrameTexture);
+		m_bZeroFramePaused = false;
+	}
 }
 
 
