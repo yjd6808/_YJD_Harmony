@@ -10,6 +10,7 @@
 
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
+#include <SteinsGate/Research/SGPlayerController.h>
 
 SGGunnerRun::SGGunnerRun(SGPlayer* player, SGActionInfo* actionInfo)
 	: SGComboAction(player, actionInfo)

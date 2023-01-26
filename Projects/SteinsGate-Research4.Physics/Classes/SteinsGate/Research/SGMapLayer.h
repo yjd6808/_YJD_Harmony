@@ -21,20 +21,26 @@ public:
 
 	void loadMap(int mapCode);
 	bool init() override;
+	bool isCollideWithObstacles(const SGRect& rect);
+
 	static SGMapLayer* create(int mapCode);
 
 	void update(float dt) override;
 	void updateZOrder(float dt);
 	void updateActors(float dt);
 	void updatePlayerProjectiles(float dt);
+	void updatePhysics(float dt);
 
 	void runFrameEvent(SGActor* runner, FrameEventType_t frameEventType, int frameEventId);
-	void createProejctile(SGActor* spawner, int projectileId);
+	SGCharacter* createCharacter(CharacterType_t characterType, float x, float y, SGCharacterInfo& info);
+	SGProjectile* createProejctile(SGActor* spawner, int projectileId);
 	void createHitbox(SGActor* spawner, int hitBoxId);
-	void createMonster(int code, float x, float y);
-	void createObstacle(int code, float x, float y);
+	SGMonster* createMonster(int code, float x, float y);
+	SGObstacle* createObstacle(int code, float x, float y);
 
+	
 	void registerZOrderActor(SGActor* actor);
+	void registerCharacter(SGCharacter* character);
 	void registerPlayerProjectile(SGProjectile* projectile);
 	void registerMonster(SGMonster* mosnter);
 	void registerObstacle(SGObstacle* obstacle);
@@ -67,7 +73,8 @@ public:
 	SGVector<SGProjectile*> m_vPlayerProjectiles;	// 플레이어가 만든 충돌체
 	SGVector<SGProjectile*> m_vEnmemyProjectiles;	// 적이 만든 충돌체
 	SGVector<SGMonster*> m_vMonsters;
-	SGVector<SGObstacle*> m_vObstacles;
+	SGVector<SGObstacle*> m_vCollidableObstacles;
+	SGVector<SGCharacter*> m_vCharacters;
 	SGArrayQueue<SGActor*> m_qRemovedActors;
 
 	float m_fZReorderTime;

@@ -41,6 +41,7 @@ public:
 
 	bool init() override;
 	void update(float dt) override;
+	void updateBoundingBoxVisibleState();
 	void runAnimation(int code);
 
 	int getPartIndex() { return m_iPartIndex; }

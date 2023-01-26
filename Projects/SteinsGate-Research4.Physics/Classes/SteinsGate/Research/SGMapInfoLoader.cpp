@@ -53,7 +53,8 @@ bool SGMapInfoLoader::LoadMapInfo(SGHashMap<int, SGMapInfo>& mapInfoMap) {
 		info.MapWidth = mapRoot["map_width"].asInt();
 		info.MapHeight = mapRoot["map_height"].asInt();
 
-		for (int j = 0; j < areaRoot.size(); ++j) {
+		// 보이는 그대로 블록 반영해주기위해
+		for (int j = areaRoot.size() - 1; j >= 0; --j) {
 			info.Area.PushBack(Move(SGJson::getString(areaRoot[j])));
 		}
 

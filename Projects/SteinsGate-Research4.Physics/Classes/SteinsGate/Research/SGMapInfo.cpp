@@ -32,3 +32,7 @@ bool SGMapInfo::checkWall(float x, float y) {
 
 	return Area[iY][iX] == '1';
 }
+
+bool SGMapInfo::checkWall(const SGVec2& pos) {
+	return checkWall(pos.x, pos.y);
+}

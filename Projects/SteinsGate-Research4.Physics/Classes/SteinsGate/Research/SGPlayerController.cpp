@@ -93,6 +93,10 @@ void SGPlayerController::onKeyReleased(ControlKey_t releasedKey) {
 	m_LastestReleasedKey.Time = DateTime::NowDetail();
 }
 
+SpriteDirection_t SGPlayerController::getSpriteDirection() {
+	return m_pCharacter->getActorSprite()->getSpriteDirection();
+}
+
 bool SGPlayerController::isKeyPressed(ControlKey_t controlKey) {
 	return m_ControlKeyPressedMap[int(controlKey)] > 0;
 }
@@ -179,60 +183,74 @@ void SGPlayerController::updateMove(float dt) {
 	float fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
 	float fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f;
 
-	SGRect thicknessPos = m_pCharacter->getThicknessBoxRect();
-
-	Vec2 lb{ thicknessPos.origin };
-	Vec2 rt{ thicknessPos.origin.x + thicknessPos.size.width,
-			 thicknessPos.origin.y + thicknessPos.size.height };
+	// 좌,우 | 위,아래 독립적으로 계산해야함
+	// 한개로만 하게되면 예를들어 Left, Down을 동시에 눌렀을 때
+	// thickness.origin.x -= fSpeedX 적용된 값이 Down 체크시에도 적용되어버려서
+	// 이 적용된 값 때문에 Down에서 lb, rb 충돌 체크가 항상 참이 되어버림
+	SGRect thicknessPosLR = m_pCharacter->getThicknessBoxRect();
+	SGRect thicknessPosUD = thicknessPosLR;
 
 	if (isKeyPressed(ControlKey::Left)) {
-		lb.x -= fSpeedX;
-		rt.x -= fSpeedX;
-
-		updateLeftRightMove(pMapInfo, lb, rt);
+		thicknessPosLR.origin.x -= fSpeedX;
+		updateLeftMove(pMapLayer, pMapInfo, thicknessPosLR);
 
 	} else if (isKeyPressed(ControlKey::Right)) {
-		lb.x += fSpeedX;
-		rt.x += fSpeedX;
-
-		updateLeftRightMove(pMapInfo, lb, rt);
+		thicknessPosLR.origin.x += fSpeedX;
+		updateRightMove(pMapLayer, pMapInfo, thicknessPosLR);
 	}
 
 	if (isKeyPressed(ControlKey::Up)) {
-		lb.y += fSpeedY;
-		rt.y += fSpeedY;
-
-		updateUpDownMove(pMapInfo, lb, rt);
+		thicknessPosUD.origin.y += fSpeedY;
+		updateUpMove(pMapLayer, pMapInfo, thicknessPosUD);
 	} else if (isKeyPressed(ControlKey::Down)) {
-		lb.y -= fSpeedY;
-		rt.y -= fSpeedY;
-
-		updateUpDownMove(pMapInfo, lb, rt);
+		thicknessPosUD.origin.y -= fSpeedY;
+		updateDownMove(pMapLayer, pMapInfo, thicknessPosUD);
 	}
 }
 
-void SGPlayerController::updateLeftRightMove(
-	SGMapInfo* mapInfo, 
-	const SGVec2& nextLeftBottomPos, 
-	const SGVec2& nextRightTopPos)
-{
-	if (mapInfo->checkWall(nextLeftBottomPos.x, nextLeftBottomPos.y) ||
-		mapInfo->checkWall(nextRightTopPos.x, nextRightTopPos.y))
+void SGPlayerController::updateLeftMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo,  const SGRect& thicknessRect) {
+	SGVec2 lb{ thicknessRect.origin.x, thicknessRect.origin.y };
+	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
+
+	// lb, lt 체크
+	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pCharacter->setPositionRealX(nextLeftBottomPos.x);
+	m_pCharacter->setPositionRealX(thicknessRect.origin.x);
 }
 
-void SGPlayerController::updateUpDownMove(
-	SGMapInfo* mapInfo, 
-	const SGVec2& nextLeftBottomPos, 
-	const SGVec2& nextRightTopPos)
-{
-	if (mapInfo->checkWall(nextLeftBottomPos.x, nextLeftBottomPos.y) ||
-		mapInfo->checkWall(nextRightTopPos.x, nextRightTopPos.y))
+
+void SGPlayerController::updateRightMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect) {
+	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
+	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
+
+	// rb, rt 체크
+	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pCharacter->setPositionRealY(nextLeftBottomPos.y);
+	m_pCharacter->setPositionRealX(thicknessRect.origin.x);
+}
+
+void SGPlayerController::updateUpMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect) {
+	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
+	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
+
+	// lt, rt 체크
+	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
+		return;
+
+	m_pCharacter->setPositionRealY(thicknessRect.origin.y);
+}
+
+void SGPlayerController::updateDownMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect) {
+	SGVec2 lb{ thicknessRect.origin.x, thicknessRect.origin.y };
+	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
+
+	// lb, rb 체크
+	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithObstacles(thicknessRect))
+		return;
+
+	m_pCharacter->setPositionRealY(thicknessRect.origin.y);
 }
 
 void SGPlayerController::updateDirection(ControlKey_t pressedKey) {

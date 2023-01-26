@@ -9,8 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Research/Tutturu.h>
-
-#include "SGActionInfo.h"
+#include <SteinsGate/Research/SGActionInfo.h>
 
 struct SGActionInfo;
 

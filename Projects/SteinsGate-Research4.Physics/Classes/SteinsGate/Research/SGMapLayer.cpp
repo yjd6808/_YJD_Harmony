@@ -8,6 +8,8 @@
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 
+#include <SteinsGate/Common/Engine/SGRectEx.h>
+
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -78,23 +80,15 @@ bool SGMapLayer::init() {
 	info.ValidAction.PushBack(pSliding->Code);
 	info.ValidAction.PushBack(pGunShot->Code);
 
-	SGCharacter* pPlayerCharacter = SGCharacter::create(CharacterType::Gunner, info);
-	pPlayerCharacter->retain();
-	pPlayerCharacter->setPositionRealCenter(300, 300);
-	
 	m_pPlayer = new SGPlayer();
 	MainPlayer_v = m_pPlayer;
-	m_pPlayer->setCharacter(pPlayerCharacter);
+	m_pPlayer->setCharacter(createCharacter(CharacterType::Gunner, 300, 250, info));
 	m_pPlayer->initActionManager();
 	m_pPlayer->initController();
 	m_pPlayer->runBaseAction(BaseAction::Idle);
 	m_pPlayer->setMapLayer(this);
-	this->addChild(pPlayerCharacter);
-	registerZOrderActor(pPlayerCharacter);
 
 	createMonster(2, 200, 200);
-
-	
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = CC_CALLBACK_2(SGMapLayer::onKeyPressed, this);
@@ -105,9 +99,23 @@ bool SGMapLayer::init() {
 	return true;
 }
 
+bool SGMapLayer::isCollideWithObstacles(const SGRect& rect) {
+	for (int i = 0; i < m_vCollidableObstacles.Size(); ++i) {
+		SGRect thicknessBox = m_vCollidableObstacles[i]->getThicknessBoxRect();
+
+		if (thicknessBox.intersectsRect(rect))
+			return true;
+	}
+
+	return false;
+}
 
 
 void SGMapLayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+
+	SGRectEx::log(m_pPlayer->getCharacter()->getHitBox());
+	SGRectEx::log(m_pPlayer->getCharacter()->getThicknessBoxRect());
+
 	m_pPlayer->onKeyPressed(keyCode, event);
 
 	if (keyCode == EventKeyboard::KeyCode::KEY_F1)
@@ -133,7 +141,16 @@ void SGMapLayer::runFrameEvent(SGActor* runner, FrameEventType_t frameEventType,
 
 }
 
-void SGMapLayer::createProejctile(SGActor* spawner, int projectileId) {
+SGCharacter* SGMapLayer::createCharacter(CharacterType_t characterType, float x, float y, SGCharacterInfo& info) {
+	SGCharacter* pPlayerCharacter = SGCharacter::create(characterType, info);
+	pPlayerCharacter->setPositionRealCenter(x, y);
+	registerZOrderActor(pPlayerCharacter);
+	registerCharacter(pPlayerCharacter);
+	this->addChild(pPlayerCharacter);
+	return pPlayerCharacter;
+}
+
+SGProjectile* SGMapLayer::createProejctile(SGActor* spawner, int projectileId) {
 	SGProjectileInfo* pInfo = SGDataManager::getInstance()->getProjectileInfo(projectileId);
 	SGProjectile* pProjectile = SGProjectile::create(spawner, pInfo);
 	this->addChild(pProjectile);
@@ -142,13 +159,14 @@ void SGMapLayer::createProejctile(SGActor* spawner, int projectileId) {
 	if (spawner == m_pPlayer->getCharacter()) {
 		registerPlayerProjectile(pProjectile);
 	}
+	return pProjectile;
 }
 
 void SGMapLayer::createHitbox(SGActor* spawner, int hitBoxId) {
 	
 }
 
-void SGMapLayer::createMonster(int code, float x, float y) {
+SGMonster* SGMapLayer::createMonster(int code, float x, float y) {
 	SGMonsterInfo* pInfo = SGDataManager::getInstance()->getMonsterInfo(code);
 	SGMonster* pMonster = SGMonster::create(pInfo);
 	pMonster->setPositionReal(x, y);
@@ -156,9 +174,10 @@ void SGMapLayer::createMonster(int code, float x, float y) {
 	registerMonster(pMonster);
 
 	this->addChild(pMonster);
+	return pMonster;
 }
 
-void SGMapLayer::createObstacle(int code, float x, float y) {
+SGObstacle* SGMapLayer::createObstacle(int code, float x, float y) {
 	SGObstacleInfo* pObstacleInfo = SGDataManager::getInstance()->getObstacleInfo(code);
 	SGObstacle* pObstacle = SGObstacle::create(pObstacleInfo);
 	pObstacle->setPositionReal(x, y);
@@ -166,14 +185,19 @@ void SGMapLayer::createObstacle(int code, float x, float y) {
 	if (pObstacleInfo->ZOrederable)
 		registerZOrderActor(pObstacle);
 
-	if (pObstacleInfo->Colliadalble || pObstacleInfo->Hitable)
+	if (pObstacleInfo->Colliadalble)
 		registerObstacle(pObstacle);
 
 	this->addChild(pObstacle);
+	return pObstacle;
 }
 
 void SGMapLayer::registerZOrderActor(SGActor* actor) {
 	m_vZOrderedActors.PushBack(actor);
+}
+
+void SGMapLayer::registerCharacter(SGCharacter* character) {
+	m_vCharacters.PushBack(character);
 }
 
 void SGMapLayer::registerPlayerProjectile(SGProjectile* projectile) {
@@ -185,7 +209,7 @@ void SGMapLayer::registerMonster(SGMonster* monster) {
 }
 
 void SGMapLayer::registerObstacle(SGObstacle* obstacle) {
-	m_vObstacles.PushBack(obstacle);
+	m_vCollidableObstacles.PushBack(obstacle);
 }
 
 void SGMapLayer::registerCleanUp(SGActor* actor) {
@@ -282,6 +306,13 @@ void SGMapLayer::updatePlayerProjectiles(float dt) {
 		if (pProjectile->isLifeTimeOver()) {
 			m_qRemovedActors.Enqueue(pProjectile);
 		}
+	}
+}
+
+void SGMapLayer::updatePhysics(float dt) {
+
+	for (int i = 0; i < m_vMonsters.Size(); ++i) {
+		
 	}
 }
 

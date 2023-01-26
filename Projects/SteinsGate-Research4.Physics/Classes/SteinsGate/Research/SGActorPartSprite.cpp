@@ -102,6 +102,10 @@ void SGActorPartSprite::update(float dt) {
 		m_pRunningAnimation->update(dt);
 	}
 
+	updateBoundingBoxVisibleState();
+}
+
+void SGActorPartSprite::updateBoundingBoxVisibleState() {
 	if (SGGlobal::getInstance()->isBodyBoundingBoxDrawMode())
 		m_pBoundingBox->setOpacity(255);
 	else
@@ -120,6 +124,8 @@ void SGActorPartSprite::runAnimation(int code) {
 
 	m_pRunningAnimation = pNextAnimation;
 	m_pRunningAnimation->run();
+
+	updateBoundingBoxVisibleState();
 }
 
 ActorType_t SGActorPartSprite::getActorType() {

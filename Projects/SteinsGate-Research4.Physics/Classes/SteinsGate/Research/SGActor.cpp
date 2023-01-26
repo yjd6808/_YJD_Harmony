@@ -85,6 +85,7 @@ SGVec2 SGActor::getPositionReal() const {
 SGVec2 SGActor::getPositionRealCenter() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	Vec2 thisPos = getPosition();
+	thisPos.x += m_pThicknessBox->getPositionX();
 	thisPos.y += m_pThicknessBox->getPositionY();
 	return thisPos;
 }
@@ -125,7 +126,7 @@ void SGActor::setPositionReal(float x, float y) {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 
-	x += thicknessBox.RelativeX;
+	x -= thicknessBox.RelativeX;
 	y -= thicknessBox.RelativeY;
 
 	x += thicknessBox.Width / 2.0f;
@@ -141,7 +142,7 @@ void SGActor::setPositionReal(const SGVec2& v) {
 void SGActor::setPositionRealX(float x) {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
-	x += thicknessBox.RelativeX;
+	x -= thicknessBox.RelativeX;
 	x += thicknessBox.Width / 2.0f;
 	setPositionX(x);
 }
@@ -157,7 +158,7 @@ void SGActor::setPositionRealY(float y) {
 void SGActor::setPositionRealCenter(float x, float y) {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	setPosition(
-		x += m_pThicknessBox->getPositionX(), 
+		x -= m_pThicknessBox->getPositionX(), 
 		y -= m_pThicknessBox->getPositionY()
 	);
 }

@@ -10,14 +10,14 @@
 
 #include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/Config.h>
-#include <SteinsGate/Research/SGActionManager.h>
 
 #include <JCore/Time.h>
 
-#include "SGCharacter.h"
+struct SGMapInfo;
 
 class SGPlayer;
 class SGCharacter;
+class SGMapLayer;
 class SGActionManager;
 class SGPlayerController
 {
@@ -35,20 +35,18 @@ public:
 
 	void init();
 	void update(float delta);
-	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
 	void onKeyPressed(ControlKey_t pressedKey);
-	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
 	void onKeyReleased(ControlKey_t pressedKey);
 
-	SpriteDirection_t getSpriteDirection() { return m_pCharacter->getActorSprite()->getSpriteDirection(); }
+	SpriteDirection_t getSpriteDirection();
 	ControlKey_t getLastestReleasedKey() { return m_LastestReleasedKey.ControlKey; }
 	ControlKey_t getLastestPressedKey() { return m_LastestPressedKey.ControlKey; }
-	ControlKey_t convertControlKey(cocos2d::EventKeyboard::KeyCode keyCode);
+	ControlKey_t convertControlKey(SGEventKeyboard::KeyCode keyCode);
 
 	bool isKeyPressed(ControlKey_t controlKey);
 	bool isMoveKeyPressed();
-	bool hasRunningAction() { return m_pActionManager->hasRunningAction(); }	// 달리는 액션이 아니라 실행중인 액션이란 뜻
-	bool hasPreviousAction() { return m_pActionManager->hasPreviousAction(); }
 
 	bool canUseCommand() { return m_bCabUseCommand; }
 	bool cannotUseCommand() { return m_bCabUseCommand == false; }
@@ -58,8 +56,10 @@ public:
 	void walk();
 
 	void updateMove(float dt);
-	void updateLeftRightMove(SGMapInfo* mapInfo, const SGVec2& nextLeftBottomPos, const SGVec2& nextRightTopPos);
-	void updateUpDownMove(SGMapInfo* mapInfo, const SGVec2& nextLeftBottomPos, const SGVec2& nextRightTopPos);
+	void updateLeftMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect);
+	void updateRightMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& nextThicknessRect);
+	void updateUpMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& nextThicknessRect);
+	void updateDownMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& nextThicknessRect);
 	void updateDirection(ControlKey_t pressedKey);
 	void reflectPressedMoveKeys();	// 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
 	void setCommandable(bool commandable) { m_bCabUseCommand = commandable; }

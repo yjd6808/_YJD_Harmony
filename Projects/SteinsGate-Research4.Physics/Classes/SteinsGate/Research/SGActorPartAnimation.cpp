@@ -134,8 +134,7 @@ void SGActorPartAnimation::updateLoopSequence(float dt) {
 
 void SGActorPartAnimation::updateAnimation(float currentFrameDelay, SGFrameTexture* currentFrameTexture, float dt) {
 
-	if (m_pTarget->getPartIndex() == 0 && m_pAnimationInfo->Name.Contain("idle"))
-		int a = 40;
+
 
 	// Step Check. 애니메이션 실행가능 여부 체크
 	if (m_bPaused || m_bFinished || m_bZeroFramePaused)
