@@ -36,6 +36,34 @@ namespace JCore {
 			QuickSort(arr, 0, ArraySize - 1, Move(predicate));
 		}
 
+		// 길이를 아는 경우
+		template <typename T, Int32U ArraySize>
+		static void SortInsertion(T(&arr)[ArraySize]) {
+			SortInsertion(arr, ArraySize, NaturalOrder{});
+		}
+
+		// 길이를 아는 경우
+		template <typename T, Int32U ArraySize, typename TPredicate>
+		static void SortInsertion(T(&arr)[ArraySize], TPredicate&& predicate) {
+			SortInsertion(arr, ArraySize, Move(predicate));
+		}
+
+		// 길이를 모르는 포인터타입인 경우
+		template <typename T>
+		static void SortInsertion(T* arr, const int arrSize) {
+			ThrowIfArrayIsNull(arr);
+			ThrowIfArraySizeIsInvalid(arrSize);
+			InsertionSort(arr, arrSize, NaturalOrder{});
+		}
+
+		// 길이를 모르는 포인터타입인 경우
+		template <typename T, typename TPredicate>
+		static void SortInsertion(T* arr, const int arrSize, TPredicate&& predicate) {
+			ThrowIfArrayIsNull(arr);
+			ThrowIfArraySizeIsInvalid(arrSize);
+			InsertionSort(arr, arrSize, Move(predicate));
+		}
+
 		// 길이를 모르는 포인터타입인 경우
 		template <typename T>
 		static void Sort(T* arr, const int arrSize) {
@@ -154,6 +182,50 @@ namespace JCore {
 			return LowerBound(arr, ArraySize, data);
 		}
 
+		//	TPredicate은 T와 TVal을 비교해서 참이면 우측으로 탐색
+		//                               거짓이면 좌측으로 탐색한다.
+		//  이는 std::lower_bound 코드를보면 알 수 있다.
+		/*  사용예시
+			struct A { int a; int b; };
+			A models[1001];
+
+			// a는 1000 ~ 0 으로 초기화
+			// b는 0 ~ 1000 으로 초기화
+			for (int i = 0; i <= 1000; ++i) {
+				models[i].a = 1000 - i;
+				models[i].b = i;
+			}
+
+
+			// b값중 300을 찾고 싶다.
+			// b는 오름차순 정렬되어있다.
+			// model.a가 200이고, val이 300이 들어왔다.
+			// 현재 탐색중인 곳인 model.a가 val보다 좌측에 있는 상황이다.
+			// 따라서 300 근처의 값이 있는 우측을 탐색하기 위해서는 이 결과가 참이 되야한다.
+			
+			int idx = Arrays::LowerBound(&models[0], 1001, 300, [](const A& model, const int& val) {
+				return model.b < val;	
+			});	// idx = 300이 들어감
+			
+
+			// a값중 300을 찾고 싶다.
+			// a는 내림차순 정렬되어있다.
+			// model.a가 500이고, val이 300이 들어왔다.
+			// 현재 탐색중인 곳인 model.a가 val보다 좌측에 있는 상황이다.
+			// 따라서 300 근처의 값이 있는 우측을 탐색하기 위해서는 이 결과가 참이 되야한다.
+			
+			int idx = Arrays::LowerBound(&models[0], 1001, 300, [](const A& model, const int& val) {
+				return model.a > val;	// val은 계속 300이 들어옴
+			});	
+		 */
+
+		template <typename T, typename TVal, typename TPredicate>
+		static int LowerBound(const T* arr, const int arrSize, TVal&& data, TPredicate&& predicate) {
+			ThrowIfArrayIsNull(arr);
+			ThrowIfArraySizeIsInvalid(arrSize);
+
+			return std::lower_bound(arr, arr + arrSize, Forward<TVal>(data), Forward<TPredicate>(predicate)) - arr;
+		}
 
 		// @참고 : https://12bme.tistory.com/120
 		// LowerBound는 경계조건 처리가 매우 까다롭다.
@@ -249,7 +321,7 @@ namespace JCore {
 		// @참고 : https://www.youtube.com/watch?v=PgBzjlCcFvc&t=45s&ab_channel=GeeksforGeeks
 		// 영상에서 동작하는데로 만들기
 		template <typename T, typename Prdeicate>
-		static void QuickSort(T* arr, int start, int end, Prdeicate predicate) {
+		static void QuickSort(T* arr, int start, int end, Prdeicate&& predicate) {
 			if (start >= end) {
 				return;
 			}
@@ -273,6 +345,25 @@ namespace JCore {
 			QuickSort(arr, pivot + 1, end, predicate);
 		}
 
+		template <typename T, typename Prdeicate>
+		static void InsertionSort(T* arr, int size, Prdeicate predicate) {
+			for (int i = 1; i < size; ++i) {
+				int find = i;
+				for (int j = i - 1; j >= 0; --j) {
+
+					if (predicate(arr[find], arr[j])) {
+						T temp = Move(arr[j]);
+						arr[j] = Move(arr[find]);
+						arr[find] = Move(temp);
+						find = j;
+					} else {
+						// 위치를 찾은 경우 바로 반환되므로 최선의 경우(대부분 정렬된 상태인 경우)에는
+						// 대부분 j반복문 진입하자마자 break로 나가버림
+						break;
+					}
+				}
+			}
+		}
 		
 	private: // Throws
 		template <typename T>

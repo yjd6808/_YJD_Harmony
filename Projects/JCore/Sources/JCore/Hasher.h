@@ -61,6 +61,14 @@ struct Hasher<double>
 	}
 };
 
+template <typename T>
+struct Hasher<T*>
+{
+	constexpr Int32U operator()(T* val) const {
+		return Hasher<Int32U>()((Int32U)val);
+	}
+};
+
 
 template <>
 struct Hasher<String> {

@@ -13,6 +13,8 @@
 #include <SteinsGate/Research/SGActionManager.h>
 
 class SGMapLayer;
+class SGMonster;
+class SGProjectile;
 class SGPlayer
 {
 public:
@@ -30,6 +32,7 @@ public:
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
+
 	void runAction(int actionCode);
 	void runBaseAction(BaseAction_t baseAction);
 	

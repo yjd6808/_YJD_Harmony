@@ -314,4 +314,18 @@ TEST(VectorTest, SizeInit) {
 	}
 }
 
+TEST(VectorTest, BinarySearch) {
+	Vector<Model> vModels;
+
+	for (int i = 0; i <= 200; ++i) {
+		vModels.PushBack({ 200 - i, i });
+	}
+
+	for (int i = 0; i <= 200; i++) {
+		int ioffset = vModels.OffsetLowerBound(i, [](const Model& m, const int& v) { return m.b < v; });
+		EXPECT_TRUE(vModels[i].b == i);
+	}
+
+}
+
 #endif // TEST_VectorTest == ON

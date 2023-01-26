@@ -287,6 +287,11 @@ protected:
 		Arrays::Sort(m_pArray, this->m_iSize, NaturalOrder{});
 	}
 
+	template <typename TPredicate>
+	void SortInsertion(TPredicate&& predicate) {
+		Arrays::SortInsertion(m_pArray, this->m_iSize, Move(predicate));
+	}
+
 	/// <summary>
 	/// startIdx 이상 endIdx이하에 위치한 원소들을 정렬한다.
 	/// </summary>

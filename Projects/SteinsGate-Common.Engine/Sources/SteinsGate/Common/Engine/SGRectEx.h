@@ -11,14 +11,14 @@
 #include <SteinsGate/Common/Engine.h>
 #include <JCore/Math.h>
 
-class RectEx : cocos2d::Rect
+class SGRectEx : SGRect
 {
 public:
 	/**
 	 * \brief 인터섹트 결과와 더불어 겹쳐진 영역의 위치를 반환하도록 한다.
 	 * 하단 테스트코드 참고
 	 */
-	static bool intersect(const cocos2d::Rect& rc, const cocos2d::Rect& rc2, cocos2d::Rect& intersectRect) {
+	static bool intersect(const SGRect& rc, const SGRect& rc2, SGRect& intersectRect) {
 		if (!rc.intersectsRect(rc2)) {
 			return false;
 		}
@@ -142,4 +142,16 @@ public:
 	
     */
 
+
+     static bool intersectY(const SGRect& lhsThick, const SGRect& rhsThick) {
+        if (lhsThick.origin.y > rhsThick.origin.y &&
+            lhsThick.origin.y < rhsThick.origin.y + rhsThick.size.height)
+            return true;
+
+        if (lhsThick.origin.y + lhsThick.size.height > rhsThick.origin.y &&
+            lhsThick.origin.y + lhsThick.size.height < rhsThick.origin.y + rhsThick.size.height)
+            return true;
+
+        return false;
+     }
 };

@@ -46,6 +46,9 @@ using SGHashMap = JCore::HashMap<TKey, TValue, TAllocator>;
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
 using SGVector = JCore::Vector<T, TAllocator>;
 
+template <typename T, typename TAllocator = JCore::DefaultAllocator>
+using SGArrayQueue = JCore::ArrayQueue<T, TAllocator>;
+
 template <typename T, typename Predicate = std::less<T>>
 using SGSet = std::set<T, Predicate>;
 

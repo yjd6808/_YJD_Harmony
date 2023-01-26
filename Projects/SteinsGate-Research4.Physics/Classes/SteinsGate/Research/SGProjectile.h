@@ -15,6 +15,8 @@ class SGProjectile : public SGActor
 {
 public:
 	SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo);
+	~SGProjectile() override;
+
 	static SGProjectile* create(SGActor* spawner, SGProjectileInfo* baseInfo);
 	void initActorSprite() override;
 	void initThicknessBox(const SGThicknessBox& thicknessBox) override;
@@ -25,12 +27,19 @@ public:
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 
+	void addHitActor(SGActor* actor);
+	void removeHitActor(SGActor* actor);
+
+	float isLifeTimeOver();
+	float isDistanceOver();
 	SGActor* getSpawner();
 	SGProjectileInfo* getBaseInfo();
 private:
 	float m_fMoveDistance;
+	float m_fElapsedLifeTime;
 
 	SGActor* m_pSpwawner;
 	SGProjectileInfo* m_pBaseInfo;
 	SGCharacterInfo m_CharacterInfo;
+	SGVector<SGActor*> m_vHitList;
 };

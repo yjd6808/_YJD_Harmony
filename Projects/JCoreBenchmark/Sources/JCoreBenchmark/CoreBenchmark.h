@@ -42,4 +42,5 @@ using Console = NormalConsole;
 // Container
 // ========================================================================================
 
-#define HashMapTest				ON
+#define HashMapTest				OFF
+#define HashMapMemoryPoolTest	ON

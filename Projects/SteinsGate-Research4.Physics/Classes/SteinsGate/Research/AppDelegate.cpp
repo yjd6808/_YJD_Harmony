@@ -5,7 +5,7 @@
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 
-#include "SteinsGate/Common/Engine/RectEx.h"
+#include "SteinsGate/Common/Engine/SGRectEx.h"
 
 #define AppName "SteinsGate-Research4.Physics"
 

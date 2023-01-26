@@ -23,7 +23,7 @@
         "musket_attack_speed": 60.00,
         "jump_force": 500.0,
         "sliding_force": 1000.0,
-        "thickness_box": "0 -130 80 20",
+        "thickness_box": "0 -130 60 20",
 
 
         "visual_z_order": {

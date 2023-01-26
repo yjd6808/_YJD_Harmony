@@ -21,14 +21,22 @@ USING_NS_CC;
 
 SGProjectile::SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo)
 	: SGActor(ActorType::Projectile, baseInfo->Code)
+	, m_fMoveDistance(0.0f)
+	, m_fElapsedLifeTime(0.0f)
 	, m_pSpwawner(spawner)
 	, m_pBaseInfo(baseInfo)
+	, m_vHitList(MaxHitList_v)
 {}
+
+SGProjectile::~SGProjectile() {
+	CC_SAFE_RELEASE(m_pSpwawner);
+}
 
 SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo) {
 	SGProjectile* pProjectile = new SGProjectile(spawner, baseInfo);
 
 	if (pProjectile && pProjectile->init()) {
+		spawner->retain();
 		pProjectile->initThicknessBox(baseInfo->ThicknessBox);
 		pProjectile->initActorSprite();
 		pProjectile->autorelease();
@@ -105,6 +113,7 @@ void SGProjectile::update(float dt) {
 	// y축 이동은 엑터 스프라이트를 이동
 	m_pActorSprite->setPositionY(m_pActorSprite->getPositionY() - fMoveDistanceFPSY);
 	m_fMoveDistance += fMoveSpeedFPS;
+	m_fElapsedLifeTime += dt;
 
 	// 사거리 체크
 
@@ -116,6 +125,22 @@ void SGProjectile::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture*
 void SGProjectile::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
 void SGProjectile::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
 void SGProjectile::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
+
+void SGProjectile::addHitActor(SGActor* actor) {
+	m_vHitList.PushBack(actor);
+}
+
+void SGProjectile::removeHitActor(SGActor* actor) {
+	m_vHitList.Remove(actor);
+}
+
+float SGProjectile::isLifeTimeOver() {
+	return m_fElapsedLifeTime >= m_pBaseInfo->LifeTime;
+}
+
+float SGProjectile::isDistanceOver() {
+	return m_fMoveDistance >= m_pBaseInfo->Distance;
+}
 
 SGActor* SGProjectile::getSpawner() { return m_pSpwawner; }
 SGProjectileInfo* SGProjectile::getBaseInfo() { return m_pBaseInfo; }

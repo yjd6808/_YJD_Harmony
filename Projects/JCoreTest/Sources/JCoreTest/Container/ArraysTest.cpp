@@ -16,42 +16,44 @@ using namespace std;
 
 // Arrays::Sort 함수 테스트
 TEST(ArraysTest, Sort) {
-	vector<int> normal;
-	Random random;
-	for (int i = 0; i < 500; i++) {
-		const int r = random.GenerateInt(1, 10);
-		int* myArray = new int[r];
-		for (int j = 0; j < r; j++) {
-			int gen = random.GenerateInt(0, 50);
-			normal.push_back(gen);
-			myArray[j] = gen;
-		}
-		std::sort(normal.begin(), normal.end());
-		Arrays::Sort(myArray, r);
-
-		for (int j = 0; j < r; j++) {
-			if (normal[j] != myArray[j]) {
-				goto FAILED;
+	{
+		vector<int> normal;
+		Random random;
+		for (int i = 0; i < 500; i++) {
+			const int r = random.GenerateInt(1, 10);
+			int* myArray = new int[r];
+			int* myArray2 = new int[r];
+			for (int j = 0; j < r; j++) {
+				int gen = random.GenerateInt(0, 50);
+				normal.push_back(gen);
+				myArray[j] = gen;
+				myArray2[j] = gen;
 			}
+			std::sort(normal.begin(), normal.end());
+			Arrays::Sort(myArray, r);
+			Arrays::SortInsertion(myArray2, r);
 
+			for (int j = 0; j < r; j++) {
+				if (normal[j] != myArray[j]) {
+					goto FAILED1;
+				}
+				if (normal[j] != myArray2[j]) {
+					goto FAILED1;
+				}
+			}
+			normal.clear();
+
+
+
+
+			delete[] myArray;
+			delete[] myArray2;
 		}
-		/*
-		for (int j = 0; j < r; j++) {
-			//Print("%d ", normal[j]);
-		}
-		PrintFormat();
-		for (int j = 0; j < r; j++) {
-			Print("%d ", myArray[j]);
-		}
-		PrintFormat();
-		
-		std::cout << r << "개의 데이터 정렬결과 일치\n";
-		*/
-		normal.clear();
+		return;
+	FAILED1:
+		EXPECT_TRUE(false);
 	}
-	return;
-FAILED:
-	EXPECT_TRUE(false);
+
 }
 
 TEST(ArraysTest, BinarySearch) {

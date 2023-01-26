@@ -9,6 +9,7 @@
 
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGComboAction.h>
+#include <SteinsGate/Research/SGMapLayer.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -46,7 +47,7 @@ void SGPlayerController::init() {
 }
 
 void SGPlayerController::update(float delta) {
-	updateWalking(delta);
+	updateMove(delta);
 }
 
 void SGPlayerController::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
@@ -161,7 +162,14 @@ void SGPlayerController::walk() {
 	m_pActionManager->runBaseAction(BaseAction::Walk);
 }
 
-void SGPlayerController::updateWalking(float dt) {
+void SGPlayerController::updateMove(float dt) {
+
+	SGMapLayer* pMapLayer = m_pPlayer->getMapLayer();
+
+	if (pMapLayer == nullptr)
+		return;
+
+	SGMapInfo* pMapInfo = pMapLayer->getMapInfo();
 	SGAction* pRunningAction = m_pActionManager->getRunningAction();
 
 	// 액션중 이동가능한 액션인 경우 해당 액션의 이동속도로 움직일 수 있도록 한다.
@@ -171,21 +179,60 @@ void SGPlayerController::updateWalking(float dt) {
 	float fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
 	float fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f;
 
-	if (isKeyPressed(ControlKey::Left)) {
-		m_pCharacter->setPositionX(m_pCharacter->getPositionX() - fSpeedX);
-	}
+	SGRect thicknessPos = m_pCharacter->getThicknessBoxRect();
 
-	if (isKeyPressed(ControlKey::Right)) {
-		m_pCharacter->setPositionX(m_pCharacter->getPositionX() + fSpeedX);
+	Vec2 lb{ thicknessPos.origin };
+	Vec2 rt{ thicknessPos.origin.x + thicknessPos.size.width,
+			 thicknessPos.origin.y + thicknessPos.size.height };
+
+	if (isKeyPressed(ControlKey::Left)) {
+		lb.x -= fSpeedX;
+		rt.x -= fSpeedX;
+
+		updateLeftRightMove(pMapInfo, lb, rt);
+
+	} else if (isKeyPressed(ControlKey::Right)) {
+		lb.x += fSpeedX;
+		rt.x += fSpeedX;
+
+		updateLeftRightMove(pMapInfo, lb, rt);
 	}
 
 	if (isKeyPressed(ControlKey::Up)) {
-		m_pCharacter->setPositionY(m_pCharacter->getPositionY() + fSpeedY);
-	}
+		lb.y += fSpeedY;
+		rt.y += fSpeedY;
 
-	if (isKeyPressed(ControlKey::Down)) {
-		m_pCharacter->setPositionY(m_pCharacter->getPositionY() - fSpeedY);
+		updateUpDownMove(pMapInfo, lb, rt);
+	} else if (isKeyPressed(ControlKey::Down)) {
+		lb.y -= fSpeedY;
+		rt.y -= fSpeedY;
+
+		updateUpDownMove(pMapInfo, lb, rt);
 	}
+}
+
+void SGPlayerController::updateLeftRightMove(
+	SGMapInfo* mapInfo, 
+	const SGVec2& nextLeftBottomPos, 
+	const SGVec2& nextRightTopPos)
+{
+	if (mapInfo->checkWall(nextLeftBottomPos.x, nextLeftBottomPos.y) ||
+		mapInfo->checkWall(nextRightTopPos.x, nextRightTopPos.y))
+		return;
+
+	m_pCharacter->setPositionRealX(nextLeftBottomPos.x);
+}
+
+void SGPlayerController::updateUpDownMove(
+	SGMapInfo* mapInfo, 
+	const SGVec2& nextLeftBottomPos, 
+	const SGVec2& nextRightTopPos)
+{
+	if (mapInfo->checkWall(nextLeftBottomPos.x, nextLeftBottomPos.y) ||
+		mapInfo->checkWall(nextRightTopPos.x, nextRightTopPos.y))
+		return;
+
+	m_pCharacter->setPositionRealY(nextLeftBottomPos.y);
 }
 
 void SGPlayerController::updateDirection(ControlKey_t pressedKey) {

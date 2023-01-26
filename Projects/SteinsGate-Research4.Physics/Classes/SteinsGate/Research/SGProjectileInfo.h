@@ -32,6 +32,7 @@ struct SGProjectileInfo
 	float Weight;
 	float Distance;
 	float MoveSpeed;
+	float LifeTime;
 	float PenetrationRate;
 	float RehitDelay;
 	SGThicknessBox ThicknessBox;

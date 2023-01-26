@@ -35,6 +35,8 @@ public:
 	virtual void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
 	virtual void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
 	virtual void initThicknessBox(const SGThicknessBox& thicknessBox);
+	virtual void addForceX(float xForce) {}
+	virtual void addForceY(float yForce) {}
 
 	bool init() override;
 	void update(float dt) override;				// 자식에서도 오버라이딩시 이거 호출하도록
@@ -45,19 +47,26 @@ public:
 	SGVec2 getPositionRealCenter()			const;	// 두께박스 중앙의 위치
 	SGVec2 getCanvasPositionReal()			const;	// 엑터 스프라이트의 절대 캔버스 위치
 	SGSize getCanvasSize()					const;	// 엑터 스프라이트의 바디 캔버스 사이즈
-	SGRect getHitbox()						const;
+	SGRect getHitBox()						const;
 	SGThicknessBox getThicknessBox()		const;
 	SGActorSprite* getActorSprite()			const;
 	SpriteDirection_t getSpriteDirection()  const;
 
 	void setPositionReal(float x, float y);
+	void setPositionReal(const SGVec2& v);
+	void setPositionRealX(float x);
+	void setPositionRealY(float y);
 	void setPositionRealCenter(float x, float y);
+	void setPositionRealCenter(const SGVec2& v);
 	void runAnimation(int animationCode);
 
 	void setSpriteDirection(SpriteDirection_t direction);
 	void setForwardDirection();
 	void setBackwardDirection();
+
 	
+
+	bool isCollide(SGActor* other, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect);
 protected:
 	ActorType_t m_eActorType;
 	SGActorSprite* m_pActorSprite;

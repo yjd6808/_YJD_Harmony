@@ -183,6 +183,9 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGObstacle.cpp">
       <Filter>src\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMapInfo.cpp">
+      <Filter>src\Data\Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">

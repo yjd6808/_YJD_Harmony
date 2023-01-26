@@ -25,7 +25,7 @@ bool GameScene::init()
     if (!Scene::init())
         return false;
 
-    m_pWorldLayer = SGMapLayer::create();
+    m_pWorldLayer = SGMapLayer::create(1);
     m_pWorldLayer->setAnchorPoint(Vec2::ZERO);
     m_pWorldLayer->setScale(SGDataManager::getInstance()->getClientInfo()->GameScale);
     this->addChild(m_pWorldLayer);

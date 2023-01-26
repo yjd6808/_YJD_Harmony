@@ -19,6 +19,9 @@
     <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreBenchmark\Container\HashMapMemoryPoolTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreBenchmark\CoreBenchmark.h" />

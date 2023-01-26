@@ -30,7 +30,12 @@ SEnumBegin(SpriteDirection)
 Right,
 Left,
 Max
-SEnumEnd(SpriteDirection)
+SEnumMiddle(SpriteDirection)
+static constexpr const char* Name[Max]{
+	"Right",
+	"Left"
+};
+SEnumMiddleEnd(SpriteDirection)
 
 
 SEnumInteritedBegin(Direction, SpriteDirection)

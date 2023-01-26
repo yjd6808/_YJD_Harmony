@@ -7,9 +7,7 @@
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
-#include <SteinsGate/Research/SGProjectile.h>
-#include <SteinsGate/Research/SGMonster.h>
-#include <SteinsGate/Research/SGObstacle.h>
+
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -20,15 +18,16 @@ USING_NS_JC;
 // 
 // ==============================================================================================================================
 
-SGMapLayer* SGMapLayer::create() {
-	SGMapLayer* pWorld = new (std::nothrow) SGMapLayer;
+SGMapLayer* SGMapLayer::create(int mapCode) {
+	SGMapLayer* pMap = new (std::nothrow) SGMapLayer;
 
-	if (pWorld && pWorld->init()) {
-		pWorld->autorelease();
-		return pWorld;
+	if (pMap && pMap->init()) {
+		pMap->loadMap(mapCode);
+		pMap->autorelease();
+		return pMap;
 	}
 
-	DeleteSafe(pWorld);
+	DeleteSafe(pMap);
 	return nullptr;
 }
 
@@ -36,6 +35,7 @@ SGMapLayer* SGMapLayer::create() {
 
 SGMapLayer::SGMapLayer()
 	: m_fZReorderTime(0.0f)
+	, m_pMapInfo(nullptr)
 	, m_pPlayer(nullptr)
 {}
 
@@ -56,17 +56,6 @@ bool SGMapLayer::init() {
 	// =================================================
 	// 임시 데이터 주입
 	// =================================================
-
-	loadMap(1);
-
-	
-
-	auto pack = SGImagePackManager::getInstance()->getPack("sprite_map.NPK");
-	int count = pack->getImgCount();
-	auto idx = pack->getImgIndex("00tile2.img");
-
-	auto tex = pack->createFrameTexture(idx, 0);
-	this->addChild(Sprite::createWithTexture(tex->getTexture()));
 
 	SGCharacterInfo info;
 	SGDataManager* pConfig = SGDataManager::getInstance();
@@ -91,7 +80,7 @@ bool SGMapLayer::init() {
 
 	SGCharacter* pPlayerCharacter = SGCharacter::create(CharacterType::Gunner, info);
 	pPlayerCharacter->retain();
-	pPlayerCharacter->setPosition(Vec2{ 300, 300 });
+	pPlayerCharacter->setPositionRealCenter(300, 300);
 	
 	m_pPlayer = new SGPlayer();
 	MainPlayer_v = m_pPlayer;
@@ -131,6 +120,10 @@ void SGMapLayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event*
 	m_pPlayer->onKeyReleased(keyCode, event);
 }
 
+SGMapInfo* SGMapLayer::getMapInfo() {
+	return m_pMapInfo;
+}
+
 void SGMapLayer::runFrameEvent(SGActor* runner, FrameEventType_t frameEventType, int frameEventId) {
 
 	if (frameEventType == FrameEventType::Projectile)
@@ -145,6 +138,10 @@ void SGMapLayer::createProejctile(SGActor* spawner, int projectileId) {
 	SGProjectile* pProjectile = SGProjectile::create(spawner, pInfo);
 	this->addChild(pProjectile);
 	registerZOrderActor(pProjectile);
+
+	if (spawner == m_pPlayer->getCharacter()) {
+		registerPlayerProjectile(pProjectile);
+	}
 }
 
 void SGMapLayer::createHitbox(SGActor* spawner, int hitBoxId) {
@@ -156,6 +153,7 @@ void SGMapLayer::createMonster(int code, float x, float y) {
 	SGMonster* pMonster = SGMonster::create(pInfo);
 	pMonster->setPositionReal(x, y);
 	registerZOrderActor(pMonster);
+	registerMonster(pMonster);
 
 	this->addChild(pMonster);
 }
@@ -168,23 +166,68 @@ void SGMapLayer::createObstacle(int code, float x, float y) {
 	if (pObstacleInfo->ZOrederable)
 		registerZOrderActor(pObstacle);
 
+	if (pObstacleInfo->Colliadalble || pObstacleInfo->Hitable)
+		registerObstacle(pObstacle);
+
 	this->addChild(pObstacle);
 }
 
 void SGMapLayer::registerZOrderActor(SGActor* actor) {
 	m_vZOrderedActors.PushBack(actor);
-	
+}
+
+void SGMapLayer::registerPlayerProjectile(SGProjectile* projectile) {
+	m_vPlayerProjectiles.PushBack(projectile);
+}
+
+void SGMapLayer::registerMonster(SGMonster* monster) {
+	m_vMonsters.PushBack(monster);
+}
+
+void SGMapLayer::registerObstacle(SGObstacle* obstacle) {
+	m_vObstacles.PushBack(obstacle);
+}
+
+void SGMapLayer::registerCleanUp(SGActor* actor) {
+	m_qRemovedActors.Enqueue(actor);
 }
 
 void SGMapLayer::unregisterZOrderActor(SGActor* actor) {
+	int iOffset = m_vZOrderedActors.OffsetLowerBound(actor->getLocalZOrder(), [](const SGActor* actor, int zorder) {
+		return actor->getLocalZOrder() < zorder;
+	});
 
+	DebugAssertMessage(iOffset != -1, "Z 오더 목록에서 대상을 찾지 못했습니다.");
+
+	if (m_vZOrderedActors[iOffset] == actor) {
+		m_vZOrderedActors.RemoveAt(iOffset);
+	}
 }
+
+void SGMapLayer::unregisterPlayerProjectile(SGProjectile* projectile) {
+	if (m_vPlayerProjectiles.Remove(projectile) == false) {
+		DebugAssertMessage(false, "플레이어 프로젝틸 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+	}
+}
+
+void SGMapLayer::unregisterMonster(SGMonster* mosnter) {
+	if (m_vMonsters.Remove(mosnter) == false) {
+		DebugAssertMessage(false, "몬스터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+	}
+}
+
+void SGMapLayer::unregisterObstacle(SGObstacle* obstacle) {
+	
+}
+
 
 void SGMapLayer::update(float dt) {
 	m_pPlayer->update(dt);
 
 	updateZOrder(dt);
 	updateActors(dt);
+	updatePlayerProjectiles(dt);
+	cleanUpActors();	// 마지막에 무조건 호출
 }
 
 void SGMapLayer::updateZOrder(float dt) {
@@ -197,24 +240,9 @@ void SGMapLayer::updateZOrder(float dt) {
 	m_fZReorderTime = 0.0f;
 
 	// 틱 이전, 이후 비교했을때 높은 확률로 대부분 정렬되어 있으므로 삽입 정렬 진행
-	for (int i = 1; i < m_vZOrderedActors.Size(); ++i) {
-		int find = i;
-		for (int j = i - 1; j >= 0; --j) {
-
-			if (m_vZOrderedActors[j]->getThicknessBoxRect().getMidY() < 
-				m_vZOrderedActors[find]->getThicknessBoxRect().getMidY()) 
-			{
-				CC_SWAP(m_vZOrderedActors[j], m_vZOrderedActors[find], SGActor*);
-				find = j;
-			}
-			else {
-				// 위치를 찾은 경우 바로 반환되므로 최선의 경우(대부분 정렬된 상태인 경우)에는
-				// 대부분 j반복문 진입하자마자 break로 나가버림
-				break;
-			}
-		}
-	}
-
+	m_vZOrderedActors.SortInsertion([](SGActor* lhs, SGActor* rhs) {
+		return lhs->getThicknessBoxRect().getMidY() > rhs->getThicknessBoxRect().getMidY();
+	});
 
 	for (int iOrder = 1; iOrder <= m_vZOrderedActors.Size(); ++iOrder) {
 		reorderChild(m_vZOrderedActors[iOrder - 1], iOrder);
@@ -228,14 +256,41 @@ void SGMapLayer::updateActors(float dt) {
 }
 
 
-void SGMapLayer::updateCollision(float dt) {
-	
+void SGMapLayer::updatePlayerProjectiles(float dt) {
+
+	auto projectileIt = m_vPlayerProjectiles.Begin();
+	while (projectileIt->HasNext()) {
+		SGProjectile* pProjectile = projectileIt->Next();
+		auto mobIt = m_vMonsters.Begin();
+		while (mobIt->HasNext()) {
+			SGMonster* pMonster = mobIt->Next();
+			SGRect hitRect;
+			SpriteDirection_t eHitDirection;
+			
+			if (!pProjectile->isCollide(pMonster, eHitDirection, hitRect)) {
+				continue;
+			}
+
+			
+		}
+
+		if (pProjectile->isDistanceOver()) {
+			m_qRemovedActors.Enqueue(pProjectile);
+			continue;
+		}
+
+		if (pProjectile->isLifeTimeOver()) {
+			m_qRemovedActors.Enqueue(pProjectile);
+		}
+	}
 }
 
 void SGMapLayer::loadMap(int mapCode) {
 	SGDataManager* pDataManager = SGDataManager::getInstance();
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
 	SGMapInfo* pMap = pDataManager->getMapInfo(mapCode);
+
+	m_pMapInfo = pMap;
 
 	// 배경 로딩
 
@@ -262,7 +317,60 @@ void SGMapLayer::loadMap(int mapCode) {
 	}
 
 	// NPC 로딩
+}
 
 
 
+void SGMapLayer::cleanUpActors() {
+
+	while (!m_qRemovedActors.IsEmpty()) {
+		SGActor* pRemovedActor = m_qRemovedActors.Front();
+		switch (pRemovedActor->getType()) {
+		case ActorType::Projectile:{
+			cleanUpProjectile((SGProjectile*)pRemovedActor);
+			break;
+		}
+		case ActorType::Monster:{
+			cleanUpMonster((SGMonster*)pRemovedActor);
+			break;
+		}
+		case ActorType::Obstacle: {
+			cleanUpObstacle((SGObstacle*)pRemovedActor);
+			break;
+		}
+		case ActorType::Character: {
+			cleanUpCharacter((SGCharacter*)pRemovedActor);
+			break;
+		}
+		default: DebugAssert(false);
+		}
+	}
+}
+
+void SGMapLayer::cleanUpProjectile(SGProjectile* projectile) {
+	if (m_pPlayer->getCharacter() == projectile->getSpawner()) {
+		unregisterPlayerProjectile(projectile);
+	}
+
+	unregisterZOrderActor(projectile);
+	removeChild(projectile);
+}
+
+void SGMapLayer::cleanUpMonster(SGMonster* monster) {
+	unregisterMonster(monster);
+	unregisterZOrderActor(monster);
+	removeChild(monster);
+}
+
+void SGMapLayer::cleanUpObstacle(SGObstacle* obstacle) {
+	unregisterObstacle(obstacle);
+
+	if (obstacle->getBaseInfo()->ZOrederable)
+		unregisterZOrderActor(obstacle);
+
+	removeChild(obstacle);
+}
+
+void SGMapLayer::cleanUpCharacter(SGCharacter* character) {
+	
 }

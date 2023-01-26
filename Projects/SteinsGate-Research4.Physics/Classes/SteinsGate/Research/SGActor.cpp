@@ -9,7 +9,11 @@
 #include "SGActor.h"
 
 #include <SteinsGate/Common/Engine/RectPoly.h>
+#include <SteinsGate/Common/Engine/SGRectEx.h>
+
 #include <SteinsGate/Research/SGGlobal.h>
+
+
 
 USING_NS_CC;
 USING_NS_JC;
@@ -73,7 +77,7 @@ SGVec2 SGActor::getPositionReal() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 	Vec2 thicknessOrigin = getPosition();
-	thicknessOrigin.x -= thicknessBox.Width / 2.0f;
+	thicknessOrigin.x += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
 	thicknessOrigin.y += (thicknessBox.RelativeY - (thicknessBox.Height / 2.0f));
 	return thicknessOrigin;
 }
@@ -95,7 +99,7 @@ SGSize SGActor::getCanvasSize() const {
 	return m_pActorSprite->getBodyCanvasSize();
 }
 
-SGRect SGActor::getHitbox() const {
+SGRect SGActor::getHitBox() const {
 	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	// 위치: 캔버스 좌하단 절대 좌표 + 캔버스 좌하단 기준 스킨 파츠 좌표
 	//      캔버스 좌하단 절대 좌표 = 플레이어 Cocos 위치  + 캐릭터 위치 - (캔버스 사이즈 / 2)
@@ -120,16 +124,46 @@ SpriteDirection_t SGActor::getSpriteDirection() const {
 void SGActor::setPositionReal(float x, float y) {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
-	x += thicknessBox.Width / 2.0f;
+
+	x += thicknessBox.RelativeX;
 	y -= thicknessBox.RelativeY;
+
+	x += thicknessBox.Width / 2.0f;
 	y += thicknessBox.Height / 2.0f;
 
 	setPosition(x, y);
 }
 
+void SGActor::setPositionReal(const SGVec2& v) {
+	setPositionReal(v.x, v.y);
+}
+
+void SGActor::setPositionRealX(float x) {
+	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	SGThicknessBox thicknessBox = getThicknessBox();
+	x += thicknessBox.RelativeX;
+	x += thicknessBox.Width / 2.0f;
+	setPositionX(x);
+}
+
+void SGActor::setPositionRealY(float y) {
+	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	SGThicknessBox thicknessBox = getThicknessBox();
+	y -= thicknessBox.RelativeY;
+	y += thicknessBox.Height / 2.0f;
+	setPositionY(y);
+}
+
 void SGActor::setPositionRealCenter(float x, float y) {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	setPosition(x, y -= m_pThicknessBox->getPositionY());
+	setPosition(
+		x += m_pThicknessBox->getPositionX(), 
+		y -= m_pThicknessBox->getPositionY()
+	);
+}
+
+void SGActor::setPositionRealCenter(const SGVec2& v) {
+	setPositionRealCenter(v.x, v.y);
 }
 
 void SGActor::runAnimation(int animationCode) {
@@ -151,5 +185,24 @@ void SGActor::setForwardDirection() {
 void SGActor::setBackwardDirection() {
 	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	m_pActorSprite->setBackwardDirection();
+}
+
+bool SGActor::isCollide(SGActor* other, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect) {
+	SGRect thisBox = getThicknessBoxRect();
+	SGRect otherBox = other->getThicknessBoxRect();
+
+	if (!SGRectEx::intersectY(thisBox, otherBox)) {
+		return false;
+	}
+
+	SGRect myHit = getHitBox();
+	SGRect targetHit = other->getHitBox();
+
+	if (SGRectEx::intersect(myHit, targetHit, hitRect)) {
+		otherHitDirection = hitRect.getMidX() < targetHit.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
+		return true;
+	}
+
+	return false;
 }
 

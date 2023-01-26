@@ -35,7 +35,10 @@ struct SGMapInfo
 	SGVector<SGMapObjectInfo> NpcList;
 	SGVector<SGMapObjectInfo> ObstacleList;
 
+	bool checkWall(float x, float y);
 	int getAreaWidth() { return Area[0].Length(); }
 	int getAreaHeight() { return Area.Size(); }
 };
+
+
 

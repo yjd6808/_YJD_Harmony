@@ -263,7 +263,21 @@ public:
 
 		return iOffset;
 	}
-	
+
+	/**
+	 * \brief 사용방법은 Arrays::LowerBound 주석 참고
+	 */
+	template <typename TVal, typename TPredicate>
+	int OffsetLowerBound(TVal&& data, TPredicate&& predicate) const {
+		int iOffset = Arrays::LowerBound(this->m_pArray, this->m_iSize, Forward<TVal>(data), Forward<TPredicate>(predicate));
+
+		if (iOffset >= this->m_iSize) {
+			return -1;
+		}
+
+		return iOffset;
+	}
+
 	/// <summary>
 	/// 선형탐색으로 데이터를 검색하여 삭제한다.
 	/// </summary>
@@ -296,17 +310,11 @@ public:
 			return false;
 		}
 
-		int iMoveBlockSize = this->m_iSize - (iOffset + 1);
-
-		this->DestroyAt(iOffset);
-		this->MoveBlock(
-			iOffset + 1,
-			iOffset,
-			iMoveBlockSize);
-
-		--this->m_iSize;
+		RemoveAt(iOffset);
 		return true;
 	}
+
+	
 
 	/// <summary>
 	/// 특정 인덱스의 데이터를 삭제한다.
@@ -341,6 +349,11 @@ public:
 	template <typename TPredicate>
 	void SortRange(const int startIdx, const int endIdx, TPredicate&& predicate) {
 		TArrayCollection::SortRange(startIdx, endIdx, Move(predicate));
+	}
+
+	template <typename TPredicate>
+	void SortInsertion(TPredicate&& predicate) {
+		TArrayCollection::SortInsertion(Move(predicate));
 	}
 
 	T& operator[](const int idx) const {

@@ -12,7 +12,7 @@
 #include <SteinsGate/Research/SGActorSprite.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGPlayer.h>
-#include <SteinsGate/Common/Engine/RectEx.h>
+#include <SteinsGate/Common/Engine/SGRectEx.h>
 
 USING_NS_JC;
 USING_NS_CC;

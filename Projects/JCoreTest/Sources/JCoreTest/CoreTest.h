@@ -225,6 +225,7 @@ struct Model
 {
     Model();
     Model(int _);
+    Model(int _1, int _2);
     virtual ~Model();
 
     int a = 3;
@@ -278,6 +279,7 @@ inline Bird::~Bird() {
 
 inline Model::Model() { PrintFormat("모델 디폴트 생성\n"); }
 inline Model::Model(int _) : a(_) { PrintFormat("모델 %d 생성\n", a); }
+inline Model::Model(int _1, int _2) : a(_1), b(_2) { PrintFormat("모델 %d %d 생성\n", a, b); }
 inline Model::~Model() { PrintFormat("모델 %d 소멸\n", a); }
 inline SuperModel::~SuperModel() { PrintFormat("슈퍼모델 %d 소멸\n", a); }
 

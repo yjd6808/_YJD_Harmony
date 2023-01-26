@@ -60,6 +60,7 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 		info.Weight = projectile["weight"].asFloat();
 		info.Distance = projectile["distance"].asFloat();
 		info.MoveSpeed = projectile["move_speed"].asFloat();
+		info.LifeTime = projectile["life_time"].asFloat();
 		info.PenetrationRate = projectile["penetration_rate"].asFloat();
 		info.RehitDelay = projectile["rehit_delay"].asFloat();
 		SGJson::parseThicknessInfo(projectile["thickness_box"], info.ThicknessBox);

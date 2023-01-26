@@ -50,44 +50,20 @@ void SGMonster::initActorSprite() {
 
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-	m_pActorSprite->runAnimation(MONSTER_ANIMATION_DIE);
+	m_pActorSprite->runAnimation(MONSTER_ANIMATION_IDLE);
 	this->addChild(m_pActorSprite);
 }
 
-bool Start = false;
-float Timers = 0.0f;
 
 void SGMonster::update(float dt) {
 	SGActor::update(dt);
 
-	if (Start) {
-		Timers += dt;
-
-		if (Timers > 3.0f) {
-			m_pActorSprite->resumeAnimation();
-			Start = false;
-			Timers = 0;
-		}
-	}
 }
 
 void SGMonster::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-	int a = animation->getFrameIndexInAnimation();
-
-	Log("%s: %d\n",animation->getAnimationInfo()->Name.Source(), a);
-
-	auto f = animation->isZeroFramePaused();
-	if (a == 4) {
-		Start = true;
-	}
 }
 
 void SGMonster::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-	int a = animation->getFrameIndexInAnimation();
-	auto f = animation->isZeroFramePaused();
-	if (a == 4) {
-		Start = true;
-	}
 }
 
 void SGMonster::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {

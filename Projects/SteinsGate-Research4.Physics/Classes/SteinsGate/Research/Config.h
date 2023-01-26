@@ -62,3 +62,6 @@ inline constexpr float DefaultRunSpeedPerFPSX_v = DefaultRunSpeedPerSecX_v / 60.
 inline constexpr int TileWidth_v = 224;		// 맵 타일들 모두 가로길이가 224픽셀임
 inline constexpr int TileHeight_v= 184;
 inline constexpr int BlockSize_v = 16;		// 8은 너무 작고 224는 20으로 나눠지지 않아서 16으로 함
+
+inline constexpr int MaxHitList_v = 8;		// 프로젝틸 관통된 객체 기록용 컨테이너 용량
+

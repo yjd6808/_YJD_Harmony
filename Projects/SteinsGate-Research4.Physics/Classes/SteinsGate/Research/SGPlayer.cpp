@@ -9,7 +9,8 @@
 #include "SGPlayer.h"
 
 SGPlayer::SGPlayer()
-	: m_pCharacter(nullptr)
+	: m_pMapLayer(nullptr)
+	, m_pCharacter(nullptr)
 	, m_pController(nullptr)
 	, m_pActionManager(nullptr) {
 	
@@ -41,6 +42,8 @@ void SGPlayer::update(float dt) {
 
 	if (m_pActionManager)
 		m_pActionManager->update(dt);
+
+
 }
 
 void SGPlayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {

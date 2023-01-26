@@ -251,7 +251,7 @@ class HashMap : public MapCollection<TKey, TValue, TAllocator>
 	 *
 	 *
 	 * ==================================================================== */
-
+public:
 	using THasher					= Hasher<TKey>;
 	using TBucket					= Bucket<TKey, TValue, TAllocator>;
 	using TBucketNode				= BucketNode<TKey, TValue>;

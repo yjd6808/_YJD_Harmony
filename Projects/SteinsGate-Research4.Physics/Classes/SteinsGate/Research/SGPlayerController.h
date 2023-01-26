@@ -47,9 +47,6 @@ public:
 
 	bool isKeyPressed(ControlKey_t controlKey);
 	bool isMoveKeyPressed();
-	bool isHorizontalKeyPressed();	// 우측, 왼쪽 키가 모두 눌린 경우
-	bool isVerticalKeyPressed();	// 위  , 아래 키가 모두 눌린 경우
-	bool isFreezedWalkState(ControlKey_t releasedKey);
 	bool hasRunningAction() { return m_pActionManager->hasRunningAction(); }	// 달리는 액션이 아니라 실행중인 액션이란 뜻
 	bool hasPreviousAction() { return m_pActionManager->hasPreviousAction(); }
 
@@ -60,7 +57,9 @@ public:
 	void idle();
 	void walk();
 
-	void updateWalking(float dt);
+	void updateMove(float dt);
+	void updateLeftRightMove(SGMapInfo* mapInfo, const SGVec2& nextLeftBottomPos, const SGVec2& nextRightTopPos);
+	void updateUpDownMove(SGMapInfo* mapInfo, const SGVec2& nextLeftBottomPos, const SGVec2& nextRightTopPos);
 	void updateDirection(ControlKey_t pressedKey);
 	void reflectPressedMoveKeys();	// 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
 	void setCommandable(bool commandable) { m_bCabUseCommand = commandable; }
