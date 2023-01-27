@@ -11,9 +11,13 @@
 #include <SteinsGate/Research/SGProjectileInfo.h>
 #include <JCore/Container/HashMap.h>
 
+namespace Json { class Value; }
 
 struct SGProjectileInfoLoader
 {
 public:
 	static bool LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap);
+private:
+	static void WriteOverridedProjectileInfo(Json::Value& projectile, SGProjectileInfo& info);
+	static void WriteProjectileInfo(Json::Value& projectile, SGProjectileInfo& info);
 };

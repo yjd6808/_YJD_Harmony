@@ -8,17 +8,17 @@
 
 #pragma once
 
-#include <SteinsGate/Research/SGComboAction.h>
+#include <SteinsGate/Research/SGAction.h>
 
 class SGComboTreeNode
 {
 public:
-	SGComboAction* Action{};
+	SGAction* Action{};
 	SGComboTreeNode* Next[ControlKey::Max]{};
 
-	bool IsValid()	{ return Action != nullptr; }
-	bool Empty()	{ return Action == nullptr;	}
-	int  Count();
+	bool isValid()	{ return Action != nullptr; }
+	bool empty()	{ return Action == nullptr;	}
+	int  count();
 };
 
 class SGComboTree
@@ -27,20 +27,20 @@ public:
 	SGComboTree();
 	~SGComboTree();
 public:
-	void RemoveComboAction(const SGComboKeyList& keys);
-	void RemoveAll();
-	void AddComboAction(SGComboAction* action);
-	SGComboAction* GetComboAction(const SGComboKeyList& keys);
+	void removeComboAction(const SGComboKeyList& keys);
+	void removeAll();
+	void addComboAction(SGAction* action);
+	SGAction* getComboAction(const SGComboKeyList& keys);
 private:
-	static void RemoveComboNodeRecursive(SGComboTreeNode* parent);
-	static void AddComboNodeRecursive(
+	static void removeComboNodeRecursive(SGComboTreeNode* parent);
+	static void addComboNodeRecursive(
 		SGComboTreeNode* parent, 
 		SGComboTreeNode* newNode, 
 		const SGComboKeyList& keys, 
 		int keyIndex, 
 		int keyCount
 	);
-	static SGComboTreeNode* FindComboNodeRecursive(
+	static SGComboTreeNode* findComboNodeRecursive(
 		SGComboTreeNode* parent, 
 		const SGComboKeyList& keys, 
 		int keyIndex, 

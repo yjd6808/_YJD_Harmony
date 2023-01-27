@@ -11,7 +11,7 @@
 #include "SGAction.h"
 
 #include <SteinsGate/Research/SGPlayer.h>
-#include <SteinsGate/Research/SGComboAction.h>
+#include <SteinsGate/Research/SGAction.h>
 #include <JCore/Utils/Console.h>
 
 #include "SGMapLayer.h"
@@ -19,9 +19,9 @@
 SGAction::SGAction(SGPlayer* player, SGActionInfo* actionInfo)
 	: m_pPlayer(player)
 	, m_pActionInfo(actionInfo)
-	, m_bMoveable(m_pActionInfo->Moveable)
+	, m_bMoveableX(m_pActionInfo->Moveable)
+	, m_bMoveableY(m_pActionInfo->Moveable)
 	, m_bCancelable(m_pActionInfo->ForceCancelable)
-	, m_bChangeDirection(m_pActionInfo->ChangeDirection)
 	, m_fMoveSpeedFPSX(m_pActionInfo->SpeedX)
 	, m_fMoveSpeedFPSY(m_pActionInfo->SpeedY)
 {}
@@ -34,8 +34,7 @@ void SGAction::play() {
 
 void SGAction::stop() {
 
-	
-	m_pPlayer->getActionManager()->setRunningAction(nullptr);	// 완료된 액션은 먼저 바로 해제 해준다.
+	m_pPlayer->getActionManager()->stopActionForce();
 	m_pPlayer->getController()->setCommandable(true);			// 다시 콤보 입력이 가능하도록 변경해준다.
 
 	if (!isForceCancelable())
@@ -71,7 +70,7 @@ void SGAction::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* f
 void SGAction::onActionBegin() {
 #ifdef DebugMode
 	if (isComboAction()) {
-		SGComboAction* pComboAction = (SGComboAction*)this;
+		SGAction* pComboAction = (SGAction*)this;
 		// Log("%s", pComboAction->getComboKeys().String().Source());
 	}
 #endif
@@ -81,8 +80,14 @@ void SGAction::onActionBegin() {
 void SGAction::onActionEnd() {
 }
 
+void SGAction::setMoveable(bool moveable) {
+	m_bMoveableX = moveable;
+	m_bMoveableY = moveable;
+}
+
 void SGAction::runFrameEvent(FrameEventType_t frameEventType, int frameEventId) {
 	SGMapLayer* pMapLayer = m_pPlayer->getMapLayer();
 	DebugAssertMessage(pMapLayer, "플레이가 속한 맵 레이어가 없습니다.");
 	pMapLayer->runFrameEvent(m_pPlayer->getCharacter(), frameEventType, frameEventId);
 }
+

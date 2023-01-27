@@ -39,7 +39,7 @@ void SGTextParser::parserFrameInfo(const SGString& frameString,
 	}
 }
 
-void SGTextParser::parserNumbers(const SGString& numStr, Out_ int* numArr, int count) {
+void SGTextParser::parserIntNumbers(const SGString& numStr, Out_ int* numArr, int count) {
 	char* pSoruce = numStr.Source();
 	int iPtrIdx = 0;
 	int iBuffIdx = 0;
@@ -52,6 +52,30 @@ void SGTextParser::parserNumbers(const SGString& numStr, Out_ int* numArr, int c
 		if (pSoruce[i] == ' ' || pSoruce[i] == NULL) {
 			buff[iBuffIdx] = NULL;
 			numArr[iPtrIdx++] = std::atoi(buff);
+			iBuffIdx = 0;
+			++iReadCount;
+			continue;
+		}
+
+		++iBuffIdx;
+	}
+
+	DebugAssertMessage(iReadCount == count, "읽은 숫자와 작성된 숫자가 틀립니다.");
+}
+
+void SGTextParser::parserFloatNumbers(const SGString& numStr, float* numArr, int count) {
+	char* pSoruce = numStr.Source();
+	int iPtrIdx = 0;
+	int iBuffIdx = 0;
+	int iReadCount = 0;
+	char buff[64];
+
+	for (int i = 0; i < numStr.Length() + 1; ++i) {
+		buff[iBuffIdx] = pSoruce[i];
+
+		if (pSoruce[i] == ' ' || pSoruce[i] == NULL) {
+			buff[iBuffIdx] = NULL;
+			numArr[iPtrIdx++] = std::atof(buff);
 			iBuffIdx = 0;
 			++iReadCount;
 			continue;

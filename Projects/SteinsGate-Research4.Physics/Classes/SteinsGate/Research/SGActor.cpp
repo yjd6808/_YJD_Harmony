@@ -18,8 +18,9 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGActor::SGActor(ActorType_t type, int code)
-	: m_eActorType(type)
+SGActor::SGActor(ActorType_t type, int code, SGMapLayer* mapLayer)
+	: m_pBelongedMap(mapLayer)
+	, m_eActorType(type)
 	, m_iCode(code)
 	, m_pThicknessBox(nullptr)
 
@@ -80,6 +81,26 @@ SGVec2 SGActor::getPositionReal() const {
 	thicknessOrigin.x += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
 	thicknessOrigin.y += (thicknessBox.RelativeY - (thicknessBox.Height / 2.0f));
 	return thicknessOrigin;
+}
+
+float SGActor::getPositionRealX() const {
+	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	SGThicknessBox thicknessBox = getThicknessBox();
+	float thicknessOriginX = getPositionX();
+	thicknessOriginX += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
+	return thicknessOriginX;
+}
+
+float SGActor::getPositionRealY() const {
+	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	SGThicknessBox thicknessBox = getThicknessBox();
+	float thicknessOriginY = getPositionY();
+	thicknessOriginY += (thicknessBox.RelativeY - (thicknessBox.Height / 2.0f));
+	return thicknessOriginY;
+}
+
+float SGActor::getPositionActorY() const {
+	return m_pActorSprite->getPositionY();
 }
 
 SGVec2 SGActor::getPositionRealCenter() const {

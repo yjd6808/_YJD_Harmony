@@ -15,14 +15,14 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGMonster::SGMonster(SGMonsterInfo* baseInfo)
-	: SGActor(ActorType::Monster, baseInfo->Code)
+SGMonster::SGMonster(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer)
+	: SGPhysicsActor(ActorType::Monster, baseInfo->Code, mapLayer)
 	, m_pBaseInfo(baseInfo)
 {
 }
 
-SGMonster* SGMonster::create(SGMonsterInfo* baseInfo) {
-	SGMonster* pMonster = new SGMonster(baseInfo);
+SGMonster* SGMonster::create(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer) {
+	SGMonster* pMonster = new SGMonster(baseInfo, mapLayer);
 
 	if (pMonster && pMonster->init()) {
 		pMonster->initThicknessBox(baseInfo->ThicknessBox);
@@ -56,7 +56,7 @@ void SGMonster::initActorSprite() {
 
 
 void SGMonster::update(float dt) {
-	SGActor::update(dt);
+	SGPhysicsActor::update(dt);
 
 }
 

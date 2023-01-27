@@ -17,6 +17,7 @@
 class SGFrameTexture : public cocos2d::Ref
 {
 public:
+	SGFrameTexture(int frameIndex) : m_iFrameIndex(frameIndex) {}
 	~SGFrameTexture() override;
 
 	virtual int getWidth()		 = 0;
@@ -25,7 +26,7 @@ public:
 	virtual int getY()			 = 0;
 	virtual int getFrameWidth()	 = 0;
 	virtual int getFrameHeight() = 0;
-	virtual int getFrameIndex()	 = 0;
+	
 	virtual int getTargetFrameIndex()		= 0;
 	virtual const NpkSpriteRect& getRect()  = 0;
 
@@ -39,6 +40,10 @@ public:
 
 	virtual bool isLink()  = 0;
 	virtual bool isDummy() = 0;
+
+	int getFrameIndex() { return m_iFrameIndex; }
+protected:
+	int m_iFrameIndex;
 };
 
 
@@ -47,10 +52,9 @@ class SGSpriteFrameTexture : public SGFrameTexture
 {
 public:
 	SGSpriteFrameTexture(SGTexture* texture, const NpkSpriteRect& rect, int frameIndex, bool dummy)
-		: SGFrameTexture()
+		: SGFrameTexture(frameIndex)
 		, m_Rect(rect)
 		, m_pTexture(texture)
-		, m_iFrameIndex(frameIndex)
 		, m_bDummy(dummy) {}
 	~SGSpriteFrameTexture() override;
 
@@ -68,7 +72,6 @@ public:
 	float getFrameWidthF()	 override { return (float)m_Rect.FrameWidth;	}
 	float getFrameHeightF()  override { return (float)m_Rect.FrameHeight;	}
 
-	int getFrameIndex()				override { return m_iFrameIndex; }
 	int getTargetFrameIndex()		override { return m_iFrameIndex; }
 	const NpkSpriteRect& getRect() 	override { return m_Rect; }
 	SGTexture* getTexture() { return m_pTexture; }
@@ -80,7 +83,7 @@ public:
 protected:
 	NpkSpriteRect m_Rect;
 	SGTexture* m_pTexture;
-	int m_iFrameIndex;
+	
 	bool m_bDummy;
 };
 
@@ -88,8 +91,8 @@ protected:
 class SGLinkFrameTexture : public SGFrameTexture
 {
 public:
-	SGLinkFrameTexture(int targetFrameIndex)
-		: SGFrameTexture()
+	SGLinkFrameTexture(int frameIndex, int targetFrameIndex)
+		: SGFrameTexture(frameIndex)
 		, m_iTargetFrameIndex(targetFrameIndex) {}
 
 	int getWidth()		 override { return 1; }
@@ -106,7 +109,6 @@ public:
 	float getFrameWidthF()	 override { return 0; }
 	float getFrameHeightF()  override { return 1; }
 
-	int getFrameIndex()				 override { return InvalidValue_v; }
 	int getTargetFrameIndex()		 override { return m_iTargetFrameIndex; }
 	const NpkSpriteRect& getRect() 	 override { return {}; }
 	SGTexture* getTexture() override { return nullptr; }

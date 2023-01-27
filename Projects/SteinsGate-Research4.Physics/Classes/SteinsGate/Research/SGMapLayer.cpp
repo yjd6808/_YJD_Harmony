@@ -73,12 +73,14 @@ bool SGMapLayer::init() {
 	SGActionInfo* pRun = pConfig->getActionInfo("run");
 	SGActionInfo* pSliding = pConfig->getActionInfo("sliding");
 	SGActionInfo* pGunShot = pConfig->getActionInfo("gun_shot");
+	SGActionInfo* pJump = pConfig->getActionInfo("jump");
 
 	info.ValidAction.PushBack(pIdle->Code);
 	info.ValidAction.PushBack(pWalk->Code);
 	info.ValidAction.PushBack(pRun->Code);
 	info.ValidAction.PushBack(pSliding->Code);
 	info.ValidAction.PushBack(pGunShot->Code);
+	info.ValidAction.PushBack(pJump->Code);
 
 	m_pPlayer = new SGPlayer();
 	MainPlayer_v = m_pPlayer;
@@ -113,8 +115,8 @@ bool SGMapLayer::isCollideWithObstacles(const SGRect& rect) {
 
 void SGMapLayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 
-	SGRectEx::log(m_pPlayer->getCharacter()->getHitBox());
-	SGRectEx::log(m_pPlayer->getCharacter()->getThicknessBoxRect());
+	// SGRectEx::log(m_pPlayer->getCharacter()->getHitBox());
+	// SGRectEx::log(m_pPlayer->getCharacter()->getThicknessBoxRect());
 
 	m_pPlayer->onKeyPressed(keyCode, event);
 
@@ -142,7 +144,7 @@ void SGMapLayer::runFrameEvent(SGActor* runner, FrameEventType_t frameEventType,
 }
 
 SGCharacter* SGMapLayer::createCharacter(CharacterType_t characterType, float x, float y, SGCharacterInfo& info) {
-	SGCharacter* pPlayerCharacter = SGCharacter::create(characterType, info);
+	SGCharacter* pPlayerCharacter = SGCharacter::create(characterType, info, this);
 	pPlayerCharacter->setPositionRealCenter(x, y);
 	registerZOrderActor(pPlayerCharacter);
 	registerCharacter(pPlayerCharacter);
@@ -152,7 +154,7 @@ SGCharacter* SGMapLayer::createCharacter(CharacterType_t characterType, float x,
 
 SGProjectile* SGMapLayer::createProejctile(SGActor* spawner, int projectileId) {
 	SGProjectileInfo* pInfo = SGDataManager::getInstance()->getProjectileInfo(projectileId);
-	SGProjectile* pProjectile = SGProjectile::create(spawner, pInfo);
+	SGProjectile* pProjectile = SGProjectile::create(spawner, pInfo, this);
 	this->addChild(pProjectile);
 	registerZOrderActor(pProjectile);
 
@@ -168,7 +170,7 @@ void SGMapLayer::createHitbox(SGActor* spawner, int hitBoxId) {
 
 SGMonster* SGMapLayer::createMonster(int code, float x, float y) {
 	SGMonsterInfo* pInfo = SGDataManager::getInstance()->getMonsterInfo(code);
-	SGMonster* pMonster = SGMonster::create(pInfo);
+	SGMonster* pMonster = SGMonster::create(pInfo, this);
 	pMonster->setPositionReal(x, y);
 	registerZOrderActor(pMonster);
 	registerMonster(pMonster);
@@ -179,7 +181,7 @@ SGMonster* SGMapLayer::createMonster(int code, float x, float y) {
 
 SGObstacle* SGMapLayer::createObstacle(int code, float x, float y) {
 	SGObstacleInfo* pObstacleInfo = SGDataManager::getInstance()->getObstacleInfo(code);
-	SGObstacle* pObstacle = SGObstacle::create(pObstacleInfo);
+	SGObstacle* pObstacle = SGObstacle::create(pObstacleInfo, this);
 	pObstacle->setPositionReal(x, y);
 
 	if (pObstacleInfo->ZOrederable)
@@ -299,22 +301,16 @@ void SGMapLayer::updatePlayerProjectiles(float dt) {
 		}
 
 		if (pProjectile->isDistanceOver()) {
-			m_qRemovedActors.Enqueue(pProjectile);
+			registerCleanUp(pProjectile);
 			continue;
 		}
 
 		if (pProjectile->isLifeTimeOver()) {
-			m_qRemovedActors.Enqueue(pProjectile);
+			registerCleanUp(pProjectile);
 		}
 	}
 }
 
-void SGMapLayer::updatePhysics(float dt) {
-
-	for (int i = 0; i < m_vMonsters.Size(); ++i) {
-		
-	}
-}
 
 void SGMapLayer::loadMap(int mapCode) {
 	SGDataManager* pDataManager = SGDataManager::getInstance();
@@ -356,6 +352,7 @@ void SGMapLayer::cleanUpActors() {
 
 	while (!m_qRemovedActors.IsEmpty()) {
 		SGActor* pRemovedActor = m_qRemovedActors.Front();
+		m_qRemovedActors.Dequeue();
 		switch (pRemovedActor->getType()) {
 		case ActorType::Projectile:{
 			cleanUpProjectile((SGProjectile*)pRemovedActor);
@@ -384,12 +381,16 @@ void SGMapLayer::cleanUpProjectile(SGProjectile* projectile) {
 	}
 
 	unregisterZOrderActor(projectile);
+
+	Log("삭제> 플레이어 프로젝틸 (%s), 남은 플레이어 프로젝틸 수 : %d, Z오더 액터 수: %d\n", projectile->getBaseInfo()->Name.Source(), m_vPlayerProjectiles.Size(), m_vZOrderedActors.Size());
 	removeChild(projectile);
 }
 
 void SGMapLayer::cleanUpMonster(SGMonster* monster) {
 	unregisterMonster(monster);
 	unregisterZOrderActor(monster);
+
+	Log("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d\n", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());
 	removeChild(monster);
 }
 
@@ -403,5 +404,7 @@ void SGMapLayer::cleanUpObstacle(SGObstacle* obstacle) {
 }
 
 void SGMapLayer::cleanUpCharacter(SGCharacter* character) {
-	
+	// 해당 캐릭터 소유의 프로젝틀 모두 삭제
+	// 해당 캐릭터 소유의 히트박스 모두 삭제
+	// 관련핵해서 다 정리 후 캐릭터 삭제
 }

@@ -19,11 +19,9 @@ struct SGActionInfo
 	int Code;
 	SGString ActionName;
 	bool ForceCancelable;
-	bool ChangeDirection;
 	bool Moveable;
 	float SpeedX;
 	float SpeedY;
-	int CommandCount;
-	SGComboKeyList Commands[MaxCommandCount_v];
+	SGComboKeyList Command;
 	SGVector<SGAnimationInfo> AnimationList;
 };

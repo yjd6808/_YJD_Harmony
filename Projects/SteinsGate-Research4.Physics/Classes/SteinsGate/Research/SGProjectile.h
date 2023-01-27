@@ -14,10 +14,10 @@
 class SGProjectile : public SGActor
 {
 public:
-	SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo);
+	SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo, SGMapLayer* mapLayer);
 	~SGProjectile() override;
 
-	static SGProjectile* create(SGActor* spawner, SGProjectileInfo* baseInfo);
+	static SGProjectile* create(SGActor* spawner, SGProjectileInfo* baseInfo, SGMapLayer* mapLayer);
 	void initActorSprite() override;
 	void initThicknessBox(const SGThicknessBox& thicknessBox) override;
 

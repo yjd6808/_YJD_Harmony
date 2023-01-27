@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include <SteinsGate/Research/SGActor.h>
+#include <SteinsGate/Research/SGPhysicsActor.h>
 #include <SteinsGate/Research/SGDataManager.h>
 
-class SGCharacter : public SGActor
+class SGCharacter : public SGPhysicsActor
 {
 public:
-	SGCharacter(int code, const SGCharacterInfo& info);
-	static SGCharacter* create(int code, const SGCharacterInfo& info);
+	SGCharacter(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer);
+	static SGCharacter* create(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer);
 	void initActorSprite() override;
 
 	void update(float dt) override;

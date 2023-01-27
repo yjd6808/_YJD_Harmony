@@ -38,8 +38,10 @@ static constexpr const char* Name[Max]{
 SEnumMiddleEnd(SpriteDirection)
 
 
-SEnumInteritedBegin(Direction, SpriteDirection)
-Up = SpriteDirection::Max,
+SEnumBegin(Direction)
+Right,
+Left,
+Up,
 Down,
 Max,
 None
@@ -80,7 +82,8 @@ Face,
 Coat,
 Cap,
 Belt,
-Weapon,
+WeaponLeft,
+WeaponRight,
 Max,
 None
 SEnumEnd(VisualType)
@@ -344,6 +347,8 @@ Run,
 Sliding,
 Attack,
 Jump,
+Hit,
+FallDown,
 Max
 SEnumEnd(BaseAction)
 

@@ -44,7 +44,8 @@ void SGGlobal::initialize() {
 		m_AvatarPartNameToTypeMap.Insert("coat", VisualType::Coat);
 		m_AvatarPartNameToTypeMap.Insert("cap", VisualType::Cap);
 		m_AvatarPartNameToTypeMap.Insert("belt", VisualType::Belt);
-		m_AvatarPartNameToTypeMap.Insert("weapon", VisualType::Weapon);
+		m_AvatarPartNameToTypeMap.Insert("weapon_left", VisualType::WeaponLeft);
+		m_AvatarPartNameToTypeMap.Insert("weapon_right", VisualType::WeaponRight);
 	}
 
 
@@ -58,7 +59,8 @@ void SGGlobal::initialize() {
 		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Coat, "gn_coat");
 		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Cap, "gn_cap");
 		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Belt, "gn_belt");
-		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::Weapon, "gn_weapon");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::WeaponLeft, "__");
+		m_AvatarPrefix[CharacterType::Gunner].Insert(VisualType::WeaponRight, "__");
 	}
 
 	{
@@ -106,11 +108,6 @@ SGTexture* SGGlobal::getDefaultTexture() {
 
 	if (m_pDefaultTexture) 
 		return m_pDefaultTexture;
-
-	// 그냥 데이터 긁어옴
-	// auto img = new Image();
-	// img->initWithImageFile("dummy.png");
-	// tex->initWithImage(img);
 
 	m_pDefaultTexture = new SGTexture;
 	m_pDefaultTexture->initWithData(White2x2TextureData_v, sizeof(White2x2TextureData_v), SGTexture::PixelFormat::RGB888, 2, 2, { 2, 2 });

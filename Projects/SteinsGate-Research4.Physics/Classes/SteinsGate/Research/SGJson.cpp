@@ -44,7 +44,7 @@ void SGJson::parseAnimationInfo(Json::Value& animationRoot, SGAnimationInfo& inf
 void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, SGThicknessBox& info) {
 
 	int num[4];
-	SGTextParser::parserNumbers(SGJson::getString(thicknessRoot), num, 4);
+	SGTextParser::parserIntNumbers(SGJson::getString(thicknessRoot), num, 4);
 
 	info.RelativeX = num[0];
 	info.RelativeY = num[1];
@@ -52,18 +52,19 @@ void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, SGThicknessBox& info
 	info.Height = num[3];
 }
 
-void SGJson::parseNumber3(Json::Value& root, int& num1, int& num2, int& num3) {
+void SGJson::parseIntNumber3(Json::Value& root, int& num1, int& num2, int& num3) {
 	int num[3];
-	SGTextParser::parserNumbers(SGJson::getString(root), num, 3);
+	SGTextParser::parserIntNumbers(SGJson::getString(root), num, 3);
 
 	num1 = num[0];
 	num2 = num[1];
 	num3 = num[2];
 }
 
-void SGJson::parseNumber4(Json::Value& root, int& num1, int& num2, int& num3, int& num4) {
+void SGJson::parseIntNumber4(Json::Value& root, int& num1, int& num2, int& num3, int& num4) {
+
 	int num[4];
-	SGTextParser::parserNumbers(SGJson::getString(root), num, 4);
+	SGTextParser::parserIntNumbers(SGJson::getString(root), num, 4);
 
 	num1 = num[0];
 	num2 = num[1];
@@ -71,7 +72,34 @@ void SGJson::parseNumber4(Json::Value& root, int& num1, int& num2, int& num3, in
 	num4 = num[3];
 }
 
-void SGJson::parseNumberN(Json::Value& root, int* numArr, int capacity) {
-	SGTextParser::parserNumbers(SGJson::getString(root), numArr, capacity);
+void SGJson::parseIntNumberN(Json::Value& root, int* numArr, int capacity) {
+	SGTextParser::parserIntNumbers(SGJson::getString(root), numArr, capacity);
 }
 
+void SGJson::parseFloatNumber2(Json::Value& root, float& num1, float& num2) {
+	float num[2];
+	SGTextParser::parserFloatNumbers(SGJson::getString(root), num, 2);
+	num1 = num[0];
+	num2 = num[1];
+}
+
+SGString SGJson::getStringDefault(Json::Value& value, const SGString& defaultValue) {
+	if (value.empty())
+		return defaultValue;
+
+	return getString(value);
+}
+
+float SGJson::getFloatDefault(Json::Value& value, float defaultValue) {
+	if (value.empty())
+		return defaultValue;
+
+	return value.asFloat();
+}
+
+int SGJson::getIntDefault(Json::Value& value, int defaultValue) {
+	if (value.empty())
+		return defaultValue;
+
+	return value.asInt();
+}

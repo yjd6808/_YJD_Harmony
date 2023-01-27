@@ -11,3 +11,10 @@
 #include <SteinsGate/Common/Engine.h>
 
 #define Log(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#define LogTick(time, fmt, ...)							\
+						static float a;					\
+						a += dt;						\
+						if (a >= time) {				\
+							printf(fmt, ##__VA_ARGS__); \
+							a = 0.0f;					\
+						}								

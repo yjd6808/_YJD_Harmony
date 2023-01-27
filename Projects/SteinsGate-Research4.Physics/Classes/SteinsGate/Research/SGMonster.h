@@ -11,14 +11,14 @@
 
 
 
-#include <SteinsGate/Research/SGActor.h>
+#include <SteinsGate/Research/SGPhysicsActor.h>
 #include <SteinsGate/Research/SGMonsterInfo.h>
 
-class SGMonster : public SGActor
+class SGMonster : public SGPhysicsActor
 {
 public:
-	SGMonster(SGMonsterInfo* baseInfo);
-	static SGMonster* create(SGMonsterInfo* baseInfo);
+	SGMonster(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer);
+	static SGMonster* create(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer);
 	void initActorSprite() override;
 
 	void update(float dt) override;

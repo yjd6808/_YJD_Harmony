@@ -24,6 +24,7 @@ struct SGCharacterBaseInfo
 	int MPLevelUp;
 	int LevelUpStat;
 	int ShotCount[WeaponType::Max];
+	int JumpShotCount[WeaponType::Max];
 	float AttackSpeed[WeaponType::Max];
 	float JumpForce;
 	float SlidingForce;

@@ -37,9 +37,10 @@ void SGActionManager::init(int characterType) {
 
 	m_ActionMap.Values()
 		.Extension()
-		.ForEach([=](SGAction* action) {
-		if (action->isComboAction()) {
-			m_ComboTree.AddComboAction((SGComboAction*)action);
+		.ForEach([this](SGAction* action) {
+
+		if (action->getCommand().count() > 0) {
+			m_ComboTree.addComboAction(action);
 		}
 	});
 }
@@ -51,11 +52,15 @@ void SGActionManager::initGunnerActions() {
 	m_pBaseAction[BaseAction::Walk] = new SGGunnerWalk(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_WALK));
 	m_pBaseAction[BaseAction::Run] = new SGGunnerRun(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_RUN));
 	m_pBaseAction[BaseAction::Attack] = new SGGunnerGunShot(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_GUN_SHOT));
+	m_pBaseAction[BaseAction::Sliding] = new SGGunnerSliding(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SLIDING));
+	m_pBaseAction[BaseAction::Jump] = new SGGunnerJump(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_JUMP));
 
 	m_ActionMap.Insert(GUNNER_ACTION_IDLE, m_pBaseAction[BaseAction::Idle]);
 	m_ActionMap.Insert(GUNNER_ACTION_WALK, m_pBaseAction[BaseAction::Walk]);
 	m_ActionMap.Insert(GUNNER_ACTION_RUN, m_pBaseAction[BaseAction::Run]);
 	m_ActionMap.Insert(GUNNER_ACTION_GUN_SHOT, m_pBaseAction[BaseAction::Attack]);
+	m_ActionMap.Insert(GUNNER_ACTION_SLIDING, m_pBaseAction[BaseAction::Sliding]);
+	m_ActionMap.Insert(GUNNER_ACTION_JUMP, m_pBaseAction[BaseAction::Jump]);
 }
 
 void SGActionManager::update(float dt) {
@@ -118,10 +123,6 @@ bool SGActionManager::canRunAction() {
 	return true;
 }
 
-void SGActionManager::setRunningAction(SGAction* action) {
-	m_pRunningAction = action;
-}
-
 bool SGActionManager::isBaseActionRunning(BaseAction_t baseActionType) {
 	if (m_pBaseAction[baseActionType] == nullptr)
 		return false;
@@ -149,12 +150,6 @@ bool SGActionManager::isRunnningActionIdleOrWalkAction() {
 	return false;
 }
 
-bool SGActionManager::canRunningActionChangeDirection() {
-	if (m_pRunningAction == nullptr)
-		return true;
-
-	return m_pRunningAction->canChangeDirection();
-}
 
 SGAction* SGActionManager::getAction(int actionCode) {
 	DebugAssertMessage(m_ActionMap.Exist(actionCode), "해당 코드값의 액션이 존재하지 않습니다.");
@@ -176,7 +171,6 @@ void SGActionManager::runAction(int actionCode) {
 		m_pRunningAction->stop();
 	}
 
-	m_pPreviousAction = m_pRunningAction;
 	m_pRunningAction = getAction(actionCode);
 	m_pRunningAction->init();
 	m_pRunningAction->play();
@@ -191,7 +185,6 @@ void SGActionManager::runAction(SGAction* action) {
 		m_pRunningAction->stop();
 	}
 
-	m_pPreviousAction = m_pRunningAction;
 	m_pRunningAction = action;
 	m_pRunningAction->init();
 	m_pRunningAction->play();
@@ -202,5 +195,10 @@ void SGActionManager::runAction(SGAction* action) {
 void SGActionManager::runBaseAction(BaseAction_t baseActionType) {
 	DebugAssertMessage(m_pBaseAction[baseActionType], "해당 기초액션이 아직 구현되지 않았습니다.");
 	runAction(m_pBaseAction[baseActionType]);
+}
+
+void SGActionManager::stopActionForce() {
+	m_pPreviousAction = m_pRunningAction;
+	m_pRunningAction = nullptr;
 }
 

@@ -110,3 +110,10 @@ int SGImagePackManager::getPackIndex(const SGString& packPath) {
 	return m_PathToIdMap[packPath];
 }
 
+int SGImagePackManager::getPackIndexDefault(const SGString& packPath, int defaultIndex) {
+	if (!m_PathToIdMap.Exist(packPath))
+		return defaultIndex;
+
+	return m_PathToIdMap[packPath];
+}
+

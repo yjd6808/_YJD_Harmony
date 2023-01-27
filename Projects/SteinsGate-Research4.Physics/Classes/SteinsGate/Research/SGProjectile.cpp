@@ -19,8 +19,8 @@
 USING_NS_JC;
 USING_NS_CC;
 
-SGProjectile::SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo)
-	: SGActor(ActorType::Projectile, baseInfo->Code)
+SGProjectile::SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo, SGMapLayer* mapLayer)
+	: SGActor(ActorType::Projectile, baseInfo->Code, mapLayer)
 	, m_fMoveDistance(0.0f)
 	, m_fElapsedLifeTime(0.0f)
 	, m_pSpwawner(spawner)
@@ -32,8 +32,8 @@ SGProjectile::~SGProjectile() {
 	CC_SAFE_RELEASE(m_pSpwawner);
 }
 
-SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo) {
-	SGProjectile* pProjectile = new SGProjectile(spawner, baseInfo);
+SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo, SGMapLayer* mapLayer) {
+	SGProjectile* pProjectile = new SGProjectile(spawner, baseInfo, mapLayer);
 
 	if (pProjectile && pProjectile->init()) {
 		spawner->retain();
@@ -70,12 +70,15 @@ void SGProjectile::initActorSprite() {
 	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });
 
 	for (int i = 0; i < m_pBaseInfo->AnimationList.Size(); ++i) {
-		spActorSpriteData->Animations.PushBack(&m_pBaseInfo->AnimationList[i]);
+		spActorSpriteData->Animations.PushBack(m_pBaseInfo->AnimationList[i]);
 	}
 
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-	m_pActorSprite->getBodyPart()->setRotation(m_pBaseInfo->Rotation);
+	m_pActorSprite->getBodyPart()->setRotation(
+		m_pBaseInfo->Rotation + 
+		SGRandom::random_real(m_pBaseInfo->RamdomRotationRangeMin, m_pBaseInfo->RamdomRotationRangeMax)
+	);
 
 	SGSize spawnerCanvsSize = m_pSpwawner->getCanvasSize();
 	SGVec2 spawnerCanvasPos = m_pSpwawner->getCanvasPositionReal();

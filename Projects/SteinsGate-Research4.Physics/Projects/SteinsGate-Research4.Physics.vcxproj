@@ -20,6 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerHit.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGPhysicsActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMapInfo.cpp">
       <SubType>
       </SubType>
@@ -40,7 +48,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGComboAction.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGComboTree.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAction.cpp">
       <SubType>
@@ -155,7 +162,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGComboAction.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGComboTree.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGComboKeyList.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActionManager.h">
@@ -188,6 +194,10 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartSprite.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerGunShot.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerHit.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerIdle.h">
       <SubType>
       </SubType>
@@ -290,6 +300,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGPhysicsActor.h">
       <SubType>
       </SubType>
     </ClInclude>

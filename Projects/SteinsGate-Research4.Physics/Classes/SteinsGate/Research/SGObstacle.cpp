@@ -18,14 +18,14 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGObstacle::SGObstacle(SGObstacleInfo* baseInfo)
-	: SGActor(ActorType::Obstacle, baseInfo->Code)
+SGObstacle::SGObstacle(SGObstacleInfo* baseInfo, SGMapLayer* mapLayer)
+	: SGActor(ActorType::Obstacle, baseInfo->Code, mapLayer)
 	, m_pBaseInfo(baseInfo)
 {
 }
 
-SGObstacle* SGObstacle::create(SGObstacleInfo* baseInfo) {
-	SGObstacle* pObstable = new SGObstacle(baseInfo);
+SGObstacle* SGObstacle::create(SGObstacleInfo* baseInfo, SGMapLayer* mapLayer) {
+	SGObstacle* pObstable = new SGObstacle(baseInfo, mapLayer);
 
 	if (pObstable && pObstable->init()) {
 		pObstable->initThicknessBox(baseInfo->ThicknessBox);

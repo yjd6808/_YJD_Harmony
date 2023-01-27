@@ -17,14 +17,14 @@
 USING_NS_JC;
 USING_NS_CC;
 
-SGCharacter::SGCharacter(int code, const SGCharacterInfo& info)
-	: SGActor(ActorType::Character, code)
+SGCharacter::SGCharacter(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer)
+	: SGPhysicsActor(ActorType::Character, code, mapLayer)
 	, m_CharacterInfo(info)
 {
 }
 
-SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
-	SGCharacter* pCharacter = new SGCharacter(code, info);
+SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer) {
+	SGCharacter* pCharacter = new SGCharacter(code, info, mapLayer);
 
 	if (pCharacter && pCharacter->init()) {
 		SGCharacterBaseInfo* pBaseInfo = SGDataManager::getInstance()->getCharacterBaseInfo(code);
@@ -69,7 +69,7 @@ void SGCharacter::initActorSprite() {
 }
 
 void SGCharacter::update(float dt) {
-	SGActor::update(dt);
+	SGPhysicsActor::update(dt);
 }
 
 extern SGPlayer* MainPlayer_v;

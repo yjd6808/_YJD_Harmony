@@ -49,30 +49,26 @@ bool SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 		actionInfo.ActionName = SGJson::getString(actionRoot["name"]);
 		actionInfo.Code = actionRoot["code"].asInt();
 		actionInfo.ForceCancelable = actionRoot["force_cancelable"].asBool();
-		actionInfo.ChangeDirection = actionRoot["change_direction"].asBool();
 		actionInfo.Moveable = actionRoot["moveable"].asBool();
 		actionInfo.SpeedX = actionRoot.get("x_speed", 0.0f).asFloat();
 		actionInfo.SpeedY = actionRoot.get("y_speed", 0.0f).asFloat();
 
 		if (actionRoot.isMember("command")) {
 			Value& commandRoot = actionRoot["command"];
-			actionInfo.CommandCount = commandRoot.size();
-			for (ArrayIndex j = 0; j < commandRoot.size(); ++j) {
-				SGString command = SGJson::getString(commandRoot[j]);
-				SGComboKeyList keyList;
-				 for (int k = 0; k < command.Length(); ++k) {
-					switch (command[k]) {
-					case 'r': keyList[k] = ControlKey::Right; break;
-					case 'l': keyList[k] = ControlKey::Left; break;
-					case 'u': keyList[k] = ControlKey::Up; break;
-					case 'd': keyList[k] = ControlKey::Down; break;
-					case 'x': keyList[k] = ControlKey::Attack; break;
-					case 'c': keyList[k] = ControlKey::Jump; break;
-					default: DebugAssert(false, "올바르지 않은 조작키 입니다.");
-					}
-				 }
-				 actionInfo.Commands[j] = keyList;
-			}
+			SGString command = SGJson::getString(commandRoot);
+			SGComboKeyList keyList;
+			 for (int k = 0; k < command.Length(); ++k) {
+				switch (command[k]) {
+				case 'r': keyList[k] = ControlKey::Right; break;
+				case 'l': keyList[k] = ControlKey::Left; break;
+				case 'u': keyList[k] = ControlKey::Up; break;
+				case 'd': keyList[k] = ControlKey::Down; break;
+				case 'x': keyList[k] = ControlKey::Attack; break;
+				case 'c': keyList[k] = ControlKey::Jump; break;
+				default: DebugAssert(false, "올바르지 않은 조작키 입니다.");
+				}
+			 }
+			actionInfo.Command = keyList;
 		}
 
 

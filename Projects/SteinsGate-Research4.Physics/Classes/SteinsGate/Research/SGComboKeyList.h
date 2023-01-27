@@ -20,13 +20,18 @@ public:
 	SGComboKeyList(std::initializer_list<ControlKey_t> list);
 	SGComboKeyList(const SGComboKeyList& other);
 	SGComboKeyList& operator=(const SGComboKeyList& other);
-	ControlKey_t& operator[](const int idx);
-	void Set(int idx, ControlKey_t key);
 
-	ControlKey_t At(int idx) const;
-	SGString String();
-	int Count() const;
-private:
+	bool operator==(const SGComboKeyList& other) const;
+	bool operator!=(const SGComboKeyList& other) const;
+
+	ControlKey_t& operator[](int idx);
+	void set(int idx, ControlKey_t key);
+
+	ControlKey_t at(int idx) const;
+	SGComboKeyList reverse() const;		// 좌, 우 방향키 반전 후 반환
+	SGString string() const;
+	int count() const;
+
 	ControlKey_t Keys[ComboSequenceCount_v];
 };
 

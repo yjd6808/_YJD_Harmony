@@ -20,7 +20,8 @@ public:
 		Out_ int& frameEvent,
 		Out_ int& frameEventCode);
 
-	static void parserNumbers(const SGString& numStr, Out_ int* numArr, int count);
+	static void parserIntNumbers(const SGString& numStr, Out_ int* numArr, int count);
+	static void parserFloatNumbers(const SGString& string, Out_ float* numArr, int count);
 };
 
 

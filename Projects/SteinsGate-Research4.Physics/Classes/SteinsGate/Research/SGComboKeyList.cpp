@@ -39,21 +39,52 @@ SGComboKeyList& SGComboKeyList::operator=(const SGComboKeyList& other) {
 	return *this;
 }
 
+bool SGComboKeyList::operator==(const SGComboKeyList& other) const {
+	int iCount = count();
+
+	for (int i = 0; i < iCount; ++i) {
+		if (Keys[i] != other.Keys[i])
+			return false;
+	}
+
+	return true;
+}
+
+bool SGComboKeyList::operator!=(const SGComboKeyList& other) const {
+	return !this->operator==(other);
+}
+
 ControlKey_t& SGComboKeyList::operator[](const int idx) {
 	return Keys[idx];
 }
 
-void SGComboKeyList::Set(int idx, ControlKey_t key) {
+void SGComboKeyList::set(int idx, ControlKey_t key) {
 	Keys[idx] = key;
 }
 
-ControlKey_t SGComboKeyList::At(int idx) const {
+ControlKey_t SGComboKeyList::at(int idx) const {
 	return Keys[idx];
 }
 
-SGString SGComboKeyList::String() {
+SGComboKeyList SGComboKeyList::reverse() const {
+	SGComboKeyList reverse;
+	int iCount = count();
+
+	for (int i = 0; i < iCount; ++i) {
+		if (Keys[i] == ControlKey_t::Left || Keys[i] == ControlKey_t::Right) {
+			reverse.Keys[i] = ControlKey::ReverseDirection[Keys[i]];
+			continue;
+		}
+
+		reverse.Keys[i] = Keys[i];
+	}
+
+	return reverse;
+}
+
+SGString SGComboKeyList::string() const {
 	SGString szKey;
-	const int iCount = Count();
+	const int iCount = count();
 
 	for (int i = 0; i < iCount; i++) {
 		szKey += ControlKey::Name[Keys[i]];
@@ -63,7 +94,7 @@ SGString SGComboKeyList::String() {
 	return szKey;
 }
 
-int SGComboKeyList::Count() const {
+int SGComboKeyList::count() const {
 	int iCount = 0;
 	for (int i = 0; i < ComboSequenceCount_v; ++i) {
 		if (Keys[i] == ControlKey::None) {

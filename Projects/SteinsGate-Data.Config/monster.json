@@ -71,7 +71,7 @@
                 },
                 {
                     "code": 4,
-                    "name": "die",
+                    "name": "fall_down",
                     "loop": false,
                     "frames": [
                         "5 100",
@@ -159,7 +159,7 @@
                 },
                 {
                     "code": 4,
-                    "name": "die",
+                    "name": "fall_down",
                     "loop": true,
                     "frames": [
                         "5 100",

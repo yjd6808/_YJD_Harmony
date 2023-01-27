@@ -34,6 +34,7 @@
 #define USING_NS_JS using namespace Json
 #define USING_NS_CCUI using namespace cocos2d::ui
 
+#define SG_FLT_EPSILON	0.0001f
 
 using SGConsole = JCore::SafeConsole;
 using SGString = JCore::String;

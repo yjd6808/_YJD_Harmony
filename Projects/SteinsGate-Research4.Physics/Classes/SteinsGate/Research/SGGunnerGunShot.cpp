@@ -12,13 +12,12 @@
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
 
-#include "SGMapLayer.h"
-
 SGGunnerGunShot::SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo)
-	: SGComboAction(player, actionInfo) {}
+	: SGAction(player, actionInfo) {}
 
 void SGGunnerGunShot::onActionBegin() { 
-	m_bMoveable = false;
+	m_bMoveableX = false;
+	m_bMoveableY = false;
 	m_bShotEnd = false;
 	m_bDownShotKeyPressedFirst = false;
 	m_bDownShotKeyPressed = false;
@@ -27,7 +26,7 @@ void SGGunnerGunShot::onActionBegin() {
 	m_bFinalShot = false;
 	m_iContinuosCount = 0;
 
-	m_iRightShotCount = 5;
+	m_iRightShotCount = m_pPlayer->getCharacter()->getBaseInfo()->ShotCount[WeaponType::Auto];
 
 
 	SGPlayerController* pController = m_pPlayer->getController();

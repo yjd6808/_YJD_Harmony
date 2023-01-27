@@ -38,13 +38,13 @@ inline constexpr float FPS18_v = 18.0f / 60.0f; // 0.3
 
 inline const char* DataDirectory_v = "D:/Programming/MyProjects/_DevCpp/UltimateHarmony/Projects/SteinsGate-Data.Resource";
 inline const char* ConfigDirectory_v = "D:/Programming/MyProjects/_DevCpp/UltimateHarmony/Projects/SteinsGate-Data.Config/";
+
 inline constexpr int MaxNpkFileCount_v = 200;
 inline constexpr int MaxNpkParallelLoadingThreadCount_v = 8;
 inline constexpr int MaxMonsterPartsCount_v = 5;
 
-
 inline constexpr int ComboSequenceCount_v = 5;				// 콤보 가능키 최대 몇개?
-inline constexpr float ComboSequenceDelay_v = 0.4f;			// 콤보 입력 제한 시간
+inline constexpr float ComboSequenceDelay_v = 0.3f;			// 콤보 입력 제한 시간
 
 inline constexpr int MaxCommandCount_v = 3;	
 inline constexpr int InvalidValue_v = -1;

@@ -15,3 +15,6 @@
 #define GUNNER_ACTION_RUN						3
 #define GUNNER_ACTION_SLIDING					4
 #define GUNNER_ACTION_GUN_SHOT					5
+#define GUNNER_ACTION_JUMP						6
+#define GUNNER_ACTION_HIT						7
+#define GUNNER_ACTION_FALLDOWN					8

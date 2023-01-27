@@ -59,8 +59,10 @@ public:
 	SGAnimationInfo* getAnimationInfo() { return m_pAnimationInfo; }
 
 	int getFrameIndexInAnimation() { return m_iFrameIndexInAnimation; }
-	int getFrameIndex() { return m_vAnimationFrames[m_iFrameIndexInAnimation]->getTargetFrameIndex(); }
+	int getTargetFrameIndex() { return m_vAnimationFrames[m_iFrameIndexInAnimation]->getTargetFrameIndex(); }
+	int getFrameIndex() { return m_vAnimationFrames[m_iFrameIndexInAnimation]->getFrameIndex(); }
 	int getPartIndex();
+	int getAnimationCode() { return m_pAnimationInfo->Code; }
 
 	bool isFinished() { return m_bFinished; }
 	bool isPaused() { return m_bPaused || m_bZeroFramePaused; }

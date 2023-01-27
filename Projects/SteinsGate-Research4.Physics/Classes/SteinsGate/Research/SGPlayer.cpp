@@ -84,9 +84,19 @@ void SGPlayer::runBaseAction(BaseAction_t baseAction) {
 	m_pActionManager->runBaseAction(baseAction);
 }
 
+void SGPlayer::runAnimation(int animationCode) {
+	DebugAssertMessage(m_pCharacter, "캐릭터가 세팅되지 않았습니다.");
+	m_pCharacter->runAnimation(animationCode);
+}
 
-void SGPlayer::setCharacter(SGCharacter* character) { m_pCharacter = character; }
-void SGPlayer::setMapLayer(SGMapLayer* mapLayer) { m_pMapLayer = mapLayer; }
+
+void SGPlayer::setCharacter(SGCharacter* character) {
+	m_pCharacter = character;
+}
+
+void SGPlayer::setMapLayer(SGMapLayer* mapLayer) {
+	m_pMapLayer = mapLayer;
+}
 
 SGCharacter* SGPlayer::getCharacter() {
 	DebugAssertMessage(m_pCharacter, "캐릭터가 세팅되지 않았습니다.");

@@ -35,6 +35,7 @@ public:
 
 	void runAction(int actionCode);
 	void runBaseAction(BaseAction_t baseAction);
+	void runAnimation(int animationCode);
 	
 	SGCharacter* getCharacter();
 	SGActionManager* getActionManager();

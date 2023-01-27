@@ -38,28 +38,36 @@ public:
 	virtual void onActionBegin();
 	virtual void onActionEnd(); 	// 정의안하면 해당 애니메이션 시퀀스가 끝나면 중단토록 한다.
 	virtual void onUpdate(float dt) {}
+
+	// virtual void onHit();
+	// virtual void onAttack();
+
 	virtual bool isComboAction() { return false; }
 
+	void setMoveable(bool moveable);
+
 	int getActionCode()  { return m_pActionInfo->Code; }
-	int getComboKeyCount() { return m_pActionInfo->CommandCount; }
 	const SGString& getActionName() { return m_pActionInfo->ActionName; }
-
-	bool isForceCancelable() { return m_bCancelable; }
-	bool isMoveable() { return m_bMoveable; }
-	bool canChangeDirection() { return m_bChangeDirection; }
-	void runFrameEvent(FrameEventType_t frameEventType, int frameEventId);
-
+	const SGComboKeyList& getCommand() { return m_pActionInfo->Command; }
 	float getMoveSpeedX() { return m_fMoveSpeedFPSX; }
 	float getMoveSpeedY() { return m_fMoveSpeedFPSY; }
+
+	bool isForceCancelable() { return m_bCancelable; }
+	bool isMoveableX() { return m_bMoveableX; }
+	bool isMoveableY() { return m_bMoveableY; }
+
+	void runFrameEvent(FrameEventType_t frameEventType, int frameEventId);
+
+	
 protected:
 	// 주입 하는 필드
 	SGPlayer* m_pPlayer;
 	SGActionInfo* m_pActionInfo;
 
 	// 자체 필드
-	bool m_bMoveable;			// 액션중 움직일 수 있는지
-	bool m_bCancelable;			// 액션이 캔슬될 수 있는지
-	bool m_bChangeDirection;	// 액션중 방향을 바꿀 수 있는지
-	float m_fMoveSpeedFPSX;		// 이때의 X방향 속도
-	float m_fMoveSpeedFPSY;		// 이때의 Y방향 속도
+	bool m_bMoveableX;			
+	bool m_bMoveableY;			
+	bool m_bCancelable;			
+	float m_fMoveSpeedFPSX;		
+	float m_fMoveSpeedFPSY;		
 };

@@ -158,6 +158,10 @@ void SGActorPartAnimation::updateAnimation(float currentFrameDelay, SGFrameTextu
 	m_fPauseDelay = 0;
 
 	if (m_iFrameIndexInAnimation < m_vAnimationFrames.Size() - 1) {
+
+		if (m_bLoopSequence)
+			return;
+
 		++m_iFrameIndexInAnimation;
 
 		SGFrameTexture* pNextFrameTexture = changeTexture(m_iFrameIndexInAnimation);
@@ -175,8 +179,12 @@ void SGActorPartAnimation::updateAnimation(float currentFrameDelay, SGFrameTextu
 	//	  다시 동일한 애니메이션을 실행해버리는 것 같은 경우가 있을 수 있는데
 	//    onAnimateEnd 함수 진입 -> runAction -> init(m_bFinshed = false) -> onAnimateEnd 함수 종료 -> m_bFinished = true로
 	//    만들어버버리기 떄문에 이런 상황이 나오지 않도록 하기위해 위에서 처리함
-	m_bFinished = m_pAnimationInfo->Loop ? false : true;
 	m_pTarget->onAnimationEnd(this, currentFrameTexture);
+
+	if (m_bLoopSequence) {
+		return;
+	}
+
 
 	if (m_pAnimationInfo->Loop) {
 		m_iFrameIndexInAnimation = 0;
@@ -187,7 +195,10 @@ void SGActorPartAnimation::updateAnimation(float currentFrameDelay, SGFrameTextu
 		m_pTarget->onFrameBegin(this, pStartFrameTexture);
 
 		updateZeroDelayFrame(fStartFrameDelay, pStartFrameTexture);
+		return;
 	}
+
+	m_bFinished = true;
 }
 
 void SGActorPartAnimation::updateZeroDelayFrame(float currentFrameDelay, SGFrameTexture* currentFrameTexture) {

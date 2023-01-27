@@ -11,20 +11,40 @@
         "level_hp": 10,
         "level_mp": 10,
         "level_up_stat": 5,
+
         "auto_shot_count": 6,
-        "auto_attack_speed": 100.00,
         "bowgun_shot_count": 7,
-        "bowgun_attack_speed": 95.00,
         "rev_shot_count": 3,
-        "rev_attack_speed": 80.00,
         "hcan_shot_count": 1,
-        "hcan_attack_speed": 40.00,
         "musket_shot_count": 2,
+
+        "auto_jump_shot_count": 6,
+        "rev_jump_shot_count": 4,
+        "bowgun_jump_shot_count": 6,
+        "musket_jump_shot_count": 2,
+        "hcan_jump_shot_count": 1,
+
+        "auto_attack_speed": 100.00,
+        "bowgun_attack_speed": 95.00,
+        "rev_attack_speed": 80.00,
         "musket_attack_speed": 60.00,
-        "jump_force": 500.0,
+        "hcan_attack_speed": 40.00,
+
+        "auto_penetration_rate": 10.0,
+        "bowgun_penetration_rate": 0.0,
+        "rev_penetration_rate": 25.0,
+        "musket_penetration_rate": 35.0,
+        "hcan_penetration_rate": 100.0,
+
+        "auto_jump_shot_force_y": 100.0,
+        "bowgun_jump_shot_force_y": 100.0,
+        "rev_jump_shot_force_y": 100.0,
+        "musket_jump_shot_force_y": 135.0,
+        "hcan_jump_shot_force_y": 200.0,
+
+        "jump_force": 500,
         "sliding_force": 1000.0,
         "thickness_box": "0 -130 60 20",
-
 
         "visual_z_order": {
             "skin" : 0,
@@ -36,7 +56,8 @@
             "coat" : 4,
             "cap" : 3,
             "belt" : 6,
-            "weapon" : 7
+            "weapon_right" : 8,
+            "weapon_left" : 7
         },
 
         "default_visual_img": {
@@ -49,7 +70,8 @@
             "coat" : "gn_coat0000a.img",
             "cap" : "gn_cap0000a.img",
             "belt" : "",
-            "weapon" : "auto0000c.img"
+            "weapon_left" : "auto0000b.img",
+            "weapon_right" : "auto0000c.img"
         }
 
     },

@@ -13,7 +13,7 @@
 #include <SteinsGate/Research/SGPlayerController.h>
 
 SGGunnerRun::SGGunnerRun(SGPlayer* player, SGActionInfo* actionInfo)
-	: SGComboAction(player, actionInfo)
+	: SGAction(player, actionInfo)
 {
 }
 

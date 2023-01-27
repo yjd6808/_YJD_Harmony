@@ -10,3 +10,19 @@
 
 
 
+#include <SteinsGate/Research/SGAction.h>
+
+class SGGunnerSliding : public SGAction {
+public:
+	SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo);
+
+	void onUpdate(float dt) override;
+	void onActionBegin() override;
+	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
+	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
+	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
+	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
+private:
+	bool m_bSlidingStarted{};
+};
+

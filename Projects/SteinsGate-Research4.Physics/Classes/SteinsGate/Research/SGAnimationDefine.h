@@ -11,6 +11,10 @@
 #pragma once
 
 
+// ==================================================================
+// 거너 베이스 애니메이션
+// ==================================================================
+
 #define GUNNER_ANIMATION_IDLE_BREATH				1
 #define GUNNER_ANIMATION_IDLE_GUN_ROLLING			2
 #define GUNNER_ANIMATION_WALK						3
@@ -25,6 +29,22 @@
 #define GUNNER_ANIMATION_SHOT_LEFT					12
 #define GUNNER_ANIMATION_SHOT_LEFT_DOWN				13
 
+#define GUNNER_ANIMATION_JUMP_START					14
+#define GUNNER_ANIMATION_JUMP_UP					15
+#define GUNNER_ANIMATION_JUMP_DOWN					16
+#define GUNNER_ANIMATION_JUMP_END					17
+
+#define GUNNER_ANIMATION_JUMP_SHOT_BEGIN			18
+#define GUNNER_ANIMATION_JUMP_SHOT_SHOT				19
+#define GUNNER_ANIMATION_JUMP_SHOT_END				20
+
+#define GUNNER_ANIMATION_HIT_1						21
+#define GUNNER_ANIMATION_HIT_2						22
+
+
+// ==================================================================
+// 몬스터 베이스 애니메이션
+// ==================================================================
 
 #define MONSTER_ANIMATION_IDLE				1
 #define MONSTER_ANIMATION_ATTACK			2

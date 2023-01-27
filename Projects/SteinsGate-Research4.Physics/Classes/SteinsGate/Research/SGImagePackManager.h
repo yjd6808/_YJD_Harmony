@@ -35,6 +35,7 @@ public:
 	int getAvatarPackIndex(CharacterType_t characterType, AvatarType_t avatarType);
 	int getWeaponPackIndex(CharacterType_t characterType, WeaponType_t weaponType);
 	int getPackIndex(const SGString& packPath);
+	int getPackIndexDefault(const SGString& packPath, int defaultIndex);
 
 private:
 

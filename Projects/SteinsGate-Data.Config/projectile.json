@@ -5,7 +5,8 @@
     "__comment__4": "공격 데미지기반은 물리 공격(1), 마법 공격(2), 고정 데미지(3) 1,2번은 데미지 비율 필요 attack_damage_ratio",
     "__comment__5": "penetration_rate: 관통 확률 100분위, rehit_delay: 관통시 연속히트 방지용 같은 몬스터에게 다시 타격 주기까기 걸리는 시간 0은 다시 안때리도록 함",
     "__comment__6": "두께 relative y좌표 -1은 소환자의 두께박스 위치와 소환 위치를 기준으로 자동지정",
-    "__comment__7": "애니메이션 코드는 무조건 1, 여러개 쓰는 경우는 없을 듯?",
+    "__comment__8": "애니메이션 코드는 무조건 1, 여러개 쓰는 경우는 없을 듯?",
+    "__comment__9": "오버라이딩 추가 / 애니메이션은 참조복사, (이름 코드는 필수 입력)",
 
     "projectile": [
         {
@@ -13,144 +14,81 @@
             "name": "gunner_auto_right",
             "npk": "sprite_character_gunner_effect_bullet.NPK",
             "img": "pistol.img",
-            "spawn_offset_x": 372.0,
-            "spawn_offset_y": 238.0,
+            "spawn_offset_x": 342.0,
+            "spawn_offset_y": 245.0,
             "spawn_effect_code": 1,
             "hit_effect_code": 2,
             "rotation": 0.0,
+            "random_rotation_range": "-3.0 3.0",
             "attack_damage_type": 1,
             "attack_damage_ratio": 100.0,
             "attack_x_force": 100.0,
             "attack_y_force": 10.0,
-            "apply_physics": false,
-            "weight": 0,
             "distance": 400.0,
-            "move_speed": 400.0,
+            "move_speed": 600.0,
             "life_time": 10.0,
-            "penetration_rate": 10.0,
             "rehit_delay": 0.0,
             "thickness_box": "0 -1 30 30",
             "animation": [
                 {
                     "code": 1,
-                    "name": "gunner_auto_right",
+                    "name": "gunner_auto",
                     "loop": true,
                     "frames": [
-                        "0 100",
-                        "1 100",
-                        "2 100",
-                        "3 100"
+                        "0 50",
+                        "1 50",
+                        "2 50",
+                        "3 50"
                     ]
                 }
             ]
         },
         {
+            "override_code": 1,
             "code": 2,
             "name": "gunner_auto_left",
-            "npk": "sprite_character_gunner_effect_bullet.NPK",
-            "img": "pistol.img",
-            "spawn_offset_x": 386.0,
-            "spawn_offset_y": 260.0,
+            "spawn_offset_x": 374.0,
+            "spawn_offset_y": 239.0,
             "spawn_effect_code": 1,
             "hit_effect_code": 2,
             "rotation": 0.0,
-            "attack_damage_type": 1,
             "attack_damage_ratio": 200.0,
             "attack_x_force": 150.0,
             "attack_y_force": 50.0,
-            "apply_physics": false,
-            "weight": 0,
-            "distance": 400.0,
-            "move_speed": 400.0,
-            "life_time": 10.0,
-            "penetration_rate": 15.0,
-            "rehit_delay": 0.0,
-            "thickness_box": "0 -1 30 30",
-            "animation": [
-                {
-                    "code": 1,
-                    "name": "gunner_auto_left",
-                    "loop": true,
-                    "frames": [
-                        "0 100",
-                        "1 100",
-                        "2 100",
-                        "3 100"
-                    ]
-                }
-            ]
+            "thickness_box": "0 -1 30 30"
         },
         {
+            "override_code": 1,
             "code": 3,
             "name": "gunner_auto_right_down",
-            "npk": "sprite_character_gunner_effect_bullet.NPK",
-            "img": "pistol.img",
-            "spawn_offset_x": 346.0,
-            "spawn_offset_y": 196.0,
-            "spawn_effect_code": 1,
-            "hit_effect_code": 2,
-            "rotation": 30.0,
-            "attack_damage_type": 1,
-            "attack_damage_ratio": 100.0,
-            "attack_x_force": 100.0,
-            "attack_y_force": 10.0,
-            "apply_physics": false,
-            "weight": 0,
-            "distance": 400.0,
-            "move_speed": 400.0,
-            "life_time": 10.0,
-            "penetration_rate": 10.0,
-            "rehit_delay": 0.0,
-            "thickness_box": "0 -1 30 30",
-            "animation": [
-                {
-                    "code": 1,
-                    "name": "gunner_auto_right_down",
-                    "loop": true,
-                    "frames": [
-                        "0 100",
-                        "1 100",
-                        "2 100",
-                        "3 100"
-                    ]
-                }
-            ]
+            "spawn_offset_x": 336.0,
+            "spawn_offset_y": 201.0,
+            "rotation": 30.0
         },
         {
+            "override_code": 2,
             "code": 4,
             "name": "gunner_auto_left_down",
-            "npk": "sprite_character_gunner_effect_bullet.NPK",
-            "img": "pistol.img",
-            "spawn_offset_x": 384.0,
-            "spawn_offset_y": 191.0,
-            "spawn_effect_code": 1,
-            "hit_effect_code": 2,
-            "rotation": 30.0,
-            "attack_damage_type": 1,
-            "attack_damage_ratio": 200.0,
-            "attack_x_force": 150.0,
-            "attack_y_force": 50.0,
-            "apply_physics": false,
-            "weight": 0,
-            "distance": 400.0,
-            "move_speed": 400.0,
-            "life_time": 10.0,
-            "penetration_rate": 15.0,
-            "rehit_delay": 0.0,
-            "thickness_box": "0 -1 30 30",
-            "animation": [
-                {
-                    "code": 1,
-                    "name": "gunner_auto_left_down",
-                    "loop": true,
-                    "frames": [
-                        "0 100",
-                        "1 100",
-                        "2 100",
-                        "3 100"
-                    ]
-                }
-            ]
+            "spawn_offset_x": 372.0,
+            "spawn_offset_y": 197.0,
+            "rotation": 30.0
+        },
+        {
+            "override_code": 4,
+            "code": 5,
+            "name": "gunner_auto_jump_right",
+            "spawn_offset_x": 301.0,
+            "spawn_offset_y": 197.0,
+            "rotation": 45.0,
+            "thickness_box": "0 -1 30 30"
+        },
+        {
+            "override_code": 5,
+            "code": 6,
+            "name": "gunner_auto_jump_left",
+            "rotation": 45.0,
+            "spawn_offset_x": 294.0,
+            "spawn_offset_y": 191.0
         }
     ]
 

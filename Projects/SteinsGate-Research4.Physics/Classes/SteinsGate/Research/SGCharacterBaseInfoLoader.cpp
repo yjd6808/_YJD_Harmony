@@ -60,15 +60,26 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 		gunnerBaseInfo.MPLevelUp = gunnerRoot["level_mp"].asInt();
 		gunnerBaseInfo.LevelUpStat = gunnerRoot["level_up_stat"].asInt();
 		gunnerBaseInfo.ShotCount[WeaponType::Auto] = gunnerRoot["auto_shot_count"].asInt();
-		gunnerBaseInfo.AttackSpeed[WeaponType::Auto] = gunnerRoot["auto_attack_speed"].asFloat();
 		gunnerBaseInfo.ShotCount[WeaponType::Bowgun] = gunnerRoot["bowgun_shot_count"].asInt();
-		gunnerBaseInfo.AttackSpeed[WeaponType::Bowgun] = gunnerRoot["bowgun_attack_speed"].asFloat();
 		gunnerBaseInfo.ShotCount[WeaponType::Revolver] = gunnerRoot["rev_shot_count"].asInt();
-		gunnerBaseInfo.AttackSpeed[WeaponType::Revolver] = gunnerRoot["rev_attack_speed"].asFloat();
 		gunnerBaseInfo.ShotCount[WeaponType::HandCannon] = gunnerRoot["hcan_shot_count"].asInt();
-		gunnerBaseInfo.AttackSpeed[WeaponType::HandCannon] = gunnerRoot["hcan_attack_speed"].asFloat();
 		gunnerBaseInfo.ShotCount[WeaponType::Musket] = gunnerRoot["musket_shot_count"].asInt();
+
+		gunnerBaseInfo.JumpShotCount[WeaponType::Auto] = gunnerRoot["auto_jump_shot_count"].asInt();
+		gunnerBaseInfo.JumpShotCount[WeaponType::Bowgun] = gunnerRoot["bowgun_jump_shot_count"].asInt();
+		gunnerBaseInfo.JumpShotCount[WeaponType::Revolver] = gunnerRoot["rev_jump_shot_count"].asInt();
+		gunnerBaseInfo.JumpShotCount[WeaponType::HandCannon] = gunnerRoot["hcan_jump_shot_count"].asInt();
+		gunnerBaseInfo.JumpShotCount[WeaponType::Musket] = gunnerRoot["musket_jump_shot_count"].asInt();
+
+		gunnerBaseInfo.AttackSpeed[WeaponType::Auto] = gunnerRoot["auto_attack_speed"].asFloat();
+		gunnerBaseInfo.AttackSpeed[WeaponType::Bowgun] = gunnerRoot["bowgun_attack_speed"].asFloat();
+		gunnerBaseInfo.AttackSpeed[WeaponType::Revolver] = gunnerRoot["rev_attack_speed"].asFloat();
+		gunnerBaseInfo.AttackSpeed[WeaponType::HandCannon] = gunnerRoot["hcan_attack_speed"].asFloat();
 		gunnerBaseInfo.AttackSpeed[WeaponType::Musket] = gunnerRoot["musket_attack_speed"].asFloat();
+
+		
+
+
 		gunnerBaseInfo.JumpForce = gunnerRoot["jump_force"].asFloat();
 		gunnerBaseInfo.SlidingForce = gunnerRoot["sliding_force"].asFloat();
 		SGJson::parseThicknessInfo(gunnerRoot["thickness_box"], gunnerBaseInfo.ThicknessBox);
@@ -84,7 +95,8 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Coat] = zOrderRoot["coat"].asInt();
 			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Cap] = zOrderRoot["cap"].asInt();
 			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Belt] = zOrderRoot["belt"].asInt();
-			gunnerBaseInfo.DefaultVisualZOrder[VisualType::Weapon] = zOrderRoot["weapon"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::WeaponLeft] = zOrderRoot["weapon_left"].asInt();
+			gunnerBaseInfo.DefaultVisualZOrder[VisualType::WeaponRight] = zOrderRoot["weapon_right"].asInt();
 		}
 
 		{
@@ -103,11 +115,17 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 			defaultAvatarPartImgName[VisualType::Coat] =   SGJson::getString(defaultAvatarImgRoot["coat"]);
 			defaultAvatarPartImgName[VisualType::Cap] =    SGJson::getString(defaultAvatarImgRoot["cap"]);
 			defaultAvatarPartImgName[VisualType::Belt] =   SGJson::getString(defaultAvatarImgRoot["belt"]);
-			defaultAvatarPartImgName[VisualType::Weapon] = SGJson::getString(defaultAvatarImgRoot["weapon"]);
+			defaultAvatarPartImgName[VisualType::WeaponLeft] = SGJson::getString(defaultAvatarImgRoot["weapon_left"]);
+			defaultAvatarPartImgName[VisualType::WeaponRight] = SGJson::getString(defaultAvatarImgRoot["weapon_right"]);
+			
 
 			for (int iVisualType = AvatarType::Begin; iVisualType < AvatarType::Max; ++iVisualType) {
 				const SGString& npkName = pGlobal->getAvatarNpkName(CharacterType::Gunner, iVisualType);
 				SGImagePack* pImgPack = pPackManager->getPack(npkName);
+
+				if (iVisualType == 6)
+					int a = 40;
+
 				gunnerBaseInfo.DefaultVisualNpkIndex[iVisualType] = pImgPack->getPackIndex();
 				if (pImgPack->hasImgIndex(defaultAvatarPartImgName[iVisualType]))
 					gunnerBaseInfo.DefaultVisualImgIndex[iVisualType] = pImgPack->getImgIndex(defaultAvatarPartImgName[iVisualType]);
@@ -118,9 +136,14 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo(&chara
 				const SGString& npkName = pGlobal->getWeaponNpkName(CharacterType::Gunner, iWeaponType);
 				SGImagePack* pImgPack = pPackManager->getPack(npkName);
 
-				if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::Weapon])) {
-					gunnerBaseInfo.DefaultVisualImgIndex[VisualType::Weapon] = pImgPack->getImgIndex(defaultAvatarPartImgName[VisualType::Weapon]);
-					gunnerBaseInfo.DefaultVisualNpkIndex[VisualType::Weapon] = pImgPack->getPackIndex();
+				if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::WeaponLeft])) {
+					gunnerBaseInfo.DefaultVisualImgIndex[VisualType::WeaponLeft] = pImgPack->getImgIndex(defaultAvatarPartImgName[VisualType::WeaponLeft]);
+					gunnerBaseInfo.DefaultVisualNpkIndex[VisualType::WeaponLeft] = pImgPack->getPackIndex();
+				}
+
+				if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::WeaponRight])) {
+					gunnerBaseInfo.DefaultVisualImgIndex[VisualType::WeaponRight] = pImgPack->getImgIndex(defaultAvatarPartImgName[VisualType::WeaponRight]);
+					gunnerBaseInfo.DefaultVisualNpkIndex[VisualType::WeaponRight] = pImgPack->getPackIndex();
 					bDefaultWeaponImgFound = true;
 					break;
 				}

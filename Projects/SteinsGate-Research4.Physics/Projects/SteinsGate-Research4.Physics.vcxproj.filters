@@ -135,9 +135,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGComboTree.cpp">
       <Filter>src\Player\Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGComboAction.cpp">
-      <Filter>src\Player\Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerIdle.cpp">
       <Filter>src\Player\Action\Gunner</Filter>
     </ClCompile>
@@ -185,6 +182,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMapInfo.cpp">
       <Filter>src\Data\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGPhysicsActor.cpp">
+      <Filter>src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerHit.cpp">
+      <Filter>src\Player\Action\Gunner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -277,9 +280,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAction.h">
       <Filter>src\Player\Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGComboAction.h">
-      <Filter>src\Player\Action</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGComboTree.h">
       <Filter>src\Player\Action</Filter>
     </ClInclude>
@@ -363,6 +363,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGObstacle.h">
       <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGPhysicsActor.h">
+      <Filter>src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerHit.h">
+      <Filter>src\Player\Action\Gunner</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -65,7 +65,7 @@ bool SGMapInfoLoader::LoadMapInfo(SGHashMap<int, SGMapInfo>& mapInfoMap) {
 		for (int j = 0; j < obstacleListRoot.size(); ++j) {
 			Value& obstacleRoot = obstacleListRoot[j];
 			SGMapObjectInfo objectInfo;
-			SGJson::parseNumber3(obstacleRoot, objectInfo.Code, objectInfo.X, objectInfo.Y);
+			SGJson::parseIntNumber3(obstacleRoot, objectInfo.Code, objectInfo.X, objectInfo.Y);
 			info.ObstacleList.PushBack(objectInfo);
 		}
 
@@ -76,8 +76,13 @@ bool SGMapInfoLoader::LoadMapInfo(SGHashMap<int, SGMapInfo>& mapInfoMap) {
 
 		for (int j = 0; j < info.TileHeight; ++j) {
 			Value& tileRoot = tileListRoot[j];
-			SGJson::parseNumberN(tileRoot, info.TileArray[j], info.TileWidth);
+			SGJson::parseIntNumberN(tileRoot, info.TileArray[j], info.TileWidth);
 		}
+
+		info.Gravity = mapRoot["gravity"].asFloat();
+		info.Friction = mapRoot["friction"].asFloat();
+		info.ElasticityDownTime = mapRoot["elasticity_down_time"].asFloat();
+		info.ElasticityDividedForce = mapRoot["elasticity_divided_force"].asFloat();
 
 		mapInfoMap.Insert(info.Code, Move(info));
 	}

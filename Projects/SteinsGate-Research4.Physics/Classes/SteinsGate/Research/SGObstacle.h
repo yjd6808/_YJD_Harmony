@@ -18,8 +18,8 @@
 class SGObstacle : public SGActor
 {
 public:
-	SGObstacle(SGObstacleInfo* baseInfo);
-	static SGObstacle* create(SGObstacleInfo* baseInfo);
+	SGObstacle(SGObstacleInfo* baseInfo, SGMapLayer* mapLayer);
+	static SGObstacle* create(SGObstacleInfo* baseInfo, SGMapLayer* mapLayer);
 	void initActorSprite() override;
 
 	void update(float dt) override;

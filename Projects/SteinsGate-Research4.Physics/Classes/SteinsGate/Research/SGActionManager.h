@@ -35,24 +35,22 @@ public:
 
 	
 	bool canRunAction();
-	void setRunningAction(SGAction* action);
-
 	bool hasPreviousAction() { return m_pPreviousAction != nullptr; }
 	bool hasRunningAction() { return m_pRunningAction != nullptr; }
 	bool isBaseActionRunning(BaseAction_t baseActionType);
 	bool isActionRunning(int actionCode);
 	bool isRunnningActionIdleOrWalkAction();
-	bool canRunningActionChangeDirection();
 	
-
 	SGAction* getRunningAction() { return m_pRunningAction; }
 	SGAction* getPreviousAction() { return m_pPreviousAction; }
 	SGAction* getAction(int actionCode);
 	SGAction* getBaseAction(BaseAction_t baseActionType);
-	SGComboAction* getComboAction(const SGComboKeyList& keys) { return m_ComboTree.GetComboAction(keys); }
+	SGAction* getComboAction(const SGComboKeyList& keys) { return m_ComboTree.getComboAction(keys); }
 	void runAction(int actionCode);
 	void runAction(SGAction* action);
 	void runBaseAction(BaseAction_t baseActionType);
+
+	void stopActionForce();
 private:
 	SGPlayer* m_pPlayer;
 	SGComboTree m_ComboTree;

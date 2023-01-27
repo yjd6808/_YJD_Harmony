@@ -29,7 +29,6 @@ public:
 	void updateZOrder(float dt);
 	void updateActors(float dt);
 	void updatePlayerProjectiles(float dt);
-	void updatePhysics(float dt);
 
 	void runFrameEvent(SGActor* runner, FrameEventType_t frameEventType, int frameEventId);
 	SGCharacter* createCharacter(CharacterType_t characterType, float x, float y, SGCharacterInfo& info);

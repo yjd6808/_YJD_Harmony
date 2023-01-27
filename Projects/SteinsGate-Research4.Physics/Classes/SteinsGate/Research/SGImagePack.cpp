@@ -71,7 +71,7 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 
 	if (sprite.IsLink()) {
 		int iTargetFrameIndex = sprite.GetTargetFrameIndex();
-		SGLinkFrameTexture* pLinkTexture = new SGLinkFrameTexture(iTargetFrameIndex);
+		SGLinkFrameTexture* pLinkTexture = new SGLinkFrameTexture(frameIndex, iTargetFrameIndex);
 		pLinkTexture->autorelease();
 		pLinkTexture->retain();
 		m_TextureCacheMap.Insert(iCacheIndex, pLinkTexture);

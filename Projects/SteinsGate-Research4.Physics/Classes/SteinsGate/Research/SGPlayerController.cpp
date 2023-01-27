@@ -8,7 +8,7 @@
 #include "SGPlayerController.h"
 
 #include <SteinsGate/Research/SGPlayer.h>
-#include <SteinsGate/Research/SGComboAction.h>
+#include <SteinsGate/Research/SGAction.h>
 #include <SteinsGate/Research/SGMapLayer.h>
 
 USING_NS_CC;
@@ -138,7 +138,9 @@ void SGPlayerController::checkComboSequence() {
 	if (iSequenceCount == 0)
 		return;
 
-	SGComboAction* pAction;
+	SGAction* pAction;
+
+
 
 	// 없는 경우 위로 거슬러 올라가서 확인
 	// 예를 들어 -> -> X를 입력했는데 키가 바인딩 되어있지 않으면
@@ -177,11 +179,8 @@ void SGPlayerController::updateMove(float dt) {
 	SGAction* pRunningAction = m_pActionManager->getRunningAction();
 
 	// 액션중 이동가능한 액션인 경우 해당 액션의 이동속도로 움직일 수 있도록 한다.
-	if (pRunningAction == nullptr || pRunningAction->isMoveable() == false)
+	if (pRunningAction == nullptr)
 		return;
-
-	float fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
-	float fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f;
 
 	// 좌,우 | 위,아래 독립적으로 계산해야함
 	// 한개로만 하게되면 예를들어 Left, Down을 동시에 눌렀을 때
@@ -190,21 +189,33 @@ void SGPlayerController::updateMove(float dt) {
 	SGRect thicknessPosLR = m_pCharacter->getThicknessBoxRect();
 	SGRect thicknessPosUD = thicknessPosLR;
 
-	if (isKeyPressed(ControlKey::Left)) {
-		thicknessPosLR.origin.x -= fSpeedX;
-		updateLeftMove(pMapLayer, pMapInfo, thicknessPosLR);
+	if (pRunningAction->isMoveableX()) {
 
-	} else if (isKeyPressed(ControlKey::Right)) {
-		thicknessPosLR.origin.x += fSpeedX;
-		updateRightMove(pMapLayer, pMapInfo, thicknessPosLR);
+		float fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
+
+		if (isKeyPressed(ControlKey::Left)) {
+			thicknessPosLR.origin.x -= fSpeedX;
+			updateLeftMove(pMapLayer, pMapInfo, thicknessPosLR);
+
+		}
+		else if (isKeyPressed(ControlKey::Right)) {
+			thicknessPosLR.origin.x += fSpeedX;
+			updateRightMove(pMapLayer, pMapInfo, thicknessPosLR);
+		}
 	}
 
-	if (isKeyPressed(ControlKey::Up)) {
-		thicknessPosUD.origin.y += fSpeedY;
-		updateUpMove(pMapLayer, pMapInfo, thicknessPosUD);
-	} else if (isKeyPressed(ControlKey::Down)) {
-		thicknessPosUD.origin.y -= fSpeedY;
-		updateDownMove(pMapLayer, pMapInfo, thicknessPosUD);
+	if (pRunningAction->isMoveableY()) {
+
+		float fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f;
+
+		if (isKeyPressed(ControlKey::Up)) {
+			thicknessPosUD.origin.y += fSpeedY;
+			updateUpMove(pMapLayer, pMapInfo, thicknessPosUD);
+		}
+		else if (isKeyPressed(ControlKey::Down)) {
+			thicknessPosUD.origin.y -= fSpeedY;
+			updateDownMove(pMapLayer, pMapInfo, thicknessPosUD);
+		}
 	}
 }
 
@@ -268,7 +279,7 @@ void SGPlayerController::updateDirection(ControlKey_t pressedKey) {
 void SGPlayerController::reflectPressedMoveKeys() {
 	// 액션 수행중 방향키로 움직일 수 있는 액션인 경우라도 걷기 나 평상시 애니메이션이 실행되어선 안된다.
 	// 방향키만 읽음, StaticVector 변경 필요
-	JCore::Vector<ControlKey_t> vPressed{ Direction::Max };
+	SGVector<ControlKey_t> vPressed{ Direction::Max };
 
 	for (int i = 0; i < Direction::Max; ++i) {
 		if (isKeyPressed(ControlKey_t(i)))
