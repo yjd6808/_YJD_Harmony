@@ -16,6 +16,8 @@
 #include <SteinsGate/Research/SGActionDefine.h>
 #include <SteinsGate/Research/SGCharacterBaseInfo.h>
 
+#define MinimumShotHeight 30.0f
+
 SGGunnerJump::SGGunnerJump(SGPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo) {}
 
@@ -109,9 +111,22 @@ void SGGunnerJump::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* f
 	int iFrameIndexInAnimation = animation->getFrameIndexInAnimation();
 
 	// jump_shot_shot 73번 인덱스 호출완료시
-	if (iFrameIndexInAnimation == 1)
-		if (!shot(pCharacter))		
-			m_bWaitForFire = true; // 시간내로 총을 못쏜 경우에대한 처리, 공중에선 쏠 수 있는 횟수만 여유롭다면 언제든지 마음대로 계속 총을 쏠 수 있다.
+	if (iFrameIndexInAnimation == 1) {
+
+		// 쏘고 나서 높이가 0인경우 바로 정지시켜주도록 하자.
+		if (pCharacter->getPositionActorY() == 0) {
+			pCharacter->runAnimation(GUNNER_ANIMATION_JUMP_END);
+			m_bJumpDownBegin = false;
+			return;
+		}
+
+		// 높이가 그래도 어느정도 있어야 쏠 수 잇도록 하자.
+		if (pCharacter->getPositionActorY() >= MinimumShotHeight && !shot(pCharacter)) {
+
+			// 시간내로 총을 못쏜 경우에대한 처리, 공중에선 쏠 수 있는 횟수만 여유롭다면 언제든지 마음대로 계속 총을 쏠 수 있다.
+			m_bWaitForFire = true; 
+		}
+	}
 }
 
 void SGGunnerJump::onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
@@ -134,7 +149,7 @@ void SGGunnerJump::onKeyPressed(SGPlayerController* controller, SGEventKeyboard:
 		m_bFireMode = true;
 	}
 	
-	if (m_bWaitForFire) {
+	if (m_bWaitForFire && pCharacter->getPositionActorY() >= MinimumShotHeight) {
 		shot(pCharacter);
 		m_bWaitForFire = false;
 	}
@@ -267,7 +282,7 @@ void SGGunnerJump::reboundY(SGCharacter* character) {
 void SGGunnerJump::createBullet() {
 
 	// 거너 총 종류에따라 프로젝틸 혹은 히트박스 생성
-	FrameEventType_t eFrameEventType = WeaponType::FrameEventType[m_eWeaponType];
+	FrameEventType_t eFrameEventType = WeaponType::ShotFrameEventType[m_eWeaponType];
 
 	int iFrameEventId = -1;
 

@@ -91,6 +91,10 @@ void SGPlayer::runAnimation(int animationCode) {
 	m_pCharacter->runAnimation(animationCode);
 }
 
+SGActorSprite* SGPlayer::getActorSprite() {
+	return m_pCharacter->getActorSprite();
+}
+
 
 void SGPlayer::setCharacter(SGCharacter* character) {
 	m_pCharacter = character;

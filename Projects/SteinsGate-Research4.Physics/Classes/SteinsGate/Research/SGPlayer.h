@@ -36,7 +36,8 @@ public:
 	void runAction(int actionCode);
 	void runBaseAction(BaseAction_t baseAction);
 	void runAnimation(int animationCode);
-	
+
+	SGActorSprite* getActorSprite();
 	SGCharacter* getCharacter();
 	SGActionManager* getActionManager();
 	SGPlayerController* getController();

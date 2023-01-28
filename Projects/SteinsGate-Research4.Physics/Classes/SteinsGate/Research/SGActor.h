@@ -54,6 +54,7 @@ public:
 	SGThicknessBox getThicknessBox()		const;
 	SGActorSprite* getActorSprite()			const;
 	SpriteDirection_t getSpriteDirection()  const;
+	int getRunningAnimationCode();
 
 	void setPositionReal(float x, float y);
 	void setPositionReal(const SGVec2& v);

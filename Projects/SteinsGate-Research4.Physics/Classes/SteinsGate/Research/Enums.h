@@ -321,7 +321,7 @@ Max
 SEnumMiddle(WeaponType)
 
 // 핸드캐논은 총 쏘는 방식이 히트박스임, 나머진 투사체 날림
-static constexpr FrameEventType_t FrameEventType[Max]{
+static constexpr FrameEventType_t ShotFrameEventType[Max]{
 	FrameEventType::Projectile,
 	FrameEventType::Projectile,
 	FrameEventType::Projectile,

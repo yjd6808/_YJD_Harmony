@@ -143,6 +143,10 @@ SpriteDirection_t SGActor::getSpriteDirection() const {
 	return m_pActorSprite->getSpriteDirection();
 }
 
+int SGActor::getRunningAnimationCode() {
+	return m_pActorSprite->getRunningAnimationCode();
+}
+
 
 void SGActor::setPositionReal(float x, float y) {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
