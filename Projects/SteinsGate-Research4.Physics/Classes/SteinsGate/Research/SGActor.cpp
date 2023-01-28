@@ -10,6 +10,7 @@
 
 #include <SteinsGate/Common/Engine/RectPoly.h>
 #include <SteinsGate/Common/Engine/SGRectEx.h>
+#include <SteinsGate/Common/Engine/SGColor.h>
 
 #include <SteinsGate/Research/SGGlobal.h>
 
@@ -44,7 +45,7 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 	m_pThicknessBox->setPositionY(thicknessBox.RelativeY);
 	m_pThicknessBox->setOpacity(125);
 	m_pThicknessBox->setContentSize(thicknessBox.getSize());
-	m_pThicknessBox->drawPolygon(poly.source(), 4, {}, 1, Color4F::MAGENTA);
+	m_pThicknessBox->drawPolygon(poly.source(), 4, {}, 1, SGColor4F{ ColorList::Brightgreen_v } );
 
 	this->addChild(m_pThicknessBox);
 }

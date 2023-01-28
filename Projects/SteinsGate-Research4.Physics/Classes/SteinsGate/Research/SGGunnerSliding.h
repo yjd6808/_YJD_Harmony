@@ -10,9 +10,9 @@
 
 
 
-#include <SteinsGate/Research/SGAction.h>
+#include <SteinsGate/Research/SGGunnerAction.h>
 
-class SGGunnerSliding : public SGAction {
+class SGGunnerSliding : public SGGunnerAction {
 public:
 	SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo);
 

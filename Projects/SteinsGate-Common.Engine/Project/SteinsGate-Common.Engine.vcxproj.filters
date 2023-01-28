@@ -4,6 +4,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\Engine\GridLayer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Engine.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Engine\SGRandomEx.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\Engine\SGColor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\GridLayer.h" />
@@ -11,5 +12,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\SGRectEx.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\RectPoly.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\SGRandomEx.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Engine\SGColor.h" />
   </ItemGroup>
 </Project>

@@ -11,10 +11,10 @@
 
 
 
-#include <SteinsGate/Research/SGAction.h>
+#include <SteinsGate/Research/SGGunnerAction.h>
 
 class SGCharacter;
-class SGGunnerJump : public SGAction {
+class SGGunnerJump : public SGGunnerAction {
 public:
 	SGGunnerJump(SGPlayer* player, SGActionInfo* actionInfo);
 
@@ -29,7 +29,13 @@ public:
 	void updateJumpUp(SGCharacter* character, float dt);
 	void updateJumpDown(SGCharacter* character, float dt);
 
-	void shot(SGCharacter* character);
+	bool shot(SGCharacter* character);
+
+	void reboundXLeft(SGCharacter* character);
+	void reboundXRight(SGCharacter* character);
+	void reboundX(SGCharacter* character);
+	void reboundY(SGCharacter* character);
+	void createBullet();
 private:
 	bool m_bJumpUpbegin{};
 	bool m_bJumpDownBegin{};

@@ -9,9 +9,9 @@
 #pragma once
 
 
-#include <SteinsGate/Research/SGAction.h>
+#include <SteinsGate/Research/SGGunnerAction.h>
 
-class SGGunnerWalk : public SGAction {
+class SGGunnerWalk : public SGGunnerAction {
 public:
 	SGGunnerWalk(SGPlayer* player, SGActionInfo* actionInfo);
 

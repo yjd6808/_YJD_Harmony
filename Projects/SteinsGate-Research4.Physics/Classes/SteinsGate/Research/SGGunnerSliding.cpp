@@ -13,7 +13,7 @@
 #include <SteinsGate/Research/SGProjectileDefine.h>
 
 SGGunnerSliding::SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo)
-	: SGAction(player, actionInfo) {}
+	: SGGunnerAction(player, actionInfo) {}
 
 
 void SGGunnerSliding::onActionBegin() {

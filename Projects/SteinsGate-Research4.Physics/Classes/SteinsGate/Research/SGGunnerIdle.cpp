@@ -12,7 +12,7 @@
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
 SGGunnerIdle::SGGunnerIdle(SGPlayer* player, SGActionInfo* actionInfo)
-	: SGAction(player, actionInfo)
+	: SGGunnerAction(player, actionInfo)
 	, m_iIdleCount(0) {}
 
 

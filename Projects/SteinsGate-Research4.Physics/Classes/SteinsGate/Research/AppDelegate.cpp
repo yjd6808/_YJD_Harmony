@@ -5,8 +5,6 @@
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 
-#include "SteinsGate/Common/Engine/SGRectEx.h"
-
 #define AppName "SteinsGate-Research4.Physics"
 
 USING_NS_CC;

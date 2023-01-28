@@ -4,7 +4,9 @@
 
 #include "GameScene.h"
 
-using namespace cocos2d;
+#include <SteinsGate/Research/SGDataManager.h>
+
+USING_NS_CC;
 
 Scene* GameScene::createScene()
 {

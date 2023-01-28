@@ -10,6 +10,7 @@
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGAction.h>
 #include <SteinsGate/Research/SGMapLayer.h>
+#include <SteinsGate/Research/SGMapInfo.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -186,36 +187,33 @@ void SGPlayerController::updateMove(float dt) {
 	// 한개로만 하게되면 예를들어 Left, Down을 동시에 눌렀을 때
 	// thickness.origin.x -= fSpeedX 적용된 값이 Down 체크시에도 적용되어버려서
 	// 이 적용된 값 때문에 Down에서 lb, rb 충돌 체크가 항상 참이 되어버림
+	// --------------------------------------------------------------
+	//  23/01/28 -> 좌,우,위,아래 모두 독립적으로 가능하도록 추가
 	SGRect thicknessPosLR = m_pCharacter->getThicknessBoxRect();
 	SGRect thicknessPosUD = thicknessPosLR;
 
-	if (pRunningAction->isMoveableX()) {
+	float fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
 
-		float fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
+	if (isKeyPressed(ControlKey::Left) && pRunningAction->isMoveableNegativeX()) {
+		thicknessPosLR.origin.x -= fSpeedX;
+		updateLeftMove(pMapLayer, pMapInfo, thicknessPosLR);
 
-		if (isKeyPressed(ControlKey::Left)) {
-			thicknessPosLR.origin.x -= fSpeedX;
-			updateLeftMove(pMapLayer, pMapInfo, thicknessPosLR);
+	} else if (isKeyPressed(ControlKey::Right) && pRunningAction->isMoveablePositiveX()) {
+		thicknessPosLR.origin.x += fSpeedX;
+		updateRightMove(pMapLayer, pMapInfo, thicknessPosLR);
 
-		}
-		else if (isKeyPressed(ControlKey::Right)) {
-			thicknessPosLR.origin.x += fSpeedX;
-			updateRightMove(pMapLayer, pMapInfo, thicknessPosLR);
-		}
 	}
 
-	if (pRunningAction->isMoveableY()) {
+	float fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f;
 
-		float fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f;
+	if (isKeyPressed(ControlKey::Up) && pRunningAction->isMoveablePositiveY()) {
+		thicknessPosUD.origin.y += fSpeedY;
+		updateUpMove(pMapLayer, pMapInfo, thicknessPosUD);
 
-		if (isKeyPressed(ControlKey::Up)) {
-			thicknessPosUD.origin.y += fSpeedY;
-			updateUpMove(pMapLayer, pMapInfo, thicknessPosUD);
-		}
-		else if (isKeyPressed(ControlKey::Down)) {
-			thicknessPosUD.origin.y -= fSpeedY;
-			updateDownMove(pMapLayer, pMapInfo, thicknessPosUD);
-		}
+	} else if (isKeyPressed(ControlKey::Down) && pRunningAction->isMoveableNegativeY()) {
+		thicknessPosUD.origin.y -= fSpeedY;
+		updateDownMove(pMapLayer, pMapInfo, thicknessPosUD);
+
 	}
 }
 

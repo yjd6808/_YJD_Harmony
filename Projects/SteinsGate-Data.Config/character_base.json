@@ -1,6 +1,8 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__3": "캐릭터 기본 정보",
+
+
     "gunner": {
         "hp": 100,
         "mp": 100,
@@ -11,6 +13,24 @@
         "level_hp": 10,
         "level_mp": 10,
         "level_up_stat": 5,
+        "jump_force": 500,
+        "sliding_force": 950.0,
+        "thickness_box": "0 -130 60 20",
+
+        "visual_z_order": {
+            "skin" : 0,
+            "shoes" : 1,
+            "pants" : 2,
+            "neck" : 5,
+            "hair" : 2,
+            "face" : 1,
+            "coat" : 4,
+            "cap" : 3,
+            "belt" : 6,
+            "weapon_right" : 8,
+            "weapon_left" : 7
+        },
+
 
         "auto_shot_count": 6,
         "bowgun_shot_count": 7,
@@ -36,29 +56,25 @@
         "musket_penetration_rate": 35.0,
         "hcan_penetration_rate": 100.0,
 
+        "auto_jump_shot_force_x": 55.0,
+        "bowgun_jump_shot_force_x": 45.0,
+        "rev_jump_shot_force_x": 65.0,
+        "musket_jump_shot_force_x": 85.0,
+        "hcan_jump_shot_force_x": 150.0,
+
+   
         "auto_jump_shot_force_y": 100.0,
         "bowgun_jump_shot_force_y": 100.0,
         "rev_jump_shot_force_y": 100.0,
         "musket_jump_shot_force_y": 135.0,
         "hcan_jump_shot_force_y": 200.0,
 
-        "jump_force": 500,
-        "sliding_force": 1000.0,
-        "thickness_box": "0 -130 60 20",
-
-        "visual_z_order": {
-            "skin" : 0,
-            "shoes" : 1,
-            "pants" : 2,
-            "neck" : 5,
-            "hair" : 2,
-            "face" : 1,
-            "coat" : 4,
-            "cap" : 3,
-            "belt" : 6,
-            "weapon_right" : 8,
-            "weapon_left" : 7
-        },
+        "auto_jump_shot_move_speed_x": 200.0,
+        "bowgun_jump_shot_move_speed_x": 200.0,
+        "rev_jump_shot_move_speed_x": 225.0,
+        "musket_jump_shot_move_speed_x": 250.0,
+        "hcan_jump_shot_move_speed_x": 400.0,
+        
 
         "default_visual_img": {
             "skin" : "gn_body0000.img",

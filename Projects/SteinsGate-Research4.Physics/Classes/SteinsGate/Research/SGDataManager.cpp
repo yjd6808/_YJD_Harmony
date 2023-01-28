@@ -34,6 +34,15 @@ void SGDataManager::LoadAllConfigs() {
 	});
 }
 
+SGDataManager::SGDataManager() {}
+
+SGDataManager::~SGDataManager() {
+
+	for (int i = 0; i < CharacterType::Max; ++i) {
+		DeleteSafe(m_CharacterBaseInfoMap[i]);
+	}
+}
+
 SGMonsterInfo* SGDataManager::getMonsterInfo(int mobCode) {
 	DebugAssertMessage(m_MonsterInfoMap.Exist(mobCode), "해당 몬스터 정보가 존재하지 않습니다.");
 	return &m_MonsterInfoMap[mobCode];
@@ -56,7 +65,7 @@ SGProjectileInfo* SGDataManager::getProjectileInfo(int projectileCode) {
 
 SGCharacterBaseInfo* SGDataManager::getCharacterBaseInfo(int characterCode) {
 	DebugAssertMessage(characterCode >= CharacterType::Begin && characterCode <= CharacterType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
-	return &m_CharacterBaseInfoMap[characterCode];
+	return m_CharacterBaseInfoMap[characterCode];
 }
 
 SGTileInfo* SGDataManager::getTileInfo(int tileCode) {

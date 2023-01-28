@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/SGAnimationInfo.h>
 #include <SteinsGate/Research/SGComboKeyList.h>
 

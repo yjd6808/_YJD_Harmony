@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <SteinsGate/Research/SGAction.h>
+#include <SteinsGate/Research/SGGunnerAction.h>
 
-class SGGunnerIdle : public SGAction {
+class SGGunnerIdle : public SGGunnerAction {
 public:
 	SGGunnerIdle(SGPlayer* player, SGActionInfo* actionInfo);
 

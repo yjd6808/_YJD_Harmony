@@ -5,7 +5,7 @@
 #pragma once
 
 #include <SteinsGate/Common/Engine/GridLayer.h>
-#include <SteinsGate/Research/Tutturu.h>
+
 #include <SteinsGate/Research/SGMapLayer.h>
 
 class GameScene : cocos2d::Scene

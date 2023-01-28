@@ -8,6 +8,8 @@
 
 #include "SGPlayer.h"
 
+#include <SteinsGate/Research/SGCharacterBaseInfo.h>
+
 SGPlayer::SGPlayer()
 	: m_pMapLayer(nullptr)
 	, m_pCharacter(nullptr)

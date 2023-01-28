@@ -19,7 +19,7 @@
 #include <SteinsGate/Research/SGMapInfo.h>
 
 
-struct SGDataManager
+class SGDataManager
 {
 public:
 	void LoadAllConfigs();
@@ -33,6 +33,10 @@ public:
 		}
 		return loader;
 	}
+
+	SGDataManager();
+	~SGDataManager();
+	
 
 	SGMonsterInfo* getMonsterInfo(int mobCode);
 	SGActionInfo* getActionInfo(int actionCode);
@@ -56,7 +60,7 @@ private:
 
 	SGHashMap<SGString, SGActionInfo*> m_ActionInfoNameMap;
 
-	SGCharacterBaseInfo m_CharacterBaseInfoMap[CharacterType::Max];
+	SGCharacterBaseInfo* m_CharacterBaseInfoMap[CharacterType::Max];
 };
 
 

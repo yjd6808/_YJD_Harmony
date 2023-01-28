@@ -28,8 +28,8 @@ public:
 	void updateGravity(float dt);
 	void updateFriction(float dt);
 
-	void addForceX(float force);
-	void addForceY(float force);
+	float addForceX(float force);
+	float addForceY(float force);
 
 	float removeForceX();
 	float removeForceY();

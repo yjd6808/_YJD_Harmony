@@ -254,6 +254,7 @@ void SGMapLayer::update(float dt) {
 	updateActors(dt);
 	updatePlayerProjectiles(dt);
 	cleanUpActors();	// 마지막에 무조건 호출
+
 }
 
 void SGMapLayer::updateZOrder(float dt) {

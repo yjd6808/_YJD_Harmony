@@ -74,3 +74,7 @@ using SGText = cocos2d::ui::Text;
 using SGEventKeyboard = cocos2d::EventKeyboard;
 using SGEvent = cocos2d::Event;
 using SGRandom = cocos2d::RandomHelper;
+using SGDirector = cocos2d::Director;
+using SGColor3B = cocos2d::Color3B;
+using SGColor4B = cocos2d::Color4B;
+using SGColor4F = cocos2d::Color4F;

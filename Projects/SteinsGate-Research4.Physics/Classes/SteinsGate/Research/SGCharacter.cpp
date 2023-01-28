@@ -10,8 +10,9 @@
 
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGActorSprite.h>
-#include <SteinsGate/Research/SGAnimationDefine.h>
+#include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGPlayer.h>
+
 #include <SteinsGate/Common/Engine/SGRectEx.h>
 
 USING_NS_JC;

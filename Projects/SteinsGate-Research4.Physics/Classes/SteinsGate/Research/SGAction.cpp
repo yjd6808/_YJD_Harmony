@@ -19,8 +19,10 @@
 SGAction::SGAction(SGPlayer* player, SGActionInfo* actionInfo)
 	: m_pPlayer(player)
 	, m_pActionInfo(actionInfo)
-	, m_bMoveableX(m_pActionInfo->Moveable)
-	, m_bMoveableY(m_pActionInfo->Moveable)
+	, m_bMoveablePositiveX(m_pActionInfo->Moveable)
+	, m_bMoveablePositiveY(m_pActionInfo->Moveable)
+	, m_bMoveableNegativeX(m_pActionInfo->Moveable)
+	, m_bMoveableNegativeY(m_pActionInfo->Moveable)
 	, m_bCancelable(m_pActionInfo->ForceCancelable)
 	, m_fMoveSpeedFPSX(m_pActionInfo->SpeedX)
 	, m_fMoveSpeedFPSY(m_pActionInfo->SpeedY)
@@ -81,8 +83,10 @@ void SGAction::onActionEnd() {
 }
 
 void SGAction::setMoveable(bool moveable) {
-	m_bMoveableX = moveable;
-	m_bMoveableY = moveable;
+	m_bMoveablePositiveX = moveable;
+	m_bMoveablePositiveY = moveable;
+	m_bMoveableNegativeX = moveable;
+	m_bMoveableNegativeY = moveable;
 }
 
 void SGAction::runFrameEvent(FrameEventType_t frameEventType, int frameEventId) {

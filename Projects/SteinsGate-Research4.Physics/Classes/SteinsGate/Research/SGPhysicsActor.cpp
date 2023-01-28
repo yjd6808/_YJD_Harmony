@@ -131,14 +131,16 @@ void SGPhysicsActor::updateFriction(float dt) {
 
 
 
-void SGPhysicsActor::addForceX(float force) {
+float SGPhysicsActor::addForceX(float force) {
+	float fBefore = m_fVelocityX;
 	m_fVelocityX += force;
+	return fBefore;
 }
 
-void SGPhysicsActor::addForceY(float force) {
-	float ff = m_fVelocityY;
+float SGPhysicsActor::addForceY(float force) {
+	float fBefore = m_fVelocityY;
 	m_fVelocityY += force;
-	Log("기존 힘: %.1f, 더한 힘: %.1f, 결과 : %.1f\n", ff, force, m_fVelocityY);
+	return fBefore;
 }
 
 float SGPhysicsActor::removeForceX() {

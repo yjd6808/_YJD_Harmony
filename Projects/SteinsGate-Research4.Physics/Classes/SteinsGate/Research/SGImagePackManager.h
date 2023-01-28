@@ -43,7 +43,7 @@ private:
 	
 	SGImagePack* m_LoadedPackages[MaxNpkFileCount_v]{};
 	SGImagePack* m_AvatarPacks[CharacterType::Max][AvatarType::Max]{};
-	SGImagePack* m_WeaponPacks[CharacterType::Max][WeaponType::Max]{};
+	SGImagePack* m_WeaponPacks[CharacterType::Max][5]{};
 	int m_iLoadedPackageCount{};
 };
 

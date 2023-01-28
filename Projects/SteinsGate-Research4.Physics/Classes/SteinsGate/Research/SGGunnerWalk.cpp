@@ -12,7 +12,7 @@
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
 SGGunnerWalk::SGGunnerWalk(SGPlayer* player, SGActionInfo* actionInfo)
-	: SGAction(player, actionInfo) {}
+	: SGGunnerAction(player, actionInfo) {}
 
 void SGGunnerWalk::onActionBegin() {
 	m_pPlayer->getCharacter()->runAnimation(GUNNER_ANIMATION_WALK);

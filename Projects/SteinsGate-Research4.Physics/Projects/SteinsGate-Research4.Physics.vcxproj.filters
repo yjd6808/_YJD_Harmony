@@ -189,6 +189,9 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerHit.cpp">
       <Filter>src\Player\Action\Gunner</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerAction.cpp">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
@@ -368,6 +371,9 @@
       <Filter>src\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerHit.h">
+      <Filter>src\Player\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerAction.h">
       <Filter>src\Player\Action\Gunner</Filter>
     </ClInclude>
   </ItemGroup>

@@ -50,7 +50,7 @@ private:
 	SGHashMap<SGString, int> m_AvatarPartNameToTypeMap;
 	SGHashMap<int, SGString> m_AvatarPrefix[CharacterType::Max];
 	SGString m_AvatarPackName[CharacterType::Max][AvatarType::Max];	
-	SGString m_WeaponPackName[CharacterType::Max][WeaponType::Max];
+	SGString m_WeaponPackName[CharacterType::Max][5];
 	SGTexture* m_pDefaultTexture;
 	
 };

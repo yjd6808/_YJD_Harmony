@@ -28,6 +28,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Engine\GridLayer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\Engine\SGColor.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Engine\SGRandomEx.cpp">
       <SubType>
       </SubType>
@@ -39,6 +40,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\GridLayer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Engine\SGColor.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\SGRectEx.h">
       <SubType>
       </SubType>

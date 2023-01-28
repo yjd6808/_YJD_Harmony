@@ -10,10 +10,10 @@
 
 
 
-#include <SteinsGate/Research/SGAction.h>
+#include <SteinsGate/Research/SGGunnerAction.h>
 
 class SGActorSprite;
-class SGGunnerGunShot : public SGAction {
+class SGGunnerGunShot : public SGGunnerAction {
 public:
 	SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo);
 

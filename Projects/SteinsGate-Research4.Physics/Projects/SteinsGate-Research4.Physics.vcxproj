@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerAction.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerHit.cpp">
       <SubType>
       </SubType>
@@ -193,6 +197,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartSprite.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerAction.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerGunShot.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerHit.h">
       <SubType>

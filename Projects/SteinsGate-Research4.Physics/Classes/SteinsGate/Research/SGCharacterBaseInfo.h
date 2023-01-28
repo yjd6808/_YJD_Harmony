@@ -2,7 +2,6 @@
  * 작성자: 윤정도
  * 생성일: 1/20/2023 11:37:58 AM
  * =====================
- *
  */
 
 
@@ -23,9 +22,6 @@ struct SGCharacterBaseInfo
 	int HPLevelUp;
 	int MPLevelUp;
 	int LevelUpStat;
-	int ShotCount[WeaponType::Max];
-	int JumpShotCount[WeaponType::Max];
-	float AttackSpeed[WeaponType::Max];
 	float JumpForce;
 	float SlidingForce;
 	int DefaultVisualZOrder[VisualType::Max];
@@ -33,4 +29,15 @@ struct SGCharacterBaseInfo
 	int DefaultVisualImgIndex[VisualType::Max];
 	SGThicknessBox ThicknessBox;
 	WeaponType_t DefaultWeaponType;
+};
+
+
+struct SGGunnerBaseInfo : SGCharacterBaseInfo
+{
+	int ShotCount[GunnerWeaponType::Max];				// 지상 공격 횟수
+	int JumpShotCount[GunnerWeaponType::Max];			// 점프 공격 횟수
+	float AttackSpeed[GunnerWeaponType::Max];			// 공속
+	float JumpShotForceX[GunnerWeaponType::Max];		// 점프 공격 X 반동
+	float JumpShotForceY[GunnerWeaponType::Max];		// 점프 공격 Y 반동
+	float JumpShotMoveSpeedX[GunnerWeaponType::Max];	// 점프 공격 X 반동스피드
 };

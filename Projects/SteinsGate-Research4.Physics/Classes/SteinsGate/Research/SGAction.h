@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/SGActionInfo.h>
 
 struct SGActionInfo;
@@ -44,7 +43,7 @@ public:
 
 	virtual bool isComboAction() { return false; }
 
-	void setMoveable(bool moveable);
+	
 
 	int getActionCode()  { return m_pActionInfo->Code; }
 	const SGString& getActionName() { return m_pActionInfo->ActionName; }
@@ -53,10 +52,20 @@ public:
 	float getMoveSpeedY() { return m_fMoveSpeedFPSY; }
 
 	bool isForceCancelable() { return m_bCancelable; }
-	bool isMoveableX() { return m_bMoveableX; }
-	bool isMoveableY() { return m_bMoveableY; }
+	bool isMovealbe() { return
+		m_bMoveablePositiveX && 
+		m_bMoveablePositiveY && 
+		m_bMoveableNegativeX &&
+		m_bMoveableNegativeY; }
+
+	bool isMoveablePositiveX() { return m_bMoveablePositiveX; }
+	bool isMoveablePositiveY() { return m_bMoveablePositiveY; }
+	bool isMoveableNegativeX() { return m_bMoveableNegativeX; }
+	bool isMoveableNegativeY() { return m_bMoveableNegativeY; }
 
 	void runFrameEvent(FrameEventType_t frameEventType, int frameEventId);
+
+	void setMoveable(bool moveable);
 
 	
 protected:
@@ -65,8 +74,12 @@ protected:
 	SGActionInfo* m_pActionInfo;
 
 	// 자체 필드
-	bool m_bMoveableX;			
-	bool m_bMoveableY;			
+	bool m_bMoveablePositiveX;
+	bool m_bMoveablePositiveY;
+
+	bool m_bMoveableNegativeX;
+	bool m_bMoveableNegativeY;
+
 	bool m_bCancelable;			
 	float m_fMoveSpeedFPSX;		
 	float m_fMoveSpeedFPSY;		

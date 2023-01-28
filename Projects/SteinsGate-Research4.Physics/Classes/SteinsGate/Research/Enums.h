@@ -299,6 +299,16 @@ SEnumEnd(FrameEventType)
 
 
 
+SEnumBegin(GunnerWeaponType)
+Begin,
+Auto = Begin,
+Revolver,
+Bowgun,
+Musket,
+HandCannon,
+Max
+SEnumEnd(GunnerWeaponType)
+
 
 SEnumBegin(WeaponType)
 Begin,

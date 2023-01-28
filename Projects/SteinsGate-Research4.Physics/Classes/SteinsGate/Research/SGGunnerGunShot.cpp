@@ -13,11 +13,12 @@
 #include <SteinsGate/Research/SGProjectileDefine.h>
 
 SGGunnerGunShot::SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo)
-	: SGAction(player, actionInfo) {}
+	: SGGunnerAction(player, actionInfo) {}
 
-void SGGunnerGunShot::onActionBegin() { 
-	m_bMoveableX = false;
-	m_bMoveableY = false;
+void SGGunnerGunShot::onActionBegin() {
+	SGGunnerAction::onActionBegin();
+
+	setMoveable(false);
 	m_bShotEnd = false;
 	m_bDownShotKeyPressedFirst = false;
 	m_bDownShotKeyPressed = false;
@@ -25,8 +26,7 @@ void SGGunnerGunShot::onActionBegin() {
 	m_bCancelable = false;
 	m_bFinalShot = false;
 	m_iContinuosCount = 0;
-
-	m_iRightShotCount = m_pPlayer->getCharacter()->getBaseInfo()->ShotCount[WeaponType::Auto];
+	m_iRightShotCount = m_pBaseInfo->ShotCount[m_eWeaponType];
 
 
 	SGPlayerController* pController = m_pPlayer->getController();

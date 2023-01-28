@@ -14,36 +14,37 @@
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
 #include <SteinsGate/Research/SGActionDefine.h>
+#include <SteinsGate/Research/SGCharacterBaseInfo.h>
 
 SGGunnerJump::SGGunnerJump(SGPlayer* player, SGActionInfo* actionInfo)
-	: SGAction(player, actionInfo) {}
-
+	: SGGunnerAction(player, actionInfo) {}
 
 // #define GUNNER_ANIMATION_JUMP_START					14
-// #define GUNNER_ANIMATION_JUMP_UP					15
+// #define GUNNER_ANIMATION_JUMP_UP						15
 // #define GUNNER_ANIMATION_JUMP_DOWN					16
 // #define GUNNER_ANIMATION_JUMP_END					17
 // 
-// #define GUNNER_ANIMATION_JUMP_SHOT_BEGIN			18
+// #define GUNNER_ANIMATION_JUMP_SHOT_BEGIN				18
 // #define GUNNER_ANIMATION_JUMP_SHOT_SHOT				19
 // #define GUNNER_ANIMATION_JUMP_SHOT_END				20
 
 void SGGunnerJump::onActionBegin() {
+	SGGunnerAction::onActionBegin();
 
 	SGActionManager* pActionManager = m_pPlayer->getActionManager();
 	SGAction* pPrevious = pActionManager->getPreviousAction();
+
+	setMoveable(false);
 
 	m_bJumpUpbegin = false;
 	m_bJumpDownBegin = false;
 	m_bCanFire = false;
 	m_bFireMode = false;
 	m_bWaitForFire = false;
-	m_bMoveableX = false;
-	m_bMoveableY = false;
 	m_bRightFire = false;
 	m_iChargedShotCount = 0;
 	m_iShotCount = 0;
-	m_iMaxShotCount = m_pPlayer->getCharacter()->getBaseInfo()->JumpShotCount[WeaponType::Auto];
+	m_iMaxShotCount = m_pBaseInfo->JumpShotCount[m_eWeaponType];
 
 	if (pPrevious->getActionCode() == GUNNER_ACTION_RUN) {
 		m_fMoveSpeedFPSX = pPrevious->getMoveSpeedX();
@@ -72,9 +73,7 @@ void SGGunnerJump::onAnimationBegin(SGActorPartAnimation* animation, SGFrameText
 	// 착지 경지 효과를 위해 움직임 봉인
 	if (iAnimationCode == GUNNER_ANIMATION_JUMP_END) {
 		setMoveable(false);
-	} else if (iAnimationCode == GUNNER_ANIMATION_JUMP_SHOT_SHOT) {
-		
-	}
+	} 
 }
 
 void SGGunnerJump::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {
@@ -82,9 +81,9 @@ void SGGunnerJump::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTextur
 	SGCharacter* pCharacter = m_pPlayer->getCharacter();
 
 	if (iAnimationCode == GUNNER_ANIMATION_JUMP_START) {
+		setMoveable(true);
+
 		m_bJumpUpbegin = true;
-		m_bMoveableX = true;
-		m_bMoveableY = true;
 		m_bCanFire = true;
 
 		pCharacter->runAnimation(GUNNER_ANIMATION_JUMP_UP);
@@ -109,11 +108,10 @@ void SGGunnerJump::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* f
 	SGCharacter* pCharacter = m_pPlayer->getCharacter();
 	int iFrameIndexInAnimation = animation->getFrameIndexInAnimation();
 
-	if (iFrameIndexInAnimation == 1) {
-		shot(pCharacter);
-	} else if (iFrameIndexInAnimation == 2) {
-		m_bWaitForFire = true;
-	}
+	// jump_shot_shot 73번 인덱스 호출완료시
+	if (iFrameIndexInAnimation == 1)
+		if (!shot(pCharacter))		
+			m_bWaitForFire = true; // 시간내로 총을 못쏜 경우에대한 처리, 공중에선 쏠 수 있는 횟수만 여유롭다면 언제든지 마음대로 계속 총을 쏠 수 있다.
 }
 
 void SGGunnerJump::onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
@@ -135,7 +133,7 @@ void SGGunnerJump::onKeyPressed(SGPlayerController* controller, SGEventKeyboard:
 		pCharacter->runAnimation(GUNNER_ANIMATION_JUMP_SHOT_BEGIN);
 		m_bFireMode = true;
 	}
-
+	
 	if (m_bWaitForFire) {
 		shot(pCharacter);
 		m_bWaitForFire = false;
@@ -162,74 +160,125 @@ void SGGunnerJump::updateJumpDown(SGCharacter* character, float dt) {
 
 	// Step 2. 하강 중
 	if (m_bJumpDownBegin && character->getPositionActorY() == 0) {
-		Log("애니메이션 종료");
 		character->runAnimation(GUNNER_ANIMATION_JUMP_END);
 		m_bJumpDownBegin = false;
 	}
 }
 
 
-void SGGunnerJump::shot(SGCharacter* character) {
+bool SGGunnerJump::shot(SGCharacter* character) {
 	if (m_iChargedShotCount <= 0) 
-		return;
+		return false;
 
 	if (m_iShotCount >= m_iMaxShotCount)
-		return;
+		return false;
 
 	m_iShotCount++;
 	--m_iChargedShotCount;
-
-	SGPlayerController* pController = m_pPlayer->getController();
-	SpriteDirection_t eDirection = character->getSpriteDirection();
+	m_bRightFire = !m_bRightFire;		// 좌/우 토글
 	character->runAnimation(GUNNER_ANIMATION_JUMP_SHOT_SHOT);
-
-	if (eDirection == SpriteDirection::Right) {
-		if (pController->isKeyPressed(ControlKey::Left)) {
-			m_fMoveSpeedFPSX = 225;
-		} else if (pController->isKeyPressed(ControlKey::Right)) {
-			m_fMoveSpeedFPSX = 0;
-		} else {
-			m_fMoveSpeedFPSX = 0.0f;
-
-			character->removeForceX();
-			character->addForceX(-50.0f);
-		}
-	} else if (eDirection == SpriteDirection::Left) {
-		if (pController->isKeyPressed(ControlKey::Right)) {
-			m_fMoveSpeedFPSX = 225;
-		} else if (pController->isKeyPressed(ControlKey::Left)) {
-			m_fMoveSpeedFPSX = 0;
-		} else {
-			m_fMoveSpeedFPSX = 0.0f;
-			character->removeForceX();
-			character->addForceX(50.0f);
-		}
-	} else {
-		int a = 40;
-	}
-
-	float fRemovedYForce = character->removeForceY();
-
-	if (fRemovedYForce > 0.0f) {
-		character->addForceY(100.0f);
-	}
-
 	
+	reboundX(character);			// X축 반동
+	reboundY(character);			// Y축 반동
+	createBullet();
+
+	return true;
+}
+
+
+void SGGunnerJump::reboundX(SGCharacter* character) {
+	
+	SpriteDirection_t eDirection = character->getSpriteDirection();
+
+	// 반동 초기화
+	character->removeForceX();
+
+	// 1. 우측키를 누른 상태
+	switch (eDirection) {
+	case SpriteDirection::Right:	reboundXLeft(character);	break;	// 우측으로 바라보고 있으면 좌측 반동
+	case SpriteDirection::Left:		reboundXRight(character);	break;	// 좌측으로 바라보고 있으면 우측 반동
+	default: DebugAssertMessage(false, "방향이 도대체 어디에요?");
+	}
+}
+
+void SGGunnerJump::reboundXLeft(SGCharacter* character) {
+	SGPlayerController* pController = m_pPlayer->getController();
+
+
+	/*
+	 * 생각 정리.
+	 * 1. 우측으로 총을 쏠때 우측키를 누른 상태면 아무 것도 없음
+	 * 2. 우측으로 총을 쏠때 아무키를 안누른 상태면 X 반동만 있어야함
+	 * 3. 우측으로 총을 쏠때 왼쪽 키를 누른 상태면 X 반동 + 이동속도 추가
+	 * 코드로 옮기자.
+	 */
+
+	// 우측으로 한번이라도 쏜 이후부터는 우측 방향 이동 불가능
+	m_bMoveablePositiveX = false;
+	m_fMoveSpeedFPSX = 0.0f;
+
+	if (pController->isKeyPressed(ControlKey::Right)) {
+		return;
+	}
+
+	if (!pController->isMoveKeyPressed()) {
+		character->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType] * -1);
+		return;
+	}
+
+	if (pController->isKeyPressed(ControlKey::Left)) {
+		character->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType] * -1);
+		m_fMoveSpeedFPSX = m_pBaseInfo->JumpShotMoveSpeedX[m_eWeaponType];
+	}
+}
+
+void SGGunnerJump::reboundXRight(SGCharacter* character) {
+	SGPlayerController* pController = m_pPlayer->getController();
+
+	m_bMoveableNegativeX = false;
+	m_fMoveSpeedFPSX = 0.0f;
+
+	if (pController->isKeyPressed(ControlKey::Left)) {
+		return;
+	}
+
+	if (!pController->isMoveKeyPressed()) {
+		character->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType]);
+		return;
+	}
+
+	if (pController->isKeyPressed(ControlKey::Right)) {
+		character->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType]);
+		m_fMoveSpeedFPSX = m_pBaseInfo->JumpShotMoveSpeedX[m_eWeaponType];
+	}
+}
+
+
+
+void SGGunnerJump::reboundY(SGCharacter* character) {
+	// 중력 역행
+	float fRemovedYForce = character->removeForceY();
+	if (fRemovedYForce > 0.0f) {
+		character->addForceY(m_pBaseInfo->JumpShotForceY[m_eWeaponType]);
+	}
+
+}
+
+void SGGunnerJump::createBullet() {
 
 	// 거너 총 종류에따라 프로젝틸 혹은 히트박스 생성
-	// 일단 오토건 기준
-	WeaponType_t ePlayerWeaponType = WeaponType::Auto;
-	FrameEventType_t eFrameEventType = WeaponType::FrameEventType[ePlayerWeaponType];
+	FrameEventType_t eFrameEventType = WeaponType::FrameEventType[m_eWeaponType];
 
 	int iFrameEventId = -1;
 
 	if (m_bRightFire) {
-		switch (ePlayerWeaponType) {
+		switch (m_eWeaponType) {
 		case WeaponType::Auto: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
 		default: DebugAssertMessage(false, "총 종류가 이상합니다. (1)");
 		}
-	} else {
-		switch (ePlayerWeaponType) {
+	}
+	else {
+		switch (m_eWeaponType) {
 		case WeaponType::Auto: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
 		default: DebugAssertMessage(false, "총 종류가 이상합니다. (2)");
 		}
@@ -237,6 +286,4 @@ void SGGunnerJump::shot(SGCharacter* character) {
 
 	DebugAssertMessage(iFrameEventId != -1, "프레임 이벤트 ID가 설정되지 않았습니다.");
 	runFrameEvent(eFrameEventType, iFrameEventId);
-	m_bRightFire = !m_bRightFire;
-
 }

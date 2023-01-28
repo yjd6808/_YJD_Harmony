@@ -74,11 +74,11 @@ void SGGlobal::initialize() {
 		m_AvatarPackName[CharacterType::Gunner][VisualType::Cap] = "sprite_character_gunner_equipment_avatar_cap.NPK";
 		m_AvatarPackName[CharacterType::Gunner][VisualType::Belt] = "sprite_character_gunner_equipment_avatar_belt.NPK";
 
-		m_WeaponPackName[CharacterType::Gunner][WeaponType::Auto] = "sprite_character_gunner_equipment_weapon_auto.NPK";
-		m_WeaponPackName[CharacterType::Gunner][WeaponType::Bowgun] = "sprite_character_gunner_equipment_weapon_bowgun.NPK";
-		m_WeaponPackName[CharacterType::Gunner][WeaponType::HandCannon] = "sprite_character_gunner_equipment_weapon_hcan.NPK";
-		m_WeaponPackName[CharacterType::Gunner][WeaponType::Musket] = "sprite_character_gunner_equipment_weapon_musket.NPK";
-		m_WeaponPackName[CharacterType::Gunner][WeaponType::Revolver] = "sprite_character_gunner_equipment_weapon_rev.NPK";
+		m_WeaponPackName[CharacterType::Gunner][GunnerWeaponType::Auto] = "sprite_character_gunner_equipment_weapon_auto.NPK";
+		m_WeaponPackName[CharacterType::Gunner][GunnerWeaponType::Bowgun] = "sprite_character_gunner_equipment_weapon_bowgun.NPK";
+		m_WeaponPackName[CharacterType::Gunner][GunnerWeaponType::HandCannon] = "sprite_character_gunner_equipment_weapon_hcan.NPK";
+		m_WeaponPackName[CharacterType::Gunner][GunnerWeaponType::Musket] = "sprite_character_gunner_equipment_weapon_musket.NPK";
+		m_WeaponPackName[CharacterType::Gunner][GunnerWeaponType::Revolver] = "sprite_character_gunner_equipment_weapon_rev.NPK";
 	}
 }
 
