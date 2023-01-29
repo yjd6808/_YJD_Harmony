@@ -10,19 +10,6 @@ struct A
 
 
 int main() {
-	
-	{
-		
-		A Chlild;
-		Chlild.Data1 = 0;
-		Chlild.Data2 = 1;
-		Chlild.Data3.PushBack("abcd");
-
-		Vector<A> Parent;
-		Parent.PushBack(Chlild);
-		int c = 40;
-	}
-
 
 	SafeConsole::WriteLine("=================================================");
 	return 0;

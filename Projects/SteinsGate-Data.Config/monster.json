@@ -7,6 +7,7 @@
     "__comment__4": "몬스터 애니메이션 기본 코드는 고정임 idle은 무조건 1, attack은 2, hit 3, die 4, walk 5 ",
     "__comment__6": "인덱스, 딜레이, 발생 이벤트 타입1, 발생 이벤트 ID1, 발생 이벤트타입2, 발생 이벤트 ID2 ...",
     "__comment__7": "이벤트 종류: projectile(1), hitbox(2), custom_event(3)",
+    "__comment__8": "fall_down_idx: 공중에서 hit -> die 자연스러운 전환을 위해 die 애니메이션 시작 ",
 
     "monsters": [
         {
@@ -20,6 +21,9 @@
             "armor": 0,
             "magic_armor": 0,
             "enhance_per_level": 110.0,
+            "move_speed_x": 90,
+            "move_speed_y": 45,
+            "fall_down_idx": 3,
             "weight": 200,
             "thickness_box": "0 -50 50 30",
             "parts": [
@@ -61,9 +65,8 @@
                     ]
                 },
                 {
-                    "__comment__4": "맞은 후 정지상태 될떄까지 기다려야함",
                     "code": 3,
-                    "name": "hit",
+                    "name": "hit_small",
                     "loop": false,
                     "frames": [
                         "5 -1"
@@ -71,18 +74,27 @@
                 },
                 {
                     "code": 4,
+                    "name": "hit_big",
+                    "loop": false,
+                    "frames": [
+                        "6 -1"
+                    ]
+                },
+                {
+                    "code": 5,
                     "name": "fall_down",
                     "loop": false,
                     "frames": [
                         "5 100",
                         "6 100",
+                        "7 100",
                         "7 -1",
                         "8 100",
                         "9 100"
                     ]
                 },
                 {
-                    "code": 5,
+                    "code": 6,
                     "name": "walk",
                     "loop": true,
                     "frames": [
@@ -109,6 +121,8 @@
             "armor": 3,
             "magic_armor": 0,
             "enhance_per_level": 110.0,
+            "move_speed_x": 90,
+            "move_speed_y": 45,
             "weight": 200,
             "thickness_box": "0 -50 50 30",
             "parts": [
@@ -159,18 +173,27 @@
                 },
                 {
                     "code": 4,
+                    "name": "hit_big",
+                    "loop": false,
+                    "frames": [
+                        "6 -1"
+                    ]
+                },
+                {
+                    "code": 5,
                     "name": "fall_down",
-                    "loop": true,
+                    "loop": false,
                     "frames": [
                         "5 100",
                         "6 100",
+                        "7 100",
                         "7 -1",
                         "8 100",
                         "9 100"
                     ]
                 },
                 {
-                    "code": 5,
+                    "code": 6,
                     "name": "walk",
                     "loop": true,
                     "frames": [

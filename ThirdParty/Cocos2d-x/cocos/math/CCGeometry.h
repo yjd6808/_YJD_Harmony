@@ -188,7 +188,7 @@ public:
     // 부족한 기능 추가
     Vec2 getRightTop() const { return { origin.x + size.width, origin.y + size.height }; }
     Vec2 getLeftBottom() const { return origin; }
-    Vec2 getMid() const { return { origin.x + size.width / 2, origin.x + size.height / 2 }; }
+    Vec2 getMid() const { return { origin.x + size.width / 2, origin.y + size.height / 2 }; }
     float getOriginX() const { return origin.x; }
     float getOriginY() const { return origin.y; }
     float getWidth() const { return size.width; }

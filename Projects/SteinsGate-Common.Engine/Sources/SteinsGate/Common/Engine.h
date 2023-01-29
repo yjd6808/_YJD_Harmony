@@ -14,6 +14,7 @@
 #include <JCore/Assert.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Define.h>
+#include <JCore/Math.h>
 #include <JCore/Primitives/StringUtil.h>
 
 #include <JCore/Utils/Console.h>
@@ -35,6 +36,7 @@
 #define USING_NS_CCUI using namespace cocos2d::ui
 
 #define SG_FLT_EPSILON	0.0001f
+#define SG_PI			3.141592f
 
 using SGConsole = JCore::SafeConsole;
 using SGString = JCore::String;
@@ -56,7 +58,7 @@ using SGSet = std::set<T, Predicate>;
 template <typename TKey, typename TValue, typename Predicate = std::less<TKey>>
 using SGMap = std::map<TKey, TValue, Predicate>;
 
-
+using SGMath = JCore::Math;
 
 // 코코스
 using SGNode = cocos2d::Node;

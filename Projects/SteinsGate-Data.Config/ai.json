@@ -1,0 +1,25 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "AI 설정",
+    "__comment__2": "몬스터에 주입하기위한 AI 정보",
+    "__comment__3": "wander_prob: 걷기, 휴식(제외)",
+    "__comment__4": "track_prob: 배회, 공격, 추격(제외)",
+    "__comment__5": "angry_prob: 배회, 추격, 공격(데뢰)",
+
+    "ai": [
+        {
+            "code": 1,
+            "wander_prob": "50",
+            "track_prob": "70 20",
+            "angry_prob": "20 20",
+            "idle_time": "1.0 4.0",
+            "wander_walk_time": "3.0 5.0",
+            "follow_walk_time": "3.0 5.0",
+            "sight_radious": 450.0,
+            "attack_radious": 50.0,
+            "force_track": false,
+            "force_angry": false
+           
+        }
+    ]
+}

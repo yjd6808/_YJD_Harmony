@@ -13,5 +13,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\RectPoly.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\SGRandomEx.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine\SGColor.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Engine\SGVec2Ex.h" />
   </ItemGroup>
 </Project>
