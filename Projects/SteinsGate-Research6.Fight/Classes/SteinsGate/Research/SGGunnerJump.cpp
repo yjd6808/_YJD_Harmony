@@ -174,7 +174,7 @@ void SGGunnerJump::updateJumpDown(SGCharacter* character, float dt) {
 		return;
 
 	// Step 2. 하강 중
-	if (m_bJumpDownBegin && character->getPositionActorY() == 0) {
+	if (m_bJumpDownBegin && character->isOnTheGround()) {
 		character->runAnimation(GUNNER_ANIMATION_JUMP_END);
 		m_bJumpDownBegin = false;
 	}

@@ -13,7 +13,7 @@
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
 
-#define MaxWaitRightShotTime 0.1f // (12fps)
+#define MaxWaitRightShotTime 0.1f // (6fps)
 
 // #define GUNNER_ANIMATION_SHOT_RIGHT_BEGIN			6
 // #define GUNNER_ANIMATION_SHOT_RIGHT_SHOT				7

@@ -86,7 +86,6 @@
 
             "gravity": 900.0,
             "friction": 1500.0,
-            "elasticity_down_time": 0.4,
             "elasticity_divided_force": 4.0
         }
     ]

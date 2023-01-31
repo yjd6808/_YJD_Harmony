@@ -54,7 +54,6 @@ void SGActorPartAnimation::init() {
 	m_fRunningFrameTime = 0.0f;
 	// m_fPlaySpeed = 1.0f;
 	m_iFrameIndexInAnimation = 0;
-	m_fPauseDelay = 0.0f;
 	m_bFinished = false;
 	m_bZeroFramePaused = false;
 	m_bPaused = false;
@@ -69,6 +68,8 @@ void SGActorPartAnimation::run(int frameIndexInAnimation) {
 	init();
 
 	m_iFrameIndexInAnimation = frameIndexInAnimation;
+	if (m_iFrameIndexInAnimation == 1)
+		int a = 40;
 
 	SGFrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
 	float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation]->Delay;
@@ -153,7 +154,7 @@ void SGActorPartAnimation::updateAnimation(float currentFrameDelay, SGFrameTextu
 	// Step 1. 프레임 시간 체크
 	m_fRunningFrameTime += dt;
 
-	if (m_fRunningFrameTime < currentFrameDelay + m_fPauseDelay) {
+	if (m_fRunningFrameTime < (currentFrameDelay + m_fPauseDelay)) {
 		return;
 	}
 
@@ -250,6 +251,10 @@ int SGActorPartAnimation::getPartIndex() {
 SGFrameInfo* SGActorPartAnimation::getFrameInfo(int frameIndexInAnimation) {
 	DebugAssertMessage(frameIndexInAnimation >= 0 && frameIndexInAnimation < m_pAnimationInfo->Frames.Size(), "애니메이션 내 프레임 인덱스가 이상합니다.");
 	return m_pAnimationInfo->Frames[frameIndexInAnimation];
+}
+
+SGFrameInfo* SGActorPartAnimation::getRunningFrameInfo() {
+	return m_pAnimationInfo->Frames[m_iFrameIndexInAnimation];
 }
 
 SGFrameTexture* SGActorPartAnimation::changeTexture(int frameIndexInAnimation) {

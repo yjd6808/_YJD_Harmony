@@ -11,10 +11,7 @@
 #include "SGAction.h"
 
 #include <SteinsGate/Research/SGPlayer.h>
-#include <SteinsGate/Research/SGAction.h>
 #include <JCore/Utils/Console.h>
-
-#include "SGMapLayer.h"
 
 SGAction::SGAction(SGPlayer* player, SGActionInfo* actionInfo)
 	: m_pPlayer(player)
@@ -26,7 +23,14 @@ SGAction::SGAction(SGPlayer* player, SGActionInfo* actionInfo)
 	, m_bCancelable(m_pActionInfo->ForceCancelable)
 	, m_fMoveSpeedFPSX(m_pActionInfo->SpeedX)
 	, m_fMoveSpeedFPSY(m_pActionInfo->SpeedY)
+	, m_pHitRecorder(nullptr)
 {}
+
+SGAction::~SGAction() {
+	DeleteSafe(m_pHitRecorder);
+
+	Log("%s 액션 소멸\n", m_pActionInfo->ActionName.Source());
+}
 
 void SGAction::play() {
 	// 플레이어가 사용가능한지 체크
@@ -42,51 +46,40 @@ void SGAction::stop() {
 	if (!isForceCancelable())
 		m_pPlayer->getController()->reflectPressedMoveKeys();
 	
-
 	onActionEnd();
 }
 
-void SGAction::onKeyPressed(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {
 
-}
-
-void SGAction::onKeyReleased(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {
-
-}
-
-
-void SGAction::onKeyPressedBefore(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {
-
-}
-
-void SGAction::onKeyReleasedBefore(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {
-
-}
-
+void SGAction::onActionBegin() {}
+void SGAction::onActionEnd() {}
+void SGAction::onKeyPressed(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
+void SGAction::onKeyReleased(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
+void SGAction::onKeyPressedBefore(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
+void SGAction::onKeyReleasedBefore(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
 void SGAction::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {}
 void SGAction::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {}
 void SGAction::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {}
 void SGAction::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {}
-
-
-void SGAction::onActionBegin() {
-#ifdef DebugMode
-	if (isComboAction()) {
-		SGAction* pComboAction = (SGAction*)this;
-		// Log("%s", pComboAction->getComboKeys().String().Source());
-	}
-#endif
-}
-
-
-void SGAction::onActionEnd() {
-}
 
 void SGAction::setMoveable(bool moveable) {
 	m_bMoveablePositiveX = moveable;
 	m_bMoveablePositiveY = moveable;
 	m_bMoveableNegativeX = moveable;
 	m_bMoveableNegativeY = moveable;
+}
+
+void SGAction::initHitRecorder(
+	const SGHitSingleCallbackFn& sigleHitFn, 
+	const SGHitMultiCallbackFn& multiHitFn, 
+	int hitListSize, 
+	int alreadyHitListSize)
+{
+	if (m_pHitRecorder)
+		return;
+
+	m_pHitRecorder = new SGHitRecorder(m_pPlayer->getCharacter(), hitListSize, alreadyHitListSize);
+	m_pHitRecorder->setSingleHitCallback(sigleHitFn);
+	m_pHitRecorder->setMultiHitCallback(multiHitFn);
 }
 
 void SGAction::runFrameEvent(FrameEventType_t frameEventType, int frameEventId) {

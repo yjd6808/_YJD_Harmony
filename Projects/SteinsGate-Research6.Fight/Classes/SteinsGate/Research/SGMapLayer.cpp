@@ -112,68 +112,49 @@ bool SGMapLayer::isCollideWithObstacles(const SGRect& rect) {
 	return false;
 }
 
-SGActor* SGMapLayer::findNearestEnemyInRadious(SGActor* stdActor, float radious, Out_ float& enemyDist) {
+
+
+SGCharacter* SGMapLayer::findNearestCharacterInRadious(SGActor* stdActor, float radious, Out_ float& enemyDist) {
 	int iAllyFlag = stdActor->getAllyFlag();
 	SGVec2 stdPos = stdActor->getPositionRealCenter();
-	SGActor* enemy = nullptr;
-	bool bFind = false;
+	SGCharacter* character = nullptr;
 	float minDist = FLT_MAX;
 
 	for (int i = 0; i < m_vCharacters.Size(); ++i) {
-		auto pActor = m_vCharacters[i];
+		auto pCharacter = m_vCharacters[i];
 
-		if (pActor == stdActor) 
+		if (pCharacter == stdActor)
 			continue;
 
-		float dist = stdPos.distance(pActor->getPositionRealCenter());
+		float dist = stdPos.distance(pCharacter->getPositionRealCenter());
 
-		if (dist < radious && pActor->getAllyFlag() != iAllyFlag && dist < minDist) {
+		if (dist < radious && pCharacter->getAllyFlag() != iAllyFlag && dist < minDist) {
 			minDist = dist;
-			enemy = pActor;
-			bFind = true;
+			character = pCharacter;
 		}
 	}
-
-	for (int i = 0; i < m_vMonsters.Size(); ++i) {
-		auto pActor = m_vMonsters[i];
-
-		if (pActor == stdActor)
-			continue;
-
-		float dist = stdPos.distance(pActor->getPositionRealCenter());
-
-		if (dist < radious && pActor->getAllyFlag() != iAllyFlag && dist < minDist) {
-			minDist = dist;
-			enemy = pActor;
-			bFind = true;
-		}
-	}
-
-	if (bFind)
-		enemyDist = minDist;
-	else
-		enemyDist = 0;
-
-	return enemy;
+	return character;
 }
 
-SGCharacter* SGMapLayer::findNearestCharacterInRadious(SGActor* stdActor, float radious) {
-	int iAllyFlag = stdActor->getAllyFlag();
-	SGVec2 stdPos = stdActor->getPositionRealCenter();
-	SGCharacter* find = nullptr;
-	float minDist = FLT_MAX;
 
-	for (int i = 0; i < m_vCharacters.Size(); ++i) {
-		auto pActor = m_vCharacters[i];
-		float dist = stdPos.distance(pActor->getPositionRealCenter());
+bool SGMapLayer::collectEnemiesInInstantAttackBox(const SGActorRect& absoluteActorRect, SGVector<SGHitInfo>& hitMonsters) {
 
-		if (dist < radious && dist < minDist) {
-			minDist = dist;
-			find = pActor;
+	bool bFind = false;
+
+	for (int i = 0; i < m_vMonsters.Size(); ++i) {
+		auto pHitTarget = m_vMonsters[i];	// 공격받을 대상
+		SGRect hitRect;
+		SpriteDirection_t eHitDirection;
+
+		// 몬스터 기준으로 플레이어 충돌이라
+		// eHitDirection은 플레이어의 충돌방향이 되므로, 반대로 돌려줘야함.
+		if (pHitTarget->isCollide(absoluteActorRect, eHitDirection, hitRect)) {
+			hitMonsters.PushBack({pHitTarget, SpriteDirection::Reverse[eHitDirection], hitRect, nullptr });
+			bFind = true;
 		}
 	}
 
-	return find;
+	return bFind;
 }
 
 
@@ -203,8 +184,7 @@ void SGMapLayer::runFrameEvent(SGActor* runner, FrameEventType_t frameEventType,
 	if (frameEventType == FrameEventType::Projectile)
 		createProejctile(runner, frameEventId);
 	else if (frameEventType == FrameEventType::AttackBox)
-		createHitbox(runner, frameEventId);
-
+		createAttackBox(runner, frameEventId);
 }
 
 SGCharacter* SGMapLayer::createCharacter(CharacterType_t characterType, float x, float y, SGCharacterInfo& info) {
@@ -230,9 +210,11 @@ SGProjectile* SGMapLayer::createProejctile(SGActor* spawner, int projectileId) {
 	return pProjectile;
 }
 
-void SGMapLayer::createHitbox(SGActor* spawner, int hitBoxId) {
+void SGMapLayer::createAttackBox(SGActor* spawner, int hitBoxId) {
 	
 }
+
+
 
 SGMonster* SGMapLayer::createMonster(int code, int aiCode, float x, float y) {
 	SGDataManager* pDataManager = SGDataManager::getInstance();

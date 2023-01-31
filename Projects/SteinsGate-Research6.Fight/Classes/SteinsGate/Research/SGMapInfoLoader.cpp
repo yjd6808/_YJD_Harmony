@@ -81,7 +81,6 @@ bool SGMapInfoLoader::LoadMapInfo(SGHashMap<int, SGMapInfo>& mapInfoMap) {
 
 		info.Gravity = mapRoot["gravity"].asFloat();
 		info.Friction = mapRoot["friction"].asFloat();
-		info.ElasticityDownTime = mapRoot["elasticity_down_time"].asFloat();
 		info.ElasticityDividedForce = mapRoot["elasticity_divided_force"].asFloat();
 
 		mapInfoMap.Insert(info.Code, Move(info));

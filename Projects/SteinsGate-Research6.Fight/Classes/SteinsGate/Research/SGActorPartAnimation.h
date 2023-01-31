@@ -65,6 +65,7 @@ public:
 	int getPartIndex();
 	int getAnimationCode() { return m_pAnimationInfo->Code; }
 	SGFrameInfo* getFrameInfo(int frameIndexInAnimation);
+	SGFrameInfo* getRunningFrameInfo();
 
 	bool isFinished() { return m_bFinished; }
 	bool isPaused() { return m_bPaused || m_bZeroFramePaused; }

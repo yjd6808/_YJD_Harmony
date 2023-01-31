@@ -9,10 +9,15 @@
 #include "SGGunnerAction.h"
 
 #include <SteinsGate/Research/SGDataManager.h>
+#include <SteinsGate/Research/SGPlayer.h>
 
 SGGunnerAction::SGGunnerAction(SGPlayer* player, SGActionInfo* actionInfo)
 	: SGAction(player, actionInfo)
 {}
+
+SGGunnerAction::~SGGunnerAction() {
+	
+}
 
 void SGGunnerAction::onActionBegin() {
 	m_pBaseInfo = (SGGunnerBaseInfo*)SGDataManager::getInstance()->getCharacterBaseInfo(CharacterType::Gunner);

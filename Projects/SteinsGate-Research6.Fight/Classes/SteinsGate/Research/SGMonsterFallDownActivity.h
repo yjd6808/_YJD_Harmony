@@ -17,8 +17,14 @@ public:
 	SGMonsterFallDownActivity(SGAIActor* actor);
 
 	void onActivityBegin() override;
+	void onActivityEnd() override;
 	void onUpdate(float dt) override;
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
+private:
+	bool m_bBounced;
+	bool m_bDown;
+
+	float m_fDownTime;
 };
 
 

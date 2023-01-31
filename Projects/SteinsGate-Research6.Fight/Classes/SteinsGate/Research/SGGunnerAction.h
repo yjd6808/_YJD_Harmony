@@ -15,9 +15,11 @@
 class SGGunnerAction : public SGAction {
 public:
 	SGGunnerAction(SGPlayer* player, SGActionInfo* actionInfo);
+	~SGGunnerAction() override;
 
 	void onActionBegin() override;
 protected:
+	
 	SGGunnerBaseInfo* m_pBaseInfo;
 	GunnerWeaponType_t m_eWeaponType;
 };

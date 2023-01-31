@@ -13,8 +13,7 @@
 #include <SteinsGate/Common/Engine/SGColor.h>
 
 #include <SteinsGate/Research/SGGlobal.h>
-
-#include "SGMapLayer.h"
+#include <SteinsGate/Research/SGMapLayer.h>
 
 
 USING_NS_CC;
@@ -65,6 +64,10 @@ void SGActor::update(float dt) {
 
 ActorType_t SGActor::getType() const {
 	return m_eActorType;
+}
+
+SGActorRect SGActor::getActorRect() const {
+	return { getThicknessBoxRect(), getHitBox() };
 }
 
 SGThicknessBox SGActor::getThicknessBox() const {
@@ -210,6 +213,11 @@ void SGActor::runAnimation(int animationCode, int startFrameIndexInAnimation) {
 	m_pActorSprite->runAnimation(animationCode, startFrameIndexInAnimation);
 }
 
+void SGActor::pauseAnimation(float delay) {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	m_pActorSprite->pauseAnimation(delay);
+}
+
 void SGActor::runFrameEvent(FrameEventType_t frameEventType, int frameEventId) {
 	m_pBelongedMap->runFrameEvent(this, frameEventType, frameEventId);
 }
@@ -231,10 +239,10 @@ void SGActor::setBackwardDirection() {
 }
 
 bool SGActor::isCollide(SGActor* other, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect) {
-	SGRect thisBox = getThicknessBoxRect();
+	SGRect myThick = getThicknessBoxRect();
 	SGRect otherBox = other->getThicknessBoxRect();
 
-	if (!SGRectEx::intersectY(thisBox, otherBox)) {
+	if (!SGRectEx::intersectY(myThick, otherBox)) {
 		return false;
 	}
 
@@ -242,10 +250,65 @@ bool SGActor::isCollide(SGActor* other, Out_ SpriteDirection_t& otherHitDirectio
 	SGRect targetHit = other->getHitBox();
 
 	if (SGRectEx::intersect(myHit, targetHit, hitRect)) {
-		otherHitDirection = hitRect.getMidX() < targetHit.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
+		otherHitDirection = targetHit.getMidX() > myHit.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
 		return true;
 	}
 
 	return false;
+}
+
+bool SGActor::isCollide(const SGActorRect& otherRect, SpriteDirection_t& otherHitDirection, SGRect& hitRect) {
+	SGRect myThick = getThicknessBoxRect();
+
+	if (!SGRectEx::intersectY(myThick, otherRect.ThicknessRect)) {
+		return false;
+	}
+
+	SGRect myHit = getHitBox();
+
+	if (SGRectEx::intersect(myHit, otherRect.BodyRect, hitRect)) {
+		// otherHitDirection = hitRect.getMidX() < otherRect.BodyRect.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
+		otherHitDirection = otherRect.BodyRect.getMidX() > myHit.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
+		return true;
+	}
+
+	return false;
+}
+
+bool SGActor::isCollide(const SGActorRect& otherRect) {
+	SGRect myThick = getThicknessBoxRect();
+
+	if (!SGRectEx::intersectY(myThick, otherRect.ThicknessRect)) {
+		return false;
+	}
+
+	SGRect myHit = getHitBox();
+	return myHit.intersectsRect(otherRect.BodyRect);
+}
+
+SGActorRect SGActor::convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect) {
+	SGActorRect absoluteActorRect;
+	SGSize spawnerCanvsSize = stdActor->getCanvasSize();
+	SGVec2 spawnerCanvasPos = stdActor->getCanvasPositionReal();
+
+	if (stdActor->getSpriteDirection() == SpriteDirection::Right) {
+		absoluteActorRect.ThicknessRect.origin.x = spawnerCanvasPos.x + relativeRect.ThicknessRect.origin.x;
+		absoluteActorRect.ThicknessRect.origin.y = spawnerCanvasPos.y + relativeRect.ThicknessRect.origin.y;
+
+		absoluteActorRect.BodyRect.origin.x = spawnerCanvasPos.x + relativeRect.BodyRect.origin.x;
+		absoluteActorRect.BodyRect.origin.y = spawnerCanvasPos.y + relativeRect.BodyRect.origin.y;
+	}
+	else {
+		absoluteActorRect.ThicknessRect.origin.x = spawnerCanvasPos.x + (spawnerCanvsSize.width - relativeRect.ThicknessRect.origin.x - relativeRect.ThicknessRect.size.width);
+		absoluteActorRect.ThicknessRect.origin.y = spawnerCanvasPos.y + relativeRect.ThicknessRect.origin.y;
+
+		absoluteActorRect.BodyRect.origin.x = spawnerCanvasPos.x + (spawnerCanvsSize.width - relativeRect.BodyRect.origin.x - relativeRect.ThicknessRect.size.width);
+		absoluteActorRect.BodyRect.origin.y = spawnerCanvasPos.y + relativeRect.BodyRect.origin.y;
+	}
+
+	absoluteActorRect.ThicknessRect.size = relativeRect.ThicknessRect.size;
+	absoluteActorRect.BodyRect.size = relativeRect.BodyRect.size;
+
+	return absoluteActorRect;
 }
 

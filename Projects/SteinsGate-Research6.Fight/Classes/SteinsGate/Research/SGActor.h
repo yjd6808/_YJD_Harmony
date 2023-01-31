@@ -44,6 +44,7 @@ public:
 	void update(float dt) override;				// 자식에서도 오버라이딩시 이거 호출하도록
 
 	ActorType_t getType()					const;
+	SGActorRect getActorRect()				const;
 	SGRect getThicknessBoxRect()			const;
 	SGVec2 getPositionReal()				const;
 	float  getPositionRealX()				const;
@@ -71,15 +72,22 @@ public:
 
 	void runAnimation(int animationCode);
 	void runAnimation(int animationCode, int startFrameIndexInAnimation);
+	void pauseAnimation(float delay);
 	void runFrameEvent(FrameEventType_t frameEventType, int frameEventId);
 
 	void setSpriteDirection(SpriteDirection_t direction);
 	void setForwardDirection();
 	void setBackwardDirection();
 
-	
-	
 	bool isCollide(SGActor* other, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect);
+	bool isCollide(const SGActorRect& otherRect, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect);
+	bool isCollide(const SGActorRect& otherRect);
+
+public:
+	// stdActor기준으로 절대 액터 렉트를 얻도록 해줌
+	static SGActorRect convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect);
+
+
 protected:
 	SGMapLayer* m_pBelongedMap;
 	ActorType_t m_eActorType;

@@ -33,9 +33,9 @@ void SGDataManager::LoadAllConfigs() {
 		SGMapInfoLoader::LoadMapInfo(m_MapInfoMap) &&
 		SGAIInfoLoader::LoadAIInfo(m_AIInfoMap) &&
 		SGAttackDataInfoLoader::LoadAttackDataInfo(m_AttackDataInfoMap)) {
-		Log("==== 모든 기획 파일 로딩완료 ====\n");
+		Log("==== 모든 기획파일 로딩완료 ====\n");
 	} else {
-		DebugAssertMessage(false, "기획 파일로딩 실패");
+		DebugAssertMessage(false, "기획파일 로딩 실패");
 	}
 
 	m_ActionInfoMap.Values().Extension().ForEach([this](SGActionInfo& info) {
@@ -97,7 +97,7 @@ SGAIInfo* SGDataManager::getAIInfo(int aiCode) {
 	return &m_AIInfoMap[aiCode];
 }
 
-SGAttackDataInfo* SGDataManager::getAttackDataInfo(int attackDataCode)
-{
-	return nullptr;
+SGAttackDataInfo* SGDataManager::getAttackDataInfo(int attackDataCode) {
+	DebugAssertMessage(m_AttackDataInfoMap.Exist(attackDataCode), "해당 공격 데이터 정보가 존재하지 않습니다.");
+	return &m_AttackDataInfoMap[attackDataCode];
 }

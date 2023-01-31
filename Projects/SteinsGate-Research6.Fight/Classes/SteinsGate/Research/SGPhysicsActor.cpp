@@ -18,12 +18,28 @@ USING_NS_JC;
 SGPhysicsActor::SGPhysicsActor(ActorType_t type, int code, SGMapLayer* mapLayer)
 	: SGActor(type, code, mapLayer)
 	, m_bUseElasticity(false)
+	, m_bBounced(false)
 	, m_fWeight(0.0f)
 	, m_fUpTime(0.0f)
 	, m_fDownTime(0.0f)
 	, m_fVelocityX(0.0f)
-	, m_fVelocityY(0.0f) {}
+	, m_fVelocityY(0.0f)
+	, m_fPuaseTime(0.0f)
+	, m_fElapsedPausedTime(0.0f)
+{}
 
+
+bool SGPhysicsActor::isPaused() {
+	return m_fElapsedPausedTime < m_fPuaseTime;
+}
+
+bool SGPhysicsActor::isOnTheGround() {
+	return m_pActorSprite->getPositionY() == 0;
+}
+
+bool SGPhysicsActor::isBounced() {
+	return m_bBounced;
+}
 
 void SGPhysicsActor::disableElasticity() {
 	m_bUseElasticity = false;
@@ -36,12 +52,22 @@ void SGPhysicsActor::enableElasticity() {
 void SGPhysicsActor::update(float dt) {
 	SGActor::update(dt);
 
+	updatePauseTime(dt);
 	updatePhysics(dt);
+}
+
+void SGPhysicsActor::updatePauseTime(float dt) {
+	m_fElapsedPausedTime += dt;
+
+	if (m_fElapsedPausedTime >= m_fPuaseTime) {
+		m_fPuaseTime = 0.0f;
+		m_fElapsedPausedTime = 0.0f;
+	}
 }
 
 void SGPhysicsActor::updatePhysics(float dt) {
 
-	if (getType() == ActorType::Monster)
+	if (isPaused())
 		return;
 
 	updateGravity(dt);
@@ -70,14 +96,15 @@ void SGPhysicsActor::updateGravity(float dt) {
 	}
 
 	if (y <= SG_FLT_EPSILON) {
-		if (m_fDownTime >= pMapInfo->ElasticityDownTime && m_bUseElasticity) {
+		if (m_bUseElasticity && !m_bBounced && m_fDownTime > 0.0f) {
 
 			// 반탄력 느낌으로 내려올때 튕겨준다.
 			// 이건 껐다 켰다 할 수 있도록.. m_bUseElasticity를 활용.
 			m_fVelocityY = Math::Abs(m_fVelocityY / pMapInfo->ElasticityDividedForce);
-		}
-		else {
+			m_bBounced = true;
+		} else {
 			m_fVelocityY = 0.0f;
+			m_bBounced = false;
 		}
 
 		m_fDownTime = 0.0f;
@@ -159,6 +186,46 @@ bool SGPhysicsActor::hasForceX() {
 
 bool SGPhysicsActor::hasForceY() {
 	return Math::Abs(m_fVelocityY) >= SG_FLT_EPSILON;
+}
+
+void SGPhysicsActor::hit(const SGHitInfo& hitInfo) {
+	SGAttackDataInfo* pAttackInfo = hitInfo.AttackDataInfo;
+
+	float fForceX = hitInfo.HitDirection == SpriteDirection::Right ? -pAttackInfo->AttackXForce : pAttackInfo->AttackXForce;
+	m_bBounced = false;
+
+	setSpriteDirection(hitInfo.HitDirection);
+	removeForceX();
+	removeForceY();
+
+	// 넘어지는 모션을 취하게 하는 경우
+	if (pAttackInfo->IsFallDownAttack) {
+		addForceX(fForceX);
+		addForceY(pAttackInfo->AttackYForce);
+		return;
+	}
+
+	// 맞는 모션을 취하게 하는 경우
+	// 땅위에 있는 경우 X축 힘만 가한다.
+	if (isOnTheGround()) {
+		addForceX(fForceX);
+		return;
+	}
+
+	// 공중에 있는 경우 Y축 힘만 가한다.
+	addForceY(pAttackInfo->AttackYForce);
+}
+
+void SGPhysicsActor::pause() {
+	pause(FLT_MAX);
+}
+
+void SGPhysicsActor::pause(float time) {
+	m_fPuaseTime = time;
+}
+
+void SGPhysicsActor::resume() {
+	m_fPuaseTime = 0.0f;
 }
 
 Direction_t SGPhysicsActor::getForceXDirection() {

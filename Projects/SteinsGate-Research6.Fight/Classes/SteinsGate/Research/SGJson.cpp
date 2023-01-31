@@ -41,20 +41,30 @@ void SGJson::parseAnimationInfo(Json::Value& animationRoot, SGAnimationInfo& inf
 
 		// 인스턴트 공격 박스외에는 전부 4개의 값만 넣어주면 됨
 		if (iFrameEvent == FrameEventType::AttackBoxInstant) {
-			float instantAttackBoxData[6];
-			SGTextParser::parserFloatNumbers(pInstantAttackBoxSourceOffset, SGStringUtil::Length(pInstantAttackBoxSourceOffset), instantAttackBoxData, 6);
+			float instantAttackBoxData[8];
+
+			SGTextParser::parserFloatNumbers(
+				pInstantAttackBoxSourceOffset, 
+				SGStringUtil::Length(pInstantAttackBoxSourceOffset), 
+				instantAttackBoxData, 
+				8
+			);
 
 			SGFrameInfoAttackBoxInstant* pInfo = new SGFrameInfoAttackBoxInstant{};
 			pInfo->FrameIndex = iFrameIndex;
 			pInfo->Delay = (float)iDelay / 1000.0f;
 			pInfo->FrameEvent = iFrameEvent;
 			pInfo->FrameEventId = iFrameEventId;
-			pInfo->SpwanOffset.x = instantAttackBoxData[0];
-			pInfo->SpwanOffset.y = instantAttackBoxData[1];
-			pInfo->AttackBoxSize.width = instantAttackBoxData[2];
-			pInfo->AttackBoxSize.height = instantAttackBoxData[3];
-			pInfo->ThicknessBoxSize.width = instantAttackBoxData[4];
-			pInfo->ThicknessBoxSize.height = instantAttackBoxData[5];
+
+			pInfo->Rect.ThicknessRect.origin.x = instantAttackBoxData[0];
+			pInfo->Rect.ThicknessRect.origin.y = instantAttackBoxData[1];
+			pInfo->Rect.ThicknessRect.size.width = instantAttackBoxData[2];
+			pInfo->Rect.ThicknessRect.size.height = instantAttackBoxData[3];
+
+			pInfo->Rect.BodyRect.origin.x = instantAttackBoxData[4];
+			pInfo->Rect.BodyRect.origin.y = instantAttackBoxData[5];
+			pInfo->Rect.BodyRect.size.width = instantAttackBoxData[6];
+			pInfo->Rect.BodyRect.size.height = instantAttackBoxData[7];
 
 			info.Frames.PushBack(pInfo);
 		} else {

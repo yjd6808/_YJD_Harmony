@@ -163,6 +163,15 @@ void SGActorSprite::pauseAnimation() {
 	}
 }
 
+void SGActorSprite::pauseAnimation(float delay) {
+	for (int i = 0; i < m_vParts.Size(); ++i) {
+		SGActorPartAnimation* pAnimation = m_vParts[i]->getRunningAnimation();
+
+		if (pAnimation)
+			pAnimation->pauseTime(delay);
+	}
+}
+
 void SGActorSprite::resumeAnimation() {
 	for (int i = 0; i < m_vParts.Size(); ++i) {
 		SGActorPartAnimation* pAnimation = m_vParts[i]->getRunningAnimation();

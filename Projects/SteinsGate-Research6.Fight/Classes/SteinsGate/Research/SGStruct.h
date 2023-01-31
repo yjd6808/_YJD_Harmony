@@ -11,6 +11,12 @@
 #include <SteinsGate/Research/Config.h>
 #include <SteinsGate/Common/Engine.h>
 
+struct SGAnimationInfo;
+struct SGAttackDataInfo;
+
+class SGPhysicsActor;
+
+
 struct SGThicknessBox
 {
 	float RelativeX;
@@ -33,6 +39,15 @@ struct SGThicknessBox
 	{}
 
 	SGSize getSize() const { return SGSize{ Width, Height }; }
+};
+
+
+struct SGActorRect
+{
+	SGRect ThicknessRect;
+	SGRect BodyRect;
+
+	bool isCollide(const SGActorRect& rect, SpriteDirection_t& otherHitDirection, SGRect& hitRect);
 };
 
 
@@ -65,7 +80,7 @@ struct SGActorPartSpriteData
 };
 
 
-struct SGAnimationInfo;
+
 struct SGActorSpriteData
 {
 	SGActorSpriteData(int partCount, int animationCount)
@@ -77,3 +92,11 @@ struct SGActorSpriteData
 };
 
 using SGActorSpriteDataPtr = JCore::SharedPtr<SGActorSpriteData>;
+
+struct SGHitInfo
+{
+	SGPhysicsActor* HitTarget;
+	SpriteDirection_t HitDirection;
+	SGRect HitRect;
+	SGAttackDataInfo* AttackDataInfo;
+};

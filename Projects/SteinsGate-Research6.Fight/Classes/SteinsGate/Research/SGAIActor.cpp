@@ -14,6 +14,13 @@
 #include <SteinsGate/Research/SGVec2Ex.h>
 
 #define SightRandomPosMinAlpha 0.2f
+#define EnableLog false
+
+#if EnableLog
+#define AILog(fmt, ...) Log(fmt, ##__VA_ARGS__)
+#else
+#define AILog(...)
+#endif
 
 SGAIActor::SGAIActor(ActorType_t type, int code, SGMapLayer* mapLayer, SGAIInfo* aiInfo)
 	: SGPhysicsActor(type, code, mapLayer)
@@ -30,6 +37,8 @@ void SGAIActor::initAI() {
 	//TODO: initAIProbs();
 }
 
+
+
 void SGAIActor::update(float dt) {
 	SGPhysicsActor::update(dt);
 
@@ -38,6 +47,7 @@ void SGAIActor::update(float dt) {
 
 	updateState();				// 변경가능한 상태 확인
 	updateRunningAcitivity();	// 해당 상태에서 수행가능한 액티비티 설정
+	updateDirection();
 	updateActivity(dt);			// 액티비티 지속 업데이트
 }
 
@@ -49,10 +59,10 @@ void SGAIActor::updateState() {
 	m_ePreviousState = m_eState;
 	float enemyDist;
 	SGActor* pPreviousTarget = m_pTarget;
-	m_pTarget = m_pBelongedMap->findNearestEnemyInRadious(this, m_pAiInfo->SightRadious, enemyDist);
+	m_pTarget = m_pBelongedMap->findNearestCharacterInRadious(this, m_pAiInfo->SightRadious, enemyDist);
 
 	if (m_pTarget == nullptr) {
-		Log("[상태] 적 미발견: 배회 상태\n");
+		AILog("[상태] 적 미발견: 배회 상태\n");
 		m_eState = eWander;
 		return;
 	}
@@ -62,12 +72,12 @@ void SGAIActor::updateState() {
 	}
 
 	if (enemyDist > m_pAiInfo->AttackRadious) {
-		Log("[상태] 적 발견: 추격 상태\n");
+		AILog("[상태] 적 발견: 추격 상태\n");
 		m_eState = eTrack;
 		return;
 	}
 
-	Log("[상태] 적 근접: 분노 상태\n");
+	AILog("[상태] 적 근접: 분노 상태\n");
 	m_eState = eAngry;
 }
 
@@ -90,6 +100,15 @@ void SGAIActor::updateRunningAcitivity() {
 
 void SGAIActor::updateActivity(float dt) {
 	m_pRunningActivity->onUpdate(dt);
+	
+}
+
+void SGAIActor::updateDirection() {
+	AIActivity_t eActivityType = m_pRunningActivity->getType();
+
+	if (!AIActivity::DirectionUpdatableOnTrackState[eActivityType]) {
+		return;
+	}
 
 	if (m_eState >= eTrack && m_pTarget) {
 		SpriteDirection_t eWhereIsTarget;
@@ -104,18 +123,18 @@ void SGAIActor::selectWanderActivity() {
 
 	if (fResult < m_pAiInfo->WanderProbs[AIWanderDecision::Walk]) {
 		m_pRunningActivity = m_ActivityMap[AIActivity::Walk];
-		Log("[배회] 걷기\n");
+		AILog("[배회] 걷기\n");
 		return;
 	}
 
 	m_pRunningActivity = m_ActivityMap[AIActivity::Idle];
-	Log("[배회] 휴식\n");
+	AILog("[배회] 휴식\n");
 }
 void SGAIActor::selectTrackActivity() {
 	float fResult = SGRandom::random_real(0.0f, 100.0f);
 	
 	if (fResult < m_pAiInfo->TrackProbs[AITrackDecision::Wander]) {
-		Log("[추격] 배회 시도\n");
+		AILog("[추격] 배회 시도\n");
 		selectWanderActivity();
 		return;
 	}
@@ -123,12 +142,12 @@ void SGAIActor::selectTrackActivity() {
 	m_eActivityState = State::eTrack;
 
 	if (fResult < m_pAiInfo->TrackProbs[AITrackDecision::Attack]) {
-		Log("[추격] 공격 시도\n");
+		AILog("[추격] 공격 시도\n");
 		m_pRunningActivity = m_ActivityMap[AIActivity::Attack];
 		return;
 	}
 
-	Log("[추격] 걷기 시도\n");
+	AILog("[추격] 걷기 시도\n");
 	m_pRunningActivity = m_ActivityMap[AIActivity::Walk];
 }
 
@@ -136,18 +155,18 @@ void SGAIActor::selectAngryActivity() {
 	float fResult = SGRandom::random_real(0.0f, 100.0f);
 
 	if (fResult < m_pAiInfo->AngryProbs[AIAngryDecision::Wander]) {
-		Log("[분노] 배회 시도\n");
+		AILog("[분노] 배회 시도\n");
 		selectWanderActivity();
 		return;
 	}
 
 	if (fResult < m_pAiInfo->AngryProbs[AIAngryDecision::Track]) {
-		Log("[분노] 추격 시도\n");
+		AILog("[분노] 추격 시도\n");
 		selectTrackActivity();
 		return;
 	}
 
-	Log("[분노] 공격 시도\n");
+	AILog("[분노] 공격 시도\n");
 	m_eActivityState = State::eAngry;
 	m_pRunningActivity = m_ActivityMap[AIActivity::Attack];
 }

@@ -22,6 +22,8 @@ public:
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
 	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
+	void onEnemySingleHit(SGHitInfo& info);
+	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 private:
 	bool m_bSlidingStarted{};
 };

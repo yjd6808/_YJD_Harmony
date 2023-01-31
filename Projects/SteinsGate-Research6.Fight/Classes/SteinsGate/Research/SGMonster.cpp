@@ -70,6 +70,17 @@ void SGMonster::initAIActivities() {
 	runActivity(m_ActivityMap[AIActivity::Idle]);	// 아무것도 설정안하면 기본 실행 시간 1초
 }
 
+void SGMonster::hit(const SGHitInfo& hitInfo) {
+	SGAIActor::hit(hitInfo);
+
+	if (hitInfo.AttackDataInfo->IsFallDownAttack) {
+		runActivity(m_ActivityMap[AIActivity::FallDown]);
+		return;
+	}
+
+	runActivity(m_ActivityMap[AIActivity::Hit]);
+}
+
 
 void SGMonster::update(float dt) {
 	SGAIActor::update(dt);

@@ -60,4 +60,3 @@ inline constexpr int TileHeight_v= 184;
 inline constexpr int BlockSize_v = 20;		// 16 고려해볼 것 타일 가로길이가 다 224임. 일단 테스트 끝나고 수정
 
 inline constexpr int MaxHitList_v = 8;		// 프로젝틸 관통된 객체 기록용 컨테이너 용량
-

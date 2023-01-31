@@ -13,13 +13,21 @@
 #include <SteinsGate/Research/SGProjectileDefine.h>
 
 SGGunnerSliding::SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo)
-	: SGGunnerAction(player, actionInfo) {}
+	: SGGunnerAction(player, actionInfo)
+{
+	initHitRecorder(
+		CC_CALLBACK_1(SGGunnerSliding::onEnemySingleHit, this),
+		CC_CALLBACK_2(SGGunnerSliding::onEnemyMultiHit, this)
+	);
+}
 
 
 void SGGunnerSliding::onActionBegin() {
 	m_bSlidingStarted = false;
-
 	m_pPlayer->runAnimation(GUNNER_ANIMATION_SLIDING);
+
+	m_pHitRecorder->clear();
+	m_pHitRecorder->setAlreadyHitRecord(true);
 }
 
 void SGGunnerSliding::onUpdate(float dt) {
@@ -44,6 +52,7 @@ void SGGunnerSliding::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTex
 }
 
 void SGGunnerSliding::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {
+	m_pHitRecorder->record(animation);
 }
 
 void SGGunnerSliding::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {
@@ -62,5 +71,22 @@ void SGGunnerSliding::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture
 	// 일시정지 프레임 만나면 1번부터 다시 재시작
 	if (animation->getFrameIndex() == 114 && animation->isZeroFramePaused()) {
 		m_pPlayer->getCharacter()->runAnimation(GUNNER_ANIMATION_SLIDING, 1);
+	}
+}
+
+
+
+void SGGunnerSliding::onEnemySingleHit(SGHitInfo& info) {
+	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
+		return;
+
+	info.HitTarget->hit(info);
+}
+
+
+void SGGunnerSliding::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
+	if (newHitCount > 0) {
+		m_pPlayer->getCharacter()->pauseAnimation(FPS6_v);
+		m_pPlayer->getCharacter()->pause(FPS6_v);
 	}
 }

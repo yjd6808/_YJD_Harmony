@@ -13,10 +13,10 @@
 #include <SteinsGate/Research/SGAttackData.h>
 
 
-struct SGAttackDataLoader
+struct SGAttackDataInfoLoader
 {
 public:
-	static bool LoadAttackData(SGHashMap<int, SGAttackData>& attackDataInfoMap);
+	static bool LoadAttackDataInfo(SGHashMap<int, SGAttackDataInfo>& attackDataInfoMap);
 };
 
 

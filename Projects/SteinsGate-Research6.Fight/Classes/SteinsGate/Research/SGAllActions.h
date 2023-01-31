@@ -16,3 +16,5 @@
 #include <SteinsGate/Research/SGGunnerJump.h>
 #include <SteinsGate/Research/SGGunnerSliding.h>
 #include <SteinsGate/Research/SGGunnerGunShot.h>
+#include <SteinsGate/Research/SGGunnerFallDown.h>
+#include <SteinsGate/Research/SGGunnerHit.h>

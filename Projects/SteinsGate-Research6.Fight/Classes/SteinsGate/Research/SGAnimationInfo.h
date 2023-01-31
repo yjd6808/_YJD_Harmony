@@ -9,6 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Common/Engine.h>
+#include <SteinsGate/Research/SGStruct.h>
 
 struct SGFrameInfo
 {
@@ -20,9 +21,7 @@ struct SGFrameInfo
 
 struct SGFrameInfoAttackBoxInstant : SGFrameInfo
 {
-	SGVec2 SpwanOffset;
-	SGSize AttackBoxSize;
-	SGSize ThicknessBoxSize;
+	SGActorRect Rect;
 };
 
 struct SGAnimationInfo

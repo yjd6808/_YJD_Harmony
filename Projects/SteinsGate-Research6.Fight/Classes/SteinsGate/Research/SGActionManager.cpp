@@ -174,7 +174,7 @@ void SGActionManager::runAction(int actionCode) {
 	m_pRunningAction = getAction(actionCode);
 	m_pRunningAction->init();
 	m_pRunningAction->play();
-	Log("[액션 실행 %05d] %s\n", ++Count, m_pRunningAction->getActionName().Source());
+	// Log("[액션 실행 %05d] %s\n", ++Count, m_pRunningAction->getActionName().Source());
 }
 
 void SGActionManager::runAction(SGAction* action) {
@@ -188,7 +188,7 @@ void SGActionManager::runAction(SGAction* action) {
 	m_pRunningAction = action;
 	m_pRunningAction->init();
 	m_pRunningAction->play();
-	Log("[액션 실행 %05d] %s\n", ++Count, m_pRunningAction->getActionName().Source());
+	// Log("[액션 실행 %05d] %s\n", ++Count, m_pRunningAction->getActionName().Source());
 
 }
 

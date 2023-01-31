@@ -9,6 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Research/SGActionInfo.h>
+#include <SteinsGate/Research/SGHitRecorder.h>
 
 struct SGActionInfo;
 
@@ -20,7 +21,7 @@ class SGActorPartAnimation;
 class SGAction {
 public:
 	SGAction(SGPlayer* player, SGActionInfo* actionInfo);
-	virtual ~SGAction() = default;
+	virtual ~SGAction();
 
 	void play();
 	void stop();
@@ -42,9 +43,8 @@ public:
 	// virtual void onAttack();
 
 	virtual bool isComboAction() { return false; }
-
+	virtual bool isAttackAction() { return false; }
 	
-
 	int getActionCode()  { return m_pActionInfo->Code; }
 	const SGString& getActionName() { return m_pActionInfo->ActionName; }
 	const SGComboKeyList& getCommand() { return m_pActionInfo->Command; }
@@ -67,13 +67,20 @@ public:
 
 	void setMoveable(bool moveable);
 
-	
+	void initHitRecorder(
+		const SGHitSingleCallbackFn& sigleHitFn,
+		const SGHitMultiCallbackFn& multiHitFn, 
+		int hitListSize = 16, 
+		int alreadyHitListSize = 32
+	);
 protected:
 	// 주입 하는 필드
 	SGPlayer* m_pPlayer;
 	SGActionInfo* m_pActionInfo;
 
 	// 자체 필드
+	SGHitRecorder* m_pHitRecorder;
+
 	bool m_bMoveablePositiveX;
 	bool m_bMoveablePositiveY;
 

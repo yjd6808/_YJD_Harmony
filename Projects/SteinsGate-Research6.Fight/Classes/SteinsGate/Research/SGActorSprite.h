@@ -40,6 +40,7 @@ public:
 	void runAnimation(int code);
 	void runAnimation(int code, int startFrameIndexInAnimation);
 	void pauseAnimation();
+	void pauseAnimation(float delay);
 	void resumeAnimation();
 
 	SGActorPartSprite* getBodyPart();

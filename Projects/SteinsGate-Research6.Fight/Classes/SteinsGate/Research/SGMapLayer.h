@@ -6,7 +6,7 @@
 #include <SteinsGate/Research/Tutturu.h>
 
 #include <SteinsGate/Common/Core/Npk/NpkPackage.h>
-#include <SteinsGate/Research/Enums.h>
+#include <SteinsGate/Research/SGStruct.h>
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGProjectile.h>
 #include <SteinsGate/Research/SGMonster.h>
@@ -23,8 +23,10 @@ public:
 	bool init() override;
 	bool isCollideWithObstacles(const SGRect& rect);
 
-	SGActor* findNearestEnemyInRadious(SGActor* stdActor, float radious, Out_ float& enemyDist);
-	SGCharacter* findNearestCharacterInRadious(SGActor* stdActor, float radious);
+	SGCharacter* findNearestCharacterInRadious(SGActor* stdActor, float radious, Out_ float& enemyDist);
+
+	// 1개이상 있으면 true 리턴
+	bool collectEnemiesInInstantAttackBox(const SGActorRect& rect, Out_ SGVector<SGHitInfo>& hitMonsters);
 
 	static SGMapLayer* create(int mapCode);
 
@@ -36,7 +38,7 @@ public:
 	void runFrameEvent(SGActor* runner, FrameEventType_t frameEventType, int frameEventId);
 	SGCharacter* createCharacter(CharacterType_t characterType, float x, float y, SGCharacterInfo& info);
 	SGProjectile* createProejctile(SGActor* spawner, int projectileId);
-	void createHitbox(SGActor* spawner, int hitBoxId);
+	void createAttackBox(SGActor* spawner, int hitBoxId);
 	SGMonster* createMonster(int code, int aiCode, float x, float y);
 	SGObstacle* createObstacle(int code, float x, float y);
 

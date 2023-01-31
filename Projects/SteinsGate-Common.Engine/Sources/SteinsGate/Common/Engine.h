@@ -14,6 +14,7 @@
 #include <JCore/Assert.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Define.h>
+#include <JCore/Functional.h>
 #include <JCore/Math.h>
 #include <JCore/Primitives/StringUtil.h>
 
@@ -59,6 +60,12 @@ template <typename TKey, typename TValue, typename Predicate = std::less<TKey>>
 using SGMap = std::map<TKey, TValue, Predicate>;
 
 using SGMath = JCore::Math;
+
+template <typename... Args>
+using SGActionFn = JCore::Action<Args...>;
+
+template <typename R, typename... Args>
+using SGFuncFn = JCore::Func<R, Args...>;
 
 // 코코스
 using SGNode = cocos2d::Node;

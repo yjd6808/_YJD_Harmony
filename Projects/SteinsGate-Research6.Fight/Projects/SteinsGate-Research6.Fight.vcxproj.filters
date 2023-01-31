@@ -61,6 +61,9 @@
     <Filter Include="Data\AttackData">
       <UniqueIdentifier>{e39a0561-addf-41aa-89b8-849512666201}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actor\Util">
+      <UniqueIdentifier>{82f6b34f-ddb7-4d22-be73-14dee37a6233}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGImagePackManager.cpp">
@@ -223,8 +226,15 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAnimationInfo.cpp">
       <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGAttackDataLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.cpp">
       <Filter>Data\AttackData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerFallDown.cpp">
+      <Filter>Player\Action\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGStruct.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGHitRecorder.cpp">
+      <Filter>Actor\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -424,11 +434,17 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMapLayer.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGStruct.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\Tutturu.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.h">
       <Filter>Data\AttackData</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackData.h">
       <Filter>Data\AttackData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerFallDown.h">
+      <Filter>Player\Action\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGHitRecorder.h">
+      <Filter>Actor\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

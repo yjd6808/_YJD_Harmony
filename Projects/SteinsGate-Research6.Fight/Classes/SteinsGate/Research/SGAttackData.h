@@ -11,11 +11,11 @@
 #include <SteinsGate/Research/Config.h>
 #include <SteinsGate/Research/Tutturu.h>
 
-struct SGAttackData
+struct SGAttackDataInfo
 {
 	int Code;
 	SGString Name;
-	AttackDamangeType_t AttackDamageType;
+	AttackDamageType_t AttackDamageType;
 	float AttackDamageRatio;
 	AttackXForceDirection_t AttackXForceDir;
 	float AttackXForce;

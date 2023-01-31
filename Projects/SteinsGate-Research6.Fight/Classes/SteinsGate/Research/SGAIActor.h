@@ -35,7 +35,11 @@ public:
 	~SGAIActor() override = 0;
 
 	void initAI();
+
 	virtual void initAIActivities() = 0;
+	virtual void onSelectedActivity(SGAIActivity* selectedActivity) = 0;
+
+
 
 	// TODO: 분할 정복 방식으로 미리 확률 계산해놓는것 고려.
 	// void initAIProbs(); 
@@ -44,18 +48,19 @@ public:
 	// (쓸일 있을까?, 갑자기 몬스터 태세 전환 한다든가 할 때 괜찮을 듯)
 	// void exhangeAI(SGAIInfo* exchangeInfo);
 
+	
 	void update(float dt) override;
 	void updateState();
-	
 	void updateActivity(float dt);
 	void updateRunningAcitivity();
+	void updateDirection();
 
 	void selectWanderActivity();
 	void selectTrackActivity();
 	void selectAngryActivity();
 
 	void runActivity(SGAIActivity* activity);
-	virtual void onSelectedActivity(SGAIActivity* selectedActivity) = 0;
+	
 
 	SGVec2 getRandomSightPos();
 	SGAIInfo* getAiInfo() { return m_pAiInfo; }

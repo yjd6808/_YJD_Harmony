@@ -35,6 +35,11 @@ static constexpr const char* Name[Max]{
 	"Right",
 	"Left"
 };
+
+static constexpr SpriteDirection_t Reverse[Max]{
+	Left,
+	Right
+};
 SEnumMiddleEnd(SpriteDirection)
 
 
@@ -245,6 +250,14 @@ Attack,
 Hit,
 FallDown,
 Max
-SEnumEnd(AIActivity)
+SEnumMiddle(AIActivity)
 
+static constexpr bool DirectionUpdatableOnTrackState[Max]{
+	true,
+	true,
+	false,
+	false,
+	false
+};
 
+SEnumMiddleEnd(AIActivity)

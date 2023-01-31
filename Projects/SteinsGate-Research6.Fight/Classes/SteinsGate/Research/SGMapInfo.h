@@ -33,7 +33,6 @@ struct SGMapInfo
 	int TileArray[10][10];
 	float Gravity;
 	float Friction;
-	float ElasticityDownTime;
 	float ElasticityDividedForce;
 	SGVector<SGString> Area;
 	SGVector<SGMapObjectInfo> NpcList;

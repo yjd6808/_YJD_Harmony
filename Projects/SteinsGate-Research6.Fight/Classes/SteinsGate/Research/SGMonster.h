@@ -22,6 +22,7 @@ public:
 	static SGMonster* create(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* aiInfo);
 	void initActorSprite() override;
 	void initAIActivities() override;
+	void hit(const SGHitInfo& hitInfo) override;
 
 	void update(float dt) override;
 

@@ -44,12 +44,20 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGAttackDataLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerAction.cpp">
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerFallDown.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerHit.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGHitRecorder.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -163,6 +171,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGStruct.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGTextParser.cpp">
       <SubType>
       </SubType>
@@ -213,7 +225,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackData.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGClientInfo.h">
       <SubType>
       </SubType>
@@ -257,6 +269,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerFallDown.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerGunShot.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerHit.h">
       <SubType>
@@ -270,6 +286,10 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerRun.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerSliding.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerWalk.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGHitRecorder.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMapInfo.h">
       <SubType>
       </SubType>
