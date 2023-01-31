@@ -11,6 +11,7 @@
     "projectile": [
         {
             "code": 1,
+            "attakdata_code": 1,
             "name": "gunner_auto_right",
             "npk": "sprite_character_gunner_effect_bullet.NPK",
             "img": "pistol.img",
@@ -20,10 +21,6 @@
             "hit_effect_code": 2,
             "rotation": 0.0,
             "random_rotation_range": "-3.0 3.0",
-            "attack_damage_type": 1,
-            "attack_damage_ratio": 100.0,
-            "attack_x_force": 100.0,
-            "attack_y_force": 10.0,
             "distance": 400.0,
             "move_speed": 600.0,
             "life_time": 10.0,
@@ -46,15 +43,13 @@
         {
             "override_code": 1,
             "code": 2,
+            "attakdata_code": 2,
             "name": "gunner_auto_left",
             "spawn_offset_x": 374.0,
             "spawn_offset_y": 239.0,
             "spawn_effect_code": 1,
             "hit_effect_code": 2,
             "rotation": 0.0,
-            "attack_damage_ratio": 200.0,
-            "attack_x_force": 150.0,
-            "attack_y_force": 50.0,
             "thickness_box": "0 -1 30 30"
         },
         {
@@ -76,6 +71,7 @@
         {
             "override_code": 4,
             "code": 5,
+            "attakdata_code": 3,
             "name": "gunner_auto_jump_right",
             "spawn_offset_x": 301.0,
             "spawn_offset_y": 197.0,

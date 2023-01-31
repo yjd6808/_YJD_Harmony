@@ -40,6 +40,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGAnimationInfo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerAction.cpp">
       <SubType>
       </SubType>
@@ -176,9 +180,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="game.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAIActivity.h">

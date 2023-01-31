@@ -82,30 +82,45 @@
                 },
                 {
                     "code": 5,
-                    "name": "fall_down",
-                    "loop": false,
+                    "name": "walk",
+                    "loop": true,
                     "frames": [
-                        "5 100",
-                        "6 100",
-                        "7 100",
-                        "7 -1",
-                        "8 100",
-                        "9 100"
+                        "11 200",
+                        "12 200",
+                        "13 200",
+                        "14 200",
+                        "15 200",
+                        "16 200"
                     ]
                 },
                 {
                     "code": 6,
-                    "name": "walk",
-                    "loop": true,
+                    "name": "fall_down_begin",
+                    "loop": false,
                     "frames": [
-                        "11 100",
-                        "12 100",
-                        "13 100",
-                        "14 100",
-                        "15 100",
-                        "16 100"
+                        "5 100",
+                        "6 100",
+                        "7 100"
+                    ]
+                },
+                {
+                    "code": 7,
+                    "name": "fall_down_bounce",
+                    "loop": false,
+                    "frames": [
+                        "8 -1"
+                    ]
+                },
+                {
+                    "code": 8,
+                    "name": "fall_down_end",
+                    "loop": false,
+                    "frames": [
+                        "9 -1"
                     ]
                 }
+
+
             ]
         },
 
@@ -181,19 +196,6 @@
                 },
                 {
                     "code": 5,
-                    "name": "fall_down",
-                    "loop": false,
-                    "frames": [
-                        "5 100",
-                        "6 100",
-                        "7 100",
-                        "7 -1",
-                        "8 100",
-                        "9 100"
-                    ]
-                },
-                {
-                    "code": 6,
                     "name": "walk",
                     "loop": true,
                     "frames": [
@@ -204,7 +206,35 @@
                         "15 200",
                         "16 200"
                     ]
+                },
+                {
+                    "code": 6,
+                    "name": "fall_down_begin",
+                    "loop": false,
+                    "frames": [
+                        "5 100",
+                        "6 100",
+                        "7 100"
+                    ]
+                },
+                {
+                    "code": 7,
+                    "name": "fall_down_bounce",
+                    "loop": false,
+                    "frames": [
+                        "8 -1"
+                    ]
+                },
+                {
+                    "code": 8,
+                    "name": "fall_down_end",
+                    "loop": false,
+                    "frames": [
+                        "9 -1"
+                    ]
                 }
+
+
             ]
         }
     ]

@@ -138,8 +138,9 @@ SEnumEnd(ActorType)
 
 
 SEnumBegin(FrameEventType)
-Projectile,
-Hitbox,
+Projectile = 1,
+AttackBox,
+AttackBoxInstant,
 Max
 SEnumEnd(FrameEventType)
 
@@ -172,7 +173,7 @@ static constexpr FrameEventType_t ShotFrameEventType[Max]{
 	FrameEventType::Projectile,
 	FrameEventType::Projectile,
 	FrameEventType::Projectile,
-	FrameEventType::Hitbox
+	FrameEventType::AttackBox
 };
 
 
