@@ -8,8 +8,6 @@
 
 #pragma once
 
-
-
 #define GUNNER_ACTION_IDLE						1
 #define GUNNER_ACTION_WALK						2
 #define GUNNER_ACTION_RUN						3
@@ -17,4 +15,5 @@
 #define GUNNER_ACTION_GUN_SHOT					5
 #define GUNNER_ACTION_JUMP						6
 #define GUNNER_ACTION_HIT						7
-#define GUNNER_ACTION_FALLDOWN					8
+#define GUNNER_ACTION_FALL_DOWN					8
+#define GUNNER_ACTION_SIT_RECOVER				9

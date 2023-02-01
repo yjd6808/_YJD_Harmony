@@ -17,7 +17,7 @@ public:
 	SGGunnerAction(SGPlayer* player, SGActionInfo* actionInfo);
 	~SGGunnerAction() override;
 
-	void onActionBegin() override;
+	void play() override;
 protected:
 	
 	SGGunnerBaseInfo* m_pBaseInfo;

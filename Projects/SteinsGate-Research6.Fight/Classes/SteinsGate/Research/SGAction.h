@@ -23,8 +23,8 @@ public:
 	SGAction(SGPlayer* player, SGActionInfo* actionInfo);
 	virtual ~SGAction();
 
-	void play();
-	void stop();
+	virtual void play();
+	virtual void stop();
 
 	virtual void init() {}	// 실행 직전 호출 (초기화 용도)
 	virtual void onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);

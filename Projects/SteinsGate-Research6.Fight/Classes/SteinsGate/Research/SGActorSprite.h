@@ -53,6 +53,7 @@ public:
 	SGVector<SGActorPartSprite*>& getParts() { return m_vParts; }
 	SpriteDirection_t getSpriteDirection();
 	int getRunningAnimationCode();
+	SGActorPartAnimation* getRunningAnimation();
 private:
 
 	SGActor* m_pActor;

@@ -19,6 +19,8 @@ class SGMonster : public SGAIActor
 {
 public:
 	SGMonster(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* aiInfo);
+	~SGMonster() override;
+
 	static SGMonster* create(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* aiInfo);
 	void initActorSprite() override;
 	void initAIActivities() override;
@@ -35,7 +37,7 @@ public:
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
-	
+
 	SGMonsterInfo* getBaseInfo();
 private:
 	SGMonsterInfo* m_pBaseInfo;

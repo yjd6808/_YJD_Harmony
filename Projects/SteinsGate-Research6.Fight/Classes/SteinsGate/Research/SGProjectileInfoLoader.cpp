@@ -10,12 +10,15 @@
 #include "SGProjectileInfoLoader.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>
+#include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGJson.h>
 
 #include <JCore/FileSystem/Path.h>
 
 #include <json.h>
 #include <fstream>
+
+
 
 
 USING_NS_JC;
@@ -70,13 +73,14 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 void SGProjectileInfoLoader::WriteOverridedProjectileInfo(Json::Value& projectile, SGProjectileInfo& info) {
 
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::getInstance();
 
 	info.Code = projectile["code"].asInt();
 	info.Name = SGJson::getString(projectile["name"]);
 
 	int iAttackDataCode = SGJson::getIntDefault(projectile["attakdata_code"], 0);
 	if (iAttackDataCode != 0)
-		info.AttackDataCode = iAttackDataCode;
+		info.AttackData = pDataManager->getAttackDataInfo(iAttackDataCode);
 
 
 
@@ -153,9 +157,12 @@ void SGProjectileInfoLoader::WriteOverridedProjectileInfo(Json::Value& projectil
 void SGProjectileInfoLoader::WriteProjectileInfo(Json::Value& projectile, SGProjectileInfo& info) {
 	// 초기화 안된 변수가 없어야함 
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::getInstance();
+
+
 	Value& animationListRoot = projectile["animation"];
 	info.Code = projectile["code"].asInt();
-	info.AttackDataCode = projectile["attakdata_code"].asInt();
+	info.AttackData = pDataManager->getAttackDataInfo(projectile["attakdata_code"].asInt());
 	info.Name = SGJson::getString(projectile["name"]);
 	info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(projectile["npk"]));
 	info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(projectile["img"]));

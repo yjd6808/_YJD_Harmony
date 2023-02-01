@@ -8,16 +8,19 @@
 
 #include "SGMonsterIdleActivity.h"
 
-#include <SteinsGate/Research/SGAIActor.h>
+#include <SteinsGate/Research/SGMonster.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
 
-SGMonsterIdleActivity::SGMonsterIdleActivity(SGAIActor* actor) : SGAITimedActivity(actor, AIActivity::Idle) {}
+SGMonsterIdleActivity::SGMonsterIdleActivity(SGMonster* monster)
+	: SGMonsterActivity(monster, AIActivity::Idle) {}
+
+void SGMonsterIdleActivity::onUpdate(float dt) {
+	updateLimitTime(dt);
+}
 
 void SGMonsterIdleActivity::onActivityBegin() {
-	SGAITimedActivity::onActivityBegin();
-
-	m_pActor->runAnimation(MONSTER_ANIMATION_IDLE);
+	m_pMonster->runAnimation(MONSTER_ANIMATION_IDLE);
 }
 
 void SGMonsterIdleActivity::onActivityEnd() {

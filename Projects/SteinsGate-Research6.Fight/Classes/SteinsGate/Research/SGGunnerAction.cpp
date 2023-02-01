@@ -19,7 +19,10 @@ SGGunnerAction::~SGGunnerAction() {
 	
 }
 
-void SGGunnerAction::onActionBegin() {
+void SGGunnerAction::play() {
 	m_pBaseInfo = (SGGunnerBaseInfo*)SGDataManager::getInstance()->getCharacterBaseInfo(CharacterType::Gunner);
 	m_eWeaponType = GunnerWeaponType::Auto;		// TODO: 무기 정보 읽기
+
+	SGAction::play();
 }
+

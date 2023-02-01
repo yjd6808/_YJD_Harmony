@@ -12,8 +12,11 @@
 #include <SteinsGate/Research/SGActorSprite.h>
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGActionDefine.h>
 
 #include <SteinsGate/Common/Engine/SGRectEx.h>
+
+
 
 USING_NS_JC;
 USING_NS_CC;
@@ -32,6 +35,7 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info, SGMapLay
 		pCharacter->m_pBaseInfo = pBaseInfo;
 		pCharacter->initThicknessBox(pBaseInfo->ThicknessBox);
 		pCharacter->initActorSprite();
+		pCharacter->initHitRecorder(32, 64);
 		pCharacter->autorelease();
 		return pCharacter;
 	}
@@ -69,15 +73,28 @@ void SGCharacter::initActorSprite() {
 	this->addChild(m_pActorSprite);
 }
 
+
+extern SGPlayer* MainPlayer_v;		// 임시
+
+void SGCharacter::hit(const SGHitInfo& hitInfo) {
+	SGPhysicsActor::hit(hitInfo);
+
+	if (hitInfo.AttackDataInfo->IsFallDownAttack) {
+		MainPlayer_v->runActionForce(GUNNER_ACTION_FALL_DOWN);
+		return;
+	}
+
+	MainPlayer_v->runActionForce(GUNNER_ACTION_HIT);
+}
+
 void SGCharacter::update(float dt) {
 	SGPhysicsActor::update(dt);
 }
 
-extern SGPlayer* MainPlayer_v;
-
-
 void SGCharacter::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
 	MainPlayer_v->onFrameBegin(animation, texture);
+
+	
 }
 
 void SGCharacter::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {

@@ -54,6 +54,10 @@ void SGActionManager::initGunnerActions() {
 	m_pBaseAction[BaseAction::Attack] = new SGGunnerGunShot(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_GUN_SHOT));
 	m_pBaseAction[BaseAction::Sliding] = new SGGunnerSliding(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SLIDING));
 	m_pBaseAction[BaseAction::Jump] = new SGGunnerJump(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_JUMP));
+	m_pBaseAction[BaseAction::Hit] = new SGGunnerHit(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_HIT));
+	m_pBaseAction[BaseAction::FallDown] = new SGGunnerFallDown(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_FALL_DOWN));
+	m_pBaseAction[BaseAction::SitRecover] = new SGGunnerSitRecover(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SIT_RECOVER));
+	
 
 	m_ActionMap.Insert(GUNNER_ACTION_IDLE, m_pBaseAction[BaseAction::Idle]);
 	m_ActionMap.Insert(GUNNER_ACTION_WALK, m_pBaseAction[BaseAction::Walk]);
@@ -61,6 +65,10 @@ void SGActionManager::initGunnerActions() {
 	m_ActionMap.Insert(GUNNER_ACTION_GUN_SHOT, m_pBaseAction[BaseAction::Attack]);
 	m_ActionMap.Insert(GUNNER_ACTION_SLIDING, m_pBaseAction[BaseAction::Sliding]);
 	m_ActionMap.Insert(GUNNER_ACTION_JUMP, m_pBaseAction[BaseAction::Jump]);
+	m_ActionMap.Insert(GUNNER_ACTION_HIT, m_pBaseAction[BaseAction::Hit]);
+	m_ActionMap.Insert(GUNNER_ACTION_FALL_DOWN, m_pBaseAction[BaseAction::FallDown]);
+	m_ActionMap.Insert(GUNNER_ACTION_SIT_RECOVER, m_pBaseAction[BaseAction::SitRecover]);
+	
 }
 
 void SGActionManager::update(float dt) {

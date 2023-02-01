@@ -16,12 +16,12 @@
 #define DestinationMinDistX 7.0f	// 목표지점까지 거리가 이정도 이내이면 도착했다고 판정
 #define DestinationMinDistY 5.0f
 
-SGMonsterWalkActivity::SGMonsterWalkActivity(SGAIActor* actor) : SGAITimedActivity(actor, AIActivity::Walk) {}
+SGMonsterWalkActivity::SGMonsterWalkActivity(SGMonster* monster)
+	: SGMonsterActivity(monster, AIActivity::Walk)
+	, m_pTarget(nullptr) {}
 
 void SGMonsterWalkActivity::onActivityBegin() {
-	SGAITimedActivity::onActivityBegin();
-
-	m_pActor->runAnimation(MONSTER_ANIMATION_WALK);
+	m_pMonster->runAnimation(MONSTER_ANIMATION_WALK);
 }
 
 void SGMonsterWalkActivity::setTarget(SGActor* target) {
@@ -29,7 +29,7 @@ void SGMonsterWalkActivity::setTarget(SGActor* target) {
 }
 
 void SGMonsterWalkActivity::onUpdate(float dt) {
-	SGAITimedActivity::onUpdate(dt);
+	updateLimitTime(dt);
 
 	if (!isRunning())
 		return;
@@ -40,10 +40,8 @@ void SGMonsterWalkActivity::onUpdate(float dt) {
 		default: DebugAssertMessage(false, "몬스터 Walking 액티비티 모드가 이상합니다.");
 	}
 
-	SGMonster* pMonster = (SGMonster*)m_pActor;
-	SGMapLayer* pMapLayer = pMonster->getMapLayer();
-
-	updateMove(dt, pMonster, pMapLayer);
+	SGMapLayer* pMapLayer = m_pMonster->getMapLayer();
+	updateMove(dt, pMapLayer);
 }
 
 void SGMonsterWalkActivity::updateWander(float dt) {
@@ -57,10 +55,10 @@ void SGMonsterWalkActivity::updateTrack(float dt) {
 	m_Destination =  m_pTarget->getPositionRealCenter();
 }
 
-void SGMonsterWalkActivity::updateMove(float dt, SGMonster* pMonster, SGMapLayer* pMapLayer) {
+void SGMonsterWalkActivity::updateMove(float dt, SGMapLayer* pMapLayer) {
 	Direction_t lr;
 	Direction_t ud;
-	SGRect thicknessPosLR = m_pActor->getThicknessBoxRect();
+	SGRect thicknessPosLR = m_pMonster->getThicknessBoxRect();
 	SGRect thicknessPosUD = thicknessPosLR;
 	SGVec2 center = thicknessPosLR.getMid();
 
@@ -80,7 +78,7 @@ void SGMonsterWalkActivity::updateMove(float dt, SGMonster* pMonster, SGMapLayer
 		return;
 	}
 
-	SGMonsterInfo* pMonsterInfo = pMonster->getBaseInfo();
+	SGMonsterInfo* pMonsterInfo = m_pMonster->getBaseInfo();
 	SGMapInfo* pMapInfo = pMapLayer->getMapInfo();
 
 	float fSpeedX = pMonsterInfo->MoveSpeedX * FPS1_v;
@@ -114,7 +112,7 @@ void SGMonsterWalkActivity::updateLeftMove(SGMapLayer* mapLayer, SGMapInfo* mapI
 	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pActor->setPositionRealX(thicknessRect.origin.x);
+	m_pMonster->setPositionRealX(thicknessRect.origin.x);
 }
 
 
@@ -126,7 +124,7 @@ void SGMonsterWalkActivity::updateRightMove(SGMapLayer* mapLayer, SGMapInfo* map
 	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pActor->setPositionRealX(thicknessRect.origin.x);
+	m_pMonster->setPositionRealX(thicknessRect.origin.x);
 }
 
 void SGMonsterWalkActivity::updateUpMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect) {
@@ -137,7 +135,7 @@ void SGMonsterWalkActivity::updateUpMove(SGMapLayer* mapLayer, SGMapInfo* mapInf
 	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pActor->setPositionRealY(thicknessRect.origin.y);
+	m_pMonster->setPositionRealY(thicknessRect.origin.y);
 }
 
 void SGMonsterWalkActivity::updateDownMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect) {
@@ -148,7 +146,7 @@ void SGMonsterWalkActivity::updateDownMove(SGMapLayer* mapLayer, SGMapInfo* mapI
 	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pActor->setPositionRealY(thicknessRect.origin.y);
+	m_pMonster->setPositionRealY(thicknessRect.origin.y);
 }
 
 

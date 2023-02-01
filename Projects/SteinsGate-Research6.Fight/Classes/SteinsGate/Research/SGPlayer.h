@@ -34,8 +34,11 @@ public:
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
 
 	void runAction(int actionCode);
+	void runActionForce(int actionCode);
 	void runBaseAction(BaseAction_t baseAction);
 	void runAnimation(int animationCode);
+
+	int getRunningActionCode();
 
 	SGActorSprite* getActorSprite();
 	SGCharacter* getCharacter();

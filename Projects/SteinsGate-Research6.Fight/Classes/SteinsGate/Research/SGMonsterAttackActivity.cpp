@@ -8,15 +8,25 @@
 
 #include "SGMonsterAttackActivity.h"
 
-#include <SteinsGate/Research/SGAIActor.h>
+#include <SteinsGate/Research/SGMonster.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
 
-SGMonsterAttackActivity::SGMonsterAttackActivity(SGAIActor* actor) : SGAIActivity(actor, AIActivity::Attack) {}
+SGMonsterAttackActivity::SGMonsterAttackActivity(SGMonster* monster)
+	: SGMonsterActivity(monster, AIActivity::Attack)
+	, m_pHitRecorder(monster->getHitRecorder()){}
 
 void SGMonsterAttackActivity::onActivityBegin() {
+	m_pMonster->runAnimation(MONSTER_ANIMATION_ATTACK);
 
-	m_pActor->runAnimation(MONSTER_ANIMATION_ATTACK);
+	m_pHitRecorder->setRecord(true);
+	m_pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(SGMonsterAttackActivity::onEnemySingleHit, this));
+	m_pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(SGMonsterAttackActivity::onEnemyMultiHit, this));
+}
+
+void SGMonsterAttackActivity::onUpdate(float dt) {
+	SGActorPartAnimation* pAnimation = m_pMonster->getRunningAnimation();
+	m_pHitRecorder->record(pAnimation);
 }
 
 void SGMonsterAttackActivity::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {
@@ -25,7 +35,17 @@ void SGMonsterAttackActivity::onAnimationEnd(SGActorPartAnimation* animation, SG
 	
 }
 
-void SGMonsterAttackActivity::onUpdate(float dt) {}
-void SGMonsterAttackActivity::onActivityEnd() {}
+
+void SGMonsterAttackActivity::onEnemySingleHit(SGHitInfo& info) {
+	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
+		return;
+
+	info.HitTarget->hit(info);
+}
 
 
+void SGMonsterAttackActivity::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
+	if (newHitCount > 0) {
+		m_pMonster->stiffenBody(FPS6_v);
+	}
+}

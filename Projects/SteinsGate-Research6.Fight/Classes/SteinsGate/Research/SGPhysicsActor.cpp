@@ -11,6 +11,9 @@
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGMapLayer.h>
+#include <SteinsGate/Research/SGGlobal.h>
+
+#include <SteinsGate/Common/Engine/RectPoly.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -26,6 +29,10 @@ SGPhysicsActor::SGPhysicsActor(ActorType_t type, int code, SGMapLayer* mapLayer)
 	, m_fVelocityY(0.0f)
 	, m_fPuaseTime(0.0f)
 	, m_fElapsedPausedTime(0.0f)
+	, m_bDead(false)
+	, m_fAtkBoxInstantElapsedTime(0.0f)
+	, m_pAtkThicknessBox(nullptr)
+	, m_pAtkHitBox(nullptr)
 {}
 
 
@@ -33,12 +40,12 @@ bool SGPhysicsActor::isPaused() {
 	return m_fElapsedPausedTime < m_fPuaseTime;
 }
 
-bool SGPhysicsActor::isOnTheGround() {
-	return m_pActorSprite->getPositionY() == 0;
-}
-
 bool SGPhysicsActor::isBounced() {
 	return m_bBounced;
+}
+
+bool SGPhysicsActor::isDead() {
+	return m_bDead;
 }
 
 void SGPhysicsActor::disableElasticity() {
@@ -49,11 +56,17 @@ void SGPhysicsActor::enableElasticity() {
 	m_bUseElasticity = true;
 }
 
+
 void SGPhysicsActor::update(float dt) {
+
+	if (m_bDead)
+		return;
+
 	SGActor::update(dt);
 
 	updatePauseTime(dt);
 	updatePhysics(dt);
+	updateDebug(dt);		// TODO: 디버깅용 임시 코드
 }
 
 void SGPhysicsActor::updatePauseTime(float dt) {
@@ -156,6 +169,7 @@ void SGPhysicsActor::updateFriction(float dt) {
 
 
 
+
 float SGPhysicsActor::addForceX(float force) {
 	float fBefore = m_fVelocityX;
 	m_fVelocityX += force;
@@ -189,19 +203,24 @@ bool SGPhysicsActor::hasForceY() {
 }
 
 void SGPhysicsActor::hit(const SGHitInfo& hitInfo) {
-	SGAttackDataInfo* pAttackInfo = hitInfo.AttackDataInfo;
+	hit(hitInfo.HitDirection, hitInfo.HitRect, hitInfo.AttackDataInfo);
+}
 
-	float fForceX = hitInfo.HitDirection == SpriteDirection::Right ? -pAttackInfo->AttackXForce : pAttackInfo->AttackXForce;
+void SGPhysicsActor::hit(
+	const SpriteDirection_t hitDirection, 
+	const SGRect& hitRect,
+	SGAttackDataInfo* attackDataInfo) {
+	float fForceX = hitDirection == SpriteDirection::Right ? -attackDataInfo->AttackXForce : attackDataInfo->AttackXForce;
 	m_bBounced = false;
 
-	setSpriteDirection(hitInfo.HitDirection);
+	setSpriteDirection(hitDirection);
 	removeForceX();
 	removeForceY();
 
 	// 넘어지는 모션을 취하게 하는 경우
-	if (pAttackInfo->IsFallDownAttack) {
+	if (attackDataInfo->IsFallDownAttack) {
 		addForceX(fForceX);
-		addForceY(pAttackInfo->AttackYForce);
+		addForceY(attackDataInfo->AttackYForce);
 		return;
 	}
 
@@ -213,15 +232,27 @@ void SGPhysicsActor::hit(const SGHitInfo& hitInfo) {
 	}
 
 	// 공중에 있는 경우 Y축 힘만 가한다.
-	addForceY(pAttackInfo->AttackYForce);
+	addForceY(attackDataInfo->AttackYForce);
 }
 
-void SGPhysicsActor::pause() {
-	pause(FLT_MAX);
+void SGPhysicsActor::dead() {
+	m_bDead = true;
+
+	removeForceX();
+	removeForceY();
 }
 
-void SGPhysicsActor::pause(float time) {
+void SGPhysicsActor::pausePhysics() {
+	pausePhysics(FLT_MAX);
+}
+
+void SGPhysicsActor::pausePhysics(float time) {
 	m_fPuaseTime = time;
+}
+
+void SGPhysicsActor::stiffenBody(float time) {
+	pausePhysics(time);
+	pauseAnimation(time);
 }
 
 void SGPhysicsActor::resume() {
@@ -251,7 +282,7 @@ Direction_t SGPhysicsActor::getForceYDirection() {
 	return Direction::None;
 }
 
-bool SGPhysicsActor::hasVelocity() {
+bool SGPhysicsActor::hasForce() {
 
 	if (Math::Abs(m_fVelocityX) >= SG_FLT_EPSILON)
 		return true;
@@ -260,4 +291,75 @@ bool SGPhysicsActor::hasVelocity() {
 		return true;
 
 	return false;
+}
+
+
+// 디버깅용으로 임시로 추가한 코드
+// 어택박스 위치가 제대로 맞나 눈으로 확인하기 위한 용도
+void SGPhysicsActor::updateDebug(float dt) {
+
+	if (!SGGlobal::getInstance()->isAttackBoxDrawMode())
+		return;
+
+	updateDebugSub1(dt);
+	updateDebugSub2(dt);
+}
+
+
+void SGPhysicsActor::updateDebugSub1(float dt) {
+	SGActorPartAnimation* pAnimation = m_pActorSprite->getRunningAnimation();
+
+	if (pAnimation == nullptr)
+		return;
+
+	SGFrameInfo* pFrameInfo = pAnimation->getRunningFrameInfo();
+
+	if (pFrameInfo->FrameEvent != FrameEventType::AttackBoxInstant) {
+		return;
+	}
+
+	// 어택박스 프레임 발견할때마다 초기화
+	m_fAtkBoxInstantElapsedTime = 0.0f;
+
+	SGFrameInfoAttackBoxInstant* pAttackBoxInstantInfo = (SGFrameInfoAttackBoxInstant*)pFrameInfo;
+	SGActorRect absoluteActorRect = SGActor::convertAbsoluteActorRect(this, pAttackBoxInstantInfo->Rect);
+
+	RectPoly hitPoly = RectPoly::createFromLeftBottom(
+		absoluteActorRect.BodyRect.origin,
+		absoluteActorRect.BodyRect.size
+	);
+
+	RectPoly thickPoly = RectPoly::createFromLeftBottom(
+		absoluteActorRect.ThicknessRect.origin,
+		absoluteActorRect.ThicknessRect.size
+	);
+
+	if (m_pAtkHitBox == nullptr) {
+		m_pAtkHitBox = DrawNode::create();
+		m_pAtkHitBox->drawPolygon(hitPoly.source(), 4, {}, 1.0, Color4F{Color3B::YELLOW, 0.7f});
+		m_pBelongedMap->addChild(m_pAtkHitBox, 1000);
+	} else {
+		m_pAtkHitBox->clear();
+		m_pAtkHitBox->setOpacity(255);
+		m_pAtkHitBox->drawPolygon(hitPoly.source(), 4, {}, 1.0, Color4F{ Color3B::YELLOW, 0.7f });
+	}
+
+	if (m_pAtkThicknessBox == nullptr) {
+		m_pAtkThicknessBox = DrawNode::create();
+		m_pAtkThicknessBox->drawPolygon(thickPoly.source(), 4, {}, 1.0, Color4F{ Color3B::YELLOW, 0.7f });
+		m_pBelongedMap->addChild(m_pAtkThicknessBox, 1000);
+	} else {
+		m_pAtkThicknessBox->clear();
+		m_pAtkThicknessBox->setOpacity(255);
+		m_pAtkThicknessBox->drawPolygon(thickPoly.source(), 4, {}, 1.0, Color4F{ Color3B::YELLOW, 0.7f });
+	}
+}
+
+void SGPhysicsActor::updateDebugSub2(float dt) {
+	m_fAtkBoxInstantElapsedTime += dt;
+
+	if (m_fAtkBoxInstantElapsedTime >= 1.0f) {
+		if (m_pAtkThicknessBox) m_pAtkThicknessBox->setOpacity(0);
+		if (m_pAtkHitBox) m_pAtkHitBox->setOpacity(0);
+	}
 }

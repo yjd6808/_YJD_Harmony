@@ -9,6 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Research/SGStruct.h>
+#include <SteinsGate/Research/SGHitRecorder.h>
 
 class SGAIActor;
 class SGActorPartAnimation;
@@ -23,13 +24,18 @@ public:
 		eFinished,
 	};
 
-	SGAIActivity(SGAIActor* actor, AIActivity_t type);
+	SGAIActivity(AIActivity_t type);
 	virtual ~SGAIActivity() = default;
+	virtual SGAIActor* getAIActor() = 0;
 
-	void run();
-	void stop();
+	virtual void run();
+	virtual void stop();
+
 	bool isRunning();
+	void setLimit(float limit);
 	AIActivity_t getType() { return m_eType; }
+
+	void updateLimitTime(float dt);
 
 	virtual void onUpdate(float dt) = 0;
 	virtual void onActivityBegin() = 0;
@@ -39,7 +45,9 @@ public:
 	virtual void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* frame);
 	virtual void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame);
 protected:
-	State m_eState;
 	AIActivity_t m_eType;
-	SGAIActor* m_pActor;
+	State m_eState;
+
+	float m_fElasedTime;
+	float m_fLimitTime;
 };

@@ -10,6 +10,8 @@
 
 #include <SteinsGate/Common/Engine/SGRectEx.h>
 
+#include "SteinsGate/Common/Engine/RectPoly.h"
+
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -74,6 +76,10 @@ bool SGMapLayer::init() {
 	SGActionInfo* pSliding = pConfig->getActionInfo("sliding");
 	SGActionInfo* pGunShot = pConfig->getActionInfo("gun_shot");
 	SGActionInfo* pJump = pConfig->getActionInfo("jump");
+	SGActionInfo* pFallDown= pConfig->getActionInfo("fall_down");
+	SGActionInfo* pSitRecover = pConfig->getActionInfo("sit_recover");
+	SGActionInfo* pHit = pConfig->getActionInfo("hit");
+
 
 	info.ValidAction.PushBack(pIdle->Code);
 	info.ValidAction.PushBack(pWalk->Code);
@@ -81,6 +87,9 @@ bool SGMapLayer::init() {
 	info.ValidAction.PushBack(pSliding->Code);
 	info.ValidAction.PushBack(pGunShot->Code);
 	info.ValidAction.PushBack(pJump->Code);
+	info.ValidAction.PushBack(pFallDown->Code);
+	info.ValidAction.PushBack(pSitRecover->Code);
+	info.ValidAction.PushBack(pHit->Code);
 
 	m_pPlayer = new SGPlayer();
 	MainPlayer_v = m_pPlayer;
@@ -90,7 +99,7 @@ bool SGMapLayer::init() {
 	m_pPlayer->runBaseAction(BaseAction::Idle);
 	m_pPlayer->setMapLayer(this);
 
-	createMonster(2, 1, 200, 200);
+	createMonster(2, 1, 600, 350);
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = CC_CALLBACK_2(SGMapLayer::onKeyPressed, this);
@@ -137,14 +146,19 @@ SGCharacter* SGMapLayer::findNearestCharacterInRadious(SGActor* stdActor, float 
 }
 
 
-bool SGMapLayer::collectEnemiesInInstantAttackBox(const SGActorRect& absoluteActorRect, SGVector<SGHitInfo>& hitMonsters) {
+bool SGMapLayer::collectEnemiesInInstantAttackBox(
+	SGActor* attacker,
+	const SGActorRect& absoluteActorRect, SGVector<SGHitInfo>& hitMonsters) {
 
 	bool bFind = false;
-
-	for (int i = 0; i < m_vMonsters.Size(); ++i) {
-		auto pHitTarget = m_vMonsters[i];	// 공격받을 대상
+	
+	for (int i = 0; i < m_vPhysicsActors.Size(); ++i) {
+		auto pHitTarget = m_vPhysicsActors[i];	// 공격받을 대상
 		SGRect hitRect;
 		SpriteDirection_t eHitDirection;
+
+		if (pHitTarget->getAllyFlag() == attacker->getAllyFlag())
+			continue;
 
 		// 몬스터 기준으로 플레이어 충돌이라
 		// eHitDirection은 플레이어의 충돌방향이 되므로, 반대로 돌려줘야함.
@@ -169,6 +183,8 @@ void SGMapLayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* 
 		SGGlobal::getInstance()->toggleDrawBodyBoundingBox();
 	else if (keyCode == EventKeyboard::KeyCode::KEY_F2)
 		SGGlobal::getInstance()->toggleDrawThicknessBox();
+	else if (keyCode == EventKeyboard::KeyCode::KEY_F3)
+		SGGlobal::getInstance()->toggleDrawAttackBox();
 }
 
 void SGMapLayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
@@ -193,6 +209,7 @@ SGCharacter* SGMapLayer::createCharacter(CharacterType_t characterType, float x,
 	pPlayerCharacter->setAllyFlag(0);
 	registerZOrderActor(pPlayerCharacter);
 	registerCharacter(pPlayerCharacter);
+	registerPhysicsActor(pPlayerCharacter);
 	this->addChild(pPlayerCharacter);
 	return pPlayerCharacter;
 }
@@ -227,7 +244,7 @@ SGMonster* SGMapLayer::createMonster(int code, int aiCode, float x, float y) {
 	pMonster->setAllyFlag(1);
 	registerZOrderActor(pMonster);
 	registerMonster(pMonster);
-
+	registerPhysicsActor(pMonster);
 	this->addChild(pMonster);
 	return pMonster;
 }
@@ -242,7 +259,7 @@ SGObstacle* SGMapLayer::createObstacle(int code, float x, float y) {
 
 	if (pObstacleInfo->Colliadalble)
 		registerObstacle(pObstacle);
-
+	
 	this->addChild(pObstacle);
 	return pObstacle;
 }
@@ -267,7 +284,16 @@ void SGMapLayer::registerObstacle(SGObstacle* obstacle) {
 	m_vCollidableObstacles.PushBack(obstacle);
 }
 
+void SGMapLayer::registerPhysicsActor(SGPhysicsActor* physicsActor) {
+	m_vPhysicsActors.PushBack(physicsActor);
+}
+
 void SGMapLayer::registerCleanUp(SGActor* actor) {
+	// 이미 존재하는 경우 무시
+	if (m_hRemoveActorMap.Exist(actor)) {
+		return;
+	}
+	m_hRemoveActorMap.Insert(actor, actor);
 	m_qRemovedActors.Enqueue(actor);
 }
 
@@ -297,6 +323,10 @@ void SGMapLayer::unregisterMonster(SGMonster* mosnter) {
 
 void SGMapLayer::unregisterObstacle(SGObstacle* obstacle) {
 	
+}
+
+void SGMapLayer::unregisterPhysicsActor(SGPhysicsActor* physicsActor) {
+	m_vPhysicsActors.Remove(physicsActor);
 }
 
 
@@ -340,24 +370,32 @@ void SGMapLayer::updatePlayerProjectiles(float dt) {
 
 	for (int i = 0; i < m_vPlayerProjectiles.Size(); ++i) {
 		SGProjectile* pProjectile = m_vPlayerProjectiles[i];
-		for (int j = 0; j < m_vMonsters.Size(); ++j) {
-			SGMonster* pMonster = m_vMonsters[j];
+
+		/* 여기서 충돌 체크하면 안될 것 같다.
+		 * 개틀링 총알, 양자폭탄 이런것도 투사체인데..양자 폭탄은 다 투과하고 바닥에만 충격을 주는데
+		 * 투사체 종류별로 새로 구현해줘야하는건가?
+		 * 고민을...
+		for (int j = 0; j < m_vPhysicsActors.Size(); ++j) {
+			SGPhysicsActor* pTarget = m_vPhysicsActors[j];
 			SGRect hitRect;
 			SpriteDirection_t eHitDirection;
 
-			if (!pProjectile->isCollide(pMonster, eHitDirection, hitRect)) {
+			if (pProjectile->getSpawner()->getAllyFlag() == pTarget->getAllyFlag()) {
 				continue;
 			}
 
+			if (!pProjectile->isCollide(pTarget, eHitDirection, hitRect)) {
+				continue;
+			}
 
-		}
-
-		if (pProjectile->isDistanceOver()) {
 			registerCleanUp(pProjectile);
-			continue;
+			pTarget->hit(eHitDirection, hitRect, pProjectile->getBaseInfo()->AttackData);
+			break;
 		}
-
-		if (pProjectile->isLifeTimeOver()) {
+		*/
+		if (pProjectile->isDistanceOver() ||
+			pProjectile->isLifeTimeOver() ||
+			pProjectile->isOnTheGround()) {
 			registerCleanUp(pProjectile);
 		}
 	}
@@ -407,6 +445,8 @@ void SGMapLayer::cleanUpActors() {
 	while (!m_qRemovedActors.IsEmpty()) {
 		SGActor* pRemovedActor = m_qRemovedActors.Front();
 		m_qRemovedActors.Dequeue();
+		m_hRemoveActorMap.Remove(pRemovedActor);
+
 		switch (pRemovedActor->getType()) {
 		case ActorType::Projectile:{
 			cleanUpProjectile((SGProjectile*)pRemovedActor);
@@ -443,6 +483,7 @@ void SGMapLayer::cleanUpProjectile(SGProjectile* projectile) {
 void SGMapLayer::cleanUpMonster(SGMonster* monster) {
 	unregisterMonster(monster);
 	unregisterZOrderActor(monster);
+	unregisterPhysicsActor(monster);
 
 	Log("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d\n", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());
 	removeChild(monster);
@@ -461,4 +502,5 @@ void SGMapLayer::cleanUpCharacter(SGCharacter* character) {
 	// 해당 캐릭터 소유의 프로젝틀 모두 삭제
 	// 해당 캐릭터 소유의 히트박스 모두 삭제
 	// 관련핵해서 다 정리 후 캐릭터 삭제
+	
 }

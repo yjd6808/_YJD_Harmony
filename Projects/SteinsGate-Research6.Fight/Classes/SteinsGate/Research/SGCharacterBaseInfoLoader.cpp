@@ -99,6 +99,7 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo*(&char
 		info.JumpShotMoveSpeedX[WeaponType::Revolver] = gunnerRoot["rev_jump_shot_move_speed_x"].asFloat();
 		info.JumpShotMoveSpeedX[WeaponType::HandCannon] = gunnerRoot["musket_jump_shot_move_speed_x"].asFloat();
 		info.JumpShotMoveSpeedX[WeaponType::Musket] = gunnerRoot["hcan_jump_shot_move_speed_x"].asFloat();
+		info.DownRecoverTime = gunnerRoot["down_recover_time"].asFloat();
 
 		info.JumpForce = gunnerRoot["jump_force"].asFloat();
 		info.SlidingForce = gunnerRoot["sliding_force"].asFloat();

@@ -13,6 +13,7 @@ SGGlobal::SGGlobal()
 	: m_pDefaultTexture(nullptr)
 	, m_bDrawThicknessBox(false)
 	, m_bDrawBodyBoundingBox(false)
+	, m_bDrawAttackBox(false)
 {}
 
 SGGlobal::~SGGlobal() {
@@ -30,6 +31,10 @@ void SGGlobal::toggleDrawThicknessBox() {
 
 void SGGlobal::toggleDrawBodyBoundingBox() {
 	m_bDrawBodyBoundingBox = !m_bDrawBodyBoundingBox;
+}
+
+void SGGlobal::toggleDrawAttackBox() {
+	m_bDrawAttackBox = !m_bDrawAttackBox;
 }
 
 void SGGlobal::initialize() {

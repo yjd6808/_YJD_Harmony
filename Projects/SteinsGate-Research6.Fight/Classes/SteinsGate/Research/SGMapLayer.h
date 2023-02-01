@@ -26,7 +26,7 @@ public:
 	SGCharacter* findNearestCharacterInRadious(SGActor* stdActor, float radious, Out_ float& enemyDist);
 
 	// 1개이상 있으면 true 리턴
-	bool collectEnemiesInInstantAttackBox(const SGActorRect& rect, Out_ SGVector<SGHitInfo>& hitMonsters);
+	bool collectEnemiesInInstantAttackBox(SGActor* attacker, const SGActorRect& rect, Out_ SGVector<SGHitInfo>& hitMonsters);
 
 	static SGMapLayer* create(int mapCode);
 
@@ -48,15 +48,19 @@ public:
 	void registerPlayerProjectile(SGProjectile* projectile);
 	void registerMonster(SGMonster* mosnter);
 	void registerObstacle(SGObstacle* obstacle);
+	void registerPhysicsActor(SGPhysicsActor* physicsActor);
 	void registerCleanUp(SGActor* actor);
+	
 
 	void unregisterZOrderActor(SGActor* actor);
 	void unregisterPlayerProjectile(SGProjectile* projectile);
 	void unregisterMonster(SGMonster* mosnter);
 	void unregisterObstacle(SGObstacle* obstacle);
+	void unregisterPhysicsActor(SGPhysicsActor* physicsActor);
 
 	void cleanUpActors();
 	void cleanUpProjectile(SGProjectile* projectile);
+	
 	void cleanUpMonster(SGMonster* monster);
 	void cleanUpObstacle(SGObstacle* obstacle);
 	void cleanUpCharacter(SGCharacter* character);
@@ -71,14 +75,17 @@ public:
 	SGMapInfo* m_pMapInfo;
 	SGVector<SGFrameTexture*> m_vTileTextures;
 	
-	// 캐릭터 관련 정보
+	// TODO: 액터 박스를 구현해서 따로 관리해줄 필요가 있음
 	SGPlayer* m_pPlayer;
-	SGVector<SGActor*> m_vZOrderedActors;							// Z오더를 고유 ID처럼 사용해도 될듯? 이진탐색으로 삭제 함 댈것같다.
+	SGVector<SGActor*> m_vZOrderedActors;			// Z오더를 고유 ID처럼 사용해도 될듯? 이진탐색으로 삭제 함 댈것같다.
 	SGVector<SGProjectile*> m_vPlayerProjectiles;	// 플레이어가 만든 충돌체
 	SGVector<SGProjectile*> m_vEnmemyProjectiles;	// 적이 만든 충돌체
 	SGVector<SGMonster*> m_vMonsters;
 	SGVector<SGObstacle*> m_vCollidableObstacles;
 	SGVector<SGCharacter*> m_vCharacters;
+	SGVector<SGPhysicsActor*> m_vPhysicsActors;
+
+	SGHashMap<SGActor*, SGActor*> m_hRemoveActorMap;	// 디버깅용, 중복 큐잉 방지용
 	SGArrayQueue<SGActor*> m_qRemovedActors;
 
 	float m_fZReorderTime;

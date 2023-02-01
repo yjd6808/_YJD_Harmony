@@ -36,10 +36,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGAITimedActivity.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAnimationInfo.cpp">
       <SubType>
       </SubType>
@@ -57,7 +53,15 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerSitRecover.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGHitRecorder.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterActivity.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -65,6 +69,10 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterFallDownActivity.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterHitActivity.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterIdleActivity.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterSitActivity.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -211,10 +219,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGAITimedActivity.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAllActions.h">
       <SubType>
       </SubType>
@@ -284,6 +288,10 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerJump.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerRun.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerSitRecover.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerSliding.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerWalk.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGHitRecorder.h">
@@ -302,10 +310,18 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterActivity.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterAttackActivity.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterFallDownActivity.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterHitActivity.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterIdleActivity.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterSitActivity.h">
       <SubType>
       </SubType>
     </ClInclude>

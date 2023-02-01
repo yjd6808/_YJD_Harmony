@@ -8,5 +8,20 @@
 
 #pragma once
 
+#include <SteinsGate/Research/SGGunnerAction.h>
+
+class SGGunnerFallDown : public SGGunnerAction {
+public:
+	SGGunnerFallDown(SGPlayer* player, SGActionInfo* actionInfo);
+
+	void onActionBegin() override;
+	void onActionEnd() override;
+	void onUpdate(float dt) override;
+private:
+	bool m_bBounced;
+	bool m_bDown;
+	float m_fElapsedDownTime;
+	float m_fDownRecoverTime;
+};
 
 

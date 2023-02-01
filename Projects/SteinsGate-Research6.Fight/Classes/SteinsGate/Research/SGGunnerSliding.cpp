@@ -15,26 +15,26 @@
 SGGunnerSliding::SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo)
 {
-	initHitRecorder(
-		CC_CALLBACK_1(SGGunnerSliding::onEnemySingleHit, this),
-		CC_CALLBACK_2(SGGunnerSliding::onEnemyMultiHit, this)
-	);
 }
 
 
 void SGGunnerSliding::onActionBegin() {
 	m_bSlidingStarted = false;
 	m_pPlayer->runAnimation(GUNNER_ANIMATION_SLIDING);
-
-	m_pHitRecorder->clear();
 	m_pHitRecorder->setAlreadyHitRecord(true);
+	m_pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(SGGunnerSliding::onEnemySingleHit, this));
+	m_pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(SGGunnerSliding::onEnemyMultiHit, this));
+	
 }
 
 void SGGunnerSliding::onUpdate(float dt) {
-	if (!m_bSlidingStarted)
-		return;
 
 	SGCharacter* pCharacter = m_pPlayer->getCharacter();
+	SGActorPartAnimation* pAnimation = pCharacter->getRunningAnimation();
+	m_pHitRecorder->record(pAnimation);
+
+	if (!m_bSlidingStarted)
+		return;
 
 	if (pCharacter->hasForceX())
 		return;
@@ -43,17 +43,6 @@ void SGGunnerSliding::onUpdate(float dt) {
 	stop();
 }
 
-
-
-void SGGunnerSliding::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {
-}
-
-void SGGunnerSliding::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {
-}
-
-void SGGunnerSliding::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {
-	m_pHitRecorder->record(animation);
-}
 
 void SGGunnerSliding::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {
 	SGCharacter* pCharacter = m_pPlayer->getCharacter();
@@ -74,8 +63,6 @@ void SGGunnerSliding::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture
 	}
 }
 
-
-
 void SGGunnerSliding::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
@@ -86,7 +73,6 @@ void SGGunnerSliding::onEnemySingleHit(SGHitInfo& info) {
 
 void SGGunnerSliding::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
 	if (newHitCount > 0) {
-		m_pPlayer->getCharacter()->pauseAnimation(FPS6_v);
-		m_pPlayer->getCharacter()->pause(FPS6_v);
+		m_pPlayer->getCharacter()->stiffenBody(FPS6_v);
 	}
 }

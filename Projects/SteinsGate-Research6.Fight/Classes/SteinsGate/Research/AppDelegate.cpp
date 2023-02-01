@@ -5,7 +5,7 @@
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 
-#define AppName "SteinsGate-Research5.AI"
+#define AppName "SteinsGate-Research6.Fight"
 
 USING_NS_CC;
 

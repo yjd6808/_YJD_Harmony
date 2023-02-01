@@ -19,21 +19,32 @@ public:
 	~SGPhysicsActor() override = default;
 
 	virtual void hit(const SGHitInfo& hitInfo);
+	virtual void hit(const SpriteDirection_t hitDirection, const SGRect& hitRect, SGAttackDataInfo* attackDataInfo);
+	virtual void dead();
+
 
 	bool isPhysicsActor() override { return true; }
 	bool isPaused();
-	bool isOnTheGround();
 	bool isBounced();
+	bool isDead();
 
 	void setWeight(float weight) { m_fWeight = weight; }
 	void disableElasticity();
 	void enableElasticity();
 
+	
 	void update(float dt) override;
 	void updatePauseTime(float dt);
 	void updatePhysics(float dt);
 	void updateGravity(float dt);
 	void updateFriction(float dt);
+
+	
+	// 디버깅용 코드 =====================
+	void updateDebug(float dt);
+	void updateDebugSub1(float dt);
+	void updateDebugSub2(float dt);
+	// =================================
 
 	float addForceX(float force);
 	float addForceY(float force);
@@ -49,20 +60,23 @@ public:
 
 	bool hasForceX();
 	bool hasForceY();
+	bool hasForce();
 
-
-	void pause();
-	void pause(float time);
-
+	void pausePhysics();
+	void pausePhysics(float time);
 	void resume();
+
+	void stiffenBody(float time);		// 경직시키다 영단어
+	
 
 	Direction_t getForceXDirection();
 	Direction_t getForceYDirection();
 
-	bool hasVelocity();
+	
 protected:
 	bool m_bUseElasticity;
 	bool m_bBounced;
+	bool m_bDead;
 
 	float m_fWeight;
 	float m_fUpTime;
@@ -71,6 +85,12 @@ protected:
 	float m_fVelocityY;
 	float m_fElapsedPausedTime;
 	float m_fPuaseTime;
+
+
+	// 디버깅 용
+	float m_fAtkBoxInstantElapsedTime;
+	SGDrawNode* m_pAtkThicknessBox;
+	SGDrawNode* m_pAtkHitBox;
 };
 
 

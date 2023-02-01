@@ -1,6 +1,6 @@
 /*
  * 작성자: 윤정도
- * 생성일: 1/29/2023 8:01:39 AM
+ * 생성일: 2/1/2023 10:17:17 AM
  * =====================
  *
  */
@@ -9,18 +9,18 @@
 #pragma once
 
 
+
 #include <SteinsGate/Research/SGMonsterActivity.h>
 
-class SGMonsterIdleActivity : public SGMonsterActivity
+class SGMonsterSitActivity : public SGMonsterActivity
 {
 public:
-	SGMonsterIdleActivity(SGMonster* monster);
+	SGMonsterSitActivity(SGMonster* monster);
 
-	void onUpdate(float dt) override;
 	void onActivityBegin() override;
 	void onActivityEnd() override;
+
+	void onUpdate(float dt) override;
 };
-
-
 
 

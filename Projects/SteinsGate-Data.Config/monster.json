@@ -19,6 +19,7 @@
             "armor": 0,
             "magic_armor": 0,
             "enhance_per_level": 110.0,
+            "down_recover_time": 1.0,
             "move_speed_x": 90,
             "move_speed_y": 45,
             "fall_down_idx": 3,
@@ -136,6 +137,7 @@
             "enhance_per_level": 110.0,
             "move_speed_x": 90,
             "move_speed_y": 45,
+            "down_recover_time": 1.0,
             "weight": 200,
             "thickness_box": "0 -50 50 30",
             "parts": [
@@ -230,9 +232,15 @@
                     "frames": [
                         "9 -1"
                     ]
+                },
+                {
+                    "code": 9,
+                    "name": "sit",
+                    "loop": false,
+                    "frames": [
+                        "10 -1"
+                    ]
                 }
-
-
             ]
         }
     ]

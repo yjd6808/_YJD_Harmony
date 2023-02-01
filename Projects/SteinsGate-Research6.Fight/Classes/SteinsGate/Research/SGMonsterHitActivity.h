@@ -8,18 +8,26 @@
 
 #pragma once
 
+#include <SteinsGate/Research/SGMonsterActivity.h>
 
-#include <SteinsGate/Research/SGAITimedActivity.h>
-
-class SGMonsterHitActivity : public SGAIActivity
+class SGHitRecorder;
+class SGMonsterHitActivity : public SGMonsterActivity
 {
 public:
-	SGMonsterHitActivity(SGAIActor* actor);
+	SGMonsterHitActivity(SGMonster* actor);
 
+	void selectHitAnimation();
+	void checkPosition();
 	void onActivityBegin() override;
+	void updateGroundHitState(float dt);
+	void updateDownState(float dt);
+	void updateAirHitState(float dt);
 	void onUpdate(float dt) override;
+private:
+	bool m_bHitSmall;
+	bool m_bOnTheGround;		// 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지
+	bool m_bDownTimeCheckBegin;
+	float m_fElapsedDownTime;
+	float m_fDownRecoverTime;
 };
-
-
-
 

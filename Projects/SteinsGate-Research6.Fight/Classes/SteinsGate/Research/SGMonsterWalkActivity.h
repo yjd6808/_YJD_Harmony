@@ -10,13 +10,13 @@
 
 
 #include <SteinsGate/Common/Engine.h>
-#include <SteinsGate/Research/SGAITimedActivity.h>
+#include <SteinsGate/Research/SGMonsterActivity.h>
 #include <SteinsGate/Research/SGMapInfo.h>
 
 class SGActor;
 class SGMapLayer;
 class SGMonster;
-class SGMonsterWalkActivity : public SGAITimedActivity
+class SGMonsterWalkActivity : public SGMonsterActivity
 {
 public:
 	enum Mode
@@ -25,14 +25,14 @@ public:
 		eTrack
 	};
 
-	SGMonsterWalkActivity(SGAIActor* actor);
+	SGMonsterWalkActivity(SGMonster* monster);
 
 	void onActivityBegin() override;
 	void onUpdate(float dt) override;
 
 	void updateWander(float dt);
 	void updateTrack(float dt);
-	void updateMove(float dt, SGMonster* pMonster, SGMapLayer* pMapLayer);
+	void updateMove(float dt, SGMapLayer* pMapLayer);
 	void updateLeftMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect);
 	void updateRightMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect);
 	void updateUpMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect);

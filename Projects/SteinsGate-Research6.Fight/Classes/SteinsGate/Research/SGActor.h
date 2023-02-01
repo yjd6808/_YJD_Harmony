@@ -23,13 +23,14 @@
 #include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/SGStruct.h>
 #include <SteinsGate/Research/SGActorSprite.h>
+#include <SteinsGate/Research/SGHitRecorder.h>
 
 class SGMapLayer;
 class SGActor : public SGNode
 {
 public:
 	SGActor(ActorType_t type, int code, SGMapLayer* mapLayer);
-	~SGActor() override = default;
+	~SGActor() override;
 
 	virtual void initActorSprite() = 0;
 	virtual void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
@@ -38,6 +39,7 @@ public:
 	virtual void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
 	// virtual void onHit(SGActor* attacker, )
 	virtual void initThicknessBox(const SGThicknessBox& thicknessBox);
+	virtual void initHitRecorder(int hitPossibleListSize = 16, int alreadyHitMapSize = 32);
 	virtual bool isPhysicsActor() { return false; }
 
 	bool init() override;
@@ -59,8 +61,10 @@ public:
 	SGActorSprite* getActorSprite()			const;
 	SpriteDirection_t getSpriteDirection()  const;
 	int getRunningAnimationCode();
+	SGActorPartAnimation* getRunningAnimation();
 	int getAllyFlag() { return m_iAllyFlag; }
 	SGMapLayer* getMapLayer() { return m_pBelongedMap; }
+	SGHitRecorder* getHitRecorder() { return m_pHitRecorder; }
 
 	void setPositionReal(float x, float y);
 	void setPositionReal(const SGVec2& v);
@@ -82,18 +86,19 @@ public:
 	bool isCollide(SGActor* other, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect);
 	bool isCollide(const SGActorRect& otherRect, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect);
 	bool isCollide(const SGActorRect& otherRect);
+	bool isOnTheGround();
 
 public:
 	// stdActor기준으로 절대 액터 렉트를 얻도록 해줌
 	static SGActorRect convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect);
-
-
 protected:
 	SGMapLayer* m_pBelongedMap;
 	ActorType_t m_eActorType;
 	SGActorSprite* m_pActorSprite;
+	SGHitRecorder* m_pHitRecorder;
+
 	int m_iCode;
-	int m_iAllyFlag;
+	int m_iAllyFlag;		// 쓸일 있을려나
 
 	SGDrawNode* m_pThicknessBox;
 };

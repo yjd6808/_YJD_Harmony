@@ -17,6 +17,7 @@ public:
 	SGCharacter(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer);
 	static SGCharacter* create(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer);
 	void initActorSprite() override;
+	void hit(const SGHitInfo& hitInfo) override;
 
 	void update(float dt) override;
 	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;

@@ -18,3 +18,4 @@
 #include <SteinsGate/Research/SGGunnerGunShot.h>
 #include <SteinsGate/Research/SGGunnerFallDown.h>
 #include <SteinsGate/Research/SGGunnerHit.h>
+#include <SteinsGate/Research/SGGunnerSitRecover.h>

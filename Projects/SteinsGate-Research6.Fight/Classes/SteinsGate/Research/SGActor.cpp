@@ -25,10 +25,15 @@ SGActor::SGActor(ActorType_t type, int code, SGMapLayer* mapLayer)
 	, m_iCode(code)
 	, m_pThicknessBox(nullptr)
 	, m_iAllyFlag(0)
+	, m_pHitRecorder(nullptr)
+	, m_pActorSprite(nullptr)
 
 {
 }
 
+SGActor::~SGActor() {
+	DeleteSafe(m_pHitRecorder);
+}
 
 
 bool SGActor::init() {
@@ -49,6 +54,11 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 	m_pThicknessBox->drawPolygon(poly.source(), 4, {}, 1, SGColor4F{ ColorList::Brightgreen_v } );
 
 	this->addChild(m_pThicknessBox);
+}
+
+void SGActor::initHitRecorder(int hitPossibleListSize, int alreadyHitMapSize) {
+	DebugAssertMessage(m_pHitRecorder == nullptr, "이미 초기화 되어있습니다.");
+	m_pHitRecorder = new SGHitRecorder(this, hitPossibleListSize, alreadyHitMapSize);
 }
 
 void SGActor::update(float dt) {
@@ -154,7 +164,13 @@ SpriteDirection_t SGActor::getSpriteDirection() const {
 }
 
 int SGActor::getRunningAnimationCode() {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
 	return m_pActorSprite->getRunningAnimationCode();
+}
+
+SGActorPartAnimation* SGActor::getRunningAnimation() {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
+	return m_pActorSprite->getRunningAnimation();
 }
 
 
@@ -284,6 +300,11 @@ bool SGActor::isCollide(const SGActorRect& otherRect) {
 
 	SGRect myHit = getHitBox();
 	return myHit.intersectsRect(otherRect.BodyRect);
+}
+
+bool SGActor::isOnTheGround() {
+	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	return m_pActorSprite->getPositionY() == 0;
 }
 
 SGActorRect SGActor::convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect) {

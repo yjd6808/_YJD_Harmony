@@ -31,9 +31,10 @@ public:
 	int convertAvatarPartNameToType(const SGString& str);
 	void toggleDrawThicknessBox();
 	void toggleDrawBodyBoundingBox();
+	void toggleDrawAttackBox();
 	bool isThicknessBoxDrawMode() { return m_bDrawThicknessBox; }
 	bool isBodyBoundingBoxDrawMode() { return m_bDrawBodyBoundingBox; }
-
+	bool isAttackBoxDrawMode() { return m_bDrawAttackBox; }
 
 	const SGString& getAvatarNpkName(int characterType, int visualAvatarType);
 	const SGString& getWeaponNpkName(int characterType, int weaponType);
@@ -45,6 +46,7 @@ private:
 	// 런타임 중 변경가능
 	bool m_bDrawThicknessBox;
 	bool m_bDrawBodyBoundingBox;
+	bool m_bDrawAttackBox;
 
 	// 변경되지 않는 데이터
 	SGHashMap<SGString, int> m_AvatarPartNameToTypeMap;

@@ -8,11 +8,11 @@
 
 #include "SGHitRecorder.h"
 
-#include <SteinsGate/Research/SGPhysicsActor.h>
+#include <SteinsGate/Research/SGActor.h>
 #include <SteinsGate/Research/SGMapLayer.h>
 #include <SteinsGate/Research/SGDataManager.h>
 
-inline SGHitRecorder::SGHitRecorder(SGPhysicsActor* recorder)
+SGHitRecorder::SGHitRecorder(SGActor* recorder)
 	: m_pRecorder(recorder)
 	, m_vHitPossibleList(16)
 	, m_hAlreadyHitEnemy(32)
@@ -20,7 +20,7 @@ inline SGHitRecorder::SGHitRecorder(SGPhysicsActor* recorder)
 	, m_bRecordAlreadyHit(false)
 {}
 
-SGHitRecorder::SGHitRecorder(SGPhysicsActor* recorder, int hitPossibleListSize, int alreadyHitEnemySize)
+SGHitRecorder::SGHitRecorder(SGActor* recorder, int hitPossibleListSize, int alreadyHitEnemySize)
 	: m_pRecorder(recorder)
 	, m_vHitPossibleList(hitPossibleListSize)
 	, m_hAlreadyHitEnemy(alreadyHitEnemySize)
@@ -51,7 +51,7 @@ void SGHitRecorder::record(SGActorPartAnimation* animation) {
 
 	// 절대 위치 박스로 변환
 	SGActorRect absoluteActorRect = SGActor::convertAbsoluteActorRect(m_pRecorder, pAttackBoxInstantInfo->Rect);	
-	pMapLayer->collectEnemiesInInstantAttackBox(absoluteActorRect, m_vHitPossibleList);
+	pMapLayer->collectEnemiesInInstantAttackBox(m_pRecorder, absoluteActorRect, m_vHitPossibleList);
 
 	for (int i = 0; i < m_vHitPossibleList.Size(); ++i) {
 		SGHitInfo& hitInfo = m_vHitPossibleList[i];

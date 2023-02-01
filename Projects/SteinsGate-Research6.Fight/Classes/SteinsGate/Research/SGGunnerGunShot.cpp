@@ -27,9 +27,11 @@ SGGunnerGunShot::SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo) {}
 
 void SGGunnerGunShot::onActionBegin() {
-	SGGunnerAction::onActionBegin();
-
 	setMoveable(false);
+
+	m_pHitRecorder->setAlreadyHitRecord(true);
+	m_pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(SGGunnerGunShot::onEnemySingleHit, this));
+	m_pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(SGGunnerGunShot::onEnemyMultiHit, this));
 
 	m_bShotEnd = false;
 	m_bDownShotKeyPressedFirst = false;
@@ -63,13 +65,7 @@ void SGGunnerGunShot::onAnimationBegin(SGActorPartAnimation* animation, SGFrameT
 	const int iAnimationCode = animation->getAnimationInfo()->Code;
 
 
-	if (iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_BEGIN ||
-		iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_DOWN_BEGIN ||
-		iAnimationCode == GUNNER_ANIMATION_SHOT_LEFT ||
-		iAnimationCode == GUNNER_ANIMATION_SHOT_LEFT_DOWN) {
-		// 팔뚝 치기
-	}
-	else if (iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_SHOT ||
+	if (iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_SHOT ||
 			 iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT) {
 		m_bNextFireCheck = true;
 	} 
@@ -140,6 +136,8 @@ void SGGunnerGunShot::onKeyPressed(SGPlayerController* controller, SGEventKeyboa
 // ================================================================
 
 void SGGunnerGunShot::onUpdate(float dt) {
+	m_pHitRecorder->record(m_pPlayer->getCharacter()->getRunningAnimation());
+
 	SGPlayerController* controller = m_pPlayer->getController();
 
 	updateDownKeyCheck(controller);
@@ -181,6 +179,21 @@ void SGGunnerGunShot::updateRightShotTime(SGPlayerController* controller, float 
 }
 
 
+void SGGunnerGunShot::onEnemySingleHit(SGHitInfo& info) {
+	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
+		return;
+
+	info.HitTarget->hit(info);
+}
+
+
+void SGGunnerGunShot::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
+	if (newHitCount > 0) {
+		m_pPlayer->getCharacter()->stiffenBody(FPS6_v);
+	}
+}
+
+
 // ================================================================
 // 구현
 // ================================================================
@@ -208,6 +221,7 @@ bool SGGunnerGunShot::runRightShotAnimation(SGActorSprite* actorSprite) {
 void SGGunnerGunShot::runLeftShotAnimation(SGActorSprite* actorSprite, int animationCode) {
 	// 우측 방향으로 더이상 못쏘는 경우
 	// 반대총으로 쏘도록 한다.
+	m_pHitRecorder->clear();
 
 	if (animationCode == GUNNER_ANIMATION_SHOT_RIGHT_SHOT)
 		actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_LEFT);

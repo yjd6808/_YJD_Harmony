@@ -9,22 +9,21 @@
 #pragma once
 
 
-#include <SteinsGate/Research/SGAITimedActivity.h>
+#include <SteinsGate/Research/SGMonsterActivity.h>
 
-class SGMonsterFallDownActivity : public SGAIActivity
+class SGMonsterFallDownActivity : public SGMonsterActivity
 {
 public:
-	SGMonsterFallDownActivity(SGAIActor* actor);
+	SGMonsterFallDownActivity(SGMonster* monster);
 
 	void onActivityBegin() override;
 	void onActivityEnd() override;
 	void onUpdate(float dt) override;
-	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
 private:
 	bool m_bBounced;
 	bool m_bDown;
-
-	float m_fDownTime;
+	float m_fElapsedDownTime;
+	float m_fDownRecoverTime;
 };
 
 

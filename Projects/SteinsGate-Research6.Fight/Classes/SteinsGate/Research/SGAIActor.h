@@ -10,15 +10,10 @@
 
 #pragma once
 
-
-
-
-#pragma once
-
 #include <SteinsGate/Research/SGPhysicsActor.h>
-#include <SteinsGate/Research/SGAITimedActivity.h>
+#include <SteinsGate/Research/SGHitRecorder.h>
+#include <SteinsGate/Research/SGAIActivity.h>
 #include <SteinsGate/Research/SGAIInfo.h>
-
 
 class SGAIActor : public SGPhysicsActor
 {
@@ -38,7 +33,7 @@ public:
 
 	virtual void initAIActivities() = 0;
 	virtual void onSelectedActivity(SGAIActivity* selectedActivity) = 0;
-
+	
 
 
 	// TODO: 분할 정복 방식으로 미리 확률 계산해놓는것 고려.
@@ -52,7 +47,7 @@ public:
 	void update(float dt) override;
 	void updateState();
 	void updateActivity(float dt);
-	void updateRunningAcitivity();
+	void selectActivity();
 	void updateDirection();
 
 	void selectWanderActivity();
@@ -60,7 +55,7 @@ public:
 	void selectAngryActivity();
 
 	void runActivity(SGAIActivity* activity);
-	
+	void runActivity(AIActivity_t activityType);
 
 	SGVec2 getRandomSightPos();
 	SGAIInfo* getAiInfo() { return m_pAiInfo; }
@@ -72,6 +67,7 @@ protected:
 	SGAIActivity* m_pRunningActivity;
 	SGActor* m_pTarget;
 	SGAIInfo* m_pAiInfo;
+
 
 	State m_eState;
 	State m_eActivityState;	

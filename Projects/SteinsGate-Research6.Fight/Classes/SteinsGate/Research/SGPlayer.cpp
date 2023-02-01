@@ -82,6 +82,11 @@ void SGPlayer::runAction(int actionCode) {
 	m_pActionManager->runAction(actionCode);
 }
 
+void SGPlayer::runActionForce(int actionCode) {
+	m_pActionManager->stopActionForce();
+	m_pActionManager->runAction(actionCode);
+}
+
 void SGPlayer::runBaseAction(BaseAction_t baseAction) {
 	m_pActionManager->runBaseAction(baseAction);
 }
@@ -89,6 +94,12 @@ void SGPlayer::runBaseAction(BaseAction_t baseAction) {
 void SGPlayer::runAnimation(int animationCode) {
 	DebugAssertMessage(m_pCharacter, "캐릭터가 세팅되지 않았습니다.");
 	m_pCharacter->runAnimation(animationCode);
+}
+
+int SGPlayer::getRunningActionCode() {
+	SGAction* pAction = m_pActionManager->getRunningAction();
+	if (pAction == nullptr) return InvalidValue_v;
+	return pAction->getActionCode();
 }
 
 SGActorSprite* SGPlayer::getActorSprite() {

@@ -22,8 +22,10 @@
 
 void SGDataManager::LoadAllConfigs() {
 	// 내가 만든 설정파일 들은 아직 엄청 가벼워서 쓰레드가 필요없다.
-	
-	if (SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectileInfoMap) && 
+
+
+	if (SGAttackDataInfoLoader::LoadAttackDataInfo(m_AttackDataInfoMap) &&
+		SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectileInfoMap) && 
 		SGActionInfoLoader::LoadActionInfo(m_ActionInfoMap) &&
 		SGMonsterInfoLoader::LoadMonsterInfo(m_MonsterInfoMap) &&
 		SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(m_CharacterBaseInfoMap) &&
@@ -31,8 +33,7 @@ void SGDataManager::LoadAllConfigs() {
 		SGTileInfoLoader::LoadTileInfo(m_TileInfoMap) && 
 		SGObstacleInfoLoader::LoadObstacleInfo(m_ObstacleInfoMap) &&
 		SGMapInfoLoader::LoadMapInfo(m_MapInfoMap) &&
-		SGAIInfoLoader::LoadAIInfo(m_AIInfoMap) &&
-		SGAttackDataInfoLoader::LoadAttackDataInfo(m_AttackDataInfoMap)) {
+		SGAIInfoLoader::LoadAIInfo(m_AIInfoMap)) {
 		Log("==== 모든 기획파일 로딩완료 ====\n");
 	} else {
 		DebugAssertMessage(false, "기획파일 로딩 실패");

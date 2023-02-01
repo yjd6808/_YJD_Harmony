@@ -9,18 +9,21 @@
 #pragma once
 
 
-#include <SteinsGate/Research/SGAITimedActivity.h>
+#include <SteinsGate/Research/SGMonsterActivity.h>
 
-class SGMonsterAttackActivity : public SGAIActivity
+class SGMonsterAttackActivity : public SGMonsterActivity
 {
 public:
-	SGMonsterAttackActivity(SGAIActor* actor);
+	SGMonsterAttackActivity(SGMonster* monster);
 
 	void onActivityBegin() override;
 	
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
 	void onUpdate(float dt) override;
-	void onActivityEnd() override;
+	void onEnemySingleHit(SGHitInfo& info);
+	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
+private:
+	SGHitRecorder* m_pHitRecorder;
 };
 
 

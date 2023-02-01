@@ -37,6 +37,7 @@ struct SGMonsterInfo
 	float Weight;
 	float MoveSpeedX;
 	float MoveSpeedY;
+	float DownRecoverTime;
 	int PartsCount;
 	SGThicknessBox ThicknessBox;
 	SGMonsterPartInfo Parts[MaxMonsterPartsCount_v];

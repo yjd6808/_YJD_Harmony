@@ -12,15 +12,17 @@
 #include <SteinsGate/Research/SGAIActor.h>
 #include <SteinsGate/Research/SGActorPartAnimation.h>
 
-SGAIActivity::SGAIActivity(SGAIActor* actor, AIActivity_t type)
-	: m_pActor(actor)
-	, m_eState(eInitialized)
+SGAIActivity::SGAIActivity(AIActivity_t type)
+	: m_eState(eInitialized)
 	, m_eType(type)
+	, m_fElasedTime(0.0f)
+	, m_fLimitTime(1.0f)
 {}
 
 void SGAIActivity::run() {
 	DebugAssertMessage(m_eState != eRunning, "해당 AI 액터의 액티비티가 실행중입니다.");
 	m_eState = eRunning;
+	m_fElasedTime = 0.0f;
 	onActivityBegin();
 }
 
@@ -36,6 +38,21 @@ bool SGAIActivity::isRunning() {
 	return m_eState == eRunning;
 }
 
+void SGAIActivity::setLimit(float limit) {
+	m_fLimitTime = limit;
+}
+
+void SGAIActivity::updateLimitTime(float dt) {
+	if (!isRunning())
+		return;
+
+	m_fElasedTime += dt;
+
+	if (m_fElasedTime >= m_fLimitTime) {
+		stop();
+	}
+}
+
 void SGAIActivity::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {
 	SGFrameInfo* pFrameInfo = animation->getFrameInfo(animation->getFrameIndexInAnimation());
 
@@ -44,7 +61,7 @@ void SGAIActivity::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture*
 	if (pFrameInfo->FrameEventId != InvalidValue_v) {
 		DebugAssertMessage(pFrameInfo->FrameEvent >= 0 && pFrameInfo->FrameEvent < FrameEventType::Max, "AI 액터의 프레임 이벤트 타입이 이상합니다.");
 		DebugAssertMessage(pFrameInfo->FrameEventId != InvalidValue_v, "AI 액터의 프레임 이벤트 ID 값이 이상합니다.");
-		m_pActor->runFrameEvent((FrameEventType_t)pFrameInfo->FrameEvent, pFrameInfo->FrameEventId);
+		getAIActor()->runFrameEvent((FrameEventType_t)pFrameInfo->FrameEvent, pFrameInfo->FrameEventId);
 	}
 }
 

@@ -17,6 +17,7 @@
 #include <SteinsGate/Research/SGMonsterHitActivity.h>
 #include <SteinsGate/Research/SGMonsterWalkActivity.h>
 #include <SteinsGate/Research/SGMonsterIdleActivity.h>
+#include <SteinsGate/Research/SGMonsterSitActivity.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -27,12 +28,16 @@ SGMonster::SGMonster(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* ai
 {
 }
 
+SGMonster::~SGMonster() {
+}
+
 SGMonster* SGMonster::create(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* aiInfo) {
 	SGMonster* pMonster = new SGMonster(baseInfo, mapLayer, aiInfo);
 
 	if (pMonster && pMonster->init()) {
 		pMonster->initThicknessBox(baseInfo->ThicknessBox);
 		pMonster->initActorSprite();
+		pMonster->initHitRecorder();		// 먼저 초기화 필요 (AIActivity에서 초기화해서 씀)
 		pMonster->initAI();
 		pMonster->autorelease();
 		return pMonster;
@@ -66,19 +71,22 @@ void SGMonster::initAIActivities() {
 	m_ActivityMap[AIActivity::Attack] = new SGMonsterAttackActivity(this);
 	m_ActivityMap[AIActivity::Hit] = new SGMonsterHitActivity(this);
 	m_ActivityMap[AIActivity::FallDown] = new SGMonsterFallDownActivity(this);
+	m_ActivityMap[AIActivity::Sit] = new SGMonsterSitActivity(this);
 
 	runActivity(m_ActivityMap[AIActivity::Idle]);	// 아무것도 설정안하면 기본 실행 시간 1초
+	
 }
+
 
 void SGMonster::hit(const SGHitInfo& hitInfo) {
 	SGAIActor::hit(hitInfo);
 
 	if (hitInfo.AttackDataInfo->IsFallDownAttack) {
-		runActivity(m_ActivityMap[AIActivity::FallDown]);
+		runActivity(AIActivity::FallDown);
 		return;
 	}
 
-	runActivity(m_ActivityMap[AIActivity::Hit]);
+	runActivity(AIActivity::Hit);
 }
 
 
@@ -88,13 +96,13 @@ void SGMonster::update(float dt) {
 
 void SGMonster::initWanderAcitivity(SGAIActivity* wanderActivity) {
 	
-
 	if (wanderActivity->getType() == AIActivity::Walk) {
 		SGMonsterWalkActivity* pWalkActivity = (SGMonsterWalkActivity*)wanderActivity;
 		float fTime = SGRandom::random_real(m_pAiInfo->WanderWalkTime[0], m_pAiInfo->WanderWalkTime[1]);
 		pWalkActivity->setLimit(fTime);
 		pWalkActivity->setMode(SGMonsterWalkActivity::eWander);
 		pWalkActivity->setDestination(getRandomSightPos());
+
 	} else if (wanderActivity->getType() == AIActivity::Idle) {
 		SGMonsterIdleActivity* pIdleActivity = (SGMonsterIdleActivity*)wanderActivity;
 		float fTime = SGRandom::random_real(m_pAiInfo->IdleTime[0], m_pAiInfo->IdleTime[1]);

@@ -52,7 +52,6 @@ SGActorPartAnimation* SGActorPartAnimation::create(
 
 void SGActorPartAnimation::init() {
 	m_fRunningFrameTime = 0.0f;
-	// m_fPlaySpeed = 1.0f;
 	m_iFrameIndexInAnimation = 0;
 	m_bFinished = false;
 	m_bZeroFramePaused = false;

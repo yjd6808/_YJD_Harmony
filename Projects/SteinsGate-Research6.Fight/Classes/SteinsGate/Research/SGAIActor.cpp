@@ -46,7 +46,7 @@ void SGAIActor::update(float dt) {
 	DebugAssertMessage(m_pRunningActivity != nullptr, "동작중인 액티비티가 없습니다.");
 
 	updateState();				// 변경가능한 상태 확인
-	updateRunningAcitivity();	// 해당 상태에서 수행가능한 액티비티 설정
+	selectActivity();			// 해당 상태에서 수행가능한 액티비티 설정
 	updateDirection();
 	updateActivity(dt);			// 액티비티 지속 업데이트
 }
@@ -83,7 +83,7 @@ void SGAIActor::updateState() {
 
 
 
-void SGAIActor::updateRunningAcitivity() {
+void SGAIActor::selectActivity() {
 	if (m_pRunningActivity->isRunning())
 		return;
 
@@ -106,7 +106,8 @@ void SGAIActor::updateActivity(float dt) {
 void SGAIActor::updateDirection() {
 	AIActivity_t eActivityType = m_pRunningActivity->getType();
 
-	if (!AIActivity::DirectionUpdatableOnTrackState[eActivityType]) {
+	if (eActivityType != AIActivity::Idle && 
+		eActivityType != AIActivity::Walk) {
 		return;
 	}
 
@@ -177,6 +178,17 @@ void SGAIActor::runActivity(SGAIActivity* activity) {
 	}
 
 	m_pRunningActivity = activity;
+	m_pRunningActivity->run();
+}
+
+void SGAIActor::runActivity(AIActivity_t activityType) {
+	DebugAssertMessage(activityType >= 0 && activityType < AIActivity::Max, "액티비티 타입이 올바르지 않습니다.");
+
+	if (m_pRunningActivity && m_pRunningActivity->isRunning()) {
+		m_pRunningActivity->stop();
+	}
+
+	m_pRunningActivity = m_ActivityMap[activityType];
 	m_pRunningActivity->run();
 }
 

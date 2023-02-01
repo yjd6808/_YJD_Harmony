@@ -27,6 +27,9 @@ public:
 	void updateDownKeyCheck(SGPlayerController* controller);
 	void updateRightShotTime(SGPlayerController* controller, float dt);
 
+	void onEnemySingleHit(SGHitInfo& info);
+	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
+
 	bool runRightShotAnimation(SGActorSprite* character);
 	void runLeftShotAnimation(SGActorSprite* character, int animationCode);
 

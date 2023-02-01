@@ -32,7 +32,7 @@ struct SGProjectileInfo
 	}
 
 	int Code;
-	int AttackDataCode;
+	SGAttackDataInfo* AttackData;
 	SGString Name;
 	int NpkIndex;
 	int ImgIndex;

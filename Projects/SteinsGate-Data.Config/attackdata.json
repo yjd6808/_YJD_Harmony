@@ -12,7 +12,7 @@
             "attack_damage_type": 1,
             "attack_damage_ratio": 100.0,
             "attack_x_force_dir": 3,
-            "attack_x_force": 100.0,
+            "attack_x_force": 300.0,
             "attack_y_force": 100.0,
             "is_fall_down_attack": false
         },
@@ -32,7 +32,7 @@
             "attack_damage_type": 1,
             "attack_damage_ratio": 100.0,
             "attack_x_force_dir": 3,
-            "attack_x_force": 100.0,
+            "attack_x_force": 300.0,
             "attack_y_force": 100.0,
             "is_fall_down_attack": false
         },
@@ -42,9 +42,9 @@
             "attack_damage_type": 1,
             "attack_damage_ratio": 100.0,
             "attack_x_force_dir": 3,
-            "attack_x_force": 150.0,
+            "attack_x_force": 300.0,
             "attack_y_force": 100.0,
-            "is_fall_down_attack": true
+            "is_fall_down_attack": false
         },
         {
             "code": 5,
@@ -66,8 +66,8 @@
             "attack_damage_ratio": 100.0,
             "attack_x_force_dir": 3,
             "attack_x_force": 150.0,
-            "attack_y_force": 150.0,
-            "is_fall_down_attack": false
+            "attack_y_force": 350.0,
+            "is_fall_down_attack": true
         }     
     ]
 }

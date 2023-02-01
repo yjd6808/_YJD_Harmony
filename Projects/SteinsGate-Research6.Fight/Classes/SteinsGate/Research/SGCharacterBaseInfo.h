@@ -24,6 +24,7 @@ struct SGCharacterBaseInfo
 	int LevelUpStat;
 	float JumpForce;
 	float SlidingForce;
+	float DownRecoverTime;
 	int DefaultVisualZOrder[VisualType::Max];
 	int DefaultVisualNpkIndex[VisualType::Max];
 	int DefaultVisualImgIndex[VisualType::Max];

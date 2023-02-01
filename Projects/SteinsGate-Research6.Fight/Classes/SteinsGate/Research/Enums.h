@@ -219,6 +219,8 @@ Attack,
 Jump,
 Hit,
 FallDown,
+SitRecover,
+SitPickUp,
 Max
 SEnumEnd(BaseAction)
 
@@ -249,15 +251,9 @@ Walk,
 Attack,
 Hit,
 FallDown,
+Sit,
+// TODO: Custom 몬스터 특수행동 그런거 추가할 수 있을 듯?
 Max
 SEnumMiddle(AIActivity)
-
-static constexpr bool DirectionUpdatableOnTrackState[Max]{
-	true,
-	true,
-	false,
-	false,
-	false
-};
 
 SEnumMiddleEnd(AIActivity)

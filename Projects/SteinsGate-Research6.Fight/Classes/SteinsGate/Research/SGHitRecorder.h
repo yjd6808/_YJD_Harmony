@@ -19,12 +19,11 @@ using SGHitInfoList = SGVector<SGHitInfo>;
 using SGHitSingleCallbackFn = SGActionFn<SGHitInfo&>;
 using SGHitMultiCallbackFn = SGActionFn<SGHitInfoList&, int>;
 
-
 class SGHitRecorder
 {
 public:
-	SGHitRecorder(SGPhysicsActor* recorder);
-	SGHitRecorder(SGPhysicsActor* recorder, int hitPossibleListSize, int alreadyHitEnemySize);
+	SGHitRecorder(SGActor* recorder);
+	SGHitRecorder(SGActor* recorder, int hitPossibleListSize, int alreadyHitEnemySize);
 
 	bool isAlreadyHit(SGActor* hitEnemy);
 	void record(SGActorPartAnimation* animation);
@@ -35,7 +34,7 @@ public:
 	void setSingleHitCallback(const SGHitSingleCallbackFn& callback);		// 한마리 한마리 호출
 	void setMultiHitCallback(const SGHitMultiCallbackFn& callback);			// 해당 프레임내에서 타격된 모든 몬스터 정보 호출
 private:
-	SGPhysicsActor* m_pRecorder;
+	SGActor* m_pRecorder;
 	SGHitSingleCallbackFn m_fnHitSingleCallback;
 	SGHitMultiCallbackFn m_fnHitMultiCallback;
 	SGVector<SGHitInfo> m_vHitPossibleList;

@@ -56,6 +56,7 @@ bool SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 		monsterInfo.EnhancePerLevel = monterRoot["enhance_per_level"].asFloat();
 		monsterInfo.MoveSpeedX = monterRoot.get("move_speed_x", 0).asInt();
 		monsterInfo.MoveSpeedY = monterRoot["move_speed_y"].asFloat();
+		monsterInfo.DownRecoverTime = monterRoot.get("down_recover_time", 1.0).asFloat();
 		monsterInfo.Weight = monterRoot["weight"].asFloat();
 
 		SGJson::parseThicknessInfo(monterRoot["thickness_box"], monsterInfo.ThicknessBox);

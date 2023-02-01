@@ -192,9 +192,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAIActivity.cpp">
       <Filter>Actor\AI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGAITimedActivity.cpp">
-      <Filter>Actor\AI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterIdleActivity.cpp">
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
@@ -235,6 +232,15 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGStruct.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGHitRecorder.cpp">
       <Filter>Actor\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterSitActivity.cpp">
+      <Filter>Actor\AI\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMonsterActivity.cpp">
+      <Filter>Actor\AI\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerSitRecover.cpp">
+      <Filter>Player\Action\Gunner</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,9 +406,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAIActivity.h">
       <Filter>Actor\AI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGAITimedActivity.h">
-      <Filter>Actor\AI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterIdleActivity.h">
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
@@ -445,6 +448,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGHitRecorder.h">
       <Filter>Actor\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterSitActivity.h">
+      <Filter>Actor\AI\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMonsterActivity.h">
+      <Filter>Actor\AI\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerSitRecover.h">
+      <Filter>Player\Action\Gunner</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
