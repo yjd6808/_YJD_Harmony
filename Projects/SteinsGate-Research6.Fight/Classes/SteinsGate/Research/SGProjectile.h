@@ -14,32 +14,38 @@
 class SGProjectile : public SGActor
 {
 public:
-	SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo, SGMapLayer* mapLayer);
+	SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo);
 	~SGProjectile() override;
 
-	static SGProjectile* create(SGActor* spawner, SGProjectileInfo* baseInfo, SGMapLayer* mapLayer);
+	static SGProjectile* create(SGActor* spawner, SGProjectileInfo* baseInfo);
+
 	void initActorSprite() override;
 	void initThicknessBox(const SGThicknessBox& thicknessBox) override;
+	void initListener(SGActorListener* listener) override;
 
+	
 	void update(float dt) override;
+	void updateListenerEvent(float dt);
+
 	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 
-	void addHitActor(SGActor* actor);
-	void removeHitActor(SGActor* actor);
 
-	float isLifeTimeOver();
-	float isDistanceOver();
+	bool isLifeTimeOver();
+	bool isDistanceOver();
+
 	SGActor* getSpawner();
 	SGProjectileInfo* getBaseInfo();
 private:
 	float m_fMoveDistance;
 	float m_fElapsedLifeTime;
 
+	bool m_bLifeTimeOver;
+	bool m_bDistanceOver;
+	bool m_bCollisionOnTheGround;
+
 	SGActor* m_pSpwawner;
 	SGProjectileInfo* m_pBaseInfo;
-	SGCharacterInfo m_CharacterInfo;
-	SGVector<SGActor*> m_vHitList;
 };

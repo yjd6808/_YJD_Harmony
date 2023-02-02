@@ -33,7 +33,6 @@ public:
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
 
-	
 	bool canRunAction();
 	bool hasPreviousAction() { return m_pPreviousAction != nullptr; }
 	bool hasRunningAction() { return m_pRunningAction != nullptr; }

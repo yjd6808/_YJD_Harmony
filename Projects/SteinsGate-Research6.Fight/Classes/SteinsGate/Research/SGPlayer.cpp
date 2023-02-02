@@ -19,7 +19,7 @@ SGPlayer::SGPlayer()
 }
 
 SGPlayer::~SGPlayer() {
-	CC_SAFE_RELEASE(m_pCharacter);
+	CC_SAFE_RELEASE_NULL(m_pCharacter);
 
 	// 삭제
 	CC_SAFE_DELETE(m_pController);
@@ -108,7 +108,10 @@ SGActorSprite* SGPlayer::getActorSprite() {
 
 
 void SGPlayer::setCharacter(SGCharacter* character) {
+	DebugAssertMessage(m_pCharacter == nullptr, "이미 캐릭터가 세팅되어 있습니다.");
 	m_pCharacter = character;
+	m_pCharacter->retain();
+	m_pCharacter->setOwner(true);
 }
 
 void SGPlayer::setMapLayer(SGMapLayer* mapLayer) {

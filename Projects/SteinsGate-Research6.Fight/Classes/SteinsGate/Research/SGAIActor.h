@@ -26,7 +26,7 @@ public:
 		eAngry
 	};
 public:
-	SGAIActor(ActorType_t type, int code, SGMapLayer* mapLayer, SGAIInfo* aiInfo);
+	SGAIActor(ActorType_t type, int code, SGAIInfo* aiInfo);
 	~SGAIActor() override = 0;
 
 	void initAI();

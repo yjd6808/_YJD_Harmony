@@ -32,6 +32,7 @@ struct SGProjectileInfo
 	}
 
 	int Code;
+	int ProjectileListenerCode;
 	SGAttackDataInfo* AttackData;
 	SGString Name;
 	int NpkIndex;

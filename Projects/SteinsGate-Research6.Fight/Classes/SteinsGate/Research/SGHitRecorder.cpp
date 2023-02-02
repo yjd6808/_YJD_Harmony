@@ -51,7 +51,7 @@ void SGHitRecorder::record(SGActorPartAnimation* animation) {
 
 	// 절대 위치 박스로 변환
 	SGActorRect absoluteActorRect = SGActor::convertAbsoluteActorRect(m_pRecorder, pAttackBoxInstantInfo->Rect);	
-	pMapLayer->collectEnemiesInInstantAttackBox(m_pRecorder, absoluteActorRect, m_vHitPossibleList);
+	pMapLayer->collectEnemiesInActorRect(m_pRecorder, absoluteActorRect, m_vHitPossibleList);
 
 	for (int i = 0; i < m_vHitPossibleList.Size(); ++i) {
 		SGHitInfo& hitInfo = m_vHitPossibleList[i];

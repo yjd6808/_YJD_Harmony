@@ -13,6 +13,7 @@
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGActorSprite.h>
 #include <SteinsGate/Research/SGDataManager.h>
+#include <SteinsGate/Research/SGProjectileListener.h>
 #include <SteinsGate/Research/SGPlayer.h>
 
 #include <SteinsGate/Common/Engine/RectPoly.h>
@@ -20,21 +21,23 @@
 USING_NS_JC;
 USING_NS_CC;
 
-SGProjectile::SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo, SGMapLayer* mapLayer)
-	: SGActor(ActorType::Projectile, baseInfo->Code, mapLayer)
+SGProjectile::SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo)
+	: SGActor(ActorType::Projectile, baseInfo->Code)
 	, m_fMoveDistance(0.0f)
 	, m_fElapsedLifeTime(0.0f)
 	, m_pSpwawner(spawner)
 	, m_pBaseInfo(baseInfo)
-	, m_vHitList(MaxHitList_v)
+	, m_bLifeTimeOver(false)
+	, m_bDistanceOver(false)
+	, m_bCollisionOnTheGround(false)
 {}
 
 SGProjectile::~SGProjectile() {
 	CC_SAFE_RELEASE(m_pSpwawner);
 }
 
-SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo, SGMapLayer* mapLayer) {
-	SGProjectile* pProjectile = new SGProjectile(spawner, baseInfo, mapLayer);
+SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo) {
+	SGProjectile* pProjectile = new SGProjectile(spawner, baseInfo);
 
 	if (pProjectile && pProjectile->init()) {
 		spawner->retain();
@@ -60,6 +63,12 @@ void SGProjectile::initThicknessBox(const SGThicknessBox& thicknessBox) {
 		float fRelativeY = spawnerGroundPos.y - (spawnerCanvasPos.y + m_pBaseInfo->SpawnOffsetY);
 		m_pThicknessBox->setPositionY(fRelativeY);
 	}
+}
+
+void SGProjectile::initListener(SGActorListener* listener) {
+	DebugAssertMessage(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
+	DebugAssertMessage(listener->getActorType() == ActorType::Projectile, "프로젝틸 리스너만 초기화 가능합니다.");
+	m_pListener = listener;
 }
 
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
@@ -119,31 +128,58 @@ void SGProjectile::update(float dt) {
 	m_fMoveDistance += fMoveSpeedFPS;
 	m_fElapsedLifeTime += dt;
 
-	// 사거리 체크
-
-	// 바당 충돌 체크
-	
+	updateListenerEvent(dt);
 }
 
-void SGProjectile::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
-void SGProjectile::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
-void SGProjectile::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
-void SGProjectile::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
+void SGProjectile::updateListenerEvent(float dt) {
 
-void SGProjectile::addHitActor(SGActor* actor) {
-	m_vHitList.PushBack(actor);
+	DebugAssert(m_pListener, "프로젝틸은 리스너 초기화가 필수입니다.");
+	SGProjectileListener* pListener = (SGProjectileListener*)m_pListener;
+	pListener->onUpdate(dt);
+
+	if (isLifeTimeOver() && !m_bLifeTimeOver) {
+		pListener->onLifeTimeOver();
+		m_bLifeTimeOver = true;
+	}
+
+	if (isDistanceOver() && !m_bDistanceOver) {
+		pListener->onDistanceOver();
+		m_bDistanceOver = true;
+	}
+
+	if (isOnTheGround() && !m_bCollisionOnTheGround) {
+		pListener->onCollisionWithGround();
+		m_bCollisionOnTheGround = false;
+	}
 }
 
-void SGProjectile::removeHitActor(SGActor* actor) {
-	m_vHitList.Remove(actor);
+void SGProjectile::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+	if (m_pListener)
+		m_pListener->onFrameBegin(animation, texture);
 }
 
-float SGProjectile::isLifeTimeOver() {
-	return m_fElapsedLifeTime >= m_pBaseInfo->LifeTime;
+void SGProjectile::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+	if (m_pListener)
+		m_pListener->onFrameEnd(animation, texture);
 }
 
-float SGProjectile::isDistanceOver() {
-	return m_fMoveDistance >= m_pBaseInfo->Distance;
+void SGProjectile::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+	if (m_pListener)
+		m_pListener->onAnimationBegin(animation, texture);
+}
+
+void SGProjectile::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+	if (m_pListener)
+		m_pListener->onAnimationEnd(animation, texture);
+}
+
+
+bool SGProjectile::isLifeTimeOver() {
+	return m_bLifeTimeOver;
+}
+
+bool SGProjectile::isDistanceOver() {
+	return m_bDistanceOver;
 }
 
 SGActor* SGProjectile::getSpawner() { return m_pSpwawner; }

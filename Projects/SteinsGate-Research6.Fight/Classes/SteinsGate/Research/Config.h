@@ -64,3 +64,5 @@ inline constexpr int MaxHitList_v = 8;		// 프로젝틸 관통된 객체 기록�
 
 inline constexpr int DeathDownTime_v = FPS6_v;	// 바닥에 사망상태로 닿았을 때 몇초뒤 사망확정될지
 inline constexpr int MinPlayHitAnimationOnTheAir_v = FPS18_v;	// 공중에서 Hit 모션 얼마나 재생할지
+
+inline constexpr float ZReodrerDelay_v = FPS6_v;

@@ -18,8 +18,8 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGPhysicsActor::SGPhysicsActor(ActorType_t type, int code, SGMapLayer* mapLayer)
-	: SGActor(type, code, mapLayer)
+SGPhysicsActor::SGPhysicsActor(ActorType_t type, int code)
+	: SGActor(type, code)
 	, m_bUseElasticity(false)
 	, m_bBounced(false)
 	, m_fWeight(0.0f)
@@ -90,7 +90,7 @@ void SGPhysicsActor::updatePhysics(float dt) {
 }
 
 void SGPhysicsActor::updateGravity(float dt) {
-	SGMapInfo* pMapInfo = m_pBelongedMap->getMapInfo();
+	SGMapInfo* pMapInfo = m_pMapLayer->getMapInfo();
 
 	// 이번틱에 이동할 y축 위치
 	float y = m_pActorSprite->getPositionY() + m_fVelocityY * FPS1_v;
@@ -128,7 +128,7 @@ void SGPhysicsActor::updateGravity(float dt) {
 }
 
 void SGPhysicsActor::updateFriction(float dt) {
-	SGMapInfo* pMapInfo = m_pBelongedMap->getMapInfo();
+	SGMapInfo* pMapInfo = m_pMapLayer->getMapInfo();
 	SGRect groundRect = getThicknessBoxRect();
 
 	groundRect.origin.x += m_fVelocityX * FPS1_v;
@@ -161,7 +161,7 @@ void SGPhysicsActor::updateFriction(float dt) {
 		return;
 	}
 
-	if (m_pBelongedMap->isCollideWithObstacles(groundRect))
+	if (m_pMapLayer->isCollideWithObstacles(groundRect))
 		return;
 
 	setPositionRealX(groundRect.origin.x);
@@ -337,7 +337,7 @@ void SGPhysicsActor::updateDebugSub1(float dt) {
 	if (m_pAtkHitBox == nullptr) {
 		m_pAtkHitBox = DrawNode::create();
 		m_pAtkHitBox->drawPolygon(hitPoly.source(), 4, {}, 1.0, Color4F{Color3B::YELLOW, 0.7f});
-		m_pBelongedMap->addChild(m_pAtkHitBox, 1000);
+		m_pMapLayer->addChild(m_pAtkHitBox, 1000);
 	} else {
 		m_pAtkHitBox->clear();
 		m_pAtkHitBox->setOpacity(255);
@@ -347,7 +347,7 @@ void SGPhysicsActor::updateDebugSub1(float dt) {
 	if (m_pAtkThicknessBox == nullptr) {
 		m_pAtkThicknessBox = DrawNode::create();
 		m_pAtkThicknessBox->drawPolygon(thickPoly.source(), 4, {}, 1.0, Color4F{ Color3B::YELLOW, 0.7f });
-		m_pBelongedMap->addChild(m_pAtkThicknessBox, 1000);
+		m_pMapLayer->addChild(m_pAtkThicknessBox, 1000);
 	} else {
 		m_pAtkThicknessBox->clear();
 		m_pAtkThicknessBox->setOpacity(255);

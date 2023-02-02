@@ -27,10 +27,11 @@ int main()
     delete SGGlobal::getInstance();
     printf("릭 %d \n", detector.StopDetect());
 	*/
-
-    
-    AppDelegate app;
-    int iResult = cocos2d::Application::getInstance()->run();
+    int iResult = -1;
+    {
+        AppDelegate app;
+        iResult = cocos2d::Application::getInstance()->run();
+    }
     printf("릭 %d(코코스땜에 제대로 안나옴) \n", detector.StopDetect());
     return iResult;
     

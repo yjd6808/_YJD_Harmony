@@ -24,12 +24,13 @@
 #include <SteinsGate/Research/SGStruct.h>
 #include <SteinsGate/Research/SGActorSprite.h>
 #include <SteinsGate/Research/SGHitRecorder.h>
+#include <SteinsGate/Research/SGActorListener.h>
 
 class SGMapLayer;
 class SGActor : public SGNode
 {
 public:
-	SGActor(ActorType_t type, int code, SGMapLayer* mapLayer);
+	SGActor(ActorType_t type, int code);
 	~SGActor() override;
 
 	virtual void initActorSprite() = 0;
@@ -40,6 +41,7 @@ public:
 	// virtual void onHit(SGActor* attacker, )
 	virtual void initThicknessBox(const SGThicknessBox& thicknessBox);
 	virtual void initHitRecorder(int hitPossibleListSize = 16, int alreadyHitMapSize = 32);
+	virtual void initListener(SGActorListener* listener) = 0;	// 올바른 리스너인지 자식이 체크하도록함
 	virtual bool isPhysicsActor() { return false; }
 
 	bool init() override;
@@ -63,8 +65,9 @@ public:
 	int getRunningAnimationCode();
 	SGActorPartAnimation* getRunningAnimation();
 	int getAllyFlag() { return m_iAllyFlag; }
-	SGMapLayer* getMapLayer() { return m_pBelongedMap; }
+	SGMapLayer* getMapLayer() { return m_pMapLayer; }
 	SGHitRecorder* getHitRecorder() { return m_pHitRecorder; }
+	int getActorId() { return m_iActorId; }
 
 	void setPositionReal(float x, float y);
 	void setPositionReal(const SGVec2& v);
@@ -73,6 +76,8 @@ public:
 	void setPositionRealCenter(float x, float y);
 	void setPositionRealCenter(const SGVec2& v);
 	void setAllyFlag(int flag) { m_iAllyFlag = flag; }
+	void setMapLayer(SGMapLayer* mapLayer);
+	void setActorId(int id);
 
 	void runAnimation(int animationCode);
 	void runAnimation(int animationCode, int startFrameIndexInAnimation);
@@ -88,20 +93,25 @@ public:
 	bool isCollide(const SGActorRect& otherRect);
 	bool isOnTheGround();
 
+	void registerCleanUp();
 public:
 	// stdActor기준으로 절대 액터 렉트를 얻도록 해줌
 	static SGActorRect convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect);
 protected:
-	SGMapLayer* m_pBelongedMap;
+	SGMapLayer* m_pMapLayer;
 	ActorType_t m_eActorType;
 	SGActorSprite* m_pActorSprite;
 	SGHitRecorder* m_pHitRecorder;
+	SGActorListener* m_pListener;
 
+	int m_iActorId;
 	int m_iCode;
 	int m_iAllyFlag;		// 쓸일 있을려나
 
 	SGDrawNode* m_pThicknessBox;
 };
+
+
 
 
 

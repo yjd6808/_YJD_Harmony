@@ -15,7 +15,7 @@
 class SGPhysicsActor : public SGActor
 {
 public:
-	SGPhysicsActor(ActorType_t type, int code, SGMapLayer* mapLayer);
+	SGPhysicsActor(ActorType_t type, int code);
 	~SGPhysicsActor() override = default;
 
 	virtual void hit(const SGHitInfo& hitInfo);

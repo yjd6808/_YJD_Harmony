@@ -82,7 +82,9 @@ void SGProjectileInfoLoader::WriteOverridedProjectileInfo(Json::Value& projectil
 	if (iAttackDataCode != 0)
 		info.AttackData = pDataManager->getAttackDataInfo(iAttackDataCode);
 
-
+	int iProjectileListenerCode = SGJson::getIntDefault(projectile["listener_code"], 0);
+	if (iProjectileListenerCode != 0)
+		info.ProjectileListenerCode = iProjectileListenerCode;
 
 	const SGString& npkName = SGJson::getStringDefault(projectile["npk"]);
 	if (!npkName.IsNull()) {
@@ -162,6 +164,7 @@ void SGProjectileInfoLoader::WriteProjectileInfo(Json::Value& projectile, SGProj
 
 	Value& animationListRoot = projectile["animation"];
 	info.Code = projectile["code"].asInt();
+	info.ProjectileListenerCode = projectile["listener_code"].asInt();
 	info.AttackData = pDataManager->getAttackDataInfo(projectile["attakdata_code"].asInt());
 	info.Name = SGJson::getString(projectile["name"]);
 	info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(projectile["npk"]));

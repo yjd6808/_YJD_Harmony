@@ -73,9 +73,12 @@ bool SGActorPartSprite::init() {
 	if (!Sprite::initWithTexture(SGGlobal::getInstance()->getDefaultTexture()))
 		return false;
 
+	
+
 	SGImagePack* pImgPack = SGImagePackManager::getInstance()->getPack(m_pPartData->NpkIndex);
 
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
+
 		m_vFrames[i] = pImgPack->createFrameTexture(m_pPartData->ImgIndex, i);
 
 		if (m_vFrames[i] == nullptr) {

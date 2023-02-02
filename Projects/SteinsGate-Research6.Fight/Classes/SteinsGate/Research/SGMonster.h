@@ -18,12 +18,13 @@
 class SGMonster : public SGAIActor
 {
 public:
-	SGMonster(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* aiInfo);
+	SGMonster(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo);
 	~SGMonster() override;
 
-	static SGMonster* create(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* aiInfo);
+	static SGMonster* create(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo);
 	void initActorSprite() override;
 	void initAIActivities() override;
+	void initListener(SGActorListener* listener) override;
 	void hit(const SGHitInfo& hitInfo) override;
 
 	void update(float dt) override;

@@ -21,14 +21,15 @@
 USING_NS_JC;
 USING_NS_CC;
 
-SGCharacter::SGCharacter(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer)
-	: SGPhysicsActor(ActorType::Character, code, mapLayer)
+SGCharacter::SGCharacter(int code, const SGCharacterInfo& info)
+	: SGPhysicsActor(ActorType::Character, code)
 	, m_CharacterInfo(info)
+	, m_bOwner(false)
 {
 }
 
-SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer) {
-	SGCharacter* pCharacter = new SGCharacter(code, info, mapLayer);
+SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
+	SGCharacter* pCharacter = new SGCharacter(code, info);
 
 	if (pCharacter && pCharacter->init()) {
 		SGCharacterBaseInfo* pBaseInfo = SGDataManager::getInstance()->getCharacterBaseInfo(code);
@@ -73,18 +74,25 @@ void SGCharacter::initActorSprite() {
 	this->addChild(m_pActorSprite);
 }
 
+void SGCharacter::initListener(SGActorListener* listener) {
+	// 캐릭터가 다양해지면 필요할듯
+}
 
-extern SGPlayer* MainPlayer_v;		// 임시
 
 void SGCharacter::hit(const SGHitInfo& hitInfo) {
 	SGPhysicsActor::hit(hitInfo);
 
+	if (!m_bOwner)
+		return;
+
+	SGPlayer* pPlayer = SGPlayer::getInstance();
+
 	if (hitInfo.AttackDataInfo->IsFallDownAttack) {
-		MainPlayer_v->runActionForce(GUNNER_ACTION_FALL_DOWN);
+		pPlayer->runActionForce(GUNNER_ACTION_FALL_DOWN);
 		return;
 	}
 
-	MainPlayer_v->runActionForce(GUNNER_ACTION_HIT);
+	pPlayer->runActionForce(GUNNER_ACTION_HIT);
 }
 
 void SGCharacter::update(float dt) {
@@ -92,21 +100,41 @@ void SGCharacter::update(float dt) {
 }
 
 void SGCharacter::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-	MainPlayer_v->onFrameBegin(animation, texture);
 
-	
+
+	if (!m_bOwner)
+		return;
+
+
+	SGPlayer::getInstance()->onFrameBegin(animation, texture);
 }
 
 void SGCharacter::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-	MainPlayer_v->onFrameEnd(animation, texture);
+
+	if (!m_bOwner)
+		return;
+
+	SGPlayer::getInstance()->onFrameEnd(animation, texture);
 }
 
 void SGCharacter::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-	MainPlayer_v->onAnimationBegin(animation, texture);
+
+	if (!m_bOwner)
+		return;
+
+	SGPlayer::getInstance()->onAnimationBegin(animation, texture);
 }
 
 void SGCharacter::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-	MainPlayer_v->onAnimationEnd(animation, texture);
+
+	if (!m_bOwner)
+		return;
+
+	SGPlayer::getInstance()->onAnimationEnd(animation, texture);
+}
+
+void SGCharacter::setOwner(bool owner) {
+	m_bOwner = owner;
 }
 
 SGCharacterBaseInfo* SGCharacter::getBaseInfo() {

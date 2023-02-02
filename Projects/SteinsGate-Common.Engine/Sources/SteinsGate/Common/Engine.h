@@ -51,6 +51,9 @@ template <typename T, typename TAllocator = JCore::DefaultAllocator>
 using SGVector = JCore::Vector<T, TAllocator>;
 
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
+using SGList = JCore::LinkedList<T, TAllocator>;
+
+template <typename T, typename TAllocator = JCore::DefaultAllocator>
 using SGArrayQueue = JCore::ArrayQueue<T, TAllocator>;
 
 template <typename T, typename Predicate = std::less<T>>

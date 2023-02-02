@@ -20,6 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorBox.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorListenerManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAIActivity.cpp">
       <SubType>
       </SubType>
@@ -41,7 +49,15 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerAction.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerBulletListener.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -179,6 +195,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileListener.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGStruct.cpp">
       <SubType>
       </SubType>
@@ -203,6 +223,18 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorBox.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorListener.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorListenerDefine.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAIActivity.h">
       <SubType>
       </SubType>
@@ -228,8 +260,16 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAllActorListener.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackData.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGClientInfo.h">
       <SubType>
       </SubType>
@@ -273,6 +313,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerBulletListener.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerFallDown.h">
       <SubType>
       </SubType>
@@ -295,6 +339,10 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerSliding.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerWalk.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGHitRecorder.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorListenerManager.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -412,6 +460,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGPhysicsActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileListener.h">
       <SubType>
       </SubType>
     </ClInclude>

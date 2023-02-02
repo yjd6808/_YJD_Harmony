@@ -19,24 +19,28 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGActor::SGActor(ActorType_t type, int code, SGMapLayer* mapLayer)
-	: m_pBelongedMap(mapLayer)
-	, m_eActorType(type)
+SGActor::SGActor(ActorType_t type, int code)
+	: m_eActorType(type)
+	, m_iActorId(InvalidValue_v)
 	, m_iCode(code)
 	, m_pThicknessBox(nullptr)
 	, m_iAllyFlag(0)
 	, m_pHitRecorder(nullptr)
 	, m_pActorSprite(nullptr)
-
-{
-}
+	, m_pMapLayer(nullptr)
+	, m_pListener(nullptr)
+{}
 
 SGActor::~SGActor() {
 	DeleteSafe(m_pHitRecorder);
+	DeleteSafe(m_pListener);
 }
 
 
 bool SGActor::init() {
+
+
+
 	return true;
 }
 
@@ -57,12 +61,14 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 }
 
 void SGActor::initHitRecorder(int hitPossibleListSize, int alreadyHitMapSize) {
-	DebugAssertMessage(m_pHitRecorder == nullptr, "이미 초기화 되어있습니다.");
+	DebugAssertMessage(m_pHitRecorder == nullptr, "이미 히트 레코더가 초기화 되어있습니다.");
 	m_pHitRecorder = new SGHitRecorder(this, hitPossibleListSize, alreadyHitMapSize);
 }
 
 void SGActor::update(float dt) {
 	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMessage(m_pMapLayer, "맵 레이어가 세팅되지 않았습니다.");
+
 	m_pActorSprite->update(dt);
 
 
@@ -219,6 +225,15 @@ void SGActor::setPositionRealCenter(const SGVec2& v) {
 	setPositionRealCenter(v.x, v.y);
 }
 
+void SGActor::setMapLayer(SGMapLayer* mapLayer) {
+	m_pMapLayer = mapLayer;
+}
+
+void SGActor::setActorId(int id) {
+	DebugAssertMessage(m_iActorId == InvalidValue_v, "이미 ID값이 할당되어 있습니다.");
+	m_iActorId = id;
+}
+
 void SGActor::runAnimation(int animationCode) {
 	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	m_pActorSprite->runAnimation(animationCode);
@@ -235,7 +250,7 @@ void SGActor::pauseAnimation(float delay) {
 }
 
 void SGActor::runFrameEvent(FrameEventType_t frameEventType, int frameEventId) {
-	m_pBelongedMap->runFrameEvent(this, frameEventType, frameEventId);
+	m_pMapLayer->runFrameEvent(this, frameEventType, frameEventId);
 }
 
 void SGActor::setSpriteDirection(SpriteDirection_t direction) {
@@ -305,6 +320,11 @@ bool SGActor::isCollide(const SGActorRect& otherRect) {
 bool SGActor::isOnTheGround() {
 	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	return m_pActorSprite->getPositionY() == 0;
+}
+
+void SGActor::registerCleanUp() {
+	DebugAssertMessage(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
+	SGActorBox::getInstance()->registerCleanUp(this);
 }
 
 SGActorRect SGActor::convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect) {

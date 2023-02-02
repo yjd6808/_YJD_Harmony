@@ -22,8 +22,8 @@
 #define AILog(...)
 #endif
 
-SGAIActor::SGAIActor(ActorType_t type, int code, SGMapLayer* mapLayer, SGAIInfo* aiInfo)
-	: SGPhysicsActor(type, code, mapLayer)
+SGAIActor::SGAIActor(ActorType_t type, int code, SGAIInfo* aiInfo)
+	: SGPhysicsActor(type, code)
 	, m_pAiInfo(aiInfo)
 	, m_ActivityMap{}
 	, m_pRunningActivity()
@@ -59,7 +59,7 @@ void SGAIActor::updateState() {
 	m_ePreviousState = m_eState;
 	float enemyDist;
 	SGActor* pPreviousTarget = m_pTarget;
-	m_pTarget = m_pBelongedMap->findNearestCharacterInRadious(this, m_pAiInfo->SightRadious, enemyDist);
+	m_pTarget = m_pMapLayer->findNearestCharacterInRadious(this, m_pAiInfo->SightRadious, enemyDist);
 
 	if (m_pTarget == nullptr) {
 		AILog("[상태] 적 미발견: 배회 상태\n");

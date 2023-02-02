@@ -14,9 +14,12 @@
 class SGCharacter : public SGPhysicsActor
 {
 public:
-	SGCharacter(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer);
-	static SGCharacter* create(int code, const SGCharacterInfo& info, SGMapLayer* mapLayer);
+	SGCharacter(int code, const SGCharacterInfo& info);
+
+	static SGCharacter* create(int code, const SGCharacterInfo& info);
+
 	void initActorSprite() override;
+	void initListener(SGActorListener* listener) override;
 	void hit(const SGHitInfo& hitInfo) override;
 
 	void update(float dt) override;
@@ -24,11 +27,14 @@ public:
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
+	void setOwner(bool owner);
+	bool isOwner() { return m_bOwner; }
 
 	SGCharacterBaseInfo* getBaseInfo();
 private:
 	SGCharacterBaseInfo* m_pBaseInfo;
 	SGCharacterInfo m_CharacterInfo;
+	bool m_bOwner;
 };
 
 

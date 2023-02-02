@@ -22,8 +22,8 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGMonster::SGMonster(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* aiInfo)
-	: SGAIActor(ActorType::Monster, baseInfo->Code, mapLayer, aiInfo)
+SGMonster::SGMonster(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo)
+	: SGAIActor(ActorType::Monster, baseInfo->Code, aiInfo)
 	, m_pBaseInfo(baseInfo)
 {
 }
@@ -31,8 +31,8 @@ SGMonster::SGMonster(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* ai
 SGMonster::~SGMonster() {
 }
 
-SGMonster* SGMonster::create(SGMonsterInfo* baseInfo, SGMapLayer* mapLayer, SGAIInfo* aiInfo) {
-	SGMonster* pMonster = new SGMonster(baseInfo, mapLayer, aiInfo);
+SGMonster* SGMonster::create(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo) {
+	SGMonster* pMonster = new SGMonster(baseInfo, aiInfo);
 
 	if (pMonster && pMonster->init()) {
 		pMonster->initThicknessBox(baseInfo->ThicknessBox);
@@ -75,6 +75,12 @@ void SGMonster::initAIActivities() {
 
 	runActivity(m_ActivityMap[AIActivity::Idle]);	// 아무것도 설정안하면 기본 실행 시간 1초
 	
+}
+
+void SGMonster::initListener(SGActorListener* listener) {
+	DebugAssertMessage(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
+	DebugAssertMessage(listener->getActorType() == ActorType::Monster, "몬스터 리스너만 초기화 가능합니다.");
+	m_pListener = listener;
 }
 
 

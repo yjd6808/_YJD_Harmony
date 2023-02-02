@@ -38,10 +38,6 @@ void SGDataManager::LoadAllConfigs() {
 	} else {
 		DebugAssertMessage(false, "기획파일 로딩 실패");
 	}
-
-	m_ActionInfoMap.Values().Extension().ForEach([this](SGActionInfo& info) {
-		m_ActionInfoNameMap.Insert(info.ActionName, &info);
-	});
 }
 
 SGDataManager::SGDataManager() {}
@@ -63,10 +59,6 @@ SGActionInfo* SGDataManager::getActionInfo(int actionCode) {
 	return &m_ActionInfoMap[actionCode];
 }
 
-SGActionInfo* SGDataManager::getActionInfo(const SGString& actionName) {
-	DebugAssertMessage(m_ActionInfoNameMap.Exist(actionName), "해당 액션 정보(이름)가 존재하지 않습니다.");
-	return m_ActionInfoNameMap[actionName];
-}
 
 SGProjectileInfo* SGDataManager::getProjectileInfo(int projectileCode) {
 	DebugAssertMessage(m_ProjectileInfoMap.Exist(projectileCode), "해당 프로젝틸 정보가 존재하지 않습니다.");

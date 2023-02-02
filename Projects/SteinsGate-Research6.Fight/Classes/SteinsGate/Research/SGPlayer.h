@@ -17,9 +17,18 @@ class SGMonster;
 class SGProjectile;
 class SGPlayer
 {
-public:
 	SGPlayer();
+public:
 	~SGPlayer();
+
+	static SGPlayer* getInstance() {
+		static SGPlayer* s_pInstance = nullptr;
+
+		if (s_pInstance == nullptr)
+			s_pInstance = new SGPlayer;
+
+		return s_pInstance;
+	}
 
 	void setCharacter(SGCharacter* character);
 	void setMapLayer(SGMapLayer* mapLayer);

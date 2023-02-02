@@ -3,6 +3,7 @@
 #include <SteinsGate/Research/GameScene.h>
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGImagePackManager.h>
+#include <SteinsGate/Research/SGActorListenerManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 
 #define AppName "SteinsGate-Research6.Fight"
@@ -14,10 +15,16 @@ AppDelegate::AppDelegate()
     SGGlobal::getInstance();
     SGImagePackManager::getInstance();
     SGDataManager::getInstance();
+    SGPlayer::getInstance();
+    SGActorListenerManager::getInstance();
+    SGActorBox::getInstance();
 }
 
 AppDelegate::~AppDelegate() 
 {
+    delete SGActorBox::getInstance();
+    delete SGActorListenerManager::getInstance();
+    delete SGPlayer::getInstance();
     delete SGDataManager::getInstance();
     delete SGImagePackManager::getInstance();
     delete SGGlobal::getInstance();

@@ -64,6 +64,12 @@
     <Filter Include="Actor\Util">
       <UniqueIdentifier>{82f6b34f-ddb7-4d22-be73-14dee37a6233}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actor\Listener">
+      <UniqueIdentifier>{0fa2fea9-9552-4752-90b5-a9bf05025453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Listener\Gunner">
+      <UniqueIdentifier>{df3446cd-34aa-48ae-8424-768cb480f8e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGImagePackManager.cpp">
@@ -242,6 +248,19 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerSitRecover.cpp">
       <Filter>Player\Action\Gunner</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorListenerManager.cpp">
+      <Filter>Actor\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileListener.cpp">
+      <Filter>Actor\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerBulletListener.cpp">
+      <Filter>Actor\Listener\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.cpp">
+      <Filter>Actor\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGImagePackManager.h">
@@ -458,5 +477,27 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerSitRecover.h">
       <Filter>Player\Action\Gunner</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileListener.h">
+      <Filter>Actor\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorListenerDefine.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorListenerManager.h">
+      <Filter>Actor\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorListener.h">
+      <Filter>Actor\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAllActorListener.h">
+      <Filter>Actor\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerBulletListener.h">
+      <Filter>Actor\Listener\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.h">
+      <Filter>Actor\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorBox.h" />
   </ItemGroup>
 </Project>
