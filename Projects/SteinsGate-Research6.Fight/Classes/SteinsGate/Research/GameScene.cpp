@@ -2,6 +2,7 @@
  * 작성자 : 윤정도
  */
 
+#include "Tutturu.h"
 #include "GameScene.h"
 
 #include <SteinsGate/Research/SGDataManager.h>

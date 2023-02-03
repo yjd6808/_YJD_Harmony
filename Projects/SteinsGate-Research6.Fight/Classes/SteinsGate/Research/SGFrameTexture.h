@@ -11,7 +11,7 @@
 #include <SteinsGate/Common/Core/Npk/NpkSpriteRect.h>
 
 
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGConfig.h>
 #include <SteinsGate/Research/Tutturu.h>
 
 class SGFrameTexture : public cocos2d::Ref

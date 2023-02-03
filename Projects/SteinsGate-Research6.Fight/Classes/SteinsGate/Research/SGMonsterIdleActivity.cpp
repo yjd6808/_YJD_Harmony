@@ -5,7 +5,7 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGMonsterIdleActivity.h"
 
 #include <SteinsGate/Research/SGMonster.h>

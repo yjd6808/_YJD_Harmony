@@ -5,10 +5,10 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGJson.h"
 
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGConfig.h>
 #include <SteinsGate/Research/SGAnimationInfo.h>
 #include <SteinsGate/Research/SGTextParser.h>
 

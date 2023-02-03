@@ -154,7 +154,10 @@ struct Bucket
 		Memory::Set(pNewDynamicArray, sizeof(TBucketNode) * newCapacity, 0);
 
 		for (int i = 0; i < Size; i++) {
-			pNewDynamicArray[i] = Move(DynamicArray[i]);
+			if constexpr (IsPointerType_v<TValue>)
+				pNewDynamicArray[i] = DynamicArray[i];
+			else
+				Memory::PlacementNew(pNewDynamicArray[i], Move(DynamicArray[i]));
 		}
 
 		TAllocator::Deallocate(DynamicArray, sizeof(TBucketNode) * Capacity);
@@ -552,8 +555,10 @@ public:
 	TValueCollection& Values() override {
 		return m_ValueCollection;
 	}
-protected:
+
 	void Expand(int capacity) {
+		DebugAssertMessage(capacity > m_iCapacity, "이전 해쉬맵 크기보다 커야합니다.");
+
 		int iAllocatedSize;
 		TBucket* pNewTable = TAllocator::template Allocate<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
 		Memory::PlacementNewArray(pNewTable, capacity);
@@ -587,6 +592,8 @@ protected:
 		AllocatorDynamicDeallocateSafe(m_pTable, sizeof(TBucket) * iPrevCapacity);
 		m_pTable = pNewTable;
 	}
+protected:
+
 
 	bool ExpandIfNeeded(int size) {
 		if (size < m_iCapacity) {

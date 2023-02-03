@@ -5,12 +5,12 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGDataManager.h"
 
 #include <SteinsGate/Research/SGActionInfoLoader.h>
 #include <SteinsGate/Research/SGMonsterInfoLoader.h>
-#include <SteinsGate/Research/SGCharacterBaseInfoLoader.h>
+#include <SteinsGate/Research/SGCharBaseInfoLoader.h>
 #include <SteinsGate/Research/SGProjectileInfoLoader.h>
 #include <SteinsGate/Research/SGClientInfoLoader.h>
 #include <SteinsGate/Research/SGTileInfoLoader.h>
@@ -18,7 +18,15 @@
 #include <SteinsGate/Research/SGMapInfoLoader.h>
 #include <SteinsGate/Research/SGAIInfoLoader.h>
 #include <SteinsGate/Research/SGAttackDataInfoLoader.h>
+#include <SteinsGate/Research/SGCharAnimationInfoLoader.h>
 
+SGDataManager::SGDataManager() {}
+SGDataManager::~SGDataManager() {
+
+	for (int i = 0; i < CharType::Max; ++i) {
+		DeleteSafe(m_CharBaseInfoMap[i]);
+	}
+}
 
 void SGDataManager::LoadAllConfigs() {
 	// 내가 만든 설정파일 들은 아직 엄청 가벼워서 쓰레드가 필요없다.
@@ -28,7 +36,8 @@ void SGDataManager::LoadAllConfigs() {
 		SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectileInfoMap) && 
 		SGActionInfoLoader::LoadActionInfo(m_ActionInfoMap) &&
 		SGMonsterInfoLoader::LoadMonsterInfo(m_MonsterInfoMap) &&
-		SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(m_CharacterBaseInfoMap) &&
+		SGCharBaseInfoLoader::LoadCharBaseInfo(m_CharBaseInfoMap) &&
+		SGCharAnimationInfoLoader::LoadCharAnimationInfo(m_CharAnimationInfoMap, m_CharAnimationList) &&
 		SGClientInfoLoader::LoadClientInfo(m_ClientInfo) && 
 		SGTileInfoLoader::LoadTileInfo(m_TileInfoMap) && 
 		SGObstacleInfoLoader::LoadObstacleInfo(m_ObstacleInfoMap) &&
@@ -40,14 +49,7 @@ void SGDataManager::LoadAllConfigs() {
 	}
 }
 
-SGDataManager::SGDataManager() {}
 
-SGDataManager::~SGDataManager() {
-
-	for (int i = 0; i < CharacterType::Max; ++i) {
-		DeleteSafe(m_CharacterBaseInfoMap[i]);
-	}
-}
 
 SGMonsterInfo* SGDataManager::getMonsterInfo(int mobCode) {
 	DebugAssertMessage(m_MonsterInfoMap.Exist(mobCode), "해당 몬스터 정보가 존재하지 않습니다.");
@@ -65,10 +67,22 @@ SGProjectileInfo* SGDataManager::getProjectileInfo(int projectileCode) {
 	return &m_ProjectileInfoMap[projectileCode];
 }
 
-SGCharacterBaseInfo* SGDataManager::getCharacterBaseInfo(int characterCode) {
-	DebugAssertMessage(characterCode >= CharacterType::Begin && characterCode <= CharacterType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
-	return m_CharacterBaseInfoMap[characterCode];
+SGCharBaseInfo* SGDataManager::getCharBaseInfo(int charCode) {
+	DebugAssertMessage(charCode >= CharType::Begin && charCode <= CharType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
+	return m_CharBaseInfoMap[charCode];
 }
+
+SGAnimationInfo* SGDataManager::getCharAnimationInfo(int charCode, int charAnimationCode) {
+	DebugAssertMessage(charCode >= CharType::Begin && charCode <= CharType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
+	DebugAssertMessage(m_CharAnimationInfoMap[charCode].Exist(charAnimationCode), "해당 캐릭터 애니메이션 정보가 존재하지 않습니다.");
+	return &m_CharAnimationInfoMap[charCode][charAnimationCode];
+}
+
+SGVector<SGAnimationInfo*>& SGDataManager::getCharAnimationInfoList(int charCode) {
+	DebugAssertMessage(charCode >= CharType::Begin && charCode <= CharType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
+	return m_CharAnimationList[charCode];
+}
+
 
 SGTileInfo* SGDataManager::getTileInfo(int tileCode) {
 	DebugAssertMessage(m_TileInfoMap.Exist(tileCode), "해당 타일 정보가 존재하지 않습니다.");

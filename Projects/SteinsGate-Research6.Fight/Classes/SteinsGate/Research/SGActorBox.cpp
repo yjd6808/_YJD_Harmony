@@ -5,6 +5,7 @@
  *
  */
 
+#include "Tutturu.h"
 #include "SGActorBox.h"
 
 #include <SteinsGate/Research/SGDataManager.h>
@@ -108,10 +109,10 @@ void SGActorBox::updateActors(float dt) {
 }
 
 
-SGCharacter* SGActorBox::createCharacterOnMap(CharacterType_t characterType, float x, float y, SGCharacterInfo& info) {
+SGCharacter* SGActorBox::createCharacterOnMap(CharType_t charType, float x, float y, SGCharacterInfo& info) {
 	DebugAssertMessage(m_pMapLayer, "맵 레이어 존재하지 않습니다.");
 
-	SGCharacter* pCharacter = SGCharacter::create(characterType, info);
+	SGCharacter* pCharacter = SGCharacter::create(charType, info);
 	pCharacter->setPositionRealCenter(x, y);
 	pCharacter->setAllyFlag(0);
 	pCharacter->setMapLayer(m_pMapLayer);

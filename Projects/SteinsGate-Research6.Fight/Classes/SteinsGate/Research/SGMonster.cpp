@@ -5,6 +5,7 @@
  *
  */
 
+#include "Tutturu.h"
 #include "SGMonster.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>

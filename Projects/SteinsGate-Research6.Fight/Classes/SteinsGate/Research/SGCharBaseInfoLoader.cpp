@@ -6,11 +6,11 @@
  */
 
 
-
-#include "SGCharacterBaseInfoLoader.h"
+#include "Tutturu.h"
+#include "SGCharBaseInfoLoader.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>
-#include <SteinsGate/Research/SGCharacterBaseInfo.h>
+#include <SteinsGate/Research/SGCharBaseInfo.h>
 #include <SteinsGate/Research/SGGlobal.h>
 #include <SteinsGate/Research/SGJson.h>
 
@@ -23,9 +23,9 @@
 USING_NS_CC;
 USING_NS_JS;
 
-#define JsonFileName "character_base.json"
+#define JsonFileName "char_base.json"
 
-bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo*(&characterInfoMap)[CharacterType::Max]) {
+bool SGCharBaseInfoLoader::LoadCharBaseInfo(SGCharBaseInfo*(&characterInfoMap)[CharType::Max]) {
 	SGGlobal* pGlobal = SGGlobal::getInstance();
 	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
@@ -39,21 +39,24 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo*(&char
 		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
 		return false;
 	}
+
 	Json::Value gunnerRoot = root["gunner"];
+
+
 
 	// 다른 캐릭이 만약 추가되면 코드 변경 필요
 
 	SGGunnerBaseInfo* pGunnerInfo = new SGGunnerBaseInfo();
 	SGGunnerBaseInfo& info = *pGunnerInfo;
 	{
-		characterInfoMap[CharacterType::Gunner] = pGunnerInfo;
+		characterInfoMap[CharType::Gunner] = pGunnerInfo;
 
 		for (int i = 0; i < VisualType::Max; ++i) {
 			info.DefaultVisualImgIndex[i] = InvalidValue_v;
 			info.DefaultVisualNpkIndex[i] = InvalidValue_v;
 		}
 
-		info.Type = CharacterType::Gunner;
+		info.Type = CharType::Gunner;
 		info.HP = gunnerRoot["hp"].asInt();
 		info.MP = gunnerRoot["mp"].asInt();
 		info.Strength = gunnerRoot["str"].asInt();
@@ -141,7 +144,7 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo*(&char
 			
 
 			for (int iVisualType = AvatarType::Begin; iVisualType < AvatarType::Max; ++iVisualType) {
-				const SGString& npkName = pGlobal->getAvatarNpkName(CharacterType::Gunner, iVisualType);
+				const SGString& npkName = pGlobal->getAvatarNpkName(CharType::Gunner, iVisualType);
 				SGImagePack* pImgPack = pPackManager->getPack(npkName);
 
 				info.DefaultVisualNpkIndex[iVisualType] = pImgPack->getPackIndex();
@@ -151,7 +154,7 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo*(&char
 
 			bool bDefaultWeaponImgFound = false;
 			for (int iWeaponType = WeaponType::Begin; iWeaponType < WeaponType::Max; ++iWeaponType) {
-				const SGString& npkName = pGlobal->getWeaponNpkName(CharacterType::Gunner, iWeaponType);
+				const SGString& npkName = pGlobal->getWeaponNpkName(CharType::Gunner, iWeaponType);
 				SGImagePack* pImgPack = pPackManager->getPack(npkName);
 
 				if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::WeaponLeft])) {
@@ -174,6 +177,6 @@ bool SGCharacterBaseInfoLoader::LoadCharacterBaseInfo(SGCharacterBaseInfo*(&char
 	}
 
 
-	Log("SGCharacterBaseInfoLoader :: 로딩완료\n");
+	Log("SGCharBaseInfoLoader :: 로딩완료\n");
 	return true;
 }

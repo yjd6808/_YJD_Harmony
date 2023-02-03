@@ -13,12 +13,6 @@
     <Filter Include="Data">
       <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Action">
-      <UniqueIdentifier>{0520369f-7e38-45ca-a074-74c59d0d3cb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\CharacterBase">
-      <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\Client">
       <UniqueIdentifier>{1ae4d134-d671-4e48-8a61-797e06e17672}</UniqueIdentifier>
     </Filter>
@@ -69,6 +63,15 @@
     </Filter>
     <Filter Include="Actor\Listener\Gunner">
       <UniqueIdentifier>{df3446cd-34aa-48ae-8424-768cb480f8e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Action">
+      <UniqueIdentifier>{0520369f-7e38-45ca-a074-74c59d0d3cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\CharBase">
+      <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\CharAnimation">
+      <UniqueIdentifier>{ec65ec03-91ef-490c-8f38-45cecb6661cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -153,11 +156,8 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerGunShot.cpp">
       <Filter>Player\Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.cpp">
-      <Filter>Data\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.cpp">
-      <Filter>Data\CharacterBase</Filter>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharBaseInfoLoader.cpp">
+      <Filter>Data\CharBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGClientInfoLoader.cpp">
       <Filter>Data\Client</Filter>
@@ -222,7 +222,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGVec2Ex.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\GameScene.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMapLayer.cpp" />
@@ -261,6 +260,14 @@
       <Filter>Actor\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGActorBox.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\Tutturu.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.cpp">
+      <Filter>Data\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\main.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharAnimationInfoLoader.cpp">
+      <Filter>Data\CharAnimation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGImagePackManager.h">
@@ -359,17 +366,11 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGProjectileDefine.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.h">
-      <Filter>Data\Action</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharBaseInfoLoader.h">
+      <Filter>Data\CharBase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfo.h">
-      <Filter>Data\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.h">
-      <Filter>Data\CharacterBase</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfo.h">
-      <Filter>Data\CharacterBase</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharBaseInfo.h">
+      <Filter>Data\CharBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGClientInfoLoader.h">
       <Filter>Data\Client</Filter>
@@ -450,8 +451,6 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\AppDelegate.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\Config.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\Enums.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\GameScene.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGMapLayer.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGStruct.h" />
@@ -499,5 +498,16 @@
       <Filter>Actor\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActorBox.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGConfig.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfo.h">
+      <Filter>Data\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.h">
+      <Filter>Data\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharAnimationInfoLoader.h">
+      <Filter>Data\CharAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEnums.h" />
   </ItemGroup>
 </Project>

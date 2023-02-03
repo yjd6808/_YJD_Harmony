@@ -6,7 +6,7 @@
  */
 
 
-
+#include "Tutturu.h"
 #include "SGObstacleInfoLoader.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Config.h>
-#include <SteinsGate/Common/Engine.h>
+#include <SteinsGate/Research/SGConfig.h>
+#include <SteinsGate/Research/Tutturu.h>
 
 struct SGAnimationInfo;
 struct SGAttackDataInfo;
@@ -69,7 +69,6 @@ struct SGVisualInfo
 struct SGCharacterInfo
 {
 	SGVisualInfo VisualInfo;
-	SGVector<int> ValidAction;
 };
 
 struct SGActorPartSpriteData

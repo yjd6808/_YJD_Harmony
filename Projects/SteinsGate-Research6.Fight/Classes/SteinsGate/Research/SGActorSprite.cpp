@@ -5,12 +5,11 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGActorSprite.h"
 
-#include "SGActor.h"
-#include "SGGlobal.h"
-#include "SGImagePackManager.h"
+#include <SteinsGate/Research/SGImagePackManager.h>
+#include <SteinsGate/Research/SGActor.h>
 
 USING_NS_CC;
 USING_NS_JC;

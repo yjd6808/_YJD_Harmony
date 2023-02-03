@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\main.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGActorBox.cpp">
       <SubType>
       </SubType>
@@ -49,6 +50,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharAnimationInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.cpp">
       <SubType>
       </SubType>
@@ -144,7 +146,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGCharBaseInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGActorPartSprite.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGDataManager.cpp">
       <SubType>
@@ -220,7 +222,14 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Research\Tutturu.cpp">
+      <SubType>
+      </SubType>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActorBox.h">
@@ -266,6 +275,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackData.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharAnimationInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.h">
       <SubType>
       </SubType>
@@ -309,6 +319,8 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartSprite.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGConfig.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEnums.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerAction.h">
       <SubType>
       </SubType>
@@ -402,7 +414,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharBaseInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -410,8 +422,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\Config.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\Enums.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGFrameTexture.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfo.h">
       <SubType>
@@ -421,7 +431,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharacterBaseInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGCharBaseInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -597,21 +607,21 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;</IncludePath>
+    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;</IncludePath>
+    <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -623,8 +633,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -657,8 +666,7 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDi
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -693,6 +701,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/utf-8</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/utf-8</AdditionalOptions>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Tutturu.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Tutturu.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <PreBuildEvent>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">탱크파이터 예제 프로그램은 x86 플랫폼으로만 빌드 가능합니다.</Command>
@@ -706,14 +718,15 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
+      <PrecompiledHeaderFile>Tutturu.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>JNetwork.lib;JCore.lib;Bass.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Engine.lib;Version.lib;libcocos2d.lib;librecast.lib;libcurl.lib;zlib.lib;jsoncpp.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
@@ -743,14 +756,15 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll" "$(OutDir)"<
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;GL_GLEXT_PROTOTYPES;CC_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
+      <PrecompiledHeaderFile>Tutturu.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <AdditionalDependencies>JNetwork.lib;JCore.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Engine.lib;Version.lib;libcocos2d.lib;librecast.lib;libcurl.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>

@@ -5,8 +5,9 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGFrameTexture.h"
+
 #include <SteinsGate/Research/SGGlobal.h>
 
 SGFrameTexture::~SGFrameTexture() {

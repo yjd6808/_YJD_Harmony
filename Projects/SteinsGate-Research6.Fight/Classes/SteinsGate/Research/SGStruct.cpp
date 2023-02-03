@@ -5,6 +5,7 @@
  *
  */
 
+#include "Tutturu.h"
 #include "SGStruct.h"
 
 bool SGActorRect::isCollide(const SGActorRect& rect, SpriteDirection_t& otherHitDirection, SGRect& hitRect) {

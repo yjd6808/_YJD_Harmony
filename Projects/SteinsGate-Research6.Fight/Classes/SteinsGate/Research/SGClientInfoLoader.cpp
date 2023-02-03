@@ -5,7 +5,7 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGClientInfoLoader.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>

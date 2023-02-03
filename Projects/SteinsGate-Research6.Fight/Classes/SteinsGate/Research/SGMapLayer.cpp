@@ -2,6 +2,7 @@
  * 작성자 : 윤정도
  */
 
+#include "Tutturu.h"
 #include "SGMapLayer.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>
@@ -60,26 +61,15 @@ bool SGMapLayer::init() {
 
 	SGCharacterInfo info;
 	SGDataManager* pConfig = SGDataManager::getInstance();
-	SGCharacterBaseInfo* pBaseInfo = pConfig->getCharacterBaseInfo(CharacterType::Gunner);
+	SGCharBaseInfo* pBaseInfo = pConfig->getCharBaseInfo(CharType::Gunner);
 	
 	for (int i = 0; i < VisualType::Max; ++i) {
 		info.VisualInfo.NpkIndex[i] = pBaseInfo->DefaultVisualNpkIndex[i];
 		info.VisualInfo.ImgIndex[i] = pBaseInfo->DefaultVisualImgIndex[i];
 	}
 
-
-	info.ValidAction.PushBack(GUNNER_ACTION_IDLE);
-	info.ValidAction.PushBack(GUNNER_ACTION_WALK);
-	info.ValidAction.PushBack(GUNNER_ACTION_RUN);
-	info.ValidAction.PushBack(GUNNER_ACTION_GUN_SHOT);
-	info.ValidAction.PushBack(GUNNER_ACTION_SLIDING);
-	info.ValidAction.PushBack(GUNNER_ACTION_JUMP);
-	info.ValidAction.PushBack(GUNNER_ACTION_HIT);
-	info.ValidAction.PushBack(GUNNER_ACTION_FALL_DOWN);
-	info.ValidAction.PushBack(GUNNER_ACTION_SIT_RECOVER);
-
 	SGPlayer* pPlayer = SGPlayer::getInstance();
-	pPlayer->setCharacter(m_pActorBox->createCharacterOnMap(CharacterType::Gunner, 300, 250, info));
+	pPlayer->setCharacter(m_pActorBox->createCharacterOnMap(CharType::Gunner, 300, 250, info));
 	pPlayer->initActionManager();
 	pPlayer->initController();
 	pPlayer->runBaseAction(BaseAction::Idle);

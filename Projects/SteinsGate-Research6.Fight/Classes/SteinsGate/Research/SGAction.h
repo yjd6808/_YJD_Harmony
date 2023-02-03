@@ -27,6 +27,7 @@ public:
 	virtual void stop();
 
 	virtual void init() {}	// 실행 직전 호출 (초기화 용도)
+	virtual bool onConditionCheck() = 0;
 	virtual void onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);
 	virtual void onKeyReleased(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);
 	virtual void onKeyPressedBefore(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);

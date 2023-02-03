@@ -44,6 +44,6 @@ namespace JCore {
 
 	// 참/거짓을 판별하는 대리자
 	template <typename... Args>
-	using TPredicate = std::function<bool(Args...)>;
+	using Predicate = std::function<bool(Args...)>;
 
 } // namespace JCore

@@ -10,7 +10,7 @@
 #include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/SGStruct.h>
 
-struct SGCharacterBaseInfo
+struct SGCharBaseInfo
 {
 	int Type;		// 캐릭터 타입
 	int HP;
@@ -33,7 +33,7 @@ struct SGCharacterBaseInfo
 };
 
 
-struct SGGunnerBaseInfo : SGCharacterBaseInfo
+struct SGGunnerBaseInfo : SGCharBaseInfo
 {
 	int ShotCount[GunnerWeaponType::Max];				// 지상 공격 횟수
 	int JumpShotCount[GunnerWeaponType::Max];			// 점프 공격 횟수

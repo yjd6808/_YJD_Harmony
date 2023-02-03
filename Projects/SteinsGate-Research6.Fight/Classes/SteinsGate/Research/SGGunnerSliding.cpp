@@ -5,10 +5,11 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGGunnerSliding.h"
 
 #include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGActionDefine.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
 
@@ -17,6 +18,9 @@ SGGunnerSliding::SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo)
 {
 }
 
+bool SGGunnerSliding::onConditionCheck() {
+	return m_pPlayer->getRunningActionCode() == GUNNER_ACTION_RUN;
+}
 
 void SGGunnerSliding::onActionBegin() {
 	m_bSlidingStarted = false;

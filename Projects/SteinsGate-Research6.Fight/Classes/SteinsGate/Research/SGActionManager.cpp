@@ -5,6 +5,7 @@
  *
  */
 
+#include "Tutturu.h"
 #include "SGActionManager.h"
 
 #include <SteinsGate/Research/SGAction.h>
@@ -25,10 +26,10 @@ SGActionManager::~SGActionManager() {
 	Log("액션 매니저 소멸\n");
 }
 
-void SGActionManager::init(int characterType) {
+void SGActionManager::init(int charType) {
 
-	switch (characterType) {
-	case CharacterType::Gunner:
+	switch (charType) {
+	case CharType::Gunner:
 		initGunnerActions();
 		break;
 	default:

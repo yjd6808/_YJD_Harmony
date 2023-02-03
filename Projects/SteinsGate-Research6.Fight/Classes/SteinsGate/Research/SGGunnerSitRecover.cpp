@@ -5,6 +5,7 @@
  *
  */
 
+#include "Tutturu.h"
 #include "SGGunnerSitRecover.h"
 
 #include <SteinsGate/Research/SGPlayer.h>

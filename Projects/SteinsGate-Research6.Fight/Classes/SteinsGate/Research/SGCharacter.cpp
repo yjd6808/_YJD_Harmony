@@ -5,7 +5,7 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGCharacter.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>
@@ -23,7 +23,7 @@ USING_NS_CC;
 
 SGCharacter::SGCharacter(int code, const SGCharacterInfo& info)
 	: SGPhysicsActor(ActorType::Character, code)
-	, m_CharacterInfo(info)
+	, m_CharInfo(info)
 	, m_bOwner(false)
 {
 }
@@ -32,7 +32,7 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 	SGCharacter* pCharacter = new SGCharacter(code, info);
 
 	if (pCharacter && pCharacter->init()) {
-		SGCharacterBaseInfo* pBaseInfo = SGDataManager::getInstance()->getCharacterBaseInfo(code);
+		SGCharBaseInfo* pBaseInfo = SGDataManager::getInstance()->getCharBaseInfo(code);
 		pCharacter->m_pBaseInfo = pBaseInfo;
 		pCharacter->initThicknessBox(pBaseInfo->ThicknessBox);
 		pCharacter->initActorSprite();
@@ -47,27 +47,20 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 void SGCharacter::initActorSprite() {
 	SGDataManager* pDataManager = SGDataManager::getInstance();
 	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
-	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(15, m_CharacterInfo.ValidAction.Size());
+	AnimationList& animationList = pDataManager->getCharAnimationInfoList(m_iCode);
+	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(15, animationList.Size());
 
 	for (int i = 0; i < VisualType::Max; ++i) {
-		if (m_CharacterInfo.VisualInfo.ImgIndex[i] != InvalidValue_v &&
-			m_CharacterInfo.VisualInfo.NpkIndex[i] != InvalidValue_v) {
+		if (m_CharInfo.VisualInfo.ImgIndex[i] != InvalidValue_v &&
+			m_CharInfo.VisualInfo.NpkIndex[i] != InvalidValue_v) {
 			spActorSpriteData->Parts.PushBack({
 				m_pBaseInfo->DefaultVisualZOrder[i],
-				m_CharacterInfo.VisualInfo.NpkIndex[i],
-				m_CharacterInfo.VisualInfo.ImgIndex[i]
+				m_CharInfo.VisualInfo.NpkIndex[i],
+				m_CharInfo.VisualInfo.ImgIndex[i]
 			});
 		}
 	}
-
-	SGVector<int>& vActions = m_CharacterInfo.ValidAction;
-
-	for (int i = 0; i < vActions.Size(); ++i) {
-		SGActionInfo* pActionInfo = pDataManager->getActionInfo(vActions[i]);
-		for (int j = 0; j < pActionInfo->AnimationList.Size(); ++j) {
-			spActorSpriteData->Animations.PushBack(&pActionInfo->AnimationList[j]);
-		}
-	}
+	spActorSpriteData->Animations = animationList;
 
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
@@ -137,7 +130,7 @@ void SGCharacter::setOwner(bool owner) {
 	m_bOwner = owner;
 }
 
-SGCharacterBaseInfo* SGCharacter::getBaseInfo() {
+SGCharBaseInfo* SGCharacter::getBaseInfo() {
 	return m_pBaseInfo;
 }
 

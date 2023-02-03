@@ -6,7 +6,7 @@
  */
 
 
-
+#include "Tutturu.h"
 #include "SGProjectileInfoLoader.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>

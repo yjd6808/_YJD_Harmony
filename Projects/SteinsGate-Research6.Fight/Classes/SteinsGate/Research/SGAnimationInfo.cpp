@@ -5,9 +5,23 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGAnimationInfo.h"
 
+USING_NS_JC;
+
+SGAnimationInfo::SGAnimationInfo(const SGAnimationInfo&) {
+	DebugAssertMessage(false, "복사 생성 금지");
+}
+
+SGAnimationInfo::SGAnimationInfo(SGAnimationInfo&& other) noexcept {
+	this->operator=(Move(other));
+}
+
+SGAnimationInfo& SGAnimationInfo::operator=(const SGAnimationInfo&) {
+	DebugAssertMessage(false, "복사 대입 금지");
+	return *this;
+}
 
 SGAnimationInfo& SGAnimationInfo::operator=(SGAnimationInfo&& other) noexcept {
 	Code = other.Code;

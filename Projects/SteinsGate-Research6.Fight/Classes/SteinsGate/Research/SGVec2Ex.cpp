@@ -5,7 +5,7 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGVec2Ex.h"
 
 void SGVec2Ex::getLookDirection(const SGVec2& from, const SGVec2& to, Out_ Direction_t& lr, Out_ Direction_t& ud) {

@@ -19,12 +19,16 @@
 #define SEnumEnd(enum_name) }; }; using enum_name##_t = enum_name::_;
 
 
-SEnumBegin(CharacterType)
+SEnumBegin(CharType)
 Begin,
 Gunner = 0,
 End = Gunner,
 Max
-SEnumEnd(CharacterType)
+SEnumMiddle(CharType)
+static constexpr const char* Name[Max]{
+	"gunner"
+};
+SEnumMiddleEnd(CharType)
 
 SEnumBegin(SpriteDirection)
 Right,

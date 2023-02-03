@@ -16,6 +16,7 @@ class SGGunnerSliding : public SGGunnerAction {
 public:
 	SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo);
 
+	bool onConditionCheck() override;
 	void onUpdate(float dt) override;
 	void onActionBegin() override;
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;

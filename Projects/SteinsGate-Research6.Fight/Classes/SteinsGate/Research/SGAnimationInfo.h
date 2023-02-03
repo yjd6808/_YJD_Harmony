@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Engine.h>
+#include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/SGStruct.h>
 
 struct SGFrameInfo
@@ -28,6 +28,11 @@ struct SGAnimationInfo
 {
 	SGAnimationInfo() {}
 	SGAnimationInfo(int frameSize) : Frames(frameSize) {}
+
+	SGAnimationInfo(const SGAnimationInfo&);
+	SGAnimationInfo(SGAnimationInfo&& other) noexcept;
+
+	SGAnimationInfo& operator=(const SGAnimationInfo&);
 	SGAnimationInfo& operator=(SGAnimationInfo&& other) noexcept;
 	~SGAnimationInfo();
 

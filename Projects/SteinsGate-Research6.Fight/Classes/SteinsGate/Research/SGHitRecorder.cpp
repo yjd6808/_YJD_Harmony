@@ -5,7 +5,7 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGHitRecorder.h"
 
 #include <SteinsGate/Research/SGActor.h>

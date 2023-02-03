@@ -30,10 +30,10 @@ public:
 
 	SGImagePack* getPack(const SGString& packName);
 	SGImagePack* getPack(const int idx);
-	SGImagePack* getAvatarPack(CharacterType_t characterType, AvatarType_t avatarType);
-	SGImagePack* getWeaponPack(CharacterType_t characterType, WeaponType_t weaponType);
-	int getAvatarPackIndex(CharacterType_t characterType, AvatarType_t avatarType);
-	int getWeaponPackIndex(CharacterType_t characterType, WeaponType_t weaponType);
+	SGImagePack* getAvatarPack(CharType_t charType, AvatarType_t avatarType);
+	SGImagePack* getWeaponPack(CharType_t charType, WeaponType_t weaponType);
+	int getAvatarPackIndex(CharType_t charType, AvatarType_t avatarType);
+	int getWeaponPackIndex(CharType_t charType, WeaponType_t weaponType);
 	int getPackIndex(const SGString& packPath);
 	int getPackIndexDefault(const SGString& packPath, int defaultIndex);
 
@@ -44,8 +44,8 @@ private:
 	SGHashMap<SGString, int> m_PathToIdMap;
 	
 	SGImagePack* m_LoadedPackages[MaxNpkFileCount_v]{};
-	SGImagePack* m_AvatarPacks[CharacterType::Max][AvatarType::Max]{};
-	SGImagePack* m_WeaponPacks[CharacterType::Max][5]{};
+	SGImagePack* m_AvatarPacks[CharType::Max][AvatarType::Max]{};
+	SGImagePack* m_WeaponPacks[CharType::Max][5]{};
 	int m_iLoadedPackageCount{};
 };
 

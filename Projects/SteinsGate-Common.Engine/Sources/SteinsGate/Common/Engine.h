@@ -70,6 +70,9 @@ using SGActionFn = JCore::Action<Args...>;
 template <typename R, typename... Args>
 using SGFuncFn = JCore::Func<R, Args...>;
 
+template <typename... Args>
+using SGPredicateFn = JCore::Predicate<Args...>;
+
 // 코코스
 using SGNode = cocos2d::Node;
 using SGLayer = cocos2d::Layer;

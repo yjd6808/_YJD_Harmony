@@ -6,12 +6,13 @@
  * 
  */
 
-
+#include "Tutturu.h"
 #include "SGGunnerGunShot.h"
 
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
+#include <SteinsGate/Research/SGActionDefine.h>
 
 #define MaxWaitRightShotTime 0.1f // (6fps)
 
@@ -25,6 +26,10 @@
 
 SGGunnerGunShot::SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo) {}
+
+bool SGGunnerGunShot::onConditionCheck() {
+	return m_pPlayer->getRunningActionCode() == GUNNER_ACTION_IDLE;
+}
 
 void SGGunnerGunShot::onActionBegin() {
 	setMoveable(false);

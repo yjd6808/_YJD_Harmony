@@ -10,7 +10,7 @@
 
 
 #include <SteinsGate/Research/Tutturu.h>
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGConfig.h>
 
 struct SGGlobal
 {
@@ -36,8 +36,8 @@ public:
 	bool isBodyBoundingBoxDrawMode() { return m_bDrawBodyBoundingBox; }
 	bool isAttackBoxDrawMode() { return m_bDrawAttackBox; }
 
-	const SGString& getAvatarNpkName(int characterType, int visualAvatarType);
-	const SGString& getWeaponNpkName(int characterType, int weaponType);
+	const SGString& getAvatarNpkName(int charType, int visualAvatarType);
+	const SGString& getWeaponNpkName(int charType, int weaponType);
 
 	SGTexture* getDefaultTexture();
 private:
@@ -50,9 +50,9 @@ private:
 
 	// 변경되지 않는 데이터
 	SGHashMap<SGString, int> m_AvatarPartNameToTypeMap;
-	SGHashMap<int, SGString> m_AvatarPrefix[CharacterType::Max];
-	SGString m_AvatarPackName[CharacterType::Max][AvatarType::Max];	
-	SGString m_WeaponPackName[CharacterType::Max][5];
+	SGHashMap<int, SGString> m_AvatarPrefix[CharType::Max];
+	SGString m_AvatarPackName[CharType::Max][AvatarType::Max];	
+	SGString m_WeaponPackName[CharType::Max][5];
 	SGTexture* m_pDefaultTexture;
 	
 };

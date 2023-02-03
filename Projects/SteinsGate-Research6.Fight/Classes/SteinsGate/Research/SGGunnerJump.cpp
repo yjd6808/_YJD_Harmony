@@ -7,14 +7,14 @@
 
 
 
-
+#include "Tutturu.h"
 #include "SGGunnerJump.h"
 
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
 #include <SteinsGate/Research/SGActionDefine.h>
-#include <SteinsGate/Research/SGCharacterBaseInfo.h>
+#include <SteinsGate/Research/SGCharBaseInfo.h>
 
 #define MinimumShotHeight 30.0f
 

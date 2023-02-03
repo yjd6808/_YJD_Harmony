@@ -17,6 +17,7 @@ class SGGunnerGunShot : public SGGunnerAction {
 public:
 	SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo);
 
+	bool onConditionCheck() override;
 	void onActionBegin() override;
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) override;
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) override;

@@ -50,7 +50,7 @@ public:
 	void clear();
 
 
-	SGCharacter* createCharacterOnMap(CharacterType_t characterType, float x, float y, SGCharacterInfo& info);
+	SGCharacter* createCharacterOnMap(CharType_t charType, float x, float y, SGCharacterInfo& info);
 	SGProjectile* createProejctileOnMap(SGActor* spawner, int projectileId);
 	SGMonster* createMonsterOnMap(int monsterCode, int aiCode, float x, float y);
 	SGObstacle* createObstacleOnMap(int obstacleCode, float x, float y);

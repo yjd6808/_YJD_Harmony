@@ -9,7 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Research/SGPhysicsActor.h>
-#include <SteinsGate/Research/SGCharacterBaseInfo.h>
+#include <SteinsGate/Research/SGCharBaseInfo.h>
 
 class SGCharacter : public SGPhysicsActor
 {
@@ -30,10 +30,10 @@ public:
 	void setOwner(bool owner);
 	bool isOwner() { return m_bOwner; }
 
-	SGCharacterBaseInfo* getBaseInfo();
+	SGCharBaseInfo* getBaseInfo();
 private:
-	SGCharacterBaseInfo* m_pBaseInfo;
-	SGCharacterInfo m_CharacterInfo;
+	SGCharBaseInfo* m_pBaseInfo;
+	SGCharacterInfo m_CharInfo;
 	bool m_bOwner;
 };
 

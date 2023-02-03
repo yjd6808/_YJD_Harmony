@@ -5,10 +5,10 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGPlayer.h"
 
-#include <SteinsGate/Research/SGCharacterBaseInfo.h>
+#include <SteinsGate/Research/SGCharBaseInfo.h>
 
 SGPlayer::SGPlayer()
 	: m_pMapLayer(nullptr)

@@ -5,7 +5,7 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGActorPartSprite.h"
 
 #include <SteinsGate/Common/Engine/RectPoly.h>
@@ -193,12 +193,9 @@ void SGActorPartSprite::onFrameBegin(SGActorPartAnimation* animation, SGFrameTex
 		m_pBoundingBox->clear();
 		m_pBoundingBox->setContentSize({ boundingBox.size });
 		m_pBoundingBox->drawPolygon(poly.source(), 4, {}, 1, Color4F::WHITE);
-
-		//Log("%d 프레임 종료\n", m_pRunningAnimation->getFrameIndex());
 	}
 
 	m_pActorSprite->onFrameBegin(animation, texture);
-	// Log("[%d 파츠] - %d 프레임 종료\n", m_iPartIndex, m_pRunningAnimation->getFrameIndex());
 }
 
 void SGActorPartSprite::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {

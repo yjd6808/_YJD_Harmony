@@ -5,7 +5,7 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGImagePackManager.h"
 
 #include <SteinsGate/Common/Core/Npk/NpkLoader.h>
@@ -72,36 +72,36 @@ SGImagePack* SGImagePackManager::getPack(const int idx) {
 	return m_LoadedPackages[idx];
 }
 
-SGImagePack* SGImagePackManager::getAvatarPack(CharacterType_t characterType, AvatarType_t part) {
-	DebugAssertMessage(characterType >= CharacterType::Begin && characterType >= CharacterType::End, "올바르지 않은 캐릭터 타입입니다.");
+SGImagePack* SGImagePackManager::getAvatarPack(CharType_t charType, AvatarType_t part) {
+	DebugAssertMessage(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
 	DebugAssertMessage(part >= AvatarType::Begin && part < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
 
-	if (m_AvatarPacks[characterType][part] == nullptr) {
-		const SGString& npkName = SGGlobal::getInstance()->getAvatarNpkName(characterType, part);
-		m_AvatarPacks[characterType][part] = getPack(npkName);
+	if (m_AvatarPacks[charType][part] == nullptr) {
+		const SGString& npkName = SGGlobal::getInstance()->getAvatarNpkName(charType, part);
+		m_AvatarPacks[charType][part] = getPack(npkName);
 	}
 
-	return m_AvatarPacks[characterType][part];
+	return m_AvatarPacks[charType][part];
 }
 
-SGImagePack* SGImagePackManager::getWeaponPack(CharacterType_t characterType, WeaponType_t weaponType) {
-	DebugAssertMessage(characterType >= CharacterType::Begin && characterType >= CharacterType::End, "올바르지 않은 캐릭터 타입입니다.");
+SGImagePack* SGImagePackManager::getWeaponPack(CharType_t charType, WeaponType_t weaponType) {
+	DebugAssertMessage(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
 	DebugAssertMessage(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
 
-	if (m_WeaponPacks[characterType][weaponType] == nullptr) {
-		const SGString& npkName = SGGlobal::getInstance()->getWeaponNpkName(characterType, weaponType);
-		m_WeaponPacks[characterType][weaponType] = getPack(npkName);
+	if (m_WeaponPacks[charType][weaponType] == nullptr) {
+		const SGString& npkName = SGGlobal::getInstance()->getWeaponNpkName(charType, weaponType);
+		m_WeaponPacks[charType][weaponType] = getPack(npkName);
 	}
 
-	return m_WeaponPacks[characterType][weaponType];
+	return m_WeaponPacks[charType][weaponType];
 }
 
-int SGImagePackManager::getAvatarPackIndex(CharacterType_t characterType, AvatarType_t avatarType) {
-	return getAvatarPack(characterType, avatarType)->getPackIndex();
+int SGImagePackManager::getAvatarPackIndex(CharType_t charType, AvatarType_t avatarType) {
+	return getAvatarPack(charType, avatarType)->getPackIndex();
 }
 
-int SGImagePackManager::getWeaponPackIndex(CharacterType_t characterType, WeaponType_t weaponType) {
-	return getWeaponPack(characterType, weaponType)->getPackIndex();
+int SGImagePackManager::getWeaponPackIndex(CharType_t charType, WeaponType_t weaponType) {
+	return getWeaponPack(charType, weaponType)->getPackIndex();
 }
 
 

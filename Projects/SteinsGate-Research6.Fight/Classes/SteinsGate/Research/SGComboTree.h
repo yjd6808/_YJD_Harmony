@@ -10,14 +10,28 @@
 
 #include <SteinsGate/Research/SGAction.h>
 
+// 동일한 액션이 있을 수 있어서 연결리스트로 구성
+
+struct SGComboTreeNodeActionList
+{
+	SGAction* Action{};
+	SGComboTreeNodeActionList* Next{};
+
+	void add(SGAction* action);
+	void clear();
+	int count();
+	bool exist(SGAction* action);
+	SGAction* find_if(const SGPredicateFn<SGAction*>& fn);
+};
+
 class SGComboTreeNode
 {
 public:
-	SGAction* Action{};
+	SGComboTreeNodeActionList ActionList{};
 	SGComboTreeNode* Next[ControlKey::Max]{};
 
-	bool isValid()	{ return Action != nullptr; }
-	bool empty()	{ return Action == nullptr;	}
+	bool isValid()	{ return ActionList.count() != 0; }
+	bool empty()	{ return ActionList.count() == 0;	}
 	int  count();
 };
 
@@ -27,10 +41,11 @@ public:
 	SGComboTree();
 	~SGComboTree();
 public:
-	void removeComboAction(const SGComboKeyList& keys);
 	void removeAll();
 	void addComboAction(SGAction* action);
 	SGAction* getComboAction(const SGComboKeyList& keys);
+	// int nodeCount();
+	// int actionCount();
 private:
 	static void removeComboNodeRecursive(SGComboTreeNode* parent);
 	static void addComboNodeRecursive(
@@ -48,7 +63,7 @@ private:
 	);
 private:
 	SGComboTreeNode* m_pRoot;
-	int m_iCount = 0;
+	int m_iNodeCount = 0;
 };
 
 

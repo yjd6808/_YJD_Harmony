@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <SteinsGate/Common/Engine.h>
+#include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/SGMonsterActivity.h>
 #include <SteinsGate/Research/SGMapInfo.h>
 

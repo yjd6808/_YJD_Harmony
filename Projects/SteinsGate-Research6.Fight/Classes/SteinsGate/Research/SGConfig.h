@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Enums.h>
+#include <SteinsGate/Research/SGEnums.h>
 
 inline constexpr float WorldFPS_v = 1.0f / 60.0f;
 

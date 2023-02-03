@@ -10,7 +10,7 @@
 
 
 #include <SteinsGate/Research/Tutturu.h>
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGConfig.h>
 #include <SteinsGate/Research/SGFrameTexture.h>
 
 #include <SteinsGate/Common/Core/Npk/NpkPackage.h>

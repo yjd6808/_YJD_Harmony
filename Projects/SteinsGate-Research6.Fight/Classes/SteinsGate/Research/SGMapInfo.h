@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Engine.h>
+#include <SteinsGate/Research/Tutturu.h>
 
 struct SGMapObjectInfo
 {

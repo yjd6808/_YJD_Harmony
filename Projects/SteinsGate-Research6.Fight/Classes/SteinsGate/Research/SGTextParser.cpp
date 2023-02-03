@@ -5,10 +5,10 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGTextParser.h"
 
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGConfig.h>
 
 char* SGTextParser::parserFrameInfo(SGString& frameString, 
 	Out_ int& frameIndex, 

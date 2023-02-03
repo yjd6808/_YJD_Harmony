@@ -1,14 +1,8 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
-    "__comment__1": "모든 모션은 인덱스 기준이다.",
+    "__comment__1": "force_cancelable은 어떤 액션이라도 이 액션을 캔슬하고 실행할 수 있다는 뜻이다.",
+    "__comment__2": "이 코멘트도 데이터에 포함되므로 추후 문서로 뺄 것",
     
-    "__comment__2": "force_cancelable은 어떤 액션이라도 이 액션을 캔슬하고 실행할 수 있다는 뜻이다.",
-    "__comment__3": "23/01/23: TODO: 액션 툴 개발 필요, 노가다 너무 심하다. 매 프레임 눈으로 보면서 짜맞춰야함 우선 손으로 적음",
-    "__comment__4": "이 코멘트도 데이터에 포함되므로 추후 문서로 뺄 것",
-    "__comment__6": "인덱스, 딜레이, 발생 이벤트 타입1, ",
-    "__comment__7": "발생 이벤트 타입 종류: projectile(1), attack_box(2), instant_attack_box(3)",
-    "__comment__8": "액션 내부에 애니메이션이 포함되어 있는 구조지만 독립적으로 사용해도 무방함 단지 이 액션에서는 이 애니메이션을 사용한다는 느낌으로 생각나는대로 만든것이다.",
-    "__comment__9": "projectile과 attack_box는 id값을 한개만 더 읽으면 된다. instant_attack_box는 attackdata id와 두께 Rect, 어택 Rect",
 
 
     "gunner": [
@@ -16,54 +10,7 @@
             "name": "idle",
             "code": 1,
             "force_cancelable": true,
-            "moveable": true,
-            "animation": [
-                {
-                    "code": 1,
-                    "name": "idle_breath",
-                    "loop": true,
-                    "frames": [
-                        "0 100",
-                        "1 100",
-                        "2 100",
-                        "2 100",
-                        "1 100",
-                        "0 1000",
-                        "0 100",
-                        "1 100",
-                        "2 100",
-                        "2 100",
-                        "1 100",
-                        "0 1000",
-                        "4 100",
-                        "5 100",
-                        "6 100",
-                        "7 100",
-                        "8 100",
-                        "9 100",
-                        "10 100",
-                        "11 100",
-                        "12 100"
-                    ]
-                },
-                {
-                    "code": 2,
-                    "name": "idle_gun_rolling",
-                    "loop": false,
-                    "frames": [
-                        "13 100",
-                        "14 100",
-                        "15 100",
-                        "16 100",
-                        "17 100",
-                        "18 100",
-                        "19 100",
-                        "20 100",
-                        "21 100",
-                        "22 100"
-                    ]
-                }
-            ]
+            "moveable": true
         },
         {
             "name": "walk",
@@ -71,24 +18,7 @@
             "force_cancelable": true,
             "moveable": true,
             "x_speed": 150,
-            "y_speed": 70,
-            "animation": [
-                {
-                    "code": 3,
-                    "name": "walk",
-                    "loop": true,
-                    "frames": [
-                        "55 100",
-                        "56 100",
-                        "57 100",
-                        "58 100",
-                        "59 100",
-                        "60 100",
-                        "61 100",
-                        "62 100"
-                    ]
-                }
-            ]
+            "y_speed": 70
         },
         {
             "name": "run",
@@ -97,283 +27,47 @@
             "moveable": true,
             "command": "rr",
             "x_speed": 225,
-            "y_speed": 70,
-            "animation": [
-                {
-                    "code": 4,
-                    "name": "run",
-                    "loop": true,
-                    "frames": [
-                        "103 100",
-                        "104 100",
-                        "105 100",
-                        "106 100",
-                        "107 100",
-                        "108 100",
-                        "109 100",
-                        "110 100"
-                    ]
-                }
-            ]
+            "y_speed": 70
         },
         {
             "name": "sliding",
             "code": 4,
             "force_cancelable": false,
             "moveable": false,
-            "command": "rrx",
-            "animation": [
-                {
-                    "code": 5,
-                    "name": "sliding",
-                    "loop": false,
-                    "frames": [
-                        "111 150 3 5 202 117 108 36 202 117 108 36",
-                        "112 100 3 5 202 117 108 36 202 117 108 36",
-                        "113 100 3 5 202 117 108 36 202 117 108 36",
-                        "114 100 3 5 202 117 108 36 202 117 108 36",
-                        "114 -1"
-                    ]
-                }
-            ]
+            "command": "x"
         },
         {
             "name": "gun_shot",
             "code": 5,
             "force_cancelable": false,
             "moveable": false,
-            "command": "x",
-            "animation": [
-                {
-                    "code": 6,
-                    "name": "shot_right_begin",
-                    "loop": false,
-                    "frames": [
-                        "23 77 3 4 242 107 56 23 246 186 56 70",
-                        "24 77 3 4 242 107 56 23 246 186 56 70",
-                        "25 77"
-                    ]
-                },
-                {
-                    "code": 7,
-                    "name": "shot_right_shot",
-                    "loop": false,
-                    "frames": [
-                        "26 77",
-                        "27 77"
-                    ]
-                },
-                {
-                    "code": 9,
-                    "name": "shot_right_down_begin",
-                    "loop": false,
-
-                    "frames": [
-                        "39 77 3 4 242 107 56 23 246 176 56 70",
-                        "40 77 3 4 242 107 56 23 246 176 56 70",
-                        "41 77"
-                    ]
-                },
-                {
-                    "code": 10,
-                    "name": "shot_right_down_shot",
-                    "loop": false,
-                    "frames": [
-                        "42 77",
-                        "43 77"
-                    ]
-                },
-             
-                {
-                    "code": 12,
-                    "name": "shot_left",
-                    "loop": false,
-                    "frames": [
-                        "28 100",
-                        "29 100",
-                        "30 77 3 4 249 107 51 24 259 177 51 70",
-                        "31 77 3 4 249 107 51 24 259 177 51 70",
-                        "32 77 3 4 249 107 51 24 259 177 51 70",
-                        "33 77",
-                        "34 77",
-                        "35 77",
-                        "36 77",
-                        "37 77",
-                        "38 77"
-                    ]
-                },
-                {
-                    "code": 13,
-                    "name": "shot_left_down",
-                    "loop": false,
-                    "frames": [
-                        "44 100",
-                        "45 100",
-                        "46 77 3 4 249 107 51 24 259 177 51 70",
-                        "47 77 3 4 249 107 51 24 259 177 51 70",
-                        "48 77 3 4 249 107 51 24 259 177 51 70",
-                        "49 77",
-                        "50 77",
-                        "51 77",
-                        "52 77",
-                        "53 77",
-                        "54 77"
-                    ]
-                }
-            ]
+            "command": "x"
         },
-        
         {
             "name": "jump",
             "code": 6,
             "force_cancelable": false,
             "moveable": true,
-            "command": "c",
-            "animation": [
-                {
-                    "code": 14,
-                    "name": "jump_start",
-                    "loop": false,
-                    "frames": [
-                        "63 150"
-                    ]
-                },
-                {
-                    "code": 15,
-                    "name": "jump_up",
-                    "loop": false,
-                    "frames": [
-                        "64 77",
-                        "65 77",
-                        "64 77",
-                        "65 77"
-                    ]
-                    
-                },
-                {
-                    "code": 16,
-                    "name": "jump_down",
-                    "loop": true,
-                    "frames": [
-                        "66 77",
-                        "67 77",
-                        "66 77",
-                        "67 77"
-                    ]
-                },
-                {
-                    "code": 17,
-                    "name": "jump_end",
-                    "loop": false,
-                    "frames": [
-                        "68 150",
-                        "69 50"
-                    ]
-                },
-                {
-                    "code": 18,
-                    "name": "jump_shot_begin",
-                    "loop": false,
-                    "frames": [
-                        "70 100",
-                        "71 100"
-                    ]
-                },
-                {
-                    "code": 19,
-                    "name": "jump_shot_shot",
-                    "loop": false,
-                    "frames": [
-                        "72 77",
-                        "73 77"
-                    ]
-                },
-                {
-                    "code": 20,
-                    "name": "jump_shot_end",
-                    "loop": false,
-                    "frames": [
-                        "74 70",
-                        "75 70"
-                    ]
-                }
-
-
-            ]
+            "command": "c"
         },
         {
             "name": "hit",
             "code": 7,
             "force_cancelable": false,
-            "moveable": false,
-            "animation": [
-                {
-                    "code": 21,
-                    "name": "hit_small",
-                    "loop": false,
-                    "frames": [
-                        "121 0"
-                    ]
-                },
-                {
-                    "code": 22,
-                    "name": "hit_big",
-                    "loop": false,
-                    "frames": [
-                        "122 0"
-                    ]
-                }
-            ]
+            "moveable": false
         },
         {
             "name": "fall_down",
             "code": 8,
             "force_cancelable": false,
-            "moveable": false,
-            "animation": [
-                {
-                    "code": 23,
-                    "name": "fall_down_begin",
-                    "loop": false,
-                    "frames": [
-                        "123 100",
-                        "124 100",
-                        "125 100"
-                    ]
-                },
-                {
-                    "code": 24,
-                    "name": "fall_down_bounce",
-                    "loop": false,
-                    "frames": [
-                        "126 -1"
-                    ]
-                },
-                {
-                    "code": 25,
-                    "name": "fall_down_end",
-                    "loop": false,
-                    "frames": [
-                        "127 -1"
-                    ]
-                }
-            ]
+            "moveable": false
         },
         {
             "name": "sit_recover",
             "code": 9,
             "force_cancelable": false,
             "moveable": false,
-            "animation": [
-                {
-                    "code": 26,
-                    "name": "sit",
-                    "loop": false,
-                    "frames": [
-                        "128 -1"
-                    ]
-                }
-            ]
+            "command": "c"
         }
 
     ]

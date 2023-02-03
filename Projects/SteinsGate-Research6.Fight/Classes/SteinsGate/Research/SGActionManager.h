@@ -21,7 +21,7 @@ public:
 	SGActionManager(SGPlayer* player);
 	~SGActionManager();
 
-	void init(int characterType);
+	void init(int charType);
 	void initGunnerActions();
 	void update(float dt);
 	void onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);

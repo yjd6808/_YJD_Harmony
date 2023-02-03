@@ -6,7 +6,7 @@
  */
 
 
-
+#include "Tutturu.h"
 #include "SGActionInfoLoader.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>
@@ -41,10 +41,8 @@ bool SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 
 	for (ArrayIndex i = 0; i < gunnerRoot.size(); ++i) {
 		Value& actionRoot = gunnerRoot[i];
-		Value& animationListRoot = actionRoot["animation"];
 
-		DebugAssertMessage(animationListRoot.size() > 0, "애니메이션이 없는 액션입니다.");
-		SGActionInfo actionInfo(animationListRoot.size());
+		SGActionInfo actionInfo;
 
 		actionInfo.ActionName = SGJson::getString(actionRoot["name"]);
 		actionInfo.Code = actionRoot["code"].asInt();
@@ -72,12 +70,6 @@ bool SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 		}
 
 
-		for (ArrayIndex j = 0; j < animationListRoot.size(); ++j) {
-			Value& animationRoot = animationListRoot[j];
-			SGAnimationInfo animationInfo(animationRoot["frames"].size());
-			SGJson::parseAnimationInfo(animationRoot, animationInfo);
-			actionInfo.AnimationList.PushBack(Move(animationInfo));
-		}
 		actionInfoMap.Insert(actionInfo.Code, Move(actionInfo));
 	}
 

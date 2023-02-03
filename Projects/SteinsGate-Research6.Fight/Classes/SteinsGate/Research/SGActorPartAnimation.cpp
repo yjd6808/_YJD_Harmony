@@ -9,7 +9,7 @@
  * Begin, End 둘중 하나만 호출하도록 구현하면 뭔가 좀 깔끔하지 않아서. 일단 둘다 호출하도록 만듬
  */
 
-
+#include "Tutturu.h"
 #include "SGActorPartAnimation.h"
 
 #include <SteinsGate/Research/SGActorPartSprite.h>

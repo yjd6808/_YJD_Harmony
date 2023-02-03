@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGConfig.h>
 #include <SteinsGate/Research/Tutturu.h>
 
 struct SGAttackDataInfo

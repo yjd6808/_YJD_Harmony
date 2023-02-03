@@ -5,7 +5,7 @@
  *
  */
 
-
+#include "Tutturu.h"
 #include "SGAttackDataInfoLoader.h"
 
 #include <SteinsGate/Research/SGImagePackManager.h>

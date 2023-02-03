@@ -5,6 +5,7 @@
  *
  */
 
+#include "Tutturu.h"
 #include "SGPlayerController.h"
 
 #include <SteinsGate/Research/SGPlayer.h>

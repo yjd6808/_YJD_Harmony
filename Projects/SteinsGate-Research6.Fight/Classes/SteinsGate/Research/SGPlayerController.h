@@ -9,7 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Research/Tutturu.h>
-#include <SteinsGate/Research/Config.h>
+#include <SteinsGate/Research/SGConfig.h>
 
 #include <JCore/Time.h>
 
