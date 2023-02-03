@@ -35,6 +35,22 @@ SGPhysicsActor::SGPhysicsActor(ActorType_t type, int code)
 	, m_pAtkHitBox(nullptr)
 {}
 
+bool SGPhysicsActor::init() {
+	SGActor::init();
+
+	m_bUseElasticity = false;
+	m_bBounced = false;
+	m_fUpTime = 0.0f;
+	m_fDownTime = 0.0f;
+	m_fVelocityX = 0.0f;
+	m_fVelocityY = 0.0f;
+	m_fPuaseTime = 0.0f;
+	m_fElapsedPausedTime = 0.0f;
+	m_bDead = false;
+	m_fAtkBoxInstantElapsedTime = 0.0f;
+
+	return true;
+}
 
 bool SGPhysicsActor::isPaused() {
 	return m_fElapsedPausedTime < m_fPuaseTime;
@@ -201,6 +217,8 @@ bool SGPhysicsActor::hasForceX() {
 bool SGPhysicsActor::hasForceY() {
 	return Math::Abs(m_fVelocityY) >= SG_FLT_EPSILON;
 }
+
+
 
 void SGPhysicsActor::hit(const SGHitInfo& hitInfo) {
 	hit(hitInfo.HitDirection, hitInfo.HitRect, hitInfo.AttackDataInfo);

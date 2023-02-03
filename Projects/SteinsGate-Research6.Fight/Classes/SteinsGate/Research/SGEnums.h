@@ -142,6 +142,7 @@ Monster,
 Npc,
 Projectile,
 Obstacle,
+Effect,
 Max
 SEnumEnd(ActorType)
 

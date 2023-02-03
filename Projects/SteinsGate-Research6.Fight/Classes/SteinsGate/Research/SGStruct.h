@@ -25,6 +25,12 @@ struct SGThicknessBox
 	float Height;
 
 	SGThicknessBox() : RelativeX(0), RelativeY(0), Width(0), Height(0) {}
+	SGThicknessBox(float relaitveX, float relativeY, float width, float height)
+		: RelativeX(relaitveX)
+		, RelativeY(relativeY)
+		, Width(width)
+		, Height(height) {}
+
 	SGThicknessBox(const SGVec2& pt, const SGSize& size)
 		: RelativeX(pt.x)
 		, RelativeY(pt.y)

@@ -11,6 +11,8 @@
 #include <SteinsGate/Research/Tutturu.h>
 #include <SteinsGate/Research/SGStruct.h>
 
+#define CreateNew(Type) public: SGActorListener* createNew() override { return new Type; }
+
 class SGActor;
 class SGActorPartAnimation;
 class SGFrameTexture;

@@ -18,7 +18,8 @@
 #include <SteinsGate/Research/SGObstacleInfo.h>
 #include <SteinsGate/Research/SGMapInfo.h>
 #include <SteinsGate/Research/SGAIInfo.h>
-#include <SteinsGate/Research/SGAttackData.h>
+#include <SteinsGate/Research/SGAttackDataInfo.h>
+#include <SteinsGate/Research/SGEffectInfo.h>
 
 using AnimationList = SGVector<SGAnimationInfo*>;
 class SGDataManager
@@ -51,6 +52,7 @@ public:
 	SGMapInfo* getMapInfo(int mapCode);
 	SGAIInfo* getAIInfo(int aiCode);
 	SGAttackDataInfo* getAttackDataInfo(int attackDataCode);
+	SGEffectInfo* getEffectInfo(int effectCode);
 private:
 	SGClientInfo m_ClientInfo;
 	SGHashMap<int, SGMonsterInfo> m_MonsterInfoMap;
@@ -61,6 +63,7 @@ private:
 	SGHashMap<int, SGMapInfo> m_MapInfoMap;
 	SGHashMap<int, SGAIInfo> m_AIInfoMap;
 	SGHashMap<int, SGAttackDataInfo> m_AttackDataInfoMap;
+	SGHashMap<int, SGEffectInfo> m_EffectInfoMap;
 
 	SGHashMap<int, SGAnimationInfo> m_CharAnimationInfoMap[CharType::Max];
 	SGVector<SGAnimationInfo*> m_CharAnimationList[CharType::Max];

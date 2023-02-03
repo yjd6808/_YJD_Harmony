@@ -10,7 +10,7 @@
 
 
 
-#include <SteinsGate/Research/SGAttackData.h>
+#include <SteinsGate/Research/SGAttackDataInfo.h>
 
 
 struct SGAttackDataInfoLoader

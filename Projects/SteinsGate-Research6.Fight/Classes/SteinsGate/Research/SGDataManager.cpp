@@ -19,6 +19,7 @@
 #include <SteinsGate/Research/SGAIInfoLoader.h>
 #include <SteinsGate/Research/SGAttackDataInfoLoader.h>
 #include <SteinsGate/Research/SGCharAnimationInfoLoader.h>
+#include <SteinsGate/Research/SGEffectInfoLoader.h>
 
 SGDataManager::SGDataManager() {}
 SGDataManager::~SGDataManager() {
@@ -33,7 +34,8 @@ void SGDataManager::LoadAllConfigs() {
 
 
 	if (SGAttackDataInfoLoader::LoadAttackDataInfo(m_AttackDataInfoMap) &&
-		SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectileInfoMap) && 
+		SGEffectInfoLoader::LoadEffectInfo(m_EffectInfoMap) &&
+		SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectileInfoMap) &&		// 프로젝틸은 이펙트, 어택 데이터를 참조하므로 이후에 로딩
 		SGActionInfoLoader::LoadActionInfo(m_ActionInfoMap) &&
 		SGMonsterInfoLoader::LoadMonsterInfo(m_MonsterInfoMap) &&
 		SGCharBaseInfoLoader::LoadCharBaseInfo(m_CharBaseInfoMap) &&
@@ -107,4 +109,9 @@ SGAIInfo* SGDataManager::getAIInfo(int aiCode) {
 SGAttackDataInfo* SGDataManager::getAttackDataInfo(int attackDataCode) {
 	DebugAssertMessage(m_AttackDataInfoMap.Exist(attackDataCode), "해당 공격 데이터 정보가 존재하지 않습니다.");
 	return &m_AttackDataInfoMap[attackDataCode];
+}
+
+SGEffectInfo* SGDataManager::getEffectInfo(int effectCode) {
+	DebugAssertMessage(m_EffectInfoMap.Exist(effectCode), "해당 이펙트 코드에 맞는 이펙트가 없다@~@~!@~!@~");
+	return &m_EffectInfoMap[effectCode];
 }

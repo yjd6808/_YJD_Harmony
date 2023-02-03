@@ -38,6 +38,19 @@ void SGAIActor::initAI() {
 }
 
 
+bool SGAIActor::init() {
+	SGPhysicsActor::init();
+
+	// m_pAiInfo = aiInfo;
+	// m_ActivityMap = ;
+
+	m_pRunningActivity = m_ActivityMap[AIActivity::Idle];
+	m_eState = eWander;
+	m_ePreviousState = eNone;
+	m_pTarget = nullptr;
+
+	return true;
+}
 
 void SGAIActor::update(float dt) {
 	SGPhysicsActor::update(dt);

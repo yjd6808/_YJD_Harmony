@@ -1,6 +1,6 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
-    "__comment__1": "프레임 단위 프로젝틸 이벤트",
+    "__comment__1": "프로젝틸 관련 정보들 모음",
     "__comment__3": "hit effect는 맞는 방향 중요 왼쪽에서 오른쪽, 오른쪽에서 왼쪽인지에따라",
     "__comment__4": "공격 데미지기반은 물리 공격(1), 마법 공격(2), 고정 데미지(3) 1,2번은 데미지 비율 필요 attack_damage_ratio",
     "__comment__5": "penetration_rate: 관통 확률 100분위, rehit_delay: 관통시 연속히트 방지용 같은 몬스터에게 다시 타격 주기까기 걸리는 시간 0은 다시 안때리도록 함",
@@ -20,8 +20,10 @@
             "img": "pistol.img",
             "spawn_offset_x": 342.0,
             "spawn_offset_y": 245.0,
-            "spawn_effect_code": 1,
-            "hit_effect_code": 2,
+            "spawn_effect_code": 3,
+            "spawn_effect_offset_x": 342.0,
+            "spawn_effect_offset_y": 245.0,
+            "hit_effect_code": 4,
             "rotation": 0.0,
             "random_rotation_range": "-3.0 3.0",
             "distance": 400.0,
@@ -29,19 +31,18 @@
             "life_time": 10.0,
             "rehit_delay": 0.0,
             "thickness_box": "0 -1 30 30",
-            "animation": [
-                {
-                    "code": 1,
-                    "name": "gunner_auto",
-                    "loop": true,
-                    "frames": [
-                        "0 50",
-                        "1 50",
-                        "2 50",
-                        "3 50"
-                    ]
-                }
-            ]
+            "animation": 
+            {
+                "code": 1,
+                "name": "gunner_auto",
+                "loop": true,
+                "frames": [
+                    "0 50",
+                    "1 50",
+                    "2 50",
+                    "3 50"
+                ]
+            }
         },
         {
             "override_code": 1,
@@ -50,8 +51,6 @@
             "name": "gunner_auto_left",
             "spawn_offset_x": 374.0,
             "spawn_offset_y": 239.0,
-            "spawn_effect_code": 1,
-            "hit_effect_code": 2,
             "rotation": 0.0,
             "thickness_box": "0 -1 30 30"
         },
@@ -59,6 +58,8 @@
             "override_code": 1,
             "code": 3,
             "name": "gunner_auto_right_down",
+            "spawn_effect_code": 5,
+            "hit_effect_code": 6,
             "spawn_offset_x": 336.0,
             "spawn_offset_y": 201.0,
             "rotation": 30.0

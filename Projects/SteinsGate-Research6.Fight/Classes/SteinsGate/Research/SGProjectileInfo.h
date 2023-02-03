@@ -8,28 +8,20 @@
 
 #pragma once
 
-#include <SteinsGate/Research/SGActionInfo.h>
+#include <SteinsGate/Research/SGAnimationInfo.h>
 
+struct SGAttackDataInfo;
+struct SGEffectInfo;
 struct SGProjectileInfo
 {
-	SGProjectileInfo(int animationSize)
-		: AnimationList(animationSize) {}
-
+	SGProjectileInfo() = default;
 	SGProjectileInfo(const SGProjectileInfo& other) = default;
-	SGProjectileInfo(SGProjectileInfo&& other) = default;
+	SGProjectileInfo(SGProjectileInfo&& other) noexcept;
 
 	SGProjectileInfo& operator=(const SGProjectileInfo& other) = default;
-	SGProjectileInfo& operator=(SGProjectileInfo&& other) = default;
+	SGProjectileInfo& operator=(SGProjectileInfo&& other) noexcept;
 
-	~SGProjectileInfo() {
-
-		if (AnimationRef) 
-			return;
-
-		for (int i = 0; i < AnimationList.Size(); ++i) {
-			DeleteSafe(AnimationList[i]);
-		}
-	}
+	~SGProjectileInfo();
 
 	int Code;
 	int ProjectileListenerCode;
@@ -39,8 +31,10 @@ struct SGProjectileInfo
 	int ImgIndex;
 	float SpawnOffsetX;
 	float SpawnOffsetY;
-	int SpawnEffectCode;
-	int HitEffectCode;
+	SGEffectInfo* SpawnEffect;
+	float SpawnEffectOffsetX;
+	float SpawnEffectOffsetY;
+	SGEffectInfo* HitEffect;
 	float Rotation;
 	float RamdomRotationRangeMin;
 	float RamdomRotationRangeMax;
@@ -48,8 +42,10 @@ struct SGProjectileInfo
 	float MoveSpeed;
 	float LifeTime;
 	float RehitDelay;
-	bool AnimationRef;	// 오버라이딩 추가에따라 애니메이션 원본인지 참조본인지 가에따라 애니메이션 원본인지 참조본인지 구분용도
+	bool AnimationRef;	// 오버라이딩 추가에따라 애니메이션 원본인지 참조본인지 구분용도
 
 	SGThicknessBox ThicknessBox;
-	SGVector<SGAnimationInfo*> AnimationList;
+	SGAnimationInfo* Animation;
 };
+
+

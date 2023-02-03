@@ -68,6 +68,7 @@ public:
 	SGMapLayer* getMapLayer() { return m_pMapLayer; }
 	SGHitRecorder* getHitRecorder() { return m_pHitRecorder; }
 	int getActorId() { return m_iActorId; }
+	SGActorListener* getListener() { return m_pListener; }
 
 	void setPositionReal(float x, float y);
 	void setPositionReal(const SGVec2& v);

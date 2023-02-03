@@ -67,8 +67,6 @@ void SGActorPartAnimation::run(int frameIndexInAnimation) {
 	init();
 
 	m_iFrameIndexInAnimation = frameIndexInAnimation;
-	if (m_iFrameIndexInAnimation == 1)
-		int a = 40;
 
 	SGFrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
 	float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation]->Delay;

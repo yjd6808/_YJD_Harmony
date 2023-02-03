@@ -9,6 +9,7 @@
 #include "SGActorBox.h"
 
 #include <SteinsGate/Research/SGDataManager.h>
+#include <SteinsGate/Research/SGActorListenerManager.h>
 #include <SteinsGate/Research/SGMapLayer.h>
 
 USING_NS_CC;
@@ -60,6 +61,10 @@ void SGActorBox::updateCleanUp() {
 		m_hRemoveActorMap.Remove(pRemovedActor);
 
 		switch (pRemovedActor->getType()) {
+		case ActorType::Effect: {
+			cleanUpEffect((SGEffect*)pRemovedActor);
+			break;
+		}
 		case ActorType::Projectile: {
 			cleanUpProjectile((SGProjectile*)pRemovedActor);
 			break;
@@ -76,9 +81,13 @@ void SGActorBox::updateCleanUp() {
 			cleanUpCharacter((SGCharacter*)pRemovedActor);
 			break;
 		}
-		default: DebugAssert(false);
-			m_pMapLayer->removeChild(pRemovedActor);
+		default: {
+			DebugAssertMessage(false, "이상한 액터 타입입니다.");
+			break;
 		}
+		}
+
+		m_pMapLayer->removeChild(pRemovedActor);
 	}
 }
 
@@ -103,8 +112,24 @@ void SGActorBox::updateZOrder(float dt) {
 }
 
 void SGActorBox::updateActors(float dt) {
-	for (int i = 0; i < m_vZOrderedActors.Size(); ++i) {
-		m_vZOrderedActors[i]->update(dt);
+	for (int i = 0; i < m_vProjectiles.Size(); ++i) {
+		m_vProjectiles[i]->update(dt);
+	}
+
+	for (int i = 0; i < m_vMonsters.Size(); ++i) {
+		m_vMonsters[i]->update(dt);
+	}
+
+	for (int i = 0; i < m_vCollidableObstacles.Size(); ++i) {
+		m_vCollidableObstacles[i]->update(dt);
+	}
+
+	for (int i = 0; i < m_vCharacters.Size(); ++i) {
+		m_vCharacters[i]->update(dt);
+	}
+
+	for (int i = 0; i < m_vEffectList.Size(); ++i) {
+		m_vEffectList[i]->update(dt);
 	}
 }
 
@@ -129,25 +154,39 @@ SGProjectile* SGActorBox::createProejctileOnMap(SGActor* spawner, int projectile
 	DebugAssertMessage(m_pMapLayer, "맵 레이어 존재하지 않습니다.");
 
 	SGProjectileInfo* pInfo = SGDataManager::getInstance()->getProjectileInfo(projectileId);
+	
 
 	if (!m_hProjectilePool.Exist(projectileId)) {
 		m_hProjectilePool.Insert(Move(projectileId), SGList<SGProjectile*>());
 	}
-
+	
 	SGProjectile* pProjectile = nullptr;
+	SGActorListenerManager* pActorListenerManager = SGActorListenerManager::getInstance();
 	SGList<SGProjectile*>& projectileList = m_hProjectilePool[projectileId];
 
 	if (projectileList.IsEmpty()) {
+		SGActorListener* pListener = pActorListenerManager->createProjectileListener(pInfo->ProjectileListenerCode);
+
 		pProjectile = SGProjectile::create(spawner, pInfo);
+		pProjectile->initListener(pListener);
 		pProjectile->retain();
+		pListener->onCreated();
+
 	} else {
 		pProjectile = projectileList.Front();
 		pProjectile->init();
+		pProjectile->getListener()->onCreated();
 		projectileList.PopFront();
 	}
 
 	pProjectile->setAllyFlag(spawner->getAllyFlag());
 	pProjectile->setMapLayer(m_pMapLayer);
+
+	if (pInfo->SpawnEffect->Code != InvalidValue_v) {
+		SGEffect* pSpawnEffect = createEffectOnMapRelative(spawner, pInfo->SpawnEffect->Code, pInfo->SpawnEffectOffsetX, pInfo->SpawnEffectOffsetY);
+		pSpawnEffect->setLocalZOrder(pProjectile->getLocalZOrder() + 1);
+	}
+	
 	registerZOrderActor(pProjectile);
 	registerProjectile(pProjectile);
 	registerActor(pProjectile);
@@ -230,6 +269,55 @@ SGObstacle* SGActorBox::createObstacleOnMap(int obstacleCode, float x, float y) 
 
 
 
+SGEffect* SGActorBox::createEffectOnMapRelative(SGActor* spawner, int effectCode, float offsetX, float offsetY) {
+	DebugAssertMessage(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+
+	SGEffectInfo* pEffectInfo = SGDataManager::getInstance()->getEffectInfo(effectCode);
+
+	if (!m_hEffectPool.Exist(effectCode)) {
+		m_hEffectPool.Insert(Move(effectCode), SGList<SGEffect*>());
+	}
+
+	SGEffect* pEffect = nullptr;
+	SGList<SGEffect*>& effectList = m_hEffectPool[effectCode];
+
+	if (effectList.IsEmpty()) {
+		pEffect = SGEffect::create(pEffectInfo);
+		pEffect->retain();
+	} else {
+		pEffect = effectList.Front();
+		pEffect->init();
+		effectList.PopFront();
+	}
+
+	SGSize spawnerCanvsSize = spawner->getCanvasSize();
+	SGVec2 spawnerCanvasPos = spawner->getCanvasPositionReal();
+
+	pEffect->initThicknessBox({ -15, -15, 30, 30 });
+	pEffect->setSpriteDirection(spawner->getSpriteDirection());
+
+	if (spawner->getSpriteDirection() == SpriteDirection::Right) {
+		pEffect->setPositionRealCenter(
+			spawnerCanvasPos.x + offsetX,
+			spawnerCanvasPos.y + offsetY
+		);
+	} else {
+		pEffect->setPositionRealCenter(
+			spawnerCanvasPos.x + spawnerCanvsSize.width - offsetX,
+			spawnerCanvasPos.y + offsetY
+		);
+	}
+
+	
+	pEffect->setMapLayer(m_pMapLayer);
+	
+
+	registerEffect(pEffect);
+	registerActor(pEffect);
+	m_pMapLayer->addChild(pEffect);
+	return pEffect;
+}
+
 
 void SGActorBox::registerZOrderActor(SGActor* actor) {
 	m_vZOrderedActors.PushBack(actor);
@@ -249,6 +337,10 @@ void SGActorBox::registerMonster(SGMonster* monster) {
 
 void SGActorBox::registerObstacle(SGObstacle* obstacle) {
 	m_vCollidableObstacles.PushBack(obstacle);
+}
+
+void SGActorBox::registerEffect(SGEffect* effect) {
+	m_vEffectList.PushBack(effect);
 }
 
 void SGActorBox::registerPhysicsActor(SGPhysicsActor* physicsActor) {
@@ -283,39 +375,42 @@ void SGActorBox::unregisterZOrderActor(SGActor* actor) {
 }
 
 void SGActorBox::unregisterProjectile(SGProjectile* projectile) {
-	if (m_vProjectiles.Remove(projectile) == false) {
+	if (!m_vProjectiles.Remove(projectile)) {
 		DebugAssertMessage(false, "프로젝틸 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
 void SGActorBox::unregisterCharacter(SGCharacter* chracter) {
-	if (m_vCharacters.Remove(chracter)) {
+	if (!m_vCharacters.Remove(chracter)) {
 		DebugAssertMessage(false, "캐릭터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
 void SGActorBox::unregisterMonster(SGMonster* mosnter) {
-	if (m_vMonsters.Remove(mosnter) == false) {
+	if (!m_vMonsters.Remove(mosnter)) {
 		DebugAssertMessage(false, "몬스터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
 void SGActorBox::unregisterObstacle(SGObstacle* obstacle) {
 	if (obstacle->getBaseInfo()->Colliadalble)
-		if (m_vCollidableObstacles.Remove(obstacle))
+		if (!m_vCollidableObstacles.Remove(obstacle))
 			DebugAssertMessage(false, "옵스터클 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+}
 
-
+void SGActorBox::unregisterEffect(SGEffect* effect) {
+	if (!m_vEffectList.Remove(effect)) 
+		DebugAssertMessage(false, "이펙트 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 }
 
 void SGActorBox::unregisterPhysicsActor(SGPhysicsActor* physicsActor) {
-	if (m_vPhysicsActors.Remove(physicsActor))
+	if (!m_vPhysicsActors.Remove(physicsActor))
 		DebugAssertMessage(false, "피직스 액터 목록에서 액터를 제거하는데 실패했습니다.");
 }
 
 void SGActorBox::unregisterActor(SGActor* actor) {
 	DebugAssertMessage(actor->getActorId() != InvalidValue_v, "올바르지 않은 액터 ID입니다.");
-	if (m_hActorMap.Remove(actor->getActorId()))
+	if (!m_hActorMap.Remove(actor->getActorId()))
 		DebugAssertMessage(false, "공통 액터 목록에서 액터를 제거하는데 실패했습니다.");
 }
 
@@ -323,7 +418,8 @@ void SGActorBox::unregisterActor(SGActor* actor) {
 void SGActorBox::cleanUpProjectile(SGProjectile* projectile) {
 	unregisterProjectile(projectile);
 	unregisterZOrderActor(projectile);
-
+	unregisterActor(projectile);
+	m_hProjectilePool[projectile->getBaseInfo()->Code].PushBack(projectile);
 	Log("삭제> 플레이어 프로젝틸 (%s), 남은 플레이어 프로젝틸 수 : %d, Z오더 액터 수: %d\n", projectile->getBaseInfo()->Name.Source(), m_vProjectiles.Size(), m_vZOrderedActors.Size());
 }
 
@@ -331,21 +427,34 @@ void SGActorBox::cleanUpMonster(SGMonster* monster) {
 	unregisterMonster(monster);
 	unregisterZOrderActor(monster);
 	unregisterPhysicsActor(monster);
-
+	unregisterActor(monster);
+	m_hMonsterPool[monster->getBaseInfo()->Code].PushBack(monster);
 	Log("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d\n", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());
 }
 
 void SGActorBox::cleanUpObstacle(SGObstacle* obstacle) {
 	unregisterObstacle(obstacle);
+	unregisterActor(obstacle);
 
 	if (obstacle->getBaseInfo()->ZOrederable)
 		unregisterZOrderActor(obstacle);
+
+	m_hObstaclePool[obstacle->getBaseInfo()->Code].PushBack(obstacle);
 }
 
 void SGActorBox::cleanUpCharacter(SGCharacter* character) {
 	unregisterCharacter(character);
 	unregisterZOrderActor(character);
 	unregisterActor(character);
+
+	
 }
 
+void SGActorBox::cleanUpEffect(SGEffect* effect) {
+	unregisterEffect(effect);
+	unregisterZOrderActor(effect);
+	unregisterActor(effect);
+
+	m_hEffectPool[effect->getBaseInfo()->Code].PushBack(effect);
+}
 

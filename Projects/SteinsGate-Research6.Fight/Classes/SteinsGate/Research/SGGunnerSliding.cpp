@@ -11,7 +11,7 @@
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGActionDefine.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
-#include <SteinsGate/Research/SGProjectileDefine.h>
+#include <SteinsGate/Research/SGActorBox.h>
 
 SGGunnerSliding::SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo)
@@ -71,6 +71,7 @@ void SGGunnerSliding::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
+	
 	info.HitTarget->hit(info);
 }
 

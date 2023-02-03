@@ -25,15 +25,12 @@ SGProjectile::SGProjectile(SGActor* spawner, SGProjectileInfo* baseInfo)
 	: SGActor(ActorType::Projectile, baseInfo->Code)
 	, m_fMoveDistance(0.0f)
 	, m_fElapsedLifeTime(0.0f)
-	, m_pSpwawner(spawner)
+	, m_pSpawner(spawner)
 	, m_pBaseInfo(baseInfo)
-	, m_bLifeTimeOver(false)
-	, m_bDistanceOver(false)
-	, m_bCollisionOnTheGround(false)
 {}
 
 SGProjectile::~SGProjectile() {
-	CC_SAFE_RELEASE(m_pSpwawner);
+	CC_SAFE_RELEASE(m_pSpawner);
 }
 
 SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo) {
@@ -43,6 +40,7 @@ SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo)
 		spawner->retain();
 		pProjectile->initThicknessBox(baseInfo->ThicknessBox);
 		pProjectile->initActorSprite();
+		pProjectile->initHitRecorder(8, 16);
 		pProjectile->autorelease();
 		return pProjectile;
 	}
@@ -50,13 +48,21 @@ SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo)
 	return pProjectile;
 }
 
+bool SGProjectile::init() {
+	SGActor::init();
+
+
+
+	return true;
+}
+
 void SGProjectile::initThicknessBox(const SGThicknessBox& thicknessBox) {
 	SGActor::initThicknessBox(thicknessBox);
 
 	// 두께빡스 위치 자동지정
 	if (thicknessBox.RelativeY <= 0.0f) {
-		SGVec2 spawnerCanvasPos = m_pSpwawner->getCanvasPositionReal();
-		SGVec2 spawnerGroundPos = m_pSpwawner->getPositionRealCenter();
+		SGVec2 spawnerCanvasPos = m_pSpawner->getCanvasPositionReal();
+		SGVec2 spawnerGroundPos = m_pSpawner->getPositionRealCenter();
 
 		// 스포너의 캔버스 기준상에서 프로젝틸의 절대 y 위치를 구한다.
 		// 스포너의 절대 그라운드 위치 중앙 y 위치에서 빼주면 됨.
@@ -69,19 +75,17 @@ void SGProjectile::initListener(SGActorListener* listener) {
 	DebugAssertMessage(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
 	DebugAssertMessage(listener->getActorType() == ActorType::Projectile, "프로젝틸 리스너만 초기화 가능합니다.");
 	m_pListener = listener;
+	m_pListener->injectActor(this);
 }
 
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
 void SGProjectile::initActorSprite() {
 	SGDataManager* pDataManager = SGDataManager::getInstance();
 	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
-	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, m_pBaseInfo->AnimationList.Size());
+	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, 1);	// 프로젝틸도 파츠, 애니메이션 모두 한개
 
 	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });
-
-	for (int i = 0; i < m_pBaseInfo->AnimationList.Size(); ++i) {
-		spActorSpriteData->Animations.PushBack(m_pBaseInfo->AnimationList[i]);
-	}
+	spActorSpriteData->Animations.PushBack(m_pBaseInfo->Animation);
 
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
@@ -90,12 +94,12 @@ void SGProjectile::initActorSprite() {
 		SGRandom::random_real(m_pBaseInfo->RamdomRotationRangeMin, m_pBaseInfo->RamdomRotationRangeMax)
 	);
 
-	SGSize spawnerCanvsSize = m_pSpwawner->getCanvasSize();
-	SGVec2 spawnerCanvasPos = m_pSpwawner->getCanvasPositionReal();
+	SGSize spawnerCanvsSize = m_pSpawner->getCanvasSize();
+	SGVec2 spawnerCanvasPos = m_pSpawner->getCanvasPositionReal();
 
-	setSpriteDirection(m_pSpwawner->getSpriteDirection());
+	setSpriteDirection(m_pSpawner->getSpriteDirection());
 
-	if (m_pSpwawner->getSpriteDirection() == SpriteDirection::Right) {
+	if (m_pSpawner->getSpriteDirection() == SpriteDirection::Right) {
 		setPosition(
 			spawnerCanvasPos.x + m_pBaseInfo->SpawnOffsetX,
 			spawnerCanvasPos.y + m_pBaseInfo->SpawnOffsetY
@@ -137,19 +141,16 @@ void SGProjectile::updateListenerEvent(float dt) {
 	SGProjectileListener* pListener = (SGProjectileListener*)m_pListener;
 	pListener->onUpdate(dt);
 
-	if (isLifeTimeOver() && !m_bLifeTimeOver) {
+	if (isLifeTimeOver()) {
 		pListener->onLifeTimeOver();
-		m_bLifeTimeOver = true;
 	}
 
-	if (isDistanceOver() && !m_bDistanceOver) {
+	if (isDistanceOver()) {
 		pListener->onDistanceOver();
-		m_bDistanceOver = true;
 	}
 
-	if (isOnTheGround() && !m_bCollisionOnTheGround) {
+	if (isOnTheGround()) {
 		pListener->onCollisionWithGround();
-		m_bCollisionOnTheGround = false;
 	}
 }
 
@@ -175,12 +176,12 @@ void SGProjectile::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTextur
 
 
 bool SGProjectile::isLifeTimeOver() {
-	return m_bLifeTimeOver;
+	return m_fElapsedLifeTime >= m_pBaseInfo->LifeTime;
 }
 
 bool SGProjectile::isDistanceOver() {
-	return m_bDistanceOver;
+	return m_fMoveDistance >= m_pBaseInfo->Distance;
 }
 
-SGActor* SGProjectile::getSpawner() { return m_pSpwawner; }
+SGActor* SGProjectile::getSpawner() { return m_pSpawner; }
 SGProjectileInfo* SGProjectile::getBaseInfo() { return m_pBaseInfo; }

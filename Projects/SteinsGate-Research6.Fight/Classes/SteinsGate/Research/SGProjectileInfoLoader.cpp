@@ -43,8 +43,8 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 
 			if (iOverride != 0) {
 				DebugAssertMessage(projectileInfoMap.Exist(iOverride), "오버라이딩할 프로젝틸 데이터가 없습니다. 문서 똑바로 안만들어!!?");
-				SGProjectileInfo& ref = projectileInfoMap[iOverride];
-				SGProjectileInfo info(ref);	// 복사 수행
+				const SGProjectileInfo& ref = projectileInfoMap[iOverride];
+				SGProjectileInfo info{ ref };	// 복사 수행
 				info.AnimationRef = true;
 				WriteOverridedProjectileInfo(projectile, info);
 				projectileInfoMap.Insert(info.Code, Move(info));
@@ -53,7 +53,7 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 
 			Value& animationListRoot = projectile["animation"];
 			DebugAssertMessage(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
-			SGProjectileInfo info(animationListRoot.size());
+			SGProjectileInfo info;
 			info.AnimationRef = false;
 			WriteProjectileInfo(projectile, info);
 
@@ -106,11 +106,20 @@ void SGProjectileInfoLoader::WriteOverridedProjectileInfo(Json::Value& projectil
 
 	int iSpawnEffectCode = SGJson::getIntDefault(projectile["spawn_effect_code"], 0);
 	if (iSpawnEffectCode != 0)
-		info.SpawnEffectCode = iSpawnEffectCode;
+		info.SpawnEffect = pDataManager->getEffectInfo(iSpawnEffectCode);
+
+
+	float fSpawnEffectOffsetX = SGJson::getFloatDefault(projectile["spawn_effect_offset_x"], 0);
+	if (fSpawnEffectOffsetX != 0)
+		info.SpawnEffectOffsetX = fSpawnEffectOffsetX;
+
+	float fSpawnEffectOffsetY = SGJson::getFloatDefault(projectile["spawn_effect_offset_y"], 0);
+	if (fSpawnEffectOffsetY != 0)
+		info.SpawnEffectOffsetY = fSpawnEffectOffsetY;
 
 	int iHitEffectCode = SGJson::getIntDefault(projectile["hit_effect_code"], 0);
 	if (iHitEffectCode != 0)
-		info.HitEffectCode = iHitEffectCode;
+		info.HitEffect = pDataManager->getEffectInfo(iHitEffectCode);
 
 	float fRotation = SGJson::getFloatDefault(projectile["rotation"], 400);
 	if (fRotation < 360)
@@ -145,15 +154,11 @@ void SGProjectileInfoLoader::WriteOverridedProjectileInfo(Json::Value& projectil
 		return;
 	}
 
-	Value& animationListRoot = projectile["animation"];
 	info.AnimationRef = false;
-
-	for (ArrayIndex j = 0; j < animationListRoot.size(); ++j) {
-		Value& animationRoot = animationListRoot[j];
-		SGAnimationInfo* pAnimationInfo = new SGAnimationInfo(animationRoot["frames"].size());
-		SGJson::parseAnimationInfo(animationRoot, *pAnimationInfo);
-		info.AnimationList.PushBack(pAnimationInfo);
-	}
+	Value& animationRoot = projectile["animation"];
+	SGAnimationInfo* pAnimationInfo = new SGAnimationInfo(animationRoot["frames"].size());
+	SGJson::parseAnimationInfo(animationRoot, *pAnimationInfo);
+	info.Animation = pAnimationInfo;
 }
 
 void SGProjectileInfoLoader::WriteProjectileInfo(Json::Value& projectile, SGProjectileInfo& info) {
@@ -162,7 +167,6 @@ void SGProjectileInfoLoader::WriteProjectileInfo(Json::Value& projectile, SGProj
 	SGDataManager* pDataManager = SGDataManager::getInstance();
 
 
-	Value& animationListRoot = projectile["animation"];
 	info.Code = projectile["code"].asInt();
 	info.ProjectileListenerCode = projectile["listener_code"].asInt();
 	info.AttackData = pDataManager->getAttackDataInfo(projectile["attakdata_code"].asInt());
@@ -171,8 +175,10 @@ void SGProjectileInfoLoader::WriteProjectileInfo(Json::Value& projectile, SGProj
 	info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(projectile["img"]));
 	info.SpawnOffsetX = projectile["spawn_offset_x"].asFloat();
 	info.SpawnOffsetY = projectile["spawn_offset_y"].asFloat();
-	info.SpawnEffectCode = projectile["spawn_effect_code"].asInt();
-	info.HitEffectCode = projectile["hit_effect_code"].asInt();
+	info.SpawnEffect = pDataManager->getEffectInfo(projectile["spawn_effect_code"].asInt());
+	info.SpawnEffectOffsetX = projectile["spawn_effect_offset_x"].asFloat();
+	info.SpawnEffectOffsetY = projectile["spawn_effect_offset_y"].asFloat();
+	info.HitEffect = pDataManager->getEffectInfo(projectile["hit_effect_code"].asInt());
 	info.Rotation = projectile["rotation"].asFloat();
 	SGJson::parseFloatNumber2(projectile["random_rotation_range"], info.RamdomRotationRangeMin, info.RamdomRotationRangeMax);
 	info.Distance = projectile["distance"].asFloat();
@@ -181,10 +187,8 @@ void SGProjectileInfoLoader::WriteProjectileInfo(Json::Value& projectile, SGProj
 	info.RehitDelay = projectile["rehit_delay"].asFloat();
 	SGJson::parseThicknessInfo(projectile["thickness_box"], info.ThicknessBox);
 
-	for (ArrayIndex j = 0; j < animationListRoot.size(); ++j) {
-		Value& animationRoot = animationListRoot[j];
-		SGAnimationInfo* pAnimationInfo = new SGAnimationInfo(animationRoot["frames"].size());
-		SGJson::parseAnimationInfo(animationRoot, *pAnimationInfo);
-		info.AnimationList.PushBack(pAnimationInfo);
-	}
+	Value& animationRoot = projectile["animation"];
+	SGAnimationInfo* pAnimationInfo = new SGAnimationInfo(animationRoot["frames"].size());
+	SGJson::parseAnimationInfo(animationRoot, *pAnimationInfo);
+	info.Animation = pAnimationInfo;
 }

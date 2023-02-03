@@ -1,0 +1,118 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "각종 이펙트 정보",
+
+    "effect": [
+
+
+
+        {
+            "code": 1,
+            "name": "knocksmall",
+            "npk": "sprite_common_hiteffect.NPK",
+            "img": "knocksmall.img",
+            "animation": 
+            {
+                "code": 1,
+                "name": "knocksmall",
+                "loop": false,
+                "frames": [
+                    "0 100",
+                    "1 100",
+                    "2 100"
+                ]
+            }
+        },
+        {
+            "code": 2,
+            "name": "knocklarge",
+            "npk": "sprite_common_hiteffect.NPK",
+            "img": "knocklarge.img",
+            "animation": 
+            {
+                "code": 1,
+                "name": "knocklarge",
+                "loop": false,
+                "frames": [
+                    "0 100",
+                    "1 100",
+                    "2 100"
+                ]
+            }
+        },
+
+        {
+            "code": 3,
+            "name": "pistol_shoot",
+            "npk": "sprite_character_gunner_effect_shooteffect.NPK",
+            "img": "pistol00.img",
+            "animation": 
+            {
+                "code": 1,
+                "name": "pistol_shoot",
+                "loop": false,
+                "frames": [
+                    "4 100",
+                    "5 100",
+                    "6 100"
+                ]
+            }
+        }, 
+        {
+            "code": 4,
+            "name": "pistol_hit",
+            "npk": "sprite_character_gunner_effect_shooteffect.NPK",
+            "img": "pistol00.img",
+            "animation": 
+            {
+                "code": 1,
+                "name": "pistol_hit",
+                "loop": false,
+                "frames": [
+                    "0 100",
+                    "1 100",
+                    "2 100",
+                    "3 100"
+                ]
+            }
+        },
+       
+        {
+            "code": 5,
+            "name": "pistol_shoot_down",
+            "npk": "sprite_character_gunner_effect_shooteffect.NPK",
+            "img": "pistol00.img",
+            "animation": 
+            {
+                "code": 1,
+                "name": "pistol_shoot_down",
+                "loop": false,
+                "frames": [
+                    "14 100",
+                    "15 100",
+                    "16 100"
+                ]
+            }
+        },
+
+       
+        {
+            "code": 6,
+            "name": "pistol_hit_down",
+            "npk": "sprite_character_gunner_effect_shooteffect.NPK",
+            "img": "pistol00.img",
+            "animation": 
+            {
+                "code": 1,
+                "name": "pistol_hit_down",
+                "loop": false,
+                "frames": [
+                    "8 100",
+                    "9 100",
+                    "10 100",
+                    "11 100"
+                ]
+            }
+        }
+    ]
+}

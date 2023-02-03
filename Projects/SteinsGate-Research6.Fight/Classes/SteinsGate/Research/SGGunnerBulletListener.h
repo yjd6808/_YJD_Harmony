@@ -11,13 +11,23 @@
 
 #include <SteinsGate/Research/SGCharProjectileListener.h>
 
+#include "SGHitRecorder.h"
+
 class SGPlayer;
+class SGHitRecorder;
 class SGGunnerBulletListener : public SGCharProjectileListener
 {
 public:
 	void onCreated() override;
+	void onUpdate(float dt) override;
+	void onLifeTimeOver() override;
+	void onDistanceOver() override;
+	void onCollisionWithGround() override;
+	void onEnemySingleHit(SGHitInfo& info);
+	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 
-	SGActorListener* createNew() override { return new SGGunnerBulletListener; }
+
+	CreateNew(SGGunnerBulletListener)
 };
 
 

@@ -73,15 +73,15 @@
     <Filter Include="Data\CharAnimation">
       <UniqueIdentifier>{ec65ec03-91ef-490c-8f38-45cecb6661cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data\Effect">
+      <UniqueIdentifier>{926d1f0b-a511-4c7f-91aa-587ab0ce672f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGImagePackManager.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGImagePack.cpp">
-      <Filter>Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGTexturePool.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGDataManager.cpp">
@@ -268,15 +268,21 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGCharAnimationInfoLoader.cpp">
       <Filter>Data\CharAnimation</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGEffect.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGEffectInfoLoader.cpp">
+      <Filter>Data\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfo.cpp">
+      <Filter>Data\Projectile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGImagePackManager.h">
       <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGImagePack.h">
-      <Filter>Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGTexturePool.h">
       <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAnimationInfo.h">
@@ -458,7 +464,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.h">
       <Filter>Data\AttackData</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackData.h">
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfo.h">
       <Filter>Data\AttackData</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerFallDown.h">
@@ -509,5 +515,17 @@
       <Filter>Data\CharAnimation</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGEnums.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEffect.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEffectDefine.h">
+      <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEffectInfo.h">
+      <Filter>Data\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEffectInfoLoader.h">
+      <Filter>Data\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

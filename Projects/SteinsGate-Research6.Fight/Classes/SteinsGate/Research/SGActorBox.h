@@ -15,6 +15,7 @@
 #include <SteinsGate/Research/SGProjectile.h>
 #include <SteinsGate/Research/SGMonster.h>
 #include <SteinsGate/Research/SGObstacle.h>
+#include <SteinsGate/Research/SGEffect.h>
 
 using ActorList = SGVector<SGActor*>;
 using CharacterList = SGVector<SGCharacter*>;
@@ -22,6 +23,7 @@ using ProjectileList = SGVector<SGProjectile*>;
 using MonsterList = SGVector<SGMonster*>;
 using PhysicsActorList = SGVector<SGPhysicsActor*>;
 using ObstacleList = SGVector<SGObstacle*>;
+using EffectList = SGVector<SGEffect*>;
 
 class SGMapLayer;
 class SGActorBox
@@ -55,6 +57,11 @@ public:
 	SGMonster* createMonsterOnMap(int monsterCode, int aiCode, float x, float y);
 	SGObstacle* createObstacleOnMap(int obstacleCode, float x, float y);
 
+	// 위에 다른 애들은 전부 절대 위치 x,y이고
+	// 이 함수는 spawner기준 상대좌표로 이펙트를 만든다.
+	SGEffect* createEffectOnMapRelative(SGActor* spawner, int effectCode, float offsetX, float offsetY);
+	// SGEffect* createEffectOnMapAbsolute(int effectCode, float x, float y);
+
 
 	void registerCleanUp(SGActor* actor);
 	void registerZOrderActor(SGActor* actor);
@@ -62,6 +69,7 @@ public:
 	void registerCharacter(SGCharacter* character);
 	void registerMonster(SGMonster* mosnter);
 	void registerObstacle(SGObstacle* obstacle);
+	void registerEffect(SGEffect* effect);
 	void registerPhysicsActor(SGPhysicsActor* physicsActor);
 	void registerActor(SGActor* actor);
 	
@@ -71,6 +79,7 @@ public:
 	void unregisterCharacter(SGCharacter* chracter);
 	void unregisterMonster(SGMonster* mosnter);
 	void unregisterObstacle(SGObstacle* obstacle);
+	void unregisterEffect(SGEffect* effect);
 	void unregisterPhysicsActor(SGPhysicsActor* physicsActor);
 	void unregisterActor(SGActor* actor);
 
@@ -78,6 +87,7 @@ public:
 	void cleanUpMonster(SGMonster* monster);
 	void cleanUpObstacle(SGObstacle* obstacle);
 	void cleanUpCharacter(SGCharacter* character);
+	void cleanUpEffect(SGEffect* effect);
 
 	ActorList& getZOrderActorList() { return m_vZOrderedActors; }
 	ProjectileList& getProjectileList() { return m_vProjectiles; }
@@ -91,9 +101,12 @@ private:
 	SGHashMap<int, SGList<SGMonster*>> m_hMonsterPool;
 	SGHashMap<int, SGList<SGObstacle*>> m_hObstaclePool;
 	SGHashMap<int, SGList<SGProjectile*>> m_hProjectilePool;
+	SGHashMap<int, SGList<SGEffect*>> m_hEffectPool;
+
 	// TODO: 캐릭터 풀링 - 이건 구현할려면 좀 고민해야함.
 	// 애니메이션 프레임 텍스쳐중에 교체 가능한것들은 다 해줘야하기때문
-	// 일단 몬스터나 옵스터클은 애니메이션이나 텍스쳐 변할일이 없기때문에 쉽게 풀링가능
+	// 그외의 것들은 애니메이션이나 텍스쳐 변할일이 없기때문에 쉽게 풀링가능
+	// 어차피 별로 없을 건데 풀링이 필요하진 않다.
 	
 	// 관리용 리스트
 	SGHashMap<int, SGActor*> m_hActorMap;
@@ -103,6 +116,7 @@ private:
 	ObstacleList m_vCollidableObstacles;
 	CharacterList m_vCharacters;
 	PhysicsActorList m_vPhysicsActors;
+	EffectList m_vEffectList;
 
 	SGHashMap<SGActor*, SGActor*> m_hRemoveActorMap;	// 디버깅용, 중복 큐잉 방지용
 	SGArrayQueue<SGActor*> m_qRemovedActors;
@@ -113,5 +127,7 @@ private:
 	float m_fZReorderTime;
 	int m_iIdSequence;
 };
+
+
 
 

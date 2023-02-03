@@ -55,6 +55,11 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGEffect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGEffectInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGGunnerAction.cpp">
       <SubType>
       </SubType>
@@ -196,6 +201,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileListener.cpp">
       <SubType>
@@ -206,10 +215,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGTextParser.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGTexturePool.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -273,7 +278,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackData.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGCharAnimationInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.h">
@@ -320,6 +325,16 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActorPartSprite.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGConfig.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEffect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEffectDefine.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEffectInfo.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGEffectInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGEnums.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGGunnerAction.h">
       <SubType>
@@ -482,10 +497,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGTextParser.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGTexturePool.h">
       <SubType>
       </SubType>
     </ClInclude>

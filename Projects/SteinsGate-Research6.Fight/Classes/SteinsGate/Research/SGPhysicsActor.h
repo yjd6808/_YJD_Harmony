@@ -18,6 +18,8 @@ public:
 	SGPhysicsActor(ActorType_t type, int code);
 	~SGPhysicsActor() override = default;
 
+	bool init() override;
+
 	virtual void hit(const SGHitInfo& hitInfo);
 	virtual void hit(const SpriteDirection_t hitDirection, const SGRect& hitRect, SGAttackDataInfo* attackDataInfo);
 	virtual void dead();

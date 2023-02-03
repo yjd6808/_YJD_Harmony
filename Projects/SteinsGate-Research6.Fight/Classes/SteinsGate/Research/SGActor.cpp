@@ -39,7 +39,19 @@ SGActor::~SGActor() {
 
 bool SGActor::init() {
 
+	// 이거 2개만 초기화 시키면 댈듯?
+	m_iActorId = InvalidValue_v;
+	m_pMapLayer = nullptr;
 
+	// m_eActorType = ;
+	// m_iCode = ;
+	// m_pThicknessBox = nullptr;
+	// m_iAllyFlag = 0;
+	// m_pHitRecorder = nullptr;
+	// m_pActorSprite = nullptr;
+	
+
+	// m_pListener = nullptr;
 
 	return true;
 }
