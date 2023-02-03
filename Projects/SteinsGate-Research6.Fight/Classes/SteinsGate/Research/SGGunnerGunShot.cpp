@@ -28,7 +28,8 @@ SGGunnerGunShot::SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo) {}
 
 bool SGGunnerGunShot::onConditionCheck() {
-	return m_pPlayer->getRunningActionCode() == GUNNER_ACTION_IDLE;
+	int iRunningActionCode = m_pPlayer->getRunningActionCode();
+	return iRunningActionCode == GUNNER_ACTION_IDLE || iRunningActionCode == GUNNER_ACTION_WALK;
 }
 
 void SGGunnerGunShot::onActionBegin() {

@@ -34,18 +34,15 @@ SGEffect::~SGEffect() {
 SGEffect* SGEffect::create(SGEffectInfo* baseInfo) {
 	SGEffect* pEffect = new SGEffect(baseInfo);
 
-	if (pEffect && pEffect->init()) {
-		pEffect->initActorSprite();
-		pEffect->autorelease();
-		return pEffect;
-	}
+	pEffect->initActorSprite();
+	pEffect->initVariables();
+	pEffect->autorelease();
 
 	return pEffect;
 }
 
-bool SGEffect::init() {
-	SGActor::init();
-
+bool SGEffect::initVariables() {
+	SGActor::initVariables();
 
 	return true;
 }
@@ -71,7 +68,6 @@ void SGEffect::initActorSprite() {
 
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-	m_pActorSprite->runAnimation(1);
 	this->addChild(m_pActorSprite);
 }
 

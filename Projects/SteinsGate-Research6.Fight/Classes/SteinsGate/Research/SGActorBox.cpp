@@ -19,6 +19,7 @@ SGActorBox::SGActorBox()
 	: m_iIdSequence(0)
 	, m_pMapLayer(nullptr)
 	, m_fZReorderTime(0.0f)
+	, m_bCleared(false)
 {}
 
 SGActorBox::~SGActorBox() {
@@ -34,6 +35,18 @@ void SGActorBox::init(SGMapLayer* mapLayer) {
 	m_pMapLayer->retain();
 }
 
+template <typename TActor>
+void clearPool(SGHashMap<int, SGList<TActor*>>& pool) {
+	pool.Keys().Extension().ForEach([&pool](int& code) {
+		SGList<TActor*>& li = pool[code];
+		auto it = li.Begin();
+		while (it->HasNext()) {
+			TActor* pActor = it->Next();
+			CC_SAFE_RELEASE(pActor);
+		}
+	});
+}
+
 void SGActorBox::clear() {
 	if (m_bCleared)
 		return;
@@ -43,6 +56,11 @@ void SGActorBox::clear() {
 	m_hActorMap.Values().Extension().ForEach([this](SGActor* actor) {
 		CC_SAFE_RELEASE(actor);
 	});
+
+	clearPool<SGEffect>(m_hEffectPool);
+	clearPool<SGMonster>(m_hMonsterPool);
+	clearPool<SGProjectile>(m_hProjectilePool);
+	clearPool<SGObstacle>(m_hObstaclePool);
 
 	CC_SAFE_RELEASE_NULL(m_pMapLayer);
 	m_bCleared = true;
@@ -174,11 +192,14 @@ SGProjectile* SGActorBox::createProejctileOnMap(SGActor* spawner, int projectile
 
 	} else {
 		pProjectile = projectileList.Front();
-		pProjectile->init();
+		pProjectile->initVariables();
+		pProjectile->setSpawner(spawner);
+		pProjectile->initPosition();		// 스포너 세팅 후 위치 초기화
 		pProjectile->getListener()->onCreated();
 		projectileList.PopFront();
 	}
 
+	pProjectile->runAnimation(1);
 	pProjectile->setAllyFlag(spawner->getAllyFlag());
 	pProjectile->setMapLayer(m_pMapLayer);
 
@@ -215,7 +236,7 @@ SGMonster* SGActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, 
 		pMonster->retain();
 	} else {
 		pMonster = monsterList.Front();
-		pMonster->init();
+		pMonster->initVariables();
 		monsterList.PopFront();
 	}
 
@@ -249,7 +270,7 @@ SGObstacle* SGActorBox::createObstacleOnMap(int obstacleCode, float x, float y) 
 		pObstacle->retain();
 	} else {
 		pObstacle = obstacleList.Front();
-		pObstacle->init();
+		pObstacle->initVariables();
 		obstacleList.PopFront();
 	}
 	pObstacle->setPositionReal(x, y);
@@ -286,23 +307,24 @@ SGEffect* SGActorBox::createEffectOnMapRelative(SGActor* spawner, int effectCode
 		pEffect->retain();
 	} else {
 		pEffect = effectList.Front();
-		pEffect->init();
+		pEffect->initVariables();
 		effectList.PopFront();
 	}
 
 	SGSize spawnerCanvsSize = spawner->getCanvasSize();
 	SGVec2 spawnerCanvasPos = spawner->getCanvasPositionReal();
 
-	pEffect->initThicknessBox({ -15, -15, 30, 30 });
+	pEffect->runAnimation(1);
+	pEffect->initThicknessBox({ 1, 1, 1, 1 });
 	pEffect->setSpriteDirection(spawner->getSpriteDirection());
 
 	if (spawner->getSpriteDirection() == SpriteDirection::Right) {
-		pEffect->setPositionRealCenter(
+		pEffect->setPositionReal(
 			spawnerCanvasPos.x + offsetX,
 			spawnerCanvasPos.y + offsetY
 		);
 	} else {
-		pEffect->setPositionRealCenter(
+		pEffect->setPositionReal(
 			spawnerCanvasPos.x + spawnerCanvsSize.width - offsetX,
 			spawnerCanvasPos.y + offsetY
 		);
@@ -412,6 +434,8 @@ void SGActorBox::unregisterActor(SGActor* actor) {
 	DebugAssertMessage(actor->getActorId() != InvalidValue_v, "올바르지 않은 액터 ID입니다.");
 	if (!m_hActorMap.Remove(actor->getActorId()))
 		DebugAssertMessage(false, "공통 액터 목록에서 액터를 제거하는데 실패했습니다.");
+	else
+		actor->setActorId(InvalidValue_v);
 }
 
 
@@ -452,7 +476,6 @@ void SGActorBox::cleanUpCharacter(SGCharacter* character) {
 
 void SGActorBox::cleanUpEffect(SGEffect* effect) {
 	unregisterEffect(effect);
-	unregisterZOrderActor(effect);
 	unregisterActor(effect);
 
 	m_hEffectPool[effect->getBaseInfo()->Code].PushBack(effect);

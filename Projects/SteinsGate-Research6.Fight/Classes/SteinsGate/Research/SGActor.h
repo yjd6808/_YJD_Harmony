@@ -44,7 +44,7 @@ public:
 	virtual void initListener(SGActorListener* listener) = 0;	// 올바른 리스너인지 자식이 체크하도록함
 	virtual bool isPhysicsActor() { return false; }
 
-	bool init() override;
+	virtual bool initVariables();
 	void update(float dt) override;				// 자식에서도 오버라이딩시 이거 호출하도록
 
 	ActorType_t getType()					const;
@@ -108,6 +108,7 @@ protected:
 	int m_iActorId;
 	int m_iCode;
 	int m_iAllyFlag;		// 쓸일 있을려나
+	bool m_bCleanUp;
 
 	SGDrawNode* m_pThicknessBox;
 };

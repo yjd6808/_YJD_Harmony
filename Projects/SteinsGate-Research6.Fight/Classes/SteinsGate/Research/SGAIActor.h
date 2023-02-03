@@ -34,7 +34,7 @@ public:
 	virtual void initAIActivities() = 0;
 	virtual void onSelectedActivity(SGAIActivity* selectedActivity) = 0;
 
-	bool init() override;
+	bool initVariables() override;
 
 	// TODO: 분할 정복 방식으로 미리 확률 계산해놓는것 고려.
 	// void initAIProbs(); 

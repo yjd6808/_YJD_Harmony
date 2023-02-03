@@ -38,8 +38,8 @@ void SGAIActor::initAI() {
 }
 
 
-bool SGAIActor::init() {
-	SGPhysicsActor::init();
+bool SGAIActor::initVariables() {
+	SGPhysicsActor::initVariables();
 
 	// m_pAiInfo = aiInfo;
 	// m_ActivityMap = ;

@@ -15,6 +15,7 @@ class SGCharacter : public SGPhysicsActor
 {
 public:
 	SGCharacter(int code, const SGCharacterInfo& info);
+	~SGCharacter() override;
 
 	static SGCharacter* create(int code, const SGCharacterInfo& info);
 

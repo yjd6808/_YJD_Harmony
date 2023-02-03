@@ -29,6 +29,7 @@ SGActor::SGActor(ActorType_t type, int code)
 	, m_pActorSprite(nullptr)
 	, m_pMapLayer(nullptr)
 	, m_pListener(nullptr)
+	, m_bCleanUp(false)
 {}
 
 SGActor::~SGActor() {
@@ -37,11 +38,12 @@ SGActor::~SGActor() {
 }
 
 
-bool SGActor::init() {
+bool SGActor::initVariables() {
 
 	// 이거 2개만 초기화 시키면 댈듯?
 	m_iActorId = InvalidValue_v;
 	m_pMapLayer = nullptr;
+	m_bCleanUp = false;
 
 	// m_eActorType = ;
 	// m_iCode = ;
@@ -49,8 +51,6 @@ bool SGActor::init() {
 	// m_iAllyFlag = 0;
 	// m_pHitRecorder = nullptr;
 	// m_pActorSprite = nullptr;
-	
-
 	// m_pListener = nullptr;
 
 	return true;
@@ -78,6 +78,7 @@ void SGActor::initHitRecorder(int hitPossibleListSize, int alreadyHitMapSize) {
 }
 
 void SGActor::update(float dt) {
+	DebugAssertMessage(m_bCleanUp == false, "다음 프레임에 풀로 복귀 예정중인 객체입니다.");
 	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	DebugAssertMessage(m_pMapLayer, "맵 레이어가 세팅되지 않았습니다.");
 
@@ -242,7 +243,12 @@ void SGActor::setMapLayer(SGMapLayer* mapLayer) {
 }
 
 void SGActor::setActorId(int id) {
-	DebugAssertMessage(m_iActorId == InvalidValue_v, "이미 ID값이 할당되어 있습니다.");
+
+	// 청소되지 않은 액터에 할당을 시도할려는 경우를 막아야한다.
+	if (!m_bCleanUp) {
+		DebugAssertMessage(m_iActorId == InvalidValue_v, "이미 ID값이 할당되어 있습니다.");
+	}
+
 	m_iActorId = id;
 }
 
@@ -337,6 +343,7 @@ bool SGActor::isOnTheGround() {
 void SGActor::registerCleanUp() {
 	DebugAssertMessage(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
 	SGActorBox::getInstance()->registerCleanUp(this);
+	m_bCleanUp = true;
 }
 
 SGActorRect SGActor::convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect) {

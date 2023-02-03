@@ -35,8 +35,8 @@ SGPhysicsActor::SGPhysicsActor(ActorType_t type, int code)
 	, m_pAtkHitBox(nullptr)
 {}
 
-bool SGPhysicsActor::init() {
-	SGActor::init();
+bool SGPhysicsActor::initVariables() {
+	SGActor::initVariables();
 
 	m_bUseElasticity = false;
 	m_bBounced = false;

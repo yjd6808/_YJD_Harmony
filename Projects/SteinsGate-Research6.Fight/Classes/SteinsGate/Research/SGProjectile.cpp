@@ -36,22 +36,22 @@ SGProjectile::~SGProjectile() {
 SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo) {
 	SGProjectile* pProjectile = new SGProjectile(spawner, baseInfo);
 
-	if (pProjectile && pProjectile->init()) {
-		spawner->retain();
-		pProjectile->initThicknessBox(baseInfo->ThicknessBox);
-		pProjectile->initActorSprite();
-		pProjectile->initHitRecorder(8, 16);
-		pProjectile->autorelease();
-		return pProjectile;
-	}
+	spawner->retain();
+	pProjectile->initThicknessBox(baseInfo->ThicknessBox);
+	pProjectile->initActorSprite();
+	pProjectile->initHitRecorder(8, 16);
+	pProjectile->initVariables();
+	pProjectile->initPosition();
 
+	pProjectile->autorelease();
 	return pProjectile;
 }
 
-bool SGProjectile::init() {
-	SGActor::init();
+bool SGProjectile::initVariables() {
+	SGActor::initVariables();
 
-
+	m_fMoveDistance = 0.0f;
+	m_fElapsedLifeTime = 0.0f;
 
 	return true;
 }
@@ -78,22 +78,7 @@ void SGProjectile::initListener(SGActorListener* listener) {
 	m_pListener->injectActor(this);
 }
 
-// 프로젝틸은 파츠, 애니메이션 다 1개씩임
-void SGProjectile::initActorSprite() {
-	SGDataManager* pDataManager = SGDataManager::getInstance();
-	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
-	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, 1);	// 프로젝틸도 파츠, 애니메이션 모두 한개
-
-	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });
-	spActorSpriteData->Animations.PushBack(m_pBaseInfo->Animation);
-
-	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
-	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-	m_pActorSprite->getBodyPart()->setRotation(
-		m_pBaseInfo->Rotation + 
-		SGRandom::random_real(m_pBaseInfo->RamdomRotationRangeMin, m_pBaseInfo->RamdomRotationRangeMax)
-	);
-
+void SGProjectile::initPosition() {
 	SGSize spawnerCanvsSize = m_pSpawner->getCanvasSize();
 	SGVec2 spawnerCanvasPos = m_pSpawner->getCanvasPositionReal();
 
@@ -110,7 +95,25 @@ void SGProjectile::initActorSprite() {
 			spawnerCanvasPos.y + m_pBaseInfo->SpawnOffsetY
 		);
 	}
-	m_pActorSprite->runAnimation(1);
+
+	m_pActorSprite->setPosition(0, 0);
+}
+
+// 프로젝틸은 파츠, 애니메이션 다 1개씩임
+void SGProjectile::initActorSprite() {
+	SGDataManager* pDataManager = SGDataManager::getInstance();
+	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
+	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, 1);	// 프로젝틸도 파츠, 애니메이션 모두 한개
+
+	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });
+	spActorSpriteData->Animations.PushBack(m_pBaseInfo->Animation);
+
+	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
+	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
+	m_pActorSprite->getBodyPart()->setRotation(
+		m_pBaseInfo->Rotation + 
+		SGRandom::random_real(m_pBaseInfo->RamdomRotationRangeMin, m_pBaseInfo->RamdomRotationRangeMax)
+	);
 
 	this->addChild(m_pActorSprite);
 }
@@ -181,6 +184,10 @@ bool SGProjectile::isLifeTimeOver() {
 
 bool SGProjectile::isDistanceOver() {
 	return m_fMoveDistance >= m_pBaseInfo->Distance;
+}
+
+void SGProjectile::setSpawner(SGActor* spawner) {
+	m_pSpawner = spawner;
 }
 
 SGActor* SGProjectile::getSpawner() { return m_pSpawner; }

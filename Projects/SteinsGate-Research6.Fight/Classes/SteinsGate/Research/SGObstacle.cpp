@@ -26,7 +26,7 @@ SGObstacle::SGObstacle(SGObstacleInfo* baseInfo)
 SGObstacle* SGObstacle::create(SGObstacleInfo* baseInfo) {
 	SGObstacle* pObstable = new SGObstacle(baseInfo);
 
-	if (pObstable && pObstable->init()) {
+	if (pObstable && pObstable->initVariables()) {
 		pObstable->initThicknessBox(baseInfo->ThicknessBox);
 		pObstable->initActorSprite();
 		pObstable->autorelease();
@@ -56,6 +56,11 @@ void SGObstacle::initActorSprite() {
 
 void SGObstacle::initListener(SGActorListener* listener) {
 	DebugAssertMessage(false, "아직 구현안됨");
+}
+
+bool SGObstacle::initVariables() {
+	return SGActor::initVariables();
+
 }
 
 void SGObstacle::update(float dt) {

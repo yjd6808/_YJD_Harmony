@@ -22,6 +22,7 @@ public:
 	static SGObstacle* create(SGObstacleInfo* baseInfo);
 	void initActorSprite() override;
 	void initListener(SGActorListener* listener) override;
+	bool initVariables() override;
 
 	void update(float dt) override;
 	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;

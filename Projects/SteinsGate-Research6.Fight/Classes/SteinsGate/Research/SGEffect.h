@@ -20,7 +20,7 @@ public:
 
 	static SGEffect* create(SGEffectInfo* baseInfo);
 
-	bool init() override;
+	bool initVariables() override;
 	void initActorSprite() override;
 	void initListener(SGActorListener* listener) override;
 	

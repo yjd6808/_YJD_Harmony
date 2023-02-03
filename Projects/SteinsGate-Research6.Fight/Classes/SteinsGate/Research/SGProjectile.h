@@ -19,10 +19,11 @@ public:
 
 	static SGProjectile* create(SGActor* spawner, SGProjectileInfo* baseInfo);
 
-	bool init() override;
+	bool initVariables() override;
 	void initActorSprite() override;
 	void initThicknessBox(const SGThicknessBox& thicknessBox) override;
 	void initListener(SGActorListener* listener) override;
+	void initPosition();
 
 	void update(float dt) override;
 	void updateListenerEvent(float dt);
@@ -35,6 +36,7 @@ public:
 
 	bool isLifeTimeOver();
 	bool isDistanceOver();
+	void setSpawner(SGActor* spawner);
 
 	SGActor* getSpawner();
 	SGProjectileInfo* getBaseInfo();
