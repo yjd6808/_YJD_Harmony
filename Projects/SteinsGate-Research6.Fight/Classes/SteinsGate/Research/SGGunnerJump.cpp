@@ -31,8 +31,6 @@ SGGunnerJump::SGGunnerJump(SGPlayer* player, SGActionInfo* actionInfo)
 // #define GUNNER_ANIMATION_JUMP_SHOT_END				20
 
 void SGGunnerJump::onActionBegin() {
-	SGGunnerAction::onActionBegin();
-
 	SGActionManager* pActionManager = m_pPlayer->getActionManager();
 	SGAction* pPrevious = pActionManager->getPreviousAction();
 

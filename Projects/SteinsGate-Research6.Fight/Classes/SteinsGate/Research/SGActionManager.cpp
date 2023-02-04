@@ -207,6 +207,9 @@ void SGActionManager::runBaseAction(BaseAction_t baseActionType) {
 }
 
 void SGActionManager::stopActionForce() {
+	if (m_pRunningAction != nullptr) {
+		m_pRunningAction->onActionEnd();
+	}
 	m_pPreviousAction = m_pRunningAction;
 	m_pRunningAction = nullptr;
 }

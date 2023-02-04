@@ -152,7 +152,6 @@ void SGMonsterWalkActivity::updateDownMove(SGMapLayer* mapLayer, SGMapInfo* mapI
 
 
 void SGMonsterWalkActivity::setDestination(const SGVec2& destination) {
-	Log("★ %d %d\n", int(destination.x), int(destination.y));
 	m_Destination = destination;
 }
 

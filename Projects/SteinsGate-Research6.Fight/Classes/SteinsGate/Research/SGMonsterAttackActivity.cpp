@@ -10,6 +10,8 @@
 
 #include <SteinsGate/Research/SGMonster.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
+#include <SteinsGate/Research/SGActorBox.h>
+#include <SteinsGate/Research/SGEffectDefine.h>
 
 
 SGMonsterAttackActivity::SGMonsterAttackActivity(SGMonster* monster)
@@ -19,7 +21,9 @@ SGMonsterAttackActivity::SGMonsterAttackActivity(SGMonster* monster)
 void SGMonsterAttackActivity::onActivityBegin() {
 	m_pMonster->runAnimation(MONSTER_ANIMATION_ATTACK);
 
+	m_pHitRecorder->clear();
 	m_pHitRecorder->setRecord(true);
+	m_pHitRecorder->setAlreadyHitRecord(true);
 	m_pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(SGMonsterAttackActivity::onEnemySingleHit, this));
 	m_pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(SGMonsterAttackActivity::onEnemyMultiHit, this));
 }
@@ -40,6 +44,7 @@ void SGMonsterAttackActivity::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
+	SGActorBox::getInstance()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

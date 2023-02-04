@@ -19,6 +19,7 @@ SGGunnerHit::SGGunnerHit(SGPlayer* player, SGActionInfo* actionInfo)
 }
 
 void SGGunnerHit::onActionBegin() {
+	m_pPlayer->getCharacter()->enableElasticity();
 	m_fElapsedDownTime = 0.0f;
 	m_bDownTimeCheckBegin = false;
 	m_fDownRecoverTime = m_pBaseInfo->DownRecoverTime / 2.0f;
@@ -26,6 +27,10 @@ void SGGunnerHit::onActionBegin() {
 	selectHitAnimation();
 	checkPosition();
 
+}
+
+void SGGunnerHit::onActionEnd() { 
+	m_pPlayer->getCharacter()->disableElasticity();
 }
 
 void SGGunnerHit::onUpdate(float dt) {

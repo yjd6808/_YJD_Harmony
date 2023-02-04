@@ -19,6 +19,7 @@ SGPlayer::SGPlayer()
 }
 
 SGPlayer::~SGPlayer() {
+	DebugAssertMessage(m_pCharacter->getReferenceCount() > 0, "레퍼런스 카운트가 이미 0입니다.");
 	CC_SAFE_RELEASE_NULL(m_pCharacter);
 
 	// 삭제

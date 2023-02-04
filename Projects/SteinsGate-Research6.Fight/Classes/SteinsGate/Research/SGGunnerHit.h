@@ -15,6 +15,7 @@ public:
 	SGGunnerHit(SGPlayer* player, SGActionInfo* actionInfo);
 
 	void onActionBegin() override;
+	void onActionEnd() override;
 	void selectHitAnimation();
     void checkPosition();
     void updateGroundHitState(float dt);

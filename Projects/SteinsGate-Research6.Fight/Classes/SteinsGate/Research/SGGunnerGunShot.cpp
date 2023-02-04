@@ -13,6 +13,8 @@
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
 #include <SteinsGate/Research/SGActionDefine.h>
+#include <SteinsGate/Research/SGEffectDefine.h>
+#include <SteinsGate/Research/SGActorBox.h>
 
 #define MaxWaitRightShotTime 0.1f // (6fps)
 
@@ -189,6 +191,7 @@ void SGGunnerGunShot::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
+	SGActorBox::getInstance()->createEffectOnMapTargetCollision(EFFECT_KNOCK_SMALL, info, true);
 	info.HitTarget->hit(info);
 }
 

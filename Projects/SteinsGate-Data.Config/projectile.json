@@ -21,8 +21,8 @@
             "spawn_offset_x": 342.0,
             "spawn_offset_y": 245.0,
             "spawn_effect_code": 3,
-            "spawn_effect_offset_x": 342.0,
-            "spawn_effect_offset_y": 245.0,
+            "spawn_effect_offset_x": 350.0,
+            "spawn_effect_offset_y": 250.0,
             "hit_effect_code": 4,
             "rotation": 0.0,
             "random_rotation_range": "-3.0 3.0",
@@ -51,6 +51,8 @@
             "name": "gunner_auto_left",
             "spawn_offset_x": 374.0,
             "spawn_offset_y": 239.0,
+            "spawn_effect_offset_x": 382.0,
+            "spawn_effect_offset_y": 244.0,
             "rotation": 0.0,
             "thickness_box": "0 -1 30 30"
         },
@@ -62,23 +64,31 @@
             "hit_effect_code": 6,
             "spawn_offset_x": 336.0,
             "spawn_offset_y": 201.0,
+            "spawn_effect_offset_x": 344.0,
+            "spawn_effect_offset_y": 206.0,
             "rotation": 30.0
         },
         {
             "override_code": 2,
             "code": 4,
             "name": "gunner_auto_left_down",
+            "spawn_effect_code": 5,
+            "hit_effect_code": 6,
             "spawn_offset_x": 372.0,
             "spawn_offset_y": 197.0,
+            "spawn_effect_offset_x": 380.0,
+            "spawn_effect_offset_y": 201.0,
             "rotation": 30.0
         },
         {
-            "override_code": 4,
+            "override_code": 3,
             "code": 5,
             "attakdata_code": 3,
             "name": "gunner_auto_jump_right",
             "spawn_offset_x": 301.0,
             "spawn_offset_y": 197.0,
+            "spawn_effect_offset_x": 315.0,
+            "spawn_effect_offset_y": 202.0,
             "rotation": 45.0,
             "thickness_box": "0 -1 30 30"
         },
@@ -88,7 +98,9 @@
             "name": "gunner_auto_jump_left",
             "rotation": 45.0,
             "spawn_offset_x": 294.0,
-            "spawn_offset_y": 191.0
+            "spawn_offset_y": 191.0,
+            "spawn_effect_offset_x": 308.0,
+            "spawn_effect_offset_y": 196.0
         }
     ]
 

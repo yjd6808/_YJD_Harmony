@@ -45,6 +45,7 @@ void clearPool(SGHashMap<int, SGList<TActor*>>& pool) {
 			CC_SAFE_RELEASE(pActor);
 		}
 	});
+	pool.Clear();
 }
 
 void SGActorBox::clear() {
@@ -56,6 +57,7 @@ void SGActorBox::clear() {
 	m_hActorMap.Values().Extension().ForEach([this](SGActor* actor) {
 		CC_SAFE_RELEASE(actor);
 	});
+	m_hActorMap.Clear();
 
 	clearPool<SGEffect>(m_hEffectPool);
 	clearPool<SGMonster>(m_hMonsterPool);
@@ -193,19 +195,21 @@ SGProjectile* SGActorBox::createProejctileOnMap(SGActor* spawner, int projectile
 	} else {
 		pProjectile = projectileList.Front();
 		pProjectile->initVariables();
-		pProjectile->setSpawner(spawner);
-		pProjectile->initPosition();		// 스포너 세팅 후 위치 초기화
+		pProjectile->setSpawner(spawner);											// 위치 세팅전 스포너 세팅 먼저 해줘야함
+		pProjectile->initThicknessBox(pProjectile->getBaseInfo()->ThicknessBox);	// 두께 박스 위치 재조정
+		pProjectile->initPosition();												// 살제 위치 초기화
 		pProjectile->getListener()->onCreated();
 		projectileList.PopFront();
 	}
+
 
 	pProjectile->runAnimation(1);
 	pProjectile->setAllyFlag(spawner->getAllyFlag());
 	pProjectile->setMapLayer(m_pMapLayer);
 
 	if (pInfo->SpawnEffect->Code != InvalidValue_v) {
-		SGEffect* pSpawnEffect = createEffectOnMapRelative(spawner, pInfo->SpawnEffect->Code, pInfo->SpawnEffectOffsetX, pInfo->SpawnEffectOffsetY);
-		pSpawnEffect->setLocalZOrder(pProjectile->getLocalZOrder() + 1);
+		SGEffect* pSpawnEffect = createEffectOnMapBySpawner(spawner, pInfo->SpawnEffect->Code, pInfo->SpawnEffectOffsetX, pInfo->SpawnEffectOffsetY);
+		pSpawnEffect->setLocalZOrder(spawner->getLocalZOrder() + 1);
 	}
 	
 	registerZOrderActor(pProjectile);
@@ -290,32 +294,12 @@ SGObstacle* SGActorBox::createObstacleOnMap(int obstacleCode, float x, float y) 
 
 
 
-SGEffect* SGActorBox::createEffectOnMapRelative(SGActor* spawner, int effectCode, float offsetX, float offsetY) {
-	DebugAssertMessage(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
-
-	SGEffectInfo* pEffectInfo = SGDataManager::getInstance()->getEffectInfo(effectCode);
-
-	if (!m_hEffectPool.Exist(effectCode)) {
-		m_hEffectPool.Insert(Move(effectCode), SGList<SGEffect*>());
-	}
-
-	SGEffect* pEffect = nullptr;
-	SGList<SGEffect*>& effectList = m_hEffectPool[effectCode];
-
-	if (effectList.IsEmpty()) {
-		pEffect = SGEffect::create(pEffectInfo);
-		pEffect->retain();
-	} else {
-		pEffect = effectList.Front();
-		pEffect->initVariables();
-		effectList.PopFront();
-	}
+SGEffect* SGActorBox::createEffectOnMapBySpawner(SGActor* spawner, int effectCode, float offsetX, float offsetY) {
+	SGEffect* pEffect = createEffectOnMap(effectCode);
 
 	SGSize spawnerCanvsSize = spawner->getCanvasSize();
 	SGVec2 spawnerCanvasPos = spawner->getCanvasPositionReal();
 
-	pEffect->runAnimation(1);
-	pEffect->initThicknessBox({ 1, 1, 1, 1 });
 	pEffect->setSpriteDirection(spawner->getSpriteDirection());
 
 	if (spawner->getSpriteDirection() == SpriteDirection::Right) {
@@ -331,9 +315,88 @@ SGEffect* SGActorBox::createEffectOnMapRelative(SGActor* spawner, int effectCode
 	}
 
 	
-	pEffect->setMapLayer(m_pMapLayer);
-	
 
+	return pEffect;
+}
+
+SGEffect* SGActorBox::createEffectOnMapBySpawner(SGActor* spawner, int effectCode, const SGVec2& offset) {
+	return createEffectOnMapBySpawner(spawner, effectCode, offset.x, offset.y);
+}
+
+SGEffect* SGActorBox::createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, float x, float y, int zOrder) {
+	SGEffect* pEffect = createEffectOnMap(effectCode);
+	pEffect->setSpriteDirection(direction);
+	pEffect->setPositionRealCenter(x, y);
+	pEffect->setLocalZOrder(zOrder);
+	return pEffect;
+}
+
+SGEffect* SGActorBox::createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, const SGVec2& pos, int zOrder) {
+	return createEffectOnMapAbsolute(effectCode, direction, pos.x, pos.y, zOrder);
+}
+
+SGEffect* SGActorBox::createEffectOnMapAbsolute(int effectCode, float x, float y, int zOrder) {
+	SGEffect* pEffect = createEffectOnMap(effectCode);
+	pEffect->setPositionRealCenter(x, y);
+	pEffect->setLocalZOrder(zOrder);
+	return pEffect;
+}
+
+SGEffect* SGActorBox::createEffectOnMapAbsolute(int effectCode, const SGVec2& pos, int zOrder) {
+	return createEffectOnMapAbsolute(effectCode, pos.x, pos.y, zOrder);
+}
+
+
+SGEffect* SGActorBox::createEffectOnMapTargetCollision(int effectCode, SpriteDirection_t direction, const SGHitInfo& info, bool randomRotation) {
+	SGEffect* pEffect = createEffectOnMapAbsolute(effectCode, info.HitRect.getMid(), info.HitTarget->getLocalZOrder() + 1);
+	pEffect->setSpriteDirection(direction);
+
+	if (randomRotation) {
+		pEffect->setRotation(SGRandom::random_real(0.0f, 360.0f));
+	}
+
+	return pEffect;
+}
+
+SGEffect* SGActorBox::createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, bool randomRotation) {
+	return createEffectOnMapTargetCollision(effectCode, SpriteDirection::Right, info, randomRotation);
+}
+
+SGEffect* SGActorBox::createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, float offsetX, float offsetY, bool randomRotation) {
+	SGEffect* pEffect = createEffectOnMapTargetCollision(effectCode, info, randomRotation);
+	pEffect->setPosition(pEffect->getPositionX() + offsetX, pEffect->getPositionX() + offsetY);
+	return pEffect;
+}
+
+SGEffect* SGActorBox::createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, const SGVec2& offset, bool randomRotation) {
+	return createEffectOnMapTargetCollision(effectCode, info, offset.x, offset.y, randomRotation);
+}
+
+SGEffect* SGActorBox::createEffectOnMap(int effectCode) {
+	DebugAssertMessage(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+
+	SGEffectInfo* pEffectInfo = SGDataManager::getInstance()->getEffectInfo(effectCode);
+
+	if (!m_hEffectPool.Exist(effectCode)) {
+		m_hEffectPool.Insert(Move(effectCode), SGList<SGEffect*>());
+	}
+
+	SGEffect* pEffect = nullptr;
+	SGList<SGEffect*>& effectList = m_hEffectPool[effectCode];
+
+	if (effectList.IsEmpty()) {
+		pEffect = SGEffect::create(pEffectInfo);
+		pEffect->retain();
+	}
+	else {
+		pEffect = effectList.Front();
+		pEffect->initVariables();
+		effectList.PopFront();
+	}
+
+	pEffect->runAnimation(1);
+	pEffect->initThicknessBox({ 0, 0, 0, 0 });
+	pEffect->setMapLayer(m_pMapLayer);
 	registerEffect(pEffect);
 	registerActor(pEffect);
 	m_pMapLayer->addChild(pEffect);
@@ -444,7 +507,7 @@ void SGActorBox::cleanUpProjectile(SGProjectile* projectile) {
 	unregisterZOrderActor(projectile);
 	unregisterActor(projectile);
 	m_hProjectilePool[projectile->getBaseInfo()->Code].PushBack(projectile);
-	Log("삭제> 플레이어 프로젝틸 (%s), 남은 플레이어 프로젝틸 수 : %d, Z오더 액터 수: %d\n", projectile->getBaseInfo()->Name.Source(), m_vProjectiles.Size(), m_vZOrderedActors.Size());
+	// Log("삭제> 플레이어 프로젝틸 (%s), 남은 플레이어 프로젝틸 수 : %d, Z오더 액터 수: %d\n", projectile->getBaseInfo()->Name.Source(), m_vProjectiles.Size(), m_vZOrderedActors.Size());
 }
 
 void SGActorBox::cleanUpMonster(SGMonster* monster) {
@@ -453,7 +516,7 @@ void SGActorBox::cleanUpMonster(SGMonster* monster) {
 	unregisterPhysicsActor(monster);
 	unregisterActor(monster);
 	m_hMonsterPool[monster->getBaseInfo()->Code].PushBack(monster);
-	Log("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d\n", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());
+	// Log("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d\n", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());
 }
 
 void SGActorBox::cleanUpObstacle(SGObstacle* obstacle) {

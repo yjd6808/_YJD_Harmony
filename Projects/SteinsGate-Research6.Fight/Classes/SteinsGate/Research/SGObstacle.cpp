@@ -26,12 +26,10 @@ SGObstacle::SGObstacle(SGObstacleInfo* baseInfo)
 SGObstacle* SGObstacle::create(SGObstacleInfo* baseInfo) {
 	SGObstacle* pObstable = new SGObstacle(baseInfo);
 
-	if (pObstable && pObstable->initVariables()) {
-		pObstable->initThicknessBox(baseInfo->ThicknessBox);
-		pObstable->initActorSprite();
-		pObstable->autorelease();
-		return pObstable;
-	}
+	pObstable->initThicknessBox(baseInfo->ThicknessBox);
+	pObstable->initActorSprite();
+	pObstable->initVariables();
+	pObstable->autorelease();
 
 	return pObstable;
 }

@@ -61,15 +61,17 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 	// DrawNode는 앵커포인트 신경안쓰고 컨텐츠박스 기준 좌하단부터 그림
 	RectPoly poly = RectPoly::createFromLeftBottom(Vec2{ 0, 0 }, thicknessBox.getSize());
 
-	m_pThicknessBox = SGDrawNode::create();
-	m_pThicknessBox->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	if (m_pThicknessBox == nullptr) {
+		m_pThicknessBox = SGDrawNode::create();
+		m_pThicknessBox->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		m_pThicknessBox->setOpacity(125);
+		m_pThicknessBox->drawPolygon(poly.source(), 4, {}, 1, SGColor4F{ ColorList::Brightgreen_v });
+		this->addChild(m_pThicknessBox);
+	}
 	m_pThicknessBox->setPositionX(thicknessBox.RelativeX);
 	m_pThicknessBox->setPositionY(thicknessBox.RelativeY);
-	m_pThicknessBox->setOpacity(125);
 	m_pThicknessBox->setContentSize(thicknessBox.getSize());
-	m_pThicknessBox->drawPolygon(poly.source(), 4, {}, 1, SGColor4F{ ColorList::Brightgreen_v } );
-
-	this->addChild(m_pThicknessBox);
+	
 }
 
 void SGActor::initHitRecorder(int hitPossibleListSize, int alreadyHitMapSize) {
@@ -149,6 +151,11 @@ SGVec2 SGActor::getPositionRealCenter() const {
 float SGActor::getPositionRealCenterX() const {
 	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	return getPositionX() + m_pThicknessBox->getPositionX();
+}
+
+float SGActor::getPositionRealCenterY() const {
+	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	return getPositionY() + m_pThicknessBox->getPositionY();
 }
 
 SGVec2 SGActor::getCanvasPositionReal() const {
@@ -316,7 +323,6 @@ bool SGActor::isCollide(const SGActorRect& otherRect, SpriteDirection_t& otherHi
 	SGRect myHit = getHitBox();
 
 	if (SGRectEx::intersect(myHit, otherRect.BodyRect, hitRect)) {
-		// otherHitDirection = hitRect.getMidX() < otherRect.BodyRect.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
 		otherHitDirection = otherRect.BodyRect.getMidX() > myHit.getMidX() ? SpriteDirection::Left : SpriteDirection::Right;
 		return true;
 	}
@@ -337,7 +343,7 @@ bool SGActor::isCollide(const SGActorRect& otherRect) {
 
 bool SGActor::isOnTheGround() {
 	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	return m_pActorSprite->getPositionY() == 0;
+	return m_pActorSprite->getPositionY() <= 0;
 }
 
 void SGActor::registerCleanUp() {
@@ -362,7 +368,7 @@ SGActorRect SGActor::convertAbsoluteActorRect(SGActor* stdActor, const SGActorRe
 		absoluteActorRect.ThicknessRect.origin.x = spawnerCanvasPos.x + (spawnerCanvsSize.width - relativeRect.ThicknessRect.origin.x - relativeRect.ThicknessRect.size.width);
 		absoluteActorRect.ThicknessRect.origin.y = spawnerCanvasPos.y + relativeRect.ThicknessRect.origin.y;
 
-		absoluteActorRect.BodyRect.origin.x = spawnerCanvasPos.x + (spawnerCanvsSize.width - relativeRect.BodyRect.origin.x - relativeRect.ThicknessRect.size.width);
+		absoluteActorRect.BodyRect.origin.x = spawnerCanvasPos.x + (spawnerCanvsSize.width - relativeRect.BodyRect.origin.x - relativeRect.BodyRect.size.width);
 		absoluteActorRect.BodyRect.origin.y = spawnerCanvasPos.y + relativeRect.BodyRect.origin.y;
 	}
 

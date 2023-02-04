@@ -101,36 +101,30 @@ void SGPhysicsActor::updatePhysics(float dt) {
 
 	updateGravity(dt);
 	updateFriction(dt);
-
-	// TODO: 땅바닥이 어디인지
 }
 
 void SGPhysicsActor::updateGravity(float dt) {
 	SGMapInfo* pMapInfo = m_pMapLayer->getMapInfo();
 
-	// 이번틱에 이동할 y축 위치
 	float y = m_pActorSprite->getPositionY() + m_fVelocityY * FPS1_v;
 	m_fVelocityY -= pMapInfo->Gravity * FPS1_v;
 
-	// 공중에 뜬 상태에서 올라가는 시간을 계산한다.
 	if (y > SG_FLT_EPSILON && m_fVelocityY > 0.0f) {
 		m_fUpTime += dt;
 		m_fDownTime = 0.0f;
 	}
 
-	// 공중에 뜬 상태에서 하락중(jump_velocity가 음수로 전환된 시점)일 때 하락시간을 계산한다.
 	if (y > SG_FLT_EPSILON && m_fVelocityY < 0.0f) {
 		m_fUpTime = 0.0f;
 		m_fDownTime += dt;
 	}
 
 	if (y <= SG_FLT_EPSILON) {
-		if (m_bUseElasticity && !m_bBounced && m_fDownTime > 0.0f) {
 
-			// 반탄력 느낌으로 내려올때 튕겨준다.
-			// 이건 껐다 켰다 할 수 있도록.. m_bUseElasticity를 활용.
+		if (m_bUseElasticity && !m_bBounced && m_fDownTime > 0.0f) {
 			m_fVelocityY = Math::Abs(m_fVelocityY / pMapInfo->ElasticityDividedForce);
 			m_bBounced = true;
+
 		} else {
 			m_fVelocityY = 0.0f;
 			m_bBounced = false;
@@ -149,30 +143,25 @@ void SGPhysicsActor::updateFriction(float dt) {
 
 	groundRect.origin.x += m_fVelocityX * FPS1_v;
 
-	// y좌표가 지면에 닫은 경우 마찰력 적용
-	if (m_pActorSprite->getPositionY() <= SG_FLT_EPSILON) {
+	if (isOnTheGround()) {
 
-		// 오른쪽으로 밀리는 경우 왼쪽 방향으로 마찰력
 		if (m_fVelocityX > 0.0f) {
 			m_fVelocityX -= pMapInfo->Friction * FPS1_v;
 
-			// 이때 음수로 전환된 경우 완전히 멈춘 경우임
 			if (m_fVelocityX <= 0.0f) {
 				m_fVelocityX = 0.0f;
 			}
 		}
-		else if (m_fVelocityX < 0.0f) { // 왼쪽으로 밀리는 경우 오른쪽 방향으로 마찰력 
+		
+		else if (m_fVelocityX < 0.0f) { 
 			m_fVelocityX += pMapInfo->Friction * FPS1_v;
 
-			// 이때 양수로 전환된 경우 완전히 멈춘 경우임
 			if (m_fVelocityX >= 0.0f) {
 				m_fVelocityX = 0.0f;
 			}
 		}
 	}
 
-	// 물리는 지속 업데이트 시켜놔야함
-	// 마지막 이동 판정을 못하도록 한다.
 	if (pMapInfo->checkWall(groundRect.origin.x, groundRect.origin.y)) {
 		return;
 	}
@@ -232,24 +221,26 @@ void SGPhysicsActor::hit(
 	m_bBounced = false;
 
 	setSpriteDirection(hitDirection);
-	removeForceX();
-	removeForceY();
 
-	// 넘어지는 모션을 취하게 하는 경우
+	int iRemovedForceX = removeForceX();
+	int iRemovedForceY = removeForceY();
+	
 	if (attackDataInfo->IsFallDownAttack) {
 		addForceX(fForceX);
 		addForceY(attackDataInfo->AttackYForce);
 		return;
 	}
 
-	// 맞는 모션을 취하게 하는 경우
-	// 땅위에 있는 경우 X축 힘만 가한다.
+	if (iRemovedForceX != 0) {
+		addForceY(attackDataInfo->AttackYForce);
+		return;
+	}
+
 	if (isOnTheGround()) {
 		addForceX(fForceX);
 		return;
 	}
 
-	// 공중에 있는 경우 Y축 힘만 가한다.
 	addForceY(attackDataInfo->AttackYForce);
 }
 

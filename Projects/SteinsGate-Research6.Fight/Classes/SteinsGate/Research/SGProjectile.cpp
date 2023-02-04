@@ -81,7 +81,7 @@ void SGProjectile::initListener(SGActorListener* listener) {
 void SGProjectile::initPosition() {
 	SGSize spawnerCanvsSize = m_pSpawner->getCanvasSize();
 	SGVec2 spawnerCanvasPos = m_pSpawner->getCanvasPositionReal();
-
+	Log("%.f, %.f\n", spawnerCanvasPos.x, spawnerCanvasPos.y);
 	setSpriteDirection(m_pSpawner->getSpriteDirection());
 
 	if (m_pSpawner->getSpriteDirection() == SpriteDirection::Right) {
@@ -95,6 +95,8 @@ void SGProjectile::initPosition() {
 			spawnerCanvasPos.y + m_pBaseInfo->SpawnOffsetY
 		);
 	}
+
+
 
 	m_pActorSprite->setPosition(0, 0);
 }
@@ -152,7 +154,7 @@ void SGProjectile::updateListenerEvent(float dt) {
 		pListener->onDistanceOver();
 	}
 
-	if (isOnTheGround()) {
+	if (m_pActorSprite->getPositionY() <= m_pThicknessBox->getPositionY()) {
 		pListener->onCollisionWithGround();
 	}
 }
@@ -175,6 +177,16 @@ void SGProjectile::onAnimationBegin(SGActorPartAnimation* animation, SGFrameText
 void SGProjectile::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
 	if (m_pListener)
 		m_pListener->onAnimationEnd(animation, texture);
+}
+
+SGEffectInfo* SGProjectile::getSpawnEffectInfo() {
+	DebugAssertMessage(m_pBaseInfo->SpawnEffect, "스폰 이펙트가 없습니다.");
+	return m_pBaseInfo->SpawnEffect; 
+}
+
+SGEffectInfo* SGProjectile::getHitEffectInfo() {
+	DebugAssertMessage(m_pBaseInfo->HitEffect, "히트 이펙트가 없습니다.");
+	return m_pBaseInfo->HitEffect; 
 }
 
 

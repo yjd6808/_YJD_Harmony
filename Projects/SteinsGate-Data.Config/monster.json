@@ -5,7 +5,6 @@
     "__comment__2": "영문 이름 적은 이유는 전처리 파일 생성시 사용할 수 있을 것 같아서 넣음",
     "__comment__3": "파츠는 5개 이하로만 할 것 클라에 고정크기로 박음",
     "__comment__4": "몬스터 애니메이션 기본 코드는 고정임 idle은 무조건 1, attack은 2, hit 3, die 4, walk 5 ",
-    "__comment__8": "fall_down_idx: 공중에서 hit -> die 자연스러운 전환을 위해 die 애니메이션 시작 ",
 
     "monsters": [
         {

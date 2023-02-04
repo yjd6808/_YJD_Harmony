@@ -44,18 +44,23 @@ void SGHitRecorder::record(SGActorPartAnimation* animation) {
 	}
 
 	SGFrameInfoAttackBoxInstant* pAttackBoxInstantInfo = (SGFrameInfoAttackBoxInstant*)pFrameInfo;
+
+	// 절대 위치 박스로 변환
+	SGActorRect absoluteActorRect = SGActor::convertAbsoluteActorRect(m_pRecorder, pAttackBoxInstantInfo->Rect);	
+	record(absoluteActorRect, pAttackBoxInstantInfo->FrameEventId);
+}
+
+void SGHitRecorder::record(const SGActorRect& absoluteActorRect, int attackDataCode) {
 	SGMapLayer* pMapLayer = m_pRecorder->getMapLayer();
 
 	int iNewHitCount = 0;
 	m_vHitPossibleList.Clear();
 
-	// 절대 위치 박스로 변환
-	SGActorRect absoluteActorRect = SGActor::convertAbsoluteActorRect(m_pRecorder, pAttackBoxInstantInfo->Rect);	
 	pMapLayer->collectEnemiesInActorRect(m_pRecorder, absoluteActorRect, m_vHitPossibleList);
 
 	for (int i = 0; i < m_vHitPossibleList.Size(); ++i) {
 		SGHitInfo& hitInfo = m_vHitPossibleList[i];
-		hitInfo.AttackDataInfo = SGDataManager::getInstance()->getAttackDataInfo(pAttackBoxInstantInfo->FrameEventId);
+		hitInfo.AttackDataInfo = SGDataManager::getInstance()->getAttackDataInfo(attackDataCode);
 
 		if (m_fnHitSingleCallback)
 			m_fnHitSingleCallback(hitInfo);

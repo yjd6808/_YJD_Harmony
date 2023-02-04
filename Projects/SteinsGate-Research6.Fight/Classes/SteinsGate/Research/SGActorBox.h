@@ -57,10 +57,25 @@ public:
 	SGMonster* createMonsterOnMap(int monsterCode, int aiCode, float x, float y);
 	SGObstacle* createObstacleOnMap(int obstacleCode, float x, float y);
 
-	// 위에 다른 애들은 전부 절대 위치 x,y이고
-	// 이 함수는 spawner기준 상대좌표로 이펙트를 만든다.
-	SGEffect* createEffectOnMapRelative(SGActor* spawner, int effectCode, float offsetX, float offsetY);
-	// SGEffect* createEffectOnMapAbsolute(int effectCode, float x, float y);
+	// spawner 캔버스 기준 상대좌표로 이펙트를 만든다.
+	SGEffect* createEffectOnMapBySpawner(SGActor* spawner, int effectCode, float offsetX, float offsetY);
+	SGEffect* createEffectOnMapBySpawner(SGActor* spawner, int effectCode, const SGVec2& offset);
+
+	// 절대적인 위치에 이펙트 생성
+	SGEffect* createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, float x, float y, int zOrder);
+	SGEffect* createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, const SGVec2& pos, int zOrder);
+	SGEffect* createEffectOnMapAbsolute(int effectCode, float x, float y, int zOrder);
+	SGEffect* createEffectOnMapAbsolute(int effectCode, const SGVec2& pos, int zOrder);
+	
+
+	// 대상과 충돌한 지점에 이펙트 생성
+	SGEffect* createEffectOnMapTargetCollision(int effectCode, SpriteDirection_t direction, const SGHitInfo& info, bool randomRotation = false);
+	SGEffect* createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, bool randomRotation = false);
+	SGEffect* createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, float offsetX, float offsetY, bool randomRotation = false);
+	SGEffect* createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, const SGVec2& offset, bool randomRotation = false);
+
+	// 일단 생성
+	SGEffect* createEffectOnMap(int effectCode);
 
 
 	void registerCleanUp(SGActor* actor);
@@ -105,8 +120,7 @@ private:
 
 	// TODO: 캐릭터 풀링 - 이건 구현할려면 좀 고민해야함.
 	// 애니메이션 프레임 텍스쳐중에 교체 가능한것들은 다 해줘야하기때문
-	// 그외의 것들은 애니메이션이나 텍스쳐 변할일이 없기때문에 쉽게 풀링가능
-	// 어차피 별로 없을 건데 풀링이 필요하진 않다.
+	// 캐릭터 말고는 애니메이션이나 파츠 텍스쳐들이 변할일이 없기때문에 쉽게 풀링가능
 	
 	// 관리용 리스트
 	SGHashMap<int, SGActor*> m_hActorMap;

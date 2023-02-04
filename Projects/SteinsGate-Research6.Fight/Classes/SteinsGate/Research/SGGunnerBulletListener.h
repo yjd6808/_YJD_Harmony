@@ -26,7 +26,6 @@ public:
 	void onEnemySingleHit(SGHitInfo& info);
 	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 
-
 	CreateNew(SGGunnerBulletListener)
 };
 

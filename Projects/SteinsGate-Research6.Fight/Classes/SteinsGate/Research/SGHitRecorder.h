@@ -27,6 +27,7 @@ public:
 
 	bool isAlreadyHit(SGActor* hitEnemy);
 	void record(SGActorPartAnimation* animation);
+	void record(const SGActorRect& absoluteActorRect, int attackDataCode);
 	void clear();
 
 	void setRecord(bool enabled);

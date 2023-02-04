@@ -11,6 +11,9 @@
 #include <SteinsGate/Research/SGProjectile.h>
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGActorPartAnimation.h>
+#include <SteinsGate/Research/SGAttackDataInfo.h>
+#include <SteinsGate/Research/SGEffectDefine.h>
+#include <SteinsGate/Research/SGActorBox.h>
 
 void SGGunnerBulletListener::onCreated() {
 	SGHitRecorder* pHitRecorder = m_pProjectile->getHitRecorder();
@@ -22,7 +25,10 @@ void SGGunnerBulletListener::onCreated() {
 }
 
 void SGGunnerBulletListener::onUpdate(float dt) {
-	m_pProjectile->getHitRecorder()->record(m_pProjectile->getRunningAnimation());
+	const SGActorRect& projectileActorRect = m_pProjectile->getActorRect();
+	const int iAttackData = m_pProjectile->getBaseInfo()->AttackData->Code;
+
+	m_pProjectile->getHitRecorder()->record(projectileActorRect, iAttackData);
 }
 
 void SGGunnerBulletListener::onLifeTimeOver() {
@@ -34,7 +40,13 @@ void SGGunnerBulletListener::onDistanceOver() {
 }
 
 void SGGunnerBulletListener::onCollisionWithGround() {
-	// TODO: 타격 이펙트 재생
+	SGActorBox::getInstance()->createEffectOnMapAbsolute(
+		EFFECT_COLLISION_FLOOR,
+		m_pProjectile->getPositionRealCenterX(),
+		m_pProjectile->getPositionRealCenterY(),
+		m_pProjectile->getLocalZOrder() + 1
+	);
+
 	m_pProjectile->registerCleanUp();
 }
 
@@ -42,8 +54,13 @@ void SGGunnerBulletListener::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pProjectile->getHitRecorder()->isAlreadyHit(info.HitTarget))
 		return;
 
-	// TODO: 타격 이펙트 재생
+	SGEffectInfo* pHitEffectInfo = m_pProjectile->getHitEffectInfo();
+	SGActorBox::getInstance()->createEffectOnMapTargetCollision(
+		pHitEffectInfo->Code,
+		SpriteDirection::Reverse[info.HitDirection],
+		info);
 	info.HitTarget->hit(info);
+	m_pProjectile->registerCleanUp();
 }
 
 

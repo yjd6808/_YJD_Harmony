@@ -5,6 +5,7 @@
 *.exe
 *.user
 .editorconfig
+*.Settings
 
 x64/
 Win32/

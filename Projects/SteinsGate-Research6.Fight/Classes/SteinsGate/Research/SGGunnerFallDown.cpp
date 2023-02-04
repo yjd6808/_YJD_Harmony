@@ -19,6 +19,7 @@ SGGunnerFallDown::SGGunnerFallDown(SGPlayer* player, SGActionInfo* actionInfo)
 }
 
 void SGGunnerFallDown::onActionBegin() {
+	
 	m_pPlayer->runAnimation(GUNNER_ANIMATION_FALL_DOWN_BEGIN);
 	m_pPlayer->getCharacter()->enableElasticity();
 
@@ -29,7 +30,7 @@ void SGGunnerFallDown::onActionBegin() {
 }
 
 void SGGunnerFallDown::onActionEnd() {
-	m_pPlayer->getCharacter()->enableElasticity();
+	m_pPlayer->getCharacter()->disableElasticity();
 }
 
 void SGGunnerFallDown::onUpdate(float dt) {

@@ -11,6 +11,7 @@
 #include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGActionDefine.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
+#include <SteinsGate/Research/SGEffectDefine.h>
 #include <SteinsGate/Research/SGActorBox.h>
 
 SGGunnerSliding::SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo)
@@ -55,7 +56,10 @@ void SGGunnerSliding::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture
 	// 거너 특유의 슬라이딩 시작전 경직 효과를 주기위해 111번 프레임 끝난 후
 	if (animation->getFrameIndex() == 111) {
 		m_bSlidingStarted = true;
-		if (eDir == SpriteDirection::Right)
+
+		SGActorBox::getInstance()->createEffectOnMapBySpawner(pCharacter, EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
+
+		if (eDir == SpriteDirection::Right) 
 			pCharacter->addForceX(pCharacter->getBaseInfo()->SlidingForce);
 		else
 			pCharacter->addForceX(-pCharacter->getBaseInfo()->SlidingForce);
@@ -71,7 +75,7 @@ void SGGunnerSliding::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	
+	SGActorBox::getInstance()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

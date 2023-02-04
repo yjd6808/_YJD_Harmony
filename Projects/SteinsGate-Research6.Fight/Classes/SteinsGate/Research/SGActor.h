@@ -38,7 +38,6 @@ public:
 	virtual void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
 	virtual void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
 	virtual void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
-	// virtual void onHit(SGActor* attacker, )
 	virtual void initThicknessBox(const SGThicknessBox& thicknessBox);
 	virtual void initHitRecorder(int hitPossibleListSize = 16, int alreadyHitMapSize = 32);
 	virtual void initListener(SGActorListener* listener) = 0;	// 올바른 리스너인지 자식이 체크하도록함
@@ -56,6 +55,7 @@ public:
 	float  getPositionActorY()				const;
 	SGVec2 getPositionRealCenter()			const;
 	float  getPositionRealCenterX() 		const;
+	float  getPositionRealCenterY()			const;
 	SGVec2 getCanvasPositionReal()			const;
 	SGSize getCanvasSize()					const;
 	SGRect getHitBox()						const;

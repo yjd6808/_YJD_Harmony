@@ -33,6 +33,8 @@ public:
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 
+	SGEffectInfo* getSpawnEffectInfo();
+	SGEffectInfo* getHitEffectInfo();
 
 	bool isLifeTimeOver();
 	bool isDistanceOver();
