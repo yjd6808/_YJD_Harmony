@@ -13,6 +13,8 @@
 #include <SteinsGate/Common/Engine/SGRectEx.h>
 #include <SteinsGate/Common/Engine/RectPoly.h>
 
+#include "GameScene.h"
+
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -98,6 +100,14 @@ void SGMapLayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* 
 		SGGlobal::getInstance()->toggleDrawThicknessBox();
 	else if (keyCode == EventKeyboard::KeyCode::KEY_F3)
 		SGGlobal::getInstance()->toggleDrawAttackBox();
+	else if (keyCode == EventKeyboard::KeyCode::KEY_F4)
+		SGGlobal::getInstance()->toggleDrawEffect();
+	else if (keyCode == EventKeyboard::KeyCode::KEY_F9) {
+		SGPlayer::getInstance()->setCharacter(nullptr);
+		SGPlayer::getInstance()->setMapLayer(nullptr);
+		SGActorBox::getInstance()->clearAll();
+		SGDirector::getInstance()->replaceScene(GameScene::createScene());
+	}
 }
 
 void SGMapLayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
@@ -117,7 +127,6 @@ void SGMapLayer::update(float dt) {
 
 void SGMapLayer::onExitTransitionDidStart() {
 	Layer::onExitTransitionDidStart();
-	m_pActorBox->clear();
 }
 
 
@@ -138,7 +147,6 @@ void SGMapLayer::loadMap(int mapCode) {
 
 			SGTileInfo* pTileInfo = pDataManager->getTileInfo(pMap->TileArray[i][j]);
 			SGFrameTexture* pFrameTexture = pPackManager->getPack(pTileInfo->NpkIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
-			// TODO: 프레임 텍스쳐 모았다가 나중에 해제
 
 			SGSprite* pTileSprite = SGSprite::createWithTexture(pFrameTexture->getTexture());
 			pTileSprite->setAnchorPoint(Vec2::ZERO);
@@ -209,7 +217,7 @@ bool SGMapLayer::collectEnemiesInActorRect(
 		// 몬스터 기준으로 플레이어 충돌이라
 		// eHitDirection은 플레이어의 충돌방향이 되므로, 반대로 돌려줘야함.
 		if (pHitTarget->isCollide(absoluteActorRect, eHitDirection, hitRect)) {
-			hitTargets.PushBack({ pHitTarget, SpriteDirection::Reverse[eHitDirection], hitRect, nullptr });
+			hitTargets.PushBack({ attacker, pHitTarget, SpriteDirection::Reverse[eHitDirection], hitRect, nullptr });
 			bFind = true;
 		}
 	}

@@ -257,6 +257,13 @@ SGFrameInfo* SGActorPartAnimation::getRunningFrameInfo() {
 SGFrameTexture* SGActorPartAnimation::changeTexture(int frameIndexInAnimation) {
 	SGFrameTexture* pFrameTexture = m_vAnimationFrames[frameIndexInAnimation];
 
+	
+	if (pFrameTexture->isLink()) {
+		int iTargetFrameIndex = pFrameTexture->getTargetFrameIndex();
+		pFrameTexture = m_vFrames[iTargetFrameIndex];
+	}
+
+	// 링크 검사 이후 체크해야함
 	if (pFrameTexture->isDummy()) {
 		// null로 넣어주면 2x2 흰색 텍스쳐를 넣어줌
 		// 이렇게 넣어줘야 opacity하고 컬러 조절이 가능해지기 때문이라고 엔진 코드에 적혀있다.
@@ -266,11 +273,6 @@ SGFrameTexture* SGActorPartAnimation::changeTexture(int frameIndexInAnimation) {
 
 		m_pTarget->setOpacity(0);
 		return pFrameTexture;
-	}
-
-	if (pFrameTexture->isLink()) {
-		int iTargetFrameIndex = pFrameTexture->getTargetFrameIndex();
-		pFrameTexture = m_vFrames[iTargetFrameIndex];
 	}
 
 	

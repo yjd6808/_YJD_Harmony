@@ -9,6 +9,7 @@
 #include "SGPlayer.h"
 
 #include <SteinsGate/Research/SGCharBaseInfo.h>
+#include <SteinsGate/Research/SGMapLayer.h>
 
 SGPlayer::SGPlayer()
 	: m_pMapLayer(nullptr)
@@ -29,13 +30,18 @@ SGPlayer::~SGPlayer() {
 
 void SGPlayer::initActionManager() {
 	DebugAssertMessage(m_pCharacter, "이 함수를 호출전에 무조건 캐릭터 세팅을 먼저 해주세요.");
-	m_pActionManager = new SGActionManager(this);
-	m_pActionManager->init(m_pCharacter->getBaseInfo()->Type);
+
+	if (m_pActionManager == nullptr) {
+		m_pActionManager = new SGActionManager(this);
+		m_pActionManager->init(m_pCharacter->getBaseInfo()->Type);
+	}
 }
 
 void SGPlayer::initController() {
 	DebugAssertMessage(m_pCharacter && m_pActionManager, "이 함수를 호출전에 무조건 캐릭터 세팅과 액션 매니저 세팅을 먼저 해주세요.");
-	m_pController = new SGPlayerController(this, m_pCharacter, m_pActionManager);
+	if (m_pController == nullptr) {
+		m_pController = new SGPlayerController(this, m_pCharacter, m_pActionManager);
+	}
 }
 
 void SGPlayer::update(float dt) {
@@ -109,14 +115,24 @@ SGActorSprite* SGPlayer::getActorSprite() {
 
 
 void SGPlayer::setCharacter(SGCharacter* character) {
-	DebugAssertMessage(m_pCharacter == nullptr, "이미 캐릭터가 세팅되어 있습니다.");
+	CC_SAFE_RELEASE(m_pCharacter);
+	
 	m_pCharacter = character;
-	m_pCharacter->retain();
-	m_pCharacter->setOwner(true);
+
+	if (character != nullptr) {
+		m_pCharacter->retain();
+		m_pCharacter->setOwner(true);
+	}
 }
 
 void SGPlayer::setMapLayer(SGMapLayer* mapLayer) {
+	CC_SAFE_RELEASE(m_pMapLayer);
+
 	m_pMapLayer = mapLayer;
+
+	if (mapLayer != nullptr) {
+		m_pMapLayer->retain();
+	}
 }
 
 SGCharacter* SGPlayer::getCharacter() {

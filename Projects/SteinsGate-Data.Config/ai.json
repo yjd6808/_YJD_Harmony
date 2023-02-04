@@ -10,7 +10,7 @@
         {
             "code": 1,
             "wander_prob": "50",
-            "track_prob": "20 20",
+            "track_prob": "20 10",
             "angry_prob": "20 20",
             "idle_time": "1.0 4.0",
             "wander_walk_time": "3.0 5.0",

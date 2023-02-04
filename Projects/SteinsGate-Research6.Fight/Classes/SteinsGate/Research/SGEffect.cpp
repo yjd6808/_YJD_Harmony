@@ -15,6 +15,7 @@
 #include <SteinsGate/Research/SGActorSprite.h>
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGGlobal.h>
 
 #include <SteinsGate/Common/Engine/RectPoly.h>
 
@@ -72,6 +73,16 @@ void SGEffect::initActorSprite() {
 }
 
 
+void SGEffect::update(float delta) {
+	SGActor::update(delta);
+
+
+	if (SGGlobal::getInstance()->isEffectDrawMode()) {
+		m_pActorSprite->getParts().Extension().ForEach([](SGActorPartSprite* sp) { sp->setOpacity(255); });
+	} else {
+		m_pActorSprite->getParts().Extension().ForEach([](SGActorPartSprite* sp) { sp->setOpacity(0); });
+	}
+}
 void SGEffect::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
 void SGEffect::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {}
 void SGEffect::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {}

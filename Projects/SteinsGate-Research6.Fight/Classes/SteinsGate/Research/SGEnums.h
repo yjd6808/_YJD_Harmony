@@ -208,8 +208,8 @@ SEnumEnd(AttackDamageType)
 
 SEnumBegin(AttackXForceDirection)
 None,
-Left,
-Right,
+Forward,
+Backward,
 Spread,
 Max
 SEnumEnd(AttackXForceDirection)
@@ -260,5 +260,16 @@ Sit,
 // TODO: Custom 몬스터 특수행동 그런거 추가할 수 있을 듯?
 Max
 SEnumMiddle(AIActivity)
+
+
+static constexpr const char* Name[Max]{
+	"Idle",
+	"Walk",
+	"Attack",
+	"Hit",
+	"FallDown",
+	"Sit"
+};
+
 
 SEnumMiddleEnd(AIActivity)

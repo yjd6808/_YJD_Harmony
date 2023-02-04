@@ -81,7 +81,7 @@ void SGProjectile::initListener(SGActorListener* listener) {
 void SGProjectile::initPosition() {
 	SGSize spawnerCanvsSize = m_pSpawner->getCanvasSize();
 	SGVec2 spawnerCanvasPos = m_pSpawner->getCanvasPositionReal();
-	Log("%.f, %.f\n", spawnerCanvasPos.x, spawnerCanvasPos.y);
+
 	setSpriteDirection(m_pSpawner->getSpriteDirection());
 
 	if (m_pSpawner->getSpriteDirection() == SpriteDirection::Right) {

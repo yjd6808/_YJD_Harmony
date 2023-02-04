@@ -21,7 +21,7 @@ public:
 	bool initVariables() override;
 
 	virtual void hit(const SGHitInfo& hitInfo);
-	virtual void hit(const SpriteDirection_t hitDirection, const SGRect& hitRect, SGAttackDataInfo* attackDataInfo);
+	virtual void hit(SGActor* attacker, const SpriteDirection_t hitDirection, const SGRect& hitRect, SGAttackDataInfo* attackDataInfo);
 	virtual void dead();
 
 
@@ -88,6 +88,7 @@ protected:
 	float m_fElapsedPausedTime;
 	float m_fPuaseTime;
 
+	
 
 	// 디버깅 용
 	float m_fAtkBoxInstantElapsedTime;

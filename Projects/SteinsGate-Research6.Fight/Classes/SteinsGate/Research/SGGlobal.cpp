@@ -14,6 +14,7 @@ SGGlobal::SGGlobal()
 	, m_bDrawThicknessBox(false)
 	, m_bDrawBodyBoundingBox(false)
 	, m_bDrawAttackBox(false)
+	, m_bDrawEffect(true)
 {}
 
 SGGlobal::~SGGlobal() {
@@ -35,6 +36,10 @@ void SGGlobal::toggleDrawBodyBoundingBox() {
 
 void SGGlobal::toggleDrawAttackBox() {
 	m_bDrawAttackBox = !m_bDrawAttackBox;
+}
+
+void SGGlobal::toggleDrawEffect() {
+	m_bDrawEffect = !m_bDrawEffect;
 }
 
 void SGGlobal::initialize() {

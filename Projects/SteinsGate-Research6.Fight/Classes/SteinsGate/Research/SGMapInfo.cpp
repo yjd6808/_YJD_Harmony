@@ -6,6 +6,7 @@
  */
 
 
+#include "Tutturu.h"
 #include "SGMapInfo.h"
 
 #include <SteinsGate/Research/SGStruct.h>

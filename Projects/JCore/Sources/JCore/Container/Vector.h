@@ -357,7 +357,6 @@ public:
 	}
 
 	T& operator[](const int idx) const {
-		this->ThrowIfIndexIsInvalid(idx);
 		return this->GetAt(idx);
 	}
 

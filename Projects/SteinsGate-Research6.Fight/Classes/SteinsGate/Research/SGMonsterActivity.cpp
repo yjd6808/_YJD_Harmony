@@ -15,10 +15,6 @@ SGMonsterActivity::SGMonsterActivity(SGMonster* monster, AIActivity_t type)
 	, m_pMonster(monster) {}
 
 void SGMonsterActivity::run() {
-	m_pMonster->getHitRecorder()->clear();
-	m_pMonster->getHitRecorder()->setSingleHitCallback(nullptr);
-	m_pMonster->getHitRecorder()->setMultiHitCallback(nullptr);
-
 	SGAIActivity::run();
 }
 

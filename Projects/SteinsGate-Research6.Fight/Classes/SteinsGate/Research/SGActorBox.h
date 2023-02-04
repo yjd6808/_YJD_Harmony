@@ -47,10 +47,10 @@ public:
 	
 	void updateActors(float dt);
 	void updateZOrder(float dt);
-	void updateCleanUp();
+	int updateCleanUp();
 
-	void clear();
-
+	void clearRoom();
+	void clearAll();
 
 	SGCharacter* createCharacterOnMap(CharType_t charType, float x, float y, SGCharacterInfo& info);
 	SGProjectile* createProejctileOnMap(SGActor* spawner, int projectileId);
@@ -60,6 +60,10 @@ public:
 	// spawner 캔버스 기준 상대좌표로 이펙트를 만든다.
 	SGEffect* createEffectOnMapBySpawner(SGActor* spawner, int effectCode, float offsetX, float offsetY);
 	SGEffect* createEffectOnMapBySpawner(SGActor* spawner, int effectCode, const SGVec2& offset);
+
+	// 이펙트를 Attcher에게 붙인다.
+	SGEffect* createEffectOnMapByAttacher(SGActor* attacher, int effectCode, float offsetX, float offsetY);
+	SGEffect* createEffectOnMapByAttacher(SGActor* attacher, int effectCode, const SGVec2& offset);
 
 	// 절대적인 위치에 이펙트 생성
 	SGEffect* createEffectOnMapAbsolute(int effectCode, SpriteDirection_t direction, float x, float y, int zOrder);
@@ -77,32 +81,33 @@ public:
 	// 일단 생성
 	SGEffect* createEffectOnMap(int effectCode);
 
-
+	void sortZOrderActor();
 	void registerCleanUp(SGActor* actor);
-	void registerZOrderActor(SGActor* actor);
+	void unregisterZOrderActor(SGActor* actor);
+
 	void registerProjectile(SGProjectile* projectile);
 	void registerCharacter(SGCharacter* character);
 	void registerMonster(SGMonster* mosnter);
 	void registerObstacle(SGObstacle* obstacle);
 	void registerEffect(SGEffect* effect);
-	void registerPhysicsActor(SGPhysicsActor* physicsActor);
 	void registerActor(SGActor* actor);
-	
-
-	void unregisterZOrderActor(SGActor* actor);
-	void unregisterProjectile(SGProjectile* projectile);
-	void unregisterCharacter(SGCharacter* chracter);
-	void unregisterMonster(SGMonster* mosnter);
-	void unregisterObstacle(SGObstacle* obstacle);
-	void unregisterEffect(SGEffect* effect);
-	void unregisterPhysicsActor(SGPhysicsActor* physicsActor);
-	void unregisterActor(SGActor* actor);
 
 	void cleanUpProjectile(SGProjectile* projectile);
 	void cleanUpMonster(SGMonster* monster);
 	void cleanUpObstacle(SGObstacle* obstacle);
 	void cleanUpCharacter(SGCharacter* character);
 	void cleanUpEffect(SGEffect* effect);
+
+	void unregisterProjectile(SGProjectile* projectile);
+	void unregisterCharacter(SGCharacter* chracter);
+	void unregisterMonster(SGMonster* mosnter);
+	void unregisterObstacle(SGObstacle* obstacle);
+	void unregisterEffect(SGEffect* effect);
+	void unregisterColidableObstacle(SGObstacle* obstacle);
+	void unregisterPhysicsActor(SGPhysicsActor* physicsActor);
+	void unregisterActor(SGActor* actor);
+
+	
 
 	ActorList& getZOrderActorList() { return m_vZOrderedActors; }
 	ProjectileList& getProjectileList() { return m_vProjectiles; }
@@ -124,15 +129,16 @@ private:
 	
 	// 관리용 리스트
 	SGHashMap<int, SGActor*> m_hActorMap;
-	ActorList m_vZOrderedActors;				// Z오더를 고유 ID처럼 사용해도 될듯? 이진탐색으로 삭제 함 댈것같다.
-	ProjectileList m_vProjectiles;		// 플레이어가 만든 충돌체
+	ActorList m_vZOrderedActors;		
+	ProjectileList m_vProjectiles;		
 	MonsterList m_vMonsters;
 	ObstacleList m_vCollidableObstacles;
+	ObstacleList m_vObstacles;
 	CharacterList m_vCharacters;
 	PhysicsActorList m_vPhysicsActors;
 	EffectList m_vEffectList;
 
-	SGHashMap<SGActor*, SGActor*> m_hRemoveActorMap;	// 디버깅용, 중복 큐잉 방지용
+	SGHashMap<SGActor*, SGActor*> m_hRemoveActorMap;	// 중복 큐잉 방지용
 	SGArrayQueue<SGActor*> m_qRemovedActors;
 
 	SGMapLayer* m_pMapLayer;

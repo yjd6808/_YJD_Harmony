@@ -308,7 +308,10 @@ protected:
 
 protected:
 	T& GetAt(const int idx) const {
+#ifdef DebugMode
+		// 함수 호출 오버헤드 있음
 		ThrowIfIndexIsInvalid(idx);
+#endif
 		return m_pArray[idx];
 	}
 

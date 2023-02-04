@@ -52,7 +52,7 @@ void SGGunnerHit::selectHitAnimation() {
 	m_bHitSmall = !m_bHitSmall;
 }
 void SGGunnerHit::checkPosition() {
-	if (m_pPlayer->getCharacter()->isOnTheGround()) {
+	if (!m_pPlayer->getCharacter()->hasForceY()) {
 		m_bOnTheGround = true;
 		return;
 	}

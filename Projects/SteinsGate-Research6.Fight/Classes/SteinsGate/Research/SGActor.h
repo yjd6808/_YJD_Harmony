@@ -26,6 +26,7 @@
 #include <SteinsGate/Research/SGHitRecorder.h>
 #include <SteinsGate/Research/SGActorListener.h>
 
+class SGActor;
 class SGMapLayer;
 class SGActor : public SGNode
 {
@@ -42,6 +43,9 @@ public:
 	virtual void initHitRecorder(int hitPossibleListSize = 16, int alreadyHitMapSize = 32);
 	virtual void initListener(SGActorListener* listener) = 0;	// 올바른 리스너인지 자식이 체크하도록함
 	virtual bool isPhysicsActor() { return false; }
+
+	
+
 
 	virtual bool initVariables();
 	void update(float dt) override;				// 자식에서도 오버라이딩시 이거 호출하도록
@@ -95,6 +99,12 @@ public:
 	bool isOnTheGround();
 
 	void registerCleanUp();
+
+	void attach(SGActor* actor);
+	void detach(SGActor* actor);
+	SGActor* getAttacher();
+	bool hasAttacher();
+	
 public:
 	// stdActor기준으로 절대 액터 렉트를 얻도록 해줌
 	static SGActorRect convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect);
@@ -111,7 +121,12 @@ protected:
 	bool m_bCleanUp;
 
 	SGDrawNode* m_pThicknessBox;
+
+	SGVector<SGActor*> m_vAttches;
+	SGActor* m_pAttacher;
 };
+
+
 
 
 

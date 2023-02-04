@@ -184,6 +184,21 @@
                     "2 77"
                 ]
             }
+        },
+        {
+            "code": 11,
+            "name": "ground_marker",
+            "npk": "sprite_common_etc.NPK",
+            "img": "auraminion.img",
+            "animation": 
+            {
+                "code": 1,
+                "name": "ground_marker",
+                "loop": false,
+                "frames": [
+                    "0 -1"
+                ]
+            }
         }
 
         

@@ -57,12 +57,10 @@ bool SGActorSprite::init() {
 		
 		m_vPartsCanvas[i] = SGSprite::create("rect.png");
 		m_vPartsCanvas[i]->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+		m_vPartsCanvas[i]->setContentSize({ 0, 0 });
 		m_vPartsCanvas[i]->setCascadeOpacityEnabled(false);
 		m_vPartsCanvas[i]->setOpacity(0);
-		m_vPartsCanvas[i]->setContentSize({ 0, 0 });
 		this->addChild(m_vPartsCanvas[i], i);	// 정렬된 순서대로 ZOrder 반영
-
-		// if (i == 0) m_vPartsCanvas[i]->setOpacity(80);
 
 		m_vPartsBoundingBox[i] = SGDrawNode::create();
 		m_vParts[i] = SGActorPartSprite::create(
@@ -78,7 +76,6 @@ bool SGActorSprite::init() {
 		// 프로젝틸은 캔버스를 사용하지 않을 거기 땜에
 		// 앵커를 0.5, 0.5로 하도록 한다.
 		// 캔버스 위에서 그려지는 캐릭터나 몬스터, 기타 오브젝트들은 ZERO로 처리하도록..
-		// 실제로 클래스를 분리하는게 정석이긴 한데.. 
 		if (m_pActor->getType() == ActorType::Projectile) {
 			m_vParts[i]->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 			m_vPartsCanvas[i]->addChild(m_vPartsBoundingBox[i]);

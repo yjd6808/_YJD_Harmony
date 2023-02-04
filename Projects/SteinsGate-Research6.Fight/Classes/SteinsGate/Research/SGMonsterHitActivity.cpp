@@ -11,9 +11,6 @@
 #include <SteinsGate/Research/SGMonster.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
-// 공중에 떴을때 Hit 애니메이션 얼마나 실행시킬지
-#define MinPlayHitAnimationOnTheAir	 0.3f
-
 
 SGMonsterHitActivity::SGMonsterHitActivity(SGMonster* monster)
 	: SGMonsterActivity(monster, AIActivity::Hit)
@@ -51,7 +48,7 @@ void SGMonsterHitActivity::selectHitAnimation() {
 }
 
 void SGMonsterHitActivity::checkPosition() {
-	if (m_pMonster->isOnTheGround()) {
+	if (!m_pMonster->hasForceY()) {
 		m_bOnTheGround = true;
 		return;
 	}
@@ -68,8 +65,11 @@ void SGMonsterHitActivity::updateGroundHitState(float dt) {
 }
 
 void SGMonsterHitActivity::updateAirHitState(float dt) {
+
+
 	if (!m_pMonster->isOnTheGround())
 		return;
+
 
 	// TODO: 죽음 확인 후 사망처리
 

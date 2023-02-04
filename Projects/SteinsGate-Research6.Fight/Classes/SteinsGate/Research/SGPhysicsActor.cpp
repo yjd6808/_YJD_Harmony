@@ -210,14 +210,37 @@ bool SGPhysicsActor::hasForceY() {
 
 
 void SGPhysicsActor::hit(const SGHitInfo& hitInfo) {
-	hit(hitInfo.HitDirection, hitInfo.HitRect, hitInfo.AttackDataInfo);
+	hit(hitInfo.Attacker, hitInfo.HitDirection, hitInfo.HitRect, hitInfo.AttackDataInfo);
 }
 
 void SGPhysicsActor::hit(
+	SGActor* attacker,
 	const SpriteDirection_t hitDirection, 
 	const SGRect& hitRect,
-	SGAttackDataInfo* attackDataInfo) {
-	float fForceX = hitDirection == SpriteDirection::Right ? -attackDataInfo->AttackXForce : attackDataInfo->AttackXForce;
+	SGAttackDataInfo* attackDataInfo)
+{
+	float fForceX = 500;
+
+	switch (attackDataInfo->AttackXForceDir) {
+	case AttackXForceDirection::Forward:
+		fForceX = attacker->getSpriteDirection() == SpriteDirection::Right
+			? attackDataInfo->AttackXForce
+			: -attackDataInfo->AttackXForce;
+		break;
+	case AttackXForceDirection::Backward:
+		fForceX = attacker->getSpriteDirection() == SpriteDirection::Right
+			? -attackDataInfo->AttackXForce
+			: attackDataInfo->AttackXForce;
+		break;
+	case AttackXForceDirection::Spread:
+	case AttackXForceDirection::None:
+		fForceX = hitDirection == SpriteDirection::Right
+			? -attackDataInfo->AttackXForce
+			: attackDataInfo->AttackXForce;
+		break;
+	default: DebugAssertMessage(false, "뭐야! 이상한 타입의 X 포스 디렉션입니다."); break;
+	}
+
 	m_bBounced = false;
 
 	setSpriteDirection(hitDirection);
@@ -307,8 +330,11 @@ bool SGPhysicsActor::hasForce() {
 // 어택박스 위치가 제대로 맞나 눈으로 확인하기 위한 용도
 void SGPhysicsActor::updateDebug(float dt) {
 
-	if (!SGGlobal::getInstance()->isAttackBoxDrawMode())
+	if (!SGGlobal::getInstance()->isAttackBoxDrawMode()) {
+		if (m_pAtkThicknessBox) m_pAtkThicknessBox->setOpacity(0);
+		if (m_pAtkHitBox) m_pAtkHitBox->setOpacity(0);
 		return;
+	}
 
 	updateDebugSub1(dt);
 	updateDebugSub2(dt);

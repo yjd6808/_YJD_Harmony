@@ -72,7 +72,7 @@ private:
 	// 기본 필드
 	// ==================================================
 	ControlKey_t m_CocosKeyCodeToControlKeyMap[200];		// 코코스 키를 ControlKey로 변환 (None(0)으로 초기화)
-	int m_ControlKeyPressedMap[ControlKey::Max]{};
+	bool m_ControlKeyPressedMap[ControlKey::Max]{};
 	InputTime m_LastestPressedKey;							// 제일 최근에 누른 키
 	InputTime m_LastestReleasedKey;							// 제일 최근에 땐 키
 	InputTime m_ControlKeySequence[ComboSequenceCount_v]{}; // 맨 앞이 제일 최근에 입력한 키

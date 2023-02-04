@@ -32,9 +32,11 @@ public:
 	void toggleDrawThicknessBox();
 	void toggleDrawBodyBoundingBox();
 	void toggleDrawAttackBox();
+	void toggleDrawEffect();
 	bool isThicknessBoxDrawMode() { return m_bDrawThicknessBox; }
 	bool isBodyBoundingBoxDrawMode() { return m_bDrawBodyBoundingBox; }
 	bool isAttackBoxDrawMode() { return m_bDrawAttackBox; }
+	bool isEffectDrawMode() { return m_bDrawEffect; }
 
 	const SGString& getAvatarNpkName(int charType, int visualAvatarType);
 	const SGString& getWeaponNpkName(int charType, int weaponType);
@@ -47,6 +49,7 @@ private:
 	bool m_bDrawThicknessBox;
 	bool m_bDrawBodyBoundingBox;
 	bool m_bDrawAttackBox;
+	bool m_bDrawEffect;
 
 	// 변경되지 않는 데이터
 	SGHashMap<SGString, int> m_AvatarPartNameToTypeMap;

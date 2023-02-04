@@ -30,6 +30,8 @@ SGActor::SGActor(ActorType_t type, int code)
 	, m_pMapLayer(nullptr)
 	, m_pListener(nullptr)
 	, m_bCleanUp(false)
+	, m_vAttches(4)
+	, m_pAttacher(nullptr)
 {}
 
 SGActor::~SGActor() {
@@ -43,6 +45,8 @@ bool SGActor::initVariables() {
 	// 이거 2개만 초기화 시키면 댈듯?
 	m_iActorId = InvalidValue_v;
 	m_pMapLayer = nullptr;
+	m_vAttches.Clear();
+	m_pAttacher = nullptr;
 	m_bCleanUp = false;
 
 	// m_eActorType = ;
@@ -350,6 +354,31 @@ void SGActor::registerCleanUp() {
 	DebugAssertMessage(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
 	SGActorBox::getInstance()->registerCleanUp(this);
 	m_bCleanUp = true;
+}
+
+void SGActor::attach(SGActor* actor) {
+	DebugAssertMessage(actor->hasAttacher() == false, "어태치 할려는 액터가 이미 다른 누군가에게 어태치 되어 있습니다.");
+	DebugAssertMessage(m_vAttches.Exist(actor) == false, "동일한 액터에 대해서 연속 어태치 할 수 없습니다.");
+
+	m_vAttches.PushBack(actor);
+
+	actor->m_pAttacher = this;
+	actor->retain();
+}
+
+void SGActor::detach(SGActor* actor) {
+	DebugAssertMessage(m_vAttches.Exist(actor), "디태치 할려는 액터가 어태치되어 있지 않습니다.");
+	if (m_vAttches.Remove(actor) == false) {
+		DebugAssertMessage(false, "디태치 실패");
+	}
+}
+
+SGActor* SGActor::getAttacher() {
+	return m_pAttacher;
+}
+
+bool SGActor::hasAttacher() {
+	return m_pAttacher != nullptr;
 }
 
 SGActorRect SGActor::convertAbsoluteActorRect(SGActor* stdActor, const SGActorRect& relativeRect) {

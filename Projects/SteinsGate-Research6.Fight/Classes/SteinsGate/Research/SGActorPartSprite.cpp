@@ -70,7 +70,7 @@ SGActorPartSprite::~SGActorPartSprite() {
 
 bool SGActorPartSprite::init() {
 
-	if (!Sprite::initWithTexture(SGGlobal::getInstance()->getDefaultTexture()))
+	if (!Sprite::init())
 		return false;
 
 	
@@ -80,7 +80,6 @@ bool SGActorPartSprite::init() {
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
 
 		m_vFrames[i] = pImgPack->createFrameTexture(m_pPartData->ImgIndex, i);
-		m_vFrames[i];
 
 		if (m_vFrames[i] == nullptr) {
 			m_vFrames[i] = SGSpriteFrameTexture::createDefaultTextureRetain();

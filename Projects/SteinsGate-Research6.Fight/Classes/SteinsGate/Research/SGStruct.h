@@ -14,6 +14,7 @@
 struct SGAnimationInfo;
 struct SGAttackDataInfo;
 
+class SGActor;
 class SGPhysicsActor;
 
 
@@ -100,6 +101,7 @@ using SGActorSpriteDataPtr = JCore::SharedPtr<SGActorSpriteData>;
 
 struct SGHitInfo
 {
+	SGActor* Attacker;
 	SGPhysicsActor* HitTarget;
 	SpriteDirection_t HitDirection;
 	SGRect HitRect;

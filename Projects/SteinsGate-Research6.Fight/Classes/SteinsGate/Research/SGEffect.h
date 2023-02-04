@@ -26,6 +26,7 @@ public:
 	
 	SGEffectInfo* getBaseInfo() { return m_pBaseInfo; }
 
+	void update(float delta) override;
 	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;

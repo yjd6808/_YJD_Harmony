@@ -43,4 +43,5 @@ using Console = NormalConsole;
 // ========================================================================================
 
 #define HashMapTest				OFF
-#define HashMapMemoryPoolTest	ON
+#define HashMapMemoryPoolTest	OFF
+#define HashMapIterationTest	ON
