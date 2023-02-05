@@ -238,7 +238,7 @@ void SGPhysicsActor::hit(
 			? -attackDataInfo->AttackXForce
 			: attackDataInfo->AttackXForce;
 		break;
-	default: DebugAssertMessage(false, "뭐야! 이상한 타입의 X 포스 디렉션입니다."); break;
+	default: DebugAssertMsg(false, "뭐야! 이상한 타입의 X 포스 디렉션입니다."); break;
 	}
 
 	m_bBounced = false;

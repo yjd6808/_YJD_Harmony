@@ -34,7 +34,7 @@ namespace JCore {
 		template <typename... Args>
 		explicit ThreadLocal(Args&&... args) {
 			if (m_uiObjectId != 0ULL) {
-				DebugAssertMessage(false, "이미 생성자가 한번 호출이 되었습니다.");
+				DebugAssertMsg(false, "이미 생성자가 한번 호출이 되었습니다.");
 				return;
 			}
 
@@ -135,7 +135,7 @@ namespace JCore {
 		// ThreadLocal<T>와 생명주기가 같음
 		T& Ref() {
 			NormalLockGuard guard(m_Lock);
-			DebugAssertMessage(m_pRefMap && m_pRefMap->Exist(m_uiObjectId), "생성자에서 초기화되지 않은 상태이거나 소멸된 객체입니다.");
+			DebugAssertMsg(m_pRefMap && m_pRefMap->Exist(m_uiObjectId), "생성자에서 초기화되지 않은 상태이거나 소멸된 객체입니다.");
 
 			/* 계속 쓰레기 데이터 쌓이는데 어떻게 처리하지.. 흠
 			 *

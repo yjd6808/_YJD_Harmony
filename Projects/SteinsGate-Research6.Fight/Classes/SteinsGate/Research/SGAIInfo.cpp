@@ -38,21 +38,21 @@ SGAIInfo::SGAIInfo(const SGAIInfo& other) {
 }
 
 float SGAIInfo::getWanderProb(AIWanderDecision_t decision) {
-	DebugAssertMessage(decision >= 0 && decision < AIWanderDecision::Max, "원더 디시전 범위가 이상합니다.");
+	DebugAssertMsg(decision >= 0 && decision < AIWanderDecision::Max, "원더 디시전 범위가 이상합니다.");
 	if (decision == 0)
 		return WanderProbs[0];
 
 	return WanderProbs[decision] - WanderProbs[decision - 1];
 }
 float SGAIInfo::getTrackProb(AITrackDecision_t decision) {
-	DebugAssertMessage(decision >= 0 && decision < AITrackDecision::Max, "트랙 디시전 범위가 이상합니다.");
+	DebugAssertMsg(decision >= 0 && decision < AITrackDecision::Max, "트랙 디시전 범위가 이상합니다.");
 	if (decision == 0)
 		return TrackProbs[0];
 
 	return TrackProbs[decision] - TrackProbs[decision - 1];
 }
 float SGAIInfo::getAngryProb(AIAngryDecision_t decision) {
-	DebugAssertMessage(decision >= 0 && decision < AIAngryDecision::Max, "앵구리 디시전 범위가 이상합니다.");
+	DebugAssertMsg(decision >= 0 && decision < AIAngryDecision::Max, "앵구리 디시전 범위가 이상합니다.");
 	if (decision == 0)
 		return AngryProbs[0];
 

@@ -120,7 +120,7 @@ void SGActorPartSprite::runAnimation(int code) {
 }
 
 void SGActorPartSprite::runAnimation(int code, int startFrameIndexInAnimation) {
-	DebugAssertMessage(m_AnimationMap.Exist(code), "해당 코드의 애니메이션이 없습니다.");
+	DebugAssertMsg(m_AnimationMap.Exist(code), "해당 코드의 애니메이션이 없습니다.");
 	SGActorPartAnimation* pNextAnimation = m_AnimationMap[code];
 
 	//요청한 애니메이션이 동일한 애니메이션인 경우

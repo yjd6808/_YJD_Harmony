@@ -57,7 +57,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     auto scene = SGWorldScene::get();
     scene->setAnchorPoint(Vec2::ZERO);
-    DebugAssertMessage(scene, "월드씬 생성에 실패했습니다.");
+    DebugAssertMsg(scene, "월드씬 생성에 실패했습니다.");
     director->runWithScene(scene);
     return true;
 }

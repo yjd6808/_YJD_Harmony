@@ -19,7 +19,7 @@
 #include <JCore/Primitives/SmartPtr.h>
 #include <JCore/Primitives/String.h>
 
-
+#include <JCore/FileSystem/Path.h>
 #include <JCore/Encoding/CodePage.h>
 
 #include <JCore/Pool/MemoryPoolManager.h>

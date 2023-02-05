@@ -33,7 +33,7 @@ void SGActionManager::init(int charType) {
 		initGunnerActions();
 		break;
 	default:
-		DebugAssertMessage(false, "해당 타입의 캐릭터는 존재하지 않습니다.");
+		DebugAssertMsg(false, "해당 타입의 캐릭터는 존재하지 않습니다.");
 	}
 
 	m_ActionMap.Values()
@@ -140,7 +140,7 @@ bool SGActionManager::isBaseActionRunning(BaseAction_t baseActionType) {
 }
 
 bool SGActionManager::isActionRunning(int actionCode) {
-	DebugAssertMessage(m_ActionMap.Exist(actionCode), "해당 코드값의 액션이 존재하지 않습니다.");
+	DebugAssertMsg(m_ActionMap.Exist(actionCode), "해당 코드값의 액션이 존재하지 않습니다.");
 
 	if (m_ActionMap[actionCode] != m_pRunningAction)
 		return false;
@@ -161,12 +161,12 @@ bool SGActionManager::isRunnningActionIdleOrWalkAction() {
 
 
 SGAction* SGActionManager::getAction(int actionCode) {
-	DebugAssertMessage(m_ActionMap.Exist(actionCode), "해당 코드값의 액션이 존재하지 않습니다.");
+	DebugAssertMsg(m_ActionMap.Exist(actionCode), "해당 코드값의 액션이 존재하지 않습니다.");
 	return m_ActionMap.Get(actionCode);
 }
 
 SGAction* SGActionManager::getBaseAction(BaseAction_t baseActionType) {
-	DebugAssertMessage(m_pBaseAction[baseActionType], "해당 기초액션이 아직 구현되지 않았습니다.");
+	DebugAssertMsg(m_pBaseAction[baseActionType], "해당 기초액션이 아직 구현되지 않았습니다.");
 	return m_pBaseAction[baseActionType];
 }
 
@@ -202,7 +202,7 @@ void SGActionManager::runAction(SGAction* action) {
 }
 
 void SGActionManager::runBaseAction(BaseAction_t baseActionType) {
-	DebugAssertMessage(m_pBaseAction[baseActionType], "해당 기초액션이 아직 구현되지 않았습니다.");
+	DebugAssertMsg(m_pBaseAction[baseActionType], "해당 기초액션이 아직 구현되지 않았습니다.");
 	runAction(m_pBaseAction[baseActionType]);
 }
 

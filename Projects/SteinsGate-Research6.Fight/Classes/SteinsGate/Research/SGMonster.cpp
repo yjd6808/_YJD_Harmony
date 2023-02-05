@@ -79,8 +79,8 @@ void SGMonster::initAIActivities() {
 }
 
 void SGMonster::initListener(SGActorListener* listener) {
-	DebugAssertMessage(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
-	DebugAssertMessage(listener->getActorType() == ActorType::Monster, "몬스터 리스너만 초기화 가능합니다.");
+	DebugAssertMsg(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
+	DebugAssertMsg(listener->getActorType() == ActorType::Monster, "몬스터 리스너만 초기화 가능합니다.");
 	m_pListener = listener;
 }
 
@@ -145,7 +145,7 @@ void SGMonster::onSelectedActivity(SGAIActivity* selectedActivity) {
 		initAngryAcitivity(selectedActivity);
 		break;
 	}
-	default: DebugAssertMessage(false, "상태 타입이 이상합니다.");
+	default: DebugAssertMsg(false, "상태 타입이 이상합니다.");
 	}
 
 }

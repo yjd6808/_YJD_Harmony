@@ -16,7 +16,7 @@ using namespace JCore;
 
 void NpkElementInitializerImpl<-1>::Initialize(const NpkElementPtr& element, Stream& stream, bool indexOnly)
 {
-	DebugAssertMessage(false, "이상한 버전이군요");
+	DebugAssertMsg(false, "이상한 버전이군요");
 }
 
 void NpkElementInitializerImpl<0>::Initialize(const NpkElementPtr& element, Stream& stream, bool indexOnly)
@@ -123,8 +123,8 @@ void NpkElementInitializer::InitializeElement(const NpkElementPtr& element, Stre
 
 	int iVersion = element->GetVersion();
 
-	DebugAssertMessage(InitializerMap_v.Size() != 0, "초기화를 먼저 진행해주세요.");
-	DebugAssertMessage(iVersion >= MinVersion_v && iVersion <= MaxVersion_v, "올바른 버전이 아닙니다.");
+	DebugAssertMsg(InitializerMap_v.Size() != 0, "초기화를 먼저 진행해주세요.");
+	DebugAssertMsg(iVersion >= MinVersion_v && iVersion <= MaxVersion_v, "올바른 버전이 아닙니다.");
 	
 	InitializerMap_v[iVersion]->Initialize(element, stream, indexOnly);
 }

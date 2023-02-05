@@ -36,20 +36,17 @@ String StringUtil::Format(const char* format, ...) {
 void StringUtil::FormatBuffer(char* buff, const int buffCapacity, const char* format, ...) {
 	va_list args;
 	va_start(args, format);
-
-	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
-
-	if (iExpectedLen <= 0) {
-		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다.");
-	}
-
-	if (iExpectedLen >= buffCapacity) {
-		throw RuntimeException("문자열 포맷 수행중 오류가 발생하였습니다. (문자열 길이가 버퍼의 용량을 초과합니다.)");
-	}
-
-	vsnprintf(buff, buffCapacity, format, args);
+	FormatBuffer(buff, buffCapacity, format, args);
 	va_end(args);
 }
+
+void StringUtil::FormatBuffer(char* buff, const int buffCapacity, const char* format, va_list args) {
+	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
+	DebugAssertMsg(iExpectedLen > 0, "문자열 포맷 수행중 오류가 발생하였습니다.");
+	DebugAssertMsg(iExpectedLen < buffCapacity, "문자열 포맷 수행중 오류가 발생하였습니다. (문자열 길이가 버퍼의 용량을 초과합니다.)");
+	vsnprintf(buff, buffCapacity, format, args);
+}
+
 
 int StringUtil::Length(const char* str) {
 	if (str == nullptr) {
@@ -97,6 +94,32 @@ void StringUtil::Swap(String& src, String& dst) {
 	String temp = std::move(src);
 	src = std::move(dst);
 	dst = std::move(temp);
+}
+
+void StringUtil::ConcatInnerBack(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen) {
+	DebugAssertMsg(buflen + concatStrLen + 1 <= bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
+	Memory::CopyUnsafe(buf + buflen, concatStr, concatStrLen);
+	buf[buflen + concatStrLen] = NULL;
+
+}
+
+void StringUtil::ConcatInnerBack(char* buf, int bufCapacity, const char* cancatStr) {
+	int iBufLen = Length(buf);
+	int iConcatLen = Length(cancatStr);
+	ConcatInnerBack(buf, iBufLen, bufCapacity, cancatStr, iConcatLen);
+}
+
+void StringUtil::ConcatInnerFront(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen) {
+	DebugAssertMsg(buflen + concatStrLen + 1 <= bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
+	Memory::CopyUnsafeReverse(buf + concatStrLen, buf, buflen);
+	Memory::CopyUnsafe(buf, concatStr, concatStrLen);
+	buf[buflen + concatStrLen] = NULL;
+}
+
+void StringUtil::ConcatInnerFront(char* buf, int bufCapacity, const char* concatStr) {
+	int iBufLen = Length(buf);
+	int iConcatLen = Length(concatStr);
+	ConcatInnerFront(buf, iBufLen, bufCapacity, concatStr, iConcatLen);
 }
 
 

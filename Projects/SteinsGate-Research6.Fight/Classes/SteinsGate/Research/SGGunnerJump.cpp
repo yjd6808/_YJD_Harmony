@@ -210,7 +210,7 @@ void SGGunnerJump::reboundX(SGCharacter* character) {
 	switch (eDirection) {
 	case SpriteDirection::Right:	reboundXLeft(character);	break;	// 우측으로 바라보고 있으면 좌측 반동
 	case SpriteDirection::Left:		reboundXRight(character);	break;	// 좌측으로 바라보고 있으면 우측 반동
-	default: DebugAssertMessage(false, "방향이 도대체 어디에요?");
+	default: DebugAssertMsg(false, "방향이 도대체 어디에요?");
 	}
 }
 
@@ -287,16 +287,16 @@ void SGGunnerJump::createBullet() {
 	if (m_bRightFire) {
 		switch (m_eWeaponType) {
 		case WeaponType::Auto: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
-		default: DebugAssertMessage(false, "총 종류가 이상합니다. (1)");
+		default: DebugAssertMsg(false, "총 종류가 이상합니다. (1)");
 		}
 	}
 	else {
 		switch (m_eWeaponType) {
 		case WeaponType::Auto: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
-		default: DebugAssertMessage(false, "총 종류가 이상합니다. (2)");
+		default: DebugAssertMsg(false, "총 종류가 이상합니다. (2)");
 		}
 	}
 
-	DebugAssertMessage(iFrameEventId != -1, "프레임 이벤트 ID가 설정되지 않았습니다.");
+	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 설정되지 않았습니다.");
 	runFrameEvent(eFrameEventType, iFrameEventId);
 }

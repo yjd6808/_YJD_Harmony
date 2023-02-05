@@ -11,7 +11,7 @@
 USING_NS_JC;
 
 SGAnimationInfo::SGAnimationInfo(const SGAnimationInfo&) {
-	DebugAssertMessage(false, "복사 생성 금지");
+	DebugAssertMsg(false, "복사 생성 금지");
 }
 
 SGAnimationInfo::SGAnimationInfo(SGAnimationInfo&& other) noexcept {
@@ -19,7 +19,7 @@ SGAnimationInfo::SGAnimationInfo(SGAnimationInfo&& other) noexcept {
 }
 
 SGAnimationInfo& SGAnimationInfo::operator=(const SGAnimationInfo&) {
-	DebugAssertMessage(false, "복사 대입 금지");
+	DebugAssertMsg(false, "복사 대입 금지");
 	return *this;
 }
 

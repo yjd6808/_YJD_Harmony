@@ -98,8 +98,8 @@ namespace JCore {
 	}
 
 	int FileStream::Read(Out_ Byte* bytes, int offset, int len) {
-		DebugAssertMessage(CanRead(), "읽기가 불가능한 스트림입니다.");
-		DebugAssertMessage(m_hHandle, "스트림이 닫혀 있습니다.");
+		DebugAssertMsg(CanRead(), "읽기가 불가능한 스트림입니다.");
+		DebugAssertMsg(m_hHandle, "스트림이 닫혀 있습니다.");
 		int iReadCount = CRuntime::FileRead(bytes + offset, 1, (int)len, m_hHandle);
 
 		m_iOffset += iReadCount;
@@ -112,8 +112,8 @@ namespace JCore {
 	}
 
 	void FileStream::Write(const Byte* bytes, int offset, int len) {
-		DebugAssertMessage(CanWrite(), "쓰기가 불가능한 스트림입니다.");
-		DebugAssertMessage(m_hHandle, "스트림이 닫혀 있습니다.");
+		DebugAssertMsg(CanWrite(), "쓰기가 불가능한 스트림입니다.");
+		DebugAssertMsg(m_hHandle, "스트림이 닫혀 있습니다.");
 		int iWriteCount = CRuntime::FileWrite(bytes + offset, 1, len, m_hHandle);
 		SetOffset(m_iOffset += iWriteCount);
 
@@ -122,8 +122,8 @@ namespace JCore {
 
 
 	void FileStream::Seek(int offset, Origin origin) {
-		DebugAssertMessage(CanSeek(), "읽기가 불가능한 스트림입니다.");
-		DebugAssertMessage(m_hHandle, "스트림이 닫혀 있습니다.");
+		DebugAssertMsg(CanSeek(), "읽기가 불가능한 스트림입니다.");
+		DebugAssertMsg(m_hHandle, "스트림이 닫혀 있습니다.");
 
 		switch (origin) {
 		case Origin::eBegin:

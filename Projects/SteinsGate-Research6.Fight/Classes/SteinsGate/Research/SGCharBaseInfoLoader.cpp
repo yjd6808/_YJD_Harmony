@@ -30,7 +30,7 @@ bool SGCharBaseInfoLoader::LoadCharBaseInfo(SGCharBaseInfo*(&characterInfoMap)[C
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
+	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
 	try {
 		reader >> root;
@@ -170,7 +170,7 @@ bool SGCharBaseInfoLoader::LoadCharBaseInfo(SGCharBaseInfo*(&characterInfoMap)[C
 				}
 			}
 
-			DebugAssertMessage(bDefaultWeaponImgFound, "기본 무기 이미지가 없습니다.");
+			DebugAssertMsg(bDefaultWeaponImgFound, "기본 무기 이미지가 없습니다.");
 
 		}
 		 

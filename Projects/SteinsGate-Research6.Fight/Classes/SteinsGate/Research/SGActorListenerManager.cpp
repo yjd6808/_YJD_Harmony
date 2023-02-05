@@ -26,8 +26,8 @@ void SGActorListenerManager::initialize() {
 }
 
 SGProjectileListener* SGActorListenerManager::createProjectileListener(int projectileListenerCode) {
-	DebugAssertMessage(m_hProjectileListenerMap.Exist(projectileListenerCode), "해당 코드의 프로젝틸 리스너가 존재하지 않습니다.");
+	DebugAssertMsg(m_hProjectileListenerMap.Exist(projectileListenerCode), "해당 코드의 프로젝틸 리스너가 존재하지 않습니다.");
 	SGProjectileListener* pListener =  dynamic_cast<SGProjectileListener*>(m_hProjectileListenerMap[projectileListenerCode]->createNew());
-	DebugAssertMessage(pListener, "오잉? 프로젝틸 리스너가 아닌 타입이 프로젝틸 리스너 목록에 존재합니다. 수정이 필요합니다");
+	DebugAssertMsg(pListener, "오잉? 프로젝틸 리스너가 아닌 타입이 프로젝틸 리스너 목록에 존재합니다. 수정이 필요합니다");
 	return pListener;
 }

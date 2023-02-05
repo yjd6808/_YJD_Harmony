@@ -280,7 +280,7 @@ public:
 			ThrowIfDynamicCastingFailed<T*>(pCasted);
 			return pCasted;
 		} else {
-			DebugAssertMessage(false, "... cannot conver to T_T");//static_assert(false, "... cannot conver to T_T");
+			DebugAssertMsg(false, "... cannot conver to T_T");//static_assert(false, "... cannot conver to T_T");
 		}
 		return nullptr;
 	}
@@ -528,7 +528,7 @@ public:
 		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
 			this->OwnerMoveToOwner<U, TBase::Cast::DynamicCastable>(owner);
 		} else {
-			DebugAssertMessage(false, "... cannot convert each other"); // static_assert(false, "cannot convert each other");
+			DebugAssertMsg(false, "... cannot convert each other"); // static_assert(false, "cannot convert each other");
 		}
 	}
 };
@@ -604,7 +604,7 @@ public:
 		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
 			this->WatcherCopyToOwner<U, TBase::Cast::DynamicCastable>(owner);
 		} else {
-			DebugAssertMessage(false, "... cannot convert each other"); //static_assert(false, "cannot convert each other");
+			DebugAssertMsg(false, "... cannot convert each other"); //static_assert(false, "cannot convert each other");
 		}
 	}
 	 
@@ -620,7 +620,7 @@ public:
 		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
 			this->WatcherCopyToWatcher<U, TBase::Cast::DynamicCastable>(watcher);
 		} else {
-			DebugAssertMessage(false, "... cannot convert each other");
+			DebugAssertMsg(false, "... cannot convert each other");
 		}
 	}
 
@@ -636,7 +636,7 @@ public:
 		} else if constexpr (Detail::IsDynamicCastable<T, U>()) {
 			this->WatcherMoveToWatcher<U, TBase::Cast::DynamicCastable>(watcher);
 		} else {
-			DebugAssertMessage(false, "... cannot convert each other");
+			DebugAssertMsg(false, "... cannot convert each other");
 		}
 	}
 };

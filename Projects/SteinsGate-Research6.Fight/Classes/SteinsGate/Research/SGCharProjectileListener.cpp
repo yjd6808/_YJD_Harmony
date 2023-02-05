@@ -18,7 +18,7 @@ SGCharProjectileListener::SGCharProjectileListener()
 
 void SGCharProjectileListener::initPlayer() {
 	SGActor* pSpawner = m_pProjectile->getSpawner();
-	DebugAssertMessage(pSpawner->getType() == ActorType::Character, "캐릭터가 소환한 프로젝틸이 아닙니다");
+	DebugAssertMsg(pSpawner->getType() == ActorType::Character, "캐릭터가 소환한 프로젝틸이 아닙니다");
 
 	SGCharacter* pCharacter = (SGCharacter*)pSpawner;
 	m_pCharacter = pCharacter;

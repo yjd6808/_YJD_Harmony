@@ -42,9 +42,6 @@ bool SGLoginScene::init() {
 		return false;
 	}
 
-	SGText* text = SGText::create("로그인", "nexon_gothic.ttf", 16);
-	text->setPosition({ 300, 300 });
-	this->addChild(text);
 
 	return true;
 }

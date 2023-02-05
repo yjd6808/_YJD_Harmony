@@ -88,7 +88,7 @@ void SGWorldScene::changeScene(SceneType_t sceneType) {
 	case SceneType::Login: m_pRunningScene = SGLoginScene::create(); break;
 	case SceneType::ServerSelect: m_pRunningScene = SGServerSelectScene::create(); break;
 	case SceneType::Game: m_pRunningScene = SGGameScene::create(); break;
-	default: DebugAssertMessage(false, "[SGWorldScene] 이상한 씬 타입입니다."); return;
+	default: DebugAssertMsg(false, "[SGWorldScene] 이상한 씬 타입입니다."); return;
 	}
 
 	this->addChild(m_pRunningScene);

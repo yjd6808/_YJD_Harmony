@@ -55,8 +55,8 @@ bool SGAIActor::initVariables() {
 void SGAIActor::update(float dt) {
 	SGPhysicsActor::update(dt);
 
-	DebugAssertMessage(m_pAiInfo != nullptr, "AI 정보가 주입되지 않았습니다.");
-	DebugAssertMessage(m_pRunningActivity != nullptr, "동작중인 액티비티가 없습니다.");
+	DebugAssertMsg(m_pAiInfo != nullptr, "AI 정보가 주입되지 않았습니다.");
+	DebugAssertMsg(m_pRunningActivity != nullptr, "동작중인 액티비티가 없습니다.");
 
 	updateState();				// 변경가능한 상태 확인
 	selectActivity();			// 해당 상태에서 수행가능한 액티비티 설정
@@ -104,7 +104,7 @@ void SGAIActor::selectActivity() {
 	case eWander:	selectWanderActivity();		break;
 	case eTrack:	selectTrackActivity();		break;
 	case eAngry:	selectAngryActivity();		break;
-	default: DebugAssertMessage(false, "이상한 AI 상태입니다.");
+	default: DebugAssertMsg(false, "이상한 AI 상태입니다.");
 	}
 
 	onSelectedActivity(m_pRunningActivity);
@@ -195,7 +195,7 @@ void SGAIActor::runActivity(SGAIActivity* activity) {
 }
 
 void SGAIActor::runActivity(AIActivity_t activityType) {
-	DebugAssertMessage(activityType >= 0 && activityType < AIActivity::Max, "액티비티 타입이 올바르지 않습니다.");
+	DebugAssertMsg(activityType >= 0 && activityType < AIActivity::Max, "액티비티 타입이 올바르지 않습니다.");
 
 	if (m_pRunningActivity && m_pRunningActivity->isRunning()) {
 		m_pRunningActivity->stop();

@@ -53,7 +53,7 @@ void SGObstacle::initActorSprite() {
 }
 
 void SGObstacle::initListener(SGActorListener* listener) {
-	DebugAssertMessage(false, "아직 구현안됨");
+	DebugAssertMsg(false, "아직 구현안됨");
 }
 
 bool SGObstacle::initVariables() {

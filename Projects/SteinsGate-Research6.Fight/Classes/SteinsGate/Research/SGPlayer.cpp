@@ -18,8 +18,10 @@ SGPlayer::SGPlayer()
 
 
 SGPlayer::~SGPlayer() {
-	DebugAssertMessage(m_pCharacter->getReferenceCount() > 0, "레퍼런스 카운트가 이미 0입니다.");
-	CC_SAFE_RELEASE_NULL(m_pCharacter);
+	if (m_pCharacter) {
+		DebugAssertMsg(m_pCharacter->getReferenceCount() > 0, "레퍼런스 카운트가 이미 0입니다.");
+		CC_SAFE_RELEASE_NULL(m_pCharacter);
+	}
 }
 
 SGActorSprite* SGPlayer::getActorSprite() {
@@ -43,11 +45,11 @@ void SGPlayer::setMapLayer(SGMapLayer* mapLayer) {
 
 
 SGCharacter* SGPlayer::getCharacter() {
-	DebugAssertMessage(m_pCharacter, "캐릭터가 세팅되지 않았습니다.");
+	DebugAssertMsg(m_pCharacter, "캐릭터가 세팅되지 않았습니다.");
 	return m_pCharacter;
 }
 
 SGMapLayer* SGPlayer::getMapLayer() {
-	DebugAssertMessage(m_pMapLayer, "맵 레이어가 초기화되지 않았습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어가 초기화되지 않았습니다.");
 	return m_pMapLayer;
 }

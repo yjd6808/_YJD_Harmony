@@ -104,7 +104,7 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 
 void SGImagePack::releaseFrameTexture(int imgIndex, int frameIndex) {
 	Int64 iCacheIndex = imgIndex << 32 | frameIndex;
-	DebugAssertMessage(m_TextureCacheMap.Exist(iCacheIndex), "해당하는 프레임 데이터가 없습니다.");
+	DebugAssertMsg(m_TextureCacheMap.Exist(iCacheIndex), "해당하는 프레임 데이터가 없습니다.");
 	CC_SAFE_RELEASE(m_TextureCacheMap[iCacheIndex]);
 	m_TextureCacheMap.Remove(iCacheIndex);
 }

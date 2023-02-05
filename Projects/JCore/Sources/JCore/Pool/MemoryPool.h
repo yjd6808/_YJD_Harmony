@@ -147,7 +147,7 @@ namespace JCore {
 				int iSize = count.Key;
 				int iCount = count.Value;
 				int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iSize);
-				DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
+				DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
 
 				for (int i = 0; i < iCount; ++i) {
 					m_Pool[iIndex].Push(Memory::Allocate<void*>(iSize));
@@ -161,7 +161,7 @@ namespace JCore {
 
 		// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
 		void Finalize() override {
-			DebugAssertMessage(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
+			DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
 
 			for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
 				while (!m_Pool[i].IsEmpty()) {

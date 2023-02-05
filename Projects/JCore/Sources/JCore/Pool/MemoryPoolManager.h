@@ -31,7 +31,7 @@ namespace JCore {
 		MemoryPoolTemplate
 			void Register(int slot, const String& name, bool skipInitialize = false) {
 			constexpr int iPoolIndex = Strategy | Algorithm;
-			DebugAssertMessage(slot < Detail::MaxSlot_v&& m_pPool[iPoolIndex][slot].Get() == nullptr,
+			DebugAssertMsg(slot < Detail::MaxSlot_v&& m_pPool[iPoolIndex][slot].Get() == nullptr,
 				"해당 슬롯에 이미 메모리풀이 등록되어 있습니다.");
 
 			auto pNewRegisteredPool = MakeShared<MemoryPoolTemplateType>(slot, name, skipInitialize);
@@ -42,15 +42,15 @@ namespace JCore {
 		MemoryPoolTemplate
 			void Initialize(int slot, const JCore::HashMap<int, int>& Counters) {
 			constexpr int iPoolIndex = Strategy | Algorithm;
-			DebugAssertMessage(m_pPool[iPoolIndex][slot].Get() != nullptr, "먼저 해당슬롯에 메모리 풀을 등록해주세요.");
-			DebugAssertMessage(m_pPool[iPoolIndex][slot]->IsInitialized() == false, "이미 초기화가 진행되었습니다.");
+			DebugAssertMsg(m_pPool[iPoolIndex][slot].Get() != nullptr, "먼저 해당슬롯에 메모리 풀을 등록해주세요.");
+			DebugAssertMsg(m_pPool[iPoolIndex][slot]->IsInitialized() == false, "이미 초기화가 진행되었습니다.");
 			m_pPool[iPoolIndex][slot]->Initialize(Counters);
 		}
 
 		MemoryPoolTemplate
 		MemoryPoolAbstractPtr Get(int slot) {
 			constexpr int iPoolIndex = Strategy | Algorithm;
-			DebugAssertMessage(m_pPool[iPoolIndex][slot].Get() != nullptr, "먼저 해당슬롯에 메모리 풀을 등록해주세요.");
+			DebugAssertMsg(m_pPool[iPoolIndex][slot].Get() != nullptr, "먼저 해당슬롯에 메모리 풀을 등록해주세요.");
 			return m_pPool[iPoolIndex][slot];
 		}
 
@@ -95,7 +95,7 @@ namespace JCore {
 
 		void StartDetectLeak() {
 			auto pool = m_pRegisteredPool.Extension().FindIf([](MemoryPoolAbstractPtr& pool) { return pool->Detecting(); });
-			DebugAssertMessage(pool == nullptr, "현재 메모리릭을 검사중인 풀이 있습니다!");
+			DebugAssertMsg(pool == nullptr, "현재 메모리릭을 검사중인 풀이 있습니다!");
 			m_pRegisteredPool.Extension().ForEach([](MemoryPoolAbstractPtr& pool) { pool->StartDetectLeak(); });
 			m_bDetecting = true;
 		}
@@ -105,7 +105,7 @@ namespace JCore {
 		 * \return 전체 메모리풀의 메모리릭 크기
 		 */
 		Int64U StopDetectLeak(OutOpt_ LinkedList<MemoryPoolCapturedPtr>* leakedPools = nullptr) {
-			DebugAssertMessage(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
+			DebugAssertMsg(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
 			Int64U uiTotalLeakedBytes = 0;
 			m_pRegisteredPool.Extension().ForEach([&uiTotalLeakedBytes, &leakedPools](MemoryPoolAbstractPtr& pool) {
 				auto spMemPoolCaptured = MakeShared<MemoryPoolCaptured>();

@@ -27,7 +27,7 @@ bool SGActionInfoLoader::LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfo
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
+	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
 	try {
 		reader >> root;

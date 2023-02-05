@@ -26,7 +26,7 @@ bool SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
+	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
 	try {
 		reader >> root;
@@ -41,7 +41,7 @@ bool SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 	for (int i = 0; i < monsterListRoot.size(); ++i) {
 		Value& monterRoot = monsterListRoot[i];
 		Value& animationListRoot = monterRoot["animation"];
-		DebugAssertMessage(animationListRoot.size() > 0, "몬스터의 애니메이션이 없습니다.");
+		DebugAssertMsg(animationListRoot.size() > 0, "몬스터의 애니메이션이 없습니다.");
 		SGMonsterInfo monsterInfo(animationListRoot.size());
 
 
@@ -63,7 +63,7 @@ bool SGMonsterInfoLoader::LoadMonsterInfo(SGHashMap<int, SGMonsterInfo>& monster
 
 		Value& partListRoot = monterRoot["parts"];
 		monsterInfo.PartsCount = partListRoot.size();
-		DebugAssertMessage(monsterInfo.PartsCount > 0, "몬스터의 파츠가 없습니다.");
+		DebugAssertMsg(monsterInfo.PartsCount > 0, "몬스터의 파츠가 없습니다.");
 		for (int j = 0; j < monsterInfo.PartsCount; j++) {
 			Value& partRoot = partListRoot[j];
 			SGMonsterPartInfo partInfo;

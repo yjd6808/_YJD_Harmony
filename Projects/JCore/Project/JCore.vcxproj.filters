@@ -132,6 +132,7 @@
     <ClCompile Include="..\Sources\JCore\FileSystem\Path.cpp">
       <Filter>FileSystem</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Assert.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />

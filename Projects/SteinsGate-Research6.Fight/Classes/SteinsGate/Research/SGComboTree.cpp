@@ -95,7 +95,7 @@ void SGComboTree::addComboAction(SGAction* action) {
 	const SGComboKeyList& keysReverse = keys.reverse();
 
 	int iCount = keys.count();
-	DebugAssertMessage(iCount != 0, "정방향 키가 없습니다.");
+	DebugAssertMsg(iCount != 0, "정방향 키가 없습니다.");
 
 	SGComboTreeNode* pFindNode = findComboNodeRecursive(m_pRoot, keys, iCount - 1, iCount);
 
@@ -113,7 +113,7 @@ void SGComboTree::addComboAction(SGAction* action) {
 	}
 
 	int iCountReverse = keysReverse.count();
-	DebugAssertMessage(iCountReverse != 0, "반대 방향 키가 없습니다.");
+	DebugAssertMsg(iCountReverse != 0, "반대 방향 키가 없습니다.");
 
 	pFindNode = findComboNodeRecursive(m_pRoot, keysReverse, iCountReverse - 1, iCountReverse);
 
@@ -189,7 +189,7 @@ void SGComboTree::addComboNodeRecursive(
 		if (pCur == nullptr) 
 			parent->Next[eKey] = newNode;
 		else {
-			DebugAssertMessage(pCur->empty(), "이미 해당 콤보키가 바인딩 되어 있습니다.");
+			DebugAssertMsg(pCur->empty(), "이미 해당 콤보키가 바인딩 되어 있습니다.");
 			parent->Next[eKey] = newNode;
 		}
 		return;

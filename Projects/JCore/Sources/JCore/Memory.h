@@ -52,7 +52,7 @@ public:
 	}
 
 	static void Deallocate(void* ptr) {
-		DebugAssertMessage(ptr != nullptr, "널 포인터를 해제하려고 하고 있어요");
+		DebugAssertMsg(ptr != nullptr, "널 포인터를 해제하려고 하고 있어요");
 		operator delete(ptr);
 	}
 

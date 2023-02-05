@@ -25,7 +25,7 @@ SGHostPlayer::~SGHostPlayer() {
 }
 
 void SGHostPlayer::initActionManager() {
-	DebugAssertMessage(m_pCharacter, "이 함수를 호출전에 무조건 캐릭터 세팅을 먼저 해주세요.");
+	DebugAssertMsg(m_pCharacter, "이 함수를 호출전에 무조건 캐릭터 세팅을 먼저 해주세요.");
 
 	if (m_pActionManager == nullptr) {
 		m_pActionManager = new SGActionManager(this);
@@ -34,7 +34,7 @@ void SGHostPlayer::initActionManager() {
 }
 
 void SGHostPlayer::initController() {
-	DebugAssertMessage(m_pCharacter && m_pActionManager, "이 함수를 호출전에 무조건 캐릭터 세팅과 액션 매니저 세팅을 먼저 해주세요.");
+	DebugAssertMsg(m_pCharacter && m_pActionManager, "이 함수를 호출전에 무조건 캐릭터 세팅과 액션 매니저 세팅을 먼저 해주세요.");
 	if (m_pController == nullptr) {
 		m_pController = new SGPlayerController(this, m_pCharacter, m_pActionManager);
 	}
@@ -95,7 +95,7 @@ void SGHostPlayer::runBaseAction(BaseAction_t baseAction) {
 }
 
 void SGHostPlayer::runAnimation(int animationCode) {
-	DebugAssertMessage(m_pCharacter, "캐릭터가 세팅되지 않았습니다.");
+	DebugAssertMsg(m_pCharacter, "캐릭터가 세팅되지 않았습니다.");
 	m_pCharacter->runAnimation(animationCode);
 }
 
@@ -107,12 +107,12 @@ int SGHostPlayer::getRunningActionCode() {
 
 
 SGActionManager* SGHostPlayer::getActionManager() {
-	DebugAssertMessage(m_pActionManager, "액션 매니저가 세팅되지 않았습니다.");
+	DebugAssertMsg(m_pActionManager, "액션 매니저가 세팅되지 않았습니다.");
 	return m_pActionManager;
 }
 
 SGPlayerController* SGHostPlayer::getController() {
-	DebugAssertMessage(m_pController, "플레이어 컨트롤러가 세팅되지 않았습니다.");
+	DebugAssertMsg(m_pController, "플레이어 컨트롤러가 세팅되지 않았습니다.");
 	return m_pController;
 }
 

@@ -30,7 +30,7 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 	
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
+	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
 	try {
 		reader >> root;
@@ -42,7 +42,7 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 			int iOverride = SGJson::getIntDefault(projectile["override_code"]);
 
 			if (iOverride != 0) {
-				DebugAssertMessage(projectileInfoMap.Exist(iOverride), "오버라이딩할 프로젝틸 데이터가 없습니다. 문서 똑바로 안만들어!!?");
+				DebugAssertMsg(projectileInfoMap.Exist(iOverride), "오버라이딩할 프로젝틸 데이터가 없습니다. 문서 똑바로 안만들어!!?");
 				const SGProjectileInfo& ref = projectileInfoMap[iOverride];
 				SGProjectileInfo info{ ref };	// 복사 수행
 				info.AnimationRef = true;
@@ -52,12 +52,12 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 			}
 
 			Value& animationListRoot = projectile["animation"];
-			DebugAssertMessage(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
+			DebugAssertMsg(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
 			SGProjectileInfo info;
 			info.AnimationRef = false;
 			WriteProjectileInfo(projectile, info);
 
-			DebugAssertMessage(!projectileInfoMap.Exist(info.Code), "projectile에 해당 코드값이 이미 존재합니다.");
+			DebugAssertMsg(!projectileInfoMap.Exist(info.Code), "projectile에 해당 코드값이 이미 존재합니다.");
 			projectileInfoMap.Insert(info.Code, Move(info));
 		}
 	}

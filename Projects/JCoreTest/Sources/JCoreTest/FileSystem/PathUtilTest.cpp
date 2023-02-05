@@ -44,6 +44,16 @@ TEST(PathTest, BasicTest) {
 	EXPECT_TRUE(k == "");
 	EXPECT_TRUE(l == ".k");
 
+	EXPECT_EQ(Path::FileNameLevel("a/b.a", 1), "a/b.a");
+	EXPECT_EQ(Path::FileNameLevel("/a/b.a", 1), "a/b.a");
+	EXPECT_EQ(Path::FileNameLevel("//a/b.a", 1), "a/b.a");
+	EXPECT_EQ(Path::FileNameLevel("b////a/b.a", 1), "a/b.a");
+	EXPECT_EQ(Path::FileNameLevel("b////a/b.a", 2), "b/a/b.a");
+	EXPECT_EQ(Path::FileNameLevel("b////a/b.a", 3), "b/a/b.a");
+	EXPECT_EQ(Path::FileNameLevel("b////a/\\\\b.a", 3), "b/a/b.a");
+	EXPECT_EQ(Path::FileNameLevel("\\b////a/\\\\b.a", 4), "b/a/b.a");
+	EXPECT_EQ(Path::FileNameLevel("", 4), "");
+
 }
 
 #endif

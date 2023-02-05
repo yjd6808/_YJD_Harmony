@@ -22,7 +22,7 @@ SGGlobal::~SGGlobal() {
 }
 
 int SGGlobal::convertAvatarPartNameToType(const SGString& str) {
-	DebugAssertMessage(m_AvatarPartNameToTypeMap.Exist(str), "존재하지 않는 아바타 부위 이름입니다.");
+	DebugAssertMsg(m_AvatarPartNameToTypeMap.Exist(str), "존재하지 않는 아바타 부위 이름입니다.");
 	return m_AvatarPartNameToTypeMap[str];
 }
 
@@ -95,14 +95,14 @@ void SGGlobal::initialize() {
 
 
 const SGString& SGGlobal::getAvatarNpkName(int charType, int visualAvatarType) {
-	DebugAssertMessage(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
-	DebugAssertMessage(visualAvatarType >= AvatarType::Begin && visualAvatarType < AvatarType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
+	DebugAssertMsg(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
+	DebugAssertMsg(visualAvatarType >= AvatarType::Begin && visualAvatarType < AvatarType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
 	return m_AvatarPackName[charType][visualAvatarType];
 }
 
 const SGString& SGGlobal::getWeaponNpkName(int charType, int weaponType) {
-	DebugAssertMessage(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
-	DebugAssertMessage(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
+	DebugAssertMsg(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
+	DebugAssertMsg(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
 	return m_WeaponPackName[charType][weaponType];
 }
 

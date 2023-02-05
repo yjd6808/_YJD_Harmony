@@ -31,6 +31,7 @@ public:
 	String(const int capacity);
 	String(const char* str, const int capacity);
 	String(const char* str);
+	String(char ch, int count);
 	String(std::string& str);
 	String(const String& str);
 	String(String&& str) noexcept;
@@ -121,6 +122,8 @@ public:
 
 	String ToLowerCase() const;
 	String ToUpperCase() const;
+
+	std::string ToStd();
 public:
 	char& operator[](const int idx) const;
 

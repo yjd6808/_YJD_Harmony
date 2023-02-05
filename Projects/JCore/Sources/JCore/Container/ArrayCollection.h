@@ -347,7 +347,7 @@ protected:
 		ThrowIfIndexIsInvalid(idx);
 
 		if constexpr (IsPointerType_v<T>)
-			DebugAssertMessage(false, "포인터 타입은 Emplace 기능 사용 금지...");
+			DebugAssertMsg(false, "포인터 타입은 Emplace 기능 사용 금지...");
 		else
 			Memory::PlacementNew(m_pArray[idx], Forward<Args>(args)...);
 	}

@@ -34,7 +34,7 @@ SGActorBox::~SGActorBox() {
 
 
 void SGActorBox::init(SGMapLayer* mapLayer) {
-	DebugAssertMessage(m_bCleared == true, "먼저 깔끔하게 비워주세요.");
+	DebugAssertMsg(m_bCleared == true, "먼저 깔끔하게 비워주세요.");
 
 	m_iIdSequence = 0;
 
@@ -89,7 +89,7 @@ void SGActorBox::clearAll() {
 		return;
 
 	// 캐릭터 제외하고 모두 릴리즈 수행
-	DebugAssertMessage(m_pMapLayer, "[SGActorBox] 맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "[SGActorBox] 맵 레이어가 존재하지 않습니다.");
 
 	// Step 1. 맵에 로딩되지 않은 풀의 엑터들을 정리해줘야한다.
 	// Step 2. 맵에 로딩된 풀에 없는 엑터들을 정리해줘야한다.
@@ -97,7 +97,7 @@ void SGActorBox::clearAll() {
 	cleanUpList<SGCharacter>(m_vCharacters);
 	Log("Step Before. 정리 대기중 엑터 수: %d개\n", m_hRemoveActorMap.Size());
 	updateCleanUp();
-	DebugAssertMessage(m_hRemoveActorMap.Size() == 0, "아직 반환안된 액터가 있습니다. 이러면 안됩니다.");
+	DebugAssertMsg(m_hRemoveActorMap.Size() == 0, "아직 반환안된 액터가 있습니다. 이러면 안됩니다.");
 
 	// 캐릭터들은 액터 ID 초기화 해줘야함
 	int iStep1ReleaseCount = 0;
@@ -109,7 +109,7 @@ void SGActorBox::clearAll() {
 	iStep1ReleaseCount += releaseList<SGObstacle>(m_vObstacles);
 	iStep1ReleaseCount += releaseList<SGEffect>(m_vEffectList);
 	Log("Step1. 정리된 액터 수: %d개\n", iStep1ReleaseCount);
-	DebugAssertMessage(iStep1ReleaseCount == m_hActorMap.Size(), "Step1. 실패");
+	DebugAssertMsg(iStep1ReleaseCount == m_hActorMap.Size(), "Step1. 실패");
 
 
 	// Step2. 현재 맵에 로딩되지 않은 엑터들 릴리즈
@@ -141,9 +141,9 @@ void SGActorBox::clearRoom() {
 
 	Log("Step Before. 정기 대기중 엑터 수: %d개\n", m_hRemoveActorMap.Size());
 	if (updateCleanUp() != iCleanUpCount) {
-		DebugAssertMessage(false, "정리가 제대로 수행되지 않았습니다.");
+		DebugAssertMsg(false, "정리가 제대로 수행되지 않았습니다.");
 	}
-	DebugAssertMessage(m_hRemoveActorMap.Size() == 0, "아직 반환안된 액터가 있습니다. 이러면 안됩니다.");
+	DebugAssertMsg(m_hRemoveActorMap.Size() == 0, "아직 반환안된 액터가 있습니다. 이러면 안됩니다.");
 
 	m_vZOrderedActors.Clear();
 	m_vCollidableObstacles.Clear();
@@ -158,7 +158,7 @@ void SGActorBox::clearRoom() {
 
 void SGActorBox::update(float dt) {
 
-	DebugAssertMessage(m_pMapLayer, "[SGActorBox] 맵 레이어가 세팅되지 않았습니다.");
+	DebugAssertMsg(m_pMapLayer, "[SGActorBox] 맵 레이어가 세팅되지 않았습니다.");
 
 	updateZOrder();
 	updateActors(dt);
@@ -194,7 +194,7 @@ int SGActorBox::updateCleanUp() {
 			break;
 		}
 		default: {
-			DebugAssertMessage(false, "이상한 액터 타입입니다.");
+			DebugAssertMsg(false, "이상한 액터 타입입니다.");
 			break;
 		}
 		}
@@ -202,7 +202,7 @@ int SGActorBox::updateCleanUp() {
 		m_pMapLayer->removeChild(pRemovedActor);
 	}
 
-	DebugAssertMessage(m_hRemoveActorMap.IsEmpty(), "아직 삭제되지 않은 액터가 있습니다. 말도 안됩니다.");
+	DebugAssertMsg(m_hRemoveActorMap.IsEmpty(), "아직 삭제되지 않은 액터가 있습니다. 말도 안됩니다.");
 	return iCleanUpCount;
 }
 
@@ -249,7 +249,7 @@ SGCharacter* SGActorBox::createCharacter(CharType_t charType, float x, float y, 
 }
 
 SGProjectile* SGActorBox::createProejctileOnMap(SGActor* spawner, int projectileId) {
-	DebugAssertMessage(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
 
 	SGProjectileInfo* pInfo = SGDataManager::get()->getProjectileInfo(projectileId);
 	
@@ -297,7 +297,7 @@ SGProjectile* SGActorBox::createProejctileOnMap(SGActor* spawner, int projectile
 
 
 SGMonster* SGActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, float y) {
-	DebugAssertMessage(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
 
 	SGDataManager* pDataManager = SGDataManager::get();
 
@@ -331,7 +331,7 @@ SGMonster* SGActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, 
 }
 
 SGObstacle* SGActorBox::createObstacleOnMap(int obstacleCode, float x, float y) {
-	DebugAssertMessage(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
 
 	SGObstacleInfo* pObstacleInfo = SGDataManager::get()->getObstacleInfo(obstacleCode);
 
@@ -438,7 +438,7 @@ SGEffect* SGActorBox::createEffectOnMapTargetCollision(int effectCode, const SGH
 }
 
 SGEffect* SGActorBox::createEffectOnMap(int effectCode) {
-	DebugAssertMessage(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
 
 	SGEffectInfo* pEffectInfo = SGDataManager::get()->getEffectInfo(effectCode);
 
@@ -535,8 +535,8 @@ void SGActorBox::unregisterZOrderActor(SGActor* actor) {
 		return actor->getLocalZOrder() < zorder;
 	});
 
-	DebugAssertMessage(iOffset != -1, "Z 오더 목록에서 대상을 찾지 못했습니다.");
-	DebugAssertMessage(m_vZOrderedActors[iOffset] == actor, "Z 오더 목록에서 찾은 대상이 동일하지 않습니다. 로직 오류! 로직 오류!");
+	DebugAssertMsg(iOffset != -1, "Z 오더 목록에서 대상을 찾지 못했습니다.");
+	DebugAssertMsg(m_vZOrderedActors[iOffset] == actor, "Z 오더 목록에서 찾은 대상이 동일하지 않습니다. 로직 오류! 로직 오류!");
 
 	if (m_vZOrderedActors[iOffset] == actor) {
 		m_vZOrderedActors.RemoveAt(iOffset);
@@ -545,32 +545,32 @@ void SGActorBox::unregisterZOrderActor(SGActor* actor) {
 
 void SGActorBox::unregisterProjectile(SGProjectile* projectile) {
 	if (!m_vProjectiles.Remove(projectile)) {
-		DebugAssertMessage(false, "프로젝틸 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+		DebugAssertMsg(false, "프로젝틸 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
 void SGActorBox::unregisterCharacter(SGCharacter* chracter) {
 	if (!m_vCharacters.Remove(chracter)) {
-		DebugAssertMessage(false, "캐릭터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+		DebugAssertMsg(false, "캐릭터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
 void SGActorBox::unregisterMonster(SGMonster* mosnter) {
 	if (!m_vMonsters.Remove(mosnter)) {
-		DebugAssertMessage(false, "몬스터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+		DebugAssertMsg(false, "몬스터 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
 void SGActorBox::unregisterObstacle(SGObstacle* obstacle) {
 
 	if (!m_vObstacles.Remove(obstacle)) {
-		DebugAssertMessage(false, "옵스터클 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+		DebugAssertMsg(false, "옵스터클 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
 void SGActorBox::unregisterColidableObstacle(SGObstacle* obstacle) {
 	if (!m_vCollidableObstacles.Remove(obstacle)) {
-		DebugAssertMessage(false, "충돌 가능한 옵스터클 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+		DebugAssertMsg(false, "충돌 가능한 옵스터클 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 	}
 }
 
@@ -578,18 +578,18 @@ void SGActorBox::unregisterColidableObstacle(SGObstacle* obstacle) {
 
 void SGActorBox::unregisterEffect(SGEffect* effect) {
 	if (!m_vEffectList.Remove(effect)) 
-		DebugAssertMessage(false, "이펙트 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
+		DebugAssertMsg(false, "이펙트 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 }
 
 void SGActorBox::unregisterPhysicsActor(SGPhysicsActor* physicsActor) {
 	if (!m_vPhysicsActors.Remove(physicsActor))
-		DebugAssertMessage(false, "피직스 액터 목록에서 액터를 제거하는데 실패했습니다.");
+		DebugAssertMsg(false, "피직스 액터 목록에서 액터를 제거하는데 실패했습니다.");
 }
 
 void SGActorBox::unregisterActor(SGActor* actor) {
-	DebugAssertMessage(actor->getActorId() != InvalidValue_v, "올바르지 않은 액터 ID입니다.");
+	DebugAssertMsg(actor->getActorId() != InvalidValue_v, "올바르지 않은 액터 ID입니다.");
 	if (!m_hActorMap.Remove(actor->getActorId()))
-		DebugAssertMessage(false, "공통 액터 목록에서 액터를 제거하는데 실패했습니다.");
+		DebugAssertMsg(false, "공통 액터 목록에서 액터를 제거하는데 실패했습니다.");
 	else
 		actor->setActorId(InvalidValue_v);
 }

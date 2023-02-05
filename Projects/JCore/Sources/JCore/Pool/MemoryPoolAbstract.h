@@ -43,22 +43,22 @@ namespace JCore {
 		Int64U GetNewAllocated() { return m_Statistics.GetNewAllocated(); }
 
 		int GetBlockTotalCounter(int blockIndex) {
-			DebugAssertMessage(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+			DebugAssertMsg(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
 			return m_Statistics.m_pBlockTotalCounter[blockIndex];
 		}
 
 		int GetBlockUsedCounter(int blockIndex) {
-			DebugAssertMessage(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+			DebugAssertMsg(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
 			return m_Statistics.m_pBlockUsedCounter[blockIndex];
 		}
 
 		int GetBlockNewAllocCounter(int blockIndex) {
-			DebugAssertMessage(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+			DebugAssertMsg(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
 			return m_Statistics.m_pBlockNewAllocCounter[blockIndex];
 		}
 
 		int GetBlockUsingCounter(int blockIndex) {
-			DebugAssertMessage(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
+			DebugAssertMsg(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
 			return m_Statistics.m_pBlockUsingCounter[blockIndex];
 		}
 
@@ -75,7 +75,7 @@ namespace JCore {
 
 		template <bool KeepDetectingState = true>	// 릭 디텍팅 상태를 복구할지
 		Int64U StopDetectLeak(OutOpt_ int* detail = nullptr) {
-			DebugAssertMessage(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
+			DebugAssertMsg(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
 			Int64U uiLeakedBytes = 0;
 
 			for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {

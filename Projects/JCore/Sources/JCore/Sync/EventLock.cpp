@@ -20,7 +20,7 @@ namespace JCore {
 	}
 
 	void EventLock::Unlock() {
-        DebugAssertMessage(m_bLocked.Load(), "이미 잠금이 해제된 상태입니다.");
+        DebugAssertMsg(m_bLocked.Load(), "이미 잠금이 해제된 상태입니다.");
         m_bLocked = false;
         m_LockEvent.Signal();
 	}

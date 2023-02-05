@@ -48,7 +48,7 @@ using namespace JCore;
 //출력 여부
 #define Print	OFF
 
-#define TestEnabled                 ON     // 전체 테스트 수행 여부
+#define TestEnabled                 ON      // 전체 테스트 수행 여부
 #define BaseTestEnabled             ON      // JCore 테스트 수행 여부
 #define ContainerTestEnabled        ON      // JCore::Container 테스트 수행 여부
 #define ContainerImplTestEnabled    OFF     // 컨테이너 개발 테스트 코드를 수행 여부
@@ -62,12 +62,7 @@ using namespace JCore;
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-	#define TEST_CRuntimeTest                    ON
-	#define TEST_FileUtilTest                    ON
-	#define TEST_FileStreamTest                  ON
-	#define TEST_DirectoryTest               ON
 	#define TEST_PathTest                    ON
-    #define TEST_SmartPtrTest			         ON
 #define TEST_VectorTest ON
 #endif
 

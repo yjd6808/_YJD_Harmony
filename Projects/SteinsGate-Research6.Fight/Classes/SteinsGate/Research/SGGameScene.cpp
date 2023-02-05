@@ -96,7 +96,6 @@ void SGGameScene::cmdEnterMap() {
         m_pMapLayer->cleanup();
     }
     
-
     m_pMapLayer = SGMapLayer::create(1);
     m_pMapLayer->setAnchorPoint(Vec2::ZERO);
     m_pMapLayer->setScale(SGDataManager::get()->getClientInfo()->GameScale);

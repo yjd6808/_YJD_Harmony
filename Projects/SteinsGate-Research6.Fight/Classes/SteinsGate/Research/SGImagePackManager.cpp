@@ -64,17 +64,17 @@ void SGImagePackManager::loadAllPackages() {
 }
 
 SGImagePack* SGImagePackManager::getPack(const SGString& packName) {
-	DebugAssertMessage(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다.");
+	DebugAssertMsg(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다.");
 	return m_LoadedPackages[m_PathToIdMap[packName]];
 }
 SGImagePack* SGImagePackManager::getPack(const int idx) {
-	DebugAssertMessage(idx >= 0 && idx < m_iLoadedPackageCount, "올바르지 않은 패키지 인덱스 입니다.");
+	DebugAssertMsg(idx >= 0 && idx < m_iLoadedPackageCount, "올바르지 않은 패키지 인덱스 입니다.");
 	return m_LoadedPackages[idx];
 }
 
 SGImagePack* SGImagePackManager::getAvatarPack(CharType_t charType, AvatarType_t part) {
-	DebugAssertMessage(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
-	DebugAssertMessage(part >= AvatarType::Begin && part < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
+	DebugAssertMsg(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
+	DebugAssertMsg(part >= AvatarType::Begin && part < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
 
 	if (m_AvatarPacks[charType][part] == nullptr) {
 		const SGString& npkName = SGGlobal::get()->getAvatarNpkName(charType, part);
@@ -85,8 +85,8 @@ SGImagePack* SGImagePackManager::getAvatarPack(CharType_t charType, AvatarType_t
 }
 
 SGImagePack* SGImagePackManager::getWeaponPack(CharType_t charType, WeaponType_t weaponType) {
-	DebugAssertMessage(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
-	DebugAssertMessage(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
+	DebugAssertMsg(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
+	DebugAssertMsg(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
 
 	if (m_WeaponPacks[charType][weaponType] == nullptr) {
 		const SGString& npkName = SGGlobal::get()->getWeaponNpkName(charType, weaponType);
@@ -106,7 +106,7 @@ int SGImagePackManager::getWeaponPackIndex(CharType_t charType, WeaponType_t wea
 
 
 int SGImagePackManager::getPackIndex(const SGString& packPath) {
-	DebugAssertMessage(m_PathToIdMap.Exist(packPath), "해당 패키지가 존재하지 않습니다. (2)");
+	DebugAssertMsg(m_PathToIdMap.Exist(packPath), "해당 패키지가 존재하지 않습니다. (2)");
 	return m_PathToIdMap[packPath];
 }
 

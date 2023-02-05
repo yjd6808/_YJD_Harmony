@@ -20,7 +20,7 @@ SGAIActivity::SGAIActivity(AIActivity_t type)
 {}
 
 void SGAIActivity::run() {
-	DebugAssertMessage(m_eState != eRunning, "해당 AI 액터의 액티비티가 실행중입니다.");
+	DebugAssertMsg(m_eState != eRunning, "해당 AI 액터의 액티비티가 실행중입니다.");
 	m_eState = eRunning;
 	m_fElasedTime = 0.0f;
 	onActivityBegin();
@@ -59,8 +59,8 @@ void SGAIActivity::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture*
 	return;
 
 	if (pFrameInfo->FrameEventId != InvalidValue_v) {
-		DebugAssertMessage(pFrameInfo->FrameEvent >= 0 && pFrameInfo->FrameEvent < FrameEventType::Max, "AI 액터의 프레임 이벤트 타입이 이상합니다.");
-		DebugAssertMessage(pFrameInfo->FrameEventId != InvalidValue_v, "AI 액터의 프레임 이벤트 ID 값이 이상합니다.");
+		DebugAssertMsg(pFrameInfo->FrameEvent >= 0 && pFrameInfo->FrameEvent < FrameEventType::Max, "AI 액터의 프레임 이벤트 타입이 이상합니다.");
+		DebugAssertMsg(pFrameInfo->FrameEventId != InvalidValue_v, "AI 액터의 프레임 이벤트 ID 값이 이상합니다.");
 		getAIActor()->runFrameEvent((FrameEventType_t)pFrameInfo->FrameEvent, pFrameInfo->FrameEventId);
 	}
 }

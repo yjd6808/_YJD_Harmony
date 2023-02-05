@@ -16,7 +16,7 @@ SGComboKeyList::SGComboKeyList() {
 
 SGComboKeyList::SGComboKeyList(std::initializer_list<ControlKey_t> list) {
 	int iKeyCount = list.size();
-	DebugAssertMessage(iKeyCount <= ComboSequenceCount_v, "최대 콤보 가능한 컨트롤 키의 수를 벗어났습니다.");
+	DebugAssertMsg(iKeyCount <= ComboSequenceCount_v, "최대 콤보 가능한 컨트롤 키의 수를 벗어났습니다.");
 
 	auto it = list.begin();
 

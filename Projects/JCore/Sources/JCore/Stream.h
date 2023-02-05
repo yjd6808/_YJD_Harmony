@@ -73,7 +73,7 @@ namespace JCore {
 
 		// bytes의 0위치부터 len만큼 스트림에 작성한다.
 		virtual void Write(const Byte* bytes, int len) {
-			DebugAssertMessage(CanWrite(), "해당 스트림에 Write 할 수 없습니다.");
+			DebugAssertMsg(CanWrite(), "해당 스트림에 Write 할 수 없습니다.");
 			Write(bytes, 0, len);
 		}
 		void WriteString(const String& str, bool withNull = true);

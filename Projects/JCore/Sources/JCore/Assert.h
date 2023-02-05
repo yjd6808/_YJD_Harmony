@@ -7,14 +7,42 @@
  */
 #pragma once
 
-#include <cassert>
+#include <cstdlib>
+
+// 헤더파일 의존성 회피를 위함
+namespace JCore {
+	namespace Detail {
+		int __StringLength(const char* str);
+		void __StringFormatBuffer(char* buff, int buffCapacity, const char* format, ...);
+		void __StringConcatInnerFront(char* buf, int bufCapacity, const char* concatStr);
+		void __PathFileNameLevel(char* buf, int bufSize, const char* path, int level);
+	}
+}
 
 #ifndef DebugAssert
     #if DebugMode
-	    #define DebugAssertMessage(exp, msg)	assert((exp) && (msg))
-        #define DebugAssert(exp)                assert((exp))
+		#define DebugAssertFmt(exp, fmt, ...)																	\
+					do {																						\
+						if (!(exp)) {																			\
+							static constexpr int BufSize = 512;													\
+							char szFmtBuf[BufSize] = { 0, };													\
+							if (JCore::Detail::__StringLength(fmt) > 0)											\
+								JCore::Detail::__StringFormatBuffer(szFmtBuf, BufSize, fmt, __VA_ARGS__);		\
+							JCore::Detail::__StringConcatInnerFront(szFmtBuf, BufSize, "┌ 어썰트 발생 : ");		\
+							printf("%s\n", szFmtBuf);															\
+							JCore::Detail::__PathFileNameLevel(szFmtBuf, BufSize, __FILE__, 2);					\
+							printf("│ 파일 : %s\n", szFmtBuf);												    \
+							printf("│ 번호 : %d\n", __LINE__);													\
+							printf("└ 함수 : %s\n", __FUNCTION__);												\
+							std::abort();																		\
+						}																						\
+					} while (0)
+	    #define DebugAssertMsg(exp, msg)	DebugAssertFmt(exp, msg)
+        #define DebugAssert(exp)            DebugAssertFmt(exp, "메시지 없음")
+
     #else
-        #define DebugAssertMessage(exp, msg)	(0)
-        #define DebugAssert(exp)                (0)
+        #define DebugAssertMsg(exp, msg)	(0)
+        #define DebugAssert(exp)            (0)
+		#define DebugAssertFmt(...)			(0)
     #endif
 #endif

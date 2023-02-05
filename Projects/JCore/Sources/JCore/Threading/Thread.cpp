@@ -98,7 +98,7 @@ namespace JCore {
     }
 
     int Thread::Start(TRunnable&& fn, void* param) {
-        DebugAssertMessage(m_eState == Uninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
+        DebugAssertMsg(m_eState == Uninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
         m_eState = RunningWait;
         SharedPtr<ThreadParam> spSend = MakeShared<ThreadParam>();
         spSend->Param = param;

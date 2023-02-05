@@ -160,7 +160,7 @@ NpkPackagePtr NpkLoader::Load(const JCore::String& npkPath, int indexOnly, bool 
 	for (int i = 0; i < vHeaders.Size(); ++i) {
 		NpkElement::Header& header = vHeaders[i];
 		NpkElementPtr spElement = ReadElement(spStream.GetRef(), header, header.NextOffset, indexOnly);
-		DebugAssertMessage(spElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
+		DebugAssertMsg(spElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
 		spElement->m_spParent = spPackage;
 		spPackage->Add(header.IndexInPackage, spElement);
 	}

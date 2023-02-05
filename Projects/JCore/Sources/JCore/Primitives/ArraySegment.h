@@ -24,7 +24,7 @@ namespace JCore {
 		virtual ~ArraySegment() = default;
 
 		T& operator[](const int idx) {
-			DebugAssertMessage(idx >= 0 && idx < m_iLen, "세그먼트의 인덱스 범위가 이상합니다.");
+			DebugAssertMsg(idx >= 0 && idx < m_iLen, "세그먼트의 인덱스 범위가 이상합니다.");
 			return m_pRawArray[idx];
 		}
 	private:

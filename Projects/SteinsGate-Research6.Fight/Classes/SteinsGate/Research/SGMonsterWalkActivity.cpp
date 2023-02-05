@@ -37,7 +37,7 @@ void SGMonsterWalkActivity::onUpdate(float dt) {
 	switch (m_eMode) {
 		case eWander: updateWander(dt); break;
 		case eTrack: updateTrack(dt); break;
-		default: DebugAssertMessage(false, "몬스터 Walking 액티비티 모드가 이상합니다.");
+		default: DebugAssertMsg(false, "몬스터 Walking 액티비티 모드가 이상합니다.");
 	}
 
 	SGMapLayer* pMapLayer = m_pMonster->getMapLayer();

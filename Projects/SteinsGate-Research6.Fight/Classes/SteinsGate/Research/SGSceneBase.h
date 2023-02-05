@@ -18,6 +18,12 @@ public:
 	SGSceneBase(SceneType_t type);
 	~SGSceneBase() override;
 
+	bool init() override;
+	void onEnter() override;
+	void onExit() override;
+	void onEnterTransitionDidFinish() override;
+	void onExitTransitionDidStart() override;
+
 	virtual void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) = 0;
 	virtual void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) = 0;
 

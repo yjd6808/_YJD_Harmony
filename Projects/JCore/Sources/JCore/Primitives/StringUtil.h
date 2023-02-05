@@ -20,11 +20,21 @@ public:
 	static Vector<String, DefaultAllocator> Split(String& src, const char* delimiter);
 	static String Format(const char* format, ...);
 	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, ...);
+	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, va_list va);
+
 
 	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);
 	static bool IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen);
 	static void Swap(String& src, String& dst);
+
+	// buf에 str 문자열 추가함
+	// 반환 결과 합쳐진 문자열의 길이
+	static void ConcatInnerBack(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen);
+	static void ConcatInnerBack(char* buf, int bufCapacity, const char* concatStr);
+
+	static void ConcatInnerFront(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen);
+	static void ConcatInnerFront(char* buf, int bufCapacity, const char* concatStr);
 
 	// 컴파일 타임용
 	static constexpr int CTLength(const char* str) {

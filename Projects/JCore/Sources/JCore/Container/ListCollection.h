@@ -431,7 +431,7 @@ protected:
 
 	TListNode* CreateNewNode(const T& data) {
 		if constexpr (!IsCopyConstructible_v<T>) {
-            DebugAssertMessage(false, "복사 생성할 수 없는 객체입니다.");
+            DebugAssertMsg(false, "복사 생성할 수 없는 객체입니다.");
             return nullptr;
 		} else {
 			TListNode* pNewNode = TAllocator::template AllocateInit<TListNode>();
@@ -442,7 +442,7 @@ protected:
 
 	TListNode* CreateNewNode(T&& data) {
         if constexpr (!IsMoveConstructible_v<T>) {
-            DebugAssertMessage(false, "이동 생성할 수 없는 객체입니다.");
+            DebugAssertMsg(false, "이동 생성할 수 없는 객체입니다.");
             return nullptr;
         } else {
 			TListNode* pNewNode = TAllocator::template AllocateInit<TListNode>();

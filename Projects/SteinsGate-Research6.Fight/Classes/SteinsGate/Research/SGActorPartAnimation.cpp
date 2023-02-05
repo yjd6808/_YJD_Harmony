@@ -246,7 +246,7 @@ int SGActorPartAnimation::getPartIndex() {
 }
 
 SGFrameInfo* SGActorPartAnimation::getFrameInfo(int frameIndexInAnimation) {
-	DebugAssertMessage(frameIndexInAnimation >= 0 && frameIndexInAnimation < m_pAnimationInfo->Frames.Size(), "애니메이션 내 프레임 인덱스가 이상합니다.");
+	DebugAssertMsg(frameIndexInAnimation >= 0 && frameIndexInAnimation < m_pAnimationInfo->Frames.Size(), "애니메이션 내 프레임 인덱스가 이상합니다.");
 	return m_pAnimationInfo->Frames[frameIndexInAnimation];
 }
 

@@ -11,6 +11,6 @@
 #include <SteinsGate/Research/SGProjectile.h>
 
 void SGProjectileListener::injectActor(SGActor* actor) {
-	DebugAssertMessage(actor->getType() == ActorType::Projectile, "프로젝틸 타입이 아닙니다.");
+	DebugAssertMsg(actor->getType() == ActorType::Projectile, "프로젝틸 타입이 아닙니다.");
 	m_pProjectile = (SGProjectile*)actor;
 }

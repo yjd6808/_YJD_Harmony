@@ -705,7 +705,7 @@ protected:
 	template <typename U>
 	static void WeakMoveToShared(SharedPtr<U>& shared) {
 		// 필요 없음
-		DebugAssertMessage(true, "멍미");
+		DebugAssertMsg(true, "멍미");
 	}
 
 	template <typename U>

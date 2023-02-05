@@ -60,6 +60,16 @@ String::String(const char* str, const int capacity) {
 String::String(const char* str) : String(str, DEFAULT_BUFFER_SIZE) {
 }
 
+String::String(char ch, int count) {
+	m_pBuffer = new char[count + DEFAULT_BUFFER_SIZE];
+	m_iCapacity = count + DEFAULT_BUFFER_SIZE;
+	m_iLen = count;
+
+	for (int i = 0; i < count; ++i) {
+		m_pBuffer[i] = ch;
+	}
+}
+
 String::String(std::string& str) : String(str.c_str()) {
 }
 
@@ -632,6 +642,10 @@ String String::ToUpperCase() const {
 	}
 
 	return copy;
+}
+
+std::string String::ToStd() {
+	return Source();
 }
 
 char& String::operator[](const int idx) const {

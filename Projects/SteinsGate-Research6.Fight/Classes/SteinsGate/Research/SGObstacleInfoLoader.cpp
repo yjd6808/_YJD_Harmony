@@ -27,7 +27,7 @@ bool SGObstacleInfoLoader::LoadObstacleInfo(SGHashMap<int, SGObstacleInfo>& obst
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMessage(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
+	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
 	try {
 		reader >> root;
@@ -41,7 +41,7 @@ bool SGObstacleInfoLoader::LoadObstacleInfo(SGHashMap<int, SGObstacleInfo>& obst
 	for (int i = 0; i < obstacleListRoot.size(); ++i) {
 		Value& projectile = obstacleListRoot[i];
 		Value& animationListRoot = projectile["animation"];
-		DebugAssertMessage(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
+		DebugAssertMsg(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
 		SGObstacleInfo info(animationListRoot.size());
 		info.Code = projectile["code"].asInt();
 		info.Name = SGJson::getString(projectile["name"]);

@@ -42,7 +42,7 @@ namespace JCore {
             return;
         }
 
-        DebugAssertMessage(false, "몽미");
+        DebugAssertMsg(false, "몽미");
 	}
 
 	bool Semaphore::TryLock() {

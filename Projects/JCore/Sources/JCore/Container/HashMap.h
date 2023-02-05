@@ -557,7 +557,7 @@ public:
 	}
 
 	void Expand(int capacity) {
-		DebugAssertMessage(capacity > m_iCapacity, "이전 해쉬맵 크기보다 커야합니다.");
+		DebugAssertMsg(capacity > m_iCapacity, "이전 해쉬맵 크기보다 커야합니다.");
 
 		int iAllocatedSize;
 		TBucket* pNewTable = TAllocator::template Allocate<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);

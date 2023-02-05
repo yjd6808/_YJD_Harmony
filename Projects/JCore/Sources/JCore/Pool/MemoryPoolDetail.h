@@ -52,12 +52,12 @@ namespace JCore {
 
 			static int ToIndex(Int32 size) {
 				int iIndex = Arrays::LowerBound(Detail::MemoryBlockSizeMap_v, size);
-				DebugAssertMessage(iIndex >= 0 && iIndex < MemoryBlockSizeMapSize_v, "전달한 Size로 할당가능한 사이즈에 맞는 풀이 없어요");
+				DebugAssertMsg(iIndex >= 0 && iIndex < MemoryBlockSizeMapSize_v, "전달한 Size로 할당가능한 사이즈에 맞는 풀이 없어요");
 				return iIndex;
 			}
 
 			static int ToSize(Int32 index) {
-				DebugAssertMessage(index >= 0 && index < MemoryBlockSizeMapSize_v, "전달한 Index에 해당하는 풀이 없어요");
+				DebugAssertMsg(index >= 0 && index < MemoryBlockSizeMapSize_v, "전달한 Index에 해당하는 풀이 없어요");
 				return Detail::MemoryBlockSizeMap_v[index];
 			}
 
@@ -79,7 +79,7 @@ namespace JCore {
 
 			// 런타임에는 성능이 중요하니 내장함수를 사용하자.
 			static bool ValidateSize(Int32 size) {
-				DebugAssertMessage(size > 0, "사이즈가 0보다는 무조건 커야돼요");
+				DebugAssertMsg(size > 0, "사이즈가 0보다는 무조건 커야돼요");
 				return __popcnt(size) == 1;
 			}
 		};

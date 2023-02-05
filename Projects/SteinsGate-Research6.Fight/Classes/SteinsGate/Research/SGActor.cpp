@@ -79,14 +79,14 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 }
 
 void SGActor::initHitRecorder(int hitPossibleListSize, int alreadyHitMapSize) {
-	DebugAssertMessage(m_pHitRecorder == nullptr, "이미 히트 레코더가 초기화 되어있습니다.");
+	DebugAssertMsg(m_pHitRecorder == nullptr, "이미 히트 레코더가 초기화 되어있습니다.");
 	m_pHitRecorder = new SGHitRecorder(this, hitPossibleListSize, alreadyHitMapSize);
 }
 
 void SGActor::update(float dt) {
-	DebugAssertMessage(m_bCleanUp == false, "다음 프레임에 풀로 복귀 예정중인 객체입니다.");
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	DebugAssertMessage(m_pMapLayer, "맵 레이어가 세팅되지 않았습니다.");
+	DebugAssertMsg(m_bCleanUp == false, "다음 프레임에 풀로 복귀 예정중인 객체입니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어가 세팅되지 않았습니다.");
 
 	m_pActorSprite->update(dt);
 
@@ -106,17 +106,17 @@ SGActorRect SGActor::getActorRect() const {
 }
 
 SGThicknessBox SGActor::getThicknessBox() const {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	return { m_pThicknessBox->getPosition(), m_pThicknessBox->getContentSize() };
 }
 
 Rect SGActor::getThicknessBoxRect() const {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	return { getPositionReal(), m_pThicknessBox->getContentSize() };
 }
 
 SGVec2 SGActor::getPositionReal() const {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 	Vec2 thicknessOrigin = getPosition();
 	thicknessOrigin.x += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
@@ -125,7 +125,7 @@ SGVec2 SGActor::getPositionReal() const {
 }
 
 float SGActor::getPositionRealX() const {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 	float thicknessOriginX = getPositionX();
 	thicknessOriginX += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
@@ -133,7 +133,7 @@ float SGActor::getPositionRealX() const {
 }
 
 float SGActor::getPositionRealY() const {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 	float thicknessOriginY = getPositionY();
 	thicknessOriginY += (thicknessBox.RelativeY - (thicknessBox.Height / 2.0f));
@@ -145,7 +145,7 @@ float SGActor::getPositionActorY() const {
 }
 
 SGVec2 SGActor::getPositionRealCenter() const {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	Vec2 thisPos = getPosition();
 	thisPos.x += m_pThicknessBox->getPositionX();
 	thisPos.y += m_pThicknessBox->getPositionY();
@@ -153,27 +153,27 @@ SGVec2 SGActor::getPositionRealCenter() const {
 }
 
 float SGActor::getPositionRealCenterX() const {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	return getPositionX() + m_pThicknessBox->getPositionX();
 }
 
 float SGActor::getPositionRealCenterY() const {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	return getPositionY() + m_pThicknessBox->getPositionY();
 }
 
 SGVec2 SGActor::getCanvasPositionReal() const {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	return this->getPosition() - (m_pActorSprite->getBodyCanvas()->getContentSize() / 2) + m_pActorSprite->getPosition();
 }
 
 SGSize SGActor::getCanvasSize() const {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	return m_pActorSprite->getBodyCanvasSize();
 }
 
 SGRect SGActor::getHitBox() const {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	// 위치: 캔버스 좌하단 절대 좌표 + 캔버스 좌하단 기준 스킨 파츠 좌표
 	//      캔버스 좌하단 절대 좌표 = 플레이어 Cocos 위치  + 캐릭터 위치 - (캔버스 사이즈 / 2)
 	Vec2 canvasPosition = getCanvasPositionReal();
@@ -184,28 +184,28 @@ SGRect SGActor::getHitBox() const {
 
 
 SGActorSprite* SGActor::getActorSprite() const {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
 	return m_pActorSprite;
 }
 
 SpriteDirection_t SGActor::getSpriteDirection() const {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
 	return m_pActorSprite->getSpriteDirection();
 }
 
 int SGActor::getRunningAnimationCode() {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
 	return m_pActorSprite->getRunningAnimationCode();
 }
 
 SGActorPartAnimation* SGActor::getRunningAnimation() {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 초기화되지 않았습니다.");
 	return m_pActorSprite->getRunningAnimation();
 }
 
 
 void SGActor::setPositionReal(float x, float y) {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 
 	x -= thicknessBox.RelativeX;
@@ -222,7 +222,7 @@ void SGActor::setPositionReal(const SGVec2& v) {
 }
 
 void SGActor::setPositionRealX(float x) {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 	x -= thicknessBox.RelativeX;
 	x += thicknessBox.Width / 2.0f;
@@ -230,7 +230,7 @@ void SGActor::setPositionRealX(float x) {
 }
 
 void SGActor::setPositionRealY(float y) {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	SGThicknessBox thicknessBox = getThicknessBox();
 	y -= thicknessBox.RelativeY;
 	y += thicknessBox.Height / 2.0f;
@@ -238,7 +238,7 @@ void SGActor::setPositionRealY(float y) {
 }
 
 void SGActor::setPositionRealCenter(float x, float y) {
-	DebugAssertMessage(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
+	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 	setPosition(
 		x -= m_pThicknessBox->getPositionX(), 
 		y -= m_pThicknessBox->getPositionY()
@@ -257,24 +257,24 @@ void SGActor::setActorId(int id) {
 
 	// 청소되지 않은 액터에 할당을 시도할려는 경우를 막아야한다.
 	if (!m_bCleanUp) {
-		DebugAssertMessage(m_iActorId == InvalidValue_v, "이미 ID값이 할당되어 있습니다.");
+		DebugAssertMsg(m_iActorId == InvalidValue_v, "이미 ID값이 할당되어 있습니다.");
 	}
 
 	m_iActorId = id;
 }
 
 void SGActor::runAnimation(int animationCode) {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	m_pActorSprite->runAnimation(animationCode);
 }
 
 void SGActor::runAnimation(int animationCode, int startFrameIndexInAnimation) {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	m_pActorSprite->runAnimation(animationCode, startFrameIndexInAnimation);
 }
 
 void SGActor::pauseAnimation(float delay) {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	m_pActorSprite->pauseAnimation(delay);
 }
 
@@ -283,18 +283,18 @@ void SGActor::runFrameEvent(FrameEventType_t frameEventType, int frameEventId) {
 }
 
 void SGActor::setSpriteDirection(SpriteDirection_t direction) {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	m_pActorSprite->setSpriteDirection(direction);
 }
 
 
 void SGActor::setForwardDirection() {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	m_pActorSprite->setForwardDirection();
 }
 
 void SGActor::setBackwardDirection() {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	m_pActorSprite->setBackwardDirection();
 }
 
@@ -346,19 +346,19 @@ bool SGActor::isCollide(const SGActorRect& otherRect) {
 }
 
 bool SGActor::isOnTheGround() {
-	DebugAssertMessage(m_pActorSprite, "액터 스프라이트가 없습니다.");
+	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
 	return m_pActorSprite->getPositionY() <= 0;
 }
 
 void SGActor::cleanUpNext() {
-	DebugAssertMessage(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
 	SGActorBox::get()->registerCleanUp(this);
 	m_bCleanUp = true;
 }
 
 void SGActor::attach(SGActor* actor) {
-	DebugAssertMessage(actor->hasAttacher() == false, "어태치 할려는 액터가 이미 다른 누군가에게 어태치 되어 있습니다.");
-	DebugAssertMessage(m_vAttches.Exist(actor) == false, "동일한 액터에 대해서 연속 어태치 할 수 없습니다.");
+	DebugAssertMsg(actor->hasAttacher() == false, "어태치 할려는 액터가 이미 다른 누군가에게 어태치 되어 있습니다.");
+	DebugAssertMsg(m_vAttches.Exist(actor) == false, "동일한 액터에 대해서 연속 어태치 할 수 없습니다.");
 
 	m_vAttches.PushBack(actor);
 
@@ -367,9 +367,9 @@ void SGActor::attach(SGActor* actor) {
 }
 
 void SGActor::detach(SGActor* actor) {
-	DebugAssertMessage(m_vAttches.Exist(actor), "디태치 할려는 액터가 어태치되어 있지 않습니다.");
+	DebugAssertMsg(m_vAttches.Exist(actor), "디태치 할려는 액터가 어태치되어 있지 않습니다.");
 	if (m_vAttches.Remove(actor) == false) {
-		DebugAssertMessage(false, "디태치 실패");
+		DebugAssertMsg(false, "디태치 실패");
 	}
 }
 

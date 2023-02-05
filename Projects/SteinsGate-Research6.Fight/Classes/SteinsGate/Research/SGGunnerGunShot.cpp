@@ -250,7 +250,7 @@ void SGGunnerGunShot::shotRight(SGActorSprite* actorSprite) {
 	default: iFrameEventId = -1;
 	}
 
-	DebugAssertMessage(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (1)");
+	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (1)");
 	runFrameEvent(frameEventType, iFrameEventId);
 }
 
@@ -265,7 +265,7 @@ void SGGunnerGunShot::shotRightDown(SGActorSprite* actorSprite) {
 	default: iFrameEventId = -1;
 	}
 
-	DebugAssertMessage(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (2)");
+	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (2)");
 	runFrameEvent(frameEventType, iFrameEventId);
 	
 }
@@ -281,7 +281,7 @@ void SGGunnerGunShot::shotLeft(SGActorSprite* actorSprite) {
 	default: iFrameEventId = -1;
 	}
 
-	DebugAssertMessage(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (3)");
+	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (3)");
 	runFrameEvent(frameEventType, iFrameEventId);
 }
 
@@ -296,7 +296,7 @@ void SGGunnerGunShot::shotLeftDown(SGActorSprite* actorSprite) {
 	default: iFrameEventId = -1;
 	}
 
-	DebugAssertMessage(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (4)");
+	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (4)");
 	runFrameEvent(frameEventType, iFrameEventId);
 }
 

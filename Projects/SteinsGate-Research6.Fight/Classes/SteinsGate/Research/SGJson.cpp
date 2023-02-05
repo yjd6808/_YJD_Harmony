@@ -13,7 +13,7 @@
 #include <SteinsGate/Research/SGTextParser.h>
 
 SGString SGJson::getString(Json::Value& value) {
-	DebugAssertMessage(!value.isNull(), "값이 없습니다.");
+	DebugAssertMsg(!value.isNull(), "값이 없습니다.");
 	const char* pBegin;
 	const char* pEnd;
 	value.getString(&pBegin, &pEnd);

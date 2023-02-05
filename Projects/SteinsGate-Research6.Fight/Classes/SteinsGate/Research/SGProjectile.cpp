@@ -72,8 +72,8 @@ void SGProjectile::initThicknessBox(const SGThicknessBox& thicknessBox) {
 }
 
 void SGProjectile::initListener(SGActorListener* listener) {
-	DebugAssertMessage(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
-	DebugAssertMessage(listener->getActorType() == ActorType::Projectile, "프로젝틸 리스너만 초기화 가능합니다.");
+	DebugAssertMsg(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
+	DebugAssertMsg(listener->getActorType() == ActorType::Projectile, "프로젝틸 리스너만 초기화 가능합니다.");
 	m_pListener = listener;
 	m_pListener->injectActor(this);
 }
@@ -180,12 +180,12 @@ void SGProjectile::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTextur
 }
 
 SGEffectInfo* SGProjectile::getSpawnEffectInfo() {
-	DebugAssertMessage(m_pBaseInfo->SpawnEffect, "스폰 이펙트가 없습니다.");
+	DebugAssertMsg(m_pBaseInfo->SpawnEffect, "스폰 이펙트가 없습니다.");
 	return m_pBaseInfo->SpawnEffect; 
 }
 
 SGEffectInfo* SGProjectile::getHitEffectInfo() {
-	DebugAssertMessage(m_pBaseInfo->HitEffect, "히트 이펙트가 없습니다.");
+	DebugAssertMsg(m_pBaseInfo->HitEffect, "히트 이펙트가 없습니다.");
 	return m_pBaseInfo->HitEffect; 
 }
 

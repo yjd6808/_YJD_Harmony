@@ -50,8 +50,8 @@ bool SGEffect::initVariables() {
 
 
 void SGEffect::initListener(SGActorListener* listener) {
-	DebugAssertMessage(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
-	DebugAssertMessage(listener->getActorType() == ActorType::Effect, "이펙트 리스너만 초기화 가능합니다.");
+	DebugAssertMsg(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
+	DebugAssertMsg(listener->getActorType() == ActorType::Effect, "이펙트 리스너만 초기화 가능합니다.");
 	m_pListener = listener;
 	m_pListener->injectActor(this);
 }

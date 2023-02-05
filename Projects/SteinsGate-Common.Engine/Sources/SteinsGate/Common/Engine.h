@@ -86,6 +86,7 @@ using SGTexture = cocos2d::Texture2D;
 using SGDrawNode = cocos2d::DrawNode;
 using SGScene = cocos2d::Scene;
 using SGText = cocos2d::ui::Text;
+using SGLabel = cocos2d::Label;
 using SGEventKeyboard = cocos2d::EventKeyboard;
 using SGEvent = cocos2d::Event;
 using SGRandom = cocos2d::RandomHelper;

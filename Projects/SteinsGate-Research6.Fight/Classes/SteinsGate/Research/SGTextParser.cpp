@@ -70,7 +70,7 @@ void SGTextParser::parserIntNumbers(const SGString& numStr, Out_ int* numArr, in
 		++iBuffIdx;
 	}
 
-	DebugAssertMessage(iReadCount == count, "읽은 숫자와 작성된 숫자가 틀립니다.");
+	DebugAssertMsg(iReadCount == count, "읽은 숫자와 작성된 숫자가 틀립니다.");
 }
 
 void SGTextParser::parserFloatNumbers(const SGString& numStr, float* numArr, int count) {
@@ -98,5 +98,5 @@ void SGTextParser::parserFloatNumbers(char* source, int len, float* numArr, int 
 		++iBuffIdx;
 	}
 
-	DebugAssertMessage(iReadCount == count, "읽은 숫자와 작성된 숫자가 틀립니다.");
+	DebugAssertMsg(iReadCount == count, "읽은 숫자와 작성된 숫자가 틀립니다.");
 }
