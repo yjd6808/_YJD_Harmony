@@ -8,10 +8,10 @@
 #include "Tutturu.h"
 #include "SGGunnerSitRecover.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
-SGGunnerSitRecover::SGGunnerSitRecover(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerSitRecover::SGGunnerSitRecover(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo)
 {
 }

@@ -72,8 +72,8 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 
 void SGProjectileInfoLoader::WriteOverridedProjectileInfo(Json::Value& projectile, SGProjectileInfo& info) {
 
-	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
-	SGDataManager* pDataManager = SGDataManager::getInstance();
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
+	SGDataManager* pDataManager = SGDataManager::get();
 
 	info.Code = projectile["code"].asInt();
 	info.Name = SGJson::getString(projectile["name"]);
@@ -163,8 +163,8 @@ void SGProjectileInfoLoader::WriteOverridedProjectileInfo(Json::Value& projectil
 
 void SGProjectileInfoLoader::WriteProjectileInfo(Json::Value& projectile, SGProjectileInfo& info) {
 	// 초기화 안된 변수가 없어야함 
-	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
-	SGDataManager* pDataManager = SGDataManager::getInstance();
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
+	SGDataManager* pDataManager = SGDataManager::get();
 
 
 	info.Code = projectile["code"].asInt();

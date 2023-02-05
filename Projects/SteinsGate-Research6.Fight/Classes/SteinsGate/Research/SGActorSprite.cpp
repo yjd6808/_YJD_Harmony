@@ -49,7 +49,7 @@ bool SGActorSprite::init() {
 	vPartsData.Sort([](SGActorPartSpriteData& lhs, SGActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
 
 	// 바디 파츠 기준으로 전체 프레임수를 얻는다.
-	int iFrameCount = SGImagePackManager::getInstance()
+	int iFrameCount = SGImagePackManager::get()
 		->getPack(vPartsData[0].NpkIndex)
 		->getSpriteCount(vPartsData[0].ImgIndex);
 

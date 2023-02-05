@@ -91,7 +91,7 @@ void SGActor::update(float dt) {
 	m_pActorSprite->update(dt);
 
 
-	if (SGGlobal::getInstance()->isThicknessBoxDrawMode())
+	if (SGGlobal::get()->isThicknessBoxDrawMode())
 		m_pThicknessBox->setOpacity(0);
 	else
 		m_pThicknessBox->setOpacity(125);
@@ -350,9 +350,9 @@ bool SGActor::isOnTheGround() {
 	return m_pActorSprite->getPositionY() <= 0;
 }
 
-void SGActor::registerCleanUp() {
+void SGActor::cleanUpNext() {
 	DebugAssertMessage(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
-	SGActorBox::getInstance()->registerCleanUp(this);
+	SGActorBox::get()->registerCleanUp(this);
 	m_bCleanUp = true;
 }
 

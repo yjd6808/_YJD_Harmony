@@ -15,7 +15,7 @@
 #include <SteinsGate/Research/SGFrameTexture.h>
 
 
-SGActionManager::SGActionManager(SGPlayer* player)
+SGActionManager::SGActionManager(SGHostPlayer* player)
 	: m_pPlayer(player)
 	, m_pRunningAction(nullptr)
 	, m_pPreviousAction(nullptr)
@@ -47,7 +47,7 @@ void SGActionManager::init(int charType) {
 }
 
 void SGActionManager::initGunnerActions() {
-	SGDataManager* pConfig = SGDataManager::getInstance();
+	SGDataManager* pConfig = SGDataManager::get();
 
 	m_pBaseAction[BaseAction::Idle] = new SGGunnerIdle(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_IDLE));
 	m_pBaseAction[BaseAction::Walk] = new SGGunnerWalk(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_WALK));

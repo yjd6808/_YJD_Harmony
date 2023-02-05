@@ -13,14 +13,14 @@
 
 struct SGActionInfo;
 
-class SGPlayer;
+class SGHostPlayer;
 class SGPlayerController;
 class SGFrameTexture;
 class SGActor;
 class SGActorPartAnimation;
 class SGAction {
 public:
-	SGAction(SGPlayer* player, SGActionInfo* actionInfo);
+	SGAction(SGHostPlayer* player, SGActionInfo* actionInfo);
 	virtual ~SGAction();
 
 	virtual void play();
@@ -76,7 +76,7 @@ public:
 	);
 protected:
 	// 주입 하는 필드
-	SGPlayer* m_pPlayer;
+	SGHostPlayer* m_pPlayer;
 	SGActionInfo* m_pActionInfo;
 
 	// 자체 필드

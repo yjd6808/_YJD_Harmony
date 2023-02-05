@@ -10,10 +10,10 @@
 #include "Tutturu.h"
 #include "SGAction.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <JCore/Utils/Console.h>
 
-SGAction::SGAction(SGPlayer* player, SGActionInfo* actionInfo)
+SGAction::SGAction(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: m_pPlayer(player)
 	, m_pActionInfo(actionInfo)
 	, m_bMoveablePositiveX(m_pActionInfo->Moveable)

@@ -14,7 +14,7 @@
 
 class SGGunnerAction : public SGAction {
 public:
-	SGGunnerAction(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerAction(SGHostPlayer* player, SGActionInfo* actionInfo);
 	~SGGunnerAction() override;
 
 	void play() override;

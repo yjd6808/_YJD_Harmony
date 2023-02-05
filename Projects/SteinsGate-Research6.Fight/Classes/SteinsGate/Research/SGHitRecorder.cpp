@@ -60,7 +60,7 @@ void SGHitRecorder::record(const SGActorRect& absoluteActorRect, int attackDataC
 
 	for (int i = 0; i < m_vHitPossibleList.Size(); ++i) {
 		SGHitInfo& hitInfo = m_vHitPossibleList[i];
-		hitInfo.AttackDataInfo = SGDataManager::getInstance()->getAttackDataInfo(attackDataCode);
+		hitInfo.AttackDataInfo = SGDataManager::get()->getAttackDataInfo(attackDataCode);
 		hitInfo.Attacker = m_pRecorder;
 
 		if (m_fnHitSingleCallback)

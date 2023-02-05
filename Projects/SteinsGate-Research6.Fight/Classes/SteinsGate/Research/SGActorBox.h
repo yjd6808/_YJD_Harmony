@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 
 #include <SteinsGate/Research/SGStruct.h>
-#include <SteinsGate/Research/SGPlayer.h>
 #include <SteinsGate/Research/SGProjectile.h>
 #include <SteinsGate/Research/SGMonster.h>
 #include <SteinsGate/Research/SGObstacle.h>
+#include <SteinsGate/Research/SGCharacter.h>
 #include <SteinsGate/Research/SGEffect.h>
 
 using ActorList = SGVector<SGActor*>;
@@ -32,7 +32,7 @@ class SGActorBox
 public:
 	~SGActorBox();
 
-	static SGActorBox* getInstance() {
+	static SGActorBox* get() {
 		static SGActorBox* s_pInstance = nullptr;
 
 		if (s_pInstance == nullptr) {
@@ -46,13 +46,16 @@ public:
 	void update(float dt);
 	
 	void updateActors(float dt);
-	void updateZOrder(float dt);
+	void updateZOrder();
 	int updateCleanUp();
 
 	void clearRoom();
 	void clearAll();
 
-	SGCharacter* createCharacterOnMap(CharType_t charType, float x, float y, SGCharacterInfo& info);
+	// 캐릭터는 액터 박스가 생성/소멸을 관리하는 객체가 아니다.
+	// 단지 생성만 도와줌
+	SGCharacter* createCharacter(CharType_t charType, float x, float y, SGCharacterInfo& info);
+
 	SGProjectile* createProejctileOnMap(SGActor* spawner, int projectileId);
 	SGMonster* createMonsterOnMap(int monsterCode, int aiCode, float x, float y);
 	SGObstacle* createObstacleOnMap(int obstacleCode, float x, float y);

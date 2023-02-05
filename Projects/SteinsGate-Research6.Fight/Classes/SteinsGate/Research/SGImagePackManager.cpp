@@ -77,7 +77,7 @@ SGImagePack* SGImagePackManager::getAvatarPack(CharType_t charType, AvatarType_t
 	DebugAssertMessage(part >= AvatarType::Begin && part < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
 
 	if (m_AvatarPacks[charType][part] == nullptr) {
-		const SGString& npkName = SGGlobal::getInstance()->getAvatarNpkName(charType, part);
+		const SGString& npkName = SGGlobal::get()->getAvatarNpkName(charType, part);
 		m_AvatarPacks[charType][part] = getPack(npkName);
 	}
 
@@ -89,7 +89,7 @@ SGImagePack* SGImagePackManager::getWeaponPack(CharType_t charType, WeaponType_t
 	DebugAssertMessage(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
 
 	if (m_WeaponPacks[charType][weaponType] == nullptr) {
-		const SGString& npkName = SGGlobal::getInstance()->getWeaponNpkName(charType, weaponType);
+		const SGString& npkName = SGGlobal::get()->getWeaponNpkName(charType, weaponType);
 		m_WeaponPacks[charType][weaponType] = getPack(npkName);
 	}
 

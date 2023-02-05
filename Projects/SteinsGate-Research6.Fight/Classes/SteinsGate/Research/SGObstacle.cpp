@@ -36,8 +36,8 @@ SGObstacle* SGObstacle::create(SGObstacleInfo* baseInfo) {
 
 // 옵스터클은 파츠, 애니메이션 다 1개씩임 (팔 다리 달린 장애물은 없을 듯?)
 void SGObstacle::initActorSprite() {
-	SGDataManager* pDataManager = SGDataManager::getInstance();
-	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::get();
+	SGImagePackManager* pImgPackManager = SGImagePackManager::get();
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, m_pBaseInfo->AnimationList.Size());	
 
 	spActorSpriteData->Parts.PushBack({ 1, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });

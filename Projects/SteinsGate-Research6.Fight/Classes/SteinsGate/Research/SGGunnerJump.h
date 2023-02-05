@@ -16,7 +16,7 @@
 class SGCharacter;
 class SGGunnerJump : public SGGunnerAction {
 public:
-	SGGunnerJump(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerJump(SGHostPlayer* player, SGActionInfo* actionInfo);
 
 	void onUpdate(float dt) override;
 	void onActionBegin() override;

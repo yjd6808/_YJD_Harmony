@@ -15,7 +15,7 @@
 
 class SGGunnerSitRecover : public SGGunnerAction {
 public:
-	SGGunnerSitRecover(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerSitRecover(SGHostPlayer* player, SGActionInfo* actionInfo);
 
 	void onActionBegin() override;
 	void onUpdate(float dt) override;

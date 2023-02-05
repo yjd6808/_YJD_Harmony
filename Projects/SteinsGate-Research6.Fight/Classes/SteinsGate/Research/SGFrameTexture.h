@@ -12,7 +12,7 @@
 
 
 #include <SteinsGate/Research/SGConfig.h>
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 
 class SGFrameTexture : public cocos2d::Ref
 {

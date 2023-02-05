@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGStruct.h>
 #include <SteinsGate/Research/SGActorSprite.h>
 #include <SteinsGate/Research/SGHitRecorder.h>
@@ -98,7 +98,8 @@ public:
 	bool isCollide(const SGActorRect& otherRect);
 	bool isOnTheGround();
 
-	void registerCleanUp();
+	void cleanUpNext();
+	
 
 	void attach(SGActor* actor);
 	void detach(SGActor* actor);

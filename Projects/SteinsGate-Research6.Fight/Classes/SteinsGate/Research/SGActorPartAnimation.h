@@ -14,7 +14,7 @@
 #pragma once
 
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGAnimationInfo.h>
 #include <SteinsGate/Research/SGFrameTexture.h>
 

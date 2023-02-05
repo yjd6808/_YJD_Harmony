@@ -27,7 +27,7 @@ class SGDataManager
 public:
 	void LoadAllConfigs();
 
-	static SGDataManager* getInstance() {
+	static SGDataManager* get() {
 		static SGDataManager* loader;
 
 		if (loader == nullptr) {

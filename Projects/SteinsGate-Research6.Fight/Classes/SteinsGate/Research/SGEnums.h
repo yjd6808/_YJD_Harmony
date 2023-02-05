@@ -260,8 +260,6 @@ Sit,
 // TODO: Custom 몬스터 특수행동 그런거 추가할 수 있을 듯?
 Max
 SEnumMiddle(AIActivity)
-
-
 static constexpr const char* Name[Max]{
 	"Idle",
 	"Walk",
@@ -271,5 +269,18 @@ static constexpr const char* Name[Max]{
 	"Sit"
 };
 
-
 SEnumMiddleEnd(AIActivity)
+
+SEnumBegin(SceneType)
+Login,
+ServerSelect,
+Game,
+Max
+SEnumMiddle(SceneType)
+static constexpr const char* Name[Max]{
+	"Login",
+	"ServerSelect",
+	"Game"
+};
+
+SEnumMiddleEnd(SceneType)

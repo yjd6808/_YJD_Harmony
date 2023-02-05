@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 
 class SGTextParser
 {

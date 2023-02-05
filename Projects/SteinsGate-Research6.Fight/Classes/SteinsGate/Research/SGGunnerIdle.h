@@ -12,7 +12,7 @@
 
 class SGGunnerIdle : public SGGunnerAction {
 public:
-	SGGunnerIdle(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerIdle(SGHostPlayer* player, SGActionInfo* actionInfo);
 
 	void init() override;
 	void onActionBegin() override;

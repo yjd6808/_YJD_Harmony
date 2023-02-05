@@ -18,7 +18,7 @@ SGSpriteFrameTexture::~SGSpriteFrameTexture() {
 
 
 SGSpriteFrameTexture* SGSpriteFrameTexture::createDefaultTextureRetain() {
-	SGTexture* pDefault = SGGlobal::getInstance()->getDefaultTexture();
+	SGTexture* pDefault = SGGlobal::get()->getDefaultTexture();
 	SGSpriteFrameTexture* pFrameTexture = new SGSpriteFrameTexture(pDefault, { 0, 0, 2, 2, 2, 2 }, 0, true);
 	pFrameTexture->autorelease();
 	pFrameTexture->retain();

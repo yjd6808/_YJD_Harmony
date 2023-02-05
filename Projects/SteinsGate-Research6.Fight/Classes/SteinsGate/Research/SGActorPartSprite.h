@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGStruct.h>
 #include <SteinsGate/Research/SGActorPartAnimation.h>
 

@@ -8,13 +8,13 @@
 #include "Tutturu.h"
 #include "SGGunnerSliding.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGActionDefine.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGEffectDefine.h>
 #include <SteinsGate/Research/SGActorBox.h>
 
-SGGunnerSliding::SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerSliding::SGGunnerSliding(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo)
 {
 }
@@ -57,7 +57,7 @@ void SGGunnerSliding::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture
 	if (animation->getFrameIndex() == 111) {
 		m_bSlidingStarted = true;
 
-		SGActorBox::getInstance()->createEffectOnMapBySpawner(pCharacter, EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
+		SGActorBox::get()->createEffectOnMapBySpawner(pCharacter, EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
 
 		if (eDir == SpriteDirection::Right) 
 			pCharacter->addForceX(pCharacter->getBaseInfo()->SlidingForce);
@@ -75,7 +75,7 @@ void SGGunnerSliding::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	SGActorBox::getInstance()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
+	SGActorBox::get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

@@ -15,7 +15,7 @@
 class SGActorSprite;
 class SGGunnerGunShot : public SGGunnerAction {
 public:
-	SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerGunShot(SGHostPlayer* player, SGActionInfo* actionInfo);
 
 	bool onConditionCheck() override;
 	void onActionBegin() override;

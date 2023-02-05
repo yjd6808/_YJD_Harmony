@@ -12,7 +12,7 @@
 
 #include <SteinsGate/Research/SGGlobal.h>
 #include <SteinsGate/Research/SGImagePackManager.h>
-#include <SteinsGate/Research/GameScene.h>
+#include <SteinsGate/Research/SGGameScene.h>
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGActorListenerManager.h>
@@ -25,19 +25,19 @@ int main()
     detector.StartDetect();
 
     //{
-    //    SGGlobal::getInstance();
-    //    SGImagePackManager::getInstance();
-    //    SGDataManager::getInstance();
-    //    SGPlayer::getInstance();
-    //    SGActorListenerManager::getInstance();
-    //    SGActorBox::getInstance();
+    //    SGGlobal::get();
+    //    SGImagePackManager::get();
+    //    SGDataManager::get();
+    //    SGHostPlayer::get();
+    //    SGActorListenerManager::get();
+    //    SGActorBox::get();
 
-    //    delete SGActorBox::getInstance();
-    //    delete SGActorListenerManager::getInstance();
-    //    delete SGPlayer::getInstance();
-    //    delete SGDataManager::getInstance();
-    //    delete SGImagePackManager::getInstance();
-    //    delete SGGlobal::getInstance();
+    //    delete SGActorBox::get();
+    //    delete SGActorListenerManager::get();
+    //    delete SGHostPlayer::get();
+    //    delete SGDataManager::get();
+    //    delete SGImagePackManager::get();
+    //    delete SGGlobal::get();
     //}
 
     int iResult = -1;

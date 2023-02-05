@@ -13,7 +13,7 @@
 
 #include "SGHitRecorder.h"
 
-class SGPlayer;
+class SGHostPlayer;
 class SGHitRecorder;
 class SGGunnerBulletListener : public SGCharProjectileListener
 {

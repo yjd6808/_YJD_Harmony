@@ -9,9 +9,9 @@
 #include "SGGunnerAction.h"
 
 #include <SteinsGate/Research/SGDataManager.h>
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 
-SGGunnerAction::SGGunnerAction(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerAction::SGGunnerAction(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGAction(player, actionInfo)
 {}
 
@@ -20,7 +20,7 @@ SGGunnerAction::~SGGunnerAction() {
 }
 
 void SGGunnerAction::play() {
-	m_pBaseInfo = (SGGunnerBaseInfo*)SGDataManager::getInstance()->getCharBaseInfo(CharType::Gunner);
+	m_pBaseInfo = (SGGunnerBaseInfo*)SGDataManager::get()->getCharBaseInfo(CharType::Gunner);
 	m_eWeaponType = GunnerWeaponType::Auto;		// TODO: 무기 정보 읽기
 
 	SGAction::play();

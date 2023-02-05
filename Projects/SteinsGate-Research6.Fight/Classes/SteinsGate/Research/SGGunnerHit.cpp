@@ -8,10 +8,10 @@
 #include "Tutturu.h"
 #include "SGGunnerHit.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
-SGGunnerHit::SGGunnerHit(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerHit::SGGunnerHit(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo)
 	, m_bHitSmall(false)
 	, m_bOnTheGround(false)		// 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지

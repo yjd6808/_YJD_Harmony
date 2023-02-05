@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGConfig.h>
 
 #include <JCore/Time.h>
 
 struct SGMapInfo;
 
-class SGPlayer;
+class SGHostPlayer;
 class SGCharacter;
 class SGMapLayer;
 class SGActionManager;
@@ -28,10 +28,10 @@ public:
 		ControlKey_t ControlKey{};
 	};
 
-	SGPlayerController(SGPlayer* player, SGCharacter* character, SGActionManager* actionManager);
+	SGPlayerController(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager);
 	~SGPlayerController();
 
-	static SGPlayerController* create(SGPlayer* player, SGCharacter* character, SGActionManager* actionManager);
+	static SGPlayerController* create(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager);
 
 	void init();
 	void update(float delta);
@@ -64,7 +64,7 @@ public:
 	void reflectPressedMoveKeys();	// 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
 	void setCommandable(bool commandable) { m_bCabUseCommand = commandable; }
 private:
-	SGPlayer* m_pPlayer;
+	SGHostPlayer* m_pPlayer;
 	SGCharacter* m_pCharacter;
 	SGActionManager* m_pActionManager;
 

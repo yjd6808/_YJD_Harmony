@@ -31,6 +31,8 @@ public:
 	void setOwner(bool owner);
 	bool isOwner() { return m_bOwner; }
 
+	void cleanUpImmediate();
+
 	SGCharBaseInfo* getBaseInfo();
 private:
 	SGCharBaseInfo* m_pBaseInfo;

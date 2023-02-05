@@ -14,7 +14,7 @@
 
 class SGGunnerSliding : public SGGunnerAction {
 public:
-	SGGunnerSliding(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerSliding(SGHostPlayer* player, SGActionInfo* actionInfo);
 
 	bool onConditionCheck() override;
 	void onUpdate(float dt) override;

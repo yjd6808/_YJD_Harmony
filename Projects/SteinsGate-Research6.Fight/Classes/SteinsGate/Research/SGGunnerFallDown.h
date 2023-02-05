@@ -12,7 +12,7 @@
 
 class SGGunnerFallDown : public SGGunnerAction {
 public:
-	SGGunnerFallDown(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerFallDown(SGHostPlayer* player, SGActionInfo* actionInfo);
 
 	void onActionBegin() override;
 	void onActionEnd() override;

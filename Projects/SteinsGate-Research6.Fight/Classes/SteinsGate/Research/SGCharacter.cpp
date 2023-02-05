@@ -11,11 +11,12 @@
 #include <SteinsGate/Research/SGImagePackManager.h>
 #include <SteinsGate/Research/SGActorSprite.h>
 #include <SteinsGate/Research/SGDataManager.h>
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGActionDefine.h>
+#include <SteinsGate/Research/SGActorBox.h>
 
 #include <SteinsGate/Common/Engine/SGRectEx.h>
-
+#include <SteinsGate/Common/Engine/SGRectEx.h>
 
 
 USING_NS_JC;
@@ -36,7 +37,7 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 	SGCharacter* pCharacter = new SGCharacter(code, info);
 
 	if (pCharacter && pCharacter->init()) {
-		SGCharBaseInfo* pBaseInfo = SGDataManager::getInstance()->getCharBaseInfo(code);
+		SGCharBaseInfo* pBaseInfo = SGDataManager::get()->getCharBaseInfo(code);
 		pCharacter->m_pBaseInfo = pBaseInfo;
 		pCharacter->initThicknessBox(pBaseInfo->ThicknessBox);
 		pCharacter->initActorSprite();
@@ -49,8 +50,8 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 }
 
 void SGCharacter::initActorSprite() {
-	SGDataManager* pDataManager = SGDataManager::getInstance();
-	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::get();
+	SGImagePackManager* pImgPackManager = SGImagePackManager::get();
 	AnimationList& animationList = pDataManager->getCharAnimationInfoList(m_iCode);
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(15, animationList.Size());
 
@@ -82,7 +83,7 @@ void SGCharacter::hit(const SGHitInfo& hitInfo) {
 	if (!m_bOwner)
 		return;
 
-	SGPlayer* pPlayer = SGPlayer::getInstance();
+	SGHostPlayer* pPlayer = SGHostPlayer::get();
 
 	if (hitInfo.AttackDataInfo->IsFallDownAttack) {
 		pPlayer->runActionForce(GUNNER_ACTION_FALL_DOWN);
@@ -103,7 +104,7 @@ void SGCharacter::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* 
 		return;
 
 
-	SGPlayer::getInstance()->onFrameBegin(animation, texture);
+	SGHostPlayer::get()->onFrameBegin(animation, texture);
 }
 
 void SGCharacter::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
@@ -111,7 +112,7 @@ void SGCharacter::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* te
 	if (!m_bOwner)
 		return;
 
-	SGPlayer::getInstance()->onFrameEnd(animation, texture);
+	SGHostPlayer::get()->onFrameEnd(animation, texture);
 }
 
 void SGCharacter::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
@@ -119,7 +120,7 @@ void SGCharacter::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTextu
 	if (!m_bOwner)
 		return;
 
-	SGPlayer::getInstance()->onAnimationBegin(animation, texture);
+	SGHostPlayer::get()->onAnimationBegin(animation, texture);
 }
 
 void SGCharacter::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
@@ -127,11 +128,17 @@ void SGCharacter::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture
 	if (!m_bOwner)
 		return;
 
-	SGPlayer::getInstance()->onAnimationEnd(animation, texture);
+	SGHostPlayer::get()->onAnimationEnd(animation, texture);
 }
 
 void SGCharacter::setOwner(bool owner) {
 	m_bOwner = owner;
+}
+
+void SGCharacter::cleanUpImmediate() {
+	m_bCleanUp = true;
+	m_pMapLayer = nullptr;
+	SGActorBox::get()->cleanUpCharacter(this);
 }
 
 SGCharBaseInfo* SGCharacter::getBaseInfo() {

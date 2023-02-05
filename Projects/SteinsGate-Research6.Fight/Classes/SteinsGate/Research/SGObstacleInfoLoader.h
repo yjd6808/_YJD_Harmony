@@ -10,7 +10,7 @@
 
 
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGObstacleInfo.h>
 
 

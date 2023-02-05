@@ -9,13 +9,13 @@
 #pragma once
 
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGConfig.h>
 
 struct SGGlobal
 {
 public:
-	static SGGlobal* getInstance() {
+	static SGGlobal* get() {
 		static SGGlobal* loader;
 
 		if (loader == nullptr) {

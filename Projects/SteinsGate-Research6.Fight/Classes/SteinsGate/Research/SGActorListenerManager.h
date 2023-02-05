@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGProjectileListener.h>
 
 class SGActorListenerManager
@@ -20,7 +20,7 @@ public:
 
 	void initialize();
 
-	static SGActorListenerManager* getInstance() {
+	static SGActorListenerManager* get() {
 		static SGActorListenerManager* s_pManager;
 
 		if (s_pManager == nullptr) {

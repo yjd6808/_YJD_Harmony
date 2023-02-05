@@ -8,7 +8,7 @@
 #include "Tutturu.h"
 #include "SGAIActivity.h"
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGAIActor.h>
 #include <SteinsGate/Research/SGActorPartAnimation.h>
 

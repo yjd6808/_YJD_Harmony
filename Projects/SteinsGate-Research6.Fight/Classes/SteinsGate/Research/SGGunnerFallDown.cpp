@@ -8,10 +8,10 @@
 #include "Tutturu.h"
 #include "SGGunnerFallDown.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
-SGGunnerFallDown::SGGunnerFallDown(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerFallDown::SGGunnerFallDown(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo)
 	, m_bBounced(false)
 	, m_bDown(false)

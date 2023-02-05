@@ -8,11 +8,11 @@
 #include "Tutturu.h"
 #include "SGGunnerRun.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGPlayerController.h>
 
-SGGunnerRun::SGGunnerRun(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerRun::SGGunnerRun(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo)
 {
 }

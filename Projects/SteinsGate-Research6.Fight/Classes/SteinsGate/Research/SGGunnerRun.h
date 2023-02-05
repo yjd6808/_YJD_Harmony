@@ -13,7 +13,7 @@
 
 class SGGunnerRun : public SGGunnerAction {
 public:
-	SGGunnerRun(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerRun(SGHostPlayer* player, SGActionInfo* actionInfo);
 
 	void onActionBegin() override;
 	void onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode) override;

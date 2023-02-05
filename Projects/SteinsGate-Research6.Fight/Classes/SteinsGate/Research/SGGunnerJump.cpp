@@ -10,7 +10,7 @@
 #include "Tutturu.h"
 #include "SGGunnerJump.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
 #include <SteinsGate/Research/SGActionDefine.h>
@@ -18,7 +18,7 @@
 
 #define MinimumShotHeight 30.0f
 
-SGGunnerJump::SGGunnerJump(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerJump::SGGunnerJump(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo) {}
 
 // #define GUNNER_ANIMATION_JUMP_START					14

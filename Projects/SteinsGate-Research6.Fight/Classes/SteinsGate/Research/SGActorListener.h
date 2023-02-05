@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Research/Tutturu.h>
+#include "Tutturu.h"
 #include <SteinsGate/Research/SGStruct.h>
 
 #define CreateNew(Type) public: SGActorListener* createNew() override { return new Type; }

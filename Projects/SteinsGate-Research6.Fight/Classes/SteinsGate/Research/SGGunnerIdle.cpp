@@ -8,10 +8,10 @@
 #include "Tutturu.h"
 #include "SGGunnerIdle.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
-SGGunnerIdle::SGGunnerIdle(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerIdle::SGGunnerIdle(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo)
 	, m_iIdleCount(0) {}
 

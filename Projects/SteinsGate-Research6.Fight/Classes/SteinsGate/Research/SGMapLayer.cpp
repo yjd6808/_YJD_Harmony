@@ -9,11 +9,12 @@
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGGlobal.h>
 #include <SteinsGate/Research/SGActionDefine.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 
 #include <SteinsGate/Common/Engine/SGRectEx.h>
 #include <SteinsGate/Common/Engine/RectPoly.h>
 
-#include "GameScene.h"
+#include "SGGameScene.h"
 
 
 USING_NS_CC;
@@ -52,66 +53,28 @@ bool SGMapLayer::init() {
 		return false;
 	}
 
-	m_pActorBox = SGActorBox::getInstance();
+	m_pActorBox = SGActorBox::get();
 	m_pActorBox->init(this);
 
-	
 
 	// =================================================
 	// 임시 데이터 주입
 	// =================================================
 
-	SGCharacterInfo info;
-	SGDataManager* pConfig = SGDataManager::getInstance();
-	SGCharBaseInfo* pBaseInfo = pConfig->getCharBaseInfo(CharType::Gunner);
-	
-	for (int i = 0; i < VisualType::Max; ++i) {
-		info.VisualInfo.NpkIndex[i] = pBaseInfo->DefaultVisualNpkIndex[i];
-		info.VisualInfo.ImgIndex[i] = pBaseInfo->DefaultVisualImgIndex[i];
-	}
-
-	SGPlayer* pPlayer = SGPlayer::getInstance();
-	pPlayer->setCharacter(m_pActorBox->createCharacterOnMap(CharType::Gunner, 300, 250, info));
-	pPlayer->initActionManager();
-	pPlayer->initController();
-	pPlayer->runBaseAction(BaseAction::Idle);
-	pPlayer->setMapLayer(this);
-
 	m_pActorBox->createMonsterOnMap(2, 1, 600, 350);
 
-	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
-	keyboardListener->onKeyPressed = CC_CALLBACK_2(SGMapLayer::onKeyPressed, this);
-	keyboardListener->onKeyReleased = CC_CALLBACK_2(SGMapLayer::onKeyReleased, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
-
-	this->scheduleUpdate();
+	
 	return true;
 }
 
 
 
-void SGMapLayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
-
-	SGPlayer::getInstance()->onKeyPressed(keyCode, event);
-
-	if (keyCode == EventKeyboard::KeyCode::KEY_F1)
-		SGGlobal::getInstance()->toggleDrawBodyBoundingBox();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F2)
-		SGGlobal::getInstance()->toggleDrawThicknessBox();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F3)
-		SGGlobal::getInstance()->toggleDrawAttackBox();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F4)
-		SGGlobal::getInstance()->toggleDrawEffect();
-	else if (keyCode == EventKeyboard::KeyCode::KEY_F9) {
-		SGPlayer::getInstance()->setCharacter(nullptr);
-		SGPlayer::getInstance()->setMapLayer(nullptr);
-		SGActorBox::getInstance()->clearAll();
-		SGDirector::getInstance()->replaceScene(GameScene::createScene());
-	}
+void SGMapLayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+	SGHostPlayer::get()->onKeyPressed(keyCode, event);
 }
 
-void SGMapLayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
-	SGPlayer::getInstance()->onKeyReleased(keyCode, event);
+void SGMapLayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+	SGHostPlayer::get()->onKeyReleased(keyCode, event);
 }
 
 SGMapInfo* SGMapLayer::getMapInfo() {
@@ -120,19 +83,16 @@ SGMapInfo* SGMapLayer::getMapInfo() {
 
 
 void SGMapLayer::update(float dt) {
-	SGPlayer::getInstance()->update(dt);
+	SGHostPlayer::get()->update(dt);
 
 	m_pActorBox->update(dt);
 }
 
-void SGMapLayer::onExitTransitionDidStart() {
-	Layer::onExitTransitionDidStart();
-}
 
 
 void SGMapLayer::loadMap(int mapCode) {
-	SGDataManager* pDataManager = SGDataManager::getInstance();
-	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::get();
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGMapInfo* pMap = pDataManager->getMapInfo(mapCode);
 
 	m_pMapInfo = pMap;

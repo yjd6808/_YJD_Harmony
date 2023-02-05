@@ -13,12 +13,12 @@
 #include <SteinsGate/Research/SGComboTree.h>
 
 class SGFrameTexture;
-class SGPlayer;
+class SGHostPlayer;
 class SGPlayerController;
 class SGActionManager
 {
 public:
-	SGActionManager(SGPlayer* player);
+	SGActionManager(SGHostPlayer* player);
 	~SGActionManager();
 
 	void init(int charType);
@@ -51,7 +51,7 @@ public:
 
 	void stopActionForce();
 private:
-	SGPlayer* m_pPlayer;
+	SGHostPlayer* m_pPlayer;
 	SGComboTree m_ComboTree;
 	SGAction* m_pRunningAction;					// 캐릭터 자체가 움직여서 사용하는 액션
 	SGAction* m_pPreviousAction;

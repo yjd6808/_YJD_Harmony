@@ -10,7 +10,7 @@
 
 #include <SteinsGate/Research/SGProjectileListener.h>
 
-class SGPlayer;
+class SGHostPlayer;
 class SGCharacter;
 class SGCharProjectileListener : public SGProjectileListener
 {
@@ -20,7 +20,7 @@ public:
 	void initPlayer();
 	bool isPlayerProjectile();
 protected:
-	SGPlayer* m_pPlayer;
+	SGHostPlayer* m_pPlayer;
 	SGCharacter* m_pCharacter;
 	bool m_bPlayerProjectile;
 };

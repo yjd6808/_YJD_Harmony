@@ -12,7 +12,7 @@
 
 class SGGunnerHit : public SGGunnerAction {
 public:
-	SGGunnerHit(SGPlayer* player, SGActionInfo* actionInfo);
+	SGGunnerHit(SGHostPlayer* player, SGActionInfo* actionInfo);
 
 	void onActionBegin() override;
 	void onActionEnd() override;

@@ -14,7 +14,7 @@
 class SGImagePackManager
 {
 public:
-	static SGImagePackManager* getInstance() {
+	static SGImagePackManager* get() {
 		static SGImagePackManager* loader;
 		if (loader == nullptr) {
 			loader = new SGImagePackManager;

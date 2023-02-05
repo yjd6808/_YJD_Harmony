@@ -24,7 +24,7 @@ USING_NS_JC;
 #define JsonFileName "effect.json"
 
 bool SGEffectInfoLoader::LoadEffectInfo(SGHashMap<int, SGEffectInfo>& effectInfoMap) {
-	SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
 	DebugAssertMessage(reader.is_open(), "effect.json 파일을 여는데 실패했습니다.");
@@ -32,8 +32,8 @@ bool SGEffectInfoLoader::LoadEffectInfo(SGHashMap<int, SGEffectInfo>& effectInfo
 	try {
 		reader >> root;
 
-		SGImagePackManager* pPackManager = SGImagePackManager::getInstance();
-		SGDataManager* pDataManager = SGDataManager::getInstance();
+		SGImagePackManager* pPackManager = SGImagePackManager::get();
+		SGDataManager* pDataManager = SGDataManager::get();
 
 		Value& effectListRoot = root["effect"];
 

@@ -9,7 +9,6 @@
 #pragma once
 
 #include <SteinsGate/Research/SGConfig.h>
-#include <SteinsGate/Research/Tutturu.h>
 
 struct SGAnimationInfo;
 struct SGAttackDataInfo;

@@ -8,10 +8,10 @@
 #include "Tutturu.h"
 #include "SGGunnerWalk.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 
-SGGunnerWalk::SGGunnerWalk(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerWalk::SGGunnerWalk(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo) {}
 
 void SGGunnerWalk::onActionBegin() {

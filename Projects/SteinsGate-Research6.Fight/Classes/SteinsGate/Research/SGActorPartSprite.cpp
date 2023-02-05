@@ -75,7 +75,7 @@ bool SGActorPartSprite::init() {
 
 	
 
-	SGImagePack* pImgPack = SGImagePackManager::getInstance()->getPack(m_pPartData->NpkIndex);
+	SGImagePack* pImgPack = SGImagePackManager::get()->getPack(m_pPartData->NpkIndex);
 
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
 
@@ -109,7 +109,7 @@ void SGActorPartSprite::update(float dt) {
 }
 
 void SGActorPartSprite::updateBoundingBoxVisibleState() {
-	if (SGGlobal::getInstance()->isBodyBoundingBoxDrawMode())
+	if (SGGlobal::get()->isBodyBoundingBoxDrawMode())
 		m_pBoundingBox->setOpacity(255);
 	else
 		m_pBoundingBox->setOpacity(0);

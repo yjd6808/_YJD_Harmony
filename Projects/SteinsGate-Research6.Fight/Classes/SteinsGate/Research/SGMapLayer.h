@@ -4,6 +4,7 @@
 #pragma once
 
 #include <SteinsGate/Research/SGActorBox.h>
+#include <SteinsGate/Research/SGMapInfo.h>
 
 class SGMapLayer : public SGLayer
 {
@@ -17,7 +18,6 @@ public:
 	bool init() override;
 
 	void update(float dt) override;
-	void onExitTransitionDidStart() override;
 
 	void runFrameEvent(SGActor* runner, FrameEventType_t frameEventType, int frameEventId);
 	SGCharacter* findNearestCharacterInRadious(SGActor* stdActor, float radious, Out_ float& enemyDist);
@@ -25,8 +25,8 @@ public:
 	bool collectEnemiesInActor(SGActor* collector, Out_ SGVector<SGHitInfo>& hitTargets);
 	bool isCollideWithObstacles(const SGRect& rect);
 
-	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
-	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) override;
+	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
+	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
 	SGMapInfo* getMapInfo();
 public:

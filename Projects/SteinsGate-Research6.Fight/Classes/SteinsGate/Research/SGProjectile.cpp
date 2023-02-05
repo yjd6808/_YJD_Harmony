@@ -14,7 +14,7 @@
 #include <SteinsGate/Research/SGActorSprite.h>
 #include <SteinsGate/Research/SGDataManager.h>
 #include <SteinsGate/Research/SGProjectileListener.h>
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 
 #include <SteinsGate/Common/Engine/RectPoly.h>
 
@@ -103,8 +103,8 @@ void SGProjectile::initPosition() {
 
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
 void SGProjectile::initActorSprite() {
-	SGDataManager* pDataManager = SGDataManager::getInstance();
-	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::get();
+	SGImagePackManager* pImgPackManager = SGImagePackManager::get();
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, 1);	// 프로젝틸도 파츠, 애니메이션 모두 한개
 
 	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });

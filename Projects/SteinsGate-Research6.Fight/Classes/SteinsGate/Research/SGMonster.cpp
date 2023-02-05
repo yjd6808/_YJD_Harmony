@@ -48,8 +48,8 @@ SGMonster* SGMonster::create(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo) {
 }
 
 void SGMonster::initActorSprite() {
-	SGDataManager* pDataManager = SGDataManager::getInstance();
-	SGImagePackManager* pImgPackManager = SGImagePackManager::getInstance();
+	SGDataManager* pDataManager = SGDataManager::get();
+	SGImagePackManager* pImgPackManager = SGImagePackManager::get();
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(m_pBaseInfo->PartsCount, m_pBaseInfo->AnimationList.Size());
 
 	for (int i = 0; i < m_pBaseInfo->PartsCount; ++i) {

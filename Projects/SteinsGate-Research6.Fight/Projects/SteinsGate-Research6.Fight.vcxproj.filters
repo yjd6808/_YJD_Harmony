@@ -76,6 +76,18 @@
     <Filter Include="Data\Effect">
       <UniqueIdentifier>{926d1f0b-a511-4c7f-91aa-587ab0ce672f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{afcdb20a-f818-4212-9c08-704660a0e3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{ce35071a-8202-4fac-89e8-e2d66cf04890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene">
+      <UniqueIdentifier>{ad27e0ec-46ef-42d3-8cd8-4c190b5b8213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Layer">
+      <UniqueIdentifier>{3d065bfc-aa30-4c21-ac0a-778e58e49571}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGImagePackManager.cpp">
@@ -111,7 +123,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGMonster.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGHostPlayer.cpp">
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayerController.cpp">
@@ -223,8 +235,6 @@
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\AppDelegate.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Research\GameScene.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGMapLayer.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGAnimationInfo.cpp">
       <Filter>Data</Filter>
     </ClCompile>
@@ -259,7 +269,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.cpp">
       <Filter>Actor\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorBox.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\Tutturu.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Research\SGActionInfoLoader.cpp">
       <Filter>Data\Action</Filter>
@@ -276,6 +285,39 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Research\SGProjectileInfo.cpp">
       <Filter>Data\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayerPool.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGNetPlayer.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGPlayer.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGActorBox.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGWorldScene.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGSceneManager.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGServerSelectScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGLoginScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGGameScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGMapLayer.cpp">
+      <Filter>Game\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Research\SGSceneBase.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -303,7 +345,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGTextParser.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGPlayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGHostPlayer.h">
       <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActor.h">
@@ -457,8 +499,6 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\AppDelegate.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\GameScene.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGMapLayer.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGStruct.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\Tutturu.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGAttackDataInfoLoader.h">
@@ -503,7 +543,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Research\SGCharProjectileListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorBox.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGConfig.h" />
     <ClInclude Include="..\Classes\SteinsGate\Research\SGActionInfo.h">
       <Filter>Data\Action</Filter>
@@ -526,6 +565,39 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Research\SGEffectInfoLoader.h">
       <Filter>Data\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGPlayerPool.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGNetPlayer.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGPlayer.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGActorBox.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGSceneManager.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGWorldScene.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGSceneBase.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGServerSelectScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGLoginScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGGameScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Research\SGMapLayer.h">
+      <Filter>Game\Layer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

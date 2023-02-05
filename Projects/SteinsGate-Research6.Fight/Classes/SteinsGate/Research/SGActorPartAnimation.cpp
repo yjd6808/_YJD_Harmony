@@ -78,7 +78,7 @@ void SGActorPartAnimation::run(int frameIndexInAnimation) {
 }
 
 void SGActorPartAnimation::constructFrames(int npkIndex, int imgIndex) {
-	SGImagePack* pImgPack = SGImagePackManager::getInstance()->getPack(npkIndex);
+	SGImagePack* pImgPack = SGImagePackManager::get()->getPack(npkIndex);
 
 	m_iNpkIndex = npkIndex;
 	m_iImgIndex = imgIndex;

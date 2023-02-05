@@ -9,7 +9,7 @@
 #include "SGGunnerBulletListener.h"
 
 #include <SteinsGate/Research/SGProjectile.h>
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGActorPartAnimation.h>
 #include <SteinsGate/Research/SGAttackDataInfo.h>
 #include <SteinsGate/Research/SGEffectDefine.h>
@@ -32,22 +32,22 @@ void SGGunnerBulletListener::onUpdate(float dt) {
 }
 
 void SGGunnerBulletListener::onLifeTimeOver() {
-	m_pProjectile->registerCleanUp();
+	m_pProjectile->cleanUpNext();
 }
 
 void SGGunnerBulletListener::onDistanceOver() {
-	m_pProjectile->registerCleanUp();
+	m_pProjectile->cleanUpNext();
 }
 
 void SGGunnerBulletListener::onCollisionWithGround() {
-	SGActorBox::getInstance()->createEffectOnMapAbsolute(
+	SGActorBox::get()->createEffectOnMapAbsolute(
 		EFFECT_COLLISION_FLOOR,
 		m_pProjectile->getPositionRealCenterX(),
 		m_pProjectile->getPositionRealCenterY(),
 		m_pProjectile->getLocalZOrder() + 1
 	);
 
-	m_pProjectile->registerCleanUp();
+	m_pProjectile->cleanUpNext();
 }
 
 void SGGunnerBulletListener::onEnemySingleHit(SGHitInfo& info) {
@@ -55,12 +55,12 @@ void SGGunnerBulletListener::onEnemySingleHit(SGHitInfo& info) {
 		return;
 
 	SGEffectInfo* pHitEffectInfo = m_pProjectile->getHitEffectInfo();
-	SGActorBox::getInstance()->createEffectOnMapTargetCollision(
+	SGActorBox::get()->createEffectOnMapTargetCollision(
 		pHitEffectInfo->Code,
 		SpriteDirection::Reverse[info.HitDirection],
 		info);
 	info.HitTarget->hit(info);
-	m_pProjectile->registerCleanUp();
+	m_pProjectile->cleanUpNext();
 }
 
 

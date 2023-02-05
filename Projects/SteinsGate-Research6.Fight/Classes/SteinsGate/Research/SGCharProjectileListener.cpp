@@ -8,7 +8,7 @@
 #include "Tutturu.h"
 #include "SGCharProjectileListener.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGProjectile.h>
 
 SGCharProjectileListener::SGCharProjectileListener()
@@ -24,7 +24,7 @@ void SGCharProjectileListener::initPlayer() {
 	m_pCharacter = pCharacter;
 
 	if (pCharacter->isOwner()) {
-		m_pPlayer = SGPlayer::getInstance();
+		m_pPlayer = SGHostPlayer::get();
 		m_bPlayerProjectile = true;
 	}
 }

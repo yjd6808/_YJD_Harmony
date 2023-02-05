@@ -8,7 +8,7 @@
 #include "Tutturu.h"
 #include "SGPlayerController.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAction.h>
 #include <SteinsGate/Research/SGMapLayer.h>
 #include <SteinsGate/Research/SGMapInfo.h>
@@ -16,14 +16,14 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGPlayerController* SGPlayerController::create(SGPlayer* player, SGCharacter* character, SGActionManager* actionManager) {
+SGPlayerController* SGPlayerController::create(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager) {
 	SGPlayerController* pController = new SGPlayerController(player, character, actionManager);
 	pController->init();
 	return pController;
 }
 
 
-SGPlayerController::SGPlayerController(SGPlayer* player, SGCharacter* character, SGActionManager* actionManager)
+SGPlayerController::SGPlayerController(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager)
 	: m_pPlayer(player)
 	, m_pCharacter(character)
 	, m_pActionManager(actionManager) {

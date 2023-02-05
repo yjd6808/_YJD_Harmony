@@ -9,7 +9,7 @@
 #include "Tutturu.h"
 #include "SGGunnerGunShot.h"
 
-#include <SteinsGate/Research/SGPlayer.h>
+#include <SteinsGate/Research/SGHostPlayer.h>
 #include <SteinsGate/Research/SGAnimationDefine.h>
 #include <SteinsGate/Research/SGProjectileDefine.h>
 #include <SteinsGate/Research/SGActionDefine.h>
@@ -26,7 +26,7 @@
 // #define GUNNER_ANIMATION_SHOT_LEFT					12
 // #define GUNNER_ANIMATION_SHOT_LEFT_DOWN				13
 
-SGGunnerGunShot::SGGunnerGunShot(SGPlayer* player, SGActionInfo* actionInfo)
+SGGunnerGunShot::SGGunnerGunShot(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo) {}
 
 bool SGGunnerGunShot::onConditionCheck() {
@@ -191,7 +191,7 @@ void SGGunnerGunShot::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	SGActorBox::getInstance()->createEffectOnMapTargetCollision(EFFECT_KNOCK_SMALL, info, true);
+	SGActorBox::get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_SMALL, info, true);
 	info.HitTarget->hit(info);
 }
 

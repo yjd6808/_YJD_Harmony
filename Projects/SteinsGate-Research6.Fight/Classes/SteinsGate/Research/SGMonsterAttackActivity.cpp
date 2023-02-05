@@ -44,7 +44,7 @@ void SGMonsterAttackActivity::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	SGActorBox::getInstance()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
+	SGActorBox::get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 
