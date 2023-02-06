@@ -15,3 +15,7 @@ Output/
 Projects/*/Output/
 Projects/*/Intermediate/
 ThirdParty/Build/
+
+
+Projects\SteinsGate-Tools.Common\Project\obj\
+Projects\SteinsGate-Tools.Animation\Project\obj\
