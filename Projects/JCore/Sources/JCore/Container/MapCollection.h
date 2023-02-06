@@ -38,8 +38,6 @@ public:
 	virtual bool Exist(const TKey& key) const = 0;
 	virtual TValue& Get(const TKey& key) const = 0;
 	virtual bool Remove(const TKey& key) = 0;
-	virtual KeyCollection& Keys() = 0;
-	virtual ValueCollection& Values() = 0;
 
 	struct KeyCollection : public Collection<TKey, TAllocator>
 	{
@@ -91,6 +89,10 @@ public:
 
 		TKey& Previous() override {
 			return m_pMapIterator->Previous().Key;
+		}
+
+		TKey& Current() override {
+			return m_pMapIterator->Current().Key;
 		}
 
 		bool IsBegin() const override {
@@ -151,6 +153,10 @@ public:
 
 		TValue& Previous() override {
 			return m_pMapIterator->Previous().Value;
+		}
+
+		TValue& Current() override {
+			return m_pMapIterator->Current().Value;
 		}
 
 		bool IsBegin() const override {

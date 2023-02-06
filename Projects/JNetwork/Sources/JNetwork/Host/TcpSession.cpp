@@ -41,7 +41,7 @@ bool TcpSession::SendAsync(ISendPacket* packet) {
 
 	// 너무 쌔리 큰 패킷은 이상한 패킷이므로 수신 버퍼 크기보다 큰 패킷을 보낼려고 할 경우 막자.
 	if (packet->GetPacketLength() >= SessionBuffer::GetBufferCapacity()) {
-		DebugAssertMessage(false, "송신할 패킷의 크기를 제대로 잡아주세요");
+		DebugAssertMsg(false, "송신할 패킷의 크기를 제대로 잡아주세요");
 		return false;
 	}
 
@@ -53,7 +53,7 @@ bool TcpSession::SendAsync(ISendPacket* packet) {
 	const int iResult = m_ClientSocket.SendEx(&buf, &uiSendBytes, pOverlapped);
 	if (iResult == SOCKET_ERROR) {
 		if (Winsock::LastError() != WSA_IO_PENDING) {
-			DebugAssertMessage(false, "SendAsync() 실패");
+			DebugAssertMsg(false, "SendAsync() 실패");
 			pOverlapped->Release();
 			packet->Release();
 			return false;
@@ -71,7 +71,7 @@ bool TcpSession::ReceiveAsync() {
 	const int iResult = m_ClientSocket.ReceiveEx(&buf, &uiReceivedBytes, pOverlapped);
 	if (iResult == SOCKET_ERROR) {
 		if (Winsock::LastError() != WSA_IO_PENDING) {
-			DebugAssertMessage(false, "ReceiveAsync() 실패");
+			DebugAssertMsg(false, "ReceiveAsync() 실패");
 			pOverlapped->Release();
 			return false;
 		}
@@ -92,7 +92,7 @@ bool TcpSession::AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped) {
 	) == FALSE) {
 
 		if (Winsock::LastError() != WSA_IO_PENDING) {
-			DebugAssertMessage(false, "세션 AcceptEx 실패");
+			DebugAssertMsg(false, "세션 AcceptEx 실패");
 			((IOCPOverlapped*)pOverlapped)->Release();
 			return false;
 		}
@@ -169,7 +169,7 @@ void TcpSession::Received(Int32UL receivedBytes) {
 			NotifyCommand(pCmd);
 
 			if (m_ReceiveBuffer.MoveReadPos(pCmd->GetCommandLen()) == false) {
-				DebugAssertMessage(false, "커맨드 크기가 이상합니다.");
+				DebugAssertMsg(false, "커맨드 크기가 이상합니다.");
 				m_ReceiveBuffer.Clear();
 				return;
 			}

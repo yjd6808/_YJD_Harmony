@@ -10,11 +10,16 @@
 
 namespace JCore {
 
+	struct TimeSpan;
+
+	class DateTime;
 	class String;
-	class Environment
+	class Env
 	{
 	public:
-		 static String CurrentDirectory();
+		static String CurrentDirectory();
+		static TimeSpan AppTime();
+		static TimeSpan SystemTime();
 	};
 
 

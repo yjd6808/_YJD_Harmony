@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!--
+	작성자: 윤정도
+	작성일: 23/02/06
+		
+	[커스텀 리스트 아이템 사용법]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#customlistitems-expansion
+	
+	[낫비스 오류 출력법]
+	Under Tools > Options (or Debug > Options) > 
+	Debugging > Output Window, set Natvis diagnostic messages 
+	(C++ only) to Error, Warning, or Verbose, and then select OK.
+	
+	[낫비스 포맷팅]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
+	-->
+
+	<Type Name="JCore::Tuple&lt;*&gt;">
+		<DisplayString>
+			{item1}
+		</DisplayString>
+	</Type>
+	
+	<Type Name="JCore::Tuple&lt;*,*&gt;">
+		<DisplayString>
+			{item1} {item2}
+		</DisplayString>
+		<Expand>
+			<Item Name="[item1]">item1</Item>
+			<Item Name="[item2]">item2</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="JCore::Tuple&lt;*,*,*&gt;">
+		<DisplayString>
+			{item1} {item2} {item3}
+		</DisplayString>
+		<Expand>
+			<Item Name="[item1]">item1</Item>
+			<Item Name="[item2]">item2</Item>
+			<Item Name="[item3]">item3</Item>
+		</Expand>
+	</Type>
+
+
+	<Type Name="JCore::Tuple&lt;*,*,*,*&gt;">
+		<DisplayString>
+			{item1} {item2} {item3} {item4}
+		</DisplayString>
+		<Expand>
+			<Item Name="[item1]">item1</Item>
+			<Item Name="[item2]">item2</Item>
+			<Item Name="[item3]">item3</Item>
+			<Item Name="[item4]">item4</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="JCore::Tuple&lt;*,*,*,*,*&gt;">
+		<DisplayString>
+			{item1} {item2} {item3} {item4}
+		</DisplayString>
+		<Expand>
+			<Item Name="[item1]">item1</Item>
+			<Item Name="[item2]">item2</Item>
+			<Item Name="[item3]">item3</Item>
+			<Item Name="[item4]">item4</Item>
+			<Item Name="[item5]">item5</Item>
+		</Expand>
+	</Type>
+
+</AutoVisualizer>

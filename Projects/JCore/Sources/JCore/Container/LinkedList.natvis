@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!--
+	작성자: 윤정도
+	작성일: 23/02/05
+		
+	[커스텀 리스트 아이템 사용법]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#customlistitems-expansion
+	
+	[낫비스 오류 출력법]
+	Under Tools > Options (or Debug > Options) > 
+	Debugging > Output Window, set Natvis diagnostic messages 
+	(C++ only) to Error, Warning, or Verbose, and then select OK.
+	
+	[낫비스 포맷팅]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
+	-->
+
+	<Type Name="JCore::LinkedList&lt;*&gt;">
+		<DisplayString>
+			size={m_iSize}
+		</DisplayString>
+		<Expand>
+			<LinkedListItems>
+				<Size>m_iSize</Size>
+				<HeadPointer>m_pHead</HeadPointer>
+				<NextPointer>Next</NextPointer>
+				<ValueNode>Value</ValueNode>
+			</LinkedListItems>
+		</Expand>
+	</Type>
+
+</AutoVisualizer>

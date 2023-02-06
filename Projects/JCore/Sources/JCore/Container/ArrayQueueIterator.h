@@ -67,6 +67,10 @@ public:
 		return pQueue->m_pArray[this->m_iPos];
 	}
 
+	T& Current() override {
+		return CastArrayQueue()->m_pArray[this->m_iPos];
+	}
+
 	bool IsEnd() const override {
 		return HasNext() == false;
 	}

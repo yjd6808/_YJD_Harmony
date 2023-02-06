@@ -30,6 +30,7 @@ struct JCORE_NOVTABLE Iterator
 	virtual bool IsBegin() const = 0;
 
 	virtual T& Previous() = 0;
+	virtual T& Current() = 0;
 	virtual T& Next() = 0;
 
 	virtual bool IsValid() const {

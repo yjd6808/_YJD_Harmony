@@ -278,10 +278,7 @@ public:
 		: TMapCollection(ContainerType::HashMap),
 		m_pHeadBucket(nullptr),
 		m_pTailBucket(nullptr),
-		m_iCapacity(capacity),
-		m_KeyCollection(this),
-		m_ValueCollection(this)
-		
+		m_iCapacity(capacity)
 	{
 		int iAllocatedSize;
 		m_pTable = TAllocator::template Allocate<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
@@ -298,9 +295,7 @@ public:
 		: TMapCollection(ContainerType::HashMap),
 		m_pTable(nullptr),
 		m_pHeadBucket(nullptr),
-		m_pTailBucket(nullptr),
-		m_KeyCollection(this),
-		m_ValueCollection(this)
+		m_pTailBucket(nullptr)
 	{
 		operator=(Move(other));
 	}
@@ -346,8 +341,6 @@ public:
 		this->m_iSize = other.m_iSize;
 		this->m_iCapacity = other.m_iCapacity;
 		this->m_pTable = other.m_pTable;
-		this->m_KeyCollection = other.m_KeyCollection;
-		this->m_ValueCollection = other.m_ValueCollection;
 		this->m_pHeadBucket = other.m_pHeadBucket;
 		this->m_pTailBucket = other.m_pTailBucket;;
 
@@ -515,7 +508,18 @@ public:
 		return m_pTable != nullptr;
 	}
 
-	void PrintInfo() {
+	int BucketCount() {
+		int iCount = 0;
+		for (int i = 0; i < m_iCapacity; i++) {
+			if (m_pTable[i].IsEmpty()) {
+				continue;
+			}
+			++iCount;
+		}
+		return iCount;
+	}
+
+	/*int Elements() {
 		for (int i = 0; i < m_iCapacity; i++) {
 			if (m_pTable[i].IsEmpty()) {
 				continue;
@@ -530,7 +534,7 @@ public:
 				printf("\t키 : %d, 값 : %d\n", v.Pair.Key, v.Pair.Value);
 			}
 		}
-	}
+	}*/
 
 	SharedPtr<TIterator> Begin() const override {
 		return MakeShared<THashMapIterator, TAllocator>(
@@ -548,12 +552,12 @@ public:
 		);
 	}
 
-	TKeyCollection& Keys() override {
-		return m_KeyCollection;
+	HashMapKeyCollection Keys() {
+		return HashMapKeyCollection(this);
 	}
 
-	TValueCollection& Values() override {
-		return m_ValueCollection;
+	HashMapValueCollection Values() {
+		return HashMapValueCollection(this);
 	}
 
 	void Expand(int capacity) {
@@ -679,9 +683,6 @@ protected:
 	TBucket* m_pHeadBucket;
 	TBucket* m_pTailBucket;
 	Int32U m_iCapacity;
-
-	HashMapKeyCollection m_KeyCollection;
-	HashMapValueCollection m_ValueCollection;
 public:
 	struct HashMapKeyCollection : public TKeyCollection
 	{

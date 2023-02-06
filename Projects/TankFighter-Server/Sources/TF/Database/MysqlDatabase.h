@@ -47,7 +47,7 @@ public:
 		IOCPOverlappedQuery* pOverlapped = new IOCPOverlappedQuery(m_pIocp, future);
 
 		if (m_pIocp->Post(0, NULL, pOverlapped) == FALSE) {
-			DebugAssertMessage(false, "MysqlDatabase::QueryAsync() Failed");
+			DebugAssertMsg(false, "MysqlDatabase::QueryAsync() Failed");
 			pOverlapped->Release();
 			future->Release(2);
 			return nullptr;
@@ -65,7 +65,7 @@ public:
 	template <typename... Args>
 	JCore::SharedPtr<MysqlQuery> Query(const JCore::String& statement, Args&&... args) {
 		if (statement.Length() <= 6) {
-			DebugAssertMessage(false, "MysqlDatabase::Query() 쿼리를 똑바로 입력해주세요.");
+			DebugAssertMsg(false, "MysqlDatabase::Query() 쿼리를 똑바로 입력해주세요.");
 			return nullptr;
 		}
 
@@ -73,7 +73,7 @@ public:
 
 		if (pConn == nullptr) {
 			// 실패
-			DebugAssertMessage(false, "MysqlDatabase::Query() 커넥션 풀에서 가져오기 실패");
+			DebugAssertMsg(false, "MysqlDatabase::Query() 커넥션 풀에서 가져오기 실패");
 			return nullptr;
 		}
 

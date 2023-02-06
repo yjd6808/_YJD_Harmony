@@ -32,7 +32,7 @@ namespace JCore {
 							printf("%s\n", szFmtBuf);															\
 							JCore::Detail::__PathFileNameLevel(szFmtBuf, BufSize, __FILE__, 2);					\
 							printf("│ 파일 : %s\n", szFmtBuf);												    \
-							printf("│ 번호 : %d\n", __LINE__);													\
+							printf("│ 라인 : %d\n", __LINE__);													\
 							printf("└ 함수 : %s\n", __FUNCTION__);												\
 							std::abort();																		\
 						}																						\

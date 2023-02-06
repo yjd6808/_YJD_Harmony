@@ -39,6 +39,10 @@ public:
 		return TArrayCollectionIterator::Previous();
 	}
 
+	T& Current() override {
+		return TArrayCollectionIterator::Current();
+	}
+
 	bool IsEnd() const override {
 		return TArrayCollectionIterator::IsEnd();
 	}

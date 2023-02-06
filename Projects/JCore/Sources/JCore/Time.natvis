@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!--
+	작성자: 윤정도
+	작성일: 23/02/06
+		
+	[커스텀 리스트 아이템 사용법]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#customlistitems-expansion
+	
+	[낫비스 오류 출력법]
+	Under Tools > Options (or Debug > Options) > 
+	Debugging > Output Window, set Natvis diagnostic messages 
+	(C++ only) to Error, Warning, or Verbose, and then select OK.
+	
+	[낫비스 포맷팅]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
+	-->
+
+	<Type Name="JCore::DateTime;">
+		<DisplayString>
+			{m_Tick}
+		</DisplayString>
+		<Expand>
+			<Item Name="[tick]" ExcludeView="simple">m_Tick</Item>
+			<Item Name="[string]" ExcludeView="simple">Format("yyyy-MM-dd hh:mm:ss.ffffff")</Item>
+		</Expand>
+	</Type>
+
+	
+	
+	<Type Name="JCore::DateAndTime;">
+		<DisplayString>
+			{Year}년 {(int)Month}월 {(int)Day}일 {(int)Hour}시 {(int)Minute}분 {(int)Second}.{MiliSecond}초
+		</DisplayString>
+		<Expand>
+			<Item Name="[year]" ExcludeView="simple">Year</Item>
+			<Item Name="[month]" ExcludeView="simple">(int)Month</Item>
+			<Item Name="[day]" ExcludeView="simple">(int)Day</Item>
+			<Item Name="[hour]" ExcludeView="simple">(int)Hour</Item>
+			<Item Name="[minute]" ExcludeView="simple">(int)Minute</Item>
+			<Item Name="[second]" ExcludeView="simple">(int)Second</Item>
+			<Item Name="[milisecond]" ExcludeView="simple">MiliSecond</Item>
+			<Item Name="[microsecond]" ExcludeView="simple">MicroSecond</Item>
+		</Expand>
+	</Type>
+
+
+	<Type Name="JCore::Date;">
+		<DisplayString>
+			{Year}년 {(int)Month}월 {(int)Day}일
+		</DisplayString>
+		<Expand>
+			<Item Name="[year]" ExcludeView="simple">Year</Item>
+			<Item Name="[month]" ExcludeView="simple">(int)Month</Item>
+			<Item Name="[day]" ExcludeView="simple">(int)Day</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="JCore::Time;">
+		<DisplayString>
+			{(int)Hour}시 {(int)Minute}분 {(int)Second}.{MiliSecond}초
+		</DisplayString>
+		<Expand>
+			<Item Name="[hour]" ExcludeView="simple">(int)Hour</Item>
+			<Item Name="[minute]" ExcludeView="simple">(int)Minute</Item>
+			<Item Name="[second]" ExcludeView="simple">(int)Second</Item>
+			<Item Name="[milisecond]" ExcludeView="simple">MiliSecond</Item>
+			<Item Name="[microsecond]" ExcludeView="simple">MicroSecond</Item>
+		</Expand>
+	</Type>
+
+	
+	<Type Name="JCore::TimeSpan;">
+		<DisplayString>
+			{(double)Tick / JCore::Detail::TicksPerSecond_v,g}초
+		</DisplayString>
+		<Expand>
+			
+			<!-- 주소를 획득하기위한 꼼수를 생각해냈다.-->
+			<CustomListItems>
+				<Variable Name="dTotalDay" InitialValue="(float)Tick / Detail::TicksPerDay_v"/>
+				<Item Name="[total day]">(JCore::Detail::NatvisFloat6*)&amp;dTotalDay,na</Item>
+			</CustomListItems>
+			<CustomListItems>
+				<Variable Name="dTotalHour" InitialValue="(float)Tick / Detail::TicksPerHour_v"/>
+				<Item Name="[total hour]">(JCore::Detail::NatvisFloat6*)&amp;dTotalHour,na</Item>
+			</CustomListItems>
+			<CustomListItems>
+				<Variable Name="dTotalMinute" InitialValue="(float)Tick / Detail::TicksPerMinute_v"/>
+				<Item Name="[total minute]">(JCore::Detail::NatvisFloat6*)&amp;dTotalMinute,na</Item>
+			</CustomListItems>
+			<CustomListItems>
+				<Variable Name="dTotalSecond" InitialValue="(float)Tick / Detail::TicksPerSecond_v"/>
+				<Item Name="[total second]">(JCore::Detail::NatvisFloat6*)&amp;dTotalSecond,na</Item>
+			</CustomListItems>
+			<CustomListItems>
+				<Variable Name="dTotalMiliSecond" InitialValue="(float)Tick / Detail::TicksPerMiliSecond_v"/>
+				<Item Name="[total mili]">(JCore::Detail::NatvisFloat6*)&amp;dTotalMiliSecond,na</Item>
+			</CustomListItems>
+			<Item Name="[total micro]" ExcludeView="simple">Tick</Item>
+
+
+			
+			<Item Name="[day]" ExcludeView="simple">int(Tick / Detail::TicksPerDay_v)</Item>
+			<Item Name="[hour]" ExcludeView="simple">(Tick / Detail::TicksPerHour_v) % Detail::MaxHour_v</Item>
+			<Item Name="[minute]" ExcludeView="simple">(Tick / Detail::TicksPerMinute_v) % Detail::MaxMinute_v</Item>
+			<Item Name="[second]" ExcludeView="simple">(Tick / Detail::TicksPerSecond_v) % Detail::MaxSecond_v</Item>
+			<Item Name="[mili]" ExcludeView="simple">(Tick / Detail::TicksPerMiliSecond_v) % Detail::MaxMiliSecond_v</Item>
+			<Item Name="[micro]" ExcludeView="simple">Tick % Detail::MaxMicroSecond_v</Item>
+
+		</Expand>
+	</Type>
+</AutoVisualizer>
+

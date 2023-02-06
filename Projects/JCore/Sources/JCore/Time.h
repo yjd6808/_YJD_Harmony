@@ -13,6 +13,7 @@
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
 #include <JCore/Comparator.h>
+#include <JCore/Utils/NatvisFloat.h>
 
 namespace JCore {
 namespace Detail {
@@ -165,6 +166,7 @@ enum class TimeUnit
 
 	Date와 Time, DateAndTime의 DateTimedml 덧셈 뺄셈 연산 수행결과로 날짜, 시간, 틱이 음수가 나올 경우 예외를 던지므로
 	음수의 시간 차이를 계산하고 싶은 경우에는 DateTime의 Diff 함수를 사용하여 TimeSpan 구조체를 통해 확인할 것
+	
 	=================================================================================== */
 struct Date
 {
@@ -208,6 +210,13 @@ protected:
 	friend class DateTime;
 };
 
+
+
+
+
+/*=====================================================================================
+									Time
+ =====================================================================================*/
 struct Time
 {
 public:
@@ -259,6 +268,10 @@ protected:
 	friend class DateTime;
 };
 
+
+/*=====================================================================================
+									DateAndTime
+ =====================================================================================*/
 class DateTime;
 struct DateAndTime : Date, Time {
 	DateAndTime() = delete;
@@ -318,6 +331,13 @@ struct DateAndTime : Date, Time {
 	Int64 ToTick() const;
 };
 
+
+
+/*=====================================================================================
+								 TimeSpan
+ =====================================================================================*/
+
+
 // 음수 시간을 다룰 수 있는 구조체
 struct TimeSpan
 {
@@ -330,6 +350,13 @@ struct TimeSpan
 	double GetTotalSeconds() const { return (double)Tick / Detail::TicksPerSecond_v; }
 	double GetTotalMiliSeconds() const { return (double)Tick / Detail::TicksPerMiliSecond_v; }
 	double GetTotalMicroSeconds() const { return (double)Tick; }
+
+	Int64U GetTotalDaysInt() const { return Tick / Detail::TicksPerDay_v; }
+	Int64U GetTotalHoursInt() const { return Tick / Detail::TicksPerHour_v; }
+	Int64U GetTotalMinutesInt() const { return Tick / Detail::TicksPerMinute_v; }
+	Int64U GetTotalSecondsInt() const { return Tick / Detail::TicksPerSecond_v; }
+	Int64U GetTotalMiliSecondsInt() const { return Tick / Detail::TicksPerMiliSecond_v; }
+	Int64U GetTotalMicroSecondsInt() const { return Tick; }
 
 	int GetDay() const { return int(Tick / Detail::TicksPerDay_v); }
 	int GetHour() const { return (Tick / Detail::TicksPerHour_v) % Detail::MaxHour_v; }
@@ -350,6 +377,12 @@ struct TimeSpan
 
 	Int64 Tick{};
 };
+
+
+/*=====================================================================================
+								 DateTime
+ =====================================================================================*/
+
 
 class String;
 class DateTime
@@ -379,8 +412,8 @@ public: // public non-static
 	int GetMicroSecond() const { return GetTotalMicroSeconds() % Detail::MaxMicroSecond_v; }
 
 	
-	DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }			// 무슨 요일인지
-	MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }			// 몇달인지
+	DayOfWeek GetDayOfWeek() const { return DayOfWeek(GetTotalDays() % 7); }		// 무슨 요일인지
+	MonthOfYear GetMonthEnum() const { return MonthOfYear(GetMonth() - 1); }		// 몇달인지
 	int GetDayOfYear() const { return GetDatePart(DatePart::DayOfYear); }			// 일년기준으로 몇일인지
 	int GetMaxDayOfMonth() const { return GetDatePart(DatePart::MaxDayOfMonth); }	// 이번달이 최대 몇일인지
 	AMPM GetAMPM() const { return (GetHour() / 12) > 0 ? AMPM::PM : AMPM::AM; }		// 오전인지 오후인지
@@ -455,7 +488,6 @@ private: // private non-static
 	static void CheckOverFlow(Int64U tick);
 public: // public static
 	static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
-	static DateTime NowDetail(TimeStandard timeStandard = TimeStandard::Local);
 	static Int32 TimeZoneBiasMinute();
 	static bool IsLeapYear(int year);
 
@@ -498,9 +530,48 @@ private:
 };
 
 
+
+/*=====================================================================================
+									StopWatch
+ =====================================================================================*/
+
+enum class StopWatchMode
+{
+	System,
+	HighResolution
+};
+
+template <StopWatchMode Mode>
+struct StopWatch;
+
+
+// 정밀도: 밀리초
+template <>
+struct StopWatch<StopWatchMode::System>
+{
+	Int64U	 Start();			// 시작 지점 등록
+	TimeSpan StopReset();		// 시작 틱을 정지 틱으로 초기화
+	TimeSpan StopContinue();	// 시작 틱을 초기화 하지 않고 차이를 반환
+
+	int StartTick{};
+};
+
+// 정밀도: 마이크로초
+template <>
+struct StopWatch<StopWatchMode::HighResolution>
+{
+	StopWatch();
+
+	Int64U	 Start();
+	TimeSpan StopReset();	
+	TimeSpan StopContinue();
+
+	Int64U Precision;
+	Int64U Frequency{};
+	Int64U StartCounter{};
+};
+
+
+
 } // namespace JCore
-
-
-
-
 

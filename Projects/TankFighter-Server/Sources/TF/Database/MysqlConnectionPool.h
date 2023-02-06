@@ -50,8 +50,8 @@ struct AutoReleaseConnection
 {
 	AutoReleaseConnection(MysqlConnection* conn, MysqlConnectionPool* pool) : m_pConn(conn), m_pConnPool(pool) {}
 	~AutoReleaseConnection() {
-		DebugAssertMessage(m_pConn != nullptr, "AutoReleaseConn 소멸자 오류 발생 / 컨넥션이 NULL입니다.");
-		DebugAssertMessage(m_pConnPool != nullptr, "AutoReleaseConn 소멸자 오류 발생 / 풀이 NULL입니다.");
+		DebugAssertMsg(m_pConn != nullptr, "AutoReleaseConn 소멸자 오류 발생 / 컨넥션이 NULL입니다.");
+		DebugAssertMsg(m_pConnPool != nullptr, "AutoReleaseConn 소멸자 오류 발생 / 풀이 NULL입니다.");
 		m_pConnPool->ReleaseConnection(m_pConn);
 	}
 private:

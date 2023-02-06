@@ -36,7 +36,7 @@ namespace JCore {
                 return 0;
             }
 
-            return static_cast<T>(expected);
+            return expected;
         }
 
         T Add(T operand) { return TInterlocked::Add(&m_Value, operand); }
@@ -109,14 +109,12 @@ namespace JCore {
     template <typename T>
     class Atomic<T*>
     {
-        static_assert(IsVoidType_v<T>, "보이드 포인터는 사용불가능합니다.");
-
         using TAtomic = Atomic<T*>;
         using TInterlocked = Interlocked<T*>;
     public:
-        Atomic() : m_pValue(nullptr) {}
+        Atomic() : m_Value(nullptr) {}
         template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-        Atomic(U ptr) : m_pValue(ptr) {}
+        Atomic(U ptr) : m_Value(ptr) {}
 
         template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         void Store(U operand) { Exchange(operand); }
@@ -131,14 +129,14 @@ namespace JCore {
             return expected;
         }
 
-        T* Add(int operand) {  return TInterlocked::Add(&m_pValue, operand); }
+        T* Add(int operand) {  return TInterlocked::Add(&m_Value, operand); }
 
         template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         bool TryCompareExchange(U expected, U desired) { return CompareExchange(expected, desired); }
         template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         bool CompareExchange(U& expected, U desired) {
             T* before = expected;
-            T* initial = TInterlocked::CompareExchange(&m_pValue, expected, desired);
+            T* initial = TInterlocked::CompareExchange(&m_Value, expected, desired);
 
             if (before == initial)
                 return true;
@@ -147,9 +145,9 @@ namespace JCore {
             return false;
         }
 
-        T* ExchangeAdd(int operand) { return TInterlocked::ExchangeAdd(&m_pValue, operand); }
+        T* ExchangeAdd(int operand) { return TInterlocked::ExchangeAdd(&m_Value, operand); }
         template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
-        T* Exchange(U operand) { return TInterlocked::Exchange(&m_pValue, operand); }
+        T* Exchange(U operand) { return TInterlocked::Exchange(&m_Value, operand); }
 
 
         // =====================================================================================
@@ -176,7 +174,7 @@ namespace JCore {
         template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
         bool operator!=(U other) { return Load() != other; }
     private:
-        T* m_pValue;
+        T* m_Value;
     };
 
     template <>
@@ -223,6 +221,52 @@ namespace JCore {
         bool operator!=(bool other) { return Load() != other; }
     private:
         bool m_Value;
+    };
+
+    template <>
+    class Atomic<void*>
+    {
+        using TAtomic = Atomic<void*>;
+        using TInterlocked = Interlocked<void*>;
+    public:
+        Atomic() : m_Value(nullptr) {}
+        Atomic(void* value) : m_Value(value) {}
+        Atomic(TAtomic& other) : m_Value(other.Load()) {}
+
+        void Store(void* operand) { Exchange(operand); }
+        void* Load() {
+            void* expected = nullptr;
+            if (CompareExchange(expected, nullptr)) {
+                return nullptr;
+            }
+
+            return expected;
+        }
+
+        void* Exchange(void* operand) { return TInterlocked::Exchange(&m_Value, operand); }
+
+        bool TryCompareExchange(void* expected, void* desired) { return CompareExchange(expected, desired); }
+        bool CompareExchange(void*& expected, void* desired) {
+            void* before = expected;
+            void* initial = TInterlocked::CompareExchange(&m_Value, expected, desired);
+
+            if (before == initial)
+                return true;
+
+            expected = initial;
+            return false;
+        }
+
+        // =====================================================================================
+        // 연산자 오버로딩
+        // =====================================================================================
+        operator bool() { return Load(); }
+
+
+        bool operator==(void* other) { return Load() == other; }
+        bool operator!=(void* other) { return Load() != other; }
+    private:
+        void* m_Value;
     };
 
 	using AtomicInt64    = Atomic<Int64>;

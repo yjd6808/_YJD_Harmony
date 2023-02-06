@@ -34,7 +34,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Environment.cpp">
+    <ClCompile Include="..\Sources\JCore\Env.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -139,7 +139,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Environment.h">
+    <ClInclude Include="..\Sources\JCore\Env.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -395,6 +395,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\NatvisFloat.h" />
     <ClInclude Include="..\Sources\JCore\Wrapper\CRuntime.h">
       <SubType>
       </SubType>
@@ -403,6 +404,22 @@
       <SubType>
       </SubType>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\Sources\JCore\Container\ArrayQueue.natvis" />
+    <Natvis Include="..\Sources\JCore\Container\ArrayStack.natvis" />
+    <Natvis Include="..\Sources\JCore\Container\HashMap.natvis" />
+    <Natvis Include="..\Sources\JCore\Container\LinkedList.natvis" />
+    <Natvis Include="..\Sources\JCore\Container\ListQueue.natvis" />
+    <Natvis Include="..\Sources\JCore\Container\ListStack.natvis" />
+    <Natvis Include="..\Sources\JCore\Container\Pair.natvis" />
+    <Natvis Include="..\Sources\JCore\Container\Vector.natvis" />
+    <Natvis Include="..\Sources\JCore\Primitives\Atomic.natvis" />
+    <Natvis Include="..\Sources\JCore\Primitives\SmartPtr.natvis" />
+    <Natvis Include="..\Sources\JCore\Primitives\String.natvis" />
+    <Natvis Include="..\Sources\JCore\Time.natvis" />
+    <Natvis Include="..\Sources\JCore\Tuple.natvis" />
+    <Natvis Include="..\Sources\JCore\Utils\NatvisFloat.natvis" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

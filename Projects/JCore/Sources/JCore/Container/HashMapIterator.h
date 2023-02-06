@@ -88,6 +88,11 @@ public:
 		return val.Pair;
 	}
 
+	TKeyValuePair& Current() override {
+		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex);
+		return val.Pair;
+	}
+
 	bool IsEnd() const override {
 		return HasNext() == false;
 	}
@@ -99,7 +104,7 @@ public:
 protected:
 	THashMap* CastHashMap() const {
 		this->ThrowIfIteratorIsNotValid();
-		return this->Watcher.Get<THashMap*>();
+		return this->Watcher.template Get<THashMap*>();
 	}
 protected:
 	int m_iCurrentBucketIndex;

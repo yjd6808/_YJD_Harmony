@@ -14,7 +14,7 @@ using namespace JNetwork;
 
 void CommandParser::AddCommand(Int16 cmd, Action<Player*, ICommand*> fn) {
 	if (m_CommandMap.Exist(cmd)) {
-		DebugAssertMessage(false, "해당 커맨드가 이미 있습니다.");
+		DebugAssertMsg(false, "해당 커맨드가 이미 있습니다.");
 		return;
 	}
 

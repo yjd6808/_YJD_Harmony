@@ -26,7 +26,7 @@ void IOCPOverlappedQuery::Process(BOOL result, Int32UL numberOfBytesTransffered,
 
 	if (pConn == nullptr) {
 		// 풀링 실패
-		DebugAssertMessage(false, "IOCPOverlappedQuery::Process() Failed 커넥션 풀링 실패");
+		DebugAssertMsg(false, "IOCPOverlappedQuery::Process() Failed 커넥션 풀링 실패");
 		return;
 	}
 

@@ -47,7 +47,7 @@ void BattleFieldWorker::AddBattleFieldRoom(Room* room) {
 	NormalLockGuard guard(m_BattleFieldRoomMapLock);
 
 	if (m_BattleFieldRoomMap.Insert(room->GetRoomUID(), room) == false) {
-		DebugAssertMessage(false, "이미 배틀필드 목록에 방이 있습니다.");
+		DebugAssertMsg(false, "이미 배틀필드 목록에 방이 있습니다.");
 	}
 }
 
@@ -58,7 +58,7 @@ bool BattleFieldWorker::RemoveBattleFieldRoom(Room* room) {
 		return true;
 	}
 
-	DebugAssertMessage(false, "배틀필드를 진행중인 방이 아닙니다.");
+	DebugAssertMsg(false, "배틀필드를 진행중인 방이 아닙니다.");
 	return false;
 }
 
@@ -92,7 +92,7 @@ void BattleFieldWorker::WorkerThread()  {
 			switch (pSignal->GetType()) {
 				case Signal::Type::Stop:	DeleteSafe(pSignal);										goto THREAD_END;
 				case Signal::Type::Packet:	ProcessPacketSignal(dynamic_cast<PacketSignal*>(pSignal));	break;
-				default: DebugAssertMessage(false, "시그널 타입을 똑바로 지정해주세요.");							break;
+				default: DebugAssertMsg(false, "시그널 타입을 똑바로 지정해주세요.");							break;
 			}
 
 			DeleteSafe(pSignal);

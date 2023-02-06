@@ -367,6 +367,31 @@ public:
 	TEnumerator End() const override {
 		return MakeShared<TVectorIterator, TAllocator>(this->GetOwner(), this->Size());
 	}
+
+
+	struct Iterator 
+    {
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type   = std::ptrdiff_t;
+        using value_type        = T;
+        using pointer           = T*;
+        using reference         = T&;
+
+        Iterator(const TEnumerator& enumerator) : m_it(enumerator) {}
+
+        reference operator*() const { return *m_it->Current(); }
+        pointer operator->() { return &m_it->Current(); }
+        Iterator& operator++() { m_it->Next(); return *this; }  
+        Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+        friend bool operator== (const Iterator& a, const Iterator& b) { return a.m_it == b.m_it; }
+        friend bool operator!= (const Iterator& a, const Iterator& b) { return a.m_it == b.m_it; }
+    private:
+		TEnumerator m_it;
+    };
+
+	Iterator begin() { return Iterator(Begin()); }
+	Iterator end() { return Iterator(End()); }
+
 protected:
 	friend class TVectorIterator;
 };

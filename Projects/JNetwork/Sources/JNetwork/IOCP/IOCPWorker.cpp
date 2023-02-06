@@ -32,7 +32,7 @@ namespace JNetwork {
 		const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
 
 		if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {  // 어느 쓰레드가 꺠어날지 모르기 때문에 여기서 join을 수행하면 안됨
-			DebugAssertMessage(false, "IOCPWorker::Pause() Failed");
+			DebugAssertMsg(false, "IOCPWorker::Pause() Failed");
 			pPostOrder->Release();
 		}
 	}
@@ -49,7 +49,7 @@ namespace JNetwork {
 		ResetEvent(m_hPauseEvent);
 
 		if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {
-			DebugAssertMessage(false, "IOCPWorker::Pause() Failed");
+			DebugAssertMsg(false, "IOCPWorker::Pause() Failed");
 			pPostOrder->Release();
 		}
 	}
@@ -93,7 +93,7 @@ namespace JNetwork {
 				case IOCP_POST_ORDER_PAUSE:
 					continue;
 				case IOCP_POST_ORDER_ERROR:
-					DebugAssertMessage(false, "... WTF?");
+					DebugAssertMsg(false, "... WTF?");
 				}
 			}
 

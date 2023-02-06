@@ -18,7 +18,7 @@
 #include <TF/ServerConfiguration.h>
 
 
-#ifndef DebugAssertMessage
+#ifndef DebugAssertMsg
 	#include <cassert>
 	#define DebugAssert(exp, msg)		assert((exp) && msg)
 #endif
@@ -134,7 +134,7 @@ public:
 	template <typename... Args>
 	constexpr static JCore::String Build(JCore::String statement, Args&&... args) {
 		if (ms_pConn == nullptr) {
-			DebugAssertMessage(false, "우선 빌더의 Initailize를 호출해주세요");
+			DebugAssertMsg(false, "우선 빌더의 Initailize를 호출해주세요");
 			return "";
 		}
 

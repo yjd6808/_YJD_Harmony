@@ -38,12 +38,12 @@ namespace JNetwork {
 		}
 
 		if (!Winsock::IsInitialized()) {
-			DebugAssertMessage(false, "윈속 초기화를 먼저 해주세요. Winsock::Initialize()");
+			DebugAssertMsg(false, "윈속 초기화를 먼저 해주세요. Winsock::Initialize()");
 			return false;
 		}
 
 		if (m_pEventListener == nullptr) {
-			DebugAssertMessage(false, "이벤트 리스너를 설정해주세요.");
+			DebugAssertMsg(false, "이벤트 리스너를 설정해주세요.");
 			return false;
 		}
 
@@ -51,37 +51,37 @@ namespace JNetwork {
 		m_ServerSocket = Socket::CreateTcpV4(true);
 
 		if (!m_ServerSocket.IsValid()) {
-			DebugAssertMessage(false, "서버 소켓 Create 실패");
+			DebugAssertMsg(false, "서버 소켓 Create 실패");
 			return false;
 		}
 
 		if (m_ServerSocket.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR) {
-			DebugAssertMessage(false, "서버 소켓 SetReuseAddrEnabled(true) 실패");
+			DebugAssertMsg(false, "서버 소켓 SetReuseAddrEnabled(true) 실패");
 		}
 
 		if (m_ServerSocket.Bind(localEndPoint) == SOCKET_ERROR) {
-			DebugAssertMessage(false, "서버 소켓 Bind 실패");
+			DebugAssertMsg(false, "서버 소켓 Bind 실패");
 			return false;
 		}
 
 		if (m_ServerSocket.Listen() == SOCKET_ERROR) {
-			DebugAssertMessage(false, "서버 소켓 Listen 실패");
+			DebugAssertMsg(false, "서버 소켓 Listen 실패");
 			return false;
 		}
 
 		if (m_ServerSocket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
-			DebugAssertMessage(false, "서버 소켓 SetNonBlockingEnabled(true) 실패");
+			DebugAssertMsg(false, "서버 소켓 SetNonBlockingEnabled(true) 실패");
 		}
 
 		if (m_pIocp->Create(DefaultIocpThreadCount()) == false) {
-			DebugAssertMessage(false, "서버 IOCP 생성 실패");
+			DebugAssertMsg(false, "서버 IOCP 생성 실패");
 			return false;
 		}
 
 		// https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
 		// AcceptEx 사용시 리슨 소켓을 IOCP와 연결해줘야 클라이언트 접속을 통보받을 수 있다.
 		if (m_pIocp->Connect(reinterpret_cast<WinHandle>(m_ServerSocket.Handle()), NULL) == false) {
-			DebugAssertMessage(false, "서버소켓을 IOCP에 연결하는데 실패하였습니다.");
+			DebugAssertMsg(false, "서버소켓을 IOCP에 연결하는데 실패하였습니다.");
 			return false;
 		}
 
@@ -95,7 +95,7 @@ namespace JNetwork {
 			const SOCKET hListeningSock = this->Socket().Handle();
 
 			if (!session->Initialize()) {
-				DebugAssertMessage(false, "세션 초기화 실패");
+				DebugAssertMsg(false, "세션 초기화 실패");
 				return false;
 			}
 
@@ -134,13 +134,13 @@ namespace JNetwork {
 
 		// IOCP 핸들을 해제해주자.
 		if (m_pIocp->Destroy() == false) {
-			DebugAssertMessage(false, "IOCP 삭제에 실패하였습니다.");
+			DebugAssertMsg(false, "IOCP 삭제에 실패하였습니다.");
 			return false;
 		}
 
 		// 서버 소켓을 닫아주자.
 		if (m_ServerSocket.Close() == SOCKET_ERROR) {
-			DebugAssertMessage(false, "서버 소켓을 닫는데 실패하였습니다.");
+			DebugAssertMsg(false, "서버 소켓을 닫는데 실패하였습니다.");
 			return false;
 		}
 
@@ -167,7 +167,7 @@ namespace JNetwork {
 
 	void TcpServer::SetEventListener(TcpServerEventListener* listener) {
 		if (m_eState == State::Running || m_eState == State::Paused) {
-			DebugAssertMessage(false, "이벤트 리스너는 서버가 실행/일시 정지중인 상태에서는 변경이 불가능합니다.");
+			DebugAssertMsg(false, "이벤트 리스너는 서버가 실행/일시 정지중인 상태에서는 변경이 불가능합니다.");
 			return;
 		}
 

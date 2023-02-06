@@ -15,6 +15,7 @@ template <typename T, typename TAllocator>
 class VectorIterator : public ArrayCollectionIterator<T, TAllocator>
 {
 	using TArrayCollectionIterator  = ArrayCollectionIterator<T, TAllocator>;
+	using TVectorIterator			= VectorIterator<T, TAllocator>;
 	using TVector					= Vector<T, TAllocator>;
 public:
 	VectorIterator(VoidOwner& owner, int pos) : TArrayCollectionIterator(owner, pos) {}
@@ -36,6 +37,10 @@ public:
 		return TArrayCollectionIterator::Previous();
 	}
 
+	T& Current() override {
+		return TArrayCollectionIterator::Current();
+	}
+
 	bool IsEnd() const override {
 		return TArrayCollectionIterator::IsEnd();
 	}
@@ -43,6 +48,15 @@ public:
 	bool IsBegin() const override {
 		return TArrayCollectionIterator::IsBegin();
 	}
+
+	friend bool operator==(const TVectorIterator& lhs, const TVectorIterator& rhs) {
+		return lhs.Watcher == rhs.Watcher;
+	}
+
+	friend bool operator!=(const TVectorIterator& lhs, const TVectorIterator& rhs) {
+		return lhs.Watcher != rhs.Watcher;
+	}
+
 };
 
 } // namespace JCore

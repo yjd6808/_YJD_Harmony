@@ -47,6 +47,10 @@ public:
 		return CastArrayCollection()->m_pArray[--m_iPos];
 	}
 
+	T& Current() override {
+		return CastArrayCollection()->m_pArray[m_iPos];
+	}
+
 	bool IsEnd() const override {
 		return HasNext() == false;
 	}

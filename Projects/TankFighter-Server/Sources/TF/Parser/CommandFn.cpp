@@ -695,12 +695,12 @@ void CommandFn::CmdBattleFieldLeaveSyn(Player* player, ICommand* cmd) {
 	Channel* pChannel = pRoom->GetChannel();
 
 	if (pRoom == nullptr || pChannel == nullptr) {
-		DebugAssertMessage(false, "플레이 중인 채널 또는 방이 없습니다.");
+		DebugAssertMsg(false, "플레이 중인 채널 또는 방이 없습니다.");
 		return;
 	}
 
 	if (!pChannel->LeaveRoom(player)) {
-		DebugAssertMessage(false, "플레이어가 방을 떠나는데 실패했습니다. 방에 플레이어가 없습니다.");
+		DebugAssertMsg(false, "플레이어가 방을 떠나는데 실패했습니다. 방에 플레이어가 없습니다.");
 	}
 
 	if (!pRoom->IsEmpty()) {

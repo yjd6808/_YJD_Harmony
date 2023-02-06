@@ -68,6 +68,10 @@ public:
 		return val;
 	}
 
+	T& Current() override {
+		return m_pCurrent->Value;
+	}
+
 	bool IsEnd() const override {
 		return m_pCurrent == nullptr;
 	}

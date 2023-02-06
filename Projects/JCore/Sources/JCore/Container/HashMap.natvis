@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!--
+	작성자: 윤정도
+	작성일: 23/02/06
+	
+	[커스텀 리스트 아이템 사용법]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#customlistitems-expansion
+	
+	[낫비스 오류 출력법]
+	Under Tools > Options (or Debug > Options) > 
+	Debugging > Output Window, set Natvis diagnostic messages 
+	(C++ only) to Error, Warning, or Verbose, and then select OK.
+	
+	[낫비스 포맷팅]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
+	-->
+
+	<Type Name="JCore::HashMap&lt;*,*&gt;">
+		<Intrinsic Name="_size" Expression="m_iSize"/>
+		<DisplayString>
+			size={_size()}
+		</DisplayString>
+		<Expand>
+			<Item Name="[size]" ExcludeView="simple">m_iSize</Item>
+			<Item Name="[bucket_count]" ExcludeView="simple">this-&gt;BucketCount()</Item>
+			<Item Name="[bucket_capacity]" ExcludeView="simple">m_iCapacity</Item>
+			
+			<!--
+				HasNext() {
+					if (m_pCurrentBucket != nullptr && m_iCurrentBucketIndex < m_pCurrentBucket->Size)
+						return true;
+					return false
+				}
+				
+				Next() {
+					TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex++);
+
+					if (m_iCurrentBucketIndex < m_pCurrentBucket->Size) {
+						return val.Pair;
+					}
+
+					m_pCurrentBucket = m_pCurrentBucket->Next;
+
+					if (m_pCurrentBucket) {
+						m_iCurrentBucketIndex = 0;
+					}
+					return val.Pair;
+				}
+			-->
+				
+			<CustomListItems MaxItemsPerView="5000" ExcludeView="Test">
+				<Variable Name="pCurBucket" InitialValue="m_pHeadBucket" />
+				<Variable Name="iCurBucketIndex" InitialValue="0" />
+				<Loop>
+					<If Condition="pCurBucket != 0 &amp;&amp; iCurBucketIndex &lt; pCurBucket-&gt;Size">
+						<Item>pCurBucket-&gt;DynamicArray[iCurBucketIndex].Pair</Item>	
+						<Exec>iCurBucketIndex++</Exec>
+						<If Condition="iCurBucketIndex &gt;= pCurBucket-&gt;Size">
+							<Exec>iCurBucketIndex = 0</Exec>
+							<Exec>pCurBucket = pCurBucket-&gt;Next</Exec>
+						</If>
+
+						<If Condition="pCurBucket == 0">
+							<Break/>
+						</If>
+					</If>	
+				</Loop>
+			</CustomListItems>
+		</Expand>
+	</Type>
+
+
+</AutoVisualizer>

@@ -134,9 +134,6 @@ TEST(AtomicTest, Pointer) {
     EXPECT_FALSE(a1.Load() != orignal);
     EXPECT_FALSE(a1.Load() != orignal);
 
-    a1.Add(1);
-    EXPECT_TRUE(a1 == orignal + 1);
-
     a1.Exchange(orignal + 4);
     EXPECT_TRUE(a1 == orignal + 4);
 

@@ -19,11 +19,11 @@ namespace JNetwork {
 
 	IOCP::~IOCP()  {
 		if (m_eState == State::Running) {
-			DebugAssertMessage(false, "먼저 조인을 해주세요");
+			DebugAssertMsg(false, "먼저 조인을 해주세요");
 		}
 
 		if (m_eState != State::Destroyed && !Destroy()) {
-			DebugAssertMessage(false, "IOCP 삭제 실패");
+			DebugAssertMsg(false, "IOCP 삭제 실패");
 		}
 	}
 
@@ -57,7 +57,7 @@ namespace JNetwork {
 
 	void IOCP::Run() {
 		if (m_eState != State::Initialized) {
-			DebugAssertMessage(false, "Initialized 상태의 IOCP만 Run할 수 있습니다.");
+			DebugAssertMsg(false, "Initialized 상태의 IOCP만 Run할 수 있습니다.");
 			return;
 		}
 
@@ -67,7 +67,7 @@ namespace JNetwork {
 
 	void IOCP::Pause() {
 		if (m_eState != State::Running) {
-			DebugAssertMessage(false, "Running 상태의 IOCP만 Pause할 수 있습니다.");
+			DebugAssertMsg(false, "Running 상태의 IOCP만 Pause할 수 있습니다.");
 			return;
 		}
 
@@ -77,7 +77,7 @@ namespace JNetwork {
 
 	void IOCP::Resume() {
 		if (m_eState != State::Paused) {
-			DebugAssertMessage(false, "Paused 상태의 IOCP만 Resume할 수 있습니다.");
+			DebugAssertMsg(false, "Paused 상태의 IOCP만 Resume할 수 있습니다.");
 			return;
 		}
 
@@ -87,7 +87,7 @@ namespace JNetwork {
 
 	void IOCP::Join() {
 		if (m_eState != State::Running && m_eState != State::Paused) {
-			DebugAssertMessage(false, "Paused 또는 Running 상태의 IOCP만 Join 할 수 있습니다.");
+			DebugAssertMsg(false, "Paused 또는 Running 상태의 IOCP만 Join 할 수 있습니다.");
 			return;
 		}
 

@@ -125,7 +125,7 @@
     <ClCompile Include="..\Sources\JCore\FileSystem\File.cpp">
       <Filter>FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Environment.cpp" />
+    <ClCompile Include="..\Sources\JCore\Env.cpp" />
     <ClCompile Include="..\Sources\JCore\FileSystem\Directory.cpp">
       <Filter>FileSystem</Filter>
     </ClCompile>
@@ -416,7 +416,7 @@
     <ClInclude Include="..\Sources\JCore\FileSystem\File.h">
       <Filter>FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Environment.h" />
+    <ClInclude Include="..\Sources\JCore\Env.h" />
     <ClInclude Include="..\Sources\JCore\FileSystem\Directory.h">
       <Filter>FileSystem</Filter>
     </ClInclude>
@@ -426,5 +426,48 @@
     <ClInclude Include="..\Sources\JCore\Primitives\ArraySegment.h">
       <Filter>Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\NatvisFloat.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\Sources\JCore\Container\Vector.natvis">
+      <Filter>Container</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Container\Pair.natvis">
+      <Filter>Container</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Container\ArrayStack.natvis">
+      <Filter>Container</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Primitives\String.natvis">
+      <Filter>Primitives</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Primitives\SmartPtr.natvis">
+      <Filter>Primitives</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Primitives\Atomic.natvis">
+      <Filter>Primitives</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Container\LinkedList.natvis">
+      <Filter>Container</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Container\ListQueue.natvis">
+      <Filter>Container</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Container\ListStack.natvis">
+      <Filter>Container</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Container\HashMap.natvis">
+      <Filter>Container</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Container\ArrayQueue.natvis">
+      <Filter>Container</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Time.natvis" />
+    <Natvis Include="..\Sources\JCore\Utils\NatvisFloat.natvis">
+      <Filter>Utils</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Tuple.natvis" />
   </ItemGroup>
 </Project>

@@ -70,7 +70,7 @@ void SGPlayerController::onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d
 
 void SGPlayerController::onKeyPressed(ControlKey_t pressedKey) {
 	m_ControlKeyPressedMap[pressedKey] = true;
-	DateTime now = DateTime::NowDetail();
+	DateTime now = DateTime::Now();
 
 	m_LastestPressedKey.ControlKey = pressedKey;;
 	m_LastestPressedKey.Time = now;
@@ -92,7 +92,7 @@ void SGPlayerController::onKeyPressed(ControlKey_t pressedKey) {
 void SGPlayerController::onKeyReleased(ControlKey_t releasedKey) {
 	m_ControlKeyPressedMap[releasedKey] = false;
 	m_LastestReleasedKey.ControlKey = releasedKey;
-	m_LastestReleasedKey.Time = DateTime::NowDetail();
+	m_LastestReleasedKey.Time = DateTime::Now();
 }
 
 SpriteDirection_t SGPlayerController::getSpriteDirection() {

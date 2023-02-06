@@ -21,7 +21,7 @@ TcpClient::TcpClient() :
 TcpClient::~TcpClient() {
 
 	m_pIocp->Join();
-	DebugAssertMessage(m_pIocp->Destroy(), "IOCP 삭제에 실패하였습니다.");
+	DebugAssertMsg(m_pIocp->Destroy(), "IOCP 삭제에 실패하였습니다.");
 	DeleteSafe(m_pIocp);
 }
 
@@ -39,45 +39,45 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	}
 
 	if (!Winsock::IsInitialized()) {
-		DebugAssertMessage(false, "윈속 초기화를 먼저 해주세요. Winsock::Initialize()");
+		DebugAssertMsg(false, "윈속 초기화를 먼저 해주세요. Winsock::Initialize()");
 		return false;
 	}
 
 	if (m_pClientEventListener == nullptr) {
-		DebugAssertMessage(false, "이벤트 리스너를 설정해주세요.");
+		DebugAssertMsg(false, "이벤트 리스너를 설정해주세요.");
 		return false;
 	}
 
 	if (!Initialize()) {
-		DebugAssertMessage(false, "클라이언트 초기화에 실패하였습니다.");
+		DebugAssertMsg(false, "클라이언트 초기화에 실패하였습니다.");
 		return false;
 	}
 
 	// ConnectEx를 사용하기 위해서 클라이언트더라도 바인딩을 해줘야한다.
 	if (m_ClientSocket.BindAny() == SOCKET_ERROR) {
-		DebugAssertMessage(false, "클라이언트 Any 바인딩에 실패하였습니다.");
+		DebugAssertMsg(false, "클라이언트 Any 바인딩에 실패하였습니다.");
 		return false;
 	}
 
 	if (m_pIocp->Create(DefaultIocpThreadCount()) == false) {
-		DebugAssertMessage(false, "클라이언트 IOCP 생성 실패");
+		DebugAssertMsg(false, "클라이언트 IOCP 생성 실패");
 		return false;
 	}
 
 	if (m_pIocp->Connect(reinterpret_cast<WinHandle>(m_ClientSocket.Handle()), NULL) == false) {
-		DebugAssertMessage(false, "클라이언트 소켓을 IOCP에 연결하는데 실패하였습니다.");
+		DebugAssertMsg(false, "클라이언트 소켓을 IOCP에 연결하는데 실패하였습니다.");
 		return false;
 	}
 
 	m_pIocp->Run();
 
 	if (m_ClientSocket.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR) {
-		DebugAssertMessage(false, "클라이언트 소켓 SetReuseAddrEnabled(true) 실패");
+		DebugAssertMsg(false, "클라이언트 소켓 SetReuseAddrEnabled(true) 실패");
 		return false;
 	}
 
 	if (m_ClientSocket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
-		DebugAssertMessage(false, "클라이언트 소켓 SetNonBlockingEnabled(true) 실패");
+		DebugAssertMsg(false, "클라이언트 소켓 SetNonBlockingEnabled(true) 실패");
 		return false;
 	}
 
@@ -100,7 +100,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	if (m_ClientSocket.ConnectEx(destination, pOverlapped, dummyPacket->GetWSABuf().buf, TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
 
 		if (Winsock::LastError() != WSA_IO_PENDING) {
-			DebugAssertMessage(false, "서버 접속에 실패하였습니다.");
+			DebugAssertMsg(false, "서버 접속에 실패하였습니다.");
 			Disconnect();
 			pOverlapped->Release();
 			m_RemoteEndPoint = IPv4EndPoint{IPv4Address::Any(), 0};
@@ -130,7 +130,7 @@ bool TcpClient::Disconnect() {
 	m_ClientSocket.ShutdownBoth();		// ConnectWait 상태에서 시도하는 경우 오류를 뱉음. 그냥 무시하자.
 
 	if (m_ClientSocket.Close() == SOCKET_ERROR) {
-		DebugAssertMessage(false, "클라이언트 소켓 Close() 실패");
+		DebugAssertMsg(false, "클라이언트 소켓 Close() 실패");
 		return false;
 	}
 
@@ -144,7 +144,7 @@ bool TcpClient::Disconnect() {
 
 void TcpClient::SetEventListener(TcpClientEventListener* listener) {
 	if (!CheckState(State::Uninitialized) && !CheckState(State::Disconnected)) {
-		DebugAssertMessage(false, "연결이 끊긴 상태 또는 서버와 연결전에만 리스너 설정을 할 수 있습니다.");
+		DebugAssertMsg(false, "연결이 끊긴 상태 또는 서버와 연결전에만 리스너 설정을 할 수 있습니다.");
 		return;
 	}
 
@@ -169,18 +169,18 @@ void TcpClient::Connected() {
 
 	// 일정주기마다 "나 살아있소" 전송
 	if (m_ClientSocket.Option().SetKeepAliveEnabled(true) == SOCKET_ERROR) {
-		DebugAssertMessage(false, "클라이언트 소켓 Keep Alive 활성화 실패");
+		DebugAssertMsg(false, "클라이언트 소켓 Keep Alive 활성화 실패");
 	}
 
 	// 빠른 반응을 위해 Nagle 알고리즘을 꺼준다.
 	if (m_ClientSocket.Option().SetNagleEnabled(false) == SOCKET_ERROR) {
-		DebugAssertMessage(false, "클라이언트 소켓 Nagle 비활성화 실패");
+		DebugAssertMsg(false, "클라이언트 소켓 Nagle 비활성화 실패");
 	}
 
 	// 클라이언트는 린저를 꺼주자.
 	// 송신 버퍼에 있는 데이터를 모두 보내고 안전하게 종료할 수 있도록
 	if (m_ClientSocket.Option().SetLingerEnabled(false) == SOCKET_ERROR) {
-		DebugAssertMessage(false, "클라이언트 소켓 린저 타임아웃 설정 실패");
+		DebugAssertMsg(false, "클라이언트 소켓 린저 타임아웃 설정 실패");
 	}
 
 	m_LocalEndPoint = m_ClientSocket.GetLocalEndPoint();

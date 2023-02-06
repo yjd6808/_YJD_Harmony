@@ -7,6 +7,7 @@
 #include <JCore/Time.h>
 #include <JCore/Limit.h>
 #include <JCore/ByteUnit.h>
+#include <JCore/Env.h>
 
 #include <JCore/Allocator/DefaultAllocator.h>
 #include <JCore/Allocator/DefaultArrayAllocator.h>

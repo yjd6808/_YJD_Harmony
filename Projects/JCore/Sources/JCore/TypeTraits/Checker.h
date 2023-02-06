@@ -123,7 +123,7 @@ namespace JCore {
         struct IsVoid : FalseType {};
 
         template <>
-        struct IsVoid<void> : TrueType {};;
+        struct IsVoid<void> : TrueType {};
 
 
         

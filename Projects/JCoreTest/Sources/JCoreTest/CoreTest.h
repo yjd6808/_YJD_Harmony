@@ -63,6 +63,7 @@ using namespace JCore;
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
 	#define TEST_PathTest                    ON
+#define TEST_WaitHandleTest ON
 #define TEST_VectorTest ON
 #endif
 

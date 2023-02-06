@@ -12,7 +12,7 @@
 
 #include <JCore/FileSystem/Directory.h>
 #include <JCore/FileSystem/File.h>
-#include <JCore/Environment.h>
+#include <JCore/Env.h>
 
 #if TEST_DirectoryTest == ON
 
@@ -32,7 +32,7 @@ TEST(DirectoryTest, BasicTest) {
 		File::WriteAllText("fesfesf", StringUtil::Format("abcd2/%d.txt", i).Source());
 	}
 
-	String szPath = Environment::CurrentDirectory();
+	String szPath = Env::CurrentDirectory();
 
 
 	Vector<String> files = Directory::Files(szPath.Source(), true);

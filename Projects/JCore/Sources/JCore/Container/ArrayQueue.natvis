@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!--
+	작성자: 윤정도
+	작성일: 23/02/06
+	
+	[커스텀 리스트 아이템 사용법]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2019#customlistitems-expansion
+	
+	[낫비스 오류 출력법]
+	Under Tools > Options (or Debug > Options) > 
+	Debugging > Output Window, set Natvis diagnostic messages 
+	(C++ only) to Error, Warning, or Verbose, and then select OK.
+	
+	[낫비스 포맷팅]
+	https://learn.microsoft.com/en-us/visualstudio/debugger/format-specifiers-in-cpp?view=vs-2022#BKMK_Visual_Studio_2012_format_specifiers
+	-->
+
+
+	<Type Name="JCore::ArrayQueue&lt;*&gt;">
+		<DisplayString>
+			size={m_iSize}
+		</DisplayString>
+		<Expand>
+			<Item Name="[size]" ExcludeView="simple">m_iSize</Item>
+			<Item Name="[capacity]" ExcludeView="simple">m_iCapacity</Item>
+			
+			
+			<!--
+			
+				bool HasNext() const override {
+					if (!this->IsValid()) {
+						return false;
+					}
+
+					return IsValidIndex(this->m_iPos);
+				}
+			
+				TArrayQueue* pQueue = CastArrayQueue();
+					T& val = pQueue->m_pArray[this->m_iPos++];
+
+					if (this->m_iPos == pQueue->Capacity()) {
+						this->m_iPos = 0;
+					}
+				return val;
+				
+				
+				bool IsValidIndex(int idx) const override {
+					TArrayQueue* pQueue = CastArrayQueue();
+
+					if (pQueue->IsEmpty()) {
+						return false;
+					}
+
+					// m_iTail <= m_iHead
+					if (pQueue->IsForwardedHead()) {	
+						if (idx >= pQueue->m_iHead && idx < pQueue->Capacity())
+							return true;
+							
+						if (idx >= 0			   && idx < pQueue->m_iTail)
+							return true;
+					} 
+
+					return idx >= pQueue->m_iHead && idx < pQueue->m_iTail;
+				}
+	
+			
+			-->
+			
+			<CustomListItems>
+				<Variable Name="iCur" InitialValue="m_iHead"/>
+				<Loop>
+					
+					<If Condition="m_iSize == 0">
+						<Break/>
+					</If>
+
+					<Item>m_pArray[iCur]</Item>
+					<Exec>iCur++</Exec>
+
+					<If Condition="iCur == m_iCapacity">
+						<Exec>iCur = 0</Exec>
+					</If>
+
+
+					<If Condition="m_iTail &lt;= m_iHead">
+						<!-- 포워드 헤드 -->
+						<If Condition="iCur &gt;= m_iTail &amp;&amp; iCur &lt; m_iHead">
+							<Break/>
+						</If>
+					</If>
+					<Else>
+						<!-- 포워드 테일 -->
+						<If Condition="(iCur &gt;= m_iHead &amp;&amp; iCur &lt; m_iTail) != 1">
+							<Break/>
+						</If>
+					</Else>
+					
+					
+				</Loop>
+			</CustomListItems>
+		</Expand>
+	</Type>
+
+
+</AutoVisualizer>

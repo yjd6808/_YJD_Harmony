@@ -70,7 +70,7 @@ bool Channel::RemovePlayer(Player* player) {
 
 	if (iRoomUID != INVALID_UID) {
 		if (!LeaveRoom(player)) {
-			DebugAssertMessage(false, "플레이어가 속한 방의 UID가 이상합니다.");
+			DebugAssertMsg(false, "플레이어가 속한 방의 UID가 이상합니다.");
 			return false;
 		}
 	}
@@ -221,14 +221,14 @@ bool Channel::LeaveRoom(Player* player) {
 
 	Room* pRoom = m_RoomMap[iRoomUID];
 	if (!pRoom->RemovePlayer(player)) {
-		DebugAssertMessage(false, "방안에 해당 플레이어가 없습니다. ㄷㄷ");
+		DebugAssertMsg(false, "방안에 해당 플레이어가 없습니다. ㄷㄷ");
 		return false;
 	}
 
 	if (pRoom->IsEmpty()) {
 		if (pRoom->IsBattleFieldState()) {
 			if (!m_BattleFieldWorker.RemoveBattleFieldRoom(pRoom)) {
-				DebugAssertMessage(false, "배틀 필드 상태인데 배틀필드 워커에 없는 방입니다.");
+				DebugAssertMsg(false, "배틀 필드 상태인데 배틀필드 워커에 없는 방입니다.");
 			}
 		}
 

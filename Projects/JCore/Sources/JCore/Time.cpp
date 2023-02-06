@@ -801,16 +801,7 @@ namespace JCore
 		return DateTime(epoch);
 	}
 
-	DateTime DateTime::NowDetail(TimeStandard timeStandard) {
-		const chrono::high_resolution_clock::time_point now = chrono::high_resolution_clock::now();
-		Int64 epoch = chrono::duration_cast<chrono::microseconds>(now.time_since_epoch()).count();
-		epoch += ADBeginTick_v;
-		if (timeStandard == TimeStandard::Local) {
-			const Int32 uiBias = TimeZoneBiasMinute();
-			epoch += (uiBias * -1) * TicksPerMinute_v;
-		}
-		return DateTime(epoch);
-	}
+
 
 	// @윤년 조건 참고 : https://ko.wikipedia.org/wiki/%EC%9C%A4%EB%85%84 
 	bool DateTime::IsLeapYear(const int year) {
@@ -829,6 +820,9 @@ namespace JCore
 		}
 		return false;
 	}
+
+	
+
 
 	DateTime DateTime::AddYear(const Int32 years) {
 		AddMonth(years * 12);
@@ -1296,4 +1290,67 @@ namespace JCore
 		Tick += miliSeconds * TicksPerMiliSecond_v;
 		Tick += microSeconds * TicksPerMicroSecond_v;
 	}
+
+
+	/*=====================================================================================
+										Clock
+	=====================================================================================*/
+
+	Int64U StopWatch<StopWatchMode::System>::Start() {
+		return StartTick = ::GetTickCount();
+	}
+
+	TimeSpan StopWatch<StopWatchMode::System>::StopReset() {
+		Int32U uiStopTick = ::GetTickCount();
+		Int32U uiGap = uiStopTick - StartTick;
+		StartTick = uiStopTick;
+		return uiGap * 1'000;
+	}
+
+	TimeSpan StopWatch<StopWatchMode::System>::StopContinue() {
+		return (::GetTickCount() - StartTick) * 1'000;
+	}
+
+
+	// @함수 설명 참고: https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter
+	StopWatch<StopWatchMode::HighResolution>::StopWatch() {
+		if (!QueryPerformanceFrequency((LARGE_INTEGER*)&Frequency)) {
+			DebugAssertFmt(false, "쿼리퍼포먼스 프리퀀시 획득 실패 (오류코드: %d)", ::GetLastError());
+		}
+
+		// 기본: Freqency.QuadPart: 10'000'000
+		// 백의 자리 나노단위까지 정밀하게 측정가능
+		// TimeSpan은 마이크로초 단위까지만 이쁘게 표현가능하므로 마이크로초 단위로 변환해주자.
+		DebugAssertMsg((Frequency / 1'000'000) > 0, "프리퀀시가 마이크로초 단위 정밀도를 커버하지 못합니다.");
+		Precision = Frequency / 1'000'000;
+	}
+
+	Int64U StopWatch<StopWatchMode::HighResolution>::Start() {
+		if (!QueryPerformanceCounter((LARGE_INTEGER*)&StartCounter)) {
+			DebugAssertFmt(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		}
+
+		return StartCounter;
+	}
+
+	TimeSpan StopWatch<StopWatchMode::HighResolution>::StopReset() {
+		Int64U StopCounter;
+		if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
+			DebugAssertFmt(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		}
+
+		Int64U uiGap = StopCounter - StartCounter;
+		StartCounter = StopCounter;
+		return uiGap / Precision;
+	}
+
+	TimeSpan StopWatch<StopWatchMode::HighResolution>::StopContinue() {
+		Int64U StopCounter;
+		if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
+			DebugAssertFmt(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		}
+
+		return (StopCounter - StartCounter) / Precision;
+	}
+
 } // namespace JCore

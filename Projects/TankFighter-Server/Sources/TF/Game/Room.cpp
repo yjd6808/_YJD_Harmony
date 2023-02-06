@@ -54,7 +54,7 @@ bool Room::TryJoin(Player* player) {
 
 	// 이러면 안댐
 	if (m_PlayerList.Exist(player)) {
-		DebugAssertMessage(false, "이미 방안에 당신이 들어있습니다.");
+		DebugAssertMsg(false, "이미 방안에 당신이 들어있습니다.");
 		return false;
 	}
 

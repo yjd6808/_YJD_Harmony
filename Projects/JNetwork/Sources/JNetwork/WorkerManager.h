@@ -17,7 +17,7 @@ private:	// IOCP 클래스에서만 삭제 가능하도록 한다.
 	~WorkerManager() {
 		for (int i = 0; i < m_Workers.Size(); i++) {
 			if (CloseHandle(m_pHandles[i]) == FALSE) {
-				DebugAssertMessage(false, "워커 매니저 핸들을 닫는데 실패하였습니다.");
+				DebugAssertMsg(false, "워커 매니저 핸들을 닫는데 실패하였습니다.");
 			}
 
 			DeleteSafe(m_Workers[i]);

@@ -68,7 +68,7 @@ public:
 	// m_iReadPos와 m_iWritePos 사이의 데이터를 len만큼 앞으로 당김
 	void Pop(int len, bool forceMove = false) {
 		if (!forceMove && m_iReadPos - len < 0) {
-			DebugAssertMessage(false, "len > m_iReadPos");
+			DebugAssertMsg(false, "len > m_iReadPos");
 			return;
 		}
 

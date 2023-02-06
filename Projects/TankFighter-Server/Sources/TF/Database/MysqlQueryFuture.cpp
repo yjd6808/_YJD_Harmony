@@ -12,7 +12,7 @@ MysqlQueryFuture::MysqlQueryFuture(const JCore::String& statement) :
 {
 	m_eStatement = MysqlQuery::ParseStatement(statement);
 	if (m_WaitHandle == INVALID_HANDLE_VALUE)
-		DebugAssertMessage(false, "핸들이 제대로 생성되지 않았습니다.");
+		DebugAssertMsg(false, "핸들이 제대로 생성되지 않았습니다.");
 }
 
 MysqlQueryFuture::~MysqlQueryFuture() {
@@ -24,7 +24,7 @@ MysqlQueryFuture::~MysqlQueryFuture() {
 }
 
 MysqlQuery& MysqlQueryFuture::Wait() {
-	DebugAssertMessage(m_WaitHandle != INVALID_HANDLE_VALUE, "핸들이 nullptr 입니다.");
+	DebugAssertMsg(m_WaitHandle != INVALID_HANDLE_VALUE, "핸들이 nullptr 입니다.");
 	if (m_bReady == false) {
 		// IOCPOverlappedQuery에서 아직 쿼리 결과가 준비가 안된 경우 시그널을 보낼때까지 기다린다.
 		WaitForSingleObject(m_WaitHandle, INFINITE);

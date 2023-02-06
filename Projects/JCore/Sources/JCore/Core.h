@@ -25,6 +25,8 @@
 #include <JCore/Define.h>
 #include <JCore/Assert.h>
 
+
+
  // 22년 12월 19일 새벽 5시
  // 내가 지금까지 계속 main 함수 내에서만 메모리릭 체크를 할려고했는데.
  // 생각해보면 PCH에서 가장먼저 체크를 시작하면 된다.
@@ -32,19 +34,22 @@
  // 체크할 수 있게된다.
  // 새벽3시에 깻는데 이거땜에 잠이 안와서 누워서 2시간동안 계속 고민했는데 드디어 방법을 찾았다. ㅠㅠ
 
-inline auto JCoreInitializer = [] {
-	// 콘솔출력 인코딩 설정
-	//  - 전 소스파일 UTF8 통일
-	//  - MSVC 컴파일러 옵션 설정도 변경함
-	JCore::NormalConsole::Init();
-	JCore::NormalConsole::SetOutputCodePage(JCore::UTF8);
-	
+namespace JCore {
 
-	// 글로벌 메모리릭 체크
-	static JCore::AutoMemoryLeakDetector _2{ [](Int32U uiLeaked) {
-		JCore::NormalConsole::WriteLine("[메모리릭 %u바이트]", uiLeaked);
-	}};
-	return 0;
-}();
+	extern Int64 AppTime_v;
+	inline auto JCoreInitializer = [] {
+		// 콘솔출력 인코딩 설정
+		//  - 전 소스파일 UTF8 통일
+		//  - MSVC 컴파일러 옵션 설정도 변경함
+		JCore::NormalConsole::Init();
+		JCore::NormalConsole::SetOutputCodePage(JCore::UTF8);
 
+
+		// 글로벌 메모리릭 체크
+		static JCore::AutoMemoryLeakDetector _2{ [](Int32U uiLeaked) {
+			JCore::NormalConsole::WriteLine("[메모리릭 %u바이트]", uiLeaked);
+		} };
+		return 0;
+	}();
+}
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+	<!-- 참고: https://stackoverflow.com/questions/31689857/natvis-floating-point-format 
+	     낫비스 플로팅 프로시전 -->
+	<Type Name="JCore::Detail::NatvisFloat6">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}{((long long)(f*100000))%10}{((long long)(f*1000000))%10}</DisplayString>
+	</Type>
+	<Type Name="JCore::Detail::NatvisFloat5">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}{((long long)(f*100000))%10}</DisplayString>
+	</Type>
+	<Type Name="JCore::Detail::NatvisFloat4">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}{((long long)(f*10000))%10}</DisplayString>
+	</Type>
+	<Type Name="JCore::Detail::NatvisFloat3">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}{((long long)(f*1000))%10}</DisplayString>
+	</Type>
+	<Type Name="JCore::Detail::NatvisFloat2">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}{((long long)(f*100))%10}</DisplayString>
+	</Type>
+	<Type Name="JCore::Detail::NatvisFloat1">
+		<DisplayString>{(long long)f}.{((long long)(f*10))%10}</DisplayString>
+	</Type>
+</AutoVisualizer>

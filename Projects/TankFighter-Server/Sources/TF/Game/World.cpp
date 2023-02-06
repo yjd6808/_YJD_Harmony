@@ -96,12 +96,12 @@ bool World::RemovePlayer(Player* player) {
 		const int iChannedUID = player->GetChannelUID();
 
 		if (!m_ChannelMap.Exist(iChannedUID)) {
-			DebugAssertMessage(false, "플레이어가 속한 채널 UID가 이상합니다.");
+			DebugAssertMsg(false, "플레이어가 속한 채널 UID가 이상합니다.");
 			return false;
 		}
 
 		if (!m_ChannelMap[iChannedUID]->RemovePlayer(player)) {
-			DebugAssertMessage(false, "플레이어가 속한 채널에 없습니다.");
+			DebugAssertMsg(false, "플레이어가 속한 채널에 없습니다.");
 			return false;
 		}
 	}

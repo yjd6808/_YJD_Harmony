@@ -39,6 +39,11 @@ public:
 		return TListCollectionIterator::Previous();
 	}
 
+	T& Current() override {
+		return TListCollectionIterator::Current();
+	}
+
+
 	bool IsEnd() const override {
 		return TListCollectionIterator::IsEnd();
 	}
