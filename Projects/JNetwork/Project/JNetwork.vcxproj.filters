@@ -60,7 +60,6 @@
     <ClInclude Include="..\Sources\JNetwork\Host\TcpSession.h">
       <Filter>Host</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Buffer.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\TcpSessionContainer.h">
       <Filter>Host</Filter>
     </ClInclude>
@@ -79,7 +78,6 @@
     <ClInclude Include="..\Sources\JNetwork\IOCP\IOCPPostOrder.h">
       <Filter>IOCP</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Packet.h" />
     <ClInclude Include="..\Sources\JNetwork\Worker.h" />
     <ClInclude Include="..\Sources\JNetwork\WorkerManager.h" />
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.h">
@@ -97,7 +95,6 @@
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.h">
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\PacketGenerator.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Session.h">
       <Filter>Host</Filter>
     </ClInclude>
@@ -111,6 +108,18 @@
       <Filter>Host\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Namespace.h" />
+    <ClInclude Include="..\Sources\JNetwork\Buffer\Buffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Packet\Packet.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Buffer\StaticBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Buffer\CommnadBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">
@@ -124,6 +133,12 @@
     </Filter>
     <Filter Include="Host\Listener">
       <UniqueIdentifier>{ea21f6b0-8056-4e44-b45f-9aa1d81306b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{9e8e93e2-56cf-4941-a5af-677ab1610c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffer">
+      <UniqueIdentifier>{0ac9912d-3fa8-4c08-a330-c450b5db4d1d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

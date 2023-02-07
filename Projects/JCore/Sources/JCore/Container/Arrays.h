@@ -52,46 +52,46 @@ struct Arrays final
 	// 길이를 모르는 포인터타입인 경우
 	template <typename T>
 	static void SortInsertion(T* arr, const int arrSize) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 		InsertionSort(arr, arrSize, NaturalOrder{});
 	}
 
 	// 길이를 모르는 포인터타입인 경우
 	template <typename T, typename TPredicate>
 	static void SortInsertion(T* arr, const int arrSize, TPredicate&& predicate) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 		InsertionSort(arr, arrSize, Move(predicate));
 	}
 
 	// 길이를 모르는 포인터타입인 경우
 	template <typename T>
 	static void Sort(T* arr, const int arrSize) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 		QuickSort(arr, 0, arrSize - 1, NaturalOrder{});
 	}
 
 	// 길이를 모르는 포인터타입인 경우
 	template <typename T, typename TPredicate>
 	static void Sort(T* arr, const int arrSize, TPredicate&& predicate) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 		QuickSort(arr, 0, arrSize - 1, Move(predicate));
 	}
 
 	template <typename T>
 	static void SortRange(T* arr, const int startIdx, const int endIdx) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfRangeIsInvalid(startIdx, endIdx);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(startIdx >= 0 && startIdx <= endIdx, "올바르지 않은 인덱스 범위입니다.");
 		QuickSort(arr, startIdx, endIdx, NaturalOrder{});
 	}
 
 	template <typename T, typename TPredicate>
 	static void SortRange(T* arr, const int startIdx, const int endIdx, TPredicate&& predicate) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfRangeIsInvalid(startIdx, endIdx);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(startIdx >= 0 && startIdx <= endIdx, "올바르지 않은 인덱스 범위입니다.");
 		QuickSort(arr, startIdx, endIdx, Move(predicate));
 	}
 
@@ -108,7 +108,7 @@ struct Arrays final
 	// 길이를 모르는 포인터 타입인 경우
 	template <typename T>
 	static int LinearSearch(T* arr, const int arrSize, const T& data) {
-		ThrowIfArrayIsNull(arr);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
 
 		for (int i = 0; i < arrSize; i++) {
 			if (arr[i] == data) {
@@ -130,8 +130,8 @@ struct Arrays final
 
 	template <typename T>
 	static int LinearSearchReverse(T* arr, const int arrSize, const T& data) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 
 
 		for (int i = arrSize - 1; i >= 0; i--) {
@@ -151,8 +151,8 @@ struct Arrays final
 
 	template <typename T>
 	static int BinarySearch(T* arr, const int arrSize, const T& data) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 
 		int iStart = 0;
 		int iEnd = arrSize - 1;
@@ -222,8 +222,8 @@ struct Arrays final
 
 	template <typename T, typename TVal, typename TPredicate>
 	static int LowerBound(const T* arr, const int arrSize, TVal&& data, TPredicate&& predicate) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 
 		return std::lower_bound(arr, arr + arrSize, Forward<TVal>(data), Forward<TPredicate>(predicate)) - arr;
 	}
@@ -233,8 +233,8 @@ struct Arrays final
 	// 머리가 핑핑돌아서 구현을 못하겠다.
 	template <typename T>
 	static int LowerBound(const T* arr, const int arrSize, const T& data) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 
 		return std::lower_bound(arr, arr + arrSize, data) - arr;
 	}
@@ -251,8 +251,8 @@ struct Arrays final
 
 	template <typename T>
 	static int UpperBound(T* arr, const int arrSize, const T& data) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfArraySizeIsInvalid(arrSize);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 
 		return std::upper_bound(arr, arr + arrSize, data) - arr;
 	}
@@ -311,8 +311,8 @@ struct Arrays final
 
 	template <typename T>
 	static void SwapCheck(T* arr, int size, int l, int r) {
-		ThrowIfArrayIsNull(arr);
-		ThrowIfRangeIsInvalid(arr, size, l, r);
+		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
+		DebugAssertMsg(l <= r && l >= 0 && l < size && r >= 0 && r < size, "올바르지 않은 인덱스 범위입니다.");
 
 		Swap(arr, l, r);
 	}
@@ -366,41 +366,6 @@ private:
 		}
 	}
 	
-private: // Throws
-	template <typename T>
-	static void ThrowIfArrayIsNull(T* arr) {
-		if (arr == nullptr) {
-			throw InvalidArgumentException("arr == nullptr");
-		}
-	}
-
-	static void ThrowIfArraySizeIsInvalid(const int arrSize) {
-		if (arrSize < 1) {
-			throw InvalidArgumentException("arrSize는 무조건 1이상이어야합니다.");
-		}
-	}
-
-	static void ThrowIfRangeIsInvalid(const int startIdx, const int endIdx) {
-		if (startIdx < 0 || startIdx > endIdx) {
-			throw InvalidArgumentException("올바르지 않은 인덱스 범위입니다.");
-		}
-	}
-
-	template <typename T, Int32U Size>
-	static void ThrowIfRangeIsInvalid(const T(&arr)[Size], const int startIdx, const int endIdx) {
-		if (startIdx <= endIdx && startIdx >= 0 && startIdx < Size && endIdx >= 0 && endIdx < Size)
-			return;
-
-		throw InvalidArgumentException("올바르지 않은 인덱스 범위입니다.");
-	}
-
-	template <typename T>
-	static void ThrowIfRangeIsInvalid(const T* arr, int size, const int startIdx, const int endIdx) {
-		if (startIdx <= endIdx && startIdx >= 0 && startIdx < size && endIdx >= 0 && endIdx < size)
-			return;
-
-		throw InvalidArgumentException("올바르지 않은 인덱스 범위입니다.");
-	}
 };
 
 NS_JC_END

@@ -84,7 +84,15 @@
     <ClCompile Include="..\Sources\JNetwork\Winsock.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\JNetwork\Buffer.h" />
+    <ClInclude Include="..\Sources\JNetwork\Buffer\Buffer.h" />
+    <ClInclude Include="..\Sources\JNetwork\Buffer\CommnadBuffer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Buffer\StaticBuffer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\ByteOrder.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Listener\SessionEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpServerEventListener.h" />
@@ -170,14 +178,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
-    <ClInclude Include="..\Sources\JNetwork\Packet.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\PacketGenerator.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Packet\Packet.h" />
     <ClInclude Include="..\Sources\JNetwork\Protocol.h" />
     <ClInclude Include="..\Sources\JNetwork\Socket.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

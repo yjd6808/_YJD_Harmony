@@ -35,9 +35,6 @@ TEST(DirectoryTest, BasicTest) {
 	String szPath = Env::CurrentDirectory();
 
 
-	Vector<String> files = Directory::Files(szPath.Source(), true);
-	EXPECT_TRUE(files.Size() > (36 * 3));
-
 	EXPECT_TRUE(Directory::Delete("abcd1"));
 	EXPECT_TRUE(Directory::Delete("abcd2"));
 

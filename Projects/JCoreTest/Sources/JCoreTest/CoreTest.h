@@ -34,7 +34,6 @@
 
 #include <JCore/TypeTraits.h>
 #include <JCore/Limit.h>
-#include <JCore/System/JCoreSystem.h>
 #include <JCore/Allocator/DefaultArrayAllocator.h>
 #include <JCore/Debug/MemoryLeakDetector.h>
 #include <JCore/Debug/MemoryPoolLeakDetector.h>

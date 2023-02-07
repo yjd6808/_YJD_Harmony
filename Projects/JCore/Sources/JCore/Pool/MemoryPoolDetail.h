@@ -27,6 +27,8 @@ inline constexpr int MemoryBlockSizeMap_v[] {
 	1 << 20, 1 << 21, 1 << 22, 1 << 23, 1 << 24
 };
 
+inline char MemoryIndexSizeMap_v;
+
 inline constexpr int MemoryBlockSizeMapSize_v = sizeof(MemoryBlockSizeMap_v) / sizeof(int);
 inline constexpr int InvalidSlot_v = -1;
 

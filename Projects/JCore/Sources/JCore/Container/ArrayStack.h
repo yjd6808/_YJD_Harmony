@@ -27,6 +27,16 @@ public:
 	{
 	}
 
+	ArrayStack(int size, const T& initData)
+		: TArrayCollection(size, ContainerType::ArrayStack, initData)
+	{
+	}
+
+	ArrayStack(int size, T&& initData)
+		: TArrayCollection(size, ContainerType::ArrayStack, Move(initData))
+	{
+	}
+
 	ArrayStack(const TArrayStack& other) 
 		: TArrayCollection(other, ContainerType::ArrayStack) 
 	{

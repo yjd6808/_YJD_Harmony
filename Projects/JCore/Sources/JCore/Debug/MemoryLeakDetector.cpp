@@ -9,8 +9,6 @@
 #include <JCore/Core.h>
 #include <JCore/Debug/MemoryLeakDetector.h>
 
-#include <crtdbg.h>
-
 NS_JC_BEGIN
 
     // ===================================================================================================================

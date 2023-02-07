@@ -118,6 +118,9 @@
       <Filter>FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Assert.cpp" />
+    <ClCompile Include="..\Sources\JCore\Pool\MemoryChunkQueue.cpp">
+      <Filter>Pool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />

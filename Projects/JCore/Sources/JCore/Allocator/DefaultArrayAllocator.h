@@ -16,7 +16,6 @@ NS_JC_BEGIN
 inline MemoryPool<eSingle, eBinarySearch> ArrayAllocatorPool_v
 {
 	{
-		{ 4, 1 },
 		/* 테스트 완료, 봉인
 		{ 8, 0 },
 		{ 16, 64 },

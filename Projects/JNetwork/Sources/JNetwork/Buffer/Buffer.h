@@ -26,11 +26,16 @@
 
 NS_JNET_BEGIN
 
-template <Int32U BufferSize>
 class Buffer
 {
-	using TBuffer = Buffer<BufferSize>;
 public:
+	Buffer(char* buffer, int bufferSize)
+		: m_pBuffer(buffer)
+		, m_iBufferSize(bufferSize)
+		, m_iReadPos(0)
+		, m_iWritePos(0)
+	{}
+
 	template <typename T>
 	T Read() {
 		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
@@ -39,7 +44,7 @@ public:
 			return nullptr;
 		}
 
-		T pRet = reinterpret_cast<T>(m_Buffer + m_iReadPos);
+		T pRet = reinterpret_cast<T>(m_pBuffer + m_iReadPos);
 		m_iReadPos += sizeof(JCore::RemovePointer_t<T>);
 		return pRet;
 	}
@@ -50,7 +55,7 @@ public:
 			return false;
 		}
 
-		JCore::Memory::CopyUnsafe(m_Buffer + m_iWritePos, &data, sizeof(T));
+		JCore::Memory::CopyUnsafe(m_pBuffer + m_iWritePos, &data, sizeof(T));
 		m_iWritePos += sizeof(T);
 		return true;
 	}
@@ -58,7 +63,7 @@ public:
 	template <typename T>
 	T Peek() {
 		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
-		return reinterpret_cast<T>(m_Buffer + m_iReadPos);
+		return reinterpret_cast<T>(m_pBuffer + m_iReadPos);
 	}
 
 	bool MoveReadPos(int size) {
@@ -99,18 +104,18 @@ public:
 		}
 
 		JCore::Memory::CopyUnsafe(
-			m_Buffer + m_iReadPos,
-			m_Buffer + iBeforeReadPos,
+			m_pBuffer + m_iReadPos,
+			m_pBuffer + iBeforeReadPos,
 			m_iWritePos - m_iReadPos);
 	}
 
 
 	WSABUF GetRemainBuffer() {
-		return { BufferSize - m_iWritePos, reinterpret_cast<char*>(m_Buffer + m_iWritePos) };
+		return { (Int32U)m_iBufferSize - m_iWritePos, m_pBuffer + m_iWritePos };
 	}
 
 	int GetRemainBufferSize() const {
-		return BufferSize - m_iWritePos;
+		return m_iBufferSize - m_iWritePos;
 	}
 
 	int GetReadableBufferSize() const {
@@ -120,7 +125,7 @@ public:
 	
 	int GetReadPos() const { return m_iReadPos; }
 	int GetWritePos() const { return m_iWritePos; }
-	static int GetBufferCapacity() { return BufferSize; }
+	int GetBufferCapacity() { return m_iBufferSize; }
 	
 
 	void Clear() {
@@ -137,19 +142,18 @@ private:
 	}
 
 	bool IsWriteable(int size) const {
-		if (m_iWritePos + size > BufferSize) {
+		if (m_iWritePos + size > m_iBufferSize) {
 			return false;
 		}
 
 		return true;
 	}
 private:
-	char m_Buffer[BufferSize] = {};
-	int m_iReadPos = 0;
-	int m_iWritePos = 0;
+	char* m_pBuffer;
+	int m_iReadPos;
+	int m_iWritePos;
+	int m_iBufferSize;
 };
-
-using SessionBuffer = Buffer<4096UL>;
 
 NS_JNET_END
 

@@ -21,8 +21,7 @@
 #include <JNetwork/IOCP/IOCP.h>
 
 #include <JNetwork/Socket.h>
-#include <JNetwork/Packet.h>
-#include <JNetwork/Buffer.h>
+#include <JNetwork/Buffer/StaticBuffer.h>
 
 
 
@@ -45,9 +44,14 @@ public:
 public:
 	IPv4EndPoint GetLocalEndPoint() const { return m_LocalEndPoint; }
 	IPv4EndPoint GetRemoteEndPoint() const { return m_RemoteEndPoint; }
-	SessionBuffer* GetReceiveBuffer() { return &m_ReceiveBuffer; }
+	Buffer* GetReceiveBuffer() { return &m_ReceiveBuffer; }
+
+
 	State GetState() { return (State)m_eState.Load(); }
 	bool SendAsync(ISendPacket* packet);
+
+	void* SendAllocation();
+	
 	virtual bool Disconnect();
 protected:
 	TcpSession(IOCP* iocp, TcpServerEventListener* listener = nullptr);
@@ -73,15 +77,16 @@ protected:
 private:
 	TcpServerEventListener* m_pServerEventListener;							// TcpClient 입장에서는 nullptr로 사용하지 않음 / 그래서 private으로 둠
 protected:
-	SessionBuffer m_ReceiveBuffer;
+	Buffer* m_pRecvBuffer;
+	Buffer* m_pSendBuffer;
+
 	Socketv4 m_ClientSocket;
 	IOCP* m_pIocp;															// TcpClient 입장에서는 생성/소멸을 해줘야하는 객체이지만 TcpSession 입장에서는 TcpServer의 IOCP를 단순히 참조하는 용도이다.
 	IPv4EndPoint m_RemoteEndPoint;
 	IPv4EndPoint m_LocalEndPoint;
-	bool m_bReuseSession;
 
-	JCore::Atomic<int> m_eState;
-	JCore::RecursiveLock m_Lock;
+	JCore::AtomicInt m_eState;
+
 	
 	friend class TcpServer;
 	friend class TcpSessionContainer;

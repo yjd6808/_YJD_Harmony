@@ -55,6 +55,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
+    <ClCompile Include="..\Sources\JCore\Pool\MemoryChunkQueue.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Primitives\ObserverPtr.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\String.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\StringUtil.cpp" />

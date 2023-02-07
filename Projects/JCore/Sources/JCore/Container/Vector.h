@@ -77,6 +77,10 @@ public:
 		return *this;
 	}
 
+	T& At(const int idx) {
+		return this->GetAt(idx);
+	}
+
 	void PushBack(const T& data) {
 		if (this->IsFull()) {
 			this->ExpandAuto();
