@@ -9,14 +9,15 @@
 #include <JCore/TypeCast.h>
 #include <JCore/Sync/AutoResetEvent.h>
 
-namespace JCore {
-    AutoResetEvent::AutoResetEvent(AutoResetEvent&& other) noexcept : WaitHandle(Move(other)) {}
+NS_JC_BEGIN
 
-    AutoResetEvent& AutoResetEvent::operator=(AutoResetEvent&& other) noexcept {
-        WaitHandle::operator=(Move(other));
-        return *this;
-    }
+AutoResetEvent::AutoResetEvent(AutoResetEvent&& other) noexcept : WaitHandle(Move(other)) {}
 
-} // namespace JCore
+AutoResetEvent& AutoResetEvent::operator=(AutoResetEvent&& other) noexcept {
+    WaitHandle::operator=(Move(other));
+    return *this;
+}
+
+NS_JC_END
  
 

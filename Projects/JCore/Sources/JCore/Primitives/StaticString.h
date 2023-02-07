@@ -14,7 +14,7 @@
 #pragma warning(push)
   #pragma warning (disable : 4200) // nonstandard extension used : zero - sized array in struct / union -> Source[0] 같은거
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <Int32U Size>
 struct StaticString
@@ -274,6 +274,6 @@ std::ostream& operator<<(std::ostream& os, const StaticString<ParamSize>& str) {
 	return os << str.Source;
 }
 
-} // namespace JCore
+NS_JC_END
 
 #pragma warning(pop)

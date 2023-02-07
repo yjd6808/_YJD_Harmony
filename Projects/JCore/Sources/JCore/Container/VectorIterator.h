@@ -6,7 +6,7 @@
 
 #include <JCore/Container/ArrayCollectionIterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 // 전방 선언
 class VoidOwner;
@@ -59,4 +59,4 @@ public:
 
 };
 
-} // namespace JCore
+NS_JC_END

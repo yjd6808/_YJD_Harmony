@@ -7,7 +7,7 @@
 #include <JCore/Declspec.h>
 #include <JCore/Primitives/ObserverPtr.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 /*=====================================================================================
 						반복자 최상위 인터페이스
@@ -52,4 +52,4 @@ protected:
 	union { VoidWatcher Watcher; };
 };
 
-} // namespace JCore
+NS_JC_END

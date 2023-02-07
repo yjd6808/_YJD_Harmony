@@ -45,7 +45,7 @@ struct DynamicMessage : ICommand
 
 
 
-class MyClientEventListener : public TcpClientEventListener
+class MyClientEventListener : public SessionEventListener
 {
 protected:
 	virtual void OnConnected() {

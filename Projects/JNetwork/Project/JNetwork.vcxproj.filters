@@ -104,12 +104,13 @@
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedDisconnect.h">
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpClientEventListener.h">
+    <ClInclude Include="..\Sources\JNetwork\Host\Listener\SessionEventListener.h">
       <Filter>Host\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpServerEventListener.h">
       <Filter>Host\Listener</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Namespace.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">

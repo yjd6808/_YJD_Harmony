@@ -6,7 +6,7 @@
 
 #include <JCore/Container/Iterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 		
 // 전방 선언
@@ -77,4 +77,4 @@ ArrayCollectionIterator<T, TAllocator>::~ArrayCollectionIterator() noexcept {
 }
 
 
-} // namespace JCore
+NS_JC_END

@@ -7,7 +7,7 @@
 
 #include <JCore/Type.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 // void 타입으로 삭제할 경우 소멸자가 호출되지 않는다
 // 소멸자가 호출될 필요없는 경우에 사용하도록 하자.
@@ -152,4 +152,4 @@ struct PlacementDeletor<T[ArraySize], Option> : PlacementDeletorBase<T[ArraySize
 
 
 
-} // namespace JCore
+NS_JC_END

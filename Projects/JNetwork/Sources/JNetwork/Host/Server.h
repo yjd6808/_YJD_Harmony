@@ -3,7 +3,7 @@
 #include <JCore/Declspec.h>
 #include <JNetwork/Socket.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class JCORE_NOVTABLE Server
 {
@@ -35,4 +35,4 @@ protected:
 	Socketv4 m_ServerSocket;
 };
 
-}
+NS_JNET_END

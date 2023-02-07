@@ -7,7 +7,7 @@
 #include <JNetwork/WorkerManager.h>
 #include <JNetwork/IOCP/IOCPWorker.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 	IOCP::IOCP() :
 		m_eState(State::Uninitialized),

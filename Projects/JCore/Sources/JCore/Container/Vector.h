@@ -8,7 +8,7 @@
 #include <JCore/Container/VectorIterator.h>
 #include <JCore/Container/ArrayCollection.h>
 
-namespace JCore { // namespace JCore
+NS_JC_BEGIN
 
 /*=====================================================================================
 								  벡터
@@ -396,4 +396,4 @@ protected:
 	friend class TVectorIterator;
 };
 
-} // namespace JCore
+NS_JC_END

@@ -9,7 +9,7 @@
 #include <JCore/Core.h>
 #include <JCore/Primitives/ObserverPtr.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 
 /*=====================================================================================
@@ -79,4 +79,4 @@ bool operator==(std::nullptr_t, const VoidWatcher& rhs) {
 
 
 
-} // namespace JCore
+NS_JC_END

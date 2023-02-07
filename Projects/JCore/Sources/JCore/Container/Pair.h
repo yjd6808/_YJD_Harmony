@@ -6,7 +6,7 @@
 
 #include <JCore/TypeCast.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename TKey, typename TValue>
 struct Pair
@@ -20,4 +20,4 @@ constexpr Pair<NaturalType_t<TKey>, NaturalType_t<TValue>> MakePair(TKey&& key, 
 	return { Forward<TKey>(key), Forward<TValue>(value) };
 }
 
-} // namespace JCore
+NS_JC_END

@@ -12,7 +12,7 @@
 
 #include <crtdbg.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 	AutMemoryPoolLeakDetector::AutMemoryPoolLeakDetector(MemoryPoolAbstract* pool, const TAction& action)
 	: m_Pool(pool)

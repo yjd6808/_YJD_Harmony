@@ -18,18 +18,19 @@
 
 #include <JCore/Sync/ILock.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
-  class UnusedLock final : public ILock
-  {
-  public:
-    void Lock() override {}
-    bool TryLock() override { return true; }
-    void Unlock() override {}
-    bool IsLocked() override { return false; }
-  };
+class UnusedLock final : public ILock
+{
+public:
+void Lock() override {}
+bool TryLock() override { return true; }
+void Unlock() override {}
+bool IsLocked() override { return false; }
+};
 
-  using UnusedLockGuard = LockGuard<UnusedLock>;
-  extern template         LockGuard<UnusedLock>;
-} // namespace JCore;
+using UnusedLockGuard = LockGuard<UnusedLock>;
+extern template         LockGuard<UnusedLock>;
+
+NS_JC_END;
 

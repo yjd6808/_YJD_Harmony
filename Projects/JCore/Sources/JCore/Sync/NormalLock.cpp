@@ -10,45 +10,45 @@
 #include <JCore/Sync/NormalLock.h>
 
 
-namespace JCore {
+NS_JC_BEGIN
 
-	template class LockGuard<NormalLock>;
+template class LockGuard<NormalLock>;
 
-	NormalLock::NormalLock() {
-		InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
-	}
+NormalLock::NormalLock() {
+	InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
+}
 
-	NormalLock::~NormalLock() {
-		DeleteCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
-	}
+NormalLock::~NormalLock() {
+	DeleteCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
+}
 
-	void NormalLock::Lock() {
-		if (m_hOwnThread != nullptr)
-			throw RuntimeException("이미 잠겨있습니다.");
+void NormalLock::Lock() {
+	if (m_hOwnThread != nullptr)
+		throw RuntimeException("이미 잠겨있습니다.");
 
-		EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
+	EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
+	m_hOwnThread = m_CriticalSection.OwningThread;
+}
+
+void NormalLock::Unlock() {
+	m_hOwnThread.Store(nullptr);
+	LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
+}
+
+bool NormalLock::TryLock() {
+	
+    if (IsLocked())
+        return false;
+
+	if ((bool)TryEnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection))) {
 		m_hOwnThread = m_CriticalSection.OwningThread;
+		return true;
 	}
+	return false;
+}
 
-	void NormalLock::Unlock() {
-		m_hOwnThread.Store(nullptr);
-		LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
-	}
+bool NormalLock::IsLocked() {
+	return m_hOwnThread != nullptr;
+}
 
-	bool NormalLock::TryLock() {
-		
-        if (IsLocked())
-            return false;
-
-		if ((bool)TryEnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection))) {
-			m_hOwnThread = m_CriticalSection.OwningThread;
-			return true;
-		}
-		return false;
-	}
-
-	bool NormalLock::IsLocked() {
-		return m_hOwnThread != nullptr;
-	}
-
-} // namespace JCore
+NS_JC_END

@@ -8,7 +8,7 @@
 #include <JCore/Exception.h>
 
 
-namespace JCore {
+NS_JC_BEGIN
 
 Random::Random() {
 	// 처음 한번만 초기화를 하자.
@@ -46,4 +46,4 @@ double Random::GenerateDouble(double begin, double end) {
 }
 
 
-} // namespace JCore
+NS_JC_END

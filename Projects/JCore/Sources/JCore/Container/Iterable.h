@@ -7,7 +7,7 @@
 #include <JCore/Primitives/SmartPtr.h>
 #include <JCore/Declspec.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 /*=====================================================================================
 						순회 가능한 = 컨테이너 최상위 인터페이스
@@ -32,4 +32,4 @@ template <typename T, typename TAllocator = DefaultAllocator>
 using Enumerator = SharedPtr<Iterator<T, TAllocator>>;
 
 
-} // namespace JCore
+NS_JC_END

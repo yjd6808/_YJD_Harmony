@@ -9,7 +9,9 @@
 #include <sstream>
 #include <ostream>
 
-namespace JCore {
+#include <JCore/Namespace.h>
+
+NS_JC_BEGIN
 
 // variadic template forward declaration
 template <typename...>
@@ -185,7 +187,5 @@ private:
 };
 
 
-
-
-} // namespace JCore
+NS_JC_END
 

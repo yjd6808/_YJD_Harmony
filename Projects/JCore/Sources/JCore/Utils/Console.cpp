@@ -5,10 +5,10 @@
 #include <JCore/Core.h>
 #include <JCore/Utils/Console.h>
 
-namespace JCore {
-    namespace Detail {
-    } // namespace Detail
+NS_JC_BEGIN
+    NS_DETAIL_BEGIN
+    NS_DETAIL_END
 
     template class Detail::Console<RecursiveLock>;
     template class Detail::Console<UnusedLock>;
-} // namespace JCore
+NS_JC_END

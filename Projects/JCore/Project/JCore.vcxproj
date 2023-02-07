@@ -85,15 +85,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\System\JCoreSystem.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\System\PrioritySingleton.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\System\System.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Threading\Thread.cpp">
       <SubType>
       </SubType>
@@ -273,6 +264,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Namespace.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryChuckQueue.h">
       <SubType>
       </SubType>
@@ -296,7 +291,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\ObjectPool.h" />
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStrategy.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\ArraySegment.h">
       <SubType>
@@ -354,13 +348,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\System\JCorePrioritySingleton.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\System\JCoreSystem.h" />
-    <ClInclude Include="..\Sources\JCore\System\PrioritySingleton.h" />
-    <ClInclude Include="..\Sources\JCore\System\System.h" />
     <ClInclude Include="..\Sources\JCore\Threading\Thread.h">
       <SubType>
       </SubType>

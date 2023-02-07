@@ -13,7 +13,7 @@
 #include <JCore/Tuple.h>
 #include <JCore/Container/Vector.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 String::String() {
 	Initialize();
@@ -791,6 +791,6 @@ void String::ThrowIfInvalidIndex(const int idx) const {
 }
 
 
-} // namespace JCore
+NS_JC_END
 
 

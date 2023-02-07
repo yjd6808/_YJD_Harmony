@@ -9,7 +9,7 @@
 #include <JNetwork/IOCP/IOCP.h>
 #include <JNetwork/Worker.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class IOCPWorker : public Worker
 {
@@ -29,4 +29,4 @@ private:
 	friend struct IOCPPostOrder;
 };
 
-} // namespace JNetwork
+NS_JNET_END

@@ -11,7 +11,7 @@
 #include <JCore/Container/LinkedList.h>
 #include <JCore/Container/HashMapIterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename TKey, typename TValue>
 struct BucketNode
@@ -800,5 +800,5 @@ public:
 
 }; // class HashMap<TKey, TValue>
 
-} // namespace JCore
+NS_JC_END
 

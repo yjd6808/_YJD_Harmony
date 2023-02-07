@@ -7,7 +7,7 @@
 #include <JCore/Container/ListCollection.h>
 #include <JCore/Container/LinkedListIterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename T, typename TAllocator = DefaultAllocator>
 class LinkedList	: public ListCollection<T, TAllocator>
@@ -145,4 +145,4 @@ protected:
 	template <typename, typename, typename> friend class HashMapIterator;
 };
 
-} // namespace JCore
+NS_JC_END

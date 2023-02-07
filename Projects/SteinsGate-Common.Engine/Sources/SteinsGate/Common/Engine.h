@@ -31,10 +31,8 @@
 #include <JCore/Container/LinkedList.h>
 
 
-#define USING_NS_JC using namespace JCore
-#define USING_NS_JN using namespace JNetwork
-#define USING_NS_JS using namespace Json
-#define USING_NS_CCUI using namespace cocos2d::ui
+#define USING_NS_JS		using namespace Json
+#define USING_NS_CCUI	using namespace cocos2d::ui
 
 #define SG_FLT_EPSILON	0.0001f
 #define SG_PI			3.141592f

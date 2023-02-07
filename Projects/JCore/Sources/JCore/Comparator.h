@@ -9,7 +9,7 @@
 #include <JCore/Primitives/String.h>
 #include <JCore/TypeCast.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename T>
 struct Comparator
@@ -59,8 +59,4 @@ struct ReverseOrder
 	}
 };
 
-
-
-
-
-} // namespace JCores
+NS_JC_END

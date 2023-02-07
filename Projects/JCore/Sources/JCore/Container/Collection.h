@@ -13,11 +13,7 @@
 #pragma warning(push)
   #pragma warning(disable: 26495) // Member variable is uninitialized
 
-namespace JCore {
-
-
-
-
+NS_JC_BEGIN
 
 /*=====================================================================================
 									콜렉션
@@ -104,6 +100,6 @@ protected:
 	int m_iSize = 0;
 };
 
-} // namespace JCore
+NS_JC_END
 
 #pragma warning(pop)

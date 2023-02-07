@@ -8,7 +8,7 @@
 #pragma warning(push)
   #pragma warning (disable: 26495) // member variable 'Value' is not initialized
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename T, typename TAllocator>
 struct ListNode final
@@ -44,7 +44,7 @@ template <typename T>
 struct ListNode<T&> {  };
 */
 
-} // namespace JCore
+NS_JC_END
 
 
 #pragma warning(pop)

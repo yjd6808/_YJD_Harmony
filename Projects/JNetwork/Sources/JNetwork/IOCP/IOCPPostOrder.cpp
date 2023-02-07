@@ -11,7 +11,7 @@
 #include <JNetwork/IOCP/IOCPPostOrder.h>
 #include <JNetwork/IOCP/IOCPWorker.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 int IOCPPostOrder::Process(IOCPWorker* worker) {
 	JCore::AutoPtr<IOCPPostOrder> autoPtrRelease(this, [](IOCPPostOrder* po) {po->Release(); });
@@ -25,7 +25,8 @@ int IOCPPostOrder::Process(IOCPWorker* worker) {
 	}
 }
 
-}
+NS_JNET_END
+
 
 
 

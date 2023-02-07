@@ -8,97 +8,97 @@
 
 #include <MSWSock.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
-	namespace Winsock {
+	NS_DETAIL_BEGIN
 
-		// Windows Vista 이전에서는 AcceptEx 함수의 주소를 얻어와서 사용해야했는데 바뀌었다고 한다.
-		// 그냥 써도 잘 동작한다.
-		// 대신 AcceptEx가 MSWSock.h와 Winsock.h 이 2개에만 있어서 사용할려면 MSWSock.h를 include하고 MSWSock.lib을 링크 해줘야함.
-		// @참고 : https://jacking75.github.io/cpp_iocp_extension_method/
-		// @AcceptEx 함수에 대한 설명 : https://programmingdiary.tistory.com/4
+	// Windows Vista 이전에서는 AcceptEx 함수의 주소를 얻어와서 사용해야했는데 바뀌었다고 한다.
+	// 그냥 써도 잘 동작한다.
+	// 대신 AcceptEx가 MSWSock.h와 Winsock.h 이 2개에만 있어서 사용할려면 MSWSock.h를 include하고 MSWSock.lib을 링크 해줘야함.
+	// @참고 : https://jacking75.github.io/cpp_iocp_extension_method/
+	// @AcceptEx 함수에 대한 설명 : https://programmingdiary.tistory.com/4
+	
+	// 동명함수 때문에 밖으로 뺌
+	int AcceptEx_(SOCKET sListenSocket,
+		SOCKET sAcceptSocket,
+		PVOID lpOutputBuffer,
+		Int32UL dwReceiveDataLength,
+		Int32UL dwLocalAddressLength,
+		Int32UL dwRemoteAddressLength,
+		Int32UL* lpdwBytesReceived,
+		LPOVERLAPPED lpOverlapped) {
 		
-		// 동명함수 때문에 밖으로 뺌
-		int AcceptEx_(SOCKET sListenSocket,
-			SOCKET sAcceptSocket,
-			PVOID lpOutputBuffer,
-			Int32UL dwReceiveDataLength,
-			Int32UL dwLocalAddressLength,
-			Int32UL dwRemoteAddressLength,
-			Int32UL* lpdwBytesReceived,
-			LPOVERLAPPED lpOverlapped) {
-			
-			return AcceptEx(sListenSocket,
-				sAcceptSocket, 
-				lpOutputBuffer, 
-				dwReceiveDataLength, 
-				dwLocalAddressLength, 
-				dwRemoteAddressLength,
-				lpdwBytesReceived, 
-				lpOverlapped);
-		}
+		return AcceptEx(sListenSocket,
+			sAcceptSocket, 
+			lpOutputBuffer, 
+			dwReceiveDataLength, 
+			dwLocalAddressLength, 
+			dwRemoteAddressLength,
+			lpdwBytesReceived, 
+			lpOverlapped);
+	}
+
+	
+	int ConnectEx_(SOCKET s, 
+		sockaddr* pConnectAddr, 
+		int ConnectAddrSize,
+		PVOID lpSendBuffer, 
+		Int32UL dwSendDataLength,
+		Int32UL* lpdwBytesSent, 
+		LPOVERLAPPED lpOverlapped) {
+
+		static LPFN_CONNECTEX lpfnConnectEx = nullptr;
 
 		
-		int ConnectEx_(SOCKET s, 
-			sockaddr* pConnectAddr, 
-			int ConnectAddrSize,
-			PVOID lpSendBuffer, 
-			Int32UL dwSendDataLength,
-			Int32UL* lpdwBytesSent, 
-			LPOVERLAPPED lpOverlapped) {
-
-			static LPFN_CONNECTEX lpfnConnectEx = nullptr;
-
+		if (lpfnConnectEx == nullptr) {
+			// WSAIoctl 함수 사용을 위한 더미 소켓 생성
+			Socketv4 dummySock = Socket::CreateTcpV4(false);
+			int iResult;
 			
-			if (lpfnConnectEx == nullptr) {
-				// WSAIoctl 함수 사용을 위한 더미 소켓 생성
-				Socketv4 dummySock = Socket::CreateTcpV4(false);
-				int iResult;
-				
-				if (!dummySock.IsValid())
-					return FALSE;
+			if (!dummySock.IsValid())
+				return FALSE;
 
-				{
-					Int32UL dwBytes;
-					GUID guid = WSAID_CONNECTEX;
-					iResult = WSAIoctl(dummySock.Handle(), SIO_GET_EXTENSION_FUNCTION_POINTER,
-						&guid, sizeof(guid),
-						&lpfnConnectEx, sizeof(lpfnConnectEx),
-						&dwBytes, NULL, NULL);
+			{
+				Int32UL dwBytes;
+				GUID guid = WSAID_CONNECTEX;
+				iResult = WSAIoctl(dummySock.Handle(), SIO_GET_EXTENSION_FUNCTION_POINTER,
+					&guid, sizeof(guid),
+					&lpfnConnectEx, sizeof(lpfnConnectEx),
+					&dwBytes, NULL, NULL);
 
-					if (iResult != 0)
-						return FALSE;
-				}
-
-				iResult = dummySock.Close();
 				if (iResult != 0)
 					return FALSE;
-
 			}
 
-			// @참고 : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nc-mswsock-lpfn_connectex
-			// ConnectEx 사용 예시 코드 : https://gist.github.com/joeyadams/4158972
-			// 
-			// [in] s :		connect()의 s와 동일
-			// [in] name :	connect()의 name과 도일
-			// [in] namelen : connect()의 namelen과 도일
-			// [in, opt]	lpSendBuffer : Connection이 Established 된 후에 전달한 버퍼의 데이터를 전송한다.
-			//								 소켓 s에 TCP_FASTOPEN이 ConnectEx() 호출전에 활성화 되어 있으면 연결 성립 중에 일부 데이터가 전송될 수 있다.
-			// [in]			dwSendDataLength : lpSendBuffer의 바이트 크기를 전달한다 만약 lpSendBuffer를 NULL로 전달하면 이 값은 무시된다.
-			// [out]		lpdwBytesSent : 함수 반환값이 TRUE 된 경우 이 연결이 성립된 후 전송된 바이트 크기를 반환해준다. lpSendBuffer를 NULL로 전달하면 이 값은 무시된다.
-			// [in]			lpOverlapped : 절대 NULL 전달하면 안됨
+			iResult = dummySock.Close();
+			if (iResult != 0)
+				return FALSE;
 
-
-			return lpfnConnectEx(
-				s,
-				pConnectAddr,
-				ConnectAddrSize,
-				lpSendBuffer,
-				dwSendDataLength,
-				lpdwBytesSent,
-				lpOverlapped);
 		}
+
+		// @참고 : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nc-mswsock-lpfn_connectex
+		// ConnectEx 사용 예시 코드 : https://gist.github.com/joeyadams/4158972
+		// 
+		// [in] s :		connect()의 s와 동일
+		// [in] name :	connect()의 name과 도일
+		// [in] namelen : connect()의 namelen과 도일
+		// [in, opt]	lpSendBuffer : Connection이 Established 된 후에 전달한 버퍼의 데이터를 전송한다.
+		//								 소켓 s에 TCP_FASTOPEN이 ConnectEx() 호출전에 활성화 되어 있으면 연결 성립 중에 일부 데이터가 전송될 수 있다.
+		// [in]			dwSendDataLength : lpSendBuffer의 바이트 크기를 전달한다 만약 lpSendBuffer를 NULL로 전달하면 이 값은 무시된다.
+		// [out]		lpdwBytesSent : 함수 반환값이 TRUE 된 경우 이 연결이 성립된 후 전송된 바이트 크기를 반환해준다. lpSendBuffer를 NULL로 전달하면 이 값은 무시된다.
+		// [in]			lpOverlapped : 절대 NULL 전달하면 안됨
+
+
+		return lpfnConnectEx(
+			s,
+			pConnectAddr,
+			ConnectAddrSize,
+			lpSendBuffer,
+			dwSendDataLength,
+			lpdwBytesSent,
+			lpOverlapped);
 	}
+	NS_DETAIL_END
 
 	/*=====================================================================================
 								Socket
@@ -199,7 +199,7 @@ namespace JNetwork {
 		//					   GetLastError()의 ERROR_IO_PENDING 오류를 받는 경우에는 완료 통지 방식으로 데이터를 읽어야한다. (오버랩 말하는 듯?)
 		// lpOverlapped : NULL을 절대 전달하면 안된다. 수신한 정보가 비동기적으로 완료될 수 있으므로 오버랩 정보를 전달해야함.
 		
-		return Winsock::AcceptEx_(listenSocket,
+		return Detail::AcceptEx_(listenSocket,
 			m_Socket, 
 			outputBuffer,
 			receiveDatalen,
@@ -264,7 +264,7 @@ namespace JNetwork {
 		addr.sin_family = AF_INET;
 		addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
 		addr.sin_addr.S_un.S_addr = ByteOrder::HostToNetwork(ipv4EndPoint.GetAddress().GetAddress());
-		return Winsock::ConnectEx_(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN), sendbuf, sendbufSize, sentBytes, overlapped);
+		return Detail::ConnectEx_(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN), sendbuf, sendbufSize, sentBytes, overlapped);
 	}
 
 	int Socketv4::Send(char* buff, Int32U len, Int32U flag) const {
@@ -503,4 +503,4 @@ namespace JNetwork {
 		return op != FALSE ? TRUE : FALSE;
 	}
 
-} // namespace JNetwork
+NS_JNET_END

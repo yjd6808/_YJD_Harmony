@@ -6,7 +6,7 @@
 
 #include <JCore/Container/Iterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 //전방 선언
 class VoidOwner;	
@@ -32,4 +32,4 @@ MapCollectionIterator<TKey, TValue, TAllocator>::~MapCollectionIterator() noexce
 
 }
 
-} // namespace JCore
+NS_JC_END

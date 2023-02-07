@@ -12,23 +12,23 @@
 #include <JCore/Wrapper/WinApi.h>
 
 
-namespace JCore {
+NS_JC_BEGIN
 
-	String Env::CurrentDirectory() {
-		char szFileName[MAX_PATH];
-		int iLen = WinApi::GetModuleFilePath(NULL, szFileName, MAX_PATH);
+String Env::CurrentDirectory() {
+	char szFileName[MAX_PATH];
+	int iLen = WinApi::GetModuleFilePath(NULL, szFileName, MAX_PATH);
 
-		while (szFileName[--iLen] != '\\') {}
-		if (iLen > 0) szFileName[iLen] = NULL;
-		return szFileName;
-	}
+	while (szFileName[--iLen] != '\\') {}
+	if (iLen > 0) szFileName[iLen] = NULL;
+	return szFileName;
+}
 
-	TimeSpan Env::AppTime() {
-		return DateTime::Now().Diff(AppTime_v);
-	}
+TimeSpan Env::AppTime() {
+	return DateTime::Now().Diff(AppTime_v);
+}
 
-	TimeSpan Env::SystemTime() {
-		return { Int64(::GetTickCount64()) * 1000 };
-	}
+TimeSpan Env::SystemTime() {
+	return { Int64(::GetTickCount64()) * 1000 };
+}
 
-} // namespace JCore
+NS_JC_END

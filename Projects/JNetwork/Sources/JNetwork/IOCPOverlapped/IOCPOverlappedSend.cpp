@@ -6,7 +6,7 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
 #include <JNetwork/Host/TcpServer.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 IOCPOverlappedSend::IOCPOverlappedSend(TcpSession* session, IOCP* iocp, ISendPacket* sentPacket) :
 	IOCPOverlapped(iocp, Type::Send),
@@ -29,4 +29,4 @@ void IOCPOverlappedSend::Process(BOOL result, Int32UL numberOfBytesTransffered, 
 	m_pSentPacket->Release();
 }
 
-} // namespace JNetwork
+NS_JNET_END

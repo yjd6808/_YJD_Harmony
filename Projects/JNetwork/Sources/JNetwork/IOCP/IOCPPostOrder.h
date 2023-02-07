@@ -8,8 +8,9 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JNetwork/Namespace.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class IOCPWorker;
 struct IOCPPostOrder
@@ -23,4 +24,4 @@ struct IOCPPostOrder
 	void Release() const { delete this; }
 };
 
-} // namespace JNetwork
+NS_JNET_END

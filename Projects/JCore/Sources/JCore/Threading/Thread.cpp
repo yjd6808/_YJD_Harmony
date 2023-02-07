@@ -11,144 +11,145 @@
 #include <JCore/Wrapper/CRuntime.h>
 #include <JCore/Wrapper/WinApi.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
-    Int32U Thread::ms_uiMainThreadId = GetMainThreadId();
-    thread_local Int32U Thread::tls_uiThreadId = WinApi::GetCurrentThreadId();
+Int32U Thread::ms_uiMainThreadId = GetMainThreadId();
+thread_local Int32U Thread::tls_uiThreadId = WinApi::GetCurrentThreadId();
 
-    Thread::Thread(TRunnable&& fn, void* param, const char* name, bool autoJoin): Thread(name, autoJoin) {
-        Start(Move(fn), param);
+Thread::Thread(TRunnable&& fn, void* param, const char* name, bool autoJoin): Thread(name, autoJoin) {
+    Start(Move(fn), param);
+}
+
+Thread::~Thread() noexcept {
+    if (m_bAutoJoin) {
+        Join();
+        return;
     }
 
-	Thread::~Thread() noexcept {
-        if (m_bAutoJoin) {
-            Join();
-            return;
-        }
-
-        if (m_hHandle == nullptr) {
-            return;
-        }
-
-        DebugAssert(!Joinable());
-        WinApi::CloseHandle(m_hHandle);
+    if (m_hHandle == nullptr) {
+        return;
     }
 
-	Thread::Thread(Thread&& other) noexcept : Thread() {
-        operator=(Move(other));
-    }
+    DebugAssert(!Joinable());
+    WinApi::CloseHandle(m_hHandle);
+}
 
-    bool Thread::SetPriority(int priority) {
+Thread::Thread(Thread&& other) noexcept : Thread() {
+    operator=(Move(other));
+}
 
-        return WinApi::SetThreadPriority(m_hHandle, priority);
-    }
+bool Thread::SetPriority(int priority) {
 
-    int Thread::GetPriority() {
-        return WinApi::GetThreadPriority(m_hHandle);
-    }
+    return WinApi::SetThreadPriority(m_hHandle, priority);
+}
 
-	Int32U Thread::GetId() {
-        
-        if (m_eState >= Running)
-            return m_uiThreadId;
+int Thread::GetPriority() {
+    return WinApi::GetThreadPriority(m_hHandle);
+}
 
-        return 0;
-    }
+Int32U Thread::GetId() {
+    
+    if (m_eState >= Running)
+        return m_uiThreadId;
 
-	Thread& Thread::operator=(Thread&& other) noexcept {
-        m_hHandle = other.m_hHandle;
-        m_uiThreadId = other.m_uiThreadId;
-        m_Name = Move(other.m_Name);
-        m_bAutoJoin = other.m_bAutoJoin;
-        m_eState = other.m_eState;
+    return 0;
+}
 
-        other.m_hHandle = nullptr;
-        other.m_uiThreadId = 0;
-        other.m_eState = Uninitialized;
-        other.m_bAutoJoin = false;
+Thread& Thread::operator=(Thread&& other) noexcept {
+    m_hHandle = other.m_hHandle;
+    m_uiThreadId = other.m_uiThreadId;
+    m_Name = Move(other.m_Name);
+    m_bAutoJoin = other.m_bAutoJoin;
+    m_eState = other.m_eState;
 
-        return *this;
-    }
+    other.m_hHandle = nullptr;
+    other.m_uiThreadId = 0;
+    other.m_eState = Uninitialized;
+    other.m_bAutoJoin = false;
 
-    Int32U Thread::GetThreadId() {
-        if (tls_uiThreadId != 0)
-            return tls_uiThreadId;
+    return *this;
+}
 
-        return WinApi::GetCurrentThreadId();
-    }
+Int32U Thread::GetThreadId() {
+    if (tls_uiThreadId != 0)
+        return tls_uiThreadId;
 
-	void Thread::Sleep(Int32U ms) {
-	    return ::Sleep(ms);
-    }
+    return WinApi::GetCurrentThreadId();
+}
 
-	Int32U JCoreStdCall Thread::ThreadRoutine(void* param) {
-        auto* pRecvParam = static_cast<ThreadParam*>(param);
-        Thread* pThis = pRecvParam->Self;
-        TRunnable runnable = Move(pRecvParam->ThreadFunc);
-        void* pParam = pRecvParam->Param;
+void Thread::Sleep(Int32U ms) {
+    return ::Sleep(ms);
+}
 
-        // ↑ 시그널 주기전에 미리 매개변수들 가져와야함 (pRecvParam은 이제 사용하지 말 것)
-        pThis->m_uiThreadId = Thread::GetThreadId();
-        pThis->m_RunningSignal.Release();
-        runnable(pParam);
-        pThis->m_eState = JoinWait;
-        
-        CRuntime::EndThreadEx(0);
-        return 0;
-    }
+Int32U JCoreStdCall Thread::ThreadRoutine(void* param) {
+    auto* pRecvParam = static_cast<ThreadParam*>(param);
+    Thread* pThis = pRecvParam->Self;
+    TRunnable runnable = Move(pRecvParam->ThreadFunc);
+    void* pParam = pRecvParam->Param;
 
-    int Thread::Start(TRunnable&& fn, void* param) {
-        DebugAssertMsg(m_eState == Uninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
-        m_eState = RunningWait;
-        SharedPtr<ThreadParam> spSend = MakeShared<ThreadParam>();
-        spSend->Param = param;
-        spSend->Self = this;
-        spSend->ThreadFunc = Move(fn);
+    // ↑ 시그널 주기전에 미리 매개변수들 가져와야함 (pRecvParam은 이제 사용하지 말 것)
+    pThis->m_uiThreadId = Thread::GetThreadId();
+    pThis->m_RunningSignal.Release();
+    runnable(pParam);
+    pThis->m_eState = JoinWait;
+    
+    CRuntime::EndThreadEx(0);
+    return 0;
+}
 
-        m_hHandle = reinterpret_cast<WinHandle>(CRuntime::BeginThreadEx(ThreadRoutine, spSend.GetPtr()));
-        
-        if (m_hHandle == NULL) {
-            m_eState = Aborted;
-            return CRuntime::ErrorNo();
-        }
+int Thread::Start(TRunnable&& fn, void* param) {
+    DebugAssertMsg(m_eState == Uninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
+    m_eState = RunningWait;
+    SharedPtr<ThreadParam> spSend = MakeShared<ThreadParam>();
+    spSend->Param = param;
+    spSend->Self = this;
+    spSend->ThreadFunc = Move(fn);
 
-        m_RunningSignal.Acquire();
-        m_eState = Running;
-
-        return 0;
-    }
-
-	bool Thread::Join() {
-        int state = m_eState;
-
-        if (state == Uninitialized || state == Aborted)
-            return false;
-
-        if (state == Joined)
-            return true;
-
-        Int32U iWaitResult = WinApi::WaitForMultipleObjectsEx(1, &m_hHandle, true);
-
-        if (iWaitResult != WAIT_OBJECT_0) {
-            std::terminate();
-        }
-
-        WinApi::CloseHandle(m_hHandle);
-        m_hHandle = nullptr;
-        m_eState = Joined;
-        return true;
-    }
-
-	bool Thread::Joinable() {
-        int state = m_eState;
-	    return state >= RunningWait && state <= JoinWait;
-    }
-
-	void Thread::Abort() {
-        WinApi::CloseHandle(m_hHandle);
+    m_hHandle = reinterpret_cast<WinHandle>(CRuntime::BeginThreadEx(ThreadRoutine, spSend.GetPtr()));
+    
+    if (m_hHandle == NULL) {
         m_eState = Aborted;
+        return CRuntime::ErrorNo();
     }
-} // namespace JCore
+
+    m_RunningSignal.Acquire();
+    m_eState = Running;
+
+    return 0;
+}
+
+bool Thread::Join() {
+    int state = m_eState;
+
+    if (state == Uninitialized || state == Aborted)
+        return false;
+
+    if (state == Joined)
+        return true;
+
+    Int32U iWaitResult = WinApi::WaitForMultipleObjectsEx(1, &m_hHandle, true);
+
+    if (iWaitResult != WAIT_OBJECT_0) {
+        std::terminate();
+    }
+
+    WinApi::CloseHandle(m_hHandle);
+    m_hHandle = nullptr;
+    m_eState = Joined;
+    return true;
+}
+
+bool Thread::Joinable() {
+    int state = m_eState;
+    return state >= RunningWait && state <= JoinWait;
+}
+
+void Thread::Abort() {
+    WinApi::CloseHandle(m_hHandle);
+    m_eState = Aborted;
+}
+
+NS_JC_END
 
 
 

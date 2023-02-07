@@ -47,138 +47,136 @@
 #include <JCore/Pool/MemoryPoolStrategy.h>
 #include <JCore/Pool/MemoryPoolAllocationAlgorithm.h>
 #include <JCore/Pool/MemoryPoolAbstract.h>
+#include <JCore/Pool/MemoryChuckQueue.h>
+
+NS_JC_BEGIN
+
+template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm>
+class MemoryPool {};
+
+using MemoryPoolSingleBinary	  = MemoryPool<eSingle, eBinarySearch>;
+using MemoryPoolSingleBinaryPtr   = SharedPtr<MemoryPoolSingleBinary>;
+using MemoryPoolMultipleBinary	  = MemoryPool<eMultiple, eBinarySearch>;
+using MemoryPoolMultipleBinaryPtr = SharedPtr<MemoryPoolMultipleBinary>;
 
 
-namespace JCore {
+
+template <>
+class MemoryPool<eSingle, eBinarySearch> : 
+	public MemoryPoolAbstract, 
+	public MakeSharedFromThis<MemoryPoolSingleBinary>
+{
+	using Type = MemoryPoolSingleBinary;
+public:
+	MemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
+		Type::Initialize(allocationMap);
+	}
+
+	MemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {}
+	MemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {}
+	~MemoryPool() override {
+		auto dbg = this;
+		Type::Finalize();
+	}
+
+	template <int RequestSize>
+	void* StaticPop()  {
+		constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
+		constexpr int iFitSize = Detail::AllocationLengthMapConverter::ToSize<iIndex>();
+
+		void* pMemoryBlock = nullptr;
+		{
+			LockGuard<NormalLock> guard(m_Lock);
+
+			if (m_Pool[iIndex].IsEmpty()) {
+				AddAllocated(iIndex, true);
+				return Memory::Allocate<void*>(iFitSize);
+			}
+
+			pMemoryBlock = m_Pool[iIndex].Top();
+			m_Pool[iIndex].Pop();
+		}
+		AddAllocated(iIndex, false);
+		return pMemoryBlock;
+	}
+
+	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
+		int iIndex = Detail::AllocationLengthMapConverter::ToIndex(requestSize);
+		int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);
+
+		realAllocatedSize = iFitSize;
+		void* pMemoryBlock = nullptr;
+
+		{
+			LockGuard<NormalLock> guard(m_Lock);
+
+			if (m_Pool[iIndex].IsEmpty()) {
+				AddAllocated(iIndex, true);
+				return Memory::Allocate<void*>(iFitSize);
+			}
+
+			pMemoryBlock = m_Pool[iIndex].Top();
+			m_Pool[iIndex].Pop();
+		}
+		AddAllocated(iIndex, false);
+		return pMemoryBlock;
+	}
+
+	template <int PushSize>
+	void StaticPush(void* memory) {
+		// static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
+		int index = Detail::AllocationLengthMapConverter::ToIndex<PushSize>();
+		LockGuard<NormalLock> guard(m_Lock);
+		AddDeallocated(index);
+		m_Pool[index].Push(memory);
+	}
+
+	void DynamicPush(void* memory, int returnSize) override {
+		// DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(returnSize), "뭐야! 사이즈가 안맞자나!");
+		int index = Detail::AllocationLengthMapConverter::ToIndex(returnSize);
+		LockGuard<NormalLock> guard(m_Lock);
+		AddDeallocated(index);
+		m_Pool[index].Push(memory);
+	}
+
+
+	void Initialize(const HashMap<int, int>& allocationMap) override {
+		const_cast<HashMap<int, int>&>(allocationMap).Extension().ForEach([this](Pair<int, int>& count) {
+			int iSize = count.Key;
+			int iCount = count.Value;
+			int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iSize);
+			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
+
+			for (int i = 0; i < iCount; ++i) {
+				m_Pool[iIndex].Push(Memory::Allocate<void*>(iSize));
+			}
+
+			AddInitBlock(iIndex, iCount);
+		});
+
+		m_bInitialized = true;
+	}
+
+	// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
+	void Finalize() override {
+		DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
+
+		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
+			while (!m_Pool[i].IsEmpty()) {
+				Memory::Deallocate(m_Pool[i].Top());
+				m_Pool[i].Pop();
+			}
+		}
+	}
+
+	int Strategy() override { return eSingle; }
+	int Algorithm() override { return eBinarySearch; }
 	
-
-
-	template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm>
-	class MemoryPool {};
-
-	using MemoryPoolSingleBinary	  = MemoryPool<eSingle, eBinarySearch>;
-	using MemoryPoolSingleBinaryPtr   = SharedPtr<MemoryPoolSingleBinary>;
-	using MemoryPoolMultipleBinary	  = MemoryPool<eMultiple, eBinarySearch>;
-	using MemoryPoolMultipleBinaryPtr = SharedPtr<MemoryPoolMultipleBinary>;
-
-
-
-	template <>
-	class MemoryPool<eSingle, eBinarySearch> : 
-		public MemoryPoolAbstract, 
-		public MakeSharedFromThis<MemoryPoolSingleBinary>
-	{
-		using Type = MemoryPoolSingleBinary;
-	public:
-		MemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
-			Type::Initialize(allocationMap);
-		}
-
-		MemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {}
-		MemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {}
-		~MemoryPool() override {
-			auto dbg = this;
-			Type::Finalize();
-		}
-
-		template <int RequestSize>
-		void* StaticPop()  {
-			constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
-			constexpr int iFitSize = Detail::AllocationLengthMapConverter::ToSize<iIndex>();
-
-			void* pMemoryBlock = nullptr;
-			{
-				LockGuard<NormalLock> guard(m_Lock);
-
-				if (m_Pool[iIndex].IsEmpty()) {
-					AddAllocated(iIndex, true);
-					return Memory::Allocate<void*>(iFitSize);
-				}
-
-				pMemoryBlock = m_Pool[iIndex].Top();
-				m_Pool[iIndex].Pop();
-			}
-			AddAllocated(iIndex, false);
-			return pMemoryBlock;
-		}
-
-		void* DynamicPop(int requestSize, int& realAllocatedSize) override {
-			int iIndex = Detail::AllocationLengthMapConverter::ToIndex(requestSize);
-			int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);
-
-			realAllocatedSize = iFitSize;
-			void* pMemoryBlock = nullptr;
-
-			{
-				LockGuard<NormalLock> guard(m_Lock);
-
-				if (m_Pool[iIndex].IsEmpty()) {
-					AddAllocated(iIndex, true);
-					return Memory::Allocate<void*>(iFitSize);
-				}
-
-				pMemoryBlock = m_Pool[iIndex].Top();
-				m_Pool[iIndex].Pop();
-			}
-			AddAllocated(iIndex, false);
-			return pMemoryBlock;
-		}
-
-		template <int PushSize>
-		void StaticPush(void* memory) {
-			// static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
-			int index = Detail::AllocationLengthMapConverter::ToIndex<PushSize>();
-			LockGuard<NormalLock> guard(m_Lock);
-			AddDeallocated(index);
-			m_Pool[index].Push(memory);
-		}
-
-		void DynamicPush(void* memory, int returnSize) override {
-			// DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(returnSize), "뭐야! 사이즈가 안맞자나!");
-			int index = Detail::AllocationLengthMapConverter::ToIndex(returnSize);
-			LockGuard<NormalLock> guard(m_Lock);
-			AddDeallocated(index);
-			m_Pool[index].Push(memory);
-		}
-
-
-		void Initialize(const HashMap<int, int>& allocationMap) override {
-			const_cast<HashMap<int, int>&>(allocationMap).Extension().ForEach([this](Pair<int, int>& count) {
-				int iSize = count.Key;
-				int iCount = count.Value;
-				int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iSize);
-				DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
-
-				for (int i = 0; i < iCount; ++i) {
-					m_Pool[iIndex].Push(Memory::Allocate<void*>(iSize));
-				}
-
-				AddInitBlock(iIndex, iCount);
-			});
-
-			m_bInitialized = true;
-		}
-
-		// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
-		void Finalize() override {
-			DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
-
-			for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
-				while (!m_Pool[i].IsEmpty()) {
-					Memory::Deallocate(m_Pool[i].Top());
-					m_Pool[i].Pop();
-				}
-			}
-		}
-
-		int Strategy() override { return eSingle; }
-		int Algorithm() override { return eBinarySearch; }
-		
-	private:
-		ArrayStack<void*> m_Pool[Detail::MemoryBlockSizeMapSize_v];
-		NormalLock m_Lock;
-	};
-
-
+private:
+	MemoryChunckQueue<void*> m_Pool[Detail::MemoryBlockSizeMapSize_v];
+	NormalLock m_Lock;
 };
+
+
+NS_JC_END
 

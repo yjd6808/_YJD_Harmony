@@ -10,9 +10,9 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JNetwork/Namespace.h>
 
-namespace JNetwork {
-
+NS_JNET_BEGIN
 
 struct ICommand;
 struct ISendPacket;
@@ -35,4 +35,4 @@ protected:
 	friend class TcpServer;
 };
 
-} // namespace JNetwork
+NS_JNET_END

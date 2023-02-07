@@ -11,67 +11,67 @@
 
 #include <JCore/Pool/MemoryPool.h>
 
-namespace JCore {
-	inline MemoryPool<eSingle, eBinarySearch> ArrayAllocatorPool_v
+NS_JC_BEGIN
+
+inline MemoryPool<eSingle, eBinarySearch> ArrayAllocatorPool_v
+{
 	{
-		{
-			{ 4, 1 },
-			/* 테스트 완료, 봉인
-			{ 8, 0 },
-			{ 16, 64 },
-			{ 32, 128 },
-			{ 64, 128 },
-			{ 128, 128 },
-			{ 256, 64 },
-			{ 512, 64 },
-			{ 1024, 32 },
-			{ 2048, 32 },
-			{ 4096, 16 },
-			{ 8192, 16 },
-			{ 8192 * 2, 8 },
-			{ 8192 * 4, 8 }
-			*/
-		}
-	};
+		{ 4, 1 },
+		/* 테스트 완료, 봉인
+		{ 8, 0 },
+		{ 16, 64 },
+		{ 32, 128 },
+		{ 64, 128 },
+		{ 128, 128 },
+		{ 256, 64 },
+		{ 512, 64 },
+		{ 1024, 32 },
+		{ 2048, 32 },
+		{ 4096, 16 },
+		{ 8192, 16 },
+		{ 8192 * 2, 8 },
+		{ 8192 * 4, 8 }
+		*/
+	}
+};
 
-	class DefaultArrayAllocator
-	{
-	public:
-		// 명시적으로 사이즈 요청해서 반환하는 2가지 기능을 구현할 것
-		template <typename T>
-		static auto Allocate() {	// Static
-			return (RemovePointer_t<T>*)ArrayAllocatorPool_v.StaticPop<sizeof(T)>();
-		}
+class DefaultArrayAllocator
+{
+public:
+	// 명시적으로 사이즈 요청해서 반환하는 2가지 기능을 구현할 것
+	template <typename T>
+	static auto Allocate() {	// Static
+		return (RemovePointer_t<T>*)ArrayAllocatorPool_v.StaticPop<sizeof(T)>();
+	}
 
-		template <typename T = void*>	// 명시하지 않을 경우 void* 반환
-		static auto Allocate(int requestSize, int& realAllocatedSize) {	// Dynamic
-			return (RemovePointer_t<T>*)ArrayAllocatorPool_v.DynamicPop(requestSize, realAllocatedSize);
-		}
+	template <typename T = void*>	// 명시하지 않을 경우 void* 반환
+	static auto Allocate(int requestSize, int& realAllocatedSize) {	// Dynamic
+		return (RemovePointer_t<T>*)ArrayAllocatorPool_v.DynamicPop(requestSize, realAllocatedSize);
+	}
 
-		template <typename T, typename... Args>
-		static auto AllocateInit(Args&&... args) {	// Static
-			auto pRet = (RemovePointer_t<T>*)ArrayAllocatorPool_v.StaticPop<sizeof(T)>();
-			Memory::PlacementNew(pRet, Forward<Args>(args)...);
-			return pRet;
-		}
+	template <typename T, typename... Args>
+	static auto AllocateInit(Args&&... args) {	// Static
+		auto pRet = (RemovePointer_t<T>*)ArrayAllocatorPool_v.StaticPop<sizeof(T)>();
+		Memory::PlacementNew(pRet, Forward<Args>(args)...);
+		return pRet;
+	}
 
-		template <typename T = void*, typename... Args>	// 명시하지 않을 경우 void* 반환
-		static auto AllocateInit(int requestSize, int& realAllocatedSize, Args&&... args) {	// Dynamic
-			auto pRet = (RemovePointer_t<T>*)ArrayAllocatorPool_v.DynamicPop(requestSize, realAllocatedSize);
-			Memory::PlacementNew(pRet, Forward<Args>(args)...);
-			return pRet;
-		}
+	template <typename T = void*, typename... Args>	// 명시하지 않을 경우 void* 반환
+	static auto AllocateInit(int requestSize, int& realAllocatedSize, Args&&... args) {	// Dynamic
+		auto pRet = (RemovePointer_t<T>*)ArrayAllocatorPool_v.DynamicPop(requestSize, realAllocatedSize);
+		Memory::PlacementNew(pRet, Forward<Args>(args)...);
+		return pRet;
+	}
 
-		template <typename T>
-		static void Deallocate(void* del) {
-			ArrayAllocatorPool_v.StaticPush<sizeof(T)>(del);
-		}
+	template <typename T>
+	static void Deallocate(void* del) {
+		ArrayAllocatorPool_v.StaticPush<sizeof(T)>(del);
+	}
 
-		static void Deallocate(void* del, int size) {
-			ArrayAllocatorPool_v.DynamicPush(del, size);
-		}
-	};
+	static void Deallocate(void* del, int size) {
+		ArrayAllocatorPool_v.DynamicPush(del, size);
+	}
+};
 
-} // namespace JCore
+NS_JC_END
 
-#undef AssertMessage

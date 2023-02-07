@@ -13,7 +13,7 @@
 #include <JCore/Container/ArrayCollectionIterator.h>
 
 
-namespace JCore {
+NS_JC_BEGIN
 
 /*=====================================================================================
 									다이나믹 배열
@@ -472,4 +472,4 @@ protected:
 template <typename T, typename TAllocator>
 ArrayCollection<T, TAllocator>::~ArrayCollection() noexcept {}
 
-} // namespace JCore
+NS_JC_END

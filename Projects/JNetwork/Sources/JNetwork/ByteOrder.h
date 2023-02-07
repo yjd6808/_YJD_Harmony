@@ -8,6 +8,8 @@
 #include <JCore/TypeTraits.h>
 #include <JCore/Memory.h>
 
+NS_JNET_BEGIN
+
 enum class Endianness
 {
 	Little,
@@ -79,3 +81,5 @@ struct ByteOrder final
 		return ret;
 	}
 };
+
+NS_JNET_END

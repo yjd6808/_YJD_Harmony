@@ -7,7 +7,7 @@
 #include <JNetwork/Host/TcpSession.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlapped.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class IOCPOverlappedAccept : public IOCPOverlapped
 {
@@ -21,4 +21,4 @@ private:
 	TcpServer* m_pListeningServer;
 };
 
-} // namespace JNetwork
+NS_JNET_END

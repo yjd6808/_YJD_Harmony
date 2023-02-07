@@ -6,7 +6,7 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedAccept.h>
 #include <JNetwork/Host/TcpServer.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 IOCPOverlappedAccept::IOCPOverlappedAccept(TcpServer* tcpServer, TcpSession* session, IOCP* iocp) :
 	IOCPOverlapped(iocp, Type::Accept),
@@ -36,4 +36,4 @@ void IOCPOverlappedAccept::Process(BOOL result, Int32UL numberOfBytesTransffered
 	m_pAcceptedSession->Disconnect();
 }
 
-} // namespace JNetwork
+NS_JNET_END

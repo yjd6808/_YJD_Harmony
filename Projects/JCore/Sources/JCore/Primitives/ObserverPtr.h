@@ -15,21 +15,19 @@
 #include <JCore/Assert.h>
 #include <JCore/Define.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
-	namespace Detail {
+NS_DETAIL_BEGIN
+template <typename T, typename U>
+constexpr bool IsStaticCastable() {
+	return IsFundamentalType_v<T> && IsFundamentalType_v<U>;
+}
 
-		template <typename T, typename U>
-		constexpr bool IsStaticCastable() {
-			return IsFundamentalType_v<T> && IsFundamentalType_v<U>;
-		}
-
-		template <typename U, typename T>
-		constexpr bool IsDynamicCastable() {
-			return IsBaseOf_v<T, U> || IsBaseOf_v<U, T>;
-		}
-		
-	}
+template <typename U, typename T>
+constexpr bool IsDynamicCastable() {
+	return IsBaseOf_v<T, U> || IsBaseOf_v<U, T>;
+}
+NS_DETAIL_END
 
 class VoidOwner;
 class VoidWatcher;
@@ -706,4 +704,4 @@ bool operator==(const VoidWatcher& lhs, std::nullptr_t);
 bool operator==(std::nullptr_t, const VoidWatcher& rhs);
 
 
-} // namespace JCore
+NS_JC_END

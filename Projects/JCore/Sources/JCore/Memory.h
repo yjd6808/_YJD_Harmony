@@ -11,7 +11,7 @@
 #include <JCore/TypeTraits.h>
 #include <JCore/Exception.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 class Memory final
 {
@@ -129,5 +129,5 @@ public:
 
 };
 
-} // namespace JCore
+NS_JC_END
 

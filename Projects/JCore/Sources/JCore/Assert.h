@@ -8,16 +8,27 @@
 #pragma once
 
 #include <cstdlib>
+#include <JCore/Namespace.h>
 
 // 헤더파일 의존성 회피를 위함
-namespace JCore {
-	namespace Detail {
-		int __StringLength(const char* str);
-		void __StringFormatBuffer(char* buff, int buffCapacity, const char* format, ...);
-		void __StringConcatInnerFront(char* buf, int bufCapacity, const char* concatStr);
-		void __PathFileNameLevel(char* buf, int bufSize, const char* path, int level);
-	}
-}
+NS_JC_BEGIN
+	NS_DETAIL_BEGIN
+	int __StringLength(const char* str);
+	void __StringFormatBuffer(char* buff, int buffCapacity, const char* format, ...);
+	void __StringConcatInnerFront(char* buf, int bufCapacity, const char* concatStr);
+	void __PathFileNameLevel(char* buf, int bufSize, const char* path, int level);
+	NS_DETAIL_END
+NS_JC_END
+
+
+
+
+
+
+
+
+
+
 
 #ifndef DebugAssert
     #if DebugMode

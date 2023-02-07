@@ -6,7 +6,7 @@
 #include <JCore/Core.h>
 #include <JCore/Memory.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 // memcpy_s와 기능이 동일합니다.
 void Memory::Copy(void* dst, const int dstCapacityByte, const void* src, const int srcCopyByte) {
@@ -96,4 +96,4 @@ void Memory::Set(void* src, const int srcCapacity, const Byte value) {
 
 
 
-} // namespace JCore
+NS_JC_END

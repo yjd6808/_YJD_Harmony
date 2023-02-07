@@ -37,12 +37,6 @@
     <Filter Include="Pool">
       <UniqueIdentifier>{a943bf96-41ea-4b46-a660-1db5bcc34f35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{f90aa830-b8c1-49d3-a5a4-6a0870a7d2c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Logging">
-      <UniqueIdentifier>{9f02d35e-b4b6-4b98-a6dc-712183c2882f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{c6bcc2b2-c8c8-4f1d-83c8-c0e10e3f66f5}</UniqueIdentifier>
     </Filter>
@@ -102,15 +96,6 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Threading\Thread.cpp">
       <Filter>Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\System\JCoreSystem.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\System\System.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\JCore\System\PrioritySingleton.cpp">
-      <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Debug\MemoryLeakDetector.cpp">
       <Filter>Debug</Filter>
@@ -345,9 +330,6 @@
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolManager.h">
       <Filter>Pool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\ObjectPool.h">
-      <Filter>Pool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStrategy.h">
       <Filter>Pool</Filter>
     </ClInclude>
@@ -356,15 +338,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolAbstract.h">
       <Filter>Pool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\System\JCoreSystem.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\System\System.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\System\PrioritySingleton.h">
-      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Debug\MemoryLeakDetector.h">
       <Filter>Debug</Filter>
@@ -384,9 +357,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\TypeTraits\Adder.h">
       <Filter>TypeTraits</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\System\JCorePrioritySingleton.h">
-      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolCaptured.h">
       <Filter>Pool</Filter>
@@ -426,6 +396,7 @@
     <ClInclude Include="..\Sources\JCore\Pool\MemoryChuckQueue.h">
       <Filter>Pool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Namespace.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Container\Vector.natvis">

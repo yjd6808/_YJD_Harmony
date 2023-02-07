@@ -14,31 +14,31 @@
 #include <JCore/FileSystem/FileAccess.h>
 #include <JCore/FileSystem/FileMode.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
-	template <typename T>
-	class SharedPtr;
-	class FileStream : public Stream
-	{
-	public:
-		FileStream(const String& path, FileAccess access, FileMode mode);
-		~FileStream() override;
+template <typename T>
+class SharedPtr;
+class FileStream : public Stream
+{
+public:
+	FileStream(const String& path, FileAccess access, FileMode mode);
+	~FileStream() override;
 
-		FileMode GetMode() { return m_eMode;  }
-		FileAccess GetAccess() { return m_eAccess; }
+	FileMode GetMode() { return m_eMode;  }
+	FileAccess GetAccess() { return m_eAccess; }
 
-		int Read(Out_ Byte* bytes, int offset, int len) override;
-		void Write(const Byte* bytes, int offset, int len) override;
-		void Seek(int offset, Origin origin = Origin::eBegin) override;
-		bool Flush() override;
-		void Close() override;
-		bool IsClosed() override;
-	protected:
-		FileAccess m_eAccess;
-		FileMode m_eMode;
-		IoHandle m_hHandle;
-	};
+	int Read(Out_ Byte* bytes, int offset, int len) override;
+	void Write(const Byte* bytes, int offset, int len) override;
+	void Seek(int offset, Origin origin = Origin::eBegin) override;
+	bool Flush() override;
+	void Close() override;
+	bool IsClosed() override;
+protected:
+	FileAccess m_eAccess;
+	FileMode m_eMode;
+	IoHandle m_hHandle;
+};
 
-	using FileStreamPtr = SharedPtr<FileStream>;
+using FileStreamPtr = SharedPtr<FileStream>;
 
-} // namespace JCore
+NS_JC_END

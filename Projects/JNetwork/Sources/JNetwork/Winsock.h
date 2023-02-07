@@ -7,7 +7,9 @@
 #include <JCore/Type.h>
 #include <JCore/Primitives/String.h>
 
-namespace JNetwork {
+#include <JNetwork/Namespace.h>
+
+NS_JNET_BEGIN
 
 struct Winsock
 {
@@ -22,7 +24,4 @@ private:
 	static bool ms_bFinalized;
 };
 
-
-
-}
-
+NS_JNET_END

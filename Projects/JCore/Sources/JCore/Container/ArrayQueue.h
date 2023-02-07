@@ -8,7 +8,7 @@
 #include <JCore/Container/ArrayCollection.h>
 
 
-namespace JCore {
+NS_JC_BEGIN
 
 /*=====================================================================================
 								배열 큐
@@ -468,4 +468,4 @@ protected:
 	friend class TArrayQueueIterator;
 };
 
-} // namespace JCore
+NS_JC_END

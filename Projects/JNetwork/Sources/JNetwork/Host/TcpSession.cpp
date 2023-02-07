@@ -11,7 +11,7 @@
 
 using namespace JCore;
 
-namespace JNetwork {
+NS_JNET_BEGIN
 	TcpSession::TcpSession(IOCP* iocp, TcpServerEventListener* listener) :
 	m_pServerEventListener(listener),
 	m_eState(State::eUninitialized),

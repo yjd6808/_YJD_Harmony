@@ -14,7 +14,8 @@
 	#define Out_
 #endif
 
-namespace JNetwork {
+NS_JNET_BEGIN
+
 class SocketOption
 {
 public:
@@ -148,6 +149,5 @@ class Socketv6 final : public Socket
 };
 
 
-
-}
+NS_JNET_END
 

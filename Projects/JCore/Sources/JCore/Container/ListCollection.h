@@ -8,7 +8,7 @@
 #include <JCore/Container/ListCollectionIterator.h>
 #include <JCore/Container/ListNode.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 /*=====================================================================================
 									리스트 콜렉션
@@ -514,4 +514,4 @@ ListCollection<T, TAllocator>::~ListCollection() noexcept {
 }
 
 
-} // namespace JCore
+NS_JC_END

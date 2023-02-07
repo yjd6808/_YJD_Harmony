@@ -10,7 +10,7 @@
 #include <JCore/Exception.h>
 #include <JCore/Ascii.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 	using namespace JCore;
 

@@ -8,7 +8,7 @@
 #include <JCore/Container/ArrayStackIterator.h>
 #include <JCore/Container/ArrayCollection.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 /*=====================================================================================
 								배열 스택
@@ -107,5 +107,4 @@ protected:
 };
 
 
-
-} // namespace JCore
+NS_JC_END

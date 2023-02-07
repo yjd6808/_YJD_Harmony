@@ -5,10 +5,9 @@
 
 #pragma once
 
-#include <JCore/TypeTraits/Checker.h>
 #include <JCore/Memory.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 class DefaultAllocator
 {
@@ -63,4 +62,4 @@ public:
 
 };
 
-} // namespace JCore
+NS_JC_END

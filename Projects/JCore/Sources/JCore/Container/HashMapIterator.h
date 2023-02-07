@@ -6,7 +6,7 @@
 
 #include <JCore/Container/MapCollectionIterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 // 전방 선언
 class VoidOwner; 
@@ -113,4 +113,4 @@ protected:
 	friend class THashMap;
 };
 
-} // namespace JCore
+NS_JC_END

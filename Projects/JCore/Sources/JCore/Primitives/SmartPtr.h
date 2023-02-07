@@ -70,19 +70,21 @@
 #include <JCore/Allocator/DefaultAllocator.h>
 #include <JCore/Primitives/Atomic.h>
 
-namespace JCore {
-	namespace Detail {
-		// 스마트포인터는 배열타입은 기본 타입으로 붕괴해서 체크하자.. ㅠ
-		template <typename Lhs, typename Rhs>
-		constexpr bool IsSmartPtrCastable_v = IsDynamicCastable_v<NakedType_t<Lhs>*, NakedType_t<Rhs>*>;
+NS_JC_BEGIN
 
-		template <typename Lhs, typename Rhs>
-		void CheckDynamicCastable() {
-			static_assert(IsSmartPtrCastable_v<Lhs, Rhs>, 
-				"... cannot convert! Type T* and U* must be dynamic castable each other");
 
-		}
-	}
+NS_DETAIL_BEGIN
+// 스마트포인터는 배열타입은 기본 타입으로 붕괴해서 체크하자.. ㅠ
+template <typename Lhs, typename Rhs>
+constexpr bool IsSmartPtrCastable_v = IsDynamicCastable_v<NakedType_t<Lhs>*, NakedType_t<Rhs>*>;
+
+template <typename Lhs, typename Rhs>
+void CheckDynamicCastable() {
+	static_assert(IsSmartPtrCastable_v<Lhs, Rhs>, 
+		"... cannot convert! Type T* and U* must be dynamic castable each other");
+
+}
+NS_DETAIL_END
 
 
 
@@ -1239,12 +1241,4 @@ bool operator!=(std::nullptr_t, const WeakPtr<T>& rhs) {
 
 
 
-
-
-
-
-
-
-
-
-} // namespace JCore
+NS_JC_END

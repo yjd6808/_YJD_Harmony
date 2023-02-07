@@ -12,7 +12,8 @@
 
 #include <JNetwork/Protocol.h>
 
-namespace JNetwork {
+
+NS_JNET_BEGIN
 
 #ifdef UNICODE
 	constexpr Int32U IPv4Len_v = 40;
@@ -87,4 +88,4 @@ private:
 	Int64U m_uiAddrLow = 0;
 };
 
-} // namespace JNetwork
+NS_JNET_END

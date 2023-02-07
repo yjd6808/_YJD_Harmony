@@ -15,7 +15,7 @@
 #define PACKET_HEADER_SIZE		4UL		// IPacket  크기
 #define COMMAND_HEADER_SIZE		4UL		// ICommand 크기
 
-namespace JNetwork {
+NS_JNET_BEGIN
 	
 /*=====================================================================================
 									커맨드 객체
@@ -322,4 +322,4 @@ private:
 };
 
 
-} // namespace JNetwork
+NS_JNET_END

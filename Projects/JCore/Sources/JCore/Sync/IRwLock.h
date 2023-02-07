@@ -11,30 +11,28 @@
 #include <JCore/Declspec.h>
 #include <JCore/Sync/LockGuard.h>
 
+NS_JC_BEGIN
 
+enum RwLockType
+{
+    eNormalRwLock
+};
 
-namespace JCore {
+struct JCORE_NOVTABLE IRwLock
+{
+    IRwLock() = default;
+    virtual ~IRwLock() = default;
 
-    enum RwLockType
-    {
-        eNormalRwLock
-    };
+    virtual void WriteLock() = 0;
+    virtual bool TryWriteLock() = 0;
+    virtual void WriteUnlock() = 0;
+    virtual bool IsWriteLocked() = 0;
 
-    struct JCORE_NOVTABLE IRwLock
-    {
-        IRwLock() = default;
-        virtual ~IRwLock() = default;
+    virtual void ReadLock() = 0;
+    virtual bool TryReadLock() = 0;
+    virtual void ReadUnlock() = 0;
+    virtual bool IsReadLocked() = 0;
+};
 
-        virtual void WriteLock() = 0;
-        virtual bool TryWriteLock() = 0;
-        virtual void WriteUnlock() = 0;
-        virtual bool IsWriteLocked() = 0;
-
-        virtual void ReadLock() = 0;
-        virtual bool TryReadLock() = 0;
-        virtual void ReadUnlock() = 0;
-        virtual bool IsReadLocked() = 0;
-    };
-
-} // namespace JCore;
+NS_JC_END;
 

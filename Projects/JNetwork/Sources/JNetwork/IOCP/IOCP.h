@@ -10,7 +10,7 @@
 #define IOCP_POST_ORDER_TERMINATE	0x01
 #define IOCP_POST_ORDER_ERROR	   -0x01
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class IOCPWorker;
 class IOCP
@@ -52,5 +52,5 @@ private:
 	// IOCP를 종료할 때 이 팬딩 카운트가 0이 되면 IOCP 쓰레드를 해제하도록 한다.
 };
 
-}
+NS_JNET_END
 

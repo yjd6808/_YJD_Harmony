@@ -8,7 +8,7 @@
 #include <JNetwork/Host/TcpSession.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlapped.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class IOCPOverlappedConnect : public IOCPOverlapped
 {
@@ -22,4 +22,4 @@ private:
 	ISendPacket* m_pSentPacket;
 };
 
-} // namespace JNetwork
+NS_JNET_END

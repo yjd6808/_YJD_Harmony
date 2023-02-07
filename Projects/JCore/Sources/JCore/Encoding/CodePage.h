@@ -10,19 +10,20 @@
 
 #pragma once
 
-namespace JCore {
-    enum CodePage
-    {
-        ANSI = 0,         // 시스템 로컬 인코딩
-        CP949 = 51949,
-        UTF8 = 65001,
-        UTF16LE = 1200,
-        UTF16BE = 1201,
-        UTF32LE = 12000,
-        UTF32BE = 12001
-    };
+NS_JC_BEGIN
 
-} // namespace JCore
+enum CodePage
+{
+    ANSI = 0,         // 시스템 로컬 인코딩
+    CP949 = 51949,
+    UTF8 = 65001,
+    UTF16LE = 1200,
+    UTF16BE = 1201,
+    UTF32LE = 12000,
+    UTF32BE = 12001
+};
+
+NS_JC_END
 
 
 

@@ -6,7 +6,7 @@
 
 #include <JCore/Container/CollectionStream.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename, typename> class Vector;
 template <typename, typename> class LinkedList;
@@ -138,4 +138,4 @@ private:
 	TCollection* m_pCollection;
 };
 
-} // namespace JCore
+NS_JC_END

@@ -10,7 +10,7 @@
 
 #include <JNetwork/Host/TcpSession.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class TcpServer;
 class TcpSessionContainer
@@ -33,4 +33,4 @@ private:
 	friend class TcpServer;
 };
 
-} // namespace JNetwork
+NS_JNET_END

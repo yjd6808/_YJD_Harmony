@@ -6,7 +6,7 @@
 
 #include <JNetwork/IPAddress.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class IPEndPoint
 {
@@ -56,5 +56,5 @@ public:
 	
 };
 
-} // namespace JNetwork
+NS_JNET_END
 

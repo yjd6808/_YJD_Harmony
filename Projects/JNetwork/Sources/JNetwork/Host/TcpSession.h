@@ -26,7 +26,7 @@
 
 
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class TcpSession
 {
@@ -73,7 +73,6 @@ protected:
 private:
 	TcpServerEventListener* m_pServerEventListener;							// TcpClient 입장에서는 nullptr로 사용하지 않음 / 그래서 private으로 둠
 protected:
-	void* m_pTag{};
 	SessionBuffer m_ReceiveBuffer;
 	Socketv4 m_ClientSocket;
 	IOCP* m_pIocp;															// TcpClient 입장에서는 생성/소멸을 해줘야하는 객체이지만 TcpSession 입장에서는 TcpServer의 IOCP를 단순히 참조하는 용도이다.
@@ -92,4 +91,4 @@ protected:
 	friend class IOCPOverlappedSend;
 };
 
-} // namespace JNetwork
+NS_JNET_END

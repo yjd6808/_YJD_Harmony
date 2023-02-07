@@ -10,7 +10,7 @@
 #include <exception>
 #include <JCore/Primitives/String.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 struct Exception : public std::exception
 {
@@ -66,4 +66,4 @@ struct NotImplementedException : public Exception
 };
 
 
-} // namespace JCore
+NS_JC_END

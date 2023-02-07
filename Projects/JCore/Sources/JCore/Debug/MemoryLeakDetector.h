@@ -15,7 +15,7 @@
 #include <JCore/Functional.h>
 
 
-namespace JCore {
+NS_JC_BEGIN
 
 
     // 범위 메모리릭 체크

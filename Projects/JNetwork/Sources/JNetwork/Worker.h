@@ -7,7 +7,9 @@
 #include <JCore/Type.h>
 #include <JCore/Threading/Thread.h>
 
-namespace JNetwork {
+#include <JNetwork/Namespace.h>
+
+NS_JNET_BEGIN
 
 class Worker
 {
@@ -35,4 +37,4 @@ protected:
 	WinHandle m_hPauseEvent;
 };
 
-} // namespace JNetwork
+NS_JNET_END

@@ -8,7 +8,7 @@
 #include <JCore/Functional.h>
 #include <JCore/TypeCast.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename T, typename TAction = Action<T*>>
 class AutoPtr
@@ -27,4 +27,4 @@ class AutoPtr<T&, TAction> {};
 
 
 
-} // namespace JCore
+NS_JC_END

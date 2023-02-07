@@ -7,7 +7,7 @@
 #include <JCore/Container/ListCollection.h>
 #include <JCore/Container/ListStackIterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename T, typename TAllocator = DefaultAllocator>
 class ListStack;
@@ -94,4 +94,4 @@ protected:
 	friend class TListStackIterator;
 };
 
-} // namespace JCore
+NS_JC_END

@@ -5,7 +5,7 @@
 
 #pragma once
 
-namespace JCore {
+NS_JC_BEGIN
 
 class Math final
 {
@@ -55,4 +55,4 @@ public:
 private:
 };
 
-} // namespace JCore
+NS_JC_END

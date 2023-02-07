@@ -8,7 +8,7 @@
 #include <JCore/Container/Vector.h>
 #include <JNetwork/Worker.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class WorkerManager final
 {
@@ -65,4 +65,4 @@ private:
 	friend class IOCP;
 };
 
-} // namespace JNetwork
+NS_JNET_END

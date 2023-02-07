@@ -5,18 +5,19 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JNetwork/Namespace.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 struct ICommand;
 struct ISendPacket;
 
-class TcpClient;
-class TcpClientEventListener
+class Session;
+class SessionEventListener
 {
 public:
-	TcpClientEventListener() = default;
-	virtual ~TcpClientEventListener() = default;
+	SessionEventListener() = default;
+	virtual ~SessionEventListener() = default;
 protected:
 	virtual void OnConnected() = 0;
 	virtual void OnDisconnected() = 0;
@@ -26,4 +27,4 @@ protected:
 	friend class TcpClient;
 };
 
-} // namespace JNetwork
+NS_JNET_END

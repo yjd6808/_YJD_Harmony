@@ -29,22 +29,22 @@
 
 #pragma once
 
-namespace JCore {
+NS_JC_BEGIN
 	
 
-	enum MemoryPoolStrategy
-	{
-		eSingle = 0x1,
-		eMultiple = 0x2,
-		eTls = 0x3,
-		eMemoryPoolStrategyMax = eTls,
-		eMemoryPoolStrategyMask = 0xf
-	};
+enum MemoryPoolStrategy
+{
+	eSingle = 0x1,
+	eMultiple = 0x2,
+	eTls = 0x3,
+	eMemoryPoolStrategyMax = eTls,
+	eMemoryPoolStrategyMask = 0xf
+};
 
-	namespace Detail {
+NS_DETAIL_BEGIN
+template <MemoryPoolStrategy Strategy>
+inline constexpr bool IsValidMemoryPoolStrategy = Strategy >= eSingle && Strategy <= eMemoryPoolStrategyMax;
+NS_DETAIL_END
 
-		template <MemoryPoolStrategy Strategy>
-		inline constexpr bool IsValidMemoryPoolStrategy = Strategy >= eSingle && Strategy <= eMemoryPoolStrategyMax;
-	}
-} // namespace JCore 
+NS_JC_END 
 

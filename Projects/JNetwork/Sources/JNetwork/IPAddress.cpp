@@ -14,7 +14,7 @@
 
 
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 using namespace JCore;
 

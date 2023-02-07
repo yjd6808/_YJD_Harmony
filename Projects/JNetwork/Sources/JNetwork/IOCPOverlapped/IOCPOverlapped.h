@@ -10,7 +10,7 @@
 #include <JNetwork/IOCP/IOCPPostOrder.h>
 
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class IOCPOverlapped : public OVERLAPPED
 {
@@ -37,4 +37,4 @@ protected:
 	IOCP* m_pIocp;
 };
 
-} // namespace JNetwork
+NS_JNET_END

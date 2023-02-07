@@ -6,6 +6,7 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/Namespace.h>
 
 #pragma warning (push)
   #pragma warning (disable : 4307)	// '+': signed integral constant overflow
@@ -13,8 +14,10 @@
   #pragma warning (disable : 26450)	// Arithmetic overflow : '+' operation causes overflow at compile time.Use a wider type to store the operands -> MinInt32_v 이런거처럼 내가 고의로 오버플로 일으킨 것 땜에
 
 
-namespace JCore {
-	namespace Detail { enum class ForSizeCheck {}; }
+NS_JC_BEGIN
+	NS_DETAIL_BEGIN
+	enum class ForSizeCheck {};
+	NS_DETAIL_END
 constexpr char		MaxChar_v = (1 << 7) - 1;
 constexpr char		MinChar_v = (1 << 7);
 constexpr char		MaxInt8_v = (1 << 7) - 1;
@@ -47,7 +50,7 @@ constexpr int BitCount(T&& val) {
 	return sizeof(val) * BytePerBit_v;
 }
 
-} // namespace JCore
+NS_JC_END
 
 #pragma warning (pop)
 

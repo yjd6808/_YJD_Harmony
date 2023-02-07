@@ -5,10 +5,10 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
-	bool Winsock::ms_bFinalized = false;
-	bool Winsock::ms_bInitailized = false;
+bool Winsock::ms_bFinalized = false;
+bool Winsock::ms_bInitailized = false;
 
 /*
 	참고 : https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsastartup
@@ -64,5 +64,5 @@ JCore::String Winsock::LastErrorMessage() {
 	return buf;
 }
 
-}
+NS_JNET_END
 

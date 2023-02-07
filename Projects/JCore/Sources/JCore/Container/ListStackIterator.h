@@ -6,7 +6,7 @@
 
 #include <JCore/Container/ListCollectionIterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 
 // 전방 선언
@@ -53,4 +53,4 @@ public:
 	}
 };
 
-} // namespace JCore
+NS_JC_END

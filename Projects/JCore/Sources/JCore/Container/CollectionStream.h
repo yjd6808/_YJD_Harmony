@@ -8,7 +8,7 @@
 #include <JCore/Container/CollectionType.h>
 #include <JCore/Container/ContainerType.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename, typename>
 class CollectionExtension;
@@ -274,4 +274,4 @@ private:
 	friend class CollectionExtension<T, TAllocator>;
 };
 
-} // namespace JCore
+NS_JC_END

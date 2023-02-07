@@ -6,7 +6,7 @@
 
 #include <JCore/Container/ListCollectionIterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 
 // 전방 선언
@@ -55,4 +55,4 @@ public:
 	friend class TLinkedList;
 };
 
-} // namespace JCore
+NS_JC_END

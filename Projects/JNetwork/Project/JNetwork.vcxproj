@@ -86,7 +86,7 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Buffer.h" />
     <ClInclude Include="..\Sources\JNetwork\ByteOrder.h" />
-    <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpClientEventListener.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\Listener\SessionEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpServerEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Server.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -165,6 +165,10 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IPEndPoint.h" />
     <ClInclude Include="..\Sources\JNetwork\IPAddress.h" />
+    <ClInclude Include="..\Sources\JNetwork\Namespace.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
     <ClInclude Include="..\Sources\JNetwork\Packet.h">
       <SubType>

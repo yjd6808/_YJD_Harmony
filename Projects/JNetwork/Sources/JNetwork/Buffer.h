@@ -21,9 +21,10 @@
 #include <JCore/Math.h>
 
 #include <WinSock2.h>
+#include <JNetwork/Namespace.h>
 
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 template <Int32U BufferSize>
 class Buffer
@@ -150,5 +151,5 @@ private:
 
 using SessionBuffer = Buffer<4096UL>;
 
-}
+NS_JNET_END
 

@@ -10,35 +10,35 @@
 #include <JCore/Sync/IRwLock.h>
 #include <condition_variable>
 
-namespace JCore {
+NS_JC_BEGIN
 
-	class NormalRwLock final : public IRwLock
-	{
-	public:
-		NormalRwLock();
+class NormalRwLock final : public IRwLock
+{
+public:
+	NormalRwLock();
 
-		void WriteLock() override;
-		bool TryWriteLock() override;
-		void WriteUnlock() override;
-		bool IsWriteLocked() override;
+	void WriteLock() override;
+	bool TryWriteLock() override;
+	void WriteUnlock() override;
+	bool IsWriteLocked() override;
 
-		void ReadLock() override;
-		bool TryReadLock() override;
-		void ReadUnlock() override;
-		bool IsReadLocked() override;
-	private:
-		std::condition_variable m_Condvar;
-		std::mutex m_Mtx;
+	void ReadLock() override;
+	bool TryReadLock() override;
+	void ReadUnlock() override;
+	bool IsReadLocked() override;
+private:
+	std::condition_variable m_Condvar;
+	std::mutex m_Mtx;
 
-		int m_iReadCount;
-		bool m_bWriteFlag;
-	};
+	int m_iReadCount;
+	bool m_bWriteFlag;
+};
 
-	using NormalWriteLockGuard = RwLockGuard<NormalRwLock, RwLockMode::Write>;
-	using NormalReadLockGuard = RwLockGuard<NormalRwLock, RwLockMode::Read>;
+using NormalWriteLockGuard = RwLockGuard<NormalRwLock, RwLockMode::Write>;
+using NormalReadLockGuard = RwLockGuard<NormalRwLock, RwLockMode::Read>;
 
-	extern template NormalWriteLockGuard;
-	extern template NormalReadLockGuard;
+extern template NormalWriteLockGuard;
+extern template NormalReadLockGuard;
 
-} // namespace JCore
+NS_JC_END
 

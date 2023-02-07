@@ -15,8 +15,9 @@
 #include <JCore/Comparator.h>
 #include <JCore/Utils/NatvisFloat.h>
 
-namespace JCore {
-namespace Detail {
+NS_JC_BEGIN
+	NS_DETAIL_BEGIN
+
 	constexpr Int64 MaxDay_v			= 365;
 	constexpr Int64 MaxHour_v			= 24;
 	constexpr Int64 MaxMinute_v			= 60;
@@ -56,7 +57,8 @@ namespace Detail {
 	// [AD 0001년 1월 1일 ~ 1969년 12월 31일까지의 마이크로초 계산]
 	constexpr Int64 ADBegin_v	  = (DaysPer400Years_v * 1969) / 400;	// Epoch 시간 1970년 1월 1일까지의 일 수
 	constexpr Int64 ADBeginTick_v = ADBegin_v * TicksPerDay_v;			// Epoch 시간 1970년 1월 1일까지의 마이크로초
-}
+
+	NS_DETAIL_END
 
 
 enum class DatePart
@@ -573,5 +575,5 @@ struct StopWatch<StopWatchMode::HighResolution>
 
 
 
-} // namespace JCore
+NS_JC_END
 

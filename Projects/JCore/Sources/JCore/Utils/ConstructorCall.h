@@ -8,13 +8,15 @@
 
 #pragma once
 
-namespace JCore {
+#include <JCore/Namespace.h>
 
-	template <typename... TParam>
-	struct ConstructorCall {
+NS_JC_BEGIN
 
-		ConstructorCall( TParam&&... params) {
-		}
-	};
+template <typename... TParam>
+struct ConstructorCall {
 
-} // namespace JCore
+	ConstructorCall( TParam&&... params) {
+	}
+};
+
+NS_JC_END

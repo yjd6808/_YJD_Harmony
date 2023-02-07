@@ -10,7 +10,7 @@
 
 #include <JNetwork/Packet.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 	template <typename TPool>
 	class PacketGenerator
@@ -22,5 +22,5 @@ namespace JNetwork {
 		}
 	};
 
-} // namespace JNetwork
+NS_JNET_END
 

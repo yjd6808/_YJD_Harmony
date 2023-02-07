@@ -7,7 +7,7 @@
 
 #include <JCore/TypeCast.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename... Args>
 struct Tuple;
@@ -64,4 +64,4 @@ constexpr auto MakeTuple(Args&&... args) {
 }
 
 
-} // namespace JCore
+NS_JC_END

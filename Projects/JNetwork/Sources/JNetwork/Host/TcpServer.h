@@ -11,7 +11,7 @@
 
 #include <JNetwork/IOCP/IOCP.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 class IPv4EndPoint;
 class TcpServer : public Server
@@ -38,4 +38,4 @@ protected:
 	IOCP* m_pIocp;
 };
 
-} // namespace JNetwork
+NS_JNET_END

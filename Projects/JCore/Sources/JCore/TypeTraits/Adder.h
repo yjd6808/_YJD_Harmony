@@ -8,29 +8,31 @@
 
 #pragma once
 
-namespace JCore {
+#include <JCore/Namespace.h>
 
-	namespace Detail
+NS_JC_BEGIN
+	NS_DETAIL_BEGIN
+
+	template <typename T>
+	struct AddLValueReference
 	{
-		template <typename T>
-		struct AddLValueReference
-		{
-			using Type = T&;
-		};
-
-		template <typename T>
-		struct AddRValueReference
-		{
-			using Type = T&&;
-		};
-	}
-
+		using Type = T&;
+	};
 
 	template <typename T>
-	using AddLValueRef_t = typename Detail::AddLValueReference<T>::Type;
+	struct AddRValueReference
+	{
+		using Type = T&&;
+	};
 
-	template <typename T>
-	using AddRValueRef_t = typename Detail::AddRValueReference<T>::Type;
+	NS_DETAIL_END
 
 
-} // namespace JCore
+template <typename T>
+using AddLValueRef_t = typename Detail::AddLValueReference<T>::Type;
+
+template <typename T>
+using AddRValueRef_t = typename Detail::AddRValueReference<T>::Type;
+
+
+NS_JC_END

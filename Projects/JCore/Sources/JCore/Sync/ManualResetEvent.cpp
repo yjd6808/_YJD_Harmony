@@ -9,12 +9,12 @@
 #include <JCore/TypeCast.h>
 #include <JCore/Sync/ManualResetEvent.h>
 
-namespace JCore {
-    ManualResetEvent::ManualResetEvent(ManualResetEvent&& other) noexcept : WaitHandle(Move(other)) {}
-    ManualResetEvent& ManualResetEvent::operator=(ManualResetEvent&& other) noexcept {
-        WaitHandle::operator=(Move(other));
-        return *this;
-    }
-} // namespace JCore
+NS_JC_BEGIN
+ManualResetEvent::ManualResetEvent(ManualResetEvent&& other) noexcept : WaitHandle(Move(other)) {}
+ManualResetEvent& ManualResetEvent::operator=(ManualResetEvent&& other) noexcept {
+    WaitHandle::operator=(Move(other));
+    return *this;
+}
+NS_JC_END
 
 

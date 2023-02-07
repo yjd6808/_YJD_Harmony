@@ -6,7 +6,7 @@
 
 #include <JCore/Container/Iterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 		
 // 전방 선언
@@ -99,4 +99,4 @@ ListCollectionIterator<T, TAllocator>::~ListCollectionIterator() noexcept {
 }
 
 
-} // namespace JCore
+NS_JC_END

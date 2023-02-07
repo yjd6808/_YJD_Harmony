@@ -9,7 +9,7 @@
 #include <JCore/Exception.h>
 #include <JCore/Container/Vector.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 Vector<String, DefaultAllocator> StringUtil::Split(String& src, const char* delimiter) {
 	return src.Split(delimiter);
@@ -165,5 +165,5 @@ inline constexpr auto StringUtil::TrimFront(const char(&str)[Size], const char d
 
 */
 
-} // namespace JCore
+NS_JC_END
 

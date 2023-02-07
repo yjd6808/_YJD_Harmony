@@ -12,7 +12,7 @@
 #pragma warning (push)
 #pragma warning (disable : 4244)  // 'argument': conversion from 'double' to 'float', possible loss of data, double을 강제로 float으로 바꿀라캐서 Hasher<double>  땜에
 
-namespace JCore {
+NS_JC_BEGIN
 	
 constexpr Int32U PrimeInt32U_v = 0x087b840FU;			// 1억 부근 암거나 - 142,312,463
 constexpr Int64U PrimeInt64U_v = 0x0000050B00000002ULL;	// 5조 부근 암거나 - 5,544,802,779,138
@@ -98,6 +98,6 @@ struct Hasher<String> {
 	}
 };
 
-} // namespace JCore
+NS_JC_END
 
 #pragma warning (pop)

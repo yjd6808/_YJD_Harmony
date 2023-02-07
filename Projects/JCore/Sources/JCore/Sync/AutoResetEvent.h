@@ -12,17 +12,17 @@
 
 #include <JCore/Sync/WaitHandle.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
-    class AutoResetEvent : public WaitHandle
-    {
-    public:
-        AutoResetEvent(bool initialState, const char* name = nullptr) : WaitHandle(initialState, true, name) {}
-        AutoResetEvent(const AutoResetEvent& other) = delete;
-        AutoResetEvent(AutoResetEvent&& other) noexcept;
+class AutoResetEvent : public WaitHandle
+{
+public:
+    AutoResetEvent(bool initialState, const char* name = nullptr) : WaitHandle(initialState, true, name) {}
+    AutoResetEvent(const AutoResetEvent& other) = delete;
+    AutoResetEvent(AutoResetEvent&& other) noexcept;
 
-        AutoResetEvent& operator=(const AutoResetEvent& other) = delete; 
-        AutoResetEvent& operator=(AutoResetEvent&& other) noexcept;
-    };
+    AutoResetEvent& operator=(const AutoResetEvent& other) = delete; 
+    AutoResetEvent& operator=(AutoResetEvent&& other) noexcept;
+};
 
-} // namespace JCore 
+NS_JC_END 

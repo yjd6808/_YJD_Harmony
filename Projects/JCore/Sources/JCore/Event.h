@@ -8,7 +8,7 @@
 #include <JCore/Functional.h>
 #include <JCore/Container/LinkedList.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 template <typename... Args>
 class Event
@@ -93,4 +93,4 @@ private:
 
 
 
-} // namespace JCore
+NS_JC_END

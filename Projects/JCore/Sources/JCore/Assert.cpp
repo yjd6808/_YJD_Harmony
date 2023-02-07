@@ -9,24 +9,24 @@
 #include <JCore/Primitives/StringUtil.h>
 #include <JCore/FileSystem/Path.h>
 
-namespace JCore {
-	namespace Detail {
-		int __StringLength(const char* str) {
-			return StringUtil::Length(str);
-		}
-		void __StringFormatBuffer(char* buff, const int buffCapacity, const char* format, ...) {
-			va_list args;
-			va_start(args, format);
-			StringUtil::FormatBuffer(buff, buffCapacity, format, args);
-			va_end(args);
-		}
-
-		void __StringConcatInnerFront(char* buf, int bufCapacity, const char* concatStr) {
-			StringUtil::ConcatInnerFront(buf, bufCapacity, concatStr);
-		}
-		void __PathFileNameLevel(char* buf, int bufSize, const char* path, int level) {
-			Path::FileNameLevel(buf, bufSize, path, StringUtil::Length(path), level);
-		}
+NS_JC_BEGIN
+	NS_DETAIL_BEGIN
+	int __StringLength(const char* str) {
+		return StringUtil::Length(str);
 	}
-}
+	void __StringFormatBuffer(char* buff, const int buffCapacity, const char* format, ...) {
+		va_list args;
+		va_start(args, format);
+		StringUtil::FormatBuffer(buff, buffCapacity, format, args);
+		va_end(args);
+	}
+
+	void __StringConcatInnerFront(char* buf, int bufCapacity, const char* concatStr) {
+		StringUtil::ConcatInnerFront(buf, bufCapacity, concatStr);
+	}
+	void __PathFileNameLevel(char* buf, int bufSize, const char* path, int level) {
+		Path::FileNameLevel(buf, bufSize, path, StringUtil::Length(path), level);
+	}
+	NS_DETAIL_END
+NS_JC_END
 

@@ -10,23 +10,23 @@
 #include <JCore/Sync/ILock.h>
 #include <JCore/Primitives/Atomic.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
-	class SpinLock final : public ILock
-	{
-	public:
-		SpinLock();
-		~SpinLock() override;
+class SpinLock final : public ILock
+{
+public:
+	SpinLock();
+	~SpinLock() override;
 
-		void Lock() override;
-		void Unlock() override;
-		bool TryLock() override;
-		bool IsLocked() override;
-	private:
-		Atomic<bool> m_bLocked;
-	};
+	void Lock() override;
+	void Unlock() override;
+	bool TryLock() override;
+	bool IsLocked() override;
+private:
+	Atomic<bool> m_bLocked;
+};
 
-	using SpinLockGuard = LockGuard<SpinLock>;
-	extern template       LockGuard<SpinLock>;
+using SpinLockGuard = LockGuard<SpinLock>;
+extern template       LockGuard<SpinLock>;
 
-} // namespace JCore
+NS_JC_END

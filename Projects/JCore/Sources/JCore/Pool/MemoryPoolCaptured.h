@@ -10,18 +10,19 @@
 
 #include <JCore/Pool/MemoryPoolDetail.h>
 
-namespace JCore {
-	template <typename T>
-	class SharedPtr;
-	class MemoryPoolAbstract;
-	struct MemoryPoolCaptured
-	{
-		MemoryPoolAbstract* Pool{};
-		Int64U TotalLeaks{};
-		Int32 LeakBlocks[Detail::MemoryBlockSizeMapSize_v]{};
-	};
+NS_JC_BEGIN
 
-	using MemoryPoolCapturedPtr = SharedPtr<MemoryPoolCaptured>;
+template <typename T>
+class SharedPtr;
+class MemoryPoolAbstract;
+struct MemoryPoolCaptured
+{
+	MemoryPoolAbstract* Pool{};
+	Int64U TotalLeaks{};
+	Int32 LeakBlocks[Detail::MemoryBlockSizeMapSize_v]{};
+};
 
-} // namespace JCore
+using MemoryPoolCapturedPtr = SharedPtr<MemoryPoolCaptured>;
+
+NS_JC_END
 

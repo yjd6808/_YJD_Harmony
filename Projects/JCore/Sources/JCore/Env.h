@@ -8,19 +8,19 @@
 #pragma once
 
 
-namespace JCore {
+NS_JC_BEGIN
 
-	struct TimeSpan;
+struct TimeSpan;
 
-	class DateTime;
-	class String;
-	class Env
-	{
-	public:
-		static String CurrentDirectory();
-		static TimeSpan AppTime();
-		static TimeSpan SystemTime();
-	};
+class DateTime;
+class String;
+class Env
+{
+public:
+	static String CurrentDirectory();
+	static TimeSpan AppTime();
+	static TimeSpan SystemTime();
+};
 
 
-} // namespace JCore
+NS_JC_END

@@ -9,7 +9,7 @@
 
 #include <random>
 
-namespace JCore {
+NS_JC_BEGIN
 
 struct Random final
 {
@@ -35,4 +35,4 @@ private:
     inline static std::random_device ms_RandomDevice;
 };
 
-} // namespace JCore
+NS_JC_END

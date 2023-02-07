@@ -11,7 +11,7 @@
 
 using namespace JCore;
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 TcpClient::TcpClient() :
 	TcpSession(new IOCP()),
@@ -111,13 +111,6 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	return true;
 }
 
-void TcpClient::Pause() {
-	// 딱히 쓸일 없을 것 같다. 구현 안함
-}
-
-void TcpClient::Resume() {
-	// 딱히 쓸일 없을 것 같다. 구현 안함
-}
 
 bool TcpClient::Disconnect() {
 	RecursiveLockGuard guard(m_Lock);
@@ -141,7 +134,7 @@ bool TcpClient::Disconnect() {
 	return true;
 }
 
-void TcpClient::SetEventListener(TcpClientEventListener* listener) {
+void TcpClient::SetEventListener(SessionEventListener* listener) {
 	if (!CheckState(State::eUninitialized) && !CheckState(State::eDisconnected)) {
 		DebugAssertMsg(false, "연결이 끊긴 상태 또는 서버와 연결전에만 리스너 설정을 할 수 있습니다.");
 		return;
@@ -186,6 +179,5 @@ void TcpClient::Connected() {
 	m_pClientEventListener->OnConnected();
 }
 
-
-}
+NS_JNET_END
 

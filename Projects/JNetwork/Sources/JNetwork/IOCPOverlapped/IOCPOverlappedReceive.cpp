@@ -6,7 +6,7 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedReceive.h>
 #include <JNetwork/Host/TcpServer.h>
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 IOCPOverlappedReceive::IOCPOverlappedReceive(TcpSession* session, IOCP* iocp) :
 	IOCPOverlapped(iocp, Type::Receive),
@@ -31,4 +31,4 @@ void IOCPOverlappedReceive::Process(BOOL result, Int32UL numberOfBytesTransffere
 	}
 }
 
-} // namespace JNetwork
+NS_JNET_END

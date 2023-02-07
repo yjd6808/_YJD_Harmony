@@ -6,8 +6,9 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/Namespace.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 class DefaultAllocator;
 
@@ -128,5 +129,5 @@ private:
 	}
 };
 
-} // namespace JCore
+NS_JC_END
 

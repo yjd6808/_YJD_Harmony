@@ -8,7 +8,7 @@
 #include <JCore/Container/Collection.h>
 #include <JCore/Container/MapCollectionIterator.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 /*=====================================================================================
 									맵 콜렉션
@@ -174,4 +174,4 @@ public:
 template <typename TKey, typename TValue, typename TAllocator>
 MapCollection<TKey, TValue, TAllocator>::~MapCollection() noexcept {}
 
-} // namespace JCore
+NS_JC_END

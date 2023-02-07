@@ -7,7 +7,7 @@
 #include <JCore/Assert.h>
 #include <JCore/Primitives/Atomic.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 struct SafeRefCount
 {
@@ -50,4 +50,4 @@ private:
     Atomic<int> m_iRef;
 };
 
-} // namespace JCore
+NS_JC_END

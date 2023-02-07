@@ -10,7 +10,7 @@
 
 
 
-namespace JNetwork {
+NS_JNET_BEGIN
 	TcpServer::TcpServer(int maxConn) :
 		m_pEventListener(nullptr),
 		m_pContainer(new TcpSessionContainer(maxConn)),

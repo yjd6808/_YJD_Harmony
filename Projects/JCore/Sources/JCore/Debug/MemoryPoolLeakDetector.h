@@ -11,7 +11,7 @@
 #include <JCore/Functional.h>
 #include <JCore/Pool/MemoryPoolManager.h>
 
-namespace JCore {
+NS_JC_BEGIN
 
 	class AutMemoryPoolLeakDetector
 	{
@@ -26,4 +26,4 @@ namespace JCore {
 	};
 
 	
-} // namespace JCore
+NS_JC_END

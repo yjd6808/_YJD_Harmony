@@ -5,9 +5,9 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/Host/TcpSessionContainer.h>
 
-using namespace JCore;
+USING_NS_JC;
 
-namespace JNetwork {
+NS_JNET_BEGIN
 
 TcpSessionContainer::TcpSessionContainer(int maxSize) : 
 	m_iMaxConnection(maxSize), 

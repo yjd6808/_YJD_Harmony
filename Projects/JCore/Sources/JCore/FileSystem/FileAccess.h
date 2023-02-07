@@ -9,13 +9,13 @@
 #pragma once
 
 
-namespace JCore {
+NS_JC_BEGIN
 
-	enum FileAccess
-	{
-		eWrite,
-		eRead,
-		eReadWrite
-	};
+enum FileAccess
+{
+	eWrite,
+	eRead,
+	eReadWrite
+};
 
-} // namespace JCore
+NS_JC_END
