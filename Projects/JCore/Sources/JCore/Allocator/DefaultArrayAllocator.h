@@ -9,11 +9,11 @@
 #pragma once
 
 
-#include <JCore/Pool/MemoryPool.h>
+#include <JCore/Pool/BinarySearchMemoryPool.h>
 
 NS_JC_BEGIN
 
-inline MemoryPool<eSingle, eBinarySearch> ArrayAllocatorPool_v
+inline BinarySearchMemoryPool ArrayAllocatorPool_v
 {
 	{
 		/* 테스트 완료, 봉인

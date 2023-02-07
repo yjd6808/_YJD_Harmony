@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JCore/Functional.h>
-#include <JCore/Pool/MemoryPoolManager.h>
+#include <JCore/Pool/MemoryPoolAbstract.h>
 
 NS_JC_BEGIN
 

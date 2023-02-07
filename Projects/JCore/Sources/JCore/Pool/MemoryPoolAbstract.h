@@ -8,15 +8,13 @@
 #pragma once
 
 #include <JCore/Primitives/SmartPtr.h>
-#include <JCore/Primitives/Atomic.h>
+#include <JCore/Container/HashMap.h>
 
 #include <JCore/Pool/MemoryPoolStatistics.h>
 #include <JCore/Pool/MemoryPoolCaptured.h>
 
 NS_JC_BEGIN
 
-template <typename, typename, typename>
-class HashMap;
 class MemoryPoolAbstract
 {
 public:
@@ -29,7 +27,6 @@ public:
 	virtual void Finalize() = 0;
 	virtual void* DynamicPop(int requestSize, int& realAllocatedSize) = 0;	// 요청한 바이트 크기와 반환된 바이트 크기
 	virtual void DynamicPush(void* memory, int returnSize) = 0;
-	virtual int Strategy() = 0;
 	virtual int Algorithm() = 0;
 	int Slot() { return m_iSlot; }
 	const String& Name() { return m_Name; }
@@ -63,8 +60,6 @@ public:
 	}
 
 	void ResetStatistics() { m_Statistics.Reset(); }
-
-	
 	bool HasUsingBlock() { return m_Statistics.HasUsingBlock();  }
 	
 

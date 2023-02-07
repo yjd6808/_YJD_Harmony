@@ -327,13 +327,7 @@
     <ClInclude Include="..\Sources\JCore\Container\ContainerType.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\MemoryPool.h">
-      <Filter>Pool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolManager.h">
-      <Filter>Pool</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStrategy.h">
+    <ClInclude Include="..\Sources\JCore\Pool\IndexedMemoryPool.h">
       <Filter>Pool</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolAllocationAlgorithm.h">
@@ -400,6 +394,9 @@
       <Filter>Pool</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Namespace.h" />
+    <ClInclude Include="..\Sources\JCore\Pool\BinarySearchMemoryPool.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Container\Vector.natvis">

@@ -272,12 +272,16 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\BinarySearchMemoryPool.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryChuckQueue.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolAbstract.h" />
-    <ClInclude Include="..\Sources\JCore\Pool\MemoryPool.h" />
+    <ClInclude Include="..\Sources\JCore\Pool\IndexedMemoryPool.h" />
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolAllocationAlgorithm.h">
       <SubType>
       </SubType>
@@ -290,12 +294,10 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolManager.h" />
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStatistics.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolStrategy.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\ArraySegment.h">
       <SubType>
       </SubType>

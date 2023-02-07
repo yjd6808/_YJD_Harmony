@@ -41,166 +41,34 @@
 #include <JCore/Container/Vector.h>
 #include <JCore/Container/HashMap.h>
 
-#include <JCore/Pool/MemoryPoolStrategy.h>
 #include <JCore/Pool/MemoryPoolAllocationAlgorithm.h>
 #include <JCore/Pool/MemoryPoolAbstract.h>
 #include <JCore/Pool/MemoryChuckQueue.h>
 
 NS_JC_BEGIN
 
-template <MemoryPoolStrategy Strategy, MemoryPoolAllocationAlgorithm Algorithm>
-class MemoryPool {};
 
-using MemoryPoolSingleBinary	  = MemoryPool<eSingle, eBinarySearch>;
-using MemoryPoolSingleBinaryPtr   = SharedPtr<MemoryPoolSingleBinary>;
-
-using MemoryPoolSingleFullIndexing		= MemoryPool<eSingle, eFullIndexing>;
-using MemoryPoolSingleFullIndexingPtr	= SharedPtr<MemoryPoolSingleBinary>;
-
-using MemoryPoolMultipleBinary		= MemoryPool<eMultiple, eBinarySearch>;
-using MemoryPoolMultipleBinaryPtr	= SharedPtr<MemoryPoolMultipleBinary>;
-
-
-/*
- * =====================================================================
- *
- * 이진 탐색기반 메모리풀
- *
- * =====================================================================
- */
-template <>
-class MemoryPool<eSingle, eBinarySearch> : 
-	public MemoryPoolAbstract, 
-	public MakeSharedFromThis<MemoryPoolSingleBinary>
+class IndexedMemoryPool : public MemoryPoolAbstract
 {
-	using Type = MemoryPoolSingleBinary;
-public:
-	MemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
-		Type::Initialize(allocationMap);
-	}
-
-	MemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {
-		Type::CreatePool();
-	}
-
-	MemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {
-		Type::CreatePool();
-	}
-
-	~MemoryPool() override {
-		Type::Finalize();
-	}
-
-	template <int RequestSize>
-	void* StaticPop()  {
-		constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
-		constexpr int iFitSize = Detail::AllocationLengthMapConverter::ToSize<iIndex>();
-
-		bool bNewAlloc;
-		void* pMemoryBlock = m_Pool[iIndex]->Pop(bNewAlloc);
-		AddAllocated(iIndex, bNewAlloc);
-
-		return pMemoryBlock;
-	}
-
-	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
-		int iIndex = Detail::AllocationLengthMapConverter::ToIndex(requestSize);
-		int iFitSize = Detail::AllocationLengthMapConverter::ToSize(iIndex);
-
-		realAllocatedSize = iFitSize;
-		bool bNewAlloc;
-		void* pMemoryBlock = m_Pool[iIndex]->Pop(bNewAlloc);
-		AddAllocated(iIndex, bNewAlloc);
-		return pMemoryBlock;
-	}
-
-	template <int PushSize>
-	void StaticPush(void* memory) {
-		// static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
-		int index = Detail::AllocationLengthMapConverter::ToIndex<PushSize>();
-		AddDeallocated(index);
-		m_Pool[index]->Push(memory);
-	}
-
-	void DynamicPush(void* memory, int returnSize) override {
-		// DebugAssertMessage(Detail::AllocationLengthMapConverter::ValidateSize(returnSize), "뭐야! 사이즈가 안맞자나!");
-		int index = Detail::AllocationLengthMapConverter::ToIndex(returnSize);
-		AddDeallocated(index);
-		m_Pool[index]->Push(memory);
-	}
-
-
-	void CreatePool() {
-		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
-			int iChunkSize = Detail::AllocationLengthMapConverter::ToSize(i);
-			m_Pool[i] = new MemoryChunckQueue(iChunkSize, 0);
-		}
-	}
-
-	void Initialize(const HashMap<int, int>& allocationMap) override {
-		DebugAssertMsg(m_bInitialized == false, "이미 풀이 초기화 되어 있습니다.");
-
-		const_cast<HashMap<int, int>&>(allocationMap).Extension().ForEach([this](Pair<int, int>& count) {
-			int iSize = count.Key;
-			int iCount = count.Value;
-			int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iSize);
-			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
-
-			if (m_Pool[iIndex]) {
-				DeleteSafe(m_Pool[iIndex]);
-			}
-			
-			m_Pool[iIndex] = new MemoryChunckQueue(iSize, iCount);
-			AddInitBlock(iIndex, iCount);
-		});
-
-		m_bInitialized = true;
-	}
-
-	// 반드시 프로그램 종료전 메모리풀을 더이상 사용하지 않을 때 호출하여 정리할 것
-	void Finalize() override {
-		DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
-
-		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
-			DeleteSafe(m_Pool[i]);
-		}
-	}
-
-	int Strategy() override { return eSingle; }
-	int Algorithm() override { return eBinarySearch; }
-	
-private:
-	MemoryChunckQueue* m_Pool[Detail::MemoryBlockSizeMapSize_v]{};
-};
-
-
-
-template <>
-class MemoryPool<eSingle, eFullIndexing> :
-	public MemoryPoolAbstract,
-	public MakeSharedFromThis<MemoryPoolSingleFullIndexing>
-
-{
-	using Type = MemoryPoolSingleFullIndexing;
 	using MemoryChunkQueueTargetrList = JCore::Vector<MemoryChunckQueue*>;
 public:
-	MemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
-		Type::Initialize(allocationMap);
-		Type::CreateTargeters();
+	IndexedMemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
+		IndexedMemoryPool::Initialize(allocationMap);
+		IndexedMemoryPool::CreateTargeters();
 	}
 
-	MemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {
-		Type::CreatePool();
-		Type::CreateTargeters();
+	IndexedMemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {
+		IndexedMemoryPool::CreatePool();
+		IndexedMemoryPool::CreateTargeters();
 	}
 
-	MemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {
-		Type::CreatePool();
-		Type::CreateTargeters();
+	IndexedMemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {
+		IndexedMemoryPool::CreatePool();
+		IndexedMemoryPool::CreateTargeters();
 	}
 
-	~MemoryPool() override {
-		Type::Finalize();
+	~IndexedMemoryPool() override {
+		IndexedMemoryPool::Finalize();
 	}
 
 	template <int RequestSize>
@@ -320,12 +188,14 @@ public:
 		}
 	}
 
-	int Strategy() override { return eSingle; }
 	int Algorithm() override { return eFullIndexing; }
 
 
 	void CreateTargeters() {
-		
+
+		DebugAssertMsg(m_PoolTargeterLow == nullptr, "이미 Low 타게터 세팅이 되어있습니다.");
+		DebugAssertMsg(m_PoolTargeterHigh == nullptr, "이미 High 타게터 세팅이 되어있습니다.");
+
 		m_PoolTargeterLow = new MemoryChunkQueueTargetrList(LowBoundarySize + 1, nullptr);	// 513
 		m_PoolTargeterHigh = new MemoryChunkQueueTargetrList(HighBoundarySize / BoundarySizeMax, nullptr);	// 524
 		int iBeforeMax = 0;
@@ -385,8 +255,8 @@ public:
 	static constexpr int MaxAllocatableSize = (HighBoundarySize / 1000 - 1) * 1000;	// 최대 할당 가능한 메모리 (523'000)
 private:
 	MemoryChunckQueue* m_Pool[Detail::MemoryBlockSizeMapSize_v]{};
-	MemoryChunkQueueTargetrList* m_PoolTargeterLow;
-	MemoryChunkQueueTargetrList* m_PoolTargeterHigh;
+	MemoryChunkQueueTargetrList* m_PoolTargeterLow{};
+	MemoryChunkQueueTargetrList* m_PoolTargeterHigh{};
 };
 
 
