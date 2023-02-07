@@ -21,25 +21,13 @@ class ListQueue	: public ListCollection<T, TAllocator>
 	using TListQueue			= ListQueue<T, TAllocator>;
 	using TListQueueIterator	= ListQueueIterator<T, TAllocator>;
 public:
-	ListQueue() 
-		: TListCollection(ContainerType::ListQueue) 
-	{
-	}
+	ListQueue() : TListCollection() {}
 
-	ListQueue(const TListQueue& other) 
-		: TListCollection(other, ContainerType::ListQueue) 
-	{
-	}
+	ListQueue(const TListQueue& other) : TListCollection(other) {}
 
-	ListQueue(TListQueue&& other) noexcept
-		: TListCollection(Move(other), ContainerType::ListQueue) 
-	{
-	}
+	ListQueue(TListQueue&& other) noexcept : TListCollection(Move(other)) {}
 
-	ListQueue(std::initializer_list<T> ilist)
-		: TListCollection(ilist, ContainerType::ListQueue)
-	{
-	}
+	ListQueue(std::initializer_list<T> ilist) : TListCollection(ilist) {}
 
 	~ListQueue() noexcept override {}
 public:
@@ -90,6 +78,8 @@ public:
 	TEnumerator End() const override {
 		return MakeShared<TListQueueIterator, TAllocator>(this->GetOwner(), this->m_pTail);
 	}
+
+	ContainerType GetContainerType() override { return ContainerType::ListQueue; }
 protected:
 	friend class TListQueueIterator;
 };

@@ -79,7 +79,7 @@ private:
 public:
 	// 복사 생성 금지
 	CollectionStream(const TCollectionStream& CollectionStream) = delete;
-	CollectionStream(TCollectionStream&& CollectionStream): TCollection(CollectionType::Stream, ContainerType::ReferenceStream) {
+	CollectionStream(TCollectionStream&& CollectionStream) noexcept : TCollection(){
 		m_pArray = CollectionStream.m_pArray;
 		this->m_iSize = CollectionStream.m_iSize;
 		m_pCollection = CollectionStream.m_pCollection;
@@ -109,6 +109,8 @@ public:
 	}
 
 public:
+	ContainerType GetContainerType() override { return ContainerType::ReferenceStream; }
+	CollectionType GetCollectionType() override { return CollectionType::Stream; }
 	
 
 	template <typename Consumer>
@@ -148,12 +150,12 @@ public:
 	}
 
 	T& First() const {
-		this->ThrowIfNoElements();
+		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
 		return *m_pHead->Next->Pointer;
 	}
 
 	T& Last() const {
-		this->ThrowIfNoElements();
+		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
 		return *m_pTail->Previous->Pointer;
 	}
 

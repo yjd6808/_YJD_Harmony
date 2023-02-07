@@ -25,7 +25,7 @@ class JCORE_NOVTABLE MapCollection : public Collection<Pair<TKey, TValue>, TAllo
 
 
 public:
-	MapCollection(ContainerType containerType) : TCollection(CollectionType::Map, containerType) {}
+	MapCollection() = default;
 	~MapCollection() noexcept override = 0;
 
 	// 전방 선언 및 HashMap과 TreeMap에서 접근할 수 있도록 public으로 선언함
@@ -39,13 +39,13 @@ public:
 	virtual TValue& Get(const TKey& key) const = 0;
 	virtual bool Remove(const TKey& key) = 0;
 
+	CollectionType GetCollectionType() override { return CollectionType::Map; }
+
 	struct KeyCollection : public Collection<TKey, TAllocator>
 	{
 		using TkeyCollection = Collection<TKey, TAllocator>;
 
-		KeyCollection(TMapCollection* map, ContainerType containerType)
-			: TkeyCollection(CollectionType::KeyCollection, containerType) 
-		{
+		KeyCollection(TMapCollection* map) {
 			m_pMap = map;
 		}
 
@@ -58,6 +58,8 @@ public:
 		bool IsEmpty() const override {
 			return m_pMap->IsEmpty();
 		}
+
+		CollectionType GetCollectionType() override { return CollectionType::KeyCollection; }
 
 		TMapCollection* m_pMap;
 	};
@@ -110,8 +112,7 @@ public:
 	{
 		using TValueCollection = Collection<TValue, TAllocator>;
 
-		ValueCollection(TMapCollection* map, ContainerType containerType)
-			: TValueCollection(CollectionType::ValueCollection, containerType) {
+		ValueCollection(TMapCollection* map) {
 			m_pMap = map;
 		}
 
@@ -124,6 +125,8 @@ public:
 		bool IsEmpty() const override {
 			return m_pMap->IsEmpty();
 		}
+
+		CollectionType GetCollectionType() override { return CollectionType::ValueCollection; }
 
 		TMapCollection* m_pMap;
 	};

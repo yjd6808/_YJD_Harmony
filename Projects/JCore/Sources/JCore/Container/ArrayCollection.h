@@ -28,22 +28,14 @@ class ArrayCollection : public Collection<T, TAllocator>
 	using TArrayCollectionIterator  = ArrayCollectionIterator<T, TAllocator>;
 public:
 	// [1]
-	ArrayCollection(ContainerType containerType) 
-		: TCollection(CollectionType::Array, containerType)
-	{
+	ArrayCollection() : TCollection() {
 		m_pArray = nullptr;
 		m_iCapacity = 0;
 	}
 
 	// [2]
-	ArrayCollection(int capacity, ContainerType containerType) 
-		: TCollection(CollectionType::Array, containerType)  
-	{
-
-		if (capacity < 1) {
-			throw InvalidArgumentException("컨테이너의 크기가 0이하가 될 수 없습니다.");
-		}
-
+	ArrayCollection(int capacity) : TCollection() {
+		DebugAssertFmt(capacity >= 1, "컨테이너의 크기가 0이하가 될 수 없습니다. (%d)", capacity);
 		int iAllocatedSize;
 		m_pArray = TAllocator::template Allocate<T*>(capacity * sizeof(T), iAllocatedSize);
 		m_iCapacity = capacity;
@@ -51,30 +43,26 @@ public:
 
 	
 	// [3]
-	ArrayCollection(const TArrayCollection& other, ContainerType containerType) 
-		: TArrayCollection(other.Capacity(), containerType)	// -> Call [2]
-	{
+	// Call [2]
+	ArrayCollection(const TArrayCollection& other) : TArrayCollection(other.Capacity())	{
 		CopyFrom(other);
 	}
 
 	// [4]
-	ArrayCollection(TArrayCollection&& other, ContainerType containerType) 
-		: TArrayCollection(containerType) // -> Call [1]
-	{
+	// Call [1]
+	ArrayCollection(TArrayCollection&& other) noexcept : TArrayCollection() {
 		CopyFrom(Move(other));
 	}
 
 	// [5]
-	ArrayCollection(std::initializer_list<T> ilist, ContainerType containerType)
-		: TArrayCollection(ilist.size() + ms_iDefaultCapacity, containerType) // -> Call [2]
-	{
+	// Call [2]
+	ArrayCollection(std::initializer_list<T> ilist) noexcept : TArrayCollection(ilist.size() + ms_iDefaultCapacity) {
 		CopyFrom(ilist);
 	}
 
 	// [6]
-	ArrayCollection(int capacity, ContainerType containerType, const T& initData) 
-		: TArrayCollection(capacity, containerType) // -> Call [2]
-	{
+	// Call [2]
+	ArrayCollection(int capacity, const T& initData) : TArrayCollection(capacity) {
 		this->m_iSize = capacity;
 
 		for (int i = 0; i < capacity; ++i) {
@@ -83,9 +71,8 @@ public:
 	}
 
 	// [7]
-	ArrayCollection(int capacity, ContainerType containerType, T&& initData) 
-		: TArrayCollection(capacity, containerType) // -> Call [2]
-	{
+	// Call [2]
+	ArrayCollection(int capacity, T&& initData) : TArrayCollection(capacity) {
 		this->m_iSize = capacity;
 
 		// Move에는 앞에 3개는 복사 해주고 마지막 1개만 이동해주면 된다.
@@ -138,7 +125,7 @@ protected:
 	/// </summary>
 	/// <param name="other"></param>
 	virtual void CopyFrom(const TArrayCollection& other) {
-		this->ThrowIfAssignSelf(other);
+		DebugAssertMsg(this != &other, "자기 자신에게 대입할 수 없습니다.");
 
 		Clear();
 
@@ -198,7 +185,7 @@ protected:
 	// 만약 현재 용량보다 더 작은 용량을 넣어줄 경우
 	virtual void Resize(int capacity) {
 		if (capacity >= this->m_iSize) {
-			Expand(capacity, false);
+			Expand(capacity);
 			return;
 		} 
 
@@ -224,9 +211,8 @@ protected:
 	/// - ArrayQueue
 	/// </summary>
 	/// <param name="newCapacity">기존 용량보다 더 큰 값</param>
-	virtual void Expand(int newCapacity, bool throwException = true) {
-		if (throwException)
-			ThrowIfNewCapacityIsSmallerThanBefore(newCapacity);
+	virtual void Expand(int newCapacity) {
+		DebugAssertFmt(newCapacity > m_iCapacity, "현재 용량보다 더 작은 용량입니다.");
 		int iAllocatedSize;
 		T* pNewArray = TAllocator::template Allocate<T*>(newCapacity * sizeof(T), iAllocatedSize);
 		Memory::Copy(pNewArray, sizeof(T) * newCapacity, m_pArray, sizeof(T) * this->m_iSize);
@@ -273,7 +259,8 @@ protected:
 	///  - ArrayQueue
 	/// </summary>
 	virtual void DestroyAtRange(const int startIdx, const int endIdx) {
-		ThrowIfRangeIsInvalid(startIdx, endIdx);
+		DebugAssertFmt(this->IsValidRange(startIdx, endIdx),
+			"올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)", startIdx, endIdx, this->m_iSize);
 
 		for (int i = startIdx; i <= endIdx; i++) {
 			Memory::PlacementDelete<IsPointerType_v<T>>(m_pArray[i]);
@@ -308,15 +295,14 @@ protected:
 
 protected:
 	T& GetAt(const int idx) const {
-#ifdef DebugMode
-		// 함수 호출 오버헤드 있음
-		ThrowIfIndexIsInvalid(idx);
-#endif
+		DebugAssertFmt(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 		return m_pArray[idx];
 	}
 
+
+
 	void SetAt(const int idx, const T& data) {
-		ThrowIfIndexIsInvalid(idx);
+		DebugAssertFmt(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
 		m_pArray[idx] = data;
 	}
@@ -344,7 +330,7 @@ protected:
 
 	template <typename... Args>
 	void EmplaceAt(const int idx, Args&&... args) {
-		ThrowIfIndexIsInvalid(idx);
+		DebugAssertFmt(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 
 		if constexpr (IsPointerType_v<T>)
 			DebugAssertMsg(false, "포인터 타입은 Emplace 기능 사용 금지...");
@@ -353,7 +339,8 @@ protected:
 	}
 
 	void DestroyAt(const int idx) {
-		ThrowIfIndexIsInvalid(idx);
+		DebugAssertFmt(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+
 		Memory::PlacementDelete<IsPointerType_v<T>>(m_pArray[idx]);
 	}
 
@@ -379,12 +366,16 @@ protected:
 		}
 
 		// 데이터가 존재하는지
-		ThrowIfIndexIsInvalid(blockIdx);
-		ThrowIfIndexIsInvalid(blockIdx + blockSize - 1);
+		DebugAssertFmt(IsValidIndex(blockIdx), 
+			"(1) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", blockIdx, this->m_iSize);
+		DebugAssertFmt(IsValidIndex(blockIdx + blockSize - 1), 
+			"(2) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", blockIdx + blockSize - 1, this->m_iSize);
 
 		// 블록이 이동할 위치가 배열 내부에 둘 수 있는지 체크
-		ThrowIfIndexIsNotCapacityIndex(moveIdx);
-		ThrowIfIndexIsNotCapacityIndex(moveIdx + blockSize - 1);
+		DebugAssertFmt(IsValidIndexCapacity(moveIdx),
+			"(3) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx, this->m_iSize);
+		DebugAssertFmt(IsValidIndexCapacity(moveIdx + blockSize - 1),
+			"(4) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx + blockSize - 1, this->m_iSize);
 
 		if (moveIdx > blockIdx) {
 			Memory::CopyUnsafeReverse(
@@ -420,45 +411,11 @@ protected:
 		return iExpectedCapacity;
 	}
 
-	
-protected:
-	virtual void ThrowIfContainerIsEmpty() const {
-		if (this->IsEmpty()) {
-			throw InvalidOperationException("데이터가 존재하지 않습니다.");
-		}
+	T* Source() {
+		return m_pArray;
 	}
 
-	virtual void ThrowIfIndexIsInvalid(int idx) const {
-		if (!IsValidIndex(idx)) {
-			throw OutOfRangeException("올바르지 않은 데이터 인덱스 입니다.");
-		}
-	}
-
-	virtual void ThrowIfIndexIsNotCapacityIndex(int capacityIdx) const {
-		if (!IsValidIndexCapacity(capacityIdx)) {
-			throw OutOfRangeException("올바르지 않은 배열 인덱스 입니다.");
-		}
-	}
-
-	virtual void ThrowIfRangeIsInvalid(int startIdx, int endIdx) const {
-		if (!IsValidRange(startIdx, endIdx)) {
-			throw OutOfRangeException("올바르지 않은 인덱스 범위입니다.");
-		}
-	}
-
-	virtual void ThrowIfNewCapacityIsSmallerThanBefore(int newCapacity) const {
-		if (newCapacity < m_iCapacity) {
-			throw InvalidArgumentException("현재 용량보다 더 작은 용량입니다.");
-		}
-	}
-protected:
-	static T* Source(const TArrayCollection& collection) {
-		return collection.m_pArray;
-	}
-
-	static T& GetAtUnsafe(const TArrayCollection& collection, const int idx) {
-		return collection.m_pArray[idx];
-	}
+	CollectionType GetCollectionType() override { return CollectionType::Array; }
 protected:
 	static constexpr int ms_iExpandingFactor = 4;	// 꽉차면 4배씩 확장
 	static constexpr int ms_iDefaultCapacity = 32;	// 초기 배열 크기

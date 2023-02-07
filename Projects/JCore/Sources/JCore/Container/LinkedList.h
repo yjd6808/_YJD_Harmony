@@ -19,24 +19,13 @@ class LinkedList	: public ListCollection<T, TAllocator>
 	using TLinkedList			= LinkedList<T, TAllocator>;
 	using TLinkedListIterator	= LinkedListIterator<T, TAllocator>;
 public:
-	LinkedList() 
-		: TListCollection(ContainerType::LinkedList) 
-	{
-	}
+	LinkedList() : TListCollection() {}
 
-	LinkedList(const TLinkedList& other) 
-		: TListCollection(other, ContainerType::LinkedList) 
-	{
-	}
+	LinkedList(const TLinkedList& other) : TListCollection(other) {}
 
-	LinkedList(TLinkedList&& other) noexcept
-		: TListCollection(Move(other), ContainerType::LinkedList) 
-	{
-	}
+	LinkedList(TLinkedList&& other) noexcept : TListCollection(Move(other)) {}
 
-	LinkedList(std::initializer_list<T> ilist)
-		: TListCollection(ilist, ContainerType::LinkedList) {
-	}
+	LinkedList(std::initializer_list<T> ilist) : TListCollection(ilist) {}
 
 	~LinkedList() noexcept override {}
 public:
@@ -139,7 +128,7 @@ public:
 		return MakeShared<TLinkedListIterator, TAllocator>(this->GetOwner(), this->m_pTail);
 	}
 
-
+	ContainerType GetContainerType() override { return ContainerType::LinkedList; }
 protected:
 	friend class TLinkedListIterator;
 	template <typename, typename, typename> friend class HashMapIterator;

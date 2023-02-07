@@ -25,7 +25,7 @@ class ListCollection : public Collection<T, TAllocator>
 	using TListCollection			= ListCollection<T, TAllocator>;
 	using TListCollectionIterator   = ListCollectionIterator<T, TAllocator>;
 public:
-	ListCollection(ContainerType containerType) : TCollection(CollectionType::List, containerType)  {
+	ListCollection() {
 		/* [더미노드 방법 1]
 		m_pHead = Memory::Allocate<TListNode*>(sizeof(TListNode) * 2);	// 양쪽 더미를 한번에 생성하자.
 		m_pTail = &m_pHead[1];
@@ -48,21 +48,15 @@ public:
 		m_pTail = nullptr;
 	}
 
-	ListCollection(const TListCollection& other, ContainerType containerType) 
-		: TListCollection(containerType)
-	{
+	ListCollection(const TListCollection& other) : TListCollection() {
 		CopyFrom(other);
 	}
 
-	ListCollection(TListCollection&& other, ContainerType containerType) noexcept
-		: TListCollection(containerType)
-	{
+	ListCollection(TListCollection&& other) noexcept : TListCollection() {
 		CopyFrom(Move(other));
 	}
 
-	ListCollection(std::initializer_list<T> ilist, ContainerType containerType)
-		: TListCollection(containerType)
-	{
+	ListCollection(std::initializer_list<T> ilist) : TListCollection() {
 		CopyFrom(ilist);
 	}
 
@@ -102,7 +96,7 @@ protected:
 		static_assert(IsAssignable_v<U&, const T&>, "... U cannot be assign to T (T = U is impossible operation)");
 
 		using UListNode = ListNode<U, UAllocator>;
-		this->ThrowIfAssignSelf(other);
+		DebugAssertMsg(this != &other, "자기 자신에게 대입할 수 없습니다.");
 
 		TListNode* pPrev = nullptr;
 		TListNode* pCur = m_pHead;
@@ -397,7 +391,7 @@ protected:
 
 
 	virtual void PopFront() {
-		this->ThrowIfNoElements();
+		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
 		
 		TListNode* pDel = m_pHead;
 		m_pHead = m_pHead->Next;
@@ -408,7 +402,7 @@ protected:
 	}
 
 	virtual void PopBack() {
-		this->ThrowIfNoElements();
+		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
 
 		TListNode* pDel = m_pTail;
 		m_pTail = m_pTail->Previous;
@@ -420,12 +414,12 @@ protected:
 	}
 
 	virtual T& Front() const {
-		this->ThrowIfNoElements();
+		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
 		return m_pHead->Value;
 	}
 
 	virtual T& Back() const {
-		this->ThrowIfNoElements();
+		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
 		return m_pTail->Value;
 	}
 
@@ -497,6 +491,8 @@ protected:
 
 		return nullptr;
 	}
+
+	CollectionType GetCollectionType() override { return CollectionType::List; }
 protected:
 	TListNode* m_pHead;
 	TListNode* m_pTail;

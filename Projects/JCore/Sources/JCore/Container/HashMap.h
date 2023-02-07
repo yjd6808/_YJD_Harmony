@@ -274,35 +274,31 @@ public:
 	struct HashMapValueCollection;
 	struct HashMapValueCollectionIterator;
 public:
-	HashMap(int capacity = ms_iTableDefaultCapacity) 
-		: TMapCollection(ContainerType::HashMap),
-		m_pHeadBucket(nullptr),
-		m_pTailBucket(nullptr),
-		m_iCapacity(capacity)
+	HashMap(int capacity = ms_iTableDefaultCapacity)
+		: TMapCollection()
+		, m_pHeadBucket(nullptr)
+		, m_pTailBucket(nullptr)
+		, m_iCapacity(capacity)
 	{
 		int iAllocatedSize;
 		m_pTable = TAllocator::template Allocate<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
 		Memory::PlacementNewArray(m_pTable, capacity);
 	}
 
-	HashMap(const THashMap& other)
-		: THashMap(other.m_iCapacity) 
-	{
+	HashMap(const THashMap& other) : THashMap(other.m_iCapacity) {
 		operator=(other);
 	}
 
 	HashMap(THashMap&& other) noexcept
-		: TMapCollection(ContainerType::HashMap),
-		m_pTable(nullptr),
-		m_pHeadBucket(nullptr),
-		m_pTailBucket(nullptr)
+		: m_pTable(nullptr)
+		, m_pHeadBucket(nullptr)
+		, m_pTailBucket(nullptr)
 	{
 		operator=(Move(other));
 	}
 
-	HashMap(std::initializer_list<TKeyValuePair> ilist)
-		: THashMap(ilist.size() + 1) // 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
-	{
+	// 이니셜라이저로 초기화 하는 경우 보통 더 확장안시킬 확률이 크므로.. 맞춤형으로 가자.
+	HashMap(std::initializer_list<TKeyValuePair> ilist) : THashMap(ilist.size() + 1) {
 		operator=(ilist);
 	}
 
@@ -596,6 +592,8 @@ public:
 		AllocatorDynamicDeallocateSafe(m_pTable, sizeof(TBucket) * iPrevCapacity);
 		m_pTable = pNewTable;
 	}
+
+	ContainerType GetContainerType() override { return ContainerType::HashMap; }
 protected:
 
 
@@ -689,9 +687,7 @@ public:
 		using TEnumerator		= SharedPtr<Iterator<TKey, TAllocator>>;
 		using TCollection		= Collection<TKey, TAllocator>;
 
-		HashMapKeyCollection(THashMap* hashMap) 
-			: TKeyCollection(hashMap, ContainerType::HashMapKeyCollection)
-		{
+		HashMapKeyCollection(THashMap* hashMap) : TKeyCollection(hashMap) {
 			m_pHashMap = hashMap;
 		}
 
@@ -727,6 +723,8 @@ public:
 			);
 		}
 
+		ContainerType GetContainerType() override { return ContainerType::HashMapKeyCollection; }
+
 		THashMap* m_pHashMap;
 	};
 
@@ -748,9 +746,7 @@ public:
 		using TEnumerator		= SharedPtr<Iterator<TValue, TAllocator>>;
 		using TCollection		= Collection<TValue, TAllocator>;
 
-		HashMapValueCollection(THashMap* hashMap)
-			: TMapCollection::ValueCollection(hashMap, ContainerType::HashMapValueCollection)
-		{
+		HashMapValueCollection(THashMap* hashMap) : TMapCollection::ValueCollection(hashMap) {
 			m_pHashMap = hashMap;
 		}
 
@@ -777,6 +773,8 @@ public:
 				m_pHashMap->m_pTailBucket ? m_pHashMap->m_pTailBucket->Size - 1 : -1
 			);
 		}
+
+		ContainerType GetContainerType() override { return ContainerType::HashMapValueCollection; }
 
 		THashMap* m_pHashMap;
 	};

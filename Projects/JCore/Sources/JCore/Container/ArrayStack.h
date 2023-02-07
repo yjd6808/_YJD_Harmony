@@ -22,34 +22,17 @@ class ArrayStack : public ArrayCollection<T, TAllocator>
 	using TArrayStack			= ArrayStack<T, TAllocator>;
 	using TArrayStackIterator	= ArrayStackIterator<T, TAllocator>;
 public:
-	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapacity) 
-		: TArrayCollection(capacity, ContainerType::ArrayStack) 
-	{
-	}
+	ArrayStack(int capacity = TArrayCollection::ms_iDefaultCapacity) : TArrayCollection(capacity) {}
 
-	ArrayStack(int size, const T& initData)
-		: TArrayCollection(size, ContainerType::ArrayStack, initData)
-	{
-	}
+	ArrayStack(int size, const T& initData) : TArrayCollection(size, initData) {}
 
-	ArrayStack(int size, T&& initData)
-		: TArrayCollection(size, ContainerType::ArrayStack, Move(initData))
-	{
-	}
+	ArrayStack(int size, T&& initData) : TArrayCollection(size, Move(initData)) {}
 
-	ArrayStack(const TArrayStack& other) 
-		: TArrayCollection(other, ContainerType::ArrayStack) 
-	{
-	}
+	ArrayStack(const TArrayStack& other) : TArrayCollection(other) {}
 
-	ArrayStack(TArrayStack&& other) noexcept
-		: TArrayCollection(Move(other), ContainerType::ArrayStack) 
-	{
-	}
-	ArrayStack(std::initializer_list<T> ilist) 
-		: TArrayCollection(ilist, ContainerType::ArrayStack) 
-	{
-	}
+	ArrayStack(TArrayStack&& other) noexcept : TArrayCollection(Move(other)) {}
+
+	ArrayStack(std::initializer_list<T> ilist) : TArrayCollection(ilist) {}
 
 	~ArrayStack() noexcept override {
 		this->Clear(true);
@@ -111,6 +94,8 @@ public:
 	TEnumerator End() const override {
 		return MakeShared<TArrayStackIterator, TAllocator>(this->GetOwner(), this->Size());
 	}
+
+	ContainerType GetContainerType() override { return ContainerType::ArrayStack; }
 
 protected:
 	friend class TArrayStackIterator;

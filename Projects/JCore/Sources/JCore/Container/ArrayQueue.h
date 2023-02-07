@@ -23,26 +23,18 @@ class ArrayQueue final : public ArrayCollection<T, TAllocator>
 	using TArrayQueue			= ArrayQueue<T, TAllocator>;
 	using TArrayQueueIterator	= ArrayQueueIterator<T, TAllocator>;
 public:
-	ArrayQueue(int capacity = TArrayCollection::ms_iDefaultCapacity) 
-		: TArrayCollection(capacity, ContainerType::ArrayQueue) 
-	{
+	ArrayQueue(int capacity = TArrayCollection::ms_iDefaultCapacity)  : TArrayCollection(capacity) {
 	}
 
-	ArrayQueue(const TArrayQueue& other) 
-		: TArrayCollection(other.Capacity(), ContainerType::ArrayQueue) 
-	{
+	ArrayQueue(const TArrayQueue& other)  : TArrayCollection(other.Capacity()) {
 		operator=(other);
 	}
 
-	ArrayQueue(TArrayQueue&& other) noexcept
-		: TArrayCollection(ContainerType::ArrayQueue) 
-	{
+	ArrayQueue(TArrayQueue&& other) noexcept : TArrayCollection() {
 		operator=(Move(other));
 	}
 
-	ArrayQueue(std::initializer_list<T> ilist) 
-		: TArrayCollection(ilist, ContainerType::ArrayQueue) 
-	{
+	ArrayQueue(std::initializer_list<T> ilist) : TArrayCollection(ilist) {
 		operator=(ilist);
 	}
 
@@ -86,7 +78,7 @@ public:
 		return *this;
 	}
 
-	virtual void Enqueue(const T& data) {
+	void Enqueue(const T& data) {
 		if (this->IsFull()) {
 			this->ExpandAuto();
 		}
@@ -96,7 +88,7 @@ public:
 		m_iTail = NextTailValue(1);
 	}
 
-	virtual void Enqueue(T&& data) {
+	void Enqueue(T&& data) {
 		if (this->IsFull()) {
 			this->ExpandAuto();
 		}
@@ -106,12 +98,12 @@ public:
 		m_iTail = NextTailValue(1);
 	}
 
-	virtual void EnqueueAll(const TCollection& collection) {
+	void EnqueueAll(const TCollection& collection) {
 		this->ExpandIfNeeded(this->m_iSize + collection.Size());
 		this->m_iSize += collection.Size();
 
 		// 배열 방식의 컬렉션은 더 효율적인 방식으로 넣어준다.
-		if (TCollection::GetCollectionType(collection) == CollectionType::Array) {
+		if (collection.GetCollectionType(collection) == CollectionType::Array) {
 			EnqueueAllArrayCollection(dynamic_cast<const TArrayCollection&>(collection));
 			return;
 		}
@@ -126,15 +118,15 @@ public:
 
 	
 
-	virtual void Dequeue() {
-		this->ThrowIfContainerIsEmpty();
+	void Dequeue() {
+		DebugAssertMsg(!this->IsEmpty(), "데이터가 존재하지 않습니다.");
 		this->DestroyAt(m_iHead);
 		m_iHead = NextHeadValue(1);
 		--this->m_iSize;
 	}
 
 	T& Front() const {
-		this->ThrowIfContainerIsEmpty();
+		DebugAssertMsg(!this->IsEmpty(), "데이터가 존재하지 않습니다.");
 		return this->m_pArray[m_iHead];
 	}
 
@@ -198,7 +190,7 @@ protected:
 	///  - From ArrayCollection
 	/// </summary>
 	void CopyFrom(const TArrayCollection& arrayCollection) override {
-		this->ThrowIfAssignSelf(arrayCollection);
+		DebugAssertMsg(this != &arrayCollection, "자기 자신에게 대입할 수 없습니다.");
 
 		const TArrayQueue& other = dynamic_cast<const TArrayQueue&>(arrayCollection);
 
@@ -236,7 +228,7 @@ protected:
 	}
 
 	// 크기 확장
-	void Expand(int capacity, bool _ = false) override {
+	void Expand(int capacity) override {
 		int iAllocated;
 		T* pNewArray = TAllocator::template Allocate<T*>(sizeof(T) * capacity, iAllocated);
 
@@ -354,13 +346,13 @@ protected:
 	void EnqueueAllArrayCollection(const TArrayCollection& arrayCollection) {
 
 		// 같은 배열 큐인 경우 : 큐는 배열 스택과 벡터와 다른 방식으로 추가해줘야함
-		if (TCollection::GetContainerType(arrayCollection) == ContainerType::ArrayQueue) {
+		if (arrayCollection.GetContainerType(arrayCollection) == ContainerType::ArrayQueue) {
 			EnqueueAllArrayQueue(dynamic_cast<const TArrayQueue&>(arrayCollection));
 			return;
 		}
 		
 		for (int i = 0; i < arrayCollection.Size(); i++) {
-			this->SetAtUnsafe(m_iTail, TArrayCollection::GetAtUnsafe(arrayCollection, i));
+			this->SetAtUnsafe(m_iTail, GetAtUnsafe(arrayCollection, i));
 			m_iTail = NextTailValue(1);
 		}
 	}
@@ -447,7 +439,7 @@ protected:
 		return m_iTail > m_iHead;
 	}
 
-
+	ContainerType GetContainerType() override { return ContainerType::ArrayQueue; }
 protected:
 	int m_iHead = 0;		// index inclusive position
 	int m_iTail = 0 ;		// index exclusive position

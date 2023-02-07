@@ -21,25 +21,13 @@ class ListStack	: public ListCollection<T, TAllocator>
 	using TListStack			= ListStack<T, TAllocator>;
 	using TListStackIterator	= ListStackIterator<T, TAllocator>;
 public:
-	ListStack() 
-		: TListCollection(ContainerType::ListStack) 
-	{
-	}
+	ListStack() : TListCollection() {}
 
-	ListStack(const TListStack& other) 
-		: TListCollection(other, ContainerType::ListStack) 
-	{
-	}
+	ListStack(const TListStack& other) : TListCollection(other) {}
 
-	ListStack(TListStack&& other) noexcept
-		: TListCollection(Move(other), ContainerType::ListStack) 
-	{
-	}
+	ListStack(TListStack&& other) noexcept : TListCollection(Move(other)) {}
 
-	ListStack(std::initializer_list<T> ilist)
-		: TListCollection(ilist, ContainerType::ListStack)
-	{
-	}
+	ListStack(std::initializer_list<T> ilist) : TListCollection(ilist) {}
 
 	~ListStack() noexcept override {}
 public:
@@ -90,6 +78,8 @@ public:
 	TEnumerator End() const override {
 		return MakeShared<TListStackIterator, TAllocator>(this->GetOwner(), this->m_pTail);
 	}
+
+	ContainerType GetContainerType() override { return ContainerType::ListStack; }
 protected:
 	friend class TListStackIterator;
 };

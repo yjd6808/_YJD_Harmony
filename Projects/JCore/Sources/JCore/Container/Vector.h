@@ -26,36 +26,17 @@ class Vector : public ArrayCollection<T, TAllocator>
 	using TVector				= Vector<T, TAllocator>;
 	using TVectorIterator		= VectorIterator<T, TAllocator>;
 public:
-	Vector(int capacity = TArrayCollection::ms_iDefaultCapacity) 
-		: TArrayCollection(capacity, ContainerType::Vector) 
-	{
-	}
+	Vector(int capacity = TArrayCollection::ms_iDefaultCapacity) : TArrayCollection(capacity) {}
 
-	Vector(int size, const T& initData) 
-		: TArrayCollection(size, ContainerType::Vector, initData) 
-	{
-	}
+	Vector(int size, const T& initData) : TArrayCollection(size, initData) {}
 
-	Vector(int size, T&& initData) 
-		: TArrayCollection(size, ContainerType::Vector, Move(initData)) 
-	{
-	}
+	Vector(int size, T&& initData) : TArrayCollection(size, Move(initData)) {}
 
+	Vector(const TVector& other) : TArrayCollection(other) {}
 
-	Vector(const TVector& other) 
-		: TArrayCollection(other, ContainerType::Vector) 
-	{
-	}
+	Vector(TVector&& other) noexcept : TArrayCollection(Move(other)) {}
 
-	Vector(TVector&& other) 
-		: TArrayCollection(Move(other), ContainerType::Vector) 
-	{
-	}
-
-	Vector(std::initializer_list<T> ilist) 
-		: TArrayCollection(ilist, ContainerType::Vector) 
-	{
-	}
+	Vector(std::initializer_list<T> ilist) : TArrayCollection(ilist) {}
 
 	~Vector() noexcept override {
 		this->Clear(true);
@@ -324,7 +305,7 @@ public:
 	/// 특정 인덱스의 데이터를 삭제한다.
 	/// </summary>
 	void RemoveAt(const int idx) {
-		this->ThrowIfIndexIsInvalid(idx);
+		DebugAssertFmt(this->IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 
 		int iMoveBlockSize = this->m_iSize - (idx + 1);
 
@@ -372,6 +353,7 @@ public:
 		return MakeShared<TVectorIterator, TAllocator>(this->GetOwner(), this->Size());
 	}
 
+	ContainerType GetContainerType() override { return ContainerType::Vector; }
 
 	struct Iterator 
     {
