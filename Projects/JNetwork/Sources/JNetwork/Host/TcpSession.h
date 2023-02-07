@@ -14,6 +14,8 @@
 
 
 #include <JCore/Sync/RecursiveLock.h>
+#include <JCore/Primitives/Atomic.h>
+
 #include <JNetwork/Socket.h>
 #include <JNetwork/Packet.h>
 #include <JNetwork/Host/TcpServerEventListener.h>
@@ -27,22 +29,22 @@ namespace JNetwork {
 class TcpSession
 {
 public:
-	enum class State
+	enum State
 	{
-		Uninitialized	= 0,
-		Initailized		= 1,
-		AcceptWait		= 2,		// 서버에서 연결 수락 대기
-		ConnectWait		= 2,		// 클라에서 연결 시도 대기 - ConnectEx를 활용한 오버랩 연결 시도시에 사용할 듯?
-		Accepted		= 3,		// 서버에서 연결 수략 완료
-		Connected		= 3,		// 클라에서 연결 완료
-		Disconnected	= 4
+		eUninitialized	= 0,
+		eInitailized	= 1,
+		eAcceptWait		= 2,		// 서버에서 연결 수락 대기
+		eConnectWait	= 2,		// 클라에서 연결 시도 대기 - ConnectEx를 활용한 오버랩 연결 시도시에 사용할 듯?
+		eAccepted		= 3,		// 서버에서 연결 수략 완료
+		eConnected		= 3,		// 클라에서 연결 완료
+		eDisconnected	= 4
 	};
 
 public:
 	IPv4EndPoint GetLocalEndPoint() const { return m_LocalEndPoint; }
 	IPv4EndPoint GetRemoteEndPoint() const { return m_RemoteEndPoint; }
 	SessionBuffer* GetReceiveBuffer() { return &m_ReceiveBuffer; }
-	State GetState() const { return m_eState; }
+	State GetState() { return (State)m_eState.Load(); }
 	bool SendAsync(ISendPacket* packet);
 	virtual bool Disconnect();
 	
@@ -78,14 +80,15 @@ protected:
 private:
 	TcpServerEventListener* m_pServerEventListener;							// TcpClient 입장에서는 nullptr로 사용하지 않음 / 그래서 private으로 둠
 protected:
-	State m_eState;
+	void* m_pTag{};
 	SessionBuffer m_ReceiveBuffer;
 	Socketv4 m_ClientSocket;
 	IOCP* m_pIocp;															// TcpClient 입장에서는 생성/소멸을 해줘야하는 객체이지만 TcpSession 입장에서는 TcpServer의 IOCP를 단순히 참조하는 용도이다.
 	IPv4EndPoint m_RemoteEndPoint;
 	IPv4EndPoint m_LocalEndPoint;
-	void* m_pTag{};
 	bool m_bReuseSession;
+
+	JCore::Atomic<int> m_eState;
 	JCore::RecursiveLock m_Lock;
 	
 	friend class TcpServer;

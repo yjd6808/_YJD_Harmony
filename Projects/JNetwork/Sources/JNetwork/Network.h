@@ -12,18 +12,11 @@
 
 #pragma once
 
-#pragma comment(lib, "Mswsock.lib")	// AcceptEx 사용을 위해서 추가
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "JCore.lib")
-
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 
 #include <sstream>
 
-// Windows.h 헤더에 Winsock.h 헤더가 포함되는 것을 막는다. 그 외에 헤더들이 많이 추가되는 것을 방지 
-// https://social.msdn.microsoft.com/Forums/vstudio/en-US/6177f9bc-db75-4317-9904-02ef55b527d0/linking-problem-with-winsock2?forum=vcgeneral
-#define WIN32_LEAN_AND_MEAN			
 #include <JCore/Core.h>
 
 #define MAX_MSS 1460

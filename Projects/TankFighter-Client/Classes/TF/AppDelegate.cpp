@@ -35,13 +35,13 @@ AppDelegate::~AppDelegate()
     GameClient* pClient = GameClient::GetInstance();
 
 	if (!pClient->Disconnect()) {
-        DebugAssertMessage(false, " 연결 해제 실패");
+        DebugAssertMsg(false, " 연결 해제 실패");
 	}
 
 	DeleteSafe(pClient);
 
     if (!Winsock::Finalize()) {
-        DebugAssertMessage(false, " 윈속 파이날라이즈 실패");
+        DebugAssertMsg(false, " 윈속 파이날라이즈 실패");
     }
 
 #if USE_AUDIO_ENGINE
@@ -71,7 +71,7 @@ static int register_all_packages()
 bool AppDelegate::applicationDidFinishLaunching() {
 
     if (!Winsock::Initialize(2, 2)) {
-        DebugAssertMessage(false, "윈속 초기화 실패");
+        DebugAssertMsg(false, "윈속 초기화 실패");
         return false;
     }
 

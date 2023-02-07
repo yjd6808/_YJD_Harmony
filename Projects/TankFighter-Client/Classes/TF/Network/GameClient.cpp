@@ -38,7 +38,7 @@ void GameClient::ChangeScene(SceneType sceneType) {
 	Scene* pScene = Director::getInstance()->getRunningScene();
 
 	if (pScene == nullptr) {
-		DebugAssertMessage(false, "멍미? 씬이 없어요");
+		DebugAssertMsg(false, "멍미? 씬이 없어요");
 		return;
 	}
 

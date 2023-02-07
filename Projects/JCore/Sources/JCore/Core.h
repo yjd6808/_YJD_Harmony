@@ -9,6 +9,8 @@
 #pragma warning (disable : 26439)		// This kind of function may not throw.Declare it 'noexcept' (f.6)
 #pragma warning (disable : 4018)		// '<': signed / unsigned mismatch
 
+// Windows.h 헤더에 Winsock.h 헤더가 포함되는 것을 막는다. 그 외에 헤더들이 많이 추가되는 것을 방지 
+// https://social.msdn.microsoft.com/Forums/vstudio/en-US/6177f9bc-db75-4317-9904-02ef55b527d0/linking-problem-with-winsock2?forum=vcgeneral
 #define WIN32_LEAN_AND_MEAN	
 
 #include <iostream>

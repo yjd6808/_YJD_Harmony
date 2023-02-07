@@ -370,7 +370,7 @@ void BattleFieldLayer::CmdUpdateRoomInfoAck(ICommand* cmd) {
 	UpdateRoomInfoAck* pUpdateRoomInfoAck = cmd->CastCommand<UpdateRoomInfoAck*>();
 
 	if (pUpdateRoomInfoAck->Count > ROOM_MAX_PLAYER_COUNT) {
-		DebugAssertMessage(false, "ROOM_MAX_PLAYER_COUNT 수치 초과하는 Count를 받음");
+		DebugAssertMsg(false, "ROOM_MAX_PLAYER_COUNT 수치 초과하는 Count를 받음");
 		pUpdateRoomInfoAck->Count = ROOM_MAX_PLAYER_COUNT;
 	}
 

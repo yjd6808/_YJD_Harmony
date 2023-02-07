@@ -93,7 +93,8 @@ namespace JNetwork {
 				case IOCP_POST_ORDER_PAUSE:
 					continue;
 				case IOCP_POST_ORDER_ERROR:
-					DebugAssertMsg(false, "... WTF?");
+				default:
+					DebugAssertMsg(false, "이상한 타입의 포스트 오더입니다.");
 				}
 			}
 

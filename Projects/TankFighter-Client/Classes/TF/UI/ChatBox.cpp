@@ -23,7 +23,7 @@ ChatBox* ChatBox::create(const Color3B& color, const Size& size)
 bool ChatBox::init(const Size& size)
 {
 	if (size.height <= ms_fChatEditBoxHeight || size.width <= ms_fChatSendButtonWidth) {
-		DebugAssertMessage(false, "채팅창 높이가 40이기 때문에 채팅 박스의 높이는 최소 40이상으로 해주세요");
+		DebugAssertMsg(false, "채팅창 높이가 40이기 때문에 채팅 박스의 높이는 최소 40이상으로 해주세요");
 		return false; 
 	}
 

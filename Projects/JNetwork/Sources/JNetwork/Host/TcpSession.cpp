@@ -14,7 +14,7 @@ using namespace JCore;
 namespace JNetwork {
 	TcpSession::TcpSession(IOCP* iocp, TcpServerEventListener* listener) :
 	m_pServerEventListener(listener),
-	m_eState(State::Uninitialized),
+	m_eState(State::eUninitialized),
 	m_ClientSocket(TransportProtocol::None, INVALID_SOCKET),
 	m_pIocp(iocp)
 {
@@ -23,14 +23,13 @@ namespace JNetwork {
 TcpSession::~TcpSession() = default;
 
 bool TcpSession::Disconnect() {
-	RecursiveLockGuard guard(m_Lock);
-	if (CheckState(State::Disconnected)) {
+	if (CheckState(State::eDisconnected)) {
 		return false;
 	}
 
 	m_ClientSocket.ShutdownBoth();
 	m_ClientSocket.Close();
-	m_eState = State::Disconnected;
+	m_eState = State::eDisconnected;
 	m_pServerEventListener->OnDisconnected(this);
 	
 	return true;
@@ -102,12 +101,10 @@ bool TcpSession::AcceptAsync(SOCKET hListeningSock, LPOVERLAPPED pOverlapped) {
 }
 
 bool TcpSession::CheckState(State state) {
-	RecursiveLockGuard guard(m_Lock);
 	return m_eState == state;
 }
 
 bool TcpSession::Initialize() {
-	RecursiveLockGuard guard(m_Lock);
 	if (m_ClientSocket.IsValid()) {
 		m_ClientSocket.Close();
 	}
@@ -117,14 +114,13 @@ bool TcpSession::Initialize() {
 	if (!m_ClientSocket.IsValid())
 		return false;
 
-	m_eState = State::Initailized;
+	m_eState = State::eInitailized;
 	m_ReceiveBuffer.Clear();
 	return true;
 }
 
 void TcpSession::AcceptWait() {
-	RecursiveLockGuard guard(m_Lock);
-	m_eState = State::AcceptWait;
+	m_eState = State::eAcceptWait;
 }
 
 bool TcpSession::Accepted(SOCKET listeningSocket, Int32UL receivedBytes) {
@@ -138,7 +134,7 @@ bool TcpSession::Accepted(SOCKET listeningSocket, Int32UL receivedBytes) {
 
 	
 	m_ClientSocket.AcceptExResult(pReads, TEST_DUMMY_PACKET_SIZE, &m_LocalEndPoint, &m_RemoteEndPoint);
-	m_eState = State::Accepted;
+	m_eState = State::eAccepted;
 	m_pServerEventListener->OnConnected(this);
 
 	return true;

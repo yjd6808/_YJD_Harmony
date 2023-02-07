@@ -101,6 +101,9 @@
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\PacketGenerator.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\Session.h">
+      <Filter>Host</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">

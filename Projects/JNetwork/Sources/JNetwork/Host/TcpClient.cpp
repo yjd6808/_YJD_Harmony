@@ -19,7 +19,6 @@ TcpClient::TcpClient() :
 }
 
 TcpClient::~TcpClient() {
-
 	m_pIocp->Join();
 	DebugAssertMsg(m_pIocp->Destroy(), "IOCP 삭제에 실패하였습니다.");
 	DeleteSafe(m_pIocp);
@@ -34,7 +33,7 @@ int TcpClient::DefaultIocpThreadCount() const {
 }
 
 bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
-	if (CheckState(State::Connected)) {
+	if (CheckState(State::eConnected)) {
 		return false;
 	}
 
@@ -122,7 +121,7 @@ void TcpClient::Resume() {
 
 bool TcpClient::Disconnect() {
 	RecursiveLockGuard guard(m_Lock);
-	if (CheckState(State::Disconnected)) {
+	if (CheckState(State::eDisconnected)) {
 		return true;
 	}
 
@@ -134,7 +133,7 @@ bool TcpClient::Disconnect() {
 		return false;
 	}
 
-	m_eState = State::Disconnected;
+	m_eState = State::eDisconnected;
 	m_pClientEventListener->OnDisconnected();
 
 	m_RemoteEndPoint = IPv4EndPoint{ IPv4Address::Any(), 0 };
@@ -143,7 +142,7 @@ bool TcpClient::Disconnect() {
 }
 
 void TcpClient::SetEventListener(TcpClientEventListener* listener) {
-	if (!CheckState(State::Uninitialized) && !CheckState(State::Disconnected)) {
+	if (!CheckState(State::eUninitialized) && !CheckState(State::eDisconnected)) {
 		DebugAssertMsg(false, "연결이 끊긴 상태 또는 서버와 연결전에만 리스너 설정을 할 수 있습니다.");
 		return;
 	}
@@ -152,7 +151,7 @@ void TcpClient::SetEventListener(TcpClientEventListener* listener) {
 }
 
 void TcpClient::ConnectWait() {
-	m_eState = State::ConnectWait;
+	m_eState = State::eConnectWait;
 }
 
 void TcpClient::NotifyCommand(ICommand* cmd) {
@@ -165,7 +164,7 @@ void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
 
 
 void TcpClient::Connected() {
-	m_eState = State::Connected;
+	m_eState = State::eConnected;
 
 	// 일정주기마다 "나 살아있소" 전송
 	if (m_ClientSocket.Option().SetKeepAliveEnabled(true) == SOCKET_ERROR) {
