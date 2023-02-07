@@ -12,8 +12,7 @@ public:
 	{
 		Stopped,
 		Initialized,
-		Running,
-		Paused
+		Running
 	};
 
 	enum class Type

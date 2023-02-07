@@ -40,7 +40,7 @@
 #include <JCore/Limit.h>
 #include <JCore/Sync/NormalLock.h>
 
-#include <JCore/Container/ArrayStack.h>
+
 #include <JCore/Container/Arrays.h>
 #include <JCore/Container/HashMap.h>
 

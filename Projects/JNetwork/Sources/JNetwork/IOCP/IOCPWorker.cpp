@@ -41,22 +41,7 @@ namespace JNetwork {
 		m_Thread.Join();
 		m_eState = State::Joined;
 	}
-
-	void IOCPWorker::Pause(WinHandle waitHandle) {
-		// 주의!> 이 워커 쓰레드가 Pause 된게 아니라 IOCP에서 관리중인 쓰레드들 중하나가 Pause됨
-		IOCPPostOrder* pPostOrder = new IOCPPostOrder{ IOCP_POST_ORDER_PAUSE, waitHandle };
-		const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
-		ResetEvent(m_hPauseEvent);
-
-		if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {
-			DebugAssertMsg(false, "IOCPWorker::Pause() Failed");
-			pPostOrder->Release();
-		}
-	}
-
-	void IOCPWorker::Resume() {
-		SetEvent(m_hPauseEvent);
-	}
+	
 
 	// 문재점!
 	// IOCPAcceptOverlapeed 동적할당을 해제 해주도록 하는 로직이 필요하다.
@@ -90,9 +75,8 @@ namespace JNetwork {
 				switch (pIOCPPostOrder->Process(this)) {
 				case IOCP_POST_ORDER_TERMINATE:
 					goto THREAD_END;
-				case IOCP_POST_ORDER_PAUSE:
-					continue;
 				case IOCP_POST_ORDER_ERROR:
+					DebugAssertMsg(false, "오류");
 				default:
 					DebugAssertMsg(false, "이상한 타입의 포스트 오더입니다.");
 				}

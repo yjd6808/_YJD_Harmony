@@ -20,8 +20,6 @@ protected:
 	void Run(void* param = nullptr) override;
 	void JoinWait(WinHandle waitHandle) override;
 	void Join() override;
-	void Pause(WinHandle waitHandle) override;
-	void Resume() override;
 
 	void WorkerThread(void* param) override;
 private:

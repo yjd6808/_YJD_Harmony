@@ -16,10 +16,12 @@
 #include <JCore/Sync/RecursiveLock.h>
 #include <JCore/Primitives/Atomic.h>
 
+#include <JNetwork/Host/Listener/TcpServerEventListener.h>
+
+#include <JNetwork/IOCP/IOCP.h>
+
 #include <JNetwork/Socket.h>
 #include <JNetwork/Packet.h>
-#include <JNetwork/Host/TcpServerEventListener.h>
-#include <JNetwork/IOCP/IOCP.h>
 #include <JNetwork/Buffer.h>
 
 
@@ -47,15 +49,6 @@ public:
 	State GetState() { return (State)m_eState.Load(); }
 	bool SendAsync(ISendPacket* packet);
 	virtual bool Disconnect();
-	
-	// 커스텀 정보 저장 기능 추가
-	void SetTag(void* ptr) { m_pTag = ptr; }
-
-	template <typename T>
-	T GetTag() {
-		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
-		return reinterpret_cast<T>(m_pTag);
-	}
 protected:
 	TcpSession(IOCP* iocp, TcpServerEventListener* listener = nullptr);
 	virtual ~TcpSession();

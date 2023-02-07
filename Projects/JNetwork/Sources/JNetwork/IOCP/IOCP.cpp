@@ -40,8 +40,7 @@ namespace JNetwork {
 	}
 
 	bool IOCP::Destroy() {
-		if (m_eState == State::Paused || 
-			m_eState == State::Destroyed) {
+		if (m_eState == State::Destroyed) {
 			return false;
 		}
 
@@ -65,37 +64,13 @@ namespace JNetwork {
 		m_eState = State::Running;
 	}
 
-	void IOCP::Pause() {
-		if (m_eState != State::Running) {
-			DebugAssertMsg(false, "Running 상태의 IOCP만 Pause할 수 있습니다.");
-			return;
-		}
-
-		m_pWorkerManager->Pause();
-		m_eState = State::Paused;
-	}
-
-	void IOCP::Resume() {
-		if (m_eState != State::Paused) {
-			DebugAssertMsg(false, "Paused 상태의 IOCP만 Resume할 수 있습니다.");
-			return;
-		}
-
-		m_pWorkerManager->Resume();
-		m_eState = State::Running;
-	}
-
 	void IOCP::Join() {
-		if (m_eState != State::Running && m_eState != State::Paused) {
-			DebugAssertMsg(false, "Paused 또는 Running 상태의 IOCP만 Join 할 수 있습니다.");
+		if (m_eState != State::Running) {
+			DebugAssertMsg(false, "Running 상태의 IOCP만 Join 할 수 있습니다.");
 			return;
 		}
 
 		// 일시정지 상태인 경우 모두 진행시켜주자.
-		if (m_eState == State::Paused) {
-			m_pWorkerManager->Resume();
-		}
-
 		m_pWorkerManager->Join();
 		m_eState = State::Joined;
 	}

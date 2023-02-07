@@ -27,6 +27,8 @@
 #include <JCore/Define.h>
 #include <JCore/Assert.h>
 
+#define NS_JC_BEGIN	namespace JCore {
+#define NS_JC_END	}
 
 
  // 22년 12월 19일 새벽 5시

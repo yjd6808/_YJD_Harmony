@@ -1,7 +1,5 @@
 /*
  *	작성자 : 윤정도
- *
- *	ISendPacket은 생성시 바로 Packet에서 멤버 초기화를 진행해주므로 해당 인스펙션은 무시하도록하자.
  */
 
 #pragma once
@@ -12,7 +10,6 @@
 #include <JCore/TypeTraits.h>
 #include <JCore/SafeRefCount.h>
 
-#include <tuple>
 #include <WinSock2.h>
 
 #define PACKET_HEADER_SIZE		4UL		// IPacket  크기

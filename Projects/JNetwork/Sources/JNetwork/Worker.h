@@ -17,7 +17,6 @@ public:
 		Prepared,
 		Running,
 		JoinWait,
-		Paused,
 		Joined
 	};
 
@@ -29,8 +28,6 @@ public:
 	virtual void Run(void* param = nullptr) = 0;
 	virtual void JoinWait(WinHandle waitHandle) = 0;
 	virtual void Join() = 0;
-	virtual void Pause(WinHandle waitHandle) = 0;
-	virtual void Resume() = 0;
 	virtual void WorkerThread(void* param) = 0;
 protected:
 	JCore::Thread m_Thread;

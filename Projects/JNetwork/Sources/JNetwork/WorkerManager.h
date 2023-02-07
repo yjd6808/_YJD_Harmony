@@ -58,31 +58,6 @@ private:	// IOCP 클래스에서만 삭제 가능하도록 한다.
 		}
 	}
 
-	void Pause() const {
-		for (int i = 0; i < m_Workers.Size(); i++) {
-			m_Workers[i]->Pause(m_pHandles[i]);
-		}
-
-		// 모든 IOCPWorker 쓰레드들이 정지될때까지 기다린다.
-		WaitForMultipleObjects(m_Workers.Size(), m_pHandles, TRUE, INFINITE);
-
-		for (int i = 0; i < m_Workers.Size(); i++) {
-			ResetEvent(m_pHandles[i]);
-		}
-	}
-
-	void Resume() {
-		m_Workers.Extension().ForEach([](Worker* worker) {
-			worker->Resume();
-		});
-
-		// 모든 IOCPWorker 쓰레드들이 시작될때까지 기다린다.
-		WaitForMultipleObjects(m_Workers.Size(), m_pHandles, TRUE, INFINITE);
-
-		for (int i = 0; i < m_Workers.Size(); i++) {
-			ResetEvent(m_pHandles[i]);
-		}
-	}
 private:
 	JCore::Vector<Worker*> m_Workers;
 	WinHandle* m_pHandles;

@@ -7,7 +7,7 @@
 
 #include <JNetwork/Host/Server.h>
 #include <JNetwork/Host/TcpSessionContainer.h>
-#include <JNetwork/Host/TcpServerEventListener.h>
+#include <JNetwork/Host/Listener/TcpServerEventListener.h>
 
 #include <JNetwork/IOCP/IOCP.h>
 
@@ -28,8 +28,6 @@ public:
 	virtual int MaxConnection() const { return m_pContainer->MaxConnection(); }
 	bool Start(const IPv4EndPoint& localEndPoint) override;
 	bool Stop() override;
-	virtual void Pause();
-	virtual void Resume();
 	
 	// 서버는 이벤트리스너 등록을 필수적으로 해주도록 함
 	virtual void SetEventListener(TcpServerEventListener* listener);

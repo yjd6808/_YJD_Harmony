@@ -8,7 +8,6 @@
 #include <JNetwork/WorkerManager.h>
 
 #define IOCP_POST_ORDER_TERMINATE	0x01
-#define IOCP_POST_ORDER_PAUSE		0x02
 #define IOCP_POST_ORDER_ERROR	   -0x01
 
 namespace JNetwork {
@@ -22,7 +21,6 @@ public:
 		Uninitialized,
 		Initialized,
 		Running,
-		Paused,
 		Joined,
 		Destroyed
 	};
@@ -34,8 +32,6 @@ public:
 	bool Create(int threadCount);
 	bool Destroy();
 	void Run();
-	void Pause();
-	void Resume();
 	void Join();
 
 	void AddPendingCount()				{ ++m_iPendingOverlappedCount;}

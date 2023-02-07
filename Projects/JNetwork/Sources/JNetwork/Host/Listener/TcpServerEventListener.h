@@ -29,8 +29,6 @@ protected:
 	virtual void OnDisconnected(TcpSession* disconnetedSession) = 0;
 	virtual void OnSent(TcpSession* sender, ISendPacket* sentPacket, Int32UL sentBytes) = 0;
 	virtual void OnReceived(TcpSession* receiver, ICommand* cmd) = 0;
-	virtual void OnPaused() = 0;		// TCP 서버의 IOCP가 관리중인 모든 쓰레드가 일시정지가 될 때 호출된다.
-	virtual void OnResume() = 0;		// TCP 서버의 IOCP가 관리중인 모든 쓰레드가 모두 시작된 후 호출된다.
 	virtual void OnStopped() = 0;		// TCP 서버를 종료한 후 호출된다.
 
 	friend class TcpSession;

@@ -20,6 +20,7 @@ public:
 		Custom,
 		Accept,
 		Connect,
+		Disconnect,
 		Receive,
 		Send
 	};

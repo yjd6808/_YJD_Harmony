@@ -10,6 +10,7 @@ namespace JNetwork {
 
 struct ICommand;
 struct ISendPacket;
+
 class TcpClient;
 class TcpClientEventListener
 {

@@ -42,6 +42,9 @@
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedDisconnect.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
@@ -70,13 +73,7 @@
     <ClInclude Include="..\Sources\JNetwork\IOCP\IOCP.h">
       <Filter>IOCP</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\TcpServerEventListener.h">
-      <Filter>Host</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\TcpClient.h">
-      <Filter>Host</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\TcpClientEventListener.h">
       <Filter>Host</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCP\IOCPPostOrder.h">
@@ -104,6 +101,15 @@
     <ClInclude Include="..\Sources\JNetwork\Host\Session.h">
       <Filter>Host</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedDisconnect.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpClientEventListener.h">
+      <Filter>Host\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpServerEventListener.h">
+      <Filter>Host\Listener</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">
@@ -114,6 +120,9 @@
     </Filter>
     <Filter Include="IOCPOverlapped">
       <UniqueIdentifier>{d1067032-1442-4f1d-9a8c-7a577b68be80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host\Listener">
+      <UniqueIdentifier>{ea21f6b0-8056-4e44-b45f-9aa1d81306b0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

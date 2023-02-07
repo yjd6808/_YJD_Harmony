@@ -96,13 +96,6 @@ protected:
 		}
 	}
 
-	void OnPaused() override {
-		SafeConsole::WriteLine("[서버] 일시정지되었습니다.");
-	}
-
-	void OnResume() override {
-		SafeConsole::WriteLine("[서버] 다시 가동 되었습니다.");
-	}
 
 	void OnStopped() override {
 		SafeConsole::WriteLine("[서버] 종료되었습니다.");
@@ -123,8 +116,6 @@ int main() {
 
 	// 서버 실행
 	if (server.Start("0.0.0.0:9999")) {
-		server.Pause();		// 서버 일시정지 기능
-		server.Resume();	// 서버 계속 진행
 	}
 
 	// c 입력시 서버 종료

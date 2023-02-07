@@ -111,7 +111,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JNetwork.lib;JCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>JNetwork.lib;JCore.lib;ws2_32.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

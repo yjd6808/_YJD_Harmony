@@ -33,7 +33,7 @@ namespace JNetwork {
 
 
 	bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
-		if (m_eState == State::Paused || m_eState == State::Running) {
+		if (m_eState == State::Running) {
 			return false;
 		}
 
@@ -153,20 +153,8 @@ namespace JNetwork {
 		return true;
 	}
 
-	void TcpServer::Pause() {
-		m_pIocp->Pause();
-		m_pEventListener->OnPaused();
-		m_eState = State::Paused;
-	}
-
-	void TcpServer::Resume() {
-		m_pIocp->Resume();
-		m_pEventListener->OnResume();
-		m_eState = State::Running;
-	}
-
 	void TcpServer::SetEventListener(TcpServerEventListener* listener) {
-		if (m_eState == State::Running || m_eState == State::Paused) {
+		if (m_eState == State::Running) {
 			DebugAssertMsg(false, "이벤트 리스너는 서버가 실행/일시 정지중인 상태에서는 변경이 불가능합니다.");
 			return;
 		}
