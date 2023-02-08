@@ -41,7 +41,7 @@ NS_JNET_BEGIN
 
 	bool IOCP::Destroy() {
 		if (m_eState == State::Destroyed) {
-			return false;
+			return true;
 		}
 
 		if (m_hIOCP != INVALID_HANDLE_VALUE) {

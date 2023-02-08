@@ -11,14 +11,19 @@
 NS_JNET_BEGIN
 
 IOCPOverlapped::IOCPOverlapped(IOCP* iocp, Type type)
-	: m_eType(type)
+	: OVERLAPPED()
+	, m_eType(type)
     , m_pIocp(iocp)
 {
 	m_pIocp->AddPendingCount();
 }
 
-void IOCPOverlapped::Release() {
+IOCPOverlapped::~IOCPOverlapped() {
 	m_pIocp->DecreasePendingCount();
+}
+
+// 무조건 제일 마지막에 호출
+void IOCPOverlapped::Release() {
 	delete this;
 }
 
@@ -28,7 +33,7 @@ bool IOCPOverlapped::IsFailed(SOCKET hSocket, BOOL result, Int32UL numberOfBytes
 
 	if (result == FALSE) {
 		// GetQueuedCompletionStatus이 실패한 경우 GetLastError()로 오류 코드를 얻을 수 있다.
-		// 하지만 이 코드는 일반적인 윈도우 오류 코드이다. (윈도우 오류 코드 표 : https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--500-999-)
+		// 하지만 이 코드는 일반적인 윈도우 오류 코드이다. (윈도우 오류 코드표 : https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--500-999-)
 		// 따라서 WSAGetOverlappedResult함수로 올바른 소켓 오류 코드를 얻어야한다.
 		// @참고 : TCP/IP 윈도우 소켓 프로그래밍 463p
 

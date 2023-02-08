@@ -22,7 +22,12 @@ public:
 		Udp
 	};
 public:
-	Server() : m_eServerType(Type::None), m_eState(State::Initialized), m_ServerSocket(TransportProtocol::None, INVALID_SOCKET) {}
+	Server()
+		: m_eServerType(Type::None)
+		, m_eState(State::Initialized)
+		, m_ServerSocket(TransportProtocol::None, INVALID_SOCKET)
+	{}
+
 	virtual ~Server() = default;
 
 	virtual bool Start(const IPv4EndPoint& localEndPoint) = 0;

@@ -17,22 +17,19 @@ NS_JNET_BEGIN
 struct ICommand;
 struct ISendPacket;
 class TcpServer;
-class TcpSession;
+class Session;
 class TcpServerEventListener
 {
 public:
 	TcpServerEventListener() = default;
 	virtual ~TcpServerEventListener() = default;
-protected:
-	virtual void OnStarted() = 0;
-	virtual void OnConnected(TcpSession* connectedSession) = 0;
-	virtual void OnDisconnected(TcpSession* disconnetedSession) = 0;
-	virtual void OnSent(TcpSession* sender, ISendPacket* sentPacket, Int32UL sentBytes) = 0;
-	virtual void OnReceived(TcpSession* receiver, ICommand* cmd) = 0;
-	virtual void OnStopped() = 0;		// TCP 서버를 종료한 후 호출된다.
 
-	friend class TcpSession;
-	friend class TcpServer;
+	virtual void OnStarted() = 0;
+	virtual void OnAccepted(Session* connectedSession) = 0;
+	virtual void OnDisconnected(Session* disconnetedSession) = 0;
+	virtual void OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) = 0;
+	virtual void OnReceived(Session* receiver, ICommand* cmd) = 0;
+	virtual void OnStopped() = 0;		// TCP 서버를 종료한 후 호출된다.
 };
 
 NS_JNET_END

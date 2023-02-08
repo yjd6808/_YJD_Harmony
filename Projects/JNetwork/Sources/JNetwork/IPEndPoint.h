@@ -23,6 +23,7 @@ public:
 	IPv4EndPoint();
 	IPv4EndPoint(const IPv4Address& ipAddr, Int16U port);
 	IPv4EndPoint(const char* endPointAddrString);
+	IPv4EndPoint(const SOCKADDR_IN& addr);
 	IPv4EndPoint(const JCore::String& endPointAddrString);
 	~IPv4EndPoint() override {}
 public:

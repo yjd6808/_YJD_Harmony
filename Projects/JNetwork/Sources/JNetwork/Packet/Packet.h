@@ -11,6 +11,7 @@
 #include <JCore/SafeRefCount.h>
 
 #include <WinSock2.h>
+#include <JNetwork/Namespace.h>
 
 #define PACKET_HEADER_SIZE		4UL		// IPacket  크기
 #define COMMAND_HEADER_SIZE		4UL		// ICommand 크기

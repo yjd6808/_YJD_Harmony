@@ -9,10 +9,10 @@
     <ClCompile Include="..\Sources\JNetwork\Host\TcpServer.cpp">
       <Filter>Host</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\Host\TcpSession.cpp">
+    <ClCompile Include="..\Sources\JNetwork\Host\Session.cpp">
       <Filter>Host</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\Host\TcpSessionContainer.cpp">
+    <ClCompile Include="..\Sources\JNetwork\Host\SessionContainer.cpp">
       <Filter>Host</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCP\IOCP.cpp">
@@ -33,7 +33,7 @@
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedConnect.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.cpp">
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecv.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.cpp">
@@ -43,6 +43,18 @@
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedDisconnect.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Host\UdpClient.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSendTo.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecvFrom.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
   </ItemGroup>
@@ -57,10 +69,7 @@
     <ClInclude Include="..\Sources\JNetwork\Host\TcpServer.h">
       <Filter>Host</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\TcpSession.h">
-      <Filter>Host</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\TcpSessionContainer.h">
+    <ClInclude Include="..\Sources\JNetwork\Host\SessionContainer.h">
       <Filter>Host</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\Server.h">
@@ -86,7 +95,7 @@
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedConnect.h">
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.h">
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecv.h">
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.h">
@@ -94,9 +103,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.h">
       <Filter>IOCPOverlapped</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\Session.h">
-      <Filter>Host</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedDisconnect.h">
       <Filter>IOCPOverlapped</Filter>
@@ -108,7 +114,7 @@
       <Filter>Host\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Namespace.h" />
-    <ClInclude Include="..\Sources\JNetwork\Buffer\Buffer.h">
+    <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAbstract.h">
       <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Packet\Packet.h">
@@ -117,8 +123,32 @@
     <ClInclude Include="..\Sources\JNetwork\Buffer\StaticBuffer.h">
       <Filter>Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Buffer\CommnadBuffer.h">
+    <ClInclude Include="..\Sources\JNetwork\Host\Session.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\TcpSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAllocator.h">
       <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Buffer\NetBuffer.h">
+      <Filter>Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\SessionState.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\Listener\ClientEventListener.h">
+      <Filter>Host\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\UdpClient.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSendTo.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecvFrom.h">
+      <Filter>IOCPOverlapped</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

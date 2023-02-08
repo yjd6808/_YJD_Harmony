@@ -2,6 +2,7 @@
 #include <JNetwork/Network.h>	// JCore.lib 링크, 2. Mswsock.lib 링크, 3. ws2_32.lib 링크
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/TcpClient.h>
+#include <JNetwork/Packet/Packet.h>
 
 #include <JCore/Encoding/CodePage.h>
 #include <JCore/Utils/Console.h>
@@ -45,7 +46,7 @@ struct DynamicMessage : ICommand
 
 
 
-class MyClientEventListener : public SessionEventListener
+class MyClientEventListener : public ClientEventListener
 {
 protected:
 	virtual void OnConnected() {
@@ -70,32 +71,41 @@ protected:
 };
 
 int main() {
-    SafeConsole::Init();
-    SafeConsole::SetOutputCodePage(CodePage::UTF8);
-
 	// 멀티 패킷 예시
-	auto pPakcet = new StaticPacket<Command<int>, StaticMessage, Command<float>>();
-	Command<int>* arg1		= pPakcet->Get<0>();
-	StaticMessage* arg2		= pPakcet->Get<1>();
-	Command<float>* arg3	= pPakcet->Get<2>();
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	{
+		auto packet = new StaticPacket<Command<int>, StaticMessage, Command<float>>();
+		Command<int>* arg1 = packet->Get<0>();
+		StaticMessage* arg2 = packet->Get<1>();
+		Command<float>* arg3 = packet->Get<2>();
 
-	arg1->Value = 30;
-	strcpy_s(arg2->Chat, 512, "안녕하세요");
-	arg3->Value = 40;
+		arg1->Value = 30;
+		strcpy_s(arg2->Chat, 512, "안녕하세요");
+		arg3->Value = 40;
+		delete packet;
+	}
+	
+	
 
 	Winsock::Initialize(2, 2);
 
-	TcpClient client;
+	IOCPPtr iocp = MakeShared<IOCP>();
+	iocp->Create(8);
+	iocp->Run();
+
 	MyClientEventListener myClientEventListener;
-	client.SetEventListener(&myClientEventListener);
+	TcpClient client{ iocp, &myClientEventListener};
 
-
+	StaticPacket<StaticMessage>* sendPacket = nullptr;
 	if (client.ConnectAsync("127.0.0.1:9999")) {
 		while (1) {
-			auto pStaticPacket = new StaticPacket<StaticMessage>();
-			StaticMessage* arg1 = pStaticPacket->Get<0>();
+			sendPacket = new StaticPacket<StaticMessage>();
+			StaticMessage* arg1 = sendPacket->Get<0>();
 			std::cin >> arg1->Chat;
-
+			// 클라이언트 종료
+			if (arg1->Chat[0] == 'c') {
+				break;
+			}
 			int iLen = StringUtil::Length(arg1->Chat);
 
 			// Dynamic 패킷 예시
@@ -110,26 +120,24 @@ int main() {
 			auto g = pDynamicPacket->Get<0>();
 			auto g1 = pDynamicPacket->Get<1>();
 
-
-			// 클라이언트 종료
-			if (arg1->Chat[0] == 'c') {
-				break;
-			}
-			
-			if (!client.SendAsync(pStaticPacket)) {
+			if (!client.SendAsync(sendPacket)) {
 				std::cout << "[클라] Static 패킷 송신 실패\n";
 			}
 			if (!client.SendAsync(pDynamicPacket)) {
 				std::cout << "[클라] Dyanmic 송신 실패\n";
 			}
+
 		}
 	}
-
-
 	if (!client.Disconnect()) {
 		std::cout << "[클라] 연결 종료 실패\n";
 	}
 
+	iocp->Join();
+	iocp->Destroy();
+
 	Winsock::Finalize();
+
+	DeleteSafe(sendPacket);
 	return 0;
 }

@@ -19,6 +19,7 @@
 
 #include <JCore/Memory.h>
 #include <JCore/Math.h>
+#include <JCore/Primitives/SmartPtr.h>
 
 #include <WinSock2.h>
 #include <JNetwork/Namespace.h>
@@ -26,15 +27,18 @@
 
 NS_JNET_BEGIN
 
-class Buffer
+class BufferAbstract
 {
 public:
-	Buffer(char* buffer, int bufferSize)
+	BufferAbstract(char* buffer, int bufferSize)
 		: m_pBuffer(buffer)
 		, m_iBufferSize(bufferSize)
 		, m_iReadPos(0)
 		, m_iWritePos(0)
 	{}
+	virtual ~BufferAbstract() = default;
+
+
 
 	template <typename T>
 	T Read() {
@@ -155,5 +159,10 @@ private:
 	int m_iBufferSize;
 };
 
+
+using BufferAbstractPtr = JCore::SharedPtr<BufferAbstract>;
+
 NS_JNET_END
+
+
 

@@ -8,27 +8,27 @@
 #include <JCore/Container/HashMap.h>
 #include <JCore/Sync/NormalLock.h>
 
-#include <JNetwork/Host/TcpSession.h>
+#include <JNetwork/Host/Session.h>
 
 NS_JNET_BEGIN
 
 class TcpServer;
-class TcpSessionContainer
+class SessionContainer
 {
 public:
-	TcpSessionContainer(int size);
-	~TcpSessionContainer();
+	SessionContainer(int size);
+	~SessionContainer();
 
 	int MaxConnection() const { return m_iMaxConnection; }
-	bool AddSession(TcpSession* session);
-	TcpSession* GetSession(SOCKET socket);
+	bool AddSession(Session* session);
+	Session* GetSession(SOCKET socket);
 	void DisconnectAllSessions();
 	void Clear();
 	
 private:
 	int m_iMaxConnection;
 	JCore::NormalLock m_ContainerLock;
-	JCore::HashMap<SOCKET, TcpSession*> m_Container;
+	JCore::HashMap<SOCKET, Session*> m_Container;
 
 	friend class TcpServer;
 };

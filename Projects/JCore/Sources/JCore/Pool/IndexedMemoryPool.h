@@ -84,7 +84,7 @@ public:
 
 	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
 
-		DebugAssertFmt(requestSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 요청함)", MaxAllocatableSize, requestSize);
+		DebugAssertMsg(requestSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 요청함)", MaxAllocatableSize, requestSize);
 
 		MemoryChunckQueue* pChuckQueue;
 		bool bNewAlloc;
@@ -153,7 +153,7 @@ public:
 			int iSize = count.Key;
 			int iCount = count.Value;
 			int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iSize);
-			DebugAssertFmt(iSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MaxAllocatableSize, iSize);
+			DebugAssertMsg(iSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MaxAllocatableSize, iSize);
 			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
 			if (m_Pool[iIndex])
 				DeleteSafe(m_Pool[iIndex]);

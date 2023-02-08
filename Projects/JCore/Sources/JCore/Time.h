@@ -546,7 +546,6 @@ enum class StopWatchMode
 template <StopWatchMode Mode>
 struct StopWatch;
 
-
 // 정밀도: 밀리초
 template <>
 struct StopWatch<StopWatchMode::System>

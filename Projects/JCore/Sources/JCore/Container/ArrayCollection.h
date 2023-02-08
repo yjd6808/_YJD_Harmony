@@ -35,7 +35,7 @@ public:
 
 	// [2]
 	ArrayCollection(int capacity) : TCollection() {
-		DebugAssertFmt(capacity >= 1, "컨테이너의 크기가 0이하가 될 수 없습니다. (%d)", capacity);
+		DebugAssertMsg(capacity >= 1, "컨테이너의 크기가 0이하가 될 수 없습니다. (%d)", capacity);
 		int iAllocatedSize;
 		m_pArray = TAllocator::template Allocate<T*>(capacity * sizeof(T), iAllocatedSize);
 		m_iCapacity = capacity;
@@ -212,7 +212,7 @@ protected:
 	/// </summary>
 	/// <param name="newCapacity">기존 용량보다 더 큰 값</param>
 	virtual void Expand(int newCapacity) {
-		DebugAssertFmt(newCapacity > m_iCapacity, "현재 용량보다 더 작은 용량입니다.");
+		DebugAssertMsg(newCapacity > m_iCapacity, "현재 용량보다 더 작은 용량입니다.");
 		int iAllocatedSize;
 		T* pNewArray = TAllocator::template Allocate<T*>(newCapacity * sizeof(T), iAllocatedSize);
 		Memory::Copy(pNewArray, sizeof(T) * newCapacity, m_pArray, sizeof(T) * this->m_iSize);
@@ -259,7 +259,7 @@ protected:
 	///  - ArrayQueue
 	/// </summary>
 	virtual void DestroyAtRange(const int startIdx, const int endIdx) {
-		DebugAssertFmt(this->IsValidRange(startIdx, endIdx),
+		DebugAssertMsg(this->IsValidRange(startIdx, endIdx),
 			"올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)", startIdx, endIdx, this->m_iSize);
 
 		for (int i = startIdx; i <= endIdx; i++) {
@@ -295,14 +295,14 @@ protected:
 
 protected:
 	T& GetAt(const int idx) const {
-		DebugAssertFmt(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 		return m_pArray[idx];
 	}
 
 
 
 	void SetAt(const int idx, const T& data) {
-		DebugAssertFmt(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
 		m_pArray[idx] = data;
 	}
@@ -330,7 +330,7 @@ protected:
 
 	template <typename... Args>
 	void EmplaceAt(const int idx, Args&&... args) {
-		DebugAssertFmt(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 
 		if constexpr (IsPointerType_v<T>)
 			DebugAssertMsg(false, "포인터 타입은 Emplace 기능 사용 금지...");
@@ -339,7 +339,7 @@ protected:
 	}
 
 	void DestroyAt(const int idx) {
-		DebugAssertFmt(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 
 		Memory::PlacementDelete<IsPointerType_v<T>>(m_pArray[idx]);
 	}
@@ -366,15 +366,15 @@ protected:
 		}
 
 		// 데이터가 존재하는지
-		DebugAssertFmt(IsValidIndex(blockIdx), 
+		DebugAssertMsg(IsValidIndex(blockIdx), 
 			"(1) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", blockIdx, this->m_iSize);
-		DebugAssertFmt(IsValidIndex(blockIdx + blockSize - 1), 
+		DebugAssertMsg(IsValidIndex(blockIdx + blockSize - 1), 
 			"(2) 올바르지 않은 데이터 인덱스 입니다. (%d, 컨테이너 크기: %d)", blockIdx + blockSize - 1, this->m_iSize);
 
 		// 블록이 이동할 위치가 배열 내부에 둘 수 있는지 체크
-		DebugAssertFmt(IsValidIndexCapacity(moveIdx),
+		DebugAssertMsg(IsValidIndexCapacity(moveIdx),
 			"(3) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx, this->m_iSize);
-		DebugAssertFmt(IsValidIndexCapacity(moveIdx + blockSize - 1),
+		DebugAssertMsg(IsValidIndexCapacity(moveIdx + blockSize - 1),
 			"(4) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx + blockSize - 1, this->m_iSize);
 
 		if (moveIdx > blockIdx) {

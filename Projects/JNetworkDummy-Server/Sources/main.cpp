@@ -1,14 +1,17 @@
 
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
-#include <JNetwork/PacketGenerator.h>
 #include <JNetwork/Host/TcpServer.h>
+#include <JNetwork/Packet/Packet.h>
 
 #include <JCore/Utils/Console.h>
 #include <JCore/Encoding/CodePage.h>
 
-using namespace JCore;
-using namespace JNetwork;
+
+
+USING_NS_JC;
+USING_NS_JNET;
+
 
 #define CMD_STATIC_MESSAGE	0
 #define CMD_DYNAMIC_MESSAGE	1
@@ -52,21 +55,21 @@ protected:
 		SafeConsole::WriteLine("[서버] 서버가 시작되었습니다.");
 	}
 
-	void OnConnected(TcpSession* connectedSession) override { 
+	void OnAccepted(Session* connectedSession) override {
 		SafeConsole::WriteLine("[서버] %s 클라이언트가 접속하였습니다.", 
 			connectedSession->GetRemoteEndPoint().ToString().Source());
 	}
 
-	void OnDisconnected(TcpSession* disconnetedSession) override {
-		SafeConsole::WriteLine("[서버] %s 클라이언트가 접속하였습니다.",
+	void OnDisconnected(Session* disconnetedSession) override {
+		SafeConsole::WriteLine("[서버] %s 클라이언트가 접속해제하였습니다.",
 			disconnetedSession->GetRemoteEndPoint().ToString().Source());
 	}
 
-	void OnSent(TcpSession* sender, ISendPacket* packet, Int32UL sentBytes) override {
+	void OnSent(Session* sender, ISendPacket* packet, Int32UL sentBytes) override {
 		SafeConsole::WriteLine("[서버] 송신 : %d 바이트", packet->GetPacketLength());
 	}
 
-	void OnReceived(TcpSession* receiver, ICommand* cmd) override {
+	void OnReceived(Session* receiver, ICommand* cmd) override {
 		// 수신한 메시지 출력
 		if (cmd->GetCommand() == CMD_STATIC_MESSAGE) {
 			StaticMessage* pMsg = cmd->CastCommand<StaticMessage*>();
@@ -104,15 +107,12 @@ protected:
 
 
 int main() {
-    SafeConsole::Init();
-    SafeConsole::SetOutputCodePage(CodePage::UTF8);
-
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	Winsock::Initialize(2, 2);
-	TcpServer server;
 	MyServerEventListener myServerEventListener;
+	TcpServer server{&myServerEventListener, 6000, 6000, 10};
 
 	// 서버 이벤트 리스너 등록
-	server.SetEventListener(&myServerEventListener);
 
 	// 서버 실행
 	if (server.Start("0.0.0.0:9999")) {

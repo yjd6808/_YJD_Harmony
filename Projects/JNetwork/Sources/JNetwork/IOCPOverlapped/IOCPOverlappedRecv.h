@@ -4,20 +4,20 @@
 
 #pragma once
 
-#include <JNetwork/Host/TcpSession.h>
+#include <JNetwork/Host/Session.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlapped.h>
 
 NS_JNET_BEGIN
 
-class IOCPOverlappedReceive : public IOCPOverlapped
+class IOCPOverlappedRecv : public IOCPOverlapped
 {
 public:
-	IOCPOverlappedReceive(TcpSession* session, IOCP* iocp);
-	~IOCPOverlappedReceive() override;
+	IOCPOverlappedRecv(Session* session, IOCP* iocp);
+	~IOCPOverlappedRecv() override = default;
 public:
 	void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
 private:
-	TcpSession* m_pReceivedSession;	
+	Session* m_pReceivedSession;	
 };
 
 NS_JNET_END

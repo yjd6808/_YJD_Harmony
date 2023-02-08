@@ -19,6 +19,13 @@
 
 #include <JCore/Core.h>
 
+#ifdef DebugMode
+	#define NetLog(fmt, ...) printf(fmt, __VA_ARGS__)
+#else
+	#define NetLog(...)
+#endif
+
+
 #define MAX_MSS 1460
 #define MAX_MTU 1500
 #define TEST_DUMMY_PACKET_SIZE	20

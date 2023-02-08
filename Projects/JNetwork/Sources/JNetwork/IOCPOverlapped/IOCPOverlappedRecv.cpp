@@ -3,20 +3,20 @@
  */
 
 #include <JNetwork/Network.h>
-#include <JNetwork/IOCPOverlapped/IOCPOverlappedReceive.h>
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedRecv.h>
 #include <JNetwork/Host/TcpServer.h>
 
 NS_JNET_BEGIN
 
-IOCPOverlappedReceive::IOCPOverlappedReceive(TcpSession* session, IOCP* iocp) :
+IOCPOverlappedRecv::IOCPOverlappedRecv(Session* session, IOCP* iocp) :
 	IOCPOverlapped(iocp, Type::Receive),
 	m_pReceivedSession(session)
 {
 }
 
-IOCPOverlappedReceive::~IOCPOverlappedReceive() = default;
 
-void IOCPOverlappedReceive::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+
+void IOCPOverlappedRecv::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hReceiveSock = m_pReceivedSession->Socket().Handle();
 
 	if (IsFailed(hReceiveSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
@@ -26,7 +26,7 @@ void IOCPOverlappedReceive::Process(BOOL result, Int32UL numberOfBytesTransffere
 
 	m_pReceivedSession->Received(numberOfBytesTransffered);
 
-	if (m_pReceivedSession->ReceiveAsync() == false) {
+	if (m_pReceivedSession->RecvAsync() == false) {
 		m_pReceivedSession->Disconnect();
 	}
 }

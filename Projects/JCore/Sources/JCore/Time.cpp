@@ -1315,7 +1315,7 @@ TimeSpan StopWatch<StopWatchMode::System>::StopContinue() {
 // @함수 설명 참고: https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter
 StopWatch<StopWatchMode::HighResolution>::StopWatch() {
 	if (!QueryPerformanceFrequency((LARGE_INTEGER*)&Frequency)) {
-		DebugAssertFmt(false, "쿼리퍼포먼스 프리퀀시 획득 실패 (오류코드: %d)", ::GetLastError());
+		DebugAssertMsg(false, "쿼리퍼포먼스 프리퀀시 획득 실패 (오류코드: %d)", ::GetLastError());
 	}
 
 	// 기본: Freqency.QuadPart: 10'000'000
@@ -1327,7 +1327,7 @@ StopWatch<StopWatchMode::HighResolution>::StopWatch() {
 
 Int64U StopWatch<StopWatchMode::HighResolution>::Start() {
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StartCounter)) {
-		DebugAssertFmt(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		DebugAssertMsg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
 	}
 
 	return StartCounter;
@@ -1336,7 +1336,7 @@ Int64U StopWatch<StopWatchMode::HighResolution>::Start() {
 TimeSpan StopWatch<StopWatchMode::HighResolution>::StopReset() {
 	Int64U StopCounter;
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
-		DebugAssertFmt(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		DebugAssertMsg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
 	}
 
 	Int64U uiGap = StopCounter - StartCounter;
@@ -1347,7 +1347,7 @@ TimeSpan StopWatch<StopWatchMode::HighResolution>::StopReset() {
 TimeSpan StopWatch<StopWatchMode::HighResolution>::StopContinue() {
 	Int64U StopCounter;
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
-		DebugAssertFmt(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
+		DebugAssertMsg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
 	}
 
 	return (StopCounter - StartCounter) / Precision;

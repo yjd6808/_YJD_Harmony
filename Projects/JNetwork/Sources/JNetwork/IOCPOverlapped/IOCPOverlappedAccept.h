@@ -12,13 +12,12 @@ NS_JNET_BEGIN
 class IOCPOverlappedAccept : public IOCPOverlapped
 {
 public:
-	IOCPOverlappedAccept(TcpServer* tcpServer, TcpSession* session, IOCP* iocp);
+	IOCPOverlappedAccept(TcpSession* session, IOCP* iocp);
 	~IOCPOverlappedAccept() override;
 public:
 	void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	TcpSession* m_pAcceptedSession;	
-	TcpServer* m_pListeningServer;
 };
 
 NS_JNET_END

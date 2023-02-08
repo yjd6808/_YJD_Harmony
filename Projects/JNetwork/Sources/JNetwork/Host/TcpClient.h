@@ -4,30 +4,26 @@
 
 #pragma once
 
-#include <JNetwork/Host/TcpSession.h>
-#include <JNetwork/Host/Listener/SessionEventListener.h>
+#include <JNetwork/Host/Session.h>
+#include <JNetwork/Host/Listener/ClientEventListener.h>
+
+#include <JNetwork/IOCP/IOCP.h>
 
 NS_JNET_BEGIN
 
-class TcpClient : public TcpSession
+class TcpClient : public Session
 {
 public:
-	TcpClient();
+	TcpClient(const IOCPPtr& iocp, ClientEventListener* listener, int sendBufferSize = 6000, int recvBufferSize = 6000);
 	~TcpClient() override;
-public:
-	// 초기 IOCP 쓰레드 수
-	virtual int DefaultIocpThreadCount() const;
 
-	virtual bool ConnectAsync(const IPv4EndPoint& destination);
-	bool Disconnect() override;
-	void SetEventListener(SessionEventListener* listener);
-protected:
+	bool ConnectAsync(const IPv4EndPoint& destination);
 	void Connected() override;
-	void ConnectWait() override;
-	void NotifyCommand(ICommand* cmd) override;								// 세션 입장에서는 ServerEventListener에 커맨드를 전달하고 클라이언트 입장에서는 ClientEventListener에 커맨드를 전달하도록 한다.
+	void Disconnected() override;
+	void NotifyCommand(ICommand* cmd) override;
 	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;
 protected:
-	SessionEventListener* m_pClientEventListener;
+	ClientEventListener* m_pClientEventListener;
 };
 
 NS_JNET_END

@@ -305,7 +305,7 @@ public:
 	/// 특정 인덱스의 데이터를 삭제한다.
 	/// </summary>
 	void RemoveAt(const int idx) {
-		DebugAssertFmt(this->IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		DebugAssertMsg(this->IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 
 		int iMoveBlockSize = this->m_iSize - (idx + 1);
 

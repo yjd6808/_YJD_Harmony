@@ -16,6 +16,11 @@
 
 NS_JNET_BEGIN
 
+	NS_DETAIL_BEGIN
+		bool UseConnectEx();
+		bool UseDisconnectEx();
+	NS_DETAIL_END
+
 class SocketOption
 {
 public:
@@ -75,6 +80,9 @@ public:
 	SocketOption Option() const { return m_SocketOption; }
 	SOCKET Handle() const { return m_Socket; }
 	bool IsValid() const { return m_Socket != INVALID_SOCKET; }
+
+	// 반환값 실패시 SOCKET_ERROR - WSAGetLastError로 확인
+	//       성공시 0
 	int ShutdownBoth() const;
 	int ShutdownWrite() const;
 	int ShutdownRead() const;
@@ -97,6 +105,8 @@ public:
 	Socketv4(TransportProtocol tpproto, SOCKET socket) : Socket(tpproto, socket) {}
 	~Socketv4() override = default;
 
+	// 반환값 성공시 0
+	//		 실패시 SOCKET_ERROR, WSAGetLastError()로 확인
 	int Bind(const IPv4EndPoint& ipv4EndPoint) const;
 	int BindAny() const;
 
@@ -109,18 +119,53 @@ public:
 	int AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ Int32UL* receivedBytes, LPOVERLAPPED overlapped) const;
 	static void AcceptExResult(char* buff, Int32UL receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp);
 
+	// 반환값 실패시 SOCKET_ERROR
+	//		 성공시 0
 	int Connect(const IPv4EndPoint& ipv4EndPoint) const;
+
+	// 반환값 실패시 FALSE, WSAGetLastError로 확인
+	//       성공시 TRUE
 	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ Int32UL* sentBytes) const;
+	int DisconnectEx(LPOVERLAPPED overlapped, Int32UL flag);
 	 
 	int Send(char* buff, Int32U len, Int32U flag = 0) const;
 	int SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag = 0) const;
 	int Receive(char* buff, Int32U buffSize, Int32U flag = 0) const;
 	int ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag = 0) const;
 
-	int SendEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesSent, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, Int32U flag = 0) const;
-	 // int SendToEx() { return 0; } // NOT IMPLEMENTED, UNUSED
-	int ReceiveEx(LPWSABUF lpBuf, Out_ Int32UL* pBytesReceived, LPOVERLAPPED lpOverlapped, LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, Int32U flag = 0) const;
-	//  int ReceiveFromEx() {} // NOT IMPLEMENTED, UNUSED
+	int SendEx(
+		LPWSABUF lpBuf, 
+		Out_ Int32UL* pBytesSent, 
+		LPOVERLAPPED lpOverlapped, 
+		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, 
+		Int32U flag = 0
+	) const;
+
+	int SendToEx(
+		LPWSABUF lpBuffers, 
+		Out_ Int32UL* pBytesSent, 
+		LPOVERLAPPED lpOverlapped, 
+		const IPv4EndPoint& to,
+		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL
+	) const;
+
+	int ReceiveEx(
+		LPWSABUF lpBuf, 
+		Out_ Int32UL* pBytesReceived, 
+		LPOVERLAPPED lpOverlapped, 
+		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, 
+		Int32U flag = 0
+	) const;
+
+	int ReceiveFromEx(
+		LPWSABUF lpBuf, 
+		Out_ Int32UL* pBytesReceived, 
+		LPOVERLAPPED lpOverlapped, 
+		Out_ SOCKADDR_IN* sockAddr, 
+		Out_ int* addrLen, 
+		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, 
+		Int32U flag = 0
+	) const;
 
 	IPv4EndPoint GetLocalEndPoint() const;
 	IPv4EndPoint GetRemoteEndPoint() const;

@@ -22,11 +22,13 @@ public:
 		Connect,
 		Disconnect,
 		Receive,
-		Send
+		Send,
+		ReceiveFrom,
+		SendTo
 	};
 public:
 	IOCPOverlapped(IOCP* iocp, Type type);
-	virtual ~IOCPOverlapped() = default;
+	virtual ~IOCPOverlapped();
 public:
 	virtual void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) = 0;
 	virtual void Release();
@@ -36,5 +38,7 @@ protected:
 	Type m_eType;
 	IOCP* m_pIocp;
 };
+
+using IOCPOverlappedPtr = JCore::SharedPtr<IOCPOverlapped>;
 
 NS_JNET_END

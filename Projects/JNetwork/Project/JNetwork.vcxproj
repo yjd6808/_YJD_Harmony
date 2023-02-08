@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JNetwork\Host\TcpClient.cpp" />
-    <ClCompile Include="..\Sources\JNetwork\Host\TcpSession.cpp">
+    <ClCompile Include="..\Sources\JNetwork\Host\Session.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -32,11 +32,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\Host\TcpSessionContainer.cpp">
+    <ClCompile Include="..\Sources\JNetwork\Host\SessionContainer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Host\UdpClient.cpp">
+      <SubType>
+      </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.cpp" />
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.cpp">
@@ -52,8 +56,16 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecv.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecvFrom.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSendTo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IOCP\IOCP.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -82,10 +94,18 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Winsock.cpp" />
+    <ClCompile Include="TcpSession.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\JNetwork\Buffer\Buffer.h" />
-    <ClInclude Include="..\Sources\JNetwork\Buffer\CommnadBuffer.h">
+    <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAbstract.h" />
+    <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAllocator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Buffer\NetBuffer.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -94,6 +114,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\ByteOrder.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\Listener\ClientEventListener.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\Listener\SessionEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpServerEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Server.h">
@@ -102,7 +126,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\Session.h">
+    <ClInclude Include="..\Sources\JNetwork\Host\Session.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\SessionState.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -110,25 +135,22 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\TcpSession.h">
-      <SubType>
-      </SubType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\TcpServer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\TcpSessionContainer.h">
+    <ClInclude Include="..\Sources\JNetwork\Host\SessionContainer.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\TcpSession.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\UdpClient.h">
+      <SubType>
+      </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.h">
       <SubType>
@@ -151,8 +173,16 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.h" />
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecv.h" />
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecvFrom.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.h" />
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSendTo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCP\IOCP.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

@@ -8,17 +8,18 @@
 
 #pragma once
 
-#include <JNetwork/Buffer/Buffer.h>
+#include <JNetwork/Buffer/BufferAbstract.h>
 
 
 NS_JNET_BEGIN
 
 template <Int32U BufferSize>
-class StaticBuffer : public Buffer
+class StaticBuffer : public BufferAbstract
 {
 	using TBuffer = StaticBuffer<BufferSize>;
 public:
-	StaticBuffer() : Buffer(m_Buffer, BufferSize) {}
+	StaticBuffer() : BufferAbstract(m_Buffer, BufferSize) {}
+	~StaticBuffer() override {}
 
 	char m_Buffer[BufferSize] = {};
 };

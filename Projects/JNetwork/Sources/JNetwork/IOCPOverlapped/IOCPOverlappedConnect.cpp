@@ -4,18 +4,22 @@
 
 #include <JNetwork/Network.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedConnect.h>
+#include <JNetwork/Packet/Packet.h>
 #include <JNetwork/Host/TcpServer.h>
 
 NS_JNET_BEGIN
 
-IOCPOverlappedConnect::IOCPOverlappedConnect(TcpSession* session, IOCP* iocp, ISendPacket* sentPacket) :
-	IOCPOverlapped(iocp, Type::Send),
-	m_pConnectedSession(session),
+IOCPOverlappedConnect::IOCPOverlappedConnect(TcpClient* client, IOCP* iocp, ISendPacket* sentPacket) :
+	IOCPOverlapped(iocp, Type::Connect),
+	m_pConnectedSession(client),
 	m_pSentPacket(sentPacket)
 {
+	NetLog("Connect 오버랩피트 생성 (%d)\n", m_pIocp->GetPendingCount());
 }
 
-IOCPOverlappedConnect::~IOCPOverlappedConnect() = default;
+IOCPOverlappedConnect::~IOCPOverlappedConnect() {
+	NetLog("Connect 오버랩피트 소멸 (%d)\n", m_pIocp->GetPendingCount());
+}
 
 void IOCPOverlappedConnect::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hConnectedSock = m_pConnectedSession->Socket().Handle();
@@ -32,7 +36,7 @@ void IOCPOverlappedConnect::Process(BOOL result, Int32UL numberOfBytesTransffere
 		m_pSentPacket->Release();
 	}
 
-	if (m_pConnectedSession->ReceiveAsync() == false) {
+	if (m_pConnectedSession->RecvAsync() == false) {
 		m_pConnectedSession->Disconnect();
 	}
 }

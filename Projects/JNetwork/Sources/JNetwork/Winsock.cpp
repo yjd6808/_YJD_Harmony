@@ -4,6 +4,7 @@
 
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
+#include <JNetwork/Socket.h>
 
 NS_JNET_BEGIN
 
@@ -34,6 +35,16 @@ bool Winsock::Initialize(Byte highVersion, Byte lowVersion) {
 		WSACleanup();
 		return false;
 	}
+
+	if (Detail::UseConnectEx() == false) {
+		DebugAssertMsg(false, "UseConnectEx 실패");
+	}
+
+	if (Detail::UseDisconnectEx() == false) {
+		DebugAssertMsg(false, "UseDisconnectEx 실패");
+	}
+
+	;
 
 	return ms_bInitailized = true;
 }

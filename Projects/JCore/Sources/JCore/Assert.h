@@ -32,7 +32,8 @@ NS_JC_END
 
 #ifndef DebugAssert
     #if DebugMode
-		#define DebugAssertFmt(exp, fmt, ...)																	\
+		inline static bool PreventUnrechableCode = true;
+		#define DebugAssertMsg(exp, fmt, ...)																	\
 					do {																						\
 						if (!(exp)) {																			\
 							static constexpr int BufSize = 512;													\
@@ -45,11 +46,10 @@ NS_JC_END
 							printf("│ 파일 : %s\n", szFmtBuf);												    \
 							printf("│ 라인 : %d\n", __LINE__);													\
 							printf("└ 함수 : %s\n", __FUNCTION__);												\
-							std::abort();																		\
+							if (PreventUnrechableCode) std::abort();											\
 						}																						\
 					} while (0)
-	    #define DebugAssertMsg(exp, msg)	DebugAssertFmt(exp, msg)
-        #define DebugAssert(exp)            DebugAssertFmt(exp, "메시지 없음")
+        #define DebugAssert(exp)            DebugAssertMsg(exp, "메시지 없음")
 
     #else
         #define DebugAssertMsg(exp, msg)	(0)
