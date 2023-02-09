@@ -1,4 +1,4 @@
-#include <JCore/Core.h>
+﻿#include <JCore/Core.h>
 #include <JCore/Time.h>
 
 NS_JC_BEGIN

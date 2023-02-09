@@ -1,4 +1,4 @@
-
+﻿
 #include <JNetwork/Network.h>	// JCore.lib 링크, 2. Mswsock.lib 링크, 3. ws2_32.lib 링크
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/UdpClient.h>

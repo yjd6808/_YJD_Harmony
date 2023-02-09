@@ -1,4 +1,4 @@
-#include "AppDelegate.h"
+﻿#include "AppDelegate.h"
 
 #include <SteinsGate/Research/GameScene.h>
 #include <SteinsGate/Research/SGDataManager.h>

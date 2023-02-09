@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * =====================
  * CriticalSection 자체가 RecursiveLock인듯?

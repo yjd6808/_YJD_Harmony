@@ -1,4 +1,4 @@
-#ifndef MYSQL_EMBED_INCLUDED
+﻿#ifndef MYSQL_EMBED_INCLUDED
 #define MYSQL_EMBED_INCLUDED
 
 /* Copyright (c) 2000, 2021, Oracle and/or its affiliates.

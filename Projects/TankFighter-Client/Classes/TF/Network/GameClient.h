@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <JNetwork/Host/TcpClient.h>
 #include <TF/Network/GameClientEventListener.h>

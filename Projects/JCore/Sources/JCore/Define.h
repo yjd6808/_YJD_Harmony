@@ -1,4 +1,4 @@
-#if !defined(__JCORE_DEFINE_H__)
+﻿#if !defined(__JCORE_DEFINE_H__)
 
     #define __JCORE_DEFINE_H__
 

@@ -1,4 +1,4 @@
-#include <JCoreTest/CoreTest.h>
+﻿#include <JCoreTest/CoreTest.h>
 #include <JCore/Primitives/Atomic.h>
 #include <JCore/Sync/NormalRwLock.h>
 

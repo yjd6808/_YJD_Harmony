@@ -1,4 +1,4 @@
-
+﻿
 
 #include <JCore/Core.h>
 #include <JCore/Sync/Semaphore.h>

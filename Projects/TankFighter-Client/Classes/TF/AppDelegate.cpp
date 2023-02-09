@@ -1,4 +1,4 @@
-#include "AppDelegate.h"
+﻿#include "AppDelegate.h"
 #include <TF/Scenes/LoginScene.h>
 #include <TF/Network/GameClient.h>
 #include <TF/Network/ClientConfiguration.h>

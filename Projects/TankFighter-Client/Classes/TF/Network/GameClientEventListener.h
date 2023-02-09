@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <JNetwork/Host/TcpClientEventListener.h>
 #include <JCore/Container/ArrayQueue.h>

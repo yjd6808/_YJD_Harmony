@@ -1,4 +1,4 @@
-#include <JNetworkTest/NetworkTest.h>
+﻿#include <JNetworkTest/NetworkTest.h>
 
 #include <JNetwork/ByteOrder.h>
 

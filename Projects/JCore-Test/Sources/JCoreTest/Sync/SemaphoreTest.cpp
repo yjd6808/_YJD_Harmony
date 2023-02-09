@@ -1,4 +1,4 @@
-#include <JCoreTest/CoreTest.h>
+﻿#include <JCoreTest/CoreTest.h>
 #include <JCore/Sync/Semaphore.h>
 
 #if TEST_SemaphoreTest == ON

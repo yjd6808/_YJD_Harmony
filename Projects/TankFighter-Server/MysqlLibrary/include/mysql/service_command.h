@@ -1,4 +1,4 @@
-#ifndef MYSQL_SERVICE_COMMAND_INCLUDED
+﻿#ifndef MYSQL_SERVICE_COMMAND_INCLUDED
 #define MYSQL_SERVICE_COMMAND_INCLUDED
 /*  Copyright (c) 2015, 2021, Oracle and/or its affiliates.
 

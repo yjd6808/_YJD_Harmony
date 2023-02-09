@@ -1,4 +1,4 @@
-#ifndef MYSQL_SERVICES_INCLUDED
+﻿#ifndef MYSQL_SERVICES_INCLUDED
 /* Copyright (c) 2009, 2021, Oracle and/or its affiliates.
 
    This program is free software; you can redistribute it and/or modify

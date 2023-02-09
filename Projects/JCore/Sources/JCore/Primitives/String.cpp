@@ -25,7 +25,7 @@ String::String(const int capacity)  {
 		m_iCapacity = 0;
 		m_iLen = 0;
 	} else {
-		*this = String(EMPTY, capacity);
+		*this = String(EmptyString, capacity);
 	}
 }
 
@@ -39,7 +39,7 @@ String::String(const char* str, const int capacity) {
 	}
 
 	const int iLen = StringUtil::Length(str);
-	int iExpectedCapcity = int(iLen * EXPANDING_FACTOR);
+	int iExpectedCapcity = int(iLen * ExpandingFactor);
 
 	if (iExpectedCapcity < capacity) {
 		iExpectedCapcity = capacity;
@@ -57,12 +57,12 @@ String::String(const char* str, const int capacity) {
 	StringUtil::Copy(m_pBuffer, m_iCapacity, str);
 }
 
-String::String(const char* str) : String(str, DEFAULT_BUFFER_SIZE) {
+String::String(const char* str) : String(str, DefaultBufferSize) {
 }
 
 String::String(char ch, int count) {
-	m_pBuffer = new char[count + DEFAULT_BUFFER_SIZE];
-	m_iCapacity = count + DEFAULT_BUFFER_SIZE;
+	m_pBuffer = new char[count + DefaultBufferSize];
+	m_iCapacity = count + DefaultBufferSize;
 	m_iLen = count;
 
 	for (int i = 0; i < count; ++i) {
@@ -190,7 +190,7 @@ void String::Resize(const int capacity) {
 void String::ResizeIfNeeded(int len) {
 	bool bNeedResize = false;
 	if (len >= m_iCapacity) {
-		len *= EXPANDING_FACTOR;
+		len *= ExpandingFactor;
 		bNeedResize = true;
 	}
 
@@ -490,7 +490,7 @@ void String::Format(const char* format, ...) {
 	}
 
 	if (m_iCapacity < iExpectedLen + 1) {
-		Resize(iExpectedLen + DEFAULT_BUFFER_SIZE);
+		Resize(iExpectedLen + DefaultBufferSize);
 	}
 
 	vsnprintf(m_pBuffer, m_iCapacity, format, args);
@@ -561,6 +561,7 @@ Tuple<char*, int, int> String::GetRangeUnsafe(const int startIdx, const int endI
 
 // delimiter 문자열 기준으로 분리합니다.
 // includeEmpty가 true일 경우 분리된 토큰 문자열이 비어있더라도 포함 시킵니다.
+// TODO: 코드 더러움, 다시 짤 것 - 2023/02/06
 // O(n)
 Vector<String> String::Split(const char* delimiter, const bool includeEmpty) const {
 	Vector<String> vecTokens;
@@ -574,7 +575,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 	const int iDelimiterLen = StringUtil::Length(delimiter);
 	if (iOffset - 1 < 0) {
 		if (includeEmpty) {
-			vecTokens.EmplaceBack(EMPTY);
+			vecTokens.EmplaceBack(EmptyString);
 		}
 	} else {
 		vecTokens.EmplaceBack(GetRange(0, iOffset - 1));
@@ -591,7 +592,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 		
 		if (iNextOffset <= iOffset) {
 			if (includeEmpty) {
-				vecTokens.EmplaceBack(EMPTY);
+				vecTokens.EmplaceBack(EmptyString);
 			}
 		} else {
 			vecTokens.EmplaceBack(GetRange(iOffset, iNextOffset - 1));
@@ -603,7 +604,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 		vecTokens.EmplaceBack(GetRange(iOffset, m_iLen - 1));
 	} else {
 		if (includeEmpty) {
-			vecTokens.EmplaceBack(EMPTY);
+			vecTokens.EmplaceBack(EmptyString);
 		}
 	}
 
@@ -710,7 +711,7 @@ String& String::operator=(const char* other) {
 	const int iExpectedCapaity = iToLen + 10;
 
 	if (iExpectedCapaity > m_iCapacity) {
-		Initialize(iExpectedCapaity + DEFAULT_BUFFER_SIZE);
+		Initialize(iExpectedCapaity + DefaultBufferSize);
 	}
 
 	StringUtil::Copy(m_pBuffer, m_iCapacity, other);

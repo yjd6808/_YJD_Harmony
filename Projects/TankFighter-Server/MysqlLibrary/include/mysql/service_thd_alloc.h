@@ -1,4 +1,4 @@
-#ifndef MYSQL_SERVICE_THD_ALLOC_INCLUDED
+﻿#ifndef MYSQL_SERVICE_THD_ALLOC_INCLUDED
 /* Copyright (c) 2009, 2021, Oracle and/or its affiliates.
 
    This program is free software; you can redistribute it and/or modify

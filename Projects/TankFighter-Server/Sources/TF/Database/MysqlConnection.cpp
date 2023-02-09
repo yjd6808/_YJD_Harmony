@@ -1,4 +1,4 @@
-#include <TF/PrecompiledHeader.h>
+﻿#include <TF/PrecompiledHeader.h>
 #include <TF/Database/MysqlConnection.h>
 
 #include <JCore/Utils/Console.h>

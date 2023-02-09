@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <JCore/TypeTraits/IntegralConstant.h>
 #include <JCore/TypeTraits/Eliminator.h>

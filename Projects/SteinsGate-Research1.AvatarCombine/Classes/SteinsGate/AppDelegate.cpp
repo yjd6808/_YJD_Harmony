@@ -1,4 +1,4 @@
-#include <SteinsGate/AppDelegate.h>
+﻿#include <SteinsGate/AppDelegate.h>
 #include <SteinsGate/TestScene.h>
 #include <SteinsGate/PackLoader.h>
 

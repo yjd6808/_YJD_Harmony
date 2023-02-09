@@ -1,4 +1,4 @@
-
+﻿
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Memory.h>
 

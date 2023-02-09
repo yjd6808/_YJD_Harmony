@@ -1,4 +1,4 @@
-#ifndef ERRMSG_INCLUDED
+﻿#ifndef ERRMSG_INCLUDED
 #define ERRMSG_INCLUDED
 
 /* Copyright (c) 2000, 2021, Oracle and/or its affiliates.

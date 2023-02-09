@@ -1,4 +1,4 @@
-#include "CharacterPartAnimate.h"
+﻿#include "CharacterPartAnimate.h"
 
 #include "CharacterPartSprite.h"
 /*

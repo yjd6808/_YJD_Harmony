@@ -1,4 +1,4 @@
-#include <TF/Object/Bullet.h>
+﻿#include <TF/Object/Bullet.h>
 #include <TF/Util/ColorUtil.h>
 
 Bullet* Bullet::create(float diameter, int characterUID) {

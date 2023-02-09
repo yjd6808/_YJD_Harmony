@@ -1,4 +1,4 @@
-#include <TF/Network/CommandParser.h>
+﻿#include <TF/Network/CommandParser.h>
 
 void CommandParser::AddCommand(Int16 cmd, JCore::Action<JNetwork::ICommand*> fn) {
 }

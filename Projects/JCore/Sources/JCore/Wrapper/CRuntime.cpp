@@ -1,4 +1,4 @@
-#include <JCore/Core.h>
+﻿#include <JCore/Core.h>
 #include <JCore/Wrapper/CRuntime.h>
 
 #include <cstdlib>

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <JCore/Type.h>
 #include <JCore/Namespace.h>

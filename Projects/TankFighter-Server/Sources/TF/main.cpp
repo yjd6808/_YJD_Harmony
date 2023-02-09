@@ -1,4 +1,4 @@
-#include <TF/PrecompiledHeader.h>
+﻿#include <TF/PrecompiledHeader.h>
 #include <TF/Host/GameServer.h>
 #include <TF/Database/MysqlDatabase.h>
 #include <TF/Game/PlayerPool.h>

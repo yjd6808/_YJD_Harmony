@@ -1,4 +1,4 @@
-#include <SteinsGate/AppDelegate.h>
+﻿#include <SteinsGate/AppDelegate.h>
 #include <SteinsGate/Scenes/Test/LoginScene.h>
 
 #include <JCore/Primitives/StringUtil.h>

@@ -1,4 +1,4 @@
-#include "AppDelegate.h"
+﻿#include "AppDelegate.h"
 
 #include <SteinsGate/Research/World.h>
 #include <SteinsGate/Research/TestScene.h>

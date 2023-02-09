@@ -25,9 +25,9 @@ class String final
 {
 public:
 	
-	inline static const int DEFAULT_BUFFER_SIZE = 32;	// 초기 버퍼의 크기
-	inline static const int EXPANDING_FACTOR = 2;		// 더해준 문자열과 기존 문자열의 길이를 합쳤을 때 용량을 초과할 경우 배열 크기를 몇배 확장시켜줄지
-	inline static const char* EMPTY = "";
+	inline static const int DefaultBufferSize = 32;	// 초기 버퍼의 크기
+	inline static const int ExpandingFactor = 2;		// 더해준 문자열과 기존 문자열의 길이를 합쳤을 때 용량을 초과할 경우 배열 크기를 몇배 확장시켜줄지
+	inline static const char* EmptyString = "";
 
 	String();
 	String(const int capacity);
@@ -120,7 +120,7 @@ public:
 	// 동적할당된 문자열, 길이, 할당된 크기를 반환한다.
 	Tuple<char*, int, int> GetRangeUnsafe(const int startIdx, const int endIdx) const;
 	Vector<String, DefaultAllocator> Split(const char* delimiter, const bool includeEmpty = false) const;
-	void Initialize(int capacity = DEFAULT_BUFFER_SIZE);
+	void Initialize(int capacity = DefaultBufferSize);
 
 	String ToLowerCase() const;
 	String ToUpperCase() const;

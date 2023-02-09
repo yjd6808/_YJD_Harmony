@@ -1,4 +1,4 @@
-#include <JCoreTest/CoreTest.h>
+﻿#include <JCoreTest/CoreTest.h>
 #include <JCore/Sync/NormalLock.h>
 
 #if TEST_NormalLockTest == ON

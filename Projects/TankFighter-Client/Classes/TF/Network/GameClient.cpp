@@ -1,4 +1,4 @@
-#include <TF/Network/GameClient.h>
+﻿#include <TF/Network/GameClient.h>
 #include <Common/Enum.h>
 
 #include <TF/Scenes/LoginScene.h>
