@@ -21,22 +21,33 @@ UdpClient::UdpClient(const IOCPPtr& iocp, ClientEventListener* listener, int rec
 	: Session(iocp, recvBufferSize, sendBufferSize)
 	, m_pClientEventListener(listener)
 {
-	if (!Winsock::IsInitialized()) {
-		DebugAssertMsg(false, "윈속 초기화를 먼저 해주세요. Winsock::Initialize()");
-	}
+	UdpClient::Initialize();
+}
+
+UdpClient::~UdpClient() {
+	Disconnect();
+}
+
+
+void UdpClient::Initialize() {
+	Session::Initialize();
 
 	if (CreateSocket(TransportProtocol::UDP) == false) {
 		DebugAssertMsg(false, "UDP 소켓 생성에 실패했습니다.");
 	}
+
+	if (ConnectIocp() == false) {
+		DebugAssertMsg(false, "IOCP 연결 실패 (%d)", ::GetLastError());
+	}
+
 }
 
-UdpClient::~UdpClient() {}
-
-
 bool UdpClient::RecvFromAsync() {
+
+	DebugAssertMsg(m_Socket.IsBinded(), "소켓이 바인딩된 상태여야 수신이 가능합니다. 상대방에게 먼저 송신하여 오토 바인딩해주거나 수동 바인딩을 해주세요.");
+
 	WSABUF buf = m_pRecvBuffer->GetRemainBuffer();
 	Int32UL uiReceivedBytes = 0;
-
 	IOCPOverlappedRecvFrom* pRecvFromOverlapped = new IOCPOverlappedRecvFrom(this, m_spIocp.GetPtr());
 
 	const int iResult = m_Socket.ReceiveFromEx(
@@ -47,8 +58,9 @@ bool UdpClient::RecvFromAsync() {
 		pRecvFromOverlapped->SenderAddrLenPtr());
 
 	if (iResult == SOCKET_ERROR) {
-		if (Winsock::LastError() != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "RecvFromAsync() 실패 (%d:%s)", Winsock::LastError(), Winsock::LastErrorMessage().Source());
+		Int32U uiErrorCode = Winsock::LastError();
+		if (uiErrorCode != WSA_IO_PENDING) {
+			DebugAssertMsg(false, "RecvFromAsync() 실패 (%d)", uiErrorCode);
 			return false;
 		}
 	}
@@ -64,8 +76,9 @@ bool UdpClient::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination
 
 	const int iResult = m_Socket.SendToEx(&buf, &uiSendBytes, pOverlapped, destination);
 	if (iResult == SOCKET_ERROR) {
-		if (Winsock::LastError() != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "SendAsync() 실패");
+		Int32U uiErrorCode = Winsock::LastError();
+		if (uiErrorCode != WSA_IO_PENDING) {
+			DebugAssertMsg(false, "SendToAsync() 실패 (%d)", uiErrorCode);
 			pOverlapped->Release();
 			packet->Release();
 			return false;
@@ -76,8 +89,13 @@ bool UdpClient::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination
 }
 
 void UdpClient::Connected() {
-	m_eSessionState = eConnected;
+	m_eState = eConnected;
+	m_Socket.State = Socket::eBinded;
 	m_pClientEventListener->OnConnected();
+}
+
+void UdpClient::Disconnected() {
+	m_pClientEventListener->OnDisconnected();
 }
 
 void UdpClient::Received(Int32UL receivedBytes, IOCPOverlappedRecvFrom* recvFrom) {

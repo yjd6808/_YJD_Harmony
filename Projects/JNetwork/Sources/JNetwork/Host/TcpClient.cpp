@@ -18,38 +18,43 @@ TcpClient::TcpClient(const IOCPPtr& iocp, ClientEventListener* listener, int sen
 	: Session(iocp, sendBuffSize, recvBufferSize)
 	, m_pClientEventListener(listener) {
 
+	TcpClient::Initialize();
+}
 
-	if (!Winsock::IsInitialized()) {
-		DebugAssertMsg(false, "윈속 초기화를 먼저 해주세요. Winsock::Initialize()");
-	}
+TcpClient::~TcpClient() {
+	Disconnect();
+}
+
+void TcpClient::Initialize() {
+
+	Session::Initialize();
 
 	if (CreateSocket(TransportProtocol::TCP) == false) {
 		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다.");
 	}
-}
 
-TcpClient::~TcpClient() {
+	if (ConnectIocp() == false) {
+		DebugAssertMsg(false, "IOCP에 연결하는데 실패했습니다.");
+	}
 }
 
 
 bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
-	if (m_eSessionState == eConnected || m_eSessionState == eConnectWait) {
+
+	// 초기화된 상태에서만 연결을 진행할 수 있습니다.
+	if (m_eState != eInitailized) {
 		return false;
 	}
 
-	// IOCP 연결안했으면
-	if (!m_bIocpConneced) {
-		ConnectIocp();
+	if (m_bIocpConneced == false) {
+		DebugAssertMsg(false, "IOCP와 연결해주세요.");
+		return false;
 	}
 
 	// ConnectEx를 사용하기 위해서 클라이언트더라도 바인딩을 해줘야한다.
 	if (Bind({}) == false) {
 		DebugAssertMsg(false, "클라이언트 Any 바인딩에 실패하였습니다.");
 		return false;
-	}
-
-	if (m_Socket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
-		DebugAssertMsg(false, "논블로킹 소켓 전환 실패");
 	}
 
 	// 연결 후 곧장 데이터 전송 테스트
@@ -66,7 +71,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	if (m_Socket.ConnectEx(destination, pOverlapped, dummyPacket->GetWSABuf().buf, TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
 		Int32U uiError = Winsock::LastError();
 		if (uiError != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "서버 접속에 실패하였습니다. (%u:%s)", uiError, Winsock::LastErrorMessage().Source());
+			DebugAssertMsg(false, "서버 접속에 실패하였습니다. (%u)", uiError);
 			Disconnect();
 			pOverlapped->Release();
 			return false;
@@ -93,7 +98,7 @@ void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
 
 
 void TcpClient::Connected() {
-	m_eSessionState = eConnected;
+	m_eState = eConnected;
 
 	// 일정주기마다 "나 살아있소" 전송
 	if (m_Socket.Option().SetKeepAliveEnabled(true) == SOCKET_ERROR) {

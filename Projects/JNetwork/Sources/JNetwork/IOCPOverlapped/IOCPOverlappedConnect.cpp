@@ -22,10 +22,11 @@ IOCPOverlappedConnect::~IOCPOverlappedConnect() {
 }
 
 void IOCPOverlappedConnect::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	const SOCKET hConnectedSock = m_pConnectedSession->Socket().Handle();
+	const SOCKET hConnectedSock = m_pConnectedSession->SocketHandle();
 
 	if (IsFailed(hConnectedSock, result, numberOfBytesTransffered)) {
 		m_pConnectedSession->Disconnect();
+		m_pSentPacket->Release();
 		return;
 	}
 

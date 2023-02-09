@@ -68,33 +68,37 @@ class Socketv4;
 class Socket
 {
 public:
-	Socket() : Socket(TransportProtocol::None, INVALID_SOCKET) {}
-	Socket(TransportProtocol tpproto, SOCKET socket) :
-		m_Socket(socket),
-		m_SocketOption(socket),
-		m_TransportProtocol(tpproto)
+	enum State
 	{
-	}
-	virtual ~Socket() = default;
+		eInitialized	= 0,
+		eBinded			= 1,
+		eListen			= 2
+	};
 
-	SocketOption Option() const { return m_SocketOption; }
-	SOCKET Handle() const { return m_Socket; }
-	bool IsValid() const { return m_Socket != INVALID_SOCKET; }
+	Socket();
+	Socket(TransportProtocol tpproto, SOCKET socket);
+
+	bool IsBinded() const { return State == eBinded; }
+	bool IsListening() const { return State == eListen; }
+
+	SocketOption Option() const { return SocketOption(Handle); }
+	bool IsValid() const { return Handle != INVALID_SOCKET; }
+	void Invalidate();
 
 	// 반환값 실패시 SOCKET_ERROR - WSAGetLastError로 확인
 	//       성공시 0
 	int ShutdownBoth() const;
 	int ShutdownWrite() const;
 	int ShutdownRead() const;
-	int Close(); 
-public:
+	int Close();
+
 	static Socketv4 CreateV4(TransportProtocol tpproto, bool overlapped);
 	static Socketv4 CreateTcpV4(bool overlapped);
 	static Socketv6 CreateV6(TransportProtocol tpproto, bool overlapped);
-protected:
-	SOCKET m_Socket;
-	SocketOption m_SocketOption;
-	TransportProtocol m_TransportProtocol;
+
+	State State;
+	SOCKET Handle;
+	TransportProtocol Protocol;
 };
 
 
@@ -103,14 +107,13 @@ class Socketv4 : public Socket
 public:
 	Socketv4() : Socket() {}
 	Socketv4(TransportProtocol tpproto, SOCKET socket) : Socket(tpproto, socket) {}
-	~Socketv4() override = default;
 
 	// 반환값 성공시 0
 	//		 실패시 SOCKET_ERROR, WSAGetLastError()로 확인
-	int Bind(const IPv4EndPoint& ipv4EndPoint) const;
-	int BindAny() const;
+	int Bind(const IPv4EndPoint& ipv4EndPoint);
+	int BindAny();
 
-	int Listen(int connectionWaitingQueueSize = 15) const;
+	int Listen(int connectionWaitingQueueSize = 15);
 
 	Socketv4 Accept();
 
@@ -170,7 +173,7 @@ public:
 	IPv4EndPoint GetLocalEndPoint() const;
 	IPv4EndPoint GetRemoteEndPoint() const;
 
-	TransportProtocol GetTransportProtocol() const { return m_TransportProtocol; }
+	TransportProtocol GetTransportProtocol() const { return Protocol; }
 	static InternetProtocol GetInternetProtocol() { return InternetProtocol::IPv4; }
 };
 

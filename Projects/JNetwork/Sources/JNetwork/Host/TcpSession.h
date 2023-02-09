@@ -20,15 +20,18 @@ public:
 
 	void NotifyCommand(ICommand* cmd) override;
 
+	void Initialize() override;
 	void Connected() override;
 	void Disconnected() override;
 	bool AcceptAsync();
-	void AcceptWait();													// 미리 생성된 TcpSession이 AcceptEx를 호출하기 직전에 호출될 함수 - 연결 수락 대기상태
-	bool Accepted(Int32UL receivedBytes);		// 서버가 해당세션의 연결을 수락시 최종적으로 호출될 함수
+	void AcceptWait();
+	bool Accepted(Int32UL receivedBytes);
 	void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) override;
+	Type GetType() const override { return eSession; }
 private:
 	TcpServer* m_pServer;
 };
 
+using TcpSessionPtr = JCore::SharedPtr<TcpSession>;
 
 NS_JNET_END

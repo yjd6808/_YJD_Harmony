@@ -24,7 +24,7 @@ IOCPOverlappedSendTo::IOCPOverlappedSendTo(UdpClient* sender, IOCP* iocp, ISendP
 IOCPOverlappedSendTo::~IOCPOverlappedSendTo() = default;
 
 void IOCPOverlappedSendTo::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	const SOCKET hSentSock = m_pSender->Socket().Handle();
+	const SOCKET hSentSock = m_pSender->SocketHandle();
 
 	if (IsFailed(hSentSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
 		return;

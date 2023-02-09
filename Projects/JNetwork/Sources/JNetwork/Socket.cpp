@@ -24,7 +24,7 @@ NS_JNET_BEGIN
 
 		{
 			Int32UL dwBytes;
-			int iResult = WSAIoctl(dummySock.Handle(), SIO_GET_EXTENSION_FUNCTION_POINTER,
+			int iResult = WSAIoctl(dummySock.Handle, SIO_GET_EXTENSION_FUNCTION_POINTER,
 				&id, sizeof(id),
 				ppfn, sizeof(LPFN),
 				&dwBytes, NULL, NULL);
@@ -76,16 +76,34 @@ NS_JNET_BEGIN
 							Socket
 =======================================================================================*/
 
+Socket::Socket()
+	: State(eInitialized)
+	, Handle(INVALID_SOCKET)
+	, Protocol(TransportProtocol::None)
+{}
+
+Socket::Socket(TransportProtocol tpproto, SOCKET socket)
+	: Handle(socket)
+	, State(eInitialized)
+	, Protocol(tpproto)
+{}
+
+void Socket::Invalidate() {
+	Protocol = TransportProtocol::None;
+	Handle = INVALID_SOCKET;
+	State = eInitialized;
+}
+
 int Socket::ShutdownBoth() const {
-	return shutdown(m_Socket, SD_BOTH);
+	return shutdown(Handle, SD_BOTH);
 }
 
 int Socket::ShutdownWrite() const {
-	return shutdown(m_Socket, SD_SEND);
+	return shutdown(Handle, SD_SEND);
 }
 
 int Socket::ShutdownRead() const {
-	return shutdown(m_Socket, SD_RECEIVE);
+	return shutdown(Handle, SD_RECEIVE);
 }
 
 int Socket::Close() {
@@ -93,10 +111,10 @@ int Socket::Close() {
 	if (!IsValid())
 		return 0;
 
-	const int ret = closesocket(m_Socket);
+	const int ret = closesocket(Handle);
 
 	if (ret == 0) {
-		m_Socket = INVALID_SOCKET;
+		Handle = INVALID_SOCKET;
 	}
 
 	return ret;
@@ -137,25 +155,36 @@ Socketv6 Socket::CreateV6(TransportProtocol tpproto, bool overlapped) {
 							Socketv4
 =======================================================================================*/
 
-int Socketv4::Bind(const IPv4EndPoint& ipv4EndPoint) const {
+int Socketv4::Bind(const IPv4EndPoint& ipv4EndPoint) {
 	SOCKADDR_IN addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
 	addr.sin_addr.S_un.S_addr = ByteOrder::HostToNetwork(ipv4EndPoint.GetAddress().GetAddress());
-	return bind(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
+
+	int iBindRet = bind(Handle, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
+	if (iBindRet == 0) {
+		State = eBinded;
+	}
+	return iBindRet;
 }
 
-int Socketv4::BindAny() const {
+int Socketv4::BindAny() {
 	return Bind({IPv4Address::Any(), 0});
 }
 
-int Socketv4::Listen(int connectionWaitingQueueSize) const {
-	
-	return listen(m_Socket, connectionWaitingQueueSize);
+int Socketv4::Listen(int connectionWaitingQueueSize) {
+
+	int iListenRet = listen(Handle, connectionWaitingQueueSize);
+
+	if (iListenRet == 0) {
+		State = eListen;
+	}
+
+	return iListenRet;
 }
 
 Socketv4 Socketv4::Accept() {
-	return { this->m_TransportProtocol, accept(m_Socket, nullptr, nullptr) };
+	return { this->Protocol, accept(Handle, nullptr, nullptr) };
 }
 
 int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ Int32UL* receivedBytes, LPOVERLAPPED overlapped) const {
@@ -178,7 +207,7 @@ int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveD
 	
 
 	return ::AcceptEx(listenSocket,
-		m_Socket, 
+		Handle, 
 		outputBuffer,
 		receiveDatalen,
 		sizeof(SOCKADDR_IN) + 16, 
@@ -234,7 +263,7 @@ int Socketv4::Connect(const IPv4EndPoint& ipv4EndPoint) const {
 	addr.sin_family = AF_INET;
 	addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
 	addr.sin_addr.S_un.S_addr = ByteOrder::HostToNetwork(ipv4EndPoint.GetAddress().GetAddress());
-	return connect(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
+	return connect(Handle, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
 }
 
 
@@ -264,20 +293,20 @@ int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlappe
 	addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
 	addr.sin_addr.S_un.S_addr = ByteOrder::HostToNetwork(ipv4EndPoint.GetAddress().GetAddress());
 	DebugAssertMsg(lpfnConnectEx != nullptr, "ConnectEx 함수를 사용할려면 먼저 UseConnectEx를 호출해주세요");
-	DebugAssertMsg(m_TransportProtocol == TransportProtocol::TCP, "커넥션 오리엔티드 소켓만 사용가능합니다.");
-	return lpfnConnectEx(m_Socket, (sockaddr*)&addr, sizeof(SOCKADDR_IN), sendbuf, sendbufSize, sentBytes, overlapped);
+	DebugAssertMsg(Protocol == TransportProtocol::TCP, "커넥션 오리엔티드 소켓만 사용가능합니다.");
+	return lpfnConnectEx(Handle, (sockaddr*)&addr, sizeof(SOCKADDR_IN), sendbuf, sendbufSize, sentBytes, overlapped);
 }
 
 // @참고: https://learn.microsoft.com/en-us/windows/win32/api/mswsock/nc-mswsock-lpfn_connectex
 // 커넥션 오리엔티드 소켓만 사용가능
 int Socketv4::DisconnectEx(LPOVERLAPPED overlapped, Int32UL flag) {
 	DebugAssertMsg(lpfnDisconnectEx != nullptr, "DisconnectEx 함수를 사용할려면 먼저 UseDisconnectEx를 호출해주세요");
-	DebugAssertMsg(m_TransportProtocol == TransportProtocol::TCP, "커넥션 오리엔티드 소켓만 사용가능합니다.");
-	return lpfnDisconnectEx(m_Socket, overlapped, flag, 0);
+	DebugAssertMsg(Protocol == TransportProtocol::TCP, "커넥션 오리엔티드 소켓만 사용가능합니다.");
+	return lpfnDisconnectEx(Handle, overlapped, flag, 0);
 }
 
 int Socketv4::Send(char* buff, Int32U len, Int32U flag) const {
-	return send(m_Socket, buff, len, flag);
+	return send(Handle, buff, len, flag);
 }
 
 int Socketv4::SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag) const {
@@ -285,17 +314,17 @@ int Socketv4::SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, I
 	addr.sin_family = AF_INET;
 	addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
 	addr.sin_addr.S_un.S_addr = ByteOrder::HostToNetwork(ipv4EndPoint.GetAddress().GetAddress());
-	return sendto(m_Socket, buff, len, flag, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
+	return sendto(Handle, buff, len, flag, (sockaddr*)&addr, sizeof(SOCKADDR_IN));
 }
 
 int Socketv4::Receive(char* buff, Int32U buffSize, Int32U flag) const {
-	return recv(m_Socket, buff, buffSize, flag);
+	return recv(Handle, buff, buffSize, flag);
 }
 
 int Socketv4::ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag) const {
 	SOCKADDR_IN addr;
 	int sz = sizeof(SOCKADDR_IN);
-	const int recvBytes = recvfrom(m_Socket, buff, buffSize, flag, (sockaddr*)&addr, &sz);
+	const int recvBytes = recvfrom(Handle, buff, buffSize, flag, (sockaddr*)&addr, &sz);
 
 	*ipv4EndPoint = IPv4EndPoint{ addr };
 	return recvBytes;
@@ -308,7 +337,7 @@ int Socketv4::SendEx(
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, 
 	Int32U flag) const
 {
-	return WSASend(m_Socket, lpBuf, 1, pBytesSent, flag, lpOverlapped, lpCompRoutine);
+	return WSASend(Handle, lpBuf, 1, pBytesSent, flag, lpOverlapped, lpCompRoutine);
 }
 
 int Socketv4::SendToEx(
@@ -322,7 +351,7 @@ int Socketv4::SendToEx(
 	addr.sin_family = AF_INET;
 	addr.sin_port = ByteOrder::HostToNetwork(to.GetPort());
 	addr.sin_addr.S_un.S_addr = ByteOrder::HostToNetwork(to.GetAddress().GetAddress());
-	return WSASendTo(m_Socket, lpBuffers, 1, pBytesSent, 0, (sockaddr*)&addr, sizeof(SOCKADDR_IN), lpOverlapped, lpCompRoutine);
+	return WSASendTo(Handle, lpBuffers, 1, pBytesSent, 0, (sockaddr*)&addr, sizeof(SOCKADDR_IN), lpOverlapped, lpCompRoutine);
 }
 
 int Socketv4::ReceiveEx(
@@ -332,7 +361,7 @@ int Socketv4::ReceiveEx(
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, 
 	Int32U flag) const
 {
-	return WSARecv(m_Socket, lpBuf, 1, pBytesReceived, (Int32UL*)&flag, lpOverlapped, lpCompRoutine);
+	return WSARecv(Handle, lpBuf, 1, pBytesReceived, (Int32UL*)&flag, lpOverlapped, lpCompRoutine);
 }
 
 int Socketv4::ReceiveFromEx(
@@ -344,7 +373,7 @@ int Socketv4::ReceiveFromEx(
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, 
 	Int32U flag) const
 {
-	return WSARecvFrom(m_Socket, lpBuf, 1, pBytesReceived, (Int32UL*)&flag, (sockaddr*)remoteAddr, addrLen, lpOverlapped, nullptr);
+	return WSARecvFrom(Handle, lpBuf, 1, pBytesReceived, (Int32UL*)&flag, (sockaddr*)remoteAddr, addrLen, lpOverlapped, lpCompRoutine);
 }
 
 IPv4EndPoint Socketv4::GetLocalEndPoint() const {
@@ -352,7 +381,7 @@ IPv4EndPoint Socketv4::GetLocalEndPoint() const {
 	int size = sizeof(SOCKADDR_IN);
 	ZeroMemory(&addr, sizeof(SOCKADDR_IN));
 
-	if (getsockname(m_Socket, (SOCKADDR*)&addr, &size) != SOCKET_ERROR) {
+	if (getsockname(Handle, (SOCKADDR*)&addr, &size) != SOCKET_ERROR) {
 		return IPv4EndPoint{ addr };
 	}
 
@@ -364,7 +393,7 @@ IPv4EndPoint Socketv4::GetRemoteEndPoint() const {
 	int size = sizeof(SOCKADDR_IN);
 	ZeroMemory(&addr, sizeof(SOCKADDR_IN));
 
-	if (getpeername(m_Socket, (SOCKADDR*)&addr, &size) != SOCKET_ERROR) {
+	if (getpeername(Handle, (SOCKADDR*)&addr, &size) != SOCKET_ERROR) {
 		return IPv4EndPoint{ addr };
 	}
 
@@ -539,5 +568,7 @@ int SocketOption::IsKeepAliveEnabled() const {
 
 	return op != FALSE ? TRUE : FALSE;
 }
+
+
 
 NS_JNET_END

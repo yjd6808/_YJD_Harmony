@@ -1,24 +1,21 @@
 /*
  *	작성자 : 윤정도
- *	TCP, UDP 세션들의 공통기능 정의
+ *	TCP, UDP 세션/클라 들의 공통기능 정의
  */
 
 #pragma once
 
 
-#include <JNetwork/Host/Listener/TcpServerEventListener.h>
-#include <JNetwork/Host/SessionState.h>
+#include <JNetwork/Host/Host.h>
+#include <JNetwork/EventListener/TcpServerEventListener.h>
 
-#include <JNetwork/IOCPOverlapped/IOCPOverlapped.h>
-
-#include <JNetwork/Socket.h>
 #include <JNetwork/Buffer/BufferAbstract.h>
 
 
 NS_JNET_BEGIN
 
 class IOCPOverlapped;
-class Session
+class JCORE_NOVTABLE Session : public Host
 {
 public:
 	Session(const IOCPPtr& iocp, int recvBufferSize, int sendBufferSize);
@@ -28,42 +25,39 @@ public:
 	IPv4EndPoint GetRemoteEndPoint() const { return m_RemoteEndPoint; }
 	BufferAbstractPtr GetRecvBuffer() { return m_pRecvBuffer; }
 	BufferAbstractPtr GetSendBuffer() { return m_pSendBuffer; }
-	const Socketv4& Socket() const { return m_Socket; }
 
+	void Initialize() override;
 	bool Bind(const IPv4EndPoint& bindAddr);
-	bool ConnectIocp();
 	bool Connect(const IPv4EndPoint& remoteAddr);
 	bool Disconnect();
 	bool SendAsync(ISendPacket* packet);
 	bool RecvAsync();
-	bool CreateSocket(TransportProtocol protocol);
 
-	virtual void	ReuseInitialize();
-	virtual void	Connected() = 0;
-	virtual void	Disconnected() = 0;
-	virtual void	Received(Int32UL receivedBytes);						
-	virtual void	Sent(ISendPacket* sentPacket, Int32UL receivedBytes) = 0;
+	virtual void Connected() = 0;
+	virtual void Disconnected() = 0;
+	virtual void Received(Int32UL receivedBytes);						
+	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) = 0;
+	virtual void NotifyCommand(ICommand* cmd) = 0;
 
-	virtual void	NotifyCommand(ICommand* cmd) = 0;
-
-	SessionState	GetSessionState() { return m_eSessionState; }
-
+	void AddPendingCount()		{ ++m_iOveralappedPendingCount;		}
+	void DecreasePendingCount()	{ --m_iOveralappedPendingCount;		}
+	int  GetPendingCount()		{ return m_iOveralappedPendingCount;	}
+	void WaitForZeroPending();
 protected:
+	JCore::AtomicInt m_iOveralappedPendingCount;
+
 	BufferAbstractPtr m_pRecvBuffer;
 	BufferAbstractPtr m_pSendBuffer;
 
-	IOCPPtr m_spIocp;
-	Socketv4 m_Socket;
-	SessionState m_eSessionState;
 	IPv4EndPoint m_LocalEndPoint;
 	IPv4EndPoint m_RemoteEndPoint;
-
-	bool m_bIocpConneced;
 
 	friend class IOCPOverlappedAccept;
 	friend class IOCPOverlappedConnect;
 	friend class IOCPOverlappedRecv;
 	friend class IOCPOverlappedSend;
 };
+
+using SessionPtr = JCore::SharedPtr<Session>;
 
 NS_JNET_END

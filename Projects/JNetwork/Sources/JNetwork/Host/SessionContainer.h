@@ -6,13 +6,13 @@
 #pragma once
 
 #include <JCore/Container/HashMap.h>
-#include <JCore/Sync/NormalLock.h>
+#include <JCore/Container/ArrayStack.h>
 
+#include <JCore/Sync/NormalLock.h>
 #include <JNetwork/Host/Session.h>
 
 NS_JNET_BEGIN
 
-class TcpServer;
 class SessionContainer
 {
 public:
@@ -28,9 +28,8 @@ public:
 private:
 	int m_iMaxConnection;
 	JCore::NormalLock m_ContainerLock;
-	JCore::HashMap<SOCKET, Session*> m_Container;
-
-	friend class TcpServer;
+	JCore::HashMap<SOCKET, Session*> m_hAllSession;
+	JCore::ArrayStack<Session*> m_qReuseSessions;
 };
 
 NS_JNET_END

@@ -19,7 +19,7 @@ IOCPOverlappedSend::IOCPOverlappedSend(Session* session, IOCP* iocp, ISendPacket
 IOCPOverlappedSend::~IOCPOverlappedSend() = default;
 
 void IOCPOverlappedSend::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	const SOCKET hSentSock = m_pSender->Socket().Handle();
+	const SOCKET hSentSock = m_pSender->SocketHandle();
 
 	if (IsFailed(hSentSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
 		m_pSender->Disconnect();

@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\JNetwork\Host\Host.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Host\TcpClient.cpp" />
     <ClCompile Include="..\Sources\JNetwork\Host\Session.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -81,6 +85,10 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\IPAddress.cpp" />
     <ClCompile Include="..\Sources\JNetwork\IPEndPoint.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\NetMaster.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Network.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -114,12 +122,13 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\ByteOrder.h" />
-    <ClInclude Include="..\Sources\JNetwork\Host\Listener\ClientEventListener.h">
+    <ClInclude Include="..\Sources\JNetwork\EventListener\ClientEventListener.h" />
+    <ClInclude Include="..\Sources\JNetwork\EventListener\SessionEventListener.h" />
+    <ClInclude Include="..\Sources\JNetwork\EventListener\TcpServerEventListener.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\Host.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\Listener\SessionEventListener.h" />
-    <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpServerEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Server.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -127,7 +136,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\Session.h" />
-    <ClInclude Include="..\Sources\JNetwork\Host\SessionState.h">
+    <ClInclude Include="..\Sources\JNetwork\Host\State.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -204,6 +213,10 @@
     <ClInclude Include="..\Sources\JNetwork\IPEndPoint.h" />
     <ClInclude Include="..\Sources\JNetwork\IPAddress.h" />
     <ClInclude Include="..\Sources\JNetwork\Namespace.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\NetMaster.h">
       <SubType>
       </SubType>
     </ClInclude>

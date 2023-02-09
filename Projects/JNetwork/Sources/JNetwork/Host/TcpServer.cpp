@@ -11,33 +11,34 @@
 
 NS_JNET_BEGIN
 
-TcpServer::TcpServer(TcpServerEventListener* eventListener, int sessionSendBufferSize, int sessionRecvBufferSize, int maxConn)
-	: m_pEventListener(eventListener)
-	, m_iSessionSendBufferSize(sessionSendBufferSize)
+TcpServer::TcpServer(
+	const IOCPPtr& iocp, 
+	TcpServerEventListener* eventListener, 
+	int sessionRecvBufferSize, 
+	int sessionSendBufferSize, 
+	int maxConn
+)
+	: Server(iocp)
+	, m_pEventListener(eventListener)
 	, m_iSessionRecvBufferSize(sessionRecvBufferSize)
+	, m_iSessionSendBufferSize(sessionSendBufferSize)
 	, m_pContainer(new SessionContainer(maxConn))
-	, m_spIocp(JCore::MakeShared<IOCP>())
 {
+	TcpServer::Initialize();
 }
 
 TcpServer::~TcpServer() {
+	TcpServer::Stop();
 	DeleteSafe(m_pContainer);
 }
 
-int TcpServer::IocpThreadCount() const {
-	// 기본적으로 쓰레드 개수만큼 생성하도록 하자.
-	// dwNumberOfProcessors 이름땜에 코어 갯수로 착각하기 쉬운데 CPU 쓰레드 갯수라고 한다.
-	SYSTEM_INFO info;
-	GetSystemInfo(&info);
-	return (int)info.dwNumberOfProcessors; 
-}
 
 void TcpServer::SessionDisconnected(TcpSession* session) {
 	m_pEventListener->OnDisconnected(session);
 }
 
-void TcpServer::SessionAccepted(TcpSession* session) {
-	m_pEventListener->OnAccepted(session);
+void TcpServer::SessionConnected(TcpSession* session) {
+	m_pEventListener->OnConnected(session);
 }
 
 void TcpServer::SessionSent(TcpSession* session, ISendPacket* sentPacket, Int32UL receivedBytes) {
@@ -48,63 +49,41 @@ void TcpServer::SessionReceived(TcpSession* session, ICommand* command) {
 	m_pEventListener->OnReceived(session, command);
 }
 
+void TcpServer::Initialize() {
+
+	if (CreateSocket(TransportProtocol::TCP) == false) {
+		DebugAssertMsg(false, "TCP 서버 소켓 생성 실패");
+	}
+
+	if (ConnectIocp() == false) {
+		DebugAssertMsg(false, "TCP 서버 IOCP 연결 실패");
+	}
+
+	m_eState = eInitailized;
+}
+
+
 
 bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
-	if (m_eState == State::Running) {
+	if (m_eState != eInitailized) {
+		DebugAssertMsg(false, "서버가 초기화 상태여야 시작할 수 있습니다.");
 		return false;
 	}
+	
 
-	if (!Winsock::IsInitialized()) {
-		DebugAssertMsg(false, "윈속 초기화를 먼저 해주세요. Winsock::Initialize()");
-		return false;
-	}
-
-	if (m_pEventListener == nullptr) {
-		DebugAssertMsg(false, "이벤트 리스너를 설정해주세요.");
-		return false;
-	}
-
-
-	m_ServerSocket = Socket::CreateTcpV4(true);
-
-	if (!m_ServerSocket.IsValid()) {
-		DebugAssertMsg(false, "서버 소켓 Create 실패");
-		return false;
-	}
-
-	if (m_ServerSocket.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR) {
+	if (m_Socket.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR) {
 		DebugAssertMsg(false, "서버 소켓 SetReuseAddrEnabled(true) 실패");
 	}
 
-	if (m_ServerSocket.Bind(localEndPoint) == SOCKET_ERROR) {
+	if (m_Socket.Bind(localEndPoint) == SOCKET_ERROR) {
 		DebugAssertMsg(false, "서버 소켓 Bind 실패");
 		return false;
 	}
 
-	if (m_ServerSocket.Listen() == SOCKET_ERROR) {
+	if (m_Socket.Listen() == SOCKET_ERROR) {
 		DebugAssertMsg(false, "서버 소켓 Listen 실패");
 		return false;
 	}
-
-	if (m_ServerSocket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
-		DebugAssertMsg(false, "서버 소켓 SetNonBlockingEnabled(true) 실패");
-	}
-
-	if (m_spIocp->Create(IocpThreadCount()) == false) {
-		DebugAssertMsg(false, "서버 IOCP 생성 실패");
-		return false;
-	}
-
-	// https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
-	// AcceptEx 사용시 리슨 소켓을 IOCP와 연결해줘야 클라이언트 접속을 통보받을 수 있다.
-	if (m_spIocp->Connect(reinterpret_cast<WinHandle>(m_ServerSocket.Handle()), NULL) == false) {
-		DebugAssertMsg(false, "서버소켓을 IOCP에 연결하는데 실패하였습니다.");
-		return false;
-	}
-
-	
-	m_spIocp->Run();	// IOCP 워커 쓰레드 실행
-	m_pContainer->Clear();
 
 	// 세션을 미리 생성해놓고 연결 대기 상태로 둠
 	for (int i = 0; i < MaxConnection(); i++) {
@@ -120,50 +99,32 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 
 
 	m_pEventListener->OnStarted();
-	return bool(m_eState = State::Running);
+	return bool(m_eState = eListening);
 }
 
-// [안전한 서버 종료를 수행하기 위한 정도의 생각 흐름]
-// 1. 세션의 연결을 모두 끊어준다.
-//   --> 오버랩들이 모두 실패로 빠져나올 것이다. 즉, IOCP에서 대기중인 Pending I/O들이 하나씩 완료되면서 IOCP에 정의된 PendingCount를 1씩 줄여줄 것이다.
-//   --> 이때 만약 서버 종료를 수행하는 main 쓰레드에서 m_pIocp->Join을 수행해버리면 곧바로 반복문을 빠져 나와서 처리 되어야할 I/O들이 무시된다.
-// 2. 그래서 Pending 상태인 Overlapped I/O의 갯수를 확인해서 이 오버랩들이 모두 동적할당이 해제되어 IOCP의 PendingCount가 0이 될때까지 기다린다.
-// 3. Pending I/O들이 모두 처리 되었다. 하지만 아직 IOCP 핸들과 서버 소켓은 연결되어있고 해제된 것이 아니므로 GetQueuedCompletionStatus에서 대기중인 상태가 된다.
-// 4. 이때 m_pIocp->Join()으로 PostQueuedCompletionStatus로 워커 쓰레드의 반복문을 빠져나와라고 명령을 보낸다.
-// 5. 이제 안전하게 IOCP 핸들을 해제해준다.
-// 6. 서버 소켓도 안전하게 닫아준다.
-// 7. 컨테이너의 세션들을 모두 정리해준다.
+
 bool TcpServer::Stop() {
-	m_pContainer->DisconnectAllSessions();	// 세션들을 정리해주자. 이걸 iocp join보다 먼저하면 GetQueuedCompletionStatus에서 995번에러를 뱉음 (I/O operation has been aborted)
 
-	
-	// PendingCount가 0이 될때까지 기다린다. (Busy Waiting)
-	while (m_spIocp->GetPendingCount() != 0) {
-	}
+	if (m_eState == eStopped)
+		return true;
 
-	// 워커 쓰레드들에게 Post I/O를 전달해서 워커 쓰레드가 joinable 상태가 되도록 반복문을 탈출시켜주자
-	m_spIocp->Join();
+	// 강종 진행: GetQueuedCompletionStatus에서 995번에러를 뱉음(I / O operation has been aborted)
+	m_pContainer->DisconnectAllSessions();
 
-	// IOCP 핸들을 해제해주자.
-	if (m_spIocp->Destroy() == false) {
-		DebugAssertMsg(false, "IOCP 삭제에 실패하였습니다.");
-		return false;
-	}
-
-	// 서버 소켓을 닫아주자.
-	if (m_ServerSocket.Close() == SOCKET_ERROR) {
+	if (m_Socket.Close() == SOCKET_ERROR) {
 		DebugAssertMsg(false, "서버 소켓을 닫는데 실패하였습니다.");
 		return false;
 	}
+	m_Socket.Invalidate();
 
 	// 동적할당된 세션들을 모두 해제해주자.
 	m_pContainer->Clear();
 
-	// [[[ 서버 완벽 중지 ]]]
-	m_eState = State::Stopped;
+	m_eState = eStopped;
 	m_pEventListener->OnStopped();
 	return true;
 }
+
 
 
 NS_JNET_END

@@ -79,14 +79,12 @@ IPv4Address IPv4Address::Parse(const char* hostOrderedAddressString) {
 
 	while (hostOrderedAddressString[addr_idx] != NULL) {
 		if (!IsNumeric(hostOrderedAddressString[addr_idx]) && hostOrderedAddressString[addr_idx] != '.')
-			throw InvalidArgumentException("올바른 IPv4 주소를 전달해주세요. 숫자 또는 점(.)이 아닌 문자가 포함되어 있습니다.");
+			DebugAssertMsg(false, "올바른 IPv4 주소를 전달해주세요. 숫자 또는 점(.)이 아닌 문자가 포함되어 있습니다.");
 
 		if (hostOrderedAddressString[addr_idx] == '.') {
 			temp.Source[temp_idx] = '\0';
 			const int val = atoi(temp.Source);
-			if (val > 255) {
-				throw InvalidArgumentException("올바른 IPv4 주소를 전달해주세요. 255.255.255.255보다 큰 IP 주소입니다.");
-			}
+			DebugAssertMsg(val <= 255, "올바른 IPv4 주소를 전달해주세요. 255.255.255.255보다 큰 IP 주소입니다.");
 			result.m_Addr.Seg[3 - step] = (Byte)val;
 			step++;
 			temp_idx = -1;
@@ -98,17 +96,14 @@ IPv4Address IPv4Address::Parse(const char* hostOrderedAddressString) {
 		temp_idx++;
 	}
 
-	if (step != 3)
-		throw InvalidArgumentException("올바른 IPv4 주소를 전달해주세요. 점(.)이 3개여야 합니다.");
+	DebugAssertMsg(step == 3, "올바른 IPv4 주소를 전달해주세요. 점(.)이 3개여야 합니다.");
 
 	// xxx.xxx.xxx.xxx
 	//             ---
 	// 마지막 xxx에 대한 정보를 정수로 변경함
 	temp.Source[temp_idx] = '\0';
 	const int val = atoi(temp.Source);
-	if (val > 255) {
-		throw InvalidArgumentException("올바른 IPv4 주소를 전달해주세요. 255.255.255.255보다 큰 IP 주소입니다.");
-	}
+	DebugAssertMsg(val <= 255, "올바른 IPv4 주소를 전달해주세요. 255.255.255.255보다 큰 IP 주소입니다.");
 	result.m_Addr.Seg[0] = (Byte)val;
 
 	return result;

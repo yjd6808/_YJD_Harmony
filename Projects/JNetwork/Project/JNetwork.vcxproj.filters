@@ -57,6 +57,10 @@
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecvFrom.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Host\Host.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\NetMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
@@ -107,12 +111,6 @@
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedDisconnect.h">
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\Listener\SessionEventListener.h">
-      <Filter>Host\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\Listener\TcpServerEventListener.h">
-      <Filter>Host\Listener</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Namespace.h" />
     <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAbstract.h">
       <Filter>Buffer</Filter>
@@ -135,11 +133,8 @@
     <ClInclude Include="..\Sources\JNetwork\Buffer\NetBuffer.h">
       <Filter>Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\SessionState.h">
+    <ClInclude Include="..\Sources\JNetwork\Host\State.h">
       <Filter>Host</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\Listener\ClientEventListener.h">
-      <Filter>Host\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\UdpClient.h">
       <Filter>Host</Filter>
@@ -149,6 +144,19 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedRecvFrom.h">
       <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\Host.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\NetMaster.h" />
+    <ClInclude Include="..\Sources\JNetwork\EventListener\SessionEventListener.h">
+      <Filter>EventListener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\EventListener\TcpServerEventListener.h">
+      <Filter>EventListener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\EventListener\ClientEventListener.h">
+      <Filter>EventListener</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -161,14 +169,14 @@
     <Filter Include="IOCPOverlapped">
       <UniqueIdentifier>{d1067032-1442-4f1d-9a8c-7a577b68be80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Host\Listener">
-      <UniqueIdentifier>{ea21f6b0-8056-4e44-b45f-9aa1d81306b0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Packet">
       <UniqueIdentifier>{9e8e93e2-56cf-4941-a5af-677ab1610c42}</UniqueIdentifier>
     </Filter>
     <Filter Include="Buffer">
       <UniqueIdentifier>{0ac9912d-3fa8-4c08-a330-c450b5db4d1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventListener">
+      <UniqueIdentifier>{ea21f6b0-8056-4e44-b45f-9aa1d81306b0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -14,13 +14,15 @@ NS_JNET_BEGIN
 IOCPOverlappedRecvFrom::IOCPOverlappedRecvFrom(UdpClient* client, IOCP* iocp)
 	: IOCPOverlapped(iocp, Type::ReceiveFrom)
 	, m_pReceiver(client)
+	, m_SenderAddr()
+	, m_iAddrLen(sizeof(SOCKADDR_IN))
 {
 }
 
 IOCPOverlappedRecvFrom::~IOCPOverlappedRecvFrom() = default;
 
 void IOCPOverlappedRecvFrom::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	const SOCKET hReceiveSock = m_pReceiver->Socket().Handle();
+	const SOCKET hReceiveSock = m_pReceiver->SocketHandle();
 
 	if (IsFailed(hReceiveSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
 		return;

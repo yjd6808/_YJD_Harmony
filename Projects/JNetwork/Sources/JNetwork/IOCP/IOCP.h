@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <JCore/Primitives/Atomic.h>
 #include <JNetwork/WorkerManager.h>
+
 
 #define IOCP_POST_ORDER_TERMINATE	0x01
 #define IOCP_POST_ORDER_ERROR	   -0x01
@@ -16,20 +16,25 @@ class IOCPWorker;
 class IOCP
 {
 public:
+	enum Type
+	{
+		eIocp,
+		eHostIocp
+	};
+
 	enum class State
 	{
-		Uninitialized,
-		Initialized,
-		Running,
-		Joined,
-		Destroyed
+		eInitialized,
+		eRunning,
+		eJoined,
+		eDestroyed
 	};
 
 public:
-	IOCP();
-	~IOCP();
+	IOCP(int threadCount);
+	virtual ~IOCP();
 
-	bool Create(int threadCount);
+	virtual Type GetType() { return eIocp; }
 	bool Destroy();
 	void Run();
 	void Join();
@@ -37,11 +42,12 @@ public:
 	void AddPendingCount()				{ ++m_iPendingOverlappedCount;}
 	void DecreasePendingCount()			{ --m_iPendingOverlappedCount;}
 	int GetPendingCount()				{ return m_iPendingOverlappedCount;}
+	void WaitForZeroPending();
 
 	bool Connect(WinHandle handle, ULONG_PTR completionKey) const;
 	BOOL GetStatus(Int32UL* numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const;
 	BOOL Post(Int32UL dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const;
-private:
+protected:
 	State m_eState;
 	WinHandle m_hIOCP;
 	Int32UL m_uiThreadCount;

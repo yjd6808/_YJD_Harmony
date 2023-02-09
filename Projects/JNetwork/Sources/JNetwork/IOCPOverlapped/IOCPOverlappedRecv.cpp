@@ -17,7 +17,7 @@ IOCPOverlappedRecv::IOCPOverlappedRecv(Session* session, IOCP* iocp) :
 
 
 void IOCPOverlappedRecv::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
-	const SOCKET hReceiveSock = m_pReceivedSession->Socket().Handle();
+	const SOCKET hReceiveSock = m_pReceivedSession->SocketHandle();
 
 	if (IsFailed(hReceiveSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
 		m_pReceivedSession->Disconnect();
