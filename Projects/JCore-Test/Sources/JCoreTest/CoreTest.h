@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	PCH 파일입니다.
 */
@@ -61,9 +61,7 @@ using namespace JCore;
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-	#define TEST_PathTest                    ON
-#define TEST_WaitHandleTest ON
-#define TEST_VectorTest ON
+	#define TEST_AtomicTest                    ON
 #endif
 
 #if TestEnabled == ON

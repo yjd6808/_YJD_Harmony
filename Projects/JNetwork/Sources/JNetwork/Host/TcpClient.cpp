@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -6,7 +6,9 @@
 #include <JNetwork/Winsock.h>
 
 #include <JNetwork/Host/TcpClient.h>
-#include <JNetwork/Packet/Packet.h>
+
+#include <JNetwork/Packet/SendPacket.h>
+#include <JNetwork/Packet/RecvPacket.h>
 
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedConnect.h>
 

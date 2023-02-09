@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/6/2022 1:57:46 PM
  * =====================
@@ -262,8 +262,7 @@ struct Interlocked<TOperand*> final
 {
     // 포인터는 x86, x64 플랫폼에 따라서 32비트, 64비트 정수형으로 각각 강제 형변환해서 사용
     // 딱히 다른 방법은 떠오르지 않는다.
-    inline static constexpr int PtrSize = sizeof(TOperand*);
-    inline static constexpr int PlatformPtrSize = sizeof(TOperand*);
+    static constexpr int PlatformPtrSize = sizeof(TOperand*);
 
     using TOperandPtr = TOperand*;
     using TReinterpretedType = Conditional_t<PlatformPtrSize == 4, Boundary32, Boundary64>;
@@ -272,7 +271,7 @@ struct Interlocked<TOperand*> final
     static TOperand* Add(InOut_ TOperand** destination, In_ int value) {
         return reinterpret_cast<TOperand*>(TInterlocked::Add(
             reinterpret_cast<TReinterpretedType*>(destination), 
-            PtrSize * value));
+            sizeof(TOperand) * value));
     }
 
     static TOperand* CompareExchange(InOut_ TOperand** destination, In_ TOperand* expected, In_ TOperand* desired) {
@@ -288,9 +287,9 @@ struct Interlocked<TOperand*> final
     }
 
     static TOperand* ExchangeAdd(InOut_ TOperand** destination, In_ int value) {
-        return reinterpret_cast<TOperand*>(TInterlocked::Exchange(
+        return reinterpret_cast<TOperand*>(TInterlocked::ExchangeAdd(
             reinterpret_cast<TReinterpretedType*>(destination),
-            PtrSize * value));
+            sizeof(TOperand) * value));
     }
 
 }; // struct Interlocked final

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 디버그모드일때만 assert 실행
  *
@@ -52,8 +52,7 @@ NS_JC_END
         #define DebugAssert(exp)            DebugAssertMsg(exp, "메시지 없음")
 
     #else
-        #define DebugAssertMsg(exp, msg)	(0)
+        #define DebugAssertMsg(exp, ...)	(0)
         #define DebugAssert(exp)            (0)
-		#define DebugAssertFmt(...)			(0)
     #endif
 #endif

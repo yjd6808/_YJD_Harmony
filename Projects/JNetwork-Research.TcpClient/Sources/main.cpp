@@ -1,8 +1,9 @@
-﻿
+
 #include <JNetwork/Network.h>	// JCore.lib 링크, 2. Mswsock.lib 링크, 3. ws2_32.lib 링크
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/TcpClient.h>
-#include <JNetwork/Packet/Packet.h>
+#include <JNetwork/Packet/RecvPacket.h>
+#include <JNetwork/Packet/SendPacket.h>
 
 #include <JCore/Encoding/CodePage.h>
 #include <JCore/Utils/Console.h>

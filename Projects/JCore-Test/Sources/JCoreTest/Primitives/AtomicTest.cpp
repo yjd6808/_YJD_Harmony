@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/8/2022 5:32:07 PM
  * =====================
@@ -148,7 +148,27 @@ TEST(AtomicTest, Pointer) {
     EXPECT_TRUE(a1 == nullptr);
 
     delete orignal;
+
+
+    Model models[500];
+    Model* model1 = models;
+    Atomic<Model*> model2 = models;
+
+    model1 += 1;
+    model2 += 1;
+    EXPECT_TRUE(model1 == model2);
+    model1 += 2;
+    model2 += 2;
+    EXPECT_TRUE(model1 == model2);
+
+    model1->a = 100;
+    model1->b = 100;
+
+    model2 = models;
+
+    EXPECT_TRUE(model2[3].a == 100);
 }
+
 
 
 #endif

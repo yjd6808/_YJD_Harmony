@@ -1,10 +1,10 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
 #include <JNetwork/Network.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedConnect.h>
-#include <JNetwork/Packet/Packet.h>
+#include <JNetwork/Packet/SendPacket.h>
 #include <JNetwork/Host/TcpServer.h>
 
 NS_JNET_BEGIN

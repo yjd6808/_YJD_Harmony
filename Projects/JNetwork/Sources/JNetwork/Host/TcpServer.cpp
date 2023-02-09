@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -35,6 +35,23 @@ TcpServer::~TcpServer() {
 
 void TcpServer::SessionDisconnected(TcpSession* session) {
 	m_pEventListener->OnDisconnected(session);
+
+	// 세션 재사용... 이거땜에 State를 Atomic으로 변경함.
+	// 서버가 다른 쓰레드에서 Stop을 실행하는 순간
+	// IOCP 쓰레드들이 서버의 State를 정확하게 관측하도록 하기위함.
+	// 이렇게 체크한번만 해주면 쓰레드 세이프하게 재사용할 수 있다. (맞겠지?)
+	if (m_eState != eListening) {
+		NetLog("IOCP 서버가 리스닝 상태가 아닙니다. 세션 재사용을 하지 않습니다.\n");
+		return;
+	}
+
+	session->Initialize();
+	session->AcceptWait();
+
+	if (session->AcceptAsync()) {
+		NetLog("세션을 재사용합니다.");
+		return;
+	}
 }
 
 void TcpServer::SessionConnected(TcpSession* session) {
@@ -92,7 +109,9 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 		session->AcceptWait();
 
 		if (!session->AcceptAsync()) {
-			break;
+			m_pContainer->DisconnectAllSessions();
+			m_pContainer->Clear();
+			return false;
 		}
 		m_pContainer->AddSession(session);
 	}
@@ -108,6 +127,11 @@ bool TcpServer::Stop() {
 	if (m_eState == eStopped)
 		return true;
 
+	// 제일먼저 세팅해줘야한다.
+	// 
+	m_eState = eStopped;
+
+
 	// 강종 진행: GetQueuedCompletionStatus에서 995번에러를 뱉음(I / O operation has been aborted)
 	m_pContainer->DisconnectAllSessions();
 
@@ -120,7 +144,7 @@ bool TcpServer::Stop() {
 	// 동적할당된 세션들을 모두 해제해주자.
 	m_pContainer->Clear();
 
-	m_eState = eStopped;
+	
 	m_pEventListener->OnStopped();
 	return true;
 }

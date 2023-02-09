@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 2:33:47 PM
  * =====================
@@ -9,7 +9,9 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/UdpClient.h>
-#include <JNetwork/Packet/Packet.h>
+
+#include <JNetwork/Packet/RecvPacket.h>
+#include <JNetwork/Packet/SendPacket.h>
 
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecvFrom.h>

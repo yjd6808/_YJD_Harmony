@@ -1,9 +1,9 @@
-﻿
+
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Host/TcpServer.h>
-#include <JNetwork/Packet/Packet.h>
-
+#include <JNetwork/Packet/RecvPacket.h>
+#include <JNetwork/Packet/SendPacket.h>
 #include <JCore/Utils/Console.h>
 #include <JCore/Encoding/CodePage.h>
 

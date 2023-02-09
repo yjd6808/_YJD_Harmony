@@ -1,131 +1,51 @@
-﻿/*
- *	작성자 : 윤정도
+/*
+ * 작성자: 윤정도
+ * 생성일: 2/9/2023 7:23:36 PM
+ * =====================
+ * 송신용 패킷
  */
+
 
 #pragma once
 
 #include <JCore/Type.h>
-#include <JCore/Define.h>
 #include <JCore/TypeCast.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/SafeRefCount.h>
 
 #include <WinSock2.h>
 #include <JNetwork/Namespace.h>
+#include <JNetwork/Packet/Command.h>
+
 
 #define PACKET_HEADER_SIZE		4UL		// IPacket  크기
 #define COMMAND_HEADER_SIZE		4UL		// ICommand 크기
 
 NS_JNET_BEGIN
-	
-/*=====================================================================================
-									커맨드 객체
-						 패킷에 커맨드를 담아서 전송한다.
- =====================================================================================*/
 
+ /*=====================================================================================
+								 패킷 객체
+		 1개 이상의 커맨드를 담아서 전송할 수 있도록한다.
+		 템플릿 파라미터로 모두 Command를 상속받은 타입을 전달하도록 해야한다.
+		 (다른 타입은 전달 못하도록 막아놓음)
 
-struct ICommand
-{
-	// 가상 함수 테이블땜에 4바이트씩 먹음; 걍 없앴다.
-	// virtual Int16U GetCommand() const = 0;
-	// virtual Int16U GetCommandLen() const = 0;
-
-	void SetCommand(const Int16U cmd)			{ Cmd = cmd;			}
-	void SetCommandLen(const Int16U cmdlen)		{ CmdLen = cmdlen;		}
-	void AddCommandLen(const Int16U cmdlen)		{ CmdLen += cmdlen;		}
-	Int16U GetCommand() const					{ return this->Cmd;		}
-	Int16U GetCommandLen() const				{ return this->CmdLen;	}
-
-	// ICommand 통틀어서 캐스팅 - ICommand를 상속받은 커스텀 커맨드 전용
-	template <typename T>
-	T CastCommand() {
-		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer command type");
-		return reinterpret_cast<T>(this);
-	}
-
-	// ICommandㄷ를 제외하고 뒷부분만 캐스팅 - Command<T> 전용
-	template <typename T>
-	T CastValue() {
-		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
-		return reinterpret_cast<T>(((char*)this) + sizeof(ICommand));
-	}
-
-protected:
-	Int16U Cmd{};		// 사용자 지정 커맨드 ID값
-	Int16U CmdLen{};	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
-						// ex) Commnad<char>의 CmdLen은 1이 아니고 5임
-};
-
-struct StaticCommand : ICommand {};
-struct DynamicCommand : ICommand {};
-
-// 쓸일은 없겟지만 테스트용도
-template <typename T>
-struct Command : ICommand
-{ 
-	Command() {
-		Cmd		= 0;
-		CmdLen  = sizeof(Command<T>);		// sizeof(T)로 할 경우 alignment 문제 때문에 커맨드길이는 T의 길이까지 포함해서 전송하도록 하자.
-		Value   = T();
-	}
-	Command(const Int16U cmd) {
-		Cmd		= cmd;
-		CmdLen	= sizeof(Command<T>);
-		Value   = T();
-	}
-
-	T Value;
-};
-
-namespace Detail {
-	template<typename T>
-	struct IsStaticCommand : JCore::IntegralConstant<bool, JCore::IsBaseOf_v<StaticCommand, T>> {};
-	template<typename T>
-	struct IsDynamicCommand : JCore::IntegralConstant<bool, JCore::IsBaseOf_v<DynamicCommand, T>> {};
-}
-
-template <typename T>
-constexpr bool IsStaticCommand_v = Detail::IsStaticCommand<T>::Value;
-
-template <typename T>
-constexpr bool IsDynamicCommand_v = Detail::IsDynamicCommand<T>::Value;
-
-
-/*=====================================================================================
-								패킷 객체
-		1개 이상의 커맨드를 담아서 전송할 수 있도록한다.
-		템플릿 파라미터로 모두 Command를 상속받은 타입을 전달하도록 해야한다. 
-		(다른 타입은 전달 못하도록 막아놓음)
-
-		SendAsync()로 패킷을 송신하게 되면 IOCPOverlappedSend에서 해당 패킷을 소멸시키도록 한다.
-
-		
-
-		<---------------------- Session Buffer ----------------------------------->
-		<--- Packet<Command<A>, Command<B>> ----><---  Packet<Command<C>> --->
-		===========================================================================
-	   ISendPacket  |  Command<A>  |  Command<B> | ISendPacket | Command<C>  |
-		===========================================================================
-	    PACKET_HEADER_SIZE      GetPacketLength()
-		       ↓                        ↓
-		       4      sizeof(Command<A>) + sizeof(Command<B>)
-
- =====================================================================================*/
+		 SendAsync()로 패킷을 송신하게 되면 IOCPOverlappedSend에서 해당 패킷을 소멸시키도록 한다.
 
 
 
-// 패킷을 받을 때는 가상 함수 테이블이 없는 구조체로 받자.
-struct IRecvPacket
-{
-	IRecvPacket() = delete;
-	~IRecvPacket() = delete;
+		 <---------------------- Session Buffer ----------------------------------->
+		 <--- Packet<Command<A>, Command<B>> ----><---  Packet<Command<C>> --->
+		 ===========================================================================
+		ISendPacket  |  Command<A>  |  Command<B> | ISendPacket | Command<C>  |
+		 ===========================================================================
+		 PACKET_HEADER_SIZE      GetPacketLength()
+				↓                        ↓
+				4      sizeof(Command<A>) + sizeof(Command<B>)
 
-	Int16U	GetPacketLength() const { return m_iPacketLen;		}
-	Int16U	GetCommandCount() const { return m_iCommandCount;	}
-protected:
-	Int16U m_iCommandCount;
-	Int16U m_iPacketLen;		
-};
+  =====================================================================================*/
+
+
+
 
 
 struct ISendPacket : JCore::SafeRefCount
@@ -179,7 +99,7 @@ public:
 		<------------------ ISendPacket ---------------- >
 		<-- RefCount--> <-------- IRecvPacket ----------->
 		===========================================================================
-		 vfptr | m_Ref | m_iCommandCount | m_iPacketCount | Command<A> | Command<B>
+		 vfptr | m_Ref | m_iCommandCount | m_iPacketLen | Command<A> | Command<B>
 		===========================================================================
 		↑              ↑ <----------------- 전송해줘야하는 구간 ---------------------->
 	   this     this + sizeof(RefCount)
@@ -321,6 +241,5 @@ private:
 	int m_pCommandSizes[CommandCount]{};		// 각 커맨드 길이 임시 기록용
 	char* m_pDynamicBuf;
 };
-
 
 NS_JNET_END

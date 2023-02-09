@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 11:26:19 AM
  * =====================
  *
  */
-
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 
@@ -22,6 +21,16 @@ TcpSession::TcpSession(TcpServer* server, const IOCPPtr& iocp, int recvBufferSiz
 {
 	TcpSession::Initialize();
 }
+
+void TcpSession::Initialize() {
+	Session::Initialize();
+
+
+	if (CreateSocket(TransportProtocol::TCP) == false) {
+		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다.");
+	}
+}
+
 
 bool TcpSession::AcceptAsync() {
 	Int32UL receivedBytes = 0;
@@ -73,14 +82,6 @@ void TcpSession::NotifyCommand(ICommand* cmd) {
 	m_pServer->SessionReceived(this, cmd);
 }
 
-void TcpSession::Initialize() {
-	Session::Initialize();
-
-
-	if (CreateSocket(TransportProtocol::TCP) == false) {
-		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다.");
-	}
-}
 
 void TcpSession::Connected() {
 	m_pServer->SessionConnected(this);

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 6:04:09 PM
  * =====================
@@ -9,7 +9,7 @@
 
 
 #include <JNetwork/Network.h>
-#include <JNetwork/Packet/Packet.h>
+#include <JNetwork/Packet/SendPacket.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
 
 NS_JNET_BEGIN

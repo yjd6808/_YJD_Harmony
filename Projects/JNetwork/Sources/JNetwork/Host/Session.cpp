@@ -1,10 +1,12 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
-#include <JNetwork/Packet/Packet.h>
+
+#include <JNetwork/Packet/RecvPacket.h>
+#include <JNetwork/Packet/SendPacket.h>
 
 #include <JNetwork/Host/Session.h>
 #include <JNetwork/Buffer/StaticBuffer.h>
@@ -71,18 +73,18 @@ bool Session::Disconnect() {
 	if (m_eState == eDisconnected)
 		return true;
 
+	m_eState = eDisconnected;
+	m_bIocpConneced = false;
+
 	// 굳이 오류 처리를 할 필요가 있나
 	// WSAENOTSOCK: 소켓 할당이 안된 
 	// WSAENOTCONN: 연결안된 소켓
-	
-	m_eState = eDisconnected;
-	m_RemoteEndPoint = {};
-
-	m_bIocpConneced = false;
 
 	m_Socket.ShutdownBoth();
 	m_Socket.Close();
 	m_Socket.Invalidate();
+
+	
 
 	Disconnected();
 

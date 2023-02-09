@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/6/2022 3:54:27 PM
  * =====================
@@ -166,13 +166,15 @@ public:
         return ++iResult;
     }
 
-    T* operator+=(int other) { return ExchangeAdd(other) + other; }
-    T* operator-=(int other) { return ExchangeAdd(other * -1) - other; }
+    T* operator+=(int other) { return ExchangeAdd(other) + (sizeof(T) * other); }
+    T* operator-=(int other) { return ExchangeAdd(other * -1) - (sizeof(T) * other); }
 
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
     bool operator==(U other) { return Load() == other; }
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
     bool operator!=(U other) { return Load() != other; }
+
+    T& operator[](const int idx) { return Load()[idx]; }
 private:
     T* m_Value;
 };

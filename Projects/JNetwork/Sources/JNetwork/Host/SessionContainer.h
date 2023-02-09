@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 */
 
@@ -6,7 +6,7 @@
 #pragma once
 
 #include <JCore/Container/HashMap.h>
-#include <JCore/Container/ArrayStack.h>
+#include <JCore/Container/ArrayQueue.h>
 
 #include <JCore/Sync/NormalLock.h>
 #include <JNetwork/Host/Session.h>
@@ -26,10 +26,11 @@ public:
 	void Clear();
 	
 private:
+	bool m_bReuse;
 	int m_iMaxConnection;
 	JCore::NormalLock m_ContainerLock;
 	JCore::HashMap<SOCKET, Session*> m_hAllSession;
-	JCore::ArrayStack<Session*> m_qReuseSessions;
+	JCore::ArrayQueue<Session*> m_qReuseSessions;
 };
 
 NS_JNET_END

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -9,9 +9,10 @@ USING_NS_JC;
 
 NS_JNET_BEGIN
 
-SessionContainer::SessionContainer(int maxSize) : 
-	m_iMaxConnection(maxSize), 
-	m_hAllSession(maxSize) 
+SessionContainer::SessionContainer(int maxSize)
+	: m_iMaxConnection(maxSize)
+	, m_hAllSession(maxSize)
+	, m_bReuse(true)
 {
 }
 

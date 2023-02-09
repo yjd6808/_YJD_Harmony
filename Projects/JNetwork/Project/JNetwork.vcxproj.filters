@@ -45,9 +45,6 @@
     <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedDisconnect.cpp">
       <Filter>IOCPOverlapped</Filter>
     </ClCompile>
-    <ClCompile Include="TcpSession.cpp">
-      <Filter>Host</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Host\UdpClient.cpp">
       <Filter>Host</Filter>
     </ClCompile>
@@ -61,6 +58,9 @@
       <Filter>Host</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\NetMaster.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\Host\TcpSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
@@ -115,9 +115,6 @@
     <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAbstract.h">
       <Filter>Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Packet\Packet.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Buffer\StaticBuffer.h">
       <Filter>Buffer</Filter>
     </ClInclude>
@@ -132,9 +129,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Buffer\NetBuffer.h">
       <Filter>Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\State.h">
-      <Filter>Host</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\UdpClient.h">
       <Filter>Host</Filter>
@@ -157,6 +151,15 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\EventListener\ClientEventListener.h">
       <Filter>EventListener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Packet\SendPacket.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Packet\RecvPacket.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Packet\Command.h">
+      <Filter>Packet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

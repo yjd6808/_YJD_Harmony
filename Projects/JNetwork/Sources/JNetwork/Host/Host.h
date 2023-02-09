@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 1:12:18 PM
  * =====================
@@ -7,6 +7,8 @@
 
 
 #pragma once
+
+
 
 #include <JNetwork/Socket.h>
 #include <JNetwork/IOCP/IOCP.h>
@@ -46,7 +48,7 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual Type GetType() const = 0;
-	State GetState() const { return m_eState; }
+	State GetState() { return (State)m_eState.Load(); }
 	bool CreateSocket(TransportProtocol protocol);
 	bool ConnectIocp();
 	const Socketv4& Socket() const { return m_Socket; }
@@ -54,7 +56,7 @@ public:
 protected:
 	IOCPPtr m_spIocp;
 	Socketv4 m_Socket;
-	State m_eState;
+	JCore::AtomicInt m_eState;
 	bool m_bIocpConneced;
 };
 

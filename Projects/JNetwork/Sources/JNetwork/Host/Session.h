@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  *	TCP, UDP 세션/클라 들의 공통기능 정의
  */
@@ -32,7 +32,7 @@ public:
 	bool Disconnect();
 	bool SendAsync(ISendPacket* packet);
 	bool RecvAsync();
-
+	
 	virtual void Connected() = 0;
 	virtual void Disconnected() = 0;
 	virtual void Received(Int32UL receivedBytes);						
@@ -48,6 +48,7 @@ protected:
 
 	BufferAbstractPtr m_pRecvBuffer;
 	BufferAbstractPtr m_pSendBuffer;
+
 
 	IPv4EndPoint m_LocalEndPoint;
 	IPv4EndPoint m_RemoteEndPoint;
