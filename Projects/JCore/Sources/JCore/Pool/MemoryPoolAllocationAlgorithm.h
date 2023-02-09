@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/13/2022 2:36:50 PM
  * =====================
@@ -22,8 +22,8 @@ enum MemoryPoolAllocationAlgorithm
 	// eFixedSize		// O(?) / 자유롭게 할당가능
 };
 
-NS_DETAIL_BEGIN
-template <MemoryPoolAllocationAlgorithm Algorithm>
-inline constexpr bool IsValidMemoryPoolAllocationAlgorithm = Algorithm >= eBinarySearch && Algorithm <= eMemoryPoolAllocationAlgorithmMax;
-NS_DETAIL_END
+	NS_DETAIL_BEGIN
+	template <MemoryPoolAllocationAlgorithm Algorithm>
+	inline constexpr bool IsValidMemoryPoolAllocationAlgorithm = Algorithm >= eBinarySearch && Algorithm <= eMemoryPoolAllocationAlgorithmMax;
+	NS_DETAIL_END
 NS_JC_END

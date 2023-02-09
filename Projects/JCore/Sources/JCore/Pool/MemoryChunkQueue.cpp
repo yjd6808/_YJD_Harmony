@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/7/2023 6:20:03 PM
  * =====================
@@ -32,8 +32,8 @@ MemoryChunckQueue::~MemoryChunckQueue() {
 void MemoryChunckQueue::Push(void* chunk) {
 	QueueGuard guard(m_Lock);
 	m_ChunkQueue.Push(chunk);
-
-	DebugAssertMsg(FreeCount() <= m_iTotalChunkCount, "알 수 없는 메모리가 스택에 포함되어있는 듯 합니다. Free가 Total보다 많네요...");
+	int iFreeCount = FreeCount();
+	DebugAssertMsg(iFreeCount <= m_iTotalChunkCount, "알 수 없는 메모리가 스택에 포함되어있는 듯 합니다. Free가 Total보다 많네요...");
 }
 
 void* MemoryChunckQueue::Pop(Out_ bool& newAlloc) {

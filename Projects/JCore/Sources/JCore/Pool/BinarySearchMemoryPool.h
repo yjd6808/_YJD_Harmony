@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/7/2023 11:08:00 PM
  * =====================
@@ -128,5 +128,7 @@ public:
 private:
 	MemoryChunckQueue* m_Pool[Detail::MemoryBlockSizeMapSize_v]{};
 };
+
+using BinaryMemoryPoolPtr = SharedPtr<BinarySearchMemoryPool>;
 
 NS_JC_END

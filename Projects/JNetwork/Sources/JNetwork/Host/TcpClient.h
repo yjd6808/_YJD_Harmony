@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -12,7 +12,14 @@ NS_JNET_BEGIN
 class TcpClient : public Session
 {
 public:
-	TcpClient(const IOCPPtr& iocp, ClientEventListener* listener, int sendBufferSize = 6000, int recvBufferSize = 6000);
+	TcpClient(
+		const IOCPPtr& iocp,
+		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
+		ClientEventListener* listener, 
+		int sendBufferSize = 6000, 
+		int recvBufferSize = 6000
+	);
+
 	~TcpClient() override;
 
 	void Initialize() override;

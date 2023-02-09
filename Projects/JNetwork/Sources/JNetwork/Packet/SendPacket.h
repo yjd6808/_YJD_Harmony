@@ -14,12 +14,14 @@
 #include <JCore/SafeRefCount.h>
 
 #include <WinSock2.h>
+
 #include <JNetwork/Namespace.h>
+#include <JNetwork/Buffer/CommandBuffer.h>
 #include <JNetwork/Packet/Command.h>
 
 
-#define PACKET_HEADER_SIZE		4UL		// IPacket  크기
-#define COMMAND_HEADER_SIZE		4UL		// ICommand 크기
+
+
 
 NS_JNET_BEGIN
 
@@ -51,24 +53,30 @@ NS_JNET_BEGIN
 struct ISendPacket : JCore::SafeRefCount
 {
 	ISendPacket() {}
-	ISendPacket(Int16U iCommandCount, Int16U iPacketLen)
+	ISendPacket(CmdCnt_t iCommandCount, PktLen_t iPacketLen)
 		: m_iCommandCount(iCommandCount)
 		, m_iPacketLen(iPacketLen) {
 	}
 
 	~ISendPacket() override = default;
 
-	Int16U	GetPacketLength() const { return m_iPacketLen; }
-	Int16U	GetCommandCount() const { return m_iCommandCount; }
+	PktLen_t	GetPacketLength() const { return m_iPacketLen; }
+	CmdCnt_t	GetCommandCount() const { return m_iCommandCount; }
 	void ReleaseAction() override { delete this; }
 	virtual WSABUF GetWSABuf() const = 0;
 protected:
-	Int16U m_iCommandCount{};
-	Int16U m_iPacketLen{};		// IPacket 크기를 제외한 커맨드들의 총 크기
+	CmdCnt_t m_iCommandCount{};
+	PktLen_t m_iPacketLen{};		// IPacket 크기를 제외한 커맨드들의 총 크기
 								// ICommand의 CmdLen은 헤더 포함이지만 이녀석은 포함안됨
 };
 
 
+
+/*=====================================================================================
+
+								 스태릭 패킷 : 고정크기의 커맨드만 사용
+								 
+  ===================================================================================== */
 template <typename... CommandArgs>
 class StaticPacket : public ISendPacket
 {
@@ -106,7 +114,7 @@ public:
 
 		*/
 		WSABUF wsaBuf;
-		wsaBuf.len = PACKET_HEADER_SIZE + m_iPacketLen;
+		wsaBuf.len = PacketHeaderSize_v + m_iPacketLen;
 		wsaBuf.buf = (char*)this + sizeof(SafeRefCount);
 		return wsaBuf;
 	}
@@ -151,6 +159,11 @@ private:
 };
 
 
+/*=====================================================================================
+
+								 따이나믹 패킷 : 가변크기의 패킷 사용
+
+  ===================================================================================== */
 template <typename... CommandArgs>
 class DynamicPacket : public ISendPacket
 {
@@ -165,7 +178,7 @@ public:
 		const int iPacketLen = (... + sizes);
 		this->m_iPacketLen = iPacketLen;
 		this->m_iCommandCount = CommandCount;
-		this->m_pDynamicBuf = new char[PACKET_HEADER_SIZE + iPacketLen];
+		this->m_pDynamicBuf = new char[PacketHeaderSize_v + iPacketLen];
 
 		InitializeCommandLenRecursive<0>(sizes...);
 	}
@@ -176,11 +189,11 @@ public:
 
 	WSABUF GetWSABuf() const override {
 		// 패킷 상위 4바이트는 패킷 헤더로 사용한다.
-		*(Int16U*)(m_pDynamicBuf + 0) = m_iCommandCount;
-		*(Int16U*)(m_pDynamicBuf + sizeof(Int16U)) = m_iPacketLen;
+		*(CmdCnt_t*)(m_pDynamicBuf + 0) = m_iCommandCount;
+		*(PktLen_t*)(m_pDynamicBuf + sizeof(CmdCnt_t)) = m_iPacketLen;
 
 		WSABUF wsaBuf;
-		wsaBuf.len = PACKET_HEADER_SIZE + m_iPacketLen;
+		wsaBuf.len = PacketHeaderSize_v + m_iPacketLen;
 		wsaBuf.buf = m_pDynamicBuf;
 		return wsaBuf;
 	}
@@ -231,7 +244,7 @@ private:
 
 
 	char* CommandBuf() const {
-		return m_pDynamicBuf + PACKET_HEADER_SIZE; // m_pDynamicBuf의 상위 4바이트는 헤더로 사용하기 때문에
+		return m_pDynamicBuf + PacketHeaderSize_v; // m_pDynamicBuf의 상위 4바이트는 헤더로 사용하기 때문에
 	}
 
 	
@@ -240,6 +253,29 @@ private:
 
 	int m_pCommandSizes[CommandCount]{};		// 각 커맨드 길이 임시 기록용
 	char* m_pDynamicBuf;
+};
+
+/*=====================================================================================
+
+		커맨드버퍼 패킷 : 커맨드만 담긴 버퍼를 패킷으로 감싸는 용도 및 커맨드 버퍼 산소호흡기 느낌
+		 - 버퍼에 레퍼런스 카운트를 추가하면 구조가 깨짐
+		 - 기존 ISendPacket을 활용하고 싶음
+		 - 산소호흡기(ref count)를 부착해서 안정적으로 송신하기 위함
+
+  ===================================================================================== */
+
+
+class CommandBufferPacket : public ISendPacket
+{
+public:
+	CommandBufferPacket(const CommandBufferPtr& buffer);
+
+	WSABUF GetWSABuf() const override {
+		return { (ULONG)m_Buffer->GetWritePos(), m_Buffer->Source() };
+	}
+
+private:
+	CommandBufferPtr m_Buffer;
 };
 
 NS_JNET_END

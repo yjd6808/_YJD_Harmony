@@ -19,7 +19,8 @@ class TcpServer : public Server
 {
 public:
 	TcpServer(
-		const IOCPPtr& iocp, 
+		const IOCPPtr& iocp,
+		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
 		TcpServerEventListener* eventListener, 
 		int sessionRecvBufferSize, 
 		int sessionSendBufferSize, 
@@ -45,6 +46,7 @@ public:
 protected:
 	JCore::Atomic<int> m_iSessionRecvBufferSize;
 	JCore::Atomic<int> m_iSessionSendBufferSize;
+	JCore::MemoryPoolAbstractPtr m_spBufferAllocator;
 
 	TcpServerEventListener* m_pEventListener;
 	SessionContainer* m_pContainer;

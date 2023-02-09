@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 11:23:59 AM
  * =====================
@@ -16,7 +16,13 @@ class TcpServer;
 class TcpSession : public Session
 {
 public:
-	TcpSession(TcpServer* server, const IOCPPtr& iocp, int recvBufferSize, int sendBufferSize);
+	TcpSession(
+		TcpServer* server, 
+		const IOCPPtr& iocp, 
+		const JCore::MemoryPoolAbstractPtr& bufferAllocator, 
+		int recvBufferSize, 
+		int sendBufferSize
+	);
 
 	void NotifyCommand(ICommand* cmd) override;
 

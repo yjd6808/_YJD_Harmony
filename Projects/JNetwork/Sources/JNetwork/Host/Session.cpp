@@ -20,10 +20,16 @@ using namespace JCore;
 
 NS_JNET_BEGIN
 
-Session::Session(const IOCPPtr& iocp, int recvBufferSize, int sendBufferSize)
+Session::Session(
+	const IOCPPtr& iocp, 
+	const JCore::MemoryPoolAbstractPtr& bufferAllocator, 
+	int recvBufferSize, 
+	int sendBufferSize
+)
 	: Host(iocp)
-	, m_pRecvBuffer(MakeShared<StaticBuffer<6000>>())
-	, m_pSendBuffer(MakeShared<StaticBuffer<6000>>()) {
+	, m_spBufferAllocator(bufferAllocator)
+	, m_spRecvBuffer(MakeShared<CommandBuffer>(m_spBufferAllocator, recvBufferSize))
+	, m_spSendBuffer(MakeShared<CommandBuffer>(m_spBufferAllocator, sendBufferSize)) {
 }
 
 Session::~Session() = default;
@@ -35,11 +41,11 @@ void Session::Initialize() {
 	m_LocalEndPoint = {};
 	m_RemoteEndPoint = {};
 
-	m_pRecvBuffer->MoveReadPos(0);
-	m_pRecvBuffer->MoveWritePos(0);
+	m_spRecvBuffer->MoveReadPos(0);
+	m_spRecvBuffer->MoveWritePos(0);
 
-	m_pSendBuffer->MoveReadPos(0);
-	m_pSendBuffer->MoveWritePos(0);
+	m_spSendBuffer->MoveReadPos(0);
+	m_spSendBuffer->MoveWritePos(0);
 
 	m_eState = eInitailized;
 }
@@ -113,9 +119,30 @@ bool Session::SendAsync(ISendPacket* packet) {
 	return true;
 }
 
+void Session::FlushSendBuffer() {
+
+	SessionLockGuard guard(m_SendBufferLock);
+
+	// Alloc이랑 페어인데 단독호출해버리는 경우 방지
+	if (m_spSendBuffer->GetCommandCount() == 0)
+		return;
+
+	CommandBufferPtr spNewSendBuffer = MakeShared<CommandBuffer>(m_spBufferAllocator, m_spSendBuffer->GetBufferRequestSize());
+	CommandBufferPtr spOldSendBuffer = m_spSendBuffer;
+
+	m_spSendBuffer = spNewSendBuffer;
+
+	CommandBufferPacket* pWrappedPacket = new CommandBufferPacket(spOldSendBuffer);
+	
+#ifdef DebugMode
+	DebugAssertMsg(spOldSendBuffer->IsValid(), "무야! 보내고자하는 커맨드 센드 버퍼 데이터가 이상합니다.");
+#endif
+	SendAsync(pWrappedPacket);
+}
+
 bool Session::RecvAsync() {
 
-	WSABUF buf = m_pRecvBuffer->GetRemainBuffer();
+	WSABUF buf = m_spRecvBuffer->GetRemainBuffer();
 	Int32UL uiReceivedBytes = 0;
 	IOCPOverlapped* pOverlapped = new IOCPOverlappedRecv(this, m_spIocp.GetPtr());
 
@@ -133,44 +160,46 @@ bool Session::RecvAsync() {
 
 
 void Session::Received(Int32UL receivedBytes) {
-	m_pRecvBuffer->MoveWritePos(receivedBytes);
+	m_spRecvBuffer->MoveWritePos(receivedBytes);
 
 	
 	for (;;) {
 		// 패킷의 헤더 크기만큼 데이터를 수신하지 않았으면 모일때까지 기달
-		if (m_pRecvBuffer->GetReadableBufferSize() < PACKET_HEADER_SIZE)
+		if (m_spRecvBuffer->GetReadableBufferSize() < PacketHeaderSize_v)
 			return;
 
 		// 패킷 헤더 길이 + 패킷 길이 만큼 수신하지 않았으면 다시 모일때까지 기다린다.
-		const IRecvPacket* packet = m_pRecvBuffer->Peek<IRecvPacket*>();
-		if (m_pRecvBuffer->GetReadableBufferSize() < (PACKET_HEADER_SIZE + packet->GetPacketLength())) {
+		const IRecvPacket* packet = m_spRecvBuffer->Peek<IRecvPacket*>();
+		if (m_spRecvBuffer->GetReadableBufferSize() < (PacketHeaderSize_v + packet->GetPacketLength())) {
 			return;
 		}
 
-		m_pRecvBuffer->MoveReadPos(PACKET_HEADER_SIZE);
+		m_spRecvBuffer->MoveReadPos(PacketHeaderSize_v);
 
 		for (int i = 0; i < packet->GetCommandCount(); i++) {
-			ICommand* pCmd = m_pRecvBuffer->Peek<ICommand*>();
+			ICommand* pCmd = m_spRecvBuffer->Peek<ICommand*>();
 
 			NotifyCommand(pCmd);
 
-			if (m_pRecvBuffer->MoveReadPos(pCmd->GetCommandLen()) == false) {
+			if (m_spRecvBuffer->MoveReadPos(pCmd->GetCommandLen()) == false) {
 				DebugAssertMsg(false, "커맨드 크기가 이상합니다.");
-				m_pRecvBuffer->Clear();
+				m_spRecvBuffer->ResetPosition();
 				return;
 			}
 		}
 
-		if (m_pRecvBuffer->GetReadPos() == m_pRecvBuffer->GetWritePos()) {
+		if (m_spRecvBuffer->GetReadPos() == m_spRecvBuffer->GetWritePos()) {
 			// 만약 수신한 데이터를 모두 읽었으면 포지션을 그냥 0으로 옮긴다.
-			m_pRecvBuffer->Clear();
+			m_spRecvBuffer->ResetPosition();
 		} else {
 			// 읽은 위치만큼은 이제 다시 쓰일일이 없으므로 버퍼를 앞으로 당긴다. 
 			// WritePos 이후로 데이터를 쌓을 수 있도록하기 위해
-			m_pRecvBuffer->Pop(m_pRecvBuffer->GetReadPos(), true);
+			m_spRecvBuffer->Pop(m_spRecvBuffer->GetReadPos(), true);
 		}
 	}
 }
+
+
 
 void Session::WaitForZeroPending() {
 	while (true) {
@@ -181,7 +210,7 @@ void Session::WaitForZeroPending() {
 			break;
 
 		DebugAssertMsg(iPending >= 0, "멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", iPending);
-		JCore::Thread::Sleep(1);
+		JCore::Thread::Sleep(10);
 	}
 }
 

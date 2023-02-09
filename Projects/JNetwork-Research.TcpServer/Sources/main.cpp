@@ -6,7 +6,7 @@
 #include <JNetwork/Packet/SendPacket.h>
 #include <JCore/Utils/Console.h>
 #include <JCore/Encoding/CodePage.h>
-
+#include <JCore/Pool/IndexedMemoryPool.h>
 
 
 USING_NS_JC;
@@ -110,10 +110,10 @@ int main() {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	Winsock::Initialize(2, 2);
 	MyServerEventListener myServerEventListener;
-
+	IndexedMemoryPoolPtr bufferAllocator = MakeShared<IndexedMemoryPool>(true);
 	IOCPPtr iocp = MakeShared<IOCP>(8);
 	iocp->Run();
-	TcpServer server{ iocp, &myServerEventListener, 6000, 6000, 10};
+	TcpServer server{ iocp, bufferAllocator, &myServerEventListener, 6000, 6000, 10};
 
 	// 서버 이벤트 리스너 등록
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/13/2022 12:01:05 AM
  * =====================
@@ -29,7 +29,6 @@
  *
  *
  * ======================================================================
- * TODO: 2번 방식으로 구현 변경
  */
 
 
@@ -110,32 +109,15 @@ public:
 
 	template <int PushSize>
 	void StaticPush(void* memory) {
-		// static_assert(Detail::AllocationLengthMapConverter::ValidateSize<PushSize>());
 		int index = Detail::AllocationLengthMapConverter::ToIndex<PushSize>();
 		AddDeallocated(index);
 		m_Pool[index]->Push(memory);
 	}
 
 	void DynamicPush(void* memory, int returnSize) override {
-		MemoryChunckQueue* pChuckQueue;
-		if (returnSize > LowBoundarySize) {
-			int iReturnIndex = returnSize / BoundarySizeMax - 1;
-			pChuckQueue = m_PoolTargeterHigh->At(iReturnIndex);
-			DebugAssertMsg(pChuckQueue, "해당하는 인덱스의 청크 큐가 없습니다.");
-			pChuckQueue->Push(memory);
-		} else {
-			pChuckQueue = m_PoolTargeterLow->At(returnSize);
-			DebugAssertMsg(pChuckQueue, "해당하는 인덱스의 청크 큐가 없습니다.");
-			pChuckQueue->Push(memory);
-		}
-		DebugAssertMsg(returnSize == pChuckQueue->ChunkSize(), "반환하고자하는 메모리 블록의 사이즈 게산이 잘못되었습니다.");
-
-
-#ifdef DebugMode
-		int iChunkSize = pChuckQueue->ChunkSize();
-		int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iChunkSize);
-		AddDeallocated(iIndex);
-#endif
+		int index = Detail::AllocationLengthMapConverter::ToIndex(returnSize);
+		AddDeallocated(index);
+		m_Pool[index]->Push(memory);
 	}
 
 
@@ -250,7 +232,7 @@ public:
 
 	static constexpr int LowBoundarySize = 1 << LowBoundaryIndex;		// 512		3자리 중 제일 큰 수
 	static constexpr int HighBoundarySize = 1 << HighBoundaryIndex;		// 524'288	6자리 중 제일 큰 수
-	static constexpr int BoundarySizeMax = 1000;							// 3자리수 최대 + 1
+	static constexpr int BoundarySizeMax = 1000;						// 3자리수 최대 + 1
 
 	static constexpr int MaxAllocatableSize = (HighBoundarySize / 1000 - 1) * 1000;	// 최대 할당 가능한 메모리 (523'000)
 private:
@@ -259,6 +241,8 @@ private:
 	MemoryChunkQueueTargetrList* m_PoolTargeterHigh{};
 };
 
+
+using IndexedMemoryPoolPtr = SharedPtr<IndexedMemoryPool>;
 
 NS_JC_END
 

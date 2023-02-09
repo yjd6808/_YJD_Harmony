@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  *
  * 	 ======================================================================
@@ -30,6 +30,13 @@ NS_JNET_BEGIN
 class BufferAbstract
 {
 public:
+	BufferAbstract()
+		: m_pBuffer(nullptr)
+		, m_iBufferSize(0)
+		, m_iReadPos(0)
+		, m_iWritePos(0)
+	{}
+
 	BufferAbstract(char* buffer, int bufferSize)
 		: m_pBuffer(buffer)
 		, m_iBufferSize(bufferSize)
@@ -129,13 +136,15 @@ public:
 	
 	int GetReadPos() const { return m_iReadPos; }
 	int GetWritePos() const { return m_iWritePos; }
-	int GetBufferCapacity() { return m_iBufferSize; }
+	int GetBufferCapacity() const { return m_iBufferSize; }
 	
 
-	void Clear() {
+	void ResetPosition() {
 		m_iWritePos = 0;
 		m_iReadPos = 0;
 	}
+
+	char* Source() { return m_pBuffer; }
 private:
 	bool IsReadable(int size) const {
 		if (m_iReadPos + size > m_iWritePos) {
@@ -152,7 +161,7 @@ private:
 
 		return true;
 	}
-private:
+protected:
 	char* m_pBuffer;
 	int m_iReadPos;
 	int m_iWritePos;

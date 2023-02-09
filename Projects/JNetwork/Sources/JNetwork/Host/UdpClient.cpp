@@ -19,8 +19,14 @@
 NS_JNET_BEGIN
 USING_NS_JC;
 
-UdpClient::UdpClient(const IOCPPtr& iocp, ClientEventListener* listener, int recvBufferSize, int sendBufferSize)
-	: Session(iocp, recvBufferSize, sendBufferSize)
+UdpClient::UdpClient(
+	const IOCPPtr& iocp,
+	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
+	ClientEventListener* listener, 
+	int recvBufferSize, 
+	int sendBufferSize
+)
+	: Session(iocp, bufferAllocator, recvBufferSize, sendBufferSize)
 	, m_pClientEventListener(listener)
 {
 	UdpClient::Initialize();
@@ -48,7 +54,7 @@ bool UdpClient::RecvFromAsync() {
 
 	DebugAssertMsg(m_Socket.IsBinded(), "소켓이 바인딩된 상태여야 수신이 가능합니다. 상대방에게 먼저 송신하여 오토 바인딩해주거나 수동 바인딩을 해주세요.");
 
-	WSABUF buf = m_pRecvBuffer->GetRemainBuffer();
+	WSABUF buf = m_spRecvBuffer->GetRemainBuffer();
 	Int32UL uiReceivedBytes = 0;
 	IOCPOverlappedRecvFrom* pRecvFromOverlapped = new IOCPOverlappedRecvFrom(this, m_spIocp.GetPtr());
 

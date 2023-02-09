@@ -15,8 +15,14 @@
 
 NS_JNET_BEGIN
 
-TcpSession::TcpSession(TcpServer* server, const IOCPPtr& iocp, int recvBufferSize, int sendBufferSize)
-	: Session(iocp, recvBufferSize, sendBufferSize)
+TcpSession::TcpSession(
+	TcpServer* server, 
+	const IOCPPtr& iocp, 
+	const JCore::MemoryPoolAbstractPtr& bufferAllocator, 
+	int recvBufferSize, 
+	int sendBufferSize
+)
+	: Session(iocp, bufferAllocator, recvBufferSize, sendBufferSize)
 	, m_pServer(server)
 {
 	TcpSession::Initialize();
@@ -40,7 +46,7 @@ bool TcpSession::AcceptAsync() {
 
 	if (m_Socket.AcceptEx(
 		hListeningSock,
-		m_pRecvBuffer->GetRemainBuffer().buf,
+		m_spRecvBuffer->GetRemainBuffer().buf,
 		TEST_DUMMY_PACKET_SIZE,	// TcpClient에서 테스트 더미 패킷을 보내기 땜에 8로 세팅
 		&receivedBytes,
 		pOverlapped
@@ -62,7 +68,7 @@ void TcpSession::AcceptWait() {
 }
 
 bool TcpSession::Accepted(Int32UL receivedBytes) {
-	char* pReads = m_pRecvBuffer->Peek<char*>();
+	char* pReads = m_spRecvBuffer->Peek<char*>();
 	// AcceptEx 함수  호출 후 연결된 소켓에 대해서 로컬 주소와 리모트 주소를 가져올 수 있도록 업데이트 해준다.
 	// 이걸 실행하지 않으면 해당 소켓에 바인딩된 로컬 주소와 리모트 주소를 못가져옴
 	//    = getsockname(), getpeername() 안먹힘

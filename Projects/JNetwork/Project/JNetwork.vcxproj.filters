@@ -61,6 +61,12 @@
     <ClCompile Include="..\Sources\JNetwork\Host\TcpSession.cpp">
       <Filter>Host</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Buffer\CommandBuffer.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Packet\SendPacket.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
@@ -124,10 +130,7 @@
     <ClInclude Include="..\Sources\JNetwork\Host\TcpSession.h">
       <Filter>Host</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAllocator.h">
-      <Filter>Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Buffer\NetBuffer.h">
+    <ClInclude Include="..\Sources\JNetwork\Buffer\CommandBuffer.h">
       <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\UdpClient.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Packet\Command.h">
       <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\SessionHelper.h">
+      <Filter>Host</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

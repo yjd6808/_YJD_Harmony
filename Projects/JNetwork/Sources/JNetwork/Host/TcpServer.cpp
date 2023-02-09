@@ -12,16 +12,18 @@
 NS_JNET_BEGIN
 
 TcpServer::TcpServer(
-	const IOCPPtr& iocp, 
+	const IOCPPtr& iocp,
+	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
 	TcpServerEventListener* eventListener, 
 	int sessionRecvBufferSize, 
 	int sessionSendBufferSize, 
 	int maxConn
 )
 	: Server(iocp)
-	, m_pEventListener(eventListener)
 	, m_iSessionRecvBufferSize(sessionRecvBufferSize)
 	, m_iSessionSendBufferSize(sessionSendBufferSize)
+	, m_spBufferAllocator(bufferAllocator)
+	, m_pEventListener(eventListener)
 	, m_pContainer(new SessionContainer(maxConn))
 {
 	TcpServer::Initialize();
@@ -104,7 +106,7 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 
 	// 세션을 미리 생성해놓고 연결 대기 상태로 둠
 	for (int i = 0; i < MaxConnection(); i++) {
-		TcpSession* session = new TcpSession(this, m_spIocp, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
+		TcpSession* session = new TcpSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
 
 		session->AcceptWait();
 

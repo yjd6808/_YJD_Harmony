@@ -16,8 +16,13 @@ using namespace JCore;
 
 NS_JNET_BEGIN
 
-TcpClient::TcpClient(const IOCPPtr& iocp, ClientEventListener* listener, int sendBuffSize, int recvBufferSize)
-	: Session(iocp, sendBuffSize, recvBufferSize)
+TcpClient::TcpClient(
+	const IOCPPtr& iocp,
+	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
+	ClientEventListener* listener,
+	int sendBuffSize, 
+	int recvBufferSize)
+	: Session(iocp, bufferAllocator, sendBuffSize, recvBufferSize)
 	, m_pClientEventListener(listener) {
 
 	TcpClient::Initialize();

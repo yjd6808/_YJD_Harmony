@@ -18,15 +18,29 @@
  =====================================================================================*/
 
 
+
+
+
+// 패킷 헤더
+using CmdCnt_t  = Int16U;
+using PktLen_t  = Int16U;
+
+// 커맨드 헤더
+using Cmd_t		= Int16U;
+using CmdLen_t	= Int16U;
+
 NS_JNET_BEGIN
+
+inline static constexpr int PacketHeaderSize_v = sizeof(CmdCnt_t) + sizeof(PktLen_t);
+inline static constexpr int CommandHeaderSize_v = sizeof(Cmd_t) + sizeof(CmdLen_t);
 
 struct ICommand
 {
-	void SetCommand(const Int16U cmd) { Cmd = cmd; }
-	void SetCommandLen(const Int16U cmdlen) { CmdLen = cmdlen; }
-	void AddCommandLen(const Int16U cmdlen) { CmdLen += cmdlen; }
-	Int16U GetCommand() const { return this->Cmd; }
-	Int16U GetCommandLen() const { return this->CmdLen; }
+	void SetCommand(const Cmd_t cmd) { Cmd = cmd; }
+	void SetCommandLen(const CmdLen_t cmdlen) { CmdLen = cmdlen; }
+	void AddCommandLen(const CmdLen_t cmdlen) { CmdLen += cmdlen; }
+	Cmd_t GetCommand() const { return this->Cmd; }
+	CmdLen_t GetCommandLen() const { return this->CmdLen; }
 
 	// 전체 캐스팅 - 상속받은 커스텀 커맨드 전용
 	template <typename T>
@@ -43,8 +57,8 @@ struct ICommand
 	}
 
 protected:
-	Int16U Cmd{};		// 사용자 지정 커맨드 ID값
-	Int16U CmdLen{};	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
+	Cmd_t	 Cmd{};		// 사용자 지정 커맨드 ID값
+	CmdLen_t CmdLen{};	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
 	// ex) Commnad<char>의 CmdLen은 1이 아니고 5임
 };
 

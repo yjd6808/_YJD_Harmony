@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 2:33:37 PM
  * =====================
@@ -20,7 +20,8 @@ class UdpClient : public Session
 {
 public:
 	UdpClient(
-		const IOCPPtr& iocp, 
+		const IOCPPtr& iocp,
+		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
 		ClientEventListener* listener,
 		int recvBufferSize = 6000,
 		int sendBufferSize = 6000 

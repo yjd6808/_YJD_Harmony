@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\JNetwork\Buffer\CommandBuffer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Host\Host.cpp">
       <SubType>
       </SubType>
@@ -96,6 +100,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Packet\SendPacket.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Socket.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -106,11 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAbstract.h" />
-    <ClInclude Include="..\Sources\JNetwork\Buffer\BufferAllocator.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Buffer\NetBuffer.h">
+    <ClInclude Include="..\Sources\JNetwork\Buffer\CommandBuffer.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -133,6 +137,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\Session.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\SessionHelper.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\TcpClient.h">
       <SubType>
       </SubType>

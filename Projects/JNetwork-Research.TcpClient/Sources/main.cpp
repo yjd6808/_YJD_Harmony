@@ -8,6 +8,8 @@
 #include <JCore/Encoding/CodePage.h>
 #include <JCore/Utils/Console.h>
 
+#include <JCore/Pool/IndexedMemoryPool.h>
+
 
 using namespace JCore;
 using namespace JNetwork;
@@ -53,6 +55,7 @@ protected:
 	virtual void OnConnected() {
 		SafeConsole::WriteLine("[클라] 서버와 연결되었습니다.");
 	}
+
 	virtual void OnDisconnected() {
 		SafeConsole::WriteLine("[클라] 연결이 종료되었습니다.");
 	}
@@ -90,11 +93,12 @@ int main() {
 
 	Winsock::Initialize(2, 2);
 
+	IndexedMemoryPoolPtr bufferAllocator = MakeShared<IndexedMemoryPool>(true);
 	IOCPPtr iocp = MakeShared<IOCP>(8);
 	iocp->Run();
 
 	MyClientEventListener myClientEventListener;
-	TcpClient client{ iocp, &myClientEventListener};
+	TcpClient client{ iocp, bufferAllocator, &myClientEventListener};
 	StaticPacket<StaticMessage>* sendPacket = nullptr;
 	if (client.ConnectAsync("127.0.0.1:9999")) {
 		while (1) {
@@ -105,19 +109,26 @@ int main() {
 			if (arg1->Chat[0] == 'c') {
 				break;
 			}
+
+			
+
 			int iLen = StringUtil::Length(arg1->Chat);
+			StaticMessage& msg = client.SendAlloc<StaticMessage>();
+			memcpy_s(msg.Chat, 512, arg1->Chat, iLen + 1);
+			msg.Chat[iLen] = 0;
 
 			// Dynamic 패킷 예시
 			auto pDynamicPacket = new DynamicPacket<DynamicMessage, DynamicMessage>(
 				DynamicMessage::CmdSizeOf(iLen + 1),
 				DynamicMessage::CmdSizeOf(iLen + 1)
 			);
-
 			
 			pDynamicPacket->Construct<0>(iLen, arg1->Chat);
 			pDynamicPacket->Construct<1>(iLen, arg1->Chat);
 			auto g = pDynamicPacket->Get<0>();
 			auto g1 = pDynamicPacket->Get<1>();
+
+
 
 			if (!client.SendAsync(sendPacket)) {
 				std::cout << "[클라] Static 패킷 송신 실패\n";
