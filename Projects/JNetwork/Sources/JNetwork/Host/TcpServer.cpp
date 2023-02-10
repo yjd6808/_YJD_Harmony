@@ -106,7 +106,7 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 
 	// 세션을 미리 생성해놓고 연결 대기 상태로 둠
 	for (int i = 0; i < MaxConnection(); i++) {
-		TcpSession* session = new TcpSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
+		TcpSession* session = dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
 
 		session->AcceptWait();
 

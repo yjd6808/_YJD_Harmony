@@ -8,17 +8,37 @@
 
 #pragma once
 
-#define _CRTDBG_MAP_ALLOC
-#define _CRTDBG_MAP_ALLOC_NEW
-
-
 #include <crtdbg.h>
+
 #include <JCore/Type.h>
 #include <JCore/TypeCast.h>
 #include <JCore/Functional.h>
 
 
+
+
 NS_JC_BEGIN
+
+
+// CrtMemBlockHeader
+struct MemHeader
+{
+	_CrtMemBlockHeader* block_header_next;
+	_CrtMemBlockHeader* block_header_prev;
+	char const*			file_name;
+	int                 line_number;
+
+	int                 block_use;
+	size_t              data_size;
+
+	long                request_number;
+	unsigned char       gap[4];
+
+	// unsigned char    _data[_data_size];
+	// unsigned char    _another_gap[no_mans_land_size];
+};
+
+
 
 // 범위 메모리릭 체크
 // @코드 획득 주소 : https://stackoverflow.com/questions/29174938/googletest-and-memory-leaks

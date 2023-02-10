@@ -72,6 +72,7 @@ protected:
 
 
 
+
 /*=====================================================================================
 
 								 스태릭 패킷 : 고정크기의 커맨드만 사용
@@ -178,7 +179,7 @@ public:
 		const int iPacketLen = (... + sizes);
 		this->m_iPacketLen = iPacketLen;
 		this->m_iCommandCount = CommandCount;
-		this->m_pDynamicBuf = new char[PacketHeaderSize_v + iPacketLen];
+		this->m_pDynamicBuf = dbg_new char[PacketHeaderSize_v + iPacketLen];
 
 		InitializeCommandLenRecursive<0>(sizes...);
 	}
@@ -277,5 +278,8 @@ public:
 private:
 	CommandBufferPtr m_Buffer;
 };
+
+
+using ISendPacketPtr = JCore::SharedPtr<ISendPacket>;
 
 NS_JNET_END

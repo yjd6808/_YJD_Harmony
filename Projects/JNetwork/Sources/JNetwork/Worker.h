@@ -1,10 +1,11 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
 #pragma once
 
 #include <JCore/Type.h>
+
 #include <JCore/Threading/Thread.h>
 
 #include <JNetwork/Namespace.h>
@@ -22,9 +23,7 @@ public:
 		Joined
 	};
 
-	Worker() : m_eState(State::Prepared)
-	         , m_hPauseEvent(CreateEvent(NULL, FALSE, FALSE, NULL)) {
-	}
+	Worker() : m_eState(State::Prepared) {}
 	virtual ~Worker() = default;
 
 	virtual void Run(void* param = nullptr) = 0;
@@ -34,7 +33,9 @@ public:
 protected:
 	JCore::Thread m_Thread;
 	State m_eState;
-	WinHandle m_hPauseEvent;
+	
 };
+
+using WorkerPtr = JCore::SharedPtr<Worker>;
 
 NS_JNET_END

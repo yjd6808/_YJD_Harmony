@@ -1,6 +1,6 @@
 /*
  * 작성자: 윤정도
- * 생성일: 12/13/2022 12:01:05 AM
+ * 생성일: 02/06/2022
  * =====================
  * 우선 락프리 컨테이너를 구현하기전에는 뮤텍스로 원자적 수행을 보장토록 해준다.
  * 메모리풀 로직을 어떻게 구현할까?
@@ -81,6 +81,10 @@ public:
 		return pMemoryBlock;
 	}
 
+
+	// TODO: 메모리할당 규칙이 Low와 High가 틀리기떄문에 벌어지는 현상이다.
+	//       BinarySearch와 Indexed를 똑같이 사용하기 위해서는 "요청한" 값을 기록해놓고 "요청한" 값을 반납해야한다.
+	//		 좀더 유연한 구조로 개선 필요. ㅠㅠ
 	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
 
 		DebugAssertMsg(requestSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 요청함)", MaxAllocatableSize, requestSize);
@@ -124,7 +128,7 @@ public:
 	void CreatePool() {
 		for (int i = 0; i <= HighBoundaryIndex; ++i) {
 			int iChunkSize = Detail::AllocationLengthMapConverter::ToSize(i);
-			m_Pool[i] = new MemoryChunckQueue(iChunkSize, 0);
+			m_Pool[i] = dbg_new MemoryChunckQueue(iChunkSize, 0);
 		}
 	}
 
@@ -140,7 +144,7 @@ public:
 			if (m_Pool[iIndex])
 				DeleteSafe(m_Pool[iIndex]);
 
-			m_Pool[iIndex] = new MemoryChunckQueue(iSize, iCount);
+			m_Pool[iIndex] = dbg_new MemoryChunckQueue(iSize, iCount);
 			AddInitBlock(iIndex, iCount);
 		});
 
@@ -178,8 +182,8 @@ public:
 		DebugAssertMsg(m_PoolTargeterLow == nullptr, "이미 Low 타게터 세팅이 되어있습니다.");
 		DebugAssertMsg(m_PoolTargeterHigh == nullptr, "이미 High 타게터 세팅이 되어있습니다.");
 
-		m_PoolTargeterLow = new MemoryChunkQueueTargetrList(LowBoundarySize + 1, nullptr);	// 513
-		m_PoolTargeterHigh = new MemoryChunkQueueTargetrList(HighBoundarySize / BoundarySizeMax, nullptr);	// 524
+		m_PoolTargeterLow = dbg_new MemoryChunkQueueTargetrList(LowBoundarySize + 1, nullptr);	// 513
+		m_PoolTargeterHigh = dbg_new MemoryChunkQueueTargetrList(HighBoundarySize / BoundarySizeMax, nullptr);	// 524
 		int iBeforeMax = 0;
 
 		// 1 ~ 512 바이트 (Low 타게터 할당)

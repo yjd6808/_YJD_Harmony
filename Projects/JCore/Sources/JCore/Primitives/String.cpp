@@ -50,7 +50,7 @@ String::String(const char* str, const int capacity) {
 		return;
 	}
 
-	m_pBuffer = new char[iExpectedCapcity];
+	m_pBuffer = dbg_new char[iExpectedCapcity];
 	m_iCapacity = iExpectedCapcity;
 	m_iLen = iLen;
 
@@ -61,7 +61,7 @@ String::String(const char* str) : String(str, DefaultBufferSize) {
 }
 
 String::String(char ch, int count) {
-	m_pBuffer = new char[count + DefaultBufferSize];
+	m_pBuffer = dbg_new char[count + DefaultBufferSize];
 	m_iCapacity = count + DefaultBufferSize;
 	m_iLen = count;
 
@@ -179,7 +179,7 @@ void String::Insert(const int idx, const String& str) {
 void String::Resize(const int capacity) {
 	char* pTempBuffer = m_pBuffer;
 
-	m_pBuffer = new char[capacity];
+	m_pBuffer = dbg_new char[capacity];
 	m_iCapacity = capacity;
 
 	StringUtil::Copy(m_pBuffer, m_iCapacity, pTempBuffer);
@@ -547,7 +547,7 @@ Tuple<char*, int, int> String::GetRangeUnsafe(const int startIdx, const int endI
 	int iCurIdx = startIdx;
 	int iIdx = 0;
 	const int iAllocCapacity = endIdx - startIdx + 10;
-	char* szRange = new char[iAllocCapacity];
+	char* szRange = dbg_new char[iAllocCapacity];
 
 	while (iCurIdx <= endIdx) {
 		szRange[iIdx] = m_pBuffer[iCurIdx];
@@ -614,7 +614,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 void String::Initialize(int capacity) {
 	DeleteArraySafe(m_pBuffer);
 
-	m_pBuffer = new char[capacity];
+	m_pBuffer = dbg_new char[capacity];
 	m_iLen = 0;
 	m_iCapacity = capacity;
 	m_pBuffer[0] = NULL;

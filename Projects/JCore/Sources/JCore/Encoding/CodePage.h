@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/5/2022 10:18:06 PM
  * =====================
@@ -9,6 +9,8 @@
 
 
 #pragma once
+
+#include <JCore/Namespace.h>
 
 NS_JC_BEGIN
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	
 	IOCPWorker 쓰레드는 IOCPWorkerManager에서만 생성하고 다룰 수 있다.
@@ -13,7 +13,7 @@ NS_JNET_BEGIN
 
 class IOCPWorker : public Worker
 {
-protected:
+public:
 	IOCPWorker(IOCP* iocp);
 	~IOCPWorker() override;
 

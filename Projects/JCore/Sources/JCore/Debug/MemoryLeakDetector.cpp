@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/19/2022 5:10:28 AM
  * =====================
@@ -22,6 +22,7 @@ NS_JC_BEGIN
 	int MemoryLeakDetector::StopDetect() {
         _CrtMemState stateNow, stateDiff;
         _CrtMemCheckpoint(&stateNow);
+        _CrtMemDumpAllObjectsSince(&m_State);
 
         const int diffResult = _CrtMemDifference(&stateDiff, &m_State, &stateNow);
         m_bDetecting = false;
@@ -51,6 +52,7 @@ NS_JC_BEGIN
 	AutoMemoryLeakDetector::~AutoMemoryLeakDetector() {
         _CrtMemState stateNow, stateDiff;
         _CrtMemCheckpoint(&stateNow);
+        _CrtMemDumpAllObjectsSince(&m_State);
         const int diffResult = _CrtMemDifference(&stateDiff, &m_State, &stateNow);
 
         if (diffResult && m_Callback) {

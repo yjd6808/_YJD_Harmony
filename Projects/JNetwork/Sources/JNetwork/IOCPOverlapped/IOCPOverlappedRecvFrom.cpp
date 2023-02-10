@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/8/2023 6:04:33 PM
  * =====================
@@ -14,8 +14,6 @@ NS_JNET_BEGIN
 IOCPOverlappedRecvFrom::IOCPOverlappedRecvFrom(UdpClient* client, IOCP* iocp)
 	: IOCPOverlapped(iocp, Type::ReceiveFrom)
 	, m_pReceiver(client)
-	, m_SenderAddr()
-	, m_iAddrLen(sizeof(SOCKADDR_IN))
 {
 }
 
@@ -28,7 +26,7 @@ void IOCPOverlappedRecvFrom::Process(BOOL result, Int32UL numberOfBytesTransffer
 		return;
 	}
 
-	m_pReceiver->Received(numberOfBytesTransffered, this);
+	m_pReceiver->Received(numberOfBytesTransffered);
 
 	if (m_pReceiver->RecvFromAsync() == false) {
 	}

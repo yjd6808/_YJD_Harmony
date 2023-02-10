@@ -167,7 +167,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeaderOutputFile>$(IntDir)CoreTest.pch</PrecompiledHeaderOutputFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>

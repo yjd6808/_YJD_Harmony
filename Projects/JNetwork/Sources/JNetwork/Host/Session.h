@@ -12,7 +12,9 @@
 #include <JNetwork/Host/SessionHelper.h>
 
 #include <JNetwork/EventListener/TcpServerEventListener.h>
-#include <JNetwork/Buffer/CommandBuffer.h>
+
+#include <JNetwork/Packet/SendPacket.h>
+#include <JNetwork/Packet/RecvPacket.h>
 
 NS_JNET_BEGIN
 
@@ -51,6 +53,8 @@ public:
 		return m_spSendBuffer->Alloc<TCommand>(JCore::Forward<Args>(args)...);
 	}
 
+	
+	CommandBufferPacket* GetCommandBufferForSending();
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;
 	virtual void Disconnected() = 0;
@@ -72,7 +76,6 @@ protected:
 
 	IPv4EndPoint m_LocalEndPoint;
 	IPv4EndPoint m_RemoteEndPoint;
-
 
 	friend class IOCPOverlappedAccept;
 	friend class IOCPOverlappedConnect;

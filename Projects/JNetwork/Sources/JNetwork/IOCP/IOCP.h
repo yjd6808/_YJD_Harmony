@@ -1,10 +1,10 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
 #pragma once
 
-#include <JNetwork/WorkerManager.h>
+#include <JNetwork/WorkerGroup.h>
 
 
 #define IOCP_POST_ORDER_TERMINATE	0x01
@@ -35,7 +35,7 @@ public:
 	virtual ~IOCP();
 
 	virtual Type GetType() { return eIocp; }
-	bool Destroy();
+	void Destroy();
 	void Run();
 	void Join();
 
@@ -51,7 +51,7 @@ protected:
 	State m_eState;
 	WinHandle m_hIOCP;
 	Int32UL m_uiThreadCount;
-	WorkerManager* m_pWorkerManager;
+	WorkerGroup* m_pWorkerManager;
 	JCore::AtomicInt m_iPendingOverlappedCount;		// TODO: IOCP에서 팬딩 카운트를 기록하면 경합이 심하지 않을까?
 
 	// 현재 I/O 완료를 대기중인 오버랩 수를 기록한다.

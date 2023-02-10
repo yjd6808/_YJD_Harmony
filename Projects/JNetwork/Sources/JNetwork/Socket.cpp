@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
@@ -368,12 +368,12 @@ int Socketv4::ReceiveFromEx(
 	LPWSABUF lpBuf, 
 	Out_ Int32UL* pBytesReceived,
 	LPOVERLAPPED lpOverlapped, 
-	Out_ SOCKADDR_IN* remoteAddr, 
-	Out_ int* addrLen, 
+	Out_ SOCKADDR_IN* senderAddr,
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, 
 	Int32U flag) const
 {
-	return WSARecvFrom(Handle, lpBuf, 1, pBytesReceived, (Int32UL*)&flag, (sockaddr*)remoteAddr, addrLen, lpOverlapped, lpCompRoutine);
+	int iAddrLen = sizeof(SOCKADDR_IN);
+	return WSARecvFrom(Handle, lpBuf, 1, pBytesReceived, (Int32UL*)&flag, (sockaddr*)senderAddr, &iAddrLen, lpOverlapped, lpCompRoutine);
 }
 
 IPv4EndPoint Socketv4::GetLocalEndPoint() const {

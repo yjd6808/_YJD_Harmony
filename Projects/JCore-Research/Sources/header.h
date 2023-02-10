@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #define _CRTDBG_MAP_ALLOC
 
 
@@ -23,7 +23,7 @@
 #include <JCore/FileSystem/Path.h>
 #include <JCore/Encoding/CodePage.h>
 
-#include <JCore/Pool/MemoryPoolManager.h>
+#include <JCore/Pool/IndexedMemoryPool.h>
 
 
 #include <JCore/Sync/SpinLock.h>

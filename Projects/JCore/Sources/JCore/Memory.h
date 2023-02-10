@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	메모리 조작을 도와주는 클래스입니다.
 */
@@ -10,6 +10,7 @@
 #include <JCore/Tuple.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Exception.h>
+#include <JCore/Debug/New.h>
 
 NS_JC_BEGIN
 
@@ -47,7 +48,7 @@ public:
 	static T Allocate(const Int32U size) {
 		static_assert(IsPointerType_v<T>, "only cast to pointer type");
 
-		try { return (T)operator new(size); }
+		try { return (T)dbg_operator_new(size); }
 		catch (std::bad_alloc&) { throw InvalidOperationException("메모리 할당에 실패하였습니다."); }
 	}
 

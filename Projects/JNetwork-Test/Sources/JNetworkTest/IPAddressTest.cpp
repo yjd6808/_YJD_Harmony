@@ -1,4 +1,4 @@
-﻿#include <JNetworkTest/NetworkTest.h>
+#include <JNetworkTest/NetworkTest.h>
 
 #include <JNetwork/IPAddress.h>
 
@@ -6,10 +6,10 @@
 #if TEST_IPAddressTest == ON
 
 TEST(IPAddressTest, IPv4) {
-	EXPECT_ANY_THROW(IPv4Address("255.255.255.256"));
-	EXPECT_ANY_THROW(IPv4Address("255.255.256.255"));
-	EXPECT_ANY_THROW(IPv4Address("255.256.255.255"));
-	EXPECT_ANY_THROW(IPv4Address("256.255.255.255"));
+	EXPECT_DEATH(IPv4Address("255.255.255.256"), "");
+	EXPECT_DEATH(IPv4Address("255.255.256.255"), "");
+	EXPECT_DEATH(IPv4Address("255.256.255.255"), "");
+	EXPECT_DEATH(IPv4Address("256.255.255.255"), "");
 	EXPECT_NO_THROW(IPv4Address("255.255.255.255"));
 	EXPECT_NO_THROW(IPv4Address("255.255.255.255"));
 	EXPECT_NO_THROW(IPv4Address("0.0.0.0"));

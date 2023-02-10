@@ -1,10 +1,10 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
 #include <JNetwork/Network.h>
 #include <JNetwork/IOCP/IOCP.h>
-#include <JNetwork/WorkerManager.h>
+#include <JNetwork/WorkerGroup.h>
 #include <JNetwork/IOCP/IOCPWorker.h>
 
 NS_JNET_BEGIN
@@ -20,7 +20,7 @@ IOCP::IOCP(int threadCount)
 	}
 
 	m_uiThreadCount = threadCount;
-	m_pWorkerManager = WorkerManager::Create<IOCPWorker>(threadCount, this);
+	m_pWorkerManager = WorkerGroup::Create<IOCPWorker>(threadCount, this);
 	m_eState = State::eInitialized;
 }
 
@@ -29,16 +29,16 @@ IOCP::~IOCP()  {
 		DebugAssertMsg(false, "먼저 조인을 해주세요");
 	}
 
-	if (m_eState != State::eDestroyed && !Destroy()) {
-		DebugAssertMsg(false, "IOCP 삭제 실패");
+	if (m_eState != State::eDestroyed) {
+		Destroy();
 	}
 }
 
 
 
-bool IOCP::Destroy() {
+void IOCP::Destroy() {
 	if (m_eState == State::eDestroyed) {
-		return true;
+		return;
 	}
 
 	if (m_hIOCP != INVALID_HANDLE_VALUE) {
@@ -48,7 +48,6 @@ bool IOCP::Destroy() {
 
 	DeleteSafe(m_pWorkerManager);
 	m_eState = State::eDestroyed;
-	return true;
 }
 
 void IOCP::Run() {

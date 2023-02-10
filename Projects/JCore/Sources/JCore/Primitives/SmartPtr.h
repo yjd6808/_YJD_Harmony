@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  *	스마트 포인터 구현해보기
  *
@@ -630,7 +630,7 @@ protected:
 	// SharedPtr에서만 호출
 	template <typename U>
     void MakeShared(U ptr) {
-	    m_pControlBlock = new SharedObject<U, DefaultAllocator>(ptr); 
+	    m_pControlBlock = dbg_new SharedObject<U, DefaultAllocator>(ptr);
         m_pPtr = ptr;
         m_Size = 1;
 

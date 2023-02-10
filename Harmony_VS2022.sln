@@ -140,6 +140,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Research.UdpClient
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Test", "Projects\JNetwork-Test\Project\JNetwork-Test.vcxproj", "{0AD5B4F2-6455-4106-A8D3-FD177F2FD00B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

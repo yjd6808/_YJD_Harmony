@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
@@ -164,8 +164,7 @@ public:
 		LPWSABUF lpBuf, 
 		Out_ Int32UL* pBytesReceived, 
 		LPOVERLAPPED lpOverlapped, 
-		Out_ SOCKADDR_IN* sockAddr, 
-		Out_ int* addrLen, 
+		Out_ SOCKADDR_IN* senderAddr, 
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, 
 		Int32U flag = 0
 	) const;

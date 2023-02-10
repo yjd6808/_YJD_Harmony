@@ -68,9 +68,9 @@ protected:
 	}
 };
 
+
 int main() {
-	// 멀티 패킷 예시
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	
 	
 	Winsock::Initialize(2, 2);
 

@@ -121,6 +121,9 @@
     <ClCompile Include="..\Sources\JCore\Pool\MemoryChunkQueue.cpp">
       <Filter>Pool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Debug\New.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -396,6 +399,9 @@
     <ClInclude Include="..\Sources\JCore\Namespace.h" />
     <ClInclude Include="..\Sources\JCore\Pool\BinarySearchMemoryPool.h">
       <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Debug\New.h">
+      <Filter>Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

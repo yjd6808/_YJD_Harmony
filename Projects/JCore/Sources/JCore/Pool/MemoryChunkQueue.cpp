@@ -16,7 +16,7 @@ MemoryChunckQueue::MemoryChunckQueue(int chunkSize, int chunkCount)
 	, m_ChunkQueue(chunkCount > 0 ? chunkCount : 32)
 {
 	for (int i = 0; i < chunkCount; ++i) {
-		m_ChunkQueue.Push(new char[chunkSize]);
+		m_ChunkQueue.Push(dbg_new char[chunkSize]);
 	}
 }
 
@@ -42,7 +42,7 @@ void* MemoryChunckQueue::Pop(Out_ bool& newAlloc) {
 	void* pChunk;
 
 	if (m_ChunkQueue.IsEmpty()) {
-		pChunk = new char[m_iChunkSize];
+		pChunk = dbg_new char[m_iChunkSize];
 		m_iTotalChunkCount++;
 		newAlloc = true;
 	} else {

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -28,7 +28,7 @@ void IOCPWorker::Run(void* param) {
 }
 
 void IOCPWorker::JoinWait(WinHandle waitHandle) {
-	IOCPPostOrder* pPostOrder = new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
+	IOCPPostOrder* pPostOrder = dbg_new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
 	const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
 
 	if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {  // 어느 쓰레드가 꺠어날지 모르기 때문에 여기서 join을 수행하면 안됨

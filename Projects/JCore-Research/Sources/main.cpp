@@ -1,10 +1,15 @@
-﻿#include <header.h>
-#include <queue>
+#include "header.h"
+#include <stacktrace>
 
-#include <timeapi.h>
+USING_NS_JC;
+
+
+
+
 
 
 int main() {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	return 0;
 }
+

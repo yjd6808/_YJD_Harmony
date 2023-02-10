@@ -67,14 +67,14 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	// 연결 후 곧장 데이터 전송 테스트
 	// 패킷은 모두 오버랩 Process에서 해제하도록 한다.
 	Int32UL dwSentBytes = 0;
-	auto* dummyPacket = new StaticPacket<Command<int>, Command<int>>;
+	auto* dummyPacket = dbg_new StaticPacket<Command<int>, Command<int>>;
 	dummyPacket->Get<0>()->SetCommand(1);
 	dummyPacket->Get<0>()->Value = 2;
 	dummyPacket->Get<1>()->SetCommand(3);
 	dummyPacket->Get<1>()->Value = 4;
     dummyPacket->AddRef();
 
-	IOCPOverlapped* pOverlapped = new IOCPOverlappedConnect(this, m_spIocp.GetPtr(), dummyPacket);
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedConnect(this, m_spIocp.GetPtr(), dummyPacket);
 	if (m_Socket.ConnectEx(destination, pOverlapped, dummyPacket->GetWSABuf().buf, TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
 		Int32U uiError = Winsock::LastError();
 		if (uiError != WSA_IO_PENDING) {

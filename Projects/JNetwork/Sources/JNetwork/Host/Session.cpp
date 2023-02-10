@@ -5,9 +5,6 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 
-#include <JNetwork/Packet/RecvPacket.h>
-#include <JNetwork/Packet/SendPacket.h>
-
 #include <JNetwork/Host/Session.h>
 #include <JNetwork/Buffer/StaticBuffer.h>
 
@@ -103,7 +100,7 @@ bool Session::SendAsync(ISendPacket* packet) {
 	packet->AddRef();
 	WSABUF buf = packet->GetWSABuf();
 	Int32UL uiSendBytes = 0;
-	IOCPOverlapped* pOverlapped = new IOCPOverlappedSend(this, m_spIocp.GetPtr(), packet);
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, m_spIocp.GetPtr(), packet);
 
 	const int iResult = m_Socket.SendEx(&buf, &uiSendBytes, pOverlapped);
 	if (iResult == SOCKET_ERROR) {
@@ -119,32 +116,39 @@ bool Session::SendAsync(ISendPacket* packet) {
 	return true;
 }
 
-void Session::FlushSendBuffer() {
+CommandBufferPacket* Session::GetCommandBufferForSending() {
 
 	SessionLockGuard guard(m_SendBufferLock);
 
-	// Alloc이랑 페어인데 단독호출해버리는 경우 방지
 	if (m_spSendBuffer->GetCommandCount() == 0)
-		return;
+		return nullptr;
 
 	CommandBufferPtr spNewSendBuffer = MakeShared<CommandBuffer>(m_spBufferAllocator, m_spSendBuffer->GetBufferRequestSize());
 	CommandBufferPtr spOldSendBuffer = m_spSendBuffer;
 
 	m_spSendBuffer = spNewSendBuffer;
 
-	CommandBufferPacket* pWrappedPacket = new CommandBufferPacket(spOldSendBuffer);
+	CommandBufferPacket* pWrappedPacket = dbg_new CommandBufferPacket(spOldSendBuffer);
 	
 #ifdef DebugMode
 	DebugAssertMsg(spOldSendBuffer->IsValid(), "무야! 보내고자하는 커맨드 센드 버퍼 데이터가 이상합니다.");
 #endif
-	SendAsync(pWrappedPacket);
+	return pWrappedPacket;
 }
+
+void Session::FlushSendBuffer() {
+	CommandBufferPacket* pWrappedPacket = GetCommandBufferForSending();
+	if (pWrappedPacket) {
+		SendAsync(pWrappedPacket);
+	}
+}
+
 
 bool Session::RecvAsync() {
 
 	WSABUF buf = m_spRecvBuffer->GetRemainBuffer();
 	Int32UL uiReceivedBytes = 0;
-	IOCPOverlapped* pOverlapped = new IOCPOverlappedRecv(this, m_spIocp.GetPtr());
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedRecv(this, m_spIocp.GetPtr());
 
 	const int iResult = m_Socket.ReceiveEx(&buf, &uiReceivedBytes, pOverlapped);
 	if (iResult == SOCKET_ERROR) {

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -25,57 +25,93 @@ USING_NS_JC;
 							IPv4EndPoint
 =======================================================================================*/
 
-IPEndPoint::~IPEndPoint()
-{
+
+
+IPv4EndPoint::IPv4EndPoint() : InternetAddr() {
+	InternetAddr.sin_family = AF_INET;
 }
 
-IPv4EndPoint::IPv4EndPoint() {
-	m_Address = IPv4Address::Any();
-	m_uiPort = 0;
+IPv4EndPoint::IPv4EndPoint(const IPv4EndPoint& other) : InternetAddr() {
+	this->operator=(other);
 }
 
-IPv4EndPoint::IPv4EndPoint(const IPv4Address& ipAddr, const Int16U port) {
-	m_Address = ipAddr;
-	m_uiPort = port;
+IPv4EndPoint::IPv4EndPoint(const SOCKADDR_IN& other) : InternetAddr() {
+	InternetAddr.sin_family = AF_INET;
+	InternetAddr.sin_addr.s_addr = other.sin_addr.s_addr;
+	InternetAddr.sin_port = other.sin_port;
 }
 
-IPv4EndPoint::IPv4EndPoint(const char* endPointAddrString) {
-	*this = Parse(endPointAddrString);
+IPv4EndPoint::IPv4EndPoint(const char* endPointString) {
+	this->operator=(Parse(endPointString));
 }
 
-IPv4EndPoint::IPv4EndPoint(const SOCKADDR_IN& addr) {
-	m_Address = ByteOrder::NetworkToHost(addr.sin_addr.S_un.S_addr);
-	m_uiPort = ByteOrder::NetworkToHost(addr.sin_port);
+IPv4EndPoint::IPv4EndPoint(const JCore::String& endPointString) {
+	this->operator=(Parse(endPointString.Source()));
 }
 
-IPv4EndPoint::IPv4EndPoint(const JCore::String& endPointAddrString) {
-	*this = Parse(endPointAddrString.Source());
+IPv4EndPoint::IPv4EndPoint(IPv4Address addr, Int16U port) : InternetAddr() {
+	InternetAddr.sin_family = AF_INET;
+	InternetAddr.sin_addr.s_addr = ByteOrder::HostToNetwork(addr.GetAddress());
+	InternetAddr.sin_port = ByteOrder::HostToNetwork(port);
 }
 
-String IPv4EndPoint::ToString() const {
+bool IPv4EndPoint::IsValidRemoteEndPoint() const {
+	if (InternetAddr.sin_family == AF_INET &&
+		InternetAddr.sin_addr.s_addr != ADDR_ANY &&
+		InternetAddr.sin_port != 0) {
+		return true;
+	}
+
+	return false;
+}
+
+IPv4EndPoint& IPv4EndPoint::operator=(const IPv4EndPoint& other) {
+	InternetAddr.sin_family = other.InternetAddr.sin_family;
+	InternetAddr.sin_port = other.InternetAddr.sin_port;
+	InternetAddr.sin_addr.s_addr = other.InternetAddr.sin_addr.s_addr;
+	return *this;
+}
+
+bool IPv4EndPoint::operator==(const IPv4EndPoint& other) const {
+	if (InternetAddr.sin_family == other.InternetAddr.sin_family &&
+		InternetAddr.sin_port == other.InternetAddr.sin_port &&
+		InternetAddr.sin_addr.s_addr == other.InternetAddr.sin_addr.s_addr) {
+		return true;
+	}
+
+	return false;
+}
+
+InternetProtocol IPv4EndPoint::GetProtocol() const {
+	return InternetProtocol::IPv4;
+}
+
+JCore::String IPv4EndPoint::ToString() const {
 	String ret = GetAddress().ToString() + ':';
-	ret += m_uiPort;
+	ret += GetPort();
 	return ret;
 }
 
+IPv4Address IPv4EndPoint::GetAddress() const {
+	return ByteOrder::NetworkToHost(InternetAddr.sin_addr.s_addr);
+}
+
+Int16U IPv4EndPoint::GetPort() const {
+	return ByteOrder::NetworkToHost(InternetAddr.sin_port);
+}
+
 IPv4EndPoint IPv4EndPoint::Parse(const char* endPointAddr) {
-	constexpr int EndPointLen = IPv4Len_v + 6; // +6 : 포트 최대 5자리 + 문자 ':'를 포함한 길이
+	static constexpr int EndPointLen = IPv4Len_v + 6; // +6 : 포트 최대 5자리 + 문자 ':'를 포함한 길이
+
+
 	using IPv4EndPointString = StaticString<EndPointLen>;
 
 	const int iLen = StringUtil::Length(endPointAddr);
-
-	if (iLen > EndPointLen) {
-		throw InvalidArgumentException("올바르지 않은 EndPoint 형식입니다. 문자열 길이가 최대로 가능한 EndPoint 길이를 초과합니다.");
-	}
-
+	DebugAssertMsg(iLen <= EndPointLen, "올바르지 않은 EndPoint 형식입니다. 문자열 길이가 최대로 가능한 EndPoint 길이를 초과합니다.");
 	IPv4EndPointString ep{};
 	ep.CopyFrom(endPointAddr);
 	const int idx = ep.Find(":");
-
-	if (idx == -1) {
-		throw InvalidArgumentException("올바르지 않은 EndPoint 형식입니다. 구분자 ':'를 찾지 못했습니다.");
-	}
-
+	DebugAssertMsg(idx != -1, "올바르지 않은 EndPoint 형식입니다. 구분자 ':'를 찾지 못했습니다.");
 	IPv4EndPointString ipAddrString{};
 	ipAddrString.CopyFrom(0, idx - 1, const_cast<char*>(ep.Source));
 
@@ -84,21 +120,18 @@ IPv4EndPoint IPv4EndPoint::Parse(const char* endPointAddr) {
 	const int iPortStrLen = portString.Length();
 
 	for (int i = 0; i < iPortStrLen; i++) {
-		if (!IsNumeric(portString[i])) {
-			throw InvalidArgumentException("올바르지 않은 EndPoint 형식입니다. 잘못된 문자가 포함되어있습니다.");
-		}
+		DebugAssertMsg(IsNumeric(portString[i]), "올바르지 않은 EndPoint 형식입니다. 잘못된 문자가 포함되어있습니다.");
 	}
 
-if (const int iPort = atoi(portString.Source); iPort < 0 || iPort > 0xffff) {
-		throw InvalidArgumentException("올바르지 않은 EndPoint 형식입니다. 포트번호는 0이상 65535이하만 가능합니다.");
-	}
-
-	return IPv4EndPoint(ipAddrString.Source, static_cast<short>(atoi(portString.Source)));
+	const int iPort = atoi(portString.Source);
+	DebugAssertMsg(iPort >= 0 && iPort <= 0xffff, "올바르지 않은 EndPoint 형식입니다. 포트번호는 0이상 65535이하만 가능합니다.");
+	return IPv4EndPoint(IPv4Address{ ipAddrString.Source }, static_cast<short>(atoi(portString.Source)));
 }
 
 IPv4EndPoint IPv4EndPoint::Parse(const JCore::String& endPointAddr) {
 	return Parse(endPointAddr.Source());
 }
+
 
 
 NS_JNET_END

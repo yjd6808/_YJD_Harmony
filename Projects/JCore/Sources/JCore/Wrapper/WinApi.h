@@ -56,6 +56,8 @@ struct WinApi {
 	#pragma pack(pop)
 	#pragma endregion
 
+    static WinHandle InvalidHandleValue;
+
     static bool            JCoreStdCall SetConsoleCursorPosition(In_ WinHandle hStdoutHandle, In_ int x, In_ int y);
     static bool            JCoreStdCall GetConsoleCursorPosition(In_ WinHandle hStdoutHandle, Out_ int& x, Out_ int& y);
     static bool            JCoreStdCall SetConsoleTextAttribute(In_ WinHandle hStdoutHandle, In_ Int16 attribute);

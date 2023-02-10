@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/9/2022 2:21:35 PM
  * =====================
@@ -11,6 +11,7 @@
 #include <JCore/Type.h>
 #include <JCore/Define.h>
 #include <JCore/Primitives/String.h>
+#include <JCore/Primitives/SmartPtr.h>
 
 
 NS_JC_BEGIN
@@ -24,7 +25,7 @@ public:
     WaitHandle(bool initialState, bool manualReset, const char* name = nullptr);
     WaitHandle(const WaitHandle& handle) = delete;      // 복사 생성을 금한다.
     WaitHandle(WaitHandle&& handle) noexcept;           // 이동 생성만 허용
-    ~WaitHandle();
+    virtual ~WaitHandle();
 
     bool Wait(Int32U timeout = JCoreInfinite);
     bool Signal();
@@ -75,5 +76,7 @@ protected:
     WinHandle m_hHandle;
     String m_Name;
 };
+
+using WaitHandlePtr = JCore::SharedPtr<WaitHandle>;
 
 NS_JC_END

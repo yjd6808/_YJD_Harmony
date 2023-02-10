@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  *	PCH 파일입니다.
  */
@@ -22,17 +22,15 @@
 #include <random>
 
 #include <JCore/Debug/MemoryLeakDetector.h>
+#include <JCore/Debug/New.h>
+
 #include <JCore/Encoding/CodePage.h>
 #include <JCore/Utils/Console.h>
 #include <JCore/Define.h>
 #include <JCore/Assert.h>
 
- // 22년 12월 19일 새벽 5시
- // 내가 지금까지 계속 main 함수 내에서만 메모리릭 체크를 할려고했는데.
- // 생각해보면 PCH에서 가장먼저 체크를 시작하면 된다.
- // 그러면 제일 나중에 메모리에서 해제될테니 안전하게 내가 만든 라이브러리의 메모리릭을
- // 체크할 수 있게된다.
- // 새벽3시에 깻는데 이거땜에 잠이 안와서 누워서 2시간동안 계속 고민했는데 드디어 방법을 찾았다. ㅠㅠ
+
+
 
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
@@ -47,4 +45,6 @@ inline auto JCoreInitializer = [] {
 }();
 
 NS_JC_END
+
+
 

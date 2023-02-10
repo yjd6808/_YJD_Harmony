@@ -1,6 +1,10 @@
-﻿#if !defined(__JCORE_DEFINE_H__)
+#if !defined(__JCORE_DEFINE_H__)
 
     #define __JCORE_DEFINE_H__
+
+	// https://stackoverflow.com/questions/8487986/file-macro-shows-full-path
+	#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+
 
 	// __COUNTER__매크로는 리다이렉션 한번 필요하다캄
 	#define JCoreCounterConcatRedirection(a, b) JCoreCounterConcatRedirectionImpl(a, b)
@@ -93,8 +97,7 @@
 	#define OutOpt_
     #define InOut_
     #define InOpt_
-
-
+	
 	#define JCoreSwap(Val1, Val2, Type) Type temp = Val1; Val1 = Val2; Val2 = temp;
 
 #endif

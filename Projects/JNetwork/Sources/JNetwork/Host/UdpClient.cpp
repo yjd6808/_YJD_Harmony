@@ -56,14 +56,14 @@ bool UdpClient::RecvFromAsync() {
 
 	WSABUF buf = m_spRecvBuffer->GetRemainBuffer();
 	Int32UL uiReceivedBytes = 0;
-	IOCPOverlappedRecvFrom* pRecvFromOverlapped = new IOCPOverlappedRecvFrom(this, m_spIocp.GetPtr());
+	IOCPOverlappedRecvFrom* pRecvFromOverlapped = dbg_new IOCPOverlappedRecvFrom(this, m_spIocp.GetPtr());
 
 	const int iResult = m_Socket.ReceiveFromEx(
 		&buf, 
 		&uiReceivedBytes, 
 		pRecvFromOverlapped, 
-		pRecvFromOverlapped->SenderAddrPtr(), 
-		pRecvFromOverlapped->SenderAddrLenPtr());
+		&m_RemoteEndPoint.InternetAddr
+	);
 
 	if (iResult == SOCKET_ERROR) {
 		Int32U uiErrorCode = Winsock::LastError();
@@ -76,11 +76,12 @@ bool UdpClient::RecvFromAsync() {
 }
 
 bool UdpClient::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination) {
+	DebugAssertMsg(destination.IsValidRemoteEndPoint(), "유효한 목적지 주소가 아닙니다.");
 
 	packet->AddRef();
 	WSABUF buf = packet->GetWSABuf();
 	Int32UL uiSendBytes = 0;
-	IOCPOverlapped* pOverlapped = new IOCPOverlappedSendTo(this, m_spIocp.GetPtr(), packet);
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSendTo(this, m_spIocp.GetPtr(), packet);
 
 	const int iResult = m_Socket.SendToEx(&buf, &uiSendBytes, pOverlapped, destination);
 	if (iResult == SOCKET_ERROR) {
@@ -96,6 +97,19 @@ bool UdpClient::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination
 	return true;
 }
 
+bool UdpClient::SendToAsyncEcho(ISendPacket* packet) {
+	return SendToAsync(packet, m_RemoteEndPoint);
+}
+
+void UdpClient::FlushSendBuffer() {
+	DebugAssertMsg(m_RemoteEndPoint.IsValidRemoteEndPoint(), "유효한 목적지 주소가 아닙니다.");
+
+	CommandBufferPacket* pWrappedPacket = GetCommandBufferForSending();
+	if (pWrappedPacket) {
+		SendToAsync(pWrappedPacket, m_RemoteEndPoint);
+	}
+}
+
 void UdpClient::Connected() {
 	m_eState = eConnected;
 	m_Socket.State = Socket::eBinded;
@@ -104,11 +118,6 @@ void UdpClient::Connected() {
 
 void UdpClient::Disconnected() {
 	m_pClientEventListener->OnDisconnected();
-}
-
-void UdpClient::Received(Int32UL receivedBytes, IOCPOverlappedRecvFrom* recvFrom) {
-	m_RemoteEndPoint = { *recvFrom->SenderAddrPtr() };
-	Session::Received(receivedBytes);
 }
 
 void UdpClient::NotifyCommand(ICommand* cmd) {

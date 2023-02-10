@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	해당 포인터가 살아있는지 여부를 알 수 있는 스마트 포인터, 쓰레드 세이프 하지 않음
 
@@ -134,7 +134,7 @@ class VoidOwner : public VoidBase
 public:
 	VoidOwner(void* ptr, bool nodelete = false) {
 		m_pPointer = ptr;
-		m_pCounter = new VoidPointerCounter();
+		m_pCounter = dbg_new VoidPointerCounter();
 		m_bNoDelete = nodelete;
 	}
 
@@ -483,7 +483,7 @@ public:
 
 	Owner(T* ptr) {
 		this->m_pPointer = ptr;
-		this->m_pCounter = new PtrCounter();
+		this->m_pCounter = dbg_new PtrCounter();
 		this->m_bMaked = false;
 	}
 
@@ -644,7 +644,7 @@ public:
 // 값 타입으로 반환
 template <typename T, typename... Args>
 constexpr decltype(auto) MakeOwner(Args&&... args) {
-	OwnerObject<T>* object = new OwnerObject<T>(Forward<Args>(args)...);
+	OwnerObject<T>* object = dbg_new OwnerObject<T>(Forward<Args>(args)...);
 	Owner<T> owner(object->Address(), object);
 	return owner;
 }
@@ -653,8 +653,8 @@ constexpr decltype(auto) MakeOwner(Args&&... args) {
 // 포인터 타입으로 반환
 template <typename T, typename... Args>
 constexpr decltype(auto) MakeOwnerPointer(Args&&... args) {
-	OwnerObject<T>* object = new OwnerObject<T>(Forward<Args>(args)...);
-	Owner<T>* owner = new Owner<T>(object->Address(), object);
+	OwnerObject<T>* object = dbg_new OwnerObject<T>(Forward<Args>(args)...);
+	Owner<T>* owner = dbg_new Owner<T>(object->Address(), object);
 	return owner;
 }
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -25,7 +25,7 @@ NS_JC_BEGIN
     {
         using TLockGuard = LockGuard<TLock>;
 
-        inline static WinHandle     ms_hStdout = INVALID_HANDLE_VALUE;
+        inline static WinHandle     ms_hStdout = WinApi::InvalidHandleValue;
         inline static ConsoleColor	ms_iDefaultColor = ConsoleColor::LightGray;
         inline static TLock         ms_ConsoleLock;
         inline static int           ms_iCursorPosX;
@@ -130,14 +130,14 @@ NS_JC_BEGIN
 
         static void SetCursorPosition(int x, int y) {
             TLockGuard guard(ms_ConsoleLock);
-            DebugAssert(ms_hStdout != INVALID_HANDLE_VALUE);
+            DebugAssert(ms_hStdout != WinApi::InvalidHandleValue);
             ms_iCursorPosX = x;
             ms_iCursorPosY = y;
             WinApi::SetConsoleCursorPosition(ms_hStdout, x, y);
         }
 
         static Tuple<int, int> GetCursorPosition() {
-            DebugAssert(ms_hStdout != INVALID_HANDLE_VALUE);
+            DebugAssert(ms_hStdout != WinApi::InvalidHandleValue);
             int x;
             int y;
             if (WinApi::GetConsoleCursorPosition(ms_hStdout, x, y)) {

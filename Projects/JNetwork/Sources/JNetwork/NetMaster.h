@@ -1,24 +1,28 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/9/2023 1:32:55 PM
  * =====================
- *
+ * 
  */
 
 
 #pragma once
 
-#include <JNetwork/IOCP/IOCP.h>
+#include <JNetwork/NetGroup.h>
 
 NS_JNET_BEGIN
 
-class NetMaster
+class JCORE_NOVTABLE NetMaster
 {
 public:
-	
+	NetMaster();
 
+	virtual void Initialize() = 0;
+	virtual void Finalize();
+
+	void AddNetGroup(int id, const NetGroupPtr& group);
 protected:
-
+	JCore::HashMap<int, NetGroupPtr> m_hNetGroup;
 };
 
 NS_JNET_END

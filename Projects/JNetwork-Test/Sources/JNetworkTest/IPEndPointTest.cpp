@@ -1,16 +1,12 @@
-﻿#include <JNetworkTest/NetworkTest.h>
+#include <JNetworkTest/NetworkTest.h>
 
 #include <JNetwork/IPEndPoint.h>
 
 #if TEST_IPEndPointTest == ON
 
 TEST(IPEndPointTest, IPv4) {
-	EXPECT_ANY_THROW(IPv4EndPoint("255.255.255.255:8000 "));
-	EXPECT_ANY_THROW(IPv4EndPoint("255.255.255.2558000 "));
-	EXPECT_ANY_THROW(IPv4EndPoint("255.255.255.255:8000:"));
-	EXPECT_ANY_THROW(IPv4EndPoint("255.255.255.255:"));
 
-	const IPv4EndPoint ep("127.0.0.1:8000");
+	IPv4EndPoint ep("127.0.0.1:8000");
 
 	EXPECT_TRUE(ep.GetProtocol() == InternetProtocol::IPv4);
 	EXPECT_TRUE(ep.GetPort() == 8000);

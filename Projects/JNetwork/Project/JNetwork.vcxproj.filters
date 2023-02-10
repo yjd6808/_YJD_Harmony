@@ -67,6 +67,7 @@
     <ClCompile Include="..\Sources\JNetwork\Packet\SendPacket.cpp">
       <Filter>Packet</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\NetGroup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
@@ -98,7 +99,7 @@
       <Filter>IOCP</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Worker.h" />
-    <ClInclude Include="..\Sources\JNetwork\WorkerManager.h" />
+    <ClInclude Include="..\Sources\JNetwork\WorkerGroup.h" />
     <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.h">
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
@@ -167,6 +168,7 @@
     <ClInclude Include="..\Sources\JNetwork\Host\SessionHelper.h">
       <Filter>Host</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\NetGroup.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">

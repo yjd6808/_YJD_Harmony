@@ -21,15 +21,6 @@ NS_JC_BEGIN
 NS_JC_END
 
 
-
-
-
-
-
-
-
-
-
 #ifndef DebugAssert
     #if DebugMode
 		inline static bool PreventUnrechableCode = true;
@@ -50,6 +41,7 @@ NS_JC_END
 						}																						\
 					} while (0)
         #define DebugAssert(exp)            DebugAssertMsg(exp, "메시지 없음")
+
 
     #else
         #define DebugAssertMsg(exp, ...)	(0)

@@ -31,9 +31,10 @@ public:
 	void Initialize() override;
 	bool RecvFromAsync();
 	bool SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination);
+	bool SendToAsyncEcho(ISendPacket* packet);
+	void FlushSendBuffer() override;
 	void Connected() override;
 	void Disconnected() override;
-	void Received(Int32UL receivedBytes, IOCPOverlappedRecvFrom* recvFrom);
 
 	void NotifyCommand(ICommand* cmd) override;
 	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;

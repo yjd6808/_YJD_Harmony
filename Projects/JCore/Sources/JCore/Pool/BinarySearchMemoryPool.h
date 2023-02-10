@@ -90,7 +90,7 @@ public:
 	void CreatePool() {
 		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
 			int iChunkSize = Detail::AllocationLengthMapConverter::ToSize(i);
-			m_Pool[i] = new MemoryChunckQueue(iChunkSize, 0);
+			m_Pool[i] = dbg_new MemoryChunckQueue(iChunkSize, 0);
 		}
 	}
 
@@ -107,7 +107,7 @@ public:
 				DeleteSafe(m_Pool[iIndex]);
 			}
 			
-			m_Pool[iIndex] = new MemoryChunckQueue(iSize, iCount);
+			m_Pool[iIndex] = dbg_new MemoryChunckQueue(iSize, iCount);
 			AddInitBlock(iIndex, iCount);
 		});
 
