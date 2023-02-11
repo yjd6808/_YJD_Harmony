@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -30,10 +30,10 @@ public:
 	IOCPOverlapped(IOCP* iocp, Type type);
 	virtual ~IOCPOverlapped();
 public:
-	virtual void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) = 0;
+	virtual void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) = 0;
 	virtual void Release();
 	Type GetType() const { return m_eType; }
-	bool IsFailed(SOCKET hSocket, BOOL result, Int32UL numberOfBytesTransffered);
+	bool IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffered, Out_ Int32U& errorCode);
 protected:
 	Type m_eType;
 	IOCP* m_pIocp;

@@ -25,6 +25,7 @@ public:
 	void Initialize() override;
 	bool ConnectAsync(const IPv4EndPoint& destination);
 	void Connected() override;
+	void ConnectFailed(Int32U errorCode);
 	void Disconnected() override;
 	void NotifyCommand(ICommand* cmd) override;
 	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;
@@ -34,5 +35,6 @@ protected:
 };
 
 using TcpClientPtr = JCore::SharedPtr<TcpClient>;
+using TcpClientWPtr = JCore::WeakPtr<TcpClient>;
 
 NS_JNET_END

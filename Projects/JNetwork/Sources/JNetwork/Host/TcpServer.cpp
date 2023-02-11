@@ -14,17 +14,17 @@ NS_JNET_BEGIN
 TcpServer::TcpServer(
 	const IOCPPtr& iocp,
 	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	TcpServerEventListener* eventListener, 
+	TcpServerEventListener* eventListener,
+	int maxConn,
 	int sessionRecvBufferSize, 
-	int sessionSendBufferSize, 
-	int maxConn
+	int sessionSendBufferSize
 )
 	: Server(iocp)
 	, m_iSessionRecvBufferSize(sessionRecvBufferSize)
 	, m_iSessionSendBufferSize(sessionSendBufferSize)
 	, m_spBufferAllocator(bufferAllocator)
 	, m_pEventListener(eventListener)
-	, m_pContainer(new SessionContainer(maxConn))
+	, m_pContainer(dbg_new SessionContainer(maxConn))
 {
 	TcpServer::Initialize();
 }
@@ -47,11 +47,11 @@ void TcpServer::SessionDisconnected(TcpSession* session) {
 		return;
 	}
 
+	NetLog("세션을 재사용합니다.\n");
 	session->Initialize();
 	session->AcceptWait();
 
 	if (session->AcceptAsync()) {
-		NetLog("세션을 재사용합니다.");
 		return;
 	}
 }
@@ -125,14 +125,14 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 
 
 bool TcpServer::Stop() {
-
+	
 	if (m_eState == eStopped)
 		return true;
 
-	// 제일먼저 세팅해줘야한다.
-	// 
-	m_eState = eStopped;
+	NetLog("서버를 정지합니다.\n");
 
+	// 제일먼저 세팅해줘야한다.
+	m_eState = eStopped;
 
 	// 강종 진행: GetQueuedCompletionStatus에서 995번에러를 뱉음(I / O operation has been aborted)
 	m_pContainer->DisconnectAllSessions();

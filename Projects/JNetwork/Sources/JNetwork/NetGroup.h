@@ -17,15 +17,21 @@ NS_JNET_BEGIN
 class JCORE_NOVTABLE NetGroup
 {
 public:
-	NetGroup();
+	NetGroup(const JCore::String& name);
 	virtual ~NetGroup() = default;
 
-	virtual void Initialize() = 0;
+	void CreateIocp(int threadCount);
+	void CreateBufferPool(const JCore::HashMap<int, int>& poolInfo);
+	void RunIocp();
+	void AddHost(const HostPtr& host);
+
+	virtual void Initialize() {}
 	virtual void Finalize();
-private:
+protected:
 	IOCPPtr m_spIOCP;
 	JCore::Vector<HostPtr> m_vHostList;
 	JCore::MemoryPoolAbstractPtr m_spBufferPool;
+	JCore::String m_Name;
 };
 
 using NetGroupPtr = JCore::SharedPtr<NetGroup>;

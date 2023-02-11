@@ -18,15 +18,16 @@ IOCPOverlappedSend::IOCPOverlappedSend(Session* session, IOCP* iocp, ISendPacket
 
 IOCPOverlappedSend::~IOCPOverlappedSend() = default;
 
-void IOCPOverlappedSend::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedSend::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hSentSock = m_pSender->SocketHandle();
+	Int32U uiErrorCode = 0;
 
-	if (IsFailed(hSentSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
+	if (IsFailed(hSentSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
 		m_pSender->Disconnect();
 		return;
 	}
 
-	m_pSender->Sent(m_pSentPacket, numberOfBytesTransffered);
+	m_pSender->Sent(m_pSentPacket, bytesTransffered);
 	m_pSentPacket->Release();
 }
 

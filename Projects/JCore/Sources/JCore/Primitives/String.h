@@ -42,6 +42,7 @@ public:
 	char* Source() const { return m_pBuffer; }
 	int Capacity() const { return m_iCapacity; }
 	int Length() const { return m_iLen; }
+	int LengthWithNull() const { return m_iLen + 1; }
 	void SetLength(int len) { m_iLen = len; }
 	void ExchangeSource(char* src, int len);
 	bool Empty() const { return m_iLen == 0; }
@@ -50,7 +51,7 @@ public:
 	bool IsValidIndexRange(const int startIdx, const int endIdx) const {
 		return startIdx <= endIdx && startIdx >= 0 && endIdx < m_iLen;
 	}
-public:
+
 	template <typename T>
 	void Append(const T& str) {
 		std::stringstream ss;

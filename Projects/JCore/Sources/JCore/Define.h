@@ -3,7 +3,7 @@
     #define __JCORE_DEFINE_H__
 
 	// https://stackoverflow.com/questions/8487986/file-macro-shows-full-path
-	#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+	#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
 
 	// __COUNTER__매크로는 리다이렉션 한번 필요하다캄

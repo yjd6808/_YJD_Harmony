@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -16,7 +16,7 @@ public:
 	IOCPOverlappedSend(Session* session, IOCP* iocp, ISendPacket* sentPacket);
 	~IOCPOverlappedSend() override;
 public:
-	void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
+	void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	Session* m_pSender;	
 	ISendPacket* m_pSentPacket;

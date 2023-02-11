@@ -2,7 +2,11 @@
  * 작성자: 윤정도
  * 생성일: 2/9/2023 7:23:36 PM
  * =====================
- * 송신용 패킷
+ * 송신용 패킷 (4타입)
+ *   - 멀티 스타릭 패킷 (스타릭 커맨드 여러개 담아서 전송)
+ *	 - 멀티 다이나믹 패킷 (다이나믹 커맨드 여러개 담아서 전송)
+ *	 - 커맨드 버퍼 패킷 (커맨드 버퍼 통째로 전송)
+ *	 - 싱글 패킷 (스타릭 커맨드, 다이나믹 커맨드 암거나 1개만 담음)
  */
 
 
@@ -75,7 +79,7 @@ protected:
 
 /*=====================================================================================
 
-								 스태릭 패킷 : 고정크기의 커맨드만 사용
+								 스태릭 패킷 : 고정크기의 커맨드만 담는 녀석
 								 
   ===================================================================================== */
 template <typename... CommandArgs>
@@ -125,9 +129,9 @@ private:
 	template <int Index, typename Cmd, typename... CmdArgs>
 	constexpr void PlacementDefaultAllocateRecursive() {
 		if constexpr (Index == 0) {
-			::new (Get<Index>()) Cmd();
+			:: new (Get<Index>()) TypeAt<Index>();
 		} else {
-			::new (Get<Index>()) Cmd();
+			:: new (Get<Index>()) TypeAt<Index>();
 			PlacementDefaultAllocateRecursive<Index - 1, CmdArgs...>();
 		}
 	}
@@ -162,26 +166,28 @@ private:
 
 /*=====================================================================================
 
-								 따이나믹 패킷 : 가변크기의 패킷 사용
+								 따이나믹 패킷 : 가변크기의 커맨드들을 담는 녀석
 
   ===================================================================================== */
 template <typename... CommandArgs>
 class DynamicPacket : public ISendPacket
 {
 	static_assert(sizeof...(CommandArgs) > 0, "... Packet must have one more command"); // 커맨드는 최소 1개 이상 전달하도록 하자.
-	static_assert(JCore::IsMultipleDerived_v<ICommand, CommandArgs...>, "... CommandArgs must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+	static_assert(JCore::IsMultipleDerived_v<DynamicCommand, CommandArgs...>, "... CommandArgs must be derived type of \"DynamicCommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
 	template <int Index>
 	using TypeAt = JCore::IndexOf_t<Index, CommandArgs...>;	 // 인자로 전달받은 커맨드 타입
 public:
 	template <typename... Ints>
-	DynamicPacket(Ints... sizes) : ISendPacket() {
-		static_assert(CommandCount == sizeof...(sizes), "... Invalid command size count");
-		const int iPacketLen = (... + sizes);
-		this->m_iPacketLen = iPacketLen;
-		this->m_iCommandCount = CommandCount;
-		this->m_pDynamicBuf = dbg_new char[PacketHeaderSize_v + iPacketLen];
+	DynamicPacket(Ints... counts) : ISendPacket() {
+		static_assert(CommandCount == sizeof...(counts), "... Invalid command size count");
+		const int iPacketLen = (... + counts);
+		InitializeCountRecursive<0>(counts...);
 
-		InitializeCommandLenRecursive<0>(sizes...);
+		this->m_iPacketLen = m_CmdEndPos[CommandCount];
+		this->m_iCommandCount = CommandCount;
+		this->m_pDynamicBuf = dbg_new char[PacketHeaderSize_v + this->m_iPacketLen];
+
+		ConstructRecursive<0>(counts...);
 	}
 	~DynamicPacket() override {
 		DeleteArraySafe(m_pDynamicBuf);
@@ -199,60 +205,60 @@ public:
 		return wsaBuf;
 	}
 
-	template <int Index, typename... Args>
-	void Construct(Args&&... args) {
-		static_assert(Index < CommandCount, "... Index must less then command count");
-		auto pCmd = ::new (CommandBuf() + CommandPos(Index)) TypeAt<Index>{ JCore::Forward<Args>(args)... };
-		pCmd->SetCommandLen(m_pCommandSizes[Index]);
-	}
+
 
 	template <int Index>
 	TypeAt<Index>* Get() {
 		static_assert(Index < CommandCount, "... Index must less then command count");
-		return reinterpret_cast<TypeAt<Index>*>(CommandBuf() + CommandPos(Index));
+		return reinterpret_cast<TypeAt<Index>*>(CommandBuf() + m_CmdEndPos[Index]);
 	}
 private:
+
+	/*
+	 *  m_CmdEndPos[0] = 0                                      (첫번째 커맨드 시작 위치)
+	 *  m_CmdEndPos[1] = 첫번째 커맨드 길이						(두번째 커맨드 시작 위치)
+	 *	m_CmdEndPos[2] = 첫번쨰 커맨드 길이 + 두번째 커맨들 길이		(세번째 커맨드 시작 위치)
+	 */
 	template <int Index>
-	void InitializeCommandLenRecursive(int size) {
-		m_pCommandSizes[Index] = size;
-		reinterpret_cast<TypeAt<Index>*>(CommandBuf() + CommandPos(Index))->SetCommandLen(size);
+	void InitializeCountRecursive(int count) {
+		int iSize = TypeAt<Index>::Size(count);
+
+		if constexpr (Index > 0) {
+			iSize += m_CmdEndPos[Index];
+		}
+		m_CmdEndPos[Index + 1] = iSize;
 	}
 
 	template <int Index, typename... Ints>
-	void InitializeCommandLenRecursive(int size, Ints... sizes) {
-		m_pCommandSizes[Index] = size;
-		reinterpret_cast<TypeAt<Index>*>(CommandBuf() + CommandPos(Index))->SetCommandLen(size);
-		InitializeCommandLenRecursive<Index + 1>(sizes...);
+	void InitializeCountRecursive(int count, Ints... counts) {
+
+		int iSize = TypeAt<Index>::Size(count);
+
+		if constexpr (Index > 0) {
+			iSize += m_CmdEndPos[Index];
+		}
+		m_CmdEndPos[Index + 1] = iSize;
+		InitializeCountRecursive<Index + 1>(counts...);
 	}
 
-	int CommandPos(const int idx) const {
-		if (idx == 0) {
-			return 0;
-		}
-
-		char* pCurBuf = CommandBuf();
-		int iCommandPos = 0;
-
-		for (int i = 1; i <= idx; ++i) {
-			const int iCurCommandLen = reinterpret_cast<ICommand*>(pCurBuf)->GetCommandLen();
-			iCommandPos += iCurCommandLen;
-			pCurBuf = pCurBuf + iCurCommandLen;
-		}
-
-		return iCommandPos;
+	template <int Index>
+	void ConstructRecursive(int count) {
+		:: new (Get<Index>()) TypeAt<Index>(count);
 	}
 
-
+	template <int Index, typename... Ints>
+	void ConstructRecursive(int count, Ints... counts) {
+		:: new (Get<Index>()) TypeAt<Index>(count);
+		ConstructRecursive<Index + 1>(counts...);
+	}
 
 	char* CommandBuf() const {
 		return m_pDynamicBuf + PacketHeaderSize_v; // m_pDynamicBuf의 상위 4바이트는 헤더로 사용하기 때문에
 	}
-
-	
 private:
 	static constexpr int CommandCount = sizeof...(CommandArgs);
 
-	int m_pCommandSizes[CommandCount]{};		// 각 커맨드 길이 임시 기록용
+	int m_CmdEndPos[CommandCount + 1]{};		// 각 커맨드 길이 임시 기록용
 	char* m_pDynamicBuf;
 };
 
@@ -278,6 +284,54 @@ public:
 private:
 	CommandBufferPtr m_Buffer;
 };
+
+
+
+
+/*=====================================================================================
+
+							   싱글 패킷 (커맨드 한개만 전송하는 용도)
+							   다이나믹, 스태릭 커맨드 아무거나 가능
+  ===================================================================================== */
+template <typename TCommand>
+class SinglePacket : public ISendPacket
+{
+	static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand must be derived type of \"ICommand\""); // 템플릿 파라미터로 전달한 모든 타입은 ICommand를 상속받아야한다.
+public:
+	SinglePacket() : SinglePacket(1, true) {}
+	SinglePacket(int count, bool noCount = false)
+		: ISendPacket(1, TCommand::Size(count))
+		, m_pDynamicBuf(dbg_new char[PacketHeaderSize_v + this->m_iPacketLen])
+		, Cmd(*reinterpret_cast<TCommand*>(m_pDynamicBuf + PacketHeaderSize_v))
+	{
+		// 다이나믹 커맨드인데 count 인자를 명시적으로 전달안한 경우
+		if (JCore::IsBaseOf_v<DynamicCommand, TCommand> && noCount) {
+			DebugAssertMsg(false, "다이나맥 커맨드는 명시적으로 count 인자를 전달해줘야합니다.");
+		}
+
+		JCore::Memory::PlacementNew(Cmd, count);
+	}
+	~SinglePacket() override {
+		DeleteArraySafe(m_pDynamicBuf);
+	}
+
+	WSABUF GetWSABuf() const override {
+		*(CmdCnt_t*)(m_pDynamicBuf + 0) = m_iCommandCount;
+		*(PktLen_t*)(m_pDynamicBuf + sizeof(CmdCnt_t)) = m_iPacketLen;
+
+		WSABUF wsaBuf;
+		wsaBuf.len = PacketHeaderSize_v + m_iPacketLen;
+		wsaBuf.buf = m_pDynamicBuf;
+		return wsaBuf;
+	}
+
+	// @참고: https://stackoverflow.com/questions/2669888/initialization-order-of-class-data-members
+	// 클래스 필드는 배열한 순서대로 초기화가 이뤄진다.
+	// 따라서 참조커맨드는 무조건 다이나믹 버퍼가 초기화된 후 초기화해줘야한다.
+	char* m_pDynamicBuf;
+	TCommand& Cmd;
+};
+
 
 
 using ISendPacketPtr = JCore::SharedPtr<ISendPacket>;

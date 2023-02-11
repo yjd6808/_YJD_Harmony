@@ -49,7 +49,7 @@ public:
 	virtual void Initialize() = 0;
 	virtual Type GetType() const = 0;
 	State GetState() { return (State)m_eState.Load(); }
-	bool CreateSocket(TransportProtocol protocol);
+	bool CreateSocket(TransportProtocol protocol, bool nonBlocking = true);
 	bool ConnectIocp();
 	const Socketv4& Socket() const { return m_Socket; }
 	SOCKET SocketHandle() const { return m_Socket.Handle; }

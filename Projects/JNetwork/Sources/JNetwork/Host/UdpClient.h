@@ -43,4 +43,7 @@ protected:
 	ClientEventListener* m_pClientEventListener;
 };
 
+using UdpClientPtr = JCore::SharedPtr<UdpClient>;
+using UdpClientWPtr = JCore::WeakPtr<UdpClient>;
+
 NS_JNET_END

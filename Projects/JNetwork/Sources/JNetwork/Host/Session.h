@@ -9,7 +9,6 @@
 #include <JCore/Sync/RecursiveLock.h>
 
 #include <JNetwork/Host/Host.h>
-#include <JNetwork/Host/SessionHelper.h>
 
 #include <JNetwork/EventListener/TcpServerEventListener.h>
 
@@ -31,29 +30,28 @@ public:
 	IPv4EndPoint GetRemoteEndPoint() const { return m_RemoteEndPoint; }
 	CommandBufferPtr GetRecvBuffer() { return m_spRecvBuffer; }
 	CommandBufferPtr GetSendBuffer() { return m_spSendBuffer; }
+	JCore::MemoryPoolAbstractPtr GetBufferAllocator() { return m_spBufferAllocator; }
 
 	void Initialize() override;
 	bool Bind(const IPv4EndPoint& bindAddr);
 	bool Connect(const IPv4EndPoint& remoteAddr);
 	bool Disconnect();
 	bool SendAsync(ISendPacket* packet);
+	bool SendAsync(const CommandBufferPtr& buffer);
 	bool RecvAsync();
 
-	template <typename TCommand, typename... Args>
-	TCommand& SendAlloc(Args&&... args) {
-		static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand is not command [2]");
-
+	template <typename TCommand>
+	TCommand& SendAlloc(int count = 1) {
 		SessionLockGuard guard(m_SendBufferLock);
-		static constexpr int CmdSize = sizeof(TCommand);
+		const int CmdSize = TCommand::Size(count);
 		if (m_spSendBuffer->GetWritePos() + CmdSize >= MAX_MSS) {
 			FlushSendBuffer();
 		}
 
 		DebugAssertMsg(CmdSize <= m_spSendBuffer->GetRemainBufferSize(), "버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)", CmdSize, m_spSendBuffer->GetRemainBufferSize());
-		return m_spSendBuffer->Alloc<TCommand>(JCore::Forward<Args>(args)...);
+		return m_spSendBuffer->Alloc<TCommand>(count);
 	}
 
-	
 	CommandBufferPacket* GetCommandBufferForSending();
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	컴파일 타임 문자열
 	런타임에는 String을 쓰면댐 굳이 이거 쓸 필요없음
@@ -7,9 +7,10 @@
 #pragma once
 
 #include <JCore/Primitives/String.h>
+#include <JCore/Primitives/StringUtil.h>
 #include <JCore/Type.h>
 #include <JCore/Exception.h>
-#include <JCore/Primitives/StringUtil.h>
+#include <JCore/Assert.h>
 
 #pragma warning(push)
   #pragma warning (disable : 4200) // nonstandard extension used : zero - sized array in struct / union -> Source[0] 같은거
@@ -20,7 +21,6 @@ template <Int32U Size>
 struct StaticString
 {
 	char Source[Size] = "";
-
 
 	template <Int32U ParamSize>
 	constexpr bool operator==(const char(&str)[ParamSize]) const {
@@ -40,6 +40,14 @@ struct StaticString
 		return StringUtil::CTCompare(Source, str) != 0;
 	}
 
+	constexpr bool operator==(const String& str) const {
+		return StringUtil::CTCompare(Source, str.Source()) == 0;
+	}
+
+	constexpr bool operator!=(const String& str) const {
+		return StringUtil::CTCompare(Source, str.Source()) != 0;
+	}
+
 	template <Int32U ParamSize>
 	constexpr bool operator==(const StaticString<ParamSize>& str) const {
 		return Compare(str) == 0;
@@ -56,6 +64,10 @@ struct StaticString
 
 	constexpr int Length() const {
 		return StringUtil::CTLength2(Source);
+	}
+
+	constexpr int LengthWithNull() const {
+		return StringUtil::CTLength2(Source) + 1;
 	}
 
 	static constexpr int Capacity() {
@@ -225,6 +237,60 @@ struct StaticString
 	/*==================================================================
 	 non-constexpr methods
 	===================================================================*/
+
+	StaticString<Size>& operator=(const char* str) {
+		int iCopySize = StringUtil::Copy(Source, Size, str);
+		DebugAssertMsg(iCopySize != -1, "복사에 실패했습니다.");
+		return *this;
+	}
+
+	StaticString<Size>& operator=(const String& str) {
+		int iCopySize = StringUtil::Copy(Source, Size, str.Source());
+		DebugAssertMsg(iCopySize != -1, "복사에 실패했습니다.");
+		return *this;
+	}
+
+
+	int SetStringUnsafe(const char* str) {
+		return StringUtil::CopyUnsafe(Source, str);
+	}
+
+	int SetStringUnsafe(const String& str) {
+		return StringUtil::CopyUnsafe(Source, str.Source());
+	}
+
+	template <Int32U ParamSize>
+	int SetStringUnsafe(const StaticString<ParamSize>& str) {
+		return StringUtil::CopyUnsafe(Source, str.Source);
+	}
+
+	int SetString(const char* str) {
+		return StringUtil::Copy(Source, Size, str);
+	}
+
+	int SetString(const String& str) {
+		return StringUtil::Copy(Source, Size, str.Source());
+	}
+
+	template <Int32U ParamSize>
+	int SetString(const StaticString<ParamSize>& str) {
+		return StringUtil::Copy(Source, Size, str.Source);
+	}
+
+	int SetString(const char* str, int count) {
+		return StringUtil::Copy(Source, count, str);
+	}
+
+	int SetString(const String& str, int count) {
+		return StringUtil::Copy(Source, count, str.Source());
+	}
+
+	template <Int32U ParamSize>
+	int SetString(const StaticString<ParamSize>& str, int count) {
+		return StringUtil::Copy(Source, count, str.Source);
+	}
+
+
 	String ToString() {
 		return Source;
 	}

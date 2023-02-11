@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/TypeTraits.h>
 #include <JNetwork/Namespace.h>
 
 
@@ -16,10 +17,6 @@
 								 커맨드 객체
 					  패킷에 커맨드를 담아서 전송한다.
  =====================================================================================*/
-
-
-
-
 
 // 패킷 헤더
 using CmdCnt_t  = Int16U;
@@ -29,10 +26,14 @@ using PktLen_t  = Int16U;
 using Cmd_t		= Int16U;
 using CmdLen_t	= Int16U;
 
+#pragma pack(push, 1)
+
 NS_JNET_BEGIN
 
 inline static constexpr int PacketHeaderSize_v = sizeof(CmdCnt_t) + sizeof(PktLen_t);
 inline static constexpr int CommandHeaderSize_v = sizeof(Cmd_t) + sizeof(CmdLen_t);
+
+
 
 struct ICommand
 {
@@ -82,7 +83,7 @@ struct Command : ICommand
 
 
 struct StaticCommand : ICommand {};
-struct DynamicCommand : ICommand {};
+struct DynamicCommand : ICommand { int Count{}; };	// 0 초기화
 
 	NS_DETAIL_BEGIN
 	template<typename T>
@@ -98,3 +99,41 @@ template <typename T>
 constexpr bool IsDynamicCommand_v = Detail::IsDynamicCommand<T>::Value;
 
 NS_JNET_END
+
+
+#pragma pack(pop) // pack 1 end
+
+
+/*=====================================================================================
+								 커맨드 생성 규칙
+					  아래 규칙에 맞게 커맨드를 생성토록 한다.
+ =====================================================================================*/
+
+
+#define StaticCmdBegin(__struct__, __cmd__)									\
+struct __struct__ : JNetwork::StaticCommand {								\
+	__struct__(int count = 1) {												\
+		Cmd = __cmd__;														\
+		CmdLen = sizeof(__struct__);										\
+	}																		\
+	static constexpr const char* Name() { return #__struct__; }				\
+	static constexpr int Size(int count = 1) { return sizeof(__struct__);	}	
+
+#define StaticCmdEnd(__struct__) };
+
+
+// 가장큰 멤버가 먼저 오도록 하는게 좋다고 한다. (왜 그런지는 모름)
+// 따라서 그냥 다이나믹 멤버타입을 상단에 박도록하자.
+// @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
+#define DynamicCmdBegin(__struct__, __cmd__, __countable_elem_type__, __countable_elem_type_name__)							\
+struct __struct__ : JNetwork::DynamicCommand {																				\
+	__struct__(int count) {																									\
+		Cmd = __cmd__;																										\
+		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);										\
+		Count = count;																										\
+	}																														\
+	static constexpr const char* Name() { return #__struct__; }																\
+	static constexpr int Size(int count) { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
+	__countable_elem_type__ __countable_elem_type_name__[1];
+
+#define DynamicCmdEnd(__struct__)	};

@@ -16,6 +16,7 @@ class JCORE_NOVTABLE NetMaster
 {
 public:
 	NetMaster();
+	virtual ~NetMaster() = default;
 
 	virtual void Initialize() = 0;
 	virtual void Finalize();

@@ -46,6 +46,10 @@ CommandBuffer::~CommandBuffer() {
 	m_Allocator->DynamicPush(m_pBuffer, m_iRequestBufferSize);
 }
 
+CommandBufferPtr CommandBuffer::Create(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize) {
+	return JCore::MakeShared<CommandBuffer>(allocator, bufferSize);
+}
+
 void CommandBuffer::Initialize() {
 	JCore::Arrays::Fill(m_pBuffer, PacketHeaderSize_v, (char)0);
 
@@ -63,7 +67,7 @@ void CommandBuffer::AddPacketLength(int size) {
 	uiPktLen += size;
 }
 
-bool CommandBuffer::IsValid() {
+bool CommandBuffer::IsValid() const {
 	CommandBuffer dbgBuffer(*this);	// 기존꺼 무결성 보장
 
 	dbgBuffer.ResetPosition();

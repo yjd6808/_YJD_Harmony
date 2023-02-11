@@ -19,7 +19,7 @@ public:
 	IOCPOverlappedRecvFrom(UdpClient* client, IOCP* iocp);
 	~IOCPOverlappedRecvFrom() override;
 public:
-	void Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) override;
+	void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) override;
 private:
 	UdpClient* m_pReceiver;
 };

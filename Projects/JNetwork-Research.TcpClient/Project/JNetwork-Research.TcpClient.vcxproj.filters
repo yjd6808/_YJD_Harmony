@@ -2,8 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\main.cpp" />
+    <ClCompile Include="..\Sources\Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\header.h" />
+    <ClInclude Include="..\Sources\Menu.h" />
   </ItemGroup>
 </Project>

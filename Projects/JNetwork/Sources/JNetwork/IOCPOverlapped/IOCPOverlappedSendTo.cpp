@@ -23,14 +23,15 @@ IOCPOverlappedSendTo::IOCPOverlappedSendTo(UdpClient* sender, IOCP* iocp, ISendP
 
 IOCPOverlappedSendTo::~IOCPOverlappedSendTo() = default;
 
-void IOCPOverlappedSendTo::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedSendTo::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hSentSock = m_pSender->SocketHandle();
+	Int32U uiErrorCode = 0;
 
-	if (IsFailed(hSentSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
+	if (IsFailed(hSentSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
 		return;
 	}
 
-	m_pSender->Sent(m_pSentPacket, numberOfBytesTransffered);
+	m_pSender->Sent(m_pSentPacket, bytesTransffered);
 	m_pSentPacket->Release();
 }
 

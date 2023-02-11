@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	문자열 조작을 도와주는 클래스입니다.
 */
@@ -26,6 +26,7 @@ public:
 
 	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);
+	static int CopyUnsafe(char* buffer, const char* copy);
 	static bool IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen);
 	static void Swap(String& src, String& dst);
 

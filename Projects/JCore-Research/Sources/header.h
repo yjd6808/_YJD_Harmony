@@ -1,6 +1,4 @@
 #pragma once
-#define _CRTDBG_MAP_ALLOC
-
 
 #include <JCore/Random.h>
 #include <JCore/TypeTraits.h>
@@ -19,6 +17,7 @@
 #include <JCore/Primitives/Atomic.h>
 #include <JCore/Primitives/SmartPtr.h>
 #include <JCore/Primitives/String.h>
+#include <JCore/Primitives/StaticString.h>
 
 #include <JCore/FileSystem/Path.h>
 #include <JCore/Encoding/CodePage.h>

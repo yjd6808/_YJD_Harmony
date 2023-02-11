@@ -16,12 +16,6 @@ class IOCPWorker;
 class IOCP
 {
 public:
-	enum Type
-	{
-		eIocp,
-		eHostIocp
-	};
-
 	enum class State
 	{
 		eInitialized,
@@ -34,15 +28,14 @@ public:
 	IOCP(int threadCount);
 	virtual ~IOCP();
 
-	virtual Type GetType() { return eIocp; }
 	void Destroy();
 	void Run();
 	void Join();
 
-	void AddPendingCount()				{ ++m_iPendingOverlappedCount;}
-	void DecreasePendingCount()			{ --m_iPendingOverlappedCount;}
-	int GetPendingCount()				{ return m_iPendingOverlappedCount;}
-	void WaitForZeroPending();
+	void	AddPendingCount()				{ ++m_iPendingOverlappedCount;}
+	void	DecreasePendingCount()			{ --m_iPendingOverlappedCount;}
+	int		GetPendingCount()				{ return m_iPendingOverlappedCount;}
+	void	WaitForZeroPending();
 
 	bool Connect(WinHandle handle, ULONG_PTR completionKey) const;
 	BOOL GetStatus(Int32UL* numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const;

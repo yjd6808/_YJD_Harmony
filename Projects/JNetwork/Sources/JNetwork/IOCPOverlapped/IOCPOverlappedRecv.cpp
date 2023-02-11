@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -16,16 +16,17 @@ IOCPOverlappedRecv::IOCPOverlappedRecv(Session* session, IOCP* iocp) :
 
 
 
-void IOCPOverlappedRecv::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedRecv::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hReceiveSock = m_pReceivedSession->SocketHandle();
-
-	if (IsFailed(hReceiveSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
+	Int32U uiErrorCode = 0;
+	if (IsFailed(hReceiveSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
 		m_pReceivedSession->Disconnect();
 		return;
 	}
 
-	m_pReceivedSession->Received(numberOfBytesTransffered);
+	m_pReceivedSession->Received(bytesTransffered);
 
+	// TODO: 리시브 오버랩 재사용 기능 구현
 	if (m_pReceivedSession->RecvAsync() == false) {
 		m_pReceivedSession->Disconnect();
 	}

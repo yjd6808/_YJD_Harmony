@@ -40,8 +40,8 @@ UdpClient::~UdpClient() {
 void UdpClient::Initialize() {
 	Session::Initialize();
 
-	if (CreateSocket(TransportProtocol::UDP) == false) {
-		DebugAssertMsg(false, "UDP 소켓 생성에 실패했습니다.");
+	if (CreateSocket(TransportProtocol::UDP, true) == false) {
+		DebugAssertMsg(false, "UDP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
 	}
 
 	if (ConnectIocp() == false) {
@@ -68,10 +68,13 @@ bool UdpClient::RecvFromAsync() {
 	if (iResult == SOCKET_ERROR) {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "RecvFromAsync() 실패 (%d)", uiErrorCode);
+			DebugAssertMsg(false, "RecvFromAsync 실패 (%d)", uiErrorCode);
 			return false;
 		}
 	}
+
+	
+
 	return true;
 }
 
@@ -87,7 +90,7 @@ bool UdpClient::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination
 	if (iResult == SOCKET_ERROR) {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "SendToAsync() 실패 (%d)", uiErrorCode);
+			DebugAssertMsg(false, "SendToAsync 실패 (%d)", uiErrorCode);
 			pOverlapped->Release();
 			packet->Release();
 			return false;
@@ -111,7 +114,6 @@ void UdpClient::FlushSendBuffer() {
 }
 
 void UdpClient::Connected() {
-	m_eState = eConnected;
 	m_Socket.State = Socket::eBinded;
 	m_pClientEventListener->OnConnected();
 }

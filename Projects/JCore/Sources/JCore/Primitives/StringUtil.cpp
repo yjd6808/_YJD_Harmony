@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	문자열 조작을 도와주는 클래스입니다.
 */
@@ -71,6 +71,25 @@ int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy) {
 	char* pBuffer = buffer;
 
 	while (*copy != NULL && iSize < bufferSize) {
+		*buffer = *copy;
+		buffer++;
+		copy++;
+		iSize++;
+	}
+
+	pBuffer[iSize] = NULL;
+	return iSize;
+}
+
+int StringUtil::CopyUnsafe(char* buffer, const char* copy) {
+	if (buffer == nullptr || copy == nullptr) {
+		return -1;
+	}
+
+	int iSize = 0;
+	char* pBuffer = buffer;
+
+	while (*copy != NULL) {
 		*buffer = *copy;
 		buffer++;
 		copy++;

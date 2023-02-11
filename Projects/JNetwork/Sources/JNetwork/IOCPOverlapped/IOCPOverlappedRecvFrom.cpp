@@ -19,15 +19,16 @@ IOCPOverlappedRecvFrom::IOCPOverlappedRecvFrom(UdpClient* client, IOCP* iocp)
 
 IOCPOverlappedRecvFrom::~IOCPOverlappedRecvFrom() = default;
 
-void IOCPOverlappedRecvFrom::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedRecvFrom::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hReceiveSock = m_pReceiver->SocketHandle();
-
-	if (IsFailed(hReceiveSock, result, numberOfBytesTransffered) || numberOfBytesTransffered == 0) {
+	Int32U uiErrorCode = 0;
+	if (IsFailed(hReceiveSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
 		return;
 	}
 
-	m_pReceiver->Received(numberOfBytesTransffered);
+	m_pReceiver->Received(bytesTransffered);
 
+	// TODO: 리시브 오버랩 재사용 기능 구현
 	if (m_pReceiver->RecvFromAsync() == false) {
 	}
 }

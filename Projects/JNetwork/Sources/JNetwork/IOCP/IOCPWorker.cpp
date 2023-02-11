@@ -49,7 +49,7 @@ void IOCPWorker::Join() {
 // --> 서버 종료시를 제외하고는 Join() 함수 호출을 하면안됨
 
 void IOCPWorker::WorkerThread(void* param) {
-	NetLog("IOCPWorker 쓰레드가 실행되었습니다. (%d)\n", std::this_thread::get_id());
+	NetLog("IOCPWorker 쓰레드가 실행되었습니다. (%d)\n", Thread::GetThreadId());
 
 	for (;;) {
 		Int32UL numberOfBytesTransffered;
@@ -86,7 +86,7 @@ void IOCPWorker::WorkerThread(void* param) {
 	}
 
 THREAD_END:
-	NetLog("IOCPWorker 쓰레드가 종료되었습니다. (%d)\n", std::this_thread::get_id());
+	NetLog("IOCPWorker 쓰레드가 종료되었습니다. (%d)\n", Thread::GetThreadId());
 	m_eState = State::JoinWait;
 }
 

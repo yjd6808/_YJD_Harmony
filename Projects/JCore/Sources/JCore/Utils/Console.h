@@ -88,6 +88,8 @@ NS_JC_BEGIN
             return printf_s(format, Forward<TArgs>(args)...);
         }
 
+
+
         template <typename... TArgs>
         static int WriteLine(ConsoleColor color, char* format, TArgs&&... args) {
             TLockGuard guard(ms_ConsoleLock);

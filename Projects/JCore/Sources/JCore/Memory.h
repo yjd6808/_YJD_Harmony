@@ -5,12 +5,14 @@
 
 #pragma once
 
-#include <JCore/Assert.h>
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Exception.h>
 #include <JCore/Debug/New.h>
+#include <JCore/Assert.h>
+
+#include <stdio.h>
 
 NS_JC_BEGIN
 
@@ -53,8 +55,9 @@ public:
 	}
 
 	static void Deallocate(void* ptr) {
-		DebugAssertMsg(ptr != nullptr, "널 포인터를 해제하려고 하고 있어요");
-		operator delete(ptr);
+		//DebugAssertMsg(ptr != nullptr, "널 포인터를 해제하려고 하고 있어요");
+
+		::operator delete(ptr);
 	}
 
 

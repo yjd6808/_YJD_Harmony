@@ -165,9 +165,6 @@
     <ClInclude Include="..\Sources\JNetwork\Packet\Command.h">
       <Filter>Packet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\Host\SessionHelper.h">
-      <Filter>Host</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\NetGroup.h" />
   </ItemGroup>
   <ItemGroup>
@@ -189,5 +186,10 @@
     <Filter Include="EventListener">
       <UniqueIdentifier>{ea21f6b0-8056-4e44-b45f-9aa1d81306b0}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\Sources\JNetwork\Host\Session.natvis">
+      <Filter>Host</Filter>
+    </Natvis>
   </ItemGroup>
 </Project>

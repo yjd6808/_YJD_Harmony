@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -21,15 +21,15 @@ IOCPOverlappedAccept::~IOCPOverlappedAccept() {
 	NetLog("Accept 오버랩피트 소멸 (%d)\n", m_pIocp->GetPendingCount());
 }
 
-void IOCPOverlappedAccept::Process(BOOL result, Int32UL numberOfBytesTransffered, IOCPPostOrder* completionKey) {
+void IOCPOverlappedAccept::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hAcceptedSock = m_pAcceptedSession->SocketHandle();
-
-	if (IsFailed(hAcceptedSock, result, numberOfBytesTransffered)) {
+	Int32U uiErrorCode = 0;
+	if (IsFailed(hAcceptedSock, result, bytesTransffered, uiErrorCode)) {
 		m_pAcceptedSession->Disconnect();
 		return;
 	}
 
-	if (m_pAcceptedSession->Accepted(numberOfBytesTransffered)) {
+	if (m_pAcceptedSession->Accepted(bytesTransffered)) {
 		if (m_pAcceptedSession->ConnectIocp() == false || m_pAcceptedSession->RecvAsync() == false) {
 			m_pAcceptedSession->Disconnect();
 		}

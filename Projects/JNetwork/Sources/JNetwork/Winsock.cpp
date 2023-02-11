@@ -1,4 +1,4 @@
-﻿/*
+/*
  *	작성자 : 윤정도
  */
 
@@ -43,8 +43,6 @@ bool Winsock::Initialize(Byte highVersion, Byte lowVersion) {
 	if (Detail::UseDisconnectEx() == false) {
 		DebugAssertMsg(false, "UseDisconnectEx 실패");
 	}
-
-	;
 
 	return ms_bInitailized = true;
 }

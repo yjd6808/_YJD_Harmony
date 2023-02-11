@@ -73,28 +73,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JNetwork-Research.Common\Output\$(Platform)\$(Configuration)\;;$(LibraryPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\JNetwork-Research.Common\Sources</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JNetwork-Research.Common\Output\$(Platform)\$(Configuration)\;;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JNetwork-Research.Common\Output\$(Platform)\$(Configuration)\;;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JNetwork-Research.Common\Output\$(Platform)\$(Configuration)\;;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
@@ -107,11 +107,12 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib</AdditionalDependencies>
+      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;JNetwork-Research.Common.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -120,13 +121,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib</AdditionalDependencies>
+      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;JNetwork-Research.Common.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,16 +139,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib</AdditionalDependencies>
+      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;JNetwork-Research.Common.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -157,23 +160,25 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib</AdditionalDependencies>
+      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;JNetwork-Research.Common.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\main.cpp" />
+    <ClCompile Include="..\Sources\Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\header.h" />
+    <ClInclude Include="..\Sources\Menu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

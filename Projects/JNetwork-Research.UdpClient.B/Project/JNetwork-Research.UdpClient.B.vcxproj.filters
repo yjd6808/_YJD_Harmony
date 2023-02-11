@@ -3,7 +3,4 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\main.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Sources\header.h" />
-  </ItemGroup>
 </Project>

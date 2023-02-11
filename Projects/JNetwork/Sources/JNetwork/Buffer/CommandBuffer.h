@@ -20,31 +20,39 @@ class CommandBuffer : public BufferAbstract
 public:
 	CommandBuffer(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize);
 	CommandBuffer(const CommandBuffer& other);
-	~CommandBuffer();
+	~CommandBuffer() override;
 
-	template <typename TCommand, typename... Args>
-	TCommand& Alloc(Args&&... args) {
+	template <typename TCommand>
+	TCommand& Alloc() {
+		static_assert(JCore::IsBaseOf_v<DynamicCommand, TCommand>, "... this method is only for StaticCommand ");
+		return Alloc<TCommand>(1);
+	}
+
+	template <typename TCommand>
+	TCommand& Alloc(int count) {
 		static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand is not command [1]");
+		const int CmdSize = TCommand::Size(count);
 
-		static constexpr int CmdSize = sizeof(TCommand);
-
-		if (MoveWritePos(sizeof(TCommand)) == false) {
+		if (MoveWritePos(CmdSize) == false) {
 			DebugAssertMsg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
 		}
 
 		DebugAssertMsg(m_iReadPos + CmdSize == m_iWritePos, "리드포스 또는 라이트포스가 이상합니다.");
-		TCommand* cmd = Read<TCommand*>();
-		JCore::Memory::PlacementNew(cmd, JCore::Forward<Args>(args)...);
+		TCommand* cmd = Peek<TCommand*>();
+		MoveReadPos(CmdSize);
+		JCore::Memory::PlacementNew(cmd, count);
 
 		AddCommandCount();
 		AddPacketLength(CmdSize);
 		return *cmd;
 	}
 
+	static JCore::SharedPtr<CommandBuffer> Create(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize = 6000);
+
 	void Initialize();
 	void AddCommandCount();
 	void AddPacketLength(int size);
-	bool IsValid();
+	bool IsValid() const;
 	int GetBufferRequestSize() { return m_iRequestBufferSize; }
 	CmdCnt_t GetCommandCount();
 	PktLen_t GetPacketLength();

@@ -21,10 +21,10 @@ public:
 	TcpServer(
 		const IOCPPtr& iocp,
 		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		TcpServerEventListener* eventListener, 
-		int sessionRecvBufferSize, 
-		int sessionSendBufferSize, 
-		int maxConn
+		TcpServerEventListener* eventListener,
+		int maxConn = 10,
+		int sessionRecvBufferSize = 6000, 
+		int sessionSendBufferSize = 6000
 	);
 	~TcpServer() override;
 
@@ -53,5 +53,6 @@ protected:
 };
 
 using TcpServerPtr = JCore::SharedPtr<TcpServer>;
+using TcpServerWPtr = JCore::WeakPtr<TcpServer>;
 
 NS_JNET_END

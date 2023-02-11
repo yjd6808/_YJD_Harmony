@@ -141,10 +141,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\Session.h" />
-    <ClInclude Include="..\Sources\JNetwork\Host\SessionHelper.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Host\TcpClient.h">
       <SubType>
       </SubType>
@@ -250,6 +246,9 @@
     <ClInclude Include="..\Sources\JNetwork\Worker.h" />
     <ClInclude Include="..\Sources\JNetwork\WorkerGroup.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\Sources\JNetwork\Host\Session.natvis" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -341,6 +340,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Network.pch</PrecompiledHeaderOutputFile>
       <AdditionalOptions>/utf-8</AdditionalOptions>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -359,9 +359,10 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>JNetwork\Network.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Network.pch</PrecompiledHeaderOutputFile>
       <AdditionalOptions>/utf-8</AdditionalOptions>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -382,10 +383,11 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>JNetwork\Network.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Network.pch</PrecompiledHeaderOutputFile>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -408,10 +410,11 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>JNetwork\Network.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Network.pch</PrecompiledHeaderOutputFile>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>

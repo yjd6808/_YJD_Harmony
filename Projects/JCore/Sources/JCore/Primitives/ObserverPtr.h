@@ -14,6 +14,7 @@
 #include <JCore/TypeTraits.h>
 #include <JCore/Assert.h>
 #include <JCore/Define.h>
+#include <JCore/Debug/New.h>
 
 NS_JC_BEGIN
 

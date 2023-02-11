@@ -33,7 +33,7 @@ void TcpSession::Initialize() {
 
 
 	if (CreateSocket(TransportProtocol::TCP) == false) {
-		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다.");
+		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
 	}
 }
 
@@ -78,7 +78,6 @@ bool TcpSession::Accepted(Int32UL receivedBytes) {
 
 	m_Socket.AcceptExResult(pReads, TEST_DUMMY_PACKET_SIZE, &m_LocalEndPoint, &m_RemoteEndPoint);
 	m_eState = State::eAccepted;
-	m_pServer->SessionConnected(this);
 
 	Connected();
 	return true;

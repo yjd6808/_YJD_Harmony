@@ -37,11 +37,11 @@ void TcpClient::Initialize() {
 	Session::Initialize();
 
 	if (CreateSocket(TransportProtocol::TCP) == false) {
-		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다.");
+		DebugAssertMsg(false, "TCP 소켓 생성에 실패했습니다. (%u)", Winsock::LastError());
 	}
 
 	if (ConnectIocp() == false) {
-		DebugAssertMsg(false, "IOCP에 연결하는데 실패했습니다.");
+		DebugAssertMsg(false, "IOCP에 연결하는데 실패했습니다. (%u)", Winsock::LastError());
 	}
 }
 
@@ -53,6 +53,8 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 		return false;
 	}
 
+	m_eState = eConnectWait;
+
 	if (m_bIocpConneced == false) {
 		DebugAssertMsg(false, "IOCP와 연결해주세요.");
 		return false;
@@ -60,7 +62,6 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 	// ConnectEx를 사용하기 위해서 클라이언트더라도 바인딩을 해줘야한다.
 	if (Bind({}) == false) {
-		DebugAssertMsg(false, "클라이언트 Any 바인딩에 실패하였습니다.");
 		return false;
 	}
 
@@ -73,6 +74,8 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	dummyPacket->Get<1>()->SetCommand(3);
 	dummyPacket->Get<1>()->Value = 4;
     dummyPacket->AddRef();
+
+	
 
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedConnect(this, m_spIocp.GetPtr(), dummyPacket);
 	if (m_Socket.ConnectEx(destination, pOverlapped, dummyPacket->GetWSABuf().buf, TEST_DUMMY_PACKET_SIZE, &dwSentBytes) == FALSE) {
@@ -93,6 +96,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 void TcpClient::Disconnected() {
 	m_pClientEventListener->OnDisconnected();
+	Initialize();
 }
 
 void TcpClient::NotifyCommand(ICommand* cmd) {
@@ -124,6 +128,11 @@ void TcpClient::Connected() {
 	}
 
 	m_pClientEventListener->OnConnected();
+}
+
+void TcpClient::ConnectFailed(Int32U errorCode) {
+	m_pClientEventListener->OnConnectFailed(errorCode);
+	Initialize();
 }
 
 NS_JNET_END

@@ -76,6 +76,7 @@ bool Session::Disconnect() {
 	if (m_eState == eDisconnected)
 		return true;
 
+	int eState = m_eState;
 	m_eState = eDisconnected;
 	m_bIocpConneced = false;
 
@@ -88,8 +89,8 @@ bool Session::Disconnect() {
 	m_Socket.Invalidate();
 
 	
-
-	Disconnected();
+	if (eState == eConnected)
+		Disconnected();
 
 	return true;
 }
@@ -106,7 +107,7 @@ bool Session::SendAsync(ISendPacket* packet) {
 	if (iResult == SOCKET_ERROR) {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "SendAsync() 실패 (%u)", uiErrorCode);
+			DebugAssertMsg(false, "SendAsync 실패 (%u)", uiErrorCode);
 			pOverlapped->Release();
 			packet->Release();
 			return false;
@@ -114,6 +115,13 @@ bool Session::SendAsync(ISendPacket* packet) {
 	}
 	
 	return true;
+}
+
+bool Session::SendAsync(const CommandBufferPtr& buffer) {
+#ifdef DebugMode
+	DebugAssertMsg(buffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
+#endif
+	return SendAsync(new CommandBufferPacket(buffer));
 }
 
 CommandBufferPacket* Session::GetCommandBufferForSending() {
@@ -138,9 +146,7 @@ CommandBufferPacket* Session::GetCommandBufferForSending() {
 
 void Session::FlushSendBuffer() {
 	CommandBufferPacket* pWrappedPacket = GetCommandBufferForSending();
-	if (pWrappedPacket) {
-		SendAsync(pWrappedPacket);
-	}
+	if (pWrappedPacket) SendAsync(pWrappedPacket);
 }
 
 
@@ -151,10 +157,11 @@ bool Session::RecvAsync() {
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedRecv(this, m_spIocp.GetPtr());
 
 	const int iResult = m_Socket.ReceiveEx(&buf, &uiReceivedBytes, pOverlapped);
+
 	if (iResult == SOCKET_ERROR) {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "RecvAsync() 실패 (%u)", uiErrorCode);
+			DebugAssertMsg(false, "RecvAsync 실패 (%u)", uiErrorCode);
 			return false;
 		}
 	}
@@ -166,7 +173,6 @@ bool Session::RecvAsync() {
 void Session::Received(Int32UL receivedBytes) {
 	m_spRecvBuffer->MoveWritePos(receivedBytes);
 
-	
 	for (;;) {
 		// 패킷의 헤더 크기만큼 데이터를 수신하지 않았으면 모일때까지 기달
 		if (m_spRecvBuffer->GetReadableBufferSize() < PacketHeaderSize_v)
@@ -182,10 +188,11 @@ void Session::Received(Int32UL receivedBytes) {
 
 		for (int i = 0; i < packet->GetCommandCount(); i++) {
 			ICommand* pCmd = m_spRecvBuffer->Peek<ICommand*>();
+			CmdLen_t uiCmdLen = pCmd->GetCommandLen();
 
 			NotifyCommand(pCmd);
 
-			if (m_spRecvBuffer->MoveReadPos(pCmd->GetCommandLen()) == false) {
+			if (m_spRecvBuffer->MoveReadPos(uiCmdLen) == false) {
 				DebugAssertMsg(false, "커맨드 크기가 이상합니다.");
 				m_spRecvBuffer->ResetPosition();
 				return;
