@@ -276,7 +276,6 @@ class CommandBufferPacket : public ISendPacket
 {
 public:
 	CommandBufferPacket(const CommandBufferPtr& buffer);
-
 	WSABUF GetWSABuf() const override {
 		return { (ULONG)m_Buffer->GetWritePos(), m_Buffer->Source() };
 	}

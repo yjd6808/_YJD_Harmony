@@ -100,17 +100,20 @@ bool UdpClient::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination
 	return true;
 }
 
+bool UdpClient::SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& destination) {
+#ifdef DebugMode
+	DebugAssertMsg(buffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
+#endif
+	return SendToAsync(new CommandBufferPacket(buffer), destination);
+}
+
 bool UdpClient::SendToAsyncEcho(ISendPacket* packet) {
 	return SendToAsync(packet, m_RemoteEndPoint);
 }
 
 void UdpClient::FlushSendBuffer() {
-	DebugAssertMsg(m_RemoteEndPoint.IsValidRemoteEndPoint(), "유효한 목적지 주소가 아닙니다.");
-
 	CommandBufferPacket* pWrappedPacket = GetCommandBufferForSending();
-	if (pWrappedPacket) {
-		SendToAsync(pWrappedPacket, m_RemoteEndPoint);
-	}
+	if (pWrappedPacket) SendToAsync(pWrappedPacket, m_RemoteEndPoint);
 }
 
 void UdpClient::Connected() {

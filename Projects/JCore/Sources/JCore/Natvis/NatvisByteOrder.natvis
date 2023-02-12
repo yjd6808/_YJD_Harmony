@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="JCore::Detail::NatvisByteOrderInt16U">
+		<DisplayString>
+			<!--(Segs.Seg1 << 8) + Segs.Seg2;-->
+			{(long long)(Segs.Seg1 &lt;&lt; 8) + Segs.Seg2}
+		</DisplayString>
+	</Type>
+</AutoVisualizer>

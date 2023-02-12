@@ -40,6 +40,9 @@
     <Filter Include="Debug">
       <UniqueIdentifier>{c6bcc2b2-c8c8-4f1d-83c8-c0e10e3f66f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Natvis">
+      <UniqueIdentifier>{cd93ccfc-1929-4e3a-af4d-c7be6197f686}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp" />
@@ -390,9 +393,6 @@
     <ClInclude Include="..\Sources\JCore\Primitives\ArraySegment.h">
       <Filter>Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Utils\NatvisFloat.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\MemoryChuckQueue.h">
       <Filter>Pool</Filter>
     </ClInclude>
@@ -403,45 +403,58 @@
     <ClInclude Include="..\Sources\JCore\Debug\New.h">
       <Filter>Debug</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Natvis\NatvisFloat.h">
+      <Filter>Natvis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Natvis\NatvisByteOrder.h">
+      <Filter>Natvis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="..\Sources\JCore\Container\Vector.natvis">
-      <Filter>Container</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Container\Pair.natvis">
-      <Filter>Container</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\ListStack.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Container\ArrayStack.natvis">
-      <Filter>Container</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\NatvisFloat.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Primitives\String.natvis">
-      <Filter>Primitives</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\Pair.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Primitives\SmartPtr.natvis">
-      <Filter>Primitives</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\SmartPtr.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Primitives\Atomic.natvis">
-      <Filter>Primitives</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\String.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Container\LinkedList.natvis">
-      <Filter>Container</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\Time.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Container\ListQueue.natvis">
-      <Filter>Container</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\Tuple.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Container\ListStack.natvis">
-      <Filter>Container</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\Vector.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Container\HashMap.natvis">
-      <Filter>Container</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\ArrayQueue.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Container\ArrayQueue.natvis">
-      <Filter>Container</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\ArrayStack.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Time.natvis" />
-    <Natvis Include="..\Sources\JCore\Utils\NatvisFloat.natvis">
-      <Filter>Utils</Filter>
+    <Natvis Include="..\Sources\JCore\Natvis\Atomic.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
-    <Natvis Include="..\Sources\JCore\Tuple.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\HashMap.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Natvis\LinkedList.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Natvis\NatvisByteOrder.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
   </ItemGroup>
 </Project>

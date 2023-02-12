@@ -18,7 +18,6 @@ bool SelectMenu(int menu);
 TcpClientNetGroup* pClientGroup;
 
 int main() {
-	// 멀티 패킷 예시
 	Winsock::Initialize(2, 2);
 
 	pClientGroup = dbg_new TcpClientNetGroup;
@@ -29,6 +28,7 @@ int main() {
 		int menu;
 
 		if (!(cin >> menu).good()) {
+			cout << "메뉴를 똑바로 선택하지 않았군요, 종료합니다.\n";
 			break;
 		}
 

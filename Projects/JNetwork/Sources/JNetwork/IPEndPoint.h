@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <JCore/Natvis/NatvisByteOrder.h>
 #include <JNetwork/IPAddress.h>
 
 NS_JNET_BEGIN
@@ -47,7 +48,7 @@ public:
 
 	static IPv4EndPoint Parse(const char* endPointAddr);
 	static IPv4EndPoint Parse(const JCore::String& endPointAddr);
-
+	
 	SOCKADDR_IN InternetAddr;
 };
 

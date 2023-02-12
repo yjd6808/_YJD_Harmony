@@ -12,7 +12,8 @@
 NS_JNET_BEGIN
 
 CommandBufferPacket::CommandBufferPacket(const CommandBufferPtr& buffer)
-	: m_Buffer(buffer)
+	: ISendPacket(buffer->GetCommandCount(), buffer->GetPacketLength())
+	, m_Buffer(buffer)
 {}
 
 

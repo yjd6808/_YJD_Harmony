@@ -1,64 +1,77 @@
 
+
 #include <JNetwork/Network.h>
+#include <JNetwork/Winsock.h>
 #include <JNetwork/Research/UdpClientNetGroup.h>
+#include <JNetwork/Research/Command.h>
+#include <JNetwork/Research/Config.h>
+
+#include "menu.h"
+#include "JNetwork/ByteOrder.h"
 
 USING_NS_JNET;
+USING_NS_STD;
 USING_NS_JC;
 
+void PrintMenu();
+bool SelectMenu(int menu);
+
+UdpClientNetGroup* pClientGroup;
 
 int main() {
-	
-	
 	Winsock::Initialize(2, 2);
 
-	IOCPPtr iocp = MakeShared<IOCP>(8);
-	iocp->Run();
+	pClientGroup = dbg_new UdpClientNetGroup{"UDP A"};
+	pClientGroup->Initialize();
 
-	MyClientEventListener myClientEventListener;
-	UdpClient client{ iocp, &myClientEventListener};
-	
+	for (;;) {
+		PrintMenu();
+		int menu;
 
-	StaticPacket<StaticMessage>* sendPacket = nullptr;
-	while (1) {
-		sendPacket = new StaticPacket<StaticMessage>();
-		StaticMessage* arg1 = sendPacket->Get<0>();
-		std::cin >> arg1->Chat;
-		// 클라이언트 종료
-		if (arg1->Chat[0] == 'c') {
+		if (!(cin >> menu).good()) {
+			cout << "메뉴를 똑바로 선택하지 않았군요, 종료합니다.\n";
 			break;
 		}
-		int iLen = StringUtil::Length(arg1->Chat);
 
-		// Dynamic 패킷 예시
-		auto pDynamicPacket = new DynamicPacket<DynamicMessage, DynamicMessage>(
-			DynamicMessage::CmdSizeOf(iLen + 1),
-			DynamicMessage::CmdSizeOf(iLen + 1)
-		);
-
-		{
-			auto g = client.Socket().GetLocalEndPoint().ToString();
-			int c = 0;
+		if (!SelectMenu(menu)) {
+			break;
 		}
-		pDynamicPacket->Construct<0>(iLen, arg1->Chat);
-		pDynamicPacket->Construct<1>(iLen, arg1->Chat);
-		auto g = pDynamicPacket->Get<0>();
-		auto g1 = pDynamicPacket->Get<1>();
-
-		if (!client.SendToAsync(sendPacket, "127.0.0.1:9999")) {
-			std::cout << "[A] Static 패킷 송신 실패\n";
-		}
-		if (!client.SendToAsync(pDynamicPacket, "127.0.0.1:9999")) {
-			std::cout << "[A] Dyanmic 송신 실패\n";
-		}
-
 	}
 
-	client.Disconnect();
-	iocp->Join();
-	iocp->Destroy();
+	DeleteSafe(pClientGroup);
 
 	Winsock::Finalize();
-
-	DeleteSafe(sendPacket);
 	return 0;
+}
+
+void PrintMenu() {
+	cout << "1. 로그인 UDP 연결\n";
+	cout << "2. 채널 UDP 연결\n";
+	cout << "3. 게임 UDP 연결\n";
+	cout << "4. 클라B UDP 연결\n";
+	cout << "5. 로그인 UDP 메시지 전송\n";
+	cout << "6. 채널 UDP 메시지 전송\n";
+	cout << "7. 게임 UDP 메시지 전송\n";
+	cout << "8. 클라B UDP 메시지 전송\n";
+	cout << "9. 바인드 + 수신대기\n";
+	cout << "10. 연결 종료\n";
+	cout << "메뉴 선택: ";
+}
+
+bool SelectMenu(int menu) {
+	switch (menu) {
+	case eConnectLogin:		ConnectLogin();		break;
+	case eConnectChannel:	ConnectChannel();	break;
+	case eConnectGame:		ConnectGame();		break;
+	case eConnectClientA:	ConnectClientB();	break;
+	case eSendLogin:		SendLogin();		break;
+	case eSendChannel:		SendChannel();		break;
+	case eSendGame:			SendGame();			break;
+	case eSendClientA:		SendClientB();		break;
+	case eBindRecvFrom:		BindRecvFrom();		break;
+	case eDisconnect:		Disconnect();		break;
+	default: return false;
+	}
+
+	return true;
 }

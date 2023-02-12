@@ -247,7 +247,8 @@
     <ClInclude Include="..\Sources\JNetwork\WorkerGroup.h" />
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="..\Sources\JNetwork\Host\Session.natvis" />
+    <Natvis Include="..\Sources\JNetwork\Natvis\IPEndPoint.natvis" />
+    <Natvis Include="..\Sources\JNetwork\Natvis\Session.natvis" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

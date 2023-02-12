@@ -31,6 +31,7 @@ public:
 	void Initialize() override;
 	bool RecvFromAsync();
 	bool SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination);
+	bool SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& destination);
 	bool SendToAsyncEcho(ISendPacket* packet);
 	void FlushSendBuffer() override;
 	void Connected() override;

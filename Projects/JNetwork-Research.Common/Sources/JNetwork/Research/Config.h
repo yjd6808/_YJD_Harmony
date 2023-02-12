@@ -16,5 +16,5 @@
 #define ServerChannelUdpAddr	"127.0.0.1:9904"
 #define ServerGameUdpAddr		"127.0.0.1:9905"
 
-#define ClientUdp1Addr			"127.0.0.1:11000"
-#define ClientUdp2Addr			"127.0.0.1:11001"
+#define ClientUdpAAddr			"127.0.0.1:11000"
+#define ClientUdpBAddr			"127.0.0.1:11001"

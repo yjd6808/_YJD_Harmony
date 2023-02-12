@@ -74,13 +74,6 @@ protected:
 
 	IPv4EndPoint m_LocalEndPoint;
 	IPv4EndPoint m_RemoteEndPoint;
-
-	friend class IOCPOverlappedAccept;
-	friend class IOCPOverlappedConnect;
-	friend class IOCPOverlappedRecv;
-	friend class IOCPOverlappedSend;
-
-	friend class SessionHelper;
 };
 
 using SessionPtr = JCore::SharedPtr<Session>;

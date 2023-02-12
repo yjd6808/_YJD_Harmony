@@ -280,6 +280,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Natvis\NatvisByteOrder.h" />
+    <ClInclude Include="..\Sources\JCore\Natvis\NatvisFloat.h" />
     <ClInclude Include="..\Sources\JCore\Pool\BinarySearchMemoryPool.h">
       <SubType>
       </SubType>
@@ -398,7 +400,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Utils\NatvisFloat.h" />
     <ClInclude Include="..\Sources\JCore\Wrapper\CRuntime.h">
       <SubType>
       </SubType>
@@ -409,20 +410,21 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="..\Sources\JCore\Container\ArrayQueue.natvis" />
-    <Natvis Include="..\Sources\JCore\Container\ArrayStack.natvis" />
-    <Natvis Include="..\Sources\JCore\Container\HashMap.natvis" />
-    <Natvis Include="..\Sources\JCore\Container\LinkedList.natvis" />
-    <Natvis Include="..\Sources\JCore\Container\ListQueue.natvis" />
-    <Natvis Include="..\Sources\JCore\Container\ListStack.natvis" />
-    <Natvis Include="..\Sources\JCore\Container\Pair.natvis" />
-    <Natvis Include="..\Sources\JCore\Container\Vector.natvis" />
-    <Natvis Include="..\Sources\JCore\Primitives\Atomic.natvis" />
-    <Natvis Include="..\Sources\JCore\Primitives\SmartPtr.natvis" />
-    <Natvis Include="..\Sources\JCore\Primitives\String.natvis" />
-    <Natvis Include="..\Sources\JCore\Time.natvis" />
-    <Natvis Include="..\Sources\JCore\Tuple.natvis" />
-    <Natvis Include="..\Sources\JCore\Utils\NatvisFloat.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\ArrayQueue.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\ArrayStack.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\Atomic.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\HashMap.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\LinkedList.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\ListStack.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\NatvisByteOrder.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\NatvisFloat.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\Pair.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\SmartPtr.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\String.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\Time.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\Tuple.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\Vector.natvis" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

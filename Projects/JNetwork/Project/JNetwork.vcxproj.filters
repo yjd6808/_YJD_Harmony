@@ -186,10 +186,16 @@
     <Filter Include="EventListener">
       <UniqueIdentifier>{ea21f6b0-8056-4e44-b45f-9aa1d81306b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Natvis">
+      <UniqueIdentifier>{19b633a7-838c-4959-98c8-068e13bc5cd9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="..\Sources\JNetwork\Host\Session.natvis">
-      <Filter>Host</Filter>
+    <Natvis Include="..\Sources\JNetwork\Natvis\Session.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JNetwork\Natvis\IPEndPoint.natvis">
+      <Filter>Natvis</Filter>
     </Natvis>
   </ItemGroup>
 </Project>

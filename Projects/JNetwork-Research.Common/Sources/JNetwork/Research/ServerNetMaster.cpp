@@ -133,12 +133,15 @@ void ServerUdpNetGroup::Initialize() {
 
 	UdpClientPtr spLoginUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_LoginListener);
 	spLoginUdp->Bind(ServerLoginUdpAddr);
+	spLoginUdp->RecvFromAsync();
 
 	UdpClientPtr spChannelUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_ChannelListener);
 	spChannelUdp->Bind(ServerChannelUdpAddr);
+	spChannelUdp->RecvFromAsync();
 
 	UdpClientPtr spGameUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_GameListener);
 	spGameUdp->Bind(ServerGameUdpAddr);
+	spGameUdp->RecvFromAsync();
 
 	AddHost(spLoginUdp);
 	AddHost(spChannelUdp);

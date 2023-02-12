@@ -49,12 +49,12 @@ void Session::Initialize() {
 
 bool Session::Bind(const IPv4EndPoint& bindAddr) {
 	DebugAssertMsg(m_Socket.IsValid(), "유효하지 않은 소켓입니다.");
-
-	if (m_Socket.Bind(bindAddr) == SOCKET_ERROR) {
+	int iBindRet = m_Socket.Bind(bindAddr);
+	if (iBindRet == SOCKET_ERROR) {
 		DebugAssertMsg(false, "소켓 바인드 실패 (%u)", Winsock::LastError());
 		return false;
 	}
-
+	NetLog("%s 바인드 완료\n", bindAddr.ToString().Source());
 	m_LocalEndPoint = bindAddr;
 	return true;
 }
@@ -62,11 +62,12 @@ bool Session::Bind(const IPv4EndPoint& bindAddr) {
 bool Session::Connect(const IPv4EndPoint& remoteAddr) {
 
 	DebugAssertMsg(m_Socket.IsValid(), "연결에 실패했습니다. INVALID_SOCKET 입니다.");
-
-	if (m_Socket.Connect(remoteAddr) == SOCKET_ERROR) {
+	int iConnectRet = m_Socket.Connect(remoteAddr);
+	if (iConnectRet == SOCKET_ERROR) {
 		DebugAssertMsg(false, "연결에 실패했습니다. (%u)", Winsock::LastError());
 		return false;
 	}
+	NetLog("%s 연결 완료\n", remoteAddr.ToString().Source());
 	m_RemoteEndPoint = remoteAddr;
 	return true;
 }
@@ -103,8 +104,9 @@ bool Session::SendAsync(ISendPacket* packet) {
 	Int32UL uiSendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, m_spIocp.GetPtr(), packet);
 
-	const int iResult = m_Socket.SendEx(&buf, &uiSendBytes, pOverlapped);
-	if (iResult == SOCKET_ERROR) {
+	const int iSendRet = m_Socket.SendEx(&buf, &uiSendBytes, pOverlapped);
+
+	if (iSendRet == SOCKET_ERROR) {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
 			DebugAssertMsg(false, "SendAsync 실패 (%u)", uiErrorCode);

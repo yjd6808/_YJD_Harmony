@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	간단한 시간을 다룰 수 있는 기능을 추가합니다.
 	스톱워치 기능
@@ -13,7 +13,7 @@
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
 #include <JCore/Comparator.h>
-#include <JCore/Utils/NatvisFloat.h>
+#include <JCore/Natvis/NatvisFloat.h>
 
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
