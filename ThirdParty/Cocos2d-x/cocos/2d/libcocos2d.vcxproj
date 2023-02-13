@@ -124,7 +124,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4267;4251;4244;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <CompileAs>CompileAsCpp</CompileAs>
       <PrecompiledHeaderFile>precheader.h</PrecompiledHeaderFile>
@@ -183,7 +183,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\uv\prebuilt\win32\*.*" "$(OutDir)"</Com
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4267;4251;4244;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <CompileAs>CompileAsCpp</CompileAs>
       <WholeProgramOptimization>false</WholeProgramOptimization>

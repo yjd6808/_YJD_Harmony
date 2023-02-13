@@ -143,6 +143,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -163,6 +164,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>
