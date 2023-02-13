@@ -39,7 +39,7 @@ SGActorPartAnimation* SGActorPartAnimation::create(
 	SGAnimationInfo* animationInfo,
 	SGVector<SGFrameTexture*>& frames
 ) {
-	SGActorPartAnimation* pAnimation = new SGActorPartAnimation(animationTarget, animationInfo, frames);
+	SGActorPartAnimation* pAnimation = dbg_new SGActorPartAnimation(animationTarget, animationInfo, frames);
 
 	if (pAnimation) {
 		pAnimation->autorelease();

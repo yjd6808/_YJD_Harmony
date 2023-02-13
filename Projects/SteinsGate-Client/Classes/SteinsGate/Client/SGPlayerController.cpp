@@ -17,7 +17,7 @@ USING_NS_CC;
 USING_NS_JC;
 
 SGPlayerController* SGPlayerController::create(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager) {
-	SGPlayerController* pController = new SGPlayerController(player, character, actionManager);
+	SGPlayerController* pController = dbg_new SGPlayerController(player, character, actionManager);
 	pController->init();
 	return pController;
 }

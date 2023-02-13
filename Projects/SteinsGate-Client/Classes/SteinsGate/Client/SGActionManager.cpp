@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 9:01:05 AM
  * =====================
@@ -49,15 +49,15 @@ void SGActionManager::init(int charType) {
 void SGActionManager::initGunnerActions() {
 	SGDataManager* pConfig = SGDataManager::get();
 
-	m_pBaseAction[BaseAction::Idle] = new SGGunnerIdle(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_IDLE));
-	m_pBaseAction[BaseAction::Walk] = new SGGunnerWalk(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_WALK));
-	m_pBaseAction[BaseAction::Run] = new SGGunnerRun(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_RUN));
-	m_pBaseAction[BaseAction::Attack] = new SGGunnerGunShot(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_GUN_SHOT));
-	m_pBaseAction[BaseAction::Sliding] = new SGGunnerSliding(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SLIDING));
-	m_pBaseAction[BaseAction::Jump] = new SGGunnerJump(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_JUMP));
-	m_pBaseAction[BaseAction::Hit] = new SGGunnerHit(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_HIT));
-	m_pBaseAction[BaseAction::FallDown] = new SGGunnerFallDown(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_FALL_DOWN));
-	m_pBaseAction[BaseAction::SitRecover] = new SGGunnerSitRecover(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SIT_RECOVER));
+	m_pBaseAction[BaseAction::Idle] = dbg_new SGGunnerIdle(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_IDLE));
+	m_pBaseAction[BaseAction::Walk] = dbg_new SGGunnerWalk(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_WALK));
+	m_pBaseAction[BaseAction::Run] = dbg_new SGGunnerRun(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_RUN));
+	m_pBaseAction[BaseAction::Attack] = dbg_new SGGunnerGunShot(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_GUN_SHOT));
+	m_pBaseAction[BaseAction::Sliding] = dbg_new SGGunnerSliding(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SLIDING));
+	m_pBaseAction[BaseAction::Jump] = dbg_new SGGunnerJump(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_JUMP));
+	m_pBaseAction[BaseAction::Hit] = dbg_new SGGunnerHit(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_HIT));
+	m_pBaseAction[BaseAction::FallDown] = dbg_new SGGunnerFallDown(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_FALL_DOWN));
+	m_pBaseAction[BaseAction::SitRecover] = dbg_new SGGunnerSitRecover(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SIT_RECOVER));
 	
 
 	m_ActionMap.Insert(GUNNER_ACTION_IDLE, m_pBaseAction[BaseAction::Idle]);

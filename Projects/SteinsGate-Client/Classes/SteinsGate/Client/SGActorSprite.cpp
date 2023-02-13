@@ -30,7 +30,7 @@ SGActorSprite* SGActorSprite::create(
 	SGActor* actor, const 
 	SGActorSpriteDataPtr& actorData)
 {
-	SGActorSprite* pSprite = new SGActorSprite(actor, actorData);
+	SGActorSprite* pSprite = dbg_new SGActorSprite(actor, actorData);
 
 	if (pSprite && pSprite->init()) {
 		pSprite->autorelease();

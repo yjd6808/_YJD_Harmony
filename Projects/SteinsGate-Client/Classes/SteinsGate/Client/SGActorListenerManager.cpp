@@ -22,7 +22,7 @@ SGActorListenerManager::~SGActorListenerManager() {
 }
 
 void SGActorListenerManager::initialize() {
-	m_hProjectileListenerMap.Insert(PROJECTILE_LISTENER_GUNNER_BULLET_LISTENER, new SGGunnerBulletListener);
+	m_hProjectileListenerMap.Insert(PROJECTILE_LISTENER_GUNNER_BULLET_LISTENER, dbg_new SGGunnerBulletListener);
 }
 
 SGProjectileListener* SGActorListenerManager::createProjectileListener(int projectileListenerCode) {

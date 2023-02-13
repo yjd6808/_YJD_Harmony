@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 6:09:56 PM
  * =====================
@@ -36,7 +36,7 @@ public:
 		static SGActorBox* s_pInstance = nullptr;
 
 		if (s_pInstance == nullptr) {
-			s_pInstance = new SGActorBox;
+			s_pInstance = dbg_new SGActorBox;
 		}
 		return s_pInstance;
 	}

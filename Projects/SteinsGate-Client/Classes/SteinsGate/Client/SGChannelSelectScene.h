@@ -1,6 +1,6 @@
 /*
  * 작성자: 윤정도
- * 생성일: 2/5/2023 10:27:43 AM
+ * 생성일: 2/5/2023 10:28:12 AM
  * =====================
  *
  */
@@ -11,17 +11,17 @@
 #include "Tutturu.h"
 #include <SteinsGate/Client/SGSceneBase.h>
 
-class SGLoginScene : public SGSceneBase
+class SGChannelSelectScene : public SGSceneBase
 {
 public:
-    SGLoginScene();
-    static SGLoginScene* create();
+    SGChannelSelectScene();
+    static SGChannelSelectScene* create();
 
     void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
     void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
     void update(float dt) override;
     bool init() override;
-    SceneType_t getType() override { return SceneType::Login; }
+    SceneType_t getType() override { return SceneType::ChannelSelect; }
 };
 

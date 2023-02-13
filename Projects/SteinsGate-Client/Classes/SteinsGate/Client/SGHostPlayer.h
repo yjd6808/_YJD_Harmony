@@ -24,7 +24,7 @@ public:
 		static SGHostPlayer* s_pInstance = nullptr;
 
 		if (s_pInstance == nullptr)
-			s_pInstance = new SGHostPlayer;
+			s_pInstance = dbg_new SGHostPlayer;
 
 		return s_pInstance;
 	}

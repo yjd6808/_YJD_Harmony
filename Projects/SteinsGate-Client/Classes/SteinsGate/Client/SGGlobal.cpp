@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 2:56:13 AM
  * =====================
@@ -9,8 +9,10 @@
 #include "Tutturu.h"
 #include "SGGlobal.h"
 
+#include <SteinsGate/Client/SGFrameTexture.h>
+
 SGGlobal::SGGlobal()
-	: m_pDefaultTexture(nullptr)
+	: m_pDefaultFrameTexture(nullptr)
 	, m_bDrawThicknessBox(false)
 	, m_bDrawBodyBoundingBox(false)
 	, m_bDrawAttackBox(false)
@@ -18,7 +20,7 @@ SGGlobal::SGGlobal()
 {}
 
 SGGlobal::~SGGlobal() {
-	DeleteSafe(m_pDefaultTexture);
+	CC_SAFE_RELEASE(m_pDefaultFrameTexture);
 }
 
 int SGGlobal::convertAvatarPartNameToType(const SGString& str) {
@@ -106,7 +108,11 @@ const SGString& SGGlobal::getWeaponNpkName(int charType, int weaponType) {
 	return m_WeaponPackName[charType][weaponType];
 }
 
-SGTexture* SGGlobal::getDefaultTexture() {
+SGSpriteFrameTexture* SGGlobal::getDefaultFrameTexture() {
+
+	if (m_pDefaultFrameTexture != nullptr) {
+		return m_pDefaultFrameTexture;
+	}
 
 	static unsigned char White2x2TextureData_v[] = {
 		// RGBA8888
@@ -116,10 +122,12 @@ SGTexture* SGGlobal::getDefaultTexture() {
 		0xFF, 0xFF, 0xFF, 0xFF
 	};
 
-	if (m_pDefaultTexture) 
-		return m_pDefaultTexture;
+	
+	SGTexture* pDefaultTexture = dbg_new SGTexture;
+	pDefaultTexture->initWithData(White2x2TextureData_v, sizeof(White2x2TextureData_v), SGTexture::PixelFormat::RGB888, 2, 2, { 2, 2 });
+	m_pDefaultFrameTexture = dbg_new SGSpriteFrameTexture(pDefaultTexture, { 0, 0, 2, 2, 2, 2 }, 0, true);
+	m_pDefaultFrameTexture->autorelease();
+	m_pDefaultFrameTexture->retain();
 
-	m_pDefaultTexture = new SGTexture;
-	m_pDefaultTexture->initWithData(White2x2TextureData_v, sizeof(White2x2TextureData_v), SGTexture::PixelFormat::RGB888, 2, 2, { 2, 2 });
-	return m_pDefaultTexture;
+	return m_pDefaultFrameTexture;
 }

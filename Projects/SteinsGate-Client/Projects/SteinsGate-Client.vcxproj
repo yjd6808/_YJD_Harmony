@@ -234,7 +234,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGServerSelectScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -545,7 +545,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGServerSelectScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.h">
       <SubType>
       </SubType>
     </ClInclude>

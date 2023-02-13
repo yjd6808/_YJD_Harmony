@@ -80,7 +80,7 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 
 void SGActor::initHitRecorder(int hitPossibleListSize, int alreadyHitMapSize) {
 	DebugAssertMsg(m_pHitRecorder == nullptr, "이미 히트 레코더가 초기화 되어있습니다.");
-	m_pHitRecorder = new SGHitRecorder(this, hitPossibleListSize, alreadyHitMapSize);
+	m_pHitRecorder = dbg_new SGHitRecorder(this, hitPossibleListSize, alreadyHitMapSize);
 }
 
 void SGActor::update(float dt) {

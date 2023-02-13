@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/5/2023 9:51:57 AM
  * =====================
@@ -12,7 +12,7 @@
 #include <SteinsGate/Client/SGActorBox.h>
 #include <SteinsGate/Client/SGLoginScene.h>
 #include <SteinsGate/Client/SGGameScene.h>
-#include <SteinsGate/Client/SGServerSelectScene.h>
+#include <SteinsGate/Client/SGChannelSelectScene.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -25,7 +25,7 @@ SGWorldScene* SGWorldScene::get() {
 	static SGWorldScene* scene;
 
 	if (scene == nullptr) {
-		scene = new (std::nothrow) SGWorldScene();
+		scene = dbg_new SGWorldScene();
 
 		if (scene && scene->init()) {
 			scene->autorelease();
@@ -46,6 +46,7 @@ SGWorldScene* SGWorldScene::get() {
 
 SGWorldScene::SGWorldScene()
 	: m_pRunningScene(nullptr)
+	, m_eReservedScene(SceneType::Login)
 {}
 SGWorldScene::~SGWorldScene() {}
 
@@ -62,12 +63,29 @@ bool SGWorldScene::init() {
 	changeScene(SceneType::Login);
 	scheduleUpdate();
 
+
 	return true;
 }
+
 void SGWorldScene::update(float dt) {
-	if (m_pRunningScene)
-		m_pRunningScene->update(dt);
+	updateScene(dt);
 }
+
+
+
+void SGWorldScene::updateScene(float dt) {
+
+	if (m_pRunningScene == nullptr) {
+		return;
+	}
+
+	m_pRunningScene->update(dt);
+
+	if (m_pRunningScene->getType() != m_eReservedScene) {
+		changeScene(m_eReservedScene);
+	}
+}
+
 
 void SGWorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
 	if (m_pRunningScene)
@@ -79,6 +97,10 @@ void SGWorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* even
 		m_pRunningScene->onKeyReleased(keyCode, event);
 }
 
+void SGWorldScene::reserveScene(SceneType_t sceneType) {
+	m_eReservedScene = sceneType;
+}
+
 void SGWorldScene::changeScene(SceneType_t sceneType) {
 	if (m_pRunningScene) {
 		this->removeChild(m_pRunningScene);
@@ -86,7 +108,7 @@ void SGWorldScene::changeScene(SceneType_t sceneType) {
 
 	switch (sceneType) {
 	case SceneType::Login: m_pRunningScene = SGLoginScene::create(); break;
-	case SceneType::ServerSelect: m_pRunningScene = SGServerSelectScene::create(); break;
+	case SceneType::ChannelSelect: m_pRunningScene = SGChannelSelectScene::create(); break;
 	case SceneType::Game: m_pRunningScene = SGGameScene::create(); break;
 	default: DebugAssertMsg(false, "[SGWorldScene] 이상한 씬 타입입니다."); return;
 	}

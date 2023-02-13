@@ -71,7 +71,7 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 
 	if (sprite.IsLink()) {
 		int iTargetFrameIndex = sprite.GetTargetFrameIndex();
-		SGLinkFrameTexture* pLinkTexture = new SGLinkFrameTexture(frameIndex, iTargetFrameIndex);
+		SGLinkFrameTexture* pLinkTexture = dbg_new SGLinkFrameTexture(frameIndex, iTargetFrameIndex);
 		pLinkTexture->autorelease();
 		pLinkTexture->retain();
 		m_TextureCacheMap.Insert(iCacheIndex, pLinkTexture);
@@ -86,7 +86,7 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 		sprite.Load();
 
 	auto spData = sprite.Decompress();
-	Texture2D* pTexture = new Texture2D;
+	Texture2D* pTexture = dbg_new Texture2D;
 	pTexture->initWithData(
 		spData.GetPtr(),
 		spData.Length(),
@@ -95,7 +95,7 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 		sprite.GetHeight(), { sprite.GetWidthF(), sprite.GetHeightF() }
 	);
 
-	auto pSpriteTexture = new SGSpriteFrameTexture(pTexture, sprite.GetRect(), sprite.GetFrameIndex(), sprite.IsDummy());
+	auto pSpriteTexture = dbg_new SGSpriteFrameTexture(pTexture, sprite.GetRect(), sprite.GetFrameIndex(), sprite.IsDummy());
 	pSpriteTexture->autorelease();
 	pSpriteTexture->retain();	// m_TextureCacheMap에서 수명연장시키기 위한 용도
 	m_TextureCacheMap.Insert(iCacheIndex, pSpriteTexture);

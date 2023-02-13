@@ -24,7 +24,7 @@ SGObstacle::SGObstacle(SGObstacleInfo* baseInfo)
 }
 
 SGObstacle* SGObstacle::create(SGObstacleInfo* baseInfo) {
-	SGObstacle* pObstable = new SGObstacle(baseInfo);
+	SGObstacle* pObstable = dbg_new SGObstacle(baseInfo);
 
 	pObstable->initThicknessBox(baseInfo->ThicknessBox);
 	pObstable->initActorSprite();

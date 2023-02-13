@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:30:07 AM
  * =====================
@@ -34,7 +34,7 @@ SGCharacter::~SGCharacter() {
 }
 
 SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
-	SGCharacter* pCharacter = new SGCharacter(code, info);
+	SGCharacter* pCharacter = dbg_new SGCharacter(code, info);
 
 	if (pCharacter && pCharacter->init()) {
 		SGCharBaseInfo* pBaseInfo = SGDataManager::get()->getCharBaseInfo(code);

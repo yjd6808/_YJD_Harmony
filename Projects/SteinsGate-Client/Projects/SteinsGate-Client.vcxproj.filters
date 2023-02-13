@@ -301,7 +301,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGSceneManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGServerSelectScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGLoginScene.cpp">
@@ -584,7 +584,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGSceneBase.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGServerSelectScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGLoginScene.h">

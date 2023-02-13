@@ -1,14 +1,15 @@
 /*
  * 작성자: 윤정도
- * 생성일: 2/5/2023 10:27:51 AM
+ * 생성일: 2/5/2023 10:28:18 AM
  * =====================
  *
  */
 
 
 
+
 #include "Tutturu.h"
-#include "SGLoginScene.h"
+#include "SGChannelSelectScene.h"
 
 #include <SteinsGate/Client/SGWorldScene.h>
 
@@ -19,8 +20,8 @@ USING_NS_JC;
 // 스태틱
 // ==============================================================
 
-SGLoginScene* SGLoginScene::create() {
-	SGLoginScene*  scene = dbg_new SGLoginScene();
+SGChannelSelectScene* SGChannelSelectScene::create() {
+	SGChannelSelectScene*  scene = dbg_new SGChannelSelectScene();
 	if (scene && scene->init()) {
 		scene->autorelease();
 		return scene;
@@ -33,27 +34,29 @@ SGLoginScene* SGLoginScene::create() {
 // 멤버
 // ==============================================================
 
-SGLoginScene::SGLoginScene()
-	: SGSceneBase()
-{}
+SGChannelSelectScene::SGChannelSelectScene() {}
 
-bool SGLoginScene::init() {
+bool SGChannelSelectScene::init() {
 	if (!SGSceneBase::init()) {
 		return false;
 	}
+
+	SGText* text = SGText::create("서버 셀렉", "nexon_gothic.ttf", 16);
+	text->setPosition({ 300, 300 });
+	this->addChild(text);
 
 	return true;
 }
 
 
-void SGLoginScene::update(float dt) {
+void SGChannelSelectScene::update(float dt) {
 	
 }
 
-void SGLoginScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+void SGChannelSelectScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
 	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
-		SGWorldScene::get()->reserveScene(SceneType::ChannelSelect);
+		SGWorldScene::get()->reserveScene(SceneType::Game);
 	}
 }
 
-void SGLoginScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {}
+void SGChannelSelectScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {}

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:30:45 AM
  * =====================
@@ -30,10 +30,13 @@ SGMonster::SGMonster(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo)
 }
 
 SGMonster::~SGMonster() {
+	for (int i = 0; i < AIActivity::Max; ++i) {
+		DeleteSafe(m_ActivityMap[i]);
+	}
 }
 
 SGMonster* SGMonster::create(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo) {
-	SGMonster* pMonster = new SGMonster(baseInfo, aiInfo);
+	SGMonster* pMonster = dbg_new SGMonster(baseInfo, aiInfo);
 
 	if (pMonster && pMonster->init()) {
 		pMonster->initThicknessBox(baseInfo->ThicknessBox);
@@ -67,12 +70,12 @@ void SGMonster::initActorSprite() {
 }
 
 void SGMonster::initAIActivities() {
-	m_ActivityMap[AIActivity::Walk] = new SGMonsterWalkActivity(this);
-	m_ActivityMap[AIActivity::Idle] = new SGMonsterIdleActivity(this);
-	m_ActivityMap[AIActivity::Attack] = new SGMonsterAttackActivity(this);
-	m_ActivityMap[AIActivity::Hit] = new SGMonsterHitActivity(this);
-	m_ActivityMap[AIActivity::FallDown] = new SGMonsterFallDownActivity(this);
-	m_ActivityMap[AIActivity::Sit] = new SGMonsterSitActivity(this);
+	m_ActivityMap[AIActivity::Walk] = dbg_new SGMonsterWalkActivity(this);
+	m_ActivityMap[AIActivity::Idle] = dbg_new SGMonsterIdleActivity(this);
+	m_ActivityMap[AIActivity::Attack] = dbg_new SGMonsterAttackActivity(this);
+	m_ActivityMap[AIActivity::Hit] = dbg_new SGMonsterHitActivity(this);
+	m_ActivityMap[AIActivity::FallDown] = dbg_new SGMonsterFallDownActivity(this);
+	m_ActivityMap[AIActivity::Sit] = dbg_new SGMonsterSitActivity(this);
 
 	runActivity(m_ActivityMap[AIActivity::Idle]);	// 아무것도 설정안하면 기본 실행 시간 1초
 	

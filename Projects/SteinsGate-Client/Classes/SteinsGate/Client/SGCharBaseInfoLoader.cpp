@@ -46,7 +46,7 @@ bool SGCharBaseInfoLoader::LoadCharBaseInfo(SGCharBaseInfo*(&characterInfoMap)[C
 
 	// 다른 캐릭이 만약 추가되면 코드 변경 필요
 
-	SGGunnerBaseInfo* pGunnerInfo = new SGGunnerBaseInfo();
+	SGGunnerBaseInfo* pGunnerInfo = dbg_new SGGunnerBaseInfo();
 	SGGunnerBaseInfo& info = *pGunnerInfo;
 	{
 		characterInfoMap[CharType::Gunner] = pGunnerInfo;

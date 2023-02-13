@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -23,8 +23,10 @@ public:
 
     void cmdLoadChar();
     void cmdEnterMap();
+    void onExit() override;
 private:
     SGMapLayer* m_pMapLayer;
     GridLayer* m_pGridLayer;
+    SceneType_t getType() override { return SceneType::Game; }
 };
 

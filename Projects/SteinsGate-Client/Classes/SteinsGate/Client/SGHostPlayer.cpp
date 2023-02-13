@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 10:25:01 AM
  * =====================
@@ -27,17 +27,16 @@ SGHostPlayer::~SGHostPlayer() {
 void SGHostPlayer::initActionManager() {
 	DebugAssertMsg(m_pCharacter, "이 함수를 호출전에 무조건 캐릭터 세팅을 먼저 해주세요.");
 
-	if (m_pActionManager == nullptr) {
-		m_pActionManager = new SGActionManager(this);
-		m_pActionManager->init(m_pCharacter->getBaseInfo()->Type);
-	}
+	CC_SAFE_DELETE(m_pActionManager);
+
+	m_pActionManager = dbg_new SGActionManager(this);
+	m_pActionManager->init(m_pCharacter->getBaseInfo()->Type);
 }
 
 void SGHostPlayer::initController() {
+	CC_SAFE_DELETE(m_pController);
 	DebugAssertMsg(m_pCharacter && m_pActionManager, "이 함수를 호출전에 무조건 캐릭터 세팅과 액션 매니저 세팅을 먼저 해주세요.");
-	if (m_pController == nullptr) {
-		m_pController = new SGPlayerController(this, m_pCharacter, m_pActionManager);
-	}
+	m_pController = dbg_new SGPlayerController(this, m_pCharacter, m_pActionManager);
 }
 
 void SGHostPlayer::update(float dt) {

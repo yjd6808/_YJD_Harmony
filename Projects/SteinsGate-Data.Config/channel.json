@@ -1,0 +1,80 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "채널 목록",
+    "__comment__2": "엔터런스 타입: 1: 초보, 엔터런스 타입: 2: 경매,  엔터런스 타입: 3: 일반",
+
+    "channel_density": {
+        "free": 20.0,
+        "normal": 50.0,
+        "busy": 80.0,
+        "full": 100.0
+    },
+
+    "channel_type": [
+        {
+            "code": 1,
+            "name": "초보 - 엘븐 가드",
+            "enterance_type": 1
+        },
+        {
+            "code": 2,
+            "name": "거래 - 경매장",
+            "enterance_type": 2
+        },
+        {
+            "code": 3,
+            "name": "그란플로리스",
+            "enterance_type": 3
+        },
+        {
+            "code": 4,
+            "name": "하늘성",
+            "enterance_type": 3
+        },
+        {
+            "code": 5,
+            "name": "베히모스",
+            "enterance_type": 3
+        },
+        {
+            "code": 6,
+            "name": "알프라이라",
+            "enterance_type": 3
+        }
+    ],
+
+
+    "channel": [
+        {
+            "code": 1,
+            "type": 1,
+            "max_player": 200
+        },
+        {
+            "code": 6,
+            "type": 2,
+            "max_player": 200
+        },
+        {
+            "code": 10,
+            "type": 3,
+            "max_player": 200
+        },
+        {
+            "code": 13,
+            "type": 4,
+            "max_player": 200
+        },
+        {
+            "code": 16,
+            "type": 5,
+            "max_player": 200
+        },
+        {
+            "code": 18,
+            "type": 6,
+            "max_player": 200
+        }
+    ]
+
+}

@@ -24,7 +24,7 @@ public:
 		static SGActorListenerManager* s_pManager;
 
 		if (s_pManager == nullptr) {
-			s_pManager = new SGActorListenerManager;
+			s_pManager = dbg_new SGActorListenerManager;
 			s_pManager->initialize();
 		}
 		return s_pManager;

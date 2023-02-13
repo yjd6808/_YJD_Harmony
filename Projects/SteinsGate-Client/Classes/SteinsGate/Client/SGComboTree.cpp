@@ -19,7 +19,7 @@ void SGComboTreeNodeActionList::add(SGAction* action) {
 
 	if (pEnd->Action == nullptr) {
 		pEnd->Action = action;
-		pEnd->Next = new SGComboTreeNodeActionList;
+		pEnd->Next = dbg_new SGComboTreeNodeActionList;
 	}
 }
 
@@ -82,7 +82,7 @@ int SGComboTreeNode::count() {
 }
 
 SGComboTree::SGComboTree() {
-	m_pRoot = new SGComboTreeNode{};
+	m_pRoot = dbg_new SGComboTreeNode{};
 }
 
 SGComboTree::~SGComboTree() {
@@ -100,7 +100,7 @@ void SGComboTree::addComboAction(SGAction* action) {
 	SGComboTreeNode* pFindNode = findComboNodeRecursive(m_pRoot, keys, iCount - 1, iCount);
 
 	if (pFindNode == nullptr) {
-		SGComboTreeNode* pNewNode = new SGComboTreeNode{};
+		SGComboTreeNode* pNewNode = dbg_new SGComboTreeNode{};
 		pNewNode->ActionList.add(action);
 		addComboNodeRecursive(m_pRoot, pNewNode, keys, 0, iCount);
 		++m_iNodeCount;
@@ -118,7 +118,7 @@ void SGComboTree::addComboAction(SGAction* action) {
 	pFindNode = findComboNodeRecursive(m_pRoot, keysReverse, iCountReverse - 1, iCountReverse);
 
 	if (pFindNode == nullptr) {
-		SGComboTreeNode* pNewNode = new SGComboTreeNode{};
+		SGComboTreeNode* pNewNode = dbg_new SGComboTreeNode{};
 		pNewNode->ActionList.add(action);
 		addComboNodeRecursive(m_pRoot, pNewNode, keysReverse, 0, iCountReverse);
 		++m_iNodeCount;
@@ -197,7 +197,7 @@ void SGComboTree::addComboNodeRecursive(
 
 	// 가는 경로에 노드가 없으면 생성
 	if (pCur == nullptr) {
-		parent->Next[eKey] = new SGComboTreeNode;
+		parent->Next[eKey] = dbg_new SGComboTreeNode;
 	}
 
 	addComboNodeRecursive(parent->Next[eKey], newNode, keys, keyIndex + 1, keyCount);

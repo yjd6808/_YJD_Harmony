@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/2/2023 6:10:07 PM
  * =====================
@@ -158,6 +158,9 @@ void SGActorBox::clearRoom() {
 
 void SGActorBox::update(float dt) {
 
+	if (m_bCleared)
+		return;
+
 	DebugAssertMsg(m_pMapLayer, "[SGActorBox] 맵 레이어가 세팅되지 않았습니다.");
 
 	updateZOrder();
@@ -243,7 +246,6 @@ SGCharacter* SGActorBox::createCharacter(CharType_t charType, float x, float y, 
 	SGCharacter* pCharacter = SGCharacter::create(charType, info);
 	pCharacter->setPositionRealCenter(x, y);
 	pCharacter->setAllyFlag(0);
-	pCharacter->retain(); 
 
 	return pCharacter;
 }

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 9:07:50 AM
  * =====================
@@ -23,7 +23,7 @@ SGAction::SGAction(SGHostPlayer* player, SGActionInfo* actionInfo)
 	, m_bCancelable(m_pActionInfo->ForceCancelable)
 	, m_fMoveSpeedFPSX(m_pActionInfo->SpeedX)
 	, m_fMoveSpeedFPSY(m_pActionInfo->SpeedY)
-	, m_pHitRecorder(m_pPlayer->getCharacter()->getHitRecorder())
+	, m_pHitRecorder(nullptr)
 {}
 
 SGAction::~SGAction() {
@@ -32,7 +32,9 @@ SGAction::~SGAction() {
 
 void SGAction::play() {
 	// 플레이어가 사용가능한지 체크
+	m_pHitRecorder = m_pPlayer->getCharacter()->getHitRecorder();
 	m_pHitRecorder->clear();
+
 
 	onActionBegin();
 }

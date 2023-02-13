@@ -33,7 +33,7 @@ SGEffect::~SGEffect() {
 
 
 SGEffect* SGEffect::create(SGEffectInfo* baseInfo) {
-	SGEffect* pEffect = new SGEffect(baseInfo);
+	SGEffect* pEffect = dbg_new SGEffect(baseInfo);
 
 	pEffect->initActorSprite();
 	pEffect->initVariables();

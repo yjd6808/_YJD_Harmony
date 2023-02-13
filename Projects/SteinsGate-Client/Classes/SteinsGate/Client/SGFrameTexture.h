@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/11/2023 4:03:01 AM
  * =====================
@@ -78,8 +78,7 @@ public:
 
 	bool isLink()  override { return false;		}
 	bool isDummy() override { return m_bDummy;	}
-
-	static SGSpriteFrameTexture* createDefaultTextureRetain();
+	
 protected:
 	NpkSpriteRect m_Rect;
 	SGTexture* m_pTexture;

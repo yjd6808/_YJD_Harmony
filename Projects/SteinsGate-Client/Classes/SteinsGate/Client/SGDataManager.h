@@ -31,7 +31,7 @@ public:
 		static SGDataManager* loader;
 
 		if (loader == nullptr) {
-			loader = new SGDataManager;
+			loader = dbg_new SGDataManager;
 			loader->LoadAllConfigs();
 		}
 		return loader;

@@ -34,7 +34,7 @@ SGProjectile::~SGProjectile() {
 }
 
 SGProjectile* SGProjectile::create(SGActor* spawner, SGProjectileInfo* baseInfo) {
-	SGProjectile* pProjectile = new SGProjectile(spawner, baseInfo);
+	SGProjectile* pProjectile = dbg_new SGProjectile(spawner, baseInfo);
 
 	spawner->retain();
 	pProjectile->initThicknessBox(baseInfo->ThicknessBox);

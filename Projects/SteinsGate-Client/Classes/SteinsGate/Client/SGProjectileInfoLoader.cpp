@@ -156,7 +156,7 @@ void SGProjectileInfoLoader::WriteOverridedProjectileInfo(Json::Value& projectil
 
 	info.AnimationRef = false;
 	Value& animationRoot = projectile["animation"];
-	SGAnimationInfo* pAnimationInfo = new SGAnimationInfo(animationRoot["frames"].size());
+	SGAnimationInfo* pAnimationInfo = dbg_new SGAnimationInfo(animationRoot["frames"].size());
 	SGJson::parseAnimationInfo(animationRoot, *pAnimationInfo);
 	info.Animation = pAnimationInfo;
 }
@@ -188,7 +188,7 @@ void SGProjectileInfoLoader::WriteProjectileInfo(Json::Value& projectile, SGProj
 	SGJson::parseThicknessInfo(projectile["thickness_box"], info.ThicknessBox);
 
 	Value& animationRoot = projectile["animation"];
-	SGAnimationInfo* pAnimationInfo = new SGAnimationInfo(animationRoot["frames"].size());
+	SGAnimationInfo* pAnimationInfo = dbg_new SGAnimationInfo(animationRoot["frames"].size());
 	SGJson::parseAnimationInfo(animationRoot, *pAnimationInfo);
 	info.Animation = pAnimationInfo;
 }

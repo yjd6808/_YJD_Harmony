@@ -50,7 +50,7 @@ void SGJson::parseAnimationInfo(Json::Value& animationRoot, SGAnimationInfo& inf
 				8
 			);
 
-			SGFrameInfoAttackBoxInstant* pInfo = new SGFrameInfoAttackBoxInstant{};
+			SGFrameInfoAttackBoxInstant* pInfo = dbg_new SGFrameInfoAttackBoxInstant{};
 			pInfo->FrameIndex = iFrameIndex;
 			pInfo->Delay = (float)iDelay / 1000.0f;
 			pInfo->FrameEvent = iFrameEvent;
@@ -68,7 +68,7 @@ void SGJson::parseAnimationInfo(Json::Value& animationRoot, SGAnimationInfo& inf
 
 			info.Frames.PushBack(pInfo);
 		} else {
-			SGFrameInfo* pInfo = new SGFrameInfo{ iFrameIndex, (float)iDelay / 1000.0f, iFrameEvent, iFrameEventId };
+			SGFrameInfo* pInfo = dbg_new SGFrameInfo{ iFrameIndex, (float)iDelay / 1000.0f, iFrameEvent, iFrameEventId };
 			info.Frames.PushBack(pInfo);
 		}
 		

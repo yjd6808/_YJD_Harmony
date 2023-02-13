@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
@@ -27,7 +27,7 @@ USING_NS_JC;
 // ==============================================================================================================================
 
 SGMapLayer* SGMapLayer::create(int mapCode) {
-	SGMapLayer* pMap = new (std::nothrow) SGMapLayer;
+	SGMapLayer* pMap = dbg_new SGMapLayer;
 
 	if (pMap && pMap->init()) {
 		pMap->loadMap(mapCode);
@@ -129,8 +129,9 @@ void SGMapLayer::runFrameEvent(SGActor* runner, FrameEventType_t frameEventType,
 
 	if (frameEventType == FrameEventType::Projectile)
 		m_pActorBox->createProejctileOnMap(runner, frameEventId);
-	else if (frameEventType == FrameEventType::AttackBox)
-		int a; // TODO: 어택박스 구현
+	else if (frameEventType == FrameEventType::AttackBox) {
+		// TODO: 어택박스 구현
+	}
 }
 
 

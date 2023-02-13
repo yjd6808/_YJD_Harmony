@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 1:09:19 PM
  * =====================
@@ -29,7 +29,7 @@ SGActorPartSprite* SGActorPartSprite::create(
 	SGVector<SGAnimationInfo*>& animations
 )
 {
-	SGActorPartSprite* pPartSprite = new SGActorPartSprite(partIndex, frameCount, actor, canvas, boundingBox, partData, animations);
+	SGActorPartSprite* pPartSprite = dbg_new SGActorPartSprite(partIndex, frameCount, actor, canvas, boundingBox, partData, animations);
 
 	if (pPartSprite && pPartSprite->init()) {
 		pPartSprite->autorelease();
@@ -82,7 +82,7 @@ bool SGActorPartSprite::init() {
 		m_vFrames[i] = pImgPack->createFrameTexture(m_pPartData->ImgIndex, i);
 
 		if (m_vFrames[i] == nullptr) {
-			m_vFrames[i] = SGSpriteFrameTexture::createDefaultTextureRetain();
+			m_vFrames[i] = SGGlobal::get()->getDefaultFrameTexture();
 		}
 
 		m_vFrames[i]->retain();

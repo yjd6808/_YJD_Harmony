@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/10/2023 11:06:04 PM
  * =====================
@@ -273,13 +273,13 @@ SEnumMiddleEnd(AIActivity)
 
 SEnumBegin(SceneType)
 Login,
-ServerSelect,
+ChannelSelect,
 Game,
 Max
 SEnumMiddle(SceneType)
 static constexpr const char* Name[Max]{
 	"Login",
-	"ServerSelect",
+	"ChannelSelect",
 	"Game"
 };
 

@@ -49,7 +49,7 @@ void SGImagePackManager::loadAllPackages() {
 				NpkPackagePtr package = NpkLoader::LoadIndexOnly(
 					Path::Combine(DataDirectory_v, szFileName)
 				);
-				m_LoadedPackages[j] = new SGImagePack(package, j);
+				m_LoadedPackages[j] = dbg_new SGImagePack(package, j);
 				SafeConsole::WriteLine("%d %s 로딩완료", j, szFileName.Source());
 			}
 		});

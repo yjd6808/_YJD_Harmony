@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 2:52:57 AM
  * =====================
@@ -12,6 +12,7 @@
 #include "Tutturu.h"
 #include <SteinsGate/Client/SGConfig.h>
 
+class SGSpriteFrameTexture;
 struct SGGlobal
 {
 public:
@@ -19,7 +20,7 @@ public:
 		static SGGlobal* loader;
 
 		if (loader == nullptr) {
-			loader = new SGGlobal;
+			loader = dbg_new SGGlobal;
 			loader->initialize();
 		}
 		return loader;
@@ -41,7 +42,7 @@ public:
 	const SGString& getAvatarNpkName(int charType, int visualAvatarType);
 	const SGString& getWeaponNpkName(int charType, int weaponType);
 
-	SGTexture* getDefaultTexture();
+	SGSpriteFrameTexture* getDefaultFrameTexture();
 private:
 	void initialize();
 
@@ -56,6 +57,6 @@ private:
 	SGHashMap<int, SGString> m_AvatarPrefix[CharType::Max];
 	SGString m_AvatarPackName[CharType::Max][AvatarType::Max];	
 	SGString m_WeaponPackName[CharType::Max][5];
-	SGTexture* m_pDefaultTexture;
+	SGSpriteFrameTexture* m_pDefaultFrameTexture;
 	
 };

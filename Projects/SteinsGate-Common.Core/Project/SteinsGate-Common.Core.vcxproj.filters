@@ -72,5 +72,8 @@
     <Filter Include="Npk">
       <UniqueIdentifier>{6a9d136d-829b-4e44-92e6-e7ed5bbe9aa4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{5362b856-14b1-40aa-8f4d-3149e4b5f075}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
