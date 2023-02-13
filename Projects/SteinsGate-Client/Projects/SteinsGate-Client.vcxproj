@@ -367,7 +367,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEnums.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerAction.h">
       <SubType>
       </SubType>

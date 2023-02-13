@@ -121,10 +121,10 @@ public:
 	SGActor* getActor(int actorId) { return m_hActorMap[actorId]; }
 private:
 	// 풀링용 리스트
-	SGHashMap<int, SGList<SGMonster*>> m_hMonsterPool;
-	SGHashMap<int, SGList<SGObstacle*>> m_hObstaclePool;
-	SGHashMap<int, SGList<SGProjectile*>> m_hProjectilePool;
-	SGHashMap<int, SGList<SGEffect*>> m_hEffectPool;
+	SGHashMap<int, SGLinkedList<SGMonster*>> m_hMonsterPool;
+	SGHashMap<int, SGLinkedList<SGObstacle*>> m_hObstaclePool;
+	SGHashMap<int, SGLinkedList<SGProjectile*>> m_hProjectilePool;
+	SGHashMap<int, SGLinkedList<SGEffect*>> m_hEffectPool;
 
 	// TODO: 캐릭터 풀링 - 이건 구현할려면 좀 고민해야함.
 	// 애니메이션 프레임 텍스쳐중에 교체 가능한것들은 다 해줘야하기때문

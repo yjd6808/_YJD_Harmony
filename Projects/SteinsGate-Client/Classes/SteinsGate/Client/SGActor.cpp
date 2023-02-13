@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:14:07 AM
  * =====================
@@ -63,7 +63,7 @@ bool SGActor::initVariables() {
 void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 
 	// DrawNode는 앵커포인트 신경안쓰고 컨텐츠박스 기준 좌하단부터 그림
-	RectPoly poly = RectPoly::createFromLeftBottom(Vec2{ 0, 0 }, thicknessBox.getSize());
+	RectPoly poly = RectPoly::createFromLeftBottom(0, 0, thicknessBox.Width, thicknessBox.Height);
 
 	if (m_pThicknessBox == nullptr) {
 		m_pThicknessBox = SGDrawNode::create();
@@ -74,7 +74,7 @@ void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
 	}
 	m_pThicknessBox->setPositionX(thicknessBox.RelativeX);
 	m_pThicknessBox->setPositionY(thicknessBox.RelativeY);
-	m_pThicknessBox->setContentSize(thicknessBox.getSize());
+	m_pThicknessBox->setContentSize(thicknessBox.Width, thicknessBox.Height);
 	
 }
 
@@ -107,7 +107,11 @@ SGActorRect SGActor::getActorRect() const {
 
 SGThicknessBox SGActor::getThicknessBox() const {
 	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	return { m_pThicknessBox->getPosition(), m_pThicknessBox->getContentSize() };
+
+	SGVec2 pos = m_pThicknessBox->getPosition();
+	SGSize size = m_pThicknessBox->getContentSize();
+
+	return { pos.x, pos.y, size.width, size.height };
 }
 
 Rect SGActor::getThicknessBoxRect() const {

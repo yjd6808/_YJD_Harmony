@@ -8,6 +8,9 @@
 #include "Tutturu.h"
 #include "SGCharacter.h"
 
+#include <SteinsGate/Common/SGRectEx.h>
+#include <SteinsGate/Common/SGRectEx.h>
+
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGActorSprite.h>
 #include <SteinsGate/Client/SGDataManager.h>
@@ -15,8 +18,7 @@
 #include <SteinsGate/Client/SGActionDefine.h>
 #include <SteinsGate/Client/SGActorBox.h>
 
-#include <SteinsGate/Common/SGRectEx.h>
-#include <SteinsGate/Common/SGRectEx.h>
+
 
 
 USING_NS_JC;

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 1:42:47 AM
  * =====================
@@ -131,7 +131,7 @@ NpkElementPtr NpkLoader::ReadElement(Stream& stream, NpkElement::Header& header,
 	return nullptr;
 }
 
-NpkPackagePtr NpkLoader::Load(const JCore::String& npkPath, int indexOnly, bool headerOnly) {
+NpkPackagePtr NpkLoader::Load(const String& npkPath, int indexOnly, bool headerOnly) {
 	StreamPtr spStream = MakeShared<FileStream>(npkPath, FileAccess::eRead, FileMode::eOpen);
 	String szFlag = spStream->ReadString();
 
@@ -177,15 +177,15 @@ NpkPackagePtr NpkLoader::LoadIndexOnly(const String& npkPath) {
 	return Load(npkPath, true, false);
 }
 
-NpkPackagePtr NpkLoader::LoadHeaderOnly(const JCore::String& npkPath) {
+NpkPackagePtr NpkLoader::LoadHeaderOnly(const String& npkPath) {
 	return Load(npkPath, true, true);
 }
 
-JCore::Vector<JCore::String> NpkLoader::LoadAllImagePackPaths() {
-	return Directory::Files(ImagePackPath, true);
+SGVector<String> NpkLoader::LoadAllImagePackPaths(const String& path) {
+	return Directory::Files(path.Source(), true);
 }
 
-JCore::Vector<JCore::String> NpkLoader::LoadAllSoundPackPaths() {
-	return Directory::Files(SoundPackPath, true);
+SGVector<String> NpkLoader::LoadAllSoundPackPaths(const String& path) {
+	return Directory::Files(path.Source(), true);
 }
 

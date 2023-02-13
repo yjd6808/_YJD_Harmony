@@ -36,6 +36,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkPackage.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkSound.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkSprite.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGStruct.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
@@ -55,6 +56,9 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSprite.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteAbstract.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteRect.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGStruct.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

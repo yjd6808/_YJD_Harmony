@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 10:25:33 AM
  * =====================
@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Tutturu.h"
+
 #include <SteinsGate/Client/SGConfig.h>
 
 #include <JCore/Time.h>

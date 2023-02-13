@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGEnums.h>
+
 
 struct SGCharBaseInfo;
 struct SGCharBaseInfoLoader

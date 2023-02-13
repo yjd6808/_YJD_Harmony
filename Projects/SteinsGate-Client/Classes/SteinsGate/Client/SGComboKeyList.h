@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/12/2023 1:14:31 PM
  * =====================
@@ -10,7 +10,7 @@
 
 
 #include "Tutturu.h"
-#include <SteinsGate/Client/SGStruct.h>
+
 #include <JCore/Primitives/SmartPtr.h>
 
 struct SGComboKeyList

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 1:41:15 AM
  * =====================
@@ -55,30 +55,30 @@ public:
 	};
 
 	static NpkPackagePtr
-	Load(const JCore::String& npkPath, int indexOnly, bool headerOnly);
+	Load(const SGString& npkPath, int indexOnly, bool headerOnly);
 
 	// 로딩 레벨 3: 전부 로딩
 	static NpkPackagePtr
-	LoadPerfectly(const JCore::String& npkPath);
+	LoadPerfectly(const SGString& npkPath);
 
 	// 로딩 레벨 2: 이미지 인덱스까지 로딩
 	static NpkPackagePtr
-	LoadIndexOnly(const JCore::String& npkPath);
+	LoadIndexOnly(const SGString& npkPath);
 
 	// 로딩 레벨 1: 패키지 인덱스까지 로딩
 	static NpkPackagePtr
-	LoadHeaderOnly(const JCore::String& npkPath);
+	LoadHeaderOnly(const SGString& npkPath);
 	
-	static JCore::Vector<JCore::String>
-	LoadAllImagePackPaths();
+	static SGVector<SGString>
+	LoadAllImagePackPaths(const SGString& path);
 
-	static JCore::Vector<JCore::String>
-	LoadAllSoundPackPaths();
+	static SGVector<SGString>
+	LoadAllSoundPackPaths(const SGString& path);
 
-	static JCore::Vector<NpkElement::Header>
+	static SGVector<NpkElement::Header>
 	ReadPackageIndex(JCore::Stream& stream, int elementCount);	// 패키지 목차읽기
 
-	static JCore::String
+	static SGString
 	ReadElementPath(JCore::Stream& stream);
 
 	static NpkElementPtr

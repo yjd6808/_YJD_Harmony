@@ -550,7 +550,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGCharAnimationInfoLoader.h">
       <Filter>Data\CharAnimation</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEnums.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGEffect.h">
       <Filter>Actor</Filter>
     </ClInclude>

@@ -23,33 +23,49 @@ public:
 		poly[3] = other.poly[3];
 	}
 
-	RectPoly(const cocos2d::Vec2& origin, const cocos2d::Size& size) {
-		poly[0].x = origin.x;
-		poly[0].y = origin.y;
+	RectPoly(float x, float y, float width, float height) {
+		poly[0].x = x;
+		poly[0].y = y;
 
-		poly[1].x = origin.x + size.width;
-		poly[1].y = origin.y;
+		poly[1].x = x + width;
+		poly[1].y = y;
 
-		poly[2].x = origin.x + size.width;
-		poly[2].y = origin.y + size.height;
+		poly[2].x = x + width;
+		poly[2].y = y + height;
 
-		poly[3].x = origin.x;
-		poly[3].y = origin.y + size.height;
+		poly[3].x = x;
+		poly[3].y = y + height;
 	}
 
-	cocos2d::Vec2* source() { return poly; }
+	RectPoly(const SGVec2& origin, const SGSize& size)
+		: RectPoly(origin.x, origin.y, size.width, size.height)
+	{}
 
-	static RectPoly createFromLeftBottom(const cocos2d::Vec2& leftBottom, const cocos2d::Size& size) {
-		return { leftBottom, size};
+	SGVec2* source() { return poly; }
+
+	static RectPoly createFromLeftBottom(float leftBottom_x, float leftBottom_y, float width, float height) {
+		return { leftBottom_x, leftBottom_y, width, height };
 	}
 
-	static RectPoly createFromRightTop(const cocos2d::Vec2& rightTop, const cocos2d::Size& size) {
-		return { cocos2d::Vec2{rightTop.x - size.width, rightTop.y - size.height }, size };
+	static RectPoly createFromLeftBottom(const SGVec2& leftBottom, const SGSize& size) {
+		return { leftBottom.x, leftBottom.y, size.width, size.height };
 	}
 
-	static RectPoly createFromCenter(const cocos2d::Vec2& center, const cocos2d::Size& size) {
-		return { cocos2d::Vec2{ center.x - size.width / 2, center.y - size.height / 2 }, size };
+	static RectPoly createFromRightTop(float rightTop_x, float rightTop_y, float width, float height) {
+		return { rightTop_x - width, rightTop_y - height, width, height };
+	}
+
+	static RectPoly createFromRightTop(const SGVec2& rightTop, const SGSize& size) {
+		return { SGVec2{rightTop.x - size.width, rightTop.y - size.height }, size };
+	}
+
+	static RectPoly createFromCenter(float center_x, float center_y, float width, float height) {
+		return { center_x - width / 2, center_y / height / 2, width, height };
+	}
+
+	static RectPoly createFromCenter(const SGVec2& center, const SGSize& size) {
+		return { SGVec2{ center.x - size.width / 2, center.y - size.height / 2 }, size };
 	}
 private:
-	cocos2d::Vec2 poly[4];
+	SGVec2 poly[4];
 };

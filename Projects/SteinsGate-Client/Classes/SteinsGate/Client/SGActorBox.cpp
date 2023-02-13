@@ -44,10 +44,10 @@ void SGActorBox::init(SGMapLayer* mapLayer) {
 }
 
 template <typename TActor>
-static int releasePool(SGHashMap<int, SGList<TActor*>>& pool) {
+static int releasePool(SGHashMap<int, SGLinkedList<TActor*>>& pool) {
 	int iReleaseCount = 0;
 	pool.Keys().Extension().ForEach([&iReleaseCount , &pool](int& code) {
-		SGList<TActor*>& li = pool[code];
+		SGLinkedList<TActor*>& li = pool[code];
 		auto it = li.Begin();
 		while (it->HasNext()) {
 			TActor* pActor = it->Next();
@@ -257,12 +257,12 @@ SGProjectile* SGActorBox::createProejctileOnMap(SGActor* spawner, int projectile
 	
 
 	if (!m_hProjectilePool.Exist(projectileId)) {
-		m_hProjectilePool.Insert(Move(projectileId), SGList<SGProjectile*>());
+		m_hProjectilePool.Insert(Move(projectileId), SGLinkedList<SGProjectile*>());
 	}
 	
 	SGProjectile* pProjectile = nullptr;
 	SGActorListenerManager* pActorListenerManager = SGActorListenerManager::get();
-	SGList<SGProjectile*>& projectileList = m_hProjectilePool[projectileId];
+	SGLinkedList<SGProjectile*>& projectileList = m_hProjectilePool[projectileId];
 
 	if (projectileList.IsEmpty()) {
 		SGActorListener* pListener = pActorListenerManager->createProjectileListener(pInfo->ProjectileListenerCode);
@@ -307,11 +307,11 @@ SGMonster* SGActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, 
 	SGAIInfo* pAIInfo = pDataManager->getAIInfo(aiCode);
 
 	if (!m_hMonsterPool.Exist(monsterCode)) {
-		m_hMonsterPool.Insert(Move(monsterCode), SGList<SGMonster*>());
+		m_hMonsterPool.Insert(Move(monsterCode), SGLinkedList<SGMonster*>());
 	}
 
 	SGMonster* pMonster = nullptr;
-	SGList<SGMonster*>& monsterList = m_hMonsterPool[monsterCode];
+	SGLinkedList<SGMonster*>& monsterList = m_hMonsterPool[monsterCode];
 
 	if (monsterList.IsEmpty()) {
 		pMonster = SGMonster::create(pMonsterInfo, pAIInfo);
@@ -338,11 +338,11 @@ SGObstacle* SGActorBox::createObstacleOnMap(int obstacleCode, float x, float y) 
 	SGObstacleInfo* pObstacleInfo = SGDataManager::get()->getObstacleInfo(obstacleCode);
 
 	if (!m_hObstaclePool.Exist(obstacleCode)) {
-		m_hObstaclePool.Insert(Move(obstacleCode), SGList<SGObstacle*>());
+		m_hObstaclePool.Insert(Move(obstacleCode), SGLinkedList<SGObstacle*>());
 	}
 
 	SGObstacle* pObstacle = nullptr;
-	SGList<SGObstacle*>& obstacleList = m_hObstaclePool[obstacleCode];
+	SGLinkedList<SGObstacle*>& obstacleList = m_hObstaclePool[obstacleCode];
 
 	if (obstacleList.IsEmpty()) {
 		pObstacle = SGObstacle::create(pObstacleInfo);
@@ -445,11 +445,11 @@ SGEffect* SGActorBox::createEffectOnMap(int effectCode) {
 	SGEffectInfo* pEffectInfo = SGDataManager::get()->getEffectInfo(effectCode);
 
 	if (!m_hEffectPool.Exist(effectCode)) {
-		m_hEffectPool.Insert(Move(effectCode), SGList<SGEffect*>());
+		m_hEffectPool.Insert(Move(effectCode), SGLinkedList<SGEffect*>());
 	}
 
 	SGEffect* pEffect = nullptr;
-	SGList<SGEffect*>& effectList = m_hEffectPool[effectCode];
+	SGLinkedList<SGEffect*>& effectList = m_hEffectPool[effectCode];
 
 	if (effectList.IsEmpty()) {
 		pEffect = SGEffect::create(pEffectInfo);

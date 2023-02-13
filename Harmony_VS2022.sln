@@ -106,6 +106,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Lobby", "Projects\SteinsGate-Server.Lobby\Project\SteinsGate-Server.Lobby.vcxproj", "{8813FE87-685D-4E31-898A-167090482206}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Client", "Projects\SteinsGate-Client\Projects\SteinsGate-Client.vcxproj", "{F0278B0E-1014-4730-B622-67B9073F8C60}"
+	ProjectSection(ProjectDependencies) = postProject
+		{13FE9916-2585-4CE2-9ECC-5CFDDD3B7339} = {13FE9916-2585-4CE2-9ECC-5CFDDD3B7339}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{B52E3E56-CE2F-469C-A7F1-879F57B8AD62}"
 	ProjectSection(SolutionItems) = preProject

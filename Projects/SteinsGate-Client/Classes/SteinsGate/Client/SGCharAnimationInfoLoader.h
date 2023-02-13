@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Tutturu.h"
-#include <SteinsGate/Client/SGEnums.h>
+
 
 struct SGAnimationInfo;
 struct SGCharAnimationInfoLoader
