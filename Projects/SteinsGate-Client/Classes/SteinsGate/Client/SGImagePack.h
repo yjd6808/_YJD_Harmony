@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 6:36:06 AM
  * =====================
@@ -13,8 +13,8 @@
 #include <SteinsGate/Client/SGConfig.h>
 #include <SteinsGate/Client/SGFrameTexture.h>
 
-#include <SteinsGate/Common/Core/Npk/NpkPackage.h>
-#include <SteinsGate/Common/Core/Npk/NpkImage.h>
+#include <SteinsGate/Common/NpkPackage.h>
+#include <SteinsGate/Common/NpkImage.h>
 
 class SGImagePack
 {

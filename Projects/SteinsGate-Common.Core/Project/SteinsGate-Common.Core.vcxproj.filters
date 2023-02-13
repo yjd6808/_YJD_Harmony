@@ -2,78 +2,75 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Core.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\BassPlayer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElement.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkElement.cpp">
       <Filter>Npk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElementInitilizer.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkElementInitilizer.cpp">
       <Filter>Npk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkImage.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkImage.cpp">
       <Filter>Npk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkLinkSprite.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkLinkSprite.cpp">
       <Filter>Npk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkLoader.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkLoader.cpp">
       <Filter>Npk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkPackage.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkPackage.cpp">
       <Filter>Npk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSound.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkSound.cpp">
       <Filter>Npk</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSprite.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkSprite.cpp">
       <Filter>Npk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\BassPlayer.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkColorFormat.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkColorFormat.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkCompressMode.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkCompressMode.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElement.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkElement.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElementInitializer.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkElementInitializer.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkImage.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkImage.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkLinkSprite.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkLinkSprite.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkLoader.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkLoader.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkPackage.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkPackage.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSound.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSound.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSprite.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSprite.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSpriteAbstract.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteAbstract.h">
       <Filter>Npk</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSpriteRect.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteRect.h">
       <Filter>Npk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Npk">
-      <UniqueIdentifier>{6a9d136d-829b-4e44-92e6-e7ed5bbe9aa4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{5362b856-14b1-40aa-8f4d-3149e4b5f075}</UniqueIdentifier>
+      <UniqueIdentifier>{8c39330d-5cc1-4ca6-b0dc-4fe8ee5021e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -5,8 +5,8 @@
  *
  */
 
-#include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/Core/Npk/NpkLinkSprite.h>
+#include "Core.h"
+#include <SteinsGate/Common/NpkLinkSprite.h>
 
 using namespace JCore;
 

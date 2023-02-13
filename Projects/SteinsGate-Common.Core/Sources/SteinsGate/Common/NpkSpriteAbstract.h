@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Core/Npk/NpkImage.h>
-#include <SteinsGate/Common/Core/Npk/NpkCompressMode.h>
-#include <SteinsGate/Common/Core/Npk/NpkSpriteRect.h>
+#include <SteinsGate/Common/NpkImage.h>
+#include <SteinsGate/Common/NpkCompressMode.h>
+#include <SteinsGate/Common/NpkSpriteRect.h>
 
 template <Int32>
 class NpkElementInitializerImpl;

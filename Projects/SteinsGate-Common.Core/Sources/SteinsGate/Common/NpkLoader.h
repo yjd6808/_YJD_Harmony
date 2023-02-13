@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <SteinsGate/Common/Core/Npk/NpkPackage.h>
+#include <SteinsGate/Common/NpkPackage.h>
 
 namespace JCore {
 	template <typename...>

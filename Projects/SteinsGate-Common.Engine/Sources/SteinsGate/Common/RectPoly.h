@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/17/2023 1:21:39 AM
  * =====================
@@ -10,7 +10,7 @@
 
 
 
-#include <SteinsGate/Common/Engine.h>
+#include "Engine.h"
 
 class RectPoly
 {

@@ -5,9 +5,9 @@
  *
  */
 
-#include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/Core/Npk/NpkLoader.h>
-#include <SteinsGate/Common/Core/Npk/NpkPackage.h>
+#include "Core.h"
+#include <SteinsGate/Common/NpkLoader.h>
+#include <SteinsGate/Common/NpkPackage.h>
 
 #include <JCore/FileSystem/FileStream.h>
 #include <JCore/FileSystem/Path.h>

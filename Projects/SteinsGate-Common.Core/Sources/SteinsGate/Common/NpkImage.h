@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Core/Npk/NpkElement.h>
+#include <SteinsGate/Common/NpkElement.h>
 
 
 class NpkSpriteAbstract;

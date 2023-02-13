@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 10:58:34 PM
  * =====================
@@ -12,17 +12,17 @@
 #include <JCore/Primitives/SmartPtr.h>
 
 
-class BassPlayer
+class AudioPlayer
 {
 	using SoundDataPtr = JCore::SharedPtr<Byte[]>;
 
 public:
-	BassPlayer()
+	AudioPlayer()
 		: m_iHandle(0)
 		, m_bPlaying(false)
 		, m_bPaused(false)
 		, m_bRepeat(false) {}
-	~BassPlayer() {
+	~AudioPlayer() {
 		Stop();
 		Close(m_iHandle);
 	}

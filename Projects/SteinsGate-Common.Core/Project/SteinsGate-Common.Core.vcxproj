@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Core.cpp">
       <SubType>
       </SubType>
@@ -27,34 +28,33 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\BassPlayer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElement.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElementInitilizer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkImage.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkLinkSprite.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkLoader.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkPackage.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSound.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSprite.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkElement.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkElementInitilizer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkImage.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkLinkSprite.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkLoader.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkPackage.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkSound.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\NpkSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\BassPlayer.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkColorFormat.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkCompressMode.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElement.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkElementInitializer.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkImage.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkLinkSprite.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkLoader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkPackage.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSound.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSprite.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSpriteAbstract.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Core\Npk\NpkSpriteRect.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkColorFormat.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkCompressMode.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkElement.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkElementInitializer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkImage.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkLinkSprite.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkLoader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkPackage.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSound.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSprite.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteAbstract.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteRect.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -139,7 +139,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;DebugMode;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>SteinsGate/Common/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
@@ -160,7 +160,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>SteinsGate/Common/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>

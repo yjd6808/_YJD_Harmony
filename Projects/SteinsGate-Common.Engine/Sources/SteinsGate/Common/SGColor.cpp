@@ -1,10 +1,9 @@
-﻿/*
+/*
  * 작성자 : 윤정도
  */
 
 
-#include <SteinsGate/Common/Engine.h>
-
+#include "Engine.h"
 #include "SGColor.h"
 
 SGColor3B ColorList::AbsoluteZero_v =                { 0x00, 0x48, 0xBA };

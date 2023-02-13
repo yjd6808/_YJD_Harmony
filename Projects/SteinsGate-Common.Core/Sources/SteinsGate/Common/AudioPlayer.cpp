@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 10:58:34 PM
  * =====================
@@ -6,10 +6,9 @@
  */
 
 
-#include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/Core/BassPlayer.h>
+#include "Core.h"
+#include "AudioPlayer.h"
 
-#include <JCore/Assert.h>
 #include <bass.h>
 
 using namespace JCore;
@@ -19,7 +18,7 @@ using namespace JCore;
 // =============================================================
 
 
-void BassPlayer::PlayOnce() {
+void AudioPlayer::PlayOnce() {
 	DebugAssertMsg(m_iHandle, "핸들이 설정되지 않았습니다.");
 
 
@@ -33,7 +32,7 @@ void BassPlayer::PlayOnce() {
 	}
 }
 
-void BassPlayer::PlayNew(SoundDataPtr soundData, bool repeat) {
+void AudioPlayer::PlayNew(SoundDataPtr soundData, bool repeat) {
 	if (m_iHandle != 0) {
 		Stop(m_iHandle);
 		Close(m_iHandle);
@@ -48,7 +47,7 @@ void BassPlayer::PlayNew(SoundDataPtr soundData, bool repeat) {
 	}
 }
 
-void BassPlayer::PlayRepeat() {
+void AudioPlayer::PlayRepeat() {
 	DebugAssertMsg(m_iHandle, "핸들이 설정되지 않았습니다.");
 
 	if (m_bPlaying)
@@ -61,7 +60,7 @@ void BassPlayer::PlayRepeat() {
 	}
 }
 
-void BassPlayer::PlayNew(Byte* mem, int len, bool repeat) {
+void AudioPlayer::PlayNew(Byte* mem, int len, bool repeat) {
 	if (m_iHandle != 0) {
 		Stop(m_iHandle);
 		Close(m_iHandle);
@@ -76,7 +75,7 @@ void BassPlayer::PlayNew(Byte* mem, int len, bool repeat) {
 	}
 }
 
-void BassPlayer::Pause() {
+void AudioPlayer::Pause() {
 
 	if (!m_bPlaying)
 		return;
@@ -87,7 +86,7 @@ void BassPlayer::Pause() {
 	}
 }
 
-void BassPlayer::Stop() {
+void AudioPlayer::Stop() {
 
 	if (!m_bPlaying)
 		return;
@@ -102,33 +101,33 @@ void BassPlayer::Stop() {
 //					라이브러리 래핑
 // =============================================================
 
-int BassPlayer::Create(void* mem, int len) {
+int AudioPlayer::Create(void* mem, int len) {
 	return (int)BASS_StreamCreateFile(TRUE, mem, 0, len, 0);
 }
 
-bool BassPlayer::Play(int handle, bool restart) {
+bool AudioPlayer::Play(int handle, bool restart) {
 	return BASS_ChannelPlay(handle, !restart) != 0;
 }
 
-bool BassPlayer::Stop(int handle) {
+bool AudioPlayer::Stop(int handle) {
 	return BASS_ChannelStop(handle) != 0;
 }
 
-bool BassPlayer::Pause(int handle) {
+bool AudioPlayer::Pause(int handle) {
 	return BASS_ChannelPause(handle);
 }
 
-bool BassPlayer::Close(int handle) {
+bool AudioPlayer::Close(int handle) {
 	return BASS_StreamFree(handle);
 }
 
 
 // https://www.un4seen.com/doc/#bass/BASS_ChannelGetPosition.html
-Int64U BassPlayer::GetPosition(int handle) {
+Int64U AudioPlayer::GetPosition(int handle) {
 	return BASS_ChannelGetPosition(handle, BASS_POS_BYTE);
 }
 
-bool BassPlayer::Initilize() {
+bool AudioPlayer::Initilize() {
 	if (BASS_Init(-1, 44100, 0, 0, 0))
 		ms_bInitialized = true;
 
@@ -136,7 +135,7 @@ bool BassPlayer::Initilize() {
 }
 
 
-bool BassPlayer::Finalize() {
+bool AudioPlayer::Finalize() {
 	
 	if (!BASS_Stop()) {
 		DebugAssert(false);

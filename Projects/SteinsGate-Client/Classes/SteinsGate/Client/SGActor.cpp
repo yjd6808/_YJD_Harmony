@@ -8,9 +8,9 @@
 #include "Tutturu.h"
 #include "SGActor.h"
 
-#include <SteinsGate/Common/Engine/RectPoly.h>
-#include <SteinsGate/Common/Engine/SGRectEx.h>
-#include <SteinsGate/Common/Engine/SGColor.h>
+#include <SteinsGate/Common/RectPoly.h>
+#include <SteinsGate/Common/SGRectEx.h>
+#include <SteinsGate/Common/SGColor.h>
 
 #include <SteinsGate/Client/SGGlobal.h>
 #include <SteinsGate/Client/SGMapLayer.h>

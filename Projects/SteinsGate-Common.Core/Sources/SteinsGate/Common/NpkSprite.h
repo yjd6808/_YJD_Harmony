@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Core/Npk/NpkSpriteAbstract.h>
-#include <SteinsGate/Common/Core/Npk/NpkSpriteRect.h>
+#include <SteinsGate/Common/NpkSpriteAbstract.h>
+#include <SteinsGate/Common/NpkSpriteRect.h>
 #include <JCore/Primitives/SmartPtr.h>
 
 #pragma warning (push, 0)

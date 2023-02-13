@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Core/Npk/NpkSpriteRect.h>
+#include <SteinsGate/Common/NpkSpriteRect.h>
 
 
 #include <SteinsGate/Client/SGConfig.h>

@@ -5,10 +5,10 @@
  *
  */
 
-#include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/Core/Npk/NpkImage.h>
-#include <SteinsGate/Common/Core/Npk/NpkSprite.h>
-#include <SteinsGate/Common/Core/Npk/NpkElementInitializer.h>
+#include "Core.h"
+#include <SteinsGate/Common/NpkImage.h>
+#include <SteinsGate/Common/NpkSprite.h>
+#include <SteinsGate/Common/NpkElementInitializer.h>
 
 #include "NpkPackage.h"
 

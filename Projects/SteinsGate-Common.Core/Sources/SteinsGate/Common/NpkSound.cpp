@@ -5,9 +5,9 @@
  *
  */
 
-#include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/Core/Npk/NpkSound.h>
-#include <SteinsGate/Common/Core/Npk/NpkPackage.h>
+#include "Core.h"
+#include <SteinsGate/Common/NpkSound.h>
+#include <SteinsGate/Common/NpkPackage.h>
 
 using namespace JCore;
 

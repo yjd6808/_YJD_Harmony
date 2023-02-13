@@ -15,8 +15,8 @@
 #include <SteinsGate/Client/SGActionDefine.h>
 #include <SteinsGate/Client/SGActorBox.h>
 
-#include <SteinsGate/Common/Engine/SGRectEx.h>
-#include <SteinsGate/Common/Engine/SGRectEx.h>
+#include <SteinsGate/Common/SGRectEx.h>
+#include <SteinsGate/Common/SGRectEx.h>
 
 
 USING_NS_JC;

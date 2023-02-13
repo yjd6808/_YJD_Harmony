@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Core/Npk/NpkElement.h>
+#include <SteinsGate/Common/NpkElement.h>
 
 #include <JCore/Stream.h>
 #include <JCore/Container/HashMap.h>

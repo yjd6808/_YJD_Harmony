@@ -11,8 +11,8 @@
 #include <SteinsGate/Client/SGActionDefine.h>
 #include <SteinsGate/Client/SGHostPlayer.h>
 
-#include <SteinsGate/Common/Engine/SGRectEx.h>
-#include <SteinsGate/Common/Engine/RectPoly.h>
+#include <SteinsGate/Common/SGRectEx.h>
+#include <SteinsGate/Common/RectPoly.h>
 
 #include "SGGameScene.h"
 

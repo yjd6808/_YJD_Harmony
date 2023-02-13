@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Engine/GridLayer.h>
+#include <SteinsGate/Common/GridLayer.h>
 
 #include <SteinsGate/Client/SGSceneBase.h>
 #include <SteinsGate/Client/SGMapLayer.h>

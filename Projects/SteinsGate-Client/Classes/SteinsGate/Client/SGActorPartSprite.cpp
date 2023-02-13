@@ -8,7 +8,7 @@
 #include "Tutturu.h"
 #include "SGActorPartSprite.h"
 
-#include <SteinsGate/Common/Engine/RectPoly.h>
+#include <SteinsGate/Common/RectPoly.h>
 #include <SteinsGate/Client/SGActorSprite.h>
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGGlobal.h>

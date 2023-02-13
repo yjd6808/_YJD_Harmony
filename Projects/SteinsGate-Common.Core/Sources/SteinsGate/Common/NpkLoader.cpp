@@ -5,11 +5,11 @@
  * 
  */
 
-#include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/Core/Npk/NpkLoader.h>
-#include <SteinsGate/Common/Core/Npk/NpkSprite.h>
-#include <SteinsGate/Common/Core/Npk/NpkSound.h>
-#include <SteinsGate/Common/Core/Npk/NpkElementInitializer.h>
+#include "Core.h"
+#include <SteinsGate/Common/NpkLoader.h>
+#include <SteinsGate/Common/NpkSprite.h>
+#include <SteinsGate/Common/NpkSound.h>
+#include <SteinsGate/Common/NpkElementInitializer.h>
 
 #include <JCore/Primitives/String.h>
 

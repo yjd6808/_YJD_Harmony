@@ -5,9 +5,9 @@
  *
  */
 
-#include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/Core/Npk/NpkSprite.h>
-#include <SteinsGate/Common/Core/Npk/NpkColorFormat.h>
+#include "Core.h"
+#include <SteinsGate/Common/NpkSprite.h>
+#include <SteinsGate/Common/NpkColorFormat.h>
 
 #include <JCore/Stream.h>
 #include <zlib.h>

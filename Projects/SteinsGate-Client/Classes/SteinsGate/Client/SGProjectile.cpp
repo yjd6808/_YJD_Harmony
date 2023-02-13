@@ -16,7 +16,7 @@
 #include <SteinsGate/Client/SGProjectileListener.h>
 #include <SteinsGate/Client/SGHostPlayer.h>
 
-#include <SteinsGate/Common/Engine/RectPoly.h>
+#include <SteinsGate/Common/RectPoly.h>
 
 USING_NS_JC;
 USING_NS_CC;

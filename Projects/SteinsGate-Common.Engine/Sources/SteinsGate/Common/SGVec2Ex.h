@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <SteinsGate/Common/Engine.h>
+#include "Engine.h"
 #include <JCore/Math.h>
 
 class SGVec2Ex : SGRect

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/10/2023 11:51:44 PM
  * =====================
@@ -8,8 +8,8 @@
 #include "Tutturu.h"
 #include "SGImagePackManager.h"
 
-#include <SteinsGate/Common/Core/Npk/NpkLoader.h>
-#include <SteinsGate/Common/Core/Npk/NpkElementInitializer.h>
+#include <SteinsGate/Common/NpkLoader.h>
+#include <SteinsGate/Common/NpkElementInitializer.h>
 
 #include <JCore/FileSystem/Directory.h>
 #include <JCore/FileSystem/Path.h>

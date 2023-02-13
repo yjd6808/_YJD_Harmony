@@ -13,7 +13,7 @@
 #include <SteinsGate/Client/SGMapLayer.h>
 #include <SteinsGate/Client/SGGlobal.h>
 
-#include <SteinsGate/Common/Engine/RectPoly.h>
+#include <SteinsGate/Common/RectPoly.h>
 
 USING_NS_CC;
 USING_NS_JC;

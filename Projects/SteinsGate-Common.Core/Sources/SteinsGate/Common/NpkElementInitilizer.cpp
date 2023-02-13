@@ -1,16 +1,16 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 5:08:22 PM
  * =====================
  *
  */
 
-#include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/Core/Npk/NpkElementInitializer.h>
-#include <SteinsGate/Common/Core/Npk/NpkLinkSprite.h>
-#include <SteinsGate/Common/Core/Npk/NpkSprite.h>
-#include <SteinsGate/Common/Core/Npk/NpkSound.h>
-#include <SteinsGate/Common/Core/Npk/NpkColorFormat.h>
+#include "Core.h"
+#include <SteinsGate/Common/NpkElementInitializer.h>
+#include <SteinsGate/Common/NpkLinkSprite.h>
+#include <SteinsGate/Common/NpkSprite.h>
+#include <SteinsGate/Common/NpkSound.h>
+#include <SteinsGate/Common/NpkColorFormat.h>
 
 using namespace JCore;
 

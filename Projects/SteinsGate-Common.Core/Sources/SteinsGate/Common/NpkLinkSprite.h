@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 6:17:04 AM
  * =====================
@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <SteinsGate/Common/Core/Npk/NpkSpriteAbstract.h>
+#include <SteinsGate/Common/NpkSpriteAbstract.h>
 #include <JCore/Primitives/SmartPtr.h>
 
 #pragma warning (push, 0)

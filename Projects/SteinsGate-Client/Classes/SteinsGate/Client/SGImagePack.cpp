@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 6:36:25 AM
  * =====================
@@ -9,7 +9,7 @@
 #include "SGImagePack.h"
 
 #include <JCore/FileSystem/Path.h>
-#include <SteinsGate/Common/Core/Npk/NpkSpriteAbstract.h>
+#include <SteinsGate/Common/NpkSpriteAbstract.h>
 #include <SteinsGate/Client/SGGlobal.h>
 
 USING_NS_CC;
