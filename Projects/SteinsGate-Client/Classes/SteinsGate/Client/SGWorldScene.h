@@ -21,17 +21,25 @@ private:
 public:
 	~SGWorldScene() override;
 
+	void initEventListeners();
 	bool init() override;
 	void update(float dt) override;
 	void updateScene(float dt);
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
-
+	void onMouseMove(SGEventMouse* mouseEvent);
+	void onMouseDown(SGEventMouse* mouseEvent);
+	void onMouseUp(SGEventMouse* mouseEvent);
+	void onMouseScroll(SGEventMouse* mouseEvent);
+	
 	void reserveScene(SceneType_t sceneType);
 	void changeScene(SceneType_t sceneType);
 
 	static SGWorldScene* get();
 private:
+	SGEventListenerKeyboard* m_pKeyboardListener;
+	SGEventListenerMouse* m_pMouseListener;
+
 	SGSceneBase* m_pRunningScene;
 	SceneType_t m_eReservedScene;
 };

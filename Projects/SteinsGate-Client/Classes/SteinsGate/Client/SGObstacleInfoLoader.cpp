@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 11:32:31 AM
  * =====================
@@ -25,7 +25,7 @@ USING_NS_JS;
 
 bool SGObstacleInfoLoader::LoadObstacleInfo(SGHashMap<int, SGObstacleInfo>& obstacleInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
+	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
 	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;

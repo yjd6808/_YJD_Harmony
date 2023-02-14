@@ -12,6 +12,7 @@ USING_NS_JC;
 
 int main()
 {
+    // Detail::__JCoreInitialize()
     //{
     //    SGGlobal::get();
     //    SGImagePackManager::get();

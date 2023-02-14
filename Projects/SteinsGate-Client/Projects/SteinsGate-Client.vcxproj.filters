@@ -85,6 +85,15 @@
     <Filter Include="Game\Layer">
       <UniqueIdentifier>{3d065bfc-aa30-4c21-ac0a-778e58e49571}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data\UI">
+      <UniqueIdentifier>{e1a5f450-8532-48da-ae6e-44f1e0253f12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI">
+      <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Font">
+      <UniqueIdentifier>{0115c815-90f7-41c3-8536-514809c3be1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePackManager.cpp">
@@ -315,6 +324,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGSceneBase.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUILayer.cpp">
+      <Filter>Game\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.cpp">
+      <Filter>Data\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGFontLoader.cpp">
+      <Filter>Data\Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -594,6 +612,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGMapLayer.h">
       <Filter>Game\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUILayer.h">
+      <Filter>Game\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfo.h">
+      <Filter>Data\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.h">
+      <Filter>Data\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGFontLoader.h">
+      <Filter>Data\Font</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

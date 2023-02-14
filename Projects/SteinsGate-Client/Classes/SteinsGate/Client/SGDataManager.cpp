@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 12:01:29 PM
  * =====================
@@ -20,6 +20,8 @@
 #include <SteinsGate/Client/SGAttackDataInfoLoader.h>
 #include <SteinsGate/Client/SGCharAnimationInfoLoader.h>
 #include <SteinsGate/Client/SGEffectInfoLoader.h>
+#include <SteinsGate/Client/SGFontLoader.h>
+#include <SteinsGate/Client/SGUIInfoLoader.h>
 
 SGDataManager::SGDataManager() {}
 SGDataManager::~SGDataManager() {
@@ -27,13 +29,16 @@ SGDataManager::~SGDataManager() {
 	for (int i = 0; i < CharType::Max; ++i) {
 		DeleteSafe(m_CharBaseInfoMap[i]);
 	}
+
+	m_UIElementInfoMap.Values().Extension().ForEach([](SGUIElementInfo* info) { delete info; });
 }
 
 void SGDataManager::LoadAllConfigs() {
 	// 내가 만든 설정파일 들은 아직 엄청 가벼워서 쓰레드가 필요없다.
 
 
-	if (SGAttackDataInfoLoader::LoadAttackDataInfo(m_AttackDataInfoMap) &&
+	if (SGFontLoader::LoadFontInfo(m_FontNameToCodeMap, m_FontCodeToNameMap) &&
+		SGAttackDataInfoLoader::LoadAttackDataInfo(m_AttackDataInfoMap) &&
 		SGEffectInfoLoader::LoadEffectInfo(m_EffectInfoMap) &&
 		SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectileInfoMap) &&		// 프로젝틸은 이펙트, 어택 데이터를 참조하므로 이후에 로딩
 		SGActionInfoLoader::LoadActionInfo(m_ActionInfoMap) &&
@@ -44,7 +49,8 @@ void SGDataManager::LoadAllConfigs() {
 		SGTileInfoLoader::LoadTileInfo(m_TileInfoMap) && 
 		SGObstacleInfoLoader::LoadObstacleInfo(m_ObstacleInfoMap) &&
 		SGMapInfoLoader::LoadMapInfo(m_MapInfoMap) &&
-		SGAIInfoLoader::LoadAIInfo(m_AIInfoMap)) {
+		SGAIInfoLoader::LoadAIInfo(m_AIInfoMap) &&
+		SGUIInfoLoader::LoadUIInfo(m_UIElementInfoMap, m_UIGroupInfoMap)) {
 		Log("==== 모든 기획파일 로딩완료 ====\n");
 	} else {
 		DebugAssertMsg(false, "기획파일 로딩 실패");
@@ -115,3 +121,24 @@ SGEffectInfo* SGDataManager::getEffectInfo(int effectCode) {
 	DebugAssertMsg(m_EffectInfoMap.Exist(effectCode), "해당 이펙트 코드에 맞는 이펙트가 없다@~@~!@~!@~");
 	return &m_EffectInfoMap[effectCode];
 }
+
+int SGDataManager::getFontCode(const SGString& fontName) {
+	DebugAssertMsg(m_FontNameToCodeMap.Exist(fontName), "해당 폰트이름에 맞는 폰트 코드가 없습니다.");
+	return m_FontNameToCodeMap[fontName];
+}
+
+const SGString& SGDataManager::getFontName(int fontCode) {
+	DebugAssertMsg(m_FontCodeToNameMap.Exist(fontCode), "해당 폰트코드에 맞는 폰트 이름이 없습니다.");
+	return m_FontCodeToNameMap[fontCode];
+}
+
+SGUIElementInfo* SGDataManager::getUIElementInfo(int uiElementCode) {
+	DebugAssertMsg(m_UIElementInfoMap.Exist(uiElementCode), "해당 UI 엘리먼트 코드에 맞는 정보가 없습니다.");
+	return m_UIElementInfoMap[uiElementCode];
+}
+
+SGUIGroupInfo* SGDataManager::getUIGroupInfo(int uiGroupCode) {
+	DebugAssertMsg(m_UIGroupInfoMap.Exist(uiGroupCode), "해당 UI 그룹 코드에 맞는 정보가 없습니다.");
+	return &m_UIGroupInfoMap[uiGroupCode];
+}
+

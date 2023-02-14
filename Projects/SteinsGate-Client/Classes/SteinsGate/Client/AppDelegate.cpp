@@ -53,7 +53,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setDisplayStats(false);
     director->setAnimationInterval(1.0f / 120);
     glview->setDesignResolutionSize(pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight, ResolutionPolicy::NO_BORDER);
-    director->setContentScaleFactor(pClientInfo->GameScale);
 
     auto scene = SGWorldScene::get();
     scene->setAnchorPoint(Vec2::ZERO);

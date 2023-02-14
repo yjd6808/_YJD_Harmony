@@ -254,7 +254,7 @@ THE SOFTWARE.
 
 /** Use physics integration API. */
 #ifndef CC_USE_PHYSICS
-#define CC_USE_PHYSICS 1
+#define CC_USE_PHYSICS 0
 #endif
 
 #if (CC_USE_PHYSICS)
@@ -272,7 +272,7 @@ THE SOFTWARE.
 /** Use 3d physics integration API. */
 #ifndef CC_USE_3D_PHYSICS
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX /*|| CC_TARGET_PLATFORM == CC_PLATFORM_WINRT*/)
-#define CC_USE_3D_PHYSICS 1
+#define CC_USE_3D_PHYSICS 0
 #endif
 #endif
 
@@ -285,7 +285,7 @@ THE SOFTWARE.
 
 /** Use 3D navigation API */
 #ifndef CC_USE_NAVMESH
-#define CC_USE_NAVMESH 1
+#define CC_USE_NAVMESH 0
 #endif
 
 /** Use culling or not. */
@@ -332,7 +332,7 @@ THE SOFTWARE.
 
 /** Enable Script binding. */
 #ifndef CC_ENABLE_SCRIPT_BINDING
-#define CC_ENABLE_SCRIPT_BINDING 1
+#define CC_ENABLE_SCRIPT_BINDING 0
 #endif
 
 /** When CC_ENABLE_SCRIPT_BINDING and CC_ENABLE_GC_FOR_NATIVE_OBJECTS are both 1

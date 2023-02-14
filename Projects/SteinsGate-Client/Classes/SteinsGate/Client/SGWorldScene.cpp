@@ -50,22 +50,34 @@ SGWorldScene::SGWorldScene()
 {}
 SGWorldScene::~SGWorldScene() {}
 
+
 bool SGWorldScene::init() {
 
 	if (!Scene::init())
 		return false;
 
-	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
-	keyboardListener->onKeyPressed = CC_CALLBACK_2(SGWorldScene::onKeyPressed, this);
-	keyboardListener->onKeyReleased = CC_CALLBACK_2(SGWorldScene::onKeyReleased, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
-
+	initEventListeners();
 	changeScene(SceneType::Login);
 	scheduleUpdate();
 
-
 	return true;
 }
+
+void SGWorldScene::initEventListeners() {
+	m_pKeyboardListener = EventListenerKeyboard::create();
+	m_pKeyboardListener->onKeyPressed = CC_CALLBACK_2(SGWorldScene::onKeyPressed, this);
+	m_pKeyboardListener->onKeyReleased = CC_CALLBACK_2(SGWorldScene::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_pKeyboardListener, this);
+
+	m_pMouseListener = EventListenerMouse::create();
+	m_pMouseListener->onMouseDown = CC_CALLBACK_1(SGWorldScene::onMouseDown, this);
+	m_pMouseListener->onMouseScroll = CC_CALLBACK_1(SGWorldScene::onMouseScroll, this);
+	m_pMouseListener->onMouseUp = CC_CALLBACK_1(SGWorldScene::onMouseUp, this);
+	m_pMouseListener->onMouseMove = CC_CALLBACK_1(SGWorldScene::onMouseMove, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_pMouseListener, this);
+}
+
+
 
 void SGWorldScene::update(float dt) {
 	updateScene(dt);
@@ -86,7 +98,6 @@ void SGWorldScene::updateScene(float dt) {
 	}
 }
 
-
 void SGWorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
 	if (m_pRunningScene)
 		m_pRunningScene->onKeyPressed(keyCode, event);
@@ -96,6 +107,23 @@ void SGWorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* even
 	if (m_pRunningScene)
 		m_pRunningScene->onKeyReleased(keyCode, event);
 }
+
+void SGWorldScene::onMouseMove(SGEventMouse* mouseEvent) {
+	CCLOG("%.f %.f", mouseEvent->getCursorX(), mouseEvent->getCursorY());
+}
+
+void SGWorldScene::onMouseDown(SGEventMouse* mouseEvent) {
+	
+}
+
+void SGWorldScene::onMouseUp(SGEventMouse* mouseEvent) {
+	
+}
+
+void SGWorldScene::onMouseScroll(SGEventMouse* mouseEvent) {
+	
+}
+
 
 void SGWorldScene::reserveScene(SceneType_t sceneType) {
 	m_eReservedScene = sceneType;
@@ -116,4 +144,98 @@ void SGWorldScene::changeScene(SceneType_t sceneType) {
 	this->addChild(m_pRunningScene);
 }
 
+enum UIControlType
+{
+	Button,
+	ToggleButton,
+	Image,
+	Label,
+	TextBox,
+	ScrollBar,
+	None
+};
 
+struct UIElementInfo
+{
+	UIControlType ControlType;
+	int Code;
+	SGString Name;
+	float X;
+	float Y;
+	float Width;
+	float Height;
+	int ZOrder;
+	int Tag;
+	int NpkIndex;
+	int ImgIndex;
+};
+
+// 토글 버튼도 동일
+struct UIButtonInfo : UIElementInfo
+{
+	int Normal;			// ElementIndex
+	int OnMouseOver;
+	int Pressed;
+	int Disabled;
+};
+
+struct UIGroupInfo
+{
+	int Code;
+	float X;
+	float Y;
+	float Width;
+	float Height;
+	SGString Name;
+	SGVector<int> vElements;
+};
+
+struct UIElement;
+struct UIGroup
+{
+	bool Loaded;
+	SGVector<UIElement*> vElements;
+	SGNode* NodeBase;
+};
+
+struct UIElement
+{
+	virtual void Load() = 0;
+
+	UIElementInfo* m_pInfo;
+};
+
+struct UIButtonNode : cocos2d::ui::Button
+{
+	static UIButtonNode* create(SGFrameTexture* Normal,
+		SGFrameTexture* Over,
+		SGFrameTexture* Pressed,
+		SGFrameTexture* Disabled) {}
+};
+
+struct UIButton : UIElement
+{
+	void Load() override {
+		
+	}
+
+	UIButtonNode* CreateNode() {
+		return UIButtonNode::create(Normal, Over, Pressed, Disabled);
+	}
+
+	SGFrameTexture* Normal;
+	SGFrameTexture* Over;
+	SGFrameTexture* Pressed;
+	SGFrameTexture* Disabled;
+};
+
+
+struct UIManager
+{
+	
+};
+
+struct UICacheShop
+{
+	
+};

@@ -10,7 +10,7 @@ NS_JC_BEGIN
 NS_DETAIL_BEGIN
 
 // 일단 포트 변환땜에 하나만 만듬
-struct NatvisByteOrderInt16U {
+union NatvisByteOrderInt16U {
 	struct
 	{
 		Int8U Seg1;	// 0xbb

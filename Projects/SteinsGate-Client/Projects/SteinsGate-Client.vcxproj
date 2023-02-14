@@ -60,6 +60,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGFontLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerAction.cpp">
       <SubType>
       </SubType>
@@ -251,6 +255,14 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUILayer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGVec2Ex.cpp">
       <SubType>
       </SubType>
@@ -367,6 +379,10 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGFontLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerAction.h">
       <SubType>
       </SubType>
@@ -561,6 +577,18 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGTileInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUILayer.h">
       <SubType>
       </SubType>
     </ClInclude>

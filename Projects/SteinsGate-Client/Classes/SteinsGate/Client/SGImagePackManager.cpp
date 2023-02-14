@@ -11,8 +11,6 @@
 #include <SteinsGate/Common/NpkLoader.h>
 #include <SteinsGate/Common/NpkElementInitializer.h>
 
-#include <JCore/FileSystem/Directory.h>
-#include <JCore/FileSystem/Path.h>
 #include <JCore/Threading/Thread.h>
 
 #include <SteinsGate/Client/SGGlobal.h>
@@ -32,8 +30,9 @@ void SGImagePackManager::loadAllPackages() {
 
 	NpkElementInitializer::Initialize();
 
-	JCore::Thread loaderThread[MaxNpkParallelLoadingThreadCount_v];
-	SGVector<SGString> paths = Directory::Files(DataDirectory_v, false);
+	SGThread loaderThread[MaxNpkParallelLoadingThreadCount_v];
+	SGString imageDirPath = Path::Combine(DataDirectoryPath_v, ImageDirectoryName_v);
+	SGVector<SGString> paths = Directory::Files(imageDirPath, false);
 
 	for (int i = 0; i < paths.Size(); ++i) {
 		m_PathToIdMap.Insert(Path::FileName(paths[i]), i);
@@ -47,7 +46,7 @@ void SGImagePackManager::loadAllPackages() {
 			for (int j = i; j < m_iLoadedPackageCount; j += MaxNpkParallelLoadingThreadCount_v) {
 				SGString szFileName =  Path::FileName(paths[j]);
 				NpkPackagePtr package = NpkLoader::LoadIndexOnly(
-					Path::Combine(DataDirectory_v, szFileName)
+					Path::Combine(DataDirectoryPath_v, ImageDirectoryName_v, szFileName)
 				);
 				m_LoadedPackages[j] = dbg_new SGImagePack(package, j);
 				SafeConsole::WriteLine("%d %s 로딩완료", j, szFileName.Source());

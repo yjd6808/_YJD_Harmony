@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 6:44:18 AM
  * =====================
@@ -39,6 +39,10 @@ bool Directory::Delete(const char* path) {
 
 bool Directory::Delete(const String& path) {
     return Delete(path.Source());
+}
+
+Vector<String> Directory::Files(const String& path, bool recursive) {
+    return Files(path.Source(), recursive);
 }
 
 Vector<String, DefaultAllocator> Directory::Files(const char* path, bool recursive) {

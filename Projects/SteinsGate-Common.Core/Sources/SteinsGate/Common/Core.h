@@ -75,6 +75,8 @@ using SGFuncFn = JCore::Func<R, Args...>;
 template <typename... Args>
 using SGPredicateFn = JCore::Predicate<Args...>;
 
+using SGThread = JCore::Thread;
+
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) AlignedVector : public SGVector<T, TAllocator> {};
 

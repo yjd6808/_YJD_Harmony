@@ -1,0 +1,63 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "UI 구성 목록",
+    "__comment__2": "horizontal_align: 0(l), 1(c), 2(r)",
+    "__comment__3": "vertical_align: 0(b), 1(c), 2(t)",
+    "__comment__4": "type 0: button 1: label 2: sprite",
+
+    "ui_element": [
+        {
+            "code": 1,
+            "name": "login_group_background",
+            "type": 2,
+            "z_order": 1,
+
+            "npk": "sprite.NPK",
+            "img": "login.img",
+            "sprite_idx": 0
+        },
+        {
+            "code": 2,
+            "name": "login_group_login_btn",
+            "type": 0,
+            "z_order": 1,
+
+            "npk": "sprite.NPK",
+            "img": "login.img",
+            "normal_idx": 6,
+            "over_idx": 7,
+            "pressed_idx": 8,
+            "disabled_idx": 6
+        },
+        {
+            "code": 3,
+            "name": "login_group_lb_1",
+            "type": 1,
+            "z_order": 1,
+
+            "font": "DF.ttf",
+            "font_size": 19,
+            "text_wrap": false,
+            "width": 200,
+            "height": 150,
+            "horizontal_align": 2, 
+            "vertical_align": 2,
+            "text": "종료"
+        }
+    ],
+
+    "ui_group": [
+        {
+            "code:": 1,
+            "name": "login_group",
+            "rect": "0 0 300 300",
+            "horizontal_align": 1,
+            "vertical_align": 1,
+            "elements": [
+                "1 0 0", 
+                "2 50 0",
+                "3 50 50"
+            ]
+        }
+    ]
+}

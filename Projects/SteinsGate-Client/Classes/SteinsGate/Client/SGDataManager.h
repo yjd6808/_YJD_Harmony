@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 11:11:17 AM
  * =====================
@@ -20,6 +20,7 @@
 #include <SteinsGate/Client/SGAIInfo.h>
 #include <SteinsGate/Client/SGAttackDataInfo.h>
 #include <SteinsGate/Client/SGEffectInfo.h>
+#include <SteinsGate/Client/SGUIInfo.h>
 
 using AnimationList = SGVector<SGAnimationInfo*>;
 class SGDataManager
@@ -53,6 +54,10 @@ public:
 	SGAIInfo* getAIInfo(int aiCode);
 	SGAttackDataInfo* getAttackDataInfo(int attackDataCode);
 	SGEffectInfo* getEffectInfo(int effectCode);
+	int getFontCode(const SGString& fontName);
+	const SGString& getFontName(int fontCode);
+	SGUIElementInfo* getUIElementInfo(int uiElementCode);
+	SGUIGroupInfo* getUIGroupInfo(int uiGroupCode);
 private:
 	SGClientInfo m_ClientInfo;
 	SGHashMap<int, SGMonsterInfo> m_MonsterInfoMap;
@@ -64,6 +69,10 @@ private:
 	SGHashMap<int, SGAIInfo> m_AIInfoMap;
 	SGHashMap<int, SGAttackDataInfo> m_AttackDataInfoMap;
 	SGHashMap<int, SGEffectInfo> m_EffectInfoMap;
+	SGHashMap<SGString, int> m_FontNameToCodeMap;
+	SGHashMap<int, SGString> m_FontCodeToNameMap;
+	SGHashMap<int, SGUIElementInfo*> m_UIElementInfoMap;
+	SGHashMap<int, SGUIGroupInfo> m_UIGroupInfoMap;
 
 	SGHashMap<int, SGAnimationInfo> m_CharAnimationInfoMap[CharType::Max];
 	SGVector<SGAnimationInfo*> m_CharAnimationList[CharType::Max];

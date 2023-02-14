@@ -13,8 +13,6 @@ int main() {
 	Winsock::Initialize(2, 2);
 	{
 		/*
-		constexpr int a= DynamicMessage::Size(5);
-
 		auto pPacket = dbg_new DynamicPacket<DynamicMessage, DynamicMessage, DynamicMessage>(5, 6, 7);
 		auto a1 = pPacket->Get<0>();
 		auto a2 = pPacket->Get<1>();

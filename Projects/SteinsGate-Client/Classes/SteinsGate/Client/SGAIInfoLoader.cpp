@@ -25,7 +25,7 @@ USING_NS_JS;
 
 bool SGAIInfoLoader::LoadAIInfo(SGHashMap<int, SGAIInfo>& aiInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
+	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
 	DebugAssertMsg(reader.is_open(), "ai.json 파일을 여는데 실패했습니다.");
 	Json::Value root;

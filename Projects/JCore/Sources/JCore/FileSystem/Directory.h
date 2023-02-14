@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 6:39:58 AM
  * =====================
@@ -26,6 +26,7 @@ public:
 	static bool Delete(const char* path);
 	static bool Delete(const String& path);
 
+	static Vector<String, DefaultAllocator> Files(const String& path, bool recursive = true);
 	static Vector<String, DefaultAllocator> Files(const char* path, bool recursive = true);
 
 private:

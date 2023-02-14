@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 2/3/2023 4:43:09 PM
  * =====================
@@ -25,7 +25,7 @@ USING_NS_JC;
 
 bool SGEffectInfoLoader::LoadEffectInfo(SGHashMap<int, SGEffectInfo>& effectInfoMap) {
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGString path = JCore::Path::Combine(ConfigDirectory_v, JsonFileName);
+	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
 	DebugAssertMsg(reader.is_open(), "effect.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
