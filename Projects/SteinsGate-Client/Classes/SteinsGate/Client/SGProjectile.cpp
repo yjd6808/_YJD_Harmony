@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/21/2023 9:30:27 AM
  * =====================
@@ -142,7 +142,7 @@ void SGProjectile::update(float dt) {
 
 void SGProjectile::updateListenerEvent(float dt) {
 
-	DebugAssert(m_pListener, "프로젝틸은 리스너 초기화가 필수입니다.");
+	DebugAssertMsg(m_pListener, "프로젝틸은 리스너 초기화가 필수입니다.");
 	SGProjectileListener* pListener = (SGProjectileListener*)m_pListener;
 	pListener->onUpdate(dt);
 

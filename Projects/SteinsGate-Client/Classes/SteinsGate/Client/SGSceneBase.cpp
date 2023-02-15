@@ -18,6 +18,9 @@
 #include "Tutturu.h"
 #include "SGSceneBase.h"
 
+#include <SteinsGate/Client/SGWorldScene.h>
+#include <SteinsGate/Client/SGUILayer.h>
+
 SGSceneBase::SGSceneBase() {}
 
 SGSceneBase::~SGSceneBase() {
@@ -26,9 +29,14 @@ SGSceneBase::~SGSceneBase() {
 
 bool SGSceneBase::init() {
 	Log("[%s] 씬 init\n", SceneType::Name[getType()]);
+	m_pWorldScene = SGWorldScene::get();
+	m_pUILayer = m_pWorldScene->getUILayer();
+
 	return Scene::init();
 }
 void SGSceneBase::onEnter() {
+
+
 	Log("[%s] 씬 onEnter\n", SceneType::Name[getType()]);
 }
 void SGSceneBase::onExit() {
@@ -42,3 +50,4 @@ void SGSceneBase::onEnterTransitionDidFinish() {
 void SGSceneBase::onExitTransitionDidStart() {
 	Log("[%s] 씬 onExitTransitionDidStart\n", SceneType::Name[getType()]);
 }
+

@@ -138,6 +138,8 @@ public:
      */
     float getCursorY() const { return _y; }
 
+    Vec2 getCursorPos() const { return { _x, _y }; }
+
     /** Returns the current touch location in OpenGL coordinates.
      *
      * @return The current touch location in OpenGL coordinates.

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 5:00:40 AM
  * =====================
@@ -98,9 +98,13 @@ bool NpkSprite::Load() {
     m_bLoaded = true;
 }
 
-void NpkSprite::Unload() {
+bool NpkSprite::Unload() {
+    if (!m_spData.Exist())
+        return false;
+
     m_spData = nullptr;
     m_bLoaded = false;
+    return true;
 }
 
 NpkSpritePtr NpkSprite::Create(const NpkImagePtr& parent, int frameIndex, int format) {

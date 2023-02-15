@@ -62,6 +62,10 @@ void SGImagePackManager::loadAllPackages() {
 	SGConsole::WriteLine("NPK파일들 인덱스 로딩 완료");
 }
 
+void SGImagePackManager::unloadPackData(int packIndex) {
+	getPack(packIndex)->unload();
+}
+
 SGImagePack* SGImagePackManager::getPack(const SGString& packName) {
 	DebugAssertMsg(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다.");
 	return m_LoadedPackages[m_PathToIdMap[packName]];
@@ -114,5 +118,15 @@ int SGImagePackManager::getPackIndexDefault(const SGString& packPath, int defaul
 		return defaultIndex;
 
 	return m_PathToIdMap[packPath];
+}
+
+void SGImagePackManager::releaseFrameTexture(int packIndex, int imgIndex, int frameIndex) {
+	getPack(packIndex)->releaseFrameTexture(imgIndex, frameIndex);
+}
+
+void SGImagePackManager::releaseFrameTexture(const SGNpkResourceIndex& npkResourceIndex) {
+	getPack(npkResourceIndex.Un.NpkIndex)->releaseFrameTexture(
+		npkResourceIndex.Un.ImgIndex, 
+		npkResourceIndex.Un.FrameIndex);
 }
 

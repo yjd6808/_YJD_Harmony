@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/10/2023 11:46:52 PM
  * =====================
@@ -27,6 +27,7 @@ public:
 	~SGImagePackManager();
 
 	void loadAllPackages();
+	void unloadPackData(int packIndex);
 
 	SGImagePack* getPack(const SGString& packName);
 	SGImagePack* getPack(const int idx);
@@ -36,6 +37,8 @@ public:
 	int getWeaponPackIndex(CharType_t charType, WeaponType_t weaponType);
 	int getPackIndex(const SGString& packPath);
 	int getPackIndexDefault(const SGString& packPath, int defaultIndex);
+	void releaseFrameTexture(int packIndex, int imgIndex, int frameIndex);
+	void releaseFrameTexture(const SGNpkResourceIndex& npkResourceIndex);
 
 	// TODO: 로딩된 패키지들 모두 Unload 하는 기능
 	// void unloadAll();

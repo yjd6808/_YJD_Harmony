@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 5:42:12 PM
  * =====================
@@ -30,10 +30,18 @@ bool NpkImage::Load(bool indexOnly) {
 	m_bIndexLoaded = true;
 	return true;
 }
-void NpkImage::Unload() {
+
+bool NpkImage::Unload() {
+
+	bool bHasUnloadedData = false;
+
 	for (int i = 0; i < m_Sprites.Size(); ++i) {
-		m_Sprites[i].GetRef().Unload();
+		if (m_Sprites[i].GetRef().Unload()) {
+			bHasUnloadedData = true;
+		}
 	}
+
+	return bHasUnloadedData;
 }
 
 NpkImage::~NpkImage() {

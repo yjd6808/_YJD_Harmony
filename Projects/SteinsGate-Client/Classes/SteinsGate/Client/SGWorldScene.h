@@ -13,6 +13,7 @@
 
 #include <SteinsGate/Client/SGSceneManager.h>
 #include <SteinsGate/Client/SGSceneBase.h>
+#include <SteinsGate/Client/SGUILayer.h>
 
 class SGWorldScene : public SGScene
 {
@@ -21,10 +22,13 @@ private:
 public:
 	~SGWorldScene() override;
 
-	void initEventListeners();
 	bool init() override;
+	void initEventListeners();
+	void InitUILayer();
+
 	void update(float dt) override;
 	void updateScene(float dt);
+
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
 	void onMouseMove(SGEventMouse* mouseEvent);
@@ -34,13 +38,19 @@ public:
 	
 	void reserveScene(SceneType_t sceneType);
 	void changeScene(SceneType_t sceneType);
+	SGSceneBase* createScene(SceneType_t sceneType);
+
+	SGUILayer* getUILayer();
 
 	static SGWorldScene* get();
+	
+
 private:
 	SGEventListenerKeyboard* m_pKeyboardListener;
 	SGEventListenerMouse* m_pMouseListener;
 
 	SGSceneBase* m_pRunningScene;
 	SceneType_t m_eReservedScene;
+	SGUILayer* m_pUILayer;
 };
 

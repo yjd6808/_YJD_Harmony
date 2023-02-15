@@ -29,7 +29,6 @@ inline constexpr float FPS16_v = 16.0f / 60.0f;
 inline constexpr float FPS17_v = 17.0f / 60.0f;
 inline constexpr float FPS18_v = 18.0f / 60.0f; // 0.3
 
-
 inline const char* DataDirectoryPath_v = "D:/Programming/MyProjects/_DevCpp/UltimateHarmony/Projects/SteinsGate-Data.Resource";
 inline const char* ImageDirectoryName_v = "image";
 inline const char* SoundDirectoryName_v = "sound";
@@ -37,3 +36,7 @@ inline const char* FontDirectoryName_v = "font";
 inline const char* ConfigDirectoryPath_v = "D:/Programming/MyProjects/_DevCpp/UltimateHarmony/Projects/SteinsGate-Data.Config/";
 
 inline constexpr int InvalidValue_v = -1;
+
+// 32바이트
+// 
+inline constexpr int NpkFlagBit = 16;

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 4:37:12 AM
  * =====================
@@ -59,7 +59,7 @@ public:
 	virtual bool Load(bool indexOnly) = 0;
 	virtual bool LoadPerfectly() { return Load(false); }
 	virtual bool LoadIndexOnly() { return Load(true); }
-	virtual void Unload() = 0;
+	virtual bool Unload() = 0;
 protected:
 
 	// ========================================

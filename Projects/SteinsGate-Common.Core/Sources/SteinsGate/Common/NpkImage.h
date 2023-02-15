@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 5:41:51 PM
  * =====================
@@ -38,9 +38,8 @@ public:
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
 	NpkSpriteAbstract& operator[](const int idx) { return m_Sprites[idx].GetRef(); }
 
-	
 	bool Load(bool indexOnly) override;
-	void Unload() override;
+	bool Unload() override;
 protected:
 	NpkSpriteList m_Sprites;	
 	int m_iWaitForLoadingDataCount;

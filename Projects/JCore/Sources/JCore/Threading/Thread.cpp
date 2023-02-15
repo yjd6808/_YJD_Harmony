@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/9/2022 8:11:16 PM
  * =====================
@@ -13,7 +13,7 @@
 
 NS_JC_BEGIN
 
-Int32U Thread::ms_uiMainThreadId = GetMainThreadId();
+Int32U Thread::ms_uiMainThreadId = WinApi::GetCurrentThreadId();
 thread_local Int32U Thread::tls_uiThreadId = WinApi::GetCurrentThreadId();
 
 Thread::Thread(TRunnable&& fn, void* param, const char* name, bool autoJoin): Thread(name, autoJoin) {

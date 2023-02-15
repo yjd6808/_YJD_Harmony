@@ -11,6 +11,8 @@
 #include "SGLoginScene.h"
 
 #include <SteinsGate/Client/SGWorldScene.h>
+#include <SteinsGate/Client/SGUILayer.h>
+
 
 USING_NS_CC;
 USING_NS_JC;
@@ -41,6 +43,9 @@ bool SGLoginScene::init() {
 	if (!SGSceneBase::init()) {
 		return false;
 	}
+
+	m_pUILayer->clear();
+	m_pUILayer->addUIGroup(UI_GROUP_LOGIN);
 
 	return true;
 }

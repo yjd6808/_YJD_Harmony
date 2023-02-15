@@ -8,6 +8,9 @@
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGActorListenerManager.h>
 #include <SteinsGate/Client/SGGlobal.h>
+#include <SteinsGate/Client/SGUIManager.h>
+
+#include "SGUIManager.h"
 
 #define AppName "SteinsGate-Client"
 
@@ -21,10 +24,13 @@ AppDelegate::AppDelegate()
     SGHostPlayer::get();
     SGActorListenerManager::get();
     SGActorBox::get();
+    SGUIManager::get();
+    
 }
 
 AppDelegate::~AppDelegate() 
 {
+    delete SGUIManager::get();
     delete SGActorBox::get();
     delete SGActorListenerManager::get();
     delete SGHostPlayer::get();
@@ -35,11 +41,13 @@ AppDelegate::~AppDelegate()
 
 void AppDelegate::initGLContextAttrs()
 {
+    
     GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8, 0};
     GLView::setGLContextAttrs(glContextAttrs);
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+    
     SGDataManager* pDataManager = SGDataManager::get();
     SGClientInfo* pClientInfo = pDataManager->getClientInfo();
 

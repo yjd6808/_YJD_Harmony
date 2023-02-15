@@ -297,6 +297,7 @@ Top
 SEnumEnd(VerticalAlignment)
 
 SEnumBegin(UIElementType)
+Group,
 Button,
 Label,
 Sprite,

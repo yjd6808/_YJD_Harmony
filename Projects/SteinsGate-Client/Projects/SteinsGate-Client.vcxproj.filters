@@ -94,6 +94,9 @@
     <Filter Include="Data\Font">
       <UniqueIdentifier>{0115c815-90f7-41c3-8536-514809c3be1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\UIGroup">
+      <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePackManager.cpp">
@@ -301,9 +304,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayer.cpp">
       <Filter>Player</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorBox.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGWorldScene.cpp">
       <Filter>Game</Filter>
     </ClCompile>
@@ -333,6 +333,24 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGFontLoader.cpp">
       <Filter>Data\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorBox.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIGroup.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIButton.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIElement.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UILogin.cpp">
+      <Filter>Game\UIGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIManager.cpp">
+      <Filter>Game\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -589,9 +607,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayer.h">
       <Filter>Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorBox.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGSceneManager.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -624,6 +639,27 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGFontLoader.h">
       <Filter>Data\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIManager.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIElement.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorBox.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIButton.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIGroup.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UILogin.h">
+      <Filter>Game\UIGroup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIDefine.h">
+      <Filter>Define</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -53,6 +53,7 @@ bool SGMapLayer::init() {
 		return false;
 	}
 
+
 	m_pActorBox = SGActorBox::get();
 	m_pActorBox->init(this);
 

@@ -50,3 +50,19 @@ struct SGActorPartSpriteData
 };
 
 
+union SGNpkResourceIndex
+{
+	SGNpkResourceIndex() = default;
+	SGNpkResourceIndex(int npkIndex, int imgIndex, int frameIndex)
+		: Un{frameIndex, imgIndex, npkIndex}
+	{}
+
+	struct
+	{
+		int FrameIndex  : 12;	// 4096
+		int ImgIndex	: 11;	// 2048
+		int NpkIndex	: 9;	// 512	
+	} Un;
+
+	Int32U Value;
+};

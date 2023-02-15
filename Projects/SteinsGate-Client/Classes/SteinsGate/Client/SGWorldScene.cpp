@@ -13,6 +13,8 @@
 #include <SteinsGate/Client/SGLoginScene.h>
 #include <SteinsGate/Client/SGGameScene.h>
 #include <SteinsGate/Client/SGChannelSelectScene.h>
+#include <SteinsGate/Client/SGUILayer.h>
+
 
 USING_NS_CC;
 USING_NS_JC;
@@ -47,8 +49,13 @@ SGWorldScene* SGWorldScene::get() {
 SGWorldScene::SGWorldScene()
 	: m_pRunningScene(nullptr)
 	, m_eReservedScene(SceneType::Login)
+	, m_pMouseListener(nullptr)
+	, m_pKeyboardListener(nullptr)
+	, m_pUILayer(nullptr)
 {}
-SGWorldScene::~SGWorldScene() {}
+SGWorldScene::~SGWorldScene() {
+	CC_SAFE_RELEASE(m_pUILayer);
+}
 
 
 bool SGWorldScene::init() {
@@ -57,8 +64,9 @@ bool SGWorldScene::init() {
 		return false;
 
 	initEventListeners();
-	changeScene(SceneType::Login);
-	scheduleUpdate();
+	InitUILayer();
+	reserveScene(SceneType::Login);
+	scheduleUpdate();	// 즉시 update 1회 호출함
 
 	return true;
 }
@@ -77,6 +85,10 @@ void SGWorldScene::initEventListeners() {
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_pMouseListener, this);
 }
 
+void SGWorldScene::InitUILayer() {
+	m_pUILayer = SGUILayer::create();
+	this->addChild(m_pUILayer, 1000);
+}
 
 
 void SGWorldScene::update(float dt) {
@@ -87,13 +99,11 @@ void SGWorldScene::update(float dt) {
 
 void SGWorldScene::updateScene(float dt) {
 
-	if (m_pRunningScene == nullptr) {
-		return;
-	}
+	if (m_pRunningScene)
+		m_pRunningScene->update(dt);
 
-	m_pRunningScene->update(dt);
-
-	if (m_pRunningScene->getType() != m_eReservedScene) {
+	// 초기 세팅 안된 상태거나, 다른 상태로 전환이 예약된 경우
+	if (m_pRunningScene == nullptr || m_pRunningScene->getType() != m_eReservedScene) {
 		changeScene(m_eReservedScene);
 	}
 }
@@ -101,6 +111,7 @@ void SGWorldScene::updateScene(float dt) {
 void SGWorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
 	if (m_pRunningScene)
 		m_pRunningScene->onKeyPressed(keyCode, event);
+
 }
 
 void SGWorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
@@ -109,19 +120,36 @@ void SGWorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* even
 }
 
 void SGWorldScene::onMouseMove(SGEventMouse* mouseEvent) {
-	CCLOG("%.f %.f", mouseEvent->getCursorX(), mouseEvent->getCursorY());
+
+	if (m_pRunningScene)
+		m_pRunningScene->onMouseMove(mouseEvent);
+
+	if (m_pUILayer)
+		m_pUILayer->onMouseMove(mouseEvent);
 }
 
 void SGWorldScene::onMouseDown(SGEventMouse* mouseEvent) {
-	
+	if (m_pRunningScene)
+		m_pRunningScene->onMouseDown(mouseEvent);
+
+	if (m_pUILayer)
+		m_pUILayer->onMouseDown(mouseEvent);
 }
 
 void SGWorldScene::onMouseUp(SGEventMouse* mouseEvent) {
-	
+	if (m_pRunningScene)
+		m_pRunningScene->onMouseUp(mouseEvent);
+
+	if (m_pUILayer)
+		m_pUILayer->onMouseUp(mouseEvent);
 }
 
 void SGWorldScene::onMouseScroll(SGEventMouse* mouseEvent) {
-	
+	if (m_pRunningScene)
+		m_pRunningScene->onMouseScroll(mouseEvent);
+
+	if (m_pUILayer)
+		m_pUILayer->onMouseScroll(mouseEvent);
 }
 
 
@@ -134,108 +162,26 @@ void SGWorldScene::changeScene(SceneType_t sceneType) {
 		this->removeChild(m_pRunningScene);
 	}
 
-	switch (sceneType) {
-	case SceneType::Login: m_pRunningScene = SGLoginScene::create(); break;
-	case SceneType::ChannelSelect: m_pRunningScene = SGChannelSelectScene::create(); break;
-	case SceneType::Game: m_pRunningScene = SGGameScene::create(); break;
-	default: DebugAssertMsg(false, "[SGWorldScene] 이상한 씬 타입입니다."); return;
-	}
-
+	// 씬전환 시 UI 리소스 모두 해제
+	m_pUILayer->clearUnload();
+	m_pRunningScene = createScene(sceneType);
 	this->addChild(m_pRunningScene);
 }
 
-enum UIControlType
-{
-	Button,
-	ToggleButton,
-	Image,
-	Label,
-	TextBox,
-	ScrollBar,
-	None
-};
+SGSceneBase* SGWorldScene::createScene(SceneType_t sceneType) {
+	SGSceneBase* pCreatedScene = nullptr;
 
-struct UIElementInfo
-{
-	UIControlType ControlType;
-	int Code;
-	SGString Name;
-	float X;
-	float Y;
-	float Width;
-	float Height;
-	int ZOrder;
-	int Tag;
-	int NpkIndex;
-	int ImgIndex;
-};
-
-// 토글 버튼도 동일
-struct UIButtonInfo : UIElementInfo
-{
-	int Normal;			// ElementIndex
-	int OnMouseOver;
-	int Pressed;
-	int Disabled;
-};
-
-struct UIGroupInfo
-{
-	int Code;
-	float X;
-	float Y;
-	float Width;
-	float Height;
-	SGString Name;
-	SGVector<int> vElements;
-};
-
-struct UIElement;
-struct UIGroup
-{
-	bool Loaded;
-	SGVector<UIElement*> vElements;
-	SGNode* NodeBase;
-};
-
-struct UIElement
-{
-	virtual void Load() = 0;
-
-	UIElementInfo* m_pInfo;
-};
-
-struct UIButtonNode : cocos2d::ui::Button
-{
-	static UIButtonNode* create(SGFrameTexture* Normal,
-		SGFrameTexture* Over,
-		SGFrameTexture* Pressed,
-		SGFrameTexture* Disabled) {}
-};
-
-struct UIButton : UIElement
-{
-	void Load() override {
-		
+	switch (sceneType) {
+	case SceneType::Login:				pCreatedScene = SGLoginScene::create(); break;
+	case SceneType::ChannelSelect:		pCreatedScene = SGChannelSelectScene::create(); break;
+	case SceneType::Game:				pCreatedScene = SGGameScene::create(); break;
+	default: DebugAssertMsg(false, "[SGWorldScene] 이상한 씬 타입입니다."); return nullptr;
 	}
 
-	UIButtonNode* CreateNode() {
-		return UIButtonNode::create(Normal, Over, Pressed, Disabled);
-	}
+	return pCreatedScene;
+}
 
-	SGFrameTexture* Normal;
-	SGFrameTexture* Over;
-	SGFrameTexture* Pressed;
-	SGFrameTexture* Disabled;
-};
-
-
-struct UIManager
-{
-	
-};
-
-struct UICacheShop
-{
-	
-};
+SGUILayer* SGWorldScene::getUILayer() {
+	DebugAssertMsg(m_pUILayer, "UI 레이어는 무조건 게임내내 생성되어있어야 합니다.");
+	return m_pUILayer;
+}

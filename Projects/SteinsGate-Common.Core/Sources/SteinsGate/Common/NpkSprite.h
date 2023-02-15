@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 5:00:29 AM
  * =====================
@@ -49,7 +49,7 @@ public:
 	int GetDataOffset() override  { return m_iDataOffset; }
 	bool Loaded() override		  { return m_bLoaded;	  }
 	bool Load() override;
-	void Unload() override;
+	bool Unload() override;
 public:
 	static NpkSpritePtr Create(const NpkImagePtr& parent, int frameIndex, int format);
 protected:

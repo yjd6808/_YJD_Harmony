@@ -57,7 +57,6 @@ public:
 	int getFontCode(const SGString& fontName);
 	const SGString& getFontName(int fontCode);
 	SGUIElementInfo* getUIElementInfo(int uiElementCode);
-	SGUIGroupInfo* getUIGroupInfo(int uiGroupCode);
 private:
 	SGClientInfo m_ClientInfo;
 	SGHashMap<int, SGMonsterInfo> m_MonsterInfoMap;
@@ -72,7 +71,6 @@ private:
 	SGHashMap<SGString, int> m_FontNameToCodeMap;
 	SGHashMap<int, SGString> m_FontCodeToNameMap;
 	SGHashMap<int, SGUIElementInfo*> m_UIElementInfoMap;
-	SGHashMap<int, SGUIGroupInfo> m_UIGroupInfoMap;
 
 	SGHashMap<int, SGAnimationInfo> m_CharAnimationInfoMap[CharType::Max];
 	SGVector<SGAnimationInfo*> m_CharAnimationList[CharType::Max];

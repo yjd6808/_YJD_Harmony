@@ -27,9 +27,7 @@ USING_NS_JS;
 
 #define JsonFileName "ui.json"
 
-bool SGUIInfoLoader::LoadUIInfo(
-	SGHashMap<int, SGUIElementInfo*>& elementInfoMap,
-	SGHashMap<int, SGUIGroupInfo>& groupInfoMap)
+bool SGUIInfoLoader::LoadUIInfo(SGHashMap<int, SGUIElementInfo*>& elementInfoMap)
 {
 	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
@@ -66,34 +64,38 @@ bool SGUIInfoLoader::LoadUIInfo(
 		Value& uiGroupListRoot = root["ui_group"];
 		for (int i = 0; i < uiGroupListRoot.size(); ++i) {
 			Value& uiGroupRoot = uiGroupListRoot[i];
-
 			Value& groupElemInfoListRoot = uiGroupRoot["elements"];
-			SGUIGroupInfo groupInfo(groupElemInfoListRoot.size());
+			SGUIGroupInfo* groupInfo = dbg_new SGUIGroupInfo(groupElemInfoListRoot.size());
 
-			groupInfo.Code = uiGroupRoot["code"].asInt();
-			groupInfo.Name = SGJson::getString(uiGroupRoot["name"]);
+			LoadElementCommon(uiGroupRoot, groupInfo);
 			float fRect[4];
 			SGJson::parseFloatNumberN(uiGroupRoot["rect"], fRect, 4);
-			groupInfo.Rect.origin.x = fRect[0];
-			groupInfo.Rect.origin.y = fRect[1];
-			groupInfo.Rect.size.width = fRect[2];
-			groupInfo.Rect.size.height = fRect[3];
-			groupInfo.HorizontalAlignment = (HorizontalAlignment_t)uiGroupRoot["horizontal_align"].asInt();
-			groupInfo.VerticalAlignment = (VerticalAlignment_t)uiGroupRoot["vertical_align"].asInt();
+			groupInfo->Rect.origin.x = fRect[0];
+			groupInfo->Rect.origin.y = fRect[1];
+			groupInfo->Rect.size.width = fRect[2];
+			groupInfo->Rect.size.height = fRect[3];
+			groupInfo->HorizontalAlignment = (HorizontalAlignment_t)uiGroupRoot["horizontal_align"].asInt();
+			groupInfo->Type = UIElementType::Group;
+			groupInfo->VerticalAlignment = (VerticalAlignment_t)uiGroupRoot["vertical_align"].asInt();
 
 			for (int j = 0; j < groupElemInfoListRoot.size(); ++j) {
 				Value& groupElemInfoRoot = groupElemInfoListRoot[j];
 				SGUIGroupElemInfo groupElemInfo;
-				int groupElemInfoData[3];
-				SGJson::parseIntNumberN(groupElemInfoRoot, groupElemInfoData, 3);
+				int groupElemInfoData[4];
+				SGJson::parseIntNumberN(groupElemInfoRoot, groupElemInfoData, 4);
 
-				groupElemInfo.ElemInfo = elementInfoMap[groupElemInfoData[0]];
-				groupElemInfo.X = groupElemInfoData[1];
-				groupElemInfo.Y = groupElemInfoData[2];
-				groupInfo.InfoList.PushBack(groupElemInfo);
+				groupElemInfo.Code = groupElemInfoData[0];
+				groupElemInfo.ZOrder = groupElemInfoData[1];
+				groupElemInfo.X = groupElemInfoData[2];
+				groupElemInfo.Y = groupElemInfoData[3];
+				groupInfo->InfoList.PushBack(groupElemInfo);
 			}
 
-			groupInfoMap.Insert(groupInfo.Code, Move(groupInfo));
+			groupInfo->InfoList.Sort([](SGUIGroupElemInfo& lhs, SGUIGroupElemInfo& rhs) {
+				return lhs.ZOrder < rhs.ZOrder;
+			});
+
+			elementInfoMap.Insert(groupInfo->Code, groupInfo);
 		}
 	}
 	catch (std::exception& ex) {
@@ -111,7 +113,6 @@ bool SGUIInfoLoader::LoadUIInfo(
 void SGUIInfoLoader::LoadElementCommon(Value& value, SGUIElementInfo* info) {
 	info->Code = value["code"].asInt();
 	info->Name = SGJson::getString(value["name"]);
-	info->ZOrder = value["z_order"].asInt();
 }
 
 

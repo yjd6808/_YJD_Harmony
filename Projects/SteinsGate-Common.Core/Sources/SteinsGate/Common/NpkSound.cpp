@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 6:25:59 AM
  * =====================
@@ -25,8 +25,12 @@ bool NpkSound::Load(bool loadIndexOnly) {
 	return true;
 }
 
-void NpkSound::Unload() {
+bool NpkSound::Unload() {
+	if (!m_spData.Exist())
+		return false;
+
 	m_spData = nullptr;
+	return true;
 }
 
 NpkSoundPtr NpkSound::Create(const Header& header) {

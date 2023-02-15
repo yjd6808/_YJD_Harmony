@@ -12,6 +12,7 @@ USING_NS_JC;
 
 int main()
 {
+//    _CrtSetBreakAlloc(138);
     // Detail::__JCoreInitialize()
     //{
     //    SGGlobal::get();

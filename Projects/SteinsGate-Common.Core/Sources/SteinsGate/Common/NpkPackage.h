@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 4:35:53 AM
  * =====================
@@ -39,6 +39,8 @@ public:
 	void LoadElement(const int index, bool indexOnly);
 	void LoadElementPerfect(const int index) { LoadElement(index, false); }
 	void LoadElementIndexOnly(const int index) { LoadElement(index, true); }
+	int UnloadAllElementData();
+
 	bool IsElementLoaded(const int index);
 	int GetElementIndex(const JCore::String& elementName);
 	bool HasElementIndex(const JCore::String& elementName);

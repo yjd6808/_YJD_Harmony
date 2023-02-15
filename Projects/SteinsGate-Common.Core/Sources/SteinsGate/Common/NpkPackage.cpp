@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 4:36:58 AM
  * =====================
@@ -37,6 +37,18 @@ void NpkPackage::LoadElement(const int index, bool indexOnly) {
 	DebugAssertMsg(spElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
 	spElement->m_spParent = Weak();
 	Add(index, spElement);
+}
+
+int NpkPackage::UnloadAllElementData() {
+	int iUnloadedElementCount = 0;
+
+	m_ElementMap.Values().Extension().ForEach([&iUnloadedElementCount](NpkElementPtr& element) {
+		if (element->Unload()) {
+			++iUnloadedElementCount;
+		}
+	});
+
+	return iUnloadedElementCount;
 }
 
 bool NpkPackage::IsElementLoaded(const int index) {

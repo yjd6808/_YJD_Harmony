@@ -50,7 +50,7 @@ void SGDataManager::LoadAllConfigs() {
 		SGObstacleInfoLoader::LoadObstacleInfo(m_ObstacleInfoMap) &&
 		SGMapInfoLoader::LoadMapInfo(m_MapInfoMap) &&
 		SGAIInfoLoader::LoadAIInfo(m_AIInfoMap) &&
-		SGUIInfoLoader::LoadUIInfo(m_UIElementInfoMap, m_UIGroupInfoMap)) {
+		SGUIInfoLoader::LoadUIInfo(m_UIElementInfoMap)) {
 		Log("==== 모든 기획파일 로딩완료 ====\n");
 	} else {
 		DebugAssertMsg(false, "기획파일 로딩 실패");
@@ -137,8 +137,4 @@ SGUIElementInfo* SGDataManager::getUIElementInfo(int uiElementCode) {
 	return m_UIElementInfoMap[uiElementCode];
 }
 
-SGUIGroupInfo* SGDataManager::getUIGroupInfo(int uiGroupCode) {
-	DebugAssertMsg(m_UIGroupInfoMap.Exist(uiGroupCode), "해당 UI 그룹 코드에 맞는 정보가 없습니다.");
-	return &m_UIGroupInfoMap[uiGroupCode];
-}
 

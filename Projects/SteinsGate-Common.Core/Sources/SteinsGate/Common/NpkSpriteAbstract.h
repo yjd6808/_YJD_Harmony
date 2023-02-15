@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/8/2023 5:46:01 PM
  * =====================
@@ -54,7 +54,7 @@ public:
 	virtual int GetDataLength()			{ return -1; }
 	virtual bool Loaded()				{ return true; }		// LinkSprite는 항상 참
 	virtual bool Load()					{ return true;}
-	virtual void Unload()				{ }
+	virtual bool Unload()				{ return false; }		// false: 실제로 반환된 메모리가 없는 경우. 링크 스프라이트의 같은넘
 	
 	float GetXF()						{ return (float)GetX(); }
 	float GetYF()						{ return (float)GetY(); }

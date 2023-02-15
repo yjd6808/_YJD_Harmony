@@ -16,8 +16,7 @@ struct SGUIInfoLoader
 {
 public:
 	static bool LoadUIInfo(
-		SGHashMap<int, SGUIElementInfo*>& elementInfoMap,
-		SGHashMap<int, SGUIGroupInfo>& groupInfoMap
+		SGHashMap<int, SGUIElementInfo*>& elementInfoMap
 	);
 
 	static void LoadElementCommon(Json::Value& value, SGUIElementInfo* info);

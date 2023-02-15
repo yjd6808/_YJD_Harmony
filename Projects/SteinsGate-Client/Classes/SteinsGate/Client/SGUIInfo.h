@@ -15,7 +15,6 @@ struct SGUIElementInfo
 	UIElementType_t Type;
 	int Code;
 	SGString Name;
-	int ZOrder;
 };
 
 struct SGUIButtonInfo : SGUIElementInfo
@@ -50,17 +49,16 @@ struct SGUISpriteInfo : SGUIElementInfo
 
 struct SGUIGroupElemInfo
 {
-	SGUIElementInfo* ElemInfo;
+	int Code;
+	int ZOrder;
 	float X;
 	float Y;
 };
 
-struct SGUIGroupInfo
+struct SGUIGroupInfo : SGUIElementInfo
 {
 	SGUIGroupInfo(int elemCount) : InfoList(elemCount) {}
 
-	int Code;
-	SGString Name;
 	SGRect Rect;
 	HorizontalAlignment_t HorizontalAlignment;
 	VerticalAlignment_t VerticalAlignment;
