@@ -11,7 +11,6 @@
 #include "Tutturu.h"
 #include "SGStruct.h"
 
-#include <SteinsGate/Client/SGSceneManager.h>
 #include <SteinsGate/Client/SGSceneBase.h>
 #include <SteinsGate/Client/SGUILayer.h>
 

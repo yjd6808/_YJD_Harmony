@@ -10,12 +10,17 @@
 
 #include <SteinsGate/Client/SGUIElement.h>
 
+class SGUIManager;
+class SGImagePackManager;
+class SGDataManager;
 class SGUIGroup : public SGUIElement
 {
 public:
 	SGUIGroup();
 	SGUIGroup(SGUIGroup* parent, SGUIGroupInfo* groupInfo);
-	static SGUIGroup* createRetain(SGUIGroup* parent, SGUIGroupInfo* btnInfo);
+
+	static SGUIGroup* createRetain(SGUIGroup* parent, SGUIGroupInfo* groupInfo);
+	static SGUIGroup* create(SGUIGroup* parent, SGUIGroupInfo* groupInfo);
 
 	
 	bool init() override;
@@ -45,7 +50,11 @@ public:
 
 	void restoreState(State state) override;
 protected:
+	SGUIManager* m_pUIManager;
+	SGImagePackManager* m_pPackManager;
+	SGDataManager* m_pDataManager;
 	SGUIGroupInfo* m_pInfo;
+
 };
 
 

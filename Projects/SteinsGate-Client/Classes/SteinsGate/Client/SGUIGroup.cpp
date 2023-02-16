@@ -11,16 +11,25 @@
 #include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGUIButton.h>
 #include <SteinsGate/Client/SGGlobal.h>
+#include <SteinsGate/Client/SGImagePackManager.h>
+#include <SteinsGate/Client/SGUIManager.h>
+#include <SteinsGate/Client/SGGlobal.h>
 
 
 SGUIGroup::SGUIGroup()
 	: SGUIElement(nullptr)
 	, m_pInfo(nullptr)
+	, m_pPackManager(SGImagePackManager::get())
+	, m_pUIManager(SGUIManager::get())
+	, m_pDataManager(SGDataManager::get())
 {}
 
 SGUIGroup::SGUIGroup(SGUIGroup* parent, SGUIGroupInfo* groupInfo)
 	: SGUIElement(parent)
 	, m_pInfo(groupInfo)
+	, m_pPackManager(SGImagePackManager::get())
+	, m_pUIManager(SGUIManager::get())
+	, m_pDataManager(SGDataManager::get())
 {}
 
 
@@ -28,6 +37,13 @@ SGUIGroup* SGUIGroup::createRetain(SGUIGroup* parent, SGUIGroupInfo* groupInfo) 
 	SGUIGroup* pGroup = dbg_new SGUIGroup(parent, groupInfo);
 	pGroup->init();
 	pGroup->retain();
+	pGroup->autorelease();
+	return pGroup;
+}
+
+SGUIGroup* SGUIGroup::create(SGUIGroup* parent, SGUIGroupInfo* groupInfo) {
+	SGUIGroup* pGroup = dbg_new SGUIGroup(parent, groupInfo);
+	pGroup->init();
 	pGroup->autorelease();
 	return pGroup;
 }
@@ -132,10 +148,15 @@ void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
 	SGUIElement* pChildElement = nullptr;
 
 	switch (pElemInfo->Type) {
+	case UIElementType::Group: pChildElement = SGUIGroup::create(this, (SGUIGroupInfo*)pElemInfo); break;
 	case UIElementType::Button: pChildElement = SGUIButton::create(this, (SGUIButtonInfo*)pElemInfo); break;
+	case UIElementType::Label: pChildElement = SGUILabel::create(this,	(SGUILabelInfo*)pElemInfo); break;
+	case UIElementType::Sprite: pChildElement = SGUISprite::create(this, (SGUISpriteInfo*)pElemInfo); break;
+	
 	default: break;
 	}
 
+	DebugAssertMsg(pChildElement, "해당하는 UI 엘리먼트 타입의 자식을 생성하지 못했습니다.");
 	pChildElement->setPosition(groupElemInfo.X, groupElemInfo.Y);
 	this->addChild(pChildElement);
 }

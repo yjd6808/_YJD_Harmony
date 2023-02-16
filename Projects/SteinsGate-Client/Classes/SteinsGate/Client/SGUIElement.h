@@ -14,7 +14,6 @@
 #include <SteinsGate/Client/SGUIDefine.h>
 #include <SteinsGate/Client/SGFrameTexture.h>
 
-
 class SGUIGroup;
 class SGUIElement : public SGNode
 {
@@ -29,7 +28,7 @@ public:
 	};
 
 	SGUIElement(SGUIGroup* parent);
-
+	~SGUIElement() override = default;
 
 	bool loaded();
 
@@ -51,10 +50,11 @@ public:
 		m_fnMouseClickCallback = callback;
 	}
 protected:
-	bool m_bLoaded;
 	SGUIGroup* m_pParent;
-	SGActionFn<SGEventMouse*> m_fnMouseClickCallback;
+	bool m_bLoaded;
 	State m_eState;
+
+	SGActionFn<SGEventMouse*> m_fnMouseClickCallback;
 };
 
 

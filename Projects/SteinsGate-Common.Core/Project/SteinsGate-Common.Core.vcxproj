@@ -36,6 +36,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkPackage.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkSound.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkSprite.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGCommonDataManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SGStruct.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +60,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSprite.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteAbstract.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteRect.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCommonDataManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGStruct.h" />

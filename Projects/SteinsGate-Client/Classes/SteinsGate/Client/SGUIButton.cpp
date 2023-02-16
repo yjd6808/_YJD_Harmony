@@ -8,12 +8,8 @@
 #include "Tutturu.h"
 #include "SGUIButton.h"
 
-#include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGUIManager.h>
-
-#include "SGVec2Ex.h"
-#include "SteinsGate/Common/SGRectEx.h"
 
 USING_NS_CC;
 USING_NS_JC;
@@ -69,8 +65,8 @@ void SGUIButton::load() {
 		return;
 
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Npk);
 	SGUIManager* pUIManager = SGUIManager::get();
+	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Npk);
 
 	m_pTexture[eNormal] = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Normal);
 	m_pTexture[eNormal]->retain();

@@ -10,10 +10,6 @@
 
 #include <SteinsGate/Client/SGUIElement.h>
 
-USING_NS_CC;
-USING_NS_JC;
-
-
 class SGUIButton : public SGUIElement
 {
 public:

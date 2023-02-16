@@ -28,6 +28,9 @@
       <Filter>Npk</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SGStruct.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGCommonDataManager.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -71,10 +74,16 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SGStruct.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCommonDataManager.h">
+      <Filter>Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Npk">
       <UniqueIdentifier>{8c39330d-5cc1-4ca6-b0dc-4fe8ee5021e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{1edcb01f-acdf-4c32-aa70-a5f17ddc8615}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -291,9 +291,9 @@ Right
 SEnumEnd(HorizontalAlignment)
 
 SEnumBegin(VerticalAlignment)
-Bottom,
+Top,
 Center,
-Top
+Bottom
 SEnumEnd(VerticalAlignment)
 
 SEnumBegin(UIElementType)

@@ -18,13 +18,7 @@ USING_NS_CC;
 
 AppDelegate::AppDelegate()
 {
-    SGGlobal::get();
-    SGImagePackManager::get();
-    SGDataManager::get();
-    SGHostPlayer::get();
-    SGActorListenerManager::get();
-    SGActorBox::get();
-    SGUIManager::get();
+    
     
 }
 
@@ -53,15 +47,24 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
-    if(!glview) {
+    
+    if (glview == nullptr) {
         glview = GLViewImpl::createWithRect(AppName, SGRect(0, 0, pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight));
         director->setOpenGLView(glview);
     }
-
+    
     director->setDisplayStats(false);
     director->setAnimationInterval(1.0f / 120);
     glview->setDesignResolutionSize(pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight, ResolutionPolicy::NO_BORDER);
+    director->setContentScaleFactor(1.0f);
 
+    SGGlobal::get();
+    SGImagePackManager::get();
+    SGDataManager::get();
+    SGHostPlayer::get();
+    SGActorListenerManager::get();
+    SGActorBox::get();
+    SGUIManager::get();
     auto scene = SGWorldScene::get();
     scene->setAnchorPoint(Vec2::ZERO);
     DebugAssertMsg(scene, "월드씬 생성에 실패했습니다.");

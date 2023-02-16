@@ -6,10 +6,7 @@
  */
 
 #include "Tutturu.h"
-#include "SGUIButton.h"
-
-#include <SteinsGate/Client/SGDataManager.h>
-#include <SteinsGate/Client/SGImagePackManager.h>
+#include "SGUIElement.h"
 
 USING_NS_CC;
 USING_NS_JC;
@@ -34,6 +31,10 @@ bool SGUIElement::loaded() {
 }
 
 void SGUIElement::restoreState(State state) {
+	if (m_eState == eDisabled)
+		return;
+
+	m_eState = eNormal;
 }
 
 bool SGUIElement::onMouseMove(SGEventMouse* mouseEvent) {
@@ -97,9 +98,8 @@ bool SGUIElement::onMouseScroll(SGEventMouse* mouseEvent) {
 }
 
 SGRect SGUIElement::getWorldBoundingBox() {
-	SGNode* parent = getParent();
-	DebugAssertMsg(parent != nullptr, "addChild 되어있지 않습니다.");
-	SGVec2 origin = parent->convertToWorldSpace(getPosition());
+	DebugAssertMsg(_parent != nullptr, "addChild 되어있지 않습니다.");
+	SGVec2 origin = _parent->convertToWorldSpace(getPosition());
 	return { origin, getContentSize() };
 }
 

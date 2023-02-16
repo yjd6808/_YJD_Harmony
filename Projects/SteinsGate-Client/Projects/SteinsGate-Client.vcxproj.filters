@@ -94,7 +94,7 @@
     <Filter Include="Data\Font">
       <UniqueIdentifier>{0115c815-90f7-41c3-8536-514809c3be1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\UIGroup">
+    <Filter Include="Game\UI\Group">
       <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -307,9 +307,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGWorldScene.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGSceneManager.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
@@ -347,9 +344,15 @@
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UILogin.cpp">
-      <Filter>Game\UIGroup</Filter>
+      <Filter>Game\UI\Group</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIManager.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUILabel.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUISprite.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -607,9 +610,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayer.h">
       <Filter>Player</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGSceneManager.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGWorldScene.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -656,10 +656,16 @@
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UILogin.h">
-      <Filter>Game\UIGroup</Filter>
+      <Filter>Game\UI\Group</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIDefine.h">
       <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUILabel.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUISprite.h">
+      <Filter>Game\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@
 #include <SteinsGate/Client/SGUIInfo.h>
 
 using AnimationList = SGVector<SGAnimationInfo*>;
+
 class SGDataManager
 {
 public:

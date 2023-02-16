@@ -149,6 +149,7 @@ SGUIElementInfo* SGUIInfoLoader::LoadElementLabel(Value& value) {
 
 	SGString szFontName = SGJson::getString(value["font"]);
 
+	pInfo->Type = UIElementType::Label;
 	pInfo->FontCode = pDataManager->getFontCode(szFontName);
 	pInfo->FontSize = value["font_size"].asInt();
 	pInfo->TextWrap = value["text_wrap"].asBool();
@@ -173,6 +174,7 @@ SGUIElementInfo* SGUIInfoLoader::LoadElementSprite(Value& value) {
 
 	SGImagePack* pPack = pPackManager->getPack(npkName);
 
+	pInfo->Type = UIElementType::Sprite;
 	pInfo->Npk = pPack->getPackIndex();
 	pInfo->Img = pPack->getImgIndex(imgName);
 	pInfo->Sprite = value["sprite"].asInt();

@@ -13,38 +13,22 @@
 // 헤더파일 의존성 회피를 위함
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
-	int __StringLength(const char* str);
-	void __StringFormatBuffer(char* buff, int buffCapacity, const char* format, ...);
-	void __StringConcatInnerFront(char* buf, int bufCapacity, const char* concatStr);
-	void __PathFileNameLevel(char* buf, int bufSize, const char* path, int level);
+	void __DebugAssertMsgImpl(bool expect, const char* filePath, int lineNum, const char* functionName, const char* fmt, ...);
 	NS_DETAIL_END
 NS_JC_END
 
 
 #ifndef DebugAssert
     #if DebugMode
-		inline static bool PreventUnrechableCode = true;
-		#define DebugAssertMsg(exp, fmt, ...)																	\
-					do {																						\
-						if (!(exp)) {																			\
-							static constexpr int BufSize = 512;													\
-							char szFmtBuf[BufSize] = { 0, };													\
-							if (JCore::Detail::__StringLength(fmt) > 0)											\
-								JCore::Detail::__StringFormatBuffer(szFmtBuf, BufSize, fmt, __VA_ARGS__);		\
-							JCore::Detail::__StringConcatInnerFront(szFmtBuf, BufSize, "┌ 어썰트 발생 : ");		\
-							printf("%s\n", szFmtBuf);															\
-							JCore::Detail::__PathFileNameLevel(szFmtBuf, BufSize, __FILE__, 2);					\
-							printf("│ 파일 : %s\n", szFmtBuf);												    \
-							printf("│ 라인 : %d\n", __LINE__);													\
-							printf("└ 함수 : %s\n", __FUNCTION__);												\
-							if (PreventUnrechableCode) std::abort();											\
-						}																						\
-					} while (0)
-        #define DebugAssert(exp)            DebugAssertMsg(exp, "메시지 없음")
+		#define DebugAssertMsg(expect, fmt, ...)																\
+		do {																								\
+			JCore::Detail::__DebugAssertMsgImpl((expect), __FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__);	\
+		} while (0)
+        #define DebugAssert(expect)            DebugAssertMsg(expect, "메시지 없음")
 
 
     #else
-        #define DebugAssertMsg(exp, ...)	(0)
-        #define DebugAssert(exp)            (0)
+        #define DebugAssertMsg(expect, ...)	(0)
+        #define DebugAssert(expect)         (0)
     #endif
 #endif

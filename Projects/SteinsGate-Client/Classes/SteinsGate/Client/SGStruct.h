@@ -49,3 +49,4 @@ struct SGHitInfo
 	SGRect HitRect;
 	SGAttackDataInfo* AttackDataInfo;
 };
+
