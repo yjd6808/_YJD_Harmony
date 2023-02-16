@@ -1032,7 +1032,7 @@ bool GLViewImpl::initGlew()
 
     if (GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader)
     {
-        log("Ready for GLSL");
+        // log("Ready for GLSL");
     }
     else
     {
@@ -1041,7 +1041,7 @@ bool GLViewImpl::initGlew()
 
     if (glewIsSupported("GL_VERSION_2_0"))
     {
-        log("Ready for OpenGL 2.0");
+        // log("Ready for OpenGL 2.0");
     }
     else
     {

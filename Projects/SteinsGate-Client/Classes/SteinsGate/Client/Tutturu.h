@@ -9,12 +9,13 @@
 #pragma once
 
 #include <SteinsGate/Common/Engine.h>
+#include <SteinsGate/Common/LoggerAbstract.h>
 
 #include <SteinsGate/Client/SGStruct.h>
 #include <SteinsGate/Client/SGConfig.h>
+#include <SteinsGate/Common/LoggerDefine.h>
 
 #ifdef DebugMode
-	#define Log(fmt, ...) printf(fmt, ##__VA_ARGS__)
 	#define LogTick(time, fmt, ...)							\
 							static float __timer__;			\
 							__timer__ += dt;				\
@@ -24,6 +25,5 @@
 							}
 
 #else
-	#define Log(...)
 	#define LogTick(...)
 #endif

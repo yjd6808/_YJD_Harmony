@@ -14,8 +14,8 @@ class SGUIButton : public SGUIElement
 {
 public:
 	SGUIButton(SGUIGroup* parent, SGUIButtonInfo* btnInfo);
-	~SGUIButton();
-
+	~SGUIButton() override;
+	 
 	bool init() override;
 	void load() override;
 	void unload() override;

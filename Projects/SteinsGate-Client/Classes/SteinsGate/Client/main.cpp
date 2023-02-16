@@ -8,33 +8,24 @@
 #include <SteinsGate/Client/AppDelegate.h>
 #include <JCore/Debug/MemoryLeakDetector.h>
 
+
 USING_NS_JC;
+USING_NS_DETAIL;
 
 int main()
 {
-//    _CrtSetBreakAlloc(138);
-    // Detail::__JCoreInitialize()
-    //{
-    //    SGGlobal::get();
-    //    SGImagePackManager::get();
-    //    SGDataManager::get();
-    //    SGHostPlayer::get();
-    //    SGActorListenerManager::get();
-    //    SGActorBox::get();
-
-    //    delete SGActorBox::get();
-    //    delete SGActorListenerManager::get();
-    //    delete SGHostPlayer::get();
-    //    delete SGDataManager::get();
-    //    delete SGImagePackManager::get();
-    //    delete SGGlobal::get();
-    //}
+    InitializeJCore();
+    InitializeCommonCore();
+    InitializeDefaultLogger();
 
     int iResult = -1;
     {
         AppDelegate app;
         iResult = cocos2d::Application::getInstance()->run();
     }
+
+    FinalizeCommonCore();
+    FinalizeDefaultLogger();
     return iResult;
     
 }

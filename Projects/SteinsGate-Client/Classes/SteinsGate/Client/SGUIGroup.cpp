@@ -32,6 +32,10 @@ SGUIGroup::SGUIGroup(SGUIGroup* parent, SGUIGroupInfo* groupInfo)
 	, m_pDataManager(SGDataManager::get())
 {}
 
+SGUIGroup::~SGUIGroup() {
+	int a = 40;
+}
+
 
 SGUIGroup* SGUIGroup::createRetain(SGUIGroup* parent, SGUIGroupInfo* groupInfo) {
 	SGUIGroup* pGroup = dbg_new SGUIGroup(parent, groupInfo);

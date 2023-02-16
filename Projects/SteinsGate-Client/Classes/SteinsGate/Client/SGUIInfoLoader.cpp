@@ -99,12 +99,10 @@ bool SGUIInfoLoader::LoadUIInfo(SGHashMap<int, SGUIElementInfo*>& elementInfoMap
 		}
 	}
 	catch (std::exception& ex) {
-		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
 		return false;
 	}
 
-	
-	Log("SGUIInfoLoader :: 로딩완료\n");
 	return true;
 }
 

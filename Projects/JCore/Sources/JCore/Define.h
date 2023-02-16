@@ -13,9 +13,9 @@
 
 
 	#ifdef DebugMode
-		#define JCoreInlineHeaderMessage(format, ...)	inline auto JCoreCounterConcat(_) = [] { return SafeConsole::WriteLine(format, __VA_ARGS__); }()
-		#define JCoreInlineClassMessage(format, ...)	inline static auto JCoreCounterConcat(_) = [] { return SafeConsole::WriteLine(format, __VA_ARGS__); }()
-		#define JCoreInlineReturnMessage(type, value, format, ...)	[]()->type { SafeConsole::WriteLine(format, __VA_ARGS__); return value; }()
+		#define JCoreInlineHeaderMessage(format, ...)	inline auto JCoreCounterConcat(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
+		#define JCoreInlineClassMessage(format, ...)	inline static auto JCoreCounterConcat(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
+		#define JCoreInlineReturnMessage(type, value, format, ...)	[]()->type { Console::WriteLine(format, __VA_ARGS__); return value; }()
 	#else
 		#define JCoreInlineHeaderMessage(format) 
 		#define JCoreInlineClassMessage(format) 

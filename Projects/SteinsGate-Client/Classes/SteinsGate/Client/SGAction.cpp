@@ -27,7 +27,6 @@ SGAction::SGAction(SGHostPlayer* player, SGActionInfo* actionInfo)
 {}
 
 SGAction::~SGAction() {
-	Log("%s 액션 소멸\n", m_pActionInfo->ActionName.Source());
 }
 
 void SGAction::play() {

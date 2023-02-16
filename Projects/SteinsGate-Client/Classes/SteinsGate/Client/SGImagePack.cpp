@@ -133,7 +133,10 @@ void SGImagePack::unload() {
 }
 
 void SGImagePack::clearCache() {
-	m_TextureCacheMap.Values().Extension().ForEach([](SGFrameTexture* tex) { CC_SAFE_RELEASE(tex); });
+	m_TextureCacheMap.Values().Extension().ForEach([](SGFrameTexture* tex) {
+		//DebugAssertMsg(tex->getReferenceCount() == 1, "레퍼런스 카운트가 1이 아닙니다.");
+		CC_SAFE_RELEASE(tex);
+	});
 	m_TextureCacheMap.Clear();
 }
 

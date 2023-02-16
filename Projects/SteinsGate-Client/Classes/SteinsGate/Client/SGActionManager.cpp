@@ -23,7 +23,7 @@ SGActionManager::SGActionManager(SGHostPlayer* player)
 
 SGActionManager::~SGActionManager() {
 	m_ActionMap.Values().Extension().ForEach([](SGAction* action) { DeleteSafe(action); });
-	Log("액션 매니저 소멸\n");
+	_LogDebug_("액션 매니저 소멸");
 }
 
 void SGActionManager::init(int charType) {

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 2:53:06 PM
  * =====================
@@ -68,10 +68,9 @@ bool SGAIInfoLoader::LoadAIInfo(SGHashMap<int, SGAIInfo>& aiInfoMap) {
 		}
 	}
 	catch (std::exception& ex) {
-		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
 		return false;
 	}
 
-	Log("SGAIInfoLoader :: 로딩완료\n");
 	return true;
 }

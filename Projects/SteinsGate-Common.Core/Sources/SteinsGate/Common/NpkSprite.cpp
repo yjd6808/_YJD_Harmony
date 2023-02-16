@@ -95,7 +95,7 @@ bool NpkSprite::Load() {
     Stream& stream = pPackage->StreamRef();
     stream.Seek(m_iDataOffset);
     stream.Read(m_spData.GetPtr(), 0, m_iDataLength);
-    m_bLoaded = true;
+    return m_bLoaded = true;
 }
 
 bool NpkSprite::Unload() {

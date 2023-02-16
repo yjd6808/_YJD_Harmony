@@ -32,7 +32,7 @@ SGCharacter::SGCharacter(int code, const SGCharacterInfo& info)
 }
 
 SGCharacter::~SGCharacter() {
-	Log("캐릭터 소멸\n");
+	_LogDebug_("캐릭터 소멸");
 }
 
 SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {

@@ -23,6 +23,7 @@
 #include <SteinsGate/Client/SGFontLoader.h>
 #include <SteinsGate/Client/SGUIInfoLoader.h>
 
+
 SGDataManager::SGDataManager() {}
 SGDataManager::~SGDataManager() {
 
@@ -30,7 +31,9 @@ SGDataManager::~SGDataManager() {
 		DeleteSafe(m_CharBaseInfoMap[i]);
 	}
 
-	m_UIElementInfoMap.Values().Extension().ForEach([](SGUIElementInfo* info) { delete info; });
+	m_UIElementInfoMap.Values().Extension().ForEach([](SGUIElementInfo* info) {
+		delete info;
+	});
 }
 
 void SGDataManager::LoadAllConfigs() {
@@ -51,10 +54,13 @@ void SGDataManager::LoadAllConfigs() {
 		SGMapInfoLoader::LoadMapInfo(m_MapInfoMap) &&
 		SGAIInfoLoader::LoadAIInfo(m_AIInfoMap) &&
 		SGUIInfoLoader::LoadUIInfo(m_UIElementInfoMap)) {
-		Log("==== 모든 기획파일 로딩완료 ====\n");
-	} else {
-		DebugAssertMsg(false, "기획파일 로딩 실패");
-	}
+
+		_LogInfo_("기획파일 로딩완료");
+		return;
+	} 
+
+
+	DebugAssertMsg(false, "기획파일 로딩 실패");
 }
 
 

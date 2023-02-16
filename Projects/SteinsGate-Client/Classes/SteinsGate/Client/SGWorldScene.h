@@ -24,6 +24,7 @@ public:
 	bool init() override;
 	void initEventListeners();
 	void InitUILayer();
+	
 
 	void update(float dt) override;
 	void updateScene(float dt);
@@ -34,7 +35,8 @@ public:
 	void onMouseDown(SGEventMouse* mouseEvent);
 	void onMouseUp(SGEventMouse* mouseEvent);
 	void onMouseScroll(SGEventMouse* mouseEvent);
-	
+	void onExit() override;
+
 	void reserveScene(SceneType_t sceneType);
 	void changeScene(SceneType_t sceneType);
 	SGSceneBase* createScene(SceneType_t sceneType);

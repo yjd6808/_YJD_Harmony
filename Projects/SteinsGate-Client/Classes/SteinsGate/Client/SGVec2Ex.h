@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/29/2023 8:19:21 PM
  * =====================
@@ -20,7 +20,7 @@ public:
 	static void getLookDirectionX(const SGVec2& from, const SGVec2& to, Out_ SpriteDirection_t& lr);
 
 	static void log(const SGVec2& v) {
-		Log("%.f, %.f\n", v.x, v.y);
+		_LogDebug_("%.f, %.f", v.x, v.y);
 	}
 };
 

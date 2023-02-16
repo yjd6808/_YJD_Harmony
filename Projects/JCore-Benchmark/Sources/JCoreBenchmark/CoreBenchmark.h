@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 12/11/2022 3:19:00 PM
  * =====================
@@ -25,8 +25,6 @@
 using namespace JCore;
 using namespace benchmark;
 using namespace std;
-
-using Console = NormalConsole;
 
 #define ON						1
 #define OFF						0

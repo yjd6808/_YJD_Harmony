@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/20/2023 1:57:14 PM
  * =====================
@@ -62,10 +62,10 @@ bool SGProjectileInfoLoader::LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>
 		}
 	}
 	catch (std::exception& ex) {
-		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
 		return false;
 	}
-	Log("SGProjectileInfoLoader :: 로딩완료\n");
+
 	return true;
 }
 

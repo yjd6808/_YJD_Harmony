@@ -583,6 +583,10 @@ public:
      */
     bool isValid() const { return !_invalid; }
 
+	/**
+	 * \brief GPU 정보 출력 여부
+	 */
+    void printGpuInfo();
 protected:
     void reset();
     

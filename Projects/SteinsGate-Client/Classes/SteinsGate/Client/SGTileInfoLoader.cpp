@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/25/2023 11:08:17 AM
  * =====================
@@ -31,25 +31,24 @@ bool SGTileInfoLoader::LoadTileInfo(SGHashMap<int, SGTileInfo>& tileInfoMap) {
 	Json::Value root;
 	try {
 		reader >> root;
+
+		Json::Value tileListRoot = root["tile"];
+
+		for (int i = 0; i < tileListRoot.size(); ++i) {
+			Value& tileRoot = tileListRoot[i];
+
+			SGTileInfo info;
+			info.Code = tileRoot["code"].asInt();
+			info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(tileRoot["npk"]));
+			info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(tileRoot["img"]));
+			info.SpriteIndex = tileRoot["index"].asInt();
+			tileInfoMap.Insert(info.Code, info);
+		}
 	}
 	catch (std::exception& ex) {
-		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
 		return false;
 	}
 
-	Json::Value tileListRoot = root["tile"];
-
-	for (int i = 0; i < tileListRoot.size(); ++i) {
-		Value& tileRoot = tileListRoot[i];
-
-		SGTileInfo info;
-		info.Code = tileRoot["code"].asInt();
-		info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(tileRoot["npk"]));
-		info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(tileRoot["img"]));
-		info.SpriteIndex = tileRoot["index"].asInt();
-		tileInfoMap.Insert(info.Code, info);
-	}
-
-	Log("SGTileInfoLoader :: 로딩완료\n");
 	return true;
 }

@@ -37,7 +37,5 @@ bool SGFontLoader::LoadFontInfo(
 		fontCodeToNameMap.Insert(i, Move(fontFileName));	// 버리기 아까우니 옴긴다.
 	}
 
-
-	Log("SGFontLoader :: 로딩완료\n");
 	return true;
 }

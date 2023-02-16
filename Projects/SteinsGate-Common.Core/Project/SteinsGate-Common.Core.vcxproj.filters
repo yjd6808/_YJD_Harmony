@@ -31,6 +31,15 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\SGCommonDataManager.cpp">
       <Filter>Data</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\LoggerAbstract.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ConsoleLogger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\LoggerDefine.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -77,6 +86,15 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SGCommonDataManager.h">
       <Filter>Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\LoggerAbstract.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ConsoleLogger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\LoggerDefine.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Npk">
@@ -84,6 +102,9 @@
     </Filter>
     <Filter Include="Data">
       <UniqueIdentifier>{1edcb01f-acdf-4c32-aa70-a5f17ddc8615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{fc588ce2-7aa2-4072-a3d3-aa9f737e607e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

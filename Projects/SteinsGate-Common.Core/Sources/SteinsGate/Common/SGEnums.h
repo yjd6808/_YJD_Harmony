@@ -278,9 +278,9 @@ Game,
 Max
 SEnumMiddle(SceneType)
 static constexpr const char* Name[Max]{
-	"Login",
-	"ChannelSelect",
-	"Game"
+	"로그인",
+	"채널 선택",
+	"게임"
 };
 SEnumMiddleEnd(SceneType)
 

@@ -9,11 +9,19 @@
 #include "Tutturu.h"
 #include "SGWorldScene.h"
 
-#include <SteinsGate/Client/SGActorBox.h>
+
 #include <SteinsGate/Client/SGLoginScene.h>
 #include <SteinsGate/Client/SGGameScene.h>
 #include <SteinsGate/Client/SGChannelSelectScene.h>
 #include <SteinsGate/Client/SGUILayer.h>
+
+#include <SteinsGate/Client/SGActorBox.h>
+#include <SteinsGate/Client/SGHostPlayer.h>
+#include <SteinsGate/Client/SGDataManager.h>
+#include <SteinsGate/Client/SGImagePackManager.h>
+#include <SteinsGate/Client/SGActorListenerManager.h>
+#include <SteinsGate/Client/SGGlobal.h>
+#include <SteinsGate/Client/SGUIManager.h>
 
 
 USING_NS_CC;
@@ -53,8 +61,9 @@ SGWorldScene::SGWorldScene()
 	, m_pKeyboardListener(nullptr)
 	, m_pUILayer(nullptr)
 {}
+
 SGWorldScene::~SGWorldScene() {
-	CC_SAFE_RELEASE(m_pUILayer);
+	
 }
 
 
@@ -150,6 +159,24 @@ void SGWorldScene::onMouseScroll(SGEventMouse* mouseEvent) {
 
 	if (m_pUILayer)
 		m_pUILayer->onMouseScroll(mouseEvent);
+}
+
+void SGWorldScene::onExit() {
+	
+
+	m_pUILayer->clearUnload();	// 삭제전 마지막 발악, 모든 UI 리소스 정리
+
+	delete SGUIManager::get();
+	delete SGActorBox::get();
+	delete SGActorListenerManager::get();
+	delete SGHostPlayer::get();
+	delete SGDataManager::get();
+	delete SGImagePackManager::get();
+	delete SGGlobal::get();
+
+	Scene::onExit();	// 호출 필수네.. 자식 객체들 모두 정리; (이후로 자식노드 사용불가능 - m_pUILayer)
+
+	_LogInfo_("월드 씬 종료");
 }
 
 

@@ -16,7 +16,7 @@ class SGUILabel : public SGUIElement
 {
 public:
 	SGUILabel(SGUIGroup* parent, SGUILabelInfo* btnInfo);
-	~SGUILabel();
+	~SGUILabel() override;
 
 	bool init() override;
 	static SGUILabel* create(SGUIGroup* parent, SGUILabelInfo* labelInfo);

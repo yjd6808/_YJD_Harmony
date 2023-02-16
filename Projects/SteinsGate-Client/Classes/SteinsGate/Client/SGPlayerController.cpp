@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/22/2023 8:59:10 AM
  * =====================
@@ -31,7 +31,7 @@ SGPlayerController::SGPlayerController(SGHostPlayer* player, SGCharacter* charac
 }
 
 SGPlayerController::~SGPlayerController() {
-	Log("플레이어 컨트롤러 소멸\n");
+	_LogDebug_("플레이어 컨트롤러 소멸");
 }
 
 void SGPlayerController::init() {
@@ -100,7 +100,7 @@ SpriteDirection_t SGPlayerController::getSpriteDirection() {
 }
 
 bool SGPlayerController::isKeyPressed(ControlKey_t controlKey) {
-	return m_ControlKeyPressedMap[int(controlKey)] > 0;
+	return m_ControlKeyPressedMap[int(controlKey)];
 }
 
 bool SGPlayerController::isMoveKeyPressed() {

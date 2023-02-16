@@ -52,12 +52,9 @@ bool SGEffectInfoLoader::LoadEffectInfo(SGHashMap<int, SGEffectInfo>& effectInfo
 
 	}
 	catch (std::exception& ex) {
-		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
 		return false;
 	}
-
-	
-	Log("SGEffectInfoLoader :: 로딩완료\n");
 
 	return true;
 }

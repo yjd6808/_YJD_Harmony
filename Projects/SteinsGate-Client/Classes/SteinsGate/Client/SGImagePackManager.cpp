@@ -28,8 +28,6 @@ SGImagePackManager::~SGImagePackManager() {
 
 void SGImagePackManager::loadAllPackages() {
 
-	NpkElementInitializer::Initialize();
-
 	SGThread loaderThread[MaxNpkParallelLoadingThreadCount_v];
 	SGString imageDirPath = Path::Combine(DataDirectoryPath_v, ImageDirectoryName_v);
 	SGVector<SGString> paths = Directory::Files(imageDirPath, false);
@@ -49,17 +47,14 @@ void SGImagePackManager::loadAllPackages() {
 					Path::Combine(DataDirectoryPath_v, ImageDirectoryName_v, szFileName)
 				);
 				m_LoadedPackages[j] = dbg_new SGImagePack(package, j);
-				SafeConsole::WriteLine("%d %s 로딩완료", j, szFileName.Source());
 			}
 		});
 	}
 
-	
-
 	for (int i = 0; i < MaxNpkParallelLoadingThreadCount_v; ++i) {
 		loaderThread[i].Join();
 	}
-	SGConsole::WriteLine("NPK파일들 인덱스 로딩 완료");
+	_LogInfo_("NPK파일 %d개 인덱싱 완료", m_iLoadedPackageCount);
 }
 
 void SGImagePackManager::unloadPackData(int packIndex) {

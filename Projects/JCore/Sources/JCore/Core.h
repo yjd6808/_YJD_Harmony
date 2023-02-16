@@ -34,13 +34,13 @@
 
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
-	void __JCoreInitialize();
+	void InitializeJCore();
 	NS_DETAIL_END
 
 extern Int64 AppTime_v;
 
 inline auto JCoreInitializer = [] {
-	Detail::__JCoreInitialize();
+	Detail::InitializeJCore();
 	return 0;
 }();
 

@@ -78,9 +78,9 @@ public:
 			uiLeakedBytes += static_cast<Int64U>(iLeakedBlockCount) * Detail::AllocationLengthMapConverter::ToSize(i);
 			if (detail) detail[i] = iLeakedBlockCount;
 
-			if (i == 0) SafeConsole::WriteLine("┌ [릭 탐지 결과]");
-			if (iLeakedBlockCount > 0) SafeConsole::WriteLine("│ [%8d]: %d", Detail::AllocationLengthMapConverter::ToSize(i), iLeakedBlockCount);
-			if (i == Detail::MemoryBlockSizeMapSize_v - 1) SafeConsole::WriteLine("└──────────────── %llu바이트 릭 <", uiLeakedBytes);
+			if (i == 0) Console::WriteLine("┌ [릭 탐지 결과]");
+			if (iLeakedBlockCount > 0) Console::WriteLine("│ [%8d]: %d", Detail::AllocationLengthMapConverter::ToSize(i), iLeakedBlockCount);
+			if (i == Detail::MemoryBlockSizeMapSize_v - 1) Console::WriteLine("└──────────────── %llu바이트 릭 <", uiLeakedBytes);
 		}
 
 		if constexpr (!KeepDetectingState)

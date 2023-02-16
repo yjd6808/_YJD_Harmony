@@ -67,7 +67,7 @@ static int releaseList(SGVector<TActor*>& actorList) {
 		++iReleaseCount;	
 	});
 	actorList.Clear();
-	Log("[%10s] 릴리즈: %d개\n", typeid(TActor).name(), iReleaseCount);
+	_LogDebug_("[%10s] 릴리즈: %d개", typeid(TActor).name(), iReleaseCount);
 	return iReleaseCount;
 }
 
@@ -79,7 +79,7 @@ static int cleanUpList(SGVector<TActor*>& actorList) {
 		++iCleanUpCount;
 	});
 	actorList.Clear();
-	Log("[%10s] 클린업: %d개\n", typeid(TActor).name(), iCleanUpCount);
+	_LogDebug_("[%10s] 클린업: %d개", typeid(TActor).name(), iCleanUpCount);
 	return iCleanUpCount;
 }
 
@@ -95,7 +95,7 @@ void SGActorBox::clearAll() {
 	// Step 2. 맵에 로딩된 풀에 없는 엑터들을 정리해줘야한다.
 
 	cleanUpList<SGCharacter>(m_vCharacters);
-	Log("Step Before. 정리 대기중 엑터 수: %d개\n", m_hRemoveActorMap.Size());
+	_LogDebug_("Step Before. 정리 대기중 엑터 수: %d개", m_hRemoveActorMap.Size());
 	updateCleanUp();
 	DebugAssertMsg(m_hRemoveActorMap.Size() == 0, "아직 반환안된 액터가 있습니다. 이러면 안됩니다.");
 
@@ -108,7 +108,7 @@ void SGActorBox::clearAll() {
 	iStep1ReleaseCount += releaseList<SGMonster>(m_vMonsters);
 	iStep1ReleaseCount += releaseList<SGObstacle>(m_vObstacles);
 	iStep1ReleaseCount += releaseList<SGEffect>(m_vEffectList);
-	Log("Step1. 정리된 액터 수: %d개\n", iStep1ReleaseCount);
+	_LogDebug_("정리된 로디드 액터 수: %d개", iStep1ReleaseCount);
 	DebugAssertMsg(iStep1ReleaseCount == m_hActorMap.Size(), "Step1. 실패");
 
 
@@ -117,7 +117,7 @@ void SGActorBox::clearAll() {
 	iStep2ReleaseCount += releasePool<SGMonster>(m_hMonsterPool);
 	iStep2ReleaseCount += releasePool<SGProjectile>(m_hProjectilePool);
 	iStep2ReleaseCount += releasePool<SGObstacle>(m_hObstaclePool);
-	Log("Step2. 정리된 액터 수: %d개\n", iStep2ReleaseCount);
+	_LogDebug_("정리된 언로디드 액터 수: %d개", iStep2ReleaseCount);
 
 	m_vZOrderedActors.Clear();
 	m_vCollidableObstacles.Clear();
@@ -139,7 +139,7 @@ void SGActorBox::clearRoom() {
 	iCleanUpCount += cleanUpList<SGEffect>(m_vEffectList);
 	iCleanUpCount += cleanUpList<SGCharacter>(m_vCharacters);
 
-	Log("Step Before. 정기 대기중 엑터 수: %d개\n", m_hRemoveActorMap.Size());
+	_LogDebug_("Step Before. 정리 대기중 엑터 수: %d개", m_hRemoveActorMap.Size());
 	if (updateCleanUp() != iCleanUpCount) {
 		DebugAssertMsg(false, "정리가 제대로 수행되지 않았습니다.");
 	}
@@ -602,7 +602,7 @@ void SGActorBox::cleanUpProjectile(SGProjectile* projectile) {
 	unregisterZOrderActor(projectile);
 	unregisterActor(projectile);
 	m_hProjectilePool[projectile->getBaseInfo()->Code].PushBack(projectile);
-	Log("삭제> 플레이어 프로젝틸 (%s), 남은 플레이어 프로젝틸 수 : %d, Z오더 액터 수: %d\n", projectile->getBaseInfo()->Name.Source(), m_vProjectiles.Size(), m_vZOrderedActors.Size());
+	_LogDebug_("삭제> 플레이어 프로젝틸 (%s), 남은 플레이어 프로젝틸 수 : %d, Z오더 액터 수: %d", projectile->getBaseInfo()->Name.Source(), m_vProjectiles.Size(), m_vZOrderedActors.Size());
 }
 
 void SGActorBox::cleanUpMonster(SGMonster* monster) {
@@ -611,7 +611,7 @@ void SGActorBox::cleanUpMonster(SGMonster* monster) {
 	unregisterPhysicsActor(monster);
 	unregisterActor(monster);
 	m_hMonsterPool[monster->getBaseInfo()->Code].PushBack(monster);
-	Log("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d\n", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());
+	_LogDebug_("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());
 }
 
 void SGActorBox::cleanUpObstacle(SGObstacle* obstacle) {

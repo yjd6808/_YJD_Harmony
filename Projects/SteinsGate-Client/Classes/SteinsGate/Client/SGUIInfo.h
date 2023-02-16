@@ -12,6 +12,8 @@
 
 struct SGUIElementInfo
 {
+	virtual ~SGUIElementInfo() = default;
+
 	UIElementType_t Type;
 	int Code;
 	SGString Name;
@@ -19,6 +21,8 @@ struct SGUIElementInfo
 
 struct SGUIButtonInfo : SGUIElementInfo
 {
+	~SGUIButtonInfo() override = default;
+
 	int Img;
 	int Npk;
 	int Normal;
@@ -29,6 +33,8 @@ struct SGUIButtonInfo : SGUIElementInfo
 
 struct SGUILabelInfo : SGUIElementInfo
 {
+	~SGUILabelInfo() override = default;
+
 	SGString Text;
 	int FontCode;
 	int FontSize;
@@ -41,6 +47,8 @@ struct SGUILabelInfo : SGUIElementInfo
 
 struct SGUISpriteInfo : SGUIElementInfo
 {
+	~SGUISpriteInfo() override = default;
+
 	int Img;
 	int Npk;
 	int Sprite;
@@ -58,6 +66,7 @@ struct SGUIGroupElemInfo
 struct SGUIGroupInfo : SGUIElementInfo
 {
 	SGUIGroupInfo(int elemCount) : InfoList(elemCount) {}
+	~SGUIGroupInfo() override = default;
 
 	SGRect Rect;
 	HorizontalAlignment_t HorizontalAlignment;

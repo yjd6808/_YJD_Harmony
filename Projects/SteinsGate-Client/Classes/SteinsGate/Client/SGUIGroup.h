@@ -18,6 +18,7 @@ class SGUIGroup : public SGUIElement
 public:
 	SGUIGroup();
 	SGUIGroup(SGUIGroup* parent, SGUIGroupInfo* groupInfo);
+	~SGUIGroup() override;
 
 	static SGUIGroup* createRetain(SGUIGroup* parent, SGUIGroupInfo* groupInfo);
 	static SGUIGroup* create(SGUIGroup* parent, SGUIGroupInfo* groupInfo);

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * 작성자: 윤정도
  * 생성일: 1/24/2023 9:27:21 AM
  * =====================
@@ -30,17 +30,15 @@ bool SGClientInfoLoader::LoadClientInfo(SGClientInfo& clientInfo) {
 	Json::Value root;
 	try {
 		reader >> root;
+
+		clientInfo.GameScale = root["game_scale"].asFloat();
+		clientInfo.ResolutionWidth = root["resolution_width"].asFloat();
+		clientInfo.ResolutionHeight = root["resolution_height"].asFloat();
 	}
 	catch (std::exception& ex) {
-		Log(SGStringUtil::Format("%s 파싱중 오류가 발생하였습니다. %s\n", JsonFileName, ex.what()).Source());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
 		return false;
 	}
-
-	clientInfo.GameScale = root["game_scale"].asFloat();
-	clientInfo.ResolutionWidth = root["resolution_width"].asFloat();
-	clientInfo.ResolutionHeight = root["resolution_height"].asFloat();
-
-	Log("SGClientInfoLoader :: 로딩완료\n");
 
 	return true;
 }

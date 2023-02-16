@@ -38,7 +38,7 @@ public:
 	}
 
     static void log(const SGRect& rc) {
-        Log(":: 위치 [%d, %d], 크기 [%d, %d]\n", int(rc.getMinX()), int(rc.getMinY()), int(rc.getWidth()), int(rc.getHeight()));
+        CCLOG(":: 위치 [%d, %d], 크기 [%d, %d]\n", int(rc.getMinX()), int(rc.getMinY()), int(rc.getWidth()), int(rc.getHeight()));
 	}
 
     /*

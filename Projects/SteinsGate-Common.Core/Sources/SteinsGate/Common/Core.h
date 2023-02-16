@@ -13,12 +13,15 @@
 #include <JCore/Define.h>
 #include <JCore/Functional.h>
 #include <JCore/Math.h>
+#include <JCore/Time.h>
+#include <JCore/Stream.h>
 #include <JCore/Primitives/StringUtil.h>
 
 #include <JCore/Utils/Console.h>
 #include <JCore/Threading/Thread.h>
 #include <JCore/FileSystem/File.h>
 #include <JCore/FileSystem/Path.h>
+#include <JCore/FileSystem/FileStream.h>
 #include <JCore/FileSystem/Directory.h>
 
 #include <JCore/Container/Vector.h>
@@ -41,7 +44,7 @@
 #define SG_FLT_EPSILON			0.0001f
 #define SG_PI					3.141592f
 
-using SGConsole = JCore::SafeConsole;
+using SGConsole = JCore::Console;
 using SGString = JCore::String;
 using SGPath = JCore::Path;
 using SGStringUtil = JCore::StringUtil;
@@ -76,6 +79,17 @@ template <typename... Args>
 using SGPredicateFn = JCore::Predicate<Args...>;
 
 using SGThread = JCore::Thread;
+
+using SGStream = JCore::Stream;
+using SGStreamPtr = JCore::StreamPtr;
+using SGFileStream = JCore::FileStream;
+using SGFileStreamPtr = JCore::FileStreamPtr;
+
+using SGConsoleColor = JCore::ConsoleColor;
+using SGDateTime = JCore::DateTime;
+
+using SGNormalLock = JCore::NormalLock;
+using SGRecursiveLock = JCore::RecursiveLock;
 
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) AlignedVector : public SGVector<T, TAllocator> {};

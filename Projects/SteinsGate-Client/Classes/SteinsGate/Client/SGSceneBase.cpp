@@ -24,30 +24,26 @@
 SGSceneBase::SGSceneBase() {}
 
 SGSceneBase::~SGSceneBase() {
-	Log("씬 소멸\n");
 }
 
 bool SGSceneBase::init() {
-	Log("[%s] 씬 init\n", SceneType::Name[getType()]);
+	_LogDebug_("%s 씬 초기화", SceneType::Name[getType()]);
+
 	m_pWorldScene = SGWorldScene::get();
 	m_pUILayer = m_pWorldScene->getUILayer();
 
 	return Scene::init();
 }
 void SGSceneBase::onEnter() {
-
-
-	Log("[%s] 씬 onEnter\n", SceneType::Name[getType()]);
+	_LogDebug_("%s 씬을 시작", SceneType::Name[getType()]);
 }
 void SGSceneBase::onExit() {
-	Log("[%s] 씬 onExit\n", SceneType::Name[getType()]);
+	_LogDebug_("%s 씬을 종료", SceneType::Name[getType()]);
 }
 
 void SGSceneBase::onEnterTransitionDidFinish() {
-	Log("[%s] 씬 onEnterTransitionDidFinish\n", SceneType::Name[getType()]);
 }
 
 void SGSceneBase::onExitTransitionDidStart() {
-	Log("[%s] 씬 onExitTransitionDidStart\n", SceneType::Name[getType()]);
 }
 

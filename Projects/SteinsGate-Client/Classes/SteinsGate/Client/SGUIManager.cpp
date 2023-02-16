@@ -24,8 +24,13 @@ SGUIManager::SGUIManager()
 {}
 
 SGUIManager::~SGUIManager() {
-	m_hMasterUIGroups.Values().Extension().ForEach([](SGUIGroup* group) { CC_SAFE_RELEASE(group); });
-	m_hUIElements.Values().Extension().ForEach([](SGUIElement* element) { CC_SAFE_RELEASE(element); });
+
+	// 마스터 UI 그룹만 제거해주면 된다.
+	// 어차피 내부 자식들은 모두 마스터 UI 그룹에 addChild 되어 있기 때문에
+	// 이녀석만 제거하면 도미노 마냥 다 제거댐
+	m_hMasterUIGroups.Values().Extension().ForEach([](SGUIGroup* group) {
+		CC_SAFE_RELEASE(group);
+	});
 }
 
 SGUIManager* SGUIManager::get() {

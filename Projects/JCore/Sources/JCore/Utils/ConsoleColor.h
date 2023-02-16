@@ -1,10 +1,12 @@
-﻿/*
+/*
 	작성자 : 윤정도
  */
 
 #pragma once
 
 NS_JC_BEGIN
+
+// @https://stackoverflow.com/questions/17125440/c-win32-console-color
 enum ConsoleColor
 {
     Black,
@@ -13,16 +15,17 @@ enum ConsoleColor
     Cyan,
     Red,
     Magenta,
-    Brown,
+    Yellow,
     LightGray,
-    DarkGray,
+    Gray,
     LightBlue,
     LightGreen,
     LightCyan,
     LightRed,
     LightMagenta,
-    Yellow,
-    White
+    LightYellow,
+    White,
+    Max
 };
 NS_JC_END
 
