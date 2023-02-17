@@ -7,3 +7,9 @@
 
 
 #include "Core.h"
+#include "SGCommonDataManager.h"
+
+
+SGCommonDataManager::SGCommonDataManager()
+	: 
+{}

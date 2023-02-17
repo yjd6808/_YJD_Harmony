@@ -56,21 +56,25 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JCore-Test", "Projects\JCor
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Research.TcpClient", "Projects\JNetwork-Research.TcpClient\Project\JNetwork-Research.TcpClient.vcxproj", "{D4072F29-4BBA-4686-BD94-73BD73E960F1}"
 	ProjectSection(ProjectDependencies) = postProject
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
 		{F1F50093-ABEE-4EA6-BF7A-7583CDFFD414} = {F1F50093-ABEE-4EA6-BF7A-7583CDFFD414}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Research.Server", "Projects\JNetwork-Research.TcpServer\Project\JNetwork-Research.TcpServer.vcxproj", "{AF76CC7C-83B4-4B7C-A737-333DCC649CB1}"
 	ProjectSection(ProjectDependencies) = postProject
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
 		{F1F50093-ABEE-4EA6-BF7A-7583CDFFD414} = {F1F50093-ABEE-4EA6-BF7A-7583CDFFD414}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Research.UdpClient.A", "Projects\JNetwork-Research.UdpClient.A\Project\JNetwork-Research.UdpClient.A.vcxproj", "{6E68C299-A042-458F-B1ED-20A4FE6DD8D3}"
 	ProjectSection(ProjectDependencies) = postProject
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
 		{F1F50093-ABEE-4EA6-BF7A-7583CDFFD414} = {F1F50093-ABEE-4EA6-BF7A-7583CDFFD414}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Research.UdpClient.B", "Projects\JNetwork-Research.UdpClient.B\Project\JNetwork-Research.UdpClient.B.vcxproj", "{8ABA6C54-EFFC-4356-8DD1-05573770E433}"
 	ProjectSection(ProjectDependencies) = postProject
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
 		{6E68C299-A042-458F-B1ED-20A4FE6DD8D3} = {6E68C299-A042-458F-B1ED-20A4FE6DD8D3}
 	EndProjectSection
 EndProject
@@ -81,6 +85,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Test", "Projects\J
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Research.Common", "Projects\JNetwork-Research.Common\Project\JNetwork-Research.Common.vcxproj", "{F1F50093-ABEE-4EA6-BF7A-7583CDFFD414}"
 	ProjectSection(ProjectDependencies) = postProject
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
 		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
 	EndProjectSection
 EndProject

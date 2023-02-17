@@ -30,8 +30,6 @@
 #include <JCore/Assert.h>
 
 
-
-
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
 	void InitializeJCore();

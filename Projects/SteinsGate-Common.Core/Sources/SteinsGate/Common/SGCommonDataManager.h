@@ -8,5 +8,16 @@
 
 #pragma once
 
+class SGCommonDataManager
+{
+public:
+	SGCommonDataManager();
+	virtual ~SGCommonDataManager() = 0;
+protected:
+
+private:
+};
 
 
+
+inline SGCommonDataManager::~SGCommonDataManager() {  /* 무 족 건 상 속 */ }

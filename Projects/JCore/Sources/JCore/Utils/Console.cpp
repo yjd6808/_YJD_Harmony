@@ -169,9 +169,9 @@ bool Console::SetEnableVTMode(bool enabled) {
         return false;
 
     if (enabled)
-        dwMode |= 0x0004;    // ENABLE_VIRTUAL_TERMINAL_PROCESSING
+        dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;    // 0x0004
     else
-        dwMode &= ~0x0004;
+        dwMode &= ~ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 
     if (!SetConsoleMode(ms_hStdout, dwMode))
         return false;
