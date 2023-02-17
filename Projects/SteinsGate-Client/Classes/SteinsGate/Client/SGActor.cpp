@@ -101,6 +101,10 @@ ActorType_t SGActor::getType() const {
 	return m_eActorType;
 }
 
+const char* SGActor::getTypeName() const {
+	return ActorType::Name[m_eActorType];
+}
+
 SGActorRect SGActor::getActorRect() const {
 	return { getThicknessBoxRect(), getHitBox() };
 }

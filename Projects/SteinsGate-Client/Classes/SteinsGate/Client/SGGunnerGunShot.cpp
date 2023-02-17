@@ -120,7 +120,9 @@ void SGGunnerGunShot::onFrameBegin(SGActorPartAnimation* animation, SGFrameTextu
 
 	// 왼쪽 공격, 왼쪽 아래 총알 발사 시점을 특정할게 프레임 인덱스 뿐임..
 	// 한번만 딱 쏘는 왼손 애니메이션도 3개로 분리하긴 귀찮다.
-	int iFrameIndex = frame->getFrameIndex();
+
+	int iFrameIndex = animation->getFrameIndex();	
+	
 	if (iFrameIndex == 35) {
 		shotLeft(m_pPlayer->getActorSprite());
 	} else if (iFrameIndex == 51) {

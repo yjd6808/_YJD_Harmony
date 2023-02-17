@@ -20,6 +20,7 @@ public:
     void update(float dt) override;
     bool init() override;
     CREATE_FUNC(SGGameScene)
+    ~SGGameScene() override;
 
     void cmdLoadChar();
     void cmdEnterMap();

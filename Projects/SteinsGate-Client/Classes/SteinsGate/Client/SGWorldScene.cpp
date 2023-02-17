@@ -164,15 +164,12 @@ void SGWorldScene::onMouseScroll(SGEventMouse* mouseEvent) {
 }
 
 void SGWorldScene::onExit() {
-	
 
 	m_pUILayer->clearUnload();	// 삭제전 마지막 발악, 모든 UI 리소스 정리
 
-	// 특정 씬에서 강종시 WolrdScene이 먼저 종료를 시작하게됨 ㄷㄷ
-	// 그래서 수동으로 삭제해줘야한다.
-	if (m_pRunningScene) {
-		removeChild(m_pRunningScene);
-	}
+
+	Scene::onExit();		// 마지막에 호출! 자식 객체들 모두 정리; (이후로 자식노드 사용불가능 - m_pUILayer 이런녀석)
+	removeAllChildren();	// 자식노드 모두 정리 (onExit에서 제거하는줄 알았는데 아니네; 그냥 재귀 onExit 호출함.. 하..)
 
 	delete SGFontPackage::get();
 	delete SGUIManager::get();
@@ -183,9 +180,23 @@ void SGWorldScene::onExit() {
 	delete SGImagePackManager::get();
 	delete SGGlobal::get();
 
-	Scene::onExit();	// 마지막에 호출! 자식 객체들 모두 정리; (이후로 자식노드 사용불가능 - m_pUILayer 이런녀석)
 
-	_LogInfo_("월드 씬 종료");
+
+
+	
+
+	
+
+	// 특정 씬에서 강종시 WolrdScene이 먼저 종료를 시작하게됨 ㄷㄷ (Director::reset())
+	// 그래서 수동으로 삭제해줘야한다.
+	//if (m_pRunningScene) {
+//		removeChild(m_pRunningScene);
+//	}
+	
+
+	
+
+
 }
 
 

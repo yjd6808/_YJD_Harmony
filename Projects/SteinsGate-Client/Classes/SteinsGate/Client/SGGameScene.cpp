@@ -60,13 +60,23 @@ void SGGameScene::update(float dt) {
 
 bool SGGameScene::init()
 {
-    if (!Scene::init())
+    if (!SGSceneBase::init())
         return false;
 
-    cmdLoadChar();
+    m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
+    m_pGridLayer->setAnchorPoint(Vec2::ZERO);
+    m_pGridLayer->setVisible(false);
+    m_pGridLayer->retain();
+    
+
     cmdEnterMap();
+    cmdLoadChar();
 
     return true;
+}
+
+SGGameScene::~SGGameScene() {
+    CC_SAFE_RELEASE(m_pGridLayer);
 }
 
 void SGGameScene::cmdLoadChar() {
@@ -79,9 +89,8 @@ void SGGameScene::cmdLoadChar() {
         info.VisualInfo.ImgIndex[i] = pBaseInfo->DefaultVisualImgIndex[i];
     }
     SGHostPlayer* pPlayer = SGHostPlayer::get();
+    SGCharacter* pCharacter = SGActorBox::get()->createCharacterOnMap(CharType::Gunner, 300, 250, info);
 
-    SGCharacter* pCharacter = SGActorBox::get()->createCharacter(CharType::Gunner, 300, 250, info);
-    
     pPlayer->setCharacter(pCharacter);
     pPlayer->initActionManager();
     pPlayer->initController();
@@ -90,30 +99,25 @@ void SGGameScene::cmdLoadChar() {
 
 void SGGameScene::cmdEnterMap() {
     SGHostPlayer* pHost = SGHostPlayer::get();
+    SGActorBox* pActorBox = SGActorBox::get();
+
     if (m_pMapLayer) {
         m_pMapLayer->release();
     }
     
-    m_pMapLayer = SGMapLayer::create(1);
+    m_pMapLayer = SGMapLayer::create();
     m_pMapLayer->setAnchorPoint(Vec2::ZERO);
-    this->addChild(m_pMapLayer);
-    
+
+    pActorBox->init(m_pMapLayer);                   // 맵 레이어 초기화
     pHost->setMapLayer(m_pMapLayer);
-    m_pMapLayer->addChild(pHost->getCharacter());
-    pHost->getCharacter()->setMapLayer(m_pMapLayer);
-
-    SGActorBox::get()->registerCharacter(pHost->getCharacter());
-
-    m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
-    m_pGridLayer->setAnchorPoint(Vec2::ZERO);
-    m_pGridLayer->setVisible(false);
+    
     m_pMapLayer->addChild(m_pGridLayer, 1);
-    SGActorBox::get()->updateZOrder();
+    m_pMapLayer->loadMap(1);
+    this->addChild(m_pMapLayer);
 }
 
 void SGGameScene::onExit() {
-    SGHostPlayer* pHost = SGHostPlayer::get();
-
-    pHost->getCharacter()->cleanUpImmediate();
+    //removeAllChildren();
     SGActorBox::get()->clearAll();
+    //SGSceneBase::onExit();
 }

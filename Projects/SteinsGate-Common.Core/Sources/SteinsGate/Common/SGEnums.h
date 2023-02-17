@@ -160,7 +160,19 @@ Projectile,
 Obstacle,
 Effect,
 Max
-SEnumEnd(ActorType)
+SEnumMiddle(ActorType)
+
+static constexpr const char* Name[Max]{
+	"None",
+	"Character",
+	"Monster",
+	"Npc",
+	"Projectile",
+	"Obstacle",
+	"Effect"
+};
+
+SEnumMiddleEnd(ActorType)
 
 
 SEnumBegin(FrameEventType)

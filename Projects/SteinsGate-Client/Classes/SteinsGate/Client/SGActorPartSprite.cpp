@@ -158,10 +158,10 @@ void SGActorPartSprite::onFrameBegin(SGActorPartAnimation* animation, SGFrameTex
 
 
 	// Coordinate-System(좌표계) 변경
-	float fWidth = rect.GetWidthF();
-	float fHeight = rect.GetHeightF();
-	float fAdjustX = rect.X;
-	float fAdjustY = fFrameHeight - rect.Y - fHeight;
+	float fWidth = (float)rect.Width;
+	float fHeight = (float)rect.Height;
+	float fAdjustX = (float)rect.X;
+	float fAdjustY = fFrameHeight - (float)rect.Y - fHeight;
 
 	bool bProjectile = getActorType() == ActorType::Projectile;
 

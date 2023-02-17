@@ -26,11 +26,10 @@ USING_NS_JC;
 // 
 // ==============================================================================================================================
 
-SGMapLayer* SGMapLayer::create(int mapCode) {
+SGMapLayer* SGMapLayer::create() {
 	SGMapLayer* pMap = dbg_new SGMapLayer;
 
 	if (pMap && pMap->init()) {
-		pMap->loadMap(mapCode);
 		pMap->autorelease();
 		return pMap;
 	}
@@ -53,18 +52,7 @@ bool SGMapLayer::init() {
 		return false;
 	}
 
-
 	m_pActorBox = SGActorBox::get();
-	m_pActorBox->init(this);
-
-
-	// =================================================
-	// 임시 데이터 주입
-	// =================================================
-
-	m_pActorBox->createMonsterOnMap(2, 1, 600, 350);
-
-	
 	return true;
 }
 
@@ -123,6 +111,10 @@ void SGMapLayer::loadMap(int mapCode) {
 	}
 
 	// NPC 로딩
+
+	// 몬스터 로딩
+	m_pActorBox->createMonsterOnMap(2, 1, 600, 350);  // 테스트 몬스터 생성
+	m_bMapLoaded = true;
 }
 
 

@@ -39,6 +39,7 @@ void SGSceneBase::onEnter() {
 }
 void SGSceneBase::onExit() {
 	_LogDebug_("%s 씬을 종료", SceneType::Name[getType()]);
+	Scene::onExit();
 }
 
 void SGSceneBase::onEnterTransitionDidFinish() {

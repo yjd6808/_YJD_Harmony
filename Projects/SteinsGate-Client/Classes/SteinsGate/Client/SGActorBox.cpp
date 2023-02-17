@@ -94,7 +94,7 @@ void SGActorBox::clearAll() {
 	// Step 1. 맵에 로딩되지 않은 풀의 엑터들을 정리해줘야한다.
 	// Step 2. 맵에 로딩된 풀에 없는 엑터들을 정리해줘야한다.
 
-	cleanUpList<SGCharacter>(m_vCharacters);
+	//cleanUpList<SGCharacter>(m_vCharacters);
 	_LogDebug_("Step Before. 정리 대기중 엑터 수: %d개", m_hRemoveActorMap.Size());
 	updateCleanUp();
 	DebugAssertMsg(m_hRemoveActorMap.Size() == 0, "아직 반환안된 액터가 있습니다. 이러면 안됩니다.");
@@ -104,6 +104,7 @@ void SGActorBox::clearAll() {
 	int iStep2ReleaseCount = 0;
 
 	// Step1. 현재 맵에 로딩된 액터들 릴리즈
+	iStep1ReleaseCount += releaseList<SGCharacter>(m_vCharacters);
 	iStep1ReleaseCount += releaseList<SGProjectile>(m_vProjectiles);
 	iStep1ReleaseCount += releaseList<SGMonster>(m_vMonsters);
 	iStep1ReleaseCount += releaseList<SGObstacle>(m_vObstacles);
@@ -124,6 +125,7 @@ void SGActorBox::clearAll() {
 	m_vPhysicsActors.Clear();
 	m_hActorMap.Clear();
 
+	auto pMap = m_pMapLayer;
 	CC_SAFE_RELEASE_NULL(m_pMapLayer);
 	m_bCleared = true;
 }
@@ -242,16 +244,23 @@ void SGActorBox::updateActors(float dt) {
 }
 
 
-SGCharacter* SGActorBox::createCharacter(CharType_t charType, float x, float y, SGCharacterInfo& info) {
+SGCharacter* SGActorBox::createCharacterOnMap(CharType_t charType, float x, float y, SGCharacterInfo& info) {
+	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 캐릭터를 생성해주세요");
+
 	SGCharacter* pCharacter = SGCharacter::create(charType, info);
 	pCharacter->setPositionRealCenter(x, y);
+	pCharacter->retain();
 	pCharacter->setAllyFlag(0);
+	pCharacter->setMapLayer(m_pMapLayer);
 
+
+	registerCharacter(pCharacter);
+	m_pMapLayer->addChild(pCharacter);
 	return pCharacter;
 }
 
 SGProjectile* SGActorBox::createProejctileOnMap(SGActor* spawner, int projectileId) {
-	DebugAssertMsg(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 프로젝틸을 생성해주세요");
 
 	SGProjectileInfo* pInfo = SGDataManager::get()->getProjectileInfo(projectileId);
 	
@@ -299,7 +308,7 @@ SGProjectile* SGActorBox::createProejctileOnMap(SGActor* spawner, int projectile
 
 
 SGMonster* SGActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, float y) {
-	DebugAssertMsg(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 몬스터를 생성해주세요");
 
 	SGDataManager* pDataManager = SGDataManager::get();
 
@@ -333,7 +342,7 @@ SGMonster* SGActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, 
 }
 
 SGObstacle* SGActorBox::createObstacleOnMap(int obstacleCode, float x, float y) {
-	DebugAssertMsg(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 옵스터클을 생성해주세요");
 
 	SGObstacleInfo* pObstacleInfo = SGDataManager::get()->getObstacleInfo(obstacleCode);
 
@@ -440,7 +449,7 @@ SGEffect* SGActorBox::createEffectOnMapTargetCollision(int effectCode, const SGH
 }
 
 SGEffect* SGActorBox::createEffectOnMap(int effectCode) {
-	DebugAssertMsg(m_pMapLayer, "맵 레이어가 존재하지 않습니다.");
+	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 이펙트를 생성해주세요");
 
 	SGEffectInfo* pEffectInfo = SGDataManager::get()->getEffectInfo(effectCode);
 
@@ -511,7 +520,9 @@ void SGActorBox::registerEffect(SGEffect* effect) {
 void SGActorBox::registerActor(SGActor* actor) {
 	int iUniqueId = ++m_iIdSequence;
 	actor->setActorId(iUniqueId);
-	m_hActorMap.Insert(iUniqueId, actor);
+	if (m_hActorMap.Insert(iUniqueId, actor) == false) {
+		DebugAssertMsg(false, "이미 %s 액터가 ActorMap에 등록되어 있습니다. (코드: %d)", actor->getTypeName(), iUniqueId);
+	}
 }
 
 void SGActorBox::sortZOrderActor() {

@@ -51,6 +51,7 @@ public:
 	void update(float dt) override;				// 자식에서도 오버라이딩시 이거 호출하도록
 
 	ActorType_t getType()					const;
+	const char* getTypeName()				const;
 	SGActorRect getActorRect()				const;
 	SGRect getThicknessBoxRect()			const;
 	SGVec2 getPositionReal()				const;

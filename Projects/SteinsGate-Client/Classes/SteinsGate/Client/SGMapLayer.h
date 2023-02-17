@@ -12,7 +12,7 @@ public:
 	SGMapLayer();
 	~SGMapLayer() override;
 
-	static SGMapLayer* create(int mapCode);
+	static SGMapLayer* create();
 
 	void loadMap(int mapCode);
 	bool init() override;
@@ -30,6 +30,8 @@ public:
 
 	SGMapInfo* getMapInfo();
 public:
+	bool m_bMapLoaded;
+
 	SGMapInfo* m_pMapInfo;
 	SGActorBox* m_pActorBox;
 };
