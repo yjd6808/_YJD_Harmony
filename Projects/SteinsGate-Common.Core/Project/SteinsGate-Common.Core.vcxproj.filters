@@ -40,6 +40,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\LoggerDefine.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Logo.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -93,6 +96,9 @@
       <Filter>Logger</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\LoggerDefine.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h">
       <Filter>Logger</Filter>
     </ClInclude>
   </ItemGroup>

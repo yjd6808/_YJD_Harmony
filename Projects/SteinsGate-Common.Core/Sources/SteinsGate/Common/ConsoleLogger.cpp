@@ -16,7 +16,6 @@ ConsoleLogger::ConsoleLogger()
 	, m_eTimeColors{ White, Yellow, LightRed, LightGray }			// [ level : datatime ] -> 시간 섹상을 바꿈
 	, m_eHeaderColors{ White, White, White, White }					// [ level : datatime ] -> 그외 [ : ]이런 녀석들 색상을 바꿈
 	, m_eLogColors{ Gray, Gray , Gray , Gray }
-	, m_bUseLock(true)
 {}
 
 void ConsoleLogger::Flush() {
@@ -45,12 +44,11 @@ void ConsoleLogger::Log(Level level, const char* fmt, va_list list) {
 	if (bUseLock)
 		m_Lock.Lock();
 
-	char szText[512];
-	vsprintf_s(szText, 512, fmt, list);
+	String szFmt = StringUtil::Format(fmt, list);
 
 	m_szBuffer += CreateHeader(level);
-	m_szBuffer += Console::GetVTForegroundColor(m_eLogColors[level]);
-	m_szBuffer += szText;
+	m_szBuffer += Console::VTForeColor[m_eLogColors[level]];
+	m_szBuffer += szFmt;
 
 	if (m_bAutoFlush) {
 		Flush();
@@ -65,6 +63,49 @@ void ConsoleLogger::Log(Level level, const char* fmt, ...) {
 	va_start(args, fmt);
 	Log(level, fmt, args);
 	va_end(args);
+}
+
+void ConsoleLogger::LogPlain(const char* fmt, va_list list) {
+	bool bUseLock = m_bUseLock;
+
+	if (bUseLock)
+		m_Lock.Lock();
+
+	String szFmt = StringUtil::Format(fmt, list);
+
+	m_szBuffer += Console::VTForeColor[ConsoleColor::LightGray];
+	m_szBuffer += szFmt;
+
+	if (m_bAutoFlush) {
+		Flush();
+	}
+
+	if (bUseLock)
+		m_Lock.Unlock();
+}
+
+void ConsoleLogger::LogPlain(const char* fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
+	LogPlain(fmt, args);
+	va_end(args);
+}
+
+void ConsoleLogger::LogPlain(const JCore::String& str) {
+	bool bUseLock = m_bUseLock;
+
+	if (bUseLock)
+		m_Lock.Lock();
+
+	m_szBuffer += Console::VTForeColor[ConsoleColor::LightGray];
+	m_szBuffer += str;
+
+	if (m_bAutoFlush) {
+		Flush();
+	}
+
+	if (bUseLock)
+		m_Lock.Unlock();
 }
 
 
@@ -89,23 +130,23 @@ SGString ConsoleLogger::CreateHeader(Level level) {
 	char szTempBuff[256];
 
 
-	szHeader += Console::GetVTForegroundColor(m_eHeaderColors[level]);
+	szHeader += Console::VTForeColor[m_eHeaderColors[level]];
 	szHeader += m_szHeaderFormat;
 
 	if (m_bShowLevel) {
-		StringUtil::FormatBuffer(szTempBuff, 256, "%s%s%s", 
-			Console::GetVTForegroundColor(m_eLevelColors[level]), 
+		StringUtil::FormatBuffer(szTempBuff, 256, "%s%s%s",
+			Console::VTForeColor[m_eLevelColors[level]],
 			m_szLevelText[level].Source(),
-			Console::GetVTForegroundColor(m_eHeaderColors[level])
+			Console::VTForeColor[m_eHeaderColors[level]]
 		);
 		szHeader.ReplaceAll("level", szTempBuff);
 	}
 
 	if (m_bShowDateTime) {
-		StringUtil::FormatBuffer(szTempBuff, 256, "%s%s%s", 
-			Console::GetVTForegroundColor(m_eTimeColors[level]), 
+		StringUtil::FormatBuffer(szTempBuff, 256, "%s%s%s",
+			Console::VTForeColor[m_eTimeColors[level]],
 			szDateTimeFmt.Source(),
-			Console::GetVTForegroundColor(m_eHeaderColors[level])
+			Console::VTForeColor[m_eHeaderColors[level]]
 		);
 		szHeader.ReplaceAll("datetime", szTempBuff);
 	}
@@ -129,6 +170,3 @@ void ConsoleLogger::SetLogColor(Level level, SGConsoleColor color) {
 	m_eLogColors[level] = color;
 }
 
-void ConsoleLogger::SetEnableLock(bool enable) {
-	m_bUseLock = enable;
-}

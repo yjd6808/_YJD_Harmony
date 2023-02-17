@@ -364,9 +364,6 @@
     <ClInclude Include="..\Sources\JCore\Pool\MemoryPoolCaptured.h">
       <Filter>Pool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JCore\Utils\ConstructorCall.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Threading\ThreadLocal.h">
       <Filter>Threading</Filter>
     </ClInclude>
@@ -408,6 +405,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Natvis\NatvisByteOrder.h">
       <Filter>Natvis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\Concatenation.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

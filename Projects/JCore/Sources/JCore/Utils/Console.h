@@ -17,11 +17,49 @@
 #include <JCore/Tuple.h>
 #include <JCore/Assert.h>
 
-#define ESC "\x1b"
+
+// @참고 https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 #define CSI "\x1b["
+#define CSI_AND ";"
 
 // 우선색상만..
 #define CSI_GRAPHIC_RENDITION(x) CSI#x"m"
+#define CSI_GRAPHIC_RENDITION_END "m"
+
+#define VT_RESET                    "0"
+#define VT_FORE_COLOR_BLACK         "30"
+#define VT_FORE_COLOR_BLUE          "34"
+#define VT_FORE_COLOR_GREEN         "32"
+#define VT_FORE_COLOR_CYAN          "36"
+#define VT_FORE_COLOR_RED           "31"
+#define VT_FORE_COLOR_MAGNETA       "35"
+#define VT_FORE_COLOR_YELLOW        "33"
+#define VT_FORE_COLOR_LIGHT_GRAY    "1;39"
+#define VT_FORE_COLOR_GRAY          "39"
+#define VT_FORE_COLOR_LIGHT_BLUE    "94"
+#define VT_FORE_COLOR_LIGHT_GREEN   "92"
+#define VT_FORE_COLOR_LIGHT_CYAN    "96"
+#define VT_FORE_COLOR_LIGHT_RED     "91"
+#define VT_FORE_COLOR_LIGHT_MAGNETA "95"
+#define VT_FORE_COLOR_LIGHT_YELLOW  "93"
+#define VT_FORE_COLOR_WHITE         "97"
+
+#define VT_BACK_COLOR_BLACK         "40"
+#define VT_BACK_COLOR_BLUE          "44"
+#define VT_BACK_COLOR_GREEN         "42"
+#define VT_BACK_COLOR_CYAN          "46"
+#define VT_BACK_COLOR_RED           "41"
+#define VT_BACK_COLOR_MAGNETA       "45"
+#define VT_BACK_COLOR_YELLOW        "43"
+#define VT_BACK_COLOR_LIGHT_GRAY    "49"        // 배경은 회색 우째하지
+#define VT_BACK_COLOR_GRAY          "49"        // 배경은 회색 우째하지
+#define VT_BACK_COLOR_LIGHT_BLUE    "104"
+#define VT_BACK_COLOR_LIGHT_GREEN   "102"
+#define VT_BACK_COLOR_LIGHT_CYAN    "106"
+#define VT_BACK_COLOR_LIGHT_RED     "101"
+#define VT_BACK_COLOR_LIGHT_MAGNETA "105"
+#define VT_BACK_COLOR_LIGHT_YELLOW  "103"
+#define VT_BACK_COLOR_WHITE         "107"
 
 NS_JC_BEGIN
 
@@ -37,13 +75,15 @@ class Console
     static int           ms_iCursorPosX;
     static int           ms_iCursorPosY;
     static int           TempBufferLen;
-    static const char*   VTForegroundColor[ConsoleColor::Max];
+public:
+    static const char*   VTForeColor[ConsoleColor::Max];
+    static const char*   VTBackColor[ConsoleColor::Max];
+
+    static const char*   VTForeToken[ConsoleColor::Max];
+    static const char*   VTBackToken[ConsoleColor::Max];
 public:
     static bool Init();
     static bool SetSize(int width, int height);
-
-    static const char* GetVTForegroundColor(ConsoleColor foreground);
-    static const char* GetVTReset();
 
     static void SetColor(ConsoleColor color);
     static void GetColor(ConsoleColor color);

@@ -396,7 +396,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Utils\ConsoleColor.h" />
-    <ClInclude Include="..\Sources\JCore\Utils\ConstructorCall.h">
+    <ClInclude Include="..\Sources\JCore\Utils\Concatenation.h">
       <SubType>
       </SubType>
     </ClInclude>

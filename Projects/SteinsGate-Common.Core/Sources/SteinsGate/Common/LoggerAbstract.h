@@ -8,12 +8,14 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Core.h>
-
+#include <JCore/Primitives/String.h>
+#include <JCore/Sync/RecursiveLock.h>
 
 class LoggerAbstract
 {
 public:
+	using TLockGuard = JCore::RecursiveLockGuard;
+
 	enum Level
 	{
 		eInfo,
@@ -30,9 +32,12 @@ public:
 	virtual void Flush() = 0;
 	virtual void Log(Level level, const char* fmt, va_list list) = 0;
 	virtual void Log(Level level, const char* fmt, ...);
-	virtual SGString CreateHeader(Level level);
+	virtual void LogPlain(const char* fmt, va_list list) = 0;
+	virtual void LogPlain(const char* fmt, ...);
+	virtual void LogPlain(const JCore::String& str);
+	virtual JCore::String CreateHeader(Level level);
 	
-	void Log(Level level, const SGString& str);
+	void Log(Level level, const JCore::String& str);
 	void LogInfo(const char* fmt, ...);
 	void LogWarn(const char* fmt, ...);
 	void LogError(const char* fmt, ...);
@@ -40,19 +45,25 @@ public:
 	
 	void ShowDateTime(bool enabled);
 	void ShowLevel(bool enabled);
-	void SetDateTimeFormat(const SGString& fmt);
+	void ShowHeader(bool enabled);
+	void SetDateTimeFormat(const JCore::String& fmt);
 	void SetAutoFlush(bool enabled);
-	void SetHeaderFormat(const SGString& fmt);		// [level | datetime] => [Info | 20:08:02]
-	void SetLevelText(Level level, const SGString& levelText);
-	
+	void SetHeaderFormat(const JCore::String& fmt);		// [level | datetime] => [Info | 20:08:02]
+	void SetLevelText(Level level, const JCore::String& levelText);
+	void SetEnableLock(bool lock);
 protected:
 	bool m_bAutoFlush;
 	bool m_bShowLevel;
 	bool m_bShowDateTime;
+	bool m_bShowHeader;
+	bool m_bUseLock;
 
-	SGString m_szHeaderFormat;
-	SGString m_szDateTimeFormat;
-	SGString m_szLevelText[eMax];
+	JCore::String m_szHeaderFormat;
+	JCore::String m_szDateTimeFormat;
+	JCore::String m_szLevelText[eMax];
+	JCore::RecursiveLock m_Lock;
 };
+
+
 
 

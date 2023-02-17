@@ -12,11 +12,13 @@
 USING_NS_JC;
 USING_NS_DETAIL;
 
+
 int main()
 {
     InitializeJCore();
     InitializeCommonCore();
     InitializeDefaultLogger();
+    InitializeClientLogo();
 
     int iResult = -1;
     {

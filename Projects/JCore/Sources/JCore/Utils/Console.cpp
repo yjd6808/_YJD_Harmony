@@ -14,7 +14,7 @@ bool             Console::ms_UseConsoleLock;
 int              Console::ms_iCursorPosX;
 int              Console::ms_iCursorPosY;
 int              Console::TempBufferLen = 1024;
-const char*      Console::VTForegroundColor[ConsoleColor::Max]{
+const char*      Console::VTForeColor[ConsoleColor::Max]{
     // 사이에 공백 없도록 주의!
     CSI_GRAPHIC_RENDITION(0;30),  // Black  
     CSI_GRAPHIC_RENDITION(0;34),  // Blue
@@ -32,6 +32,63 @@ const char*      Console::VTForegroundColor[ConsoleColor::Max]{
     CSI_GRAPHIC_RENDITION(0;95),  // LightMagenta
     CSI_GRAPHIC_RENDITION(0;93),  // LightYellow
     CSI_GRAPHIC_RENDITION(0;97)   // White
+};
+
+const char*      Console::VTBackColor[ConsoleColor::Max]{
+    CSI_GRAPHIC_RENDITION(0;30),  // Black  
+    CSI_GRAPHIC_RENDITION(0;34),  // Blue
+    CSI_GRAPHIC_RENDITION(0;32),  // Green
+    CSI_GRAPHIC_RENDITION(0;36),  // Cyan
+    CSI_GRAPHIC_RENDITION(0;31),  // Red
+    CSI_GRAPHIC_RENDITION(0;35),  // Magenta
+    CSI_GRAPHIC_RENDITION(0;33),  // Yellow
+    CSI_GRAPHIC_RENDITION(0;1),   // LightGray
+    CSI_GRAPHIC_RENDITION(0;0),   // Gray
+    CSI_GRAPHIC_RENDITION(0;94),  // LightBlue
+    CSI_GRAPHIC_RENDITION(0;92),  // LightGreen
+    CSI_GRAPHIC_RENDITION(0;96),  // LightCyan
+    CSI_GRAPHIC_RENDITION(0;91),  // LightRed
+    CSI_GRAPHIC_RENDITION(0;95),  // LightMagenta
+    CSI_GRAPHIC_RENDITION(0;93),  // LightYellow
+    CSI_GRAPHIC_RENDITION(0;97)   // White
+};
+
+const char*     Console::VTForeToken[ConsoleColor::Max] {
+	VT_FORE_COLOR_BLACK        ,
+	VT_FORE_COLOR_BLUE         ,
+	VT_FORE_COLOR_GREEN        ,
+	VT_FORE_COLOR_CYAN         ,
+	VT_FORE_COLOR_RED          ,
+	VT_FORE_COLOR_MAGNETA      ,
+	VT_FORE_COLOR_YELLOW       ,
+	VT_FORE_COLOR_LIGHT_GRAY   ,
+	VT_FORE_COLOR_GRAY         ,
+	VT_FORE_COLOR_LIGHT_BLUE   ,
+	VT_FORE_COLOR_LIGHT_GREEN  ,
+	VT_FORE_COLOR_LIGHT_CYAN   ,
+	VT_FORE_COLOR_LIGHT_RED    ,
+	VT_FORE_COLOR_LIGHT_MAGNETA,
+	VT_FORE_COLOR_LIGHT_YELLOW ,
+	VT_FORE_COLOR_WHITE  
+};
+
+const char*     Console::VTBackToken[ConsoleColor::Max] {
+    VT_BACK_COLOR_BLACK         ,
+    VT_BACK_COLOR_BLUE          ,
+    VT_BACK_COLOR_GREEN         ,
+    VT_BACK_COLOR_CYAN          ,
+    VT_BACK_COLOR_RED           ,
+    VT_BACK_COLOR_MAGNETA       ,
+    VT_BACK_COLOR_YELLOW        ,
+    VT_BACK_COLOR_LIGHT_GRAY    ,
+    VT_BACK_COLOR_GRAY          ,
+    VT_BACK_COLOR_LIGHT_BLUE    ,
+    VT_BACK_COLOR_LIGHT_GREEN   ,
+    VT_BACK_COLOR_LIGHT_CYAN    ,
+    VT_BACK_COLOR_LIGHT_RED     ,
+    VT_BACK_COLOR_LIGHT_MAGNETA ,
+    VT_BACK_COLOR_LIGHT_YELLOW  ,
+    VT_BACK_COLOR_WHITE
 };
 
 
@@ -56,14 +113,6 @@ bool Console::SetSize(int width, int height) {
         return false;
 
     return MoveWindow(hConsole, r.left, r.top, width, height, TRUE) != 0;
-}
-
-const char* Console::GetVTForegroundColor(ConsoleColor foreground) {
-    return VTForegroundColor[foreground];
-}
-
-const char* Console::GetVTReset() {
-    return CSI_GRAPHIC_RENDITION(0);
 }
 
 void Console::SetColor(ConsoleColor color) {

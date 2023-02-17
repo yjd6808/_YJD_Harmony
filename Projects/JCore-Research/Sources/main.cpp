@@ -1,23 +1,20 @@
 #include "header.h"
 #include <stacktrace>
 
-#include "JCore/Natvis/NatvisByteOrder.h"
 
 
 USING_NS_JC;
+String s;
+
 
 int main() {
-	constexpr const char* a = CSI_GRAPHIC_RENDITION(1;2);
+	Console::SetSize(600, 800);
 
-	Console::Init();
-	Console::SetEnableVTMode(false);
-	Console::WriteLine(Yellow, "fsefe");
-	Console::SetEnableVTMode(false);
-	Console::WriteLine(White, "fsefe");
-	Console::SetEnableVTMode(true);
-	Console::WriteLine(Yellow, "fsefe");
-	Console::SetEnableVTMode(true);
-	Console::WriteLine(White, "fsefe");
+	String c = "c";       // c: "c"
+	String d = "d";       // d: "d'
+	String g = CopyConcat<String>("a", "b", c, d, "e"); // abcde
+	
+
 	return 0;
 }
 

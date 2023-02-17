@@ -33,6 +33,28 @@ void LoggerAbstract::Log(Level level, const SGString& str) {
 	Log(level, str.Source());
 }
 
+void LoggerAbstract::LogPlain(const char* fmt, ...) {
+	bool bLock = m_bUseLock;
+
+	if (bLock)
+		m_Lock.Lock();
+
+	bool bState = m_bShowHeader;
+	ShowHeader(false);
+	va_list args;
+	va_start(args, fmt);
+	LogPlain(fmt, args);
+	va_end(args);
+	ShowHeader(bState);
+
+	if (bLock)
+		m_Lock.Unlock();
+}
+
+void LoggerAbstract::LogPlain(const JCore::String& str) {
+	LogPlain(str.Source());
+}
+
 void LoggerAbstract::LogInfo(const char* fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
@@ -69,6 +91,10 @@ void LoggerAbstract::ShowLevel(bool enabled) {
 	m_bShowLevel = enabled;
 }
 
+void LoggerAbstract::ShowHeader(bool enabled) {
+	m_bShowHeader = enabled;
+}
+
 void LoggerAbstract::SetDateTimeFormat(const SGString& fmt) {
 	m_szDateTimeFormat = fmt;
 }
@@ -76,6 +102,11 @@ void LoggerAbstract::SetDateTimeFormat(const SGString& fmt) {
 void LoggerAbstract::SetAutoFlush(bool enabled) {
 	m_bAutoFlush = enabled;
 }
+
+void LoggerAbstract::SetEnableLock(bool enable) {
+	m_bUseLock = enable;
+}
+
 
 void LoggerAbstract::SetHeaderFormat(const SGString& fmt) {
 	int iLevelIndex  = fmt.Find("level");

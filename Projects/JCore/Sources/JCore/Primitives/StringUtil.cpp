@@ -18,7 +18,12 @@ Vector<String, DefaultAllocator> StringUtil::Split(String& src, const char* deli
 String StringUtil::Format(const char* format, ...) {
 	va_list args;
 	va_start(args, format);
+	String szResult = Format(format, args);
+	va_end(args);
+	return szResult;
+}
 
+String StringUtil::Format(const char* format, va_list args) {
 	const int iExpectedLen = vsnprintf(nullptr, 0, format, args); // 포맷 변환시 필요한 문자열 길이를 획득
 
 	if (iExpectedLen <= 0) {
@@ -29,7 +34,6 @@ String StringUtil::Format(const char* format, ...) {
 	vsnprintf(szResult.Source(), szResult.Capacity(), format, args);
 	szResult.SetAt(iExpectedLen, NULL);
 	szResult.m_iLen = iExpectedLen;
-	va_end(args);
 	return szResult;
 }
 

@@ -7,6 +7,9 @@
 #include <JCore/ByteUnit.h>
 #include <JCore/Env.h>
 
+#include <JCore/Natvis/NatvisByteOrder.h>
+#include <JCore/Utils/Concatenation.h>
+
 #include <JCore/Allocator/DefaultAllocator.h>
 #include <JCore/Allocator/DefaultArrayAllocator.h>
 
@@ -23,7 +26,6 @@
 #include <JCore/Encoding/CodePage.h>
 
 #include <JCore/Pool/IndexedMemoryPool.h>
-
 
 #include <JCore/Sync/SpinLock.h>
 #include <JCore/Sync/WaitHandle.h>

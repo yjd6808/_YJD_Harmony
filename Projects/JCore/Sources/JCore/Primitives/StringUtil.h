@@ -20,6 +20,7 @@ class StringUtil final
 public:
 	static Vector<String, DefaultAllocator> Split(String& src, const char* delimiter);
 	static String Format(const char* format, ...);
+	static String Format(const char* format, va_list args);
 	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, ...);
 	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, va_list va);
 

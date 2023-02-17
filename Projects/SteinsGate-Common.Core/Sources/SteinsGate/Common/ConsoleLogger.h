@@ -8,7 +8,9 @@
 
 #pragma once
 
+#include <JCore/Utils/ConsoleColor.h>
 #include <SteinsGate/Common/LoggerAbstract.h>
+
 
 class ConsoleLogger : public LoggerAbstract
 {
@@ -18,20 +20,20 @@ public:
 	void Flush() override;
 	void Log(Level level, const char* fmt, va_list list) override;
 	void Log(Level level, const char* fmt, ...) override ;
-	SGString CreateHeader(Level level) override;
+	void LogPlain(const char* fmt, va_list list) override;
+	void LogPlain(const char* fmt, ...) override;
+	void LogPlain(const JCore::String& str) override;
+	JCore::String CreateHeader(Level level) override;
 
-	void SetHeaderLevelColor(Level level, SGConsoleColor color);
-	void SetHeaderTimeColor(Level level, SGConsoleColor color);
-	void SetHeaderDefaultColor(Level level, SGConsoleColor color);
-	void SetLogColor(Level level, SGConsoleColor color);
-	void SetEnableLock(bool lock); 
+	void SetHeaderLevelColor(Level level, JCore::ConsoleColor color);
+	void SetHeaderTimeColor(Level level, JCore::ConsoleColor color);
+	void SetHeaderDefaultColor(Level level, JCore::ConsoleColor color);
+	void SetLogColor(Level level, JCore::ConsoleColor color);
 private:
-	SGConsoleColor m_eLevelColors[eMax];
-	SGConsoleColor m_eTimeColors[eMax];
-	SGConsoleColor m_eHeaderColors[eMax];
-	SGConsoleColor m_eLogColors[eMax];
-	bool m_bUseLock;
-	SGString m_szBuffer;
-	SGRecursiveLock m_Lock;
+	JCore::ConsoleColor m_eLevelColors[eMax];
+	JCore::ConsoleColor m_eTimeColors[eMax];
+	JCore::ConsoleColor m_eHeaderColors[eMax];
+	JCore::ConsoleColor m_eLogColors[eMax];
+	JCore::String m_szBuffer;
 };
 

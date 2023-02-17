@@ -10,10 +10,13 @@
 
 #include <SteinsGate/Common/Engine.h>
 #include <SteinsGate/Common/LoggerAbstract.h>
+#include <SteinsGate/Common/LoggerDefine.h>
+#include <SteinsGate/Common/Logo.h>
 
 #include <SteinsGate/Client/SGStruct.h>
 #include <SteinsGate/Client/SGConfig.h>
-#include <SteinsGate/Common/LoggerDefine.h>
+
+
 
 #ifdef DebugMode
 	#define LogTick(time, fmt, ...)							\

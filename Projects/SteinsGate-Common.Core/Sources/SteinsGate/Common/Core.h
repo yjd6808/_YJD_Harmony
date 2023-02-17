@@ -15,9 +15,10 @@
 #include <JCore/Math.h>
 #include <JCore/Time.h>
 #include <JCore/Stream.h>
-#include <JCore/Primitives/StringUtil.h>
 
+#include <JCore/Utils/Concatenation.h>
 #include <JCore/Utils/Console.h>
+
 #include <JCore/Threading/Thread.h>
 #include <JCore/FileSystem/File.h>
 #include <JCore/FileSystem/Path.h>
@@ -33,6 +34,8 @@
 
 #include <SteinsGate/Common/SGStruct.h>
 #include <SteinsGate/Common/SGConfig.h>
+#include <SteinsGate/Common/LoggerDefine.h>
+#include <SteinsGate/Common/Logo.h>
 
 #include <json.h>
 #include <set>
@@ -99,6 +102,9 @@ class alignas(SG_CACHELINE_SIZE) AlignedLinkedList : public SGLinkedList<T, TAll
 
 template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) AlignedHashMap : public SGHashMap<TKey, TValue, TAllocator> {};
+
+// 모든 프로젝트에서 사용하는 변수
+
 
 void InitializeCommonCore();
 void FinalizeCommonCore();
