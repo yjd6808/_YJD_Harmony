@@ -9,14 +9,17 @@
 #pragma once
 
 #include "Tutturu.h"
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-
-struct SGAnimationInfo;
-struct SGCharAnimationInfoLoader
+struct SGCharAnimationInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadCharAnimationInfo(
-		SGHashMap<int, SGAnimationInfo>(&charAnimationInfoMap)[CharType::Max],
-		SGVector<SGAnimationInfo*> (&charAnimationList)[CharType::Max]
-	);
+	~SGCharAnimationInfoLoader() override = default;
+
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Char_Animation; }
+	bool load() override;
+
+	SGVector<SGAnimationInfo*>& getAnimationList(CharType_t charCode);
+private:
+	SGVector<SGAnimationInfo*> m_CharAnimationList[CharType::Max];
 };

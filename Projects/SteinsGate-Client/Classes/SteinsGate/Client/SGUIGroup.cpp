@@ -214,8 +214,7 @@ void SGUIGroup::setPositionReal(float x, float y) {
 }
 
 void SGUIGroup::setPositionRealNoParent(float x, float y) {
-	SGClientInfo* pClientInfo = SGDataManager::get()->getClientInfo();
-	SGRect rect{ 0, 0, pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight };
+	SGRect rect{ 0, 0, CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight };
 	SGVec2 realPos = getPositionInRect(rect, x, y);
 	setPosition(realPos);
 }

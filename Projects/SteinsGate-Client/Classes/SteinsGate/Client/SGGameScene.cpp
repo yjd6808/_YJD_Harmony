@@ -72,7 +72,7 @@ bool SGGameScene::init()
 void SGGameScene::cmdLoadChar() {
     SGCharacterInfo info;
     SGDataManager* pConfig = SGDataManager::get();
-    SGCharBaseInfo* pBaseInfo = pConfig->getCharBaseInfo(CharType::Gunner);
+    SGCharInfo* pBaseInfo = pConfig->getCharInfo(CharType::Gunner);
 
     for (int i = 0; i < VisualType::Max; ++i) {
         info.VisualInfo.NpkIndex[i] = pBaseInfo->DefaultVisualNpkIndex[i];

@@ -10,7 +10,7 @@
 #include "Tutturu.h"
 #include "SGUILabel.h"
 
-#include <SteinsGate/Client/SGDataManager.h>
+#include <SteinsGate/Client/SGFontPackage.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -32,7 +32,8 @@ SGUILabel* SGUILabel::create(SGUIGroup* parent, SGUILabelInfo* labelInfo) {
 }
 
 bool SGUILabel::init() {
-	SGString fontName = SGDataManager::get()->getFontName(m_pInfo->FontCode);
+
+	SGString fontName = SGFontPackage::get()->getFontName(m_pInfo->FontCode);
 	SGString fontPath = Path::Combine(DataDirectoryPath_v, FontDirectoryName_v, fontName);
 
 	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), fontPath.Source(), m_pInfo->FontSize, Size::ZERO);

@@ -21,7 +21,7 @@
 
 SEnumBegin(CharType)
 Begin,
-Gunner = 0,
+Gunner = Begin,
 End = Gunner,
 Max
 SEnumMiddle(CharType)
@@ -95,7 +95,23 @@ WeaponLeft,
 WeaponRight,
 Max,
 None
-SEnumEnd(VisualType)
+SEnumMiddle(VisualType)
+
+inline static int ZOrder[Max]{
+	0, // Skin
+	1, // Shoes
+	2, // Pants
+	5, // Neck
+	2, // Hair
+	1, // Face
+	4, // Coat
+	3, // Cap
+	6, // Belt
+	8, // WeaponLeft
+	7  // WeaponRight
+};
+
+SEnumMiddleEnd(VisualType)
 
 
 // 인덱스 기반 타입이므로 무조건 0부터 시작해야한다.
@@ -275,12 +291,13 @@ SEnumBegin(SceneType)
 Login,
 ChannelSelect,
 Game,
-Max
+None,
+Max = None
 SEnumMiddle(SceneType)
 static constexpr const char* Name[Max]{
 	"로그인",
 	"채널 선택",
-	"게임"
+	"게임",
 };
 SEnumMiddleEnd(SceneType)
 
@@ -304,3 +321,46 @@ Sprite,
 Max
 SEnumEnd(UIElementType)
 
+
+
+SEnumBegin(ConfigFileType)
+Begin,
+Effect = Begin,
+Map,
+Monster,
+Obstacle,
+Projectile,
+Server,
+Tile,
+UI,
+Action,
+AI,
+AttackBox,
+AttackData,
+Channel,
+Char_Animation,
+Char_Base,
+Client,
+End,
+Max = End
+SEnumMiddle(ConfigFileType)
+
+static constexpr const char* FileName[Max]{
+	"effect.json"			,
+	"map.json"				,
+	"monster.json"			,
+	"obstacle.json"			,
+	"projectile.json"		,
+	"server.json"			,
+	"tile.json"				,
+	"ui.json"				,
+	"action.json"			,
+	"ai.json"				,
+	"attackbox.json"		,
+	"attackdata.json"		,
+	"channel.json"			,
+	"char_animation.json"	,
+	"char_base.json"		,
+	"client.json"
+};
+SEnumMiddleEnd(ConfigFileType)

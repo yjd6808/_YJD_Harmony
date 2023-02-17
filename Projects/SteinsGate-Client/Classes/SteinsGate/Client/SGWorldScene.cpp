@@ -22,6 +22,7 @@
 #include <SteinsGate/Client/SGActorListenerManager.h>
 #include <SteinsGate/Client/SGGlobal.h>
 #include <SteinsGate/Client/SGUIManager.h>
+#include <SteinsGate/Client/SGFontPackage.h>
 
 
 USING_NS_CC;
@@ -72,6 +73,7 @@ bool SGWorldScene::init() {
 	if (!Scene::init())
 		return false;
 
+	SGDataManager::get()->loadAll();
 	initEventListeners();
 	InitUILayer();
 	reserveScene(SceneType::Login);
@@ -166,15 +168,22 @@ void SGWorldScene::onExit() {
 
 	m_pUILayer->clearUnload();	// 삭제전 마지막 발악, 모든 UI 리소스 정리
 
+	// 특정 씬에서 강종시 WolrdScene이 먼저 종료를 시작하게됨 ㄷㄷ
+	// 그래서 수동으로 삭제해줘야한다.
+	if (m_pRunningScene) {
+		removeChild(m_pRunningScene);
+	}
+
+	delete SGFontPackage::get();
 	delete SGUIManager::get();
+	delete SGHostPlayer::get();
 	delete SGActorBox::get();
 	delete SGActorListenerManager::get();
-	delete SGHostPlayer::get();
 	delete SGDataManager::get();
 	delete SGImagePackManager::get();
 	delete SGGlobal::get();
 
-	Scene::onExit();	// 호출 필수네.. 자식 객체들 모두 정리; (이후로 자식노드 사용불가능 - m_pUILayer)
+	Scene::onExit();	// 마지막에 호출! 자식 객체들 모두 정리; (이후로 자식노드 사용불가능 - m_pUILayer 이런녀석)
 
 	_LogInfo_("월드 씬 종료");
 }

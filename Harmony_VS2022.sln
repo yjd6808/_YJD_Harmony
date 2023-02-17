@@ -115,6 +115,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Lobby", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Client", "Projects\SteinsGate-Client\Projects\SteinsGate-Client.vcxproj", "{F0278B0E-1014-4730-B622-67B9073F8C60}"
 	ProjectSection(ProjectDependencies) = postProject
+		{0A422C66-4F4D-424C-835F-2B9A99FE2737} = {0A422C66-4F4D-424C-835F-2B9A99FE2737}
 		{13FE9916-2585-4CE2-9ECC-5CFDDD3B7339} = {13FE9916-2585-4CE2-9ECC-5CFDDD3B7339}
 	EndProjectSection
 EndProject
@@ -122,8 +123,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{B52E3E
 	ProjectSection(SolutionItems) = preProject
 		Projects\SteinsGate-Data.Config\action.json = Projects\SteinsGate-Data.Config\action.json
 		Projects\SteinsGate-Data.Config\ai.json = Projects\SteinsGate-Data.Config\ai.json
+		Projects\SteinsGate-Data.Config\attackbox.json = Projects\SteinsGate-Data.Config\attackbox.json
 		Projects\SteinsGate-Data.Config\attackdata.json = Projects\SteinsGate-Data.Config\attackdata.json
-		Projects\SteinsGate-Data.Config\attack_box.json = Projects\SteinsGate-Data.Config\attack_box.json
 		Projects\SteinsGate-Data.Config\channel.json = Projects\SteinsGate-Data.Config\channel.json
 		Projects\SteinsGate-Data.Config\char_animation.json = Projects\SteinsGate-Data.Config\char_animation.json
 		Projects\SteinsGate-Data.Config\char_base.json = Projects\SteinsGate-Data.Config\char_base.json

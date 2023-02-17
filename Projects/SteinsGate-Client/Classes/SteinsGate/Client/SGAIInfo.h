@@ -8,20 +8,19 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGConfig.h>
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct SGAIInfo
+struct SGAIInfo : ConfigDataAbstract
 {
 	SGAIInfo() = default;
 	SGAIInfo(const SGAIInfo& other);
+	~SGAIInfo() override = default;
 
 	// 합친 확률 분해해서 얻기
 	float getWanderProb(AIWanderDecision_t decision);
 	float getTrackProb(AITrackDecision_t decision);
 	float getAngryProb(AIAngryDecision_t decision);
 
-
-	int Code;
 	float WanderProbs[AIWanderDecision::Max - 1];
 	float TrackProbs[AITrackDecision::Max - 1];
 	float AngryProbs[AIAngryDecision::Max - 1];

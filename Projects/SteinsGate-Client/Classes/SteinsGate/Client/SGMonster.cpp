@@ -23,7 +23,7 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGMonster::SGMonster(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo)
+SGMonster::SGMonster(SGMobInfo* baseInfo, SGAIInfo* aiInfo)
 	: SGAIActor(ActorType::Monster, baseInfo->Code, aiInfo)
 	, m_pBaseInfo(baseInfo)
 {
@@ -35,7 +35,7 @@ SGMonster::~SGMonster() {
 	}
 }
 
-SGMonster* SGMonster::create(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo) {
+SGMonster* SGMonster::create(SGMobInfo* baseInfo, SGAIInfo* aiInfo) {
 	SGMonster* pMonster = dbg_new SGMonster(baseInfo, aiInfo);
 
 	if (pMonster && pMonster->init()) {
@@ -56,7 +56,7 @@ void SGMonster::initActorSprite() {
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(m_pBaseInfo->PartsCount, m_pBaseInfo->AnimationList.Size());
 
 	for (int i = 0; i < m_pBaseInfo->PartsCount; ++i) {
-		SGMonsterPartInfo& part = m_pBaseInfo->Parts[i];
+		SGMobPartInfo& part = m_pBaseInfo->Parts[i];
 		spActorSpriteData->Parts.PushBack({ part.ZOrder, part.PackIndex, part.ImgIndex });
 	}
 
@@ -170,6 +170,6 @@ void SGMonster::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* 
 	m_pRunningActivity->onAnimationEnd(animation, texture);
 }
 
-SGMonsterInfo* SGMonster::getBaseInfo() {
+SGMobInfo* SGMonster::getBaseInfo() {
 	return m_pBaseInfo;
 }

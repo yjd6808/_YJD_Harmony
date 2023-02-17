@@ -90,7 +90,9 @@ void SGActorPartAnimation::constructFrames(int npkIndex, int imgIndex) {
 	// 애니메이션 프레임 구성
 	for (int i = 0; i < m_pAnimationInfo->Frames.Size(); ++i) {
 		SGFrameInfo* frameInfo = m_pAnimationInfo->Frames[i];
-		m_vAnimationFrames[i] = m_vFrames[frameInfo->FrameIndex];
+		int iFrameIndex = frameInfo->FrameIndex;
+		DebugAssertMsg(iFrameIndex >= 0 && iFrameIndex < m_vFrames.Size(), "전체 프레임 수(%d)에 포함되지 않는 애니메이션 프레임 인덱스(%d)입니다.", m_vFrames.Size(), iFrameIndex);
+		m_vAnimationFrames[i] = m_vFrames[iFrameIndex];
 	}
 }
 

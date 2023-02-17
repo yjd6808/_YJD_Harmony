@@ -8,9 +8,12 @@
 
 #pragma once
 
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct SGClientInfo
+struct SGClientInfo : ConfigDataAbstract
 {
+	~SGClientInfo() override = default;
+
 	float GameScale;
 	float ResolutionWidth;
 	float ResolutionHeight;

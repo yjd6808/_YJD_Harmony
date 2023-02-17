@@ -6,12 +6,10 @@
 #include "Tutturu.h"
 
 #include <SteinsGate/Client/AppDelegate.h>
-#include <JCore/Debug/MemoryLeakDetector.h>
-
+#include <SteinsGate/Client/GameCore.h>
 
 USING_NS_JC;
 USING_NS_DETAIL;
-
 
 int main()
 {
@@ -19,6 +17,7 @@ int main()
     InitializeCommonCore();
     InitializeDefaultLogger();
     InitializeClientLogo();
+    InitializeClientCore();
 
     int iResult = -1;
     {
@@ -26,6 +25,7 @@ int main()
         iResult = cocos2d::Application::getInstance()->run();
     }
 
+    FinalizeClientCore();
     FinalizeCommonCore();
     FinalizeDefaultLogger();
     return iResult;

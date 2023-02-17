@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include "Tutturu.h"
+#include "Core.h"
 
 class SGTextParser
 {

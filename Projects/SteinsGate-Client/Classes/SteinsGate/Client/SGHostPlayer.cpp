@@ -8,7 +8,7 @@
 #include "Tutturu.h"
 #include "SGHostPlayer.h"
 
-#include <SteinsGate/Client/SGCharBaseInfo.h>
+#include <SteinsGate/Client/SGCharInfo.h>
 #include <SteinsGate/Client/SGMapLayer.h>
 
 SGHostPlayer::SGHostPlayer()
@@ -30,7 +30,7 @@ void SGHostPlayer::initActionManager() {
 	CC_SAFE_DELETE(m_pActionManager);
 
 	m_pActionManager = dbg_new SGActionManager(this);
-	m_pActionManager->init(m_pCharacter->getBaseInfo()->Type);
+	m_pActionManager->init(m_pCharacter->getBaseInfo()->Code);
 }
 
 void SGHostPlayer::initController() {

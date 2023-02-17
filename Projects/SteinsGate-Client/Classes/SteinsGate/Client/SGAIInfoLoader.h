@@ -10,14 +10,18 @@
 
 
 
-#include "Tutturu.h"
 #include <SteinsGate/Client/SGAIInfo.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-
-struct SGAIInfoLoader
+struct SGAIInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadAIInfo(SGHashMap<int, SGAIInfo>& aiInfoMap);
+	~SGAIInfoLoader() override = default;
+
+	bool load() override;
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::AI; }
+
+	static void readAIInfo(Json::Value& aiRoot, Out_ SGAIInfo* aiInfo);
 };
 
 

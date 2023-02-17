@@ -10,14 +10,17 @@
 
 
 
-#include "Tutturu.h"
 #include <SteinsGate/Client/SGMapInfo.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
 
-struct SGMapInfoLoader
+struct SGMapInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadMapInfo(SGHashMap<int, SGMapInfo>& mapInfoMap);
+	bool load() override;
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Map; }
+
+	static void readMapInfo(Json::Value& mapRoot, Out_ SGMapInfo* mapInfo);
 };
 
 

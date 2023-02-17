@@ -28,7 +28,7 @@
       <Filter>Npk</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SGStruct.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGCommonDataManager.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.cpp">
       <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\LoggerAbstract.cpp">
@@ -42,6 +42,21 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Logo.cpp">
       <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGMobBaseInfoLoader.cpp">
+      <Filter>Data\MobBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGTextParser.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGJson.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.cpp">
+      <Filter>Data\CharBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +101,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SGStruct.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGCommonDataManager.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.h">
       <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\LoggerAbstract.h">
@@ -101,6 +116,30 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h">
       <Filter>Logger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGMobBaseInfo.h">
+      <Filter>Data\MobBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGMobBaseInfoLoader.h">
+      <Filter>Data\MobBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGJson.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGTextParser.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ConfigDataAbstract.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfo.h">
+      <Filter>Data\CharBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.h">
+      <Filter>Data\CharBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Npk">
@@ -111,6 +150,15 @@
     </Filter>
     <Filter Include="Logger">
       <UniqueIdentifier>{fc588ce2-7aa2-4072-a3d3-aa9f737e607e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\MobBase">
+      <UniqueIdentifier>{2f9aa599-999d-4d63-bf3e-df9f190b26cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{6490a88f-7352-4290-bdc4-4cd44e99280e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\CharBase">
+      <UniqueIdentifier>{c4c23334-31c3-447c-a7c6-d8e43d1e5968}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

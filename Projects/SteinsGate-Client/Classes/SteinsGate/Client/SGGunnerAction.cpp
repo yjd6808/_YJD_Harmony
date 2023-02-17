@@ -20,7 +20,8 @@ SGGunnerAction::~SGGunnerAction() {
 }
 
 void SGGunnerAction::play() {
-	m_pBaseInfo = (SGGunnerBaseInfo*)SGDataManager::get()->getCharBaseInfo(CharType::Gunner);
+	m_pBaseInfo = dynamic_cast<SGGunnerInfo*>(SGDataManager::get()->getCharInfo(CharType::Gunner));
+	DebugAssertMsg(m_pBaseInfo, "오잉! 거너 인포가 아닌데요?");
 	m_eWeaponType = GunnerWeaponType::Auto;		// TODO: 무기 정보 읽기
 
 	SGAction::play();

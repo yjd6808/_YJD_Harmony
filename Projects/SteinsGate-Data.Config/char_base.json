@@ -17,20 +17,6 @@
         "sliding_force": 950.0,
         "thickness_box": "0 -130 60 20",
 
-        "visual_z_order": {
-            "skin" : 0,
-            "shoes" : 1,
-            "pants" : 2,
-            "neck" : 5,
-            "hair" : 2,
-            "face" : 1,
-            "coat" : 4,
-            "cap" : 3,
-            "belt" : 6,
-            "weapon_right" : 8,
-            "weapon_left" : 7
-        },
-
 
         "auto_shot_count": 6,
         "bowgun_shot_count": 7,
@@ -77,6 +63,7 @@
 
         "down_recover_time": 0.8,
 
+        "default_weapon_type": 0,
         "default_visual_img": {
             "skin" : "gn_body0000.img",
             "shoes" : "gn_shoes0000a.img", 

@@ -11,12 +11,15 @@
 
 
 #include <SteinsGate/Client/SGClientInfo.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-
-struct SGClientInfoLoader
+struct SGClientInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadClientInfo(SGClientInfo& clientInfo);
+	bool load() override;
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Client; }
+
+	static void readClientInfo(Json::Value& clientRoot, Out_ SGClientInfo* clientInfo);
 };
 
 

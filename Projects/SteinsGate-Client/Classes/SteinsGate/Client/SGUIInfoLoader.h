@@ -10,19 +10,20 @@
 
 
 #include <SteinsGate/Client/SGUIInfo.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-
-struct SGUIInfoLoader
+struct SGUIInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadUIInfo(
-		SGHashMap<int, SGUIElementInfo*>& elementInfoMap
-	);
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::UI; }
+	bool load() override;
 
-	static void LoadElementCommon(Json::Value& value, SGUIElementInfo* info);
-	static SGUIElementInfo* LoadElementButton(Json::Value& value);
-	static SGUIElementInfo* LoadElementLabel(Json::Value& value);
-	static SGUIElementInfo* LoadElementSprite(Json::Value& value);
+	static void readElementCommon(Json::Value& elementRoot, Out_ SGUIElementInfo* elementInfo);
+	static void readElementGroup(Json::Value& uiGroupRoot, Out_ SGUIGroupInfo* groupInfo);
+	static SGUIElementInfo* readElementButton(Json::Value& buttonRoot);
+	static SGUIElementInfo* readElementLabel(Json::Value& labelRoot);
+	static SGUIElementInfo* readElementSprite(Json::Value& spriteRoot);
+	
 };
 
 

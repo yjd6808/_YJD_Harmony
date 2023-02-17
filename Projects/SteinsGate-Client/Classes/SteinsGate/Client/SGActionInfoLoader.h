@@ -12,11 +12,16 @@
 
 #pragma once
 
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 #include <SteinsGate/Client/SGActionInfo.h>
-#include <JCore/Container/HashMap.h>
 
-struct SGActionInfoLoader
+struct SGActionInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadActionInfo(SGHashMap<int, SGActionInfo>& actionInfoMap);
+	~SGActionInfoLoader() override = default;
+
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Action; }
+	bool load() override;
+
+	static void readActionInfo(Json::Value& actionRoot, Out_ SGActionInfo* actionInfo);
 };

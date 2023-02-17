@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ConsoleLogger.cpp">
       <SubType>
       </SubType>
@@ -52,19 +56,34 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkPackage.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkSound.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkSprite.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGCommonDataManager.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGJson.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGMobBaseInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SGStruct.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGTextParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ConfigDataAbstract.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ConsoleLogger.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -92,13 +111,28 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSprite.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteAbstract.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteRect.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGCommonDataManager.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGJson.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGMobBaseInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGMobBaseInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\SGStruct.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGTextParser.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

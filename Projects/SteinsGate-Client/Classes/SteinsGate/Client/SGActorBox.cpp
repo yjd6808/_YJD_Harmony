@@ -303,7 +303,7 @@ SGMonster* SGActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, 
 
 	SGDataManager* pDataManager = SGDataManager::get();
 
-	SGMonsterInfo* pMonsterInfo = pDataManager->getMonsterInfo(monsterCode);
+	SGMobInfo* pMonsterInfo = pDataManager->getMonsterInfo(monsterCode);
 	SGAIInfo* pAIInfo = pDataManager->getAIInfo(aiCode);
 
 	if (!m_hMonsterPool.Exist(monsterCode)) {

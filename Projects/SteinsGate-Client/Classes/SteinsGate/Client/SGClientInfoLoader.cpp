@@ -8,37 +8,36 @@
 #include "Tutturu.h"
 #include "SGClientInfoLoader.h"
 
-#include <SteinsGate/Client/SGImagePackManager.h>
-#include <SteinsGate/Client/SGGlobal.h>
-#include <SteinsGate/Client/SGJson.h>
-
-#include <JCore/FileSystem/Path.h>
-
-#include <json.h>
-#include <fstream>
-
 USING_NS_JS;
 USING_NS_JC;
 
-#define JsonFileName "client.json"
+bool SGClientInfoLoader::load() {
 
-bool SGClientInfoLoader::LoadClientInfo(SGClientInfo& clientInfo) {
-	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
-	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
-	try {
-		reader >> root;
+	if (!loadJson(root))
+		return false;
 
-		clientInfo.GameScale = root["game_scale"].asFloat();
-		clientInfo.ResolutionWidth = root["resolution_width"].asFloat();
-		clientInfo.ResolutionHeight = root["resolution_height"].asFloat();
+	try {
+		Json::Value clientInfoListRoot = root["client"];
+
+		for (int i = 0; i < clientInfoListRoot.size(); ++i) {
+			Value& clientRoot = clientInfoListRoot[i];
+			SGClientInfo* pInfo = dbg_new SGClientInfo;
+			readClientInfo(clientRoot, pInfo);
+			addData(pInfo);
+		}
 	}
 	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
+}
+
+void SGClientInfoLoader::readClientInfo(Json::Value& clientRoot, Out_ SGClientInfo* clientInfo) {
+	clientInfo->Code = clientRoot["code"].asInt();
+	clientInfo->GameScale = clientRoot["game_scale"].asFloat();
+	clientInfo->ResolutionWidth = clientRoot["resolution_width"].asFloat();
+	clientInfo->ResolutionHeight = clientRoot["resolution_height"].asFloat();
 }

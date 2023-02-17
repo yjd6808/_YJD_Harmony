@@ -12,12 +12,12 @@
 #include <SteinsGate/Client/SGAnimationInfo.h>
 #include <SteinsGate/Client/SGStruct.h>
 
-struct SGObstacleInfo
+struct SGObstacleInfo : ConfigDataAbstract
 {
 	SGObstacleInfo(int animationSize)
 		: AnimationList(animationSize) {}
+	~SGObstacleInfo() override = default;
 
-	int Code;
 	SGString Name;
 	int NpkIndex;
 	int ImgIndex;

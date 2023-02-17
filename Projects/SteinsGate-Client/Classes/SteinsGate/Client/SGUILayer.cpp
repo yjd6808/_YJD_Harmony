@@ -41,8 +41,7 @@ bool SGUILayer::init() {
 	if (!Layer::init())
 		return false;
 
-	SGClientInfo* pClientInfo = SGDataManager::get()->getClientInfo();
-	setContentSize(pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight);
+	setContentSize(CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight);
 	return true;
 }
 

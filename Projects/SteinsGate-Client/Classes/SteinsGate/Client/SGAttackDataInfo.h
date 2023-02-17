@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGConfig.h>
-#include "Tutturu.h"
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct SGAttackDataInfo
+struct SGAttackDataInfo : ConfigDataAbstract
 {
-	int Code;
+	~SGAttackDataInfo() override = default;
+
 	SGString Name;
 	AttackDamageType_t AttackDamageType;
 	float AttackDamageRatio;

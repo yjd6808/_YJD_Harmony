@@ -11,50 +11,46 @@
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGGlobal.h>
-#include <SteinsGate/Client/SGJson.h>
-
-#include <JCore/FileSystem/Path.h>
-
-#include <json.h>
-#include <fstream>
+#include <SteinsGate/Client/SGJsonEx.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
-#define JsonFileName "effect.json"
-
-bool SGEffectInfoLoader::LoadEffectInfo(SGHashMap<int, SGEffectInfo>& effectInfoMap) {
-	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
-	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "effect.json 파일을 여는데 실패했습니다.");
+bool SGEffectInfoLoader::load() {
 	Json::Value root;
+
+	if (!loadJson(root))
+		return false;
+
 	try {
-		reader >> root;
-
-		SGImagePackManager* pPackManager = SGImagePackManager::get();
-		SGDataManager* pDataManager = SGDataManager::get();
-
 		Value& effectListRoot = root["effect"];
 
 		for (int i = 0; i < effectListRoot.size(); ++i) {
 			Value& effectRoot = effectListRoot[i];
-			 Value& animationRoot = effectRoot["animation"];
-
-			SGEffectInfo info(animationRoot["frames"].size());
-			info.Code = effectRoot["code"].asInt();
-			info.Name = SGJson::getString(effectRoot["name"]);
-			info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(effectRoot["npk"]));
-			info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(effectRoot["img"]));
-			SGJson::parseAnimationInfo(animationRoot, info.Animation);
-			effectInfoMap.Insert(info.Code, Move(info));
+			int iAnimationCount = effectRoot["animation"].size();
+			SGEffectInfo* pInfo = dbg_new SGEffectInfo(iAnimationCount);
+			readEffectInfo(effectRoot, pInfo);
+			addData(pInfo);
 		}
-
 	}
 	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
+}
+
+
+
+void SGEffectInfoLoader::readEffectInfo(Json::Value& effectRoot, SGEffectInfo* effectInfo) {
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
+	SGDataManager* pDataManager = SGDataManager::get();
+
+	Value& animationRoot = effectRoot["animation"];
+	effectInfo->Code = effectRoot["code"].asInt();
+	effectInfo->Name = SGJsonEx::getString(effectRoot["name"]);
+	effectInfo->NpkIndex = pPackManager->getPackIndex(SGJsonEx::getString(effectRoot["npk"]));
+	effectInfo->ImgIndex = pPackManager->getPack(effectInfo->NpkIndex)->getImgIndex(SGJsonEx::getString(effectRoot["img"]));
+	SGJsonEx::parseAnimationInfo(animationRoot, effectInfo->Animation);
 }

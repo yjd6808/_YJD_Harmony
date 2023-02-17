@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Tutturu.h"
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 
 struct SGMapObjectInfo
 {
@@ -17,14 +17,14 @@ struct SGMapObjectInfo
 	int Y;
 };
 
-struct SGMapInfo
+struct SGMapInfo : ConfigDataAbstract
 {
 	SGMapInfo(int areaHeight, int npcCount, int obstacleCount)
 		: Area(areaHeight)
 		, NpcList(npcCount)
 		, ObstacleList(obstacleCount) {}
+	~SGMapInfo() override = default;
 
-	int Code;
 	SGString Name;
 	int MapWidth;
 	int MapHeight;

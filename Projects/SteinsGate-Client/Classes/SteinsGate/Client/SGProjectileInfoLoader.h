@@ -9,15 +9,16 @@
 #pragma once
 
 #include <SteinsGate/Client/SGProjectileInfo.h>
-#include <JCore/Container/HashMap.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-namespace Json { class Value; }
-
-struct SGProjectileInfoLoader
+struct SGProjectileInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadProjectileInfo(SGHashMap<int, SGProjectileInfo>& projectileInfoMap);
+	~SGProjectileInfoLoader() override = default;
+
+	ConfigFileType_t getConfigFileType() override { return  ConfigFileType::Projectile; }
+	bool load() override;
 private:
-	static void WriteOverridedProjectileInfo(Json::Value& projectile, SGProjectileInfo& info);
-	static void WriteProjectileInfo(Json::Value& projectile, SGProjectileInfo& info);
+	static void readOverridedProjectileInfo(Json::Value& projectileRoot, Out_ SGProjectileInfo* projectileInfo);
+	static void readProjectileInfo(Json::Value& projectileRoot, Out_ SGProjectileInfo* projectileInfo);
 };

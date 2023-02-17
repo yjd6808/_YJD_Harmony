@@ -8,10 +8,12 @@
 
 #pragma once
 
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct SGTileInfo
+struct SGTileInfo : ConfigDataAbstract
 {
-	int Code;
+	~SGTileInfo() override = default;
+
 	int NpkIndex;
 	int ImgIndex;
 	int SpriteIndex;

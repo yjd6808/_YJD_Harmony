@@ -9,8 +9,8 @@
 #include "SGDataManager.h"
 
 #include <SteinsGate/Client/SGActionInfoLoader.h>
-#include <SteinsGate/Client/SGMonsterInfoLoader.h>
-#include <SteinsGate/Client/SGCharBaseInfoLoader.h>
+#include <SteinsGate/Client/SGMobInfoLoader.h>
+#include <SteinsGate/Client/SGCharInfoLoader.h>
 #include <SteinsGate/Client/SGProjectileInfoLoader.h>
 #include <SteinsGate/Client/SGClientInfoLoader.h>
 #include <SteinsGate/Client/SGTileInfoLoader.h>
@@ -20,127 +20,166 @@
 #include <SteinsGate/Client/SGAttackDataInfoLoader.h>
 #include <SteinsGate/Client/SGCharAnimationInfoLoader.h>
 #include <SteinsGate/Client/SGEffectInfoLoader.h>
-#include <SteinsGate/Client/SGFontLoader.h>
 #include <SteinsGate/Client/SGUIInfoLoader.h>
 
 
-SGDataManager::SGDataManager() {}
-SGDataManager::~SGDataManager() {
+SGDataManager::SGDataManager()
+	: SGDataManagerAbstract()
+{}
 
-	for (int i = 0; i < CharType::Max; ++i) {
-		DeleteSafe(m_CharBaseInfoMap[i]);
-	}
-
-	m_UIElementInfoMap.Values().Extension().ForEach([](SGUIElementInfo* info) {
-		delete info;
-	});
+void SGDataManager::initializeLoader() {
+	 m_pConfigFileLoaders[ConfigFileType::Effect]			 = dbg_new SGEffectInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::Map]				 = dbg_new SGMapInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::Monster]			 = dbg_new SGMobInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::Obstacle]			 = dbg_new SGObstacleInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::Projectile]		 = dbg_new SGProjectileInfoLoader;
+	 // m_pConfigFileLoaders[ConfigFileType::Server]			 = 
+	 m_pConfigFileLoaders[ConfigFileType::Tile]				 = dbg_new SGTileInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::UI]				 = dbg_new SGUIInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::Action]			 = dbg_new SGActionInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::AI]				 = dbg_new SGAIInfoLoader;
+	 // m_pConfigFileLoaders[ConfigFileType::AttackBox]
+	 m_pConfigFileLoaders[ConfigFileType::AttackData]		 = dbg_new SGAttackDataInfoLoader;
+	 // m_pConfigFileLoaders[ConfigFileType::Channel]
+	 m_pConfigFileLoaders[ConfigFileType::Char_Animation]	 = dbg_new SGCharAnimationInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::Char_Base]	     = dbg_new SGCharInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::Client]			 = dbg_new SGClientInfoLoader;
+	 m_bInitialized = true;
 }
 
-void SGDataManager::LoadAllConfigs() {
-	// 내가 만든 설정파일 들은 아직 엄청 가벼워서 쓰레드가 필요없다.
+SGMobInfo* SGDataManager::getMonsterInfo(int mobCode) {
 
+	auto eType = ConfigFileType::Monster;
 
-	if (SGFontLoader::LoadFontInfo(m_FontNameToCodeMap, m_FontCodeToNameMap) &&
-		SGAttackDataInfoLoader::LoadAttackDataInfo(m_AttackDataInfoMap) &&
-		SGEffectInfoLoader::LoadEffectInfo(m_EffectInfoMap) &&
-		SGProjectileInfoLoader::LoadProjectileInfo(m_ProjectileInfoMap) &&		// 프로젝틸은 이펙트, 어택 데이터를 참조하므로 이후에 로딩
-		SGActionInfoLoader::LoadActionInfo(m_ActionInfoMap) &&
-		SGMonsterInfoLoader::LoadMonsterInfo(m_MonsterInfoMap) &&
-		SGCharBaseInfoLoader::LoadCharBaseInfo(m_CharBaseInfoMap) &&
-		SGCharAnimationInfoLoader::LoadCharAnimationInfo(m_CharAnimationInfoMap, m_CharAnimationList) &&
-		SGClientInfoLoader::LoadClientInfo(m_ClientInfo) && 
-		SGTileInfoLoader::LoadTileInfo(m_TileInfoMap) && 
-		SGObstacleInfoLoader::LoadObstacleInfo(m_ObstacleInfoMap) &&
-		SGMapInfoLoader::LoadMapInfo(m_MapInfoMap) &&
-		SGAIInfoLoader::LoadAIInfo(m_AIInfoMap) &&
-		SGUIInfoLoader::LoadUIInfo(m_UIElementInfoMap)) {
+	if (!m_bLoaded[eType])
+		load(eType);
 
-		_LogInfo_("기획파일 로딩완료");
-		return;
-	} 
-
-
-	DebugAssertMsg(false, "기획파일 로딩 실패");
-}
-
-
-
-SGMonsterInfo* SGDataManager::getMonsterInfo(int mobCode) {
-	DebugAssertMsg(m_MonsterInfoMap.Exist(mobCode), "해당 몬스터 정보가 존재하지 않습니다.");
-	return &m_MonsterInfoMap[mobCode];
+	return (SGMobInfo*)getData(eType, mobCode);
 }
 
 SGActionInfo* SGDataManager::getActionInfo(int actionCode) {
-	DebugAssertMsg(m_ActionInfoMap.Exist(actionCode), "해당 액션 정보(코드)가 존재하지 않습니다.");
-	return &m_ActionInfoMap[actionCode];
+	auto eType = ConfigFileType::Action;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGActionInfo*)getData(eType, actionCode);
 }
 
 
 SGProjectileInfo* SGDataManager::getProjectileInfo(int projectileCode) {
-	DebugAssertMsg(m_ProjectileInfoMap.Exist(projectileCode), "해당 프로젝틸 정보가 존재하지 않습니다.");
-	return &m_ProjectileInfoMap[projectileCode];
+	auto eType = ConfigFileType::Projectile;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGProjectileInfo*)getData(eType, projectileCode);
 }
 
-SGCharBaseInfo* SGDataManager::getCharBaseInfo(int charCode) {
-	DebugAssertMsg(charCode >= CharType::Begin && charCode <= CharType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
-	return m_CharBaseInfoMap[charCode];
+SGCharInfo* SGDataManager::getCharInfo(int charCode) {
+	auto eType = ConfigFileType::Char_Base;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGCharInfo*)getData(eType, charCode);
 }
 
-SGAnimationInfo* SGDataManager::getCharAnimationInfo(int charCode, int charAnimationCode) {
-	DebugAssertMsg(charCode >= CharType::Begin && charCode <= CharType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
-	DebugAssertMsg(m_CharAnimationInfoMap[charCode].Exist(charAnimationCode), "해당 캐릭터 애니메이션 정보가 존재하지 않습니다.");
-	return &m_CharAnimationInfoMap[charCode][charAnimationCode];
+SGAnimationInfo* SGDataManager::getCharAnimationInfo(int charAnimationCode) {
+	auto eType = ConfigFileType::Char_Animation;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGAnimationInfo*)getData(eType, charAnimationCode);
 }
 
 SGVector<SGAnimationInfo*>& SGDataManager::getCharAnimationInfoList(int charCode) {
-	DebugAssertMsg(charCode >= CharType::Begin && charCode <= CharType::End, "해당 캐릭터 타입은 존재하지 않습니다.");
-	return m_CharAnimationList[charCode];
+	auto eType = ConfigFileType::Char_Animation;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pLoader = (SGCharAnimationInfoLoader*)m_pConfigFileLoaders[eType];
+	return pLoader->getAnimationList((CharType_t)charCode);
+}
+
+SGClientInfo* SGDataManager::getClientInfo(int code) {
+	auto eType = ConfigFileType::Client;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGClientInfo*)getData(eType, code);
 }
 
 
 SGTileInfo* SGDataManager::getTileInfo(int tileCode) {
-	DebugAssertMsg(m_TileInfoMap.Exist(tileCode), "해당 타일 정보가 존재하지 않습니다.");
-	return &m_TileInfoMap[tileCode];
+	auto eType = ConfigFileType::Tile;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGTileInfo*)getData(eType, tileCode);
 }
 
 SGObstacleInfo* SGDataManager::getObstacleInfo(int obstacleCode) {
-	DebugAssertMsg(m_ObstacleInfoMap.Exist(obstacleCode), "해당 옵스터클 정보가 존재하지 않습니다.");
-	return &m_ObstacleInfoMap[obstacleCode];
+	auto eType = ConfigFileType::Obstacle;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGObstacleInfo*)getData(eType, obstacleCode);
 }
 
 SGMapInfo* SGDataManager::getMapInfo(int mapCode) {
-	DebugAssertMsg(m_TileInfoMap.Exist(mapCode), "해당 맵 정보가 존재하지 않습니다.");
-	return &m_MapInfoMap[mapCode];
+	auto eType = ConfigFileType::Map;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGMapInfo*)getData(eType, mapCode);
 }
 
 SGAIInfo* SGDataManager::getAIInfo(int aiCode) {
-	DebugAssertMsg(m_AIInfoMap.Exist(aiCode), "해당 AI 정보(코드)가 존재하지 않습니다.");
-	return &m_AIInfoMap[aiCode];
+	auto eType = ConfigFileType::AI;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGAIInfo*)getData(eType, aiCode);
 }
 
 SGAttackDataInfo* SGDataManager::getAttackDataInfo(int attackDataCode) {
-	DebugAssertMsg(m_AttackDataInfoMap.Exist(attackDataCode), "해당 공격 데이터 정보가 존재하지 않습니다.");
-	return &m_AttackDataInfoMap[attackDataCode];
+
+	auto eType = ConfigFileType::AttackData;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGAttackDataInfo*)getData(eType, attackDataCode);
+
 }
 
 SGEffectInfo* SGDataManager::getEffectInfo(int effectCode) {
-	DebugAssertMsg(m_EffectInfoMap.Exist(effectCode), "해당 이펙트 코드에 맞는 이펙트가 없다@~@~!@~!@~");
-	return &m_EffectInfoMap[effectCode];
-}
 
-int SGDataManager::getFontCode(const SGString& fontName) {
-	DebugAssertMsg(m_FontNameToCodeMap.Exist(fontName), "해당 폰트이름에 맞는 폰트 코드가 없습니다.");
-	return m_FontNameToCodeMap[fontName];
-}
+	auto eType = ConfigFileType::Effect;
 
-const SGString& SGDataManager::getFontName(int fontCode) {
-	DebugAssertMsg(m_FontCodeToNameMap.Exist(fontCode), "해당 폰트코드에 맞는 폰트 이름이 없습니다.");
-	return m_FontCodeToNameMap[fontCode];
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGEffectInfo*)getData(eType, effectCode);
 }
 
 SGUIElementInfo* SGDataManager::getUIElementInfo(int uiElementCode) {
-	DebugAssertMsg(m_UIElementInfoMap.Exist(uiElementCode), "해당 UI 엘리먼트 코드에 맞는 정보가 없습니다.");
-	return m_UIElementInfoMap[uiElementCode];
+
+	auto eType = ConfigFileType::UI;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (SGUIElementInfo*)getData(eType, uiElementCode);
+
 }
 
 

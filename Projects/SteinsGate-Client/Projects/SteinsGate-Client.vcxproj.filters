@@ -16,9 +16,6 @@
     <Filter Include="Data\Client">
       <UniqueIdentifier>{1ae4d134-d671-4e48-8a61-797e06e17672}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Monster">
-      <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\Projectile">
       <UniqueIdentifier>{c8ab47bd-66a6-43b5-a4a9-eb39aec47249}</UniqueIdentifier>
     </Filter>
@@ -67,9 +64,6 @@
     <Filter Include="Data\Action">
       <UniqueIdentifier>{0520369f-7e38-45ca-a074-74c59d0d3cb2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\CharBase">
-      <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\CharAnimation">
       <UniqueIdentifier>{ec65ec03-91ef-490c-8f38-45cecb6661cd}</UniqueIdentifier>
     </Filter>
@@ -91,11 +85,14 @@
     <Filter Include="Game\UI">
       <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Font">
-      <UniqueIdentifier>{0115c815-90f7-41c3-8536-514809c3be1d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\UI\Group">
       <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Mob">
+      <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Char">
+      <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,14 +108,11 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGlobal.cpp">
       <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGJson.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGJsonEx.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGComboKeyList.cpp">
       <Filter>Player\Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGTextParser.cpp">
-      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGActor.cpp">
       <Filter>Actor</Filter>
@@ -177,14 +171,14 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerGunShot.cpp">
       <Filter>Player\Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharBaseInfoLoader.cpp">
-      <Filter>Data\CharBase</Filter>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.cpp">
+      <Filter>Data\Char</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGClientInfoLoader.cpp">
       <Filter>Data\Client</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterInfoLoader.cpp">
-      <Filter>Data\Monster</Filter>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGMobInfoLoader.cpp">
+      <Filter>Data\Mob</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectileInfoLoader.cpp">
       <Filter>Data\Projectile</Filter>
@@ -328,9 +322,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.cpp">
       <Filter>Data\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGFontLoader.cpp">
-      <Filter>Data\Font</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGActorBox.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
@@ -355,6 +346,12 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUISprite.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGFontPackage.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\GameCore.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePackManager.h">
@@ -372,14 +369,11 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGlobal.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGJson.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGJsonEx.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGComboKeyList.h">
       <Filter>Player\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGTextParser.h">
-      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGHostPlayer.h">
       <Filter>Player</Filter>
@@ -450,11 +444,11 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileDefine.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharBaseInfoLoader.h">
-      <Filter>Data\CharBase</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.h">
+      <Filter>Data\Char</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharBaseInfo.h">
-      <Filter>Data\CharBase</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharInfo.h">
+      <Filter>Data\Char</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGClientInfoLoader.h">
       <Filter>Data\Client</Filter>
@@ -462,11 +456,11 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGClientInfo.h">
       <Filter>Data\Client</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterInfoLoader.h">
-      <Filter>Data\Monster</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGMobInfoLoader.h">
+      <Filter>Data\Mob</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterInfo.h">
-      <Filter>Data\Monster</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGMobInfo.h">
+      <Filter>Data\Mob</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileInfo.h">
       <Filter>Data\Projectile</Filter>
@@ -637,9 +631,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.h">
       <Filter>Data\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGFontLoader.h">
-      <Filter>Data\Font</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIManager.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
@@ -666,6 +657,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUISprite.h">
       <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGFontPackage.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\GameCore.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

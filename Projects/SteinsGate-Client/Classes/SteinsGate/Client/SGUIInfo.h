@@ -8,14 +8,13 @@
 
 #pragma once
 
-#include "Tutturu.h"
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct SGUIElementInfo
+struct SGUIElementInfo : ConfigDataAbstract
 {
-	virtual ~SGUIElementInfo() = default;
+	~SGUIElementInfo() override = default;
 
 	UIElementType_t Type;
-	int Code;
 	SGString Name;
 };
 

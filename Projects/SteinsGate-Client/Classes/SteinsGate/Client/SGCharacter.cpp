@@ -39,7 +39,7 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 	SGCharacter* pCharacter = dbg_new SGCharacter(code, info);
 
 	if (pCharacter && pCharacter->init()) {
-		SGCharBaseInfo* pBaseInfo = SGDataManager::get()->getCharBaseInfo(code);
+		SGCharBaseInfo* pBaseInfo = SGDataManager::get()->getCharInfo(code);
 		pCharacter->m_pBaseInfo = pBaseInfo;
 		pCharacter->initThicknessBox(pBaseInfo->ThicknessBox);
 		pCharacter->initActorSprite();
@@ -53,7 +53,6 @@ SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
 
 void SGCharacter::initActorSprite() {
 	SGDataManager* pDataManager = SGDataManager::get();
-	SGImagePackManager* pImgPackManager = SGImagePackManager::get();
 	AnimationList& animationList = pDataManager->getCharAnimationInfoList(m_iCode);
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(15, animationList.Size());
 
@@ -61,7 +60,7 @@ void SGCharacter::initActorSprite() {
 		if (m_CharInfo.VisualInfo.ImgIndex[i] != InvalidValue_v &&
 			m_CharInfo.VisualInfo.NpkIndex[i] != InvalidValue_v) {
 			spActorSpriteData->Parts.PushBack({
-				m_pBaseInfo->DefaultVisualZOrder[i],
+				VisualType::ZOrder[i],
 				m_CharInfo.VisualInfo.NpkIndex[i],
 				m_CharInfo.VisualInfo.ImgIndex[i]
 			});

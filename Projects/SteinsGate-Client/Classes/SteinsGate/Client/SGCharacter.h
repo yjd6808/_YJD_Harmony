@@ -9,7 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Client/SGPhysicsActor.h>
-#include <SteinsGate/Client/SGCharBaseInfo.h>
+#include <SteinsGate/Client/SGCharInfo.h>
 
 class SGCharacter : public SGPhysicsActor
 {

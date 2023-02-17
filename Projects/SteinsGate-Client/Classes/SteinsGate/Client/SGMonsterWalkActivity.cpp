@@ -78,7 +78,7 @@ void SGMonsterWalkActivity::updateMove(float dt, SGMapLayer* pMapLayer) {
 		return;
 	}
 
-	SGMonsterInfo* pMonsterInfo = m_pMonster->getBaseInfo();
+	SGMobInfo* pMonsterInfo = m_pMonster->getBaseInfo();
 	SGMapInfo* pMapInfo = pMapLayer->getMapInfo();
 
 	float fSpeedX = pMonsterInfo->MoveSpeedX * FPS1_v;

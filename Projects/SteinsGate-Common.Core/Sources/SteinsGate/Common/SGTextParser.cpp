@@ -5,10 +5,8 @@
  *
  */
 
-#include "Tutturu.h"
+#include "Core.h"
 #include "SGTextParser.h"
-
-#include <SteinsGate/Client/SGConfig.h>
 
 char* SGTextParser::parserFrameInfo(SGString& frameString, 
 	Out_ int& frameIndex, 
@@ -89,7 +87,7 @@ void SGTextParser::parserFloatNumbers(char* source, int len, float* numArr, int 
 
 		if (source[i] == ' ' || source[i] == NULL) {
 			buff[iBuffIdx] = NULL;
-			numArr[iPtrIdx++] = std::atof(buff);
+			numArr[iPtrIdx++] = (float)std::atof(buff);
 			iBuffIdx = 0;
 			++iReadCount;
 			continue;

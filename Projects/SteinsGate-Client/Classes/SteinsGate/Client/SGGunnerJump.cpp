@@ -14,7 +14,7 @@
 #include <SteinsGate/Client/SGAnimationDefine.h>
 #include <SteinsGate/Client/SGProjectileDefine.h>
 #include <SteinsGate/Client/SGActionDefine.h>
-#include <SteinsGate/Client/SGCharBaseInfo.h>
+#include <SteinsGate/Client/SGCharInfo.h>
 
 #define MinimumShotHeight 30.0f
 

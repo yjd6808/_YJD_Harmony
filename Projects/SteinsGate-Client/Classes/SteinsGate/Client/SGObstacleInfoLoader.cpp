@@ -10,59 +10,55 @@
 #include "SGObstacleInfoLoader.h"
 
 #include <SteinsGate/Client/SGImagePackManager.h>
-#include <SteinsGate/Client/SGJson.h>
-
-#include <JCore/FileSystem/Path.h>
-
-#include <json.h>
-#include <fstream>
-
+#include <SteinsGate/Client/SGJsonEx.h>
 
 USING_NS_JC;
 USING_NS_JS;
 
-#define JsonFileName "obstacle.json"
+bool SGObstacleInfoLoader::load() {
 
-bool SGObstacleInfoLoader::LoadObstacleInfo(SGHashMap<int, SGObstacleInfo>& obstacleInfoMap) {
-	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
-	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
 	Json::Value root;
-	try {
-		reader >> root;
 
+	if (!loadJson(root))
+		return false;
+	try {
 
 		Json::Value obstacleListRoot = root["obstacle"];
 		for (int i = 0; i < obstacleListRoot.size(); ++i) {
-			Value& projectile = obstacleListRoot[i];
-			Value& animationListRoot = projectile["animation"];
-			DebugAssertMsg(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
-			SGObstacleInfo info(animationListRoot.size());
-			info.Code = projectile["code"].asInt();
-			info.Name = SGJson::getString(projectile["name"]);
-			info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(projectile["npk"]));
-			info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(projectile["img"]));
-			SGJson::parseThicknessInfo(projectile["thickness_box"], info.ThicknessBox);
-			info.Hitable = projectile["hitable"].asBool();
-			info.Colliadalble = projectile["collidable"].asBool();
-			info.ZOrederable = projectile["z_orderable"].asBool();
+			Value& obstacleRoot = obstacleListRoot[i];
+			Value& animationListRoot = obstacleRoot["animation"];
+			DebugAssertMsg(animationListRoot.size() > 0, "애니메이션이 없는 옵스터클입니다.");
+			SGObstacleInfo* pInfo = dbg_new SGObstacleInfo(animationListRoot.size());
 
-
-			for (ArrayIndex j = 0; j < animationListRoot.size(); ++j) {
-				Value& animationRoot = animationListRoot[j];
-				SGAnimationInfo animationInfo(animationRoot["frames"].size());
-				SGJson::parseAnimationInfo(animationRoot, animationInfo);
-				info.AnimationList.PushBack(Move(animationInfo));
-			}
-
-			obstacleInfoMap.Insert(info.Code, Move(info));
+			readObstacleInfo(obstacleRoot, pInfo);
+			addData(pInfo);
 		}
 	}
 	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
 		return false;
 	}
 
 	return true;
+}
+
+void SGObstacleInfoLoader::readObstacleInfo(Json::Value& obstacleRoot, SGObstacleInfo* obstacleInfo) {
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
+	obstacleInfo->Code = obstacleRoot["code"].asInt();
+	obstacleInfo->Name = SGJsonEx::getString(obstacleRoot["name"]);
+	obstacleInfo->NpkIndex = pPackManager->getPackIndex(SGJsonEx::getString(obstacleRoot["npk"]));
+	obstacleInfo->ImgIndex = pPackManager->getPack(obstacleInfo->NpkIndex)->getImgIndex(SGJsonEx::getString(obstacleRoot["img"]));
+	SGJsonEx::parseThicknessInfo(obstacleRoot["thickness_box"], obstacleInfo->ThicknessBox);
+	obstacleInfo->Hitable = obstacleRoot["hitable"].asBool();
+	obstacleInfo->Colliadalble = obstacleRoot["collidable"].asBool();
+	obstacleInfo->ZOrederable = obstacleRoot["z_orderable"].asBool();
+
+	Value& animationListRoot = obstacleRoot["animation"];
+	for (ArrayIndex j = 0; j < animationListRoot.size(); ++j) {
+		Value& animationRoot = animationListRoot[j];
+		SGAnimationInfo animationInfo(animationRoot["frames"].size());
+		SGJsonEx::parseAnimationInfo(animationRoot, animationInfo);
+		obstacleInfo->AnimationList.PushBack(Move(animationInfo));
+	}
+
 }

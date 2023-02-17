@@ -11,12 +11,17 @@
 
 
 #include <SteinsGate/Client/SGAttackDataInfo.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-
-struct SGAttackDataInfoLoader
+struct SGAttackDataInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadAttackDataInfo(SGHashMap<int, SGAttackDataInfo>& attackDataInfoMap);
+	~SGAttackDataInfoLoader() override = default;
+
+	bool load() override;
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::AttackData; }
+
+	static void readAttackDataInfo(Json::Value& attackDataRoot, Out_ SGAttackDataInfo* attackDataInfo);
 };
 
 

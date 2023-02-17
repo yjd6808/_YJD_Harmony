@@ -15,6 +15,7 @@
 
 #include <SteinsGate/Client/SGStruct.h>
 #include <SteinsGate/Client/SGConfig.h>
+#include <SteinsGate/Client/GameCore.h>
 
 
 

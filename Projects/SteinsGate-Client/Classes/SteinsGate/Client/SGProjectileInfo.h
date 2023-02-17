@@ -12,7 +12,7 @@
 
 struct SGAttackDataInfo;
 struct SGEffectInfo;
-struct SGProjectileInfo
+struct SGProjectileInfo : ConfigDataAbstract
 {
 	SGProjectileInfo() = default;
 	SGProjectileInfo(const SGProjectileInfo& other) = default;
@@ -21,9 +21,8 @@ struct SGProjectileInfo
 	SGProjectileInfo& operator=(const SGProjectileInfo& other) = default;
 	SGProjectileInfo& operator=(SGProjectileInfo&& other) noexcept;
 
-	~SGProjectileInfo();
+	~SGProjectileInfo() override;
 
-	int Code;
 	int ProjectileListenerCode;
 	SGAttackDataInfo* AttackData;
 	SGString Name;

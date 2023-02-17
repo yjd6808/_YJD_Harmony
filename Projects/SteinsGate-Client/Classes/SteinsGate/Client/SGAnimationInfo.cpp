@@ -11,7 +11,7 @@
 USING_NS_JC;
 
 SGAnimationInfo::SGAnimationInfo(const SGAnimationInfo&) {
-	DebugAssertMsg(false, "복사 생성 금지");
+	DebugAssertMsg(false, "복사 생성 금지");	// 이 객체는 조회 전용 데이터이기땜
 }
 
 SGAnimationInfo::SGAnimationInfo(SGAnimationInfo&& other) noexcept {
@@ -35,6 +35,5 @@ SGAnimationInfo::~SGAnimationInfo() {
 	for (int i = 0; i < Frames.Size(); ++i) {
 		DeleteSafe(Frames[i]);
 	}
-	
 }
 

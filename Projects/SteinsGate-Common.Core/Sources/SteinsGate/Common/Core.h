@@ -38,6 +38,7 @@
 #include <SteinsGate/Common/Logo.h>
 
 #include <json.h>
+#include <fstream>
 #include <set>
 #include <map>
 

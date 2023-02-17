@@ -8,11 +8,13 @@
 
 #pragma once
 
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 #include <SteinsGate/Client/SGComboKeyList.h>
 
-struct SGActionInfo
+struct SGActionInfo : ConfigDataAbstract
 {
-	int Code;
+	~SGActionInfo() override = default;
+
 	SGString ActionName;
 	bool ForceCancelable;
 	bool Moveable;

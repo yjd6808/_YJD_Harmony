@@ -8,14 +8,18 @@
 
 #pragma once
 
-#include "Tutturu.h"
 #include <SteinsGate/Client/SGTileInfo.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
 
-struct SGTileInfoLoader
+struct SGTileInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadTileInfo(SGHashMap<int, SGTileInfo>& tileInfoMap);
+	~SGTileInfoLoader() override = default;
+
+	bool load() override;
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Tile; }
+	static void readTileInfo(Json::Value& tileRoot, Out_ SGTileInfo* tileInfo);
 };
 
 

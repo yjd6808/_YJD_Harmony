@@ -9,14 +9,15 @@
 #pragma once
 
 #include <SteinsGate/Client/SGAnimationInfo.h>
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct SGEffectInfo
+struct SGEffectInfo : ConfigDataAbstract
 {
 	SGEffectInfo() {}
 	SGEffectInfo(int animationFrameSize) :
 		Animation(animationFrameSize) {}
+	~SGEffectInfo() override = default;
 
-	int Code;
 	SGString Name;
 	int NpkIndex;
 	int ImgIndex;

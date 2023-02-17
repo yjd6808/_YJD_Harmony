@@ -11,11 +11,15 @@
 
 
 #include <SteinsGate/Client/SGEffectInfo.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-struct SGEffectInfoLoader
+struct SGEffectInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadEffectInfo(SGHashMap<int, SGEffectInfo>& effectInfoMap);
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Effect; }
+	bool load() override;
+
+	static void readEffectInfo(Json::Value& effectRoot, Out_ SGEffectInfo* effectInfo);
 };
 
 

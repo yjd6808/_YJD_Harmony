@@ -109,7 +109,11 @@ public:
 	float getFrameHeightF()  override { return 1; }
 
 	int getTargetFrameIndex()		 override { return m_iTargetFrameIndex; }
+
+#pragma warning(push, 1)
+#pragma warning(disable: 4172) // return local variable address
 	const NpkSpriteRect& getRect() 	 override { return {}; }
+#pragma warning(pop)
 	SGTexture* getTexture() override { return nullptr; }
 
 	bool isLink()  override { return true;	}

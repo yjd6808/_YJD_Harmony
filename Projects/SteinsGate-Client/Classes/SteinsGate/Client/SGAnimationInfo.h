@@ -9,7 +9,9 @@
 #pragma once
 
 #include "Tutturu.h"
+
 #include <SteinsGate/Client/SGStruct.h>
+#include <SteinsGate/Common/ConfigDataAbstract.h>
 
 struct SGFrameInfo
 {
@@ -24,7 +26,7 @@ struct SGFrameInfoAttackBoxInstant : SGFrameInfo
 	SGActorRect Rect;
 };
 
-struct SGAnimationInfo
+struct SGAnimationInfo : ConfigDataAbstract
 {
 	SGAnimationInfo() {}
 	SGAnimationInfo(int frameSize) : Frames(frameSize) {}
@@ -34,9 +36,8 @@ struct SGAnimationInfo
 
 	SGAnimationInfo& operator=(const SGAnimationInfo&);
 	SGAnimationInfo& operator=(SGAnimationInfo&& other) noexcept;
-	~SGAnimationInfo();
+	~SGAnimationInfo() override;
 
-	int Code;
 	bool Loop;
 	SGString Name;
 

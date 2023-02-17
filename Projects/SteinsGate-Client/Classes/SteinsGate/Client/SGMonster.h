@@ -12,16 +12,16 @@
 
 
 #include <SteinsGate/Client/SGAIActor.h>
-#include <SteinsGate/Client/SGMonsterInfo.h>
+#include <SteinsGate/Client/SGMobInfo.h>
 #include <SteinsGate/Client/SGAIInfo.h>
 
 class SGMonster : public SGAIActor
 {
 public:
-	SGMonster(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo);
+	SGMonster(SGMobInfo* baseInfo, SGAIInfo* aiInfo);
 	~SGMonster() override;
 
-	static SGMonster* create(SGMonsterInfo* baseInfo, SGAIInfo* aiInfo);
+	static SGMonster* create(SGMobInfo* baseInfo, SGAIInfo* aiInfo);
 	void initActorSprite() override;
 	void initAIActivities() override;
 	void initListener(SGActorListener* listener) override;
@@ -39,9 +39,9 @@ public:
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 
-	SGMonsterInfo* getBaseInfo();
+	SGMobInfo* getBaseInfo();
 private:
-	SGMonsterInfo* m_pBaseInfo;
+	SGMobInfo* m_pBaseInfo;
 };
 
 

@@ -10,7 +10,7 @@
 #include "SGTileInfoLoader.h"
 
 #include <SteinsGate/Client/SGImagePackManager.h>
-#include <SteinsGate/Client/SGJson.h>
+#include <SteinsGate/Client/SGJsonEx.h>
 
 #include <JCore/FileSystem/Path.h>
 
@@ -23,26 +23,22 @@ USING_NS_JS;
 
 #define JsonFileName "tile.json"
 
-bool SGTileInfoLoader::LoadTileInfo(SGHashMap<int, SGTileInfo>& tileInfoMap) {
-	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
-	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
-	Json::Value root;
-	try {
-		reader >> root;
+bool SGTileInfoLoader::load() {
 
+	Json::Value root;
+
+	if (!loadJson(root))
+		return false;
+
+	try {
 		Json::Value tileListRoot = root["tile"];
 
 		for (int i = 0; i < tileListRoot.size(); ++i) {
 			Value& tileRoot = tileListRoot[i];
+			SGTileInfo* pInfo = dbg_new SGTileInfo;
 
-			SGTileInfo info;
-			info.Code = tileRoot["code"].asInt();
-			info.NpkIndex = pPackManager->getPackIndex(SGJson::getString(tileRoot["npk"]));
-			info.ImgIndex = pPackManager->getPack(info.NpkIndex)->getImgIndex(SGJson::getString(tileRoot["img"]));
-			info.SpriteIndex = tileRoot["index"].asInt();
-			tileInfoMap.Insert(info.Code, info);
+			readTileInfo(tileRoot, pInfo);
+			addData(pInfo);
 		}
 	}
 	catch (std::exception& ex) {
@@ -51,4 +47,12 @@ bool SGTileInfoLoader::LoadTileInfo(SGHashMap<int, SGTileInfo>& tileInfoMap) {
 	}
 
 	return true;
+}
+
+void SGTileInfoLoader::readTileInfo(Json::Value& tileRoot, SGTileInfo* tileInfo) {
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
+	tileInfo->Code = tileRoot["code"].asInt();
+	tileInfo->NpkIndex = pPackManager->getPackIndex(SGJsonEx::getString(tileRoot["npk"]));
+	tileInfo->ImgIndex = pPackManager->getPack(tileInfo->NpkIndex)->getImgIndex(SGJsonEx::getString(tileRoot["img"]));
+	tileInfo->SpriteIndex = tileRoot["index"].asInt();
 }

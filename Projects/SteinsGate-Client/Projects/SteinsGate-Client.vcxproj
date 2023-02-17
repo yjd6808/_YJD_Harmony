@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\GameCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\main.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGActorBox.cpp">
       <SubType>
@@ -60,7 +64,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGFontLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGFontPackage.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -163,7 +167,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharBaseInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGActorPartSprite.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGDataManager.cpp">
       <SubType>
@@ -192,7 +196,7 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePackManager.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGameScene.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGJson.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGJsonEx.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -200,7 +204,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGMobInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGHostPlayer.cpp">
       <SubType>
       </SubType>
@@ -239,10 +243,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGStruct.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGTextParser.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -305,6 +305,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Classes\SteinsGate\Client\GameCore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGActorBox.h">
       <SubType>
       </SubType>
@@ -403,7 +407,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGFontLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGFontPackage.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -500,7 +504,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGJson.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGJsonEx.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -508,11 +512,11 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharBaseInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGMobInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -525,7 +529,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharBaseInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -539,7 +543,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePackManager.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGameScene.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGMobInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -585,10 +589,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGStruct.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGTextParser.h">
       <SubType>
       </SubType>
     </ClInclude>

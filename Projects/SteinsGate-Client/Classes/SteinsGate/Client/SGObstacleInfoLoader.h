@@ -10,14 +10,19 @@
 
 
 
-#include "Tutturu.h"
 #include <SteinsGate/Client/SGObstacleInfo.h>
+#include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
 
-struct SGObstacleInfoLoader
+struct SGObstacleInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	static bool LoadObstacleInfo(SGHashMap<int, SGObstacleInfo>& obstacleInfoMap);
+	~SGObstacleInfoLoader() override = default;
+
+	bool load() override;
+	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Obstacle; }
+
+	static void readObstacleInfo(Json::Value& obstacleRoot, Out_ SGObstacleInfo* obstacleInfo);
 };
 
 

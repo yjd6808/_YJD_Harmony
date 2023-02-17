@@ -10,7 +10,7 @@
 
 
 #include <SteinsGate/Client/SGAction.h>
-#include <SteinsGate/Client/SGCharBaseInfo.h>
+#include <SteinsGate/Client/SGCharInfo.h>
 
 class SGGunnerAction : public SGAction {
 public:
@@ -20,8 +20,7 @@ public:
 	void play() override;
 	bool onConditionCheck() override { return true; }
 protected:
-	
-	SGGunnerBaseInfo* m_pBaseInfo;
+	SGGunnerInfo* m_pBaseInfo;
 	GunnerWeaponType_t m_eWeaponType;
 };
 

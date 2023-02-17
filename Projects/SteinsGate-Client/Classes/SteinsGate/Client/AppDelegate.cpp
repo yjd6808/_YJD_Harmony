@@ -39,19 +39,18 @@ void AppDelegate::initGLContextAttrs()
 bool AppDelegate::applicationDidFinishLaunching() {
     
     SGDataManager* pDataManager = SGDataManager::get();
-    SGClientInfo* pClientInfo = pDataManager->getClientInfo();
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     
     if (glview == nullptr) {
-        glview = GLViewImpl::createWithRect(AppName, SGRect(0, 0, pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight));
+        glview = GLViewImpl::createWithRect(AppName, SGRect(0, 0, CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight));
         director->setOpenGLView(glview);
     }
     
     director->setDisplayStats(false);
     director->setAnimationInterval(1.0f / 120);
-    glview->setDesignResolutionSize(pClientInfo->ResolutionWidth, pClientInfo->ResolutionHeight, ResolutionPolicy::NO_BORDER);
+    glview->setDesignResolutionSize(CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight, ResolutionPolicy::NO_BORDER);
     director->setContentScaleFactor(1.0f);
     FileUtils::getInstance()->setPopupNotify(false);    // 파일못찾은 경우 알람 안하도록 함
     SGConsole::SetSize(1200, 800);

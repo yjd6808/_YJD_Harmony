@@ -11,30 +11,20 @@
 #include "SGUIInfoLoader.h"
 
 #include <SteinsGate/Client/SGImagePackManager.h>
-#include <SteinsGate/Client/SGJson.h>
+#include <SteinsGate/Client/SGJsonEx.h>
 #include <SteinsGate/Client/SGDataManager.h>
-
-#include <JCore/FileSystem/Path.h>
-
-#include <json.h>
-#include <fstream>
-
-
-
+#include <SteinsGate/Client/SGFontPackage.h>
 
 USING_NS_JC;
 USING_NS_JS;
 
-#define JsonFileName "ui.json"
-
-bool SGUIInfoLoader::LoadUIInfo(SGHashMap<int, SGUIElementInfo*>& elementInfoMap)
+bool SGUIInfoLoader::load()
 {
-	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, JsonFileName);
-	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "monster.json 파일을 여는데 실패했습니다.");
-	Value root;
+	Json::Value root;
+
+	if (!loadJson(root))
+		return false;
 	try {
-		reader >> root;
 
 		// ========================================================================
 		//  UI 엘리먼트 로딩
@@ -47,14 +37,14 @@ bool SGUIInfoLoader::LoadUIInfo(SGHashMap<int, SGUIElementInfo*>& elementInfoMap
 			int eElemType = uiElementRoot["type"].asInt();
 
 			switch (eElemType) {
-			case UIElementType::Button: pElemInfo = LoadElementButton(uiElementRoot); break;
-			case UIElementType::Label: pElemInfo = LoadElementLabel(uiElementRoot); break;
-			case UIElementType::Sprite: pElemInfo = LoadElementSprite(uiElementRoot); break;
+			case UIElementType::Button: pElemInfo = readElementButton(uiElementRoot); break;
+			case UIElementType::Label: pElemInfo = readElementLabel(uiElementRoot); break;
+			case UIElementType::Sprite: pElemInfo = readElementSprite(uiElementRoot); break;
 			default: break;
 			}
 
 			DebugAssertMsg(pElemInfo != nullptr, "UI 엘리먼트 로딩에 실패했습니다.");
-			elementInfoMap.Insert(pElemInfo->Code, pElemInfo);
+			addData(pElemInfo);
 		}
 
 
@@ -67,39 +57,13 @@ bool SGUIInfoLoader::LoadUIInfo(SGHashMap<int, SGUIElementInfo*>& elementInfoMap
 			Value& groupElemInfoListRoot = uiGroupRoot["elements"];
 			SGUIGroupInfo* groupInfo = dbg_new SGUIGroupInfo(groupElemInfoListRoot.size());
 
-			LoadElementCommon(uiGroupRoot, groupInfo);
-			float fRect[4];
-			SGJson::parseFloatNumberN(uiGroupRoot["rect"], fRect, 4);
-			groupInfo->Rect.origin.x = fRect[0];
-			groupInfo->Rect.origin.y = fRect[1];
-			groupInfo->Rect.size.width = fRect[2];
-			groupInfo->Rect.size.height = fRect[3];
-			groupInfo->HorizontalAlignment = (HorizontalAlignment_t)uiGroupRoot["horizontal_align"].asInt();
-			groupInfo->Type = UIElementType::Group;
-			groupInfo->VerticalAlignment = (VerticalAlignment_t)uiGroupRoot["vertical_align"].asInt();
-
-			for (int j = 0; j < groupElemInfoListRoot.size(); ++j) {
-				Value& groupElemInfoRoot = groupElemInfoListRoot[j];
-				SGUIGroupElemInfo groupElemInfo;
-				int groupElemInfoData[4];
-				SGJson::parseIntNumberN(groupElemInfoRoot, groupElemInfoData, 4);
-
-				groupElemInfo.Code = groupElemInfoData[0];
-				groupElemInfo.ZOrder = groupElemInfoData[1];
-				groupElemInfo.X = groupElemInfoData[2];
-				groupElemInfo.Y = groupElemInfoData[3];
-				groupInfo->InfoList.PushBack(groupElemInfo);
-			}
-
-			groupInfo->InfoList.Sort([](SGUIGroupElemInfo& lhs, SGUIGroupElemInfo& rhs) {
-				return lhs.ZOrder < rhs.ZOrder;
-			});
-
-			elementInfoMap.Insert(groupInfo->Code, groupInfo);
+			readElementCommon(uiGroupRoot, groupInfo);
+			readElementGroup(uiGroupRoot, groupInfo);
+			addData(groupInfo);
 		}
 	}
 	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
 		return false;
 	}
 
@@ -108,20 +72,50 @@ bool SGUIInfoLoader::LoadUIInfo(SGHashMap<int, SGUIElementInfo*>& elementInfoMap
 
 
 
-void SGUIInfoLoader::LoadElementCommon(Value& value, SGUIElementInfo* info) {
-	info->Code = value["code"].asInt();
-	info->Name = SGJson::getString(value["name"]);
+void SGUIInfoLoader::readElementCommon(Value& elementRoot, SGUIElementInfo* elementInfo) {
+	elementInfo->Code = elementRoot["code"].asInt();
+	elementInfo->Name = SGJsonEx::getString(elementRoot["name"]);
+}
+
+void SGUIInfoLoader::readElementGroup(Json::Value& uiGroupRoot, SGUIGroupInfo* groupInfo) {
+	float fRect[4];
+	SGJsonEx::parseFloatNumberN(uiGroupRoot["rect"], fRect, 4);
+	groupInfo->Rect.origin.x = fRect[0];
+	groupInfo->Rect.origin.y = fRect[1];
+	groupInfo->Rect.size.width = fRect[2];
+	groupInfo->Rect.size.height = fRect[3];
+	groupInfo->HorizontalAlignment = (HorizontalAlignment_t)uiGroupRoot["horizontal_align"].asInt();
+	groupInfo->Type = UIElementType::Group;
+	groupInfo->VerticalAlignment = (VerticalAlignment_t)uiGroupRoot["vertical_align"].asInt();
+
+	Value& groupElemInfoListRoot = uiGroupRoot["elements"];
+	for (int j = 0; j < groupElemInfoListRoot.size(); ++j) {
+		Value& groupElemInfoRoot = groupElemInfoListRoot[j];
+		SGUIGroupElemInfo groupElemInfo;
+		int groupElemInfoData[4];
+		SGJsonEx::parseIntNumberN(groupElemInfoRoot, groupElemInfoData, 4);
+
+		groupElemInfo.Code = groupElemInfoData[0];
+		groupElemInfo.ZOrder = groupElemInfoData[1];
+		groupElemInfo.X = (float)groupElemInfoData[2];
+		groupElemInfo.Y = (float)groupElemInfoData[3];
+		groupInfo->InfoList.PushBack(groupElemInfo);
+	}
+
+	groupInfo->InfoList.Sort([](SGUIGroupElemInfo& lhs, SGUIGroupElemInfo& rhs) {
+		return lhs.ZOrder < rhs.ZOrder;
+	});
 }
 
 
-SGUIElementInfo* SGUIInfoLoader::LoadElementButton(Value& value) {
+SGUIElementInfo* SGUIInfoLoader::readElementButton(Value& buttonRoot) {
 	SGUIButtonInfo* pInfo = dbg_new SGUIButtonInfo();
 
-	LoadElementCommon(value, pInfo);
+	readElementCommon(buttonRoot, pInfo);
 
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	const SGString& npkName = SGJson::getString(value["npk"]);
-	const SGString& imgName = SGJson::getString(value["img"]);
+	const SGString& npkName = SGJsonEx::getString(buttonRoot["npk"]);
+	const SGString& imgName = SGJsonEx::getString(buttonRoot["img"]);
 
 	SGImagePack* pPack = pPackManager->getPack(npkName);
 
@@ -129,53 +123,53 @@ SGUIElementInfo* SGUIInfoLoader::LoadElementButton(Value& value) {
 	pInfo->Img = pPack->getImgIndex(imgName);
 
 	pInfo->Type = UIElementType::Button;
-	pInfo->Normal = value["normal_idx"].asInt();
-	pInfo->Over = value["over_idx"].asInt();
-	pInfo->Pressed = value["pressed_idx"].asInt();
-	pInfo->Disabled = value["disabled_idx"].asInt();
+	pInfo->Normal = buttonRoot["normal_idx"].asInt();
+	pInfo->Over = buttonRoot["over_idx"].asInt();
+	pInfo->Pressed = buttonRoot["pressed_idx"].asInt();
+	pInfo->Disabled = buttonRoot["disabled_idx"].asInt();
 
 	return pInfo;
 }
 
 
 
-SGUIElementInfo* SGUIInfoLoader::LoadElementLabel(Value& value) {
+SGUIElementInfo* SGUIInfoLoader::readElementLabel(Value& labelRoot) {
 	SGUILabelInfo* pInfo = dbg_new SGUILabelInfo();
 	SGDataManager* pDataManager = SGDataManager::get();
 
-	LoadElementCommon(value, pInfo);
+	readElementCommon(labelRoot, pInfo);
 
-	SGString szFontName = SGJson::getString(value["font"]);
+	SGString szFontName = SGJsonEx::getString(labelRoot["font"]);
 
 	pInfo->Type = UIElementType::Label;
-	pInfo->FontCode = pDataManager->getFontCode(szFontName);
-	pInfo->FontSize = value["font_size"].asInt();
-	pInfo->TextWrap = value["text_wrap"].asBool();
-	pInfo->Width = value["width"].asFloat();
-	pInfo->Height = value["height"].asFloat();
-	pInfo->HorizontalAlignment = (HorizontalAlignment_t)value["horizontal_align"].asInt();
-	pInfo->VerticalAlignment = (VerticalAlignment_t)value["vertical_align"].asInt();
-	pInfo->Text = SGJson::getString(value["text"]);
+	pInfo->FontCode =  SGFontPackage::get()->getFontCode(szFontName);
+	pInfo->FontSize = labelRoot["font_size"].asInt();
+	pInfo->TextWrap = labelRoot["text_wrap"].asBool();
+	pInfo->Width = labelRoot["width"].asFloat();
+	pInfo->Height = labelRoot["height"].asFloat();
+	pInfo->HorizontalAlignment = (HorizontalAlignment_t)labelRoot["horizontal_align"].asInt();
+	pInfo->VerticalAlignment = (VerticalAlignment_t)labelRoot["vertical_align"].asInt();
+	pInfo->Text = SGJsonEx::getString(labelRoot["text"]);
 
 	return pInfo;
 }
 
-SGUIElementInfo* SGUIInfoLoader::LoadElementSprite(Value& value) {
+SGUIElementInfo* SGUIInfoLoader::readElementSprite(Value& spriteRoot) {
 	SGUISpriteInfo* pInfo = dbg_new SGUISpriteInfo();
 
-	LoadElementCommon(value, pInfo);
+	readElementCommon(spriteRoot, pInfo);
 
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 
-	const SGString& npkName = SGJson::getString(value["npk"]);
-	const SGString& imgName = SGJson::getString(value["img"]);
+	const SGString& npkName = SGJsonEx::getString(spriteRoot["npk"]);
+	const SGString& imgName = SGJsonEx::getString(spriteRoot["img"]);
 
 	SGImagePack* pPack = pPackManager->getPack(npkName);
 
 	pInfo->Type = UIElementType::Sprite;
 	pInfo->Npk = pPack->getPackIndex();
 	pInfo->Img = pPack->getImgIndex(imgName);
-	pInfo->Sprite = value["sprite"].asInt();
+	pInfo->Sprite = spriteRoot["sprite"].asInt();
 
 	return pInfo;
 }
