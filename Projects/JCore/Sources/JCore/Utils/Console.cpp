@@ -109,10 +109,10 @@ bool Console::SetSize(int width, int height) {
         return false;
 
     RECT r;
-    if (GetWindowRect(hConsole, &r) == 0)
+    if (::GetWindowRect(hConsole, &r) == 0)
         return false;
 
-    return MoveWindow(hConsole, r.left, r.top, width, height, TRUE) != 0;
+    return ::MoveWindow(hConsole, r.left, r.top, width, height, TRUE) != 0;
 }
 
 void Console::SetColor(ConsoleColor color) {

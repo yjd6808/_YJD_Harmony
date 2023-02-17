@@ -225,7 +225,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>SteinsGate/Common/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>
@@ -245,7 +245,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>SteinsGate/Common/Core.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>Core.h</PrecompiledHeaderFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)Core.pch</PrecompiledHeaderOutputFile>

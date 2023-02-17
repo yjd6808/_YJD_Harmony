@@ -858,7 +858,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <PreBuildEvent>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">탱크파이터 예제 프로그램은 x86 플랫폼으로만 빌드 가능합니다.</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">슈타인즈 게이트는 x86 플랫폼만 빌드가능합니다.</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -892,7 +892,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <PostBuildEvent>
       <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
+xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -935,7 +936,7 @@ xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll" "$(OutDir)"<
       </Command>
     </PreLinkEvent>
     <PreBuildEvent>
-      <Command>탱크파이터 예제 프로그램은 x86 플랫폼으로만 빌드 가능합니다.</Command>
+      <Command>슈타인즈 게이트는 x86 플랫폼만 빌드가능합니다.</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

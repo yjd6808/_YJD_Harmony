@@ -1,4 +1,4 @@
-﻿/*
+/*
 	작성자 : 윤정도
 	기본 배열을 다루도록 도와주는 클래스
 */
@@ -236,7 +236,7 @@ struct Arrays final
 		DebugAssertMsg(arr != nullptr, "배열이 null입니다.");
 		DebugAssertMsg(arrSize >= 1, "arrSize는 무조건 1이상이어야합니다.");
 
-		return std::lower_bound(arr, arr + arrSize, data) - arr;
+		return int(std::lower_bound(arr, arr + arrSize, data) - arr);
 	}
 
 

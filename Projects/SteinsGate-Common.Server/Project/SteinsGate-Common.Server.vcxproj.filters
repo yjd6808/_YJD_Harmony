@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Server.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQueryFuture.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\StatementType.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnection.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQuery.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQueryFuture.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnection.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Database">
+      <UniqueIdentifier>{b67e8325-f0df-4416-9a2c-c3994194080e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
