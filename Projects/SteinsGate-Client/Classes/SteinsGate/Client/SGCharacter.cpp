@@ -24,45 +24,69 @@
 USING_NS_JC;
 USING_NS_CC;
 
-SGCharacter::SGCharacter(int code, const SGCharacterInfo& info)
+SGCharacter::SGCharacter() 
+	: SGPhysicsActor(ActorType::Character, InvalidValue_v)
+	, m_pBaseInfo(nullptr)
+{}
+
+SGCharacter::SGCharacter(int code)
 	: SGPhysicsActor(ActorType::Character, code)
-	, m_CharInfo(info)
-	, m_bOwner(false)
-{
-}
+	, m_pBaseInfo(nullptr)
+{}
+
+SGCharacter::SGCharacter(int code, const VisualInfo& info)
+	: SGPhysicsActor(ActorType::Character, code)
+	, m_VisualInfo(info)
+	, m_pBaseInfo(nullptr)
+{}
 
 SGCharacter::~SGCharacter() {
 	_LogDebug_("캐릭터 소멸");
 }
 
-SGCharacter* SGCharacter::create(int code, const SGCharacterInfo& info) {
+SGCharacter* SGCharacter::create(int code, const VisualInfo& info) {
 	SGCharacter* pCharacter = dbg_new SGCharacter(code, info);
-
-	if (pCharacter && pCharacter->init()) {
-		SGCharBaseInfo* pBaseInfo = SGDataManager::get()->getCharInfo(code);
-		pCharacter->m_pBaseInfo = pBaseInfo;
-		pCharacter->initThicknessBox(pBaseInfo->ThicknessBox);
-		pCharacter->initActorSprite();
-		pCharacter->initHitRecorder(32, 64);
-		pCharacter->autorelease();
-		return pCharacter;
-	}
-
+	pCharacter->initBaseInfo(code);
+	pCharacter->initThicknessBox(pCharacter->m_pBaseInfo->ThicknessBox);
+	pCharacter->initActorSprite();
+	pCharacter->initHitRecorder(32, 64);
+	pCharacter->autorelease();
 	return pCharacter;
 }
 
+void SGCharacter::initInfo(int code, const VisualInfo& visualInfo) {
+	initBaseInfo(code);
+	initVisualInfo(visualInfo);
+	initThicknessBox(m_pBaseInfo->ThicknessBox);
+	initActorSprite();
+	initHitRecorder(32, 64);
+}
+
+void SGCharacter::initVisualInfo(const VisualInfo& visualInfo) {
+	DebugAssertMsg(visualInfo.isValid(), "유효하지 않은 비주얼 정보입니다.");
+	m_VisualInfo = visualInfo;
+}
+
+void SGCharacter::initBaseInfo(int code) {
+	m_iCode = code;
+	SGCharBaseInfo* pBaseInfo = SGDataManager::get()->getCharInfo(code);
+	m_pBaseInfo = pBaseInfo;
+}
+
 void SGCharacter::initActorSprite() {
+	DebugAssertMsg(m_VisualInfo.isValid(), "액터 스프라이트 초기화 실패: 유효하지 않은 비주얼 정보입니다.");
+
 	SGDataManager* pDataManager = SGDataManager::get();
 	AnimationList& animationList = pDataManager->getCharAnimationInfoList(m_iCode);
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(15, animationList.Size());
 
 	for (int i = 0; i < VisualType::Max; ++i) {
-		if (m_CharInfo.VisualInfo.ImgIndex[i] != InvalidValue_v &&
-			m_CharInfo.VisualInfo.NpkIndex[i] != InvalidValue_v) {
+		if (m_VisualInfo.ImgIndex[i] != InvalidValue_v &&
+			m_VisualInfo.NpkIndex[i] != InvalidValue_v) {
 			spActorSpriteData->Parts.PushBack({
 				VisualType::ZOrder[i],
-				m_CharInfo.VisualInfo.NpkIndex[i],
-				m_CharInfo.VisualInfo.ImgIndex[i]
+				m_VisualInfo.NpkIndex[i],
+				m_VisualInfo.ImgIndex[i]
 			});
 		}
 	}
@@ -80,18 +104,6 @@ void SGCharacter::initListener(SGActorListener* listener) {
 
 void SGCharacter::hit(const SGHitInfo& hitInfo) {
 	SGPhysicsActor::hit(hitInfo);
-
-	if (!m_bOwner)
-		return;
-
-	SGHostPlayer* pPlayer = SGHostPlayer::get();
-
-	if (hitInfo.AttackDataInfo->IsFallDownAttack) {
-		pPlayer->runActionForce(GUNNER_ACTION_FALL_DOWN);
-		return;
-	}
-
-	pPlayer->runActionForce(GUNNER_ACTION_HIT);
 }
 
 void SGCharacter::update(float dt) {
@@ -99,41 +111,15 @@ void SGCharacter::update(float dt) {
 }
 
 void SGCharacter::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-
-
-	if (!m_bOwner)
-		return;
-
-
-	SGHostPlayer::get()->onFrameBegin(animation, texture);
 }
 
 void SGCharacter::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-
-	if (!m_bOwner)
-		return;
-
-	SGHostPlayer::get()->onFrameEnd(animation, texture);
 }
 
 void SGCharacter::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-
-	if (!m_bOwner)
-		return;
-
-	SGHostPlayer::get()->onAnimationBegin(animation, texture);
 }
 
 void SGCharacter::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
-
-	if (!m_bOwner)
-		return;
-
-	SGHostPlayer::get()->onAnimationEnd(animation, texture);
-}
-
-void SGCharacter::setOwner(bool owner) {
-	m_bOwner = owner;
 }
 
 void SGCharacter::cleanUpImmediate() {

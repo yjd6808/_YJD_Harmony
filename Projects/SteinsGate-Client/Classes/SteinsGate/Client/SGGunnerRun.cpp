@@ -18,11 +18,11 @@ SGGunnerRun::SGGunnerRun(SGHostPlayer* player, SGActionInfo* actionInfo)
 }
 
 void SGGunnerRun::onActionBegin() {
-	m_pPlayer->getCharacter()->runAnimation(GUNNER_ANIMATION_RUN);
+	m_pPlayer->runAnimation(GUNNER_ANIMATION_RUN);
 }
 
 void SGGunnerRun::onKeyPressed(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {
-	SGActionManager* pActionManager = m_pPlayer->getActionManager();
+	SGActionManager* pActionManager = m_pPlayer->actionManager();
 
 	if (controller->getSpriteDirection() == SpriteDirection::Right &&
 		controller->isKeyPressed(ControlKey::Left)) {
@@ -40,7 +40,7 @@ void SGGunnerRun::onKeyPressed(SGPlayerController* controller, cocos2d::EventKey
 void SGGunnerRun::onKeyReleased(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {
 
 	ControlKey_t releasedKey = controller->getLastestReleasedKey();
-	SGActionManager* pActionManager = m_pPlayer->getActionManager();
+	SGActionManager* pActionManager = m_pPlayer->actionManager();
 
 	if (controller->isMoveKeyPressed() == false) {
 		pActionManager->runBaseAction(BaseAction::Idle);

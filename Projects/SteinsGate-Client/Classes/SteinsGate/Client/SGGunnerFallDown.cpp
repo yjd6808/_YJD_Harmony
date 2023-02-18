@@ -21,7 +21,7 @@ SGGunnerFallDown::SGGunnerFallDown(SGHostPlayer* player, SGActionInfo* actionInf
 void SGGunnerFallDown::onActionBegin() {
 	
 	m_pPlayer->runAnimation(GUNNER_ANIMATION_FALL_DOWN_BEGIN);
-	m_pPlayer->getCharacter()->enableElasticity();
+	m_pPlayer->enableElasticity();
 
 	m_fElapsedDownTime = 0.0f;
 	m_fDownRecoverTime = m_pBaseInfo->DownRecoverTime / 2.0f;
@@ -30,11 +30,11 @@ void SGGunnerFallDown::onActionBegin() {
 }
 
 void SGGunnerFallDown::onActionEnd() {
-	m_pPlayer->getCharacter()->disableElasticity();
+	m_pPlayer->disableElasticity();
 }
 
 void SGGunnerFallDown::onUpdate(float dt) {
-	SGCharacter* pCharacter = m_pPlayer->getCharacter();
+	SGCharacter* pCharacter = m_pPlayer;
 
 
 	// Step 1. 바닥에 충돌해서 공중으로 튀어올랐는지 확인
@@ -63,7 +63,7 @@ void SGGunnerFallDown::onUpdate(float dt) {
 	m_fElapsedDownTime += dt;
 
 	if (m_fElapsedDownTime >= m_fDownRecoverTime) {
-		SGActionManager* pActionManager = m_pPlayer->getActionManager();
+		SGActionManager* pActionManager = m_pPlayer->actionManager();
 
 		pActionManager->stopActionForce();
 		pActionManager->runBaseAction(BaseAction::SitRecover);

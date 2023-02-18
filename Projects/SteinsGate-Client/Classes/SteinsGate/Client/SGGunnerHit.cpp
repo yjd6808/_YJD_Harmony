@@ -19,7 +19,7 @@ SGGunnerHit::SGGunnerHit(SGHostPlayer* player, SGActionInfo* actionInfo)
 }
 
 void SGGunnerHit::onActionBegin() {
-	m_pPlayer->getCharacter()->enableElasticity();
+	m_pPlayer->enableElasticity();
 	m_fElapsedDownTime = 0.0f;
 	m_bDownTimeCheckBegin = false;
 	m_fDownRecoverTime = m_pBaseInfo->DownRecoverTime / 2.0f;
@@ -30,7 +30,7 @@ void SGGunnerHit::onActionBegin() {
 }
 
 void SGGunnerHit::onActionEnd() { 
-	m_pPlayer->getCharacter()->disableElasticity();
+	m_pPlayer->disableElasticity();
 }
 
 void SGGunnerHit::onUpdate(float dt) {
@@ -52,7 +52,7 @@ void SGGunnerHit::selectHitAnimation() {
 	m_bHitSmall = !m_bHitSmall;
 }
 void SGGunnerHit::checkPosition() {
-	if (!m_pPlayer->getCharacter()->hasForceY()) {
+	if (!m_pPlayer->hasForceY()) {
 		m_bOnTheGround = true;
 		return;
 	}
@@ -62,7 +62,7 @@ void SGGunnerHit::checkPosition() {
 
 
 void SGGunnerHit::updateGroundHitState(float dt) {
-	if (m_pPlayer->getCharacter()->hasForceX())
+	if (m_pPlayer->hasForceX())
 		return;
 
 	// TODO: 죽음 확인 후 사망처리
@@ -70,7 +70,7 @@ void SGGunnerHit::updateGroundHitState(float dt) {
 }
 
 void SGGunnerHit::updateAirHitState(float dt) {
-	if (!m_pPlayer->getCharacter()->isOnTheGround())
+	if (!m_pPlayer->isOnTheGround())
 		return;
 
 	// TODO: 죽음 확인 후 사망처리
@@ -88,7 +88,7 @@ void SGGunnerHit::updateDownState(float dt) {
 	m_fElapsedDownTime += dt;
 
 	if (m_fElapsedDownTime >= m_fDownRecoverTime) {
-		SGActionManager* pActionManager = m_pPlayer->getActionManager();
+		SGActionManager* pActionManager = m_pPlayer->actionManager();
 
 		pActionManager->stopActionForce();
 		pActionManager->runBaseAction(BaseAction::SitRecover);

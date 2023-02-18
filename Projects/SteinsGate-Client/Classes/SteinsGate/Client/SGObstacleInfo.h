@@ -21,7 +21,7 @@ struct SGObstacleInfo : ConfigDataAbstract
 	SGString Name;
 	int NpkIndex;
 	int ImgIndex;
-	SGThicknessBox ThicknessBox;
+	ThicknessBox ThicknessBox;
 	bool Hitable;
 	bool Colliadalble;
 	bool ZOrederable;

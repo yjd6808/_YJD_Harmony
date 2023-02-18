@@ -91,8 +91,7 @@ Face,
 Coat,
 Cap,
 Belt,
-WeaponLeft,
-WeaponRight,
+Weapon,
 Max,
 None
 SEnumMiddle(VisualType)
@@ -107,8 +106,8 @@ inline static int ZOrder[Max]{
 	4, // Coat
 	3, // Cap
 	6, // Belt
-	8, // WeaponLeft
-	7  // WeaponRight
+	8 // WeaponLeft
+	// 7  // WeaponRight
 };
 
 SEnumMiddleEnd(VisualType)
@@ -376,3 +375,140 @@ static constexpr const char* FileName[Max]{
 	"client.json"
 };
 SEnumMiddleEnd(ConfigFileType)
+
+
+SEnumBegin(ItemType)
+Quest,
+Etc,
+Consume,
+Equip,
+Avatar,
+Max
+SEnumMiddle(ItemType)
+
+static constexpr bool Stackable[Max] {
+	true,
+	true,
+	true,
+	false,
+	false
+};
+
+static constexpr const char* Name[Max]{
+	"Quest",
+	"Etc",
+	"Consume",
+	"Equip",
+	"Avatar"
+};
+SEnumMiddleEnd(ItemType)
+
+// https://wiki.dfo-world.com/view/Armor
+SEnumBegin(EquipItemType)
+Begin,
+Cloth = Begin,	// 천
+Leather,		// 가죽
+Light,			// 경갑
+Heavy,			// 중갑
+Plate,			// 판금
+Ring,			// 반지
+Neck,			// 목걸이
+Bracelet,		// 팔찌
+Weapon,			// 무기
+Title,			// 칭호
+End,
+Max = End
+SEnumMiddle(EquipItemType)
+static constexpr const char* NameKor[Max]{
+	"천"		,
+	"가죽"	,
+	"경갑"	,
+	"중갑"	,
+	"판금"	,
+	"반지"	,
+	"목걸이"	,
+	"팔찌"   ,
+	"무기"	,
+	"칭호"
+};
+
+static constexpr const char* NameEng[Max]{
+	"Cloth"	  ,
+	"Leather" ,
+	"Light"	  ,
+	"Heavy"	  ,
+	"Plate"	  ,
+	"Ring"	  ,
+	"Neck"	  ,
+	"Bracelet",
+	"Weapon"  ,
+	"Title"
+};
+SEnumMiddleEnd(EquipItemType)
+
+SEnumBegin(RarityType)
+Begin,
+Normal = Begin,
+Magic,
+Rare,
+Unique,
+Legacy,
+Epic,
+Set,
+End,
+Max = End
+SEnumMiddle(RarityType)
+
+static constexpr const char* Name[Max]{
+	"Normal"	,
+	"Magic"		,
+	"Rare"		,
+	"Unique"	,
+	"Legacy"	,
+	"Epic"		,
+	"Set"	
+};
+
+static constexpr int OptCount[Max]{
+	1,
+	2,
+	3,
+	4,
+	3,
+	0
+};
+
+SEnumMiddleEnd(RarityType)
+
+
+
+SEnumBegin(ItemOptType)
+Begin,
+Str = Begin,
+Dex,
+Int,
+Vit,
+Lift,
+Mana,
+DamagePhysical,
+DamageMagic,
+ArmorPhysical,
+ArmorMagic,
+ChanceMagic,
+ChanceGold,
+AttackSpeed,
+CastSpeed,
+RegenLifePerMin,
+RegenManaPerMin,
+MoveSpeedInDungeon,
+MoveSpeedInTown,
+End,
+Max = End
+SEnumMiddle(ItemOptType)
+
+SEnumMiddleEnd(ItemOptType)
+
+
+
+
+

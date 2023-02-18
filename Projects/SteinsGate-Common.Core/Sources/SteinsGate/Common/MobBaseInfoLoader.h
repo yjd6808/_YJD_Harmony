@@ -9,16 +9,16 @@
 #pragma once
 
 
-#include <SteinsGate/Common/SGMobBaseInfo.h>
+#include <SteinsGate/Common/MobBaseInfo.h>
 #include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-struct SGMobBaseInfoLoader : ConfigFileLoaderAbstract
+struct MobBaseInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	virtual ~SGMobBaseInfoLoader() override = default;
+	virtual ~MobBaseInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Monster; }
 	bool load() override;
 
-	static void readMobBaseInfo(Json::Value& monsterRoot, Out_ SGMobBaseInfo* mobInfo);
+	static void readMobBaseInfo(Json::Value& monsterRoot, Out_ MobBaseInfo* mobInfo);
 };

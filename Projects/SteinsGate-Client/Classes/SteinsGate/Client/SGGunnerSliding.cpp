@@ -34,7 +34,7 @@ void SGGunnerSliding::onActionBegin() {
 
 void SGGunnerSliding::onUpdate(float dt) {
 
-	SGCharacter* pCharacter = m_pPlayer->getCharacter();
+	SGCharacter* pCharacter = m_pPlayer;
 	SGActorPartAnimation* pAnimation = pCharacter->getRunningAnimation();
 	m_pHitRecorder->record(pAnimation);
 
@@ -50,7 +50,7 @@ void SGGunnerSliding::onUpdate(float dt) {
 
 
 void SGGunnerSliding::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {
-	SGCharacter* pCharacter = m_pPlayer->getCharacter();
+	SGCharacter* pCharacter = m_pPlayer;
 	SpriteDirection_t eDir = pCharacter->getSpriteDirection();
 
 	// 거너 특유의 슬라이딩 시작전 경직 효과를 주기위해 111번 프레임 끝난 후
@@ -67,7 +67,7 @@ void SGGunnerSliding::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture
 
 	// 일시정지 프레임 만나면 1번부터 다시 재시작
 	if (animation->getFrameIndex() == 114 && animation->isZeroFramePaused()) {
-		m_pPlayer->getCharacter()->runAnimation(GUNNER_ANIMATION_SLIDING, 1);
+		m_pPlayer->runAnimation(GUNNER_ANIMATION_SLIDING, 1);
 	}
 }
 
@@ -82,6 +82,6 @@ void SGGunnerSliding::onEnemySingleHit(SGHitInfo& info) {
 
 void SGGunnerSliding::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
 	if (newHitCount > 0) {
-		m_pPlayer->getCharacter()->stiffenBody(FPS6_v);
+		m_pPlayer->stiffenBody(FPS6_v);
 	}
 }

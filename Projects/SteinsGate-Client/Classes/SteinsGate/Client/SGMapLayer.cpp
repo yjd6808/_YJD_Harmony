@@ -72,8 +72,6 @@ SGMapInfo* SGMapLayer::getMapInfo() {
 
 
 void SGMapLayer::update(float dt) {
-	SGHostPlayer::get()->update(dt);
-
 	m_pActorBox->update(dt);
 }
 

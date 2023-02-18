@@ -15,11 +15,11 @@ SGGunnerWalk::SGGunnerWalk(SGHostPlayer* player, SGActionInfo* actionInfo)
 	: SGGunnerAction(player, actionInfo) {}
 
 void SGGunnerWalk::onActionBegin() {
-	m_pPlayer->getCharacter()->runAnimation(GUNNER_ANIMATION_WALK);
+	m_pPlayer->runAnimation(GUNNER_ANIMATION_WALK);
 }
 
 void SGGunnerWalk::onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
-	SGActionManager* pActionManager = m_pPlayer->getActionManager();
+	SGActionManager* pActionManager = m_pPlayer->actionManager();
 
 	controller->reflectPressedMoveKeys();
 
@@ -35,7 +35,7 @@ void SGGunnerWalk::onKeyPressed(SGPlayerController* controller, SGEventKeyboard:
 
 void SGGunnerWalk::onKeyReleased(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
 	ControlKey_t releasedKey = controller->getLastestReleasedKey();
-	SGActionManager* pActionManager = m_pPlayer->getActionManager();
+	SGActionManager* pActionManager = m_pPlayer->actionManager();
 
 	if (controller->isMoveKeyPressed() == false) {
 		pActionManager->runBaseAction(BaseAction::Idle);

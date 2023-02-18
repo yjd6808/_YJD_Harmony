@@ -21,7 +21,7 @@ void SGGunnerIdle::init() {
 }
 
 void SGGunnerIdle::onActionBegin() {
-	m_pPlayer->getCharacter()->runAnimation(GUNNER_ANIMATION_IDLE_BREATH);
+	m_pPlayer->runAnimation(GUNNER_ANIMATION_IDLE_BREATH);
 }
 
 void SGGunnerIdle::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {
@@ -30,7 +30,7 @@ void SGGunnerIdle::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTextur
 	if (iAnimationCode == GUNNER_ANIMATION_IDLE_BREATH) {
 		++m_iIdleCount;
 	} else if (iAnimationCode == GUNNER_ANIMATION_IDLE_GUN_ROLLING) {
-		m_pPlayer->getCharacter()->runAnimation(GUNNER_ANIMATION_IDLE_BREATH);
+		m_pPlayer->runAnimation(GUNNER_ANIMATION_IDLE_BREATH);
 		m_iIdleCount = 0;
 	}
 }
@@ -53,7 +53,7 @@ void SGGunnerIdle::onActionEnd() {
 
 void SGGunnerIdle::fixFreezedState(SGPlayerController* controller, ControlKey_t releasedKey) {
 	ControlKey_t eReverseKey = ControlKey::ReverseDirection[releasedKey];
-	SGActionManager* pActionManager = m_pPlayer->getActionManager();
+	SGActionManager* pActionManager = m_pPlayer->actionManager();
 
 	if (controller->isKeyPressed(ControlKey::Left) && controller->isKeyPressed(ControlKey::Right) &&
 		(releasedKey == ControlKey::Left || releasedKey == ControlKey::Right)) {

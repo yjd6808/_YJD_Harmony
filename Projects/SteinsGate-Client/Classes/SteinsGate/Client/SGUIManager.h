@@ -32,7 +32,7 @@ public:
 
 	void init();
 	void registerGroup(SGUIGroup* group);
-	void registerLoadedUITexture(SGNpkResourceIndex index);
+	void registerLoadedUITexture(NpkResourceIndex index);
 	void unloadAll();
 
 	SGUIGroup* getGroup(int groupCode);
@@ -41,7 +41,7 @@ public:
 	SGUISprite* getSprite(int spriteCode);
 	SGUILabel* getLabel(int labelCode);
 private:
-	SGHashMap<Int32U, SGNpkResourceIndex> m_hLoadedUITexture;		// 어떤 이미지 팩 로딩했는지 기록용
+	SGHashMap<Int32U, NpkResourceIndex> m_hLoadedUITexture;		// 어떤 이미지 팩 로딩했는지 기록용
 	SGHashMap<int, SGUIElement*> m_hUIElements;
 	SGHashMap<int, SGUIGroup*> m_hMasterUIGroups;
 };

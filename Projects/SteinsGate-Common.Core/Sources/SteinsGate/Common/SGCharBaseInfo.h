@@ -28,7 +28,7 @@ struct SGCharBaseInfo : ConfigDataAbstract
 	float JumpForce;
 	float SlidingForce;
 	float DownRecoverTime;
-	SGThicknessBox ThicknessBox;
+	ThicknessBox ThicknessBox;
 	WeaponType_t DefaultWeaponType;
 };
 

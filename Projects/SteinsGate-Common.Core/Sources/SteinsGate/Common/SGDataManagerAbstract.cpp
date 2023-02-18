@@ -71,8 +71,8 @@ void SGDataManagerAbstract::finalizeLoader() {
 	_LogDebug_("설정파일에서 읽은 모든 데이터를 정리하였습니다.");
 }
 
-SGMobBaseInfo* SGDataManagerAbstract::getMobBaseInfo(int code) {
-	return (SGMobBaseInfo*)m_pConfigFileLoaders[ConfigFileType::Monster]->getData(code);
+MobBaseInfo* SGDataManagerAbstract::getMobBaseInfo(int code) {
+	return (MobBaseInfo*)m_pConfigFileLoaders[ConfigFileType::Monster]->getData(code);
 }
 
 

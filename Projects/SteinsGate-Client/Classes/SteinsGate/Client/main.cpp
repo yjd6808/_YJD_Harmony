@@ -4,30 +4,15 @@
  */
 
 #include "Tutturu.h"
-
-#include <SteinsGate/Client/AppDelegate.h>
-#include <SteinsGate/Client/GameCore.h>
-
-USING_NS_JC;
-USING_NS_DETAIL;
+#include "AppDelegate.h"
 
 int main()
 {
-    InitializeJCore();
-    InitializeCommonCore();
-    InitializeDefaultLogger();
-    InitializeClientLogo();
-    InitializeClientCore();
-
     int iResult = -1;
     {
         AppDelegate app;
         iResult = cocos2d::Application::getInstance()->run();
     }
-
-    FinalizeClientCore();
-    FinalizeCommonCore();
-    FinalizeDefaultLogger();
     return iResult;
     
 }

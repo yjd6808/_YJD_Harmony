@@ -1,18 +1,12 @@
 #include "Tutturu.h"
 #include "AppDelegate.h"
-
-#include <SteinsGate/Client/SGWorldScene.h>
-#include <SteinsGate/Client/SGActorBox.h>
-#include <SteinsGate/Client/SGHostPlayer.h>
-#include <SteinsGate/Client/SGDataManager.h>
-#include <SteinsGate/Client/SGImagePackManager.h>
-#include <SteinsGate/Client/SGActorListenerManager.h>
-#include <SteinsGate/Client/SGGlobal.h>
-#include <SteinsGate/Client/SGUIManager.h>
+#include "GameCoreHeader.h"
 
 #define AppName "SteinsGate-Client"
 
 USING_NS_CC;
+USING_NS_JC;
+USING_NS_DETAIL;
 
 AppDelegate::AppDelegate()
 {
@@ -42,6 +36,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
+    CoreInfo_v = SGDataManager::get()->getClientInfo(1);
     
     if (glview == nullptr) {
         glview = GLViewImpl::createWithRect(AppName, SGRect(0, 0, CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight));
@@ -52,17 +47,17 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0f / 120);
     glview->setDesignResolutionSize(CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight, ResolutionPolicy::NO_BORDER);
     director->setContentScaleFactor(1.0f);
+
     FileUtils::getInstance()->setPopupNotify(false);    // 파일못찾은 경우 알람 안하도록 함
     SGConsole::SetSize(1200, 800);
-  
-    SGGlobal::get();
-    SGImagePackManager::get();
-    SGDataManager::get();
-    SGHostPlayer::get();
-    SGActorListenerManager::get();
-    SGActorBox::get();
-    SGUIManager::get();
-    auto scene = SGWorldScene::get();
+
+    InitializeJCore();
+    InitializeCommonCore();
+    InitializeDefaultLogger();
+    InitializeClientLogo();
+    InitializeClientCore();
+
+    auto scene = CoreWorld_v;
     scene->setAnchorPoint(Vec2::ZERO);
     DebugAssertMsg(scene, "월드씬 생성에 실패했습니다.");
     director->runWithScene(scene);

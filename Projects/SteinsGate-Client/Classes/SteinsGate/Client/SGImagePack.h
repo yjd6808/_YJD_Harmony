@@ -27,7 +27,7 @@ public:
 
 	SGFrameTexture* createFrameTexture(int imgIndex, int frameIndex);
 	void releaseFrameTexture(int imgIndex, int frameIndex);
-	void releaseFrameTexture(const SGNpkResourceIndex& npkResourceIndex);
+	void releaseFrameTexture(const NpkResourceIndex& npkResourceIndex);
 
 	const SGString& getPath() { return m_Package->GetPath(); }
 	SGString getFileName();

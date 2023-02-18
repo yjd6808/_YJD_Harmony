@@ -14,7 +14,7 @@ struct SGJson
 {
 public:
 	static SGString getString(Json::Value& value);
-	static void parseThicknessInfo(Json::Value& thicknessRoot, Out_ SGThicknessBox& box);
+	static void parseThicknessInfo(Json::Value& thicknessRoot, Out_ ThicknessBox& box);
 
 	static void parseIntNumber3(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3);
 	static void parseIntNumber4(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3, Out_ int& num4);

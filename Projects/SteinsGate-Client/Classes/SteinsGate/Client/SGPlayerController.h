@@ -29,10 +29,10 @@ public:
 		ControlKey_t ControlKey{};
 	};
 
-	SGPlayerController(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager);
+	SGPlayerController(SGHostPlayer* player, SGActionManager* actionManager);
 	~SGPlayerController();
 
-	static SGPlayerController* create(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager);
+	static SGPlayerController* create(SGHostPlayer* player, SGActionManager* actionManager);
 
 	void init();
 	void update(float delta);
@@ -66,12 +66,12 @@ public:
 	void setCommandable(bool commandable) { m_bCabUseCommand = commandable; }
 private:
 	SGHostPlayer* m_pPlayer;
-	SGCharacter* m_pCharacter;
 	SGActionManager* m_pActionManager;
 
 	// ==================================================
 	// 기본 필드
 	// ==================================================
+	SGVector<ControlKey_t> m_vPressedArrowKeyState;
 	ControlKey_t m_CocosKeyCodeToControlKeyMap[200];		// 코코스 키를 ControlKey로 변환 (None(0)으로 초기화)
 	bool m_ControlKeyPressedMap[ControlKey::Max]{};
 	InputTime m_LastestPressedKey;							// 제일 최근에 누른 키

@@ -8,9 +8,25 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGClientInfo.h>
+class SGClientInfo;
+class SGHostPlayer;
+class SGDataManager;
+class SGUIManager;
+class SGInven;
+class SGWorldScene;
+class SGFontPackage;
+class SGActorListenerManager;
+class SGActorBox;
 
 extern SGClientInfo* CoreInfo_v;
+extern SGHostPlayer* CorePlayer_v;
+extern SGDataManager* CoreDataManager_v;
+extern SGUIManager* CoreUIManager_v;
+extern SGInven* CoreInven_v;
+extern SGWorldScene* CoreWorld_v;
+extern SGFontPackage* CoreFont_v;
+extern SGActorListenerManager* CoreActorListenerManager_v;
+extern SGActorBox* CoreActorBox_v;
 
 void InitializeClientCore();
 void FinalizeClientCore();

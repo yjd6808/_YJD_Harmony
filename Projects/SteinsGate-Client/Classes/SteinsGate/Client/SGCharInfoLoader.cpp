@@ -59,8 +59,7 @@ void SGCharInfoLoader::readCharInfo(Json::Value& gunnerRoot, Out_ SGGunnerInfo* 
 	defaultAvatarPartImgName[VisualType::Coat] = SGJsonEx::getString(defaultAvatarImgRoot["coat"]);
 	defaultAvatarPartImgName[VisualType::Cap] = SGJsonEx::getString(defaultAvatarImgRoot["cap"]);
 	defaultAvatarPartImgName[VisualType::Belt] = SGJsonEx::getString(defaultAvatarImgRoot["belt"]);
-	defaultAvatarPartImgName[VisualType::WeaponLeft] = SGJsonEx::getString(defaultAvatarImgRoot["weapon_left"]);
-	defaultAvatarPartImgName[VisualType::WeaponRight] = SGJsonEx::getString(defaultAvatarImgRoot["weapon_right"]);
+	defaultAvatarPartImgName[VisualType::Weapon] = SGJsonEx::getString(defaultAvatarImgRoot["weapon"]);
 
 
 	for (int iVisualType = AvatarType::Begin; iVisualType < AvatarType::Max; ++iVisualType) {
@@ -77,16 +76,10 @@ void SGCharInfoLoader::readCharInfo(Json::Value& gunnerRoot, Out_ SGGunnerInfo* 
 		const SGString& npkName = pGlobal->getWeaponNpkName(CharType::Gunner, iWeaponType);
 		SGImagePack* pImgPack = pPackManager->getPack(npkName);
 
-		if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::WeaponLeft])) {
-			gunnerInfo->DefaultVisualImgIndex[VisualType::WeaponLeft] = pImgPack->getImgIndex(defaultAvatarPartImgName[VisualType::WeaponLeft]);
-			gunnerInfo->DefaultVisualNpkIndex[VisualType::WeaponLeft] = pImgPack->getPackIndex();
-		}
-
-		if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::WeaponRight])) {
-			gunnerInfo->DefaultVisualImgIndex[VisualType::WeaponRight] = pImgPack->getImgIndex(defaultAvatarPartImgName[VisualType::WeaponRight]);
-			gunnerInfo->DefaultVisualNpkIndex[VisualType::WeaponRight] = pImgPack->getPackIndex();
+		if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::Weapon])) {
+			gunnerInfo->DefaultVisualImgIndex[VisualType::Weapon] = pImgPack->getImgIndex(defaultAvatarPartImgName[VisualType::Weapon]);
+			gunnerInfo->DefaultVisualNpkIndex[VisualType::Weapon] = pImgPack->getPackIndex();
 			bDefaultWeaponImgFound = true;
-			break;
 		}
 	}
 

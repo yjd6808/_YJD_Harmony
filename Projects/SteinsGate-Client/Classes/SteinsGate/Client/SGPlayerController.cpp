@@ -16,17 +16,17 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGPlayerController* SGPlayerController::create(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager) {
-	SGPlayerController* pController = dbg_new SGPlayerController(player, character, actionManager);
+SGPlayerController* SGPlayerController::create(SGHostPlayer* player, SGActionManager* actionManager) {
+	SGPlayerController* pController = dbg_new SGPlayerController(player, actionManager);
 	pController->init();
 	return pController;
 }
 
 
-SGPlayerController::SGPlayerController(SGHostPlayer* player, SGCharacter* character, SGActionManager* actionManager)
+SGPlayerController::SGPlayerController(SGHostPlayer* player, SGActionManager* actionManager)
 	: m_pPlayer(player)
-	, m_pCharacter(character)
-	, m_pActionManager(actionManager) {
+	, m_pActionManager(actionManager)
+	, m_vPressedArrowKeyState(4) {
 	init();
 }
 
@@ -96,7 +96,7 @@ void SGPlayerController::onKeyReleased(ControlKey_t releasedKey) {
 }
 
 SpriteDirection_t SGPlayerController::getSpriteDirection() {
-	return m_pCharacter->getActorSprite()->getSpriteDirection();
+	return m_pPlayer->getActorSprite()->getSpriteDirection();
 }
 
 bool SGPlayerController::isKeyPressed(ControlKey_t controlKey) {
@@ -190,7 +190,7 @@ void SGPlayerController::updateMove(float dt) {
 	// 이 적용된 값 때문에 Down에서 lb, rb 충돌 체크가 항상 참이 되어버림
 	// --------------------------------------------------------------
 	//  23/01/28 -> 좌,우,위,아래 모두 독립적으로 가능하도록 추가
-	SGRect thicknessPosLR = m_pCharacter->getThicknessBoxRect();
+	SGRect thicknessPosLR = m_pPlayer->getThicknessBoxRect();
 	SGRect thicknessPosUD = thicknessPosLR;
 
 	float fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
@@ -226,7 +226,7 @@ void SGPlayerController::updateLeftMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo
 	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pCharacter->setPositionRealX(thicknessRect.origin.x);
+	m_pPlayer->setPositionRealX(thicknessRect.origin.x);
 }
 
 
@@ -238,7 +238,7 @@ void SGPlayerController::updateRightMove(SGMapLayer* mapLayer, SGMapInfo* mapInf
 	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pCharacter->setPositionRealX(thicknessRect.origin.x);
+	m_pPlayer->setPositionRealX(thicknessRect.origin.x);
 }
 
 void SGPlayerController::updateUpMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect) {
@@ -249,7 +249,7 @@ void SGPlayerController::updateUpMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, 
 	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pCharacter->setPositionRealY(thicknessRect.origin.y);
+	m_pPlayer->setPositionRealY(thicknessRect.origin.y);
 }
 
 void SGPlayerController::updateDownMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo, const SGRect& thicknessRect) {
@@ -260,16 +260,16 @@ void SGPlayerController::updateDownMove(SGMapLayer* mapLayer, SGMapInfo* mapInfo
 	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithObstacles(thicknessRect))
 		return;
 
-	m_pCharacter->setPositionRealY(thicknessRect.origin.y);
+	m_pPlayer->setPositionRealY(thicknessRect.origin.y);
 }
 
 void SGPlayerController::updateDirection(ControlKey_t pressedKey) {
 
 	// 방향전환 가능 여부
 	if (pressedKey == ControlKey::Right) 
-		m_pCharacter->setForwardDirection();
+		m_pPlayer->setForwardDirection();
 	else if (pressedKey == ControlKey::Left) 
-		m_pCharacter->setBackwardDirection();
+		m_pPlayer->setBackwardDirection();
 }
 
 
@@ -277,34 +277,34 @@ void SGPlayerController::updateDirection(ControlKey_t pressedKey) {
 // 2. 액션이 없는 경우 키 입력시마다 반영해줘야한다.
 void SGPlayerController::reflectPressedMoveKeys() {
 	// 액션 수행중 방향키로 움직일 수 있는 액션인 경우라도 걷기 나 평상시 애니메이션이 실행되어선 안된다.
-	// 방향키만 읽음, StaticVector 변경 필요
-	SGVector<ControlKey_t> vPressed{ Direction::Max };
+	// 방향키만 읽음
+	m_vPressedArrowKeyState.Clear();
 
 	for (int i = 0; i < Direction::Max; ++i) {
 		if (isKeyPressed(ControlKey_t(i)))
-			vPressed.PushBack(ControlKey_t(i));
+			m_vPressedArrowKeyState.PushBack(ControlKey_t(i));
 	}
 
-	if (vPressed.Size() == 0) {
+	if (m_vPressedArrowKeyState.Size() == 0) {
 		idle();
 		return;
 	}
 
 	// 동시 키입력 소거
 	// 남은건 대각이동 또는 한가지 방향밖에 없다.
-	if (vPressed.Exist(ControlKey::Left) && vPressed.Exist(ControlKey::Right)) {
-		vPressed.Remove(ControlKey::Left);
-		vPressed.Remove(ControlKey::Right);
+	if (m_vPressedArrowKeyState.Exist(ControlKey::Left) && m_vPressedArrowKeyState.Exist(ControlKey::Right)) {
+		m_vPressedArrowKeyState.Remove(ControlKey::Left);
+		m_vPressedArrowKeyState.Remove(ControlKey::Right);
 	}
 
-	if (vPressed.Exist(ControlKey::Up) && vPressed.Exist(ControlKey::Down)) {
-		vPressed.Remove(ControlKey::Up);
-		vPressed.Remove(ControlKey::Down);
+	if (m_vPressedArrowKeyState.Exist(ControlKey::Up) && m_vPressedArrowKeyState.Exist(ControlKey::Down)) {
+		m_vPressedArrowKeyState.Remove(ControlKey::Up);
+		m_vPressedArrowKeyState.Remove(ControlKey::Down);
 	}
 
-	if (vPressed.Exist(ControlKey::Right))
+	if (m_vPressedArrowKeyState.Exist(ControlKey::Right))
 		updateDirection(ControlKey::Right);
-	else if (vPressed.Exist(ControlKey::Left))
+	else if (m_vPressedArrowKeyState.Exist(ControlKey::Left))
 		updateDirection(ControlKey::Left);
 
 	walk();

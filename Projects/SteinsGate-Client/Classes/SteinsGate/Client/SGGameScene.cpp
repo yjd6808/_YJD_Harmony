@@ -80,21 +80,12 @@ SGGameScene::~SGGameScene() {
 }
 
 void SGGameScene::cmdLoadChar() {
-    SGCharacterInfo info;
-    SGDataManager* pConfig = SGDataManager::get();
-    SGCharInfo* pBaseInfo = pConfig->getCharInfo(CharType::Gunner);
 
-    for (int i = 0; i < VisualType::Max; ++i) {
-        info.VisualInfo.NpkIndex[i] = pBaseInfo->DefaultVisualNpkIndex[i];
-        info.VisualInfo.ImgIndex[i] = pBaseInfo->DefaultVisualImgIndex[i];
-    }
-    SGHostPlayer* pPlayer = SGHostPlayer::get();
-    SGCharacter* pCharacter = SGActorBox::get()->createCharacterOnMap(CharType::Gunner, 300, 250, info);
+    CorePlayer_v->init();
+    CorePlayer_v->setPositionRealCenter(300, 200);
 
-    pPlayer->setCharacter(pCharacter);
-    pPlayer->initActionManager();
-    pPlayer->initController();
-    pPlayer->runBaseAction(BaseAction::Idle);
+    CoreActorBox_v->registerPlayerOnMap(CorePlayer_v);
+
 }
 
 void SGGameScene::cmdEnterMap() {

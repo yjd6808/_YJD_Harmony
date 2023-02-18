@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/SGMobBaseInfo.h>
+#include <SteinsGate/Common/MobBaseInfo.h>
 #include <SteinsGate/Client/SGAnimationInfo.h>
 #include <SteinsGate/Client/SGStruct.h>
 
@@ -20,7 +20,7 @@ struct SGMobPartInfo
 };
 
 
-struct SGMobInfo : SGMobBaseInfo
+struct SGMobInfo : MobBaseInfo
 {
 	SGMobInfo(int animationSize) : AnimationList(animationSize) {}
 	~SGMobInfo() override = default;

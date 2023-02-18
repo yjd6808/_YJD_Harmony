@@ -53,8 +53,8 @@ void SGGunnerGunShot::onActionBegin() {
 	m_iRightShotCount = m_pBaseInfo->ShotCount[m_eWeaponType];
 
 
-	SGPlayerController* pController = m_pPlayer->getController();
-	SGActorSprite* pActorSprite = m_pPlayer->getCharacter()->getActorSprite();
+	SGPlayerController* pController = m_pPlayer->ctrl();
+	SGActorSprite* pActorSprite = m_pPlayer->getActorSprite();
 
 	if (pController->isKeyPressed(ControlKey::Down)) {
 		m_bDownShotKeyPressed = true;
@@ -146,9 +146,9 @@ void SGGunnerGunShot::onKeyPressed(SGPlayerController* controller, SGEventKeyboa
 // ================================================================
 
 void SGGunnerGunShot::onUpdate(float dt) {
-	m_pHitRecorder->record(m_pPlayer->getCharacter()->getRunningAnimation());
+	m_pHitRecorder->record(m_pPlayer->getRunningAnimation());
 
-	SGPlayerController* controller = m_pPlayer->getController();
+	SGPlayerController* controller = m_pPlayer->ctrl();
 
 	updateDownKeyCheck(controller);
 	updateRightShotTime(controller, dt);
@@ -200,7 +200,7 @@ void SGGunnerGunShot::onEnemySingleHit(SGHitInfo& info) {
 
 void SGGunnerGunShot::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
 	if (newHitCount > 0) {
-		m_pPlayer->getCharacter()->stiffenBody(FPS6_v);
+		m_pPlayer->stiffenBody(FPS6_v);
 	}
 }
 

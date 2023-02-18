@@ -14,10 +14,16 @@
 class SGCharacter : public SGPhysicsActor
 {
 public:
-	SGCharacter(int code, const SGCharacterInfo& info);
+	SGCharacter();
+	SGCharacter(int code);
+	SGCharacter(int code, const VisualInfo& info);
 	~SGCharacter() override;
 
-	static SGCharacter* create(int code, const SGCharacterInfo& info);
+	static SGCharacter* create(int code, const VisualInfo& info);
+
+	void initInfo(int code, const VisualInfo& visualInfo);
+	void initVisualInfo(const VisualInfo& visualInfo);
+	void initBaseInfo(int code);
 
 	void initActorSprite() override;
 	void initListener(SGActorListener* listener) override;
@@ -28,16 +34,12 @@ public:
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
-	void setOwner(bool owner);
-	bool isOwner() { return m_bOwner; }
-
 	void cleanUpImmediate();
 
 	SGCharBaseInfo* getBaseInfo();
 private:
 	SGCharBaseInfo* m_pBaseInfo;
-	SGCharacterInfo m_CharInfo;
-	bool m_bOwner;
+	VisualInfo m_VisualInfo;
 };
 
 

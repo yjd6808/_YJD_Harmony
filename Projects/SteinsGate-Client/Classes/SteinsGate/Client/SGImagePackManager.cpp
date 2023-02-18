@@ -119,7 +119,7 @@ void SGImagePackManager::releaseFrameTexture(int packIndex, int imgIndex, int fr
 	getPack(packIndex)->releaseFrameTexture(imgIndex, frameIndex);
 }
 
-void SGImagePackManager::releaseFrameTexture(const SGNpkResourceIndex& npkResourceIndex) {
+void SGImagePackManager::releaseFrameTexture(const NpkResourceIndex& npkResourceIndex) {
 	getPack(npkResourceIndex.Un.NpkIndex)->releaseFrameTexture(
 		npkResourceIndex.Un.ImgIndex, 
 		npkResourceIndex.Un.FrameIndex);

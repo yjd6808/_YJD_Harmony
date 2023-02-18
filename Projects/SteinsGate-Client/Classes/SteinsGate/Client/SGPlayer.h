@@ -11,21 +11,12 @@
 #include <SteinsGate/Client/SGCharacter.h>
 
 class SGMapLayer;
-class SGPlayer
+class SGPlayer : public SGCharacter
 {
 public:
 	SGPlayer();
-	virtual ~SGPlayer();
+	~SGPlayer() override;
 
-	void setCharacter(SGCharacter* character);
-	void setMapLayer(SGMapLayer* mapLayer);
-
-	SGActorSprite* getActorSprite();
-	SGCharacter* getCharacter();
-	SGMapLayer* getMapLayer();
-
-	virtual void runAnimation(int animationCode) = 0;
 protected:
-	SGMapLayer* m_pMapLayer;
-	SGCharacter* m_pCharacter;
+	PlayerData m_PlayerData;
 };

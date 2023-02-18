@@ -10,10 +10,11 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct SGClientInfo : ConfigDataAbstract
+class SGClientInfo : public ConfigDataAbstract
 {
-	~SGClientInfo() override = default;
+public:
 
+	~SGClientInfo() override = default;
 	float GameScale;
 	float ResolutionWidth;
 	float ResolutionHeight;

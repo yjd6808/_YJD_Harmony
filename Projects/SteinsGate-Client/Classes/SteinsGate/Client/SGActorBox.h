@@ -14,7 +14,7 @@
 #include <SteinsGate/Client/SGProjectile.h>
 #include <SteinsGate/Client/SGMonster.h>
 #include <SteinsGate/Client/SGObstacle.h>
-#include <SteinsGate/Client/SGCharacter.h>
+#include <SteinsGate/Client/SGHostPlayer.h>
 #include <SteinsGate/Client/SGEffect.h>
 
 using ActorList = SGVector<SGActor*>;
@@ -54,11 +54,11 @@ public:
 
 	// 캐릭터는 액터 박스가 생성/소멸을 관리하는 객체가 아니다.
 	// 단지 생성만 도와줌
-	SGCharacter* createCharacterOnMap(CharType_t charType, float x, float y, SGCharacterInfo& info);
-
+	SGCharacter* createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& info);
 	SGProjectile* createProejctileOnMap(SGActor* spawner, int projectileId);
 	SGMonster* createMonsterOnMap(int monsterCode, int aiCode, float x, float y);
 	SGObstacle* createObstacleOnMap(int obstacleCode, float x, float y);
+	void registerPlayerOnMap(SGPlayer* player);
 
 	// spawner 캔버스 기준 상대좌표로 이펙트를 만든다.
 	SGEffect* createEffectOnMapBySpawner(SGActor* spawner, int effectCode, float offsetX, float offsetY);

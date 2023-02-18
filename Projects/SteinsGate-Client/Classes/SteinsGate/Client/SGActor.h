@@ -39,7 +39,7 @@ public:
 	virtual void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
 	virtual void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
 	virtual void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) = 0;
-	virtual void initThicknessBox(const SGThicknessBox& thicknessBox);
+	virtual void initThicknessBox(const ThicknessBox& thicknessBox);
 	virtual void initHitRecorder(int hitPossibleListSize = 16, int alreadyHitMapSize = 32);
 	virtual void initListener(SGActorListener* listener) = 0;	// 올바른 리스너인지 자식이 체크하도록함
 	virtual bool isPhysicsActor() { return false; }
@@ -64,7 +64,7 @@ public:
 	SGVec2 getCanvasPositionReal()			const;
 	SGSize getCanvasSize()					const;
 	SGRect getHitBox()						const;
-	SGThicknessBox getThicknessBox()		const;
+	ThicknessBox getThicknessBox()		const;
 	SGActorSprite* getActorSprite()			const;
 	SpriteDirection_t getSpriteDirection()  const;
 	int getRunningAnimationCode();

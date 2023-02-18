@@ -25,7 +25,7 @@ SGActorPartSprite* SGActorPartSprite::create(
 	SGActorSprite* actor, 
 	SGNode* canvas, 
 	SGDrawNode* boundingBox, 
-	SGActorPartSpriteData* partData, 
+	ActorPartSpriteData* partData, 
 	SGVector<SGAnimationInfo*>& animations
 )
 {
@@ -46,7 +46,7 @@ SGActorPartSprite::SGActorPartSprite(
 	SGActorSprite* actor,
 	SGNode* canvas,
 	SGDrawNode* boundingBox,
-	SGActorPartSpriteData* partData, 
+	ActorPartSpriteData* partData, 
 	SGVector<SGAnimationInfo*>& animations)
 		: m_iPartIndex(partIndex)
 		, m_pActorSprite(actor)

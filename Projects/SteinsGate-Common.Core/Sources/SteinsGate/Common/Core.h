@@ -16,6 +16,8 @@
 #include <JCore/Time.h>
 #include <JCore/Stream.h>
 
+#include <JCore/Primitives/StaticString.h>
+
 #include <JCore/Utils/Concatenation.h>
 #include <JCore/Utils/Console.h>
 
@@ -50,6 +52,9 @@
 
 using SGConsole = JCore::Console;
 using SGString = JCore::String;
+
+template <Int32U Size>
+using SGStaticString = JCore::StaticString<Size>;
 using SGPath = JCore::Path;
 using SGStringUtil = JCore::StringUtil;
 
@@ -95,6 +100,8 @@ using SGDateTime = JCore::DateTime;
 using SGNormalLock = JCore::NormalLock;
 using SGRecursiveLock = JCore::RecursiveLock;
 
+
+
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) AlignedVector : public SGVector<T, TAllocator> {};
 
@@ -109,3 +116,5 @@ class alignas(SG_CACHELINE_SIZE) AlignedHashMap : public SGHashMap<TKey, TValue,
 
 void InitializeCommonCore();
 void FinalizeCommonCore();
+
+

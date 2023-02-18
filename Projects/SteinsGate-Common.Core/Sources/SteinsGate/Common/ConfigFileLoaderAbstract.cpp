@@ -15,7 +15,7 @@ ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract() {
 	});
 }
 
-bool ConfigFileLoaderAbstract::loadJson(Json::Value& root) {
+bool ConfigFileLoaderAbstract::loadJson(Out_ Json::Value& root) {
 	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, getConfigFileName());
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
 	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", getConfigFileName());
@@ -26,6 +26,23 @@ bool ConfigFileLoaderAbstract::loadJson(Json::Value& root) {
 		return false;
 	}
 	return true;
+}
+
+bool ConfigFileLoaderAbstract::loadJson(const char* fileName, Out_ Json::Value& root) {
+	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, fileName);
+	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
+	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", fileName);
+	try {
+		reader >> root;
+	} catch (std::exception& ex) {
+		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", fileName, ex.what());
+		return false;
+	}
+	return true;
+}
+
+bool ConfigFileLoaderAbstract::loadJson(const SGString& fileName, Out_ Json::Value& root) {
+	return loadJson(fileName.Source(), root);
 }
 
 void ConfigFileLoaderAbstract::addData(ConfigDataAbstract* data) {

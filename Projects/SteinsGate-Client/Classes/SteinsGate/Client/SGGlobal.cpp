@@ -56,8 +56,7 @@ void SGGlobal::initialize() {
 		m_AvatarPartNameToTypeMap.Insert("coat", VisualType::Coat);
 		m_AvatarPartNameToTypeMap.Insert("cap", VisualType::Cap);
 		m_AvatarPartNameToTypeMap.Insert("belt", VisualType::Belt);
-		m_AvatarPartNameToTypeMap.Insert("weapon_left", VisualType::WeaponLeft);
-		m_AvatarPartNameToTypeMap.Insert("weapon_right", VisualType::WeaponRight);
+		m_AvatarPartNameToTypeMap.Insert("weapon_left", VisualType::Weapon);
 	}
 
 
@@ -71,8 +70,7 @@ void SGGlobal::initialize() {
 		m_AvatarPrefix[CharType::Gunner].Insert(VisualType::Coat, "gn_coat");
 		m_AvatarPrefix[CharType::Gunner].Insert(VisualType::Cap, "gn_cap");
 		m_AvatarPrefix[CharType::Gunner].Insert(VisualType::Belt, "gn_belt");
-		m_AvatarPrefix[CharType::Gunner].Insert(VisualType::WeaponLeft, "__");
-		m_AvatarPrefix[CharType::Gunner].Insert(VisualType::WeaponRight, "__");
+		m_AvatarPrefix[CharType::Gunner].Insert(VisualType::Weapon, "__");
 	}
 
 	{

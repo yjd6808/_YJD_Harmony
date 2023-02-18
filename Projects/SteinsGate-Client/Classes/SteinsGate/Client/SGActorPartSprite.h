@@ -24,7 +24,7 @@ public:
 		SGActorSprite* actor,
 		SGNode* canvas,
 		SGDrawNode* boundingBox,
-		SGActorPartSpriteData* partData, 
+		ActorPartSpriteData* partData, 
 		SGVector<SGAnimationInfo*>& animations
 	);
 
@@ -34,7 +34,7 @@ public:
 		SGActorSprite* actor,
 		SGNode* canvas,
 		SGDrawNode* boundingBox,
-		SGActorPartSpriteData* partData, 
+		ActorPartSpriteData* partData, 
 		SGVector<SGAnimationInfo*>& animations
 	);
 	~SGActorPartSprite() override;
@@ -62,7 +62,7 @@ private:
 	// 주입 데이터
 	int m_iPartIndex;	// 몇번째 파츠인지
 	SGActorSprite* m_pActorSprite;
-	SGActorPartSpriteData* m_pPartData;
+	ActorPartSpriteData* m_pPartData;
 	SGVector<SGAnimationInfo*>& m_refAnimationInfoList;
 
 	// 자체 데이터

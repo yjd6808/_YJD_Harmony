@@ -21,7 +21,7 @@ public:
 
 	bool initVariables() override;
 	void initActorSprite() override;
-	void initThicknessBox(const SGThicknessBox& thicknessBox) override;
+	void initThicknessBox(const ThicknessBox& thicknessBox) override;
 	void initListener(SGActorListener* listener) override;
 	void initPosition();
 

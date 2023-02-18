@@ -18,40 +18,41 @@ class SGHostPlayer : public SGPlayer
 {
 	SGHostPlayer();
 public:
-	~SGHostPlayer();
+	~SGHostPlayer() override;
 
 	static SGHostPlayer* get() {
 		static SGHostPlayer* s_pInstance = nullptr;
 
-		if (s_pInstance == nullptr)
+		if (s_pInstance == nullptr) {
 			s_pInstance = dbg_new SGHostPlayer;
-
+		}
 		return s_pInstance;
 	}
 
-	
+	bool init();
 	void initActionManager();
 	void initController();
-
-	void update(float dt);
+	void hit(const SGHitInfo& hitInfo) override;
+	
+	void update(float dt) override;
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
-	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
-	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
-	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
+	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
+	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
+	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
+	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) override;
 
-	void runAnimation(int animationCode) override;
-	void runAction(int actionCode);
-	void runActionForce(int actionCode);
-	void runBaseAction(BaseAction_t baseAction);
-	
+	void playAction(int actionCode);
+	void playActionForce(int actionCode);
+	void playBaseActionForce(BaseAction_t baseActionType);
+	void playBaseAction(BaseAction_t baseAction);
 
 	int getRunningActionCode();
 
-	SGActionManager* getActionManager();
-	SGPlayerController* getController();
+	SGActionManager* actionManager();
+	SGPlayerController* ctrl();
 private:
+	AccountData m_AccountData;
 
 	SGActionManager* m_pActionManager;
 	SGPlayerController* m_pController;

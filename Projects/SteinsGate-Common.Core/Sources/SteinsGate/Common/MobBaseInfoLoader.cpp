@@ -15,14 +15,14 @@
   */
 
 #include "Core.h"
-#include "SGMobBaseInfoLoader.h"
+#include "MobBaseInfoLoader.h"
 
 #include <SteinsGate/Common/SGJson.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
-bool SGMobBaseInfoLoader::load() {
+bool MobBaseInfoLoader::load() {
 	Json::Value root;
 
 	if (!loadJson(root)) {
@@ -34,7 +34,7 @@ bool SGMobBaseInfoLoader::load() {
 
 		for (int i = 0; i < monsterListRoot.size(); ++i) {
 			Value& monsterRoot = monsterListRoot[i];
-			SGMobBaseInfo* pMobInfo = dbg_new SGMobBaseInfo;
+			MobBaseInfo* pMobInfo = dbg_new MobBaseInfo;
 			readMobBaseInfo(monsterRoot, pMobInfo);
 			addData(pMobInfo);
 		}
@@ -47,14 +47,14 @@ bool SGMobBaseInfoLoader::load() {
 	return true;
 }
 
-void SGMobBaseInfoLoader::readMobBaseInfo(Json::Value& monsterRoot, Out_ SGMobBaseInfo* mobInfo) {
+void MobBaseInfoLoader::readMobBaseInfo(Json::Value& monsterRoot, Out_ MobBaseInfo* mobInfo) {
 
 	mobInfo->Code = monsterRoot["code"].asInt();
 	mobInfo->Name = SGJson::getString(monsterRoot["kor_name"]);
 	mobInfo->HP = monsterRoot["hp"].asInt();
 	mobInfo->MP = monsterRoot.get("mp", 0).asInt();
 	mobInfo->PhysicalDamage = monsterRoot["physical_damage"].asInt();
-	mobInfo->MagicalDamage = monsterRoot["magical_damage"].asInt();
+	mobInfo->MagicDamage = monsterRoot["Magic_damage"].asInt();
 	mobInfo->Armor = monsterRoot.get("armor", 0).asInt();
 	mobInfo->MagicArmor = monsterRoot.get("magic_armor", 0).asInt();
 	mobInfo->EnhancePerLevel = monsterRoot["enhance_per_level"].asFloat();

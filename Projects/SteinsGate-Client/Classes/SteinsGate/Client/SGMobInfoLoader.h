@@ -10,10 +10,10 @@
 
 
 #include <SteinsGate/Client/SGMobInfo.h>
-#include <SteinsGate/Common/SGMobBaseInfoLoader.h>
+#include <SteinsGate/Common/MobBaseInfoLoader.h>
 
 
-struct SGMobInfoLoader : SGMobBaseInfoLoader
+struct SGMobInfoLoader : MobBaseInfoLoader
 {
 public:
 	~SGMobInfoLoader() override = default;

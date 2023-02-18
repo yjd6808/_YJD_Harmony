@@ -34,15 +34,6 @@
     <Filter Include="Define">
       <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Player">
-      <UniqueIdentifier>{0c149682-99b4-47ce-a598-7f8e8e05e211}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player\Action">
-      <UniqueIdentifier>{4811212e-a215-4545-90b1-d42941b6c07d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player\Action\Gunner">
-      <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Texture">
       <UniqueIdentifier>{2c7479b6-6920-4f4d-8a18-d686a3dc17b1}</UniqueIdentifier>
     </Filter>
@@ -94,6 +85,12 @@
     <Filter Include="Data\Char">
       <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Action">
+      <UniqueIdentifier>{4811212e-a215-4545-90b1-d42941b6c07d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Action\Gunner">
+      <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePackManager.cpp">
@@ -112,7 +109,7 @@
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGComboKeyList.cpp">
-      <Filter>Player\Action</Filter>
+      <Filter>Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGActor.cpp">
       <Filter>Actor</Filter>
@@ -126,12 +123,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGMonster.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGHostPlayer.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayerController.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGActorSprite.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
@@ -144,32 +135,29 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGFrameTexture.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActionManager.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGAction.cpp">
-      <Filter>Player\Action</Filter>
+      <Filter>Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGComboTree.cpp">
-      <Filter>Player\Action</Filter>
+      <Filter>Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerIdle.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerJump.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerRun.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerSliding.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerWalk.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerGunShot.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.cpp">
       <Filter>Data\Char</Filter>
@@ -202,10 +190,10 @@
       <Filter>Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerHit.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerAction.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGAIActor.cpp">
       <Filter>Actor</Filter>
@@ -245,7 +233,7 @@
       <Filter>Data\AttackData</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerFallDown.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGStruct.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGHitRecorder.cpp">
@@ -258,7 +246,7 @@
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerSitRecover.cpp">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGActorListenerManager.cpp">
       <Filter>Actor\Listener</Filter>
@@ -288,15 +276,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectileInfo.cpp">
       <Filter>Data\Projectile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayerPool.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetPlayer.cpp">
-      <Filter>Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayer.cpp">
-      <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGWorldScene.cpp">
       <Filter>Game</Filter>
@@ -352,6 +331,24 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\GameCore.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGHostPlayer.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayer.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayerController.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayerPool.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGActionManager.cpp">
+      <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGInven.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePackManager.h">
@@ -373,10 +370,7 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGComboKeyList.h">
-      <Filter>Player\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGHostPlayer.h">
-      <Filter>Player</Filter>
+      <Filter>Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGActor.h">
       <Filter>Actor</Filter>
@@ -390,9 +384,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGMonster.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayerController.h">
-      <Filter>Player</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGActorSprite.h">
       <Filter>Actor</Filter>
     </ClInclude>
@@ -405,14 +396,11 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGFrameTexture.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionManager.h">
-      <Filter>Player</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAction.h">
-      <Filter>Player\Action</Filter>
+      <Filter>Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGComboTree.h">
-      <Filter>Player\Action</Filter>
+      <Filter>Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAnimationDefine.h">
       <Filter>Define</Filter>
@@ -421,25 +409,25 @@
       <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerIdle.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerGunShot.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerJump.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerRun.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerSliding.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerWalk.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAllActions.h">
-      <Filter>Player\Action</Filter>
+      <Filter>Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileDefine.h">
       <Filter>Define</Filter>
@@ -493,10 +481,10 @@
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerHit.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerAction.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAIActor.h">
       <Filter>Actor</Filter>
@@ -538,7 +526,7 @@
       <Filter>Data\AttackData</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerFallDown.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGHitRecorder.h">
       <Filter>Actor\Util</Filter>
@@ -550,7 +538,7 @@
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerSitRecover.h">
-      <Filter>Player\Action\Gunner</Filter>
+      <Filter>Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileListener.h">
       <Filter>Actor\Listener</Filter>
@@ -594,15 +582,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.h">
       <Filter>Data\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayerPool.h">
-      <Filter>Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetPlayer.h">
-      <Filter>Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayer.h">
-      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGWorldScene.h">
       <Filter>Game</Filter>
@@ -662,6 +641,27 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GameCore.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayer.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGHostPlayer.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayerPool.h">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionManager.h">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayerController.h">
+      <Filter>Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGInven.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\GameCoreHeader.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

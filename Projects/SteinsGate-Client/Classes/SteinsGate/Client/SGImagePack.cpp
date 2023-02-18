@@ -42,7 +42,7 @@ int SGImagePack::getSpriteCount(int imgIndex) {
  * 같은 몬스터 수십마리를 매번 파일스트림에서 텍스쳐 데이터를 읽고 압축 해제하고 32bit 이미지화 시킬 수는 없자나?
  */
 SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
-	SGNpkResourceIndex index;
+	NpkResourceIndex index;
 	index.Un.NpkIndex = m_iIndex;
 	index.Un.ImgIndex = imgIndex;
 	index.Un.FrameIndex = frameIndex;
@@ -103,13 +103,13 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 }
 
 void SGImagePack::releaseFrameTexture(int imgIndex, int frameIndex) {
-	SGNpkResourceIndex index{ m_iIndex, imgIndex, frameIndex };
+	NpkResourceIndex index{ m_iIndex, imgIndex, frameIndex };
 	DebugAssertMsg(m_TextureCacheMap.Exist(index.Value), "해당하는 프레임 데이터가 없습니다. [1]");
 	CC_SAFE_RELEASE(m_TextureCacheMap[index.Value]);
 	m_TextureCacheMap.Remove(index.Value);
 }
 
-void SGImagePack::releaseFrameTexture(const SGNpkResourceIndex& npkResourceIndex) {
+void SGImagePack::releaseFrameTexture(const NpkResourceIndex& npkResourceIndex) {
 	DebugAssertMsg(m_TextureCacheMap.Exist(npkResourceIndex.Value), "해당하는 프레임 데이터가 없습니다. [2]");
 	CC_SAFE_RELEASE(m_TextureCacheMap[npkResourceIndex.Value]);
 	m_TextureCacheMap.Remove(npkResourceIndex.Value);

@@ -14,8 +14,8 @@
 
 #include <SteinsGate/Client/SGActorPartSprite.h>
 #include <SteinsGate/Client/SGImagePackManager.h>
-
-#include "SGActorSprite.h"
+#include <SteinsGate/Client/SGActorSprite.h>
+#include <SteinsGate/Client/SGActor.h>
 
 SGActorPartAnimation::SGActorPartAnimation(
 	SGActorPartSprite* animationTarget,

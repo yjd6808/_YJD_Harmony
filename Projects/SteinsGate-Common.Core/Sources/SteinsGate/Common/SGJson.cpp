@@ -19,7 +19,7 @@ SGString SGJson::getString(Json::Value& value) {
 	return { pBegin, iLen + 1 };
 }
 
-void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, SGThicknessBox& info) {
+void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, ThicknessBox& info) {
 
 	int num[4];
 	SGTextParser::parserIntNumbers(SGJson::getString(thicknessRoot), num, 4);

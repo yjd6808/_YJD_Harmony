@@ -49,6 +49,10 @@
     #define JCoreForceInline    __forceinline
     #define JCoreInfinite       0xffffffff
 
+    #define Null(x	)			\
+    do {						\
+        (x) = nullptr;			\
+    } while (0)
     #define DeleteSafe(x)		\
     do {						\
 	    if (x) {				\

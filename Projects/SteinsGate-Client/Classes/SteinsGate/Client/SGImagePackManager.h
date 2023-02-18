@@ -38,7 +38,7 @@ public:
 	int getPackIndex(const SGString& packPath);
 	int getPackIndexDefault(const SGString& packPath, int defaultIndex);
 	void releaseFrameTexture(int packIndex, int imgIndex, int frameIndex);
-	void releaseFrameTexture(const SGNpkResourceIndex& npkResourceIndex);
+	void releaseFrameTexture(const NpkResourceIndex& npkResourceIndex);
 
 	// TODO: 로딩된 패키지들 모두 Unload 하는 기능
 	// void unloadAll();

@@ -31,7 +31,7 @@ SGAction::~SGAction() {
 
 void SGAction::play() {
 	// 플레이어가 사용가능한지 체크
-	m_pHitRecorder = m_pPlayer->getCharacter()->getHitRecorder();
+	m_pHitRecorder = m_pPlayer->getHitRecorder();
 	m_pHitRecorder->clear();
 
 
@@ -40,15 +40,15 @@ void SGAction::play() {
 
 void SGAction::stop() {
 
-	m_pPlayer->getActionManager()->stopActionForce();
-	m_pPlayer->getController()->setCommandable(true);			// 다시 콤보 입력이 가능하도록 변경해준다.
+	m_pPlayer->actionManager()->stopActionForce();
+	m_pPlayer->ctrl()->setCommandable(true);			// 다시 콤보 입력이 가능하도록 변경해준다.
 
 	m_pHitRecorder->setAlreadyHitRecord(false);
 	m_pHitRecorder->setSingleHitCallback(nullptr);
 	m_pHitRecorder->setMultiHitCallback(nullptr);
 
 	if (!isForceCancelable()) {
-		m_pPlayer->getController()->reflectPressedMoveKeys();
+		m_pPlayer->ctrl()->reflectPressedMoveKeys();
 	}
 	
 	onActionEnd();
@@ -75,6 +75,6 @@ void SGAction::setMoveable(bool moveable) {
 
 void SGAction::runFrameEvent(FrameEventType_t frameEventType, int frameEventId) {
 	DebugAssertMsg(m_pPlayer->getMapLayer() != nullptr, "플레이가 속한 맵 레이어가 없습니다.");
-	m_pPlayer->getCharacter()->runFrameEvent(frameEventType, frameEventId);
+	m_pPlayer->runFrameEvent(frameEventType, frameEventId);
 }
 

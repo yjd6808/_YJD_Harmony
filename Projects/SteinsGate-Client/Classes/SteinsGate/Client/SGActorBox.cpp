@@ -99,7 +99,6 @@ void SGActorBox::clearAll() {
 	updateCleanUp();
 	DebugAssertMsg(m_hRemoveActorMap.Size() == 0, "아직 반환안된 액터가 있습니다. 이러면 안됩니다.");
 
-	// 캐릭터들은 액터 ID 초기화 해줘야함
 	int iStep1ReleaseCount = 0;
 	int iStep2ReleaseCount = 0;
 
@@ -244,7 +243,7 @@ void SGActorBox::updateActors(float dt) {
 }
 
 
-SGCharacter* SGActorBox::createCharacterOnMap(CharType_t charType, float x, float y, SGCharacterInfo& info) {
+SGCharacter* SGActorBox::createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& info) {
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 캐릭터를 생성해주세요");
 
 	SGCharacter* pCharacter = SGCharacter::create(charType, info);
@@ -370,6 +369,19 @@ SGObstacle* SGActorBox::createObstacleOnMap(int obstacleCode, float x, float y) 
 	return pObstacle;
 }
 
+void SGActorBox::registerPlayerOnMap(SGPlayer* player) {
+
+	for (int i = 0; i < m_vCharacters.Size(); ++i) {
+		if (m_vCharacters[i] == player) {
+			DebugAssertMsg(false, "이미 캐릭터가 맵에 포함되어 있습니다.");
+			return;
+		}
+	}
+
+	registerCharacter(player);
+	player->retain();
+	m_pMapLayer->addChild(player);
+}
 
 
 SGEffect* SGActorBox::createEffectOnMapBySpawner(SGActor* spawner, int effectCode, float offsetX, float offsetY) {

@@ -31,7 +31,7 @@ SGGunnerJump::SGGunnerJump(SGHostPlayer* player, SGActionInfo* actionInfo)
 // #define GUNNER_ANIMATION_JUMP_SHOT_END				20
 
 void SGGunnerJump::onActionBegin() {
-	SGActionManager* pActionManager = m_pPlayer->getActionManager();
+	SGActionManager* pActionManager = m_pPlayer->actionManager();
 	SGAction* pPrevious = pActionManager->getPreviousAction();
 
 	setMoveable(false);
@@ -59,7 +59,7 @@ void SGGunnerJump::onActionBegin() {
 }
 
 void SGGunnerJump::onUpdate(float dt) {
-	SGCharacter* pCharacter = m_pPlayer->getCharacter();
+	SGCharacter* pCharacter = m_pPlayer;
 
 	updateJumpUp(pCharacter, dt);
 	updateJumpDown(pCharacter, dt);
@@ -67,8 +67,8 @@ void SGGunnerJump::onUpdate(float dt) {
 
 void SGGunnerJump::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {
 	int iAnimationCode = animation->getAnimationCode();
-	SGCharacter* pCharacter = m_pPlayer->getCharacter();
-	SGPlayerController* pController = m_pPlayer->getController();
+	SGCharacter* pCharacter = m_pPlayer;
+	SGPlayerController* pController = m_pPlayer->ctrl();
 
 	// 착지 경지 효과를 위해 움직임 봉인
 	if (iAnimationCode == GUNNER_ANIMATION_JUMP_END) {
@@ -78,7 +78,7 @@ void SGGunnerJump::onAnimationBegin(SGActorPartAnimation* animation, SGFrameText
 
 void SGGunnerJump::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {
 	int iAnimationCode = animation->getAnimationCode();
-	SGCharacter* pCharacter = m_pPlayer->getCharacter();
+	SGCharacter* pCharacter = m_pPlayer;
 
 	if (iAnimationCode == GUNNER_ANIMATION_JUMP_START) {
 		setMoveable(true);
@@ -105,7 +105,7 @@ void SGGunnerJump::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* f
 		return;
 	}
 
-	SGCharacter* pCharacter = m_pPlayer->getCharacter();
+	SGCharacter* pCharacter = m_pPlayer;
 	int iFrameIndexInAnimation = animation->getFrameIndexInAnimation();
 
 	// jump_shot_shot 73번 인덱스 호출완료시
@@ -129,7 +129,7 @@ void SGGunnerJump::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* f
 
 void SGGunnerJump::onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
 	ControlKey_t controlKey = controller->convertControlKey(keyCode);
-	SGCharacter* pCharacter = m_pPlayer->getCharacter();
+	SGCharacter* pCharacter = m_pPlayer;
 
 	if (!m_bFireMode)
 		controller->updateDirection(controlKey);
@@ -215,7 +215,7 @@ void SGGunnerJump::reboundX(SGCharacter* character) {
 }
 
 void SGGunnerJump::reboundXLeft(SGCharacter* character) {
-	SGPlayerController* pController = m_pPlayer->getController();
+	SGPlayerController* pController = m_pPlayer->ctrl();
 
 
 	/*
@@ -246,7 +246,7 @@ void SGGunnerJump::reboundXLeft(SGCharacter* character) {
 }
 
 void SGGunnerJump::reboundXRight(SGCharacter* character) {
-	SGPlayerController* pController = m_pPlayer->getController();
+	SGPlayerController* pController = m_pPlayer->ctrl();
 
 	m_bMoveableNegativeX = false;
 	m_fMoveSpeedFPSX = 0.0f;

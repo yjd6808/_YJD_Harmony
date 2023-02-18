@@ -43,7 +43,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\Logo.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGMobBaseInfoLoader.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.cpp">
       <Filter>Data\MobBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SGTextParser.cpp">
@@ -116,10 +116,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h">
       <Filter>Logger</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGMobBaseInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfo.h">
       <Filter>Data\MobBase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGMobBaseInfoLoader.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.h">
       <Filter>Data\MobBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\SGJson.h">
@@ -140,6 +140,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.h">
       <Filter>Data\CharBase</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ItemBaseInfo.h">
+      <Filter>Data\ItemBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfo.h">
+      <Filter>Data\ItemOpt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Npk">
@@ -159,6 +165,15 @@
     </Filter>
     <Filter Include="Data\CharBase">
       <UniqueIdentifier>{c4c23334-31c3-447c-a7c6-d8e43d1e5968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\ItemBase">
+      <UniqueIdentifier>{cd4145a7-98cf-4050-acbe-defa7ebbcc35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\ItemOpt">
+      <UniqueIdentifier>{4c789653-6ad2-47f4-a466-d695070aa351}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Buff">
+      <UniqueIdentifier>{3a8da66d-ff6a-4a0b-bf0e-e32706850bab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

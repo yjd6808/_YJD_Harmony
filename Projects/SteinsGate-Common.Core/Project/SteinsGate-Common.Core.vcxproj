@@ -62,7 +62,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SGJson.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGMobBaseInfoLoader.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -84,6 +84,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ItemBaseInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -122,12 +126,16 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGJson.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGMobBaseInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGMobBaseInfoLoader.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGJson.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

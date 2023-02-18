@@ -35,7 +35,7 @@ struct SGActorSpriteData
 		: Parts(partCount)
 		, Animations(animationCount) {}
 
-	SGVector<SGActorPartSpriteData> Parts;
+	SGVector<ActorPartSpriteData> Parts;
 	SGVector<SGAnimationInfo*> Animations;
 };
 

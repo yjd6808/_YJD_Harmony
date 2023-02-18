@@ -56,7 +56,7 @@ bool SGProjectile::initVariables() {
 	return true;
 }
 
-void SGProjectile::initThicknessBox(const SGThicknessBox& thicknessBox) {
+void SGProjectile::initThicknessBox(const ThicknessBox& thicknessBox) {
 	SGActor::initThicknessBox(thicknessBox);
 
 	// 두께빡스 위치 자동지정

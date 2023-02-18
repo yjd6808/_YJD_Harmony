@@ -11,7 +11,7 @@
 #include "Core.h"
 
 #include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
-#include <SteinsGate/Common/SGMobBaseInfo.h>
+#include <SteinsGate/Common/MobBaseInfo.h>
 
 class SGDataManagerAbstract
 {
@@ -29,7 +29,7 @@ public:
 	void unload(ConfigFileType_t configFileType); 
 	void finalizeLoader();
 
-	SGMobBaseInfo* getMobBaseInfo(int code);
+	MobBaseInfo* getMobBaseInfo(int code);
 protected:
 	ConfigFileLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max];
 	bool m_bLoaded[ConfigFileType::Max]; // Lazy Loading을 기본으로 하자.

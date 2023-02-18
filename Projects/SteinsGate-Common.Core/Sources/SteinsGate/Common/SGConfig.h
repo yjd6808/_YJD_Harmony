@@ -37,6 +37,8 @@ inline const char* ConfigDirectoryPath_v = "D:/Programming/MyProjects/_DevCpp/Ul
 
 inline constexpr int InvalidValue_v = -1;
 
-// 32바이트
-// 
-inline constexpr int NpkFlagBit = 16;
+inline constexpr int CharNameLen_v = 40;
+inline constexpr int AccountIdLen_v = 40;
+inline constexpr int AccountPassLen_v = 40;
+
+inline constexpr int MaxOptCount_v = 6;

@@ -61,7 +61,7 @@ void SGUIManager::registerGroup(SGUIGroup* group) {
 	});
 }
 
-void SGUIManager::registerLoadedUITexture(SGNpkResourceIndex index) {
+void SGUIManager::registerLoadedUITexture(NpkResourceIndex index) {
 	m_hLoadedUITexture.Insert(index.Value, index);
 }
 
@@ -76,7 +76,7 @@ void SGUIManager::unloadAll() {
 	});
 
 	// 관련 캐쉬, 팩 모두 언로드
-	m_hLoadedUITexture.Values().Extension().ForEach([pPackManager](SGNpkResourceIndex& resourceIndex) {
+	m_hLoadedUITexture.Values().Extension().ForEach([pPackManager](NpkResourceIndex& resourceIndex) {
 		pPackManager->releaseFrameTexture(resourceIndex);
 		pPackManager->unloadPackData(resourceIndex.Un.NpkIndex);
 	});

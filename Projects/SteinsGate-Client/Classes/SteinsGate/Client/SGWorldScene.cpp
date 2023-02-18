@@ -165,38 +165,19 @@ void SGWorldScene::onMouseScroll(SGEventMouse* mouseEvent) {
 
 void SGWorldScene::onExit() {
 
-	m_pUILayer->clearUnload();	// 삭제전 마지막 발악, 모든 UI 리소스 정리
+	// 삭제전 마지막 발악, 모든 UI 리소스 정리
+	m_pUILayer->clearUnload();	
 
+	// 강종시 하위 씬들의 onExit을 수동호출해주자.
+	Scene::onExit();		
 
-	Scene::onExit();		// 마지막에 호출! 자식 객체들 모두 정리; (이후로 자식노드 사용불가능 - m_pUILayer 이런녀석)
-	removeAllChildren();	// 자식노드 모두 정리 (onExit에서 제거하는줄 알았는데 아니네; 그냥 재귀 onExit 호출함.. 하..)
+	// 자식노드 모두 정리 (onExit에서 제거하는줄 알았는데 아니네; 그냥 재귀 onExit 호출함.. 하..)
+	// 씬 정리되기전에 모든 레퍼런스 카운트가 0가 되어야함.
+	removeAllChildren();
 
-	delete SGFontPackage::get();
-	delete SGUIManager::get();
-	delete SGHostPlayer::get();
-	delete SGActorBox::get();
-	delete SGActorListenerManager::get();
-	delete SGDataManager::get();
-	delete SGImagePackManager::get();
-	delete SGGlobal::get();
-
-
-
-
-	
-
-	
-
-	// 특정 씬에서 강종시 WolrdScene이 먼저 종료를 시작하게됨 ㄷㄷ (Director::reset())
-	// 그래서 수동으로 삭제해줘야한다.
-	//if (m_pRunningScene) {
-//		removeChild(m_pRunningScene);
-//	}
-	
-
-	
-
-
+	FinalizeClientCore();
+	FinalizeCommonCore();
+	FinalizeDefaultLogger();
 }
 
 

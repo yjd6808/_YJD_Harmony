@@ -45,8 +45,8 @@ bool SGActorSprite::init() {
 	if (!Sprite::init())
 		return false;
 
-	SGVector<SGActorPartSpriteData>& vPartsData = m_spActorData->Parts;
-	vPartsData.Sort([](SGActorPartSpriteData& lhs, SGActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
+	SGVector<ActorPartSpriteData>& vPartsData = m_spActorData->Parts;
+	vPartsData.Sort([](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
 
 	// 바디 파츠 기준으로 전체 프레임수를 얻는다.
 	int iFrameCount = SGImagePackManager::get()

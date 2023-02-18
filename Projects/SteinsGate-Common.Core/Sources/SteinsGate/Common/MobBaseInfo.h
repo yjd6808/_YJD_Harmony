@@ -11,15 +11,15 @@
 #include "Core.h"
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct SGMobBaseInfo : ConfigDataAbstract
+struct MobBaseInfo : ConfigDataAbstract
 {
-	virtual ~SGMobBaseInfo() = default;
+	virtual ~MobBaseInfo() = default;
 
 	SGString Name;
 	int HP;
 	int MP;
 	int PhysicalDamage;
-	int MagicalDamage;
+	int MagicDamage;
 	int Armor;
 	int MagicArmor;
 	float EnhancePerLevel;
@@ -27,5 +27,5 @@ struct SGMobBaseInfo : ConfigDataAbstract
 	float MoveSpeedX;
 	float MoveSpeedY;
 	float DownRecoverTime;
-	SGThicknessBox ThicknessBox;
+	ThicknessBox ThicknessBox;
 };

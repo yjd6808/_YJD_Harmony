@@ -60,7 +60,7 @@ bool SGActor::initVariables() {
 	return true;
 }
 
-void SGActor::initThicknessBox(const SGThicknessBox& thicknessBox) {
+void SGActor::initThicknessBox(const ThicknessBox& thicknessBox) {
 
 	// DrawNode는 앵커포인트 신경안쓰고 컨텐츠박스 기준 좌하단부터 그림
 	RectPoly poly = RectPoly::createFromLeftBottom(0, 0, thicknessBox.Width, thicknessBox.Height);
@@ -109,7 +109,7 @@ SGActorRect SGActor::getActorRect() const {
 	return { getThicknessBoxRect(), getHitBox() };
 }
 
-SGThicknessBox SGActor::getThicknessBox() const {
+ThicknessBox SGActor::getThicknessBox() const {
 	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
 
 	SGVec2 pos = m_pThicknessBox->getPosition();
@@ -125,7 +125,7 @@ Rect SGActor::getThicknessBoxRect() const {
 
 SGVec2 SGActor::getPositionReal() const {
 	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	SGThicknessBox thicknessBox = getThicknessBox();
+	ThicknessBox thicknessBox = getThicknessBox();
 	Vec2 thicknessOrigin = getPosition();
 	thicknessOrigin.x += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
 	thicknessOrigin.y += (thicknessBox.RelativeY - (thicknessBox.Height / 2.0f));
@@ -134,7 +134,7 @@ SGVec2 SGActor::getPositionReal() const {
 
 float SGActor::getPositionRealX() const {
 	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	SGThicknessBox thicknessBox = getThicknessBox();
+	ThicknessBox thicknessBox = getThicknessBox();
 	float thicknessOriginX = getPositionX();
 	thicknessOriginX += (thicknessBox.RelativeX - (thicknessBox.Width / 2.0f));
 	return thicknessOriginX;
@@ -142,7 +142,7 @@ float SGActor::getPositionRealX() const {
 
 float SGActor::getPositionRealY() const {
 	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	SGThicknessBox thicknessBox = getThicknessBox();
+	ThicknessBox thicknessBox = getThicknessBox();
 	float thicknessOriginY = getPositionY();
 	thicknessOriginY += (thicknessBox.RelativeY - (thicknessBox.Height / 2.0f));
 	return thicknessOriginY;
@@ -214,7 +214,7 @@ SGActorPartAnimation* SGActor::getRunningAnimation() {
 
 void SGActor::setPositionReal(float x, float y) {
 	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	SGThicknessBox thicknessBox = getThicknessBox();
+	ThicknessBox thicknessBox = getThicknessBox();
 
 	x -= thicknessBox.RelativeX;
 	y -= thicknessBox.RelativeY;
@@ -231,7 +231,7 @@ void SGActor::setPositionReal(const SGVec2& v) {
 
 void SGActor::setPositionRealX(float x) {
 	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	SGThicknessBox thicknessBox = getThicknessBox();
+	ThicknessBox thicknessBox = getThicknessBox();
 	x -= thicknessBox.RelativeX;
 	x += thicknessBox.Width / 2.0f;
 	setPositionX(x);
@@ -239,7 +239,7 @@ void SGActor::setPositionRealX(float x) {
 
 void SGActor::setPositionRealY(float y) {
 	DebugAssertMsg(m_pThicknessBox, "아직 두께박스가 초기화가 이뤄지지 않았습니다.");
-	SGThicknessBox thicknessBox = getThicknessBox();
+	ThicknessBox thicknessBox = getThicknessBox();
 	y -= thicknessBox.RelativeY;
 	y += thicknessBox.Height / 2.0f;
 	setPositionY(y);

@@ -43,7 +43,7 @@ struct SGProjectileInfo : ConfigDataAbstract
 	float RehitDelay;
 	bool AnimationRef;	// 오버라이딩 추가에따라 애니메이션 원본인지 참조본인지 구분용도
 
-	SGThicknessBox ThicknessBox;
+	ThicknessBox ThicknessBox;
 	SGAnimationInfo* Animation;
 };
 
