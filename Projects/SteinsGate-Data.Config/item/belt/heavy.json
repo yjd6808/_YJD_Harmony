@@ -1,0 +1,716 @@
+{
+  "heavy": [
+    {
+      "code": 1,
+      "name_kor": "(구)미늘 밴드",
+      "name_eng": "Barb Band",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 40,
+      "armor_physical": 320
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)체인 밴드",
+      "name_eng": "Chain Band",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 64,
+      "armor_physical": 512
+    },
+    {
+      "code": 3,
+      "name_kor": "(구)튼튼한 미늘 밴드",
+      "name_eng": "Firm Barb Band",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 44,
+      "armor_physical": 352
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)튼튼한 체인 밴드",
+      "name_eng": "Firm Chain Band",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 68,
+      "armor_physical": 544
+    },
+    {
+      "code": 5,
+      "name_kor": "튼튼한 링 밴드",
+      "name_eng": "Firm Ring Band",
+      "rarity": 1,
+      "icon": 132,
+      "req_lv": 20,
+      "armor_physical": 160
+    },
+    {
+      "code": 6,
+      "name_kor": "링 밴드",
+      "name_eng": "Ring Band",
+      "rarity": 1,
+      "icon": 132,
+      "req_lv": 16,
+      "armor_physical": 128
+    },
+    {
+      "code": 7,
+      "name_kor": "(구)마모된 미늘 밴드",
+      "name_eng": "Rubbed Barb Band",
+      "rarity": 0,
+      "icon": 141,
+      "req_lv": 40,
+      "armor_physical": 304
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)마모된 체인 밴드",
+      "name_eng": "Rubbed Chain Band",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 64,
+      "armor_physical": 496
+    },
+    {
+      "code": 9,
+      "name_kor": "마모된 링 밴드",
+      "name_eng": "Rubbed Ring Band",
+      "rarity": 0,
+      "icon": 132,
+      "req_lv": 16,
+      "armor_physical": 112
+    },
+    {
+      "code": 10,
+      "name_kor": "아라드 벨트",
+      "name_eng": "Arad Belt",
+      "rarity": 2,
+      "icon": 18,
+      "req_lv": 20,
+      "armor_physical": 224
+    },
+    {
+      "code": 11,
+      "name_kor": "미늘 벨트",
+      "name_eng": "Barb Belt",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 34,
+      "armor_physical": 272
+    },
+    {
+      "code": 12,
+      "name_kor": "(구)체인 벨트",
+      "name_eng": "Chain Belt",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 58,
+      "armor_physical": 464
+    },
+    {
+      "code": 13,
+      "name_kor": "(구)코부르크식 벨트",
+      "name_eng": "Coburg Belt",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 82,
+      "armor_physical": 656
+    },
+    {
+      "code": 14,
+      "name_kor": "흉갑 토드퍼스 벨트",
+      "name_eng": "Curse Armor Todpurs Belt",
+      "rarity": 2,
+      "icon": 68,
+      "req_lv": 90,
+      "armor_physical": 800
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)드래고닉 스킨 벨트",
+      "name_eng": "Dragonic Skin Belt",
+      "rarity": 2,
+      "icon": 15,
+      "req_lv": 66,
+      "armor_physical": 608
+    },
+    {
+      "code": 16,
+      "name_kor": "ES-YL11 벨트",
+      "name_eng": "ES-YL11 Belt",
+      "rarity": 2,
+      "icon": 72,
+      "req_lv": 90,
+      "armor_physical": 800
+    },
+    {
+      "code": 17,
+      "name_kor": "멜티 블러드 벨트",
+      "name_eng": "Melty Blood Belt",
+      "rarity": 2,
+      "icon": 35,
+      "req_lv": 70,
+      "armor_physical": 640
+    },
+    {
+      "code": 18,
+      "name_kor": "(구)멧세 쿼드라트 벨트",
+      "name_eng": "Messe Quadrat Belt",
+      "rarity": 2,
+      "icon": 17,
+      "req_lv": 36,
+      "armor_physical": 368
+    },
+    {
+      "code": 19,
+      "name_kor": "수호 벨트",
+      "name_eng": "Protection Belt",
+      "rarity": 2,
+      "icon": 18,
+      "req_lv": 10,
+      "armor_physical": 144
+    },
+    {
+      "code": 20,
+      "name_kor": "녹슨 미늘 벨트",
+      "name_eng": "Rusty Barb Belt",
+      "rarity": 0,
+      "icon": 141,
+      "req_lv": 34,
+      "armor_physical": 256
+    },
+    {
+      "code": 21,
+      "name_kor": "(구)녹슨 체인 벨트",
+      "name_eng": "Rusty Chain Belt",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 58,
+      "armor_physical": 448
+    },
+    {
+      "code": 22,
+      "name_kor": "링 벨트",
+      "name_eng": "Ring Belt",
+      "rarity": 1,
+      "icon": 132,
+      "req_lv": 10,
+      "armor_physical": 80
+    },
+    {
+      "code": 23,
+      "name_kor": "녹슨 링 벨트",
+      "name_eng": "Rusty Ring Belt",
+      "rarity": 0,
+      "icon": 132,
+      "req_lv": 10,
+      "armor_physical": 64
+    },
+    {
+      "code": 24,
+      "name_kor": "(구)마모된 코부르크식 벨트",
+      "name_eng": "Rubbed Coburg Belt",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 82,
+      "armor_physical": 640
+    },
+    {
+      "code": 25,
+      "name_kor": "(구)슈바르츠 크라이스 벨트",
+      "name_eng": "Schwarz Kreis Belt",
+      "rarity": 2,
+      "icon": 18,
+      "req_lv": 30,
+      "armor_physical": 320
+    },
+    {
+      "code": 26,
+      "name_kor": "(구)샤이닝 로리카 벨트",
+      "name_eng": "Shining Lorica Belt",
+      "rarity": 2,
+      "icon": 16,
+      "req_lv": 54,
+      "armor_physical": 512
+    },
+    {
+      "code": 27,
+      "name_kor": "단단한 미늘 벨트",
+      "name_eng": "Stiff Barb Belt",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 38,
+      "armor_physical": 304
+    },
+    {
+      "code": 28,
+      "name_kor": "(구)단단한 체인 벨트",
+      "name_eng": "Stiff Chain Belt",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 62,
+      "armor_physical": 496
+    },
+    {
+      "code": 29,
+      "name_kor": "단단한 링 벨트",
+      "name_eng": "Stiff Ring Belt",
+      "rarity": 1,
+      "icon": 132,
+      "req_lv": 14,
+      "armor_physical": 112
+    },
+    {
+      "code": 30,
+      "name_kor": "쇼난 황실 전통 벨트",
+      "explain": "인벤토리 한도 증가",
+      "name_eng": "Traditional Shonan Imperial Belt",
+      "rarity": 3,
+      "icon": 18,
+      "req_lv": 20,
+      "armor_physical": 288
+    },
+    {
+      "code": 31,
+      "name_kor": "낡아빠진 링 벨트",
+      "name_eng": "Used Ring Belt",
+      "rarity": 0,
+      "icon": 132,
+      "req_lv": 6,
+      "armor_physical": 32
+    },
+    {
+      "code": 32,
+      "name_kor": "크림슨 비네트 벨트",
+      "name_eng": "Crimson Vignette Belt",
+      "rarity": 2,
+      "icon": 36,
+      "req_lv": 70,
+      "armor_physical": 640
+    },
+    {
+      "code": 33,
+      "name_kor": "닳아빠진 링 벨트",
+      "name_eng": "Worn Ring Belt",
+      "rarity": 0,
+      "icon": 132,
+      "req_lv": 2,
+      "armor_physical": 14
+    },
+    {
+      "code": 34,
+      "name_kor": "(구)미늘 코일",
+      "name_eng": "Barb Coil",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 46,
+      "armor_physical": 368
+    },
+    {
+      "code": 35,
+      "name_kor": "초경량 카볼라이트 코일",
+      "name_eng": "Carbollite Coil",
+      "rarity": 2,
+      "icon": 37,
+      "req_lv": 70,
+      "armor_physical": 640
+    },
+    {
+      "code": 36,
+      "name_kor": "(구)체인 코일",
+      "name_eng": "Chain Coil",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 70,
+      "armor_physical": 560
+    },
+    {
+      "code": 37,
+      "name_kor": "EL-XM25 벨트",
+      "name_eng": "EL-XM25 Belt",
+      "rarity": 2,
+      "icon": 71,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 38,
+      "name_kor": "비열한 펠 비스킹 코일",
+      "name_eng": "Fel Visking Coil",
+      "rarity": 2,
+      "icon": 69,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 39,
+      "name_kor": "고어 브라스 코일",
+      "name_eng": "Gore Brass Coil",
+      "rarity": 2,
+      "icon": 67,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 40,
+      "name_kor": "구식 링 코일",
+      "name_eng": "Outdated Ring Coil",
+      "rarity": 0,
+      "icon": 132,
+      "req_lv": 22,
+      "armor_physical": 160
+    },
+    {
+      "code": 41,
+      "name_kor": "오네이트 블리츠 코일",
+      "name_eng": "Ornate Blitz Coil",
+      "rarity": 2,
+      "icon": 70,
+      "req_lv": 90,
+      "armor_physical": 800
+    },
+    {
+      "code": 42,
+      "name_kor": "링 코일",
+      "name_eng": "Ring Coil",
+      "rarity": 1,
+      "icon": 132,
+      "req_lv": 22,
+      "armor_physical": 176
+    },
+    {
+      "code": 43,
+      "name_kor": "(구)허술한 미늘 코일",
+      "name_eng": "Shabby Barb Coil",
+      "rarity": 0,
+      "icon": 141,
+      "req_lv": 46,
+      "armor_physical": 352
+    },
+    {
+      "code": 44,
+      "name_kor": "(구)허술한 체인 코일",
+      "name_eng": "Shabby Chain Coil",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 70,
+      "armor_physical": 544
+    },
+    {
+      "code": 45,
+      "name_kor": "(구)견고한 미늘 코일",
+      "name_eng": "Strong Barb Coil",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 50,
+      "armor_physical": 400
+    },
+    {
+      "code": 46,
+      "name_kor": "(구)견고한 체인 코일",
+      "name_eng": "Strong Chain Coil",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 74,
+      "armor_physical": 592
+    },
+    {
+      "code": 47,
+      "name_kor": "견고한 링 코일",
+      "name_eng": "Strong Ring Coil",
+      "rarity": 1,
+      "icon": 132,
+      "req_lv": 26,
+      "armor_physical": 208
+    },
+    {
+      "code": 48,
+      "name_kor": "(구)미늘 거들",
+      "name_eng": "Barb Girdle",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 52,
+      "armor_physical": 416
+    },
+    {
+      "code": 49,
+      "name_kor": "(구)촘촘한 미늘 거들",
+      "name_eng": "Close Barb Girdle",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 56,
+      "armor_physical": 448
+    },
+    {
+      "code": 50,
+      "name_kor": "(구)촘촘한 체인 거들",
+      "name_eng": "Close Chain Girdle",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 78,
+      "armor_physical": 624
+    },
+    {
+      "code": 51,
+      "name_kor": "(구)체인 거들",
+      "name_eng": "Chain Girdle",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 76,
+      "armor_physical": 608
+    },
+    {
+      "code": 52,
+      "name_kor": "촘촘한 링 거들",
+      "name_eng": "Close Ring Girdle",
+      "rarity": 1,
+      "icon": 132,
+      "req_lv": 32,
+      "armor_physical": 256
+    },
+    {
+      "code": 53,
+      "name_kor": "링 거들",
+      "name_eng": "Ring Girdle",
+      "rarity": 1,
+      "icon": 132,
+      "req_lv": 28,
+      "armor_physical": 224
+    },
+    {
+      "code": 54,
+      "name_kor": "허술한 링 거들",
+      "name_eng": "Shabby Ring Girdle",
+      "rarity": 0,
+      "icon": 132,
+      "req_lv": 28,
+      "armor_physical": 208
+    },
+    {
+      "code": 55,
+      "name_kor": "(구)낡은 미늘 거들",
+      "name_eng": "Used Barb Girdle",
+      "rarity": 0,
+      "icon": 141,
+      "req_lv": 52,
+      "armor_physical": 400
+    },
+    {
+      "code": 56,
+      "name_kor": "(구)낡은 체인 거들",
+      "name_eng": "Used Chain Girdle",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 76,
+      "armor_physical": 592
+    },
+    {
+      "code": 57,
+      "name_kor": "유물 : 이슈타르의 체인 코일",
+      "name_eng": "Legacy : Belt of Ishtar",
+      "rarity": 2,
+      "icon": 308,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 58,
+      "name_kor": "유물 : 성스러운 이슈타르의 체인 코인",
+      "name_eng": "Legacy : Holy Belt of Ishtar",
+      "rarity": 2,
+      "icon": 313,
+      "req_lv": 90,
+      "armor_physical": 800
+    },
+    {
+      "code": 59,
+      "name_kor": "미늘 밴드",
+      "name_eng": "Barb Band",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 40,
+      "armor_physical": 320
+    },
+    {
+      "code": 60,
+      "name_kor": "체인 밴드",
+      "name_eng": "Chain Band",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 80,
+      "armor_physical": 640
+    },
+    {
+      "code": 61,
+      "name_kor": "마모된 미늘 밴드",
+      "name_eng": "Rubbed Barb Band",
+      "rarity": 0,
+      "icon": 141,
+      "req_lv": 40,
+      "armor_physical": 304
+    },
+    {
+      "code": 62,
+      "name_kor": "마모된 체인 밴드",
+      "name_eng": "Rubbed Chain Band",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 80,
+      "armor_physical": 624
+    },
+    {
+      "code": 63,
+      "name_kor": "체인 벨트",
+      "name_eng": "Chain Belt",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 70,
+      "armor_physical": 560
+    },
+    {
+      "code": 64,
+      "name_kor": "코부르크식 벨트",
+      "name_eng": "Coburg Belt",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 110,
+      "armor_physical": 880
+    },
+    {
+      "code": 65,
+      "name_kor": "드래고닉 스킨 벨트",
+      "name_eng": "Dragonic Skin Belt",
+      "rarity": 2,
+      "icon": 15,
+      "req_lv": 60,
+      "armor_physical": 560
+    },
+    {
+      "code": 66,
+      "name_kor": "제라드의 화염띠",
+      "name_eng": "Gerrad's FlameBelt",
+      "rarity": 4,
+      "icon": 91,
+      "req_lv": 100,
+      "armor_physical": 992
+    },
+    {
+      "code": 67,
+      "name_kor": "멧세 쿼드라트 벨트",
+      "name_eng": "Messe Quadrat Belt",
+      "rarity": 2,
+      "icon": 17,
+      "req_lv": 40,
+      "armor_physical": 400
+    },
+    {
+      "code": 68,
+      "name_kor": "녹슨 체인 벨트",
+      "name_eng": "Rusty Chain Belt",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 70,
+      "armor_physical": 544
+    },
+    {
+      "code": 69,
+      "name_kor": "마모된 코부르크식 벨트",
+      "name_eng": "Rubbed Coburg Belt",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 110,
+      "armor_physical": 864
+    },
+    {
+      "code": 70,
+      "name_kor": "슈바르츠 크라이스 벨트",
+      "name_eng": "Schwarz Kreis Belt",
+      "rarity": 2,
+      "icon": 18,
+      "req_lv": 30,
+      "armor_physical": 320
+    },
+    {
+      "code": 71,
+      "name_kor": "샤이닝 로리카 벨트",
+      "name_eng": "Shining Lorica Belt",
+      "rarity": 2,
+      "icon": 16,
+      "req_lv": 50,
+      "armor_physical": 480
+    },
+    {
+      "code": 72,
+      "name_kor": "미늘 코일",
+      "name_eng": "Barb Coil",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 50,
+      "armor_physical": 400
+    },
+    {
+      "code": 73,
+      "name_kor": "체인 코일",
+      "name_eng": "Chain Coil",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 90,
+      "armor_physical": 720
+    },
+    {
+      "code": 74,
+      "name_kor": "허술한 미늘 코일",
+      "name_eng": "Shabby Barb Coil",
+      "rarity": 0,
+      "icon": 141,
+      "req_lv": 50,
+      "armor_physical": 384
+    },
+    {
+      "code": 75,
+      "name_kor": "허술한 체인 코일",
+      "name_eng": "Shabby Chain Coil",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 90,
+      "armor_physical": 704
+    },
+    {
+      "code": 76,
+      "name_kor": "미늘 거들",
+      "name_eng": "Barb Girdle",
+      "rarity": 1,
+      "icon": 141,
+      "req_lv": 60,
+      "armor_physical": 480
+    },
+    {
+      "code": 77,
+      "name_kor": "체인 거들",
+      "name_eng": "Chain Girdle",
+      "rarity": 1,
+      "icon": 178,
+      "req_lv": 100,
+      "armor_physical": 800
+    },
+    {
+      "code": 78,
+      "name_kor": "낡은 미늘 거들",
+      "name_eng": "Used Barb Girdle",
+      "rarity": 0,
+      "icon": 141,
+      "req_lv": 60,
+      "armor_physical": 464
+    },
+    {
+      "code": 79,
+      "name_kor": "낡은 체인 거들",
+      "name_eng": "Used Chain Girdle",
+      "rarity": 0,
+      "icon": 178,
+      "req_lv": 100,
+      "armor_physical": 784
+    }
+  ]
+}

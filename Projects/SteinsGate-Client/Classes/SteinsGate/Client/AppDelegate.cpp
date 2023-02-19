@@ -54,8 +54,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
     InitializeJCore();
     InitializeCommonCore();
     InitializeDefaultLogger();
-    InitializeClientLogo();
     InitializeClientCore();
+
+    InitializeServerAuthLogo();
+    _LogPlain_(Logo_v);
+    InitializeServerLobbyLogo();
+    _LogPlain_(Logo_v);
+    InitializeServerGameLogo();
+    _LogPlain_(Logo_v);
+    InitializeServerCenterLogo();
+    _LogPlain_(Logo_v);
 
     auto scene = CoreWorld_v;
     scene->setAnchorPoint(Vec2::ZERO);

@@ -84,7 +84,7 @@ void SGGlobal::initialize() {
 		m_AvatarPackName[CharType::Gunner][VisualType::Cap] = "sprite_character_gunner_equipment_avatar_cap.NPK";
 		m_AvatarPackName[CharType::Gunner][VisualType::Belt] = "sprite_character_gunner_equipment_avatar_belt.NPK";
 
-		m_WeaponPackName[CharType::Gunner][GunnerWeaponType::Auto] = "sprite_character_gunner_equipment_weapon_auto.NPK";
+		m_WeaponPackName[CharType::Gunner][GunnerWeaponType::Automatic] = "sprite_character_gunner_equipment_weapon_auto.NPK";
 		m_WeaponPackName[CharType::Gunner][GunnerWeaponType::Bowgun] = "sprite_character_gunner_equipment_weapon_bowgun.NPK";
 		m_WeaponPackName[CharType::Gunner][GunnerWeaponType::HandCannon] = "sprite_character_gunner_equipment_weapon_hcan.NPK";
 		m_WeaponPackName[CharType::Gunner][GunnerWeaponType::Musket] = "sprite_character_gunner_equipment_weapon_musket.NPK";

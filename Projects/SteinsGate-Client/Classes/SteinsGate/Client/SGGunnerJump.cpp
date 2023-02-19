@@ -286,13 +286,13 @@ void SGGunnerJump::createBullet() {
 
 	if (m_bRightFire) {
 		switch (m_eWeaponType) {
-		case WeaponType::Auto: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
+		case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
 		default: DebugAssertMsg(false, "총 종류가 이상합니다. (1)");
 		}
 	}
 	else {
 		switch (m_eWeaponType) {
-		case WeaponType::Auto: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
+		case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
 		default: DebugAssertMsg(false, "총 종류가 이상합니다. (2)");
 		}
 	}

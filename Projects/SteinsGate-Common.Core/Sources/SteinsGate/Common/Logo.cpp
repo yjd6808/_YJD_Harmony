@@ -47,16 +47,50 @@ void InitializeServerAuthLogo() {
 }
 
 void InitializeServerLobbyLogo() {
-
+	Logo_v.SetLength(0);
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "                 " COLOR_WHITE "                                              \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "                 " COLOR_WHITE "                                              \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "         ██╗     " COLOR_WHITE "  ██████╗ ██████╗ ██████╗ ██╗   ██╗           \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "         ██║     " COLOR_WHITE " ██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝           \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "         ██║     " COLOR_WHITE " ██║   ██║██████╔╝██████╔╝ ╚████╔╝            \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "         ██║     " COLOR_WHITE " ██║   ██║██╔══██╗██╔══██╗  ╚██╔╝             \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "         ███████╗" COLOR_WHITE " ╚██████╔╝██████╔╝██████╔╝   ██║              \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "         ╚══════╝" COLOR_WHITE "  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝              \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "             --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--              \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "                                                               \n");
+	Logo_v += MoveConcat<SGString>(CSI_GRAPHIC_RENDITION(0));
 }
 
 
 void InitializeServerGameLogo() {
-	
+
+	Logo_v.SetLength(0);
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW "                   " COLOR_WHITE "                                            \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW "                   " COLOR_WHITE "                                            \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW "            ██████╗" COLOR_WHITE "  █████╗ ███╗   ███╗███████╗                \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW "           ██╔════╝" COLOR_WHITE " ██╔══██╗████╗ ████║██╔════╝                \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW "           ██║  ███" COLOR_WHITE "╗███████║██╔████╔██║█████╗                  \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW "           ██║   ██" COLOR_WHITE "║██╔══██║██║╚██╔╝██║██╔══╝                  \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW "           ╚██████╔" COLOR_WHITE "╝██║  ██║██║ ╚═╝ ██║███████╗                \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW "            ╚═════╝" COLOR_WHITE " ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝                \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "             --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--              \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "                                                               \n");
+	Logo_v += MoveConcat<SGString>(CSI_GRAPHIC_RENDITION(0));
 }
 
 void InitializeServerCenterLogo() {
-
+	Logo_v.SetLength(0);
+	Logo_v += MoveConcat<SGString>(COLOR_CYAN "             " COLOR_WHITE "                                                  \n");
+	Logo_v += MoveConcat<SGString>(COLOR_CYAN "             " COLOR_WHITE "                                                  \n");
+	Logo_v += MoveConcat<SGString>(COLOR_CYAN "       ██████" COLOR_WHITE "╗███████╗███╗  ██╗████████╗███████╗██████╗        \n");
+	Logo_v += MoveConcat<SGString>(COLOR_CYAN "     ██╔════╝" COLOR_WHITE "██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗       \n");
+	Logo_v += MoveConcat<SGString>(COLOR_CYAN "     ██║     " COLOR_WHITE "█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝       \n");
+	Logo_v += MoveConcat<SGString>(COLOR_CYAN "     ██║     " COLOR_WHITE "██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗       \n");
+	Logo_v += MoveConcat<SGString>(COLOR_CYAN "     ╚██████╗" COLOR_WHITE "███████╗██║ ╚████║   ██║   ███████╗██║  ██║       \n");
+	Logo_v += MoveConcat<SGString>(COLOR_CYAN "      ╚═════╝" COLOR_WHITE "╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝       \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "             --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--              \n");
+	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "                                                               \n");
+	Logo_v += MoveConcat<SGString>(CSI_GRAPHIC_RENDITION(0));
 }
 
 

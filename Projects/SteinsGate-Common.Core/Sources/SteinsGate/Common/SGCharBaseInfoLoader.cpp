@@ -61,38 +61,38 @@ void SGCharBaseInfoLoader::readCharBaseInfo(Json::Value& charBaseRoot, SGCharBas
 
 void SGCharBaseInfoLoader::readGunnerInfo(Json::Value& gunnerBaseRoot, SGGunnerInfo* baseInfo) {
 
-	baseInfo->ShotCount[WeaponType::Auto] = gunnerBaseRoot["auto_shot_count"].asInt();
+	baseInfo->ShotCount[WeaponType::Automatic] = gunnerBaseRoot["auto_shot_count"].asInt();
 	baseInfo->ShotCount[WeaponType::Bowgun] = gunnerBaseRoot["bowgun_shot_count"].asInt();
 	baseInfo->ShotCount[WeaponType::Revolver] = gunnerBaseRoot["rev_shot_count"].asInt();
 	baseInfo->ShotCount[WeaponType::HandCannon] = gunnerBaseRoot["hcan_shot_count"].asInt();
 	baseInfo->ShotCount[WeaponType::Musket] = gunnerBaseRoot["musket_shot_count"].asInt();
 
-	baseInfo->JumpShotCount[WeaponType::Auto] = gunnerBaseRoot["auto_jump_shot_count"].asInt();
+	baseInfo->JumpShotCount[WeaponType::Automatic] = gunnerBaseRoot["auto_jump_shot_count"].asInt();
 	baseInfo->JumpShotCount[WeaponType::Bowgun] = gunnerBaseRoot["bowgun_jump_shot_count"].asInt();
 	baseInfo->JumpShotCount[WeaponType::Revolver] = gunnerBaseRoot["rev_jump_shot_count"].asInt();
 	baseInfo->JumpShotCount[WeaponType::HandCannon] = gunnerBaseRoot["hcan_jump_shot_count"].asInt();
 	baseInfo->JumpShotCount[WeaponType::Musket] = gunnerBaseRoot["musket_jump_shot_count"].asInt();
 
-	baseInfo->AttackSpeed[WeaponType::Auto] = gunnerBaseRoot["auto_attack_speed"].asFloat();
+	baseInfo->AttackSpeed[WeaponType::Automatic] = gunnerBaseRoot["auto_attack_speed"].asFloat();
 	baseInfo->AttackSpeed[WeaponType::Bowgun] = gunnerBaseRoot["bowgun_attack_speed"].asFloat();
 	baseInfo->AttackSpeed[WeaponType::Revolver] = gunnerBaseRoot["rev_attack_speed"].asFloat();
 	baseInfo->AttackSpeed[WeaponType::HandCannon] = gunnerBaseRoot["hcan_attack_speed"].asFloat();
 	baseInfo->AttackSpeed[WeaponType::Musket] = gunnerBaseRoot["musket_attack_speed"].asFloat();
 
 
-	baseInfo->JumpShotForceX[WeaponType::Auto] = gunnerBaseRoot["auto_jump_shot_force_x"].asFloat();
+	baseInfo->JumpShotForceX[WeaponType::Automatic] = gunnerBaseRoot["auto_jump_shot_force_x"].asFloat();
 	baseInfo->JumpShotForceX[WeaponType::Bowgun] = gunnerBaseRoot["bowgun_jump_shot_force_x"].asFloat();
 	baseInfo->JumpShotForceX[WeaponType::Revolver] = gunnerBaseRoot["rev_jump_shot_force_x"].asFloat();
 	baseInfo->JumpShotForceX[WeaponType::HandCannon] = gunnerBaseRoot["musket_jump_shot_force_x"].asFloat();
 	baseInfo->JumpShotForceX[WeaponType::Musket] = gunnerBaseRoot["hcan_jump_shot_force_x"].asFloat();
 
-	baseInfo->JumpShotForceY[WeaponType::Auto] = gunnerBaseRoot["auto_jump_shot_force_y"].asFloat();
+	baseInfo->JumpShotForceY[WeaponType::Automatic] = gunnerBaseRoot["auto_jump_shot_force_y"].asFloat();
 	baseInfo->JumpShotForceY[WeaponType::Bowgun] = gunnerBaseRoot["bowgun_jump_shot_force_y"].asFloat();
 	baseInfo->JumpShotForceY[WeaponType::Revolver] = gunnerBaseRoot["rev_jump_shot_force_y"].asFloat();
 	baseInfo->JumpShotForceY[WeaponType::HandCannon] = gunnerBaseRoot["musket_jump_shot_force_y"].asFloat();
 	baseInfo->JumpShotForceY[WeaponType::Musket] = gunnerBaseRoot["hcan_jump_shot_force_y"].asFloat();
 
-	baseInfo->JumpShotMoveSpeedX[WeaponType::Auto] = gunnerBaseRoot["auto_jump_shot_move_speed_x"].asFloat();
+	baseInfo->JumpShotMoveSpeedX[WeaponType::Automatic] = gunnerBaseRoot["auto_jump_shot_move_speed_x"].asFloat();
 	baseInfo->JumpShotMoveSpeedX[WeaponType::Bowgun] = gunnerBaseRoot["bowgun_jump_shot_move_speed_x"].asFloat();
 	baseInfo->JumpShotMoveSpeedX[WeaponType::Revolver] = gunnerBaseRoot["rev_jump_shot_move_speed_x"].asFloat();
 	baseInfo->JumpShotMoveSpeedX[WeaponType::HandCannon] = gunnerBaseRoot["musket_jump_shot_move_speed_x"].asFloat();

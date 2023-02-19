@@ -1,0 +1,841 @@
+{
+  "light": [
+    {
+      "code": 1,
+      "name_kor": "(구)본 아머",
+      "name_eng": "Bone Armor",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 52,
+      "armor_physical": 936
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)세라믹 아머",
+      "name_eng": "Ceramics Armor",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 76,
+      "armor_physical": 1368
+    },
+    {
+      "code": 3,
+      "name_kor": "(구)강화된 본 아머",
+      "name_eng": "Hard Bone Armor",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 56,
+      "armor_physical": 1008
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)강화된 세라믹 아머",
+      "name_eng": "Hard Ceramics Armor",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 78,
+      "armor_physical": 1404
+    },
+    {
+      "code": 5,
+      "name_kor": "강화된 스야 아머",
+      "comment": "비록 스야가 경갑이긴 하나 그 배치와 겹겹이 결을 어떻게 잡아 주느냐에 따라 강도가 달라지지. -신다-",
+      "name_eng": "Hard Sya Armor",
+      "rarity": 1,
+      "icon": 7,
+      "req_lv": 32,
+      "armor_physical": 576
+    },
+    {
+      "code": 6,
+      "name_kor": "마이어 로얄 가더 아머",
+      "name_eng": "Myre Royal Guarder Armor",
+      "rarity": 2,
+      "icon": 36,
+      "req_lv": 80,
+      "armor_physical": 1620
+    },
+    {
+      "code": 7,
+      "name_kor": "스야 아머",
+      "comment": "아머와 메일의 차이점은 형태를 잡아주느냐 그렇지 않느냐에 있지.",
+      "name_eng": "Sya Armor",
+      "rarity": 1,
+      "icon": 7,
+      "req_lv": 28,
+      "armor_physical": 504
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)낡은 본 아머",
+      "name_eng": "Used Bone Armor",
+      "rarity": 0,
+      "icon": 128,
+      "req_lv": 52,
+      "armor_physical": 900
+    },
+    {
+      "code": 9,
+      "name_kor": "(구)낡은 세라믹 아머",
+      "name_eng": "Used Ceramics Armor",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 76,
+      "armor_physical": 1332
+    },
+    {
+      "code": 10,
+      "name_kor": "낡은 스야 아머",
+      "name_eng": "Used Sya Armor",
+      "rarity": 0,
+      "icon": 7,
+      "req_lv": 28,
+      "armor_physical": 468
+    },
+    {
+      "code": 11,
+      "name_kor": "본 흉갑",
+      "comment": "몬스터들의 뼈는 때로 강력한 방어구가 되기도 한다네 -신다-",
+      "name_eng": "Bone Breastplate",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 34,
+      "armor_physical": 612
+    },
+    {
+      "code": 12,
+      "name_kor": "불탄 팡고른 흉갑",
+      "name_eng": "Burning Curse-Tree Breastplate",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 22,
+      "armor_physical": 540
+    },
+    {
+      "code": 13,
+      "name_kor": "산수유 흉갑",
+      "name_eng": "Cornus Officinalis Breastplate",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 12,
+      "armor_physical": 360
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)갈라진 세라믹 흉갑",
+      "name_eng": "Cracked Ceramics Breastplate",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 58,
+      "armor_physical": 1008
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)세라믹 흉갑",
+      "name_eng": "Ceramics Breastplate",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 58,
+      "armor_physical": 1044
+    },
+    {
+      "code": 16,
+      "name_kor": "(구)갈라진 레드컬 흉갑",
+      "name_eng": "Cracked Redcurl Breastplate",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 82,
+      "armor_physical": 1440
+    },
+    {
+      "code": 17,
+      "name_kor": "엘븐 경갑 상의",
+      "name_eng": "Elven Light Breastplate",
+      "rarity": 3,
+      "icon": 22,
+      "req_lv": 20,
+      "armor_physical": 648
+    },
+    {
+      "code": 18,
+      "name_kor": "(구)레드컬 흉갑",
+      "name_eng": "Redcurl Breastplate",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 82,
+      "armor_physical": 1476
+    },
+    {
+      "code": 19,
+      "name_kor": "허름한 스야 흉갑",
+      "name_eng": "Shabby Sya Breastplate",
+      "rarity": 0,
+      "icon": 7,
+      "req_lv": 10,
+      "armor_physical": 144
+    },
+    {
+      "code": 20,
+      "name_kor": "단단한 본 흉갑",
+      "name_eng": "Stiff Bone Breastplate",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 38,
+      "armor_physical": 684
+    },
+    {
+      "code": 21,
+      "name_kor": "(구)단단한 세라믹 흉갑",
+      "name_eng": "Stiff Ceramics Breastplate",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 62,
+      "armor_physical": 1116
+    },
+    {
+      "code": 22,
+      "name_kor": "단단한 스야 흉갑",
+      "comment": "경갑이 좋은 이유는 강력한 방어력과 가볍기 때문인가?",
+      "name_eng": "Stiff Sya Breastplate",
+      "rarity": 1,
+      "icon": 7,
+      "req_lv": 14,
+      "armor_physical": 252
+    },
+    {
+      "code": 23,
+      "name_kor": "스야 흉갑",
+      "comment": "스야나무는 참 많은 곳에 쓰이는 것 같아요. -제자-",
+      "name_eng": "Sya Breastplate",
+      "rarity": 1,
+      "icon": 7,
+      "req_lv": 10,
+      "armor_physical": 180
+    },
+    {
+      "code": 24,
+      "name_kor": "스야나무 껍질 흉갑",
+      "name_eng": "Sya Skin Breastplate",
+      "rarity": 0,
+      "icon": 29,
+      "req_lv": 12,
+      "armor_physical": 180
+    },
+    {
+      "code": 25,
+      "name_kor": "너덜너덜한 스야 흉갑",
+      "comment": "처음엔 이렇게 시작하는 거야 -초보 모험가의 다짐-",
+      "name_eng": "Tatters Sya Breastplate",
+      "rarity": 0,
+      "icon": 7,
+      "req_lv": 2,
+      "armor_physical": 32
+    },
+    {
+      "code": 26,
+      "name_kor": "벌레먹은 본 흉갑",
+      "comment": "이런…… 도대체 장비 관리를 하는 겐가? -신다-",
+      "name_eng": "Wormy Bone Breastplate",
+      "rarity": 0,
+      "icon": 128,
+      "req_lv": 34,
+      "armor_physical": 576
+    },
+    {
+      "code": 27,
+      "name_kor": "마모된 스야 흉갑",
+      "comment": "역시 스피드인가?",
+      "name_eng": "Worn Sya Breastplate",
+      "rarity": 0,
+      "icon": 7,
+      "req_lv": 6,
+      "armor_physical": 72
+    },
+    {
+      "code": 28,
+      "name_kor": "에이스 어드벤트 상의",
+      "name_eng": "Ace Advent Coat",
+      "rarity": 2,
+      "icon": 70,
+      "req_lv": 100,
+      "armor_physical": 1980
+    },
+    {
+      "code": 29,
+      "name_kor": "(구)아쿠아 크루스테 상의",
+      "comment": "껍질은 장비를 만드는 데 쓰는구나. 정말 버릴 곳이 없군!",
+      "name_eng": "Aqua Kruste Coat",
+      "rarity": 2,
+      "icon": 19,
+      "req_lv": 72,
+      "armor_physical": 1476
+    },
+    {
+      "code": 30,
+      "name_kor": "알렉시 스파인 상의",
+      "name_eng": "Alexi Spine Coat",
+      "rarity": 2,
+      "icon": 66,
+      "req_lv": 100,
+      "armor_physical": "1980 +600"
+    },
+    {
+      "code": 31,
+      "name_kor": "아티 마르피사 상의",
+      "name_eng": "Arti Marpissa Coat",
+      "rarity": 2,
+      "icon": 65,
+      "req_lv": 90,
+      "armor_physical": 1800
+    },
+    {
+      "code": 32,
+      "name_kor": "(구)바이넨 플루크 상의",
+      "comment": "원한을 갖고 죽은 동물은 때로 저주 섞인 피를 내뿜기도 하지.",
+      "name_eng": "Beinen Fluch Coat",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 36,
+      "armor_physical": 828
+    },
+    {
+      "code": 33,
+      "name_kor": "(구)버설트 마크 상의",
+      "comment": "아 뜨거워~ ! 으아압 나의 분노를 받아랏!",
+      "name_eng": "Basalt Mark Coat",
+      "rarity": 2,
+      "icon": 20,
+      "req_lv": 60,
+      "armor_physical": 1260
+    },
+    {
+      "code": 34,
+      "name_kor": "그리즐드 수트 상의",
+      "name_eng": "Grizzled Suit Coat",
+      "rarity": 2,
+      "icon": 69,
+      "req_lv": 90,
+      "armor_physical": 1800
+    },
+    {
+      "code": 35,
+      "name_kor": "(구)대륙의 신록 상의",
+      "comment": "햇빛과 물만 있다면 이 세상 모두 아름답게 할 수 있지 -대륙의 신록-",
+      "name_eng": "Green Verdure Coat of Continental",
+      "rarity": 2,
+      "icon": 21,
+      "req_lv": 42,
+      "armor_physical": "936 +250"
+    },
+    {
+      "code": 36,
+      "name_kor": "플라타닉 컴배턴트 상의",
+      "name_eng": "Platanic Combatant Coat",
+      "rarity": 2,
+      "icon": 67,
+      "req_lv": 90,
+      "armor_physical": "1800 +600"
+    },
+    {
+      "code": 37,
+      "name_kor": "근성의 집결체 상의",
+      "name_eng": "Spirit Concentration Coat",
+      "rarity": 2,
+      "icon": 38,
+      "req_lv": 80,
+      "armor_physical": 1620
+    },
+    {
+      "code": 38,
+      "name_kor": "스프리건 팀버 상의",
+      "name_eng": "Spriggan Timber Coat",
+      "rarity": 2,
+      "icon": 68,
+      "req_lv": 100,
+      "armor_physical": 1980
+    },
+    {
+      "code": 39,
+      "name_kor": "유물 : 라트리의 본 메일",
+      "name_eng": "Legacy : Coat of Latri",
+      "rarity": 2,
+      "icon": 270,
+      "req_lv": 50,
+      "armor_physical": 1080
+    },
+    {
+      "code": 40,
+      "name_kor": "유물 : 시로넨의 본 흉갑",
+      "name_eng": "Legacy : Coat of Sironen",
+      "rarity": 2,
+      "icon": 213,
+      "req_lv": 30,
+      "armor_physical": 720
+    },
+    {
+      "code": 41,
+      "name_kor": "유물 : 큐빌레이의 세라믹 흉갑",
+      "name_eng": "Legacy : Coat of Cubeley",
+      "rarity": 2,
+      "icon": 289,
+      "req_lv": 70,
+      "armor_physical": 1440
+    },
+    {
+      "code": 42,
+      "name_kor": "유물 : 이슈타르의 세라믹 메일",
+      "name_eng": "Legacy : Coat of Ishtar",
+      "rarity": 2,
+      "icon": 279,
+      "req_lv": 90,
+      "armor_physical": 1800
+    },
+    {
+      "code": 43,
+      "name_kor": "유물 : 성스러운 라트리의 본 메일",
+      "name_eng": "Legacy : Holy Coat of Latri",
+      "rarity": 2,
+      "icon": 273,
+      "req_lv": 60,
+      "armor_physical": 1260
+    },
+    {
+      "code": 44,
+      "name_kor": "유물 : 성스러운 시로넨의 본 흉갑",
+      "name_eng": "Legacy : Holy Coat of Sironen",
+      "rarity": 2,
+      "icon": 268,
+      "req_lv": 40,
+      "armor_physical": 900
+    },
+    {
+      "code": 45,
+      "name_kor": "유물 : 성스러운 큐빌레이의 세라믹 흉갑",
+      "name_eng": "Legacy : Holy Coat of Cubeley",
+      "rarity": 2,
+      "icon": 292,
+      "req_lv": 80,
+      "armor_physical": 1620
+    },
+    {
+      "code": 46,
+      "name_kor": "유물 : 성스러운 이슈타르의 세라믹 메일",
+      "name_eng": "Legacy : Coat of Ishtar",
+      "rarity": 2,
+      "icon": 284,
+      "req_lv": 100,
+      "armor_physical": 1980
+    },
+    {
+      "code": 47,
+      "name_kor": "유물 : 성스러운 이슈타르의 세라믹 메일",
+      "name_eng": "Legacy : Coat of Ishtar",
+      "rarity": 2,
+      "icon": 284,
+      "req_lv": 100,
+      "armor_physical": 1980
+    },
+    {
+      "code": 48,
+      "name_kor": "유물 : 성스러운 메티스의 스야 흉갑",
+      "name_eng": "Legacy : Holy Coat of Metis",
+      "rarity": 2,
+      "icon": 265,
+      "req_lv": 20,
+      "armor_physical": 540
+    },
+    {
+      "code": 49,
+      "name_kor": "유물 : 메티스의 스야 흉갑",
+      "name_eng": "Legacy : Coat of Metis",
+      "rarity": 2,
+      "icon": 7,
+      "req_lv": 10,
+      "armor_physical": 360
+    },
+    {
+      "code": 50,
+      "name_kor": "(구)본 메일",
+      "comment": "짤그락 짤그락 아 본 메일  뼈 부딪히는 소리 너무 싫어..",
+      "name_eng": "Bone Mail",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 46,
+      "armor_physical": 828
+    },
+    {
+      "code": 51,
+      "name_kor": "(구)세라믹 메일",
+      "name_eng": "Ceramics Mail",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 70,
+      "armor_physical": 1260
+    },
+    {
+      "code": 52,
+      "name_kor": "(구)오래된 본 메일",
+      "name_eng": "Old Bone Mail",
+      "rarity": 0,
+      "icon": 128,
+      "req_lv": 46,
+      "armor_physical": 792
+    },
+    {
+      "code": 53,
+      "name_kor": "(구)구식 세라믹 메일",
+      "name_eng": "Outdated Ceramics Mail",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 70,
+      "armor_physical": 1224
+    },
+    {
+      "code": 54,
+      "name_kor": "구식 스야 메일",
+      "comment": "에잉.. 어디서 이런 구식을 가져왔어? 으잉 손 대기도 싫구만! -신다-",
+      "name_eng": "Outdated Sya Mail",
+      "rarity": 0,
+      "icon": 7,
+      "req_lv": 22,
+      "armor_physical": 360
+    },
+    {
+      "code": 55,
+      "name_kor": "(구)견고한 본 메일",
+      "name_eng": "Strong Bone Mail",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 50,
+      "armor_physical": 900
+    },
+    {
+      "code": 56,
+      "name_kor": "(구)견고한 세라믹 메일",
+      "name_eng": "Strong Ceramics Mail",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 74,
+      "armor_physical": 1332
+    },
+    {
+      "code": 57,
+      "name_kor": "견고한 스야 메일",
+      "comment": "탕! 탕! 그래 견고하게 잘 만들었군 -신다 제자에게-",
+      "name_eng": "Strong Sya Mail",
+      "rarity": 1,
+      "icon": 7,
+      "req_lv": 26,
+      "armor_physical": 468
+    },
+    {
+      "code": 58,
+      "name_kor": "스야 메일",
+      "name_eng": "Sya Mail",
+      "rarity": 1,
+      "icon": 7,
+      "req_lv": 22,
+      "armor_physical": 396
+    },
+    {
+      "code": 59,
+      "name_kor": "본 아머",
+      "name_eng": "Bone Armor",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 60,
+      "armor_physical": 1080
+    },
+    {
+      "code": 60,
+      "name_kor": "세라믹 아머",
+      "name_eng": "Ceramics Armor",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 100,
+      "armor_physical": 1800
+    },
+    {
+      "code": 61,
+      "name_kor": "낡은 본 아머",
+      "name_eng": "Used Bone Armor",
+      "rarity": 0,
+      "icon": 128,
+      "req_lv": 60,
+      "armor_physical": 1044
+    },
+    {
+      "code": 62,
+      "name_kor": "낡은 세라믹 아머",
+      "name_eng": "Used Ceramics Armor",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 100,
+      "armor_physical": 1764
+    },
+    {
+      "code": 63,
+      "name_kor": "갈라진 세라믹 흉갑",
+      "name_eng": "Cracked Ceramics Breastplate",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 70,
+      "armor_physical": 1224
+    },
+    {
+      "code": 64,
+      "name_kor": "세라믹 흉갑",
+      "name_eng": "Ceramics Breastplate",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 70,
+      "armor_physical": 1260
+    },
+    {
+      "code": 65,
+      "name_kor": "갈라진 레드컬 흉갑",
+      "name_eng": "Cracked Redcurl Breastplate",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 110,
+      "armor_physical": 1944
+    },
+    {
+      "code": 66,
+      "name_kor": "레드컬 흉갑",
+      "name_eng": "Redcurl Breastplate",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 110,
+      "armor_physical": 1980
+    },
+    {
+      "code": 67,
+      "name_kor": "아쿠아 크루스테 상의",
+      "comment": "껍질은 장비를 만드는 데 쓰는구나. 정말 버릴 곳이 없군!",
+      "name_eng": "Aqua Kruste Coat",
+      "rarity": 2,
+      "icon": 19,
+      "req_lv": 70,
+      "armor_physical": 1440
+    },
+    {
+      "code": 68,
+      "name_kor": "바이넨 플루크 상의",
+      "comment": "원한을 갖고 죽은 동물은 때로 저주 섞인 피를 내뿜기도 하지.",
+      "name_eng": "Beinen Fluch Coat",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 40,
+      "armor_physical": 900
+    },
+    {
+      "code": 69,
+      "name_kor": "버설트 마크 상의",
+      "comment": "아 뜨거워~ ! 으아압 나의 분노를 받아랏!",
+      "name_eng": "Basalt Mark Coat",
+      "rarity": 2,
+      "icon": 20,
+      "req_lv": 60,
+      "armor_physical": 1260
+    },
+    {
+      "code": 70,
+      "name_kor": "대륙의 신록 상의",
+      "comment": "햇빛과 물만 있다면 이 세상 모두 아름답게 할 수 있지 -대륙의 신록-",
+      "name_eng": "Green Verdure Coat of Continental",
+      "rarity": 2,
+      "icon": 21,
+      "req_lv": 50,
+      "armor_physical": "1080 +250"
+    },
+    {
+      "code": 71,
+      "name_kor": "사룡의 뼈갑 상의",
+      "explain": "피격시 2%% 확률로 7초동안 적을 중독시켜 초당 195.64의 독 데미지를 줍니다.",
+      "name_eng": "Spirrazzi's BoneArmor",
+      "rarity": 4,
+      "icon": 106,
+      "req_lv": 80,
+      "armor_physical": 1872
+    },
+    {
+      "code": 72,
+      "name_kor": "스작의 절방 뼈갑 상의",
+      "name_eng": "Szak's Ab-Def Armor",
+      "rarity": 4,
+      "icon": 105,
+      "req_lv": 90,
+      "armor_physical": "2124 +1000"
+    },
+    {
+      "code": 73,
+      "name_kor": "본 메일",
+      "comment": "짤그락 짤그락 아 본 메일  뼈 부딪히는 소리 너무 싫어..",
+      "name_eng": "Bone Mail",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 50,
+      "armor_physical": 900
+    },
+    {
+      "code": 74,
+      "name_kor": "세라믹 메일",
+      "name_eng": "Ceramics Mail",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 90,
+      "armor_physical": 1620
+    },
+    {
+      "code": 75,
+      "name_kor": "오래된 본 메일",
+      "name_eng": "Old Bone Mail",
+      "rarity": 0,
+      "icon": 128,
+      "req_lv": 50,
+      "armor_physical": 864
+    },
+    {
+      "code": 76,
+      "name_kor": "구식 세라믹 메일",
+      "name_eng": "Outdated Ceramics Mail",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 90,
+      "armor_physical": 1584
+    },
+    {
+      "code": 77,
+      "name_kor": "본 레지스트",
+      "comment": "본 계열 장비는 튼튼하긴 한데 벌레가 잘 먹어",
+      "name_eng": "Bone Resist",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 40,
+      "armor_physical": 720
+    },
+    {
+      "code": 78,
+      "name_kor": "세라믹 레지스트",
+      "name_eng": "Ceramics Resist",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 80,
+      "armor_physical": 1440
+    },
+    {
+      "code": 79,
+      "name_kor": "오래된 세라믹 레지스트",
+      "name_eng": "Old Ceramics Resist",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 80,
+      "armor_physical": 1404
+    },
+    {
+      "code": 80,
+      "name_kor": "부패한 본 레지스트",
+      "name_eng": "Rotten Bone Resist",
+      "rarity": 0,
+      "icon": 128,
+      "req_lv": 40,
+      "armor_physical": 684
+    },
+    {
+      "code": 81,
+      "name_kor": "(구)본 레지스트",
+      "comment": "본 계열 장비는 튼튼하긴 한데 벌레가 잘 먹어",
+      "name_eng": "Bone Resist",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 40,
+      "armor_physical": 720
+    },
+    {
+      "code": 82,
+      "name_kor": "(구)세라믹 레지스트",
+      "name_eng": "Ceramics Resist",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 64,
+      "armor_physical": 1152
+    },
+    {
+      "code": 83,
+      "name_kor": "(구)향상된 본 레지스트",
+      "comment": "드디어! 본 레지스트를 향상시켰다!! 이 얼마만의 결실이란 말인가. - 케미스트리 브라더스 윌-",
+      "name_eng": "Improved Bone Resist",
+      "rarity": 1,
+      "icon": 128,
+      "req_lv": 44,
+      "armor_physical": 792
+    },
+    {
+      "code": 84,
+      "name_kor": "(구)향상된 세라믹 레지스트",
+      "name_eng": "Improved Ceramics Resist",
+      "rarity": 1,
+      "icon": 76,
+      "req_lv": 68,
+      "armor_physical": 1224
+    },
+    {
+      "code": 85,
+      "name_kor": "향상된 스야 레지스트",
+      "comment": "스야나무와 금속을 연결시키니 방어력이 향상 되었군 -신다-",
+      "name_eng": "Improved Sya Resist",
+      "rarity": 1,
+      "icon": 7,
+      "req_lv": 20,
+      "armor_physical": 360
+    },
+    {
+      "code": 86,
+      "name_kor": "(구)오래된 세라믹 레지스트",
+      "name_eng": "Old Ceramics Resist",
+      "rarity": 0,
+      "icon": 76,
+      "req_lv": 64,
+      "armor_physical": 1116
+    },
+    {
+      "code": 87,
+      "name_kor": "오래된 스야 레지스트",
+      "comment": "경갑은 관리를 잘해야 해. 안 그러면 이렇게 오래 쓰지 못해.. -신다-",
+      "name_eng": "Old Sya Resist",
+      "rarity": 0,
+      "icon": 7,
+      "req_lv": 16,
+      "armor_physical": 252
+    },
+    {
+      "code": 88,
+      "name_kor": "(구)부패한 본 레지스트",
+      "name_eng": "Rotten Bone Resist",
+      "rarity": 0,
+      "icon": 128,
+      "req_lv": 40,
+      "armor_physical": 684
+    },
+    {
+      "code": 89,
+      "name_kor": "스야 레지스트",
+      "comment": "스야나무는 단단하기가 왠만한 금속만 하지. -신다-",
+      "name_eng": "Sya Resist",
+      "rarity": 1,
+      "icon": 7,
+      "req_lv": 16,
+      "armor_physical": 288
+    },
+    {
+      "code": 90,
+      "name_kor": "크사낙스 프로텍터 레지스트",
+      "name_eng": "Xanacs Protector Resist",
+      "rarity": 2,
+      "icon": 37,
+      "req_lv": 80,
+      "armor_physical": 1620
+    }
+  ]
+}

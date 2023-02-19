@@ -1,0 +1,1063 @@
+{
+  "ring": [
+    {
+      "code": 1,
+      "name_kor": "세리아의 응원",
+      "comment": "세리아가 응원하는 사람들에게 선물한 반지. 세리아의 마음이 깃들어 있다.",
+      "name_eng": "Assistance of Seria",
+      "rarity": 1,
+      "sell_price": 1,
+      "icon": 8,
+      "req_lv": 2,
+      "armor_magic": 300
+    },
+    {
+      "code": 2,
+      "name_kor": "유물 : 축복받은 페이트리스의 반지",
+      "name_eng": "Legacy : Blessed Fateless",
+      "rarity": 2,
+      "icon": 94,
+      "req_lv": 100,
+      "armor_magic": 1760
+    },
+    {
+      "code": 3,
+      "name_kor": "유물 : 축복받은 휴트리드의 반지",
+      "name_eng": "Legacy : Blessed Hughtrid Ring",
+      "rarity": 2,
+      "icon": 92,
+      "req_lv": 80,
+      "armor_magic": 1440
+    },
+    {
+      "code": 4,
+      "name_kor": "유물 : 축복받은 루이넬의 반지",
+      "name_eng": "Legacy : Blessed Luinel",
+      "rarity": 2,
+      "icon": 90,
+      "req_lv": 60,
+      "armor_magic": 1120
+    },
+    {
+      "code": 5,
+      "name_kor": "유물 : 축복받은 레디스퓨트의 반지",
+      "name_eng": "Legacy : Blessed Redispute",
+      "rarity": 2,
+      "icon": 35,
+      "req_lv": 40,
+      "armor_magic": 800
+    },
+    {
+      "code": 6,
+      "name_kor": "유물 : 축복받은 질리엇의 반지",
+      "name_eng": "Legacy : Blessed Zealiot",
+      "rarity": 2,
+      "icon": 27,
+      "req_lv": 20,
+      "armor_magic": 480
+    },
+    {
+      "code": 7,
+      "name_kor": "유물 : 페이트리스의 반지",
+      "name_eng": "Legacy : Fateless",
+      "rarity": 2,
+      "icon": 93,
+      "req_lv": 90,
+      "armor_magic": 1600
+    },
+    {
+      "code": 8,
+      "name_kor": "유물 : 휴트리드의 반지",
+      "name_eng": "Legacy : Hughtrid Ring",
+      "rarity": 2,
+      "icon": 91,
+      "req_lv": 70,
+      "armor_magic": 1280
+    },
+    {
+      "code": 9,
+      "name_kor": "유물 : 루이넬의 반지",
+      "name_eng": "Legacy : Luinel",
+      "rarity": 2,
+      "icon": 89,
+      "req_lv": 50,
+      "armor_magic": 960
+    },
+    {
+      "code": 10,
+      "name_kor": "유물 : 레디스퓨트의 반지",
+      "name_eng": "Legacy : Redispute",
+      "rarity": 2,
+      "icon": 33,
+      "req_lv": 30,
+      "armor_magic": 640
+    },
+    {
+      "code": 11,
+      "name_kor": "유물 : 질리엇의 반지",
+      "name_eng": "Legacy : Zealiot",
+      "rarity": 2,
+      "icon": 25,
+      "req_lv": 10,
+      "armor_magic": 320
+    },
+    {
+      "code": 12,
+      "name_kor": "귀신을 부르는 검지",
+      "explain": "피격시 5%% 확률로 Lv3 카잔을 소환한다.",
+      "comment": "나와라 카잔! 모든 방황하는 영혼을 흡수하는 거다!! - 귀검사 요한 -",
+      "name_eng": "The 1st Finger of Calling Ghost",
+      "rarity": 2,
+      "icon": 46,
+      "req_lv": 60,
+      "armor_magic": 1120
+    },
+    {
+      "code": 13,
+      "name_kor": "심장을 뽑는 약지",
+      "explain": "공격시 2%% 확률로 10초동안 적을 출혈 상태로 만들어 초당 15.04의 데미지를 줍니다.",
+      "comment": "내 원수의 심장을 뽑아 피죽으로 갈아마시겠어.",
+      "name_eng": "The 3rd Finger of Pulling Heart",
+      "rarity": 2,
+      "icon": 55,
+      "req_lv": 30,
+      "armor_magic": 640
+    },
+    {
+      "code": 14,
+      "name_kor": "자수정 반지",
+      "comment": "붉은 핏덩이같은 자수정이라니…",
+      "name_eng": "Amethyst Ring",
+      "rarity": 1,
+      "icon": 54,
+      "req_lv": 80,
+      "armor_magic": 1280
+    },
+    {
+      "code": 15,
+      "name_kor": "베히모스의 눈",
+      "name_eng": "Behemoth's Eye",
+      "rarity": 3,
+      "icon": 7,
+      "req_lv": 100,
+      "armor_magic": 1920
+    },
+    {
+      "code": 16,
+      "name_kor": "흑련 반지",
+      "comment": "흑련의 이름은 슬픔 사유 좌절 절망",
+      "name_eng": "Black Flower Ring",
+      "rarity": 2,
+      "icon": 62,
+      "req_lv": 40,
+      "armor_magic": 800
+    },
+    {
+      "code": 17,
+      "name_kor": "블루 문",
+      "comment": "우야 호수에 비친 달을 갈라보거라 -시란-",
+      "name_eng": "Blue Moon",
+      "rarity": 2,
+      "icon": 56,
+      "req_lv": 70,
+      "armor_magic": 1280
+    },
+    {
+      "code": 18,
+      "name_kor": "청동 반지",
+      "comment": "더러운 것, 사악한 것들은 모조리 없애버리겠어. -버켄-",
+      "name_eng": "Bronze Ring",
+      "rarity": 1,
+      "icon": 26,
+      "req_lv": 30,
+      "armor_magic": 480
+    },
+    {
+      "code": 19,
+      "name_kor": "금간 큐빅 반지",
+      "name_eng": "Cracked Cubic Ring",
+      "rarity": 0,
+      "icon": 45,
+      "req_lv": 70,
+      "armor_magic": 1088
+    },
+    {
+      "code": 20,
+      "name_kor": "금간 사파이어 반지",
+      "comment": "슬픈 사파이어의 빛처럼 내 마음도 이렇게…… -실연 당한 헨돈 마이어 청년-",
+      "name_eng": "Cracked Shappire Ring",
+      "rarity": 0,
+      "icon": 48,
+      "req_lv": 110,
+      "armor_magic": 1728
+    },
+    {
+      "code": 21,
+      "name_kor": "큐빅 반지",
+      "name_eng": "Cubic Ring",
+      "rarity": 1,
+      "icon": 45,
+      "req_lv": 70,
+      "armor_magic": 1120
+    },
+    {
+      "code": 22,
+      "name_kor": "쿨라드의 사출 반지",
+      "name_eng": "Culad's Emission Ring",
+      "rarity": 4,
+      "icon": 11,
+      "req_lv": 50,
+      "armor_magic": 1184
+    },
+    {
+      "code": 23,
+      "name_kor": "에메랄드 반지",
+      "name_eng": "Emerald Ring",
+      "rarity": 1,
+      "icon": 46,
+      "req_lv": 100,
+      "armor_magic": 1600
+    },
+    {
+      "code": 24,
+      "name_kor": "빛바랜 청동 반지",
+      "comment": "징표는 비록 빛이 바랬지만 우리의 굳은 사랑의 맹세는 영원하리오.",
+      "name_eng": "Fade Bronze Ring",
+      "rarity": 0,
+      "icon": 26,
+      "req_lv": 30,
+      "armor_magic": 448
+    },
+    {
+      "code": 25,
+      "name_kor": "빛바랜 에메랄드 반지",
+      "comment": "이 반지의 주인은 지금 어디서 무엇을 하고 있을까. 오랜 세월 요정의 손길이 남아 있는 반지를 보며",
+      "name_eng": "Fade Emerald Ring",
+      "rarity": 0,
+      "icon": 46,
+      "req_lv": 100,
+      "armor_magic": 1568
+    },
+    {
+      "code": 26,
+      "name_kor": "꽃담",
+      "comment": "화려하되 야하지 않은 수수한 풍미를 느끼게 하는 꽃 담이로고 -원로 마법사 징킨-",
+      "name_eng": "Flower Bud",
+      "rarity": 2,
+      "icon": 62,
+      "req_lv": 70,
+      "armor_magic": 1280
+    },
+    {
+      "code": 27,
+      "name_kor": "GBL의 예식 반지",
+      "name_eng": "GBL's ritual ring",
+      "rarity": 4,
+      "icon": 10,
+      "req_lv": 70,
+      "armor_magic": 1504
+    },
+    {
+      "code": 28,
+      "name_kor": "금도금 반지",
+      "name_eng": "Gold Coating Ring",
+      "rarity": 1,
+      "icon": 28,
+      "req_lv": 60,
+      "armor_magic": 960
+    },
+    {
+      "code": 29,
+      "name_kor": "할기의 본링",
+      "explain": "카운터 공격력이 50%%상승한다.",
+      "comment": "인생 한방! 뭐 있겠나! 어줍지 않게 두 번, 세 번 할 필요 있나. 오직 한 번이면 족한거야. -카곤-",
+      "name_eng": "Halgi's Bone Ring",
+      "rarity": 3,
+      "icon": 38,
+      "req_lv": 80,
+      "armor_magic": 1600
+    },
+    {
+      "code": 30,
+      "name_kor": "라라 미스용",
+      "explain": "물리공격시 3%% 확률로 30초간 지능이 15%% 상승한다.",
+      "comment": "라라… - 풍진 -",
+      "name_eng": "Lala Mis Yong",
+      "rarity": 3,
+      "icon": 61,
+      "req_lv": 40,
+      "armor_magic": 960
+    },
+    {
+      "code": 31,
+      "name_kor": "라포르 메타",
+      "comment": "너와 난 떨어져있지만 한 몸과 같아 나는 네가 아무리 먼 곳에 있어도 느낄 수 있어.  -Rapport-",
+      "name_eng": "Lapore Meta",
+      "rarity": 3,
+      "icon": 67,
+      "req_lv": 60,
+      "armor_magic": 1280
+    },
+    {
+      "code": 32,
+      "name_kor": "하급 월장석 반지",
+      "name_eng": "Low-Class Moonstone Ring",
+      "rarity": 0,
+      "icon": 53,
+      "req_lv": 90,
+      "armor_magic": 1408
+    },
+    {
+      "code": 33,
+      "name_kor": "피를 부르는 중지",
+      "comment": "자칫. 정말 피를 부를 수 있지. 중지를 잘못쓰면 말이야.",
+      "name_eng": "The Middle Finger of Calling Blood",
+      "rarity": 2,
+      "icon": 47,
+      "req_lv": 80,
+      "armor_magic": 1440
+    },
+    {
+      "code": 34,
+      "name_kor": "달빛 이슬 반지",
+      "name_eng": "Moonlight Dew Ring",
+      "rarity": 2,
+      "icon": 6,
+      "req_lv": 100,
+      "armor_magic": 1760
+    },
+    {
+      "code": 35,
+      "name_kor": "월장석 반지",
+      "name_eng": "Moonstone Ring",
+      "rarity": 1,
+      "icon": 53,
+      "req_lv": 90,
+      "armor_magic": 1440
+    },
+    {
+      "code": 36,
+      "name_kor": "네이팜 이그나이터",
+      "explain": "네이팜탄의 폭발 범위가 10%% 증가합니다. 네이팜탄의 화염지대 크기가 10%% 증가합니다.",
+      "name_eng": "Napalm Igniter",
+      "rarity": 4,
+      "icon": 12,
+      "req_lv": 80,
+      "armor_magic": 1664
+    },
+    {
+      "code": 37,
+      "name_kor": "오래된 자수정 반지",
+      "comment": "할머니께서 남겨주신 자수정……",
+      "name_eng": "Old Amethyst Ring",
+      "rarity": 0,
+      "icon": 54,
+      "req_lv": 80,
+      "armor_magic": 1248
+    },
+    {
+      "code": 38,
+      "name_kor": "팔로만의 진주 반지",
+      "comment": "팔로만에서만 생산된다는 그~~~ 귀한 진주야~ 어머어머어머 - 로리안 -",
+      "name_eng": "Paloman's Pearl Ring",
+      "rarity": 2,
+      "icon": 54,
+      "req_lv": 50,
+      "armor_magic": 960
+    },
+    {
+      "code": 39,
+      "name_kor": "벗겨진 루비 반지",
+      "name_eng": "Peeled Ruby Ring",
+      "rarity": 0,
+      "icon": 48,
+      "req_lv": 120,
+      "armor_magic": 1888
+    },
+    {
+      "code": 40,
+      "name_kor": "벗겨진 은도금 반지",
+      "comment": "앗..이런 도금한 거 들키겠군. - 샤일록 고블린드 -",
+      "name_eng": "Peeled Silver Coating Ring",
+      "rarity": 0,
+      "icon": 27,
+      "req_lv": 50,
+      "armor_magic": 768
+    },
+    {
+      "code": 41,
+      "name_kor": "로리안의 꽃반지",
+      "name_eng": "Rorian's Flower Ring",
+      "rarity": 2,
+      "icon": 5,
+      "req_lv": 90,
+      "armor_magic": 1600
+    },
+    {
+      "code": 42,
+      "name_kor": "로열링",
+      "name_eng": "Royal Ring",
+      "rarity": 2,
+      "icon": 28,
+      "req_lv": 80,
+      "armor_magic": 1440
+    },
+    {
+      "code": 43,
+      "name_kor": "마모된 강철 반지",
+      "comment": "클클 반지는 비단 멋을 내는 데에만 쓰이는 것은 아니라고……",
+      "name_eng": "Rubbed Steel Ring",
+      "rarity": 0,
+      "icon": 25,
+      "req_lv": 40,
+      "armor_magic": 608
+    },
+    {
+      "code": 44,
+      "name_kor": "루비 반지",
+      "name_eng": "Ruby Ring",
+      "rarity": 1,
+      "icon": 48,
+      "req_lv": 120,
+      "armor_magic": 1920
+    },
+    {
+      "code": 45,
+      "name_kor": "사파이어 반지",
+      "comment": "가을. 가을. 가을. 사파이어의 계절은 가을.",
+      "name_eng": "Shappire Ring",
+      "rarity": 1,
+      "icon": 48,
+      "req_lv": 110,
+      "armor_magic": 1760
+    },
+    {
+      "code": 46,
+      "name_kor": "쉬스케의 한개의 눈물",
+      "explain": "피격시 1%% 확률로 2.05초동안 적을 얼립니다.",
+      "name_eng": "Shuske's teardrop ring",
+      "rarity": 4,
+      "icon": 9,
+      "req_lv": 90,
+      "armor_magic": 1824
+    },
+    {
+      "code": 47,
+      "name_kor": "은도금 반지",
+      "name_eng": "Silver Coating Ring",
+      "rarity": 1,
+      "icon": 27,
+      "req_lv": 50,
+      "armor_magic": 800
+    },
+    {
+      "code": 48,
+      "name_kor": "강철 반지",
+      "comment": "이미 내 마음은 굳어져 더 이상 당신의 마음을 받아 들일 수 없군요. - 세리아 -",
+      "name_eng": "Steel Ring",
+      "rarity": 1,
+      "icon": 25,
+      "req_lv": 40,
+      "armor_magic": 640
+    },
+    {
+      "code": 49,
+      "name_kor": "슈라토 아이",
+      "comment": "슈라토 아이를 보고 있으면 거짓을 말할 수 없다지?",
+      "name_eng": "Surato Eye",
+      "rarity": 3,
+      "icon": 45,
+      "req_lv": 80,
+      "armor_magic": 1600
+    },
+    {
+      "code": 50,
+      "name_kor": "낡은 금도금 반지",
+      "comment": "저… 하늘에는 베히모스라는…천상 수호물이 있다던데… - 소설에 빠진 청년 -",
+      "name_eng": "Used Gold Coating Ring",
+      "rarity": 0,
+      "icon": 28,
+      "req_lv": 60,
+      "armor_magic": 928
+    },
+    {
+      "code": 51,
+      "name_kor": "(구)귀신을 부르는 검지",
+      "explain": "피격시 5%% 확률로 Lv3 카잔을 소환한다.",
+      "comment": "나와라 카잔! 모든 방황하는 영혼을 흡수하는 거다!! - 귀검사 요한 -",
+      "name_eng": "The 1st Finger of Calling Ghost",
+      "rarity": 2,
+      "icon": 46,
+      "req_lv": 48,
+      "armor_magic": 928
+    },
+    {
+      "code": 52,
+      "name_kor": "(구)심장을 뽑는 약지",
+      "explain": "공격시 2%% 확률로 10초동안 적을 출혈 상태로 만들어 초당 15.04의 데미지를 줍니다.",
+      "comment": "내 원수의 심장을 뽑아 피죽으로 갈아마시겠어.",
+      "name_eng": "The 3rd Finger of Pulling Heart",
+      "rarity": 2,
+      "icon": 55,
+      "req_lv": 30,
+      "armor_magic": 640
+    },
+    {
+      "code": 53,
+      "name_kor": "(구)자수정 반지",
+      "comment": "붉은 핏덩이같은 자수정이라니…",
+      "name_eng": "Amethyst Ring",
+      "rarity": 1,
+      "icon": 54,
+      "req_lv": 60,
+      "armor_magic": 960
+    },
+    {
+      "code": 54,
+      "name_kor": "(구)푸른 청동 반지",
+      "comment": "어머 어머 이 빛깔 좀 봐~ 이런 특별한 색은 나와 아~~주 잘 어울리지~ - 로리안-",
+      "name_eng": "Azure Bronze Ring",
+      "rarity": 1,
+      "icon": 26,
+      "req_lv": 34,
+      "armor_magic": 544
+    },
+    {
+      "code": 55,
+      "name_kor": "(구)흑련 반지",
+      "comment": "흑련의 이름은 슬픔 사유 좌절 절망",
+      "name_eng": "Black Flower Ring",
+      "rarity": 2,
+      "icon": 62,
+      "req_lv": 36,
+      "armor_magic": 736
+    },
+    {
+      "code": 56,
+      "name_kor": "(구)블루 문",
+      "comment": "우야 호수에 비친 달을 갈라보거라 -시란-",
+      "name_eng": "Blue Moon",
+      "rarity": 2,
+      "icon": 56,
+      "req_lv": 60,
+      "armor_magic": 1120
+    },
+    {
+      "code": 57,
+      "name_kor": "본링",
+      "comment": "탕탕 좋아. 이 정도면 벽을 쳐도 아프지 않겠어!. 으앗! 제발 용도에 맞게 쓰라고!",
+      "name_eng": "Bone Ring",
+      "rarity": 1,
+      "icon": 33,
+      "req_lv": 24,
+      "armor_magic": 384
+    },
+    {
+      "code": 58,
+      "name_kor": "(구)청동 반지",
+      "comment": "더러운 것, 사악한 것들은 모조리 없애버리겠어. -버켄-",
+      "name_eng": "Bronze Ring",
+      "rarity": 1,
+      "icon": 26,
+      "req_lv": 30,
+      "armor_magic": 480
+    },
+    {
+      "code": 59,
+      "name_kor": "(구)금간 큐빅 반지",
+      "name_eng": "Cracked Cubic Ring",
+      "rarity": 0,
+      "icon": 45,
+      "req_lv": 54,
+      "armor_magic": 832
+    },
+    {
+      "code": 60,
+      "name_kor": "(구)금간 사파이어 반지",
+      "comment": "슬픈 사파이어의 빛처럼 내 마음도 이렇게…… -실연 당한 헨돈 마이어 청년-",
+      "name_eng": "Cracked Shappire Ring",
+      "rarity": 0,
+      "icon": 48,
+      "req_lv": 78,
+      "armor_magic": 1216
+    },
+    {
+      "code": 61,
+      "name_kor": "(구)큐빅 반지",
+      "name_eng": "Cubic Ring",
+      "rarity": 1,
+      "icon": 45,
+      "req_lv": 54,
+      "armor_magic": 864
+    },
+    {
+      "code": 62,
+      "name_kor": "다이아몬드 반지",
+      "comment": "나의 사랑과 정열을 담아 ... 사랑합니다. 당신.",
+      "name_eng": "Diamond Ring",
+      "rarity": 0,
+      "icon": 27,
+      "req_lv": 20,
+      "armor_magic": 288
+    },
+    {
+      "code": 63,
+      "name_kor": "(구)정교한 자수정 반지",
+      "name_eng": "Elaborate Amethyst Ring",
+      "rarity": 1,
+      "icon": 54,
+      "req_lv": 64,
+      "armor_magic": 1024
+    },
+    {
+      "code": 64,
+      "name_kor": "(구)정교한 사파이어 반지",
+      "comment": "어머나 어머나 어머나! 이거 몇 캐럿이나 하나?",
+      "name_eng": "Elaborate Shappire Ring",
+      "rarity": 1,
+      "icon": 48,
+      "req_lv": 80,
+      "armor_magic": 1280
+    },
+    {
+      "code": 65,
+      "name_kor": "엘프의 노래",
+      "name_eng": "Elf Song",
+      "rarity": 3,
+      "icon": 55,
+      "req_lv": 20,
+      "armor_magic": 640
+    },
+    {
+      "code": 66,
+      "name_kor": "(구)에메랄드 반지",
+      "name_eng": "Emerald Ring",
+      "rarity": 1,
+      "icon": 46,
+      "req_lv": 72,
+      "armor_magic": 1152
+    },
+    {
+      "code": 67,
+      "name_kor": "요정시대의 반지",
+      "name_eng": "Ring of Fairy Age",
+      "rarity": 2,
+      "icon": 55,
+      "req_lv": 22,
+      "armor_magic": 512
+    },
+    {
+      "code": 68,
+      "name_kor": "(구)빛바랜 청동 반지",
+      "comment": "징표는 비록 빛이 바랬지만 우리의 굳은 사랑의 맹세는 영원하리오.",
+      "name_eng": "Fade Bronze Ring",
+      "rarity": 0,
+      "icon": 26,
+      "req_lv": 30,
+      "armor_magic": 448
+    },
+    {
+      "code": 69,
+      "name_kor": "(구)빛바랜 에머랄드 반지",
+      "comment": "이 반지의 주인은 지금 어디서 무엇을 하고 있을까. 오랜 세월 요정의 손길이 남아 있는 반지를 보며",
+      "name_eng": "Fade Emerald Ring",
+      "rarity": 0,
+      "icon": 46,
+      "req_lv": 72,
+      "armor_magic": 1120
+    },
+    {
+      "code": 70,
+      "name_kor": "(구)꽃담",
+      "comment": "화려하되 야하지 않은 수수한 풍미를 느끼게 하는 꽃 담이로고 -원로 마법사 징킨-",
+      "name_eng": "Flower Bud",
+      "rarity": 2,
+      "icon": 62,
+      "req_lv": 54,
+      "armor_magic": 1024
+    },
+    {
+      "code": 71,
+      "name_kor": "얼어붙은 비명의 반지",
+      "name_eng": "Freezing Scream Ring",
+      "rarity": 2,
+      "icon": 48,
+      "req_lv": 78,
+      "armor_magic": 1300
+    },
+    {
+      "code": 72,
+      "name_kor": "(구)빛나는 에머랄드 반지",
+      "comment": "마법사가 되려면 보석의 사용법 역시 잘 알고 있어야 한답니다. 에메랄드는 깨지고 쉽고 약하지만 정화력을 갖고 있지요 또 적당량의 마나를 집어 넣기도 수월해서 예나 지금이나 많은 마법사들이 애용하고 있는 보석이지요 -샤란-",
+      "name_eng": "Glittering Emerald Ring",
+      "rarity": 1,
+      "icon": 46,
+      "req_lv": 76,
+      "armor_magic": 1216
+    },
+    {
+      "code": 73,
+      "name_kor": "(구)금 반지",
+      "name_eng": "Gold Ring",
+      "rarity": 1,
+      "icon": 28,
+      "req_lv": 52,
+      "armor_magic": 832
+    },
+    {
+      "code": 74,
+      "name_kor": "(구)금도금 반지",
+      "name_eng": "Gold Coating Ring",
+      "rarity": 1,
+      "icon": 28,
+      "req_lv": 48,
+      "armor_magic": 768
+    },
+    {
+      "code": 75,
+      "name_kor": "(구)할기의 본링",
+      "explain": "카운터 공격력이 50%%상승한다.",
+      "comment": "인생 한방! 뭐 있겠나! 어줍지 않게 두 번, 세 번 할 필요 있나. 오직 한 번이면 족한거야. -카곤-",
+      "name_eng": "Halgi's Bone Ring",
+      "rarity": 3,
+      "icon": 38,
+      "req_lv": 74,
+      "armor_magic": 1504
+    },
+    {
+      "code": 76,
+      "name_kor": "향상된 연꽃 반지",
+      "comment": "연꽃잎 따서 한 올, 연꽃잎 따서 한 올.",
+      "name_eng": "Improved Lotus Ring",
+      "rarity": 1,
+      "icon": 61,
+      "req_lv": 22,
+      "armor_magic": 352
+    },
+    {
+      "code": 77,
+      "name_kor": "(구)라라 미스용",
+      "explain": "물리공격시 3%% 확률로 30초간 지능이 15%% 상승한다.",
+      "comment": "라라… - 풍진 -",
+      "name_eng": "Lala Mis Yong",
+      "rarity": 3,
+      "icon": 61,
+      "req_lv": 44,
+      "armor_magic": 1024
+    },
+    {
+      "code": 78,
+      "name_kor": "(구)라포르 메타",
+      "comment": "너와 난 떨어져있지만 한 몸과 같아 나는 네가 아무리 먼 곳에 있어도 느낄 수 있어.  -Rapport-",
+      "name_eng": "Lapore Meta",
+      "rarity": 3,
+      "icon": 67,
+      "req_lv": 54,
+      "armor_magic": 1184
+    },
+    {
+      "code": 79,
+      "name_kor": "연꽃 반지",
+      "comment": "사랑이란 말…… 그 거 다 거짓말이야. -패리스-",
+      "name_eng": "Lotus Ring",
+      "rarity": 1,
+      "icon": 61,
+      "req_lv": 18,
+      "armor_magic": 288
+    },
+    {
+      "code": 80,
+      "name_kor": "(구)하급 월장석 반지",
+      "name_eng": "Low-Class Moonstone Ring",
+      "rarity": 0,
+      "icon": 53,
+      "req_lv": 66,
+      "armor_magic": 1024
+    },
+    {
+      "code": 81,
+      "name_kor": "마법석 반지",
+      "name_eng": "Magical Stone Ring",
+      "rarity": 2,
+      "icon": 55,
+      "req_lv": 12,
+      "armor_magic": 352
+    },
+    {
+      "code": 82,
+      "name_kor": "(구)피를 부르는 중지",
+      "comment": "자칫. 정말 피를 부를 수 있지. 중지를 잘못쓰면 말이야.",
+      "name_eng": "The Middle Finger of Calling Blood",
+      "rarity": 2,
+      "icon": 47,
+      "req_lv": 66,
+      "armor_magic": 1216
+    },
+    {
+      "code": 83,
+      "name_kor": "(구)월장석 반지",
+      "name_eng": "Moonstone Ring",
+      "rarity": 1,
+      "icon": 53,
+      "req_lv": 66,
+      "armor_magic": 1056
+    },
+    {
+      "code": 84,
+      "name_kor": "(구)오래된 자수정 반지",
+      "comment": "할머니께서 남겨주신 자수정……",
+      "name_eng": "Old Amethyst Ring",
+      "rarity": 0,
+      "icon": 54,
+      "req_lv": 60,
+      "armor_magic": 928
+    },
+    {
+      "code": 85,
+      "name_kor": "오래된 연꽃 반지",
+      "comment": "이제 지겨워! 너란 인간은 더 이상 내 눈에 보이지 않았으면 좋겠어. 이 오래된 연꽃반지 처럼 이젠 네가 지겨워!",
+      "name_eng": "Old Lotus Ring",
+      "rarity": 0,
+      "icon": 61,
+      "req_lv": 18,
+      "armor_magic": 256
+    },
+    {
+      "code": 86,
+      "name_kor": "(구)팔로만의 진주 반지",
+      "comment": "팔로만에서만 생산된다는 그~~~ 귀한 진주야~ 어머어머어머 - 로리안 -",
+      "name_eng": "Paloman's Pearl Ring",
+      "rarity": 2,
+      "icon": 54,
+      "req_lv": 42,
+      "armor_magic": 832
+    },
+    {
+      "code": 87,
+      "name_kor": "질경이풀 반지",
+      "comment": "오아~ 질겨 질겨. 대단해. 이런 질김이라면…… -로톤 막시머그-",
+      "name_eng": "Plantain Ring",
+      "rarity": 1,
+      "icon": 62,
+      "req_lv": 12,
+      "armor_magic": 192
+    },
+    {
+      "code": 88,
+      "name_kor": "(구)세련된 큐빅 반지",
+      "comment": "드디어 삼류 디자이너에게 봄은 오는가! 이런 환상적인 디자인을 바로 내가 한 것이란 말인가? - 만년 삼류 디자이너 -",
+      "name_eng": "Polishing Cubic Ring",
+      "rarity": 1,
+      "icon": 45,
+      "req_lv": 58,
+      "armor_magic": 928
+    },
+    {
+      "code": 89,
+      "name_kor": "(구)벗겨진 루비 반지",
+      "name_eng": "Peeled Ruby Ring",
+      "rarity": 0,
+      "icon": 48,
+      "req_lv": 84,
+      "armor_magic": 1312
+    },
+    {
+      "code": 90,
+      "name_kor": "(구)벗겨진 은도금 반지",
+      "comment": "앗..이런 도금한 거 들키겠군. - 샤일록 고블린드 -",
+      "name_eng": "Peeled Silver Coating Ring",
+      "rarity": 0,
+      "icon": 27,
+      "req_lv": 42,
+      "armor_magic": 640
+    },
+    {
+      "code": 91,
+      "name_kor": "부패한 본링",
+      "comment": "썩어 아주. 내 마음처럼 … 몸도 똑같이…… -시련녀-",
+      "name_eng": "Rotten Bone Ring",
+      "rarity": 0,
+      "icon": 33,
+      "req_lv": 24,
+      "armor_magic": 352
+    },
+    {
+      "code": 92,
+      "name_kor": "(구)로열링",
+      "name_eng": "Royal Ring",
+      "rarity": 2,
+      "icon": 28,
+      "req_lv": 72,
+      "armor_magic": 1312
+    },
+    {
+      "code": 93,
+      "name_kor": "썩은 밀짚 반지",
+      "comment": "나 비록 가난하여 나 사랑하는 여인에게 썩은 밀짚반지만을 주지만 이를 사랑의 징표로 하여…  -헨돈마이어 뒷골목 청년-",
+      "name_eng": "Rotten Straw Ring",
+      "rarity": 0,
+      "icon": 27,
+      "req_lv": 4,
+      "armor_magic": 32
+    },
+    {
+      "code": 94,
+      "name_kor": "(구)마모된 강철 반지",
+      "comment": "클클 반지는 비단 멋을 내는 데에만 쓰이는 것은 아니라고……",
+      "name_eng": "Rubbed Steel Ring",
+      "rarity": 0,
+      "icon": 25,
+      "req_lv": 36,
+      "armor_magic": 544
+    },
+    {
+      "code": 95,
+      "name_kor": "(구)루비 반지",
+      "name_eng": "Ruby Ring",
+      "rarity": 1,
+      "icon": 48,
+      "req_lv": 84,
+      "armor_magic": 1344
+    },
+    {
+      "code": 96,
+      "name_kor": "헐은 질경이풀 반지",
+      "comment": "헐은 질경이 풀을 보며 네 인생의 허망함을 알아라. -헨돈 마이어 어울리지 않는 마법사 솔린-",
+      "name_eng": "Shabby Plantain Ring",
+      "rarity": 0,
+      "icon": 62,
+      "req_lv": 12,
+      "armor_magic": 160
+    },
+    {
+      "code": 97,
+      "name_kor": "(구)사파이어 반지",
+      "comment": "가을. 가을. 가을. 사파이어의 계절은 가을.",
+      "name_eng": "Shappire Ring",
+      "rarity": 1,
+      "icon": 48,
+      "req_lv": 78,
+      "armor_magic": 1248
+    },
+    {
+      "code": 98,
+      "name_kor": "(구)은 반지",
+      "comment": "은은 제독효과가 있지. 금과 같은 영원의 약속은 할 수 없지만 깨지기 쉬운 아름다움이랄까?",
+      "name_eng": "Silver Ring",
+      "rarity": 1,
+      "icon": 27,
+      "req_lv": 46,
+      "armor_magic": 736
+    },
+    {
+      "code": 99,
+      "name_kor": "(구)은도금 반지",
+      "name_eng": "Silver Coating Ring",
+      "rarity": 1,
+      "icon": 27,
+      "req_lv": 42,
+      "armor_magic": 672
+    },
+    {
+      "code": 100,
+      "name_kor": "(구)강철 반지",
+      "comment": "이미 내 마음은 굳어져 더 이상 당신의 마음을 받아 들일 수 없군요. - 세리아 -",
+      "name_eng": "Steel Ring",
+      "rarity": 1,
+      "icon": 25,
+      "req_lv": 36,
+      "armor_magic": 576
+    },
+    {
+      "code": 101,
+      "name_kor": "단단한 본링",
+      "comment": "이거 도대체 무슨 뼈야? 우 찝찝해.    아이고 마야 하고 다니기 싫으면 손 나뿌라 네 애비 곰탕이나 끓여 줄랑께.",
+      "name_eng": "Stiff Bone Ring",
+      "rarity": 1,
+      "icon": 33,
+      "req_lv": 28,
+      "armor_magic": 448
+    },
+    {
+      "code": 102,
+      "name_kor": "(구)견고한 월장석 반지",
+      "comment": "달빛의 기운을 지니고 있는 월장석… 보고 있으면 우울해 진다. - 라이너스 -",
+      "name_eng": "Strong Moonstone Ring",
+      "rarity": 1,
+      "icon": 53,
+      "req_lv": 70,
+      "armor_magic": 1120
+    },
+    {
+      "code": 103,
+      "name_kor": "밀짚 반지",
+      "comment": "내가 사랑하는 이라면 이런 밀짚반지라도 기쁘게 받아줄 것… -헨돈 마이어 뒷골목 청년",
+      "name_eng": "Straw Ring",
+      "rarity": 1,
+      "icon": 27,
+      "req_lv": 10,
+      "armor_magic": 160
+    },
+    {
+      "code": 104,
+      "name_kor": "(구)견고한 강철 반지",
+      "comment": "하하 귀중한 아이템을 얻으셨군요! 저의 레가시는 꽝이 절대 없다니깐요. -단진-",
+      "name_eng": "Strong Steel Ring",
+      "rarity": 1,
+      "icon": 25,
+      "req_lv": 40,
+      "armor_magic": 640
+    },
+    {
+      "code": 105,
+      "name_kor": "(구)슈라토 아이",
+      "comment": "슈라토 아이를 보고 있으면 거짓을 말할 수 없다지?",
+      "name_eng": "Surato Eye",
+      "rarity": 3,
+      "icon": 45,
+      "req_lv": 64,
+      "armor_magic": 1344
+    },
+    {
+      "code": 106,
+      "name_kor": "억센 질경이풀 반지",
+      "comment": "너와 나의 사이는 떼어 놓을래야 떼어 놓을 수 없는 관계야.. 마치 이 억센 질경이풀 반지처럼",
+      "name_eng": "Tough Plantain Ring",
+      "rarity": 1,
+      "icon": 62,
+      "req_lv": 14,
+      "armor_magic": 224
+    },
+    {
+      "code": 107,
+      "name_kor": "(구)낡은 금도금 반지",
+      "comment": "저… 하늘에는 베히모스라는…천상 수호물이 있다던데… - 소설에 빠진 청년 -",
+      "name_eng": "Used Gold Coating Ring",
+      "rarity": 0,
+      "icon": 28,
+      "req_lv": 48,
+      "armor_magic": 736
+    },
+    {
+      "code": 108,
+      "name_kor": "세번째 주시자의 눈",
+      "comment": "시즌 3. 클로즈 베타 유저들을 위한 세리아의 특별한 선물",
+      "name_eng": "The 3rd Watcher's Eye",
+      "rarity": 1,
+      "sell_price": 1,
+      "icon": 0,
+      "req_lv": 2,
+      "armor_magic": 14
+    },
+    {
+      "code": 109,
+      "name_kor": "낡은 밀짚 반지",
+      "comment": "에헤이 뭔 모냥이 이로꼬롬 후지다냐. -헨돈마이어 뒷골목 청년의 애인-",
+      "name_eng": "Worn Straw Ring",
+      "rarity": 0,
+      "icon": 27,
+      "req_lv": 8,
+      "armor_magic": 96
+    }
+  ]
+}

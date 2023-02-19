@@ -1,0 +1,492 @@
+{
+  "plate": [
+    {
+      "code": 1,
+      "name_kor": "유물 : 성스러운 이슈타르의 티타늄 폴드론",
+      "name_eng": "Legacy : Holy Shoulder of Ishtar",
+      "rarity": 2,
+      "icon": 329,
+      "req_lv": 90,
+      "armor_physical": 2000
+    },
+    {
+      "code": 2,
+      "name_kor": "유물 : 이슈타르의 티타늄 폴드론",
+      "name_eng": "Legacy : Shoulder of Ishtar",
+      "rarity": 2,
+      "icon": 324,
+      "req_lv": 80,
+      "armor_physical": 1800
+    },
+    {
+      "code": 3,
+      "name_kor": "강철 폴드론",
+      "name_eng": "Steel Pauldron",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 60,
+      "armor_physical": 1200
+    },
+    {
+      "code": 4,
+      "name_kor": "티타늄 폴드론",
+      "name_eng": "Titanium Pauldron",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 100,
+      "armor_physical": 2000
+    },
+    {
+      "code": 5,
+      "name_kor": "낡은 강철 폴드론",
+      "name_eng": "Used Steel Pauldron",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 60,
+      "armor_physical": 1160
+    },
+    {
+      "code": 6,
+      "name_kor": "낡은 티타늄 폴드론",
+      "name_eng": "Used Titanium Pauldron",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 100,
+      "armor_physical": 1960
+    },
+    {
+      "code": 7,
+      "name_kor": "마모된 티타늄 숄더패드",
+      "name_eng": "Rubbed Titanium Shoulder-Pad",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 80,
+      "armor_physical": 1560
+    },
+    {
+      "code": 8,
+      "name_kor": "티타늄 숄더패드",
+      "name_eng": "Titanium Shoulder-Pad",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 80,
+      "armor_physical": 1600
+    },
+    {
+      "code": 9,
+      "name_kor": "합금 숄더",
+      "name_eng": "Alloy Shoulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 110,
+      "armor_physical": 2200
+    },
+    {
+      "code": 10,
+      "name_kor": "칠흑의 베르테스 숄더",
+      "name_eng": "Jet-Black Bertes Shoulder",
+      "rarity": 2,
+      "icon": 16,
+      "req_lv": 60,
+      "armor_physical": 1400
+    },
+    {
+      "code": 11,
+      "name_kor": "보로딘의 황제갑 투구",
+      "name_eng": "Borodin's Emperor HeadGear",
+      "rarity": 4,
+      "icon": 103,
+      "req_lv": 100,
+      "armor_physical": 2480
+    },
+    {
+      "code": 12,
+      "name_kor": "블루 프로미넌스 숄더",
+      "name_eng": "Blue Prominence Shoulder",
+      "rarity": 2,
+      "icon": 18,
+      "req_lv": 40,
+      "armor_physical": 1000
+    },
+    {
+      "code": 13,
+      "name_kor": "다크스틸 투구",
+      "name_eng": "Darksteel Headgear",
+      "rarity": 4,
+      "icon": 102,
+      "req_lv": 80,
+      "armor_physical": 2080
+    },
+    {
+      "code": 14,
+      "name_kor": "강견의 의장 이로코이스",
+      "explain": "숄더태클의 최대 충전시간이 20%% 단축됩니다. 공격속도 +1%%",
+      "comment": "\"판금 그래플러가 무서운걸 보여주지\"",
+      "name_eng": "Heavy Shouder Guard :Iroquois",
+      "rarity": 4,
+      "icon": 104,
+      "req_lv": 60,
+      "armor_physical": 1680
+    },
+    {
+      "code": 15,
+      "name_kor": "녹슨 합금 숄더",
+      "name_eng": "Rusty Alloy Shoulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 110,
+      "armor_physical": 2160
+    },
+    {
+      "code": 16,
+      "name_kor": "녹슨 티타늄 숄더",
+      "name_eng": "Rusty Titanium Shoulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 70,
+      "armor_physical": 1360
+    },
+    {
+      "code": 17,
+      "name_kor": "티타늄 숄더",
+      "name_eng": "Titanium Shoulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 70,
+      "armor_physical": 1400
+    },
+    {
+      "code": 18,
+      "name_kor": "초합금 고르아투스 숄더",
+      "name_eng": "Ultra Alloy Goratus Shoulder",
+      "rarity": 2,
+      "icon": 17,
+      "req_lv": 50,
+      "armor_physical": 1200
+    },
+    {
+      "code": 19,
+      "name_kor": "허술한 강철 스폴더",
+      "name_eng": "Shabby Steel Spaulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 50,
+      "armor_physical": 960
+    },
+    {
+      "code": 20,
+      "name_kor": "허술한 티타늄 스폴더",
+      "name_eng": "Shabby Titanium Spaulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 90,
+      "armor_physical": 1760
+    },
+    {
+      "code": 21,
+      "name_kor": "강철 스폴더",
+      "name_eng": "Steel Spaulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 50,
+      "armor_physical": 1000
+    },
+    {
+      "code": 22,
+      "name_kor": "티타늄 스폴더",
+      "name_eng": "Titanium Spaulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 90,
+      "armor_physical": 1800
+    },
+    {
+      "code": 23,
+      "name_kor": "(구)촘촘한 강철 폴드론",
+      "name_eng": "Close Steel Pauldron",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 58,
+      "armor_physical": 1160
+    },
+    {
+      "code": 24,
+      "name_kor": "(구)촘촘한 티타늄 폴드론",
+      "name_eng": "Close Titanium Pauldron",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 80,
+      "armor_physical": 1600
+    },
+    {
+      "code": 25,
+      "name_kor": "고요의 정령 폴드론",
+      "name_eng": "Pauldron of Silent Soul",
+      "rarity": 2,
+      "icon": 47,
+      "req_lv": 70,
+      "armor_physical": 1600
+    },
+    {
+      "code": 26,
+      "name_kor": "(구)강철 폴드론",
+      "name_eng": "Steel Pauldron",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 54,
+      "armor_physical": 1080
+    },
+    {
+      "code": 27,
+      "name_kor": "(구)티타늄 폴드론",
+      "name_eng": "Titanium Pauldron",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 78,
+      "armor_physical": 1560
+    },
+    {
+      "code": 28,
+      "name_kor": "(구)낡은 강철 폴드론",
+      "name_eng": "Used Steel Pauldron",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 54,
+      "armor_physical": 1040
+    },
+    {
+      "code": 29,
+      "name_kor": "(구)낡은 티타늄 폴드론",
+      "name_eng": "Used Titanium Pauldron",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 78,
+      "armor_physical": 1520
+    },
+    {
+      "code": 30,
+      "name_kor": "용갑 밸러 퀴러스 폴드론",
+      "name_eng": "Brave Armor Valor Cuirass Pauldron",
+      "rarity": 2,
+      "icon": 82,
+      "req_lv": 90,
+      "armor_physical": 2000
+    },
+    {
+      "code": 31,
+      "name_kor": "비전 리퍼 폴드론",
+      "name_eng": "Vision Reaper Pauldron",
+      "rarity": 2,
+      "icon": 81,
+      "req_lv": 80,
+      "armor_physical": 1800
+    },
+    {
+      "code": 32,
+      "name_kor": "튼튼한 강철 숄더패드",
+      "name_eng": "Firm Steel Shoulder-Pad",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 46,
+      "armor_physical": 920
+    },
+    {
+      "code": 33,
+      "name_kor": "(구)튼튼한 티타늄 숄더패드",
+      "name_eng": "Firm Titanium Shoulder-Pad",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 70,
+      "armor_physical": 1400
+    },
+    {
+      "code": 34,
+      "name_kor": "마모된 강철 숄더패드",
+      "name_eng": "Rubbed Steel Shoulder-Pad",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 42,
+      "armor_physical": 800
+    },
+    {
+      "code": 35,
+      "name_kor": "(구)마모된 티타늄 숄더패드",
+      "name_eng": "Rubbed Titanium Shoulder-Pad",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 66,
+      "armor_physical": 1280
+    },
+    {
+      "code": 36,
+      "name_kor": "강철 숄더패드",
+      "name_eng": "Steel Shoulder-Pad",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 42,
+      "armor_physical": 840
+    },
+    {
+      "code": 37,
+      "name_kor": "(구)티타늄 숄더패드",
+      "name_eng": "Titanium Shoulder-Pad",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 66,
+      "armor_physical": 1320
+    },
+    {
+      "code": 38,
+      "name_kor": "(구)합금 숄더",
+      "name_eng": "Alloy Shoulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 84,
+      "armor_physical": 1680
+    },
+    {
+      "code": 39,
+      "name_kor": "(구)칠흑의 베르테스 숄더",
+      "name_eng": "Jet-Black Bertes Shoulder",
+      "rarity": 2,
+      "icon": 16,
+      "req_lv": 64,
+      "armor_physical": 1480
+    },
+    {
+      "code": 40,
+      "name_kor": "(구)블루 프로미넌스 숄더",
+      "name_eng": "Blue Prominence Shoulder",
+      "rarity": 2,
+      "icon": 18,
+      "req_lv": 40,
+      "armor_physical": 1000
+    },
+    {
+      "code": 41,
+      "name_kor": "(구)녹슨 합금 숄더",
+      "name_eng": "Rusty Alloy Shoulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 84,
+      "armor_physical": 1640
+    },
+    {
+      "code": 42,
+      "name_kor": "녹슨 강철 숄더",
+      "name_eng": "Rusty Steel Shoulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 36,
+      "armor_physical": 680
+    },
+    {
+      "code": 43,
+      "name_kor": "(구)녹슨 티타늄 숄더",
+      "name_eng": "Rusty Titanium Shoulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 60,
+      "armor_physical": 1160
+    },
+    {
+      "code": 44,
+      "name_kor": "강철 숄더",
+      "name_eng": "Steel Shoulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 36,
+      "armor_physical": 720
+    },
+    {
+      "code": 45,
+      "name_kor": "단단한 강철 숄더",
+      "name_eng": "Stiff Steel Shoulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 40,
+      "armor_physical": 800
+    },
+    {
+      "code": 46,
+      "name_kor": "(구)단단한 티타늄 숄더",
+      "name_eng": "Stiff Titanium Shoulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 64,
+      "armor_physical": 1280
+    },
+    {
+      "code": 47,
+      "name_kor": "(구)티타늄 숄더",
+      "name_eng": "Titanium Shoulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 60,
+      "armor_physical": 1200
+    },
+    {
+      "code": 48,
+      "name_kor": "(구)초합금 고르아투스 숄더",
+      "name_eng": "Ultra Alloy Goratus Shoulder",
+      "rarity": 2,
+      "icon": 17,
+      "req_lv": 52,
+      "armor_physical": 1240
+    },
+    {
+      "code": 49,
+      "name_kor": "(구)허술한 강철 스폴더",
+      "name_eng": "Shabby Steel Spaulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 48,
+      "armor_physical": 920
+    },
+    {
+      "code": 50,
+      "name_kor": "(구)허술한 티타늄 스폴더",
+      "name_eng": "Shabby Titanium Spaulder",
+      "rarity": 0,
+      "icon": 167,
+      "req_lv": 72,
+      "armor_physical": 1400
+    },
+    {
+      "code": 51,
+      "name_kor": "(구)강철 스폴더",
+      "name_eng": "Steel Spaulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 48,
+      "armor_physical": 960
+    },
+    {
+      "code": 52,
+      "name_kor": "(구)견고한 강철 스폴더",
+      "name_eng": "Strong Steel Spaulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 52,
+      "armor_physical": 1040
+    },
+    {
+      "code": 53,
+      "name_kor": "(구)견고한 티타늄 스폴더",
+      "name_eng": "Strong Titanium Spaulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 76,
+      "armor_physical": 1520
+    },
+    {
+      "code": 54,
+      "name_kor": "(구)티타늄 스폴더",
+      "name_eng": "Titanium Spaulder",
+      "rarity": 1,
+      "icon": 167,
+      "req_lv": 72,
+      "armor_physical": 1440
+    }
+  ]
+}

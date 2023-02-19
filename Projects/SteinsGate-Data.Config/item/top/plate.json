@@ -1,0 +1,527 @@
+{
+  "plate": [
+    {
+      "code": 1,
+      "name_kor": "(구)촘촘한 강철 아머",
+      "name_eng": "Close Steel Armor",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 58,
+      "armor_physical": 1740
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)촘촘한 티타늄 아머",
+      "name_eng": "Close Titanium Armor",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 80,
+      "armor_physical": 2400
+    },
+    {
+      "code": 3,
+      "name_kor": "고요의 정령 아머",
+      "name_eng": "Armor of Silent Soul",
+      "rarity": 2,
+      "icon": 51,
+      "req_lv": 80,
+      "armor_physical": 2700
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)강철 아머",
+      "name_eng": "Steel Armor",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 54,
+      "armor_physical": 1620
+    },
+    {
+      "code": 5,
+      "name_kor": "(구)티타늄 아머",
+      "name_eng": "Titanium Armor",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 78,
+      "armor_physical": 2340
+    },
+    {
+      "code": 6,
+      "name_kor": "(구)낡은 강철 아머",
+      "name_eng": "Used Steel Armor",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 54,
+      "armor_physical": 1560
+    },
+    {
+      "code": 7,
+      "name_kor": "(구)낡은 티타늄 아머",
+      "name_eng": "Used Titanium Armor",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 78,
+      "armor_physical": 2280
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)합금 흉갑",
+      "name_eng": "Alloy Breastplate",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 84,
+      "armor_physical": 2520
+    },
+    {
+      "code": 9,
+      "name_kor": "(구)녹슨 합금 흉갑",
+      "name_eng": "Rusty Alloy Breastplate",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 84,
+      "armor_physical": 2460
+    },
+    {
+      "code": 10,
+      "name_kor": "녹슨 강철 흉갑",
+      "name_eng": "Rusty Steel Breatplate",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 36,
+      "armor_physical": 1020
+    },
+    {
+      "code": 11,
+      "name_kor": "(구)녹슨 티타늄 흉갑",
+      "name_eng": "Rusty Titanium Breatplate",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 60,
+      "armor_physical": 1740
+    },
+    {
+      "code": 12,
+      "name_kor": "강철 흉갑",
+      "name_eng": "Steel Breatplate",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 36,
+      "armor_physical": 1080
+    },
+    {
+      "code": 13,
+      "name_kor": "단단한 강철 흉갑",
+      "name_eng": "Stiff Steel Breatplate",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 40,
+      "armor_physical": 1200
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)단단한 티타늄 흉갑",
+      "name_eng": "Stiff Titanium Breatplate",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 64,
+      "armor_physical": 1920
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)티타늄 흉갑",
+      "name_eng": "Titanium Breatplate",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 60,
+      "armor_physical": 1800
+    },
+    {
+      "code": 16,
+      "name_kor": "(구)칠흑의 베르테스 상의",
+      "name_eng": "Jet-Black Bertes Coat",
+      "rarity": 2,
+      "icon": 18,
+      "req_lv": 66,
+      "armor_physical": 2280
+    },
+    {
+      "code": 17,
+      "name_kor": "(구)블루 프로미넌스 상의",
+      "name_eng": "Blue Prominence Coat",
+      "rarity": 2,
+      "icon": 17,
+      "req_lv": 42,
+      "armor_physical": "1560 +80"
+    },
+    {
+      "code": 18,
+      "name_kor": "(구)초합금 고르아투스 상의",
+      "name_eng": "Ultra Alloy Goratus Coat",
+      "rarity": 2,
+      "icon": 16,
+      "req_lv": 54,
+      "armor_physical": 1920
+    },
+    {
+      "code": 19,
+      "name_kor": "유물 : 성스러운 라트리의 강철 메일",
+      "name_eng": "Legacy : Holy Coat of Latri",
+      "rarity": 2,
+      "icon": 316,
+      "req_lv": 60,
+      "armor_physical": 2100
+    },
+    {
+      "code": 20,
+      "name_kor": "유물 : 성스러운 시로넨의 강철 메일",
+      "name_eng": "Legacy : Holy Coat of Sironen",
+      "rarity": 2,
+      "icon": 314,
+      "req_lv": 40,
+      "armor_physical": 1500
+    },
+    {
+      "code": 21,
+      "name_kor": "유물 : 성스러운 이슈타르의 티타늄 아머",
+      "name_eng": "Legacy : Coat of Ishtar",
+      "rarity": 2,
+      "icon": 327,
+      "req_lv": 100,
+      "armor_physical": 3300
+    },
+    {
+      "code": 22,
+      "name_kor": "유물 : 성스러운 큐빌레이의 티타늄 메일",
+      "name_eng": "Legacy : Holy Coat of Cubeley",
+      "rarity": 2,
+      "icon": 319,
+      "req_lv": 80,
+      "armor_physical": 2700
+    },
+    {
+      "code": 23,
+      "name_kor": "유물 : 라트리의 강철 메일",
+      "name_eng": "Legacy : Coat of Latri",
+      "rarity": 2,
+      "icon": 145,
+      "req_lv": 50,
+      "armor_physical": 1800
+    },
+    {
+      "code": 24,
+      "name_kor": "유물 : 이슈타르의 티타늄 아머",
+      "name_eng": "Legacy : Coat of Ishtar",
+      "rarity": 2,
+      "icon": 322,
+      "req_lv": 90,
+      "armor_physical": 3000
+    },
+    {
+      "code": 25,
+      "name_kor": "유물 : 큐빌레이의 티타늄 메일",
+      "name_eng": "Legacy : Coat of Cubeley",
+      "rarity": 2,
+      "icon": 109,
+      "req_lv": 70,
+      "armor_physical": 2400
+    },
+    {
+      "code": 26,
+      "name_kor": "(구)허술한 강철 메일",
+      "name_eng": "Shabby Steel Mail",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 48,
+      "armor_physical": 1380
+    },
+    {
+      "code": 27,
+      "name_kor": "(구)허술한 티타늄 메일",
+      "name_eng": "Shabby Titanium Mail",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 72,
+      "armor_physical": 2100
+    },
+    {
+      "code": 28,
+      "name_kor": "(구)강철 메일",
+      "name_eng": "Steel Mail",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 48,
+      "armor_physical": 1440
+    },
+    {
+      "code": 29,
+      "name_kor": "(구)견고한 강철 메일",
+      "name_eng": "Strong Steel Mail",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 52,
+      "armor_physical": 1560
+    },
+    {
+      "code": 30,
+      "name_kor": "(구)견고한 티타늄 메일",
+      "name_eng": "Strong Titanium Mail",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 76,
+      "armor_physical": 2280
+    },
+    {
+      "code": 31,
+      "name_kor": "(구)티타늄 메일",
+      "name_eng": "Titanium Mail",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 72,
+      "armor_physical": 2160
+    },
+    {
+      "code": 32,
+      "name_kor": "용갑 밸러 퀴러스 메일",
+      "name_eng": "Brave Armor Valor Cuirass Mail",
+      "rarity": 2,
+      "icon": 86,
+      "req_lv": 100,
+      "armor_physical": 3300
+    },
+    {
+      "code": 33,
+      "name_kor": "비전 리퍼 메일",
+      "name_eng": "Vision Reaper Mail",
+      "rarity": 2,
+      "icon": 85,
+      "req_lv": 90,
+      "armor_physical": 3000
+    },
+    {
+      "code": 34,
+      "name_kor": "강철 아머",
+      "name_eng": "Steel Armor",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 60,
+      "armor_physical": 1800
+    },
+    {
+      "code": 35,
+      "name_kor": "티타늄 아머",
+      "name_eng": "Titanium Armor",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 100,
+      "armor_physical": 3000
+    },
+    {
+      "code": 36,
+      "name_kor": "낡은 강철 아머",
+      "name_eng": "Used Steel Armor",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 60,
+      "armor_physical": 1740
+    },
+    {
+      "code": 37,
+      "name_kor": "낡은 티타늄 아머",
+      "name_eng": "Used Titanium Armor",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 100,
+      "armor_physical": 2940
+    },
+    {
+      "code": 38,
+      "name_kor": "합금 흉갑",
+      "name_eng": "Alloy Breastplate",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 110,
+      "armor_physical": 3300
+    },
+    {
+      "code": 39,
+      "name_kor": "보로딘의 황제갑 흉갑",
+      "explain": "피격시 물리데미지를 5%% 감소시킵니다.",
+      "name_eng": "Borodin's Emperor Breast",
+      "rarity": 4,
+      "icon": 111,
+      "req_lv": 100,
+      "armor_physical": 3720
+    },
+    {
+      "code": 40,
+      "name_kor": "다크스틸 흉갑",
+      "name_eng": "Darksteel Breast",
+      "rarity": 4,
+      "icon": 110,
+      "req_lv": 80,
+      "armor_physical": 3120
+    },
+    {
+      "code": 41,
+      "name_kor": "녹슨 합금 흉갑",
+      "name_eng": "Rusty Alloy Breastplate",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 110,
+      "armor_physical": 3240
+    },
+    {
+      "code": 42,
+      "name_kor": "녹슨 티타늄 흉갑",
+      "name_eng": "Rusty Titanium Breatplate",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 70,
+      "armor_physical": 2040
+    },
+    {
+      "code": 43,
+      "name_kor": "티타늄 흉갑",
+      "name_eng": "Titanium Breatplate",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 70,
+      "armor_physical": 2100
+    },
+    {
+      "code": 44,
+      "name_kor": "칠흑의 베르테스 상의",
+      "name_eng": "Jet-Black Bertes Coat",
+      "rarity": 2,
+      "icon": 18,
+      "req_lv": 70,
+      "armor_physical": 2400
+    },
+    {
+      "code": 45,
+      "name_kor": "블루 프로미넌스 상의",
+      "name_eng": "Blue Prominence Coat",
+      "rarity": 2,
+      "icon": 17,
+      "req_lv": 50,
+      "armor_physical": "1800 +80"
+    },
+    {
+      "code": 46,
+      "name_kor": "초합금 고르아투스 상의",
+      "name_eng": "Ultra Alloy Goratus Coat",
+      "rarity": 2,
+      "icon": 16,
+      "req_lv": 60,
+      "armor_physical": 2100
+    },
+    {
+      "code": 47,
+      "name_kor": "허술한 강철 메일",
+      "name_eng": "Shabby Steel Mail",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 50,
+      "armor_physical": 1440
+    },
+    {
+      "code": 48,
+      "name_kor": "허술한 티타늄 메일",
+      "name_eng": "Shabby Titanium Mail",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 90,
+      "armor_physical": 2640
+    },
+    {
+      "code": 49,
+      "name_kor": "강철 메일",
+      "name_eng": "Steel Mail",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 50,
+      "armor_physical": 1500
+    },
+    {
+      "code": 50,
+      "name_kor": "티타늄 메일",
+      "name_eng": "Titanium Mail",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 90,
+      "armor_physical": 2700
+    },
+    {
+      "code": 51,
+      "name_kor": "마모된 티타늄 레지스트",
+      "name_eng": "Rubbed Titanium Resist",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 80,
+      "armor_physical": 2340
+    },
+    {
+      "code": 52,
+      "name_kor": "티타늄 레지스트",
+      "name_eng": "Titanium Resist",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 80,
+      "armor_physical": 2400
+    },
+    {
+      "code": 53,
+      "name_kor": "튼튼한 강철 레지스트",
+      "name_eng": "Firm Steel Resist",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 46,
+      "armor_physical": 1380
+    },
+    {
+      "code": 54,
+      "name_kor": "(구)튼튼한 티타늄 레지스트",
+      "name_eng": "Firm Titanium Resist",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 70,
+      "armor_physical": 2100
+    },
+    {
+      "code": 55,
+      "name_kor": "마모된 강철 레지스트",
+      "name_eng": "Rubbed Steel Resist",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 42,
+      "armor_physical": 1200
+    },
+    {
+      "code": 56,
+      "name_kor": "(구)마모된 티타늄 레지스트",
+      "name_eng": "Rubbed Titanium Resist",
+      "rarity": 0,
+      "icon": 168,
+      "req_lv": 66,
+      "armor_physical": 1920
+    },
+    {
+      "code": 57,
+      "name_kor": "강철 레지스트",
+      "name_eng": "Steel Resist",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 42,
+      "armor_physical": 1260
+    },
+    {
+      "code": 58,
+      "name_kor": "(구)티타늄 레지스트",
+      "name_eng": "Titanium Resist",
+      "rarity": 1,
+      "icon": 168,
+      "req_lv": 66,
+      "armor_physical": 1980
+    }
+  ]
+}

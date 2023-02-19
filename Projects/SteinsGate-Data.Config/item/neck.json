@@ -1,0 +1,1011 @@
+{
+  "neck": [
+    {
+      "code": 1,
+      "name_kor": "(구)금간 크리스탈 브로치",
+      "name_eng": "Cracked Crystal Brooch",
+      "rarity": 0,
+      "icon": 30,
+      "req_lv": 66,
+      "armor_magic": 2560
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)크리스탈 브로치",
+      "name_eng": "Crystal Brooch",
+      "rarity": 1,
+      "icon": 30,
+      "req_lv": 66,
+      "armor_magic": 2640
+    },
+    {
+      "code": 3,
+      "name_kor": "(구)정교한 크리스탈 브로치",
+      "name_eng": "Elaborate Crystal Brooch",
+      "rarity": 1,
+      "icon": 30,
+      "req_lv": 70,
+      "armor_magic": 2800
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)에메랄드 브로치",
+      "name_eng": "Emerald Brooch",
+      "rarity": 1,
+      "icon": 50,
+      "req_lv": 84,
+      "armor_magic": 3360
+    },
+    {
+      "code": 5,
+      "name_kor": "(구)빛바랜 토파즈 브로치",
+      "name_eng": "Fade Topaz Brooch",
+      "rarity": 0,
+      "icon": 30,
+      "req_lv": 72,
+      "armor_magic": 2800
+    },
+    {
+      "code": 6,
+      "name_kor": "(구)빛나는 토파즈 브로치",
+      "name_eng": "Glittering Topaz Brooch",
+      "rarity": 1,
+      "icon": 30,
+      "req_lv": 76,
+      "armor_magic": 3040
+    },
+    {
+      "code": 7,
+      "name_kor": "(구)하급 오닉스 브로치",
+      "name_eng": "Low-Class Onyx Brooch",
+      "rarity": 0,
+      "icon": 50,
+      "req_lv": 78,
+      "armor_magic": 3040
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)오닉스 브로치",
+      "name_eng": "Onyx Brooch",
+      "rarity": 1,
+      "icon": 50,
+      "req_lv": 78,
+      "armor_magic": 3120
+    },
+    {
+      "code": 9,
+      "name_kor": "(구)벗겨진 에메랄드 브로치",
+      "name_eng": "Peeled Emerald Brooch",
+      "rarity": 0,
+      "icon": 50,
+      "req_lv": 84,
+      "armor_magic": 3280
+    },
+    {
+      "code": 10,
+      "name_kor": "(구)견고한 오닉스 브로치",
+      "name_eng": "Strong Onyx Brooch",
+      "rarity": 1,
+      "icon": 50,
+      "req_lv": 80,
+      "armor_magic": 3200
+    },
+    {
+      "code": 11,
+      "name_kor": "(구)토파즈 브로치",
+      "name_eng": "Topaz Brooch",
+      "rarity": 1,
+      "icon": 30,
+      "req_lv": 72,
+      "armor_magic": 2880
+    },
+    {
+      "code": 12,
+      "name_kor": "(구)푸른 청동 체인",
+      "name_eng": "Azure Bronze Chain",
+      "rarity": 1,
+      "icon": 60,
+      "req_lv": 34,
+      "armor_magic": 1360
+    },
+    {
+      "code": 13,
+      "name_kor": "(구)청동 체인",
+      "name_eng": "Bronze Chain",
+      "rarity": 1,
+      "icon": 60,
+      "req_lv": 30,
+      "armor_magic": 1200
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)빛바랜 청동 체인",
+      "name_eng": "Fade Bronze Chain",
+      "rarity": 0,
+      "icon": 60,
+      "req_lv": 30,
+      "armor_magic": 1120
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)빛나는 실버 체인",
+      "name_eng": "Glittering Silver Chain",
+      "rarity": 1,
+      "icon": 57,
+      "req_lv": 46,
+      "armor_magic": 1840
+    },
+    {
+      "code": 16,
+      "name_kor": "아이언 체인",
+      "name_eng": "Iron Chain",
+      "rarity": 1,
+      "icon": 57,
+      "req_lv": 24,
+      "armor_magic": 960
+    },
+    {
+      "code": 17,
+      "name_kor": "녹슨 아이언 체인",
+      "name_eng": "Rusty Iron Chain",
+      "rarity": 0,
+      "icon": 58,
+      "req_lv": 24,
+      "armor_magic": 880
+    },
+    {
+      "code": 18,
+      "name_kor": "(구)허술한 실버 체인",
+      "name_eng": "Shabby Silver Chain",
+      "rarity": 0,
+      "icon": 57,
+      "req_lv": 42,
+      "armor_magic": 1600
+    },
+    {
+      "code": 19,
+      "name_kor": "(구)실버 체인",
+      "name_eng": "Silver Chain",
+      "rarity": 1,
+      "icon": 57,
+      "req_lv": 42,
+      "armor_magic": 1680
+    },
+    {
+      "code": 20,
+      "name_kor": "견고한 아이언 체인",
+      "name_eng": "Strong Iron Chain",
+      "rarity": 1,
+      "icon": 57,
+      "req_lv": 28,
+      "armor_magic": 1120
+    },
+    {
+      "code": 21,
+      "name_kor": "유물 : 축복받은 페이트리스의 브로치",
+      "name_eng": "Legacy : Blessed Fateless",
+      "rarity": 2,
+      "icon": 82,
+      "req_lv": 100,
+      "armor_magic": 4400
+    },
+    {
+      "code": 22,
+      "name_kor": "유물 : 축복받은 휴트리드의 펜던트",
+      "name_eng": "Legacy : Blessed Hughtrid Pendant",
+      "rarity": 2,
+      "icon": 80,
+      "req_lv": 80,
+      "armor_magic": 3600
+    },
+    {
+      "code": 23,
+      "name_kor": "유물 : 축복받은 루이넬의 펜던트",
+      "name_eng": "Legacy : Blessed Luinel",
+      "rarity": 2,
+      "icon": 78,
+      "req_lv": 60,
+      "armor_magic": 2800
+    },
+    {
+      "code": 24,
+      "name_kor": "유물 : 축복받은 레디스퓨트의 목걸이",
+      "name_eng": "Legacy : Blessed Redispute",
+      "rarity": 2,
+      "icon": 43,
+      "req_lv": 40,
+      "armor_magic": 2000
+    },
+    {
+      "code": 25,
+      "name_kor": "유물 : 축복받은 질리엇의 목걸이",
+      "name_eng": "Legacy : Blessed Zealiot",
+      "rarity": 2,
+      "icon": 59,
+      "req_lv": 20,
+      "armor_magic": "1200 +300"
+    },
+    {
+      "code": 26,
+      "name_kor": "유물 : 페이트리스의 브로치",
+      "name_eng": "Legacy : Fateless",
+      "rarity": 2,
+      "icon": 81,
+      "req_lv": 90,
+      "armor_magic": 4000
+    },
+    {
+      "code": 27,
+      "name_kor": "유물 : 휴트리드의 펜던트",
+      "name_eng": "Legacy : Hughtrid Pendant",
+      "rarity": 2,
+      "icon": 79,
+      "req_lv": 70,
+      "armor_magic": 3200
+    },
+    {
+      "code": 28,
+      "name_kor": "유물 : 루이넬의 펜던트",
+      "name_eng": "Legacy : Luinel",
+      "rarity": 2,
+      "icon": 64,
+      "req_lv": 50,
+      "armor_magic": 2400
+    },
+    {
+      "code": 29,
+      "name_kor": "유물 : 레디스퓨트의 목걸이",
+      "name_eng": "Legacy : Redispute",
+      "rarity": 2,
+      "icon": 42,
+      "req_lv": 30,
+      "armor_magic": 1600
+    },
+    {
+      "code": 30,
+      "name_kor": "유물 : 질리엇의 목걸이",
+      "name_eng": "Legacy : Zealiot",
+      "rarity": 2,
+      "icon": 57,
+      "req_lv": 10,
+      "armor_magic": "800 +200"
+    },
+    {
+      "code": 31,
+      "name_kor": "화염의 고리",
+      "name_eng": "Flame Loop",
+      "rarity": 2,
+      "icon": 4,
+      "req_lv": 80,
+      "armor_magic": 3600
+    },
+    {
+      "code": 32,
+      "name_kor": "(구)알렉스의 파편",
+      "name_eng": "Alex's Fragment",
+      "rarity": 2,
+      "icon": 32,
+      "req_lv": 58,
+      "armor_magic": 2720
+    },
+    {
+      "code": 33,
+      "name_kor": "(구)아쿠아 마린 목걸이",
+      "name_eng": "Aqua Marine Necklace",
+      "rarity": 2,
+      "icon": 43,
+      "req_lv": 64,
+      "armor_magic": 2960
+    },
+    {
+      "code": 34,
+      "name_kor": "(구)벨 마이어의 별",
+      "name_eng": "Belmaia's Star",
+      "rarity": 2,
+      "icon": 32,
+      "req_lv": 76,
+      "armor_magic": 3440
+    },
+    {
+      "code": 35,
+      "name_kor": "(구)흑련 목장식",
+      "name_eng": "Black Flower Decking",
+      "rarity": 2,
+      "icon": 72,
+      "req_lv": 40,
+      "armor_magic": 2000
+    },
+    {
+      "code": 36,
+      "name_kor": "뼈목걸이",
+      "name_eng": "Bone Necklace",
+      "rarity": 1,
+      "icon": 58,
+      "req_lv": 12,
+      "armor_magic": 480
+    },
+    {
+      "code": 37,
+      "name_kor": "찰리의 목걸이",
+      "explain": "피격시 1%% 확률로 Lv35 난폭한 장난감 병정을 한마리 소환합니다. 소환된 장난감 병정은 60초 후에 사라집니다.",
+      "name_eng": "Charlie's Neckless",
+      "rarity": 2,
+      "icon": 6,
+      "req_lv": 70,
+      "armor_magic": 3200
+    },
+    {
+      "code": 38,
+      "name_kor": "(구)반투의 십장표",
+      "name_eng": "Chief Evidence of Bantu",
+      "rarity": 2,
+      "icon": 49,
+      "req_lv": 52,
+      "armor_magic": 2480
+    },
+    {
+      "code": 39,
+      "name_kor": "면 띠",
+      "name_eng": "Cloth Necklace",
+      "rarity": 1,
+      "icon": 65,
+      "req_lv": 10,
+      "armor_magic": 400
+    },
+    {
+      "code": 40,
+      "name_kor": "촘촘한 밀짚 목걸이",
+      "name_eng": "Close Straw Necklace",
+      "rarity": 1,
+      "icon": 65,
+      "req_lv": 16,
+      "armor_magic": 640
+    },
+    {
+      "code": 41,
+      "name_kor": "다크 네클레스",
+      "name_eng": "Dark Necklace",
+      "rarity": 0,
+      "icon": 41,
+      "req_lv": 34,
+      "armor_magic": 1280
+    },
+    {
+      "code": 42,
+      "name_kor": "암흑의 기운",
+      "name_eng": "Darkness Touch",
+      "rarity": 2,
+      "icon": 40,
+      "req_lv": 12,
+      "armor_magic": 880
+    },
+    {
+      "code": 43,
+      "name_kor": "(구)정교한 금 목걸이",
+      "name_eng": "Elaborate Gold Necklace",
+      "rarity": 1,
+      "icon": 59,
+      "req_lv": 52,
+      "armor_magic": 2080
+    },
+    {
+      "code": 44,
+      "name_kor": "(구)고블린 뼈 장식 목걸이",
+      "explain": "공격시 1%% 확률로 Lv10 고블린을 한마리 소환한다.",
+      "name_eng": "Goblin Bone Necklace",
+      "rarity": 2,
+      "icon": 40,
+      "req_lv": 34,
+      "armor_magic": 1760
+    },
+    {
+      "code": 45,
+      "name_kor": "(구)지지 크로스",
+      "name_eng": "Gigi Cross",
+      "rarity": 2,
+      "icon": 31,
+      "req_lv": 70,
+      "armor_magic": 3200
+    },
+    {
+      "code": 46,
+      "name_kor": "(구)글래디오스 라인",
+      "name_eng": "Gladios Line",
+      "rarity": 3,
+      "icon": 43,
+      "req_lv": 58,
+      "armor_magic": 3120,
+      "armor_physical": 200
+    },
+    {
+      "code": 47,
+      "name_kor": "(구)금 목걸이",
+      "name_eng": "Gold Necklace",
+      "rarity": 1,
+      "icon": 59,
+      "req_lv": 48,
+      "armor_magic": 1920
+    },
+    {
+      "code": 48,
+      "name_kor": "골고라이언 - 휘광",
+      "name_eng": "Golgorian - Glance",
+      "rarity": 3,
+      "icon": 40,
+      "req_lv": 20,
+      "armor_magic": 1600
+    },
+    {
+      "code": 49,
+      "name_kor": "(구)군트람",
+      "name_eng": "Goontram",
+      "rarity": 3,
+      "icon": 64,
+      "req_lv": 48,
+      "armor_magic": 2720
+    },
+    {
+      "code": 50,
+      "name_kor": "향상된 가죽 목 띠",
+      "name_eng": "Improved Leather Necklace",
+      "rarity": 1,
+      "icon": 63,
+      "req_lv": 22,
+      "armor_magic": 880
+    },
+    {
+      "code": 51,
+      "name_kor": "가죽 목 띠",
+      "name_eng": "Leather Necklace",
+      "rarity": 1,
+      "icon": 63,
+      "req_lv": 18,
+      "armor_magic": 720
+    },
+    {
+      "code": 52,
+      "name_kor": "(구)마니 아루소의 유물",
+      "name_eng": "Mani Aruso's Legacy",
+      "rarity": 3,
+      "icon": 30,
+      "req_lv": 78,
+      "armor_magic": 3920
+    },
+    {
+      "code": 53,
+      "name_kor": "(구)진은 목걸이",
+      "name_eng": "Pure Silver Necklace",
+      "rarity": 1,
+      "icon": 57,
+      "req_lv": 40,
+      "armor_magic": 1600
+    },
+    {
+      "code": 54,
+      "name_kor": "(구)벗겨진 은도금 목걸이",
+      "name_eng": "Peeled Silver Coating Necklace",
+      "rarity": 0,
+      "icon": 57,
+      "req_lv": 36,
+      "armor_magic": 1360
+    },
+    {
+      "code": 55,
+      "name_kor": "(구)은도금 목걸이",
+      "name_eng": "Silver Coating Necklace",
+      "rarity": 1,
+      "icon": 57,
+      "req_lv": 36,
+      "armor_magic": 1440
+    },
+    {
+      "code": 56,
+      "name_kor": "엉성한 밀짚 목걸이",
+      "name_eng": "Sparse Straw Necklace",
+      "rarity": 0,
+      "icon": 65,
+      "req_lv": 12,
+      "armor_magic": 400
+    },
+    {
+      "code": 57,
+      "name_kor": "밀짚 목걸이",
+      "name_eng": "Straw Necklace",
+      "rarity": 1,
+      "icon": 65,
+      "req_lv": 14,
+      "armor_magic": 560
+    },
+    {
+      "code": 58,
+      "name_kor": "너덜너덜한 면 띠",
+      "name_eng": "Tatters Cloth Necklace",
+      "rarity": 0,
+      "icon": 65,
+      "req_lv": 4,
+      "armor_magic": 80
+    },
+    {
+      "code": 59,
+      "name_kor": "(구)타우 뼈 장식 목걸이",
+      "name_eng": "Tau's Bone Necklace",
+      "rarity": 2,
+      "icon": 40,
+      "req_lv": 46,
+      "armor_magic": 2240
+    },
+    {
+      "code": 60,
+      "name_kor": "(구)트로피컬 플라워",
+      "name_eng": "Tropical Flower",
+      "rarity": 3,
+      "icon": 66,
+      "req_lv": 68,
+      "armor_magic": 3520
+    },
+    {
+      "code": 61,
+      "name_kor": "헐은 면 띠",
+      "name_eng": "Worn Cloth Necklace",
+      "rarity": 0,
+      "icon": 65,
+      "req_lv": 8,
+      "armor_magic": 240
+    },
+    {
+      "code": 62,
+      "name_kor": "(구)마모된 금 목걸이",
+      "name_eng": "Worn Gold Necklace",
+      "rarity": 0,
+      "icon": 59,
+      "req_lv": 48,
+      "armor_magic": 1840
+    },
+    {
+      "code": 63,
+      "name_kor": "헐은 가죽 목 띠",
+      "name_eng": "Worn Leather Necklace",
+      "rarity": 0,
+      "icon": 63,
+      "req_lv": 18,
+      "armor_magic": 640
+    },
+    {
+      "code": 64,
+      "name_kor": "금간 크리스탈 브로치",
+      "name_eng": "Cracked Crystal Brooch",
+      "rarity": 0,
+      "icon": 30,
+      "req_lv": 90,
+      "armor_magic": 3520
+    },
+    {
+      "code": 65,
+      "name_kor": "크리스탈 브로치",
+      "name_eng": "Crystal Brooch",
+      "rarity": 1,
+      "icon": 30,
+      "req_lv": 90,
+      "armor_magic": 3600
+    },
+    {
+      "code": 66,
+      "name_kor": "에메랄드 브로치",
+      "name_eng": "Emerald Brooch",
+      "rarity": 1,
+      "icon": 50,
+      "req_lv": 120,
+      "armor_magic": 4800
+    },
+    {
+      "code": 67,
+      "name_kor": "빛바랜 토파즈 브로치",
+      "name_eng": "Fade Topaz Brooch",
+      "rarity": 0,
+      "icon": 30,
+      "req_lv": 100,
+      "armor_magic": 3920
+    },
+    {
+      "code": 68,
+      "name_kor": "하급 오닉스 브로치",
+      "name_eng": "Low-Class Onyx Brooch",
+      "rarity": 0,
+      "icon": 50,
+      "req_lv": 110,
+      "armor_magic": 4320
+    },
+    {
+      "code": 69,
+      "name_kor": "오닉스 브로치",
+      "name_eng": "Onyx Brooch",
+      "rarity": 1,
+      "icon": 50,
+      "req_lv": 110,
+      "armor_magic": 4400
+    },
+    {
+      "code": 70,
+      "name_kor": "벗겨진 에메랄드 브로치",
+      "name_eng": "Peeled Emerald Brooch",
+      "rarity": 0,
+      "icon": 50,
+      "req_lv": 120,
+      "armor_magic": 4720
+    },
+    {
+      "code": 71,
+      "name_kor": "토파즈 브로치",
+      "name_eng": "Topaz Brooch",
+      "rarity": 1,
+      "icon": 30,
+      "req_lv": 100,
+      "armor_magic": 4000
+    },
+    {
+      "code": 72,
+      "name_kor": "청동 체인",
+      "name_eng": "Bronze Chain",
+      "rarity": 1,
+      "icon": 60,
+      "req_lv": 30,
+      "armor_magic": 1200
+    },
+    {
+      "code": 73,
+      "name_kor": "빛바랜 청동 체인",
+      "name_eng": "Fade Bronze Chain",
+      "rarity": 0,
+      "icon": 60,
+      "req_lv": 30,
+      "armor_magic": 1120
+    },
+    {
+      "code": 74,
+      "name_kor": "허술한 실버 체인",
+      "name_eng": "Shabby Silver Chain",
+      "rarity": 0,
+      "icon": 57,
+      "req_lv": 50,
+      "armor_magic": 1920
+    },
+    {
+      "code": 75,
+      "name_kor": "실버 체인",
+      "name_eng": "Silver Chain",
+      "rarity": 1,
+      "icon": 57,
+      "req_lv": 50,
+      "armor_magic": 2000
+    },
+    {
+      "code": 76,
+      "name_kor": "알렉스의 파편",
+      "name_eng": "Alex's Fragment",
+      "rarity": 2,
+      "icon": 32,
+      "req_lv": 70,
+      "armor_magic": 3200
+    },
+    {
+      "code": 77,
+      "name_kor": "아쿠아 마린 목걸이",
+      "name_eng": "Aqua Marine Necklace",
+      "rarity": 2,
+      "icon": 43,
+      "req_lv": 70,
+      "armor_magic": 3200
+    },
+    {
+      "code": 78,
+      "name_kor": "벨 마이어의 별",
+      "name_eng": "Belmaia's Star",
+      "rarity": 2,
+      "icon": 32,
+      "req_lv": 80,
+      "armor_magic": 3600
+    },
+    {
+      "code": 79,
+      "name_kor": "흑련 목장식",
+      "name_eng": "Black Flower Decking",
+      "rarity": 2,
+      "icon": 72,
+      "req_lv": 40,
+      "armor_magic": 2000
+    },
+    {
+      "code": 80,
+      "name_kor": "반투의 십장표",
+      "name_eng": "Chief Evidence of Bantu",
+      "rarity": 2,
+      "icon": 49,
+      "req_lv": 60,
+      "armor_magic": 2800
+    },
+    {
+      "code": 81,
+      "name_kor": "GBL의 예식 목걸이",
+      "name_eng": "GBL's ritual Neclace",
+      "rarity": 4,
+      "icon": 8,
+      "req_lv": 70,
+      "armor_magic": 3760
+    },
+    {
+      "code": 82,
+      "name_kor": "고블린 뼈 장식 목걸이",
+      "explain": "공격시 1%% 확률로 Lv10 고블린을 한마리를 소환합니다. 소환된 고블린은 60초 후에 사라집니다.",
+      "name_eng": "Goblin Bone Necklace",
+      "rarity": 2,
+      "icon": 40,
+      "req_lv": 30,
+      "armor_magic": 1600
+    },
+    {
+      "code": 83,
+      "name_kor": "지지 크로스",
+      "name_eng": "Gigi Cross",
+      "rarity": 2,
+      "icon": 31,
+      "req_lv": 80,
+      "armor_magic": 3600
+    },
+    {
+      "code": 84,
+      "name_kor": "글래디오스 라인",
+      "name_eng": "Gladios Line",
+      "rarity": 3,
+      "icon": 43,
+      "req_lv": 60,
+      "armor_magic": 3200,
+      "armor_physical": 200
+    },
+    {
+      "code": 85,
+      "name_kor": "금 목걸이",
+      "name_eng": "Gold Necklace",
+      "rarity": 1,
+      "icon": 59,
+      "req_lv": 60,
+      "armor_magic": 2400
+    },
+    {
+      "code": 86,
+      "name_kor": "군트람",
+      "name_eng": "Goontram",
+      "rarity": 3,
+      "icon": 64,
+      "req_lv": 40,
+      "armor_magic": 2400
+    },
+    {
+      "code": 87,
+      "name_kor": "왕가의 목걸이",
+      "name_eng": "King's Necklace",
+      "rarity": 3,
+      "icon": 3,
+      "req_lv": 100,
+      "armor_magic": 4800
+    },
+    {
+      "code": 88,
+      "name_kor": "마니 아루소의 유물",
+      "name_eng": "Mani Aruso's Legacy",
+      "rarity": 3,
+      "icon": 30,
+      "req_lv": 80,
+      "armor_magic": 4000
+    },
+    {
+      "code": 89,
+      "name_kor": "팔로만의 진주 목걸이",
+      "name_eng": "Paloman's Pearl Necklace",
+      "rarity": 2,
+      "icon": 2,
+      "req_lv": 100,
+      "armor_magic": 4400
+    },
+    {
+      "code": 90,
+      "name_kor": "벗겨진 은도금 목걸이",
+      "name_eng": "Peeled Silver Coating Necklace",
+      "rarity": 0,
+      "icon": 57,
+      "req_lv": 40,
+      "armor_magic": 1520
+    },
+    {
+      "code": 91,
+      "name_kor": "쉬스케의 네개의 눈물",
+      "name_eng": "Shuske's four teardrop",
+      "rarity": 4,
+      "icon": 7,
+      "req_lv": 90,
+      "armor_magic": 4560
+    },
+    {
+      "code": 92,
+      "name_kor": "은도금 목걸이",
+      "name_eng": "Silver Coating Necklace",
+      "rarity": 1,
+      "icon": 57,
+      "req_lv": 40,
+      "armor_magic": 1600
+    },
+    {
+      "code": 93,
+      "name_kor": "창공의 형상",
+      "explain": "점프공격시 15%%의 추가데미지를 줍니다.",
+      "name_eng": "SkyShape",
+      "rarity": 4,
+      "icon": 9,
+      "req_lv": 60,
+      "armor_magic": 3360
+    },
+    {
+      "code": 94,
+      "name_kor": "영혼 추적장치",
+      "explain": "영혼의 결정을 1개 소모해서 60초동안 데미지가 20%% 증가합니다.",
+      "name_eng": "SoulChaser",
+      "rarity": 4,
+      "icon": 12,
+      "req_lv": 90,
+      "armor_magic": 4560
+    },
+    {
+      "code": 95,
+      "name_kor": "타우 뼈 장식 목걸이",
+      "name_eng": "Tau's Bone Necklace",
+      "rarity": 2,
+      "icon": 40,
+      "req_lv": 50,
+      "armor_magic": 2400
+    },
+    {
+      "code": 96,
+      "name_kor": "트로피컬 플라워",
+      "name_eng": "Tropical Flower",
+      "rarity": 3,
+      "icon": 66,
+      "req_lv": 80,
+      "armor_magic": 4000
+    },
+    {
+      "code": 97,
+      "name_kor": "파동증폭 목걸이",
+      "name_eng": "Wave amplification collar",
+      "rarity": 4,
+      "icon": 10,
+      "req_lv": 80,
+      "armor_magic": 4160
+    },
+    {
+      "code": 98,
+      "name_kor": "마모된 금 목걸이",
+      "name_eng": "Worn Gold Necklace",
+      "rarity": 0,
+      "icon": 59,
+      "req_lv": 60,
+      "armor_magic": 2320
+    },
+    {
+      "code": 99,
+      "name_kor": "다프네의 펜던트",
+      "name_eng": "Dapne Pendant",
+      "rarity": 2,
+      "icon": 1,
+      "req_lv": 90,
+      "armor_magic": 4000
+    },
+    {
+      "code": 100,
+      "name_kor": "청금석 펜던트",
+      "name_eng": "Lapis-Lazuli Pendant",
+      "rarity": 1,
+      "icon": 41,
+      "req_lv": 80,
+      "armor_magic": 3200
+    },
+    {
+      "code": 101,
+      "name_kor": "오래된 청금석 펜던트",
+      "name_eng": "Old Lapis-Lazuli Pendant",
+      "rarity": 0,
+      "icon": 41,
+      "req_lv": 80,
+      "armor_magic": 3120
+    },
+    {
+      "code": 102,
+      "name_kor": "낡은 질콘 펜던트",
+      "name_eng": "Used Zircon Pendant",
+      "rarity": 0,
+      "icon": 40,
+      "req_lv": 70,
+      "armor_magic": 2720
+    },
+    {
+      "code": 103,
+      "name_kor": "질콘 펜던트",
+      "name_eng": "Zircon Pendant",
+      "rarity": 1,
+      "icon": 40,
+      "req_lv": 70,
+      "armor_magic": 2800
+    },
+    {
+      "code": 104,
+      "name_kor": "(구)청금석 펜던트",
+      "name_eng": "Lapis-Lazuli Pendant",
+      "rarity": 1,
+      "icon": 41,
+      "req_lv": 60,
+      "armor_magic": 2400
+    },
+    {
+      "code": 105,
+      "name_kor": "(구)신형 청금석 펜던트",
+      "name_eng": "Novelty Lapis-Lazuli Pendant",
+      "rarity": 1,
+      "icon": 41,
+      "req_lv": 64,
+      "armor_magic": 2560
+    },
+    {
+      "code": 106,
+      "name_kor": "(구)오래된 청금석 펜던트",
+      "name_eng": "Old Lapis-Lazuli Pendant",
+      "rarity": 0,
+      "icon": 41,
+      "req_lv": 60,
+      "armor_magic": 2320
+    },
+    {
+      "code": 107,
+      "name_kor": "(구)견고한 질콘 펜던트",
+      "name_eng": "Strong Zircon Pendant",
+      "rarity": 1,
+      "icon": 40,
+      "req_lv": 58,
+      "armor_magic": 2320
+    },
+    {
+      "code": 108,
+      "name_kor": "(구)낡은 질콘 펜던트",
+      "name_eng": "Used Zircon Pendant",
+      "rarity": 0,
+      "icon": 40,
+      "req_lv": 54,
+      "armor_magic": 2080
+    },
+    {
+      "code": 109,
+      "name_kor": "(구)질콘 펜던트",
+      "name_eng": "Zircon Pendant",
+      "rarity": 1,
+      "icon": 40,
+      "req_lv": 54,
+      "armor_magic": 2160
+    },
+    {
+      "code": 110,
+      "name_kor": "칠링 래빗풋",
+      "comment": "토끼 신은 예지의 신이다. 우리는 그런 토끼신을 숭상함으로써 자연과 교감하며, 날씨나 위험을 예지할 수 있는 능력을 유지할 수 있는 것이다. - 반투 쿠닉족의 설화 중에서",
+      "name_eng": "Chilling Rabbit-Foot",
+      "rarity": 2,
+      "icon": 5,
+      "req_lv": 90,
+      "armor_magic": 4000
+    },
+    {
+      "code": 111,
+      "name_kor": "리넨 스카프",
+      "name_eng": "Linen Scarf",
+      "rarity": 2,
+      "icon": 40,
+      "req_lv": 22,
+      "armor_magic": 1280
+    }
+  ]
+}

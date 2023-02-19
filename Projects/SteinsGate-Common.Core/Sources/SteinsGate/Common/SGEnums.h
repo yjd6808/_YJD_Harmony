@@ -185,7 +185,7 @@ SEnumEnd(FrameEventType)
 
 SEnumBegin(GunnerWeaponType)
 Begin,
-Auto = Begin,
+Automatic = Begin,
 Revolver,
 Bowgun,
 Musket,
@@ -196,7 +196,7 @@ SEnumEnd(GunnerWeaponType)
 
 SEnumBegin(WeaponType)
 Begin,
-Auto = Begin,
+Automatic = Begin,
 Revolver,
 Bowgun,
 Musket,
@@ -215,11 +215,11 @@ static constexpr FrameEventType_t ShotFrameEventType[Max]{
 
 
 static constexpr const char* Name[] {
-	"auto",
-	"rev",
+	"automatic",
+	"revolver",
 	"bowgun",
 	"musket",
-	"hcan"
+	"handcannon"
 };
 
 SEnumMiddleEnd(WeaponType)
@@ -352,6 +352,7 @@ Channel,
 Char_Animation,
 Char_Base,
 Client,
+Item,
 End,
 Max = End
 SEnumMiddle(ConfigFileType)
@@ -372,19 +373,20 @@ static constexpr const char* FileName[Max]{
 	"channel.json"			,
 	"char_animation.json"	,
 	"char_base.json"		,
-	"client.json"
+	"client.json"			,
+	"수동로딩"
 };
 SEnumMiddleEnd(ConfigFileType)
 
 
-SEnumBegin(ItemType)
+SEnumBegin(ItemInvenType)
 Quest,
 Etc,
 Consume,
 Equip,
 Avatar,
 Max
-SEnumMiddle(ItemType)
+SEnumMiddle(ItemInvenType)
 
 static constexpr bool Stackable[Max] {
 	true,
@@ -395,64 +397,80 @@ static constexpr bool Stackable[Max] {
 };
 
 static constexpr const char* Name[Max]{
-	"Quest",
-	"Etc",
-	"Consume",
-	"Equip",
-	"Avatar"
+	"quest",
+	"etc",
+	"consume",
+	"equip",
+	"avatar"
 };
-SEnumMiddleEnd(ItemType)
+SEnumMiddleEnd(ItemInvenType)
+
+//Shoulder = Begin,	// 천
+//Bottom,				// 가죽
 
 // https://wiki.dfo-world.com/view/Armor
 SEnumBegin(EquipItemType)
 Begin,
-Cloth = Begin,	// 천
-Leather,		// 가죽
-Light,			// 경갑
-Heavy,			// 중갑
-Plate,			// 판금
-Ring,			// 반지
-Neck,			// 목걸이
-Bracelet,		// 팔찌
-Weapon,			// 무기
-Title,			// 칭호
+Shoulder = Begin,	// 어깨
+Top,				// 상의
+Bottom,				// 하의
+Shoes,				// 신발
+Belt,				// 벨트
+Ring,				// 반지
+Neck,				// 목걸이
+Bracelet,			// 팔찌
+Weapon,				// 무기
+Title,				// 칭호
 End,
 Max = End
 SEnumMiddle(EquipItemType)
-static constexpr const char* NameKor[Max]{
-	"천"		,
-	"가죽"	,
-	"경갑"	,
-	"중갑"	,
-	"판금"	,
-	"반지"	,
-	"목걸이"	,
-	"팔찌"   ,
-	"무기"	,
-	"칭호"
+
+static constexpr const char* Name[Max]{
+	"shoulder"	,
+	"top" 		,
+	"bottom"	,  
+	"shoes"	  	,
+	"belt"	  	,
+	"ring"	  	,
+	"neck"	  	,
+	"bracelet"	,
+	"weapon"  	,
+	"title"
 };
 
-static constexpr const char* NameEng[Max]{
-	"Cloth"	  ,
-	"Leather" ,
-	"Light"	  ,
-	"Heavy"	  ,
-	"Plate"	  ,
-	"Ring"	  ,
-	"Neck"	  ,
-	"Bracelet",
-	"Weapon"  ,
-	"Title"
-};
 SEnumMiddleEnd(EquipItemType)
+
+
+SEnumBegin(EquipArmorItemType)
+Begin,
+Cloth,			// 천
+Leather,		// 가죽
+Light,			// 경갑
+Heavy,			// 중갑
+Place,			// 판금
+End,
+Max = End
+SEnumMiddle(EquipArmorItemType)
+
+static constexpr const char* Name[Max]{
+	"cloth"		,
+	"leather" 	,	
+	"light"		,
+	"heavy"	  	,
+	"place"	  	
+};
+
+SEnumMiddleEnd(EquipArmorItemType)
+
+
 
 SEnumBegin(RarityType)
 Begin,
 Normal = Begin,
 Magic,
 Rare,
-Unique,
 Legacy,
+Unique,
 Epic,
 Set,
 End,

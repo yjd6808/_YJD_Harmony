@@ -1,0 +1,754 @@
+{
+  "light": [
+    {
+      "code": 1,
+      "name_kor": "(구)본 아미스",
+      "name_eng": "Bone Amice",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 46,
+      "armor_physical": 552
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)세라믹 아미스",
+      "name_eng": "Ceramics Amice",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 70,
+      "armor_physical": 840
+    },
+    {
+      "code": 3,
+      "name_kor": "(구)오래된 본 아미스",
+      "name_eng": "Old Bone Amice",
+      "rarity": 0,
+      "icon": 129,
+      "req_lv": 46,
+      "armor_physical": 528
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)구식 세라믹 아미스",
+      "name_eng": "Outdated Ceramics Amice",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 70,
+      "armor_physical": 816
+    },
+    {
+      "code": 5,
+      "name_kor": "구식 스야 아미스",
+      "comment": "미안…… -록시-",
+      "name_eng": "Outdated Sya Amice",
+      "rarity": 0,
+      "icon": 8,
+      "req_lv": 22,
+      "armor_physical": 240
+    },
+    {
+      "code": 6,
+      "name_kor": "(구)견고한 본 아미스",
+      "name_eng": "Strong Bone Amice",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 50,
+      "armor_physical": 600
+    },
+    {
+      "code": 7,
+      "name_kor": "(구)견고한 세라믹 아미스",
+      "name_eng": "Strong Ceramics Amice",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 74,
+      "armor_physical": 888
+    },
+    {
+      "code": 8,
+      "name_kor": "견고한 스야 아미스",
+      "comment": "묵묵히 걸어가는 아간조의 뒷모습에서…… -록시-",
+      "name_eng": "Strong Sya Amice",
+      "rarity": 1,
+      "icon": 8,
+      "req_lv": 26,
+      "armor_physical": 312
+    },
+    {
+      "code": 9,
+      "name_kor": "스야 아미스",
+      "comment": "사과도 할 줄아네? -아간조-",
+      "name_eng": "Sya Amice",
+      "rarity": 1,
+      "icon": 8,
+      "req_lv": 22,
+      "armor_physical": 264
+    },
+    {
+      "code": 10,
+      "name_kor": "유물 : 이슈타르의 세라믹 맨틀",
+      "name_eng": "Legacy : Shoulder of Ishtar",
+      "rarity": 2,
+      "icon": 282,
+      "req_lv": 80,
+      "armor_physical": 1080
+    },
+    {
+      "code": 11,
+      "name_kor": "유물 : 성스러운 이슈타르의 세라믹 맨틀",
+      "name_eng": "Legacy : Holy Shoulder of Ishtar",
+      "rarity": 2,
+      "icon": 287,
+      "req_lv": 90,
+      "armor_physical": 1200
+    },
+    {
+      "code": 12,
+      "name_kor": "(구)본 맨틀",
+      "name_eng": "Bone Mantle",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 52,
+      "armor_physical": 624
+    },
+    {
+      "code": 13,
+      "name_kor": "(구)세라믹 맨틀",
+      "name_eng": "Ceramics Mentle",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 76,
+      "armor_physical": 912
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)강화된 본 맨틀",
+      "name_eng": "Hard Bone Mantle",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 56,
+      "armor_physical": 672
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)강화된 세라믹 맨틀",
+      "comment": "어째 너무 딱딱한 것 같다?",
+      "name_eng": "Hard Ceramics Mentle",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 78,
+      "armor_physical": 936
+    },
+    {
+      "code": 16,
+      "name_kor": "강화된 스야 맨틀",
+      "name_eng": "Hard Sya Mantle",
+      "rarity": 1,
+      "icon": 8,
+      "req_lv": 32,
+      "armor_physical": 384
+    },
+    {
+      "code": 17,
+      "name_kor": "(구)낡은 세라믹 맨틀",
+      "name_eng": "Used Ceramics Mentle",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 76,
+      "armor_physical": 888
+    },
+    {
+      "code": 18,
+      "name_kor": "스야 맨틀",
+      "comment": "약속하지 못했던 사랑을……",
+      "name_eng": "Sya Mantle",
+      "rarity": 1,
+      "icon": 8,
+      "req_lv": 28,
+      "armor_physical": 336
+    },
+    {
+      "code": 19,
+      "name_kor": "(구)낡은 본 맨틀",
+      "name_eng": "Used Bone Mantle",
+      "rarity": 0,
+      "icon": 129,
+      "req_lv": 52,
+      "armor_physical": 600
+    },
+    {
+      "code": 20,
+      "name_kor": "낡은 스야 맨틀",
+      "comment": "등 뒤에 꽂히는 약한 눈빛에서…… -아간조-",
+      "name_eng": "Used Sya Mantle",
+      "rarity": 0,
+      "icon": 8,
+      "req_lv": 28,
+      "armor_physical": 312
+    },
+    {
+      "code": 21,
+      "name_kor": "본 아미스",
+      "name_eng": "Bone Amice",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 50,
+      "armor_physical": 600
+    },
+    {
+      "code": 22,
+      "name_kor": "세라믹 아미스",
+      "name_eng": "Ceramics Amice",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 90,
+      "armor_physical": 1080
+    },
+    {
+      "code": 23,
+      "name_kor": "오래된 본 아미스",
+      "name_eng": "Old Bone Amice",
+      "rarity": 0,
+      "icon": 129,
+      "req_lv": 50,
+      "armor_physical": 576
+    },
+    {
+      "code": 24,
+      "name_kor": "구식 세라믹 아미스",
+      "name_eng": "Outdated Ceramics Amice",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 90,
+      "armor_physical": 1056
+    },
+    {
+      "code": 25,
+      "name_kor": "본 맨틀",
+      "name_eng": "Bone Mantle",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 60,
+      "armor_physical": 720
+    },
+    {
+      "code": 26,
+      "name_kor": "세라믹 맨틀",
+      "name_eng": "Ceramics Mentle",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 100,
+      "armor_physical": 1200
+    },
+    {
+      "code": 27,
+      "name_kor": "낡은 세라믹 맨틀",
+      "name_eng": "Used Ceramics Mentle",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 100,
+      "armor_physical": 1176
+    },
+    {
+      "code": 28,
+      "name_kor": "낡은 본 맨틀",
+      "name_eng": "Used Bone Mantle",
+      "rarity": 0,
+      "icon": 129,
+      "req_lv": 60,
+      "armor_physical": 696
+    },
+    {
+      "code": 29,
+      "name_kor": "본 숄더패드",
+      "comment": "악에 물든 자여. 이제 그만 영면의 길로 들지어다. -모이엔-",
+      "name_eng": "Bone Shoulder-Pad",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 40,
+      "armor_physical": 480
+    },
+    {
+      "code": 30,
+      "name_kor": "세라믹 숄더패드",
+      "name_eng": "Ceramics Shoulder-Pad",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 80,
+      "armor_physical": 960
+    },
+    {
+      "code": 31,
+      "name_kor": "오래된 세라믹 숄더패드",
+      "name_eng": "Old Ceramics Shoulder-Pad",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 80,
+      "armor_physical": 936
+    },
+    {
+      "code": 32,
+      "name_kor": "부패한 본 숄더패드",
+      "comment": "오랜 숄더패드군. 찢긴 모양으로 봐서 헌터가 공격한 것이 틀림없다. -쿠란-",
+      "name_eng": "Rotten Bone Shoulder-Pad",
+      "rarity": 0,
+      "icon": 129,
+      "req_lv": 40,
+      "armor_physical": 456
+    },
+    {
+      "code": 33,
+      "name_kor": "아쿠아 크루스테 숄더",
+      "comment": "마력이 있는 갑각류의 껍질로 만든 경갑",
+      "name_eng": "Aqua Kruste Shoulder",
+      "rarity": 2,
+      "icon": 19,
+      "req_lv": 60,
+      "armor_physical": 840
+    },
+    {
+      "code": 34,
+      "name_kor": "바이넨 플루크 숄더",
+      "comment": "장비가 좋지만…… 왠지 께름찍 한 걸?",
+      "name_eng": "Beinen Fluch Shoulder",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 30,
+      "armor_physical": 480
+    },
+    {
+      "code": 35,
+      "name_kor": "버설트 마크 숄더",
+      "comment": "용암을 식힌 암석으로 만든 경갑",
+      "name_eng": "Basalt Mark Shoulder",
+      "rarity": 2,
+      "icon": 20,
+      "req_lv": 50,
+      "armor_physical": 720
+    },
+    {
+      "code": 36,
+      "name_kor": "갈라진 세라믹 숄더",
+      "name_eng": "Cracked Ceramics Shoulder",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 70,
+      "armor_physical": 816
+    },
+    {
+      "code": 37,
+      "name_kor": "세라믹 숄더",
+      "name_eng": "Ceramics Shoulder",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 70,
+      "armor_physical": 840
+    },
+    {
+      "code": 38,
+      "name_kor": "갈라진 레드컬 숄더",
+      "name_eng": "Cracked Redcurl Shoulder",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 110,
+      "armor_physical": 1296
+    },
+    {
+      "code": 39,
+      "name_kor": "대륙의 신록 숄더",
+      "comment": "만물을 정화하는 힘 -대륙의 신록-",
+      "name_eng": "Green Verdure Shoulder of Continental",
+      "rarity": 2,
+      "icon": 21,
+      "req_lv": 40,
+      "armor_physical": 600
+    },
+    {
+      "code": 40,
+      "name_kor": "레드컬 숄더",
+      "name_eng": "Redcurl Shoulder",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 110,
+      "armor_physical": 1320
+    },
+    {
+      "code": 41,
+      "name_kor": "사룡의 뼈갑 어깨뿔",
+      "explain": "공격시 2%% 확률로 100의 추가데미지를 줍니다. 대쉬공격력이 100 증가합니다.",
+      "name_eng": "Spirrazzi's Shoulder Horn",
+      "rarity": 4,
+      "icon": 99,
+      "req_lv": 80,
+      "armor_physical": 1248
+    },
+    {
+      "code": 42,
+      "name_kor": "스작의 절방 뼈갑 어깨뿔",
+      "name_eng": "Szak's Ab-Def Shoulder Horn",
+      "rarity": 4,
+      "icon": 98,
+      "req_lv": 90,
+      "armor_physical": 1416
+    },
+    {
+      "code": 43,
+      "name_kor": "(구)본 숄더패드",
+      "comment": "악에 물든 자여. 이제 그만 영면의 길로 들지어다. -모이엔-",
+      "name_eng": "Bone Shoulder-Pad",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 40,
+      "armor_physical": 480
+    },
+    {
+      "code": 44,
+      "name_kor": "(구)세라믹 숄더패드",
+      "name_eng": "Ceramics Shoulder-Pad",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 64,
+      "armor_physical": 768
+    },
+    {
+      "code": 45,
+      "name_kor": "(구)향상된 본 숄더패드",
+      "name_eng": "Improved Bone Shoulder-Pad",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 44,
+      "armor_physical": 528
+    },
+    {
+      "code": 46,
+      "name_kor": "(구)향상된 세라믹 숄더패드",
+      "name_eng": "Improved Ceramics Shoulder-Pad",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 68,
+      "armor_physical": 816
+    },
+    {
+      "code": 47,
+      "name_kor": "향상된 스야 숄더패드",
+      "comment": "퍽! 성질 더러운 다크엘프 같으니라고 잠 좀 자고 나면 괜찮아질거다 -아간조-",
+      "name_eng": "Improved Sya Shoulder-Pad",
+      "rarity": 1,
+      "icon": 8,
+      "req_lv": 20,
+      "armor_physical": 240
+    },
+    {
+      "code": 48,
+      "name_kor": "(구)오래된 세라믹 숄더패드",
+      "name_eng": "Old Ceramics Shoulder-Pad",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 64,
+      "armor_physical": 744
+    },
+    {
+      "code": 49,
+      "name_kor": "오래된 스야 숄더패드",
+      "comment": "이런 발작이군. 쇠사슬의 힘으로 통제하기엔 너무 늦은걸까? -아간조-",
+      "name_eng": "Old Sya Shoulder-Pad",
+      "rarity": 0,
+      "icon": 8,
+      "req_lv": 16,
+      "armor_physical": 168
+    },
+    {
+      "code": 50,
+      "name_kor": "(구)부패한 본 숄더패드",
+      "comment": "오랜 숄더패드군. 찢긴 모양으로 봐서 헌터가 공격한 것이 틀림없다. -쿠란-",
+      "name_eng": "Rotten Bone Shoulder-Pad",
+      "rarity": 0,
+      "icon": 129,
+      "req_lv": 40,
+      "armor_physical": 456
+    },
+    {
+      "code": 51,
+      "name_kor": "스야 숄더패드",
+      "comment": "아 알았어 알았어 네 주위엔 가지 않을 테니 걱정하지마! -아간조-",
+      "name_eng": "Sya Shoulder-Pad",
+      "rarity": 1,
+      "icon": 8,
+      "req_lv": 16,
+      "armor_physical": 192
+    },
+    {
+      "code": 52,
+      "name_kor": "에이스 어드벤트  숄더",
+      "name_eng": "Ace Advent Shoulder",
+      "rarity": 2,
+      "icon": 66,
+      "req_lv": 90,
+      "armor_physical": 1200
+    },
+    {
+      "code": 53,
+      "name_kor": "(구)아쿠아 크루스테 숄더",
+      "comment": "마력이 있는 갑각류의 껍질로 만든 경갑",
+      "name_eng": "Aqua Kruste Shoulder",
+      "rarity": 2,
+      "icon": 19,
+      "req_lv": 68,
+      "armor_physical": 936
+    },
+    {
+      "code": 54,
+      "name_kor": "알렉시 스파인 숄더",
+      "name_eng": "Alexi Spine Shoulder",
+      "rarity": 2,
+      "icon": 62,
+      "req_lv": 90,
+      "armor_physical": 1200
+    },
+    {
+      "code": 55,
+      "name_kor": "아티 마르피사 숄더",
+      "name_eng": "Arti Marpissa Shoulder",
+      "rarity": 2,
+      "icon": 61,
+      "req_lv": 80,
+      "armor_physical": 1080
+    },
+    {
+      "code": 56,
+      "name_kor": "(구)바이넨 플루크 숄더",
+      "comment": "장비가 좋지만…… 왠지 께름찍 한 걸?",
+      "name_eng": "Beinen Fluch Shoulder",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 32,
+      "armor_physical": 504
+    },
+    {
+      "code": 57,
+      "name_kor": "(구)버설트 마크 숄더",
+      "comment": "용암을 식힌 암석으로 만든 경갑",
+      "name_eng": "Basalt Mark Shoulder",
+      "rarity": 2,
+      "icon": 20,
+      "req_lv": 56,
+      "armor_physical": 792
+    },
+    {
+      "code": 58,
+      "name_kor": "본 숄더",
+      "comment": "아쭈 어린 놈이 아주 귀엽게 노네 반~ 기다려 누나가 귀여워 해줄께 -르네-",
+      "name_eng": "Bone Shoulder",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 34,
+      "armor_physical": 408
+    },
+    {
+      "code": 59,
+      "name_kor": "(구)갈라진 세라믹 숄더",
+      "name_eng": "Cracked Ceramics Shoulder",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 58,
+      "armor_physical": 672
+    },
+    {
+      "code": 60,
+      "name_kor": "(구)세라믹 숄더",
+      "name_eng": "Ceramics Shoulder",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 58,
+      "armor_physical": 696
+    },
+    {
+      "code": 61,
+      "name_kor": "(구)갈라진 레드컬 숄더",
+      "name_eng": "Cracked Redcurl Shoulder",
+      "rarity": 0,
+      "icon": 77,
+      "req_lv": 82,
+      "armor_physical": 960
+    },
+    {
+      "code": 62,
+      "name_kor": "그리즐드 수트 숄더",
+      "name_eng": "Grizzled Suit Shoulder",
+      "rarity": 2,
+      "icon": 65,
+      "req_lv": 80,
+      "armor_physical": 1080
+    },
+    {
+      "code": 63,
+      "name_kor": "(구)대륙의 신록 숄더",
+      "comment": "만물을 정화하는 힘 -대륙의 신록-",
+      "name_eng": "Green Verdure Shoulder of Continental",
+      "rarity": 2,
+      "icon": 21,
+      "req_lv": 38,
+      "armor_physical": 576
+    },
+    {
+      "code": 64,
+      "name_kor": "랜더블",
+      "name_eng": "Landable",
+      "rarity": 3,
+      "icon": 22,
+      "req_lv": 20,
+      "armor_physical": 432
+    },
+    {
+      "code": 65,
+      "name_kor": "보리수 숄더",
+      "name_eng": "Linden Tree Shoulder",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 12,
+      "armor_physical": 240
+    },
+    {
+      "code": 66,
+      "name_kor": "마이어 로얄 가더 숄더",
+      "name_eng": "Myre Royal Guarder Shoulder",
+      "rarity": 2,
+      "icon": 32,
+      "req_lv": 70,
+      "armor_physical": 960
+    },
+    {
+      "code": 67,
+      "name_kor": "떡갈나무 숄더",
+      "name_eng": "Oak Tree Shoulder",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 22,
+      "armor_physical": 360
+    },
+    {
+      "code": 68,
+      "name_kor": "플라타닉 컴배턴트 숄더",
+      "name_eng": "Platanic Combatant Shoulder",
+      "rarity": 2,
+      "icon": 63,
+      "req_lv": 80,
+      "armor_physical": 1080
+    },
+    {
+      "code": 69,
+      "name_kor": "(구)레드컬 숄더",
+      "name_eng": "Redcurl Shoulder",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 82,
+      "armor_physical": 984
+    },
+    {
+      "code": 70,
+      "name_kor": "허름한 스야 숄더",
+      "comment": "미안, 내 목숨보다 조금은 네가 더 소중한걸 -록시-",
+      "name_eng": "Shabby Sya Shoulder",
+      "rarity": 0,
+      "icon": 8,
+      "req_lv": 10,
+      "armor_physical": 96
+    },
+    {
+      "code": 71,
+      "name_kor": "근성의 집결체 숄더",
+      "name_eng": "Spirit Concentration Shoulder",
+      "rarity": 2,
+      "icon": 34,
+      "req_lv": 70,
+      "armor_physical": 960
+    },
+    {
+      "code": 72,
+      "name_kor": "스프리건 팀버 숄더",
+      "name_eng": "Spriggan Timber Shoulder",
+      "rarity": 2,
+      "icon": 64,
+      "req_lv": 90,
+      "armor_physical": 1200
+    },
+    {
+      "code": 73,
+      "name_kor": "단단한 본 숄더",
+      "comment": "전 마법사가 싫습니다. 고로 르네님도 싫습니다. -반-",
+      "name_eng": "Stiff Bone Shoulder",
+      "rarity": 1,
+      "icon": 129,
+      "req_lv": 38,
+      "armor_physical": 456
+    },
+    {
+      "code": 74,
+      "name_kor": "(구)단단한 세라믹 숄더",
+      "name_eng": "Stiff Ceramics Shoulder",
+      "rarity": 1,
+      "icon": 77,
+      "req_lv": 62,
+      "armor_physical": 744
+    },
+    {
+      "code": 75,
+      "name_kor": "단단한 스야 숄더",
+      "comment": "아흐 아흐. 가까이 오면 죽여버리겠다. 당장 꺼져 -록시-",
+      "name_eng": "Stiff Sya Shoulder",
+      "rarity": 1,
+      "icon": 8,
+      "req_lv": 14,
+      "armor_physical": 168
+    },
+    {
+      "code": 76,
+      "name_kor": "스야 숄더",
+      "comment": "우훙 다크엘프에게도 카잔 증후군이… -아간조-",
+      "name_eng": "Sya Shoulder",
+      "rarity": 1,
+      "icon": 8,
+      "req_lv": 10,
+      "armor_physical": 120
+    },
+    {
+      "code": 77,
+      "name_kor": "너덜너덜한 스야 숄더",
+      "comment": "록시…너는 어디가고 망가진 숄더만 남았니.. -아간조-",
+      "name_eng": "Tatters Sya Shoulder",
+      "rarity": 0,
+      "icon": 8,
+      "req_lv": 2,
+      "armor_physical": 22
+    },
+    {
+      "code": 78,
+      "name_kor": "벌레먹은 본 숄더",
+      "comment": "르네 당신과 한 조가 되긴 했지만 행동은 따로 하는 것이 좋겠군요 -반-",
+      "name_eng": "Wormy Bone Shoulder",
+      "rarity": 0,
+      "icon": 129,
+      "req_lv": 34,
+      "armor_physical": 384
+    },
+    {
+      "code": 79,
+      "name_kor": "마모된 스야 숄더",
+      "comment": "아간조… 너를 만나서 눈을 뜰 수 있음을, 아침이 다시온다는 것이 행복이라는 것을 알았어. -록시-",
+      "name_eng": "Worn Sya Shoulder",
+      "rarity": 0,
+      "icon": 8,
+      "req_lv": 6,
+      "armor_physical": 48
+    },
+    {
+      "code": 80,
+      "name_kor": "크사낙스 프로텍터 숄더",
+      "name_eng": "Xanacs Protector Shoulder",
+      "rarity": 2,
+      "icon": 33,
+      "req_lv": 70,
+      "armor_physical": 960
+    }
+  ]
+}

@@ -1,0 +1,528 @@
+{
+  "title": [
+    {
+      "code": 1,
+      "name_kor": "아라드의 주시자",
+      "explain": "\"뛰어난 안목과 통찰력, 주의력, 집중력의 소유자로 언제나 아라드 대륙에 일어나는 일을 보지 않고도 알 수 있는 경지에 이른 이에게 수여되는 칭호\"",
+      "name_eng": "Beholder",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 2,
+      "name_kor": "☆GBL교 명예 신도☆",
+      "name_eng": "☆Honorary Believer of GBL☆",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 3,
+      "name_kor": "마이어 전쟁 영웅",
+      "explain": "길드칭호 쟁탈전 우승 길드 입니다.",
+      "name_eng": "Battle Hero of Myre",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 23,
+      "req_lv": 2
+    },
+    {
+      "code": 4,
+      "name_kor": "도전하는 자",
+      "comment": "< 이벤트 > 도전자 패키지 구입자에 지급되는 칭호",
+      "name_eng": "Challenger",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 39,
+      "req_lv": 2
+    },
+    {
+      "code": 5,
+      "name_kor": "코크 액션쾌감",
+      "name_eng": "Coke Action Pleasure",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 24,
+      "req_lv": 2
+    },
+    {
+      "code": 6,
+      "name_kor": "다음카페 포토제닉",
+      "explain": "다음카페 http://cafe.daum.net/basd1004 의 던파 포토제닉 우승자입니다!!!",
+      "name_eng": "Daum Photogenic",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 1,
+      "req_lv": 2
+    },
+    {
+      "code": 7,
+      "name_kor": "다음카페 퀴즈왕",
+      "explain": "다음카페 http://cafe.daum.net/basd1004 의 던파 퀴즈대회 우승자입니다!!!",
+      "name_eng": "Daum Quiz King",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 7,
+      "req_lv": 2
+    },
+    {
+      "code": 8,
+      "name_kor": "dcinside 결투왕",
+      "explain": "dcinside 던파온겔의 결투대회 우승자입니다!!!",
+      "name_eng": "Dcinside Duel Champion",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 3,
+      "req_lv": 2
+    },
+    {
+      "code": 9,
+      "name_kor": "고귀한 기품",
+      "explain": "피격시 2%%확률로 15초간 슈퍼아머 상태가 된다.",
+      "name_eng": "Noble Dignity",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 20,
+      "req_lv": 2
+    },
+    {
+      "code": 10,
+      "name_kor": "던전 앤 파이터",
+      "explain": "던전 앤 파이터 이벤트에 응모 되셨습니다. 칭호를 만드신 분들 중 추첨을 통해 푸짐한 상품을 드립니다.",
+      "name_eng": "D&F",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 11,
+      "name_kor": "던아모 결투 우승길드",
+      "name_eng": "Dunamo Guild Champion",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 25,
+      "req_lv": 2
+    },
+    {
+      "code": 12,
+      "name_kor": "던아모 개인토너먼트 우승자",
+      "name_eng": "Dunamo Tournament Champion",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 26,
+      "req_lv": 2
+    },
+    {
+      "code": 13,
+      "name_kor": "뽑기의 제왕",
+      "explain": "\"공격을 받았을때 1%%확률로 야생딸기, 머스크 멜론, 잘 익은 포도, 포츈코인 중 한 개가 랜덤으로 생성되어 자신에게 사용됩니다.\"",
+      "name_eng": "Emperor of Draw",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 22,
+      "req_lv": 2
+    },
+    {
+      "code": 14,
+      "name_kor": "제국 견습 기사",
+      "explain": "제국의 전사로 인정받기 위한 저항단체",
+      "name_eng": "Empireapprentice",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 15,
+      "name_kor": "enplay 포토제닉",
+      "explain": "enplay 던파 포토제닉 우승자입니다!!!",
+      "name_eng": "Enplay Photogenic",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 1,
+      "req_lv": 2
+    },
+    {
+      "code": 16,
+      "name_kor": "enplay 퀴즈왕",
+      "explain": "enplay 던파 퀴즈대회 우승자입니다!!!",
+      "name_eng": "Enplay Quiz King",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 7,
+      "req_lv": 2
+    },
+    {
+      "code": 17,
+      "name_kor": "글래디에이터",
+      "comment": "< 이벤트 > 던파카페 결투대회 우승자입니다.",
+      "name_eng": "Gladiator",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 27,
+      "req_lv": 2
+    },
+    {
+      "code": 18,
+      "name_kor": "글래디오스",
+      "explain": "글래디오스의 일원임을 알리는 칭호초기 단계",
+      "name_eng": "Gladios",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 19,
+      "name_kor": "†성스러운 수호자†",
+      "name_eng": "†Holy Guarder†",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2,
+      "armor_magic": 120,
+      "armor_physical": 120
+    },
+    {
+      "code": 20,
+      "name_kor": "길드 슬러거",
+      "comment": "< 이벤트 > 던파카페 길드대회 우승자입니다.",
+      "name_eng": "Guild Sluger",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 30,
+      "req_lv": 2
+    },
+    {
+      "code": 21,
+      "name_kor": "칸나의 노예♡",
+      "explain": "칸나의 부탁을 자주 들어주면 그녀가 붙여 주는 칭호",
+      "name_eng": "Kannaslave♡",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 22,
+      "name_kor": "던파 지식왕",
+      "comment": "던파 지식인으로 등록된 자에게 지급되는 칭호",
+      "name_eng": "D&F Knowledge King",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 41,
+      "req_lv": 2
+    },
+    {
+      "code": 23,
+      "name_kor": "화염의 킹스가드",
+      "explain": "무기 타격시 2%%확률로 상대방에게 데미지 150의 파이어 익스플로전이 시전된다.",
+      "name_eng": "King's Guard of Flame",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 17,
+      "req_lv": 100
+    },
+    {
+      "code": 24,
+      "name_kor": "얼음의 킹스가드",
+      "explain": "무기 타격시 2%%확률로 상대방에게 데미지 100의 아이스 니들이 시전된다.",
+      "name_eng": "King's Guard of Ice",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 16,
+      "req_lv": 100
+    },
+    {
+      "code": 25,
+      "name_kor": "빛의 킹스가드",
+      "explain": "무기 타격시 2%%확률로 상대방에게 데미지 100의 번개가 떨어진다.",
+      "name_eng": "King's Guard of Light",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 14,
+      "req_lv": 100
+    },
+    {
+      "code": 26,
+      "name_kor": "수호의 킹스가드",
+      "name_eng": "King's Guard of Protection",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 15,
+      "req_lv": 100,
+      "armor_physical": 400
+    },
+    {
+      "code": 27,
+      "name_kor": "바람의 킹스가드",
+      "name_eng": "King's Guard of Wind",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 13,
+      "req_lv": 100
+    },
+    {
+      "code": 28,
+      "name_kor": "한계돌파",
+      "name_eng": "Limit Breakthrough",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 4,
+      "req_lv": 40
+    },
+    {
+      "code": 29,
+      "name_kor": "천하무적 매직스테이션",
+      "comment": "던파PC로 던전 앤 파이터를 더욱 재밌게 즐겨보세요.",
+      "name_eng": "Insuperable Magic Station",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 36,
+      "req_lv": 2
+    },
+    {
+      "code": 30,
+      "name_kor": "매직 앤 파이터",
+      "explain": "던파PC로 던전 앤 파이터를 더욱 재밌게 즐겨보세요.",
+      "name_eng": "Magic & fighter",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 3,
+      "req_lv": 2
+    },
+    {
+      "code": 31,
+      "name_kor": "★끈기있는 자★",
+      "explain": "한결같은 그대에게 행운이 있으리…",
+      "name_eng": "Patient Man",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 9,
+      "req_lv": 2
+    },
+    {
+      "code": 32,
+      "name_kor": "깨달음을 얻은 자",
+      "explain": "궁금한게 있으면 나를 찾으시오.",
+      "name_eng": "Man of Wisdom",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 11,
+      "req_lv": 2
+    },
+    {
+      "code": 33,
+      "name_kor": "던전 마스터",
+      "explain": "<이벤트> 던전앤파이터 던전 / 퀘스트편 가이드북 구입자에게 지급되는 칭호",
+      "name_eng": "Dungeon Master",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 35,
+      "req_lv": 2
+    },
+    {
+      "code": 34,
+      "name_kor": "80명의 달인",
+      "explain": "피격시 1%%확률로 8초간 무적 상태가 된다.",
+      "name_eng": "The Eighty Masters",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 21,
+      "req_lv": 2
+    },
+    {
+      "code": 35,
+      "name_kor": "메리 크리스마스",
+      "comment": "< 이벤트 > 메리 크리스마스",
+      "name_eng": "Merry christmas",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 37,
+      "req_lv": 2
+    },
+    {
+      "code": 36,
+      "name_kor": "임무 완료",
+      "comment": "< 이벤트 > 도전 임무에 성공한 자에게 지급되는 칭호",
+      "name_eng": "Mission Complete",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 38,
+      "req_lv": 2
+    },
+    {
+      "code": 37,
+      "name_kor": "판도라의 주인",
+      "name_eng": "Master of Pandora",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 3,
+      "req_lv": 2
+    },
+    {
+      "code": 38,
+      "name_kor": "개척자의 혼",
+      "comment": "< 이벤트 > 세리아 서버로 캐릭터를 이전하는 자에게 지급되는 칭호",
+      "name_eng": "Spirit of Pioneer",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 40,
+      "req_lv": 2
+    },
+    {
+      "code": 39,
+      "name_kor": "승리★예감",
+      "explain": "승리할거 같은 예감!",
+      "name_eng": "Premonition of Victory",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 0,
+      "req_lv": 2
+    },
+    {
+      "code": 40,
+      "name_kor": "프리시즌 우승자",
+      "explain": "아라드 대륙의 최고의 실력자에게 부여되는 칭호",
+      "name_eng": "Preseasonwinner",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 41,
+      "name_kor": "퀴즈 마스터",
+      "comment": "< 이벤트 > 던파카페 퀴즈대회 우승자입니다.",
+      "name_eng": "Quiz Master",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 29,
+      "req_lv": 2
+    },
+    {
+      "code": 42,
+      "name_kor": "무지개빛 희망",
+      "explain": "피격시 5%%확률로 30초간 점프력이 100 상승한다.",
+      "name_eng": "Rainbow Hope",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 19,
+      "req_lv": 2
+    },
+    {
+      "code": 43,
+      "name_kor": "황녀의 경호인",
+      "explain": "여기저기 돌아다니는 스카디 여왕을 호위하는 역할. 정말 힘든 직업이다",
+      "name_eng": "Skadyguard",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 44,
+      "name_kor": "스냅슈터",
+      "comment": "< 이벤트 > 던파카페 포토제닉 우승자입니다.",
+      "name_eng": "Snap Shooter",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 28,
+      "req_lv": 2
+    },
+    {
+      "code": 45,
+      "name_kor": "ATI속도최강ATI",
+      "explain": "나를 따라올자가 누구냐?",
+      "name_eng": "Powerful Speed",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 10,
+      "req_lv": 2
+    },
+    {
+      "code": 46,
+      "name_kor": "봄요정의 응원",
+      "explain": "멋진 인연을 만나길 봄의 요정이 힘껏 응원해요! 파이팅~",
+      "name_eng": "Help of The Spring Fairy",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 18,
+      "req_lv": 2
+    },
+    {
+      "code": 47,
+      "name_kor": "칸나의 노예♡",
+      "explain": "칸나의 부탁을 자주 들어주면 그녀가 붙여 주는 칭호",
+      "name_eng": "Kannaslave♡",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 48,
+      "name_kor": "역전의 정예 용병",
+      "explain": "길드칭호 쟁탈전 2위 길드 입니다.",
+      "name_eng": "Veteran Troops of Reversal",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 33,
+      "req_lv": 2
+    },
+    {
+      "code": 49,
+      "name_kor": "발렌타인",
+      "explain": "발렌타인 이벤트에 응모 되셨습니다.",
+      "name_eng": "Valentine",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 7,
+      "req_lv": 2
+    },
+    {
+      "code": 50,
+      "name_kor": "최전방 지원 용병",
+      "explain": "길드칭호 쟁탈전 3위 길드 입니다.",
+      "name_eng": "Forefront Volunteer",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 34,
+      "req_lv": 2
+    },
+    {
+      "code": 51,
+      "name_kor": "따뜻한 마음",
+      "explain": "불행한 사람을 생각하는 따뜻한 마음을 가진 사람에게 붙는 칭호",
+      "name_eng": "Warmmind",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 5,
+      "req_lv": 2
+    },
+    {
+      "code": 52,
+      "name_kor": "아라드의 용사",
+      "explain": "<이벤트> 던전앤파이터 귀검사 / 격투가편 가이드북 구입자에게 지급되는 칭호",
+      "name_eng": "Warrior of Arad",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 31,
+      "req_lv": 2
+    },
+    {
+      "code": 53,
+      "name_kor": "대박기원",
+      "comment": "< 이벤트 > 던전앤파이터가 수능 대박을 기원합니다!",
+      "name_eng": "Wish of Great Success",
+      "rarity": 2,
+      "sell_price": 1,
+      "icon": 32,
+      "req_lv": 2
+    }
+  ]
+}

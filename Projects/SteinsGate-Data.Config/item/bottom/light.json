@@ -1,0 +1,826 @@
+{
+  "light": [
+    {
+      "code": 1,
+      "name_kor": "본 각반",
+      "name_eng": "Bone Gaiter",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 34,
+      "armor_physical": 510
+    },
+    {
+      "code": 2,
+      "name_kor": "산수유 각반",
+      "name_eng": "Cornus Officinalis Gaiter",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 14,
+      "armor_physical": 330
+    },
+    {
+      "code": 3,
+      "name_kor": "(구)갈라진 세라믹 각반",
+      "name_eng": "Cracked Ceramics Gaiter",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 58,
+      "armor_physical": 840
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)세라믹 각반",
+      "name_eng": "Ceramics Gaiter",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 58,
+      "armor_physical": 870
+    },
+    {
+      "code": 5,
+      "name_kor": "허름한 스야 각반",
+      "name_eng": "Shabby Sya Gaiter",
+      "rarity": 0,
+      "icon": 6,
+      "req_lv": 10,
+      "armor_physical": 120
+    },
+    {
+      "code": 6,
+      "name_kor": "단단한 본 각반",
+      "name_eng": "Stiff Bone Shoulder",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 38,
+      "armor_physical": 570
+    },
+    {
+      "code": 7,
+      "name_kor": "(구)단단한 세라믹 각반",
+      "name_eng": "Stiff Ceramics Gaiter",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 62,
+      "armor_physical": 930
+    },
+    {
+      "code": 8,
+      "name_kor": "단단한 스야 각반",
+      "name_eng": "Stiff Sya Gaiter",
+      "rarity": 1,
+      "icon": 6,
+      "req_lv": 14,
+      "armor_physical": 210
+    },
+    {
+      "code": 9,
+      "name_kor": "스야 각반",
+      "name_eng": "Sya Gaiter",
+      "rarity": 1,
+      "icon": 6,
+      "req_lv": 10,
+      "armor_physical": 150
+    },
+    {
+      "code": 10,
+      "name_kor": "스야나무 껍질 각반",
+      "name_eng": "Sya Skin Gaiter",
+      "rarity": 0,
+      "icon": 29,
+      "req_lv": 12,
+      "armor_physical": 150
+    },
+    {
+      "code": 11,
+      "name_kor": "너덜너덜한 스야 각반",
+      "comment": "무작정 걸어 나와 걷기를 5년 깨끗했던 각반이 여정을 증명하는 구나 -방랑시인-",
+      "name_eng": "Tatters Sya Gaiter",
+      "rarity": 0,
+      "icon": 6,
+      "req_lv": 2,
+      "armor_physical": 27
+    },
+    {
+      "code": 12,
+      "name_kor": "벌레먹은 본 각반",
+      "name_eng": "Wormy Bone Gaiter",
+      "rarity": 0,
+      "icon": 127,
+      "req_lv": 34,
+      "armor_physical": 480
+    },
+    {
+      "code": 13,
+      "name_kor": "마모된 스야 각반",
+      "name_eng": "Worn Sya Gaiter",
+      "rarity": 0,
+      "icon": 6,
+      "req_lv": 6,
+      "armor_physical": 60
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)오래된 레드컬 각반",
+      "name_eng": "Old Redcurl Gaiter",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 82,
+      "armor_physical": 1200
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)레드컬 각반",
+      "name_eng": "Redcurl Gaiter",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 82,
+      "armor_physical": 1230
+    },
+    {
+      "code": 16,
+      "name_kor": "크사낙스 프로텍터 각반",
+      "name_eng": "Xanacs Protector Gaitor",
+      "rarity": 2,
+      "icon": 37,
+      "req_lv": 80,
+      "armor_physical": 1350
+    },
+    {
+      "code": 17,
+      "name_kor": "(구)본 그리브",
+      "name_eng": "Bone Greave",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 40,
+      "armor_physical": 600
+    },
+    {
+      "code": 18,
+      "name_kor": "(구)세라믹 그리브",
+      "name_eng": "Ceramics Greave",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 64,
+      "armor_physical": 960
+    },
+    {
+      "code": 19,
+      "name_kor": "(구)향상된 본 그리브",
+      "comment": "오늘은 본 그리브를 향상시켜 보자 -케미스트리 브라더스 윌-",
+      "name_eng": "Improved Bone Shoulder-Pad",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 44,
+      "armor_physical": 660
+    },
+    {
+      "code": 20,
+      "name_kor": "(구)향상된 세라믹 그리브",
+      "comment": "시브 그 노인네보다 내가 먼저 향상시켰도다! -골고라이언-",
+      "name_eng": "Improved Ceramics Greave",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 68,
+      "armor_physical": 1020
+    },
+    {
+      "code": 21,
+      "name_kor": "향상된 스야 그리브",
+      "name_eng": "Improved Sya Greave",
+      "rarity": 1,
+      "icon": 6,
+      "req_lv": 20,
+      "armor_physical": 300
+    },
+    {
+      "code": 22,
+      "name_kor": "마이어 로얄 가더 그리브",
+      "name_eng": "Myre Royal Guarder Greave",
+      "rarity": 2,
+      "icon": 36,
+      "req_lv": 80,
+      "armor_physical": 1350
+    },
+    {
+      "code": 23,
+      "name_kor": "(구)오래된 세라믹 그리브",
+      "name_eng": "Old Ceramics Greave",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 64,
+      "armor_physical": 930
+    },
+    {
+      "code": 24,
+      "name_kor": "오래된 스야 그리브",
+      "name_eng": "Old Sya Greave",
+      "rarity": 0,
+      "icon": 6,
+      "req_lv": 16,
+      "armor_physical": 210
+    },
+    {
+      "code": 25,
+      "name_kor": "(구)부패한 본 그리브",
+      "name_eng": "Rotten Bone Greave",
+      "rarity": 0,
+      "icon": 127,
+      "req_lv": 40,
+      "armor_physical": 570
+    },
+    {
+      "code": 26,
+      "name_kor": "스야 그리브",
+      "name_eng": "Sya Greave",
+      "rarity": 1,
+      "icon": 6,
+      "req_lv": 16,
+      "armor_physical": 240
+    },
+    {
+      "code": 27,
+      "name_kor": "(구)본 레깅스",
+      "name_eng": "Bone Leggings",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 46,
+      "armor_physical": 690
+    },
+    {
+      "code": 28,
+      "name_kor": "불탄 팡고른 각반",
+      "name_eng": "Burning Curse-Tree Leggings",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 24,
+      "armor_physical": 480
+    },
+    {
+      "code": 29,
+      "name_kor": "(구)세라믹 레깅스",
+      "comment": "세라믹 재질은 아무나 다룰 수 있는 재질이 아니지 -명인 시브-",
+      "name_eng": "Ceramics Leggings",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 70,
+      "armor_physical": 1050
+    },
+    {
+      "code": 30,
+      "name_kor": "엘븐 경갑 하의",
+      "name_eng": "Elven Light Leggings",
+      "rarity": 3,
+      "icon": 22,
+      "req_lv": 20,
+      "armor_physical": 540
+    },
+    {
+      "code": 31,
+      "name_kor": "(구)오래된 본 레깅스",
+      "comment": "이제 좀 쉬게 해주게.",
+      "name_eng": "Old Bone Leggings",
+      "rarity": 0,
+      "icon": 127,
+      "req_lv": 46,
+      "armor_physical": 660
+    },
+    {
+      "code": 32,
+      "name_kor": "(구)구식 세라믹 레깅스",
+      "name_eng": "Outdated Ceramics Leggings",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 70,
+      "armor_physical": 1020
+    },
+    {
+      "code": 33,
+      "name_kor": "구식 스야 레깅스",
+      "name_eng": "Outdated Sya Leggings",
+      "rarity": 0,
+      "icon": 6,
+      "req_lv": 22,
+      "armor_physical": 300
+    },
+    {
+      "code": 34,
+      "name_kor": "(구)견고한 본 레깅스",
+      "name_eng": "Strong Bone Leggings",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 50,
+      "armor_physical": 750
+    },
+    {
+      "code": 35,
+      "name_kor": "(구)견고한 세라믹 레깅스",
+      "name_eng": "Strong Ceramics Leggings",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 74,
+      "armor_physical": 1110
+    },
+    {
+      "code": 36,
+      "name_kor": "견고한 스야 레깅스",
+      "comment": "레깅스는 몸과 완전 밀착 시켜야 하는 장비다! -제국 교관-",
+      "name_eng": "Strong Sya Leggings",
+      "rarity": 1,
+      "icon": 6,
+      "req_lv": 26,
+      "armor_physical": 390
+    },
+    {
+      "code": 37,
+      "name_kor": "스야 레깅스",
+      "comment": "으아~~ 덜 덜 춥다. 어쩔 수 없군. 이거라도 태우자!",
+      "name_eng": "Sya Leggings",
+      "rarity": 1,
+      "icon": 6,
+      "req_lv": 22,
+      "armor_physical": 330
+    },
+    {
+      "code": 38,
+      "name_kor": "유물 : 라트리의 본 각반",
+      "name_eng": "Legacy : Pants of Latri",
+      "rarity": 2,
+      "icon": 271,
+      "req_lv": 50,
+      "armor_physical": 900
+    },
+    {
+      "code": 39,
+      "name_kor": "유물 : 시로넨의 본 각반",
+      "name_eng": "Legacy : Pants of Sironen",
+      "rarity": 2,
+      "icon": 267,
+      "req_lv": 30,
+      "armor_physical": 600
+    },
+    {
+      "code": 40,
+      "name_kor": "유물 : 큐빌레이의 세라믹 각반",
+      "name_eng": "Legacy : Pants of Cubeley",
+      "rarity": 2,
+      "icon": 290,
+      "req_lv": 70,
+      "armor_physical": 1200
+    },
+    {
+      "code": 41,
+      "name_kor": "유물 : 이슈타르의 세라믹 레깅스",
+      "name_eng": "Legacy : Pants of Ishtar",
+      "rarity": 2,
+      "icon": 280,
+      "req_lv": 90,
+      "armor_physical": 1500
+    },
+    {
+      "code": 42,
+      "name_kor": "유물 : 성스러운 라트리의 본 각반",
+      "name_eng": "Legacy : Holy Pants of Latri",
+      "rarity": 2,
+      "icon": 274,
+      "req_lv": 60,
+      "armor_physical": 1050
+    },
+    {
+      "code": 43,
+      "name_kor": "유물 : 성스러운 시로넨의 본 각반",
+      "name_eng": "Legacy : Holy Pants of Sironen",
+      "rarity": 2,
+      "icon": 269,
+      "req_lv": 40,
+      "armor_physical": 750
+    },
+    {
+      "code": 44,
+      "name_kor": "유물 : 성스러운 큐빌레이의 세라믹 각반",
+      "name_eng": "Legacy : Holy Pants of Cubeley",
+      "rarity": 2,
+      "icon": 293,
+      "req_lv": 80,
+      "armor_physical": 1350
+    },
+    {
+      "code": 45,
+      "name_kor": "유물 : 성스러운 이슈타르의 세라믹 레깅스",
+      "name_eng": "Legacy : Holy Pants of Ishtar",
+      "rarity": 2,
+      "icon": 285,
+      "req_lv": 100,
+      "armor_physical": 1650
+    },
+    {
+      "code": 46,
+      "name_kor": "유물 : 성스러운 메티스의 스야 각반",
+      "name_eng": "Legacy : Holy Pants of Metis",
+      "rarity": 2,
+      "icon": 266,
+      "req_lv": 20,
+      "armor_physical": 450
+    },
+    {
+      "code": 47,
+      "name_kor": "유물 : 메티스의 스야 각반",
+      "name_eng": "Legacy : Pants of Metis",
+      "rarity": 2,
+      "icon": 6,
+      "req_lv": 10,
+      "armor_physical": 300
+    },
+    {
+      "code": 48,
+      "name_kor": "(구)본 경갑 하의",
+      "name_eng": "Bone Light Pants",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 52,
+      "armor_physical": 780
+    },
+    {
+      "code": 49,
+      "name_kor": "(구)세라믹 경갑 하의",
+      "comment": "이 정도의 방어도라면 실전에 배치할 수 있겠어 -스카디 가드 장-",
+      "name_eng": "Ceramics Light Pants",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 76,
+      "armor_physical": 1140
+    },
+    {
+      "code": 50,
+      "name_kor": "(구)강화된 본 경갑 하의",
+      "name_eng": "Hard Bone Light Pants",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 56,
+      "armor_physical": 840
+    },
+    {
+      "code": 51,
+      "name_kor": "(구)강화된 세라믹 경갑 하의",
+      "name_eng": "Hard Ceramics Light Pants",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 78,
+      "armor_physical": 1170
+    },
+    {
+      "code": 52,
+      "name_kor": "강화된 스야 경갑 하의",
+      "name_eng": "Hard Sya Mantle",
+      "rarity": 1,
+      "icon": 6,
+      "req_lv": 32,
+      "armor_physical": 480
+    },
+    {
+      "code": 53,
+      "name_kor": "스야 경갑 하의",
+      "comment": "스야나무는 견고해서 좋아.",
+      "name_eng": "Sya Light Pants",
+      "rarity": 1,
+      "icon": 6,
+      "req_lv": 28,
+      "armor_physical": 420
+    },
+    {
+      "code": 54,
+      "name_kor": "(구)낡은 본 경갑 하의",
+      "name_eng": "Used Bone Light Pants",
+      "rarity": 0,
+      "icon": 127,
+      "req_lv": 52,
+      "armor_physical": 750
+    },
+    {
+      "code": 55,
+      "name_kor": "(구)낡은 세라믹 경갑 하의",
+      "name_eng": "Used Ceramics Light Pants",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 76,
+      "armor_physical": 1110
+    },
+    {
+      "code": 56,
+      "name_kor": "낡은 스야 경갑 하의",
+      "name_eng": "Used Sya Light Pants",
+      "rarity": 0,
+      "icon": 6,
+      "req_lv": 28,
+      "armor_physical": 390
+    },
+    {
+      "code": 57,
+      "name_kor": "갈라진 세라믹 각반",
+      "name_eng": "Cracked Ceramics Gaiter",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 70,
+      "armor_physical": 1020
+    },
+    {
+      "code": 58,
+      "name_kor": "세라믹 각반",
+      "name_eng": "Ceramics Gaiter",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 70,
+      "armor_physical": 1050
+    },
+    {
+      "code": 59,
+      "name_kor": "오래된 레드컬 각반",
+      "name_eng": "Old Redcurl Gaiter",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 110,
+      "armor_physical": 1620
+    },
+    {
+      "code": 60,
+      "name_kor": "레드컬 각반",
+      "name_eng": "Redcurl Gaiter",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 110,
+      "armor_physical": 1650
+    },
+    {
+      "code": 61,
+      "name_kor": "본 그리브",
+      "name_eng": "Bone Greave",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 40,
+      "armor_physical": 600
+    },
+    {
+      "code": 62,
+      "name_kor": "세라믹 그리브",
+      "name_eng": "Ceramics Greave",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 80,
+      "armor_physical": 1200
+    },
+    {
+      "code": 63,
+      "name_kor": "오래된 세라믹 그리브",
+      "name_eng": "Old Ceramics Greave",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 80,
+      "armor_physical": 1170
+    },
+    {
+      "code": 64,
+      "name_kor": "부패한 본 그리브",
+      "name_eng": "Rotten Bone Greave",
+      "rarity": 0,
+      "icon": 127,
+      "req_lv": 40,
+      "armor_physical": 570
+    },
+    {
+      "code": 65,
+      "name_kor": "본 레깅스",
+      "name_eng": "Bone Leggings",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 50,
+      "armor_physical": 750
+    },
+    {
+      "code": 66,
+      "name_kor": "세라믹 레깅스",
+      "comment": "세라믹 재질은 아무나 다룰 수 있는 재질이 아니지 -명인 시브-",
+      "name_eng": "Ceramics Leggings",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 90,
+      "armor_physical": 1350
+    },
+    {
+      "code": 67,
+      "name_kor": "오래된 본 레깅스",
+      "comment": "이제 좀 쉬게 해주게.",
+      "name_eng": "Old Bone Leggings",
+      "rarity": 0,
+      "icon": 127,
+      "req_lv": 50,
+      "armor_physical": 720
+    },
+    {
+      "code": 68,
+      "name_kor": "구식 세라믹 레깅스",
+      "name_eng": "Outdated Ceramics Leggings",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 90,
+      "armor_physical": 1320
+    },
+    {
+      "code": 69,
+      "name_kor": "본 경갑 하의",
+      "name_eng": "Bone Light Pants",
+      "rarity": 1,
+      "icon": 127,
+      "req_lv": 60,
+      "armor_physical": 900
+    },
+    {
+      "code": 70,
+      "name_kor": "세라믹 경갑 하의",
+      "comment": "이 정도의 방어도라면 실전에 배치할 수 있겠어 -스카디 가드 장-",
+      "name_eng": "Ceramics Light Pants",
+      "rarity": 1,
+      "icon": 75,
+      "req_lv": 100,
+      "armor_physical": 1500
+    },
+    {
+      "code": 71,
+      "name_kor": "낡은 본 경갑 하의",
+      "name_eng": "Used Bone Light Pants",
+      "rarity": 0,
+      "icon": 127,
+      "req_lv": 60,
+      "armor_physical": 870
+    },
+    {
+      "code": 72,
+      "name_kor": "낡은 세라믹 경갑 하의",
+      "name_eng": "Used Ceramics Light Pants",
+      "rarity": 0,
+      "icon": 75,
+      "req_lv": 100,
+      "armor_physical": 1470
+    },
+    {
+      "code": 73,
+      "name_kor": "아쿠아 크루스테 하의",
+      "comment": "반! 크루스테 잡아줘! 르네… 네가 할 일은 네가 좀 하지 그래?",
+      "name_eng": "Aqua Kruste Pants",
+      "rarity": 2,
+      "icon": 19,
+      "req_lv": 70,
+      "armor_physical": 1200
+    },
+    {
+      "code": 74,
+      "name_kor": "바이넨 플루크 하의",
+      "comment": "킁. 킁. 우웩 무슨 냄새가 이래. 이거 입을 수 나 있겠어? -신참-",
+      "name_eng": "Beinen Fluch Pants",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 40,
+      "armor_physical": 750
+    },
+    {
+      "code": 75,
+      "name_kor": "버설트 마크 하의",
+      "comment": "용암을 식힌 암석으로 만든 장비라던데?",
+      "name_eng": "Basalt Mark Pants",
+      "rarity": 2,
+      "icon": 20,
+      "req_lv": 60,
+      "armor_physical": 1050
+    },
+    {
+      "code": 76,
+      "name_kor": "대륙의 신록 하의",
+      "comment": "대지에 뿌리를 깊게 뻗어라 -대륙의 신록-",
+      "name_eng": "Green Verdure Pants of Continental",
+      "rarity": 2,
+      "icon": 21,
+      "req_lv": 50,
+      "armor_physical": 900
+    },
+    {
+      "code": 77,
+      "name_kor": "사룡의 뼈갑 하의",
+      "explain": "공격시 1%% 확률로 7초동안 적을 중독시켜 초당 195.64의 독 데미지를 줍니다.",
+      "name_eng": "Spirrazzi's Bone",
+      "rarity": 4,
+      "icon": 105,
+      "req_lv": 80,
+      "armor_physical": 1560
+    },
+    {
+      "code": 78,
+      "name_kor": "스작의 절방 뼈갑 각반",
+      "name_eng": "Szak's Ab-Def",
+      "rarity": 4,
+      "icon": 104,
+      "req_lv": 90,
+      "armor_physical": 1770
+    },
+    {
+      "code": 79,
+      "name_kor": "에이스 어드벤트 하의",
+      "name_eng": "Ace Advent Pants",
+      "rarity": 2,
+      "icon": 70,
+      "req_lv": 100,
+      "armor_physical": 1650
+    },
+    {
+      "code": 80,
+      "name_kor": "(구)아쿠아 크루스테 하의",
+      "comment": "반! 크루스테 잡아줘! 르네… 네가 할 일은 네가 좀 하지 그래?",
+      "name_eng": "Aqua Kruste Pants",
+      "rarity": 2,
+      "icon": 19,
+      "req_lv": 72,
+      "armor_physical": 1230
+    },
+    {
+      "code": 81,
+      "name_kor": "알렉시 스파인 하의",
+      "name_eng": "Alexi Spine Pants",
+      "rarity": 2,
+      "icon": 66,
+      "req_lv": 100,
+      "armor_physical": 1650
+    },
+    {
+      "code": 82,
+      "name_kor": "아티 마르피사 하의",
+      "name_eng": "Arti Marpissa Pants",
+      "rarity": 2,
+      "icon": 65,
+      "req_lv": 90,
+      "armor_physical": 1500
+    },
+    {
+      "code": 83,
+      "name_kor": "(구)바이넨 플루크 하의",
+      "comment": "킁. 킁. 우웩 무슨 냄새가 이래. 이거 입을 수 나 있겠어? -신참-",
+      "name_eng": "Beinen Fluch Pants",
+      "rarity": 2,
+      "icon": 22,
+      "req_lv": 36,
+      "armor_physical": 690
+    },
+    {
+      "code": 84,
+      "name_kor": "(구)버설트 마크 하의",
+      "comment": "용암을 식힌 암석으로 만든 장비라던데?",
+      "name_eng": "Basalt Mark Pants",
+      "rarity": 2,
+      "icon": 20,
+      "req_lv": 60,
+      "armor_physical": 1050
+    },
+    {
+      "code": 85,
+      "name_kor": "그리즐드 수트 하의",
+      "name_eng": "Grizzled Suit Pants",
+      "rarity": 2,
+      "icon": 69,
+      "req_lv": 90,
+      "armor_physical": 1500
+    },
+    {
+      "code": 86,
+      "name_kor": "(구)대륙의 신록 하의",
+      "comment": "대지에 뿌리를 깊게 뻗어라 -대륙의 신록-",
+      "name_eng": "Green Verdure Pants of Continental",
+      "rarity": 2,
+      "icon": 21,
+      "req_lv": 42,
+      "armor_physical": 780
+    },
+    {
+      "code": 87,
+      "name_kor": "플라타닉 컴배턴트 하의",
+      "name_eng": "Platanic Combatant Pants",
+      "rarity": 2,
+      "icon": 67,
+      "req_lv": 90,
+      "armor_physical": 1500
+    },
+    {
+      "code": 88,
+      "name_kor": "근성의 집결체 하의",
+      "name_eng": "Spirit Concentration Pants",
+      "rarity": 2,
+      "icon": 38,
+      "req_lv": 80,
+      "armor_physical": 1350
+    },
+    {
+      "code": 89,
+      "name_kor": "스프리건 팀버 하의",
+      "name_eng": "Spriggan Timber Pants",
+      "rarity": 2,
+      "icon": 68,
+      "req_lv": 100,
+      "armor_physical": 1650
+    }
+  ]
+}
