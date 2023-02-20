@@ -15,5 +15,5 @@ struct SGCharInfoLoader : SGCharBaseInfoLoader
 {
 public:
 	bool load() override;
-	static void readCharInfo(Json::Value& gunnerRoot, Out_ SGGunnerInfo* gunnerInfo);
+	static void readDefaultVisualInfo(Json::Value& charRoot, Out_ SGCharInfo* charInfo);
 };

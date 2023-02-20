@@ -7,6 +7,7 @@
 
 #include "Tutturu.h"
 #include "SGGunnerAction.h"
+#include "GameCoreHeader.h"
 
 #include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGHostPlayer.h>
@@ -20,9 +21,8 @@ SGGunnerAction::~SGGunnerAction() {
 }
 
 void SGGunnerAction::play() {
-	m_pBaseInfo = dynamic_cast<SGGunnerInfo*>(SGDataManager::get()->getCharInfo(CharType::Gunner));
+	m_pBaseInfo = dynamic_cast<SGGunnerInfo*>(CoreDataManager_v->getCharInfo(CharType::Gunner));
 	DebugAssertMsg(m_pBaseInfo, "오잉! 거너 인포가 아닌데요?");
-	m_eWeaponType = GunnerWeaponType::Automatic;		// TODO: 무기 정보 읽기
 
 	SGAction::play();
 }

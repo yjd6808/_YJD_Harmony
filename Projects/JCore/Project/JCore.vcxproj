@@ -112,6 +112,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Assert.h" />
+    <ClInclude Include="..\Sources\JCore\Bit.h" />
     <ClInclude Include="..\Sources\JCore\Container\CollectionStream.h" />
     <ClInclude Include="..\Sources\JCore\Container\CollectionType.h">
       <SubType>

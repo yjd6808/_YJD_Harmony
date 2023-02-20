@@ -14,3 +14,7 @@
 #include <SteinsGate/Client/SGInven.h>
 #include <SteinsGate/Client/SGWorldScene.h>
 #include <SteinsGate/Client/SGFontPackage.h>
+#include <SteinsGate/Client/SGActorListenerManager.h>
+#include <SteinsGate/Client/SGActorBox.h>
+#include <SteinsGate/Client/SGGlobal.h>
+#include <SteinsGate/Client/SGImagePackManager.h>

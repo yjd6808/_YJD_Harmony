@@ -56,7 +56,9 @@ void SGCharBaseInfoLoader::readCharBaseInfo(Json::Value& charBaseRoot, SGCharBas
 	baseInfo->SlidingForce = charBaseRoot["sliding_force"].asFloat();
 	SGJson::parseThicknessInfo(charBaseRoot["thickness_box"], baseInfo->ThicknessBox);
 	baseInfo->DownRecoverTime = charBaseRoot["down_recover_time"].asFloat();
-	baseInfo->DefaultWeaponType = (WeaponType_t)charBaseRoot["default_weapon_type"].asInt();
+
+	SGString weaponType = SGJson::getString(charBaseRoot["default_weapon_type"]);
+	baseInfo->DefaultWeaponType = WeaponType::getType(weaponType);
 }
 
 void SGCharBaseInfoLoader::readGunnerInfo(Json::Value& gunnerBaseRoot, SGGunnerInfo* baseInfo) {

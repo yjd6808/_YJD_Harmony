@@ -8,14 +8,17 @@
 
 #include "Tutturu.h"
 #include "SGCharInfoLoader.h"
+#include "GameCoreHeader.h"
 
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGCharInfo.h>
 #include <SteinsGate/Client/SGGlobal.h>
 #include <SteinsGate/Client/SGJsonEx.h>
+#include <SteinsGate/Client/VisualHelper.h>
 
 USING_NS_CC;
 USING_NS_JS;
+USING_NS_JC;
 
 
 bool SGCharInfoLoader::load() {
@@ -31,7 +34,7 @@ bool SGCharInfoLoader::load() {
 		SGGunnerInfo* pGunnerInfo = dbg_new SGGunnerInfo();
 		readCharBaseInfo(gunnerRoot, pGunnerInfo);
 		readGunnerInfo(gunnerRoot, pGunnerInfo);
-		readCharInfo(gunnerRoot, pGunnerInfo);
+		readDefaultVisualInfo(gunnerRoot, pGunnerInfo);
 		addData(pGunnerInfo);
 	}
 	catch (std::exception& ex) {
@@ -43,47 +46,38 @@ bool SGCharInfoLoader::load() {
 
 }
 
-void SGCharInfoLoader::readCharInfo(Json::Value& gunnerRoot, Out_ SGGunnerInfo* gunnerInfo) {
+void SGCharInfoLoader::readDefaultVisualInfo(Json::Value& charRoot, Out_ SGCharInfo* charInfo) {
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGGlobal* pGlobal = SGGlobal::get();
-	Json::Value& defaultAvatarImgRoot = gunnerRoot["default_visual_img"];
+	Json::Value& defaultVisualInfoRoot = charRoot["default_visual_img"];
 
-	SGString defaultAvatarPartImgName[VisualType::Max];
+	auto eCharType = (CharType_t)charInfo->Code;
 
-	defaultAvatarPartImgName[VisualType::Skin] = SGJsonEx::getString(defaultAvatarImgRoot["skin"]);
-	defaultAvatarPartImgName[VisualType::Shoes] = SGJsonEx::getString(defaultAvatarImgRoot["shoes"]);
-	defaultAvatarPartImgName[VisualType::Pants] = SGJsonEx::getString(defaultAvatarImgRoot["pants"]);
-	defaultAvatarPartImgName[VisualType::Neck] = SGJsonEx::getString(defaultAvatarImgRoot["neck"]);
-	defaultAvatarPartImgName[VisualType::Hair] = SGJsonEx::getString(defaultAvatarImgRoot["hair"]);
-	defaultAvatarPartImgName[VisualType::Face] = SGJsonEx::getString(defaultAvatarImgRoot["face"]);
-	defaultAvatarPartImgName[VisualType::Coat] = SGJsonEx::getString(defaultAvatarImgRoot["coat"]);
-	defaultAvatarPartImgName[VisualType::Cap] = SGJsonEx::getString(defaultAvatarImgRoot["cap"]);
-	defaultAvatarPartImgName[VisualType::Belt] = SGJsonEx::getString(defaultAvatarImgRoot["belt"]);
-	defaultAvatarPartImgName[VisualType::Weapon] = SGJsonEx::getString(defaultAvatarImgRoot["weapon"]);
+	for (int i = 0; i < VisualType::Max; ++i) {
+		const char* pVisualTypeName = VisualType::Name[i];
+		int iDefaultCode = defaultVisualInfoRoot.get(pVisualTypeName, InvalidValue_v).asInt();
 
-
-	for (int iVisualType = AvatarType::Begin; iVisualType < AvatarType::Max; ++iVisualType) {
-		const SGString& npkName = pGlobal->getAvatarNpkName(CharType::Gunner, iVisualType);
-		SGImagePack* pImgPack = pPackManager->getPack(npkName);
-
-		gunnerInfo->DefaultVisualNpkIndex[iVisualType] = pImgPack->getPackIndex();
-		if (pImgPack->hasImgIndex(defaultAvatarPartImgName[iVisualType]))
-			gunnerInfo->DefaultVisualImgIndex[iVisualType] = pImgPack->getImgIndex(defaultAvatarPartImgName[iVisualType]);
-	}
-
-	bool bDefaultWeaponImgFound = false;
-	for (int iWeaponType = WeaponType::Begin; iWeaponType < WeaponType::Max; ++iWeaponType) {
-		const SGString& npkName = pGlobal->getWeaponNpkName(CharType::Gunner, iWeaponType);
-		SGImagePack* pImgPack = pPackManager->getPack(npkName);
-
-		if (pImgPack->hasImgIndex(defaultAvatarPartImgName[VisualType::Weapon])) {
-			gunnerInfo->DefaultVisualImgIndex[VisualType::Weapon] = pImgPack->getImgIndex(defaultAvatarPartImgName[VisualType::Weapon]);
-			gunnerInfo->DefaultVisualNpkIndex[VisualType::Weapon] = pImgPack->getPackIndex();
-			bDefaultWeaponImgFound = true;
+		if (iDefaultCode == InvalidValue_v) {
+			charInfo->HasVisual[i] = false;
+			continue;
 		}
-	}
 
-	DebugAssertMsg(bDefaultWeaponImgFound, "기본 무기 이미지가 없습니다.");
+		ItemCode code;
+		if (VisualType::IsAvatar[i]) {
+			code.initAvatarCode(eCharType, (AvatarType_t)i, iDefaultCode);
+		} else if (VisualType::IsWeapon[i]) {
+			code.initWeaponCode(eCharType, charInfo->DefaultWeaponType, iDefaultCode);
+		} else {
+			DebugAssertMsg(false, "무슨 타입이죠?");
+			continue;
+		}
+
+		charInfo->VisualCount[i] = VisualHelper::getVisualData(charInfo->Visual[i], code.Code);
+		charInfo->HasVisual[i] = true;
+
+		DebugAssertMsg(charInfo->VisualCount[i] > 0, "안들어오겠지?");
+	}
+	
 }
 
 

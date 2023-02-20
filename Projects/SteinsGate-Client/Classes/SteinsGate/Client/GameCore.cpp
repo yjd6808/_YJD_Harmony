@@ -7,20 +7,12 @@
 
 #include "Tutturu.h"
 #include "GameCore.h"
+#include "GameCoreHeader.h"
 
-#include <SteinsGate/Client/SGDataManager.h>
-#include <SteinsGate/Client/SGUIManager.h>
-#include <SteinsGate/Client/SGHostPlayer.h>
-#include <SteinsGate/Client/SGInven.h>
-#include <SteinsGate/Client/SGWorldScene.h>
-#include <SteinsGate/Client/SGFontPackage.h>
-#include <SteinsGate/Client/SGActorListenerManager.h>
-#include <SteinsGate/Client/SGActorBox.h>
-#include <SteinsGate/Client/SGGlobal.h>
-#include <SteinsGate/Client/SGImagePackManager.h>
 
 // ===========================================================
 //     슈타인즈 게이트 모든 세계션이 만나는 곳
+//     사실.. 소괄호 작성하기 귀찮아서 이렇게 모아놓음
 // ===========================================================
 
 SGClientInfo*				CoreInfo_v;
@@ -36,6 +28,7 @@ SGImagePackManager*			CorePackManager_v;
 SGGlobal*					CoreGlobal_v;
 
 void InitializeClientCore() {
+	CorePackManager_v			= SGImagePackManager::get();
 	CoreUIManager_v				= SGUIManager::get();
 	CorePlayer_v				= SGHostPlayer::get();
 	CoreDataManager_v			= SGDataManager::get();
@@ -44,7 +37,6 @@ void InitializeClientCore() {
 	CoreFont_v					= SGFontPackage::get();
 	CoreActorListenerManager_v  = SGActorListenerManager::get();
 	CoreActorBox_v				= SGActorBox::get();
-	CorePackManager_v			= SGImagePackManager::get();
 	CoreGlobal_v				= SGGlobal::get();
 }
 

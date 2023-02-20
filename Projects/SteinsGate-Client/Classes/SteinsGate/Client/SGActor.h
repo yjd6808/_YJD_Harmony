@@ -73,6 +73,7 @@ public:
 	SGMapLayer* getMapLayer() { return m_pMapLayer; }
 	SGHitRecorder* getHitRecorder() { return m_pHitRecorder; }
 	int getActorId() { return m_iActorId; }
+	int getCode() { return m_iCode; }
 	SGActorListener* getListener() { return m_pListener; }
 
 	void setPositionReal(float x, float y);

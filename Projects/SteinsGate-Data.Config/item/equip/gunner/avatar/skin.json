@@ -1,0 +1,81 @@
+{
+  "skin": [
+    {
+      "code": 1,
+      "name_kor": "살구빛 피부",
+      "name_eng": "Apricot Skin",
+      "rarity": 0,
+      "sell_price": 100000,
+      "icon": 4,
+      "shape": "0004",
+      "shape_alpha": "",
+      "req_lv": 1
+    },
+    {
+      "code": 2,
+      "name_kor": "잿빛 피부",
+      "name_eng": "Ash Skin",
+      "rarity": 0,
+      "sell_price": 100000,
+      "icon": 5,
+      "shape": "0005",
+      "shape_alpha": "",
+      "req_lv": 1
+    },
+    {
+      "code": 3,
+      "name_kor": "검은 피부",
+      "name_eng": "Black Skin",
+      "rarity": 0,
+      "sell_price": 100000,
+      "icon": 6,
+      "shape": "0006",
+      "shape_alpha": "",
+      "req_lv": 1
+    },
+    {
+      "code": 4,
+      "name_kor": "초콜릿빛 피부",
+      "name_eng": "Chocolate Skin",
+      "rarity": 0,
+      "sell_price": 100000,
+      "icon": 3,
+      "shape": "0003",
+      "shape_alpha": "",
+      "req_lv": 1
+    },
+    {
+      "code": 5,
+      "name_kor": "기본피부색",
+      "name_eng": "Gunner Default Skin",
+      "rarity": 0,
+      "sell_price": 100000,
+      "icon": 0,
+      "shape": "0000",
+      "shape_alpha": "",
+      "req_lv": 1
+    },
+    {
+      "code": 6,
+      "name_kor": "창백한 피부",
+      "name_eng": "Pale Skin",
+      "rarity": 0,
+      "sell_price": 100000,
+      "icon": 2,
+      "shape": "0002",
+      "shape_alpha": "",
+      "req_lv": 1
+    },
+    {
+      "code": 7,
+      "name_kor": "구리빛 피부",
+      "name_eng": "Sunburned Skin",
+      "rarity": 0,
+      "sell_price": 100000,
+      "icon": 1,
+      "shape": "0001",
+      "shape_alpha": "",
+      "req_lv": 1
+    }
+  ]
+}

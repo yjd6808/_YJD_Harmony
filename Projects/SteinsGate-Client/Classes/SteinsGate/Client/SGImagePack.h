@@ -26,6 +26,7 @@ public:
 	int getSpriteCount(int imgIndex);
 
 	SGFrameTexture* createFrameTexture(int imgIndex, int frameIndex);
+
 	void releaseFrameTexture(int imgIndex, int frameIndex);
 	void releaseFrameTexture(const NpkResourceIndex& npkResourceIndex);
 
@@ -33,6 +34,7 @@ public:
 	SGString getFileName();
 	bool hasImgIndex(const SGString& imgName);
 	int getImgIndex(const SGString& imgName) { return m_Package->GetElementIndex(imgName); }
+
 	int getPackIndex() { return m_iIndex; }
 
 	void unload();

@@ -12,6 +12,7 @@
 
 #include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 #include <SteinsGate/Common/MobBaseInfo.h>
+#include <SteinsGate/Common/ItemInfo.h>
 
 class SGDataManagerAbstract
 {
@@ -29,7 +30,11 @@ public:
 	void unload(ConfigFileType_t configFileType); 
 	void finalizeLoader();
 
-	MobBaseInfo* getMobBaseInfo(int code);
+	MobBaseInfo* getMobBaseInfo(int monsterCode);
+	ItemAvatarInfo* getAvatarInfo(int avatarCode);		// 아바타
+	ItemWeaponInfo* getWeaponInfo(int weaponCode);		// 무기
+	ItemArmorInfo* getArmorInfo(int armorCode);			// 장신구 혹은 방어구
+	ItemVisualInfo* getVisualInfo(int visualCode);		// 아바타 혹은 무기;
 protected:
 	ConfigFileLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max];
 	bool m_bLoaded[ConfigFileType::Max]; // Lazy Loading을 기본으로 하자.

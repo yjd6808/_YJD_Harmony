@@ -1,0 +1,907 @@
+{
+  "heavy": [
+    {
+      "code": 1,
+      "name_kor": "(구)미늘 아머",
+      "name_eng": "Barb Armor",
+      "rarity": 1,
+      "sell_price": 23400,
+      "icon": 140,
+      "req_lv": 52,
+      "armor_physical": 1248
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)촘촘한 미늘 아머",
+      "name_eng": "Close Barb Armor",
+      "rarity": 1,
+      "sell_price": 25200,
+      "icon": 140,
+      "req_lv": 56,
+      "armor_physical": 1344
+    },
+    {
+      "code": 3,
+      "name_kor": "(구)촘촘한 체인 아머",
+      "name_eng": "Close Chain Armor",
+      "rarity": 1,
+      "sell_price": 35100,
+      "icon": 180,
+      "req_lv": 78,
+      "armor_physical": 1872
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)체인 아머",
+      "name_eng": "Chain Armor",
+      "rarity": 1,
+      "sell_price": 34200,
+      "icon": 180,
+      "req_lv": 76,
+      "armor_physical": 1824
+    },
+    {
+      "code": 5,
+      "name_kor": "촘촘한 링 아머",
+      "name_eng": "Close Ring Armor",
+      "rarity": 1,
+      "sell_price": 14400,
+      "icon": 134,
+      "req_lv": 32,
+      "armor_physical": 768
+    },
+    {
+      "code": 6,
+      "name_kor": "비열한 펠 비스킹 아머",
+      "name_eng": "Fel Visking Armor",
+      "rarity": 2,
+      "sell_price": 47000,
+      "icon": 81,
+      "req_lv": 90,
+      "armor_physical": 2400
+    },
+    {
+      "code": 7,
+      "name_kor": "고어 브라스 아머",
+      "name_eng": "Gore Brass Armor",
+      "rarity": 2,
+      "sell_price": 47000,
+      "icon": 79,
+      "req_lv": 90,
+      "armor_physical": 2400
+    },
+    {
+      "code": 8,
+      "name_kor": "오네이트 블리츠 아머",
+      "name_eng": "Ornate Blitz Armor",
+      "rarity": 2,
+      "sell_price": 52000,
+      "icon": 82,
+      "req_lv": 100,
+      "armor_physical": 2640
+    },
+    {
+      "code": 9,
+      "name_kor": "링 아머",
+      "name_eng": "Ring Armor",
+      "rarity": 1,
+      "sell_price": 12600,
+      "icon": 134,
+      "req_lv": 28,
+      "armor_physical": 672
+    },
+    {
+      "code": 10,
+      "name_kor": "허술한 링 아머",
+      "name_eng": "Shabby Ring Armor",
+      "rarity": 0,
+      "sell_price": 9800,
+      "icon": 134,
+      "req_lv": 28,
+      "armor_physical": 624
+    },
+    {
+      "code": 11,
+      "name_kor": "(구)낡은 미늘 아머",
+      "name_eng": "Used Barb Armor",
+      "rarity": 0,
+      "sell_price": 18200,
+      "icon": 140,
+      "req_lv": 52,
+      "armor_physical": 1200
+    },
+    {
+      "code": 12,
+      "name_kor": "(구)낡은 체인 아머",
+      "name_eng": "Used Chain Armor",
+      "rarity": 0,
+      "sell_price": 26600,
+      "icon": 180,
+      "req_lv": 76,
+      "armor_physical": 1776
+    },
+    {
+      "code": 13,
+      "name_kor": "미늘 흉갑",
+      "name_eng": "Barb Breatplate",
+      "rarity": 1,
+      "sell_price": 15300,
+      "icon": 140,
+      "req_lv": 34,
+      "armor_physical": 816
+    },
+    {
+      "code": 14,
+      "name_kor": "초급전사 흉갑",
+      "name_eng": "Beginning Warrior's Breastplate",
+      "rarity": 2,
+      "sell_price": 7000,
+      "icon": 26,
+      "req_lv": 12,
+      "armor_physical": 480
+    },
+    {
+      "code": 15,
+      "name_kor": "블론델의 흉갑",
+      "explain": "내구도 증가",
+      "name_eng": "Breastplate of Blondel",
+      "rarity": 0,
+      "sell_price": 4800,
+      "icon": 30,
+      "req_lv": 12,
+      "armor_physical": 240
+    },
+    {
+      "code": 16,
+      "name_kor": "초경량 카볼라이트 흉갑",
+      "name_eng": "Carbollite Breastplate",
+      "rarity": 2,
+      "sell_price": 42000,
+      "icon": 49,
+      "req_lv": 80,
+      "armor_physical": 2160
+    },
+    {
+      "code": 17,
+      "name_kor": "(구)체인 흉갑",
+      "name_eng": "Chain Breatplate",
+      "rarity": 1,
+      "sell_price": 26100,
+      "icon": 180,
+      "req_lv": 58,
+      "armor_physical": 1392
+    },
+    {
+      "code": 18,
+      "name_kor": "(구)코부르크식 흉갑",
+      "name_eng": "Coburg Breastplate",
+      "rarity": 1,
+      "sell_price": 36900,
+      "icon": 180,
+      "req_lv": 82,
+      "armor_physical": 1968
+    },
+    {
+      "code": 19,
+      "name_kor": "멜티 블러드 흉갑",
+      "name_eng": "Melty Blood Breastplate",
+      "rarity": 2,
+      "sell_price": 42000,
+      "icon": 47,
+      "req_lv": 80,
+      "armor_physical": 2160
+    },
+    {
+      "code": 20,
+      "name_kor": "녹슨 미늘 흉갑",
+      "name_eng": "Rusty Barb Breatplate",
+      "rarity": 0,
+      "sell_price": 11900,
+      "icon": 140,
+      "req_lv": 34,
+      "armor_physical": 768
+    },
+    {
+      "code": 21,
+      "name_kor": "(구)녹슨 체인 흉갑",
+      "name_eng": "Rusty Chain Breatplate",
+      "rarity": 0,
+      "sell_price": 20300,
+      "icon": 180,
+      "req_lv": 58,
+      "armor_physical": 1344
+    },
+    {
+      "code": 22,
+      "name_kor": "(구)녹슨 코부르크식 흉갑",
+      "name_eng": "Rusty Coburg Breastplate",
+      "rarity": 0,
+      "sell_price": 28700,
+      "icon": 180,
+      "req_lv": 82,
+      "armor_physical": 1920
+    },
+    {
+      "code": 23,
+      "name_kor": "링 흉갑",
+      "name_eng": "Ring Breatplate",
+      "rarity": 1,
+      "sell_price": 4500,
+      "icon": 134,
+      "req_lv": 10,
+      "armor_physical": 240
+    },
+    {
+      "code": 24,
+      "name_kor": "녹슨 링 흉갑",
+      "name_eng": "Rusty Ring Breatplate",
+      "rarity": 0,
+      "sell_price": 3500,
+      "icon": 134,
+      "req_lv": 10,
+      "armor_physical": 192
+    },
+    {
+      "code": 25,
+      "name_kor": "단단한 미늘 흉갑",
+      "name_eng": "Stiff Barb Breatplate",
+      "rarity": 1,
+      "sell_price": 17100,
+      "icon": 140,
+      "req_lv": 38,
+      "armor_physical": 912
+    },
+    {
+      "code": 26,
+      "name_kor": "(구)단단한 체인 흉갑",
+      "name_eng": "Stiff Chain Breatplate",
+      "rarity": 1,
+      "sell_price": 27900,
+      "icon": 180,
+      "req_lv": 62,
+      "armor_physical": 1488
+    },
+    {
+      "code": 27,
+      "name_kor": "단단한 링 흉갑",
+      "name_eng": "Stiff Ring Breatplate",
+      "rarity": 1,
+      "sell_price": 6300,
+      "icon": 134,
+      "req_lv": 14,
+      "armor_physical": 336
+    },
+    {
+      "code": 28,
+      "name_kor": "낡아빠진 링 흉갑",
+      "name_eng": "Used Ring Breatplate",
+      "rarity": 0,
+      "sell_price": 2100,
+      "icon": 134,
+      "req_lv": 6,
+      "armor_physical": 96
+    },
+    {
+      "code": 29,
+      "name_kor": "크림슨 비네트 흉갑",
+      "name_eng": "Crimson Vignette Breastplate",
+      "rarity": 2,
+      "sell_price": 42000,
+      "icon": 48,
+      "req_lv": 80,
+      "armor_physical": 2160
+    },
+    {
+      "code": 30,
+      "name_kor": "닳아빠진 링 흉갑",
+      "name_eng": "Worn Ring Breatplate",
+      "rarity": 0,
+      "sell_price": 700,
+      "icon": 134,
+      "req_lv": 2,
+      "armor_physical": 43
+    },
+    {
+      "code": 31,
+      "name_kor": "(구)드래고닉 스킨 상의",
+      "name_eng": "Dragonic Skin Coat",
+      "rarity": 2,
+      "sell_price": 37000,
+      "icon": 23,
+      "req_lv": 70,
+      "armor_physical": 1920
+    },
+    {
+      "code": 32,
+      "name_kor": "(구)멧세 쿼드라트 상의",
+      "name_eng": "Messe Quadrat Coat",
+      "rarity": 2,
+      "sell_price": 22000,
+      "icon": 25,
+      "req_lv": 40,
+      "armor_physical": 1200
+    },
+    {
+      "code": 33,
+      "name_kor": "(구)슈바르츠 크라이스 상의",
+      "name_eng": "Schwarz Kreis Coat",
+      "rarity": 2,
+      "sell_price": 19000,
+      "icon": 26,
+      "req_lv": 34,
+      "armor_physical": 1056
+    },
+    {
+      "code": 34,
+      "name_kor": "(구)샤이닝 로리카 상의",
+      "name_eng": "Shining Lorica Coat",
+      "rarity": 2,
+      "sell_price": 31000,
+      "icon": 24,
+      "req_lv": 58,
+      "armor_physical": 1632
+    },
+    {
+      "code": 35,
+      "name_kor": "유물 : 라트리의 미늘 아머",
+      "name_eng": "Legacy : Holy Coat of Latri",
+      "rarity": 2,
+      "sell_price": 27000,
+      "icon": 186,
+      "req_lv": 50,
+      "armor_physical": 1440
+    },
+    {
+      "code": 36,
+      "name_kor": "유물 : 시로넨의 미늘 흉갑",
+      "name_eng": "Legacy : Coat of Sironen",
+      "rarity": 2,
+      "sell_price": 17000,
+      "icon": 300,
+      "req_lv": 30,
+      "armor_physical": 960
+    },
+    {
+      "code": 37,
+      "name_kor": "유물 : 큐빌레이의 체인 흉갑",
+      "name_eng": "Legacy : Coat of Cubeley",
+      "rarity": 2,
+      "sell_price": 37000,
+      "icon": 158,
+      "req_lv": 70,
+      "armor_physical": 1920
+    },
+    {
+      "code": 38,
+      "name_kor": "유물 : 이슈타르의 체인 메일",
+      "name_eng": "Legacy : Coat of Ishtar",
+      "rarity": 2,
+      "sell_price": 47000,
+      "icon": 304,
+      "req_lv": 90,
+      "armor_physical": 2400
+    },
+    {
+      "code": 39,
+      "name_kor": "유물 : 성스러운 라트리의 미늘 아머",
+      "name_eng": "Legacy : Coat of Cubeley",
+      "rarity": 2,
+      "sell_price": 32000,
+      "icon": 276,
+      "req_lv": 60,
+      "armor_physical": 1680
+    },
+    {
+      "code": 40,
+      "name_kor": "유물 : 성스러운 시로넨의 미늘 흉갑",
+      "name_eng": "Legacy : Holy Coat of Sironen",
+      "rarity": 2,
+      "sell_price": 22000,
+      "icon": 302,
+      "req_lv": 40,
+      "armor_physical": 1200
+    },
+    {
+      "code": 41,
+      "name_kor": "유물 : 성스러운 큐빌레이의 체인 흉갑",
+      "name_eng": "Legacy : Holy Coat of Cubeley",
+      "rarity": 2,
+      "sell_price": 42000,
+      "icon": 295,
+      "req_lv": 80,
+      "armor_physical": 2160
+    },
+    {
+      "code": 42,
+      "name_kor": "유물 : 성스러운 이슈타르의 체인 메일",
+      "name_eng": "Legacy : Holy Coat of Ishtar",
+      "rarity": 2,
+      "sell_price": 52000,
+      "icon": 309,
+      "req_lv": 100,
+      "armor_physical": 2640
+    },
+    {
+      "code": 43,
+      "name_kor": "유물 : 성스러운 메티스의 링 흉갑",
+      "name_eng": "Legacy : Holy Coat of Metis",
+      "rarity": 2,
+      "sell_price": 12000,
+      "icon": 298,
+      "req_lv": 20,
+      "armor_physical": 720
+    },
+    {
+      "code": 44,
+      "name_kor": "유물 : 메티스의 링 흉갑",
+      "name_eng": "Legacy : Coat of Metis",
+      "rarity": 2,
+      "sell_price": 7000,
+      "icon": 134,
+      "req_lv": 10,
+      "armor_physical": 480
+    },
+    {
+      "code": 45,
+      "name_kor": "(구)미늘 메일",
+      "name_eng": "Barb Mail",
+      "rarity": 1,
+      "sell_price": 20700,
+      "icon": 140,
+      "req_lv": 46,
+      "armor_physical": 1104
+    },
+    {
+      "code": 46,
+      "name_kor": "대장장이의 열정",
+      "name_eng": "Passion of Blacksmith",
+      "rarity": 3,
+      "sell_price": 16800,
+      "icon": 26,
+      "req_lv": 20,
+      "armor_physical": 864
+    },
+    {
+      "code": 47,
+      "name_kor": "(구)체인 메일",
+      "name_eng": "Chain Mail",
+      "rarity": 1,
+      "sell_price": 31500,
+      "icon": 180,
+      "req_lv": 70,
+      "armor_physical": 1680
+    },
+    {
+      "code": 48,
+      "name_kor": "구식 링 메일",
+      "name_eng": "Outdated Ring Mail",
+      "rarity": 0,
+      "sell_price": 7700,
+      "icon": 134,
+      "req_lv": 22,
+      "armor_physical": 480
+    },
+    {
+      "code": 49,
+      "name_kor": "링 메일",
+      "name_eng": "Ring Mail",
+      "rarity": 1,
+      "sell_price": 9900,
+      "icon": 134,
+      "req_lv": 22,
+      "armor_physical": 528
+    },
+    {
+      "code": 50,
+      "name_kor": "링 가더",
+      "name_eng": "Ring Guarder",
+      "rarity": 2,
+      "sell_price": 12000,
+      "icon": 26,
+      "req_lv": 22,
+      "armor_physical": 720
+    },
+    {
+      "code": 51,
+      "name_kor": "(구)허술한 미늘 메일",
+      "name_eng": "Shabby Barb Mail",
+      "rarity": 0,
+      "sell_price": 16100,
+      "icon": 140,
+      "req_lv": 46,
+      "armor_physical": 1056
+    },
+    {
+      "code": 52,
+      "name_kor": "(구)허술한 체인 메일",
+      "name_eng": "Shabby Chain Mail",
+      "rarity": 0,
+      "sell_price": 24500,
+      "icon": 180,
+      "req_lv": 70,
+      "armor_physical": 1632
+    },
+    {
+      "code": 53,
+      "name_kor": "(구)견고한 미늘 메일",
+      "name_eng": "Strong Barb Mail",
+      "rarity": 1,
+      "sell_price": 22500,
+      "icon": 140,
+      "req_lv": 50,
+      "armor_physical": 1200
+    },
+    {
+      "code": 54,
+      "name_kor": "(구)견고한 체인 메일",
+      "name_eng": "Strong Chain Mail",
+      "rarity": 1,
+      "sell_price": 33300,
+      "icon": 180,
+      "req_lv": 74,
+      "armor_physical": 1776
+    },
+    {
+      "code": 55,
+      "name_kor": "견고한 링 메일",
+      "name_eng": "Strong Ring Mail",
+      "rarity": 1,
+      "sell_price": 11700,
+      "icon": 134,
+      "req_lv": 26,
+      "armor_physical": 624
+    },
+    {
+      "code": 56,
+      "name_kor": "미늘 아머",
+      "name_eng": "Barb Armor",
+      "rarity": 1,
+      "sell_price": 27000,
+      "icon": 140,
+      "req_lv": 60,
+      "armor_physical": 1440
+    },
+    {
+      "code": 57,
+      "name_kor": "체인 아머",
+      "name_eng": "Chain Armor",
+      "rarity": 1,
+      "sell_price": 45000,
+      "icon": 180,
+      "req_lv": 100,
+      "armor_physical": 2400
+    },
+    {
+      "code": 58,
+      "name_kor": "핀드하이거 중장갑",
+      "explain": "뽑아치기로 타격시 10%% 확률로 적을 기절시킵니다.",
+      "name_eng": "FindHeiger Heavy Armor",
+      "rarity": 4,
+      "sell_price": 63000,
+      "icon": 108,
+      "req_lv": 80,
+      "armor_physical": 2496
+    },
+    {
+      "code": 59,
+      "name_kor": "제라드의 화염상갑",
+      "name_eng": "Gerrad's FlameUpperGuard",
+      "rarity": 4,
+      "sell_price": 77000,
+      "icon": 107,
+      "req_lv": 100,
+      "armor_physical": 2976
+    },
+    {
+      "code": 60,
+      "name_kor": "자이언트 터틀 등갑",
+      "explain": "백어택을 당했을 때 10%%의 데미지를 감소시킵니다.",
+      "name_eng": "Giant Turtle BackGuard",
+      "rarity": 4,
+      "sell_price": 49000,
+      "icon": 109,
+      "req_lv": 60,
+      "armor_physical": 2016
+    },
+    {
+      "code": 61,
+      "name_kor": "낡은 미늘 아머",
+      "name_eng": "Used Barb Armor",
+      "rarity": 0,
+      "sell_price": 21000,
+      "icon": 140,
+      "req_lv": 60,
+      "armor_physical": 1392
+    },
+    {
+      "code": 62,
+      "name_kor": "낡은 체인 아머",
+      "name_eng": "Used Chain Armor",
+      "rarity": 0,
+      "sell_price": 35000,
+      "icon": 180,
+      "req_lv": 100,
+      "armor_physical": 2352
+    },
+    {
+      "code": 63,
+      "name_kor": "체인 흉갑",
+      "name_eng": "Chain Breatplate",
+      "rarity": 1,
+      "sell_price": 31500,
+      "icon": 180,
+      "req_lv": 70,
+      "armor_physical": 1680
+    },
+    {
+      "code": 64,
+      "name_kor": "코부르크식 흉갑",
+      "name_eng": "Coburg Breastplate",
+      "rarity": 1,
+      "sell_price": 49500,
+      "icon": 180,
+      "req_lv": 110,
+      "armor_physical": 2640
+    },
+    {
+      "code": 65,
+      "name_kor": "녹슨 체인 흉갑",
+      "name_eng": "Rusty Chain Breatplate",
+      "rarity": 0,
+      "sell_price": 24500,
+      "icon": 180,
+      "req_lv": 70,
+      "armor_physical": 1632
+    },
+    {
+      "code": 66,
+      "name_kor": "녹슨 코부르크식 흉갑",
+      "name_eng": "Rusty Coburg Breastplate",
+      "rarity": 0,
+      "sell_price": 38500,
+      "icon": 180,
+      "req_lv": 110,
+      "armor_physical": 2592
+    },
+    {
+      "code": 67,
+      "name_kor": "드래고닉 스킨 상의",
+      "name_eng": "Dragonic Skin Coat",
+      "rarity": 2,
+      "sell_price": 37000,
+      "icon": 23,
+      "req_lv": 70,
+      "armor_physical": 1920
+    },
+    {
+      "code": 68,
+      "name_kor": "멧세 쿼드라트 상의",
+      "name_eng": "Messe Quadrat Coat",
+      "rarity": 2,
+      "sell_price": 27000,
+      "icon": 25,
+      "req_lv": 50,
+      "armor_physical": 1440
+    },
+    {
+      "code": 69,
+      "name_kor": "슈바르츠 크라이스 상의",
+      "name_eng": "Schwarz Kreis Coat",
+      "rarity": 2,
+      "sell_price": 22000,
+      "icon": 26,
+      "req_lv": 40,
+      "armor_physical": 1200
+    },
+    {
+      "code": 70,
+      "name_kor": "샤이닝 로리카 상의",
+      "name_eng": "Shining Lorica Coat",
+      "rarity": 2,
+      "sell_price": 32000,
+      "icon": 24,
+      "req_lv": 60,
+      "armor_physical": 1680
+    },
+    {
+      "code": 71,
+      "name_kor": "미늘 메일",
+      "name_eng": "Barb Mail",
+      "rarity": 1,
+      "sell_price": 22500,
+      "icon": 140,
+      "req_lv": 50,
+      "armor_physical": 1200
+    },
+    {
+      "code": 72,
+      "name_kor": "체인 메일",
+      "name_eng": "Chain Mail",
+      "rarity": 1,
+      "sell_price": 40500,
+      "icon": 180,
+      "req_lv": 90,
+      "armor_physical": 2160
+    },
+    {
+      "code": 73,
+      "name_kor": "허술한 미늘 메일",
+      "name_eng": "Shabby Barb Mail",
+      "rarity": 0,
+      "sell_price": 17500,
+      "icon": 140,
+      "req_lv": 50,
+      "armor_physical": 1152
+    },
+    {
+      "code": 74,
+      "name_kor": "허술한 체인 메일",
+      "name_eng": "Shabby Chain Mail",
+      "rarity": 0,
+      "sell_price": 31500,
+      "icon": 180,
+      "req_lv": 90,
+      "armor_physical": 2112
+    },
+    {
+      "code": 75,
+      "name_kor": "미늘 레지스트",
+      "name_eng": "Barb Resist",
+      "rarity": 1,
+      "sell_price": 18000,
+      "icon": 140,
+      "req_lv": 40,
+      "armor_physical": 960
+    },
+    {
+      "code": 76,
+      "name_kor": "체인 레지스트",
+      "name_eng": "Chain Resist",
+      "rarity": 1,
+      "sell_price": 36000,
+      "icon": 180,
+      "req_lv": 80,
+      "armor_physical": 1920
+    },
+    {
+      "code": 77,
+      "name_kor": "마모된 미늘 레지스트",
+      "name_eng": "Rubbed Barb Resist",
+      "rarity": 0,
+      "sell_price": 14000,
+      "icon": 140,
+      "req_lv": 40,
+      "armor_physical": 912
+    },
+    {
+      "code": 78,
+      "name_kor": "마모된 체인 레지스트",
+      "name_eng": "Rubbed Chain Resist",
+      "rarity": 0,
+      "sell_price": 28000,
+      "icon": 180,
+      "req_lv": 80,
+      "armor_physical": 1872
+    },
+    {
+      "code": 79,
+      "name_kor": "(구)미늘 레지스트",
+      "name_eng": "Barb Resist",
+      "rarity": 1,
+      "sell_price": 18000,
+      "icon": 140,
+      "req_lv": 40,
+      "armor_physical": 960
+    },
+    {
+      "code": 80,
+      "name_kor": "(구)체인 레지스트",
+      "name_eng": "Chain Resist",
+      "rarity": 1,
+      "sell_price": 28800,
+      "icon": 180,
+      "req_lv": 64,
+      "armor_physical": 1536
+    },
+    {
+      "code": 81,
+      "name_kor": "흉갑 토드퍼스 레지스트",
+      "name_eng": "Curse Armor Todpurs Resist",
+      "rarity": 2,
+      "sell_price": 52000,
+      "icon": 80,
+      "req_lv": 100,
+      "armor_physical": 2640
+    },
+    {
+      "code": 82,
+      "name_kor": "EL-XM25 레지스트",
+      "name_eng": "EL-XM25 Resist",
+      "rarity": 2,
+      "sell_price": 47000,
+      "icon": 83,
+      "req_lv": 90,
+      "armor_physical": 2400
+    },
+    {
+      "code": 83,
+      "name_kor": "ES-YL11 레지스트",
+      "name_eng": "ES-YL11 Resist",
+      "rarity": 2,
+      "sell_price": 52000,
+      "icon": 84,
+      "req_lv": 100,
+      "armor_physical": 2640
+    },
+    {
+      "code": 84,
+      "name_kor": "(구)튼튼한 미늘 레지스트",
+      "name_eng": "Firm Barb Resist",
+      "rarity": 1,
+      "sell_price": 19800,
+      "icon": 140,
+      "req_lv": 44,
+      "armor_physical": 1056
+    },
+    {
+      "code": 85,
+      "name_kor": "(구)튼튼한 체인 레지스트",
+      "name_eng": "Frim Chain Resist",
+      "rarity": 1,
+      "sell_price": 30600,
+      "icon": 180,
+      "req_lv": 68,
+      "armor_physical": 1632
+    },
+    {
+      "code": 86,
+      "name_kor": "튼튼한 링 레지스트",
+      "name_eng": "Firm Ring Resist",
+      "rarity": 1,
+      "sell_price": 9000,
+      "icon": 134,
+      "req_lv": 20,
+      "armor_physical": 480
+    },
+    {
+      "code": 87,
+      "name_kor": "(구)마모된 미늘 레지스트",
+      "name_eng": "Rubbed Barb Resist",
+      "rarity": 0,
+      "sell_price": 14000,
+      "icon": 140,
+      "req_lv": 40,
+      "armor_physical": 912
+    },
+    {
+      "code": 88,
+      "name_kor": "링 레지스트",
+      "name_eng": "Ring Resist",
+      "rarity": 1,
+      "sell_price": 7200,
+      "icon": 134,
+      "req_lv": 16,
+      "armor_physical": 384
+    },
+    {
+      "code": 89,
+      "name_kor": "(구)마모된 체인 레지스트",
+      "name_eng": "Rubbed Chain Resist",
+      "rarity": 0,
+      "sell_price": 22400,
+      "icon": 180,
+      "req_lv": 64,
+      "armor_physical": 1488
+    },
+    {
+      "code": 90,
+      "name_kor": "마모된 링 레지스트",
+      "name_eng": "Rubbed Ring Resist",
+      "rarity": 0,
+      "sell_price": 5600,
+      "icon": 134,
+      "req_lv": 16,
+      "armor_physical": 336
+    }
+  ]
+}

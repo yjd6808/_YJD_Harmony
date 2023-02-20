@@ -63,7 +63,7 @@ void SGCharacter::initInfo(int code, const VisualInfo& visualInfo) {
 }
 
 void SGCharacter::initVisualInfo(const VisualInfo& visualInfo) {
-	DebugAssertMsg(visualInfo.isValid(), "유효하지 않은 비주얼 정보입니다.");
+	DebugAssertMsg(visualInfo.Size() > 0, "유효하지 않은 비주얼 정보입니다.");
 	m_VisualInfo = visualInfo;
 }
 
@@ -74,22 +74,13 @@ void SGCharacter::initBaseInfo(int code) {
 }
 
 void SGCharacter::initActorSprite() {
-	DebugAssertMsg(m_VisualInfo.isValid(), "액터 스프라이트 초기화 실패: 유효하지 않은 비주얼 정보입니다.");
+	DebugAssertMsg(m_VisualInfo.Size() > 0, "액터 스프라이트 초기화 실패: 유효하지 않은 비주얼 정보입니다.");
 
 	SGDataManager* pDataManager = SGDataManager::get();
 	AnimationList& animationList = pDataManager->getCharAnimationInfoList(m_iCode);
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(15, animationList.Size());
 
-	for (int i = 0; i < VisualType::Max; ++i) {
-		if (m_VisualInfo.ImgIndex[i] != InvalidValue_v &&
-			m_VisualInfo.NpkIndex[i] != InvalidValue_v) {
-			spActorSpriteData->Parts.PushBack({
-				VisualType::ZOrder[i],
-				m_VisualInfo.NpkIndex[i],
-				m_VisualInfo.ImgIndex[i]
-			});
-		}
-	}
+	spActorSpriteData->Parts = m_VisualInfo;
 	spActorSpriteData->Animations = animationList;
 
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);

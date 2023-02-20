@@ -21,7 +21,6 @@ public:
 	bool onConditionCheck() override { return true; }
 protected:
 	SGGunnerInfo* m_pBaseInfo;
-	GunnerWeaponType_t m_eWeaponType;
 };
 
 

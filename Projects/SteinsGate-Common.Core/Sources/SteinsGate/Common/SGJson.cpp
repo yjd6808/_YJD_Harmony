@@ -19,6 +19,21 @@ SGString SGJson::getString(Json::Value& value) {
 	return { pBegin, iLen + 1 };
 }
 
+SGString SGJson::getStringOrDefault(Json::Value& value, const SGString& defaultValue) {
+	if (value.empty())
+		return defaultValue;
+
+	return getString(value);
+}
+
+SGString SGJson::getStringOrNull(Json::Value& value)
+{
+	if (value.empty())
+		return { 0 };
+
+	return getString(value);
+}
+
 void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, ThicknessBox& info) {
 
 	int num[4];
@@ -65,12 +80,7 @@ void SGJson::parseFloatNumberN(Json::Value& root, float* numArr, int count) {
 	SGTextParser::parserFloatNumbers(SGJson::getString(root), numArr, count);
 }
 
-SGString SGJson::getStringDefault(Json::Value& value, const SGString& defaultValue) {
-	if (value.empty())
-		return defaultValue;
 
-	return getString(value);
-}
 
 float SGJson::getFloatDefault(Json::Value& value, float defaultValue) {
 	if (value.empty())

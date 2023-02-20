@@ -1,0 +1,870 @@
+{
+  "light": [
+    {
+      "code": 1,
+      "name_kor": "에이스 어드벤트 부츠",
+      "name_eng": "Ace Advent Boots",
+      "rarity": 2,
+      "sell_price": 28200,
+      "icon": 62,
+      "req_lv": 90,
+      "armor_physical": 900
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)아쿠아 크루스테 부츠",
+      "name_eng": "Aqua Kruste Boots",
+      "rarity": 2,
+      "sell_price": 21000,
+      "icon": 11,
+      "req_lv": 66,
+      "armor_physical": 684
+    },
+    {
+      "code": 3,
+      "name_kor": "알렉시 스파인 부츠",
+      "name_eng": "Alexi Spine Boots",
+      "rarity": 2,
+      "sell_price": 28200,
+      "icon": 58,
+      "req_lv": 90,
+      "armor_physical": 900
+    },
+    {
+      "code": 4,
+      "name_kor": "아티 마르피사 부츠",
+      "name_eng": "Arti Marpissa Boots",
+      "rarity": 2,
+      "sell_price": 25200,
+      "icon": 57,
+      "req_lv": 80,
+      "armor_physical": 810
+    },
+    {
+      "code": 5,
+      "name_kor": "(구)바이넨 플루크 부츠",
+      "name_eng": "Beinen Fluch Boots",
+      "rarity": 2,
+      "sell_price": 10200,
+      "icon": 14,
+      "req_lv": 30,
+      "armor_physical": 360
+    },
+    {
+      "code": 6,
+      "name_kor": "(구)버설트 마크 부츠",
+      "name_eng": "Basalt Mark Boots",
+      "rarity": 2,
+      "sell_price": 17400,
+      "icon": 12,
+      "req_lv": 54,
+      "armor_physical": 576
+    },
+    {
+      "code": 7,
+      "name_kor": "본 부츠",
+      "name_eng": "Bone Boots",
+      "rarity": 1,
+      "sell_price": 8500,
+      "icon": 130,
+      "req_lv": 34,
+      "armor_physical": 306
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)갈라진 세라믹 부츠",
+      "name_eng": "Cracked Ceramics Boots",
+      "rarity": 0,
+      "sell_price": 8700,
+      "icon": 78,
+      "req_lv": 58,
+      "armor_physical": 504
+    },
+    {
+      "code": 9,
+      "name_kor": "(구)세라믹 부츠",
+      "name_eng": "Ceramics Boots",
+      "rarity": 1,
+      "sell_price": 14500,
+      "icon": 78,
+      "req_lv": 58,
+      "armor_physical": 522
+    },
+    {
+      "code": 10,
+      "name_kor": "(구)갈라진 레드컬 부츠",
+      "name_eng": "Cracked Redcurl Boots",
+      "rarity": 0,
+      "sell_price": 12300,
+      "icon": 78,
+      "req_lv": 82,
+      "armor_physical": 720
+    },
+    {
+      "code": 11,
+      "name_kor": "그리즐드 수트 부츠",
+      "name_eng": "Grizzled Suit Boots",
+      "rarity": 2,
+      "sell_price": 25200,
+      "icon": 61,
+      "req_lv": 80,
+      "armor_physical": 810
+    },
+    {
+      "code": 12,
+      "name_kor": "(구)대륙의 신록 부츠",
+      "name_eng": "Green Verdure Boots of Continental",
+      "rarity": 2,
+      "sell_price": 12000,
+      "icon": 13,
+      "req_lv": 36,
+      "armor_physical": 414
+    },
+    {
+      "code": 13,
+      "name_kor": "보리수 부츠",
+      "name_eng": "Linden Tree Boots",
+      "rarity": 2,
+      "sell_price": 4200,
+      "icon": 14,
+      "req_lv": 12,
+      "armor_physical": 180
+    },
+    {
+      "code": 14,
+      "name_kor": "플라타닉 컴배턴트 부츠",
+      "name_eng": "Platanic Combatant Boots",
+      "rarity": 2,
+      "sell_price": 25200,
+      "icon": 59,
+      "req_lv": 80,
+      "armor_physical": 810
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)레드컬 부츠",
+      "name_eng": "Redcurl Boots",
+      "rarity": 1,
+      "sell_price": 20500,
+      "icon": 78,
+      "req_lv": 82,
+      "armor_physical": 738
+    },
+    {
+      "code": 16,
+      "name_kor": "허름한 스야 부츠",
+      "comment": "허름한 게 대수야! -시궁창 공주 패리스-",
+      "name_eng": "Shabby Sya Boots",
+      "rarity": 0,
+      "sell_price": 1500,
+      "icon": 9,
+      "req_lv": 10,
+      "armor_physical": 72
+    },
+    {
+      "code": 17,
+      "name_kor": "스프리건 팀버 부츠",
+      "name_eng": "Spriggan Timber Boots",
+      "rarity": 2,
+      "sell_price": 28200,
+      "icon": 60,
+      "req_lv": 90,
+      "armor_physical": 900
+    },
+    {
+      "code": 18,
+      "name_kor": "단단한 본 부츠",
+      "name_eng": "Stfii Bone Boots",
+      "rarity": 1,
+      "sell_price": 9500,
+      "icon": 130,
+      "req_lv": 38,
+      "armor_physical": 342
+    },
+    {
+      "code": 19,
+      "name_kor": "(구)단단한 세라믹 부츠",
+      "name_eng": "Stiff Ceramics Boots",
+      "rarity": 1,
+      "sell_price": 15500,
+      "icon": 78,
+      "req_lv": 62,
+      "armor_physical": 558
+    },
+    {
+      "code": 20,
+      "name_kor": "단단한 스야 부츠",
+      "name_eng": "Stiff Sya Boots",
+      "rarity": 1,
+      "sell_price": 3500,
+      "icon": 9,
+      "req_lv": 14,
+      "armor_physical": 126
+    },
+    {
+      "code": 21,
+      "name_kor": "스야 부츠",
+      "name_eng": "Sya Boots",
+      "rarity": 1,
+      "sell_price": 2500,
+      "icon": 9,
+      "req_lv": 10,
+      "armor_physical": 90
+    },
+    {
+      "code": 22,
+      "name_kor": "스야나무 껍질 부츠",
+      "name_eng": "Sya Skin Boots",
+      "rarity": 0,
+      "sell_price": 1600,
+      "icon": 21,
+      "req_lv": 8,
+      "armor_physical": 54
+    },
+    {
+      "code": 23,
+      "name_kor": "너덜너덜한 스야 부츠",
+      "comment": "아무리 실력우선이라지만 어느 정도 장비가 되야 하지 않겠어? -시궁창 공주 패리스-",
+      "name_eng": "Tatters Sya Boots",
+      "rarity": 0,
+      "sell_price": 300,
+      "icon": 9,
+      "req_lv": 2,
+      "armor_physical": 16
+    },
+    {
+      "code": 24,
+      "name_kor": "벌레먹은 본 부츠",
+      "name_eng": "Wormy Bone Boots",
+      "rarity": 0,
+      "sell_price": 5100,
+      "icon": 130,
+      "req_lv": 34,
+      "armor_physical": 288
+    },
+    {
+      "code": 25,
+      "name_kor": "마모된 스야 부츠",
+      "comment": "경력은 장비가 증명한다! 이 마모된 것 좀 봐라 -시궁창 공주 패리스-",
+      "name_eng": "Worn Sya Boots",
+      "rarity": 0,
+      "sell_price": 900,
+      "icon": 9,
+      "req_lv": 6,
+      "armor_physical": 36
+    },
+    {
+      "code": 26,
+      "name_kor": "크사낙스 프로텍터 부츠",
+      "name_eng": "Xanacs Protector Boots",
+      "rarity": 2,
+      "sell_price": 22200,
+      "icon": 29,
+      "req_lv": 70,
+      "armor_physical": 720
+    },
+    {
+      "code": 27,
+      "name_kor": "(구)본 경갑 부츠",
+      "name_eng": "Bone Light Boots",
+      "rarity": 1,
+      "sell_price": 13000,
+      "icon": 130,
+      "req_lv": 52,
+      "armor_physical": 468
+    },
+    {
+      "code": 28,
+      "name_kor": "(구)세라믹 경갑 부츠",
+      "name_eng": "Ceramics Light Boots",
+      "rarity": 1,
+      "sell_price": 19000,
+      "icon": 78,
+      "req_lv": 76,
+      "armor_physical": 684
+    },
+    {
+      "code": 29,
+      "name_kor": "(구)강화된 본 경갑 부츠",
+      "name_eng": "Hard Bone Light Boots",
+      "rarity": 1,
+      "sell_price": 14000,
+      "icon": 130,
+      "req_lv": 56,
+      "armor_physical": 504
+    },
+    {
+      "code": 30,
+      "name_kor": "(구)강화된 세라믹 경갑 부츠",
+      "name_eng": "Hard Ceramics Light Boots",
+      "rarity": 1,
+      "sell_price": 19500,
+      "icon": 78,
+      "req_lv": 78,
+      "armor_physical": 702
+    },
+    {
+      "code": 31,
+      "name_kor": "강화된 스야 경갑 부츠",
+      "name_eng": "Hard Sya Light Boots",
+      "rarity": 1,
+      "sell_price": 8000,
+      "icon": 9,
+      "req_lv": 32,
+      "armor_physical": 288
+    },
+    {
+      "code": 32,
+      "name_kor": "스야 경갑 부츠",
+      "name_eng": "Sya Light Boots",
+      "rarity": 1,
+      "sell_price": 7000,
+      "icon": 9,
+      "req_lv": 28,
+      "armor_physical": 252
+    },
+    {
+      "code": 33,
+      "name_kor": "(구)낡은 본 경갑 부츠",
+      "name_eng": "Used Bone Light Boots",
+      "rarity": 0,
+      "sell_price": 7800,
+      "icon": 130,
+      "req_lv": 52,
+      "armor_physical": 450
+    },
+    {
+      "code": 34,
+      "name_kor": "(구)낡은 세라믹 경갑 부츠",
+      "name_eng": "Used Ceramics Light Boots",
+      "rarity": 0,
+      "sell_price": 11400,
+      "icon": 78,
+      "req_lv": 76,
+      "armor_physical": 666
+    },
+    {
+      "code": 35,
+      "name_kor": "낡은 스야 경갑 부츠",
+      "name_eng": "Used Sya Light Boots",
+      "rarity": 0,
+      "sell_price": 4200,
+      "icon": 9,
+      "req_lv": 28,
+      "armor_physical": 234
+    },
+    {
+      "code": 36,
+      "name_kor": "유물 : 라트리의 본 슈즈",
+      "name_eng": "Legacy : Shoes of Latri",
+      "rarity": 2,
+      "sell_price": 13200,
+      "icon": 272,
+      "req_lv": 40,
+      "armor_physical": 450
+    },
+    {
+      "code": 37,
+      "name_kor": "유물 : 이슈타르의 세라믹 오버슈즈",
+      "name_eng": "Legacy : Shoes of Ishtar",
+      "rarity": 2,
+      "sell_price": 25200,
+      "icon": 282,
+      "req_lv": 80,
+      "armor_physical": 810
+    },
+    {
+      "code": 38,
+      "name_kor": "유물 : 큐빌레이의 세라믹 슈즈",
+      "name_eng": "Legacy : Shoes of Cubeley",
+      "rarity": 2,
+      "sell_price": 19200,
+      "icon": 291,
+      "req_lv": 60,
+      "armor_physical": 630
+    },
+    {
+      "code": 39,
+      "name_kor": "유물 : 성스러운 라트리의 본 슈즈",
+      "name_eng": "Legacy : Shoes of Latri",
+      "rarity": 2,
+      "sell_price": 16200,
+      "icon": 275,
+      "req_lv": 50,
+      "armor_physical": 540
+    },
+    {
+      "code": 40,
+      "name_kor": "유물 : 성스러운 이슈타르의 세라믹 오버슈즈",
+      "name_eng": "Legacy :Holy Shoes of Ishtar",
+      "rarity": 2,
+      "sell_price": 28200,
+      "icon": 288,
+      "req_lv": 90,
+      "armor_physical": 900
+    },
+    {
+      "code": 41,
+      "name_kor": "유물 : 성스러운 큐빌레이의 세라믹 슈즈",
+      "name_eng": "Legacy : Holy Shoes of Cubeley",
+      "rarity": 2,
+      "sell_price": 22200,
+      "icon": 294,
+      "req_lv": 70,
+      "armor_physical": 720
+    },
+    {
+      "code": 42,
+      "name_kor": "아쿠아 크루스테 부츠",
+      "name_eng": "Aqua Kruste Boots",
+      "rarity": 2,
+      "sell_price": 19200,
+      "icon": 11,
+      "req_lv": 60,
+      "armor_physical": 630
+    },
+    {
+      "code": 43,
+      "name_kor": "바이넨 플루크 부츠",
+      "name_eng": "Beinen Fluch Boots",
+      "rarity": 2,
+      "sell_price": 10200,
+      "icon": 14,
+      "req_lv": 30,
+      "armor_physical": 360
+    },
+    {
+      "code": 44,
+      "name_kor": "버설트 마크 부츠",
+      "name_eng": "Basalt Mark Boots",
+      "rarity": 2,
+      "sell_price": 16200,
+      "icon": 12,
+      "req_lv": 50,
+      "armor_physical": 540
+    },
+    {
+      "code": 45,
+      "name_kor": "갈라진 세라믹 부츠",
+      "name_eng": "Cracked Ceramics Boots",
+      "rarity": 0,
+      "sell_price": 10500,
+      "icon": 78,
+      "req_lv": 70,
+      "armor_physical": 612
+    },
+    {
+      "code": 46,
+      "name_kor": "세라믹 부츠",
+      "name_eng": "Ceramics Boots",
+      "rarity": 1,
+      "sell_price": 17500,
+      "icon": 78,
+      "req_lv": 70,
+      "armor_physical": 630
+    },
+    {
+      "code": 47,
+      "name_kor": "갈라진 레드컬 부츠",
+      "name_eng": "Cracked Redcurl Boots",
+      "rarity": 0,
+      "sell_price": 16500,
+      "icon": 78,
+      "req_lv": 110,
+      "armor_physical": 972
+    },
+    {
+      "code": 48,
+      "name_kor": "대륙의 신록 부츠",
+      "name_eng": "Green Verdure Boots of Continental",
+      "rarity": 2,
+      "sell_price": 13200,
+      "icon": 13,
+      "req_lv": 40,
+      "armor_physical": 450
+    },
+    {
+      "code": 49,
+      "name_kor": "자카시야의 축이동 뼈샌들",
+      "explain": "Y축 이동속도가 50 증가합니다.",
+      "name_eng": "Jakasiya's Axis Movement Bone Sandle",
+      "rarity": 4,
+      "sell_price": 44000,
+      "icon": 98,
+      "req_lv": 100,
+      "armor_physical": 1116
+    },
+    {
+      "code": 50,
+      "name_kor": "레드컬 부츠",
+      "name_eng": "Redcurl Boots",
+      "rarity": 1,
+      "sell_price": 27500,
+      "icon": 78,
+      "req_lv": 110,
+      "armor_physical": 990
+    },
+    {
+      "code": 51,
+      "name_kor": "비스케의 섬광부츠",
+      "explain": "대쉬중에 이동속도가 5%% 증가한다. 대쉬중에 맞으면 크리티컬 히트당함.",
+      "comment": "호호호 나잡아봐라 - 바이셔스 비스케",
+      "name_eng": "Schillerization Boots",
+      "rarity": 4,
+      "sell_price": 24000,
+      "icon": 100,
+      "req_lv": 50,
+      "armor_physical": 666
+    },
+    {
+      "code": 52,
+      "name_kor": "사룡의 뼈갑 신발",
+      "name_eng": "Spirrazzi's BoneBoots",
+      "rarity": 4,
+      "sell_price": 36000,
+      "icon": 99,
+      "req_lv": 80,
+      "armor_physical": 936
+    },
+    {
+      "code": 53,
+      "name_kor": "본 경갑 부츠",
+      "name_eng": "Bone Light Boots",
+      "rarity": 1,
+      "sell_price": 15000,
+      "icon": 130,
+      "req_lv": 60,
+      "armor_physical": 540
+    },
+    {
+      "code": 54,
+      "name_kor": "세라믹 경갑 부츠",
+      "name_eng": "Ceramics Light Boots",
+      "rarity": 1,
+      "sell_price": 25000,
+      "icon": 78,
+      "req_lv": 100,
+      "armor_physical": 900
+    },
+    {
+      "code": 55,
+      "name_kor": "낡은 본 경갑 부츠",
+      "name_eng": "Used Bone Light Boots",
+      "rarity": 0,
+      "sell_price": 9000,
+      "icon": 130,
+      "req_lv": 60,
+      "armor_physical": 522
+    },
+    {
+      "code": 56,
+      "name_kor": "낡은 세라믹 경갑 부츠",
+      "name_eng": "Used Ceramics Light Boots",
+      "rarity": 0,
+      "sell_price": 15000,
+      "icon": 78,
+      "req_lv": 100,
+      "armor_physical": 882
+    },
+    {
+      "code": 57,
+      "name_kor": "본 오버슈즈",
+      "name_eng": "Bone Over-Boots",
+      "rarity": 1,
+      "sell_price": 10000,
+      "icon": 130,
+      "req_lv": 40,
+      "armor_physical": 360
+    },
+    {
+      "code": 58,
+      "name_kor": "세라믹 오버슈즈",
+      "name_eng": "Ceramics Over-Shoes",
+      "rarity": 1,
+      "sell_price": 20000,
+      "icon": 78,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 59,
+      "name_kor": "오래된 세라믹 오버슈즈",
+      "name_eng": "Old Ceramics Over-Shoes",
+      "rarity": 0,
+      "sell_price": 12000,
+      "icon": 78,
+      "req_lv": 80,
+      "armor_physical": 702
+    },
+    {
+      "code": 60,
+      "name_kor": "부패한 본 오버슈즈",
+      "name_eng": "Rotten Bone Over-Boots",
+      "rarity": 0,
+      "sell_price": 6000,
+      "icon": 130,
+      "req_lv": 40,
+      "armor_physical": 342
+    },
+    {
+      "code": 61,
+      "name_kor": "본 사바톤",
+      "name_eng": "Bone Sabatons",
+      "rarity": 1,
+      "sell_price": 12500,
+      "icon": 130,
+      "req_lv": 50,
+      "armor_physical": 450
+    },
+    {
+      "code": 62,
+      "name_kor": "세라믹 사바톤",
+      "name_eng": "Ceramics Sabatons",
+      "rarity": 1,
+      "sell_price": 22500,
+      "icon": 78,
+      "req_lv": 90,
+      "armor_physical": 810
+    },
+    {
+      "code": 63,
+      "name_kor": "오래된 본 사바톤",
+      "name_eng": "Old Bone Sabatons",
+      "rarity": 0,
+      "sell_price": 7500,
+      "icon": 130,
+      "req_lv": 50,
+      "armor_physical": 432
+    },
+    {
+      "code": 64,
+      "name_kor": "구식 세라믹 사바톤",
+      "name_eng": "Outdated Ceramics Sabatons",
+      "rarity": 0,
+      "sell_price": 13500,
+      "icon": 78,
+      "req_lv": 90,
+      "armor_physical": 792
+    },
+    {
+      "code": 65,
+      "name_kor": "(구)본 오버슈즈",
+      "name_eng": "Bone Over-Boots",
+      "rarity": 1,
+      "sell_price": 10000,
+      "icon": 130,
+      "req_lv": 40,
+      "armor_physical": 360
+    },
+    {
+      "code": 66,
+      "name_kor": "(구)세라믹 오버슈즈",
+      "name_eng": "Ceramics Over-Shoes",
+      "rarity": 1,
+      "sell_price": 16000,
+      "icon": 78,
+      "req_lv": 64,
+      "armor_physical": 576
+    },
+    {
+      "code": 67,
+      "name_kor": "(구)향상된 본 오버슈즈",
+      "name_eng": "Improvement Bone Over-Boots",
+      "rarity": 1,
+      "sell_price": 11000,
+      "icon": 130,
+      "req_lv": 44,
+      "armor_physical": 396
+    },
+    {
+      "code": 68,
+      "name_kor": "(구)향상된 세라믹 오버슈즈",
+      "name_eng": "Improvement Ceramics Over-Shoes",
+      "rarity": 1,
+      "sell_price": 17000,
+      "icon": 78,
+      "req_lv": 68,
+      "armor_physical": 612
+    },
+    {
+      "code": 69,
+      "name_kor": "향상된 스야 오버슈즈",
+      "name_eng": "Improvement Sya Over-Shoes",
+      "rarity": 1,
+      "sell_price": 5000,
+      "icon": 9,
+      "req_lv": 20,
+      "armor_physical": 180
+    },
+    {
+      "code": 70,
+      "name_kor": "(구)오래된 세라믹 오버슈즈",
+      "name_eng": "Old Ceramics Over-Shoes",
+      "rarity": 0,
+      "sell_price": 9600,
+      "icon": 78,
+      "req_lv": 64,
+      "armor_physical": 558
+    },
+    {
+      "code": 71,
+      "name_kor": "오래된 스야 오버슈즈",
+      "name_eng": "Old Sya Over-Shoes",
+      "rarity": 0,
+      "sell_price": 2400,
+      "icon": 9,
+      "req_lv": 16,
+      "armor_physical": 126
+    },
+    {
+      "code": 72,
+      "name_kor": "(구)부패한 본 오버슈즈",
+      "name_eng": "Rotten Bone Over-Boots",
+      "rarity": 0,
+      "sell_price": 6000,
+      "icon": 130,
+      "req_lv": 40,
+      "armor_physical": 342
+    },
+    {
+      "code": 73,
+      "name_kor": "근성의 집결체 오버슈즈",
+      "name_eng": "Spirit Concentration Over-shoes",
+      "rarity": 2,
+      "sell_price": 22200,
+      "icon": 30,
+      "req_lv": 70,
+      "armor_physical": 720
+    },
+    {
+      "code": 74,
+      "name_kor": "스야 오버슈즈",
+      "name_eng": "Sya Over-Shoes",
+      "rarity": 1,
+      "sell_price": 4000,
+      "icon": 9,
+      "req_lv": 16,
+      "armor_physical": 144
+    },
+    {
+      "code": 75,
+      "name_kor": "(구)본 사바톤",
+      "name_eng": "Bone Sabatons",
+      "rarity": 1,
+      "sell_price": 11500,
+      "icon": 130,
+      "req_lv": 46,
+      "armor_physical": 414
+    },
+    {
+      "code": 76,
+      "name_kor": "(구)세라믹 사바톤",
+      "name_eng": "Ceramics Sabatons",
+      "rarity": 1,
+      "sell_price": 17500,
+      "icon": 78,
+      "req_lv": 70,
+      "armor_physical": 630
+    },
+    {
+      "code": 77,
+      "name_kor": "마이어 로얄 가더 사바톤",
+      "name_eng": "Myre Royal Guarder Sabaton",
+      "rarity": 2,
+      "sell_price": 22200,
+      "icon": 28,
+      "req_lv": 70,
+      "armor_physical": 720
+    },
+    {
+      "code": 78,
+      "name_kor": "(구)오래된 본 사바톤",
+      "name_eng": "Old Bone Sabatons",
+      "rarity": 0,
+      "sell_price": 6900,
+      "icon": 130,
+      "req_lv": 46,
+      "armor_physical": 396
+    },
+    {
+      "code": 79,
+      "name_kor": "(구)구식 세라믹 사바톤",
+      "name_eng": "Outdated Ceramics Sabatons",
+      "rarity": 0,
+      "sell_price": 10500,
+      "icon": 78,
+      "req_lv": 70,
+      "armor_physical": 612
+    },
+    {
+      "code": 80,
+      "name_kor": "구식 스야 사바톤",
+      "name_eng": "Outdated Sya Sabatons",
+      "rarity": 0,
+      "sell_price": 3300,
+      "icon": 9,
+      "req_lv": 22,
+      "armor_physical": 180
+    },
+    {
+      "code": 81,
+      "name_kor": "(구)견고한 본 사바톤",
+      "name_eng": "Strong Bone Sabatons",
+      "rarity": 1,
+      "sell_price": 12500,
+      "icon": 130,
+      "req_lv": 50,
+      "armor_physical": 450
+    },
+    {
+      "code": 82,
+      "name_kor": "(구)견고한 세라믹 사바톤",
+      "name_eng": "Strong Ceramics Sabatons",
+      "rarity": 1,
+      "sell_price": 18500,
+      "icon": 78,
+      "req_lv": 74,
+      "armor_physical": 666
+    },
+    {
+      "code": 83,
+      "name_kor": "견고한 스야 사바톤",
+      "name_eng": "Strong Sya Sabatons",
+      "rarity": 1,
+      "sell_price": 6500,
+      "icon": 9,
+      "req_lv": 26,
+      "armor_physical": 234
+    },
+    {
+      "code": 84,
+      "name_kor": "스야 사바톤",
+      "name_eng": "Sya Sabatons",
+      "rarity": 1,
+      "sell_price": 5500,
+      "icon": 9,
+      "req_lv": 22,
+      "armor_physical": 198
+    },
+    {
+      "code": 85,
+      "name_kor": "엘븐 경갑 샌들",
+      "name_eng": "Elven Light Sandals",
+      "rarity": 3,
+      "sell_price": 9600,
+      "icon": 14,
+      "req_lv": 20,
+      "armor_physical": 324
+    },
+    {
+      "code": 86,
+      "name_kor": "떡갈나무 슈즈",
+      "name_eng": "Oak Tree Shoes",
+      "rarity": 2,
+      "sell_price": 7200,
+      "icon": 14,
+      "req_lv": 22,
+      "armor_physical": 270
+    }
+  ]
+}

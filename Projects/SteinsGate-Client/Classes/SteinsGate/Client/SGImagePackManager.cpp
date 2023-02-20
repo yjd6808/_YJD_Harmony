@@ -82,24 +82,24 @@ SGImagePack* SGImagePackManager::getAvatarPack(CharType_t charType, AvatarType_t
 	return m_AvatarPacks[charType][part];
 }
 
-SGImagePack* SGImagePackManager::getWeaponPack(CharType_t charType, WeaponType_t weaponType) {
-	DebugAssertMsg(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다.");
+SGImagePack* SGImagePackManager::getWeaponPack(WeaponType_t weaponType) {
 	DebugAssertMsg(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
 
-	if (m_WeaponPacks[charType][weaponType] == nullptr) {
-		const SGString& npkName = SGGlobal::get()->getWeaponNpkName(charType, weaponType);
-		m_WeaponPacks[charType][weaponType] = getPack(npkName);
+	if (m_WeaponPacks[weaponType] == nullptr) {
+		const SGString& npkName = SGGlobal::get()->getWeaponNpkName(weaponType);
+		m_WeaponPacks[weaponType] = getPack(npkName);
 	}
 
-	return m_WeaponPacks[charType][weaponType];
+	return m_WeaponPacks[weaponType];
 }
 
 int SGImagePackManager::getAvatarPackIndex(CharType_t charType, AvatarType_t avatarType) {
 	return getAvatarPack(charType, avatarType)->getPackIndex();
 }
 
-int SGImagePackManager::getWeaponPackIndex(CharType_t charType, WeaponType_t weaponType) {
-	return getWeaponPack(charType, weaponType)->getPackIndex();
+
+int SGImagePackManager::getWeaponPackIndex(WeaponType_t weaponType) {
+	return getWeaponPack(weaponType)->getPackIndex();
 }
 
 

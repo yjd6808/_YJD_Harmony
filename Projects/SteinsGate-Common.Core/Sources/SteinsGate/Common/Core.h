@@ -15,6 +15,7 @@
 #include <JCore/Math.h>
 #include <JCore/Time.h>
 #include <JCore/Stream.h>
+#include <JCore/Bit.h>
 
 #include <JCore/Primitives/StaticString.h>
 
@@ -56,6 +57,8 @@ using SGString = JCore::String;
 template <Int32U Size>
 using SGStaticString = JCore::StaticString<Size>;
 using SGPath = JCore::Path;
+using SGFile = JCore::File;
+using SGDirectory = JCore::Directory;
 using SGStringUtil = JCore::StringUtil;
 
 template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
@@ -100,6 +103,8 @@ using SGDateTime = JCore::DateTime;
 using SGNormalLock = JCore::NormalLock;
 using SGRecursiveLock = JCore::RecursiveLock;
 
+template <typename... TArgs>
+using SGTuple = JCore::Tuple<TArgs...>;
 
 
 template <typename T, typename TAllocator = JCore::DefaultAllocator>

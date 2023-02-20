@@ -70,6 +70,23 @@ public:
 		this->SetAtUnsafe(this->m_iSize++, data);
 	}
 
+	template <Int32U Size>
+	void PushBack(const T(&data)[Size]) {
+		this->ExpandIfNeeded(this->Size() + Size);
+
+		for (int i = 0; i < Size; ++i) {
+			this->SetAtUnsafe(this->m_iSize++, data[i]);
+		}
+	}
+
+	void PushBack(T* data, int count) {
+		this->ExpandIfNeeded(this->Size() + count);
+
+		for (int i = 0; i < count; ++i) {
+			this->SetAtUnsafe(this->m_iSize++, data[i]);
+		}
+	}
+
 	void PushBack(T&& data) {
 		if (this->IsFull()) {
 			this->ExpandAuto();

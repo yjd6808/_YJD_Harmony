@@ -1,0 +1,816 @@
+{
+  "heavy": [
+    {
+      "code": 1,
+      "name_kor": "(구)미늘 아미스",
+      "name_eng": "Barb Amice",
+      "rarity": 1,
+      "sell_price": 16100,
+      "icon": 139,
+      "req_lv": 46,
+      "armor_physical": 736
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)체인 아미스",
+      "name_eng": "Chain Amice",
+      "rarity": 1,
+      "sell_price": 24500,
+      "icon": 185,
+      "req_lv": 70,
+      "armor_physical": 1120
+    },
+    {
+      "code": 3,
+      "name_kor": "제국 중견장",
+      "name_eng": "Empire Heavy Epaulette",
+      "rarity": 3,
+      "sell_price": 12000,
+      "icon": 26,
+      "req_lv": 20,
+      "armor_physical": 576
+    },
+    {
+      "code": 4,
+      "name_kor": "구식 링 아미스",
+      "name_eng": "Outdated Ring Amice",
+      "rarity": 0,
+      "sell_price": 5500,
+      "icon": 163,
+      "req_lv": 22,
+      "armor_physical": 320
+    },
+    {
+      "code": 5,
+      "name_kor": "링 아미스",
+      "name_eng": "Ring Amice",
+      "rarity": 1,
+      "sell_price": 7700,
+      "icon": 163,
+      "req_lv": 22,
+      "armor_physical": 352
+    },
+    {
+      "code": 6,
+      "name_kor": "(구)허술한 미늘 아미스",
+      "name_eng": "Shabby Barb Amice",
+      "rarity": 0,
+      "sell_price": 11500,
+      "icon": 139,
+      "req_lv": 46,
+      "armor_physical": 704
+    },
+    {
+      "code": 7,
+      "name_kor": "(구)허술한 체인 아미스",
+      "name_eng": "Shabby Chain Amice",
+      "rarity": 0,
+      "sell_price": 17500,
+      "icon": 185,
+      "req_lv": 70,
+      "armor_physical": 1088
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)견고한 미늘 아미스",
+      "name_eng": "Strong Barb Amice",
+      "rarity": 1,
+      "sell_price": 17500,
+      "icon": 139,
+      "req_lv": 50,
+      "armor_physical": 800
+    },
+    {
+      "code": 9,
+      "name_kor": "(구)견고한 체인 아미스",
+      "name_eng": "Strong Chain Amice",
+      "rarity": 1,
+      "sell_price": 25900,
+      "icon": 185,
+      "req_lv": 74,
+      "armor_physical": 1184
+    },
+    {
+      "code": 10,
+      "name_kor": "견고한 링 아미스",
+      "name_eng": "Strong Ring Amice",
+      "rarity": 1,
+      "sell_price": 9100,
+      "icon": 163,
+      "req_lv": 26,
+      "armor_physical": 416
+    },
+    {
+      "code": 11,
+      "name_kor": "크림슨 비네트 아미스",
+      "name_eng": "Crimson Vignette Amice",
+      "rarity": 2,
+      "sell_price": 29600,
+      "icon": 44,
+      "req_lv": 70,
+      "armor_physical": 1280
+    },
+    {
+      "code": 12,
+      "name_kor": "유물 : 이슈타르의 체인 맨틀",
+      "name_eng": "Legacy : Shoulder of Ishtar",
+      "rarity": 2,
+      "sell_price": 33600,
+      "icon": 306,
+      "req_lv": 80,
+      "armor_physical": 1440
+    },
+    {
+      "code": 13,
+      "name_kor": "유물 : 성스러운 이슈타르의 체인 맨틀",
+      "name_eng": "Legacy : Holy Shoulder of Ishtar",
+      "rarity": 2,
+      "sell_price": 37600,
+      "icon": 311,
+      "req_lv": 90,
+      "armor_physical": 1600
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)미늘 맨틀",
+      "name_eng": "Barb Mantle",
+      "rarity": 1,
+      "sell_price": 18200,
+      "icon": 139,
+      "req_lv": 52,
+      "armor_physical": 832
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)촘촘한 미늘 맨틀",
+      "name_eng": "Close Barb Mantle",
+      "rarity": 1,
+      "sell_price": 19600,
+      "icon": 139,
+      "req_lv": 56,
+      "armor_physical": 896
+    },
+    {
+      "code": 16,
+      "name_kor": "(구)촘촘한 체인 맨틀",
+      "name_eng": "Close Chain Mantle",
+      "rarity": 1,
+      "sell_price": 27300,
+      "icon": 185,
+      "req_lv": 78,
+      "armor_physical": 1248
+    },
+    {
+      "code": 17,
+      "name_kor": "(구)체인 맨틀",
+      "name_eng": "Chain Mantle",
+      "rarity": 1,
+      "sell_price": 26600,
+      "icon": 185,
+      "req_lv": 76,
+      "armor_physical": 1216
+    },
+    {
+      "code": 18,
+      "name_kor": "촘촘한 링 맨틀",
+      "name_eng": "Close Ring Mantle",
+      "rarity": 1,
+      "sell_price": 11200,
+      "icon": 163,
+      "req_lv": 32,
+      "armor_physical": 512
+    },
+    {
+      "code": 19,
+      "name_kor": "링 맨틀",
+      "name_eng": "Ring Mantle",
+      "rarity": 1,
+      "sell_price": 9800,
+      "icon": 163,
+      "req_lv": 28,
+      "armor_physical": 448
+    },
+    {
+      "code": 20,
+      "name_kor": "허술한 링 맨틀",
+      "name_eng": "Shabby Ring Mantle",
+      "rarity": 0,
+      "sell_price": 7000,
+      "icon": 163,
+      "req_lv": 28,
+      "armor_physical": 416
+    },
+    {
+      "code": 21,
+      "name_kor": "(구)낡은 미늘 맨틀",
+      "name_eng": "Used Barb Mantle",
+      "rarity": 0,
+      "sell_price": 13000,
+      "icon": 139,
+      "req_lv": 52,
+      "armor_physical": 800
+    },
+    {
+      "code": 22,
+      "name_kor": "(구)낡은 체인 맨틀",
+      "name_eng": "Used Chain Mantle",
+      "rarity": 0,
+      "sell_price": 19000,
+      "icon": 185,
+      "req_lv": 76,
+      "armor_physical": 1184
+    },
+    {
+      "code": 23,
+      "name_kor": "미늘 아미스",
+      "name_eng": "Barb Amice",
+      "rarity": 1,
+      "sell_price": 17500,
+      "icon": 139,
+      "req_lv": 50,
+      "armor_physical": 800
+    },
+    {
+      "code": 24,
+      "name_kor": "체인 아미스",
+      "name_eng": "Chain Amice",
+      "rarity": 1,
+      "sell_price": 31500,
+      "icon": 185,
+      "req_lv": 90,
+      "armor_physical": 1440
+    },
+    {
+      "code": 25,
+      "name_kor": "허술한 미늘 아미스",
+      "name_eng": "Shabby Barb Amice",
+      "rarity": 0,
+      "sell_price": 12500,
+      "icon": 139,
+      "req_lv": 50,
+      "armor_physical": 768
+    },
+    {
+      "code": 26,
+      "name_kor": "허술한 체인 아미스",
+      "name_eng": "Shabby Chain Amice",
+      "rarity": 0,
+      "sell_price": 22500,
+      "icon": 185,
+      "req_lv": 90,
+      "armor_physical": 1408
+    },
+    {
+      "code": 27,
+      "name_kor": "미늘 맨틀",
+      "name_eng": "Barb Mantle",
+      "rarity": 1,
+      "sell_price": 21000,
+      "icon": 139,
+      "req_lv": 60,
+      "armor_physical": 960
+    },
+    {
+      "code": 28,
+      "name_kor": "체인 맨틀",
+      "name_eng": "Chain Mantle",
+      "rarity": 1,
+      "sell_price": 35000,
+      "icon": 185,
+      "req_lv": 100,
+      "armor_physical": 1600
+    },
+    {
+      "code": 29,
+      "name_kor": "낡은 미늘 맨틀",
+      "name_eng": "Used Barb Mantle",
+      "rarity": 0,
+      "sell_price": 15000,
+      "icon": 139,
+      "req_lv": 60,
+      "armor_physical": 928
+    },
+    {
+      "code": 30,
+      "name_kor": "낡은 체인 맨틀",
+      "name_eng": "Used Chain Mantle",
+      "rarity": 0,
+      "sell_price": 25000,
+      "icon": 185,
+      "req_lv": 100,
+      "armor_physical": 1568
+    },
+    {
+      "code": 31,
+      "name_kor": "미늘 숄더패드",
+      "name_eng": "Barb Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 14000,
+      "icon": 139,
+      "req_lv": 40,
+      "armor_physical": 640
+    },
+    {
+      "code": 32,
+      "name_kor": "체인 숄더패드",
+      "name_eng": "Chain Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 28000,
+      "icon": 185,
+      "req_lv": 80,
+      "armor_physical": 1280
+    },
+    {
+      "code": 33,
+      "name_kor": "마모된 미늘 숄더패드",
+      "name_eng": "Rubbed Barb Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 10000,
+      "icon": 139,
+      "req_lv": 40,
+      "armor_physical": 608
+    },
+    {
+      "code": 34,
+      "name_kor": "마모된 체인 숄더패드",
+      "name_eng": "Rubbed Chain Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 28000,
+      "icon": 185,
+      "req_lv": 80,
+      "armor_physical": 1248
+    },
+    {
+      "code": 35,
+      "name_kor": "체인 숄더",
+      "name_eng": "Chain Shoulder",
+      "rarity": 1,
+      "sell_price": 24500,
+      "icon": 185,
+      "req_lv": 70,
+      "armor_physical": 1120
+    },
+    {
+      "code": 36,
+      "name_kor": "코부르크식 숄더",
+      "name_eng": "Coburg Shoulder",
+      "rarity": 1,
+      "sell_price": 38500,
+      "icon": 185,
+      "req_lv": 110,
+      "armor_physical": 1760
+    },
+    {
+      "code": 37,
+      "name_kor": "드래고닉 스킨 숄더",
+      "name_eng": "Dragonic Skin Shoulder",
+      "rarity": 2,
+      "sell_price": 25600,
+      "icon": 23,
+      "req_lv": 60,
+      "armor_physical": 1120
+    },
+    {
+      "code": 38,
+      "name_kor": "간츠완",
+      "explain": "대쉬공격시 20%%의 추가데미지를 줍니다.",
+      "name_eng": "Gantzwan",
+      "rarity": 4,
+      "sell_price": 30000,
+      "icon": 24,
+      "req_lv": 50,
+      "armor_physical": 1184
+    },
+    {
+      "code": 39,
+      "name_kor": "제라드의 화염머리",
+      "name_eng": "Gerrad's Flamehead",
+      "rarity": 4,
+      "sell_price": 55000,
+      "icon": 100,
+      "req_lv": 100,
+      "armor_physical": 1984
+    },
+    {
+      "code": 40,
+      "name_kor": "자이언트 터틀 투구",
+      "explain": "크리티컬을 당했을 때 10%%의 데미지를 감소시킵니다.",
+      "name_eng": "Giant Turtle Helm",
+      "rarity": 4,
+      "sell_price": 35000,
+      "icon": 101,
+      "req_lv": 60,
+      "armor_physical": 1344
+    },
+    {
+      "code": 41,
+      "name_kor": "멧세 쿼드라트 숄더",
+      "name_eng": "Messe Quadrat Shoulder",
+      "rarity": 2,
+      "sell_price": 17600,
+      "icon": 25,
+      "req_lv": 40,
+      "armor_physical": 800
+    },
+    {
+      "code": 42,
+      "name_kor": "녹슨 체인 숄더",
+      "name_eng": "Rusty Chain Shoulder",
+      "rarity": 0,
+      "sell_price": 17500,
+      "icon": 185,
+      "req_lv": 70,
+      "armor_physical": 1088
+    },
+    {
+      "code": 43,
+      "name_kor": "녹슨 코부르크식 숄더",
+      "name_eng": "Rusty Coburg Shoulder",
+      "rarity": 0,
+      "sell_price": 27500,
+      "icon": 185,
+      "req_lv": 110,
+      "armor_physical": 1728
+    },
+    {
+      "code": 44,
+      "name_kor": "슈바르츠 크라이스 숄더",
+      "name_eng": "Schwarz Kreis Shoulder",
+      "rarity": 2,
+      "sell_price": 13600,
+      "icon": 26,
+      "req_lv": 30,
+      "armor_physical": 640
+    },
+    {
+      "code": 45,
+      "name_kor": "샤이닝 로리카 숄더",
+      "name_eng": "Shining Lorica Shoulder",
+      "rarity": 2,
+      "sell_price": 21600,
+      "icon": 24,
+      "req_lv": 50,
+      "armor_physical": 960
+    },
+    {
+      "code": 46,
+      "name_kor": "(구)미늘 숄더패드",
+      "name_eng": "Barb Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 14000,
+      "icon": 139,
+      "req_lv": 40,
+      "armor_physical": 640
+    },
+    {
+      "code": 47,
+      "name_kor": "(구)체인 숄더패드",
+      "name_eng": "Chain Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 22400,
+      "icon": 185,
+      "req_lv": 64,
+      "armor_physical": 1024
+    },
+    {
+      "code": 48,
+      "name_kor": "(구)튼튼한 미늘 숄더패드",
+      "name_eng": "Firm Barb Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 15400,
+      "icon": 139,
+      "req_lv": 44,
+      "armor_physical": 704
+    },
+    {
+      "code": 49,
+      "name_kor": "(구)튼튼한 체인 숄더패드",
+      "name_eng": "Firm Chain Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 23800,
+      "icon": 185,
+      "req_lv": 68,
+      "armor_physical": 1088
+    },
+    {
+      "code": 50,
+      "name_kor": "튼튼한 링 숄더패드",
+      "name_eng": "Firm Ring Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 7000,
+      "icon": 163,
+      "req_lv": 20,
+      "armor_physical": 320
+    },
+    {
+      "code": 51,
+      "name_kor": "링 숄더패드",
+      "name_eng": "Ring Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 5600,
+      "icon": 163,
+      "req_lv": 16,
+      "armor_physical": 256
+    },
+    {
+      "code": 52,
+      "name_kor": "(구)마모된 미늘 숄더패드",
+      "name_eng": "Rubbed Barb Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 10000,
+      "icon": 139,
+      "req_lv": 40,
+      "armor_physical": 608
+    },
+    {
+      "code": 53,
+      "name_kor": "(구)마모된 체인 숄더패드",
+      "name_eng": "Rubbed Chain Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 22400,
+      "icon": 185,
+      "req_lv": 64,
+      "armor_physical": 992
+    },
+    {
+      "code": 54,
+      "name_kor": "마모된 링 숄더패드",
+      "name_eng": "Rubbed Ring Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 4000,
+      "icon": 163,
+      "req_lv": 16,
+      "armor_physical": 224
+    },
+    {
+      "code": 55,
+      "name_kor": "아미 숄더",
+      "name_eng": "Army Shoulder",
+      "rarity": 2,
+      "sell_price": 5600,
+      "icon": 26,
+      "req_lv": 12,
+      "armor_physical": 320
+    },
+    {
+      "code": 56,
+      "name_kor": "미늘 숄더",
+      "name_eng": "Barb Shoulder",
+      "rarity": 1,
+      "sell_price": 11900,
+      "icon": 139,
+      "req_lv": 34,
+      "armor_physical": 544
+    },
+    {
+      "code": 57,
+      "name_kor": "초경량 카볼라이트 숄더",
+      "name_eng": "Carbollite Shoulder",
+      "rarity": 2,
+      "sell_price": 29600,
+      "icon": 45,
+      "req_lv": 70,
+      "armor_physical": 1280
+    },
+    {
+      "code": 58,
+      "name_kor": "(구)체인 숄더",
+      "name_eng": "Chain Shoulder",
+      "rarity": 1,
+      "sell_price": 20300,
+      "icon": 185,
+      "req_lv": 58,
+      "armor_physical": 928
+    },
+    {
+      "code": 59,
+      "name_kor": "(구)코부르크식 숄더",
+      "name_eng": "Coburg Shoulder",
+      "rarity": 1,
+      "sell_price": 28700,
+      "icon": 185,
+      "req_lv": 82,
+      "armor_physical": 1312
+    },
+    {
+      "code": 60,
+      "name_kor": "흉갑 토드퍼스 숄더",
+      "name_eng": "Curse Armor Todpurs Shoulder",
+      "rarity": 2,
+      "sell_price": 37600,
+      "icon": 76,
+      "req_lv": 90,
+      "armor_physical": 1600
+    },
+    {
+      "code": 61,
+      "name_kor": "(구)드래고닉 스킨 숄더",
+      "name_eng": "Dragonic Skin Shoulder",
+      "rarity": 2,
+      "sell_price": 28800,
+      "icon": 23,
+      "req_lv": 68,
+      "armor_physical": 1248
+    },
+    {
+      "code": 62,
+      "name_kor": "EL-XM25 숄더",
+      "name_eng": "EL-XM25 Shoulder",
+      "rarity": 2,
+      "sell_price": 33600,
+      "icon": 79,
+      "req_lv": 80,
+      "armor_physical": 1440
+    },
+    {
+      "code": 63,
+      "name_kor": "ES-YL11 숄더",
+      "name_eng": "ES-YL11 Shoulder",
+      "rarity": 2,
+      "sell_price": 37600,
+      "icon": 80,
+      "req_lv": 90,
+      "armor_physical": 1600
+    },
+    {
+      "code": 64,
+      "name_kor": "비열한 펠 비스킹 숄더",
+      "name_eng": "Fel Visking Shoulder",
+      "rarity": 2,
+      "sell_price": 33600,
+      "icon": 77,
+      "req_lv": 80,
+      "armor_physical": 1440
+    },
+    {
+      "code": 65,
+      "name_kor": "고어 브라스 숄더",
+      "name_eng": "Gore Brass Shoulder",
+      "rarity": 2,
+      "sell_price": 33600,
+      "icon": 75,
+      "req_lv": 80,
+      "armor_physical": 1440
+    },
+    {
+      "code": 66,
+      "name_kor": "멜티 블러드 숄더",
+      "name_eng": "Melty Blood Shoulder",
+      "rarity": 2,
+      "sell_price": 29600,
+      "icon": 43,
+      "req_lv": 70,
+      "armor_physical": 1280
+    },
+    {
+      "code": 67,
+      "name_kor": "(구)멧세 쿼드라트 숄더",
+      "name_eng": "Messe Quadrat Shoulder",
+      "rarity": 2,
+      "sell_price": 16800,
+      "icon": 25,
+      "req_lv": 38,
+      "armor_physical": 768
+    },
+    {
+      "code": 68,
+      "name_kor": "오네이트 블리츠 숄더",
+      "name_eng": "Ornate Blitz Shoulder",
+      "rarity": 2,
+      "sell_price": 37600,
+      "icon": 78,
+      "req_lv": 90,
+      "armor_physical": 1600
+    },
+    {
+      "code": 69,
+      "name_kor": "녹슨 미늘 숄더",
+      "name_eng": "Rusty Barb Shoulder",
+      "rarity": 0,
+      "sell_price": 8500,
+      "icon": 139,
+      "req_lv": 34,
+      "armor_physical": 512
+    },
+    {
+      "code": 70,
+      "name_kor": "(구)녹슨 체인 숄더",
+      "name_eng": "Rusty Chain Shoulder",
+      "rarity": 0,
+      "sell_price": 14500,
+      "icon": 185,
+      "req_lv": 58,
+      "armor_physical": 896
+    },
+    {
+      "code": 71,
+      "name_kor": "(구)녹슨 코부르크식 숄더",
+      "name_eng": "Rusty Coburg Shoulder",
+      "rarity": 0,
+      "sell_price": 20500,
+      "icon": 185,
+      "req_lv": 82,
+      "armor_physical": 1280
+    },
+    {
+      "code": 72,
+      "name_kor": "링 숄더",
+      "name_eng": "Ring Shoulder",
+      "rarity": 1,
+      "sell_price": 3500,
+      "icon": 163,
+      "req_lv": 10,
+      "armor_physical": 160
+    },
+    {
+      "code": 73,
+      "name_kor": "녹슨 링 숄더",
+      "name_eng": "Rusty Ring Shoulder",
+      "rarity": 0,
+      "sell_price": 2500,
+      "icon": 163,
+      "req_lv": 10,
+      "armor_physical": 128
+    },
+    {
+      "code": 74,
+      "name_kor": "쇼난 어깨 보호구",
+      "name_eng": "Shonan Shoulder Protector",
+      "rarity": 2,
+      "sell_price": 9600,
+      "icon": 26,
+      "req_lv": 22,
+      "armor_physical": 480
+    },
+    {
+      "code": 75,
+      "name_kor": "(구)슈바르츠 크라이스 숄더",
+      "name_eng": "Schwarz Kreis Shoulder",
+      "rarity": 2,
+      "sell_price": 14400,
+      "icon": 26,
+      "req_lv": 32,
+      "armor_physical": 672
+    },
+    {
+      "code": 76,
+      "name_kor": "(구)샤이닝 로리카 숄더",
+      "name_eng": "Shining Lorica Shoulder",
+      "rarity": 2,
+      "sell_price": 24000,
+      "icon": 24,
+      "req_lv": 56,
+      "armor_physical": 1056
+    },
+    {
+      "code": 77,
+      "name_kor": "단단한 미늘 숄더",
+      "name_eng": "Stiff Barb Shoulder",
+      "rarity": 1,
+      "sell_price": 13300,
+      "icon": 139,
+      "req_lv": 38,
+      "armor_physical": 608
+    },
+    {
+      "code": 78,
+      "name_kor": "(구)단단한 체인 숄더",
+      "name_eng": "Stiff Chain Shoulder",
+      "rarity": 1,
+      "sell_price": 21700,
+      "icon": 185,
+      "req_lv": 62,
+      "armor_physical": 992
+    },
+    {
+      "code": 79,
+      "name_kor": "단단한 링 숄더",
+      "name_eng": "Stiff Ring Shoulder",
+      "rarity": 1,
+      "sell_price": 4900,
+      "icon": 163,
+      "req_lv": 14,
+      "armor_physical": 224
+    },
+    {
+      "code": 80,
+      "name_kor": "낡아빠진 링 숄더",
+      "name_eng": "Used Ring Shoulder",
+      "rarity": 0,
+      "sell_price": 1500,
+      "icon": 163,
+      "req_lv": 6,
+      "armor_physical": 64
+    },
+    {
+      "code": 81,
+      "name_kor": "닳아빠진 링 숄더",
+      "name_eng": "Worn Ring Shoulder",
+      "rarity": 0,
+      "sell_price": 500,
+      "icon": 163,
+      "req_lv": 2,
+      "armor_physical": 29
+    }
+  ]
+}

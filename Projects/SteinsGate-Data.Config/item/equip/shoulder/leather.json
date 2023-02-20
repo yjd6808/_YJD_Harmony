@@ -1,0 +1,827 @@
+{
+  "leather": [
+    {
+      "code": 1,
+      "name_kor": "(구)페더레더 아미스",
+      "name_eng": "Feather Leather Amice",
+      "rarity": 1,
+      "sell_price": 11500,
+      "icon": 26,
+      "req_lv": 46,
+      "armor_physical": 368
+    },
+    {
+      "code": 2,
+      "name_kor": "가죽 아미스",
+      "name_eng": "Leather Amice",
+      "rarity": 1,
+      "sell_price": 5500,
+      "icon": 2,
+      "req_lv": 22,
+      "armor_physical": 176
+    },
+    {
+      "code": 3,
+      "name_kor": "(구)신형 페더레더 아미스",
+      "name_eng": "Novelty Feather Leather Amice",
+      "rarity": 1,
+      "sell_price": 12500,
+      "icon": 26,
+      "req_lv": 50,
+      "armor_physical": 400
+    },
+    {
+      "code": 4,
+      "name_kor": "신형 가죽 아미스",
+      "name_eng": "Novelty Leather Amice",
+      "rarity": 1,
+      "sell_price": 6500,
+      "icon": 2,
+      "req_lv": 26,
+      "armor_physical": 208
+    },
+    {
+      "code": 5,
+      "name_kor": "(구)신형 스웨이드 아미스",
+      "name_eng": "Novelty Suede Amice",
+      "rarity": 1,
+      "sell_price": 18500,
+      "icon": 49,
+      "req_lv": 74,
+      "armor_physical": 592
+    },
+    {
+      "code": 6,
+      "name_kor": "(구)구식 페더레더 아미스",
+      "name_eng": "Outdated Feather Leather Amice",
+      "rarity": 0,
+      "sell_price": 6900,
+      "icon": 26,
+      "req_lv": 46,
+      "armor_physical": 352
+    },
+    {
+      "code": 7,
+      "name_kor": "구식 가죽 아미스",
+      "name_eng": "Outdated Leather Amice",
+      "rarity": 0,
+      "sell_price": 3300,
+      "icon": 2,
+      "req_lv": 22,
+      "armor_physical": 160
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)구식 스웨이드 아미스",
+      "name_eng": "Outdated Suede Amice",
+      "rarity": 0,
+      "sell_price": 10500,
+      "icon": 49,
+      "req_lv": 70,
+      "armor_physical": 544
+    },
+    {
+      "code": 9,
+      "name_kor": "(구)스웨이드 아미스",
+      "name_eng": "Suede Amice",
+      "rarity": 1,
+      "sell_price": 17500,
+      "icon": 49,
+      "req_lv": 70,
+      "armor_physical": 560
+    },
+    {
+      "code": 10,
+      "name_kor": "유물 : 성스러운 이슈타르의 스웨이드 맨틀",
+      "name_eng": "Legacy : Holy Shoulder of Ishtar",
+      "rarity": 2,
+      "sell_price": 28200,
+      "icon": 263,
+      "req_lv": 90,
+      "armor_physical": 800
+    },
+    {
+      "code": 11,
+      "name_kor": "유물 : 이슈타르의 스웨이드 맨틀",
+      "name_eng": "Legacy : Shoulder of Ishtar",
+      "rarity": 2,
+      "sell_price": 25200,
+      "icon": 258,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 12,
+      "name_kor": "(구)페더레더 맨틀",
+      "name_eng": "Feather Leather Mantle",
+      "rarity": 1,
+      "sell_price": 13000,
+      "icon": 26,
+      "req_lv": 52,
+      "armor_physical": 416
+    },
+    {
+      "code": 13,
+      "name_kor": "(구)강화된 페더레더 맨틀",
+      "name_eng": "Hard Feather Leather Mantle",
+      "rarity": 1,
+      "sell_price": 14000,
+      "icon": 26,
+      "req_lv": 56,
+      "armor_physical": 448
+    },
+    {
+      "code": 14,
+      "name_kor": "강화된 가죽 맨틀",
+      "name_eng": "Hard Leather Mantle",
+      "rarity": 1,
+      "sell_price": 8000,
+      "icon": 2,
+      "req_lv": 32,
+      "armor_physical": 256
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)강화된 스웨이드 맨틀",
+      "name_eng": "Hard Suede Mantle",
+      "rarity": 1,
+      "sell_price": 19500,
+      "icon": 49,
+      "req_lv": 78,
+      "armor_physical": 624
+    },
+    {
+      "code": 16,
+      "name_kor": "가죽 맨틀",
+      "name_eng": "Leather Mantle",
+      "rarity": 1,
+      "sell_price": 7000,
+      "icon": 2,
+      "req_lv": 28,
+      "armor_physical": 224
+    },
+    {
+      "code": 17,
+      "name_kor": "(구)스웨이드 맨틀",
+      "name_eng": "Suede Mantle",
+      "rarity": 1,
+      "sell_price": 19000,
+      "icon": 49,
+      "req_lv": 76,
+      "armor_physical": 608
+    },
+    {
+      "code": 18,
+      "name_kor": "(구)낡은 페더레더 맨틀",
+      "name_eng": "Used Feather Leather Mantle",
+      "rarity": 0,
+      "sell_price": 7800,
+      "icon": 26,
+      "req_lv": 52,
+      "armor_physical": 400
+    },
+    {
+      "code": 19,
+      "name_kor": "낡은 가죽 맨틀",
+      "name_eng": "Used Leather Mantle",
+      "rarity": 0,
+      "sell_price": 4200,
+      "icon": 2,
+      "req_lv": 28,
+      "armor_physical": 208
+    },
+    {
+      "code": 20,
+      "name_kor": "(구)낡은 스웨이드 맨틀",
+      "name_eng": "Used Suede Mantle",
+      "rarity": 0,
+      "sell_price": 11400,
+      "icon": 49,
+      "req_lv": 76,
+      "armor_physical": 592
+    },
+    {
+      "code": 21,
+      "name_kor": "페더레더 아미스",
+      "name_eng": "Feather Leather Amice",
+      "rarity": 1,
+      "sell_price": 12500,
+      "icon": 26,
+      "req_lv": 50,
+      "armor_physical": 400
+    },
+    {
+      "code": 22,
+      "name_kor": "구식 페더레더 아미스",
+      "name_eng": "Outdated Feather Leather Amice",
+      "rarity": 0,
+      "sell_price": 7500,
+      "icon": 26,
+      "req_lv": 50,
+      "armor_physical": 384
+    },
+    {
+      "code": 23,
+      "name_kor": "구식 스웨이드 아미스",
+      "name_eng": "Outdated Suede Amice",
+      "rarity": 0,
+      "sell_price": 13500,
+      "icon": 49,
+      "req_lv": 90,
+      "armor_physical": 704
+    },
+    {
+      "code": 24,
+      "name_kor": "스웨이드 아미스",
+      "name_eng": "Suede Amice",
+      "rarity": 1,
+      "sell_price": 22500,
+      "icon": 49,
+      "req_lv": 90,
+      "armor_physical": 720
+    },
+    {
+      "code": 25,
+      "name_kor": "페더레더 맨틀",
+      "name_eng": "Feather Leather Mantle",
+      "rarity": 1,
+      "sell_price": 15000,
+      "icon": 26,
+      "req_lv": 60,
+      "armor_physical": 480
+    },
+    {
+      "code": 26,
+      "name_kor": "스웨이드 맨틀",
+      "name_eng": "Suede Mantle",
+      "rarity": 1,
+      "sell_price": 25000,
+      "icon": 49,
+      "req_lv": 100,
+      "armor_physical": 800
+    },
+    {
+      "code": 27,
+      "name_kor": "낡은 페더레더 맨틀",
+      "name_eng": "Used Feather Leather Mantle",
+      "rarity": 0,
+      "sell_price": 9000,
+      "icon": 26,
+      "req_lv": 60,
+      "armor_physical": 464
+    },
+    {
+      "code": 28,
+      "name_kor": "낡은 스웨이드 맨틀",
+      "name_eng": "Used Suede Mantle",
+      "rarity": 0,
+      "sell_price": 15000,
+      "icon": 49,
+      "req_lv": 100,
+      "armor_physical": 784
+    },
+    {
+      "code": 29,
+      "name_kor": "페더레더 숄더패드",
+      "name_eng": "Feather Leather Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 10000,
+      "icon": 26,
+      "req_lv": 40,
+      "armor_physical": 320
+    },
+    {
+      "code": 30,
+      "name_kor": "오래된 페더레더 숄더패드",
+      "name_eng": "Old Feather Leather Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 6000,
+      "icon": 26,
+      "req_lv": 40,
+      "armor_physical": 304
+    },
+    {
+      "code": 31,
+      "name_kor": "오래된 스웨이드 숄더패드",
+      "name_eng": "Old Suede Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 12000,
+      "icon": 49,
+      "req_lv": 80,
+      "armor_physical": 624
+    },
+    {
+      "code": 32,
+      "name_kor": "스웨이드 숄더패드",
+      "name_eng": "Suede Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 20000,
+      "icon": 49,
+      "req_lv": 80,
+      "armor_physical": 640
+    },
+    {
+      "code": 33,
+      "name_kor": "베히모스의 가죽 숄더",
+      "explain": "원거리 물리 공격에 대한 방어력 +50",
+      "comment": "가공할 신비의 생물이라 이건가?",
+      "name_eng": "Behemos Leather Shoulder",
+      "rarity": 2,
+      "sell_price": 19200,
+      "icon": 12,
+      "req_lv": 60,
+      "armor_physical": 560
+    },
+    {
+      "code": 34,
+      "name_kor": "버닝 라이더 숄더",
+      "comment": "아~ 시원하게 맞는 바람!",
+      "name_eng": "Burning Rider Shoulder",
+      "rarity": 2,
+      "sell_price": 13200,
+      "icon": 14,
+      "req_lv": 40,
+      "armor_physical": 400
+    },
+    {
+      "code": 35,
+      "name_kor": "크라임 버팔로 숄더",
+      "comment": "크라임 버팔로 군단은 최고다! 우리는 아라드 대륙을 지배할 것이다.",
+      "name_eng": "Crime Buffalo Shoulder",
+      "rarity": 2,
+      "sell_price": 10200,
+      "icon": 15,
+      "req_lv": 30,
+      "armor_physical": 320
+    },
+    {
+      "code": 36,
+      "name_kor": "증오의 야수 숄더",
+      "comment": "업보 상승.",
+      "name_eng": "Hateful Beast Shoulder",
+      "rarity": 2,
+      "sell_price": 16200,
+      "icon": 13,
+      "req_lv": 50,
+      "armor_physical": 480
+    },
+    {
+      "code": 37,
+      "name_kor": "페카리 스킨 숄더",
+      "name_eng": "Peccary Skin Shoulder",
+      "rarity": 1,
+      "sell_price": 27500,
+      "icon": 49,
+      "req_lv": 110,
+      "armor_physical": 880
+    },
+    {
+      "code": 38,
+      "name_kor": "허름한 페카리 스킨 숄더",
+      "name_eng": "Shabby Peccary Skin Shoulder",
+      "rarity": 0,
+      "sell_price": 16500,
+      "icon": 49,
+      "req_lv": 110,
+      "armor_physical": 864
+    },
+    {
+      "code": 39,
+      "name_kor": "허름한 스웨이드 숄더",
+      "name_eng": "Shabby Suede Shoulder",
+      "rarity": 0,
+      "sell_price": 10500,
+      "icon": 49,
+      "req_lv": 70,
+      "armor_physical": 544
+    },
+    {
+      "code": 40,
+      "name_kor": "스웨이드 숄더",
+      "name_eng": "Suede Shoulder",
+      "rarity": 1,
+      "sell_price": 17500,
+      "icon": 49,
+      "req_lv": 70,
+      "armor_physical": 560
+    },
+    {
+      "code": 41,
+      "name_kor": "(구)페더레더 숄더패드",
+      "name_eng": "Feather Leather Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 10000,
+      "icon": 26,
+      "req_lv": 40,
+      "armor_physical": 320
+    },
+    {
+      "code": 42,
+      "name_kor": "가죽 숄더패드",
+      "name_eng": "Leather Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 4000,
+      "icon": 2,
+      "req_lv": 16,
+      "armor_physical": 128
+    },
+    {
+      "code": 43,
+      "name_kor": "(구)오래된 페더레더 숄더패드",
+      "name_eng": "Old Feather Leather Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 6000,
+      "icon": 26,
+      "req_lv": 40,
+      "armor_physical": 304
+    },
+    {
+      "code": 44,
+      "name_kor": "오래된 가죽 숄더패드",
+      "name_eng": "Old Leather Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 2400,
+      "icon": 2,
+      "req_lv": 16,
+      "armor_physical": 112
+    },
+    {
+      "code": 45,
+      "name_kor": "(구)오래된 스웨이드 숄더패드",
+      "name_eng": "Old Suede Shoulder-Pad",
+      "rarity": 0,
+      "sell_price": 9600,
+      "icon": 49,
+      "req_lv": 64,
+      "armor_physical": 496
+    },
+    {
+      "code": 46,
+      "name_kor": "(구)스웨이드 숄더패드",
+      "name_eng": "Suede Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 16000,
+      "icon": 49,
+      "req_lv": 64,
+      "armor_physical": 512
+    },
+    {
+      "code": 47,
+      "name_kor": "(구)두꺼운 페더레더 숄더패드",
+      "name_eng": "Thick Feather Leather Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 11000,
+      "icon": 26,
+      "req_lv": 44,
+      "armor_physical": 352
+    },
+    {
+      "code": 48,
+      "name_kor": "두꺼운 가죽 숄더패드",
+      "comment": "어깨가 무거워..오십 견 오는 거 아녀?",
+      "name_eng": "Thick Leather Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 5000,
+      "icon": 2,
+      "req_lv": 20,
+      "armor_physical": 160
+    },
+    {
+      "code": 49,
+      "name_kor": "(구)두꺼운 스웨이드 숄더패드",
+      "name_eng": "Thick Suede Shoulder-Pad",
+      "rarity": 1,
+      "sell_price": 17000,
+      "icon": 49,
+      "req_lv": 68,
+      "armor_physical": 544
+    },
+    {
+      "code": 50,
+      "name_kor": "어설트 어태커 숄더",
+      "explain": "원거리 물리 공격에 대한 방어력 +150",
+      "name_eng": "Assault Attacker Shoulder",
+      "rarity": 2,
+      "sell_price": 22200,
+      "icon": 41,
+      "req_lv": 70,
+      "armor_physical": 640
+    },
+    {
+      "code": 51,
+      "name_kor": "(구)베히모스의 가죽 숄더",
+      "explain": "원거리 공격에 대한 방어력 +50",
+      "comment": "가공할 신비의 생물이라 이건가?",
+      "name_eng": "Behemos Leather Shoulder",
+      "rarity": 2,
+      "sell_price": 21600,
+      "icon": 12,
+      "req_lv": 68,
+      "armor_physical": 624
+    },
+    {
+      "code": 52,
+      "name_kor": "블랙 루나 숄더",
+      "name_eng": "Black Luna Shoulder",
+      "rarity": 2,
+      "sell_price": 28200,
+      "icon": 60,
+      "req_lv": 90,
+      "armor_physical": 800
+    },
+    {
+      "code": 53,
+      "name_kor": "(구)버닝 라이더 숄더",
+      "comment": "아~ 시원하게 맞는 바람!",
+      "name_eng": "Burning Rider Shoulder",
+      "rarity": 2,
+      "sell_price": 12000,
+      "icon": 14,
+      "req_lv": 36,
+      "armor_physical": 368
+    },
+    {
+      "code": 54,
+      "name_kor": "(구)크라임 버팔로 숄더",
+      "comment": "크라임 버팔로 군단은 최고다! 우리는 아라드 대륙을 지배할 것이다.",
+      "name_eng": "Crime Buffalo Shoulder",
+      "rarity": 2,
+      "sell_price": 10200,
+      "icon": 15,
+      "req_lv": 30,
+      "armor_physical": 320
+    },
+    {
+      "code": 55,
+      "name_kor": "크로마틱 버스트 숄더",
+      "name_eng": "Chromatic Burst Shoulder",
+      "rarity": 2,
+      "sell_price": 28200,
+      "icon": 58,
+      "req_lv": 90,
+      "armor_physical": 800
+    },
+    {
+      "code": 56,
+      "name_kor": "컨저링 템페스트 숄더",
+      "name_eng": "Conjuring Tempest Shoulder",
+      "rarity": 2,
+      "sell_price": 25200,
+      "icon": 59,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 57,
+      "name_kor": "갈라진 가죽 숄더",
+      "name_eng": "Cracked Leather Shoulder",
+      "rarity": 0,
+      "sell_price": 300,
+      "icon": 2,
+      "req_lv": 2,
+      "armor_physical": 14
+    },
+    {
+      "code": 58,
+      "name_kor": "페더레더 숄더",
+      "name_eng": "Feather Leather Shoulder",
+      "rarity": 1,
+      "sell_price": 8500,
+      "icon": 26,
+      "req_lv": 34,
+      "armor_physical": 272
+    },
+    {
+      "code": 59,
+      "name_kor": "고블린 가죽 어깨 덧댐",
+      "comment": "피부색이 같다고 속지 마라!! 저들은 인간이다!",
+      "name_eng": "Goblin Skin Shoulder",
+      "rarity": 2,
+      "sell_price": 5400,
+      "icon": 91,
+      "req_lv": 18,
+      "armor_physical": 192
+    },
+    {
+      "code": 60,
+      "name_kor": "거츠 드래프트 숄더",
+      "name_eng": "Guts Draft  Shoulder",
+      "rarity": 2,
+      "sell_price": 25200,
+      "icon": 57,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 61,
+      "name_kor": "(구)증오의 야수 숄더",
+      "comment": "업보 상승.",
+      "name_eng": "Hateful Beast Shoulder",
+      "rarity": 2,
+      "sell_price": 17400,
+      "icon": 13,
+      "req_lv": 54,
+      "armor_physical": 512
+    },
+    {
+      "code": 62,
+      "name_kor": "키프스킨 숄더",
+      "name_eng": "Kip Skin Shoulder",
+      "rarity": 2,
+      "sell_price": 4200,
+      "icon": 15,
+      "req_lv": 12,
+      "armor_physical": 160
+    },
+    {
+      "code": 63,
+      "name_kor": "가죽 숄더",
+      "name_eng": "Leather Shoulder",
+      "rarity": 1,
+      "sell_price": 2500,
+      "icon": 2,
+      "req_lv": 10,
+      "armor_physical": 80
+    },
+    {
+      "code": 64,
+      "name_kor": "루가루 가죽 숄더",
+      "name_eng": "Lugaru Skin Shoulder",
+      "rarity": 2,
+      "sell_price": 7200,
+      "icon": 15,
+      "req_lv": 22,
+      "armor_physical": 240
+    },
+    {
+      "code": 65,
+      "name_kor": "밀리언 데드샷 숄더",
+      "name_eng": "Million Deadshot Shoulder",
+      "rarity": 2,
+      "sell_price": 22200,
+      "icon": 42,
+      "req_lv": 70,
+      "armor_physical": 640
+    },
+    {
+      "code": 66,
+      "name_kor": "(구)페카리 스킨 숄더",
+      "name_eng": "Peccary Skin Shoulder",
+      "rarity": 1,
+      "sell_price": 20500,
+      "icon": 49,
+      "req_lv": 82,
+      "armor_physical": 656
+    },
+    {
+      "code": 67,
+      "name_kor": "퀵실버 솔 숄더",
+      "name_eng": "Quicksilver Sol Shoulder",
+      "rarity": 2,
+      "sell_price": 28200,
+      "icon": 56,
+      "req_lv": 90,
+      "armor_physical": 800
+    },
+    {
+      "code": 68,
+      "name_kor": "거만한 상트레 숄더",
+      "name_eng": "Rude Chantre Shoulder",
+      "rarity": 2,
+      "sell_price": 25200,
+      "icon": 55,
+      "req_lv": 80,
+      "armor_physical": 720
+    },
+    {
+      "code": 69,
+      "name_kor": "허름한 페더레더 숄더",
+      "name_eng": "Shabby Feather Leather Shoulder",
+      "rarity": 0,
+      "sell_price": 5100,
+      "icon": 26,
+      "req_lv": 34,
+      "armor_physical": 256
+    },
+    {
+      "code": 70,
+      "name_kor": "허름한 가죽 숄더",
+      "name_eng": "Shabby Leather Shoulder",
+      "rarity": 0,
+      "sell_price": 1500,
+      "icon": 2,
+      "req_lv": 10,
+      "armor_physical": 64
+    },
+    {
+      "code": 71,
+      "name_kor": "(구)허름한 페카리 스킨 숄더",
+      "name_eng": "Shabby Peccary Skin Shoulder",
+      "rarity": 0,
+      "sell_price": 12300,
+      "icon": 49,
+      "req_lv": 82,
+      "armor_physical": 640
+    },
+    {
+      "code": 72,
+      "name_kor": "(구)허름한 스웨이드 숄더",
+      "name_eng": "Shabby Suede Shoulder",
+      "rarity": 0,
+      "sell_price": 8700,
+      "icon": 49,
+      "req_lv": 58,
+      "armor_physical": 448
+    },
+    {
+      "code": 73,
+      "name_kor": "섀도우 베일 숄더",
+      "name_eng": "Shadow Veil Shoulder",
+      "rarity": 2,
+      "sell_price": 22200,
+      "icon": 48,
+      "req_lv": 70,
+      "armor_physical": 640
+    },
+    {
+      "code": 74,
+      "name_kor": "슬라이머",
+      "name_eng": "Slimer",
+      "rarity": 3,
+      "sell_price": 9600,
+      "icon": 15,
+      "req_lv": 20,
+      "armor_physical": 288
+    },
+    {
+      "code": 75,
+      "name_kor": "스타 라커 숄더",
+      "name_eng": "Shoulder of Star Rocker",
+      "rarity": 2,
+      "sell_price": 13200,
+      "icon": 49,
+      "req_lv": 40,
+      "armor_physical": 400
+    },
+    {
+      "code": 76,
+      "name_kor": "(구)스웨이드 숄더",
+      "name_eng": "Suede Shoulder",
+      "rarity": 1,
+      "sell_price": 14500,
+      "icon": 49,
+      "req_lv": 58,
+      "armor_physical": 464
+    },
+    {
+      "code": 77,
+      "name_kor": "질긴 페더레더 숄더",
+      "name_eng": "Tough Feather Leather Shoulder",
+      "rarity": 1,
+      "sell_price": 9500,
+      "icon": 26,
+      "req_lv": 38,
+      "armor_physical": 304
+    },
+    {
+      "code": 78,
+      "name_kor": "질긴 가죽 숄더",
+      "name_eng": "Tough Leather Shoulder",
+      "rarity": 1,
+      "sell_price": 3500,
+      "icon": 2,
+      "req_lv": 14,
+      "armor_physical": 112
+    },
+    {
+      "code": 79,
+      "name_kor": "(구)질긴 스웨이드 숄더",
+      "name_eng": "Tough Suede Shoulder",
+      "rarity": 1,
+      "sell_price": 15500,
+      "icon": 49,
+      "req_lv": 62,
+      "armor_physical": 496
+    },
+    {
+      "code": 80,
+      "name_kor": "윈드 드리머 숄더",
+      "name_eng": "Shoulder of Wind Dreamer",
+      "rarity": 2,
+      "sell_price": 7200,
+      "icon": 50,
+      "req_lv": 20,
+      "armor_physical": 240
+    },
+    {
+      "code": 81,
+      "name_kor": "마모된 가죽 숄더",
+      "name_eng": "Worn Leather Shoulder",
+      "rarity": 0,
+      "sell_price": 900,
+      "icon": 2,
+      "req_lv": 6,
+      "armor_physical": 32
+    }
+  ]
+}

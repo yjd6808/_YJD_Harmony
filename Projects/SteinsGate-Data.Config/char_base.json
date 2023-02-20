@@ -63,18 +63,14 @@
 
         "down_recover_time": 0.8,
 
-        "default_weapon_type": 0,
+        "default_weapon_type": "rev",
         "default_visual_img": {
-            "skin" : "gn_body0000.img",
-            "shoes" : "gn_shoes0000a.img", 
-            "pants" : "gn_pants0000a.img", 
-            "neck" : "gn_neck0000d.img", 
-            "hair" : "gn_hair0000a.img",
-            "face" : "",
-            "coat" : "gn_coat0000a.img",
-            "cap" : "gn_cap0000a.img",
-            "belt" : "",
-            "weapon" : "auto0000c.img"
+            "skin" : 5,
+            "hair" : 80,
+            "coat" : 26,
+            "pants" : 58,
+            "shoes" : 81,
+            "weapon" : 94
         }
 
     },

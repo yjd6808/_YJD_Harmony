@@ -36,6 +36,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\LoggerAbstract.cpp">
       <SubType>
       </SubType>
@@ -58,6 +59,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\NpkSprite.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGEnum.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -87,10 +92,8 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ItemBaseInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfo.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\LoggerAbstract.h">
       <SubType>
       </SubType>

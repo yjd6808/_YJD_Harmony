@@ -10,6 +10,7 @@
 
 #include <SteinsGate/Common/SGDataManagerAbstract.h>
 
+#include <SteinsGate/Common/ItemInfo.h>
 #include <SteinsGate/Client/SGMobInfo.h>
 #include <SteinsGate/Client/SGActionInfo.h>
 #include <SteinsGate/Client/SGCharInfo.h>
@@ -57,5 +58,7 @@ public:
 	SGAttackDataInfo* getAttackDataInfo(int attackDataCode);
 	SGEffectInfo* getEffectInfo(int effectCode);
 	SGUIElementInfo* getUIElementInfo(int uiElementCode);
+
+
 };
 

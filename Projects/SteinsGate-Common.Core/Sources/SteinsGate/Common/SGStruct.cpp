@@ -12,20 +12,6 @@
 
 USING_NS_JC;
 
-VisualInfo::VisualInfo() {
-	JCore::Arrays::Fill(NpkIndex, InvalidValue_v);
-	JCore::Arrays::Fill(ImgIndex, InvalidValue_v);
-}
-
-VisualInfo::VisualInfo(const VisualInfo& other) {
-	JCore::Memory::CopyUnsafe(NpkIndex, other.NpkIndex, sizeof(int) * VisualType::Max);
-	JCore::Memory::CopyUnsafe(ImgIndex, other.ImgIndex, sizeof(int) * VisualType::Max);
-}
-
-// 스킨이 설정안된 녀석은 유효하지 않은 정보임
-bool VisualInfo::isValid() const {
-	return NpkIndex[VisualType::Skin] != InvalidValue_v;
-}
 
 ActorPartSpriteData::ActorPartSpriteData()
 	: NpkIndex(InvalidValue_v)
@@ -55,7 +41,6 @@ PlayerData::PlayerData()
 	, CharId(InvalidValue_v)
 	, CharType(CharType::Gunner)
 	, Gold(0)
-	, Sera(0)
 	, Str(0)
 	, Dex(0)
 	, Int(0)
@@ -64,3 +49,53 @@ PlayerData::PlayerData()
 	, Mana(0)
 	, Level(0)
 {}
+
+ItemCode::ItemCode(int Total)
+	: Code(Total)
+{}
+
+
+
+ItemCode::ItemCode(int Code, ItemType_t Type) {
+	CommonUn.Code = Code;
+	CommonUn.Detail1 = InvalidValue_v;
+	CommonUn.Detail2 = InvalidValue_v;
+	CommonUn.Type = Type;
+}
+
+ItemCode::ItemCode(int Code, int Detail, ItemType_t Type) {
+	CommonUn.Code = Code;
+	CommonUn.Detail1 = Detail;
+	CommonUn.Detail2 = InvalidValue_v;
+	CommonUn.Type = Type;
+}
+
+ItemCode::ItemCode(int Code, int Detail1, int Detail2, ItemType_t Type) {
+	CommonUn.Code = Code;
+	CommonUn.Detail1 = Detail1;
+	CommonUn.Detail2 = Detail2;
+	CommonUn.Type = Type;
+}
+
+
+void ItemCode::initAvatarCode(CharType_t charType, AvatarType_t avatarType, int code) {
+	AvatarUn.CharType = charType;
+	AvatarUn.ItemType = ItemType::Avatar;
+	AvatarUn.PartType = avatarType;
+	AvatarUn.Code = code;
+}
+
+void ItemCode::initWeaponCode(CharType_t charType, WeaponType_t weaponType, int code) {
+	WeaponUn.ItemType = ItemType::Weapon;
+	WeaponUn.WeaponType = weaponType;
+	WeaponUn.CharType = charType;
+	WeaponUn.Code = code;
+}
+
+void ItemCode::initArmorCode(ItemType_t itemType, EquipArmorType_t armorType, int code) {
+	ArmorUn.Code = code;
+	ArmorUn.ItemType = itemType;
+	ArmorUn.ArmorType = armorType;
+	ArmorUn._ = InvalidValue_v;
+}
+

@@ -17,13 +17,14 @@ public:
 
 	static SGInven* get();
 
+	WeaponType_t getWeaponType();
 	void getVisualInfo(Out_ VisualInfo& info, int defaultCharType);
 
 private:
-	InvenItemEquip* m_EquipedItemList[EquipItemType::Max];
+	InvenItemEquip* m_EquipedItemList[ItemType::MaxEquip];
 	InvenItemEquip* m_EquipedAvatarList[AvatarType::Max];
 
-	SGHashMap<int, InvenItem*> m_hashInven[ItemType::Max];		// 슬롯(키), 아이템
+	SGHashMap<int, InvenItem*> m_hashInven[InvenItemType::Max];		// 슬롯(키), 아이템
 };
 
 

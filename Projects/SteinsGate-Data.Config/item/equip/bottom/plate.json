@@ -1,0 +1,585 @@
+{
+  "plate": [
+    {
+      "code": 1,
+      "name_kor": "(구)합금 각반",
+      "name_eng": "Alloy Gaiter",
+      "rarity": 1,
+      "sell_price": 37800,
+      "icon": 170,
+      "req_lv": 84,
+      "armor_physical": 2100
+    },
+    {
+      "code": 2,
+      "name_kor": "(구)녹슨 합금 각반",
+      "name_eng": "Rusty Alloy Gaiter",
+      "rarity": 0,
+      "sell_price": 29400,
+      "icon": 170,
+      "req_lv": 84,
+      "armor_physical": 2050
+    },
+    {
+      "code": 3,
+      "name_kor": "녹슨 강철 각반",
+      "name_eng": "Rusty Steel Gaiter",
+      "rarity": 0,
+      "sell_price": 12600,
+      "icon": 170,
+      "req_lv": 36,
+      "armor_physical": 850
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)녹슨 티타늄 각반",
+      "name_eng": "Rusty Titanium Gaiter",
+      "rarity": 0,
+      "sell_price": 21000,
+      "icon": 170,
+      "req_lv": 60,
+      "armor_physical": 1450
+    },
+    {
+      "code": 5,
+      "name_kor": "강철 각반",
+      "name_eng": "Steel Gaiter",
+      "rarity": 1,
+      "sell_price": 16200,
+      "icon": 170,
+      "req_lv": 36,
+      "armor_physical": 900
+    },
+    {
+      "code": 6,
+      "name_kor": "단단한 강철 각반",
+      "name_eng": "Stiff Steel Gaiter",
+      "rarity": 1,
+      "sell_price": 18000,
+      "icon": 170,
+      "req_lv": 40,
+      "armor_physical": 1000
+    },
+    {
+      "code": 7,
+      "name_kor": "(구)단단한 티타늄 각반",
+      "name_eng": "Stiff Titanium Gaiter",
+      "rarity": 1,
+      "sell_price": 28800,
+      "icon": 170,
+      "req_lv": 64,
+      "armor_physical": 1600
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)티타늄 각반",
+      "name_eng": "Titanium Gaiter",
+      "rarity": 1,
+      "sell_price": 27000,
+      "icon": 170,
+      "req_lv": 60,
+      "armor_physical": 1500
+    },
+    {
+      "code": 9,
+      "name_kor": "튼튼한 강철 그리브",
+      "name_eng": "Firm Steel Greave",
+      "rarity": 1,
+      "sell_price": 20700,
+      "icon": 170,
+      "req_lv": 46,
+      "armor_physical": 1150
+    },
+    {
+      "code": 10,
+      "name_kor": "(구)튼튼한 티타늄 그리브",
+      "name_eng": "Firm Titanium Greave",
+      "rarity": 1,
+      "sell_price": 31500,
+      "icon": 170,
+      "req_lv": 70,
+      "armor_physical": 1750
+    },
+    {
+      "code": 11,
+      "name_kor": "마모된 강철 그리브",
+      "name_eng": "Rubbed Steel Greave",
+      "rarity": 0,
+      "sell_price": 14700,
+      "icon": 170,
+      "req_lv": 42,
+      "armor_physical": 1000
+    },
+    {
+      "code": 12,
+      "name_kor": "(구)마모된 티타늄 그리브",
+      "name_eng": "Rubbed Titanium Greave",
+      "rarity": 0,
+      "sell_price": 23100,
+      "icon": 170,
+      "req_lv": 66,
+      "armor_physical": 1600
+    },
+    {
+      "code": 13,
+      "name_kor": "강철 그리브",
+      "name_eng": "Steel Greave",
+      "rarity": 1,
+      "sell_price": 18900,
+      "icon": 170,
+      "req_lv": 42,
+      "armor_physical": 1050
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)티타늄 그리브",
+      "name_eng": "Titanium Greave",
+      "rarity": 1,
+      "sell_price": 29700,
+      "icon": 170,
+      "req_lv": 66,
+      "armor_physical": 1650
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)허술한 강철 레깅스",
+      "name_eng": "Shabby Steel Leggings",
+      "rarity": 0,
+      "sell_price": 16800,
+      "icon": 170,
+      "req_lv": 48,
+      "armor_physical": 1150
+    },
+    {
+      "code": 16,
+      "name_kor": "(구)허술한 티타늄 레깅스",
+      "name_eng": "Shabby Titanium Leggings",
+      "rarity": 0,
+      "sell_price": 25200,
+      "icon": 170,
+      "req_lv": 72,
+      "armor_physical": 1750
+    },
+    {
+      "code": 17,
+      "name_kor": "고요의 정령 레깅스",
+      "name_eng": "Leggings of Silent Soul",
+      "rarity": 2,
+      "sell_price": 42000,
+      "icon": 51,
+      "req_lv": 80,
+      "armor_physical": 2250
+    },
+    {
+      "code": 18,
+      "name_kor": "(구)강철 레깅스",
+      "name_eng": "Steel Leggings",
+      "rarity": 1,
+      "sell_price": 21600,
+      "icon": 170,
+      "req_lv": 48,
+      "armor_physical": 1200
+    },
+    {
+      "code": 19,
+      "name_kor": "(구)견고한 강철 레깅스",
+      "name_eng": "Strong Steel Leggings",
+      "rarity": 1,
+      "sell_price": 23400,
+      "icon": 170,
+      "req_lv": 52,
+      "armor_physical": 1300
+    },
+    {
+      "code": 20,
+      "name_kor": "(구)견고한 티타늄 레깅스",
+      "name_eng": "StrongTitanium Leggings",
+      "rarity": 1,
+      "sell_price": 34200,
+      "icon": 170,
+      "req_lv": 76,
+      "armor_physical": 1900
+    },
+    {
+      "code": 21,
+      "name_kor": "(구)티타늄 레깅스",
+      "name_eng": "Titanium Leggings",
+      "rarity": 1,
+      "sell_price": 32400,
+      "icon": 170,
+      "req_lv": 72,
+      "armor_physical": 1800
+    },
+    {
+      "code": 22,
+      "name_kor": "비전 리퍼 레깅스",
+      "name_eng": "Vision Reaper Leggings",
+      "rarity": 2,
+      "sell_price": 47000,
+      "icon": 85,
+      "req_lv": 90,
+      "armor_physical": 2500
+    },
+    {
+      "code": 23,
+      "name_kor": "유물 : 성스러운 라트리의 강철 각반",
+      "name_eng": "Legacy : Holy Pants of Latri",
+      "rarity": 2,
+      "sell_price": 32000,
+      "icon": 317,
+      "req_lv": 60,
+      "armor_physical": 1750
+    },
+    {
+      "code": 24,
+      "name_kor": "유물 : 성스러운 시로넨의 강철 각반",
+      "name_eng": "Legacy : Holy Pants of Sironen",
+      "rarity": 2,
+      "sell_price": 22000,
+      "icon": 315,
+      "req_lv": 40,
+      "armor_physical": 1250
+    },
+    {
+      "code": 25,
+      "name_kor": "유물 : 성스러운 큐빌레이의 티타늄 각반",
+      "name_eng": "Legacy : Holy Pants of Cubeley",
+      "rarity": 2,
+      "sell_price": 42000,
+      "icon": 320,
+      "req_lv": 80,
+      "armor_physical": 2250
+    },
+    {
+      "code": 26,
+      "name_kor": "유물 : 성스러운 이슈타르의 티타늄 레깅스",
+      "name_eng": "Legacy : Holy Pants of Ishtar",
+      "rarity": 2,
+      "sell_price": 52000,
+      "icon": 328,
+      "req_lv": 100,
+      "armor_physical": 2750
+    },
+    {
+      "code": 27,
+      "name_kor": "유물 : 라트리의 강철 각반",
+      "name_eng": "Legacy : Pants of Latri",
+      "rarity": 2,
+      "sell_price": 27000,
+      "icon": 147,
+      "req_lv": 50,
+      "armor_physical": 1500
+    },
+    {
+      "code": 28,
+      "name_kor": "유물 : 큐빌레이의 티타늄 각반",
+      "name_eng": "Legacy : Pants of Cubeley",
+      "rarity": 2,
+      "sell_price": 37000,
+      "icon": 110,
+      "req_lv": 70,
+      "armor_physical": 2000
+    },
+    {
+      "code": 29,
+      "name_kor": "유물 : 이슈타르의 티타늄 레깅스",
+      "name_eng": "Legacy : Pants of Ishtar",
+      "rarity": 2,
+      "sell_price": 47000,
+      "icon": 323,
+      "req_lv": 90,
+      "armor_physical": 2500
+    },
+    {
+      "code": 30,
+      "name_kor": "(구)촘촘한 강철 판금 하의",
+      "name_eng": "Close Steel metal Pants",
+      "rarity": 1,
+      "sell_price": 26100,
+      "icon": 170,
+      "req_lv": 58,
+      "armor_physical": 1450
+    },
+    {
+      "code": 31,
+      "name_kor": "(구)촘촘한 티타늄 판금 하의",
+      "name_eng": "Close Titanium Metal Pants",
+      "rarity": 1,
+      "sell_price": 36000,
+      "icon": 170,
+      "req_lv": 80,
+      "armor_physical": 2000
+    },
+    {
+      "code": 32,
+      "name_kor": "(구)강철 판금 하의",
+      "name_eng": "Steel metal Pants",
+      "rarity": 1,
+      "sell_price": 24300,
+      "icon": 170,
+      "req_lv": 54,
+      "armor_physical": 1350
+    },
+    {
+      "code": 33,
+      "name_kor": "(구)티타늄 판금 하의",
+      "name_eng": "Titanium Metal Pants",
+      "rarity": 1,
+      "sell_price": 35100,
+      "icon": 170,
+      "req_lv": 78,
+      "armor_physical": 1950
+    },
+    {
+      "code": 34,
+      "name_kor": "(구)낡은 강철 판금 하의",
+      "name_eng": "Used Steel metal Pants",
+      "rarity": 0,
+      "sell_price": 18900,
+      "icon": 170,
+      "req_lv": 54,
+      "armor_physical": 1300
+    },
+    {
+      "code": 35,
+      "name_kor": "(구)낡은 티타늄 판금 하의",
+      "name_eng": "Used Titanium Metal Pants",
+      "rarity": 0,
+      "sell_price": 27300,
+      "icon": 170,
+      "req_lv": 78,
+      "armor_physical": 1900
+    },
+    {
+      "code": 36,
+      "name_kor": "합금 각반",
+      "name_eng": "Alloy Gaiter",
+      "rarity": 1,
+      "sell_price": 49500,
+      "icon": 170,
+      "req_lv": 110,
+      "armor_physical": 2750
+    },
+    {
+      "code": 37,
+      "name_kor": "보로딘의 황제갑 각반",
+      "name_eng": "Borodin's Emperor Leggings",
+      "rarity": 4,
+      "sell_price": 66000,
+      "icon": 110,
+      "req_lv": 100,
+      "armor_physical": 3100
+    },
+    {
+      "code": 38,
+      "name_kor": "다크스틸 각반",
+      "explain": "피격시 3%% 확률로 9.40초동안 적의 눈을 멀게 합니다.",
+      "name_eng": "Darksteel Spats",
+      "rarity": 4,
+      "sell_price": 54000,
+      "icon": 109,
+      "req_lv": 80,
+      "armor_physical": 2600
+    },
+    {
+      "code": 39,
+      "name_kor": "녹슨 합금 각반",
+      "name_eng": "Rusty Alloy Gaiter",
+      "rarity": 0,
+      "sell_price": 38500,
+      "icon": 170,
+      "req_lv": 110,
+      "armor_physical": 2700
+    },
+    {
+      "code": 40,
+      "name_kor": "녹슨 티타늄 각반",
+      "name_eng": "Rusty Titanium Gaiter",
+      "rarity": 0,
+      "sell_price": 24500,
+      "icon": 170,
+      "req_lv": 70,
+      "armor_physical": 1700
+    },
+    {
+      "code": 41,
+      "name_kor": "티타늄 각반",
+      "name_eng": "Titanium Gaiter",
+      "rarity": 1,
+      "sell_price": 31500,
+      "icon": 170,
+      "req_lv": 70,
+      "armor_physical": 1750
+    },
+    {
+      "code": 42,
+      "name_kor": "마모된 티타늄 그리브",
+      "name_eng": "Rubbed Titanium Greave",
+      "rarity": 0,
+      "sell_price": 28000,
+      "icon": 170,
+      "req_lv": 80,
+      "armor_physical": 1950
+    },
+    {
+      "code": 43,
+      "name_kor": "티타늄 그리브",
+      "name_eng": "Titanium Greave",
+      "rarity": 1,
+      "sell_price": 36000,
+      "icon": 170,
+      "req_lv": 80,
+      "armor_physical": 2000
+    },
+    {
+      "code": 44,
+      "name_kor": "허술한 강철 레깅스",
+      "name_eng": "Shabby Steel Leggings",
+      "rarity": 0,
+      "sell_price": 17500,
+      "icon": 170,
+      "req_lv": 50,
+      "armor_physical": 1200
+    },
+    {
+      "code": 45,
+      "name_kor": "허술한 티타늄 레깅스",
+      "name_eng": "Shabby Titanium Leggings",
+      "rarity": 0,
+      "sell_price": 31500,
+      "icon": 170,
+      "req_lv": 90,
+      "armor_physical": 2200
+    },
+    {
+      "code": 46,
+      "name_kor": "강철 레깅스",
+      "name_eng": "Steel Leggings",
+      "rarity": 1,
+      "sell_price": 22500,
+      "icon": 170,
+      "req_lv": 50,
+      "armor_physical": 1250
+    },
+    {
+      "code": 47,
+      "name_kor": "티타늄 레깅스",
+      "name_eng": "Titanium Leggings",
+      "rarity": 1,
+      "sell_price": 40500,
+      "icon": 170,
+      "req_lv": 90,
+      "armor_physical": 2250
+    },
+    {
+      "code": 48,
+      "name_kor": "강철 판금 하의",
+      "name_eng": "Steel metal Pants",
+      "rarity": 1,
+      "sell_price": 27000,
+      "icon": 170,
+      "req_lv": 60,
+      "armor_physical": 1500
+    },
+    {
+      "code": 49,
+      "name_kor": "티타늄 판금 하의",
+      "name_eng": "Titanium Metal Pants",
+      "rarity": 1,
+      "sell_price": 45000,
+      "icon": 170,
+      "req_lv": 100,
+      "armor_physical": 2500
+    },
+    {
+      "code": 50,
+      "name_kor": "낡은 강철 판금 하의",
+      "name_eng": "Used Steel metal Pants",
+      "rarity": 0,
+      "sell_price": 21000,
+      "icon": 170,
+      "req_lv": 60,
+      "armor_physical": 1450
+    },
+    {
+      "code": 51,
+      "name_kor": "낡은 티타늄 판금 하의",
+      "name_eng": "Used Titanium Metal Pants",
+      "rarity": 0,
+      "sell_price": 35000,
+      "icon": 170,
+      "req_lv": 100,
+      "armor_physical": 2450
+    },
+    {
+      "code": 52,
+      "name_kor": "칠흑의 베르테스 하의",
+      "name_eng": "Jet-Black Bertes pants",
+      "rarity": 2,
+      "sell_price": 37000,
+      "icon": 18,
+      "req_lv": 70,
+      "armor_physical": 2000
+    },
+    {
+      "code": 53,
+      "name_kor": "블루 프로미넌스 하의",
+      "name_eng": "Blue Prominence pants",
+      "rarity": 2,
+      "sell_price": 27000,
+      "icon": 17,
+      "req_lv": 50,
+      "armor_physical": 1500
+    },
+    {
+      "code": 54,
+      "name_kor": "초합금 고르아투스 하의",
+      "name_eng": "Ultra Alloy Goratus pants",
+      "rarity": 2,
+      "sell_price": 32000,
+      "icon": 16,
+      "req_lv": 60,
+      "armor_physical": 1750
+    },
+    {
+      "code": 55,
+      "name_kor": "(구)칠흑의 베르테스 하의",
+      "name_eng": "Jet-Black Bertes pants",
+      "rarity": 2,
+      "sell_price": 35000,
+      "icon": 18,
+      "req_lv": 66,
+      "armor_physical": 1900
+    },
+    {
+      "code": 56,
+      "name_kor": "(구)블루 프로미넌스 하의",
+      "name_eng": "Blue Prominence pants",
+      "rarity": 2,
+      "sell_price": 23000,
+      "icon": 17,
+      "req_lv": 42,
+      "armor_physical": 1300
+    },
+    {
+      "code": 57,
+      "name_kor": "(구)초합금 고르아투스 하의",
+      "name_eng": "Ultra Alloy Goratus pants",
+      "rarity": 2,
+      "sell_price": 29000,
+      "icon": 16,
+      "req_lv": 54,
+      "armor_physical": 1600
+    },
+    {
+      "code": 58,
+      "name_kor": "용갑 밸러 퀴러스 레깅스",
+      "name_eng": "Brave Armor Valor Cuirass Leggings",
+      "rarity": 2,
+      "sell_price": 52000,
+      "icon": 86,
+      "req_lv": 100,
+      "armor_physical": 2750
+    }
+  ]
+}

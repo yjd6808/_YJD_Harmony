@@ -14,6 +14,8 @@ struct SGJson
 {
 public:
 	static SGString getString(Json::Value& value);
+	static SGString getStringOrNull(Json::Value& value);
+	static SGString getStringOrDefault(Json::Value& value, const SGString& defaultValue = 0); // 내 문자열은 0으로 초기화하면 동적 할당 안함
 	static void parseThicknessInfo(Json::Value& thicknessRoot, Out_ ThicknessBox& box);
 
 	static void parseIntNumber3(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3);
@@ -25,7 +27,7 @@ public:
 
 	static int getIntDefault(Json::Value& value, int defaultValue = 0);
 	static float getFloatDefault(Json::Value& value, float defaultValue = 0);
-	static SGString getStringDefault(Json::Value& value, const SGString& defaultValue = 0); // 내 문자열은 0으로 초기화하면 동적 할당 안함
+	
 };
 
 

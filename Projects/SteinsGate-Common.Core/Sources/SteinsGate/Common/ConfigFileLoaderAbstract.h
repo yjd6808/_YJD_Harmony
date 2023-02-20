@@ -10,6 +10,7 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
+
 class ConfigFileLoaderAbstract
 {
 public:
@@ -18,6 +19,8 @@ public:
 	virtual bool loadJson(Out_ Json::Value& root);
 	virtual bool loadJson(const char* fileName, Out_ Json::Value& root);
 	virtual bool loadJson(const SGString& fileName, Out_ Json::Value& root);
+	virtual void loadJsonThrow(const char* fileName, Out_ Json::Value& root);
+	virtual void loadJsonThrow(const SGString& fileName, Out_ Json::Value& root);
 	virtual bool load() = 0;
 	
 	virtual ConfigFileType_t getConfigFileType() = 0;
@@ -25,6 +28,9 @@ public:
 
 	void addData(ConfigDataAbstract* data);
 	ConfigDataAbstract* getData(int code);
+
+
+
 protected:
 	SGHashMap<int, ConfigDataAbstract*> m_hConfigDataAbstract;
 };

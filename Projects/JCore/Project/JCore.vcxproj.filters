@@ -409,6 +409,7 @@
     <ClInclude Include="..\Sources\JCore\Utils\Concatenation.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Bit.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

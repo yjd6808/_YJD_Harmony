@@ -8,6 +8,7 @@
 #include "Tutturu.h"
 #include "SGDataManager.h"
 
+#include <SteinsGate/Common/ItemInfoLoader.h>
 #include <SteinsGate/Client/SGActionInfoLoader.h>
 #include <SteinsGate/Client/SGMobInfoLoader.h>
 #include <SteinsGate/Client/SGCharInfoLoader.h>
@@ -21,6 +22,7 @@
 #include <SteinsGate/Client/SGCharAnimationInfoLoader.h>
 #include <SteinsGate/Client/SGEffectInfoLoader.h>
 #include <SteinsGate/Client/SGUIInfoLoader.h>
+
 
 
 SGDataManager::SGDataManager()
@@ -44,6 +46,7 @@ void SGDataManager::initializeLoader() {
 	 m_pConfigFileLoaders[ConfigFileType::Char_Animation]	 = dbg_new SGCharAnimationInfoLoader;
 	 m_pConfigFileLoaders[ConfigFileType::Char_Base]	     = dbg_new SGCharInfoLoader;
 	 m_pConfigFileLoaders[ConfigFileType::Client]			 = dbg_new SGClientInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::Item]				 = dbg_new ItemInfoLoader;
 	 m_bInitialized = true;
 }
 
@@ -181,5 +184,4 @@ SGUIElementInfo* SGDataManager::getUIElementInfo(int uiElementCode) {
 	return (SGUIElementInfo*)getData(eType, uiElementCode);
 
 }
-
 

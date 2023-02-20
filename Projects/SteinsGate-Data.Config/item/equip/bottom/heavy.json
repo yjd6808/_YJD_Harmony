@@ -1,0 +1,908 @@
+{
+  "heavy": [
+    {
+      "code": 1,
+      "name_kor": "미늘 각반",
+      "name_eng": "Barb Gaiter",
+      "rarity": 1,
+      "sell_price": 13600,
+      "icon": 183,
+      "req_lv": 34,
+      "armor_physical": 680
+    },
+    {
+      "code": 2,
+      "name_kor": "초급전사 각반",
+      "name_eng": "Beginning Warrior's Gaiter",
+      "rarity": 2,
+      "sell_price": 6300,
+      "icon": 26,
+      "req_lv": 12,
+      "armor_physical": 400
+    },
+    {
+      "code": 3,
+      "name_kor": "블론델의 각반",
+      "explain": "내구도 증가",
+      "name_eng": "Gaiter of Blondel",
+      "rarity": 0,
+      "sell_price": 4200,
+      "icon": 30,
+      "req_lv": 12,
+      "armor_physical": 200
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)체인 각반",
+      "name_eng": "Chain Gaiter",
+      "rarity": 1,
+      "sell_price": 23200,
+      "icon": 179,
+      "req_lv": 58,
+      "armor_physical": 1160
+    },
+    {
+      "code": 5,
+      "name_kor": "녹슨 미늘 각반",
+      "name_eng": "Rusty Barb Gaiter",
+      "rarity": 0,
+      "sell_price": 10200,
+      "icon": 183,
+      "req_lv": 34,
+      "armor_physical": 640
+    },
+    {
+      "code": 6,
+      "name_kor": "(구)녹슨 체인 각반",
+      "name_eng": "Rusty Chain Gaiter",
+      "rarity": 0,
+      "sell_price": 17400,
+      "icon": 179,
+      "req_lv": 58,
+      "armor_physical": 1120
+    },
+    {
+      "code": 7,
+      "name_kor": "링 각반",
+      "name_eng": "Ring Gaiter",
+      "rarity": 1,
+      "sell_price": 4000,
+      "icon": 133,
+      "req_lv": 10,
+      "armor_physical": 200
+    },
+    {
+      "code": 8,
+      "name_kor": "녹슨 링 각반",
+      "name_eng": "Rusty Ring Gaiter",
+      "rarity": 0,
+      "sell_price": 3000,
+      "icon": 133,
+      "req_lv": 10,
+      "armor_physical": 160
+    },
+    {
+      "code": 9,
+      "name_kor": "단단한 미늘 각반",
+      "name_eng": "Stiff Barb Gaiter",
+      "rarity": 1,
+      "sell_price": 15200,
+      "icon": 137,
+      "req_lv": 38,
+      "armor_physical": 760
+    },
+    {
+      "code": 10,
+      "name_kor": "(구)단단한 체인 각반",
+      "name_eng": "Stiff Chain Gaiter",
+      "rarity": 1,
+      "sell_price": 24800,
+      "icon": 179,
+      "req_lv": 62,
+      "armor_physical": 1240
+    },
+    {
+      "code": 11,
+      "name_kor": "단단한 링 각반",
+      "name_eng": "Stiff Ring Gaiter",
+      "rarity": 1,
+      "sell_price": 5600,
+      "icon": 133,
+      "req_lv": 14,
+      "armor_physical": 280
+    },
+    {
+      "code": 12,
+      "name_kor": "낡아빠진 링 각반",
+      "name_eng": "Used Ring Gaiter",
+      "rarity": 0,
+      "sell_price": 1800,
+      "icon": 133,
+      "req_lv": 6,
+      "armor_physical": 80
+    },
+    {
+      "code": 13,
+      "name_kor": "닳아빠진 링 각반",
+      "name_eng": "Worn Ring Gaiter",
+      "rarity": 0,
+      "sell_price": 600,
+      "icon": 133,
+      "req_lv": 2,
+      "armor_physical": 36
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)코부르크식 각반",
+      "name_eng": "Coburg Gaiter",
+      "rarity": 1,
+      "sell_price": 32800,
+      "icon": 179,
+      "req_lv": 82,
+      "armor_physical": 1640
+    },
+    {
+      "code": 15,
+      "name_kor": "흉갑 토드퍼스 각반",
+      "name_eng": "Curse Armor Todpurs Gaiter",
+      "rarity": 2,
+      "sell_price": 46800,
+      "icon": 80,
+      "req_lv": 100,
+      "armor_physical": 2200
+    },
+    {
+      "code": 16,
+      "name_kor": "EL-XM25 각반",
+      "name_eng": "EL-XM25 Gaiter",
+      "rarity": 2,
+      "sell_price": 42300,
+      "icon": 83,
+      "req_lv": 90,
+      "armor_physical": 2000
+    },
+    {
+      "code": 17,
+      "name_kor": "ES-YL11 각반",
+      "name_eng": "ES-YL11 Gaiter",
+      "rarity": 2,
+      "sell_price": 46800,
+      "icon": 84,
+      "req_lv": 100,
+      "armor_physical": 2200
+    },
+    {
+      "code": 18,
+      "name_kor": "비열한 펠 비스킹 각반",
+      "name_eng": "Fel Visking Gaiter",
+      "rarity": 2,
+      "sell_price": 42300,
+      "icon": 81,
+      "req_lv": 90,
+      "armor_physical": 2000
+    },
+    {
+      "code": 19,
+      "name_kor": "고어 브라스 각반",
+      "name_eng": "Gore Brass Gaiter",
+      "rarity": 2,
+      "sell_price": 42300,
+      "icon": 79,
+      "req_lv": 90,
+      "armor_physical": 2000
+    },
+    {
+      "code": 20,
+      "name_kor": "오네이트 블리츠 각반",
+      "name_eng": "Ornate Blitz Gaiter",
+      "rarity": 2,
+      "sell_price": 46800,
+      "icon": 82,
+      "req_lv": 100,
+      "armor_physical": 2200
+    },
+    {
+      "code": 21,
+      "name_kor": "(구)마모된 코부르크식 각반",
+      "name_eng": "Rubbed Coburg Gaiter",
+      "rarity": 0,
+      "sell_price": 24600,
+      "icon": 179,
+      "req_lv": 82,
+      "armor_physical": 1600
+    },
+    {
+      "code": 22,
+      "name_kor": "(구)미늘 그리브",
+      "name_eng": "Barb Greave",
+      "rarity": 1,
+      "sell_price": 16000,
+      "icon": 137,
+      "req_lv": 40,
+      "armor_physical": 800
+    },
+    {
+      "code": 23,
+      "name_kor": "초경량 카볼라이트 그리브",
+      "name_eng": "Carbollite Greave",
+      "rarity": 2,
+      "sell_price": 37800,
+      "icon": 49,
+      "req_lv": 80,
+      "armor_physical": 1800
+    },
+    {
+      "code": 24,
+      "name_kor": "(구)체인 그리브",
+      "name_eng": "Chain Greave",
+      "rarity": 1,
+      "sell_price": 25600,
+      "icon": 179,
+      "req_lv": 64,
+      "armor_physical": 1280
+    },
+    {
+      "code": 25,
+      "name_kor": "(구)튼튼한 미늘 그리브",
+      "name_eng": "Firm Barb Greave",
+      "rarity": 1,
+      "sell_price": 17600,
+      "icon": 137,
+      "req_lv": 44,
+      "armor_physical": 880
+    },
+    {
+      "code": 26,
+      "name_kor": "(구)튼튼한 체인 그리브",
+      "name_eng": "Firm Chain Greave",
+      "rarity": 1,
+      "sell_price": 27200,
+      "icon": 179,
+      "req_lv": 68,
+      "armor_physical": 1360
+    },
+    {
+      "code": 27,
+      "name_kor": "튼튼한 링 그리브",
+      "name_eng": "Firm Ring Greave",
+      "rarity": 1,
+      "sell_price": 8000,
+      "icon": 133,
+      "req_lv": 20,
+      "armor_physical": 400
+    },
+    {
+      "code": 28,
+      "name_kor": "멜티 블러드 그리브",
+      "name_eng": "Melty Blood Greave",
+      "rarity": 2,
+      "sell_price": 37800,
+      "icon": 47,
+      "req_lv": 80,
+      "armor_physical": 1800
+    },
+    {
+      "code": 29,
+      "name_kor": "링 그리브",
+      "name_eng": "Ring Greave",
+      "rarity": 1,
+      "sell_price": 6400,
+      "icon": 133,
+      "req_lv": 16,
+      "armor_physical": 320
+    },
+    {
+      "code": 30,
+      "name_kor": "마모된 링 그리브",
+      "name_eng": "Rubbed Ring Greave",
+      "rarity": 0,
+      "sell_price": 4800,
+      "icon": 133,
+      "req_lv": 16,
+      "armor_physical": 280
+    },
+    {
+      "code": 31,
+      "name_kor": "(구)마모된 미늘 그리브",
+      "name_eng": "Rubbed Barb Greave",
+      "rarity": 0,
+      "sell_price": 12000,
+      "icon": 137,
+      "req_lv": 40,
+      "armor_physical": 760
+    },
+    {
+      "code": 32,
+      "name_kor": "(구)마모된 체인 그리브",
+      "name_eng": "Rubbed Chain Greave",
+      "rarity": 0,
+      "sell_price": 19200,
+      "icon": 179,
+      "req_lv": 64,
+      "armor_physical": 1240
+    },
+    {
+      "code": 33,
+      "name_kor": "(구)미늘 중갑 하의",
+      "name_eng": "Barb Heavy Pants",
+      "rarity": 1,
+      "sell_price": 20800,
+      "icon": 137,
+      "req_lv": 52,
+      "armor_physical": 1040
+    },
+    {
+      "code": 34,
+      "name_kor": "(구)촘촘한 미늘 중갑 하의",
+      "name_eng": "Close Barb Heavy Pants",
+      "rarity": 1,
+      "sell_price": 22400,
+      "icon": 137,
+      "req_lv": 56,
+      "armor_physical": 1120
+    },
+    {
+      "code": 35,
+      "name_kor": "(구)촘촘한 체인 중갑 하의",
+      "name_eng": "Close Chain Heavy Pants",
+      "rarity": 1,
+      "sell_price": 31200,
+      "icon": 179,
+      "req_lv": 78,
+      "armor_physical": 1560
+    },
+    {
+      "code": 36,
+      "name_kor": "(구)체인 중갑 하의",
+      "name_eng": "Chain Heavy Pants",
+      "rarity": 1,
+      "sell_price": 30400,
+      "icon": 179,
+      "req_lv": 76,
+      "armor_physical": 1520
+    },
+    {
+      "code": 37,
+      "name_kor": "촘촘한 링 중갑 하의",
+      "name_eng": "Close Ring Heavy Pants",
+      "rarity": 1,
+      "sell_price": 12800,
+      "icon": 133,
+      "req_lv": 32,
+      "armor_physical": 640
+    },
+    {
+      "code": 38,
+      "name_kor": "링 중갑 하의",
+      "name_eng": "Ring Heavy Pants",
+      "rarity": 1,
+      "sell_price": 11200,
+      "icon": 133,
+      "req_lv": 28,
+      "armor_physical": 560
+    },
+    {
+      "code": 39,
+      "name_kor": "허술한 링 중갑 하의",
+      "name_eng": "Shabby Ring Heavy Pants",
+      "rarity": 0,
+      "sell_price": 8400,
+      "icon": 133,
+      "req_lv": 28,
+      "armor_physical": 520
+    },
+    {
+      "code": 40,
+      "name_kor": "(구)낡은 미늘 중갑 하의",
+      "name_eng": "Used Barb Heavy Pants",
+      "rarity": 0,
+      "sell_price": 15600,
+      "icon": 137,
+      "req_lv": 52,
+      "armor_physical": 1000
+    },
+    {
+      "code": 41,
+      "name_kor": "(구)낡은 체인 중갑 하의",
+      "name_eng": "Used Chain Heavy Pants",
+      "rarity": 0,
+      "sell_price": 22800,
+      "icon": 179,
+      "req_lv": 76,
+      "armor_physical": 1480
+    },
+    {
+      "code": 42,
+      "name_kor": "(구)미늘 레깅스",
+      "name_eng": "Barb Leggings",
+      "rarity": 1,
+      "sell_price": 18400,
+      "icon": 137,
+      "req_lv": 46,
+      "armor_physical": 920
+    },
+    {
+      "code": 43,
+      "name_kor": "(구)체인 레깅스",
+      "name_eng": "Chain Leggings",
+      "rarity": 1,
+      "sell_price": 28000,
+      "icon": 179,
+      "req_lv": 70,
+      "armor_physical": 1400
+    },
+    {
+      "code": 44,
+      "name_kor": "구식 링 레깅스",
+      "name_eng": "Outdated Ring Leggings",
+      "rarity": 0,
+      "sell_price": 6600,
+      "icon": 133,
+      "req_lv": 22,
+      "armor_physical": 400
+    },
+    {
+      "code": 45,
+      "name_kor": "링 레깅스",
+      "name_eng": "Ring Leggings",
+      "rarity": 1,
+      "sell_price": 8800,
+      "icon": 133,
+      "req_lv": 22,
+      "armor_physical": 440
+    },
+    {
+      "code": 46,
+      "name_kor": "(구)허술한 미늘 레깅스",
+      "name_eng": "Shabby Barb Leggings",
+      "rarity": 0,
+      "sell_price": 13800,
+      "icon": 137,
+      "req_lv": 46,
+      "armor_physical": 880
+    },
+    {
+      "code": 47,
+      "name_kor": "(구)허술한 체인 레깅스",
+      "name_eng": "Shabby Chain Leggings",
+      "rarity": 0,
+      "sell_price": 21000,
+      "icon": 179,
+      "req_lv": 70,
+      "armor_physical": 1360
+    },
+    {
+      "code": 48,
+      "name_kor": "(구)견고한 미늘 레깅스",
+      "name_eng": "Strong Barb Leggings",
+      "rarity": 1,
+      "sell_price": 20000,
+      "icon": 137,
+      "req_lv": 50,
+      "armor_physical": 1000
+    },
+    {
+      "code": 49,
+      "name_kor": "(구)견고한 체인 레깅스",
+      "name_eng": "Strong Chain Leggings",
+      "rarity": 1,
+      "sell_price": 29600,
+      "icon": 179,
+      "req_lv": 74,
+      "armor_physical": 1480
+    },
+    {
+      "code": 50,
+      "name_kor": "견고한 링 레깅스",
+      "name_eng": "Strong Ring Leggings",
+      "rarity": 1,
+      "sell_price": 10400,
+      "icon": 133,
+      "req_lv": 26,
+      "armor_physical": 520
+    },
+    {
+      "code": 51,
+      "name_kor": "크림슨 비네트 레깅스",
+      "name_eng": "Crimson Vignette Leggings",
+      "rarity": 2,
+      "sell_price": 37800,
+      "icon": 48,
+      "req_lv": 80,
+      "armor_physical": 1800
+    },
+    {
+      "code": 52,
+      "name_kor": "유물 : 라트리의 미늘 각반",
+      "name_eng": "Legacy : Pants of Latri",
+      "rarity": 2,
+      "sell_price": 24300,
+      "icon": 183,
+      "req_lv": 50,
+      "armor_physical": 1200
+    },
+    {
+      "code": 53,
+      "name_kor": "유물 : 시로넨의 미늘 각반",
+      "name_eng": "Legacy : Pants of Sironen",
+      "rarity": 2,
+      "sell_price": 15300,
+      "icon": 301,
+      "req_lv": 30,
+      "armor_physical": 800
+    },
+    {
+      "code": 54,
+      "name_kor": "유물 : 큐빌레이의 체인 각반",
+      "name_eng": "Legacy : Pants of Cubeley",
+      "rarity": 2,
+      "sell_price": 33300,
+      "icon": 157,
+      "req_lv": 70,
+      "armor_physical": 1600
+    },
+    {
+      "code": 55,
+      "name_kor": "유물 : 이슈타르의 체인 레깅스",
+      "name_eng": "Legacy : Pants of Ishtar",
+      "rarity": 2,
+      "sell_price": 42300,
+      "icon": 305,
+      "req_lv": 90,
+      "armor_physical": 2000
+    },
+    {
+      "code": 56,
+      "name_kor": "유물 : 성스러운 라트리의 미늘 각반",
+      "name_eng": "Legacy : Holy Pants of Latri",
+      "rarity": 2,
+      "sell_price": 28800,
+      "icon": 277,
+      "req_lv": 60,
+      "armor_physical": 1400
+    },
+    {
+      "code": 57,
+      "name_kor": "유물 : 성스러운 시로넨의 미늘 각반",
+      "name_eng": "Legacy : Holy Pants of Sironen",
+      "rarity": 2,
+      "sell_price": 19800,
+      "icon": 303,
+      "req_lv": 40,
+      "armor_physical": 1000
+    },
+    {
+      "code": 58,
+      "name_kor": "유물 : 성스러운 큐빌레이의 체인 각반",
+      "name_eng": "Legacy : Holy Pants of Cubeley",
+      "rarity": 2,
+      "sell_price": 37800,
+      "icon": 296,
+      "req_lv": 80,
+      "armor_physical": 1800
+    },
+    {
+      "code": 59,
+      "name_kor": "유물 : 성스러운 이슈타르의 체인 레깅스",
+      "name_eng": "Legacy : Holy Pants of Ishtar",
+      "rarity": 2,
+      "sell_price": 46800,
+      "icon": 310,
+      "req_lv": 100,
+      "armor_physical": 2200
+    },
+    {
+      "code": 60,
+      "name_kor": "유물 : 성스러운 메티스의 링 각반",
+      "name_eng": "Legacy : Holy Pants of Metis",
+      "rarity": 2,
+      "sell_price": 10800,
+      "icon": 299,
+      "req_lv": 20,
+      "armor_physical": 600
+    },
+    {
+      "code": 61,
+      "name_kor": "유물 : 메티스의 링 각반",
+      "name_eng": "Legacy : Pants of Metis",
+      "rarity": 2,
+      "sell_price": 6300,
+      "icon": 133,
+      "req_lv": 10,
+      "armor_physical": 400
+    },
+    {
+      "code": 62,
+      "name_kor": "체인 각반",
+      "name_eng": "Chain Gaiter",
+      "rarity": 1,
+      "sell_price": 28000,
+      "icon": 179,
+      "req_lv": 70,
+      "armor_physical": 1400
+    },
+    {
+      "code": 63,
+      "name_kor": "자이언트 터틀 각반",
+      "explain": "백어택을 당했을 때 10%%의 데미지를 감소시킵니다.",
+      "name_eng": "Giant Turtle Back",
+      "rarity": 4,
+      "sell_price": 42000,
+      "icon": 108,
+      "req_lv": 60,
+      "armor_physical": 1680
+    },
+    {
+      "code": 64,
+      "name_kor": "녹슨 체인 각반",
+      "name_eng": "Rusty Chain Gaiter",
+      "rarity": 0,
+      "sell_price": 21000,
+      "icon": 179,
+      "req_lv": 70,
+      "armor_physical": 1360
+    },
+    {
+      "code": 65,
+      "name_kor": "코부르크식 각반",
+      "name_eng": "Coburg Gaiter",
+      "rarity": 1,
+      "sell_price": 44000,
+      "icon": 179,
+      "req_lv": 110,
+      "armor_physical": 2200
+    },
+    {
+      "code": 66,
+      "name_kor": "제라드의 화염하갑",
+      "name_eng": "Gerrad's FlameLowerGuard",
+      "rarity": 4,
+      "sell_price": 66000,
+      "icon": 107,
+      "req_lv": 100,
+      "armor_physical": 2480
+    },
+    {
+      "code": 67,
+      "name_kor": "마모된 코부르크식 각반",
+      "name_eng": "Rubbed Coburg Gaiter",
+      "rarity": 0,
+      "sell_price": 33000,
+      "icon": 179,
+      "req_lv": 110,
+      "armor_physical": 2160
+    },
+    {
+      "code": 68,
+      "name_kor": "미늘 그리브",
+      "name_eng": "Barb Greave",
+      "rarity": 1,
+      "sell_price": 16000,
+      "icon": 137,
+      "req_lv": 40,
+      "armor_physical": 800
+    },
+    {
+      "code": 69,
+      "name_kor": "체인 그리브",
+      "name_eng": "Chain Greave",
+      "rarity": 1,
+      "sell_price": 32000,
+      "icon": 179,
+      "req_lv": 80,
+      "armor_physical": 1600
+    },
+    {
+      "code": 70,
+      "name_kor": "마모된 미늘 그리브",
+      "name_eng": "Rubbed Barb Greave",
+      "rarity": 0,
+      "sell_price": 12000,
+      "icon": 137,
+      "req_lv": 40,
+      "armor_physical": 760
+    },
+    {
+      "code": 71,
+      "name_kor": "마모된 체인 그리브",
+      "name_eng": "Rubbed Chain Greave",
+      "rarity": 0,
+      "sell_price": 24000,
+      "icon": 179,
+      "req_lv": 80,
+      "armor_physical": 1560
+    },
+    {
+      "code": 72,
+      "name_kor": "미늘 중갑 하의",
+      "name_eng": "Barb Heavy Pants",
+      "rarity": 1,
+      "sell_price": 24000,
+      "icon": 137,
+      "req_lv": 60,
+      "armor_physical": 1200
+    },
+    {
+      "code": 73,
+      "name_kor": "체인 중갑 하의",
+      "name_eng": "Chain Heavy Pants",
+      "rarity": 1,
+      "sell_price": 40000,
+      "icon": 179,
+      "req_lv": 100,
+      "armor_physical": 2000
+    },
+    {
+      "code": 74,
+      "name_kor": "낡은 미늘 중갑 하의",
+      "name_eng": "Used Barb Heavy Pants",
+      "rarity": 0,
+      "sell_price": 18000,
+      "icon": 137,
+      "req_lv": 60,
+      "armor_physical": 1160
+    },
+    {
+      "code": 75,
+      "name_kor": "낡은 체인 중갑 하의",
+      "name_eng": "Used Chain Heavy Pants",
+      "rarity": 0,
+      "sell_price": 30000,
+      "icon": 179,
+      "req_lv": 100,
+      "armor_physical": 1960
+    },
+    {
+      "code": 76,
+      "name_kor": "미늘 레깅스",
+      "name_eng": "Barb Leggings",
+      "rarity": 1,
+      "sell_price": 20000,
+      "icon": 137,
+      "req_lv": 50,
+      "armor_physical": 1000
+    },
+    {
+      "code": 77,
+      "name_kor": "체인 레깅스",
+      "name_eng": "Chain Leggings",
+      "rarity": 1,
+      "sell_price": 36000,
+      "icon": 179,
+      "req_lv": 90,
+      "armor_physical": 1800
+    },
+    {
+      "code": 78,
+      "name_kor": "허술한 미늘 레깅스",
+      "name_eng": "Shabby Barb Leggings",
+      "rarity": 0,
+      "sell_price": 15000,
+      "icon": 137,
+      "req_lv": 50,
+      "armor_physical": 960
+    },
+    {
+      "code": 79,
+      "name_kor": "허술한 체인 레깅스",
+      "name_eng": "Shabby Chain Leggings",
+      "rarity": 0,
+      "sell_price": 27000,
+      "icon": 179,
+      "req_lv": 90,
+      "armor_physical": 1760
+    },
+    {
+      "code": 80,
+      "name_kor": "조이기 레깅스",
+      "explain": "마운트 공격횟수가 1회 증가합니다.",
+      "comment": "\"어떻게 그렇게 세게 조일수 있는거죠?\" - 패리스에게, 독왕 도전자",
+      "name_eng": "Tighten Leggings",
+      "rarity": 4,
+      "sell_price": 54000,
+      "icon": 106,
+      "req_lv": 80,
+      "armor_physical": 2080
+    },
+    {
+      "code": 81,
+      "name_kor": "드래고닉 스킨 하의",
+      "name_eng": "Dragonic Skin Pants",
+      "rarity": 2,
+      "sell_price": 33300,
+      "icon": 23,
+      "req_lv": 70,
+      "armor_physical": 1600
+    },
+    {
+      "code": 82,
+      "name_kor": "멧세 쿼드라트 하의",
+      "name_eng": "Messe Quadrat Pants",
+      "rarity": 2,
+      "sell_price": 24300,
+      "icon": 25,
+      "req_lv": 50,
+      "armor_physical": 1200
+    },
+    {
+      "code": 83,
+      "name_kor": "슈바르츠 크라이스 하의",
+      "name_eng": "Schwarz Kreis Pants",
+      "rarity": 2,
+      "sell_price": 19800,
+      "icon": 26,
+      "req_lv": 40,
+      "armor_physical": 1000
+    },
+    {
+      "code": 84,
+      "name_kor": "샤이닝 로리카 하의",
+      "name_eng": "Shining Lorica Pants",
+      "rarity": 2,
+      "sell_price": 28800,
+      "icon": 24,
+      "req_lv": 60,
+      "armor_physical": 1400
+    },
+    {
+      "code": 85,
+      "name_kor": "(구)드래고닉 스킨 하의",
+      "name_eng": "Dragonic Skin Pants",
+      "rarity": 2,
+      "sell_price": 33300,
+      "icon": 23,
+      "req_lv": 70,
+      "armor_physical": 1600
+    },
+    {
+      "code": 86,
+      "name_kor": "제국 장군갑 하의",
+      "name_eng": "Empire General Heavy Pants",
+      "rarity": 3,
+      "sell_price": 14400,
+      "icon": 26,
+      "req_lv": 20,
+      "armor_physical": 720
+    },
+    {
+      "code": 87,
+      "name_kor": "일루멘탈 중갑 하의",
+      "name_eng": "Illumental Heavy Pants",
+      "rarity": 2,
+      "sell_price": 10800,
+      "icon": 26,
+      "req_lv": 22,
+      "armor_physical": 600
+    },
+    {
+      "code": 88,
+      "name_kor": "(구)멧세 쿼드라트 하의",
+      "name_eng": "Messe Quadrat Pants",
+      "rarity": 2,
+      "sell_price": 19800,
+      "icon": 25,
+      "req_lv": 40,
+      "armor_physical": 1000
+    },
+    {
+      "code": 89,
+      "name_kor": "(구)슈바르츠 크라이스 하의",
+      "name_eng": "Schwarz Kreis Pants",
+      "rarity": 2,
+      "sell_price": 17100,
+      "icon": 26,
+      "req_lv": 34,
+      "armor_physical": 880
+    },
+    {
+      "code": 90,
+      "name_kor": "(구)샤이닝 로리카 하의",
+      "name_eng": "Shining Lorica Pants",
+      "rarity": 2,
+      "sell_price": 27900,
+      "icon": 24,
+      "req_lv": 58,
+      "armor_physical": 1360
+    }
+  ]
+}

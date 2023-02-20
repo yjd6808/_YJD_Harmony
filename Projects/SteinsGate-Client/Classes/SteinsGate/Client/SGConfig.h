@@ -40,9 +40,3 @@ inline constexpr int DeathDownTime_v = FPS6_v;	// 바닥에 사망상태로 닿�
 inline constexpr int MinPlayHitAnimationOnTheAir_v = FPS18_v;	// 공중에서 Hit 모션 얼마나 재생할지
 
 inline constexpr float ZReodrerDelay_v = FPS6_v;
-
-inline constexpr int ItemQuestMinCode_v = 0;
-inline constexpr int ItemEtcMinCode_v = 10'000;
-inline constexpr int ItemConsumeMinCode_v = 20'000;
-inline constexpr int ItemEquipMinCode_v = 30'000;
-inline constexpr int ItemAvatarMinCode_v = 40'000;

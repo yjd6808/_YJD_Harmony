@@ -71,9 +71,71 @@ void SGDataManagerAbstract::finalizeLoader() {
 	_LogDebug_("설정파일에서 읽은 모든 데이터를 정리하였습니다.");
 }
 
-MobBaseInfo* SGDataManagerAbstract::getMobBaseInfo(int code) {
-	return (MobBaseInfo*)m_pConfigFileLoaders[ConfigFileType::Monster]->getData(code);
+
+// ========================================================================================
+// 공통 데이터 가져오기
+// ========================================================================================
+
+
+MobBaseInfo* SGDataManagerAbstract::getMobBaseInfo(int monsterCode) {
+
+	auto eType = ConfigFileType::Monster;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<MobBaseInfo*>(getData(eType, monsterCode));
+	DebugAssertMsg(pRet, "아바타 타입이 아닙니다.");
+	return pRet;
 }
+
+
+
+ItemAvatarInfo* SGDataManagerAbstract::getAvatarInfo(int avatarCode) {
+	auto eType = ConfigFileType::Item;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<ItemAvatarInfo*>(getData(eType, avatarCode));
+	DebugAssertMsg(pRet, "아바타 타입이 아닙니다.");
+	return pRet;
+
+}
+
+ItemWeaponInfo* SGDataManagerAbstract::getWeaponInfo(int weaponCode) {
+	auto eType = ConfigFileType::Item;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<ItemWeaponInfo*>(getData(eType, weaponCode));
+	DebugAssertMsg(pRet, "무기 타입이 아닙니다.");
+	return pRet;
+}
+
+ItemArmorInfo* SGDataManagerAbstract::getArmorInfo(int armorCode) {
+	auto eType = ConfigFileType::Item;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<ItemArmorInfo*>(getData(eType, armorCode));
+	DebugAssertMsg(pRet, "방어구 | 장신구 | 칭호 타입이 아닙니다.");
+	return pRet;
+}
+
+ItemVisualInfo* SGDataManagerAbstract::getVisualInfo(int visualCode) {
+	auto eType = ConfigFileType::Item;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<ItemVisualInfo*>(getData(eType, visualCode));
+	DebugAssertMsg(pRet, "아바타 | 무기가 아닙니다.");
+	return pRet;
+}
+
 
 
 

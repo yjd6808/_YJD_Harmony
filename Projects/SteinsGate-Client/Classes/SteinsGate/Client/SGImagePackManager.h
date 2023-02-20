@@ -32,11 +32,13 @@ public:
 	SGImagePack* getPack(const SGString& packName);
 	SGImagePack* getPack(const int idx);
 	SGImagePack* getAvatarPack(CharType_t charType, AvatarType_t avatarType);
-	SGImagePack* getWeaponPack(CharType_t charType, WeaponType_t weaponType);
+	SGImagePack* getWeaponPack(WeaponType_t weaponType);
+
 	int getAvatarPackIndex(CharType_t charType, AvatarType_t avatarType);
-	int getWeaponPackIndex(CharType_t charType, WeaponType_t weaponType);
+	int getWeaponPackIndex(WeaponType_t weaponType);
 	int getPackIndex(const SGString& packPath);
 	int getPackIndexDefault(const SGString& packPath, int defaultIndex);
+
 	void releaseFrameTexture(int packIndex, int imgIndex, int frameIndex);
 	void releaseFrameTexture(const NpkResourceIndex& npkResourceIndex);
 
@@ -48,7 +50,7 @@ private:
 	
 	SGImagePack* m_LoadedPackages[MaxNpkFileCount_v]{};
 	SGImagePack* m_AvatarPacks[CharType::Max][AvatarType::Max]{};
-	SGImagePack* m_WeaponPacks[CharType::Max][5]{};
+	SGImagePack* m_WeaponPacks[WeaponType::Max]{};
 	int m_iLoadedPackageCount{};
 };
 

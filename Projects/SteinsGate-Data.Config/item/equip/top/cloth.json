@@ -1,0 +1,1166 @@
+{
+  "cloth": [
+    {
+      "code": 1,
+      "name_kor": "에어 빈티지 상의",
+      "name_eng": "Air Vintage Coat",
+      "rarity": 2,
+      "sell_price": 36400,
+      "icon": 76,
+      "req_lv": 100,
+      "armor_physical": 660
+    },
+    {
+      "code": 2,
+      "name_kor": "펠론 인큐비 상의",
+      "name_eng": "Felon Incubi Coat",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 71,
+      "req_lv": 90,
+      "armor_physical": 600
+    },
+    {
+      "code": 3,
+      "name_kor": "(구)천상의 레인코트",
+      "name_eng": "Raincoat of Heavens",
+      "rarity": 3,
+      "sell_price": 36900,
+      "icon": 0,
+      "req_lv": 74,
+      "armor_physical": 564
+    },
+    {
+      "code": 4,
+      "name_kor": "마나홀리커 상의",
+      "name_eng": "Manaholicker Coat",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 58,
+      "req_lv": 80,
+      "armor_physical": 540
+    },
+    {
+      "code": 5,
+      "name_kor": "마리아의 천 상의",
+      "name_eng": "Cloth Coat of Maria",
+      "rarity": 0,
+      "sell_price": 3000,
+      "icon": 27,
+      "req_lv": 12,
+      "armor_physical": 60
+    },
+    {
+      "code": 6,
+      "name_kor": "레어 타슬란 상의",
+      "name_eng": "Rare Taslan Coat",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 33,
+      "req_lv": 80,
+      "armor_physical": 540
+    },
+    {
+      "code": 7,
+      "name_kor": "소울 리터너 상의",
+      "name_eng": "Soul Returner Coat",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 32,
+      "req_lv": 80,
+      "armor_physical": 540
+    },
+    {
+      "code": 8,
+      "name_kor": "테트라 어타이어 상의",
+      "name_eng": "Tetra Attire Coat",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 75,
+      "req_lv": 90,
+      "armor_physical": 600
+    },
+    {
+      "code": 9,
+      "name_kor": "(구)철인의 트레이닝복 상의",
+      "name_eng": "Training Coat of Sage",
+      "rarity": 2,
+      "sell_price": 26600,
+      "icon": 4,
+      "req_lv": 72,
+      "armor_physical": 492
+    },
+    {
+      "code": 10,
+      "name_kor": "어퍼 위자드리 상의",
+      "name_eng": "Upper Wizardry Coat",
+      "rarity": 2,
+      "sell_price": 22400,
+      "icon": 57,
+      "req_lv": 60,
+      "armor_physical": 420
+    },
+    {
+      "code": 11,
+      "name_kor": "활력의 가비스 상의",
+      "name_eng": "Coat of Vital Gabis",
+      "rarity": 2,
+      "sell_price": 15400,
+      "icon": 56,
+      "req_lv": 40,
+      "armor_physical": 300
+    },
+    {
+      "code": 12,
+      "name_kor": "바람의 두루마기",
+      "name_eng": "Windy Overcoat",
+      "rarity": 3,
+      "sell_price": 15300,
+      "icon": 11,
+      "req_lv": 26,
+      "armor_physical": 276
+    },
+    {
+      "code": 13,
+      "name_kor": "지그 가브 상의",
+      "name_eng": "Zieg Garb Coat",
+      "rarity": 2,
+      "sell_price": 36400,
+      "icon": 72,
+      "req_lv": 100,
+      "armor_physical": 660
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)영원의 화염 드레스",
+      "explain": "피격시 10%% 확률로 상대에게 +50의 화속성 데미지를 준다.",
+      "name_eng": "Dress of Eternal Flame",
+      "rarity": 3,
+      "sell_price": 27900,
+      "icon": 2,
+      "req_lv": 54,
+      "armor_physical": 444
+    },
+    {
+      "code": 15,
+      "name_kor": "모험가 도복",
+      "name_eng": "Garb for Adventure",
+      "rarity": 0,
+      "sell_price": 1800,
+      "icon": 10,
+      "req_lv": 6,
+      "armor_physical": 24
+    },
+    {
+      "code": 16,
+      "name_kor": "유물 : 메티스의 면 상의",
+      "name_eng": "Legacy : Coat of Metis",
+      "rarity": 2,
+      "sell_price": 4900,
+      "icon": 16,
+      "req_lv": 10,
+      "armor_physical": 120
+    },
+    {
+      "code": 17,
+      "name_kor": "유물 : 성스러운 메티스의 면 상의",
+      "name_eng": "Legacy : Holy Coat of Metis",
+      "rarity": 2,
+      "sell_price": 8400,
+      "icon": 40,
+      "req_lv": 20,
+      "armor_physical": 180
+    },
+    {
+      "code": 18,
+      "name_kor": "유물 : 성스러운 이슈타르의 실키얀 로브",
+      "name_eng": "Legacy : Holy Coat of Ishtar",
+      "rarity": 2,
+      "sell_price": 36400,
+      "icon": 245,
+      "req_lv": 100,
+      "armor_physical": 660
+    },
+    {
+      "code": 19,
+      "name_kor": "유물 : 성스러운 큐빌레이의 실키얀 상의",
+      "name_eng": "Legacy : Holy Coat of Cubeley",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 237,
+      "req_lv": 80,
+      "armor_physical": 540
+    },
+    {
+      "code": 20,
+      "name_kor": "유물 : 성스러운 라트리의 양모 상의",
+      "name_eng": "Legacy : Holy Coat of Latri",
+      "rarity": 2,
+      "sell_price": 22400,
+      "icon": 234,
+      "req_lv": 60,
+      "armor_physical": 420
+    },
+    {
+      "code": 21,
+      "name_kor": "유물 : 성스러운 시로넨의 양모 상의",
+      "name_eng": "Legacy : Holy Coat of Sironen",
+      "rarity": 2,
+      "sell_price": 15400,
+      "icon": 47,
+      "req_lv": 40,
+      "armor_physical": 300
+    },
+    {
+      "code": 22,
+      "name_kor": "유물 : 이슈타르의 실키얀 로브",
+      "name_eng": "Legacy : Coat of Ishtar",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 240,
+      "req_lv": 90,
+      "armor_physical": 600
+    },
+    {
+      "code": 23,
+      "name_kor": "유물 : 큐빌레이의 실키얀 상의",
+      "name_eng": "Legacy : Coat of Cubeley",
+      "rarity": 2,
+      "sell_price": 25900,
+      "icon": 46,
+      "req_lv": 70,
+      "armor_physical": 480
+    },
+    {
+      "code": 24,
+      "name_kor": "유물 : 라트리의 양모 상의",
+      "name_eng": "Legacy : Coat of Latri",
+      "rarity": 2,
+      "sell_price": 18900,
+      "icon": 82,
+      "req_lv": 50,
+      "armor_physical": 360
+    },
+    {
+      "code": 25,
+      "name_kor": "유물 : 시로넨의 양모 상의",
+      "name_eng": "Legacy : Coat of Sironen",
+      "rarity": 2,
+      "sell_price": 11900,
+      "icon": 232,
+      "req_lv": 30,
+      "armor_physical": 240
+    },
+    {
+      "code": 26,
+      "name_kor": "천상의 레인코트",
+      "name_eng": "Raincoat of Heavens",
+      "rarity": 3,
+      "sell_price": 48600,
+      "icon": 0,
+      "req_lv": 100,
+      "armor_physical": 720
+    },
+    {
+      "code": 27,
+      "name_kor": "철인의 트레이닝복 상의",
+      "name_eng": "Training Coat of Sage",
+      "rarity": 2,
+      "sell_price": 22400,
+      "icon": 4,
+      "req_lv": 60,
+      "armor_physical": 420
+    },
+    {
+      "code": 28,
+      "name_kor": "영원의 화염 드레스",
+      "explain": "피격시 10%% 확률로 상대에게 +50의 화속성 데미지를 준다.",
+      "name_eng": "Dress of Eternal Flame",
+      "rarity": 3,
+      "sell_price": 30600,
+      "icon": 2,
+      "req_lv": 60,
+      "armor_physical": 480
+    },
+    {
+      "code": 29,
+      "name_kor": "요정의 축복 로브",
+      "name_eng": "Blessing Robe of Fairy",
+      "rarity": 2,
+      "sell_price": 25900,
+      "icon": 5,
+      "req_lv": 70,
+      "armor_physical": 480
+    },
+    {
+      "code": 30,
+      "name_kor": "카본파이버 로브",
+      "name_eng": "Robe of Carbon Fiber",
+      "rarity": 2,
+      "sell_price": 15400,
+      "icon": 10,
+      "req_lv": 40,
+      "armor_physical": 300
+    },
+    {
+      "code": 31,
+      "name_kor": "그라파이트 로브",
+      "name_eng": "Graphite Robe",
+      "rarity": 3,
+      "sell_price": 21600,
+      "icon": 3,
+      "req_lv": 40,
+      "armor_physical": 360
+    },
+    {
+      "code": 32,
+      "name_kor": "헨돈마이어 귀족 로브",
+      "name_eng": "Noble Robe of Hendon Myre",
+      "rarity": 2,
+      "sell_price": 18900,
+      "icon": 8,
+      "req_lv": 50,
+      "armor_physical": 360
+    },
+    {
+      "code": 33,
+      "name_kor": "실키얀 로브",
+      "name_eng": "Silky Yarn Robe",
+      "rarity": 1,
+      "sell_price": 30000,
+      "icon": 102,
+      "req_lv": 100,
+      "armor_physical": 600
+    },
+    {
+      "code": 34,
+      "name_kor": "낡은 실키얀 로브",
+      "name_eng": "Used Silky Yarn Robe",
+      "rarity": 0,
+      "sell_price": 20000,
+      "icon": 102,
+      "req_lv": 100,
+      "armor_physical": 588
+    },
+    {
+      "code": 35,
+      "name_kor": "낡은 양모 로브",
+      "name_eng": "Used Wool Robe",
+      "rarity": 0,
+      "sell_price": 12000,
+      "icon": 40,
+      "req_lv": 60,
+      "armor_physical": 348
+    },
+    {
+      "code": 36,
+      "name_kor": "양모 로브",
+      "name_eng": "Wool Robe",
+      "rarity": 1,
+      "sell_price": 18000,
+      "icon": 40,
+      "req_lv": 60,
+      "armor_physical": 360
+    },
+    {
+      "code": 37,
+      "name_kor": "아라클로소의 실크 셔츠",
+      "name_eng": "Araclotho's Silk shirts",
+      "rarity": 4,
+      "sell_price": 45000,
+      "icon": 100,
+      "req_lv": 90,
+      "armor_physical": 684
+    },
+    {
+      "code": 38,
+      "name_kor": "오래된 벨벳 셔츠",
+      "name_eng": "Old Velvet Shirt",
+      "rarity": 0,
+      "sell_price": 22000,
+      "icon": 102,
+      "req_lv": 110,
+      "armor_physical": 648
+    },
+    {
+      "code": 39,
+      "name_kor": "허름한 실키얀 셔츠",
+      "name_eng": "Shabby Silky Yarn Shirt",
+      "rarity": 0,
+      "sell_price": 14000,
+      "icon": 102,
+      "req_lv": 70,
+      "armor_physical": 408
+    },
+    {
+      "code": 40,
+      "name_kor": "실키얀 셔츠",
+      "name_eng": "Silky Yarn Shirt",
+      "rarity": 1,
+      "sell_price": 21000,
+      "icon": 102,
+      "req_lv": 70,
+      "armor_physical": 420
+    },
+    {
+      "code": 41,
+      "name_kor": "스팽글 걸 티",
+      "explain": "캐릭터의 레벨이 올라감에 따라 무기 방어력이 올라갑니다. (레벨당 물리 방어력 6 증가) ( 미구현 )",
+      "name_eng": "Spangle Girl T-Shirts",
+      "rarity": 4,
+      "sell_price": 13500,
+      "icon": 115,
+      "req_lv": 20,
+      "armor_physical": 264
+    },
+    {
+      "code": 42,
+      "name_kor": "벨벳 셔츠",
+      "name_eng": "Velvet Shirt",
+      "rarity": 1,
+      "sell_price": 33000,
+      "icon": 102,
+      "req_lv": 110,
+      "armor_physical": 660
+    },
+    {
+      "code": 43,
+      "name_kor": "얼음실 튜닉",
+      "explain": "피격시 5%% 확률로 4.93초동안 적을 얼립니다.",
+      "name_eng": "Tunic of Ice Seal",
+      "rarity": 2,
+      "sell_price": 22400,
+      "icon": 7,
+      "req_lv": 60,
+      "armor_physical": 420
+    },
+    {
+      "code": 44,
+      "name_kor": "구식 실키얀 튜닉",
+      "name_eng": "Outdated Silky Yarn Tunic",
+      "rarity": 0,
+      "sell_price": 18000,
+      "icon": 102,
+      "req_lv": 90,
+      "armor_physical": 528
+    },
+    {
+      "code": 45,
+      "name_kor": "구식 양모 튜닉",
+      "name_eng": "Outdated Wool Tunic",
+      "rarity": 0,
+      "sell_price": 10000,
+      "icon": 16,
+      "req_lv": 50,
+      "armor_physical": 288
+    },
+    {
+      "code": 46,
+      "name_kor": "실키얀 튜닉",
+      "name_eng": "Silky Yarn Tunic",
+      "rarity": 1,
+      "sell_price": 27000,
+      "icon": 102,
+      "req_lv": 90,
+      "armor_physical": 540
+    },
+    {
+      "code": 47,
+      "name_kor": "양모 튜닉",
+      "name_eng": "Wool Tunic",
+      "rarity": 1,
+      "sell_price": 15000,
+      "icon": 40,
+      "req_lv": 50,
+      "armor_physical": 300
+    },
+    {
+      "code": 48,
+      "name_kor": "환영의 턱시도",
+      "explain": "피격시 10%% 확률로 5.09초동안 적을 혼란에 빠지게 만듭니다.",
+      "name_eng": "Tuxedo of Phantom",
+      "rarity": 3,
+      "sell_price": 39600,
+      "icon": 1,
+      "req_lv": 80,
+      "armor_physical": 600
+    },
+    {
+      "code": 49,
+      "name_kor": "오래된 실키얀 조끼",
+      "name_eng": "Old Silky Yarn Vest",
+      "rarity": 0,
+      "sell_price": 16000,
+      "icon": 107,
+      "req_lv": 80,
+      "armor_physical": 468
+    },
+    {
+      "code": 50,
+      "name_kor": "오래된 양모 조끼",
+      "name_eng": "Old Wool Vest",
+      "rarity": 0,
+      "sell_price": 8000,
+      "icon": 21,
+      "req_lv": 40,
+      "armor_physical": 228
+    },
+    {
+      "code": 51,
+      "name_kor": "비명초 조끼",
+      "explain": "피격시 10%% 확률로 맞은자리에 비명초를 심는다.",
+      "name_eng": "Vest of Scream Glass",
+      "rarity": 2,
+      "sell_price": 18900,
+      "icon": 9,
+      "req_lv": 50,
+      "armor_physical": 360
+    },
+    {
+      "code": 52,
+      "name_kor": "실키얀 조끼",
+      "name_eng": "Silky Yarn Vest",
+      "rarity": 1,
+      "sell_price": 24000,
+      "icon": 107,
+      "req_lv": 80,
+      "armor_physical": 480
+    },
+    {
+      "code": 53,
+      "name_kor": "타우갈기 조끼",
+      "explain": "피격시 5%% 확률로 Lv15 타우가드를 소환합니다. 소환된 타우가드는 60초 후에 사라집니다.",
+      "name_eng": "Vest of Tau's Mane",
+      "rarity": 2,
+      "sell_price": 25900,
+      "icon": 6,
+      "req_lv": 70,
+      "armor_physical": 480
+    },
+    {
+      "code": 54,
+      "name_kor": "양모 조끼",
+      "name_eng": "Wool Vest",
+      "rarity": 1,
+      "sell_price": 12000,
+      "icon": 21,
+      "req_lv": 40,
+      "armor_physical": 240
+    },
+    {
+      "code": 55,
+      "name_kor": "초급 마법사 로브",
+      "name_eng": "Robe of Beginning Mage",
+      "rarity": 2,
+      "sell_price": 8400,
+      "icon": 55,
+      "req_lv": 20,
+      "armor_physical": 180
+    },
+    {
+      "code": 56,
+      "name_kor": "(구)요정의 축복 로브",
+      "name_eng": "Blessing Robe of Fairy",
+      "rarity": 2,
+      "sell_price": 28700,
+      "icon": 5,
+      "req_lv": 78,
+      "armor_physical": 528
+    },
+    {
+      "code": 57,
+      "name_kor": "(구)카본파이버 로브",
+      "name_eng": "Robe of Carbon Fiber",
+      "rarity": 2,
+      "sell_price": 16100,
+      "icon": 10,
+      "req_lv": 42,
+      "armor_physical": 312
+    },
+    {
+      "code": 58,
+      "name_kor": "서클메이지 단복 로브",
+      "name_eng": "Circle Mage Uniform Robe",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 98,
+      "req_lv": 90,
+      "armor_physical": 600
+    },
+    {
+      "code": 59,
+      "name_kor": "면 로브",
+      "name_eng": "Cloth Robe",
+      "rarity": 1,
+      "sell_price": 8400,
+      "icon": 16,
+      "req_lv": 28,
+      "armor_physical": 168
+    },
+    {
+      "code": 60,
+      "name_kor": "코메트 실크 로브",
+      "name_eng": "Comet Silk Robe",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 31,
+      "req_lv": 80,
+      "armor_physical": 540
+    },
+    {
+      "code": 61,
+      "name_kor": "에니그마 인보커 로브",
+      "name_eng": "Enigma Invoker Robe",
+      "rarity": 2,
+      "sell_price": 36400,
+      "icon": 99,
+      "req_lv": 100,
+      "armor_physical": 660
+    },
+    {
+      "code": 62,
+      "name_kor": "생명의 친화 로브",
+      "name_eng": "Vital Frienship Robe",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 97,
+      "req_lv": 80,
+      "armor_physical": 540
+    },
+    {
+      "code": 63,
+      "name_kor": "(구)그라파이트 로브",
+      "name_eng": "Graphite Robe",
+      "rarity": 3,
+      "sell_price": 25200,
+      "icon": 3,
+      "req_lv": 48,
+      "armor_physical": 408
+    },
+    {
+      "code": 64,
+      "name_kor": "강화된 면 로브",
+      "name_eng": "Hard Cloth Robe",
+      "rarity": 1,
+      "sell_price": 9600,
+      "icon": 16,
+      "req_lv": 32,
+      "armor_physical": 192
+    },
+    {
+      "code": 65,
+      "name_kor": "군자의 로브",
+      "name_eng": "Robe of Honor Man",
+      "rarity": 2,
+      "sell_price": 14000,
+      "icon": 11,
+      "req_lv": 36,
+      "armor_physical": 276
+    },
+    {
+      "code": 66,
+      "name_kor": "(구)강화된 실키얀 로브",
+      "name_eng": "Hard Silky Yarn Robe",
+      "rarity": 1,
+      "sell_price": 23400,
+      "icon": 102,
+      "req_lv": 78,
+      "armor_physical": 468
+    },
+    {
+      "code": 67,
+      "name_kor": "(구)강화된 양모 로브",
+      "name_eng": "Hard Wool Robe",
+      "rarity": 1,
+      "sell_price": 16800,
+      "icon": 40,
+      "req_lv": 56,
+      "armor_physical": 336
+    },
+    {
+      "code": 68,
+      "name_kor": "마나 라멜라 로브",
+      "name_eng": "Mana Lamella Robe",
+      "rarity": 2,
+      "sell_price": 36400,
+      "icon": 78,
+      "req_lv": 100,
+      "armor_physical": 660
+    },
+    {
+      "code": 69,
+      "name_kor": "뮤징 레갈리아 로브",
+      "name_eng": "Musing Regalia Robe",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 73,
+      "req_lv": 90,
+      "armor_physical": 600
+    },
+    {
+      "code": 70,
+      "name_kor": "(구)헨돈마이어 귀족 로브",
+      "name_eng": "Noble Robe of Hendon Myre",
+      "rarity": 2,
+      "sell_price": 20300,
+      "icon": 8,
+      "req_lv": 54,
+      "armor_physical": 384
+    },
+    {
+      "code": 71,
+      "name_kor": "사일런트 프레이야 로브",
+      "name_eng": "Silent Freyja Robe",
+      "rarity": 2,
+      "sell_price": 36400,
+      "icon": 74,
+      "req_lv": 100,
+      "armor_physical": 660
+    },
+    {
+      "code": 72,
+      "name_kor": "(구)실키얀 로브",
+      "name_eng": "Silky Yarn Robe",
+      "rarity": 1,
+      "sell_price": 22800,
+      "icon": 102,
+      "req_lv": 76,
+      "armor_physical": 456
+    },
+    {
+      "code": 73,
+      "name_kor": "스타 플라티나 로브",
+      "name_eng": "Star Platina Robe",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 77,
+      "req_lv": 90,
+      "armor_physical": 600
+    },
+    {
+      "code": 74,
+      "name_kor": "낡은 면 로브",
+      "name_eng": "Used Cloth Robe",
+      "rarity": 0,
+      "sell_price": 5600,
+      "icon": 16,
+      "req_lv": 28,
+      "armor_physical": 156
+    },
+    {
+      "code": 75,
+      "name_kor": "(구)낡은 실키얀 로브",
+      "name_eng": "Used Silky Yarn Robe",
+      "rarity": 0,
+      "sell_price": 15200,
+      "icon": 102,
+      "req_lv": 76,
+      "armor_physical": 444
+    },
+    {
+      "code": 76,
+      "name_kor": "(구)낡은 양모 로브",
+      "name_eng": "Used Wool Robe",
+      "rarity": 0,
+      "sell_price": 10400,
+      "icon": 40,
+      "req_lv": 52,
+      "armor_physical": 300
+    },
+    {
+      "code": 77,
+      "name_kor": "(구)양모 로브",
+      "name_eng": "Wool Robe",
+      "rarity": 1,
+      "sell_price": 15600,
+      "icon": 40,
+      "req_lv": 52,
+      "armor_physical": 312
+    },
+    {
+      "code": 78,
+      "name_kor": "면 셔츠",
+      "name_eng": "Cloth Shirt",
+      "rarity": 1,
+      "sell_price": 3000,
+      "icon": 16,
+      "req_lv": 10,
+      "armor_physical": 60
+    },
+    {
+      "code": 79,
+      "name_kor": "더블 클로스 셔츠",
+      "name_eng": "Double Cloth Shirts",
+      "rarity": 2,
+      "sell_price": 7000,
+      "icon": 11,
+      "req_lv": 16,
+      "armor_physical": 156
+    },
+    {
+      "code": 80,
+      "name_kor": "그람블링의 낡은 재킷",
+      "name_eng": "Gramblin's Worn Jacket",
+      "rarity": 2,
+      "sell_price": 8400,
+      "icon": 11,
+      "req_lv": 20,
+      "armor_physical": 180
+    },
+    {
+      "code": 81,
+      "name_kor": "(구)오래된 벨벳 셔츠",
+      "name_eng": "Old Velvet Shirt",
+      "rarity": 0,
+      "sell_price": 16400,
+      "icon": 102,
+      "req_lv": 82,
+      "armor_physical": 480
+    },
+    {
+      "code": 82,
+      "name_kor": "찢어진 면 셔츠",
+      "name_eng": "Ragged Cloth Shirt",
+      "rarity": 0,
+      "sell_price": 400,
+      "icon": 16,
+      "req_lv": 2,
+      "armor_physical": 11
+    },
+    {
+      "code": 83,
+      "name_kor": "허름한 면 셔츠",
+      "name_eng": "Shabby Cloth Shirt",
+      "rarity": 0,
+      "sell_price": 2000,
+      "icon": 16,
+      "req_lv": 10,
+      "armor_physical": 48
+    },
+    {
+      "code": 84,
+      "name_kor": "(구)허름한 실키얀 셔츠",
+      "name_eng": "Shabby Silky Yarn Shirt",
+      "rarity": 0,
+      "sell_price": 11600,
+      "icon": 102,
+      "req_lv": 58,
+      "armor_physical": 336
+    },
+    {
+      "code": 85,
+      "name_kor": "허름한 양모 셔츠",
+      "name_eng": "Shabby Wool Shirt",
+      "rarity": 0,
+      "sell_price": 6800,
+      "icon": 16,
+      "req_lv": 34,
+      "armor_physical": 192
+    },
+    {
+      "code": 86,
+      "name_kor": "(구)실키얀 셔츠",
+      "name_eng": "Silky Yarn Shirt",
+      "rarity": 1,
+      "sell_price": 17400,
+      "icon": 102,
+      "req_lv": 58,
+      "armor_physical": 348
+    },
+    {
+      "code": 87,
+      "name_kor": "너덜너덜한 면 셔츠",
+      "name_eng": "Tattered Cloth Shirt",
+      "rarity": 0,
+      "sell_price": 1200,
+      "icon": 16,
+      "req_lv": 6,
+      "armor_physical": 24
+    },
+    {
+      "code": 88,
+      "name_kor": "질긴 면 셔츠",
+      "name_eng": "Tough Cloth Shirt",
+      "rarity": 1,
+      "sell_price": 4200,
+      "icon": 16,
+      "req_lv": 14,
+      "armor_physical": 84
+    },
+    {
+      "code": 89,
+      "name_kor": "(구)질긴 실키얀 셔츠",
+      "name_eng": "Tough Silky Yarn Shirt",
+      "rarity": 1,
+      "sell_price": 18600,
+      "icon": 102,
+      "req_lv": 62,
+      "armor_physical": 372
+    },
+    {
+      "code": 90,
+      "name_kor": "질긴 양모 셔츠",
+      "name_eng": "Tough Wool Shirt",
+      "rarity": 1,
+      "sell_price": 11400,
+      "icon": 40,
+      "req_lv": 38,
+      "armor_physical": 228
+    },
+    {
+      "code": 91,
+      "name_kor": "(구)벨벳 셔츠",
+      "name_eng": "Velvet Shirt",
+      "rarity": 1,
+      "sell_price": 24600,
+      "icon": 102,
+      "req_lv": 82,
+      "armor_physical": 492
+    },
+    {
+      "code": 92,
+      "name_kor": "양모 셔츠",
+      "name_eng": "Wool Shirt",
+      "rarity": 1,
+      "sell_price": 10200,
+      "icon": 40,
+      "req_lv": 34,
+      "armor_physical": 204
+    },
+    {
+      "code": 93,
+      "name_kor": "면 튜닉",
+      "name_eng": "Cloth Tunic",
+      "rarity": 1,
+      "sell_price": 6600,
+      "icon": 16,
+      "req_lv": 22,
+      "armor_physical": 132
+    },
+    {
+      "code": 94,
+      "name_kor": "(구)얼음실 튜닉",
+      "explain": "피격시 5% 확률로 4.93초동안 적을 얼립니다.",
+      "name_eng": "Tunic of Ice Seal",
+      "rarity": 2,
+      "sell_price": 22400,
+      "icon": 7,
+      "req_lv": 60,
+      "armor_physical": 420
+    },
+    {
+      "code": 95,
+      "name_kor": "신형 면 튜닉",
+      "name_eng": "Novelty Cloth Tunic",
+      "rarity": 1,
+      "sell_price": 7800,
+      "icon": 16,
+      "req_lv": 26,
+      "armor_physical": 156
+    },
+    {
+      "code": 96,
+      "name_kor": "(구)신형 실키얀 튜닉",
+      "name_eng": "Novelty Silky Yarn Tunic",
+      "rarity": 1,
+      "sell_price": 22200,
+      "icon": 102,
+      "req_lv": 74,
+      "armor_physical": 444
+    },
+    {
+      "code": 97,
+      "name_kor": "(구)신형 양모 튜닉",
+      "name_eng": "Novelty Wool Tunic",
+      "rarity": 1,
+      "sell_price": 15000,
+      "icon": 40,
+      "req_lv": 50,
+      "armor_physical": 300
+    },
+    {
+      "code": 98,
+      "name_kor": "구식 면 튜닉",
+      "name_eng": "Outdated Cloth Tunic",
+      "rarity": 0,
+      "sell_price": 4400,
+      "icon": 16,
+      "req_lv": 22,
+      "armor_physical": 120
+    },
+    {
+      "code": 99,
+      "name_kor": "(구)구식 실키얀 튜닉",
+      "name_eng": "Outdated Silky Yarn Tunic",
+      "rarity": 0,
+      "sell_price": 14000,
+      "icon": 102,
+      "req_lv": 70,
+      "armor_physical": 408
+    },
+    {
+      "code": 100,
+      "name_kor": "(구)구식 양모 튜닉",
+      "name_eng": "Outdated Wool Tunic",
+      "rarity": 0,
+      "sell_price": 9200,
+      "icon": 16,
+      "req_lv": 46,
+      "armor_physical": 264
+    },
+    {
+      "code": 101,
+      "name_kor": "(구)실키얀 튜닉",
+      "name_eng": "Silky Yarn Tunic",
+      "rarity": 1,
+      "sell_price": 21000,
+      "icon": 102,
+      "req_lv": 70,
+      "armor_physical": 420
+    },
+    {
+      "code": 102,
+      "name_kor": "(구)양모 튜닉",
+      "name_eng": "Wool Tunic",
+      "rarity": 1,
+      "sell_price": 13800,
+      "icon": 40,
+      "req_lv": 46,
+      "armor_physical": 276
+    },
+    {
+      "code": 103,
+      "name_kor": "(구)환영의 턱시도",
+      "explain": "피격시 10%% 확률로 4.31초동안 적을 혼란에 빠지게 만듭니다.",
+      "name_eng": "Tuxedo of Phantom",
+      "rarity": 3,
+      "sell_price": 32400,
+      "icon": 1,
+      "req_lv": 64,
+      "armor_physical": 504
+    },
+    {
+      "code": 104,
+      "name_kor": "방탄형 베스트",
+      "explain": "원거리 공격에 대한 방어력 +30 증가",
+      "name_eng": "Bulletproof Vest",
+      "rarity": 2,
+      "sell_price": 11200,
+      "icon": 11,
+      "req_lv": 28,
+      "armor_physical": 228
+    },
+    {
+      "code": 105,
+      "name_kor": "면 조끼",
+      "name_eng": "Cloth Vest",
+      "rarity": 1,
+      "sell_price": 4800,
+      "icon": 21,
+      "req_lv": 16,
+      "armor_physical": 96
+    },
+    {
+      "code": 106,
+      "name_kor": "오래된 면 조끼",
+      "name_eng": "Old Cloth Vest",
+      "rarity": 0,
+      "sell_price": 3200,
+      "icon": 16,
+      "req_lv": 16,
+      "armor_physical": 84
+    },
+    {
+      "code": 107,
+      "name_kor": "(구)오래된 실키얀 조끼",
+      "name_eng": "Old Silky Yarn Vest",
+      "rarity": 0,
+      "sell_price": 12800,
+      "icon": 107,
+      "req_lv": 64,
+      "armor_physical": 372
+    },
+    {
+      "code": 108,
+      "name_kor": "(구)오래된 양모 조끼",
+      "name_eng": "Old Wool Vest",
+      "rarity": 0,
+      "sell_price": 8000,
+      "icon": 21,
+      "req_lv": 40,
+      "armor_physical": 228
+    },
+    {
+      "code": 109,
+      "name_kor": "(구)비명초 조끼",
+      "explain": "피격시 10%% 확률로 맞은자리에 비명초를 심는다.",
+      "name_eng": "Vest of Scream Glass",
+      "rarity": 2,
+      "sell_price": 18200,
+      "icon": 9,
+      "req_lv": 48,
+      "armor_physical": 348
+    },
+    {
+      "code": 110,
+      "name_kor": "(구)실키얀 조끼",
+      "name_eng": "Silky Yarn Vest",
+      "rarity": 1,
+      "sell_price": 19200,
+      "icon": 107,
+      "req_lv": 64,
+      "armor_physical": 384
+    },
+    {
+      "code": 111,
+      "name_kor": "(구)타우갈기 조끼",
+      "explain": "피격시 5%% 확률로 Lv15 타우가드를 소환한다.",
+      "name_eng": "Vest of Tau's Mane",
+      "rarity": 2,
+      "sell_price": 24500,
+      "icon": 6,
+      "req_lv": 66,
+      "armor_physical": 456
+    },
+    {
+      "code": 112,
+      "name_kor": "두꺼운 면 조끼",
+      "name_eng": "Thick Cloth Vest",
+      "rarity": 1,
+      "sell_price": 6000,
+      "icon": 21,
+      "req_lv": 20,
+      "armor_physical": 120
+    },
+    {
+      "code": 113,
+      "name_kor": "(구)두꺼운 실키얀 조끼",
+      "name_eng": "Thick Silky Yarn Vest",
+      "rarity": 1,
+      "sell_price": 20400,
+      "icon": 107,
+      "req_lv": 68,
+      "armor_physical": 408
+    },
+    {
+      "code": 114,
+      "name_kor": "(구)두꺼운 양모 조끼",
+      "name_eng": "Thick Wool Vest",
+      "rarity": 1,
+      "sell_price": 13200,
+      "icon": 21,
+      "req_lv": 44,
+      "armor_physical": 264
+    },
+    {
+      "code": 115,
+      "name_kor": "(구)양모 조끼",
+      "name_eng": "Wool Vest",
+      "rarity": 1,
+      "sell_price": 12000,
+      "icon": 21,
+      "req_lv": 40,
+      "armor_physical": 240
+    }
+  ]
+}

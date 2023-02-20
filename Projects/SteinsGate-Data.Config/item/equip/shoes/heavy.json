@@ -1,0 +1,857 @@
+{
+  "heavy": [
+    {
+      "code": 1,
+      "name_kor": "미늘 부츠",
+      "name_eng": "Barb Boots",
+      "rarity": 1,
+      "sell_price": 10200,
+      "icon": 138,
+      "req_lv": 34,
+      "armor_physical": 408
+    },
+    {
+      "code": 2,
+      "name_kor": "블론델의 부츠",
+      "explain": "내구도 증가",
+      "name_eng": "Boots of Blondel",
+      "rarity": 0,
+      "sell_price": 2000,
+      "icon": 22,
+      "req_lv": 8,
+      "armor_physical": 72
+    },
+    {
+      "code": 3,
+      "name_kor": "초경량 카볼라이트 부츠",
+      "name_eng": "Carbollite Boots",
+      "rarity": 2,
+      "sell_price": 25900,
+      "icon": 41,
+      "req_lv": 70,
+      "armor_physical": 960
+    },
+    {
+      "code": 4,
+      "name_kor": "(구)체인 부츠",
+      "name_eng": "Chain Boots",
+      "rarity": 1,
+      "sell_price": 17400,
+      "icon": 181,
+      "req_lv": 58,
+      "armor_physical": 696
+    },
+    {
+      "code": 5,
+      "name_kor": "(구)코부르크식 부츠",
+      "name_eng": "Coburg Boots",
+      "rarity": 1,
+      "sell_price": 24600,
+      "icon": 181,
+      "req_lv": 82,
+      "armor_physical": 984
+    },
+    {
+      "code": 6,
+      "name_kor": "(구)드래고닉 스킨 부츠",
+      "name_eng": "Dragonic Skin Boots",
+      "rarity": 2,
+      "sell_price": 24500,
+      "icon": 15,
+      "req_lv": 66,
+      "armor_physical": 912
+    },
+    {
+      "code": 7,
+      "name_kor": "멜티 블러드 부츠",
+      "name_eng": "Melty Blood Boots",
+      "rarity": 2,
+      "sell_price": 25900,
+      "icon": 39,
+      "req_lv": 70,
+      "armor_physical": 960
+    },
+    {
+      "code": 8,
+      "name_kor": "(구)멧세 쿼드라트 부츠",
+      "name_eng": "Messe Quadrat Boots",
+      "rarity": 2,
+      "sell_price": 14000,
+      "icon": 17,
+      "req_lv": 36,
+      "armor_physical": 552
+    },
+    {
+      "code": 9,
+      "name_kor": "녹슨 미늘 부츠",
+      "name_eng": "Rusty Barb Boots",
+      "rarity": 0,
+      "sell_price": 6800,
+      "icon": 138,
+      "req_lv": 34,
+      "armor_physical": 384
+    },
+    {
+      "code": 10,
+      "name_kor": "(구)녹슨 체인 부츠",
+      "name_eng": "Rusty Chain Boots",
+      "rarity": 0,
+      "sell_price": 11600,
+      "icon": 181,
+      "req_lv": 58,
+      "armor_physical": 672
+    },
+    {
+      "code": 11,
+      "name_kor": "(구)녹슨 코부르크식 부츠",
+      "name_eng": "Rusty Coburg Boots",
+      "rarity": 0,
+      "sell_price": 16400,
+      "icon": 181,
+      "req_lv": 82,
+      "armor_physical": 960
+    },
+    {
+      "code": 12,
+      "name_kor": "링 부츠",
+      "name_eng": "Ring Boots",
+      "rarity": 1,
+      "sell_price": 3000,
+      "icon": 135,
+      "req_lv": 10,
+      "armor_physical": 120
+    },
+    {
+      "code": 13,
+      "name_kor": "녹슨 링 부츠",
+      "name_eng": "Rusty Ring Boots",
+      "rarity": 0,
+      "sell_price": 2000,
+      "icon": 135,
+      "req_lv": 10,
+      "armor_physical": 96
+    },
+    {
+      "code": 14,
+      "name_kor": "(구)슈바르츠 크라이스 부츠",
+      "name_eng": "Schwarz Kreis Boots",
+      "rarity": 2,
+      "sell_price": 11900,
+      "icon": 18,
+      "req_lv": 30,
+      "armor_physical": 480
+    },
+    {
+      "code": 15,
+      "name_kor": "(구)샤이닝 로리카 부츠",
+      "explain": "명속성 맵에서 이동속도 +25",
+      "name_eng": "Shining Lorica Boots",
+      "rarity": 2,
+      "sell_price": 20300,
+      "icon": 16,
+      "req_lv": 54,
+      "armor_physical": 768
+    },
+    {
+      "code": 16,
+      "name_kor": "단단한 미늘 부츠",
+      "name_eng": "Stiff Barb Boots",
+      "rarity": 1,
+      "sell_price": 11400,
+      "icon": 138,
+      "req_lv": 38,
+      "armor_physical": 456
+    },
+    {
+      "code": 17,
+      "name_kor": "(구)단단한 체인 부츠",
+      "name_eng": "Stiff Chain Boots",
+      "rarity": 1,
+      "sell_price": 18600,
+      "icon": 181,
+      "req_lv": 62,
+      "armor_physical": 744
+    },
+    {
+      "code": 18,
+      "name_kor": "단단한 링 부츠",
+      "name_eng": "Stiff Ring Boots",
+      "rarity": 1,
+      "sell_price": 4200,
+      "icon": 135,
+      "req_lv": 14,
+      "armor_physical": 168
+    },
+    {
+      "code": 19,
+      "name_kor": "낡아빠진 링 부츠",
+      "name_eng": "Used Ring Boots",
+      "rarity": 0,
+      "sell_price": 1200,
+      "icon": 135,
+      "req_lv": 6,
+      "armor_physical": 48
+    },
+    {
+      "code": 20,
+      "name_kor": "닳아빠진 링 부츠",
+      "name_eng": "Worn Ring Boots",
+      "rarity": 0,
+      "sell_price": 400,
+      "icon": 135,
+      "req_lv": 2,
+      "armor_physical": 22
+    },
+    {
+      "code": 21,
+      "name_kor": "(구)미늘 중갑 부츠",
+      "name_eng": "Barb Heavy Boots",
+      "rarity": 1,
+      "sell_price": 15600,
+      "icon": 138,
+      "req_lv": 52,
+      "armor_physical": 624
+    },
+    {
+      "code": 22,
+      "name_kor": "(구)촘촘한 미늘 중갑 부츠",
+      "name_eng": "Close Barb Heavy Boots",
+      "rarity": 1,
+      "sell_price": 16800,
+      "icon": 138,
+      "req_lv": 56,
+      "armor_physical": 672
+    },
+    {
+      "code": 23,
+      "name_kor": "(구)촘촘한 체인 중갑 부츠",
+      "name_eng": "Close Chain Heavy Boots",
+      "rarity": 1,
+      "sell_price": 23400,
+      "icon": 181,
+      "req_lv": 78,
+      "armor_physical": 936
+    },
+    {
+      "code": 24,
+      "name_kor": "(구)체인 중갑 부츠",
+      "name_eng": "Chain Heavy Boots",
+      "rarity": 1,
+      "sell_price": 22800,
+      "icon": 181,
+      "req_lv": 76,
+      "armor_physical": 912
+    },
+    {
+      "code": 25,
+      "name_kor": "촘촘한 링 중갑 부츠",
+      "name_eng": "Close Ring Heavy Boots",
+      "rarity": 1,
+      "sell_price": 9600,
+      "icon": 135,
+      "req_lv": 32,
+      "armor_physical": 384
+    },
+    {
+      "code": 26,
+      "name_kor": "링 중갑 부츠",
+      "name_eng": "Ring Heavy Boots",
+      "rarity": 1,
+      "sell_price": 8400,
+      "icon": 135,
+      "req_lv": 28,
+      "armor_physical": 336
+    },
+    {
+      "code": 27,
+      "name_kor": "허술한 링 중갑 부츠",
+      "name_eng": "Shabby Ring Heavy Boots",
+      "rarity": 0,
+      "sell_price": 5600,
+      "icon": 135,
+      "req_lv": 28,
+      "armor_physical": 312
+    },
+    {
+      "code": 28,
+      "name_kor": "(구)낡은 미늘 중갑 부츠",
+      "name_eng": "Used Barb Heavy Boots",
+      "rarity": 0,
+      "sell_price": 10400,
+      "icon": 138,
+      "req_lv": 52,
+      "armor_physical": 600
+    },
+    {
+      "code": 29,
+      "name_kor": "(구)낡은 체인 중갑 부츠",
+      "name_eng": "Used Chain Heavy Boots",
+      "rarity": 0,
+      "sell_price": 15200,
+      "icon": 181,
+      "req_lv": 76,
+      "armor_physical": 888
+    },
+    {
+      "code": 30,
+      "name_kor": "유물 : 라트리의 미늘 슈즈",
+      "name_eng": "Legacy : Shoes of Latri",
+      "rarity": 2,
+      "sell_price": 15400,
+      "icon": 184,
+      "req_lv": 40,
+      "armor_physical": 600
+    },
+    {
+      "code": 31,
+      "name_kor": "유물 : 성스러운 큐빌레이의 체인 슈즈",
+      "name_eng": "Legacy : Holy Shoes of Cubeley",
+      "rarity": 2,
+      "sell_price": 25900,
+      "icon": 297,
+      "req_lv": 70,
+      "armor_physical": 960
+    },
+    {
+      "code": 32,
+      "name_kor": "유물 : 이슈타르의 체인 사바톤",
+      "name_eng": "Legacy : Shoes of Ishtar",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 307,
+      "req_lv": 80,
+      "armor_physical": 1080
+    },
+    {
+      "code": 33,
+      "name_kor": "유물 : 큐빌레이의 체인 슈즈",
+      "name_eng": "Legacy : Shoes of Cubeley",
+      "rarity": 2,
+      "sell_price": 22400,
+      "icon": 159,
+      "req_lv": 60,
+      "armor_physical": 840
+    },
+    {
+      "code": 34,
+      "name_kor": "유물 : 성스러운 라트리의 미늘 슈즈",
+      "name_eng": "Legacy : Holy Shoes of Latri",
+      "rarity": 2,
+      "sell_price": 18900,
+      "icon": 278,
+      "req_lv": 50,
+      "armor_physical": 720
+    },
+    {
+      "code": 35,
+      "name_kor": "유물 : 성스러운 이슈타르의 체인 사바톤",
+      "name_eng": "Legacy :Holy Shoes of Ishtar",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 312,
+      "req_lv": 90,
+      "armor_physical": 1200
+    },
+    {
+      "code": 36,
+      "name_kor": "체인 부츠",
+      "name_eng": "Chain Boots",
+      "rarity": 1,
+      "sell_price": 21000,
+      "icon": 181,
+      "req_lv": 70,
+      "armor_physical": 840
+    },
+    {
+      "code": 37,
+      "name_kor": "코부르크식 부츠",
+      "name_eng": "Coburg Boots",
+      "rarity": 1,
+      "sell_price": 33000,
+      "icon": 181,
+      "req_lv": 110,
+      "armor_physical": 1320
+    },
+    {
+      "code": 38,
+      "name_kor": "드래고닉 스킨 부츠",
+      "name_eng": "Dragonic Skin Boots",
+      "rarity": 2,
+      "sell_price": 22400,
+      "icon": 15,
+      "req_lv": 60,
+      "armor_physical": 840
+    },
+    {
+      "code": 39,
+      "name_kor": "제라드의 화염걷기",
+      "name_eng": "Gerrad's Flamewalker",
+      "rarity": 4,
+      "sell_price": 49500,
+      "icon": 102,
+      "req_lv": 100,
+      "armor_physical": 1488
+    },
+    {
+      "code": 40,
+      "name_kor": "크락사스 중장화",
+      "name_eng": "Kraksas Heavy Boots",
+      "rarity": 4,
+      "sell_price": 31500,
+      "icon": 101,
+      "req_lv": 60,
+      "armor_physical": 1008
+    },
+    {
+      "code": 41,
+      "name_kor": "멧세 쿼드라트 부츠",
+      "name_eng": "Messe Quadrat Boots",
+      "rarity": 2,
+      "sell_price": 15400,
+      "icon": 17,
+      "req_lv": 40,
+      "armor_physical": 600
+    },
+    {
+      "code": 42,
+      "name_kor": "녹슨 체인 부츠",
+      "name_eng": "Rusty Chain Boots",
+      "rarity": 0,
+      "sell_price": 14000,
+      "icon": 181,
+      "req_lv": 70,
+      "armor_physical": 816
+    },
+    {
+      "code": 43,
+      "name_kor": "녹슨 코부르크식 부츠",
+      "name_eng": "Rusty Coburg Boots",
+      "rarity": 0,
+      "sell_price": 22000,
+      "icon": 181,
+      "req_lv": 110,
+      "armor_physical": 1296
+    },
+    {
+      "code": 44,
+      "name_kor": "슈바르츠 크라이스 부츠",
+      "name_eng": "Schwarz Kreis Boots",
+      "rarity": 2,
+      "sell_price": 11900,
+      "icon": 18,
+      "req_lv": 30,
+      "armor_physical": 480
+    },
+    {
+      "code": 45,
+      "name_kor": "샤이닝 로리카 부츠",
+      "explain": "명속성 맵에서 이동속도 +25",
+      "name_eng": "Shining Lorica Boots",
+      "rarity": 2,
+      "sell_price": 18900,
+      "icon": 16,
+      "req_lv": 50,
+      "armor_physical": 720
+    },
+    {
+      "code": 46,
+      "name_kor": "미늘 중갑 부츠",
+      "name_eng": "Barb Heavy Boots",
+      "rarity": 1,
+      "sell_price": 18000,
+      "icon": 138,
+      "req_lv": 60,
+      "armor_physical": 720
+    },
+    {
+      "code": 47,
+      "name_kor": "체인 중갑 부츠",
+      "name_eng": "Chain Heavy Boots",
+      "rarity": 1,
+      "sell_price": 30000,
+      "icon": 181,
+      "req_lv": 100,
+      "armor_physical": 1200
+    },
+    {
+      "code": 48,
+      "name_kor": "낡은 미늘 중갑 부츠",
+      "name_eng": "Used Barb Heavy Boots",
+      "rarity": 0,
+      "sell_price": 12000,
+      "icon": 138,
+      "req_lv": 60,
+      "armor_physical": 696
+    },
+    {
+      "code": 49,
+      "name_kor": "낡은 체인 중갑 부츠",
+      "name_eng": "Used Chain Heavy Boots",
+      "rarity": 0,
+      "sell_price": 20000,
+      "icon": 181,
+      "req_lv": 100,
+      "armor_physical": 1176
+    },
+    {
+      "code": 50,
+      "name_kor": "미늘 오버슈즈",
+      "name_eng": "Barb Over-Shoes",
+      "rarity": 1,
+      "sell_price": 12000,
+      "icon": 138,
+      "req_lv": 40,
+      "armor_physical": 480
+    },
+    {
+      "code": 51,
+      "name_kor": "체인 오버슈즈",
+      "name_eng": "Chain Over-Shoes",
+      "rarity": 1,
+      "sell_price": 24000,
+      "icon": 181,
+      "req_lv": 80,
+      "armor_physical": 960
+    },
+    {
+      "code": 52,
+      "name_kor": "마모된 미늘 오버슈즈",
+      "name_eng": "Rubbed Barb Over-Shoes",
+      "rarity": 0,
+      "sell_price": 8000,
+      "icon": 138,
+      "req_lv": 40,
+      "armor_physical": 456
+    },
+    {
+      "code": 53,
+      "name_kor": "마모된 체인 오버슈즈",
+      "name_eng": "Rubbed Chain Over-Shoes",
+      "rarity": 0,
+      "sell_price": 16000,
+      "icon": 181,
+      "req_lv": 80,
+      "armor_physical": 936
+    },
+    {
+      "code": 54,
+      "name_kor": "미늘 사바톤",
+      "name_eng": "Barb Sabatons",
+      "rarity": 1,
+      "sell_price": 15000,
+      "icon": 138,
+      "req_lv": 50,
+      "armor_physical": 600
+    },
+    {
+      "code": 55,
+      "name_kor": "체인 사바톤",
+      "name_eng": "Chain Sabatons",
+      "rarity": 1,
+      "sell_price": 27000,
+      "icon": 181,
+      "req_lv": 90,
+      "armor_physical": 1080
+    },
+    {
+      "code": 56,
+      "name_kor": "허술한 미늘 사바톤",
+      "name_eng": "Shabby Barb Sabatons",
+      "rarity": 0,
+      "sell_price": 10000,
+      "icon": 138,
+      "req_lv": 50,
+      "armor_physical": 576
+    },
+    {
+      "code": 57,
+      "name_kor": "허술한 체인 사바톤",
+      "name_eng": "Shabby Chain Sabatons",
+      "rarity": 0,
+      "sell_price": 18000,
+      "icon": 181,
+      "req_lv": 90,
+      "armor_physical": 1056
+    },
+    {
+      "code": 58,
+      "name_kor": "(구)미늘 오버슈즈",
+      "name_eng": "Barb Over-Shoes",
+      "rarity": 1,
+      "sell_price": 12000,
+      "icon": 138,
+      "req_lv": 40,
+      "armor_physical": 480
+    },
+    {
+      "code": 59,
+      "name_kor": "(구)체인 오버슈즈",
+      "name_eng": "Chain Over-Shoes",
+      "rarity": 1,
+      "sell_price": 19200,
+      "icon": 181,
+      "req_lv": 64,
+      "armor_physical": 768
+    },
+    {
+      "code": 60,
+      "name_kor": "(구)튼튼한 미늘 오버슈즈",
+      "name_eng": "Firm Barb Over-Shoes",
+      "rarity": 1,
+      "sell_price": 13200,
+      "icon": 138,
+      "req_lv": 44,
+      "armor_physical": 528
+    },
+    {
+      "code": 61,
+      "name_kor": "(구)튼튼한 체인 오버슈즈",
+      "name_eng": "Firm Chain Over-Shoes",
+      "rarity": 1,
+      "sell_price": 20400,
+      "icon": 181,
+      "req_lv": 68,
+      "armor_physical": 816
+    },
+    {
+      "code": 62,
+      "name_kor": "튼튼한 링 오버슈즈",
+      "name_eng": "Firm Ring Over-Shoes",
+      "rarity": 1,
+      "sell_price": 6000,
+      "icon": 135,
+      "req_lv": 20,
+      "armor_physical": 240
+    },
+    {
+      "code": 63,
+      "name_kor": "링 오버슈즈",
+      "name_eng": "Ring Over-Shoes",
+      "rarity": 1,
+      "sell_price": 4800,
+      "icon": 135,
+      "req_lv": 16,
+      "armor_physical": 192
+    },
+    {
+      "code": 64,
+      "name_kor": "(구)마모된 미늘 오버슈즈",
+      "name_eng": "Rubbed Barb Over-Shoes",
+      "rarity": 0,
+      "sell_price": 8000,
+      "icon": 138,
+      "req_lv": 40,
+      "armor_physical": 456
+    },
+    {
+      "code": 65,
+      "name_kor": "(구)마모된 체인 오버슈즈",
+      "name_eng": "Rubbed Chain Over-Shoes",
+      "rarity": 0,
+      "sell_price": 12800,
+      "icon": 181,
+      "req_lv": 64,
+      "armor_physical": 744
+    },
+    {
+      "code": 66,
+      "name_kor": "마모된 링 오버슈즈",
+      "name_eng": "Rubbed Ring Over-Shoes",
+      "rarity": 0,
+      "sell_price": 3200,
+      "icon": 135,
+      "req_lv": 16,
+      "armor_physical": 168
+    },
+    {
+      "code": 67,
+      "name_kor": "크림슨 비네트 오버슈즈",
+      "name_eng": "Crimson Vignette Over-Shoes",
+      "rarity": 2,
+      "sell_price": 25900,
+      "icon": 40,
+      "req_lv": 70,
+      "armor_physical": 960
+    },
+    {
+      "code": 68,
+      "name_kor": "(구)미늘 사바톤",
+      "name_eng": "Barb Sabatons",
+      "rarity": 1,
+      "sell_price": 13800,
+      "icon": 138,
+      "req_lv": 46,
+      "armor_physical": 552
+    },
+    {
+      "code": 69,
+      "name_kor": "(구)체인 사바톤",
+      "name_eng": "Chain Sabatons",
+      "rarity": 1,
+      "sell_price": 21000,
+      "icon": 181,
+      "req_lv": 70,
+      "armor_physical": 840
+    },
+    {
+      "code": 70,
+      "name_kor": "흉갑 토드퍼스 사바톤",
+      "name_eng": "Curse Armor Todpurs Sabatons",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 72,
+      "req_lv": 90,
+      "armor_physical": 1200
+    },
+    {
+      "code": 71,
+      "name_kor": "EL-XM25 사바톤",
+      "name_eng": "EL-XM25 Sabatons",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 75,
+      "req_lv": 80,
+      "armor_physical": 1080
+    },
+    {
+      "code": 72,
+      "name_kor": "ES-YL11 사바톤",
+      "name_eng": "ES-YL11 Sabatons",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 76,
+      "req_lv": 90,
+      "armor_physical": 1200
+    },
+    {
+      "code": 73,
+      "name_kor": "비열한 펠 비스킹 사바톤",
+      "name_eng": "Fel Visking Sabatons",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 73,
+      "req_lv": 80,
+      "armor_physical": 1080
+    },
+    {
+      "code": 74,
+      "name_kor": "고어 브라스 사바톤",
+      "name_eng": "Gore Brass Sabatons",
+      "rarity": 2,
+      "sell_price": 29400,
+      "icon": 71,
+      "req_lv": 80,
+      "armor_physical": 1080
+    },
+    {
+      "code": 75,
+      "name_kor": "구식 링 사바톤",
+      "name_eng": "Outdated Ring Sabatons",
+      "rarity": 0,
+      "sell_price": 4400,
+      "icon": 135,
+      "req_lv": 22,
+      "armor_physical": 240
+    },
+    {
+      "code": 76,
+      "name_kor": "오네이트 블리츠 사바톤",
+      "name_eng": "Ornate Blitz Sabatons",
+      "rarity": 2,
+      "sell_price": 32900,
+      "icon": 74,
+      "req_lv": 90,
+      "armor_physical": 1200
+    },
+    {
+      "code": 77,
+      "name_kor": "링 사바톤",
+      "name_eng": "Ring Sabatons",
+      "rarity": 1,
+      "sell_price": 6600,
+      "icon": 135,
+      "req_lv": 22,
+      "armor_physical": 264
+    },
+    {
+      "code": 78,
+      "name_kor": "(구)허술한 미늘 사바톤",
+      "name_eng": "Shabby Barb Sabatons",
+      "rarity": 0,
+      "sell_price": 9200,
+      "icon": 138,
+      "req_lv": 46,
+      "armor_physical": 528
+    },
+    {
+      "code": 79,
+      "name_kor": "(구)허술한 체인 사바톤",
+      "name_eng": "Shabby Chain Sabatons",
+      "rarity": 0,
+      "sell_price": 14000,
+      "icon": 181,
+      "req_lv": 70,
+      "armor_physical": 816
+    },
+    {
+      "code": 80,
+      "name_kor": "(구)견고한 미늘 사바톤",
+      "name_eng": "Strong Barb Sabatons",
+      "rarity": 1,
+      "sell_price": 15000,
+      "icon": 138,
+      "req_lv": 50,
+      "armor_physical": 600
+    },
+    {
+      "code": 81,
+      "name_kor": "(구)견고한 체인 사바톤",
+      "name_eng": "Strong Chain Sabatons",
+      "rarity": 1,
+      "sell_price": 22200,
+      "icon": 181,
+      "req_lv": 74,
+      "armor_physical": 888
+    },
+    {
+      "code": 82,
+      "name_kor": "견고한 링 사바톤",
+      "name_eng": "Strong Ring Sabatons",
+      "rarity": 1,
+      "sell_price": 7800,
+      "icon": 135,
+      "req_lv": 26,
+      "armor_physical": 312
+    },
+    {
+      "code": 83,
+      "name_kor": "수석신",
+      "name_eng": "Chief Shoes",
+      "rarity": 2,
+      "sell_price": 4200,
+      "icon": 18,
+      "req_lv": 10,
+      "armor_physical": 216
+    },
+    {
+      "code": 84,
+      "name_kor": "천지축",
+      "name_eng": "Heaven and Earth Shoes",
+      "rarity": 3,
+      "sell_price": 10800,
+      "icon": 18,
+      "req_lv": 20,
+      "armor_physical": 432
+    },
+    {
+      "code": 85,
+      "name_kor": "작은 세계의 세공신",
+      "name_eng": "Ware Shoes of Small World",
+      "rarity": 2,
+      "sell_price": 7700,
+      "icon": 18,
+      "req_lv": 20,
+      "armor_physical": 336
+    }
+  ]
+}

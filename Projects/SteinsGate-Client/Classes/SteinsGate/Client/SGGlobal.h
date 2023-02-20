@@ -13,7 +13,7 @@
 #include <SteinsGate/Client/SGConfig.h>
 
 class SGSpriteFrameTexture;
-struct SGGlobal
+class SGGlobal
 {
 public:
 	static SGGlobal* get() {
@@ -39,8 +39,8 @@ public:
 	bool isAttackBoxDrawMode() { return m_bDrawAttackBox; }
 	bool isEffectDrawMode() { return m_bDrawEffect; }
 
-	const SGString& getAvatarNpkName(int charType, int visualAvatarType);
-	const SGString& getWeaponNpkName(int charType, int weaponType);
+	const SGString& getAvatarNpkName(int charType, int avatarType);
+	const SGString& getWeaponNpkName(int weaponType);
 
 	SGSpriteFrameTexture* getDefaultFrameTexture();
 private:
@@ -53,10 +53,8 @@ private:
 	bool m_bDrawEffect;
 
 	// 변경되지 않는 데이터
-	SGHashMap<SGString, int> m_AvatarPartNameToTypeMap;
-	SGHashMap<int, SGString> m_AvatarPrefix[CharType::Max];
 	SGString m_AvatarPackName[CharType::Max][AvatarType::Max];	
-	SGString m_WeaponPackName[CharType::Max][5];
+	SGString m_WeaponPackName[WeaponType::Max];
 	SGSpriteFrameTexture* m_pDefaultFrameTexture;
 	
 };

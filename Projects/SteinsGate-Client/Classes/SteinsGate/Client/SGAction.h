@@ -81,6 +81,7 @@ protected:
 
 	// 자체 필드
 	SGHitRecorder* m_pHitRecorder;
+	WeaponType_t m_eWeaponType;
 
 	bool m_bMoveablePositiveX;
 	bool m_bMoveablePositiveY;

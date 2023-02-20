@@ -73,12 +73,12 @@ void SGProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectile
 	if (iProjectileListenerCode != 0)
 		projectileInfo->ProjectileListenerCode = iProjectileListenerCode;
 
-	const SGString& npkName = SGJsonEx::getStringDefault(projectileRoot["npk"]);
+	const SGString& npkName = SGJsonEx::getStringOrNull(projectileRoot["npk"]);
 	if (!npkName.IsNull()) {
 		projectileInfo->NpkIndex = pPackManager->getPackIndex(npkName);
 	}
 
-	const SGString& imgName = SGJsonEx::getStringDefault(projectileRoot["img"]);
+	const SGString& imgName = SGJsonEx::getStringOrNull(projectileRoot["img"]);
 	if (!imgName.IsNull()) {
 		projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->NpkIndex)->getImgIndex(imgName);
 	}

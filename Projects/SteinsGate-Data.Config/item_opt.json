@@ -1,0 +1,267 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "아이템 옵션 관련 정보",
+
+    "item_opt":[
+        {
+            "code": 1,
+            "fmt": "%c%d 힘",
+            "ename": "str",
+            "is_integer": true,
+            "lv": [
+                "20 1 2", "40 2 4", "60 5 10", "80 10 15", "100 20 30"
+            ]
+        },
+        {
+            "code": 2,
+            "fmt": "%c%d 민첩",
+            "ename": "dex",
+            "is_integer": true,
+            "lv": [
+                "20 1 2", "40 2 4", "60 5 10", "80 10 15", "100 20 30"
+            ]
+        },
+        {
+            "code": 3,
+            "fmt": "%c%d 지능",
+            "ename": "int",
+            "is_integer": true,
+            "lv": [
+                "20 1 2", "40 2 4", "60 5 10", "80 10 15", "100 20 30"
+            ]
+        },
+        {
+            "code": 4,
+            "fmt": "%c%d 생명력",
+            "ename": "vit",
+            "is_integer": true,
+            "lv": [
+                "20 1 2", "40 2 4", "60 5 10", "80 10 15", "100 20 30"
+            ]
+        },
+        {
+            "code": 5,
+            "fmt": "%c%d 에너지",
+            "ename": "energe",
+            "is_integer": true,
+            "lv": [
+                "20 1 2", "40 2 4", "60 5 10", "80 10 15", "100 20 30"
+            ]
+        },
+        {
+            "code": 6,
+            "fmt": "%c%d 라이프",
+            "ename": "life",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 20", "60 15 40", "80 24 70", "100 30 100"
+            ]
+        },
+        {
+            "code": 7,
+            "fmt": "%c%d 마나",
+            "ename": "mana",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 20", "60 15 40", "80 24 70", "100 30 100"
+            ]
+        },
+        {
+            "code": 8,
+            "fmt": "%c%d 물리 공격력",
+            "ename": "attack_physical",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 15", "60 10 30", "80 15 30", "100 20 50"
+            ]
+        },
+        {
+            "code": 9,
+            "fmt": "%c%d 마법 공격력",
+            "ename": "attack_magic",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 15", "60 10 30", "80 15 30", "100 20 50"
+            ]
+        },
+        {
+            "code": 10,
+            "fmt": "%c%d 추가 물리 공격력",
+            "ename": "attack_physical_additional",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 15", "60 10 30", "80 15 30", "100 20 50"
+            ]
+        },
+        {
+            "code": 11,
+            "fmt": "%c%d 추가 마법 공격력",
+            "ename": "attack_magic_additional",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 15", "60 10 30", "80 15 30", "100 20 50"
+            ]
+        },
+        {
+            "code": 12,
+            "fmt": "받는 물리 피해 %s %d",
+            "ename": "damage_physical",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 4 20", "60 10 50", "80 20 80", "100 40 150"
+            ]
+        },
+        {
+            "code": 13,
+            "fmt": "받는 마법 피해 %s %d",
+            "ename": "damage_magic",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 4 20", "60 10 50", "80 20 80", "100 40 150"
+            ]
+        },
+        {
+            "code": 14,
+            "fmt": "받는 물리 피해 %s %f%%",
+            "ename": "damage_physical_percent",
+            "is_integer": false,
+            "lv": [
+                "20 100 500", 
+                "40 200 1000", 
+                "60 400 1400", 
+                "80 600 2000", 
+                "100 800 3000"
+            ]
+        },
+        {
+            "code": 15,
+            "fmt": "받는 마법 피해 %s %f%%",
+            "ename": "damage_magic_percent",
+            "is_integer": false,
+            "lv": [
+                "20 100 500", 
+                "40 200 1000", 
+                "60 400 1400", 
+                "80 600 2000", 
+                "100 800 3000"
+            ]
+        },
+        {
+            "code": 16,
+            "fmt": "%c%d 물리 방어력",
+            "ename": "armor_physical",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 20", "60 10 30", "80 15 50", "100 30 100"
+            ]
+        },
+        {
+            "code": 17,
+            "fmt": "%c%d 마법 방어력",
+            "ename": "armor_magic",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 20", "60 10 30", "80 15 50", "100 30 100"
+            ]
+        },
+        {
+            "code": 18,
+            "fmt": "전체 물리 방어력 %f %s",
+            "ename": "armor_physical_percent",
+            "is_integer": false,
+            "lv": [
+                "20 100 300", 
+                "40 200 500", 
+                "60 300 1000", 
+                "80 500 1500", 
+                "100 700 2000"
+            ]
+        },
+        {
+            "code": 19,
+            "fmt": "전체 마법 방어력 %f %s",
+            "ename": "armor_magic_percent",
+            "is_integer": false,
+            "lv": [
+                "20 100 300", 
+                "40 200 500", 
+                "60 300 1000", 
+                "80 500 1500", 
+                "100 700 2000"
+            ]
+        },
+        {
+            "code": 20,
+            "fmt": "%d%% 매직 아이템 얻을 확률 %s",
+            "ename": "chance_magic",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 20", "60 10 30", "80 15 45", "100 20 70"
+            ]
+        },
+        {
+            "code": 21,
+            "fmt": "몬스터에게서 얻는 금화 %d%% %s",
+            "ename": "chance_gold",
+            "is_integer": true,
+            "lv": [
+                "20 1 10", "40 5 20", "60 10 30", "80 15 45", "100 20 70"
+            ]
+        },
+        {
+            "code": 22,
+            "fmt": "공격속도 %c%d%%",
+            "ename": "attack_speed",
+            "is_integer": true,
+            "lv": [
+                "20 1 5", "40 3 10", "60 5 20", "80 10 30", "100 15 40"
+            ]
+        },
+        {
+            "code": 23,
+            "fmt": "캐스트속도 %c%d%%",
+            "ename": "cast_speed",
+            "is_integer": true,
+            "lv": [
+                "20 1 5", "40 3 10", "60 5 20", "80 10 30", "100 15 40"
+            ]
+        },
+        {
+            "code": 24,
+            "fmt": "라이프 1분당 %d 회복",
+            "ename": "regen_life_per_min",
+            "is_integer": true,
+            "lv": [
+                "20 1 5", "40 3 10", "60 5 20", "80 10 30", "100 15 40"
+            ]
+        },
+        {
+            "code": 25,
+            "fmt": "마나 1분당 %d 회복",
+            "ename": "regen_mana_per_min",
+            "is_integer": true,
+            "lv": [
+                "20 1 5", "40 3 10", "60 5 20", "80 10 30", "100 15 40"
+            ]
+        },
+        {
+            "code": 26,
+            "fmt": "던전에서 이독속도 %s %c%d%%",
+            "ename": "move_speed_in_dungeon",
+            "is_integer": true,
+            "lv": [
+                "20 1 2", "40 2 4", "60 3 8", "80 4 10", "100 5 15"
+            ]
+        },
+        {
+            "code": 27,
+            "fmt": "마을에서 이독속도 %s %c%d%%",
+            "ename": "move_speed_in_town",
+            "is_integer": true,
+            "lv": [
+                "20 1 2", "40 2 4", "60 3 8", "80 4 10", "100 5 15"
+            ]
+        }
+
+    ]
+}

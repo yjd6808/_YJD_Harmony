@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Core.h"
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
 struct SGCharBaseInfo : ConfigDataAbstract
@@ -36,19 +35,20 @@ struct SGCharInfo : SGCharBaseInfo
 {
 	~SGCharInfo() override = default;
 
-	int DefaultVisualNpkIndex[VisualType::Max];
-	int DefaultVisualImgIndex[VisualType::Max];
+	VisualData Visual[VisualType::Max];
+	int VisualCount[VisualType::Max];
+	bool HasVisual[VisualType::Max];
 };
 
 struct SGGunnerInfo : SGCharInfo
 {
 	~SGGunnerInfo() override = default;
 
-	int ShotCount[GunnerWeaponType::Max];				// 지상 공격 횟수
-	int JumpShotCount[GunnerWeaponType::Max];			// 점프 공격 횟수
-	float AttackSpeed[GunnerWeaponType::Max];			// 공속
-	float JumpShotForceX[GunnerWeaponType::Max];		// 점프 공격 X 반동
-	float JumpShotForceY[GunnerWeaponType::Max];		// 점프 공격 Y 반동
-	float JumpShotMoveSpeedX[GunnerWeaponType::Max];	// 점프 공격 X 반동스피드
+	int ShotCount[CharWeaponTypeCount_v];				// 지상 공격 횟수
+	int JumpShotCount[CharWeaponTypeCount_v];			// 점프 공격 횟수
+	float AttackSpeed[CharWeaponTypeCount_v];			// 공속
+	float JumpShotForceX[CharWeaponTypeCount_v];		// 점프 공격 X 반동
+	float JumpShotForceY[CharWeaponTypeCount_v];		// 점프 공격 Y 반동
+	float JumpShotMoveSpeedX[CharWeaponTypeCount_v];	// 점프 공격 X 반동스피드
 };
 

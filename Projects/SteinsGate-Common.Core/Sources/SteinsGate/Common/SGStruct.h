@@ -34,20 +34,6 @@ struct ThicknessBox
 		, Height(height) {}
 };
 
-
-
-
-struct VisualInfo
-{
-	int NpkIndex[VisualType::Max];
-	int ImgIndex[VisualType::Max];
-
-	VisualInfo();
-	VisualInfo(const VisualInfo& other);
-
-	bool isValid() const;
-};
-
 struct ActorPartSpriteData
 {
 	ActorPartSpriteData();
@@ -57,6 +43,9 @@ struct ActorPartSpriteData
 	int NpkIndex;
 	int ImgIndex;
 };
+
+using VisualData = ActorPartSpriteData[MaxVisualCount_v];
+using VisualInfo = JCore::Vector<ActorPartSpriteData>;
 
 
 union NpkResourceIndex
@@ -95,7 +84,6 @@ struct PlayerData
 	SGStaticString<CharNameLen_v> Name;
 	CharType_t CharType;
 	int Gold;
-	int Sera;
 	int Str;
 	int Dex;
 	int Int;
@@ -106,27 +94,103 @@ struct PlayerData
 };
 
 
-struct ItemOptPair
+union ItemCode
 {
-	ItemOptType_t Type;
-	int Value;
+	inline static constexpr int BitCodeBit = 16;	// 65535
+	inline static constexpr int BitDetail1 = 6;		// 64
+	inline static constexpr int BitDetail2 = 4;		// 16
+	inline static constexpr int BitType = 6;		// 64
+
+	inline static constexpr int BitCodeShift = 0;
+	inline static constexpr int BitDetail1Shift = 16;
+	inline static constexpr int BitDetail2Shift = 22;
+	inline static constexpr int BitTypeShift = 26;
+
+	inline static constexpr int BitCodeMask = 0x0000ffff;
+	inline static constexpr int BitDetail1Mask = JCore::FillBitRightInt32<22>() & ~0x0000ffff;
+	inline static constexpr int BitDetail2Mask = JCore::FillBitRightInt32<26>() & ~JCore::FillBitRightInt32<22>();
+	inline static constexpr int BitTypeMask = 0xffffffff & JCore::FillBitRightInt32<26>();
+
+
+	ItemCode() : Code(InvalidValue_v) {}
+	ItemCode(int Total);	// 얘는 전체 값
+	ItemCode(int Code, ItemType_t Type);
+	ItemCode(int Code, int Detail1, ItemType_t Type);
+	ItemCode(int Code, int Detail1, int Detail2, ItemType_t Type);
+
+	void initAvatarCode(CharType_t charType, AvatarType_t avatarType, int code);
+	void initWeaponCode(CharType_t charType, WeaponType_t weaponType, int code);
+	void initArmorCode(ItemType_t itemType, EquipArmorType_t armorType, int code);
+
+	struct
+	{
+		int Code		 : BitCodeBit;
+		int Detail1		 : BitDetail1;		// 아바타 부위 || 갑옷 종류 || 무기 종류
+		int Detail2		 : BitDetail2;		// 캐릭터 타입
+		ItemType_t Type	 : BitType;			// 소모품, 아바타, 무기
+	} CommonUn;
+
+	struct
+	{
+		int Code				: BitCodeBit;
+		AvatarType_t PartType	: BitDetail1;	
+		CharType_t CharType		: BitDetail2;	
+		ItemType_t ItemType		: BitType;		
+	} AvatarUn;
+
+	struct
+	{
+		int Code					: BitCodeBit;
+		WeaponType_t WeaponType		: BitDetail1;	
+		CharType_t CharType			: BitDetail2;	
+		ItemType_t ItemType			: BitType;
+	} WeaponUn;
+
+	struct
+	{
+		int Code					: BitCodeBit;
+		EquipArmorType_t ArmorType	: BitDetail1;	
+		int _						: BitDetail2;	
+		ItemType_t ItemType			: BitType;		
+	} ArmorUn;
+
+
+	int Code;
+};
+
+struct ItemOpt
+{
+	ItemOpt() : Code(InvalidValue_v) {}
+
+	int Code{};
+};
+
+struct ItemOptVal : ItemOpt
+{
+	int Value{};
+};
+
+struct ItemOptRangeVal : ItemOpt
+{
+	int MinValue{};
+	int MaxValue{};
 };
 
 struct InvenItem
 {
-	int Code;
+	ItemCode Code;
 	int Quantity;
 };
 
 struct InvenItemEquip : InvenItem
 {
-	int ArmorPhysical;
+	int ArmorPhisical;
 	int ArmorMagic;
-	int DamagePhysical;
-	int DamageMagic;
+	int AttackPhysical;
+	int AttackMagic;
 
 	int OptCount;
-	ItemOptPair Opt[MaxOptCount_v];
+	ItemOptVal Opt[MaxOptCount_v];
 };
 
 

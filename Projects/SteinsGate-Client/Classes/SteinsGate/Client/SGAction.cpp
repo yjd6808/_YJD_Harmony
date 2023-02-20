@@ -9,6 +9,7 @@
 
 #include "Tutturu.h"
 #include "SGAction.h"
+#include "GameCoreHeader.h"
 
 #include <SteinsGate/Client/SGHostPlayer.h>
 #include <JCore/Utils/Console.h>
@@ -33,7 +34,7 @@ void SGAction::play() {
 	// 플레이어가 사용가능한지 체크
 	m_pHitRecorder = m_pPlayer->getHitRecorder();
 	m_pHitRecorder->clear();
-
+	m_eWeaponType = CoreInven_v->getWeaponType();
 
 	onActionBegin();
 }

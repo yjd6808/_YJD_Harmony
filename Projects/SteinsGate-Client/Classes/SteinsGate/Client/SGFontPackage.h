@@ -10,7 +10,7 @@
 
 #include "Tutturu.h"
 
-struct SGFontPackage
+class SGFontPackage
 {
 public:
 	SGFontPackage();

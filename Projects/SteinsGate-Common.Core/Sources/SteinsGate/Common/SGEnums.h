@@ -75,40 +75,111 @@ Face,
 Coat,
 Cap,
 Belt,
-Max,
+End,
+Max = End,
 None
-SEnumEnd(AvatarType)
+SEnumMiddle(AvatarType)
+static constexpr const char* Name[Max]{
+	"skin"	,
+	"shoes"	,
+	"pants"	,
+	"neck"	,
+	"hair"	,
+	"face"	,
+	"coat"	,
+	"cap"	,
+	"belt"
+};
+
+static constexpr const char* ImgPrefix[Max]{
+	"gn_body"	,
+	"gn_shoes"	,
+	"gn_pants"	,
+	"gn_neck"	,
+	"gn_hair"	,
+	"gn_face"	,
+	"gn_coat"	,
+	"gn_cap"	,
+	"gn_belt"
+};
+
+
+SEnumMiddleEnd(AvatarType)
 
 
 SEnumBegin(VisualType)
 Begin,
-Skin = Begin,
-Shoes,
-Pants,
-Neck,
-Hair,
-Face,
-Coat,
-Cap,
-Belt,
+AvatarBegin = Begin,
+Skin	= AvatarType::Skin	,
+Shoes	= AvatarType::Shoes	,
+Pants	= AvatarType::Pants	,
+Neck	= AvatarType::Neck	,
+Hair	= AvatarType::Hair	,
+Face	= AvatarType::Face	,
+Coat	= AvatarType::Coat	,
+Cap		= AvatarType::Cap	,
+Belt	= AvatarType::Belt	,
+AvatarEnd = Belt,
 Weapon,
 Max,
 None
 SEnumMiddle(VisualType)
 
-inline static int ZOrder[Max]{
-	0, // Skin
-	1, // Shoes
-	2, // Pants
-	5, // Neck
-	2, // Hair
-	1, // Face
-	4, // Coat
-	3, // Cap
-	6, // Belt
-	8 // WeaponLeft
-	// 7  // WeaponRight
+
+inline static constexpr int ZOrder[Max]{
+	00, // Skin
+	10, // Shoes
+	20, // Pants
+	50, // Neck
+	20, // Hair
+	10, // Face
+	40, // Coat
+	30, // Cap
+	60, // Belt
+	90, // Weapon
 };
+
+inline static const char* Name[Max]{
+	AvatarType::Name[Skin],
+	AvatarType::Name[Shoes],
+	AvatarType::Name[Pants],
+	AvatarType::Name[Neck],
+	AvatarType::Name[Hair],
+	AvatarType::Name[Face],
+	AvatarType::Name[Coat],
+	AvatarType::Name[Cap],
+	AvatarType::Name[Belt],
+	"weapon"
+};
+
+inline static constexpr bool IsAvatar[Max]{
+	true, // Skin
+	true, // Shoes
+	true, // Pants
+	true, // Neck
+	true, // Hair
+	true, // Face
+	true, // Coat
+	true, // Cap
+	true, // Belt
+	false // Weapon
+};
+
+
+inline static constexpr bool IsWeapon[Max]{
+	false, // Skin
+	false, // Shoes
+	false, // Pants
+	false, // Neck
+	false, // Hair
+	false, // Face
+	false, // Coat
+	false, // Cap
+	false, // Belt
+	true   // Weapon
+};
+
+
 
 SEnumMiddleEnd(VisualType)
 
@@ -181,26 +252,15 @@ AttackBoxInstant,
 Max
 SEnumEnd(FrameEventType)
 
-
-
-SEnumBegin(GunnerWeaponType)
-Begin,
-Automatic = Begin,
-Revolver,
-Bowgun,
-Musket,
-HandCannon,
-Max
-SEnumEnd(GunnerWeaponType)
-
-
 SEnumBegin(WeaponType)
 Begin,
-Automatic = Begin,
+GunnerBegin = Begin,
+Automatic = GunnerBegin,
 Revolver,
 Bowgun,
 Musket,
 HandCannon,
+GunnerEnd = HandCannon,
 Max
 SEnumMiddle(WeaponType)
 
@@ -222,7 +282,19 @@ static constexpr const char* Name[] {
 	"handcannon"
 };
 
+
+static constexpr const char* ImgPrefix[] {
+	"auto",
+	"rev",
+	"bowgun",
+	"musket",
+	"hcan"
+};
+
+static WeaponType_t getType(const JCore::String& name);
+
 SEnumMiddleEnd(WeaponType)
+
 
 
 SEnumBegin(AttackDamageType)
@@ -353,6 +425,8 @@ Char_Animation,
 Char_Base,
 Client,
 Item,
+ItemOpt,
+Enhancement,
 End,
 Max = End
 SEnumMiddle(ConfigFileType)
@@ -374,19 +448,21 @@ static constexpr const char* FileName[Max]{
 	"char_animation.json"	,
 	"char_base.json"		,
 	"client.json"			,
-	"수동로딩"
+	"수동로딩"				,
+	"item_opt.json"			,
+	"enhancement.json"
 };
 SEnumMiddleEnd(ConfigFileType)
 
 
-SEnumBegin(ItemInvenType)
+SEnumBegin(InvenItemType)
 Quest,
 Etc,
 Consume,
 Equip,
 Avatar,
 Max
-SEnumMiddle(ItemInvenType)
+SEnumMiddle(InvenItemType)
 
 static constexpr bool Stackable[Max] {
 	true,
@@ -403,14 +479,13 @@ static constexpr const char* Name[Max]{
 	"equip",
 	"avatar"
 };
-SEnumMiddleEnd(ItemInvenType)
+SEnumMiddleEnd(InvenItemType)
 
-//Shoulder = Begin,	// 천
-//Bottom,				// 가죽
 
 // https://wiki.dfo-world.com/view/Armor
-SEnumBegin(EquipItemType)
+SEnumBegin(ItemType)
 Begin,
+BeginEquip = Begin,
 Shoulder = Begin,	// 어깨
 Top,				// 상의
 Bottom,				// 하의
@@ -421,46 +496,107 @@ Neck,				// 목걸이
 Bracelet,			// 팔찌
 Weapon,				// 무기
 Title,				// 칭호
+Avatar,				// 아바타
+EndEquip = Avatar,
+MaxEquip = EndEquip + 1,
+Consume = MaxEquip,	// 소모품
+Etc,				// 기타
+Quest,				// 퀘스트
 End,
 Max = End
-SEnumMiddle(EquipItemType)
+SEnumMiddle(ItemType)
 
-static constexpr const char* Name[Max]{
-	"shoulder"	,
-	"top" 		,
-	"bottom"	,  
-	"shoes"	  	,
-	"belt"	  	,
-	"ring"	  	,
-	"neck"	  	,
-	"bracelet"	,
-	"weapon"  	,
-	"title"
+inline static constexpr bool IsEquip[Max]{
+	true,			// 어깨
+	true,			// 상의
+	true,			// 하의
+	true,			// 신발
+	true,			// 벨트
+	true,			// 반지
+	true,			// 목걸이
+	true,			// 팔찌
+	true,			// 무기
+	true,			// 칭호
+	true,			// 아바타
+	false,			// 소모품
+	false,			// 기타
+	false,			// 퀘스트
 };
 
-SEnumMiddleEnd(EquipItemType)
+inline static constexpr bool IsCommonEquip[Max]{
+	true,			// 어깨
+	true,			// 상의
+	true,			// 하의
+	true,			// 신발
+	true,			// 벨트
+	true,			// 반지
+	true,			// 목걸이
+	true,			// 팔찌
+	false,			// 무기
+	true,			// 칭호
+	false,			// 아바타
+	false,			// 소모품
+	false,			// 기타
+	false,			// 퀘스트
+};
+
+inline static constexpr bool HasDetailType[Max]{
+	true,			// 어깨
+	true,			// 상의
+	true,			// 하의
+	true,			// 신발
+	true,			// 벨트
+	false,			// 반지
+	false,			// 목걸이
+	false,			// 팔찌
+	true,			// 무기
+	false,			// 칭호
+	true,			// 아바타
+	true,			// 소모품
+	false,			// 기타
+	false,			// 퀘스트
+};
+
+inline static constexpr const char* Name[Max]{
+	"shoulder"	,	// 어깨
+	"top" 		,	// 상의
+	"bottom"	,  	// 하의
+	"shoes"	  	,	// 신발
+	"belt"	  	,	// 벨트
+	"ring"	  	,	// 반지
+	"neck"	  	,	// 목걸이
+	"bracelet"	,	// 팔찌
+	"weapon"  	,	// 무기
+	"title"		,	// 칭호
+	"avatar"	,	// 아바타
+	"consume"	,	// 소모품
+	"etc"		,	// 기타
+	"quest"			// 퀘스트
+};
+
+SEnumMiddleEnd(ItemType)
 
 
-SEnumBegin(EquipArmorItemType)
+SEnumBegin(EquipArmorType)
 Begin,
-Cloth,			// 천
+Cloth = Begin,	// 천
 Leather,		// 가죽
 Light,			// 경갑
 Heavy,			// 중갑
 Place,			// 판금
 End,
 Max = End
-SEnumMiddle(EquipArmorItemType)
+SEnumMiddle(EquipArmorType)
 
 static constexpr const char* Name[Max]{
 	"cloth"		,
 	"leather" 	,	
 	"light"		,
 	"heavy"	  	,
-	"place"	  	
+	"plate"	  	
 };
 
-SEnumMiddleEnd(EquipArmorItemType)
+SEnumMiddleEnd(EquipArmorType)
 
 
 
@@ -472,7 +608,6 @@ Rare,
 Legacy,
 Unique,
 Epic,
-Set,
 End,
 Max = End
 SEnumMiddle(RarityType)
@@ -481,18 +616,26 @@ static constexpr const char* Name[Max]{
 	"Normal"	,
 	"Magic"		,
 	"Rare"		,
-	"Unique"	,
 	"Legacy"	,
+	"Unique"	,
 	"Epic"		,
-	"Set"	
 };
 
-static constexpr int OptCount[Max]{
+static constexpr int OptMinCount[Max]{
+	0,
 	1,
 	2,
 	3,
-	4,
 	3,
+	3,
+};
+
+static constexpr int OptMaxCount[Max]{
+	1,
+	3,
+	5,
+	7,
+	6,
 	0
 };
 
@@ -502,27 +645,43 @@ SEnumMiddleEnd(RarityType)
 
 SEnumBegin(ItemOptType)
 Begin,
-Str = Begin,
-Dex,
-Int,
-Vit,
-Lift,
-Mana,
-DamagePhysical,
+Str = Begin,					
+Dex,							
+Int,							
+Vit,							
+Energe,							
+Lift,							
+Mana,							
+DamagePhysical,					
 DamageMagic,
-ArmorPhysical,
-ArmorMagic,
-ChanceMagic,
-ChanceGold,
-AttackSpeed,
-CastSpeed,
-RegenLifePerMin,
-RegenManaPerMin,
-MoveSpeedInDungeon,
-MoveSpeedInTown,
+DamagePhysicalAdditional,
+DamageMagicAdditional,
+DamagePhysiclReduce,			
+DamageMagicReduce,				
+DamagePhysiclReducePercent,		
+DamageMagicReducePercent,		
+ArmorPhysical,					
+ArmorMagic,						
+ArmorPhysicalPercent,			
+ArmorMagicPercent,				
+ChanceMagic,					
+ChanceGold,						
+AttackSpeed,					
+CastSpeed,						
+RegenLifePerMin,				
+RegenManaPerMin,				
+MoveSpeedInDungeon,				
+MoveSpeedInTown,				
 End,
 Max = End
 SEnumMiddle(ItemOptType)
+
+
+//static ItemOptType_t Code(const char* codeName);
+//static ItemOptType_t Code(const JCore::String& codeName);
+//
+//template <ItemOptType_t Type>
+//using TypeOf = JCore::Conditional_t<IsIntegerOpt[Type], int, float>;
 
 SEnumMiddleEnd(ItemOptType)
 
