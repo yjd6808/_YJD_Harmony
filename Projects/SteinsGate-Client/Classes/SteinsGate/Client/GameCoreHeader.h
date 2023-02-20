@@ -8,6 +8,9 @@
 
 #pragma once
 
+
+#include <SteinsGate/Common/CommonInfo.h>
+
 #include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGUIManager.h>
 #include <SteinsGate/Client/SGHostPlayer.h>

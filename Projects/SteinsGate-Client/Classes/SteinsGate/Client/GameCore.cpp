@@ -38,6 +38,7 @@ void InitializeClientCore() {
 	CoreActorListenerManager_v  = SGActorListenerManager::get();
 	CoreActorBox_v				= SGActorBox::get();
 	CoreGlobal_v				= SGGlobal::get();
+	
 }
 
 void FinalizeClientCore() {

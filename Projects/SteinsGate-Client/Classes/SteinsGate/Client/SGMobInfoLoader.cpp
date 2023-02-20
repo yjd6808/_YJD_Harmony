@@ -56,12 +56,12 @@ void SGMobInfoLoader::readMobInfo(Json::Value& mobRoot, SGMobInfo* mobInfo) {
 		Value& partRoot = partListRoot[j];
 		SGMobPartInfo partInfo;
 
-		SGString npkName = SGJsonEx::getString(partRoot["npk"]);
+		SGString sgaName = SGJsonEx::getString(partRoot["sga"]);
 		SGString imgName = SGJsonEx::getString(partRoot["img"]);
-		SGImagePack* pImgPack = pPackManager->getPack(npkName);
+		SGImagePack* pImgPack = pPackManager->getPack(sgaName);
 
 		partInfo.ZOrder = partRoot["z_order"].asInt();
-		partInfo.PackIndex = pPackManager->getPackIndex(npkName);
+		partInfo.SgaIndex = pPackManager->getPackIndex(sgaName);
 		partInfo.ImgIndex = pImgPack->getImgIndex(imgName);
 
 

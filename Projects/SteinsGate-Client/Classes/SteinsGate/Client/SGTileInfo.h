@@ -14,7 +14,7 @@ struct SGTileInfo : ConfigDataAbstract
 {
 	~SGTileInfo() override = default;
 
-	int NpkIndex;
+	int SgaIndex;
 	int ImgIndex;
 	int SpriteIndex;
 };

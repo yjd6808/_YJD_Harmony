@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "ItemInfoLoader.h"
+#include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/SGJson.h>
 
@@ -16,7 +17,7 @@ USING_NS_JS;
 
 bool ItemInfoLoader::load() {
 
-	SGString itemRootPath = SGPath::Combine(ConfigDirectoryPath_v, "item");
+	SGString itemRootPath = SGPath::Combine(CoreCommon_v->ConfigPath, "item");
 
 	if (!JCore::Directory::Exist(itemRootPath))
 		return false;

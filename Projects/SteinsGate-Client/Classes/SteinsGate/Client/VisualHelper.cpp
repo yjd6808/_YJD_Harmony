@@ -20,6 +20,7 @@ int VisualHelper::getVisualData(Out_ VisualData& visualData, int code) {
 	ItemVisualInfo* pVisualInfo = CoreDataManager_v->getVisualInfo(code);
 	CharType_t eCharType = pVisualInfo->getCharType();
 	ItemType_t eItemType = pVisualInfo->getItemType();
+	VisualType_t eVisualType = pVisualInfo->getVisualType();
 	SGImagePack* pPack = nullptr;
 
 	char* ImgPrefix = nullptr;
@@ -46,8 +47,8 @@ int VisualHelper::getVisualData(Out_ VisualData& visualData, int code) {
 
 	DebugAssertMsg(pVisualInfo->Shape.Length() > 1, "해당 비주얼 아이템에 쉐이프가 없습니다.");
 
-	int iZOrder = VisualType::ZOrder[eItemType];
-	int iNpkIndex = pPack->getPackIndex();
+	int iZOrder = VisualType::ZOrder[eVisualType];
+	int iSgaIndex = pPack->getPackIndex();
 	int iShapeCount = pVisualInfo->ShapeAlpha.Length();	// 쉐이프 수
 
 	// 알파가 없는 경우 그대로 씀
@@ -60,7 +61,7 @@ int VisualHelper::getVisualData(Out_ VisualData& visualData, int code) {
 		);
 
 		visualData[0].ZOrder = iZOrder;
-		visualData[0].NpkIndex = iNpkIndex;
+		visualData[0].SgaIndex = iSgaIndex;
 		visualData[0].ImgIndex = iImgIndex;
 		return 1;
 	}
@@ -79,7 +80,7 @@ int VisualHelper::getVisualData(Out_ VisualData& visualData, int code) {
 		);
 
 		visualData[i].ZOrder = iZOrder--;
-		visualData[i].NpkIndex = iNpkIndex;
+		visualData[i].SgaIndex = iSgaIndex;
 		visualData[i].ImgIndex = iImgIndex;
 	}
 

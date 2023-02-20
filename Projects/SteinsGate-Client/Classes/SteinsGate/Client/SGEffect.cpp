@@ -64,7 +64,7 @@ void SGEffect::initActorSprite() {
 	SGImagePackManager* pImgPackManager = SGImagePackManager::get();
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, 1);	// 프로젝틸도 파츠, 애니메이션 모두 한개
 
-	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });
+	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->SgaIndex, m_pBaseInfo->ImgIndex });
 	spActorSpriteData->Animations.PushBack(&m_pBaseInfo->Animation);
 
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);

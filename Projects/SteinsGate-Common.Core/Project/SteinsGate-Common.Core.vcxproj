@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonInfoLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.cpp">
       <SubType>
       </SubType>
@@ -36,6 +40,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\LoggerAbstract.cpp">
       <SubType>
@@ -49,14 +57,14 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkElement.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkElementInitilizer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkImage.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkLinkSprite.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkLoader.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkPackage.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkSound.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkSprite.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaElement.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaElementInitilizer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaImage.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaLinkSprite.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaLoader.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaPackage.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaSound.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaSprite.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.cpp">
       <SubType>
@@ -76,6 +84,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ConfigDataAbstract.h">
       <SubType>
       </SubType>
@@ -89,6 +105,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonCore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonCoreHeader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -106,18 +130,18 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkColorFormat.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkCompressMode.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkElement.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkElementInitializer.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkImage.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkLinkSprite.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkLoader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkPackage.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSound.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSprite.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteAbstract.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteRect.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaColorFormat.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaCompressMode.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaElement.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaElementInitializer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaImage.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaLinkSprite.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaLoader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaPackage.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSound.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSprite.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSpriteAbstract.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSpriteRect.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfo.h">
       <SubType>
       </SubType>

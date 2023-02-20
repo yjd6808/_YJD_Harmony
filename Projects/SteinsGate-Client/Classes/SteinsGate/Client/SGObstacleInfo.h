@@ -19,7 +19,7 @@ struct SGObstacleInfo : ConfigDataAbstract
 	~SGObstacleInfo() override = default;
 
 	SGString Name;
-	int NpkIndex;
+	int SgaIndex;
 	int ImgIndex;
 	ThicknessBox ThicknessBox;
 	bool Hitable;

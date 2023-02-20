@@ -13,9 +13,7 @@
 
 #include <SteinsGate/Common/SGRectEx.h>
 #include <SteinsGate/Common/RectPoly.h>
-
-#include "SGGameScene.h"
-
+#include <SteinsGate/Common/SGVec2Ex.h>
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -73,6 +71,11 @@ SGMapInfo* SGMapLayer::getMapInfo() {
 
 void SGMapLayer::update(float dt) {
 	m_pActorBox->update(dt);
+
+	SGSize contentSize = CorePlayer_v->getActorSprite()->getBodyCanvas()->getContentSize();
+	SGVec2 canvasRealPos = this->getPosition() - (contentSize / 2) + CorePlayer_v->getActorSprite()->getPosition();
+
+	//_LogDebug_("%.f %.f", contentSize.width, contentSize.height);
 }
 
 
@@ -93,7 +96,7 @@ void SGMapLayer::loadMap(int mapCode) {
 			float fTileYPos = float(TileHeight_v) * k;
 
 			SGTileInfo* pTileInfo = pDataManager->getTileInfo(pMap->TileArray[i][j]);
-			SGFrameTexture* pFrameTexture = pPackManager->getPack(pTileInfo->NpkIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
+			SGFrameTexture* pFrameTexture = pPackManager->getPack(pTileInfo->SgaIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
 
 			SGSprite* pTileSprite = SGSprite::createWithTexture(pFrameTexture->getTexture());
 			pTileSprite->setAnchorPoint(Vec2::ZERO);

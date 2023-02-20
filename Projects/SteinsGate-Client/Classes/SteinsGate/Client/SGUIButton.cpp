@@ -66,7 +66,7 @@ void SGUIButton::load() {
 
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGUIManager* pUIManager = SGUIManager::get();
-	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Npk);
+	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Sga);
 
 	m_pTexture[eNormal] = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Normal);
 	m_pTexture[eNormal]->retain();
@@ -77,10 +77,10 @@ void SGUIButton::load() {
 	m_pTexture[eDisabled] = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Disabled);
 	m_pTexture[eDisabled]->retain();
 
-	pUIManager->registerLoadedUITexture({ m_pInfo->Npk, m_pInfo->Img, m_pInfo->Normal });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Npk, m_pInfo->Img, m_pInfo->Over });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Npk, m_pInfo->Img, m_pInfo->Pressed });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Npk, m_pInfo->Img, m_pInfo->Disabled });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Normal });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Over });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Pressed });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Disabled });
 
 	DebugAssertMsg(!m_pTexture[eNormal]->isLink(), "버튼의 노말 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
 	DebugAssertMsg(!m_pTexture[eOver]->isLink(), "버튼의 오버 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");

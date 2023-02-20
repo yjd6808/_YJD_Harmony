@@ -1,0 +1,14 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "공통 설정 파일",
+
+    "common": [
+        {
+            "code": 1,
+            "data_dir": "D:\\Programming\\MyProjects\\_DevCpp\\UltimateHarmony\\Projects\\SteinsGate-Data.Resource",
+            "config_dir": "D:\\Programming\\MyProjects\\_DevCpp\\UltimateHarmony\\Projects\\SteinsGate-Data.Config"
+        }
+    ]
+    
+    
+}

@@ -114,12 +114,12 @@ SGUIElementInfo* SGUIInfoLoader::readElementButton(Value& buttonRoot) {
 	readElementCommon(buttonRoot, pInfo);
 
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	const SGString& npkName = SGJsonEx::getString(buttonRoot["npk"]);
+	const SGString& sgaName = SGJsonEx::getString(buttonRoot["sga"]);
 	const SGString& imgName = SGJsonEx::getString(buttonRoot["img"]);
 
-	SGImagePack* pPack = pPackManager->getPack(npkName);
+	SGImagePack* pPack = pPackManager->getPack(sgaName);
 
-	pInfo->Npk = pPack->getPackIndex();
+	pInfo->Sga = pPack->getPackIndex();
 	pInfo->Img = pPack->getImgIndex(imgName);
 
 	pInfo->Type = UIElementType::Button;
@@ -161,13 +161,13 @@ SGUIElementInfo* SGUIInfoLoader::readElementSprite(Value& spriteRoot) {
 
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 
-	const SGString& npkName = SGJsonEx::getString(spriteRoot["npk"]);
+	const SGString& sgaName = SGJsonEx::getString(spriteRoot["sga"]);
 	const SGString& imgName = SGJsonEx::getString(spriteRoot["img"]);
 
-	SGImagePack* pPack = pPackManager->getPack(npkName);
+	SGImagePack* pPack = pPackManager->getPack(sgaName);
 
 	pInfo->Type = UIElementType::Sprite;
-	pInfo->Npk = pPack->getPackIndex();
+	pInfo->Sga = pPack->getPackIndex();
 	pInfo->Img = pPack->getImgIndex(imgName);
 	pInfo->Sprite = spriteRoot["sprite"].asInt();
 

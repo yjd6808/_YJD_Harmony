@@ -9,8 +9,11 @@
 
 #include "Tutturu.h"
 #include "SGUILabel.h"
+#include "GameCoreHeader.h"
 
 #include <SteinsGate/Client/SGFontPackage.h>
+
+#include "SGClientInfo.h"
 
 USING_NS_CC;
 USING_NS_JC;
@@ -34,7 +37,7 @@ SGUILabel* SGUILabel::create(SGUIGroup* parent, SGUILabelInfo* labelInfo) {
 bool SGUILabel::init() {
 
 	SGString fontName = SGFontPackage::get()->getFontName(m_pInfo->FontCode);
-	SGString fontPath = Path::Combine(DataDirectoryPath_v, FontDirectoryName_v, fontName);
+	SGString fontPath = Path::Combine(CoreCommon_v->DataPath, FontDirName_v, fontName);
 
 	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), fontPath.Source(), m_pInfo->FontSize, Size::ZERO);
 	m_pLabel->setHorizontalAlignment((TextHAlignment)m_pInfo->HorizontalAlignment);

@@ -50,12 +50,20 @@ bool SGActorSprite::init() {
 
 	// 바디 파츠 기준으로 전체 프레임수를 얻는다.
 	int iFrameCount = SGImagePackManager::get()
-		->getPack(vPartsData[0].NpkIndex)
+		->getPack(vPartsData[0].SgaIndex)
 		->getSpriteCount(vPartsData[0].ImgIndex);
 
 	for (int i = 0; i < vPartsData.Size(); ++i) {
-		
-		m_vPartsCanvas[i] = SGSprite::create("rect.png");
+
+		if (i == 0) {
+			SGImagePack* pPack = CorePackManager_v->getPack(vPartsData[i].SgaIndex);
+			SGString szPackName = pPack->getFileName();
+			SGString& szImgName = pPack->getImgName(vPartsData[i].ImgIndex);
+
+			_LogDebug_("액터 로딩: %s || sga: %s || img: %s || z: %d", ActorType::Name[m_pActor->getType()], szPackName.Source(), szImgName.Source(), vPartsData[i].ZOrder);
+		}
+
+		m_vPartsCanvas[i] = SGSprite::create();
 		m_vPartsCanvas[i]->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
 		m_vPartsCanvas[i]->setContentSize({ 0, 0 });
 		m_vPartsCanvas[i]->setCascadeOpacityEnabled(false);

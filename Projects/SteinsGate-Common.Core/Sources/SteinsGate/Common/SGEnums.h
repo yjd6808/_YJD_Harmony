@@ -126,17 +126,18 @@ None
 SEnumMiddle(VisualType)
 
 
+// 스킨 0으로 두면 안됨
 inline static constexpr int ZOrder[Max]{
-	00, // Skin
-	10, // Shoes
-	20, // Pants
-	50, // Neck
-	20, // Hair
-	10, // Face
-	40, // Coat
-	30, // Cap
-	60, // Belt
-	90, // Weapon
+	100, // Skin
+	110, // Shoes
+	120, // Pants
+	150, // Neck
+	120, // Hair
+	110, // Face
+	140, // Coat
+	130, // Cap
+	160, // Belt
+	190, // Weapon
 };
 
 inline static const char* Name[Max]{
@@ -426,7 +427,8 @@ Char_Base,
 Client,
 Item,
 ItemOpt,
-Enhancement,
+Enchant,
+Common,
 End,
 Max = End
 SEnumMiddle(ConfigFileType)
@@ -450,7 +452,8 @@ static constexpr const char* FileName[Max]{
 	"client.json"			,
 	"수동로딩"				,
 	"item_opt.json"			,
-	"enhancement.json"
+	"enchant.json"			,
+	"common.json"
 };
 SEnumMiddleEnd(ConfigFileType)
 

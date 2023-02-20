@@ -79,10 +79,10 @@ void SGActorPartAnimation::run(int frameIndexInAnimation) {
 	updateZeroDelayFrame(fCurrentFrameDelay, pStartFrameTexture);
 }
 
-void SGActorPartAnimation::constructFrames(int npkIndex, int imgIndex) {
-	SGImagePack* pImgPack = SGImagePackManager::get()->getPack(npkIndex);
+void SGActorPartAnimation::constructFrames(int sgaIndex, int imgIndex) {
+	SGImagePack* pImgPack = SGImagePackManager::get()->getPack(sgaIndex);
 
-	m_iNpkIndex = npkIndex;
+	m_iSgaIndex = sgaIndex;
 	m_iImgIndex = imgIndex;
 
 	for (int i = 0; i < m_vAnimationFrames.Size(); ++i) {

@@ -11,7 +11,7 @@
             "name": "group_login_background_sp",
             "type": 3,
 
-            "npk": "sprite.NPK",
+            "sga": "sprite.sga",
             "img": "login.img",
             "sprite_idx": 0
         },
@@ -20,7 +20,7 @@
             "name": "group_login_login_btn",
             "type": 1,
 
-            "npk": "sprite.NPK",
+            "sga": "sprite.sga",
             "img": "login.img",
             "normal_idx": 6,
             "over_idx": 7,

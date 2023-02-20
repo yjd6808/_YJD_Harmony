@@ -73,14 +73,14 @@ void SGProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectile
 	if (iProjectileListenerCode != 0)
 		projectileInfo->ProjectileListenerCode = iProjectileListenerCode;
 
-	const SGString& npkName = SGJsonEx::getStringOrNull(projectileRoot["npk"]);
-	if (!npkName.IsNull()) {
-		projectileInfo->NpkIndex = pPackManager->getPackIndex(npkName);
+	const SGString& sgaName = SGJsonEx::getStringOrNull(projectileRoot["sga"]);
+	if (!sgaName.IsNull()) {
+		projectileInfo->SgaIndex = pPackManager->getPackIndex(sgaName);
 	}
 
 	const SGString& imgName = SGJsonEx::getStringOrNull(projectileRoot["img"]);
 	if (!imgName.IsNull()) {
-		projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->NpkIndex)->getImgIndex(imgName);
+		projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->SgaIndex)->getImgIndex(imgName);
 	}
 
 	float fSpawnOffsetX = SGJsonEx::getFloatDefault(projectileRoot["spawn_offset_x"], 0);
@@ -158,8 +158,8 @@ void SGProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, Out
 	projectileInfo->ProjectileListenerCode = projectileRoot["listener_code"].asInt();
 	projectileInfo->AttackData = pDataManager->getAttackDataInfo(projectileRoot["attakdata_code"].asInt());
 	projectileInfo->Name = SGJsonEx::getString(projectileRoot["name"]);
-	projectileInfo->NpkIndex = pPackManager->getPackIndex(SGJsonEx::getString(projectileRoot["npk"]));
-	projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->NpkIndex)->getImgIndex(SGJsonEx::getString(projectileRoot["img"]));
+	projectileInfo->SgaIndex = pPackManager->getPackIndex(SGJsonEx::getString(projectileRoot["sga"]));
+	projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->SgaIndex)->getImgIndex(SGJsonEx::getString(projectileRoot["img"]));
 	projectileInfo->SpawnOffsetX = projectileRoot["spawn_offset_x"].asFloat();
 	projectileInfo->SpawnOffsetY = projectileRoot["spawn_offset_y"].asFloat();
 	projectileInfo->SpawnEffect = pDataManager->getEffectInfo(projectileRoot["spawn_effect_code"].asInt());

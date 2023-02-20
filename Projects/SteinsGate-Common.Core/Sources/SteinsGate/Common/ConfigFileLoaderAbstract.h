@@ -28,11 +28,11 @@ public:
 
 	void addData(ConfigDataAbstract* data);
 	ConfigDataAbstract* getData(int code);
-
-
-
 protected:
+	SGString* m_pConfigPath{};
 	SGHashMap<int, ConfigDataAbstract*> m_hConfigDataAbstract;
+
+	friend class SGDataManagerAbstract;
 };
 
 

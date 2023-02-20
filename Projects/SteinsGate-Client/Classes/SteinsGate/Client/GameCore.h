@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <SteinsGate/Common/CommonCore.h>
+
 class SGClientInfo;
 class SGHostPlayer;
 class SGDataManager;

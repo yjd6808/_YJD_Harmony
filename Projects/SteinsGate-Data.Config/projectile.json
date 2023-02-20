@@ -16,7 +16,7 @@
             "attakdata_code": 1,
             "listener_code": 1,
             "name": "gunner_auto_right",
-            "npk": "sprite_character_gunner_effect_bullet.NPK",
+            "sga": "sprite_character_gunner_effect_bullet.sga",
             "img": "pistol.img",
             "spawn_offset_x": 342.0,
             "spawn_offset_y": 245.0,

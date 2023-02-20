@@ -25,7 +25,9 @@ public:
 	CollectionExtension(TCollection* collection) {
 		m_pCollection = collection;
 	}
-	virtual ~CollectionExtension() noexcept {}
+	virtual ~CollectionExtension() noexcept {
+		
+	}
 
 
 	template <typename Consumer>

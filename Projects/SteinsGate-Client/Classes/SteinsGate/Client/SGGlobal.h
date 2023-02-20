@@ -39,8 +39,8 @@ public:
 	bool isAttackBoxDrawMode() { return m_bDrawAttackBox; }
 	bool isEffectDrawMode() { return m_bDrawEffect; }
 
-	const SGString& getAvatarNpkName(int charType, int avatarType);
-	const SGString& getWeaponNpkName(int weaponType);
+	const SGString& getAvatarSgaName(int charType, int avatarType);
+	const SGString& getWeaponSgaName(int weaponType);
 
 	SGSpriteFrameTexture* getDefaultFrameTexture();
 private:

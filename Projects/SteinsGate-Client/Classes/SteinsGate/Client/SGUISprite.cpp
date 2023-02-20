@@ -44,12 +44,12 @@ void SGUISprite::load() {
 
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	SGUIManager* pUIManager = SGUIManager::get();
-	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Npk);
+	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Sga);
 
 	m_pTexture = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Sprite);
 	m_pTexture->retain();
 
-	pUIManager->registerLoadedUITexture({ m_pInfo->Npk, m_pInfo->Img, m_pInfo->Sprite });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite });
 
 	DebugAssertMsg(!m_pTexture->isLink(), "스프라이트의 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
 

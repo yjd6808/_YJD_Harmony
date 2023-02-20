@@ -14,7 +14,7 @@
 
 struct SGMobPartInfo
 {
-	int PackIndex;
+	int SgaIndex;
 	int ImgIndex;
 	int ZOrder;
 };

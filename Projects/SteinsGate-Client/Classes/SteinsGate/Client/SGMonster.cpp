@@ -57,7 +57,7 @@ void SGMonster::initActorSprite() {
 
 	for (int i = 0; i < m_pBaseInfo->PartsCount; ++i) {
 		SGMobPartInfo& part = m_pBaseInfo->Parts[i];
-		spActorSpriteData->Parts.PushBack({ part.ZOrder, part.PackIndex, part.ImgIndex });
+		spActorSpriteData->Parts.PushBack({ part.ZOrder, part.SgaIndex, part.ImgIndex });
 	}
 
 	for (int i = 0; i < m_pBaseInfo->AnimationList.Size(); ++i) {

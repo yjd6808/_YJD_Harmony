@@ -3,29 +3,29 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Core.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkElement.cpp">
-      <Filter>Npk</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaElement.cpp">
+      <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkElementInitilizer.cpp">
-      <Filter>Npk</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaElementInitilizer.cpp">
+      <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkImage.cpp">
-      <Filter>Npk</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaImage.cpp">
+      <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkLinkSprite.cpp">
-      <Filter>Npk</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaLinkSprite.cpp">
+      <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkLoader.cpp">
-      <Filter>Npk</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaLoader.cpp">
+      <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkPackage.cpp">
-      <Filter>Npk</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaPackage.cpp">
+      <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkSound.cpp">
-      <Filter>Npk</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaSound.cpp">
+      <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\NpkSprite.cpp">
-      <Filter>Npk</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SgaSprite.cpp">
+      <Filter>Sga</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SGStruct.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.cpp">
@@ -62,45 +62,49 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp">
       <Filter>Data\Item</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonInfoLoader.cpp">
+      <Filter>Data\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkColorFormat.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaColorFormat.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkCompressMode.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaCompressMode.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkElement.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaElement.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkElementInitializer.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaElementInitializer.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkImage.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaImage.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkLinkSprite.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaLinkSprite.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkLoader.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaLoader.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkPackage.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaPackage.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSound.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSound.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSprite.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSprite.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteAbstract.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSpriteAbstract.h">
+      <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NpkSpriteRect.h">
-      <Filter>Npk</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSpriteRect.h">
+      <Filter>Sga</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\SGStruct.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
@@ -153,11 +157,16 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfo.h">
       <Filter>Data\Item</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonInfo.h">
+      <Filter>Data\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonInfoLoader.h">
+      <Filter>Data\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonCore.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonCoreHeader.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Npk">
-      <UniqueIdentifier>{8c39330d-5cc1-4ca6-b0dc-4fe8ee5021e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data">
       <UniqueIdentifier>{1edcb01f-acdf-4c32-aa70-a5f17ddc8615}</UniqueIdentifier>
     </Filter>
@@ -178,6 +187,12 @@
     </Filter>
     <Filter Include="Data\Item">
       <UniqueIdentifier>{cd4145a7-98cf-4050-acbe-defa7ebbcc35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sga">
+      <UniqueIdentifier>{8c39330d-5cc1-4ca6-b0dc-4fe8ee5021e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Common">
+      <UniqueIdentifier>{cc66cec2-148c-4a10-8631-375947d38c0d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

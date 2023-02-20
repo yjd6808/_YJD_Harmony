@@ -172,7 +172,9 @@ float SGActor::getPositionRealCenterY() const {
 
 SGVec2 SGActor::getCanvasPositionReal() const {
 	DebugAssertMsg(m_pActorSprite, "액터 스프라이트가 없습니다.");
-	return this->getPosition() - (m_pActorSprite->getBodyCanvas()->getContentSize() / 2) + m_pActorSprite->getPosition();
+	SGSize contentSize = m_pActorSprite->getBodyCanvas()->getContentSize();
+	SGVec2 canvasRealPos = this->getPosition() - (contentSize / 2) + m_pActorSprite->getPosition();
+	return canvasRealPos;
 }
 
 SGSize SGActor::getCanvasSize() const {

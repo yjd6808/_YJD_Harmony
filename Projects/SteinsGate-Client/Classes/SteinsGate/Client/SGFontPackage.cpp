@@ -8,6 +8,7 @@
 
 #include "Tutturu.h"
 #include "SGFontPackage.h"
+#include "GameCoreHeader.h"
 
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGJsonEx.h>
@@ -19,6 +20,8 @@
 #include <fstream>
 
 
+
+
 USING_NS_JC;
 USING_NS_JS;
 
@@ -28,7 +31,7 @@ SGFontPackage::SGFontPackage()
 {}
 
 void SGFontPackage::init() {
-	SGString szFontDirPath = JCore::Path::Combine(DataDirectoryPath_v, FontDirectoryName_v);
+	SGString szFontDirPath = JCore::Path::Combine(CoreCommon_v->DataPath, FontDirName_v);
 	Vector<SGString> vFontFiles = Directory::Files(szFontDirPath.Source());
 
 	for (int i = 0; i < vFontFiles.Size(); ++i) {

@@ -8,14 +8,34 @@
 
 #include "Core.h"
 #include "SGDataManagerAbstract.h"
+#include "CommonCoreHeader.h"
+
+#include <SteinsGate/Common/CommonInfoLoader.h>
 
 SGDataManagerAbstract::SGDataManagerAbstract()
 	: m_pConfigFileLoaders{}
 	, m_bLoaded{}
-{}
+	, m_bInitialized(false) {
+	loadCommon();
+}
 
 SGDataManagerAbstract::~SGDataManagerAbstract() {
 	finalizeLoader();
+}
+
+void SGDataManagerAbstract::loadCommon() {
+
+	DebugAssertMsg(m_bLoaded[ConfigFileType::Common] == false, "이미 초기화가 진행되어있습니다.");
+
+	CommonInfoLoader* pCommonInfoLoader = dbg_new CommonInfoLoader();
+
+	if (!pCommonInfoLoader->load()) {
+		DebugAssertMsg(false, "커몬 인포 로딩에 실패했습니다.");
+		return;
+	}
+
+	m_pConfigFileLoaders[ConfigFileType::Common] = pCommonInfoLoader;
+	m_bLoaded[ConfigFileType::Common] = true;
 }
 
 void SGDataManagerAbstract::loadAll() {
@@ -29,6 +49,7 @@ void SGDataManagerAbstract::loadAll() {
 			continue;
 
 		++iInitCount;
+
 
 		if (m_bLoaded[i])
 			continue;
@@ -134,6 +155,11 @@ ItemVisualInfo* SGDataManagerAbstract::getVisualInfo(int visualCode) {
 	auto pRet = dynamic_cast<ItemVisualInfo*>(getData(eType, visualCode));
 	DebugAssertMsg(pRet, "아바타 | 무기가 아닙니다.");
 	return pRet;
+}
+
+CommonInfo* SGDataManagerAbstract::getCommonInfo(int commonConfigCode) {
+	DebugAssertMsg(m_bLoaded[ConfigFileType::Common], "먼저 loadCommon()을 호출해주세요");
+	return (CommonInfo*)m_pConfigFileLoaders[ConfigFileType::Common]->getData(commonConfigCode);
 }
 
 

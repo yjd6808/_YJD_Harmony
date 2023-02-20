@@ -75,7 +75,7 @@ bool SGActorPartSprite::init() {
 
 	
 
-	SGImagePack* pImgPack = SGImagePackManager::get()->getPack(m_pPartData->NpkIndex);
+	SGImagePack* pImgPack = SGImagePackManager::get()->getPack(m_pPartData->SgaIndex);
 
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
 
@@ -91,7 +91,7 @@ bool SGActorPartSprite::init() {
 	for (int i = 0; i < m_refAnimationInfoList.Size(); ++i) {
 		SGAnimationInfo* pAnimationInfo = m_refAnimationInfoList[i];
 		SGActorPartAnimation* pPartAnimation = SGActorPartAnimation::create(this, pAnimationInfo, m_vFrames);
-		pPartAnimation->constructFrames(m_pPartData->NpkIndex, m_pPartData->ImgIndex);
+		pPartAnimation->constructFrames(m_pPartData->SgaIndex, m_pPartData->ImgIndex);
 		pPartAnimation->retain();
 		m_AnimationMap.Insert(pAnimationInfo->Code, pPartAnimation);
 		m_vAnimationList.PushBack(pPartAnimation);
@@ -149,7 +149,7 @@ void SGActorPartSprite::onAnimationEnd(SGActorPartAnimation* animation, SGFrameT
 
 void SGActorPartSprite::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
 
-	const NpkSpriteRect& rect = texture->getRect();
+	const SgaSpriteRect& rect = texture->getRect();
 	const int iFrameIndex = texture->getFrameIndex();
 	const int iFrameIndexInAnimation = animation->getFrameIndexInAnimation();
 

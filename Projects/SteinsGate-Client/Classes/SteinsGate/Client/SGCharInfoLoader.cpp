@@ -74,8 +74,6 @@ void SGCharInfoLoader::readDefaultVisualInfo(Json::Value& charRoot, Out_ SGCharI
 
 		charInfo->VisualCount[i] = VisualHelper::getVisualData(charInfo->Visual[i], code.Code);
 		charInfo->HasVisual[i] = true;
-
-		DebugAssertMsg(charInfo->VisualCount[i] > 0, "안들어오겠지?");
 	}
 	
 }

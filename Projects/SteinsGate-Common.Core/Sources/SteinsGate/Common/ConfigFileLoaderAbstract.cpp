@@ -8,6 +8,7 @@
 
 #include "Core.h"
 #include "ConfigFileLoaderAbstract.h"
+#include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/ItemInfoLoader.h>
 
@@ -18,7 +19,8 @@ ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract() {
 }
 
 bool ConfigFileLoaderAbstract::loadJson(Out_ Json::Value& root) {
-	SGString path = JCore::Path::Combine(ConfigDirectoryPath_v, getConfigFileName());
+	DebugAssertMsg(CoreCommon_v != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
+	SGString path = JCore::Path::Combine(CoreCommon_v->ConfigPath, getConfigFileName());
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
 	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", getConfigFileName());
 	try {

@@ -15,6 +15,7 @@
 #include <JCore/Math.h>
 #include <JCore/Time.h>
 #include <JCore/Stream.h>
+#include <JCore/Env.h>
 #include <JCore/Bit.h>
 
 #include <JCore/Primitives/StaticString.h>
@@ -39,6 +40,7 @@
 #include <SteinsGate/Common/SGConfig.h>
 #include <SteinsGate/Common/LoggerDefine.h>
 #include <SteinsGate/Common/Logo.h>
+#include <SteinsGate/Common/CommonCore.h>
 
 #include <json.h>
 #include <fstream>
@@ -117,9 +119,4 @@ template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAl
 class alignas(SG_CACHELINE_SIZE) AlignedHashMap : public SGHashMap<TKey, TValue, TAllocator> {};
 
 // 모든 프로젝트에서 사용하는 변수
-
-
-void InitializeCommonCore();
-void FinalizeCommonCore();
-
 

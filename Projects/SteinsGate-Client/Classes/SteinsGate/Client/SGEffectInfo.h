@@ -19,7 +19,7 @@ struct SGEffectInfo : ConfigDataAbstract
 	~SGEffectInfo() override = default;
 
 	SGString Name;
-	int NpkIndex;
+	int SgaIndex;
 	int ImgIndex;
 	SGAnimationInfo Animation;
 };

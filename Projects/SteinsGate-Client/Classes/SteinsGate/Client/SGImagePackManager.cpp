@@ -7,13 +7,15 @@
 
 #include "Tutturu.h"
 #include "SGImagePackManager.h"
+#include "GameCoreHeader.h"
 
-#include <SteinsGate/Common/NpkLoader.h>
-#include <SteinsGate/Common/NpkElementInitializer.h>
+#include <SteinsGate/Common/SgaLoader.h>
+#include <SteinsGate/Common/SgaElementInitializer.h>
 
 #include <JCore/Threading/Thread.h>
 
 #include <SteinsGate/Client/SGGlobal.h>
+
 
 
 USING_NS_CC;
@@ -21,40 +23,44 @@ USING_NS_JC;
 
 SGImagePackManager::SGImagePackManager() {}
 SGImagePackManager::~SGImagePackManager() {
-	for (int i = 0; i < MaxNpkFileCount_v; ++i) {
+	for (int i = 0; i < MaxSgaFileCount_v; ++i) {
 		DeleteSafe(m_LoadedPackages[i]);
 	}
 }
 
 void SGImagePackManager::loadAllPackages() {
 
-	SGThread loaderThread[MaxNpkParallelLoadingThreadCount_v];
-	SGString imageDirPath = Path::Combine(DataDirectoryPath_v, ImageDirectoryName_v);
+	SGThread loaderThread[MaxSgaParallelLoadingThreadCount_v];
+	SGString imageDirPath = Path::Combine(CoreCommon_v->DataPath, ImageDirName_v);
 	SGVector<SGString> paths = Directory::Files(imageDirPath, false);
+	SGVector<SGString> sgaPaths;
 
 	for (int i = 0; i < paths.Size(); ++i) {
-		m_PathToIdMap.Insert(Path::FileName(paths[i]), i);
+		if (paths[i].EndWith(".sga")) {
+			sgaPaths.PushBack(paths[i]);
+		}
 	}
 
-	m_iLoadedPackageCount = paths.Size();
-	
+	for (int i = 0; i < sgaPaths.Size(); i++) {
+		m_PathToIdMap.Insert(Path::FileName(sgaPaths[i]), i);
+	}
+
+	m_iLoadedPackageCount = sgaPaths.Size();
+
 	// 8개씩 병렬 로딩 진행
-	for (int i = 0; i < MaxNpkParallelLoadingThreadCount_v; ++i) {
-		loaderThread[i].Start([i, this, &paths](void*) {
-			for (int j = i; j < m_iLoadedPackageCount; j += MaxNpkParallelLoadingThreadCount_v) {
-				SGString szFileName =  Path::FileName(paths[j]);
-				NpkPackagePtr package = NpkLoader::LoadIndexOnly(
-					Path::Combine(DataDirectoryPath_v, ImageDirectoryName_v, szFileName)
-				);
+	for (int i = 0; i < MaxSgaParallelLoadingThreadCount_v; ++i) {
+		loaderThread[i].Start([i, this, &sgaPaths](void*) {
+			for (int j = i; j < m_iLoadedPackageCount; j += MaxSgaParallelLoadingThreadCount_v) {
+				SgaPackagePtr package = SgaLoader::LoadHeaderOnly(sgaPaths[j]);
 				m_LoadedPackages[j] = dbg_new SGImagePack(package, j);
 			}
 		});
 	}
 
-	for (int i = 0; i < MaxNpkParallelLoadingThreadCount_v; ++i) {
+	for (int i = 0; i < MaxSgaParallelLoadingThreadCount_v; ++i) {
 		loaderThread[i].Join();
 	}
-	_LogInfo_("NPK파일 %d개 인덱싱 완료", m_iLoadedPackageCount);
+	_LogInfo_("sga 파일 %d개 헤더 인덱싱 완료", m_iLoadedPackageCount);
 }
 
 void SGImagePackManager::unloadPackData(int packIndex) {
@@ -75,8 +81,8 @@ SGImagePack* SGImagePackManager::getAvatarPack(CharType_t charType, AvatarType_t
 	DebugAssertMsg(part >= AvatarType::Begin && part < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
 
 	if (m_AvatarPacks[charType][part] == nullptr) {
-		const SGString& npkName = SGGlobal::get()->getAvatarNpkName(charType, part);
-		m_AvatarPacks[charType][part] = getPack(npkName);
+		const SGString& sgaName = SGGlobal::get()->getAvatarSgaName(charType, part);
+		m_AvatarPacks[charType][part] = getPack(sgaName);
 	}
 
 	return m_AvatarPacks[charType][part];
@@ -86,8 +92,8 @@ SGImagePack* SGImagePackManager::getWeaponPack(WeaponType_t weaponType) {
 	DebugAssertMsg(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
 
 	if (m_WeaponPacks[weaponType] == nullptr) {
-		const SGString& npkName = SGGlobal::get()->getWeaponNpkName(weaponType);
-		m_WeaponPacks[weaponType] = getPack(npkName);
+		const SGString& sgaName = SGGlobal::get()->getWeaponSgaName(weaponType);
+		m_WeaponPacks[weaponType] = getPack(sgaName);
 	}
 
 	return m_WeaponPacks[weaponType];
@@ -119,9 +125,9 @@ void SGImagePackManager::releaseFrameTexture(int packIndex, int imgIndex, int fr
 	getPack(packIndex)->releaseFrameTexture(imgIndex, frameIndex);
 }
 
-void SGImagePackManager::releaseFrameTexture(const NpkResourceIndex& npkResourceIndex) {
-	getPack(npkResourceIndex.Un.NpkIndex)->releaseFrameTexture(
-		npkResourceIndex.Un.ImgIndex, 
-		npkResourceIndex.Un.FrameIndex);
+void SGImagePackManager::releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex) {
+	getPack(sgaResourceIndex.Un.SgaIndex)->releaseFrameTexture(
+		sgaResourceIndex.Un.ImgIndex, 
+		sgaResourceIndex.Un.FrameIndex);
 }
 

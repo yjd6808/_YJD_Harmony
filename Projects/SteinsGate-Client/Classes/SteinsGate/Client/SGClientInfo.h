@@ -13,7 +13,6 @@
 class SGClientInfo : public ConfigDataAbstract
 {
 public:
-
 	~SGClientInfo() override = default;
 	float GameScale;
 	float ResolutionWidth;

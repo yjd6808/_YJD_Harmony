@@ -50,7 +50,7 @@ void SGEffectInfoLoader::readEffectInfo(Json::Value& effectRoot, SGEffectInfo* e
 	Value& animationRoot = effectRoot["animation"];
 	effectInfo->Code = effectRoot["code"].asInt();
 	effectInfo->Name = SGJsonEx::getString(effectRoot["name"]);
-	effectInfo->NpkIndex = pPackManager->getPackIndex(SGJsonEx::getString(effectRoot["npk"]));
-	effectInfo->ImgIndex = pPackManager->getPack(effectInfo->NpkIndex)->getImgIndex(SGJsonEx::getString(effectRoot["img"]));
+	effectInfo->SgaIndex = pPackManager->getPackIndex(SGJsonEx::getString(effectRoot["sga"]));
+	effectInfo->ImgIndex = pPackManager->getPack(effectInfo->SgaIndex)->getImgIndex(SGJsonEx::getString(effectRoot["img"]));
 	SGJsonEx::parseAnimationInfo(animationRoot, effectInfo->Animation);
 }

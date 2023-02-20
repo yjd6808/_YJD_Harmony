@@ -51,29 +51,29 @@ void SGGlobal::initialize() {
 
 
 		for (int j = 0; j < AvatarType::Max; ++j) {
-			m_AvatarPackName[i][j] = StringUtil::Format("%s_avatar_%s.NPK", CharType::Name[i], AvatarType::Name[j]);
+			m_AvatarPackName[i][j] = StringUtil::Format("%s_avatar_%s.sga", CharType::Name[i], AvatarType::Name[j]);
 		}
 
 	}
 
-	m_WeaponPackName[WeaponType::Automatic] = "gunner_weapon_auto.NPK";
-	m_WeaponPackName[WeaponType::Bowgun] = "gunner_weapon_bowgun.NPK";
-	m_WeaponPackName[WeaponType::HandCannon] = "gunner_weapon_hcan.NPK";
-	m_WeaponPackName[WeaponType::Musket] = "gunner_weapon_musket.NPK";
-	m_WeaponPackName[WeaponType::Revolver] = "gunner_weapon_rev.NPK";
+	m_WeaponPackName[WeaponType::Automatic] = "gunner_weapon_auto.sga";
+	m_WeaponPackName[WeaponType::Bowgun] = "gunner_weapon_bowgun.sga";
+	m_WeaponPackName[WeaponType::HandCannon] = "gunner_weapon_hcan.sga";
+	m_WeaponPackName[WeaponType::Musket] = "gunner_weapon_musket.sga";
+	m_WeaponPackName[WeaponType::Revolver] = "gunner_weapon_rev.sga";
 
 
 }
 
 
 
-const SGString& SGGlobal::getAvatarNpkName(int charType, int avatarType) {
+const SGString& SGGlobal::getAvatarSgaName(int charType, int avatarType) {
 	DebugAssertMsg(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다. [1]");
 	DebugAssertMsg(avatarType >= AvatarType::Begin && avatarType < AvatarType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
 	return m_AvatarPackName[charType][avatarType];
 }
 
-const SGString& SGGlobal::getWeaponNpkName(int weaponType) {
+const SGString& SGGlobal::getWeaponSgaName(int weaponType) {
 	DebugAssertMsg(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
 	return m_WeaponPackName[weaponType];
 }

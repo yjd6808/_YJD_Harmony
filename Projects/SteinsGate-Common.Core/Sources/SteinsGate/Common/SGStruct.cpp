@@ -14,18 +14,18 @@ USING_NS_JC;
 
 
 ActorPartSpriteData::ActorPartSpriteData()
-	: NpkIndex(InvalidValue_v)
+	: SgaIndex(InvalidValue_v)
 	, ZOrder(0)
 	, ImgIndex(InvalidValue_v)
 {}
 
-ActorPartSpriteData::ActorPartSpriteData(int zorder, int npk, int img)
-	: NpkIndex(npk)
+ActorPartSpriteData::ActorPartSpriteData(int zorder, int sga, int img)
+	: SgaIndex(sga)
 	, ZOrder(zorder)
 	, ImgIndex(img)
 {}
 
-NpkResourceIndex::NpkResourceIndex() : Value(0) {}
+SgaResourceIndex::SgaResourceIndex() : Value(0) {}
 
 
 AccountData::AccountData()

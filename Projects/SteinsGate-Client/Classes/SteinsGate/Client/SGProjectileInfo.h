@@ -26,7 +26,7 @@ struct SGProjectileInfo : ConfigDataAbstract
 	int ProjectileListenerCode;
 	SGAttackDataInfo* AttackData;
 	SGString Name;
-	int NpkIndex;
+	int SgaIndex;
 	int ImgIndex;
 	float SpawnOffsetX;
 	float SpawnOffsetY;

@@ -26,17 +26,17 @@
             "thickness_box": "0 -50 50 30",
             "parts": [
                 {
-                    "npk": "sprite_monster_goblin.NPK",
+                    "sga": "sprite_monster_goblin.sga",
                     "img": "body0.img",
                     "z_order": 0
                 },
                 {
-                    "npk": "sprite_monster_goblin_equipment.NPK",
+                    "sga": "sprite_monster_goblin_equipment.sga",
                     "img": "weapon1.img",
                     "z_order": 1
                 },
                 {
-                    "npk": "sprite_monster_goblin_equipment.NPK",
+                    "sga": "sprite_monster_goblin_equipment.sga",
                     "img": "gcc1-2.img",
                     "z_order": 2
                 }
@@ -141,17 +141,17 @@
             "thickness_box": "0 -50 50 30",
             "parts": [
                 {
-                    "npk": "sprite_monster_goblin.NPK",
+                    "sga": "sprite_monster_goblin.sga",
                     "img": "body1.img",
                     "z_order": 0
                 },
                 {
-                    "npk": "sprite_monster_goblin_equipment.NPK",
+                    "sga": "sprite_monster_goblin_equipment.sga",
                     "img": "weapon1-2.img",
                     "z_order": 1
                 },
                 {
-                    "npk": "sprite_monster_goblin_equipment.NPK",
+                    "sga": "sprite_monster_goblin_equipment.sga",
                     "img": "acc2.img",
                     "z_order": 2
                 }

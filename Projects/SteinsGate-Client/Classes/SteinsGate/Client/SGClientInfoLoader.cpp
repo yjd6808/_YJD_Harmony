@@ -8,6 +8,8 @@
 #include "Tutturu.h"
 #include "SGClientInfoLoader.h"
 
+#include <SteinsGate/Client/SGJsonEx.h>
+
 USING_NS_JS;
 USING_NS_JC;
 
@@ -40,4 +42,5 @@ void SGClientInfoLoader::readClientInfo(Json::Value& clientRoot, Out_ SGClientIn
 	clientInfo->GameScale = clientRoot["game_scale"].asFloat();
 	clientInfo->ResolutionWidth = clientRoot["resolution_width"].asFloat();
 	clientInfo->ResolutionHeight = clientRoot["resolution_height"].asFloat();
+	
 }

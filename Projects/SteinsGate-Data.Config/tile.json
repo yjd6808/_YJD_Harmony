@@ -5,49 +5,49 @@
     "tile": [
         {
             "code": 1,
-            "npk": "sprite_map.NPK",
+            "sga": "sprite_map.sga",
             "img": "00tile.img",
             "index": 0
         },
         {
             "code": 2,
-            "npk": "sprite_map.NPK",
+            "sga": "sprite_map.sga",
             "img": "00tile.img",
             "index": 1
         },
         {
             "code": 3,
-            "npk": "sprite_map.NPK",
+            "sga": "sprite_map.sga",
             "img": "00tile.img",
             "index": 2
         },
         {
             "code": 4,
-            "npk": "sprite_map.NPK",
+            "sga": "sprite_map.sga",
             "img": "00tile.img",
             "index": 3
         },
         {
             "code": 5,
-            "npk": "sprite_map.NPK",
+            "sga": "sprite_map.sga",
             "img": "00tile2.img",
             "index": 0
         },
         {
             "code": 6,
-            "npk": "sprite_map.NPK",
+            "sga": "sprite_map.sga",
             "img": "00tile2.img",
             "index": 1
         },
         {
             "code": 7,
-            "npk": "sprite_map.NPK",
+            "sga": "sprite_map.sga",
             "img": "00tile2.img",
             "index": 2
         },
         {
             "code": 8,
-            "npk": "sprite_map.NPK",
+            "sga": "sprite_map.sga",
             "img": "00tile2.img",
             "index": 3
         }

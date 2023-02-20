@@ -9,7 +9,7 @@
         {
             "code": 1,
             "name": "knocksmall",
-            "npk": "sprite_common_hiteffect.NPK",
+            "sga": "sprite_common_hiteffect.sga",
             "img": "knocksmall.img",
             "animation": 
             {
@@ -26,7 +26,7 @@
         {
             "code": 2,
             "name": "knocklarge",
-            "npk": "sprite_common_hiteffect.NPK",
+            "sga": "sprite_common_hiteffect.sga",
             "img": "knocklarge.img",
             "animation": 
             {
@@ -44,7 +44,7 @@
         {
             "code": 3,
             "name": "pistol_shoot",
-            "npk": "sprite_character_gunner_effect_shooteffect.NPK",
+            "sga": "sprite_character_gunner_effect_shooteffect.sga",
             "img": "pistol00.img",
             "animation": 
             {
@@ -61,7 +61,7 @@
         {
             "code": 4,
             "name": "pistol_hit",
-            "npk": "sprite_character_gunner_effect_shooteffect.NPK",
+            "sga": "sprite_character_gunner_effect_shooteffect.sga",
             "img": "pistol00.img",
             "animation": 
             {
@@ -80,7 +80,7 @@
         {
             "code": 5,
             "name": "pistol_shoot_down",
-            "npk": "sprite_character_gunner_effect_shooteffect.NPK",
+            "sga": "sprite_character_gunner_effect_shooteffect.sga",
             "img": "pistol00.img",
             "animation": 
             {
@@ -99,7 +99,7 @@
         {
             "code": 6,
             "name": "pistol_hit_down",
-            "npk": "sprite_character_gunner_effect_shooteffect.NPK",
+            "sga": "sprite_character_gunner_effect_shooteffect.sga",
             "img": "pistol00.img",
             "animation": 
             {
@@ -117,7 +117,7 @@
         {
             "code": 7,
             "name": "collision_wall",
-            "npk": "sprite_character_gunner_effect_hiteffect.NPK",
+            "sga": "sprite_character_gunner_effect_hiteffect.sga",
             "img": "collisionwall.img",
             "animation": 
             {
@@ -135,7 +135,7 @@
         {
             "code": 8,
             "name": "collision_floor",
-            "npk": "sprite_character_gunner_effect_hiteffect.NPK",
+            "sga": "sprite_character_gunner_effect_hiteffect.sga",
             "img": "collisionfloor.img",
             "animation": 
             {
@@ -153,7 +153,7 @@
         {
             "code": 9,
             "name": "gunner_sliding_begin",
-            "npk": "sprite_character_gunner_effect.NPK",
+            "sga": "sprite_character_gunner_effect.sga",
             "img": "dashattackdust1.img",
             "animation": 
             {
@@ -171,7 +171,7 @@
         {
             "code": 10,
             "name": "gunner_sliding_attach",
-            "npk": "sprite_character_gunner_effect.NPK",
+            "sga": "sprite_character_gunner_effect.sga",
             "img": "dashattackdust2.img",
             "animation": 
             {
@@ -188,7 +188,7 @@
         {
             "code": 11,
             "name": "ground_marker",
-            "npk": "sprite_common_etc.NPK",
+            "sga": "sprite_common_etc.sga",
             "img": "auraminion.img",
             "animation": 
             {

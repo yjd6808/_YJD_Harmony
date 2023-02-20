@@ -52,7 +52,7 @@ bool SGTileInfoLoader::load() {
 void SGTileInfoLoader::readTileInfo(Json::Value& tileRoot, SGTileInfo* tileInfo) {
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	tileInfo->Code = tileRoot["code"].asInt();
-	tileInfo->NpkIndex = pPackManager->getPackIndex(SGJsonEx::getString(tileRoot["npk"]));
-	tileInfo->ImgIndex = pPackManager->getPack(tileInfo->NpkIndex)->getImgIndex(SGJsonEx::getString(tileRoot["img"]));
+	tileInfo->SgaIndex = pPackManager->getPackIndex(SGJsonEx::getString(tileRoot["sga"]));
+	tileInfo->ImgIndex = pPackManager->getPack(tileInfo->SgaIndex)->getImgIndex(SGJsonEx::getString(tileRoot["img"]));
 	tileInfo->SpriteIndex = tileRoot["index"].asInt();
 }

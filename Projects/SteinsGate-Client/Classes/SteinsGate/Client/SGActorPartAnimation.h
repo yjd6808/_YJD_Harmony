@@ -43,7 +43,7 @@ public:
 		SGVector<SGFrameTexture*>& frames
 	);
 	
-	void constructFrames(int npkIndex, int imgIndex);
+	void constructFrames(int sgaIndex, int imgIndex);
 	void update(float dt);
 	void updateLoopSequence(float dt);
 	void updateAnimation(float currentdelayFrame, SGFrameTexture* currentFrameTexture, float dt);
@@ -76,7 +76,7 @@ private:
 	SGFrameTexture* getTexture(int frameIndexInAnimation);
 private:
 	// 주입 데이터
-	int m_iNpkIndex;
+	int m_iSgaIndex;
 	int m_iImgIndex;
 
 	SGAnimationInfo* m_pAnimationInfo;

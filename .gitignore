@@ -1,20 +1,25 @@
 .vs/
 .idea/
 
+
+*.sga
 *.pdb
 *.exe
 *.user
 .editorconfig
 *.Settings
+*.sga
 
 x64/
 Win32/
+
 
 packages/
 Output/
 Projects/*/Output/
 Projects/*/Intermediate/
 ThirdParty/Build/
+
 
 
 Projects/*/Project/obj/

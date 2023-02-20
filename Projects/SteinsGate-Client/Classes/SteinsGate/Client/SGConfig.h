@@ -10,8 +10,8 @@
 
 #include <SteinsGate/Common/SGConfig.h>
 
-inline constexpr int MaxNpkFileCount_v = 200;
-inline constexpr int MaxNpkParallelLoadingThreadCount_v = 8;
+inline constexpr int MaxSgaFileCount_v = 200;
+inline constexpr int MaxSgaParallelLoadingThreadCount_v = 8;
 inline constexpr int MaxMonsterPartsCount_v = 5;
 
 inline constexpr int ComboSequenceCount_v = 5;				// 콤보 가능키 최대 몇개?

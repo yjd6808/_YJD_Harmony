@@ -36,6 +36,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
+
+    CoreCommon_v = pDataManager->getCommonInfo(1);
     CoreInfo_v = SGDataManager::get()->getClientInfo(1);
     
     if (glview == nullptr) {
@@ -56,14 +58,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     InitializeDefaultLogger();
     InitializeClientCore();
 
-    InitializeServerAuthLogo();
-    _LogPlain_(Logo_v);
-    InitializeServerLobbyLogo();
-    _LogPlain_(Logo_v);
-    InitializeServerGameLogo();
-    _LogPlain_(Logo_v);
-    InitializeServerCenterLogo();
-    _LogPlain_(Logo_v);
+    //InitializeServerCenterLogo();
+    //_LogPlain_(Logo_v);
 
     auto scene = CoreWorld_v;
     scene->setAnchorPoint(Vec2::ZERO);

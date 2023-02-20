@@ -6,16 +6,3 @@
  */
 
 #include "Core.h"
-#include <SteinsGate/Common/NpkElementInitializer.h>
-#include <SteinsGate/Common/AudioPlayer.h>
-
-void InitializeCommonCore() {
-	NpkElementInitializer::Initialize();
-	AudioPlayer::Initilize();
-	
-}
-
-void FinalizeCommonCore() {
-	AudioPlayer::Finalize();
-	NpkElementInitializer::Finalize();
-}

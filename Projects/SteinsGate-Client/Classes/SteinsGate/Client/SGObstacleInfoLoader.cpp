@@ -46,8 +46,8 @@ void SGObstacleInfoLoader::readObstacleInfo(Json::Value& obstacleRoot, SGObstacl
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
 	obstacleInfo->Code = obstacleRoot["code"].asInt();
 	obstacleInfo->Name = SGJsonEx::getString(obstacleRoot["name"]);
-	obstacleInfo->NpkIndex = pPackManager->getPackIndex(SGJsonEx::getString(obstacleRoot["npk"]));
-	obstacleInfo->ImgIndex = pPackManager->getPack(obstacleInfo->NpkIndex)->getImgIndex(SGJsonEx::getString(obstacleRoot["img"]));
+	obstacleInfo->SgaIndex = pPackManager->getPackIndex(SGJsonEx::getString(obstacleRoot["sga"]));
+	obstacleInfo->ImgIndex = pPackManager->getPack(obstacleInfo->SgaIndex)->getImgIndex(SGJsonEx::getString(obstacleRoot["img"]));
 	SGJsonEx::parseThicknessInfo(obstacleRoot["thickness_box"], obstacleInfo->ThicknessBox);
 	obstacleInfo->Hitable = obstacleRoot["hitable"].asBool();
 	obstacleInfo->Colliadalble = obstacleRoot["collidable"].asBool();

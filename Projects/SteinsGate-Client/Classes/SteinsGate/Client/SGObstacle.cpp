@@ -40,7 +40,7 @@ void SGObstacle::initActorSprite() {
 	SGImagePackManager* pImgPackManager = SGImagePackManager::get();
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, m_pBaseInfo->AnimationList.Size());	
 
-	spActorSpriteData->Parts.PushBack({ 1, m_pBaseInfo->NpkIndex, m_pBaseInfo->ImgIndex });
+	spActorSpriteData->Parts.PushBack({ 1, m_pBaseInfo->SgaIndex, m_pBaseInfo->ImgIndex });
 
 	for (int i = 0; i < m_pBaseInfo->AnimationList.Size(); ++i) {
 		spActorSpriteData->Animations.PushBack(&m_pBaseInfo->AnimationList[i]);

@@ -93,6 +93,22 @@ struct ItemVisualInfo : ItemEquipInfo
 	WeaponType_t getWeaponType() {
 		return ItemCode(Code).WeaponUn.WeaponType;
 	}
+
+	VisualType_t getVisualType() {
+
+		ItemCode c(Code);
+
+		if (c.CommonUn.Type == ItemType::Avatar) {
+			return (VisualType_t)c.AvatarUn.PartType;
+		}
+
+		if (c.CommonUn.Type == ItemType::Weapon) {
+			return VisualType::Weapon;
+		}
+
+		DebugAssertMsg(false, "비주얼 타입이 아닌 녀석이 비주얼 타입으로 설정되어있습니다.");
+		return (VisualType_t)-1;
+	}
 };
 
 

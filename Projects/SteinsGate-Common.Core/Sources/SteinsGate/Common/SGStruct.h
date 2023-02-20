@@ -37,10 +37,10 @@ struct ThicknessBox
 struct ActorPartSpriteData
 {
 	ActorPartSpriteData();
-	ActorPartSpriteData(int zorder, int npk, int img);
+	ActorPartSpriteData(int zorder, int sga, int img);
 
 	int ZOrder;
-	int NpkIndex;
+	int SgaIndex;
 	int ImgIndex;
 };
 
@@ -48,18 +48,18 @@ using VisualData = ActorPartSpriteData[MaxVisualCount_v];
 using VisualInfo = JCore::Vector<ActorPartSpriteData>;
 
 
-union NpkResourceIndex
+union SgaResourceIndex
 {
-	NpkResourceIndex();
-	NpkResourceIndex(int npkIndex, int imgIndex, int frameIndex)
-		: Un{frameIndex, imgIndex, npkIndex}
+	SgaResourceIndex();
+	SgaResourceIndex(int sgaIndex, int imgIndex, int frameIndex)
+		: Un{frameIndex, imgIndex, sgaIndex}
 	{}
 
 	struct
 	{
 		int FrameIndex  : 12;	// 4096
 		int ImgIndex	: 11;	// 2048
-		int NpkIndex	: 9;	// 512	
+		int SgaIndex	: 9;	// 512	
 	} Un;
 
 	Int32U Value;

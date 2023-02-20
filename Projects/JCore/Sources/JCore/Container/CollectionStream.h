@@ -45,7 +45,7 @@ class CollectionStream : public Collection<T, TAllocator>
 
 private: 
 	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
-	CollectionStream(TCollection* collection): TCollection(CollectionType::Stream, ContainerType::ReferenceStream) {
+	CollectionStream(TCollection* collection): TCollection() {
 		m_pCollection = collection;
         int size = collection->Size();
 	    this->m_iSize = size;
@@ -108,6 +108,7 @@ public:
 		return nullptr;
 	}
 
+	
 public:
 	ContainerType GetContainerType() override { return ContainerType::ReferenceStream; }
 	CollectionType GetCollectionType() override { return CollectionType::Stream; }

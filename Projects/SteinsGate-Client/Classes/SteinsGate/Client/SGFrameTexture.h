@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/NpkSpriteRect.h>
+#include <SteinsGate/Common/SgaSpriteRect.h>
 
 
 #include <SteinsGate/Client/SGConfig.h>
@@ -28,7 +28,7 @@ public:
 	virtual int getFrameHeight() = 0;
 	
 	virtual int getTargetFrameIndex()		= 0;
-	virtual const NpkSpriteRect& getRect()  = 0;
+	virtual const SgaSpriteRect& getRect()  = 0;
 
 	virtual float getWidthF() 	 	= 0;
 	virtual float getHeightF()	 	= 0;
@@ -51,7 +51,7 @@ protected:
 class SGSpriteFrameTexture : public SGFrameTexture
 {
 public:
-	SGSpriteFrameTexture(SGTexture* texture, const NpkSpriteRect& rect, int frameIndex, bool dummy)
+	SGSpriteFrameTexture(SGTexture* texture, const SgaSpriteRect& rect, int frameIndex, bool dummy)
 		: SGFrameTexture(frameIndex)
 		, m_Rect(rect)
 		, m_pTexture(texture)
@@ -73,14 +73,14 @@ public:
 	float getFrameHeightF()  override { return (float)m_Rect.FrameHeight;	}
 
 	int getTargetFrameIndex()		override { return m_iFrameIndex; }
-	const NpkSpriteRect& getRect() 	override { return m_Rect; }
+	const SgaSpriteRect& getRect() 	override { return m_Rect; }
 	SGTexture* getTexture() { return m_pTexture; }
 
 	bool isLink()  override { return false;		}
 	bool isDummy() override { return m_bDummy;	}
 	
 protected:
-	NpkSpriteRect m_Rect;
+	SgaSpriteRect m_Rect;
 	SGTexture* m_pTexture;
 	
 	bool m_bDummy;
@@ -112,7 +112,7 @@ public:
 
 #pragma warning(push, 1)
 #pragma warning(disable: 4172) // return local variable address
-	const NpkSpriteRect& getRect() 	 override { return {}; }
+	const SgaSpriteRect& getRect() 	 override { return {}; }
 #pragma warning(pop)
 	SGTexture* getTexture() override { return nullptr; }
 

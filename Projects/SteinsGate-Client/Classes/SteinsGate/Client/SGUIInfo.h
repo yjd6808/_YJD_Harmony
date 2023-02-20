@@ -23,7 +23,7 @@ struct SGUIButtonInfo : SGUIElementInfo
 	~SGUIButtonInfo() override = default;
 
 	int Img;
-	int Npk;
+	int Sga;
 	int Normal;
 	int Over;
 	int Pressed;
@@ -49,7 +49,7 @@ struct SGUISpriteInfo : SGUIElementInfo
 	~SGUISpriteInfo() override = default;
 
 	int Img;
-	int Npk;
+	int Sga;
 	int Sprite;
 };
 

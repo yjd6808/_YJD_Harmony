@@ -20,13 +20,16 @@ public:
 	SGDataManagerAbstract();
 	virtual ~SGDataManagerAbstract();
 
+	
 	virtual void initializeLoader() = 0;
+
+	void loadCommon();
 	void loadAll();
 
 	ConfigDataAbstract* getData(ConfigFileType_t configFileType, int code);
 
-	void load(ConfigFileType_t configFileType);
 	
+	void load(ConfigFileType_t configFileType);
 	void unload(ConfigFileType_t configFileType); 
 	void finalizeLoader();
 
@@ -35,6 +38,7 @@ public:
 	ItemWeaponInfo* getWeaponInfo(int weaponCode);		// 무기
 	ItemArmorInfo* getArmorInfo(int armorCode);			// 장신구 혹은 방어구
 	ItemVisualInfo* getVisualInfo(int visualCode);		// 아바타 혹은 무기;
+	CommonInfo* getCommonInfo(int commonConfigCode);	// 커몬 컨피크
 protected:
 	ConfigFileLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max];
 	bool m_bLoaded[ConfigFileType::Max]; // Lazy Loading을 기본으로 하자.

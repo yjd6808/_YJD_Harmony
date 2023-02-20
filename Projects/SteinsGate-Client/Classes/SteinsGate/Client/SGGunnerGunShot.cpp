@@ -249,6 +249,8 @@ void SGGunnerGunShot::shotRight(SGActorSprite* actorSprite) {
 
 	switch (m_eWeaponType) {
 	case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_RIGHT; break;
+	case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_RIGHT; break;
+
 	default: iFrameEventId = -1;
 	}
 
@@ -264,6 +266,7 @@ void SGGunnerGunShot::shotRightDown(SGActorSprite* actorSprite) {
 
 	switch (m_eWeaponType) {
 	case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_RIGHT_DOWN; break;
+	case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_RIGHT_DOWN; break;
 	default: iFrameEventId = -1;
 	}
 
@@ -280,6 +283,7 @@ void SGGunnerGunShot::shotLeft(SGActorSprite* actorSprite) {
 
 	switch (m_eWeaponType) {
 	case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_LEFT; break;
+	case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_LEFT; break;
 	default: iFrameEventId = -1;
 	}
 
@@ -295,6 +299,7 @@ void SGGunnerGunShot::shotLeftDown(SGActorSprite* actorSprite) {
 
 	switch (m_eWeaponType) {
 	case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_LEFT_DOWN; break;
+	case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_LEFT_DOWN; break;
 	default: iFrameEventId = -1;
 	}
 
