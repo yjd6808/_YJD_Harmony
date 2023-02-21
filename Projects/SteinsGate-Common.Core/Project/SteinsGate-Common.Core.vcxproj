@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonInfoLoader.cpp">
       <SubType>
       </SubType>
@@ -45,6 +49,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\LoggerAbstract.cpp">
       <SubType>
       </SubType>
@@ -54,6 +62,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Logo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ServerInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -84,6 +96,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonInfo.h">
       <SubType>
       </SubType>
@@ -118,6 +138,10 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfoLoader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\LoggerAbstract.h">
       <SubType>
       </SubType>
@@ -127,6 +151,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

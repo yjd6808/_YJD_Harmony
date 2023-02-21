@@ -19,6 +19,8 @@
 #include <JCore/Bit.h>
 
 #include <JCore/Primitives/StaticString.h>
+#include <JCore/Primitives/StringUtil.h>
+#include <JCore/Primitives/String.h>
 
 #include <JCore/Utils/Concatenation.h>
 #include <JCore/Utils/Console.h>
@@ -36,6 +38,19 @@
 #include <JCore/Container/HashMap.h>
 #include <JCore/Container/LinkedList.h>
 
+#include <JNetwork/Network.h>
+#include <JNetwork/NetMaster.h>
+#include <JNetwork/IPEndPoint.h>
+
+#include <JNetwork/Host/TcpServer.h>
+#include <JNetwork/Host/TcpClient.h>
+#include <JNetwork/Host/UdpClient.h>
+
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedRecv.h>
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedRecvFrom.h>
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
+
 #include <SteinsGate/Common/SGStruct.h>
 #include <SteinsGate/Common/SGConfig.h>
 #include <SteinsGate/Common/LoggerDefine.h>
@@ -52,6 +67,10 @@
 #define SG_CACHELINE_SIZE		64
 #define SG_FLT_EPSILON			0.0001f
 #define SG_PI					3.141592f
+
+ // ============================================================
+ //     JCore
+ // ============================================================
 
 using SGConsole = JCore::Console;
 using SGString = JCore::String;
@@ -108,6 +127,41 @@ using SGRecursiveLock = JCore::RecursiveLock;
 template <typename... TArgs>
 using SGTuple = JCore::Tuple<TArgs...>;
 
+// ============================================================
+ //     JNework
+ // ============================================================
+
+using SGSocket = JNetwork::Socketv4;
+using SGEndPoint = JNetwork::IPv4EndPoint;
+using SGAddress = JNetwork::IPv4Address;
+using SGTcpClient = JNetwork::TcpClient;
+using SGUdpClient = JNetwork::UdpClient;
+using SGTcpSession = JNetwork::TcpSession;
+using SGTcpServer = JNetwork::TcpServer;
+
+using SGTcpClientPtr = JNetwork::TcpClientPtr;
+using SGUdpClientPtr = JNetwork::UdpClientPtr;
+using SGTcpSessionPtr = JNetwork::TcpSessionPtr;
+using SGTcpServerPtr = JNetwork::TcpServerPtr;
+
+using SGTcpClientWPtr = JNetwork::TcpClientPtr;
+using SGUdpClientWPtr = JNetwork::UdpClientPtr;
+using SGTcpSessionWPtr = JNetwork::TcpSessionPtr;
+using SGTcpServerWPtr = JNetwork::TcpServerPtr;
+
+using SGOverlapped = JNetwork::IOCPOverlapped;
+using SGISendPacket = JNetwork::ISendPacket;
+using SGCommandBuffer = JNetwork::CommandBuffer;
+using SGCommandBufferPacket = JNetwork::CommandBufferPacket;
+
+using SGOverlappedPtr = JNetwork::IOCPOverlappedPtr;
+using SGISendPacketPtr = JNetwork::ISendPacketPtr;
+using SGCommandBufferPtr = JNetwork::CommandBufferPtr;
+
+
+// ============================================================
+//       컨테이너
+// ============================================================
 
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) AlignedVector : public SGVector<T, TAllocator> {};
@@ -118,5 +172,4 @@ class alignas(SG_CACHELINE_SIZE) AlignedLinkedList : public SGLinkedList<T, TAll
 template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
 class alignas(SG_CACHELINE_SIZE) AlignedHashMap : public SGHashMap<TKey, TValue, TAllocator> {};
 
-// 모든 프로젝트에서 사용하는 변수
 

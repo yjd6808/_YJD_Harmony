@@ -66,6 +66,15 @@
       <Filter>Data\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonCore.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.cpp">
+      <Filter>Data\ItemOpt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ServerInfoLoader.cpp">
+      <Filter>Data\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.cpp">
+      <Filter>Data\ChannelBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -165,6 +174,21 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonCoreHeader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.h">
+      <Filter>Data\ItemOpt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerInfo.h">
+      <Filter>Data\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerInfoLoader.h">
+      <Filter>Data\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfo.h">
+      <Filter>Data\ChannelBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.h">
+      <Filter>Data\ChannelBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -193,6 +217,12 @@
     </Filter>
     <Filter Include="Data\Common">
       <UniqueIdentifier>{cc66cec2-148c-4a10-8631-375947d38c0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Server">
+      <UniqueIdentifier>{527118c2-9bf2-4cd7-a878-360b0f1d3879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\ChannelBase">
+      <UniqueIdentifier>{a7851926-c0b9-465c-99d8-b322f51ea50f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

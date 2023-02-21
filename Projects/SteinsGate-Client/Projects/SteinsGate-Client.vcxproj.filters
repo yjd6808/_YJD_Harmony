@@ -670,5 +670,8 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\VisualHelper.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\PackHelper.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

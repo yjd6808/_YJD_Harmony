@@ -122,6 +122,10 @@ union ItemCode
 	void initWeaponCode(CharType_t charType, WeaponType_t weaponType, int code);
 	void initArmorCode(ItemType_t itemType, EquipArmorType_t armorType, int code);
 
+	// 이렇게 유니온 많이 달아도 일반 유니온 1개짜리랑 성능차이가 있을려나?
+	// TODO: 어셈코드 확인해볼 것
+	//		TODO: 코드가 다르면 벤치 테스트 해볼 것
+
 	struct
 	{
 		int Code		 : BitCodeBit;
@@ -175,6 +179,8 @@ struct ItemOptRangeVal : ItemOpt
 	int MinValue{};
 	int MaxValue{};
 };
+
+
 
 struct InvenItem
 {

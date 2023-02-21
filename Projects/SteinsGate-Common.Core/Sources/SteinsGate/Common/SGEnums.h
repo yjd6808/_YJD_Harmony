@@ -20,8 +20,8 @@
 
 
 SEnumBegin(CharType)
-Begin,
-Gunner = Begin,
+Gunner,
+Begin = Gunner,
 End = Gunner,
 Max
 SEnumMiddle(CharType)
@@ -65,8 +65,8 @@ Down
 SEnumEnd(JumpDirection)
 
 SEnumBegin(AvatarType)
-Begin,
-Skin = Begin,
+Skin,
+Begin = Skin,
 Shoes,
 Pants,
 Neck,
@@ -108,9 +108,9 @@ SEnumMiddleEnd(AvatarType)
 
 
 SEnumBegin(VisualType)
-Begin,
-AvatarBegin = Begin,
 Skin	= AvatarType::Skin	,
+Begin = Skin,
+AvatarBegin = Begin,
 Shoes	= AvatarType::Shoes	,
 Pants	= AvatarType::Pants	,
 Neck	= AvatarType::Neck	,
@@ -254,9 +254,9 @@ Max
 SEnumEnd(FrameEventType)
 
 SEnumBegin(WeaponType)
-Begin,
+Automatic,
+Begin = Automatic,
 GunnerBegin = Begin,
-Automatic = GunnerBegin,
 Revolver,
 Bowgun,
 Musket,
@@ -408,8 +408,8 @@ SEnumEnd(UIElementType)
 
 
 SEnumBegin(ConfigFileType)
-Begin,
-Effect = Begin,
+Effect,
+Begin = Effect,
 Map,
 Monster,
 Obstacle,
@@ -487,9 +487,9 @@ SEnumMiddleEnd(InvenItemType)
 
 // https://wiki.dfo-world.com/view/Armor
 SEnumBegin(ItemType)
-Begin,
+Shoulder,			// 어깨
+Begin = Shoulder,
 BeginEquip = Begin,
-Shoulder = Begin,	// 어깨
 Top,				// 상의
 Bottom,				// 하의
 Shoes,				// 신발
@@ -581,8 +581,8 @@ SEnumMiddleEnd(ItemType)
 
 
 SEnumBegin(EquipArmorType)
-Begin,
-Cloth = Begin,	// 천
+Cloth,			// 천
+Begin = Cloth,
 Leather,		// 가죽
 Light,			// 경갑
 Heavy,			// 중갑
@@ -604,8 +604,8 @@ SEnumMiddleEnd(EquipArmorType)
 
 
 SEnumBegin(RarityType)
-Begin,
-Normal = Begin,
+Normal,
+Begin = Normal,
 Magic,
 Rare,
 Legacy,
@@ -647,48 +647,87 @@ SEnumMiddleEnd(RarityType)
 
 
 SEnumBegin(ItemOptType)
-Begin,
-Str = Begin,					
-Dex,							
-Int,							
-Vit,							
-Energe,							
-Lift,							
-Mana,							
-DamagePhysical,					
-DamageMagic,
-DamagePhysicalAdditional,
-DamageMagicAdditional,
-DamagePhysiclReduce,			
-DamageMagicReduce,				
-DamagePhysiclReducePercent,		
-DamageMagicReducePercent,		
-ArmorPhysical,					
-ArmorMagic,						
-ArmorPhysicalPercent,			
-ArmorMagicPercent,				
-ChanceMagic,					
-ChanceGold,						
-AttackSpeed,					
-CastSpeed,						
-RegenLifePerMin,				
-RegenManaPerMin,				
-MoveSpeedInDungeon,				
-MoveSpeedInTown,				
-End,
-Max = End
+Begin = 1,
+Str = Begin,					// 1
+Dex,							// 2
+Int,							// 3
+Vit,							// 4
+Energe,							// 5
+Lift,							// 6
+Mana,							// 7 
+DamagePhysical,					// 8
+DamageMagic,					// 9
+DamagePhysicalAdditional,		// 10
+DamageMagicAdditional,			// 11
+DamagePhysiclReduce,			// 12
+DamageMagicReduce,				// 13
+DamagePhysiclReducePercent,		// 14
+DamageMagicReducePercent,		// 15
+ArmorPhysical,					// 16
+ArmorMagic,						// 17
+ArmorPhysicalPercent,			// 18
+ArmorMagicPercent,				// 19
+ChanceMagic,					// 20
+ChanceGold,						// 21
+AttackSpeed,					// 22
+CastSpeed,						// 23
+RegenLifePerMin,				// 24
+RegenManaPerMin,				// 25
+MoveSpeedInDungeon,				// 26
+MoveSpeedInTown,				// 27
+End = MoveSpeedInTown,
+Max
 SEnumMiddle(ItemOptType)
-
-
-//static ItemOptType_t Code(const char* codeName);
-//static ItemOptType_t Code(const JCore::String& codeName);
-//
-//template <ItemOptType_t Type>
-//using TypeOf = JCore::Conditional_t<IsIntegerOpt[Type], int, float>;
 
 SEnumMiddleEnd(ItemOptType)
 
 
+SEnumBegin(ServerType)
+Begin = 1,
+Luke = Begin,
+Hilder,
+Siroco,
+Prey,
+Kasias,		// 대충 발음나는데..
+Diregie,
+Cain,
+Seria,
+End = Seria
+SEnumMiddle(ServerType)
+
+SEnumMiddleEnd(ServerType)
+
+SEnumBegin(EnteranceType)
+Begin = 1,
+Newbie = Begin,
+Auction,
+Normal,
+End = Normal
+SEnumMiddle(EnteranceType)
+
+SEnumMiddleEnd(EnteranceType)
 
 
+SEnumBegin(ChannelDensity)
+Free,
+Normal,
+Busy,
+Full,
+Max
+SEnumMiddle(ChannelDensity)
 
+float Density[Max]{
+	25.0f,
+	50.0f,
+	75.0f,
+	100.0f
+};
+
+inline static const char* Name[Max]{
+	"쾌적",
+	"보통",
+	"혼잡",
+	"포화"
+};
+
+SEnumMiddleEnd(ChannelDensity)

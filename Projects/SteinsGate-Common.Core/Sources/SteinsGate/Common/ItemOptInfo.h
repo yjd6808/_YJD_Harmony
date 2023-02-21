@@ -9,13 +9,23 @@
 #pragma once
 
 
-#include "Core.h"
 #include <SteinsGate/Common/ConfigDataAbstract.h>
+
+struct ItemOptLevel
+{
+	int Level;
+	int Min;		// 포함
+	int Max;		// 포함
+};
 
 struct ItemOptInfo : ConfigDataAbstract
 {
-	SGString Name;
-	int Min;
-	int Max;
+	ItemOptInfo(int optLevelCount) : OptLevelList(optLevelCount) {}
+	~ItemOptInfo() override = default;
+
+	SGString EName;
+	SGString Format;
+	bool IsInteger;
+	SGVector<ItemOptLevel> OptLevelList;
 };
 

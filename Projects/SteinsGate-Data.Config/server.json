@@ -2,78 +2,83 @@
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "서버 목록",
 
-    "center": {
-        "ip": "127.0.0.1",
-        "bind_center_tcp_port": 10000,
-        "bind_interserver_udp_port": 10000
-    },
-
-    "auth": {
-        "ip": "127.0.0.1",
-        "bind_auth_tcp_port": 10010,
-        "bind_interserver_udp_port": 10010,
-        "bind_center_tcp": 10011
-    },
-
-    "lobby": {
-        "ip": "127.0.0.1",
-        "bind_lobby_tcp_port": 10020,
-        "bind_interserver_udp_port": 10020,
-        "bind_center_tcp": 10021
-    },
-
-    "game": [
+    "server": [
         {
             "code": 1,
-            "name": "루크",
-            "ip": "127.0.0.1",
-            "bind_game_tcp_port": 10030,
-            "bind_game_udp_port": 10030,
-            "bind_town_tcp_port": 10031,
-            "bind_center_tcp_port": 10032,
-            "bind_interserver_udp_port": 10032,
-            "active": 1
-        },
-        {
-            "code": 2,
-            "name": "힐더",
-            "ip": "127.0.0.1",
-            "bind_game_tcp_port": 10040,
-            "bind_game_udp_port": 10040,
-            "bind_town_tcp_port": 10041,
-            "bind_center_tcp_port": 10042,
-            "bind_interserver_udp_port": 10042,
-            "active": 1
-        },
-        {
-            "code": 3,
-            "name": "시로코",
-            "active": 0
-        },
-        {
-            "code": 4,
-            "name": "프레이",
-            "active": 0
-        },
-        {
-            "code": 5,
-            "name": "카시야스",
-            "active": 0
-        },
-        {
-            "code": 6,
-            "name": "디레지에",
-            "active": 0
-        },
-        {
-            "code": 7,
-            "name": "카인",
-            "active": 0
-        },
-        {
-            "code": 8,
-            "name": "세리아",
-            "active": 0
+            "name": "로컬 테스트",
+            "center": {
+                "bind_interserver_udp": "127.0.0.1:10000",
+                "bind_center_tcp": "127.0.0.1:10000"
+            },
+        
+            "auth": {
+                "bind_auth_tcp": "127.0.0.1:10010",
+                "bind_interserver_udp": "127.0.0.1:10010",
+                "bind_center_tcp": "127.0.0.1:10011",
+                "connect_center_tcp": "127.0.0.1:10000"
+            },
+        
+            "lobby": {
+                "bind_lobby_tcp": "127.0.0.1:10020",
+                "bind_interserver_udp": "127.0.0.1:10020",
+                "bind_center_tcp": "127.0.0.1:10021",
+                "connect_center_tcp": "127.0.0.1:10000"
+            },
+        
+            "game": [
+                {
+                    "code": 1,
+                    "name": "루크",
+                    "bind_game_tcp": "127.0.0.1:10030",
+                    "bind_game_udp": "127.0.0.1:10030",
+                    "bind_town_tcp": "127.0.0.1:10031",
+                    "bind_chat_tcp": "127.0.0.1:10032",
+                    "bind_interserver_udp": "127.0.0.1:10031",
+                    "connect_center_tcp": "127.0.0.1:10000",
+                    "active": true
+                },
+                {
+                    "code": 2,
+                    "name": "힐더",
+                    "bind_game_tcp": "127.0.0.1:10040",
+                    "bind_game_udp": "127.0.0.1:10040",
+                    "bind_town_tcp": "127.0.0.1:10041",
+                    "bind_chat_tcp": "127.0.0.1:10042",
+                    "bind_interserver_udp": "127.0.0.1:10041",
+                    "connect_center_tcp": "127.0.0.1:10000",
+                    "active": true
+                },
+                {
+                    "code": 3,
+                    "name": "시로코",
+                    "active": false
+                },
+                {
+                    "code": 4,
+                    "name": "프레이",
+                    "active": false
+                },
+                {
+                    "code": 5,
+                    "name": "카시야스",
+                    "active": false
+                },
+                {
+                    "code": 6,
+                    "name": "디레지에",
+                    "active": false
+                },
+                {
+                    "code": 7,
+                    "name": "카인",
+                    "active": false
+                },
+                {
+                    "code": 8,
+                    "name": "세리아",
+                    "active": false
+                }
+            ]
         }
     ]
 }

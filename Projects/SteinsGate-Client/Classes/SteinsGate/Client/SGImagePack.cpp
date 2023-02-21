@@ -18,10 +18,9 @@ USING_NS_JC;
 
 SGImagePack::SGImagePack(const SgaPackagePtr& sgaPackage, int packIndex)
 	: m_iIndex(packIndex)
-	, m_Package(sgaPackage)
-	, m_TextureCacheMap(1'000)
 	, m_bHasLoadedData(false)
-{}
+	, m_Package(sgaPackage)
+	, m_TextureCacheMap(1'000) {}
 
 SGImagePack::~SGImagePack() {
 	clearCache();
