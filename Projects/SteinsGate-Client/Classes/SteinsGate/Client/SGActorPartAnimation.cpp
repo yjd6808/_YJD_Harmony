@@ -258,6 +258,17 @@ SGFrameInfo* SGActorPartAnimation::getRunningFrameInfo() {
 	return m_pAnimationInfo->Frames[m_iFrameIndexInAnimation];
 }
 
+void SGActorPartAnimation::reflectAnimation(SGActorPartAnimation* runningAnimation) {
+	m_fRunningFrameTime = runningAnimation->m_fRunningFrameTime;
+	m_fPauseDelay = runningAnimation->m_fPauseDelay;
+	m_fPlaySpeed = runningAnimation->m_fPlaySpeed;
+	m_iFrameIndexInAnimation = runningAnimation->m_iFrameIndexInAnimation;
+	m_bFinished = runningAnimation->m_bFinished;
+	m_bPaused = runningAnimation->m_bPaused;
+	m_bZeroFramePaused = runningAnimation->m_bZeroFramePaused;
+	m_bLoopSequence = runningAnimation->m_bLoopSequence;
+}
+
 SGFrameTexture* SGActorPartAnimation::changeTexture(int frameIndexInAnimation) {
 	SGFrameTexture* pFrameTexture = m_vAnimationFrames[frameIndexInAnimation];
 

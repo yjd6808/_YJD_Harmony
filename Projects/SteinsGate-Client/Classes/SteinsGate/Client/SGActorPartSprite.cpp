@@ -20,7 +20,6 @@ USING_NS_JC;
 
 
 SGActorPartSprite* SGActorPartSprite::create(
-	int partIndex, 
 	int frameCount, 
 	SGActorSprite* actor, 
 	SGNode* canvas, 
@@ -29,7 +28,7 @@ SGActorPartSprite* SGActorPartSprite::create(
 	SGVector<SGAnimationInfo*>& animations
 )
 {
-	SGActorPartSprite* pPartSprite = dbg_new SGActorPartSprite(partIndex, frameCount, actor, canvas, boundingBox, partData, animations);
+	SGActorPartSprite* pPartSprite = dbg_new SGActorPartSprite(frameCount, actor, canvas, boundingBox, partData, animations);
 
 	if (pPartSprite && pPartSprite->init()) {
 		pPartSprite->autorelease();
@@ -41,15 +40,13 @@ SGActorPartSprite* SGActorPartSprite::create(
 }
 
 SGActorPartSprite::SGActorPartSprite(
-	int partIndex,
 	int frameCount,
 	SGActorSprite* actor,
 	SGNode* canvas,
 	SGDrawNode* boundingBox,
 	const ActorPartSpriteData& partData,
 	SGVector<SGAnimationInfo*>& animations)
-		: m_iPartIndex(partIndex)
-		, m_pActorSprite(actor)
+		: m_pActorSprite(actor)
 		, m_pCanvas(canvas)
 		, m_PartData(partData)
 		, m_refAnimationInfoList(animations)
@@ -206,4 +203,15 @@ void SGActorPartSprite::onCustomFrameBegin(SGActorPartAnimation* animation, SGFr
 }
 
 void SGActorPartSprite::onCustomFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture) {
+}
+
+
+// runningAnimation과 동일한 상태의 애니메이션으로 변경
+void SGActorPartSprite::reflectAnimation(SGActorPartAnimation* runningAnimation) {
+	int iAnimationCode = runningAnimation->getAnimationCode();
+	DebugAssertMsg(m_AnimationMap.Exist(iAnimationCode), "기존 액터파츠가 수행중이던 애니메이션을 교체할려고했으나 신규 액터 파츠가 수행할 수 있는 애니메이션목록에 없습니다.");
+	SGActorPartAnimation* pAnimation = m_AnimationMap[iAnimationCode];
+
+	m_pRunningAnimation = pAnimation;
+	m_pRunningAnimation->reflectAnimation(runningAnimation);
 }

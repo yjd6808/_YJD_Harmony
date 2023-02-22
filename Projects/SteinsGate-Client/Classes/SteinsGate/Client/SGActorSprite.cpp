@@ -17,13 +17,15 @@ USING_NS_JC;
 SGActorSprite::SGActorSprite(
 	SGActor* actor, 
 	const SGActorSpriteDataPtr& actorData)
-	: m_pActor(actor)
+	: m_iFrameCount(InvalidValue_v)
+	, m_pActor(actor)
 	, m_spActorData(actorData)
 	, m_vParts(actorData->Parts.Size())
 	// , m_vPartsCanvas(actorData->Parts.Size(), nullptr)
 	// , m_vParts(actorData->Parts.Size(), nullptr)
 	// , m_vPartsBoundingBox(actorData->Parts.Size(), nullptr)
 	, m_eDirection(SpriteDirection::Right)
+
 {
 }
 
@@ -50,7 +52,7 @@ bool SGActorSprite::init() {
 	vPartsData.Sort([](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
 
 	// 바디 파츠 기준으로 전체 프레임수를 얻는다.
-	int iFrameCount = SGImagePackManager::get()
+	m_iFrameCount = SGImagePackManager::get()
 		->getPack(vPartsData[0].SgaIndex)
 		->getSpriteCount(vPartsData[0].ImgIndex);
 
@@ -64,7 +66,8 @@ bool SGActorSprite::init() {
 			_LogDebug_("액터 로딩: %s || sga: %s || img: %s || z: %d", ActorType::Name[m_pActor->getType()], szPackName.Source(), szImgName.Source(), vPartsData[i].ZOrder);
 		}
 
-		PartData partData = createPart(vPartsData[i], i, iFrameCount);
+		PartData partData = createPart(vPartsData[i], m_iFrameCount);
+		partData.Part->setPartIndex(i);
 		m_vParts.PushBack(partData);
 		this->addChild(partData.Canvas, i);	// 정렬된 순서대로 ZOrder 반영
 	}
@@ -180,7 +183,7 @@ SGVec2 SGActorSprite::getBodyPartPosition() {
 	return m_vParts[0].Part->getPosition();
 }
 
-SGActorSprite::PartData SGActorSprite::createPart(const ActorPartSpriteData& partSpriteData, int partIndex, int frameCount) {
+SGActorSprite::PartData SGActorSprite::createPart(const ActorPartSpriteData& partSpriteData, int frameCount) {
 	PartData partData;
 
 	// 캔버스 위에 파츠를 그린다.
@@ -191,7 +194,6 @@ SGActorSprite::PartData SGActorSprite::createPart(const ActorPartSpriteData& par
 	partData.Canvas->setOpacity(0);
 	partData.BoundingBox = SGDrawNode::create();
 	partData.Part = SGActorPartSprite::create(
-		partIndex,
 		frameCount,
 		this,
 		partData.Canvas,
@@ -235,55 +237,88 @@ void SGActorSprite::updateSpriteData(const SGActorSpriteDataPtr& spriteData) {
 
 	// 다른 부위만 업데이트 해줘야함
 	SGVector<ActorPartSpriteData>& vPartsData = m_spActorData->Parts;
-	// vPartsData.Sort([](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
 
-	SharedPtr<bool[]> bNewPart = MakeShared<bool[]>(vPartsData.Size(), false);
-
-	// 새로 기존 재생된 애니메이션 정보로 싱크 조정
-	int AnimationCode;
-	bool Removed[64];
-	float m_fRunningFrameTime;
-	float m_fPauseDelay;
-	float m_fPlaySpeed;
-	int m_iFrameIndexInAnimation;
-	bool m_bFinished;
-	bool m_bPaused;
-	bool m_bZeroFramePaused;
-	bool m_bLoopSequence;		// 켜져있으면 한번 더 돔
-
+	// 기존 파츠에서 실행중인 애니메이션 정보를 가져온다.
+	SGActorPartAnimation* pRunningAnimation = getRunningAnimation();
 
 	
+	SGVector<PartData> vRemoveParts;				// 기존 목록중 교체되어야하는 파츠들을 찾는다.
+	SGVector<ActorPartSpriteData> vNewParts;		// 신규 목록중 추가되어야하는 파츠들
 
-	// 교체되어야하는 파츠들을 찾는다.
-	SGVector<PartData> vRemoveParts;
+	// Step 1. 기존 목록중 교체되어야하는 파츠들을 찾는다.
+	m_vParts.Extension().Filter([&vPartsData](PartData& candidatePart) {
+		ActorPartSpriteData pTargetPartData = candidatePart.Part->getPartData();
 
-	// 1. 교체되어야하는 파츠들을 찾는다.
-	m_vParts.Extension().Filter([&vPartsData](PartData& partData) {
-		ActorPartSpriteData pTargetPartData = partData.Part->getPartData();
-
-		bool bNeedToUpdate = true;
+		bool bNeedToRemove = true;
 		for (int i = 0; i < vPartsData.Size(); ++i) {
 
+			// 모두 같으면 동일한 파츠
 			if (vPartsData[i].ImgIndex == pTargetPartData.ImgIndex &&
 				vPartsData[i].SgaIndex == pTargetPartData.SgaIndex) {
-				bNeedToUpdate = false;
+				bNeedToRemove = false;
 				break;
 			}
 
 		}
 
-		return bNeedToUpdate;
+		return bNeedToRemove;
 
-	}).ForEach([&vRemoveParts](PartData& partData) {
-		vRemoveParts.PushBack(partData);
+	}).ForEach([&vRemoveParts](PartData& removePartData) {
+		vRemoveParts.PushBack(removePartData);
 	});
 
-	vRemoveParts.Extension().ForEach([](PartData& removePart) {
-		//int iRemovePartIndex = removePart->getPartIndex();
 
-		//m_vParts.RemoveAt();
-		//m_vPartsCanvas.RemoveAt()
+	// Step 2. 신규 목록중 추가되어야하는 파츠들을 찾는다.
+	vPartsData.Extension().Filter([this](ActorPartSpriteData& candidatePart) {
+		bool bNeedToAdd = false;
 
+		for (int i = 0; i < m_vParts.Size(); ++i) {
+			const ActorPartSpriteData& partData = m_vParts[i].Part->getPartData();
+
+			// 하나라도 다르면 다른 파츠
+			if (partData.ImgIndex != candidatePart.ImgIndex ||
+				partData.SgaIndex != candidatePart.SgaIndex) {
+				bNeedToAdd = true;
+				break;
+			}
+		}
+
+		return bNeedToAdd;
+	}).ForEach([&vNewParts](ActorPartSpriteData& partData) {
+		vNewParts.PushBack(partData);
 	});
 
+	// Step 3. 제거된 기존 파츠 목록과 메모리에서 제거한다.
+	//         이때 Step4에서 애니메이션으로 등록할 파츠가 제거될 수 있으므로 메모리에서 제거는 하지 않는다.
+	vRemoveParts.Extension().ForEach([this](PartData& removePart) {
+
+		// 캔버스만 제거하면 
+		// 캔버스에 붙은 파츠
+		// 파츠에 붙은 바운딩박스 알아서 제거됨
+		m_vParts.Remove(removePart);
+	});
+
+
+	// Step 4. 신규 파츠들을 생성한 후 추가한 후 애니메이션 정보를 세팅해준다.
+	for (int i = 0; i < vNewParts.Size(); ++i) {
+		 PartData partData = createPart(vNewParts[i], m_iFrameCount);
+		 partData.Part->reflectAnimation(pRunningAnimation);
+		 m_vParts.PushBack(partData);
+	}
+
+	// Step 5. Z 오더 정렬을 수행한다.
+	m_vParts.Sort([](PartData& lhs, PartData& rhs) {
+		return lhs.Part->getPartData().ZOrder < rhs.Part->getPartData().ZOrder;
+	});
+
+	// Step 6. 변경된 파츠 인덱스 반영
+	for (int i = 0; i < m_vParts.Size(); ++i) {
+		m_vParts[i].Part->setPartIndex(i);
+	}
+
+	// Step 7. 마지막으로 제거되어야할 대상들을 메모리에서 제거
+	vRemoveParts.Extension().ForEach([this](PartData& removePart) {
+		// 파츠에 붙은 바운딩박스 알아서 제거됨
+		this->removeChild(removePart.Part, true);
+	});
 }

@@ -19,7 +19,6 @@ class SGActorPartSprite : public SGSprite
 {
 public:
 	static SGActorPartSprite* create(
-		int partIndex, 
 		int frameCount,
 		SGActorSprite* actor,
 		SGNode* canvas,
@@ -29,7 +28,6 @@ public:
 	);
 
 	SGActorPartSprite(
-		int partIndex, 
 		int frameCount, 
 		SGActorSprite* actor,
 		SGNode* canvas,
@@ -45,12 +43,13 @@ public:
 	void runAnimation(int code);
 	void runAnimation(int code, int startFrameIndexInAnimation);
 
+	int setPartIndex(int index) { m_iPartIndex = index;  }
 	int getPartIndex() { return m_iPartIndex; }
 	ActorType_t getActorType();
 	SGNode* getCanvas() { return m_pCanvas; }
 	SGDrawNode* getPartBoundingBox() { return m_pBoundingBox; }
 	SGActorSprite* getActorSprite() { return m_pActorSprite; }
-	ActorPartSpriteData getPartData() { return m_PartData; }
+	const ActorPartSpriteData& getPartData() { return m_PartData; }
 	SGActorPartAnimation* getRunningAnimation() { return m_pRunningAnimation; }
 
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
@@ -59,6 +58,7 @@ public:
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
 	void onCustomFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
 	void onCustomFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
+	void reflectAnimation(SGActorPartAnimation* runningAnimation);	// runningAnimation과 동일한 상태의 애니메이션을 실행하도록 함
 private:
 	// 주입 데이터
 	int m_iPartIndex;	// 몇번째 파츠인지

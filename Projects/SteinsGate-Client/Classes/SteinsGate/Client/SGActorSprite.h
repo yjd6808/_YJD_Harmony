@@ -59,7 +59,7 @@ public:
 	SGSize	getBodyCanvasSize();
 	SGSize	getBodyPartSize();
 	SGVec2	getBodyPartPosition();
-	PartData createPart(const ActorPartSpriteData& partSpriteData, int partIndex, int frameCount);
+	PartData createPart(const ActorPartSpriteData& partSpriteData, int frameCount);
 
 	SGVector<PartData>& getParts() { return m_vParts; }
 	SpriteDirection_t getSpriteDirection();
@@ -68,7 +68,7 @@ public:
 	void updateSpriteData(const SGActorSpriteDataPtr& spriteData);
 private:
 
-
+	int m_iFrameCount;
 	SGActor* m_pActor;
 	SGActorSpriteDataPtr m_spActorData;
 	SGVector<PartData> m_vParts;

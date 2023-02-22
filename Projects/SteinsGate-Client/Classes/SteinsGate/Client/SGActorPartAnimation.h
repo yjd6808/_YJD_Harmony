@@ -71,6 +71,7 @@ public:
 	bool isFinished() { return m_bFinished; }
 	bool isPaused() { return m_bPaused || m_bZeroFramePaused; }
 	bool isZeroFramePaused() { return m_bZeroFramePaused; }
+	void reflectAnimation(SGActorPartAnimation* runningAnimation); // runningAnimation과 동일한 상태의 애니메이션 상태로 바꿈
 
 private:
 	SGFrameTexture* changeTexture(int frameIndexInAnimation);
