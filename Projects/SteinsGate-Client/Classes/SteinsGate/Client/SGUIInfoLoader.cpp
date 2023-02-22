@@ -44,6 +44,8 @@ bool SGUIInfoLoader::load()
 			case UIElementType::Button: pElemInfo = readElementButton(uiElementRoot); break;
 			case UIElementType::Label: pElemInfo = readElementLabel(uiElementRoot); break;
 			case UIElementType::Sprite: pElemInfo = readElementSprite(uiElementRoot); break;
+			case UIElementType::EditBox: pElemInfo = readElementEditBox(uiElementRoot); break;
+			case UIElementType::CheckBox: pElemInfo = readElementCheckBox(uiElementRoot); break;
 			default: break;
 			}
 
@@ -151,8 +153,8 @@ SGUIElementInfo* SGUIInfoLoader::readElementLabel(Value& labelRoot) {
 	pInfo->TextWrap = labelRoot["text_wrap"].asBool();
 	pInfo->Width = labelRoot["width"].asFloat();
 	pInfo->Height = labelRoot["height"].asFloat();
-	pInfo->HorizontalAlignment = (HorizontalAlignment_t)labelRoot["horizontal_align"].asInt();
-	pInfo->VerticalAlignment = (VerticalAlignment_t)labelRoot["vertical_align"].asInt();
+	pInfo->TextHAlignment = (HorizontalAlignment_t)labelRoot["horizontal_align"].asInt();
+	pInfo->TextVAlignment = (VerticalAlignment_t)labelRoot["vertical_align"].asInt();
 	pInfo->Text = SGJsonEx::getString(labelRoot["text"]);
 
 	return pInfo;
@@ -174,6 +176,64 @@ SGUIElementInfo* SGUIInfoLoader::readElementSprite(Value& spriteRoot) {
 	pInfo->Sga = pPack->getPackIndex();
 	pInfo->Img = pPack->getImgIndex(imgName);
 	pInfo->Sprite = spriteRoot["sprite"].asInt();
+
+	return pInfo;
+}
+
+SGUIElementInfo* SGUIInfoLoader::readElementEditBox(Json::Value& editBoxRoot) {
+	SGUIEditBoxInfo* pInfo = dbg_new SGUIEditBoxInfo();
+
+	readElementCommon(editBoxRoot, pInfo);
+
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
+
+	pInfo->Type = UIElementType::EditBox;
+	pInfo->Size.width = editBoxRoot["width"].asFloat();
+	pInfo->Size.height = editBoxRoot["height"].asFloat();
+	pInfo->FontSize = editBoxRoot["font_size"].asInt();
+	SGJsonEx::parseColor4B(editBoxRoot["font_color"], pInfo->FontColor);
+
+	pInfo->TextHAlignment = HorizontalAlignment_t(editBoxRoot["text_horizontal_align"].asInt());
+
+	pInfo->PlaceholderText = SGJsonEx::getString(editBoxRoot["placeholder_text"]);
+	SGJsonEx::parseColor4B(editBoxRoot["placeholder_font_color"], pInfo->PlaceHolderFontColor);
+	pInfo->PlaceholderFontSize = editBoxRoot["placeholder_font_size"].asFloat();
+	pInfo->MaxLength = editBoxRoot["max_length"].asInt();
+	pInfo->InputMode = SGInputMode(editBoxRoot["input_mode"].asInt());
+
+	return pInfo;
+}
+
+SGUIElementInfo* SGUIInfoLoader::readElementCheckBox(Json::Value& checkBoxRoot) {
+	SGUICheckBoxInfo* pInfo = dbg_new SGUICheckBoxInfo();
+
+	readElementCommon(checkBoxRoot, pInfo);
+
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
+
+	const SGString& sgaName = SGJsonEx::getString(checkBoxRoot["sga"]);
+	const SGString& imgName = SGJsonEx::getString(checkBoxRoot["img"]);
+
+	SGImagePack* pPack = pPackManager->getPack(sgaName);
+
+	pInfo->Type = UIElementType::CheckBox;
+	pInfo->Sga = pPack->getPackIndex();
+	pInfo->Img = pPack->getImgIndex(imgName);
+	pInfo->Background = checkBoxRoot["background_idx"].asInt();
+	pInfo->BackgroundDisabled= checkBoxRoot["background_disabled_idx"].asInt();
+	pInfo->Cross = checkBoxRoot["cross_idx"].asInt();
+	pInfo->CrossDisabled = checkBoxRoot["cross_disabled_idx"].asInt();
+
+	if (pInfo->Background < 0)
+		pInfo->Background = InvalidValue_v;
+
+	if (pInfo->BackgroundDisabled < 0)
+		pInfo->BackgroundDisabled = InvalidValue_v;
+
+	if (pInfo->CrossDisabled < 0)
+		pInfo->CrossDisabled = InvalidValue_v;
+
+	DebugAssertMsg(pInfo->Cross >= 0, "체크박스인데 크로스 이미지가 설정되어있지 않습니다.");
 
 	return pInfo;
 }

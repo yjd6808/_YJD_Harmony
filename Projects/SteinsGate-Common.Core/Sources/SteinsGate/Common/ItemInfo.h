@@ -125,8 +125,6 @@ struct ItemWeaponInfo : ItemVisualInfo
 
 	int AttackPhysical;
 	int AttackMagic;
-
-	
 };
 
 

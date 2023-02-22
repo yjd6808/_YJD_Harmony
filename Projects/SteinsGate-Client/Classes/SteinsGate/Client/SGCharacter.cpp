@@ -54,7 +54,12 @@ SGCharacter* SGCharacter::create(int code, const VisualInfo& info) {
 	return pCharacter;
 }
 
+void SGCharacter::initActorId() {
+	m_iActorId = InvalidValue_v;
+}
+
 void SGCharacter::initInfo(int code, const VisualInfo& visualInfo) {
+	initActorId();
 	initBaseInfo(code);
 	initVisualInfo(visualInfo);
 	initThicknessBox(m_pBaseInfo->ThicknessBox);

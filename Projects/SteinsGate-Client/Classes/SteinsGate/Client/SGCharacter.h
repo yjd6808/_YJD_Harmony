@@ -21,6 +21,7 @@ public:
 
 	static SGCharacter* create(int code, const VisualInfo& info);
 
+	void initActorId();
 	void initInfo(int code, const VisualInfo& visualInfo);
 	void initVisualInfo(const VisualInfo& visualInfo);
 	void initBaseInfo(int code);

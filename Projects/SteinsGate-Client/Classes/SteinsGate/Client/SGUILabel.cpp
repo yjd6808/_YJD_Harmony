@@ -11,16 +11,12 @@
 #include "SGUILabel.h"
 #include "GameCoreHeader.h"
 
-#include <SteinsGate/Client/SGFontPackage.h>
-
-#include "SGClientInfo.h"
-
 USING_NS_CC;
 USING_NS_JC;
 
-SGUILabel::SGUILabel(SGUIGroup* parent, SGUILabelInfo* btnInfo)
+SGUILabel::SGUILabel(SGUIGroup* parent, SGUILabelInfo* labelInfo)
 	: SGUIElement(parent)
-	, m_pInfo(btnInfo)
+	, m_pInfo(labelInfo)
 	, m_pLabel{nullptr}
 {}
 
@@ -36,12 +32,12 @@ SGUILabel* SGUILabel::create(SGUIGroup* parent, SGUILabelInfo* labelInfo) {
 
 bool SGUILabel::init() {
 
-	SGString fontName = SGFontPackage::get()->getFontName(m_pInfo->FontCode);
+	SGString fontName = CoreFont_v->getFontName(m_pInfo->FontCode);
 	SGString fontPath = Path::Combine(CoreCommon_v->DataPath, FontDirName_v, fontName);
 
 	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), fontPath.Source(), m_pInfo->FontSize, Size::ZERO);
-	m_pLabel->setHorizontalAlignment((TextHAlignment)m_pInfo->HorizontalAlignment);
-	m_pLabel->setVerticalAlignment((TextVAlignment)m_pInfo->VerticalAlignment);
+	m_pLabel->setHorizontalAlignment((TextHAlignment)m_pInfo->TextHAlignment);
+	m_pLabel->setVerticalAlignment((TextVAlignment)m_pInfo->TextVAlignment);
 	m_pLabel->setDimensions(m_pInfo->Width, m_pInfo->Height);
 	m_pLabel->enableWrap(m_pInfo->TextWrap);
 	m_pLabel->setAnchorPoint(Vec2::ZERO);

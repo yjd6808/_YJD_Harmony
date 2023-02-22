@@ -259,6 +259,14 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUICheckBox.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIEditBox.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIElement.cpp">
       <SubType>
       </SubType>
@@ -374,6 +382,10 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGCharAnimationInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGCharProjectileListener.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUICheckBox.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -625,6 +637,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIDefine.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIEditBox.h">
       <SubType>
       </SubType>
     </ClInclude>

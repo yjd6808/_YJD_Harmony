@@ -23,7 +23,6 @@ public:
 	static SGUIGroup* createRetain(SGUIGroup* parent, SGUIGroupInfo* groupInfo);
 	static SGUIGroup* create(SGUIGroup* parent, SGUIGroupInfo* groupInfo);
 
-	
 	bool init() override;
 	void load() override;
 	void unload() override;

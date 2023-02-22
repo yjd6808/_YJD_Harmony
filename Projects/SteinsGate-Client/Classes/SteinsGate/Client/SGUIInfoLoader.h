@@ -17,6 +17,8 @@ struct SGUIInfoLoader : ConfigFileLoaderAbstract
 public:
 	SGUIInfoLoader(DataManagerAbstract* manager);
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::UI; }
+
+	
 	bool load() override;
 
 	static void readElementCommon(Json::Value& elementRoot, Out_ SGUIElementInfo* elementInfo);
@@ -24,7 +26,8 @@ public:
 	static SGUIElementInfo* readElementButton(Json::Value& buttonRoot);
 	static SGUIElementInfo* readElementLabel(Json::Value& labelRoot);
 	static SGUIElementInfo* readElementSprite(Json::Value& spriteRoot);
-	
+	static SGUIElementInfo* readElementEditBox(Json::Value& editBoxRoot);
+	static SGUIElementInfo* readElementCheckBox(Json::Value& checkBoxRoot);
 };
 
 

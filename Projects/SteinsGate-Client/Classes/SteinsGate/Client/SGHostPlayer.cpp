@@ -35,6 +35,7 @@ bool SGHostPlayer::init() {
 	VisualInfo info;
 	CoreInven_v->getVisualInfo(info, m_PlayerData.CharType);
 
+
 	initInfo(m_PlayerData.CharType, info);
 	initActionManager();
 	initController();

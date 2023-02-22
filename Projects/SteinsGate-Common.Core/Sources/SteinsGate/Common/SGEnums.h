@@ -402,6 +402,8 @@ Group,
 Button,
 Label,
 Sprite,
+EditBox,
+CheckBox,
 Max
 SEnumEnd(UIElementType)
 

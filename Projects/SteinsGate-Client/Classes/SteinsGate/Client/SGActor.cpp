@@ -79,8 +79,10 @@ void SGActor::initThicknessBox(const ThicknessBox& thicknessBox) {
 }
 
 void SGActor::initHitRecorder(int hitPossibleListSize, int alreadyHitMapSize) {
-	DebugAssertMsg(m_pHitRecorder == nullptr, "이미 히트 레코더가 초기화 되어있습니다.");
-	m_pHitRecorder = dbg_new SGHitRecorder(this, hitPossibleListSize, alreadyHitMapSize);
+	// DebugAssertMsg(m_pHitRecorder == nullptr, "이미 히트 레코더가 초기화 되어있습니다.");
+	_LogDebug_("%s 이미 히트 레코터가 초기화 되어 있습니다.", ActorType::Name[m_eActorType]);
+	if (m_pHitRecorder == nullptr)
+		m_pHitRecorder = dbg_new SGHitRecorder(this, hitPossibleListSize, alreadyHitMapSize);
 }
 
 void SGActor::update(float dt) {
@@ -96,6 +98,7 @@ void SGActor::update(float dt) {
 	else
 		m_pThicknessBox->setOpacity(125);
 }
+
 
 ActorType_t SGActor::getType() const {
 	return m_eActorType;

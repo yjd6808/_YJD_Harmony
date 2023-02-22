@@ -30,6 +30,14 @@ bool SGUIElement::loaded() {
 	return m_bLoaded;
 }
 
+void SGUIElement::focus() {
+	m_bFocused = true;
+}
+
+void SGUIElement::unfocus() {
+	m_bFocused = false;
+}
+
 void SGUIElement::restoreState(State state) {
 	if (m_eState == eDisabled)
 		return;
@@ -95,6 +103,13 @@ bool SGUIElement::onMouseScroll(SGEventMouse* mouseEvent) {
 		return true;
 
 	return true;
+}
+
+void SGUIElement::updateState() {
+}
+
+void SGUIElement::setCallbackClick(const SGActionFn<SGEventMouse*>& callback) {
+	m_fnMouseClickCallback = callback;
 }
 
 SGRect SGUIElement::getWorldBoundingBox() {

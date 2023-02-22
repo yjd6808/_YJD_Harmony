@@ -1,14 +1,14 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "UI 구성 목록",
-    "__comment__2": "horizontal_align: 0(l), 1(c), 2(r)",
-    "__comment__3": "vertical_align: 0(t), 1(c), 2(b)",
-    "__comment__4": "type group(0) button(1) label(2) sprite(3) editbox(4)",
+    "__comment__2": "horizontal_align: 0(left), 1(c), 2(r)",
+    "__comment__3": "vertical_align: 0(top), 1(center), 2(bottom)",
+    "__comment__4": "type group(0) button(1) label(2) sprite(3) editbox(4), checkboxd(5)",
 
     "ui_element": [
         {
             "code": 1,
-            "name": "group_login_background_sp",
+            "name": "group_login_background_sprite",
             "type": 3,
 
             "sga": "sprite.sga",
@@ -29,7 +29,7 @@
         },
         {
             "code": 3,
-            "name": "group_login_text1_lb",
+            "name": "group_login_text1_label",
             "type": 2,
 
             "font": "DF.ttf",
@@ -40,13 +40,43 @@
             "horizontal_align": 2, 
             "vertical_align": 2,
             "text": "종료"
+        },
+        {
+            "code": 4,
+            "name": "group_login_id_editbox",
+            "type": 4,
+
+            
+            "width": 200,
+            "height": 20,
+            "font_size": 16,
+            "font_color": "170 80 0 125",
+            "text_horizontal_align": 0, 
+            "placeholder_text": "ID",
+            "placeholder_font_color": "125 125 125 255",
+            "placeholder_font_size": 16,
+            "max_length": 15,
+            "input_mode": 1
+        },
+        {
+            "code": 5,
+            "name": "group_login_id_save_checkbox",
+            "type": 5,
+
+            
+            "sga": "sprite.sga",
+            "img": "login.img",
+            "background_idx": -1,
+            "background_disabled_idx": -1,
+            "cross_idx": 1,
+            "cross_disabled_idx": -1
         }
        
     ],
 
     "ui_group": [
         {
-            "code": 4,
+            "code": 100,
             "name": "group_login",
             
             "rect": "0 0 300 300",
@@ -55,7 +85,9 @@
             "elements": [
                 "1 0 0 0", 
                 "2 1 50 0",
-                "3 2 50 50"
+                "3 2 50 50",
+                "4 3 50 100",
+                "5 4 100 100"
             ]
         }
     ]

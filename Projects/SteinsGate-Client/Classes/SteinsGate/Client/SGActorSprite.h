@@ -23,6 +23,8 @@ public:
 		SGSprite* Canvas;
 		SGActorPartSprite* Part;
 		SGDrawNode* BoundingBox;
+
+		bool operator==(const PartData& other);
 	};
 
 	SGActorSprite(

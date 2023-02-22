@@ -10,6 +10,8 @@
 
 #include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGUIButton.h>
+#include <SteinsGate/Client/SGUIEditBox.h>
+#include <SteinsGate/Client/SGUICheckBox.h>
 #include <SteinsGate/Client/SGGlobal.h>
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGUIManager.h>
@@ -156,6 +158,8 @@ void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
 	case UIElementType::Button: pChildElement = SGUIButton::create(this, (SGUIButtonInfo*)pElemInfo); break;
 	case UIElementType::Label: pChildElement = SGUILabel::create(this,	(SGUILabelInfo*)pElemInfo); break;
 	case UIElementType::Sprite: pChildElement = SGUISprite::create(this, (SGUISpriteInfo*)pElemInfo); break;
+	case UIElementType::EditBox: pChildElement = SGUIEditBox::create(this, (SGUIEditBoxInfo*)pElemInfo); break;
+	case UIElementType::CheckBox: pChildElement = SGUICheckBox::create(this, (SGUICheckBoxInfo*)pElemInfo); break;
 	
 	default: break;
 	}

@@ -14,6 +14,10 @@
 USING_NS_CC;
 USING_NS_JC;
 
+bool SGActorSprite::PartData::operator==(const PartData& other) {
+	return Part == other.Part && Canvas == other.Canvas && BoundingBox == other.BoundingBox;
+}
+
 SGActorSprite::SGActorSprite(
 	SGActor* actor, 
 	const SGActorSpriteDataPtr& actorData)
@@ -270,15 +274,15 @@ void SGActorSprite::updateSpriteData(const SGActorSpriteDataPtr& spriteData) {
 
 	// Step 2. 신규 목록중 추가되어야하는 파츠들을 찾는다.
 	vPartsData.Extension().Filter([this](ActorPartSpriteData& candidatePart) {
-		bool bNeedToAdd = false;
+		bool bNeedToAdd = true;
 
 		for (int i = 0; i < m_vParts.Size(); ++i) {
 			const ActorPartSpriteData& partData = m_vParts[i].Part->getPartData();
 
-			// 하나라도 다르면 다른 파츠
-			if (partData.ImgIndex != candidatePart.ImgIndex ||
-				partData.SgaIndex != candidatePart.SgaIndex) {
-				bNeedToAdd = true;
+			// 같은 파츠가 이미 기존 파츠 목록에 존재하면 추가해선 안된다.
+			if (partData.ImgIndex == candidatePart.ImgIndex &&
+				partData.SgaIndex == candidatePart.SgaIndex) {
+				bNeedToAdd = false;
 				break;
 			}
 		}

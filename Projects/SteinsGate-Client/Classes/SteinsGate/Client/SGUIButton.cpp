@@ -40,6 +40,22 @@ void SGUIButton::setVisibleState(State state) {
 	m_eState = state;
 }
 
+void SGUIButton::setEnabled(bool enabled) {
+
+	if (enabled) {
+		// 활성화 요청을 했지만 이미 활성화 상태인 경우는 무시
+		if (m_eState != eDisabled)
+			return;
+
+		// 이전 상태가 비활성화 상태 인경우 현재 상태가 Prssed인지, Moved인지 체크해서 업데이트
+		updateState();
+		return;
+	}
+
+	m_eState = eDisabled;
+	setVisibleState(eDisabled);
+}
+
 SGUIButton* SGUIButton::create(SGUIGroup* parent, SGUIButtonInfo* btnInfo) {
 	SGUIButton* pBtn = dbg_new SGUIButton(parent,btnInfo);
 	pBtn->autorelease();

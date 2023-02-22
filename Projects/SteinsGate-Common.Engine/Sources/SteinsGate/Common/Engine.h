@@ -12,6 +12,7 @@
 #include <cocos/ui/CocosGUI.h>
 
 #include <SteinsGate/Common/Core.h>
+#include <SteinsGate/Common/SGColor.h>
 
 #define USING_NS_CCUI	using namespace cocos2d::ui
 
@@ -29,6 +30,7 @@ using SGDrawNode = cocos2d::DrawNode;
 using SGScene = cocos2d::Scene;
 using SGText = cocos2d::ui::Text;
 using SGEditBox = cocos2d::ui::EditBox;
+using SGEditBoxEndAction = cocos2d::ui::EditBoxDelegate::EditBoxEndAction;
 using SGLabel = cocos2d::Label;
 using SGEventKeyboard = cocos2d::EventKeyboard;
 using SGEventListenerKeyboard = cocos2d::EventListenerKeyboard;
@@ -40,3 +42,6 @@ using SGDirector = cocos2d::Director;
 using SGColor3B = cocos2d::Color3B;
 using SGColor4B = cocos2d::Color4B;
 using SGColor4F = cocos2d::Color4F;
+using SGColorList = ColorList;
+using SGInputMode = cocos2d::ui::EditBox::InputMode;
+using SGCheckBox = cocos2d::ui::CheckBox;

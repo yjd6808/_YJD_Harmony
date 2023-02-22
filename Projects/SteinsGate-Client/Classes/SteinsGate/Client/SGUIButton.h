@@ -21,6 +21,7 @@ public:
 	void unload() override;
 	
 	void setVisibleState(State state);
+	void setEnabled(bool enabled) override;
 
 	static SGUIButton* create(SGUIGroup* parent, SGUIButtonInfo* btnInfo);
 	void restoreState(State state) override;

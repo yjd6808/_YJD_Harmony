@@ -32,6 +32,9 @@ public:
 
 	bool loaded();
 
+	virtual void focus();
+	virtual void unfocus();
+
 	virtual void restoreState(State state);
 	virtual void load();
 	virtual void unload();
@@ -39,20 +42,21 @@ public:
 	virtual bool onMouseDown(SGEventMouse* mouseEvent);
 	virtual bool onMouseUp(SGEventMouse* mouseEvent);
 	virtual bool onMouseScroll(SGEventMouse* mouseEvent);
+	
 	virtual int getCode() = 0;
+	virtual void setEnabled(bool enabled);
 	virtual UIElementType_t getElementType() = 0;
 
 	SGRect getWorldBoundingBox();
-	void setEnabled(bool enabled);
-	
+	void updateState();
 
-	void setMouseClick(const SGActionFn<SGEventMouse*>& callback) {
-		m_fnMouseClickCallback = callback;
-	}
+	void setCallbackClick(const SGActionFn<SGEventMouse*>& callback);
 protected:
 	SGUIGroup* m_pParent;
-	bool m_bLoaded;
 	State m_eState;
+
+	bool m_bLoaded;
+	bool m_bFocused;
 
 	SGActionFn<SGEventMouse*> m_fnMouseClickCallback;
 };

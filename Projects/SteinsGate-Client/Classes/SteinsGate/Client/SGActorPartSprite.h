@@ -43,7 +43,7 @@ public:
 	void runAnimation(int code);
 	void runAnimation(int code, int startFrameIndexInAnimation);
 
-	int setPartIndex(int index) { m_iPartIndex = index;  }
+	void setPartIndex(int index) { m_iPartIndex = index;  }
 	int getPartIndex() { return m_iPartIndex; }
 	ActorType_t getActorType();
 	SGNode* getCanvas() { return m_pCanvas; }

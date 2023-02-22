@@ -11,6 +11,9 @@
 #include <SteinsGate/Client/SGAnimationInfo.h>
 #include <SteinsGate/Common/SGTextParser.h>
 
+USING_NS_JC;
+USING_NS_CC;
+
 void SGJsonEx::parseAnimationInfo(Json::Value& animationRoot, SGAnimationInfo& info) {
 	info.Name = SGJsonEx::getString(animationRoot["name"]);
 	info.Code = animationRoot["code"].asInt();
@@ -62,4 +65,23 @@ void SGJsonEx::parseAnimationInfo(Json::Value& animationRoot, SGAnimationInfo& i
 		}
 		
 	}
+}
+
+void SGJsonEx::parseColor4B(Json::Value& root, Out_ SGColor4B& color) {
+
+	int iR;
+	int iG;
+	int iB;
+	int iA;
+
+	parseIntNumber4(root, iR, iG, iB, iA);
+	DebugAssertMsg(iR >= 0 && iR <= MaxByte_v, "R 색상값(%d)이 0 ~ %d사이 값이 아닙니다.", iR, MaxByte_v);
+	DebugAssertMsg(iG >= 0 && iG <= MaxByte_v, "G 색상값(%d)이 0 ~ %d사이 값이 아닙니다.", iG, MaxByte_v);
+	DebugAssertMsg(iB >= 0 && iB <= MaxByte_v, "B 색상값(%d)이 0 ~ %d사이 값이 아닙니다.", iB, MaxByte_v);
+	DebugAssertMsg(iA >= 0 && iA <= MaxByte_v, "A 색상값(%d)이 0 ~ %d사이 값이 아닙니다.", iA, MaxByte_v);
+
+	color.r = (GLubyte)iR;
+	color.g = (GLubyte)iG;
+	color.b = (GLubyte)iB;
+	color.a = (GLubyte)iA;
 }

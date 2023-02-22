@@ -72,7 +72,7 @@ void SGCamera::updateView(float dt) {
 
 
 	// 위쪽 한계, 오른쪽 한계를 미리 계산해놓자.
-	// 내가 우측으로 500만큼 가면 mapLayerPos.x는 -500임 반대라는걸 
+	// 내가 우측으로 500만큼 가면 mapLayerPos.x는 -500임 반대라는걸 유념할 것
 	float fRightX = -(mapSize.width - winSize.width);
 	float fTopY = -(mapSize.height - winSize.height);
 
