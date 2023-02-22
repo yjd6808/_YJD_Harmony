@@ -25,7 +25,7 @@ SGActorPartSprite* SGActorPartSprite::create(
 	SGActorSprite* actor, 
 	SGNode* canvas, 
 	SGDrawNode* boundingBox, 
-	ActorPartSpriteData* partData, 
+	const ActorPartSpriteData& partData, 
 	SGVector<SGAnimationInfo*>& animations
 )
 {
@@ -46,12 +46,12 @@ SGActorPartSprite::SGActorPartSprite(
 	SGActorSprite* actor,
 	SGNode* canvas,
 	SGDrawNode* boundingBox,
-	ActorPartSpriteData* partData, 
+	const ActorPartSpriteData& partData,
 	SGVector<SGAnimationInfo*>& animations)
 		: m_iPartIndex(partIndex)
 		, m_pActorSprite(actor)
 		, m_pCanvas(canvas)
-		, m_pPartData(partData)
+		, m_PartData(partData)
 		, m_refAnimationInfoList(animations)
 		, m_pBoundingBox(boundingBox)
 		, m_pRunningAnimation(nullptr)
@@ -75,11 +75,11 @@ bool SGActorPartSprite::init() {
 
 	
 
-	SGImagePack* pImgPack = SGImagePackManager::get()->getPack(m_pPartData->SgaIndex);
+	SGImagePack* pImgPack = SGImagePackManager::get()->getPack(m_PartData.SgaIndex);
 
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
 
-		m_vFrames[i] = pImgPack->createFrameTexture(m_pPartData->ImgIndex, i);
+		m_vFrames[i] = pImgPack->createFrameTexture(m_PartData.ImgIndex, i);
 
 		if (m_vFrames[i] == nullptr) {
 			m_vFrames[i] = SGGlobal::get()->getDefaultFrameTexture();
@@ -91,7 +91,7 @@ bool SGActorPartSprite::init() {
 	for (int i = 0; i < m_refAnimationInfoList.Size(); ++i) {
 		SGAnimationInfo* pAnimationInfo = m_refAnimationInfoList[i];
 		SGActorPartAnimation* pPartAnimation = SGActorPartAnimation::create(this, pAnimationInfo, m_vFrames);
-		pPartAnimation->constructFrames(m_pPartData->SgaIndex, m_pPartData->ImgIndex);
+		pPartAnimation->constructFrames(m_PartData.SgaIndex, m_PartData.ImgIndex);
 		pPartAnimation->retain();
 		m_AnimationMap.Insert(pAnimationInfo->Code, pPartAnimation);
 		m_vAnimationList.PushBack(pPartAnimation);

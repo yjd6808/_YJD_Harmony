@@ -17,6 +17,7 @@
 struct SGMapInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGMapInfoLoader(DataManagerAbstract* manager);
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Map; }
 

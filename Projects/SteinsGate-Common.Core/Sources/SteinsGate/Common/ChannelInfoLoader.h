@@ -9,17 +9,18 @@
 #pragma once
 
 
-#include <SteinsGate/Common/ChannelBaseInfo.h>
+#include <SteinsGate/Common/ChannelInfo.h>
 #include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
-struct ChannelBaseInfoLoader : ConfigFileLoaderAbstract
+struct ChannelInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	virtual ~ChannelBaseInfoLoader() override = default;
+	ChannelInfoLoader(DataManagerAbstract* manager);
+	virtual ~ChannelInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Channel; }
 	bool load() override;
 
-	static void readChannelBaseInfo(Json::Value& channelRoot, Out_ ChannelBaseInfo* channelInfo);
+	static void readChannelBaseInfo(Json::Value& channelRoot, Out_ ChannelInfo* channelInfo);
 };
 

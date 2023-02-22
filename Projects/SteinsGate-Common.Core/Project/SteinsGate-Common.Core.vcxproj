@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\ChannelInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -45,6 +45,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\EnchantInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -78,7 +82,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\SgaSound.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SgaSprite.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\DataManagerAbstract.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -96,11 +100,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -133,6 +137,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonCoreHeader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\EnchantInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\EnchantInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -179,7 +191,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGDataManagerAbstract.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
       <SubType>
       </SubType>
     </ClInclude>

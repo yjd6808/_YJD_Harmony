@@ -21,6 +21,9 @@
 #include <SteinsGate/Client/SGWorldScene.h>
 #include <SteinsGate/Client/SGUILayer.h>
 
+USING_NS_CC;
+USING_NS_JC;
+
 SGSceneBase::SGSceneBase() {}
 
 SGSceneBase::~SGSceneBase() {
@@ -29,10 +32,19 @@ SGSceneBase::~SGSceneBase() {
 bool SGSceneBase::init() {
 	_LogDebug_("%s 씬 초기화", SceneType::Name[getType()]);
 
+	if (!Scene::init())
+		return false;
+
 	m_pWorldScene = SGWorldScene::get();
 	m_pUILayer = m_pWorldScene->getUILayer();
 
-	return Scene::init();
+	auto a = Sprite::create("hud.png");
+	a->setAnchorPoint(Vec2::ZERO);
+	a->setScaleX(1.0f);
+	a->setScaleY(1.0f);
+	this->addChild(a);
+
+	return true;
 }
 void SGSceneBase::onEnter() {
 	_LogDebug_("%s 씬을 시작", SceneType::Name[getType()]);

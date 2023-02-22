@@ -1,0 +1,18 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "마을 구성 목록",
+
+    "town": [
+        {
+            "code": 1,
+            "name": "마을",
+            "newbie_starter_map": "elvenguard_private_room",
+            "map_connection": [
+                "elvenguard_private_room elvenguard",
+                "elvenguard elvenguard_dungeon_enterance",
+                "elvenguard alflyra_post_enterance",
+                "elvenguard hendon_myre"
+            ]
+        }
+    ]
+}

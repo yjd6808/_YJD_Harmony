@@ -14,6 +14,7 @@
 struct ServerInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	ServerInfoLoader(DataManagerAbstract* manager);
 	virtual ~ServerInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Server; }

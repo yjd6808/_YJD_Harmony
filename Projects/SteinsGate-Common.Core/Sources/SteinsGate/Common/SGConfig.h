@@ -42,3 +42,6 @@ inline constexpr int AccountPassLen_v = 40;
 
 inline constexpr int MaxOptCount_v = 7;
 inline constexpr int MaxVisualCount_v = 3;
+inline constexpr int MaxEnchantLevel_v = 25;
+
+inline constexpr int ArmorEnchantBonusOptCount_v = 2;

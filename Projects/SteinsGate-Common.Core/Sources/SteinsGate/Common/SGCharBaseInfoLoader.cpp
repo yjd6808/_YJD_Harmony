@@ -9,9 +9,14 @@
 #include "Core.h"
 #include "SGCharBaseInfoLoader.h"
 
+#include <SteinsGate/Common/DataManagerAbstract.h>
 #include <SteinsGate/Common/SGJson.h>
 
 USING_NS_JS;
+
+SGCharBaseInfoLoader::SGCharBaseInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
 
 bool SGCharBaseInfoLoader::load() {
 
@@ -21,7 +26,7 @@ bool SGCharBaseInfoLoader::load() {
 		return false;
 
 	try {
-		Json::Value gunnerRoot = root["gunner"];
+		Json::Value& gunnerRoot = root["gunner"];
 
 		// 다른 캐릭이 만약 추가되면 코드 변경 필요
 		SGGunnerInfo* pGunnerInfo = dbg_new SGGunnerInfo();

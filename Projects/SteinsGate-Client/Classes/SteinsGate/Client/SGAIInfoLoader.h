@@ -16,6 +16,7 @@
 struct SGAIInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGAIInfoLoader(DataManagerAbstract* manager);
 	~SGAIInfoLoader() override = default;
 
 	bool load() override;

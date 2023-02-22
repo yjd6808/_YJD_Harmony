@@ -182,7 +182,7 @@ private:
 
 	// tls_RefMap이 thread_local이지만 m_pRefMap이 이를 참조해서 다른 쓰레드에서 사용할 수 있기 때문에
 	// 락의 범위는 락이 필요 없는 ThreadLocal<T>::thread_local에서 ThreadLocal<T>로 확장되어버린다. ㅠㅠ
-	inline static NormalLock m_Lock;
+	inline static NormalLock m_Lock{};
 
 	// https://stackoverflow.com/questions/8102125/is-local-static-variable-initialization-thread-safe-in-c11
 	// static 변수의 initialization은 thread-safe하다.

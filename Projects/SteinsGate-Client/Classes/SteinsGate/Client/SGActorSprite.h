@@ -11,10 +11,20 @@
 #include "Tutturu.h"
 #include <SteinsGate/Client/SGActorPartSprite.h>
 
+
+
+
 class SGActor;
 class SGActorSprite : public SGSprite
 {
 public:
+	struct PartData
+	{
+		SGSprite* Canvas;
+		SGActorPartSprite* Part;
+		SGDrawNode* BoundingBox;
+	};
+
 	SGActorSprite(
 		SGActor* actor, 
 		const SGActorSpriteDataPtr& actorData
@@ -27,12 +37,12 @@ public:
 
 	bool init() override;
 	void update(float dt) override;
-	
 
 	void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
 	void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
 	void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* texture);
 	void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* texture);
+
 	void setSpriteDirection(SpriteDirection_t direction);
 	void setForwardDirection();
 	void setBackwardDirection();
@@ -49,18 +59,22 @@ public:
 	SGSize	getBodyCanvasSize();
 	SGSize	getBodyPartSize();
 	SGVec2	getBodyPartPosition();
+	PartData createPart(const ActorPartSpriteData& partSpriteData, int partIndex, int frameCount);
 
-	SGVector<SGActorPartSprite*>& getParts() { return m_vParts; }
+	SGVector<PartData>& getParts() { return m_vParts; }
 	SpriteDirection_t getSpriteDirection();
 	int getRunningAnimationCode();
 	SGActorPartAnimation* getRunningAnimation();
+	void updateSpriteData(const SGActorSpriteDataPtr& spriteData);
 private:
+
 
 	SGActor* m_pActor;
 	SGActorSpriteDataPtr m_spActorData;
-	SGVector<SGSprite*> m_vPartsCanvas;
-	SGVector<SGActorPartSprite*> m_vParts;
-	SGVector<SGDrawNode*> m_vPartsBoundingBox;
+	SGVector<PartData> m_vParts;
+	//SGVector<SGSprite*> m_vPartsCanvas;
+	//SGVector<SGActorPartSprite*> m_vParts;
+	//SGVector<SGDrawNode*> m_vPartsBoundingBox;
 	SpriteDirection_t m_eDirection;
 };
 

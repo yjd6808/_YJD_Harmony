@@ -18,6 +18,11 @@
 USING_NS_JS;
 USING_NS_JC;
 
+
+SGActionInfoLoader::SGActionInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
 bool SGActionInfoLoader::load() {
 	Json::Value root;
 

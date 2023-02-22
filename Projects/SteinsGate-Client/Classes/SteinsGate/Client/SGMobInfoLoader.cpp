@@ -15,6 +15,9 @@
 USING_NS_JS;
 USING_NS_JC;
 
+SGMobInfoLoader::SGMobInfoLoader(DataManagerAbstract* manager)
+	: MobBaseInfoLoader(manager)
+{}
 
 bool SGMobInfoLoader::load() {
 	Json::Value root;

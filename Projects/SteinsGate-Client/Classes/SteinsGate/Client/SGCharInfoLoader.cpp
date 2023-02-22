@@ -20,6 +20,9 @@ USING_NS_CC;
 USING_NS_JS;
 USING_NS_JC;
 
+SGCharInfoLoader::SGCharInfoLoader(DataManagerAbstract* manager)
+	: SGCharBaseInfoLoader(manager)
+{}
 
 bool SGCharInfoLoader::load() {
 	Json::Value root;

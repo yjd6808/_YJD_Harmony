@@ -17,4 +17,5 @@ public:
 	float GameScale;
 	float ResolutionWidth;
 	float ResolutionHeight;
+	bool FullScreen;
 };

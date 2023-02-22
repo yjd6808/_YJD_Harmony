@@ -18,6 +18,7 @@
 struct SGActionInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGActionInfoLoader(DataManagerAbstract* manager);
 	~SGActionInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Action; }

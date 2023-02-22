@@ -14,6 +14,7 @@
 struct SGCharAnimationInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGCharAnimationInfoLoader(DataManagerAbstract* manager);
 	~SGCharAnimationInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Char_Animation; }

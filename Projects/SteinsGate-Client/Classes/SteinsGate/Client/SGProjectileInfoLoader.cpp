@@ -16,6 +16,10 @@
 USING_NS_JC;
 USING_NS_JS;
 
+SGProjectileInfoLoader::SGProjectileInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
 bool SGProjectileInfoLoader::load() {
 	Json::Value root;
 

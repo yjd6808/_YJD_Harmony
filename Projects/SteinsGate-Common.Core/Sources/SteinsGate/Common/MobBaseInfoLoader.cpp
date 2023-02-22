@@ -10,10 +10,15 @@
 #include "Core.h"
 #include "MobBaseInfoLoader.h"
 
+#include <SteinsGate/Common/DataManagerAbstract.h>
 #include <SteinsGate/Common/SGJson.h>
 
 USING_NS_JS;
 USING_NS_JC;
+
+MobBaseInfoLoader::MobBaseInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
 
 bool MobBaseInfoLoader::load() {
 	Json::Value root;
@@ -23,7 +28,7 @@ bool MobBaseInfoLoader::load() {
 	}
 
 	try {
-		Json::Value monsterListRoot = root["monsters"];
+		Json::Value& monsterListRoot = root["monsters"];
 
 		for (int i = 0; i < monsterListRoot.size(); ++i) {
 			Value& monsterRoot = monsterListRoot[i];

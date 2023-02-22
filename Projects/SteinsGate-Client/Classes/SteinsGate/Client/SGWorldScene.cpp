@@ -26,6 +26,7 @@
 
 
 USING_NS_CC;
+USING_NS_CCUI;
 USING_NS_JC;
 
 // ==============================================================
@@ -48,6 +49,15 @@ SGWorldScene* SGWorldScene::get() {
 	}
 
 	return scene;
+}
+
+SGMapLayer* SGWorldScene::getMap() {
+	DebugAssertMsg(m_pRunningScene && m_pRunningScene->getType() == SceneType::Game, "게임 씬이 실행중이지 않을때 맵을 가져올려고 시도했습니다.");
+	return ((SGGameScene*)m_pRunningScene)->getMap();
+}
+
+SGCamera* SGWorldScene::getCamera() {
+	return getMap()->getCamera();
 }
 
 
@@ -78,6 +88,20 @@ bool SGWorldScene::init() {
 	InitUILayer();
 	reserveScene(SceneType::Login);
 	scheduleUpdate();	// 즉시 update 1회 호출함
+
+	// 에딧박스는 좌우 패딩 5씩 줘서 실제 컨텐츠 사이즈는 너비가 10 작아진다.
+	auto sz = Size(200, 20);
+	auto pIDEditBox = EditBox::create(sz, "");
+	pIDEditBox->setContentSize(sz);
+	pIDEditBox->setPosition({ 400, 340 });
+	pIDEditBox->setFontColor(Color4B::WHITE);
+	pIDEditBox->setFontSize(18.0f);
+	pIDEditBox->setPlaceHolder("ID");
+	pIDEditBox->setAnchorPoint(Vec2::ZERO);
+	pIDEditBox->setPlaceholderFontColor(Color4B::GRAY);
+	pIDEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
+	this->addChild(pIDEditBox);
+
 
 	return true;
 }

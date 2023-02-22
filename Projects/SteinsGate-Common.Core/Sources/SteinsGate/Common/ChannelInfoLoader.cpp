@@ -6,15 +6,21 @@
  */
 
 #include "Core.h"
-#include "ChannelBaseInfoLoader.h"
+#include "ChannelInfoLoader.h"
 #include "CommonCoreHeader.h"
 
+#include <SteinsGate/Common/DataManagerAbstract.h>
 #include <SteinsGate/Common/SGJson.h>
 
 USING_NS_JS;
 USING_NS_JC;
 
-bool ChannelBaseInfoLoader::load() {
+ChannelInfoLoader::ChannelInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
+
+bool ChannelInfoLoader::load() {
 	Json::Value root;
 
 	if (!loadJson(root)) {
@@ -22,11 +28,11 @@ bool ChannelBaseInfoLoader::load() {
 	}
 
 	try {
-		Json::Value channelInfoRootList = root["channel"];
+		Json::Value& channelInfoRootList = root["channel"];
 
 		for (int i = 0; i < channelInfoRootList.size(); ++i) {
 			Value& channelInfoRoot = channelInfoRootList[i];
-			ChannelBaseInfo* pChannelInfo = dbg_new ChannelBaseInfo;
+			ChannelInfo* pChannelInfo = dbg_new ChannelInfo;
 			readChannelBaseInfo(channelInfoRoot, pChannelInfo);
 			addData(pChannelInfo);
 		}
@@ -39,7 +45,7 @@ bool ChannelBaseInfoLoader::load() {
 	return true;
 }
 
-void ChannelBaseInfoLoader::readChannelBaseInfo(Json::Value& channelRoot, Out_ ChannelBaseInfo* channelInfo) {
+void ChannelInfoLoader::readChannelBaseInfo(Json::Value& channelRoot, Out_ ChannelInfo* channelInfo) {
  	channelInfo->Code = channelRoot["code"].asInt();
 	channelInfo->Name = SGJson::getString(channelRoot["name"]);
 	channelInfo->EnteranceType = (EnteranceType_t)channelRoot["enterance_type"].asInt();

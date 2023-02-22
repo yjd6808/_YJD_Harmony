@@ -13,6 +13,10 @@
 USING_NS_JS;
 USING_NS_JC;
 
+SGClientInfoLoader::SGClientInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
 bool SGClientInfoLoader::load() {
 
 	Json::Value root;
@@ -42,5 +46,6 @@ void SGClientInfoLoader::readClientInfo(Json::Value& clientRoot, Out_ SGClientIn
 	clientInfo->GameScale = clientRoot["game_scale"].asFloat();
 	clientInfo->ResolutionWidth = clientRoot["resolution_width"].asFloat();
 	clientInfo->ResolutionHeight = clientRoot["resolution_height"].asFloat();
+	clientInfo->FullScreen = clientRoot["fullscreen"].asBool();
 	
 }

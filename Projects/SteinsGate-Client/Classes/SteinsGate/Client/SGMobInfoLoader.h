@@ -16,6 +16,7 @@
 struct SGMobInfoLoader : MobBaseInfoLoader
 {
 public:
+	SGMobInfoLoader(DataManagerAbstract* manager);
 	~SGMobInfoLoader() override = default;
 
 	bool load() override;

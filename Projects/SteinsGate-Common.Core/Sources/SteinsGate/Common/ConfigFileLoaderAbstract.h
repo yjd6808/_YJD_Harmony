@@ -10,10 +10,11 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-
+class DataManagerAbstract;
 class ConfigFileLoaderAbstract
 {
 public:
+	ConfigFileLoaderAbstract(DataManagerAbstract* manager);
 	virtual ~ConfigFileLoaderAbstract();
 
 	virtual bool loadJson(Out_ Json::Value& root);
@@ -30,9 +31,8 @@ public:
 	ConfigDataAbstract* getData(int code);
 protected:
 	SGString* m_pConfigPath{};
+	DataManagerAbstract* m_pManager;
 	SGHashMap<int, ConfigDataAbstract*> m_hConfigDataAbstract;
-
-	friend class SGDataManagerAbstract;
 };
 
 

@@ -78,9 +78,9 @@ void SGEffect::update(float delta) {
 
 
 	if (SGGlobal::get()->isEffectDrawMode()) {
-		m_pActorSprite->getParts().Extension().ForEach([](SGActorPartSprite* sp) { sp->setOpacity(255); });
+		m_pActorSprite->getParts().Extension().ForEach([](SGActorSprite::PartData& part) { part.Part->setOpacity(255); });
 	} else {
-		m_pActorSprite->getParts().Extension().ForEach([](SGActorPartSprite* sp) { sp->setOpacity(0); });
+		m_pActorSprite->getParts().Extension().ForEach([](SGActorSprite::PartData& part) { part.Part->setOpacity(0); });
 	}
 }
 void SGEffect::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {}

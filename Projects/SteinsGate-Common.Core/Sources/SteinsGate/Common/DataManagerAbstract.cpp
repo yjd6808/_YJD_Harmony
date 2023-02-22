@@ -7,27 +7,32 @@
 
 
 #include "Core.h"
-#include "SGDataManagerAbstract.h"
+#include "DataManagerAbstract.h"
 #include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/CommonInfoLoader.h>
+#include <SteinsGate/Common/ItemOptInfoLoader.h>
+#include <SteinsGate/Common/ChannelInfoLoader.h>
+#include <SteinsGate/Common/EnchantInfoLoader.h>
+#include <SteinsGate/Common/ServerInfoLoader.h>
 
-SGDataManagerAbstract::SGDataManagerAbstract()
+DataManagerAbstract::DataManagerAbstract()
 	: m_pConfigFileLoaders{}
 	, m_bLoaded{}
-	, m_bInitialized(false) {
-	loadCommon();
+	, m_bInitialized(false)
+{
+	loadCommon();	
 }
 
-SGDataManagerAbstract::~SGDataManagerAbstract() {
+DataManagerAbstract::~DataManagerAbstract() {
 	finalizeLoader();
 }
 
-void SGDataManagerAbstract::loadCommon() {
+void DataManagerAbstract::loadCommon() {
 
 	DebugAssertMsg(m_bLoaded[ConfigFileType::Common] == false, "이미 초기화가 진행되어있습니다.");
 
-	CommonInfoLoader* pCommonInfoLoader = dbg_new CommonInfoLoader();
+	CommonInfoLoader* pCommonInfoLoader = dbg_new CommonInfoLoader(this);
 
 	if (!pCommonInfoLoader->load()) {
 		DebugAssertMsg(false, "커몬 인포 로딩에 실패했습니다.");
@@ -38,7 +43,7 @@ void SGDataManagerAbstract::loadCommon() {
 	m_bLoaded[ConfigFileType::Common] = true;
 }
 
-void SGDataManagerAbstract::loadAll() {
+void DataManagerAbstract::loadAll() {
 	DebugAssertMsg(m_bInitialized, "아직 데이터 매니저 초기화가 이뤄지지 않았습니다.");
 
 	int iInitCount = 0;
@@ -64,24 +69,24 @@ void SGDataManagerAbstract::loadAll() {
 	_LogInfo_("기획파일 %d개중 %d개를 로딩하였습니다.", iInitCount, iLoadedCount);
 }
 
-ConfigDataAbstract* SGDataManagerAbstract::getData(ConfigFileType_t configFileType, int code) {
+ConfigDataAbstract* DataManagerAbstract::getData(ConfigFileType_t configFileType, int code) {
 	DebugAssertMsg(configFileType >= ConfigFileType::Begin && configFileType <= ConfigFileType::End
 		, "올바르지 않은 ConfigFileType 입니다.");
 	return m_pConfigFileLoaders[configFileType]->getData(code);
 }
 
-void SGDataManagerAbstract::load(ConfigFileType_t configFileType) {
+void DataManagerAbstract::load(ConfigFileType_t configFileType) {
 	ConfigFileLoaderAbstract* pLoader = m_pConfigFileLoaders[configFileType];
 	DebugAssertMsg(pLoader != nullptr, "%s 파일 로더가 아직 생성되어있지 않습니다.", ConfigFileType::FileName[configFileType]);
 	m_bLoaded[configFileType] = pLoader->load();
 }
 
-void SGDataManagerAbstract::unload(ConfigFileType_t configFileType) {
+void DataManagerAbstract::unload(ConfigFileType_t configFileType) {
 	DebugAssertMsg(false, "아직 구현 안됨");
 	// TODO: 필요시 구현
 }
 
-void SGDataManagerAbstract::finalizeLoader() {
+void DataManagerAbstract::finalizeLoader() {
 	for (int i = 0; i < ConfigFileType::Max; ++i) {
 		DeleteSafe(m_pConfigFileLoaders[i]);
 		m_bLoaded[i] = false;
@@ -98,7 +103,7 @@ void SGDataManagerAbstract::finalizeLoader() {
 // ========================================================================================
 
 
-MobBaseInfo* SGDataManagerAbstract::getMobBaseInfo(int monsterCode) {
+MobBaseInfo* DataManagerAbstract::getMobBaseInfo(int monsterCode) {
 
 	auto eType = ConfigFileType::Monster;
 
@@ -112,7 +117,7 @@ MobBaseInfo* SGDataManagerAbstract::getMobBaseInfo(int monsterCode) {
 
 
 
-ItemAvatarInfo* SGDataManagerAbstract::getAvatarInfo(int avatarCode) {
+ItemAvatarInfo* DataManagerAbstract::getAvatarInfo(int avatarCode) {
 	auto eType = ConfigFileType::Item;
 
 	if (!m_bLoaded[eType])
@@ -124,7 +129,7 @@ ItemAvatarInfo* SGDataManagerAbstract::getAvatarInfo(int avatarCode) {
 
 }
 
-ItemWeaponInfo* SGDataManagerAbstract::getWeaponInfo(int weaponCode) {
+ItemWeaponInfo* DataManagerAbstract::getWeaponInfo(int weaponCode) {
 	auto eType = ConfigFileType::Item;
 
 	if (!m_bLoaded[eType])
@@ -135,7 +140,7 @@ ItemWeaponInfo* SGDataManagerAbstract::getWeaponInfo(int weaponCode) {
 	return pRet;
 }
 
-ItemArmorInfo* SGDataManagerAbstract::getArmorInfo(int armorCode) {
+ItemArmorInfo* DataManagerAbstract::getArmorInfo(int armorCode) {
 	auto eType = ConfigFileType::Item;
 
 	if (!m_bLoaded[eType])
@@ -146,7 +151,7 @@ ItemArmorInfo* SGDataManagerAbstract::getArmorInfo(int armorCode) {
 	return pRet;
 }
 
-ItemVisualInfo* SGDataManagerAbstract::getVisualInfo(int visualCode) {
+ItemVisualInfo* DataManagerAbstract::getVisualInfo(int visualCode) {
 	auto eType = ConfigFileType::Item;
 
 	if (!m_bLoaded[eType])
@@ -157,11 +162,63 @@ ItemVisualInfo* SGDataManagerAbstract::getVisualInfo(int visualCode) {
 	return pRet;
 }
 
-CommonInfo* SGDataManagerAbstract::getCommonInfo(int commonConfigCode) {
+CommonInfo* DataManagerAbstract::getCommonInfo(int commonConfigCode) {
 	DebugAssertMsg(m_bLoaded[ConfigFileType::Common], "먼저 loadCommon()을 호출해주세요");
 	return (CommonInfo*)m_pConfigFileLoaders[ConfigFileType::Common]->getData(commonConfigCode);
 }
 
+ItemOptInfo* DataManagerAbstract::getItemOptInfo(int itemOptCode) {
+	auto eType = ConfigFileType::ItemOpt;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<ItemOptInfo*>(getData(eType, itemOptCode));
+	DebugAssertMsg(pRet, "아이템 옵트 타입이 아닙니다.");
+	return pRet;
+}
+
+ItemOptInfo* DataManagerAbstract::getItemOptInfo(const SGString& itemOptEngName) {
+	auto eType = ConfigFileType::ItemOpt;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return ((ItemOptInfoLoader*)m_pConfigFileLoaders[eType])->getData(itemOptEngName);
+}
+
+ChannelInfo* DataManagerAbstract::getChannelInfo(int channelCode) {
+	auto eType = ConfigFileType::Channel;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<ChannelInfo*>(getData(eType, channelCode));
+	DebugAssertMsg(pRet, "채널 인포 타입이 아닙니다.");
+	return pRet;
+}
+
+EnchantInfo* DataManagerAbstract::getEnchantInfo(int enchantCode) {
+	auto eType = ConfigFileType::Enchant;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<EnchantInfo*>(getData(eType, enchantCode));
+	DebugAssertMsg(pRet, "인챈트 인포 타입이 아닙니다.");
+	return pRet;
+}
+
+ServerInfo* DataManagerAbstract::getServerInfo(int serverCode) {
+	auto eType = ConfigFileType::Server;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<ServerInfo*>(getData(eType, serverCode));
+	DebugAssertMsg(pRet, "서버 인포 타입이 아닙니다.");
+	return pRet;
+}
 
 
 

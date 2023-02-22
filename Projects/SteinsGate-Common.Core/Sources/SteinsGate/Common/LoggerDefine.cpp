@@ -19,7 +19,7 @@ USING_NS_JS;
 void InitializeDefaultLogger() {
 	DebugAssertMsg(Logger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
 
-	ConsoleLogger* pConsoleLogger = new ConsoleLogger;
+	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
 	pConsoleLogger->SetEnableLock(true);
 	pConsoleLogger->SetAutoFlush(true);
 	pConsoleLogger->SetHeaderLevelColor(LoggerAbstract::eInfo, LightGreen);

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Core.h"
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
 struct MobBaseInfo : ConfigDataAbstract

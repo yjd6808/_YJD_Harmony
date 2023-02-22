@@ -16,6 +16,10 @@
 USING_NS_JS;
 USING_NS_JC;
 
+SGEffectInfoLoader::SGEffectInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
 bool SGEffectInfoLoader::load() {
 	Json::Value root;
 

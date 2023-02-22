@@ -15,6 +15,7 @@
 struct SGTileInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGTileInfoLoader(DataManagerAbstract* manager);
 	~SGTileInfoLoader() override = default;
 
 	bool load() override;

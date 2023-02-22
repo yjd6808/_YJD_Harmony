@@ -42,6 +42,10 @@ bool SGUILayer::init() {
 		return false;
 
 	setContentSize(CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight);
+
+	
+
+
 	return true;
 }
 
@@ -112,6 +116,9 @@ void SGUILayer::addUIGroup(int groupCode) {
 		pGroup->load();
 
 	addChild(pGroup, 0, pGroup->getCode());
+
+
+
 }
 
 void SGUILayer::removeUIGroup(int groupCode) {

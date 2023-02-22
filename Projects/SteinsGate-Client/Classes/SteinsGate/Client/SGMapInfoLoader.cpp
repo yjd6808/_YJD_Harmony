@@ -15,6 +15,10 @@
 USING_NS_JC;
 USING_NS_JS;
 
+SGMapInfoLoader::SGMapInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
 bool SGMapInfoLoader::load() {
 	Json::Value root;
 

@@ -18,10 +18,15 @@
 #include "Core.h"
 #include "CommonInfoLoader.h"
 
+#include <SteinsGate/Common/DataManagerAbstract.h>
 #include <SteinsGate/Common/SGJson.h>
 
 USING_NS_JS;
 USING_NS_JC;
+
+CommonInfoLoader::CommonInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
 
 bool CommonInfoLoader::load() {
 	Json::Value root;
@@ -34,7 +39,7 @@ bool CommonInfoLoader::load() {
 	}
 
 	try {
-		Json::Value commonListRoot = root["common"];
+		Json::Value& commonListRoot = root["common"];
 
 		for (int i = 0; i < commonListRoot.size(); ++i) {
 			Value& commontRoot = commonListRoot[i];

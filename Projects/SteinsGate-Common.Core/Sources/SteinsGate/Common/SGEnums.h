@@ -611,8 +611,8 @@ Rare,
 Legacy,
 Unique,
 Epic,
-End,
-Max = End
+End = Epic,
+Max
 SEnumMiddle(RarityType)
 
 static constexpr const char* Name[Max]{

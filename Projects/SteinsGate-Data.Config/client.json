@@ -7,9 +7,10 @@
     "client": [
         {
             "code": 1,
-            "game_scale": 1.5,
-            "resolution_width": 960.0,
-            "resolution_height": 720.0
+            "game_scale": 1.0,
+            "resolution_width": 960,
+            "resolution_height": 720,
+            "fullsreen": false
         }
     ]
 }

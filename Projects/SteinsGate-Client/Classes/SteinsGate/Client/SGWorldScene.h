@@ -14,6 +14,8 @@
 #include <SteinsGate/Client/SGSceneBase.h>
 #include <SteinsGate/Client/SGUILayer.h>
 
+class SGCamera;
+class SGMapLayer;
 class SGWorldScene : public SGScene
 {
 private:
@@ -45,7 +47,8 @@ public:
 
 	static SGWorldScene* get();
 	
-
+	SGMapLayer* getMap();
+	SGCamera* getCamera();
 private:
 	SGEventListenerKeyboard* m_pKeyboardListener;
 	SGEventListenerMouse* m_pMouseListener;

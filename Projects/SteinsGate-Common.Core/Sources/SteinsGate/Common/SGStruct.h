@@ -96,7 +96,7 @@ struct PlayerData
 
 union ItemCode
 {
-	inline static constexpr int BitCodeBit = 16;	// 65535
+	inline static constexpr int BitCode = 16;	// 65535
 	inline static constexpr int BitDetail1 = 6;		// 64
 	inline static constexpr int BitDetail2 = 4;		// 16
 	inline static constexpr int BitType = 6;		// 64
@@ -128,7 +128,7 @@ union ItemCode
 
 	struct
 	{
-		int Code		 : BitCodeBit;
+		int Code		 : BitCode;
 		int Detail1		 : BitDetail1;		// 아바타 부위 || 갑옷 종류 || 무기 종류
 		int Detail2		 : BitDetail2;		// 캐릭터 타입
 		ItemType_t Type	 : BitType;			// 소모품, 아바타, 무기
@@ -136,7 +136,7 @@ union ItemCode
 
 	struct
 	{
-		int Code				: BitCodeBit;
+		int Code				: BitCode;
 		AvatarType_t PartType	: BitDetail1;	
 		CharType_t CharType		: BitDetail2;	
 		ItemType_t ItemType		: BitType;		
@@ -144,7 +144,7 @@ union ItemCode
 
 	struct
 	{
-		int Code					: BitCodeBit;
+		int Code					: BitCode;
 		WeaponType_t WeaponType		: BitDetail1;	
 		CharType_t CharType			: BitDetail2;	
 		ItemType_t ItemType			: BitType;
@@ -152,7 +152,7 @@ union ItemCode
 
 	struct
 	{
-		int Code					: BitCodeBit;
+		int Code					: BitCode;
 		EquipArmorType_t ArmorType	: BitDetail1;	
 		int _						: BitDetail2;	
 		ItemType_t ItemType			: BitType;		

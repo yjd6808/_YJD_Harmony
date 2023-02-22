@@ -7,10 +7,12 @@
 
 
 #include "Core.h"
-#include "ConfigFileLoaderAbstract.h"
+#include "DataManagerAbstract.h"
 #include "CommonCoreHeader.h"
 
-#include <SteinsGate/Common/ItemInfoLoader.h>
+ConfigFileLoaderAbstract::ConfigFileLoaderAbstract(DataManagerAbstract* manager)
+	: m_pManager(manager)
+{}
 
 ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract() {
 	m_hConfigDataAbstract.Values().Extension().ForEach([](ConfigDataAbstract* data) {

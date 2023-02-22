@@ -12,16 +12,12 @@
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGJsonEx.h>
 
-#include <JCore/FileSystem/Path.h>
-
-#include <json.h>
-#include <fstream>
-
-
 USING_NS_JC;
 USING_NS_JS;
 
-#define JsonFileName "tile.json"
+SGTileInfoLoader::SGTileInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
 
 bool SGTileInfoLoader::load() {
 
@@ -42,7 +38,7 @@ bool SGTileInfoLoader::load() {
 		}
 	}
 	catch (std::exception& ex) {
-		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", JsonFileName, ex.what());
+		_LogError_("%s 파싱중 오류가 발생하였습니다. %s", getConfigFileName(), ex.what());
 		return false;
 	}
 

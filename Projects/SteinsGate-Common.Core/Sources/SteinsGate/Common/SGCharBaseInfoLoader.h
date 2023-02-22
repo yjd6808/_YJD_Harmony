@@ -14,6 +14,8 @@
 struct SGCharBaseInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGCharBaseInfoLoader(DataManagerAbstract* manager);
+
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Char_Base; }
 	bool load() override;
 

@@ -18,6 +18,10 @@
 USING_NS_JC;
 USING_NS_JS;
 
+SGUIInfoLoader::SGUIInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
 bool SGUIInfoLoader::load()
 {
 	Json::Value root;

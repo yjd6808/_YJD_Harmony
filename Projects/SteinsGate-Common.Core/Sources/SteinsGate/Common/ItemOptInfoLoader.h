@@ -14,10 +14,14 @@
 struct ItemOptInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	ItemOptInfoLoader(DataManagerAbstract* manager);
 	virtual ~ItemOptInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::ItemOpt; }
 	bool load() override;
 
 	static void readItemOptInfo(Json::Value& optRoot, Out_ ItemOptInfo* optInfo);
+	ItemOptInfo* getData(const SGString& name);
+private:
+	SGHashMap<SGString, ItemOptInfo*> m_DataMapByName;
 };

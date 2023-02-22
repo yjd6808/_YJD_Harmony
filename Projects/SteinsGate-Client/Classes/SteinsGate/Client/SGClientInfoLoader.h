@@ -16,6 +16,7 @@
 struct SGClientInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGClientInfoLoader(DataManagerAbstract* manager);
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Client; }
 

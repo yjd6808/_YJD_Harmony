@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/SGDataManagerAbstract.h>
+#include <SteinsGate/Common/DataManagerAbstract.h>
 
 #include <SteinsGate/Common/ItemInfo.h>
 #include <SteinsGate/Client/SGMobInfo.h>
@@ -26,7 +26,7 @@
 
 using AnimationList = SGVector<SGAnimationInfo*>;
 
-class SGDataManager : public SGDataManagerAbstract
+class SGDataManager : public DataManagerAbstract
 {
 public:
 	static SGDataManager* get() {

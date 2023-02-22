@@ -16,6 +16,7 @@
 struct SGEffectInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGEffectInfoLoader(DataManagerAbstract* manager);
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Effect; }
 	bool load() override;
 

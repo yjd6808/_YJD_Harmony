@@ -14,6 +14,8 @@
 struct ItemInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	ItemInfoLoader(DataManagerAbstract* manager);
+
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Item; }
 	void loadArmor(const JCore::String& equipItemArmorPath, int armorType, int equipItemType);
 	

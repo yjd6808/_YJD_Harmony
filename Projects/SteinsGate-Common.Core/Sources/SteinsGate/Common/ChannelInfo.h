@@ -10,7 +10,7 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct ChannelBaseInfo : ConfigDataAbstract
+struct ChannelInfo : ConfigDataAbstract
 {
 	SGString Name;
 	EnteranceType_t EnteranceType;

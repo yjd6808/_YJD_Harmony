@@ -14,13 +14,15 @@ class SGGameScene : public SGSceneBase
 public:
     SGGameScene();
 
-    void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
-    void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
+    void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
+    void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
     void update(float dt) override;
     bool init() override;
     CREATE_FUNC(SGGameScene)
     ~SGGameScene() override;
+
+    SGMapLayer* getMap() { return m_pMapLayer; }
 
     void cmdLoadChar();
     void cmdEnterMap();

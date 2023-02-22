@@ -67,6 +67,7 @@ bool SGGameScene::init()
     m_pGridLayer->setAnchorPoint(Vec2::ZERO);
     m_pGridLayer->setVisible(false);
     m_pGridLayer->retain();
+    //this->addChild(m_pGridLayer);
     
 
     cmdEnterMap();
@@ -85,7 +86,7 @@ void SGGameScene::cmdLoadChar() {
     CorePlayer_v->setPositionRealCenter(300, 200);
 
     CoreActorBox_v->registerPlayerOnMap(CorePlayer_v);
-
+    m_pMapLayer->getCamera()->setFollowTarget(CorePlayer_v);
 }
 
 void SGGameScene::cmdEnterMap() {
@@ -108,7 +109,6 @@ void SGGameScene::cmdEnterMap() {
 }
 
 void SGGameScene::onExit() {
-    //removeAllChildren();
     SGActorBox::get()->clearAll();
     //SGSceneBase::onExit();
 }

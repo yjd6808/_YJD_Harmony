@@ -20,7 +20,10 @@ struct ItemOptLevel
 
 struct ItemOptInfo : ConfigDataAbstract
 {
-	ItemOptInfo(int optLevelCount) : OptLevelList(optLevelCount) {}
+	ItemOptInfo(int optLevelCount)
+		: EName(0)
+		, Format(0)
+		, OptLevelList(optLevelCount) {}
 	~ItemOptInfo() override = default;
 
 	SGString EName;

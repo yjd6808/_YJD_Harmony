@@ -68,13 +68,13 @@ class Console
 	using TLockGuard = RecursiveLockGuard;
     using TLock = RecursiveLock;
 
-    static WinHandle     ms_hStdout;
-    static ConsoleColor	 ms_iDefaultColor;
-    static TLock         ms_ConsoleLock;
-    static bool          ms_UseConsoleLock;
-    static int           ms_iCursorPosX;
-    static int           ms_iCursorPosY;
-    static int           TempBufferLen;
+    inline static WinHandle     ms_hStdout = (WinHandle)-1;
+    inline static ConsoleColor	ms_iDefaultColor = LightGray;
+    inline static TLock         ms_ConsoleLock{};
+    inline static bool          ms_UseConsoleLock{};
+    inline static int           ms_iCursorPosX{};
+    inline static int           ms_iCursorPosY{};
+    inline static int           TempBufferLen = 1024;
 public:
     static const char*   VTForeColor[ConsoleColor::Max];
     static const char*   VTBackColor[ConsoleColor::Max];

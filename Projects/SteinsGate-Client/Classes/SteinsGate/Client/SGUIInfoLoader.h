@@ -15,6 +15,7 @@
 struct SGUIInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGUIInfoLoader(DataManagerAbstract* manager);
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::UI; }
 	bool load() override;
 

@@ -14,6 +14,8 @@
 struct SGCharInfoLoader : SGCharBaseInfoLoader
 {
 public:
+	SGCharInfoLoader(DataManagerAbstract* manager);
+
 	bool load() override;
 	static void readDefaultVisualInfo(Json::Value& charRoot, Out_ SGCharInfo* charInfo);
 };

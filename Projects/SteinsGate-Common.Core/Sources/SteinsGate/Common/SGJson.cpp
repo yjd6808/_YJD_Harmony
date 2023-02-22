@@ -11,7 +11,7 @@
 #include <SteinsGate/Common/SGTextParser.h>
 
 SGString SGJson::getString(Json::Value& value) {
-	DebugAssertMsg(!value.isNull(), "값이 없습니다.");
+	DebugAssertMsg(!value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
 	const char* pBegin;
 	const char* pEnd;
 	value.getString(&pBegin, &pEnd);
@@ -34,7 +34,7 @@ SGString SGJson::getStringOrNull(Json::Value& value)
 	return getString(value);
 }
 
-void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, ThicknessBox& info) {
+void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, Out_ ThicknessBox& info) {
 
 	int num[4];
 	SGTextParser::parserIntNumbers(SGJson::getString(thicknessRoot), num, 4);
@@ -45,7 +45,7 @@ void SGJson::parseThicknessInfo(Json::Value& thicknessRoot, ThicknessBox& info) 
 	info.Height = (float)num[3];
 }
 
-void SGJson::parseIntNumber3(Json::Value& root, int& num1, int& num2, int& num3) {
+void SGJson::parseIntNumber3(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3) {
 	int num[3];
 	SGTextParser::parserIntNumbers(SGJson::getString(root), num, 3);
 
@@ -54,7 +54,7 @@ void SGJson::parseIntNumber3(Json::Value& root, int& num1, int& num2, int& num3)
 	num3 = num[2];
 }
 
-void SGJson::parseIntNumber4(Json::Value& root, int& num1, int& num2, int& num3, int& num4) {
+void SGJson::parseIntNumber4(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3, Out_ int& num4) {
 
 	int num[4];
 	SGTextParser::parserIntNumbers(SGJson::getString(root), num, 4);
@@ -65,18 +65,18 @@ void SGJson::parseIntNumber4(Json::Value& root, int& num1, int& num2, int& num3,
 	num4 = num[3];
 }
 
-void SGJson::parseIntNumberN(Json::Value& root, int* numArr, int count) {
+void SGJson::parseIntNumberN(Json::Value& root, Out_ int* numArr, int count) {
 	SGTextParser::parserIntNumbers(SGJson::getString(root), numArr, count);
 }
 
-void SGJson::parseFloatNumber2(Json::Value& root, float& num1, float& num2) {
+void SGJson::parseFloatNumber2(Json::Value& root, Out_ float& num1, Out_ float& num2) {
 	float num[2];
 	SGTextParser::parserFloatNumbers(SGJson::getString(root), num, 2);
 	num1 = num[0];
 	num2 = num[1];
 }
 
-void SGJson::parseFloatNumberN(Json::Value& root, float* numArr, int count) {
+void SGJson::parseFloatNumberN(Json::Value& root, Out_ float* numArr, int count) {
 	SGTextParser::parserFloatNumbers(SGJson::getString(root), numArr, count);
 }
 

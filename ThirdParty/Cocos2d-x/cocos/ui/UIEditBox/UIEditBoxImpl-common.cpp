@@ -287,7 +287,8 @@ void EditBoxImplCommon::setVisible(bool visible)
 void EditBoxImplCommon::setContentSize(const Size& size)
 {
     _contentSize = applyPadding(size);
-    CCLOG("[Edit text] content size = (%f, %f)", _contentSize.width, _contentSize.height);
+    // À±Á¤µµ
+    // CCLOG("[Edit text] content size = (%f, %f)", _contentSize.width, _contentSize.height);
     placeInactiveLabels(_contentSize);
 }
 

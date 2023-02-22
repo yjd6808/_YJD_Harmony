@@ -82,6 +82,9 @@ using SGFile = JCore::File;
 using SGDirectory = JCore::Directory;
 using SGStringUtil = JCore::StringUtil;
 
+using SGMemory = JCore::Memory;
+using SGArrays = JCore::Arrays;
+
 template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
 using SGHashMap = JCore::HashMap<TKey, TValue, TAllocator>;
 

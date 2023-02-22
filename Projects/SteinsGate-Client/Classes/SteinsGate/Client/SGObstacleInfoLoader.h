@@ -17,6 +17,7 @@
 struct SGObstacleInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGObstacleInfoLoader(DataManagerAbstract* manager);
 	~SGObstacleInfoLoader() override = default;
 
 	bool load() override;

@@ -7,13 +7,13 @@
 
 NS_JC_BEGIN
 
-WinHandle        Console::ms_hStdout = WinApi::InvalidHandleValue;
-ConsoleColor	 Console::ms_iDefaultColor = ConsoleColor::LightGray;
-Console::TLock   Console::ms_ConsoleLock{};
-bool             Console::ms_UseConsoleLock;
-int              Console::ms_iCursorPosX;
-int              Console::ms_iCursorPosY;
-int              Console::TempBufferLen = 1024;
+// WinHandle        Console::ms_hStdout = WinApi::InvalidHandleValue;
+// ConsoleColor	 Console::ms_iDefaultColor = ConsoleColor::LightGray;
+// Console::TLock   Console::ms_ConsoleLock{};
+// bool             Console::ms_UseConsoleLock;
+// int              Console::ms_iCursorPosX;
+// int              Console::ms_iCursorPosY;
+// int              Console::TempBufferLen = 1024;
 const char*      Console::VTForeColor[ConsoleColor::Max]{
     // 사이에 공백 없도록 주의!
     CSI_GRAPHIC_RENDITION(0;30),  // Black  

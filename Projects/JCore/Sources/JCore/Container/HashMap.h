@@ -35,10 +35,22 @@ struct BucketNode
 		, Hash(hash)
 	{}
 
-	BucketNode(const TBucketNode& other) = default;
-	BucketNode(TBucketNode&& other) = default;
-	TBucketNode& operator=(const BucketNode& other) = default;
-	TBucketNode& operator=(BucketNode&& other) = default;
+	BucketNode(const TBucketNode& other) { this->operator=(other); }
+	BucketNode(TBucketNode&& other) { this->operator=(Move(other)); }
+
+	TBucketNode& operator=(const BucketNode& other) {
+		Pair.Key = other.Pair.Key;
+		Pair.Value = other.Pair.Value;
+		Hash = other.Hash;
+		return *this;
+	}
+
+	TBucketNode& operator=(BucketNode&& other) {
+		Pair.Key = Move(other.Pair.Key);		// 이게 엄청 중요하디. 키가 Fundamental 타입이 아닐수가 있다.
+		Pair.Value = Move(other.Pair.Value);
+		Hash = other.Hash;
+		return *this;
+	}
 
 	TKeyValuePair Pair;
 	Int32U Hash{};	// 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
@@ -145,17 +157,27 @@ struct Bucket
 	void Initialize() {
 		int iAllocated;
 		DynamicArray = TAllocator::template Allocate<TBucketNode*>(sizeof(TBucketNode) * Capacity, iAllocated);
-		Memory::Set(DynamicArray, sizeof(TBucketNode) * Capacity, 0);
+		// Memory::Set(DynamicArray, sizeof(TBucketNode) * Capacity, 0);
 	}
 
 	void Expand(int newCapacity) {
 		int iAllocated;
 		TBucketNode* pNewDynamicArray = TAllocator::template Allocate<TBucketNode*>(sizeof(TBucketNode) * newCapacity, iAllocated);
-		Memory::Set(pNewDynamicArray, sizeof(TBucketNode) * newCapacity, 0);
+
+		// 2023/02/23
+		// 키가 String 같은 타입인 경우 그냥 대입 해버리면 Key의 생성자로 초기화가 수행이 안되어있기때문에 오류가 발생한다.
+		// String의 경우 m_pBuffer가 nullptr로 초기화가 되지 않음
+		// 기본 생성자를 호출해서 초기화를 해놔야한다.
+		if constexpr (IsPointerType_v<TValue> && !IsFundamentalType_v<TKey>) {
+			if constexpr (IsStringType_v<TKey>)
+				Memory::PlacementNewArray(pNewDynamicArray, newCapacity, TBucketNode{ { 0, nullptr }, 0 });	// 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
+			else
+				DebugAssert(false); // String도 아니고 int같은 기본 타입도 아닌 새로운 키타입을 추가하고자 한다면 성능향상을 위해 여기서 직접 수정 ㄱ, 그냥 Memory::PlacementNewArray(pNewDynamicArray, newCapacity)를 수행해도 동작하는데 문제없긴함
+		}
 
 		for (int i = 0; i < Size; i++) {
 			if constexpr (IsPointerType_v<TValue>)
-				pNewDynamicArray[i] = DynamicArray[i];
+				pNewDynamicArray[i] = Move(DynamicArray[i]);	// 2023/02/23 Move 필수.. Value가 포인터라지만 Key가 String 같은 타입일 수가 있다. 만약 Move를 안하고 Copy를 한다면 DynamicArray의 메모리를 해제하기전에 수동으로 소멸자 호출을 해줘야함.
 			else
 				Memory::PlacementNew(pNewDynamicArray[i], Move(DynamicArray[i]));
 		}
@@ -594,8 +616,6 @@ public:
 	}
 
 	ContainerType GetContainerType() override { return ContainerType::HashMap; }
-protected:
-
 
 	bool ExpandIfNeeded(int size) {
 		if (size < m_iCapacity) {
@@ -606,6 +626,10 @@ protected:
 		Expand(iCapacity);
 		return true;
 	}
+protected:
+
+
+
 
 	/// <summary>
 	/// 전달받은 사이즈 크기에 맞는 배열 크기를 반환해준다.

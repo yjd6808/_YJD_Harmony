@@ -17,6 +17,9 @@
 USING_NS_JS;
 USING_NS_JC;
 
+SGAttackDataInfoLoader::SGAttackDataInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
 
 bool SGAttackDataInfoLoader::load() {
 	Json::Value root;

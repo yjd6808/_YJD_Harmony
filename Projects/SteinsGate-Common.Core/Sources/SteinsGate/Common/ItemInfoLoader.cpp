@@ -10,10 +10,15 @@
 #include "ItemInfoLoader.h"
 #include "CommonCoreHeader.h"
 
+#include <SteinsGate/Common/DataManagerAbstract.h>
 #include <SteinsGate/Common/SGJson.h>
 
 USING_NS_JC;
 USING_NS_JS;
+
+ItemInfoLoader::ItemInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
 
 bool ItemInfoLoader::load() {
 

@@ -21,7 +21,7 @@ NS_JC_END
 #ifndef DebugAssert
     #if DebugMode
 		#define DebugAssertMsg(expect, fmt, ...)																\
-		do {																								\
+		do {																									\
 			JCore::Detail::__DebugAssertMsgImpl((expect), __FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__);	\
 		} while (0)
         #define DebugAssert(expect)            DebugAssertMsg(expect, "메시지 없음")

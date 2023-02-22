@@ -14,6 +14,7 @@
 struct CommonInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	CommonInfoLoader(DataManagerAbstract* manager);
 	virtual ~CommonInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Common; }

@@ -19,9 +19,10 @@ SGActorSprite::SGActorSprite(
 	const SGActorSpriteDataPtr& actorData)
 	: m_pActor(actor)
 	, m_spActorData(actorData)
-	, m_vPartsCanvas(actorData->Parts.Size(), nullptr)
-	, m_vParts(actorData->Parts.Size(), nullptr)
-	, m_vPartsBoundingBox(actorData->Parts.Size(), nullptr)
+	, m_vParts(actorData->Parts.Size())
+	// , m_vPartsCanvas(actorData->Parts.Size(), nullptr)
+	// , m_vParts(actorData->Parts.Size(), nullptr)
+	// , m_vPartsBoundingBox(actorData->Parts.Size(), nullptr)
 	, m_eDirection(SpriteDirection::Right)
 {
 }
@@ -63,35 +64,9 @@ bool SGActorSprite::init() {
 			_LogDebug_("액터 로딩: %s || sga: %s || img: %s || z: %d", ActorType::Name[m_pActor->getType()], szPackName.Source(), szImgName.Source(), vPartsData[i].ZOrder);
 		}
 
-		m_vPartsCanvas[i] = SGSprite::create();
-		m_vPartsCanvas[i]->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-		m_vPartsCanvas[i]->setContentSize({ 0, 0 });
-		m_vPartsCanvas[i]->setCascadeOpacityEnabled(false);
-		m_vPartsCanvas[i]->setOpacity(0);
-		this->addChild(m_vPartsCanvas[i], i);	// 정렬된 순서대로 ZOrder 반영
-
-		m_vPartsBoundingBox[i] = SGDrawNode::create();
-		m_vParts[i] = SGActorPartSprite::create(
-			i,
-			iFrameCount,
-			this , 
-			m_vPartsCanvas[i],
-			m_vPartsBoundingBox[i],
-			&vPartsData[i], 
-			m_spActorData->Animations
-		);
-
-		// 프로젝틸은 캔버스를 사용하지 않을 거기 땜에
-		// 앵커를 0.5, 0.5로 하도록 한다.
-		// 캔버스 위에서 그려지는 캐릭터나 몬스터, 기타 오브젝트들은 ZERO로 처리하도록..
-		if (m_pActor->getType() == ActorType::Projectile) {
-			m_vParts[i]->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-			m_vPartsCanvas[i]->addChild(m_vPartsBoundingBox[i]);
-		} else {
-			m_vParts[i]->setAnchorPoint(Vec2::ZERO);
-			m_vParts[i]->addChild(m_vPartsBoundingBox[i]);
-		}
-		m_vPartsCanvas[i]->addChild(m_vParts[i]);
+		PartData partData = createPart(vPartsData[i], i, iFrameCount);
+		m_vParts.PushBack(partData);
+		this->addChild(partData.Canvas, i);	// 정렬된 순서대로 ZOrder 반영
 	}
 
 	return true;
@@ -99,19 +74,19 @@ bool SGActorSprite::init() {
 
 void SGActorSprite::update(float dt) {
 	for (int i = 0; i < m_vParts.Size(); ++i) {
-		m_vParts[i]->update(dt);
+		m_vParts[i].Part->update(dt);
 	}
 }
 
 void SGActorSprite::runAnimation(int code) {
 	for (int i = 0; i < m_vParts.Size(); ++i) {
-		m_vParts[i]->runAnimation(code);
+		m_vParts[i].Part->runAnimation(code);
 	}
 }
 
 void SGActorSprite::runAnimation(int code, int startFrameIndexInAnimation) {
 	for (int i = 0; i < m_vParts.Size(); ++i) {
-		m_vParts[i]->runAnimation(code, startFrameIndexInAnimation);
+		m_vParts[i].Part->runAnimation(code, startFrameIndexInAnimation);
 	}
 }
 
@@ -160,7 +135,7 @@ void SGActorSprite::setBackwardDirection() {
 
 void SGActorSprite::pauseAnimation() {
 	for (int i = 0; i < m_vParts.Size(); ++i) {
-		SGActorPartAnimation* pAnimation = m_vParts[i]->getRunningAnimation();
+		SGActorPartAnimation* pAnimation = m_vParts[i].Part->getRunningAnimation();
 
 		if (pAnimation)
 			pAnimation->pause();
@@ -169,7 +144,7 @@ void SGActorSprite::pauseAnimation() {
 
 void SGActorSprite::pauseAnimation(float delay) {
 	for (int i = 0; i < m_vParts.Size(); ++i) {
-		SGActorPartAnimation* pAnimation = m_vParts[i]->getRunningAnimation();
+		SGActorPartAnimation* pAnimation = m_vParts[i].Part->getRunningAnimation();
 
 		if (pAnimation)
 			pAnimation->pauseTime(delay);
@@ -178,7 +153,7 @@ void SGActorSprite::pauseAnimation(float delay) {
 
 void SGActorSprite::resumeAnimation() {
 	for (int i = 0; i < m_vParts.Size(); ++i) {
-		SGActorPartAnimation* pAnimation = m_vParts[i]->getRunningAnimation();
+		SGActorPartAnimation* pAnimation = m_vParts[i].Part->getRunningAnimation();
 
 		if (pAnimation)
 			pAnimation->resume();
@@ -186,23 +161,58 @@ void SGActorSprite::resumeAnimation() {
 }
 
 SGActorPartSprite* SGActorSprite::getBodyPart() {
-	return m_vParts[0];
+	return m_vParts[0].Part;
 }
 
 SGNode* SGActorSprite::getBodyCanvas() {
-	return m_vParts[0]->getCanvas();
+	return m_vParts[0].Part->getCanvas();
 }
 
 SGSize SGActorSprite::getBodyCanvasSize() {
-	return m_vParts[0]->getCanvas()->getContentSize();
+	return m_vParts[0].Part->getCanvas()->getContentSize();
 }
 
 SGSize SGActorSprite::getBodyPartSize() {
-	return m_vParts[0]->getPartBoundingBox()->getContentSize();
+	return m_vParts[0].Part->getPartBoundingBox()->getContentSize();
 }
 
 SGVec2 SGActorSprite::getBodyPartPosition() {
-	return m_vParts[0]->getPosition();
+	return m_vParts[0].Part->getPosition();
+}
+
+SGActorSprite::PartData SGActorSprite::createPart(const ActorPartSpriteData& partSpriteData, int partIndex, int frameCount) {
+	PartData partData;
+
+	// 캔버스 위에 파츠를 그린다.
+	partData.Canvas = SGSprite::create();
+	partData.Canvas->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+	partData.Canvas->setContentSize({ 0, 0 });
+	partData.Canvas->setCascadeOpacityEnabled(false);
+	partData.Canvas->setOpacity(0);
+	partData.BoundingBox = SGDrawNode::create();
+	partData.Part = SGActorPartSprite::create(
+		partIndex,
+		frameCount,
+		this,
+		partData.Canvas,
+		partData.BoundingBox,
+		partSpriteData,
+		m_spActorData->Animations
+	);
+
+	// 프로젝틸은 캔버스를 사용하지 않을 거기 땜에
+	// 앵커를 0.5, 0.5로 하도록 한다.
+	// 캔버스 위에서 그려지는 캐릭터나 몬스터, 기타 오브젝트들은 ZERO로 처리하도록..
+	if (m_pActor->getType() == ActorType::Projectile) {
+		partData.Part->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		partData.Canvas->addChild(partData.BoundingBox);
+	}
+	else {
+		partData.Part->setAnchorPoint(Vec2::ZERO);
+		partData.Part->addChild(partData.BoundingBox);
+	}
+	partData.Canvas->addChild(partData.Part);
+	return partData;
 }
 
 SpriteDirection_t SGActorSprite::getSpriteDirection() {
@@ -210,13 +220,70 @@ SpriteDirection_t SGActorSprite::getSpriteDirection() {
 }
 
 int SGActorSprite::getRunningAnimationCode() {
-	SGActorPartAnimation* pRunningAnimation = m_vParts[0]->getRunningAnimation();
+	SGActorPartAnimation* pRunningAnimation = m_vParts[0].Part->getRunningAnimation();
 	DebugAssertMsg(pRunningAnimation != nullptr, "실행중인 애니메이션이 없을 수 없습니다.");
 	return pRunningAnimation->getAnimationCode();
 }
 
 SGActorPartAnimation* SGActorSprite::getRunningAnimation() {
-	SGActorPartAnimation* pRunningAnimation = m_vParts[0]->getRunningAnimation();
+	SGActorPartAnimation* pRunningAnimation = m_vParts[0].Part->getRunningAnimation();
 	DebugAssertMsg(pRunningAnimation != nullptr, "실행중인 애니메이션이 없을 수 없습니다.");
 	return pRunningAnimation;
+}
+
+void SGActorSprite::updateSpriteData(const SGActorSpriteDataPtr& spriteData) {
+
+	// 다른 부위만 업데이트 해줘야함
+	SGVector<ActorPartSpriteData>& vPartsData = m_spActorData->Parts;
+	// vPartsData.Sort([](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
+
+	SharedPtr<bool[]> bNewPart = MakeShared<bool[]>(vPartsData.Size(), false);
+
+	// 새로 기존 재생된 애니메이션 정보로 싱크 조정
+	int AnimationCode;
+	bool Removed[64];
+	float m_fRunningFrameTime;
+	float m_fPauseDelay;
+	float m_fPlaySpeed;
+	int m_iFrameIndexInAnimation;
+	bool m_bFinished;
+	bool m_bPaused;
+	bool m_bZeroFramePaused;
+	bool m_bLoopSequence;		// 켜져있으면 한번 더 돔
+
+
+	
+
+	// 교체되어야하는 파츠들을 찾는다.
+	SGVector<PartData> vRemoveParts;
+
+	// 1. 교체되어야하는 파츠들을 찾는다.
+	m_vParts.Extension().Filter([&vPartsData](PartData& partData) {
+		ActorPartSpriteData pTargetPartData = partData.Part->getPartData();
+
+		bool bNeedToUpdate = true;
+		for (int i = 0; i < vPartsData.Size(); ++i) {
+
+			if (vPartsData[i].ImgIndex == pTargetPartData.ImgIndex &&
+				vPartsData[i].SgaIndex == pTargetPartData.SgaIndex) {
+				bNeedToUpdate = false;
+				break;
+			}
+
+		}
+
+		return bNeedToUpdate;
+
+	}).ForEach([&vRemoveParts](PartData& partData) {
+		vRemoveParts.PushBack(partData);
+	});
+
+	vRemoveParts.Extension().ForEach([](PartData& removePart) {
+		//int iRemovePartIndex = removePart->getPartIndex();
+
+		//m_vParts.RemoveAt();
+		//m_vPartsCanvas.RemoveAt()
+
+	});
+
 }

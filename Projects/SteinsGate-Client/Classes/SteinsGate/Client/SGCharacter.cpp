@@ -83,6 +83,11 @@ void SGCharacter::initActorSprite() {
 	spActorSpriteData->Parts = m_VisualInfo;
 	spActorSpriteData->Animations = animationList;
 
+	if (m_pActorSprite != nullptr) {
+		m_pActorSprite->updateSpriteData(spActorSpriteData);
+		return;
+	}
+
 	m_pActorSprite = SGActorSprite::create(this, spActorSpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
 	this->addChild(m_pActorSprite);

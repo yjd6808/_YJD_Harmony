@@ -3,7 +3,7 @@
     "__comment__1": "UI 구성 목록",
     "__comment__2": "horizontal_align: 0(l), 1(c), 2(r)",
     "__comment__3": "vertical_align: 0(t), 1(c), 2(b)",
-    "__comment__4": "type group(0) button(1) label(2) sprite(3)",
+    "__comment__4": "type group(0) button(1) label(2) sprite(3) editbox(4)",
 
     "ui_element": [
         {
@@ -41,6 +41,7 @@
             "vertical_align": 2,
             "text": "종료"
         }
+       
     ],
 
     "ui_group": [

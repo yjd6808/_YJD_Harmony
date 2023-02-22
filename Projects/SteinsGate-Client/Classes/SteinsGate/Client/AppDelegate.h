@@ -12,22 +12,25 @@ public:
 
     virtual void initGLContextAttrs();
 
+	void CreateOpenGLWindow();
+	void CreateWorldScene();
+
     /**
-    @brief    Implement Director and Scene init code here.
-    @return true    Initialize success, app continue.
-    @return false   Initialize failed, app terminate.
+    @brief    디렉터 씬 초기화 코드 삽입
+    @return true    작업 성공시 앱은 계속 실행된다.
+    @return false   앱 종료
     */
     virtual bool applicationDidFinishLaunching();
 
     /**
-    @brief  Called when the application moves to the background
-    @param  the pointer of the application
+    @brief  백그라운드 어플리케이션으로 이동시 호출
+    @param  애플리케이션 포인터
     */
     virtual void applicationDidEnterBackground();
 
     /**
-    @brief  Called when the application reenters the foreground
-    @param  the pointer of the application
+    @brief  포그라운드 애플리케이션으로 이동시 호출
+    @param  애플리케이션 포인터
     */
     virtual void applicationWillEnterForeground();
 };

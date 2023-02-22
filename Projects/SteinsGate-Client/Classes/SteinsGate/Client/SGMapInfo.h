@@ -42,6 +42,7 @@ struct SGMapInfo : ConfigDataAbstract
 	bool checkWall(const SGVec2& pos);
 	int getAreaWidth() { return Area[0].Length(); }
 	int getAreaHeight() { return Area.Size(); }
+	SGSize getMapSize() { return { float(MapWidth), float(MapHeight) }; }
 };
 
 

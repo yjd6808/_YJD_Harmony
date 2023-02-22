@@ -352,6 +352,9 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\VisualHelper.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGCamera.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePackManager.h">
@@ -672,6 +675,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\PackHelper.h">
       <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGCamera.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

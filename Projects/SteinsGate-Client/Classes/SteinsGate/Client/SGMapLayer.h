@@ -5,6 +5,7 @@
 
 #include <SteinsGate/Client/SGActorBox.h>
 #include <SteinsGate/Client/SGMapInfo.h>
+#include <SteinsGate/Client/SGCamera.h>
 
 class SGMapLayer : public SGLayer
 {
@@ -29,9 +30,11 @@ public:
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
 	SGMapInfo* getMapInfo();
+	SGCamera* getCamera();
 public:
 	bool m_bMapLoaded;
 
+	SGCamera* m_pCamera;
 	SGMapInfo* m_pMapInfo;
 	SGActorBox* m_pActorBox;
 };

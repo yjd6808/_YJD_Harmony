@@ -51,6 +51,8 @@ bool SGMapLayer::init() {
 	}
 
 	m_pActorBox = SGActorBox::get();
+	m_pCamera = SGCamera::create();
+	this->addChild(m_pCamera);
 	return true;
 }
 
@@ -68,17 +70,15 @@ SGMapInfo* SGMapLayer::getMapInfo() {
 	return m_pMapInfo;
 }
 
-
-void SGMapLayer::update(float dt) {
-	m_pActorBox->update(dt);
-
-	SGSize contentSize = CorePlayer_v->getActorSprite()->getBodyCanvas()->getContentSize();
-	SGVec2 canvasRealPos = this->getPosition() - (contentSize / 2) + CorePlayer_v->getActorSprite()->getPosition();
-
-	//_LogDebug_("%.f %.f", contentSize.width, contentSize.height);
+SGCamera* SGMapLayer::getCamera() {
+	return m_pCamera;
 }
 
 
+void SGMapLayer::update(float dt) {
+	m_pActorBox->update(dt);
+	m_pCamera->update(dt);
+}
 
 void SGMapLayer::loadMap(int mapCode) {
 	SGDataManager* pDataManager = SGDataManager::get();

@@ -28,6 +28,7 @@ using SGTexture = cocos2d::Texture2D;
 using SGDrawNode = cocos2d::DrawNode;
 using SGScene = cocos2d::Scene;
 using SGText = cocos2d::ui::Text;
+using SGEditBox = cocos2d::ui::EditBox;
 using SGLabel = cocos2d::Label;
 using SGEventKeyboard = cocos2d::EventKeyboard;
 using SGEventListenerKeyboard = cocos2d::EventListenerKeyboard;

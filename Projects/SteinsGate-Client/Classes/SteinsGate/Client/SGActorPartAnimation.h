@@ -64,6 +64,7 @@ public:
 	int getFrameIndex() { return m_vAnimationFrames[m_iFrameIndexInAnimation]->getFrameIndex(); }
 	int getPartIndex();
 	int getAnimationCode() { return m_pAnimationInfo->Code; }
+
 	SGFrameInfo* getFrameInfo(int frameIndexInAnimation);
 	SGFrameInfo* getRunningFrameInfo();
 

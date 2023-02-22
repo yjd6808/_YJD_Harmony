@@ -54,6 +54,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGAttackDataInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGCamera.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGCharAnimationInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGCharProjectileListener.cpp">
       <SubType>
@@ -364,6 +368,10 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAttackDataInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAttackDataInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGCamera.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGCharAnimationInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGCharProjectileListener.h">
       <SubType>

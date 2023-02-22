@@ -15,6 +15,7 @@
 struct MobBaseInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	MobBaseInfoLoader(DataManagerAbstract* manager);
 	virtual ~MobBaseInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Monster; }

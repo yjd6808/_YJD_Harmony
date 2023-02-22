@@ -14,6 +14,7 @@
 struct SGProjectileInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGProjectileInfoLoader(DataManagerAbstract* manager);
 	~SGProjectileInfoLoader() override = default;
 
 	ConfigFileType_t getConfigFileType() override { return  ConfigFileType::Projectile; }

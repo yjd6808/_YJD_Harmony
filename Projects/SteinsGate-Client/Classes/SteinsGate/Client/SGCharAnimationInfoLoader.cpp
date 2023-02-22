@@ -17,6 +17,10 @@
 USING_NS_JS;
 USING_NS_JC;
 
+SGCharAnimationInfoLoader::SGCharAnimationInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
 bool SGCharAnimationInfoLoader::load()
 {
 	Json::Value root;

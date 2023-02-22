@@ -8,6 +8,10 @@
 #include "Tutturu.h"
 #include "SGDataManager.h"
 
+#include <SteinsGate/Common/ItemOptInfoLoader.h>
+#include <SteinsGate/Common/ChannelInfoLoader.h>
+#include <SteinsGate/Common/EnchantInfoLoader.h>
+#include <SteinsGate/Common/ServerInfoLoader.h>
 #include <SteinsGate/Common/ItemInfoLoader.h>
 #include <SteinsGate/Client/SGActionInfoLoader.h>
 #include <SteinsGate/Client/SGMobInfoLoader.h>
@@ -25,28 +29,53 @@
 
 
 
+
 SGDataManager::SGDataManager()
-	: SGDataManagerAbstract()
+	: DataManagerAbstract()
 {}
 
 void SGDataManager::initializeLoader() {
-	 m_pConfigFileLoaders[ConfigFileType::Effect]			 = dbg_new SGEffectInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::Map]				 = dbg_new SGMapInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::Monster]			 = dbg_new SGMobInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::Obstacle]			 = dbg_new SGObstacleInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::Projectile]		 = dbg_new SGProjectileInfoLoader;
-	 // m_pConfigFileLoaders[ConfigFileType::Server]			 = 
-	 m_pConfigFileLoaders[ConfigFileType::Tile]				 = dbg_new SGTileInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::UI]				 = dbg_new SGUIInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::Action]			 = dbg_new SGActionInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::AI]				 = dbg_new SGAIInfoLoader;
+
+	// Effect
+	// Map
+	// Monster
+	// Obstacle
+	// Projectile
+	// Server
+	// Tile
+	// UI
+	// Action
+	// AI
+	// AttackBox
+	// AttackData
+	// Channel
+	// Char_Animation
+	// Char_Base
+	// Client
+	// Item
+	// ItemOpt
+	// Enchant
+	// Common
+
+	 m_pConfigFileLoaders[ConfigFileType::Effect]			 = dbg_new SGEffectInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Map]				 = dbg_new SGMapInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Monster]			 = dbg_new SGMobInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Obstacle]			 = dbg_new SGObstacleInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Projectile]		 = dbg_new SGProjectileInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Server]			 = dbg_new ServerInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Tile]				 = dbg_new SGTileInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::UI]				 = dbg_new SGUIInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Action]			 = dbg_new SGActionInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::AI]				 = dbg_new SGAIInfoLoader(this);
 	 // m_pConfigFileLoaders[ConfigFileType::AttackBox]
-	 m_pConfigFileLoaders[ConfigFileType::AttackData]		 = dbg_new SGAttackDataInfoLoader;
-	 // m_pConfigFileLoaders[ConfigFileType::Channel]
-	 m_pConfigFileLoaders[ConfigFileType::Char_Animation]	 = dbg_new SGCharAnimationInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::Char_Base]	     = dbg_new SGCharInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::Client]			 = dbg_new SGClientInfoLoader;
-	 m_pConfigFileLoaders[ConfigFileType::Item]				 = dbg_new ItemInfoLoader;
+	 m_pConfigFileLoaders[ConfigFileType::AttackData]		 = dbg_new SGAttackDataInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Channel]			 = dbg_new SGCharInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Char_Animation]	 = dbg_new SGCharAnimationInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Char_Base]	     = dbg_new SGCharInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Client]			 = dbg_new SGClientInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Item]				 = dbg_new ItemInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::ItemOpt]			 = dbg_new ItemOptInfoLoader(this);
+	// m_pConfigFileLoaders[ConfigFileType::Enchant]			 = dbg_new EnchantInfoLoader(this);
 	 m_bInitialized = true;
 }
 

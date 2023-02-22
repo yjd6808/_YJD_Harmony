@@ -61,7 +61,7 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 	}
 
 	// ConnectEx를 사용하기 위해서 클라이언트더라도 바인딩을 해줘야한다.
-	if (Bind({}) == false) {
+	if (!m_Socket.IsBinded() && Bind({}) == false) {
 		return false;
 	}
 

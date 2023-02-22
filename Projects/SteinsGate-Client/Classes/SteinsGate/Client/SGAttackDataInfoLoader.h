@@ -16,6 +16,7 @@
 struct SGAttackDataInfoLoader : ConfigFileLoaderAbstract
 {
 public:
+	SGAttackDataInfoLoader(DataManagerAbstract* manager);
 	~SGAttackDataInfoLoader() override = default;
 
 	bool load() override;

@@ -15,6 +15,10 @@
 USING_NS_JC;
 USING_NS_JS;
 
+SGObstacleInfoLoader::SGObstacleInfoLoader(DataManagerAbstract* manager)
+	: ConfigFileLoaderAbstract(manager)
+{}
+
 bool SGObstacleInfoLoader::load() {
 
 	Json::Value root;
