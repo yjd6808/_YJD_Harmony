@@ -19,88 +19,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using Path = System.IO.Path;
+using SGToolsCommon.ThirdParty;
 
 namespace SGToolsUI
 {
-
-    public class TestSize : INotifyPropertyChanged
-    {
-        private int _width = 0;
-        private int _height = 0;
-
-        public int Width
-        {
-            get { return (int)_width;}
-            set
-            {
-                _width = value;
-                OnPropertyChanged("Width");
-            }
-        }
-        public int Height
-        {
-            get { return (int)_height; }
-            set
-            {
-                _height = value;
-                OnPropertyChanged("Height");
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-    }
-    
-
-    public class Student
-    {
-        // XAML에서 생성가능하도록 하기위한 빈 생성자
-        public Student()
-        {
-            Age = 0;
-            Name = "";
-        }
-
-        // C#에서 활용하기위한 생성자
-        public Student(int age, string name)
-        {
-            Age = age;
-            Name = name;
-        }
-
-        public int Age { get; set; }
-        public string Name { get; set; }
-    }
-
-
-
-
-
     public partial class MainWindow : Window
     {
-        public static string Test = "오하요";
-
         private static string _binaryDir = Environment.CurrentDirectory;
-
-        
-
 
         public MainWindow()
         {
             InitializeComponent();
             SetVerticalScrollToEnd();
-
-         
-
-            // s.Width -> 100
-            // s.Height -> 100
-            // 타겟 -> 소스로 전파 제대로 됨.
+            Zlib.Decompress(new byte[32], 32);
         }
 
         public void AddChildBitmapImage(BitmapImage bitmap, double x, double y)

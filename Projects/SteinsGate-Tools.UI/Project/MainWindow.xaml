@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SGToolsUI"
-        xmlns:cv="clr-namespace:SGToolsCommon.Converter"
+        xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime">
     <Window.Resources>
     </Window.Resources>
