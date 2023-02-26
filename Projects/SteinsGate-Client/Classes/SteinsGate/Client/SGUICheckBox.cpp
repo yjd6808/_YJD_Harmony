@@ -222,7 +222,6 @@ bool SGUICheckBox::onMouseUp(SGEventMouse* mouseEvent) {
 	if (m_fnMouseClickCallback)
 		m_fnMouseClickCallback(mouseEvent);
 
-
 	return false;
 }
 
