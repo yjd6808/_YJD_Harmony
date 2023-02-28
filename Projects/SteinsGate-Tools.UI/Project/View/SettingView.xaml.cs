@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,11 @@ namespace SGToolsUI.View
             ViewModel.View = this;
             Resources.Add("ViewModel", ViewModel);
             InitializeComponent();
+        }
+
+        private void SettingView_OnClosing(object? sender, CancelEventArgs e)
+        {
+            ViewModel.Commander.Finalize();
         }
     }
 }

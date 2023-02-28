@@ -22,7 +22,7 @@ using System.Windows.Shapes;
 
 namespace SGToolsCommon.Command
 {
-    public abstract class CommandAbstract : ICommand
+    public abstract class CommandAbstract : ICommand, IDisposable
     {
         public string Name => GetType().Name;
         public string Description { get; }
@@ -43,6 +43,8 @@ namespace SGToolsCommon.Command
         }
         public abstract void Execute(object? parameter);
         public event EventHandler? CanExecuteChanged;
+
+        public virtual void Dispose() { }
     }
 
    

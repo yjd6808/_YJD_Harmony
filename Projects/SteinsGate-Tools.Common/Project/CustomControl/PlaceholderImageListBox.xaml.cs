@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsCommon.Custom
+namespace SGToolsCommon.CustomControl
 {
     /// <summary>
     /// Interaction logic for PlaceholderImageListBox.xaml

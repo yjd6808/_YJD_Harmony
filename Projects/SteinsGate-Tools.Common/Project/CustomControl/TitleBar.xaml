@@ -3,23 +3,24 @@
     생성일: 2/27/2023 11:52:42 AM
 -->
 
-
-<UserControl x:Class="SGToolsCommon.Custom.TitleBar"
+<UserControl x:Class="SGToolsCommon.CustomControl.TitleBar"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:SGToolsCommon.Custom"
+             xmlns:local="clr-namespace:SGToolsCommon.CustomControl"
              xmlns:p="clr-namespace:SGToolsCommon.Provider"
-             xmlns:style="clr-namespace:SGToolsCommon.Style"
-             mc:Ignorable="d">
+             xmlns:style="clr-namespace:SGToolsCommon.CustomStyle"
+             mc:Ignorable="d"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Style/ImageButton.xaml" />
+                <ResourceDictionary Source="../CustomStyle/ImageButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+
 
     <StackPanel>
         <Grid>
@@ -30,7 +31,8 @@
                 <ColumnDefinition Width="30"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="_tbTitle" Text="제목을 넣어주세요" VerticalAlignment="Center" FontSize="16"
+            <!--소스 설정을 해야 알림을 받음-->
+            <TextBlock x:Name="_tbTitle" Text="{Binding Title, RelativeSource={RelativeSource  AncestorType={x:Type local:TitleBar}}}" VerticalAlignment="Center" FontSize="16"
                        Margin="5, 0, 0, 0">
             </TextBlock>
             <Button Grid.Column="1" Style="{StaticResource ImageButton}" Click="MinimizeOnClick">

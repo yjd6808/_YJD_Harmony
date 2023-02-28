@@ -24,6 +24,7 @@ namespace SGToolsCommon.Command
 {
     public abstract class CommandCenter
     {
+        private bool _finalized;
         private Dictionary<string, CommandAbstract> _commandMap = new();
 
         public void Add(CommandAbstract command)
@@ -39,6 +40,9 @@ namespace SGToolsCommon.Command
 
         public void Execute(string commandName, object? param = null)
         {
+            if (_finalized)
+                throw new Exception("이미 파이날라이즈드 된 커맨드 센터입니다.");
+
             if (!_commandMap.ContainsKey(commandName))
             {
                 MessageBox.Show($"{commandName} 커맨드를 실행할 수 없습니다.");
@@ -46,6 +50,13 @@ namespace SGToolsCommon.Command
             }
 
             _commandMap[commandName].Execute(param);
+        }
+
+        public void Finalize()
+        {
+            foreach (CommandAbstract command in _commandMap.Values)
+                command.Dispose();
+            _finalized = true;
         }
     }
 }

@@ -7,7 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,19 +21,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
 
-namespace SGToolsCommon.Custom
+namespace SGToolsCommon.CustomControl
 {
     public partial class TitleBar : UserControl
     {
+        
+
         public string Title
         {
-            get => _tbTitle.Text;
-            set => _tbTitle.Text = value;
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
         }
 
-       
+
         private Window _window;
 
         public TitleBar()
@@ -83,5 +88,28 @@ namespace SGToolsCommon.Custom
         {
             _window.WindowState = WindowState.Minimized;
         }
+
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Ttitle",
+            typeof(string),
+            typeof(TitleBar),
+            new PropertyMetadata(null) { DefaultValue = "제목을 입력해주세요." });
+
+        /*
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+        */
     }
 }

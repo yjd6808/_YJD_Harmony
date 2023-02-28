@@ -43,6 +43,8 @@ namespace SGToolsUI.Command.MainViewCommand
 
                 ViewModel.PackManager.SgaDirectory = ViewModel.Setting.SgaDirectory;
                 ViewModel.PackManager.LoadSga(SgaPackageType.Interface);
+
+                ViewModel.ResourceSelectionStatus = string.Empty;
             }
             catch (Exception e)
             {

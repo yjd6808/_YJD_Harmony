@@ -45,7 +45,7 @@ namespace SGToolsCommon.Sga
         public bool Loaded => _elementMap.Count > 0;
         public bool IndexLoaded => _indexLoaded;
         public string FileName => System.IO.Path.GetFileName(_path);
-        public string FileNameWithOutExt => System.IO.Path.GetFileNameWithoutExtension(_path);
+        public string FileNameWithoutExt => System.IO.Path.GetFileNameWithoutExtension(_path);
         public ObservableCollection<SgaElementHeader> ElementHeaderList => _elementHeaderList;
 
         // Xaml 바인딩용

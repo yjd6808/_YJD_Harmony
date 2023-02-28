@@ -26,11 +26,7 @@ SgaDataPtr SgaSprite::Decompress() {
 
 	int iDecompressedSize = m_Rect.Width * m_Rect.Height * (m_eColorFormat == SgaColorFormat::eArgb8888 ? 4 : 2);
 
-    if (iDecompressedSize == 48500) {
-        int a = 40;
-    }
-
-    SgaDataPtr spDecompressed = nullptr;
+      SgaDataPtr spDecompressed = nullptr;
     Byte* pReadData = m_spData.GetPtr();
 
 

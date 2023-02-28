@@ -21,6 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.Command;
 using SGToolsUI.Command.MainViewCommand;
+using SGToolsUI.Command.MainViewCommand.Control;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command
@@ -36,7 +37,16 @@ namespace SGToolsUI.Command
         public CommandAbstract ReloadPackage { get; }
         public CommandAbstract SelectPackage { get; }
         public CommandAbstract SelectElement { get; }
+        public CommandAbstract SelectSprite { get; }
+        
 
+
+        // =================================================
+        // 컨트롤 커맨드 목록 (개발자가 직접 호출할 일없는..)
+        // =================================================
+        public CommandAbstract MouseMoveOnWindow { get; }
+        public CommandAbstract SpritePreview { get; }
+        public CommandAbstract CanvasWheel{ get; }
 
         public MainCommandCenter(MainViewModel viewModel)
         {
@@ -46,6 +56,11 @@ namespace SGToolsUI.Command
             Add(ReloadPackage = new ReloadPackage(ViewModel) );
             Add(SelectPackage = new SelectPackage(ViewModel) { UseParameter = true });
             Add(SelectElement = new SelectElement(ViewModel) { UseParameter = true });
+            Add(SelectSprite = new SelectSprite(ViewModel) { UseParameter = true });
+
+            Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });
+            Add(SpritePreview = new SpritePreview(ViewModel) { UseParameter = true });
+            Add(CanvasWheel = new CanvasWheel(ViewModel) { UseParameter = true });
         }
     }
 }

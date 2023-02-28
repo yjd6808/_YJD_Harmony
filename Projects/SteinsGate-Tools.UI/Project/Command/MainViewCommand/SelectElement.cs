@@ -60,6 +60,8 @@ namespace SGToolsUI.Command.MainViewCommand
                     ViewModel.SelectedImage = selectedElement as SgaImage ?? throw new Exception("말도 안됩니다. SgaImage 타입인데 캐스팅에 실패했습니다.");
                     break;
             }
+
+            ViewModel.ResourceSelectionStatus = $"{selectedPackage.FileNameWithoutExt} ➯ {selectedElement.Header.NameWithoutExt}";
         }
     }
 }

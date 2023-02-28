@@ -15,10 +15,7 @@
 
 	<ItemGroup>
 		<None Remove="Resource\Icon\ui_button.ico" />
-		<None Remove="Resource\Icon\ui_button2.ico" />
-		<None Remove="Resource\Icon\ui_checkbox.ico" />
-		<None Remove="Resource\Icon\ui_checkbox2.ico" />
-		<None Remove="Resource\Icon\ui_editbox2.ico" />
+		<None Remove="Resource\Icon\ui_editbox.ico" />
 		<None Remove="Resource\Icon\ui_group.ico" />
 		<None Remove="Resource\Icon\ui_group_selected.ico" />
 		<None Remove="Resource\Icon\ui_label.ico" />
@@ -26,17 +23,13 @@
 
 	<ItemGroup>
 		<Resource Include="Resource\Icon\ui_button.ico" />
-		<Resource Include="Resource\Icon\ui_button2.ico" />
-		<Resource Include="Resource\Icon\ui_checkbox.ico" />
-		<Resource Include="Resource\Icon\ui_checkbox2.ico" />
-		<Resource Include="Resource\Icon\ui_editbox2.ico" />
+		<Resource Include="Resource\Icon\ui_editbox.ico" />
 		<Resource Include="Resource\Icon\ui_group.ico" />
 		<Resource Include="Resource\Icon\ui_group_selected.ico" />
 		<Resource Include="Resource\Icon\ui_label.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Custom\" />
 	  <Folder Include="Resource\Font\" />
 	</ItemGroup>
 

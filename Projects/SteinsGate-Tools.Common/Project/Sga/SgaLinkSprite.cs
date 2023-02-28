@@ -23,16 +23,20 @@ namespace SGToolsCommon.Sga
 {
     public class SgaLinkSprite : SgaSpriteAbstract
     {
-        private int _targetFrameIndex;
-
         public SgaLinkSprite(SgaImage parent, int targetFrameIndex, int frameIndex) : base(SgaSpriteType.LinkSprite, SgaColorFormat.Link, parent, frameIndex)
         {
-            _targetFrameIndex = targetFrameIndex;  
+            TargetFrameIndex = targetFrameIndex;  
         }
 
         public override bool IsDummy => false;
         public override bool Loaded => true;
-        public int TargetFrameIndex => _targetFrameIndex;
+        public override int Width => 1;
+        public override int Height => 1;
+        public override int X => 1;
+        public override int Y => 1;
+        public override int FrameWidth => 1;
+        public override int FrameHeight => 1;
+        public override int TargetFrameIndex { get; }
 
         public override void Load()
         {

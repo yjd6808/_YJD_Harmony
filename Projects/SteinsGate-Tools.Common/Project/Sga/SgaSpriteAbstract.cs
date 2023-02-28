@@ -37,6 +37,13 @@ namespace SGToolsCommon.Sga
         public bool IsLink => SpriteType == SgaSpriteType.LinkSprite;
         public abstract bool IsDummy { get; }
         public abstract bool Loaded { get; }
+        public abstract int Width { get; }
+        public abstract int Height { get; }
+        public abstract int X { get; }
+        public abstract int Y { get; }
+        public abstract int FrameWidth { get; }
+        public abstract int FrameHeight { get; }
+        public abstract int TargetFrameIndex { get; }
 
         public abstract void Load();
         public abstract void Unload();

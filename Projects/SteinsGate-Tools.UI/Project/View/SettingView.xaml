@@ -11,7 +11,7 @@
         xmlns:local="clr-namespace:SGToolsUI.View"
         xmlns:m="clr-namespace:SGToolsUI.Model"
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
-        xmlns:cus="clr-namespace:SGToolsCommon.Custom;assembly=SGToolsCommon"
+        xmlns:cus="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
         xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -21,6 +21,7 @@
         FontSize="14"
         MinWidth="500"
         SizeToContent="WidthAndHeight"
+        Closing="SettingView_OnClosing"
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel DataContext="{Binding Path=ViewModel}">

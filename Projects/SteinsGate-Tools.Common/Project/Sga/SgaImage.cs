@@ -120,6 +120,9 @@ namespace SGToolsCommon.Sga
                 if (compressMode == SgaCompressMode.None)
                     dataLength = width * height * (format == SgaColorFormat.Argb8888 ? 4 : 2);
 
+                
+                image._spriteList[i] = new SgaSprite(rect, format, compressMode, dataOffset, dataLength, image, i);
+
                 if (indexOnly)
                 {
                     stream.Seek(dataOffset + dataLength, SeekOrigin.Begin);
@@ -127,7 +130,6 @@ namespace SGToolsCommon.Sga
                 }
 
 
-                image._spriteList[i] = new SgaSprite(rect, dataOffset, dataLength, format, image, i);
                 image._spriteList[i].Load();
             }
         }
@@ -180,7 +182,7 @@ namespace SGToolsCommon.Sga
                 int dataOffset = (int)stream.Position;
                 int dataLength = temp.Item4;
 
-                image._spriteList[i] = new SgaSprite(temp.Item2, dataOffset, dataLength, temp.Item1, image, i);
+                image._spriteList[i] = new SgaSprite(temp.Item2, temp.Item1, temp.Item3, dataOffset, dataLength, image, i);
 
                 if (indexOnly)
                 {

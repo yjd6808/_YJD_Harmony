@@ -54,5 +54,20 @@ namespace SGToolsCommon.Extension
             }
             return null;
         }
+
+        public static Point GetOffsetIn(this Visual depObj, Visual relative)
+        {
+            // Visual 객체의 위치를 기준이 되는 UIElement 객체를 기준으로 변환합니다.
+            GeneralTransform transform = depObj.TransformToVisual(relative);
+
+            // 변환된 위치를 Point 객체로 변환합니다.
+            return transform.Transform(new Point(0, 0));
+        }
+
+        public static Point GetOffsetInMonitor(this Visual depObj)
+        {
+            Vector offset = VisualTreeHelper.GetOffset(depObj);
+            return depObj.PointToScreen(new Point(offset.X, offset.Y));
+        }
     }
 }

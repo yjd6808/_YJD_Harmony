@@ -29,10 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resource\Image\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Resource\Icon\common_refresh.ico" />
     <Resource Include="Resource\Icon\win_close.ico" />
     <Resource Include="Resource\Icon\win_maximize.ico" />

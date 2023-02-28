@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using SGToolsCommon.Custom;
+using SGToolsCommon.CustomControl;
 using SGToolsCommon.Sga;
 using SGToolsCommon.ThirdParty;
 using SGToolsUI.ViewModel;
@@ -29,16 +29,24 @@ namespace SGToolsUI.View
     public partial class MainView : Window
     {
         public MainViewModel ViewModel { get; }
+        public DispatcherTimer Timer { get; }
 
         public MainView()
         {
             ViewModel = new MainViewModel();
             ViewModel.View = this;
+            Timer = new DispatcherTimer();
+            Timer.Interval = TimeSpan.FromSeconds(1/60.0f);
+            Timer.Tick += TimerTick;
             Resources.Add("ViewModel", ViewModel);
-            InitializeComponent();
 
-            var f = PackageListBox.Items[0];
+            InitializeComponent();
             SetVerticalScrollToEnd();
+        }
+
+        private void TimerTick(object? sender, EventArgs e)
+        {
+
         }
 
         public void AddChildBitmapImage(BitmapImage bitmap, double x, double y)
@@ -64,36 +72,13 @@ namespace SGToolsUI.View
                 double beforeTop = Canvas.GetTop(child);
                 Canvas.SetTop(child, beforeTop + height);
             }
+            
         }
 
       
-        private void View_OnMouseWheel(object sender, MouseWheelEventArgs e)
+        private void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
-            double prevWidth = MainCanvas.Width;
-            double prevHeight = MainCanvas.Height;
-
-            if (e.Delta > 0)
-            {
-                MainCanvas.Width += 10.0f;
-                MainCanvas.Height = MainCanvas.Width * Constant.ResoltionRatio;
-            }
-            else
-            {
-                if (MainCanvas.Width <= 100.0f)
-                    return;
-
-                MainCanvas.Width -= 10.0f;
-                MainCanvas.Height = MainCanvas.Width * Constant.ResoltionRatio;
-            }
-
-            double deltaX = MainCanvas.Width / Constant.ResolutionWidth;
-            double deltaY = MainCanvas.Height / Constant.ResolutionHeight;
-
-            ScaleTransform scaleTransform = new ScaleTransform(deltaX, deltaY);
-            MainCanvas.LayoutTransform = scaleTransform;
-
-            Debug.WriteLine(this.ActualWidth);
-            Debug.WriteLine(MainDockPanel.ActualWidth);
+            ViewModel.Commander.Finalize();
         }
     }
 }

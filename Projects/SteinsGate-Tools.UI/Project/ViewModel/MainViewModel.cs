@@ -38,6 +38,57 @@ namespace SGToolsUI.ViewModel
             Commander.Execute(nameof(ReloadPackage));
         }
 
+
+        public string ResourceSelectionStatus
+        {
+            get => _resourceSelectionStatus;
+            set
+            {
+                _resourceSelectionStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string CanvasSelectionStatus
+        {
+            get => _canvasSelectionStatus;
+            set
+            {
+                _canvasSelectionStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Vector MouseOnMonitor
+        {
+            get => _mouseOnMonitor;
+            set
+            {
+                _mouseOnMonitor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Vector MouseOnWindow
+        {
+            get => _mouseOnWindow;
+            set
+            {
+                _mouseOnWindow = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Vector MouseOnCanvas
+        {
+            get => _mouseOnCanvas;
+            set
+            {
+                _mouseOnCanvas = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainView View { get; set; }
         public Setting Setting { get; set; }
         public MainCommandCenter Commander { get; }
@@ -63,9 +114,13 @@ namespace SGToolsUI.ViewModel
             }
         }
 
-      
-
+        private Vector _mouseOnWindow = new (0, 0);
+        private Vector _mouseOnMonitor = new(0, 0);
+        private Vector _mouseOnCanvas = new(0, 0);
+        private string _resourceSelectionStatus = string.Empty;
+        private string _canvasSelectionStatus = string.Empty;
         private SgaPackage _selectedPackage = new ();
         private SgaImage _selectedImage = new ();
     }
 }
+
