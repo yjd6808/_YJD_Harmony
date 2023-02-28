@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,25 +22,26 @@ using System.Windows.Shapes;
 
 namespace SGToolsCommon.Command
 {
-    public abstract class Command : ICommand
+    public abstract class CommandAbstract : ICommand
     {
-        public string Name { get; }
-        public string Decription { get; }
+        public string Name => GetType().Name;
+        public string Description { get; }
+        public bool UseParameter { get; set; }
 
 
-        public Command(string name, string decription)
+        public CommandAbstract(string description)
         {
-            Name = name;
-            Decription = decription;
+            Description = description;
         }
 
         public bool CanExecute(object? parameter)
         {
+            if (UseParameter && parameter == null)
+                throw new ArgumentNullException($"{Name} 커맨드의 파라미터는 널일 수 없습니다.");
+
             return true;
         }
-
         public abstract void Execute(object? parameter);
-
         public event EventHandler? CanExecuteChanged;
     }
 

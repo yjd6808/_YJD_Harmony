@@ -23,6 +23,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
+using System.Collections.ObjectModel;
 
 namespace SGToolsCommon.Sga
 {
@@ -34,10 +35,20 @@ namespace SGToolsCommon.Sga
             LoadVersion1,
             LoadVersion2,
         };
-        
 
-        private List<SgaSpriteAbstract> _spriteList;
+
+        private ObservableCollection<SgaSpriteAbstract> _spriteList;
         private int _waitForLoading;
+
+        public ObservableCollection<SgaSpriteAbstract> SpriteList => _spriteList;
+
+        // Xaml 바인딩용
+        public SgaImage()
+        {
+            _spriteList = new();
+            _indexLoaded = true;
+            _dataLoaded = true;
+        }
 
         public SgaImage(int spriteCount, SgaPackage parent, SgaElementHeader header, int version, int indexOffset, int indexLength) 
             : base(SgaElementType.Image, parent, header, version, indexOffset, indexLength)
@@ -46,17 +57,30 @@ namespace SGToolsCommon.Sga
             // C# 리스트 디폴트로 초기화 방법
             _spriteList = new(new SgaSpriteAbstract[spriteCount]);
             _waitForLoading = spriteCount;
+            _indexLoaded = false;
+            _dataLoaded = false;
         }
 
         public override void Load(bool indexOnly)
         {
             VersionLoader[Version](this, indexOnly);
+
+            if (indexOnly)
+            {
+                _indexLoaded = true;
+                return;
+            }
+
+            _dataLoaded = true;
+            _indexLoaded = true;
         }
 
         public override void Unload()
         {
             for (int i = 0; i < _spriteList.Count; ++i)
                 _spriteList[i].Unload();
+
+            _dataLoaded = false;
         }
 
 
@@ -166,6 +190,7 @@ namespace SGToolsCommon.Sga
 
                 image._spriteList[i].Load();
             }
+            
         }
     }
 }

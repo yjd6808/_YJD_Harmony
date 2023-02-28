@@ -32,6 +32,8 @@ namespace SGToolsCommon.Sga
             : base(SgaElementType.Sound, parent, header, version, indexOffset, indexLength)
         {
             _data = null;
+            _indexLoaded = true;
+            _dataLoaded = false;
         }
 
         public override void Load(bool indexOnly)
@@ -40,6 +42,7 @@ namespace SGToolsCommon.Sga
                 return;
 
             _data = new byte[IndexLength];
+            _dataLoaded = true;
             _parent.ReadStream.Seek(IndexOffset, SeekOrigin.Begin);
             _parent.ReadStream.Read(_data, 0, IndexLength);
         }
@@ -47,6 +50,7 @@ namespace SGToolsCommon.Sga
         public override void Unload()
         {
             _data = null;
+            _dataLoaded = false;
         }
     }
 }

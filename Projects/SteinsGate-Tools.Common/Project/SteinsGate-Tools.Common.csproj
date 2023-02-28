@@ -11,14 +11,32 @@
     <AssemblyName>SGToolsCommon</AssemblyName>
   </PropertyGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="rd &quot;$(ProjectDir)obj&quot; /S /Q" />
-  </Target>
+  <ItemGroup>
+    <None Remove="Resource\Icon\common_music.ico" />
+    <None Remove="Resource\Icon\common_refresh.ico" />
+    <None Remove="Resource\win_close.ico" />
+    <None Remove="Resource\win_maximize.ico" />
+    <None Remove="Resource\win_minimize.ico" />
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.PropertyGrid.WPF" Version="20.4.0.51" />
+    <Resource Include="Resource\Icon\common_music.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resource\Image\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\Icon\common_refresh.ico" />
+    <Resource Include="Resource\Icon\win_close.ico" />
+    <Resource Include="Resource\Icon\win_maximize.ico" />
+    <Resource Include="Resource\Icon\win_minimize.ico" />
   </ItemGroup>
 
 </Project>

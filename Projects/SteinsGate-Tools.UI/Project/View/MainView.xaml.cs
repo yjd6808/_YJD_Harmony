@@ -19,19 +19,26 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using SGToolsCommon.Custom;
+using SGToolsCommon.Sga;
 using SGToolsCommon.ThirdParty;
+using SGToolsUI.ViewModel;
 
-namespace SGToolsUI
+namespace SGToolsUI.View
 {
-    public partial class MainWindow : Window
+    public partial class MainView : Window
     {
-        private static string _binaryDir = Environment.CurrentDirectory;
+        public MainViewModel ViewModel { get; }
 
-        public MainWindow()
+        public MainView()
         {
+            ViewModel = new MainViewModel();
+            ViewModel.View = this;
+            Resources.Add("ViewModel", ViewModel);
             InitializeComponent();
+
+            var f = PackageListBox.Items[0];
             SetVerticalScrollToEnd();
-            Zlib.Decompress(new byte[32], 32);
         }
 
         public void AddChildBitmapImage(BitmapImage bitmap, double x, double y)
@@ -44,7 +51,7 @@ namespace SGToolsUI
 
         public void SetVerticalScrollToEnd()
         {
-            MainCanvasScrollViewer.ScrollToVerticalOffset(20000);
+            //MainCanvas.ScrollToVerticalOffset(20000);
         }
 
         // 높이 변경은 다시 보정해줘야함
@@ -59,39 +66,34 @@ namespace SGToolsUI
             }
         }
 
-        private void TimerOnTick(object? sender, EventArgs e)
+      
+        private void View_OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-        }
-
-        private void MainWindow_OnMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            double prevWidth = MainCanvasScrollViewer.Width;
-            double prevHeight = MainCanvasScrollViewer.Height;
+            double prevWidth = MainCanvas.Width;
+            double prevHeight = MainCanvas.Height;
 
             if (e.Delta > 0)
             {
-                MainCanvasScrollViewer.Width += 10.0f;
-                MainCanvasScrollViewer.Height = MainCanvasScrollViewer.Width * Constant.ResoltionRatio;
+                MainCanvas.Width += 10.0f;
+                MainCanvas.Height = MainCanvas.Width * Constant.ResoltionRatio;
             }
             else
             {
-                if (MainCanvasScrollViewer.Width <= 100.0f)
+                if (MainCanvas.Width <= 100.0f)
                     return;
 
-                MainCanvasScrollViewer.Width -= 10.0f;
-                MainCanvasScrollViewer.Height = MainCanvasScrollViewer.Width * Constant.ResoltionRatio;
+                MainCanvas.Width -= 10.0f;
+                MainCanvas.Height = MainCanvas.Width * Constant.ResoltionRatio;
             }
 
-            double deltaX = MainCanvasScrollViewer.Width / Constant.ResolutionWidth;
-            double deltaY = MainCanvasScrollViewer.Height / Constant.ResolutionHeight;
+            double deltaX = MainCanvas.Width / Constant.ResolutionWidth;
+            double deltaY = MainCanvas.Height / Constant.ResolutionHeight;
 
             ScaleTransform scaleTransform = new ScaleTransform(deltaX, deltaY);
             MainCanvas.LayoutTransform = scaleTransform;
 
-            var g = MainCanvas.Children[0];
-            Debug.WriteLine(g);
-
-            
+            Debug.WriteLine(this.ActualWidth);
+            Debug.WriteLine(MainDockPanel.ActualWidth);
         }
     }
 }

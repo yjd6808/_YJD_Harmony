@@ -1,0 +1,156 @@
+<Window x:Class="SGToolsUI.View.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGToolsUI" 
+        xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+        xmlns:cus="clr-namespace:SGToolsCommon.Custom;assembly=SGToolsCommon"
+        xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
+        xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
+        xmlns:style="clr-namespace:SGToolsCommon.Style;assembly=SGToolsCommon"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+        xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Name="View"
+        FontSize="14"
+        AllowsTransparency="True" WindowStyle="None"
+        SizeToContent="WidthAndHeight"
+        Style="{StaticResource OneLineWindow}"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <DockPanel Name="MainDockPanel"
+               MouseWheel="View_OnMouseWheel"
+               DataContext="{Binding Path=ViewModel}">
+
+        <cus:TitleBar Title="오하요" DockPanel.Dock="Top"/>
+        <Separator DockPanel.Dock="Top"/>
+
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="파일">
+                <MenuItem Header="열기"/>
+                <MenuItem Header="저장" />
+            </MenuItem>
+            <MenuItem Style="{StaticResource MenuItemSeparator}"/>
+            <MenuItem Header="도구">
+                <MenuItem Header="설정" Command="{Binding Commander.OpenSetting}" />
+            </MenuItem>
+            <MenuItem Style="{StaticResource MenuItemSeparator}"/>
+        </Menu>
+
+        <Separator DockPanel.Dock="Top"/>
+
+        <TreeView Width="300" Background="Transparent" BorderThickness="0">
+            <TreeViewItem>아이템1</TreeViewItem>
+            <TreeViewItem>아이템1</TreeViewItem>
+            <TreeViewItem>아이템1</TreeViewItem>
+        </TreeView>
+
+        <Border BorderThickness="0, 0, 1, 0"
+                DockPanel.Dock="Left"
+                Height="{Binding View.Height}"
+                BorderBrush="Black"/>
+
+        <StackPanel DockPanel.Dock="Left">
+            <local:CustomCanvas x:Name="MainCanvas"
+                                Background="LightGray"
+                                Width="{x:Static local:Constant.CanvasWidth}"
+                                Height="{x:Static local:Constant.CanvasHeight}" />
+            <TextBlock Text="오하요"></TextBlock>
+        </StackPanel>
+
+
+        <Grid DockPanel.Dock="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"></ColumnDefinition>
+                    <ColumnDefinition Width="30"></ColumnDefinition>
+                    <ColumnDefinition Width="30"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Style="{StaticResource ImageButton}" Command="{Binding Commander.ReloadPackage}">
+                    <style:ImageButtonProperty.Image>
+                        <BitmapImage UriSource="/SGToolsCommon;component/Resource/Icon/common_refresh.ico"></BitmapImage>
+                    </style:ImageButtonProperty.Image>
+                </Button>
+            </Grid>
+            
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal">
+                <ListBox MinWidth="100"
+                         MaxWidth="100"
+                         Name="PackageListBox"
+                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                         Style="{StaticResource StretchListBox}"
+                         ItemsSource="{Binding PackManager.Packages}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type sga:SgaPackage}">
+
+                            <TextBlock Text="{
+                            Binding FileNameWithOutExt, 
+                            Converter={cv:SgaFileNameConverter}, 
+                            ConverterParameter={x:Static sga:SgaPackageType.Interface}}">
+                                <!-- 리스트박스 아이템 더블클릭으로 커맨드를 실행하기 위함 -->
+                                <TextBlock.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick"
+                                                  Command="{Binding DataContext.Commander.SelectPackage, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                  CommandParameter="{Binding}" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <i:Interaction.Triggers>
+                        <!--리스트 박스 이벤트를 커맨드로 실행하기 위함-->
+                        <i:EventTrigger EventName="SelectionChanged">
+
+                            <!--<i:InvokeCommandAction Command="{Binding Commander.ReloadPackage}"
+                                                   CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}, AncestorLevel=1}, Path=SelectedItem}" />-->
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListBox>
+                <ListBox MinWidth="100"
+                         MaxWidth="100"
+                         Name="ElementListBox"
+                         ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                         Style="{StaticResource StretchListBox}"
+                         ItemsSource="{Binding SelectedPackage.ElementHeaderList}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type sga:SgaElementHeader}">
+                            <TextBlock Text="{Binding Name}">
+                                <!-- 리스트박스 아이템 더블클릭으로 커맨드를 실행하기 위함 -->
+                                <TextBlock.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick"
+                                                  Command="{Binding DataContext.Commander.SelectElement, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                  CommandParameter="{Binding}" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+                <cus:PlaceholderImageListBox MinWidth="100"
+                                             MaxWidth="100"
+                                             Name="SpriteListBox"
+                                             ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                             PlaceholderImageSource="/SGToolsCommon;component/Resource/Icon/common_refresh.ico"
+                                             PlaceholderImageSourceWidth="30"
+                                             PlaceholderImageSourceHeight="30"
+                                             PlaceholderImageSourceOpacity="0.5"
+                                             Style="{StaticResource StretchListBox}"
+                                             ItemsSource="{Binding SelectedImage.SpriteList}">
+                </cus:PlaceholderImageListBox>
+            </StackPanel>
+
+            <Grid Grid.Row="2">
+                <c:PropertyGrid Name="ElementPropertyGrid"/>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>

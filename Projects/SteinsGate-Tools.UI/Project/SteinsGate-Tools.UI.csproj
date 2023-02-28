@@ -14,33 +14,37 @@
 
 
 	<ItemGroup>
-		<None Remove="Resource\Image\1.png" />
-		<None Remove="Resource\Image\ui_button.ico" />
-		<None Remove="Resource\Image\ui_button2.ico" />
-		<None Remove="Resource\Image\ui_checkbox.ico" />
-		<None Remove="Resource\Image\ui_checkbox2.ico" />
-		<None Remove="Resource\Image\ui_editbox2.ico" />
-		<None Remove="Resource\Image\ui_group.ico" />
-		<None Remove="Resource\Image\ui_group_selected.ico" />
-		<None Remove="Resource\Image\ui_label.ico" />
+		<None Remove="Resource\Icon\ui_button.ico" />
+		<None Remove="Resource\Icon\ui_button2.ico" />
+		<None Remove="Resource\Icon\ui_checkbox.ico" />
+		<None Remove="Resource\Icon\ui_checkbox2.ico" />
+		<None Remove="Resource\Icon\ui_editbox2.ico" />
+		<None Remove="Resource\Icon\ui_group.ico" />
+		<None Remove="Resource\Icon\ui_group_selected.ico" />
+		<None Remove="Resource\Icon\ui_label.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Resource Include="Resource\Image\1.png">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Resource>
-		<Resource Include="Resource\Image\ui_button.ico" />
-		<Resource Include="Resource\Image\ui_button2.ico" />
-		<Resource Include="Resource\Image\ui_checkbox.ico" />
-		<Resource Include="Resource\Image\ui_checkbox2.ico" />
-		<Resource Include="Resource\Image\ui_editbox2.ico" />
-		<Resource Include="Resource\Image\ui_group.ico" />
-		<Resource Include="Resource\Image\ui_group_selected.ico" />
-		<Resource Include="Resource\Image\ui_label.ico" />
+		<Resource Include="Resource\Icon\ui_button.ico" />
+		<Resource Include="Resource\Icon\ui_button2.ico" />
+		<Resource Include="Resource\Icon\ui_checkbox.ico" />
+		<Resource Include="Resource\Icon\ui_checkbox2.ico" />
+		<Resource Include="Resource\Icon\ui_editbox2.ico" />
+		<Resource Include="Resource\Icon\ui_group.ico" />
+		<Resource Include="Resource\Icon\ui_group_selected.ico" />
+		<Resource Include="Resource\Icon\ui_label.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Custom\" />
 	  <Folder Include="Resource\Font\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+	  <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+	  <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -48,7 +52,7 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="rd &quot;$(ProjectDir)obj&quot; /S /Q&#xD;&#xA;xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;&#xD;&#xA;xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;" />
+	  <Exec Command="xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;&#xD;&#xA;xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;" />
 	</Target>
 
 </Project>

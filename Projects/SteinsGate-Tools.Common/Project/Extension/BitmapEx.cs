@@ -1,5 +1,5 @@
 ﻿/*
- * 다른데서 복붙함
+ * 복붙
  * 생성일: 2/27/2023 6:41:47 AM
  */
 
@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
@@ -30,6 +31,18 @@ namespace SGToolsCommon.Extension
 
         public static ImageSource ToSource(this Bitmap bitmap)
             => BitmapSource.Create(bitmap.Width, bitmap.Height, 0, 0, System.Windows.Media.PixelFormats.Bgra32, null, bitmap.ToArray(), 4 * bitmap.Width);
+
+        /*
+        public static ImageSource ToSource(this Bitmap bitmap)
+        {
+            BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
+                bitmap.GetHbitmap(),
+                IntPtr.Zero,
+                System.Windows.Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+        }
+        */
+        
 
         public static byte[] ToArray(this Bitmap bmp)
         {

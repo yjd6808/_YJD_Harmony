@@ -168,10 +168,10 @@ struct Bucket
 		// 키가 String 같은 타입인 경우 그냥 대입 해버리면 Key의 생성자로 초기화가 수행이 안되어있기때문에 오류가 발생한다.
 		// String의 경우 m_pBuffer가 nullptr로 초기화가 되지 않음
 		// 기본 생성자를 호출해서 초기화를 해놔야한다.
-		if constexpr (IsPointerType_v<TValue> && !IsFundamentalType_v<TKey>) {
+		if constexpr (IsPointerType_v<TValue> && !IsFundamentalType_v<TKey> && !IsPointerType_v<TKey>) {
 			if constexpr (IsStringType_v<TKey>)
 				Memory::PlacementNewArray(pNewDynamicArray, newCapacity, TBucketNode{ { 0, nullptr }, 0 });	// 문자열은 동적할당 안된 상태로 생성해주자. String(0)는 동적할당안함
-			else
+			else 
 				DebugAssert(false); // String도 아니고 int같은 기본 타입도 아닌 새로운 키타입을 추가하고자 한다면 성능향상을 위해 여기서 직접 수정 ㄱ, 그냥 Memory::PlacementNewArray(pNewDynamicArray, newCapacity)를 수행해도 동작하는데 문제없긴함
 		}
 

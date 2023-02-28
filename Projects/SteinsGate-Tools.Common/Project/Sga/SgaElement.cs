@@ -23,10 +23,13 @@ namespace SGToolsCommon.Sga
 {
     public abstract class SgaElement
     {
+        // Xaml 바인딩용
+        public SgaElement()
+        {
+        }
 
         public SgaElement(SgaElementType type, SgaPackage parent, SgaElementHeader header, int version, int indexOffset, int indexLength)
         {
-            _indexLoaded = false;
             _parent = parent;
 
             Type = type;
@@ -36,6 +39,7 @@ namespace SGToolsCommon.Sga
             IndexLength = indexLength;
         }
 
+        protected bool _dataLoaded;
         protected bool _indexLoaded;
         protected SgaPackage _parent;
 
@@ -46,6 +50,9 @@ namespace SGToolsCommon.Sga
         public int Version { get; }
         public int IndexOffset { get; }
         public int IndexLength { get; }
+        public bool DataLoaded => _dataLoaded;
+        public bool IndexLoaded => _indexLoaded;
+        
 
         public abstract void Load(bool indexOnly);
         public abstract void Unload();

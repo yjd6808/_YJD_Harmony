@@ -8,7 +8,6 @@
     ".NETCoreApp,Version=v6.0": {
       "SGToolsCommon/1.0.0": {
         "dependencies": {
-          "Syncfusion.PropertyGrid.WPF": "20.4.0.51",
           "System.Drawing.Common": "7.0.0",
           "System.Reflection": "4.3.0"
         },
@@ -31,63 +30,6 @@
             "assetType": "runtime",
             "assemblyVersion": "7.0.0.0",
             "fileVersion": "7.0.22.51805"
-          }
-        }
-      },
-      "Syncfusion.Licensing/20.4.0.51": {
-        "runtime": {
-          "lib/net6.0-windows7.0/Syncfusion.Licensing.dll": {
-            "assemblyVersion": "20.4600.0.51",
-            "fileVersion": "20.4600.0.51"
-          }
-        }
-      },
-      "Syncfusion.PropertyGrid.WPF/20.4.0.51": {
-        "dependencies": {
-          "Syncfusion.Licensing": "20.4.0.51",
-          "Syncfusion.SfInput.WPF": "20.4.0.51",
-          "Syncfusion.Shared.WPF": "20.4.0.51",
-          "Syncfusion.Tools.WPF": "20.4.0.51"
-        },
-        "runtime": {
-          "lib/net6.0-windows7.0/Syncfusion.PropertyGrid.WPF.dll": {
-            "assemblyVersion": "20.4600.0.51",
-            "fileVersion": "20.4600.0.51"
-          }
-        }
-      },
-      "Syncfusion.SfInput.WPF/20.4.0.51": {
-        "dependencies": {
-          "Syncfusion.Licensing": "20.4.0.51",
-          "Syncfusion.Shared.WPF": "20.4.0.51"
-        },
-        "runtime": {
-          "lib/net6.0-windows7.0/Syncfusion.SfInput.WPF.dll": {
-            "assemblyVersion": "20.4600.0.51",
-            "fileVersion": "20.4600.0.51"
-          }
-        }
-      },
-      "Syncfusion.Shared.WPF/20.4.0.51": {
-        "dependencies": {
-          "Syncfusion.Licensing": "20.4.0.51"
-        },
-        "runtime": {
-          "lib/net6.0-windows7.0/Syncfusion.Shared.WPF.dll": {
-            "assemblyVersion": "20.4600.0.51",
-            "fileVersion": "20.4600.0.51"
-          }
-        }
-      },
-      "Syncfusion.Tools.WPF/20.4.0.51": {
-        "dependencies": {
-          "Syncfusion.Licensing": "20.4.0.51",
-          "Syncfusion.Shared.WPF": "20.4.0.51"
-        },
-        "runtime": {
-          "lib/net6.0-windows7.0/Syncfusion.Tools.WPF.dll": {
-            "assemblyVersion": "20.4600.0.51",
-            "fileVersion": "20.4600.0.51"
           }
         }
       },
@@ -183,41 +125,6 @@
       "sha512": "sha512-2nXPrhdAyAzir0gLl8Yy8S5Mnm/uBSQQA7jEsILOS1MTyS7DbmV1NgViMtvV1sfCD1ebITpNwb1NIinKeJgUVQ==",
       "path": "microsoft.win32.systemevents/7.0.0",
       "hashPath": "microsoft.win32.systemevents.7.0.0.nupkg.sha512"
-    },
-    "Syncfusion.Licensing/20.4.0.51": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-xjNupS8/Qu/CYXOO/jVhO66Kv41p1B+OeDweBCoqVNImxmqbO7hGsfEKga2AtcfxQ/FOHoQ68dGpe4948lTCBQ==",
-      "path": "syncfusion.licensing/20.4.0.51",
-      "hashPath": "syncfusion.licensing.20.4.0.51.nupkg.sha512"
-    },
-    "Syncfusion.PropertyGrid.WPF/20.4.0.51": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-qPOg7m8e0uhkMg5Xs+kay1SCOuaJSrncf3S235gWz1fk0e/Sst7hBSXrgQySEyWajMWzFpzVCN6cSnD9//2lfQ==",
-      "path": "syncfusion.propertygrid.wpf/20.4.0.51",
-      "hashPath": "syncfusion.propertygrid.wpf.20.4.0.51.nupkg.sha512"
-    },
-    "Syncfusion.SfInput.WPF/20.4.0.51": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-MQ5naq8oQqxc7Pl7REz7FC9DwuAVZewzJAlNwc61Rknl8zYBHoAikhT4kWu6HJjmANQweEU0zyUWCPkVrQer6w==",
-      "path": "syncfusion.sfinput.wpf/20.4.0.51",
-      "hashPath": "syncfusion.sfinput.wpf.20.4.0.51.nupkg.sha512"
-    },
-    "Syncfusion.Shared.WPF/20.4.0.51": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-vrM4Pxg9OfRqu5uuzjSImNZsrhStfM5xajmk8i4R8p1B0QflqRJHeRaOKiocT2EHdDGo76LXgJ4ltZ8uqchbSg==",
-      "path": "syncfusion.shared.wpf/20.4.0.51",
-      "hashPath": "syncfusion.shared.wpf.20.4.0.51.nupkg.sha512"
-    },
-    "Syncfusion.Tools.WPF/20.4.0.51": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-NJ3DX4EZ9LARmbjQqNULIodyCnMMa8SnBJ21nzNgslft0Lis5c0zsjI7aWPupheRUk8dLYe6VGYCjOCIrHKw2Q==",
-      "path": "syncfusion.tools.wpf/20.4.0.51",
-      "hashPath": "syncfusion.tools.wpf.20.4.0.51.nupkg.sha512"
     },
     "System.Drawing.Common/7.0.0": {
       "type": "package",

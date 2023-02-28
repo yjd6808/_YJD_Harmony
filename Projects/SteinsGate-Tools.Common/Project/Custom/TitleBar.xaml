@@ -1,0 +1,53 @@
+﻿<!--
+    작성자: 윤정도
+    생성일: 2/27/2023 11:52:42 AM
+-->
+
+
+<UserControl x:Class="SGToolsCommon.Custom.TitleBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SGToolsCommon.Custom"
+             xmlns:p="clr-namespace:SGToolsCommon.Provider"
+             xmlns:style="clr-namespace:SGToolsCommon.Style"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Style/ImageButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="30"></ColumnDefinition>
+                <ColumnDefinition Width="30"></ColumnDefinition>
+                <ColumnDefinition Width="30"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="_tbTitle" Text="제목을 넣어주세요" VerticalAlignment="Center" FontSize="16"
+                       Margin="5, 0, 0, 0">
+            </TextBlock>
+            <Button Grid.Column="1" Style="{StaticResource ImageButton}" Click="MinimizeOnClick">
+                <style:ImageButtonProperty.Image>
+                    <BitmapImage UriSource="/SGToolsCommon;component/Resource/Icon/win_minimize.ico"></BitmapImage>
+                </style:ImageButtonProperty.Image>
+            </Button>
+            <Button Grid.Column="2" Style="{StaticResource ImageButton}" Click="MaximizeOnClick">
+                <style:ImageButtonProperty.Image>
+                    <BitmapImage UriSource="/SGToolsCommon;component/Resource/Icon/win_maximize.ico"></BitmapImage>
+                </style:ImageButtonProperty.Image>
+            </Button>
+            <Button Grid.Column="3" Style="{StaticResource ImageButton}" Click="CloseOnClick">
+                <style:ImageButtonProperty.Image>
+                    <BitmapImage UriSource="/SGToolsCommon;component/Resource/Icon/win_close.ico"></BitmapImage>
+                </style:ImageButtonProperty.Image>
+            </Button>
+        </Grid>
+    </StackPanel>
+</UserControl>

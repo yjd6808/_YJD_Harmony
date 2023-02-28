@@ -24,9 +24,9 @@ namespace SGToolsCommon.Command
 {
     public abstract class CommandCenter
     {
-        private Dictionary<string, Command> _commandMap = new();
+        private Dictionary<string, CommandAbstract> _commandMap = new();
 
-        public void Add(Command command)
+        public void Add(CommandAbstract command)
         {
             if (_commandMap.ContainsKey(command.Name))
             {
@@ -41,7 +41,7 @@ namespace SGToolsCommon.Command
         {
             if (!_commandMap.ContainsKey(commandName))
             {
-                MessageBox.Show("%s 커맨드를 실행할 수 없습니다.");
+                MessageBox.Show($"{commandName} 커맨드를 실행할 수 없습니다.");
                 return;
             }
 

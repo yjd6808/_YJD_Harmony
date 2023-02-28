@@ -79,24 +79,20 @@ namespace SGToolsCommon.Sga
 
         public static SgaElement ReadElement(SgaPackage package, Stream stream, SgaElementHeader header, int nextOffset, bool indexOnly)
         {
-            stream.Seek(header.Offset);
+            stream.Seek(header.Offset, SeekOrigin.Begin);
 
             SgaElement element;
             string elementFlag = stream.ReadString();
 
             if (elementFlag == ImgFlag)
             {
-                int indexLength = stream.ReadInt();
+                int indexLength = (int)stream.ReadLong();
                 int version = stream.ReadInt();
                 int spriteCount = stream.ReadInt();
                 int indexOffset = (int)stream.Position;
 
                 element = new SgaImage(spriteCount, package, header, version, indexOffset, indexLength);
-
-                if (indexOnly)
-                    return element;
-
-                element.Load(false);
+                element.Load(indexOnly);
                 return element;
             }
 
@@ -108,11 +104,7 @@ namespace SGToolsCommon.Sga
                 int indexOffset = (int)stream.Position;
 
                 element = new SgaImage(spriteCount, package, header, version, indexOffset, indexLength);
-
-                if (indexOnly)
-                    return element;
-
-                element.Load(false);
+                element.Load(indexOnly);
                 return element;
             }
 
@@ -127,11 +119,7 @@ namespace SGToolsCommon.Sga
                 int indexOffset = (int)stream.Position;
 
                 element = new SgaSound(package, header, version, indexOffset, indexLength);
-
-                if (indexOnly) 
-                    return element;
-
-                element.Load(false);
+                element.Load(indexOnly);
                 return element;
             }
 
