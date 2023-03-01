@@ -17,5 +17,6 @@ namespace SGToolsUI
         public const string SettingFileName = "setting.json";
 
         public const double LeftPaneWidth = 300;
+        public const int ZOrderInterval = 100;
     }
 }

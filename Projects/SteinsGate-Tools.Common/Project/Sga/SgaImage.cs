@@ -61,6 +61,15 @@ namespace SGToolsCommon.Sga
             _dataLoaded = false;
         }
 
+        public bool IsValidSpriteIndex(int index) => index >= 0 && index < _spriteList.Count;
+        public SgaSpriteAbstract GetSprite(int index)
+        {
+            if (!IsValidSpriteIndex(index))
+                throw new Exception($"{index}번 인덱스 스프라이트를 {Header.Name}에서 찾지 못했습니다.");
+
+            return _spriteList[index];
+        }
+
         public override void Load(bool indexOnly)
         {
             VersionLoader[Version](this, indexOnly);

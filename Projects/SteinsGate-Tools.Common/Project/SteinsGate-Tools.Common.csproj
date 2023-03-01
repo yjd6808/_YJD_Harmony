@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resource\Icon\common_delete.ico" />
     <None Remove="Resource\Icon\common_music.ico" />
     <None Remove="Resource\Icon\common_refresh.ico" />
     <None Remove="Resource\win_close.ico" />
@@ -20,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\Icon\common_delete.ico" />
     <Resource Include="Resource\Icon\common_music.ico" />
   </ItemGroup>
 

@@ -1,14 +1,15 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ImageButton.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="OneLineWindow.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="OneLineSeparator.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="NoIconMenuItem.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="MenuItemSeparator.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="StretchListBox.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="BorderSeparatorHorizontal.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="BorderSeparatorVertical.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="ReadonlyTextBox.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="ImageButton.xaml"/>
+        <ResourceDictionary Source="OneLineWindow.xaml"/>
+        <ResourceDictionary Source="OneLineSeparator.xaml"/>
+        <ResourceDictionary Source="NoIconMenuItem.xaml"/>
+        <ResourceDictionary Source="MenuItemSeparator.xaml"/>
+        <ResourceDictionary Source="StretchListBox.xaml"/>
+        <ResourceDictionary Source="StretchTreeView.xaml"/>
+        <ResourceDictionary Source="BorderSeparatorHorizontal.xaml"/>
+        <ResourceDictionary Source="BorderSeparatorVertical.xaml"/>
+        <ResourceDictionary Source="ReadonlyTextBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

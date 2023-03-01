@@ -38,7 +38,9 @@ namespace SGToolsUI.Command
         public CommandAbstract SelectPackage { get; }
         public CommandAbstract SelectElement { get; }
         public CommandAbstract SelectSprite { get; }
-        
+        public CommandAbstract DeleteUIElement { get; }
+        public CommandAbstract AddUIElement { get; }
+
 
 
         // =================================================
@@ -53,10 +55,13 @@ namespace SGToolsUI.Command
             ViewModel = viewModel;
 
             Add(OpenSetting = new OpenSetting(ViewModel));
-            Add(ReloadPackage = new ReloadPackage(ViewModel) );
+            Add(ReloadPackage = new ReloadPackage(ViewModel));
             Add(SelectPackage = new SelectPackage(ViewModel) { UseParameter = true });
             Add(SelectElement = new SelectElement(ViewModel) { UseParameter = true });
             Add(SelectSprite = new SelectSprite(ViewModel) { UseParameter = true });
+            Add(DeleteUIElement = new DeleteUIElement(ViewModel));
+            Add(AddUIElement = new AddUIElement(ViewModel));
+
 
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });
             Add(SpritePreview = new SpritePreview(ViewModel) { UseParameter = true });

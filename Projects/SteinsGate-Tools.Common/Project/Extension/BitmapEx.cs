@@ -31,19 +31,7 @@ namespace SGToolsCommon.Extension
 
         public static ImageSource ToSource(this Bitmap bitmap)
             => BitmapSource.Create(bitmap.Width, bitmap.Height, 0, 0, System.Windows.Media.PixelFormats.Bgra32, null, bitmap.ToArray(), 4 * bitmap.Width);
-
-        /*
-        public static ImageSource ToSource(this Bitmap bitmap)
-        {
-            BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
-                bitmap.GetHbitmap(),
-                IntPtr.Zero,
-                System.Windows.Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
-        }
-        */
         
-
         public static byte[] ToArray(this Bitmap bmp)
         {
             ToArray(bmp, out var data);

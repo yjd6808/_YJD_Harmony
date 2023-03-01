@@ -10,6 +10,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SGToolsUI" 
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+        xmlns:model="clr-namespace:SGToolsUI.Model"
         xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
         xmlns:custom_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
@@ -104,11 +105,30 @@
         
             ############################################################################### -->
 
-        <TreeView Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}" Background="Transparent" BorderThickness="0">
-            <TreeViewItem>아이템1</TreeViewItem>
-            <TreeViewItem>아이템1</TreeViewItem>
-            <TreeViewItem>아이템1</TreeViewItem>
-        </TreeView>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.AddUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" custom_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_group.ico"/>
+                <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.AddUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" custom_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_button.ico"/>
+                <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" custom_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_delete.ico"/>
+            </Grid>
+            <Separator/>
+
+            <custom_ctrl:StretchingTreeView Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            ItemTemplateSelector="{x:Static model:SGUIElementSelector.Selector}"
+                                            ItemsSource="{Binding GroupMaster.Children}"
+                                            Style="{StaticResource StretchTreeView}">
+            </custom_ctrl:StretchingTreeView>
+
+        </StackPanel>
         <Border Style="{StaticResource BorderSeparatorVertical}" DockPanel.Dock="Left"/>
 
 
@@ -142,12 +162,7 @@
                     <ColumnDefinition Width="30"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-
-                <Button Grid.Column="0" Style="{StaticResource ImageButton}" Command="{Binding Commander.ReloadPackage}">
-                    <custom_style:ImageButtonProperty.Image>
-                        <BitmapImage UriSource="/SGToolsCommon;component/Resource/Icon/common_refresh.ico"></BitmapImage>
-                    </custom_style:ImageButtonProperty.Image>
-                </Button>
+                <Button Grid.Column="0" Command="{Binding Commander.ReloadPackage}" Style="{StaticResource ImageButton}" custom_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_refresh.ico"/>
             </Grid>
             
             <StackPanel Grid.Row="1"

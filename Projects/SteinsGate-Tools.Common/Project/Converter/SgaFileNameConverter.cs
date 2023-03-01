@@ -27,9 +27,9 @@ namespace SGToolsCommon.Converter
 {
     public class SgaFileNameConverter : MarkupExtension, IValueConverter
     {
-        public static Dictionary<int, Func<string, string, string>> Converter = new ()
+        public static Func<string, string, string>[] Converter = new []
         {
-            { SgaPackageType.Interface, InterfaceConverter }
+            new Func<string, string, string>(InterfaceConverter)
         };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -38,7 +38,7 @@ namespace SGToolsCommon.Converter
             string fileExt = Path.GetExtension(fileName);
             int packageType = (int)parameter;
 
-            if (!Converter.ContainsKey(packageType))
+            if (packageType < 0 || packageType >= Converter.Length)
                 throw new Exception($"{SgaPackageType.Name[packageType]}에 해당하는 컨버터가 없습니다.");
 
             return Converter[packageType](fileName, fileExt);

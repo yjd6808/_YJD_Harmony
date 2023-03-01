@@ -66,6 +66,7 @@ namespace SGToolsCommon.Sga
                 if (!Loaded)
                     Load();
 
+                // 얕은 복사 좋아
                 return BitmapSource.Create(Width, Height, 0, 0, PixelFormats.Bgra32, null, _data, 4 * Width);
             }
         }
@@ -77,6 +78,7 @@ namespace SGToolsCommon.Sga
                 if (!Loaded)
                     Load();
 
+                // 너무나도 깊은 복사 조심
                 return BitmapEx.FromArray(_data, Width, Height);
             }
         }

@@ -12,7 +12,8 @@
           "Microsoft.Xaml.Behaviors.Wpf": "1.1.39",
           "Newtonsoft.Json": "13.0.2",
           "SGToolsCommon": "1.0.0",
-          "System.Drawing.Common": "7.0.0"
+          "System.Drawing.Common": "7.0.0",
+          "morelinq": "3.4.0"
         },
         "runtime": {
           "SGToolsUI.dll": {}
@@ -103,6 +104,14 @@
           "lib/net5.0-windows7.0/Microsoft.Xaml.Behaviors.dll": {
             "assemblyVersion": "1.1.0.0",
             "fileVersion": "1.1.39.4716"
+          }
+        }
+      },
+      "morelinq/3.4.0": {
+        "runtime": {
+          "lib/net6.0/MoreLinq.dll": {
+            "assemblyVersion": "3.4.0.0",
+            "fileVersion": "3.4.0.0"
           }
         }
       },
@@ -229,6 +238,13 @@
       "sha512": "sha512-8PZKqw9QOcu42xk8puY4P1+EXHL9YGOR9b7qhaYx5cILHul456H073tj99vyPcCt0W0781T9RwHqkx507ZyUpQ==",
       "path": "microsoft.xaml.behaviors.wpf/1.1.39",
       "hashPath": "microsoft.xaml.behaviors.wpf.1.1.39.nupkg.sha512"
+    },
+    "morelinq/3.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j+RJjxXt6gNjowzOGbxTwZP4n1qtTR9PR62GSN00lHdfaxw+4aJM1AF5f2Woqewx7uoYlNQaXHqJyEfPdeqp8A==",
+      "path": "morelinq/3.4.0",
+      "hashPath": "morelinq.3.4.0.nupkg.sha512"
     },
     "Newtonsoft.Json/13.0.2": {
       "type": "package",

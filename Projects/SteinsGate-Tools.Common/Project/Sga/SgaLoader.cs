@@ -35,7 +35,7 @@ namespace SGToolsCommon.Sga
 
 
 
-        public static SgaPackage Load(string path, bool indexOnly, bool headerOnly)
+        public static SgaPackage Load(string path, bool indexOnly, bool headerOnly, int index)
         {
             FileStream readStream = File.OpenRead(path);
 
@@ -43,7 +43,7 @@ namespace SGToolsCommon.Sga
                 return null;
 
             int elementCount = readStream.ReadInt();
-            SgaPackage package = new SgaPackage(readStream, path, elementCount);
+            SgaPackage package = new SgaPackage(readStream, path, elementCount, index);
 
             if (elementCount == 0)
                 return package;

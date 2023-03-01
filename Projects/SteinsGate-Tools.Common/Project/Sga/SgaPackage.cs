@@ -33,7 +33,9 @@ namespace SGToolsCommon.Sga
         private string _path;
         private Dictionary<int, SgaElement> _elementMap;
         private int _elementCount;
+        private int _packageIndex;
         private bool _indexLoaded;
+        
 
         // Lazy Loading 용
         private ObservableCollection<SgaElementHeader> _elementHeaderList;
@@ -47,6 +49,7 @@ namespace SGToolsCommon.Sga
         public string FileName => System.IO.Path.GetFileName(_path);
         public string FileNameWithoutExt => System.IO.Path.GetFileNameWithoutExtension(_path);
         public ObservableCollection<SgaElementHeader> ElementHeaderList => _elementHeaderList;
+        public int PackageIndex => _packageIndex;
 
         // Xaml 바인딩용
         public SgaPackage()
@@ -54,7 +57,7 @@ namespace SGToolsCommon.Sga
             _elementHeaderList = new();
         }
 
-        public SgaPackage(Stream readStream, string path, int elementCount)
+        public SgaPackage(Stream readStream, string path, int elementCount, int packageIndex)
         {
             _elementMap = new();
             _elementHeaderList = new();
@@ -64,6 +67,7 @@ namespace SGToolsCommon.Sga
             _readStream = readStream;
             _path = path;
             _indexLoaded = false;
+            _packageIndex = packageIndex;
         }
 
 
@@ -95,7 +99,7 @@ namespace SGToolsCommon.Sga
                 header.NextOffset =
                     i < _elementCount - 1 ? _elementHeaderList[i + 1].Offset : (int)_readStream.Length;
 
-                _elementNameToIndexMap.Add(header.Name, header.IndexInPackage);
+                _elementNameToIndexMap.Add(header.NameWithoutExt, header.IndexInPackage);
             }
 
             _indexLoaded = true;
@@ -109,7 +113,15 @@ namespace SGToolsCommon.Sga
         }
 
         public SgaElement GetElement(int index) => _elementMap[index];
-        public int GetElementIndex(string elementName) => _elementNameToIndexMap[elementName];
+        public SgaElement GetElement(string elementNameWithoutExt) => _elementMap[GetElementIndex(elementNameWithoutExt)];
+
+        public int GetElementIndex(string elementName)
+        {
+            if (!_elementNameToIndexMap.ContainsKey(elementName))
+                throw new Exception($"{elementName}을 패키지${FileNameWithoutExt}에서 찾지 못했습니다.");
+
+            return _elementNameToIndexMap[elementName];
+        }
         public bool HasElementIndex(string elementName) => _elementNameToIndexMap.ContainsKey(elementName);
         public bool IsElementLoaded(int index) => _elementMap.ContainsKey(index);
 
