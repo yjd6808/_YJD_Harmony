@@ -13,6 +13,7 @@
           "Newtonsoft.Json": "13.0.2",
           "SGToolsCommon": "1.0.0",
           "System.Drawing.Common": "7.0.0",
+          "WinCopies.AttachedCommandBehavior": "3.1.0.2",
           "morelinq": "3.4.0"
         },
         "runtime": {
@@ -187,6 +188,14 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "WinCopies.AttachedCommandBehavior/3.1.0.2": {
+        "runtime": {
+          "lib/netcoreapp3.1/AttachedCommandBehavior.dll": {
+            "assemblyVersion": "3.1.0.2",
+            "fileVersion": "3.1.0.2"
+          }
+        }
+      },
       "SGToolsCommon/1.0.0": {
         "dependencies": {
           "System.Drawing.Common": "7.0.0",
@@ -301,6 +310,13 @@
       "sha512": "sha512-LbSxKEdOUhVe8BezB/9uOGGppt+nZf6e1VFyw6v3DN6lqitm0OSn2uXMOdtP0M3W4iMcqcivm2J6UgqiwwnXiA==",
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
+    },
+    "WinCopies.AttachedCommandBehavior/3.1.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7BFFufgkgVF8g+GyPW/UlETviJUCKHVLuSGeVSxdHe1eg+FwLjJsZsSAFnhmN0ttK9yWjxOrqcC54tVtMrV/Eg==",
+      "path": "wincopies.attachedcommandbehavior/3.1.0.2",
+      "hashPath": "wincopies.attachedcommandbehavior.3.1.0.2.nupkg.sha512"
     },
     "SGToolsCommon/1.0.0": {
       "type": "project",

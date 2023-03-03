@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mo="clr-namespace:SGToolsUI.Model"
+                    xmlns:vm="clr-namespace:SGToolsUI.ViewModel">
+    <DataTemplate x:Key="CanvasSelectionTemplate"
+                  DataType="{x:Type mo:CanvasSelection}">
+        <ContentPresenter Content="{Binding Selection}">
+
+        </ContentPresenter>
+    </DataTemplate>
+    
+</ResourceDictionary>

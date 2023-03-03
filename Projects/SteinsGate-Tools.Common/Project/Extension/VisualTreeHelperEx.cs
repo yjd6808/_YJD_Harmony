@@ -1,7 +1,5 @@
 ﻿/*
- * 스택 복붙
  * 생성일: 2/27/2023 10:19:42 AM
- *
  */
 
 using System;
@@ -23,6 +21,7 @@ namespace SGToolsCommon.Extension
 {
     public static class VisualTreeHelperEx
     {
+        // 복붙
         public static T FindParent<T>(this DependencyObject child) where T : DependencyObject
         {
             //get parent item
@@ -39,6 +38,16 @@ namespace SGToolsCommon.Extension
                 return FindParent<T>(parentObject);
         }
 
+        public static void ForEachParent(this DependencyObject child, Action<DependencyObject> action)
+        {
+            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+
+            if (parentObject == null) 
+                return;
+
+            action(parentObject);
+            parentObject.ForEachParent(action);
+        }
 
         public static T FindChild<T>(this DependencyObject depObj)
             where T : DependencyObject

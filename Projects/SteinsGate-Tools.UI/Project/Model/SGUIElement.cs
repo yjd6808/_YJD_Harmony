@@ -24,30 +24,21 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
 {
-    public abstract class SGUIElement : Bindable, ICloneable
+    public abstract class SGUIElement : CanvasElement, ICloneable
     {
-        public SGUIElement(SGUIElementType elementType)
-        {
-            _elementType = elementType;
-        }
-
-
         // =========================================================================
         //                         엘리먼트 관련 정보
         // =========================================================================
+
+       
+        [Browsable(false)] public virtual bool IsGroup => false;
+
         [Category("Element")]
         [DisplayName("ElementType")]
         [Description("UI 타입을 의미")]
-        [ItemsSource(typeof(SGUIElementType))]
-        public SGUIElementType ElementType
-        {
-            get => _elementType;
-            set
-            {
-                _elementType = value;
-                OnPropertyChanged();
-            }
-        }
+        public abstract SGUIElementType UIElementType { get; }
+
+        
 
         [Category("Element")]
         [DisplayName("Name")]
@@ -100,6 +91,9 @@ namespace SGToolsUI.Model
             get => _selected;
             set
             {
+                if (_selected == value)
+                    return;
+
                 _selected = value;
                 OnPropertyChanged();
             }
@@ -109,6 +103,7 @@ namespace SGToolsUI.Model
         // =========================================================================
         //                         비주얼 관련 정보
         // =========================================================================
+        [Browsable(false)]
         [Category("Visual")]
         [DisplayName("VisualRect")]
         [Description("UI엘리먼트의 캔버스 좌상단 위치와 크기를 의미")]
@@ -160,19 +155,40 @@ namespace SGToolsUI.Model
             get => _visualName;
             set
             {
+                if (_visualName == value)
+                    return;
+
                 _visualName = value;
                 OnPropertyChanged();
             }
         }
 
+        [Category("Visual")]
+        [DisplayName("Visible")]
+        [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정")]
+        public virtual bool IsVisible
+        {
+            get => _visible;
+            set
+            {
+                if (_visible == value)
+                    return;
 
-        private string _visualName = string.Empty;
-        private Rect _visualRect = new (0, 0, 50, 50);
-        private bool _selected;
+                _visible = value;
+                OnPropertyChanged();
+            }
+        }
 
-        private SGUIElementType _elementType;
-        private string _name;
-        private int _code;
+        
+
+
+        protected string _visualName = string.Empty;
+        protected Rect _visualRect = new (0, 0, 50, 50);
+        protected bool _selected = false;
+        protected bool _visible = true;
+
+        protected string _name;
+        protected int _code;
 
 
         public void CopyFrom(SGUIElement element)
@@ -180,11 +196,40 @@ namespace SGToolsUI.Model
             _visualName = element._visualName;
             _visualRect = element._visualRect;
 
-            _elementType = element._elementType;
             _name = element._name;
             _code = element._code;
         }
 
+        public abstract void CreateInit();
+
+        // ================================================
+        // 팩토리 메서드
+        // ================================================
+        public static SGUIElement Create(SGUIElementType type)
+        {
+            SGUIElement element = null;
+
+            switch (type)
+            {
+                case SGUIElementType.Button: 
+                    element = new SGUIButton();
+                    break;
+                case SGUIElementType.Group: 
+                    element = new SGUIGroup();
+                    break;
+            }
+
+            if (element == null)
+                throw new Exception("");
+
+            element.CreateInit();
+            return element;
+        }
+
+        
+
         public abstract object Clone();
+        [Browsable(false)]
+        public override CanvasElementType CanvasElementType => CanvasElementType.UIElement;
     }
 }

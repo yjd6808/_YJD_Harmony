@@ -10,7 +10,16 @@
                             Value="Stretch" />
                     <Setter Property="VerticalContentAlignment"
                             Value="Stretch" />
+                    <Setter Property="IsExpanded"
+                            Value="True" />
                 </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
     </Style>

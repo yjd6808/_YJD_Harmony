@@ -34,12 +34,18 @@ namespace SGToolsUI.Command
         // 커맨드 목록
         // =================================================
         public CommandAbstract OpenSetting { get; }
-        public CommandAbstract ReloadPackage { get; }
-        public CommandAbstract SelectPackage { get; }
-        public CommandAbstract SelectElement { get; }
-        public CommandAbstract SelectSprite { get; }
+        public CommandAbstract ReloadSgaPackage { get; }
+        public CommandAbstract SelectSgaPackage { get; }
+        public CommandAbstract SelectSgaElement { get; }
+        public CommandAbstract SelectSgaSprite { get; }
         public CommandAbstract DeleteUIElement { get; }
+        public CommandAbstract CreateUIElement { get; }
+        public CommandAbstract SelectUIElement { get; }
         public CommandAbstract AddUIElement { get; }
+        public CommandAbstract PickUIElement { get; }
+
+        public CommandAbstract ToggleCanvasViewport { get; }
+        public CommandAbstract ToggleCanvasGrid { get; }
 
 
 
@@ -55,13 +61,17 @@ namespace SGToolsUI.Command
             ViewModel = viewModel;
 
             Add(OpenSetting = new OpenSetting(ViewModel));
-            Add(ReloadPackage = new ReloadPackage(ViewModel));
-            Add(SelectPackage = new SelectPackage(ViewModel) { UseParameter = true });
-            Add(SelectElement = new SelectElement(ViewModel) { UseParameter = true });
-            Add(SelectSprite = new SelectSprite(ViewModel) { UseParameter = true });
+            Add(ReloadSgaPackage = new ReloadSgaPackage(ViewModel));
+            Add(SelectSgaPackage = new SelectSgaPackage(ViewModel) { UseParameter = true });
+            Add(SelectSgaElement = new SelectSgaElement(ViewModel) { UseParameter = true });
+            Add(SelectSgaSprite = new SelectSgaSprite(ViewModel) { UseParameter = true });
             Add(DeleteUIElement = new DeleteUIElement(ViewModel));
-            Add(AddUIElement = new AddUIElement(ViewModel));
-
+            Add(CreateUIElement = new CreateUIElement(ViewModel));
+            Add(SelectUIElement = new SelectUIElement(ViewModel) { UseParameter = true });
+            Add(AddUIElement = new AddUIElement(ViewModel) { UseParameter = true });
+            Add(PickUIElement = new PickUIElement(ViewModel));
+            Add(ToggleCanvasViewport = new ToggleCanvasViewport(ViewModel));
+            Add(ToggleCanvasGrid = new ToggleCanvasGrid(ViewModel));
 
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });
             Add(SpritePreview = new SpritePreview(ViewModel) { UseParameter = true });

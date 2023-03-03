@@ -6,10 +6,17 @@
         <ResourceDictionary Source="OneLineSeparator.xaml"/>
         <ResourceDictionary Source="NoIconMenuItem.xaml"/>
         <ResourceDictionary Source="MenuItemSeparator.xaml"/>
+        <ResourceDictionary Source="MenuItemSpark.xaml" />
+        <ResourceDictionary Source="MenuItemSelect.xaml" />
+        <ResourceDictionary Source="MenuItemNotUsable.xaml" />
+        <ResourceDictionary Source="MenuItemDelete.xaml" />
+        <ResourceDictionary Source="MenuItemSeparator.xaml" />
         <ResourceDictionary Source="StretchListBox.xaml"/>
         <ResourceDictionary Source="StretchTreeView.xaml"/>
         <ResourceDictionary Source="BorderSeparatorHorizontal.xaml"/>
         <ResourceDictionary Source="BorderSeparatorVertical.xaml"/>
         <ResourceDictionary Source="ReadonlyTextBox.xaml"/>
+        <ResourceDictionary Source="Selection.xaml" />
+        <ResourceDictionary Source="WinformTreeView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

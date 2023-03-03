@@ -52,7 +52,7 @@ namespace SGToolsUI.Command.MainViewCommand.Control
                 ViewModel.View.Top + ViewModel.MouseOnWindow.Y
             );
 
-            ViewModel.MouseOnCanvas = Mouse.GetPosition(ViewModel.View.MainCanvas).ToVector();
+            ViewModel.MouseOnCanvas = Mouse.GetPosition(ViewModel.View.UIElementsControl).ToVector();
         }
     }
 }

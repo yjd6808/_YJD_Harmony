@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:local="clr-namespace:SGToolsUI"
+                    xmlns:mo="clr-namespace:SGToolsUI.Model"
+                    xmlns:vm="clr-namespace:SGToolsUI.ViewModel">
+    <DataTemplate x:Key="CanvasGridTemplate" DataType="{x:Type mo:CanvasGrid}">
+        <ItemsControl ItemsSource="{Binding Lines}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Line X1="{Binding Position}"
+                              Y1="0"
+                              X2="{Binding Position}"
+                              Y2="100000" 
+                              StrokeThickness="{Binding DataContext.Thickness, RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}}"
+                              Stroke="{Binding DataContext.Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}}"/>
+                        <Line X1="0"
+                              Y1="{Binding Position}"
+                              X2="100000"
+                              Y2="{Binding Position}" 
+                              StrokeThickness="{Binding DataContext.Thickness, RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}}"
+                              Stroke="{Binding DataContext.Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas ClipToBounds="True"
+                            Width="{x:Static local:Constant.ResolutionWidth}"
+                            Height="{x:Static local:Constant.ResolutionHeight}">
+                    </Canvas>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        
+    </DataTemplate>
+</ResourceDictionary>

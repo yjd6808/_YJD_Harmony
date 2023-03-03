@@ -25,10 +25,10 @@ using SGToolsCommon.Sga;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
-    public class SelectPackage : MainCommandAbstract
+    public class SelectSgaPackage : MainCommandAbstract
     {
 
-        public SelectPackage(MainViewModel viewModel)
+        public SelectSgaPackage(MainViewModel viewModel)
             : base(viewModel, "SGA 패키지를 선택합니다.")
         {
         }

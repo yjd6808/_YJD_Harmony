@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="MenuItemButton" TargetType="MenuItem">
+        <Setter Property="Icon">
+            <Setter.Value>
+                <Image Width="16"
+                       Height="16"
+                       Source="/Resource/Icon/ui_button2.ico"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

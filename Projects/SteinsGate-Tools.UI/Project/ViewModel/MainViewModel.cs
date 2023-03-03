@@ -37,99 +37,24 @@ namespace SGToolsUI.ViewModel
             Setting.Load();
             PackManager = SgaManager.Instance;
             Commander = new MainCommandCenter(this);
-            Commander.Execute(nameof(ReloadPackage));
-
-            GroupMaster.Children.Add(new SGUIGroup()
-            {
-                Name = "그룹 1" ,
-                Children = new ObservableCollection<SGUIElement>()
-                {
-                    new SGUIButton() { Name = "버튼 1-1"},
-                    new SGUIButton() { Name = "버튼 1-2"},
-                    new SGUIButton() { Name = "버튼 1-3"},
-                    new SGUIButton() { Name = "버튼 1-4"},
-                    new SGUIGroup()
-                    {
-                        Name = "그룹 1-5",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { Name = "버튼 1-5-1"},
-                            new SGUIButton() { Name = "버튼 1-5-2"},
-                            new SGUIButton() { Name = "버튼 1-5-3"},
-                            new SGUIButton() { Name = "버튼 1-5-4"},
-                            new SGUIGroup()
-                            {
-                                Name = "그룹 1-5-5"
-                            }
-                        }
-                    },
-                    new SGUIGroup()
-                    {
-                        Name = "그룹 1-6",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { Name = "버튼 1-6-1"},
-                            new SGUIButton() { Name = "버튼 1-6-2"},
-                            new SGUIButton() { Name = "버튼 1-6-3"},
-                            new SGUIButton() { Name = "버튼 1-6-4"},
-                            new SGUIGroup()
-                            {
-                                Name = "그룹 1-6-5"
-                            }
-                        }
-                    }
-                }
-                
-            });
-            GroupMaster.Children.Add(new SGUIGroup()
-            {
-                Name = "그룹 2",
-                Children = new ObservableCollection<SGUIElement>()
-                {
-                    new SGUIButton() { Name = "버튼 2-1"},
-                    new SGUIButton() { Name = "버튼 2-2"},
-                    new SGUIButton() { Name = "버튼 2-3"},
-                    new SGUIButton() { Name = "버튼 2-4"},
-                    new SGUIGroup()
-                    {
-                        Name = "그룹 2-5",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { Name = "버튼 2-5-1"},
-                            new SGUIButton() { Name = "버튼 2-5-2"},
-                            new SGUIButton() { Name = "버튼 2-5-3"},
-                            new SGUIButton() { Name = "버튼 2-5-4"},
-                            new SGUIGroup()
-                            {
-                                Name = "그룹 2-5-5"
-                            }
-                        }
-                    },
-                    new SGUIGroup()
-                    {
-                        Name = "그룹 2-6",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { Name = "버튼 2-6-1"},
-                            new SGUIButton() { Name = "버튼 2-6-2"},
-                            new SGUIButton() { Name = "버튼 2-6-3"},
-                            new SGUIButton() { Name = "버튼 2-6-4"},
-                            new SGUIGroup()
-                            {
-                                Name = "그룹 2-6-5"
-                            }
-                        }
-                    }
-                }
-            });
-            GroupMaster.Children.Add(new SGUIGroup() { Name = "그룹 3" });
-            GroupMaster.Children.Add(new SGUIGroup() { Name = "그룹 4" });
+            Commander.Execute(nameof(ReloadSgaPackage));
         }
 
         public MainView View { get; set; }
         public Setting Setting { get; set; }
         public MainCommandCenter Commander { get; }
         public SgaManager PackManager { get; }
+
+
+        public ZoomState ZoomState
+        {
+            get => _zoomState;
+            set
+            {
+                _zoomState = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string ResourceSelectionStatus
         {
@@ -211,6 +136,18 @@ namespace SGToolsUI.ViewModel
             }
         }
 
+        public SelectMode UIElementSelectMode
+        {
+            get => _uiElementSelectMode;
+            set
+            {
+                _uiElementSelectMode = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private SelectMode _uiElementSelectMode;
+        private ZoomState _zoomState;
         private Vector _mouseOnWindow = new (0, 0);
         private Vector _mouseOnMonitor = new(0, 0);
         private Vector _mouseOnCanvas = new(0, 0);
@@ -224,7 +161,6 @@ namespace SGToolsUI.ViewModel
             VisualRect = new Rect(0, 0, Constant.CanvasWidth, Constant.CanvasHeight),
             VisualName = "그룹 마스터",
             Code = 0,
-            ElementType = SGUIElementType.Group,
             Selected = false,
             VerticalAlignment = VerticalAlignment.Top,
             HorizontalAlignment = HorizontalAlignment.Left,

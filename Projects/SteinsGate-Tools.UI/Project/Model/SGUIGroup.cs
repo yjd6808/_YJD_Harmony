@@ -28,9 +28,7 @@ namespace SGToolsUI.Model
 {
     public class SGUIGroup : SGUIElement
     {
-        public SGUIGroup() : base(SGUIElementType.Group)
-        {
-        }
+        
 
         [Browsable(false)]
         [Category("Group")]
@@ -72,6 +70,9 @@ namespace SGToolsUI.Model
             get => _horizontalAlignment;
             set
             {
+                if (_horizontalAlignment == value)
+                    return;
+
                 _horizontalAlignment = value;
                 OnPropertyChanged();
             }
@@ -85,11 +86,38 @@ namespace SGToolsUI.Model
             get => _verticalAlignment;
             set
             {
+                if (_verticalAlignment == value)
+                    return;
+
                 _verticalAlignment = value;
                 OnPropertyChanged();
             }
         }
 
+        [Category("Visual")]
+        [DisplayName("Visible")]
+        [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정합니다. (그룹 요소입니다. 하위 항목들도 모두 적용됩니다.)")]
+        public override bool IsVisible
+        {
+            get => _visible;
+            set
+            {
+                if (_visible == value)
+                    return;
+
+                _visible = value;
+                OnPropertyChanged();
+                ForEachRecursive((element) => element.IsVisible = value);
+            }
+        }
+
+        [Browsable(false)] public override bool IsGroup => true;
+        public override SGUIElementType UIElementType => SGUIElementType.Group;
+
+        public override void CreateInit()
+        {
+            VisualName = $"그룹_{Seq++}";
+        }
 
         public override object Clone()
         {
@@ -115,7 +143,7 @@ namespace SGToolsUI.Model
             {
                 SGUIElement element = _children[i];
                 action(element);
-                if (element.ElementType == SGUIElementType.Group)
+                if (element.UIElementType == SGUIElementType.Group)
                 {
                     ((SGUIGroup)element).ForEachRecursive(action);
                     continue;
@@ -128,6 +156,8 @@ namespace SGToolsUI.Model
         private ObservableCollection<SGUIElement> _children = new();
         private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Left;
         private VerticalAlignment _verticalAlignment = VerticalAlignment.Bottom;
+
+        public static int Seq = 0;
 
     }
 }

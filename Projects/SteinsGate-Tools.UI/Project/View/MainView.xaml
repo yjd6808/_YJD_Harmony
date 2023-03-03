@@ -8,23 +8,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SGToolsUI" 
+        
+        xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+        xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+
+
+        xmlns:local="clr-namespace:SGToolsUI"
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
         xmlns:model="clr-namespace:SGToolsUI.Model"
+        xmlns:cus_ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
+        xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+
         xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
-        xmlns:custom_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
-        xmlns:custom_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
-        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
-        xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
-        xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:cus_common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
+        xmlns:cus_common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
         Name="View"
         FontSize="14"
         AllowsTransparency="True" WindowStyle="None"
         SizeToContent="WidthAndHeight"
-        Width="Auto"
-        Height="Auto"
         Closing="MainView_OnClosing"
+        Loaded="MainView_OnLoaded"
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     
@@ -47,7 +53,7 @@
         
             ############################################################################### -->
 
-        <custom_ctrl:TitleBar Title="슈타인즈게이트 : UI 툴" DockPanel.Dock="Top"/>
+        <cus_common_ctrl:TitleBar Title="슈타인즈게이트 : UI 툴" DockPanel.Dock="Top"/>
         <Separator DockPanel.Dock="Top"/>
 
 
@@ -58,9 +64,9 @@
             ############################################################################### -->
         <Grid DockPanel.Dock="Bottom" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}"></ColumnDefinition>
+                <ColumnDefinition Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}"/>
                 <ColumnDefinition Width="1"></ColumnDefinition>
-                <ColumnDefinition Width="{Binding Source={x:Static local:Constant.CanvasWidth}}" x:Name="CanvasStatusBarColumnDefinition"></ColumnDefinition>
+                <ColumnDefinition Width="{Binding ZoomState.BaseCanvasStatusBarWidth, Mode=OneWay}"/>
                 <ColumnDefinition Width="1"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
@@ -75,7 +81,14 @@
                 <TextBox Grid.Column="2" Text="{Binding MouseOnCanvas, Converter={cv:VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
             </Grid>
             <Border     Grid.Column="1"  Style="{StaticResource BorderSeparatorVertical}"/>
-            <TextBox    Grid.Column="2"  Text="{Binding CanvasSelectionStatus}" Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
+            <Grid Grid.Column="2" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0"  Text="{Binding ZoomState.ZoomLevelXString, Mode=OneWay}"  Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
+                <TextBox Grid.Column="1"  Text="{Binding CanvasSelectionStatus}" Style="{StaticResource ReadonlyTextBox}"/>
+            </Grid>
             <Border     Grid.Column="3"  Style="{StaticResource BorderSeparatorVertical}" />
             <TextBox    Grid.Column="4"  Text="{Binding ResourceSelectionStatus}" Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
         </Grid>
@@ -99,13 +112,147 @@
         </Menu>
         <Separator DockPanel.Dock="Top"/>
 
+ 
+
         <!-- ###############################################################################
         
                                               트리뷰
         
             ############################################################################### -->
 
-        <StackPanel>
+        <ScrollViewer Name="UIElementTreeViewScrollViewer" Height="Auto" Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_group.ico"/>
+                        <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_button.ico"/>
+                        <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_delete.ico"/>
+                    </Grid>
+                    <Separator />
+                </StackPanel>
+
+                <cus_ui_ctrl:UIElementTreeView Grid.Row="1"
+                                               x:Name="UIElementTreeView"
+                                               Background="Transparent"
+                                               BorderThickness="0"
+                                               ItemTemplateSelector="{x:Static ui_selector:UIElementTreeViewSelector.Selector}"
+                                               ItemsSource="{Binding GroupMaster.Children}">
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem"
+                               BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Selected}" Value="True">
+                                    <Setter Property="Background" Value="CornflowerBlue" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Selected}" Value="False">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+
+                    <TreeView.Style>
+                        <Style TargetType="{x:Type TreeView}">
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding GroupMaster.HasSelectedElement}"
+                                                   Value="True" />
+                                        <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}"
+                                                   Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="ContextMenu">
+                                        <Setter.Value>
+                                            <ContextMenu>
+                                                <MenuItem Style="{StaticResource MenuItemDelete}"
+                                                          Header="삭제"
+                                                          Command="{Binding Commander.DeleteUIElement}" />
+                                                <MenuItem Style="{StaticResource MenuItemSelect}"
+                                                          Header="픽"
+                                                          Command="{Binding Commander.PickUIElement}" />
+                                                <Separator />
+                                                <MenuItem Style="{StaticResource MenuItemGroup}"
+                                                          Header="그룹 추가"
+                                                          Command="{Binding Commander.CreateUIElement}"
+                                                          CommandParameter="Group" />
+                                                <MenuItem Style="{StaticResource MenuItemButton}"
+                                                          Header="버튼 추가"
+                                                          Command="{Binding Commander.CreateUIElement}"
+                                                          CommandParameter="Button" />
+                                            </ContextMenu>
+                                        </Setter.Value>
+                                    </Setter>
+                                </MultiDataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding GroupMaster.HasSelectedElement}"
+                                                   Value="True" />
+                                        <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}"
+                                                   Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="ContextMenu">
+                                        <Setter.Value>
+                                            <ContextMenu>
+                                                <MenuItem Style="{StaticResource MenuItemDelete}"
+                                                          Header="삭제"
+                                                          Command="{Binding Commander.DeleteUIElement}" />
+                                                <MenuItem Style="{StaticResource MenuItemSelect}"
+                                                          Header="픽"
+                                                          Command="{Binding Commander.PickUIElement}" />
+                                            </ContextMenu>
+                                        </Setter.Value>
+                                    </Setter>
+                                </MultiDataTrigger>
+                                <DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}"
+                                             Value="False">
+                                    <Setter Property="ContextMenu">
+                                        <Setter.Value>
+                                            <ContextMenu>
+                                                <MenuItem Style="{StaticResource MenuItemDelete}"
+                                                          Header="삭제"
+                                                          Command="{Binding Commander.DeleteUIElement}"
+                                                          IsEnabled="False" />
+                                                <MenuItem Style="{StaticResource MenuItemSelect}"
+                                                          Header="픽"
+                                                          Command="{Binding Commander.PickUIElement}"
+                                                          IsEnabled="False" />
+                                                <Separator />
+                                                <MenuItem Style="{StaticResource MenuItemGroup}"
+                                                          Header="그룹 추가"
+                                                          Command="{Binding Commander.CreateUIElement}"
+                                                          CommandParameter="Group"
+                                                          IsEnabled="True" />
+                                                <MenuItem Style="{StaticResource MenuItemButton}"
+                                                          Header="버튼 추가"
+                                                          Command="{Binding Commander.CreateUIElement}"
+                                                          CommandParameter="Button"
+                                                          IsEnabled="False" />
+                                            </ContextMenu>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeView.Style>
+                </cus_ui_ctrl:UIElementTreeView>
+            </Grid>
+        </ScrollViewer>
+        <Border Style="{StaticResource BorderSeparatorVertical}" DockPanel.Dock="Left"/>
+
+        
+
+        <StackPanel DockPanel.Dock="Left" Name="CanvasPanel">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"/>
@@ -114,35 +261,73 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.AddUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" custom_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_group.ico"/>
-                <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.AddUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" custom_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_button.ico"/>
-                <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" custom_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_delete.ico"/>
+                <Button Name="ToggleCanvasGridButton" Grid.Column="0" Command="{Binding Commander.ToggleCanvasGrid}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_grid.ico"/>
+                <Button Name="ToggleCanvasViewportButton" Grid.Column="1" Command="{Binding Commander.ToggleCanvasViewport}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_rect.ico"/>
             </Grid>
-            <Separator/>
+            <Grid>
 
-            <custom_ctrl:StretchingTreeView Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}"
-                                            Background="Transparent"
-                                            BorderThickness="0"
-                                            ItemTemplateSelector="{x:Static model:SGUIElementSelector.Selector}"
-                                            ItemsSource="{Binding GroupMaster.Children}"
-                                            Style="{StaticResource StretchTreeView}">
-            </custom_ctrl:StretchingTreeView>
-
-        </StackPanel>
-        <Border Style="{StaticResource BorderSeparatorVertical}" DockPanel.Dock="Left"/>
-
-
-        <!-- ###############################################################################
+                <!-- ###############################################################################
         
-                                              캔버스
+                                              엘리먼트 캔버스
         
-            ############################################################################### -->
-        <StackPanel DockPanel.Dock="Left" Name="CanvasPanel">
-            <local:CustomCanvas x:Name="MainCanvas"
-                                Background="LightGray"
-                                Width="{x:Static local:Constant.CanvasWidth}"
-                                Height="{x:Static local:Constant.CanvasHeight}" />
-            <TextBlock Text="오하요"></TextBlock>
+                ############################################################################### -->
+                <cus_ui_ctrl:UIElementItemsControl x:Name="UIElementsControl"
+                                               ItemsSource="{Binding UIElements, RelativeSource={RelativeSource Self}}"
+                                               ItemTemplateSelector="{x:Static ui_selector:UIElementCanvasSelector.Selector}">
+
+                    <!-- 아이템을 어떤 패널에 표시할지 결정 -->
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas x:Name="UIElementsPanel"
+                                    Width="{x:Static local:Constant.CanvasWidth}"
+                                    Height="{x:Static local:Constant.CanvasHeight}"
+                                    Background="LightGray">
+                                <Canvas.LayoutTransform>
+                                    <ScaleTransform ScaleX="{Binding ZoomState.ZoomLevelX, Mode=OneWay}"
+                                                    ScaleY="{Binding ZoomState.ZoomLevelY, Mode=OneWay}" />
+                                </Canvas.LayoutTransform>
+                            </Canvas>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CanvasElementType}" Value="UIElement">
+                                    <Setter Property="Canvas.Left" Value="{Binding VisualPosition.X}"/>
+                                    <Setter Property="Canvas.Top" Value="{Binding VisualPosition.Y}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </cus_ui_ctrl:UIElementItemsControl>
+
+
+                <!-- ###############################################################################
+        
+                                              쉐이프 캔버스
+        
+                ############################################################################### -->
+
+
+                <cus_ui_ctrl:CanvasShapeItemsControl x:Name="CanvasShapesControl"
+                                           ItemsSource="{Binding CanvasShapes, RelativeSource={RelativeSource Self}}"
+                                           ItemTemplateSelector="{x:Static ui_selector:CanvasShapeSelector.Selector}">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas x:Name="CanvasShapesPanel"
+                                    Width="{x:Static local:Constant.CanvasWidth}"
+                                    Height="{x:Static local:Constant.CanvasHeight}"
+                                    Background="LightGray">
+                                <Canvas.LayoutTransform>
+                                    <ScaleTransform ScaleX="{Binding ZoomState.ZoomLevelX, Mode=OneWay}"
+                                                    ScaleY="{Binding ZoomState.ZoomLevelY, Mode=OneWay}" />
+                                </Canvas.LayoutTransform>
+                            </Canvas>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </cus_ui_ctrl:CanvasShapeItemsControl>
+            </Grid>
         </StackPanel>
 
 
@@ -162,7 +347,7 @@
                     <ColumnDefinition Width="30"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Command="{Binding Commander.ReloadPackage}" Style="{StaticResource ImageButton}" custom_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_refresh.ico"/>
+                <Button Grid.Column="0" Command="{Binding Commander.ReloadSgaPackage}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_refresh.ico"/>
             </Grid>
             
             <StackPanel Grid.Row="1"
@@ -183,7 +368,7 @@
                                 <!-- 리스트박스 아이템 더블클릭으로 커맨드를 실행하기 위함 -->
                                 <TextBlock.InputBindings>
                                     <MouseBinding MouseAction="LeftDoubleClick"
-                                                  Command="{Binding DataContext.Commander.SelectPackage, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                  Command="{Binding DataContext.Commander.SelectSgaPackage, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
                                                   CommandParameter="{Binding}" />
                                 </TextBlock.InputBindings>
                             </TextBlock>
@@ -202,7 +387,7 @@
                                 <!-- 리스트박스 아이템 더블클릭으로 커맨드를 실행하기 위함 -->
                                 <TextBlock.InputBindings>
                                     <MouseBinding MouseAction="LeftDoubleClick"
-                                                  Command="{Binding DataContext.Commander.SelectElement, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                  Command="{Binding DataContext.Commander.SelectSgaElement, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
                                                   CommandParameter="{Binding}" />
                                 </TextBlock.InputBindings>
                                 <TextBlock.ContextMenu>
@@ -215,7 +400,7 @@
                     </ListBox.ItemTemplate>
 
                 </ListBox>
-                <custom_ctrl:PlaceholderImageListBox MinWidth="100"
+                <cus_common_ctrl:PlaceholderImageListBox MinWidth="100"
                                              MaxWidth="100"
                                              Name="SpriteListBox"
                                              ScrollViewer.VerticalScrollBarVisibility="Hidden"
@@ -225,7 +410,7 @@
                                              PlaceholderImageSourceOpacity="0.5"
                                              Style="{StaticResource StretchListBox}"
                                              ItemsSource="{Binding SelectedImage.SpriteList}">
-                    <custom_ctrl:PlaceholderImageListBox.ItemTemplate>
+                    <cus_common_ctrl:PlaceholderImageListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding FrameIndex}">
                                 <i:Interaction.Triggers>
@@ -239,14 +424,14 @@
                                                                PassEventArgsToCommand="True" />
                                     </i:EventTrigger>
                                     <i:EventTrigger EventName="MouseLeftButtonDown">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.Commander.SelectSprite, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                        <i:InvokeCommandAction Command="{Binding DataContext.Commander.SelectSgaSprite, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
                                                                PassEventArgsToCommand="True" />
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBlock>
                         </DataTemplate>
-                    </custom_ctrl:PlaceholderImageListBox.ItemTemplate>
-                </custom_ctrl:PlaceholderImageListBox>
+                    </cus_common_ctrl:PlaceholderImageListBox.ItemTemplate>
+                </cus_common_ctrl:PlaceholderImageListBox>
             </StackPanel>
 
             <Grid Grid.Row="2">

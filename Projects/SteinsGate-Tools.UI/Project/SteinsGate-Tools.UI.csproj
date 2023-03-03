@@ -15,18 +15,28 @@
 
 	<ItemGroup>
 		<None Remove="Resource\Icon\ui_button.ico" />
+		<None Remove="Resource\Icon\ui_button2.ico" />
+		<None Remove="Resource\Icon\ui_checkbox2.ico" />
 		<None Remove="Resource\Icon\ui_editbox.ico" />
+		<None Remove="Resource\Icon\ui_editbox2.ico" />
+		<None Remove="Resource\Icon\ui_glass.ico" />
 		<None Remove="Resource\Icon\ui_group.ico" />
 		<None Remove="Resource\Icon\ui_group_selected.ico" />
 		<None Remove="Resource\Icon\ui_label.ico" />
+		<None Remove="Resource\Icon\ui_label2.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Resource Include="Resource\Icon\ui_button.ico" />
+		<Resource Include="Resource\Icon\ui_button2.ico" />
+		<Resource Include="Resource\Icon\ui_checkbox2.ico" />
 		<Resource Include="Resource\Icon\ui_editbox.ico" />
+		<Resource Include="Resource\Icon\ui_editbox2.ico" />
+		<Resource Include="Resource\Icon\ui_glass.ico" />
 		<Resource Include="Resource\Icon\ui_group.ico" />
 		<Resource Include="Resource\Icon\ui_group_selected.ico" />
 		<Resource Include="Resource\Icon\ui_label.ico" />
+		<Resource Include="Resource\Icon\ui_label2.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -39,6 +49,7 @@
 	  <PackageReference Include="morelinq" Version="3.4.0" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 	  <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+	  <PackageReference Include="WinCopies.AttachedCommandBehavior" Version="3.1.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>

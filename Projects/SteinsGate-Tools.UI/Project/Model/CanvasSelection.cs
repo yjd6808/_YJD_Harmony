@@ -1,0 +1,67 @@
+﻿
+/*
+ * 작성자: 윤정도
+ * 생성일: 3/2/2023 9:40:59 AM
+ *
+ */
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace SGToolsUI.Model
+{
+    public class CanvasSelection : CanvasShape
+    {
+        public ItemsControl Selection { get; set; }
+        public override ShapeElementType ShapeElementType => ShapeElementType.Selection;
+
+        public Rect VisualRect
+        {
+            get => _visualRect;
+            set
+            {
+                _visualRect = value;
+                OnPropertyChanged();
+                OnPropertyChanged("VisualSize");
+                OnPropertyChanged("VisualPosition");
+            }
+        }
+
+        public Point VisualPosition
+        {
+            get => _visualRect.Location;
+            set
+            {
+                _visualRect.Location = value;
+                OnPropertyChanged();
+                OnPropertyChanged("VisualRect");
+            }
+        }
+
+        public Size VisualSize
+        {
+            get => _visualRect.Size;
+            set
+            {
+                _visualRect.Size = value;
+                OnPropertyChanged();
+                OnPropertyChanged("VisualRect");
+            }
+        }
+
+        public override bool IsSelection => true;
+        private Rect _visualRect;
+    }
+}

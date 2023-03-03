@@ -8,8 +8,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/SGToolsCommon;Component/CustomStyle/All.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/Model/SGUIButtonTemplate.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/Model/SGUIGroupTemplate.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/CustomStyle/All.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/SGToolsUI;Component/ModelTemplate/All.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 

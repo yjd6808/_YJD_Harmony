@@ -26,9 +26,9 @@ using SGToolsCommon.Sga;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
-    public class ReloadPackage : MainCommandAbstract
+    public class ReloadSgaPackage : MainCommandAbstract
     {
-        public ReloadPackage(MainViewModel viewModel)
+        public ReloadSgaPackage(MainViewModel viewModel)
             : base(viewModel, "패키지를 모두 언로드 후 다시 로딩홥니다.")
         {
         }

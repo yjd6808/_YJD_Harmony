@@ -1,6 +1,7 @@
 ﻿<!--
     작성자: 윤정도
     생성일: 3/1/2023 2:42:20 AM
+    윈도우 스타일 None, 백그라운드 Null, 얼로트랜스패런시 True로 하면 이미지만 깔쌈하게 뛰울 수 있음
 -->
 
 <Window x:Class="SGToolsUI.View.SpriteView"
@@ -16,6 +17,7 @@
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
         AllowsTransparency="True"
+        Background="{x:Null}"
         WindowStyle="None"
         Name="View"
         FontSize="14"

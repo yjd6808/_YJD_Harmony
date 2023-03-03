@@ -23,9 +23,9 @@ using System.Windows.Shapes;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
-    public class SelectSprite : MainCommandAbstract
+    public class SelectSgaSprite : MainCommandAbstract
     {
-        public SelectSprite(MainViewModel viewModel)
+        public SelectSgaSprite(MainViewModel viewModel)
             : base(viewModel, "SGA 스프라이트를 선택합니다.")
         {
         }

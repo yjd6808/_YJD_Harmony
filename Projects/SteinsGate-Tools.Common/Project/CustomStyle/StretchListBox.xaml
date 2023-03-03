@@ -11,5 +11,12 @@
                 </Style>
             </Setter.Value>
         </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

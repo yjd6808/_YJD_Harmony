@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <!-- 쉐이프 캔버스 -->
+        <ResourceDictionary Source="CanvasSelectionTemplate.xaml"/>
+        <ResourceDictionary Source="CanvasGridTemplate.xaml" />
+        <ResourceDictionary Source="CanvasRectTemplate.xaml" />
+
+        <!-- UI 엘리먼트 캔버스 -->
+        <ResourceDictionary Source="UIButtonCanvasTemplate.xaml" />
+        <ResourceDictionary Source="UIGroupCanvasTemplate.xaml" />
+
+        <!-- UI 엘리먼트 트리뷰-->
+        <ResourceDictionary Source="UIButtonTreeViewTemplate.xaml" />
+        <ResourceDictionary Source="UIGroupTreeViewTemplate.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

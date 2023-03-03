@@ -13,8 +13,13 @@
 
   <ItemGroup>
     <None Remove="Resource\Icon\common_delete.ico" />
+    <None Remove="Resource\Icon\common_grid.ico" />
     <None Remove="Resource\Icon\common_music.ico" />
+    <None Remove="Resource\Icon\common_not_usable.ico" />
+    <None Remove="Resource\Icon\common_rect.ico" />
     <None Remove="Resource\Icon\common_refresh.ico" />
+    <None Remove="Resource\Icon\common_select.ico" />
+    <None Remove="Resource\Icon\common_spark.ico" />
     <None Remove="Resource\win_close.ico" />
     <None Remove="Resource\win_maximize.ico" />
     <None Remove="Resource\win_minimize.ico" />
@@ -22,6 +27,7 @@
 
   <ItemGroup>
     <Resource Include="Resource\Icon\common_delete.ico" />
+    <Resource Include="Resource\Icon\common_grid.ico" />
     <Resource Include="Resource\Icon\common_music.ico" />
   </ItemGroup>
 
@@ -31,10 +37,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\Icon\common_not_usable.ico" />
+    <Resource Include="Resource\Icon\common_rect.ico" />
     <Resource Include="Resource\Icon\common_refresh.ico" />
+    <Resource Include="Resource\Icon\common_select.ico" />
+    <Resource Include="Resource\Icon\common_spark.ico" />
     <Resource Include="Resource\Icon\win_close.ico" />
     <Resource Include="Resource\Icon\win_maximize.ico" />
     <Resource Include="Resource\Icon\win_minimize.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ThirdParty\ACB\" />
   </ItemGroup>
 
 </Project>

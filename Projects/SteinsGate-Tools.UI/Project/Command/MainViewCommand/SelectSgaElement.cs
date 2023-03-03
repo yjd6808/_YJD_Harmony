@@ -24,10 +24,10 @@ using SGToolsCommon.Extension;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
-    public class SelectElement : MainCommandAbstract
+    public class SelectSgaElement : MainCommandAbstract
     {
 
-        public SelectElement(MainViewModel viewModel)
+        public SelectSgaElement(MainViewModel viewModel)
             : base(viewModel, "SGA 엘리멘트를 선택합니다.")
         {
         }

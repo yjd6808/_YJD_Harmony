@@ -63,6 +63,7 @@ namespace SGToolsCommon.Sga
                 sgaPackage.UnloadAll();
 
             Packages.Clear();
+            PackageMap.Clear();
         }
 
         public SgaPackage GetPackage(int index)

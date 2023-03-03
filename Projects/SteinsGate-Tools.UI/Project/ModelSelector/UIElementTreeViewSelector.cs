@@ -19,8 +19,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Extension;
+using SGToolsUI.CustomControl;
+using SGToolsUI.Model;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.ModelSelector
 {
     /*
      * WPF에서 ItemTemplateSelector는 컬렉션 컨트롤(예: ListBox, TreeView, ItemsControl 등)의
@@ -34,17 +37,18 @@ namespace SGToolsUI.Model
      * 나타내는 두 개의 매개 변수(선택하려는 항목과 그 항목의 부모 요소)를 받습니다.
      */
 
-    public class SGUIElementSelector : DataTemplateSelector
+    public class UIElementTreeViewSelector : DataTemplateSelector
     {
-        public static readonly SGUIElementSelector Selector = new ();
+        public static readonly UIElementTreeViewSelector Selector = new ();
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
+            UIElementTreeView treeView = container.FindParent<UIElementTreeView>();
+
             switch (item)
             {
-            case SGUIGroupMaster  __groupMaster__ :  return (DataTemplate)Application.Current.FindResource("GroupMasterTemplate");
-            case SGUIGroup        __group__       :  return (DataTemplate)Application.Current.FindResource("GroupTemplate");
-            case SGUIButton       __button__      :  return (DataTemplate)Application.Current.FindResource("ButtonTemplate");
+            case SGUIGroup        __group__       :  return (DataTemplate)Application.Current.FindResource("GroupTreeViewTemplate");
+            case SGUIButton       __button__      :  return (DataTemplate)Application.Current.FindResource("ButtonTreeViewTemplate");
             }
 
             throw new Exception("SGUIElementSelector에서 반환가능한 DataTemplate을 찾지 못했습니다.");

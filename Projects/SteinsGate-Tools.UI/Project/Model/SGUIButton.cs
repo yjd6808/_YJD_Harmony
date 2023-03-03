@@ -26,10 +26,6 @@ namespace SGToolsUI.Model
 
     public class SGUIButton : SGUIElement
     {
-        public SGUIButton() : base(SGUIElementType.Button)
-        {
-        }
-
         public SGUISpriteInfo Normal
         {
             get => _normal;
@@ -76,6 +72,13 @@ namespace SGToolsUI.Model
         private SGUISpriteInfo _over;
         private SGUISpriteInfo _disabled;
 
+        public override SGUIElementType UIElementType => SGUIElementType.Button;
+
+        public override void CreateInit()
+        {
+            VisualName = $"버튼_{Seq++}";
+        }
+
         public override object Clone()
         {
             SGUIButton button = new SGUIButton();
@@ -87,6 +90,6 @@ namespace SGToolsUI.Model
             return button;
         }
 
-        
+        public static int Seq = 0;
     }
 }

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using SGToolsCommon.CustomControl;
+using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
 using SGToolsCommon.ThirdParty;
+using SGToolsUI.Command.MainViewCommand;
+using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
+using Xceed.Wpf.AvalonDock.Controls;
 
 namespace SGToolsUI.View
 {
@@ -30,6 +35,9 @@ namespace SGToolsUI.View
     {
         public MainViewModel ViewModel { get; }
         public DispatcherTimer Timer { get; }
+        public CanvasGrid GridRect { get; } = new (100, 1, Brushes.White);
+
+
 
         public MainView()
         {
@@ -38,47 +46,163 @@ namespace SGToolsUI.View
             Timer = new DispatcherTimer();
             Timer.Interval = TimeSpan.FromSeconds(1/60.0f);
             Timer.Tick += TimerTick;
+            ViewModel.ZoomState = new ZoomState();
             Resources.Add("ViewModel", ViewModel);
 
             InitializeComponent();
-            SetVerticalScrollToEnd();
         }
 
         private void TimerTick(object? sender, EventArgs e)
         {
-
         }
 
-        public void AddChildBitmapImage(BitmapImage bitmap, double x, double y)
-        {
-            Image image = new Image() { Source = bitmap };
-            MainCanvas.Children.Add(image);
-            Canvas.SetLeft(image, x);
-            Canvas.SetTop(image, MainCanvas.Height - bitmap.PixelHeight);
-        }
 
-        public void SetVerticalScrollToEnd()
-        {
-            //MainCanvas.ScrollToVerticalOffset(20000);
-        }
-
-        // ÎÜíÏù¥ Î≥ÄÍ≤ΩÏùÄ Îã§Ïãú Î≥¥Ï†ïÌï¥Ï§òÏïºÌï®
-        public void ChangeCanvasHeight(double width, double height)
-        {
-            double changedHeight = height - MainCanvas.Height;
-
-            foreach (UIElement child in MainCanvas.Children)
-            {
-                double beforeTop = Canvas.GetTop(child);
-                Canvas.SetTop(child, beforeTop + height);
-            }
-            
-        }
-
-      
         private void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
             ViewModel.Commander.Finalize();
+        }
+
+        private void MainView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            InitializeZoomStateBinding();       // ƒƒ∆˜≥Õ∆Æ∞° ∏µŒ √ ±‚»≠µ» »ƒø° ¿©µµøÏ ªÁ¿Ã¡Ó∞° √÷¡æ∞·¡§µ«±‚ ∂ßπÆø°.. Xamlø°º≠ ¿€º∫«œ¡ˆ æ ∞Ì C# ƒ⁄µÂ∑Œ ¿€º∫«œµµ∑œ «—¥Ÿ.
+
+            #region  a
+
+            //#region MyRegion
+
+            //ViewModel.GroupMaster.Children.Add(new SGUIGroup()
+            //{
+            //    Name = "±◊∑Ï 1",
+            //    Children = new ObservableCollection<SGUIElement>()
+            //    {
+            //        new SGUIButton() { Name = "πˆ∆∞ 1-1"},
+            //        new SGUIButton() { Name = "πˆ∆∞ 1-2"},
+            //        new SGUIButton() { Name = "πˆ∆∞ 1-3"},
+            //        new SGUIButton() { Name = "πˆ∆∞ 1-4"},
+            //        new SGUIGroup()
+            //        {
+            //            Name = "±◊∑Ï 1-5",
+            //            Children = new ObservableCollection<SGUIElement>()
+            //            {
+            //                new SGUIButton() { Name = "πˆ∆∞ 1-5-1"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 1-5-2"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 1-5-3"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 1-5-4"},
+            //                new SGUIGroup()
+            //                {
+            //                    Name = "±◊∑Ï 1-5-5"
+            //                }
+            //            }
+            //        },
+            //        new SGUIGroup()
+            //        {
+            //            Name = "±◊∑Ï 1-6",
+            //            Children = new ObservableCollection<SGUIElement>()
+            //            {
+            //                new SGUIButton() { Name = "πˆ∆∞ 1-6-1"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 1-6-2"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 1-6-3"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 1-6-4"},
+            //                new SGUIGroup()
+            //                {
+            //                    Name = "±◊∑Ï 1-6-5"
+            //                }
+            //            }
+            //        }
+            //    }
+
+            //});
+            //ViewModel.GroupMaster.Children.Add(new SGUIGroup()
+            //{
+            //    Name = "±◊∑Ï 2",
+            //    Children = new ObservableCollection<SGUIElement>()
+            //    {
+            //        new SGUIButton() { Name = "πˆ∆∞ 2-1"},
+            //        new SGUIButton() { Name = "πˆ∆∞ 2-2"},
+            //        new SGUIButton() { Name = "πˆ∆∞ 2-3"},
+            //        new SGUIButton() { Name = "πˆ∆∞ 2-4"},
+            //        new SGUIGroup()
+            //        {
+            //            Name = "±◊∑Ï 2-5",
+            //            Children = new ObservableCollection<SGUIElement>()
+            //            {
+            //                new SGUIButton() { Name = "πˆ∆∞ 2-5-1"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 2-5-2"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 2-5-3"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 2-5-4"},
+            //                new SGUIGroup()
+            //                {
+            //                    Name = "±◊∑Ï 2-5-5"
+            //                }
+            //            }
+            //        },
+            //        new SGUIGroup()
+            //        {
+            //            Name = "±◊∑Ï 2-6",
+            //            Children = new ObservableCollection<SGUIElement>()
+            //            {
+            //                new SGUIButton() { Name = "πˆ∆∞ 2-6-1"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 2-6-2"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 2-6-3"},
+            //                new SGUIButton() { Name = "πˆ∆∞ 2-6-4"},
+            //                new SGUIGroup()
+            //                {
+            //                    Name = "±◊∑Ï 2-6-5"
+            //                }
+            //            }
+            //        }
+            //    }
+            //});
+            //ViewModel.GroupMaster.Children.Add(new SGUIGroup() { Name = "±◊∑Ï 3" });
+            //ViewModel.GroupMaster.Children.Add(new SGUIGroup() { Name = "±◊∑Ï 4" });
+
+            //#endregion
+
+            #endregion
+
+            /*
+            for (int i = 0; i < 100; ++i)
+            {
+                var g = new SGUIGroup() { Name = "±◊∑Ï 3", VisualPosition = new Point(10 * i, 10 * i) };
+                g.SetViewModel(ViewModel); 
+                ViewModel.Commander.Execute(nameof(AddUIElement), g);
+            }
+            */
+
+            
+        }
+
+
+
+        // ================================================================================
+        // XAML∑Œ ±∏«ˆ¿Ã »˚µÁ ±‚¥…µÈ
+        // ================================================================================
+
+
+        private void InitializeZoomStateBinding()
+        {
+            // ºˆµø ≥ ∫Ò, ≥Ù¿Ã ¡∂¿˝¿ª ¿ß«ÿ ∏ﬁ¥∫æÛ∑Œ ¿¸»Ø
+            SizeToContent = SizeToContent.Manual;
+            ViewModel.ZoomState.BaseWindowWidth = ActualWidth;
+            ViewModel.ZoomState.BaseWindowHeight = ActualHeight;
+
+            // https://stackoverflow.com/questions/2673600/problems-with-binding-to-window-height-and-width
+            // Width, Height «¡∑Œ∆€∆º∞° ∫Œ∏ ø‰º“¿« ∑π¿Ãæ∆øÙ ∑Œ¡˜¿ª µ˚∂Û ∞£¥Ÿ¥¬ º≥∏Ì.
+            // ¿©µµøÏø° ∫Œ∏ ø‰º“∞° ¿÷æ˙≥™ §ß§ß..
+            // ±◊∑°º≠ MinWidth, MaxHeightø° ∞¢∞¢ πŸ¿Œµ˘«ÿ¡·¥Ÿ.
+            Binding windowZoomStateWidthBinding = new Binding();
+            windowZoomStateWidthBinding.Source = ViewModel.ZoomState;
+            windowZoomStateWidthBinding.Path = new PropertyPath(nameof(ViewModel.ZoomState.BaseWindowWidth));
+            windowZoomStateWidthBinding.Mode = BindingMode.OneWay;
+            View.SetBinding(Window.MinWidthProperty, windowZoomStateWidthBinding);
+            View.SetBinding(Window.MaxWidthProperty, windowZoomStateWidthBinding);
+
+            Binding windowZoomStateHeightBinding = new Binding();
+            windowZoomStateHeightBinding.Source = ViewModel.ZoomState;
+            windowZoomStateHeightBinding.Path = new PropertyPath(nameof(ViewModel.ZoomState.BaseWindowHeight));
+            windowZoomStateHeightBinding.Mode = BindingMode.OneWay;
+            View.SetBinding(Window.MinHeightProperty, windowZoomStateHeightBinding);
+            View.SetBinding(Window.MaxHeightProperty, windowZoomStateHeightBinding);
         }
     }
 }

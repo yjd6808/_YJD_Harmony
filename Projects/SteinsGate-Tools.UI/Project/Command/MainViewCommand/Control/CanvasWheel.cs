@@ -37,43 +37,43 @@ namespace SGToolsUI.Command.MainViewCommand.Control
             if (wheelEventArgs == null)
                 return;
 
-            double canvasWidth = ViewModel.View.MainCanvas.DesiredSize.Width;
-            double canvasHeight = ViewModel.View.MainCanvas.DesiredSize.Height;
+            double canvasWidth = ViewModel.View.UIElementsControl.DesiredSize.Width;
+            double canvasHeight = ViewModel.View.UIElementsControl.DesiredSize.Height;
             double deltaWidth = Constant.CanvasWheelDelta;
             double deltaHeight = Constant.CanvasWheelDelta * Constant.ResoltionRatio;
-            double deltaScaleX;
-            double deltaScaleY;
+            double scaleX;
+            double scaleY;
 
-            if (wheelEventArgs.Delta > 0)
+            if (wheelEventArgs.Delta < 0) 
             {
-                if (canvasWidth >= 1500.0f)
-                    return;
-            }
-            else
-            {
-                if (canvasWidth <= 200.0f)
-                    return;
-
                 deltaWidth *= -1;
                 deltaHeight *= -1;
             }
 
-            deltaScaleX = (canvasWidth + deltaWidth) / Constant.CanvasWidth;
-            deltaScaleY = (canvasHeight + deltaHeight) / Constant.CanvasHeight;
+            scaleX = (canvasWidth + deltaWidth) / Constant.CanvasWidth;
+            scaleY = (canvasHeight + deltaHeight) / Constant.CanvasHeight;
 
+            if (scaleX < 0.51 || scaleY < 0.51)
+                return;
+
+            ViewModel.ZoomState.ZoomLevelX = scaleX;
+            ViewModel.ZoomState.ZoomLevelY = scaleY;
+
+            /* 바인딩을 활용해서 좀더 범용성있게 구현 수정
             // 캔버스 스케일 반영
             ScaleTransform scaleTransform = new ScaleTransform(deltaScaleX, deltaScaleY);
             ViewModel.View.MainCanvas.LayoutTransform = scaleTransform;
-
+            
             // 매인 윈도 크기 반영
             ViewModel.View.Width += deltaWidth;
             ViewModel.View.Height += deltaHeight;
-
+            
             // 캔버스 상태표시줄 너비 반영
             double lengthValue = ViewModel.View.CanvasStatusBarColumnDefinition.ActualWidth + deltaWidth;
             GridLengthConverter gridLengthConverter = new GridLengthConverter();
             GridLength gridLength = (GridLength)gridLengthConverter.ConvertFrom(lengthValue.ToString());
             ViewModel.View.CanvasStatusBarColumnDefinition.Width = gridLength;
+            */
         }
     }
 }
