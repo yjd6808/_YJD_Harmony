@@ -12,17 +12,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="obj\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <None Remove="obj\**" />
+    <Page Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resource\Icon\common_delete.ico" />
+    <None Remove="Resource\Icon\common_down.ico" />
     <None Remove="Resource\Icon\common_grid.ico" />
     <None Remove="Resource\Icon\common_music.ico" />
     <None Remove="Resource\Icon\common_not_usable.ico" />
     <None Remove="Resource\Icon\common_rect.ico" />
     <None Remove="Resource\Icon\common_refresh.ico" />
+    <None Remove="Resource\Icon\common_reset.ico" />
     <None Remove="Resource\Icon\common_select.ico" />
     <None Remove="Resource\Icon\common_spark.ico" />
+    <None Remove="Resource\Icon\common_up.ico" />
     <None Remove="Resource\win_close.ico" />
     <None Remove="Resource\win_maximize.ico" />
     <None Remove="Resource\win_minimize.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\Icon\common_down.ico" />
+    <Resource Include="Resource\Icon\common_reset.ico" />
+    <Resource Include="Resource\Icon\common_up.ico" />
   </ItemGroup>
 
   <ItemGroup>

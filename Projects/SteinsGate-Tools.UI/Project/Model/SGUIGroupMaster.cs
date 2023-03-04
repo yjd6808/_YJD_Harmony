@@ -22,7 +22,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using iText.StyledXmlParser.Css.Selector.Item;
 using MoreLinq;
 using SGToolsUI.ViewModel;
 
@@ -90,6 +89,17 @@ namespace SGToolsUI.Model
             }
         }
 
+        public SGUIElement PrevSelectedElement
+        {
+            get
+            {
+                if (SelectedElements.Count <= 1)
+                    return null;
+
+                return SelectedElements[SelectedElements.Count - 2];
+            }
+        }
+
         public bool IsMultiSelected => SelectedElements.Count >= 2;
 
 
@@ -113,7 +123,7 @@ namespace SGToolsUI.Model
 
             int selectedCount = 0;
 
-            ForEachRecursive((element) =>
+            ForEachRecursive(element =>
             {
                 if (element.Selected)
                     selectedCount++;
@@ -126,14 +136,13 @@ namespace SGToolsUI.Model
 
         public void SelectPrint()
         {
-            //SelectedElements.ForEach(element =>
-            //{
-            //    if (!element.Selected)
-            //        throw new Exception("선택되지 않은 대상이 있습니다.");
+            SelectedElements.ForEach(element =>
+            {
+                if (!element.Selected)
+                    throw new Exception("선택되지 않은 대상이 있습니다.");
 
-            //    Debug.WriteLine($"\t{element.VisualName} 렉트:{element.VisualRect} 깊이:{element.Depth} 부모:{element.Parent.VisualName}");
-            //});
-
+                Debug.WriteLine($"\t{element.VisualName} 렉트:{element.VisualRect} 깊이:{element.Depth} 부모:{element.Parent.VisualName}");
+            });
         }
 
 
@@ -166,10 +175,13 @@ namespace SGToolsUI.Model
 
             SGUIElement low = lhsElement;
             SGUIElement high = rhsElement;
+
             
+            int comp = Compare(lhsElement, rhsElement);
+
             // 좌측 엘리먼트가 우선순위가 더 큰경우 스왑
-            if (Compare(lhsElement, rhsElement) > 0)
-                (low, high) = (high, low);  // ㄷㄷ 이런게 되네
+            if (comp > 0)
+                (low, high) = (high, low); // ㄷㄷ 이런게 되네
 
             // 0: low를 찾는 상태
             // 1: high를 찾는 상태
@@ -207,6 +219,10 @@ namespace SGToolsUI.Model
                     }
                 }
             }
+
+            // 밑에껄 선택 후 위에껄 선택한 경우, 반대로 뒤짚어준다.
+            if (comp > 0)
+                result.Reverse();
 
             return result;
         }

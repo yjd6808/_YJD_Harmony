@@ -24,9 +24,9 @@ using System.Windows.Shapes;
 
 namespace SGToolsUI.Command.MainViewCommand.Control
 {
-    public class CanvasWheel : MainCommandAbstract
+    public class CanvasZoomWheel : MainCommandAbstract
     {
-        public CanvasWheel(MainViewModel viewModel)
+        public CanvasZoomWheel(MainViewModel viewModel)
             : base(viewModel, "UI 툴의 캔버스 크기를 휠로 조절합니다. 이에따라 윈도우 크기도 같이 조절됩니다.")
         {
         }

@@ -57,7 +57,7 @@ namespace SGToolsUI.Model
             JObject root = JObject.Parse(content);
 
             SgaDirectory = root["SgaDirectory"].ToString();
-            OutputDefinePath = root["SgaDirectory"].ToString();
+            OutputDefinePath = root["OutputDefinePath"].ToString();
             OutputJsonPath = root["OutputJsonPath"].ToString();
             return true;
         }

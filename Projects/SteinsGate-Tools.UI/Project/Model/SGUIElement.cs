@@ -129,7 +129,37 @@ namespace SGToolsUI.Model
             }
         }
 
-        
+        [Browsable(false)]
+        public bool LastSelected
+        {
+            get
+            {
+                var groupMaster = ViewModel.GroupMaster;
+
+                if (this == groupMaster)
+                    throw new Exception("그룹 마스터는 이 함수 호출 금지");
+
+
+                return groupMaster.SelectedElement == this;
+            }
+        }
+
+        [Browsable(false)]
+        public bool PrevSelected
+        {
+            get
+            {
+                var groupMaster = ViewModel.GroupMaster;
+
+                if (this == groupMaster)
+                    throw new Exception("그룹 마스터는 이 함수 호출 금지");
+
+
+                return groupMaster.PrevSelectedElement == this;
+            }
+        }
+
+
 
         // =========================================================================
         //                         비주얼 관련 정보

@@ -45,7 +45,7 @@
                                        PassEventArgsToCommand="True" />
             </i:EventTrigger>
             <i:EventTrigger EventName="MouseWheel">
-                <i:InvokeCommandAction Command="{Binding Commander.CanvasWheel}"
+                <i:InvokeCommandAction Command="{Binding Commander.CanvasZoomWheel}"
                                        PassEventArgsToCommand="True" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
@@ -56,7 +56,7 @@
         
             ############################################################################### -->
 
-        <cus_common_ctrl:TitleBar Name="TitlePanel" Title="슈타인즈게이트 : UI 툴" DockPanel.Dock="Top"/>
+        <cus_common_ctrl:TitleBar Name="TitlePanel" Title="슈타인즈게이트 : UITool" DockPanel.Dock="Top"/>
         <Separator DockPanel.Dock="Top"/>
 
 
@@ -83,14 +83,20 @@
                 <TextBox Grid.Column="1" Text="{Binding MouseOnWindow, Converter={cv:VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
                 <TextBox Grid.Column="2" Text="{Binding MouseOnCanvas, Converter={cv:VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
             </Grid>
-            <Border     Grid.Column="1"  Style="{StaticResource BorderSeparatorVertical}"/>
+            <Border Grid.Column="1"  Style="{StaticResource BorderSeparatorVertical}"/>
             <Grid Grid.Column="2" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0"  Text="{Binding ZoomState.ZoomLevelXString, Mode=OneWay}"  Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
-                <TextBox Grid.Column="1"  Text="{Binding CanvasSelectionStatus}" Style="{StaticResource ReadonlyTextBox}"/>
+                <Button Name="ZoomLevelDownButton" Grid.Column="1" Command="{Binding Commander.CanvasZoomUp}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_up.ico" />
+                <Button Name="ZoomLevelUpButton" Grid.Column="2" Command="{Binding Commander.CanvasZoomDown}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_down.ico" />
+                <Button Name="ZoomLevelResetButton" Grid.Column="3" Command="{Binding Commander.CanvasZoomReset}" IsEnabled="{Binding ZoomState.IsNotDefaultZoomLevel}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_reset.ico"/>
+                <TextBox Grid.Column="4"  Text="{Binding CanvasSelectionStatus}" Style="{StaticResource ReadonlyTextBox}"/>
             </Grid>
             <Border     Grid.Column="3"  Style="{StaticResource BorderSeparatorVertical}" />
             <TextBox    Grid.Column="4"  Text="{Binding ResourceSelectionStatus}" Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
@@ -123,110 +129,127 @@
         
             ############################################################################### -->
 
-        <ScrollViewer Name="UIElementTreeViewScrollViewer" Height="Auto" Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}" VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0">
-                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+        <Grid DockPanel.Dock="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-                        <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_group.ico"/>
-                        <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_button.ico"/>
-                        <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_delete.ico"/>
-                    </Grid>
-                    <Separator />
+            <ScrollViewer Grid.Column="0" Name="UIElementTreeViewScrollViewer" Height="Auto" Width="{Binding Source={x:Static local:Constant.LeftPaneWidth}}" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                         <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_group.ico"/>
+                            <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsUI;component/Resource/Icon/ui_button.ico"/>
+                            <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" cus_common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_delete.ico"/>
+                        </Grid>
+                        <Separator />
+                    </StackPanel>
+
+                    <cus_ui_ctrl:UIElementTreeView Grid.Row="1"
+                                                   x:Name="UIElementTreeView"
+                                                   Background="Transparent"
+                                                   BorderThickness="0"
+                                                   ItemTemplateSelector="{x:Static ui_selector:UIElementTreeViewSelector.Selector}"
+                                                   ItemsSource="{Binding GroupMaster.Children}">
+                        <cus_ui_ctrl:UIElementTreeView.ItemContainerStyle>
+                            <Style TargetType="TreeViewItem"
+                                   BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Selected}" Value="True">
+                                        <Setter Property="Background" Value="CornflowerBlue" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Selected}" Value="False">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </cus_ui_ctrl:UIElementTreeView.ItemContainerStyle>
+
+                        <cus_ui_ctrl:UIElementTreeView.Style>
+                            <Style TargetType="{x:Type cus_ui_ctrl:UIElementTreeView}">
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
+                                            <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="ContextMenu">
+                                            <Setter.Value>
+                                                <ContextMenu>
+                                                    <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
+                                                    <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" CommandParameter="{Binding CurrentSelectedTreeViewItem.DataContext, ElementName=UIElementTreeView}" />
+                                                    <Separator />
+                                                    <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" />
+                                                    <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Button" />
+                                                </ContextMenu>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
+                                            <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="False" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="ContextMenu">
+                                            <Setter.Value>
+                                                <ContextMenu>
+                                                    <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
+                                                    <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" CommandParameter="{Binding CurrentSelectedTreeViewItem.DataContext, ElementName=UIElementTreeView}" />
+                                                </ContextMenu>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </MultiDataTrigger>
+                                    <DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
+                                        <Setter Property="ContextMenu">
+                                            <Setter.Value>
+                                                <ContextMenu>
+                                                    <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="False" />
+                                                    <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" IsEnabled="False" />
+                                                    <Separator />
+                                                    <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" IsEnabled="True" />
+                                                    <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Button" IsEnabled="False" />
+                                                </ContextMenu>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding GroupMaster.IsMultiSelected}" Value="True">
+                                        <Setter Property="ContextMenu">
+                                            <Setter.Value>
+                                                <ContextMenu>
+                                                    <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="True" />
+                                                </ContextMenu>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </cus_ui_ctrl:UIElementTreeView.Style>
+                    </cus_ui_ctrl:UIElementTreeView>
+                </Grid>
+            </ScrollViewer>
+            <Border Grid.Row="1" Style="{StaticResource BorderSeparatorHorizontal}"/>
+            <Grid Grid.Row="2"> 
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="선택됨: "/>
+                    <TextBlock Text="{Binding GroupMaster.SelectedElement.VisualName}"/>
                 </StackPanel>
-
-                <cus_ui_ctrl:UIElementTreeView Grid.Row="1"
-                                               x:Name="UIElementTreeView"
-                                               Background="Transparent"
-                                               BorderThickness="0"
-                                               ItemTemplateSelector="{x:Static ui_selector:UIElementTreeViewSelector.Selector}"
-                                               ItemsSource="{Binding GroupMaster.Children}">
-                    <TreeView.ItemContainerStyle>
-                        <Style TargetType="TreeViewItem"
-                               BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Selected}" Value="True">
-                                    <Setter Property="Background" Value="CornflowerBlue" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Selected}" Value="False">
-                                    <Setter Property="Background" Value="Transparent" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-
-                    <TreeView.Style>
-                        <Style TargetType="{x:Type TreeView}">
-                            <Style.Triggers>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
-                                        <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="True" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="ContextMenu">
-                                        <Setter.Value>
-                                            <ContextMenu>
-                                                <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
-                                                <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" />
-                                                <Separator />
-                                                <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" />
-                                                <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Button" />
-                                            </ContextMenu>
-                                        </Setter.Value>
-                                    </Setter>
-                                </MultiDataTrigger>
-                                <MultiDataTrigger>
-                                    <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
-                                        <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="False" />
-                                    </MultiDataTrigger.Conditions>
-                                    <Setter Property="ContextMenu">
-                                        <Setter.Value>
-                                            <ContextMenu>
-                                                <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
-                                                <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" />
-                                            </ContextMenu>
-                                        </Setter.Value>
-                                    </Setter>
-                                </MultiDataTrigger>
-                                <DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
-                                    <Setter Property="ContextMenu">
-                                        <Setter.Value>
-                                            <ContextMenu>
-                                                <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="False" />
-                                                <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" IsEnabled="False" />
-                                                <Separator />
-                                                <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" IsEnabled="True" />
-                                                <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Button" IsEnabled="False" />
-                                            </ContextMenu>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding GroupMaster.IsMultiSelected}" Value="True">
-                                    <Setter Property="ContextMenu">
-                                        <Setter.Value>
-                                            <ContextMenu>
-                                                <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="True" />
-                                            </ContextMenu>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TreeView.Style>
-                </cus_ui_ctrl:UIElementTreeView>
             </Grid>
-        </ScrollViewer>
+        </Grid>
+
+        
         <Border Style="{StaticResource BorderSeparatorVertical}" DockPanel.Dock="Left"/>
 
         
@@ -315,8 +338,8 @@
         <Grid DockPanel.Dock="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="200"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -414,7 +437,7 @@
             </StackPanel>
 
             <Grid Grid.Row="2">
-                <c:PropertyGrid Name="ElementPropertyGrid"/>
+                <c:PropertyGrid Name="ElementPropertyGrid" FontSize="12"/>
             </Grid>
         </Grid>
 

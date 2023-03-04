@@ -12,6 +12,13 @@
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="obj\**" />
+	  <EmbeddedResource Remove="obj\**" />
+	  <None Remove="obj\**" />
+	  <Page Remove="obj\**" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<None Remove="Resource\Icon\ui_button.ico" />
@@ -45,7 +52,6 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
-	  <PackageReference Include="itext7" Version="7.2.5" />
 	  <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
 	  <PackageReference Include="morelinq" Version="3.4.0" />
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />

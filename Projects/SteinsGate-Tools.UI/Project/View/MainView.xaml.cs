@@ -35,9 +35,6 @@ namespace SGToolsUI.View
     {
         public MainViewModel ViewModel { get; }
         public DispatcherTimer Timer { get; }
-        public CanvasGrid GridRect { get; } = new (100, 1, Brushes.White);
-
-
 
         public MainView()
         {
@@ -63,111 +60,6 @@ namespace SGToolsUI.View
         private void MainView_OnLoaded(object sender, RoutedEventArgs e)
         {
             InitializeZoomStateBinding();       // 컴포넌트가 모두 초기화된 후에 윈도우 사이즈가 최종결정되기 때문에.. Xaml에서 작성하지 않고 C# 코드로 작성하도록 한다.
-
-            #region  a
-
-            //#region MyRegion
-
-            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0)
-            {
-                VisualName = "그룹 1",
-                Children = new ObservableCollection<SGUIElement>()
-                {
-                    new SGUIButton() { VisualName = "버튼 1-1"},
-                    new SGUIButton() { VisualName = "버튼 1-2"},
-                    new SGUIButton() { VisualName = "버튼 1-3"},
-                    new SGUIButton() { VisualName = "버튼 1-4"},
-                    new SGUIGroup(1)
-                    {
-                        VisualName = "그룹 1-5",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { VisualName = "버튼 1-5-1"},
-                            new SGUIButton() { VisualName = "버튼 1-5-2"},
-                            new SGUIButton() { VisualName = "버튼 1-5-3"},
-                            new SGUIButton() { VisualName = "버튼 1-5-4"},
-                            new SGUIGroup(2)
-                            {
-                                VisualName = "그룹 1-5-5"
-                            }
-                        }
-                    },
-                    new SGUIGroup(1)
-                    {
-                        VisualName = "그룹 1-6",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { VisualName = "버튼 1-6-1"},
-                            new SGUIButton() { VisualName = "버튼 1-6-2"},
-                            new SGUIButton() { VisualName = "버튼 1-6-3"},
-                            new SGUIButton() { VisualName = "버튼 1-6-4"},
-                            new SGUIGroup(2)
-                            {
-                                VisualName = "그룹 1-6-5"
-                            }
-                        }
-                    }
-                }
-
-            });
-            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0)
-            {
-                VisualName = "그룹 2",
-                Children = new ObservableCollection<SGUIElement>()
-                {
-                    new SGUIButton() { VisualName = "버튼 2-1"},
-                    new SGUIButton() { VisualName = "버튼 2-2"},
-                    new SGUIButton() { VisualName = "버튼 2-3"},
-                    new SGUIButton() { VisualName = "버튼 2-4"},
-                    new SGUIGroup(1)
-                    {
-                        VisualName = "그룹 2-5",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { VisualName = "버튼 2-5-1"},
-                            new SGUIButton() { VisualName = "버튼 2-5-2"},
-                            new SGUIButton() { VisualName = "버튼 2-5-3"},
-                            new SGUIButton() { VisualName = "버튼 2-5-4"},
-                            new SGUIGroup(2)
-                            {
-                                VisualName = "그룹 2-5-5"
-                            }
-                        }
-                    },
-                    new SGUIGroup(1)
-                    {
-                        VisualName = "그룹 2-6",
-                        Children = new ObservableCollection<SGUIElement>()
-                        {
-                            new SGUIButton() { VisualName = "버튼 2-6-1"},
-                            new SGUIButton() { VisualName = "버튼 2-6-2"},
-                            new SGUIButton() { VisualName = "버튼 2-6-3"},
-                            new SGUIButton() { VisualName = "버튼 2-6-4"},
-                            new SGUIGroup(2)
-                            {
-                                VisualName = "그룹 2-6-5"
-                            }
-                        }
-                    }
-                }
-            });
-            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0) { VisualName = "그룹 3" });
-            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0) { VisualName = "그룹 4" });
-            ViewModel.GroupMaster.ForEachRecursive(x => x.ViewModel = ViewModel);
-            ViewModel.GroupMaster.UpdateParent();
-
-            #endregion
-
-
-            /*
-            for (int i = 0; i < 100; ++i)
-            {
-                var g = new SGUIGroup() { Name = "그룹 3", VisualPosition = new Point(10 * i, 10 * i) };
-                g.SetViewModel(ViewModel); 
-                ViewModel.Commander.Execute(nameof(AddUIElement), g);
-            }
-            */
-
 
         }
 
@@ -206,35 +98,38 @@ namespace SGToolsUI.View
 
         private void MainView_OnKeyDown(object sender, KeyEventArgs e)
         {
-            Debug.WriteLine(this.Focusable);
-            ViewModel.KeyState.Down(e.Key);
+            KeyState state = ViewModel.KeyState;
 
-            if (ViewModel.KeyState.IsShiftPressed)
+            state.Down(e.Key);
+
+            if (state.IsShiftPressed)
             {
                 TitlePanel.Draggable = false;
                 ViewModel.UIElementSelectMode = SelectMode.Keep;
-                Debug.WriteLine("모드1");
             }
 
             // 컨트롤키를 우선토록 한다.
-            if (ViewModel.KeyState.IsCtrlPressed)
+            else if (state.IsCtrlPressed)
             {
                 TitlePanel.Draggable = false;
                 ViewModel.UIElementSelectMode = SelectMode.KeepExcept;
-                Debug.WriteLine("모드2");
             }
+
+            else if (state.IsPressed(Key.Escape))
+                ViewModel.GroupMaster.DeselectAll();
         }
 
 
         private void MainView_OnKeyUp(object sender, KeyEventArgs e)
         {
-            ViewModel.KeyState.Up(e.Key);
+            KeyState state = ViewModel.KeyState;
 
-            if (!ViewModel.KeyState.IsShiftPressed && !ViewModel.KeyState.IsCtrlPressed)
+            state.Up(e.Key);
+
+            if (!state.IsShiftPressed && !state.IsCtrlPressed)
             {
                 TitlePanel.Draggable = true;
                 ViewModel.UIElementSelectMode = SelectMode.New;
-                Debug.WriteLine("해제");
             }
         } 
     }

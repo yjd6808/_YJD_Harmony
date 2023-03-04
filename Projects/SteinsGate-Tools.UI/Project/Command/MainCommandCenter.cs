@@ -46,7 +46,10 @@ namespace SGToolsUI.Command
 
         public CommandAbstract ToggleCanvasViewport { get; }
         public CommandAbstract ToggleCanvasGrid { get; }
-
+        public CommandAbstract CanvasZoomUp { get; }
+        public CommandAbstract CanvasZoomDown { get; }
+        public CommandAbstract CanvasZoomReset { get; }
+        
 
 
         // =================================================
@@ -54,7 +57,8 @@ namespace SGToolsUI.Command
         // =================================================
         public CommandAbstract MouseMoveOnWindow { get; }
         public CommandAbstract SpritePreview { get; }
-        public CommandAbstract CanvasWheel{ get; }
+        public CommandAbstract CanvasZoomWheel{ get; }
+        
 
         public MainCommandCenter(MainViewModel viewModel)
         {
@@ -70,12 +74,16 @@ namespace SGToolsUI.Command
             Add(SelectUIElement = new SelectUIElement(ViewModel) { UseParameter = true });
             Add(AddUIElement = new AddUIElement(ViewModel) { UseParameter = true });
             Add(PickUIElement = new PickUIElement(ViewModel));
+            Add(CanvasZoomUp = new CanvasZoomUp(ViewModel));
+            Add(CanvasZoomDown = new CanvasZoomDown(ViewModel));
+            Add(CanvasZoomReset = new CanvasZoomReset(ViewModel));
+            
             Add(ToggleCanvasViewport = new ToggleCanvasViewport(ViewModel));
             Add(ToggleCanvasGrid = new ToggleCanvasGrid(ViewModel));
 
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });
             Add(SpritePreview = new SpritePreview(ViewModel) { UseParameter = true });
-            Add(CanvasWheel = new CanvasWheel(ViewModel) { UseParameter = true });
+            Add(CanvasZoomWheel = new CanvasZoomWheel(ViewModel) { UseParameter = true });
         }
     }
 }

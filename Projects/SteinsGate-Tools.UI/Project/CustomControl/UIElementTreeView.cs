@@ -24,17 +24,18 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.CustomControl;
+using SGToolsCommon.Extension;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
+using Xceed.Wpf.Toolkit.Primitives;
 
 namespace SGToolsUI.CustomControl
 {
-    public class UIElementTreeView : TreeView
+    public class UIElementTreeView : TreeView, INotifyPropertyChanged
     {
         public MainViewModel ViewModel { get; private set; }
         public ScrollViewer ScrollViewer { get; private set; }
-
 
         public UIElementTreeView()
         {
@@ -64,8 +65,33 @@ namespace SGToolsUI.CustomControl
         //             이벤트
         // ======================================================================
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
+            HitTestResult hit = VisualTreeHelper.HitTest(this, Mouse.GetPosition(this));
+
+            if (hit.VisualHit == null)
+                return;
+
+            var item = hit.VisualHit.FindParent<TreeViewItem>();
+
+            if (item == null)
+                return;
+
+            if (item.DataContext is not SGUIElement)
+                throw new Exception("선택한 트리뷰 아이템의 데이터컨텍스트가 설정되어있지 않습니다.");
+
+            
+            SGUIElement? selected = item.DataContext as SGUIElement;
+            SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
+
+            if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null)
+            {
+                List<SGUIElement> betweenElements = ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected);
+                ViewModel.Commander.SelectUIElement.Execute(betweenElements);
+                return;
+            }
+
+            ViewModel.Commander.SelectUIElement.Execute(selected);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -86,27 +112,9 @@ namespace SGToolsUI.CustomControl
 
         
 
-
         protected override void OnSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
         {
             base.OnSelectedItemChanged(e);
-
-            SGUIElement selected = e.NewValue as SGUIElement;
-
-            if (selected == null)
-                return;
-
-            SGUIElement prevSelected = e.OldValue as SGUIElement;
-
-            if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null)
-            {
-                List<SGUIElement> betweenElements = ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected);
-                ViewModel.Commander.SelectUIElement.Execute(betweenElements);
-                return;
-            }
-
-
-            ViewModel.Commander.SelectUIElement.Execute(selected);
         }
 
 
@@ -120,5 +128,10 @@ namespace SGToolsUI.CustomControl
 
             ViewModel.Commander.PickUIElement.Execute(selected);
         }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

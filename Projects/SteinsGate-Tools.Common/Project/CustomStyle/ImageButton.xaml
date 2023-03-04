@@ -8,7 +8,10 @@
                 <ControlTemplate TargetType="Button">
                     <StackPanel Orientation="Vertical">
 
-                        <Image Source="{
+                        <Image 
+                            Width="{TemplateBinding Width}" 
+                            Height="{TemplateBinding Height}" 
+                            Source="{
                             Binding Path=(style:ImageButtonProperty.Image), 
                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                         </Image>
@@ -21,6 +24,9 @@
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Background" Value="LightSkyBlue"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.4"></Setter>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
