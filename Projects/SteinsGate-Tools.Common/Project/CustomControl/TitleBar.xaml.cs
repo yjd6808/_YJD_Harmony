@@ -28,7 +28,11 @@ namespace SGToolsCommon.CustomControl
 {
     public partial class TitleBar : UserControl
     {
-        
+        public bool Draggable
+        {
+            get => (bool)GetValue(DraggableProperty);
+            set => SetValue(DraggableProperty, value);
+        }
 
         public string Title
         {
@@ -47,9 +51,11 @@ namespace SGToolsCommon.CustomControl
             {
                 _window = this.FindParent<Window>();
 
-                if (_window == null)
+                if (DesignerProperties.GetIsInDesignMode(this))
                     return;
-                    //throw new Exception("무조건 윈도우 내부에 포함되어야합니다.");
+
+                if (_window == null)
+                    throw new Exception("무조건 윈도우 내부에 포함되어야합니다.");
 
                 _window.MouseDown += WindowOnMouseDown;
             };
@@ -59,6 +65,9 @@ namespace SGToolsCommon.CustomControl
         {
             if (e.ChangedButton == MouseButton.Left)
             {
+                if (!Draggable)
+                    return;
+
                 bool allowTransparency = _window.AllowsTransparency;
 
                 if (allowTransparency)
@@ -95,21 +104,12 @@ namespace SGToolsCommon.CustomControl
             typeof(TitleBar),
             new PropertyMetadata(null) { DefaultValue = "제목을 입력해주세요." });
 
-        /*
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public static readonly DependencyProperty DraggableProperty = DependencyProperty.Register(
+           "Draggable",
+           typeof(bool),
+           typeof(TitleBar),
+           new PropertyMetadata(null) { DefaultValue = true });
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-        */
     }
 }

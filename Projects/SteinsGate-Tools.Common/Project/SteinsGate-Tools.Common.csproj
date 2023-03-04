@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <BaseIntermediateOutputPath>..\Intermediate\</BaseIntermediateOutputPath>
-    <BaseOutputPath>..\Out\</BaseOutputPath>
+    <BaseOutputPath>..\Output\</BaseOutputPath>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
     <AssemblyName>SGToolsCommon</AssemblyName>
   </PropertyGroup>

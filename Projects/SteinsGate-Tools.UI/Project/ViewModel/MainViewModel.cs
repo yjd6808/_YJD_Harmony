@@ -38,13 +38,22 @@ namespace SGToolsUI.ViewModel
             PackManager = SgaManager.Instance;
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
+            GroupMaster = new SGUIGroupMaster(this)
+            {
+                Name = "group_master",
+                VisualRect = new Rect(0, 0, Constant.CanvasWidth, Constant.CanvasHeight),
+                VisualName = "그룹 마스터",
+                Code = 0,
+                Selected = false,
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Left,
+            };
         }
 
         public MainView View { get; set; }
         public Setting Setting { get; set; }
         public MainCommandCenter Commander { get; }
         public SgaManager PackManager { get; }
-
 
         public ZoomState ZoomState
         {
@@ -55,6 +64,17 @@ namespace SGToolsUI.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        public KeyState KeyState
+        {
+            get => _keyState;
+            set
+            {
+                _keyState = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public string ResourceSelectionStatus
         {
@@ -146,8 +166,10 @@ namespace SGToolsUI.ViewModel
             }
         }
 
+        
         private SelectMode _uiElementSelectMode;
-        private ZoomState _zoomState;
+        private KeyState _keyState = new ();
+        private ZoomState _zoomState = new ();
         private Vector _mouseOnWindow = new (0, 0);
         private Vector _mouseOnMonitor = new(0, 0);
         private Vector _mouseOnCanvas = new(0, 0);
@@ -155,16 +177,7 @@ namespace SGToolsUI.ViewModel
         private string _canvasSelectionStatus = string.Empty;
         private SgaPackage _selectedPackage = new ();
         private SgaImage _selectedImage = new ();
-        private SGUIGroupMaster _groupMaster = new()
-        {
-            Name = "group_master",
-            VisualRect = new Rect(0, 0, Constant.CanvasWidth, Constant.CanvasHeight),
-            VisualName = "그룹 마스터",
-            Code = 0,
-            Selected = false,
-            VerticalAlignment = VerticalAlignment.Top,
-            HorizontalAlignment = HorizontalAlignment.Left,
-        };
+        private SGUIGroupMaster _groupMaster;
     }
 }
 

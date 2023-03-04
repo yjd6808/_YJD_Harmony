@@ -37,7 +37,7 @@ namespace SGToolsUI.Command.MainViewCommand
 
         public override void Execute(object? parameter)
         {
-            SGUIGroup selectedGroup = ViewModel.GroupMaster.SelectedElement as SGUIGroup;
+            SGUIGroup selectedGroup = null;//ViewModel.GroupMaster.SelectedElement as SGUIGroup;
 
 
             switch (parameter)

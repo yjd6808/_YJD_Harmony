@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -56,6 +57,28 @@ namespace SGToolsCommon.Extension
 
             static TreeViewItem ContainerFromItem(ItemsControl parent, object item) =>
               (TreeViewItem)parent.ItemContainerGenerator.ContainerFromItem(item);
+
+            // 바인딩된 원소로부터 TreeViewItem을 얻음
+            public static TreeViewItem GetTreeViewItem(this ItemsControl treeView,  object item)
+            {
+                if (treeView.ItemContainerGenerator.ContainerFromItem(item) is TreeViewItem container)
+                    return container;
+
+                if (treeView.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                {
+                    foreach (var childItem in treeView.Items)
+                    {
+                        if (treeView.ItemContainerGenerator.ContainerFromItem(childItem) is TreeViewItem childContainer)
+                        {
+                            var targetContainer = childContainer.GetTreeViewItem(item);
+                            if (targetContainer != null)
+                                return targetContainer;
+                        }
+                    }
+                }
+
+                return null;
+            }
         }
     }
 }

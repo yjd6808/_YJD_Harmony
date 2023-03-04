@@ -28,7 +28,16 @@ namespace SGToolsUI.Model
 {
     public class SGUIGroup : SGUIElement
     {
-        
+
+        public SGUIGroup(int depth)
+        {
+            _depth = depth;
+        }
+
+        // ============================================================
+        //            프로파티
+        // ============================================================
+
 
         [Browsable(false)]
         [Category("Group")]
@@ -106,14 +115,33 @@ namespace SGToolsUI.Model
                     return;
 
                 _visible = value;
+                ForEachRecursive(element => element.IsVisible = value);
                 OnPropertyChanged();
-                ForEachRecursive((element) => element.IsVisible = value);
             }
         }
+
+        [Category("Visual")]
+        [DisplayName("Depth")]
+        [Description("이 엘리먼트의 계층구조상 위치")]
+        public override int Depth => _depth;
+
+
+       
 
         [Browsable(false)] public override bool IsGroup => true;
         public override SGUIElementType UIElementType => SGUIElementType.Group;
 
+        private ObservableCollection<SGUIElement> _children = new();
+        private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Left;
+        private VerticalAlignment _verticalAlignment = VerticalAlignment.Bottom;
+        private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
+
+        public static int Seq = 0;
+
+
+        // ============================================================
+        //            기능
+        // ============================================================
         public override void CreateInit()
         {
             VisualName = $"그룹_{Seq++}";
@@ -121,7 +149,7 @@ namespace SGToolsUI.Model
 
         public override object Clone()
         {
-            SGUIGroup group = new SGUIGroup();
+            SGUIGroup group = new SGUIGroup(_depth);
             group.CopyFrom(this);
             group.HorizontalAlignment = HorizontalAlignment;
             group.VerticalAlignment = VerticalAlignment;
@@ -143,6 +171,7 @@ namespace SGToolsUI.Model
             {
                 SGUIElement element = _children[i];
                 action(element);
+
                 if (element.UIElementType == SGUIElementType.Group)
                 {
                     ((SGUIGroup)element).ForEachRecursive(action);
@@ -151,13 +180,42 @@ namespace SGToolsUI.Model
             }
         }
 
-        public void ForEach(Action<SGUIElement> action) => _children.ForEach(action);
+        public void ForEach(Action<SGUIElement> action)
+        {
+            action(this);
 
-        private ObservableCollection<SGUIElement> _children = new();
-        private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Left;
-        private VerticalAlignment _verticalAlignment = VerticalAlignment.Bottom;
+            _children.ForEach(action);
+        }
 
-        public static int Seq = 0;
 
+
+
+
+        public void UpdateDepth()
+        {
+            Children.Where(childElement => childElement.IsGroup)
+                .Cast<SGUIGroup>()
+                .ForEach(group =>
+                {
+                    group._depth = Parent._depth + 1;
+                    group.UpdateDepth();
+                });
+        }
+
+
+
+        // 디버깅용
+        public void UpdateParent()
+        {
+            Children.ForEach(x =>
+            {
+                x.Parent = this;
+
+                if (x.IsGroup)
+                    x.Cast<SGUIGroup>().UpdateParent();
+            });
+        }
+
+        
     }
 }

@@ -26,6 +26,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsUI.Command.MainViewCommand;
+using MoreLinq.Extensions;
 
 namespace SGToolsUI.CustomControl
 {
@@ -109,7 +110,7 @@ namespace SGToolsUI.CustomControl
             base.OnKeyDown(e);
 
             if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
-                ViewModel.UIElementSelectMode = SelectMode.Keep;
+                ViewModel.UIElementSelectMode = SelectMode.KeepExcept;
         }
 
         protected override void OnKeyUp(KeyEventArgs e)
@@ -140,6 +141,9 @@ namespace SGToolsUI.CustomControl
             initializeSelectionPool();
         }
 
+        // ======================================================================
+        //             이니셜라지
+        // ======================================================================
         private void InitializeViewPort() => _viewPort = new CanvasRect(new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight), 1, Brushes.DodgerBlue);
         private void InitializeGrid() => _grid = new CanvasGrid(100, 1, Brushes.White);
 
@@ -178,14 +182,33 @@ namespace SGToolsUI.CustomControl
         {
             for (int i = 0; i < 200; ++i)
             {
-                var canvasSelection = new CanvasSelection();
-                canvasSelection.Selection = new ItemsControl();
+                var canvasSelection = new CanvasSelection(new ItemsControl());
                 canvasSelection.Selection.Style = (Style)Application.Current.FindResource("Selection");
                 _selectionPool.AddLast(canvasSelection);
             }
         }
+        // ======================================================================
+        //             이벤트
+        // ======================================================================
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+
+        }
 
 
+        // ======================================================================
+        //             기능
+        // ======================================================================
         public void ReleaseAllSelection()
         {
             _selectionMap.Clear();
@@ -213,8 +236,7 @@ namespace SGToolsUI.CustomControl
         {
             if (_selectionPool.Count == 0)
             {
-                var canvasSelection = new CanvasSelection();
-                canvasSelection.Selection = new ItemsControl();
+                var canvasSelection = new CanvasSelection(new ItemsControl());
                 canvasSelection.Selection.Style = (Style)Application.Current.FindResource("Selection");
                 return canvasSelection;
             }
@@ -259,8 +281,7 @@ namespace SGToolsUI.CustomControl
             var canvasSelection = PopSelection();
             canvasSelection.Selection.Width = element.VisualSize.Width;
             canvasSelection.Selection.Height = element.VisualSize.Height;
-            Canvas.SetLeft(canvasSelection.Selection, element.VisualPosition.X);
-            Canvas.SetTop(canvasSelection.Selection, element.VisualPosition.Y);
+            canvasSelection.Selection.Margin = new Thickness(element.VisualPosition.X, element.VisualPosition.Y, 0, 0);
             _canvasShapes.Add(canvasSelection);
             _selectionMap.Add(element, canvasSelection);
         }
@@ -268,10 +289,11 @@ namespace SGToolsUI.CustomControl
         public void ReleaseSelection(SGUIElement element)
         {
             if (!_selectionMap.ContainsKey(element))
-                throw new Exception($"해당 엘리먼트는 선택된 상태가 아닌데 Selection해제를 시도했습니다. 상태:{element.Selected}");
+                return;
 
              CanvasSelection selection = _selectionMap[element];
              _selectionMap.Remove(element);
+             _canvasShapes.Remove(selection);
              PushSelection(selection);
         }
 

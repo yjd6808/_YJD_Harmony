@@ -4,7 +4,7 @@
     <DataTemplate x:Key="ButtonTreeViewTemplate" DataType="{x:Type mo:SGUIButton}">
         <StackPanel Orientation="Horizontal">
             <Image Width="16" Height="16" Source="/Resource/Icon/ui_button2.ico" Margin="0, 0, 4, 0"/>
-            <TextBlock Text="{Binding Name}" />
+            <TextBlock Text="{Binding VisualName}" />
             <StackPanel.Style>
                 <Style TargetType="StackPanel">
                     <Style.Triggers>

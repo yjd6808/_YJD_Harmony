@@ -24,7 +24,11 @@ namespace SGToolsUI.Model
 {
     public class CanvasSelection : CanvasShape
     {
-        public ItemsControl Selection { get; set; }
+        public CanvasSelection(ItemsControl selectionControl)
+            => Selection = selectionControl;
+
+        public ItemsControl Selection { get; }
+        public SGUIElement SelectedElement { get; set; }
         public override ShapeElementType ShapeElementType => ShapeElementType.Selection;
 
         public Rect VisualRect

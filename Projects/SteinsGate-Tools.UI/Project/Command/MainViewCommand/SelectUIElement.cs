@@ -28,7 +28,8 @@ namespace SGToolsUI.Command.MainViewCommand
     public enum SelectMode
     {
         New,        // 기존 셀력 해제 후 선택
-        Keep        // 기존 셀렉션 유지 및 겹치는 대상 제거
+        KeepExcept, // 기존 셀렉션 유지 및 겹치는 대상 제거
+        Keep        // 기존 셀렉션 유지 및 겹치더라도 제거안함.
     }
 
     public class SelectUIElement : MainCommandAbstract
@@ -53,38 +54,87 @@ namespace SGToolsUI.Command.MainViewCommand
             }
         }
 
+        
+
         private void SelectSingleElement(SGUIElement element, SelectMode mode)
         {
-            if (mode == SelectMode.New)
+            switch (mode)
             {
-                ViewModel.View.CanvasShapesControl.ReleaseAllSelection();
-                ViewModel.GroupMaster.DeselectAll();
+                case SelectMode.New:  SelectSingleElementNew(element);   break;
+                case SelectMode.KeepExcept: SelectSingleElementKeepExcept(element);  break;
+                case SelectMode.Keep: SelectSingleElementKeep(element);  break;
             }
+        }
+
+        
+
+        private void SelectSingleElementNew(SGUIElement element)
+        {
+            ViewModel.GroupMaster.DeselectAll();
 
             if (element.Selected)
             {
                 element.Selected = false;
+                return;
+            }
 
-                if (ViewModel.GroupMaster.SelectedElement == element)
-                    ViewModel.GroupMaster.SelectedElement = null;
 
-                ViewModel.View.CanvasShapesControl.ReleaseSelection(element);
+            element.Selected = true;
+        }
+
+        private void SelectSingleElementKeepExcept(SGUIElement element)
+        {
+            if (element.Selected)
+            {
+                element.Selected = false;
                 return;
             }
 
             element.Selected = true;
-            ViewModel.GroupMaster.SelectedElement = element;
-            ViewModel.View.CanvasShapesControl.ArrangeSelection(element);
+        }
+
+        private void SelectSingleElementKeep(SGUIElement element)
+        {
+            if (element.Selected)
+                return;
+
+            element.Selected = true;
         }
 
         private void SelectMultiElements(IEnumerable<SGUIElement> elementList, SelectMode mode)
         {
-            ViewModel.GroupMaster.SelectedElement = null;
-            elementList.ForEach(element =>
+            switch (mode)
             {
-                element.Selected = true;
-                ViewModel.View.CanvasShapesControl.ArrangeSelection(element);
-            });
+                case SelectMode.New:  SelectMultiElementNew(elementList);  break;
+                case SelectMode.KeepExcept: SelectMultiElementKeepExcept(elementList); break;
+                case SelectMode.Keep: SelectMultiElementKeep(elementList); break;
+            }
+        }
+
+
+        private void SelectMultiElementNew(IEnumerable<SGUIElement> elementList)
+        {
+            ViewModel.GroupMaster.DeselectAll();
+            elementList.ForEach(newElement => newElement.Selected = true);
+        }
+
+        private void SelectMultiElementKeepExcept(IEnumerable<SGUIElement> elementList)
+        {
+            
+            IEnumerable<SGUIElement> alreadySelectedElements = ViewModel.GroupMaster.SelectedElements.Intersect(elementList);
+
+            // 이미 존재하는 대상은 선택해제
+            if (alreadySelectedElements.Any())
+                alreadySelectedElements.ForEach(selectedElement => selectedElement.Selected = false);
+
+            // 겹치는 대상을 제외하고 새로 선택해줌
+            elementList.Except(alreadySelectedElements).ForEach(newElement => newElement.Selected = true);
+        }
+
+        private void SelectMultiElementKeep(IEnumerable<SGUIElement> elementList)
+        {
+            // 어차피 이미 셀릭트되었다면 내부 프로퍼티에서 바로 나오기때문에 이렇게 해도댐
+            elementList.ForEach(element => element.Selected = true);
         }
     }
 }

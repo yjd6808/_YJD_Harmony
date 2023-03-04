@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -22,6 +24,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.CustomControl;
+using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 
@@ -57,9 +60,20 @@ namespace SGToolsUI.CustomControl
             ScrollViewer = ViewModel.View.UIElementTreeViewScrollViewer;
         }
 
-        protected override void OnKeyDown(KeyEventArgs e)
+        // ======================================================================
+        //             이벤트
+        // ======================================================================
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            base.OnKeyDown(e);
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -70,10 +84,8 @@ namespace SGToolsUI.CustomControl
                 ScrollViewer.LineDown();
         }
 
-        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            base.OnPreviewMouseLeftButtonDown(e);
-        }
+        
+
 
         protected override void OnSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
         {
@@ -84,18 +96,20 @@ namespace SGToolsUI.CustomControl
             if (selected == null)
                 return;
 
-            if (selected.Selected)
+            SGUIElement prevSelected = e.OldValue as SGUIElement;
+
+            if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null)
+            {
+                List<SGUIElement> betweenElements = ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected);
+                ViewModel.Commander.SelectUIElement.Execute(betweenElements);
                 return;
+            }
+
 
             ViewModel.Commander.SelectUIElement.Execute(selected);
         }
 
-        protected override void OnLostFocus(RoutedEventArgs e)
-        {
-            base.OnLostFocus(e);
 
-
-        }
 
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {

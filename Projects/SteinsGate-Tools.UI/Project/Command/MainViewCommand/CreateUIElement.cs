@@ -36,7 +36,7 @@ namespace SGToolsUI.Command.MainViewCommand
         public override void Execute(object? parameter)
         {
             SGUIElementType createElementType = (SGUIElementType)Enum.Parse(typeof(SGUIElementType), parameter.ToString());
-            SGUIGroup group = ViewModel.GroupMaster.SelectedGroupAny;
+            SGUIGroup group = ViewModel.GroupMaster.SelectedGroup;
 
             if (group == null)
             {
@@ -51,10 +51,9 @@ namespace SGToolsUI.Command.MainViewCommand
                 return;
             }
 
-            SGUIElement newElement = SGUIElement.Create(createElementType);
+            SGUIElement newElement = SGUIElement.Create(createElementType, group);
             newElement.ViewModel = ViewModel;
             group.Children.Add(newElement);
-            ViewModel.Commander.SelectUIElement.Execute(newElement);
         }
     }
 }
