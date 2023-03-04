@@ -62,7 +62,7 @@ namespace SGToolsUI.Model
                     lines.Add(new LinePosition(i * _interval));
 
                 _lines = lines;
-                OnPropertyChanged("Lines");
+                OnPropertyChanged(nameof(Lines));
                 OnPropertyChanged();
             }
         }

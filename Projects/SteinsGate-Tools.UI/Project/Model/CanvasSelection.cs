@@ -38,8 +38,8 @@ namespace SGToolsUI.Model
             {
                 _visualRect = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualSize");
-                OnPropertyChanged("VisualPosition");
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualPosition));
             }
         }
 
@@ -50,7 +50,7 @@ namespace SGToolsUI.Model
             {
                 _visualRect.Location = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualRect");
+                OnPropertyChanged(nameof(VisualRect));
             }
         }
 
@@ -61,7 +61,7 @@ namespace SGToolsUI.Model
             {
                 _visualRect.Size = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualRect");
+                OnPropertyChanged(nameof(VisualRect));
             }
         }
 

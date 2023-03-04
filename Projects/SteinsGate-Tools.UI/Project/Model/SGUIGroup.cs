@@ -121,7 +121,7 @@ namespace SGToolsUI.Model
         }
 
         [Category("Visual")]
-        [DisplayName("Depth")]
+        [DisplayName(nameof(Depth))]
         [Description("이 엘리먼트의 계층구조상 위치")]
         public override int Depth => _depth;
 

@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.Extension;
+using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command.MainViewCommand
@@ -32,13 +33,15 @@ namespace SGToolsUI.Command.MainViewCommand
 
         public override void Execute(object? parameter)
         {
-            if (!ViewModel.GroupMaster.HasSelectedElement)
+            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+
+            if (!groupMaster.HasSelectedElement)
             {
                 MessageBoxEx.ShowTopMost("선택된 UI 엘리먼트가 없습니다.");
                 return;
             }
 
-
+            SGUIElement selectedElement = groupMaster.SelectedElement;
         }
     }
 }

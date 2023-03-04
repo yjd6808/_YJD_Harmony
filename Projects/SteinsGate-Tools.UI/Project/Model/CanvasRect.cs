@@ -40,13 +40,13 @@ namespace SGToolsUI.Model
             {
                 _visualRect = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualSize");
-                OnPropertyChanged("VisualPosition");
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualPosition));
             }
         }
 
 
-        [DisplayName("VisualPosition")]
+        [DisplayName(nameof(VisualPosition))]
         [Description("캔버스상의 좌상단 위치")]
         public Point VisualPosition
         {
@@ -55,7 +55,7 @@ namespace SGToolsUI.Model
             {
                 _visualRect.Location = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualRect");
+                OnPropertyChanged(nameof(VisualRect));
             }
         }
 
@@ -69,7 +69,7 @@ namespace SGToolsUI.Model
             {
                 _visualRect.Size = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualRect");
+                OnPropertyChanged(nameof(VisualRect));
             }
         }
 

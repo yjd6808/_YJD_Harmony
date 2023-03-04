@@ -29,10 +29,14 @@ namespace SGToolsUI.Model
 {
     public class SGUIGroupMaster : SGUIGroup
     {
+        public const string HasSelectedElementKey = nameof(HasSelectedElement);
+        public const string SelectedElementKey = nameof(SelectedElement);
+        public const string IsMultiSelectedKey = nameof(IsMultiSelected);
+
         // ============================================================
         //            프로파티
         // ============================================================
-        
+
 
         public SGUIGroupMaster(MainViewModel viewModel) : base(-1)
         {
@@ -42,23 +46,24 @@ namespace SGToolsUI.Model
         }
 
 
-        public SGUIGroup PickedGroup
+        public SGUIElement PickedElement
         {
-            get => _pickedGroup;
+            get => _pickedElement;
             set
             {
-                if (_pickedGroup == value)
+                if (_pickedElement == value)
                     return;
 
-                _pickedGroup = value;
-                Debug.WriteLine(value.VisualName + "픽 됨");
+                _pickedElement = value;
+
                 OnPropertyChanged();
-                OnPropertyChanged("HasPickedGroup");
+                OnPropertyChanged(nameof(HasPickedElement));
             }
         }
 
         public bool HasSelectedElement => SelectedElements.Count > 0;
-        public bool HasPickedGroup => _pickedGroup != null;
+        public bool HasPickedElement => _pickedElement != null;
+        public bool HasPickedGroup => _pickedElement != null && _pickedElement.IsGroup;
 
         // 선택된 엘리먼트가 없을 경우 마스터
         // 선택된 엘리먼트가 그룹일 경우 최상위 그룹
@@ -104,7 +109,7 @@ namespace SGToolsUI.Model
 
 
         public ObservableCollection<SGUIElement> SelectedElements { get; }
-        private SGUIGroup _pickedGroup;
+        private SGUIElement _pickedElement;
 
         // ============================================================
         //            기능

@@ -42,7 +42,7 @@ namespace SGToolsUI.Model
         
 
         [Category("Element")]
-        [DisplayName("Name")]
+        [DisplayName(nameof(Name))]
         [Description("게임에서 사용할 이름 혹은 변수명의 축약형태")]
         public string Name
         {
@@ -56,7 +56,7 @@ namespace SGToolsUI.Model
 
         [Browsable(true)]
         [Category("Element")]
-        [DisplayName("Name")]
+        [DisplayName(nameof(DefineName))]
         [Description("게임에서 실제로 사용할 변수/Define명")]
         public string DefineName
         {
@@ -70,7 +70,7 @@ namespace SGToolsUI.Model
         }
 
         [Category("Element")]
-        [DisplayName("Code")]
+        [DisplayName(nameof(Code))]
         [Description("엘리먼트 고유 코드를 의미")]
         public int Code
         {
@@ -84,7 +84,7 @@ namespace SGToolsUI.Model
 
         [Browsable(false)]
         [Category("Element")]
-        [DisplayName("Selected")]
+        [DisplayName(nameof(Selected))]
         [Description("엘리먼트가 트리뷰/캔버스 상에서 선택되었는지 ")]
         public bool Selected
         {
@@ -95,8 +95,9 @@ namespace SGToolsUI.Model
                     return;
 
                 _selected = value;
+                SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
-                ObservableCollection<SGUIElement> selectedElements = ViewModel.GroupMaster.SelectedElements;
+                ObservableCollection<SGUIElement> selectedElements = groupMaster.SelectedElements;
 
 
                 if (_selected)
@@ -105,9 +106,9 @@ namespace SGToolsUI.Model
                     ViewModel.View.CanvasShapesControl.ArrangeSelection(this);
 
                     if (selectedElements.Count == 1)
-                        ViewModel.GroupMaster.OnPropertyChanged("HasSelectedElements");
+                        groupMaster.OnPropertyChanged(SGUIGroupMaster.HasSelectedElementKey);
                     else if (selectedElements.Count == 2)
-                        ViewModel.GroupMaster.OnPropertyChanged("IsMultiSelected");
+                        groupMaster.OnPropertyChanged(SGUIGroupMaster.IsMultiSelectedKey);
 
                 }
                 else
@@ -118,13 +119,13 @@ namespace SGToolsUI.Model
                     ViewModel.View.CanvasShapesControl.ReleaseSelection(this);
 
                     if (selectedElements.Count == 0)
-                        ViewModel.GroupMaster.OnPropertyChanged("HasSelectedElements");
+                        groupMaster.OnPropertyChanged(SGUIGroupMaster.HasSelectedElementKey);
                     else if (selectedElements.Count == 1)
-                        ViewModel.GroupMaster.OnPropertyChanged("IsMultiSelected");
+                        groupMaster.OnPropertyChanged(SGUIGroupMaster.IsMultiSelectedKey);
                 }
 
-                ViewModel.GroupMaster.OnPropertyChanged("SelectedElement");
-                ViewModel.GroupMaster.SelectPrint();
+                groupMaster.OnPropertyChanged(SGUIGroupMaster.SelectedElementKey);
+                groupMaster.SelectPrint();
                 OnPropertyChanged();
             }
         }
@@ -166,7 +167,7 @@ namespace SGToolsUI.Model
         // =========================================================================
         [Browsable(false)]
         [Category("Visual")]
-        [DisplayName("VisualRect")]
+        [DisplayName(nameof(VisualRect))]
         [Description("UI엘리먼트의 캔버스 좌상단 위치와 크기를 의미")]
         public Rect VisualRect
         {
@@ -175,13 +176,13 @@ namespace SGToolsUI.Model
             {
                 _visualRect = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualSize");
-                OnPropertyChanged("VisualPosition");
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualPosition));
             } 
         }
 
         [Category("Visual")]
-        [DisplayName("VisualPosition")]
+        [DisplayName(nameof(VisualPosition))]
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
         public Point VisualPosition
         {
@@ -190,12 +191,12 @@ namespace SGToolsUI.Model
             {
                 _visualRect.Location = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualRect");
+                OnPropertyChanged(nameof(VisualRect));
             }
         }
 
         [Category("Visual")]
-        [DisplayName("VisualSize")]
+        [DisplayName(nameof(VisualSize))]
         [Description("UI엘리먼트의 크기를 의미")]
         public Size VisualSize
         {
@@ -204,12 +205,12 @@ namespace SGToolsUI.Model
             {
                 _visualRect.Size = value;
                 OnPropertyChanged();
-                OnPropertyChanged("VisualRect");
+                OnPropertyChanged(nameof(VisualRect));
             }
         }
 
         [Category("Visual")]
-        [DisplayName("VisualName")]
+        [DisplayName(nameof(VisualName))]
         [Description("UI엘리먼트가 트리뷰에서 나타내는 이름입니다.")]
         public string VisualName
         {
@@ -225,7 +226,7 @@ namespace SGToolsUI.Model
         }
 
         [Category("Visual")]
-        [DisplayName("IsVisible")]
+        [DisplayName(nameof(IsVisible))]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정")]
         public virtual bool IsVisible
         {
@@ -241,7 +242,7 @@ namespace SGToolsUI.Model
         }
 
         [Category("Visual")]
-        [DisplayName("Depth")]
+        [DisplayName(nameof(Depth))]
         [Description("이 엘리먼트의 계층구조상 위치")]
         public virtual int Depth => Parent.Depth + 1;
 
@@ -249,7 +250,7 @@ namespace SGToolsUI.Model
 
 
         [Category("Visual")]
-        [DisplayName("Deleted")]
+        [DisplayName(nameof(Deleted))]
         [Description("이 엘리먼트가 이미 삭제되었는지 여부")]
         public bool Deleted => _deleted;
 
@@ -378,7 +379,7 @@ namespace SGToolsUI.Model
             if (IsGroup)
                 Cast<SGUIGroup>().ForEachRecursive(element => element._deleted = true);
 
-            OnPropertyChanged("Deleted");
+            OnPropertyChanged(nameof(Deleted));
         }
 
         // 트리뷰 모든 원소부터 위에서부터 한칸씩 계층구조 신경쓰지않고 확인했을 때 누가 위에있고 아래에잇는지 검사
