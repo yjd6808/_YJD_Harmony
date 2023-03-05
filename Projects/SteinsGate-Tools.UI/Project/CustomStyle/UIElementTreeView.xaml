@@ -1,0 +1,106 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d"
+
+                    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+                    xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+                    xmlns:local="clr-namespace:SGToolsUI"
+                    xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+                    xmlns:model="clr-namespace:SGToolsUI.Model"
+                    xmlns:cus_ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
+                    xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    
+                    xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
+                    xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
+                    xmlns:cus_common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
+                    xmlns:cus_common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="MenuItemGroup.xaml" />
+        <ResourceDictionary Source="MenuItemButton.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <Style x:Key="UIElementTreeView" TargetType="{x:Type cus_ui_ctrl:UIElementTreeView}" >
+        <d:Style.DataContext>
+            <x:Type Type="vm:MainViewModel" />
+        </d:Style.DataContext>
+
+
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource WinformTreeViewItem}">
+                    <d:Style.DataContext>
+                        <x:Type Type="model:SGUIElement" />
+                    </d:Style.DataContext>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Selected}" Value="True">
+                            <Setter Property="Background" Value="CornflowerBlue" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Selected}" Value="False">
+                            <Setter Property="Background" Value="Transparent" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
+                    <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
+                            <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" />
+                            <Separator />
+                            <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" />
+                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Button" />
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding GroupMaster.HasSelectedElement}" Value="True" />
+                    <Condition Binding="{Binding GroupMaster.SelectedElement.IsGroup}" Value="False" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
+                            <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}"/>
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+            </MultiDataTrigger>
+            <DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" IsEnabled="False" />
+                            <Separator />
+                            <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" IsEnabled="True" />
+                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Button" IsEnabled="False" />
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding GroupMaster.IsMultiSelected}" Value="True">
+                <Setter Property="ContextMenu">
+                    <Setter.Value>
+                        <ContextMenu>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="True" />
+                        </ContextMenu>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
+</ResourceDictionary>

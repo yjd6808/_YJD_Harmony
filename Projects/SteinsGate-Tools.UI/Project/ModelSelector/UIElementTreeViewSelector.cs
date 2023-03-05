@@ -47,8 +47,8 @@ namespace SGToolsUI.ModelSelector
 
             switch (item)
             {
-            case SGUIGroup        __group__       :  return (DataTemplate)Application.Current.FindResource("GroupTreeViewTemplate");
-            case SGUIButton       __button__      :  return (DataTemplate)Application.Current.FindResource("ButtonTreeViewTemplate");
+            case SGUIGroup        __group__  :  return (DataTemplate)Application.Current.FindResource("GroupTreeViewTemplate");
+            case SGUIElement      __else__   :  return (DataTemplate)Application.Current.FindResource("ElementTreeViewTemplate");
             }
 
             throw new Exception("SGUIElementSelector에서 반환가능한 DataTemplate을 찾지 못했습니다.");

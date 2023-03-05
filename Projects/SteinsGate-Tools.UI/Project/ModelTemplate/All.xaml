@@ -11,7 +11,7 @@
         <ResourceDictionary Source="UIGroupCanvasTemplate.xaml" />
 
         <!-- UI 엘리먼트 트리뷰-->
-        <ResourceDictionary Source="UIButtonTreeViewTemplate.xaml" />
+        <ResourceDictionary Source="UIElementTreeViewTemplate.xaml" />
         <ResourceDictionary Source="UIGroupTreeViewTemplate.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

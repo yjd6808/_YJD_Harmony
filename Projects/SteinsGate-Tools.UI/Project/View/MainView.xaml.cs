@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,15 +36,105 @@ namespace SGToolsUI.View
         public MainViewModel ViewModel { get; }
         public DispatcherTimer Timer { get; }
 
+
+
         public MainView()
         {
             ViewModel = new MainViewModel();
             ViewModel.View = this;
             Timer = new DispatcherTimer();
-            Timer.Interval = TimeSpan.FromSeconds(1/60.0f);
+            Timer.Interval = TimeSpan.FromSeconds(1 / 60.0f);
             Timer.Tick += TimerTick;
             Resources.Add("ViewModel", ViewModel);
             InitializeComponent();
+
+            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0)
+            {
+                VisualName = "ê·¸ë£¹ 1",
+                Children = new ObservableCollection<SGUIElement>()
+                {
+                    new SGUIButton() { VisualName = "ê·¸ë£¹ 1-1"},
+                    new SGUIButton() { VisualName = "ê·¸ë£¹ 1-2"},
+                    new SGUIButton() { VisualName = "ê·¸ë£¹ 1-3"},
+                    new SGUIButton() { VisualName = "ê·¸ë£¹ 1-4"},
+                    new SGUIGroup(1)
+                    {
+                        VisualName = "ê·¸ë£¹ 1-5",
+                        Children = new ObservableCollection<SGUIElement>()
+                        {
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 1-5-1"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 1-5-2"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 1-5-3"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 1-5-4"},
+                            new SGUIGroup(2)
+                            {
+                                VisualName = "ê·¸ë£¹ 1-5-5"
+                            }
+                        }
+                    },
+                    new SGUIGroup(1)
+                    {
+                        VisualName = "ê·¸ë£¹ 1-6",
+                        Children = new ObservableCollection<SGUIElement>()
+                        {
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 1-6-1"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 1-6-2"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 1-6-3"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 1-6-4"},
+                            new SGUIGroup(2)
+                            {
+                                VisualName = "ê·¸ë£¹ 1-6-5"
+                            }
+                        }
+                    }
+                }
+
+            });
+            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0)
+            {
+                VisualName = "ê·¸ë£¹ 2",
+                Children = new ObservableCollection<SGUIElement>()
+                {
+                    new SGUIButton() { VisualName = "ê·¸ë£¹ 2-1"},
+                    new SGUIButton() { VisualName = "ê·¸ë£¹ 2-2"},
+                    new SGUIButton() { VisualName = "ê·¸ë£¹ 2-3"},
+                    new SGUIButton() { VisualName = "ê·¸ë£¹ 2-4"},
+                    new SGUIGroup(1)
+                    {
+                        VisualName = "ê·¸ë£¹ 2-5",
+                        Children = new ObservableCollection<SGUIElement>()
+                        {
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 2-5-1"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 2-5-2"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 2-5-3"},
+                            new SGUIButton() { VisualName = "ê·¸ë£¹ 2-5-4"},
+                            new SGUIGroup(2)
+                            {
+                                VisualName = "ê·¸ë£¹ 2-5-5"
+                            }
+                        }
+                    },
+                    new SGUIGroup(1)
+                    {
+                        VisualName = "ï¿½×·ï¿½ 2-6",
+                        Children = new ObservableCollection<SGUIElement>()
+                        {
+                            new SGUIButton() { VisualName ="ê·¸ë£¹ 2-6-1"},
+                            new SGUIButton() { VisualName ="ê·¸ë£¹ 2-6-2"},
+                            new SGUIButton() { VisualName ="ê·¸ë£¹ 2-6-3"},
+                            new SGUIButton() { VisualName ="ê·¸ë£¹ 2-6-4"},
+                            new SGUIGroup(2)
+                            {
+                                VisualName = "ê·¸ë£¹ 2-6-5"
+                            }
+                        }
+                    }
+                }
+            });
+            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0) { VisualName = "ê·¸ë£¹ 3" });
+            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0) { VisualName = "ê·¸ë£¹ 4" });
+            ViewModel.GroupMaster.ForEachRecursive(x => x.ViewModel = ViewModel);
+            ViewModel.GroupMaster.UpdateParent();
         }
 
         private void TimerTick(object? sender, EventArgs e)
@@ -59,28 +149,28 @@ namespace SGToolsUI.View
 
         private void MainView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            InitializeZoomStateBinding();       // ÄÄÆ÷³ÍÆ®°¡ ¸ğµÎ ÃÊ±âÈ­µÈ ÈÄ¿¡ À©µµ¿ì »çÀÌÁî°¡ ÃÖÁ¾°áÁ¤µÇ±â ¶§¹®¿¡.. Xaml¿¡¼­ ÀÛ¼ºÇÏÁö ¾Ê°í C# ÄÚµå·Î ÀÛ¼ºÇÏµµ·Ï ÇÑ´Ù.
+            InitializeZoomStateBinding();       // ì»´í¬ë„ŒíŠ¸ê°€ ëª¨ë‘ ì´ˆê¸°í™”ëœ í›„ì— ìœˆë„ìš° ì‚¬ì´ì¦ˆê°€ ìµœì¢…ê²°ì •ë˜ê¸° ë•Œë¬¸ì—.. Xamlì—ì„œ ì‘ì„±í•˜ì§€ ì•Šê³  C# ì½”ë“œë¡œ ì‘ì„±í•˜ë„ë¡ í•œë‹¤.
 
         }
 
 
 
         // ================================================================================
-        // XAML·Î ±¸ÇöÀÌ Èûµç ±â´Éµé
+        // XAMLë¡œ êµ¬í˜„ì´ í˜ë“  ê¸°ëŠ¥ë“¤
         // ================================================================================
 
 
         private void InitializeZoomStateBinding()
         {
-            // ¼öµ¿ ³Êºñ, ³ôÀÌ Á¶ÀıÀ» À§ÇØ ¸Ş´º¾ó·Î ÀüÈ¯
+            // ìˆ˜ë™ ë„ˆë¹„, ë†’ì´ ì¡°ì ˆì„ ìœ„í•´ ë©”ë‰´ì–¼ë¡œ ì „í™˜
             SizeToContent = SizeToContent.Manual;
             ViewModel.ZoomState.BaseWindowWidth = ActualWidth;
             ViewModel.ZoomState.BaseWindowHeight = ActualHeight;
 
             // https://stackoverflow.com/questions/2673600/problems-with-binding-to-window-height-and-width
-            // Width, Height ÇÁ·ÎÆÛÆ¼°¡ ºÎ¸ğ ¿ä¼ÒÀÇ ·¹ÀÌ¾Æ¿ô ·ÎÁ÷À» µû¶ó °£´Ù´Â ¼³¸í.
-            // À©µµ¿ì¿¡ ºÎ¸ğ ¿ä¼Ò°¡ ÀÖ¾ú³ª ¤§¤§..
-            // ±×·¡¼­ MinWidth, MaxHeight¿¡ °¢°¢ ¹ÙÀÎµùÇØÁá´Ù.
+            // Width, Height í”„ë¡œí¼í‹°ê°€ ë¶€ëª¨ ìš”ì†Œì˜ ë ˆì´ì•„ì›ƒ ë¡œì§ì„ ë”°ë¼ ê°„ë‹¤ëŠ” ì„¤ëª….
+            // ìœˆë„ìš°ì— ë¶€ëª¨ ìš”ì†Œê°€ ìˆì—ˆë‚˜ ã„·ã„·..
+            // ê·¸ë˜ì„œ MinWidth, MaxHeightì— ê°ê° ë°”ì¸ë”©í•´ì¤¬ë‹¤.
             Binding windowZoomStateWidthBinding = new Binding();
             windowZoomStateWidthBinding.Source = ViewModel.ZoomState;
             windowZoomStateWidthBinding.Path = new PropertyPath(nameof(ViewModel.ZoomState.BaseWindowWidth));
@@ -108,7 +198,7 @@ namespace SGToolsUI.View
                 ViewModel.UIElementSelectMode = SelectMode.Keep;
             }
 
-            // ÄÁÆ®·ÑÅ°¸¦ ¿ì¼±Åä·Ï ÇÑ´Ù.
+            // ì»¨íŠ¸ë¡¤í‚¤ë¥¼ ìš°ì„ í† ë¡ í•œë‹¤.
             else if (state.IsCtrlPressed)
             {
                 TitlePanel.Draggable = false;
@@ -118,6 +208,7 @@ namespace SGToolsUI.View
             else if (state.IsPressed(Key.Escape))
                 ViewModel.GroupMaster.DeselectAll();
         }
+
 
 
         private void MainView_OnKeyUp(object sender, KeyEventArgs e)
@@ -131,6 +222,21 @@ namespace SGToolsUI.View
                 TitlePanel.Draggable = true;
                 ViewModel.UIElementSelectMode = SelectMode.New;
             }
-        } 
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            CanvasShapesControl.DragMove(e);
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            CanvasShapesControl.DragEnd(e);
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            CanvasShapesControl.DragEnd(e);
+        }
     }
 }

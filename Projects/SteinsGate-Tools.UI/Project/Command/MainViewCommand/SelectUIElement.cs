@@ -47,11 +47,13 @@ namespace SGToolsUI.Command.MainViewCommand
             {
             case SGUIElement element:
                 SelectSingleElement(element, mode);
-                return;
+                break;
             case IEnumerable<SGUIElement> elementList:
                 SelectMultiElements(elementList, mode);
-                return;
+                break;
             }
+
+            ViewModel.GroupMaster.PrintSelect();
         }
 
         
@@ -109,6 +111,8 @@ namespace SGToolsUI.Command.MainViewCommand
                 case SelectMode.KeepExcept: SelectMultiElementKeepExcept(elementList); break;
                 case SelectMode.Keep: SelectMultiElementKeep(elementList); break;
             }
+
+            
         }
 
 

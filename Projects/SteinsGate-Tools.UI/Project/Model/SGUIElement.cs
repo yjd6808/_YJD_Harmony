@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
+using MoreLinq;
+using Newtonsoft.Json.Linq;
 using SGToolsCommon;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
@@ -28,6 +31,7 @@ namespace SGToolsUI.Model
 {
     public abstract class SGUIElement : CanvasElement, ICloneable
     {
+        public const string PickedKey = nameof(Picked);
         // =========================================================================
         //                         엘리먼트 관련 정보
         // =========================================================================
@@ -96,14 +100,15 @@ namespace SGToolsUI.Model
 
                 _selected = value;
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
-
                 ObservableCollection<SGUIElement> selectedElements = groupMaster.SelectedElements;
 
 
                 if (_selected)
                 {
                     selectedElements.Add(this);
-                    ViewModel.View.CanvasShapesControl.ArrangeSelection(this);
+
+                    if (_picked)
+                        ViewModel.View.CanvasShapesControl.ArrangeSelection(this);
 
                     if (selectedElements.Count == 1)
                         groupMaster.OnPropertyChanged(SGUIGroupMaster.HasSelectedElementKey);
@@ -116,7 +121,8 @@ namespace SGToolsUI.Model
                     if (!selectedElements.Remove(this))
                         throw new Exception("선택목록에 엘리먼트가 없습니다.");
 
-                    ViewModel.View.CanvasShapesControl.ReleaseSelection(this);
+                    if (_picked)
+                        ViewModel.View.CanvasShapesControl.ReleaseSelection(this);
 
                     if (selectedElements.Count == 0)
                         groupMaster.OnPropertyChanged(SGUIGroupMaster.HasSelectedElementKey);
@@ -125,7 +131,6 @@ namespace SGToolsUI.Model
                 }
 
                 groupMaster.OnPropertyChanged(SGUIGroupMaster.SelectedElementKey);
-                groupMaster.SelectPrint();
                 OnPropertyChanged();
             }
         }
@@ -161,6 +166,60 @@ namespace SGToolsUI.Model
         }
 
 
+        // 엘레멘트로 피크 가능, 그룹마스터로도 가능
+        [Browsable(false)]
+        public bool Picked
+        {
+            get => _picked;
+            set
+            {
+                if (_picked == value) 
+                    return;
+
+                SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+
+                _picked = value;
+
+                if (_picked)
+                {
+                    groupMaster.DeselectAll();
+                    groupMaster.PickedElements.ForEach(element => element.Picked = false);
+                    groupMaster.PickedElements.Clear();
+                    groupMaster.PickedElements.Add(this);
+
+                    if (IsGroup)
+                    {
+                        Cast<SGUIGroup>().ForEachRecursive(element =>
+                        {
+                            element._picked = true;
+                            groupMaster.PickedElements.Add(element);
+                            element.OnPropertyChanged();    // 트리뷰 아이콘 교체를 위한 노티파이
+                        });
+                    }
+                    
+                    groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
+                    groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedElementKey);
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+        [Browsable(false)] public bool FirstPicked => ViewModel.GroupMaster.SelectedElement == this;
+
+        [Browsable(false)]
+        public bool LastPicked
+        {
+            get
+            {
+                SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+
+                if (groupMaster.PickedElements.Count <= 0)
+                    return false;
+
+                return groupMaster.PickedElements[groupMaster.PickedElements.Count - 1] == this;
+            }
+        }
 
         // =========================================================================
         //                         비주얼 관련 정보
@@ -323,6 +382,7 @@ namespace SGToolsUI.Model
         protected bool _selected = false;
         protected bool _visible = true;
         protected bool _deleted = false;
+        protected bool _picked = false;
 
         protected string _name;
         protected int _code;

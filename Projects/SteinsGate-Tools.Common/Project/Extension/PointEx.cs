@@ -42,6 +42,11 @@ namespace SGToolsCommon.Extension
         {
             return $"{point.X:F0} {point.Y:F0}";
         }
+
+        public static double Distance(this Point point, Point other)
+        {
+            return Point.Subtract(point, other).Length;
+        }
     }
 
 

@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d"
+
+                    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+                    xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+                    xmlns:local="clr-namespace:SGToolsUI"
+                    xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+                    xmlns:model="clr-namespace:SGToolsUI.Model"
+                    xmlns:cus_ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
+                    xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    
+                    xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
+                    xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
+                    xmlns:cus_common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
+                    xmlns:cus_common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon">
+
+    <Style x:Key="UIElementItemsControl" TargetType="cus_ui_ctrl:UIElementItemsControl">
+        <d:Style.DataContext>
+            <x:Type Type="vm:MainViewModel" />
+        </d:Style.DataContext>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <Canvas x:Name="UIElementsPanel" 
+                            Width="{x:Static local:Constant.CanvasWidth}" 
+                            Height="{x:Static local:Constant.CanvasHeight}" 
+                            Background="LightGray">
+                        <Canvas.LayoutTransform>
+                            <ScaleTransform ScaleX="{Binding ZoomState.ZoomLevelX, Mode=OneWay}" 
+                                            ScaleY="{Binding ZoomState.ZoomLevelY, Mode=OneWay}" />
+                        </Canvas.LayoutTransform>
+                    </Canvas>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+            <!-- 아이템을 어떤 패널에 표시할지 결정 -->
+        </Setter>
+
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ContentPresenter">
+                    <d:Style.DataContext>
+                        <x:Type Type="model:SGUIElement" />
+                    </d:Style.DataContext>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CanvasElementType}" Value="UIElement">
+                            <Setter Property="Canvas.Left" Value="{Binding VisualPosition.X}" />
+                            <Setter Property="Canvas.Top" Value="{Binding VisualPosition.Y}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+        
+</ResourceDictionary>

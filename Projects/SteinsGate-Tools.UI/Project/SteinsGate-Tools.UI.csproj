@@ -21,29 +21,35 @@
 
 
 	<ItemGroup>
-		<None Remove="Resource\Icon\ui_button.ico" />
-		<None Remove="Resource\Icon\ui_button2.ico" />
-		<None Remove="Resource\Icon\ui_checkbox2.ico" />
-		<None Remove="Resource\Icon\ui_editbox.ico" />
-		<None Remove="Resource\Icon\ui_editbox2.ico" />
+		<None Remove="Resource\Icon\ui_black_button.ico" />
+		<None Remove="Resource\Icon\ui_black_checkbox.ico" />
+		<None Remove="Resource\Icon\ui_black_editbox.ico" />
+		<None Remove="Resource\Icon\ui_black_group.ico" />
+		<None Remove="Resource\Icon\ui_black_label.ico" />
+		<None Remove="Resource\Icon\ui_black_sprite.ico" />
+		<None Remove="Resource\Icon\ui_colored_button.ico" />
+		<None Remove="Resource\Icon\ui_colored_checkbox.ico" />
+		<None Remove="Resource\Icon\ui_colored_editbox.ico" />
+		<None Remove="Resource\Icon\ui_colored_group.ico" />
+		<None Remove="Resource\Icon\ui_colored_label.ico" />
+		<None Remove="Resource\Icon\ui_colored_sprite.ico" />
 		<None Remove="Resource\Icon\ui_glass.ico" />
-		<None Remove="Resource\Icon\ui_group.ico" />
-		<None Remove="Resource\Icon\ui_group_selected.ico" />
-		<None Remove="Resource\Icon\ui_label.ico" />
-		<None Remove="Resource\Icon\ui_label2.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Resource Include="Resource\Icon\ui_button.ico" />
-		<Resource Include="Resource\Icon\ui_button2.ico" />
-		<Resource Include="Resource\Icon\ui_checkbox2.ico" />
-		<Resource Include="Resource\Icon\ui_editbox.ico" />
-		<Resource Include="Resource\Icon\ui_editbox2.ico" />
+		<Resource Include="Resource\Icon\ui_black_button.ico" />
+		<Resource Include="Resource\Icon\ui_black_checkbox.ico" />
+		<Resource Include="Resource\Icon\ui_black_sprite.ico" />
+		<Resource Include="Resource\Icon\ui_colored_button.ico" />
+		<Resource Include="Resource\Icon\ui_colored_checkbox.ico" />
+		<Resource Include="Resource\Icon\ui_black_editbox.ico" />
+		<Resource Include="Resource\Icon\ui_colored_editbox.ico" />
+		<Resource Include="Resource\Icon\ui_colored_group.ico" />
+		<Resource Include="Resource\Icon\ui_colored_sprite.ico" />
 		<Resource Include="Resource\Icon\ui_glass.ico" />
-		<Resource Include="Resource\Icon\ui_group.ico" />
-		<Resource Include="Resource\Icon\ui_group_selected.ico" />
-		<Resource Include="Resource\Icon\ui_label.ico" />
-		<Resource Include="Resource\Icon\ui_label2.ico" />
+		<Resource Include="Resource\Icon\ui_black_group.ico" />
+		<Resource Include="Resource\Icon\ui_black_label.ico" />
+		<Resource Include="Resource\Icon\ui_colored_label.ico" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -42,6 +42,8 @@ namespace SGToolsUI.Command.MainViewCommand
             }
 
             SGUIElement selectedElement = groupMaster.SelectedElement;
+            selectedElement.Picked = true;
+            groupMaster.PrintPick();
         }
     }
 }

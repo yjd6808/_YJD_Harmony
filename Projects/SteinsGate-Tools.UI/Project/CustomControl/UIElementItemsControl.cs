@@ -22,6 +22,12 @@ using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.CustomControl
 {
+    public enum DragState
+    {
+        None,
+        Wait,
+        Dragging
+    }
     public class UIElementItemsControl : ItemsControl, INotifyPropertyChanged
     {
         public ObservableCollection<SGUIElement> UIElements
@@ -37,11 +43,21 @@ namespace SGToolsUI.CustomControl
         public MainViewModel ViewModel { get; private set; }
         public Canvas CanvasPanel => _canvasPanel;
         public ItemsPresenter Presenter => _canvasPresenter;
+        public ObservableCollection<SGUIElement> Elements => _uiElements;
 
-        private ObservableCollection<SGUIElement> _uiElements;
+        private ObservableCollection<SGUIElement> _uiElements = new();
         private Canvas _canvasPanel;
         private ItemsPresenter _canvasPresenter;
         
+
+        private List<SGUIElement> _prevClickedElements = new();
+        private SGUIElement _prevClickedElement;
+
+
+
+        // ======================================================================
+        //             초기화
+        // ======================================================================
         public UIElementItemsControl()
         {
             Loaded += OnLoaded;
@@ -78,13 +94,29 @@ namespace SGToolsUI.CustomControl
         }
 
 
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+
+        // ======================================================================
+        //             이벤트
+        // ======================================================================
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-
-
             
         }
 
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+
+           
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+        }
+
+        // ======================================================================
+        //             기능
+        // ======================================================================
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

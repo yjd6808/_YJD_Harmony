@@ -1,21 +1,18 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 3/3/2023 4:12:34 AM
+ * 생성일: 3/5/2023 2:22:45 AM
  *
  */
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -28,11 +25,10 @@ using SGToolsCommon.Extension;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
-using Xceed.Wpf.Toolkit.Primitives;
 
 namespace SGToolsUI.CustomControl
 {
-    public class UIElementTreeView : TreeView, INotifyPropertyChanged
+    public class UIElementTreeView : TreeView
     {
         public MainViewModel ViewModel { get; private set; }
         public ScrollViewer ScrollViewer { get; private set; }
@@ -45,9 +41,7 @@ namespace SGToolsUI.CustomControl
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             InitializeViewModel();
-            
         }
-
         private void InitializeViewModel()
         {
             ViewModel = DataContext as MainViewModel;
@@ -80,7 +74,7 @@ namespace SGToolsUI.CustomControl
             if (item.DataContext is not SGUIElement)
                 throw new Exception("선택한 트리뷰 아이템의 데이터컨텍스트가 설정되어있지 않습니다.");
 
-            
+
             SGUIElement? selected = item.DataContext as SGUIElement;
             SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
 
@@ -110,14 +104,10 @@ namespace SGToolsUI.CustomControl
                 ScrollViewer.LineDown();
         }
 
-        
-
         protected override void OnSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
         {
             base.OnSelectedItemChanged(e);
         }
-
-
 
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {

@@ -30,8 +30,12 @@ namespace SGToolsUI.Model
     public class SGUIGroupMaster : SGUIGroup
     {
         public const string HasSelectedElementKey = nameof(HasSelectedElement);
+        public const string HasPickedElementKey = nameof(HasPickedElement);
         public const string SelectedElementKey = nameof(SelectedElement);
+        public const string PickedElementKey = nameof(PickedElement);
         public const string IsMultiSelectedKey = nameof(IsMultiSelected);
+        
+
 
         // ============================================================
         //            프로파티
@@ -41,29 +45,17 @@ namespace SGToolsUI.Model
         public SGUIGroupMaster(MainViewModel viewModel) : base(-1)
         {
             ViewModel = viewModel;
-            SelectedElements = new SelectedElementCollection(120, viewModel);
+            SelectedElements = new ObservableElementsCollection(120, viewModel);
             SelectedElements.CollectionChanged += SelectedElementsOnCollectionChanged;
+            PickedElements = new ObservableElementsCollection(120, viewModel);
+            PickedElements.CollectionChanged += PickedElementsOnCollectionChanged;
         }
 
 
-        public SGUIElement PickedElement
-        {
-            get => _pickedElement;
-            set
-            {
-                if (_pickedElement == value)
-                    return;
-
-                _pickedElement = value;
-
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(HasPickedElement));
-            }
-        }
-
+        public SGUIElement PickedElement => PickedElements.Count > 0 ? PickedElements[0] : null;
         public bool HasSelectedElement => SelectedElements.Count > 0;
-        public bool HasPickedElement => _pickedElement != null;
-        public bool HasPickedGroup => _pickedElement != null && _pickedElement.IsGroup;
+        public bool HasPickedElement => PickedElements.Count > 0;
+        public bool HasPickedGroup => PickedElement != null && PickedElement.IsGroup;
 
         // 선택된 엘리먼트가 없을 경우 마스터
         // 선택된 엘리먼트가 그룹일 경우 최상위 그룹
@@ -109,7 +101,7 @@ namespace SGToolsUI.Model
 
 
         public ObservableCollection<SGUIElement> SelectedElements { get; }
-        private SGUIElement _pickedElement;
+        public ObservableCollection<SGUIElement> PickedElements { get; }
 
         // ============================================================
         //            기능
@@ -136,26 +128,36 @@ namespace SGToolsUI.Model
 
             if (selectedCount > 0)
                 throw new Exception("자식 요소중에 선택된 원소가 있습니다.");
-
         }
 
-        public void SelectPrint()
+
+        public void Depick()
         {
-            SelectedElements.ForEach(element =>
-            {
-                if (!element.Selected)
-                    throw new Exception("선택되지 않은 대상이 있습니다.");
+            PickedElements.ToList().ForEach(element => element.Picked = false);
 
-                Debug.WriteLine($"\t{element.VisualName} 렉트:{element.VisualRect} 깊이:{element.Depth} 부모:{element.Parent.VisualName}");
+            if (PickedElements.Count > 0)
+                throw new Exception("모두 선택해제 했음에도 불구하고 아직 선택목록에서 제거안된 대상이 있습니다.");
+
+            if (Picked)
+                throw new Exception("마스터 그룹이 픽드 상태입니다.");
+
+            int pickedCount = 0;
+
+            ForEachRecursive(element =>
+            {
+                if (element.Selected)
+                    pickedCount++;
             });
+
+            if (pickedCount > 0)
+                throw new Exception("자식 요소중에 픽된 원소가 있습니다.");
         }
 
 
-
-        private class SelectedElementCollection : ObservableCollection<SGUIElement>
+        private class ObservableElementsCollection : ObservableCollection<SGUIElement>
         {
             // 옵저버블컬렉션 생성자보면 크기 안먹음
-            public SelectedElementCollection(int capacity, MainViewModel viewModel)
+            public ObservableElementsCollection(int capacity, MainViewModel viewModel)
                 : base(new List<SGUIElement>(capacity))
             {
                 ViewModel = viewModel;
@@ -166,12 +168,16 @@ namespace SGToolsUI.Model
 
         private static void SelectedElementsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            SelectedElementCollection collection = sender as SelectedElementCollection;
+            ObservableElementsCollection collection = sender as ObservableElementsCollection;
 
             if (collection == null)
                 throw new Exception("말도안됩니다.");
 
             collection.ViewModel.GroupMaster.OnPropertyChanged("HasSelectedElement");
+        }
+
+        private void PickedElementsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
         }
 
         public List<SGUIElement> GetElementsBetween(SGUIElement lhsElement, SGUIElement rhsElement)
@@ -231,5 +237,33 @@ namespace SGToolsUI.Model
 
             return result;
         }
+
+#if DEBUG
+        private static int PickSeq = 0;
+        public void PrintPick()
+        {
+            Debug.WriteLine($"[{PickSeq++}] =======================================");
+            PickedElements.ForEach(element =>
+            {
+                if (!element.Picked)
+                    throw new Exception("픽트 않은 대상이 있습니다.");
+
+                Debug.WriteLine($"PICK \t{element.VisualName} 렉트:{element.VisualRect} 깊이:{element.Depth} 부모:{element.Parent.VisualName}");
+            });
+        }
+
+        private static int SelectSeq = 0;
+        public void PrintSelect()
+        {
+            Debug.WriteLine($"[{SelectSeq++}] =======================================");
+            SelectedElements.ForEach(element =>
+            {
+                if (!element.Selected)
+                    throw new Exception("선택되지 않은 대상이 있습니다.");
+
+                Debug.WriteLine($"SEL \t{element.VisualName} 렉트:{element.VisualRect} 깊이:{element.Depth} 부모:{element.Parent.VisualName}");
+            });
+        }
     }
+#endif
 }

@@ -3,5 +3,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="MenuItemButton.xaml"/>
         <ResourceDictionary Source="MenuItemGroup.xaml" />
+
+        <ResourceDictionary Source="UIElementItemsControl.xaml" />
+        <ResourceDictionary Source="UIElementTreeView.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

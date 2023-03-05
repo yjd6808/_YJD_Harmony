@@ -38,7 +38,7 @@ namespace SGToolsUI.Command.MainViewCommand
                 return;
 
 
-            ViewModel.ZoomState.ZoomLevelY = zoomLevelY + 0.1 * Constant.ResoltionRatio;
+            ViewModel.ZoomState.ZoomLevelY = zoomLevelY + 0.1 * Constant.ResolutionRatio;
             ViewModel.ZoomState.ZoomLevelX = zoomLevelX + 0.1;
         }
     }

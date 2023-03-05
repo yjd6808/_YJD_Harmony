@@ -40,7 +40,7 @@ namespace SGToolsUI.Command.MainViewCommand.Control
             double canvasWidth = ViewModel.View.UIElementsControl.DesiredSize.Width;
             double canvasHeight = ViewModel.View.UIElementsControl.DesiredSize.Height;
             double deltaWidth = Constant.CanvasWheelDelta;
-            double deltaHeight = Constant.CanvasWheelDelta * Constant.ResoltionRatio;
+            double deltaHeight = Constant.CanvasWheelDelta * Constant.ResolutionRatio;
             double scaleX;
             double scaleY;
 

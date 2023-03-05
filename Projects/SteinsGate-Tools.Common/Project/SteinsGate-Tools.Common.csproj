@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resource\Icon\common_checked.ico" />
     <None Remove="Resource\Icon\common_delete.ico" />
     <None Remove="Resource\Icon\common_down.ico" />
     <None Remove="Resource\Icon\common_grid.ico" />
@@ -36,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\Icon\common_checked.ico" />
     <Resource Include="Resource\Icon\common_down.ico" />
     <Resource Include="Resource\Icon\common_reset.ico" />
     <Resource Include="Resource\Icon\common_up.ico" />
