@@ -21,7 +21,7 @@ using System.Windows.Shapes;
 
 namespace SGToolsCommon.Extension
 {
-    public static class PointEx
+    public static partial class PointEx
     {
         public static Point ToPoint(this Vector vector)
         {
@@ -47,6 +47,7 @@ namespace SGToolsCommon.Extension
         {
             return Point.Subtract(point, other).Length;
         }
+
     }
 
 

@@ -225,12 +225,12 @@ namespace SGToolsUI.View
             }
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             CanvasShapesControl.DragMove(e);
         }
 
-        protected override void OnMouseUp(MouseButtonEventArgs e)
+        protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
         {
             CanvasShapesControl.DragEnd(e);
         }

@@ -20,6 +20,7 @@ using SGToolsUI.View;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using SGToolsUI.ViewModel;
 using System.Xml.Linq;
+using SGToolsUI.Extension;
 
 namespace SGToolsUI.CustomControl
 {
@@ -115,8 +116,7 @@ namespace SGToolsUI.CustomControl
 
         private void MoveBegin(MouseButtonEventArgs e)
         {
-
-            _moveStartPosition = e.GetPosition(this);
+            _moveStartPosition = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             
             IEnumerable<SGUIElement> pickedSelectedElements = ViewModel.GroupMaster.PickedSelectedElements;
 
@@ -141,7 +141,7 @@ namespace SGToolsUI.CustomControl
             if (_movingElements == null)
                 return;
 
-            Point pos = e.GetPosition(this);
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             Vector move = Point.Subtract(_moveStartPosition, pos);
             _movingElements.ForEach(m => m.Element.VisualPosition = Point.Subtract(m.StartPosition, move));
         }

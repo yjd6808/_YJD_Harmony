@@ -29,6 +29,7 @@ using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsUI.Command.MainViewCommand;
 using MoreLinq.Extensions;
+using SGToolsUI.Extension;
 
 namespace SGToolsUI.CustomControl
 {
@@ -370,7 +371,8 @@ namespace SGToolsUI.CustomControl
                 return;
             }
 
-            Point pos = e.GetPosition(this);
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+
             _dragState = DragState.Wait;
             _dragStartPosition = pos;
             ViewModel.View.TitlePanel.Draggable = false;
@@ -378,7 +380,7 @@ namespace SGToolsUI.CustomControl
 
         public void DragMove(MouseEventArgs e)
         {
-            Point pos = e.GetPosition(this);
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             if (_dragState == DragState.Wait)
             {
@@ -407,7 +409,7 @@ namespace SGToolsUI.CustomControl
             if (_dragBox == null)
                 return;
 
-            Point pos = e.GetPosition(this);
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             if (pos.Distance(_dragStartPosition) < Constant.DragActivateDistance)
                 return;
