@@ -45,7 +45,8 @@ namespace SGToolsUI.Command.MainViewCommand
             }
 
             // 마스터 그룹엔 그룹만 추가가능
-            if (group == ViewModel.GroupMaster && createElementType != SGUIElementType.Group)
+            bool isGroupMaster = group == ViewModel.GroupMaster;
+            if (isGroupMaster && createElementType != SGUIElementType.Group)
             {
                 MessageBox.Show($"마스터 그룹에는 그룹만 추가 가능합니다.");
                 return;
@@ -53,7 +54,11 @@ namespace SGToolsUI.Command.MainViewCommand
 
             SGUIElement newElement = SGUIElement.Create(createElementType, group);
             newElement.ViewModel = ViewModel;
-            group.Children.Add(newElement);
+            group.AddChild(newElement);
+
+            // 그룹마스터는 트리뷰에서 관리를 안하므로..
+            if (!isGroupMaster)
+                group.Item.IsExpanded = true;
         }
     }
 }

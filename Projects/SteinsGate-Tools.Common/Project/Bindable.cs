@@ -23,6 +23,12 @@ using System.Windows.Shapes;
 
 namespace SGToolsCommon
 {
+    public enum PropertyReflect
+    {
+        Update,
+        DonUpdate
+    }
+
     public class Bindable : INotifyPropertyChanged
     {
         public bool IsNotifyEnabled { get; set; } = true;

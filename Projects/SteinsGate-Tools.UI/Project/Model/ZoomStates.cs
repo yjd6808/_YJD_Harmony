@@ -61,22 +61,34 @@ namespace SGToolsUI.Model
 
         public double BaseCanvasStatusBarWidth => _baseCanvasStatusBarWidth + ZoomWidthDelta;
 
-        // 윈도우 로딩 끝나고 크기 설정이 가능하기때문에 어쩔수없이 set 추가함.
+        // 윈도우 로딩 끝나고 크기 설정이 가능하기때문에 어쩔수없이 set 추가함, 2번 설정 방지를 위해 익셉션
         public double BaseWindowWidth
         {
             get => _baseWindowWidth + ZoomWidthDelta;
-            set => _baseWindowWidth = value;
+            set
+            {
+                if (_baseWindowWidth >= 0)
+                    throw new Exception("이미 너비가 설정되었습니다.");
+
+                _baseWindowWidth = value;
+            }
         }
 
         public double BaseWindowHeight
         {
             get => _baseWindowHeight + ZoomHeightDelta;
-            set => _baseWindowHeight = value;
+            set
+            {
+                if (_baseWindowHeight >= 0)
+                    throw new Exception("이미 너비가 설정되었습니다.");
+
+                _baseWindowHeight = value;
+            }
         }
 
         private double _baseCanvasStatusBarWidth = Constant.CanvasWidth;
-        private double _baseWindowWidth;
-        private double _baseWindowHeight;
+        private double _baseWindowWidth = -1;
+        private double _baseWindowHeight = -1;
         private double _zoomLevelX = 1.0;
         private double _zoomLevelY = 1.0;
 

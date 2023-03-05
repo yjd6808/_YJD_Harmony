@@ -151,21 +151,12 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Browsable(false)]
-        public bool PrevSelected
+
+        public void SetPick(bool pick)
         {
-            get
-            {
-                var groupMaster = ViewModel.GroupMaster;
-
-                if (this == groupMaster)
-                    throw new Exception("그룹 마스터는 이 함수 호출 금지");
-
-
-                return groupMaster.PrevSelectedElement == this;
-            }
+            _picked = true;
+            OnPropertyChanged(nameof(Picked));
         }
-
 
         // 엘레멘트로 피크 가능, 그룹마스터로도 가능
         [Browsable(false)]
@@ -219,6 +210,80 @@ namespace SGToolsUI.Model
                     return false;
 
                 return groupMaster.PickedElements[groupMaster.PickedElements.Count - 1] == this;
+            }
+        }
+
+        [Browsable(false)]
+        public bool IsFirst => Index == 0;
+        [Browsable(false)]
+        public bool IsLast => Index == Parent.Children.Count - 1;
+
+        [Browsable(false)]
+        public int Index
+        {
+            get
+            {
+                int index = Parent.Children.IndexOf(this);
+                if (index == -1) throw new Exception("부모에 포함안된 자식입니다.");
+                return index;
+            }
+        }
+
+
+        // 1   <--- (Previous.Previous)
+        //   2 <--- (Previous)
+        //   3 <--- (현재)
+        //   4 <--- (Next)
+        // 2   <--- (Next.Next)
+        [Browsable(false)]
+        public SGUIElement Previous
+        {
+            get
+            {
+                if (IsFirst)
+                    return Parent == ViewModel.GroupMaster ? null : Parent;
+
+                return Parent.Children[Index - 1];
+            }
+        }
+
+        [Browsable(false)]
+        public SGUIElement Next
+        {
+            get
+            {
+                if (Parent == null)
+                    return null;
+
+                if (IsLast)
+                {
+                    // 재귀 프로퍼티
+                    // 1
+                    //   2
+                    //     3
+                    // 2ㅋ
+                    // ------------
+                    // 트리구성이 위처럼 되어있을때
+                    // 3은 마지막이므로 2번에서 다음 인덱스로 이동해야한다.
+                    // 하지만 2번도 마지막 인덱스 이므로 1번이 다음 인덱스로 이동해야한다.
+                    return Parent.Next;
+                }
+
+                var nextElement = Parent.Children[Index + 1];
+
+                // 내리다가 그룹을 만나는 경우, 깊숙히 들어간다.
+                if (IsGroup)
+                {
+                    SGUIGroup group = Cast<SGUIGroup>();
+                    if (group.ChildCount <= 0)
+                        return nextElement;
+
+                    group.Item.IsExpanded = true;
+                    return group.Children[0];
+                }
+
+
+                return nextElement;
             }
         }
 
@@ -378,6 +443,15 @@ namespace SGToolsUI.Model
             }
         }
 
+        public TreeViewItem Item => _treeViewItem;
+
+        public void OnTreeViewItemLoaded(TreeViewItem item)
+        {
+            _treeViewItem = item;
+            Debug.WriteLine($"{VisualName} 트리뷰아이템 로딩");
+            OnPropertyChanged(nameof(Item));
+        }
+
 
         protected string _visualName = string.Empty;
         protected Rect _visualRect = new (0, 0, 50, 50);
@@ -385,6 +459,7 @@ namespace SGToolsUI.Model
         protected bool _visible = true;
         protected bool _deleted = false;
         protected bool _picked = false;
+        protected TreeViewItem _treeViewItem;
 
         protected string _name;
         protected int _code;
@@ -415,8 +490,10 @@ namespace SGToolsUI.Model
                 case SGUIElementType.Button: 
                     element = new SGUIButton();
                     break;
-                case SGUIElementType.Group: 
+                case SGUIElementType.Group:
+                    // 그룹 기본 크기는 해상도로.
                     element = new SGUIGroup(parent.Depth + 1);
+                    element._visualRect = new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight);  
                     break;
             }
 

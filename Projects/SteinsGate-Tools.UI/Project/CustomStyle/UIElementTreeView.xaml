@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     mc:Ignorable="d"
-
                     xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
                     xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
@@ -22,7 +21,7 @@
         <ResourceDictionary Source="MenuItemGroup.xaml" />
         <ResourceDictionary Source="MenuItemButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <Style x:Key="UIElementTreeView" TargetType="{x:Type cus_ui_ctrl:UIElementTreeView}" >
+    <Style x:Key="UIElementTreeView" TargetType="TreeView" >
         <d:Style.DataContext>
             <x:Type Type="vm:MainViewModel" />
         </d:Style.DataContext>

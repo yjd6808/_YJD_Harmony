@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -28,8 +29,32 @@ using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.CustomControl
 {
+    public class TreeViewItemImpl : TreeViewItem
+    {
+        protected override DependencyObject GetContainerForItemOverride()
+        {
+            var treeViewItem = new TreeViewItem();
+            treeViewItem.Loaded += OnTreeViewItemLoaded;
+            return treeViewItem;
+        }
+
+        // 확장 누르면 로딩함 ㅡㅡ;
+        public static void OnTreeViewItemLoaded(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem item = sender as TreeViewItem;
+            if (item == null)
+                throw new Exception("이럴 수 없어요 어떻게 트리뷰 아이템 아닐 수 있죠?");
+
+            SGUIElement element = item.DataContext as SGUIElement;
+            if (element == null)
+                throw new Exception("로드된 트리뷰 아이템에 데이터 컨텍스트가 설정되어있지 않습니다.");
+            element.OnTreeViewItemLoaded(item);
+        }
+    }
+
     public class UIElementTreeView : TreeView
     {
+
         public MainViewModel ViewModel { get; private set; }
         public ScrollViewer ScrollViewer { get; private set; }
 
@@ -42,6 +67,15 @@ namespace SGToolsUI.CustomControl
         {
             InitializeViewModel();
         }
+
+        protected override DependencyObject GetContainerForItemOverride()
+        {
+            var treeViewItem = new TreeViewItemImpl();
+            treeViewItem.Loaded += TreeViewItemImpl.OnTreeViewItemLoaded;
+            return treeViewItem;
+        }
+
+        
         private void InitializeViewModel()
         {
             ViewModel = DataContext as MainViewModel;
@@ -58,6 +92,42 @@ namespace SGToolsUI.CustomControl
         // ======================================================================
         //             이벤트
         // ======================================================================
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            var commandCenter = ViewModel.Commander;
+            var groupMaster = ViewModel.GroupMaster;
+            SGUIElement element = groupMaster.SelectedElement;
+
+            if (element == null)
+                return;
+
+            SGUIGroup parent = element.Parent;
+            SGUIGroup group = null;
+            if (element is SGUIGroup)
+                group = (SGUIGroup)element;
+
+            switch (e.Key)
+            {
+                case Key.Up:
+                    SGUIElement prev = element.Previous;
+                    if (prev != null) commandCenter.SelectUIElement.Execute(prev);
+                    break;
+                case Key.Down:
+                    SGUIElement next = element.Next;
+                    if (next != null) commandCenter.SelectUIElement.Execute(next);
+                    break;
+                case Key.Enter:
+                case Key.Space:
+                {
+                    if (group == null)
+                        break;
+
+                    group.Item.IsExpanded = !group.Item.IsExpanded;
+                    break;
+                }
+            }
+        }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
@@ -104,11 +174,6 @@ namespace SGToolsUI.CustomControl
                 ScrollViewer.LineDown();
         }
 
-        protected override void OnSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
-        {
-            base.OnSelectedItemChanged(e);
-        }
-
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {
             SGUIElement selected = SelectedItem as SGUIElement;
@@ -118,6 +183,7 @@ namespace SGToolsUI.CustomControl
 
             ViewModel.Commander.PickUIElement.Execute(selected);
         }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

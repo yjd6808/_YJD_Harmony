@@ -86,17 +86,6 @@ namespace SGToolsUI.Model
             }
         }
 
-        public SGUIElement PrevSelectedElement
-        {
-            get
-            {
-                if (SelectedElements.Count <= 1)
-                    return null;
-
-                return SelectedElements[SelectedElements.Count - 2];
-            }
-        }
-
         public bool IsMultiSelected => SelectedElements.Count >= 2;
 
 

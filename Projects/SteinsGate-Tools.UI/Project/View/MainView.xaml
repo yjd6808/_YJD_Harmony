@@ -57,7 +57,8 @@
             ############################################################################### -->
 
         <common_ctrl:TitleBar Name="TitlePanel" Title="슈타인즈게이트 : UITool" DockPanel.Dock="Top"/>
-        <Separator DockPanel.Dock="Top"/>
+        <Separator DockPanel.Dock="Top">
+        </Separator>
 
 
         <!-- ###############################################################################

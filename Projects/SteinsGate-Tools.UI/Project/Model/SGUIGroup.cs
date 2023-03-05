@@ -23,6 +23,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
+using SGToolsCommon;
 
 namespace SGToolsUI.Model
 {
@@ -188,20 +189,31 @@ namespace SGToolsUI.Model
         }
 
 
-
-
-
-        public void UpdateDepth()
+        public void AddChild(SGUIElement child, PropertyReflect updateProperty = PropertyReflect.Update)
         {
-            Children.Where(childElement => childElement.IsGroup)
-                .Cast<SGUIGroup>()
-                .ForEach(group =>
-                {
-                    group._depth = Parent._depth + 1;
-                    group.UpdateDepth();
-                });
-        }
+            Children.Add(child);
 
+            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+
+            bool isPicked = Picked;  // 현재 그룹이 픽된 경우 자식도 픽상태
+            if (isPicked)
+            {
+                child.SetPick(true);
+                groupMaster.PickedElements.Add(child);
+            }
+
+            if (updateProperty == PropertyReflect.Update)
+            {
+                if (isPicked)
+                {
+                    groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
+                    groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedElementKey);
+                }
+
+                OnPropertyChanged(nameof(ChildCount));
+                OnPropertyChanged(nameof(ChildCountRecursive));
+            }
+        }
 
 
         // 디버깅용

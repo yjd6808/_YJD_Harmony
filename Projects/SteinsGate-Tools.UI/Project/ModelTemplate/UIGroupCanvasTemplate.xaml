@@ -7,7 +7,7 @@
         <Grid Width="{Binding VisualRect.Width}"
               Height="{Binding VisualRect.Height}">
 
-            <Rectangle Fill="Yellow" Opacity="0.55"/>
+            <Rectangle StrokeDashArray="1, 1" Stroke="Black"/>
 
             <Grid.Style>
                 <Style TargetType="Grid">
@@ -16,7 +16,7 @@
                             <Setter Property="Opacity" Value="1"></Setter>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsVisible, Mode=OneWay}" Value="False">
-                            <Setter Property="Opacity" Value="1"></Setter>
+                            <Setter Property="Opacity" Value="0"></Setter>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
