@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -235,6 +236,10 @@ namespace SGToolsUI.Model
         //   3 <--- (현재)
         //   4 <--- (Next)
         // 2   <--- (Next.Next)
+
+
+
+
         [Browsable(false)]
         public SGUIElement Previous
         {
@@ -243,7 +248,37 @@ namespace SGToolsUI.Model
                 if (IsFirst)
                     return Parent == ViewModel.GroupMaster ? null : Parent;
 
-                return Parent.Children[Index - 1];
+                /*
+                 * 왜 인덱스 아웃오브레인지 검사를 수행하지 않는가?
+                 * 1
+                 *   2 <<--- 내가 여기 위치에서 Previous를 수행한 경우 IsFirst조건이 충족되어서 1로 이동한다.
+                 *   3       3또는 4인경우에만 이 블록으로 진입하므로 아래 코드가 인덱스 범위를 벗어날일은 절대 발생하지 않는다.
+                 *   4
+                 */
+                SGUIElement prev = Parent.Children[Index - 1];
+
+
+
+                /*
+                 * 1   <<-- prev
+                 *   2
+                 *   3
+                 *   4
+                 *      5
+                 *      6 <<-- 이녀석 필요
+                 * 2   <<-- 여기서 이전노드로 prev로 이동할 경우 6번 노드로 이동해야한다.
+                 *          따라서 prev가 그룹인 경우 그룹내에서 가장 아래에 있는 노드 6번노드를 가져와야한다.
+                 */
+
+                if (prev.IsGroup && prev.Item.IsExpanded)
+                {
+                    SGUIGroup prevGroup = prev.Cast<SGUIGroup>();
+
+                    if (prevGroup.ChildCount > 0)
+                        return prevGroup.DeepestLastChild;
+                }
+
+                return prev;
             }
         }
 
@@ -252,38 +287,71 @@ namespace SGToolsUI.Model
         {
             get
             {
+                // 그룹마스터의 부모인경우, 그룹마스터는 부모가 절대없음
                 if (Parent == null)
                     return null;
 
-                if (IsLast)
-                {
-                    // 재귀 프로퍼티
-                    // 1
-                    //   2
-                    //     3
-                    // 2ㅋ
-                    // ------------
-                    // 트리구성이 위처럼 되어있을때
-                    // 3은 마지막이므로 2번에서 다음 인덱스로 이동해야한다.
-                    // 하지만 2번도 마지막 인덱스 이므로 1번이 다음 인덱스로 이동해야한다.
-                    return Parent.Next;
-                }
+                int index = Index;
 
-                var nextElement = Parent.Children[Index + 1];
-
-                // 내리다가 그룹을 만나는 경우, 깊숙히 들어간다.
-                if (IsGroup)
+                // 내가 그룹이고 확장된 경우, 그리고 자식이 있는 경우 자식계층으로 진입한다.
+                if (IsGroup && Item.IsExpanded)
                 {
                     SGUIGroup group = Cast<SGUIGroup>();
-                    if (group.ChildCount <= 0)
-                        return nextElement;
 
-                    group.Item.IsExpanded = true;
-                    return group.Children[0];
+                    if (group.ChildCount > 0)
+                        return group.Children[0];
                 }
 
+                /*
+                 * 1
+                 *   3
+                 *   4
+                 *   5  <<-- (IsLast)인경우 부모의 동일 계층구조상 다음원소 즉, 2로 이동해야함.
+                 * 2    <<-- 여기
+                 */
+                return IsLast ? Parent.NextWithChildSkip : Parent.Children[index + 1];
+            }
+        }
 
-                return nextElement;
+        /*
+         * 동등 계층 구조상의 다음 원소로 간다.
+         * 즉, 자신이 그룹이고 자식이 있더라도 진입하지 않음
+         *
+         * 1   <<-- 여기에 위치하더라도 3으로 가지않고 2로간다.
+         *   3
+         *   4
+         *   5  
+         * 2   <<-- 여기
+         */
+
+        [Browsable(false)]
+        public SGUIElement NextWithChildSkip
+        {
+            get
+            {
+                if (Parent == null)
+                    return null;
+
+                int index = Index;
+                if (Parent.Children.Count > index + 1)
+                    return Parent.Children[index + 1];
+
+                /*
+                 * 재귀 프로퍼티
+                 * 0
+                 *   1
+                 *     2
+                 *     3
+                 *     4 <<-- 여기서 수행한 경우 1로 올라간다. 1에서 다시 자식이 없는 경우 0으로 올라감
+                 *        5                               
+                 *        6
+                 * ------------------------------------
+                 * 계단 구조라면 결국 Parent == null을 만나게됨
+                 *  0
+                 *    1
+                 *      2
+                 */
+                return Parent.NextWithChildSkip;
             }
         }
 
@@ -443,7 +511,17 @@ namespace SGToolsUI.Model
             }
         }
 
-        public TreeViewItem Item => _treeViewItem;
+        public TreeViewItem Item
+        {
+            get
+            {
+                if (_treeViewItem == null)
+                    throw new Exception($"{VisualName}의 트리뷰아이템이 null입니다.");
+
+                return _treeViewItem;
+            }
+        }
+        
 
         public void OnTreeViewItemLoaded(TreeViewItem item)
         {

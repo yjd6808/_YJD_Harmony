@@ -127,10 +127,31 @@ namespace SGToolsUI.Model
         public override int Depth => _depth;
 
 
-       
+        [Browsable(false)]
+        public SGUIElement DeepestLastChild
+        {
+            get
+            {
+                if (ChildCount == 0)
+                    return null;
+
+                SGUIElement lastChild = Children[ChildCount - 1];
+
+                if (lastChild.IsGroup && lastChild.Item.IsExpanded)
+                {
+                    SGUIGroup lastChildGroup = lastChild.Cast<SGUIGroup>();
+                    if (lastChildGroup.ChildCount > 0)
+                        return lastChildGroup.DeepestLastChild;
+                }
+
+                return lastChild;
+            }
+        }
+
 
         [Browsable(false)] public override bool IsGroup => true;
         public override SGUIElementType UIElementType => SGUIElementType.Group;
+        
 
         private ObservableCollection<SGUIElement> _children = new();
         private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Left;

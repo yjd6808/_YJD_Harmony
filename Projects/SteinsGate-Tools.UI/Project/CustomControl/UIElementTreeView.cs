@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -29,28 +30,7 @@ using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.CustomControl
 {
-    public class TreeViewItemImpl : TreeViewItem
-    {
-        protected override DependencyObject GetContainerForItemOverride()
-        {
-            var treeViewItem = new TreeViewItem();
-            treeViewItem.Loaded += OnTreeViewItemLoaded;
-            return treeViewItem;
-        }
-
-        // 확장 누르면 로딩함 ㅡㅡ;
-        public static void OnTreeViewItemLoaded(object sender, RoutedEventArgs e)
-        {
-            TreeViewItem item = sender as TreeViewItem;
-            if (item == null)
-                throw new Exception("이럴 수 없어요 어떻게 트리뷰 아이템 아닐 수 있죠?");
-
-            SGUIElement element = item.DataContext as SGUIElement;
-            if (element == null)
-                throw new Exception("로드된 트리뷰 아이템에 데이터 컨텍스트가 설정되어있지 않습니다.");
-            element.OnTreeViewItemLoaded(item);
-        }
-    }
+  
 
     public class UIElementTreeView : TreeView
     {
@@ -61,6 +41,45 @@ namespace SGToolsUI.CustomControl
         public UIElementTreeView()
         {
             Loaded += OnLoaded;
+
+            /*
+             * TreeViewItem Loaded 추가를 위해 내가 시도한 방법들
+             * 1. TreeView와 TreeViewItem을 상속받은 클래스를 정의한 후 GetContainerForItemOverride 함수를 오버라이딩해서
+             *    TreeViewItemn 생성 후 Loaded 이벤트에 콜백이벤트 추가해줬는데
+             *    이렇게 하니까 Depth가 2이상인 TreeViewItem에서 Loaded 이벤트가 호출이 안됨
+             *
+             *    public class TreeViewItemImpl : TreeViewItem
+             *    {
+             *        protected override DependencyObject GetContainerForItemOverride()
+             *        {
+             *            var treeViewItem = new TreeViewItem();
+             *            treeViewItem.Loaded += OnTreeViewItemLoaded;
+             *            return treeViewItem;
+             *        }
+             *    
+             *        // 확장 누르면 로딩함 ㅡㅡ;
+             *        public static void OnTreeViewItemLoaded(object sender, RoutedEventArgs e)
+             *        {
+             *            TreeViewItem item = sender as TreeViewItem;
+             *            if (item == null)
+             *                throw new Exception("이럴 수 없어요 어떻게 트리뷰 아이템 아닐 수 있죠?");
+             *    
+             *            SGUIElement element = item.DataContext as SGUIElement;
+             *            if (element == null)
+             *                throw new Exception("로드된 트리뷰 아이템에 데이터 컨텍스트가 설정되어있지 않습니다.");
+             *            element.OnTreeViewItemLoaded(item);
+             *        }
+             *    }
+             *
+             * 2. 컨테이너 스타일을 코드로 작성할려고 했는데. 코드가 가독성도 떨어지고 별로같음
+             *    ItemContainerStyle = new Style(typeof(TreeViewItem));
+             *    ItemContainerStyle.BasedOn = (Style)Application.Current.FindResource("WinformTreeViewItem");
+             *    ItemContainerStyle.Setters.Add(new EventSetter(TreeViewItem.LoadedEvent, new RoutedEventHandler(OnTreeViewItemLoaded)));
+             *
+             * 3. CustomStyle.UIElementTreeView 리소스파일과 연결할 클래스 UIElementTreeViewStyle.cs를 만든 후 연결해줌
+             *    이게 제일 깔끔한 것 같다.
+             */
+
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -68,14 +87,7 @@ namespace SGToolsUI.CustomControl
             InitializeViewModel();
         }
 
-        protected override DependencyObject GetContainerForItemOverride()
-        {
-            var treeViewItem = new TreeViewItemImpl();
-            treeViewItem.Loaded += TreeViewItemImpl.OnTreeViewItemLoaded;
-            return treeViewItem;
-        }
 
-        
         private void InitializeViewModel()
         {
             ViewModel = DataContext as MainViewModel;
@@ -184,10 +196,5 @@ namespace SGToolsUI.CustomControl
             ViewModel.Commander.PickUIElement.Execute(selected);
         }
 
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
