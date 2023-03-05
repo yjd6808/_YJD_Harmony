@@ -219,7 +219,7 @@
         
                 ############################################################################### -->
                 <ui_ctrl:UIElementItemsControl x:Name="UIElementsControl"
-                                               ItemsSource="{Binding UIElements, RelativeSource={RelativeSource Self}}"
+                                               ItemsSource="{Binding GroupMaster.PickedElements}"
                                                ItemTemplateSelector="{x:Static ui_selector:UIElementCanvasSelector.Selector}"
                                                Style="{StaticResource UIElementItemsControl}">
                 </ui_ctrl:UIElementItemsControl>
@@ -235,21 +235,7 @@
                 <ui_ctrl:CanvasShapeItemsControl x:Name="CanvasShapesControl"
                                            ItemsSource="{Binding CanvasShapes, RelativeSource={RelativeSource Self}}"
                                            ItemTemplateSelector="{x:Static ui_selector:CanvasShapeSelector.Selector}"
->
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas x:Name="CanvasShapesPanel"
-                                    Width="{x:Static local:Constant.CanvasWidth}"
-                                    Height="{x:Static local:Constant.CanvasHeight}"
-                                    Background="LightGray">
-                                <Canvas.LayoutTransform>
-                                    <ScaleTransform ScaleX="{Binding ZoomState.ZoomLevelX, Mode=OneWay}"
-                                                    ScaleY="{Binding ZoomState.ZoomLevelY, Mode=OneWay}" />
-                                </Canvas.LayoutTransform>
-                            </Canvas>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                                           Style="{StaticResource CanvasShapeItemsControl}">
                 </ui_ctrl:CanvasShapeItemsControl>
             </Grid>
         </StackPanel>

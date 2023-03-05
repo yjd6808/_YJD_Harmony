@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
@@ -249,6 +250,7 @@ namespace SGToolsUI.Model
             set
             {
                 _visualRect.Location = value;
+                Debug.WriteLine(value);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
             }

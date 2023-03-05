@@ -32,6 +32,13 @@ using MoreLinq.Extensions;
 
 namespace SGToolsUI.CustomControl
 {
+    public enum DragState
+    {
+        None,
+        Wait,
+        Dragging,
+    }
+
     public class CanvasShapeItemsControl : ItemsControl, INotifyPropertyChanged
     {
         public ObservableCollection<CanvasShape> CanvasShapes
@@ -84,6 +91,20 @@ namespace SGToolsUI.CustomControl
             }
         }
 
+        public bool IsDraggable
+        {
+            get => _isDraggable;
+            set
+            {
+                _isDraggable = value;
+                DragEnd(null);
+            }
+        }
+
+        // 헬퍼 프로퍼티.
+        public ObservableCollection<SGUIElement> PickedElements => ViewModel.GroupMaster.PickedElements;
+
+
         public MainViewModel ViewModel { get; private set; }
         public CanvasRect Viewport => _viewPort;
         public CanvasGrid Grid => _grid;
@@ -91,6 +112,7 @@ namespace SGToolsUI.CustomControl
         public ItemsPresenter Presenter => _canvasPresenter;
         public DragState DragState => _dragState;
 
+        
 
 
         private ObservableCollection<CanvasShape> _canvasShapes = new();
@@ -107,6 +129,7 @@ namespace SGToolsUI.CustomControl
         private double _draggedDistance;
         private DragState _dragState = DragState.None;
         private Point _dragStartPosition;
+        private bool _isDraggable = true;
 
         public CanvasShapeItemsControl()
         {
@@ -168,7 +191,9 @@ namespace SGToolsUI.CustomControl
             }
         }
         // ======================================================================
-        //             이벤트
+        //             버블링 이벤트
+        //             MainView.xaml파일상 ZOrder를 더 높게 배치했기 때문에
+        //             이때 겹쳐진 UIElementsItemsControl로 이벤트 전파가 안되기 땜에 강제로 이벤트 발생을 해줘야함
         // ======================================================================
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -187,19 +212,41 @@ namespace SGToolsUI.CustomControl
 
         }
 
+        
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             DragBegin(e);
+
+            UIElementItemsControl source = ViewModel.View.UIElementsControl;
+            source.RaiseEvent(new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, e.ChangedButton)
+            {
+                RoutedEvent = e.RoutedEvent, 
+                Source = source
+            });
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             DragMove(e);
+
+            UIElementItemsControl source = ViewModel.View.UIElementsControl;
+            source.RaiseEvent(new MouseEventArgs(e.MouseDevice, e.Timestamp, e.StylusDevice)
+            {
+                RoutedEvent = e.RoutedEvent,
+                Source = source
+            });
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             DragEnd(e);
+
+            UIElementItemsControl source = ViewModel.View.UIElementsControl;
+            source.RaiseEvent(new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, e.ChangedButton)
+            {
+                RoutedEvent = e.RoutedEvent,
+                Source = source
+            });
         }
 
 
@@ -218,8 +265,8 @@ namespace SGToolsUI.CustomControl
             foreach (CanvasShape shape in _canvasShapes)
             {
                 if (shape == _grid) continue;
-                if (shape == _viewPort) continue;
-                if (shape == _dragBox) continue;
+                else if (shape == _viewPort) continue;
+                else if (shape == _dragBox) continue;
 
                 if (!shape.IsSelection)
                 {
@@ -264,8 +311,8 @@ namespace SGToolsUI.CustomControl
             foreach (CanvasShape shape in _canvasShapes)
             {
                 if (shape == _grid) hasGrid = true;
-                if (shape == _viewPort) hasViewPort = true;
-                if (shape == _dragBox) hasDragBox = true;
+                else if (shape == _viewPort) hasViewPort = true;
+                else if (shape == _dragBox) hasDragBox = true;
             }
 
             if (!hasViewPort && _isViewportVisible)
@@ -288,9 +335,12 @@ namespace SGToolsUI.CustomControl
             var canvasSelection = PopSelection();
             canvasSelection.Selection.Width = element.VisualSize.Width;
             canvasSelection.Selection.Height = element.VisualSize.Height;
-            canvasSelection.Selection.Margin = new Thickness(element.VisualPosition.X, element.VisualPosition.Y, 0, 0);
+            //canvasSelection.Selection.Margin = new Thickness(element.VisualPosition.X, element.VisualPosition.Y, 0, 0);
+            canvasSelection.Element = element;
             _canvasShapes.Add(canvasSelection);
             _selectionMap.Add(element, canvasSelection);
+
+            System.Diagnostics.Debug.WriteLine($"셀렉션맵: {_selectionMap.Count} || 캔버스쉐이프 ${_canvasShapes.Count}");
         }
 
         public void ReleaseSelection(SGUIElement element)
@@ -299,13 +349,21 @@ namespace SGToolsUI.CustomControl
                 return;
 
              CanvasSelection selection = _selectionMap[element];
-             _selectionMap.Remove(element);
-             _canvasShapes.Remove(selection);
-             PushSelection(selection);
+             selection.Element = null;
+            if (!_selectionMap.Remove(element))
+                throw new Exception("셀렉션 맵에서 삭제 실패");
+
+            if (!_canvasShapes.Remove(selection))
+                throw new Exception("캔버스 쉐잎에서 삭제 실패");
+
+            PushSelection(selection);
         }
 
         public void DragBegin(MouseButtonEventArgs e)
         {
+            if (!_isDraggable)
+                return;
+
             if (_dragState != DragState.None)
             {
                 DragEnd(e);
@@ -339,15 +397,26 @@ namespace SGToolsUI.CustomControl
 
         public void DragEnd(MouseEventArgs e)
         {
+            _dragState = DragState.None;
             ViewModel.View.TitlePanel.Draggable = true;
+            
 
-            if (_dragState != DragState.Dragging)
+            if (e == null)
                 return;
 
-            ObservableCollection<SGUIElement> canvasElements = ViewModel.View.UIElementsControl.Elements;
-            IEnumerable<SGUIElement> draggedElements = canvasElements.Where(element => _dragBox.VisualRect.Contains(element.VisualRect));
-            ViewModel.Commander.SelectUIElement.Execute(draggedElements);
-            _dragState = DragState.None;
+            if (_dragBox == null)
+                return;
+
+            Point pos = e.GetPosition(this);
+
+            if (pos.Distance(_dragStartPosition) < Constant.DragActivateDistance)
+                return;
+
+            IEnumerable<SGUIElement> selectedElements = PickedElements.Where(element => _dragBox.VisualRect.Contains(element.VisualRect));
+
+            if (selectedElements.Any())
+                ViewModel.Commander.SelectUIElement.Execute(selectedElements);
+
             _canvasShapes.Remove(_dragBox);
             _dragBox = null;
         }

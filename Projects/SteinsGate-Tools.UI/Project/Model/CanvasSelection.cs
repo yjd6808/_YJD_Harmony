@@ -28,44 +28,19 @@ namespace SGToolsUI.Model
             => Selection = selectionControl;
 
         public ItemsControl Selection { get; }
-        public SGUIElement SelectedElement { get; set; }
+        public SGUIElement Element 
+        {
+            get => _element;
+            set
+            {
+                _element = value;
+                OnPropertyChanged();
+            }
+        }
         public override ShapeElementType ShapeElementType => ShapeElementType.Selection;
 
-        public Rect VisualRect
-        {
-            get => _visualRect;
-            set
-            {
-                _visualRect = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualSize));
-                OnPropertyChanged(nameof(VisualPosition));
-            }
-        }
-
-        public Point VisualPosition
-        {
-            get => _visualRect.Location;
-            set
-            {
-                _visualRect.Location = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
-            }
-        }
-
-        public Size VisualSize
-        {
-            get => _visualRect.Size;
-            set
-            {
-                _visualRect.Size = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
-            }
-        }
-
         public override bool IsSelection => true;
-        private Rect _visualRect;
+
+        private SGUIElement _element;
     }
 }

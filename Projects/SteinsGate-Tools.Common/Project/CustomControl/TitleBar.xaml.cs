@@ -63,7 +63,7 @@ namespace SGToolsCommon.CustomControl
 
         private void WindowOnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
             {
                 if (!Draggable)
                     return;

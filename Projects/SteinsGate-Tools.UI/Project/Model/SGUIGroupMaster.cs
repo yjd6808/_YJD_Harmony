@@ -102,6 +102,7 @@ namespace SGToolsUI.Model
 
         public ObservableCollection<SGUIElement> SelectedElements { get; }
         public ObservableCollection<SGUIElement> PickedElements { get; }
+        public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
 
         // ============================================================
         //            기능

@@ -33,6 +33,7 @@ namespace SGToolsUI.View
 {
     public partial class MainView : Window
     {
+
         public MainViewModel ViewModel { get; }
         public DispatcherTimer Timer { get; }
 
@@ -238,5 +239,7 @@ namespace SGToolsUI.View
         {
             CanvasShapesControl.DragEnd(e);
         }
+
+      
     }
 }

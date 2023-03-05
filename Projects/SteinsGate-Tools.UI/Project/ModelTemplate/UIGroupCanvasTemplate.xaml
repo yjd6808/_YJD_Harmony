@@ -5,12 +5,9 @@
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel">
     <DataTemplate x:Key="GroupCanvasTemplate" DataType="{x:Type mo:SGUIGroup}">
         <Grid Width="{Binding VisualRect.Width}"
-              Height="{Binding VisualRect.Height}"
-              Canvas.Left="{Binding VisualRect.Left}"
-              Canvas.Top="{Binding VisualRect.Top}">
+              Height="{Binding VisualRect.Height}">
 
-            <TextBlock Text="fsefesfesfsfesfesfs"/>
-            <Rectangle Fill="Gray" Opacity="0.6"/>
+            <Rectangle Fill="Yellow" Opacity="0.55"/>
 
             <Grid.Style>
                 <Style TargetType="Grid">
