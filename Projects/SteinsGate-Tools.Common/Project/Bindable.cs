@@ -31,6 +31,7 @@ namespace SGToolsCommon
 
     public class Bindable : INotifyPropertyChanged
     {
+        [Browsable(false)]
         public bool IsNotifyEnabled { get; set; } = true;
 
         public event PropertyChangedEventHandler? PropertyChanged;

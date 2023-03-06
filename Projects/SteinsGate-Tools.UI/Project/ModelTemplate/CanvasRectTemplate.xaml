@@ -4,13 +4,13 @@
                     xmlns:local="clr-namespace:SGToolsUI"
                     xmlns:mo="clr-namespace:SGToolsUI.Model"
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
-                    xmlns:converter="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon">
+                    xmlns:common_conv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon">
     <DataTemplate x:Key="CanvasRectTemplate" DataType="{x:Type mo:CanvasRect}">
         <Rectangle StrokeThickness="{Binding Thickness}"
                    Stroke="{Binding Foreground}"
                    Width="{Binding VisualSize.Width}"
                    Height="{Binding VisualSize.Height}"
-                   Margin="{Binding VisualRect, Converter={x:Static local:Constant.RectThicknessConverter}}">
+                   Margin="{Binding VisualRect, Converter={StaticResource RectThicknessConverter}}">
         </Rectangle>
     </DataTemplate>
 </ResourceDictionary>

@@ -38,12 +38,12 @@ namespace SGToolsUI.ViewModel
             PackManager = SgaManager.Instance;
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
+            DragState = new DataDragState(this);
             GroupMaster = new SGUIGroupMaster(this)
             {
-                Name = "group_master",
-                VisualRect = new Rect(0, 0, Constant.CanvasWidth, Constant.CanvasHeight),
+                DefineName = "group_master",
+                VisualRect = new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight),
                 VisualName = "그룹 마스터",
-                Code = 0,
                 Selected = false,
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -166,7 +166,8 @@ namespace SGToolsUI.ViewModel
             }
         }
 
-        
+        public DataDragState DragState { get; }
+
         private SelectMode _uiElementSelectMode;
         private KeyState _keyState = new ();
         private ZoomState _zoomState = new ();

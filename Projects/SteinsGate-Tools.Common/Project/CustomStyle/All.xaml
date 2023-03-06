@@ -11,6 +11,7 @@
         <ResourceDictionary Source="MenuItemNotUsable.xaml" />
         <ResourceDictionary Source="MenuItemDelete.xaml" />
         <ResourceDictionary Source="MenuItemSeparator.xaml" />
+        <ResourceDictionary Source="PlaceholderImageListBox.xaml" />
         <ResourceDictionary Source="StretchListBox.xaml"/>
         <ResourceDictionary Source="StretchTreeView.xaml"/>
         <ResourceDictionary Source="BorderSeparatorHorizontal.xaml"/>

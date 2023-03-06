@@ -10,14 +10,14 @@
                     xmlns:local="clr-namespace:SGToolsUI"
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
                     xmlns:model="clr-namespace:SGToolsUI.Model"
-                    xmlns:cus_ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
+                    xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
                     xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     
                     xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
                     xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
-                    xmlns:cus_common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
-                    xmlns:cus_common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon">
+                    xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
+                    xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="MenuItemGroup.xaml" />
         <ResourceDictionary Source="MenuItemButton.xaml" />

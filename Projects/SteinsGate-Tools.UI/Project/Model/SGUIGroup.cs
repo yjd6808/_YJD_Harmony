@@ -24,11 +24,20 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsCommon;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
 {
     public class SGUIGroup : SGUIElement
     {
+        public const string CategoryName = "그룹";
+        public const int CategoryOrder = 2;
+
+        public const int OrderVerticalAlignment = 1;
+        public const int OrderHorizontalAlignment = 1;
+        public const int OrderChildCount = 3;
+        public const int OrderChildCountRecursive = 4;
+
 
         public SGUIGroup(int depth)
         {
@@ -41,9 +50,6 @@ namespace SGToolsUI.Model
 
 
         [Browsable(false)]
-        [Category("Group")]
-        [DisplayName("Children")]
-        [Description("UI 그룹의 자식들")]
         public ObservableCollection<SGUIElement> Children
         {
             get => _children;
@@ -54,13 +60,12 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category("Group")]
-        [DisplayName("ChildCount")]
+
+        [Category(CategoryName), DisplayName("자식 수"), PropertyOrder(OrderChildCount)]
         [Description("UI 그룹의 자식수를 의미합니다.")]
         public int ChildCount => Children.Count;
 
-        [Category("Group")]
-        [DisplayName("ChildCountRecursive")]
+        [Category(CategoryName), DisplayName("자식 수(Total)"), PropertyOrder(OrderChildCountRecursive)]
         [Description("UI 그룹 자식수를 의미합니다. (하위 자식들 모두 포함)")]
         public int ChildCountRecursive
         {
@@ -72,8 +77,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category("Group")]
-        [DisplayName("HorizontalAlignment")]
+        [Category(CategoryName), DisplayName("가로 정렬"), PropertyOrder(OrderHorizontalAlignment)]
         [Description("UI 그룹내 자식의 가로 정렬 기준입니다.")]
         public HorizontalAlignment HorizontalAlignment
         {
@@ -88,8 +92,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category("Group")]
-        [DisplayName("VerticalAlignment")]
+        [Category(CategoryName), DisplayName("수직 정렬"), PropertyOrder(OrderVerticalAlignment)]
         [Description("UI 그룹내 자식의 세로 정렬 기준입니다.")]
         public VerticalAlignment VerticalAlignment
         {
@@ -104,8 +107,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category("Visual")]
-        [DisplayName("Visible")]
+        [Category(SGUIElement.CategoryName), DisplayName("보이기"), PropertyOrder(SGUIElement.OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정합니다. (그룹 요소입니다. 하위 항목들도 모두 적용됩니다.)")]
         public override bool IsVisible
         {
@@ -121,9 +123,8 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category("Visual")]
-        [DisplayName(nameof(Depth))]
-        [Description("이 엘리먼트의 계층구조상 위치")]
+        [Category(SGUIElement.CategoryName), DisplayName("계층적 높이"), PropertyOrder(SGUIElement.OrderDepth)]
+        [Description("이 엘리먼트의 계층구조상 높이")]
         public override int Depth => _depth;
 
 
@@ -157,22 +158,25 @@ namespace SGToolsUI.Model
         private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Left;
         private VerticalAlignment _verticalAlignment = VerticalAlignment.Bottom;
         private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
+        private int _code;
 
-        public static int Seq = 0;
+        [Browsable(false)] public override int Code => _code;
+        public void SetCode(int code) => _code = code;
 
-
+        public static int NameSeq = 0;
         // ============================================================
         //            기능
         // ============================================================
         public override void CreateInit()
         {
-            VisualName = $"그룹_{Seq++}";
+            VisualName = $"그룹_{NameSeq++}";
         }
 
         public override object Clone()
         {
             SGUIGroup group = new SGUIGroup(_depth);
             group.CopyFrom(this);
+            group._code = _code;
             group.HorizontalAlignment = HorizontalAlignment;
             group.VerticalAlignment = VerticalAlignment;
 
@@ -238,14 +242,15 @@ namespace SGToolsUI.Model
 
 
         // 디버깅용
-        public void UpdateParent()
+        public void ____Update()
         {
+            ViewModel.GroupMaster.AddGroup(this);
             Children.ForEach(x =>
             {
                 x.Parent = this;
 
                 if (x.IsGroup)
-                    x.Cast<SGUIGroup>().UpdateParent();
+                    x.Cast<SGUIGroup>().____Update();
             });
         }
 

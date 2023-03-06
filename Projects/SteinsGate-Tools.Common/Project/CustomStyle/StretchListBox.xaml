@@ -1,16 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="StretchListBoxItem" TargetType="ListBoxItem">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    </Style>
     
     <Style x:Key="StretchListBox" TargetType="ListBox">
-        <Setter Property="ItemContainerStyle">
-            <Setter.Value>
-                <!-- 박스 아이템을 꽉채우도록 한다. 텍스트블록 글만내에서만 클릭되는걸 방지 -->
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="HorizontalContentAlignment"
-                            Value="Stretch" />
-                </Style>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource StretchListBoxItem}"/>
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>

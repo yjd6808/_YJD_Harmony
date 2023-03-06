@@ -33,12 +33,7 @@ using SGToolsUI.Extension;
 
 namespace SGToolsUI.CustomControl
 {
-    public enum DragState
-    {
-        None,
-        Wait,
-        Dragging,
-    }
+   
 
     public class CanvasShapeItemsControl : ItemsControl, INotifyPropertyChanged
     {
@@ -127,7 +122,6 @@ namespace SGToolsUI.CustomControl
         private bool _isViewportVisible;
 
         private CanvasRect _dragBox;
-        private double _draggedDistance;
         private DragState _dragState = DragState.None;
         private Point _dragStartPosition;
         private bool _isDraggable = true;

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.Sga;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
 {
@@ -26,6 +28,16 @@ namespace SGToolsUI.Model
 
     public class SGUIButton : SGUIElement
     {
+        public const string CategoryName = "버튼";
+        public const int CategoryOrder = 2;
+
+        public const int OrderNormal = 1;
+        public const int OrderPressed = 2;
+        public const int OrderOver = 3;
+        public const int OrderDisabled = 4;
+
+
+        [Category(CategoryName), DisplayName("눌렀을 때"), PropertyOrder(OrderNormal)]
         public SGUISpriteInfo Normal
         {
             get => _normal;

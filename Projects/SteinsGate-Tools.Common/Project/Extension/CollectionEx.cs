@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 3/1/2023 11:25:36 AM
+ * 생성일: 3/6/2023 4:44:35 PM
  *
  */
 
@@ -18,18 +18,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SGToolsCommon;
-using SGToolsCommon.Sga;
 
-namespace SGToolsUI.Model
+namespace SGToolsCommon.Extension
 {
-    public struct SGUISpriteInfo 
+    public static class CollectionEx
     {
-        public SgaPackage Sga { get; set; }
-        public SgaImage Img { get; set; }
-        public int Index { get; set; }
-
-        public string SgaName => Sga.FileNameWithoutExt;
-        public string ImgName => Img.Header.NameWithoutExt;
     }
 }

@@ -39,10 +39,16 @@ namespace SGToolsCommon.Converter
                 case TypeCode.Int32:
                 case TypeCode.Int64:
                 case TypeCode.Decimal:
-                    return (long)value - long.Parse((string)parameter);
+                    if (parameter is string)
+                        return (long)value - long.Parse((string)parameter);
+
+                    return (long)value - (long)parameter;
                 case TypeCode.Double:
                 case TypeCode.Single:
-                    return (double)value - double.Parse((string)parameter);
+                    if (parameter is string)
+                        return (double)value - double.Parse((string)parameter);
+
+                    return (double)value - (double)parameter;
                 default:
                 {
                     Thickness v = (Thickness)value;

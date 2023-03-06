@@ -11,6 +11,8 @@
              xmlns:local="clr-namespace:SGToolsCommon.CustomControl"
              xmlns:p="clr-namespace:SGToolsCommon.Provider"
              xmlns:style="clr-namespace:SGToolsCommon.CustomStyle"
+             xmlns:conv="clr-namespace:SGToolsCommon.Converter"
+             xmlns:res="clr-namespace:SGToolsCommon.Resource"
              mc:Ignorable="d"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <UserControl.Resources>
@@ -18,9 +20,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../CustomStyle/ImageButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <conv:PackUrlImageSourceConverter x:Key="PackUrlImageSourceConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-
 
     <StackPanel>
         <Grid>
@@ -35,20 +38,29 @@
             <TextBlock x:Name="_tbTitle" Text="{Binding Title, RelativeSource={RelativeSource  AncestorType={x:Type local:TitleBar}}}" VerticalAlignment="Center" FontSize="16"
                        Margin="5, 0, 0, 0">
             </TextBlock>
-            <Button Grid.Column="1" Style="{StaticResource ImageButton}" Click="MinimizeOnClick">
-                <style:ImageButtonProperty.Image>
-                    <BitmapImage UriSource="/SGToolsCommon;component/Resource/Icon/win_minimize.ico"></BitmapImage>
-                </style:ImageButtonProperty.Image>
+            <Button Grid.Column="1" 
+                    Style="{StaticResource ImageButton}" 
+                    Click="MinimizeOnClick"
+                    style:ImageButtonProperty.Image="{
+                Binding 
+                Converter={StaticResource PackUrlImageSourceConverter},
+                ConverterParameter={x:Static res:R.IconWinMinimizeKey}}">
             </Button>
-            <Button Grid.Column="2" Style="{StaticResource ImageButton}" Click="MaximizeOnClick">
-                <style:ImageButtonProperty.Image>
-                    <BitmapImage UriSource="/SGToolsCommon;component/Resource/Icon/win_maximize.ico"></BitmapImage>
-                </style:ImageButtonProperty.Image>
+            <Button Grid.Column="2" 
+                    Style="{StaticResource ImageButton}" 
+                    Click="MaximizeOnClick"
+                    style:ImageButtonProperty.Image="{
+                Binding 
+                Converter={StaticResource PackUrlImageSourceConverter},
+                ConverterParameter={x:Static res:R.IconWinMaximizeKey}}">
             </Button>
-            <Button Grid.Column="3" Style="{StaticResource ImageButton}" Click="CloseOnClick">
-                <style:ImageButtonProperty.Image>
-                    <BitmapImage UriSource="/SGToolsCommon;component/Resource/Icon/win_close.ico"></BitmapImage>
-                </style:ImageButtonProperty.Image>
+            <Button Grid.Column="3" 
+                    Style="{StaticResource ImageButton}" 
+                    Click="CloseOnClick"
+                    style:ImageButtonProperty.Image="{
+                Binding 
+                Converter={StaticResource PackUrlImageSourceConverter},
+                ConverterParameter={x:Static res:R.IconWinCloseKey}}">
             </Button>
         </Grid>
     </StackPanel>

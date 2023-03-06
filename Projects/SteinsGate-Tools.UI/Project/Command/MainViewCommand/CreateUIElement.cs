@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -55,6 +56,9 @@ namespace SGToolsUI.Command.MainViewCommand
             SGUIElement newElement = SGUIElement.Create(createElementType, group);
             newElement.ViewModel = ViewModel;
             group.AddChild(newElement);
+
+            if (createElementType == SGUIElementType.Group)
+                ViewModel.GroupMaster.Groups.Add(newElement.Cast<SGUIGroup>());
 
             // 그룹마스터는 트리뷰에서 관리를 안하므로..
             if (!isGroupMaster)

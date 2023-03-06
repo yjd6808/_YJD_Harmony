@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using SGToolsUI.Model;
+using SGToolsUI.Resource;
 
 namespace SGToolsUI.Converter
 {
@@ -18,11 +19,11 @@ namespace SGToolsUI.Converter
 
             switch (elementType)
             {
-                case SGUIElementType.Group: return Constant.UIGroupIconImageSource;
-                case SGUIElementType.Button: return Constant.UIButtonIconImageSource;
-                case SGUIElementType.CheckBox: return Constant.UICheckBoxIconImageSource;
-                case SGUIElementType.EditBox: return Constant.UIEditBoxIconImageSource;
-                case SGUIElementType.Label: return Constant.UILabelIconImageSource;
+                case SGUIElementType.Group: return R.UIGroupIconImageSource;
+                case SGUIElementType.Button: return R.UIButtonIconImageSource;
+                case SGUIElementType.CheckBox: return R.UICheckBoxIconImageSource;
+                case SGUIElementType.EditBox: return R.UIEditBoxIconImageSource;
+                case SGUIElementType.Label: return R.UILabelIconImageSource;
             }
 
             return null;

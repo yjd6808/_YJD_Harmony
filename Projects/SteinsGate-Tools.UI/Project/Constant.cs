@@ -20,44 +20,18 @@ namespace SGToolsUI
         public const double CanvasWheelDelta = 10.0;
         public const double CanvasWidth = ResolutionWidth + 50.0;
         public const double CanvasHeight = ResolutionHeight + 50.0;
+
+        public const double PropertyGridHeight = 360;                 // 실제프로퍼티 그리드 크기
+        public const double PropertyGridLowerInspectorHide = 0;      // 하단 패널 높이 (숨기기 위한 수치)
+        public const double PropertyGridUpperInspectorHide = 0;     // 상단 패널 높이 (숨기기 위한 수치)
+
         public const double ResolutionRatio = 480.0f / 640.0f;
         public const string SettingFileName = "setting.json";
 
         public const double LeftPaneWidth = 300;
-        public const int ZOrderInterval = 100;
-
-        public static readonly RectThicknessConverter RectThicknessConverter= new ();
-        public static readonly UIElementTypeBlackImageConverter UIElementTypeBlackImageConverter = new();
-        public static readonly UIElementTypeColoredImageConverter UIElementTypeColoredImageConverter = new();
-
-
-
-        public const string IconPath = "pack://application:,,,/SGToolsUI;component/Resource/Icon/";
-        public const string UIGroupIconKey = IconPath + "ui_black_group.ico";
-        public const string UIButtonIconKey = IconPath + "ui_black_button.ico";
-        public const string UICheckBoxIconKey = IconPath + "ui_black_checkbox.ico";
-        public const string UIEditBoxIconKey = IconPath + "ui_black_editbox.ico";
-        public const string UILabelIconKey = IconPath + "ui_black_label.ico";
-
-        public const string UIColoredGroupIconKey = IconPath + "ui_colored_group.ico";
-        public const string UIColoredButtonIconKey = IconPath + "ui_colored_button.ico";
-        public const string UIColoredCheckBoxIconKey = IconPath + "ui_colored_checkbox.ico";
-        public const string UIColoredEditBoxIconKey = IconPath + "ui_colored_editbox.ico";
-        public const string UIColoredLabelIconKey = IconPath + "ui_colored_label.ico";
-
-        public static readonly ImageSource UIGroupIconImageSource = new BitmapImage(new Uri(UIGroupIconKey));
-        public static readonly ImageSource UIButtonIconImageSource = new BitmapImage(new Uri(UIButtonIconKey));
-        public static readonly ImageSource UICheckBoxIconImageSource = new BitmapImage(new Uri(UICheckBoxIconKey));
-        public static readonly ImageSource UIEditBoxIconImageSource = new BitmapImage(new Uri(UIEditBoxIconKey));
-        public static readonly ImageSource UILabelIconImageSource = new BitmapImage(new Uri(UILabelIconKey));
-
-        public static readonly ImageSource UIColoredGroupIconImageSource = new BitmapImage(new Uri(UIColoredGroupIconKey));
-        public static readonly ImageSource UIColoredButtonIconImageSource = new BitmapImage(new Uri(UIColoredButtonIconKey));
-        public static readonly ImageSource UIColoredCheckBoxIconImageSource = new BitmapImage(new Uri(UIColoredCheckBoxIconKey));
-        public static readonly ImageSource UIColoredEditBoxIconImageSource = new BitmapImage(new Uri(UIColoredEditBoxIconKey));
-        public static readonly ImageSource UIColoredLabelIconImageSource = new BitmapImage(new Uri(UIColoredLabelIconKey));
-
-
         public const double DragActivateDistance = 5.0f;
+
+        public const int CodeAssignerCapacity = 1000;
+        public const int ZOrderInterval = 100;
     }
 }

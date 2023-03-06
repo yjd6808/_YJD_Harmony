@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +20,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Resources;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using SGToolsCommon.CustomControl;
@@ -47,7 +50,15 @@ namespace SGToolsUI.View
             Timer.Interval = TimeSpan.FromSeconds(1 / 60.0f);
             Timer.Tick += TimerTick;
             Resources.Add("ViewModel", ViewModel);
+
             InitializeComponent();
+
+            // Mouse.OverrideCursor = SGToolsCommon.Resource.R.DragAndDropCursor.Value;
+
+
+            #region  A
+
+
 
             ViewModel.GroupMaster.Children.Add(new SGUIGroup(0)
             {
@@ -134,8 +145,13 @@ namespace SGToolsUI.View
             });
             ViewModel.GroupMaster.Children.Add(new SGUIGroup(0) { VisualName = "그룹 3" });
             ViewModel.GroupMaster.Children.Add(new SGUIGroup(0) { VisualName = "그룹 4" });
+
+
+            #endregion
+
             ViewModel.GroupMaster.ForEachRecursive(x => x.ViewModel = ViewModel);
-            ViewModel.GroupMaster.UpdateParent();
+            ViewModel.GroupMaster.____Update();
+
         }
 
         private void TimerTick(object? sender, EventArgs e)
@@ -151,9 +167,9 @@ namespace SGToolsUI.View
         private void MainView_OnLoaded(object sender, RoutedEventArgs e)
         {
             InitializeZoomStateBinding();       // 컴포넌트가 모두 초기화된 후에 윈도우 사이즈가 최종결정되기 때문에.. Xaml에서 작성하지 않고 C# 코드로 작성하도록 한다.
-
         }
 
+        
 
 
         // ================================================================================
@@ -228,18 +244,21 @@ namespace SGToolsUI.View
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             CanvasShapesControl.DragMove(e);
+            ViewModel.DragState.OnDragMove(e.GetPosition(this));
         }
 
         protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
         {
             CanvasShapesControl.DragEnd(e);
+            ViewModel.DragState.OnDragEnd(e.GetPosition(this));
         }
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             CanvasShapesControl.DragEnd(e);
+            ViewModel.DragState.OnDragEnd(e.GetPosition(this));
+
         }
 
-      
     }
 }

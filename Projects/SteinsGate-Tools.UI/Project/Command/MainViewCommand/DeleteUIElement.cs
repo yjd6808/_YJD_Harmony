@@ -34,7 +34,8 @@ namespace SGToolsUI.Command.MainViewCommand
         public override void Execute(object? parameter)
         {
             // 그룹인 요소와 그룹이 아닌 요소로 분리
-            var lookup = ViewModel.GroupMaster.SelectedElements.ToLookup(element => element.IsGroup);
+            var masterGroup = ViewModel.GroupMaster;
+            var lookup = masterGroup.SelectedElements.ToLookup(element => element.IsGroup);
 
             /*선택된 요소중 그룹만 먼저 다 가져온후 그룹을 제일먼저 제거해준 후 원소 제거를 수행한다.
               [이유]
@@ -48,8 +49,9 @@ namespace SGToolsUI.Command.MainViewCommand
                    list.Remove(i)와 같은 작업 수행시 연산이 제대로 수행안될 수 있기 때문
 
              최상위 그룹을 먼저 삭제 우선토록한다. 따라서 깊이가 얕은 순서대로 오름차순 정렬을 해준다.*/
-            lookup[true].OrderBy(element => element.Depth).ToList().ForEach(deletedGroupElement =>
+            lookup[true].OrderBy(element => element.Depth).Cast<SGUIGroup>().ToList().ForEach(deletedGroupElement =>
             {
+                masterGroup.RemoveGroup(deletedGroupElement);
                 deletedGroupElement.Selected = false;
                 deletedGroupElement.DeleteSelf();
             });

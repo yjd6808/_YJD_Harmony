@@ -18,13 +18,16 @@
         xmlns:local="clr-namespace:SGToolsUI"
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
         xmlns:model="clr-namespace:SGToolsUI.Model"
+        xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
         xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
         xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
 
-        xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
+        
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
         xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
         xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
+        xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
+        
         Name="View"
         FontSize="14"
         AllowsTransparency="True" WindowStyle="None"
@@ -36,7 +39,6 @@
         Loaded="MainView_OnLoaded"
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    
     <DockPanel Name="MainDockPanel"
                DataContext="{Binding Path=ViewModel}">
         <i:Interaction.Triggers>
@@ -80,9 +82,9 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Text="{Binding MouseOnMonitor, Converter={cv:VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
-                <TextBox Grid.Column="1" Text="{Binding MouseOnWindow, Converter={cv:VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
-                <TextBox Grid.Column="2" Text="{Binding MouseOnCanvas, Converter={cv:VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
+                <TextBox Grid.Column="0" Text="{Binding MouseOnMonitor, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
+                <TextBox Grid.Column="1" Text="{Binding MouseOnWindow, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
+                <TextBox Grid.Column="2" Text="{Binding MouseOnCanvas, Converter={StaticResource VectorStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
             </Grid>
             <Border Grid.Column="1"  Style="{StaticResource BorderSeparatorVertical}"/>
             <Grid Grid.Column="2" >
@@ -94,9 +96,9 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0"  Text="{Binding ZoomState.ZoomLevelXString, Mode=OneWay}"  Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
-                <Button Name="ZoomLevelDownButton" Grid.Column="1" Command="{Binding Commander.CanvasZoomUp}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_up.ico" />
-                <Button Name="ZoomLevelUpButton" Grid.Column="2" Command="{Binding Commander.CanvasZoomDown}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_down.ico" />
-                <Button Name="ZoomLevelResetButton" Grid.Column="3" Command="{Binding Commander.CanvasZoomReset}" IsEnabled="{Binding ZoomState.IsNotDefaultZoomLevel}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_reset.ico"/>
+                <Button Name="ZoomLevelDownButton" Grid.Column="1" Command="{Binding Commander.CanvasZoomUp}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDownKey}}" />
+                <Button Name="ZoomLevelUpButton" Grid.Column="2" Command="{Binding Commander.CanvasZoomDown}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUpKey}}" />
+                <Button Name="ZoomLevelResetButton" Grid.Column="3" Command="{Binding Commander.CanvasZoomReset}" IsEnabled="{Binding ZoomState.IsNotDefaultZoomLevel}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonResetKey}}"/>
                 <TextBox Grid.Column="4"  Text="{Binding CanvasSelectionStatus}" Style="{StaticResource ReadonlyTextBox}"/>
             </Grid>
             <Border     Grid.Column="3"  Style="{StaticResource BorderSeparatorVertical}" />
@@ -152,9 +154,9 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static local:Constant.UIGroupIconImageSource}"/>
-                            <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static local:Constant.UIButtonIconImageSource}"/>
-                            <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_delete.ico"/>
+                            <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIGroupIconImageSource}"/>
+                            <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIButtonIconImageSource}"/>
+                            <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
                         </Grid>
                         <Separator />
                     </StackPanel>
@@ -174,7 +176,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="선택됨: "/>
                     <TextBlock Text="{Binding GroupMaster.SelectedElement.VisualName}"/>
-                    <Image Margin="4, 0, 0, 0" Width="16" Source="/SGToolsCommon;component/Resource/Icon/common_checked.ico">
+                    <Image Margin="4, 0, 0, 0" Width="16" Source="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonCheckedKey}}">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
@@ -209,8 +211,8 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Name="ToggleCanvasGridButton" Grid.Column="0" Command="{Binding Commander.ToggleCanvasGrid}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_grid.ico"/>
-                <Button Name="ToggleCanvasViewportButton" Grid.Column="1" Command="{Binding Commander.ToggleCanvasViewport}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_rect.ico"/>
+                <Button Name="ToggleCanvasGridButton" Grid.Column="0" Command="{Binding Commander.ToggleCanvasGrid}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonGridKey}}"/>
+                <Button Name="ToggleCanvasViewportButton" Grid.Column="1" Command="{Binding Commander.ToggleCanvasViewport}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRectKey}}"/>
             </Grid>
             <Grid>
 
@@ -243,7 +245,11 @@
 
 
 
-
+        <!-- ###############################################################################
+        
+                                        우측 패널
+        
+        ############################################################################### -->
         <Grid DockPanel.Dock="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
@@ -258,7 +264,7 @@
                     <ColumnDefinition Width="30"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Command="{Binding Commander.ReloadSgaPackage}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="/SGToolsCommon;component/Resource/Icon/common_refresh.ico"/>
+                <Button Grid.Column="0" Command="{Binding Commander.ReloadSgaPackage}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRefreshKey}}"/>
             </Grid>
             
             <StackPanel Grid.Row="1"
@@ -274,7 +280,7 @@
 
                             <TextBlock Text="{
                             Binding FileNameWithoutExt, 
-                            Converter={cv:SgaFileNameConverter}, 
+                            Converter={StaticResource SgaFileNameConverter}, 
                             ConverterParameter={x:Static sga:SgaPackageType.Interface}}">
                                 <!-- 리스트박스 아이템 더블클릭으로 커맨드를 실행하기 위함 -->
                                 <TextBlock.InputBindings>
@@ -311,43 +317,52 @@
                     </ListBox.ItemTemplate>
 
                 </ListBox>
-                <common_ctrl:PlaceholderImageListBox MinWidth="100"
-                                             MaxWidth="100"
-                                             Name="SpriteListBox"
-                                             ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                             PlaceholderImageSource="/SGToolsCommon;component/Resource/Icon/common_music.ico"
-                                             PlaceholderImageSourceWidth="30"
-                                             PlaceholderImageSourceHeight="30"
-                                             PlaceholderImageSourceOpacity="0.5"
-                                             Style="{StaticResource StretchListBox}"
-                                             ItemsSource="{Binding SelectedImage.SpriteList}">
-                    <common_ctrl:PlaceholderImageListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding FrameIndex}">
-                                <i:Interaction.Triggers>
-                                    <!--리스트 박스 이벤트를 커맨드로 실행하기 위함-->
-                                    <i:EventTrigger EventName="MouseEnter">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.Commander.SpritePreview, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
-                                                               PassEventArgsToCommand="True" />
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="MouseLeave">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.Commander.SpritePreview, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
-                                                               PassEventArgsToCommand="True" />
-                                    </i:EventTrigger>
-                                    <i:EventTrigger EventName="MouseLeftButtonDown">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.Commander.SelectSgaSprite, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
-                                                               PassEventArgsToCommand="True" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBlock>
-                        </DataTemplate>
-                    </common_ctrl:PlaceholderImageListBox.ItemTemplate>
-                </common_ctrl:PlaceholderImageListBox>
+                <ui_ctrl:SgaSpriteListBox MinWidth="100"
+                         MaxWidth="100"
+                         x:Name="SpriteListBox"
+                         ScrollViewer.VerticalScrollBarVisibility="Hidden" 
+                         Style="{StaticResource SgaSpriteListBox}"
+                         ItemsSource="{Binding SelectedImage.SpriteList}">
+                </ui_ctrl:SgaSpriteListBox>
             </StackPanel>
 
-            <Grid Grid.Row="2">
-                <c:PropertyGrid Name="ElementPropertyGrid" FontSize="12"/>
-            </Grid>
+            <Canvas Grid.Row="2" 
+                    Name="PropertyGridCanvas"
+                    ClipToBounds="True"
+                    Height="{Binding ZoomState.BasePropertyGridHeight}">
+                
+                <!-- 캔버스 자체가 내부 요소를 Grid 처럼 꽉채우지 않는다. 
+                     따라서 캔버스내부에 그리드를 두고 그리드의 크기를 캔버스크기로 맞춰주면
+                     캔버스내에서 Control들을 꽉채울 수 있게된다.
+                     https://stackoverflow.com/questions/14781300/xaml-how-to-get-canvass-child-to-fill-the-entire-canvas
+                
+                     Auto로 해놓으니까 수직 스크롤바가 안생김.. 이녀석도 줌레벨에 따라 변경해주도록 함
+                 -->
+                <Grid Width="{Binding ElementName=PropertyGridCanvas, Path=ActualWidth}"
+                      Height="{Binding ElementName=PropertyGridCanvas, Path=ActualHeight}">
+                    <ui_ctrl:UIElementPropertyGrid x:Name="ElementPropertyGrid" 
+                                               FontSize="12" 
+                                               Width="Auto"
+                                               AutoGenerateProperties="True"
+                                               ShowAdvancedOptions="False">
+                        <ui_ctrl:UIElementPropertyGrid.Margin >
+                            <Thickness Top="{x:Static local:Constant.PropertyGridUpperInspectorHide}"
+                                       Bottom="{x:Static local:Constant.PropertyGridLowerInspectorHide}"/>
+                        </ui_ctrl:UIElementPropertyGrid.Margin>
+                    </ui_ctrl:UIElementPropertyGrid>
+                </Grid>
+
+                
+            </Canvas>
+
+            <!--<ui_ctrl:UIElementPropertyGrid Grid.Row="2"
+                                               x:Name="ElementPropertyGrid" 
+                                               FontSize="12" 
+                                               Height="{Binding ZoomState.BasePropertyGridHeight}"
+                                               AutoGenerateProperties="True"
+                                               ShowAdvancedOptions="False" Margin="0, 0, 0, -60">
+                </ui_ctrl:UIElementPropertyGrid>-->
+            
         </Grid>
 
         

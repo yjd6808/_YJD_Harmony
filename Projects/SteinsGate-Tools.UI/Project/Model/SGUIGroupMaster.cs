@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -49,6 +50,14 @@ namespace SGToolsUI.Model
             SelectedElements.CollectionChanged += SelectedElementsOnCollectionChanged;
             PickedElements = new ObservableElementsCollection(120, viewModel);
             PickedElements.CollectionChanged += PickedElementsOnCollectionChanged;
+            Groups = new List<SGUIGroup>(120);
+
+
+            _codeAssigner = new PriorityQueue<int, int>(Constant.CodeAssignerCapacity);
+
+            // 이정도면 충분하겠지..?
+            for (int i = 0; i < Constant.CodeAssignerCapacity; ++i)
+                _codeAssigner.Enqueue(1000 * i, 1000 * i);
         }
 
 
@@ -92,10 +101,33 @@ namespace SGToolsUI.Model
         public ObservableCollection<SGUIElement> SelectedElements { get; }
         public ObservableCollection<SGUIElement> PickedElements { get; }
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
+        public List<SGUIGroup> Groups { get; }
+
+        // 코드 어사이너!
+        // 코드 수동할당은 에반거 같아서 자동으로 할당하도록 한다.
+        private PriorityQueue<int, int> _codeAssigner;
 
         // ============================================================
         //            기능
         // ============================================================
+
+        public void AddGroup(SGUIGroup group)
+        {
+            int assignedCode = _codeAssigner.Dequeue();
+            Groups.Add(group);
+            group.SetCode(assignedCode);
+
+            Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
+        }
+
+        public void RemoveGroup(SGUIGroup group)
+        {
+            Groups.Remove(group);
+            _codeAssigner.Enqueue(group.Code, group.Code);
+
+            Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
+        }
+
 
         public void DeselectAll()
         {

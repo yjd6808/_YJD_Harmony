@@ -143,21 +143,13 @@ namespace SGToolsUI.CustomControl
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            HitTestResult hit = VisualTreeHelper.HitTest(this, Mouse.GetPosition(this));
+            Point pos = e.GetPosition(this);
+            var hit = this.HitTest<UIElementTreeView, TreeViewItem, SGUIElement>(pos);
 
-            if (hit.VisualHit == null)
+            if (hit == null)
                 return;
 
-            var item = hit.VisualHit.FindParent<TreeViewItem>();
-
-            if (item == null)
-                return;
-
-            if (item.DataContext is not SGUIElement)
-                throw new Exception("선택한 트리뷰 아이템의 데이터컨텍스트가 설정되어있지 않습니다.");
-
-
-            SGUIElement? selected = item.DataContext as SGUIElement;
+            SGUIElement? selected = hit.DataContext as SGUIElement;
             SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
 
             if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null)

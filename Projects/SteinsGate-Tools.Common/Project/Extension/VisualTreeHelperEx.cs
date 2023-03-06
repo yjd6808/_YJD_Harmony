@@ -2,6 +2,7 @@
  * 생성일: 2/27/2023 10:19:42 AM
  */
 
+using SGToolsCommon.Sga;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,5 +79,48 @@ namespace SGToolsCommon.Extension
             Vector offset = VisualTreeHelper.GetOffset(depObj);
             return depObj.PointToScreen(new Point(offset.X, offset.Y));
         }
+
+
+
+        // 매번 만들기 귀찮아서 하나로 합침
+        // ListBox를 예로들어서 ListBox내에서 마우스로 아무곳 찍으면
+        // 해당위치에서 ListBoxItem과 ListBoxItem에 바인딩된 데이터 컨텍스트 가져오는 함수
+
+        public class HitExResult<TItem, TDataContext>
+            where TItem : Control
+            where TDataContext : class
+        {
+            public HitExResult(TItem item, TDataContext dataContext)
+            {
+                Item = item;
+                DataContext = dataContext;
+            }
+
+            public TItem Item { get; }
+            public TDataContext DataContext { get; }
+        }
+        public static HitExResult<TItem, TDataContext> HitTest<T, TItem, TDataContext>(this T visual, Point posOnVisual)
+            where T : Visual
+            where TItem : Control
+            where TDataContext : class
+        {
+            HitTestResult hit = VisualTreeHelper.HitTest(visual, posOnVisual);
+
+            if (hit.VisualHit == null)
+                return null;
+
+            var hitItem = hit.VisualHit.FindParent<TItem>();
+
+            if (hitItem == null)
+                return null;
+
+            if (hitItem.DataContext is not TDataContext)
+                throw new Exception($"선택한 {typeof(T).Namespace} 아이템의 데이터컨텍스트가 설정되어있지 않습니다.");
+
+            TDataContext hitDataContext = hitItem.DataContext as TDataContext;
+            return new HitExResult<TItem, TDataContext>(hitItem, hitDataContext);
+        }
+
+      
     }
 }

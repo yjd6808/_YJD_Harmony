@@ -32,6 +32,9 @@ namespace SGToolsUI.Command.MainViewCommand.Control
         }
         public override void Execute(object? parameter)
         {
+            if (!ViewModel.KeyState.IsCtrlPressed)
+                return;
+
             MouseWheelEventArgs wheelEventArgs =  parameter as MouseWheelEventArgs;
 
             if (wheelEventArgs == null)

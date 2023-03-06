@@ -19,9 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resource\Cursor\drag_and_drop.ani" />
     <None Remove="Resource\Icon\common_checked.ico" />
     <None Remove="Resource\Icon\common_delete.ico" />
     <None Remove="Resource\Icon\common_down.ico" />
+    <None Remove="Resource\Icon\common_empty.ico" />
     <None Remove="Resource\Icon\common_grid.ico" />
     <None Remove="Resource\Icon\common_music.ico" />
     <None Remove="Resource\Icon\common_not_usable.ico" />
@@ -37,8 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\Cursor\drag_and_drop.ani" />
     <Resource Include="Resource\Icon\common_checked.ico" />
     <Resource Include="Resource\Icon\common_down.ico" />
+    <Resource Include="Resource\Icon\common_empty.ico" />
     <Resource Include="Resource\Icon\common_reset.ico" />
     <Resource Include="Resource\Icon\common_up.ico" />
   </ItemGroup>

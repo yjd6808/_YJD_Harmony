@@ -33,63 +33,138 @@ namespace SGToolsUI.Model
 {
     public abstract class SGUIElement : CanvasElement, ICloneable
     {
+        public const string CategoryName = "공통";
+        public const int CategoryOrder = 1;
+        
+        public const int OrderUIElementType = 1;
+        public const int OrderCodeString = 2;
+        public const int OrderVisualName = 3;
+        public const int OrderDefineName = 4;
+        public const int OrderVisualPosition = 5;
+        public const int OrderVisualSize = 6;
+        public const int OrderIsVisible = 7;
+        public const int OrderDepth = 8;
+
         public const string PickedKey = nameof(Picked);
-        // =========================================================================
-        //                         엘리먼트 관련 정보
-        // =========================================================================
 
-        [Browsable(false)] public virtual bool IsGroup => false;
-
-        [Category("Element")]
-        [DisplayName("ElementType")]
+        [Category(SGUIElement.CategoryName), DisplayName("타입"), PropertyOrder(OrderUIElementType)]
         [Description("UI 타입을 의미")]
         public abstract SGUIElementType UIElementType { get; }
 
-        
+        [Category(SGUIElement.CategoryName), DisplayName("코드"), PropertyOrder(OrderCodeString)]
+        public string CodeString => Code.ToString("#,##0");
 
-        [Category("Element")]
-        [DisplayName(nameof(Name))]
-        [Description("게임에서 사용할 이름 혹은 변수명의 축약형태")]
-        public string Name
+        [Category(SGUIElement.CategoryName), DisplayName("이름"), PropertyOrder(OrderVisualName)]
+        [Description("UI엘리먼트가 트리뷰에서 나타내는 이름입니다.")]
+        public string VisualName
         {
-            get => _name;
+            get => _visualName;
             set
             {
-                _name = value;
+                if (_visualName == value)
+                    return;
+
+                _visualName = value;
                 OnPropertyChanged();
             }
         }
 
-        [Browsable(true)]
-        [Category("Element")]
-        [DisplayName(nameof(DefineName))]
-        [Description("게임에서 실제로 사용할 변수/Define명")]
+        [Category(SGUIElement.CategoryName), DisplayName("디파인 명"), PropertyOrder(OrderDefineName)]
+        [Description("게임에서 실제로 사용될 디파인 이름")]
         public string DefineName
         {
-            get
-            {
-                StringBuilder sb = new StringBuilder(60);
-
-
-                return sb.ToString();
-            }
-        }
-
-        [Category("Element")]
-        [DisplayName(nameof(Code))]
-        [Description("엘리먼트 고유 코드를 의미")]
-        public int Code
-        {
-            get => _code;
+            get => _defineName;
             set
             {
-                _code = value;
+                _defineName = value;
                 OnPropertyChanged();
             }
         }
 
+
         [Browsable(false)]
-        [Category("Element")]
+        [Category(SGUIElement.CategoryName), DisplayName("좌표크기")]
+        [Description("UI엘리먼트의 캔버스 좌상단 위치와 크기를 의미")]
+        public Rect VisualRect
+        {
+            get => _visualRect;
+            set
+            {
+                _visualRect = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualPosition));
+            } 
+        }
+
+        [Category(SGUIElement.CategoryName), DisplayName("위치"), PropertyOrder(OrderVisualPosition)]
+        [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
+        public Point VisualPosition
+        {
+            get => _visualRect.Location;
+            set
+            {
+                _visualRect.Location = value;
+                Debug.WriteLine(value);
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualRect));
+            }
+        }
+
+        [Category(SGUIElement.CategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
+        [Description("UI엘리먼트의 크기를 의미")]
+        public Size VisualSize
+        {
+            get => _visualRect.Size;
+            set
+            {
+                _visualRect.Size = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualRect));
+            }
+        }
+
+        
+
+        [Category(SGUIElement.CategoryName), DisplayName("보이기"), PropertyOrder(OrderIsVisible)]
+        [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정")]
+        public virtual bool IsVisible
+        {
+            get => _visible;
+            set
+            {
+                if (_visible == value)
+                    return;
+
+                _visible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [Category(SGUIElement.CategoryName), DisplayName("계층적 높이"), PropertyOrder(OrderDepth)]
+        [Description("이 엘리먼트의 계층구조상 위치")]
+        public virtual int Depth => Parent.Depth + 1;
+
+
+        [Browsable(false)]
+        [Category(SGUIElement.CategoryName)]
+        [DisplayName(nameof(Deleted))]
+        [Description("이 엘리먼트가 이미 삭제되었는지 여부")]
+        public bool Deleted => _deleted;
+
+        [Browsable(false)] public virtual bool IsGroup => false;
+
+
+        [Browsable(false)]
+        public virtual int Code => Parent.Code + Index + 1;
+
+
+
+
+
+
+        [Browsable(false)]
+        [Category(SGUIElement.CategoryName)]
         [DisplayName(nameof(Selected))]
         [Description("엘리먼트가 트리뷰/캔버스 상에서 선택되었는지 ")]
         public bool Selected
@@ -166,7 +241,7 @@ namespace SGToolsUI.Model
             get => _picked;
             set
             {
-                if (_picked == value) 
+                if (_picked == value)
                     return;
 
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
@@ -189,7 +264,7 @@ namespace SGToolsUI.Model
                             element.OnPropertyChanged();    // 트리뷰 아이콘 교체를 위한 노티파이
                         });
                     }
-                    
+
                     groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
                     groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedElementKey);
                 }
@@ -355,99 +430,6 @@ namespace SGToolsUI.Model
             }
         }
 
-        // =========================================================================
-        //                         비주얼 관련 정보
-        // =========================================================================
-        [Browsable(false)]
-        [Category("Visual")]
-        [DisplayName(nameof(VisualRect))]
-        [Description("UI엘리먼트의 캔버스 좌상단 위치와 크기를 의미")]
-        public Rect VisualRect
-        {
-            get => _visualRect;
-            set
-            {
-                _visualRect = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualSize));
-                OnPropertyChanged(nameof(VisualPosition));
-            } 
-        }
-
-        [Category("Visual")]
-        [DisplayName(nameof(VisualPosition))]
-        [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
-        public Point VisualPosition
-        {
-            get => _visualRect.Location;
-            set
-            {
-                _visualRect.Location = value;
-                Debug.WriteLine(value);
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
-            }
-        }
-
-        [Category("Visual")]
-        [DisplayName(nameof(VisualSize))]
-        [Description("UI엘리먼트의 크기를 의미")]
-        public Size VisualSize
-        {
-            get => _visualRect.Size;
-            set
-            {
-                _visualRect.Size = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
-            }
-        }
-
-        [Category("Visual")]
-        [DisplayName(nameof(VisualName))]
-        [Description("UI엘리먼트가 트리뷰에서 나타내는 이름입니다.")]
-        public string VisualName
-        {
-            get => _visualName;
-            set
-            {
-                if (_visualName == value)
-                    return;
-
-                _visualName = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [Category("Visual")]
-        [DisplayName(nameof(IsVisible))]
-        [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정")]
-        public virtual bool IsVisible
-        {
-            get => _visible;
-            set
-            {
-                if (_visible == value)
-                    return;
-
-                _visible = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [Category("Visual")]
-        [DisplayName(nameof(Depth))]
-        [Description("이 엘리먼트의 계층구조상 위치")]
-        public virtual int Depth => Parent.Depth + 1;
-
-
-
-
-        [Category("Visual")]
-        [DisplayName(nameof(Deleted))]
-        [Description("이 엘리먼트가 이미 삭제되었는지 여부")]
-        public bool Deleted => _deleted;
-
 
         [Browsable(false)]
         public SGUIGroup Parent { get; set; }
@@ -511,6 +493,7 @@ namespace SGToolsUI.Model
             }
         }
 
+        [Browsable(false)]
         public TreeViewItem Item
         {
             get
@@ -531,18 +514,6 @@ namespace SGToolsUI.Model
         }
 
 
-        protected string _visualName = string.Empty;
-        protected Rect _visualRect = new (0, 0, 50, 50);
-        protected bool _selected = false;
-        protected bool _visible = true;
-        protected bool _deleted = false;
-        protected bool _picked = false;
-        protected TreeViewItem _treeViewItem;
-
-        protected string _name;
-        protected int _code;
-
-
         public void CopyFrom(SGUIElement element)
         {
             ViewModel = element.ViewModel;
@@ -553,8 +524,7 @@ namespace SGToolsUI.Model
 
             // 셀렉션 여부는 복사안함.
 
-            _name = element._name;
-            _code = element._code;
+            _defineName = element._defineName;
         }
 
         public abstract void CreateInit();
@@ -700,5 +670,16 @@ namespace SGToolsUI.Model
 
             return casted;
         }
+
+        protected string _visualName = string.Empty;
+        protected Rect _visualRect = new(0, 0, 50, 50);
+        protected bool _selected = false;
+        protected bool _visible = true;
+        protected bool _deleted = false;
+        protected bool _picked = false;
+        protected TreeViewItem _treeViewItem;
+
+        protected string _defineName;
+
     }
 }
