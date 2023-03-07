@@ -7,8 +7,8 @@
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel">
     <DataTemplate x:Key="CanvasSelectionTemplate"
                   DataType="{x:Type mo:CanvasSelection}">
-        <ContentPresenter Margin="{Binding Element.VisualRect, Converter={x:Static common_conv:RectThicknessConverter.Instance}}" Content="{Binding Selection}">
-
+        <ContentPresenter Margin="{Binding Element.VisualRect, Converter={x:Static common_conv:RectThicknessConverter.Instance}}" 
+                          Content="{Binding Selection}">
         </ContentPresenter>
     </DataTemplate>
     

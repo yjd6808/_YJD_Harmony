@@ -57,7 +57,7 @@ namespace SGToolsUI.Model
 
             // 이정도면 충분하겠지..?
             for (int i = 0; i < Constant.CodeAssignerCapacity; ++i)
-                _codeAssigner.Enqueue(1000 * i, 1000 * i);
+                _codeAssigner.Enqueue(Constant.GroupCodeInterval * i, Constant.GroupCodeInterval * i);
         }
 
 

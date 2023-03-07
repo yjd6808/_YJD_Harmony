@@ -37,10 +37,10 @@ namespace SGToolsCommon.Sga
         };
 
 
-        private ObservableCollection<SgaSpriteAbstract> _spriteList;
+        private List<SgaSpriteAbstract> _spriteList;
         private int _waitForLoading;
 
-        public ObservableCollection<SgaSpriteAbstract> SpriteList => _spriteList;
+        public List<SgaSpriteAbstract> SpriteList => _spriteList;
 
         // Xaml 바인딩용
         public SgaImage()
@@ -55,7 +55,7 @@ namespace SGToolsCommon.Sga
         {
             // @https://stackoverflow.com/questions/3363940/fill-listint-with-default-values
             // C# 리스트 디폴트로 초기화 방법
-            _spriteList = new(new SgaSpriteAbstract[spriteCount]);
+            
             _waitForLoading = spriteCount;
             _indexLoaded = false;
             _dataLoaded = false;
@@ -72,6 +72,11 @@ namespace SGToolsCommon.Sga
 
         public override void Load(bool indexOnly)
         {
+            if (_spriteList != null)
+                Unload();
+
+            _spriteList = new List<SgaSpriteAbstract>(new SgaSpriteAbstract[_waitForLoading]);
+
             VersionLoader[Version](this, indexOnly);
 
             if (indexOnly)
@@ -82,14 +87,21 @@ namespace SGToolsCommon.Sga
 
             _dataLoaded = true;
             _indexLoaded = true;
+
+            NotifyUpdateList();
         }
 
         public override void Unload()
         {
+            if (_spriteList == null)
+                return;
+
             for (int i = 0; i < _spriteList.Count; ++i)
                 _spriteList[i].Unload();
 
+            _spriteList = null;
             _dataLoaded = false;
+            NotifyUpdateList();
         }
 
 
@@ -203,5 +215,12 @@ namespace SGToolsCommon.Sga
             }
             
         }
+
+        public override string ToString()
+            => Header.NameWithoutExt;
+
+
+        public void NotifyUpdateList()
+            => OnPropertyChanged(nameof(SpriteList));
     }
 }

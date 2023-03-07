@@ -146,6 +146,19 @@ namespace SGToolsUI.ViewModel
             }
         }
 
+        public SgaSpriteAbstract SelectedSprite
+        {
+            get => _selectedSprite;
+            set
+            {
+                if (_selectedSprite == value)
+                    return;
+
+                _selectedSprite = value;
+                OnPropertyChanged();
+            }
+        }
+
         public SGUIGroupMaster GroupMaster
         {
             get => _groupMaster;
@@ -178,6 +191,7 @@ namespace SGToolsUI.ViewModel
         private string _canvasSelectionStatus = string.Empty;
         private SgaPackage _selectedPackage = new ();
         private SgaImage _selectedImage = new ();
+        private SgaSpriteAbstract _selectedSprite = new SgaSprite();
         private SGUIGroupMaster _groupMaster;
     }
 }

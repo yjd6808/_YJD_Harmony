@@ -28,13 +28,11 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
 {
+    [CategoryOrder(Constant.GroupCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIGroup : SGUIElement
     {
-        public const string CategoryName = "그룹";
-        public const int CategoryOrder = 2;
-
         public const int OrderVerticalAlignment = 1;
-        public const int OrderHorizontalAlignment = 1;
+        public const int OrderHorizontalAlignment = 2;
         public const int OrderChildCount = 3;
         public const int OrderChildCountRecursive = 4;
 
@@ -61,11 +59,11 @@ namespace SGToolsUI.Model
         }
 
 
-        [Category(CategoryName), DisplayName("자식 수"), PropertyOrder(OrderChildCount)]
+        [Category(Constant.GroupCategoryName), DisplayName("자식 수"), PropertyOrder(OrderChildCount)]
         [Description("UI 그룹의 자식수를 의미합니다.")]
         public int ChildCount => Children.Count;
 
-        [Category(CategoryName), DisplayName("자식 수(Total)"), PropertyOrder(OrderChildCountRecursive)]
+        [Category(Constant.GroupCategoryName), DisplayName("자식 수(Total)"), PropertyOrder(OrderChildCountRecursive)]
         [Description("UI 그룹 자식수를 의미합니다. (하위 자식들 모두 포함)")]
         public int ChildCountRecursive
         {
@@ -77,7 +75,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(CategoryName), DisplayName("가로 정렬"), PropertyOrder(OrderHorizontalAlignment)]
+        [Category(Constant.GroupCategoryName), DisplayName("가로 정렬"), PropertyOrder(OrderHorizontalAlignment)]
         [Description("UI 그룹내 자식의 가로 정렬 기준입니다.")]
         public HorizontalAlignment HorizontalAlignment
         {
@@ -92,7 +90,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(CategoryName), DisplayName("수직 정렬"), PropertyOrder(OrderVerticalAlignment)]
+        [Category(Constant.GroupCategoryName), DisplayName("수직 정렬"), PropertyOrder(OrderVerticalAlignment)]
         [Description("UI 그룹내 자식의 세로 정렬 기준입니다.")]
         public VerticalAlignment VerticalAlignment
         {
@@ -107,7 +105,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(SGUIElement.CategoryName), DisplayName("보이기"), PropertyOrder(SGUIElement.OrderIsVisible)]
+        [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(SGUIElement.OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정합니다. (그룹 요소입니다. 하위 항목들도 모두 적용됩니다.)")]
         public override bool IsVisible
         {
@@ -123,7 +121,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(SGUIElement.CategoryName), DisplayName("계층적 높이"), PropertyOrder(SGUIElement.OrderDepth)]
+        [Category(Constant.ElementCategoryName), DisplayName("계층적 높이"), PropertyOrder(SGUIElement.OrderDepth)]
         [Description("이 엘리먼트의 계층구조상 높이")]
         public override int Depth => _depth;
 
@@ -207,11 +205,7 @@ namespace SGToolsUI.Model
         }
 
         public void ForEach(Action<SGUIElement> action)
-        {
-            action(this);
-
-            _children.ForEach(action);
-        }
+            => _children.ForEach(action);
 
 
         public void AddChild(SGUIElement child, PropertyReflect updateProperty = PropertyReflect.Update)

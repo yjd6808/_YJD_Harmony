@@ -58,6 +58,7 @@ namespace SGToolsUI.Command.MainViewCommand
                     break;
                 case SgaElementType.Image:
                     ViewModel.SelectedImage = selectedElement as SgaImage ?? throw new Exception("말도 안됩니다. SgaImage 타입인데 캐스팅에 실패했습니다.");
+                    ViewModel.SelectedImage.NotifyUpdateList();
                     break;
             }
 

@@ -330,10 +330,20 @@ namespace SGToolsUI.CustomControl
             var canvasSelection = PopSelection();
             canvasSelection.Selection.Width = element.VisualSize.Width;
             canvasSelection.Selection.Height = element.VisualSize.Height;
-            //canvasSelection.Selection.Margin = new Thickness(element.VisualPosition.X, element.VisualPosition.Y, 0, 0);
             canvasSelection.Element = element;
             _canvasShapes.Add(canvasSelection);
             _selectionMap.Add(element, canvasSelection);
+
+            Binding selectionWidthBinding = new Binding("VisualSize.Width");
+            selectionWidthBinding.Source = element;
+            selectionWidthBinding.Mode = BindingMode.OneWay;
+            canvasSelection.Selection.SetBinding(ItemsControl.WidthProperty, selectionWidthBinding);
+
+            Binding selectionHeightBinding = new Binding("VisualSize.Height");
+            selectionHeightBinding.Source = element;
+            selectionHeightBinding.Mode = BindingMode.OneWay;
+            canvasSelection.Selection.SetBinding(ItemsControl.HeightProperty, selectionHeightBinding);
+
 
             System.Diagnostics.Debug.WriteLine($"셀렉션맵: {_selectionMap.Count} || 캔버스쉐이프 ${_canvasShapes.Count}");
         }

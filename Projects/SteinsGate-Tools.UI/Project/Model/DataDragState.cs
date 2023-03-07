@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,11 +26,18 @@ using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Model
 {
+    public interface IDataDragReceiver
+    {
+        void DragEnd(object data);
+        bool ContainPoint(Point p);
+    }
+
+
     public enum DragState
     {
         None,
-        Wait,
-        Dragging,
+        Wait,           // 드래그 활성화 조건검사중 (이때부터 데이터 소지)
+        Dragging,       // 드래그 활성화 상태
     }
 
     public class DataDragState : Bindable
@@ -61,6 +69,8 @@ namespace SGToolsUI.Model
             }
         }
 
+        public List<IDataDragReceiver> EndTargets { get; } = new ();
+
         public void OnDragMove(Point p)
         {
             if (_state == DragState.Wait)
@@ -71,23 +81,41 @@ namespace SGToolsUI.Model
 
                 _state = DragState.Dragging;
                 Mouse.OverrideCursor = SGToolsCommon.Resource.R.DragAndDropCursor.Value;
-                
             }
         }
 
         public void OnDragEnd(Point p)
         {
+            if (State == DragState.Dragging)
+                RaiseDragEndEvents(p);
 
+            Clear();
+        }
 
+        private bool RaiseDragEndEvents(Point p)
+        {
+            for (int i = 0; i < EndTargets.Count; ++i)
+            {
+                if (EndTargets[i].ContainPoint(p))
+                {
+                    EndTargets[i].DragEnd(Data);
+                    return true;
+                }
+            }
 
-            Mouse.OverrideCursor = Cursors.Arrow;
-            State = DragState.None;
-            Data = null;
+            return false;
         }
 
         private Point _startPosition;
         private DragState _state = DragState.None;
         private MainViewModel _viewModel;
+
+        public void Clear()
+        {
+            Mouse.OverrideCursor = Cursors.Arrow;
+            State = DragState.None;
+            Data = null;
+        }
     }
 
 

@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 3/1/2023 8:08:34 AM
+ * 생성일: 3/7/2023 1:19:17 PM
  *
  */
 
@@ -19,17 +19,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsUI.Model
+namespace SGToolsCommon
 {
-    public enum SGUIElementType
+    public class DisposeAction : IDisposable
     {
-        Group,
-        Button,
-        ToggleButton,
-        Label,
-        Sprite,
-        EditBox,
-        CheckBox,
-        Empty
+        public DisposeAction(Action action) => _action = action;
+
+        public void Dispose()
+        {
+            if (_action == null)
+                return;
+
+            _action();
+        }
+
+        private Action _action;
     }
 }

@@ -32,7 +32,7 @@ namespace SGToolsUI.CustomControl
 {
   
 
-    public class UIElementTreeView : TreeView
+    public class UIElementTreeView : TreeView, IDataDragReceiver
     {
 
         public MainViewModel ViewModel { get; private set; }
@@ -187,6 +187,13 @@ namespace SGToolsUI.CustomControl
 
             ViewModel.Commander.PickUIElement.Execute(selected);
         }
+
+        public void DragEnd(object data)
+        {
+
+        }
+
+        public bool ContainPoint(Point p) => VisualTreeHelperEx.ContainPoint(this, p);
 
     }
 }

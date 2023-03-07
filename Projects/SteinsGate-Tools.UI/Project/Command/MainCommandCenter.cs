@@ -38,6 +38,8 @@ namespace SGToolsUI.Command
         public CommandAbstract SelectSgaPackage { get; }
         public CommandAbstract SelectSgaElement { get; }
         public CommandAbstract SelectSgaSprite { get; }
+        public CommandAbstract SearchSgaResource { get; }
+
         public CommandAbstract DeleteUIElement { get; }
         public CommandAbstract CreateUIElement { get; }
         public CommandAbstract SelectUIElement { get; }
@@ -69,6 +71,7 @@ namespace SGToolsUI.Command
             Add(SelectSgaPackage = new SelectSgaPackage(ViewModel) { UseParameter = true });
             Add(SelectSgaElement = new SelectSgaElement(ViewModel) { UseParameter = true });
             Add(SelectSgaSprite = new SelectSgaSprite(ViewModel) { UseParameter = true });
+            Add(SearchSgaResource = new SearchSgaResource(ViewModel) { UseParameter = true });
             Add(DeleteUIElement = new DeleteUIElement(ViewModel));
             Add(CreateUIElement = new CreateUIElement(ViewModel));
             Add(SelectUIElement = new SelectUIElement(ViewModel) { UseParameter = true });

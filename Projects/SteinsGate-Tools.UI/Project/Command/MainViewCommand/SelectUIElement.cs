@@ -53,7 +53,6 @@ namespace SGToolsUI.Command.MainViewCommand
                 break;
             }
 
-            ViewModel.GroupMaster.PrintSelect();
         }
 
         

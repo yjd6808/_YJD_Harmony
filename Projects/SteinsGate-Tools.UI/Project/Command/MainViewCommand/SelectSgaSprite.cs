@@ -9,6 +9,7 @@ using SGToolsUI.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,26 +34,36 @@ namespace SGToolsUI.Command.MainViewCommand
 
         public override void Execute(object? parameter)
         {
-            var eventArgs = parameter as MouseEventArgs;
+            switch (parameter)
+            {
+                case MouseEventArgs eventArgs: SelectByEventArgs(eventArgs); break;
+                case SgaSpriteAbstract sprite: SelectBySprite(sprite); break;
+            }
+        }
 
-            if (eventArgs == null)
-                return;
+        private void SelectBySprite(SgaSpriteAbstract sprite)
+        {
+            string linkText = string.Empty;
 
+            if (sprite.IsLink)
+                linkText = $"링크({sprite.TargetFrameIndex})";
+
+            ViewModel.SelectedSprite = sprite;
+            ViewModel.ResourceSelectionStatus =
+                $"{sprite.Parent.Parent.FileNameWithoutExt} ➯ " +
+                $"{sprite.Parent.Header.NameWithoutExt} ➯ " +
+                $"{sprite.FrameIndex} {linkText}";
+        }
+
+        private void SelectByEventArgs(MouseEventArgs eventArgs)
+        {
             FrameworkElement sender = eventArgs.Source as FrameworkElement;
 
             if (sender == null)
                 throw new Exception("프레임워크 엘리먼트가 아닙니다.");
 
             SgaSpriteAbstract sprite = sender.DataContext as SgaSpriteAbstract;
-            string linkText = string.Empty;
-
-            if (sprite.IsLink)
-                linkText = $"링크({sprite.TargetFrameIndex})";
-
-            ViewModel.ResourceSelectionStatus = 
-                $"{sprite.Parent.Parent.FileNameWithoutExt} ➯ " +
-                $"{sprite.Parent.Header.NameWithoutExt} ➯ " +
-                $"{sprite.FrameIndex} {linkText}";
+            SelectBySprite(sprite);
         }
     }
 }

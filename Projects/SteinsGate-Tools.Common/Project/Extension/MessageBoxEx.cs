@@ -23,7 +23,7 @@ namespace SGToolsCommon.Extension
 {
     public static class MessageBoxEx
     {
-        public static void ShowTopMost(string message, string caption = null, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.None)
+        public static MessageBoxResult ShowTopMost(string message, string caption = null, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.None)
         {
             Window parentWindow = Application.Current.MainWindow;
 
@@ -31,13 +31,14 @@ namespace SGToolsCommon.Extension
                 throw new Exception("Application의 메인윈도우가 null입니다.");
 
             parentWindow.Topmost = true;
-            MessageBox.Show(parentWindow, message, caption, button, icon);
+            MessageBoxResult result = MessageBox.Show(parentWindow, message, caption, button, icon);
             parentWindow.Topmost = false;
+            return result;
         }
 
-        public static void ShowTopMost(Exception e)
+        public static MessageBoxResult ShowTopMost(Exception e)
         {
-            ShowTopMost(e.Message + "\n\n" + e.StackTrace, "예외 발생", MessageBoxButton.OK, MessageBoxImage.Error);
+            return ShowTopMost(e.Message + "\n\n" + e.StackTrace, "예외 발생", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public static void ShowTopMostMessageBox(this Window owner, string message, string caption = null, MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.None)

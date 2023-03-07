@@ -37,13 +37,13 @@ namespace SGToolsUI.Command.MainViewCommand
         {
             try
             {
+                
                 ViewModel.PackManager.UnloadAll();
                 ViewModel.SelectedPackage = new SgaPackage();
                 ViewModel.SelectedImage = new SgaImage();
 
                 ViewModel.PackManager.SgaDirectory = ViewModel.Setting.SgaDirectory;
                 ViewModel.PackManager.LoadSga(SgaPackageType.Interface);
-
                 ViewModel.ResourceSelectionStatus = string.Empty;
             }
             catch (Exception e)

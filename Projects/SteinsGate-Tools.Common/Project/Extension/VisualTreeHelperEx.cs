@@ -15,6 +15,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -86,20 +87,23 @@ namespace SGToolsCommon.Extension
         // ListBox를 예로들어서 ListBox내에서 마우스로 아무곳 찍으면
         // 해당위치에서 ListBoxItem과 ListBoxItem에 바인딩된 데이터 컨텍스트 가져오는 함수
 
-        public class HitExResult<TItem, TDataContext>
+        public class HitResult<TItem> where TItem : Control
+        {
+            public HitResult(TItem item) => Item = item;
+            public TItem Item { get; }
+        }
+
+        public class HitResultEx<TItem, TDataContext> : HitResult<TItem>
             where TItem : Control
             where TDataContext : class
         {
-            public HitExResult(TItem item, TDataContext dataContext)
-            {
-                Item = item;
-                DataContext = dataContext;
-            }
+            public HitResultEx(TItem item, TDataContext dataContext) : base(item)
+                => DataContext = dataContext;
 
-            public TItem Item { get; }
             public TDataContext DataContext { get; }
         }
-        public static HitExResult<TItem, TDataContext> HitTest<T, TItem, TDataContext>(this T visual, Point posOnVisual)
+
+        public static HitResultEx<TItem, TDataContext> HitTest<T, TItem, TDataContext>(this T visual, Point posOnVisual)
             where T : Visual
             where TItem : Control
             where TDataContext : class
@@ -118,9 +122,38 @@ namespace SGToolsCommon.Extension
                 throw new Exception($"선택한 {typeof(T).Namespace} 아이템의 데이터컨텍스트가 설정되어있지 않습니다.");
 
             TDataContext hitDataContext = hitItem.DataContext as TDataContext;
-            return new HitExResult<TItem, TDataContext>(hitItem, hitDataContext);
+            return new HitResultEx<TItem, TDataContext>(hitItem, hitDataContext);
         }
 
-      
+        public static HitResult<TItem> HitTest<T, TItem>(this T visual, Point posOnVisual)
+            where T : Visual
+            where TItem : Control
+        {
+            HitTestResult hit = VisualTreeHelper.HitTest(visual, posOnVisual);
+
+            if (hit.VisualHit == null)
+                return null;
+
+            var hitItem = hit.VisualHit.FindParent<TItem>();
+
+            if (hitItem == null)
+                return null;
+
+            return new HitResult<TItem>(hitItem);
+        }
+
+        
+
+        // 윈도우기준으로 visual의 위치,크기 정보를 얻는다.
+        public static Rect GetRectOnWindow(this FrameworkElement frameworkElement)
+        {
+            Window window = Window.GetWindow(frameworkElement);
+            Point visualOffset = frameworkElement.TransformToAncestor(window).Transform(new Point(0, 0));
+            Size visualSize = new Size(frameworkElement.ActualWidth, frameworkElement.ActualHeight);
+            return new Rect(visualOffset, visualSize);
+        }
+
+        public static bool ContainPoint(this FrameworkElement frameworkElement, Point p)
+            => frameworkElement.GetRectOnWindow().Contains(p);
     }
 }

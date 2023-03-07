@@ -1,0 +1,57 @@
+﻿<ResourceDictionary x:Class="SGToolsUI.CustomStyle.SgaElementListBoxStyle"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"                    
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    mc:Ignorable="d"
+                    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+                    xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+                    xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+                    xmlns:local="clr-namespace:SGToolsUI"
+                    xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+                    xmlns:model="clr-namespace:SGToolsUI.Model"
+
+                    xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
+                    xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
+                    xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    
+                    xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
+                    xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
+                    xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
+                    xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon">
+
+    <Style x:Key="SgaElementListBox" TargetType="ListBox">
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource StretchListBoxItem}">
+                    <EventSetter Event="Loaded" Handler="OnListBoxItemLoaded"/>
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnListBoxItemPreviewMouseLeftDown" />
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="{x:Type sga:SgaElementHeader}">
+                    <TextBlock Text="{Binding NameWithoutExt}">
+                       
+
+                        <!-- 리스트박스 아이템 클릭으로 커맨드를 실행하기 위함 
+                             더블클릭은 잘되는데 일반 클릭은 삑날때가 있네;;
+                         -->
+
+                        <!--<TextBlock.InputBindings>
+                            <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.Commander.SelectSgaElement, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" CommandParameter="{Binding}" />
+                        </TextBlock.InputBindings>
+                        -->
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="안녕"></MenuItem>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+     </Style>
+</ResourceDictionary>

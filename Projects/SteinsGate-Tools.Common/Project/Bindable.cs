@@ -44,6 +44,11 @@ namespace SGToolsCommon
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public void NotifyProperty(string propertyName)
+        {
+            OnPropertyChanged(propertyName);
+        }
+
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) 

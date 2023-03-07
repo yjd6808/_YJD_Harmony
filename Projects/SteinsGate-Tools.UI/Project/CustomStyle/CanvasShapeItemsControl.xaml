@@ -29,6 +29,7 @@
                     <Canvas x:Name="CanvasShapesPanel" 
                             Width="{x:Static local:Constant.CanvasWidth}" 
                             Height="{x:Static local:Constant.CanvasHeight}" 
+                            ClipToBounds="True"
                             Background="Transparent">  <!-- 하 ㄹㅇ; 이녀석이 길막해서 뒤에녀석이 안보였자나!!!!!-->
                         <Canvas.LayoutTransform>
                             <ScaleTransform ScaleX="{Binding ZoomState.ZoomLevelX, Mode=OneWay}" 

@@ -29,7 +29,8 @@
                     <Canvas x:Name="UIElementsPanel" 
                             Width="{x:Static local:Constant.CanvasWidth}" 
                             Height="{x:Static local:Constant.CanvasHeight}" 
-                            Background="LightGray">
+                            ClipToBounds="True"
+                            Background="{x:Null}">
                         <Canvas.LayoutTransform>
                             <ScaleTransform ScaleX="{Binding ZoomState.ZoomLevelX, Mode=OneWay}" 
                                             ScaleY="{Binding ZoomState.ZoomLevelY, Mode=OneWay}" />

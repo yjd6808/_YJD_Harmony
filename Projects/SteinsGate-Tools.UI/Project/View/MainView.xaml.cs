@@ -50,7 +50,6 @@ namespace SGToolsUI.View
             Timer.Interval = TimeSpan.FromSeconds(1 / 60.0f);
             Timer.Tick += TimerTick;
             Resources.Add("ViewModel", ViewModel);
-
             InitializeComponent();
 
             // Mouse.OverrideCursor = SGToolsCommon.Resource.R.DragAndDropCursor.Value;
@@ -167,16 +166,13 @@ namespace SGToolsUI.View
         private void MainView_OnLoaded(object sender, RoutedEventArgs e)
         {
             InitializeZoomStateBinding();       // 컴포넌트가 모두 초기화된 후에 윈도우 사이즈가 최종결정되기 때문에.. Xaml에서 작성하지 않고 C# 코드로 작성하도록 한다.
+            InitializeDragEndTargets();
         }
 
+
+
+
         
-
-
-        // ================================================================================
-        // XAML로 구현이 힘든 기능들
-        // ================================================================================
-
-
         private void InitializeZoomStateBinding()
         {
             // 수동 너비, 높이 조절을 위해 메뉴얼로 전환
@@ -202,6 +198,14 @@ namespace SGToolsUI.View
             View.SetBinding(Window.MinHeightProperty, windowZoomStateHeightBinding);
             View.SetBinding(Window.MaxHeightProperty, windowZoomStateHeightBinding);
         }
+
+        private void InitializeDragEndTargets()
+        {
+            ViewModel.DragState.EndTargets.Add(UIElementPropertyGrid);
+            ViewModel.DragState.EndTargets.Add(UIElementTreeView);
+        }
+
+
 
         private void MainView_OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -241,24 +245,29 @@ namespace SGToolsUI.View
             }
         }
 
-        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        public void MainView_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
             CanvasShapesControl.DragMove(e);
             ViewModel.DragState.OnDragMove(e.GetPosition(this));
         }
 
-        protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
+        public void MainView_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             CanvasShapesControl.DragEnd(e);
             ViewModel.DragState.OnDragEnd(e.GetPosition(this));
         }
 
-        protected override void OnMouseLeave(MouseEventArgs e)
+        public void MainView_OnMouseLeave(object sender, MouseEventArgs e)
         {
             CanvasShapesControl.DragEnd(e);
-            ViewModel.DragState.OnDragEnd(e.GetPosition(this));
-
         }
 
+        private void SgaResourceSearchTextBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter)
+                return;
+
+            ViewModel.Commander.SearchSgaResource.Execute(SgaResourceSearchTextBox.Text);
+        }
     }
 }

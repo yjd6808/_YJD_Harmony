@@ -38,7 +38,7 @@ namespace SGToolsCommon.Sga
             0xFF, 0xFF, 0xFF, 0xFF
         };
 
-        private SgaSpriteRect _rect;
+        private SgaSpriteRect _spriteRect;
         private byte[] _data;
         private int _dataOffset;
         private int _dataLength;
@@ -46,17 +46,18 @@ namespace SGToolsCommon.Sga
 
 
         public SgaCompressMode CompressMode => _compressMode;
-        public SgaSpriteRect Rect => _rect;
+        public SgaSpriteRect SpriteRect => _spriteRect;
+        public Rect Rect => new Rect(_spriteRect.X, _spriteRect.Y, _spriteRect.Width, _spriteRect.Height);
         public int DataOffset => _dataOffset;
         public int DataLength => _dataLength;
         public override bool Loaded => _data != null;
-        public override bool IsDummy => _rect.Width * _rect.Height <= 8;
-        public override int Width => _rect.Width;
-        public override int Height => _rect.Height;
-        public override int X => _rect.X;
-        public override int Y => _rect.Y;
-        public override int FrameWidth => _rect.Width;
-        public override int FrameHeight => _rect.Height;
+        public override bool IsDummy => _spriteRect.Width * _spriteRect.Height <= 8;
+        public override int Width => _spriteRect.Width;
+        public override int Height => _spriteRect.Height;
+        public override int X => _spriteRect.X;
+        public override int Y => _spriteRect.Y;
+        public override int FrameWidth => _spriteRect.Width;
+        public override int FrameHeight => _spriteRect.Height;
         public override int TargetFrameIndex => FrameIndex;
 
         public BitmapSource Source
@@ -88,7 +89,7 @@ namespace SGToolsCommon.Sga
         {
             _data = DummyTexture;
             _dataLength = _data.Length;
-            _rect = new SgaSpriteRect()
+            _spriteRect = new SgaSpriteRect()
             {
                 FrameHeight = 2,
                 FrameWidth = 2,
@@ -100,9 +101,9 @@ namespace SGToolsCommon.Sga
         }
 
 
-        public SgaSprite(SgaSpriteRect rect, SgaColorFormat colorFormat, SgaCompressMode compressedMode, int dataOffset, int dataLength,  SgaImage parent, int frameIndex) : base(SgaSpriteType.Sprite, colorFormat, parent, frameIndex)
+        public SgaSprite(SgaSpriteRect spriteRect, SgaColorFormat colorFormat, SgaCompressMode compressedMode, int dataOffset, int dataLength,  SgaImage parent, int frameIndex) : base(SgaSpriteType.Sprite, colorFormat, parent, frameIndex)
         {
-            _rect = rect;
+            _spriteRect = spriteRect;
             _compressMode = compressedMode;
             _dataLength = dataLength;
             _dataOffset = dataOffset;
@@ -187,6 +188,9 @@ namespace SGToolsCommon.Sga
             }
             _data = bit32Data;
         }
+
+        public override string ToString()
+            => $"{FrameIndex}" + (IsLink ? $"링크({TargetFrameIndex})" : "");
     }
 }
  

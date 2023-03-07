@@ -5,8 +5,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ItemsControl">
                     <Canvas>
-                        <Rectangle Width="{TemplateBinding Width}"
-                                   Height="{TemplateBinding Height}">
+                        <Rectangle Width="{Binding Width, RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}}"
+                                   Height="{Binding Height, RelativeSource={RelativeSource FindAncestor, AncestorType=ItemsControl}}">
                             <Rectangle.Style>
                                 <Style TargetType="Rectangle">
                                     <Setter Property="StrokeDashArray"

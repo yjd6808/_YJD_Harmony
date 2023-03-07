@@ -1,7 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary  x:Class="SGToolsUI.ModelTemplate.UIButtonCanvasTemplate"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mo="clr-namespace:SGToolsUI.Model">
     <DataTemplate x:Key="ButtonCanvasTemplate" DataType="{x:Type mo:SGUIButton}">
-        
+        <Image Name="ButtonImage" Source="{Binding VisualSpriteSource}"/>
     </DataTemplate>
 </ResourceDictionary>

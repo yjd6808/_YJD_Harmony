@@ -29,12 +29,12 @@ using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.CustomControl
 {
-    public class SgaSpriteListBox : ListBox
+    public class SgaPackageListBox : ListBox
     {
         public MainViewModel ViewModel { get; private set; }
         public ScrollBar ScrollBar { get; private set; }
 
-        public SgaSpriteListBox()
+        public SgaPackageListBox()
         {
             Loaded += OnLoaded;
         }
@@ -57,19 +57,5 @@ namespace SGToolsUI.CustomControl
 
             ScrollBar = this.FindChild<ScrollBar>();
         }
-
-        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
-        {
-            Point pos = e.GetPosition(this);
-            var hit = this.HitTest<SgaSpriteListBox, ListBoxItem, SgaSprite>(pos);
-
-            if (hit == null)
-                return;
-
-            ViewModel.DragState.Data = hit.DataContext;
-            ViewModel.DragState.State = DragState.Wait;
-        }
-
-        
     }
 }

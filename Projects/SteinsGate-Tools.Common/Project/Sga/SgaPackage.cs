@@ -22,12 +22,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsCommon.Extension;
 
 namespace SGToolsCommon.Sga
 {
-    public class SgaPackage
+    public class SgaPackage : Bindable
     {
         private Stream _readStream;
         private string _path;
@@ -38,7 +37,7 @@ namespace SGToolsCommon.Sga
         
 
         // Lazy Loading 용
-        private ObservableCollection<SgaElementHeader> _elementHeaderList;
+        private List<SgaElementHeader> _elementHeaderList;
         private Dictionary<string, int> _elementNameToIndexMap;
 
         public Stream ReadStream => _readStream;
@@ -48,8 +47,9 @@ namespace SGToolsCommon.Sga
         public bool IndexLoaded => _indexLoaded;
         public string FileName => System.IO.Path.GetFileName(_path);
         public string FileNameWithoutExt => System.IO.Path.GetFileNameWithoutExtension(_path);
-        public ObservableCollection<SgaElementHeader> ElementHeaderList => _elementHeaderList;
+        public List<SgaElementHeader> ElementHeaderList => _elementHeaderList;
         public int PackageIndex => _packageIndex;
+        public ListBoxItem Item { get; set; }
 
         // Xaml 바인딩용
         public SgaPackage()
@@ -88,7 +88,8 @@ namespace SGToolsCommon.Sga
                     NextOffset = 0,
                     IndexInPackage = i,
                     Length = length,
-                    Name = name
+                    Name = name,
+                    NameWithoutExt = System.IO.Path.GetFileNameWithoutExtension(name)
                 });
             }
 
@@ -103,6 +104,7 @@ namespace SGToolsCommon.Sga
             }
 
             _indexLoaded = true;
+            OnPropertyChanged(nameof(ElementHeaderList));
         }
 
 
@@ -110,6 +112,8 @@ namespace SGToolsCommon.Sga
         {
             foreach (var element in _elementMap.Values)
                 element.Unload();
+
+            OnPropertyChanged(nameof(ElementHeaderList));
         }
 
         public SgaElement GetElement(int index) => _elementMap[index];
@@ -138,6 +142,12 @@ namespace SGToolsCommon.Sga
             }
         }
 
+        public void LoadElementIfNotLoaded(int index, bool indexOnly)
+        {
+            if (!IsElementLoaded(index))
+                LoadElement(index, indexOnly);
+        }
+
         public void LoadElement(int index, bool indexOnly)
         {
             if (!_indexLoaded)
@@ -154,5 +164,11 @@ namespace SGToolsCommon.Sga
             SgaElement element = SgaLoader.ReadElement(this, _readStream, header, header.NextOffset, indexOnly);
             _elementMap.Add(header.IndexInPackage, element);
         }
+
+        public void NotifyUpdateList()
+            => OnPropertyChanged(nameof(ElementHeaderList));
+
+        public override string ToString()
+            => FileNameWithoutExt;
     }
 }

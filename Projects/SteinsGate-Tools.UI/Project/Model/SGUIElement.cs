@@ -31,11 +31,10 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
 {
+
+    [CategoryOrder(Constant.ElementCategoryName, Constant.ElementCategoryOrder)]
     public abstract class SGUIElement : CanvasElement, ICloneable
     {
-        public const string CategoryName = "공통";
-        public const int CategoryOrder = 1;
-        
         public const int OrderUIElementType = 1;
         public const int OrderCodeString = 2;
         public const int OrderVisualName = 3;
@@ -47,14 +46,14 @@ namespace SGToolsUI.Model
 
         public const string PickedKey = nameof(Picked);
 
-        [Category(SGUIElement.CategoryName), DisplayName("타입"), PropertyOrder(OrderUIElementType)]
+        [Category(Constant.ElementCategoryName), DisplayName("타입"), PropertyOrder(OrderUIElementType)]
         [Description("UI 타입을 의미")]
         public abstract SGUIElementType UIElementType { get; }
 
-        [Category(SGUIElement.CategoryName), DisplayName("코드"), PropertyOrder(OrderCodeString)]
+        [Category(Constant.ElementCategoryName), DisplayName("코드"), PropertyOrder(OrderCodeString)]
         public string CodeString => Code.ToString("#,##0");
 
-        [Category(SGUIElement.CategoryName), DisplayName("이름"), PropertyOrder(OrderVisualName)]
+        [Category(Constant.ElementCategoryName), DisplayName("이름"), PropertyOrder(OrderVisualName)]
         [Description("UI엘리먼트가 트리뷰에서 나타내는 이름입니다.")]
         public string VisualName
         {
@@ -69,7 +68,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(SGUIElement.CategoryName), DisplayName("디파인 명"), PropertyOrder(OrderDefineName)]
+        [Category(Constant.ElementCategoryName), DisplayName("디파인 명"), PropertyOrder(OrderDefineName)]
         [Description("게임에서 실제로 사용될 디파인 이름")]
         public string DefineName
         {
@@ -83,7 +82,7 @@ namespace SGToolsUI.Model
 
 
         [Browsable(false)]
-        [Category(SGUIElement.CategoryName), DisplayName("좌표크기")]
+        [Category(Constant.ElementCategoryName), DisplayName("좌표크기")]
         [Description("UI엘리먼트의 캔버스 좌상단 위치와 크기를 의미")]
         public Rect VisualRect
         {
@@ -97,7 +96,7 @@ namespace SGToolsUI.Model
             } 
         }
 
-        [Category(SGUIElement.CategoryName), DisplayName("위치"), PropertyOrder(OrderVisualPosition)]
+        [Category(Constant.ElementCategoryName), DisplayName("위치"), PropertyOrder(OrderVisualPosition)]
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
         public Point VisualPosition
         {
@@ -105,13 +104,12 @@ namespace SGToolsUI.Model
             set
             {
                 _visualRect.Location = value;
-                Debug.WriteLine(value);
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
             }
         }
 
-        [Category(SGUIElement.CategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
+        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
         [Description("UI엘리먼트의 크기를 의미")]
         public Size VisualSize
         {
@@ -126,7 +124,7 @@ namespace SGToolsUI.Model
 
         
 
-        [Category(SGUIElement.CategoryName), DisplayName("보이기"), PropertyOrder(OrderIsVisible)]
+        [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정")]
         public virtual bool IsVisible
         {
@@ -141,13 +139,13 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(SGUIElement.CategoryName), DisplayName("계층적 높이"), PropertyOrder(OrderDepth)]
+        [Category(Constant.ElementCategoryName), DisplayName("계층적 높이"), PropertyOrder(OrderDepth)]
         [Description("이 엘리먼트의 계층구조상 위치")]
         public virtual int Depth => Parent.Depth + 1;
 
 
         [Browsable(false)]
-        [Category(SGUIElement.CategoryName)]
+        [Category(Constant.ElementCategoryName)]
         [DisplayName(nameof(Deleted))]
         [Description("이 엘리먼트가 이미 삭제되었는지 여부")]
         public bool Deleted => _deleted;
@@ -164,7 +162,7 @@ namespace SGToolsUI.Model
 
 
         [Browsable(false)]
-        [Category(SGUIElement.CategoryName)]
+        [Category(Constant.ElementCategoryName)]
         [DisplayName(nameof(Selected))]
         [Description("엘리먼트가 트리뷰/캔버스 상에서 선택되었는지 ")]
         public bool Selected

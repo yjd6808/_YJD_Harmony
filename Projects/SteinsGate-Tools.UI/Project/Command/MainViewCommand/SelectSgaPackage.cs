@@ -9,6 +9,7 @@ using SGToolsUI.View;
 using SGToolsUI.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,7 +41,9 @@ namespace SGToolsUI.Command.MainViewCommand
                 throw new Exception("선택한 리스트박스 아이템은 Sga 패키지 타입이 아닙니다.");
 
             ViewModel.SelectedPackage = selectedPackage;
+            ViewModel.SelectedPackage.NotifyUpdateList();
             ViewModel.ResourceSelectionStatus = $"{selectedPackage.FileNameWithoutExt}";
+            Debug.WriteLine($"${selectedPackage} 패키지 선택");
         }
     }
 }

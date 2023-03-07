@@ -44,6 +44,7 @@ namespace SGToolsCommon.Sga
         public abstract int FrameWidth { get; }
         public abstract int FrameHeight { get; }
         public abstract int TargetFrameIndex { get; }
+        public ListBoxItem Item { get; set; }
 
         public abstract void Load();
         public abstract void Unload();

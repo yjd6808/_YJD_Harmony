@@ -21,11 +21,12 @@ using System.Windows.Shapes;
 
 namespace SGToolsCommon.Sga
 {
-    public abstract class SgaElement
+    public abstract class SgaElement : Bindable
     {
         // Xaml 바인딩용
         public SgaElement()
         {
+            Header = new SgaElementHeader();
         }
 
         public SgaElement(SgaElementType type, SgaPackage parent, SgaElementHeader header, int version, int indexOffset, int indexLength)

@@ -5,6 +5,7 @@
  */
 
 using System.IO;
+using System.Windows.Controls;
 
 namespace SGToolsCommon.Sga
 {
@@ -15,6 +16,7 @@ namespace SGToolsCommon.Sga
         public int IndexInPackage { get; set; }
         public int Length { get; set; }
         public string Name { get; set; }
-        public string NameWithoutExt => Path.GetFileNameWithoutExtension(Name);
+        public string NameWithoutExt { get; set; }
+        public ListBoxItem Item { get; set; }
     }
 }

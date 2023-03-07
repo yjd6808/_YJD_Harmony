@@ -34,6 +34,9 @@
         SizeToContent="WidthAndHeight"
 
         Closing="MainView_OnClosing"
+        PreviewMouseMove="MainView_OnPreviewMouseMove"
+        PreviewMouseUp="MainView_OnPreviewMouseUp"
+        MouseLeave="MainView_OnMouseLeave"
         PreviewKeyDown="MainView_OnKeyDown"
         PreviewKeyUp="MainView_OnKeyUp"
         Loaded="MainView_OnLoaded"
@@ -265,64 +268,55 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Command="{Binding Commander.ReloadSgaPackage}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRefreshKey}}"/>
+
+                <c:WatermarkTextBox Watermark="검색할 내용 입력" Grid.Column="3" Name="SgaResourceSearchTextBox" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" KeyDown="SgaResourceSearchTextBox_OnKeyDown">
+                    <c:WatermarkTextBox.Style>
+                        <Style TargetType="c:WatermarkTextBox">
+                            <Style.Triggers>
+                                <Trigger Property="IsFocused" Value="True">
+                                    <Setter Property="Text" Value="" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </c:WatermarkTextBox.Style>
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding Commander.SearchSgaResource}" 
+                                                   CommandParameter="{Binding Path=Text, ElementName=SgaResourceSearchTextBox}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </c:WatermarkTextBox>
             </Grid>
             
             <StackPanel Grid.Row="1"
                         Orientation="Horizontal">
-                <ListBox MinWidth="100"
+                <ui_ctrl:SgaPackageListBox 
+                        MinWidth="100"
                          MaxWidth="100"
-                         Name="PackageListBox"
+                         x:Name="PackageListBox"
                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                         Style="{StaticResource StretchListBox}"
-                         ItemsSource="{Binding PackManager.Packages}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type sga:SgaPackage}">
+                         Style="{StaticResource SgaPackageListBox}"
+                         ItemsSource="{Binding PackManager.Packages, Mode=OneWay}"
+                         SelectedItem="{Binding SelectedPackage, Mode=OneWay}">
+                </ui_ctrl:SgaPackageListBox>
 
-                            <TextBlock Text="{
-                            Binding FileNameWithoutExt, 
-                            Converter={StaticResource SgaFileNameConverter}, 
-                            ConverterParameter={x:Static sga:SgaPackageType.Interface}}">
-                                <!-- 리스트박스 아이템 더블클릭으로 커맨드를 실행하기 위함 -->
-                                <TextBlock.InputBindings>
-                                    <MouseBinding MouseAction="LeftDoubleClick"
-                                                  Command="{Binding DataContext.Commander.SelectSgaPackage, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
-                                                  CommandParameter="{Binding}" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <ListBox MinWidth="150"
-                         MaxWidth="150"
-                         Name="ElementListBox"
+                <ui_ctrl:SgaElementListBox MinWidth="150"
+                         MaxWidth="150" 
+                         x:Name="ElementListBox"
                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                         Style="{StaticResource StretchListBox}"
-                         ItemsSource="{Binding SelectedPackage.ElementHeaderList}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type sga:SgaElementHeader}">
-                            <TextBlock Text="{Binding Name}">
-                                <!-- 리스트박스 아이템 더블클릭으로 커맨드를 실행하기 위함 -->
-                                <TextBlock.InputBindings>
-                                    <MouseBinding MouseAction="LeftDoubleClick"
-                                                  Command="{Binding DataContext.Commander.SelectSgaElement, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
-                                                  CommandParameter="{Binding}" />
-                                </TextBlock.InputBindings>
-                                <TextBlock.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="안녕"></MenuItem>
-                                    </ContextMenu>
-                                </TextBlock.ContextMenu>
-                            </TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
+                         Style="{StaticResource SgaElementListBox}"
+                         SelectedItem="{Binding SelectedImage.Header, Mode=OneWay}"
+                         ItemsSource="{Binding SelectedPackage.ElementHeaderList, Mode=OneWay}">
+                </ui_ctrl:SgaElementListBox>
 
-                </ListBox>
                 <ui_ctrl:SgaSpriteListBox MinWidth="100"
                          MaxWidth="100"
                          x:Name="SpriteListBox"
                          ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                          Style="{StaticResource SgaSpriteListBox}"
-                         ItemsSource="{Binding SelectedImage.SpriteList}">
+                         SelectedItem="{Binding SelectedSprite, Mode=OneWay}"
+                         ItemsSource="{Binding SelectedImage.SpriteList, Mode=OneWay}">
                 </ui_ctrl:SgaSpriteListBox>
             </StackPanel>
 
@@ -340,7 +334,7 @@
                  -->
                 <Grid Width="{Binding ElementName=PropertyGridCanvas, Path=ActualWidth}"
                       Height="{Binding ElementName=PropertyGridCanvas, Path=ActualHeight}">
-                    <ui_ctrl:UIElementPropertyGrid x:Name="ElementPropertyGrid" 
+                    <ui_ctrl:UIElementPropertyGrid x:Name="UIElementPropertyGrid" 
                                                FontSize="12" 
                                                Width="Auto"
                                                AutoGenerateProperties="True"

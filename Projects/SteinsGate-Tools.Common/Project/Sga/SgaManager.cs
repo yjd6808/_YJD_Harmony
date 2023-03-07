@@ -24,20 +24,24 @@ using System.Windows.Threading;
 
 namespace SGToolsCommon.Sga
 {
-    public class SgaManager
+    public class SgaManager : Bindable
     {
         private SgaManager() {}
         public static SgaManager Instance = new ();
 
-        public List<SgaPackage> Packages { get; } = new();
+        public List<SgaPackage> Packages => _packages;
+
         public Dictionary<string, SgaPackage> PackageMap { get; } = new();
         public string SgaDirectory { get; set; } = string.Empty;
         public Dispatcher Dispatcher { get; set; }
+        private List<SgaPackage> _packages;
 
         public void LoadSga(int type)
         {
-            if (Packages.Count > 0)
-                throw new Exception("이미 로딩되었습니다.");
+            if (_packages != null)
+                UnloadAll();
+
+            _packages = new List<SgaPackage>();
 
             if (type < 0 || type >= SgaPackageType.Max)
                 throw new Exception("올바르지 않은 sga 패키지 타입입니다.");
@@ -52,18 +56,23 @@ namespace SGToolsCommon.Sga
             for (int i = 0; i < sgaFileList.Length; ++i)
             {
                 SgaPackage loadedPackage = SgaLoader.Load(sgaFileList[i], false, true, i);
-                Packages.Add(loadedPackage);
+                _packages.Add(loadedPackage);
                 PackageMap.Add(loadedPackage.FileNameWithoutExt, loadedPackage);
             }
+            NotifyUpdateList();
         }
 
         public void UnloadAll()
         {
-            foreach (var sgaPackage in Packages)
+            if (_packages == null)
+                return;
+
+            foreach (var sgaPackage in _packages)
                 sgaPackage.UnloadAll();
 
-            Packages.Clear();
             PackageMap.Clear();
+            _packages = null;
+            NotifyUpdateList();
         }
 
         public SgaPackage GetPackage(int index)
@@ -115,5 +124,9 @@ namespace SGToolsCommon.Sga
 
         bool IsValidPackageIndex(int index) => index >= 0 && index < Packages.Count;
         bool IsValidPackageName(string packageNameWithoutExt) => PackageMap.ContainsKey(packageNameWithoutExt);
+
+        public void NotifyUpdateList()
+            => OnPropertyChanged(nameof(Packages));
+
     }
 }
