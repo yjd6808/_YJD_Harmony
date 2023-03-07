@@ -155,7 +155,7 @@ namespace SGToolsUI.CustomControl
             if (spriteInfo.IsNull)
             {
                 apply = MessageBoxEx.ShowTopMost(
-                    $"{propertyItem.DisplayName}에 스프라이트 데이터를 넣어으시겠습니까?",
+                    $"[{propertyItem.DisplayName}]에 스프라이트 데이터를 넣어으시겠습니까?",
                     "확인",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) == MessageBoxResult.Yes;
@@ -165,7 +165,7 @@ namespace SGToolsUI.CustomControl
                 apply = MessageBoxEx.ShowTopMost(
                     $"{propertyItem.DisplayName}에 이미 스프라이트 정보가 할당되어있습니다.\n" +
                     $"스프라이트 데이터를 넣어으시겠습니까?\n\n" +
-                    $"{spriteInfo}",
+                    $"{spriteInfo.Question}",
                     "확인",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) == MessageBoxResult.Yes;

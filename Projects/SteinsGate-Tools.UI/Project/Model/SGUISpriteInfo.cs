@@ -76,5 +76,20 @@ namespace SGToolsUI.Model
 
             return "할당됨";
         }
+
+        [Browsable(false)]
+        public string Question
+
+        {
+            get
+            {
+                if (IsNull)
+                    return "비어있음";
+
+                return $"Sga: {Sga}\n" +
+                       $"Img: {Img}\n" +
+                       $"Sprite: {Sprite}";
+            }
+        }
     }
 }

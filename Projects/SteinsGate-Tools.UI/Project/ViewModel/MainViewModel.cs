@@ -151,9 +151,6 @@ namespace SGToolsUI.ViewModel
             get => _selectedSprite;
             set
             {
-                if (_selectedSprite == value)
-                    return;
-
                 _selectedSprite = value;
                 OnPropertyChanged();
             }

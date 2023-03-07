@@ -42,6 +42,8 @@ namespace SGToolsUI.Command.MainViewCommand
 
             ViewModel.SelectedPackage = selectedPackage;
             ViewModel.SelectedPackage.NotifyUpdateList();
+
+            ViewModel.SelectedImage = new SgaImage();
             ViewModel.ResourceSelectionStatus = $"{selectedPackage.FileNameWithoutExt}";
             Debug.WriteLine($"${selectedPackage} 패키지 선택");
         }
