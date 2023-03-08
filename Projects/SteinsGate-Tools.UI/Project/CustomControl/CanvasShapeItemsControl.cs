@@ -87,6 +87,26 @@ namespace SGToolsUI.CustomControl
             }
         }
 
+        public bool IsAnchorVisible
+        {
+            get => _isAnchorVisible;
+            set
+            {
+                if (_isAnchorVisible == value)
+                    return;
+
+                _isAnchorVisible = value;
+
+                if (value)
+                    _canvasShapes.Add(_anchor);
+                else
+                    _canvasShapes.Remove(_anchor);
+
+
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsDraggable
         {
             get => _isDraggable;
@@ -116,10 +136,12 @@ namespace SGToolsUI.CustomControl
         private Dictionary<SGUIElement, CanvasSelection> _selectionMap = new();
         private CanvasGrid _grid;
         private CanvasRect _viewPort;
+        private CanvasAnchor _anchor;
         private Canvas _canvasPanel;
         private ItemsPresenter _canvasPresenter;
         private bool _isGridVisible;
         private bool _isViewportVisible;
+        private bool _isAnchorVisible;
 
         private CanvasRect _dragBox;
         private DragState _dragState = DragState.None;
@@ -142,12 +164,28 @@ namespace SGToolsUI.CustomControl
             InitializePanel();
             InitializeGrid();
             InitializeViewPort();
+            initializeAnchor();
             initializeSelectionPool();
         }
 
         
-        private void InitializeViewPort() => _viewPort = new CanvasRect(new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight), 1, Brushes.DodgerBlue);
-        private void InitializeGrid() => _grid = new CanvasGrid(100, 1, Brushes.White);
+
+        private void InitializeViewPort() 
+            => _viewPort = new CanvasRect(
+                new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight), 
+                1, Brushes.DodgerBlue
+            );
+        private void InitializeGrid() 
+            => _grid = new CanvasGrid(100, 1, Brushes.White);
+
+        private void initializeAnchor()
+            => _anchor = new CanvasAnchor(
+                new Rect(0, 0, Constant.CanvasAnchorSize, Constant.CanvasAnchorSize),
+                2, Brushes.Black, Brushes.Orange
+            )
+            {
+                Target = ViewModel.GroupMaster  // 타겟이 null인 상황을 만들면 안됨.
+            };
 
         private void InitializeViewModel()
         {
@@ -260,8 +298,9 @@ namespace SGToolsUI.CustomControl
             foreach (CanvasShape shape in _canvasShapes)
             {
                 if (shape == _grid) continue;
-                else if (shape == _viewPort) continue;
-                else if (shape == _dragBox) continue;
+                if (shape == _viewPort) continue;
+                if (shape == _dragBox) continue;
+                if (shape == _anchor) continue;
 
                 if (!shape.IsSelection)
                 {
@@ -302,12 +341,14 @@ namespace SGToolsUI.CustomControl
             bool hasViewPort = false;
             bool hasGrid = false;
             bool hasDragBox = false;
+            bool hasAnchor = false;
 
             foreach (CanvasShape shape in _canvasShapes)
             {
                 if (shape == _grid) hasGrid = true;
                 else if (shape == _viewPort) hasViewPort = true;
                 else if (shape == _dragBox) hasDragBox = true;
+                else if (shape == _anchor) hasAnchor = true;
             }
 
             if (!hasViewPort && _isViewportVisible)
@@ -316,14 +357,24 @@ namespace SGToolsUI.CustomControl
             if (!hasGrid && _isGridVisible)
                 _canvasShapes.Add(_grid);
 
-            if (_dragBox != null)
+            if (!hasDragBox && _dragBox != null)
                 _canvasShapes.Add(_dragBox);
+
+            if (!hasAnchor && _anchor != null)
+                _canvasShapes.Add(_anchor);
 
 
             OnPropertyChanged(nameof(CanvasShapes));
         }
 
-       
+
+        public void AdjustAnchor(SGUIGroup group = null)
+        {
+            if (group == null)
+                _anchor.Target = ViewModel.GroupMaster;
+            else
+                _anchor.Target = group;
+        }
 
         public void ArrangeSelection(SGUIElement element)
         {
@@ -359,7 +410,7 @@ namespace SGToolsUI.CustomControl
                 throw new Exception("셀렉션 맵에서 삭제 실패");
 
             if (!_canvasShapes.Remove(selection))
-                throw new Exception("캔버스 쉐잎에서 삭제 실패");
+                throw new Exception("캔버스 쉐잎에서 셀렉션 삭제 실패");
 
             PushSelection(selection);
         }

@@ -108,6 +108,14 @@ namespace SGToolsUI.Model
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
                 OnPropertyChanged(nameof(CocosAlignPosition));
+
+                if (IsGroup)
+                {
+                    SGUIGroup group = Cast<SGUIGroup>();
+
+                    group.OnPropertyChanged(SGUIGroup.VisualPositionAnchorRelativeKey);
+                    group.OnPropertyChanged(SGUIGroup.VisualPositionAnchorAbsoluteKey);
+                }
             }
         }
 
@@ -228,6 +236,20 @@ namespace SGToolsUI.Model
                     else if (selectedElements.Count == 2)
                         groupMaster.OnPropertyChanged(SGUIGroupMaster.IsMultiSelectedKey);
 
+
+                    // 선택된 원소가 접힌 상태인경우 확장시킬지
+                    // 트리뷰에서는 어차피 확장된 상태여야만 선택가능한데
+                    // 캔버스상에서 선택할때는 접혀있을 수가 있다.
+                    // 그룹마스터는 TreeViewItem자체를 가지고 있지 않기때문에 스킵해야함
+                    if (ViewModel.Setting.AutoExpandWhenSelected)
+                        ParentTrack.ForEach(parentGroup =>
+                        {
+                            if (parentGroup == groupMaster)
+                                return;
+
+                            parentGroup.Item.IsExpanded = true;
+                        });
+
                 }
                 else
                 {
@@ -296,12 +318,24 @@ namespace SGToolsUI.Model
 
                     if (IsGroup)
                     {
-                        Cast<SGUIGroup>().ForEachRecursive(element =>
+                        SGUIGroup group = Cast<SGUIGroup>();
+
+                        group.ForEachRecursive(element =>
                         {
-                            element._picked = true;
+                            element.SetPick(true);// 트리뷰 아이콘 교체를 위한 노티파이
                             groupMaster.PickedElements.Add(element);
-                            element.OnPropertyChanged();    // 트리뷰 아이콘 교체를 위한 노티파이
+                            element.OnPropertyChanged();
                         });
+
+                        // 그룹을 선택했으면 자기자신의 앵커포인터 반영
+                        ViewModel.View.CanvasShapesControl.AdjustAnchor(group);
+                    }
+                    else
+                    {
+                        // 그룹이 아니면 부모 그룹도 픽하고 부모그룹에 앵커포인터를 반영한다.
+                        Parent.SetPick(true);
+                        groupMaster.PickedElements.Add(Parent);
+                        ViewModel.View.CanvasShapesControl.AdjustAnchor(Parent);
                     }
 
                     groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
@@ -313,7 +347,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Browsable(false)] public bool FirstPicked => ViewModel.GroupMaster.SelectedElement == this;
+        [Browsable(false)] public bool FirstPicked => ViewModel.GroupMaster.PickedElement == this;
 
         [Browsable(false)]
         public bool LastPicked
@@ -596,6 +630,8 @@ namespace SGToolsUI.Model
             return element;
         }
 
+
+        // DeleteUIElement 설명 참고
         public void DeleteSelf()
         {
             if (_deleted)
@@ -707,15 +743,15 @@ namespace SGToolsUI.Model
 
             switch (group.HorizontalAlignment)
             {
-                case HorizontalAlignment.Left: 
+                case HAlignment.Left: 
                     visualPos.X = group.VisualPosition.X; 
                     break;
-                case HorizontalAlignment.Center:
+                case HAlignment.Center:
                     visualPos.X = group.VisualPosition.X +
                                   group.VisualSize.Width / 2 -
                                   VisualSize.Width / 2;
                     break;
-                case HorizontalAlignment.Right:
+                case HAlignment.Right:
                     visualPos.X = group.VisualPosition.X +
                                   group.VisualSize.Width -
                                   VisualSize.Width;
@@ -724,15 +760,15 @@ namespace SGToolsUI.Model
 
             switch (group.VerticalAlignment)
             {
-                case VerticalAlignment.Top: 
+                case VAlignment.Top: 
                     visualPos.Y = group.VisualPosition.Y;
                     break;
-                case VerticalAlignment.Center:
+                case VAlignment.Center:
                     visualPos.Y = group.VisualPosition.Y +
                                   group.VisualSize.Height / 2 -
                                   VisualSize.Height / 2;
                     break;
-                case VerticalAlignment.Bottom:
+                case VAlignment.Bottom:
                     visualPos.Y = group.VisualPosition.Y +
                                   group.VisualSize.Height -
                                   VisualSize.Height;
@@ -751,31 +787,39 @@ namespace SGToolsUI.Model
 
             switch (group.HorizontalAlignment)
             {
-                case HorizontalAlignment.Left:
+                case HAlignment.Left:
                     alignedPos.X = VisualPosition.X - group.VisualPosition.X;
                     break;
-                case HorizontalAlignment.Center:
+                case HAlignment.Center:
                     alignedPos.X = VisualPositionCenter.X - group.VisualPositionCenter.X;
                     break;
-                case HorizontalAlignment.Right:
+                case HAlignment.Right:
                     alignedPos.X = VisualPositionRightBottom.X - group.VisualPositionRightBottom.X;
                     break;
             }
 
             switch (group.VerticalAlignment)
             {
-                case VerticalAlignment.Top:
+                case VAlignment.Top:
                     alignedPos.Y = group.VisualPosition.Y - VisualPosition.Y;
                     break;
-                case VerticalAlignment.Center:
+                case VAlignment.Center:
                     alignedPos.Y = group.VisualPositionCenter.Y - VisualPositionCenter.Y;
                     break;
-                case VerticalAlignment.Bottom:
+                case VAlignment.Bottom:
                     alignedPos.Y = group.VisualPositionRightBottom.Y - VisualPositionRightBottom.Y;
                     break;
             }
 
             return alignedPos;
+        }
+
+        public bool ContainPoint(Point p)
+        {
+            if (!_visible)
+                return false;
+
+            return _visualRect.Contains(p);
         }
 
         public abstract object Clone();
@@ -791,6 +835,8 @@ namespace SGToolsUI.Model
 
             return casted;
         }
+
+        public override string ToString() => _visualName;
 
         protected string _visualName = string.Empty;
         protected Rect _visualRect = new(0, 0, 50, 50);

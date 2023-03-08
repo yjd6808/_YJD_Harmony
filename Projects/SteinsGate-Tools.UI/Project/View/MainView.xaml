@@ -220,6 +220,7 @@
 
                 <Button Name="ToggleCanvasGridButton" Grid.Column="0" Command="{Binding Commander.ToggleCanvasGrid}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonGridKey}}"/>
                 <Button Name="ToggleCanvasViewportButton" Grid.Column="1" Command="{Binding Commander.ToggleCanvasViewport}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRectKey}}"/>
+                <Button Name="ToggleCanvasAnchorButton" Grid.Column="2" Command="{Binding Commander.ToggleCanvasAnchor}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonAnchorKey}}"/>
             </Grid>
             <Grid>
 

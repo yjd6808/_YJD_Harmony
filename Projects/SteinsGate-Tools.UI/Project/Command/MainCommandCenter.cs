@@ -48,6 +48,7 @@ namespace SGToolsUI.Command
 
         public CommandAbstract ToggleCanvasViewport { get; }
         public CommandAbstract ToggleCanvasGrid { get; }
+        public CommandAbstract ToggleCanvasAnchor { get; }
         public CommandAbstract CanvasZoomUp { get; }
         public CommandAbstract CanvasZoomDown { get; }
         public CommandAbstract CanvasZoomReset { get; }
@@ -77,12 +78,14 @@ namespace SGToolsUI.Command
             Add(SelectUIElement = new SelectUIElement(ViewModel) { UseParameter = true });
             Add(AddUIElement = new AddUIElement(ViewModel) { UseParameter = true });
             Add(PickUIElement = new PickUIElement(ViewModel));
+
             Add(CanvasZoomUp = new CanvasZoomUp(ViewModel));
             Add(CanvasZoomDown = new CanvasZoomDown(ViewModel));
             Add(CanvasZoomReset = new CanvasZoomReset(ViewModel));
             
             Add(ToggleCanvasViewport = new ToggleCanvasViewport(ViewModel));
             Add(ToggleCanvasGrid = new ToggleCanvasGrid(ViewModel));
+            Add(ToggleCanvasAnchor = new ToggleCanvasAnchor(ViewModel));
 
             Add(CocosPositionToZero = new CocosPositionToZero(ViewModel));
 

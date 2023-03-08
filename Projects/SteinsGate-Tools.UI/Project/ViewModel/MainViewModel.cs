@@ -45,8 +45,8 @@ namespace SGToolsUI.ViewModel
                 VisualRect = new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight),
                 VisualName = "그룹 마스터",
                 Selected = false,
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VAlignment.Top,
+                HorizontalAlignment = HAlignment.Left,
             };
         }
 

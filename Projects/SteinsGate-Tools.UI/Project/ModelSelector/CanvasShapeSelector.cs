@@ -37,6 +37,7 @@ namespace SGToolsUI.ModelSelector
                 case CanvasSelection __selection__: return (DataTemplate)Application.Current.FindResource("CanvasSelectionTemplate");
                 case CanvasGrid __grid__: return (DataTemplate)Application.Current.FindResource("CanvasGridTemplate");
                 case CanvasRect __rect__: return (DataTemplate)Application.Current.FindResource("CanvasRectTemplate");
+                case CanvasAnchor __anchor__: return (DataTemplate)Application.Current.FindResource("CanvasAnchorTemplate");
             }
 
             throw new Exception("SGUIElementSelector에서 반환가능한 DataTemplate을 찾지 못했습니다.");

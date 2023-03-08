@@ -26,17 +26,18 @@ namespace SGToolsUI.Model
 {
     public class Setting : ICloneable
     {
-        [DisplayName("SgaDirectory")]
-        [Description("Sga 패키지들이 위치한 디렉토리 경로 정보입니다.")]
+
+        [DisplayName("Sga 패키지 리소스 경로")]
         public string SgaDirectory { get; set; } = "";
 
-        [DisplayName("OutputDefinePath")]
-        [Description("UIDefine.h 헤더파일이 저장될 경로입니다.")]
+        [DisplayName("UIDefine.h 출력경로")]
         public string OutputDefinePath { get; set; } = "";
 
-        [DisplayName("OutputJsonPath")]
-        [Description("ui.json 파일 출력 경로")]
+        [DisplayName("ui.json 출력 경로")]
         public string OutputJsonPath { get; set; } = "";
+
+        [DisplayName("아이템 선택시 트리뷰 자동확장 여부")]
+        public bool AutoExpandWhenSelected { get; set; } = true;
 
         public object Clone()
         {
@@ -44,7 +45,8 @@ namespace SGToolsUI.Model
             {
                 SgaDirectory = SgaDirectory,
                 OutputDefinePath = OutputDefinePath,
-                OutputJsonPath = OutputJsonPath
+                OutputJsonPath = OutputJsonPath,
+                AutoExpandWhenSelected = AutoExpandWhenSelected
             };
         }
 
@@ -55,10 +57,19 @@ namespace SGToolsUI.Model
 
             string content = File.ReadAllText(Constant.SettingFileName);
             JObject root = JObject.Parse(content);
+            JToken? token = null;
 
-            SgaDirectory = root["SgaDirectory"].ToString();
-            OutputDefinePath = root["OutputDefinePath"].ToString();
-            OutputJsonPath = root["OutputJsonPath"].ToString();
+            if (root.TryGetValue("SgaDirectory", out token))
+                SgaDirectory = (string)token;
+
+            if (root.TryGetValue("OutputDefinePath", out token))
+                OutputDefinePath = (string)token;
+
+            if (root.TryGetValue("OutputJsonPath", out token))
+                OutputJsonPath = (string)token;
+
+            if (root.TryGetValue("AutoExpandWhenSelected", out token))
+                AutoExpandWhenSelected = (bool)token;
             return true;
         }
 
@@ -68,6 +79,7 @@ namespace SGToolsUI.Model
             root["SgaDirectory"] = SgaDirectory;
             root["OutputDefinePath"] = OutputDefinePath;
             root["OutputJsonPath"] = OutputJsonPath;
+            root["AutoExpandWhenSelected"] = AutoExpandWhenSelected;
             File.WriteAllText(Constant.SettingFileName, root.ToString());
         }
     }

@@ -3,4 +3,6 @@
                     xmlns:local="clr-namespace:SGToolsUI.Converter">
     <local:UIElementTypeBlackImageConverter x:Key="UIElementTypeBlackImageConverter" />
     <local:UIElementTypeColoredImageConverter x:Key="UIElementTypeColoredImageConverter"/>
+    <local:AbsoluteAnchorPositionThicknessConverter x:Key="AbsoluteAnchorPositionThicknessConverter" />
+    
 </ResourceDictionary>

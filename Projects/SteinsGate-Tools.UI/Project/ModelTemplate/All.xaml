@@ -5,6 +5,7 @@
         <ResourceDictionary Source="CanvasSelectionTemplate.xaml"/>
         <ResourceDictionary Source="CanvasGridTemplate.xaml" />
         <ResourceDictionary Source="CanvasRectTemplate.xaml" />
+        <ResourceDictionary Source="CanvasAnchorTemplate.xaml" />
 
         <!-- UI 엘리먼트 캔버스 -->
         <ResourceDictionary Source="UIButtonCanvasTemplate.xaml" />

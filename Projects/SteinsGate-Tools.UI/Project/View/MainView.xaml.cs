@@ -211,7 +211,11 @@ namespace SGToolsUI.View
         {
             KeyState state = ViewModel.KeyState;
 
-            state.Down(e.Key);
+            if (e.SystemKey != Key.None)
+                state.Down(e.SystemKey);
+            else
+                state.Down(e.Key);
+
 
             if (state.IsShiftPressed)
             {
@@ -236,7 +240,10 @@ namespace SGToolsUI.View
         {
             KeyState state = ViewModel.KeyState;
 
-            state.Up(e.Key);
+            if (e.SystemKey != Key.None)
+                state.Up(e.SystemKey);
+            else
+                state.Up(e.Key);
 
             if (!state.IsShiftPressed && !state.IsCtrlPressed)
             {

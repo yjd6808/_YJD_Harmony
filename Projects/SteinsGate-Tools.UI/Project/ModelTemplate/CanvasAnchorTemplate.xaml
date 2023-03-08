@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:local="clr-namespace:SGToolsUI"
+                    xmlns:mo="clr-namespace:SGToolsUI.Model"
+                    xmlns:common_conv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
+                    xmlns:vm="clr-namespace:SGToolsUI.ViewModel">
+    <DataTemplate x:Key="CanvasAnchorTemplate"
+                  DataType="{x:Type mo:CanvasAnchor}">
+        <Ellipse Margin="{Binding Target.VisualPositionAnchorAbsolute, Converter={StaticResource AbsoluteAnchorPositionThicknessConverter}}"
+                 Width="{Binding VisualSize.Width}"
+                 Height="{Binding VisualSize.Height}"
+                 Stroke="{Binding StrokeBrush}"
+                 Fill="{Binding FillBrush}">
+
+        </Ellipse>
+    </DataTemplate>
+    
+</ResourceDictionary>

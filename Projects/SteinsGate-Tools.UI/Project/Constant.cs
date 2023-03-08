@@ -20,6 +20,7 @@ namespace SGToolsUI
         public const double CanvasWheelDelta = 10.0;
         public const double CanvasWidth = ResolutionWidth + 50;
         public const double CanvasHeight = ResolutionHeight + 50;
+        public const double CanvasAnchorSize = 16;
 
         public const double PropertyGridHeight = 360;               // 실제프로퍼티 그리드 크기
         public const double PropertyGridLowerInspectorHide = -30;     // 하단 패널 높이 (숨기기 위한 수치)

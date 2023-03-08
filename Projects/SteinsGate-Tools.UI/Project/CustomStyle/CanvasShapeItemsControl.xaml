@@ -40,7 +40,6 @@
             </Setter.Value>
         </Setter>
 
-        <!-- 아이템을 어떤 패널에 표시할지 결정 -->
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="ContentPresenter">

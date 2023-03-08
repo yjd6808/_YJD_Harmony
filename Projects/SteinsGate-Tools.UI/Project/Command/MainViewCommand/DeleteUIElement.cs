@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
+using MoreLinq.Extensions;
 using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 
@@ -51,6 +52,15 @@ namespace SGToolsUI.Command.MainViewCommand
              최상위 그룹을 먼저 삭제 우선토록한다. 따라서 깊이가 얕은 순서대로 오름차순 정렬을 해준다.*/
             lookup[true].OrderBy(element => element.Depth).Cast<SGUIGroup>().ToList().ForEach(deletedGroupElement =>
             {
+
+                // 처음 픽된 대상인 경우 = 이녀석을 눌러서 픽된 녀석이 삭제되면
+                // 픽 목록을 초기화시키고 앵커포인트를 그룹마스터로 변경해준다.
+                if (deletedGroupElement.FirstPicked)
+                {
+                    ViewModel.GroupMaster.PickedElements.Clear();
+                    ViewModel.View.CanvasShapesControl.AdjustAnchor();
+                }
+
                 masterGroup.RemoveGroup(deletedGroupElement);
                 deletedGroupElement.Selected = false;
                 deletedGroupElement.DeleteSelf();
@@ -59,6 +69,15 @@ namespace SGToolsUI.Command.MainViewCommand
             // 이후 무지성 원소 삭제
             lookup[false].ToList().ForEach(deletedElement =>
             {
+                if (deletedElement.FirstPicked)
+                {
+                    // 엘리먼트가 픽된 경우 엘리먼트 이후 원소는 무조건 부모 그룹이므로 해제해준다.
+                    // 여기 들어왔다는 말은 부모 그룹이 위쪽에서 삭제가 안되었다는 말이다.
+                    ViewModel.GroupMaster.PickedElements[1].Picked = false;
+                    ViewModel.GroupMaster.PickedElements.Clear();
+                    ViewModel.View.CanvasShapesControl.AdjustAnchor();
+                }
+
                 deletedElement.Selected = false;
                 deletedElement.DeleteSelf();
             });

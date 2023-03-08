@@ -28,9 +28,26 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
 {
+    public enum VAlignment
+    {
+        Top,
+        Center,
+        Bottom
+    }
+
+    public enum HAlignment
+    {
+        Left,
+        Center,
+        Right
+    }
+
     [CategoryOrder(Constant.GroupCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIGroup : SGUIElement
     {
+        public const string VisualPositionAnchorAbsoluteKey = nameof(VisualPositionAnchorAbsolute);
+        public const string VisualPositionAnchorRelativeKey = nameof(VisualPositionAnchorRelative);
+
         public const int OrderVerticalAlignment = 1;
         public const int OrderHorizontalAlignment = 2;
         public const int OrderChildCount = 3;
@@ -77,7 +94,7 @@ namespace SGToolsUI.Model
 
         [Category(Constant.GroupCategoryName), DisplayName("가로 정렬"), PropertyOrder(OrderHorizontalAlignment)]
         [Description("UI 그룹내 자식의 가로 정렬 기준입니다.")]
-        public HorizontalAlignment HorizontalAlignment
+        public HAlignment HorizontalAlignment
         {
             get => _horizontalAlignment;
             set
@@ -87,12 +104,13 @@ namespace SGToolsUI.Model
 
                 _horizontalAlignment = value;
                 OnPropertyChanged();
+                OnPropertyChanged(VisualPositionAnchorAbsoluteKey);
             }
         }
 
         [Category(Constant.GroupCategoryName), DisplayName("수직 정렬"), PropertyOrder(OrderVerticalAlignment)]
         [Description("UI 그룹내 자식의 세로 정렬 기준입니다.")]
-        public VerticalAlignment VerticalAlignment
+        public VAlignment VerticalAlignment
         {
             get => _verticalAlignment;
             set
@@ -102,6 +120,47 @@ namespace SGToolsUI.Model
 
                 _verticalAlignment = value;
                 OnPropertyChanged();
+                OnPropertyChanged(VisualPositionAnchorAbsoluteKey);
+            }
+        }
+
+
+        // 앵커의 위치 (절대)
+        public Point VisualPositionAnchorAbsolute
+        {
+            get
+            {
+                Point absoluteAnchorPosition = VisualPosition;
+                Point relativeAnchorPosition = VisualPositionAnchorRelative;
+
+                absoluteAnchorPosition.X += relativeAnchorPosition.X;
+                absoluteAnchorPosition.Y += relativeAnchorPosition.Y;
+                return absoluteAnchorPosition;
+            }
+        }
+
+        // 엘리먼트 좌상단 위치를 기준으로 앵커의 위치
+        public Point VisualPositionAnchorRelative
+        {
+            get
+            {
+                Point relativeAnchorRelative;
+
+                switch (HorizontalAlignment)
+                {
+                    /* case HorizontalAlignment.Left: relativeAnchorRelative.X = 0;  break; */
+                    case HAlignment.Center: relativeAnchorRelative.X = VisualSize.Width / 2;   break;
+                    case HAlignment.Right: relativeAnchorRelative.X = VisualSize.Width;        break;
+                }
+
+                switch (VerticalAlignment)
+                {
+                    /* case HorizontalAlignment.Top: relativeAnchorRelative.Y = 0;  break; */
+                    case VAlignment.Center: relativeAnchorRelative.Y = VisualSize.Height / 2;   break;
+                    case VAlignment.Bottom: relativeAnchorRelative.Y = VisualSize.Height;       break;
+                }
+
+                return relativeAnchorRelative;
             }
         }
 
@@ -151,13 +210,6 @@ namespace SGToolsUI.Model
         [Browsable(false)] public override bool IsGroup => true;
         public override SGUIElementType UIElementType => SGUIElementType.Group;
         
-
-        private ObservableCollection<SGUIElement> _children = new();
-        private HorizontalAlignment _horizontalAlignment = HorizontalAlignment.Left;
-        private VerticalAlignment _verticalAlignment = VerticalAlignment.Bottom;
-        private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
-        private int _code;
-
         [Browsable(false)] public override int Code => _code;
         public void SetCode(int code) => _code = code;
 
@@ -249,6 +301,10 @@ namespace SGToolsUI.Model
             });
         }
 
-        
+        private ObservableCollection<SGUIElement> _children = new();
+        private HAlignment _horizontalAlignment = HAlignment.Left;
+        private VAlignment _verticalAlignment = VAlignment.Bottom;
+        private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
+        private int _code;
     }
 }
