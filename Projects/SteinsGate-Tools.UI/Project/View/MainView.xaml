@@ -37,8 +37,6 @@
         PreviewMouseMove="MainView_OnPreviewMouseMove"
         PreviewMouseUp="MainView_OnPreviewMouseUp"
         MouseLeave="MainView_OnMouseLeave"
-        PreviewKeyDown="MainView_OnKeyDown"
-        PreviewKeyUp="MainView_OnKeyUp"
         Loaded="MainView_OnLoaded"
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
@@ -157,12 +155,14 @@
                                 <ColumnDefinition Width="30"/>
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
                             <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIGroupIconImageSource}"/>
                             <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIButtonIconImageSource}"/>
                             <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
+                            <Button Name="UnpickUIElementButton" Grid.Column="3" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
                         </Grid>
                         <Separator />
                     </StackPanel>

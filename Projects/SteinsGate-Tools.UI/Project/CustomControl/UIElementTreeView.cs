@@ -105,7 +105,7 @@ namespace SGToolsUI.CustomControl
         //             이벤트
         // ======================================================================
 
-        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        public void OnKeyDown(SGKey key)
         {
             var commandCenter = ViewModel.Commander;
             var groupMaster = ViewModel.GroupMaster;
@@ -119,18 +119,18 @@ namespace SGToolsUI.CustomControl
             if (element is SGUIGroup)
                 group = (SGUIGroup)element;
 
-            switch (e.Key)
+            switch (key)
             {
-                case Key.Up:
+                case SGKey.Up:
                     SGUIElement prev = element.Previous;
                     if (prev != null) commandCenter.SelectUIElement.Execute(prev);
                     break;
-                case Key.Down:
+                case SGKey.Down:
                     SGUIElement next = element.Next;
                     if (next != null) commandCenter.SelectUIElement.Execute(next);
                     break;
-                case Key.Enter:
-                case Key.Space:
+                case SGKey.Enter:
+                case SGKey.Space:
                 {
                     if (group == null)
                         break;
@@ -138,6 +138,18 @@ namespace SGToolsUI.CustomControl
                     group.Item.IsExpanded = !group.Item.IsExpanded;
                     break;
                 }
+                case SGKey.X:
+                    if (ViewModel.KeyState.IsCtrlPressed)
+                        ViewModel.Commander.ClipboardOperateUIElement.Execute(ClipboardOperate.Cut);
+                    break;
+                case SGKey.C:
+                    if (ViewModel.KeyState.IsCtrlPressed)
+                        ViewModel.Commander.ClipboardOperateUIElement.Execute(ClipboardOperate.Copy);
+                    break;
+                case SGKey.V:
+                    if (ViewModel.KeyState.IsCtrlPressed)
+                        ViewModel.Commander.ClipboardOperateUIElement.Execute(ClipboardOperate.Paste);
+                    break;
             }
         }
 

@@ -46,5 +46,7 @@ namespace SGToolsUI
         public const string GroupCategoryName = "그룹";
         public const string ButtonCategoryName = "버튼";
         public const int OtherCategoryOrder = 1;
+
+        public const int CacheAlignSize = 64;
     }
 }

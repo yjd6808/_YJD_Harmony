@@ -29,5 +29,39 @@ namespace SGToolsCommon.Extension
             for (int i = collection.Count - 1; i >= 0; --i)
                 yield return collection[i];
         }
+
+        public static ObservableCollection<T> InsertRangeNew<T>(
+            this ObservableCollection<T> collection, int index, IList<T> elements) 
+            where T : class
+        {
+            ObservableCollection<T> newCollection = new(new List<T>(collection.Count + elements.Count + 16));
+
+            if (index > collection.Count)
+                index = collection.Count;
+
+            for (int i = 0; i < index; ++i)
+                newCollection.Add(collection[i]);
+
+            for (int i = 0; i < elements.Count; ++i)
+                newCollection.Add(elements[i]);
+
+            for (int i = index; i < collection.Count; ++i)
+                newCollection.Add(collection[i]);
+
+            return newCollection;
+        }
+
+        public static ObservableCollection<T> AddAfterRangeNew<T>(
+            this ObservableCollection<T> collection, int index, IList<T> elements) 
+            where T : class
+            => InsertRangeNew(collection, index + 1, elements);
+
+        public static void AddRange<T>(
+            this ObservableCollection<T> collection, IList<T> elements)
+            where T : class
+        {
+            foreach (var element in elements)
+                collection.Add(element);
+        }
     }
 }

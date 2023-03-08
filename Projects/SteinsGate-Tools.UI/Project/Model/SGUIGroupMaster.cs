@@ -44,7 +44,7 @@ namespace SGToolsUI.Model
         // ============================================================
 
 
-        public SGUIGroupMaster(MainViewModel viewModel) : base(-1)
+        public SGUIGroupMaster(MainViewModel viewModel)
         {
             ViewModel = viewModel;
             SelectedElements = new ObservableElementsCollection(120, viewModel);
@@ -108,6 +108,7 @@ namespace SGToolsUI.Model
         // 코드 어사이너!
         // 코드 수동할당은 에반거 같아서 자동으로 할당하도록 한다.
         private PriorityQueue<int, int> _codeAssigner;
+
 
         // ============================================================
         //            기능
@@ -255,11 +256,31 @@ namespace SGToolsUI.Model
                 }
             }
 
-            // 밑에껄 선택 후 위에껄 선택한 경우, 반대로 뒤짚어준다.
+            // 밑에껄 선택 후 위에껄 선택한 경우(마지막 선택한게 이전 선택한 것보다 위에있다면), 반대로 뒤짚어준다.
             if (comp > 0)
                 result.Reverse();
 
             return result;
+        }
+
+
+        public void Backup(string tag)
+        {
+        }
+
+        public void Save()
+        {
+        }
+        private void Save(string filepath)
+        {
+        }
+
+        public void Load()
+        {
+        }
+
+        public void Load(string path)
+        {
         }
 
 #if DEBUG

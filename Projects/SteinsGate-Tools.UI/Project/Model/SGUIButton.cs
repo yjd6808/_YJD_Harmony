@@ -64,7 +64,7 @@ namespace SGToolsUI.Model
         [Browsable(false)]
         public BitmapSource VisualSpriteSource => VisualSprite.Source;
 
-        [Category(Constant.ButtonCategoryName), DisplayName("상태: 일반"), PropertyOrder(OrderNormal)]
+        [Category(Constant.ButtonCategoryName), DisplayName("일반"), PropertyOrder(OrderNormal)]
         public SGUISpriteInfo Normal
         {
             get => _sprites[StateNormal];
@@ -78,7 +78,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(Constant.ButtonCategoryName), DisplayName("상태: 누름"), PropertyOrder(OrderPressed)]
+        [Category(Constant.ButtonCategoryName), DisplayName("누름"), PropertyOrder(OrderPressed)]
         public SGUISpriteInfo Pressed
         {
             get => _sprites[StatePressed];
@@ -92,7 +92,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(Constant.ButtonCategoryName), DisplayName("상태: 마우스위"), PropertyOrder(OrderOver)]
+        [Category(Constant.ButtonCategoryName), DisplayName("마우스위"), PropertyOrder(OrderOver)]
         public SGUISpriteInfo Over
         {
             get => _sprites[StateOver];
@@ -106,7 +106,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(Constant.ButtonCategoryName), DisplayName("상태: 비활성화"), PropertyOrder(OrderDisabled)]
+        [Category(Constant.ButtonCategoryName), DisplayName("비활성화"), PropertyOrder(OrderDisabled)]
         public SGUISpriteInfo Disabled
         {
             get => _sprites[StateDisabled];
@@ -170,7 +170,6 @@ namespace SGToolsUI.Model
         }
 
         public static int Seq = 0;
-
         private SGUISpriteInfo[] _sprites;
         private int _state = StateNormal;
     }

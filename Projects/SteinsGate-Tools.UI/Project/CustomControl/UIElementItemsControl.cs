@@ -187,6 +187,9 @@ namespace SGToolsUI.CustomControl
                     _prevSelectElement = findElement;
                     ViewModel.Commander.SelectUIElement.Execute(findElement);
                 }
+
+
+
             }
             else
             {

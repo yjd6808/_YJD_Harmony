@@ -247,7 +247,8 @@ namespace SGToolsUI.Model
                             if (parentGroup == groupMaster)
                                 return;
 
-                            parentGroup.Item.IsExpanded = true;
+                            if (parentGroup.ItemLoaded)
+                                parentGroup.Item.IsExpanded = true;
                         });
 
                 }
@@ -282,7 +283,6 @@ namespace SGToolsUI.Model
 
                 if (this == groupMaster)
                     throw new Exception("그룹 마스터는 이 함수 호출 금지");
-
 
                 return groupMaster.SelectedElement == this;
             }
@@ -388,9 +388,6 @@ namespace SGToolsUI.Model
         //   3 <--- (현재)
         //   4 <--- (Next)
         // 2   <--- (Next.Next)
-
-
-
 
         [Browsable(false)]
         public SGUIElement Previous
@@ -570,6 +567,8 @@ namespace SGToolsUI.Model
             }
         }
 
+        [Browsable(false)] public bool ItemLoaded => _treeViewItem != null;
+
         [Browsable(false)]
         public TreeViewItem Item
         {
@@ -597,16 +596,14 @@ namespace SGToolsUI.Model
 
             _visualName = element._visualName;
             _visualRect = element._visualRect;
-            _visible = element._visible;
-
-            // 셀렉션 여부는 복사안함.
-
             _defineName = element._defineName;
+
+            // 상태들은 복사안함
         }
 
         public abstract void CreateInit();
 
-        public static SGUIElement Create(SGUIElementType type, SGUIGroup parent)
+        public static SGUIElement Create(SGUIElementType type)
         {
             SGUIElement element = null;
 
@@ -617,7 +614,7 @@ namespace SGToolsUI.Model
                     break;
                 case SGUIElementType.Group:
                     // 그룹 기본 크기는 해상도로.
-                    element = new SGUIGroup(parent.Depth + 1);
+                    element = new SGUIGroup();
                     element._visualRect = new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight);  
                     break;
             }
@@ -626,7 +623,6 @@ namespace SGToolsUI.Model
                 throw new Exception("");
             
             element.CreateInit();
-            element.Parent = parent;
             return element;
         }
 
@@ -634,6 +630,8 @@ namespace SGToolsUI.Model
         // DeleteUIElement 설명 참고
         public void DeleteSelf()
         {
+            
+
             if (_deleted)
                 return;
 
@@ -643,7 +641,19 @@ namespace SGToolsUI.Model
             _deleted = true;
 
             if (IsGroup)
-                Cast<SGUIGroup>().ForEachRecursive(element => element._deleted = true);
+            {
+                SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+
+                var delGroup = Cast<SGUIGroup>();
+                groupMaster.RemoveGroup(delGroup);
+                delGroup.ForEachRecursive(element =>
+                {
+                    if (element.IsGroup)
+                        groupMaster.RemoveGroup(element.Cast<SGUIGroup>());
+
+                    element._deleted = true;
+                });
+            }
 
             OnPropertyChanged(nameof(Deleted));
         }

@@ -1,0 +1,163 @@
+﻿/*
+ * 작성자: 윤정도
+ * 생성일: 3/8/2023 4:12:28 PM
+ *
+ */
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using SGToolsCommon.Extension;
+using SGToolsUI.Model;
+using SGToolsUI.ViewModel;
+
+namespace SGToolsUI.Command.MainViewCommand
+{
+    public enum ClipboardOperate
+    {
+        Copy,
+        Paste,
+        Cut
+    }
+
+    public class ClipboardOperateUIElement : MainCommandAbstract
+    {
+        private List<SGUIElement> _clipboard = new();
+
+        private const string CopyMessageFmt = "{0} 개의 엘리먼트가 선택되었습니다.\n복사하시겠습니까?";
+        private const string CutMessageFmt = "{0} 개의 엘리먼트가 선택되었습니다.\n잘라내시겠습니까?";
+
+        public ClipboardOperateUIElement(MainViewModel viewModel) 
+            : base(viewModel, "UI 엘리먼트 대상으로 클립보드 오퍼레이션을 수행합니다.")
+        {
+        }
+
+        public override void Execute(object? parameter)
+        {
+            if (parameter is not ClipboardOperate operate)
+                return;
+
+            ObservableCollection<SGUIElement> selectedElements = ViewModel.GroupMaster.SelectedElements;
+            int selectedElementCount = selectedElements.Count;
+
+            switch (operate)
+            {
+                case ClipboardOperate.Copy:
+                    
+                    if (selectedElementCount > 0 && MessageBoxEx.ShowTopMost(
+                            string.Format(CopyMessageFmt, selectedElementCount),
+                            "복사 할래요?",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        Copy(selectedElements);
+                    }
+                    break;
+                case ClipboardOperate.Paste:
+                    Paste(selectedElements); 
+                    break;
+                case ClipboardOperate.Cut:
+                    if (selectedElementCount > 0 && MessageBoxEx.ShowTopMost(
+                            string.Format(CutMessageFmt, selectedElementCount),
+                            "잘라낼래요??",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        Cut(selectedElements);
+                    }
+                    break;
+            }
+        }
+
+        private bool Copy(ObservableCollection<SGUIElement> selectedElements)
+        {
+            // 잘못된 붙여넣기를 할 우려가 있으므로 Depth가 틀리면 못하도록 막는다.
+            int depth = selectedElements[0].Depth;
+            if (selectedElements.FirstOrDefault(element => element.Depth != depth) != null)
+            {
+                MessageBoxEx.ShowTopMost("깊이가 다른 원소가 존재합니다.\n", "안돼!");
+                return false;
+            }
+
+            _clipboard.Clear();
+            for (int i = 0; i < selectedElements.Count; ++i)
+                _clipboard.Add(selectedElements[i]);
+
+            return true;
+        }
+
+        private void Cut(ObservableCollection<SGUIElement> selectedElements)
+        {
+            if (Copy(selectedElements))
+            {
+                // 백업
+                ViewModel.GroupMaster.Backup("Cut 수행전");
+                ViewModel.Commander.DeleteUIElement.Execute(null);
+            }
+        }
+
+        private void Paste(ObservableCollection<SGUIElement> selectedElements)
+        {
+            if (_clipboard.Count <= 0)
+            {
+                MessageBoxEx.ShowTopMost("붙여넣을 데이터가 없습니다.");
+                return;
+            }
+
+            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+            SGUIGroup pasteGroup;   
+            List<SGUIElement> cloned = new List<SGUIElement>(_clipboard.Count);
+
+            for (int i = 0; i < _clipboard.Count; ++i)
+                cloned.Add((SGUIElement)_clipboard[i].Clone());
+
+            if (groupMaster.HasSelectedElement)
+            {
+                SGUIElement standardElement = selectedElements[selectedElements.Count - 1];
+
+                // 그룹이 아닌 경우 무조건 엘리먼트 이후로 추가해줌
+                if (!standardElement.IsGroup)
+                {
+                    InsertChildren(standardElement.Parent, cloned, standardElement.Index + 1);
+                    return;
+                }
+
+                SGUIGroup standardGroup = standardElement.Cast<SGUIGroup>();
+
+                // 선택한 그룹이 확장되어 있으면 안에 넣고
+                // 확장되어있지 않으면 해당 그룹이 아닌것처럼 추가해준다.
+                if (standardGroup.Item.IsExpanded)
+                    InsertChildren(standardGroup, cloned, 0);
+                else
+                    InsertChildren(standardGroup.Parent, cloned, standardGroup.Index + 1);
+            }
+            else
+            {
+                InsertChildren(groupMaster, cloned, groupMaster.SelectedElements.Count);
+            }
+        }
+
+        private void InsertChildren(SGUIGroup group, List<SGUIElement> cloned, int index)
+        {
+            if (group.IsMaster && cloned.FirstOrDefault(element => !element.IsGroup) != null)
+            {
+                MessageBox.Show("그룹마스터에는 그룹만 붙일 수 있습니다.");
+                return;
+            }
+
+            group.InsertChildren(cloned, index);
+        }
+    }
+}

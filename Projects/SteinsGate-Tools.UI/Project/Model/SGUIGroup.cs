@@ -24,6 +24,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsCommon;
+using SGToolsCommon.Extension;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
@@ -54,9 +55,8 @@ namespace SGToolsUI.Model
         public const int OrderChildCountRecursive = 4;
 
 
-        public SGUIGroup(int depth)
+        public SGUIGroup()
         {
-            _depth = depth;
         }
 
         // ============================================================
@@ -212,6 +212,7 @@ namespace SGToolsUI.Model
         
         [Browsable(false)] public override int Code => _code;
         public void SetCode(int code) => _code = code;
+        public void SetDepth(int depth) => _depth = depth;
 
         public static int NameSeq = 0;
         // ============================================================
@@ -224,9 +225,10 @@ namespace SGToolsUI.Model
 
         public override object Clone()
         {
-            SGUIGroup group = new SGUIGroup(_depth);
+            SGUIGroup group = new SGUIGroup();
             group.CopyFrom(this);
-            group._code = _code;
+            // 코드 복사안함
+            // 
             group.HorizontalAlignment = HorizontalAlignment;
             group.VerticalAlignment = VerticalAlignment;
 
@@ -260,17 +262,25 @@ namespace SGToolsUI.Model
             => _children.ForEach(action);
 
 
-        public void AddChild(SGUIElement child, PropertyReflect updateProperty = PropertyReflect.Update)
+        public void AddChild(SGUIElement newChild, PropertyReflect updateProperty = PropertyReflect.Update)
         {
-            Children.Add(child);
-
+            Children.Add(newChild);
+            newChild.Parent = this;
             SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
             bool isPicked = Picked;  // 현재 그룹이 픽된 경우 자식도 픽상태
             if (isPicked)
             {
-                child.SetPick(true);
-                groupMaster.PickedElements.Add(child);
+                newChild.SetPick(true);
+                groupMaster.PickedElements.Add(newChild);
+            }
+
+            if (newChild.IsGroup)
+            {
+                SGUIGroup newGroup = newChild.Cast<SGUIGroup>();
+
+                groupMaster.AddGroup(newGroup);
+                newGroup.SetDepth(Depth + 1);
             }
 
             if (updateProperty == PropertyReflect.Update)
@@ -285,6 +295,45 @@ namespace SGToolsUI.Model
                 OnPropertyChanged(nameof(ChildCountRecursive));
             }
         }
+
+
+        // 0, 1, 2, 3
+        // InsertChildren(children, 2)
+        // 0, 1, Children, 2, 3
+        // InsertChildren(children, 3)
+        // 0, 1, 2, Children, 3
+        // InsertChildren(children, 4)
+        // 0, 1, 2, 3, Children
+        public void InsertChildren(IList<SGUIElement> newChildren, int index)
+        {
+            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+
+            // 현재 그룹이 픽된 경우 추가되는 자식들도 픽해줘야함.
+            bool isPicked = Picked;
+            if (isPicked)
+            {
+                newChildren.ForEach(element => element.SetPick(true));
+                groupMaster.PickedElements.AddRange(newChildren);
+            }
+
+            newChildren.ForEach(newChild =>
+            {
+                if (newChild.IsGroup)
+                {
+                    SGUIGroup newGroup = newChild.Cast<SGUIGroup>();
+
+                    groupMaster.AddGroup(newGroup);
+                    newGroup.SetDepth(Depth + 1);
+                }
+
+                newChild.Parent = this;
+            });
+
+            // 중간에 넣는 작업은 데이터를 계속 밀기땜에 그냥 새로 만들어서 교체해주자.
+            _children = _children.InsertRangeNew(index, newChildren);
+            OnPropertyChanged(nameof(Children));
+        }
+
 
 
         // 디버깅용

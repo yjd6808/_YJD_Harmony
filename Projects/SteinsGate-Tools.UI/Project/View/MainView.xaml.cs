@@ -51,15 +51,14 @@ namespace SGToolsUI.View
             Timer.Tick += TimerTick;
             Resources.Add("ViewModel", ViewModel);
             InitializeComponent();
-
-            // Mouse.OverrideCursor = SGToolsCommon.Resource.R.DragAndDropCursor.Value;
-
+            ViewModel.KeyState.KeyDown += MainView_OnKeyDown;
+            ViewModel.KeyState.KeyUp += MainView_OnKeyUp;
 
             #region  A
 
 
 
-            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0)
+            ViewModel.GroupMaster.Children.Add(new SGUIGroup()
             {
                 VisualName = "그룹 1",
                 Children = new ObservableCollection<SGUIElement>()
@@ -68,7 +67,7 @@ namespace SGToolsUI.View
                     new SGUIButton() { VisualName = "그룹 1-2"},
                     new SGUIButton() { VisualName = "그룹 1-3"},
                     new SGUIButton() { VisualName = "그룹 1-4"},
-                    new SGUIGroup(1)
+                    new SGUIGroup()
                     {
                         VisualName = "그룹 1-5",
                         Children = new ObservableCollection<SGUIElement>()
@@ -77,13 +76,13 @@ namespace SGToolsUI.View
                             new SGUIButton() { VisualName = "그룹 1-5-2"},
                             new SGUIButton() { VisualName = "그룹 1-5-3"},
                             new SGUIButton() { VisualName = "그룹 1-5-4"},
-                            new SGUIGroup(2)
+                            new SGUIGroup()
                             {
                                 VisualName = "그룹 1-5-5"
                             }
                         }
                     },
-                    new SGUIGroup(1)
+                    new SGUIGroup()
                     {
                         VisualName = "그룹 1-6",
                         Children = new ObservableCollection<SGUIElement>()
@@ -92,7 +91,7 @@ namespace SGToolsUI.View
                             new SGUIButton() { VisualName = "그룹 1-6-2"},
                             new SGUIButton() { VisualName = "그룹 1-6-3"},
                             new SGUIButton() { VisualName = "그룹 1-6-4"},
-                            new SGUIGroup(2)
+                            new SGUIGroup()
                             {
                                 VisualName = "그룹 1-6-5"
                             }
@@ -101,7 +100,7 @@ namespace SGToolsUI.View
                 }
 
             });
-            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0)
+            ViewModel.GroupMaster.Children.Add(new SGUIGroup()
             {
                 VisualName = "그룹 2",
                 Children = new ObservableCollection<SGUIElement>()
@@ -110,7 +109,7 @@ namespace SGToolsUI.View
                     new SGUIButton() { VisualName = "그룹 2-2"},
                     new SGUIButton() { VisualName = "그룹 2-3"},
                     new SGUIButton() { VisualName = "그룹 2-4"},
-                    new SGUIGroup(1)
+                    new SGUIGroup()
                     {
                         VisualName = "그룹 2-5",
                         Children = new ObservableCollection<SGUIElement>()
@@ -119,13 +118,13 @@ namespace SGToolsUI.View
                             new SGUIButton() { VisualName = "그룹 2-5-2"},
                             new SGUIButton() { VisualName = "그룹 2-5-3"},
                             new SGUIButton() { VisualName = "그룹 2-5-4"},
-                            new SGUIGroup(2)
+                            new SGUIGroup()
                             {
                                 VisualName = "그룹 2-5-5"
                             }
                         }
                     },
-                    new SGUIGroup(1)
+                    new SGUIGroup()
                     {
                         VisualName = "�׷� 2-6",
                         Children = new ObservableCollection<SGUIElement>()
@@ -134,7 +133,7 @@ namespace SGToolsUI.View
                             new SGUIButton() { VisualName ="그룹 2-6-2"},
                             new SGUIButton() { VisualName ="그룹 2-6-3"},
                             new SGUIButton() { VisualName ="그룹 2-6-4"},
-                            new SGUIGroup(2)
+                            new SGUIGroup()
                             {
                                 VisualName = "그룹 2-6-5"
                             }
@@ -142,8 +141,8 @@ namespace SGToolsUI.View
                     }
                 }
             });
-            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0) { VisualName = "그룹 3" });
-            ViewModel.GroupMaster.Children.Add(new SGUIGroup(0) { VisualName = "그룹 4" });
+            ViewModel.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 3" });
+            ViewModel.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 4" });
 
 
             #endregion
@@ -160,6 +159,7 @@ namespace SGToolsUI.View
 
         private void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
+            ViewModel.KeyState.Dispose();
             ViewModel.Commander.Finalize();
         }
 
@@ -207,16 +207,11 @@ namespace SGToolsUI.View
 
 
 
-        private void MainView_OnKeyDown(object sender, KeyEventArgs e)
+        private void MainView_OnKeyDown(SGKey key)
         {
             KeyState state = ViewModel.KeyState;
-
-            if (e.SystemKey != Key.None)
-                state.Down(e.SystemKey);
-            else
-                state.Down(e.Key);
-
-
+            Debug.WriteLine(key + "눌림");
+         
             if (state.IsShiftPressed)
             {
                 TitlePanel.Draggable = false;
@@ -230,21 +225,20 @@ namespace SGToolsUI.View
                 ViewModel.UIElementSelectMode = SelectMode.KeepExcept;
             }
 
-            else if (state.IsPressed(Key.Escape))
+            else if (state.IsPressed(SGKey.Escape))
+            {
                 ViewModel.GroupMaster.DeselectAll();
+            }
+
+            UIElementTreeView.OnKeyDown(key);
         }
 
 
 
-        private void MainView_OnKeyUp(object sender, KeyEventArgs e)
+        private void MainView_OnKeyUp(SGKey key)
         {
             KeyState state = ViewModel.KeyState;
-
-            if (e.SystemKey != Key.None)
-                state.Up(e.SystemKey);
-            else
-                state.Up(e.Key);
-
+            Debug.WriteLine(key + "땜");
             if (!state.IsShiftPressed && !state.IsCtrlPressed)
             {
                 TitlePanel.Draggable = true;

@@ -22,6 +22,7 @@
     <None Remove="Resource\Cursor\drag_and_drop.ani" />
     <None Remove="Resource\Icon\common_anchor.ico" />
     <None Remove="Resource\Icon\common_checked.ico" />
+    <None Remove="Resource\Icon\common_collapse.ico" />
     <None Remove="Resource\Icon\common_delete.ico" />
     <None Remove="Resource\Icon\common_down.ico" />
     <None Remove="Resource\Icon\common_empty.ico" />
@@ -34,6 +35,7 @@
     <None Remove="Resource\Icon\common_reset.ico" />
     <None Remove="Resource\Icon\common_select.ico" />
     <None Remove="Resource\Icon\common_spark.ico" />
+    <None Remove="Resource\Icon\common_unlock.ico" />
     <None Remove="Resource\Icon\common_up.ico" />
     <None Remove="Resource\win_close.ico" />
     <None Remove="Resource\win_maximize.ico" />
@@ -44,10 +46,12 @@
     <Resource Include="Resource\Cursor\drag_and_drop.ani" />
     <Resource Include="Resource\Icon\common_anchor.ico" />
     <Resource Include="Resource\Icon\common_checked.ico" />
+    <Resource Include="Resource\Icon\common_collapse.ico" />
     <Resource Include="Resource\Icon\common_down.ico" />
     <Resource Include="Resource\Icon\common_empty.ico" />
     <Resource Include="Resource\Icon\common_position.ico" />
     <Resource Include="Resource\Icon\common_reset.ico" />
+    <Resource Include="Resource\Icon\common_unlock.ico" />
     <Resource Include="Resource\Icon\common_up.ico" />
   </ItemGroup>
 

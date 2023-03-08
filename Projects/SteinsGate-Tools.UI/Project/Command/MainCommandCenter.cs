@@ -45,6 +45,8 @@ namespace SGToolsUI.Command
         public CommandAbstract SelectUIElement { get; }
         public CommandAbstract AddUIElement { get; }
         public CommandAbstract PickUIElement { get; }
+        public CommandAbstract UnpickUIElement { get; }
+        public CommandAbstract ClipboardOperateUIElement { get; }
 
         public CommandAbstract ToggleCanvasViewport { get; }
         public CommandAbstract ToggleCanvasGrid { get; }
@@ -78,6 +80,8 @@ namespace SGToolsUI.Command
             Add(SelectUIElement = new SelectUIElement(ViewModel) { UseParameter = true });
             Add(AddUIElement = new AddUIElement(ViewModel) { UseParameter = true });
             Add(PickUIElement = new PickUIElement(ViewModel));
+            Add(UnpickUIElement = new UnpickUIElement(ViewModel));
+            Add(ClipboardOperateUIElement = new ClipboardOperateUIElement(ViewModel) { UseParameter = true });
 
             Add(CanvasZoomUp = new CanvasZoomUp(ViewModel));
             Add(CanvasZoomDown = new CanvasZoomDown(ViewModel));
@@ -89,6 +93,8 @@ namespace SGToolsUI.Command
 
             Add(CocosPositionToZero = new CocosPositionToZero(ViewModel));
 
+
+            // ============================================================
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });
             Add(SpritePreview = new SpritePreview(ViewModel) { UseParameter = true });
             Add(CanvasZoomWheel = new CanvasZoomWheel(ViewModel) { UseParameter = true });

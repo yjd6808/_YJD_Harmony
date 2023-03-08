@@ -53,7 +53,7 @@ namespace SGToolsUI.Command.MainViewCommand
                 return;
             }
 
-            SGUIElement newElement = SGUIElement.Create(createElementType, group);
+            SGUIElement newElement = SGUIElement.Create(createElementType);
             newElement.ViewModel = ViewModel;
             group.AddChild(newElement);
 
