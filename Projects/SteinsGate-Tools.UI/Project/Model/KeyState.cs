@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -52,7 +53,7 @@ namespace SGToolsUI.Model
         // 멀티쓰레드 기반에서 키캡쳐 구현할려고했는데.
         // Keyboard 클래스자체가 UI 쓰레드에서 동작해야하네..
         // 따라서 아래와 같이 64바이트 단위로 정렬하는게 의미없는 짓이다.
-        // 일단 추후 멀티 쓰레드기반으로 전환 가능할수도있으니 남겨두자.
+        // 일단 추후 멀티 쓰레드에서도 안전하게 키입력 받을 수 있도록 구현 할수도있으니 남겨두자.
         [StructLayout(LayoutKind.Explicit, Size = Constant.CacheAlignSize, Pack = 8)]
         private struct KeyElement 
         {
@@ -60,10 +61,16 @@ namespace SGToolsUI.Model
             {
                 Key = key;
                 Pressed = false;
+                FireContinuous = false;
+                FireDelayCurMs = 0;
+                FireDelayMs = 150;
             }
 
             [FieldOffset(0)] public Key Key;
             [FieldOffset(8)] public bool Pressed;
+            [FieldOffset(16)] public bool FireContinuous;   // 키를 누르고있으면 연속 키입력 이벤트를 보낼지 설정
+            [FieldOffset(24)] public long FireDelayCurMs;
+            [FieldOffset(32)] public long FireDelayMs;
         }
 
         public KeyState()
@@ -83,6 +90,14 @@ namespace SGToolsUI.Model
             _keys[(int)SGKey.V]         = new KeyElement(Key.V);
             _keys[(int)SGKey.Escape]    = new KeyElement(Key.Escape);
 
+            // 방향키 연속키입력 허용
+            SetEnableFireContinuous(SGKey.Left, true);
+            SetEnableFireContinuous(SGKey.Up, true);
+            SetEnableFireContinuous(SGKey.Right, true);
+            SetEnableFireContinuous(SGKey.Down, true);
+            
+
+
             _isRunning = true;
             _finishHandle = new AutoResetEvent(false);
             _keyCaptureThread = new Thread(CaptureThreadRoutine);
@@ -91,12 +106,13 @@ namespace SGToolsUI.Model
 
         private void CaptureThreadRoutine()
         {
+            _stopWatch.Start();
             while (_isRunning)
             {
                 Application.Current?.Dispatcher.Invoke(CaptureKeyState);
+                _previousTick = _stopWatch.ElapsedTicks;
                 Thread.Sleep(10);
             }
-
             _finishHandle.Set();
         }
 
@@ -105,24 +121,44 @@ namespace SGToolsUI.Model
             SGKey sgKey;
             Key wpfKey;
             bool isKeyDown;
+            
             for (int i = 0; i < _keys.Length; ++i)
             {
                 sgKey = (SGKey)i;
                 wpfKey = _keys[i].Key;
                 isKeyDown = Keyboard.IsKeyDown(wpfKey);
+                bool isKeyDownInvoked = false;
 
                 if (isKeyDown && !_keys[i].Pressed)
                 {
                     _keys[i].Pressed = true;
                     KeyDown?.Invoke(sgKey);
+                    isKeyDownInvoked = true;
                 }
+
                 if (!isKeyDown && _keys[i].Pressed)
                 {
+                    _keys[i].FireDelayCurMs = 0;
                     _keys[i].Pressed = false;
                     KeyUp?.Invoke(sgKey);
                 }
+
+                // 키 입력이벤트를 수행안했고, 키가 눌린 상태이고, 해당 키가 연속 키입력을 허용하는 경우
+                // 따다다다다다 키이벤트 보낸다.
+                if (!isKeyDownInvoked && isKeyDown && _keys[i].FireContinuous)
+                {
+                    _keys[i].FireDelayCurMs += ElapsedDeltaMs;
+
+                    if (_keys[i].FireDelayCurMs >= _keys[i].FireDelayMs)
+                    {
+                        _keys[i].FireDelayCurMs = 0;
+                        KeyDown?.Invoke(sgKey);
+                    }
+                }
             }
         }
+
+        private long ElapsedDeltaMs => (_stopWatch.ElapsedTicks - _previousTick) / 10000; // 틱이 100나노초 단위이므로, 밀리초단위로 변환
 
         public void Dispose()
         {
@@ -154,6 +190,14 @@ namespace SGToolsUI.Model
             });
         }
 
+        
+        public void SetEnableFireContinuous(SGKey key, bool fire, long delay = 70)
+        {
+            int idx = (int)key;
+
+            _keys[idx].FireContinuous = fire;
+            _keys[idx].FireDelayMs = delay;
+        }
         public bool IsPressed(SGKey key) => _keys[(int)key].Pressed;
         public bool IsShiftPressed => IsPressed(SGKey.LeftShift);
         public bool IsAltPressed => IsPressed(SGKey.LeftAlt);
@@ -162,6 +206,8 @@ namespace SGToolsUI.Model
         private readonly KeyElement[] _keys;
         private readonly Thread _keyCaptureThread;
         private volatile bool _isRunning;
+        private long _previousTick;
+        private Stopwatch _stopWatch = new ();
         public event KeyDownHandler KeyDown;
         public event KeyDownHandler KeyUp;
         private AutoResetEvent _finishHandle;

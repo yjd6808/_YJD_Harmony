@@ -145,8 +145,12 @@ namespace SGToolsUI.CustomControl
             if (alt)
             {
                 // 픽된 원소들중 마우스를 클릭한 지점에 겹쳐져있는 모든 엘리먼트를 가져온다.
-                // 이때 깊은 자식부터 가져와야하므로 뒤짚어줘야함
-                IEnumerable<SGUIElement> candidates = ViewModel.GroupMaster.PickedElements.Reversed().Where(element => element.ContainPoint(_moveStartPosition));
+                // 이때 깊은 자식부터 가져와야하므로 뒤짚어줘야함 (역방향 반복자를 구현했기때문에 효율 굳)
+                IEnumerable<SGUIElement> candidates = ViewModel.GroupMaster
+                    .PickedElements
+                    .Reversed()
+                    .Where(element => element.CanvasSelectable && element.ContainPoint(_moveStartPosition));
+
                 IEnumerator<SGUIElement> enumerator = candidates.GetEnumerator();
 
                 if (!candidates.Any())
@@ -168,6 +172,7 @@ namespace SGToolsUI.CustomControl
                         findElement = success ? 
                             enumerator.Current : 
                             candidates.First(); // 마지막원소를 찾은 경우, 처음 원소를 가져온다.
+
                         break;
                     }
 
@@ -193,7 +198,10 @@ namespace SGToolsUI.CustomControl
             }
             else
             {
-                _prevSelectElement = ViewModel.GroupMaster.PickedElements.FirstOrDefault(element => element.ContainPoint(_moveStartPosition));
+                _prevSelectElement = ViewModel.GroupMaster
+                    .PickedElements
+                    .Reversed()
+                    .FirstOrDefault(element => element.CanvasSelectable && element.ContainPoint(_moveStartPosition));
 
                 if (_prevSelectElement != null)
                     ViewModel.Commander.SelectUIElement.Execute(_prevSelectElement);

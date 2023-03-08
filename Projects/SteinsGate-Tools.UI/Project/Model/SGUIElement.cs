@@ -43,7 +43,8 @@ namespace SGToolsUI.Model
         public const int OrderCocosPosition = 6;
         public const int OrderVisualSize = 7;
         public const int OrderIsVisible = 8;
-        public const int OrderDepth = 9;
+        public const int OrderCanvasSelectable = 9;
+        public const int OrderDepth = 10;
 
         public const string PickedKey = nameof(Picked);
 
@@ -182,6 +183,26 @@ namespace SGToolsUI.Model
                 OnPropertyChanged();
             }
         }
+
+        [Category(Constant.ElementCategoryName), DisplayName("선택 가능"), PropertyOrder(OrderCanvasSelectable)]
+        [Description("캔버스상에서 클릭가능하도록 할지")]
+        public bool CanvasSelectable
+        {
+            get => _canvasSelectable;
+            set
+            {
+                if (_canvasSelectable == value)
+                    return;
+
+                _canvasSelectable = value;
+
+                if (Selected && !_canvasSelectable)
+                    Selected = false;
+
+                OnPropertyChanged();
+            }
+        }
+
 
         [Category(Constant.ElementCategoryName), DisplayName("계층적 높이"), PropertyOrder(OrderDepth)]
         [Description("이 엘리먼트의 계층구조상 위치")]
@@ -594,6 +615,7 @@ namespace SGToolsUI.Model
         {
             ViewModel = element.ViewModel;
 
+            _canvasSelectable = element._canvasSelectable;
             _visualName = element._visualName;
             _visualRect = element._visualRect;
             _defineName = element._defineName;
@@ -852,6 +874,7 @@ namespace SGToolsUI.Model
         protected bool _visible = true;
         protected bool _deleted = false;
         protected bool _picked = false;
+        protected bool _canvasSelectable = true;
         protected TreeViewItem _treeViewItem;
 
         protected string _defineName;

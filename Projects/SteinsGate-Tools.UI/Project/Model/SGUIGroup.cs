@@ -59,11 +59,13 @@ namespace SGToolsUI.Model
         public SGUIGroup()
         {
             _children = new ObservableCollection<SGUIElement>();
+            _canvasSelectable = false;
         }
 
         public SGUIGroup(int capacity)
         {
             _children = new ObservableCollection<SGUIElement>(new List<SGUIElement>(capacity));
+            _canvasSelectable = false;
         }
 
         // ============================================================
