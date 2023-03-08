@@ -24,6 +24,8 @@ namespace SGToolsUI.CustomStyle
 {
     public partial class UIElementTreeViewStyle : ResourceDictionary
     {
+        // 아이템이 추가되거나
+        // 확장할때 아이템 로딩수행됨
         private void OnTreeViewItemLoaded(object sender, RoutedEventArgs e)
         {
             TreeViewItem item = sender as TreeViewItem;

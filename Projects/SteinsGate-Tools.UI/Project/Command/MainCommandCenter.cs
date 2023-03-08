@@ -46,7 +46,7 @@ namespace SGToolsUI.Command
         public CommandAbstract AddUIElement { get; }
         public CommandAbstract PickUIElement { get; }
         public CommandAbstract UnpickUIElement { get; }
-        public CommandAbstract ClipboardOperateUIElement { get; }
+        public ClipboardOperateUIElement ClipboardOperateUIElement { get; }
 
         public CommandAbstract ToggleCanvasViewport { get; }
         public CommandAbstract ToggleCanvasGrid { get; }

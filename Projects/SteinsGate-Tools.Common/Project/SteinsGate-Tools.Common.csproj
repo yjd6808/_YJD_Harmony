@@ -77,4 +77,10 @@
     <Resource Include="Resource\Icon\win_minimize.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="CustomStyle\ReadonlyAnimatedTextBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

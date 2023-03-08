@@ -178,21 +178,28 @@
                 </Grid>
             </ScrollViewer>
             <Border Grid.Row="1" Style="{StaticResource BorderSeparatorHorizontal}"/>
-            <Grid Grid.Row="2"> 
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="선택됨: "/>
-                    <TextBlock Text="{Binding GroupMaster.SelectedElement.VisualName}"/>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBox x:Name="SelectedVisualNameTextBox" Opacity="1" Text="{Binding GroupMaster.SelectedElement.VisualName, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
                     <Image Margin="4, 0, 0, 0" Width="16" Source="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonCheckedKey}}">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="True">
-                                        <Setter Property="Opacity" Value="1"/>
+                                        <Setter Property="Opacity" Value="1" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="False">
-                                        <Setter Property="Opacity" Value="0"/>
+                                        <Setter Property="Opacity" Value="0" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding GroupMaster.HasPickedElement}" Value="False">
+                                        <Setter Property="Opacity" Value="0" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding GroupMaster.HasSelectedElement}" Value="False">
                                         <Setter Property="Opacity" Value="0" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -200,6 +207,12 @@
                         </Image.Style>
                     </Image>
                 </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBox Text="클립보드: " Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}" />
+                    <TextBox Text="{Binding Commander.ClipboardOperateUIElement.ClipboardDataCount, Mode=OneWay}" Name="ClipboardDataCountTextBox" Style="{StaticResource ReadonlyAnimatedTextBox}" />
+                    <TextBox Text="개" Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
+                </StackPanel>
+                        
             </Grid>
         </Grid>
 

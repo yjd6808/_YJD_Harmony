@@ -148,8 +148,7 @@ namespace SGToolsUI.View
             #endregion
 
             ViewModel.GroupMaster.ForEachRecursive(x => x.ViewModel = ViewModel);
-            ViewModel.GroupMaster.____Update();
-
+            ViewModel.GroupMaster.DebugUpdate();
         }
 
         private void TimerTick(object? sender, EventArgs e)
@@ -205,12 +204,9 @@ namespace SGToolsUI.View
             ViewModel.DragState.EndTargets.Add(UIElementTreeView);
         }
 
-
-
         private void MainView_OnKeyDown(SGKey key)
         {
             KeyState state = ViewModel.KeyState;
-            Debug.WriteLine(key + "눌림");
          
             if (state.IsShiftPressed)
             {
@@ -238,7 +234,6 @@ namespace SGToolsUI.View
         private void MainView_OnKeyUp(SGKey key)
         {
             KeyState state = ViewModel.KeyState;
-            Debug.WriteLine(key + "땜");
             if (!state.IsShiftPressed && !state.IsCtrlPressed)
             {
                 TitlePanel.Draggable = true;

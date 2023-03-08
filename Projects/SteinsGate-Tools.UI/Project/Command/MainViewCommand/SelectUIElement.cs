@@ -68,6 +68,7 @@ namespace SGToolsUI.Command.MainViewCommand
 
             if (element.Picked && element.Selected)
                 ViewModel.View.UIElementPropertyGrid.SelectedObject = element;
+
         }
 
         

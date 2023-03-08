@@ -17,6 +17,7 @@
         <ResourceDictionary Source="BorderSeparatorHorizontal.xaml"/>
         <ResourceDictionary Source="BorderSeparatorVertical.xaml"/>
         <ResourceDictionary Source="ReadonlyTextBox.xaml"/>
+        <ResourceDictionary Source="ReadonlyAnimatedTextBox.xaml" />
         <ResourceDictionary Source="Selection.xaml" />
         <ResourceDictionary Source="WinformTreeView.xaml" />
     </ResourceDictionary.MergedDictionaries>

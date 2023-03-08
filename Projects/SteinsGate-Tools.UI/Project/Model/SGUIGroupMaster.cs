@@ -205,7 +205,7 @@ namespace SGToolsUI.Model
         {
         }
 
-        public List<SGUIElement> GetElementsBetween(SGUIElement lhsElement, SGUIElement rhsElement)
+        public List<SGUIElement> GetElementsBetween(SGUIElement lhsElement, SGUIElement rhsElement, bool expandOnly)
         {
             List<SGUIElement> result = new List<SGUIElement>();
 
@@ -234,6 +234,8 @@ namespace SGToolsUI.Model
                 {
                     SGUIElement child = group.Children[i];
 
+                    
+
                     // 1일때 high 만나기전까지 모든 자식 추가
                     if (child == low && state == 0)
                         state = 1;
@@ -249,7 +251,7 @@ namespace SGToolsUI.Model
                     if (state == 2) 
                         break;
 
-                    if (child.IsGroup)
+                    if (child.IsGroup && expandOnly && child.Item.IsLoaded && child.Item.IsExpanded)
                     {
                         ForEachRecursive(child.Cast<SGUIGroup>(), ref state);
                     }

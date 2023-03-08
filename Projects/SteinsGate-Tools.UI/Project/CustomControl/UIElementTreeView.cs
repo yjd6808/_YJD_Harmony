@@ -161,12 +161,12 @@ namespace SGToolsUI.CustomControl
             if (hit == null)
                 return;
 
-            SGUIElement? selected = hit.DataContext as SGUIElement;
+            SGUIElement? selected = hit.DataContext;
             SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
 
             if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null)
             {
-                List<SGUIElement> betweenElements = ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected);
+                List<SGUIElement> betweenElements = ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected, true);
                 ViewModel.Commander.SelectUIElement.Execute(betweenElements);
                 return;
             }

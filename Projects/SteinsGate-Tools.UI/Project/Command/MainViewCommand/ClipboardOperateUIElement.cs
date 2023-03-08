@@ -7,7 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,12 +34,10 @@ namespace SGToolsUI.Command.MainViewCommand
         Cut
     }
 
-    public class ClipboardOperateUIElement : MainCommandAbstract
+    public class ClipboardOperateUIElement : MainCommandAbstract, INotifyPropertyChanged
     {
         private List<SGUIElement> _clipboard = new();
-
-        private const string CopyMessageFmt = "{0} 개의 엘리먼트가 선택되었습니다.\n복사하시겠습니까?";
-        private const string CutMessageFmt = "{0} 개의 엘리먼트가 선택되었습니다.\n잘라내시겠습니까?";
+        public int ClipboardDataCount => _clipboard.Count;
 
         public ClipboardOperateUIElement(MainViewModel viewModel) 
             : base(viewModel, "UI 엘리먼트 대상으로 클립보드 오퍼레이션을 수행합니다.")
@@ -56,27 +56,15 @@ namespace SGToolsUI.Command.MainViewCommand
             {
                 case ClipboardOperate.Copy:
                     
-                    if (selectedElementCount > 0 && MessageBoxEx.ShowTopMost(
-                            string.Format(CopyMessageFmt, selectedElementCount),
-                            "복사 할래요?",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question) == MessageBoxResult.Yes)
-                    {
+                    if (selectedElementCount > 0)
                         Copy(selectedElements);
-                    }
                     break;
                 case ClipboardOperate.Paste:
                     Paste(selectedElements); 
                     break;
                 case ClipboardOperate.Cut:
-                    if (selectedElementCount > 0 && MessageBoxEx.ShowTopMost(
-                            string.Format(CutMessageFmt, selectedElementCount),
-                            "잘라낼래요??",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question) == MessageBoxResult.Yes)
-                    {
+                    if (selectedElementCount > 0)
                         Cut(selectedElements);
-                    }
                     break;
             }
         }
@@ -94,7 +82,7 @@ namespace SGToolsUI.Command.MainViewCommand
             _clipboard.Clear();
             for (int i = 0; i < selectedElements.Count; ++i)
                 _clipboard.Add(selectedElements[i]);
-
+            OnPropertyChanged(nameof(ClipboardDataCount));
             return true;
         }
 
@@ -117,11 +105,11 @@ namespace SGToolsUI.Command.MainViewCommand
             }
 
             SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
-            SGUIGroup pasteGroup;   
-            List<SGUIElement> cloned = new List<SGUIElement>(_clipboard.Count);
+            SGUIGroup pasteGroup;
+            SGUIGroup cloned = new SGUIGroup(_clipboard.Count);
 
             for (int i = 0; i < _clipboard.Count; ++i)
-                cloned.Add((SGUIElement)_clipboard[i].Clone());
+                cloned.Children.Add((SGUIElement)_clipboard[i].Clone());
 
             if (groupMaster.HasSelectedElement)
             {
@@ -138,7 +126,7 @@ namespace SGToolsUI.Command.MainViewCommand
 
                 // 선택한 그룹이 확장되어 있으면 안에 넣고
                 // 확장되어있지 않으면 해당 그룹이 아닌것처럼 추가해준다.
-                if (standardGroup.Item.IsExpanded)
+                if (standardGroup.ItemLoaded && standardGroup.Item.IsExpanded)
                     InsertChildren(standardGroup, cloned, 0);
                 else
                     InsertChildren(standardGroup.Parent, cloned, standardGroup.Index + 1);
@@ -149,15 +137,22 @@ namespace SGToolsUI.Command.MainViewCommand
             }
         }
 
-        private void InsertChildren(SGUIGroup group, List<SGUIElement> cloned, int index)
+        private void InsertChildren(SGUIGroup group, SGUIGroup cloned, int index)
         {
-            if (group.IsMaster && cloned.FirstOrDefault(element => !element.IsGroup) != null)
+            if (group.IsMaster && !cloned.HasOnlyGroup)
             {
                 MessageBox.Show("그룹마스터에는 그룹만 붙일 수 있습니다.");
                 return;
             }
 
             group.InsertChildren(cloned, index);
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

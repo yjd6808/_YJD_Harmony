@@ -220,6 +220,7 @@ namespace SGToolsUI.Model
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
                 ObservableCollection<SGUIElement> selectedElements = groupMaster.SelectedElements;
 
+                
 
                 if (_selected)
                 {
@@ -269,6 +270,7 @@ namespace SGToolsUI.Model
                         groupMaster.OnPropertyChanged(SGUIGroupMaster.IsMultiSelectedKey);
                 }
 
+
                 groupMaster.OnPropertyChanged(SGUIGroupMaster.SelectedElementKey);
                 OnPropertyChanged();
             }
@@ -289,10 +291,10 @@ namespace SGToolsUI.Model
         }
 
 
-        public void SetPick(bool pick)
+        public void SetPick(bool pick, bool notify = true)
         {
             _picked = true;
-            OnPropertyChanged(nameof(Picked));
+            if (notify) OnPropertyChanged(nameof(Picked));
         }
 
         // 엘레멘트로 피크 가능, 그룹마스터로도 가능
@@ -308,42 +310,41 @@ namespace SGToolsUI.Model
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
                 _picked = value;
+                OnPropertyChanged();
 
-                if (_picked)
+                if (!_picked)
+                    return;
+
+                groupMaster.DeselectAll();
+                groupMaster.PickedElements.ForEach(element => element.Picked = false);
+                groupMaster.PickedElements.Clear();
+                groupMaster.PickedElements.Add(this);
+
+                if (IsGroup)
                 {
-                    groupMaster.DeselectAll();
-                    groupMaster.PickedElements.ForEach(element => element.Picked = false);
-                    groupMaster.PickedElements.Clear();
-                    groupMaster.PickedElements.Add(this);
+                    SGUIGroup group = Cast<SGUIGroup>();
 
-                    if (IsGroup)
+                    group.ForEachRecursive(element =>
                     {
-                        SGUIGroup group = Cast<SGUIGroup>();
+                        element.SetPick(true); // 트리뷰 아이콘 교체를 위한 노티파이
+                        groupMaster.PickedElements.Add(element);
+                        element.OnPropertyChanged();
+                    });
 
-                        group.ForEachRecursive(element =>
-                        {
-                            element.SetPick(true);// 트리뷰 아이콘 교체를 위한 노티파이
-                            groupMaster.PickedElements.Add(element);
-                            element.OnPropertyChanged();
-                        });
-
-                        // 그룹을 선택했으면 자기자신의 앵커포인터 반영
-                        ViewModel.View.CanvasShapesControl.AdjustAnchor(group);
-                    }
-                    else
-                    {
-                        // 그룹이 아니면 부모 그룹도 픽하고 부모그룹에 앵커포인터를 반영한다.
-                        Parent.SetPick(true);
-                        groupMaster.PickedElements.Add(Parent);
-                        ViewModel.View.CanvasShapesControl.AdjustAnchor(Parent);
-                    }
-
-                    groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
-                    groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedElementKey);
-                    groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedSelectedElementKey);
+                    // 그룹을 선택했으면 자기자신의 앵커포인터 반영
+                    ViewModel.View.CanvasShapesControl.AdjustAnchor(group);
+                }
+                else
+                {
+                    // 그룹이 아니면 부모 그룹도 픽하고 부모그룹에 앵커포인터를 반영한다.
+                    Parent.SetPick(true);
+                    groupMaster.PickedElements.Add(Parent);
+                    ViewModel.View.CanvasShapesControl.AdjustAnchor(Parent);
                 }
 
-                OnPropertyChanged();
+                groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
+                groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedElementKey);
+                groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedSelectedElementKey);
             }
         }
 
@@ -585,7 +586,6 @@ namespace SGToolsUI.Model
         public void OnTreeViewItemLoaded(TreeViewItem item)
         {
             _treeViewItem = item;
-            Debug.WriteLine($"{VisualName} 트리뷰아이템 로딩");
             OnPropertyChanged(nameof(Item));
         }
 
@@ -597,8 +597,6 @@ namespace SGToolsUI.Model
             _visualName = element._visualName;
             _visualRect = element._visualRect;
             _defineName = element._defineName;
-
-            // 상태들은 복사안함
         }
 
         public abstract void CreateInit();
@@ -620,7 +618,7 @@ namespace SGToolsUI.Model
             }
 
             if (element == null)
-                throw new Exception("");
+                throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
             
             element.CreateInit();
             return element;

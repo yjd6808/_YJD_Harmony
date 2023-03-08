@@ -130,7 +130,7 @@ namespace SGToolsUI.Model
 
 
             /*
-             * 외부쓰레드에서 종료를 안받으면 데드락이 걸린 수가 있다.
+             * 외부쓰레드에서 종료를 안받으면 데드락이 걸릴 수가 있다.
              *
              * Dispatcher.Invoke 시작
              *         -> WPF 작업

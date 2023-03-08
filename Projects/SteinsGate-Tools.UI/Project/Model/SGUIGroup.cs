@@ -26,6 +26,7 @@ using MoreLinq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using static System.Collections.Specialized.BitVector32;
 
 namespace SGToolsUI.Model
 {
@@ -57,6 +58,12 @@ namespace SGToolsUI.Model
 
         public SGUIGroup()
         {
+            _children = new ObservableCollection<SGUIElement>();
+        }
+
+        public SGUIGroup(int capacity)
+        {
+            _children = new ObservableCollection<SGUIElement>(new List<SGUIElement>(capacity));
         }
 
         // ============================================================
@@ -211,8 +218,12 @@ namespace SGToolsUI.Model
         public override SGUIElementType UIElementType => SGUIElementType.Group;
         
         [Browsable(false)] public override int Code => _code;
+        [Browsable(false)] public bool HasOnlyGroup => Where(element => !element.IsGroup).Any() == false;
+        [Browsable(false)] public bool HasOnlyGroupRecursive => WhereRecursive(element => !element.IsGroup).Any() == false;
+
         public void SetCode(int code) => _code = code;
         public void SetDepth(int depth) => _depth = depth;
+        
 
         public static int NameSeq = 0;
         // ============================================================
@@ -238,10 +249,15 @@ namespace SGToolsUI.Model
                 if (cloned == null)
                     throw new Exception("클론한 갹체가 null입니다.");
                 group._children.Add(cloned);
+                cloned.Parent = group;
             }
 
             return group;
         }
+
+
+        public void ForEach(Action<SGUIElement> action)
+            => _children.ForEach(action);
 
         public void ForEachRecursive(Action<SGUIElement> action)
         {
@@ -250,16 +266,33 @@ namespace SGToolsUI.Model
                 SGUIElement element = _children[i];
                 action(element);
 
-                if (element.UIElementType == SGUIElementType.Group)
-                {
-                    ((SGUIGroup)element).ForEachRecursive(action);
-                    continue;
-                }
+                if (element.IsGroup)
+                    element.Cast<SGUIGroup>().ForEachRecursive(action);
             }
         }
 
-        public void ForEach(Action<SGUIElement> action)
-            => _children.ForEach(action);
+        IEnumerable<SGUIElement> Where(Predicate<SGUIElement> predicate)
+        {
+            for (int i = 0; i < _children.Count; ++i)
+                if (predicate(_children[i]))
+                    yield return _children[i];
+        }
+
+        IEnumerable<SGUIElement> WhereRecursive(Predicate<SGUIElement> predicate)
+        {
+            for (int i = 0; i < _children.Count; ++i)
+            {
+                SGUIElement element = _children[i];
+
+                if (predicate(element))
+                    yield return element;
+
+                if (element.IsGroup)
+                    element.Cast<SGUIGroup>().WhereRecursive(predicate);
+            }
+        }
+
+
 
 
         public void AddChild(SGUIElement newChild, PropertyReflect updateProperty = PropertyReflect.Update)
@@ -304,7 +337,7 @@ namespace SGToolsUI.Model
         // 0, 1, 2, Children, 3
         // InsertChildren(children, 4)
         // 0, 1, 2, 3, Children
-        public void InsertChildren(IList<SGUIElement> newChildren, int index)
+        public void InsertChildren(SGUIGroup newChildren, int index)
         {
             SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
@@ -312,48 +345,51 @@ namespace SGToolsUI.Model
             bool isPicked = Picked;
             if (isPicked)
             {
-                newChildren.ForEach(element => element.SetPick(true));
-                groupMaster.PickedElements.AddRange(newChildren);
+                newChildren.ForEach(element => element.SetPick(false));
+                groupMaster.PickedElements.AddRange(newChildren.Children);
             }
 
-            newChildren.ForEach(newChild =>
+            // 새로 추가된 자식들중 바로 다음 계층(깊이)의 자식들만 부모를 업데이트해줌 된다.
+            // 하지만 다음, 다음 계층의 경우 깊이와, 그룹이 존재하는 경우 업데이트 해줘야하므로
+            newChildren.ForEach(newChild => newChild.Parent = this);
+            newChildren.ForEachRecursive(newChild =>
             {
-                if (newChild.IsGroup)
-                {
-                    SGUIGroup newGroup = newChild.Cast<SGUIGroup>();
+                if (!newChild.IsGroup)
+                    return;
 
-                    groupMaster.AddGroup(newGroup);
-                    newGroup.SetDepth(Depth + 1);
-                }
-
-                newChild.Parent = this;
+                SGUIGroup newGroup = newChild.Cast<SGUIGroup>();
+                groupMaster.AddGroup(newGroup);
+                newGroup.SetDepth(newGroup.Parent.Depth + 1);
             });
 
+            
             // 중간에 넣는 작업은 데이터를 계속 밀기땜에 그냥 새로 만들어서 교체해주자.
-            _children = _children.InsertRangeNew(index, newChildren);
+            _children = _children.InsertRangeNew(index, newChildren.Children);
             OnPropertyChanged(nameof(Children));
         }
 
-
-
-        // 디버깅용
-        public void ____Update()
+        // 디버깅용, new로 임시로 생성한 데이터에 정보 주입해주기 위함
+        public void DebugUpdate()
         {
             ViewModel.GroupMaster.AddGroup(this);
             VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
+
+            if (!IsMaster)
+                SetDepth(Parent.Depth + 1);
             Children.ForEach(x =>
             {
                 x.Parent = this;
 
                 if (x.IsGroup)
-                    x.Cast<SGUIGroup>().____Update();
+                    x.Cast<SGUIGroup>().DebugUpdate();
             });
         }
 
-        private ObservableCollection<SGUIElement> _children = new();
+        private ObservableCollection<SGUIElement> _children;
         private HAlignment _horizontalAlignment = HAlignment.Left;
         private VAlignment _verticalAlignment = VAlignment.Bottom;
         private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
         private int _code;
     }
 }
+
