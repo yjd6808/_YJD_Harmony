@@ -22,8 +22,8 @@ namespace SGToolsUI
         public const double CanvasHeight = ResolutionHeight + 50;
 
         public const double PropertyGridHeight = 360;               // 실제프로퍼티 그리드 크기
-        public const double PropertyGridLowerInspectorHide = 0;     // 하단 패널 높이 (숨기기 위한 수치)
-        public const double PropertyGridUpperInspectorHide = 0;     // 상단 패널 높이 (숨기기 위한 수치)
+        public const double PropertyGridLowerInspectorHide = -30;     // 하단 패널 높이 (숨기기 위한 수치)
+        public const double PropertyGridUpperInspectorHide = -20;     // 상단 패널 높이 (숨기기 위한 수치)
 
         public const double ResolutionRatio = 480.0f / 640.0f;
         public const string SettingFileName = "setting.json";
@@ -37,6 +37,10 @@ namespace SGToolsUI
 
         public const string ElementCategoryName = "공통";
         public const int ElementCategoryOrder = 2;
+
+        // 디자이너 윈도우와 실제 운영체제가 그리는 윈도우간의 너비, 높이 차이를 보정하기위한 수치
+        public const double VisualHeightDifferenceBetweenDesignerAndReal = 35;
+        public const double VisualWidthDifferenceBetweenDesignerAndReal = 16;
 
         public const string GroupCategoryName = "그룹";
         public const string ButtonCategoryName = "버튼";

@@ -30,7 +30,7 @@
                             Width="{x:Static local:Constant.CanvasWidth}" 
                             Height="{x:Static local:Constant.CanvasHeight}" 
                             ClipToBounds="True"
-                            Background="{x:Null}">
+                            Background="LightGray">
                         <Canvas.LayoutTransform>
                             <ScaleTransform ScaleX="{Binding ZoomState.ZoomLevelX, Mode=OneWay}" 
                                             ScaleY="{Binding ZoomState.ZoomLevelY, Mode=OneWay}" />

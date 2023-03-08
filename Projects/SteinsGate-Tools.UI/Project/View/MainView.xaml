@@ -107,7 +107,10 @@
             <Border     Grid.Column="3"  Style="{StaticResource BorderSeparatorVertical}" />
             <TextBox    Grid.Column="4"  Text="{Binding ResourceSelectionStatus}" Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
         </Grid>
+
+
         <Separator DockPanel.Dock="Bottom" />
+
 
         <!-- ###############################################################################
         
@@ -212,6 +215,7 @@
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="30" />
                 </Grid.ColumnDefinitions>
 
                 <Button Name="ToggleCanvasGridButton" Grid.Column="0" Command="{Binding Commander.ToggleCanvasGrid}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonGridKey}}"/>
@@ -244,6 +248,33 @@
                                            Style="{StaticResource CanvasShapeItemsControl}">
                 </ui_ctrl:CanvasShapeItemsControl>
             </Grid>
+
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" 
+                        Width="30" 
+                        Height="30" 
+                        Name="CocosPositionToZeroButton" 
+                        VerticalAlignment="Top" 
+                        Command="{Binding Commander.CocosPositionToZero}"  
+                        common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonPositionKey}}"
+                        Style="{StaticResource ImageButton}"
+                        IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}">
+                </Button>
+
+
+                <!-- 운영체제의 뷰와 디자이너 뷰간의 차이를 없애기위한 높이지정용도 컨트롤 -->
+                <Grid Grid.Column="1" Height="{Binding Height, ElementName=CocosPositionToZeroButton, Converter={StaticResource AddConverter}, ConverterParameter={x:Static local:Constant.VisualHeightDifferenceBetweenDesignerAndReal}}"  Background="Aquamarine"/>
+            </Grid>
+            
         </StackPanel>
 
 

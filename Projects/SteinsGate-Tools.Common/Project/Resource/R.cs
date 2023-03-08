@@ -32,6 +32,7 @@ namespace SGToolsCommon.Resource
         public const string IconCommonSelectKey = IconPath + "common_select.ico";
         public const string IconCommonSparkKey = IconPath + "common_spark.ico";
         public const string IconCommonUpKey = IconPath + "common_up.ico";
+        public const string IconCommonPositionKey = IconPath + "common_position.ico";
 
         public const string IconWinCloseKey = IconPath + "win_close.ico";
         public const string IconWinMaximizeKey = IconPath + "win_maximize.ico";

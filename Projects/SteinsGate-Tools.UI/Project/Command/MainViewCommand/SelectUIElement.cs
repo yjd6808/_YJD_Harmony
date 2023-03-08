@@ -65,6 +65,9 @@ namespace SGToolsUI.Command.MainViewCommand
                 case SelectMode.KeepExcept: SelectSingleElementKeepExcept(element);  break;
                 case SelectMode.Keep: SelectSingleElementKeep(element);  break;
             }
+
+            if (element.Picked && element.Selected)
+                ViewModel.View.UIElementPropertyGrid.SelectedObject = element;
         }
 
         

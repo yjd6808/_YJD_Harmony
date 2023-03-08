@@ -40,9 +40,10 @@ namespace SGToolsUI.Model
         public const int OrderVisualName = 3;
         public const int OrderDefineName = 4;
         public const int OrderVisualPosition = 5;
-        public const int OrderVisualSize = 6;
-        public const int OrderIsVisible = 7;
-        public const int OrderDepth = 8;
+        public const int OrderCocosPosition = 6;
+        public const int OrderVisualSize = 7;
+        public const int OrderIsVisible = 8;
+        public const int OrderDepth = 9;
 
         public const string PickedKey = nameof(Picked);
 
@@ -96,7 +97,7 @@ namespace SGToolsUI.Model
             } 
         }
 
-        [Category(Constant.ElementCategoryName), DisplayName("위치"), PropertyOrder(OrderVisualPosition)]
+        [Category(Constant.ElementCategoryName), DisplayName("위치 (절대)"), PropertyOrder(OrderVisualPosition)]
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
         public Point VisualPosition
         {
@@ -106,8 +107,41 @@ namespace SGToolsUI.Model
                 _visualRect.Location = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
+                OnPropertyChanged(nameof(CocosAlignPosition));
             }
         }
+
+        [Category(Constant.ElementCategoryName), DisplayName("위치 (정렬기준)"), PropertyOrder(OrderCocosPosition)]
+        [Description("VAlign, HAlign을 적용시킨 위치이고 이때 좌표계는 코코스 좌표계를 따른다.")]
+        public Point CocosAlignPosition
+        {
+            get
+            {
+                if (Parent == null)  throw new Exception("마스터 그룹은 호출 금지");
+                return ConvertVisualPositionToCocosAlignPosition(Parent);
+            }
+            set
+            {
+                // 정렬 좌표를 받는다.
+                if (Parent == null) throw new Exception("마스터 그룹은 호출 금지");
+                VisualPosition = ConvertCocosPositionToVisualPosition(Parent, value);
+                OnPropertyChanged();
+            }
+        }
+
+        [Browsable(false)]
+        [Description("엘리먼트 Rect의 중앙위치")]
+        public Point VisualPositionCenter => new (
+            _visualRect.X + _visualRect.Width / 2,
+            _visualRect.Y + _visualRect.Height / 2
+        );
+
+        [Browsable(false)]
+        [Description("엘리먼트 Rect의 우하단위치")]
+        public Point VisualPositionRightBottom => new (
+            _visualRect.X + _visualRect.Width,
+            _visualRect.Y + _visualRect.Height
+        );
 
         [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
         [Description("UI엘리먼트의 크기를 의미")]
@@ -121,6 +155,8 @@ namespace SGToolsUI.Model
                 OnPropertyChanged(nameof(VisualRect));
             }
         }
+
+        
 
         
 
@@ -145,12 +181,11 @@ namespace SGToolsUI.Model
 
 
         [Browsable(false)]
-        [Category(Constant.ElementCategoryName)]
-        [DisplayName(nameof(Deleted))]
         [Description("이 엘리먼트가 이미 삭제되었는지 여부")]
         public bool Deleted => _deleted;
 
-        [Browsable(false)] public virtual bool IsGroup => false;
+        [Browsable(false)] 
+        public virtual bool IsGroup => false;
 
 
         [Browsable(false)]
@@ -186,7 +221,10 @@ namespace SGToolsUI.Model
                         ViewModel.View.CanvasShapesControl.ArrangeSelection(this);
 
                     if (selectedElements.Count == 1)
+                    {
                         groupMaster.OnPropertyChanged(SGUIGroupMaster.HasSelectedElementKey);
+                        groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedSelectedElementKey);
+                    }
                     else if (selectedElements.Count == 2)
                         groupMaster.OnPropertyChanged(SGUIGroupMaster.IsMultiSelectedKey);
 
@@ -200,7 +238,10 @@ namespace SGToolsUI.Model
                         ViewModel.View.CanvasShapesControl.ReleaseSelection(this);
 
                     if (selectedElements.Count == 0)
+                    {
                         groupMaster.OnPropertyChanged(SGUIGroupMaster.HasSelectedElementKey);
+                        groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedSelectedElementKey);
+                    }
                     else if (selectedElements.Count == 1)
                         groupMaster.OnPropertyChanged(SGUIGroupMaster.IsMultiSelectedKey);
                 }
@@ -265,6 +306,7 @@ namespace SGToolsUI.Model
 
                     groupMaster.OnPropertyChanged(SGUIGroupMaster.PickedElementKey);
                     groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedElementKey);
+                    groupMaster.OnPropertyChanged(SGUIGroupMaster.HasPickedSelectedElementKey);
                 }
 
                 OnPropertyChanged();
@@ -287,6 +329,9 @@ namespace SGToolsUI.Model
             }
         }
 
+
+        [Browsable(false)]
+        public bool IsMaster => this == ViewModel.GroupMaster;
         [Browsable(false)]
         public bool IsFirst => Index == 0;
         [Browsable(false)]
@@ -653,6 +698,84 @@ namespace SGToolsUI.Model
             }
 
             return Comparer<int>.Default.Compare(lhsCurIndex, rhsCurIndex);
+        }
+
+
+        public Point ConvertCocosPositionToVisualPosition(SGUIGroup group, Point alignedPosition)
+        {
+            Point visualPos;
+
+            switch (group.HorizontalAlignment)
+            {
+                case HorizontalAlignment.Left: 
+                    visualPos.X = group.VisualPosition.X; 
+                    break;
+                case HorizontalAlignment.Center:
+                    visualPos.X = group.VisualPosition.X +
+                                  group.VisualSize.Width / 2 -
+                                  VisualSize.Width / 2;
+                    break;
+                case HorizontalAlignment.Right:
+                    visualPos.X = group.VisualPosition.X +
+                                  group.VisualSize.Width -
+                                  VisualSize.Width;
+                    break;
+            }
+
+            switch (group.VerticalAlignment)
+            {
+                case VerticalAlignment.Top: 
+                    visualPos.Y = group.VisualPosition.Y;
+                    break;
+                case VerticalAlignment.Center:
+                    visualPos.Y = group.VisualPosition.Y +
+                                  group.VisualSize.Height / 2 -
+                                  VisualSize.Height / 2;
+                    break;
+                case VerticalAlignment.Bottom:
+                    visualPos.Y = group.VisualPosition.Y +
+                                  group.VisualSize.Height -
+                                  VisualSize.Height;
+                    break;
+            }
+
+            visualPos.X += alignedPosition.X;
+            visualPos.Y += alignedPosition.Y;
+            return visualPos;
+        }
+
+        public Point ConvertVisualPositionToCocosAlignPosition(SGUIGroup group)
+        {
+            Point alignedPos;
+
+
+            switch (group.HorizontalAlignment)
+            {
+                case HorizontalAlignment.Left:
+                    alignedPos.X = VisualPosition.X - group.VisualPosition.X;
+                    break;
+                case HorizontalAlignment.Center:
+                    alignedPos.X = VisualPositionCenter.X - group.VisualPositionCenter.X;
+                    break;
+                case HorizontalAlignment.Right:
+                    alignedPos.X = VisualPositionRightBottom.X - group.VisualPositionRightBottom.X;
+                    break;
+            }
+
+            switch (group.VerticalAlignment)
+            {
+                case VerticalAlignment.Top:
+                    alignedPos.Y = group.VisualPosition.Y - VisualPosition.Y;
+                    break;
+                case VerticalAlignment.Center:
+                    alignedPos.Y = group.VisualPositionCenter.Y - VisualPositionCenter.Y;
+                    break;
+                case VerticalAlignment.Bottom:
+                    alignedPos.Y = group.VisualPositionRightBottom.Y - VisualPositionRightBottom.Y;
+                    break;
+            }
+
+            return alignedPos;
         }
 
         public abstract object Clone();

@@ -32,6 +32,7 @@ namespace SGToolsUI.Model
     {
         public const string HasSelectedElementKey = nameof(HasSelectedElement);
         public const string HasPickedElementKey = nameof(HasPickedElement);
+        public const string HasPickedSelectedElementKey = nameof(HasPickedSelectedElement);
         public const string SelectedElementKey = nameof(SelectedElement);
         public const string PickedElementKey = nameof(PickedElement);
         public const string IsMultiSelectedKey = nameof(IsMultiSelected);
@@ -101,6 +102,7 @@ namespace SGToolsUI.Model
         public ObservableCollection<SGUIElement> SelectedElements { get; }
         public ObservableCollection<SGUIElement> PickedElements { get; }
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
+        public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
         public List<SGUIGroup> Groups { get; }
 
         // 코드 어사이너!

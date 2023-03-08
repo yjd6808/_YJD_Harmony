@@ -345,7 +345,7 @@ namespace SGToolsUI.CustomControl
             canvasSelection.Selection.SetBinding(ItemsControl.HeightProperty, selectionHeightBinding);
 
 
-            System.Diagnostics.Debug.WriteLine($"셀렉션맵: {_selectionMap.Count} || 캔버스쉐이프 ${_canvasShapes.Count}");
+            System.Diagnostics.Debug.WriteLine($"셀렉션맵: {_selectionMap.Count} ★ 캔버스쉐이프 {_canvasShapes.Count}");
         }
 
         public void ReleaseSelection(SGUIElement element)

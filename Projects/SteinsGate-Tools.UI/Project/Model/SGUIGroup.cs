@@ -239,6 +239,7 @@ namespace SGToolsUI.Model
         public void ____Update()
         {
             ViewModel.GroupMaster.AddGroup(this);
+            VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
             Children.ForEach(x =>
             {
                 x.Parent = this;
