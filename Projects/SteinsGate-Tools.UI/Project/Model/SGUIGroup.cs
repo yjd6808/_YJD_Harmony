@@ -25,24 +25,12 @@ using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-using static System.Collections.Specialized.BitVector32;
 
 namespace SGToolsUI.Model
 {
-    public enum VAlignment
-    {
-        Top,
-        Center,
-        Bottom
-    }
 
-    public enum HAlignment
-    {
-        Left,
-        Center,
-        Right
-    }
 
     [CategoryOrder(Constant.GroupCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIGroup : SGUIElement
@@ -241,7 +229,6 @@ namespace SGToolsUI.Model
             SGUIGroup group = new SGUIGroup();
             group.CopyFrom(this);
             // 코드 복사안함
-            // 
             group.HorizontalAlignment = HorizontalAlignment;
             group.VerticalAlignment = VerticalAlignment;
 
@@ -317,6 +304,10 @@ namespace SGToolsUI.Model
                 groupMaster.AddGroup(newGroup);
                 newGroup.SetDepth(Depth + 1);
             }
+            else
+            {
+                groupMaster.AddElement(newChild);
+            }
 
             if (updateProperty == PropertyReflect.Update)
             {
@@ -357,7 +348,10 @@ namespace SGToolsUI.Model
             newChildren.ForEachRecursive(newChild =>
             {
                 if (!newChild.IsGroup)
+                {
+                    groupMaster.AddElement(newChild);
                     return;
+                }
 
                 SGUIGroup newGroup = newChild.Cast<SGUIGroup>();
                 groupMaster.AddGroup(newGroup);
@@ -384,6 +378,8 @@ namespace SGToolsUI.Model
 
                 if (x.IsGroup)
                     x.Cast<SGUIGroup>().DebugUpdate();
+                else
+                    ViewModel.GroupMaster.AddElement(x);
             });
         }
 

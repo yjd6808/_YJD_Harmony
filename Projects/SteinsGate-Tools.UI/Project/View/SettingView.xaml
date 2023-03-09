@@ -25,7 +25,7 @@
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel DataContext="{Binding Path=ViewModel}">
-        <cus:TitleBar Title="설정"
+        <cus:TitleBar Title="설정 뷰"
                       DockPanel.Dock="Top"></cus:TitleBar>
         <StackPanel DockPanel.Dock="Top">
             <c:PropertyGrid SelectedObject="{Binding Model}" />

@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ * 작성자: 윤정도
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -26,6 +30,15 @@ using SGToolsUI.Extension;
 
 namespace SGToolsUI.CustomControl
 {
+    // 쉬프트를 누르고 움직일 경우
+    // 어떻게 움직일지
+    public enum ShiftKeyMoving
+    {
+        None,
+        Horizontal,
+        Vertical
+    }
+
     public class UIElementItemsControl : ItemsControl, INotifyPropertyChanged
     {
         public bool IsMove
@@ -46,6 +59,8 @@ namespace SGToolsUI.CustomControl
         private Canvas _canvasPanel;
         private ItemsPresenter _canvasPresenter;
         private bool _isElementsMove;
+        private bool _isShiftMove;
+        private ShiftKeyMoving _shiftKeyMoving = ShiftKeyMoving.None;
         private Point _moveStartPosition;
         private List<MovingElement> _movingElements;
         private SGUIElement _prevSelectElement;                     // 이전에 마우스 포인터를 찍었을때 선택한 엘리먼트
@@ -127,7 +142,7 @@ namespace SGToolsUI.CustomControl
             // 1. 알트키를 누른경우 겹친 엘리먼트 뒤에있는 원소를 순차적으로 선택할 수 있도록 한다.
             // 2. 선택된 엘리먼트가 있더라도 움직일 수 없도록 한다.
             bool alt = ViewModel.KeyState.IsAltPressed;
-
+            _isShiftMove = ViewModel.KeyState.IsShiftPressed;
 
             // 마우스를 클릭한 지점에 선택된 원소가 있는 경우 마우스를 따라 움직일 수 있도록 한다.
             if (!alt && pickedSelectedElements.FirstOrDefault(element => element.ContainPoint(_moveStartPosition)) != null)
@@ -219,11 +234,29 @@ namespace SGToolsUI.CustomControl
             // 드래그 시작 후 마우스가 움직인 벡터만큼 다른 엘리먼트들도 벡터만큼 움직여준다.
             Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             Vector move = Point.Subtract(_moveStartPosition, pos);
+
+            if (_isShiftMove && _shiftKeyMoving == ShiftKeyMoving.None)
+            {
+                if (Math.Abs(move.X) > Math.Abs(move.Y))
+                    _shiftKeyMoving = ShiftKeyMoving.Horizontal;
+                else
+                    _shiftKeyMoving = ShiftKeyMoving.Vertical;
+                _isShiftMove = false;
+            }
+
+            if (_shiftKeyMoving == ShiftKeyMoving.Vertical)
+                move.X = 0;
+            else if (_shiftKeyMoving == ShiftKeyMoving.Horizontal)
+                move.Y = 0;
+
             _movingElements.ForEach(m => m.Element.VisualPosition = Point.Subtract(m.StartPosition, move));
         }
 
         public void MoveEnd(MouseButtonEventArgs e)
         {
+            _isShiftMove = false;
+            _shiftKeyMoving = ShiftKeyMoving.None;
+
             if (_isElementsMove)
             {
 
@@ -253,9 +286,7 @@ namespace SGToolsUI.CustomControl
                 Element = element;
                 StartPosition = startPosition;
             }
-            
         }
-
 
     }
 }

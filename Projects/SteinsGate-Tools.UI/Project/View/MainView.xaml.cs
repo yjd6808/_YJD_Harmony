@@ -11,6 +11,7 @@ using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +24,7 @@ using System.Windows.Navigation;
 using System.Windows.Resources;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
@@ -37,22 +39,19 @@ namespace SGToolsUI.View
     public partial class MainView : Window
     {
 
+        
         public MainViewModel ViewModel { get; }
-        public DispatcherTimer Timer { get; }
-
-
 
         public MainView()
         {
+           
+
             ViewModel = new MainViewModel();
             ViewModel.View = this;
-            Timer = new DispatcherTimer();
-            Timer.Interval = TimeSpan.FromSeconds(1 / 60.0f);
-            Timer.Tick += TimerTick;
-            Resources.Add("ViewModel", ViewModel);
-            InitializeComponent();
             ViewModel.KeyState.KeyDown += MainView_OnKeyDown;
             ViewModel.KeyState.KeyUp += MainView_OnKeyUp;
+            Resources.Add("ViewModel", ViewModel);
+            InitializeComponent();
 
             #region  A
 
@@ -151,13 +150,10 @@ namespace SGToolsUI.View
             ViewModel.GroupMaster.DebugUpdate();
         }
 
-        private void TimerTick(object? sender, EventArgs e)
-        {
-        }
-
-
         private void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
+            ViewModel.LogView.Close();
+            ViewModel.JobQueue.Dispose();
             ViewModel.KeyState.Dispose();
             ViewModel.Commander.Finalize();
         }

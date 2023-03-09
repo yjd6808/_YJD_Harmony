@@ -34,6 +34,7 @@ namespace SGToolsUI.Command
         // 커맨드 목록
         // =================================================
         public CommandAbstract OpenSetting { get; }
+        public CommandAbstract OpenLogView { get; }
         public CommandAbstract ReloadSgaPackage { get; }
         public CommandAbstract SelectSgaPackage { get; }
         public CommandAbstract SelectSgaElement { get; }
@@ -54,7 +55,7 @@ namespace SGToolsUI.Command
         public CommandAbstract CanvasZoomUp { get; }
         public CommandAbstract CanvasZoomDown { get; }
         public CommandAbstract CanvasZoomReset { get; }
-        public CommandAbstract CocosPositionToZero { get; }
+        public CommandAbstract PositionUIElement { get; }
 
 
         // =================================================
@@ -70,6 +71,8 @@ namespace SGToolsUI.Command
             ViewModel = viewModel;
 
             Add(OpenSetting = new OpenSetting(ViewModel));
+            Add(OpenLogView = new OpenLogView(ViewModel));
+            
             Add(ReloadSgaPackage = new ReloadSgaPackage(ViewModel));
             Add(SelectSgaPackage = new SelectSgaPackage(ViewModel) { UseParameter = true });
             Add(SelectSgaElement = new SelectSgaElement(ViewModel) { UseParameter = true });
@@ -82,6 +85,8 @@ namespace SGToolsUI.Command
             Add(PickUIElement = new PickUIElement(ViewModel));
             Add(UnpickUIElement = new UnpickUIElement(ViewModel));
             Add(ClipboardOperateUIElement = new ClipboardOperateUIElement(ViewModel) { UseParameter = true });
+            Add(PositionUIElement = new PositionUIElement(ViewModel) { UseParameter = true });
+            
 
             Add(CanvasZoomUp = new CanvasZoomUp(ViewModel));
             Add(CanvasZoomDown = new CanvasZoomDown(ViewModel));
@@ -90,8 +95,6 @@ namespace SGToolsUI.Command
             Add(ToggleCanvasViewport = new ToggleCanvasViewport(ViewModel));
             Add(ToggleCanvasGrid = new ToggleCanvasGrid(ViewModel));
             Add(ToggleCanvasAnchor = new ToggleCanvasAnchor(ViewModel));
-
-            Add(CocosPositionToZero = new CocosPositionToZero(ViewModel));
 
 
             // ============================================================

@@ -20,15 +20,26 @@
 
   <ItemGroup>
     <None Remove="Resource\Cursor\drag_and_drop.ani" />
+    <None Remove="Resource\Icon\arrow_bottom.ico" />
+    <None Remove="Resource\Icon\arrow_bottomleft.ico" />
+    <None Remove="Resource\Icon\arrow_bottomright.ico" />
+    <None Remove="Resource\Icon\arrow_left.ico" />
+    <None Remove="Resource\Icon\arrow_right.ico" />
+    <None Remove="Resource\Icon\arrow_top.ico" />
+    <None Remove="Resource\Icon\arrow_topleft.ico" />
+    <None Remove="Resource\Icon\arrow_topright.ico" />
     <None Remove="Resource\Icon\common_anchor.ico" />
+    <None Remove="Resource\Icon\common_backup.ico" />
     <None Remove="Resource\Icon\common_checked.ico" />
     <None Remove="Resource\Icon\common_collapse.ico" />
     <None Remove="Resource\Icon\common_delete.ico" />
     <None Remove="Resource\Icon\common_down.ico" />
     <None Remove="Resource\Icon\common_empty.ico" />
     <None Remove="Resource\Icon\common_grid.ico" />
+    <None Remove="Resource\Icon\common_info.ico" />
     <None Remove="Resource\Icon\common_music.ico" />
     <None Remove="Resource\Icon\common_not_usable.ico" />
+    <None Remove="Resource\Icon\common_pin.ico" />
     <None Remove="Resource\Icon\common_position.ico" />
     <None Remove="Resource\Icon\common_rect.ico" />
     <None Remove="Resource\Icon\common_refresh.ico" />
@@ -36,6 +47,7 @@
     <None Remove="Resource\Icon\common_select.ico" />
     <None Remove="Resource\Icon\common_spark.ico" />
     <None Remove="Resource\Icon\common_unlock.ico" />
+    <None Remove="Resource\Icon\common_unpin.ico" />
     <None Remove="Resource\Icon\common_up.ico" />
     <None Remove="Resource\win_close.ico" />
     <None Remove="Resource\win_maximize.ico" />
@@ -44,14 +56,26 @@
 
   <ItemGroup>
     <Resource Include="Resource\Cursor\drag_and_drop.ani" />
+    <Resource Include="Resource\Icon\arrow_bottom.ico" />
+    <Resource Include="Resource\Icon\arrow_bottomleft.ico" />
+    <Resource Include="Resource\Icon\arrow_bottomright.ico" />
+    <Resource Include="Resource\Icon\arrow_left.ico" />
+    <Resource Include="Resource\Icon\arrow_right.ico" />
+    <Resource Include="Resource\Icon\arrow_top.ico" />
+    <Resource Include="Resource\Icon\arrow_topleft.ico" />
+    <Resource Include="Resource\Icon\arrow_topright.ico" />
     <Resource Include="Resource\Icon\common_anchor.ico" />
+    <Resource Include="Resource\Icon\common_backup.ico" />
     <Resource Include="Resource\Icon\common_checked.ico" />
     <Resource Include="Resource\Icon\common_collapse.ico" />
     <Resource Include="Resource\Icon\common_down.ico" />
     <Resource Include="Resource\Icon\common_empty.ico" />
+    <Resource Include="Resource\Icon\common_info.ico" />
+    <Resource Include="Resource\Icon\common_pin.ico" />
     <Resource Include="Resource\Icon\common_position.ico" />
     <Resource Include="Resource\Icon\common_reset.ico" />
     <Resource Include="Resource\Icon\common_unlock.ico" />
+    <Resource Include="Resource\Icon\common_unpin.ico" />
     <Resource Include="Resource\Icon\common_up.ico" />
   </ItemGroup>
 
@@ -62,8 +86,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="morelinq" Version="3.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="WindowsDisplayAPI" Version="1.3.0.13" />
   </ItemGroup>
 
   <ItemGroup>

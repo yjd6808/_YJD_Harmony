@@ -21,6 +21,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon;
+using SGToolsCommon.CustomControl;
+using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Command;
 using SGToolsUI.Command.MainViewCommand;
@@ -48,6 +51,15 @@ namespace SGToolsUI.ViewModel
                 VerticalAlignment = VAlignment.Top,
                 HorizontalAlignment = HAlignment.Left,
             };
+
+            LogBox = new LogListBox() { MaxItemCount = 1500 };
+            LogView = new LogView(LogBox);
+
+            if (Setting.ShowLogViewWhenProgramLaunched)
+                LogView.Show();
+
+            if (Setting.ShowLogViewWhenProgramLaunched && Setting.LogViewPositionWhenProgramLaunched != PointEx.Zero)
+                LogView.MoveTo(Setting.LogViewPositionWhenProgramLaunched);
         }
 
         public MainView View { get; set; }
@@ -177,6 +189,9 @@ namespace SGToolsUI.ViewModel
         }
 
         public DataDragState DragState { get; }
+        public JobQueue JobQueue { get; } = new ();
+        public LogListBox LogBox { get; }
+        public LogView LogView { get; }
 
         private SelectMode _uiElementSelectMode;
         private KeyState _keyState = new ();

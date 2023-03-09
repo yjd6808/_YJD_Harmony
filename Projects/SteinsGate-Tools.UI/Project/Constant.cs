@@ -28,6 +28,10 @@ namespace SGToolsUI
 
         public const double ResolutionRatio = 480.0f / 640.0f;
         public const string SettingFileName = "setting.json";
+        public const string DataFileName = "data.json";
+        public const string BackupDirectoryRoot = "backup";
+        public const string BackupDirectoryFmt = "yyyy-MM-dd";
+        public const string BackupFileFmt = "hh.mm.ss";
 
         public const double LeftPaneWidth = 300;
         public const double DragActivateDistance = 5.0f;

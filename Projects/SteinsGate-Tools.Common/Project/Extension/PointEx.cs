@@ -23,9 +23,11 @@ namespace SGToolsCommon.Extension
 {
     public static partial class PointEx
     {
+        public static readonly Point Zero = new (0, 0);
+
         public static Point ToPoint(this Vector vector)
         {
-            return new Point(vector.X, vector.Y);
+            return new global::System.Windows.Point(vector.X, vector.Y);
         }
 
         public static Vector ToVector(this Point point)

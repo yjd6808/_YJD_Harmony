@@ -1,4 +1,5 @@
 ﻿/*
+ * 작성자: 윤정도
  * 생성일: 2/27/2023 10:19:42 AM
  */
 
@@ -26,13 +27,9 @@ namespace SGToolsCommon.Extension
         // 복붙
         public static T FindParent<T>(this DependencyObject child) where T : DependencyObject
         {
-            //get parent item
             DependencyObject parentObject = VisualTreeHelper.GetParent(child);
-
-            //we've reached the end of the tree
             if (parentObject == null) return null;
 
-            //check if the parent matches the type we're looking for
             T parent = parentObject as T;
             if (parent != null)
                 return parent;
@@ -78,7 +75,7 @@ namespace SGToolsCommon.Extension
         public static Point GetOffsetInMonitor(this Visual depObj)
         {
             Vector offset = VisualTreeHelper.GetOffset(depObj);
-            return depObj.PointToScreen(new Point(offset.X, offset.Y));
+            return depObj.PointToScreen(new global::System.Windows.Point(offset.X, offset.Y));
         }
 
 
@@ -148,7 +145,7 @@ namespace SGToolsCommon.Extension
         public static Rect GetRectOnWindow(this FrameworkElement frameworkElement)
         {
             Window window = Window.GetWindow(frameworkElement);
-            Point visualOffset = frameworkElement.TransformToAncestor(window).Transform(new Point(0, 0));
+            Point visualOffset = frameworkElement.TransformToAncestor(window).Transform(new global::System.Windows.Point(0, 0));
             Size visualSize = new Size(frameworkElement.ActualWidth, frameworkElement.ActualHeight);
             return new Rect(visualOffset, visualSize);
         }

@@ -23,6 +23,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 using MoreLinq;
 using SGToolsUI.ViewModel;
 
@@ -52,6 +53,7 @@ namespace SGToolsUI.Model
             PickedElements = new ObservableElementsCollection(120, viewModel);
             PickedElements.CollectionChanged += PickedElementsOnCollectionChanged;
             Groups = new List<SGUIGroup>(120);
+            Elements = new LinkedList<SGUIElement>();
 
 
             _codeAssigner = new PriorityQueue<int, int>(Constant.CodeAssignerCapacity);
@@ -104,6 +106,7 @@ namespace SGToolsUI.Model
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
         public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
         public List<SGUIGroup> Groups { get; }
+        public LinkedList<SGUIElement> Elements { get; }
 
         // 코드 어사이너!
         // 코드 수동할당은 에반거 같아서 자동으로 할당하도록 한다.
@@ -125,12 +128,32 @@ namespace SGToolsUI.Model
 
         public void RemoveGroup(SGUIGroup group)
         {
-            Groups.Remove(group);
+            if (!Groups.Remove(group))
+                throw new Exception("그룹목록에서 삭제하는데 실패했습니다.");
+
             _codeAssigner.Enqueue(group.Code, group.Code);
 
             Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
         }
 
+        public void AddElement(SGUIElement element)
+        {
+            if (element.IsGroup)
+                throw new Exception("그룹도 엘러먼트이긴 하지만 그룹이 아닌 엘리먼트만 보관하도록 하기로 결정했습니다.");
+
+            Elements.AddFirst(element);
+        }
+
+        public void RemoveElement(SGUIElement element)
+        {
+            if (element.IsGroup)
+                throw new Exception("그룹을 엘리먼트 목록에서 삭제할려고 하고 있습니다.");
+
+            if (!Elements.Remove(element))
+                throw new Exception("엘리먼트목록에서 삭제하는데 실패했습니다.");
+
+            Debug.WriteLine($"할당된 엘리먼트 수 {Elements.Count}");
+        }
 
         public void DeselectAll()
         {
@@ -268,11 +291,14 @@ namespace SGToolsUI.Model
 
         public void Backup(string tag)
         {
+
         }
+
 
         public void Save()
         {
         }
+
         private void Save(string filepath)
         {
         }

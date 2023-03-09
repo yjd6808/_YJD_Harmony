@@ -27,7 +27,11 @@ using System.Xml.Linq;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon;
+using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
+using SGToolsCommon.Resource;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using Point = System.Windows.Point;
 
 namespace SGToolsUI.Model
 {
@@ -108,7 +112,7 @@ namespace SGToolsUI.Model
                 _visualRect.Location = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
-                OnPropertyChanged(nameof(CocosAlignPosition));
+                OnPropertyChanged(nameof(CocosRelativePosition));
 
                 if (IsGroup)
                 {
@@ -120,20 +124,20 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(Constant.ElementCategoryName), DisplayName("위치 (정렬기준)"), PropertyOrder(OrderCocosPosition)]
+        [Category(Constant.ElementCategoryName), DisplayName("위치 (상대)"), PropertyOrder(OrderCocosPosition)]
         [Description("VAlign, HAlign을 적용시킨 위치이고 이때 좌표계는 코코스 좌표계를 따른다.")]
-        public Point CocosAlignPosition
+        public Point CocosRelativePosition
         {
             get
             {
                 if (Parent == null)  throw new Exception("마스터 그룹은 호출 금지");
-                return ConvertVisualPositionToCocosAlignPosition(Parent);
+                return ConvertCocosRelativePosition(Parent);
             }
             set
             {
                 // 정렬 좌표를 받는다.
                 if (Parent == null) throw new Exception("마스터 그룹은 호출 금지");
-                VisualPosition = ConvertCocosPositionToVisualPosition(Parent, value);
+                VisualPosition = ConvertVisualPosition(Parent, value);
                 OnPropertyChanged();
             }
         }
@@ -659,20 +663,25 @@ namespace SGToolsUI.Model
                 throw new Exception($"{VisualName}은 {Parent.VisualName}의 자식이 아닙니다.");
 
             _deleted = true;
+            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
             if (IsGroup)
             {
-                SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
-
                 var delGroup = Cast<SGUIGroup>();
                 groupMaster.RemoveGroup(delGroup);
                 delGroup.ForEachRecursive(element =>
                 {
                     if (element.IsGroup)
                         groupMaster.RemoveGroup(element.Cast<SGUIGroup>());
+                    else
+                        groupMaster.RemoveElement(element);
 
                     element._deleted = true;
                 });
+            }
+            else
+            {
+                groupMaster.RemoveElement(this);
             }
 
             OnPropertyChanged(nameof(Deleted));
@@ -766,7 +775,24 @@ namespace SGToolsUI.Model
             return Comparer<int>.Default.Compare(lhsCurIndex, rhsCurIndex);
         }
 
+        // group내의 좌하단 좌표를 기준으로 this의 좌하단의 상대적 위치(코코스 좌표계)
+        public Point ConvertCocosRelativePosition(SGUIGroup group)
+        {
+            return new Point(
+                VisualPosition.X - group.VisualPosition.X,
+                group.VisualPositionRightBottom.Y - VisualPositionRightBottom.Y
+            );
+        }
 
+        public Point ConvertVisualPosition(SGUIGroup group, Point cocosRelativePosition)
+        {
+            return new Point(
+                group.VisualPosition.X + cocosRelativePosition.X,
+                group.VisualPosition.Y + group.VisualSize.Height - VisualSize.Height - cocosRelativePosition.Y
+            );
+        }
+
+        /*
         public Point ConvertCocosPositionToVisualPosition(SGUIGroup group, Point alignedPosition)
         {
             Point visualPos;
@@ -843,6 +869,40 @@ namespace SGToolsUI.Model
 
             return alignedPos;
         }
+        */
+
+        public void SetPosition(VAlignment vAlign, HAlignment hAlign, Point point)
+        {
+            Point groupPosition = Parent.VisualPosition;
+            Point zeroPosition;
+            switch (vAlign)
+            {
+                case VAlignment.Center:
+                    zeroPosition.Y = groupPosition.Y + Parent.VisualSize.Height / 2 - VisualSize.Height / 2;
+                    break;
+                case VAlignment.Bottom:
+                    zeroPosition.Y = groupPosition.Y + Parent.VisualSize.Height - VisualSize.Height;
+                    break;
+            }
+
+            switch (hAlign)
+            {
+                case HAlignment.Center:
+                    zeroPosition.X = groupPosition.X + Parent.VisualSize.Width / 2 - VisualSize.Width / 2;
+                    
+                    break;
+                case HAlignment.Right:
+                    zeroPosition.X = groupPosition.X + Parent.VisualSize.Width - VisualSize.Width;
+                    break;
+            }
+
+            zeroPosition.X += point.X;
+            zeroPosition.Y += point.Y;
+            VisualPosition = zeroPosition;
+        }
+
+        public void SetPositionZero(VAlignment vAlign, HAlignment hAlign)
+            => SetPosition(vAlign, hAlign, PointEx.Zero);
 
         public bool ContainPoint(Point p)
         {
@@ -879,5 +939,6 @@ namespace SGToolsUI.Model
 
         protected string _defineName;
 
+        
     }
 }

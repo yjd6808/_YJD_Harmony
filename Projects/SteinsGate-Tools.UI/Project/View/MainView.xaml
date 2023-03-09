@@ -27,6 +27,7 @@
         xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
         xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
         xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
+        xmlns:common_prim="clr-namespace:SGToolsCommon.Primitive;assembly=SGToolsCommon"
         
         Name="View"
         FontSize="14"
@@ -121,10 +122,15 @@
                 <MenuItem Header="저장" />
             </MenuItem>
             <MenuItem Style="{StaticResource MenuItemSeparator}"/>
+            <MenuItem Header="보기">
+                <MenuItem Header="로그 뷰" Command="{Binding Commander.OpenLogView}"/>
+            </MenuItem>
+            <MenuItem Style="{StaticResource MenuItemSeparator}"/>
             <MenuItem Header="도구">
                 <MenuItem Header="설정" Command="{Binding Commander.OpenSetting}" />
             </MenuItem>
             <MenuItem Style="{StaticResource MenuItemSeparator}"/>
+            
         </Menu>
         <Separator DockPanel.Dock="Top"/>
 
@@ -265,28 +271,42 @@
 
             <Grid >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" 
-                        Width="30" 
-                        Height="30" 
-                        Name="CocosPositionToZeroButton" 
-                        VerticalAlignment="Top" 
-                        Command="{Binding Commander.CocosPositionToZero}"  
-                        common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonPositionKey}}"
-                        Style="{StaticResource ImageButton}"
-                        IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}">
-                </Button>
 
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="20" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" /> 
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <Button Grid.Column="0" Grid.Row="0" Width="20" Height="20" Name="PositionTopLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                    <Button Grid.Column="1" Grid.Row="0" Width="20" Height="20" Name="PositionTopButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Top}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                    <Button Grid.Column="2" Grid.Row="0" Width="20" Height="20" Name="PositionTopRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.TopRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowTopRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                    <Button Grid.Column="0" Grid.Row="1" Width="20" Height="20" Name="PositionLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Left}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                    <Button Grid.Column="1" Grid.Row="1" Width="20" Height="20" Name="PositionCenterButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Center}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonPositionKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                    <Button Grid.Column="2" Grid.Row="1" Width="20" Height="20" Name="PositionRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Right}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                    <Button Grid.Column="0" Grid.Row="2" Width="20" Height="20" Name="PositionBottomLeftButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomLeft}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomLeftKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                    <Button Grid.Column="1" Grid.Row="2" Width="20" Height="20" Name="PositionBottomButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.Bottom}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                    <Button Grid.Column="2" Grid.Row="2" Width="20" Height="20" Name="PositionBottomRightButton" VerticalAlignment="Top" Command="{Binding Commander.PositionUIElement}" CommandParameter="{x:Static common_prim:Positioning.BottomRight}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconArrowBottomRightKey}}" Style="{StaticResource ImageButton}" IsEnabled="{Binding GroupMaster.HasPickedSelectedElement}" />
+                </Grid>
+
+                <Grid Grid.Column="1" Height="60" Name="Temp">
+
+                    
+                </Grid>
+                <Grid Grid.Column="2" Width="10" Height="{Binding Height, ElementName=Temp, Converter={StaticResource AddConverter}, ConverterParameter={x:Static local:Constant.VisualHeightDifferenceBetweenDesignerAndReal}}" Background="Aquamarine" />
+               
 
                 <!-- 운영체제의 뷰와 디자이너 뷰간의 차이를 없애기위한 높이지정용도 컨트롤 -->
-                <Grid Grid.Column="1" Height="{Binding Height, ElementName=CocosPositionToZeroButton, Converter={StaticResource AddConverter}, ConverterParameter={x:Static local:Constant.VisualHeightDifferenceBetweenDesignerAndReal}}"  Background="Aquamarine"/>
+                
             </Grid>
             
         </StackPanel>
@@ -407,3 +427,5 @@
         
     </DockPanel>
 </Window>
+
+

@@ -1,0 +1,42 @@
+﻿<!-- 작성자: 윤정자
+     생성일: 3/9/2023 2:40:42 PM
+ -->
+
+<Window x:Class="SGToolsUI.View.LogView"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            
+            xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+            xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
+            xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+            xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+
+
+            xmlns:local="clr-namespace:SGToolsUI"
+            xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+            xmlns:model="clr-namespace:SGToolsUI.Model"
+            xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
+            xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
+            xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+
+            
+            xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
+            xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
+            xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
+            xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
+            
+            Name="View"
+            FontSize="14"
+            MinWidth="500"
+            AllowsTransparency="True" WindowStyle="None"
+            SizeToContent="WidthAndHeight"
+
+            Style="{StaticResource OneLineWindow}"
+            DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <DockPanel Name="MainPanel" DataContext="{Binding Path=ViewModel}">
+        <common_ctrl:TitleBar Title="로그 뷰" DockPanel.Dock="Top" RealClose="False"></common_ctrl:TitleBar>
+    </DockPanel>
+</Window>

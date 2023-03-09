@@ -40,13 +40,18 @@ namespace SGToolsCommon.CustomControl
             set => SetValue(TitleProperty, value);
         }
 
+        public bool RealClose
+        {
+            get => (bool)GetValue(RealCloseProperty);
+            set => SetValue(RealCloseProperty, value);
+        }
+
 
         private Window _window;
 
         public TitleBar()
         {
             InitializeComponent();
-            
             Loaded += (sender, args) =>
             {
                 _window = this.FindParent<Window>();
@@ -80,9 +85,20 @@ namespace SGToolsCommon.CustomControl
             }
         }
 
+        private void PinOnClick(object sender, RoutedEventArgs e)
+        {
+            if (_window.Topmost)
+                _window.Topmost = false;
+            else
+                _window.Topmost = true;
+        }
+
         private void CloseOnClick(object sender, RoutedEventArgs e)
         {
-            _window.Close();
+            if (RealClose)
+                _window.Close();
+            else
+                _window.Visibility = Visibility.Collapsed;
         }
 
         private void MaximizeOnClick(object sender, RoutedEventArgs e)
@@ -98,18 +114,26 @@ namespace SGToolsCommon.CustomControl
             _window.WindowState = WindowState.Minimized;
         }
 
+       
+
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            "Ttitle",
+            nameof(Title),
             typeof(string),
             typeof(TitleBar),
             new PropertyMetadata(null) { DefaultValue = "제목을 입력해주세요." });
 
+        public static readonly DependencyProperty RealCloseProperty = DependencyProperty.Register(
+            nameof(RealClose),
+            typeof(bool),
+            typeof(TitleBar),
+            new PropertyMetadata(true));
+
         public static readonly DependencyProperty DraggableProperty = DependencyProperty.Register(
-           "Draggable",
+           nameof(Draggable),
            typeof(bool),
            typeof(TitleBar),
            new PropertyMetadata(null) { DefaultValue = true });
 
-
+        
     }
 }

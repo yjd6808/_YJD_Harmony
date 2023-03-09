@@ -5,7 +5,7 @@
                     Background="White" />
     </ItemsPanelTemplate>
 
-    <Style TargetType="{x:Type MenuItem}">
+    <Style x:Key="NoItconMenuItem" TargetType="{x:Type MenuItem}">
         <Setter Property="ItemsPanel"
                 Value="{StaticResource MenuItemPanelTemplate}" />
     </Style>

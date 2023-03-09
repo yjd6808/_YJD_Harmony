@@ -21,6 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json.Linq;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsUI.Model
 {
@@ -39,6 +40,13 @@ namespace SGToolsUI.Model
         [DisplayName("아이템 선택시 트리뷰 자동확장 여부")]
         public bool AutoExpandWhenSelected { get; set; } = true;
 
+        [DisplayName("프로그램 실행후 로그뷰 보이기")]
+        public bool ShowLogViewWhenProgramLaunched { get; set; } = true;
+
+        [DisplayName("로그뷰 기본 위치")]
+        public Point LogViewPositionWhenProgramLaunched { get; set; } 
+
+
         public object Clone()
         {
             return new Setting()
@@ -46,7 +54,9 @@ namespace SGToolsUI.Model
                 SgaDirectory = SgaDirectory,
                 OutputDefinePath = OutputDefinePath,
                 OutputJsonPath = OutputJsonPath,
-                AutoExpandWhenSelected = AutoExpandWhenSelected
+                AutoExpandWhenSelected = AutoExpandWhenSelected,
+                ShowLogViewWhenProgramLaunched = ShowLogViewWhenProgramLaunched,
+                LogViewPositionWhenProgramLaunched = LogViewPositionWhenProgramLaunched
             };
         }
 
@@ -70,6 +80,19 @@ namespace SGToolsUI.Model
 
             if (root.TryGetValue("AutoExpandWhenSelected", out token))
                 AutoExpandWhenSelected = (bool)token;
+
+            if (root.TryGetValue("ShowLogViewWhenProgramLaunched", out token))
+                ShowLogViewWhenProgramLaunched = (bool)token;
+
+            Point temp = new ();
+
+            if (root.TryGetValue("LogViewPositionWhenProgramLaunchedX", out token))
+                temp.X = (int)token;
+
+            if (root.TryGetValue("LogViewPositionWhenProgramLaunchedY", out token))
+                temp.Y = (int)token;
+
+            LogViewPositionWhenProgramLaunched = temp;
             return true;
         }
 
@@ -80,6 +103,9 @@ namespace SGToolsUI.Model
             root["OutputDefinePath"] = OutputDefinePath;
             root["OutputJsonPath"] = OutputJsonPath;
             root["AutoExpandWhenSelected"] = AutoExpandWhenSelected;
+            root["ShowLogViewWhenProgramLaunched"] = ShowLogViewWhenProgramLaunched;
+            root["LogViewPositionWhenProgramLaunchedX"] = LogViewPositionWhenProgramLaunched.X;
+            root["LogViewPositionWhenProgramLaunchedY"] = LogViewPositionWhenProgramLaunched.Y;
             File.WriteAllText(Constant.SettingFileName, root.ToString());
         }
     }

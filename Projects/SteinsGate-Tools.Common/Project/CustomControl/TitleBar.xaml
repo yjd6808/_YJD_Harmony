@@ -32,13 +32,38 @@
                 <ColumnDefinition Width="30"></ColumnDefinition>
                 <ColumnDefinition Width="30"></ColumnDefinition>
                 <ColumnDefinition Width="30"></ColumnDefinition>
+                <ColumnDefinition Width="30"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <!--소스 설정을 해야 알림을 받음-->
             <TextBlock x:Name="_tbTitle" Text="{Binding Title, RelativeSource={RelativeSource  AncestorType={x:Type local:TitleBar}}}" VerticalAlignment="Center" FontSize="16"
                        Margin="5, 0, 0, 0">
             </TextBlock>
-            <Button Grid.Column="1" 
+            <Button Grid.Column="1" Click="PinOnClick">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ImageButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                         Value="True">
+                                <Setter Property="style:ImageButtonProperty.Image" Value="{
+                                        Binding 
+                                        Converter={StaticResource PackUrlImageSourceConverter},
+                                        ConverterParameter={x:Static res:R.IconCommonUnpinKey}}">
+                                </Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Topmost, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                         Value="False">
+                                <Setter Property="style:ImageButtonProperty.Image" Value="{
+                                        Binding 
+                                        Converter={StaticResource PackUrlImageSourceConverter},
+                                        ConverterParameter={x:Static res:R.IconCommonPinKey}}">
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Grid.Column="2" 
                     Style="{StaticResource ImageButton}" 
                     Click="MinimizeOnClick"
                     style:ImageButtonProperty.Image="{
@@ -46,7 +71,7 @@
                 Converter={StaticResource PackUrlImageSourceConverter},
                 ConverterParameter={x:Static res:R.IconWinMinimizeKey}}">
             </Button>
-            <Button Grid.Column="2" 
+            <Button Grid.Column="3" 
                     Style="{StaticResource ImageButton}" 
                     Click="MaximizeOnClick"
                     style:ImageButtonProperty.Image="{
@@ -54,7 +79,7 @@
                 Converter={StaticResource PackUrlImageSourceConverter},
                 ConverterParameter={x:Static res:R.IconWinMaximizeKey}}">
             </Button>
-            <Button Grid.Column="3" 
+            <Button Grid.Column="4" 
                     Style="{StaticResource ImageButton}" 
                     Click="CloseOnClick"
                     style:ImageButtonProperty.Image="{

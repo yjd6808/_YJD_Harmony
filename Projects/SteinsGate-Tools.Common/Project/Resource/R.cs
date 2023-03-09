@@ -5,13 +5,42 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Resources;
 
 namespace SGToolsCommon.Resource
 {
+
+
+    public enum IconCommonType
+    {
+        Checked,
+        Delete,
+        Down,
+        Empty,
+        Grid,
+        Music,
+        NotUsable,
+        Rect,
+        Refresh,
+        Reset,
+        Select,
+        Spark,
+        Up,
+        Position,
+        Anchor,
+        Unlock,
+        Info,
+        Backup,
+        Pin,
+        Unpin,
+        Max
+    }
+
     public class R
     {
         public const string ResourcePath = "pack://application:,,,/SGToolsCommon;component/Resource/";
@@ -35,11 +64,26 @@ namespace SGToolsCommon.Resource
         public const string IconCommonPositionKey = IconPath + "common_position.ico";
         public const string IconCommonAnchorKey = IconPath + "common_anchor.ico";
         public const string IconCommonUnlockKey = IconPath + "common_unlock.ico";
+        public const string IconCommonInfoKey = IconPath + "common_info.ico";
+        public const string IconCommonBackupKey = IconPath + "common_backup.ico";
+        public const string IconCommonPinKey = IconPath + "common_pin.ico";
+        public const string IconCommonUnpinKey = IconPath + "common_unpin.ico";
+
+        public const string IconArrowTopLeftKey = IconPath + "arrow_topleft.ico";
+        public const string IconArrowTopKey = IconPath + "arrow_top.ico";
+        public const string IconArrowTopRightKey = IconPath + "arrow_topright.ico";
+        public const string IconArrowRightKey = IconPath + "arrow_right.ico";
+        public const string IconArrowBottomRightKey = IconPath + "arrow_bottomright.ico";
+        public const string IconArrowBottomKey = IconPath + "arrow_bottom.ico";
+        public const string IconArrowBottomLeftKey = IconPath + "arrow_bottomleft.ico";
+        public const string IconArrowLeftKey = IconPath + "arrow_left.ico";
 
         public const string IconWinCloseKey = IconPath + "win_close.ico";
         public const string IconWinMaximizeKey = IconPath + "win_maximize.ico";
         public const string IconWinMinimizeKey = IconPath + "win_minimize.ico";
 
+       
+        private static readonly BitmapImage[] IconCommonMap = new BitmapImage[(int)IconCommonType.Max];
         public static readonly Lazy<Cursor> DragAndDropCursor = new(() => ReadCursor(CursorPath + "drag_and_drop.ani"));
 
         private static Cursor ReadCursor(string cursorPackPath)
@@ -49,6 +93,41 @@ namespace SGToolsCommon.Resource
             sri.Stream.Read(buffer, 0, buffer.Length);
             MemoryStream ms = new MemoryStream(buffer);
             return new Cursor(ms);
+        }
+
+        private static string GetIconCommonKey(IconCommonType type)
+        {
+            switch (type)
+            {
+                case IconCommonType.Checked:        return IconCommonCheckedKey;
+                case IconCommonType.Delete:         return IconCommonDeleteKey;
+                case IconCommonType.Down:           return IconCommonDownKey;
+                case IconCommonType.Empty:          return IconCommonEmptyKey;
+                case IconCommonType.Grid:           return IconCommonGridKey;
+                case IconCommonType.Music:          return IconCommonMusicKey;
+                case IconCommonType.NotUsable:      return IconCommonNotUsableKey;
+                case IconCommonType.Rect:           return IconCommonRectKey;
+                case IconCommonType.Refresh:        return IconCommonRefreshKey;
+                case IconCommonType.Reset:          return IconCommonResetKey;
+                case IconCommonType.Select:         return IconCommonSelectKey;
+                case IconCommonType.Spark:          return IconCommonSparkKey;
+                case IconCommonType.Up:             return IconCommonUpKey;
+                case IconCommonType.Position:       return IconCommonPositionKey;
+                case IconCommonType.Anchor:         return IconCommonAnchorKey;
+                case IconCommonType.Unlock:         return IconCommonUnlockKey;
+                case IconCommonType.Info:           return IconCommonInfoKey;
+                case IconCommonType.Backup:         return IconCommonBackupKey;
+                default:  throw new ArgumentException("몽미");
+            }
+        }
+
+        public static BitmapImage GetIconCommon(IconCommonType type)
+        {
+            int index = (int)type;
+            if (IconCommonMap[index] == null)
+                IconCommonMap[index] = new BitmapImage(new Uri(GetIconCommonKey(type)));
+
+            return IconCommonMap[index];
         }
     }
 }

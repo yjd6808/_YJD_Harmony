@@ -23,6 +23,7 @@ using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsUI.CustomControl;
 using SGToolsUI.ViewModel;
+using Point = System.Windows.Point;
 
 namespace SGToolsUI.Model
 {

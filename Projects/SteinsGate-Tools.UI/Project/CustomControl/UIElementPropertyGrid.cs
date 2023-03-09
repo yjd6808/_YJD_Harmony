@@ -29,6 +29,7 @@ using SGToolsUI.Model;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using System.Reflection.PortableExecutable;
+using Point = System.Windows.Point;
 
 namespace SGToolsUI.CustomControl
 {
