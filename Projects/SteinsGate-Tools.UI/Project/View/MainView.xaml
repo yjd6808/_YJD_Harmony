@@ -60,7 +60,15 @@
         
             ############################################################################### -->
 
-        <common_ctrl:TitleBar Name="TitlePanel" Title="슈타인즈게이트 : UITool" DockPanel.Dock="Top"/>
+        <!---->
+        <common_ctrl:TitleBar Name="TitlePanel" 
+                              FontSize="16"
+                              Title="{x:Static local:Constant.Title}" 
+                              DockPanel.Dock="Top" 
+                              TitleContentMargin="0, 0, 5, 0"
+                              TitleContent="{Binding DataContext.LogBox.LastLog, RelativeSource={RelativeSource AncestorType=DockPanel}}"
+                              TitleContentTemplate="{StaticResource TitleLogDataTemplate}">
+        </common_ctrl:TitleBar>
         <Separator DockPanel.Dock="Top">
         </Separator>
 
@@ -118,8 +126,14 @@
             ############################################################################### -->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="파일">
-                <MenuItem Header="열기"/>
-                <MenuItem Header="저장" />
+                <MenuItem Header="툴 데이터 열기" Command="{Binding Commander.FileUIToolDataOpen}"/>
+                <MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSave}" CommandParameter="0"/>
+                <MenuItem Header="툴 데이터 다른이름 저장" Command="{Binding Commander.FileUIToolDataSave}" CommandParameter="1"/>
+                <Separator />
+                <MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSave}" CommandParameter="0"/>
+                <MenuItem Header="게임 데이터 다른이름 저장" Command="{Binding Commander.FileGameDataSave}" CommandParameter="1"/>
+                <Separator />
+                <MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileExportHeader}" />
             </MenuItem>
             <MenuItem Style="{StaticResource MenuItemSeparator}"/>
             <MenuItem Header="보기">

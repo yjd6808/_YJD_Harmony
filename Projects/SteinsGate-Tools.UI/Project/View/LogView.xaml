@@ -29,14 +29,13 @@
             
             Name="View"
             FontSize="14"
-            MinWidth="500"
             AllowsTransparency="True" WindowStyle="None"
             SizeToContent="WidthAndHeight"
-
+            Activated="LogView_OnActivated"
             Style="{StaticResource OneLineWindow}"
             DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <DockPanel Name="MainPanel" DataContext="{Binding Path=ViewModel}">
-        <common_ctrl:TitleBar Title="로그 뷰" DockPanel.Dock="Top" RealClose="False"></common_ctrl:TitleBar>
+        <common_ctrl:TitleBar FontSize="16"  Title="로그 뷰" DockPanel.Dock="Top" RealClose="False"/>
     </DockPanel>
 </Window>

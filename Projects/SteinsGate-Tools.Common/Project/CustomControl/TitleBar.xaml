@@ -29,6 +29,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="30"></ColumnDefinition>
                 <ColumnDefinition Width="30"></ColumnDefinition>
                 <ColumnDefinition Width="30"></ColumnDefinition>
@@ -36,10 +37,20 @@
             </Grid.ColumnDefinitions>
 
             <!--소스 설정을 해야 알림을 받음-->
-            <TextBlock x:Name="_tbTitle" Text="{Binding Title, RelativeSource={RelativeSource  AncestorType={x:Type local:TitleBar}}}" VerticalAlignment="Center" FontSize="16"
+            <TextBlock x:Name="_tbTitle" Text="{Binding Title, RelativeSource={RelativeSource  AncestorType={x:Type local:TitleBar}}}" VerticalAlignment="Center"
                        Margin="5, 0, 0, 0">
             </TextBlock>
-            <Button Grid.Column="1" Click="PinOnClick">
+            <ContentControl Grid.Column="1" 
+                            Height="30"
+                            VerticalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Aquamarine"
+                            Margin="{Binding TitleContentMargin}" 
+                            Content="{Binding TitleContent}" 
+                            ContentTemplate="{Binding TitleContentTemplate}">
+            </ContentControl>
+
+            <Button Grid.Column="2" Click="PinOnClick">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource ImageButton}">
                         <Style.Triggers>
@@ -63,7 +74,7 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <Button Grid.Column="2" 
+            <Button Grid.Column="3" 
                     Style="{StaticResource ImageButton}" 
                     Click="MinimizeOnClick"
                     style:ImageButtonProperty.Image="{
@@ -71,7 +82,7 @@
                 Converter={StaticResource PackUrlImageSourceConverter},
                 ConverterParameter={x:Static res:R.IconWinMinimizeKey}}">
             </Button>
-            <Button Grid.Column="3" 
+            <Button Grid.Column="4" 
                     Style="{StaticResource ImageButton}" 
                     Click="MaximizeOnClick"
                     style:ImageButtonProperty.Image="{
@@ -79,7 +90,7 @@
                 Converter={StaticResource PackUrlImageSourceConverter},
                 ConverterParameter={x:Static res:R.IconWinMaximizeKey}}">
             </Button>
-            <Button Grid.Column="4" 
+            <Button Grid.Column="5" 
                     Style="{StaticResource ImageButton}" 
                     Click="CloseOnClick"
                     style:ImageButtonProperty.Image="{

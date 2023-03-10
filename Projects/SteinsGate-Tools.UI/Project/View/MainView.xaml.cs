@@ -33,6 +33,7 @@ using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 using Xceed.Wpf.AvalonDock.Controls;
+using Xceed.Wpf.AvalonDock.Properties;
 
 namespace SGToolsUI.View
 {
@@ -44,13 +45,10 @@ namespace SGToolsUI.View
 
         public MainView()
         {
-           
-
             ViewModel = new MainViewModel();
             ViewModel.View = this;
             ViewModel.KeyState.KeyDown += MainView_OnKeyDown;
             ViewModel.KeyState.KeyUp += MainView_OnKeyUp;
-            Resources.Add("ViewModel", ViewModel);
             InitializeComponent();
 
             #region  A
@@ -150,6 +148,14 @@ namespace SGToolsUI.View
             ViewModel.GroupMaster.DebugUpdate();
         }
 
+        private void MainView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Loaded();
+            InitializeZoomStateBinding();       // 컴포넌트가 모두 초기화된 후에 윈도우 사이즈가 최종결정되기 때문에.. Xaml에서 작성하지 않고 C# 코드로 작성하도록 한다.
+            InitializeDragEndTargets();
+        }
+
+
         private void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
             ViewModel.LogView.Close();
@@ -158,12 +164,7 @@ namespace SGToolsUI.View
             ViewModel.Commander.Finalize();
         }
 
-        private void MainView_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            InitializeZoomStateBinding();       // 컴포넌트가 모두 초기화된 후에 윈도우 사이즈가 최종결정되기 때문에.. Xaml에서 작성하지 않고 C# 코드로 작성하도록 한다.
-            InitializeDragEndTargets();
-        }
-
+     
 
 
 

@@ -35,20 +35,21 @@ namespace SGToolsCommon.Extension
             return new Vector(point.X, point.Y);
         }
 
-        public static string ToSpacedString(this Vector vector)
+        public static string ToFullString(this Vector vector)
         {
-            return $"{vector.X:F0} {vector.Y:F0}";
+            return $"{vector.X} {vector.Y:F0}";
         }
 
-        public static string ToSpacedString(this Point point)
+        public static string ToFullString(this Point point)
         {
-            return $"{point.X:F0} {point.Y:F0}";
+            return $"{(int)point.X} {(int)point.Y}";
         }
 
         public static double Distance(this Point point, Point other)
         {
             return Point.Subtract(point, other).Length;
         }
+
 
     }
 

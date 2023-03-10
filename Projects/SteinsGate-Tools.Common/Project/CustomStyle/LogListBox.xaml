@@ -1,7 +1,63 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cus_ctrl="clr-namespace:SGToolsCommon.CustomControl"
+                    xmlns:conv="clr-namespace:SGToolsCommon.Converter"
                     xmlns:local="clr-namespace:SGToolsCommon">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Converter/All.xaml"></ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate x:Key="TitleLogDataTemplate" DataType="{x:Type cus_ctrl:LogData}">
+        <StackPanel Orientation="Horizontal" Name="Panel">
+            <Image Width="30" 
+                   Height="30" 
+                   Source="{Binding HeaderImageSource}"/>
+            <TextBlock Text="{Binding 
+                Log, 
+                Converter={x:Static conv:CutStringConverter.Instance}, 
+                ConverterParameter={x:Static local:Constant.TitleLogMaxLength}}"
+                 Foreground="{Binding Foreground}"
+                 Margin="3, 0, 0, 0"
+                 VerticalAlignment="Center"
+                 ClipToBounds="True"
+                 TextWrapping="NoWrap" >
+            </TextBlock>
+        </StackPanel>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="LogListBoxDataTemplate" DataType="{x:Type cus_ctrl:LogData}">
+        <StackPanel Orientation="Horizontal" 
+                    Name="Panel"
+                    Width="{
+            Binding Width,
+            Mode=OneTime,
+            RelativeSource={RelativeSource AncestorType= ListBox}, 
+            Converter={StaticResource SubConverter}, 
+            ConverterParameter={x:Static local:Constant.LogListBoxItemWidthDecrease}}">
+            <Border BorderThickness="0, 0, 0, 1" BorderBrush="DarkGray">
+                <Image Width="{x:Static local:Constant.LogListBoxItemHeaderImageSize}" 
+                       Height="{x:Static local:Constant.LogListBoxItemHeaderImageSize}" 
+                       Source="{Binding HeaderImageSource, Mode=OneTime}"/>
+            </Border>
+            <Border BorderThickness="0, 0, 0, 1" BorderBrush="DarkGray">
+                <TextBlock Text="{Binding Log, Mode=OneTime}"
+                         FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=OneTime}"
+                         Foreground="{Binding Foreground, Mode=OneTime}"
+                         Width="{Binding 
+                    Width, 
+                    ElementName=Panel, 
+                    Converter={StaticResource SubConverter}, 
+                    ConverterParameter={x:Static local:Constant.LogListBoxItemHeaderImageSize}}"
+                         Margin="3, 0, 0, 0"
+                         VerticalAlignment="Center"
+                         TextWrapping="Wrap" >
+                </TextBlock>
+            </Border>
+        </StackPanel>
+    </DataTemplate>
+
     <Style x:Key="LogListBox" TargetType="ListBox">
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
@@ -12,40 +68,6 @@
         </Setter>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"></Setter>
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate DataType="{x:Type cus_ctrl:LogData}">
-                    <StackPanel Orientation="Horizontal" 
-                                Name="Panel"
-                                Width="{
-                        Binding Width,
-                        Mode=OneTime,
-                        RelativeSource={RelativeSource AncestorType= ListBox}, 
-                        Converter={StaticResource SubConverter}, 
-                        ConverterParameter={x:Static local:Constant.LogListBoxItemWidthDecrease}}">
-                        <Border BorderThickness="0, 0, 0, 1" BorderBrush="DarkGray">
-                            <Image Width="{x:Static local:Constant.LogListBoxItemHeaderImageSize}" 
-                                   Height="{x:Static local:Constant.LogListBoxItemHeaderImageSize}" 
-                                   Source="{Binding HeaderImageSource, Mode=OneTime}"/>
-                        </Border>
-                        <Border BorderThickness="0, 0, 0, 1" BorderBrush="DarkGray">
-                            <TextBlock Text="{Binding Log, Mode=OneTime}"
-                                 FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=OneTime}"
-                                 Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=OneTime}"
-                                 Width="{Binding 
-                            Width, 
-                            ElementName=Panel, 
-                            Converter={StaticResource SubConverter}, 
-                            ConverterParameter={x:Static local:Constant.LogListBoxItemHeaderImageSize}}"
-                                 Margin="3, 0, 0, 0"
-                                 VerticalAlignment="Center"
-                                 TextWrapping="Wrap" >
-                        </TextBlock>
-                        </Border>
-                    </StackPanel>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-
+        <Setter Property="ItemTemplate" Value="{StaticResource LogListBoxDataTemplate}"/>
     </Style>
 </ResourceDictionary>

@@ -18,6 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json.Linq;
+using SGToolsUI.File;
 
 namespace SGToolsUI.Model
 {
@@ -32,6 +34,11 @@ namespace SGToolsUI.Model
         {
             SGUIToggleButton clone = new SGUIToggleButton();
             return clone;
+        }
+
+        public override JObject ToJObject(SaveMode mode)
+        {
+            throw new NotImplementedException();
         }
     }
 }

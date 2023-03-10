@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 3/9/2023 2:43:25 PM
+ * 생성일: 3/10/2023 8:57:49 AM
  *
  */
 
@@ -19,13 +19,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsUI.ViewModel
+namespace SGToolsUI.File
 {
-    public class LogViewModel
+    public static class SGUIExporter
     {
-        public LogViewModel()
-        {
-
-        }
     }
 }

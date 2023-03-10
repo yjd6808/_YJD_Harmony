@@ -14,6 +14,7 @@ using System.Net.WebSockets;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -30,25 +31,27 @@ using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
+using SGToolsUI.File;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using Point = System.Windows.Point;
 
 namespace SGToolsUI.Model
 {
-
     [CategoryOrder(Constant.ElementCategoryName, Constant.ElementCategoryOrder)]
-    public abstract class SGUIElement : CanvasElement, ICloneable
+    public abstract class SGUIElement : CanvasElement, ICloneable, IComparer<SGUIElement>
     {
         public const int OrderUIElementType = 1;
         public const int OrderCodeString = 2;
         public const int OrderVisualName = 3;
         public const int OrderDefineName = 4;
         public const int OrderVisualPosition = 5;
-        public const int OrderCocosPosition = 6;
-        public const int OrderVisualSize = 7;
-        public const int OrderIsVisible = 8;
-        public const int OrderCanvasSelectable = 9;
-        public const int OrderDepth = 10;
+        public const int OrderRelativePosition = 6;    // 엘리먼트들
+        public const int OrderVisualSize = 6;
+        public const int OrderVAlignment = 7;
+        public const int OrderHAlignment = 8;
+        public const int OrderIsVisible = 9;
+        public const int OrderCanvasSelectable = 10;
+        public const int OrderDepth = 11;
 
         public const string PickedKey = nameof(Picked);
 
@@ -102,6 +105,8 @@ namespace SGToolsUI.Model
             } 
         }
 
+
+
         [Category(Constant.ElementCategoryName), DisplayName("위치 (절대)"), PropertyOrder(OrderVisualPosition)]
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
         public Point VisualPosition
@@ -112,33 +117,112 @@ namespace SGToolsUI.Model
                 _visualRect.Location = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
-                OnPropertyChanged(nameof(CocosRelativePosition));
+                OnPropertyChanged(nameof(RelativePosition));
 
                 if (IsGroup)
                 {
                     SGUIGroup group = Cast<SGUIGroup>();
 
-                    group.OnPropertyChanged(SGUIGroup.VisualPositionAnchorRelativeKey);
-                    group.OnPropertyChanged(SGUIGroup.VisualPositionAnchorAbsoluteKey);
+                    group.OnPropertyChanged(nameof(VisualPositionAnchorRelative));
+                    group.OnPropertyChanged(nameof(VisualPositionAnchorAbsolute));
                 }
             }
         }
 
-        [Category(Constant.ElementCategoryName), DisplayName("위치 (상대)"), PropertyOrder(OrderCocosPosition)]
-        [Description("VAlign, HAlign을 적용시킨 위치이고 이때 좌표계는 코코스 좌표계를 따른다.")]
-        public Point CocosRelativePosition
+        [Category(Constant.ElementCategoryName), DisplayName("위치 (상대)"), PropertyOrder(OrderRelativePosition)]
+        [Description("VAlign, HAlign을 적용시킨 위치이고 이때 좌표계는 특별히 코코스 좌표계를 따른다.")]
+        public Point RelativePosition
         {
             get
             {
                 if (Parent == null)  throw new Exception("마스터 그룹은 호출 금지");
-                return ConvertCocosRelativePosition(Parent);
+                return ConvertVisualPositionToRelativePosition(Parent);
             }
             set
             {
                 // 정렬 좌표를 받는다.
                 if (Parent == null) throw new Exception("마스터 그룹은 호출 금지");
-                VisualPosition = ConvertVisualPosition(Parent, value);
+                VisualPosition = ConvertRelativePositionToVisualPosition(Parent, value);
                 OnPropertyChanged();
+            }
+        }
+
+
+        [Category(Constant.ElementCategoryName), DisplayName("수직 정렬"), PropertyOrder(OrderVAlignment)]
+        [Description("UI 그룹내 자식의 세로 정렬 기준입니다.")]
+        public VAlignment VerticalAlignment
+        {
+            get => _verticalAlignment;
+            set
+            {
+                if (_verticalAlignment == value)
+                    return;
+
+                _verticalAlignment = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RelativePosition));
+                OnPropertyChanged(nameof(VisualPositionAnchorAbsolute));
+            }
+        }
+
+
+        [Category(Constant.ElementCategoryName), DisplayName("가로 정렬"), PropertyOrder(OrderHAlignment)]
+        [Description("UI 그룹내 자식의 가로 정렬 기준입니다.")]
+        public HAlignment HorizontalAlignment
+        {
+            get => _horizontalAlignment;
+            set
+            {
+                if (_horizontalAlignment == value)
+                    return;
+
+                _horizontalAlignment = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(RelativePosition));
+                OnPropertyChanged(nameof(VisualPositionAnchorAbsolute));
+            }
+        }
+
+
+        [Browsable(false)]
+        // 앵커의 위치 (절대)
+        public Point VisualPositionAnchorAbsolute
+        {
+            get
+            {
+                Point absoluteAnchorPosition = VisualPosition;
+                Point relativeAnchorPosition = VisualPositionAnchorRelative;
+
+                absoluteAnchorPosition.X += relativeAnchorPosition.X;
+                absoluteAnchorPosition.Y += relativeAnchorPosition.Y;
+                return absoluteAnchorPosition;
+            }
+        }
+
+
+        [Browsable(false)]
+        // 엘리먼트 좌상단 위치를 기준으로 앵커의 위치
+        public Point VisualPositionAnchorRelative
+        {
+            get
+            {
+                Point relativeAnchorRelative;
+
+                switch (HorizontalAlignment)
+                {
+                    /* case HorizontalAlignment.Left: relativeAnchorRelative.X = 0;  break; */
+                    case HAlignment.Center: relativeAnchorRelative.X = VisualSize.Width / 2;   break;
+                    case HAlignment.Right: relativeAnchorRelative.X = VisualSize.Width;        break;
+                }
+
+                switch (VerticalAlignment)
+                {
+                    /* case HorizontalAlignment.Top: relativeAnchorRelative.Y = 0;  break; */
+                    case VAlignment.Center: relativeAnchorRelative.Y = VisualSize.Height / 2;   break;
+                    case VAlignment.Bottom: relativeAnchorRelative.Y = VisualSize.Height;       break;
+                }
+
+                return relativeAnchorRelative;
             }
         }
 
@@ -168,9 +252,6 @@ namespace SGToolsUI.Model
                 OnPropertyChanged(nameof(VisualRect));
             }
         }
-
-        
-
         
 
         [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(OrderIsVisible)]
@@ -230,8 +311,7 @@ namespace SGToolsUI.Model
 
 
         [Browsable(false)]
-        [Category(Constant.ElementCategoryName)]
-        [DisplayName(nameof(Selected))]
+        [Category(Constant.ElementCategoryName), DisplayName(nameof(Selected))]
         [Description("엘리먼트가 트리뷰/캔버스 상에서 선택되었는지 ")]
         public bool Selected
         {
@@ -373,7 +453,9 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Browsable(false)] public bool FirstPicked => ViewModel.GroupMaster.PickedElement == this;
+        [Browsable(false)] 
+        public bool FirstPicked => ViewModel.GroupMaster.PickedElement == this;
+
 
         [Browsable(false)]
         public bool LastPicked
@@ -688,7 +770,7 @@ namespace SGToolsUI.Model
         }
 
         // 트리뷰 모든 원소부터 위에서부터 한칸씩 계층구조 신경쓰지않고 확인했을 때 누가 위에있고 아래에잇는지 검사
-        public int Compare(SGUIElement lhsElement, SGUIElement rhsElement)
+        public int CompareHeight(SGUIElement lhsElement, SGUIElement rhsElement)
         {
             List<SGUIGroup> lhsTrack = lhsElement.ParentTrack.Reverse().ToList();
             List<SGUIGroup> rhsTrack = rhsElement.ParentTrack.Reverse().ToList();
@@ -776,7 +858,8 @@ namespace SGToolsUI.Model
         }
 
         // group내의 좌하단 좌표를 기준으로 this의 좌하단의 상대적 위치(코코스 좌표계)
-        public Point ConvertCocosRelativePosition(SGUIGroup group)
+        /*
+        public Point ConvertVisualPositionToElementPosition(SGUIGroup group)
         {
             return new Point(
                 VisualPosition.X - group.VisualPosition.X,
@@ -784,23 +867,23 @@ namespace SGToolsUI.Model
             );
         }
 
-        public Point ConvertVisualPosition(SGUIGroup group, Point cocosRelativePosition)
+        public Point ConvertElementPositionToVisualPosition(SGUIGroup group, Point cocosRelativePosition)
         {
             return new Point(
                 group.VisualPosition.X + cocosRelativePosition.X,
                 group.VisualPosition.Y + group.VisualSize.Height - VisualSize.Height - cocosRelativePosition.Y
             );
         }
+        */
 
-        /*
-        public Point ConvertCocosPositionToVisualPosition(SGUIGroup group, Point alignedPosition)
+        public Point ConvertRelativePositionToVisualPosition(SGUIGroup group, Point relativePosition)
         {
             Point visualPos;
 
-            switch (group.HorizontalAlignment)
+            switch (_horizontalAlignment)
             {
-                case HAlignment.Left: 
-                    visualPos.X = group.VisualPosition.X; 
+                case HAlignment.Left:
+                    visualPos.X = group.VisualPosition.X;
                     break;
                 case HAlignment.Center:
                     visualPos.X = group.VisualPosition.X +
@@ -814,9 +897,9 @@ namespace SGToolsUI.Model
                     break;
             }
 
-            switch (group.VerticalAlignment)
+            switch (_verticalAlignment)
             {
-                case VAlignment.Top: 
+                case VAlignment.Top:
                     visualPos.Y = group.VisualPosition.Y;
                     break;
                 case VAlignment.Center:
@@ -831,17 +914,17 @@ namespace SGToolsUI.Model
                     break;
             }
 
-            visualPos.X += alignedPosition.X;
-            visualPos.Y += alignedPosition.Y;
+            visualPos.X += relativePosition.X;
+            visualPos.Y += relativePosition.Y;
             return visualPos;
         }
 
-        public Point ConvertVisualPositionToCocosAlignPosition(SGUIGroup group)
+        public Point ConvertVisualPositionToRelativePosition(SGUIGroup group)
         {
             Point alignedPos;
 
 
-            switch (group.HorizontalAlignment)
+            switch (_horizontalAlignment)
             {
                 case HAlignment.Left:
                     alignedPos.X = VisualPosition.X - group.VisualPosition.X;
@@ -854,7 +937,7 @@ namespace SGToolsUI.Model
                     break;
             }
 
-            switch (group.VerticalAlignment)
+            switch (_verticalAlignment)
             {
                 case VAlignment.Top:
                     alignedPos.Y = group.VisualPosition.Y - VisualPosition.Y;
@@ -869,7 +952,7 @@ namespace SGToolsUI.Model
 
             return alignedPos;
         }
-        */
+
 
         public void SetPosition(VAlignment vAlign, HAlignment hAlign, Point point)
         {
@@ -889,7 +972,6 @@ namespace SGToolsUI.Model
             {
                 case HAlignment.Center:
                     zeroPosition.X = groupPosition.X + Parent.VisualSize.Width / 2 - VisualSize.Width / 2;
-                    
                     break;
                 case HAlignment.Right:
                     zeroPosition.X = groupPosition.X + Parent.VisualSize.Width - VisualSize.Width;
@@ -901,6 +983,8 @@ namespace SGToolsUI.Model
             VisualPosition = zeroPosition;
         }
 
+
+        // 9방향위치에 딱 붙여서 배치하는 용도
         public void SetPositionZero(VAlignment vAlign, HAlignment hAlign)
             => SetPosition(vAlign, hAlign, PointEx.Zero);
 
@@ -926,6 +1010,33 @@ namespace SGToolsUI.Model
             return casted;
         }
 
+        public int Compare(SGUIElement lhs, SGUIElement rhs)
+        {
+            return lhs.Code.CompareTo(rhs.Code);
+        }
+
+
+        protected void CopyFrom(JObject root, SaveMode mode)
+        {
+            if (mode == SaveMode.UIToolData)
+            {
+                root["code"] = Code;
+                root["name"] = _visualName;
+                root["dname"] = _defineName;
+                root["size"] = _visualRect.ToSizeString();
+                root["valign"] = (int)_verticalAlignment;
+                root["halign"] = (int)_horizontalAlignment;
+            }
+            else if (mode == SaveMode.GameData)
+            {
+
+            }
+            else
+            {
+                throw new Exception("CopyFrom 저장모드가 이상합니다.");
+            }
+        }
+        public abstract JObject ToJObject(SaveMode mode);
         public override string ToString() => _visualName;
 
         protected string _visualName = string.Empty;
@@ -935,8 +1046,9 @@ namespace SGToolsUI.Model
         protected bool _deleted = false;
         protected bool _picked = false;
         protected bool _canvasSelectable = true;
+        protected HAlignment _horizontalAlignment = HAlignment.Left;
+        protected VAlignment _verticalAlignment = VAlignment.Bottom;
         protected TreeViewItem _treeViewItem;
-
         protected string _defineName;
 
         

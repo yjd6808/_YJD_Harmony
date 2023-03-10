@@ -9,7 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,16 +29,20 @@ namespace SGToolsCommon.CustomControl
 {
     public class LogData
     {
-        public LogData(string log, object data, BitmapImage headerImageSource)
+        public LogData(string log, object data, BitmapImage headerImageSource, Brush foreground = null)
         {
             Log = log;
             Data = data;
             HeaderImageSource = headerImageSource;
+
+            if (foreground != null)
+                Foreground = foreground;
         }
 
         
         public string Log { get; set; }
         public object Data { get; set; }
+        public Brush Foreground { get; } = Brushes.Black;
         public BitmapImage HeaderImageSource { get; }
         public bool HasData => Data != null;
     }
@@ -50,9 +56,20 @@ namespace SGToolsCommon.CustomControl
             => LogData = logData;
     }
 
-    public class LogListBox : ListBox
+    public class LogListBox : ListBox, INotifyPropertyChanged
     {
         public ObservableCollection<LogData> Logs { get; } = new ();
+
+        public LogData LastLog
+        {
+            get => _lastLog;
+            set
+            {
+                _lastLog = value;
+                OnPropertyChanged();
+            }
+        }
+        private LogData _lastLog = new ("안녕", null, R.GetIconCommon(IconCommonType.Empty), Brushes.Bisque);
 
         public LogListBox()
         {
@@ -67,14 +84,15 @@ namespace SGToolsCommon.CustomControl
         }
 
         public void AddLog(Exception e)
-            => AddLog(e.Message + "\n" + e.StackTrace.Split('\n').Last(), null, IconCommonType.NotUsable);
+            => AddLog(e.Message + "\n" + e.StackTrace.Split('\n').Last(), null, IconCommonType.NotUsable, Brushes.Crimson);
 
-        public void AddLog(string log, object data = null, IconCommonType type = IconCommonType.Info)
+        public void AddLog(string log, object data = null, IconCommonType type = IconCommonType.Info, Brush brush = null)
         {
             if (Logs.Count > MaxItemCount)
                 Logs.RemoveAt(0);
 
-            Logs.Add(new LogData(log, data, R.GetIconCommon(type)));
+            LastLog = new LogData(log, data, R.GetIconCommon(type), brush);
+            Logs.Add(LastLog);
 
             if (Logs.Count > 0)
                 ScrollIntoView(Logs.Last());
@@ -113,5 +131,13 @@ namespace SGToolsCommon.CustomControl
             typeof(RoutedEventHandler),
             typeof(LogListBox)
         );
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
     }
 }

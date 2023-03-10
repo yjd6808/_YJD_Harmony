@@ -10,5 +10,6 @@ namespace SGToolsCommon
     {
         public const double LogListBoxItemHeaderImageSize = 16;
         public const double LogListBoxItemWidthDecrease = 35;
+        public const int TitleLogMaxLength = 50;
     }
 }

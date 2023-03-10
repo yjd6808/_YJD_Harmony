@@ -34,5 +34,10 @@ namespace SGToolsUI.View
             MainPanel.Children.Add(box);
             DockPanel.SetDock(box, Dock.Top);
         }
+
+        private void LogView_OnActivated(object? sender, EventArgs e)
+        {
+        }
+
     }
 }

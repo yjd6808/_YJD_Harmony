@@ -25,6 +25,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using MoreLinq;
+using SGToolsCommon.Primitive;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Model
@@ -52,7 +53,7 @@ namespace SGToolsUI.Model
             SelectedElements.CollectionChanged += SelectedElementsOnCollectionChanged;
             PickedElements = new ObservableElementsCollection(120, viewModel);
             PickedElements.CollectionChanged += PickedElementsOnCollectionChanged;
-            Groups = new List<SGUIGroup>(120);
+            Groups = new SortedList<int, SGUIGroup>(120);   // C++의 map같은 녀석임
             Elements = new LinkedList<SGUIElement>();
 
 
@@ -105,7 +106,7 @@ namespace SGToolsUI.Model
         public ObservableCollection<SGUIElement> PickedElements { get; }
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
         public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
-        public List<SGUIGroup> Groups { get; }
+        public SortedList<int, SGUIGroup> Groups { get; }
         public LinkedList<SGUIElement> Elements { get; }
 
         // 코드 어사이너!
@@ -120,18 +121,18 @@ namespace SGToolsUI.Model
         public void AddGroup(SGUIGroup group)
         {
             int assignedCode = _codeAssigner.Dequeue();
-            Groups.Add(group);
             group.SetCode(assignedCode);
+            Groups.Add(group.Code, group);
 
             Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
         }
 
         public void RemoveGroup(SGUIGroup group)
         {
-            if (!Groups.Remove(group))
-                throw new Exception("그룹목록에서 삭제하는데 실패했습니다.");
-
             _codeAssigner.Enqueue(group.Code, group.Code);
+
+            if (!Groups.Remove(group.Code))
+                throw new Exception("그룹목록에서 삭제하는데 실패했습니다.");
 
             Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
         }
@@ -236,7 +237,7 @@ namespace SGToolsUI.Model
             SGUIElement high = rhsElement;
 
             
-            int comp = Compare(lhsElement, rhsElement);
+            int comp = CompareHeight(lhsElement, rhsElement);
 
             // 좌측 엘리먼트가 우선순위가 더 큰경우 스왑
             if (comp > 0)
@@ -288,6 +289,23 @@ namespace SGToolsUI.Model
             return result;
         }
 
+        public SGUIElement GetElementByCode(int code)
+        {
+            int groupCode = (code / Constant.GroupCodeInterval) * Constant.GroupCodeInterval;
+            int codeIndex = code % Constant.GroupCodeInterval;
+
+            if (!Groups.ContainsKey(groupCode))
+                throw new Exception($"{code}의 그룹을 찾지 못했습니다.");
+
+            SGUIGroup group = Groups[groupCode];
+            if (codeIndex == 0)
+                return group;
+
+            if (codeIndex - 1 < group.ChildCount)
+                throw new Exception($"{group}에서 {codeIndex - 1}인덱스에 있는 엘리먼트를 찾지못했습니다.");
+
+            return group.Children[codeIndex - 1];
+        }
 
         public void Backup(string tag)
         {
@@ -309,6 +327,19 @@ namespace SGToolsUI.Model
 
         public void Load(string path)
         {
+        }
+
+        public static SGUIGroupMaster Create(MainViewModel viewModel)
+        {
+            return new SGUIGroupMaster(viewModel)
+            {
+                DefineName = "group_master",
+                VisualRect = new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight),
+                VisualName = "그룹 마스터",
+                Selected = false,
+                VerticalAlignment = VAlignment.Top,
+                HorizontalAlignment = HAlignment.Left,
+            };
         }
 
 #if DEBUG

@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 3/9/2023 2:43:25 PM
+ * 생성일: 3/10/2023 11:55:35 AM
  *
  */
 
@@ -18,12 +18,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsUI.ViewModel;
 
-namespace SGToolsUI.ViewModel
+namespace SGToolsUI.Command.MainViewCommand
 {
-    public class LogViewModel
+    public class FileExportHeader : MainCommandAbstract
     {
-        public LogViewModel()
+        public FileExportHeader(MainViewModel viewModel) 
+            : base(viewModel, "UI툴 데이터의 디파인을 추출하여 저장합니다.")
+        {
+        }
+
+        public override void Execute(object? parameter)
         {
 
         }

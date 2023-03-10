@@ -40,10 +40,30 @@ namespace SGToolsCommon.CustomControl
             set => SetValue(TitleProperty, value);
         }
 
+
+        // true로 설정시 코드로 반드시 마지막에 Close 수동 
         public bool RealClose
         {
             get => (bool)GetValue(RealCloseProperty);
             set => SetValue(RealCloseProperty, value);
+        }
+
+        public object TitleContent
+        {
+            get => (object)GetValue(TitleContentProperty);
+            set => SetValue(TitleContentProperty, value);
+        }
+
+        public DataTemplate TitleContentTemplate
+        {
+            get => (DataTemplate)GetValue(TitleContentTemplateProperty);
+            set => SetValue(TitleContentTemplateProperty, value);
+        }
+
+        public Thickness TitleContentMargin
+        {
+            get => (Thickness)GetValue(TitleContentMarginProperty);
+            set => SetValue(TitleContentMarginProperty, value);
         }
 
 
@@ -134,6 +154,24 @@ namespace SGToolsCommon.CustomControl
            typeof(TitleBar),
            new PropertyMetadata(null) { DefaultValue = true });
 
-        
+        public static readonly DependencyProperty TitleContentProperty = DependencyProperty.Register(
+            nameof(TitleContent),
+            typeof(object),
+            typeof(TitleBar),
+            new PropertyMetadata(null));
+
+        public static readonly DependencyProperty TitleContentTemplateProperty = DependencyProperty.Register(
+            nameof(TitleContentTemplate),
+            typeof(DataTemplate),
+            typeof(TitleBar),
+            new PropertyMetadata(null));
+
+        public static readonly DependencyProperty TitleContentMarginProperty = DependencyProperty.Register(
+            nameof(TitleContentMargin),
+            typeof(Thickness),
+            typeof(TitleBar),
+            new PropertyMetadata(new Thickness()));
+
+
     }
 }

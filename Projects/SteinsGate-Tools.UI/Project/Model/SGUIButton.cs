@@ -20,19 +20,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
+using Newtonsoft.Json.Linq;
 using SGToolsCommon.Sga;
+using SGToolsUI.File;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
 {
-    
+
     [CategoryOrder(Constant.ButtonCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIButton : SGUIElement
     {
         public const int StateCount = 4;
         public const int StateNormal = 0;
-        public const int StatePressed = 1;
-        public const int StateOver = 2;
+        public const int StateOver = 1;
+        public const int StatePressed = 2;
         public const int StateDisabled = 3;
 
         public const int OrderNormal = 1;
@@ -78,19 +80,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(Constant.ButtonCategoryName), DisplayName("누름"), PropertyOrder(OrderPressed)]
-        public SGUISpriteInfo Pressed
-        {
-            get => _sprites[StatePressed];
-            set
-            {
-                _sprites[StatePressed] = value;
-                DetermineSize();
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualSprite));
-                OnPropertyChanged(nameof(VisualSpriteSource));
-            }
-        }
+       
 
         [Category(Constant.ButtonCategoryName), DisplayName("마우스위"), PropertyOrder(OrderOver)]
         public SGUISpriteInfo Over
@@ -99,6 +89,20 @@ namespace SGToolsUI.Model
             set
             {
                 _sprites[StateOver] = value;
+                DetermineSize();
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualSprite));
+                OnPropertyChanged(nameof(VisualSpriteSource));
+            }
+        }
+
+        [Category(Constant.ButtonCategoryName), DisplayName("누름"), PropertyOrder(OrderPressed)]
+        public SGUISpriteInfo Pressed
+        {
+            get => _sprites[StatePressed];
+            set
+            {
+                _sprites[StatePressed] = value;
                 DetermineSize();
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualSprite));
@@ -168,6 +172,36 @@ namespace SGToolsUI.Model
 
             return button;
         }
+
+        public override JObject ToJObject(SaveMode mode)
+        {
+            JObject root = new JObject();
+            CopyFrom(root, mode);
+
+            // 인덱스를 뛰어쓰기로 구분해서 돌려줌
+            string sga;
+            string img;
+            GetSgaImgFileName(out sga, out img);
+            root["sga"] = sga;
+            root["img"] = img;
+            root["sprites"] = $"{_sprites[0].SpriteIndex} {_sprites[1].SpriteIndex} {_sprites[2].SpriteIndex} {_sprites[3].SpriteIndex}";
+            return root;
+        }
+
+        private void GetSgaImgFileName(out string sga, out string img)
+        {
+            sga = string.Empty;
+            img = string.Empty;
+            int i;
+            
+            for (i = 0; i < _sprites.Length; ++i)
+                if (!_sprites[i].IsNull)
+                    break;
+            sga = _sprites[i].Sga.FileName;
+            img = _sprites[i].Img.Header.Name;
+        }
+
+        
 
         public static int Seq = 0;
         private SGUISpriteInfo[] _sprites;

@@ -27,6 +27,7 @@ using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Command;
 using SGToolsUI.Command.MainViewCommand;
+using SGToolsUI.File;
 using SGToolsUI.Model;
 using SGToolsUI.View;
 
@@ -36,24 +37,28 @@ namespace SGToolsUI.ViewModel
     {
         public MainViewModel()
         {
+            SGUIGroupMaster master = SGUIGroupMaster.Create(this);
+
+            
             Setting = new Setting();
             Setting.Load();
+            LogBox = new LogListBox() { MaxItemCount = 1500 };
+            LogBox.Width = 400;
+            LogBox.Height = 600;
+            LogView = new LogView(LogBox);
+            Loader = new SGUILoader(this);
+            Saver = new SGUISaver(this);
+            Loader.Load(out master);
+            GroupMaster = master;
             PackManager = SgaManager.Instance;
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
             DragState = new DataDragState(this);
-            GroupMaster = new SGUIGroupMaster(this)
-            {
-                DefineName = "group_master",
-                VisualRect = new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight),
-                VisualName = "그룹 마스터",
-                Selected = false,
-                VerticalAlignment = VAlignment.Top,
-                HorizontalAlignment = HAlignment.Left,
-            };
+        }
 
-            LogBox = new LogListBox() { MaxItemCount = 1500 };
-            LogView = new LogView(LogBox);
+        public void Loaded()
+        {
+            LogBox.Style = (Style)Application.Current.FindResource("LogListBox");
 
             if (Setting.ShowLogViewWhenProgramLaunched)
                 LogView.Show();
@@ -192,6 +197,8 @@ namespace SGToolsUI.ViewModel
         public JobQueue JobQueue { get; } = new ();
         public LogListBox LogBox { get; }
         public LogView LogView { get; }
+        public SGUILoader Loader { get; }
+        public SGUISaver Saver { get; }
 
         private SelectMode _uiElementSelectMode;
         private KeyState _keyState = new ();

@@ -58,6 +58,13 @@ namespace SGToolsUI.Command
         public CommandAbstract PositionUIElement { get; }
 
 
+        public CommandAbstract FileUIToolDataOpen { get; }
+        public CommandAbstract FileUIToolDataSave { get; }
+        public CommandAbstract FileGameDataSave { get; }
+        public CommandAbstract FileExportHeader { get; }
+
+
+
         // =================================================
         // 컨트롤 커맨드 목록 (개발자가 직접 호출할 일없는..)
         // =================================================
@@ -95,6 +102,11 @@ namespace SGToolsUI.Command
             Add(ToggleCanvasViewport = new ToggleCanvasViewport(ViewModel));
             Add(ToggleCanvasGrid = new ToggleCanvasGrid(ViewModel));
             Add(ToggleCanvasAnchor = new ToggleCanvasAnchor(ViewModel));
+
+            Add(FileUIToolDataOpen = new FileUIToolDataOpen(ViewModel));
+            Add(FileUIToolDataSave = new FileUIToolDataSave(ViewModel));
+            Add(FileGameDataSave = new FileGameDataSave(ViewModel));
+            Add(FileExportHeader = new FileExportHeader(ViewModel));
 
 
             // ============================================================

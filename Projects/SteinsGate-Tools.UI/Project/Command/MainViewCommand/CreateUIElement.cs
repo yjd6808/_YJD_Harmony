@@ -57,9 +57,6 @@ namespace SGToolsUI.Command.MainViewCommand
             newElement.ViewModel = ViewModel;
             group.AddChild(newElement);
 
-            if (createElementType == SGUIElementType.Group)
-                ViewModel.GroupMaster.Groups.Add(newElement.Cast<SGUIGroup>());
-
             // 그룹마스터는 트리뷰에서 관리를 안하므로..
             if (!isGroupMaster)
                 group.Item.IsExpanded = true;

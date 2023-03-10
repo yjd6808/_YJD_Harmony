@@ -15,6 +15,8 @@ namespace SGToolsUI
 {
     public static class Constant
     {
+        public const string Title = "슈타인즈게이트 : UITool";
+
         public const double ResolutionWidth = 640.0f;
         public const double ResolutionHeight = 480.0f;
         public const double CanvasWheelDelta = 10.0;
@@ -22,13 +24,15 @@ namespace SGToolsUI
         public const double CanvasHeight = ResolutionHeight + 50;
         public const double CanvasAnchorSize = 16;
 
-        public const double PropertyGridHeight = 360;               // 실제프로퍼티 그리드 크기
+        public const double PropertyGridHeight = 400;               // 실제프로퍼티 그리드 크기
         public const double PropertyGridLowerInspectorHide = -30;     // 하단 패널 높이 (숨기기 위한 수치)
         public const double PropertyGridUpperInspectorHide = -20;     // 상단 패널 높이 (숨기기 위한 수치)
 
         public const double ResolutionRatio = 480.0f / 640.0f;
         public const string SettingFileName = "setting.json";
-        public const string DataFileName = "data.json";
+        public const string UIToolDataFileName = "data.json";
+        public const string GameDataFileName = "ui.json";
+        public const string HeaderFileName = "UIDefine.h";
         public const string BackupDirectoryRoot = "backup";
         public const string BackupDirectoryFmt = "yyyy-MM-dd";
         public const string BackupFileFmt = "hh.mm.ss";

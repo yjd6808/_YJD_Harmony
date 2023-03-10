@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 3/9/2023 2:43:25 PM
+ * 생성일: 3/10/2023 7:31:52 AM
  *
  */
 
@@ -19,13 +19,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsUI.ViewModel
+namespace SGToolsCommon.Extension
 {
-    public class LogViewModel
+    public static class SizeEx
     {
-        public LogViewModel()
-        {
-
-        }
+        public static string ToFullString(this Size size)
+            => $"{(int)size.Width} {(int)size.Height}";
     }
 }

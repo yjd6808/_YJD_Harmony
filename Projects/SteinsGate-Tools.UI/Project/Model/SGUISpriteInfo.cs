@@ -63,6 +63,10 @@ namespace SGToolsUI.Model
         public BitmapSource Source => Sprite != null ? Sprite.Source : null;
 
         [Browsable(false)]
+        public int SpriteIndex => Sprite != null ? Sprite.FrameIndex : -1;
+
+
+        [Browsable(false)]
         public bool IsNull => Sprite == null;
         [Browsable(false)]
         public string SgaName => Sga.FileNameWithoutExt;

@@ -23,6 +23,8 @@ using System.Windows.Shapes;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Primitive;
 
+using IoFile = System.IO.File;
+
 namespace SGToolsUI.Model
 {
     public class Setting : ICloneable
@@ -62,10 +64,10 @@ namespace SGToolsUI.Model
 
         public bool Load()
         {
-            if (!File.Exists(Constant.SettingFileName))
+            if (!IoFile.Exists(Constant.SettingFileName))
                 return false;
 
-            string content = File.ReadAllText(Constant.SettingFileName);
+            string content = IoFile.ReadAllText(Constant.SettingFileName);
             JObject root = JObject.Parse(content);
             JToken? token = null;
 
@@ -106,7 +108,7 @@ namespace SGToolsUI.Model
             root["ShowLogViewWhenProgramLaunched"] = ShowLogViewWhenProgramLaunched;
             root["LogViewPositionWhenProgramLaunchedX"] = LogViewPositionWhenProgramLaunched.X;
             root["LogViewPositionWhenProgramLaunchedY"] = LogViewPositionWhenProgramLaunched.Y;
-            File.WriteAllText(Constant.SettingFileName, root.ToString());
+            IoFile.WriteAllText(Constant.SettingFileName, root.ToString());
         }
     }
 }

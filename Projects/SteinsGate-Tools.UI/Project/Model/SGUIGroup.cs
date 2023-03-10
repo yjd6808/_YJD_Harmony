@@ -23,9 +23,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
+using Newtonsoft.Json.Linq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
+using SGToolsUI.File;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
@@ -35,13 +37,8 @@ namespace SGToolsUI.Model
     [CategoryOrder(Constant.GroupCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIGroup : SGUIElement
     {
-        public const string VisualPositionAnchorAbsoluteKey = nameof(VisualPositionAnchorAbsolute);
-        public const string VisualPositionAnchorRelativeKey = nameof(VisualPositionAnchorRelative);
-
-        public const int OrderVerticalAlignment = 1;
-        public const int OrderHorizontalAlignment = 2;
-        public const int OrderChildCount = 3;
-        public const int OrderChildCountRecursive = 4;
+        public const int OrderChildCount = 1;
+        public const int OrderChildCountRecursive = 2;
 
 
         public SGUIGroup()
@@ -89,77 +86,6 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(Constant.GroupCategoryName), DisplayName("가로 정렬"), PropertyOrder(OrderHorizontalAlignment)]
-        [Description("UI 그룹내 자식의 가로 정렬 기준입니다.")]
-        public HAlignment HorizontalAlignment
-        {
-            get => _horizontalAlignment;
-            set
-            {
-                if (_horizontalAlignment == value)
-                    return;
-
-                _horizontalAlignment = value;
-                OnPropertyChanged();
-                OnPropertyChanged(VisualPositionAnchorAbsoluteKey);
-            }
-        }
-
-        [Category(Constant.GroupCategoryName), DisplayName("수직 정렬"), PropertyOrder(OrderVerticalAlignment)]
-        [Description("UI 그룹내 자식의 세로 정렬 기준입니다.")]
-        public VAlignment VerticalAlignment
-        {
-            get => _verticalAlignment;
-            set
-            {
-                if (_verticalAlignment == value)
-                    return;
-
-                _verticalAlignment = value;
-                OnPropertyChanged();
-                OnPropertyChanged(VisualPositionAnchorAbsoluteKey);
-            }
-        }
-
-
-        // 앵커의 위치 (절대)
-        public Point VisualPositionAnchorAbsolute
-        {
-            get
-            {
-                Point absoluteAnchorPosition = VisualPosition;
-                Point relativeAnchorPosition = VisualPositionAnchorRelative;
-
-                absoluteAnchorPosition.X += relativeAnchorPosition.X;
-                absoluteAnchorPosition.Y += relativeAnchorPosition.Y;
-                return absoluteAnchorPosition;
-            }
-        }
-
-        // 엘리먼트 좌상단 위치를 기준으로 앵커의 위치
-        public Point VisualPositionAnchorRelative
-        {
-            get
-            {
-                Point relativeAnchorRelative;
-
-                switch (HorizontalAlignment)
-                {
-                    /* case HorizontalAlignment.Left: relativeAnchorRelative.X = 0;  break; */
-                    case HAlignment.Center: relativeAnchorRelative.X = VisualSize.Width / 2;   break;
-                    case HAlignment.Right: relativeAnchorRelative.X = VisualSize.Width;        break;
-                }
-
-                switch (VerticalAlignment)
-                {
-                    /* case HorizontalAlignment.Top: relativeAnchorRelative.Y = 0;  break; */
-                    case VAlignment.Center: relativeAnchorRelative.Y = VisualSize.Height / 2;   break;
-                    case VAlignment.Bottom: relativeAnchorRelative.Y = VisualSize.Height;       break;
-                }
-
-                return relativeAnchorRelative;
-            }
-        }
 
         [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(SGUIElement.OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정합니다. (그룹 요소입니다. 하위 항목들도 모두 적용됩니다.)")]
@@ -228,10 +154,7 @@ namespace SGToolsUI.Model
         {
             SGUIGroup group = new SGUIGroup();
             group.CopyFrom(this);
-            // 코드 복사안함
-            group.HorizontalAlignment = HorizontalAlignment;
-            group.VerticalAlignment = VerticalAlignment;
-
+            
             for (int i = 0; i < _children.Count; ++i)
             {
                 SGUIElement cloned = _children[i].Clone() as SGUIElement;
@@ -383,9 +306,36 @@ namespace SGToolsUI.Model
             });
         }
 
+        public override JObject ToJObject(SaveMode mode)
+        {
+            JObject root = new JObject();
+            JArray children = new JArray();
+            CopyFrom(root, mode);
+
+            for (int i = 0; i < _children.Count; ++i)
+            {
+                SGUIElement e = _children[i];
+                children.Add($"{e.Code} {e.RelativePosition.ToFullString()}");
+            }
+
+            root["children"] = children;
+            return root;
+        }
+
+        /* 분리할일이 생긴다면
+        public JObject ToJObjectUIToolData()
+        {
+            JObject root = new JObject();
+            return root;
+        }
+
+        public JObject ToJObjectGameData()
+        {
+            JObject root = new JObject();
+            return root;
+        }
+        */
         private ObservableCollection<SGUIElement> _children;
-        private HAlignment _horizontalAlignment = HAlignment.Left;
-        private VAlignment _verticalAlignment = VAlignment.Bottom;
         private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
         private int _code;
     }

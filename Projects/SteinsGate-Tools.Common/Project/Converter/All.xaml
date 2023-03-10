@@ -2,9 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:SGToolsCommon.Converter">
     <local:AddConverter x:Key="AddConverter"/>
+    <local:SubConverter x:Key="SubConverter" />
     <local:PackUrlImageSourceConverter x:Key="PackUrlImageSourceConverter" />
     <local:RectThicknessConverter x:Key="RectThicknessConverter" />
     <local:SgaFileNameConverter x:Key="SgaFileNameConverter" />
-    <local:SubConverter x:Key="SubConverter" />
     <local:VectorStringConverter x:Key="VectorStringConverter" />
+    <local:CutStringConverter x:Key="CutStringConverter" />
 </ResourceDictionary>
