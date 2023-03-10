@@ -22,7 +22,6 @@
         xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
         xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
 
-        
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
         xmlns:common_local="clr-namespace:SGToolsCommon;assembly=SGToolsCommon"
         xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"

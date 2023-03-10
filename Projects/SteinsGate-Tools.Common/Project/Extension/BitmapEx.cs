@@ -46,5 +46,17 @@ namespace SGToolsCommon.Extension
             Marshal.Copy(bmpData.Scan0, data, 0, data.Length);
             bmp.UnlockBits(bmpData);
         }
+
+
+        // 코코스에서는 Rgb이므로 바이트 순서 유념해야한다.
+        public static void Bgra32LinearDodgePixel(Span<byte> pixelData)
+        {
+            var max = Math.Max(pixelData[0], Math.Max(pixelData[1], pixelData[2]));
+            var sub = (byte)(0xff - max);
+            pixelData[3] = Math.Min(pixelData[3], max);
+            pixelData[2] += sub;
+            pixelData[1] += sub;
+            pixelData[0] += sub;
+        }
     }
 }

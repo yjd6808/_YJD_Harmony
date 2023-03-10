@@ -1012,30 +1012,28 @@ namespace SGToolsUI.Model
         }
 
 
-        protected void CopyFrom(JObject root, SaveMode mode)
+        public virtual JObject ToJObject()
         {
-            if (mode == SaveMode.UIToolData)
-            {
-                root[JsonCodeKey] = Code;
-                root[JsonElementTypeKey] = (int)UIElementType;
-                root[JsonVisualNameKey] = _visualName;
-                root[JsonDefineNameKey] = _defineName;
-                root[JsonVisualSizeKey] = _visualRect.ToSizeString();
-                root[JsonVAlignKey] = (int)_verticalAlignment;
-                root[JsonHAlignKey] = (int)_horizontalAlignment;
-            }
-            else if (mode == SaveMode.GameData)
-            {
+            JObject root = new JObject();
+            root[JsonCodeKey] = Code;
+            root[JsonElementTypeKey] = (int)UIElementType;
+            root[JsonDefineNameKey] = _defineName;
 
-            }
-            else
-            {
-                throw new Exception("CopyFrom 저장모드가 이상합니다.");
-            }
+            // 비주얼 이름은 게임데이터에서 필요없음
+            root[JsonVisualNameKey] = _visualName;
+
+            // 필요없는 자식도 있음
+            root[JsonVisualSizeKey] = _visualRect.ToSizeString();
+
+            root[JsonVAlignKey] = (int)_verticalAlignment;
+            root[JsonHAlignKey] = (int)_horizontalAlignment;
+            return root;
         }
-        public abstract JObject ToJObject(SaveMode mode);
+
         public virtual void ParseJObject(JObject root)
         {
+            // 코드필요없음
+            // 엘리먼트타입 고정이므로 필요없음
             VisualSize = SizeEx.ParseFullString((string)root[JsonVisualSizeKey]);
             _visualName = (string)root[JsonVisualNameKey];
             _defineName = (string)root[JsonDefineNameKey];

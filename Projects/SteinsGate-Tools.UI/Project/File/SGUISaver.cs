@@ -22,7 +22,7 @@ using System.Xml.Linq;
 using SGToolsCommon.Resource;
 using SGToolsUI.Model;
 using SGToolsUI.View;
-
+using IoFile = System.IO.File;
 namespace SGToolsUI.File
 {
     public enum SaveMode
@@ -54,14 +54,21 @@ namespace SGToolsUI.File
                 if (!Directory.Exists(dir))
                     throw new Exception($"{mode}: [{dir}] 경로가 존재하지 않습니다.");
 
-                groupMaster.Elements.ForEach(element => elements.Add(element.ToJObject(mode)));
-                groupMaster.Groups.Values.ForEach(group => groups.Add(group.ToJObject(mode)));
+                groupMaster.Elements.ForEach(element =>
+                {
+                    JObject elementRoot = element.ToJObject();
+
+                    if (mode == SaveMode.GameData)
+                        elementRoot.Remove(SGUIElement.JsonVisualNameKey);
+                    elements.Add(elementRoot);
+                });
+                groupMaster.Groups.Values.ForEach(group => groups.Add(group.ToJObject()));
                 
                 root[JsonDateKey] = DateTime.Now.ToString();
                 root[JsonModeKey] = mode.ToString();
                 root[JsonElementKey] = elements;
                 root[JsonGroupKey] = groups;
-                root[JsonGroupMasterKey] = groupMaster.ToJObject(mode);
+                root[JsonGroupMasterKey] = groupMaster.ToJObject();
 
                 if (minify)
                 {
@@ -71,11 +78,24 @@ namespace SGToolsUI.File
                         Formatting = Formatting.None // 공백 무시 옵션
                     };
 
-                    System.IO.File.WriteAllText(path, JsonConvert.SerializeObject(root, settings));
+                    IoFile.WriteAllText(path, JsonConvert.SerializeObject(root, settings));
                 }
                 else
                 {
-                    System.IO.File.WriteAllText(path, root.ToString());
+                    // 스페이스바가 아닌 탭으로 파일 저장
+                    // https://stackoverflow.com/questions/25788686/how-do-i-save-a-json-file-with-four-spaces-indentation-using-json-net
+                    using (FileStream fs = IoFile.Open(path, FileMode.OpenOrCreate))
+                    {
+                        using (StreamWriter sw = new StreamWriter(fs))
+                        {
+                            using (JsonTextWriter jw = new JsonTextWriter(sw))
+                            {
+                                jw.Formatting = Formatting.Indented;
+                                jw.IndentChar = '\t';
+                                root.WriteTo(jw);
+                            }
+                        }
+                    }
                 }
 
                 return null;

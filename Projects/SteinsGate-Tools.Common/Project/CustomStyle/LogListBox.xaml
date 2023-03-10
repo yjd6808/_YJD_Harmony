@@ -15,12 +15,12 @@
                    Source="{Binding HeaderImageSource}"/>
             <TextBlock Text="{Binding 
                 Log, 
-                Converter={x:Static conv:CutStringConverter.Instance}, 
+                Converter={x:Static conv:TitleBarLogConverter.Instance}, 
                 ConverterParameter={x:Static local:Constant.TitleLogMaxLength}}"
                  Foreground="{Binding Foreground}"
                  Margin="3, 0, 0, 0"
                  VerticalAlignment="Center"
-                 TextWrapping="NoWrap" >
+                 ClipToBounds="True">
             </TextBlock>
         </StackPanel>
     </DataTemplate>

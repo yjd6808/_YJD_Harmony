@@ -174,11 +174,9 @@ namespace SGToolsUI.Model
             return button;
         }
 
-        public override JObject ToJObject(SaveMode mode)
+        public override JObject ToJObject()
         {
-            JObject root = new JObject();
-            CopyFrom(root, mode);
-
+            JObject root = base.ToJObject();
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
             string sga;
             string img;

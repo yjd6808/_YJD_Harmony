@@ -36,7 +36,7 @@ namespace SGToolsUI.Model
             return clone;
         }
 
-        public override JObject ToJObject(SaveMode mode)
+        public override JObject ToJObject()
         {
             throw new NotImplementedException();
         }

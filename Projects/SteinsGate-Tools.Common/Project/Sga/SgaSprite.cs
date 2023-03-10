@@ -42,6 +42,7 @@ namespace SGToolsCommon.Sga
         private byte[] _data;
         private int _dataOffset;
         private int _dataLength;
+        private bool _linearDodge;
         private SgaCompressMode _compressMode;
 
 
@@ -60,6 +61,25 @@ namespace SGToolsCommon.Sga
         public override int FrameHeight => _spriteRect.Height;
         public override int TargetFrameIndex => FrameIndex;
 
+        public bool IsLinearDodged
+        {
+            get => _linearDodge;
+            set
+            {
+                if (_linearDodge == value)
+                    return;
+
+                if (!_linearDodge)
+                {
+                    Load();
+                    return;
+                }
+
+                ApplyLinearDodge();
+            }
+        }
+
+        
         public BitmapSource Source
         {
             get
@@ -110,7 +130,7 @@ namespace SGToolsCommon.Sga
             _data = null;
         }
 
-
+        
 
         public override void Load()
         {
@@ -121,6 +141,21 @@ namespace SGToolsCommon.Sga
 
             Decompress();
         }
+
+        public void ApplyLinearDodge()
+        {
+            if (_linearDodge)
+                return;
+
+            if (!Loaded)
+                Load();
+
+            for (int i = 0; i < _data.Length; i += 4)
+                BitmapEx.Bgra32LinearDodgePixel(_data.AsSpan(i, 4));
+
+            _linearDodge = true;
+        }
+
 
         public override void Unload()
         {

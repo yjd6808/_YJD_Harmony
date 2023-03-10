@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -85,7 +86,13 @@ namespace SGToolsCommon.CustomControl
         }
 
         public void AddLog(Exception e)
-            => AddLog(e.Message + "\n" + e.StackTrace.Split('\n').Last(), null, IconCommonType.NotUsable, Brushes.Crimson);
+        {
+            StackFrame frame = (new StackTrace(e, true)).GetFrame(0);
+            string lastFrameInfo = $"{System.IO.Path.GetFileName(frame.GetFileName())}\n{frame.GetMethod().Name}()\n{frame.GetFileLineNumber()}";
+            
+            AddLog(e.Message + "\n" + lastFrameInfo, null, IconCommonType.NotUsable,
+                Brushes.Crimson);
+        }
 
         public void AddLog(string log, object data = null, IconCommonType type = IconCommonType.Info, Brush brush = null)
         {

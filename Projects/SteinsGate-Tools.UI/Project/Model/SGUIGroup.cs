@@ -311,11 +311,10 @@ namespace SGToolsUI.Model
             });
         }
 
-        public override JObject ToJObject(SaveMode mode)
+        public override JObject ToJObject()
         {
-            JObject root = new JObject();
+            JObject root = base.ToJObject();
             JArray children = new JArray();
-            CopyFrom(root, mode);
 
             for (int i = 0; i < _children.Count; ++i)
             {
@@ -323,7 +322,7 @@ namespace SGToolsUI.Model
                 children.Add($"{e.Code} {e.RelativePosition.ToFullString()}");
             }
 
-            root["children"] = children;
+            root[JsonChildrenKey] = children;
             return root;
         }
 
