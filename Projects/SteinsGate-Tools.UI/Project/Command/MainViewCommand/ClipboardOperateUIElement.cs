@@ -38,6 +38,7 @@ namespace SGToolsUI.Command.MainViewCommand
     {
         private List<SGUIElement> _clipboard = new();
         public int ClipboardDataCount => _clipboard.Count;
+        public bool HasClipboardData => _clipboard.Count > 0;
 
         public ClipboardOperateUIElement(MainViewModel viewModel) 
             : base(viewModel, "UI 엘리먼트 대상으로 클립보드 오퍼레이션을 수행합니다.")
@@ -83,6 +84,7 @@ namespace SGToolsUI.Command.MainViewCommand
             for (int i = 0; i < selectedElements.Count; ++i)
                 _clipboard.Add(selectedElements[i]);
             OnPropertyChanged(nameof(ClipboardDataCount));
+            OnPropertyChanged(nameof(HasClipboardData));
             return true;
         }
 
@@ -91,7 +93,7 @@ namespace SGToolsUI.Command.MainViewCommand
             if (Copy(selectedElements))
             {
                 // 백업
-                ViewModel.GroupMaster.Backup("Cut 수행전");
+                ViewModel.Saver.Backup("Cut 수행전");
                 ViewModel.Commander.DeleteUIElement.Execute(null);
             }
         }
@@ -153,6 +155,15 @@ namespace SGToolsUI.Command.MainViewCommand
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Clear()
+        {
+            _clipboard.Clear();
+
+            OnPropertyChanged(nameof(HasClipboardData));
+            OnPropertyChanged(nameof(ClipboardDataCount));
+            
         }
     }
 }

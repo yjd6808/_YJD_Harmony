@@ -21,6 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
+using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
 using SGToolsUI.File;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -182,9 +183,9 @@ namespace SGToolsUI.Model
             string sga;
             string img;
             GetSgaImgFileName(out sga, out img);
-            root["sga"] = sga;
-            root["img"] = img;
-            root["sprites"] = $"{_sprites[0].SpriteIndex} {_sprites[1].SpriteIndex} {_sprites[2].SpriteIndex} {_sprites[3].SpriteIndex}";
+            root[JsonSgaKey] = sga;
+            root[JsonImgKey] = img;
+            root[JsonSpriteKey] = $"{_sprites[0].SpriteIndex} {_sprites[1].SpriteIndex} {_sprites[2].SpriteIndex} {_sprites[3].SpriteIndex}";
             return root;
         }
 
@@ -197,11 +198,43 @@ namespace SGToolsUI.Model
             for (i = 0; i < _sprites.Length; ++i)
                 if (!_sprites[i].IsNull)
                     break;
-            sga = _sprites[i].Sga.FileName;
-            img = _sprites[i].Img.Header.Name;
+
+            if (i == _sprites.Length)
+                return;
+
+            sga = _sprites[i].Sga.FileNameWithoutExt;
+            img = _sprites[i].Img.Header.NameWithoutExt;
         }
 
-        
+        public override void ParseJObject(JObject root)
+        {
+            base.ParseJObject(root);
+
+            string sgaName = (string)root[JsonSgaKey];
+
+            if (sgaName == string.Empty)
+                return;
+
+            string imgName = (string)root[JsonImgKey];
+
+            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
+            SgaPackage sga = img.Parent;
+
+            int[] sprites = new int[StateCount];
+            StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
+
+
+            for (int i = 0; i < StateCount; ++i)
+            {
+                if (sprites[i] != Constant.InvalidValue)
+                {
+                    SgaSprite sprite = img.GetSprite(sprites[i]) as SgaSprite;
+                    if (sprite == null) throw new Exception($"{sgaName} -> {imgName} -> {sprites[i]}가 SgaSprite 타입이 아닙니다.");
+                    _sprites[i] = new SGUISpriteInfo(sga, img, sprite); 
+                }
+            }
+        }
+
 
         public static int Seq = 0;
         private SGUISpriteInfo[] _sprites;

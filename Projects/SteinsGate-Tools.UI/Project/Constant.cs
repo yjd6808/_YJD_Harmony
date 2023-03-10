@@ -44,17 +44,19 @@ namespace SGToolsUI
         public const int CodeAssignerCapacity = 1000;               // 최대 그룹 수
 
 
-        public const string ElementCategoryName = "공통";
-        public const int ElementCategoryOrder = 2;
-
         // 디자이너 윈도우와 실제 운영체제가 그리는 윈도우간의 너비, 높이 차이를 보정하기위한 수치
         public const double VisualHeightDifferenceBetweenDesignerAndReal = 35;
         public const double VisualWidthDifferenceBetweenDesignerAndReal = 16;
+
+        public const string ElementCategoryName = "공통";
+        public const int ElementCategoryOrder = 2;
 
         public const string GroupCategoryName = "그룹";
         public const string ButtonCategoryName = "버튼";
         public const int OtherCategoryOrder = 1;
 
+        public const int InvalidValue = -1;
         public const int CacheAlignSize = 64;
+        public const bool UseDebugData = true;
     }
 }

@@ -48,8 +48,9 @@ namespace SGToolsUI.ViewModel
             LogView = new LogView(LogBox);
             Loader = new SGUILoader(this);
             Saver = new SGUISaver(this);
-            Loader.Load(out master);
+            Exporter = new SGUIExporter(this);
             GroupMaster = master;
+            Loader.Load(master);
             PackManager = SgaManager.Instance;
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
@@ -199,6 +200,7 @@ namespace SGToolsUI.ViewModel
         public LogView LogView { get; }
         public SGUILoader Loader { get; }
         public SGUISaver Saver { get; }
+        public SGUIExporter Exporter { get; }
 
         private SelectMode _uiElementSelectMode;
         private KeyState _keyState = new ();

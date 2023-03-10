@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsCommon.Extension
 {
@@ -49,7 +50,14 @@ namespace SGToolsCommon.Extension
         {
             return Point.Subtract(point, other).Length;
         }
+        public static Point ParseFullString(string s)
+        {
+            int[] sizeArr = new int[2];
+            StringEx.ParseIntNumberN(s, sizeArr);
+            return new Point(sizeArr[0], sizeArr[1]);
+        }
 
+       
 
     }
 

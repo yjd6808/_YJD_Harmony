@@ -63,6 +63,10 @@ namespace SGToolsUI.Command
         public CommandAbstract FileGameDataSave { get; }
         public CommandAbstract FileExportHeader { get; }
 
+        public CommandAbstract OpenDirectory { get; }
+
+
+
 
 
         // =================================================
@@ -104,9 +108,11 @@ namespace SGToolsUI.Command
             Add(ToggleCanvasAnchor = new ToggleCanvasAnchor(ViewModel));
 
             Add(FileUIToolDataOpen = new FileUIToolDataOpen(ViewModel));
-            Add(FileUIToolDataSave = new FileUIToolDataSave(ViewModel));
-            Add(FileGameDataSave = new FileGameDataSave(ViewModel));
+            Add(FileUIToolDataSave = new FileUIToolDataSave(ViewModel) { UseParameter = true } );
+            Add(FileGameDataSave = new FileGameDataSave(ViewModel) { UseParameter = true });
             Add(FileExportHeader = new FileExportHeader(ViewModel));
+
+            Add(OpenDirectory = new OpenDirectory(ViewModel) { UseParameter = true });
 
 
             // ============================================================

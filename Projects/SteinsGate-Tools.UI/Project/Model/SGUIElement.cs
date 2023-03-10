@@ -53,6 +53,28 @@ namespace SGToolsUI.Model
         public const int OrderCanvasSelectable = 10;
         public const int OrderDepth = 11;
 
+        // 엘리먼트
+        public const string JsonCodeKey = "code";
+        public const string JsonElementTypeKey = "type";
+        public const string JsonVisualNameKey = "name";
+        public const string JsonDefineNameKey = "dname";
+        public const string JsonVisualSizeKey = "size";
+        public const string JsonVAlignKey = "valign";
+        public const string JsonHAlignKey = "halign";
+
+        // 그룹
+        public const string JsonChildrenKey = "children";
+
+        // 버튼
+        public const string JsonSgaKey = "sga";
+        public const string JsonImgKey = "img";
+        public const string JsonSpriteKey = "sprite";
+
+        
+
+
+
+
         public const string PickedKey = nameof(Picked);
 
         [Category(Constant.ElementCategoryName), DisplayName("타입"), PropertyOrder(OrderUIElementType)]
@@ -305,7 +327,8 @@ namespace SGToolsUI.Model
         [Browsable(false)]
         public virtual int Code => Parent.Code + Index + 1;
 
-
+        [Browsable(false)]
+        public int GroupCode => (Code / Constant.GroupCodeInterval) * Constant.GroupCodeInterval;
 
 
 
@@ -711,25 +734,12 @@ namespace SGToolsUI.Model
 
         public static SGUIElement Create(SGUIElementType type)
         {
-            SGUIElement element = null;
-
             switch (type)
             {
-                case SGUIElementType.Button: 
-                    element = new SGUIButton();
-                    break;
-                case SGUIElementType.Group:
-                    // 그룹 기본 크기는 해상도로.
-                    element = new SGUIGroup();
-                    element._visualRect = new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight);  
-                    break;
+                case SGUIElementType.Button: return new SGUIButton();
+                case SGUIElementType.Group:  return new SGUIGroup();
+                default:  throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
             }
-
-            if (element == null)
-                throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
-            
-            element.CreateInit();
-            return element;
         }
 
 
@@ -857,42 +867,28 @@ namespace SGToolsUI.Model
             return Comparer<int>.Default.Compare(lhsCurIndex, rhsCurIndex);
         }
 
-        // group내의 좌하단 좌표를 기준으로 this의 좌하단의 상대적 위치(코코스 좌표계)
-        /*
-        public Point ConvertVisualPositionToElementPosition(SGUIGroup group)
-        {
-            return new Point(
-                VisualPosition.X - group.VisualPosition.X,
-                group.VisualPositionRightBottom.Y - VisualPositionRightBottom.Y
-            );
-        }
-
-        public Point ConvertElementPositionToVisualPosition(SGUIGroup group, Point cocosRelativePosition)
-        {
-            return new Point(
-                group.VisualPosition.X + cocosRelativePosition.X,
-                group.VisualPosition.Y + group.VisualSize.Height - VisualSize.Height - cocosRelativePosition.Y
-            );
-        }
-        */
 
         public Point ConvertRelativePositionToVisualPosition(SGUIGroup group, Point relativePosition)
         {
             Point visualPos;
+            Rect groupRect = group == null
+                ? new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight)
+                : group.VisualRect;
+
 
             switch (_horizontalAlignment)
             {
                 case HAlignment.Left:
-                    visualPos.X = group.VisualPosition.X;
+                    visualPos.X = groupRect.X;
                     break;
                 case HAlignment.Center:
-                    visualPos.X = group.VisualPosition.X +
-                                  group.VisualSize.Width / 2 -
+                    visualPos.X = groupRect.X +
+                                  groupRect.Width / 2 -
                                   VisualSize.Width / 2;
                     break;
                 case HAlignment.Right:
-                    visualPos.X = group.VisualPosition.X +
-                                  group.VisualSize.Width -
+                    visualPos.X = groupRect.X +
+                                  groupRect.Width -
                                   VisualSize.Width;
                     break;
             }
@@ -900,22 +896,22 @@ namespace SGToolsUI.Model
             switch (_verticalAlignment)
             {
                 case VAlignment.Top:
-                    visualPos.Y = group.VisualPosition.Y;
+                    visualPos.Y = groupRect.Y;
                     break;
                 case VAlignment.Center:
-                    visualPos.Y = group.VisualPosition.Y +
-                                  group.VisualSize.Height / 2 -
+                    visualPos.Y = groupRect.Y +
+                                  groupRect.Height / 2 -
                                   VisualSize.Height / 2;
                     break;
                 case VAlignment.Bottom:
-                    visualPos.Y = group.VisualPosition.Y +
-                                  group.VisualSize.Height -
+                    visualPos.Y = groupRect.Y +
+                                  groupRect.Height -
                                   VisualSize.Height;
                     break;
             }
 
             visualPos.X += relativePosition.X;
-            visualPos.Y += relativePosition.Y;
+            visualPos.Y -= relativePosition.Y;
             return visualPos;
         }
 
@@ -1020,12 +1016,13 @@ namespace SGToolsUI.Model
         {
             if (mode == SaveMode.UIToolData)
             {
-                root["code"] = Code;
-                root["name"] = _visualName;
-                root["dname"] = _defineName;
-                root["size"] = _visualRect.ToSizeString();
-                root["valign"] = (int)_verticalAlignment;
-                root["halign"] = (int)_horizontalAlignment;
+                root[JsonCodeKey] = Code;
+                root[JsonElementTypeKey] = (int)UIElementType;
+                root[JsonVisualNameKey] = _visualName;
+                root[JsonDefineNameKey] = _defineName;
+                root[JsonVisualSizeKey] = _visualRect.ToSizeString();
+                root[JsonVAlignKey] = (int)_verticalAlignment;
+                root[JsonHAlignKey] = (int)_horizontalAlignment;
             }
             else if (mode == SaveMode.GameData)
             {
@@ -1037,6 +1034,19 @@ namespace SGToolsUI.Model
             }
         }
         public abstract JObject ToJObject(SaveMode mode);
+        public virtual void ParseJObject(JObject root)
+        {
+            VisualSize = SizeEx.ParseFullString((string)root[JsonVisualSizeKey]);
+            _visualName = (string)root[JsonVisualNameKey];
+            _defineName = (string)root[JsonDefineNameKey];
+            _verticalAlignment = (VAlignment)((int)root[JsonVAlignKey]);
+            _horizontalAlignment = (HAlignment)((int)root[JsonHAlignKey]);
+        }
+
+        [Browsable(false)]
+        public object Tag { get; set; } // 아무런 데이터나 기록할 수 있도록하는 프로퍼티
+
+
         public override string ToString() => _visualName;
 
         protected string _visualName = string.Empty;

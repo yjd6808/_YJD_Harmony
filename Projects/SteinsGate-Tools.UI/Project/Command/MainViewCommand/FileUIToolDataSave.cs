@@ -24,6 +24,8 @@ using System.Windows.Navigation;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
+    
+
     public class FileUIToolDataSave : MainCommandAbstract
     {
         public FileUIToolDataSave(MainViewModel viewModel)
@@ -36,11 +38,13 @@ namespace SGToolsUI.Command.MainViewCommand
             if (parameter is not string param)
                 throw new Exception("UI툴데이터 저장 파라미터가 이상합니다. 0 또는 1");
 
-            if (param == "0")
+            SaveType saveType = (SaveType)Enum.Parse(typeof(SaveType), param);
+
+            if (saveType == SaveType.Save)
             {
                 ViewModel.Saver.Save(SaveMode.UIToolData, false);
             }
-            else if (param == "1")
+            else if (saveType == SaveType.SaveAs)
             {
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Title = "UI툴데이터 저장";

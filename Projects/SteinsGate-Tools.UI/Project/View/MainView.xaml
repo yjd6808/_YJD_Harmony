@@ -24,11 +24,13 @@
 
         
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
+        xmlns:common_local="clr-namespace:SGToolsCommon;assembly=SGToolsCommon"
         xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
         xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
         xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
         xmlns:common_prim="clr-namespace:SGToolsCommon.Primitive;assembly=SGToolsCommon"
-        
+        xmlns:file="clr-namespace:SGToolsUI.File"
+
         Name="View"
         FontSize="14"
         AllowsTransparency="True" WindowStyle="None"
@@ -127,13 +129,16 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="파일">
                 <MenuItem Header="툴 데이터 열기" Command="{Binding Commander.FileUIToolDataOpen}"/>
-                <MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSave}" CommandParameter="0"/>
-                <MenuItem Header="툴 데이터 다른이름 저장" Command="{Binding Commander.FileUIToolDataSave}" CommandParameter="1"/>
+                <MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSave}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}"/>
+                <MenuItem Header="툴 데이터 다른이름 저장" Command="{Binding Commander.FileUIToolDataSave}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}"/>
                 <Separator />
-                <MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSave}" CommandParameter="0"/>
-                <MenuItem Header="게임 데이터 다른이름 저장" Command="{Binding Commander.FileGameDataSave}" CommandParameter="1"/>
+                <MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSave}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}"/>
+                <MenuItem Header="게임 데이터 다른이름 저장" Command="{Binding Commander.FileGameDataSave}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}"/>
                 <Separator />
                 <MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileExportHeader}" />
+                <Separator />
+                <MenuItem Header="실행 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Exe" />
+                <MenuItem Header="백업 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Backup" />
             </MenuItem>
             <MenuItem Style="{StaticResource MenuItemSeparator}"/>
             <MenuItem Header="보기">
@@ -211,7 +216,7 @@
                             <Style TargetType="Image">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="True">
-                                        <Setter Property="Opacity" Value="1" />
+                                        <Setter Property="Opacity" Value="{Binding Path=Opacity, ElementName=SelectedVisualNameTextBox, Mode=OneWay}" />
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding GroupMaster.SelectedElement.Picked}" Value="False">
                                         <Setter Property="Opacity" Value="0" />
@@ -228,8 +233,21 @@
                     </Image>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <TextBox Text="클립보드: " Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}" />
-                    <TextBox Text="{Binding Commander.ClipboardOperateUIElement.ClipboardDataCount, Mode=OneWay}" Name="ClipboardDataCountTextBox" Style="{StaticResource ReadonlyAnimatedTextBox}" />
+                    <TextBox Text="클립보드: " Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
+                    <TextBox Text="{Binding Commander.ClipboardOperateUIElement.ClipboardDataCount, Mode=OneWay}" Name="ClipboardDataCountTextBox">
+                        <TextBox.Style>
+                            <Style BasedOn="{StaticResource ReadonlyTextBox}" TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Commander.ClipboardOperateUIElement.HasClipboardData, Mode=OneWay}" Value="True">
+                                        <Setter Property="Opacity" Value="1" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Commander.ClipboardOperateUIElement.HasClipboardData, Mode=OneWay}" Value="False">
+                                        <Setter Property="Opacity" Value="0"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
                     <TextBox Text="개" Opacity="{Binding Path=Opacity, ElementName=ClipboardDataCountTextBox, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
                 </StackPanel>
                         
@@ -316,7 +334,7 @@
 
                     
                 </Grid>
-                <Grid Grid.Column="2" Width="10" Height="{Binding Height, ElementName=Temp, Converter={StaticResource AddConverter}, ConverterParameter={x:Static local:Constant.VisualHeightDifferenceBetweenDesignerAndReal}}" Background="Aquamarine" />
+                <Grid Grid.Column="2" Width="10" Height="{Binding Height, ElementName=Temp, Converter={StaticResource AddConverter}, ConverterParameter={x:Static local:Constant.VisualHeightDifferenceBetweenDesignerAndReal}}" Background="Transparent" />
                
 
                 <!-- 운영체제의 뷰와 디자이너 뷰간의 차이를 없애기위한 높이지정용도 컨트롤 -->
@@ -345,10 +363,11 @@
                     <ColumnDefinition Width="30"></ColumnDefinition>
                     <ColumnDefinition Width="30"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="250"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Command="{Binding Commander.ReloadSgaPackage}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRefreshKey}}"/>
 
-                <c:WatermarkTextBox Watermark="검색할 내용 입력" Grid.Column="3" Name="SgaResourceSearchTextBox" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" KeyDown="SgaResourceSearchTextBox_OnKeyDown">
+                <c:WatermarkTextBox Watermark="검색할 내용 입력" Grid.Column="4" Name="SgaResourceSearchTextBox" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" KeyDown="SgaResourceSearchTextBox_OnKeyDown">
                     <c:WatermarkTextBox.Style>
                         <Style TargetType="c:WatermarkTextBox">
                             <Style.Triggers>

@@ -21,35 +21,8 @@
 
 
 	<ItemGroup>
-		<None Remove="Resource\Icon\ui_black_button.ico" />
-		<None Remove="Resource\Icon\ui_black_checkbox.ico" />
-		<None Remove="Resource\Icon\ui_black_editbox.ico" />
-		<None Remove="Resource\Icon\ui_black_group.ico" />
-		<None Remove="Resource\Icon\ui_black_label.ico" />
-		<None Remove="Resource\Icon\ui_black_sprite.ico" />
-		<None Remove="Resource\Icon\ui_colored_button.ico" />
-		<None Remove="Resource\Icon\ui_colored_checkbox.ico" />
-		<None Remove="Resource\Icon\ui_colored_editbox.ico" />
-		<None Remove="Resource\Icon\ui_colored_group.ico" />
-		<None Remove="Resource\Icon\ui_colored_label.ico" />
-		<None Remove="Resource\Icon\ui_colored_sprite.ico" />
-		<None Remove="Resource\Icon\ui_glass.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Resource Include="Resource\Icon\ui_black_button.ico" />
-		<Resource Include="Resource\Icon\ui_black_checkbox.ico" />
-		<Resource Include="Resource\Icon\ui_black_sprite.ico" />
-		<Resource Include="Resource\Icon\ui_colored_button.ico" />
-		<Resource Include="Resource\Icon\ui_colored_checkbox.ico" />
-		<Resource Include="Resource\Icon\ui_black_editbox.ico" />
-		<Resource Include="Resource\Icon\ui_colored_editbox.ico" />
-		<Resource Include="Resource\Icon\ui_colored_group.ico" />
-		<Resource Include="Resource\Icon\ui_colored_sprite.ico" />
-		<Resource Include="Resource\Icon\ui_glass.ico" />
-		<Resource Include="Resource\Icon\ui_black_group.ico" />
-		<Resource Include="Resource\Icon\ui_black_label.ico" />
-		<Resource Include="Resource\Icon\ui_colored_label.ico" />
+		<Resource Include="Resource\Icon\*.ico" />
+		<Resource Include="Resource\Font\*.ttf" />
 	</ItemGroup>
 
 	<ItemGroup>

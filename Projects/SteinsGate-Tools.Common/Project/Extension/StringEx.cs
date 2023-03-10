@@ -79,6 +79,54 @@ namespace SGToolsCommon.Extension
             arr[readCount++] = double.Parse(temp);
         }
 
+        public static void ParseIntNumber2(string s, out int num1, out int num2)
+        {
+            int[] nums = new int[2];
+
+            ParseIntNumberN(s, nums);
+
+            num1 = nums[0];
+            num2 = nums[1];
+        }
+
+
+        public static void ParseIntNumber3(string s, out int num1, out int num2, out int num3)
+        {
+            int[] nums = new int[3];
+
+            ParseIntNumberN(s, nums);
+
+            num1 = nums[0];
+            num2 = nums[1];
+            num3 = nums[2];
+        }
+
+        public static void ParseIntNumber4(string s, out int num1, out int num2, out int num3, out int num4)
+        {
+            int[] nums = new int[4];
+
+            ParseIntNumberN(s, nums);
+
+            num1 = nums[0];
+            num2 = nums[1];
+            num3 = nums[2];
+            num4 = nums[3];
+        }
+
+        public static void ParseIntNumber2(JToken? token, out int num1, out int num2)
+        {
+            int[] nums = new int[2];
+
+            if (token.Type != JTokenType.String)
+                throw new Exception("해당 JToken은 문자열 타입이 아닙니다.");
+
+            ParseIntNumberN((string)token, nums);
+
+            num1 = nums[0];
+            num2 = nums[1];
+        }
+
+
         public static void  ParseIntNumber3(JToken? token, out int num1, out int num2, out int num3)
         {
             int[] nums = new int[3];

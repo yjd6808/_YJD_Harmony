@@ -19,9 +19,9 @@ using Newtonsoft.Json.Linq;
 using SGToolsCommon;
 using SGToolsUI.ViewModel;
 using System.Xml.Linq;
-using MoreLinq.Extensions;
 using SGToolsCommon.Resource;
 using SGToolsUI.Model;
+using SGToolsUI.View;
 
 namespace SGToolsUI.File
 {
@@ -31,7 +31,7 @@ namespace SGToolsUI.File
         GameData      // 게임 구동에 필요한 데이터만 저장
     }
 
-    public class SGUISaver
+    public class SGUISaver : SGUIFileSystem
     {
         public SGUISaver(MainViewModel viewModel)
             => _viewModel = viewModel;
@@ -44,15 +44,24 @@ namespace SGToolsUI.File
 
             SGUIGroupMaster groupMaster = _viewModel.GroupMaster;
 
+            
+
+
             try
             {
-                MoreEnumerable.ForEach(groupMaster.Elements, element => elements.Add(element.ToJObject(mode)));
-                MoreEnumerable.ForEach(groupMaster.Groups.Values, group => groups.Add(group.ToJObject(mode)));
+                string dir = Path.GetDirectoryName(path);
 
-                root["date"] = DateTime.Now.ToString();
-                root["mode"] = (int)mode;
-                root["ui_element"] = elements;
-                root["ui_group"] = groups;
+                if (!Directory.Exists(dir))
+                    throw new Exception($"{mode}: [{dir}] 경로가 존재하지 않습니다.");
+
+                groupMaster.Elements.ForEach(element => elements.Add(element.ToJObject(mode)));
+                groupMaster.Groups.Values.ForEach(group => groups.Add(group.ToJObject(mode)));
+                
+                root[JsonDateKey] = DateTime.Now.ToString();
+                root[JsonModeKey] = mode.ToString();
+                root[JsonElementKey] = elements;
+                root[JsonGroupKey] = groups;
+                root[JsonGroupMasterKey] = groupMaster.ToJObject(mode);
 
                 if (minify)
                 {
@@ -85,6 +94,7 @@ namespace SGToolsUI.File
             DateTime now = DateTime.Now;
             string fileName = now.ToString(Constant.BackupFileFmt) + $"_{tag}.json";
             string savePath = Path.Join(
+                Environment.CurrentDirectory,
                 Constant.BackupDirectoryRoot,
                 now.ToString(Constant.BackupDirectoryFmt),
                 fileName
@@ -93,36 +103,42 @@ namespace SGToolsUI.File
             Exception e = Save(savePath, SaveMode.UIToolData, true);
             
             if (e == null)
-                _viewModel.LogBox.AddLog($"백업완료 {fileName}", savePath, IconCommonType.Backup, Brushes.CornflowerBlue);
+                _viewModel.LogBox.AddLog($"백업완료 {fileName}", (LogType.Path, (object)savePath), IconCommonType.Backup, Brushes.RoyalBlue);
             else
                 _viewModel.LogBox.AddLog(e);
         }
 
         public void Save(SaveMode mode, bool minify = false)
         {
-            string fileName;
+            string saveFileName;
+            string savePath;
             if (mode == SaveMode.UIToolData)
-                fileName = Constant.UIToolDataFileName;
+            {
+                saveFileName = Constant.UIToolDataFileName;
+                savePath = Path.Combine(Environment.CurrentDirectory, Constant.UIToolDataFileName);
+            }
             else if (mode == SaveMode.GameData)
-                fileName = Path.Combine(_viewModel.Setting.OutputJsonPath, Constant.GameDataFileName);
+            {
+                saveFileName = Constant.GameDataFileName;
+                savePath = Path.Combine(_viewModel.Setting.OutputJsonPath, Constant.GameDataFileName);
+            }
             else
                 throw new Exception("올바르지 않은 모드입니다.");
 
-            Exception e = Save(fileName, mode, minify);
+            Exception e = Save(savePath, mode, minify);
 
             if (e == null)
-                _viewModel.LogBox.AddLog($"{mode} 데이터 저장완료 {fileName}", null, IconCommonType.Backup, Brushes.Gold);
+                _viewModel.LogBox.AddLog($"{mode} 데이터 저장완료 {saveFileName}", (LogType.Path, (object)savePath), IconCommonType.Backup, Brushes.RoyalBlue);
             else
                 _viewModel.LogBox.AddLog(e);
-            
         }
 
-        public void SaveManual(string fileName, SaveMode mode, bool minify = false)
+        public void SaveManual(string path, SaveMode mode, bool minify = false)
         {
-            Exception e = Save(fileName, mode, minify);
+            Exception e = Save(path, mode, minify);
 
             if (e == null)
-                _viewModel.LogBox.AddLog($"{mode} 데이터 수동 저장완료 {fileName}", null, IconCommonType.Down, Brushes.DarkGray);
+                _viewModel.LogBox.AddLog($"{mode} 데이터 수동 저장완료 {path}", (LogType.Path, (object)path), IconCommonType.Down, Brushes.DarkGray);
             else
                 _viewModel.LogBox.AddLog(e);
             

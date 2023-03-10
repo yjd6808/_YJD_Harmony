@@ -54,6 +54,10 @@ namespace SGToolsUI.Command.MainViewCommand
             }
 
             SGUIElement newElement = SGUIElement.Create(createElementType);
+            if (newElement.IsGroup)
+                newElement.VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
+
+            newElement.CreateInit();
             newElement.ViewModel = ViewModel;
             group.AddChild(newElement);
 

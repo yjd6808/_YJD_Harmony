@@ -69,7 +69,8 @@ namespace SGToolsCommon.CustomControl
                 OnPropertyChanged();
             }
         }
-        private LogData _lastLog = new ("안녕", null, R.GetIconCommon(IconCommonType.Empty), Brushes.Bisque);
+
+        private LogData _lastLog;
 
         public LogListBox()
         {

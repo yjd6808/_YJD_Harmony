@@ -1,11 +1,12 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 3/10/2023 7:31:52 AM
+ * 생성일: 3/10/2023 8:21:20 PM
  *
  */
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,16 +22,18 @@ using System.Windows.Shapes;
 
 namespace SGToolsCommon.Extension
 {
-    public static class SizeEx
+    public class DirectoryEx
     {
-        public static string ToFullString(this Size size)
-            => $"{(int)size.Width} {(int)size.Height}";
-
-        public static Size ParseFullString(string s)
+        // https://stackoverflow.com/questions/1395205/better-way-to-check-if-a-path-is-a-file-or-a-directory
+        public static bool IsDirectory(string path)
         {
-            int[] sizeArr = new int[2];
-            StringEx.ParseIntNumberN(s, sizeArr);
-            return new Size(sizeArr[0], sizeArr[1]);
+            FileAttributes attr = File.GetAttributes(path);
+
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                return true;
+
+            return false;
         }
+
     }
 }

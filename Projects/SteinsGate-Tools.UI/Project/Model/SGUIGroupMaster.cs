@@ -38,7 +38,18 @@ namespace SGToolsUI.Model
         public const string SelectedElementKey = nameof(SelectedElement);
         public const string PickedElementKey = nameof(PickedElement);
         public const string IsMultiSelectedKey = nameof(IsMultiSelected);
-        
+
+        private class ObservableElementsCollection : ObservableCollection<SGUIElement>
+        {
+            // 옵저버블컬렉션 생성자보면 크기 안먹음
+            public ObservableElementsCollection(int capacity, MainViewModel viewModel)
+                : base(new List<SGUIElement>(capacity))
+            {
+                ViewModel = viewModel;
+            }
+
+            public MainViewModel ViewModel { get; }
+        }
 
 
         // ============================================================
@@ -61,7 +72,7 @@ namespace SGToolsUI.Model
 
             // 이정도면 충분하겠지..?
             for (int i = 0; i < Constant.CodeAssignerCapacity; ++i)
-                _codeAssigner.Enqueue(Constant.GroupCodeInterval * i, Constant.GroupCodeInterval * i);
+                _codeAssigner.Enqueue(Constant.GroupCodeInterval * (i + 1), i);
         }
 
 
@@ -203,18 +214,7 @@ namespace SGToolsUI.Model
         }
 
 
-        private class ObservableElementsCollection : ObservableCollection<SGUIElement>
-        {
-            // 옵저버블컬렉션 생성자보면 크기 안먹음
-            public ObservableElementsCollection(int capacity, MainViewModel viewModel)
-                : base(new List<SGUIElement>(capacity))
-            {
-                ViewModel = viewModel;
-            }
-
-            public MainViewModel ViewModel { get; }
-        }
-
+       
         private static void SelectedElementsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             ObservableElementsCollection collection = sender as ObservableElementsCollection;
@@ -307,27 +307,6 @@ namespace SGToolsUI.Model
             return group.Children[codeIndex - 1];
         }
 
-        public void Backup(string tag)
-        {
-
-        }
-
-
-        public void Save()
-        {
-        }
-
-        private void Save(string filepath)
-        {
-        }
-
-        public void Load()
-        {
-        }
-
-        public void Load(string path)
-        {
-        }
 
         public static SGUIGroupMaster Create(MainViewModel viewModel)
         {
@@ -342,32 +321,6 @@ namespace SGToolsUI.Model
             };
         }
 
-#if DEBUG
-        private static int PickSeq = 0;
-        public void PrintPick()
-        {
-            Debug.WriteLine($"[{PickSeq++}] =======================================");
-            PickedElements.ForEach(element =>
-            {
-                if (!element.Picked)
-                    throw new Exception("픽트 않은 대상이 있습니다.");
-
-                Debug.WriteLine($"PICK \t{element.VisualName} 렉트:{element.VisualRect} 깊이:{element.Depth} 부모:{element.Parent.VisualName}");
-            });
-        }
-
-        private static int SelectSeq = 0;
-        public void PrintSelect()
-        {
-            Debug.WriteLine($"[{SelectSeq++}] =======================================");
-            SelectedElements.ForEach(element =>
-            {
-                if (!element.Selected)
-                    throw new Exception("선택되지 않은 대상이 있습니다.");
-
-                Debug.WriteLine($"SEL \t{element.VisualName} 렉트:{element.VisualRect} 깊이:{element.Depth} 부모:{element.Parent.VisualName}");
-            });
-        }
+       
     }
-#endif
 }

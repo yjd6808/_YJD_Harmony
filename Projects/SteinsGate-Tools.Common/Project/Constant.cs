@@ -4,6 +4,9 @@
  *
  */
 
+using System;
+using System.Windows;
+
 namespace SGToolsCommon
 {
     public class Constant
@@ -11,5 +14,6 @@ namespace SGToolsCommon
         public const double LogListBoxItemHeaderImageSize = 16;
         public const double LogListBoxItemWidthDecrease = 35;
         public const int TitleLogMaxLength = 50;
+        public static readonly Duration FadeInDuration = new(TimeSpan.FromMilliseconds(400));
     }
 }

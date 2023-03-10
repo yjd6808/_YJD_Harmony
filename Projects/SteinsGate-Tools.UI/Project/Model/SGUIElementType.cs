@@ -25,11 +25,10 @@ namespace SGToolsUI.Model
     {
         Group,
         Button,
-        ToggleButton,
         Label,
         Sprite,
         EditBox,
         CheckBox,
-        Empty
+        ToggleButton
     }
 }

@@ -43,6 +43,14 @@ namespace SGToolsUI.Model
             Sprite = sprite;
         }
 
+        public SGUISpriteInfo(SgaPackage sga, SgaImage img, SgaSprite sprite)
+        {
+            Sga = sga;
+            Img = img;
+            Sprite = sprite;
+        }
+
+
         public SgaPackage Sga { get; }
         public SgaImage Img { get; }
         public SgaSprite Sprite { get; }
@@ -63,7 +71,7 @@ namespace SGToolsUI.Model
         public BitmapSource Source => Sprite != null ? Sprite.Source : null;
 
         [Browsable(false)]
-        public int SpriteIndex => Sprite != null ? Sprite.FrameIndex : -1;
+        public int SpriteIndex => Sprite != null ? Sprite.FrameIndex : Constant.InvalidValue;
 
 
         [Browsable(false)]

@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:SGToolsCommon">
     <Style x:Key="ReadonlyAnimatedTextBox" TargetType="TextBox">
         <Setter Property="IsReadOnly" Value="True"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -8,7 +9,7 @@
             <EventTrigger RoutedEvent="TextChanged">
                 <BeginStoryboard>
                     <Storyboard>
-                        <DoubleAnimation From="0" To="1" Duration="0:0:1" Storyboard.TargetProperty="Opacity" />
+                        <DoubleAnimation From="0" To="1" Duration="{x:Static local:Constant.FadeInDuration}" Storyboard.TargetProperty="Opacity" />
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>

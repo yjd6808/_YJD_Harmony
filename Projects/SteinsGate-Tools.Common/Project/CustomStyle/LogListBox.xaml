@@ -10,8 +10,8 @@
 
     <DataTemplate x:Key="TitleLogDataTemplate" DataType="{x:Type cus_ctrl:LogData}">
         <StackPanel Orientation="Horizontal" Name="Panel">
-            <Image Width="30" 
-                   Height="30" 
+            <Image Width="{Binding Height, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}" 
+                   Height="{Binding Height, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}" 
                    Source="{Binding HeaderImageSource}"/>
             <TextBlock Text="{Binding 
                 Log, 
@@ -20,7 +20,6 @@
                  Foreground="{Binding Foreground}"
                  Margin="3, 0, 0, 0"
                  VerticalAlignment="Center"
-                 ClipToBounds="True"
                  TextWrapping="NoWrap" >
             </TextBlock>
         </StackPanel>

@@ -18,10 +18,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.File
 {
-    public static class SGUIExporter
+    public class SGUIExporter : SGUIFileSystem
     {
+        public SGUIExporter(MainViewModel viewModel)
+            => _viewModel = viewModel;
+
+        private MainViewModel _viewModel;
     }
 }

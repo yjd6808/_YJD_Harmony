@@ -290,11 +290,16 @@ namespace SGToolsUI.Model
         // 디버깅용, new로 임시로 생성한 데이터에 정보 주입해주기 위함
         public void DebugUpdate()
         {
-            ViewModel.GroupMaster.AddGroup(this);
+            
+
             VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
 
             if (!IsMaster)
+            {
+                ViewModel.GroupMaster.AddGroup(this);
                 SetDepth(Parent.Depth + 1);
+            }
+
             Children.ForEach(x =>
             {
                 x.Parent = this;
@@ -322,22 +327,9 @@ namespace SGToolsUI.Model
             return root;
         }
 
-        /* 분리할일이 생긴다면
-        public JObject ToJObjectUIToolData()
-        {
-            JObject root = new JObject();
-            return root;
-        }
-
-        public JObject ToJObjectGameData()
-        {
-            JObject root = new JObject();
-            return root;
-        }
-        */
         private ObservableCollection<SGUIElement> _children;
-        private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
         private int _code;
+        private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
     }
 }
 

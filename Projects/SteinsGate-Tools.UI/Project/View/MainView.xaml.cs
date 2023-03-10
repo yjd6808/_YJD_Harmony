@@ -19,6 +19,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Resources;
@@ -30,6 +31,7 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
 using SGToolsCommon.ThirdParty;
 using SGToolsUI.Command.MainViewCommand;
+using SGToolsUI.File;
 using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 using Xceed.Wpf.AvalonDock.Controls;
@@ -51,28 +53,28 @@ namespace SGToolsUI.View
             ViewModel.KeyState.KeyUp += MainView_OnKeyUp;
             InitializeComponent();
 
-            #region  A
+            if (!Constant.UseDebugData)
+                return;
 
-
-
+            ViewModel.GroupMaster = SGUIGroupMaster.Create(ViewModel);
             ViewModel.GroupMaster.Children.Add(new SGUIGroup()
             {
                 VisualName = "그룹 1",
                 Children = new ObservableCollection<SGUIElement>()
                 {
-                    new SGUIButton() { VisualName = "그룹 1-1"},
-                    new SGUIButton() { VisualName = "그룹 1-2"},
-                    new SGUIButton() { VisualName = "그룹 1-3"},
-                    new SGUIButton() { VisualName = "그룹 1-4"},
+                    new SGUIButton() { VisualName = "버튼 1-1"},
+                    new SGUIButton() { VisualName = "버튼 1-2"},
+                    new SGUIButton() { VisualName = "버튼 1-3"},
+                    new SGUIButton() { VisualName = "버튼 1-4"},
                     new SGUIGroup()
                     {
                         VisualName = "그룹 1-5",
                         Children = new ObservableCollection<SGUIElement>()
                         {
-                            new SGUIButton() { VisualName = "그룹 1-5-1"},
-                            new SGUIButton() { VisualName = "그룹 1-5-2"},
-                            new SGUIButton() { VisualName = "그룹 1-5-3"},
-                            new SGUIButton() { VisualName = "그룹 1-5-4"},
+                            new SGUIButton() { VisualName = "버튼 1-5-1"},
+                            new SGUIButton() { VisualName = "버튼 1-5-2"},
+                            new SGUIButton() { VisualName = "버튼 1-5-3"},
+                            new SGUIButton() { VisualName = "버튼 1-5-4"},
                             new SGUIGroup()
                             {
                                 VisualName = "그룹 1-5-5"
@@ -84,10 +86,10 @@ namespace SGToolsUI.View
                         VisualName = "그룹 1-6",
                         Children = new ObservableCollection<SGUIElement>()
                         {
-                            new SGUIButton() { VisualName = "그룹 1-6-1"},
-                            new SGUIButton() { VisualName = "그룹 1-6-2"},
-                            new SGUIButton() { VisualName = "그룹 1-6-3"},
-                            new SGUIButton() { VisualName = "그룹 1-6-4"},
+                            new SGUIButton() { VisualName = "버튼 1-6-1"},
+                            new SGUIButton() { VisualName = "버튼 1-6-2"},
+                            new SGUIButton() { VisualName = "버튼 1-6-3"},
+                            new SGUIButton() { VisualName = "버튼 1-6-4"},
                             new SGUIGroup()
                             {
                                 VisualName = "그룹 1-6-5"
@@ -102,19 +104,19 @@ namespace SGToolsUI.View
                 VisualName = "그룹 2",
                 Children = new ObservableCollection<SGUIElement>()
                 {
-                    new SGUIButton() { VisualName = "그룹 2-1"},
-                    new SGUIButton() { VisualName = "그룹 2-2"},
-                    new SGUIButton() { VisualName = "그룹 2-3"},
-                    new SGUIButton() { VisualName = "그룹 2-4"},
+                    new SGUIButton() { VisualName = "버튼 2-1"},
+                    new SGUIButton() { VisualName = "버튼 2-2"},
+                    new SGUIButton() { VisualName = "버튼 2-3"},
+                    new SGUIButton() { VisualName = "버튼 2-4"},
                     new SGUIGroup()
                     {
                         VisualName = "그룹 2-5",
                         Children = new ObservableCollection<SGUIElement>()
                         {
-                            new SGUIButton() { VisualName = "그룹 2-5-1"},
-                            new SGUIButton() { VisualName = "그룹 2-5-2"},
-                            new SGUIButton() { VisualName = "그룹 2-5-3"},
-                            new SGUIButton() { VisualName = "그룹 2-5-4"},
+                            new SGUIButton() { VisualName = "버튼 2-5-1"},
+                            new SGUIButton() { VisualName = "버튼 2-5-2"},
+                            new SGUIButton() { VisualName = "버튼 2-5-3"},
+                            new SGUIButton() { VisualName = "버튼 2-5-4"},
                             new SGUIGroup()
                             {
                                 VisualName = "그룹 2-5-5"
@@ -123,13 +125,13 @@ namespace SGToolsUI.View
                     },
                     new SGUIGroup()
                     {
-                        VisualName = "�׷� 2-6",
+                        VisualName = "그룹 2-6",
                         Children = new ObservableCollection<SGUIElement>()
                         {
-                            new SGUIButton() { VisualName ="그룹 2-6-1"},
-                            new SGUIButton() { VisualName ="그룹 2-6-2"},
-                            new SGUIButton() { VisualName ="그룹 2-6-3"},
-                            new SGUIButton() { VisualName ="그룹 2-6-4"},
+                            new SGUIButton() { VisualName ="버튼 2-6-1"},
+                            new SGUIButton() { VisualName ="버튼 2-6-2"},
+                            new SGUIButton() { VisualName ="버튼 2-6-3"},
+                            new SGUIButton() { VisualName ="버튼 2-6-4"},
                             new SGUIGroup()
                             {
                                 VisualName = "그룹 2-6-5"
@@ -140,10 +142,6 @@ namespace SGToolsUI.View
             });
             ViewModel.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 3" });
             ViewModel.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 4" });
-
-
-            #endregion
-
             ViewModel.GroupMaster.ForEachRecursive(x => x.ViewModel = ViewModel);
             ViewModel.GroupMaster.DebugUpdate();
         }
@@ -158,6 +156,7 @@ namespace SGToolsUI.View
 
         private void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
+            ViewModel.Saver.Save(SaveMode.UIToolData);
             ViewModel.LogView.Close();
             ViewModel.JobQueue.Dispose();
             ViewModel.KeyState.Dispose();
@@ -204,24 +203,35 @@ namespace SGToolsUI.View
         private void MainView_OnKeyDown(SGKey key)
         {
             KeyState state = ViewModel.KeyState;
-         
-            if (state.IsShiftPressed)
+
+            bool shift = state.IsShiftPressed;
+            bool ctrl = state.IsCtrlPressed;
+            bool alt = state.IsAltPressed;
+
+            if (shift)
             {
                 TitlePanel.Draggable = false;
                 ViewModel.UIElementSelectMode = SelectMode.Keep;
             }
 
             // 컨트롤키를 우선토록 한다.
-            else if (state.IsCtrlPressed)
+            if (ctrl)
             {
                 TitlePanel.Draggable = false;
                 ViewModel.UIElementSelectMode = SelectMode.KeepExcept;
+
+                if (state.IsPressed(SGKey.S))
+                {
+                    ViewModel.Saver.Save(SaveMode.UIToolData);
+                }
             }
 
-            else if (state.IsPressed(SGKey.Escape))
+            if (state.IsPressed(SGKey.Escape))
             {
                 ViewModel.GroupMaster.DeselectAll();
+                ViewModel.Commander.ClipboardOperateUIElement.Clear();
             }
+
 
             UIElementTreeView.OnKeyDown(key);
         }

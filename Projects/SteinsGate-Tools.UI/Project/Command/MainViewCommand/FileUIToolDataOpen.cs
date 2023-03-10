@@ -43,9 +43,9 @@ namespace SGToolsUI.Command.MainViewCommand
 
             if (openFileDialog.ShowDialog() == true)
             {
-                SGUIGroupMaster master;
+                SGUIGroupMaster master = SGUIGroupMaster.Create(ViewModel);
 
-                if (ViewModel.Loader.Load(out master))
+                if (ViewModel.Loader.Load(master))
                     ViewModel.GroupMaster = master;
             }
         }
