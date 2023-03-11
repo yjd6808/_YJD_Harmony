@@ -12,29 +12,32 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Microsoft.Win32;
+using SGToolsCommon.Resource;
 using SGToolsUI.File;
+using SGToolsUI.View;
 using SGToolsUI.ViewModel;
 
-namespace SGToolsUI.Command.MainViewCommand
+namespace SGToolsUI.Command.MainViewCommand.Async
 {
-    public class FileGameDataSave : MainCommandAbstract
+    public class FileGameDataSaveAsync : MainCommandAbstractAsync
     {
-        public FileGameDataSave(MainViewModel viewModel)
+        public FileGameDataSaveAsync(MainViewModel viewModel)
             : base(viewModel, "UI툴데이터를 저장합니다.")
         {
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
             if (parameter is not string param)
-                throw new Exception("게임데이터 저장 파라미터가 이상합니다. 0 또는 1");
+                throw new Exception("게임데이터 Save 파라미터가 이상합니다. SaveType 이놈 타입으로 전달해주세요.");
 
             SaveType saveType = (SaveType)Enum.Parse(typeof(SaveType), param);
 
             if (saveType == SaveType.Save)
             {
-                ViewModel.Saver.Save(SaveMode.GameData, false);
+                await ViewModel.Saver.SaveAutoAsync(SaveMode.GameData, false);
             }
             else if (saveType == SaveType.SaveAs)
             {
@@ -47,7 +50,9 @@ namespace SGToolsUI.Command.MainViewCommand
 
                 if (saveFileDialog.ShowDialog() == true)
                 {
-                    ViewModel.Saver.SaveManual(saveFileDialog.FileName, SaveMode.GameData, false);
+                    Exception e = await ViewModel.Saver.SaveGameDataAsync(saveFileDialog.FileName, false);
+                    if (e != null) throw e; // MainCommandAbstractAsync에 디폴트 에러 핸들러로 로그박스에서 처리하도록 했으므로 그냥 던져서 위임하면 됨.
+                    ViewModel.LogBox.AddLog($"게임데이터 저장완료", (LogType.Path, (object)saveFileDialog.FileName), IconCommonType.Backup, Brushes.RoyalBlue);
                 }
             }
             else

@@ -127,14 +127,16 @@
             ############################################################################### -->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="파일">
-                <MenuItem Header="툴 데이터 열기" Command="{Binding Commander.FileUIToolDataOpen}"/>
-                <MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSave}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}"/>
-                <MenuItem Header="툴 데이터 다른이름 저장" Command="{Binding Commander.FileUIToolDataSave}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}"/>
+                <MenuItem Header="툴 데이터 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadKey}"/>
+                <MenuItem Header="툴 데이터 경로지정 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadAsKey}" />
+                <MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}"/>
+                <MenuItem Header="툴 데이터 경로지정 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}"/>
                 <Separator />
-                <MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSave}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}"/>
-                <MenuItem Header="게임 데이터 다른이름 저장" Command="{Binding Commander.FileGameDataSave}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}"/>
+                <MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}"/>
+                <MenuItem Header="게임 데이터 경로지정 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}"/>
                 <Separator />
-                <MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileExportHeader}" />
+                <MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportKey}"/>
+                <MenuItem Header="헤더 파일 경로지정 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportAsKey}"/>
                 <Separator />
                 <MenuItem Header="실행 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Exe" />
                 <MenuItem Header="백업 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Backup" />
@@ -146,6 +148,10 @@
             <MenuItem Style="{StaticResource MenuItemSeparator}"/>
             <MenuItem Header="도구">
                 <MenuItem Header="설정" Command="{Binding Commander.OpenSetting}" />
+            </MenuItem>
+            <MenuItem Style="{StaticResource MenuItemSeparator}" />
+            <MenuItem Header="도움말">
+                <MenuItem Header="단축키 보기" Command="{Binding Commander.ShowShortcut}" />
             </MenuItem>
             <MenuItem Style="{StaticResource MenuItemSeparator}"/>
             

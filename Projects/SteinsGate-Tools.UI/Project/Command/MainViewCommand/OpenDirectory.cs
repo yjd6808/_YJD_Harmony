@@ -42,7 +42,10 @@ namespace SGToolsUI.Command.MainViewCommand
 
         public override void Execute(object? parameter)
         {
-            ToolDirectory toolDirectory = (ToolDirectory)Enum.Parse(typeof(ToolDirectory), (string)parameter);
+            if (parameter is not string param)
+                throw new Exception("파라미터가 문자열 타입이 아닙니다.");
+
+            ToolDirectory toolDirectory = (ToolDirectory)Enum.Parse(typeof(ToolDirectory), param);
 
             string path = string.Empty;
 

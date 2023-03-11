@@ -2,6 +2,11 @@
  * 작성자: 윤정도
  * 생성일: 3/10/2023 8:57:59 AM
  *
+ * 비동기로 수행한다.
+ * 따라서 비동기수행중 데이터를 변경하거나 삭제하면 문제가 발생할 수 있으므로 자제하도록.
+ * 동기로 하는게 안전하지만 렉걸리는게 싫어서 비동기로 다 바꿈
+ * 엘리먼트마다 락을 걸면 신경안써도 되지만 코드가 복잡해질 우려가 있다. 또한, 작업 수행 성능에 영향을 줄 수도 있기 때문이다.
+ *
  */
 
 using SGToolsUI.ViewModel;
@@ -18,7 +23,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SGToolsUI.Model;
 using System.Diagnostics.Metrics;
 using SGToolsCommon.Resource;
@@ -26,8 +30,11 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using System.Collections;
+using System.IO;
+using System.Windows.Media.Media3D;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
+using SGToolsUI.View;
 
 namespace SGToolsUI.File
 {
@@ -36,10 +43,11 @@ namespace SGToolsUI.File
         public SGUILoader(MainViewModel viewModel)
             => _viewModel = viewModel;
 
-        public Exception Load(string path, SGUIGroupMaster master)
+        public bool Load(string path, SGUIGroupMaster master)
         {
             try
             {
+                string fileName = Path.GetFileName(path);
                 JObject root = JObject.Parse(System.IO.File.ReadAllText(path));
 
                 SaveMode mode = (SaveMode)Enum.Parse(typeof(SaveMode), (string)root[JsonModeKey]);
@@ -51,7 +59,7 @@ namespace SGToolsUI.File
                 JArray? groups = root[JsonGroupKey] as JArray;
                 JObject? groupMaster = root[JsonGroupMasterKey] as JObject;
 
-                List<(SGUIGroup, JArray)> groupList = new (groups.Count);   // 그룹 뼈대 로딩때 임시로 저장하는 리스트
+                List<(SGUIGroup, JArray)> groupList = new(groups.Count);   // 그룹 뼈대 로딩때 임시로 저장하는 리스트
                 Dictionary<int, SGUIElement> elementDict = new();           // 그룹, 엘리먼트 저장용 임시 맵, 그룹 로딩시 자식 코드로 빠르게 엘리먼트 추가하기 위한 용도
 
 
@@ -110,7 +118,7 @@ namespace SGToolsUI.File
                 }
 
                 // 모든 자식 순회하면서 기타 설정까지 한번에 수행, 이때부턴 그룹의 코드가 다시 재구성된다. 태그에 저장된 childInfo[0](코드)는 이후로 쓸모없어짐
-                master.InsertChildren(parsed, 0);   
+                master.InsertChildren(parsed, 0);
 
                 // Step5. 부모 관계가 모두 확립되었으므로 상위 계층부터 하위 계층까지 순회하며 RelativePosition VisualPosition으로 반영
                 master.ForEachRecursive(element =>
@@ -127,26 +135,28 @@ namespace SGToolsUI.File
                     SGUIElement newChild = elementDict[arr[0]];
                     return newChild;
                 }
-                
-                return null;
+
+                _viewModel.LogBox.AddDispatchedLog($"UI툴 데이터 로딩완료 {fileName}", (LogType.Path, path), IconCommonType.Checked, Brushes.Green);
+                return true;
             }
             catch (Exception exception)
             {
-                return exception;
+                _viewModel.LogBox.AddDispatchedLog(exception);
+                return false;
             }
         }
 
-        public bool Load(SGUIGroupMaster master)
+        public async Task<SGUIGroupMaster> LoadAsync(string path)
         {
-            Exception e = Load(Constant.UIToolDataFileName, master);
+            SGUIGroupMaster master = SGUIGroupMaster.Create(_viewModel);
+            bool result = await Task.Run(() => Load(path, master));
 
-            if (e == null)
-                _viewModel.LogBox?.AddLog("데이터 로딩완료", null, IconCommonType.Down, Brushes.RoyalBlue);
-            else
-                _viewModel.LogBox?.AddLog(e);
+            if (result == false)
+                return master;
 
-            return e == null;
+            return SGUIGroupMaster.Create(_viewModel);
         }
+
 
         public MainViewModel _viewModel;
     }

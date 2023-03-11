@@ -127,7 +127,7 @@ namespace SGToolsUI.CustomControl
         public Canvas CanvasPanel => _canvasPanel;
         public ItemsPresenter Presenter => _canvasPresenter;
         public DragState DragState => _dragState;
-
+        public bool HasSelection => _canvasShapes.FirstOrDefault(shape => shape is CanvasSelection) != null;
         
 
 

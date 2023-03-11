@@ -24,6 +24,10 @@
 		<Resource Include="Resource/Cursor/*.ani" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Resource\Icon\common_transparent.ico" />
+	</ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="morelinq" Version="3.4.0" />

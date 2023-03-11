@@ -64,6 +64,20 @@ namespace SGToolsUI.Model
             }
         }
 
+        [ReadOnly(true)]
+        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(SGUIElement.OrderVisualSize)]
+        public override Size VisualSize
+        {
+            get
+            {
+                for (int i = 0; i < StateCount; ++i)
+                    if (!_sprites[i].IsNull)
+                        return _sprites[i].Rect.Size;
+
+                return Constant.DefaultVisualSize;
+            }
+        }
+
         [Browsable(false)]
         public BitmapSource VisualSpriteSource => VisualSprite.Source;
 
@@ -74,8 +88,9 @@ namespace SGToolsUI.Model
             set
             {
                 _sprites[StateNormal] = value;
-                DetermineSize();
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualRect));
                 OnPropertyChanged(nameof(VisualSprite));
                 OnPropertyChanged(nameof(VisualSpriteSource));
             }
@@ -90,8 +105,9 @@ namespace SGToolsUI.Model
             set
             {
                 _sprites[StateOver] = value;
-                DetermineSize();
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualRect));
                 OnPropertyChanged(nameof(VisualSprite));
                 OnPropertyChanged(nameof(VisualSpriteSource));
             }
@@ -104,8 +120,9 @@ namespace SGToolsUI.Model
             set
             {
                 _sprites[StatePressed] = value;
-                DetermineSize();
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualRect));
                 OnPropertyChanged(nameof(VisualSprite));
                 OnPropertyChanged(nameof(VisualSpriteSource));
             }
@@ -118,24 +135,14 @@ namespace SGToolsUI.Model
             set
             {
                 _sprites[StateDisabled] = value;
-                DetermineSize();
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualRect));
                 OnPropertyChanged(nameof(VisualSprite));
                 OnPropertyChanged(nameof(VisualSpriteSource));
             }
         }
 
-
-        // 어떤 버튼 상태의 이미지 크기로 비주얼 사이즈를 업데이트할지 결정
-        private void DetermineSize()
-        {
-            for (int i = 0; i < StateCount; ++i)
-                if (!_sprites[i].IsNull)
-                {
-                    VisualRect = _sprites[i].Rect;
-                    return;
-                }
-        }
 
 
         [Browsable(false)]
@@ -150,6 +157,8 @@ namespace SGToolsUI.Model
                 if (_sprites[value].IsNull)
                     return;
 
+                OnPropertyChanged(nameof(VisualSize));
+                OnPropertyChanged(nameof(VisualRect));
                 OnPropertyChanged(nameof(VisualSprite));
                 OnPropertyChanged(nameof(VisualSpriteSource));
             }

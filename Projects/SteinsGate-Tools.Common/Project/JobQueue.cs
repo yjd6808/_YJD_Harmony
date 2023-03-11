@@ -59,9 +59,10 @@ namespace SGToolsCommon
             }
             catch (Exception e)
             {
+                _failed = true;
+                Exception = e;
                 if (ErrorHandler != null)
                     ErrorHandler(e);
-                _failed = true;
             }
             finally
             {
@@ -72,6 +73,7 @@ namespace SGToolsCommon
         private Action Job { get; }
         private Action<Exception> ErrorHandler { get; }
         public SemaphoreSlim Notifier { get; }
+        public Exception Exception { get; private set; }
         public bool IsFailed => _failed;
         public bool IsSuccess => !_failed;
         private bool _failed;
@@ -82,6 +84,7 @@ namespace SGToolsCommon
 
     public class JobQueue : Bindable, IDisposable
     {
+
         public JobQueue()
         {
             _isRunning = true;

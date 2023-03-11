@@ -113,30 +113,17 @@ namespace SGToolsUI.Model
 
 
         [Browsable(false)]
-        [Category(Constant.ElementCategoryName), DisplayName("좌표크기")]
-        [Description("UI엘리먼트의 캔버스 좌상단 위치와 크기를 의미")]
-        public Rect VisualRect
-        {
-            get => _visualRect;
-            set
-            {
-                _visualRect = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualSize));
-                OnPropertyChanged(nameof(VisualPosition));
-            } 
-        }
-
+        public Rect VisualRect => new (VisualPosition, VisualSize);
 
 
         [Category(Constant.ElementCategoryName), DisplayName("위치 (절대)"), PropertyOrder(OrderVisualPosition)]
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
         public Point VisualPosition
         {
-            get => _visualRect.Location;
+            get => _visualPosition;
             set
             {
-                _visualRect.Location = value;
+                _visualPosition = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualRect));
                 OnPropertyChanged(nameof(RelativePosition));
@@ -251,30 +238,33 @@ namespace SGToolsUI.Model
         [Browsable(false)]
         [Description("엘리먼트 Rect의 중앙위치")]
         public Point VisualPositionCenter => new (
-            _visualRect.X + _visualRect.Width / 2,
-            _visualRect.Y + _visualRect.Height / 2
+            _visualPosition.X + VisualSize.Width / 2,
+            _visualPosition.Y + VisualSize.Height / 2
         );
 
         [Browsable(false)]
         [Description("엘리먼트 Rect의 우하단위치")]
         public Point VisualPositionRightBottom => new (
-            _visualRect.X + _visualRect.Width,
-            _visualRect.Y + _visualRect.Height
+            _visualPosition.X + VisualSize.Width,
+            _visualPosition.Y + VisualSize.Height
         );
 
+
+        [ReadOnly(true)]
         [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
         [Description("UI엘리먼트의 크기를 의미")]
-        public Size VisualSize
+        public virtual Size VisualSize
         {
-            get => _visualRect.Size;
-            set
-            {
-                _visualRect.Size = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualRect));
-            }
+            get => Constant.DefaultVisualSize;
+            set {}
         }
-        
+
+        /*
+         *
+         * _visualRect.Size = value;
+                OnPropertyChanged();
+         *
+         */
 
         [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정")]
@@ -726,7 +716,7 @@ namespace SGToolsUI.Model
 
             _canvasSelectable = element._canvasSelectable;
             _visualName = element._visualName;
-            _visualRect = element._visualRect;
+            _visualPosition = element._visualPosition;
             _defineName = element._defineName;
         }
 
@@ -989,7 +979,7 @@ namespace SGToolsUI.Model
             if (!_visible)
                 return false;
 
-            return _visualRect.Contains(p);
+            return VisualRect.Contains(p);
         }
 
         public abstract object Clone();
@@ -1023,8 +1013,6 @@ namespace SGToolsUI.Model
             root[JsonVisualNameKey] = _visualName;
 
             // 필요없는 자식도 있음
-            root[JsonVisualSizeKey] = _visualRect.ToSizeString();
-
             root[JsonVAlignKey] = (int)_verticalAlignment;
             root[JsonHAlignKey] = (int)_horizontalAlignment;
             return root;
@@ -1048,7 +1036,7 @@ namespace SGToolsUI.Model
         public override string ToString() => _visualName;
 
         protected string _visualName = string.Empty;
-        protected Rect _visualRect = new(0, 0, 50, 50);
+        protected Point _visualPosition;
         protected bool _selected = false;
         protected bool _visible = true;
         protected bool _deleted = false;
@@ -1057,7 +1045,7 @@ namespace SGToolsUI.Model
         protected HAlignment _horizontalAlignment = HAlignment.Left;
         protected VAlignment _verticalAlignment = VAlignment.Bottom;
         protected TreeViewItem _treeViewItem;
-        protected string _defineName;
+        protected string _defineName = string.Empty;
 
         
     }

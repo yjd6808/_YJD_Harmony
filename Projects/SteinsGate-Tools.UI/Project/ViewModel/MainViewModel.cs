@@ -27,6 +27,7 @@ using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Command;
 using SGToolsUI.Command.MainViewCommand;
+using SGToolsUI.Command.MainViewCommand.Async;
 using SGToolsUI.File;
 using SGToolsUI.Model;
 using SGToolsUI.View;
@@ -37,20 +38,16 @@ namespace SGToolsUI.ViewModel
     {
         public MainViewModel()
         {
-            SGUIGroupMaster master = SGUIGroupMaster.Create(this);
-
-            
             Setting = new Setting();
             Setting.Load();
             LogBox = new LogListBox() { MaxItemCount = 1500 };
             LogBox.Width = 400;
             LogBox.Height = 600;
+            LogErrorHandler = new Action<Exception>((ex) => LogBox.AddLog(ex));
             LogView = new LogView(LogBox);
             Loader = new SGUILoader(this);
             Saver = new SGUISaver(this);
             Exporter = new SGUIExporter(this);
-            GroupMaster = master;
-            Loader.Load(master);
             PackManager = SgaManager.Instance;
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
@@ -60,6 +57,7 @@ namespace SGToolsUI.ViewModel
         public void Loaded()
         {
             LogBox.Style = (Style)Application.Current.FindResource("LogListBox");
+            //Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey); // 그룹마스터 로딩
 
             if (Setting.ShowLogViewWhenProgramLaunched)
                 LogView.Show();
@@ -179,6 +177,9 @@ namespace SGToolsUI.ViewModel
             get => _groupMaster;
             set
             {
+                if (_groupMaster != null)
+                    _groupMaster.Clear();
+
                 _groupMaster = value;
                 OnPropertyChanged();
             }
@@ -201,6 +202,7 @@ namespace SGToolsUI.ViewModel
         public SGUILoader Loader { get; }
         public SGUISaver Saver { get; }
         public SGUIExporter Exporter { get; }
+        public readonly Action<Exception> LogErrorHandler;
 
         private SelectMode _uiElementSelectMode;
         private KeyState _keyState = new ();

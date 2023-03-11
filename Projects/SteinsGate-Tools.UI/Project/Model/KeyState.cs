@@ -43,6 +43,7 @@ namespace SGToolsUI.Model
         C,
         V,
         S,
+        L,
         Escape,
         Max
     }
@@ -90,6 +91,7 @@ namespace SGToolsUI.Model
             _keys[(int)SGKey.C]         = new KeyElement(Key.C);
             _keys[(int)SGKey.V]         = new KeyElement(Key.V);
             _keys[(int)SGKey.S]         = new KeyElement(Key.S);
+            _keys[(int)SGKey.L]         = new KeyElement(Key.L);
             _keys[(int)SGKey.Escape]    = new KeyElement(Key.Escape);
 
             // 방향키 연속키입력 허용

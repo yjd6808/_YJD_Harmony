@@ -37,5 +37,6 @@
 
     <DockPanel Name="MainPanel" DataContext="{Binding Path=ViewModel}">
         <common_ctrl:TitleBar FontSize="16"  Title="로그 뷰" DockPanel.Dock="Top" RealClose="False"/>
+        <Button Name="CleanLogBoxButton" Content="로그 비우기" DockPanel.Dock="Bottom" Click="CleanLogBoxButton_OnClick"/> 
     </DockPanel>
 </Window>

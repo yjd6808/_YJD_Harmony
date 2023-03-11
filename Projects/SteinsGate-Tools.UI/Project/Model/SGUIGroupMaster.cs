@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -64,8 +65,9 @@ namespace SGToolsUI.Model
             SelectedElements.CollectionChanged += SelectedElementsOnCollectionChanged;
             PickedElements = new ObservableElementsCollection(120, viewModel);
             PickedElements.CollectionChanged += PickedElementsOnCollectionChanged;
-            Groups = new SortedList<int, SGUIGroup>(120);   // C++의 map같은 녀석임
-            Elements = new LinkedList<SGUIElement>();
+
+            _groups = new SortedList<int, SGUIGroup>(120);   // C++의 map같은 녀석임
+            _elements = new LinkedList<SGUIElement>();
 
 
             _codeAssigner = new PriorityQueue<int, int>(Constant.CodeAssignerCapacity);
@@ -117,35 +119,60 @@ namespace SGToolsUI.Model
         public ObservableCollection<SGUIElement> PickedElements { get; }
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
         public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
-        public SortedList<int, SGUIGroup> Groups { get; }
-        public LinkedList<SGUIElement> Elements { get; }
 
+        public int GroupCount  {  get  {  lock (_groups)  {  return _groups.Count; }  }  }
+        public int ElementCount  {  get  {  lock (_elements)  {  return _elements.Count; }  }  }
+
+        // 아래 3가지 항목은 멀티쓰레드 접근 가능함, 따라서 락을 수행토록 한다.
         // 코드 어사이너!
         // 코드 수동할당은 에반거 같아서 자동으로 할당하도록 한다.
         private PriorityQueue<int, int> _codeAssigner;
+        private SortedList<int, SGUIGroup> _groups;
+        private LinkedList<SGUIElement> _elements;
 
 
         // ============================================================
         //            기능
         // ============================================================
 
+        public void ForEachGroup(Action<SGUIGroup> action)
+        {
+            lock (_groups)
+            {
+                _groups.Values.ForEach(action);
+            }
+        }
+
         public void AddGroup(SGUIGroup group)
         {
-            int assignedCode = _codeAssigner.Dequeue();
-            group.SetCode(assignedCode);
-            Groups.Add(group.Code, group);
-
-            Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
+            lock (_groups)
+            {
+                int assignedCode = _codeAssigner.Dequeue();
+                group.SetCode(assignedCode);
+                _groups.Add(group.Code, group);
+                Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
+            }
         }
 
         public void RemoveGroup(SGUIGroup group)
         {
-            _codeAssigner.Enqueue(group.Code, group.Code);
+            lock (_groups)
+            {
+                _codeAssigner.Enqueue(group.Code, group.Code);
 
-            if (!Groups.Remove(group.Code))
-                throw new Exception("그룹목록에서 삭제하는데 실패했습니다.");
+                if (!_groups.Remove(group.Code))
+                    throw new Exception("그룹목록에서 삭제하는데 실패했습니다.");
 
-            Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
+                Debug.WriteLine($"할당된 코드 수 {Constant.CodeAssignerCapacity - _codeAssigner.Count}");
+            }
+        }
+
+        public void ForEachElement(Action<SGUIElement> action)
+        {
+            lock (_elements)
+            {
+                _elements.ForEach(action);
+            }
         }
 
         public void AddElement(SGUIElement element)
@@ -153,7 +180,10 @@ namespace SGToolsUI.Model
             if (element.IsGroup)
                 throw new Exception("그룹도 엘러먼트이긴 하지만 그룹이 아닌 엘리먼트만 보관하도록 하기로 결정했습니다.");
 
-            Elements.AddFirst(element);
+            lock (_elements)
+            {
+                _elements.AddFirst(element);
+            }
         }
 
         public void RemoveElement(SGUIElement element)
@@ -161,10 +191,14 @@ namespace SGToolsUI.Model
             if (element.IsGroup)
                 throw new Exception("그룹을 엘리먼트 목록에서 삭제할려고 하고 있습니다.");
 
-            if (!Elements.Remove(element))
-                throw new Exception("엘리먼트목록에서 삭제하는데 실패했습니다.");
+            lock (_elements)
+            {
+                if (!_elements.Remove(element))
+                    throw new Exception("엘리먼트목록에서 삭제하는데 실패했습니다.");
 
-            Debug.WriteLine($"할당된 엘리먼트 수 {Elements.Count}");
+                Debug.WriteLine($"할당된 엘리먼트 수 {_elements.Count}");
+            }
+
         }
 
         public void DeselectAll()
@@ -258,8 +292,6 @@ namespace SGToolsUI.Model
                 {
                     SGUIElement child = group.Children[i];
 
-                    
-
                     // 1일때 high 만나기전까지 모든 자식 추가
                     if (child == low && state == 0)
                         state = 1;
@@ -294,10 +326,10 @@ namespace SGToolsUI.Model
             int groupCode = (code / Constant.GroupCodeInterval) * Constant.GroupCodeInterval;
             int codeIndex = code % Constant.GroupCodeInterval;
 
-            if (!Groups.ContainsKey(groupCode))
+            if (!_groups.ContainsKey(groupCode))
                 throw new Exception($"{code}의 그룹을 찾지 못했습니다.");
 
-            SGUIGroup group = Groups[groupCode];
+            SGUIGroup group = _groups[groupCode];
             if (codeIndex == 0)
                 return group;
 
@@ -310,17 +342,40 @@ namespace SGToolsUI.Model
 
         public static SGUIGroupMaster Create(MainViewModel viewModel)
         {
-            return new SGUIGroupMaster(viewModel)
+            var master = new SGUIGroupMaster(viewModel)
             {
                 DefineName = "group_master",
-                VisualRect = new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight),
+                VisualSize = new(Constant.ResolutionWidth, Constant.ResolutionHeight),
                 VisualName = "그룹 마스터",
                 Selected = false,
                 VerticalAlignment = VAlignment.Top,
                 HorizontalAlignment = HAlignment.Left,
             };
+            master.SetDepth(-1);
+            return master;
         }
 
-       
+        public void Clear()
+        {
+            Depick();
+            DeselectAll();
+            Children.Clear();
+
+            lock (_groups) _groups.Clear();
+            lock (_elements) _elements.Clear();
+
+            ViewModel.View.CanvasShapesControl.AdjustAnchor(null);
+            ViewModel.View.UIElementPropertyGrid.SelectedObject = null;
+#if DEBUG
+            Debug.Assert(!HasSelectedElement);
+            Debug.Assert(!HasPickedElement);
+            Debug.Assert(GroupCount == 0);
+            Debug.Assert(ElementCount == 0);
+            Debug.Assert(!ViewModel.View.CanvasShapesControl.HasSelection);
+            
+#endif
+
+
+        }
     }
 }

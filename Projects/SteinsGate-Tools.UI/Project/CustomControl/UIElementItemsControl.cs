@@ -142,10 +142,15 @@ namespace SGToolsUI.CustomControl
             // 1. 알트키를 누른경우 겹친 엘리먼트 뒤에있는 원소를 순차적으로 선택할 수 있도록 한다.
             // 2. 선택된 엘리먼트가 있더라도 움직일 수 없도록 한다.
             bool alt = ViewModel.KeyState.IsAltPressed;
+            bool ctrl = ViewModel.KeyState.IsCtrlPressed;
+            bool space = ViewModel.KeyState.IsPressed(SGKey.Space);
             _isShiftMove = ViewModel.KeyState.IsShiftPressed;
 
+            if (space)
+                return;
+
             // 마우스를 클릭한 지점에 선택된 원소가 있는 경우 마우스를 따라 움직일 수 있도록 한다.
-            if (!alt && pickedSelectedElements.FirstOrDefault(element => element.ContainPoint(_moveStartPosition)) != null)
+            if (!alt && !ctrl && pickedSelectedElements.FirstOrDefault(element => element.ContainPoint(_moveStartPosition)) != null)
             {
                 ViewModel.View.CanvasShapesControl.IsDraggable = false;
                 ViewModel.View.TitlePanel.Draggable = false;
@@ -155,6 +160,7 @@ namespace SGToolsUI.CustomControl
                 _isElementsMove = true;
                 return;
             }
+
 
             // 알트키를 눌린 경우 겹친 위치의 원소들을 순차적으로 선택할 수 있도록한다.
             if (alt)

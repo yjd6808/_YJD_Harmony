@@ -25,6 +25,7 @@ using System.Windows.Navigation;
 using System.Windows.Resources;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using MoreLinq.Extensions;
 using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
@@ -55,6 +56,8 @@ namespace SGToolsUI.View
 
             if (!Constant.UseDebugData)
                 return;
+
+            #region DebugElements
 
             ViewModel.GroupMaster = SGUIGroupMaster.Create(ViewModel);
             ViewModel.GroupMaster.Children.Add(new SGUIGroup()
@@ -140,10 +143,41 @@ namespace SGToolsUI.View
                     }
                 }
             });
+
+
+
             ViewModel.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 3" });
             ViewModel.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 4" });
-            ViewModel.GroupMaster.ForEachRecursive(x => x.ViewModel = ViewModel);
-            ViewModel.GroupMaster.DebugUpdate();
+
+
+            void DebugManualUpdate(SGUIGroup group)
+            {
+                group.VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
+                group.ViewModel = ViewModel;
+
+                if (!group.IsMaster)
+                {
+                    ViewModel.GroupMaster.AddGroup(group);
+                    group.SetDepth(group.Parent.Depth + 1);
+                }
+
+                group.Children.ForEach(x =>
+                {
+                    x.Parent = group;
+                    x.ViewModel = ViewModel;
+
+                    if (x.IsGroup)
+                        DebugManualUpdate(x.Cast<SGUIGroup>());
+                    else
+                        ViewModel.GroupMaster.AddElement(x);
+                });
+            }
+
+            // 임시데이트 기본 데이터 주입
+            DebugManualUpdate(ViewModel.GroupMaster);
+
+            #endregion
+
         }
 
         private void MainView_OnLoaded(object sender, RoutedEventArgs e)
@@ -154,20 +188,20 @@ namespace SGToolsUI.View
         }
 
 
-        private void MainView_OnClosing(object? sender, CancelEventArgs e)
+        private async void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
-            ViewModel.Saver.Save(SaveMode.UIToolData);
+            Task t1 = ViewModel.Saver.SaveAutoAsync(SaveMode.UIToolData, false);
+            Task t2 = ViewModel.Exporter.ExportAsync();
+
+            await t1;
+            await t2;
+
             ViewModel.LogView.Close();
             ViewModel.JobQueue.Dispose();
             ViewModel.KeyState.Dispose();
             ViewModel.Commander.Finalize();
         }
 
-     
-
-
-
-        
         private void InitializeZoomStateBinding()
         {
             // 수동 너비, 높이 조절을 위해 메뉴얼로 전환
@@ -200,7 +234,7 @@ namespace SGToolsUI.View
             ViewModel.DragState.EndTargets.Add(UIElementTreeView);
         }
 
-        private void MainView_OnKeyDown(SGKey key)
+        private async void MainView_OnKeyDown(SGKey key)
         {
             KeyState state = ViewModel.KeyState;
 
@@ -222,8 +256,13 @@ namespace SGToolsUI.View
 
                 if (state.IsPressed(SGKey.S))
                 {
-                    ViewModel.Saver.Save(SaveMode.UIToolData);
+                    await ViewModel.Saver.SaveAutoAsync(SaveMode.Full, false);
                 }
+                else if (state.IsPressed(SGKey.L))
+                {
+                    ViewModel.Commander.OpenLogView.Execute(null);
+                }
+
             }
 
             if (state.IsPressed(SGKey.Escape))

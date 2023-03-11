@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -86,6 +87,18 @@ namespace SGToolsUI.Model
             }
         }
 
+        [ReadOnly(false)]
+        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(SGUIElement.OrderVisualSize)]
+        public override Size VisualSize
+        {
+            get => _visualSize;
+            set
+            {
+                _visualSize = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VisualRect));
+            }
+        }
 
         [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(SGUIElement.OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정합니다. (그룹 요소입니다. 하위 항목들도 모두 적용됩니다.)")]
@@ -106,6 +119,8 @@ namespace SGToolsUI.Model
         [Category(Constant.ElementCategoryName), DisplayName("계층적 높이"), PropertyOrder(SGUIElement.OrderDepth)]
         [Description("이 엘리먼트의 계층구조상 높이")]
         public override int Depth => _depth;
+
+        
 
 
         [Browsable(false)]
@@ -138,8 +153,12 @@ namespace SGToolsUI.Model
         [Browsable(false)] public bool HasOnlyGroupRecursive => WhereRecursive(element => !element.IsGroup).Any() == false;
 
         public void SetCode(int code) => _code = code;
-        public void SetDepth(int depth) => _depth = depth;
-        
+        public void SetDepth(int depth)
+        {
+            Debug.Assert(_depth < SGUIExporter.DepthStrings.Length, "뎁쓰가 너무 깊습니다.");
+            _depth = depth;
+        }
+
 
         public static int NameSeq = 0;
         // ============================================================
@@ -287,33 +306,10 @@ namespace SGToolsUI.Model
             OnPropertyChanged(nameof(Children));
         }
 
-        // 디버깅용, new로 임시로 생성한 데이터에 정보 주입해주기 위함
-        public void DebugUpdate()
-        {
-            
-
-            VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
-
-            if (!IsMaster)
-            {
-                ViewModel.GroupMaster.AddGroup(this);
-                SetDepth(Parent.Depth + 1);
-            }
-
-            Children.ForEach(x =>
-            {
-                x.Parent = this;
-
-                if (x.IsGroup)
-                    x.Cast<SGUIGroup>().DebugUpdate();
-                else
-                    ViewModel.GroupMaster.AddElement(x);
-            });
-        }
-
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();
+            root[JsonVisualSizeKey] = _visualSize.ToFullString();
             JArray children = new JArray();
 
             for (int i = 0; i < _children.Count; ++i)
@@ -327,6 +323,7 @@ namespace SGToolsUI.Model
         }
 
         private ObservableCollection<SGUIElement> _children;
+        private Size _visualSize;
         private int _code;
         private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
     }

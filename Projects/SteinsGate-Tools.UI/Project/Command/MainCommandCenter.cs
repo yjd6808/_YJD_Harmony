@@ -21,6 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.Command;
 using SGToolsUI.Command.MainViewCommand;
+using SGToolsUI.Command.MainViewCommand.Async;
 using SGToolsUI.Command.MainViewCommand.Control;
 using SGToolsUI.ViewModel;
 
@@ -58,14 +59,16 @@ namespace SGToolsUI.Command
         public CommandAbstract PositionUIElement { get; }
 
 
-        public CommandAbstract FileUIToolDataOpen { get; }
-        public CommandAbstract FileUIToolDataSave { get; }
-        public CommandAbstract FileGameDataSave { get; }
-        public CommandAbstract FileExportHeader { get; }
-
         public CommandAbstract OpenDirectory { get; }
+        public CommandAbstract ShowShortcut { get; }
 
-
+        // =================================================
+        // 비동기 커맨드 목록
+        // =================================================
+        public CommandAbstract FileUIToolDataLoadAsync { get; }
+        public CommandAbstract FileUIToolDataSaveAsync { get; }
+        public CommandAbstract FileGameDataSaveAsync { get; }
+        public CommandAbstract FileGameHeaderExportAsync { get; }
 
 
 
@@ -107,14 +110,13 @@ namespace SGToolsUI.Command
             Add(ToggleCanvasGrid = new ToggleCanvasGrid(ViewModel));
             Add(ToggleCanvasAnchor = new ToggleCanvasAnchor(ViewModel));
 
-            Add(FileUIToolDataOpen = new FileUIToolDataOpen(ViewModel));
-            Add(FileUIToolDataSave = new FileUIToolDataSave(ViewModel) { UseParameter = true } );
-            Add(FileGameDataSave = new FileGameDataSave(ViewModel) { UseParameter = true });
-            Add(FileExportHeader = new FileExportHeader(ViewModel));
+            Add(FileUIToolDataLoadAsync = new FileUIToolDataLoadAsync(ViewModel) { UseParameter = true } );
+            Add(FileUIToolDataSaveAsync = new FileUIToolDataSaveAsync(ViewModel) { UseParameter = true } );
+            Add(FileGameDataSaveAsync = new FileGameDataSaveAsync(ViewModel) { UseParameter = true } );
+            Add(FileGameHeaderExportAsync = new FileGameHeaderExportAsync(ViewModel) );
 
             Add(OpenDirectory = new OpenDirectory(ViewModel) { UseParameter = true });
-
-
+            Add(ShowShortcut = new ShowShortcut(ViewModel));
             // ============================================================
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });
             Add(SpritePreview = new SpritePreview(ViewModel) { UseParameter = true });

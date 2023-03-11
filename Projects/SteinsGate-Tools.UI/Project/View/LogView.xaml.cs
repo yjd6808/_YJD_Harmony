@@ -19,6 +19,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MoreLinq.Extensions;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
 using SGToolsUI.ViewModel;
@@ -27,7 +28,8 @@ namespace SGToolsUI.View
 {
     public enum LogType
     {
-        Path
+        Path,
+        MultiPath
     }
 
     public partial class LogView : Window
@@ -61,6 +63,9 @@ namespace SGToolsUI.View
                     case LogType.Path:
                         ProcessEx.OpenDirectory((string)logData.Item2);
                         break;
+                    case LogType.MultiPath:
+                        ((IEnumerable<string>)logData.Item2).ForEach(path => ProcessEx.OpenDirectory(path));
+                        break;
                     default:
                         throw new Exception("로그 타입이 이상합니다.");
                 }
@@ -76,5 +81,9 @@ namespace SGToolsUI.View
         {
         }
 
+        private void CleanLogBoxButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            LogBox.Clear();
+        }
     }
 }

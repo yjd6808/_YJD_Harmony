@@ -57,6 +57,7 @@ namespace SGToolsCommon.CustomControl
             => LogData = logData;
     }
 
+
     public class LogListBox : ListBox, INotifyPropertyChanged
     {
         public ObservableCollection<LogData> Logs { get; } = new ();
@@ -89,9 +90,7 @@ namespace SGToolsCommon.CustomControl
         {
             StackFrame frame = (new StackTrace(e, true)).GetFrame(0);
             string lastFrameInfo = $"{System.IO.Path.GetFileName(frame.GetFileName())}\n{frame.GetMethod().Name}()\n{frame.GetFileLineNumber()}";
-            
-            AddLog(e.Message + "\n" + lastFrameInfo, null, IconCommonType.NotUsable,
-                Brushes.Crimson);
+            AddLog(e.Message + "\n" + lastFrameInfo, null, IconCommonType.NotUsable, Brushes.Crimson);
         }
 
         public void AddLog(string log, object data = null, IconCommonType type = IconCommonType.Info, Brush brush = null)
@@ -104,6 +103,18 @@ namespace SGToolsCommon.CustomControl
 
             if (Logs.Count > 0)
                 ScrollIntoView(Logs.Last());
+        }
+
+        public void AddDispatchedLog(string log, object data = null, IconCommonType type = IconCommonType.Info, Brush brush = null)
+            => Dispatcher.BeginInvoke(() => AddLog(log, data, type, brush));
+
+        public void AddDispatchedLog(Exception e)
+            => Dispatcher.BeginInvoke(() => AddLog(e));
+
+        public void Clear()
+        {
+            Logs.Clear();
+            LastLog = null;
         }
 
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
