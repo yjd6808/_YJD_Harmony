@@ -113,20 +113,26 @@ namespace SGToolsUI.CustomControl
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
+            base.OnMouseDown(e);
+
             OnMouseDownEventMode(e);
             MoveBegin(e);
         }
 
       
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
+            base.OnPreviewMouseMove(e);
+
             OnMouseMoveEventMode(e);
             MoveMove(e);
         }
 
   
-        protected override void OnMouseUp(MouseButtonEventArgs e)
+        protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
         {
+            base.OnPreviewMouseUp(e);
+
             OnMouseUpEventMode(e);
             MoveEnd(e);
         }
@@ -137,35 +143,6 @@ namespace SGToolsUI.CustomControl
         //             기능
         // ======================================================================
 
-
-        // 그룹은 제일 처음부터 그룹이 드
-        private IEnumerable<SGUIElement> PickedElementsForCanvasSelection
-        {
-            get
-            {
-                SGUIGroupMaster master =  ViewModel.GroupMaster;
-                SGUIElement element = master.PickedElement;
-
-                if (element == null)
-                    yield break;
-                ObservableCollection<SGUIElement> pickedElements = master.PickedElements;
-
-                if (element.IsGroup)
-                {
-                    // 부모그룹이 픽된 경우 부모 그룹이 제일 앞이므로, 
-                    for (int i = pickedElements.Count - 2; i >= 0; --i)
-                        yield return pickedElements[i];
-
-                    yield return pickedElements[pickedElements.Count - 1];
-                }
-                else
-                {
-                    // 단순하게 
-                    for (int i = 0; i < pickedElements.Count; ++i) 
-                        yield return pickedElements[i];
-                }
-            }
-        }
 
         private void MoveBegin(MouseButtonEventArgs e)
         {
@@ -312,19 +289,48 @@ namespace SGToolsUI.CustomControl
             }
         }
 
+       
 
-        private void OnMouseDownEventMode(MouseButtonEventArgs mouseButtonEventArgs)
+        private bool TryGetPickedGroupEventMode(out SGUIGroup pickedGroup)
         {
+            pickedGroup = null;
 
+            if (ViewModel.IsEventMode == false)
+                return false;
+
+            pickedGroup = ViewModel.GroupMaster.PickedGroup;
+            if (pickedGroup == null)
+                return false;
+
+            return true;
         }
-        private void OnMouseMoveEventMode(MouseEventArgs mouseEventArgs)
+
+        private void OnMouseDownEventMode(MouseButtonEventArgs e)
         {
+            if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
+                return;
+
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            pickedGroup.OnMouseDown(pos);
         }
-        private void OnMouseUpEventMode(MouseButtonEventArgs mouseButtonEventArgs)
+
+        private void OnMouseMoveEventMode(MouseEventArgs e)
         {
+            if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
+                return;
+
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            pickedGroup.OnMouseMove(pos);
         }
 
+        private void OnMouseUpEventMode(MouseButtonEventArgs e)
+        {
+            if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
+                return;
 
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            pickedGroup.OnMouseUp(pos);
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

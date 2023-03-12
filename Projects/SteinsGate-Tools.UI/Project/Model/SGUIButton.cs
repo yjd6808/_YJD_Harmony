@@ -16,6 +16,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -32,12 +33,6 @@ namespace SGToolsUI.Model
     [CategoryOrder(Constant.ButtonCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIButton : SGUIElement
     {
-        public const int StateCount = 4;
-        public const int StateNormal = 0;
-        public const int StateOver = 1;
-        public const int StatePressed = 2;
-        public const int StateDisabled = 3;
-
         public const int OrderNormal = 1;
         public const int OrderPressed = 2;
         public const int OrderOver = 3;
@@ -54,6 +49,11 @@ namespace SGToolsUI.Model
         {
             get
             {
+                if (ViewModel.IsEventMode)
+                    for (int i = 0; i < _sprites.Length; ++i)
+                        if (i == _state)
+                            return _sprites[i];
+
                 // 현재 상태를 우선해서 보여준다.
                 for (int i = 0; i < _sprites.Length; ++i)
                     if (i == _state && !_sprites[i].IsNull)
@@ -146,7 +146,7 @@ namespace SGToolsUI.Model
 
 
         [Browsable(false)]
-        public int State
+        public override int State
         {
             get => _state;
             set
@@ -154,8 +154,8 @@ namespace SGToolsUI.Model
                 _state = value;
 
                 // 상태가 변했지만 스프라이트 정보가 주입안되어있으면 업데이트 불가능
-                if (_sprites[value].IsNull)
-                    return;
+                //if (_sprites[value].IsNull)
+                //    return;
 
                 OnPropertyChanged(nameof(VisualSize));
                 OnPropertyChanged(nameof(VisualRect));
@@ -242,9 +242,53 @@ namespace SGToolsUI.Model
             }
         }
 
+        // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.
+        public override bool OnMouseMove(Point p)
+        {
+            if (State == StateDisabled ||
+                State == StatePressed)
+                return true;
 
+            bool contained = ContainPoint(p);
+
+            if (!contained)
+            {
+                State = StateNormal;
+                return true;
+            }
+
+            State = StateOver;
+            return false;
+        }
+
+        public override bool OnMouseDown(Point p)
+        {
+            if (State == StateDisabled ||
+                State == StatePressed)
+                return true;
+
+            bool contained = ContainPoint(p);
+            if (!contained)
+                return true;
+
+            State = StatePressed;
+            return false;
+        }
+
+        public override bool OnMouseUp(Point p)
+        {
+            if (State != StatePressed)
+                return true;
+
+            bool contained = ContainPoint(p);
+            State = StateNormal;
+
+            if (!contained)
+                return true;
+
+            return false;
+        }
         public static int Seq = 0;
         private SGUISpriteInfo[] _sprites;
-        private int _state = StateNormal;
     }
 }

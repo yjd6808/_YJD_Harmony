@@ -57,7 +57,7 @@ namespace SGToolsUI
 
         public const int InvalidValue = -1;
         public const int CacheAlignSize = 64;
-        public const bool UseDebugData = false;
+        public const bool UseDebugData = true;
 
         public static readonly Size DefaultVisualSize = new (50, 50);
         

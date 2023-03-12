@@ -57,7 +57,7 @@ namespace SGToolsUI.ViewModel
         public void Loaded()
         {
             LogBox.Style = (Style)Application.Current.FindResource("LogListBox");
-            Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey); // 그룹마스터 로딩
+            // Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey); // 그룹마스터 로딩
 
             if (Setting.ShowLogViewWhenProgramLaunched)
                 LogView.Show();

@@ -53,6 +53,13 @@ namespace SGToolsUI.Model
         public const int OrderCanvasSelectable = 10;
         public const int OrderDepth = 11;
 
+        // 엘리먼트 스테이츠
+        public const int StateCount = 4;
+        public const int StateNormal = 0;
+        public const int StateOver = 1;
+        public const int StatePressed = 2;
+        public const int StateDisabled = 3;
+
         // 엘리먼트
         public const string JsonCodeKey = "code";
         public const string JsonElementTypeKey = "type";
@@ -411,8 +418,9 @@ namespace SGToolsUI.Model
 
         public void SetPick(bool pick, bool notify = true)
         {
-            _picked = true;
-            if (notify) OnPropertyChanged(nameof(Picked));
+            _picked = pick;
+            if (notify && _picked != pick) 
+                OnPropertyChanged(nameof(Picked));
         }
 
         // 엘레멘트로 피크 가능, 그룹마스터로도 가능
@@ -426,20 +434,45 @@ namespace SGToolsUI.Model
                     return;
 
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
-
                 _picked = value;
+
+                if (value == false)
+                {
+                    if (groupMaster.PickedGroup == this)
+                    {
+                        groupMaster.PickedElements.ForEach(element => element.SetPick(false));
+                        groupMaster.PickedElements.Clear();
+                        return;
+                    }
+
+                    if (!groupMaster.PickedElements.Remove(this))
+                        throw new Exception("픽드 엘리먼트 목록에서 삭제 실패했습니다.");
+
+                    if (IsGroup)
+                    {
+                        Cast<SGUIGroup>().ForEachRecursive(element =>
+                        {
+                            element.SetPick(false);
+                            groupMaster.PickedElements.Remove(element);
+                        });
+                    }
+                }
+
+               
                 OnPropertyChanged();
 
                 if (!_picked)
                     return;
 
+                
                 groupMaster.DeselectAll();
-                groupMaster.PickedElements.ForEach(element => element.Picked = false);
+                groupMaster.PickedElements.ForEach(element => element.SetPick(false));
                 groupMaster.PickedElements.Clear();
-                groupMaster.PickedElements.Add(this);
+                
 
                 if (IsGroup)
                 {
+                    groupMaster.PickedElements.Add(this);
                     SGUIGroup group = Cast<SGUIGroup>();
 
                     group.ForEachRecursive(element =>
@@ -455,8 +488,10 @@ namespace SGToolsUI.Model
                 else
                 {
                     // 그룹이 아니면 부모 그룹도 픽하고 부모그룹에 앵커포인터를 반영한다.
-                    Parent.SetPick(true);
                     groupMaster.PickedElements.Add(Parent);
+                    groupMaster.PickedElements.Add(this);
+
+                    Parent.SetPick(true);
                     ViewModel.View.CanvasShapesControl.AdjustAnchor(Parent);
                 }
 
@@ -701,7 +736,15 @@ namespace SGToolsUI.Model
                 return _treeViewItem;
             }
         }
-        
+
+        [Browsable(false)]
+        public virtual int State
+        {
+            get => _state;
+            set => _state = value;
+        }
+
+        // ==============================================================================
 
         public void OnTreeViewItemLoaded(TreeViewItem item)
         {
@@ -1031,6 +1074,53 @@ namespace SGToolsUI.Model
         [Browsable(false)]
         public object Tag { get; set; } // 아무런 데이터나 기록할 수 있도록하는 프로퍼티
 
+        // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.
+        public virtual bool OnMouseMove(Point p)
+        {
+            if (State == StateDisabled ||
+                State == StatePressed)
+                return true;
+
+            bool contained = ContainPoint(p);
+
+            if (!contained)
+            {
+                State = StateNormal;
+                return true;
+            }
+
+            State = StateOver;
+            return true;
+        }
+
+        public virtual bool OnMouseDown(Point p)
+        {
+            if (State == StateDisabled ||
+                State == StatePressed)
+                return true;
+
+            bool contained = ContainPoint(p);
+            if (!contained)
+                return true;
+
+            State = StatePressed;
+            return true;
+        }
+
+        public virtual bool OnMouseUp(Point p)
+        {
+            if (State != StatePressed)
+                return true;
+
+            bool contained = ContainPoint(p);
+            State = StateNormal;
+
+            if (!contained)
+                return true;
+
+            return true;
+        }
+
 
         public override string ToString() => _visualName;
 
@@ -1039,6 +1129,7 @@ namespace SGToolsUI.Model
         protected bool _selected = false;
         protected bool _visible = true;
         protected bool _deleted = false;
+        protected int _state = StateNormal;
         protected bool _picked = false;
         protected bool _canvasSelectable = true;
         protected HAlignment _horizontalAlignment = HAlignment.Left;

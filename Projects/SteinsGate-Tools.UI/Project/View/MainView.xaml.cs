@@ -275,12 +275,12 @@ namespace SGToolsUI.View
                 ViewModel.Commander.ClipboardOperateUIElement.Clear();
             }
 
-            else if (state.IsPressed(SGKey.F5) && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            else if (state.IsPressed(SGKey.F6) && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 ViewModel.Commander.FileUIToolDataLoadAsync.Execute(SGUIFileSystem.LoadKey);
             }
 
-            else if (state.IsPressed(SGKey.F6))
+            else if (state.IsPressed(SGKey.F7))
             {
                 BackUpTextBox.Focus();
                 BackUpTextBox.Text = string.Empty;
@@ -289,6 +289,14 @@ namespace SGToolsUI.View
             else if (state.IsPressed(SGKey.X))
             {
                 ViewModel.IsEventMode = !ViewModel.IsEventMode;
+
+                if (ViewModel.IsEventMode)
+                    ViewModel.GroupMaster.PickedElements.ForEach(element => element.State = SGUIElement.StateNormal);
+            }
+
+            else if (state.IsPressed(SGKey.C) && ViewModel.IsEventMode)
+            {
+                ViewModel.GroupMaster.PickedElements.ForEach(element => element.State = SGUIElement.StateDisabled);
             }
 
             CanvasShapesControl.OnKeyDown(key);
@@ -313,13 +321,11 @@ namespace SGToolsUI.View
 
         public void MainView_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
-            CanvasShapesControl.DragMove(e);
             ViewModel.DragState.OnDragMove(e.GetPosition(this));
         }
 
         public void MainView_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            CanvasShapesControl.DragEnd(e);
             ViewModel.DragState.OnDragEnd(e.GetPosition(this));
         }
 

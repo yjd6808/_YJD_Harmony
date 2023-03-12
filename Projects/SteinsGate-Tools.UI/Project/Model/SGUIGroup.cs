@@ -331,6 +331,52 @@ namespace SGToolsUI.Model
 
         }
 
+
+        // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.
+        public override bool OnMouseMove(Point p)
+        {
+            // 자기 자신 그룹은 셀프 호출
+            base.OnMouseMove(p);
+
+
+            for (int i = Children.Count - 1; i >= 0; i--)
+            {
+                if (!Children[i].OnMouseMove(p))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public override bool OnMouseDown(Point p)
+        {
+            // 자기 자신 그룹은 셀프 호출
+            base.OnMouseDown(p);
+
+
+            for (int i = Children.Count - 1; i >= 0; i--)
+            {
+                if (!Children[i].OnMouseDown(p))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public override bool OnMouseUp(Point p)
+        {
+            // 자기 자신 그룹은 셀프 호출
+            base.OnMouseUp(p);
+
+            for (int i = Children.Count - 1; i >= 0; i--)
+            {
+                if (!Children[i].OnMouseUp(p))
+                    return false;
+            }
+
+            return true;
+        }
+
         private ObservableCollection<SGUIElement> _children;
         private Size _visualSize;
         private int _code;

@@ -33,6 +33,7 @@ namespace SGToolsUI.Model
         LeftCtrl,
         LeftAlt,
         LeftShift,
+        Delete,
         Space,
         Enter,
         Left,
@@ -45,10 +46,9 @@ namespace SGToolsUI.Model
         S,
         L,
         Z,
-        D1,
         Escape,
-        F5,
         F6,
+        F7,
         Max
     }
 
@@ -85,6 +85,7 @@ namespace SGToolsUI.Model
             _keys[(int)SGKey.LeftCtrl]  = new KeyElement(Key.LeftCtrl);  
             _keys[(int)SGKey.LeftAlt]   = new KeyElement(Key.LeftAlt);
             _keys[(int)SGKey.LeftShift] = new KeyElement(Key.LeftShift);
+            _keys[(int)SGKey.Delete]    = new KeyElement(Key.Delete);
             _keys[(int)SGKey.Space]     = new KeyElement(Key.Space);
             _keys[(int)SGKey.Enter]     = new KeyElement(Key.Enter);
             _keys[(int)SGKey.Left]      = new KeyElement(Key.Left);
@@ -97,10 +98,9 @@ namespace SGToolsUI.Model
             _keys[(int)SGKey.S]         = new KeyElement(Key.S);
             _keys[(int)SGKey.L]         = new KeyElement(Key.L);
             _keys[(int)SGKey.Z]         = new KeyElement(Key.Z);
-            _keys[(int)SGKey.D1]        = new KeyElement(Key.D1);
             _keys[(int)SGKey.Escape]    = new KeyElement(Key.Escape);
-            _keys[(int)SGKey.F5]        = new KeyElement(Key.F5);
             _keys[(int)SGKey.F6]        = new KeyElement(Key.F6);
+            _keys[(int)SGKey.F7]        = new KeyElement(Key.F7);
 
 
             // 방향키 연속키입력 허용

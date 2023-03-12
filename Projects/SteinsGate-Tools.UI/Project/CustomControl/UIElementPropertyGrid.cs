@@ -199,11 +199,9 @@ namespace SGToolsUI.CustomControl
             return true;
         }
 
+
         public void OnKeyDown(SGKey key)
         {
-            if (key != SGKey.D1)
-                return;
-
             SGUIElement element = SelectedObject as SGUIElement;
 
             if (element == null)
@@ -214,7 +212,6 @@ namespace SGToolsUI.CustomControl
                 case SGUIElementType.Group:
                     break;
                 case SGUIElementType.Button:
-                    SGUIButton button = element.Cast<SGUIButton>();
                     break;
                 case SGUIElementType.Label:
                     break;

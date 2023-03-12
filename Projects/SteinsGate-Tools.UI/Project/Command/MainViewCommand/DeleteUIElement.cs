@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,12 +36,12 @@ namespace SGToolsUI.Command.MainViewCommand
         public override async Task ExecuteAsync(object? parameter)
         {
             // 그룹인 요소와 그룹이 아닌 요소로 분리
-            var masterGroup = ViewModel.GroupMaster;
+            var groupMaster = ViewModel.GroupMaster;
 
-            if (!masterGroup.HasSelectedElement)
+            if (!groupMaster.HasSelectedElement)
                 return;
 
-            var lookup = masterGroup.SelectedElements.ToLookup(element => element.IsGroup);
+            var lookup = groupMaster.SelectedElements.ToLookup(element => element.IsGroup);
 
             /*선택된 요소중 그룹만 먼저 다 가져온후 그룹을 제일먼저 제거해준 후 원소 제거를 수행한다.
               [이유]
@@ -55,25 +56,19 @@ namespace SGToolsUI.Command.MainViewCommand
 
              최상위 그룹을 먼저 삭제 우선토록한다. 따라서 깊이가 얕은 순서대로 오름차순 정렬을 해준다.*/
             await ViewModel.Saver.BackupAsync("삭제");
+
             lookup[true].OrderBy(element => element.Depth).Cast<SGUIGroup>().ToList().ForEach(deletedGroupElement =>
             {
-
-                // 처음 픽된 대상인 경우 = 이녀석을 눌러서 픽된 녀석이 삭제되면
-                // 픽 목록을 초기화시키고 앵커포인트를 그룹마스터로 변경해준다.
-                if (deletedGroupElement.FirstPicked)
-                    ViewModel.Commander.UnpickUIElement.Execute(null);
-
                 deletedGroupElement.Selected = false;
+                deletedGroupElement.Picked = false;
                 deletedGroupElement.DeleteSelf();
             });
 
             // 이후 무지성 원소 삭제
             lookup[false].ToList().ForEach(deletedElement =>
             {
-                if (deletedElement.FirstPicked)
-                    ViewModel.Commander.UnpickUIElement.Execute(null);
-
                 deletedElement.Selected = false;
+                deletedElement.Picked = false;
                 deletedElement.DeleteSelf();
             });
         }

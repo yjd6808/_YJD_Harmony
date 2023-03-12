@@ -30,6 +30,32 @@ namespace SGToolsCommon.Extension
                 yield return collection[i];
         }
 
+        // 반대로 인덱스와 함께 순회
+        public static void ReversedIndexingForEach<T>(this IList<T> collection, Action<int, T> action) where T : class
+        {
+            for (int i = collection.Count - 1; i >= 0; --i)
+                action(i, collection[i]);
+        }
+
+        // 반대로 조건이 true일때까지만 순회
+        public static void ReversedIndexingConditionForEach<T>(this IList<T> collection, Predicate<T> predicate) where T : class
+        {
+            for (int i = collection.Count - 1; i >= 0; --i)
+                if (!predicate(collection[i]))
+                    return;
+        }
+
+
+        // 반대로 인덱스와 함께 조건이 true일때까지만 순회
+        public static void ReversedIndexingConditionForEach<T>(this IList<T> collection, Func<int, T, bool> predicate) where T : class
+        {
+            for (int i = collection.Count - 1; i >= 0; --i)
+                if (!predicate(i, collection[i]))
+                    return;
+        }
+
+
+
         public static ObservableCollection<T> InsertRangeNew<T>(
             this ObservableCollection<T> collection, int index, IList<T> elements) 
             where T : class
@@ -62,6 +88,13 @@ namespace SGToolsCommon.Extension
         {
             foreach (var element in elements)
                 collection.Add(element);
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<int, T> action) where T : class
+        {
+            int i = 0;
+            foreach (T item in collection)
+                action(i++, item);
         }
     }
 }

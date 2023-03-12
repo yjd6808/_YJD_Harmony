@@ -138,6 +138,12 @@ namespace SGToolsUI.CustomControl
                     group.Item.IsExpanded = !group.Item.IsExpanded;
                     break;
                 }
+                case SGKey.Delete:
+                {
+                    if (ViewModel.GroupMaster.HasSelectedElement && MessageBoxEx.ShowTopMost("정말로 삭제하시겠습니까?", "질문임", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        ViewModel.Commander.DeleteUIElement.Execute(null);
+                    break;
+                }
                 case SGKey.X:
                     if (ViewModel.KeyState.IsCtrlPressed)
                         ViewModel.Commander.ClipboardOperateUIElement.Execute(ClipboardOperate.Cut);
@@ -166,7 +172,7 @@ namespace SGToolsUI.CustomControl
             SGUIElement? selected = hit.DataContext;
             SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
 
-            if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null)
+            if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null && prevSelected != selected) 
             {
                 List<SGUIElement> betweenElements = ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected, true);
                 ViewModel.Commander.SelectUIElement.Execute(betweenElements);

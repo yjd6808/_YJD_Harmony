@@ -170,6 +170,8 @@ namespace SGToolsUI.CustomControl
             Loaded += OnLoaded;
         }
 
+       
+
 
         // ======================================================================
         //             이니셜라지
@@ -251,18 +253,12 @@ namespace SGToolsUI.CustomControl
 
         public void OnKeyDown(SGKey key)
         {
-            if (key == SGKey.LeftShift)
-                ViewModel.UIElementSelectMode = SelectMode.KeepExcept;
-
             if (key == SGKey.Z)
                 IsHideSelection = true;
         }
 
         public void OnKeyUp(SGKey key)
         {
-            if (key == SGKey.LeftShift)
-                ViewModel.UIElementSelectMode = SelectMode.New;
-
             if (key == SGKey.Z)
                 IsHideSelection = false;
         }
@@ -270,9 +266,6 @@ namespace SGToolsUI.CustomControl
         
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            if (ViewModel.IsEventMode)
-                return;
-
             DragBegin(e);
 
             UIElementItemsControl source = ViewModel.View.UIElementsControl;
@@ -283,7 +276,7 @@ namespace SGToolsUI.CustomControl
             });
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             DragMove(e);
 
@@ -295,7 +288,7 @@ namespace SGToolsUI.CustomControl
             });
         }
 
-        protected override void OnMouseUp(MouseButtonEventArgs e)
+        protected override void OnPreviewMouseUp(MouseButtonEventArgs e)
         {
             DragEnd(e);
 
@@ -306,8 +299,6 @@ namespace SGToolsUI.CustomControl
                 Source = source
             });
         }
-
-
 
         
 
@@ -452,7 +443,6 @@ namespace SGToolsUI.CustomControl
             }
 
             Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
-
             _dragState = DragState.Wait;
             _dragStartPosition = pos;
             ViewModel.View.TitlePanel.Draggable = false;
@@ -481,7 +471,6 @@ namespace SGToolsUI.CustomControl
         {
             _dragState = DragState.None;
             ViewModel.View.TitlePanel.Draggable = true;
-            
 
             if (e == null)
                 return;

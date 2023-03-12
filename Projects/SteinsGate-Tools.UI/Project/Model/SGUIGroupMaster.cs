@@ -118,7 +118,7 @@ namespace SGToolsUI.Model
 
         public ObservableCollection<SGUIElement> SelectedElements { get; }
         public ObservableCollection<SGUIElement> PickedElements { get; }
-
+        public SGUIGroup PickedGroup => HasPickedElement ? PickedElements[0].Cast<SGUIGroup>() : null;
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
         public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
 
