@@ -41,6 +41,10 @@ namespace SGToolsUI.Model
     [CategoryOrder(Constant.ElementCategoryName, Constant.ElementCategoryOrder)]
     public abstract class SGUIElement : CanvasElement, ICloneable, IComparer<SGUIElement>
     {
+        public const string VisualNameKey = nameof(VisualName);
+        public const string DefineNameKey = nameof(DefineName);
+        public const string VisualSizeKey = nameof(VisualSize);
+
         public const int OrderUIElementType = 1;
         public const int OrderCodeString = 2;
         public const int OrderVisualName = 3;

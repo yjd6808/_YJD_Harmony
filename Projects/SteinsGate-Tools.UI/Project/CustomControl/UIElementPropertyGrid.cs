@@ -6,11 +6,13 @@
 
 using SGToolsUI.ViewModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -31,22 +33,39 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using System.Reflection.PortableExecutable;
 using Point = System.Windows.Point;
 using Newtonsoft.Json.Linq;
+using System.Windows.Threading;
+using Xceed.Wpf.AvalonDock.Controls;
+using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
+using PropertyItem = Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem;
 
 namespace SGToolsUI.CustomControl
 {
+   
+
     public class UIElementPropertyGrid : PropertyGrid, IDataDragReceiver
     {
         public MainViewModel ViewModel { get; private set; }
         public ScrollViewer ScrollViewer { get; private set; }
         public PropertyItemsControl PropertyItemsControl { get; private set; }
         private const BindingFlags PropertyFlag = BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance;
+        private string _selectProperty;
 
         public UIElementPropertyGrid()
         {
             Loaded += OnLoaded;
-            SelectedPropertyItemChanged += OnSelectedPropertyItemChanged;
+            
+        }
+
+
+
+        private void OnPreparePropertyItem(object sender, PropertyItemEventArgs e)
+        {
+            PropertyItem propertyItem = e.PropertyItem as PropertyItem;
+            if (propertyItem == null) return;
+
 
         }
+
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -70,9 +89,8 @@ namespace SGToolsUI.CustomControl
                 throw new Exception("UIElementTreeView에서 뷰모델 초기화 실패");
             ScrollViewer = ViewModel.View.UIElementTreeViewScrollViewer;
             PropertyItemsControl = this.FindChild<PropertyItemsControl>();
-
-            
         }
+
 
         private void OnSelectedPropertyItemChanged(object sender, RoutedPropertyChangedEventArgs<PropertyItemBase> e)
         {
@@ -100,39 +118,39 @@ namespace SGToolsUI.CustomControl
         {
 
             /* 프로퍼티 그리드 내부 부모 관계도 (위에서부터 시작)
-             * System.Windows.Controls.ContentPresenter
-             * System.Windows.Controls.ContentControl: 없음
-             * System.Windows.Controls.Border
-             * System.Windows.Controls.Grid
-             * System.Windows.Controls.Border
+             * ContentPresenter
+             * ContentControl: 없음
+             * Border
+             * Grid
+             * Border
              * Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem
-             * System.Windows.Controls.VirtualizingStackPanel
-             * System.Windows.Controls.ItemsPresenter
-             * System.Windows.Controls.ContentPresenter
-             * System.Windows.Controls.Border
-             * System.Windows.Controls.Border
-             * System.Windows.Controls.Grid
-             * System.Windows.Controls.Expander Header:버튼 Content:
-             * System.Windows.Controls.Border
-             * System.Windows.Controls.GroupItem: 버튼
-             * System.Windows.Controls.VirtualizingStackPanel
-             * System.Windows.Controls.ItemsPresenter
-             * System.Windows.Controls.ScrollContentPresenter
-             * System.Windows.Controls.Grid
-             * System.Windows.Controls.ScrollViewer
-             * System.Windows.Controls.Border
+             * VirtualizingStackPanel
+             * ItemsPresenter
+             * ContentPresenter
+             * Border
+             * Border
+             * Grid
+             * Expander Header:버튼 Content:
+             * Border
+             * GroupItem: 버튼
+             * VirtualizingStackPanel
+             * ItemsPresenter
+             * ScrollContentPresenter
+             * Grid
+             * ScrollViewer
+             * Border
              * Xceed.Wpf.Toolkit.PropertyGrid.PropertyItemsControl Items.Count: 12
-             * System.Windows.Controls.Grid
-             * System.Windows.Controls.Grid
-             * System.Windows.Controls.Border
+             * Grid
+             * Grid
+             * Border
              * SGToolsUI.CustomControl.UIElementPropertyGrid
-             * System.Windows.Controls.Grid
-             * System.Windows.Controls.Canvas
-             * System.Windows.Controls.Grid
-             * System.Windows.Controls.DockPanel
-             * System.Windows.Controls.ContentPresenter
-             * System.Windows.Controls.Grid
-             * System.Windows.Controls.Border
+             * Grid
+             * Canvas
+             * Grid
+             * DockPanel
+             * ContentPresenter
+             * Grid
+             * Border
              * SGToolsUI.View.MainView
              */
 
@@ -229,6 +247,40 @@ namespace SGToolsUI.CustomControl
         }
 
         public bool ContainPoint(Point p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
+
+        public void SelectWithPropertyFocus(SGUIElement selectedElement, string propertyName)
+        {
+            // 오브젝트 변경전 프로퍼티 아이템 수 : 카운트 0 (제일 초기)
+            SelectedObject = selectedElement;
+            // 오브젝트 변경후 프로퍼티 아이템 수 : 카운트 多 프로퍼티 아이템 세팅됨.
+
+            for (int i = 0; i < PropertyItemsControl.Items.Count; ++i)
+            {
+                var propertyItem = PropertyItemsControl.Items[i] as PropertyItem;
+                if (propertyItem == null) continue;
+                if (propertyItem.PropertyName != propertyName) continue;
+
+                // 아직 하위 비주얼 UI 컨트롤들이 로딩되지 않은 상태라서 포커스를 잡을 수 없다.
+                // 로딩되면 포커스를 잡아주도록 하자.
+                // propertyItem.Editor.Focus(); 여기서 수행할 수가 없음
+                propertyItem.Loaded += (sender, args) =>
+                {
+                    propertyItem.Editor.Focus();
+
+                    if (propertyItem.Editor is PropertyGridEditorTextBox textBox)
+                        textBox.SelectAll();
+                };
+            }
+        }
+
+        private void OnSelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            string defaultSelectedPropertyName = _selectProperty.Length == 0 ? SGUIElement.VisualNameKey : _selectProperty;
+
+            
+
+            _selectProperty = string.Empty;
+        }
     }
 
  

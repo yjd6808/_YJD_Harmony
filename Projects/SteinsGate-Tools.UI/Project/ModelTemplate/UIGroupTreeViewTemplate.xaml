@@ -27,7 +27,7 @@
                     </Style>
                 </Image.Style>
             </Image>
-            <TextBlock Text="{Binding VisualName}" HorizontalAlignment="Stretch"/>
+            <TextBlock Name="VisualNameTextBlock" Text="{Binding VisualName}" HorizontalAlignment="Stretch" />
             <StackPanel.Style>
                 <Style TargetType="StackPanel">
                     <Style.Triggers>

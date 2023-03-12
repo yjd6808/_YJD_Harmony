@@ -47,6 +47,7 @@ namespace SGToolsUI.Model
         L,
         Z,
         Escape,
+        F2,
         F6,
         F7,
         Max
@@ -99,6 +100,7 @@ namespace SGToolsUI.Model
             _keys[(int)SGKey.L]         = new KeyElement(Key.L);
             _keys[(int)SGKey.Z]         = new KeyElement(Key.Z);
             _keys[(int)SGKey.Escape]    = new KeyElement(Key.Escape);
+            _keys[(int)SGKey.F2]        = new KeyElement(Key.F2);
             _keys[(int)SGKey.F6]        = new KeyElement(Key.F6);
             _keys[(int)SGKey.F7]        = new KeyElement(Key.F7);
 

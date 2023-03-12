@@ -25,7 +25,7 @@ using System.Windows.Navigation;
 using System.Windows.Resources;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using MoreLinq.Extensions;
+using MoreLinq;
 using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
@@ -38,6 +38,7 @@ using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Properties;
+using Xceed.Wpf.Toolkit.PropertyGrid;
 
 namespace SGToolsUI.View
 {
@@ -153,6 +154,11 @@ namespace SGToolsUI.View
                 ViewModel.Commander.ClipboardOperateUIElement.Clear();
             }
 
+            else if (state.IsPressed(SGKey.F2) && ViewModel.GroupMaster.SelectedElement != null)
+            {
+                UIElementPropertyGrid.SelectWithPropertyFocus(ViewModel.GroupMaster.SelectedElement, SGUIElement.VisualNameKey);
+            }
+
             else if (state.IsPressed(SGKey.F6) && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 ViewModel.Commander.FileUIToolDataLoadAsync.Execute(SGUIFileSystem.LoadKey);
@@ -234,5 +240,6 @@ namespace SGToolsUI.View
             BackUpTextBox.FocusClear();
 
         }
+
     }
 }

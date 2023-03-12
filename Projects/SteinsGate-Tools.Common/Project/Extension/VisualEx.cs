@@ -6,6 +6,7 @@
 using SGToolsCommon.Sga;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,6 +63,20 @@ namespace SGToolsCommon.Extension
             }
             return null;
         }
+
+        public static void PrintChildren(this DependencyObject depObj)
+        {
+            if (depObj == null) return;
+
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+                Debug.WriteLine(child);
+                PrintChildren(child);
+            }
+        }
+
+
 
         public static Point GetOffsetIn(this global::System.Windows.Media.Visual depObj, global::System.Windows.Media.Visual relative)
         {
