@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsUI.File
+namespace SGToolsUI.FileSystem
 {
     public enum ExportType
     {

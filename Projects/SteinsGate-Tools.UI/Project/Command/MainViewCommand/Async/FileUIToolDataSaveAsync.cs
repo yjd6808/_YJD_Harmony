@@ -5,7 +5,7 @@
  */
 
 using Microsoft.Win32;
-using SGToolsUI.File;
+using SGToolsUI.FileSystem;
 using SGToolsUI.ViewModel;
 using System;
 using System.Collections.Generic;

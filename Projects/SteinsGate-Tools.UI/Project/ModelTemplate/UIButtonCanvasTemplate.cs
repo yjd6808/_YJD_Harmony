@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,25 +30,6 @@ namespace SGToolsUI.ModelTemplate
         {
         }
 
-        private void ButtonImage_OnMouseEnter(object sender, MouseEventArgs e)
-        {
-            if (!TryCast(sender, out Image img, out SGUIButton button))
-                return;
-
-        }
-
-        private void ButtonImage_OnMouseLeave(object sender, MouseEventArgs e)
-        {
-        }
-
-        private void ButtonImage_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-        }
-
-        private void ButtonImage_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-        }
-
         private bool TryCast(object sender, out Image img, out SGUIButton button)
         {
             img = sender as Image;
@@ -57,6 +39,14 @@ namespace SGToolsUI.ModelTemplate
                 button = img.DataContext as SGUIButton;
 
             return img != null && button != null;
+        }
+
+
+        private void ButtonImage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!TryCast(sender, out Image img, out SGUIButton button))
+                return;
+
         }
     }
 }

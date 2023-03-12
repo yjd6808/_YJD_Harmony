@@ -30,13 +30,14 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Media.Media3D;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsUI.View;
 
-namespace SGToolsUI.File
+namespace SGToolsUI.FileSystem
 {
     public class SGUILoader : SGUIFileSystem
     {
@@ -105,26 +106,35 @@ namespace SGToolsUI.File
                 }
 
                 // Step4. 마스터 그룹 로딩, 그룹 마스터와 부모, 자식 등록진행
-                SGUIGroup parsed = new SGUIGroup();
+                ObservableCollection<SGUIElement> parsed = new ();
                 JArray masterGroups = groupMaster[SGUIElement.JsonChildrenKey] as JArray;
-                parsed.ParseJObject(groupMaster);
+                master.ParseJObject(groupMaster);
 
                 for (int i = 0; i < masterGroups.Count; ++i)
                 {
                     int[] newChildInfo = new int[3];
                     SGUIGroup masterGroup = ParseChildInfo(masterGroups[i], newChildInfo).Cast<SGUIGroup>();
+                    masterGroup.Parent = master;
                     masterGroup.Tag = newChildInfo;
-                    parsed.Children.Add(masterGroup);
+                    master.Children.Add(masterGroup);
                 }
 
                 // 모든 자식 순회하면서 기타 설정까지 한번에 수행, 이때부턴 그룹의 코드가 다시 재구성된다. 태그에 저장된 childInfo[0](코드)는 이후로 쓸모없어짐
-                master.InsertChildren(parsed, 0);
-
                 // Step5. 부모 관계가 모두 확립되었으므로 상위 계층부터 하위 계층까지 순회하며 RelativePosition VisualPosition으로 반영
                 master.ForEachRecursive(element =>
                 {
                     int[] childInfo = (int[])element.Tag;
                     element.RelativePosition = new Point(childInfo[1], childInfo[2]);
+
+                    if (!element.IsGroup)
+                    {
+                        master.AddElement(element);
+                        return;
+                    }
+
+                    SGUIGroup newGroup = element.Cast<SGUIGroup>();
+                    master.AddGroup(newGroup);
+                    newGroup.SetDepth(newGroup.Parent.Depth + 1);
                 });
 
 
@@ -151,7 +161,7 @@ namespace SGToolsUI.File
             SGUIGroupMaster master = SGUIGroupMaster.Create(_viewModel);
             bool result = await Task.Run(() => Load(path, master));
 
-            if (result == false)
+            if (result)
                 return master;
 
             return SGUIGroupMaster.Create(_viewModel);

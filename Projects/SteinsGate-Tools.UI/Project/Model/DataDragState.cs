@@ -27,6 +27,7 @@ using Point = System.Windows.Point;
 
 namespace SGToolsUI.Model
 {
+
     public interface IDataDragReceiver
     {
         void DragEnd(object data);
@@ -72,6 +73,14 @@ namespace SGToolsUI.Model
 
         public List<IDataDragReceiver> EndTargets { get; } = new ();
 
+        public void OnDragBegin(UIElement beginTarget, Point p, object data)
+        {
+            _beginTarget = beginTarget;
+            DragStartPosition = p;
+            State = DragState.Wait;
+            Data = data;
+        }
+
         public void OnDragMove(Point p)
         {
             if (_state == DragState.Wait)
@@ -109,10 +118,12 @@ namespace SGToolsUI.Model
 
         private Point _startPosition;
         private DragState _state = DragState.None;
+        private UIElement _beginTarget;
         private MainViewModel _viewModel;
 
         public void Clear()
         {
+            _beginTarget = null;
             Mouse.OverrideCursor = Cursors.Arrow;
             State = DragState.None;
             Data = null;

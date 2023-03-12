@@ -28,7 +28,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsUI.Command.MainViewCommand;
-using MoreLinq.Extensions;
 using SGToolsUI.Extension;
 
 namespace SGToolsUI.CustomControl
@@ -117,12 +116,29 @@ namespace SGToolsUI.CustomControl
             }
         }
 
+        public bool IsHideSelection
+        {
+            get => _isHideSelection;
+            set
+            {
+                if (_isHideSelection == value)
+                    return;
+
+                _isHideSelection = value;
+                double opacity = _isHideSelection ? 0 : 1;
+                _selectionPool.ForEach(selection => selection.Selection.Opacity = opacity);
+                _selectionMap.Values.ForEach(selection => selection.Selection.Opacity = opacity);
+            }
+        }
+
         // 헬퍼 프로퍼티.
         public ObservableCollection<SGUIElement> PickedElements => ViewModel.GroupMaster.PickedElements;
 
 
         public MainViewModel ViewModel { get; private set; }
         public CanvasRect Viewport => _viewPort;
+
+        
         public CanvasGrid Grid => _grid;
         public Canvas CanvasPanel => _canvasPanel;
         public ItemsPresenter Presenter => _canvasPresenter;
@@ -147,6 +163,7 @@ namespace SGToolsUI.CustomControl
         private DragState _dragState = DragState.None;
         private Point _dragStartPosition;
         private bool _isDraggable = true;
+        private bool _isHideSelection = false;
 
         public CanvasShapeItemsControl()
         {
@@ -179,13 +196,18 @@ namespace SGToolsUI.CustomControl
             => _grid = new CanvasGrid(100, 1, Brushes.White);
 
         private void initializeAnchor()
-            => _anchor = new CanvasAnchor(
+        {
+            _anchor = new CanvasAnchor(
                 new Rect(0, 0, Constant.CanvasAnchorSize, Constant.CanvasAnchorSize),
                 2, Brushes.Black, Brushes.Orange
-            )
-            {
-                Target = ViewModel.GroupMaster  // 타겟이 null인 상황을 만들면 안됨.
-            };
+            );
+
+            if (DesignerProperties.GetIsInDesignMode(this))
+                return;
+
+            _anchor.Target = ViewModel.GroupMaster;
+        }
+            
 
         private void InitializeViewModel()
         {
@@ -212,8 +234,6 @@ namespace SGToolsUI.CustomControl
         }
 
 
-
-
         private void initializeSelectionPool()
         {
             for (int i = 0; i < 200; ++i)
@@ -229,25 +249,30 @@ namespace SGToolsUI.CustomControl
         //             이때 겹쳐진 UIElementsItemsControl로 이벤트 전파가 안되기 땜에 강제로 이벤트 발생을 해줘야함
         // ======================================================================
 
-        protected override void OnKeyDown(KeyEventArgs e)
+        public void OnKeyDown(SGKey key)
         {
-            base.OnKeyDown(e);
-
-            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            if (key == SGKey.LeftShift)
                 ViewModel.UIElementSelectMode = SelectMode.KeepExcept;
+
+            if (key == SGKey.Z)
+                IsHideSelection = true;
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
+        public void OnKeyUp(SGKey key)
         {
-            base.OnKeyDown(e);
-            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            if (key == SGKey.LeftShift)
                 ViewModel.UIElementSelectMode = SelectMode.New;
 
+            if (key == SGKey.Z)
+                IsHideSelection = false;
         }
 
         
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
+            if (ViewModel.IsEventMode)
+                return;
+
             DragBegin(e);
 
             UIElementItemsControl source = ViewModel.View.UIElementsControl;

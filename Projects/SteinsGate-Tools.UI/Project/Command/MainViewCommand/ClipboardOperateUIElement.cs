@@ -92,8 +92,7 @@ namespace SGToolsUI.Command.MainViewCommand
         {
             if (Copy(selectedElements))
             {
-                // 백업
-                ViewModel.Saver.Backup("Cut 수행전");
+                // 삭제 수행시 알아서 백업하므로 여기서 백업 안해도됨.
                 ViewModel.Commander.DeleteUIElement.Execute(null);
             }
         }

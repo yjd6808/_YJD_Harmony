@@ -29,6 +29,19 @@ using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.CustomControl
 {
+    public class DragPreventListBoxItem : ListBoxItem
+    {
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            return;
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+        }
+    }
+
     public class SgaSpriteListBox : ListBox
     {
         public MainViewModel ViewModel { get; private set; }
@@ -37,6 +50,11 @@ namespace SGToolsUI.CustomControl
         public SgaSpriteListBox()
         {
             Loaded += OnLoaded;
+        }
+
+        protected override DependencyObject GetContainerForItemOverride()
+        {
+            return new DragPreventListBoxItem();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -66,10 +84,7 @@ namespace SGToolsUI.CustomControl
             if (hit == null)
                 return;
 
-            ViewModel.DragState.Data = hit.DataContext;
-            ViewModel.DragState.State = DragState.Wait;
+            ViewModel.DragState.OnDragBegin(this, e.GetPosition(ViewModel.View), hit.DataContext);
         }
-
-        
     }
 }

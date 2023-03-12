@@ -14,6 +14,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -29,7 +30,10 @@ using SGToolsCommon.Resource;
 using SGToolsUI.Model;
 using SGToolsUI.View;
 using IoFile = System.IO.File;
-namespace SGToolsUI.File
+using System.Windows.Interop;
+using SGToolsCommon.Extension;
+
+namespace SGToolsUI.FileSystem
 {
     public enum SaveMode
     {
@@ -138,19 +142,27 @@ namespace SGToolsUI.File
             }
         }
 
-        public void Backup(string tag)
+        public async Task BackupAsync(string tag)
         {
             if (!Directory.Exists(Constant.BackupDirectoryRoot))
                 Directory.CreateDirectory(Constant.BackupDirectoryRoot);
 
             DateTime now = DateTime.Now;
             string fileName = now.ToString(Constant.BackupFileFmt) + $"_{tag}.json";
-            string savePath = Path.Join(
+            string saveDir = Path.Join(
                 Environment.CurrentDirectory,
                 Constant.BackupDirectoryRoot,
-                now.ToString(Constant.BackupDirectoryFmt),
-                fileName
+                now.ToString(Constant.BackupDirectoryFmt)
             );
+
+            DirectoryEx.CreateDirectoryIfNotExist(saveDir);
+            string savePath = Path.Join(saveDir, fileName);
+
+            Exception e = await SaveAsync(savePath, null, false);
+            if (e == null)
+                _viewModel.LogBox.AddDispatchedLog($"{tag} 백업완료", (LogType.Path, (object)savePath), IconCommonType.Backup, Brushes.RoyalBlue);
+            else
+                _viewModel.LogBox.AddDispatchedLog(e);
         }
 
         public async Task<Exception> SaveAutoAsync(SaveMode mode, bool minify)

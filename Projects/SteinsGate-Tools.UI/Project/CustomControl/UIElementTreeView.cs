@@ -161,6 +161,8 @@ namespace SGToolsUI.CustomControl
             if (hit == null)
                 return;
 
+            
+
             SGUIElement? selected = hit.DataContext;
             SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
 
@@ -205,7 +207,7 @@ namespace SGToolsUI.CustomControl
 
         }
 
-        public bool ContainPoint(Point p) => VisualTreeHelperEx.ContainPoint(this, p);
+        public bool ContainPoint(Point p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
 
     }
 }

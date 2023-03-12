@@ -25,14 +25,14 @@ using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
-    public class DeleteUIElement : MainCommandAbstract
+    public class DeleteUIElement : MainCommandAbstractAsync
     {
         public DeleteUIElement(MainViewModel viewModel)
             : base(viewModel, "파라미터로 전달된 SGUIElement를 트리뷰에서 삭제합니다.")
         {
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
             // 그룹인 요소와 그룹이 아닌 요소로 분리
             var masterGroup = ViewModel.GroupMaster;
@@ -54,6 +54,7 @@ namespace SGToolsUI.Command.MainViewCommand
                    list.Remove(i)와 같은 작업 수행시 연산이 제대로 수행안될 수 있기 때문
 
              최상위 그룹을 먼저 삭제 우선토록한다. 따라서 깊이가 얕은 순서대로 오름차순 정렬을 해준다.*/
+            await ViewModel.Saver.BackupAsync("삭제");
             lookup[true].OrderBy(element => element.Depth).Cast<SGUIGroup>().ToList().ForEach(deletedGroupElement =>
             {
 

@@ -44,7 +44,11 @@ namespace SGToolsUI.Model
         V,
         S,
         L,
+        Z,
+        D1,
         Escape,
+        F5,
+        F6,
         Max
     }
 
@@ -92,7 +96,12 @@ namespace SGToolsUI.Model
             _keys[(int)SGKey.V]         = new KeyElement(Key.V);
             _keys[(int)SGKey.S]         = new KeyElement(Key.S);
             _keys[(int)SGKey.L]         = new KeyElement(Key.L);
+            _keys[(int)SGKey.Z]         = new KeyElement(Key.Z);
+            _keys[(int)SGKey.D1]        = new KeyElement(Key.D1);
             _keys[(int)SGKey.Escape]    = new KeyElement(Key.Escape);
+            _keys[(int)SGKey.F5]        = new KeyElement(Key.F5);
+            _keys[(int)SGKey.F6]        = new KeyElement(Key.F6);
+
 
             // 방향키 연속키입력 허용
             SetEnableFireContinuous(SGKey.Left, true);

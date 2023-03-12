@@ -28,7 +28,7 @@
         xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
         xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
         xmlns:common_prim="clr-namespace:SGToolsCommon.Primitive;assembly=SGToolsCommon"
-        xmlns:file="clr-namespace:SGToolsUI.File"
+        xmlns:file="clr-namespace:SGToolsUI.FileSystem"
 
         Name="View"
         FontSize="14"
@@ -104,13 +104,15 @@
                     <ColumnDefinition Width="16"/>
                     <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0"  Text="{Binding ZoomState.ZoomLevelXString, Mode=OneWay}"  Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
                 <Button Name="ZoomLevelDownButton" Grid.Column="1" Command="{Binding Commander.CanvasZoomUp}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDownKey}}" />
                 <Button Name="ZoomLevelUpButton" Grid.Column="2" Command="{Binding Commander.CanvasZoomDown}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUpKey}}" />
                 <Button Name="ZoomLevelResetButton" Grid.Column="3" Command="{Binding Commander.CanvasZoomReset}" IsEnabled="{Binding ZoomState.IsNotDefaultZoomLevel}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonResetKey}}"/>
-                <TextBox Grid.Column="4"  Text="{Binding CanvasSelectionStatus}" Style="{StaticResource ReadonlyTextBox}"/>
+                <TextBox Grid.Column="4" Text="{Binding IsEventMode, Mode=OneWay, Converter={StaticResource EventModeToStringConverter}}" Style="{StaticResource ReadonlyTextBox}"/>
+                <TextBox Grid.Column="5"  Text="{Binding CanvasSelectionStatus, Mode=OneWay}" Style="{StaticResource ReadonlyTextBox}"/>
             </Grid>
             <Border     Grid.Column="3"  Style="{StaticResource BorderSeparatorVertical}" />
             <TextBox    Grid.Column="4"  Text="{Binding ResourceSelectionStatus}" Margin="5, 0, 0, 0" Style="{StaticResource ReadonlyTextBox}"/>
@@ -125,37 +127,52 @@
                                               상단 메뉴
         
             ############################################################################### -->
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="파일">
-                <MenuItem Header="툴 데이터 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadKey}"/>
-                <MenuItem Header="툴 데이터 경로지정 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadAsKey}" />
-                <MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}"/>
-                <MenuItem Header="툴 데이터 경로지정 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}"/>
-                <Separator />
-                <MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}"/>
-                <MenuItem Header="게임 데이터 경로지정 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}"/>
-                <Separator />
-                <MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportKey}"/>
-                <MenuItem Header="헤더 파일 경로지정 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportAsKey}"/>
-                <Separator />
-                <MenuItem Header="실행 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Exe" />
-                <MenuItem Header="백업 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Backup" />
-            </MenuItem>
-            <MenuItem Style="{StaticResource MenuItemSeparator}"/>
-            <MenuItem Header="보기">
-                <MenuItem Header="로그 뷰" Command="{Binding Commander.OpenLogView}"/>
-            </MenuItem>
-            <MenuItem Style="{StaticResource MenuItemSeparator}"/>
-            <MenuItem Header="도구">
-                <MenuItem Header="설정" Command="{Binding Commander.OpenSetting}" />
-            </MenuItem>
-            <MenuItem Style="{StaticResource MenuItemSeparator}" />
-            <MenuItem Header="도움말">
-                <MenuItem Header="단축키 보기" Command="{Binding Commander.ShowShortcut}" />
-            </MenuItem>
-            <MenuItem Style="{StaticResource MenuItemSeparator}"/>
-            
-        </Menu>
+
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Menu  Background="Transparent">
+                    <MenuItem Header="파일" Background="Transparent">
+                        <MenuItem Header="툴 데이터 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadKey}" />
+                        <MenuItem Header="툴 데이터 경로지정 로드" Command="{Binding Commander.FileUIToolDataLoadAsync}" CommandParameter="{x:Static file:SGUIFileSystem.LoadAsKey}" />
+                        <MenuItem Header="툴 데이터 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
+                        <MenuItem Header="툴 데이터 경로지정 저장" Command="{Binding Commander.FileUIToolDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
+                        <Separator />
+                        <MenuItem Header="게임 데이터 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveKey}" />
+                        <MenuItem Header="게임 데이터 경로지정 저장" Command="{Binding Commander.FileGameDataSaveAsync}" CommandParameter="{x:Static file:SGUIFileSystem.SaveAsKey}" />
+                        <Separator />
+                        <MenuItem Header="헤더 파일 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportKey}" />
+                        <MenuItem Header="헤더 파일 경로지정 추출" Command="{Binding Commander.FileGameHeaderExportAsync}" CommandParameter="{x:Static file:SGUIFileSystem.ExportAsKey}" />
+                        <Separator />
+                        <MenuItem Header="실행 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Exe" />
+                        <MenuItem Header="백업 폴더 열기" Command="{Binding Commander.OpenDirectory}" CommandParameter="Backup" />
+                    </MenuItem>
+                    <MenuItem Style="{StaticResource MenuItemSeparator}" />
+                    <MenuItem Header="보기">
+                        <MenuItem Header="로그 뷰" Command="{Binding Commander.OpenLogView}" />
+                    </MenuItem>
+                    <MenuItem Style="{StaticResource MenuItemSeparator}" />
+                    <MenuItem Header="도구">
+                        <MenuItem Header="설정" Command="{Binding Commander.OpenSetting}" />
+                    </MenuItem>
+                    <MenuItem Style="{StaticResource MenuItemSeparator}" />
+                    <MenuItem Header="도움말">
+                        <MenuItem Header="단축키 보기" Command="{Binding Commander.ShowShortcut}" />
+                    </MenuItem>
+                    <MenuItem Style="{StaticResource MenuItemSeparator}" />
+                </Menu>
+            </Grid>
+
+            <DockPanel Margin="5, 0, 0, 0" Grid.Column="1" LastChildFill="False" MaxHeight="18">
+                <TextBox DockPanel.Dock="Left" Name="BackUpTextBox" Width="80" FontSize="12" Text="" HorizontalAlignment="Right" KeyDown="BackUpTextBox_OnKeyDown" />
+                <Button DockPanel.Dock="Left" Content=" 백업 " Height="18" FontSize="12" Command="{Binding Commander.FileUIToolDataBackupAsync}" CommandParameter="{Binding Text, ElementName=BackUpTextBox, Mode=OneWay}" />
+            </DockPanel>
+        </Grid>
+      
         <Separator DockPanel.Dock="Top"/>
 
  

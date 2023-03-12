@@ -28,7 +28,7 @@ using SGToolsCommon.Sga;
 using SGToolsUI.Command;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Command.MainViewCommand.Async;
-using SGToolsUI.File;
+using SGToolsUI.FileSystem;
 using SGToolsUI.Model;
 using SGToolsUI.View;
 
@@ -57,7 +57,7 @@ namespace SGToolsUI.ViewModel
         public void Loaded()
         {
             LogBox.Style = (Style)Application.Current.FindResource("LogListBox");
-            //Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey); // 그룹마스터 로딩
+            Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey); // 그룹마스터 로딩
 
             if (Setting.ShowLogViewWhenProgramLaunched)
                 LogView.Show();
@@ -195,6 +195,16 @@ namespace SGToolsUI.ViewModel
             }
         }
 
+        public bool IsEventMode //  클릭 등 이벤트 처리를 간접적으로 수행하기 위한 용도/ UIElementItemsControl.cs, OnMouseDownEventMode()
+        {
+            get => _isEventMode;
+            set
+            {
+                _isEventMode = value;
+                OnPropertyChanged();
+            }
+        }
+
         public DataDragState DragState { get; }
         public JobQueue JobQueue { get; } = new ();
         public LogListBox LogBox { get; }
@@ -212,6 +222,7 @@ namespace SGToolsUI.ViewModel
         private Vector _mouseOnCanvas = new(0, 0);
         private string _resourceSelectionStatus = string.Empty;
         private string _canvasSelectionStatus = string.Empty;
+        private bool _isEventMode = false;
         private SgaPackage _selectedPackage = new ();
         private SgaImage _selectedImage = new ();
         private SgaSpriteAbstract _selectedSprite = new SgaSprite();

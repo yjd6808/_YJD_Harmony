@@ -26,6 +26,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using MoreLinq;
+using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsUI.ViewModel;
 
@@ -117,6 +118,7 @@ namespace SGToolsUI.Model
 
         public ObservableCollection<SGUIElement> SelectedElements { get; }
         public ObservableCollection<SGUIElement> PickedElements { get; }
+
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
         public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
 
@@ -228,13 +230,20 @@ namespace SGToolsUI.Model
         public void Depick()
         {
             PickedElements.ToList().ForEach(element => element.Picked = false);
+            PickedElements.Clear();
 
-            if (PickedElements.Count > 0)
+#if DEBUG
+            int count = 0;
+            ForEachRecursive(element =>
+            {
+                if (element.Picked) count++;
+            });
+
+            if (count > 0)
                 throw new Exception("모두 선택해제 했음에도 불구하고 아직 선택목록에서 제거안된 대상이 있습니다.");
+#endif
 
-            if (Picked)
-                throw new Exception("마스터 그룹이 픽드 상태입니다.");
-
+            Debug.Assert(!Picked, "마스터 그룹이 픽드 상태입니다.");
             int pickedCount = 0;
 
             ForEachRecursive(element =>

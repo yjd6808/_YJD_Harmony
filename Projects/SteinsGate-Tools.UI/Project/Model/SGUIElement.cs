@@ -31,7 +31,7 @@ using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
-using SGToolsUI.File;
+using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using Point = System.Windows.Point;
 
@@ -120,7 +120,7 @@ namespace SGToolsUI.Model
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
         public Point VisualPosition
         {
-            get => _visualPosition;
+            get => new ((int)_visualPosition.X, (int)_visualPosition.Y);
             set
             {
                 _visualPosition = value;
@@ -145,7 +145,7 @@ namespace SGToolsUI.Model
             get
             {
                 if (Parent == null)  throw new Exception("마스터 그룹은 호출 금지");
-                return ConvertVisualPositionToRelativePosition(Parent);
+                return (IntPoint)ConvertVisualPositionToRelativePosition(Parent);
             }
             set
             {
@@ -1022,7 +1022,6 @@ namespace SGToolsUI.Model
         {
             // 코드필요없음
             // 엘리먼트타입 고정이므로 필요없음
-            VisualSize = SizeEx.ParseFullString((string)root[JsonVisualSizeKey]);
             _visualName = (string)root[JsonVisualNameKey];
             _defineName = (string)root[JsonDefineNameKey];
             _verticalAlignment = (VAlignment)((int)root[JsonVAlignKey]);
@@ -1047,6 +1046,13 @@ namespace SGToolsUI.Model
         protected TreeViewItem _treeViewItem;
         protected string _defineName = string.Empty;
 
-        
+
+
+        // =====================================================
+        // 프로포티 그리드에서 리플렉션을 사용해서 프로퍼티 처리를 하기때문에
+        // 타입 디스크립터로 중간에 가져오는 값을 변경해줘서 소수점 아래자리는 안보이도록 만들어주자.
+        // =====================================================
+    
+
     }
 }

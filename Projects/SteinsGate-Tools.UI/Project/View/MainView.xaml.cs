@@ -32,7 +32,8 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
 using SGToolsCommon.ThirdParty;
 using SGToolsUI.Command.MainViewCommand;
-using SGToolsUI.File;
+using SGToolsUI.CustomControl;
+using SGToolsUI.FileSystem;
 using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 using Xceed.Wpf.AvalonDock.Controls;
@@ -184,7 +185,7 @@ namespace SGToolsUI.View
         {
             ViewModel.Loaded();
             InitializeZoomStateBinding();       // 컴포넌트가 모두 초기화된 후에 윈도우 사이즈가 최종결정되기 때문에.. Xaml에서 작성하지 않고 C# 코드로 작성하도록 한다.
-            InitializeDragEndTargets();
+            InitializeDragTargets();
         }
 
 
@@ -226,9 +227,11 @@ namespace SGToolsUI.View
             windowZoomStateHeightBinding.Mode = BindingMode.OneWay;
             View.SetBinding(Window.MinHeightProperty, windowZoomStateHeightBinding);
             View.SetBinding(Window.MaxHeightProperty, windowZoomStateHeightBinding);
+
+            
         }
 
-        private void InitializeDragEndTargets()
+        private void InitializeDragTargets()
         {
             ViewModel.DragState.EndTargets.Add(UIElementPropertyGrid);
             ViewModel.DragState.EndTargets.Add(UIElementTreeView);
@@ -268,11 +271,29 @@ namespace SGToolsUI.View
             if (state.IsPressed(SGKey.Escape))
             {
                 ViewModel.GroupMaster.DeselectAll();
+                ViewModel.GroupMaster.Depick();
                 ViewModel.Commander.ClipboardOperateUIElement.Clear();
             }
 
+            else if (state.IsPressed(SGKey.F5) && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                ViewModel.Commander.FileUIToolDataLoadAsync.Execute(SGUIFileSystem.LoadKey);
+            }
 
+            else if (state.IsPressed(SGKey.F6))
+            {
+                BackUpTextBox.Focus();
+                BackUpTextBox.Text = string.Empty;
+            }
+
+            else if (state.IsPressed(SGKey.X))
+            {
+                ViewModel.IsEventMode = !ViewModel.IsEventMode;
+            }
+
+            CanvasShapesControl.OnKeyDown(key);
             UIElementTreeView.OnKeyDown(key);
+            UIElementPropertyGrid.OnKeyDown(key);
         }
 
 
@@ -285,6 +306,9 @@ namespace SGToolsUI.View
                 TitlePanel.Draggable = true;
                 ViewModel.UIElementSelectMode = SelectMode.New;
             }
+
+            CanvasShapesControl.OnKeyUp(key);
+            // UIElementTreeView.OnKeyUp(key);
         }
 
         public void MainView_OnPreviewMouseMove(object sender, MouseEventArgs e)
@@ -310,6 +334,21 @@ namespace SGToolsUI.View
                 return;
 
             ViewModel.Commander.SearchSgaResource.Execute(SgaResourceSearchTextBox.Text);
+        }
+
+        private async void BackUpTextBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter)
+                return;
+
+            string backuptag = BackUpTextBox.Text.Trim();
+            if (backuptag.Length == 0)
+                return;
+
+            await ViewModel.Saver.BackupAsync(backuptag);
+            BackUpTextBox.Text = string.Empty;
+            BackUpTextBox.FocusClear();
+
         }
     }
 }

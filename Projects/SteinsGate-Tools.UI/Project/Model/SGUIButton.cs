@@ -23,7 +23,7 @@ using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
-using SGToolsUI.File;
+using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model

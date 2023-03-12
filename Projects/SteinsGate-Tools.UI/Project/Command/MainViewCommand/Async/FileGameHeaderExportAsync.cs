@@ -19,7 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using SGToolsCommon.Resource;
-using SGToolsUI.File;
+using SGToolsUI.FileSystem;
 using SGToolsUI.View;
 using SGToolsUI.ViewModel;
 

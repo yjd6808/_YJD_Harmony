@@ -30,6 +30,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using System.Reflection.PortableExecutable;
 using Point = System.Windows.Point;
+using Newtonsoft.Json.Linq;
 
 namespace SGToolsUI.CustomControl
 {
@@ -50,7 +51,11 @@ namespace SGToolsUI.CustomControl
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             InitializeViewModel();
-            InitializeDefinitions();
+            InitializeDescriptor();
+        }
+
+        private void InitializeDescriptor()
+        {
         }
 
         private void InitializeViewModel()
@@ -67,10 +72,6 @@ namespace SGToolsUI.CustomControl
             PropertyItemsControl = this.FindChild<PropertyItemsControl>();
 
             
-        }
-
-        private void InitializeDefinitions()
-        {
         }
 
         private void OnSelectedPropertyItemChanged(object sender, RoutedPropertyChangedEventArgs<PropertyItemBase> e)
@@ -198,6 +199,40 @@ namespace SGToolsUI.CustomControl
             return true;
         }
 
-        public bool ContainPoint(Point p) => VisualTreeHelperEx.ContainPoint(this, p);
+        public void OnKeyDown(SGKey key)
+        {
+            if (key != SGKey.D1)
+                return;
+
+            SGUIElement element = SelectedObject as SGUIElement;
+
+            if (element == null)
+                return;
+
+            switch (element.UIElementType)
+            {
+                case SGUIElementType.Group:
+                    break;
+                case SGUIElementType.Button:
+                    SGUIButton button = element.Cast<SGUIButton>();
+                    break;
+                case SGUIElementType.Label:
+                    break;
+                case SGUIElementType.Sprite:
+                    break;
+                case SGUIElementType.EditBox:
+                    break;
+                case SGUIElementType.CheckBox:
+                    break;
+                case SGUIElementType.ToggleButton:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public bool ContainPoint(Point p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
     }
+
+ 
 }

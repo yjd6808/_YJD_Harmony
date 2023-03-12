@@ -35,5 +35,12 @@ namespace SGToolsCommon.Extension
             return false;
         }
 
+
+        public static void CreateDirectoryIfNotExist(string path)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+        }
+
     }
 }

@@ -4,5 +4,6 @@
     <local:UIElementTypeBlackImageConverter x:Key="UIElementTypeBlackImageConverter" />
     <local:UIElementTypeColoredImageConverter x:Key="UIElementTypeColoredImageConverter"/>
     <local:AbsoluteAnchorPositionThicknessConverter x:Key="AbsoluteAnchorPositionThicknessConverter" />
+    <local:EventModeToStringConverter x:Key="EventModeToStringConverter" />
     
 </ResourceDictionary>

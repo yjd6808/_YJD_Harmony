@@ -22,7 +22,7 @@ using System.Windows.Shapes;
 
 namespace SGToolsCommon.Extension
 {
-    public static class VisualTreeHelperEx
+    public static class VisualEx
     {
         // 복붙
         public static T FindParent<T>(this DependencyObject child) where T : DependencyObject
@@ -63,7 +63,7 @@ namespace SGToolsCommon.Extension
             return null;
         }
 
-        public static Point GetOffsetIn(this Visual depObj, Visual relative)
+        public static Point GetOffsetIn(this global::System.Windows.Media.Visual depObj, global::System.Windows.Media.Visual relative)
         {
             // Visual 객체의 위치를 기준이 되는 UIElement 객체를 기준으로 변환합니다.
             GeneralTransform transform = depObj.TransformToVisual(relative);
@@ -72,7 +72,7 @@ namespace SGToolsCommon.Extension
             return transform.Transform(new Point(0, 0));
         }
 
-        public static Point GetOffsetInMonitor(this Visual depObj)
+        public static Point GetOffsetInMonitor(this global::System.Windows.Media.Visual depObj)
         {
             Vector offset = VisualTreeHelper.GetOffset(depObj);
             return depObj.PointToScreen(new global::System.Windows.Point(offset.X, offset.Y));
@@ -101,7 +101,7 @@ namespace SGToolsCommon.Extension
         }
 
         public static HitResultEx<TItem, TDataContext> HitTest<T, TItem, TDataContext>(this T visual, Point posOnVisual)
-            where T : Visual
+            where T : global::System.Windows.Media.Visual
             where TItem : Control
             where TDataContext : class
         {
@@ -123,7 +123,7 @@ namespace SGToolsCommon.Extension
         }
 
         public static HitResult<TItem> HitTest<T, TItem>(this T visual, Point posOnVisual)
-            where T : Visual
+            where T : global::System.Windows.Media.Visual
             where TItem : Control
         {
             HitTestResult hit = VisualTreeHelper.HitTest(visual, posOnVisual);
@@ -152,5 +152,14 @@ namespace SGToolsCommon.Extension
 
         public static bool ContainPoint(this FrameworkElement frameworkElement, Point p)
             => frameworkElement.GetRectOnWindow().Contains(p);
+
+        // https://stackoverflow.com/questions/2914495/wpf-how-to-programmatically-remove-focus-from-a-textbox
+        public static void FocusClear(this FrameworkElement element)
+        {
+            // Kill logical focus
+            FocusManager.SetFocusedElement(FocusManager.GetFocusScope(element), null);
+            // Kill keyboard focus
+            Keyboard.ClearFocus();
+        }
     }
 }

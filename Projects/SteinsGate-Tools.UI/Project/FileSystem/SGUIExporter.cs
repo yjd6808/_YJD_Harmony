@@ -30,7 +30,7 @@ using SGToolsUI.View;
 using SGToolsUI.ViewModel;
 using Path = System.IO.Path;
 
-namespace SGToolsUI.File
+namespace SGToolsUI.FileSystem
 {
     public class SGUIExporter : SGUIFileSystem
     {
@@ -73,7 +73,7 @@ namespace SGToolsUI.File
                         if (element.Depth == 0)
                             writer.WriteLine("\n\n");
 
-                        writer.WriteLine($"{DepthStrings[element.Depth]}#define {element.DefineName}");
+                        writer.WriteLine($"{DepthStrings[element.Depth]}#define {element.DefineName.ToUpper()}_{element.UIElementType}");
 
                         if (!uniqueDefineNameMap.TryAdd(element.DefineName, true))
                             duplicatedDefineNameList.Add(element.DefineName);

@@ -117,7 +117,14 @@ namespace SGToolsCommon.Sga
         }
 
         public SgaElement GetElement(int index) => _elementMap[index];
-        public SgaElement GetElement(string elementNameWithoutExt) => _elementMap[GetElementIndex(elementNameWithoutExt)];
+
+        public SgaElement GetElement(string elementNameWithoutExt)
+        {
+            if (!Loaded)
+                Load(true);
+
+            return _elementMap[GetElementIndex(elementNameWithoutExt)];
+        } 
 
         public int GetElementIndex(string elementName)
         {

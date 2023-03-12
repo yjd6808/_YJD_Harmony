@@ -27,6 +27,7 @@ using SGToolsUI.ViewModel;
 using System.Xml.Linq;
 using Accessibility;
 using SGToolsUI.Extension;
+using SGToolsUI.Command.MainViewCommand;
 
 namespace SGToolsUI.CustomControl
 {
@@ -112,51 +113,88 @@ namespace SGToolsUI.CustomControl
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
+            OnMouseDownEventMode(e);
             MoveBegin(e);
         }
 
-        
+      
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            OnMouseMoveEventMode(e);
             MoveMove(e);
         }
 
-        
+  
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
+            OnMouseUpEventMode(e);
             MoveEnd(e);
         }
 
+      
 
         // ======================================================================
         //             기능
         // ======================================================================
 
 
+        // 그룹은 제일 처음부터 그룹이 드
+        private IEnumerable<SGUIElement> PickedElementsForCanvasSelection
+        {
+            get
+            {
+                SGUIGroupMaster master =  ViewModel.GroupMaster;
+                SGUIElement element = master.PickedElement;
+
+                if (element == null)
+                    yield break;
+                ObservableCollection<SGUIElement> pickedElements = master.PickedElements;
+
+                if (element.IsGroup)
+                {
+                    // 부모그룹이 픽된 경우 부모 그룹이 제일 앞이므로, 
+                    for (int i = pickedElements.Count - 2; i >= 0; --i)
+                        yield return pickedElements[i];
+
+                    yield return pickedElements[pickedElements.Count - 1];
+                }
+                else
+                {
+                    // 단순하게 
+                    for (int i = 0; i < pickedElements.Count; ++i) 
+                        yield return pickedElements[i];
+                }
+            }
+        }
+
         private void MoveBegin(MouseButtonEventArgs e)
         {
-            _moveStartPosition = e.GetPosition(this).Zoom(ViewModel.ZoomState);
-            
-            IEnumerable<SGUIElement> pickedSelectedElements = ViewModel.GroupMaster.PickedSelectedElements;
-
-            // 1. 알트키를 누른경우 겹친 엘리먼트 뒤에있는 원소를 순차적으로 선택할 수 있도록 한다.
-            // 2. 선택된 엘리먼트가 있더라도 움직일 수 없도록 한다.
             bool alt = ViewModel.KeyState.IsAltPressed;
             bool ctrl = ViewModel.KeyState.IsCtrlPressed;
             bool space = ViewModel.KeyState.IsPressed(SGKey.Space);
-            _isShiftMove = ViewModel.KeyState.IsShiftPressed;
 
+            _isShiftMove = ViewModel.KeyState.IsShiftPressed;
+            _moveStartPosition = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            
+            ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
+            
+            // 1. 알트키를 누른경우 겹친 엘리먼트 뒤에있는 원소를 순차적으로 선택할 수 있도록 한다.
+            // 2. 선택된 엘리먼트가 있더라도 움직일 수 없도록 한다.
+            
             if (space)
                 return;
 
+            if (ViewModel.IsEventMode)
+                return;
+
             // 마우스를 클릭한 지점에 선택된 원소가 있는 경우 마우스를 따라 움직일 수 있도록 한다.
-            if (!alt && !ctrl && pickedSelectedElements.FirstOrDefault(element => element.ContainPoint(_moveStartPosition)) != null)
+            if (!alt && !ctrl && pickedElements.Count > 0 && pickedElements.Last().Selected && pickedElements.Last().ContainPoint(_moveStartPosition))
             {
                 ViewModel.View.CanvasShapesControl.IsDraggable = false;
                 ViewModel.View.TitlePanel.Draggable = false;
 
                 // 각 엘리먼트의 시작위치를 기록해놓는다.
-                _movingElements = pickedSelectedElements.Select(element => new MovingElement(element, element.VisualPosition)).ToList();
+                _movingElements = ViewModel.GroupMaster.PickedSelectedElements.Select(element => new MovingElement(element, element.VisualPosition)).ToList();
                 _isElementsMove = true;
                 return;
             }
@@ -273,6 +311,20 @@ namespace SGToolsUI.CustomControl
                 _isElementsMove = false;
             }
         }
+
+
+        private void OnMouseDownEventMode(MouseButtonEventArgs mouseButtonEventArgs)
+        {
+
+        }
+        private void OnMouseMoveEventMode(MouseEventArgs mouseEventArgs)
+        {
+        }
+        private void OnMouseUpEventMode(MouseButtonEventArgs mouseButtonEventArgs)
+        {
+        }
+
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

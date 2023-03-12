@@ -28,7 +28,7 @@ using Newtonsoft.Json.Linq;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
-using SGToolsUI.File;
+using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
@@ -91,7 +91,7 @@ namespace SGToolsUI.Model
         [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(SGUIElement.OrderVisualSize)]
         public override Size VisualSize
         {
-            get => _visualSize;
+            get => new ((int)_visualSize.Width, (int)_visualSize.Height);
             set
             {
                 _visualSize = value;
@@ -306,6 +306,7 @@ namespace SGToolsUI.Model
             OnPropertyChanged(nameof(Children));
         }
 
+     
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();
@@ -320,6 +321,14 @@ namespace SGToolsUI.Model
 
             root[JsonChildrenKey] = children;
             return root;
+        }
+
+        public override void ParseJObject(JObject root)
+        {
+            base.ParseJObject(root);
+
+            _visualSize = SizeEx.ParseFullString((string)root[JsonVisualSizeKey]);
+
         }
 
         private ObservableCollection<SGUIElement> _children;
