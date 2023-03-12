@@ -66,8 +66,12 @@ namespace SGToolsUI.Command.MainViewCommand
                 case SelectMode.Keep: SelectSingleElementKeep(element);  break;
             }
 
+            // 음.. 프로퍼티 그리드 성능이 엄청 안좋네
             if (element.Picked && element.Selected)
-                ViewModel.View.UIElementPropertyGrid.SelectedObject = element;
+            {
+                // ViewModel.View.UIElementPropertyGrid.SelectedObject = element; 
+                // ViewModel.GroupMaster.NotifyProperty("PickedSelectedElement");
+            }
 
         }
 

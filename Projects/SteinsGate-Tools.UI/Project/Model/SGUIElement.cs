@@ -37,6 +37,7 @@ using Point = System.Windows.Point;
 
 namespace SGToolsUI.Model
 {
+    [RefreshProperties(RefreshProperties.All)]
     [CategoryOrder(Constant.ElementCategoryName, Constant.ElementCategoryOrder)]
     public abstract class SGUIElement : CanvasElement, ICloneable, IComparer<SGUIElement>
     {
@@ -340,7 +341,7 @@ namespace SGToolsUI.Model
             {
                 if (_selected == value)
                     return;
-
+                Debug.WriteLine($"{VisualName} 셀렉 {value}");
                 _selected = value;
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
                 ObservableCollection<SGUIElement> selectedElements = groupMaster.SelectedElements;
@@ -419,7 +420,7 @@ namespace SGToolsUI.Model
         public void SetPick(bool pick, bool notify = true)
         {
             _picked = pick;
-            if (notify && _picked != pick) 
+            if (notify) 
                 OnPropertyChanged(nameof(Picked));
         }
 
@@ -433,11 +434,14 @@ namespace SGToolsUI.Model
                 if (_picked == value)
                     return;
 
+                Debug.WriteLine($"{VisualName} 픽");
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
                 _picked = value;
 
                 if (value == false)
                 {
+                    Selected = false;
+
                     if (groupMaster.PickedGroup == this)
                     {
                         groupMaster.PickedElements.ForEach(element => element.SetPick(false));

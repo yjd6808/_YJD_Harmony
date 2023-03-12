@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Security.RightsManagement;
+using System.Windows.Data;
 using MoreLinq;
 using SGToolsCommon.Extension;
 using SGToolsUI.Model;
@@ -26,8 +27,10 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using SGToolsUI.ViewModel;
 using System.Xml.Linq;
 using Accessibility;
+using SGToolsCommon.CustomStyle;
 using SGToolsUI.Extension;
 using SGToolsUI.Command.MainViewCommand;
+using Xceed.Wpf.AvalonDock.Controls;
 
 namespace SGToolsUI.CustomControl
 {
@@ -48,15 +51,17 @@ namespace SGToolsUI.CustomControl
             set
             {
                 _isElementsMove = value;
-                MoveEnd(null);
+                MoveEnd();
                 OnPropertyChanged();
             }
         }
+
 
         public MainViewModel ViewModel { get; private set; }
         public Canvas CanvasPanel => _canvasPanel;
         public ItemsPresenter Presenter => _canvasPresenter;
 
+        
         private Canvas _canvasPanel;
         private ItemsPresenter _canvasPresenter;
         private bool _isElementsMove;
@@ -65,6 +70,10 @@ namespace SGToolsUI.CustomControl
         private Point _moveStartPosition;
         private List<MovingElement> _movingElements;
         private SGUIElement _prevSelectElement;                     // 이전에 마우스 포인터를 찍었을때 선택한 엘리먼트
+
+        private ContextMenu _contextMenu;
+        private MenuItem _attributeMenuItem;
+        private MenuItem _deleteMenuItem;
 
         // ======================================================================
         //             초기화
@@ -78,6 +87,27 @@ namespace SGToolsUI.CustomControl
         {
             InitializeViewModel();
             InitializePanel();
+            InitializeContextMenu();
+        }
+
+        private void InitializeContextMenu()
+        {
+            _contextMenu = new ContextMenu();
+            _attributeMenuItem = new MenuItem();
+            _attributeMenuItem.Style = (Style)Application.Current.FindResource(CustomStyleKey.MenuItemSparkKey);
+            _attributeMenuItem.Header = "속성";
+            _attributeMenuItem.Command = ViewModel.Commander.SelectPropertyGridElement;
+
+            _deleteMenuItem = new MenuItem();
+            _deleteMenuItem.Style = (Style)Application.Current.FindResource(CustomStyleKey.MenuItemDeleteKey);
+            _deleteMenuItem.Header = "삭제";
+            _deleteMenuItem.Command = ViewModel.Commander.DeleteUIElement;
+
+            _contextMenu.Items.Add(_attributeMenuItem);
+            _contextMenu.Items.Add(_deleteMenuItem);
+
+
+            _canvasPanel.ContextMenu = _contextMenu;
         }
 
         private void InitializeViewModel()
@@ -114,18 +144,25 @@ namespace SGToolsUI.CustomControl
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            MouseButton btn = e.ChangedButton;
 
-            OnMouseDownEventMode(e);
-            MoveBegin(e);
+            OnMouseDownEventMode(pos);
+            OpenContextMenu(pos, btn);
+            MoveBegin(pos);
         }
 
-      
+        
+
+
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             base.OnPreviewMouseMove(e);
 
-            OnMouseMoveEventMode(e);
-            MoveMove(e);
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+
+            OnMouseMoveEventMode(pos);
+            MoveMove(pos);
         }
 
   
@@ -133,8 +170,11 @@ namespace SGToolsUI.CustomControl
         {
             base.OnPreviewMouseUp(e);
 
-            OnMouseUpEventMode(e);
-            MoveEnd(e);
+            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            MouseButton btn = e.ChangedButton;
+
+            OnMouseUpEventMode(pos, btn);
+            MoveEnd();
         }
 
       
@@ -144,14 +184,14 @@ namespace SGToolsUI.CustomControl
         // ======================================================================
 
 
-        private void MoveBegin(MouseButtonEventArgs e)
+        private void MoveBegin(Point pos)
         {
             bool alt = ViewModel.KeyState.IsAltPressed;
             bool ctrl = ViewModel.KeyState.IsCtrlPressed;
             bool space = ViewModel.KeyState.IsPressed(SGKey.Space);
 
             _isShiftMove = ViewModel.KeyState.IsShiftPressed;
-            _moveStartPosition = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            _moveStartPosition = pos;
             
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
             
@@ -244,7 +284,7 @@ namespace SGToolsUI.CustomControl
             }
         }
 
-        public void MoveMove(MouseEventArgs e)
+        public void MoveMove(Point pos)
         {
             if (!_isElementsMove)
                 return;
@@ -253,7 +293,6 @@ namespace SGToolsUI.CustomControl
                 return;
 
             // 드래그 시작 후 마우스가 움직인 벡터만큼 다른 엘리먼트들도 벡터만큼 움직여준다.
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             Vector move = Point.Subtract(_moveStartPosition, pos);
 
             if (_isShiftMove && _shiftKeyMoving == ShiftKeyMoving.None)
@@ -273,7 +312,7 @@ namespace SGToolsUI.CustomControl
             _movingElements.ForEach(m => m.Element.VisualPosition = Point.Subtract(m.StartPosition, move));
         }
 
-        public void MoveEnd(MouseButtonEventArgs e)
+        public void MoveEnd()
         {
             _isShiftMove = false;
             _shiftKeyMoving = ShiftKeyMoving.None;
@@ -305,31 +344,46 @@ namespace SGToolsUI.CustomControl
             return true;
         }
 
-        private void OnMouseDownEventMode(MouseButtonEventArgs e)
+        private void OnMouseDownEventMode(Point pos)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             pickedGroup.OnMouseDown(pos);
         }
 
-        private void OnMouseMoveEventMode(MouseEventArgs e)
+        private void OnMouseMoveEventMode(Point pos)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             pickedGroup.OnMouseMove(pos);
         }
 
-        private void OnMouseUpEventMode(MouseButtonEventArgs e)
+        private void OnMouseUpEventMode(Point pos, MouseButton btn)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             pickedGroup.OnMouseUp(pos);
+        }
+
+        private void OpenContextMenu(Point pos, MouseButton btn)
+        {
+            if (btn != MouseButton.Right)
+                return;
+
+            if (ViewModel.IsEventMode)
+                return;
+
+            ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
+            SGUIElement lastSelectedElement = pickedElements.LastOrDefault(element => element.Selected && element.ContainPoint(pos));
+
+            if (lastSelectedElement == null)
+                return;
+
+            _attributeMenuItem.CommandParameter = lastSelectedElement;
+            _contextMenu.IsOpen = true;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

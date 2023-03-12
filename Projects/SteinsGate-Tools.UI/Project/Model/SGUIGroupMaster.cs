@@ -120,6 +120,7 @@ namespace SGToolsUI.Model
         public ObservableCollection<SGUIElement> PickedElements { get; }
         public SGUIGroup PickedGroup => HasPickedElement ? PickedElements[0].Cast<SGUIGroup>() : null;
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
+        public SGUIElement PickedSelectedElement => PickedElements.LastOrDefault(element => element.Selected);
         public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
 
         public int GroupCount  {  get  {  lock (_groups)  {  return _groups.Count; }  }  }
@@ -244,16 +245,16 @@ namespace SGToolsUI.Model
 #endif
 
             Debug.Assert(!Picked, "마스터 그룹이 픽드 상태입니다.");
-            int pickedCount = 0;
+            int selectedCount = 0;
 
             ForEachRecursive(element =>
             {
                 if (element.Selected)
-                    pickedCount++;
+                    selectedCount++;
             });
 
-            if (pickedCount > 0)
-                throw new Exception("자식 요소중에 픽된 원소가 있습니다.");
+            if (selectedCount > 0)
+                throw new Exception("자식 요소중에 선택된 원소가 있습니다.");
         }
 
 
@@ -366,8 +367,8 @@ namespace SGToolsUI.Model
 
         public void Clear()
         {
-            Depick();
             DeselectAll();
+            Depick();
             Children.Clear();
 
             lock (_groups) _groups.Clear();

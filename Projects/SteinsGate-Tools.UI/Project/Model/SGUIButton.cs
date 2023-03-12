@@ -30,6 +30,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace SGToolsUI.Model
 {
 
+    [RefreshProperties(RefreshProperties.All)]
     [CategoryOrder(Constant.ButtonCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIButton : SGUIElement
     {

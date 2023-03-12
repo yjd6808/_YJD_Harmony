@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ using SGToolsUI.FileSystem;
 
 namespace SGToolsUI.Model
 {
+    [RefreshProperties(RefreshProperties.All)]
     public class SGUIToggleButton : SGUIElement
     {
         public override SGUIElementType UIElementType => SGUIElementType.ToggleButton;

@@ -22,4 +22,5 @@
         <ResourceDictionary Source="Selection.xaml" />
         <ResourceDictionary Source="WinformTreeView.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
 </ResourceDictionary>

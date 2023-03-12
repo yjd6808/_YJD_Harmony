@@ -35,6 +35,7 @@ namespace SGToolsUI.Model
 {
 
 
+    [RefreshProperties(RefreshProperties.All)]
     [CategoryOrder(Constant.GroupCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIGroup : SGUIElement
     {

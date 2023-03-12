@@ -20,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MoreLinq.Extensions;
 using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
@@ -57,13 +58,139 @@ namespace SGToolsUI.ViewModel
         public void Loaded()
         {
             LogBox.Style = (Style)Application.Current.FindResource("LogListBox");
-            // Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey); // 그룹마스터 로딩
-
+            
             if (Setting.ShowLogViewWhenProgramLaunched)
                 LogView.Show();
 
             if (Setting.ShowLogViewWhenProgramLaunched && Setting.LogViewPositionWhenProgramLaunched != PointEx.Zero)
                 LogView.MoveTo(Setting.LogViewPositionWhenProgramLaunched);
+
+            if (!Constant.UseDebugData)
+            {
+                Commander.Execute(nameof(FileUIToolDataLoadAsync), SGUIFileSystem.LoadKey); // 그룹마스터 로딩
+                return;
+            }
+
+            #region DebugElements
+
+            this.GroupMaster = SGUIGroupMaster.Create(this);
+            this.GroupMaster.Children.Add(new SGUIGroup()
+            {
+                VisualName = "그룹 1",
+                Children = new ObservableCollection<SGUIElement>()
+                {
+                    new SGUIButton() { VisualName = "버튼 1-1"},
+                    new SGUIButton() { VisualName = "버튼 1-2"},
+                    new SGUIButton() { VisualName = "버튼 1-3"},
+                    new SGUIButton() { VisualName = "버튼 1-4"},
+                    new SGUIGroup()
+                    {
+                        VisualName = "그룹 1-5",
+                        Children = new ObservableCollection<SGUIElement>()
+                        {
+                            new SGUIButton() { VisualName = "버튼 1-5-1"},
+                            new SGUIButton() { VisualName = "버튼 1-5-2"},
+                            new SGUIButton() { VisualName = "버튼 1-5-3"},
+                            new SGUIButton() { VisualName = "버튼 1-5-4"},
+                            new SGUIGroup()
+                            {
+                                VisualName = "그룹 1-5-5"
+                            }
+                        }
+                    },
+                    new SGUIGroup()
+                    {
+                        VisualName = "그룹 1-6",
+                        Children = new ObservableCollection<SGUIElement>()
+                        {
+                            new SGUIButton() { VisualName = "버튼 1-6-1"},
+                            new SGUIButton() { VisualName = "버튼 1-6-2"},
+                            new SGUIButton() { VisualName = "버튼 1-6-3"},
+                            new SGUIButton() { VisualName = "버튼 1-6-4"},
+                            new SGUIGroup()
+                            {
+                                VisualName = "그룹 1-6-5"
+                            }
+                        }
+                    }
+                }
+
+            });
+            this.GroupMaster.Children.Add(new SGUIGroup()
+            {
+                VisualName = "그룹 2",
+                Children = new ObservableCollection<SGUIElement>()
+                {
+                    new SGUIButton() { VisualName = "버튼 2-1"},
+                    new SGUIButton() { VisualName = "버튼 2-2"},
+                    new SGUIButton() { VisualName = "버튼 2-3"},
+                    new SGUIButton() { VisualName = "버튼 2-4"},
+                    new SGUIGroup()
+                    {
+                        VisualName = "그룹 2-5",
+                        Children = new ObservableCollection<SGUIElement>()
+                        {
+                            new SGUIButton() { VisualName = "버튼 2-5-1"},
+                            new SGUIButton() { VisualName = "버튼 2-5-2"},
+                            new SGUIButton() { VisualName = "버튼 2-5-3"},
+                            new SGUIButton() { VisualName = "버튼 2-5-4"},
+                            new SGUIGroup()
+                            {
+                                VisualName = "그룹 2-5-5"
+                            }
+                        }
+                    },
+                    new SGUIGroup()
+                    {
+                        VisualName = "그룹 2-6",
+                        Children = new ObservableCollection<SGUIElement>()
+                        {
+                            new SGUIButton() { VisualName ="버튼 2-6-1"},
+                            new SGUIButton() { VisualName ="버튼 2-6-2"},
+                            new SGUIButton() { VisualName ="버튼 2-6-3"},
+                            new SGUIButton() { VisualName ="버튼 2-6-4"},
+                            new SGUIGroup()
+                            {
+                                VisualName = "그룹 2-6-5"
+                            }
+                        }
+                    }
+                }
+            });
+
+
+
+            this.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 3" });
+            this.GroupMaster.Children.Add(new SGUIGroup() { VisualName = "그룹 4" });
+
+
+            void DebugManualUpdate(SGUIGroup group)
+            {
+                group.VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
+                group.ViewModel = this;
+
+                if (!group.IsMaster)
+                {
+                    this.GroupMaster.AddGroup(group);
+                    group.SetDepth(group.Parent.Depth + 1);
+                }
+
+                group.Children.ForEach(x =>
+                {
+                    x.Parent = group;
+                    x.ViewModel = this;
+
+                    if (x.IsGroup)
+                        DebugManualUpdate(x.Cast<SGUIGroup>());
+                    else
+                        this.GroupMaster.AddElement(x);
+                });
+            }
+
+            // 임시데이트 기본 데이터 주입
+            DebugManualUpdate(this.GroupMaster);
+
+            #endregion
         }
 
         public MainView View { get; set; }

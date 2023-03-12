@@ -62,6 +62,8 @@ namespace SGToolsUI.Command
         public CommandAbstract OpenDirectory { get; }
         public CommandAbstract ShowShortcut { get; }
 
+        public CommandAbstract SelectPropertyGridElement { get; set; }
+
         // =================================================
         // 비동기 커맨드 목록
         // =================================================
@@ -79,6 +81,7 @@ namespace SGToolsUI.Command
         public CommandAbstract SpritePreview { get; }
         public CommandAbstract CanvasZoomWheel{ get; }
         
+
 
         public MainCommandCenter(MainViewModel viewModel)
         {
@@ -105,19 +108,20 @@ namespace SGToolsUI.Command
             Add(CanvasZoomUp = new CanvasZoomUp(ViewModel));
             Add(CanvasZoomDown = new CanvasZoomDown(ViewModel));
             Add(CanvasZoomReset = new CanvasZoomReset(ViewModel));
-            
             Add(ToggleCanvasViewport = new ToggleCanvasViewport(ViewModel));
             Add(ToggleCanvasGrid = new ToggleCanvasGrid(ViewModel));
             Add(ToggleCanvasAnchor = new ToggleCanvasAnchor(ViewModel));
-
+            Add(OpenDirectory = new OpenDirectory(ViewModel) { UseParameter = true });
+            Add(ShowShortcut = new ShowShortcut(ViewModel));
+            Add(SelectPropertyGridElement = new SelectPropertyGridElement(ViewModel) { /*UseParameter = true */});
+            // ============================================================
             Add(FileUIToolDataLoadAsync = new FileUIToolDataLoadAsync(ViewModel) { UseParameter = true } );
             Add(FileUIToolDataSaveAsync = new FileUIToolDataSaveAsync(ViewModel) { UseParameter = true } );
             Add(FileUIToolDataBackupAsync = new FileUIToolDataBackupAsync(ViewModel) /*{ UseParameter = true }*/); // 커맨드파라미터를 바인딩해서 초기 null이 들어옴
             Add(FileGameDataSaveAsync = new FileGameDataSaveAsync(ViewModel) { UseParameter = true } );
             Add(FileGameHeaderExportAsync = new FileGameHeaderExportAsync(ViewModel) );
 
-            Add(OpenDirectory = new OpenDirectory(ViewModel) { UseParameter = true });
-            Add(ShowShortcut = new ShowShortcut(ViewModel));
+            
             // ============================================================
             Add(MouseMoveOnWindow = new MouseMoveOnWindow(ViewModel) { UseParameter = true });
             Add(SpritePreview = new SpritePreview(ViewModel) { UseParameter = true });
