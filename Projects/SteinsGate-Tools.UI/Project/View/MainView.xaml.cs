@@ -77,6 +77,7 @@ namespace SGToolsUI.View
             await t2;
 
             ViewModel.LogView.Close();
+            ViewModel.AlbumView.Close();
             ViewModel.JobQueue.Dispose();
             ViewModel.KeyState.Dispose();
             ViewModel.Commander.Finalize();
@@ -205,11 +206,21 @@ namespace SGToolsUI.View
 
         public void MainView_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
-            ViewModel.DragState.OnDragMove(e.GetPosition(this));
+            Point pos = e.GetPosition(this);
+
+            if (!CanvasShapesControl.ContainPoint(pos))
+                CanvasShapesControl.DragMove(e);
+
+            if (!UIElementsControl.ContainPoint(pos))
+                UIElementsControl.OnMouseMoveManipulation(e);
+
+            ViewModel.DragState.OnDragMove(pos);
         }
 
         public void MainView_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
+            CanvasShapesControl.DragEnd(e);
+            UIElementsControl.OnMouseUpManipulation();
             ViewModel.DragState.OnDragEnd(e.GetPosition(this));
         }
 

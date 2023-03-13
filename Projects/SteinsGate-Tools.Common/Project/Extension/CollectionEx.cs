@@ -30,6 +30,7 @@ namespace SGToolsCommon.Extension
                 yield return collection[i];
         }
 
+
         // 반대로 인덱스와 함께 순회
         public static void ReversedIndexingForEach<T>(this IList<T> collection, Action<int, T> action) where T : class
         {
@@ -38,7 +39,9 @@ namespace SGToolsCommon.Extension
         }
 
         // 반대로 조건이 true일때까지만 순회
-        public static void ReversedIndexingConditionForEach<T>(this IList<T> collection, Predicate<T> predicate) where T : class
+        // return true가 break이고
+        // return false가 continue라고 생각하면된다.
+        public static void ReversedConditionForEach<T>(this IList<T> collection, Predicate<T> predicate) where T : class
         {
             for (int i = collection.Count - 1; i >= 0; --i)
                 if (!predicate(collection[i]))
@@ -47,6 +50,7 @@ namespace SGToolsCommon.Extension
 
 
         // 반대로 인덱스와 함께 조건이 true일때까지만 순회
+     
         public static void ReversedIndexingConditionForEach<T>(this IList<T> collection, Func<int, T, bool> predicate) where T : class
         {
             for (int i = collection.Count - 1; i >= 0; --i)

@@ -22,15 +22,11 @@
                     xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
                     xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon">
 
+    <Style x:Key="SgaPackageListBoxItemContainerStyle" BasedOn="{StaticResource StretchListBoxItem}" TargetType="ListBoxItem">
+        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnListBoxItemPreviewMouseLeftDown" />
+    </Style>
+
     <Style x:Key="SgaPackageListBox" TargetType="ListBox">
-        <Setter Property="ItemContainerStyle">
-            <Setter.Value>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource StretchListBoxItem}">
-                    <EventSetter Event="Loaded" Handler="OnListBoxItemLoaded"></EventSetter>
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnListBoxItemPreviewMouseLeftDown" />
-                </Style>
-            </Setter.Value>
-        </Setter>
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate DataType="{x:Type sga:SgaPackage}">

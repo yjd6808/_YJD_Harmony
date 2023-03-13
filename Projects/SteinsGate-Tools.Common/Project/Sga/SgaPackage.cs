@@ -49,7 +49,7 @@ namespace SGToolsCommon.Sga
         public string FileNameWithoutExt => System.IO.Path.GetFileNameWithoutExtension(_path);
         public List<SgaElementHeader> ElementHeaderList => _elementHeaderList;
         public int PackageIndex => _packageIndex;
-        public ListBoxItem Item { get; set; }
+        // public ListBoxItem Item { get; set; }
 
         // Xaml 바인딩용
         public SgaPackage()
@@ -112,7 +112,7 @@ namespace SGToolsCommon.Sga
         {
             foreach (var element in _elementMap.Values)
                 element.Unload();
-
+            _elementMap.Clear();
             OnPropertyChanged(nameof(ElementHeaderList));
         }
 
@@ -135,6 +135,7 @@ namespace SGToolsCommon.Sga
         }
         public bool HasElementIndex(string elementName) => _elementNameToIndexMap.ContainsKey(elementName);
         public bool IsElementLoaded(int index) => _elementMap.ContainsKey(index);
+        public bool HasElement(int index) => index >= 0 && index < _elementHeaderList.Count;
 
         public void Load(bool indexOnly)
         {

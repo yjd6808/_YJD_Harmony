@@ -17,6 +17,6 @@ namespace SGToolsCommon.Sga
         public int Length { get; set; }
         public string Name { get; set; }
         public string NameWithoutExt { get; set; }
-        public ListBoxItem Item { get; set; }
+        // public ListBoxItem Item { get; set; }
     }
 }

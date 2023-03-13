@@ -152,6 +152,7 @@ namespace SGToolsUI.Model
         [Browsable(false)] public override int Code => _code;
         [Browsable(false)] public bool HasOnlyGroup => Where(element => !element.IsGroup).Any() == false;
         [Browsable(false)] public bool HasOnlyGroupRecursive => WhereRecursive(element => !element.IsGroup).Any() == false;
+        [Browsable(false)] public override bool Manipulatable => true;
 
         public void SetCode(int code) => _code = code;
         public void SetDepth(int depth)

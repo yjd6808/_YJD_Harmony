@@ -34,7 +34,19 @@ namespace SGToolsCommon.Extension
         // Rect전체를 바꿈
         public static string ToFullString(this Rect rect)
             => $"{(int)rect.X} {(int)rect.Y} {(int)rect.Width} {(int)rect.Height}";
-        
-        
+
+
+        public static Rect From(double x, double y, double width, double height)
+            => new (x, y, width, height);
+
+        public static bool FromContain(double x, double y, double width, double height, Point pos)
+        {
+            if (pos.X >= x && pos.X <= x + width &&
+                pos.Y >= y && pos.Y <= y + height)
+                return true;
+
+            return false;
+        }
+
     }
 }

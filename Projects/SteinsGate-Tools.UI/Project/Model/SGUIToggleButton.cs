@@ -28,6 +28,7 @@ namespace SGToolsUI.Model
     public class SGUIToggleButton : SGUIElement
     {
         public override SGUIElementType UIElementType => SGUIElementType.ToggleButton;
+        [Browsable(false)] public override bool Manipulatable => false;
         public override void CreateInit()
         {
         }

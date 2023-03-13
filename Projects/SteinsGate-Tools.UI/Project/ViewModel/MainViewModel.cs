@@ -39,6 +39,7 @@ namespace SGToolsUI.ViewModel
     {
         public MainViewModel()
         {
+            PackManager = SgaManager.Instance;
             Setting = new Setting();
             Setting.Load();
             LogBox = new LogListBox() { MaxItemCount = 1500 };
@@ -46,10 +47,10 @@ namespace SGToolsUI.ViewModel
             LogBox.Height = 600;
             LogErrorHandler = new Action<Exception>((ex) => LogBox.AddLog(ex));
             LogView = new LogView(LogBox);
+            AlbumView = new AlbumView(this);
             Loader = new SGUILoader(this);
             Saver = new SGUISaver(this);
             Exporter = new SGUIExporter(this);
-            PackManager = SgaManager.Instance;
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
             DragState = new DataDragState(this);
@@ -336,6 +337,7 @@ namespace SGToolsUI.ViewModel
         public JobQueue JobQueue { get; } = new ();
         public LogListBox LogBox { get; }
         public LogView LogView { get; }
+        public AlbumView AlbumView { get; }
         public SGUILoader Loader { get; }
         public SGUISaver Saver { get; }
         public SGUIExporter Exporter { get; }

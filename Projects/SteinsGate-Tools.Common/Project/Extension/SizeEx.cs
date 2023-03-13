@@ -32,5 +32,20 @@ namespace SGToolsCommon.Extension
             StringEx.ParseIntNumberN(s, sizeArr);
             return new Size(sizeArr[0], sizeArr[1]);
         }
+
+        public static Size Add(Size size, Vector vec)
+        {
+            return new Size(size.Width + vec.X, size.Height + vec.Y);
+        }
+
+        public static Size Add(Size size, Size sizeOther)
+        {
+            return new Size(size.Width + sizeOther.Width, size.Height + sizeOther.Height);
+        }
+
+        public static Size Add(Size size, Point pt)
+        {
+            return new Size(size.Width + pt.X, size.Height + pt.Y);
+        }
     }
 }

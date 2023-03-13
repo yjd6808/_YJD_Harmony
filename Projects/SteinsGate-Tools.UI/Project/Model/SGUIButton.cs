@@ -167,6 +167,7 @@ namespace SGToolsUI.Model
 
 
         public override SGUIElementType UIElementType => SGUIElementType.Button;
+        [Browsable(false)] public override bool Manipulatable => false;
 
         public override void CreateInit()
         {

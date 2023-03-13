@@ -333,6 +333,8 @@ namespace SGToolsUI.Model
         public int GroupCode => (Code / Constant.GroupCodeInterval) * Constant.GroupCodeInterval;
 
 
+        [Browsable(false)] 
+        public abstract bool Manipulatable { get; }
 
 
         [Browsable(false)]
@@ -345,7 +347,8 @@ namespace SGToolsUI.Model
             {
                 if (_selected == value)
                     return;
-                Debug.WriteLine($"{VisualName} 셀렉 {value}");
+
+                // Debug.WriteLine($"{VisualName} 셀렉 {value}");
                 _selected = value;
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
                 ObservableCollection<SGUIElement> selectedElements = groupMaster.SelectedElements;
@@ -438,35 +441,24 @@ namespace SGToolsUI.Model
                 if (_picked == value)
                     return;
 
-                Debug.WriteLine($"{VisualName} 픽");
+                // Debug.WriteLine($"{VisualName} 픽");
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
                 _picked = value;
 
                 if (value == false)
                 {
-                    Selected = false;
-
                     if (groupMaster.PickedGroup == this)
-                    {
-                        groupMaster.PickedElements.ForEach(element => element.SetPick(false));
                         groupMaster.PickedElements.Clear();
-                        return;
-                    }
-
-                    if (!groupMaster.PickedElements.Remove(this))
-                        throw new Exception("픽드 엘리먼트 목록에서 삭제 실패했습니다.");
-
-                    if (IsGroup)
+                    else if (!IsGroup)
+                        groupMaster.PickedElements.Remove(this);
+                    else
                     {
-                        Cast<SGUIGroup>().ForEachRecursive(element =>
-                        {
-                            element.SetPick(false);
-                            groupMaster.PickedElements.Remove(element);
-                        });
+                        groupMaster.PickedElements.Remove(this);
+                        Cast<SGUIGroup>().ForEachRecursive(element => groupMaster.PickedElements.Remove(element));
                     }
                 }
 
-               
+
                 OnPropertyChanged();
 
                 if (!_picked)
@@ -1131,6 +1123,7 @@ namespace SGToolsUI.Model
 
 
         public override string ToString() => _visualName;
+
 
         protected string _visualName = string.Empty;
         protected Point _visualPosition;

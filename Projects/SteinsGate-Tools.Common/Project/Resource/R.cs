@@ -39,6 +39,9 @@ namespace SGToolsCommon.Resource
         Pin,
         Unpin,
         Transparent,
+        Album,
+        Unclip,
+        Link,
         Max
     }
 
@@ -70,6 +73,9 @@ namespace SGToolsCommon.Resource
         public const string IconCommonPinKey = IconPath + "common_pin.ico";
         public const string IconCommonUnpinKey = IconPath + "common_unpin.ico";
         public const string IconCommonTransparentKey = IconPath + "common_transparent.ico";
+        public const string IconCommonAlbumKey = IconPath + "common_album.ico";
+        public const string IconCommonUnclipKey = IconPath + "common_unclip.ico";
+        public const string IconCommonLinkKey = IconPath + "common_link.ico";
 
         public const string IconArrowTopLeftKey = IconPath + "arrow_topleft.ico";
         public const string IconArrowTopKey = IconPath + "arrow_top.ico";
@@ -122,7 +128,12 @@ namespace SGToolsCommon.Resource
                 case IconCommonType.Pin:            return IconCommonPinKey;
                 case IconCommonType.Unpin:          return IconCommonUnpinKey;
                 case IconCommonType.Transparent:    return IconCommonTransparentKey;
+                case IconCommonType.Album:          return IconCommonAlbumKey;
+                case IconCommonType.Unclip:         return IconCommonUnclipKey;
+                case IconCommonType.Link:           return IconCommonLinkKey;
                 default:  throw new ArgumentException("몽미");
+
+                    
             }
         }
 

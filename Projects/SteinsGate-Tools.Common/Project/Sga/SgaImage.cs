@@ -81,16 +81,12 @@ namespace SGToolsCommon.Sga
             _spriteList = new List<SgaSpriteAbstract>(new SgaSpriteAbstract[_waitForLoading]);
 
             VersionLoader[Version](this, indexOnly);
-
-            if (indexOnly)
-            {
-                _indexLoaded = true;
-                return;
-            }
-
-            _dataLoaded = true;
             _indexLoaded = true;
 
+            if (indexOnly)
+                return;
+
+            _dataLoaded = true;
             NotifyUpdateList();
         }
 

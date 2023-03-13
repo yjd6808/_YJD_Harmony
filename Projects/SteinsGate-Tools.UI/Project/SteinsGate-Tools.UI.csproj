@@ -40,6 +40,12 @@
 	  <ProjectReference Include="..\..\SteinsGate-Tools.Common\Project\SteinsGate-Tools.Common.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="View\AlbumView.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;&#xD;&#xA;xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;" />
 	</Target>

@@ -154,6 +154,7 @@
                     <MenuItem Style="{StaticResource MenuItemSeparator}" />
                     <MenuItem Header="보기">
                         <MenuItem Header="로그 뷰" Command="{Binding Commander.OpenLogView}" />
+                        <MenuItem Header="앨범 뷰" Command="{Binding Commander.OpenAlbumView}" />
                     </MenuItem>
                     <MenuItem Style="{StaticResource MenuItemSeparator}" />
                     <MenuItem Header="도구">
@@ -205,22 +206,27 @@
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
+                             
+                             <Grid.RowDefinitions>
+                                 <RowDefinition Height="Auto"></RowDefinition>
+                                 <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
 
-                            <Button Name="AddGroupUIElementButton" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIGroupIconImageSource}"/>
-                            <Button Name="AddButtonUIElementButton" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIButtonIconImageSource}"/>
-                            <Button Name="DeleteUIElementButton" Grid.Column="2" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
-                            <Button Name="UnpickUIElementButton" Grid.Column="3" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
+                            <Button Grid.Row="0" Grid.Column="0" Name="AddGroupUIElementButton"  Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIGroupIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="1" Name="AddButtonUIElementButton" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIButtonIconImageSource}"/>
+                            <Button Grid.Row="1" Grid.Column="0" Name="DeleteUIElementButton" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
+                            <Button Grid.Row="1" Grid.Column="1" Name="UnpickUIElementButton" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
                         </Grid>
                         <Separator />
                     </StackPanel>
 
                     <ui_ctrl:UIElementTreeView Grid.Row="1"
-                                                   x:Name="UIElementTreeView"
-                                                   Background="Transparent"
-                                                   BorderThickness="0"
-                                                   ItemTemplateSelector="{x:Static ui_selector:UIElementTreeViewSelector.Selector}"
-                                                   ItemsSource="{Binding GroupMaster.Children}"
-                                                   Style="{StaticResource UIElementTreeView}">
+                                               x:Name="UIElementTreeView"
+                                               Background="Transparent"
+                                               BorderThickness="0"
+                                               ItemTemplateSelector="{x:Static ui_selector:UIElementTreeViewSelector.Selector}"
+                                               ItemsSource="{Binding GroupMaster.Children}"
+                                               Style="{StaticResource UIElementTreeView}">
                     </ui_ctrl:UIElementTreeView>
                 </Grid>
             </ScrollViewer>
@@ -388,6 +394,7 @@
                     <ColumnDefinition Width="250"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Command="{Binding Commander.ReloadSgaPackage}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRefreshKey}}"/>
+                <Button Grid.Column="1" Command="{Binding Commander.OpenAlbumView}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonAlbumKey}}"/>
 
                 <c:WatermarkTextBox Watermark="검색할 내용 입력" Grid.Column="4" Name="SgaResourceSearchTextBox" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" KeyDown="SgaResourceSearchTextBox_OnKeyDown">
                     <c:WatermarkTextBox.Style>
@@ -416,6 +423,7 @@
                          MaxWidth="100"
                          x:Name="PackageListBox"
                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                         ItemContainerStyle="{StaticResource SgaPackageListBoxItemContainerStyle}"
                          Style="{StaticResource SgaPackageListBox}"
                          ItemsSource="{Binding PackManager.Packages, Mode=OneWay}"
                          SelectedItem="{Binding SelectedPackage, Mode=OneWay}">
@@ -427,6 +435,7 @@
                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
                          Style="{StaticResource SgaElementListBox}"
                          SelectedItem="{Binding SelectedImage.Header, Mode=OneWay}"
+                         ItemContainerStyle="{StaticResource SgaElementListBoxItemContainerStyle}"
                          ItemsSource="{Binding SelectedPackage.ElementHeaderList, Mode=OneWay}">
                 </ui_ctrl:SgaElementListBox>
 

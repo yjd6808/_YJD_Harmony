@@ -47,8 +47,8 @@ namespace SGToolsCommon.Sga
 
 
         public SgaCompressMode CompressMode => _compressMode;
-        public SgaSpriteRect SpriteRect => _spriteRect;
-        public Rect Rect => new Rect(_spriteRect.X, _spriteRect.Y, _spriteRect.Width, _spriteRect.Height);
+        public override SgaSpriteRect SpriteRect => _spriteRect;
+        public override Rect Rect => new Rect(_spriteRect.X, _spriteRect.Y, _spriteRect.Width, _spriteRect.Height);
         public int DataOffset => _dataOffset;
         public int DataLength => _dataLength;
         public override bool Loaded => _data != null;
@@ -80,7 +80,7 @@ namespace SGToolsCommon.Sga
         }
 
         
-        public BitmapSource Source
+        public override BitmapSource Source
         {
             get
             {
@@ -160,6 +160,7 @@ namespace SGToolsCommon.Sga
         public override void Unload()
         {
             _data = null;
+            
         }
 
         private void Decompress()

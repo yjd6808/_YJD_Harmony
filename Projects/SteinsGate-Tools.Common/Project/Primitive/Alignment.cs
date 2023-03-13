@@ -48,6 +48,7 @@ namespace SGToolsCommon.Primitive
         BottomRight
     }
 
+
     public static class Alignment
     {
         public static readonly ValueTuple<VAlignment, HAlignment>[] PositioningToAlignMap = new[]

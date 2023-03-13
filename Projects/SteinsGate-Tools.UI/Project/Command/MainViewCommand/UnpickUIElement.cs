@@ -7,8 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,15 +36,15 @@ namespace SGToolsUI.Command.MainViewCommand
 
         public override void Execute(object? parameter)
         {
-            var masterGroup = ViewModel.GroupMaster;
+            var groupMaster = ViewModel.GroupMaster;
 
-            if (!masterGroup.HasPickedElement)
+            if (!groupMaster.HasPickedElement)
                 return;
 
 
-            ObservableCollection<SGUIElement> pickedElements = masterGroup.PickedElements;
-            pickedElements.ForEach(element => element.Picked = false);
-            pickedElements.Clear();
+            ObservableCollection<SGUIElement> pickedElements = groupMaster.PickedElements;
+            pickedElements.ToList().ForEach(element => element.Picked = false);
+            Debug.Assert(pickedElements.Count == 0, "아직 픽된 엘리먼트가 남아있습니다.");
             ViewModel.View.CanvasShapesControl.AdjustAnchor();
         }
     }

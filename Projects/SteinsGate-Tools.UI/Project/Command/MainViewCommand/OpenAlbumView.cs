@@ -24,21 +24,21 @@ using SGToolsUI.View;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
-    public class OpenSetting : MainCommandAbstract
+    public class OpenAlbumView : MainCommandAbstract
     {
 
-        public OpenSetting(MainViewModel viewModel)
-            : base(viewModel, "설정 창을 엽니다.")
+        public OpenAlbumView(MainViewModel viewModel)
+            : base(viewModel, "앨범 뷰를 보여주거나 숨깁니다.")
         {
         }
 
         public override void Execute(object? parameter)
         {
-            SettingView settingView = new SettingView();
-            settingView.ShowDialog();
+            if (ViewModel.AlbumView.IsVisible)
+                ViewModel.AlbumView.Visibility = Visibility.Collapsed;
+            else
+                ViewModel.AlbumView.Show();
 
-            if (settingView.Result)
-                ViewModel.Setting = settingView.ViewModel.Model.Clone() as Setting;
         }
     }
 }

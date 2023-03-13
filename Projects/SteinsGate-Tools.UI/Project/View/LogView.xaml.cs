@@ -34,12 +34,10 @@ namespace SGToolsUI.View
 
     public partial class LogView : Window
     {
-        public LogViewModel ViewModel { get; }
         public LogListBox LogBox { get; }
 
         public LogView(LogListBox box)
         {
-            ViewModel = new LogViewModel();
             InitializeComponent();
             LogBox = box;
             LogBox.LogClick += LogBox_OnLogClick;

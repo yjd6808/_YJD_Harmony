@@ -436,6 +436,8 @@ namespace SGToolsUI.CustomControl
             if (!_isDraggable)
                 return;
 
+            
+
             if (_dragState != DragState.None)
             {
                 DragEnd(e);
@@ -450,6 +452,12 @@ namespace SGToolsUI.CustomControl
 
         public void DragMove(MouseEventArgs e)
         {
+            if (ViewModel.View.UIElementsControl.IsManipulationMode)
+            {
+                DragEnd(e);
+                return;
+            }
+
             Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             if (_dragState == DragState.Wait)

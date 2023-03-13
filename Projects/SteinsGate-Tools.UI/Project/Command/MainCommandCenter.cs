@@ -36,6 +36,7 @@ namespace SGToolsUI.Command
         // =================================================
         public CommandAbstract OpenSetting { get; }
         public CommandAbstract OpenLogView { get; }
+        public CommandAbstract OpenAlbumView { get; }
         public CommandAbstract ReloadSgaPackage { get; }
         public CommandAbstract SelectSgaPackage { get; }
         public CommandAbstract SelectSgaElement { get; }
@@ -87,9 +88,10 @@ namespace SGToolsUI.Command
         {
             ViewModel = viewModel;
 
-            Add(OpenSetting = new OpenSetting(ViewModel));
+            Add(OpenSetting = new OpenSettingView(ViewModel));
             Add(OpenLogView = new OpenLogView(ViewModel));
-            
+            Add(OpenAlbumView = new OpenAlbumView(ViewModel));
+
             Add(ReloadSgaPackage = new ReloadSgaPackage(ViewModel));
             Add(SelectSgaPackage = new SelectSgaPackage(ViewModel) { UseParameter = true });
             Add(SelectSgaElement = new SelectSgaElement(ViewModel) { UseParameter = true });

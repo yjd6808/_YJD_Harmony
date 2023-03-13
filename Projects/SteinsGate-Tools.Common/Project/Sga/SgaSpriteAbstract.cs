@@ -35,6 +35,9 @@ namespace SGToolsCommon.Sga
         public SgaImage Parent { get; }
         public int FrameIndex { get; }
         public bool IsLink => SpriteType == SgaSpriteType.LinkSprite;
+
+        public abstract SgaSpriteRect SpriteRect { get; }
+        public abstract Rect Rect { get; }
         public abstract bool IsDummy { get; }
         public abstract bool Loaded { get; }
         public abstract int Width { get; }
@@ -44,6 +47,7 @@ namespace SGToolsCommon.Sga
         public abstract int FrameWidth { get; }
         public abstract int FrameHeight { get; }
         public abstract int TargetFrameIndex { get; }
+        public abstract BitmapSource Source { get; }
         public ListBoxItem Item { get; set; }
 
         public abstract void Load();
@@ -64,6 +68,18 @@ namespace SGToolsCommon.Sga
 
             return (SgaLinkSprite)this;
         }
-            
+
+        public string InfoString
+        {
+            get
+            {
+                if (IsLink)
+                    return $"[{FrameIndex}] {Width}x{Height} (링크:{TargetFrameIndex})";
+
+                return $"[{FrameIndex}] {Width}x{Height}";
+            }
+        }
+
+        public string SizeString => $"{Width}x{Height}";
     }
 }

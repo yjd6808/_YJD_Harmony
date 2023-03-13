@@ -8,4 +8,5 @@
     <local:SgaFileNameConverter x:Key="SgaFileNameConverter" />
     <local:VectorStringConverter x:Key="VectorStringConverter" />
     <local:CutStringConverter x:Key="CutStringConverter" />
+    <local:SourceStretchConverterWithSize x:Key="SourceStretchConverterWithSize" />
 </ResourceDictionary>

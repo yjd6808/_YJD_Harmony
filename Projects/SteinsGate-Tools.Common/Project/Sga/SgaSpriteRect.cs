@@ -23,11 +23,23 @@ namespace SGToolsCommon.Sga
 {
     public struct SgaSpriteRect
     {
-        public int X;
-        public int Y;
-        public int Width;
-        public int Height;
-        public int FrameWidth;
-        public int FrameHeight;
+        public SgaSpriteRect() {}
+
+        public SgaSpriteRect(int x, int y, int width, int height, int frameWidth, int frameHeight)
+        {
+            X = x;
+            Y = y;
+            Width = width; 
+            Height = height;
+            FrameWidth = frameWidth;
+            FrameHeight = frameHeight;
+        }
+
+        public int X { get; set; } = 0;
+        public int Y { get; set; } = 0;
+        public int Width { get; set; } = 0;
+        public int Height { get; set; } = 0;
+        public int FrameWidth { get; set; } = 0;
+        public int FrameHeight {  get; set; } = 0;
     }
 }

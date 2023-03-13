@@ -27,11 +27,11 @@ namespace SGToolsUI.CustomStyle
 {
     public partial class SgaElementListBoxStyle : ResourceDictionary
     {
-        private void OnListBoxItemLoaded(object sender, RoutedEventArgs e)
-        {
-            GetElementHeader(sender, out ListBoxItem item, out SgaElementHeader header);
-            header.Item = item;
-        }
+        //private void OnListBoxItemLoaded(object sender, RoutedEventArgs e)
+        //{
+        //    GetElementHeader(sender, out ListBoxItem item, out SgaElementHeader header);
+        //    header.Item = item;
+        //}
 
         private void OnListBoxItemPreviewMouseLeftDown(object sender, MouseButtonEventArgs e)
         {

@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Resource;
 
 namespace SGToolsCommon.Sga
 {
@@ -30,6 +31,8 @@ namespace SGToolsCommon.Sga
 
         public override bool IsDummy => false;
         public override bool Loaded => true;
+        public override SgaSpriteRect SpriteRect => new(1, 1, 1, 1, 1, 1);
+        public override Rect Rect => new(1, 1, 1, 1);
         public override int Width => 1;
         public override int Height => 1;
         public override int X => 1;
@@ -37,6 +40,7 @@ namespace SGToolsCommon.Sga
         public override int FrameWidth => 1;
         public override int FrameHeight => 1;
         public override int TargetFrameIndex { get; }
+        public override BitmapSource Source => R.GetIconCommon(IconCommonType.Link);
 
         public override void Load()
         {
