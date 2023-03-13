@@ -2,6 +2,7 @@
  * 작성자: 윤정도
  * 생성일: 3/1/2023 2:38:01 PM
  * 이 그룹의 자식은 트리뷰의 아이템소스
+ *
  */
 
 using System;
@@ -122,7 +123,6 @@ namespace SGToolsUI.Model
         public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
         public SGUIElement PickedSelectedElement => PickedElements.LastOrDefault(element => element.Selected);
         public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
-
         public int GroupCount  {  get  {  lock (_groups)  {  return _groups.Count; }  }  }
         public int ElementCount  {  get  {  lock (_elements)  {  return _elements.Count; }  }  }
 
@@ -161,7 +161,7 @@ namespace SGToolsUI.Model
         {
             lock (_groups)
             {
-                _codeAssigner.Enqueue(group.Code, group.Code);
+                _codeAssigner.Enqueue(group.Code, group.Code / Constant.GroupCodeInterval);
 
                 if (!_groups.Remove(group.Code))
                     throw new Exception("그룹목록에서 삭제하는데 실패했습니다.");

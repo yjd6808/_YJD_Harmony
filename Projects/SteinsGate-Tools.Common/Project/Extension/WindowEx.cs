@@ -10,16 +10,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using SGToolsCommon.DllImport;
+using Vanara.PInvoke;
+using static Vanara.PInvoke.User32;
 
 namespace SGToolsCommon.Extension
 {
 
     public static class WindowEx
     {
+        /*
+         * 프로세스, 작업표시줄 주황표시 영구적으로 하기
+         * https://stackoverflow.com/questions/19831540/flash-external-window
+         *
+         * FLASHWINFO 구조체는 FlashWindowEx 함수에서 사용되는 구조체입니다.이 구조체는 윈도우를 깜박이게 하여 알림을 주기 위한 정보를 제공합니다.구조체의 필드는 다음과 같습니다.
+         * cbSize: 구조체의 크기를 나타냅니다.이 필드는 구조체를 초기화할 때 sizeof(FLASHWINFO) 와 같은 값을 할당해야 합니다.
+         * hwnd: 깜박이게 할 윈도우의 핸들입니다.
+         * dwFlags: 깜박이기의 옵션을 지정합니다.다음과 같은 값들을 사용할 수 있습니다.
+         *
+         * FLASHW_CAPTION: 윈도우의 캡션 바를 깜박입니다.
+         * FLASHW_TRAY: 작업 표시줄에 있는 아이콘을 깜박입니다.
+         * FLASHW_ALL: 윈도우와 작업 표시줄 아이콘을 모두 깜박입니다.
+         * FLASHW_TIMER: 윈도우를 깜박이게 합니다.이때, dwTimeout 필드에 설정된 시간 간격으로 깜박입니다.
+         * FLASHW_TIMERNOFG: 윈도우를 깜박이게 하되, 해당 윈도우가 Foreground가 아닌 경우에만 깜박입니다.
+         * uCount: 깜박이기의 횟수입니다. 0이면 무한히 깜박입니다.
+         *
+         * dwTimeout: 깜박이기 간격의 시간을 밀리초 단위로 지정합니다.
+         * 위와 같은 필드들을 사용하여 깜박이기의 옵션을 설정할 수 있습니다.깜박이기가 완료된 후, FlashWindowEx 함수는 TRUE를 반환합니다.
+         */
+
+        public static void Flash(IntPtr handle)
+        {
+            FLASHWINFO fInfo = new FLASHWINFO();
+            fInfo.cbSize = Convert.ToUInt32(Marshal.SizeOf(fInfo));
+            fInfo.dwFlags = FLASHW.FLASHW_TRAY | FLASHW.FLASHW_TIMERNOFG;
+            fInfo.dwTimeout = 3000; 
+            fInfo.hwnd = handle;
+            fInfo.uCount = 0;
+            FlashWindowEx(fInfo);
+        }
+
         public static IntPtr Handle(this Window window)
             => new WindowInteropHelper(window).Handle;
-
 
         // 해당 윈도우가 포그라운드 윈도우인지 체크
         // https://stackoverflow.com/questions/7162834/determine-if-current-application-is-activated-has-focus
@@ -28,13 +59,13 @@ namespace SGToolsCommon.Extension
 
         public static bool IsApplicationForeground()
         {
+
             var activatedHandle = User32.GetForegroundWindow();
             if (activatedHandle == IntPtr.Zero)
                 return false;       // No window is currently activated
 
-            var procId = Process.GetCurrentProcess().Id;
-            int activeProcId;
-            User32.GetWindowThreadProcessId(activatedHandle, out activeProcId);
+            int procId = Process.GetCurrentProcess().Id;
+            User32.GetWindowThreadProcessId(activatedHandle, out uint activeProcId);
             return activeProcId == procId;
         }
 

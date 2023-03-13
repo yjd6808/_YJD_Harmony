@@ -386,6 +386,10 @@ namespace SGToolsUI.CustomControl
 
         public void AdjustAnchor(SGUIGroup group = null)
         {
+            // 뷰가 초기화되기도 전에 호출하는 경우
+            if (_anchor == null)
+                return;
+
             if (group == null)
                 _anchor.Target = ViewModel.GroupMaster;
             else

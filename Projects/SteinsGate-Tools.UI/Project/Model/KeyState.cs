@@ -51,6 +51,7 @@ namespace SGToolsUI.Model
         F2,
         F6,
         F7,
+        F8,
         Max
     }
 
@@ -104,6 +105,7 @@ namespace SGToolsUI.Model
             _keys[(int)SGKey.F2]        = new KeyElement(Key.F2);
             _keys[(int)SGKey.F6]        = new KeyElement(Key.F6);
             _keys[(int)SGKey.F7]        = new KeyElement(Key.F7);
+            _keys[(int)SGKey.F8]        = new KeyElement(Key.F8);
 
 
             // 방향키 연속키입력 허용

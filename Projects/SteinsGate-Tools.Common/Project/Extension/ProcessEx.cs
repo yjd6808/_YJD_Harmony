@@ -20,6 +20,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static Vanara.PInvoke.Kernel32.PSS_HANDLE_ENTRY;
+using Path = System.IO.Path;
+using Process = System.Diagnostics.Process;
+
+using static Vanara.PInvoke.User32;
 
 namespace SGToolsCommon.Extension
 {
@@ -30,8 +35,27 @@ namespace SGToolsCommon.Extension
         // https://stackoverflow.com/questions/334630/opening-a-folder-in-explorer-and-selecting-a-file
         public static void OpenDirectory(string path)
         {
+            string directoryName = Path.GetFileName(path);
+            if (FileEx.IsFile(path))
+                throw new Exception($"{path}는 폴더가 아닙니다.");
+
+            if (directoryName == string.Empty)
+                throw new Exception($"{path}에서 디렉토리 명을 얻는데 실패했습니다.");
+
+            foreach (Process process in Process.GetProcesses())
+            {
+                if (process.MainWindowTitle.Contains(directoryName))
+                {
+                    // 열려있는 폴더가 있다면 해당 프로세스를 활성화
+                    IntPtr hWnd = process.MainWindowHandle;
+                    SetForegroundWindow(hWnd);
+                    // WindowEx.Flash(hWnd);
+                    return;
+                }
+            }
+
             string explorerDir = Environment.GetEnvironmentVariable("WINDIR") + @"\explorer.exe";
-            
+
             if (FileEx.IsFile(path))
             {
                 string argument = "/select, \"" + path + "\"";

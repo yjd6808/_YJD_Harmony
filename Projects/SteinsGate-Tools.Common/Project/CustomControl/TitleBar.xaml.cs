@@ -195,7 +195,5 @@ namespace SGToolsCommon.CustomControl
             typeof(Thickness),
             typeof(TitleBar),
             new PropertyMetadata(new Thickness()));
-
-
     }
 }

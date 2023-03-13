@@ -42,6 +42,7 @@ namespace SGToolsUI.Command.MainViewCommand
             
             ViewModel.LogBox.AddLog("F6: 파일 다시 로딩");
             ViewModel.LogBox.AddLog("F7: 백업 텍스트 박스 포커싱");
+            ViewModel.LogBox.AddLog("F8: 백업 폴더 열기");
             ViewModel.LogBox.AddLog("ESC: 선택, 픽된 엘리먼트 모두 해제");
             ViewModel.LogBox.AddLog("", null, IconCommonType.Transparent);
             ViewModel.LogBox.AddLog("[트리뷰 단축키 목록]");

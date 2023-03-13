@@ -45,6 +45,7 @@ namespace SGToolsUI.ViewModel
             LogBox = new LogListBox() { MaxItemCount = 1500 };
             LogBox.Width = 400;
             LogBox.Height = 600;
+            GroupMaster = SGUIGroupMaster.Create(this);
             LogErrorHandler = new Action<Exception>((ex) => LogBox.AddLog(ex));
             LogView = new LogView(LogBox);
             AlbumView = new AlbumView(this);

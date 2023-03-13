@@ -39,6 +39,7 @@ using SGToolsUI.ViewModel;
 using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Properties;
 using Xceed.Wpf.Toolkit.PropertyGrid;
+using Path = System.IO.Path;
 
 namespace SGToolsUI.View
 {
@@ -171,6 +172,11 @@ namespace SGToolsUI.View
                 BackUpTextBox.Text = string.Empty;
             }
 
+            else if (state.IsPressed(SGKey.F8))
+            {
+                ViewModel.Commander.OpenDirectory.Execute(ToolDirectory.Backup.ToString());
+            }
+
             else if (state.IsPressed(SGKey.X))
             {
                 ViewModel.IsEventMode = !ViewModel.IsEventMode;
@@ -252,5 +258,29 @@ namespace SGToolsUI.View
 
         }
 
+        private async void MainView_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                List<string> files = ((string[])e.Data.GetData(DataFormats.FileDrop)).ToList();
+
+                // 이미지 파일이 아닌녀석들 제거
+                if (files.Count > 1)
+                {
+                    MessageBoxEx.ShowTopMost("하나의 .json 파일만 드래그 앤 드롭 해주세요.");
+                    return;
+                }
+
+                string file = files[0];
+
+                if (Path.GetExtension(file) != ".json")
+                {
+                    MessageBoxEx.ShowTopMost(".json 형식의 파일이 아닙니다.");
+                    return;
+                }
+
+                await ViewModel.Loader.LoadAsync(file);
+            }
+        }
     }
 }
