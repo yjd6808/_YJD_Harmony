@@ -68,7 +68,6 @@ namespace SGToolsUI.View
             SgaImage cur = ViewModel.SelectedPackage.GetElement(header.IndexInPackage) as SgaImage;
             if (cur == null) return;
             ViewModel.SelectedImage = cur;
-            // ViewModel.SelectedImage.NotifyUpdateList();
         }
     }
 }

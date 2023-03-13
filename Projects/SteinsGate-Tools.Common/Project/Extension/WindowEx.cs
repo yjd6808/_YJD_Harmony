@@ -3,16 +3,41 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
+using SGToolsCommon.DllImport;
 
 namespace SGToolsCommon.Extension
 {
 
     public static class WindowEx
     {
+        public static IntPtr Handle(this Window window)
+            => new WindowInteropHelper(window).Handle;
+
+
+        // 해당 윈도우가 포그라운드 윈도우인지 체크
+        // https://stackoverflow.com/questions/7162834/determine-if-current-application-is-activated-has-focus
+        public static bool IsMainWindowForeground()
+            => Application.Current?.MainWindow?.Handle() == User32.GetForegroundWindow();
+
+        public static bool IsApplicationForeground()
+        {
+            var activatedHandle = User32.GetForegroundWindow();
+            if (activatedHandle == IntPtr.Zero)
+                return false;       // No window is currently activated
+
+            var procId = Process.GetCurrentProcess().Id;
+            int activeProcId;
+            User32.GetWindowThreadProcessId(activatedHandle, out activeProcId);
+            return activeProcId == procId;
+        }
+
         public static void MoveTo(this Window window, Point point, bool allowOver = true)
         {
             window.Left = point.X;

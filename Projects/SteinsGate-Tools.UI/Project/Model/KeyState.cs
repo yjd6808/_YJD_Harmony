@@ -24,6 +24,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon;
+using SGToolsCommon.Extension;
 
 namespace SGToolsUI.Model
 {
@@ -133,6 +134,9 @@ namespace SGToolsUI.Model
 
         private void CaptureKeyState()
         {
+            if (!WindowEx.IsMainWindowForeground())
+                return;
+
             SGKey sgKey;
             Key wpfKey;
             bool isKeyDown;

@@ -48,6 +48,12 @@ namespace SGToolsCommon.CustomControl
             set => SetValue(RealCloseProperty, value);
         }
 
+        public bool EscTermination
+        {
+            get => (bool)GetValue(EscTerminationProperty);
+            set => SetValue(EscTerminationProperty, value);
+        }
+
         public object TitleContent
         {
             get => (object)GetValue(TitleContentProperty);
@@ -83,7 +89,14 @@ namespace SGToolsCommon.CustomControl
                     throw new Exception("무조건 윈도우 내부에 포함되어야합니다.");
 
                 _window.MouseDown += WindowOnMouseDown;
+                _window.PreviewKeyDown += OnPreviewKeyDown;
             };
+        }
+
+        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (EscTermination && e.Key == Key.Escape)
+                Close();
         }
 
         private void WindowOnMouseDown(object sender, MouseButtonEventArgs e)
@@ -114,6 +127,11 @@ namespace SGToolsCommon.CustomControl
         }
 
         private void CloseOnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        public void Close()
         {
             if (RealClose)
                 _window.Close();
@@ -153,6 +171,12 @@ namespace SGToolsCommon.CustomControl
            typeof(bool),
            typeof(TitleBar),
            new PropertyMetadata(null) { DefaultValue = true });
+
+        public static readonly DependencyProperty EscTerminationProperty = DependencyProperty.Register(
+            nameof(EscTermination),
+            typeof(bool),
+            typeof(TitleBar),
+            new PropertyMetadata(false));
 
         public static readonly DependencyProperty TitleContentProperty = DependencyProperty.Register(
             nameof(TitleContent),

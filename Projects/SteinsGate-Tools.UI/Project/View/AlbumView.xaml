@@ -36,6 +36,7 @@
             <common_ctrl:TitleBar Name="TitleBar"
                                   FontSize="16"
                                   Title="SGA 이미지 뷰"
+                                  EscTermination="True"
                                   RealClose="False" />
             <Slider Name="SizeSlider"
                     HorizontalAlignment="Right"
@@ -46,6 +47,7 @@
                     Minimum="60"
                     Maximum="300" />
         </Grid>
+        <Separator DockPanel.Dock="Top" />
 
         <ListBox DockPanel.Dock="Left"
                  MinWidth="150"
@@ -73,7 +75,6 @@
         </ListBox>
 
         <ScrollViewer DockPanel.Dock="Left">
-
             <ListBox 
                      Width="600"
                      SelectionMode="Extended"

@@ -70,8 +70,7 @@
                               TitleContent="{Binding DataContext.LogBox.LastLog, RelativeSource={RelativeSource AncestorType=DockPanel}}"
                               TitleContentTemplate="{StaticResource TitleLogDataTemplate}">
         </common_ctrl:TitleBar>
-        <Separator DockPanel.Dock="Top">
-        </Separator>
+        <Separator DockPanel.Dock="Top"/>
 
 
         <!-- ###############################################################################

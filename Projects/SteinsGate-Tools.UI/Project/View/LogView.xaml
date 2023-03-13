@@ -36,7 +36,8 @@
             DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <DockPanel Name="MainPanel">
-        <common_ctrl:TitleBar FontSize="16"  Title="로그 뷰" DockPanel.Dock="Top" RealClose="False"/>
+        <common_ctrl:TitleBar FontSize="16"  Title="로그 뷰" DockPanel.Dock="Top" RealClose="False" EscTermination="True"/>
+        <Separator DockPanel.Dock="Top" />
         <Button Name="CleanLogBoxButton" Content="로그 비우기" DockPanel.Dock="Bottom" Click="CleanLogBoxButton_OnClick"/> 
     </DockPanel>
 </Window>
