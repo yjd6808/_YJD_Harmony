@@ -205,6 +205,9 @@
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                              
@@ -213,10 +216,15 @@
                                  <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>
 
-                            <Button Grid.Row="0" Grid.Column="0" Name="AddGroupUIElementButton"  Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredGroupIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="1" Name="AddButtonUIElementButton" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredButtonIconImageSource}"/>
-                            <Button Grid.Row="1" Grid.Column="0" Name="DeleteUIElementButton" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
-                            <Button Grid.Row="1" Grid.Column="1" Name="UnpickUIElementButton" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
+                            <Button Grid.Row="0" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredGroupIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredButtonIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="2" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Label}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredLabelIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="3" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.Sprite}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredSpriteIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="4" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.EditBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredEditBoxIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="5" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.CheckBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredCheckBoxIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="6" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredToggleButtonIconImageSource}"/>
+                            <Button Grid.Row="1" Grid.Column="0" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
+                            <Button Grid.Row="1" Grid.Column="1" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
                         </Grid>
                         <Separator />
                     </StackPanel>

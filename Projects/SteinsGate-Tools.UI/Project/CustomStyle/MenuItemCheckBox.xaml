@@ -2,13 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:common_conv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
                     xmlns:res="clr-namespace:SGToolsUI.Resource">
-    <Style x:Key="MenuItemButton" TargetType="MenuItem">
+    <Style x:Key="MenuItemCheckBox" TargetType="MenuItem">
         <Setter Property="Icon">
             <Setter.Value>
                 <Image Width="16" Height="16" Source="{
                     Binding 
                     Converter={StaticResource PackUrlImageSourceConverter},
-                    ConverterParameter={x:Static res:R.UIColoredButtonIconKey}}">
+                    ConverterParameter={x:Static res:R.UIColoredCheckBoxIconKey}}">
                     <Image.Style>
                         <Style TargetType="Image">
                             <Style.Triggers>

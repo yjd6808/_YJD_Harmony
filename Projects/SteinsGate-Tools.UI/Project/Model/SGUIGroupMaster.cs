@@ -126,12 +126,21 @@ namespace SGToolsUI.Model
         public int GroupCount  {  get  {  lock (_groups)  {  return _groups.Count; }  }  }
         public int ElementCount  {  get  {  lock (_elements)  {  return _elements.Count; }  }  }
 
-        // 아래 3가지 항목은 멀티쓰레드 접근 가능함, 따라서 락을 수행토록 한다.
-        // 코드 어사이너!
-        // 코드 수동할당은 에반거 같아서 자동으로 할당하도록 한다.
-        private PriorityQueue<int, int> _codeAssigner;
-        private SortedList<int, SGUIGroup> _groups;
-        private LinkedList<SGUIElement> _elements;
+        public bool PickedElementsDisabled
+        {
+            get => _pickedElementsDisabled;
+            set
+            {
+                _pickedElementsDisabled = value;
+
+                if (value)
+                    PickedElements.ForEach(element => element.State = StateDisabled);
+                else
+                    PickedElements.ForEach(element => element.State = StateNormal);
+            }
+        }
+
+
 
 
         // ============================================================
@@ -387,5 +396,13 @@ namespace SGToolsUI.Model
 
 
         }
+
+        // 아래 3가지 항목은 멀티쓰레드 접근 가능함, 따라서 락을 수행토록 한다.
+        // 코드 어사이너!
+        // 코드 수동할당은 에반거 같아서 자동으로 할당하도록 한다.
+        private PriorityQueue<int, int> _codeAssigner;
+        private SortedList<int, SGUIGroup> _groups;
+        private LinkedList<SGUIElement> _elements;
+        private bool _pickedElementsDisabled;       // 픽된 엘리먼트 전원 비활성화/활성화 변환용도
     }
 }

@@ -58,7 +58,8 @@ void SGUISprite::load() {
 	m_pSprite->setAnchorPoint(Vec2::ZERO);
 	this->addChild(m_pSprite);
 
-	setContentSize(m_pSprite->getContentSize());
+	Size contentSize = m_pSprite->getContentSize();
+	setContentSize(contentSize);
 	m_bLoaded = true;
 }
 

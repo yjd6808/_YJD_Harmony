@@ -30,7 +30,6 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace SGToolsUI.Model
 {
 
-    [RefreshProperties(RefreshProperties.All)]
     [CategoryOrder(Constant.ButtonCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIButton : SGUIElement
     {
@@ -79,6 +78,14 @@ namespace SGToolsUI.Model
             }
         }
 
+        private void NotifySpriteChanged()
+        {
+            OnPropertyChanged(nameof(VisualSize));
+            OnPropertyChanged(nameof(VisualRect));
+            OnPropertyChanged(nameof(VisualSprite));
+            OnPropertyChanged(nameof(VisualSpriteSource));
+        }
+
         [Browsable(false)]
         public BitmapSource VisualSpriteSource => VisualSprite.Source;
 
@@ -90,10 +97,7 @@ namespace SGToolsUI.Model
             {
                 _sprites[StateNormal] = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualSize));
-                OnPropertyChanged(nameof(VisualRect));
-                OnPropertyChanged(nameof(VisualSprite));
-                OnPropertyChanged(nameof(VisualSpriteSource));
+                NotifySpriteChanged();
             }
         }
 
@@ -107,10 +111,7 @@ namespace SGToolsUI.Model
             {
                 _sprites[StateOver] = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualSize));
-                OnPropertyChanged(nameof(VisualRect));
-                OnPropertyChanged(nameof(VisualSprite));
-                OnPropertyChanged(nameof(VisualSpriteSource));
+                NotifySpriteChanged();
             }
         }
 
@@ -122,10 +123,7 @@ namespace SGToolsUI.Model
             {
                 _sprites[StatePressed] = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualSize));
-                OnPropertyChanged(nameof(VisualRect));
-                OnPropertyChanged(nameof(VisualSprite));
-                OnPropertyChanged(nameof(VisualSpriteSource));
+                NotifySpriteChanged();
             }
         }
 
@@ -137,10 +135,7 @@ namespace SGToolsUI.Model
             {
                 _sprites[StateDisabled] = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(VisualSize));
-                OnPropertyChanged(nameof(VisualRect));
-                OnPropertyChanged(nameof(VisualSprite));
-                OnPropertyChanged(nameof(VisualSpriteSource));
+                NotifySpriteChanged();
             }
         }
 
@@ -153,15 +148,7 @@ namespace SGToolsUI.Model
             set
             {
                 _state = value;
-
-                // 상태가 변했지만 스프라이트 정보가 주입안되어있으면 업데이트 불가능
-                //if (_sprites[value].IsNull)
-                //    return;
-
-                OnPropertyChanged(nameof(VisualSize));
-                OnPropertyChanged(nameof(VisualRect));
-                OnPropertyChanged(nameof(VisualSprite));
-                OnPropertyChanged(nameof(VisualSpriteSource));
+                NotifySpriteChanged();
             }
         }
 
@@ -169,10 +156,7 @@ namespace SGToolsUI.Model
         public override SGUIElementType UIElementType => SGUIElementType.Button;
         [Browsable(false)] public override bool Manipulatable => false;
 
-        public override void CreateInit()
-        {
-            VisualName = $"버튼_{Seq++}";
-        }
+        
 
         public override object Clone()
         {
@@ -290,6 +274,8 @@ namespace SGToolsUI.Model
 
             return false;
         }
+
+        public override void CreateInit() => VisualName = $"버튼_{Seq++}";
         public static int Seq = 0;
         private SGUISpriteInfo[] _sprites;
     }

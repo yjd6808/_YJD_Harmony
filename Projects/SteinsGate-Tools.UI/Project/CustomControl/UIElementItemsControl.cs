@@ -626,7 +626,6 @@ namespace SGToolsUI.CustomControl
 
             manipulatedPoint = _manipulationStartTargetPosition;
             manipulatedSize = _manipulationStartTargetSize;
-            Debug.WriteLine(move);
 
             if (manipulatedPoint.Y <= bottomEdgeAxis - 5)
                 manipulatedPoint.Y = _manipulationStartTargetPosition.Y - move.Y;

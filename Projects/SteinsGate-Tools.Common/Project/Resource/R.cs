@@ -7,14 +7,24 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Transactions;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Resources;
 
 namespace SGToolsCommon.Resource
 {
-
+    // 폰트 파일명과 동일하게
+    public enum FontType
+    {
+        DF,
+        N2G,
+        N2GB,
+        N2GM,
+        Max
+    }
 
     public enum IconCommonType
     {
@@ -50,6 +60,7 @@ namespace SGToolsCommon.Resource
         public const string ResourcePath = "pack://application:,,,/SGToolsCommon;component/Resource/";
         public const string IconPath = ResourcePath + "Icon/";
         public const string CursorPath = ResourcePath + "Cursor/";
+        public const string FontPath = ResourcePath + "Font/";
         public const string ImagePath = ResourcePath + "Image/";
 
         public const string IconCommonCheckedKey = IconPath + "common_checked.ico";
@@ -90,8 +101,16 @@ namespace SGToolsCommon.Resource
         public const string IconWinMaximizeKey = IconPath + "win_maximize.ico";
         public const string IconWinMinimizeKey = IconPath + "win_minimize.ico";
 
-       
+        
+
+        public static readonly string FontDFKey = "gasinamuM";
+        public static readonly string FontN2GKey = "NEXON Lv2 Gothic";
+        public static readonly string FontN2GBKey ="NEXON Lv2 Gothic Bold";
+        public static readonly string FontN2GMKey = "NEXON Lv2 Gothic Medium";
+
         private static readonly BitmapImage[] IconCommonMap = new BitmapImage[(int)IconCommonType.Max];
+        private static readonly FontFamily[] FontCommonMap = new FontFamily[(int)FontType.Max];
+
         public static readonly Lazy<Cursor> DragAndDropCursor = new(() => ReadCursor(CursorPath + "drag_and_drop.ani"));
 
         private static Cursor ReadCursor(string cursorPackPath)
@@ -101,6 +120,28 @@ namespace SGToolsCommon.Resource
             sri.Stream.Read(buffer, 0, buffer.Length);
             MemoryStream ms = new MemoryStream(buffer);
             return new Cursor(ms);
+        }
+
+        private static string GetFontFamilyKey(FontType type)
+        {
+            switch (type)
+            {
+                case FontType.DF:       return FontDFKey;
+                case FontType.N2G:      return FontN2GKey;
+                case FontType.N2GB:     return FontN2GBKey;
+                case FontType.N2GM:     return FontN2GMKey;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        public static FontFamily GetFontFamily(FontType type)
+        {
+            int index = (int)type;
+            if (FontCommonMap[index] == null)
+                FontCommonMap[index] = new FontFamily(new Uri(FontPath), GetFontFamilyKey(type));
+
+            return FontCommonMap[index];
         }
 
         private static string GetIconCommonKey(IconCommonType type)

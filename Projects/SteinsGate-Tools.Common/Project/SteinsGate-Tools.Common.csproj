@@ -25,6 +25,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resource\Font\DF.ttf" />
+	  <None Remove="Resource\Font\N2G.ttf" />
+	  <None Remove="Resource\Font\N2GB.ttf" />
+	  <None Remove="Resource\Font\N2GM.ttf" />
 	  <None Remove="Resource\Icon\common_transparent.ico" />
 	</ItemGroup>
 
@@ -42,6 +46,13 @@
     <Page Update="CustomStyle\ReadonlyAnimatedTextBox.xaml">
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resource\Font\DF.ttf" />
+    <Resource Include="Resource\Font\N2G.ttf" />
+    <Resource Include="Resource\Font\N2GB.ttf" />
+    <Resource Include="Resource\Font\N2GM.ttf" />
   </ItemGroup>
 
 </Project>

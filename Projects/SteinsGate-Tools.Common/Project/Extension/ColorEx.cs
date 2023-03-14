@@ -23,6 +23,17 @@ namespace SGToolsCommon.Extension
 {
     public static class ColorEx
     {
+        public static string ToFullString4B(this Color color)
+            => $"{color.R} {color.G} {color.B} {color.A}";
+
+        public static Color ParseFullString4B(string fullstr)
+        {
+            int[] n = new int[4];
+            StringEx.ParseIntNumberN(fullstr, n);
+            return Color.FromArgb((Byte)n[3], (Byte)n[0], (Byte)n[1], (Byte)n[2]);
+        }
+
+
         public static Color AddAllWithoutAlpha(this Color me, byte all)
         {
             me.R = me.R + all > byte.MaxValue ? byte.MaxValue : (byte)(me.R + all);

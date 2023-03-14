@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -38,6 +39,8 @@ namespace SGToolsUI.Model
 
         public SGUISpriteInfo(SgaSprite sprite)
         {
+            Debug.Assert(sprite != null);
+
             Sga = sprite.Parent.Parent;
             Img = sprite.Parent;
             Sprite = sprite;
@@ -45,6 +48,8 @@ namespace SGToolsUI.Model
 
         public SGUISpriteInfo(SgaPackage sga, SgaImage img, SgaSprite sprite)
         {
+            Debug.Assert(sprite != null);
+
             Sga = sga;
             Img = img;
             Sprite = sprite;

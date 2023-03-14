@@ -41,7 +41,8 @@ namespace SGToolsCommon.Converter
             if (values.Length != 2)
                 throw new Exception("무조건 2개의 소스가 전달되어야합니다.");
             if (values[0] is not SgaSprite sprite)
-                throw new Exception("소스가 스프라이트 타입이 아닙니다.");
+                return Stretch.None;
+
             if (values[1] is not double availabieSize)
                 throw new Exception("파라미터가 double 타입이 아닙니다.");
 

@@ -29,6 +29,7 @@ using MoreLinq;
 using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
 using SGToolsCommon.ThirdParty;
 using SGToolsUI.Command.MainViewCommand;
@@ -56,9 +57,6 @@ namespace SGToolsUI.View
             ViewModel.KeyState.KeyDown += MainView_OnKeyDown;
             ViewModel.KeyState.KeyUp += MainView_OnKeyUp;
             InitializeComponent();
-
-           
-
         }
 
         private void MainView_OnLoaded(object sender, RoutedEventArgs e)
@@ -71,11 +69,11 @@ namespace SGToolsUI.View
 
         private async void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
-            Task t1 = ViewModel.Saver.SaveAutoAsync(SaveMode.UIToolData, false);
-            Task t2 = ViewModel.Exporter.ExportAsync();
+            //Task t1 = ViewModel.Saver.SaveAutoAsync(SaveMode.UIToolData, false);
+            //Task t2 = ViewModel.Exporter.ExportAsync();
 
-            await t1;
-            await t2;
+            //await t1;
+            //await t2;
 
             ViewModel.LogView.Close();
             ViewModel.AlbumView.Close();
@@ -182,12 +180,12 @@ namespace SGToolsUI.View
                 ViewModel.IsEventMode = !ViewModel.IsEventMode;
 
                 if (ViewModel.IsEventMode == false)
-                    ViewModel.GroupMaster.PickedElements.ForEach(element => element.State = SGUIElement.StateNormal);
+                    ViewModel.GroupMaster.PickedElementsDisabled = false;
             }
 
             else if (state.IsPressed(SGKey.C) && ViewModel.IsEventMode)
             {
-                ViewModel.GroupMaster.PickedElements.ForEach(element => element.State = SGUIElement.StateDisabled);
+                ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
             }
 
             CanvasShapesControl.OnKeyDown(key);
@@ -279,7 +277,7 @@ namespace SGToolsUI.View
                     return;
                 }
 
-                await ViewModel.Loader.LoadAsync(file);
+                ViewModel.GroupMaster = await ViewModel.Loader.LoadAsync(file);
             }
         }
     }

@@ -9,4 +9,6 @@
     <local:VectorStringConverter x:Key="VectorStringConverter" />
     <local:CutStringConverter x:Key="CutStringConverter" />
     <local:SourceStretchConverterWithSize x:Key="SourceStretchConverterWithSize" />
+    <local:SGAlignmentWpfAlignmentConverter x:Key="SGAlignmentWpfAlignmentConverter"/>
+    <local:SGHorizontalAlignmentWpfTextAlignmentConverter x:Key="SGHorizontalAlignmentWpfTextAlignmentConverter" />
 </ResourceDictionary>

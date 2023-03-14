@@ -11,6 +11,7 @@
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
                     xmlns:model="clr-namespace:SGToolsUI.Model"
                     xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
+                    xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
                     xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     
@@ -18,9 +19,15 @@
                     xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
                     xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
                     xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon">
+
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="MenuItemGroup.xaml" />
         <ResourceDictionary Source="MenuItemButton.xaml" />
+        <ResourceDictionary Source="MenuItemLabel.xaml" />
+        <ResourceDictionary Source="MenuItemSprite.xaml" />
+        <ResourceDictionary Source="MenuItemEditBox.xaml" />
+        <ResourceDictionary Source="MenuItemCheckBox.xaml" />
+        <ResourceDictionary Source="MenuItemToggleButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="UIElementTreeView" TargetType="TreeView" >
         <d:Style.DataContext>
@@ -59,8 +66,13 @@
                             <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
                             <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" />
                             <Separator />
-                            <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" />
-                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Button" />
+                            <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIGroupKey}" />
+                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIButtonKey}" />
+                            <MenuItem Style="{StaticResource MenuItemLabel}" Header="라벨 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UILabelKey}" />
+                            <MenuItem Style="{StaticResource MenuItemSprite}" Header="스프라이트 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UISpriteKey}" />
+                            <MenuItem Style="{StaticResource MenuItemEditBox}" Header="에딧박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIEditBoxKey}" />
+                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="체크박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UICheckBoxKey}" />
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="토글 버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIToggleButtonKey}" />
                         </ContextMenu>
                     </Setter.Value>
                 </Setter>
@@ -73,8 +85,8 @@
                 <Setter Property="ContextMenu">
                     <Setter.Value>
                         <ContextMenu>
-                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
                             <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}"/>
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
                         </ContextMenu>
                     </Setter.Value>
                 </Setter>
@@ -83,11 +95,16 @@
                 <Setter Property="ContextMenu">
                     <Setter.Value>
                         <ContextMenu>
-                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="False" />
                             <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="False" />
                             <Separator />
                             <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" IsEnabled="True" />
-                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Button" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIButtonKey}" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemLabel}" Header="라벨 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UILabelKey}" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemSprite}" Header="스프라이트 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UISpriteKey}" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemEditBox}" Header="에딧박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIEditBoxKey}" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="체크박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UICheckBoxKey}" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="토글 버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIToggleButtonKey}" IsEnabled="False"/>
                         </ContextMenu>
                     </Setter.Value>
                 </Setter>

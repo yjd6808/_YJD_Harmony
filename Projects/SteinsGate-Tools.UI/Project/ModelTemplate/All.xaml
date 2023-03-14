@@ -8,8 +8,14 @@
         <ResourceDictionary Source="CanvasAnchorTemplate.xaml" />
 
         <!-- UI 엘리먼트 캔버스 -->
-        <ResourceDictionary Source="UIButtonCanvasTemplate.xaml" />
         <ResourceDictionary Source="UIGroupCanvasTemplate.xaml" />
+        <ResourceDictionary Source="UIButtonCanvasTemplate.xaml" />
+        <ResourceDictionary Source="UILabelCanvasTemplate.xaml" />
+        <ResourceDictionary Source="UISpriteCanvasTemplate.xaml" />
+        <ResourceDictionary Source="UIEditBoxCanvasTemplate.xaml" />
+        <ResourceDictionary Source="UICheckBoxCanvasTemplate.xaml" />
+        <ResourceDictionary Source="UIToggleButtonCanvasTemplate.xaml" />
+        
 
         <!-- UI 엘리먼트 트리뷰-->
         <ResourceDictionary Source="UIElementTreeViewTemplate.xaml" />

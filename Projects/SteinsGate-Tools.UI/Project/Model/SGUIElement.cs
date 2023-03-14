@@ -82,7 +82,33 @@ namespace SGToolsUI.Model
         public const string JsonImgKey = "img";
         public const string JsonSpriteKey = "sprite";
 
-        
+        // 스프라이트
+        // 라벨
+        public const string JsonFontKey = "font";
+        public const string JsonFontSizeKey = "font_size";
+        public const string JsonFontColorKey = "font_color";
+        public const string JsonTextKey = "text";
+        public const string JsonTextWrapKey = "text_wrap";
+        public const string JsonTextVAlignKey = "text_valign";
+        public const string JsonTextHAlignKey = "text_halign";
+
+        // 에딧 박스
+        public const string JsonPlaceholderTextKey = "p_text";
+        public const string JsonPlaceholderFontColorKey = "p_font_color";
+        public const string JsonPlaceholderFontSizeKey = "p_font_size";
+        public const string JsonMaxLengthKey = "max_length";
+        public const string JsonInputModeKey = "input_mode";
+
+        // 체크 박스
+        public const string JsonBackgroundSga = "bg_sga";
+        public const string JsonBackgroundImg = "bg_img";
+        public const string JsonCrossSga = "cross_sga";
+        public const string JsonCrossImg = "cross_img";
+
+        // 토글 버튼
+        public const string JsonToggleSpriteKey = "sprite2";
+
+
 
 
 
@@ -769,8 +795,13 @@ namespace SGToolsUI.Model
         {
             switch (type)
             {
+                case SGUIElementType.Group: return new SGUIGroup();
                 case SGUIElementType.Button: return new SGUIButton();
-                case SGUIElementType.Group:  return new SGUIGroup();
+                case SGUIElementType.Label: return new SGUILabel();
+                case SGUIElementType.Sprite: return new SGUISprite();
+                case SGUIElementType.EditBox: return new SGUIEditBox();
+                case SGUIElementType.CheckBox: return new SGUICheckBox();
+                case SGUIElementType.ToggleButton: return new SGUIToggleButton();
                 default:  throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
             }
         }

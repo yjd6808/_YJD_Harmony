@@ -29,10 +29,13 @@ namespace SGToolsCommon.Sga
             TargetFrameIndex = targetFrameIndex;  
         }
 
+        
         public override bool IsDummy => false;
         public override bool Loaded => true;
         public override SgaSpriteRect SpriteRect => new(1, 1, 1, 1, 1, 1);
         public override Rect Rect => new(1, 1, 1, 1);
+        public override Size Size => new(1, 1);
+        public override Size FrameSize => new(1, 1);
         public override int Width => 1;
         public override int Height => 1;
         public override int X => 1;

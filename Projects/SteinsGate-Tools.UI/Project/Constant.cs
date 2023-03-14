@@ -53,6 +53,11 @@ namespace SGToolsUI
 
         public const string GroupCategoryName = "그룹";
         public const string ButtonCategoryName = "버튼";
+        public const string SpriteCategoryName = "스프라이트";
+        public const string LabelCategoryName = "라벨";
+        public const string EditBoxCategoryName = "에딧박스";
+        public const string CheckBoxCategoryName = "체크박스";
+        public const string ToggleButtonCategoryName = "토글버튼";
         public const int OtherCategoryOrder = 1;
 
         public const int InvalidValue = -1;

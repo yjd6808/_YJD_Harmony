@@ -1,5 +1,5 @@
 ﻿// 작성자 : 윤정도
-// 1~2년전에 만든 윈도우 관련 처리
+// 1~2년전에 만든 윈도우 관련 처리 이어서 확장
 
 using System;
 using System.Collections.Generic;
@@ -55,17 +55,17 @@ namespace SGToolsCommon.Extension
         // 해당 윈도우가 포그라운드 윈도우인지 체크
         // https://stackoverflow.com/questions/7162834/determine-if-current-application-is-activated-has-focus
         public static bool IsMainWindowForeground()
-            => Application.Current?.MainWindow?.Handle() == User32.GetForegroundWindow();
+            => Application.Current?.MainWindow?.Handle() == GetForegroundWindow();
 
         public static bool IsApplicationForeground()
         {
 
-            var activatedHandle = User32.GetForegroundWindow();
+            HWND activatedHandle = GetForegroundWindow();
             if (activatedHandle == IntPtr.Zero)
                 return false;       // No window is currently activated
 
             int procId = Process.GetCurrentProcess().Id;
-            User32.GetWindowThreadProcessId(activatedHandle, out uint activeProcId);
+            GetWindowThreadProcessId(activatedHandle, out uint activeProcId);
             return activeProcId == procId;
         }
 

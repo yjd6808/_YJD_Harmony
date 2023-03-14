@@ -1,0 +1,19 @@
+﻿<ResourceDictionary x:Class="SGToolsUI.ModelTemplate.UISpriteCanvasTemplate"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mo="clr-namespace:SGToolsUI.Model"
+                    xmlns:res="clr-namespace:SGToolsUI.Resource">
+    <DataTemplate x:Key="SpriteCanvasTemplate"
+                  DataType="{x:Type mo:SGUISprite}">
+        <Image Name="SpriteImage"
+               Source="{Binding SpriteSource}"
+               Loaded="SpriteImage_OnLoaded">
+            <Image.LayoutTransform>
+                <ScaleTransform ScaleX="{Binding ScaleX}"
+                                ScaleY="{Binding ScaleY}">
+                </ScaleTransform>
+            </Image.LayoutTransform>
+        </Image>
+
+    </DataTemplate>
+</ResourceDictionary>

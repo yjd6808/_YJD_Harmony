@@ -35,8 +35,14 @@ namespace SGToolsUI.ModelSelector
 
             switch (item)
             {
-            case SGUIGroup        __group__       :  return (DataTemplate)Application.Current.FindResource("GroupCanvasTemplate");
-            case SGUIButton       __button__      :  return (DataTemplate)Application.Current.FindResource("ButtonCanvasTemplate");
+            case SGUIGroup          __group__       : return (DataTemplate)Application.Current.FindResource("GroupCanvasTemplate");
+            case SGUIButton         __button__      : return (DataTemplate)Application.Current.FindResource("ButtonCanvasTemplate");
+            case SGUILabel          __label__       : return (DataTemplate)Application.Current.FindResource("LabelCanvasTemplate");
+            case SGUISprite         __sprite__      : return (DataTemplate)Application.Current.FindResource("SpriteCanvasTemplate");
+            case SGUIEditBox        __editBox__     : return (DataTemplate)Application.Current.FindResource("EditBoxCanvasTemplate");
+            case SGUICheckBox       __checkBox__    : return (DataTemplate)Application.Current.FindResource("CheckBoxCanvasTemplate");
+            case SGUIToggleButton   __toggleButton__: return (DataTemplate)Application.Current.FindResource("ToggleButtonCanvasTemplate");
+            
             }
 
             throw new Exception("SGUIElementSelector에서 반환가능한 DataTemplate을 찾지 못했습니다.");

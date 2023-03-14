@@ -21,9 +21,11 @@ namespace SGToolsUI.Converter
             {
                 case SGUIElementType.Group: return R.UIGroupIconImageSource;
                 case SGUIElementType.Button: return R.UIButtonIconImageSource;
+                case SGUIElementType.Label: return R.UILabelIconImageSource;
+                case SGUIElementType.Sprite: return R.UISpriteIconImageSource;
                 case SGUIElementType.CheckBox: return R.UICheckBoxIconImageSource;
                 case SGUIElementType.EditBox: return R.UIEditBoxIconImageSource;
-                case SGUIElementType.Label: return R.UILabelIconImageSource;
+                case SGUIElementType.ToggleButton: return R.UIToggleButtonIconImageSource;
             }
 
             return null;

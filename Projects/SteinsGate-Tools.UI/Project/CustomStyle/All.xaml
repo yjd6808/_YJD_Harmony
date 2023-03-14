@@ -5,8 +5,14 @@
         <ResourceDictionary Source="SgaElementListBox.xaml" />
         <ResourceDictionary Source="SgaSpriteListBox.xaml" />
 
-        <ResourceDictionary Source="MenuItemButton.xaml"/>
         <ResourceDictionary Source="MenuItemGroup.xaml" />
+        <ResourceDictionary Source="MenuItemButton.xaml" />
+        <ResourceDictionary Source="MenuItemLabel.xaml" />
+        <ResourceDictionary Source="MenuItemSprite.xaml" />
+        <ResourceDictionary Source="MenuItemEditBox.xaml" />
+        <ResourceDictionary Source="MenuItemCheckBox.xaml" />
+        <ResourceDictionary Source="MenuItemToggleButton.xaml" />
+
 
         <ResourceDictionary Source="CanvasShapeItemsControl.xaml" />
         <ResourceDictionary Source="UIElementItemsControl.xaml" />

@@ -57,8 +57,7 @@ namespace SGToolsCommon.Extension
                 if (!predicate(i, collection[i]))
                     return;
         }
-
-
+        
 
         public static ObservableCollection<T> InsertRangeNew<T>(
             this ObservableCollection<T> collection, int index, IList<T> elements) 

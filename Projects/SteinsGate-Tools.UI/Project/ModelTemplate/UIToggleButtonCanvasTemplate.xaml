@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mo="clr-namespace:SGToolsUI.Model">
+    <DataTemplate x:Key="ToggleButtonCanvasTemplate" DataType="{x:Type mo:SGUIToggleButton}">
+        <Image Name="ToggleButtonImage" Source="{Binding VisualSpriteSource}" />
+    </DataTemplate>
+</ResourceDictionary>

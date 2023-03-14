@@ -1,0 +1,7 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <FontFamily x:Key="FontDF">pack://application:,,,/SGToolsCommon;Component/Resource/Font/#gasinamuM</FontFamily>
+    <FontFamily x:Key="FontN2G">pack://application:,,,/SGToolsCommon;Component/Resource/Font/#NEXON Lv2 Gothic</FontFamily>
+    <FontFamily x:Key="FontN2GB">pack://application:,,,/SGToolsCommon;Component/Resource/Font/#NEXON Lv2 Gothic Bold</FontFamily>
+    <FontFamily x:Key="FontN2GM">pack://application:,,,/SGToolsCommon;Component/Resource/Font/#NEXON Lv2 Gothic Medium</FontFamily>
+</ResourceDictionary>

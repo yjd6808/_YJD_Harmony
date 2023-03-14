@@ -38,6 +38,8 @@ namespace SGToolsCommon.Sga
 
         public abstract SgaSpriteRect SpriteRect { get; }
         public abstract Rect Rect { get; }
+        public abstract Size Size { get; }
+        public abstract Size FrameSize { get; }
         public abstract bool IsDummy { get; }
         public abstract bool Loaded { get; }
         public abstract int Width { get; }

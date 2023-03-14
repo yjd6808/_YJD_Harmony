@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Printing.IndexedProperties;
@@ -48,7 +47,9 @@ namespace SGToolsCommon.Sga
 
         public SgaCompressMode CompressMode => _compressMode;
         public override SgaSpriteRect SpriteRect => _spriteRect;
-        public override Rect Rect => new Rect(_spriteRect.X, _spriteRect.Y, _spriteRect.Width, _spriteRect.Height);
+        public override Rect Rect => new (_spriteRect.X, _spriteRect.Y, _spriteRect.Width, _spriteRect.Height);
+        public override Size Size => new(_spriteRect.Width, _spriteRect.Height);
+        public override Size FrameSize => new(_spriteRect.FrameWidth, _spriteRect.FrameHeight);
         public int DataOffset => _dataOffset;
         public int DataLength => _dataLength;
         public override bool Loaded => _data != null;
@@ -92,7 +93,7 @@ namespace SGToolsCommon.Sga
             }
         }
 
-        public Bitmap Bitmap
+        public System.Drawing.Bitmap Bitmap
         {
             get
             {
