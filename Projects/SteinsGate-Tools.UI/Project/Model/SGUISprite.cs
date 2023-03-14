@@ -163,5 +163,16 @@ namespace SGToolsUI.Model
         public static int Seq;
         private SGUISpriteInfo _sprite;
         private Size _visualSize;
+
+        public void RestoreSize()
+        {
+            if (_sprite.IsNull)
+            {
+                VisualSize = Constant.DefaultVisualSize;
+                return;
+            }
+
+            VisualSize = _sprite.Rect.Size;
+        }
     }
 }

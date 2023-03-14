@@ -99,5 +99,48 @@ namespace SGToolsCommon.Extension
             foreach (T item in collection)
                 action(i++, item);
         }
+
+        public static bool Exist(this ItemCollection collection, object item)
+        {
+            foreach (var o in collection)
+                if (o == item)
+                    return true;
+
+            return false;
+        }
+
+        public static IEnumerable<object> Where(this ItemCollection collection, Predicate<object> predicate)
+        {
+            foreach (var o in collection)
+                if (predicate(o))
+                    yield return o;
+        }
+
+        public static IEnumerable<T> Where<T>(this ItemCollection collection, Predicate<T> predicate) where T : class
+        {
+            foreach (var o in collection)
+            {
+                T t = o as T;
+                if (t == null) throw new NullReferenceException($"{typeof(T).Name}으로 변환되지 않는 타입입니다.");
+                if (predicate(t))
+                    yield return t;
+            }
+        }
+
+        public static void ForEach(this ItemCollection collection, Action<object> action)
+        {
+            foreach (var o in collection)
+                action(o);
+        }
+
+        public static void ForEach<T>(this ItemCollection collection, Action<T> action) where T : class
+        {
+            foreach (var o in collection)
+            {
+                T t = o as T;
+                if (t == null) throw new NullReferenceException($"{typeof(T).Name}으로 변환되지 않는 타입입니다.");
+                action(t);
+            }
+        }
     }
 }

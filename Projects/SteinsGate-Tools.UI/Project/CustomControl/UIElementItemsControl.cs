@@ -87,7 +87,10 @@ namespace SGToolsUI.CustomControl
         private ContextMenu _contextMenu;
         private MenuItem _attributeMenuItem;
         private MenuItem _deleteMenuItem;
-        
+        private MenuItem _restoreSizeMenuItem;
+
+
+
 
         // ======================================================================
         //             초기화
@@ -105,6 +108,8 @@ namespace SGToolsUI.CustomControl
             InitializeManipulators();
         }
 
+        
+
         private void InitializeContextMenu()
         {
             if (DesignerProperties.GetIsInDesignMode(this))
@@ -121,9 +126,14 @@ namespace SGToolsUI.CustomControl
             _deleteMenuItem.Header = "삭제";
             _deleteMenuItem.Command = ViewModel.Commander.DeleteUIElement;
 
+            // SGUISprite에만 적용될 메뉴
+            _restoreSizeMenuItem = new MenuItem();
+            _restoreSizeMenuItem.Header = "크기 복구";
+            _restoreSizeMenuItem.Command = new RestoreSizeCommand();
+
+
             _contextMenu.Items.Add(_attributeMenuItem);
             _contextMenu.Items.Add(_deleteMenuItem);
-
 
             _canvasPanel.ContextMenu = _contextMenu;
         }
@@ -430,8 +440,19 @@ namespace SGToolsUI.CustomControl
             if (lastSelectedElement == null)
                 return;
 
+            _contextMenu.Items.Remove(_restoreSizeMenuItem);
+
+            if (lastSelectedElement is SGUISprite)
+            {
+                _contextMenu.Items.Add(_restoreSizeMenuItem);
+                _restoreSizeMenuItem.CommandParameter = lastSelectedElement;
+            }
+
             _attributeMenuItem.CommandParameter = lastSelectedElement;
             _contextMenu.IsOpen = true;
+
+
+
         }
 
 
@@ -735,6 +756,15 @@ namespace SGToolsUI.CustomControl
                 Element = element;
                 StartPosition = startPosition;
             }
+        }
+
+        private class RestoreSizeCommand : ICommand
+        {
+            public event EventHandler? CanExecuteChanged;
+            public bool CanExecute(object? parameter) => true;
+
+            public void Execute(object? parameter)
+                => (parameter as SGUISprite).RestoreSize();
         }
 
     }
