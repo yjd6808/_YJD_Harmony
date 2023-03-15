@@ -24,6 +24,8 @@
 #include <SteinsGate/Client/SGUIManager.h>
 #include <SteinsGate/Client/SGFontPackage.h>
 
+#include "TextFieldEx.h"
+
 
 USING_NS_CC;
 USING_NS_CCUI;

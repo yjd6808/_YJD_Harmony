@@ -1,7 +1,97 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary x:Class="SGToolsUI.ModelTemplate.UIEditBoxCanvasTemplate"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:mo="clr-namespace:SGToolsUI.Model">
+                    xmlns:mo="clr-namespace:SGToolsUI.Model"
+                    xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit">
     <DataTemplate x:Key="EditBoxCanvasTemplate" DataType="{x:Type mo:SGUIEditBox}">
+        <c:WatermarkTextBox Foreground="{Binding FontColor, Converter={StaticResource ColorSolidBrushConverter}}"
+                            Name="EditBox"
+                            BorderThickness="0"
+                            Padding="-2"
+                            Background="{x:Null}"
+                            IsReadOnly="{Binding ViewModel.IsNotEventMode}"
+                            Focusable="{Binding ViewModel.IsEventMode}"
+                            Width="{Binding VisualSize.Width}"
+                            Height="{Binding VisualSize.Height}"
+                            FontSize="{Binding FontSize}"
+                            Loaded="TextBox_OnLoaded"
+                            TextAlignment="{Binding TextHAlign, Converter={StaticResource SGHorizontalAlignmentWpfTextAlignmentConverter}}">
+            <c:WatermarkTextBox.Style>
+                <Style TargetType="c:WatermarkTextBox">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ViewModel.IsEventMode}" Value="True">
+                            <Setter Property="Text" Value=""></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ViewModel.IsEventMode}" Value="False">
+                            <Setter Property="Text" Value="에딧에딧에딧에딧에딧에딧"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </c:WatermarkTextBox.Style>
+            <c:WatermarkTextBox.WatermarkTemplate>
+                <DataTemplate DataType="{x:Type mo:SGUIEditBox}">
+                    <TextBlock Text="{Binding PlaceholderText}"
+                               DataContext="{Binding DataContext, ElementName=EditBox}"
+                               Foreground="{Binding PlaceholderFontColor, Converter={StaticResource ColorSolidBrushConverter}}"
+                               FontSize="{Binding PlaceholderFontSize}"
+                               TextAlignment="{Binding TextAlignment, RelativeSource={RelativeSource AncestorType=c:WatermarkTextBox}}">
+                    </TextBlock>
+                </DataTemplate>
+            </c:WatermarkTextBox.WatermarkTemplate>
+        </c:WatermarkTextBox>
 
+        <!--<ContentControl x:Name="Drop" Content="{Binding}">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ViewModel.IsEventMode}" Value="False">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type mo:SGUIEditBox}">
+                                        <TextBlock Text="에딧에딧에딧에딧에딧에딧에딧에딧에딧"
+                                                   Width="{Binding VisualSize.Width}"
+                                                   Height="{Binding VisualSize.Height}"
+                                                   TextAlignment="{Binding TextHAlign, Converter={StaticResource SGHorizontalAlignmentWpfTextAlignmentConverter}}"
+                                                   Foreground="{Binding FontColor, Converter={StaticResource ColorSolidBrushConverter}}"
+                                                   FontSize="{Binding FontSize}">
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ViewModel.IsEventMode}" Value="True">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate DataType="{x:Type mo:SGUIEditBox}" >
+                                        <c:WatermarkTextBox Foreground="{Binding FontColor, Converter={StaticResource ColorSolidBrushConverter}}"
+                                                            Name="EventModeTextBox"
+                                                            BorderThickness="0"
+                                                            Padding="-2"
+                                                            Background="{x:Null}"
+                                                            Text=""
+                                                            Width="{Binding VisualSize.Width}"
+                                                            Height="{Binding VisualSize.Height}"
+                                                            FontSize="{Binding FontSize}"
+                                                            TextAlignment="{Binding TextHAlign, Converter={StaticResource SGHorizontalAlignmentWpfTextAlignmentConverter}}">
+                                            <c:WatermarkTextBox.WatermarkTemplate>
+                                                <DataTemplate DataType="{x:Type mo:SGUIEditBox}">
+                                                    <TextBlock Text="{Binding PlaceholderText}"
+                                                               DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                                                               Foreground="{Binding PlaceholderFontColor, Converter={StaticResource ColorSolidBrushConverter}}"
+                                                               FontSize="{Binding PlaceholderFontSize}"
+                                                               TextAlignment="{Binding TextAlignment, RelativeSource={RelativeSource AncestorType=c:WatermarkTextBox}}">
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </c:WatermarkTextBox.WatermarkTemplate>
+                                        </c:WatermarkTextBox>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>-->
+        
     </DataTemplate>
 </ResourceDictionary>

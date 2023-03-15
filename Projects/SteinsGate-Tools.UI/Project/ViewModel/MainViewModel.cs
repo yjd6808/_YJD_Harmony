@@ -331,8 +331,11 @@ namespace SGToolsUI.ViewModel
             {
                 _isEventMode = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsNotEventMode));
             }
         }
+
+        public bool IsNotEventMode => !IsEventMode;
 
         public DataDragState DragState { get; }
         public JobQueue JobQueue { get; } = new ();

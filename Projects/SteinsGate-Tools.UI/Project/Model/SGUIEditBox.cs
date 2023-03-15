@@ -6,6 +6,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -15,6 +16,7 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
+using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
@@ -45,9 +47,16 @@ namespace SGToolsUI.Model
 
         public SGUIEditBox()
         {
-            _placeholderText = "텍스트를 입력해주새요.";
-            _visualSize = Constant.DefaultVisualSize;
-        }
+            _visualSize = Constant.DefaultBoxVisualSize;
+            _textHAlign = HAlignment.Right;
+            _fontSize = 16;
+            _fontColor = Color.FromArgb(255, 0, 0, 0);
+            _placeholderText = "텍스트를 입력해주세요.";
+            _placeholderFontColor = Color.FromArgb(255, 128, 128, 128);
+            _placeholderFontSize = 16;
+            _maxLength = 20;
+            _inputMode = InputMode.Any;
+        }   
 
         
         [Category(Constant.EditBoxCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
@@ -156,6 +165,9 @@ namespace SGToolsUI.Model
         public override SGUIElementType UIElementType => SGUIElementType.EditBox;
         [Browsable(false)] public override bool Manipulatable => true;
 
+        [Browsable(false)]
+        public WatermarkTextBox TextBox { get; set; }
+
         public override object Clone()
         {
             SGUIEditBox editbox = new SGUIEditBox();
@@ -177,7 +189,7 @@ namespace SGToolsUI.Model
             JObject root = base.ToJObject();
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
             root[JsonVisualSizeKey] = _visualSize.ToFullString();
-            root[JsonTextVAlignKey] = (int)_textHAlign;
+            root[JsonTextHAlignKey] = (int)_textHAlign;
             root[JsonFontSizeKey] = _fontSize;
             root[JsonFontColorKey] = _fontColor.ToFullString4B();
             root[JsonPlaceholderTextKey] = _placeholderText;
@@ -193,7 +205,7 @@ namespace SGToolsUI.Model
         {
             base.ParseJObject(root);
 
-            string sizeString = (string)root[JsonImgKey];
+            string sizeString = (string)root[JsonVisualSizeKey];
             _visualSize = SizeEx.ParseFullString(sizeString);
             _textHAlign = (HAlignment)((int)root[JsonTextHAlignKey]);
 
@@ -202,13 +214,35 @@ namespace SGToolsUI.Model
 
             string fontColorString = (string)root[JsonFontColorKey];
             _fontColor = ColorEx.ParseFullString4B(fontColorString);
-            _placeholderText = (string)root[JsonTextKey];
+            _placeholderText = (string)root[JsonPlaceholderTextKey];
 
             string placeholderFontColorString = (string)root[JsonPlaceholderFontColorKey];
             _placeholderFontColor = ColorEx.ParseFullString4B(placeholderFontColorString);
             _placeholderFontSize = (int)root[JsonPlaceholderFontSizeKey];
             _maxLength = (int)root[JsonMaxLengthKey];
             _inputMode = (InputMode)(int)root[JsonInputModeKey];
+        }
+
+
+        public override bool OnMouseDown(Point p)
+        {
+            if (State == StateDisabled ||
+                State == StatePressed)
+                return true;
+
+            bool contained = ContainPoint(p);
+            if (!contained)
+                return true;
+
+            State = StatePressed;
+
+            if (ViewModel.IsEventMode)
+            {
+                Debug.Assert(TextBox != null);
+                TextBox.Focus();
+            }
+
+            return false;
         }
 
         public override void CreateInit() => VisualName = $"에딧박스_{Seq++}";

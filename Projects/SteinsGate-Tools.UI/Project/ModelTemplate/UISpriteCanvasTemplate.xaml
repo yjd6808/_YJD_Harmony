@@ -5,6 +5,7 @@
                     xmlns:res="clr-namespace:SGToolsUI.Resource">
     <DataTemplate x:Key="SpriteCanvasTemplate"
                   DataType="{x:Type mo:SGUISprite}">
+
         <Image Name="SpriteImage"
                Source="{Binding SpriteSource}"
                Loaded="SpriteImage_OnLoaded">

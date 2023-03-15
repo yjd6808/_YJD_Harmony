@@ -3,6 +3,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mo="clr-namespace:SGToolsUI.Model">
     <DataTemplate x:Key="ButtonCanvasTemplate" DataType="{x:Type mo:SGUIButton}">
-        <Image Name="ButtonImage" Source="{Binding VisualSpriteSource}" Loaded="ButtonImage_OnLoaded"/>
+        <Image Name="ButtonImage" Source="{Binding VisualSpriteSource}"/>
     </DataTemplate>
 </ResourceDictionary>

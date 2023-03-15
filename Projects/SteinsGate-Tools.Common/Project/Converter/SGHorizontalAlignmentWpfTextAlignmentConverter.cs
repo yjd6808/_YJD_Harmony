@@ -30,7 +30,14 @@ namespace SGToolsCommon.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is HAlignment alignment)
-                return (TextAlignment)alignment;
+            {
+                switch (alignment)
+                {
+                    case HAlignment.Right: return TextAlignment.Right;
+                    case HAlignment.Center: return TextAlignment.Center;
+                    case HAlignment.Left: return TextAlignment.Left;
+                }
+            }
 
             throw new Exception("소스가 HAlignment 타입이 아닙니다.");
         }

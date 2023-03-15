@@ -190,7 +190,6 @@ namespace SGToolsUI.CustomControl
             MouseButton btn = e.ChangedButton;
 
             OpenContextMenu(pos, btn);
-
             OnMouseDownEventMode(pos);
             OnMouseDownManipulation(pos);
             MoveBegin(pos);

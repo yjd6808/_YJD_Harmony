@@ -100,8 +100,6 @@ namespace SGToolsUI.CustomControl
 
         private void InitializeContextMenu()
         {
-            
-
             ClearMenuItem = new MenuItemEx();
             ClearMenuItem.Header = "스프라이트 초기화";
             ClearMenuItem.Click += ClearMenuItemOnClick;

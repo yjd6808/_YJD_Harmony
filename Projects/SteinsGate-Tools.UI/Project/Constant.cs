@@ -65,6 +65,7 @@ namespace SGToolsUI
         public const bool UseDebugData = false;
 
         public static readonly Size DefaultVisualSize = new (50, 50);
-        
+        public static readonly Size DefaultBoxVisualSize = new(200, 30);
+
     }
 }

@@ -23,6 +23,7 @@
         <d:Style.DataContext>
             <x:Type Type="vm:MainViewModel" />
         </d:Style.DataContext>
+        <Setter Property="IsHitTestVisible" Value="True" />
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>

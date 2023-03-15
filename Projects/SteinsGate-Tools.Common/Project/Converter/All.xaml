@@ -11,4 +11,5 @@
     <local:SourceStretchConverterWithSize x:Key="SourceStretchConverterWithSize" />
     <local:SGAlignmentWpfAlignmentConverter x:Key="SGAlignmentWpfAlignmentConverter"/>
     <local:SGHorizontalAlignmentWpfTextAlignmentConverter x:Key="SGHorizontalAlignmentWpfTextAlignmentConverter" />
+    <local:ColorSolidBrushConverter x:Key="ColorSolidBrushConverter"/>
 </ResourceDictionary>
