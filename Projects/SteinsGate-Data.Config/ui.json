@@ -37,8 +37,8 @@
             "text_wrap": false,
             "width": 200,
             "height": 150,
-            "horizontal_align": 2, 
-            "vertical_align": 2,
+            "horizontal_align": 1, 
+            "vertical_align": 1,
             "text": "종료"
         },
         {
@@ -86,7 +86,7 @@
                 "1 0 0 0", 
                 "2 1 50 0",
                 "3 2 50 50",
-                "4 3 50 100",
+                "4 3 50 50",
                 "5 4 100 100"
             ]
         }

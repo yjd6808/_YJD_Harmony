@@ -144,50 +144,54 @@ namespace SGToolsUI.View
                 {
                     ViewModel.Commander.OpenLogView.Execute(null);
                 }
-
             }
 
-            if (state.IsPressed(SGKey.Escape))
+            if (!state.IsModifierKeyPressed)
             {
-                ViewModel.GroupMaster.DeselectAll();
-                ViewModel.GroupMaster.Depick();
-                ViewModel.Commander.ClipboardOperateUIElement.Clear();
+                if (state.IsPressed(SGKey.Escape))
+                {
+                    ViewModel.GroupMaster.DeselectAll();
+                    ViewModel.GroupMaster.Depick();
+                    ViewModel.Commander.ClipboardOperateUIElement.Clear();
+                }
+
+                else if (state.IsPressed(SGKey.F2) && ViewModel.GroupMaster.SelectedElement != null)
+                {
+                    UIElementPropertyGrid.SelectWithPropertyFocus(ViewModel.GroupMaster.SelectedElement, SGUIElement.VisualNameKey);
+                }
+
+                else if (state.IsPressed(SGKey.F6) && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    ViewModel.Commander.FileUIToolDataLoadAsync.Execute(SGUIFileSystem.LoadKey);
+                }
+
+                else if (state.IsPressed(SGKey.F7))
+                {
+                    BackUpTextBox.Focus();
+                    BackUpTextBox.Text = string.Empty;
+                }
+
+                else if (state.IsPressed(SGKey.F8))
+                {
+                    ViewModel.Commander.OpenDirectory.Execute(ToolDirectory.Backup.ToString());
+                }
+
+                else if (state.IsPressed(SGKey.X))
+                {
+                    ViewModel.GroupMaster.DeselectAll();
+                    ViewModel.IsEventMode = !ViewModel.IsEventMode;
+
+                    if (ViewModel.IsEventMode == false)
+                        ViewModel.GroupMaster.PickedElementsDisabled = false;
+                }
+
+                else if (state.IsPressed(SGKey.C) && ViewModel.IsEventMode)
+                {
+                    ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
+                }
             }
 
-            else if (state.IsPressed(SGKey.F2) && ViewModel.GroupMaster.SelectedElement != null)
-            {
-                UIElementPropertyGrid.SelectWithPropertyFocus(ViewModel.GroupMaster.SelectedElement, SGUIElement.VisualNameKey);
-            }
-
-            else if (state.IsPressed(SGKey.F6) && MessageBoxEx.ShowTopMost("다시 로딩하시겠습니까?", "질문", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                ViewModel.Commander.FileUIToolDataLoadAsync.Execute(SGUIFileSystem.LoadKey);
-            }
-
-            else if (state.IsPressed(SGKey.F7))
-            {
-                BackUpTextBox.Focus();
-                BackUpTextBox.Text = string.Empty;
-            }
-
-            else if (state.IsPressed(SGKey.F8))
-            {
-                ViewModel.Commander.OpenDirectory.Execute(ToolDirectory.Backup.ToString());
-            }
-
-            else if (state.IsPressed(SGKey.X))
-            {
-                ViewModel.GroupMaster.DeselectAll();
-                ViewModel.IsEventMode = !ViewModel.IsEventMode;
-
-                if (ViewModel.IsEventMode == false)
-                    ViewModel.GroupMaster.PickedElementsDisabled = false;
-            }
-
-            else if (state.IsPressed(SGKey.C) && ViewModel.IsEventMode)
-            {
-                ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
-            }
+            
 
             CanvasShapesControl.OnKeyDown(key);
             UIElementTreeView.OnKeyDown(key);

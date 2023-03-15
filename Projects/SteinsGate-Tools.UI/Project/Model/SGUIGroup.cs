@@ -282,7 +282,7 @@ namespace SGToolsUI.Model
             bool isPicked = Picked;
             if (isPicked)
             {
-                newChildren.ForEach(element => element.SetPick(false));
+                newChildren.ForEach(element => element.SetPick(true));
                 groupMaster.PickedElements.AddRange(newChildren.Children);
             }
 

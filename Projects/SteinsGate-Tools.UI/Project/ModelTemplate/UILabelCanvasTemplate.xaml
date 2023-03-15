@@ -1,5 +1,19 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mo="clr-namespace:SGToolsUI.Model">
-    <DataTemplate x:Key="LabelCanvasTemplate" DataType="{x:Type mo:SGUILabel}"/>
+    <DataTemplate x:Key="LabelCanvasTemplate"
+                  DataType="{x:Type mo:SGUILabel}">
+
+        <Grid Width="{Binding VisualSize.Width}"
+              Height="{Binding VisualSize.Height}">
+            <TextBlock Text="{Binding Text}"
+                       HorizontalAlignment="{Binding TextHAlign, Converter={StaticResource SGAlignmentWpfAlignmentConverter}}"
+                       VerticalAlignment="{Binding TextVAlign, Converter={StaticResource SGAlignmentWpfAlignmentConverter}}"
+                       FontSize="{Binding FontSize}"
+                       Foreground="{Binding FontColor, Converter={StaticResource ColorSolidBrushConverter}}"
+                       FontFamily="{Binding FontFamily}"
+                       TextWrapping="{Binding TextWrapEnum}">
+            </TextBlock>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

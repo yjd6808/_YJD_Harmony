@@ -105,8 +105,15 @@ namespace SGToolsUI.Model
             {
                 _textWrap = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(TextWrapEnum));
             }
         }
+
+
+        [Browsable(false)] 
+        public TextWrapping TextWrapEnum => _textWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
+
+
 
         [Category(Constant.LabelCategoryName), DisplayName("텍스트 수직정렬"), PropertyOrder(OrderTextVAlign)]
         public VAlignment TextVAlign

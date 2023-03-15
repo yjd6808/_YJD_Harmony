@@ -7,6 +7,7 @@
 
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "SGWorldScene.h"
 
 
@@ -23,8 +24,6 @@
 #include <SteinsGate/Client/SGGlobal.h>
 #include <SteinsGate/Client/SGUIManager.h>
 #include <SteinsGate/Client/SGFontPackage.h>
-
-#include "TextFieldEx.h"
 
 
 USING_NS_CC;
@@ -90,6 +89,8 @@ bool SGWorldScene::init() {
 	InitUILayer();
 	reserveScene(SceneType::Login);
 	scheduleUpdate();	// 즉시 update 1회 호출함
+
+	
 
 	return true;
 }

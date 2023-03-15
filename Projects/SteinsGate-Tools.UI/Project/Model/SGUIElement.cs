@@ -784,7 +784,7 @@ namespace SGToolsUI.Model
             ViewModel = element.ViewModel;
 
             _canvasSelectable = element._canvasSelectable;
-            _visualName = element._visualName;
+            _visualName = element._visualName + "_복사";
             _visualPosition = element._visualPosition;
             _defineName = element._defineName;
         }
@@ -1057,6 +1057,7 @@ namespace SGToolsUI.Model
         }
 
         public abstract object Clone();
+
         [Browsable(false)]
         public override CanvasElementType CanvasElementType => CanvasElementType.UIElement;
 

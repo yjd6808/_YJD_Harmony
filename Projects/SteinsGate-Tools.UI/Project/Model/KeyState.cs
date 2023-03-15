@@ -25,6 +25,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
+using Vanara.PInvoke;
 
 namespace SGToolsUI.Model
 {
@@ -223,7 +224,12 @@ namespace SGToolsUI.Model
         public bool IsShiftPressed => IsPressed(SGKey.LeftShift);
         public bool IsAltPressed => IsPressed(SGKey.LeftAlt);
         public bool IsCtrlPressed => IsPressed(SGKey.LeftCtrl);
-            
+        
+        public bool IsModifierKeyPressed => _keys[(int)SGKey.LeftShift].Pressed || 
+                                            _keys[(int)SGKey.LeftAlt].Pressed ||
+                                            _keys[(int)SGKey.LeftCtrl].Pressed;
+
+
         private readonly KeyElement[] _keys;
         private readonly Thread _keyCaptureThread;
         private volatile bool _isRunning;

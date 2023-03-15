@@ -110,7 +110,10 @@ namespace SGToolsUI.Command.MainViewCommand
             SGUIGroup cloned = new SGUIGroup(_clipboard.Count);
 
             for (int i = 0; i < _clipboard.Count; ++i)
-                cloned.Children.Add((SGUIElement)_clipboard[i].Clone());
+            {
+                SGUIElement element = _clipboard[i].Clone() as SGUIElement;
+                cloned.Children.Add(element);
+            }
 
             if (groupMaster.HasSelectedElement)
             {
