@@ -81,7 +81,7 @@ namespace SGToolsUI.Model
                 if (!visualBackgroundIsNull)
                     return VisualBackgroundSprite.Rect.Size;
                 if (!visualCrossIsNull)
-                    return VisualBackgroundSprite.Rect.Size;
+                    return VisualCrossSprite.Rect.Size;
 
                 return Constant.DefaultVisualSize;
             }
@@ -95,8 +95,11 @@ namespace SGToolsUI.Model
             {
                 _checked = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CheckedOpacity));
             }
         }
+
+        [Browsable(false)] public double CheckedOpacity => _checked ? 1.0 : 0.0;
 
         [Category(Constant.CheckBoxCategoryName), DisplayName("배경"), PropertyOrder(OrderBackground)]
         public SGUISpriteInfo Background
@@ -343,7 +346,7 @@ namespace SGToolsUI.Model
 
         public override void CreateInit() => VisualName = $"체크박스_{Seq++}";
         public static int Seq;
-        private bool _checked;
+        private bool _checked = true;
         private SGUISpriteInfo[] _sprites;
     }
 

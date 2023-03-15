@@ -28,8 +28,9 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace SGToolsUI.Model
 {
     [ExpandableObject]
-    public struct SGUISpriteInfo 
+    public struct SGUISpriteInfo
     {
+        public static readonly SGUISpriteInfo Empty = new ();
         public SGUISpriteInfo()
         {
             Sga = null;

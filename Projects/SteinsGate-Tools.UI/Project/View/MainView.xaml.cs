@@ -177,6 +177,7 @@ namespace SGToolsUI.View
 
             else if (state.IsPressed(SGKey.X))
             {
+                ViewModel.GroupMaster.DeselectAll();
                 ViewModel.IsEventMode = !ViewModel.IsEventMode;
 
                 if (ViewModel.IsEventMode == false)
@@ -280,5 +281,7 @@ namespace SGToolsUI.View
                 ViewModel.GroupMaster = await ViewModel.Loader.LoadAsync(file);
             }
         }
+
+       
     }
 }

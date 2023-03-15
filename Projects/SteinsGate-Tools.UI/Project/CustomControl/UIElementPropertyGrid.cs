@@ -37,6 +37,8 @@ using System.Windows.Threading;
 using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using PropertyItem = Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem;
+using System.Drawing.Imaging;
+using SGToolsUI.ModelTemplate;
 
 namespace SGToolsUI.CustomControl
 {
@@ -46,8 +48,10 @@ namespace SGToolsUI.CustomControl
     {
         public MainViewModel ViewModel { get; private set; }
         public ScrollViewer ScrollViewer { get; private set; }
+        public ContextMenu ContextMenu { get; private set; }
+        public MenuItem ClearMenuItem { get; private set; }
         public PropertyItemsControl PropertyItemsControl { get; private set; }
-        private const BindingFlags PropertyFlag = BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance;
+        private const BindingFlags PropertyFlag = BindingFlags.GetProperty | BindingFlags.SetProperty | BindingFlags.Public | BindingFlags.Instance;
         private string _selectProperty;
 
         public UIElementPropertyGrid()
@@ -71,7 +75,10 @@ namespace SGToolsUI.CustomControl
         {
             InitializeViewModel();
             InitializeDescriptor();
+            InitializeContextMenu();
         }
+
+        
 
         private void InitializeDescriptor()
         {
@@ -89,6 +96,28 @@ namespace SGToolsUI.CustomControl
                 throw new Exception("UIElementTreeView에서 뷰모델 초기화 실패");
             ScrollViewer = ViewModel.View.UIElementTreeViewScrollViewer;
             PropertyItemsControl = this.FindChild<PropertyItemsControl>();
+        }
+
+        private void InitializeContextMenu()
+        {
+            
+
+            ClearMenuItem = new MenuItemEx();
+            ClearMenuItem.Header = "스프라이트 초기화";
+            ClearMenuItem.Click += ClearMenuItemOnClick;
+
+            ContextMenu = new ContextMenu();
+            ContextMenu.Opened += ContextMenuOnOpened;
+            ContextMenu.Items.Add(ClearMenuItem);
+
+            AdvancedOptionsMenu = ContextMenu;
+        }
+
+        private void ContextMenuOnOpened(object sender, RoutedEventArgs e)
+        {
+            PropertyItem item = SelectedPropertyItem as PropertyItem;
+            if (item == null) return;
+            ClearMenuItem.IsEnabled = item.PropertyType == typeof(SGUISpriteInfo);
         }
 
 
@@ -195,7 +224,7 @@ namespace SGToolsUI.CustomControl
                 propInfo.SetValue(element, new SGUISpriteInfo(sprite));
         }
 
-        private bool TryGetSpriteInfoProperty(PropertyItem propertyItem, out PropertyInfo propInfo, out SGUIElement element, out SGUISpriteInfo spriteInfo)
+        public bool TryGetSpriteInfoProperty(PropertyItem propertyItem, out PropertyInfo propInfo, out SGUIElement element, out SGUISpriteInfo spriteInfo)
         {
             spriteInfo = new SGUISpriteInfo();
             element = propertyItem.Instance as SGUIElement;
@@ -215,6 +244,26 @@ namespace SGToolsUI.CustomControl
 
             spriteInfo = (SGUISpriteInfo)propInfo.GetValue(element);
             return true;
+        }
+
+        public bool TrySetSpriteInfoProperty(PropertyItem propertyItem, SGUISpriteInfo spriteInfo)
+        {
+            SGUIElement element = propertyItem.Instance as SGUIElement;
+            if (element == null) return false;
+
+            PropertyInfo propInfo = element.GetType().GetProperty(propertyItem.PropertyName, PropertyFlag);
+            if (propInfo == null) return false;
+            propInfo.SetValue(element, spriteInfo);
+            return true;
+        }
+
+      
+        private void ClearMenuItemOnClick(object sender, RoutedEventArgs e)
+        {
+            PropertyItem item = ClearMenuItem.DataContext as PropertyItem;
+            if (item == null) return;
+            if (item.PropertyType != typeof(SGUISpriteInfo)) return;
+            TrySetSpriteInfoProperty(item, SGUISpriteInfo.Empty);
         }
 
 
@@ -248,29 +297,47 @@ namespace SGToolsUI.CustomControl
 
         public bool ContainPoint(Point p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
 
-        public void SelectWithPropertyFocus(SGUIElement selectedElement, string propertyName)
+        public void SelectPropertyValue(bool newObject, ref string propertyName)
         {
-            // 오브젝트 변경전 프로퍼티 아이템 수 : 카운트 0 (제일 초기)
-            SelectedObject = selectedElement;
-            // 오브젝트 변경후 프로퍼티 아이템 수 : 카운트 多 프로퍼티 아이템 세팅됨.
-
             for (int i = 0; i < PropertyItemsControl.Items.Count; ++i)
             {
                 var propertyItem = PropertyItemsControl.Items[i] as PropertyItem;
                 if (propertyItem == null) continue;
                 if (propertyItem.PropertyName != propertyName) continue;
 
+                // 새롭게 할당된 오브젝트라면
                 // 아직 하위 비주얼 UI 컨트롤들이 로딩되지 않은 상태라서 포커스를 잡을 수 없다.
                 // 로딩되면 포커스를 잡아주도록 하자.
-                // propertyItem.Editor.Focus(); 여기서 수행할 수가 없음
-                propertyItem.Loaded += (sender, args) =>
-                {
-                    propertyItem.Editor.Focus();
-
-                    if (propertyItem.Editor is PropertyGridEditorTextBox textBox)
-                        textBox.SelectAll();
-                };
+                // propertyItem.Editor.Focus();를 직접적으로 수행할 수가 없음
+                if (newObject)
+                    propertyItem.Loaded += (sender, args) => SelectValue(propertyItem);
+                else
+                    SelectValue(propertyItem);
+                break;
             }
+
+            void SelectValue(PropertyItem item)
+            {
+                item.Editor.Focus();
+
+                if (item.Editor is PropertyGridEditorTextBox textBox)
+                    textBox.SelectAll();
+            }
+        }
+
+        public void SelectWithPropertyFocus(SGUIElement selectedElement, string propertyName)
+        {
+            // 이미 할당된 경우
+            if (SelectedObject == selectedElement)
+            {
+                SelectPropertyValue(false, ref propertyName);
+                return;
+            }
+
+            // 오브젝트 변경전 프로퍼티 아이템 수 : 카운트 0 (제일 초기)
+            SelectedObject = selectedElement;
+            // 오브젝트 변경후 프로퍼티 아이템 수 : 카운트 多 프로퍼티 아이템 세팅됨.
+            SelectPropertyValue(true, ref propertyName);
         }
 
         private void OnSelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

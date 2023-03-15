@@ -476,25 +476,15 @@
                                                FontSize="12" 
                                                Width="Auto"
                                                AutoGenerateProperties="True"
+                                               Style="{StaticResource UIElementPropertyGrid}"
                                                ShowAdvancedOptions="False">
-                        <ui_ctrl:UIElementPropertyGrid.Margin >
-                            <Thickness Top="{x:Static local:Constant.PropertyGridUpperInspectorHide}"
-                                       Bottom="{x:Static local:Constant.PropertyGridLowerInspectorHide}"/>
-                        </ui_ctrl:UIElementPropertyGrid.Margin>
+
+                        <!--스타일 파일로 빼니까 어드벤스드 옵션 메뉴 이벤트가 안먹힘.. 이렇게 직접적으로 할당해주는건 동작함. 버그인듯? 아님 내가 뭐 잘못했나-->
+                        <!--<ui_ctrl:UIElementPropertyGrid.AdvancedOptionsMenu>
+                        </ui_ctrl:UIElementPropertyGrid.AdvancedOptionsMenu>-->
                     </ui_ctrl:UIElementPropertyGrid>
                 </Grid>
-
-                
             </Canvas>
-
-            <!--<ui_ctrl:UIElementPropertyGrid Grid.Row="2"
-                                               x:Name="ElementPropertyGrid" 
-                                               FontSize="12" 
-                                               Height="{Binding ZoomState.BasePropertyGridHeight}"
-                                               AutoGenerateProperties="True"
-                                               ShowAdvancedOptions="False" Margin="0, 0, 0, -60">
-                </ui_ctrl:UIElementPropertyGrid>-->
-            
         </Grid>
 
         

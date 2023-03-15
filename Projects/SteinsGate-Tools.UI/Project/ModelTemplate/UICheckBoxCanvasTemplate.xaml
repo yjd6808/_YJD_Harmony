@@ -2,9 +2,54 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mo="clr-namespace:SGToolsUI.Model">
     <DataTemplate x:Key="CheckBoxCanvasTemplate" DataType="{x:Type mo:SGUICheckBox}">
-        <Grid>
-
+        <!-- 
+        1. 배경이 더 뒤에있어야하고 배경은 크로스 중앙에, 크로스는 배경 중앙에 위치할려면 중앙 정렬을 해주면 될듯? 
+        2. 체크박스 백그라운드 이미지가 없으면 어차피 크기가 0일테니 그냥 굳이 템플릿 트리거러 복잡하게 만들지말자
+        -->
+        <Grid Width="Auto"
+              Height="AUto"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            <Image Source="{Binding VisualBackgroundSource}" 
+                   Stretch="None"/>
+            <Image Source="{Binding VisualCrossSource}"
+                   Opacity="{Binding CheckedOpacity}"
+                   Stretch="None" />
         </Grid>
-        <!--<Image Name="SpriteImage" Source="{Binding VisualBackgroundSource}"/>-->
+
+        <!--<Grid>
+
+            <ContentControl Content="{Binding}">
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasBackground}" Value="True">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate DataType="{x:Type mo:SGUICheckBox}">
+                                            --><!-- 배경이 더 뒤에있어야하고 배경은 크로스 중앙에, 크로스는 배경 중앙에 위치할려면 중앙 정렬을 해주면 될듯? --><!--
+                                            <Grid Width="Auto" Height="AUto" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Image Source="{Binding VisualBackgroundSource}"/>
+                                                <Image Source="{Binding VisualCrossSource}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HasBackground}" Value="False">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate DataType="{x:Type mo:SGUICheckBox}">
+                                            <Image Source="{Binding VisualCrossSource}"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </Grid>-->
+        
     </DataTemplate>
 </ResourceDictionary>

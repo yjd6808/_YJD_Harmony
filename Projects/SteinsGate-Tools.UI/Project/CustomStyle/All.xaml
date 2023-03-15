@@ -17,5 +17,6 @@
         <ResourceDictionary Source="CanvasShapeItemsControl.xaml" />
         <ResourceDictionary Source="UIElementItemsControl.xaml" />
         <ResourceDictionary Source="UIElementTreeView.xaml" />
+        <ResourceDictionary Source="UIElementPropertyGrid.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary> 
