@@ -42,10 +42,11 @@ namespace SGToolsUI.Command.MainViewCommand
                 return;
 
 
-            ObservableCollection<SGUIElement> pickedElements = groupMaster.PickedElements;
-            pickedElements.ToList().ForEach(element => element.Picked = false);
-            Debug.Assert(pickedElements.Count == 0, "아직 픽된 엘리먼트가 남아있습니다.");
+            groupMaster.DeselectAll();
+            groupMaster.Depick();
+            Debug.Assert(groupMaster.PickedElements.Count == 0, "아직 픽된 엘리먼트가 남아있습니다.");
             ViewModel.View.CanvasShapesControl.AdjustAnchor();
+            ViewModel.View.UIElementPropertyGrid.SelectedObject = null;
         }
     }
 }

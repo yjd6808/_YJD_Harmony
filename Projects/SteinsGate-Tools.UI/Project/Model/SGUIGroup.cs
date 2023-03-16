@@ -283,7 +283,13 @@ namespace SGToolsUI.Model
             if (isPicked)
             {
                 newChildren.ForEach(element => element.SetPick(true));
-                groupMaster.PickedElements.AddRange(newChildren.Children);
+
+                // https://stackoverflow.com/questions/7284805/how-to-sort-observablecollection
+                // PickedElements와 트리뷰의 엘리먼트들간에 정렬순서가 일치해야한다.
+                // 이때 Depth순으로 오름차순된 상태에서 Depth가 동일하다면 코드순으로 정렬되어야한다.
+                // 여기서 이렇게 막 추가해주더라도 내가 MainView에서 CollectionViewSource로 정렬순서를 정해줬기때문에
+                // 내부적으로 알아서 정렬을 수행하게 된다.
+                groupMaster.PickedElements.AddRange(newChildren.Children); 
             }
 
             // 새로 추가된 자식들중 바로 다음 계층(깊이)의 자식들만 부모를 업데이트해줌 된다.

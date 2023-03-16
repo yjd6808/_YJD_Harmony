@@ -341,7 +341,14 @@ namespace SGToolsUI.Model
 
         [Category(Constant.ElementCategoryName), DisplayName("계층적 높이"), PropertyOrder(OrderDepth)]
         [Description("이 엘리먼트의 계층구조상 위치")]
-        public virtual int Depth => Parent.Depth + 1;
+        public virtual int Depth
+        {
+            get
+            {
+                if (Parent == null) return -1;
+                return Parent.Depth + 1;
+            }
+        }
 
 
         [Browsable(false)]
@@ -351,9 +358,8 @@ namespace SGToolsUI.Model
         [Browsable(false)] 
         public virtual bool IsGroup => false;
 
-
-        [Browsable(false)]
-        public virtual int Code => Parent.Code + Index + 1;
+        [Browsable(false)] 
+        public virtual int Code => Parent == null ? -1 : Parent.Code + Index + 1;
 
         [Browsable(false)]
         public int GroupCode => (Code / Constant.GroupCodeInterval) * Constant.GroupCodeInterval;
@@ -841,6 +847,14 @@ namespace SGToolsUI.Model
             }
 
             OnPropertyChanged(nameof(Deleted));
+        }
+
+        public static int CompareOrder(SGUIElement lhsElement, SGUIElement rhsElement)
+        {
+            int comp = Comparer<int>.Default.Compare(lhsElement.Depth, rhsElement.Depth);
+            if (comp == 0)
+                return Comparer<int>.Default.Compare(lhsElement.Code, rhsElement.Code);
+            return comp;
         }
 
         // 트리뷰 모든 원소부터 위에서부터 한칸씩 계층구조 신경쓰지않고 확인했을 때 누가 위에있고 아래에잇는지 검사

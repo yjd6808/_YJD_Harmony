@@ -177,7 +177,7 @@ namespace SGToolsUI.Model
         {
             base.ParseJObject(root);
 
-            string sizeString = (string)root[JsonImgKey];
+            string sizeString = (string)root[JsonVisualSizeKey];
             _visualSize = SizeEx.ParseFullString(sizeString);
             string fontFileName = (string)root[JsonFontKey];
             _font = (FontType)Enum.Parse(typeof(FontType), Path.GetFileNameWithoutExtension(fontFileName));

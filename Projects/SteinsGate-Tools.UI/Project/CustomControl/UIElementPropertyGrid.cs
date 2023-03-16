@@ -57,19 +57,8 @@ namespace SGToolsUI.CustomControl
         public UIElementPropertyGrid()
         {
             Loaded += OnLoaded;
-            
+            SelectedPropertyItemChanged += OnSelectedPropertyItemChanged;
         }
-
-
-
-        private void OnPreparePropertyItem(object sender, PropertyItemEventArgs e)
-        {
-            PropertyItem propertyItem = e.PropertyItem as PropertyItem;
-            if (propertyItem == null) return;
-
-
-        }
-
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -125,6 +114,14 @@ namespace SGToolsUI.CustomControl
 
             if (selectedProperty == null)
                 return;
+
+            // 프로퍼티 값이 들어있는 셀을 클릭하면 텍스트박스 전체 선택하도록
+            if (!selectedProperty.IsReadOnly && selectedProperty.Editor is TextBox tb)
+            {
+                tb.Focus();
+                tb.SelectAll();
+                return;
+            }
 
             if (!TryGetSpriteInfoProperty(selectedProperty, out PropertyInfo propInfo, out SGUIElement element, out SGUISpriteInfo spriteInfo))
                 return;
@@ -317,9 +314,6 @@ namespace SGToolsUI.CustomControl
             void SelectValue(PropertyItem item)
             {
                 item.Editor.Focus();
-
-                if (item.Editor is PropertyGridEditorTextBox textBox)
-                    textBox.SelectAll();
             }
         }
 
