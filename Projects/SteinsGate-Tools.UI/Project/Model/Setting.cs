@@ -29,6 +29,15 @@ namespace SGToolsUI.Model
 {
     public class Setting : ICloneable
     {
+        public const string SgaDirectoryKey = "SgaDirectory";
+        public const string OutputDefinePathKey = "OutputDefinePath";
+        public const string OutputJsonPathKey = "OutputJsonPath";
+        public const string AutoExpandWhenSelectedKey = "AutoExpandWhenSelected";
+        public const string ShowLogViewWhenProgramLaunchedKey = "ShowLogViewWhenProgramLaunched";
+        public const string LogViewPositionWhenProgramLaunchedXKey = "LogViewPositionWhenProgramLaunchedX";
+        public const string LogViewPositionWhenProgramLaunchedYKey = "LogViewPositionWhenProgramLaunchedY";
+        public const string ZoomLevelKey = "ZoomLevel";
+
 
         [DisplayName("Sga 패키지 리소스 경로")]
         public string SgaDirectory { get; set; } = "";
@@ -46,7 +55,9 @@ namespace SGToolsUI.Model
         public bool ShowLogViewWhenProgramLaunched { get; set; } = true;
 
         [DisplayName("로그뷰 기본 위치")]
-        public Point LogViewPositionWhenProgramLaunched { get; set; } 
+        public Point LogViewPositionWhenProgramLaunched { get; set; }
+        [DisplayName("초기 배율(%)")]
+        public int ZoomLevel { get; set; } = 100;
 
 
         public object Clone()
@@ -58,7 +69,8 @@ namespace SGToolsUI.Model
                 OutputJsonPath = OutputJsonPath,
                 AutoExpandWhenSelected = AutoExpandWhenSelected,
                 ShowLogViewWhenProgramLaunched = ShowLogViewWhenProgramLaunched,
-                LogViewPositionWhenProgramLaunched = LogViewPositionWhenProgramLaunched
+                LogViewPositionWhenProgramLaunched = LogViewPositionWhenProgramLaunched,
+                ZoomLevel = ZoomLevel
             };
         }
 
@@ -71,43 +83,47 @@ namespace SGToolsUI.Model
             JObject root = JObject.Parse(content);
             JToken? token = null;
 
-            if (root.TryGetValue("SgaDirectory", out token))
+            if (root.TryGetValue(SgaDirectoryKey, out token))
                 SgaDirectory = (string)token;
 
-            if (root.TryGetValue("OutputDefinePath", out token))
+            if (root.TryGetValue(OutputDefinePathKey, out token))
                 OutputDefinePath = (string)token;
 
-            if (root.TryGetValue("OutputJsonPath", out token))
+            if (root.TryGetValue(OutputJsonPathKey, out token))
                 OutputJsonPath = (string)token;
 
-            if (root.TryGetValue("AutoExpandWhenSelected", out token))
+            if (root.TryGetValue(AutoExpandWhenSelectedKey, out token))
                 AutoExpandWhenSelected = (bool)token;
 
-            if (root.TryGetValue("ShowLogViewWhenProgramLaunched", out token))
+            if (root.TryGetValue(ShowLogViewWhenProgramLaunchedKey, out token))
                 ShowLogViewWhenProgramLaunched = (bool)token;
 
             Point temp = new ();
 
-            if (root.TryGetValue("LogViewPositionWhenProgramLaunchedX", out token))
+            if (root.TryGetValue(LogViewPositionWhenProgramLaunchedXKey, out token))
                 temp.X = (int)token;
 
-            if (root.TryGetValue("LogViewPositionWhenProgramLaunchedY", out token))
+            if (root.TryGetValue(LogViewPositionWhenProgramLaunchedYKey, out token))
                 temp.Y = (int)token;
 
             LogViewPositionWhenProgramLaunched = temp;
+
+            if (root.TryGetValue(ZoomLevelKey, out token))
+                ZoomLevel = (int)token;
             return true;
         }
 
         public void Save()
         {
             JObject root = new JObject();
-            root["SgaDirectory"] = SgaDirectory;
-            root["OutputDefinePath"] = OutputDefinePath;
-            root["OutputJsonPath"] = OutputJsonPath;
-            root["AutoExpandWhenSelected"] = AutoExpandWhenSelected;
-            root["ShowLogViewWhenProgramLaunched"] = ShowLogViewWhenProgramLaunched;
-            root["LogViewPositionWhenProgramLaunchedX"] = LogViewPositionWhenProgramLaunched.X;
-            root["LogViewPositionWhenProgramLaunchedY"] = LogViewPositionWhenProgramLaunched.Y;
+            root[SgaDirectoryKey] = SgaDirectory;
+            root[OutputDefinePathKey] = OutputDefinePath;
+            root[OutputJsonPathKey] = OutputJsonPath;
+            root[AutoExpandWhenSelectedKey] = AutoExpandWhenSelected;
+            root[ShowLogViewWhenProgramLaunchedKey] = ShowLogViewWhenProgramLaunched;
+            root[LogViewPositionWhenProgramLaunchedXKey] = LogViewPositionWhenProgramLaunched.X;
+            root[LogViewPositionWhenProgramLaunchedYKey] = LogViewPositionWhenProgramLaunched.Y;
+            root[ZoomLevelKey] = ZoomLevel;
             IoFile.WriteAllText(Constant.SettingFileName, root.ToString());
         }
     }

@@ -20,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using MoreLinq.Extensions;
 using SGToolsCommon;
 using SGToolsCommon.CustomControl;
@@ -59,6 +60,15 @@ namespace SGToolsUI.ViewModel
 
         public void Loaded()
         {
+            double zoomLevelDelta = (double)Setting.ZoomLevel / 100 - 1.0;
+            
+            ZoomState.ZoomLevelY += zoomLevelDelta * Constant.ResolutionRatio;
+            ZoomState.ZoomLevelX += zoomLevelDelta;
+
+            // ZoomLevel 업데이트를 한다고해서 윈도우의 Width, Height 업데이트가 즉시 이뤄지지 않는다.
+            // 이번 업데이트가 지나간 후 가운데로 옮겨주기 위해서 BeginInvoke로 처리하였다.
+            View.Dispatcher.BeginInvoke(() => View.MoveToClosestDisplayCenter());
+
             LogBox.Style = (Style)Application.Current.FindResource("LogListBox");
             
             if (Setting.ShowLogViewWhenProgramLaunched)
