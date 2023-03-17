@@ -71,8 +71,12 @@ namespace SGToolsUI.Command.MainViewCommand
                         ViewModel.Commander.SelectSgaPackage.Execute(image.Parent);
                         ViewModel.Commander.SelectSgaElement.Execute(header);
 
+                        ViewModel.AlbumView.PackageListBox.ScrollIntoView(image.Parent);
                         packageListBox.ScrollIntoView(image.Parent);
+
                         ViewModel.View.ElementListBox.ScrollIntoView(header);
+                        ViewModel.AlbumView.ElementListBox.ScrollIntoView(header);
+
                         return;
                     }
                 }
@@ -86,6 +90,10 @@ namespace SGToolsUI.Command.MainViewCommand
                 {
                     _saveDict.Add(package, package);
                     ViewModel.Commander.SelectSgaPackage.Execute(package);
+
+                    ViewModel.AlbumView.PackageListBox.SelectedItem = package;
+                    ViewModel.AlbumView.PackageListBox.ScrollIntoView(package);
+
                     packageListBox.SelectedItem = package;
                     packageListBox.ScrollIntoView(package);
                     return;

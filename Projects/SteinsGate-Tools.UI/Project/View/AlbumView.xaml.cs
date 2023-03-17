@@ -11,6 +11,7 @@ using System.IO;
 using System.IO.Packaging;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,9 +23,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MoreLinq.Extensions;
 using SGToolsCommon.CustomControl;
+using SGToolsCommon.CustomView;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
+using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
+using Xceed.Wpf.Toolkit.Primitives;
+using Path = System.IO.Path;
 
 namespace SGToolsUI.View
 {
@@ -40,6 +46,10 @@ namespace SGToolsUI.View
             InitializeComponent();
 
             ViewModel.MainViewModel.PackManager.NotifyUpdateList();
+        }
+        private void AlbumView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            SizeToContent = SizeToContent.Manual;
         }
 
         private void PackageListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -68,6 +78,65 @@ namespace SGToolsUI.View
             SgaImage cur = ViewModel.SelectedPackage.GetElement(header.IndexInPackage) as SgaImage;
             if (cur == null) return;
             ViewModel.SelectedImage = cur;
+        }
+
+        private async void AlbumListBox_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            int selectedCount = AlbumListBox.SelectedItems.Count;
+            if (selectedCount == 0)
+                return;
+
+            LogListBox logBox = ViewModel.MainViewModel.LogBox;
+            ProgressView progressView = ViewModel.MainViewModel.ProgressView;
+
+            if (Keyboard.IsKeyDown(Key.LeftCtrl))
+            {
+                if (Keyboard.IsKeyDown(Key.S))
+                {
+                    progressView.Show();
+                    progressView.MoveToClosestDisplayCenter();
+                    int count = 0;
+                    string dirPath = Path.Combine(Constant.ImageSaveDirName, (AlbumListBox.SelectedItems[0] as SgaSpriteAbstract).DataDir);
+                    DirectoryEx.CreateDirectoryIfNotExist(dirPath);
+                    foreach (SgaSpriteAbstract selectedItem in AlbumListBox.SelectedItems)
+                    {
+                        string filePath = Path.Combine(dirPath, selectedItem.ToString() + ".png");
+                        await selectedItem.Bitmap.SaveAsync(filePath);
+                        count++;
+                        double percent = (double)count / selectedCount * 100.0;
+                        progressView.ProgressPercentage = percent;
+                        progressView.ProgressText = $"진행률 : {percent:F1}%";
+                    }
+                    logBox.AddLog($"이미지 {selectedCount}개를 저장하였습니다.", (LogType.Path, (object)dirPath), IconCommonType.Info, Brushes.DarkOrchid);
+                }
+                else if (Keyboard.IsKeyDown(Key.C))
+                {
+                    (AlbumListBox.SelectedItems[0] as SgaSpriteAbstract).Bitmap.SaveToClipboard();
+                    logBox.AddLog($"이미지를 클립보드에 저장하였습니다.");
+                }
+            }
+        }
+
+
+        private void AlbumListBox_OnPreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            int selectedCount = AlbumListBox.SelectedItems.Count;
+            if (selectedCount == 0)
+                return;
+            SgaSpriteAbstract sprite = AlbumListBox.SelectedItems[0] as SgaSpriteAbstract ?? throw new Exception("선택된 리스트박스 아이템을 SgaSprite로 캐스팅하는데 실패했습니다.");
+            SgaPackage sga = sprite.Parent.Parent;
+            SgaElementHeader header = sprite.Parent.Header;
+
+            ViewModel.MainViewModel.Commander.SelectSgaPackage.Execute(sga);
+            ViewModel.MainViewModel.Commander.SelectSgaElement.Execute(header);
+            ViewModel.MainViewModel.Commander.SelectSgaSprite.Execute(sprite);
+
+            ViewModel.MainViewModel.View.PackageListBox.ScrollIntoView(sga);
+            ViewModel.MainViewModel.View.ElementListBox.ScrollIntoView(header);
+            ViewModel.MainViewModel.View.SpriteListBox.ScrollIntoView(sprite);
+
+            ViewModel.MainViewModel.View.Topmost = true;
+            ViewModel.MainViewModel.View.Topmost = false;
         }
     }
 }

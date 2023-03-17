@@ -77,6 +77,7 @@ namespace SGToolsUI.View
 
             ViewModel.LogView.Close();
             ViewModel.AlbumView.Close();
+            ViewModel.ProgressView.Close();
             ViewModel.JobQueue.Dispose();
             ViewModel.KeyState.Dispose();
             ViewModel.Commander.Finalize();

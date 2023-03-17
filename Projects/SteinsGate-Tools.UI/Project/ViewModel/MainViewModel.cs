@@ -24,6 +24,7 @@ using System.Windows.Threading;
 using MoreLinq.Extensions;
 using SGToolsCommon;
 using SGToolsCommon.CustomControl;
+using SGToolsCommon.CustomView;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
@@ -351,6 +352,7 @@ namespace SGToolsUI.ViewModel
         public JobQueue JobQueue { get; } = new ();
         public LogListBox LogBox { get; }
         public LogView LogView { get; }
+        public ProgressView ProgressView { get; } = new();
         public AlbumView AlbumView { get; }
         public SGUILoader Loader { get; }
         public SGUISaver Saver { get; }

@@ -93,7 +93,7 @@ namespace SGToolsCommon.Sga
             }
         }
 
-        public System.Drawing.Bitmap Bitmap
+        public override System.Drawing.Bitmap Bitmap
         {
             get
             {

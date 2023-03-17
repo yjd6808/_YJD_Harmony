@@ -41,10 +41,17 @@ namespace SGToolsUI.Command.MainViewCommand
                 throw new Exception("선택한 리스트박스 아이템은 Sga 패키지 타입이 아닙니다.");
 
             ViewModel.SelectedPackage = selectedPackage;
+            ViewModel.AlbumView.ViewModel.SelectedPackage = selectedPackage;
+
             ViewModel.SelectedPackage.NotifyUpdateList();
 
             ViewModel.SelectedImage = new SgaImage();
+            ViewModel.AlbumView.ViewModel.SelectedImage = new SgaImage();
+
             ViewModel.ResourceSelectionStatus = $"{selectedPackage.FileNameWithoutExt}";
+
+            
+
             Debug.WriteLine($"${selectedPackage} 패키지 선택");
         }
     }

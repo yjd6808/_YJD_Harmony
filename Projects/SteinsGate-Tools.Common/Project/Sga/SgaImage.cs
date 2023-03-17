@@ -96,7 +96,7 @@ namespace SGToolsCommon.Sga
                 return;
 
             for (int i = 0; i < _spriteList.Count; ++i)
-                _spriteList[i].Unload();
+                _spriteList[i]?.Unload();
 
             _spriteList = null;
             _dataLoaded = false;

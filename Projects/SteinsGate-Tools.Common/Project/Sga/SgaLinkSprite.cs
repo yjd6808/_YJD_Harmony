@@ -6,6 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.Resource;
+using Size = System.Windows.Size;
 
 namespace SGToolsCommon.Sga
 {
@@ -43,7 +46,23 @@ namespace SGToolsCommon.Sga
         public override int FrameWidth => 1;
         public override int FrameHeight => 1;
         public override int TargetFrameIndex { get; }
+        private static Bitmap BitmapInstance = LinkBitmap();
         public override BitmapSource Source => R.GetIconCommon(IconCommonType.Link);
+
+        public override Bitmap Bitmap => BitmapInstance;
+
+        private static Bitmap LinkBitmap()
+        {
+            BitmapImage image = R.GetIconCommon(IconCommonType.Link); 
+            MemoryStream memoryStream = new MemoryStream();
+            BitmapEncoder encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            encoder.Save(memoryStream);
+
+            // MemoryStream으로부터 Bitmap 생성
+            Bitmap bitmap = new Bitmap(memoryStream);
+            return bitmap;
+        }
 
         public override void Load()
         {

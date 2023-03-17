@@ -5,6 +5,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -140,6 +141,16 @@ namespace SGToolsCommon.Extension
                 T t = o as T;
                 if (t == null) throw new NullReferenceException($"{typeof(T).Name}으로 변환되지 않는 타입입니다.");
                 action(t);
+            }
+        }
+
+        public static IEnumerable<T> Cast<T>(this IList list) where T : class
+        {
+            foreach (var o in list)
+            {
+                T t = o as T;
+                if (t == null) throw new InvalidCastException("캐스팅 실패");
+                yield return t;
             }
         }
     }

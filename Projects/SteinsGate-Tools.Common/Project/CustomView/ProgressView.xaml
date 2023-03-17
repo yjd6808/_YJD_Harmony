@@ -1,0 +1,22 @@
+﻿<Window x:Class="SGToolsCommon.CustomView.ProgressView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SGToolsCommon.CustomView"
+        xmlns:cus="clr-namespace:SGToolsCommon.CustomControl"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        Title="ProgressView"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <StackPanel>
+        <cus:TitleBar x:Name="TitleBar" Title="{Binding ProgressText}" FontSize="16" RealClose="False"/>
+        <ProgressBar Minimum="0"
+                     Maximum="100"
+                     Value="{Binding ProgressPercentage}" 
+                     Height="30"
+                     Width="150"/>
+    </StackPanel>
+</Window>

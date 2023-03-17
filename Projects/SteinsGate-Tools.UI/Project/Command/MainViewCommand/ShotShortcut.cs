@@ -65,6 +65,10 @@ namespace SGToolsUI.Command.MainViewCommand
             ViewModel.LogBox.AddLog("Alt + 클릭: 겹친 순서대로 클릭할때마다 변경 선택");
             ViewModel.LogBox.AddLog("Alt + Shift + 클릭: 겹친 순서대로 클릭시 중복선택");
             ViewModel.LogBox.AddLog("", null, IconCommonType.Transparent);
+            ViewModel.LogBox.AddLog("[앨범 뷰 단축키 목록]");
+            ViewModel.LogBox.AddLog("선택 후 Ctrl + S: save 디렉토리에 이미지 저장", null);
+            ViewModel.LogBox.AddLog("선택 후 Ctrl + C: 클립보드에 복사", null);
+            ViewModel.LogBox.AddLog("이미지 더블클릭: 메인뷰에서 리소스 목록에서 선택", null);
 
             if (!ViewModel.LogView.IsVisible)
                 ViewModel.LogView.Show();

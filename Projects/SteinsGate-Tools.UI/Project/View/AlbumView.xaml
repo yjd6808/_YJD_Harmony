@@ -26,8 +26,10 @@
         AllowsTransparency="True"
         WindowStyle="None"
         SizeToContent="WidthAndHeight"
+        Loaded="AlbumView_OnLoaded"
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
 
     <DockPanel Name="MainPanel"
                DataContext="{Binding Path=ViewModel}">
@@ -77,6 +79,9 @@
         <ScrollViewer DockPanel.Dock="Left">
             <ListBox 
                      Width="600"
+                     Name="AlbumListBox"
+                     PreviewKeyDown="AlbumListBox_OnPreviewKeyDown"
+                     PreviewMouseDoubleClick="AlbumListBox_OnPreviewMouseDoubleClick"
                      SelectionMode="Extended"
                      ItemsSource="{Binding SelectedImage.SpriteList}">
                 <ListBox.ItemContainerStyle>
@@ -158,6 +163,11 @@
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="클립보드에 복사"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
             </ListBox>
         </ScrollViewer>
         

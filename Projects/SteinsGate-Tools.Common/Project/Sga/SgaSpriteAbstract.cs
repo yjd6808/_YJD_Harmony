@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Size = System.Windows.Size;
 
 namespace SGToolsCommon.Sga
 {
@@ -50,6 +52,7 @@ namespace SGToolsCommon.Sga
         public abstract int FrameHeight { get; }
         public abstract int TargetFrameIndex { get; }
         public abstract BitmapSource Source { get; }
+        public abstract Bitmap Bitmap { get; }
         public ListBoxItem Item { get; set; }
 
         public abstract void Load();
@@ -76,11 +79,23 @@ namespace SGToolsCommon.Sga
             get
             {
                 if (IsLink)
-                    return $"[{FrameIndex}] {Width}x{Height} (링크:{TargetFrameIndex})";
+                    return $"[{FrameIndex}] {Width}x{Height} (링크-{TargetFrameIndex})";
 
                 return $"[{FrameIndex}] {Width}x{Height}";
             }
         }
+
+        public string DataDir => $"{Parent.Parent.FileName}\\{Parent.Header.Name}";
+        public string DataPath
+        {
+            get
+            {
+                if (IsLink)
+                    return $"{Parent.Parent.FileName}\\{Parent.Header.Name}\\{FrameIndex}-링크{TargetFrameIndex}";
+
+                return $"{Parent.Parent.FileName}\\{Parent.Header.Name}\\{FrameIndex}";
+            }
+        } 
 
         public string SizeString => $"{Width}x{Height}";
     }
