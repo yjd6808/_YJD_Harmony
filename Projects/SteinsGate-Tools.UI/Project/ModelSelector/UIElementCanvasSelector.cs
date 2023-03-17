@@ -42,7 +42,9 @@ namespace SGToolsUI.ModelSelector
             case SGUIEditBox        __editBox__     : return (DataTemplate)Application.Current.FindResource("EditBoxCanvasTemplate");
             case SGUICheckBox       __checkBox__    : return (DataTemplate)Application.Current.FindResource("CheckBoxCanvasTemplate");
             case SGUIToggleButton   __toggleButton__: return (DataTemplate)Application.Current.FindResource("ToggleButtonCanvasTemplate");
-            
+            case SGUIScrollBar      __scrollBar__   : return (DataTemplate)Application.Current.FindResource("ScrollBarCanvasTemplate");
+            case SGUIProgressBar    __progressBar__ : return (DataTemplate)Application.Current.FindResource("ProgressBarCanvasTemplate");
+
             }
 
             throw new Exception("SGUIElementSelector에서 반환가능한 DataTemplate을 찾지 못했습니다.");

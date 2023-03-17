@@ -73,6 +73,8 @@
                             <MenuItem Style="{StaticResource MenuItemEditBox}" Header="에딧박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIEditBoxKey}" />
                             <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="체크박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UICheckBoxKey}" />
                             <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="토글 버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIToggleButtonKey}" />
+                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="프로그래스바 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIProgressBarKey}" />
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="스크롤바 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIScrollBarKey}" />
                         </ContextMenu>
                     </Setter.Value>
                 </Setter>
@@ -95,16 +97,18 @@
                 <Setter Property="ContextMenu">
                     <Setter.Value>
                         <ContextMenu>
-                            <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" IsEnabled="False" />
-                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" IsEnabled="False" />
                             <Separator />
                             <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" IsEnabled="True" />
-                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIButtonKey}" IsEnabled="False"/>
-                            <MenuItem Style="{StaticResource MenuItemLabel}" Header="라벨 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UILabelKey}" IsEnabled="False"/>
-                            <MenuItem Style="{StaticResource MenuItemSprite}" Header="스프라이트 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UISpriteKey}" IsEnabled="False" />
-                            <MenuItem Style="{StaticResource MenuItemEditBox}" Header="에딧박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIEditBoxKey}" IsEnabled="False"/>
-                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="체크박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UICheckBoxKey}" IsEnabled="False"/>
-                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="토글 버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIToggleButtonKey}" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemLabel}" Header="라벨 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemSprite}" Header="스프라이트 추가" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemEditBox}" Header="에딧박스 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="체크박스 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="토글 버튼 추가" IsEnabled="False"/>
+                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="프로그래스바 추가" IsEnabled="False" />
+                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="스크롤바 추가" IsEnabled="False" />
                         </ContextMenu>
                     </Setter.Value>
                 </Setter>

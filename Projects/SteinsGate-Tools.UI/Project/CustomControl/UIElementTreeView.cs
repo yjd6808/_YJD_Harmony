@@ -208,7 +208,7 @@ namespace SGToolsUI.CustomControl
             ViewModel.Commander.PickUIElement.Execute(selected);
         }
 
-        public void DragEnd(object data)
+        public void DragEnd(Point p, object data)
         {
 
         }

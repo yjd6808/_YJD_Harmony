@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -107,6 +108,9 @@ namespace SGToolsUI.Model
 
         // 토글 버튼
         public const string JsonToggleSpriteKey = "sprite2";
+
+        // 프로그래스바
+        public const string JsonDirectionKey = "direction";
 
 
 
@@ -808,6 +812,8 @@ namespace SGToolsUI.Model
                 case SGUIElementType.EditBox: return new SGUIEditBox();
                 case SGUIElementType.CheckBox: return new SGUICheckBox();
                 case SGUIElementType.ToggleButton: return new SGUIToggleButton();
+                case SGUIElementType.ScrollBar: return new SGUIScrollBar();
+                case SGUIElementType.ProgressBar: return new SGUIProgressBar();
                 default:  throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
             }
         }
@@ -816,8 +822,6 @@ namespace SGToolsUI.Model
         // DeleteUIElement 설명 참고
         public void DeleteSelf()
         {
-            
-
             if (_deleted)
                 return;
 

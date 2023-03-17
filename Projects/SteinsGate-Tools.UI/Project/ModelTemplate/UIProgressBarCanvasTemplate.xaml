@@ -1,0 +1,76 @@
+﻿<ResourceDictionary x:Class="SGToolsUI.ModelTemplate.UIProgressBarCanvasTemplate"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mo="clr-namespace:SGToolsUI.Model"
+                    xmlns:res="clr-namespace:SGToolsUI.Resource"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+    <DataTemplate x:Key="ProgressBarCanvasTemplate"
+                  DataType="{x:Type mo:SGUIProgressBar}">
+
+        <!-- 어떻게하면 프로그래스 느낌을 줄까? 잘 가려주면 될 것 같은데? -->
+        <!-- Left Right -> Left, Left 0 -->
+        <!-- Right Left-> Right, Right 0 -->
+        <!-- Top Bottom -> 호리즌 노상관, Top, 0 -->
+        <!-- Bottom Top -> 호리즌 노상관, Bottom, 0 -->
+
+        <Grid Name="TopPanel"
+              Width="{Binding VisualSize.Width}"
+              Height="{Binding VisualSize.Height}">
+           
+            <Canvas Width="{Binding PercentWidth}"
+                    Height="{Binding PercentHeight}"
+                    HorizontalAlignment="{Binding PercentHAlignment}"
+                    VerticalAlignment="{Binding PercentVAlignment}"
+                    ClipToBounds="True">
+                <Image Name="SpriteImage"
+                       Source="{Binding SpriteSource}"
+                       Canvas.Top="{Binding CanvasTop}"
+                       Canvas.Bottom="{Binding CanvasBottom}"
+                       Canvas.Left="{Binding CanvasLeft}"
+                       Canvas.Right="{Binding CanvasRight}">
+
+                    <Image.LayoutTransform>
+                        <ScaleTransform ScaleX="{Binding ScaleX}"
+                                        ScaleY="{Binding ScaleY}">
+                        </ScaleTransform>
+                    </Image.LayoutTransform>
+                    <!--<Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLeftRightDirection}" Value="True">
+                            <Setter Property="Canvas.Left"   Value="0"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLeftRightDirection}" Value="False">
+                            <Setter Property="Canvas.Left"   Value="{x:Static sys:Double.NaN}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsTopBottomDirection}" Value="True">
+                            <Setter Property="Canvas.Top"    Value="0"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsTopBottomDirection}" Value="False">
+                            <Setter Property="Canvas.Left"   Value="{x:Static sys:Double.NaN}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsRightLeftDirection}" Value="True">
+                            <Setter Property="Canvas.Left"   Value="0"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsRightLeftDirection}" Value="True">
+                            <Setter Property="Canvas.Left"   Value="0"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsTopBottomDirection}" Value="False">
+                            <Setter Property="Canvas.Left"   Value="{x:Static sys:Double.NaN}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsBottomTopDirection}" Value="True">
+                            <Setter Property="Canvas.Left"   Value="{x:Static sys:Double.NaN}"/>
+                            <Setter Property="Canvas.Top"    Value="{x:Static sys:Double.NaN}"/>
+                            <Setter Property="Canvas.Right"  Value="{x:Static sys:Double.NaN}"/>
+                            <Setter Property="Canvas.Bottom" Value="0"/>
+                        </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>-->
+                </Image>
+            </Canvas>
+        </Grid>
+        
+        
+    </DataTemplate>
+</ResourceDictionary>

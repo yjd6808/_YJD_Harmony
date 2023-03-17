@@ -209,6 +209,8 @@
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                              
@@ -224,6 +226,8 @@
                             <Button Grid.Row="0" Grid.Column="4" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.EditBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredEditBoxIconImageSource}"/>
                             <Button Grid.Row="0" Grid.Column="5" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.CheckBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredCheckBoxIconImageSource}"/>
                             <Button Grid.Row="0" Grid.Column="6" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredToggleButtonIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="7" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredProgressBarIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="8" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static model:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredScrollBarIconImageSource}"/>
                             <Button Grid.Row="1" Grid.Column="0" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
                             <Button Grid.Row="1" Grid.Column="1" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
                         </Grid>

@@ -30,7 +30,7 @@ namespace SGToolsUI.Model
 
     public interface IDataDragReceiver
     {
-        void DragEnd(object data);
+        void DragEnd(Point p, object data);
         bool ContainPoint(Point p);
     }
 
@@ -108,7 +108,7 @@ namespace SGToolsUI.Model
             {
                 if (EndTargets[i].ContainPoint(p))
                 {
-                    EndTargets[i].DragEnd(Data);
+                    EndTargets[i].DragEnd(p, Data);
                     return true;
                 }
             }

@@ -59,6 +59,8 @@ namespace SGToolsUI
         public const string EditBoxCategoryName = "에딧박스";
         public const string CheckBoxCategoryName = "체크박스";
         public const string ToggleButtonCategoryName = "토글버튼";
+        public const string ProgressBarCategoryName = "프로그래스바";
+        public const string ScrollBarCategoryName = "스크롤바";
         public const int OtherCategoryOrder = 1;
 
         public const int InvalidValue = -1;
@@ -67,6 +69,5 @@ namespace SGToolsUI
 
         public static readonly Size DefaultVisualSize = new (50, 50);
         public static readonly Size DefaultBoxVisualSize = new(200, 30);
-
     }
 }

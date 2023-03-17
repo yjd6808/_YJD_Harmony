@@ -114,6 +114,7 @@ namespace SGToolsUI.View
         private void InitializeDragTargets()
         {
             ViewModel.DragState.EndTargets.Add(UIElementPropertyGrid);
+            ViewModel.DragState.EndTargets.Add(UIElementsControl);
             ViewModel.DragState.EndTargets.Add(UIElementTreeView);
         }
 

@@ -138,7 +138,7 @@ namespace SGToolsUI.CustomControl
             ViewModel.View.SpriteListBox.ScrollIntoView(spriteInfo.Sprite);
         }
 
-        public void DragEnd(object data)
+        public void DragEnd(Point p, object data)
         {
 
             /* 프로퍼티 그리드 내부 부모 관계도 (위에서부터 시작)
@@ -271,22 +271,16 @@ namespace SGToolsUI.CustomControl
 
             switch (element.UIElementType)
             {
-                case SGUIElementType.Group:
-                    break;
-                case SGUIElementType.Button:
-                    break;
-                case SGUIElementType.Label:
-                    break;
-                case SGUIElementType.Sprite:
-                    break;
-                case SGUIElementType.EditBox:
-                    break;
-                case SGUIElementType.CheckBox:
-                    break;
-                case SGUIElementType.ToggleButton:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                case SGUIElementType.Group:         break;
+                case SGUIElementType.Button:        break;
+                case SGUIElementType.Label:         break;
+                case SGUIElementType.Sprite:        break;
+                case SGUIElementType.EditBox:       break;
+                case SGUIElementType.CheckBox:      break;
+                case SGUIElementType.ToggleButton:  break;
+                case SGUIElementType.ScrollBar:     break;
+                case SGUIElementType.ProgressBar:   break;
+                default: throw new ArgumentOutOfRangeException();
             }
         }
 

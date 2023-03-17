@@ -27,11 +27,13 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using SGToolsUI.ViewModel;
 using System.Xml.Linq;
 using Accessibility;
+using MoreLinq.Extensions;
 using SGToolsCommon.CustomStyle;
 using SGToolsCommon.Primitive;
 using SGToolsUI.Extension;
 using SGToolsUI.Command.MainViewCommand;
 using Xceed.Wpf.AvalonDock.Controls;
+using SGToolsCommon.Sga;
 
 namespace SGToolsUI.CustomControl
 {
@@ -44,7 +46,7 @@ namespace SGToolsUI.CustomControl
         Vertical
     }
 
-    public class UIElementItemsControl : ItemsControl, INotifyPropertyChanged
+    public class UIElementItemsControl : ItemsControl, INotifyPropertyChanged, IDataDragReceiver
     {
         public bool IsMove
         {
@@ -766,5 +768,27 @@ namespace SGToolsUI.CustomControl
                 => (parameter as SGUISprite).RestoreSize();
         }
 
+        public void DragEnd(Point p, object data)
+        {
+            SgaSprite sprite = data as SgaSprite;
+
+            if (sprite == null)
+                return;
+
+            Point pos = Mouse.GetPosition(this);
+            ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
+
+            // 놓은 지점에있는 그룹들중 가장 위에 그룹을 가져온다.
+            SGUIGroup topLevelGroup = pickedElements.Select(element => element.IsGroup && element.ContainPoint(pos)).Cast<SGUIGroup>().LastOrDefault();
+            if (topLevelGroup == null) 
+                return;
+
+
+        }
+
+        public bool ContainPoint(Point p)
+        {
+            return VisualEx.ContainPoint(this, p);
+        }
     }
 }

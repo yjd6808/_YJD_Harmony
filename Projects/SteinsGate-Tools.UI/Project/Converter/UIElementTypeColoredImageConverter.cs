@@ -26,6 +26,8 @@ namespace SGToolsUI.Converter
                 case SGUIElementType.CheckBox: return R.UIColoredCheckBoxIconImageSource;
                 case SGUIElementType.EditBox: return R.UIColoredEditBoxIconImageSource;
                 case SGUIElementType.ToggleButton: return R.UIColoredToggleButtonIconImageSource;
+                case SGUIElementType.ProgressBar: return R.UIColoredProgressBarIconImageSource;
+                case SGUIElementType.ScrollBar: return R.UIColoredScrollBarIconImageSource;
             }
 
             return null;

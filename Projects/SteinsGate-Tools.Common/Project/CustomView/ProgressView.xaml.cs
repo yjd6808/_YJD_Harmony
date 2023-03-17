@@ -20,7 +20,7 @@ using System.Windows.Shapes;
 
 namespace SGToolsCommon.CustomView
 {
-    public partial class ProgressView : Window, INotifyPropertyChanged
+    public partial class ProgressView : Window
     {
         public string ProgressText
         {
@@ -48,7 +48,7 @@ namespace SGToolsCommon.CustomView
             nameof(ProgressText),
             typeof(string),
             typeof(ProgressView),
-            new PropertyMetadata("")
+            new PropertyMetadata(string.Empty)
         );
 
         public static DependencyProperty ProgressPercentageProperty = DependencyProperty.Register(
@@ -57,13 +57,5 @@ namespace SGToolsCommon.CustomView
             typeof(ProgressView),
             new PropertyMetadata(0.0)
         );
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
     }
 }

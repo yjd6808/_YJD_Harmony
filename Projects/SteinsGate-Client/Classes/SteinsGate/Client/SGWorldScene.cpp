@@ -90,18 +90,6 @@ bool SGWorldScene::init() {
 	reserveScene(SceneType::Login);
 	scheduleUpdate();	// 즉시 update 1회 호출함
 
-	auto progressTimer = ProgressTimer::create(Sprite::create("progressbar.png"));
-	progressTimer->setType(ProgressTimer::Type::BAR);
-	progressTimer->setMidpoint(Vec2(0, 1)); // 시작점을 위쪽으로 설정
-	progressTimer->setBarChangeRate(Vec2(1, 0)); // 가로방향으로만 변하도록 설정
-	progressTimer->setPercentage(100); // 초기 진행률 100% 설정
-	progressTimer->setPosition(Vec2()); // 위치 설정
-	this->addChild(progressTimer);
-
-	// Progress Timer 감소 액션 실행
-	auto progressTo = ProgressTo::create(5.0f, 0); // 5초 동안 0%로 감소하는 액션
-	progressTimer->runAction(progressTo);
-
 	return true;
 }
 

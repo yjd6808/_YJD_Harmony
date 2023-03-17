@@ -34,13 +34,16 @@ namespace SGToolsUI.Model
         public SGUILabel()
         {
             _visualSize = Constant.DefaultVisualSize;
+            _fontSize = 12;
+            _font = FontType.DF;
+            _fontColor = Brushes.Black.Color;
         }
 
         
         [Category(Constant.LabelCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override Size VisualSize
         {
-            get => _visualSize;
+            get => new((int)_visualSize.Width, (int)_visualSize.Height);
             set
             {
                 _visualSize = value;

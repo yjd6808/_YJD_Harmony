@@ -13,10 +13,6 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <StackPanel>
         <cus:TitleBar x:Name="TitleBar" Title="{Binding ProgressText}" FontSize="16" RealClose="False"/>
-        <ProgressBar Minimum="0"
-                     Maximum="100"
-                     Value="{Binding ProgressPercentage}" 
-                     Height="30"
-                     Width="150"/>
+        <ProgressBar Minimum="0" Maximum="100" Value="{Binding ProgressPercentage}" Height="30" Width="150"/>
     </StackPanel>
 </Window>
