@@ -21,18 +21,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
-using SGToolsUI.CustomControl;
-using SGToolsUI.ViewModel;
 using Point = System.Windows.Point;
 
-namespace SGToolsUI.Model.Main
+namespace SGToolsCommon.Model
 {
 
-    public interface IDataDragReceiver
-    {
-        void DragEnd(Point p, object data);
-        bool ContainPoint(Point p);
-    }
+   
 
 
     public enum DragState
@@ -44,9 +38,8 @@ namespace SGToolsUI.Model.Main
 
     public class DataDragState : Bindable
     {
-        public DataDragState(MainViewModel viewModel)
+        public DataDragState()
         {
-            _viewModel = viewModel;
         }
 
         public object Data { get; set; }
@@ -119,7 +112,6 @@ namespace SGToolsUI.Model.Main
         private Point _startPosition;
         private DragState _state = DragState.None;
         private UIElement _beginTarget;
-        private MainViewModel _viewModel;
 
         public void Clear()
         {

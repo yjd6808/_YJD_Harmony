@@ -24,6 +24,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Model;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;

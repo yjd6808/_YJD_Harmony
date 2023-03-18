@@ -26,6 +26,7 @@ using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.CustomView;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Model;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Command;
@@ -58,7 +59,7 @@ namespace SGToolsUI.ViewModel
             Exporter = new SGUIExporter(this);
             Commander = new MainCommandCenter(this);
             Commander.Execute(nameof(ReloadSgaPackage));
-            DragState = new DataDragState(this);
+            DragState = new DataDragState();
         }
 
         public void Loaded()
@@ -394,10 +395,6 @@ namespace SGToolsUI.ViewModel
         private SGUIGroupMaster _groupMaster;
     }
 
-    public interface IKeyboardInputReceiver
-    {
-        void OnKeyDown(SGKey key);
-        void OnKeyUp(SGKey key);
-    }
+   
 }
 

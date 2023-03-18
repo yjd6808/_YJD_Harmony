@@ -28,6 +28,7 @@ using System.Xml.Linq;
 using Accessibility;
 using MoreLinq.Extensions;
 using SGToolsCommon.CustomStyle;
+using SGToolsCommon.Model;
 using SGToolsCommon.Primitive;
 using SGToolsUI.Extension;
 using SGToolsUI.Command.MainViewCommand;

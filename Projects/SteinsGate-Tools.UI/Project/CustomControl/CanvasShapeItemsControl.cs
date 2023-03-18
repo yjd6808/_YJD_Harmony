@@ -26,6 +26,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
+using SGToolsCommon.Model;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Extension;
 using SGToolsUI.Model.Main;
@@ -256,6 +257,8 @@ namespace SGToolsUI.CustomControl
             if (key == SGKey.Z)
                 IsHideSelection = true;
 
+           
+
             if (!ViewModel.KeyState.IsModifierKeyPressed)
             {
                 if (ViewModel.KeyState.IsPressed(SGKey.X))
@@ -272,6 +275,13 @@ namespace SGToolsUI.CustomControl
                     ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
                 }
             }
+
+            if (key == SGKey.Delete)
+            {
+                if (ViewModel.GroupMaster.HasSelectedElement && MessageBoxEx.ShowTopMost("정말로 삭제하시겠습니까?", "질문임", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    ViewModel.Commander.DeleteUIElement.Execute(null);
+            }
+
         }
 
         public void OnKeyUp(SGKey key)

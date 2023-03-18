@@ -29,6 +29,7 @@ using MoreLinq;
 using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Model;
 using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
 using SGToolsCommon.ThirdParty;

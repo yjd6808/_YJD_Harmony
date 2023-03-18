@@ -27,7 +27,7 @@ using SGToolsCommon;
 using SGToolsCommon.Extension;
 using Vanara.PInvoke;
 
-namespace SGToolsUI.Model.Main
+namespace SGToolsCommon.Model
 {
 
     public enum SGKey
