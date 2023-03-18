@@ -15,6 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -173,32 +174,14 @@ namespace SGToolsUI.Model
         {
             JObject root = base.ToJObject();
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            string sga;
-            string img;
-            GetSgaImgFileName(out sga, out img);
+            SGUISpriteInfoExt.TryGetSgaImgFileName(in _sprites, out string sga, out string img);
             root[JsonSgaKey] = sga;
             root[JsonImgKey] = img;
-            root[JsonSpriteKey] = $"{_sprites[0].SpriteIndex} {_sprites[1].SpriteIndex} {_sprites[2].SpriteIndex} {_sprites[3].SpriteIndex}";
+            root[JsonSpriteKey] = _sprites.ToFullString();
             return root;
         }
 
-        private void GetSgaImgFileName(out string sga, out string img)
-        {
-            sga = string.Empty;
-            img = string.Empty;
-            int i;
-            
-            for (i = 0; i < _sprites.Length; ++i)
-                if (!_sprites[i].IsNull)
-                    break;
-
-            if (i == _sprites.Length)
-                return;
-
-            sga = _sprites[i].Sga.FileNameWithoutExt;
-            img = _sprites[i].Img.Header.NameWithoutExt;
-        }
-
+       
         public override void ParseJObject(JObject root)
         {
             base.ParseJObject(root);
@@ -215,17 +198,7 @@ namespace SGToolsUI.Model
 
             int[] sprites = new int[StateCount];
             StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
-
-
-            for (int i = 0; i < StateCount; ++i)
-            {
-                if (sprites[i] != Constant.InvalidValue)
-                {
-                    SgaSprite sprite = img.GetSprite(sprites[i]) as SgaSprite;
-                    if (sprite == null) throw new Exception($"{sgaName} -> {imgName} -> {sprites[i]}가 SgaSprite 타입이 아닙니다.");
-                    _sprites[i] = new SGUISpriteInfo(sga, img, sprite); 
-                }
-            }
+            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites);
         }
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.

@@ -242,41 +242,15 @@ namespace SGToolsUI.Model
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
             string sga;
             string img;
-            GetSgaImgFileName(out sga, out img);
+
+            if (!SGUISpriteInfoExt.TryGetSgaImgFileName(in _sprites[0], out sga, out img))
+                SGUISpriteInfoExt.TryGetSgaImgFileName(in _sprites[1], out sga, out img);
 
             root[JsonSgaKey] = sga;
             root[JsonImgKey] = img;
-            root[JsonSpriteKey] = $"{_sprites[0][0].SpriteIndex} {_sprites[0][1].SpriteIndex} {_sprites[0][2].SpriteIndex} {_sprites[0][3].SpriteIndex}";
-            root[JsonToggleSpriteKey] = $"{_sprites[1][0].SpriteIndex} {_sprites[1][1].SpriteIndex} {_sprites[1][2].SpriteIndex} {_sprites[1][3].SpriteIndex}";
+            root[JsonSpriteKey] = _sprites[0].ToFullString();
+            root[JsonToggleSpriteKey] = _sprites[1].ToFullString();
             return root;
-        }
-
-        private void GetSgaImgFileName(out string sga, out string img)
-        {
-            sga = string.Empty;
-            img = string.Empty;
-            int i;
-
-            for (i = 0; i < StateCount; ++i)
-                if (!_sprites[0][i].IsNull)
-                    break;
-
-            if (i != StateCount)
-            {
-                sga = _sprites[0][i].Sga.FileNameWithoutExt;
-                img = _sprites[0][i].Img.Header.NameWithoutExt;
-                return;
-            }
-
-            for (i = 0; i < StateCount; ++i)
-                if (!_sprites[1][i].IsNull)
-                    break;
-
-            if (i == StateCount)
-                return;
-
-            sga = _sprites[1][i].Sga.FileNameWithoutExt;
-            img = _sprites[1][i].Img.Header.NameWithoutExt;
         }
 
         public override void ParseJObject(JObject root)
@@ -299,27 +273,8 @@ namespace SGToolsUI.Model
             StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
             StringEx.ParseIntNumberN((string)root[JsonToggleSpriteKey], toggledSprites);
 
-            for (int i = 0; i < StateCount; ++i)
-            {
-                if (sprites[i] != Constant.InvalidValue)
-                {
-                    SgaSprite sprite = img.GetSprite(sprites[i]) as SgaSprite;
-                    if (sprite == null)
-                        throw new Exception($"{sgaName} -> {imgName} -> {sprites[i]}가 SgaSprite 타입이 아닙니다.");
-                    _sprites[0][i] = new SGUISpriteInfo(sga, img, sprite);
-                }
-            }
-
-            for (int i = 0; i < StateCount; ++i)
-            {
-                if (toggledSprites[i] != Constant.InvalidValue)
-                {
-                    SgaSprite sprite = img.GetSprite(toggledSprites[i]) as SgaSprite;
-                    if (sprite == null)
-                        throw new Exception($"{sgaName} -> {imgName} -> {toggledSprites[i]}가 SgaSprite 타입이 아닙니다.");
-                    _sprites[1][i] = new SGUISpriteInfo(sga, img, sprite);
-                }
-            }
+            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites[0]);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in toggledSprites, in _sprites[1]);
         }
 
 

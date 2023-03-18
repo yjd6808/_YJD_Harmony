@@ -465,7 +465,7 @@ namespace SGToolsUI.CustomControl
 
             _contextMenu.Items.Remove(_restoreSizeMenuItem);
 
-            if (lastSelectedElement is SGUISprite)
+            if (lastSelectedElement is ISizeRestorable)
             {
                 _contextMenu.Items.Add(_restoreSizeMenuItem);
                 _restoreSizeMenuItem.CommandParameter = lastSelectedElement;
@@ -790,7 +790,7 @@ namespace SGToolsUI.CustomControl
             public bool CanExecute(object? parameter) => true;
 
             public void Execute(object? parameter)
-                => (parameter as SGUISprite).RestoreSize();
+                => (parameter as ISizeRestorable).RestoreSize();
         }
 
         public void DragEnd(Point p, object data)

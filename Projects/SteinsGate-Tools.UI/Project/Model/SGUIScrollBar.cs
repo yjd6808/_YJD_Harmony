@@ -24,14 +24,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
-using Vanara.PInvoke;
+using SGToolsCommon.Sga;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model
 {
     [CategoryOrder(Constant.ScrollBarCategoryName, Constant.OtherCategoryOrder)]
-    public class SGUIScrollBar : SGUIElement
+    public class SGUIScrollBar : SGUIElement, ISizeRestorable
     {
         public const int IndexUpNormal = 0;
         public const int IndexUpOver = 1;
@@ -43,11 +44,11 @@ namespace SGToolsUI.Model
 
         public const int OrderUpNormal = 1;
         public const int OrderUpOver = 2;
-        public const int OrderTrack = 3;
-        public const int OrderThumbNormal = 4;
-        public const int OrderThumbOver = 5;
-        public const int OrderDownNormal = 6;
-        public const int OrderDownOver = 7;
+        public const int OrderDownNormal = 3;
+        public const int OrderDownOver = 4;
+        public const int OrderTrack = 5;
+        public const int OrderThumbNormal = 6;
+        public const int OrderThumbOver = 7;
         public const int OrderSize = 8;
         public const int OrderTrackSize = 9;
 
@@ -64,6 +65,9 @@ namespace SGToolsUI.Model
         public static int Seq = 0;
         public override void CreateInit() => _visualName = $"스크롤바_{Seq++}";
 
+
+
+        [Browsable(false)] public double VisualUpHeight => VisualUpSprite.IsNull ? 0 : VisualUpSprite.Height;
         [Browsable(false)] public BitmapSource VisualUpSpriteSource => VisualUpSprite.Source;
         [Browsable(false)]
         public SGUISpriteInfo VisualUpSprite
@@ -86,6 +90,8 @@ namespace SGToolsUI.Model
             }
         }
 
+
+        [Browsable(false)] public double VisualDownHeight => VisualDownSprite.IsNull ? 0 : VisualDownSprite.Height;
         [Browsable(false)] public BitmapSource VisualDownSpriteSource => VisualDownSprite.Source;
         [Browsable(false)]
         public SGUISpriteInfo VisualDownSprite
@@ -107,6 +113,7 @@ namespace SGToolsUI.Model
             }
         }
 
+        [Browsable(false)] public double VisualThumbHeight => VisualThumbSprite.IsNull ? 0 : VisualThumbSprite.Height;
         [Browsable(false)] public BitmapSource VisualThumbSpriteSource => VisualThumbSprite.Source;
         [Browsable(false)]
         public SGUISpriteInfo VisualThumbSprite
@@ -128,7 +135,28 @@ namespace SGToolsUI.Model
             }
         }
 
+   
 
+        
+
+        // 4개중 제일 너비가 큰걸로 잡음
+        private void UpdateVisualWidth()
+        {
+            _visualSize.Width = MaxWidth;
+            _widthInitialized = true;
+
+            if (_visualSize.Width <= 1)
+                _visualSize.Width = Constant.DefaultVisualSize.Width;
+        }
+
+        private void UpdateVisualHeight() // 내가 강제로 적용하고잫라는 트랙 높이
+        {
+            _visualSize.Height = MaxHeight;
+            _heightInitialized = true;
+
+            if (_visualSize.Height <= 1)
+                _visualSize.Height = Constant.DefaultVisualSize.Height;
+        }
         [Browsable(false)] public BitmapSource VisualTrackSpriteSource => _sprites[IndexTrack].Source;
         [Category(Constant.ScrollBarCategoryName), DisplayName("트랙"), PropertyOrder(OrderTrack)]
         public SGUISpriteInfo Track
@@ -138,45 +166,13 @@ namespace SGToolsUI.Model
             {
                 _sprites[IndexTrack] = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(TrackHeight));
                 OnPropertyChanged(nameof(VisualTrackSpriteSource));
                 OnSpriteChanged();
             }
         }
 
-
-        
-
-        // 4개중 제일 너비가 큰걸로 잡음
-        private void UpdateVisualWidth()
-        {
-            SGUISpriteInfo visualDown = VisualDownSprite;
-            SGUISpriteInfo visualUp = VisualUpSprite;
-            SGUISpriteInfo visualThumb = VisualThumbSprite;
-
-            _visualSize.Width = MathEx.Max(visualDown.Width, visualUp.Width, visualThumb.Width, _sprites[IndexTrack].Width);
-
-            if (_visualSize.Width <= 1)
-                _visualSize.Width = Constant.DefaultVisualSize.Width;
-        }
-
-        private void UpdateVisualHeight()
-        {
-            int height = 0;
-
-            SGUISpriteInfo visualDown = VisualDownSprite;
-            SGUISpriteInfo visualUp = VisualUpSprite;
-            SGUISpriteInfo visualThumb = VisualThumbSprite;
-
-            height += visualUp.Height;
-            height += Math.Max(visualThumb.Height, _sprites[IndexTrack].Height);
-            height += visualDown.Height;
-            _visualSize.Height = height;
-
-            if (height <= 1)
-                _visualSize.Height = Constant.DefaultVisualSize.Height;
-        }
-
-        [Category(Constant.ScrollBarCategoryName), DisplayName("UP Normal"), PropertyOrder(OrderUpNormal)]
+        [Category(Constant.ScrollBarCategoryName), DisplayName("위 Normal"), PropertyOrder(OrderUpNormal)]
         public SGUISpriteInfo UpNormal
         {
             get => _sprites[IndexUpNormal];
@@ -186,6 +182,7 @@ namespace SGToolsUI.Model
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualUpSprite));
                 OnPropertyChanged(nameof(VisualUpSpriteSource));
+                OnPropertyChanged(nameof(VisualUpHeight));
                 OnSpriteChanged();
                 
             }
@@ -199,7 +196,7 @@ namespace SGToolsUI.Model
             OnPropertyChanged(nameof(VisualRect));
         }
 
-        [Category(Constant.ScrollBarCategoryName), DisplayName("UP Over"), PropertyOrder(OrderUpOver)]
+        [Category(Constant.ScrollBarCategoryName), DisplayName("위 Over"), PropertyOrder(OrderUpOver)]
         public SGUISpriteInfo UpOver
         {
             get => _sprites[IndexUpOver];
@@ -208,11 +205,12 @@ namespace SGToolsUI.Model
                 _sprites[IndexUpOver] = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualUpSprite));
+                OnPropertyChanged(nameof(VisualUpHeight));
                 OnPropertyChanged(nameof(VisualUpSpriteSource));
                 OnSpriteChanged();
             }
         }
-        [Category(Constant.ScrollBarCategoryName), DisplayName("Down Normal"), PropertyOrder(OrderDownNormal)]
+        [Category(Constant.ScrollBarCategoryName), DisplayName("아래 Normal"), PropertyOrder(OrderDownNormal)]
         public SGUISpriteInfo DownNormal
         {
             get => _sprites[IndexDownNormal];
@@ -221,11 +219,12 @@ namespace SGToolsUI.Model
                 _sprites[IndexDownNormal] = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualDownSprite));
+                OnPropertyChanged(nameof(VisualDownHeight));
                 OnPropertyChanged(nameof(VisualDownSpriteSource));
                 OnSpriteChanged();
             }
         }
-        [Category(Constant.ScrollBarCategoryName), DisplayName("Down Over"), PropertyOrder(OrderDownOver)]
+        [Category(Constant.ScrollBarCategoryName), DisplayName("아래 Over"), PropertyOrder(OrderDownOver)]
         public SGUISpriteInfo DownOver
         {
             get => _sprites[IndexDownOver];
@@ -234,12 +233,13 @@ namespace SGToolsUI.Model
                 _sprites[IndexDownOver] = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualDownSprite));
+                OnPropertyChanged(nameof(VisualDownHeight));
                 OnPropertyChanged(nameof(VisualDownSpriteSource));
                 OnSpriteChanged();
             }
         }
 
-        [Category(Constant.ScrollBarCategoryName), DisplayName("Thumb Normal"), PropertyOrder(OrderThumbNormal)]
+        [Category(Constant.ScrollBarCategoryName), DisplayName("바 Normal"), PropertyOrder(OrderThumbNormal)]
         public SGUISpriteInfo ThumbNormal
         {
             get => _sprites[IndexThumbNormal];
@@ -248,12 +248,13 @@ namespace SGToolsUI.Model
                 _sprites[IndexThumbNormal] = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualThumbSprite));
+                OnPropertyChanged(nameof(VisualThumbHeight));
                 OnPropertyChanged(nameof(VisualThumbSpriteSource));
                 OnSpriteChanged();
             }
         }
 
-        [Category(Constant.ScrollBarCategoryName), DisplayName("Thumb Over"), PropertyOrder(OrderThumbOver)]
+        [Category(Constant.ScrollBarCategoryName), DisplayName("바 Over"), PropertyOrder(OrderThumbOver)]
         public SGUISpriteInfo ThumbOver
         {
             get => _sprites[IndexThumbOver];
@@ -262,6 +263,7 @@ namespace SGToolsUI.Model
                 _sprites[IndexThumbOver] = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualThumbSprite));
+                OnPropertyChanged(nameof(VisualThumbHeight));
                 OnPropertyChanged(nameof(VisualThumbSpriteSource));
                 OnSpriteChanged();
             }
@@ -287,14 +289,79 @@ namespace SGToolsUI.Model
         //    }
         //}
 
+        public double MaxWidth
+        {
+            get
+            {
+                SGUISpriteInfo visualDown = VisualDownSprite;
+                SGUISpriteInfo visualUp = VisualUpSprite;
+                SGUISpriteInfo visualThumb = VisualThumbSprite;
 
+                if (!_widthInitialized)
+                    return MathEx.Max(visualDown.Width, visualUp.Width, visualThumb.Width, _sprites[IndexTrack].Width);
+
+                return MathEx.Max(_visualSize.Width, visualDown.Width, visualUp.Width, visualThumb.Width, _sprites[IndexTrack].Width);
+            }
+        }
+
+        public double MaxHeight
+        {
+            get
+            {
+                SGUISpriteInfo visualDown = VisualDownSprite;
+                SGUISpriteInfo visualUp = VisualUpSprite;
+                SGUISpriteInfo visualThumb = VisualThumbSprite;
+
+                double height = 0;
+                height += visualUp.Height;
+                height += MathEx.Max(visualThumb.Height, _sprites[IndexTrack].Height);
+                height += visualDown.Height;
+
+                if (!_heightInitialized)
+                    return height;
+
+                return Math.Max(_visualSize.Height, height);
+            }
+        }
+
+        public double TrackHeight
+        {
+            get
+            {
+                double trackHeight = _visualSize.Height;
+
+                SGUISpriteInfo visualDown = VisualDownSprite;
+                SGUISpriteInfo visualUp = VisualUpSprite;
+
+                if (!visualUp.IsNull)
+                    trackHeight -= visualUp.Height;
+
+                if (!visualDown.IsNull)
+                    trackHeight -= visualDown.Height;
+
+                return trackHeight;
+            }
+        }
+
+        [ReadOnly(false)]
         [Category(Constant.ScrollBarCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override Size VisualSize => _visualSize;
+        public override Size VisualSize
+        {
+            get => _visualSize;
+            set
+            {
+                _visualSize = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(TrackSize));
+                OnPropertyChanged(nameof(TrackHeight));
+                OnPropertyChanged(nameof(VisualRect));
+            }
+        }
 
         [Category(Constant.ScrollBarCategoryName), DisplayName("트랙 크기"), PropertyOrder(OrderTrackSize)]
         public Size TrackSize
         {
-            get => _sprites[IndexTrack].Size;
+            get => new ((int)_visualSize.Width, TrackHeight);
             set
             {
                 _visualSize.Width = Math.Max(_visualSize.Width, value.Width);
@@ -335,8 +402,22 @@ namespace SGToolsUI.Model
             }
         }
 
+        public void RestoreSize()
+        {
+            _widthInitialized = false;
+            _heightInitialized = false;
 
-        
+            UpdateVisualWidth();
+            UpdateVisualHeight();
+
+            OnPropertyChanged(nameof(VisualUpHeight));
+            OnPropertyChanged(nameof(VisualThumbHeight));
+            OnPropertyChanged(nameof(VisualDownHeight));
+            OnPropertyChanged(nameof(TrackHeight));
+            OnPropertyChanged(nameof(VisualSize));
+            OnPropertyChanged(nameof(VisualRect));
+        }
+
         private bool IsVisualUpRectContainPoint(Point p)
         {
             SGUISpriteInfo visualUp = VisualUpSprite;
@@ -372,7 +453,7 @@ namespace SGToolsUI.Model
                 visualDownRect.Y += VisualUpSprite.Height;
 
             if (!_sprites[IndexTrack].IsNull)
-                visualDownRect.Y += _sprites[IndexTrack].Height;
+                visualDownRect.Y += TrackHeight;
 
             return visualDownRect.Contains(p);
         }
@@ -449,8 +530,46 @@ namespace SGToolsUI.Model
         {
             SGUIScrollBar scrollbar = new SGUIScrollBar();
             scrollbar.CopyFrom(this);
+            scrollbar._visualSize = VisualSize;
             Array.Copy(_sprites, scrollbar._sprites, _sprites.Length);
+            //scrollbar.UpdateVisualWidth();
             return scrollbar;
+        }
+
+        public override JObject ToJObject()
+        {
+            JObject root = base.ToJObject();
+            SGUISpriteInfoExt.TryGetSgaImgFileName(in _sprites, out string sga, out string img);
+            root[JsonSgaKey] = sga;
+            root[JsonImgKey] = img;
+            root[JsonSpriteKey] = _sprites.ToFullString();
+            root[JsonTrackSizeKey] = TrackSize.ToFullString();
+            return root;
+        }
+
+
+        public override void ParseJObject(JObject root)
+        {
+            base.ParseJObject(root);
+
+            string sgaName = (string)root[JsonSgaKey];
+
+            if (sgaName == string.Empty)
+                return;
+
+            string imgName = (string)root[JsonImgKey];
+            string trackSizeString = (string)root[JsonTrackSizeKey];
+
+            Size trackSize = SizeEx.ParseFullString(trackSizeString);
+
+            SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
+            SgaPackage sga = img.Parent;
+            int[] sprites = new int[7];
+            StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites);
+
+            _visualSize.Width = Math.Max(trackSize.Width, MaxWidth);
+            _visualSize.Height = Math.Max(trackSize.Height, MaxHeight);
         }
 
         // 실제 기입되는 중요한 데이터
@@ -461,5 +580,8 @@ namespace SGToolsUI.Model
         private int _thumbState;
         private int _downState;
         private Size _visualSize;
+        private bool _widthInitialized;
+        private bool _heightInitialized;
+        
     }
 }

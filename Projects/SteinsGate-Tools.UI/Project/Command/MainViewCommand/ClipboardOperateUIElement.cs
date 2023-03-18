@@ -150,6 +150,10 @@ namespace SGToolsUI.Command.MainViewCommand
             }
 
             group.InsertChildren(cloned, index);
+
+            // 새로 추가된 원소들 선택함
+            ViewModel.GroupMaster.DeselectAll();
+            cloned.ForEachRecursive(element => element.Selected = true);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

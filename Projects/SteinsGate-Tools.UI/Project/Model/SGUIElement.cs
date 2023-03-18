@@ -112,6 +112,9 @@ namespace SGToolsUI.Model
         // 프로그래스바
         public const string JsonDirectionKey = "direction";
 
+        // 스크롤바
+        public const string JsonTrackSizeKey = "track_size";
+
 
 
 
@@ -293,7 +296,7 @@ namespace SGToolsUI.Model
 
 
         [ReadOnly(true)]
-        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
+        [Category(Constant.ElementCategoryName), DisplayName("크기")/*, PropertyOrder(OrderVisualSize)*/]
         [Description("UI엘리먼트의 크기를 의미")]
         public virtual Size VisualSize
         {
@@ -1196,5 +1199,10 @@ namespace SGToolsUI.Model
         // =====================================================
     
 
+    }
+
+    public interface ISizeRestorable
+    {
+        void RestoreSize();
     }
 }

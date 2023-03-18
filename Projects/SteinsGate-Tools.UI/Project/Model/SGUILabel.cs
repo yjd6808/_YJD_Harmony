@@ -39,7 +39,8 @@ namespace SGToolsUI.Model
             _fontColor = Brushes.Black.Color;
         }
 
-        
+
+        [ReadOnly(false)]
         [Category(Constant.LabelCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override Size VisualSize
         {

@@ -7,12 +7,12 @@
     <DataTemplate x:Key="ScrollBarCanvasTemplate"
                   DataType="{x:Type mo:SGUIScrollBar}">
         <StackPanel>
-            <Image Source="{Binding VisualUpSpriteSource}" Width="{Binding VisualSize.Width}"/>
+            <Image Source="{Binding VisualUpSpriteSource}" Width="{Binding VisualSize.Width}" Height="{Binding VisualUpHeight}" Stretch="Fill"/>
             <Grid>
-                <Image Source="{Binding VisualTrackSpriteSource}" Width="{Binding VisualSize.Width}"/>
-                <Image Source="{Binding VisualThumbSpriteSource}" Width="{Binding VisualSize.Width}" VerticalAlignment="Top"/>
+                <Image Source="{Binding VisualTrackSpriteSource}" Width="{Binding VisualSize.Width}" Height="{Binding TrackHeight}" Stretch="Fill"/>
+                <Image Source="{Binding VisualThumbSpriteSource}" Width="{Binding VisualSize.Width}" Height="{Binding VisualThumbHeight}" VerticalAlignment="Top" Stretch="Fill"/>
             </Grid>
-            <Image Source="{Binding VisualDownSpriteSource}" Width="{Binding VisualSize.Width}"/>
+            <Image Source="{Binding VisualDownSpriteSource}" Width="{Binding VisualSize.Width}" Height="{Binding VisualDownHeight}" Stretch="Fill"/>
         </StackPanel>
         
         

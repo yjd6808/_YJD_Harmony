@@ -16,7 +16,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 namespace SGToolsUI.Model
 {
     [CategoryOrder(Constant.SpriteCategoryName, Constant.OtherCategoryOrder)]
-    public class SGUISprite : SGUIElement
+    public class SGUISprite : SGUIElement, ISizeRestorable
     {
         public const int OrderSize = 1;
         public const int OrderSprite = 1;
