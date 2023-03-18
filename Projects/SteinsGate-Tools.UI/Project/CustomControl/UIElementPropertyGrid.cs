@@ -37,7 +37,7 @@ using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using PropertyItem = Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem;
 using System.Drawing.Imaging;
-using SGToolsUI.ModelTemplate;
+using SGToolsUI.ModelTemplate.Main;
 using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.CustomControl

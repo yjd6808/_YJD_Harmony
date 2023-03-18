@@ -39,7 +39,9 @@ namespace SGToolsUI.Command.MainViewCommand
             ViewModel.LogBox.AddLog("[글로벌 단축키 목록]");
             ViewModel.LogBox.AddLog("Ctrl + S: 저장");
             ViewModel.LogBox.AddLog("Ctrl + L: 로그뷰");
-            
+            ViewModel.LogBox.AddLog("Ctrl + B: 백업뷰");
+            ViewModel.LogBox.AddLog("Ctrl + O: 세팅뷰");
+
             ViewModel.LogBox.AddLog("F6: 파일 다시 로딩");
             ViewModel.LogBox.AddLog("F7: 백업 텍스트 박스 포커싱");
             ViewModel.LogBox.AddLog("F8: 백업 폴더 열기");

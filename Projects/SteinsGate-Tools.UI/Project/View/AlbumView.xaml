@@ -52,8 +52,7 @@
         <Separator DockPanel.Dock="Top" />
 
         <ListBox DockPanel.Dock="Left"
-                 MinWidth="150"
-                 MaxWidth="150"
+                 Width="150"
                  Height="600"
                  x:Name="PackageListBox"
                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
@@ -65,8 +64,7 @@
         </ListBox>
 
         <ListBox DockPanel.Dock="Left"
-                 MinWidth="150"
-                 MaxWidth="150"
+                 Width="150"
                  Height="600"
                  x:Name="ElementListBox"
                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
@@ -77,9 +75,10 @@
                  SelectionChanged="ElementListBox_OnSelectionChanged">
         </ListBox>
 
-        <ScrollViewer DockPanel.Dock="Left">
-            <ListBox 
-                     Width="600"
+        <ScrollViewer DockPanel.Dock="Left" 
+                      Width="600" 
+                      Height="600">
+            <ListBox Width="600"
                      Name="AlbumListBox"
                      PreviewKeyDown="AlbumListBox_OnPreviewKeyDown"
                      PreviewMouseDoubleClick="AlbumListBox_OnPreviewMouseDoubleClick"

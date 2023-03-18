@@ -52,6 +52,7 @@ namespace SGToolsUI.ViewModel
             LogErrorHandler = new Action<Exception>((ex) => LogBox.AddLog(ex));
             LogView = new LogView(LogBox);
             AlbumView = new AlbumView(this);
+            BackupView = new BackupView(this);
             Loader = new SGUILoader(this);
             Saver = new SGUISaver(this);
             Exporter = new SGUIExporter(this);
@@ -355,6 +356,7 @@ namespace SGToolsUI.ViewModel
         public LogView LogView { get; }
         public ProgressView ProgressView { get; } = new();
         public AlbumView AlbumView { get; }
+        public BackupView BackupView { get; }
         public SGUILoader Loader { get; }
         public SGUISaver Saver { get; }
         public SGUIExporter Exporter { get; }

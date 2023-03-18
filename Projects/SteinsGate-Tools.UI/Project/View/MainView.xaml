@@ -18,10 +18,11 @@
 
         xmlns:local="clr-namespace:SGToolsUI"
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+        xmlns:res="clr-namespace:SGToolsUI.Resource"
+        xmlns:ctrl="clr-namespace:SGToolsUI.CustomControl"
+
         xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
-        xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
-        xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
-        xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+        xmlns:mo_main_selector="clr-namespace:SGToolsUI.ModelSelector.Main"
 
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
         xmlns:common_local="clr-namespace:SGToolsCommon;assembly=SGToolsCommon"
@@ -157,6 +158,7 @@
                     <MenuItem Header="보기">
                         <MenuItem Header="로그 뷰" Command="{Binding Commander.OpenLogView}" />
                         <MenuItem Header="앨범 뷰" Command="{Binding Commander.OpenAlbumView}" />
+                        <MenuItem Header="백업 뷰" Command="{Binding Commander.OpenBackupView}" />
                     </MenuItem>
                     <MenuItem Style="{StaticResource MenuItemSeparator}" />
                     <MenuItem Header="도구">
@@ -219,29 +221,29 @@
                                  <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>
 
-                            <Button Grid.Row="0" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredGroupIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredButtonIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="2" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Label}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredLabelIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="3" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Sprite}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredSpriteIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="4" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.EditBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredEditBoxIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="5" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.CheckBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredCheckBoxIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="6" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredToggleButtonIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="7" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredProgressBarIconImageSource}"/>
-                            <Button Grid.Row="0" Grid.Column="8" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredScrollBarIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="0" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Group}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredGroupIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="1" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredButtonIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="2" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Label}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredLabelIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="3" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Sprite}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredSpriteIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="4" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.EditBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredEditBoxIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="5" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.CheckBox}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredCheckBoxIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="6" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredToggleButtonIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="7" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredProgressBarIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="8" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredScrollBarIconImageSource}"/>
                             <Button Grid.Row="1" Grid.Column="0" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
                             <Button Grid.Row="1" Grid.Column="1" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
                         </Grid>
                         <Separator />
                     </StackPanel>
 
-                    <ui_ctrl:UIElementTreeView Grid.Row="1"
+                    <ctrl:UIElementTreeView Grid.Row="1"
                                                x:Name="UIElementTreeView"
                                                Background="Transparent"
                                                BorderThickness="0"
-                                               ItemTemplateSelector="{x:Static ui_selector:UIElementTreeViewSelector.Selector}"
+                                               ItemTemplateSelector="{x:Static mo_main_selector:UIElementTreeViewSelector.Selector}"
                                                ItemsSource="{Binding GroupMaster.Children}"
                                                Style="{StaticResource UIElementTreeView}">
-                    </ui_ctrl:UIElementTreeView>
+                    </ctrl:UIElementTreeView>
                 </Grid>
             </ScrollViewer>
             <Border Grid.Row="1" Style="{StaticResource BorderSeparatorHorizontal}"/>
@@ -348,11 +350,11 @@
                                               엘리먼트 캔버스
         
                 ############################################################################### -->
-                <ui_ctrl:UIElementItemsControl x:Name="UIElementsControl"
+                <ctrl:UIElementItemsControl x:Name="UIElementsControl"
                                                ItemsSource="{Binding Source={StaticResource UIElementsControlCollectionViewSource}}"
-                                               ItemTemplateSelector="{x:Static ui_selector:UIElementCanvasSelector.Selector}"
+                                               ItemTemplateSelector="{x:Static mo_main_selector:UIElementCanvasSelector.Selector}"
                                                Style="{StaticResource UIElementItemsControl}">
-                </ui_ctrl:UIElementItemsControl>
+                </ctrl:UIElementItemsControl>
 
 
                 <!-- ###############################################################################
@@ -362,11 +364,11 @@
                 ############################################################################### -->
 
 
-                <ui_ctrl:CanvasShapeItemsControl x:Name="CanvasShapesControl"
+                <ctrl:CanvasShapeItemsControl x:Name="CanvasShapesControl"
                                            ItemsSource="{Binding CanvasShapes, RelativeSource={RelativeSource Self}}"
-                                           ItemTemplateSelector="{x:Static ui_selector:CanvasShapeSelector.Selector}"
+                                           ItemTemplateSelector="{x:Static mo_main_selector:CanvasShapeSelector.Selector}"
                                            Style="{StaticResource CanvasShapeItemsControl}">
-                </ui_ctrl:CanvasShapeItemsControl>
+                </ctrl:CanvasShapeItemsControl>
             </Grid>
 
             <Grid >
@@ -458,7 +460,7 @@
             
             <StackPanel Grid.Row="1"
                         Orientation="Horizontal">
-                <ui_ctrl:SgaPackageListBox 
+                <ctrl:SgaPackageListBox 
                         MinWidth="100"
                          MaxWidth="100"
                          x:Name="PackageListBox"
@@ -467,9 +469,9 @@
                          Style="{StaticResource SgaPackageListBox}"
                          ItemsSource="{Binding PackManager.Packages, Mode=OneWay}"
                          SelectedItem="{Binding SelectedPackage, Mode=OneWay}">
-                </ui_ctrl:SgaPackageListBox>
+                </ctrl:SgaPackageListBox>
 
-                <ui_ctrl:SgaElementListBox MinWidth="150"
+                <ctrl:SgaElementListBox MinWidth="150"
                          MaxWidth="150" 
                          x:Name="ElementListBox"
                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
@@ -477,16 +479,16 @@
                          SelectedItem="{Binding SelectedImage.Header, Mode=OneWay}"
                          ItemContainerStyle="{StaticResource SgaElementListBoxItemContainerStyle}"
                          ItemsSource="{Binding SelectedPackage.ElementHeaderList, Mode=OneWay}">
-                </ui_ctrl:SgaElementListBox>
+                </ctrl:SgaElementListBox>
 
-                <ui_ctrl:SgaSpriteListBox MinWidth="100"
+                <ctrl:SgaSpriteListBox MinWidth="100"
                          MaxWidth="100"
                          x:Name="SpriteListBox"
                          ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                          Style="{StaticResource SgaSpriteListBox}"
                          SelectedItem="{Binding SelectedSprite, Mode=OneWay}"
                          ItemsSource="{Binding SelectedImage.SpriteList, Mode=OneWay}">
-                </ui_ctrl:SgaSpriteListBox>
+                </ctrl:SgaSpriteListBox>
             </StackPanel>
 
             <Canvas Grid.Row="2" 
@@ -504,7 +506,7 @@
                  -->
                 <Grid Width="{Binding ElementName=PropertyGridCanvas, Path=ActualWidth}"
                       Height="{Binding ElementName=PropertyGridCanvas, Path=ActualHeight}">
-                    <ui_ctrl:UIElementPropertyGrid x:Name="UIElementPropertyGrid" 
+                    <ctrl:UIElementPropertyGrid x:Name="UIElementPropertyGrid" 
                                                    FontSize="12" 
                                                    Width="Auto"
                                                    AutoGenerateProperties="True"
@@ -514,7 +516,7 @@
                         <!--스타일 파일로 빼니까 어드벤스드 옵션 메뉴 이벤트가 안먹힘.. 이렇게 직접적으로 할당해주는건 동작함. 버그인듯? 아님 내가 뭐 잘못했나-->
                         <!--<ui_ctrl:UIElementPropertyGrid.AdvancedOptionsMenu>
                         </ui_ctrl:UIElementPropertyGrid.AdvancedOptionsMenu>-->
-                    </ui_ctrl:UIElementPropertyGrid>
+                    </ctrl:UIElementPropertyGrid>
                 </Grid>
             </Canvas>
         </Grid>

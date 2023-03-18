@@ -34,6 +34,7 @@ using System.IO;
 using System.Windows.Media.Media3D;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
+using SGToolsUI.Model.Backup;
 using SGToolsUI.View;
 using SGToolsUI.Model.Main;
 
@@ -43,6 +44,8 @@ namespace SGToolsUI.FileSystem
     {
         public SGUILoader(MainViewModel viewModel)
             => _viewModel = viewModel;
+
+        
 
         public bool Load(string path, SGUIGroupMaster master)
         {
@@ -135,6 +138,7 @@ namespace SGToolsUI.FileSystem
                     SGUIGroup newGroup = element.Cast<SGUIGroup>();
                     master.AddGroup(newGroup);
                     newGroup.SetDepth(newGroup.Parent.Depth + 1);
+                    element.Tag = null; // GC를 위해 참조 없애놔야함
                 });
 
 
@@ -147,6 +151,95 @@ namespace SGToolsUI.FileSystem
                 }
 
                 _viewModel.LogBox.AddDispatchedLog($"UI툴 데이터 로딩완료 {fileName}", (LogType.Path, path), IconCommonType.Checked, Brushes.Green);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                _viewModel.LogBox.AddDispatchedLog(exception);
+                return false;
+            }
+        }
+
+        public bool Load(string path, BackupTreeViewItemGroup master)
+        {
+            try
+            {
+                string fileName = Path.GetFileName(path);
+                JObject root = JObject.Parse(System.IO.File.ReadAllText(path));
+
+                SaveMode mode = (SaveMode)Enum.Parse(typeof(SaveMode), (string)root[JsonModeKey]);
+
+                if (mode == SaveMode.GameData)
+                    throw new Exception("게임 데이터를 로딩할려고 하고 있습니다.");
+
+                JArray? elements = root[JsonElementKey] as JArray;
+                JArray? groups = root[JsonGroupKey] as JArray;
+                JObject? groupMaster = root[JsonGroupMasterKey] as JObject;
+
+                List<(BackupTreeViewItemGroup, JArray)> groupList = new(groups.Count);   // 그룹 뼈대 로딩때 임시로 저장하는 리스트
+                Dictionary<int, BackupTreeViewItem> elementDict = new();           // 그룹, 엘리먼트 저장용 임시 맵, 그룹 로딩시 자식 코드로 빠르게 엘리먼트 추가하기 위한 용도
+
+
+                // Step1. 모든 그룹 제외 엘리먼트정보들 로딩
+                for (int i = 0; i < elements.Count; ++i)
+                {
+                    JObject elementRoot = elements[i] as JObject;
+                    int code = (int)elementRoot[SGUIElement.JsonCodeKey];
+                    SGUIElementType type = (SGUIElementType)((int)elementRoot[SGUIElement.JsonElementTypeKey]);
+                    elementDict.Add(code, new BackupTreeViewItem()
+                    {
+                        UIElementType = type,
+                        VisualName = (string)elementRoot[SGUIElement.JsonVisualNameKey]
+                    });
+                }
+
+                // Step2. 모든 그룹 뼈대만 로딩, 그룹간 부모/자식 관계가 존재하기 때문에 미리 만듬
+                for (int i = 0; i < groups.Count; ++i)
+                {
+                    JObject groupRoot = groups[i] as JObject;
+                    int code = (int)groupRoot[SGUIElement.JsonCodeKey];
+                    JArray childrenRoot = groupRoot[SGUIElement.JsonChildrenKey] as JArray;
+                    BackupTreeViewItemGroup group = new()
+                    {
+                        UIElementType = SGUIElementType.Group,
+                        VisualName = (string)groupRoot[SGUIElement.JsonVisualNameKey]
+                    };
+
+                    elementDict.Add(code, group);
+                    groupList.Add((group, childrenRoot));
+                }
+
+                // Step3. 이제 모든 그룹포함 엘리먼트정보가 엘리먼트 맵에 등록되었으므로 그룹 자식등록 진행
+                for (int i = 0; i < groupList.Count; ++i)
+                {
+                    BackupTreeViewItemGroup group = groupList[i].Item1;
+                    foreach (JToken childInfoRoot in groupList[i].Item2)
+                    {
+                        int[] newChildInfo = new int[3];
+                        BackupTreeViewItem newChild = ParseChildInfo(childInfoRoot, newChildInfo);
+                        group.Children.Add(newChild);
+                    }
+                }
+
+                // Step4. 마스터 그룹 로딩, 그룹 마스터와 부모, 자식 등록진행
+                ObservableCollection<SGUIElement> parsed = new ();
+                JArray masterGroups = groupMaster[SGUIElement.JsonChildrenKey] as JArray;
+
+                for (int i = 0; i < masterGroups.Count; ++i)
+                {
+                    int[] newChildInfo = new int[3];
+                    BackupTreeViewItemGroup masterGroup = ParseChildInfo(masterGroups[i], newChildInfo) as BackupTreeViewItemGroup;
+                    master.Children.Add(masterGroup);
+                }
+
+                BackupTreeViewItem ParseChildInfo(JToken? token, int[] arr)
+                {
+                    string childInfoStr = ((string)token);
+                    StringEx.ParseIntNumberN(childInfoStr, arr);
+                    BackupTreeViewItem newChild = elementDict[arr[0]];
+                    return newChild;
+                }
+
                 return true;
             }
             catch (Exception exception)

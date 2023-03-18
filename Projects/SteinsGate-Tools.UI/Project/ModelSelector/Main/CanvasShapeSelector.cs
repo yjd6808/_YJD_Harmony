@@ -22,7 +22,7 @@ using SGToolsCommon.Extension;
 using SGToolsUI.CustomControl;
 using SGToolsUI.Model.Main;
 
-namespace SGToolsUI.ModelSelector
+namespace SGToolsUI.ModelSelector.Main
 {
     public class CanvasShapeSelector : DataTemplateSelector
     {

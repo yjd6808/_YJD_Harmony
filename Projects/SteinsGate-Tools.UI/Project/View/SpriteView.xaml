@@ -10,7 +10,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SGToolsUI.View"
-        xmlns:m="clr-namespace:SGToolsUI.Model"
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
         xmlns:cus="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
         xmlns:cv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"

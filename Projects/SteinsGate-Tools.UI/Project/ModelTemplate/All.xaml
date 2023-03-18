@@ -1,26 +1,31 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
+
+        <!-- 백업 -->
+        <ResourceDictionary Source="Backup/BackupTreeViewItemGroupTemplate.xaml" />
+        <ResourceDictionary Source="Backup/BackupTreeViewItemTemplate.xaml" />
+
         <!-- 쉐이프 캔버스 -->
-        <ResourceDictionary Source="CanvasSelectionTemplate.xaml"/>
-        <ResourceDictionary Source="CanvasGridTemplate.xaml" />
-        <ResourceDictionary Source="CanvasRectTemplate.xaml" />
-        <ResourceDictionary Source="CanvasAnchorTemplate.xaml" />
+        <ResourceDictionary Source="Main/CanvasSelectionTemplate.xaml"/>
+        <ResourceDictionary Source="Main/CanvasGridTemplate.xaml" />
+        <ResourceDictionary Source="Main/CanvasRectTemplate.xaml" />
+        <ResourceDictionary Source="Main/CanvasAnchorTemplate.xaml" />
 
         <!-- UI 엘리먼트 캔버스 -->
-        <ResourceDictionary Source="UIGroupCanvasTemplate.xaml" />
-        <ResourceDictionary Source="UIButtonCanvasTemplate.xaml" />
-        <ResourceDictionary Source="UILabelCanvasTemplate.xaml" />
-        <ResourceDictionary Source="UISpriteCanvasTemplate.xaml" />
-        <ResourceDictionary Source="UIEditBoxCanvasTemplate.xaml" />
-        <ResourceDictionary Source="UICheckBoxCanvasTemplate.xaml" />
-        <ResourceDictionary Source="UIToggleButtonCanvasTemplate.xaml" />
-        <ResourceDictionary Source="UIScrollBarCanvasTemplate.xaml" />
-        <ResourceDictionary Source="UIProgressBarCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIGroupCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIButtonCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UILabelCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UISpriteCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIEditBoxCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UICheckBoxCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIToggleButtonCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIScrollBarCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIProgressBarCanvasTemplate.xaml" />
         
 
         <!-- UI 엘리먼트 트리뷰-->
-        <ResourceDictionary Source="UIElementTreeViewTemplate.xaml" />
-        <ResourceDictionary Source="UIGroupTreeViewTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIElementTreeViewTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIGroupTreeViewTemplate.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

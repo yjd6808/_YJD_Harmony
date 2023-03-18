@@ -23,7 +23,10 @@ using System.Windows.Shapes;
 using Microsoft.Xaml.Behaviors.Core;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
+using SGToolsUI.Model.Backup;
+using SGToolsUI.View;
 using Vanara.PInvoke;
+using Path = System.IO.Path;
 
 namespace SGToolsUI.ViewModel
 {
@@ -31,44 +34,49 @@ namespace SGToolsUI.ViewModel
 
     public class BackupViewModel : Bindable
     {
-       
-
-        public BackupViewModel()
+        public BackupViewModel(MainViewModel mainViewModel)
         {
-            _items = new List<BackupTreeViewItem>();
-            _backupDates = Directory.GetFiles(Constant.BackupDirectoryRoot, "*", SearchOption.TopDirectoryOnly).ToList();
-            _backupDates = _backupDates.Where(folder => DirectoryEx.IsDirectory(folder)).ToList();
-            _backupDates.Sort((s1, s2) => s1.CompareTo(s2) * -1);   // 오름차순 정렬
+            _selectedFolder = new BackupFolder(string.Empty, this);
+            _selectedFile = new BackupFile(string.Empty, this);
+            MainViewModel = mainViewModel;
         }
 
-        public List<string> BackUpDates
+        public BackupFolder SelectedFolder
         {
-            get => _backupDates;
+            get => _selectedFolder;
             set
             {
-                _backupDates = value;
+                _selectedFolder = value;
                 OnPropertyChanged();
             }
         }
 
-        public List<BackupTreeViewItem> Items
+        public BackupFile SelectedFile
         {
-            get => _items;
+            get => _selectedFile;
             set
             {
-                _items = value;
+                _selectedFile = value;
                 OnPropertyChanged();
             }
         }
 
+        public List<BackupFolder> Folders
+        {
+            get
+            {
+                List<string> backupDates = Directory.GetDirectories(Constant.BackupDirectoryRoot, "*", SearchOption.TopDirectoryOnly).ToList();
+                backupDates = backupDates.Where(folder => DirectoryEx.IsDirectory(folder)).ToList();
+                backupDates.Sort((s1, s2) => s1.CompareTo(s2) * -1);   // 오름차순 정렬 (최신)
+                return backupDates.Select(name => new BackupFolder(Path.GetFileName(name), this)).ToList();
+            }
+        }
 
-        private List<BackupTreeViewItem> _items;
-        private List<string> _backupDates;
-    }
 
+        public MainViewModel MainViewModel { get; }
 
-    public class BackupTreeViewItem
-    {
+        private BackupFolder _selectedFolder;
+        private BackupFile _selectedFile;
 
     }
 }

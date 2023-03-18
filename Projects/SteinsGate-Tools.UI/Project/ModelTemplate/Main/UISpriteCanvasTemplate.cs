@@ -23,7 +23,7 @@ using System.Windows.Shapes;
 using SGToolsCommon.Extension;
 using SGToolsUI.Model.Main;
 
-namespace SGToolsUI.ModelTemplate
+namespace SGToolsUI.ModelTemplate.Main
 {
     public partial class UISpriteCanvasTemplate : ResourceDictionary
     {

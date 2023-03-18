@@ -10,13 +10,12 @@
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
 
-
         xmlns:local="clr-namespace:SGToolsUI"
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
-        xmlns:model="clr-namespace:SGToolsUI.Model"
-        xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
-        xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
-        xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+        xmlns:res="clr-namespace:SGToolsUI.Resource"
+        xmlns:ctrl="clr-namespace:SGToolsUI.CustomControl"
+        xmlns:mo_backup="clr-namespace:SGToolsUI.Model.Backup"
+        xmlns:mo_backup_selector="clr-namespace:SGToolsUI.ModelSelector.Backup"
 
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
         xmlns:common_local="clr-namespace:SGToolsCommon;assembly=SGToolsCommon"
@@ -34,15 +33,48 @@
         AllowDrop="True"
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <DockPanel Name="MainPanel">
+    <DockPanel Name="MainPanel" DataContext="{Binding ViewModel}">
         <common_ctrl:TitleBar Name="TitleBar"
                               DockPanel.Dock="Top"
                               FontSize="16"
                               Title="백업 뷰"
                               EscTermination="True"
                               RealClose="False" />
-        <ListBox>
-
+        <ListBox DockPanel.Dock="Left"
+                 Name="BackupFolderListBox"
+                 Width="120"
+                 Height="600"
+                 ItemsSource="{Binding Folders}"
+                 SelectionChanged="BackupFolderListBox_OnSelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type mo_backup:BackupFolder}">
+                    <TextBlock Text="{Binding FolderName}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
+        <ListBox DockPanel.Dock="Left"
+                 Name="BackupFileListBox"
+                 Width="120"
+                 Height="600"
+                 ItemsSource="{Binding SelectedFolder.Files}"
+                 SelectionChanged="BackupFileListBox_OnSelectionChanged"
+                 PreviewMouseDoubleClick="BackupFileListBox_OnPreviewMouseDoubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type mo_backup:BackupFile}">
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      Width="300"
+                      Height="600"
+                      DockPanel.Dock="Left">
+            <TreeView Name="BackupTreeView"
+                      ItemsSource="{Binding SelectedFile.Root.Children}"
+                      ItemContainerStyle="{StaticResource WinformTreeViewItem}"
+                      ItemTemplateSelector="{x:Static mo_backup_selector:BackuprTreeViewItemSelector.Selector}"/>
+        </ScrollViewer>
+        
     </DockPanel>
 </Window>

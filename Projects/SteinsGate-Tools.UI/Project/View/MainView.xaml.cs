@@ -67,7 +67,7 @@ namespace SGToolsUI.View
         }
 
 
-        private async void MainView_OnClosing(object? sender, CancelEventArgs e)
+        private void MainView_OnClosing(object? sender, CancelEventArgs e)
         {
             //Task t1 = ViewModel.Saver.SaveAutoAsync(SaveMode.UIToolData, false);
             //Task t2 = ViewModel.Exporter.ExportAsync();
@@ -77,6 +77,7 @@ namespace SGToolsUI.View
 
             ViewModel.LogView.Close();
             ViewModel.AlbumView.Close();
+            ViewModel.BackupView.Close();
             ViewModel.ProgressView.Close();
             ViewModel.JobQueue.Dispose();
             ViewModel.KeyState.Dispose();
@@ -146,6 +147,10 @@ namespace SGToolsUI.View
                 {
                     ViewModel.Commander.OpenLogView.Execute(null);
                 }
+                else if (state.IsPressed(SGKey.B))
+                {
+                    ViewModel.Commander.OpenBackupView.Execute(null);
+                }
             }
 
             if (!state.IsModifierKeyPressed)
@@ -191,6 +196,7 @@ namespace SGToolsUI.View
                 {
                     ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
                 }
+
             }
 
             

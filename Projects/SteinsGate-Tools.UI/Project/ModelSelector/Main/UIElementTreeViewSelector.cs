@@ -23,7 +23,7 @@ using SGToolsCommon.Extension;
 using SGToolsUI.CustomControl;
 using SGToolsUI.Model.Main;
 
-namespace SGToolsUI.ModelSelector
+namespace SGToolsUI.ModelSelector.Main
 {
     /*
      * WPF에서 ItemTemplateSelector는 컬렉션 컨트롤(예: ListBox, TreeView, ItemsControl 등)의
@@ -39,7 +39,7 @@ namespace SGToolsUI.ModelSelector
 
     public class UIElementTreeViewSelector : DataTemplateSelector
     {
-        public static readonly UIElementTreeViewSelector Selector = new ();
+        public static readonly UIElementTreeViewSelector Selector = new();
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -47,8 +47,8 @@ namespace SGToolsUI.ModelSelector
 
             switch (item)
             {
-            case SGUIGroup        __group__  :  return (DataTemplate)Application.Current.FindResource("GroupTreeViewTemplate");
-            case SGUIElement      __else__   :  return (DataTemplate)Application.Current.FindResource("ElementTreeViewTemplate");
+                case SGUIGroup __group__: return (DataTemplate)Application.Current.FindResource("GroupTreeViewTemplate");
+                case SGUIElement __else__: return (DataTemplate)Application.Current.FindResource("ElementTreeViewTemplate");
             }
 
             throw new Exception("SGUIElementSelector에서 반환가능한 DataTemplate을 찾지 못했습니다.");

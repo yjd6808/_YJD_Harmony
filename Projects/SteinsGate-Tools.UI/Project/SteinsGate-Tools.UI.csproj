@@ -41,10 +41,6 @@
 	  </Compile>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Model\Backup\" />
-	</ItemGroup>
-
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;&#xD;&#xA;xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;" />
 	</Target>

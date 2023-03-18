@@ -24,7 +24,7 @@ using SGToolsUI.Model.Main;
 using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.Toolkit;
 
-namespace SGToolsUI.ModelTemplate
+namespace SGToolsUI.ModelTemplate.Main
 {
     public partial class UIEditBoxCanvasTemplate : ResourceDictionary
     {
