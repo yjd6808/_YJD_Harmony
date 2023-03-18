@@ -202,5 +202,10 @@ namespace SGToolsUI.Model.Main
 
             return false;
         }
+
+        public static SGUISpriteInfo CreateFromSprite(SgaSprite sprite)
+        {
+            return new SGUISpriteInfo(sprite.Parent.Parent, sprite.Parent, sprite);
+        }
     }
 }

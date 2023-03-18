@@ -34,7 +34,8 @@
 
         Name="View"
         FontSize="14"
-        AllowsTransparency="True" WindowStyle="None"
+        AllowsTransparency="True" 
+        WindowStyle="None"
         SizeToContent="WidthAndHeight"
 
         AllowDrop="True"

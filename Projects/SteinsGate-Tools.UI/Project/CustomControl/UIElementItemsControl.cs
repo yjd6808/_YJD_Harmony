@@ -799,13 +799,22 @@ namespace SGToolsUI.CustomControl
 
             Point pos = Mouse.GetPosition(this);
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
+            if (pickedElements.Count == 0)
+            {
+                MessageBoxEx.ShowTopMost("우선 그룹 또는 엘리먼트를 픽해주세요.");
+                return;
+            }
 
             // 놓은 지점에있는 그룹들중 가장 위에 그룹을 가져온다.
             SGUIGroup topLevelGroup = pickedElements.Where(element => element.IsGroup && element.ContainPoint(pos)).Cast<SGUIGroup>().LastOrDefault();
-            if (topLevelGroup == null) 
+            if (topLevelGroup == null)
+            {
+                MessageBoxEx.ShowTopMost("해당위치에 그룹이 없습니다.\n그룹내에 드랍해야합니다.");
                 return;
+            }
 
-
+            CreateElementView elementView = new CreateElementView(topLevelGroup, sprite, pos);
+            elementView.ShowDialog();
         }
 
         public bool ContainPoint(Point p)

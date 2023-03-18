@@ -12,7 +12,6 @@
         xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
         xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
         xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
-        xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
         xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
         xmlns:common_local="clr-namespace:SGToolsCommon;assembly=SGToolsCommon"
         xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
@@ -20,19 +19,29 @@
         xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
         xmlns:common_prim="clr-namespace:SGToolsCommon.Primitive;assembly=SGToolsCommon"
         xmlns:file="clr-namespace:SGToolsUI.FileSystem"
-        ResizeMode="NoResize"
+
         WindowStyle="None"
-        Style="{StaticResource OneLineWindow}"
+        AllowsTransparency="True"
+        Loaded="CreateElementView_OnLoaded"
         SizeToContent="WidthAndHeight"
-        Title="CreateElementView">
-    <StackPanel>
-        <common_ctrl:TitleBar Name="TitleBar" Title="엘리먼트 선택" FontSize="16" RealClose="False"/>
-        <StackPanel Orientation="Horizontal">
-            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredButtonIconImageSource}"/>
-            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.Sprite}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredSpriteIconImageSource}"/>
-            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredToggleButtonIconImageSource}"/>
-            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredProgressBarIconImageSource}"/>
-            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredScrollBarIconImageSource}"/>
-        </StackPanel>
-    </StackPanel>
+        Title="CreateElementView"
+        Style="{StaticResource OneLineWindow}">
+    <DockPanel Height="Auto">
+        <common_ctrl:TitleBar Name="TitleBar" DockPanel.Dock="Top" Title="엘리먼트 선택" FontSize="16" RealClose="True" EscTermination="True"/>
+        <Separator  DockPanel.Dock="Top"/>
+        <Grid Height="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="50" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredButtonIconImageSource}"/>
+            <Button Grid.Column="1" Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.Sprite}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredSpriteIconImageSource}"/>
+            <Button Grid.Column="2" Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredToggleButtonIconImageSource}"/>
+            <Button Grid.Column="3" Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredProgressBarIconImageSource}"/>
+            <Button Grid.Column="4" Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredScrollBarIconImageSource}"/>
+        </Grid>
+    </DockPanel>
 </Window>
