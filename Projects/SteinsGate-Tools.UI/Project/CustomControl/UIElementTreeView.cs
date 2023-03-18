@@ -32,7 +32,7 @@ namespace SGToolsUI.CustomControl
 {
 
 
-    public class UIElementTreeView : TreeView, IDataDragReceiver
+    public class UIElementTreeView : TreeView, IDataDragReceiver, IKeyboardInputReceiver
     {
 
         public MainViewModel ViewModel { get; private set; }
@@ -157,6 +157,11 @@ namespace SGToolsUI.CustomControl
                         ViewModel.Commander.ClipboardOperateUIElement.Execute(ClipboardOperate.Paste);
                     break;
             }
+        }
+
+        public void OnKeyUp(SGKey key)
+        {
+
         }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)

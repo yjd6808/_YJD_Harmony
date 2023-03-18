@@ -63,6 +63,10 @@ namespace SGToolsUI.ViewModel
 
         public void Loaded()
         {
+            KeyboardInputReceivers.Add(View.UIElementTreeView);
+            KeyboardInputReceivers.Add(View.UIElementPropertyGrid);
+            KeyboardInputReceivers.Add(View.CanvasShapesControl);
+
             double zoomLevelDelta = (double)Setting.ZoomLevel / 100 - 1.0;
             
             ZoomState.ZoomLevelY += zoomLevelDelta * Constant.ResolutionRatio;
@@ -348,6 +352,16 @@ namespace SGToolsUI.ViewModel
             }
         }
 
+        public IKeyboardInputReceiver? FocusedKeyboardInputReceiver
+        {
+            get => _focusedKeyboardInputReceiver;
+            set
+            {
+                _focusedKeyboardInputReceiver = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsNotEventMode => !IsEventMode;
 
         public DataDragState DragState { get; }
@@ -360,6 +374,7 @@ namespace SGToolsUI.ViewModel
         public SGUILoader Loader { get; }
         public SGUISaver Saver { get; }
         public SGUIExporter Exporter { get; }
+        public List<IKeyboardInputReceiver> KeyboardInputReceivers = new();
         public readonly Action<Exception> LogErrorHandler;
 
         private SelectMode _uiElementSelectMode;
@@ -373,8 +388,16 @@ namespace SGToolsUI.ViewModel
         private bool _isEventMode = false;
         private SgaPackage _selectedPackage = new ();
         private SgaImage _selectedImage = new ();
+        private IKeyboardInputReceiver _focusedKeyboardInputReceiver;
+        
         private SgaSpriteAbstract _selectedSprite = new SgaSprite();
         private SGUIGroupMaster _groupMaster;
+    }
+
+    public interface IKeyboardInputReceiver
+    {
+        void OnKeyDown(SGKey key);
+        void OnKeyUp(SGKey key);
     }
 }
 

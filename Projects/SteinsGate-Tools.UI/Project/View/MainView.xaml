@@ -45,6 +45,7 @@
         PreviewMouseUp="MainView_OnPreviewMouseUp"
         MouseLeave="MainView_OnMouseLeave"
         Loaded="MainView_OnLoaded"
+        PreviewMouseDown="MainView_OnPreviewMouseDown"
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel Name="MainDockPanel"

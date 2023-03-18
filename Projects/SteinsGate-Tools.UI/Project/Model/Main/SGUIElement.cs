@@ -156,7 +156,6 @@ namespace SGToolsUI.Model.Main
             }
         }
 
-
         [Browsable(false)]
         public Rect VisualRect => new(VisualPosition, VisualSize);
 

@@ -34,7 +34,7 @@ namespace SGToolsUI.CustomControl
 {
 
 
-    public class CanvasShapeItemsControl : ItemsControl, INotifyPropertyChanged
+    public class CanvasShapeItemsControl : ItemsControl, INotifyPropertyChanged, IKeyboardInputReceiver
     {
         public ObservableCollection<CanvasShape> CanvasShapes
         {
@@ -255,6 +255,23 @@ namespace SGToolsUI.CustomControl
         {
             if (key == SGKey.Z)
                 IsHideSelection = true;
+
+            if (!ViewModel.KeyState.IsModifierKeyPressed)
+            {
+                if (ViewModel.KeyState.IsPressed(SGKey.X))
+                {
+                    ViewModel.GroupMaster.DeselectAll();
+                    ViewModel.IsEventMode = !ViewModel.IsEventMode;
+
+                    if (ViewModel.IsEventMode == false)
+                        ViewModel.GroupMaster.PickedElementsDisabled = false;
+                }
+
+                else if (ViewModel.KeyState.IsPressed(SGKey.C) && ViewModel.IsEventMode)
+                {
+                    ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
+                }
+            }
         }
 
         public void OnKeyUp(SGKey key)
@@ -262,6 +279,7 @@ namespace SGToolsUI.CustomControl
             if (key == SGKey.Z)
                 IsHideSelection = false;
         }
+
 
         
         protected override void OnMouseDown(MouseButtonEventArgs e)

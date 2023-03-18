@@ -44,7 +44,7 @@ namespace SGToolsUI.CustomControl
 {
 
 
-    public class UIElementPropertyGrid : PropertyGrid, IDataDragReceiver
+    public class UIElementPropertyGrid : PropertyGrid, IDataDragReceiver, IKeyboardInputReceiver
     {
         public MainViewModel ViewModel { get; private set; }
         public ScrollViewer ScrollViewer { get; private set; }
@@ -282,6 +282,10 @@ namespace SGToolsUI.CustomControl
                 case SGUIElementType.ProgressBar:   break;
                 default: throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public void OnKeyUp(SGKey key)
+        {
         }
 
         public bool ContainPoint(Point p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);

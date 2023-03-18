@@ -182,28 +182,9 @@ namespace SGToolsUI.View
                 {
                     ViewModel.Commander.OpenDirectory.Execute(ToolDirectory.Backup.ToString());
                 }
-
-                else if (state.IsPressed(SGKey.X))
-                {
-                    ViewModel.GroupMaster.DeselectAll();
-                    ViewModel.IsEventMode = !ViewModel.IsEventMode;
-
-                    if (ViewModel.IsEventMode == false)
-                        ViewModel.GroupMaster.PickedElementsDisabled = false;
-                }
-
-                else if (state.IsPressed(SGKey.C) && ViewModel.IsEventMode)
-                {
-                    ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
-                }
-
             }
 
-            
-
-            CanvasShapesControl.OnKeyDown(key);
-            UIElementTreeView.OnKeyDown(key);
-            UIElementPropertyGrid.OnKeyDown(key);
+            ViewModel.FocusedKeyboardInputReceiver?.OnKeyDown(key);
         }
 
 
@@ -294,6 +275,12 @@ namespace SGToolsUI.View
             }
         }
 
-       
+
+        private void MainView_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Point p = e.GetPosition(this);
+
+            ViewModel.FocusedKeyboardInputReceiver = ViewModel.KeyboardInputReceivers.FirstOrDefault(receiver => ((FrameworkElement)receiver).ContainPoint(p));
+        }
     }
 }

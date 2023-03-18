@@ -24,8 +24,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MoreLinq;
 using SGToolsCommon.Resource;
 using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
 using SGToolsUI.View;
 using SGToolsUI.ViewModel;
 using Path = System.IO.Path;
@@ -52,6 +54,22 @@ namespace SGToolsUI.FileSystem
         public SGUIExporter(MainViewModel viewModel)
             => _viewModel = viewModel;
 
+        private string DefineNamePrefix(SGUIElement element)
+        {
+            string prefix = string.Empty;
+
+            element.ParentTrack.ForEach(parent =>
+            {
+                if (parent == _viewModel.GroupMaster)
+                    return;
+
+                if (parent.DefineName.Length > 0)
+                    prefix += parent.DefineName + "_";
+            });
+
+            return prefix;
+        }
+
         public bool Export(string path)
         {
             string fileName = Path.GetFileName(path);
@@ -73,7 +91,7 @@ namespace SGToolsUI.FileSystem
                         if (element.Depth == 0)
                             writer.WriteLine("\n\n");
 
-                        writer.WriteLine($"{DepthStrings[element.Depth]}#define {element.DefineName.ToUpper()}_{element.UIElementType}");
+                        writer.WriteLine($"{DepthStrings[element.Depth]}#define {DefineNamePrefix(element)}{element.DefineName.ToUpper()}_{element.UIElementType}");
 
                         if (!uniqueDefineNameMap.TryAdd(element.DefineName, true))
                             duplicatedDefineNameList.Add(element.DefineName);
