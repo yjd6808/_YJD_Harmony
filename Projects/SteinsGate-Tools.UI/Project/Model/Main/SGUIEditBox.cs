@@ -16,10 +16,11 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
+using SGToolsUI.Model;
 using Xceed.Wpf.Toolkit;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public enum InputMode
     {
@@ -56,9 +57,9 @@ namespace SGToolsUI.Model
             _placeholderFontSize = 16;
             _maxLength = 20;
             _inputMode = InputMode.Any;
-        }   
+        }
 
-        
+
         [Category(Constant.EditBoxCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override Size VisualSize
         {
@@ -207,7 +208,7 @@ namespace SGToolsUI.Model
 
             string sizeString = (string)root[JsonVisualSizeKey];
             _visualSize = SizeEx.ParseFullString(sizeString);
-            _textHAlign = (HAlignment)((int)root[JsonTextHAlignKey]);
+            _textHAlign = (HAlignment)(int)root[JsonTextHAlignKey];
 
             string fontFileName = (string)root[JsonFontKey];
             _fontSize = (int)root[JsonFontSizeKey];

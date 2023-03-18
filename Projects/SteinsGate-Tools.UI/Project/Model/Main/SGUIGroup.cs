@@ -29,9 +29,10 @@ using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsUI.FileSystem;
+using SGToolsUI.Model;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
 
 
@@ -89,10 +90,10 @@ namespace SGToolsUI.Model
         }
 
         [ReadOnly(false)]
-        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(SGUIElement.OrderVisualSize)]
+        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
         public override Size VisualSize
         {
-            get => new ((int)_visualSize.Width, (int)_visualSize.Height);
+            get => new((int)_visualSize.Width, (int)_visualSize.Height);
             set
             {
                 _visualSize = value;
@@ -101,7 +102,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(SGUIElement.OrderIsVisible)]
+        [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정합니다. (그룹 요소입니다. 하위 항목들도 모두 적용됩니다.)")]
         public override bool IsVisible
         {
@@ -117,11 +118,11 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Category(Constant.ElementCategoryName), DisplayName("계층적 높이"), PropertyOrder(SGUIElement.OrderDepth)]
+        [Category(Constant.ElementCategoryName), DisplayName("계층적 높이"), PropertyOrder(OrderDepth)]
         [Description("이 엘리먼트의 계층구조상 높이")]
         public override int Depth => _depth;
 
-        
+
 
 
         [Browsable(false)]
@@ -148,7 +149,7 @@ namespace SGToolsUI.Model
 
         [Browsable(false)] public override bool IsGroup => true;
         public override SGUIElementType UIElementType => SGUIElementType.Group;
-        
+
         [Browsable(false)] public override int Code => _code;
         [Browsable(false)] public bool HasOnlyGroup => Where(element => !element.IsGroup).Any() == false;
         [Browsable(false)] public bool HasOnlyGroupRecursive => WhereRecursive(element => !element.IsGroup).Any() == false;
@@ -175,7 +176,7 @@ namespace SGToolsUI.Model
         {
             SGUIGroup group = new SGUIGroup();
             group.CopyFrom(this);
-            
+
             for (int i = 0; i < _children.Count; ++i)
             {
                 SGUIElement cloned = _children[i].Clone() as SGUIElement;
@@ -319,14 +320,14 @@ namespace SGToolsUI.Model
                 groupMaster.PickedElements.AddRange(newChildren.Children);
             }
 
-           
 
-            
-            
+
+
+
             OnPropertyChanged(nameof(Children));
         }
 
-     
+
         public override JObject ToJObject()
         {
             JObject root = base.ToJObject();

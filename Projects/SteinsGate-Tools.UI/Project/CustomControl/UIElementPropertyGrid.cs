@@ -27,7 +27,6 @@ using System.Windows.Shapes;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
-using SGToolsUI.Model;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using System.Reflection.PortableExecutable;
@@ -39,10 +38,11 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using PropertyItem = Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem;
 using System.Drawing.Imaging;
 using SGToolsUI.ModelTemplate;
+using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.CustomControl
 {
-   
+
 
     public class UIElementPropertyGrid : PropertyGrid, IDataDragReceiver
     {

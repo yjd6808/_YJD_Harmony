@@ -28,22 +28,18 @@ using SGToolsCommon.Sga;
 using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
 
     [CategoryOrder(Constant.ButtonCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIButton : SGUIElement
     {
         public const int OrderNormal = 1;
-        public const int OrderPressed = 2;
-        public const int OrderOver = 3;
+        public const int OrderOver = 2;
+        public const int OrderPressed = 3;
         public const int OrderDisabled = 4;
 
-
-        public SGUIButton()
-        {
-            _sprites = new SGUISpriteInfo[StateCount];
-        }
+        public SGUIButton() => _sprites = new SGUISpriteInfo[StateCount];
 
         [Browsable(false)] // 캔버스상에 보일 상태
         public SGUISpriteInfo VisualSprite
@@ -66,7 +62,7 @@ namespace SGToolsUI.Model
         }
 
         [ReadOnly(true)]
-        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(SGUIElement.OrderVisualSize)]
+        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
         public override Size VisualSize
         {
             get
@@ -102,7 +98,7 @@ namespace SGToolsUI.Model
             }
         }
 
-       
+
 
         [Category(Constant.ButtonCategoryName), DisplayName("마우스위"), PropertyOrder(OrderOver)]
         public SGUISpriteInfo Over
@@ -157,7 +153,7 @@ namespace SGToolsUI.Model
         public override SGUIElementType UIElementType => SGUIElementType.Button;
         [Browsable(false)] public override bool Manipulatable => false;
 
-        
+
 
         public override object Clone()
         {
@@ -181,7 +177,7 @@ namespace SGToolsUI.Model
             return root;
         }
 
-       
+
         public override void ParseJObject(JObject root)
         {
             base.ParseJObject(root);

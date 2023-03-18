@@ -22,7 +22,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsUI.ViewModel;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public enum CanvasElementType
     {
@@ -42,7 +42,7 @@ namespace SGToolsUI.Model
         [Browsable(false)]
         public MainViewModel ViewModel { get; set; }
 
-        public void SetViewModel(MainViewModel model)  => _viewModel = model;
+        public void SetViewModel(MainViewModel model) => _viewModel = model;
         private MainViewModel _viewModel;
     }
 }

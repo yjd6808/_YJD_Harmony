@@ -27,11 +27,11 @@ using SGToolsCommon;
 using SGToolsUI.ViewModel;
 using System.Xml.Linq;
 using SGToolsCommon.Resource;
-using SGToolsUI.Model;
 using SGToolsUI.View;
 using IoFile = System.IO.File;
 using System.Windows.Interop;
 using SGToolsCommon.Extension;
+using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.FileSystem
 {

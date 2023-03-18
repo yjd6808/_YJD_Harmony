@@ -19,9 +19,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
-using SGToolsUI.Model;
 using SGToolsUI.CustomControl;
 using SGToolsUI.ViewModel;
+using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.Command.MainViewCommand
 {

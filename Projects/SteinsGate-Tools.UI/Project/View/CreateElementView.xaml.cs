@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.View
 {
@@ -23,8 +23,10 @@ namespace SGToolsUI.View
         public CreateElementView(SGUISpriteInfo info)
         {
             InitializeComponent();
+        }
 
-
+        private void CreateElement_OnClick(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

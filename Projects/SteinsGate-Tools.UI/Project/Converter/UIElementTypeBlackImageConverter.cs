@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
 using SGToolsUI.Resource;
 
 namespace SGToolsUI.Converter

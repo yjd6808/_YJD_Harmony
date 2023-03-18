@@ -27,9 +27,10 @@ using System.Windows.Shapes;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
+using SGToolsUI.Model.Main;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     [CategoryOrder(Constant.ScrollBarCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIScrollBar : SGUIElement, ISizeRestorable
@@ -85,7 +86,7 @@ namespace SGToolsUI.Model
                         return _sprites[i];
 
                 // 현재 상태에 맞는 스프라이트가 세팅되어있지 않으면 Order순서대로 확인해서 스프라이트 세팅된 놈으로
-                
+
                 return _sprites.Take(new Range(IndexUpNormal, IndexUpOver)).FirstOrDefault(x => !x.IsNull);
             }
         }
@@ -135,9 +136,9 @@ namespace SGToolsUI.Model
             }
         }
 
-   
 
-        
+
+
 
         // 4개중 제일 너비가 큰걸로 잡음
         private void UpdateVisualWidth()
@@ -184,7 +185,7 @@ namespace SGToolsUI.Model
                 OnPropertyChanged(nameof(VisualUpSpriteSource));
                 OnPropertyChanged(nameof(VisualUpHeight));
                 OnSpriteChanged();
-                
+
             }
         }
 
@@ -347,7 +348,7 @@ namespace SGToolsUI.Model
         [Category(Constant.ScrollBarCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
         public override Size VisualSize
         {
-            get => _visualSize;
+            get => new((int)_visualSize.Width, (int)_visualSize.Height);
             set
             {
                 _visualSize = value;
@@ -361,7 +362,7 @@ namespace SGToolsUI.Model
         [Category(Constant.ScrollBarCategoryName), DisplayName("트랙 크기"), PropertyOrder(OrderTrackSize)]
         public Size TrackSize
         {
-            get => new ((int)_visualSize.Width, TrackHeight);
+            get => new((int)_visualSize.Width, (int)TrackHeight);
             set
             {
                 _visualSize.Width = Math.Max(_visualSize.Width, value.Width);
@@ -461,7 +462,7 @@ namespace SGToolsUI.Model
         // 300, 400에 엘리먼트가 위치해있을때
         // 300, 400는 엘리먼트기준 0, 0의 좌표이다.
         public Point ConvertElementPosition(Point p)
-            => new (p.X - _visualPosition.X, p.Y - _visualPosition.Y);
+            => new(p.X - _visualPosition.X, p.Y - _visualPosition.Y);
 
         public override bool OnMouseMove(Point p)
         {
@@ -470,7 +471,7 @@ namespace SGToolsUI.Model
                 return true;
 
             bool elementContained = ContainPoint(p);
-            
+
 
             if (!elementContained)
             {
@@ -582,6 +583,6 @@ namespace SGToolsUI.Model
         private Size _visualSize;
         private bool _widthInitialized;
         private bool _heightInitialized;
-        
+
     }
 }

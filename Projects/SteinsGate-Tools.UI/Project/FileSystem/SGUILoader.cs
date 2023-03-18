@@ -23,7 +23,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using SGToolsUI.Model;
 using System.Diagnostics.Metrics;
 using SGToolsCommon.Resource;
 using System.Text.RegularExpressions;
@@ -36,6 +35,7 @@ using System.Windows.Media.Media3D;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
 using SGToolsUI.View;
+using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.FileSystem
 {

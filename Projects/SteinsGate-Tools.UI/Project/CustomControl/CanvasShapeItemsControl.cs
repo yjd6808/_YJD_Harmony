@@ -5,7 +5,6 @@
  */
 
 using SGToolsCommon.Extension;
-using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -29,10 +28,11 @@ using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Extension;
+using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.CustomControl
 {
-   
+
 
     public class CanvasShapeItemsControl : ItemsControl, INotifyPropertyChanged
     {

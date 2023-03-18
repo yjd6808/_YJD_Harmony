@@ -32,7 +32,8 @@ using SGToolsUI.Command;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Command.MainViewCommand.Async;
 using SGToolsUI.FileSystem;
-using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
+using SGToolsUI.Model.Setting;
 using SGToolsUI.View;
 
 namespace SGToolsUI.ViewModel

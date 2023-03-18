@@ -31,7 +31,7 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsUI.ViewModel;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public class SGUIGroupMaster : SGUIGroup
     {
@@ -124,8 +124,8 @@ namespace SGToolsUI.Model
         public IEnumerable<SGUIElement> PickedSelectedElements => _pickedElements.Where(element => element.Selected);
         public SGUIElement PickedSelectedElement => _pickedElements.LastOrDefault(element => element.Selected);
         public bool HasPickedSelectedElement => _pickedElements.FirstOrDefault(element => element.Selected) != null;
-        public int GroupCount  {  get  {  lock (_groups)  {  return _groups.Count; }  }  }
-        public int ElementCount  {  get  {  lock (_elements)  {  return _elements.Count; }  }  }
+        public int GroupCount { get { lock (_groups) { return _groups.Count; } } }
+        public int ElementCount { get { lock (_elements) { return _elements.Count; } } }
 
         public bool PickedElementsDisabled
         {
@@ -268,7 +268,7 @@ namespace SGToolsUI.Model
         }
 
 
-       
+
         private static void SelectedElementsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             ObservableElementsCollection collection = sender as ObservableElementsCollection;
@@ -290,7 +290,7 @@ namespace SGToolsUI.Model
             SGUIElement low = lhsElement;
             SGUIElement high = rhsElement;
 
-            
+
             int comp = CompareHeight(lhsElement, rhsElement);
 
             // 좌측 엘리먼트가 우선순위가 더 큰경우 스왑
@@ -305,7 +305,7 @@ namespace SGToolsUI.Model
 
             void ForEachRecursive(SGUIGroup group, ref int state)
             {
-                if (state == 2) 
+                if (state == 2)
                     return;
 
                 for (int i = 0; i < group.Children.Count; ++i)
@@ -324,7 +324,7 @@ namespace SGToolsUI.Model
                     if (state == 1)
                         result.Add(child);
 
-                    if (state == 2) 
+                    if (state == 2)
                         break;
 
                     if (child.IsGroup && expandOnly && child.Item.IsLoaded && child.Item.IsExpanded)
@@ -349,7 +349,7 @@ namespace SGToolsUI.Model
 
         public SGUIElement GetElementByCode(int code)
         {
-            int groupCode = (code / Constant.GroupCodeInterval) * Constant.GroupCodeInterval;
+            int groupCode = code / Constant.GroupCodeInterval * Constant.GroupCodeInterval;
             int codeIndex = code % Constant.GroupCodeInterval;
 
             if (!_groups.ContainsKey(groupCode))
@@ -398,7 +398,7 @@ namespace SGToolsUI.Model
             Debug.Assert(GroupCount == 0);
             Debug.Assert(ElementCount == 0);
             Debug.Assert(!ViewModel.View.CanvasShapesControl.HasSelection);
-            
+
 #endif
 
 

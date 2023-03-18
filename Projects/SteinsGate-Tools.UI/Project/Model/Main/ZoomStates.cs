@@ -21,7 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public class ZoomState : Bindable
     {
@@ -31,7 +31,7 @@ namespace SGToolsUI.Model
             set
             {
                 _zoomLevelX = value;
-                
+
                 OnPropertyChanged();
                 OnPropertyChanged("IsNotDefaultZoomLevel");
                 OnPropertyChanged("ZoomLevelXString");
@@ -47,7 +47,7 @@ namespace SGToolsUI.Model
             set
             {
                 _zoomLevelY = value;
-                
+
                 OnPropertyChanged();
                 OnPropertyChanged("BaseWindowHeight");
                 OnPropertyChanged("BasePropertyGridHeight");

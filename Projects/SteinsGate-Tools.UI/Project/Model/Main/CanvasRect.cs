@@ -20,7 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public class CanvasRect : CanvasShape
     {
@@ -82,7 +82,7 @@ namespace SGToolsUI.Model
             set
             {
                 _thickness = value;
-                
+
                 OnPropertyChanged();
             }
         }

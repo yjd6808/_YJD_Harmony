@@ -11,9 +11,10 @@ using System.Windows.Media.Imaging;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
+using SGToolsUI.Model.Main;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     [CategoryOrder(Constant.SpriteCategoryName, Constant.OtherCategoryOrder)]
     public class SGUISprite : SGUIElement, ISizeRestorable

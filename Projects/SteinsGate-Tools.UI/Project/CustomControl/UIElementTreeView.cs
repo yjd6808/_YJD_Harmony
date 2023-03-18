@@ -25,12 +25,12 @@ using System.Windows.Shapes;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
 using SGToolsUI.Command.MainViewCommand;
-using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.CustomControl
 {
-  
+
 
     public class UIElementTreeView : TreeView, IDataDragReceiver
     {

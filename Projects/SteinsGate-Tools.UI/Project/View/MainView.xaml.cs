@@ -35,7 +35,7 @@ using SGToolsCommon.ThirdParty;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.CustomControl;
 using SGToolsUI.FileSystem;
-using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
 using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Properties;

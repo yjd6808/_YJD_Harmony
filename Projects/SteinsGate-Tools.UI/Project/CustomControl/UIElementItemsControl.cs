@@ -21,7 +21,6 @@ using System.Security.RightsManagement;
 using System.Windows.Data;
 using MoreLinq;
 using SGToolsCommon.Extension;
-using SGToolsUI.Model;
 using SGToolsUI.View;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using SGToolsUI.ViewModel;
@@ -34,6 +33,7 @@ using SGToolsUI.Extension;
 using SGToolsUI.Command.MainViewCommand;
 using Xceed.Wpf.AvalonDock.Controls;
 using SGToolsCommon.Sga;
+using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.CustomControl
 {
@@ -78,9 +78,6 @@ namespace SGToolsUI.CustomControl
         private MenuItem _attributeMenuItem;
         private MenuItem _deleteMenuItem;
         private MenuItem _restoreSizeMenuItem;
-
-
-
 
         // ======================================================================
         //             초기화

@@ -4,7 +4,6 @@
  *
  */
 
-using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -24,6 +23,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsCommon.Extension;
+using SGToolsUI.Model.Main;
 
 namespace SGToolsUI.Command.MainViewCommand
 {

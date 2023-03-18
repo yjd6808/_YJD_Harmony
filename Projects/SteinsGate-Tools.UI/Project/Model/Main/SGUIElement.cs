@@ -36,7 +36,7 @@ using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using Point = System.Windows.Point;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     [RefreshProperties(RefreshProperties.All)]
     [CategoryOrder(Constant.ElementCategoryName, Constant.ElementCategoryOrder)]
@@ -158,14 +158,14 @@ namespace SGToolsUI.Model
 
 
         [Browsable(false)]
-        public Rect VisualRect => new (VisualPosition, VisualSize);
+        public Rect VisualRect => new(VisualPosition, VisualSize);
 
 
         [Category(Constant.ElementCategoryName), DisplayName("위치 (절대)"), PropertyOrder(OrderVisualPosition)]
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
         public Point VisualPosition
         {
-            get => new ((int)_visualPosition.X, (int)_visualPosition.Y);
+            get => new((int)_visualPosition.X, (int)_visualPosition.Y);
             set
             {
                 _visualPosition = value;
@@ -189,7 +189,7 @@ namespace SGToolsUI.Model
         {
             get
             {
-                if (Parent == null)  throw new Exception("마스터 그룹은 호출 금지");
+                if (Parent == null) throw new Exception("마스터 그룹은 호출 금지");
                 return (IntPoint)ConvertVisualPositionToRelativePosition(Parent);
             }
             set
@@ -265,15 +265,15 @@ namespace SGToolsUI.Model
                 switch (HorizontalAlignment)
                 {
                     /* case HorizontalAlignment.Left: relativeAnchorRelative.X = 0;  break; */
-                    case HAlignment.Center: relativeAnchorRelative.X = VisualSize.Width / 2;   break;
-                    case HAlignment.Right: relativeAnchorRelative.X = VisualSize.Width;        break;
+                    case HAlignment.Center: relativeAnchorRelative.X = VisualSize.Width / 2; break;
+                    case HAlignment.Right: relativeAnchorRelative.X = VisualSize.Width; break;
                 }
 
                 switch (VerticalAlignment)
                 {
                     /* case HorizontalAlignment.Top: relativeAnchorRelative.Y = 0;  break; */
-                    case VAlignment.Center: relativeAnchorRelative.Y = VisualSize.Height / 2;   break;
-                    case VAlignment.Bottom: relativeAnchorRelative.Y = VisualSize.Height;       break;
+                    case VAlignment.Center: relativeAnchorRelative.Y = VisualSize.Height / 2; break;
+                    case VAlignment.Bottom: relativeAnchorRelative.Y = VisualSize.Height; break;
                 }
 
                 return relativeAnchorRelative;
@@ -282,14 +282,14 @@ namespace SGToolsUI.Model
 
         [Browsable(false)]
         [Description("엘리먼트 Rect의 중앙위치")]
-        public Point VisualPositionCenter => new (
+        public Point VisualPositionCenter => new(
             _visualPosition.X + VisualSize.Width / 2,
             _visualPosition.Y + VisualSize.Height / 2
         );
 
         [Browsable(false)]
         [Description("엘리먼트 Rect의 우하단위치")]
-        public Point VisualPositionRightBottom => new (
+        public Point VisualPositionRightBottom => new(
             _visualPosition.X + VisualSize.Width,
             _visualPosition.Y + VisualSize.Height
         );
@@ -301,7 +301,7 @@ namespace SGToolsUI.Model
         public virtual Size VisualSize
         {
             get => Constant.DefaultVisualSize;
-            set {}
+            set { }
         }
 
         /*
@@ -362,17 +362,17 @@ namespace SGToolsUI.Model
         [Description("이 엘리먼트가 이미 삭제되었는지 여부")]
         public bool Deleted => _deleted;
 
-        [Browsable(false)] 
+        [Browsable(false)]
         public virtual bool IsGroup => false;
 
-        [Browsable(false)] 
+        [Browsable(false)]
         public virtual int Code => Parent == null ? -1 : Parent.Code + Index + 1;
 
         [Browsable(false)]
-        public int GroupCode => (Code / Constant.GroupCodeInterval) * Constant.GroupCodeInterval;
+        public int GroupCode => Code / Constant.GroupCodeInterval * Constant.GroupCodeInterval;
 
 
-        [Browsable(false)] 
+        [Browsable(false)]
         public abstract bool Manipulatable { get; }
 
 
@@ -392,7 +392,7 @@ namespace SGToolsUI.Model
                 SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
                 ObservableCollection<SGUIElement> selectedElements = groupMaster.SelectedElements;
 
-                
+
 
                 if (_selected)
                 {
@@ -466,7 +466,7 @@ namespace SGToolsUI.Model
         public void SetPick(bool pick, bool notify = true)
         {
             _picked = pick;
-            if (notify) 
+            if (notify)
                 OnPropertyChanged(nameof(Picked));
         }
 
@@ -503,11 +503,11 @@ namespace SGToolsUI.Model
                 if (!_picked)
                     return;
 
-                
+
                 groupMaster.DeselectAll();
                 groupMaster.PickedElements.ForEach(element => element.SetPick(false));
                 groupMaster.PickedElements.Clear();
-                
+
 
                 if (IsGroup)
                 {
@@ -540,7 +540,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Browsable(false)] 
+        [Browsable(false)]
         public bool FirstPicked => ViewModel.GroupMaster.PickedElement == this;
 
 
@@ -751,7 +751,7 @@ namespace SGToolsUI.Model
                     if (parent == master)
                         yield break;
 
-                    
+
                     parent = parent.Parent;
                     yield return parent;
                     infCheck++;
@@ -817,7 +817,7 @@ namespace SGToolsUI.Model
                 case SGUIElementType.ToggleButton: return new SGUIToggleButton();
                 case SGUIElementType.ScrollBar: return new SGUIScrollBar();
                 case SGUIElementType.ProgressBar: return new SGUIProgressBar();
-                default:  throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
+                default: throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
             }
         }
 
@@ -1120,8 +1120,8 @@ namespace SGToolsUI.Model
             // 엘리먼트타입 고정이므로 필요없음
             _visualName = (string)root[JsonVisualNameKey];
             _defineName = (string)root[JsonDefineNameKey];
-            _verticalAlignment = (VAlignment)((int)root[JsonVAlignKey]);
-            _horizontalAlignment = (HAlignment)((int)root[JsonHAlignKey]);
+            _verticalAlignment = (VAlignment)(int)root[JsonVAlignKey];
+            _horizontalAlignment = (HAlignment)(int)root[JsonHAlignKey];
         }
 
         [Browsable(false)]
@@ -1197,7 +1197,7 @@ namespace SGToolsUI.Model
         // 프로포티 그리드에서 리플렉션을 사용해서 프로퍼티 처리를 하기때문에
         // 타입 디스크립터로 중간에 가져오는 값을 변경해줘서 소수점 아래자리는 안보이도록 만들어주자.
         // =====================================================
-    
+
 
     }
 

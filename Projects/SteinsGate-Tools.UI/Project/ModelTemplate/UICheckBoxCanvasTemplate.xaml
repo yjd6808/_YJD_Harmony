@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:mo="clr-namespace:SGToolsUI.Model">
-    <DataTemplate x:Key="CheckBoxCanvasTemplate" DataType="{x:Type mo:SGUICheckBox}">
+                    xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main">
+    <DataTemplate x:Key="CheckBoxCanvasTemplate" DataType="{x:Type mo_main:SGUICheckBox}">
         <!-- 
         1. 배경이 더 뒤에있어야하고 배경은 크로스 중앙에, 크로스는 배경 중앙에 위치할려면 중앙 정렬을 해주면 될듯? 
         2. 체크박스 백그라운드 이미지가 없으면 어차피 크기가 0일테니 그냥 굳이 템플릿 트리거러 복잡하게 만들지말자
@@ -26,7 +26,7 @@
                             <DataTrigger Binding="{Binding HasBackground}" Value="True">
                                 <Setter Property="ContentTemplate">
                                     <Setter.Value>
-                                        <DataTemplate DataType="{x:Type mo:SGUICheckBox}">
+                                        <DataTemplate DataType="{x:Type mo_main:SGUICheckBox}">
                                             --><!-- 배경이 더 뒤에있어야하고 배경은 크로스 중앙에, 크로스는 배경 중앙에 위치할려면 중앙 정렬을 해주면 될듯? --><!--
                                             <Grid Width="Auto" Height="AUto" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <Image Source="{Binding VisualBackgroundSource}"/>
@@ -39,7 +39,7 @@
                             <DataTrigger Binding="{Binding HasBackground}" Value="False">
                                 <Setter Property="ContentTemplate">
                                     <Setter.Value>
-                                        <DataTemplate DataType="{x:Type mo:SGUICheckBox}">
+                                        <DataTemplate DataType="{x:Type mo_main:SGUICheckBox}">
                                             <Image Source="{Binding VisualCrossSource}"/>
                                         </DataTemplate>
                                     </Setter.Value>

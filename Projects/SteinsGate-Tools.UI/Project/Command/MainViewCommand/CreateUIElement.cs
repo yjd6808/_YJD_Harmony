@@ -4,7 +4,7 @@
  *
  */
 
-using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ using System.Windows.Shapes;
 
 namespace SGToolsUI.Command.MainViewCommand
 {
-    public class CreateUIElement : MainCommandAbstract
+    public class CreateUIElement : MainCommandAbstractAsync
     {
         public CreateUIElement(MainViewModel viewModel)
             : base(viewModel, "선택한 그룹에 UIElement를 추가합니다. " +
@@ -34,7 +34,7 @@ namespace SGToolsUI.Command.MainViewCommand
         {
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
             SGUIElementType createElementType = (SGUIElementType)Enum.Parse(typeof(SGUIElementType), parameter.ToString());
             SGUIGroup group = ViewModel.GroupMaster.SelectedGroup;
@@ -53,6 +53,8 @@ namespace SGToolsUI.Command.MainViewCommand
                 return;
             }
 
+            
+
             SGUIElement newElement = SGUIElement.Create(createElementType);
             if (newElement.IsGroup)
                 newElement.VisualSize = new Size(Constant.ResolutionWidth, Constant.ResolutionHeight);
@@ -60,7 +62,7 @@ namespace SGToolsUI.Command.MainViewCommand
             newElement.CreateInit();
             newElement.ViewModel = ViewModel;
             group.AddChild(newElement);
-
+            await ViewModel.Saver.BackupAsync($"{createElementType} 생성");
             // 그룹마스터는 트리뷰에서 관리를 안하므로..
             if (!isGroupMaster)
                 group.Item.IsExpanded = true;

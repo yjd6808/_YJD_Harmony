@@ -17,7 +17,7 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
 
     [CategoryOrder(Constant.CheckBoxCategoryName, Constant.OtherCategoryOrder)]
@@ -62,7 +62,7 @@ namespace SGToolsUI.Model
 
 
         [ReadOnly(true)]
-        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(SGUIElement.OrderVisualSize)]
+        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
         public override Size VisualSize
         {
             get
@@ -249,7 +249,7 @@ namespace SGToolsUI.Model
             string cross_img = (string)root[JsonCrossImg];
 
             int[] sprites = new int[4];
-            StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites); 
+            StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
 
             if (bg_sga != string.Empty)
             {

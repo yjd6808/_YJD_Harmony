@@ -20,7 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public class CanvasSelection : CanvasShape
     {
@@ -28,7 +28,7 @@ namespace SGToolsUI.Model
             => Selection = selectionControl;
 
         public ItemsControl Selection { get; }
-        public SGUIElement Element 
+        public SGUIElement Element
         {
             get => _element;
             set

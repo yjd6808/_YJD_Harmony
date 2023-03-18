@@ -2,11 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:local="clr-namespace:SGToolsUI"
-                    xmlns:mo="clr-namespace:SGToolsUI.Model"
+                    xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
                     xmlns:common_conv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel">
     <DataTemplate x:Key="CanvasSelectionTemplate"
-                  DataType="{x:Type mo:CanvasSelection}">
+                  DataType="{x:Type mo_main:CanvasSelection}">
         <ContentPresenter Margin="{Binding Element.VisualRect, Converter={x:Static common_conv:RectThicknessConverter.Instance}}" 
                           Content="{Binding Selection}">
         </ContentPresenter>

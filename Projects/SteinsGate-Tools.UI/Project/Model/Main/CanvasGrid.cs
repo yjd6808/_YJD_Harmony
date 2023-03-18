@@ -21,7 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Tuple = System.Tuple;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public class LinePosition
     {
@@ -55,7 +55,7 @@ namespace SGToolsUI.Model
 
                 _interval = value;
 
-                int lineCount = ((int)Constant.ResolutionWidth) / _interval + 1;
+                int lineCount = (int)Constant.ResolutionWidth / _interval + 1;
                 var lines = new List<LinePosition>(lineCount);
 
                 for (int i = 0; i < lineCount; ++i)
@@ -76,7 +76,7 @@ namespace SGToolsUI.Model
             set
             {
                 _thickness = value;
-                
+
                 OnPropertyChanged();
             }
         }

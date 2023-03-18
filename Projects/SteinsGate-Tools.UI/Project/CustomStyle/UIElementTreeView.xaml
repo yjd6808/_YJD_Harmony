@@ -9,7 +9,7 @@
                     xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
                     xmlns:local="clr-namespace:SGToolsUI"
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
-                    xmlns:model="clr-namespace:SGToolsUI.Model"
+                    xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
                     xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
                     xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
                     xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
@@ -42,7 +42,7 @@
             <Setter.Value>
                 <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource WinformTreeViewItem}">
                     <d:Style.DataContext>
-                        <x:Type Type="model:SGUIElement" />
+                        <x:Type Type="mo_main:SGUIElement" />
                     </d:Style.DataContext>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Selected}" Value="True">

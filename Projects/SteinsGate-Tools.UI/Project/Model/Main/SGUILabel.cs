@@ -15,9 +15,10 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
+using SGToolsUI.Model;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     [CategoryOrder(Constant.LabelCategoryName, Constant.OtherCategoryOrder)]
     public class SGUILabel : SGUIElement
@@ -114,7 +115,7 @@ namespace SGToolsUI.Model
         }
 
 
-        [Browsable(false)] 
+        [Browsable(false)]
         public TextWrapping TextWrapEnum => _textWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
 
 
@@ -191,8 +192,8 @@ namespace SGToolsUI.Model
             _fontColor = ColorEx.ParseFullString4B(fontColorString);
             _text = (string)root[JsonTextKey];
             _textWrap = (bool)root[JsonTextWrapKey];
-            _textVAlign = (VAlignment)((int)root[JsonTextVAlignKey]);
-            _textHAlign = (HAlignment)((int)root[JsonTextHAlignKey]);
+            _textVAlign = (VAlignment)(int)root[JsonTextVAlignKey];
+            _textHAlign = (HAlignment)(int)root[JsonTextHAlignKey];
         }
 
         public override void CreateInit() => VisualName = $"라벨_{Seq++}";
@@ -206,8 +207,8 @@ namespace SGToolsUI.Model
         private bool _textWrap;
         private VAlignment _textVAlign;
         private HAlignment _textHAlign;
-        
-        
+
+
     }
 }
 

@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public class CanvasAnchor : CanvasEllipse
     {

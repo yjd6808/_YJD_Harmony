@@ -21,7 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
 using MoreLinq.Extensions;
-using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command.MainViewCommand

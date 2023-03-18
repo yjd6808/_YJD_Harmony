@@ -22,7 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.Extension;
-using SGToolsUI.Model;
+using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
 
 namespace SGToolsUI.Command.MainViewCommand

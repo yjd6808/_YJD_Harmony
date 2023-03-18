@@ -25,14 +25,14 @@ using SGToolsCommon;
 using SGToolsCommon.Sga;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
-    
+
 
     [ExpandableObject]
     public struct SGUISpriteInfo
     {
-        public static readonly SGUISpriteInfo Empty = new ();
+        public static readonly SGUISpriteInfo Empty = new();
         public SGUISpriteInfo()
         {
             Sga = null;
@@ -111,7 +111,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Browsable(false)] 
+        [Browsable(false)]
         public BitmapSource Source => Sprite != null ? Sprite.Source : null;
 
         [Browsable(false)]

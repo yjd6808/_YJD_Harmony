@@ -3,8 +3,8 @@
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime"
                     xmlns:conv="clr-namespace:SGToolsUI.Converter"
                     xmlns:local="clr-namespace:SGToolsUI"
-                    xmlns:mo="clr-namespace:SGToolsUI.Model">
-    <DataTemplate x:Key="ElementTreeViewTemplate" DataType="{x:Type mo:SGUIElement}">
+                    xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main">
+    <DataTemplate x:Key="ElementTreeViewTemplate" DataType="{x:Type mo_main:SGUIElement}">
         <DataTemplate.Resources>
             <sys:Boolean x:Key="Re"/>
         </DataTemplate.Resources>

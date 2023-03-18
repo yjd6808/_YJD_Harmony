@@ -2,14 +2,37 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SGToolsUI.View"
-        xmlns:cus="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
-        mc:Ignorable="d"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+        xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=AttachedCommandBehavior"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:SGToolsUI"
+        xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
+        xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
+        xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
+        xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
+        xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"
+        xmlns:sga="clr-namespace:SGToolsCommon.Sga;assembly=SGToolsCommon"
+        xmlns:common_local="clr-namespace:SGToolsCommon;assembly=SGToolsCommon"
+        xmlns:common_ctrl="clr-namespace:SGToolsCommon.CustomControl;assembly=SGToolsCommon"
+        xmlns:common_style="clr-namespace:SGToolsCommon.CustomStyle;assembly=SGToolsCommon"
+        xmlns:common_res="clr-namespace:SGToolsCommon.Resource;assembly=SGToolsCommon"
+        xmlns:common_prim="clr-namespace:SGToolsCommon.Primitive;assembly=SGToolsCommon"
+        xmlns:file="clr-namespace:SGToolsUI.FileSystem"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Style="{StaticResource OneLineWindow}"
         SizeToContent="WidthAndHeight"
         Title="CreateElementView">
     <StackPanel>
-        <cus:TitleBar Name="TitleBar" Title="엘리먼트 선택" RealClose="False"/>
-
+        <common_ctrl:TitleBar Name="TitleBar" Title="엘리먼트 선택" FontSize="16" RealClose="False"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.Button}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredButtonIconImageSource}"/>
+            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.Sprite}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredSpriteIconImageSource}"/>
+            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredToggleButtonIconImageSource}"/>
+            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredProgressBarIconImageSource}"/>
+            <Button Click="CreateElement_OnClick" Tag="{x:Static mo_main:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static ui_res:R.UIColoredScrollBarIconImageSource}"/>
+        </StackPanel>
     </StackPanel>
 </Window>

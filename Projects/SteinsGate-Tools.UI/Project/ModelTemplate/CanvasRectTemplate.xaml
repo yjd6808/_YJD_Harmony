@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:local="clr-namespace:SGToolsUI"
-                    xmlns:mo="clr-namespace:SGToolsUI.Model"
+                    xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
                     xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
                     xmlns:common_conv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon">
-    <DataTemplate x:Key="CanvasRectTemplate" DataType="{x:Type mo:CanvasRect}">
+    <DataTemplate x:Key="CanvasRectTemplate" DataType="{x:Type mo_main:CanvasRect}">
         <Rectangle StrokeThickness="{Binding Thickness}"
                    Stroke="{Binding Foreground}"
                    Width="{Binding VisualSize.Width}"

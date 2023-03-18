@@ -25,7 +25,7 @@ using SGToolsCommon.Primitive;
 
 using IoFile = System.IO.File;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Setting
 {
     public class Setting : ICloneable
     {
@@ -98,7 +98,7 @@ namespace SGToolsUI.Model
             if (root.TryGetValue(ShowLogViewWhenProgramLaunchedKey, out token))
                 ShowLogViewWhenProgramLaunched = (bool)token;
 
-            Point temp = new ();
+            Point temp = new();
 
             if (root.TryGetValue(LogViewPositionWhenProgramLaunchedXKey, out token))
                 temp.X = (int)token;

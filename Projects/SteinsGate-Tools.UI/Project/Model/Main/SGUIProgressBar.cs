@@ -7,6 +7,7 @@
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
+using SGToolsUI.Model.Main;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,7 +29,7 @@ using Vanara.PInvoke;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using static Vanara.PInvoke.Kernel32;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public enum ProgressIncreaseDirection
     {
@@ -114,7 +115,8 @@ namespace SGToolsUI.Model
             }
         }
 
-        [Browsable(false)] public double PercentHeight
+        [Browsable(false)]
+        public double PercentHeight
         // 수직방향시에 보일 너비 비율
         {
             get
@@ -124,7 +126,7 @@ namespace SGToolsUI.Model
                 {
                     double height = _visualSize.Height * (_percent / 100.0);
                     return height;
-                } 
+                }
                 return _visualSize.Height;
             }
         }
@@ -155,10 +157,10 @@ namespace SGToolsUI.Model
         }
 
         // 디폴트 값이 NaN이라 하나를 0으로 세팅하면 나머지는 NaN으로 바꿔줘야함
-        [Browsable(false)] public double CanvasLeft  => _direction == ProgressIncreaseDirection.LeftRight ? 0.0 : Double.NaN;
-        [Browsable(false)] public double CanvasRight => _direction == ProgressIncreaseDirection.RightLeft ? 0.0 : Double.NaN;
-        [Browsable(false)] public double CanvasTop => _direction == ProgressIncreaseDirection.TopBottom ? 0.0 : Double.NaN;
-        [Browsable(false)] public double CanvasBottom => _direction == ProgressIncreaseDirection.BottomTop ? 0.0 : Double.NaN;
+        [Browsable(false)] public double CanvasLeft => _direction == ProgressIncreaseDirection.LeftRight ? 0.0 : double.NaN;
+        [Browsable(false)] public double CanvasRight => _direction == ProgressIncreaseDirection.RightLeft ? 0.0 : double.NaN;
+        [Browsable(false)] public double CanvasTop => _direction == ProgressIncreaseDirection.TopBottom ? 0.0 : double.NaN;
+        [Browsable(false)] public double CanvasBottom => _direction == ProgressIncreaseDirection.BottomTop ? 0.0 : double.NaN;
 
 
         [ReadOnly(false)]
@@ -199,7 +201,7 @@ namespace SGToolsUI.Model
         }
 
 
-      
+
 
         [Browsable(false)]
         public BitmapSource SpriteSource => Sprite.Source;

@@ -25,7 +25,7 @@ using SGToolsUI.CustomControl;
 using SGToolsUI.ViewModel;
 using Point = System.Windows.Point;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
 
     public interface IDataDragReceiver
@@ -71,7 +71,7 @@ namespace SGToolsUI.Model
             }
         }
 
-        public List<IDataDragReceiver> EndTargets { get; } = new ();
+        public List<IDataDragReceiver> EndTargets { get; } = new();
 
         public void OnDragBegin(UIElement beginTarget, Point p, object data)
         {

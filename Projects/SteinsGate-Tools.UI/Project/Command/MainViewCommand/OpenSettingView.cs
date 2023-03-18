@@ -19,8 +19,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SGToolsUI.Model;
 using SGToolsUI.View;
+using SGToolsUI.Model.Setting;
 
 namespace SGToolsUI.Command.MainViewCommand
 {

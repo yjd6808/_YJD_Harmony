@@ -27,7 +27,7 @@ using SGToolsCommon;
 using SGToolsCommon.Extension;
 using Vanara.PInvoke;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
 
     public enum SGKey
@@ -65,7 +65,7 @@ namespace SGToolsUI.Model
         // 따라서 아래와 같이 64바이트 단위로 정렬하는게 의미없는 짓이다.
         // 일단 추후 멀티 쓰레드에서도 안전하게 키입력 받을 수 있도록 구현 할수도있으니 남겨두자.
         [StructLayout(LayoutKind.Explicit, Size = Constant.CacheAlignSize, Pack = 8)]
-        private struct KeyElement 
+        private struct KeyElement
         {
             public KeyElement(Key key)
             {
@@ -86,27 +86,27 @@ namespace SGToolsUI.Model
         public KeyState()
         {
             _keys = new KeyElement[(int)SGKey.Max];
-            _keys[(int)SGKey.LeftCtrl]  = new KeyElement(Key.LeftCtrl);  
-            _keys[(int)SGKey.LeftAlt]   = new KeyElement(Key.LeftAlt);
+            _keys[(int)SGKey.LeftCtrl] = new KeyElement(Key.LeftCtrl);
+            _keys[(int)SGKey.LeftAlt] = new KeyElement(Key.LeftAlt);
             _keys[(int)SGKey.LeftShift] = new KeyElement(Key.LeftShift);
-            _keys[(int)SGKey.Delete]    = new KeyElement(Key.Delete);
-            _keys[(int)SGKey.Space]     = new KeyElement(Key.Space);
-            _keys[(int)SGKey.Enter]     = new KeyElement(Key.Enter);
-            _keys[(int)SGKey.Left]      = new KeyElement(Key.Left);
-            _keys[(int)SGKey.Up]        = new KeyElement(Key.Up);
-            _keys[(int)SGKey.Right]     = new KeyElement(Key.Right);
-            _keys[(int)SGKey.Down]      = new KeyElement(Key.Down);
-            _keys[(int)SGKey.X]         = new KeyElement(Key.X);
-            _keys[(int)SGKey.C]         = new KeyElement(Key.C);
-            _keys[(int)SGKey.V]         = new KeyElement(Key.V);
-            _keys[(int)SGKey.S]         = new KeyElement(Key.S);
-            _keys[(int)SGKey.L]         = new KeyElement(Key.L);
-            _keys[(int)SGKey.Z]         = new KeyElement(Key.Z);
-            _keys[(int)SGKey.Escape]    = new KeyElement(Key.Escape);
-            _keys[(int)SGKey.F2]        = new KeyElement(Key.F2);
-            _keys[(int)SGKey.F6]        = new KeyElement(Key.F6);
-            _keys[(int)SGKey.F7]        = new KeyElement(Key.F7);
-            _keys[(int)SGKey.F8]        = new KeyElement(Key.F8);
+            _keys[(int)SGKey.Delete] = new KeyElement(Key.Delete);
+            _keys[(int)SGKey.Space] = new KeyElement(Key.Space);
+            _keys[(int)SGKey.Enter] = new KeyElement(Key.Enter);
+            _keys[(int)SGKey.Left] = new KeyElement(Key.Left);
+            _keys[(int)SGKey.Up] = new KeyElement(Key.Up);
+            _keys[(int)SGKey.Right] = new KeyElement(Key.Right);
+            _keys[(int)SGKey.Down] = new KeyElement(Key.Down);
+            _keys[(int)SGKey.X] = new KeyElement(Key.X);
+            _keys[(int)SGKey.C] = new KeyElement(Key.C);
+            _keys[(int)SGKey.V] = new KeyElement(Key.V);
+            _keys[(int)SGKey.S] = new KeyElement(Key.S);
+            _keys[(int)SGKey.L] = new KeyElement(Key.L);
+            _keys[(int)SGKey.Z] = new KeyElement(Key.Z);
+            _keys[(int)SGKey.Escape] = new KeyElement(Key.Escape);
+            _keys[(int)SGKey.F2] = new KeyElement(Key.F2);
+            _keys[(int)SGKey.F6] = new KeyElement(Key.F6);
+            _keys[(int)SGKey.F7] = new KeyElement(Key.F7);
+            _keys[(int)SGKey.F8] = new KeyElement(Key.F8);
 
 
             // 방향키 연속키입력 허용
@@ -114,7 +114,7 @@ namespace SGToolsUI.Model
             SetEnableFireContinuous(SGKey.Up, true);
             SetEnableFireContinuous(SGKey.Right, true);
             SetEnableFireContinuous(SGKey.Down, true);
-            
+
 
 
             _isRunning = true;
@@ -143,7 +143,7 @@ namespace SGToolsUI.Model
             SGKey sgKey;
             Key wpfKey;
             bool isKeyDown;
-            
+
             for (int i = 0; i < _keys.Length; ++i)
             {
                 sgKey = (SGKey)i;
@@ -212,7 +212,7 @@ namespace SGToolsUI.Model
             });
         }
 
-        
+
         public void SetEnableFireContinuous(SGKey key, bool fire, long delay = 70)
         {
             int idx = (int)key;
@@ -224,8 +224,8 @@ namespace SGToolsUI.Model
         public bool IsShiftPressed => IsPressed(SGKey.LeftShift);
         public bool IsAltPressed => IsPressed(SGKey.LeftAlt);
         public bool IsCtrlPressed => IsPressed(SGKey.LeftCtrl);
-        
-        public bool IsModifierKeyPressed => _keys[(int)SGKey.LeftShift].Pressed || 
+
+        public bool IsModifierKeyPressed => _keys[(int)SGKey.LeftShift].Pressed ||
                                             _keys[(int)SGKey.LeftAlt].Pressed ||
                                             _keys[(int)SGKey.LeftCtrl].Pressed;
 
@@ -234,7 +234,7 @@ namespace SGToolsUI.Model
         private readonly Thread _keyCaptureThread;
         private volatile bool _isRunning;
         private long _previousTick;
-        private Stopwatch _stopWatch = new ();
+        private Stopwatch _stopWatch = new();
         public event KeyDownHandler KeyDown;
         public event KeyDownHandler KeyUp;
         private AutoResetEvent _finishHandle;

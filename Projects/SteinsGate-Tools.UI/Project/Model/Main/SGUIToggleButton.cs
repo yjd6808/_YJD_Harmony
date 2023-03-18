@@ -26,7 +26,7 @@ using SGToolsCommon.Sga;
 using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     [CategoryOrder(Constant.ToggleButtonCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIToggleButton : SGUIElement
@@ -72,7 +72,7 @@ namespace SGToolsUI.Model
         }
 
         [ReadOnly(true)]
-        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(SGUIElement.OrderVisualSize)]
+        [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
         public override Size VisualSize
         {
             get

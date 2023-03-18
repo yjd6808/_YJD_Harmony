@@ -21,7 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.Extension;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.Model.Main
 {
     public class CanvasEllipse : CanvasShape
     {
@@ -34,7 +34,7 @@ namespace SGToolsUI.Model
             _fillBrush = fill;
         }
 
-        
+
         public Rect VisualRect
         {
             get => _visualRect;

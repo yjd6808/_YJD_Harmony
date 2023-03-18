@@ -1,10 +1,4 @@
-﻿/*
- * 작성자: 윤정도
- * 생성일: 3/1/2023 8:08:34 AM
- *
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,21 +10,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SGToolsUI.Model
+namespace SGToolsUI.View
 {
-    public enum SGUIElementType
+    public class BackUpItem
     {
-        Group,
-        Button,
-        Label,
-        Sprite,
-        EditBox,
-        CheckBox,
-        ToggleButton,
-        ScrollBar,
-        ProgressBar
+        
+    }
+
+
+    public partial class BackupView : Window
+    {
+        public BackupView()
+        {
+            InitializeComponent();
+        }
     }
 }
