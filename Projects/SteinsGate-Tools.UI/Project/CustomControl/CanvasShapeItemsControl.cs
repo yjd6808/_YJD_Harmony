@@ -257,8 +257,6 @@ namespace SGToolsUI.CustomControl
             if (key == SGKey.Z)
                 IsHideSelection = true;
 
-           
-
             if (!ViewModel.KeyState.IsModifierKeyPressed)
             {
                 if (ViewModel.KeyState.IsPressed(SGKey.X))
@@ -274,14 +272,38 @@ namespace SGToolsUI.CustomControl
                 {
                     ViewModel.GroupMaster.PickedElementsDisabled = !ViewModel.GroupMaster.PickedElementsDisabled;
                 }
+                else if (key == SGKey.Delete)
+                {
+                    if (ViewModel.GroupMaster.HasSelectedElement && MessageBoxEx.ShowTopMost("정말로 삭제하시겠습니까?", "질문임", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        ViewModel.Commander.DeleteUIElement.Execute(null);
+                }
+                else if (key == SGKey.Left)
+                {
+                    ViewModel.GroupMaster
+                        .PickedSelectedElements
+                        .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(Constant.CanvasElementWithKeyboardDeltaX * -1, 0)) );
+                }
+                else if (key == SGKey.Right)
+                {
+                    ViewModel.GroupMaster
+                        .PickedSelectedElements
+                        .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(Constant.CanvasElementWithKeyboardDeltaX, 0)) );
+                }
+                else if (key == SGKey.Up)
+                {
+                    ViewModel.GroupMaster
+                        .PickedSelectedElements
+                        .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(0, Constant.CanvasElementWithKeyboardDeltaY * -1)) );
+                }
+                else if (key == SGKey.Down)
+                {
+                    ViewModel.GroupMaster
+                        .PickedSelectedElements
+                        .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(0, Constant.CanvasElementWithKeyboardDeltaY)) );
+                }
             }
 
-            if (key == SGKey.Delete)
-            {
-                if (ViewModel.GroupMaster.HasSelectedElement && MessageBoxEx.ShowTopMost("정말로 삭제하시겠습니까?", "질문임", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                    ViewModel.Commander.DeleteUIElement.Execute(null);
-            }
-
+          
         }
 
         public void OnKeyUp(SGKey key)
