@@ -112,6 +112,7 @@ namespace SGToolsUI.CustomControl
         private void OnSelectedPropertyItemChanged(object sender, RoutedPropertyChangedEventArgs<PropertyItemBase> e)
         {
             PropertyItem selectedProperty = e.NewValue as PropertyItem;
+            ViewModel.FocusedKeyboardInputReceiver = this;
 
             if (selectedProperty == null)
                 return;

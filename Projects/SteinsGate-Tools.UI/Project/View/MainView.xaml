@@ -41,11 +41,12 @@
         AllowDrop="True"
         Drop="MainView_Drop"
         Closing="MainView_OnClosing"
+        PreviewMouseDown="MainView_OnPreviewMouseDown"
         PreviewMouseMove="MainView_OnPreviewMouseMove"
         PreviewMouseUp="MainView_OnPreviewMouseUp"
         MouseLeave="MainView_OnMouseLeave"
         Loaded="MainView_OnLoaded"
-        PreviewMouseDown="MainView_OnPreviewMouseDown"
+        
         Style="{StaticResource OneLineWindow}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel Name="MainDockPanel"
@@ -441,6 +442,11 @@
                 <Button Grid.Column="1" Command="{Binding Commander.OpenAlbumView}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonAlbumKey}}"/>
 
                 <c:WatermarkTextBox Watermark="검색할 내용 입력" Grid.Column="4" Name="SgaResourceSearchTextBox" TextWrapping="NoWrap" AcceptsReturn="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" KeyDown="SgaResourceSearchTextBox_OnKeyDown">
+                    <!--
+                    포커싱 해제될때 삭제전 문자열로 한번 검색이 이뤄지네..
+                    이거 해결할려면 커맨드 파라미터로 TextChangedEventArgs넘긴다음 변환된 문자열확인해서 처리해야하는데. 
+                    코드가 직관적이지 않아질거고, 커맨드 범용성이 사라져버린다.
+                    
                     <c:WatermarkTextBox.Style>
                         <Style TargetType="c:WatermarkTextBox">
                             <Style.Triggers>
@@ -449,7 +455,7 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                    </c:WatermarkTextBox.Style>
+                    </c:WatermarkTextBox.Style>-->ㅣ
 
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">

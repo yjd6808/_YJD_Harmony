@@ -283,5 +283,7 @@ namespace SGToolsUI.View
 
             ViewModel.FocusedKeyboardInputReceiver = ViewModel.KeyboardInputReceivers.FirstOrDefault(receiver => ((FrameworkElement)receiver).ContainPoint(p));
         }
+
+        
     }
 }

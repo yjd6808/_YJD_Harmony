@@ -58,7 +58,7 @@ namespace SGToolsUI.FileSystem
         {
             string prefix = string.Empty;
 
-            element.ParentTrack.ForEach(parent =>
+            element.ParentTrack.Reverse().ForEach(parent =>
             {
                 if (parent == _viewModel.GroupMaster)
                     return;
@@ -91,7 +91,9 @@ namespace SGToolsUI.FileSystem
                         if (element.Depth == 0)
                             writer.WriteLine("\n\n");
 
-                        writer.WriteLine($"{DepthStrings[element.Depth]}#define {DefineNamePrefix(element)}{element.DefineName.ToUpper()}_{element.UIElementType}");
+                        string defineName = $"{DefineNamePrefix(element)}{element.UIElementType}_{element.DefineName}".ToUpper();
+
+                        writer.WriteLine($"{DepthStrings[element.Depth]}#define {defineName}\t{element.Code}");
 
                         if (!uniqueDefineNameMap.TryAdd(element.DefineName, true))
                             duplicatedDefineNameList.Add(element.DefineName);

@@ -798,7 +798,7 @@ namespace SGToolsUI.CustomControl
             if (sprite == null)
                 return;
 
-            Point pos = Mouse.GetPosition(this);
+            Point pos = Mouse.GetPosition(this).Zoom(ViewModel.ZoomState);
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
             if (pickedElements.Count == 0)
             {

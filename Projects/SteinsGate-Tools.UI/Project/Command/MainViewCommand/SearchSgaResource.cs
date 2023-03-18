@@ -42,7 +42,7 @@ namespace SGToolsUI.Command.MainViewCommand
             if (parameter is not string searchText)
                 return;
 
-            if (_beforeSearchText != searchText)
+            if (searchText.Length == 0 || _beforeSearchText != searchText)
                 _saveDict.Clear();
 
             _beforeSearchText = searchText;
@@ -71,12 +71,14 @@ namespace SGToolsUI.Command.MainViewCommand
                         ViewModel.Commander.SelectSgaPackage.Execute(image.Parent);
                         ViewModel.Commander.SelectSgaElement.Execute(header);
 
-                        ViewModel.AlbumView.PackageListBox.ScrollIntoView(image.Parent);
                         packageListBox.ScrollIntoView(image.Parent);
-
                         ViewModel.View.ElementListBox.ScrollIntoView(header);
-                        ViewModel.AlbumView.ElementListBox.ScrollIntoView(header);
 
+                        if (ViewModel.AlbumView.IsVisible)
+                        {
+                            ViewModel.AlbumView.PackageListBox.ScrollIntoView(image.Parent);
+                            ViewModel.AlbumView.ElementListBox.ScrollIntoView(header);
+                        }
                         return;
                     }
                 }
@@ -91,8 +93,11 @@ namespace SGToolsUI.Command.MainViewCommand
                     _saveDict.Add(package, package);
                     ViewModel.Commander.SelectSgaPackage.Execute(package);
 
-                    ViewModel.AlbumView.PackageListBox.SelectedItem = package;
-                    ViewModel.AlbumView.PackageListBox.ScrollIntoView(package);
+                    if (ViewModel.AlbumView.IsVisible)
+                    {
+                        ViewModel.AlbumView.PackageListBox.SelectedItem = package;
+                        ViewModel.AlbumView.PackageListBox.ScrollIntoView(package);
+                    }
 
                     packageListBox.SelectedItem = package;
                     packageListBox.ScrollIntoView(package);

@@ -301,9 +301,28 @@ namespace SGToolsUI.CustomControl
                         .PickedSelectedElements
                         .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(0, Constant.CanvasElementWithKeyboardDeltaY)) );
                 }
+
+
             }
 
-          
+            if (ViewModel.KeyState.IsCtrlPressed)
+            {
+                switch (key)
+                {
+                case SGKey.X:
+                    if (ViewModel.KeyState.IsCtrlPressed)
+                        ViewModel.Commander.ClipboardOperateUIElement.Execute(ClipboardOperate.Cut);
+                    break;
+                case SGKey.C:
+                    if (ViewModel.KeyState.IsCtrlPressed)
+                        ViewModel.Commander.ClipboardOperateUIElement.Execute(ClipboardOperate.Copy);
+                    break;
+                case SGKey.V:
+                    if (ViewModel.KeyState.IsCtrlPressed)
+                        ViewModel.Commander.ClipboardOperateUIElement.Execute(ClipboardOperate.Paste);
+                    break;
+                }
+            }
         }
 
         public void OnKeyUp(SGKey key)
