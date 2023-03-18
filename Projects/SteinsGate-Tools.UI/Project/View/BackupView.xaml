@@ -39,7 +39,14 @@
                               FontSize="16"
                               Title="백업 뷰"
                               EscTermination="True"
-                              RealClose="False" />
+                              RealClose="False">
+            <common_ctrl:TitleBar.TitleContent>
+                <Button Width="25"
+                        Click="RefreshButton_OnClick"
+                        Style="{StaticResource ImageButton}"
+                        common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonRefreshKey}}" />
+            </common_ctrl:TitleBar.TitleContent>
+        </common_ctrl:TitleBar>
         <Separator DockPanel.Dock="Top" />
         <ListBox DockPanel.Dock="Left"
                  Name="BackupFolderListBox"

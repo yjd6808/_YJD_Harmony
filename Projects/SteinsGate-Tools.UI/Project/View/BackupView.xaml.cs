@@ -64,6 +64,13 @@ namespace SGToolsUI.View
             await ViewModel.MainViewModel.Saver.BackupAsync("백업뷰 로딩");
             ViewModel.MainViewModel.GroupMaster = await ViewModel.MainViewModel.Loader.LoadAsync(file.Path);
         }
+
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel.NotifyProperty("Folders");
+            ViewModel.SelectedFolder = new BackupFolder(string.Empty, ViewModel);
+            ViewModel.SelectedFile = new BackupFile(string.Empty, ViewModel);
+        }
     }
 }
 
