@@ -12,6 +12,8 @@
         <ResourceDictionary Source="MenuItemEditBox.xaml" />
         <ResourceDictionary Source="MenuItemCheckBox.xaml" />
         <ResourceDictionary Source="MenuItemToggleButton.xaml" />
+        <ResourceDictionary Source="MenuItemProgressBar.xaml" />
+        <ResourceDictionary Source="MenuItemScrollBar.xaml" />
 
 
         <ResourceDictionary Source="CanvasShapeItemsControl.xaml" />

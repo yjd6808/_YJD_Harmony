@@ -154,13 +154,11 @@ namespace SGToolsUI.Model
             }
         }
 
+        // 디폴트 값이 NaN이라 하나를 0으로 세팅하면 나머지는 NaN으로 바꿔줘야함
         [Browsable(false)] public double CanvasLeft  => _direction == ProgressIncreaseDirection.LeftRight ? 0.0 : Double.NaN;
         [Browsable(false)] public double CanvasRight => _direction == ProgressIncreaseDirection.RightLeft ? 0.0 : Double.NaN;
         [Browsable(false)] public double CanvasTop => _direction == ProgressIncreaseDirection.TopBottom ? 0.0 : Double.NaN;
         [Browsable(false)] public double CanvasBottom => _direction == ProgressIncreaseDirection.BottomTop ? 0.0 : Double.NaN;
-
-
-
 
 
         [ReadOnly(false)]

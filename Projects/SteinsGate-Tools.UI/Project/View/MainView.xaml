@@ -337,7 +337,7 @@
                                           Source="{Binding GroupMaster.PickedElements}">
                         <CollectionViewSource.SortDescriptions>
                             <!--<scm:SortDescription PropertyName="Depth" />-->
-                            <scm:SortDescription PropertyName="Code" />
+                            <scm:SortDescription PropertyName="Code" Direction="Ascending" />
                             
                         </CollectionViewSource.SortDescriptions>
                     </CollectionViewSource>

@@ -38,7 +38,7 @@ namespace SGToolsCommon.Extension
 
         public static string ToFullString(this Vector vector)
         {
-            return $"{vector.X} {vector.Y:F0}";
+            return $"{vector.X:F0} {vector.Y:F0}";
         }
 
         public static string ToFullString(this Point point)

@@ -63,10 +63,10 @@ namespace SGToolsUI.Model
         public SGUIGroupMaster(MainViewModel viewModel)
         {
             ViewModel = viewModel;
-            SelectedElements = new ObservableElementsCollection(120, viewModel);
-            SelectedElements.CollectionChanged += SelectedElementsOnCollectionChanged;
-            PickedElements = new ObservableElementsCollection(120, viewModel);
-            PickedElements.CollectionChanged += PickedElementsOnCollectionChanged;
+            _selectedElements = new ObservableElementsCollection(120, viewModel);
+            _selectedElements.CollectionChanged += SelectedElementsOnCollectionChanged;
+            _pickedElements = new ObservableElementsCollection(120, viewModel);
+            _pickedElements.CollectionChanged += PickedElementsOnCollectionChanged;
 
             _groups = new SortedList<int, SGUIGroup>(120);   // C++의 map같은 녀석임
             _elements = new LinkedList<SGUIElement>();
@@ -80,9 +80,9 @@ namespace SGToolsUI.Model
         }
 
 
-        public SGUIElement PickedElement => PickedElements.Count > 0 ? PickedElements[0] : null;
-        public bool HasSelectedElement => SelectedElements.Count > 0;
-        public bool HasPickedElement => PickedElements.Count > 0;
+        public SGUIElement PickedElement => _pickedElements.Count > 0 ? _pickedElements[0] : null;
+        public bool HasSelectedElement => _selectedElements.Count > 0;
+        public bool HasPickedElement => _pickedElements.Count > 0;
         public bool HasPickedGroup => PickedElement != null && PickedElement.IsGroup;
 
         // 선택된 엘리먼트가 없을 경우 마스터
@@ -94,7 +94,7 @@ namespace SGToolsUI.Model
                 if (!HasSelectedElement)
                     return this;
 
-                IEnumerable<SGUIElement> selectedGroups = SelectedElements.Where(element => element.IsGroup);
+                IEnumerable<SGUIElement> selectedGroups = _selectedElements.Where(element => element.IsGroup);
 
                 if (!selectedGroups.Any())
                     return null;
@@ -107,22 +107,23 @@ namespace SGToolsUI.Model
         {
             get
             {
-                if (SelectedElements.Count == 0)
+                if (_selectedElements.Count == 0)
                     return null;
 
-                return SelectedElements[SelectedElements.Count - 1];
+                return _selectedElements[_selectedElements.Count - 1];
             }
         }
 
-        public bool IsMultiSelected => SelectedElements.Count >= 2;
+        public bool IsMultiSelected => _selectedElements.Count >= 2;
 
 
-        public ObservableCollection<SGUIElement> SelectedElements { get; }
-        public ObservableCollection<SGUIElement> PickedElements { get; }
-        public SGUIGroup PickedGroup => HasPickedElement ? PickedElements[0].Cast<SGUIGroup>() : null;
-        public IEnumerable<SGUIElement> PickedSelectedElements => PickedElements.Where(element => element.Selected);
-        public SGUIElement PickedSelectedElement => PickedElements.LastOrDefault(element => element.Selected);
-        public bool HasPickedSelectedElement => PickedElements.FirstOrDefault(element => element.Selected) != null;
+        public ObservableCollection<SGUIElement> SelectedElements => _selectedElements;
+        public ObservableCollection<SGUIElement> PickedElements => _pickedElements;
+
+        public SGUIGroup PickedGroup => HasPickedElement ? _pickedElements[0].Cast<SGUIGroup>() : null;
+        public IEnumerable<SGUIElement> PickedSelectedElements => _pickedElements.Where(element => element.Selected);
+        public SGUIElement PickedSelectedElement => _pickedElements.LastOrDefault(element => element.Selected);
+        public bool HasPickedSelectedElement => _pickedElements.FirstOrDefault(element => element.Selected) != null;
         public int GroupCount  {  get  {  lock (_groups)  {  return _groups.Count; }  }  }
         public int ElementCount  {  get  {  lock (_elements)  {  return _elements.Count; }  }  }
 
@@ -340,6 +341,12 @@ namespace SGToolsUI.Model
             return result;
         }
 
+        public void ChangePickedElements(ObservableCollection<SGUIElement> pickedElements)
+        {
+            _pickedElements = pickedElements;
+            OnPropertyChanged(nameof(PickedElements));
+        }
+
         public SGUIElement GetElementByCode(int code)
         {
             int groupCode = (code / Constant.GroupCodeInterval) * Constant.GroupCodeInterval;
@@ -403,6 +410,8 @@ namespace SGToolsUI.Model
         private PriorityQueue<int, int> _codeAssigner;
         private SortedList<int, SGUIGroup> _groups;
         private LinkedList<SGUIElement> _elements;
+        private ObservableCollection<SGUIElement> _selectedElements;
+        private ObservableCollection<SGUIElement> _pickedElements;
         private bool _pickedElementsDisabled;       // 픽된 엘리먼트 전원 비활성화/활성화 변환용도
     }
 }

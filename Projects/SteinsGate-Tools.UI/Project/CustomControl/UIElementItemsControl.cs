@@ -48,18 +48,6 @@ namespace SGToolsUI.CustomControl
 
     public class UIElementItemsControl : ItemsControl, INotifyPropertyChanged, IDataDragReceiver
     {
-        public bool IsMove
-        {
-            get => _isElementsMove;
-            set
-            {
-                _isElementsMove = value;
-                MoveEnd();
-                OnPropertyChanged();
-            }
-        }
-
-
         public bool IsManipulationMode => _manipulationMode != Positioning.Center;
         public MainViewModel ViewModel { get; private set; }
         public Canvas CanvasPanel => _canvasPanel;
@@ -68,8 +56,8 @@ namespace SGToolsUI.CustomControl
         
         private Canvas _canvasPanel;
         private ItemsPresenter _canvasPresenter;
-        private bool _isElementsMove;
         private bool _isShiftMove;
+        private DragState _dragState;
         private ShiftKeyMoving _shiftKeyMoving = ShiftKeyMoving.None;
         private Point _dragMoveStartPosition;
         private List<MovingElement> _movingElements;
@@ -223,7 +211,7 @@ namespace SGToolsUI.CustomControl
 
             OnMouseUpEventMode(pos, btn);
             OnMouseUpManipulation();
-            MoveEnd();
+            MoveEnd(pos);
         }
 
 
@@ -238,11 +226,99 @@ namespace SGToolsUI.CustomControl
             bool ctrl = ViewModel.KeyState.IsCtrlPressed;
             bool space = ViewModel.KeyState.IsPressed(SGKey.Space);
 
+            // 자유 드래그 모드 일때는 선택/드래그 되면 안됨
+            if (space)
+                return;
+
+            // 매니퓰레이션 중일때는 선택/드래깅을 하지못하도록 한다.
+            if (IsManipulationMode)
+                return;
+
+            // 컨텍스트 메뉴 열렸다가 캔버스를 누르고 닫을때 바닥찍으면 클릭으로 인식해버림, 한번 흘려주자.
+            if (_contextMenu.IsOpen)
+                return;
+
+            // 이벤트 모드일때도 선택/드래그 금지
+            if (ViewModel.IsEventMode)
+                return;
+
             _isShiftMove = ViewModel.KeyState.IsShiftPressed;
             _dragMoveStartPosition = pos;
-            
+
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
             IEnumerable<SGUIElement> pickedSelectedElements = pickedElements.Where(element => element.Selected);
+
+
+            // 마우스를 클릭한 지점에 선택된 원소가 있는 경우 마우스를 따라 움직일 수 있도록 한다.
+            // if (!alt && !ctrl && pickedElements.Count > 0 && pickedSelectedElements.LastOrDefault(element => element.ContainPoint(pos)) != null)
+            if (!alt && !ctrl && pickedElements.Count > 0 && pickedSelectedElements.LastOrDefault(element => element.ContainPoint(pos)) != null)
+            {
+                ViewModel.View.CanvasShapesControl.IsDraggable = false;
+                ViewModel.View.TitlePanel.Draggable = false;
+
+                // 각 엘리먼트의 시작위치를 기록해놓는다.
+                _movingElements = ViewModel.GroupMaster.PickedSelectedElements.Select(element => new MovingElement(element, element.VisualPosition)).ToList();
+                _dragState = DragState.Wait;
+            }
+            
+        }
+
+        public void MoveMove(Point pos)
+        {
+            if (_dragState == DragState.None)
+                return;
+
+            if (_movingElements == null)
+                return;
+
+            // 드래그 시작 후 마우스가 움직인 벡터만큼 다른 엘리먼트들도 벡터만큼 움직여준다.
+            Vector move = Point.Subtract(_dragMoveStartPosition, pos);
+
+            if (_dragState == DragState.Wait)
+            {
+                if (move.Length <= Constant.DragActivateDistance)
+                    return;
+
+                _dragState = DragState.Dragging;
+                return;
+            }
+
+            // dragState == Dragging
+            if (_isShiftMove && _shiftKeyMoving == ShiftKeyMoving.None)
+            {
+                if (Math.Abs(move.X) > Math.Abs(move.Y))
+                    _shiftKeyMoving = ShiftKeyMoving.Horizontal;
+                else
+                    _shiftKeyMoving = ShiftKeyMoving.Vertical;
+                _isShiftMove = false;
+            }
+
+            if (_shiftKeyMoving == ShiftKeyMoving.Vertical)
+                move.X = 0;
+            else if (_shiftKeyMoving == ShiftKeyMoving.Horizontal)
+                move.Y = 0;
+
+            _movingElements.ForEach(m => m.Element.VisualPosition = Point.Subtract(m.StartPosition, move));
+        }
+
+        public void MoveEnd(Point p)
+        {
+            _isShiftMove = false;
+            _shiftKeyMoving = ShiftKeyMoving.None; 
+            ViewModel.View.CanvasShapesControl.IsDraggable = true;
+            ViewModel.View.TitlePanel.Draggable = true;
+            _movingElements = null;
+
+            // 드래그 중이었다면 아래의 선택기능은 수행하지 않는다.
+            if (_dragState == DragState.Dragging) {
+                _dragState = DragState.None;
+                return; 
+            }
+
+            _dragState = DragState.None;
+            bool alt = ViewModel.KeyState.IsAltPressed;
+            bool ctrl = ViewModel.KeyState.IsCtrlPressed;
+            bool space = ViewModel.KeyState.IsPressed(SGKey.Space);
 
             // 자유 드래그 모드 일때는 선택/드래그 되면 안됨
             if (space)
@@ -252,27 +328,17 @@ namespace SGToolsUI.CustomControl
             if (IsManipulationMode)
                 return;
 
-            // 컨텍스트 메뉴 열렸다가 캔버스를 누르고 닫으면 엘리먼트가 움직이는 문제가 있다.
+            // 컨텍스트 메뉴 열렸다가 캔버스를 누르고 닫을때 바닥찍으면 클릭으로 인식해버림, 한번 흘려주자.
             if (_contextMenu.IsOpen)
                 return;
 
             // 이벤트 모드일때도 선택/드래그 금지
-            if (ViewModel.IsEventMode) 
+            if (ViewModel.IsEventMode)
                 return;
 
-            // 마우스를 클릭한 지점에 선택된 원소가 있는 경우 마우스를 따라 움직일 수 있도록 한다.
-            //pickedSelectedElements.Last().Selected && pickedSelectedElements.Last().ContainPoint(_dragMoveStartPosition)
-            if (!alt && !ctrl && pickedElements.Count > 0 && pickedSelectedElements.FirstOrDefault(element => element.ContainPoint(pos)) != null)
-            {
-                ViewModel.View.CanvasShapesControl.IsDraggable = false;
-                ViewModel.View.TitlePanel.Draggable = false;
+            
 
-                // 각 엘리먼트의 시작위치를 기록해놓는다.
-                _movingElements = ViewModel.GroupMaster.PickedSelectedElements.Select(element => new MovingElement(element, element.VisualPosition)).ToList();
-                _isElementsMove = true;
-                return;
-            }
-
+            ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
 
             // 알트키를 눌린 경우 겹친 위치의 원소들을 순차적으로 선택할 수 있도록한다.
             if (alt)
@@ -300,8 +366,8 @@ namespace SGToolsUI.CustomControl
 
                     if (find)
                     {
-                        findElement = success ? 
-                            enumerator.Current : 
+                        findElement = success ?
+                            enumerator.Current :
                             candidates.First(); // 마지막원소를 찾은 경우, 처음 원소를 가져온다.
 
                         break;
@@ -334,50 +400,6 @@ namespace SGToolsUI.CustomControl
 
                 if (_prevSelectElement != null)
                     ViewModel.Commander.SelectUIElement.Execute(_prevSelectElement);
-            }
-        }
-
-        public void MoveMove(Point pos)
-        {
-            if (!_isElementsMove)
-                return;
-
-            if (_movingElements == null)
-                return;
-
-            // 드래그 시작 후 마우스가 움직인 벡터만큼 다른 엘리먼트들도 벡터만큼 움직여준다.
-            Vector move = Point.Subtract(_dragMoveStartPosition, pos);
-
-            if (_isShiftMove && _shiftKeyMoving == ShiftKeyMoving.None)
-            {
-                if (Math.Abs(move.X) > Math.Abs(move.Y))
-                    _shiftKeyMoving = ShiftKeyMoving.Horizontal;
-                else
-                    _shiftKeyMoving = ShiftKeyMoving.Vertical;
-                _isShiftMove = false;
-            }
-
-            if (_shiftKeyMoving == ShiftKeyMoving.Vertical)
-                move.X = 0;
-            else if (_shiftKeyMoving == ShiftKeyMoving.Horizontal)
-                move.Y = 0;
-
-            _movingElements.ForEach(m => m.Element.VisualPosition = Point.Subtract(m.StartPosition, move));
-        }
-
-        public void MoveEnd()
-        {
-            _isShiftMove = false;
-            _shiftKeyMoving = ShiftKeyMoving.None;
-
-            if (_isElementsMove)
-            {
-
-                ViewModel.View.CanvasShapesControl.IsDraggable = true;
-                ViewModel.View.TitlePanel.Draggable = true;
-
-                _movingElements = null;
-                _isElementsMove = false;
             }
         }
 
@@ -573,6 +595,9 @@ namespace SGToolsUI.CustomControl
 
         public void OnMouseMoveManipulation(MouseEventArgs e)
         {
+            if (ViewModel.DragState.State != DragState.None)
+                return;
+
             Manipulate(e);
             ManipulationCheck(e);
         }
@@ -779,7 +804,7 @@ namespace SGToolsUI.CustomControl
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
 
             // 놓은 지점에있는 그룹들중 가장 위에 그룹을 가져온다.
-            SGUIGroup topLevelGroup = pickedElements.Select(element => element.IsGroup && element.ContainPoint(pos)).Cast<SGUIGroup>().LastOrDefault();
+            SGUIGroup topLevelGroup = pickedElements.Where(element => element.IsGroup && element.ContainPoint(pos)).Cast<SGUIGroup>().LastOrDefault();
             if (topLevelGroup == null) 
                 return;
 

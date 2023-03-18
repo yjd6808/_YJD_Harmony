@@ -278,19 +278,10 @@ namespace SGToolsUI.Model
         {
             SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
-            // 현재 그룹이 픽된 경우 추가되는 자식들도 픽해줘야함.
-            bool isPicked = Picked;
-            if (isPicked)
-            {
-                newChildren.ForEach(element => element.SetPick(true));
+            // 부모 업데이트를 먼저 수행해줘야한다.
+            // 아래의 groupMaster.PickedElements.AddRange를 수행하면서 CollectionViewSource에서 Code를 기준으로 오름차순 정렬을 하는데
+            // 부모가 업데이트 되지 않은 상태에서는 Code가 -1로 고정되어버리기 떄문이다.
 
-                // https://stackoverflow.com/questions/7284805/how-to-sort-observablecollection
-                // PickedElements와 트리뷰의 엘리먼트들간에 정렬순서가 일치해야한다.
-                // 이때 Depth순으로 오름차순된 상태에서 Depth가 동일하다면 코드순으로 정렬되어야한다.
-                // 여기서 이렇게 막 추가해주더라도 내가 MainView에서 CollectionViewSource로 정렬순서를 정해줬기때문에
-                // 내부적으로 알아서 정렬을 수행하게 된다.
-                groupMaster.PickedElements.AddRange(newChildren.Children); 
-            }
 
             // 새로 추가된 자식들중 바로 다음 계층(깊이)의 자식들만 부모를 업데이트해줌 된다.
             // 하지만 다음, 다음 계층의 경우 깊이와, 그룹이 존재하는 경우 업데이트 해줘야하므로
@@ -308,9 +299,30 @@ namespace SGToolsUI.Model
                 newGroup.SetDepth(newGroup.Parent.Depth + 1);
             });
 
-            
             // 중간에 넣는 작업은 데이터를 계속 밀기땜에 그냥 새로 만들어서 교체해주자.
+            // PickedElements.AddRange이전에 수행을 무조건 해줘야한다.
+            // CollectionViewSource의 SortDescriptor로 Code를 설정해놨는데 Code는 Index프로퍼티를 사용하고
+            // Index 프로퍼티는 _children에 새로 추가된 children이 포함되어야지 올바르게 동작하기 떄문이다.
             _children = _children.InsertRangeNew(index, newChildren.Children);
+
+            // 현재 그룹이 픽된 경우 추가되는 자식들도 픽해줘야함.
+            bool isPicked = Picked;
+            if (isPicked)
+            {
+                newChildren.ForEach(element => element.SetPick(true));
+
+                // https://stackoverflow.com/questions/7284805/how-to-sort-observablecollection
+                // PickedElements와 트리뷰의 엘리먼트들간에 정렬순서가 일치해야한다.
+                // 이때 Depth순으로 오름차순된 상태에서 Depth가 동일하다면 코드순으로 정렬되어야한다.
+                // 여기서 이렇게 막 추가해주더라도 내가 MainView에서 CollectionViewSource로 정렬순서를 정해줬기때문에
+                // 내부적으로 알아서 정렬을 수행하게 된다.
+                groupMaster.PickedElements.AddRange(newChildren.Children);
+            }
+
+           
+
+            
+            
             OnPropertyChanged(nameof(Children));
         }
 

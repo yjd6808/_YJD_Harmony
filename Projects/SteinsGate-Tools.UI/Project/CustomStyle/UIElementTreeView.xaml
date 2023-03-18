@@ -28,6 +28,8 @@
         <ResourceDictionary Source="MenuItemEditBox.xaml" />
         <ResourceDictionary Source="MenuItemCheckBox.xaml" />
         <ResourceDictionary Source="MenuItemToggleButton.xaml" />
+        <ResourceDictionary Source="MenuItemProgressBar.xaml" />
+        <ResourceDictionary Source="MenuItemScrollBar.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="UIElementTreeView" TargetType="TreeView" >
         <d:Style.DataContext>
@@ -73,8 +75,8 @@
                             <MenuItem Style="{StaticResource MenuItemEditBox}" Header="에딧박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIEditBoxKey}" />
                             <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="체크박스 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UICheckBoxKey}" />
                             <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="토글 버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIToggleButtonKey}" />
-                            <MenuItem Style="{StaticResource MenuItemCheckBox}" Header="프로그래스바 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIProgressBarKey}" />
-                            <MenuItem Style="{StaticResource MenuItemToggleButton}" Header="스크롤바 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIScrollBarKey}" />
+                            <MenuItem Style="{StaticResource MenuItemProgressBar}" Header="프로그래스바 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIProgressBarKey}" />
+                            <MenuItem Style="{StaticResource MenuItemScrollBar}" Header="스크롤바 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIScrollBarKey}" />
                         </ContextMenu>
                     </Setter.Value>
                 </Setter>

@@ -73,6 +73,42 @@ namespace SGToolsUI.Model
             }
         }
 
+        [Browsable(false)]
+        public int Height
+        {
+            get
+            {
+                if (Sprite == null)
+                    return 0;
+
+                return Sprite.Height;
+            }
+        }
+
+        [Browsable(false)]
+        public int Width
+        {
+            get
+            {
+                if (Sprite == null)
+                    return 0;
+
+                return Sprite.Width;
+            }
+        }
+
+        [Browsable(false)]
+        public Size Size
+        {
+            get
+            {
+                if (Sprite == null)
+                    return new Size(0, 0);
+
+                return Sprite.Size;
+            }
+        }
+
         [Browsable(false)] 
         public BitmapSource Source => Sprite != null ? Sprite.Source : null;
 
@@ -92,7 +128,7 @@ namespace SGToolsUI.Model
             if (IsNull)
                 return "비어있음";
 
-            return "할당됨";
+            return $"{Img}/{Sprite.FrameIndex}";
         }
 
         [Browsable(false)]
