@@ -82,6 +82,7 @@ namespace SGToolsUI.FileSystem
 
                 Dictionary<string, bool> uniqueDefineNameMap = new ();
                 List<string> duplicatedDefineNameList = new();
+                const bool _ = false;
 
                 using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 using (StreamWriter writer = new StreamWriter(fs))
@@ -91,12 +92,25 @@ namespace SGToolsUI.FileSystem
                         if (element.Depth == 0)
                             writer.WriteLine("\n\n");
 
-                        string defineName = $"{DefineNamePrefix(element)}{element.UIElementType}_{element.DefineName}".ToUpper();
+                        StringBuilder builder = new StringBuilder(128);
 
-                        writer.WriteLine($"{DepthStrings[element.Depth]}#define {defineName}\t{element.Code}");
+                        builder.Append(DefineNamePrefix(element));
+                        builder.Append(element.UIElementType.ToString());
 
-                        if (!uniqueDefineNameMap.TryAdd(element.DefineName, true))
-                            duplicatedDefineNameList.Add(element.DefineName);
+                        if (element.DefineName.Length > 0)
+                        {
+                            builder.Append('_');
+                            builder.Append(element.DefineName);
+                        }
+
+                        string defName = $"{DepthStrings[element.Depth]}#define {builder.ToString().ToUpper()}";
+
+                        writer.Write(defName);
+                        writer.Write('\t');
+                        writer.WriteLine(element.Code);
+
+                        if (!uniqueDefineNameMap.TryAdd(defName, _))
+                            duplicatedDefineNameList.Add(defName);
                     });
                 }
                 StringBuilder builder = new StringBuilder(60 * duplicatedDefineNameList.Count);

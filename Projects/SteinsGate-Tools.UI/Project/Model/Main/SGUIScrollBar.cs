@@ -550,8 +550,19 @@ namespace SGToolsUI.Model.Main
             StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
             SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites);
 
-            _visualSize.Width = Math.Max(trackSize.Width, MaxWidth);
-            _visualSize.Height = Math.Max(trackSize.Height, MaxHeight);
+            int height = 0;
+
+            if (!VisualUpSprite.IsNull)
+                height += VisualUpSprite.Height;
+
+            height += trackSize.Height;
+
+            if (!VisualDownSprite.IsNull)
+                height += VisualDownSprite.Height;
+
+
+            _visualSize.Width = trackSize.Width;
+            _visualSize.Height = Math.Max(height, MaxHeight);
         }
 
         // 실제 기입되는 중요한 데이터
