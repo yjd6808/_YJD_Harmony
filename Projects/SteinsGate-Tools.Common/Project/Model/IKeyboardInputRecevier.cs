@@ -25,5 +25,6 @@ namespace SGToolsCommon.Model
     {
         void OnKeyDown(SGKey key);
         void OnKeyUp(SGKey key);
+        void OnLostFocus();
     }
 }

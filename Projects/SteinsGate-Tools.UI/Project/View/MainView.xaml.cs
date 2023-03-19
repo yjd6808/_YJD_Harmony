@@ -148,7 +148,8 @@ namespace SGToolsUI.View
                     animation.From = 0;
                     animation.To = 1;
                     animation.Duration = TimeSpan.FromMilliseconds(300);
-                    BeginAnimation(UIElement.OpacityProperty, animation);
+
+                    UIElementTreeView.BeginAnimation(UIElement.OpacityProperty, animation);
                 }
                 else if (state.IsPressed(SGKey.L))
                 {

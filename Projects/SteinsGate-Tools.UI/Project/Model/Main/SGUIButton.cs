@@ -38,6 +38,7 @@ namespace SGToolsUI.Model.Main
         public const int OrderOver = 2;
         public const int OrderPressed = 3;
         public const int OrderDisabled = 4;
+        public const int OrderLinearDodge = 5;
 
         public SGUIButton() => _sprites = new SGUISpriteInfo[StateCount];
 
@@ -93,6 +94,8 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[StateNormal] = value;
+                _sprites[StateNormal].LinearDodge = _linearDodge;
+
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -107,6 +110,8 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[StateOver] = value;
+                _sprites[StateOver].LinearDodge = _linearDodge;
+
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -119,6 +124,8 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[StatePressed] = value;
+                _sprites[StatePressed].LinearDodge = _linearDodge;
+
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -131,11 +138,24 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[StateDisabled] = value;
+                _sprites[StateDisabled].LinearDodge = _linearDodge;
+
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
         }
 
+        [Category(Constant.ButtonCategoryName), DisplayName("선형 닷지"), PropertyOrder(OrderLinearDodge)]
+        public bool LinearDodge
+        {
+            get => _linearDodge;
+            set
+            {
+                _sprites.ForEach(info => info.LinearDodge = value);
+                _linearDodge = value;
+                OnPropertyChanged(nameof(VisualSpriteSource));
+            }
+        }
 
 
         [Browsable(false)]
@@ -174,6 +194,7 @@ namespace SGToolsUI.Model.Main
             root[JsonSgaKey] = sga;
             root[JsonImgKey] = img;
             root[JsonSpriteKey] = _sprites.ToFullString();
+            root[JsonLinearDodgeKey] = _linearDodge;
             return root;
         }
 
@@ -182,9 +203,10 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseJObject(root);
 
-            string sgaName = (string)root[JsonSgaKey];
+            root.TryGetValueDefault(JsonLinearDodgeKey, out _linearDodge, false);
+            root.TryGetValueDefault(JsonSgaKey, out string sgaName, string.Empty);
 
-            if (sgaName == string.Empty)
+            if (sgaName.Length == 0)
                 return;
 
             string imgName = (string)root[JsonImgKey];
@@ -194,7 +216,7 @@ namespace SGToolsUI.Model.Main
 
             int[] sprites = new int[StateCount];
             StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
-            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites, _linearDodge);
         }
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.
@@ -246,6 +268,7 @@ namespace SGToolsUI.Model.Main
 
         public override void CreateInit() => VisualName = $"버튼_{Seq++}";
         public static int Seq = 0;
+        private bool _linearDodge;
         private SGUISpriteInfo[] _sprites;
     }
 }

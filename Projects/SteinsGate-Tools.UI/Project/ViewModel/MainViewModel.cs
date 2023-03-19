@@ -358,6 +358,9 @@ namespace SGToolsUI.ViewModel
             get => _focusedKeyboardInputReceiver;
             set
             {
+                if (_focusedKeyboardInputReceiver != null && _focusedKeyboardInputReceiver != value)
+                    _focusedKeyboardInputReceiver.OnLostFocus();
+
                 _focusedKeyboardInputReceiver = value;
                 OnPropertyChanged();
             }

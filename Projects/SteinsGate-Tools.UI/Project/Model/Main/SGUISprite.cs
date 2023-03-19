@@ -21,6 +21,7 @@ namespace SGToolsUI.Model.Main
     {
         public const int OrderSize = 1;
         public const int OrderSprite = 2;
+        public const int OrderLinearDodge = 3;
 
         public SGUISprite()
         {
@@ -89,8 +90,22 @@ namespace SGToolsUI.Model.Main
                 else
                     _visualSize = Constant.DefaultVisualSize;
 
+                _sprite.LinearDodge = _linearDodge;
+
                 OnPropertyChanged();
                 NotifySpriteChanged();
+            }
+        }
+
+        [Category(Constant.SpriteCategoryName), DisplayName("선형 닷지"), PropertyOrder(OrderLinearDodge)]
+        public bool LinearDodge
+        {
+            get => _linearDodge;
+            set
+            {
+                _sprite.LinearDodge = value;
+                _linearDodge = value;
+                OnPropertyChanged(nameof(SpriteSource));
             }
         }
 
@@ -118,6 +133,7 @@ namespace SGToolsUI.Model.Main
             root[JsonImgKey] = img;
             root[JsonSpriteKey] = _sprite.SpriteIndex.ToString();
             root[JsonVisualSizeKey] = _visualSize.ToFullString();
+            root[JsonLinearDodgeKey] = _linearDodge;
             return root;
         }
 
@@ -136,6 +152,8 @@ namespace SGToolsUI.Model.Main
         public override void ParseJObject(JObject root)
         {
             base.ParseJObject(root);
+
+            root.TryGetValueDefault(JsonLinearDodgeKey, out _linearDodge, false);
 
             string sgaName = (string)root[JsonSgaKey];
 
@@ -158,11 +176,13 @@ namespace SGToolsUI.Model.Main
             if (sprite == null)
                 throw new Exception($"{sgaName} -> {imgName} -> {spriteIndex}가 SgaSprite 타입이 아닙니다.");
             _sprite = new SGUISpriteInfo(sga, img, sprite);
+            _sprite.LinearDodge = _linearDodge;
         }
 
         public override void CreateInit() => VisualName = $"스프라이트_{Seq++}";
         public static int Seq;
         private SGUISpriteInfo _sprite;
+        private bool _linearDodge;
         private Size _visualSize;
 
         public void RestoreSize()

@@ -290,6 +290,11 @@ namespace SGToolsUI.CustomControl
         {
         }
 
+        public void OnLostFocus()
+        {
+            this.FocusClear();
+        }
+
         public bool ContainPoint(Point p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
 
         public void SelectPropertyValue(bool newObject, ref string propertyName)

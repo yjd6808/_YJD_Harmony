@@ -68,7 +68,7 @@ namespace SGToolsUI
         public const int CacheAlignSize = 64;
         public const bool UseDebugData = false;
 
-        public static readonly Size DefaultVisualSize = new (32, 32);
+        public static readonly Size DefaultVisualSize = new (30, 30);
         public static readonly Size DefaultBoxVisualSize = new(200, 30);
 
         public const int CanvasElementWithKeyboardDeltaX = 1;

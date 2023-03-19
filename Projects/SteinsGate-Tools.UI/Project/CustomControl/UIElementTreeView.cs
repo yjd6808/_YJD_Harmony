@@ -166,6 +166,11 @@ namespace SGToolsUI.CustomControl
 
         }
 
+        public void OnLostFocus()
+        {
+            this.FocusClear();
+        }
+
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point pos = e.GetPosition(this);

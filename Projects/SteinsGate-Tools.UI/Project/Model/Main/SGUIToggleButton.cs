@@ -20,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Sga;
@@ -42,6 +43,11 @@ namespace SGToolsUI.Model.Main
         public const int OrderToggledOver = 7;
         public const int OrderToggledPressed = 8;
         public const int OrderToggledDisabled = 9;
+
+        public const int OrderLinearDodge = 10;
+
+        
+
 
         public SGUIToggleButton()
         {
@@ -103,6 +109,7 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[0][StateNormal] = value;
+                _sprites[0][StateNormal].LinearDodge = _linearDodge;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -116,6 +123,7 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[0][StateOver] = value;
+                _sprites[0][StateOver].LinearDodge = _linearDodge;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -128,6 +136,7 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[0][StatePressed] = value;
+                _sprites[0][StatePressed].LinearDodge = _linearDodge;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -140,6 +149,7 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[0][StateDisabled] = value;
+                _sprites[0][StateDisabled].LinearDodge = _linearDodge;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -154,6 +164,7 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[1][StateNormal] = value;
+                _sprites[1][StateNormal].LinearDodge = _linearDodge;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -167,6 +178,7 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[1][StateOver] = value;
+                _sprites[1][StateOver].LinearDodge = _linearDodge;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -179,6 +191,7 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[1][StatePressed] = value;
+                _sprites[1][StatePressed].LinearDodge = _linearDodge;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -191,6 +204,7 @@ namespace SGToolsUI.Model.Main
             set
             {
                 _sprites[1][StateDisabled] = value;
+                _sprites[1][StateDisabled].LinearDodge = _linearDodge;
                 OnPropertyChanged();
                 NotifySpriteChanged();
             }
@@ -204,6 +218,20 @@ namespace SGToolsUI.Model.Main
             {
                 _toggleState = value ? 1 : 0;
                 NotifySpriteChanged();
+            }
+        }
+
+        
+        [Category(Constant.ToggleButtonCategoryName), DisplayName("선형 닷지"), PropertyOrder(OrderLinearDodge)]
+        public bool LinearDodge
+        {
+            get => _linearDodge;
+            set
+            {
+                _sprites[0].ForEach(info => info.LinearDodge = value);
+                _sprites[1].ForEach(info => info.LinearDodge = value);
+                _linearDodge = value;
+                OnPropertyChanged(nameof(VisualSpriteSource));
             }
         }
 
@@ -250,6 +278,7 @@ namespace SGToolsUI.Model.Main
             root[JsonImgKey] = img;
             root[JsonSpriteKey] = _sprites[0].ToFullString();
             root[JsonToggleSpriteKey] = _sprites[1].ToFullString();
+            root[JsonLinearDodgeKey] = _linearDodge;
             return root;
         }
 
@@ -257,6 +286,7 @@ namespace SGToolsUI.Model.Main
         {
             base.ParseJObject(root);
 
+            root.TryGetValueDefault(JsonLinearDodgeKey, out _linearDodge, false);
             string sgaName = (string)root[JsonSgaKey];
 
             if (sgaName == string.Empty)
@@ -273,8 +303,8 @@ namespace SGToolsUI.Model.Main
             StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
             StringEx.ParseIntNumberN((string)root[JsonToggleSpriteKey], toggledSprites);
 
-            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites[0]);
-            SGUISpriteInfoExt.ParseInfo(sga, img, in toggledSprites, in _sprites[1]);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites[0], _linearDodge);
+            SGUISpriteInfoExt.ParseInfo(sga, img, in toggledSprites, in _sprites[1], _linearDodge);
         }
 
 
@@ -329,6 +359,7 @@ namespace SGToolsUI.Model.Main
         public override void CreateInit() => VisualName = $"토글버튼_{Seq++}";
         public static int Seq = 0;
         private SGUISpriteInfo[][] _sprites;
+        private bool _linearDodge;
         private int _toggleState;
     }
 }

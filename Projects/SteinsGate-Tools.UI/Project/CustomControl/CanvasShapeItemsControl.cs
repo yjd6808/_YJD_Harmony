@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -146,7 +147,7 @@ namespace SGToolsUI.CustomControl
                 ViewModel.GroupMaster.PickedElements.ForEach(element =>
                 {
                     if (element is SGUIStatic staticElement)
-                        staticElement.IsVisible = value;
+                        staticElement.IsVisible = !value;
                 });
             }
         }
@@ -274,15 +275,13 @@ namespace SGToolsUI.CustomControl
 
         public void OnKeyDown(SGKey key)
         {
-            if (key == SGKey.Z)
-                IsHideSelection = !IsHideSelection;
-            else if (key == SGKey.S)
-                IsHideStatic = !IsHideStatic;
-
-
             if (!ViewModel.KeyState.IsModifierKeyPressed)
             {
-                if (ViewModel.KeyState.IsPressed(SGKey.X))
+                if (key == SGKey.Z)
+                    IsHideSelection = !IsHideSelection;
+                else if (key == SGKey.S)
+                    IsHideStatic = !IsHideStatic;
+                else if (ViewModel.KeyState.IsPressed(SGKey.X))
                 {
                     ViewModel.GroupMaster.DeselectAll();
                     ViewModel.IsEventMode = !ViewModel.IsEventMode;
@@ -350,8 +349,12 @@ namespace SGToolsUI.CustomControl
         {
         }
 
+        public void OnLostFocus()
+        {
+            this.FocusClear();
+        }
 
-        
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             DragBegin(e);
@@ -490,8 +493,16 @@ namespace SGToolsUI.CustomControl
             canvasSelection.Selection.Width = element.VisualSize.Width;
             canvasSelection.Selection.Height = element.VisualSize.Height;
             canvasSelection.Element = element;
-            _canvasShapes.Add(canvasSelection);
+
+            if (_selectionMap.ContainsKey(element))
+            {
+                Debug.Assert(false, "이미 해당 엘리먼트에 셀렉션이 할당되어있는데 다시 셀렉션이 할당이 시도되고 있습니다.");
+                PushSelection(canvasSelection);
+                return;
+            }
+
             _selectionMap.Add(element, canvasSelection);
+            _canvasShapes.Add(canvasSelection);
 
             Binding selectionWidthBinding = new Binding("VisualSize.Width");
             selectionWidthBinding.Source = element;

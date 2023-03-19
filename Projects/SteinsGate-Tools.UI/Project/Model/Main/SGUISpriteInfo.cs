@@ -63,6 +63,25 @@ namespace SGToolsUI.Model.Main
         public SgaImage Img { get; }
         public SgaSprite Sprite { get; }
 
+        [ReadOnly(true), DisplayName("선형 닷지")]
+        public bool LinearDodge
+        {
+            get
+            {
+                if (Sprite == null)
+                    return false;
+
+                return Sprite.IsLinearDodged;
+            }
+            set
+            {
+                if (Sprite == null)
+                    return;
+
+                Sprite.IsLinearDodged = value;
+            }
+        }
+
         [Browsable(false)]
         public Rect Rect
         {
@@ -170,7 +189,7 @@ namespace SGToolsUI.Model.Main
             return sb.ToString();
         }
 
-        public static void ParseInfo(SgaPackage sga, SgaImage img, in int[] sourceSprites, in SGUISpriteInfo[] targetSprites)
+        public static void ParseInfo(SgaPackage sga, SgaImage img, in int[] sourceSprites, in SGUISpriteInfo[] targetSprites, bool linearDodge = false)
         {
             // 무조건 두개 길이 같아야함.
             Debug.Assert(sourceSprites.Length == targetSprites.Length);
@@ -182,6 +201,7 @@ namespace SGToolsUI.Model.Main
                     SgaSprite sprite = img.GetSprite(sourceSprites[i]) as SgaSprite;
                     if (sprite == null) throw new Exception($"{sga.FileNameWithoutExt} -> {img.Header.NameWithoutExt} -> {sourceSprites[i]}가 SgaSprite 타입이 아닙니다.");
                     targetSprites[i] = new SGUISpriteInfo(sga, img, sprite);
+                    targetSprites[i].LinearDodge = linearDodge;
                 }
             }
         }
@@ -203,9 +223,5 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
-        public static SGUISpriteInfo CreateFromSprite(SgaSprite sprite)
-        {
-            return new SGUISpriteInfo(sprite.Parent.Parent, sprite.Parent, sprite);
-        }
     }
 }

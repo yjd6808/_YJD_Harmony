@@ -74,6 +74,7 @@ namespace SGToolsUI.Model.Main
         public const string JsonVisualSizeKey = "size";
         public const string JsonVAlignKey = "valign";
         public const string JsonHAlignKey = "halign";
+        public const string JsonLinearDodgeKey = "linear_dodge";
 
         // 그룹
         public const string JsonChildrenKey = "children";

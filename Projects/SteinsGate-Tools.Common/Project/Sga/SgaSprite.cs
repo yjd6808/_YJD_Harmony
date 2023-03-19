@@ -70,13 +70,12 @@ namespace SGToolsCommon.Sga
                 if (_linearDodge == value)
                     return;
 
-                if (!_linearDodge)
-                {
+                if (!value)
                     Load();
-                    return;
-                }
+                else
+                    ApplyLinearDodge();
 
-                ApplyLinearDodge();
+                _linearDodge = value;
             }
         }
 
@@ -89,7 +88,8 @@ namespace SGToolsCommon.Sga
                     Load();
 
                 // 얕은 복사 좋아
-                return BitmapSource.Create(Width, Height, 0, 0, PixelFormats.Bgra32, null, _data, 4 * Width);
+                var source = BitmapSource.Create(Width, Height, 0, 0, PixelFormats.Bgra32, null, _data, 4 * Width);
+                return source;
             }
         }
 
@@ -135,6 +135,9 @@ namespace SGToolsCommon.Sga
 
         public override void Load()
         {
+            if (_data != null && !_linearDodge)
+                return;
+
             Stream stream = Parent.Parent.ReadStream;
             _data = new byte[_dataLength];
             stream.Seek(_dataOffset, SeekOrigin.Begin);
