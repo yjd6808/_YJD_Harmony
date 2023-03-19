@@ -21,6 +21,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsCommon.Converter
 {
@@ -30,11 +31,12 @@ namespace SGToolsCommon.Converter
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not Rect)
-                throw new Exception("value가 rect 타입이 아닙니다,");
-
-            Rect r = (Rect)value;
-            return new Thickness(r.Left, r.Top, 0, 0);
+            switch (value)
+            {
+            case Rect rc:  return new Thickness(rc.Left, rc.Top, 0, 0);
+            case IntRect irc: return new Thickness(irc.Left, irc.Top, 0, 0);
+            default: throw new Exception("value가 rect 타입이 아닙니다,");
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -5,11 +5,15 @@
  */
 
 
+using SGToolsCommon.Primitive.Converter;
+using System.ComponentModel;
 using System.Windows;
 
 
 namespace SGToolsCommon.Primitive
 {
+
+    [TypeConverter(typeof(IntSizeConverter))]
     public struct IntSize
     {
         public int Width { get; set; }
@@ -50,7 +54,7 @@ namespace SGToolsCommon.Primitive
 
         public override string ToString()
         {
-            return $"{Width} {Height}";
+            return $"{Width},{Height}";
         }
     }
 }

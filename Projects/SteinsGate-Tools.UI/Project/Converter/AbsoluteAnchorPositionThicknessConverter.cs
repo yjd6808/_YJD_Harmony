@@ -27,15 +27,19 @@ namespace SGToolsUI.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not Point p)
-                throw new Exception("IntPoint 타입이 아닙니다.");
+            Point pt = new Point();
 
-            p.X -= Constant.CanvasAnchorSize / 2.0;
-            p.Y -= Constant.CanvasAnchorSize / 2.0;
+            if (value is Point)
+                pt = (Point)value;
+            else if (value is IntPoint)
+                pt = (IntPoint)value;
+
+            pt.X -= Constant.CanvasAnchorSize / 2.0;
+            pt.Y -= Constant.CanvasAnchorSize / 2.0;
 
             Thickness thickness = new Thickness();
-            thickness.Left = p.X;
-            thickness.Top = p.Y;
+            thickness.Left = pt.X;
+            thickness.Top = pt.Y;
             return thickness;
         }
 

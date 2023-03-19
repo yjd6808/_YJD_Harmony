@@ -6,12 +6,21 @@
 
 
 using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
+using System.Windows.Converters;
+using System.Windows.Markup;
+using SGToolsCommon.Primitive.Converter;
 using Vanara.PInvoke;
 
 
 namespace SGToolsCommon.Primitive
 {
+
+
+    [TypeConverter(typeof(IntPointConverter))]
     public struct IntPoint
     {
         public static readonly IntPoint Zero = new();
@@ -48,7 +57,7 @@ namespace SGToolsCommon.Primitive
 
         public override string ToString()
         {
-            return $"{X} {Y}";
+            return $"{X},{Y}";
         }
 
         public static IntPoint Add(IntPoint lhs, IntPoint rhs)
@@ -84,9 +93,19 @@ namespace SGToolsCommon.Primitive
             return !(lhs == rhs);
         }
 
-    public double Distance(IntPoint other)
+        public double Distance(IntPoint other)
         {
             return Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Y - other.Y, 2));
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (!(obj is IntPoint)) return false;
+            return this == (IntPoint)obj;
+        }
+
+        public override int GetHashCode()
+            => base.GetHashCode();
     }
 }
