@@ -30,6 +30,11 @@ namespace SGToolsCommon.Extension
             for (int i = collection.Count - 1; i >= 0; --i)
                 yield return collection[i];
         }
+        public static void IndexingForEach<T>(this IList<T> collection, Action<int, T> action) where T : class
+        {
+            for (int i = 0; i < collection.Count; ++i)
+                action(i, collection[i]);
+        }
 
 
         // 반대로 인덱스와 함께 순회

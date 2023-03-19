@@ -596,6 +596,9 @@ namespace SGToolsUI.CustomControl
             if (ViewModel.DragState.State != DragState.None)
                 return;
 
+            if (ViewModel.View.CanvasShapesControl.IsHideSelection)
+                return;
+
             Manipulate(e);
             ManipulationCheck(e);
         }

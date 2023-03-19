@@ -282,7 +282,7 @@ namespace SGToolsUI.CustomControl
                 case SGUIElementType.ToggleButton:  break;
                 case SGUIElementType.ScrollBar:     break;
                 case SGUIElementType.ProgressBar:   break;
-                default: throw new ArgumentOutOfRangeException();
+                case SGUIElementType.Static:        break;
             }
         }
 

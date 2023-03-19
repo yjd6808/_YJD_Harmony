@@ -20,7 +20,7 @@ namespace SGToolsUI.Model.Main
     public class SGUISprite : SGUIElement, ISizeRestorable
     {
         public const int OrderSize = 1;
-        public const int OrderSprite = 1;
+        public const int OrderSprite = 2;
 
         public SGUISprite()
         {

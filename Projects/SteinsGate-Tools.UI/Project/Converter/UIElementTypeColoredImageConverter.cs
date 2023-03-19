@@ -28,6 +28,7 @@ namespace SGToolsUI.Converter
                 case SGUIElementType.ToggleButton: return R.UIColoredToggleButtonIconImageSource;
                 case SGUIElementType.ProgressBar: return R.UIColoredProgressBarIconImageSource;
                 case SGUIElementType.ScrollBar: return R.UIColoredScrollBarIconImageSource;
+                case SGUIElementType.Static: return R.UIColoredStaticIconImageSource;
             }
 
             return null;

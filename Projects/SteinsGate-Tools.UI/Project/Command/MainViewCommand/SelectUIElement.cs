@@ -145,7 +145,11 @@ namespace SGToolsUI.Command.MainViewCommand
         private void SelectMultiElementKeep(IEnumerable<SGUIElement> elementList)
         {
             // 어차피 이미 셀릭트되었다면 내부 프로퍼티에서 바로 나오기때문에 이렇게 해도댐
-            elementList.ForEach(element => element.Selected = true);
+            elementList.ForEach(element =>
+            {
+                element.Selected = false;
+                element.Selected = true;
+            });
         }
     }
 }

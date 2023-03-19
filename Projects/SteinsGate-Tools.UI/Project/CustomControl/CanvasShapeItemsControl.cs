@@ -132,6 +132,25 @@ namespace SGToolsUI.CustomControl
             }
         }
 
+
+        public bool IsHideStatic
+        {
+            get => _isHideStatic;
+            set
+            {
+                if (_isHideStatic == value)
+                    return;
+
+                _isHideStatic = value;
+
+                ViewModel.GroupMaster.PickedElements.ForEach(element =>
+                {
+                    if (element is SGUIStatic staticElement)
+                        staticElement.IsVisible = value;
+                });
+            }
+        }
+
         // 헬퍼 프로퍼티.
         public ObservableCollection<SGUIElement> PickedElements => ViewModel.GroupMaster.PickedElements;
 
@@ -165,6 +184,7 @@ namespace SGToolsUI.CustomControl
         private Point _dragStartPosition;
         private bool _isDraggable = true;
         private bool _isHideSelection = false;
+        private bool _isHideStatic = false;
 
         public CanvasShapeItemsControl()
         {
@@ -255,7 +275,10 @@ namespace SGToolsUI.CustomControl
         public void OnKeyDown(SGKey key)
         {
             if (key == SGKey.Z)
-                IsHideSelection = true;
+                IsHideSelection = !IsHideSelection;
+            else if (key == SGKey.S)
+                IsHideStatic = !IsHideStatic;
+
 
             if (!ViewModel.KeyState.IsModifierKeyPressed)
             {
@@ -301,8 +324,6 @@ namespace SGToolsUI.CustomControl
                         .PickedSelectedElements
                         .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(0, Constant.CanvasElementWithKeyboardDeltaY)) );
                 }
-
-
             }
 
             if (ViewModel.KeyState.IsCtrlPressed)
@@ -327,8 +348,6 @@ namespace SGToolsUI.CustomControl
 
         public void OnKeyUp(SGKey key)
         {
-            if (key == SGKey.Z)
-                IsHideSelection = false;
         }
 
 
@@ -495,6 +514,7 @@ namespace SGToolsUI.CustomControl
 
              CanvasSelection selection = _selectionMap[element];
              selection.Element = null;
+
             if (!_selectionMap.Remove(element))
                 throw new Exception("셀렉션 맵에서 삭제 실패");
 

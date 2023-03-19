@@ -44,6 +44,7 @@ namespace SGToolsUI.ModelSelector.Main
                 case SGUIToggleButton __toggleButton__: return (DataTemplate)Application.Current.FindResource("ToggleButtonCanvasTemplate");
                 case SGUIScrollBar __scrollBar__: return (DataTemplate)Application.Current.FindResource("ScrollBarCanvasTemplate");
                 case SGUIProgressBar __progressBar__: return (DataTemplate)Application.Current.FindResource("ProgressBarCanvasTemplate");
+                case SGUIStatic __static__: return (DataTemplate)Application.Current.FindResource("StaticCanvasTemplate");
 
             }
 

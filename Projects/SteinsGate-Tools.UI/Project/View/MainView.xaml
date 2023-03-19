@@ -216,7 +216,7 @@
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="30" />
                             </Grid.ColumnDefinitions>
                              
                              <Grid.RowDefinitions>
@@ -233,6 +233,7 @@
                             <Button Grid.Row="0" Grid.Column="6" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ToggleButton}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredToggleButtonIconImageSource}"/>
                             <Button Grid.Row="0" Grid.Column="7" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ProgressBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredProgressBarIconImageSource}"/>
                             <Button Grid.Row="0" Grid.Column="8" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.ScrollBar}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredScrollBarIconImageSource}"/>
+                            <Button Grid.Row="0" Grid.Column="9" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static mo_main:SGUIElementType.Static}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{x:Static res:R.UIColoredStaticIconImageSource}"/>
                             <Button Grid.Row="1" Grid.Column="0" Command="{Binding Commander.DeleteUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonDeleteKey}}"/>
                             <Button Grid.Row="1" Grid.Column="1" Command="{Binding Commander.UnpickUIElement}" Style="{StaticResource ImageButton}" common_style:ImageButtonProperty.Image="{Binding Converter={StaticResource PackUrlImageSourceConverter}, ConverterParameter={x:Static common_res:R.IconCommonUnlockKey}}" />
                         </Grid>
@@ -328,7 +329,7 @@
                          캔버스상에 보일 순서를 트리뷰상에 엘리먼트가 배치된 순서와 통일시켜주기 위함이다.
                             => 음.. Depth가 깊으면 우선순위를 높일경우(캔버스상 앞에)
                                1 
-                                 1
+                                 1(C)
                                    1(A) A가 B보다 앞에 배치되는 경우가 발생한다.
                                    2
                                    3
@@ -337,13 +338,22 @@
                          그냥 Code순으로 해도 상관없는게 Code를 할당전력이
                          Depth가 루트에 가까울 수록 기본적으로 낮은 Code를 가지도록 구현했기 땜에
                          그냥 Code순으로 오름차순하면 끝날 듯하다.
+                           => 안된다. 이렇게하면
+                              A의 코드가 7001
+                              C의 코드가 7000
+                              B의 코드가 6002 이기때문에 B가 C와 A보다 뒤에 위치함.
+                    
+                         어쩔수없이 엘리먼트마다 ZOrder변수를 추가해줬다.
+                         자식 삽입시마다 업데이트를 해주도록 한다.
+                         여러개 삽입시에는 여러개 모두 삽입 후 업데이트를 하므로
+                         O(n)의 성능이라 나쁘지 않을 것으로 보인다.
                     -->
                     <CollectionViewSource x:Key="UIElementsControlCollectionViewSource"
                                           Source="{Binding GroupMaster.PickedElements}">
                         <CollectionViewSource.SortDescriptions>
                             <!--<scm:SortDescription PropertyName="Depth" />-->
-                            <scm:SortDescription PropertyName="Code" Direction="Ascending" />
-                            
+                            <!--<scm:SortDescription PropertyName="Code" Direction="Ascending" />-->
+                            <scm:SortDescription PropertyName="ZOrder" Direction="Ascending" />
                         </CollectionViewSource.SortDescriptions>
                     </CollectionViewSource>
                 </Grid.Resources>

@@ -150,6 +150,7 @@ namespace SGToolsUI.FileSystem
                     return newChild;
                 }
 
+                master.UpdateZOrder();
                 _viewModel.LogBox.AddDispatchedLog($"UI툴 데이터 로딩완료 {fileName}", (LogType.Path, path), IconCommonType.Checked, Brushes.Green);
                 return true;
             }
@@ -239,6 +240,7 @@ namespace SGToolsUI.FileSystem
                     BackupTreeViewItem newChild = elementDict[arr[0]];
                     return newChild;
                 }
+
 
                 return true;
             }

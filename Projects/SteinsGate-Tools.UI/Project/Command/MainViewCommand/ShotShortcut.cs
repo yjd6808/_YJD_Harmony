@@ -57,6 +57,7 @@ namespace SGToolsUI.Command.MainViewCommand
             ViewModel.LogBox.AddLog("", null, IconCommonType.Transparent);
             ViewModel.LogBox.AddLog("[캔버스 단축키 목록]");
             ViewModel.LogBox.AddLog("Z: 셀렉션 숨기기|보이기");
+            ViewModel.LogBox.AddLog("S: 스태틱 숨기기|보이기");
             ViewModel.LogBox.AddLog("X: 이벤트 모드, 캔버스상 선택, 움직임등이 모두 차단되고 버튼의 클릭등 컨트롤 이벤트를 시각적으로 확인할 수 있도록 하는 모드이다.");
             ViewModel.LogBox.AddLog("C: 이벤트 모드에서만 사용가능, 모든 엘리먼트를 Disabled 상태로 바꾼다. (다시 돌리기 위해서는 이벤트 모드 껏다 키면됨)");
             ViewModel.LogBox.AddLog("드래그: 범위 다중 선택");

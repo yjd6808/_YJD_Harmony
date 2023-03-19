@@ -1,0 +1,13 @@
+﻿<ResourceDictionary x:Class="SGToolsUI.ModelTemplate.Main.UIStaticCanvasTemplate"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mo_main="clr-namespace:SGToolsUI.Model.Main"
+                    xmlns:res="clr-namespace:SGToolsUI.Resource">
+    <DataTemplate x:Key="StaticCanvasTemplate"
+                  DataType="{x:Type mo_main:SGUIStatic}">
+        <Rectangle Width="{Binding VisualSize.Width}"
+                   Height="{Binding VisualSize.Height}"
+                   Fill="GreenYellow"
+                   Opacity="{Binding VisibleOpacity}"/>
+    </DataTemplate>
+</ResourceDictionary>

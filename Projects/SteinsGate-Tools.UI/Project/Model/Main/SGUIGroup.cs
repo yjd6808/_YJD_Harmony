@@ -233,6 +233,8 @@ namespace SGToolsUI.Model.Main
         {
             Children.Add(newChild);
             newChild.Parent = this;
+            ViewModel.GroupMaster.UpdateZOrder();
+
             SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
 
             bool isPicked = Picked;  // 현재 그룹이 픽된 경우 자식도 픽상태
@@ -305,6 +307,7 @@ namespace SGToolsUI.Model.Main
             // CollectionViewSource의 SortDescriptor로 Code를 설정해놨는데 Code는 Index프로퍼티를 사용하고
             // Index 프로퍼티는 _children에 새로 추가된 children이 포함되어야지 올바르게 동작하기 떄문이다.
             _children = _children.InsertRangeNew(index, newChildren.Children);
+            ViewModel.GroupMaster.UpdateZOrder();
 
             // 현재 그룹이 픽된 경우 추가되는 자식들도 픽해줘야함.
             bool isPicked = Picked;

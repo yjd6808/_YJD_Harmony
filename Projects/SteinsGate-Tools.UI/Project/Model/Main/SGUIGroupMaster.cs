@@ -119,6 +119,7 @@ namespace SGToolsUI.Model.Main
 
         public ObservableCollection<SGUIElement> SelectedElements => _selectedElements;
         public ObservableCollection<SGUIElement> PickedElements => _pickedElements;
+        
 
         public SGUIGroup PickedGroup => HasPickedElement ? _pickedElements[0].Cast<SGUIGroup>() : null;
         public IEnumerable<SGUIElement> PickedSelectedElements => _pickedElements.Where(element => element.Selected);
@@ -255,16 +256,16 @@ namespace SGToolsUI.Model.Main
 #endif
 
             Debug.Assert(!Picked, "마스터 그룹이 픽드 상태입니다.");
-            int selectedCount = 0;
+            //int selectedCount = 0;
 
-            ForEachRecursive(element =>
-            {
-                if (element.Selected)
-                    selectedCount++;
-            });
+            //ForEachRecursive(element =>
+            //{
+            //    if (element.Selected)
+            //        selectedCount++;
+            //});
 
-            if (selectedCount > 0)
-                throw new Exception("자식 요소중에 선택된 원소가 있습니다.");
+            //if (selectedCount > 0)
+            //    throw new Exception("자식 요소중에 선택된 원소가 있습니다.");
         }
 
 
@@ -334,10 +335,6 @@ namespace SGToolsUI.Model.Main
                 }
             }
 
-            // 밑에껄 선택 후 위에껄 선택한 경우(마지막 선택한게 이전 선택한 것보다 위에있다면), 반대로 뒤짚어준다.
-            if (comp > 0)
-                result.Reverse();
-
             return result;
         }
 
@@ -380,6 +377,17 @@ namespace SGToolsUI.Model.Main
             master.SetDepth(-1);
             return master;
         }
+
+        // 계층구조를 위에서부터 모두 펼쳐서 일렬로 쭉 나열했을때의 리스트
+        public List<SGUIElement> ToList()
+        {
+            List<SGUIElement> list = new();
+            ForEachRecursive(element => list.Add(element));
+            return list;
+        }
+
+        public void UpdateZOrder()
+            => ToList().IndexingForEach((index, element) => element.ZOrder = index);
 
         public void Clear()
         {

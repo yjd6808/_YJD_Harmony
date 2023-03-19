@@ -14,6 +14,7 @@
         <ResourceDictionary Source="MenuItemToggleButton.xaml" />
         <ResourceDictionary Source="MenuItemProgressBar.xaml" />
         <ResourceDictionary Source="MenuItemScrollBar.xaml" />
+        <ResourceDictionary Source="MenuItemStatic.xaml" />
 
 
         <ResourceDictionary Source="CanvasShapeItemsControl.xaml" />

@@ -143,6 +143,12 @@ namespace SGToolsUI.View
                 if (state.IsPressed(SGKey.S))
                 {
                     await ViewModel.Saver.SaveAutoAsync(SaveMode.Full, false);
+
+                    DoubleAnimation animation = new DoubleAnimation();
+                    animation.From = 0;
+                    animation.To = 1;
+                    animation.Duration = TimeSpan.FromMilliseconds(300);
+                    BeginAnimation(UIElement.OpacityProperty, animation);
                 }
                 else if (state.IsPressed(SGKey.L))
                 {

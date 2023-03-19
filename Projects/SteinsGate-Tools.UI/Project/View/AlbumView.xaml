@@ -13,7 +13,6 @@
         xmlns:c="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:SGToolsUI"
         xmlns:vm="clr-namespace:SGToolsUI.ViewModel"
-        xmlns:model="clr-namespace:SGToolsUI.Model"
         xmlns:ui_res="clr-namespace:SGToolsUI.Resource"
         xmlns:ui_ctrl="clr-namespace:SGToolsUI.CustomControl"
         xmlns:ui_selector="clr-namespace:SGToolsUI.ModelSelector"

@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:common_conv="clr-namespace:SGToolsCommon.Converter;assembly=SGToolsCommon"
+                    xmlns:res="clr-namespace:SGToolsUI.Resource">
+    <Style x:Key="MenuItemStatic" TargetType="MenuItem">
+        <Setter Property="Icon">
+            <Setter.Value>
+                <Image Width="16" Height="16" Source="{
+                    Binding 
+                    Converter={StaticResource PackUrlImageSourceConverter},
+                    ConverterParameter={x:Static res:R.UIColoredStaticIconKey}}">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="True">
+                                    <Setter Property="Opacity" Value="1" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.6" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

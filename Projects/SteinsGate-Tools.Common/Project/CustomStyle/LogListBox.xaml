@@ -17,10 +17,10 @@
                 Log, 
                 Converter={x:Static conv:TitleBarLogConverter.Instance}, 
                 ConverterParameter={x:Static local:Constant.TitleLogMaxLength}}"
-                 Foreground="{Binding Foreground}"
-                 Margin="3, 0, 0, 0"
-                 VerticalAlignment="Center"
-                 ClipToBounds="True">
+                       Foreground="{Binding Foreground}"
+                       Margin="3, 0, 0, 0"
+                       VerticalAlignment="Center"
+                       ClipToBounds="True">
             </TextBlock>
         </StackPanel>
     </DataTemplate>

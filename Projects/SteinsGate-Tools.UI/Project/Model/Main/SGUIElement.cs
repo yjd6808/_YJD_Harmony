@@ -310,6 +310,9 @@ namespace SGToolsUI.Model.Main
          *
          */
 
+
+        [Browsable(false)] public virtual double VisibleOpacity => _visible ? 1.0 : 0;
+
         [Category(Constant.ElementCategoryName), DisplayName("보이기"), PropertyOrder(OrderIsVisible)]
         [Description("현재 엘리먼트를 캔버스상에서 표시될지를 결정")]
         public virtual bool IsVisible
@@ -322,6 +325,7 @@ namespace SGToolsUI.Model.Main
 
                 _visible = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(VisibleOpacity));
             }
         }
 
@@ -367,9 +371,12 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public virtual int Code => Parent == null ? -1 : Parent.Code + Index + 1;
 
+        [Browsable(false)] 
+        public int ZOrder { get; set; }
+
+
         [Browsable(false)]
         public int GroupCode => Code / Constant.GroupCodeInterval * Constant.GroupCodeInterval;
-
 
         [Browsable(false)]
         public abstract bool Manipulatable { get; }
@@ -501,12 +508,6 @@ namespace SGToolsUI.Model.Main
 
                 if (!_picked)
                     return;
-
-
-                groupMaster.DeselectAll();
-                groupMaster.PickedElements.ForEach(element => element.SetPick(false));
-                groupMaster.PickedElements.Clear();
-
 
                 if (IsGroup)
                 {
@@ -796,7 +797,7 @@ namespace SGToolsUI.Model.Main
             ViewModel = element.ViewModel;
 
             _canvasSelectable = element._canvasSelectable;
-            _visualName = element._visualName + "_복사";
+            _visualName = element._visualName;
             _visualPosition = element._visualPosition;
             _defineName = element._defineName;
         }
@@ -816,6 +817,7 @@ namespace SGToolsUI.Model.Main
                 case SGUIElementType.ToggleButton: return new SGUIToggleButton();
                 case SGUIElementType.ScrollBar: return new SGUIScrollBar();
                 case SGUIElementType.ProgressBar: return new SGUIProgressBar();
+                case SGUIElementType.Static: return new SGUIStatic();
                 default: throw new Exception($"이런.. {type} 생성은 아직 구현되지 않았습니다.");
             }
         }

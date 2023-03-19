@@ -22,6 +22,7 @@
         <ResourceDictionary Source="Main/UIToggleButtonCanvasTemplate.xaml" />
         <ResourceDictionary Source="Main/UIScrollBarCanvasTemplate.xaml" />
         <ResourceDictionary Source="Main/UIProgressBarCanvasTemplate.xaml" />
+        <ResourceDictionary Source="Main/UIStaticCanvasTemplate.xaml" />
         
 
         <!-- UI 엘리먼트 트리뷰-->

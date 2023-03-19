@@ -36,6 +36,7 @@ namespace SGToolsUI.Resource
         public static readonly string UIToggleButtonKey = SGUIElementType.ToggleButton.ToString();
         public static readonly string UIProgressBarKey = SGUIElementType.ProgressBar.ToString();
         public static readonly string UIScrollBarKey = SGUIElementType.ScrollBar.ToString();
+        public static readonly string UIStaticKey = SGUIElementType.Static.ToString();
 
         public const string UIGroupIconKey = IconPath + "ui_black_group.ico";
         public const string UIButtonIconKey = IconPath + "ui_black_button.ico";
@@ -46,6 +47,7 @@ namespace SGToolsUI.Resource
         public const string UIToggleButtonIconKey = IconPath + "ui_black_toggle_button.ico";
         public const string UIProgressBarIconKey = IconPath + "ui_black_progressbar.ico";
         public const string UIScrollBarIconKey = IconPath + "ui_black_scrollbar.ico";
+        public const string UIStaticIconKey = IconPath + "ui_black_static.ico";
 
         public const string UIColoredGroupIconKey = IconPath + "ui_colored_group.ico";
         public const string UIColoredButtonIconKey = IconPath + "ui_colored_button.ico";
@@ -56,6 +58,7 @@ namespace SGToolsUI.Resource
         public const string UIColoredToggleButtonIconKey = IconPath + "ui_colored_toggle_button.ico";
         public const string UIColoredProgressBarIconKey = IconPath + "ui_colored_progressbar.ico";
         public const string UIColoredScrollBarIconKey = IconPath + "ui_colored_scrollbar.ico";
+        public const string UIColoredStaticIconKey = IconPath + "ui_colored_static.ico";
 
 
         public static readonly ImageSource UIGroupIconImageSource = new BitmapImage(new Uri(UIGroupIconKey));
@@ -67,6 +70,7 @@ namespace SGToolsUI.Resource
         public static readonly ImageSource UIToggleButtonIconImageSource = new BitmapImage(new Uri(UIToggleButtonIconKey));
         public static readonly ImageSource UIProgressBarIconImageSource = new BitmapImage(new Uri(UIProgressBarIconKey));
         public static readonly ImageSource UIScrollBarIconImageSource = new BitmapImage(new Uri(UIScrollBarIconKey));
+        public static readonly ImageSource UIStaticIconImageSource = new BitmapImage(new Uri(UIStaticIconKey));
 
         public static readonly ImageSource UIColoredGroupIconImageSource = new BitmapImage(new Uri(UIColoredGroupIconKey));
         public static readonly ImageSource UIColoredButtonIconImageSource = new BitmapImage(new Uri(UIColoredButtonIconKey));
@@ -77,6 +81,8 @@ namespace SGToolsUI.Resource
         public static readonly ImageSource UIColoredToggleButtonIconImageSource = new BitmapImage(new Uri(UIColoredToggleButtonIconKey));
         public static readonly ImageSource UIColoredProgressBarIconImageSource = new BitmapImage(new Uri(UIColoredProgressBarIconKey));
         public static readonly ImageSource UIColoredScrollBarIconImageSource = new BitmapImage(new Uri(UIColoredScrollBarIconKey));
+        public static readonly ImageSource UIColoredStaticIconImageSource = new BitmapImage(new Uri(UIColoredStaticIconKey));
+
 
     }
 }

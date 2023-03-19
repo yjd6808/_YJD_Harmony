@@ -197,10 +197,7 @@ namespace SGToolsUI.CustomControl
             else if (e.ClickCount > 1)
             {
                 e.Handled = true;
-
-                ViewModel.Commander.UnpickUIElement.Execute(null);
-                selected.Picked = true;
-
+                ViewModel.Commander.PickUIElement.Execute(selected);
 
                 // https://stackoverflow.com/questions/6037883/how-to-disable-double-click-behaviour-in-a-wpf-treeview
                 // 마우스 더블클릭으로 아이템 확장 안되도록 만듬.

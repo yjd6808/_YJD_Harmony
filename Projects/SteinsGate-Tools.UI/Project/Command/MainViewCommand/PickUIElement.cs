@@ -33,16 +33,62 @@ namespace SGToolsUI.Command.MainViewCommand
 
         public override void Execute(object? parameter)
         {
-            SGUIGroupMaster groupMaster = ViewModel.GroupMaster;
+            SelectMode mode = ViewModel.UIElementSelectMode;
 
-            if (!groupMaster.HasSelectedElement)
+            switch (parameter)
             {
-                MessageBoxEx.ShowTopMost("선택된 UI 엘리먼트가 없습니다.");
+            case SGUIElement element: 
+                PickSingleElement(element, mode);
+                break;
+            case IEnumerable<SGUIElement> elements: 
+                PickMultiElement(elements, mode);
+                break;
+            }
+
+            //ViewModel.View.UIElementPropertyGrid.SelectedObject = selectedElement;
+        }
+
+        private void PickSingleElement(SGUIElement element, SelectMode mode)
+        {
+            switch (mode)
+            {
+                case SelectMode.New: PickSingleElementNew(element); break;
+                case SelectMode.KeepExcept: PickSingleElementKeepExcept(element); break;
+                case SelectMode.Keep: PickSingleElementKeep(element); break;
+            }
+        }
+
+      
+        private void PickSingleElementNew(SGUIElement element)
+        {
+            ViewModel.GroupMaster.Depick();
+            element.Picked = true;
+        }
+
+        private void PickSingleElementKeepExcept(SGUIElement element)
+        {
+            if (element.Picked)
+            {
+                element.Picked = false;
                 return;
             }
 
-            SGUIElement selectedElement = groupMaster.SelectedElement;
-            selectedElement.Picked = true;
+            element.Picked = true;
+        }
+
+
+        private void PickSingleElementKeep(SGUIElement element)
+        {
+            if (element.Picked)
+                return;
+
+            element.Picked = true;
+        }
+
+
+
+        private void PickMultiElement(IEnumerable<SGUIElement> elements, SelectMode mode)
+        {
         }
     }
 }

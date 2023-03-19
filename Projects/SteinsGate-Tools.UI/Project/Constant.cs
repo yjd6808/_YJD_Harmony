@@ -61,13 +61,14 @@ namespace SGToolsUI
         public const string ToggleButtonCategoryName = "토글버튼";
         public const string ProgressBarCategoryName = "프로그래스바";
         public const string ScrollBarCategoryName = "스크롤바";
+        public const string StaticCategoryName = "스태틱";
         public const int OtherCategoryOrder = 1;
 
         public const int InvalidValue = -1;
         public const int CacheAlignSize = 64;
         public const bool UseDebugData = false;
 
-        public static readonly Size DefaultVisualSize = new (50, 50);
+        public static readonly Size DefaultVisualSize = new (32, 32);
         public static readonly Size DefaultBoxVisualSize = new(200, 30);
 
         public const int CanvasElementWithKeyboardDeltaX = 1;

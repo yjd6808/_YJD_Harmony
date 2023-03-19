@@ -31,6 +31,7 @@ namespace SGToolsUI.Model.Main
         CheckBox,
         ToggleButton,
         ScrollBar,
-        ProgressBar
+        ProgressBar,
+        Static
     }
 }
