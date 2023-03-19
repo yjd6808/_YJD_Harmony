@@ -91,9 +91,9 @@ namespace SGToolsUI.Model.Main
 
         [ReadOnly(false)]
         [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
-        public override Size VisualSize
+        public override IntSize VisualSize
         {
-            get => new((int)_visualSize.Width, (int)_visualSize.Height);
+            get => _visualSize;
             set
             {
                 _visualSize = value;
@@ -357,7 +357,7 @@ namespace SGToolsUI.Model.Main
 
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.
-        public override bool OnMouseMove(Point p)
+        public override bool OnMouseMove(IntPoint p)
         {
             // 자기 자신 그룹은 셀프 호출
             base.OnMouseMove(p);
@@ -372,7 +372,7 @@ namespace SGToolsUI.Model.Main
             return true;
         }
 
-        public override bool OnMouseDown(Point p)
+        public override bool OnMouseDown(IntPoint p)
         {
             // 자기 자신 그룹은 셀프 호출
             base.OnMouseDown(p);
@@ -387,7 +387,7 @@ namespace SGToolsUI.Model.Main
             return true;
         }
 
-        public override bool OnMouseUp(Point p)
+        public override bool OnMouseUp(IntPoint p)
         {
             // 자기 자신 그룹은 셀프 호출
             base.OnMouseUp(p);
@@ -402,7 +402,7 @@ namespace SGToolsUI.Model.Main
         }
 
         private ObservableCollection<SGUIElement> _children;
-        private Size _visualSize;
+        private IntSize _visualSize;
         private int _code;
         private int _depth; // 계층 구조상 깊이. 추가한 이유: 깊이 계산시 연산 낭비가 심함. 특히 모든 원소 깊이를 계산하는 경우
     }

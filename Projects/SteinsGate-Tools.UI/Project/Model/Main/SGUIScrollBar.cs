@@ -26,6 +26,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Model.Main;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -270,27 +271,7 @@ namespace SGToolsUI.Model.Main
             }
         }
 
-        //[Browsable(false)]
-        //public double ScaleX
-        //{
-        //    get
-        //    {
-        //        if (_sprites[IndexTrack].IsNull) return 1.0;
-        //        return _trackSize.Width / _sprites[IndexTrack].Sprite.Width;
-        //    }
-        //}
-
-        //[Browsable(false)]
-        //public double ScaleY
-        //{
-        //    get
-        //    {
-        //        if (_sprites[IndexTrack].IsNull) return 1.0;
-        //        return _trackSize.Height / _sprites[IndexTrack].Sprite.Height;
-        //    }
-        //}
-
-        public double MaxWidth
+        public int MaxWidth
         {
             get
             {
@@ -305,7 +286,7 @@ namespace SGToolsUI.Model.Main
             }
         }
 
-        public double MaxHeight
+        public int MaxHeight
         {
             get
             {
@@ -313,7 +294,7 @@ namespace SGToolsUI.Model.Main
                 SGUISpriteInfo visualUp = VisualUpSprite;
                 SGUISpriteInfo visualThumb = VisualThumbSprite;
 
-                double height = 0;
+                int height = 0;
                 height += visualUp.Height;
                 height += MathEx.Max(visualThumb.Height, _sprites[IndexTrack].Height);
                 height += visualDown.Height;
@@ -346,9 +327,9 @@ namespace SGToolsUI.Model.Main
 
         [ReadOnly(false)]
         [Category(Constant.ScrollBarCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override Size VisualSize
+        public override IntSize VisualSize
         {
-            get => new((int)_visualSize.Width, (int)_visualSize.Height);
+            get => _visualSize;
             set
             {
                 _visualSize = value;
@@ -360,9 +341,9 @@ namespace SGToolsUI.Model.Main
         }
 
         [Category(Constant.ScrollBarCategoryName), DisplayName("트랙 크기"), PropertyOrder(OrderTrackSize)]
-        public Size TrackSize
+        public IntSize TrackSize
         {
-            get => new((int)_visualSize.Width, (int)TrackHeight);
+            get => new(_visualSize.Width, TrackHeight);
             set
             {
                 _visualSize.Width = Math.Max(_visualSize.Width, value.Width);
@@ -419,7 +400,7 @@ namespace SGToolsUI.Model.Main
             OnPropertyChanged(nameof(VisualRect));
         }
 
-        private bool IsVisualUpRectContainPoint(Point p)
+        private bool IsVisualUpRectContainPoint(IntPoint p)
         {
             SGUISpriteInfo visualUp = VisualUpSprite;
             if (visualUp.IsNull) return false;
@@ -428,7 +409,7 @@ namespace SGToolsUI.Model.Main
             return rc.Contains(p);
         }
 
-        private bool IsVisualThumbRectContainPoint(Point p)
+        private bool IsVisualThumbRectContainPoint(IntPoint p)
         {
             SGUISpriteInfo visualThumb = VisualThumbSprite;
             if (visualThumb.IsNull) return false;
@@ -442,7 +423,7 @@ namespace SGToolsUI.Model.Main
             return visualThumbRect.Contains(p);
         }
 
-        private bool IsVisualDownRectContainPoint(Point p)
+        private bool IsVisualDownRectContainPoint(IntPoint p)
         {
             SGUISpriteInfo visualDown = VisualDownSprite;
             if (visualDown.IsNull) return false;
@@ -461,10 +442,10 @@ namespace SGToolsUI.Model.Main
 
         // 300, 400에 엘리먼트가 위치해있을때
         // 300, 400는 엘리먼트기준 0, 0의 좌표이다.
-        public Point ConvertElementPosition(Point p)
+        public IntPoint ConvertElementPosition(IntPoint p)
             => new(p.X - _visualPosition.X, p.Y - _visualPosition.Y);
 
-        public override bool OnMouseMove(Point p)
+        public override bool OnMouseMove(IntPoint p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
@@ -493,7 +474,7 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
-        public override bool OnMouseDown(Point p)
+        public override bool OnMouseDown(IntPoint p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
@@ -507,7 +488,7 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
-        public override bool OnMouseUp(Point p)
+        public override bool OnMouseUp(IntPoint p)
         {
             if (State != StatePressed)
                 return true;
@@ -561,7 +542,7 @@ namespace SGToolsUI.Model.Main
             string imgName = (string)root[JsonImgKey];
             string trackSizeString = (string)root[JsonTrackSizeKey];
 
-            Size trackSize = SizeEx.ParseFullString(trackSizeString);
+            IntSize trackSize = SizeEx.ParseFullString(trackSizeString);
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
@@ -580,7 +561,7 @@ namespace SGToolsUI.Model.Main
         private int _upState;
         private int _thumbState;
         private int _downState;
-        private Size _visualSize;
+        private IntSize _visualSize;
         private bool _widthInitialized;
         private bool _heightInitialized;
 

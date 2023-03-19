@@ -25,6 +25,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 using Vanara.PInvoke;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using static Vanara.PInvoke.Kernel32;
@@ -165,9 +166,9 @@ namespace SGToolsUI.Model.Main
 
         [ReadOnly(false)]
         [Category(Constant.ProgressBarCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override Size VisualSize
+        public override IntSize VisualSize
         {
-            get => new((int)_visualSize.Width, (int)_visualSize.Height);
+            get => _visualSize;
             set
             {
                 _visualSize = value;
@@ -186,7 +187,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (_sprite.IsNull) return 1.0;
-                return _visualSize.Width / _sprite.Sprite.Width;
+                return (double)_visualSize.Width / _sprite.Sprite.Width;
             }
         }
 
@@ -196,7 +197,7 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (_sprite.IsNull) return 1.0;
-                return _visualSize.Height / _sprite.Sprite.Height;
+                return (double)_visualSize.Height / _sprite.Sprite.Height;
             }
         }
 
@@ -304,7 +305,7 @@ namespace SGToolsUI.Model.Main
 
         private double _percent;
         private SGUISpriteInfo _sprite;
-        private Size _visualSize;
+        private IntSize _visualSize;
         private ProgressIncreaseDirection _direction;
     }
 }

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using SGToolsCommon.Converter;
+using SGToolsCommon.Primitive;
 using SGToolsUI.Converter;
 using SGToolsUI.Model;
 
@@ -68,8 +69,8 @@ namespace SGToolsUI
         public const int CacheAlignSize = 64;
         public const bool UseDebugData = false;
 
-        public static readonly Size DefaultVisualSize = new (30, 30);
-        public static readonly Size DefaultBoxVisualSize = new(200, 30);
+        public static readonly IntSize DefaultVisualSize = new (30, 30);
+        public static readonly IntSize DefaultBoxVisualSize = new(200, 30);
 
         public const int CanvasElementWithKeyboardDeltaX = 1;
         public const int CanvasElementWithKeyboardDeltaY = 1;

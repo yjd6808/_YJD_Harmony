@@ -18,12 +18,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsUI.Model.Main
 {
     public class CanvasLine : CanvasShape
     {
-        public Point Start
+        public IntPoint Start
         {
             get => _start;
             set
@@ -33,7 +34,7 @@ namespace SGToolsUI.Model.Main
             }
         }
 
-        public Point End
+        public IntPoint End
         {
             get => _end;
             set
@@ -47,7 +48,7 @@ namespace SGToolsUI.Model.Main
         public override bool IsLine => true;
         public override ShapeElementType ShapeElementType => ShapeElementType.Line;
 
-        private Point _start;
-        private Point _end;
+        private IntPoint _start;
+        private IntPoint _end;
     }
 }

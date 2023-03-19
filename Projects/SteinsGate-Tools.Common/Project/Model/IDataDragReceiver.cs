@@ -4,6 +4,7 @@
  *
  */
 
+using SGToolsCommon.Primitive;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace SGToolsCommon.Model
 {
     public interface IDataDragReceiver
     {
-        void DragEnd(Point p, object data);
-        bool ContainPoint(Point p);
+        void DragEnd(IntPoint p, object data);
+        bool ContainPoint(IntPoint p);
     }
 }

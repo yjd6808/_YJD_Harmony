@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Model.Main;
 using Vanara.PInvoke;
@@ -26,9 +27,9 @@ namespace SGToolsUI.View
         public SGUIGroup SelectedGroup { get; }
         public SgaSprite DroppedSprite { get; }
         public SGUISpriteInfo DroppedSpriteInfo { get; }
-        public Point DroppedPositionOnCanvas { get; }
+        public IntPoint DroppedPositionOnCanvas { get; }
 
-        public CreateElementView(SGUIGroup group, SgaSprite sprite, Point droppedPosOnCanvas)
+        public CreateElementView(SGUIGroup group, SgaSprite sprite, IntPoint droppedPosOnCanvas)
         {
             SelectedGroup = group;
             DroppedSprite = sprite;

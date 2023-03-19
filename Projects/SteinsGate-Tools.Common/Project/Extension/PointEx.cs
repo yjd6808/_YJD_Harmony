@@ -41,6 +41,7 @@ namespace SGToolsCommon.Extension
             return $"{vector.X:F0} {vector.Y:F0}";
         }
 
+
         public static string ToFullString(this Point point)
         {
             return $"{(int)point.X} {(int)point.Y}";
@@ -50,6 +51,7 @@ namespace SGToolsCommon.Extension
         {
             return Point.Subtract(point, other).Length;
         }
+
         public static Point ParseFullString(string s)
         {
             int[] sizeArr = new int[2];
@@ -57,7 +59,43 @@ namespace SGToolsCommon.Extension
             return new Point(sizeArr[0], sizeArr[1]);
         }
 
-       
+
+        public static IntPoint ToIntPoint(this IntVector vector)
+        {
+            return new IntPoint(vector.X, vector.Y);
+        }
+
+        public static IntVector ToIntVector(this IntPoint point)
+        {
+            return new IntVector(point.X, point.Y);
+        }
+
+        public static string ToFullString(this IntVector vector)
+        {
+            return $"{vector.X} {vector.Y}";
+        }
+
+
+        public static string ToFullString(this IntPoint point)
+        {
+            return $"{point.X} {point.Y}";
+        }
+
+        public static double Distance(this IntPoint point, IntPoint other)
+        {
+            return point.Distance(other);
+        }
+
+        public static IntPoint ParseFullStringIntPoint(string s)
+        {
+            int[] sizeArr = new int[2];
+            StringEx.ParseIntNumberN(s, sizeArr);
+            return new IntPoint(sizeArr[0], sizeArr[1]);
+        }
+
+
+
+
 
     }
 

@@ -30,7 +30,6 @@ using SGToolsCommon.Sga;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using System.Reflection.PortableExecutable;
-using Point = System.Windows.Point;
 using Newtonsoft.Json.Linq;
 using System.Windows.Threading;
 using Xceed.Wpf.AvalonDock.Controls;
@@ -38,6 +37,7 @@ using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using PropertyItem = Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem;
 using System.Drawing.Imaging;
 using SGToolsCommon.Model;
+using SGToolsCommon.Primitive;
 using SGToolsUI.ModelTemplate.Main;
 using SGToolsUI.Model.Main;
 
@@ -140,7 +140,7 @@ namespace SGToolsUI.CustomControl
             ViewModel.View.SpriteListBox.ScrollIntoView(spriteInfo.Sprite);
         }
 
-        public void DragEnd(Point p, object data)
+        public void DragEnd(IntPoint p, object data)
         {
 
             /* 프로퍼티 그리드 내부 부모 관계도 (위에서부터 시작)
@@ -186,7 +186,7 @@ namespace SGToolsUI.CustomControl
             if (sprite == null)
                 return;
 
-            Point pos = Mouse.GetPosition(this);
+            IntPoint pos = Mouse.GetPosition(this);
             var hit = this.HitTest<UIElementPropertyGrid, PropertyItem>(pos);
 
             if (hit == null)
@@ -295,7 +295,7 @@ namespace SGToolsUI.CustomControl
             this.FocusClear();
         }
 
-        public bool ContainPoint(Point p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
+        public bool ContainPoint(IntPoint p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
 
         public void SelectPropertyValue(bool newObject, ref string propertyName)
         {

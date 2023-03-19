@@ -5,13 +5,17 @@
  */
 
 
+using System;
 using System.Windows;
+using Vanara.PInvoke;
 
 
 namespace SGToolsCommon.Primitive
 {
     public struct IntPoint
     {
+        public static readonly IntPoint Zero = new();
+
         public int X { get; set; }
         public int Y { get; set; }
 
@@ -45,6 +49,44 @@ namespace SGToolsCommon.Primitive
         public override string ToString()
         {
             return $"{X} {Y}";
+        }
+
+        public static IntPoint Add(IntPoint lhs, IntPoint rhs)
+        {
+            lhs.X += rhs.X;
+            lhs.Y += rhs.Y;
+            return lhs;
+        }
+
+        public static IntVector Subtract(IntPoint lhs, IntPoint rhs)
+        {
+            IntVector v = new IntVector();
+            v.X = lhs.X - rhs.X;
+            v.Y = lhs.Y - rhs.Y;
+            return v;
+        }
+
+        public static IntPoint Subtract(IntPoint lhs, IntVector rhs)
+        {
+            IntPoint v = new IntPoint();
+            v.X = lhs.X - rhs.X;
+            v.Y = lhs.Y - rhs.Y;
+            return v;
+        }
+
+        public static bool operator==(IntPoint lhs, IntPoint rhs)
+        {
+            return lhs.X == rhs.X && lhs.Y == rhs.Y;
+        }
+
+        public static bool operator !=(IntPoint lhs, IntPoint rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+    public double Distance(IntPoint other)
+        {
+            return Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Y - other.Y, 2));
         }
     }
 }

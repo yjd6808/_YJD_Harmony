@@ -30,6 +30,7 @@ using SGToolsCommon;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Model;
+using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
 using SGToolsCommon.Sga;
 using SGToolsCommon.ThirdParty;
@@ -212,7 +213,7 @@ namespace SGToolsUI.View
 
         public void MainView_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
-            Point pos = e.GetPosition(this);
+            IntPoint pos = e.GetPosition(this);
 
             if (!CanvasShapesControl.ContainPoint(pos))
                 CanvasShapesControl.DragMove(e);
@@ -285,7 +286,7 @@ namespace SGToolsUI.View
 
         private void MainView_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Point p = e.GetPosition(this);
+            IntPoint p = e.GetPosition(this);
 
             ViewModel.FocusedKeyboardInputReceiver = ViewModel.KeyboardInputReceivers.FirstOrDefault(receiver => ((FrameworkElement)receiver).ContainPoint(p));
         }

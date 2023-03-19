@@ -34,7 +34,6 @@ using SGToolsCommon.Primitive;
 using SGToolsCommon.Resource;
 using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
-using Point = System.Windows.Point;
 
 namespace SGToolsUI.Model.Main
 {
@@ -163,7 +162,7 @@ namespace SGToolsUI.Model.Main
 
         [Category(Constant.ElementCategoryName), DisplayName("위치 (절대)"), PropertyOrder(OrderVisualPosition)]
         [Description("UI엘리먼트의 캔버스 좌상단 위치를 의미")]
-        public Point VisualPosition
+        public IntPoint VisualPosition
         {
             get => new((int)_visualPosition.X, (int)_visualPosition.Y);
             set
@@ -185,12 +184,12 @@ namespace SGToolsUI.Model.Main
 
         [Category(Constant.ElementCategoryName), DisplayName("위치 (상대)"), PropertyOrder(OrderRelativePosition)]
         [Description("VAlign, HAlign을 적용시킨 위치이고 이때 좌표계는 특별히 코코스 좌표계를 따른다.")]
-        public Point RelativePosition
+        public IntPoint RelativePosition
         {
             get
             {
                 if (Parent == null) throw new Exception("마스터 그룹은 호출 금지");
-                return (IntPoint)ConvertVisualPositionToRelativePosition(Parent);
+                return ConvertVisualPositionToRelativePosition(Parent);
             }
             set
             {
@@ -240,12 +239,12 @@ namespace SGToolsUI.Model.Main
 
         [Browsable(false)]
         // 앵커의 위치 (절대)
-        public Point VisualPositionAnchorAbsolute
+        public IntPoint VisualPositionAnchorAbsolute
         {
             get
             {
-                Point absoluteAnchorPosition = VisualPosition;
-                Point relativeAnchorPosition = VisualPositionAnchorRelative;
+                IntPoint absoluteAnchorPosition = VisualPosition;
+                IntPoint relativeAnchorPosition = VisualPositionAnchorRelative;
 
                 absoluteAnchorPosition.X += relativeAnchorPosition.X;
                 absoluteAnchorPosition.Y += relativeAnchorPosition.Y;
@@ -256,11 +255,11 @@ namespace SGToolsUI.Model.Main
 
         [Browsable(false)]
         // 엘리먼트 좌상단 위치를 기준으로 앵커의 위치
-        public Point VisualPositionAnchorRelative
+        public IntPoint VisualPositionAnchorRelative
         {
             get
             {
-                Point relativeAnchorRelative;
+                IntPoint relativeAnchorRelative = new ();
 
                 switch (HorizontalAlignment)
                 {
@@ -282,14 +281,14 @@ namespace SGToolsUI.Model.Main
 
         [Browsable(false)]
         [Description("엘리먼트 Rect의 중앙위치")]
-        public Point VisualPositionCenter => new(
+        public IntPoint VisualPositionCenter => new(
             _visualPosition.X + VisualSize.Width / 2,
             _visualPosition.Y + VisualSize.Height / 2
         );
 
         [Browsable(false)]
         [Description("엘리먼트 Rect의 우하단위치")]
-        public Point VisualPositionRightBottom => new(
+        public IntPoint VisualPositionRightBottom => new(
             _visualPosition.X + VisualSize.Width,
             _visualPosition.Y + VisualSize.Height
         );
@@ -298,7 +297,7 @@ namespace SGToolsUI.Model.Main
         [ReadOnly(true)]
         [Category(Constant.ElementCategoryName), DisplayName("크기")/*, PropertyOrder(OrderVisualSize)*/]
         [Description("UI엘리먼트의 크기를 의미")]
-        public virtual Size VisualSize
+        public virtual IntSize VisualSize
         {
             get => Constant.DefaultVisualSize;
             set { }
@@ -955,10 +954,10 @@ namespace SGToolsUI.Model.Main
         }
 
 
-        public Point ConvertRelativePositionToVisualPosition(SGUIGroup group, Point relativePosition)
+        public IntPoint ConvertRelativePositionToVisualPosition(SGUIGroup group, IntPoint relativePosition)
         {
-            Point visualPos;
-            Rect groupRect = group == null
+            IntPoint visualPos = new ();
+            IntRect groupRect = group == null
                 ? new Rect(0, 0, Constant.ResolutionWidth, Constant.ResolutionHeight)
                 : group.VisualRect;
 
@@ -1002,9 +1001,9 @@ namespace SGToolsUI.Model.Main
             return visualPos;
         }
 
-        public Point ConvertVisualPositionToRelativePosition(SGUIGroup group)
+        public IntPoint ConvertVisualPositionToRelativePosition(SGUIGroup group)
         {
-            Point alignedPos;
+            IntPoint alignedPos = new();
 
 
             switch (_horizontalAlignment)
@@ -1037,10 +1036,10 @@ namespace SGToolsUI.Model.Main
         }
 
 
-        public void SetPosition(VAlignment vAlign, HAlignment hAlign, Point point)
+        public void SetPosition(VAlignment vAlign, HAlignment hAlign, IntPoint IntPoint)
         {
-            Point groupPosition = Parent.VisualPosition;
-            Point zeroPosition;
+            IntPoint groupPosition = Parent.VisualPosition;
+            IntPoint zeroPosition = new ();
             switch (vAlign)
             {
                 case VAlignment.Center:
@@ -1061,17 +1060,17 @@ namespace SGToolsUI.Model.Main
                     break;
             }
 
-            zeroPosition.X += point.X;
-            zeroPosition.Y += point.Y;
+            zeroPosition.X += IntPoint.X;
+            zeroPosition.Y += IntPoint.Y;
             VisualPosition = zeroPosition;
         }
 
 
         // 9방향위치에 딱 붙여서 배치하는 용도
         public void SetPositionZero(VAlignment vAlign, HAlignment hAlign)
-            => SetPosition(vAlign, hAlign, PointEx.Zero);
+            => SetPosition(vAlign, hAlign, IntPoint.Zero);
 
-        public bool ContainPoint(Point p)
+        public bool ContainPoint(IntPoint p)
         {
             if (!_visible)
                 return false;
@@ -1130,7 +1129,7 @@ namespace SGToolsUI.Model.Main
         public object Tag { get; set; } // 아무런 데이터나 기록할 수 있도록하는 프로퍼티
 
         // 기본적으로 엘리먼트의 이벤트는 "전파"되도록한다.
-        public virtual bool OnMouseMove(Point p)
+        public virtual bool OnMouseMove(IntPoint p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
@@ -1148,7 +1147,7 @@ namespace SGToolsUI.Model.Main
             return true;
         }
 
-        public virtual bool OnMouseDown(Point p)
+        public virtual bool OnMouseDown(IntPoint p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
@@ -1162,7 +1161,7 @@ namespace SGToolsUI.Model.Main
             return true;
         }
 
-        public virtual bool OnMouseUp(Point p)
+        public virtual bool OnMouseUp(IntPoint p)
         {
             if (State != StatePressed)
                 return true;
@@ -1181,7 +1180,7 @@ namespace SGToolsUI.Model.Main
 
 
         protected string _visualName = string.Empty;
-        protected Point _visualPosition;
+        protected IntPoint _visualPosition;
         protected bool _selected = false;
         protected bool _visible = true;
         protected bool _deleted = false;

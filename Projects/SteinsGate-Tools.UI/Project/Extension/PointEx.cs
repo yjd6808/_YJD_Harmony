@@ -19,14 +19,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsUI.Extension
 {
     public static partial class PointEx
     {
-        public static Point Zoom(this Point point, ZoomState zoomState) 
+        public static IntPoint Zoom(this Point point, ZoomState zoomState) 
         {
-            return new Point(point.X / zoomState.ZoomLevelX, point.Y / zoomState.ZoomLevelY);
+            return new IntPoint((int)(point.X / zoomState.ZoomLevelX), (int)(point.Y / zoomState.ZoomLevelY));
         }
 
         public static Vector Zoom(this Vector vector, ZoomState zoomState) 

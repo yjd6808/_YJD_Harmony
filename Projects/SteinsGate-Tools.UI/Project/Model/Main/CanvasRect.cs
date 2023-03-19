@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsUI.Model.Main
 {
@@ -33,7 +34,7 @@ namespace SGToolsUI.Model.Main
 
 
         [Browsable(false)]
-        public Rect VisualRect
+        public IntRect VisualRect
         {
             get => _visualRect;
             set
@@ -48,7 +49,7 @@ namespace SGToolsUI.Model.Main
 
         [DisplayName(nameof(VisualPosition))]
         [Description("캔버스상의 좌상단 위치")]
-        public Point VisualPosition
+        public IntPoint VisualPosition
         {
             get => _visualRect.Location;
             set
@@ -62,7 +63,7 @@ namespace SGToolsUI.Model.Main
 
         [DisplayName("VisualSize")]
         [Description("사각형의 크기")]
-        public Size VisualSize
+        public IntSize VisualSize
         {
             get => _visualRect.Size;
             set

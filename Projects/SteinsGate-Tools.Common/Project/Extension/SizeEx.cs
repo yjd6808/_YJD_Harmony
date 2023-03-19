@@ -18,19 +18,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsCommon.Extension
 {
     public static class SizeEx
     {
-        public static string ToFullString(this Size size)
-            => $"{(int)size.Width} {(int)size.Height}";
+        public static string ToFullString(this IntSize size)
+            => $"{size.Width} {size.Height}";
 
-        public static Size ParseFullString(string s)
+        public static IntSize ParseFullString(string s)
         {
             int[] sizeArr = new int[2];
             StringEx.ParseIntNumberN(s, sizeArr);
-            return new Size(sizeArr[0], sizeArr[1]);
+            return new IntSize(sizeArr[0], sizeArr[1]);
         }
 
         public static Size Add(Size size, Vector vec)

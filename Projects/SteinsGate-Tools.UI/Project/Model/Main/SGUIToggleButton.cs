@@ -23,6 +23,7 @@ using System.Windows.Shapes;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.FileSystem;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
@@ -79,7 +80,7 @@ namespace SGToolsUI.Model.Main
 
         [ReadOnly(true)]
         [Category(Constant.ElementCategoryName), DisplayName("크기"), PropertyOrder(OrderVisualSize)]
-        public override Size VisualSize
+        public override IntSize VisualSize
         {
             get
             {
@@ -308,7 +309,7 @@ namespace SGToolsUI.Model.Main
         }
 
 
-        public override bool OnMouseMove(Point p)
+        public override bool OnMouseMove(IntPoint p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
@@ -326,7 +327,7 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
-        public override bool OnMouseDown(Point p)
+        public override bool OnMouseDown(IntPoint p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
@@ -340,7 +341,7 @@ namespace SGToolsUI.Model.Main
             return false;
         }
 
-        public override bool OnMouseUp(Point p)
+        public override bool OnMouseUp(IntPoint p)
         {
             if (State != StatePressed)
                 return true;

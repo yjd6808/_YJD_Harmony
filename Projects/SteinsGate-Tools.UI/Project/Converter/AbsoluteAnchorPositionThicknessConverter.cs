@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsUI.Converter
 {
@@ -27,7 +28,7 @@ namespace SGToolsUI.Converter
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is not Point p)
-                throw new Exception("Point 타입이 아닙니다.");
+                throw new Exception("IntPoint 타입이 아닙니다.");
 
             p.X -= Constant.CanvasAnchorSize / 2.0;
             p.Y -= Constant.CanvasAnchorSize / 2.0;

@@ -82,7 +82,7 @@ namespace SGToolsUI.ViewModel
             if (Setting.ShowLogViewWhenProgramLaunched)
                 LogView.Show();
 
-            if (Setting.ShowLogViewWhenProgramLaunched && Setting.LogViewPositionWhenProgramLaunched != PointEx.Zero)
+            if (Setting.ShowLogViewWhenProgramLaunched && Setting.LogViewPositionWhenProgramLaunched != IntPoint.Zero)
                 LogView.MoveTo(Setting.LogViewPositionWhenProgramLaunched);
 
             if (!Constant.UseDebugData)

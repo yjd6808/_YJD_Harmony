@@ -60,7 +60,7 @@ namespace SGToolsUI.CustomControl
         private bool _isShiftMove;
         private DragState _dragState;
         private ShiftKeyMoving _shiftKeyMoving = ShiftKeyMoving.None;
-        private Point _dragMoveStartPosition;
+        private IntPoint _dragMoveStartPosition;
         private List<MovingElement> _movingElements;
         private SGUIElement _prevSelectElement;                     // 이전에 마우스 포인터를 찍었을때 선택한 엘리먼트
 
@@ -68,10 +68,10 @@ namespace SGToolsUI.CustomControl
         private SGUIElement _manipulationTarget;
         private Positioning _manipulationMode = Positioning.Center; // Center는 아무 상태도 아닐때를 말한다.
         private Positioning _prevManipulationMode;
-        private Size _manipulationStartTargetSize;
-        private Point _manipulationStartPosition;
-        private Point _manipulationStartTargetPosition;
-        public delegate bool ManipulatorMethod(Point pos, Vector move, out Point manipulatedPosition, out Size manipulatedSize);
+        private IntSize _manipulationStartTargetSize;
+        private IntPoint _manipulationStartPosition;
+        private IntPoint _manipulationStartTargetPosition;
+        public delegate bool ManipulatorMethod(IntPoint pos, IntVector move, out IntPoint manipulatedPosition, out IntSize manipulatedSize);
         private List<ManipulatorMethod> _manipulators = new ();
 
 
@@ -174,7 +174,7 @@ namespace SGToolsUI.CustomControl
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             MouseButton btn = e.ChangedButton;
 
             OpenContextMenu(pos, btn);
@@ -190,7 +190,7 @@ namespace SGToolsUI.CustomControl
         {
             base.OnPreviewMouseMove(e);
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             OnMouseMoveEventMode(pos);
             OnMouseMoveManipulation(e);
@@ -204,7 +204,7 @@ namespace SGToolsUI.CustomControl
         {
             base.OnPreviewMouseUp(e);
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             MouseButton btn = e.ChangedButton;
 
             OnMouseUpEventMode(pos, btn);
@@ -218,7 +218,7 @@ namespace SGToolsUI.CustomControl
         // ======================================================================
 
 
-        private void MoveBegin(Point pos)
+        private void MoveBegin(IntPoint pos)
         {
             bool alt = ViewModel.KeyState.IsAltPressed;
             bool ctrl = ViewModel.KeyState.IsCtrlPressed;
@@ -261,7 +261,7 @@ namespace SGToolsUI.CustomControl
             
         }
 
-        public void MoveMove(Point pos)
+        public void MoveMove(IntPoint pos)
         {
             if (_dragState == DragState.None)
                 return;
@@ -270,7 +270,7 @@ namespace SGToolsUI.CustomControl
                 return;
 
             // 드래그 시작 후 마우스가 움직인 벡터만큼 다른 엘리먼트들도 벡터만큼 움직여준다.
-            Vector move = Point.Subtract(_dragMoveStartPosition, pos);
+            IntVector move = IntPoint.Subtract(_dragMoveStartPosition, pos);
 
             if (_dragState == DragState.Wait)
             {
@@ -296,10 +296,10 @@ namespace SGToolsUI.CustomControl
             else if (_shiftKeyMoving == ShiftKeyMoving.Horizontal)
                 move.Y = 0;
 
-            _movingElements.ForEach(m => m.Element.VisualPosition = Point.Subtract(m.StartPosition, move));
+            _movingElements.ForEach(m => m.Element.VisualPosition = IntPoint.Subtract(m.StartPosition, move));
         }
 
-        public void MoveEnd(Point p)
+        public void MoveEnd(IntPoint p)
         {
             _isShiftMove = false;
             _shiftKeyMoving = ShiftKeyMoving.None; 
@@ -419,7 +419,7 @@ namespace SGToolsUI.CustomControl
             return true;
         }
 
-        private void OnMouseDownEventMode(Point pos)
+        private void OnMouseDownEventMode(IntPoint pos)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
@@ -427,7 +427,7 @@ namespace SGToolsUI.CustomControl
             pickedGroup.OnMouseDown(pos);
         }
 
-        private void OnMouseMoveEventMode(Point pos)
+        private void OnMouseMoveEventMode(IntPoint pos)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
@@ -435,7 +435,7 @@ namespace SGToolsUI.CustomControl
             pickedGroup.OnMouseMove(pos);
         }
 
-        private void OnMouseUpEventMode(Point pos, MouseButton btn)
+        private void OnMouseUpEventMode(IntPoint pos, MouseButton btn)
         {
             if (!TryGetPickedGroupEventMode(out SGUIGroup pickedGroup))
                 return;
@@ -447,7 +447,7 @@ namespace SGToolsUI.CustomControl
         // ======================================================================
         //             컨텍스트 메뉴
         // ======================================================================
-        private void OpenContextMenu(Point pos, MouseButton btn)
+        private void OpenContextMenu(IntPoint pos, MouseButton btn)
         {
             if (btn != MouseButton.Right)
                 return;
@@ -499,7 +499,7 @@ namespace SGToolsUI.CustomControl
          *    마우스를 때면 다시 가능토록 한다.
          */
 
-        Positioning CheckManipulatable(Point mousePos, out SGUIElement manipulationTarget)
+        Positioning CheckManipulatable(IntPoint mousePos, out SGUIElement manipulationTarget)
         {
             manipulationTarget = null;
             const double thickHalf = 2.0;
@@ -577,7 +577,7 @@ namespace SGToolsUI.CustomControl
         }
 
 
-        private void OnMouseDownManipulation(Point pos)
+        private void OnMouseDownManipulation(IntPoint pos)
         {
             _manipulationMode = CheckManipulatable(pos, out SGUIElement manipulationTarget);
 
@@ -608,10 +608,10 @@ namespace SGToolsUI.CustomControl
             if (!IsManipulationMode || _manipulationTarget == null)
                 return;
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
-            Vector move = Point.Subtract(_manipulationStartPosition, pos);
+            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            Vector move = IntPoint.Subtract(_manipulationStartPosition, pos);
 
-            if (!_manipulators[(int)_manipulationMode](pos, move, out Point manipulatedPosition, out Size manipulatedSize))
+            if (!_manipulators[(int)_manipulationMode](pos, move, out IntPoint manipulatedPosition, out IntSize manipulatedSize))
                 return;
 
             _manipulationTarget.VisualPosition = manipulatedPosition;
@@ -620,7 +620,7 @@ namespace SGToolsUI.CustomControl
 
         private void ManipulationCheck(MouseEventArgs e)
         {
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             if (IsManipulationMode)
                 return;
@@ -634,16 +634,16 @@ namespace SGToolsUI.CustomControl
             }
         }
 
-        private bool ManipulateLeft(Point pos, Vector move, out Point manipulatedPoint, out Size manipulatedSize)
+        private bool ManipulateLeft(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
         {
             move.Y = 0; // 좌우 이동은 Y축 델타를 0으로만든다.
             double rightEdgeAxis = _manipulationStartTargetPosition.X + _manipulationStartTargetSize.Width;
 
-            manipulatedPoint = _manipulationStartTargetPosition;
+            manipulatedIntPoint = _manipulationStartTargetPosition;
             manipulatedSize = _manipulationStartTargetSize;
 
-            if (manipulatedPoint.X <= rightEdgeAxis)
-                manipulatedPoint.X = _manipulationStartTargetPosition.X - move.X;
+            if (manipulatedIntPoint.X <= rightEdgeAxis)
+                manipulatedIntPoint.X = _manipulationStartTargetPosition.X - move.X;
 
             // 좌에서 우로갈때 너비가 음수가 되지 않도록 해야한다.
             if (_manipulationStartTargetSize.Width + move.X < 5)
@@ -653,10 +653,10 @@ namespace SGToolsUI.CustomControl
             return true;
         }
 
-        private bool ManipulateRight(Point pos, Vector move, out Point manipulatedPoint, out Size manipulatedSize)
+        private bool ManipulateRight(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
         {
             move.Y = 0; // 좌우 이동은 Y축 델타를 0으로만든다.
-            manipulatedPoint = _manipulationStartTargetPosition;
+            manipulatedIntPoint = _manipulationStartTargetPosition;
             manipulatedSize = _manipulationStartTargetSize;
 
             // 우에서 좌로갈때 너비가 음수가 되지 않도록 해야한다.
@@ -667,16 +667,16 @@ namespace SGToolsUI.CustomControl
             return true;
         }
 
-        private bool ManipulateTop(Point pos, Vector move, out Point manipulatedPoint, out Size manipulatedSize)
+        private bool ManipulateTop(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
         {
             move.X = 0; // 상하 이동은 X축 델타를 0으로만든다.
             double bottomEdgeAxis = _manipulationStartTargetPosition.Y + _manipulationStartTargetSize.Height;
 
-            manipulatedPoint = _manipulationStartTargetPosition;
+            manipulatedIntPoint = _manipulationStartTargetPosition;
             manipulatedSize = _manipulationStartTargetSize;
 
-            if (manipulatedPoint.Y <= bottomEdgeAxis - 5)
-                manipulatedPoint.Y = _manipulationStartTargetPosition.Y - move.Y;
+            if (manipulatedIntPoint.Y <= bottomEdgeAxis - 5)
+                manipulatedIntPoint.Y = _manipulationStartTargetPosition.Y - move.Y;
 
             // 위에서 아래로갈때 높이가 음수가 되지 않도록 해야한다.
             if (_manipulationStartTargetSize.Height + move.Y < 5)
@@ -686,10 +686,10 @@ namespace SGToolsUI.CustomControl
             return true;
         }
 
-        private bool ManipulateBottom(Point pos, Vector move, out Point manipulatedPoint, out Size manipulatedSize)
+        private bool ManipulateBottom(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
         {
             move.X = 0; // 상하 이동은 X축 델타를 0으로만든다.
-            manipulatedPoint = _manipulationStartTargetPosition;
+            manipulatedIntPoint = _manipulationStartTargetPosition;
             manipulatedSize = _manipulationStartTargetSize;
 
             // 아래에서 위로갈때 높이가 음수가 되지 않도록 해야한다.
@@ -700,61 +700,71 @@ namespace SGToolsUI.CustomControl
             return true;
         }
 
-        private bool ManipulateTopLeft(Point pos, Vector move, out Point manipulatedPoint, out Size manipulatedSize)
+        private bool ManipulateTopLeft(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
         {
-            if (!ManipulateTop(pos, move, out Point topPoint, out Size topSize))
+            manipulatedIntPoint = new();
+            manipulatedSize = new();
+
+            if (!ManipulateTop(pos, move, out IntPoint topIntPoint, out IntSize topSize))
                 return false;
 
-            if (!ManipulateLeft(pos, move, out Point leftPoint, out Size leftSize))
+            if (!ManipulateLeft(pos, move, out IntPoint leftIntPoint, out IntSize leftSize))
                 return false;
 
-            manipulatedPoint = new Point(leftPoint.X, topPoint.Y);
+            manipulatedIntPoint = new IntPoint(leftIntPoint.X, topIntPoint.Y);
             manipulatedSize = new Size(leftSize.Width, topSize.Height);
             return true;
         }
 
-        private bool ManipulateTopRight(Point pos, Vector move, out Point manipulatedPoint, out Size manipulatedSize)
+        private bool ManipulateTopRight(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
         {
-            if (!ManipulateTop(pos, move, out Point topPoint, out Size topSize))
+            manipulatedIntPoint = new();
+            manipulatedSize = new();
+
+            if (!ManipulateTop(pos, move, out IntPoint topIntPoint, out IntSize topSize))
                 return false;
 
-            if (!ManipulateRight(pos, move, out Point rightPoint, out Size rightSize))
+            if (!ManipulateRight(pos, move, out IntPoint rightIntPoint, out IntSize rightSize))
                 return false;
 
-            manipulatedPoint = new Point(rightPoint.X, topPoint.Y);
+            manipulatedIntPoint = new IntPoint(rightIntPoint.X, topIntPoint.Y);
             manipulatedSize = new Size(rightSize.Width, topSize.Height);
             return true;
         }
 
-        private bool ManipulateBottomLeft(Point pos, Vector move, out Point manipulatedPoint, out Size manipulatedSize)
+        private bool ManipulateBottomLeft(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
         {
-            if (!ManipulateBottom(pos, move, out Point bottomPoint, out Size bottomSize))
+            manipulatedIntPoint = new();
+            manipulatedSize = new();
+
+            if (!ManipulateBottom(pos, move, out IntPoint bottomIntPoint, out IntSize bottomSize))
                 return false;
 
-            if (!ManipulateLeft(pos, move, out Point leftPoint, out Size leftSize))
+            if (!ManipulateLeft(pos, move, out IntPoint leftIntPoint, out IntSize leftSize))
                 return false;
 
-            manipulatedPoint = new Point(leftPoint.X, bottomPoint.Y);
+            manipulatedIntPoint = new IntPoint(leftIntPoint.X, bottomIntPoint.Y);
             manipulatedSize = new Size(leftSize.Width, bottomSize.Height);
             return true;
         }
 
-        private bool ManipulateBottomRight(Point pos, Vector move, out Point manipulatedPoint, out Size manipulatedSize)
+        private bool ManipulateBottomRight(IntPoint pos, IntVector move, out IntPoint manipulatedIntPoint, out IntSize manipulatedSize)
         {
-            if (!ManipulateBottom(pos, move, out Point bottomPoint, out Size bottomSize))
+            manipulatedIntPoint = new();
+            manipulatedSize = new();
+
+            if (!ManipulateBottom(pos, move, out IntPoint bottomIntPoint, out IntSize bottomSize))
                 return false;
 
-            if (!ManipulateRight(pos, move, out Point rightPoint, out Size rightSize))
+            if (!ManipulateRight(pos, move, out IntPoint rightIntPoint, out IntSize rightSize))
                 return false;
 
-            manipulatedPoint = new Point(rightPoint.X, bottomPoint.Y);
+            manipulatedIntPoint = new IntPoint(rightIntPoint.X, bottomIntPoint.Y);
             manipulatedSize = new Size(rightSize.Width, bottomSize.Height);
-            return true;
-
             return true;
         }
 
-        private bool ManipulateCenter(Point pos, Vector move, out Point manipulatedposition, out Size manipulatedsize)
+        private bool ManipulateCenter(IntPoint pos, IntVector move, out IntPoint manipulatedposition, out IntSize manipulatedsize)
         {
             throw new Exception("매니퓰레이트 불가능한 모드입니다.");
         }
@@ -776,9 +786,9 @@ namespace SGToolsUI.CustomControl
         private struct MovingElement
         {
             public SGUIElement Element { get; }
-            public Point StartPosition { get; }
+            public IntPoint StartPosition { get; }
 
-            public MovingElement(SGUIElement element, Point startPosition)
+            public MovingElement(SGUIElement element, IntPoint startPosition)
             {
                 Element = element;
                 StartPosition = startPosition;
@@ -794,14 +804,14 @@ namespace SGToolsUI.CustomControl
                 => (parameter as ISizeRestorable).RestoreSize();
         }
 
-        public void DragEnd(Point p, object data)
+        public void DragEnd(IntPoint p, object data)
         {
             SgaSprite sprite = data as SgaSprite;
 
             if (sprite == null)
                 return;
 
-            Point pos = Mouse.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = Mouse.GetPosition(this).Zoom(ViewModel.ZoomState);
             ObservableCollection<SGUIElement> pickedElements = ViewModel.GroupMaster.PickedElements;
             if (pickedElements.Count == 0)
             {
@@ -821,7 +831,7 @@ namespace SGToolsUI.CustomControl
             elementView.ShowDialog();
         }
 
-        public bool ContainPoint(Point p)
+        public bool ContainPoint(IntPoint p)
         {
             return VisualEx.ContainPoint(this, p);
         }

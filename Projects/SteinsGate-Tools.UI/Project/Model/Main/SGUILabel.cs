@@ -43,9 +43,9 @@ namespace SGToolsUI.Model.Main
 
         [ReadOnly(false)]
         [Category(Constant.LabelCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override Size VisualSize
+        public override IntSize VisualSize
         {
-            get => new((int)_visualSize.Width, (int)_visualSize.Height);
+            get => _visualSize;
             set
             {
                 _visualSize = value;
@@ -199,7 +199,7 @@ namespace SGToolsUI.Model.Main
         public override void CreateInit() => VisualName = $"라벨_{Seq++}";
         public static int Seq;
 
-        private Size _visualSize;
+        private IntSize _visualSize;
         private FontType _font;
         private int _fontSize;
         private Color _fontColor;

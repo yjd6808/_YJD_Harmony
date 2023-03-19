@@ -61,9 +61,9 @@ namespace SGToolsUI.Model.Main
 
 
         [Category(Constant.EditBoxCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override Size VisualSize
+        public override IntSize VisualSize
         {
-            get => new((int)_visualSize.Width, (int)_visualSize.Height);
+            get => _visualSize;
             set
             {
                 _visualSize = value;
@@ -225,7 +225,7 @@ namespace SGToolsUI.Model.Main
         }
 
 
-        public override bool OnMouseDown(Point p)
+        public override bool OnMouseDown(IntPoint p)
         {
             if (State == StateDisabled ||
                 State == StatePressed)
@@ -249,7 +249,7 @@ namespace SGToolsUI.Model.Main
         public override void CreateInit() => VisualName = $"에딧박스_{Seq++}";
         public static int Seq;
 
-        private Size _visualSize;
+        private IntSize _visualSize;
         private HAlignment _textHAlign;
         private int _fontSize;
         private Color _fontColor;

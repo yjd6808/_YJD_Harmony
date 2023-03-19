@@ -25,6 +25,7 @@ using System.Windows.Shapes;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
 using SGToolsCommon.Model;
+using SGToolsCommon.Primitive;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Model.Main;
 using SGToolsUI.ViewModel;
@@ -173,7 +174,7 @@ namespace SGToolsUI.CustomControl
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Point pos = e.GetPosition(this);
+            IntPoint pos = e.GetPosition(this);
             var hit = this.HitTest<UIElementTreeView, TreeViewItem, SGUIElement>(pos);
 
             if (hit == null)
@@ -229,12 +230,14 @@ namespace SGToolsUI.CustomControl
 
      
 
-        public void DragEnd(Point p, object data)
+        public void DragEnd(IntPoint p, object data)
         {
 
         }
 
-        public bool ContainPoint(Point p) => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
+        
+        public bool ContainPoint(IntPoint p)
+            => SGToolsCommon.Extension.VisualEx.ContainPoint(this, p);
 
     }
 }

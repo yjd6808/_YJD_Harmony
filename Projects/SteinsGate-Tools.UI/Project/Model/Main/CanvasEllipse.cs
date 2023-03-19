@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
 
 namespace SGToolsUI.Model.Main
 {
@@ -47,7 +48,7 @@ namespace SGToolsUI.Model.Main
             }
         }
 
-        public Point VisualPosition
+        public IntPoint VisualPosition
         {
             get => _visualRect.Location;
             set

@@ -28,6 +28,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MoreLinq;
 using SGToolsCommon.Model;
+using SGToolsCommon.Primitive;
 using SGToolsUI.Command.MainViewCommand;
 using SGToolsUI.Extension;
 using SGToolsUI.Model.Main;
@@ -182,7 +183,7 @@ namespace SGToolsUI.CustomControl
 
         private CanvasRect _dragBox;
         private DragState _dragState = DragState.None;
-        private Point _dragStartPosition;
+        private IntPoint _dragStartPosition;
         private bool _isDraggable = true;
         private bool _isHideSelection = false;
         private bool _isHideStatic = false;
@@ -303,25 +304,25 @@ namespace SGToolsUI.CustomControl
                 {
                     ViewModel.GroupMaster
                         .PickedSelectedElements
-                        .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(Constant.CanvasElementWithKeyboardDeltaX * -1, 0)) );
+                        .ForEach(ps => ps.VisualPosition = IntPoint.Add(ps.VisualPosition, new IntPoint(Constant.CanvasElementWithKeyboardDeltaX * -1, 0)) );
                 }
                 else if (key == SGKey.Right)
                 {
                     ViewModel.GroupMaster
                         .PickedSelectedElements
-                        .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(Constant.CanvasElementWithKeyboardDeltaX, 0)) );
+                        .ForEach(ps => ps.VisualPosition = IntPoint.Add(ps.VisualPosition, new IntPoint(Constant.CanvasElementWithKeyboardDeltaX, 0)) );
                 }
                 else if (key == SGKey.Up)
                 {
                     ViewModel.GroupMaster
                         .PickedSelectedElements
-                        .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(0, Constant.CanvasElementWithKeyboardDeltaY * -1)) );
+                        .ForEach(ps => ps.VisualPosition = IntPoint.Add(ps.VisualPosition, new IntPoint(0, Constant.CanvasElementWithKeyboardDeltaY * -1)) );
                 }
                 else if (key == SGKey.Down)
                 {
                     ViewModel.GroupMaster
                         .PickedSelectedElements
-                        .ForEach(ps => ps.VisualPosition = Point.Add(ps.VisualPosition, new Vector(0, Constant.CanvasElementWithKeyboardDeltaY)) );
+                        .ForEach(ps => ps.VisualPosition = IntPoint.Add(ps.VisualPosition, new IntPoint(0, Constant.CanvasElementWithKeyboardDeltaY)) );
                 }
             }
 
@@ -548,7 +549,7 @@ namespace SGToolsUI.CustomControl
                 return;
             }
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
             _dragState = DragState.Wait;
             _dragStartPosition = pos;
             ViewModel.View.TitlePanel.Draggable = false;
@@ -562,7 +563,7 @@ namespace SGToolsUI.CustomControl
                 return;
             }
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             if (_dragState == DragState.Wait)
             {
@@ -590,7 +591,7 @@ namespace SGToolsUI.CustomControl
             if (_dragBox == null)
                 return;
 
-            Point pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
+            IntPoint pos = e.GetPosition(this).Zoom(ViewModel.ZoomState);
 
             if (pos.Distance(_dragStartPosition) < Constant.DragActivateDistance)
                 return;

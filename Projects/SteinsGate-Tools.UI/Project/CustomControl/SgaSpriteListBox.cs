@@ -23,6 +23,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SGToolsCommon.CustomControl;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Model;
 using SGToolsUI.ViewModel;
@@ -78,7 +79,7 @@ namespace SGToolsUI.CustomControl
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            Point pos = e.GetPosition(this);
+            IntPoint pos = e.GetPosition(this);
             var hit = this.HitTest<SgaSpriteListBox, ListBoxItem, SgaSprite>(pos);
 
             if (hit == null)

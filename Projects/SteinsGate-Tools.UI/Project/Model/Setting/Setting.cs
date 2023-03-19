@@ -55,7 +55,7 @@ namespace SGToolsUI.Model.Setting
         public bool ShowLogViewWhenProgramLaunched { get; set; } = true;
 
         [DisplayName("로그뷰 기본 위치")]
-        public Point LogViewPositionWhenProgramLaunched { get; set; }
+        public IntPoint LogViewPositionWhenProgramLaunched { get; set; }
         [DisplayName("초기 배율(%)")]
         public int ZoomLevel { get; set; } = 100;
 
@@ -98,7 +98,7 @@ namespace SGToolsUI.Model.Setting
             if (root.TryGetValue(ShowLogViewWhenProgramLaunchedKey, out token))
                 ShowLogViewWhenProgramLaunched = (bool)token;
 
-            Point temp = new();
+            IntPoint temp = new();
 
             if (root.TryGetValue(LogViewPositionWhenProgramLaunchedXKey, out token))
                 temp.X = (int)token;

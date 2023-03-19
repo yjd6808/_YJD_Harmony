@@ -22,6 +22,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model.Main
@@ -40,9 +41,9 @@ namespace SGToolsUI.Model.Main
 
         [ReadOnly(false)]
         [Category(Constant.StaticCategoryName), DisplayName("크기"), PropertyOrder(OrderSize)]
-        public override Size VisualSize
+        public override IntSize VisualSize
         {
-            get => new((int)_visualSize.Width, (int)_visualSize.Height);
+            get => _visualSize;
             set
             {
                 _visualSize = value;
@@ -83,7 +84,7 @@ namespace SGToolsUI.Model.Main
 
         public override void CreateInit() => VisualName = $"스태틱_{Seq++}";
         public static int Seq;
-        private Size _visualSize;
+        private IntSize _visualSize;
 
         public void RestoreSize()
             => VisualSize = Constant.DefaultVisualSize;

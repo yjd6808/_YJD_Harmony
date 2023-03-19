@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 
 namespace SGToolsUI.View
@@ -45,7 +46,7 @@ namespace SGToolsUI.View
 
         }
 
-        public void AdjustPosition(Point offsetInMonitor)
+        public void AdjustPosition(IntPoint offsetInMonitor)
         {
             Left = offsetInMonitor.X - Width - 5;
             Top = offsetInMonitor.Y;

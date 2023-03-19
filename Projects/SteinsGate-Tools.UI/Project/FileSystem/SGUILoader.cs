@@ -34,6 +34,7 @@ using System.IO;
 using System.Windows.Media.Media3D;
 using SGToolsCommon;
 using SGToolsCommon.Extension;
+using SGToolsCommon.Primitive;
 using SGToolsUI.Model.Backup;
 using SGToolsUI.View;
 using SGToolsUI.Model.Main;
@@ -127,7 +128,7 @@ namespace SGToolsUI.FileSystem
                 master.ForEachRecursive(element =>
                 {
                     int[] childInfo = (int[])element.Tag;
-                    element.RelativePosition = new Point(childInfo[1], childInfo[2]);
+                    element.RelativePosition = new IntPoint(childInfo[1], childInfo[2]);
 
                     if (!element.IsGroup)
                     {
