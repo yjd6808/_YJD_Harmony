@@ -42,7 +42,7 @@ namespace SGToolsUI.CustomControl
         public UIElementTreeView()
         {
             Loaded += OnLoaded;
-
+            PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
             /*
              * TreeViewItem Loaded 추가를 위해 내가 시도한 방법들
              * 1. TreeView와 TreeViewItem을 상속받은 클래스를 정의한 후 GetContainerForItemOverride 함수를 오버라이딩해서
@@ -82,6 +82,7 @@ namespace SGToolsUI.CustomControl
              */
 
         }
+
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -165,7 +166,7 @@ namespace SGToolsUI.CustomControl
 
         }
 
-        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point pos = e.GetPosition(this);
             var hit = this.HitTest<UIElementTreeView, TreeViewItem, SGUIElement>(pos);
@@ -173,19 +174,39 @@ namespace SGToolsUI.CustomControl
             if (hit == null)
                 return;
 
-            
-
             SGUIElement? selected = hit.DataContext;
-            SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
 
-            if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null && prevSelected != selected) 
-            {
-                List<SGUIElement> betweenElements = ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected, true);
-                ViewModel.Commander.SelectUIElement.Execute(betweenElements);
+            if (selected == null)
                 return;
-            }
 
-            ViewModel.Commander.SelectUIElement.Execute(selected);
+            if (e.ClickCount == 1)
+            {
+                SGUIElement? prevSelected = ViewModel.GroupMaster.SelectedElement;
+
+                if (ViewModel.UIElementSelectMode == SelectMode.Keep && prevSelected != null &&
+                    prevSelected != selected)
+                {
+                    List<SGUIElement> betweenElements =
+                        ViewModel.GroupMaster.GetElementsBetween(prevSelected, selected, true);
+                    ViewModel.Commander.SelectUIElement.Execute(betweenElements);
+                    return;
+                }
+
+                ViewModel.Commander.SelectUIElement.Execute(selected);
+            }
+            else if (e.ClickCount > 1)
+            {
+                e.Handled = true;
+
+                ViewModel.Commander.UnpickUIElement.Execute(null);
+                selected.Picked = true;
+
+
+                // https://stackoverflow.com/questions/6037883/how-to-disable-double-click-behaviour-in-a-wpf-treeview
+                // 마우스 더블클릭으로 아이템 확장 안되도록 만듬.
+                // 이게 엄청 거슬리네
+                // 터널링 이벤트가 자식 이벤트로 클릭이 전파되지 않도록하는걸로 보인다.
+            }
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -204,15 +225,7 @@ namespace SGToolsUI.CustomControl
                 ScrollViewer.LineDown();
         }
 
-        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
-        {
-            SGUIElement selected = SelectedItem as SGUIElement;
-
-            if (selected == null)
-                return;
-
-            ViewModel.Commander.PickUIElement.Execute(selected);
-        }
+     
 
         public void DragEnd(Point p, object data)
         {

@@ -36,7 +36,6 @@
             <x:Type Type="vm:MainViewModel" />
         </d:Style.DataContext>
 
-
         <Setter Property="ItemContainerStyle">
 
             <Setter.Value>
@@ -66,7 +65,6 @@
                     <Setter.Value>
                         <ContextMenu>
                             <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" Command="{Binding Commander.DeleteUIElement}" />
-                            <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" Command="{Binding Commander.PickUIElement}" />
                             <Separator />
                             <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIGroupKey}" />
                             <MenuItem Style="{StaticResource MenuItemButton}" Header="버튼 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="{x:Static ui_res:R.UIButtonKey}" />
@@ -99,7 +97,6 @@
                 <Setter Property="ContextMenu">
                     <Setter.Value>
                         <ContextMenu>
-                            <MenuItem Style="{StaticResource MenuItemSelect}" Header="픽" IsEnabled="False" />
                             <MenuItem Style="{StaticResource MenuItemDelete}" Header="삭제" IsEnabled="False" />
                             <Separator />
                             <MenuItem Style="{StaticResource MenuItemGroup}" Header="그룹 추가" Command="{Binding Commander.CreateUIElement}" CommandParameter="Group" IsEnabled="True" />

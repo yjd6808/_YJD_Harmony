@@ -43,7 +43,6 @@ namespace SGToolsUI.Command.MainViewCommand
 
             SGUIElement selectedElement = groupMaster.SelectedElement;
             selectedElement.Picked = true;
-            //ViewModel.View.UIElementPropertyGrid.SelectedObject = selectedElement;
         }
     }
 }

@@ -75,7 +75,7 @@ namespace SGToolsUI.View
 
             //await t1;
             //await t2;
-
+            ViewModel.Terminated = true;
             ViewModel.LogView.Close();
             ViewModel.AlbumView.Close();
             ViewModel.BackupView.Close();
@@ -276,14 +276,11 @@ namespace SGToolsUI.View
             }
         }
 
-
         private void MainView_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Point p = e.GetPosition(this);
 
             ViewModel.FocusedKeyboardInputReceiver = ViewModel.KeyboardInputReceivers.FirstOrDefault(receiver => ((FrameworkElement)receiver).ContainPoint(p));
         }
-
-        
     }
 }

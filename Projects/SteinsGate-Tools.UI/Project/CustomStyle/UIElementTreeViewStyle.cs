@@ -37,5 +37,7 @@ namespace SGToolsUI.CustomStyle
                  throw new Exception("로드된 트리뷰 아이템에 데이터 컨텍스트가 설정되어있지 않습니다.");
              element.OnTreeViewItemLoaded(item);
         }
+
+       
     }
 }

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Packaging;
@@ -137,6 +138,12 @@ namespace SGToolsUI.View
 
             ViewModel.MainViewModel.View.Topmost = true;
             ViewModel.MainViewModel.View.Topmost = false;
+        }
+
+        private void AlbumView_OnClosing(object? sender, CancelEventArgs e)
+        {
+            if (!ViewModel.MainViewModel.Terminated)
+                Debug.Assert(false);
         }
     }
 }

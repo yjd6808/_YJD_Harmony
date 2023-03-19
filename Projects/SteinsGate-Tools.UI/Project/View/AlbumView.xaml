@@ -25,6 +25,7 @@
         FontSize="14"
         AllowsTransparency="True"
         WindowStyle="None"
+        Closing="AlbumView_OnClosing"
         SizeToContent="WidthAndHeight"
         Loaded="AlbumView_OnLoaded"
         Style="{StaticResource OneLineWindow}"

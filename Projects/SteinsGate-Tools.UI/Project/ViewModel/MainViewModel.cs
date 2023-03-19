@@ -364,7 +364,7 @@ namespace SGToolsUI.ViewModel
         }
 
         public bool IsNotEventMode => !IsEventMode;
-
+        public bool Terminated { get; set; }
         public DataDragState DragState { get; }
         public JobQueue JobQueue { get; } = new ();
         public LogListBox LogBox { get; }
