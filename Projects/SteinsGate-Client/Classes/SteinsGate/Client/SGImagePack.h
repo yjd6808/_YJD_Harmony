@@ -13,8 +13,10 @@
 
 #include <SteinsGate/Client/SGFrameTexture.h>
 
+#include <SteinsGate/Common/SgaSpriteAbstract.h>
 #include <SteinsGate/Common/SgaPackage.h>
 #include <SteinsGate/Common/SgaImage.h>
+
 
 class SGImagePack
 {
@@ -23,18 +25,21 @@ public:
 	~SGImagePack();
 
 	int getImgCount() { return m_Package->Count(); }
-	int getSpriteCount(int imgIndex);
+	int getSpriteCount(int imgIndex) const;
 
-	SGFrameTexture* createFrameTexture(int imgIndex, int frameIndex);
+	SgaSpriteAbstractPtr getSprite(int imgIndex, int frameIndex) const;
+	SgaSpriteAbstractPtr getSpriteUnsafe(int imgIndex, int frameIndex) const;
+	SGFrameTexture* createFrameTexture(int imgIndex, int frameIndex, bool linearDodge = false);
 
 	void releaseFrameTexture(int imgIndex, int frameIndex);
 	void releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex);
 
-	const SGString& getPath() { return m_Package->GetPath(); }
-	SGString getFileName();
-	bool hasImgIndex(const SGString& imgName);
-	int getImgIndex(const SGString& imgName) { return m_Package->GetElementIndex(imgName); }
-	SGString& getImgName(const int imgIndex);
+	const SGString& getPath() const { return m_Package->GetPath(); }
+	SGString getFileName() const;
+	bool hasImgIndex(const SGString& imgName) const;
+	int getImgIndex(const SGString& imgName) const { return m_Package->GetElementIndex(imgName); }
+	SGString& getImgName(const int imgIndex) const;
+	void applyLinearDodge(Byte* pixelData, int len) const;
 
 	int getPackIndex() { return m_iIndex; }
 

@@ -34,7 +34,7 @@ namespace SGToolsUI.Command.MainViewCommand
         Cut
     }
 
-    public class ClipboardOperateUIElement : MainCommandAbstract, INotifyPropertyChanged
+    public class ClipboardOperateUIElement : MainCommandAbstractAsync, INotifyPropertyChanged
     {
         private List<SGUIElement> _clipboard = new();
         public int ClipboardDataCount => _clipboard.Count;
@@ -45,7 +45,7 @@ namespace SGToolsUI.Command.MainViewCommand
         {
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
             if (parameter is not ClipboardOperate operate)
                 return;
@@ -61,7 +61,7 @@ namespace SGToolsUI.Command.MainViewCommand
                         Copy(selectedElements);
                     break;
                 case ClipboardOperate.Paste:
-                    Paste(selectedElements); 
+                    await Paste(selectedElements); 
                     break;
                 case ClipboardOperate.Cut:
                     if (selectedElementCount > 0)
@@ -97,7 +97,7 @@ namespace SGToolsUI.Command.MainViewCommand
             }
         }
 
-        private void Paste(ObservableCollection<SGUIElement> selectedElements)
+        private async Task Paste(ObservableCollection<SGUIElement> selectedElements)
         {
             if (_clipboard.Count <= 0)
             {
@@ -122,7 +122,7 @@ namespace SGToolsUI.Command.MainViewCommand
                 // 그룹이 아닌 경우 무조건 엘리먼트 이후로 추가해줌
                 if (!standardElement.IsGroup)
                 {
-                    InsertChildren(standardElement.Parent, cloned, standardElement.Index + 1);
+                    await InsertChildren(standardElement.Parent, cloned, standardElement.Index + 1);
                     return;
                 }
 
@@ -131,17 +131,17 @@ namespace SGToolsUI.Command.MainViewCommand
                 // 선택한 그룹이 확장되어 있으면 안에 넣고
                 // 확장되어있지 않으면 해당 그룹이 아닌것처럼 추가해준다.
                 if (standardGroup.ItemLoaded && standardGroup.Item.IsExpanded)
-                    InsertChildren(standardGroup, cloned, 0);
+                    await InsertChildren(standardGroup, cloned, 0);
                 else
-                    InsertChildren(standardGroup.Parent, cloned, standardGroup.Index + 1);
+                    await InsertChildren(standardGroup.Parent, cloned, standardGroup.Index + 1);
             }
             else
             {
-                InsertChildren(groupMaster, cloned, groupMaster.SelectedElements.Count);
+                await InsertChildren(groupMaster, cloned, groupMaster.SelectedElements.Count);
             }
         }
 
-        private void InsertChildren(SGUIGroup group, SGUIGroup cloned, int index)
+        private async Task InsertChildren(SGUIGroup group, SGUIGroup cloned, int index)
         {
             if (group.IsMaster && !cloned.HasOnlyGroup)
             {
@@ -154,6 +154,7 @@ namespace SGToolsUI.Command.MainViewCommand
             // 새로 추가된 원소들 선택함
             ViewModel.GroupMaster.DeselectAll();
             cloned.ForEachRecursive(element => element.Selected = true);
+            await ViewModel.Saver.BackupAsync("붙여넣기");
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

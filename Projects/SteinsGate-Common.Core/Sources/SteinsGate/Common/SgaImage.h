@@ -24,19 +24,21 @@ public:
 	SgaImage(const Header& header, int size);
 	~SgaImage() override;
 public:
-	void Set(int idx, const SgaSpriteAbstractPtr& sprite);
+	void Set(int idx, const SgaSpriteAbstractPtr& sprite) const;
 	void Remove(const SgaSpriteAbstractPtr& sprite);
 	void RemoveAt(const int idx);
-	int Count() { return m_Sprites.Size();  }
+	int Count() const { return m_Sprites.Size();  }
 	void Clear();
-	int WaitForLoadingDataCount() { return m_iWaitForLoadingDataCount; }
-	SgaSpriteAbstractPtr GetAt(const int idx) { return m_Sprites[idx]; }
-	SgaSpriteAbstract& GetAtRef(const int idx) { return m_Sprites[idx].GetRef(); }
+	int WaitForLoadingDataCount() const { return m_iWaitForLoadingDataCount; }
+	SgaSpriteAbstractPtr GetAt(const int idx) const;
+	SgaSpriteAbstractPtr GetAtUnsafe(const int idx) const;
+	SgaSpriteAbstract& GetAtRef(const int idx) const;
 
 	static SgaImagePtr Create(const Header& header, int size);
 
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
-	SgaSpriteAbstract& operator[](const int idx) { return m_Sprites[idx].GetRef(); }
+	SgaSpriteAbstract& operator[](const int idx) const;
+	bool IsValidIndex(int index) const;
 
 	bool Load(bool indexOnly) override;
 	bool Unload() override;

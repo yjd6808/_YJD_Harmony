@@ -15,7 +15,7 @@ USING_NS_CC;
 USING_NS_JC;
 
 SGUILabel::SGUILabel(SGUIGroup* parent, SGUILabelInfo* labelInfo)
-	: SGUIElement(parent)
+	: SGUIElement(parent, labelInfo)
 	, m_pInfo(labelInfo)
 	, m_pLabel{nullptr}
 {}
@@ -32,13 +32,14 @@ SGUILabel* SGUILabel::create(SGUIGroup* parent, SGUILabelInfo* labelInfo) {
 
 bool SGUILabel::init() {
 
-	SGString fontName = CoreFont_v->getFontName(m_pInfo->FontCode);
-	SGString fontPath = Path::Combine(CoreCommon_v->DataPath, FontDirName_v, fontName);
+	const SGString fontName = CoreFont_v->getFontName(m_pInfo->FontCode);
+	const SGString fontPath = Path::Combine(CoreCommon_v->DataPath, FontDirName_v, fontName);
 
 	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), fontPath.Source(), m_pInfo->FontSize, Size::ZERO);
 	m_pLabel->setHorizontalAlignment((TextHAlignment)m_pInfo->TextHAlignment);
 	m_pLabel->setVerticalAlignment((TextVAlignment)m_pInfo->TextVAlignment);
-	m_pLabel->setDimensions(m_pInfo->Width, m_pInfo->Height);
+	m_pLabel->setDimensions(m_pInfo->Size.width, m_pInfo->Size.height);
+	m_pLabel->setTextColor(m_pInfo->FontColor);
 	m_pLabel->enableWrap(m_pInfo->TextWrap);
 	m_pLabel->setAnchorPoint(Vec2::ZERO);
 	this->addChild(m_pLabel);
@@ -49,4 +50,5 @@ bool SGUILabel::init() {
 int SGUILabel::getCode() {
 	return m_pInfo->Code;
 }
+
 

@@ -71,8 +71,23 @@ SGImagePack* SGImagePackManager::getPack(const SGString& packName) {
 	DebugAssertMsg(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다.");
 	return m_LoadedPackages[m_PathToIdMap[packName]];
 }
+
+SGImagePack* SGImagePackManager::getPackUnsafe(const SGString& packName) {
+	if (!m_PathToIdMap.Exist(packName))
+		return nullptr;
+
+	return m_LoadedPackages[m_PathToIdMap[packName]];
+}
+
 SGImagePack* SGImagePackManager::getPack(const int idx) {
-	DebugAssertMsg(idx >= 0 && idx < m_iLoadedPackageCount, "올바르지 않은 패키지 인덱스 입니다.");
+	DebugAssertMsg(IsValidPackIndex(idx), "올바르지 않은 패키지 인덱스 입니다.");
+	return m_LoadedPackages[idx];
+}
+
+SGImagePack* SGImagePackManager::getPackUnsafe(const int idx) {
+	if (!IsValidPackIndex(idx))
+		return nullptr;
+
 	return m_LoadedPackages[idx];
 }
 
@@ -129,5 +144,12 @@ void SGImagePackManager::releaseFrameTexture(const SgaResourceIndex& sgaResource
 	getPack(sgaResourceIndex.Un.SgaIndex)->releaseFrameTexture(
 		sgaResourceIndex.Un.ImgIndex, 
 		sgaResourceIndex.Un.FrameIndex);
+}
+
+bool SGImagePackManager::IsValidPackIndex(int idx) {
+	if (idx >= 0 && idx < m_iLoadedPackageCount)
+		return true;
+
+	return false;
 }
 

@@ -385,17 +385,17 @@ static constexpr const char* Name[Max]{
 };
 SEnumMiddleEnd(SceneType)
 
-SEnumBegin(HorizontalAlignment)
+SEnumBegin(HAlignment)
 Left,
 Center,
 Right
-SEnumEnd(HorizontalAlignment)
+SEnumEnd(HAlignment)
 
-SEnumBegin(VerticalAlignment)
+SEnumBegin(VAlignment)
 Top,
 Center,
 Bottom
-SEnumEnd(VerticalAlignment)
+SEnumEnd(VAlignment)
 
 SEnumBegin(UIElementType)
 Group,
@@ -404,6 +404,10 @@ Label,
 Sprite,
 EditBox,
 CheckBox,
+ToggleButton,
+ScrollBar,
+ProgressBar,
+Static,
 Max
 SEnumEnd(UIElementType)
 
@@ -733,3 +737,10 @@ inline static const char* Name[Max]{
 };
 
 SEnumMiddleEnd(ChannelDensity)
+
+SEnumBegin(ProgressIncreaseDirection)
+LeftRight,
+RightLeft,
+TopBottom,
+BottomTop
+SEnumEnd(ProgressIncreaseDirection)

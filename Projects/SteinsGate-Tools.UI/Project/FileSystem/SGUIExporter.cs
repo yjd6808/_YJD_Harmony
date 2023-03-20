@@ -87,7 +87,7 @@ namespace SGToolsUI.FileSystem
                 using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 using (StreamWriter writer = new StreamWriter(fs))
                 {
-                    _viewModel.GroupMaster.ForEachRecursive(element =>
+                    void WriteDefine(SGUIElement element, bool groupMaster = false)
                     {
                         if (element.Depth == 0)
                             writer.WriteLine("\n\n");
@@ -95,15 +95,21 @@ namespace SGToolsUI.FileSystem
                         StringBuilder builder = new StringBuilder(128);
 
                         builder.Append(DefineNamePrefix(element));
-                        builder.Append(element.UIElementType.ToString());
+
+                        if (!groupMaster)
+                        {
+                            builder.Append(element.UIElementType.ToString());
+                        }
 
                         if (element.DefineName.Length > 0)
                         {
-                            builder.Append('_');
+                            if (!groupMaster) builder.Append('_');
                             builder.Append(element.DefineName);
                         }
 
-                        string defName = $"{DepthStrings[element.Depth]}#define {builder.ToString().ToUpper()}";
+                        int depth = element.Depth;
+                        depth = depth < 0 ? 0 : depth;
+                        string defName = $"{DepthStrings[depth]}#define {builder.ToString().ToUpper()}";
 
                         writer.Write(defName);
                         writer.Write('\t');
@@ -111,7 +117,12 @@ namespace SGToolsUI.FileSystem
 
                         if (!uniqueDefineNameMap.TryAdd(defName, _))
                             duplicatedDefineNameList.Add(defName);
-                    });
+                    }
+
+                    WriteDefine(_viewModel.GroupMaster, true);
+                    writer.WriteLine("// ========================================");
+                    writer.WriteLine();
+                    _viewModel.GroupMaster.ForEachRecursive(element => WriteDefine(element, false));
                 }
                 StringBuilder builder = new StringBuilder(60 * duplicatedDefineNameList.Count);
 

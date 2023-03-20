@@ -8,6 +8,7 @@
 #pragma once
 
 #include <exception>
+#include <stacktrace>
 #include <JCore/Primitives/String.h>
 
 NS_JC_BEGIN

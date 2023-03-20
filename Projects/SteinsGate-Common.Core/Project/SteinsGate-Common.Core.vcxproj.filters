@@ -198,6 +198,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\EnchantInfoLoader.h">
       <Filter>Data\Enchant</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SgaSpriteHelper.h">
+      <Filter>Sga</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\TypeTraits.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">

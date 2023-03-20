@@ -12,6 +12,7 @@
 
 #include <SteinsGate/Client/SGWorldScene.h>
 #include <SteinsGate/Client/SGUILayer.h>
+#include <SteinsGate/Client/SGUIDefine.h>
 
 
 USING_NS_CC;
@@ -45,7 +46,7 @@ bool SGLoginScene::init() {
 	}
 
 	m_pUILayer->clear();
-	m_pUILayer->addUIGroup(UI_GROUP_LOGIN);
+	m_pUILayer->addUIGroup(GROUP_UI_LOGIN);
 
 	return true;
 }

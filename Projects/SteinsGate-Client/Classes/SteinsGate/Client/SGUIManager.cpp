@@ -11,7 +11,7 @@
 #include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGUIGroup.h>
-#include <SteinsGate/Client/UILogin.h>
+
 
 USING_NS_CC;
 USING_NS_JC;
@@ -24,6 +24,8 @@ SGUIManager::SGUIManager()
 {}
 
 SGUIManager::~SGUIManager() {
+
+	CC_SAFE_RELEASE(Master);
 
 	// 마스터 UI 그룹만 제거해주면 된다.
 	// 어차피 내부 자식들은 모두 마스터 UI 그룹에 addChild 되어 있기 때문에
@@ -47,21 +49,33 @@ SGUIManager* SGUIManager::get() {
 // =====================================================
 //           마스타 유아이 그룹 등록
 // =====================================================
+
 void SGUIManager::init() {
-	registerGroup(UILogin::createRetain());
+	Master = SGUIGroupMaster::createRetain();
+	Master->forEach([this](SGUIElement* pElem)
+	{
+		DebugAssertMsg(pElem->getElementType() == UIElementType::Group, "그룹 타입이 아닌 요소가 그룹마스터에 포함되어있습니다.");
+		registerGroup(static_cast<SGUIGroup*>(pElem));
+	});
+
+
 }
 
 void SGUIManager::registerGroup(SGUIGroup* group) {
 	m_hUIElements.Insert(group->getCode(), group);
 	m_hMasterUIGroups.Insert(group->getCode(), group);
 
-	group->forEach([this](SGUIElement* uiElement) {
+	group->forEachRecursive([this](SGUIElement* uiElement) {
 		bool bInsert = m_hUIElements.Insert(uiElement->getCode(), uiElement);
 		DebugAssertMsg(bInsert, "이미 해당 UI 엘리먼트가 그룹내 포함되어 있습니다.");
 	});
 }
 
 void SGUIManager::registerLoadedUITexture(SgaResourceIndex index) {
+
+	if (index.Un.FrameIndex == InvalidValue_v)
+		return;
+
 	m_hLoadedUITexture.Insert(index.Value, index);
 }
 

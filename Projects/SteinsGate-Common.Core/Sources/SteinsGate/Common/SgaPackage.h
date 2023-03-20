@@ -29,16 +29,18 @@ public:
 public:
 	const JCore::String& GetPath()			{ return m_szPath; }
 	void Add(int idx, const SgaElementPtr& element);
-	SgaElementPtr Get(int idx);
+	
 
 	JCore::StreamPtr Stream()				{ return m_spStream; }
-	JCore::Stream& StreamRef()				{ return m_spStream.GetRef(); }
-	int Count()								{ return m_ElementMap.Size(); }
+	JCore::Stream& StreamRef() const		{ return m_spStream.GetRef(); }
+	int Count() const						{ return m_ElementMap.Size(); }
 
+	SgaElementPtr Get(int idx);
+	SgaElementPtr GetUnsafe(int idx);
 	SgaElement& GetAtRef(const int index) { return m_ElementMap[index].GetRef(); }
-	void LoadElement(const int index, bool indexOnly);
-	void LoadElementPerfect(const int index) { LoadElement(index, false); }
-	void LoadElementIndexOnly(const int index) { LoadElement(index, true); }
+	void LoadElement(const int index, bool elementOnly);
+	void LoadElementIndex(const int index) { LoadElement(index, false); }	// 스프라이트 프레임 인덱스 구성
+	void LoadElementOnly(const int index) { LoadElement(index, true); }		// 엘리먼트만 딸랑 만듬, 스프라이트 인덱스 미구성
 	int UnloadAllElementData();
 
 	bool IsElementLoaded(const int index);
@@ -46,7 +48,7 @@ public:
 	bool HasElementIndex(const JCore::String& elementName);
 
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
-	SgaElement& operator[](const int idx)	{ return m_ElementMap[idx].GetRef(); }
+	SgaElement& operator[](const int idx);
 protected:
 	JCore::String m_szPath;
 	JCore::StreamPtr m_spStream;

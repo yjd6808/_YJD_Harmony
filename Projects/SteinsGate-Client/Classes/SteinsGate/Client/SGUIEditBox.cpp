@@ -14,7 +14,7 @@ USING_NS_CCUI;
 USING_NS_JC;
 
 SGUIEditBox::SGUIEditBox(SGUIGroup* parent, SGUIEditBoxInfo* editBoxInfo)
-	: SGUIElement(parent)
+	: SGUIElement(parent, editBoxInfo)
 	, m_pInfo(editBoxInfo)
 	, m_pEditBox{ nullptr }
 {}
@@ -57,19 +57,19 @@ int SGUIEditBox::getCode() {
 	return m_pInfo->Code;
 }
 
-void SGUIEditBox::setTextEditBeginCallback(const SGActionFn<SGUIEditBox*>& fnTextEditBegin) {
+void SGUIEditBox::setTextEditBeginCallback(const SGActionFn<SGUIEditBox*>& fnTextEditBegin) const {
 	m_pListener->FnEditBoxEditingDidBegin = fnTextEditBegin;
 }
 
-void SGUIEditBox::setTextChangedCallback(const SGActionFn<SGUIEditBox*, const SGString&>& fnTextChanged) {
+void SGUIEditBox::setTextChangedCallback(const SGActionFn<SGUIEditBox*, const SGString&>& fnTextChanged) const {
 	m_pListener->FnEditBoxTextChanged = fnTextChanged;
 }
 
-void SGUIEditBox::setReturnCallback(const SGActionFn<SGUIEditBox*>& fnEditBoxReturn) {
+void SGUIEditBox::setReturnCallback(const SGActionFn<SGUIEditBox*>& fnEditBoxReturn) const {
 	m_pListener->FnEditBoxReturn = fnEditBoxReturn;
 }
 
-void SGUIEditBox::setLoseFocusCallback(const SGActionFn<SGUIEditBox*, SGEditBoxEndAction>& fnLoseFocus) {
+void SGUIEditBox::setLoseFocusCallback(const SGActionFn<SGUIEditBox*, SGEditBoxEndAction>& fnLoseFocus) const {
 	m_pListener->FnEditBoxEditingDidEndWithAction = fnLoseFocus;
 }
 

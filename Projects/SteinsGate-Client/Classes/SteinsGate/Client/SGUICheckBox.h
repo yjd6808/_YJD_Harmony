@@ -13,6 +13,11 @@
 class SGUICheckBox : public SGUIElement
 {
 public:
+	static constexpr int IndexBackground = 0;
+	static constexpr int IndexBackgroundDisabled = 1;
+	static constexpr int IndexCross = 2;
+	static constexpr int IndexCrossDisabled = 3;
+
 	SGUICheckBox(SGUIGroup* parent, SGUICheckBoxInfo* checkBoxInfo);
 	~SGUICheckBox() override;
 
@@ -23,7 +28,7 @@ public:
 
 	void setCheck(bool checked);
 	void setEnabled(bool enabled) override;
-	bool isChecked();
+	bool isChecked() const;
 
 	static SGUICheckBox* create(SGUIGroup* parent, SGUICheckBoxInfo* checkBoxInfo);
 

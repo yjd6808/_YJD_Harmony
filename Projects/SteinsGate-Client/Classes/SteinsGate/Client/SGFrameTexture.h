@@ -37,6 +37,8 @@ public:
 	virtual float getFrameWidthF() 	= 0;
 	virtual float getFrameHeightF() = 0;
 	virtual SGTexture* getTexture() = 0;
+	virtual bool isLinearDodged()	= 0;
+	virtual SGSize getSize()		= 0;
 
 	virtual bool isLink()  = 0;
 	virtual bool isDummy() = 0;
@@ -51,11 +53,12 @@ protected:
 class SGSpriteFrameTexture : public SGFrameTexture
 {
 public:
-	SGSpriteFrameTexture(SGTexture* texture, const SgaSpriteRect& rect, int frameIndex, bool dummy)
+	SGSpriteFrameTexture(SGTexture* texture, const SgaSpriteRect& rect, int frameIndex, bool dummy, bool linearDodge)
 		: SGFrameTexture(frameIndex)
 		, m_Rect(rect)
 		, m_pTexture(texture)
-		, m_bDummy(dummy) {}
+		, m_bDummy(dummy)
+		, m_bLinearDodged(linearDodge) {}
 	~SGSpriteFrameTexture() override;
 
 	int getWidth()		 override { return m_Rect.Width;  }
@@ -71,6 +74,8 @@ public:
 	float getYF()			 override { return (float)m_Rect.Y; }
 	float getFrameWidthF()	 override { return (float)m_Rect.FrameWidth;	}
 	float getFrameHeightF()  override { return (float)m_Rect.FrameHeight;	}
+	SGSize getSize()		 override { return { (float)m_Rect.Width, (float)m_Rect.Height }; }
+	
 
 	int getTargetFrameIndex()		override { return m_iFrameIndex; }
 	const SgaSpriteRect& getRect() 	override { return m_Rect; }
@@ -78,12 +83,13 @@ public:
 
 	bool isLink()  override { return false;		}
 	bool isDummy() override { return m_bDummy;	}
-	
+	bool isLinearDodged() override { return m_bLinearDodged; }
 protected:
 	SgaSpriteRect m_Rect;
 	SGTexture* m_pTexture;
 	
 	bool m_bDummy;
+	bool m_bLinearDodged;
 };
 
 
@@ -107,6 +113,7 @@ public:
 	float getYF()			 override { return 0; }
 	float getFrameWidthF()	 override { return 0; }
 	float getFrameHeightF()  override { return 1; }
+	SGSize getSize()		 override { return { 1, 1 }; }
 
 	int getTargetFrameIndex()		 override { return m_iTargetFrameIndex; }
 
@@ -118,6 +125,7 @@ public:
 
 	bool isLink()  override { return true;	}
 	bool isDummy() override { return false;	}
+	bool isLinearDodged() override { return false; }
 protected:
 	int m_iTargetFrameIndex;
 };

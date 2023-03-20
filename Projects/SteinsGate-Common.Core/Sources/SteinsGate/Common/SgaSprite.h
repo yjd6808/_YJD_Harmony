@@ -39,8 +39,8 @@ public:
 
 	SgaDataPtr GetData() override	{ return m_spData;		  }
 	SgaDataPtr Decompress() override;
+
 	SgaSpriteRect GetRect()	override { return m_Rect; }
-	
 
 	// ==========================================
 	// Lazy Loading을 위함

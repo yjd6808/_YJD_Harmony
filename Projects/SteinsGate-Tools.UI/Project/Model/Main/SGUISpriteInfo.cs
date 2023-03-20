@@ -140,9 +140,9 @@ namespace SGToolsUI.Model.Main
         [Browsable(false)]
         public bool IsNull => Sprite == null;
         [Browsable(false)]
-        public string SgaName => Sga.FileNameWithoutExt;
+        public string SgaName => Sga.FileName;
         [Browsable(false)]
-        public string ImgName => Img.Header.NameWithoutExt;
+        public string ImgName => Img.Header.Name;
 
         public override string ToString()
         {
@@ -217,6 +217,21 @@ namespace SGToolsUI.Model.Main
             {
                 sga = info.SgaName;
                 img = info.ImgName;
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool TryGetSgaImgFileName(in SGUISpriteInfo sprite, out string sga, out string img)
+        {
+            sga = string.Empty;
+            img = string.Empty;
+
+            if (!sprite.IsNull)
+            {
+                sga = sprite.SgaName;
+                img = sprite.ImgName;
                 return true;
             }
 

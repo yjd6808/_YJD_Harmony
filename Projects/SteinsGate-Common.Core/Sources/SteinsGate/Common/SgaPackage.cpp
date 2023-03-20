@@ -30,9 +30,16 @@ SgaElementPtr SgaPackage::Get(int idx) {
 	return m_ElementMap[idx];
 }
 
-void SgaPackage::LoadElement(const int index, bool indexOnly) {
+SgaElementPtr SgaPackage::GetUnsafe(int idx) {
+	if (!m_ElementMap.Exist(idx))
+		return nullptr;
+
+	return m_ElementMap[idx];
+}
+
+void SgaPackage::LoadElement(const int index, bool elementOnly) {
 	DebugAssertMsg(index >= 0 && index < m_ElementHeaders.Size(), "올바르지 않은 Element 인덱스입니다.");
-	SgaElementPtr spElement = SgaLoader::ReadElement(m_spStream.GetRef(), m_ElementHeaders[index], m_ElementHeaders[index].NextOffset, indexOnly);
+	SgaElementPtr spElement = SgaLoader::ReadElement(m_spStream.GetRef(), m_ElementHeaders[index], m_ElementHeaders[index].NextOffset, elementOnly);
 	DebugAssertMsg(spElement.Exist(), "엘리먼트 파싱에 실패했습니다.");
 	spElement->m_spParent = Weak();
 	Add(index, spElement);
@@ -63,4 +70,9 @@ int SgaPackage::GetElementIndex(const JCore::String& elementName) {
 bool SgaPackage::HasElementIndex(const JCore::String& elementName) {
 	bool bExist = m_ElementNameToIndex.Exist(elementName);
 	return bExist;
+}
+
+SgaElement& SgaPackage::operator[](const int idx) {
+	DebugAssert(m_ElementMap.Exist(idx));
+	return m_ElementMap[idx].GetRef();
 }

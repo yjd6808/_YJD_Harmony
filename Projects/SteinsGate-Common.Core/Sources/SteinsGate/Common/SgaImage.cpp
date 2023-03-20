@@ -27,6 +27,15 @@ SgaImagePtr SgaImage::Create(const Header& header, int size) {
 	return MakeShared<SgaImage>(header, size);
 }
 
+SgaSpriteAbstract& SgaImage::operator[](const int idx) const {
+	DebugAssert(IsValidIndex(idx));
+	return m_Sprites[idx].GetRef();
+}
+
+bool SgaImage::IsValidIndex(int index) const {
+	return index >= 0 && index < m_Sprites.Size();
+}
+
 bool SgaImage::Load(bool indexOnly) {
 	if (!m_spParent.Exist())
 		return false;
@@ -36,7 +45,6 @@ bool SgaImage::Load(bool indexOnly) {
 		m_spParent->StreamRef(),
 		indexOnly
 	);
-	m_bIndexLoaded = true;
 	return true;
 }
 
@@ -53,7 +61,24 @@ bool SgaImage::Unload() {
 	return bHasUnloadedData;
 }
 
-void SgaImage::Set(int idx, const SgaSpriteAbstractPtr& sprite) {
+SgaSpriteAbstractPtr SgaImage::GetAt(const int idx) const {
+	DebugAssert(IsValidIndex(idx));
+	return m_Sprites[idx];
+}
+
+SgaSpriteAbstractPtr SgaImage::GetAtUnsafe(const int idx) const {
+	if (!IsValidIndex(idx))
+		return nullptr;
+
+	return m_Sprites[idx];
+}
+
+SgaSpriteAbstract& SgaImage::GetAtRef(const int idx) const {
+	DebugAssert(IsValidIndex(idx));
+	return m_Sprites[idx].GetRef();
+}
+
+void SgaImage::Set(int idx, const SgaSpriteAbstractPtr& sprite) const {
 	DebugAssertMsg(m_Sprites[idx] == nullptr, "이미 초기화된 스프라이트 인덱스에 넣을려고 하고 있습니다.");
 	m_Sprites[idx] = sprite;
 }
@@ -73,3 +98,5 @@ void SgaImage::RemoveAt(const int idx) {
 void SgaImage::Clear() {
 	m_Sprites.Clear();
 }
+
+

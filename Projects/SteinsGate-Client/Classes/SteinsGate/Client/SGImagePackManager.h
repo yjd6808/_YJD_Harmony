@@ -30,7 +30,9 @@ public:
 	void unloadPackData(int packIndex);
 
 	SGImagePack* getPack(const SGString& packName);
+	SGImagePack* getPackUnsafe(const SGString& packName);
 	SGImagePack* getPack(const int idx);
+	SGImagePack* getPackUnsafe(const int idx);
 	SGImagePack* getAvatarPack(CharType_t charType, AvatarType_t avatarType);
 	SGImagePack* getWeaponPack(WeaponType_t weaponType);
 
@@ -45,6 +47,7 @@ public:
 	// TODO: 로딩된 패키지들 모두 Unload 하는 기능
 	// void unloadAll();
 private:
+	bool IsValidPackIndex(int index);
 
 	SGHashMap<SGString, int> m_PathToIdMap;
 	

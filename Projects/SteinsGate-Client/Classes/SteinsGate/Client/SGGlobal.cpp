@@ -95,7 +95,7 @@ SGSpriteFrameTexture* SGGlobal::getDefaultFrameTexture() {
 	
 	SGTexture* pDefaultTexture = dbg_new SGTexture;
 	pDefaultTexture->initWithData(White2x2TextureData_v, sizeof(White2x2TextureData_v), SGTexture::PixelFormat::RGB888, 2, 2, { 2, 2 });
-	m_pDefaultFrameTexture = dbg_new SGSpriteFrameTexture(pDefaultTexture, { 0, 0, 2, 2, 2, 2 }, 0, true);
+	m_pDefaultFrameTexture = dbg_new SGSpriteFrameTexture(pDefaultTexture, { 0, 0, 2, 2, 2, 2 }, 0, true, false);
 	m_pDefaultFrameTexture->autorelease();
 	m_pDefaultFrameTexture->retain();
 

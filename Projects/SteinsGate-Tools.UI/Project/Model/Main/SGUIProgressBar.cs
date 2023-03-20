@@ -249,28 +249,14 @@ namespace SGToolsUI.Model.Main
         {
             JObject root = base.ToJObject();
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
-            string sga;
-            string img;
-            GetSgaImgFileName(out sga, out img);
+            SGUISpriteInfoExt.TryGetSgaImgFileName(_sprite, out string sga, out string img);
 
             root[JsonSgaKey] = sga;
             root[JsonImgKey] = img;
-            root[JsonSpriteKey] = _sprite.SpriteIndex.ToString();
+            root[JsonSpriteKey] = _sprite.SpriteIndex;
             root[JsonVisualSizeKey] = _visualSize.ToFullString();
             root[JsonDirectionKey] = (int)_direction;
             return root;
-        }
-
-        private void GetSgaImgFileName(out string sga, out string img)
-        {
-            sga = string.Empty;
-            img = string.Empty;
-
-            if (!_sprite.IsNull)
-            {
-                sga = _sprite.Sga.FileNameWithoutExt;
-                img = _sprite.Img.Header.NameWithoutExt;
-            }
         }
 
         public override void ParseJObject(JObject root)
@@ -289,7 +275,7 @@ namespace SGToolsUI.Model.Main
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
-            int spriteIndex = int.Parse((string)root[JsonSpriteKey]);
+            int spriteIndex = (int)root[JsonSpriteKey];
 
             if (spriteIndex == Constant.InvalidValue)
                 return;

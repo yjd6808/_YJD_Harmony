@@ -77,7 +77,7 @@ String SgaLoader::ReadElementPath(Stream& stream) {
 }
 
 
-SgaElementPtr SgaLoader::ReadElement(Stream& stream, SgaElement::Header& header, int nextOffset, bool loadIndexOnly) {
+SgaElementPtr SgaLoader::ReadElement(Stream& stream, SgaElement::Header& header, int nextOffset, bool elementOnly) {
 	stream.Seek(header.Offset);
 
 	SgaElementPtr spElement;
@@ -92,8 +92,8 @@ SgaElementPtr SgaLoader::ReadElement(Stream& stream, SgaElement::Header& header,
 		spElement->m_iIndexLength = iIndexLength;
 		spElement->m_iVersion = iVersion;
 		spElement->m_iIndexOffset = stream.GetOffset();
-		if (loadIndexOnly) return spElement;
-		SgaElementInitializer::InitializeElement(spElement, stream, loadIndexOnly);
+		if (elementOnly) return spElement;
+		SgaElementInitializer::InitializeElement(spElement, stream, true);
 		return spElement;
 	}
 
@@ -108,8 +108,8 @@ SgaElementPtr SgaLoader::ReadElement(Stream& stream, SgaElement::Header& header,
 		spElement->m_iVersion = iVersion;
 		spElement->m_iIndexOffset = stream.GetOffset();
 
-		if (loadIndexOnly) return spElement;
-		SgaElementInitializer::InitializeElement(spElement, stream, loadIndexOnly);
+		if (elementOnly) return spElement;
+		SgaElementInitializer::InitializeElement(spElement, stream, true);
 		return spElement;
 	}
 
@@ -120,8 +120,8 @@ SgaElementPtr SgaLoader::ReadElement(Stream& stream, SgaElement::Header& header,
 		spElement->m_iVersion = 0;
 		spElement->m_iIndexLength = nextOffset - stream.GetOffset();	// 인덱스 길이가 곧 음악 데이터 길이이다.
 		spElement->m_iIndexOffset = stream.GetOffset();
-		if (loadIndexOnly) return spElement;
-		SgaElementInitializer::InitializeElement(spElement, stream, loadIndexOnly);
+		if (elementOnly) return spElement;
+		SgaElementInitializer::InitializeElement(spElement, stream, true);
 		return spElement;
 	}
 

@@ -26,7 +26,7 @@ SgaDataPtr SgaSprite::Decompress() {
 
 	int iDecompressedSize = m_Rect.Width * m_Rect.Height * (m_eColorFormat == SgaColorFormat::eArgb8888 ? 4 : 2);
 
-      SgaDataPtr spDecompressed = nullptr;
+    SgaDataPtr spDecompressed = nullptr;
     Byte* pReadData = m_spData.GetPtr();
 
 
@@ -38,8 +38,24 @@ SgaDataPtr SgaSprite::Decompress() {
         pReadData = pDecompressedRawPtr;
 	}
 
+    // 기본적으로 던파 픽셀 포맷은 다이렉트X 기반이라 32비트 BGRA임
+    // Cocos2d-x는 OpenGL 기반이라 픽셀 포맷을 RGBA 순서로 변경해줘야한다.
+    // TODO: 툴로 이미지 포맷을 모두 변경해야할 듯 아래 코드는 임시로 일단 둔다.
+    // Sga 패키지들중 Bgra 32비트 픽셀 포맷 타입들은 전부 Rgba32비트 픽셀 포맷으로 변경해서 저장해야겠다.
     if (m_eColorFormat == SgaColorFormat::eArgb8888) {
-        return spDecompressed == nullptr ? m_spData : spDecompressed;
+        SgaDataPtr& spData = spDecompressed == nullptr ? m_spData : spDecompressed;
+    	Byte* pRaw = spData.GetPtr();
+
+        for (int i = 0; i < spData.Length(); i += 4)
+        {
+            // 기존 B G R A
+            // 변경 R G B A
+            const Byte temp = pRaw[i + 0];
+            pRaw[i + 0] = pRaw[i + 2];
+            pRaw[i + 2] = temp;
+        }
+
+        return spData;
     }
 
 
@@ -81,6 +97,8 @@ SgaDataPtr SgaSprite::Decompress() {
             DebugAssert(false);
         }
 
+
+        // 32비트 픽셀 포맷으로 확장할때 한번에 Rgba32 포맷으로 변경하자.
         pRaw32Bites[i] = r;
         pRaw32Bites[i + 1] = g;
         pRaw32Bites[i + 2] = b;

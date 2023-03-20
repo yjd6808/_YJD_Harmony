@@ -61,8 +61,11 @@ namespace SGToolsUI.Command.MainViewCommand
       
         private void PickSingleElementNew(SGUIElement element)
         {
+            // 픽 해제 전에는 무조건 셀렉트를 먼저해제해줘야한다. SGUIElement.Selected 주석 참고
+            ViewModel.GroupMaster.DeselectAll();
             ViewModel.GroupMaster.Depick();
             element.Picked = true;
+            element.Selected = true;
         }
 
         private void PickSingleElementKeepExcept(SGUIElement element)

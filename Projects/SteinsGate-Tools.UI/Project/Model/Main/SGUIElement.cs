@@ -382,6 +382,13 @@ namespace SGToolsUI.Model.Main
         public abstract bool Manipulatable { get; }
 
 
+        /*
+         * 셀렉트는 픽에 의존성을 가지고 있다.
+         * 픽 되어있을 때만 캔버스상에 셀렉션을 표시하도록 하기 위함이다.
+         * 픽을 해제할때는 무조건 셀렉트를 먼저 해제 해줘야한다.
+         * 그렇지않으면 캔버스에 할당된 셀렉션이 반환되지 않는 문제가 생긴다.
+         */
+
         [Browsable(false)]
         [Category(Constant.ElementCategoryName), DisplayName(nameof(Selected))]
         [Description("엘리먼트가 트리뷰/캔버스 상에서 선택되었는지 ")]

@@ -80,6 +80,8 @@ void SgaElementInitializerImpl<1>::Initialize(const SgaElementPtr& element, Stre
 		pSprite->m_bLoaded = true;
 		
 	}
+
+	image.m_bIndexLoaded = true;
 }
 
 void SgaElementInitializerImpl<2>::Initialize(const SgaElementPtr& element, Stream& stream, bool indexOnly)
@@ -142,6 +144,8 @@ void SgaElementInitializerImpl<2>::Initialize(const SgaElementPtr& element, Stre
 		sprite.m_spData = pData;
 		sprite.m_bLoaded = true;
 	}
+
+	image.m_bIndexLoaded = true;
 }
 
 

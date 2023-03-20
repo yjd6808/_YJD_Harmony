@@ -38,12 +38,6 @@ bool SGSceneBase::init() {
 	m_pWorldScene = SGWorldScene::get();
 	m_pUILayer = m_pWorldScene->getUILayer();
 
-	auto a = Sprite::create("hud.png");
-	a->setAnchorPoint(Vec2::ZERO);
-	a->setScaleX(1.0f);
-	a->setScaleY(1.0f);
-	this->addChild(a);
-
 	return true;
 }
 void SGSceneBase::onEnter() {

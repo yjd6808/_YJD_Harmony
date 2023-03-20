@@ -15,7 +15,7 @@ USING_NS_CC;
 USING_NS_JC;
 
 SGUIButton::SGUIButton(SGUIGroup* parent, SGUIButtonInfo* btnInfo)
-	: SGUIElement(parent)
+	: SGUIElement(parent, btnInfo)
 	, m_pInfo(btnInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -58,6 +58,7 @@ void SGUIButton::setEnabled(bool enabled) {
 
 SGUIButton* SGUIButton::create(SGUIGroup* parent, SGUIButtonInfo* btnInfo) {
 	SGUIButton* pBtn = dbg_new SGUIButton(parent,btnInfo);
+	pBtn->init();
 	pBtn->autorelease();
 	return pBtn;
 }
@@ -70,9 +71,11 @@ void SGUIButton::restoreState(State state) {
 		setVisibleState(eNormal);
 }
 
-
 bool SGUIButton::init() {
-
+	SGImagePackManager* pPackManager = SGImagePackManager::get();
+	const SGImagePack* pPack = pPackManager->getPack(m_pInfo->Sga);
+	const SgaSpriteRect spriteRect = pPack->getSprite(m_pInfo->Img, m_pInfo->Sprites[IndexNormal])->GetRect();
+	setContentSize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
 	return true;
 }
 
@@ -84,24 +87,30 @@ void SGUIButton::load() {
 	SGUIManager* pUIManager = SGUIManager::get();
 	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Sga);
 
-	m_pTexture[eNormal] = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Normal);
+	const int iNormal = m_pInfo->Sprites[eNormal];
+	const int iOver = m_pInfo->Sprites[eOver];
+	const int iPressed = m_pInfo->Sprites[ePressed];
+	const int iDisabled = m_pInfo->Sprites[eDisabled];
+	const bool bLinearDodge = m_pInfo->LinearDodge;
+
+	m_pTexture[eNormal] = pPack->createFrameTexture(m_pInfo->Img, iNormal, bLinearDodge);
 	m_pTexture[eNormal]->retain();
-	m_pTexture[eOver] = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Over);
+	m_pTexture[eOver] = pPack->createFrameTexture(m_pInfo->Img, iOver, bLinearDodge);
 	m_pTexture[eOver]->retain();
-	m_pTexture[ePressed] = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Pressed);
+	m_pTexture[ePressed] = pPack->createFrameTexture(m_pInfo->Img, iPressed, bLinearDodge);
 	m_pTexture[ePressed]->retain();
-	m_pTexture[eDisabled] = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Disabled);
+	m_pTexture[eDisabled] = pPack->createFrameTexture(m_pInfo->Img, iDisabled, bLinearDodge);
 	m_pTexture[eDisabled]->retain();
 
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Normal });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Over });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Pressed });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Disabled });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iNormal });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iOver });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iPressed });
+	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iDisabled });
 
-	DebugAssertMsg(!m_pTexture[eNormal]->isLink(), "버튼의 노말 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
-	DebugAssertMsg(!m_pTexture[eOver]->isLink(), "버튼의 오버 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
-	DebugAssertMsg(!m_pTexture[ePressed]->isLink(), "버튼의 프레스트 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
-	DebugAssertMsg(!m_pTexture[eDisabled]->isLink(), "버튼의 디세이블드 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
+	DebugAssertMsg(!m_pTexture[eNormal]->isLink(), "버튼의 텍스쳐가 링크 텍스쳐입니다. [1] 그래선 안됩니다.");
+	DebugAssertMsg(!m_pTexture[eOver]->isLink(), "버튼의 텍스쳐가 링크 텍스쳐입니다. [2] 그래선 안됩니다.");
+	DebugAssertMsg(!m_pTexture[ePressed]->isLink(), "버튼의 텍스쳐가 링크 텍스쳐입니다. [3] 그래선 안됩니다.");
+	DebugAssertMsg(!m_pTexture[eDisabled]->isLink(), "버튼의 텍스쳐가 링크 텍스쳐입니다. [4] 그래선 안됩니다.");
 
 	m_pSprite[eNormal] = Sprite::create();
 	m_pSprite[eNormal]->initWithTexture(m_pTexture[eNormal]->getTexture());
@@ -122,7 +131,6 @@ void SGUIButton::load() {
 	this->addChild(m_pSprite[eDisabled]);
 
 	setVisibleState(eNormal);
-	setContentSize(m_pSprite[eNormal]->getContentSize());
 
 	m_bLoaded = true;
 }

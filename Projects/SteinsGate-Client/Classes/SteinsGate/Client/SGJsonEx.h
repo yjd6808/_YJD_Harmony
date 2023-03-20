@@ -17,6 +17,8 @@ struct SGJsonEx : SGJson
 public:
 	static void parseAnimationInfo(Json::Value& animationRoot, Out_ SGAnimationInfo& info);
 	static void parseColor4B(Json::Value& root, Out_ SGColor4B& color);
+	static void parseSize(Json::Value& root, Out_ SGSize& size);
+	static void parseVec2(Json::Value& root, Out_ SGVec2& vec);
 };
 
 

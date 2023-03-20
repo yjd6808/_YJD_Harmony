@@ -100,7 +100,7 @@ namespace SGToolsCommon.Sga
                 header.NextOffset =
                     i < _elementCount - 1 ? _elementHeaderList[i + 1].Offset : (int)_readStream.Length;
 
-                _elementNameToIndexMap.Add(header.NameWithoutExt, header.IndexInPackage);
+                _elementNameToIndexMap.Add(header.Name, header.IndexInPackage);
             }
 
             _indexLoaded = true;
@@ -118,18 +118,18 @@ namespace SGToolsCommon.Sga
 
         public SgaElement GetElement(int index) => _elementMap[index];
 
-        public SgaElement GetElement(string elementNameWithoutExt)
+        public SgaElement GetElement(string elementName)
         {
             if (!Loaded)
                 Load(true);
 
-            return _elementMap[GetElementIndex(elementNameWithoutExt)];
+            return _elementMap[GetElementIndex(elementName)];
         } 
 
         public int GetElementIndex(string elementName)
         {
             if (!_elementNameToIndexMap.ContainsKey(elementName))
-                throw new Exception($"{elementName}을 패키지${FileNameWithoutExt}에서 찾지 못했습니다.");
+                throw new Exception($"{elementName}을 패키지${FileName}에서 찾지 못했습니다.");
 
             return _elementNameToIndexMap[elementName];
         }

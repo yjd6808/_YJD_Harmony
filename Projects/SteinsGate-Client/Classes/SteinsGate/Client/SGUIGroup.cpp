@@ -18,24 +18,13 @@
 #include <SteinsGate/Client/SGGlobal.h>
 
 
-SGUIGroup::SGUIGroup()
-	: SGUIElement(nullptr)
-	, m_pInfo(nullptr)
-	, m_pPackManager(SGImagePackManager::get())
-	, m_pUIManager(SGUIManager::get())
-	, m_pDataManager(SGDataManager::get())
-{}
-
 SGUIGroup::SGUIGroup(SGUIGroup* parent, SGUIGroupInfo* groupInfo)
-	: SGUIElement(parent)
+	: SGUIElement(parent, groupInfo)
 	, m_pInfo(groupInfo)
-	, m_pPackManager(SGImagePackManager::get())
-	, m_pUIManager(SGUIManager::get())
-	, m_pDataManager(SGDataManager::get())
+	, vChildren(groupInfo->InfoList.Size())
 {}
 
 SGUIGroup::~SGUIGroup() {
-	int a = 40;
 }
 
 
@@ -59,24 +48,22 @@ bool SGUIGroup::init() {
 	if (!SGUIElement::init())
 		return false;
 
-	
+	setContentSize(m_pInfo->Size);
+	return true;
+}
+
+void SGUIGroup::initChildren() {
 	for (int i = 0; i < m_pInfo->InfoList.Size(); ++i) {
 		SGUIGroupElemInfo& elemInfo = m_pInfo->InfoList[i];
 		addUIElement(elemInfo);
 	}
-
-	setContentSize(m_pInfo->Rect.getSize());
-	setPositionReal(m_pInfo->Rect.origin);
-
-	
-	return true;
 }
 
 void SGUIGroup::load() {
 	if (m_bLoaded)
 		return;
 
-	forEach([](SGUIElement* elem) {
+	forEachRecursive([](SGUIElement* elem) {
 		elem->load();
 	});
 
@@ -87,7 +74,7 @@ void SGUIGroup::unload() {
 	if (m_bLoaded == false)
 		return;
 
-	forEach([](SGUIElement* elem) {
+	forEachRecursive([](SGUIElement* elem) {
 		elem->unload();
 	});
 
@@ -103,7 +90,7 @@ bool SGUIGroup::onMouseMove(SGEventMouse* mouseEvent) {
 	}
 
 	for (int i = _children.size() - 1; i >= 0; --i) {
-		SGUIElement* pElem = (SGUIElement*)_children.at(i);
+		SGUIElement* pElem = static_cast<SGUIElement*>(_children.at(i));
 		if (!pElem->onMouseMove(mouseEvent))
 			return false;
 	}
@@ -119,7 +106,7 @@ bool SGUIGroup::onMouseDown(SGEventMouse* mouseEvent) {
 	
 
 	for (int i = _children.size() - 1; i >= 0; --i) {
-		SGUIElement* pElem = (SGUIElement*)_children.at(i);
+		SGUIElement* pElem = static_cast<SGUIElement*>(_children.at(i));
 		if (!pElem->onMouseDown(mouseEvent))
 			return false;
 	}
@@ -133,7 +120,7 @@ bool SGUIGroup::onMouseUp(SGEventMouse* mouseEvent) {
 	}
 
 	for (int i = _children.size() - 1; i >= 0; --i) {
-		SGUIElement* pElem = (SGUIElement*)_children.at(i);
+		SGUIElement* pElem = static_cast<SGUIElement*>(_children.at(i));
 		if (!pElem->onMouseUp(mouseEvent))
 			return false;
 	}
@@ -149,94 +136,57 @@ int SGUIGroup::getCode() {
 }
 
 void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
-	SGDataManager* pDataManager = SGDataManager::get();
-	SGUIElementInfo* pElemInfo = pDataManager->getUIElementInfo(groupElemInfo.Code);
+	SGUIElementInfo* pElemInfo = CoreDataManager_v->getUIElementInfo(groupElemInfo.Code);
 	SGUIElement* pChildElement = nullptr;
 
 	switch (pElemInfo->Type) {
-	case UIElementType::Group: pChildElement = SGUIGroup::create(this, (SGUIGroupInfo*)pElemInfo); break;
-	case UIElementType::Button: pChildElement = SGUIButton::create(this, (SGUIButtonInfo*)pElemInfo); break;
-	case UIElementType::Label: pChildElement = SGUILabel::create(this,	(SGUILabelInfo*)pElemInfo); break;
-	case UIElementType::Sprite: pChildElement = SGUISprite::create(this, (SGUISpriteInfo*)pElemInfo); break;
-	case UIElementType::EditBox: pChildElement = SGUIEditBox::create(this, (SGUIEditBoxInfo*)pElemInfo); break;
-	case UIElementType::CheckBox: pChildElement = SGUICheckBox::create(this, (SGUICheckBoxInfo*)pElemInfo); break;
+	case UIElementType::Group: pChildElement = SGUIGroup::create(this, static_cast<SGUIGroupInfo*>(pElemInfo)); break;
+	case UIElementType::Button: pChildElement = SGUIButton::create(this, static_cast<SGUIButtonInfo*>(pElemInfo)); break;
+	case UIElementType::Label: pChildElement = SGUILabel::create(this,	static_cast<SGUILabelInfo*>(pElemInfo)); break;
+	case UIElementType::Sprite: pChildElement = SGUISprite::create(this, static_cast<SGUISpriteInfo*>(pElemInfo)); break;
+	case UIElementType::EditBox: pChildElement = SGUIEditBox::create(this, static_cast<SGUIEditBoxInfo*>(pElemInfo)); break;
+	case UIElementType::CheckBox: pChildElement = SGUICheckBox::create(this, static_cast<SGUICheckBoxInfo*>(pElemInfo)); break;
 	
-	default: break;
+	default: return;
+	// default: break; 임시로 리턴
 	}
 
 	DebugAssertMsg(pChildElement, "해당하는 UI 엘리먼트 타입의 자식을 생성하지 못했습니다.");
-	pChildElement->setPosition(groupElemInfo.X, groupElemInfo.Y);
+
+	pChildElement->setPositionRelative(groupElemInfo.Pos.x, groupElemInfo.Pos.y);
+	if (pChildElement->isGroup())
+		static_cast<SGUIGroup*>(pChildElement)->initChildren();
+
+	vChildren.PushBack(pChildElement);
 	this->addChild(pChildElement);
 }
 
-void SGUIGroup::forEach(const SGActionFn<SGUIElement*>& iteration) {
-	for (int i = _children.size() - 1; i >= 0; --i) {
-		SGUIElement* pElem = (SGUIElement*)_children.at(i);
+void SGUIGroup::forEachRecursive(const SGActionFn<SGUIElement*>& action) const {
+	for (int i = 0; i < vChildren.Size(); ++i) {
+		SGUIElement* pElem = vChildren[i];
 
 		if (pElem->getElementType() == UIElementType::Group) {
-			SGUIGroup* pGroupElem = (SGUIGroup*)pElem;
-			iteration(pGroupElem);
-			pGroupElem->forEach(iteration);
+			SGUIGroup* pGroupElem = static_cast<SGUIGroup*>(pElem);
+			action(pGroupElem);
+			pGroupElem->forEachRecursive(action);
 			continue;
 		}
 
-		iteration(pElem);
+		action(pElem);
 	}
 }
 
-SGVec2 SGUIGroup::getPositionInRect(
-	const SGRect& rc,
-	float origin_x,
-	float origin_y)
-{
-	float xPos = 0;
-	float yPos = 0;
-
-	switch (m_pInfo->HorizontalAlignment) {
-	case HorizontalAlignment::Left:		xPos = 0;											break;
-	case HorizontalAlignment::Center:	xPos = rc.getWidth() / 2 - getContentWidth() / 2;	break;
-	case HorizontalAlignment::Right:	xPos = rc.getWidth() - getContentWidth();			break;
+void SGUIGroup::forEach(const SGActionFn<SGUIElement*>& action) const {
+	for (int i = 0; i < vChildren.Size(); ++i) {
+		action(vChildren[i]);
 	}
-
-	switch (m_pInfo->VerticalAlignment) {
-	case VerticalAlignment::Bottom:	yPos = 0;											break;
-	case VerticalAlignment::Center:	yPos = rc.getHeight() / 2 - getContentHeight() / 2;	break;
-	case VerticalAlignment::Top:	yPos = rc.getHeight() - getContentHeight();			break;
-	}
-
-	return { xPos + origin_x, yPos + origin_y};
 }
 
-
-void SGUIGroup::setPositionReal(float x, float y) {
-	if (m_pParent == nullptr) {
-		setPositionRealNoParent(x, y);
-		return;
-	}
-
-	setPositionRealHasParent(x, y);
-}
-
-void SGUIGroup::setPositionRealNoParent(float x, float y) {
-	SGRect rect{ 0, 0, CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight };
-	SGVec2 realPos = getPositionInRect(rect, x, y);
-	setPosition(realPos);
-}
-
-void SGUIGroup::setPositionRealHasParent(float x, float y) {
-	SGRect rect = getWorldBoundingBox();
-	SGVec2 realPos = getPositionInRect(rect, x, y);
-	setPosition(realPos);
-}
-
-void SGUIGroup::setPositionReal(const SGVec2& pos) {
-	setPositionReal(pos.x, pos.y);
-}
 
 void SGUIGroup::restoreState(State state) {
 	if (m_eState == eDisabled)
 		return;
 
-	forEach([state](SGUIElement* uiElement) { uiElement->restoreState(state); });
+	forEachRecursive([state](SGUIElement* uiElement) { uiElement->restoreState(state); });
 }
 

@@ -30,9 +30,9 @@ SGGlobal*					CoreGlobal_v;
 void InitializeClientCore() {
 	CorePackManager_v			= SGImagePackManager::get();
 	CoreFont_v					= SGFontPackage::get();
+	CoreDataManager_v			= SGDataManager::get();
 	CoreUIManager_v				= SGUIManager::get();
 	CorePlayer_v				= SGHostPlayer::get();
-	CoreDataManager_v			= SGDataManager::get();
 	CoreInven_v					= SGInven::get();
 	CoreWorld_v					= SGWorldScene::get();
 	CoreActorListenerManager_v  = SGActorListenerManager::get();

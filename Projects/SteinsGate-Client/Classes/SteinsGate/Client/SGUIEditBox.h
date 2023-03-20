@@ -21,10 +21,10 @@ public:
 	int getCode() override;
 	UIElementType_t getElementType() override { return UIElementType::EditBox; }
 
-    void setTextEditBeginCallback(const SGActionFn<SGUIEditBox*>& fnTextEditBegin);
-    void setTextChangedCallback(const SGActionFn<SGUIEditBox*, const SGString&>& fnTextChanged);
-    void setReturnCallback(const SGActionFn<SGUIEditBox*>& fnEditBoxReturn);
-    void setLoseFocusCallback(const SGActionFn<SGUIEditBox*, SGEditBoxEndAction>& fnLoseFocus);
+    void setTextEditBeginCallback(const SGActionFn<SGUIEditBox*>& fnTextEditBegin) const;
+    void setTextChangedCallback(const SGActionFn<SGUIEditBox*, const SGString&>& fnTextChanged) const;
+    void setReturnCallback(const SGActionFn<SGUIEditBox*>& fnEditBoxReturn) const;
+    void setLoseFocusCallback(const SGActionFn<SGUIEditBox*, SGEditBoxEndAction>& fnLoseFocus) const;
     void focus() override;
 private:
     struct Listener : cocos2d::ui::EditBoxDelegate

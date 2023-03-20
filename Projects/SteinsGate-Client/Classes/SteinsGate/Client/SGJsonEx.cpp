@@ -85,3 +85,11 @@ void SGJsonEx::parseColor4B(Json::Value& root, Out_ SGColor4B& color) {
 	color.b = (GLubyte)iB;
 	color.a = (GLubyte)iA;
 }
+
+void SGJsonEx::parseSize(Json::Value& root, SGSize& size) {
+	parseFloatNumber2(root, size.width, size.height);
+}
+
+void SGJsonEx::parseVec2(Json::Value& root, SGVec2& vec) {
+	parseFloatNumber2(root, vec.x, vec.y);
+}

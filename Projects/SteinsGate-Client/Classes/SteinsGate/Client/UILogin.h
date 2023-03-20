@@ -13,8 +13,9 @@
 class UILogin : public SGUIGroup
 {
 public:
-	static UILogin* createRetain();
+	UILogin(SGUIGroup* groupMaster, SGUIGroupInfo* groupInfo);
 	bool init() override;
+	bool isMasterGroup() override { return true; }
 protected:
 };
 

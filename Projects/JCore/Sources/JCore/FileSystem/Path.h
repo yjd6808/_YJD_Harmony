@@ -19,6 +19,8 @@ public:
 	static String FileName(const String& path);
 	static String FileName(const char* path, int length);
 	static String FileName(const char* path);
+	static String FileNameWithoutExt(const String& path);
+	static String FileNameWithoutExt(const char* path);
 	static String FileNameLevel(const String& path, int level);
 	static String FileNameLevel(const char* path, int length, int level);
 	static String FileNameLevel(const char* path, int level);

@@ -57,7 +57,7 @@ namespace SGToolsCommon.Sga
             {
                 SgaPackage loadedPackage = SgaLoader.Load(sgaFileList[i], false, true, i);
                 _packages.Add(loadedPackage);
-                PackageMap.Add(loadedPackage.FileNameWithoutExt, loadedPackage);
+                PackageMap.Add(loadedPackage.FileName, loadedPackage);
             }
             NotifyUpdateList();
         }
@@ -83,12 +83,18 @@ namespace SGToolsCommon.Sga
             return Packages[index];
         }
 
-        public SgaImage GetImg(string packageNameWithoutExt, string imgNameWithoutExt)
+        public SgaImage GetImg(string packageName, string imgName)
         {
-            if (!IsValidPackageName(packageNameWithoutExt))
+            //if (!packageName.EndsWith(".sga"))
+            //    packageName += ".sga";
+
+            //if (!imgName.EndsWith(".img"))
+            //    imgName += ".img";
+
+            if (!IsValidPackageName(packageName))
                 throw new Exception("올바르지 않은 패키지 이름입니다.");
 
-            SgaImage img = PackageMap[packageNameWithoutExt].GetElement(imgNameWithoutExt) as SgaImage;
+            SgaImage img = PackageMap[packageName].GetElement(imgName) as SgaImage;
 
             if (img == null)
                 throw new Exception("해당 SgaElement는 SgaImage타입이 아닙니다.");
@@ -96,12 +102,12 @@ namespace SGToolsCommon.Sga
             return img;
         }
 
-        public SgaSpriteAbstract GetSprite(string packageNameWithoutExt, string imgNameWithoutExt, int spriteIndex)
-            => GetImg(packageNameWithoutExt, imgNameWithoutExt).GetSprite(spriteIndex);
+        public SgaSpriteAbstract GetSprite(string packageName, string imgName, int spriteIndex)
+            => GetImg(packageName, imgName).GetSprite(spriteIndex);
 
-        public SgaSprite GetSpriteLink(string packageNameWithoutExt, string imgNameWithoutExt, int spriteIndex)
+        public SgaSprite GetSpriteLink(string packageName, string imgName, int spriteIndex)
         {
-            SgaImage img = GetImg(packageNameWithoutExt, imgNameWithoutExt);
+            SgaImage img = GetImg(packageName, imgName);
             SgaSpriteAbstract sprite = img.GetSprite(spriteIndex);
 
             if (sprite.IsLink)
@@ -119,11 +125,11 @@ namespace SGToolsCommon.Sga
 
 
         // 링크는 타겟 프레임 찾아서 비트맵 가져옴
-        public BitmapSource GetBitmapSourceLink(string packageNameWithoutExt, string imgNameWithoutExt, int spriteIndex)
-            => GetSpriteLink(packageNameWithoutExt, imgNameWithoutExt, spriteIndex).Source;
+        public BitmapSource GetBitmapSourceLink(string packageName, string imgName, int spriteIndex)
+            => GetSpriteLink(packageName, imgName, spriteIndex).Source;
 
         bool IsValidPackageIndex(int index) => index >= 0 && index < Packages.Count;
-        bool IsValidPackageName(string packageNameWithoutExt) => PackageMap.ContainsKey(packageNameWithoutExt);
+        bool IsValidPackageName(string packageName) => PackageMap.ContainsKey(packageName);
 
         public void NotifyUpdateList()
             => OnPropertyChanged(nameof(Packages));

@@ -92,9 +92,19 @@ namespace SGToolsUI.FileSystem
                     {
                         // 비주얼 네임 전부 제거
                         root[JsonModeKey] = SaveMode.GameData.ToString();
-                        elementsRoot.ForEach(token => ((JObject)token).Remove(SGUIElement.JsonVisualNameKey));
-                        groupsRoot.ForEach(token => ((JObject)token).Remove(SGUIElement.JsonVisualNameKey));
+                        elementsRoot.ForEach(token =>
+                        {
+                            ((JObject)token).Remove(SGUIElement.JsonVisualNameKey);
+                            ((JObject)token).Remove(SGUIElement.JsonDefineNameKey);
+                        });
+                        groupsRoot.ForEach(token =>
+                        {
+                            ((JObject)token).Remove(SGUIElement.JsonVisualNameKey);
+                            ((JObject)token).Remove(SGUIElement.JsonDefineNameKey);
+                        });
+
                         groupMasterRoot.Remove(SGUIElement.JsonVisualNameKey);
+                        groupMasterRoot.Remove(SGUIElement.JsonDefineNameKey);
 
                         SaveJObject(gameDataPath, root, minify);
                     }

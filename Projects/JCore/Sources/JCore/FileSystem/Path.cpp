@@ -23,6 +23,18 @@ String Path::FileName(const char* path) {
 	return FileName(path, strlen(path));
 }
 
+String Path::FileNameWithoutExt(const String& path)
+{
+	return FileNameWithoutExt(path.Source());
+}
+
+String Path::FileNameWithoutExt(const char* path)
+{
+	const String szFileName = FileName(path);
+	int lastPeriod = szFileName.FindReverse(".");
+	return lastPeriod == -1 ? lastPeriod : szFileName.GetRange(0, lastPeriod);
+}
+
 String Path::FileName(const char* path, int length) {
 	String szFileName;
 	bool bSlashFound = false;

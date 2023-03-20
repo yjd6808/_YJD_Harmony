@@ -8,29 +8,21 @@
 
 #include "Tutturu.h"
 #include "UILogin.h"
-
 #include "SGUIGroup.h"
 
+#include <SteinsGate/Client/SGUIDefine.h>
 #include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGImagePackManager.h>
-
 
 USING_NS_CC;
 USING_NS_JC;
 
 
-UILogin* UILogin::createRetain() {
-	UILogin* pGroup = dbg_new UILogin();
-	SGDataManager* pDataManager = SGDataManager::get();
-	SGUIElementInfo* pInfo = pDataManager->getUIElementInfo(UI_GROUP_LOGIN);
-	DebugAssertMsg(pInfo->Type == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
-	pGroup->m_pInfo = (SGUIGroupInfo*)pInfo;
-
-	pGroup->init();
-	pGroup->retain();
-	pGroup->autorelease();
-	return pGroup;
+UILogin::UILogin(SGUIGroup* groupMaster, SGUIGroupInfo* groupInfo)
+	: SGUIGroup(groupMaster, groupInfo)
+{
 }
+
 
 bool UILogin::init() {
 

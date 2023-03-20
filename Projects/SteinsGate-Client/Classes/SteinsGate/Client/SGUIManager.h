@@ -21,6 +21,8 @@
 #include <SteinsGate/Client/SGUISprite.h>
 #include <SteinsGate/Client/SGUILabel.h>
 #include <SteinsGate/Client/SGImagePack.h>
+#include <SteinsGate/Client/SGUIGroupMaster.h>
+
 
 class SGUIManager
 {
@@ -40,6 +42,10 @@ public:
 	SGUIButton* getButton(int buttonCode);
 	SGUISprite* getSprite(int spriteCode);
 	SGUILabel* getLabel(int labelCode);
+
+public:
+	SGUIGroupMaster* Master;
+
 private:
 	SGHashMap<Int32U, SgaResourceIndex> m_hLoadedUITexture;		// 어떤 이미지 팩 로딩했는지 기록용
 	SGHashMap<int, SGUIElement*> m_hUIElements;

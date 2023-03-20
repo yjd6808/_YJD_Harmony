@@ -6,17 +6,20 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "SGUIElement.h"
 
 USING_NS_CC;
 USING_NS_JC;
 
-SGUIElement::SGUIElement(SGUIGroup* parent)
-	: m_fnMouseClickCallback(nullptr)
+SGUIElement::SGUIElement(SGUIGroup* parent, SGUIElementInfo* info)
+	: m_pBaseInfo(info)
 	, m_pParent(parent)
 	, m_eState(eNormal)
 	, m_bLoaded(false)
-{}
+	, m_bFocused(false)
+	, m_fnMouseClickCallback(nullptr) {
+}
 
 void SGUIElement::load() {
 	m_bLoaded = true;
@@ -26,7 +29,7 @@ void SGUIElement::unload() {
 	m_bLoaded = false;
 }
 
-bool SGUIElement::loaded() {
+bool SGUIElement::loaded() const {
 	return m_bLoaded;
 }
 
@@ -50,9 +53,9 @@ bool SGUIElement::onMouseMove(SGEventMouse* mouseEvent) {
 		m_eState == ePressed)
 		return true;
 
-	Vec2 mousePos = mouseEvent->getCursorPos();
-	SGRect worldRect = getWorldBoundingBox();
-	bool bContainedMouse = worldRect.containsPoint(mousePos);
+	const Vec2 mousePos = mouseEvent->getCursorPos();
+	const SGRect worldRect = getWorldBoundingBox();
+	const bool bContainedMouse = worldRect.containsPoint(mousePos);
 
 	if (!bContainedMouse) {
 		m_eState = eNormal;
@@ -68,8 +71,8 @@ bool SGUIElement::onMouseDown(SGEventMouse* mouseEvent) {
 		m_eState == ePressed)
 		return true;
 
-	Vec2 mousePos = mouseEvent->getCursorPos();
-	bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
+	const Vec2 mousePos = mouseEvent->getCursorPos();
+	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
 
 	if (!bContainedMouse) {
 		return true;
@@ -83,8 +86,8 @@ bool SGUIElement::onMouseUp(SGEventMouse* mouseEvent) {
 	if (m_eState != ePressed)
 		return true;
 
-	Vec2 mousePos = mouseEvent->getCursorPos();
-	bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
+	const Vec2 mousePos = mouseEvent->getCursorPos();
+	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
 
 	m_eState = eNormal;
 
@@ -112,9 +115,22 @@ void SGUIElement::setCallbackClick(const SGActionFn<SGEventMouse*>& callback) {
 	m_fnMouseClickCallback = callback;
 }
 
-SGRect SGUIElement::getWorldBoundingBox() {
-	DebugAssertMsg(_parent != nullptr, "addChild 되어있지 않습니다.");
-	SGVec2 origin = _parent->convertToWorldSpace(getPosition());
+SGRect SGUIElement::getWorldBoundingBox() const {
+	if (!isGroupMaster())
+		DebugAssertMsg(m_pParent != nullptr, "그룹마스터가 아닌데 부모가 없습니다.");
+	SGVec2 origin;
+
+	/*
+	 * 그룹마스터와 마스터 그룹들은 비쥬얼 부모(_parent)가 존재하지 않는다.
+	 * 그룹마스터는 비쥬얼 부모, 논리 부모 모두 존재하지 않는다. (계층 최상위 노드이기 때문)
+	 * 마스터 그룹들은 논리 부모는 존재하지만 비쥬얼 부모는 추후 UILayer에 붙이기 위해 존재하지 않도록 한다.
+	 */
+
+	if (_parent == nullptr)	
+		origin = getPosition();
+	else
+		origin = _parent->convertToWorldSpace(getPosition());
+
 	return { origin, getContentSize() };
 }
 
@@ -122,3 +138,44 @@ void SGUIElement::setEnabled(bool enabled) {
 	m_eState = enabled ? eNormal : eDisabled;
 }
 
+
+SGVec2 SGUIElement::getPositionInRect(
+	const SGRect& rc,
+	float origin_x,
+	float origin_y) const
+{
+	float xPos = 0;
+	float yPos = 0;
+
+	switch (m_pBaseInfo->HAlignment) {
+	case HAlignment::Left:		xPos = 0;											break;
+	case HAlignment::Center:	xPos = rc.getWidth() / 2 - getContentWidth() / 2;	break;
+	case HAlignment::Right:		xPos = rc.getWidth() - getContentWidth();			break;
+	}
+
+	switch (m_pBaseInfo->VAlignment) {
+	case VAlignment::Bottom:	yPos = 0;											break;
+	case VAlignment::Center:	yPos = rc.getHeight() / 2 - getContentHeight() / 2;	break;
+	case VAlignment::Top:		yPos = rc.getHeight() - getContentHeight();			break;
+	}
+
+	return { xPos + origin_x, yPos + origin_y };
+}
+
+
+void SGUIElement::setPositionRelative(float x, float y) {
+
+	if (getCode() == 1000)
+		int a = 40;
+
+	if (getCode() == 1001)
+		int a = 40;
+
+	const SGRect rect = m_pParent->getWorldBoundingBox();
+	const SGVec2 realPos = getPositionInRect(rect, x, y);
+	setPosition(realPos);
+}
+
+void SGUIElement::setPositionRelative(const SGVec2& pos) {
+	setPositionRelative(pos.x, pos.y);
+}

@@ -53,7 +53,7 @@ public:
 	ReadElementPath(JCore::Stream& stream);
 
 	static SgaElementPtr
-	ReadElement(JCore::Stream& stream, SgaElement::Header& header, int nextOffset, bool loadIndexOnly);
+	ReadElement(JCore::Stream& stream, SgaElement::Header& header, int nextOffset, bool elementOnly);
 
 };
 

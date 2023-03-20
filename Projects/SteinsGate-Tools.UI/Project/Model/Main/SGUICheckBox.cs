@@ -217,15 +217,15 @@ namespace SGToolsUI.Model.Main
 
             if (!_sprites[normal].IsNull)
             {
-                sga = _sprites[normal].Sga.FileNameWithoutExt;
-                img = _sprites[normal].Img.Header.NameWithoutExt;
+                sga = _sprites[normal].Sga.FileName;
+                img = _sprites[normal].Img.Header.Name;
                 return;
             }
 
             if (!_sprites[disabled].IsNull)
             {
-                sga = _sprites[disabled].Sga.FileNameWithoutExt;
-                img = _sprites[disabled].Img.Header.NameWithoutExt;
+                sga = _sprites[disabled].Sga.FileName;
+                img = _sprites[disabled].Img.Header.Name;
             }
         }
 

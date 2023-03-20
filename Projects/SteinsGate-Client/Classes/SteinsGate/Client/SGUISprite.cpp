@@ -17,7 +17,7 @@ USING_NS_CC;
 USING_NS_JC;
 
 SGUISprite::SGUISprite(SGUIGroup* parent, SGUISpriteInfo* btnInfo)
-	: SGUIElement(parent)
+	: SGUIElement(parent, btnInfo)
 	, m_pInfo(btnInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -29,12 +29,13 @@ SGUISprite::~SGUISprite() {
 
 SGUISprite* SGUISprite::create(SGUIGroup* parent, SGUISpriteInfo* spriteInfo) {
 	SGUISprite* pSprite = dbg_new SGUISprite(parent, spriteInfo);
+	pSprite->init();
 	pSprite->autorelease();
 	return pSprite;
 }
 
 bool SGUISprite::init() {
-
+	setContentSize(m_pInfo->Size);
 	return true;
 }
 
@@ -42,24 +43,26 @@ void SGUISprite::load() {
 	if (m_bLoaded)
 		return;
 
-	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGUIManager* pUIManager = SGUIManager::get();
-	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Sga);
+	SGImagePack* pPack = CorePackManager_v->getPack(m_pInfo->Sga);
 
-	m_pTexture = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Sprite);
+	m_pTexture = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Sprite, m_pInfo->LinearDodge);
 	m_pTexture->retain();
 
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite });
+	
+
+	CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite });
 
 	DebugAssertMsg(!m_pTexture->isLink(), "스프라이트의 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
+
+	const Size spriteSize = m_pTexture->getSize();
+	const float fScaleX = m_pInfo->Size.width / spriteSize.width;
+	const float fScaleY = m_pInfo->Size.height / spriteSize.height;
 
 	m_pSprite = Sprite::create();
 	m_pSprite->initWithTexture(m_pTexture->getTexture());
 	m_pSprite->setAnchorPoint(Vec2::ZERO);
+	m_pSprite->setScale(fScaleX, fScaleY);
 	this->addChild(m_pSprite);
-
-	Size contentSize = m_pSprite->getContentSize();
-	setContentSize(contentSize);
 	m_bLoaded = true;
 }
 

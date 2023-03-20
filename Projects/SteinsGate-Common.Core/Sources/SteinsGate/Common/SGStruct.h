@@ -52,14 +52,15 @@ union SgaResourceIndex
 {
 	SgaResourceIndex();
 	SgaResourceIndex(int sgaIndex, int imgIndex, int frameIndex)
-		: Un{frameIndex, imgIndex, sgaIndex}
+		: Un{sgaIndex, imgIndex, frameIndex}
 	{}
 
 	struct
 	{
-		int FrameIndex  : 12;	// 4096
+		int SgaIndex	: 9;	// 512
 		int ImgIndex	: 11;	// 2048
-		int SgaIndex	: 9;	// 512	
+		int FrameIndex  : 12;	// 4096
+		
 	} Un;
 
 	Int32U Value;

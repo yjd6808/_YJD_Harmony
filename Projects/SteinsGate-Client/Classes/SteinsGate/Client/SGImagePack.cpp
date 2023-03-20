@@ -10,7 +10,10 @@
 
 #include <JCore/FileSystem/Path.h>
 #include <SteinsGate/Common/SgaSpriteAbstract.h>
+#include <SteinsGate/Common/SgaColorFormat.h>
 #include <SteinsGate/Client/SGGlobal.h>
+
+
 
 USING_NS_CC;
 USING_NS_JC;
@@ -26,25 +29,55 @@ SGImagePack::~SGImagePack() {
 	clearCache();
 }
 
-int SGImagePack::getSpriteCount(int imgIndex) {
+int SGImagePack::getSpriteCount(int imgIndex) const {
+	if (!m_Package->IsElementLoaded(imgIndex))
+		m_Package->LoadElementIndex(imgIndex);
+
+	const SgaElementPtr spElement = m_Package->Get(imgIndex);
+	const SgaImage* pImg = spElement.Get<SgaImage*>();
+	return pImg->Count();
+}
+
+SgaSpriteAbstractPtr SGImagePack::getSprite(int imgIndex, int frameIndex) const {
 
 	if (!m_Package->IsElementLoaded(imgIndex))
-		m_Package->LoadElementIndexOnly(imgIndex);
+		m_Package->LoadElementIndex(imgIndex);
 
-	SgaElementPtr spElement = m_Package->Get(imgIndex);
+	const SgaElementPtr spElement = m_Package->Get(imgIndex);
+	DebugAssertMsg(spElement->GetType() == SgaElement::eImage, "엘리먼트가 Img 타입이 아닙니다.");
+	return spElement.Get<SgaImage*>()->GetAt(frameIndex);
+}
+
+SgaSpriteAbstractPtr SGImagePack::getSpriteUnsafe(int imgIndex, int frameIndex) const {
+
+	if (imgIndex == InvalidValue_v || frameIndex == InvalidValue_v)
+		return nullptr;
+
+	if (!m_Package->IsElementLoaded(imgIndex))
+		m_Package->LoadElementIndex(imgIndex);
+
+	const SgaElementPtr spElement = m_Package->GetUnsafe(imgIndex);
+
+	if (spElement == nullptr)
+		return nullptr;
+
+	if (spElement->GetType() == SgaElement::eSound)
+		return nullptr;
+
+	DebugAssertMsg(spElement->GetType() == SgaElement::eImage, "엘리먼트가 Img 타입이 아닙니다.");
 	SgaImage* pImg = spElement.Get<SgaImage*>();
-
-	if (!pImg->IndexLoaded())
-		pImg->LoadIndexOnly();
-
-	return pImg->Count();
+	return pImg->GetAtUnsafe(frameIndex);
 }
 
 /*
  * 생성한 텍스쳐는 캐싱해놓자.
  * 같은 몬스터 수십마리를 매번 파일스트림에서 텍스쳐 데이터를 읽고 압축 해제하고 32bit 이미지화 시킬 수는 없자나?
  */
-SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
+SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex, bool linearDodge) {
+
+	if (frameIndex == -1)
+		return SGGlobal::get()->getDefaultFrameTexture();
+
 	SgaResourceIndex index;
 	index.Un.SgaIndex = m_iIndex;
 	index.Un.ImgIndex = imgIndex;
@@ -56,7 +89,7 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 	}
 
 	if (!m_Package->IsElementLoaded(imgIndex))
-		m_Package->LoadElementIndexOnly(imgIndex);
+		m_Package->LoadElementOnly(imgIndex);
 
 	SgaImage& img = (SgaImage&)m_Package->GetAtRef(imgIndex);
 
@@ -71,7 +104,7 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 	SgaSpriteAbstract& sprite = img.GetAtRef(frameIndex);
 
 	if (sprite.IsLink()) {
-		int iTargetFrameIndex = sprite.GetTargetFrameIndex();
+		const int iTargetFrameIndex = sprite.GetTargetFrameIndex();
 		SGLinkFrameTexture* pLinkTexture = dbg_new SGLinkFrameTexture(frameIndex, iTargetFrameIndex);
 		pLinkTexture->autorelease();
 		pLinkTexture->retain();
@@ -87,8 +120,12 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 	if (!sprite.Loaded())
 		sprite.Load();
 
+	const SgaDataPtr spData = sprite.Decompress();
 
-	SgaDataPtr spData = sprite.Decompress();
+	if (linearDodge)
+		applyLinearDodge(spData.GetPtr(), spData.Length());
+
+
 	Texture2D* pTexture = dbg_new Texture2D;
 	pTexture->initWithData(
 		spData.GetPtr(),
@@ -98,7 +135,7 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 		sprite.GetHeight(), { sprite.GetWidthF(), sprite.GetHeightF() }
 	);
 
-	auto pSpriteTexture = dbg_new SGSpriteFrameTexture(pTexture, sprite.GetRect(), sprite.GetFrameIndex(), sprite.IsDummy());
+	auto pSpriteTexture = dbg_new SGSpriteFrameTexture(pTexture, sprite.GetRect(), sprite.GetFrameIndex(), sprite.IsDummy(), linearDodge);
 	pSpriteTexture->autorelease();
 	pSpriteTexture->retain();	// m_TextureCacheMap에서 수명연장시키기 위한 용도
 	m_bHasLoadedData = true;
@@ -107,28 +144,41 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex) {
 }
 
 void SGImagePack::releaseFrameTexture(int imgIndex, int frameIndex) {
-	SgaResourceIndex index{ m_iIndex, imgIndex, frameIndex };
-	DebugAssertMsg(m_TextureCacheMap.Exist(index.Value), "해당하는 프레임 데이터가 없습니다. [1]");
+	const SgaResourceIndex index{ m_iIndex, imgIndex, frameIndex };
+	DebugAssertMsg(m_TextureCacheMap.Exist(index.Value), "sga: %d, img: %d, index: %d, 해당하는 프레임 데이터가 없습니다. [1]", m_iIndex, imgIndex, frameIndex);
 	CC_SAFE_RELEASE(m_TextureCacheMap[index.Value]);
 	m_TextureCacheMap.Remove(index.Value);
 }
 
 void SGImagePack::releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex) {
-	DebugAssertMsg(m_TextureCacheMap.Exist(sgaResourceIndex.Value), "해당하는 프레임 데이터가 없습니다. [2]");
+	DebugAssertMsg(m_TextureCacheMap.Exist(sgaResourceIndex.Value), "sga: %d, img: %d, index: %d, 해당하는 프레임 데이터가 없습니다. [2]", m_iIndex, sgaResourceIndex.Un.ImgIndex, sgaResourceIndex.Un.FrameIndex);
 	CC_SAFE_RELEASE(m_TextureCacheMap[sgaResourceIndex.Value]);
 	m_TextureCacheMap.Remove(sgaResourceIndex.Value);
 }
 
-SGString SGImagePack::getFileName() {
+SGString SGImagePack::getFileName() const {
 	return Path::FileName(getPath());
 }
 
-bool SGImagePack::hasImgIndex(const SGString& imgName) {
+bool SGImagePack::hasImgIndex(const SGString& imgName) const {
 	return m_Package->HasElementIndex(imgName);
 }
 
-SGString& SGImagePack::getImgName(const int imgIndex) {
+SGString& SGImagePack::getImgName(const int imgIndex) const {
 	return m_Package->Get(imgIndex)->GetName();
+}
+
+void SGImagePack::applyLinearDodge(Byte* pixelData, int len) const {
+	for (int i = 0; i < len; i += 4)
+	{
+		const Byte max = Math::Max(pixelData[i + 0], Math::Max(pixelData[i + 1], pixelData[i + 2]));
+		const Byte sub = 0xff - max;
+
+		/* a */ pixelData[i + 3] = Math::Min(pixelData[i + 3], max);
+		/* b */ pixelData[i + 2] += sub;	
+		/* g */ pixelData[i + 1] += sub;	
+		/* r */ pixelData[i + 0] += sub;	
+	}
 }
 
 void SGImagePack::unload() {
