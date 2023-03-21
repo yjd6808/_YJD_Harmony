@@ -13,7 +13,7 @@
 class SGUISprite : public SGUIElement
 {
 public:
-	SGUISprite(SGUIGroup* parent, SGUISpriteInfo* btnInfo);
+	SGUISprite(SGUIGroup* parent, SGUISpriteInfo* staticInfo);
 	~SGUISprite() override;
 
 	bool init() override;

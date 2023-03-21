@@ -6,9 +6,11 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "SGUILayer.h"
 
 #include <SteinsGate/Client/SGDataManager.h>
+#include <SteinsGate/Client/SGUIStatic.h>
 #include <SteinsGate/Client/SGUIManager.h>
 
 USING_NS_CC;
@@ -26,14 +28,14 @@ SGUILayer::SGUILayer()
 {}
 
 SGUILayer* SGUILayer::create() {
-	SGUILayer* pUI = dbg_new SGUILayer;
+	SGUILayer* pUILayer = dbg_new SGUILayer;
 
-	if (pUI && pUI->init()) {
-		pUI->autorelease();
-		return pUI;
+	if (pUILayer && pUILayer->init()) {
+		pUILayer->autorelease();
+		return pUILayer;
 	}
 
-	DeleteSafe(pUI);
+	DeleteSafe(pUILayer);
 	return nullptr;
 }
 
@@ -54,7 +56,7 @@ void SGUILayer::onMouseMove(SGEventMouse* mouseEvent) {
 	SGUIGroup* pTopGroup = nullptr;
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
-		SGUIGroup* uiGroup = (SGUIGroup*)_children.at(i);
+		SGUIGroup* uiGroup = static_cast<SGUIGroup*>(_children.at(i));
 		if (uiGroup->getBoundingBox().containsPoint(mouseEvent->getCursorPos())) {
 			pTopGroup = uiGroup;
 			pTopGroup->onMouseMove(mouseEvent);
@@ -74,7 +76,7 @@ void SGUILayer::onMouseDown(SGEventMouse* mouseEvent) {
 	SGUIGroup* pTopGroup = nullptr;
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
-		SGUIGroup* uiGroup = (SGUIGroup*)_children.at(i);
+		SGUIGroup* uiGroup = static_cast<SGUIGroup*>(_children.at(i));
 		if (uiGroup->getBoundingBox().containsPoint(mouseEvent->getCursorPos()) &&
 			uiGroup->onMouseDown(mouseEvent) == false) {
 			pTopGroup = uiGroup;
@@ -89,7 +91,7 @@ void SGUILayer::onMouseUp(SGEventMouse* mouseEvent) {
 	SGUIGroup* pTopGroup = nullptr;
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
-		SGUIGroup* uiGroup = (SGUIGroup*)_children.at(i);
+		SGUIGroup* uiGroup = static_cast<SGUIGroup*>(_children.at(i));
 		if (uiGroup->getBoundingBox().containsPoint(mouseEvent->getCursorPos())) {
 			pTopGroup = uiGroup;
 			pTopGroup->onMouseUp(mouseEvent);
@@ -105,8 +107,43 @@ void SGUILayer::onMouseUp(SGEventMouse* mouseEvent) {
 	m_pPrevPressedStateGroup = nullptr;
 }
 
-void SGUILayer::onMouseScroll(SGEventMouse* mouseEvent) {
-	
+void SGUILayer::onMouseScroll(SGEventMouse* mouseEvent) const {
+	for (int i = _children.size() - 1; i >= 0; i--) {
+		SGUIGroup* uiGroup = static_cast<SGUIGroup*>(_children.at(i));
+		if (!uiGroup->onMouseScroll(mouseEvent)) {
+			return;
+		}
+	}
+}
+
+void SGUILayer::update(float delta) {
+
+	for (int i = _children.size() - 1; i >= 0; i--) {
+		SGUIGroup* uiGroup = static_cast<SGUIGroup*>(_children.at(i));
+		uiGroup->forEachRecursiveSpecificType<SGUIStatic>([](auto child) { child->setDebugVisible(CoreGlobal_v->DrawUIStatic); });
+
+		if (!uiGroup->onUpdate(delta)) {
+			return;
+		}
+	}
+}
+
+void SGUILayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+	for (int i = _children.size() - 1; i >= 0; i--) {
+		SGUIGroup* uiGroup = static_cast<SGUIGroup*>(_children.at(i));
+		if (!uiGroup->onKeyPressed(keyCode, event)) {
+			return;
+		}
+	}
+}
+
+void SGUILayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+	for (int i = _children.size() - 1; i >= 0; i--) {
+		SGUIGroup* uiGroup = static_cast<SGUIGroup*>(_children.at(i));
+		if (!uiGroup->onKeyReleased(keyCode, event)) {
+			return;
+		}
+	}
 }
 
 void SGUILayer::addUIGroup(int groupCode) {
@@ -116,9 +153,6 @@ void SGUILayer::addUIGroup(int groupCode) {
 		pGroup->load();
 
 	addChild(pGroup, 0, pGroup->getCode());
-
-
-
 }
 
 void SGUILayer::removeUIGroup(int groupCode) {
@@ -133,7 +167,7 @@ void SGUILayer::clearUnload() {
 	if (_children.size() > 0)
 		removeAllChildren();
 
-	SGUIManager::get()->unloadAll();
+	CoreUIManager_v->unloadAll();
 }
 
 

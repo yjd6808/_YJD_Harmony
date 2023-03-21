@@ -58,23 +58,27 @@ public:
 	virtual UIElementType_t getElementType() = 0;
 
 	virtual bool isGroup() const { return false; }
-	virtual bool isGroupMaster() const { return false; }
 	virtual bool isMasterGroup() { return false; }
 
 	SGRect getWorldBoundingBox() const;
-	static void updateState();
+	virtual void updateState();
 
-	int getCode() { return m_pBaseInfo->Code; }
+	template <typename TElem>
+	TElem cast() {
+		static_assert(JCore::IsPointerType_v<TElem>, "... TElem must be pointer type");
+		static_assert(JCore::IsBaseOf_v<SGUIElement, JCore::RemovePointer_t<TElem>>, "... TElem must be SGUIElement type");
+		return static_cast<TElem>(this);
+	}
 
+	int getCode() const { return m_pBaseInfo->Code; }
 	void setCallbackClick(const SGActionFn<SGEventMouse*>& callback);
 
 
-
-	// 정렬 방식에 따라 앵커포인트 0, 0기준으로해서 박스내의 위치를 구한다.
-	SGVec2 getPositionInRect(
+	SGVec2 relativePositionInRect(
 		const SGRect& rc,
 		float origin_x,
-		float origin_y) const;
+		float origin_y
+	) const;
 
 
 	void setPositionRelative(float x, float y);		// 부모가 그룹이면 그룹 내에서 상대적 위치 반영

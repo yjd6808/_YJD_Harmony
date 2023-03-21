@@ -62,7 +62,7 @@ void SGUIProgressBar::load() {
 	m_pProgressSprite = Sprite::create();
 	m_pProgressSprite->initWithTexture(m_pTexture->getTexture());
 
-	m_pProgressBar = SGProgressBar::create(m_pProgressSprite);
+	m_pProgressBar = SGProgressTimer::create(m_pProgressSprite);
 	m_pProgressBar->setPercentage(0);
 	m_pProgressBar->setType(ProgressTimer::Type::BAR);
 	m_pProgressBar->setScale(fScaleX, fScaleY);

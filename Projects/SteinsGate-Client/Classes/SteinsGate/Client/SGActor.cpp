@@ -93,7 +93,7 @@ void SGActor::update(float dt) {
 	m_pActorSprite->update(dt);
 
 
-	if (SGGlobal::get()->isThicknessBoxDrawMode())
+	if (CoreGlobal_v->DrawThicknessBox)
 		m_pThicknessBox->setOpacity(0);
 	else
 		m_pThicknessBox->setOpacity(125);

@@ -34,23 +34,24 @@ public:
 	void toggleDrawBodyBoundingBox();
 	void toggleDrawAttackBox();
 	void toggleDrawEffect();
-	bool isThicknessBoxDrawMode() { return m_bDrawThicknessBox; }
-	bool isBodyBoundingBoxDrawMode() { return m_bDrawBodyBoundingBox; }
-	bool isAttackBoxDrawMode() { return m_bDrawAttackBox; }
-	bool isEffectDrawMode() { return m_bDrawEffect; }
+	void toggleDrawUIStatic();
 
 	const SGString& getAvatarSgaName(int charType, int avatarType);
 	const SGString& getWeaponSgaName(int weaponType);
 
 	SGSpriteFrameTexture* getDefaultFrameTexture();
+
+public:
+	bool DrawThicknessBox;
+	bool DrawBodyBoundingBox;
+	bool DrawAttackBox;
+	bool DrawEffect;
+	bool DrawUIStatic;
 private:
 	void initialize();
 
 	// 런타임 중 변경가능
-	bool m_bDrawThicknessBox;
-	bool m_bDrawBodyBoundingBox;
-	bool m_bDrawAttackBox;
-	bool m_bDrawEffect;
+	
 
 	// 변경되지 않는 데이터
 	SGString m_AvatarPackName[CharType::Max][AvatarType::Max];	

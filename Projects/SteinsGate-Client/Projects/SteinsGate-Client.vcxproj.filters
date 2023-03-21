@@ -313,7 +313,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIElement.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\UILogin.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UI_Login.cpp">
       <Filter>Game\UI\Group</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIManager.cpp">
@@ -369,6 +369,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIProgressBar.cpp">
       <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIStatic.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UI_Inventory.cpp">
+      <Filter>Game\UI\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.cpp">
+      <Filter>Game\UI\Group</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -646,7 +655,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIGroup.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\UILogin.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UI_Login.h">
       <Filter>Game\UI\Group</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUILabel.h">
@@ -708,6 +717,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIProgressBar.h">
       <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIStatic.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UI_Inventory.h">
+      <Filter>Game\UI\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.h">
+      <Filter>Game\UI\Group</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

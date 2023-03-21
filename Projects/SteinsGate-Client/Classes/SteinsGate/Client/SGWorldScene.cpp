@@ -124,33 +124,55 @@ void SGWorldScene::updateScene(float dt) {
 	if (m_pRunningScene)
 		m_pRunningScene->update(dt);
 
+	if (m_pUILayer)
+		m_pUILayer->update(dt);
+
 	// 초기 세팅 안된 상태거나, 다른 상태로 전환이 예약된 경우
 	if (m_pRunningScene == nullptr || m_pRunningScene->getType() != m_eReservedScene) {
 		changeScene(m_eReservedScene);
 	}
 }
 
-void SGWorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+void SGWorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const {
+
+	if (keyCode == EventKeyboard::KeyCode::KEY_F1)
+		SGGlobal::get()->toggleDrawBodyBoundingBox();
+	else if (keyCode == EventKeyboard::KeyCode::KEY_F2)
+		SGGlobal::get()->toggleDrawThicknessBox();
+	else if (keyCode == EventKeyboard::KeyCode::KEY_F3)
+		SGGlobal::get()->toggleDrawAttackBox();
+	else if (keyCode == EventKeyboard::KeyCode::KEY_F4)
+		SGGlobal::get()->toggleDrawEffect();
+	else if (keyCode == EventKeyboard::KeyCode::KEY_F5)
+		SGGlobal::get()->toggleDrawUIStatic();
+
 	if (m_pRunningScene)
 		m_pRunningScene->onKeyPressed(keyCode, event);
 
+	if (m_pUILayer)
+		m_pUILayer->onKeyPressed(keyCode, event);
+
 }
 
-void SGWorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+void SGWorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const {
 	if (m_pRunningScene)
 		m_pRunningScene->onKeyReleased(keyCode, event);
+
+	if (m_pUILayer)
+		m_pUILayer->onKeyReleased(keyCode, event);
 }
 
-void SGWorldScene::onMouseMove(SGEventMouse* mouseEvent) {
+void SGWorldScene::onMouseMove(SGEventMouse* mouseEvent) const {
 
 	if (m_pRunningScene)
 		m_pRunningScene->onMouseMove(mouseEvent);
 
 	if (m_pUILayer)
 		m_pUILayer->onMouseMove(mouseEvent);
+
 }
 
-void SGWorldScene::onMouseDown(SGEventMouse* mouseEvent) {
+void SGWorldScene::onMouseDown(SGEventMouse* mouseEvent) const {
 	if (m_pRunningScene)
 		m_pRunningScene->onMouseDown(mouseEvent);
 
@@ -158,7 +180,7 @@ void SGWorldScene::onMouseDown(SGEventMouse* mouseEvent) {
 		m_pUILayer->onMouseDown(mouseEvent);
 }
 
-void SGWorldScene::onMouseUp(SGEventMouse* mouseEvent) {
+void SGWorldScene::onMouseUp(SGEventMouse* mouseEvent) const {
 	if (m_pRunningScene)
 		m_pRunningScene->onMouseUp(mouseEvent);
 
@@ -166,7 +188,7 @@ void SGWorldScene::onMouseUp(SGEventMouse* mouseEvent) {
 		m_pUILayer->onMouseUp(mouseEvent);
 }
 
-void SGWorldScene::onMouseScroll(SGEventMouse* mouseEvent) {
+void SGWorldScene::onMouseScroll(SGEventMouse* mouseEvent) const {
 	if (m_pRunningScene)
 		m_pRunningScene->onMouseScroll(mouseEvent);
 
@@ -220,7 +242,7 @@ SGSceneBase* SGWorldScene::createScene(SceneType_t sceneType) {
 	return pCreatedScene;
 }
 
-SGUILayer* SGWorldScene::getUILayer() {
+SGUILayer* SGWorldScene::getUILayer() const {
 	DebugAssertMsg(m_pUILayer, "UI 레이어는 무조건 게임내내 생성되어있어야 합니다.");
 	return m_pUILayer;
 }

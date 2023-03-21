@@ -18,9 +18,10 @@ USING_NS_JC;
 
 
 SGUIManager::SGUIManager()
-	: m_hMasterUIGroups(64)		// 창을 64개까지 만들일이 있을려나 ㅋㅋ
+	: Master(nullptr)
+	, m_hLoadedUITexture(1024) // 창을 64개까지 만들일이 있을려나 ㅋㅋ
 	, m_hUIElements(512)
-	, m_hLoadedUITexture(1024)
+	, m_hMasterUIGroups(64)
 {}
 
 SGUIManager::~SGUIManager() {
@@ -52,13 +53,7 @@ SGUIManager* SGUIManager::get() {
 
 void SGUIManager::init() {
 	Master = SGUIGroupMaster::createRetain();
-	Master->forEach([this](SGUIElement* pElem)
-	{
-		DebugAssertMsg(pElem->getElementType() == UIElementType::Group, "그룹 타입이 아닌 요소가 그룹마스터에 포함되어있습니다.");
-		registerGroup(static_cast<SGUIGroup*>(pElem));
-	});
-
-
+	Master->forEach([this](SGUIGroup* pMasterGroup) { registerGroup(pMasterGroup); });
 }
 
 void SGUIManager::registerGroup(SGUIGroup* group) {

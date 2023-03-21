@@ -106,7 +106,7 @@ void SGActorPartSprite::update(float dt) {
 }
 
 void SGActorPartSprite::updateBoundingBoxVisibleState() {
-	if (SGGlobal::get()->isBodyBoundingBoxDrawMode())
+	if (SGGlobal::get()->DrawBodyBoundingBox)
 		m_pBoundingBox->setOpacity(255);
 	else
 		m_pBoundingBox->setOpacity(0);

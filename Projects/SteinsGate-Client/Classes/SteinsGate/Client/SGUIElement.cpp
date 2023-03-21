@@ -116,8 +116,6 @@ void SGUIElement::setCallbackClick(const SGActionFn<SGEventMouse*>& callback) {
 }
 
 SGRect SGUIElement::getWorldBoundingBox() const {
-	if (!isGroupMaster())
-		DebugAssertMsg(m_pParent != nullptr, "그룹마스터가 아닌데 부모가 없습니다.");
 	SGVec2 origin;
 
 	/*
@@ -139,7 +137,7 @@ void SGUIElement::setEnabled(bool enabled) {
 }
 
 
-SGVec2 SGUIElement::getPositionInRect(
+SGVec2 SGUIElement::relativePositionInRect(
 	const SGRect& rc,
 	float origin_x,
 	float origin_y) const
@@ -164,15 +162,9 @@ SGVec2 SGUIElement::getPositionInRect(
 
 
 void SGUIElement::setPositionRelative(float x, float y) {
-
-	if (getCode() == 1000)
-		int a = 40;
-
-	if (getCode() == 1001)
-		int a = 40;
-
-	const SGRect rect = m_pParent->getWorldBoundingBox();
-	const SGVec2 realPos = getPositionInRect(rect, x, y);
+	// 마스터 그룹들은 실제 부모가 없음.
+	const SGRect rect = isMasterGroup() ? SGRect{0, 0, CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight} : m_pParent->getWorldBoundingBox();
+	const SGVec2 realPos = relativePositionInRect(rect, x, y);
 	setPosition(realPos);
 }
 

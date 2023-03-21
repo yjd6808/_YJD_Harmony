@@ -77,7 +77,7 @@ void SGEffect::update(float delta) {
 	SGActor::update(delta);
 
 
-	if (SGGlobal::get()->isEffectDrawMode()) {
+	if (SGGlobal::get()->DrawEffect) {
 		m_pActorSprite->getParts().Extension().ForEach([](SGActorSprite::PartData& part) { part.Part->setOpacity(255); });
 	} else {
 		m_pActorSprite->getParts().Extension().ForEach([](SGActorSprite::PartData& part) { part.Part->setOpacity(0); });

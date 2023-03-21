@@ -15,12 +15,14 @@ USING_NS_JC;
 SGUICheckBox::SGUICheckBox(SGUIGroup* parent, SGUICheckBoxInfo* checkBoxInfo)
 	: SGUIElement(parent, checkBoxInfo)
 	, m_pInfo(checkBoxInfo)
+	, m_pTexture{}
+	, m_pSprite{}
 	, m_bChecked(false)
 {}
 
 SGUICheckBox::~SGUICheckBox() {
 	for (int i = 0; i < TextureCount; ++i) {
-		CC_SAFE_RELEASE(m_pTexture[eNormal]);
+		CC_SAFE_RELEASE(m_pTexture[i]);
 	}
 }
 

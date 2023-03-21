@@ -28,15 +28,8 @@ void SGGameScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event)
     if (m_pMapLayer)
         m_pMapLayer->onKeyPressed(keyCode, event);
 
-    if (keyCode == EventKeyboard::KeyCode::KEY_F1)
-        SGGlobal::get()->toggleDrawBodyBoundingBox();
-    else if (keyCode == EventKeyboard::KeyCode::KEY_F2)
-        SGGlobal::get()->toggleDrawThicknessBox();
-    else if (keyCode == EventKeyboard::KeyCode::KEY_F3)
-        SGGlobal::get()->toggleDrawAttackBox();
-    else if (keyCode == EventKeyboard::KeyCode::KEY_F4)
-        SGGlobal::get()->toggleDrawEffect();
-    else if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
+   
+    if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
         SGWorldScene::get()->reserveScene(SceneType::Login);
     } else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
         if (m_pGridLayer == nullptr) {

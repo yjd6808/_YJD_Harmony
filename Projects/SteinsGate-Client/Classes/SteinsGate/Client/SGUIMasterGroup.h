@@ -1,6 +1,6 @@
 /*
  * 작성자: 윤정도
- * 생성일: 2/15/2023 8:07:08 PM
+ * 생성일: 3/22/2023 12:50:32 AM
  * =====================
  *
  */
@@ -10,13 +10,11 @@
 
 #include <SteinsGate/Client/SGUIGroup.h>
 
-class UILogin : public SGUIGroup
+class SGUIMasterGroup : public SGUIGroup
 {
 public:
-	UILogin(SGUIGroup* groupMaster, SGUIGroupInfo* groupInfo);
-	bool init() override;
-	bool isMasterGroup() override { return true; }
-protected:
-};
+	SGUIMasterGroup(SGUIGroupInfo* groupInfo);
 
+	bool isMasterGroup() override { return true; }
+};
 

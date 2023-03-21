@@ -14,12 +14,12 @@
 #include <SteinsGate/Client/SGUICheckBox.h>
 #include <SteinsGate/Client/SGUIToggleButton.h>
 #include <SteinsGate/Client/SGUIProgressBar.h>
+#include <SteinsGate/Client/SGUIStatic.h>
 
 
 SGUIGroup::SGUIGroup(SGUIGroup* parent, SGUIGroupInfo* groupInfo)
 	: SGUIElement(parent, groupInfo)
 	, m_pInfo(groupInfo)
-	, vChildren(groupInfo->InfoList.Size())
 {}
 
 SGUIGroup::~SGUIGroup() {
@@ -145,6 +145,7 @@ void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
 	case UIElementType::CheckBox: pChildElement = SGUICheckBox::create(this, static_cast<SGUICheckBoxInfo*>(pElemInfo)); break;
 	case UIElementType::ToggleButton: pChildElement = SGUIToggleButton::create(this, static_cast<SGUIToggleButtonInfo*>(pElemInfo)); break;
 	case UIElementType::ProgressBar: pChildElement = SGUIProgressBar::create(this, static_cast<SGUIProgressBarInfo*>(pElemInfo)); break;
+	case UIElementType::Static: pChildElement = SGUIStatic::create(this, static_cast<SGUIStaticInfo*>(pElemInfo)); break;
 	
 	default: return;
 	// default: break; 임시로 리턴
@@ -156,13 +157,12 @@ void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
 	if (pChildElement->isGroup())
 		static_cast<SGUIGroup*>(pChildElement)->initChildren();
 
-	vChildren.PushBack(pChildElement);
 	this->addChild(pChildElement);
 }
 
 void SGUIGroup::forEachRecursive(const SGActionFn<SGUIElement*>& action) const {
-	for (int i = 0; i < vChildren.Size(); ++i) {
-		SGUIElement* pElem = vChildren[i];
+	for (int i = 0; i < _children.size(); ++i) {
+		SGUIElement* pElem = static_cast<SGUIElement*>(_children.at(i));
 
 		if (pElem->getElementType() == UIElementType::Group) {
 			SGUIGroup* pGroupElem = static_cast<SGUIGroup*>(pElem);
@@ -176,8 +176,8 @@ void SGUIGroup::forEachRecursive(const SGActionFn<SGUIElement*>& action) const {
 }
 
 void SGUIGroup::forEach(const SGActionFn<SGUIElement*>& action) const {
-	for (int i = 0; i < vChildren.Size(); ++i) {
-		action(vChildren[i]);
+	for (int i = 0; i < _children.size(); ++i) {
+		action(static_cast<SGUIElement*>(_children.at(i)));
 	}
 }
 

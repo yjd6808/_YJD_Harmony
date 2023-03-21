@@ -22,7 +22,11 @@ public:
 	void onMouseMove(SGEventMouse* mouseEvent);
 	void onMouseDown(SGEventMouse* mouseEvent);
 	void onMouseUp(SGEventMouse* mouseEvent);
-	void onMouseScroll(SGEventMouse* mouseEvent);
+	void onMouseScroll(SGEventMouse* mouseEvent) const;
+
+	void update(float dt) override;
+	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
+	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
 	void addUIGroup(int groupCode);
 	void removeUIGroup(int groupCode);

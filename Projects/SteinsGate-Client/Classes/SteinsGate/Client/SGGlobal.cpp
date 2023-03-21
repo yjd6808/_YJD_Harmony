@@ -16,32 +16,42 @@ USING_NS_JC;
 USING_NS_CC;
 
 SGGlobal::SGGlobal()
-	: m_pDefaultFrameTexture(nullptr)
-	, m_bDrawThicknessBox(false)
-	, m_bDrawBodyBoundingBox(false)
-	, m_bDrawAttackBox(false)
-	, m_bDrawEffect(true)
+	: DrawThicknessBox(false)
+	, DrawBodyBoundingBox(false)
+	, DrawAttackBox(false)
+	, DrawEffect(true)
+	, DrawUIStatic(false)
+	, m_pDefaultFrameTexture(nullptr)
 {}
 
 SGGlobal::~SGGlobal() {
 	CC_SAFE_RELEASE(m_pDefaultFrameTexture);
 }
 
+int SGGlobal::convertAvatarPartNameToType(const SGString& str) {
+
+	return -1;
+}
+
 
 void SGGlobal::toggleDrawThicknessBox() {
-	m_bDrawThicknessBox = !m_bDrawThicknessBox;
+	DrawThicknessBox = !DrawThicknessBox;
 }
 
 void SGGlobal::toggleDrawBodyBoundingBox() {
-	m_bDrawBodyBoundingBox = !m_bDrawBodyBoundingBox;
+	DrawBodyBoundingBox = !DrawBodyBoundingBox;
 }
 
 void SGGlobal::toggleDrawAttackBox() {
-	m_bDrawAttackBox = !m_bDrawAttackBox;
+	DrawAttackBox = !DrawAttackBox;
 }
 
 void SGGlobal::toggleDrawEffect() {
-	m_bDrawEffect = !m_bDrawEffect;
+	DrawEffect = !DrawEffect;
+}
+
+void SGGlobal::toggleDrawUIStatic() {
+	DrawUIStatic = !DrawUIStatic;
 }
 
 void SGGlobal::initialize() {

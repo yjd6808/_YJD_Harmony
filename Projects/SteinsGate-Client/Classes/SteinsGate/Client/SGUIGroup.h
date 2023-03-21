@@ -31,16 +31,42 @@ public:
 	bool onMouseUp(SGEventMouse* mouseEvent) override;
 	bool onMouseScroll(SGEventMouse* mouseEvent) override;
 
+	// 마스터 그룹들만 적용 (자식 그룹은 쓸일 없을 듯? 구현 안해노음)
+	// return false시에는 ZOrder이 true를 반환한 그룹보다 낮은 대상들에게 전파되지 않음
+	virtual bool onUpdate(float dt) { return true; }
+	virtual bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) { return true; }
+	virtual bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) { return true; }
+
 	UIElementType_t getElementType() override { return UIElementType::Group; }
 	bool isGroup() const override { return true; }
 
 	void addUIElement(const SGUIGroupElemInfo& groupElemInfo);
+
+	template <typename TElem>
+	void forEachRecursiveSpecificType(const SGActionFn<TElem*>& action) const {
+		static_assert(!JCore::IsPointerType_v<TElem>, "... TElem must not be pointer type");
+		static_assert(JCore::IsBaseOf_v<SGUIElement, TElem>, "... TElem must be derived from SGUIElemenet type");
+
+		for (int i = 0; i < _children.size(); ++i) {
+			SGUIElement* pElem = (SGUIElement*)_children.at(i);
+			TElem* pCastElem = dynamic_cast<TElem*>(pElem);
+
+			if (pCastElem) {
+				action(pCastElem);
+			}
+
+			if (pElem->getElementType() == UIElementType::Group) {
+				SGUIGroup* pGroupElem = static_cast<SGUIGroup*>(pElem);
+				pGroupElem->forEachRecursiveSpecificType<TElem>(action);
+			}
+		}
+
+	}
 	void forEachRecursive(const SGActionFn<SGUIElement*>& action) const;
 	void forEach(const SGActionFn<SGUIElement*>& action) const;
 	void restoreState(State state) override;
 protected:
 	SGUIGroupInfo* m_pInfo;
-	SGVector<SGUIElement*> vChildren;
 };
 
 

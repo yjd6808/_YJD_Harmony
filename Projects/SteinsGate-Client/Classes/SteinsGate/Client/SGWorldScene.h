@@ -31,19 +31,19 @@ public:
 	void update(float dt) override;
 	void updateScene(float dt);
 
-	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
-	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event);
-	void onMouseMove(SGEventMouse* mouseEvent);
-	void onMouseDown(SGEventMouse* mouseEvent);
-	void onMouseUp(SGEventMouse* mouseEvent);
-	void onMouseScroll(SGEventMouse* mouseEvent);
+	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const;
+	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const;
+	void onMouseMove(SGEventMouse* mouseEvent) const;
+	void onMouseDown(SGEventMouse* mouseEvent) const;
+	void onMouseUp(SGEventMouse* mouseEvent) const;
+	void onMouseScroll(SGEventMouse* mouseEvent) const;
 	void onExit() override;
 
 	void reserveScene(SceneType_t sceneType);
 	void changeScene(SceneType_t sceneType);
-	SGSceneBase* createScene(SceneType_t sceneType);
+	static SGSceneBase* createScene(SceneType_t sceneType);
 
-	SGUILayer* getUILayer();
+	SGUILayer* getUILayer() const;
 
 	static SGWorldScene* get();
 	

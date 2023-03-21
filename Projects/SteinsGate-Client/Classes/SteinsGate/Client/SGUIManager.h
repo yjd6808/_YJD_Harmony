@@ -4,12 +4,12 @@
  * =====================
  * UI 구조 예시
  *
- *                SGUIGroup -> 이녀석을 MasterUIGroup으로 부름
+ *                 Group -> 이녀석을 MasterUIGroup으로 부름
  *		              │
  *		 ┌────────────┼───────────────┐
- *	SGUIGroup    SGUIButton     SGUIGroup
+ *	   Group        Button          Group
  *	  ....                      ┌────┴─────┐
- *							SGUIButton  SGUILabel
+ *							  Button     Label
  *	             
  */
 
@@ -42,7 +42,6 @@ public:
 	SGUIButton* getButton(int buttonCode);
 	SGUISprite* getSprite(int spriteCode);
 	SGUILabel* getLabel(int labelCode);
-
 public:
 	SGUIGroupMaster* Master;
 

@@ -28,6 +28,6 @@ public:
 private:
 	SGUIProgressBarInfo* m_pInfo;
 	SGFrameTexture* m_pTexture;
-	SGProgressBar* m_pProgressBar;
+	SGProgressTimer* m_pProgressBar;
 	SGSprite* m_pProgressSprite;
 };

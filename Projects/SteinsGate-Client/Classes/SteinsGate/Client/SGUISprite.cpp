@@ -14,9 +14,9 @@
 USING_NS_CC;
 USING_NS_JC;
 
-SGUISprite::SGUISprite(SGUIGroup* parent, SGUISpriteInfo* btnInfo)
-	: SGUIElement(parent, btnInfo)
-	, m_pInfo(btnInfo)
+SGUISprite::SGUISprite(SGUIGroup* parent, SGUISpriteInfo* staticInfo)
+	: SGUIElement(parent, staticInfo)
+	, m_pInfo(staticInfo)
 	, m_pTexture{}
 	, m_pSprite{}
 {}
