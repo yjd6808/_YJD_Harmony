@@ -10,6 +10,7 @@
 		<BaseOutputPath>..\Output\</BaseOutputPath>
 		<AssemblyName>SGToolsUI</AssemblyName>
 		<RunPostBuildEvent>Always</RunPostBuildEvent>
+		<ApplicationIcon>Resource\Icon\logo.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -22,6 +23,16 @@
 
 	<ItemGroup>
 		<Resource Include="Resource\Icon\*.ico" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <None Remove="Resource\Icon\logo.ico" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Content Include="Resource\Icon\logo.ico" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -67,6 +67,8 @@ bool SGUIInfoLoader::load()
 		for (int i = 0; i < uiGroupListRoot.size(); ++i) {
 			Value& uiGroupRoot = uiGroupListRoot[i];
 			Value& groupElemInfoListRoot = uiGroupRoot[JsonChildrenKey];
+
+			DebugAssertMsg(groupElemInfoListRoot.size() != 0, "그룹에 자식이 없습니다.");
 			SGUIGroupInfo* groupInfo = dbg_new SGUIGroupInfo(groupElemInfoListRoot.size());
 
 			readElementCommon(uiGroupRoot, groupInfo);

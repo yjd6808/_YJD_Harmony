@@ -28,6 +28,7 @@ SGImagePackManager*			CorePackManager_v;
 SGGlobal*					CoreGlobal_v;
 
 void InitializeClientCore() {
+	CoreGlobal_v				= SGGlobal::get();
 	CorePackManager_v			= SGImagePackManager::get();
 	CoreFont_v					= SGFontPackage::get();
 	CoreDataManager_v			= SGDataManager::get();
@@ -37,7 +38,7 @@ void InitializeClientCore() {
 	CoreWorld_v					= SGWorldScene::get();
 	CoreActorListenerManager_v  = SGActorListenerManager::get();
 	CoreActorBox_v				= SGActorBox::get();
-	CoreGlobal_v				= SGGlobal::get();
+	
 }
 
 void FinalizeClientCore() {

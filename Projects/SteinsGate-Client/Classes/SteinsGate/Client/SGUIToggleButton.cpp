@@ -15,7 +15,7 @@ USING_NS_JC;
 
 SGUIToggleButton::SGUIToggleButton(SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo)
 	: SGUIElement(parent, btnInfo)
-	, m_iCurState(StateOne)
+	, m_iToggleState(StateOne)
 	, m_pInfo(btnInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -41,7 +41,7 @@ void SGUIToggleButton::setVisibleState(State state) {
 		}
 	}
 
-	m_pSprite[m_iCurState][state]->setVisible(true);
+	m_pSprite[m_iToggleState][state]->setVisible(true);
 	m_eState = state;
 }
 
@@ -192,7 +192,7 @@ bool SGUIToggleButton::onMouseUp(SGEventMouse* mouseEvent) {
 		return true;
 	}
 
-	m_iCurState = m_iCurState == 0 ? 1 : 0;
+	m_iToggleState = m_iToggleState == 0 ? 1 : 0;
 	setVisibleState(eNormal);
 
 	if (m_fnMouseClickCallback)

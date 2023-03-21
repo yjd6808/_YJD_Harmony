@@ -367,7 +367,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIToggleButton.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="SGUIProgressBar.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIProgressBar.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -706,7 +706,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIToggleButton.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="SGUIProgressBar.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIProgressBar.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
   </ItemGroup>

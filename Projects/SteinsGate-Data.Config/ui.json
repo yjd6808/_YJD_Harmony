@@ -1,28 +1,6 @@
 {
-	"date": "3/20/2023 11:38:04 PM",
+	"date": "3/21/2023 4:22:21 PM",
 	"elements": [
-		{
-			"code": 1022,
-			"type": 3,
-			"valign": 2,
-			"halign": 2,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
-		{
-			"code": 1021,
-			"type": 3,
-			"valign": 2,
-			"halign": 1,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
 		{
 			"code": 8010,
 			"type": 9,
@@ -532,83 +510,6 @@
 			"linear_dodge": false
 		},
 		{
-			"code": 1020,
-			"type": 3,
-			"valign": 2,
-			"halign": 0,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
-		{
-			"code": 1019,
-			"type": 3,
-			"valign": 1,
-			"halign": 0,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
-		{
-			"code": 1018,
-			"type": 3,
-			"valign": 1,
-			"halign": 1,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
-		{
-			"code": 1017,
-			"type": 3,
-			"valign": 1,
-			"halign": 2,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
-		{
-			"code": 1016,
-			"type": 3,
-			"valign": 0,
-			"halign": 2,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
-		{
-			"code": 1015,
-			"type": 3,
-			"valign": 0,
-			"halign": 1,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
-		{
-			"code": 1014,
-			"type": 3,
-			"valign": 0,
-			"halign": 0,
-			"sga": "sprite.sga",
-			"img": "nowloading.img",
-			"sprite": 0,
-			"size": "165 112",
-			"linear_dodge": false
-		},
-		{
 			"code": 2004,
 			"type": 8,
 			"valign": 2,
@@ -636,9 +537,9 @@
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
-			"img": "additionalavatarinventoryimage.img",
-			"sprite": 3,
-			"size": "22 100",
+			"img": "base.img",
+			"sprite": 2,
+			"size": "36 65",
 			"direction": 3
 		},
 		{
@@ -647,9 +548,9 @@
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
-			"img": "additionalavatarinventoryimage.img",
-			"sprite": 3,
-			"size": "17 157",
+			"img": "base.img",
+			"sprite": 1,
+			"size": "33 65",
 			"direction": 2
 		},
 		{
@@ -810,16 +711,7 @@
 				"1010 17 301",
 				"1011 53 79",
 				"1012 332 185",
-				"2000 334 299",
-				"1014 0 0",
-				"1015 0 0",
-				"1016 0 0",
-				"1017 0 0",
-				"1018 0 0",
-				"1019 0 0",
-				"1020 0 0",
-				"1021 0 0",
-				"1022 0 0"
+				"2000 334 299"
 			]
 		},
 		{
@@ -829,8 +721,8 @@
 			"halign": 0,
 			"size": "300 175",
 			"children": [
-				"2001 11 10",
-				"2002 49 48",
+				"2001 10 66",
+				"2002 52 55",
 				"2003 102 104",
 				"2004 101 48"
 			]

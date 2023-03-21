@@ -6,17 +6,14 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "SGUIGroup.h"
 
-#include <SteinsGate/Client/SGDataManager.h>
 #include <SteinsGate/Client/SGUIButton.h>
 #include <SteinsGate/Client/SGUIEditBox.h>
 #include <SteinsGate/Client/SGUICheckBox.h>
 #include <SteinsGate/Client/SGUIToggleButton.h>
-#include <SteinsGate/Client/SGGlobal.h>
-#include <SteinsGate/Client/SGImagePackManager.h>
-#include <SteinsGate/Client/SGUIManager.h>
-#include <SteinsGate/Client/SGGlobal.h>
+#include <SteinsGate/Client/SGUIProgressBar.h>
 
 
 SGUIGroup::SGUIGroup(SGUIGroup* parent, SGUIGroupInfo* groupInfo)
@@ -136,6 +133,9 @@ void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
 	SGUIElementInfo* pElemInfo = CoreDataManager_v->getUIElementInfo(groupElemInfo.Code);
 	SGUIElement* pChildElement = nullptr;
 
+	/*if (groupElemInfo.Code == 2003)
+		return;*/
+
 	switch (pElemInfo->Type) {
 	case UIElementType::Group: pChildElement = SGUIGroup::create(this, static_cast<SGUIGroupInfo*>(pElemInfo)); break;
 	case UIElementType::Button: pChildElement = SGUIButton::create(this, static_cast<SGUIButtonInfo*>(pElemInfo)); break;
@@ -144,6 +144,7 @@ void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
 	case UIElementType::EditBox: pChildElement = SGUIEditBox::create(this, static_cast<SGUIEditBoxInfo*>(pElemInfo)); break;
 	case UIElementType::CheckBox: pChildElement = SGUICheckBox::create(this, static_cast<SGUICheckBoxInfo*>(pElemInfo)); break;
 	case UIElementType::ToggleButton: pChildElement = SGUIToggleButton::create(this, static_cast<SGUIToggleButtonInfo*>(pElemInfo)); break;
+	case UIElementType::ProgressBar: pChildElement = SGUIProgressBar::create(this, static_cast<SGUIProgressBarInfo*>(pElemInfo)); break;
 	
 	default: return;
 	// default: break; 임시로 리턴

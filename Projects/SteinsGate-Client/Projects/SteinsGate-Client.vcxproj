@@ -295,6 +295,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIProgressBar.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUISprite.cpp">
       <SubType>
       </SubType>
@@ -324,10 +325,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\VisualHelper.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="SGUIProgressBar.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -685,6 +682,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIProgressBar.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUISprite.h">
       <SubType>
       </SubType>
@@ -708,10 +706,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\VisualHelper.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="SGUIProgressBar.h">
       <SubType>
       </SubType>
     </ClInclude>

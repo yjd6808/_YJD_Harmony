@@ -8,10 +8,8 @@
 
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "SGUISprite.h"
-
-#include <SteinsGate/Client/SGImagePackManager.h>
-#include <SteinsGate/Client/SGUIManager.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -57,7 +55,6 @@ void SGUISprite::load() {
 	}
 
 	CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite });
-	DebugAssertMsg(!m_pTexture->isLink(), "스프라이트의 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
 
 	const Size spriteSize = m_pTexture->getSize();
 	const float fScaleX = m_pInfo->Size.width / spriteSize.width;
