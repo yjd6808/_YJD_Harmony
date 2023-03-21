@@ -20,7 +20,6 @@ public:
 
 	bool init() override;
 	static SGUILabel* create(SGUIGroup* parent, SGUILabelInfo* labelInfo);
-	int getCode() override;
 	UIElementType_t getElementType() override { return UIElementType::Sprite; }
 
 private:

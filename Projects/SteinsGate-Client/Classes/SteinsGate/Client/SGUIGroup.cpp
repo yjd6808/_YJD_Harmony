@@ -12,6 +12,7 @@
 #include <SteinsGate/Client/SGUIButton.h>
 #include <SteinsGate/Client/SGUIEditBox.h>
 #include <SteinsGate/Client/SGUICheckBox.h>
+#include <SteinsGate/Client/SGUIToggleButton.h>
 #include <SteinsGate/Client/SGGlobal.h>
 #include <SteinsGate/Client/SGImagePackManager.h>
 #include <SteinsGate/Client/SGUIManager.h>
@@ -131,10 +132,6 @@ bool SGUIGroup::onMouseScroll(SGEventMouse* mouseEvent) {
 	return true;
 }
 
-int SGUIGroup::getCode() {
-	return m_pInfo->Code;
-}
-
 void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
 	SGUIElementInfo* pElemInfo = CoreDataManager_v->getUIElementInfo(groupElemInfo.Code);
 	SGUIElement* pChildElement = nullptr;
@@ -146,6 +143,7 @@ void SGUIGroup::addUIElement(const SGUIGroupElemInfo& groupElemInfo) {
 	case UIElementType::Sprite: pChildElement = SGUISprite::create(this, static_cast<SGUISpriteInfo*>(pElemInfo)); break;
 	case UIElementType::EditBox: pChildElement = SGUIEditBox::create(this, static_cast<SGUIEditBoxInfo*>(pElemInfo)); break;
 	case UIElementType::CheckBox: pChildElement = SGUICheckBox::create(this, static_cast<SGUICheckBoxInfo*>(pElemInfo)); break;
+	case UIElementType::ToggleButton: pChildElement = SGUIToggleButton::create(this, static_cast<SGUIToggleButtonInfo*>(pElemInfo)); break;
 	
 	default: return;
 	// default: break; 임시로 리턴

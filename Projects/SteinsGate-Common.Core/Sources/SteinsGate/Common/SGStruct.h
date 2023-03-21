@@ -63,6 +63,7 @@ union SgaResourceIndex
 		
 	} Un;
 
+	SGString ToString() const;
 	Int32U Value;
 };
 

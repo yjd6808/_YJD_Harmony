@@ -39,6 +39,7 @@ public:
 	virtual SGTexture* getTexture() = 0;
 	virtual bool isLinearDodged()	= 0;
 	virtual SGSize getSize()		= 0;
+	virtual SGString toString()		= 0;
 
 	virtual bool isLink()  = 0;
 	virtual bool isDummy() = 0;
@@ -75,6 +76,7 @@ public:
 	float getFrameWidthF()	 override { return (float)m_Rect.FrameWidth;	}
 	float getFrameHeightF()  override { return (float)m_Rect.FrameHeight;	}
 	SGSize getSize()		 override { return { (float)m_Rect.Width, (float)m_Rect.Height }; }
+	SGString toString()		 override { return SGStringUtil::Format("프레임(%d)", m_iFrameIndex); }
 	
 
 	int getTargetFrameIndex()		override { return m_iFrameIndex; }
@@ -116,6 +118,7 @@ public:
 	SGSize getSize()		 override { return { 1, 1 }; }
 
 	int getTargetFrameIndex()		 override { return m_iTargetFrameIndex; }
+	SGString toString()		 override { return SGStringUtil::Format("프레임(%d) 링크(%d)", m_iFrameIndex, m_iTargetFrameIndex); }
 
 #pragma warning(push, 1)
 #pragma warning(disable: 4172) // return local variable address

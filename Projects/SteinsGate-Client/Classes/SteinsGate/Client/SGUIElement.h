@@ -27,6 +27,17 @@ public:
 		eMax
 	};
 
+	// 체크 박스 관련 상수
+	static constexpr int TextureCount = 4;
+	static constexpr int IndexBackground = 0;
+	static constexpr int IndexBackgroundDisabled = 1;
+	static constexpr int IndexCross = 2;
+	static constexpr int IndexCrossDisabled = 3;
+
+	// 토글 버튼 관련 상수
+	static constexpr int StateOne = 0;
+	static constexpr int StateTwo = 1;
+
 	SGUIElement(SGUIGroup* parent, SGUIElementInfo* info);
 	~SGUIElement() override = default;
 
@@ -42,19 +53,22 @@ public:
 	virtual bool onMouseDown(SGEventMouse* mouseEvent);
 	virtual bool onMouseUp(SGEventMouse* mouseEvent);
 	virtual bool onMouseScroll(SGEventMouse* mouseEvent);
-	
-	virtual int getCode() = 0;
+
 	virtual void setEnabled(bool enabled);
 	virtual UIElementType_t getElementType() = 0;
-
-	SGRect getWorldBoundingBox() const;
-	static void updateState();
-
-	void setCallbackClick(const SGActionFn<SGEventMouse*>& callback);
 
 	virtual bool isGroup() const { return false; }
 	virtual bool isGroupMaster() const { return false; }
 	virtual bool isMasterGroup() { return false; }
+
+	SGRect getWorldBoundingBox() const;
+	static void updateState();
+
+	int getCode() { return m_pBaseInfo->Code; }
+
+	void setCallbackClick(const SGActionFn<SGEventMouse*>& callback);
+
+
 
 	// 정렬 방식에 따라 앵커포인트 0, 0기준으로해서 박스내의 위치를 구한다.
 	SGVec2 getPositionInRect(

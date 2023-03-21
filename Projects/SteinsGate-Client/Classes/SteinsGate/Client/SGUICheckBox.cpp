@@ -15,22 +15,13 @@ USING_NS_JC;
 SGUICheckBox::SGUICheckBox(SGUIGroup* parent, SGUICheckBoxInfo* checkBoxInfo)
 	: SGUIElement(parent, checkBoxInfo)
 	, m_pInfo(checkBoxInfo)
-	, m_pBackgroundTexture{}
-	, m_pBackgroundDisabledTexture{}
-	, m_pCrossTexture{}
-	, m_pCrossDisabledTexture{}
-	, m_pBackgroundSprite{}
-	, m_pBackgroundDisabledSprite{}
-	, m_pCrossSprite{}
-	, m_pCrossDisabledSprite{}
 	, m_bChecked(false)
 {}
 
 SGUICheckBox::~SGUICheckBox() {
-	CC_SAFE_RELEASE(m_pBackgroundTexture);
-	CC_SAFE_RELEASE(m_pBackgroundDisabledTexture);
-	CC_SAFE_RELEASE(m_pCrossTexture);
-	CC_SAFE_RELEASE(m_pCrossDisabledTexture);
+	for (int i = 0; i < TextureCount; ++i) {
+		CC_SAFE_RELEASE(m_pTexture[eNormal]);
+	}
 }
 
 void SGUICheckBox::setCheck(bool checked) {
@@ -38,7 +29,7 @@ void SGUICheckBox::setCheck(bool checked) {
 	if (m_eState == eDisabled)
 		return;
 
-	m_pCrossSprite->setVisible(checked);
+	m_pSprite[IndexCross]->setVisible(checked);
 	m_bChecked = checked;
 
 	if (m_fnCheckStateChangedCallback)
@@ -51,24 +42,24 @@ void SGUICheckBox::setEnabled(bool enabled) {
 
 		updateState();
 
-		m_pBackgroundSprite->setVisible(true);
-		m_pBackgroundDisabledSprite->setVisible(false);
+		m_pSprite[IndexBackground]->setVisible(true);
+		m_pSprite[IndexBackgroundDisabled]->setVisible(false);
 
 		if (m_bChecked) {
-			m_pCrossSprite->setVisible(true);
-			m_pCrossDisabledSprite->setVisible(false);
+			m_pSprite[IndexCross]->setVisible(true);
+			m_pSprite[IndexCrossDisabled]->setVisible(false);
 		}
 
 		return;
 	}
 
 
-	m_pBackgroundSprite->setVisible(false);
-	m_pBackgroundDisabledSprite->setVisible(true);
+	m_pSprite[IndexBackground]->setVisible(false);
+	m_pSprite[IndexBackgroundDisabled]->setVisible(true);
 
 	if (m_bChecked) {
-		m_pCrossSprite->setVisible(false);
-		m_pCrossDisabledSprite->setVisible(true);
+		m_pSprite[IndexCross]->setVisible(false);
+		m_pSprite[IndexCrossDisabled]->setVisible(true);
 	}
 
 	m_eState = eDisabled;
@@ -87,18 +78,13 @@ SGUICheckBox* SGUICheckBox::create(SGUIGroup* parent, SGUICheckBoxInfo* btnInfo)
 
 bool SGUICheckBox::init() {
 
-	if (m_pInfo->Sprites[IndexBackground] == InvalidValue_v) {
-		m_pBackgroundSprite = Sprite::create();
-		this->addChild(m_pBackgroundSprite);
-	}
-
-	if (m_pInfo->Sprites[IndexBackgroundDisabled] == InvalidValue_v) {
-		m_pBackgroundDisabledSprite = Sprite::create();
-		this->addChild(m_pBackgroundDisabledSprite);
-	}
-
 	const SGImagePack* pBackgroundPack = CorePackManager_v->getPackUnsafe(m_pInfo->BackgroundSga);
-	const SGImagePack* pCrossPack = CorePackManager_v->getPack(m_pInfo->CrossSga);
+	const SGImagePack* pCrossPack = CorePackManager_v->getPackUnsafe(m_pInfo->CrossSga);
+
+	// 백그라운드 팩은 없을 수도 있다. 크로스팩은 필수
+	if (pCrossPack == nullptr) {
+		return false;
+	}
 
 	SgaSpriteAbstractPtr spBackgroundSprite;
 	SgaSpriteAbstractPtr spBackgroundDisabledSprite;
@@ -123,85 +109,28 @@ void SGUICheckBox::load() {
 
 	SGImagePack* pBackgroundPack = CorePackManager_v->getPackUnsafe(m_pInfo->BackgroundSga);
 	SGImagePack* pCrossPack = CorePackManager_v->getPack(m_pInfo->CrossSga);
+	SGImagePack* pPack[TextureCount] = { pBackgroundPack, pBackgroundPack, pCrossPack, pCrossPack };
+	const int Sga[TextureCount] { m_pInfo->BackgroundSga, m_pInfo->BackgroundSga, m_pInfo->CrossSga, m_pInfo->CrossSga };
+	const int Img[TextureCount] { m_pInfo->BackgroundImg, m_pInfo->BackgroundImg, m_pInfo->CrossImg, m_pInfo->CrossImg };
 
-	const int iBackground = m_pInfo->Sprites[IndexBackground];
-	const int iBackgroundDisabled = m_pInfo->Sprites[IndexBackgroundDisabled];
-	const int iCross = m_pInfo->Sprites[IndexCross];
-	const int iCrossDisabled = m_pInfo->Sprites[IndexCrossDisabled];
+	for (int i = 0; i < TextureCount; ++i) {
+		const int iSprite = m_pInfo->Sprites[i];
 
-	if (iBackground != InvalidValue_v) {
+		SGFrameTexture* pTexture = pPack[i] == nullptr ?
+			CoreGlobal_v->getDefaultFrameTexture() :
+			pPack[i]->createFrameTexture(Img[i], iSprite);
+		pTexture->retain();
 
-		m_pBackgroundTexture = pBackgroundPack->createFrameTexture(m_pInfo->BackgroundImg, iBackground);
-		m_pBackgroundTexture->retain();
+		Sprite* pSprite = Sprite::create();
+		pSprite->initWithTexture(pTexture->getTexture());
+		pSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		pSprite->setPosition(getContentSize() / 2);
 
-		DebugAssertMsg(!m_pBackgroundTexture->isLink(), "체크박스의 백그라운드 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
-		CoreUIManager_v->registerLoadedUITexture({ m_pInfo->BackgroundSga, m_pInfo->BackgroundImg, iBackground });
-		m_pBackgroundSprite = Sprite::create();
-		m_pBackgroundSprite->initWithTexture(m_pBackgroundTexture->getTexture());
-		m_pBackgroundSprite->setAnchorPoint(Vec2::ZERO);
-		this->addChild(m_pBackgroundSprite);
-	}
+		m_pTexture[i] = pTexture;
+		m_pSprite[i] = pSprite;
 
-	if (iBackgroundDisabled != InvalidValue_v) {
-
-		m_pBackgroundDisabledTexture = pBackgroundPack->createFrameTexture(m_pInfo->BackgroundImg, iBackgroundDisabled);
-		m_pBackgroundDisabledTexture->retain();
-
-		DebugAssertMsg(!m_pBackgroundDisabledTexture->isLink(), "체크박스의 백그라운드 디세이블드 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
-		CoreUIManager_v->registerLoadedUITexture({ m_pInfo->BackgroundSga, m_pInfo->BackgroundImg, iBackgroundDisabled });
-		m_pBackgroundDisabledSprite = Sprite::create();
-		m_pBackgroundDisabledSprite->initWithTexture(m_pBackgroundDisabledTexture->getTexture());
-		m_pBackgroundDisabledSprite->setAnchorPoint(Vec2::ZERO);
-		m_pBackgroundDisabledSprite->setVisible(false);
-		this->addChild(m_pBackgroundDisabledSprite);
-	}
-
-	m_pCrossTexture = pCrossPack->createFrameTexture(m_pInfo->CrossImg, iCross);
-	m_pCrossTexture->retain();
-
-	DebugAssertMsg(!m_pCrossTexture->isLink(), "체크박스의 크로스 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
-	CoreUIManager_v->registerLoadedUITexture({ m_pInfo->CrossSga, m_pInfo->CrossImg, iCross });
-	m_pCrossSprite = Sprite::create();
-	m_pCrossSprite->initWithTexture(m_pCrossTexture->getTexture());
-
-	if (iBackground == InvalidValue_v) {
-		m_pCrossSprite->setAnchorPoint(Vec2::ZERO);
-		this->addChild(m_pCrossSprite);
-		setContentSize(m_pCrossSprite->getContentSize());
-	} else {
-		DebugAssertMsg(m_pBackgroundSprite, "백그라운드 스프라이트가 없습니다.");
-		m_pCrossSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-		m_pCrossSprite->setPosition(m_pBackgroundSprite->getContentSize() / 2);
-		m_pBackgroundSprite->addChild(m_pCrossSprite);
-		setContentSize(m_pBackgroundSprite->getContentSize());
-	}
-
-	if (iCrossDisabled != InvalidValue_v) {
-
-		m_pCrossDisabledTexture = pCrossPack->createFrameTexture(m_pInfo->CrossImg, iCrossDisabled);
-		m_pCrossDisabledTexture->retain();
-
-		DebugAssertMsg(!m_pCrossDisabledTexture->isLink(), "체크박스의 크로스 디세이블드 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
-		CoreUIManager_v->registerLoadedUITexture({ m_pInfo->CrossSga, m_pInfo->CrossImg, iCrossDisabled });
-	} else {
-		// 만약 비활성화 Cross 텍스쳐가 없는 경우, 활성화 텍스쳐를 그대로 쓰도록 하자.
-		m_pCrossDisabledTexture = m_pCrossTexture;
-		m_pCrossDisabledTexture->retain();
-	}
-
-	m_pCrossDisabledSprite = Sprite::create();
-	m_pCrossDisabledSprite->initWithTexture(m_pCrossDisabledTexture->getTexture());
-	m_pCrossDisabledSprite->setAnchorPoint(Vec2::ZERO);
-	m_pCrossDisabledSprite->setVisible(false);
-
-
-	if (iBackground == InvalidValue_v) {
-		m_pCrossDisabledSprite->setAnchorPoint(Vec2::ZERO);
-		this->addChild(m_pCrossDisabledSprite);
-	} else {
-		m_pCrossDisabledSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-		m_pCrossDisabledSprite->setPosition(m_pBackgroundSprite->getContentSize() / 2);
-		m_pBackgroundSprite->addChild(m_pCrossDisabledSprite);
+		CoreUIManager_v->registerLoadedUITexture({ Sga[i], Img[i], iSprite});
+		this->addChild(pSprite);
 	}
 
 	setEnabled(true);
@@ -214,15 +143,10 @@ void SGUICheckBox::unload() {
 
 	removeAllChildren(); // autorelease 되기땜
 
-	m_pBackgroundSprite = nullptr;
-	m_pBackgroundDisabledSprite = nullptr;
-	m_pCrossSprite = nullptr;
-	m_pCrossDisabledSprite = nullptr;
-
-	CC_SAFE_RELEASE_NULL(m_pBackgroundTexture);
-	CC_SAFE_RELEASE_NULL(m_pBackgroundDisabledTexture);
-	CC_SAFE_RELEASE_NULL(m_pCrossTexture);
-	CC_SAFE_RELEASE_NULL(m_pCrossDisabledTexture);
+	for (int i = 0; i < TextureCount; ++i) {
+		m_pSprite[i] = nullptr;
+		CC_SAFE_RELEASE_NULL(m_pTexture[i]);
+	}
 
 	m_bLoaded = false;
 }
@@ -247,12 +171,6 @@ bool SGUICheckBox::onMouseUp(SGEventMouse* mouseEvent) {
 
 	return false;
 }
-
-
-int SGUICheckBox::getCode() {
-	return m_pInfo->Code;
-}
-
 
 void SGUICheckBox::setCallbackCheckStateChanged(const SGActionFn<SGUICheckBox*, bool>& fnCheckStateChangedCallback) {
 	m_fnCheckStateChangedCallback = fnCheckStateChangedCallback;

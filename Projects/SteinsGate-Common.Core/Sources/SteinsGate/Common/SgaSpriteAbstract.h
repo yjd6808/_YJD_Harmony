@@ -12,6 +12,8 @@
 #include <SteinsGate/Common/SgaCompressMode.h>
 #include <SteinsGate/Common/SgaSpriteRect.h>
 
+#include "SgaPackage.h"
+
 template <Int32>
 class SgaElementInitializerImpl;
 class SgaSpriteAbstract
@@ -62,7 +64,12 @@ public:
 	float GetHeightF()					{ return (float)GetHeight(); }
 	float GetFrameWidthF()				{ return (float)GetFrameWidth(); }
 	float GetFrameHeightF()				{ return (float)GetFrameHeight(); }
-	
+
+	SGString ToString() const {
+		return SGStringUtil::Format("Sga(%s), Img(%s), Sprite(%d)",
+			m_spParent->GetParent()->GetPath().Source(), m_spParent->GetName().Source(), m_iFrameIndex);
+	}
+
 protected:
 	SgaImageWeakPtr m_spParent;
 	Type m_eType;

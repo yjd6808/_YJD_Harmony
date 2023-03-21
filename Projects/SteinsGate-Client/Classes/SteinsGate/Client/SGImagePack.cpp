@@ -13,11 +13,8 @@
 #include <SteinsGate/Common/SgaColorFormat.h>
 #include <SteinsGate/Client/SGGlobal.h>
 
-
-
 USING_NS_CC;
 USING_NS_JC;
-
 
 SGImagePack::SGImagePack(const SgaPackagePtr& sgaPackage, int packIndex)
 	: m_iIndex(packIndex)
@@ -75,8 +72,9 @@ SgaSpriteAbstractPtr SGImagePack::getSpriteUnsafe(int imgIndex, int frameIndex) 
  */
 SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex, bool linearDodge) {
 
-	if (frameIndex == -1)
+	if (frameIndex == InvalidValue_v) {
 		return SGGlobal::get()->getDefaultFrameTexture();
+	}
 
 	SgaResourceIndex index;
 	index.Un.SgaIndex = m_iIndex;
@@ -94,11 +92,14 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex, bo
 	SgaImage& img = (SgaImage&)m_Package->GetAtRef(imgIndex);
 
 	if (!img.IndexLoaded() && !img.LoadIndexOnly()) {
-		return nullptr;
+		_LogWarn_("%s (Img로딩 실패)", index.ToString().Source());
+		return CoreGlobal_v->getDefaultFrameTexture();
 	}
 
 	if (frameIndex < 0 || frameIndex >= img.Count()) {
+		_LogWarn_("%s (올바르지 않은 인덱스 범위)", index.ToString().Source());
 		DebugAssert(false);
+		return CoreGlobal_v->getDefaultFrameTexture();
 	}
 
 	SgaSpriteAbstract& sprite = img.GetAtRef(frameIndex);
@@ -114,7 +115,8 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex, bo
 	}
 
 	if (sprite.IsDummy()) {
-		return nullptr;
+		_LogWarn_("%s (더미 스프라이트)", index.ToString().Source());
+		return CoreGlobal_v->getDefaultFrameTexture();
 	}
 
 	if (!sprite.Loaded())
@@ -145,13 +147,13 @@ SGFrameTexture* SGImagePack::createFrameTexture(int imgIndex, int frameIndex, bo
 
 void SGImagePack::releaseFrameTexture(int imgIndex, int frameIndex) {
 	const SgaResourceIndex index{ m_iIndex, imgIndex, frameIndex };
-	DebugAssertMsg(m_TextureCacheMap.Exist(index.Value), "sga: %d, img: %d, index: %d, 해당하는 프레임 데이터가 없습니다. [1]", m_iIndex, imgIndex, frameIndex);
+	DebugAssertMsg(m_TextureCacheMap.Exist(index.Value), "%s, 해당하는 프레임 데이터가 없습니다. [1]", index.ToString().Source());
 	CC_SAFE_RELEASE(m_TextureCacheMap[index.Value]);
 	m_TextureCacheMap.Remove(index.Value);
 }
 
 void SGImagePack::releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex) {
-	DebugAssertMsg(m_TextureCacheMap.Exist(sgaResourceIndex.Value), "sga: %d, img: %d, index: %d, 해당하는 프레임 데이터가 없습니다. [2]", m_iIndex, sgaResourceIndex.Un.ImgIndex, sgaResourceIndex.Un.FrameIndex);
+	DebugAssertMsg(m_TextureCacheMap.Exist(sgaResourceIndex.Value), "%s, 해당하는 프레임 데이터가 없습니다. [2]", sgaResourceIndex.ToString().Source());
 	CC_SAFE_RELEASE(m_TextureCacheMap[sgaResourceIndex.Value]);
 	m_TextureCacheMap.Remove(sgaResourceIndex.Value);
 }

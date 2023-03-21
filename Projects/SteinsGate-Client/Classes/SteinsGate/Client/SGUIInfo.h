@@ -151,9 +151,6 @@ struct SGUIToggleButtonInfo : SGUIElementInfo
 		LinearDodge = false;
 	}
 
-	static constexpr int One = 0;
-	static constexpr int Two = 1;
-
 	int Sga;
 	int Img;
 	int Sprites[2][4];

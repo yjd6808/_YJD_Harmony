@@ -28,6 +28,10 @@ ActorPartSpriteData::ActorPartSpriteData(int zorder, int sga, int img)
 SgaResourceIndex::SgaResourceIndex() : Value(0) {}
 
 
+SGString SgaResourceIndex::ToString() const {
+	return SGStringUtil::Format("Sga(%d) Img(%d) Sprite(%d)", Un.SgaIndex, Un.ImgIndex, Un.FrameIndex);
+}
+
 AccountData::AccountData()
 	: Name{""}
 	, AccountId(InvalidValue_v)

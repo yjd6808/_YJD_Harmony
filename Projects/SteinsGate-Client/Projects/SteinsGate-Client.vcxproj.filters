@@ -364,6 +364,12 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIGroupMaster.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIToggleButton.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SGUIProgressBar.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePackManager.h">
@@ -695,6 +701,12 @@
       <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIGroupMaster.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIToggleButton.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SGUIProgressBar.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
   </ItemGroup>

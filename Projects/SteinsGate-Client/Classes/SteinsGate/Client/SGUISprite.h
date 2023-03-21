@@ -21,7 +21,6 @@ public:
 	void unload() override;
 
 	static SGUISprite* create(SGUIGroup* parent, SGUISpriteInfo* spriteInfo);
-	int getCode() override;
 	UIElementType_t getElementType() override { return UIElementType::Sprite; }
 private:
 	SGUISpriteInfo* m_pInfo;

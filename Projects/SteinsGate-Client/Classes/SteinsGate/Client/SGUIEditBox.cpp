@@ -53,10 +53,6 @@ bool SGUIEditBox::init() {
 	return true;
 }
 
-int SGUIEditBox::getCode() {
-	return m_pInfo->Code;
-}
-
 void SGUIEditBox::setTextEditBeginCallback(const SGActionFn<SGUIEditBox*>& fnTextEditBegin) const {
 	m_pListener->FnEditBoxEditingDidBegin = fnTextEditBegin;
 }

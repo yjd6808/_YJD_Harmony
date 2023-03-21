@@ -42,6 +42,7 @@ public:
 
 	bool Load(bool indexOnly) override;
 	bool Unload() override;
+	SGString ToString() const;
 protected:
 	SgaSpriteList m_Sprites;	
 	int m_iWaitForLoadingDataCount;

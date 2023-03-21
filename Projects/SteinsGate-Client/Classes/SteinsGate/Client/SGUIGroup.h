@@ -30,7 +30,6 @@ public:
 	bool onMouseDown(SGEventMouse* mouseEvent) override;
 	bool onMouseUp(SGEventMouse* mouseEvent) override;
 	bool onMouseScroll(SGEventMouse* mouseEvent) override;
-	int getCode() override;
 
 	UIElementType_t getElementType() override { return UIElementType::Group; }
 	bool isGroup() const override { return true; }

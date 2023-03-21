@@ -85,8 +85,9 @@ SGImagePack* SGImagePackManager::getPack(const int idx) {
 }
 
 SGImagePack* SGImagePackManager::getPackUnsafe(const int idx) {
-	if (!IsValidPackIndex(idx))
+	if (!IsValidPackIndex(idx)) {
 		return nullptr;
+	}
 
 	return m_LoadedPackages[idx];
 }

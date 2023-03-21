@@ -47,7 +47,7 @@ void SGUIButton::setEnabled(bool enabled) {
 		if (m_eState != eDisabled)
 			return;
 
-		// 이전 상태가 비활성화 상태 인경우 현재 상태가 Prssed인지, Moved인지 체크해서 업데이트
+		// 이전 상태가 비활성화 상태 인경우 현재 상태가 Pressed인지, Moved인지 체크해서 업데이트
 		updateState();
 		return;
 	}
@@ -73,8 +73,21 @@ void SGUIButton::restoreState(State state) {
 
 bool SGUIButton::init() {
 	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	const SGImagePack* pPack = pPackManager->getPack(m_pInfo->Sga);
-	const SgaSpriteRect spriteRect = pPack->getSprite(m_pInfo->Img, m_pInfo->Sprites[IndexNormal])->GetRect();
+	const SGImagePack* pPack = pPackManager->getPackUnsafe(m_pInfo->Sga);
+
+	if (pPack == nullptr) {
+		_LogWarn_("버튼 Sga패키지를 찾지 못했습니다.");
+		return false;
+	}
+
+	const SgaSpriteAbstractPtr spSprite = pPack->getSpriteUnsafe(m_pInfo->Img, m_pInfo->Sprites[eNormal]);
+
+	if (spSprite == nullptr) {
+		_LogWarn_("버튼 노말 스프라이트를 찾지 못했습니다.");
+		return false;
+	}
+
+	const SgaSpriteRect spriteRect = spSprite->GetRect();
 	setContentSize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
 	return true;
 }
@@ -83,52 +96,25 @@ void SGUIButton::load() {
 	if (m_bLoaded)
 		return;
 
-	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	SGUIManager* pUIManager = SGUIManager::get();
-	SGImagePack* pPack = pPackManager->getPack(m_pInfo->Sga);
+	SGImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
 
-	const int iNormal = m_pInfo->Sprites[eNormal];
-	const int iOver = m_pInfo->Sprites[eOver];
-	const int iPressed = m_pInfo->Sprites[ePressed];
-	const int iDisabled = m_pInfo->Sprites[eDisabled];
-	const bool bLinearDodge = m_pInfo->LinearDodge;
+	for (int i = 0; i < eMax; ++i) {
+		const int iSprite = m_pInfo->Sprites[i];
 
-	m_pTexture[eNormal] = pPack->createFrameTexture(m_pInfo->Img, iNormal, bLinearDodge);
-	m_pTexture[eNormal]->retain();
-	m_pTexture[eOver] = pPack->createFrameTexture(m_pInfo->Img, iOver, bLinearDodge);
-	m_pTexture[eOver]->retain();
-	m_pTexture[ePressed] = pPack->createFrameTexture(m_pInfo->Img, iPressed, bLinearDodge);
-	m_pTexture[ePressed]->retain();
-	m_pTexture[eDisabled] = pPack->createFrameTexture(m_pInfo->Img, iDisabled, bLinearDodge);
-	m_pTexture[eDisabled]->retain();
+		SGFrameTexture* pTexture = pPack->createFrameTexture(m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
+		pTexture->retain();
 
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iNormal });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iOver });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iPressed });
-	pUIManager->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iDisabled });
+		Sprite* pSprite = Sprite::create();
+		pSprite = Sprite::create();
+		pSprite->initWithTexture(pTexture->getTexture());
+		pSprite->setAnchorPoint(Vec2::ZERO);
 
-	DebugAssertMsg(!m_pTexture[eNormal]->isLink(), "버튼의 텍스쳐가 링크 텍스쳐입니다. [1] 그래선 안됩니다.");
-	DebugAssertMsg(!m_pTexture[eOver]->isLink(), "버튼의 텍스쳐가 링크 텍스쳐입니다. [2] 그래선 안됩니다.");
-	DebugAssertMsg(!m_pTexture[ePressed]->isLink(), "버튼의 텍스쳐가 링크 텍스쳐입니다. [3] 그래선 안됩니다.");
-	DebugAssertMsg(!m_pTexture[eDisabled]->isLink(), "버튼의 텍스쳐가 링크 텍스쳐입니다. [4] 그래선 안됩니다.");
+		m_pTexture[i] = pTexture;
+		m_pSprite[i] = pSprite;
 
-	m_pSprite[eNormal] = Sprite::create();
-	m_pSprite[eNormal]->initWithTexture(m_pTexture[eNormal]->getTexture());
-	m_pSprite[eNormal]->setAnchorPoint(Vec2::ZERO);
-	m_pSprite[eOver] = Sprite::create();
-	m_pSprite[eOver]->initWithTexture(m_pTexture[eOver]->getTexture());
-	m_pSprite[eOver]->setAnchorPoint(Vec2::ZERO);
-	m_pSprite[ePressed] = Sprite::create();
-	m_pSprite[ePressed]->initWithTexture(m_pTexture[ePressed]->getTexture());
-	m_pSprite[ePressed]->setAnchorPoint(Vec2::ZERO);
-	m_pSprite[eDisabled] = Sprite::create();
-	m_pSprite[eDisabled]->initWithTexture(m_pTexture[eDisabled]->getTexture());
-	m_pSprite[eDisabled]->setAnchorPoint(Vec2::ZERO);
-
-	this->addChild(m_pSprite[eNormal]);
-	this->addChild(m_pSprite[eOver]);
-	this->addChild(m_pSprite[ePressed]);
-	this->addChild(m_pSprite[eDisabled]);
+		CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iSprite });
+		this->addChild(pSprite);
+	}
 
 	setVisibleState(eNormal);
 
@@ -141,15 +127,10 @@ void SGUIButton::unload() {
 
 	removeAllChildren(); // autorelease 되기땜
 
-	m_pSprite[eNormal] = nullptr;
-	m_pSprite[eOver] = nullptr;
-	m_pSprite[ePressed] = nullptr;
-	m_pSprite[eDisabled] = nullptr;
-
-	CC_SAFE_RELEASE_NULL(m_pTexture[eNormal]);
-	CC_SAFE_RELEASE_NULL(m_pTexture[eOver]);
-	CC_SAFE_RELEASE_NULL(m_pTexture[ePressed]);
-	CC_SAFE_RELEASE_NULL(m_pTexture[eDisabled]);
+	for (int i = 0; i < eMax; ++i) {
+		m_pSprite[i] = nullptr;
+		CC_SAFE_RELEASE_NULL(m_pTexture[eNormal]);
+	}
 
 	m_bLoaded = false;
 }
@@ -160,9 +141,9 @@ bool SGUIButton::onMouseMove(SGEventMouse* mouseEvent) {
 		m_eState == ePressed)
 		return true;
 
-	Vec2 mousePos = mouseEvent->getCursorPos();
-	SGRect worldRect = getWorldBoundingBox();
-	bool bContainedMouse = worldRect.containsPoint(mousePos);
+	const Vec2 mousePos = mouseEvent->getCursorPos();
+	const SGRect worldRect = getWorldBoundingBox();
+	const bool bContainedMouse = worldRect.containsPoint(mousePos);
 
 	if (!bContainedMouse) {
 		setVisibleState(eNormal);
@@ -178,8 +159,8 @@ bool SGUIButton::onMouseDown(SGEventMouse* mouseEvent) {
 		m_eState == ePressed)
 		return true;
 
-	Vec2 mousePos = mouseEvent->getCursorPos();
-	bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
+	const Vec2 mousePos = mouseEvent->getCursorPos();
+	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
 
 	if (!bContainedMouse) {
 		return true;
@@ -193,8 +174,8 @@ bool SGUIButton::onMouseUp(SGEventMouse* mouseEvent) {
 	if (m_eState != ePressed)
 		return true;
 
-	Vec2 mousePos = mouseEvent->getCursorPos();
-	bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
+	const Vec2 mousePos = mouseEvent->getCursorPos();
+	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
 
 	setVisibleState(eNormal);
 
@@ -211,8 +192,3 @@ bool SGUIButton::onMouseUp(SGEventMouse* mouseEvent) {
 bool SGUIButton::onMouseScroll(SGEventMouse* mouseEvent) {
 	return true;
 }
-
-int SGUIButton::getCode() {
-	return m_pInfo->Code;
-}
- 

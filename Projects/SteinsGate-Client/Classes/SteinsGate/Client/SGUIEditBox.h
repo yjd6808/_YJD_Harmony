@@ -18,7 +18,6 @@ public:
 
 	bool init() override;
 	static SGUIEditBox* create(SGUIGroup* parent, SGUIEditBoxInfo* editBoxInfo);
-	int getCode() override;
 	UIElementType_t getElementType() override { return UIElementType::EditBox; }
 
     void setTextEditBeginCallback(const SGActionFn<SGUIEditBox*>& fnTextEditBegin) const;
@@ -71,8 +70,6 @@ private:
 	SGUIEditBoxInfo* m_pInfo;
 	SGEditBox* m_pEditBox;
     Listener* m_pListener;
-
-   
 };
 
 

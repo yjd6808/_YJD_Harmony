@@ -47,8 +47,4 @@ bool SGUILabel::init() {
 	return true;
 }
 
-int SGUILabel::getCode() {
-	return m_pInfo->Code;
-}
-
 

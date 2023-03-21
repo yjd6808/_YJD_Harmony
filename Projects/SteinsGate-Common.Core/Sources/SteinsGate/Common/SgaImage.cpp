@@ -61,6 +61,10 @@ bool SgaImage::Unload() {
 	return bHasUnloadedData;
 }
 
+SGString SgaImage::ToString() const {
+	return SGStringUtil::Format("Sga(%s) Img(%s)", m_spParent->GetPath().Source(), m_Header.Name.Source());
+}
+
 SgaSpriteAbstractPtr SgaImage::GetAt(const int idx) const {
 	DebugAssert(IsValidIndex(idx));
 	return m_Sprites[idx];

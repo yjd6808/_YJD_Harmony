@@ -43,15 +43,20 @@ void SGUISprite::load() {
 	if (m_bLoaded)
 		return;
 
-	SGImagePack* pPack = CorePackManager_v->getPack(m_pInfo->Sga);
+	SGImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+
+	if (pPack == nullptr)
+		return;
 
 	m_pTexture = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Sprite, m_pInfo->LinearDodge);
 	m_pTexture->retain();
 
-	
+	if (m_pTexture->isLink()) {
+		CC_SAFE_RELEASE_NULL(m_pTexture);
+		return;
+	}
 
 	CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite });
-
 	DebugAssertMsg(!m_pTexture->isLink(), "스프라이트의 텍스쳐가 링크 텍스쳐입니다. 그래선 안됩니다.");
 
 	const Size spriteSize = m_pTexture->getSize();
@@ -77,7 +82,3 @@ void SGUISprite::unload() {
 }
 
 
-
-int SGUISprite::getCode() {
-	return m_pInfo->Code;
-}

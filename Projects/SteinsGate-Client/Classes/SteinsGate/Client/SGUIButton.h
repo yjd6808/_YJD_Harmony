@@ -13,11 +13,6 @@
 class SGUIButton : public SGUIElement
 {
 public:
-	static constexpr int IndexNormal = 0;
-	static constexpr int IndexOver = 1;
-	static constexpr int IndexPressed = 2;
-	static constexpr int IndexDisabled = 3;
-
 	SGUIButton(SGUIGroup* parent, SGUIButtonInfo* btnInfo);
 	~SGUIButton() override;
 	 
@@ -34,7 +29,6 @@ public:
 	bool onMouseDown(SGEventMouse* mouseEvent) override;
 	bool onMouseUp(SGEventMouse* mouseEvent) override;
 	bool onMouseScroll(SGEventMouse* mouseEvent) override;
-	int getCode() override;
 	UIElementType_t getElementType() override { return UIElementType::Button; }
 private:
 	SGUIButtonInfo* m_pInfo;

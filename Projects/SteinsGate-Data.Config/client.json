@@ -8,8 +8,8 @@
         {
             "code": 1,
             "game_scale": 1.0,
-            "resolution_width": 960,
-            "resolution_height": 720,
+            "resolution_width": 640,
+            "resolution_height": 480,
             "fullsreen": false
         }
     ]

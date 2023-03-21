@@ -299,6 +299,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIToggleButton.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGVec2Ex.cpp">
       <SubType>
       </SubType>
@@ -320,6 +324,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\VisualHelper.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="SGUIProgressBar.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -681,6 +689,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIToggleButton.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGVec2Ex.h">
       <SubType>
       </SubType>
@@ -696,6 +708,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\VisualHelper.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="SGUIProgressBar.h">
       <SubType>
       </SubType>
     </ClInclude>

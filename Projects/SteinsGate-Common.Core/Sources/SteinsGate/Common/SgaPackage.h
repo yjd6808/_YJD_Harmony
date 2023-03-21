@@ -43,12 +43,13 @@ public:
 	void LoadElementOnly(const int index) { LoadElement(index, true); }		// 엘리먼트만 딸랑 만듬, 스프라이트 인덱스 미구성
 	int UnloadAllElementData();
 
-	bool IsElementLoaded(const int index);
+	bool IsElementLoaded(const int index) const;
 	int GetElementIndex(const JCore::String& elementName);
-	bool HasElementIndex(const JCore::String& elementName);
+	bool HasElementIndex(const JCore::String& elementName) const;
 
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
 	SgaElement& operator[](const int idx);
+	SGString ToString() const;
 protected:
 	JCore::String m_szPath;
 	JCore::StreamPtr m_spStream;

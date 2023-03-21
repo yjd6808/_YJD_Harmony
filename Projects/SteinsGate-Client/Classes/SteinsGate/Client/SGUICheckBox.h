@@ -13,11 +13,6 @@
 class SGUICheckBox : public SGUIElement
 {
 public:
-	static constexpr int IndexBackground = 0;
-	static constexpr int IndexBackgroundDisabled = 1;
-	static constexpr int IndexCross = 2;
-	static constexpr int IndexCrossDisabled = 3;
-
 	SGUICheckBox(SGUIGroup* parent, SGUICheckBoxInfo* checkBoxInfo);
 	~SGUICheckBox() override;
 
@@ -33,22 +28,13 @@ public:
 	static SGUICheckBox* create(SGUIGroup* parent, SGUICheckBoxInfo* checkBoxInfo);
 
 	bool onMouseUp(SGEventMouse* mouseEvent) override;
-
-	int getCode() override;
 	UIElementType_t getElementType() override { return UIElementType::CheckBox; }
 
 	void setCallbackCheckStateChanged(const SGActionFn<SGUICheckBox*, bool>& fnCheckStateChangedCallback);
 private:
 	SGUICheckBoxInfo* m_pInfo;
-	SGFrameTexture* m_pBackgroundTexture;
-	SGFrameTexture* m_pBackgroundDisabledTexture;
-	SGFrameTexture* m_pCrossTexture;
-	SGFrameTexture* m_pCrossDisabledTexture;
-	SGSprite* m_pBackgroundSprite;
-	SGSprite* m_pBackgroundDisabledSprite;
-	SGSprite* m_pCrossSprite;
-	SGSprite* m_pCrossDisabledSprite;
-
+	SGFrameTexture* m_pTexture[TextureCount];
+	SGSprite* m_pSprite[TextureCount];
 	SGActionFn<SGUICheckBox*, bool> m_fnCheckStateChangedCallback;
 	bool m_bChecked;
 };
