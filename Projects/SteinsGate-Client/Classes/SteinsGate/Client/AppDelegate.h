@@ -4,9 +4,11 @@
 
 #include "cocos2d.h"
 
-class  AppDelegate : private cocos2d::Application
+class AppDelegate : private cocos2d::Application
 {
 public:
+    HHOOK m_hWndProcHook;
+
     AppDelegate();
     virtual ~AppDelegate();
 
@@ -15,6 +17,8 @@ public:
 	void CreateOpenGLWindow();
 	void CreateWorldScene();
 
+
+    void InitializeWindowProcedure();
     /**
     @brief    디렉터 씬 초기화 코드 삽입
     @return true    작업 성공시 앱은 계속 실행된다.

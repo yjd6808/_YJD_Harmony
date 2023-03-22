@@ -91,6 +91,9 @@
     <Filter Include="Action\Gunner">
       <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Extension">
+      <UniqueIdentifier>{afca49d9-5dad-4dcb-8803-7f73c14f3200}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePackManager.cpp">
@@ -376,8 +379,17 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Inventory.cpp">
       <Filter>Game\UI\Group</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIScrollBar.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.cpp">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGWndMessage.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGWin32Helper.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -724,8 +736,17 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Inventory.h">
       <Filter>Game\UI\Group</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIScrollBar.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.h">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGWndMessage.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGWin32Helper.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "Tutturu.h"
 #include "AppDelegate.h"
 #include "GameCoreHeader.h"
+#include "SGWin32Helper.h"
 
 #define AppName "SteinsGate-Client"
 
@@ -9,10 +10,8 @@ USING_NS_JC;
 USING_NS_DETAIL;
 
 AppDelegate::AppDelegate()
-{
-    
-    
-}
+	: m_hWndProcHook(nullptr)
+{}
 
 AppDelegate::~AppDelegate() 
 {
@@ -22,6 +21,8 @@ AppDelegate::~AppDelegate()
     // 근데 내가 코코스 게임엔진의 모든 리소스가 종료되고 나서도 코코스 오브젝트 레퍼런스를 유지하고 있어버리면
     // 일일히 찾아서 해제해줄 수가 없다.
     // 따라서 WorldScene 삭제시 해제해주도록 하자.
+    if (m_hWndProcHook != nullptr)
+		UnhookWindowsHookEx(m_hWndProcHook);
 }
 
 void AppDelegate::initGLContextAttrs()
@@ -49,7 +50,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     InitializeDefaultLogger();
     InitializeClientCore();
     InitializeClientLogo();
+    InitializeWindowProcedure();
     CreateWorldScene();
+    
     
     return true;
 }
@@ -73,6 +76,8 @@ void AppDelegate::CreateOpenGLWindow() {
     glview->setDesignResolutionSize(viewRect.size.width, viewRect.size.height, ResolutionPolicy::NO_BORDER);
     //glview->setDesignResolutionSize(CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight, ResolutionPolicy::SHOW_ALL);
     director->setContentScaleFactor(1.0f);
+
+    SGWin32Helper::LazyInit();
 }
 
 void AppDelegate::CreateWorldScene() {
@@ -82,6 +87,29 @@ void AppDelegate::CreateWorldScene() {
     Director::getInstance()->runWithScene(scene);
 }
 
+static LRESULT CALLBACK GLFWWindowHookProc(int code, WPARAM wParam, LPARAM lParam)
+{
+    Scene* runningScene = Director::getInstance()->getRunningScene();
+
+    /*if (runningScene != nullptr) {
+        static_cast<SGWorldScene*>(runningScene)->onWndMessageReceived(code, wParam, lParam);
+    }*/
+
+    _LogDebug_("%d", code);
+
+    return ::CallNextHookEx(NULL, code, wParam, lParam);
+}
+
+void AppDelegate::InitializeWindowProcedure() {
+    const HWND hWndCocos = Director::getInstance()->getOpenGLView()->getWin32Window();
+    const DWORD dwThreadId = GetWindowThreadProcessId(hWndCocos, NULL);
+    const HINSTANCE hInstance = ::GetModuleHandleW(nullptr);
+    //m_hWndProcHook = SetWindowsHookEx(WH_CALLWNDPROC, GLFWWindowHookProc, hInstance, dwThreadId);
+
+    //if (m_hWndProcHook == nullptr)
+        //_LogError_("코코스 윈도우 프로시저 후킹에 실패했습니다.");
+}
+
 void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 }
@@ -89,3 +117,4 @@ void AppDelegate::applicationDidEnterBackground() {
 void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 }
+

@@ -300,6 +300,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUIProgressBar.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIScrollBar.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGUISprite.cpp">
       <SubType>
       </SubType>
@@ -313,6 +317,14 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGVec2Ex.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGWin32Helper.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGWndMessage.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -696,6 +708,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIProgressBar.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIScrollBar.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUISprite.h">
       <SubType>
       </SubType>
@@ -712,6 +725,11 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGWin32Helper.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGWndMessage.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Tutturu.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGMapLayer.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGWorldScene.h">

@@ -166,6 +166,9 @@ protected:
     void onGLFWWindowIconifyCallback(GLFWwindow* window, int iconified);
     void onGLFWWindowFocusCallback(GLFWwindow* window, int focused);
 
+    // À±Á¤µµ
+    void onGLFWCursorEnterCallback(GLFWwindow* window, int enter);
+
     bool _captured;
     bool _supportTouch;
     bool _isInRetinaMonitor;
@@ -191,6 +194,8 @@ public:
     static const std::string EVENT_WINDOW_RESIZED;
     static const std::string EVENT_WINDOW_FOCUSED;
     static const std::string EVENT_WINDOW_UNFOCUSED;
+    static const std::string EVENT_CURSOR_ENTER;
+    static const std::string EVENT_CURSOR_LEAVE;
 
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(GLViewImpl);
@@ -272,6 +277,14 @@ public:
         if (_view)
         {
             _view->onGLFWWindowFocusCallback(window, focused);
+        }
+    }
+
+    static void onGLFWCursorEnterCallback(GLFWwindow* window, int entered)
+    {
+        if (_view)
+        {
+            _view->onGLFWCursorEnterCallback(window, entered);
         }
     }
 

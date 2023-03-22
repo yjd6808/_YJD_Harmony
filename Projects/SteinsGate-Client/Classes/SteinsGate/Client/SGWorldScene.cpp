@@ -24,7 +24,8 @@
 #include <SteinsGate/Client/SGGlobal.h>
 #include <SteinsGate/Client/SGUIManager.h>
 #include <SteinsGate/Client/SGFontPackage.h>
-
+#include <SteinsGate/Client/SGWndMessage.h>
+#include <SteinsGate/Client/SGWin32Helper.h>
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -69,8 +70,6 @@ SGCamera* SGWorldScene::getCamera() {
 SGWorldScene::SGWorldScene()
 	: m_pRunningScene(nullptr)
 	, m_eReservedScene(SceneType::Login)
-	, m_pMouseListener(nullptr)
-	, m_pKeyboardListener(nullptr)
 	, m_pUILayer(nullptr)
 {}
 
@@ -93,19 +92,36 @@ bool SGWorldScene::init() {
 	return true;
 }
 
-void SGWorldScene::initEventListeners() {
-	m_pKeyboardListener = EventListenerKeyboard::create();
-	m_pKeyboardListener->onKeyPressed = CC_CALLBACK_2(SGWorldScene::onKeyPressed, this);
-	m_pKeyboardListener->onKeyReleased = CC_CALLBACK_2(SGWorldScene::onKeyReleased, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_pKeyboardListener, this);
 
-	m_pMouseListener = EventListenerMouse::create();
-	m_pMouseListener->onMouseDown = CC_CALLBACK_1(SGWorldScene::onMouseDown, this);
-	m_pMouseListener->onMouseScroll = CC_CALLBACK_1(SGWorldScene::onMouseScroll, this);
-	m_pMouseListener->onMouseUp = CC_CALLBACK_1(SGWorldScene::onMouseUp, this);
-	m_pMouseListener->onMouseMove = CC_CALLBACK_1(SGWorldScene::onMouseMove, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(m_pMouseListener, this);
+void SGWorldScene::initEventListeners() {
+
+	const auto pKeyboardListener = EventListenerKeyboard::create();
+	pKeyboardListener->onKeyPressed = CC_CALLBACK_2(SGWorldScene::onKeyPressed, this);
+	pKeyboardListener->onKeyReleased = CC_CALLBACK_2(SGWorldScene::onKeyReleased, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pKeyboardListener, this);
+
+	const auto pMouseListener = EventListenerMouse::create();
+	pMouseListener->onMouseDown = CC_CALLBACK_1(SGWorldScene::onMouseDown, this);
+	pMouseListener->onMouseScroll = CC_CALLBACK_1(SGWorldScene::onMouseScroll, this);
+	pMouseListener->onMouseUp = CC_CALLBACK_1(SGWorldScene::onMouseUp, this);
+	pMouseListener->onMouseMove = CC_CALLBACK_1(SGWorldScene::onMouseMove, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pMouseListener, this);
+	
+	const auto pFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_FOCUSED, CC_CALLBACK_1(SGWorldScene::onWndFocused, this));
+	const auto pLostFocusedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_UNFOCUSED, CC_CALLBACK_1(SGWorldScene::onWndLostFocused, this));
+	const auto pResizedListener = EventListenerCustom::create(GLViewImpl::EVENT_WINDOW_RESIZED, CC_CALLBACK_1(SGWorldScene::onWndResized, this));
+	const auto pCursorEnterListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_ENTER, CC_CALLBACK_1(SGWorldScene::onWndCursorEnter, this));
+	const auto pCursorLeaveListener = EventListenerCustom::create(GLViewImpl::EVENT_CURSOR_LEAVE, CC_CALLBACK_1(SGWorldScene::onWndCursorLeave, this));
+
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pFocusedListener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pLostFocusedListener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pResizedListener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pCursorEnterListener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(pCursorLeaveListener, this);
+
 }
+
+
 
 void SGWorldScene::InitUILayer() {
 	m_pUILayer = SGUILayer::create();
@@ -131,6 +147,37 @@ void SGWorldScene::updateScene(float dt) {
 	if (m_pRunningScene == nullptr || m_pRunningScene->getType() != m_eReservedScene) {
 		changeScene(m_eReservedScene);
 	}
+
+}
+
+void SGWorldScene::onWndMessageReceived(int code, WPARAM wParam, LPARAM lParam) {
+	const char* codeName = SGWndMessage::GetName(code);
+	
+}
+
+void SGWorldScene::onWndFocused(SGEventCustom* custom) {
+}
+
+void SGWorldScene::onWndLostFocused(SGEventCustom* custom) {
+}
+
+
+void SGWorldScene::onWndResized(SGEventCustom* custom) {
+	SGSize size = _director->getOpenGLView()->getFrameSize();
+}
+
+void SGWorldScene::onWndCursorEnter(SGEventCustom* custom) {
+}
+
+void SGWorldScene::onWndCursorLeave(SGEventCustom* custom) {
+	const SGVec2 leavePos = SGWin32Helper::getCursorPos();
+	EventMouse* pEventMouse = dbg_new EventMouse(EventMouse::MouseEventType::MOUSE_MOVE);
+	pEventMouse->setCursorPosition(leavePos.x, leavePos.y);
+
+	if (m_pUILayer)
+		m_pUILayer->onMouseMove(pEventMouse);
+
+	CC_SAFE_DELETE(pEventMouse);
 }
 
 void SGWorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const {
@@ -170,6 +217,8 @@ void SGWorldScene::onMouseMove(SGEventMouse* mouseEvent) const {
 	if (m_pUILayer)
 		m_pUILayer->onMouseMove(mouseEvent);
 
+
+	
 }
 
 void SGWorldScene::onMouseDown(SGEventMouse* mouseEvent) const {

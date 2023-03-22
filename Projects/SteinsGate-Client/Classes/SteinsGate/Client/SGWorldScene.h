@@ -31,12 +31,20 @@ public:
 	void update(float dt) override;
 	void updateScene(float dt);
 
+	void onWndMessageReceived(int code, WPARAM wParam, LPARAM lParam);
+	void onWndFocused(SGEventCustom* custom);
+	void onWndLostFocused(SGEventCustom* custom);
+	void onWndResized(SGEventCustom* custom);
+	void onWndCursorEnter(SGEventCustom* custom);
+	void onWndCursorLeave(SGEventCustom* custom);
+
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const;
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const;
 	void onMouseMove(SGEventMouse* mouseEvent) const;
 	void onMouseDown(SGEventMouse* mouseEvent) const;
 	void onMouseUp(SGEventMouse* mouseEvent) const;
 	void onMouseScroll(SGEventMouse* mouseEvent) const;
+	
 	void onExit() override;
 
 	void reserveScene(SceneType_t sceneType);
@@ -50,9 +58,6 @@ public:
 	SGMapLayer* getMap();
 	SGCamera* getCamera();
 private:
-	SGEventListenerKeyboard* m_pKeyboardListener;
-	SGEventListenerMouse* m_pMouseListener;
-
 	SGSceneBase* m_pRunningScene;
 	SceneType_t m_eReservedScene;
 	SGUILayer* m_pUILayer;

@@ -48,6 +48,8 @@ GLViewImpl* GLFWEventHandler::_view = nullptr;
 const std::string GLViewImpl::EVENT_WINDOW_RESIZED = "glview_window_resized";
 const std::string GLViewImpl::EVENT_WINDOW_FOCUSED = "glview_window_focused";
 const std::string GLViewImpl::EVENT_WINDOW_UNFOCUSED = "glview_window_unfocused";
+const std::string GLViewImpl::EVENT_CURSOR_ENTER = "glview_cursur_enter";
+const std::string GLViewImpl::EVENT_CURSOR_LEAVE = "glview_cursur_leave";
 
 ////////////////////////////////////////////////////
 
@@ -345,6 +347,7 @@ bool GLViewImpl::initWithRect(const std::string& viewName, Rect rect, float fram
     glfwSetWindowSizeCallback(_mainWindow, GLFWEventHandler::onGLFWWindowSizeFunCallback);
     glfwSetWindowIconifyCallback(_mainWindow, GLFWEventHandler::onGLFWWindowIconifyCallback);
     glfwSetWindowFocusCallback(_mainWindow, GLFWEventHandler::onGLFWWindowFocusCallback);
+    glfwSetCursorEnterCallback(_mainWindow, GLFWEventHandler::onGLFWCursorEnterCallback);
 
     setFrameSize(rect.size.width, rect.size.height);
 
@@ -954,6 +957,19 @@ void GLViewImpl::onGLFWWindowFocusCallback(GLFWwindow* /*window*/, int focused)
         Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLViewImpl::EVENT_WINDOW_UNFOCUSED, nullptr);
     }
 }
+
+// 윤정도: 윈도우 영역으로 커서 들어오고 나가는거 알려주는 기능 추가
+void GLViewImpl::onGLFWCursorEnterCallback(GLFWwindow* window, int enter) {
+    if (enter == GLFW_TRUE)
+    {
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLViewImpl::EVENT_CURSOR_ENTER, nullptr);
+    }
+    else
+    {
+        Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(GLViewImpl::EVENT_CURSOR_LEAVE, nullptr);
+    }
+}
+
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 static bool glew_dynamic_binding()
