@@ -64,9 +64,14 @@ public:
     virtual void setText(const char* pText) override;
     virtual void setPlaceHolder(const char* pText) override;
     virtual void setVisible(bool visible) override;
+    
 
     virtual void setMaxLength(int maxLength) override;
     virtual void setTextHorizontalAlignment(TextHAlignment alignment) override;
+
+    // ¿±¡§µµ: ∂Û∫ß ∞Ÿ≈Õ √ﬂ∞°
+    Label* getLabel() const { return _label; }
+    Label* getLabelPlaceholder() const { return _labelPlaceHolder; }
 
     virtual int  getMaxLength() override { return _maxLength; }
     virtual const char* getText(void) override { return _text.c_str(); }
@@ -108,6 +113,7 @@ public:
     virtual void onEndEditing(const std::string& text);
 
     void editBoxEditingDidBegin();
+    void nativeEditBoxFocused();
     void editBoxEditingChanged(const std::string& text);
     void editBoxEditingDidEnd(const std::string& text, EditBoxDelegate::EditBoxEndAction action = EditBoxDelegate::EditBoxEndAction::UNKNOWN);
 

@@ -64,10 +64,14 @@ namespace ui {
         virtual void nativeCloseKeyboard() override;
         virtual void setNativeMaxLength(int maxLength) override;
 
+        // À±Á¤µµ ¿¡µ÷¹Ú½º ÇÚµé °ÙÅÍ Ãß°¡
+        virtual HWND getNativeHandle() const { return _hwndEdit; }
+
     private:
         void createEditCtrl(bool singleLine);
         void cleanupEditCtrl();
         std::string getText() const;
+        
         void _WindowProc(HWND, UINT, WPARAM, LPARAM);
 
         WNDPROC _prevWndProc;

@@ -42,6 +42,7 @@ namespace ui {
 
     class EditBox;
     class EditBoxImpl;
+    class EditBoxImplCommon;
 
     /**
      *@brief Editbox delegate class.
@@ -73,6 +74,11 @@ namespace ui {
         virtual void editBoxEditingDidBegin(EditBox* /*editBox*/) {}
 
         /**
+         * // 윤정도 editBoxEditingDidBegin으로 보낸 PostMessage를 네이티브 에딧박스에서 수신한 후 호출하도록 하는 델리게이트
+         */
+        virtual void nativeEditBoxFocused(EditBox* /*editBox*/) {}
+
+        /**
          * This method is called when an edit box loses focus after keyboard is hidden.
          * @param editBox The edit box object that generated the event.
          * @deprecated Use editBoxEditingDidEndWithAction() instead to receive reason for end
@@ -85,6 +91,8 @@ namespace ui {
          * @param text The new text.
          */
         virtual void editBoxTextChanged(EditBox* /*editBox*/, const std::string& /*text*/) {}
+
+        
 
         /**
          * This method is called when the return button was pressed or the outside area of keyboard was touched.
@@ -664,6 +672,9 @@ namespace ui {
         void touchDownAction(Ref *sender, TouchEventType controlEvent);
 
         void openKeyboard() const;
+
+        // 윤정도: 에딧박스 임플 겟터 추가
+        EditBoxImplCommon* getImpl() const;
 
     protected:
         virtual void releaseUpEvent() override;

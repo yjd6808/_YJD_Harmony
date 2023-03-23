@@ -354,6 +354,7 @@ namespace ui {
                 s_previousFocusWnd = _hwndEdit;
                 _hasFocus = true;
                 this->_changedTextManually = false;
+                this->nativeEditBoxFocused();
             }
             break;
         case WM_KILLFOCUS:

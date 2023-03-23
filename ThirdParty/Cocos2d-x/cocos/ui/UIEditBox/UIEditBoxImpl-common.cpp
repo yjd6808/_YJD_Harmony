@@ -33,7 +33,7 @@
 #include "2d/CCLabel.h"
 #include "ui/UIHelper.h"
 
-static const int CC_EDIT_BOX_PADDING = 5;
+static const int CC_EDIT_BOX_PADDING = 0;
 
 static cocos2d::Size applyPadding(const cocos2d::Size& sizeToCorrect) {
     return cocos2d::Size(sizeToCorrect.width - CC_EDIT_BOX_PADDING * 2, sizeToCorrect.height);
@@ -351,6 +351,14 @@ void EditBoxImplCommon::editBoxEditingDidBegin()
         cocos2d::ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&event);
     }
 #endif
+}
+
+void EditBoxImplCommon::nativeEditBoxFocused() {
+    cocos2d::ui::EditBoxDelegate* pDelegate = _editBox->getDelegate();
+
+    if (pDelegate != nullptr) {
+        pDelegate->nativeEditBoxFocused(_editBox);
+    }
 }
 
 void EditBoxImplCommon::editBoxEditingDidEnd(const std::string& text, EditBoxDelegate::EditBoxEndAction action)
