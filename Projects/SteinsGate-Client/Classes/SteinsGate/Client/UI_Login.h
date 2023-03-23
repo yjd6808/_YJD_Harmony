@@ -14,10 +14,9 @@ class UI_Login : public SGUIMasterGroup
 {
 public:
 	UI_Login(SGUIGroupInfo* groupInfo);
-	bool init() override;
 
+	void onInit() override;
 	bool onUpdate(float dt) override;
-	bool onMouseScroll(SGEventMouse* mouseEvent) override;
 	bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 	bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 };

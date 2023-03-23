@@ -11,11 +11,13 @@
 #include "GameCoreHeader.h"
 #include "SGUISprite.h"
 
+#include <SteinsGate/Client/SGUIMasterGroup.h>
+
 USING_NS_CC;
 USING_NS_JC;
 
-SGUISprite::SGUISprite(SGUIGroup* parent, SGUISpriteInfo* staticInfo)
-	: SGUIElement(parent, staticInfo)
+SGUISprite::SGUISprite(SGUIMasterGroup* master, SGUIGroup* parent, SGUISpriteInfo* staticInfo)
+	: SGUIElement(master, parent, staticInfo)
 	, m_pInfo(staticInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -25,8 +27,8 @@ SGUISprite::~SGUISprite() {
 	CC_SAFE_RELEASE(m_pTexture);
 }
 
-SGUISprite* SGUISprite::create(SGUIGroup* parent, SGUISpriteInfo* spriteInfo) {
-	SGUISprite* pSprite = dbg_new SGUISprite(parent, spriteInfo);
+SGUISprite* SGUISprite::create(SGUIMasterGroup* master, SGUIGroup* parent, SGUISpriteInfo* spriteInfo) {
+	SGUISprite* pSprite = dbg_new SGUISprite(master, parent, spriteInfo);
 	pSprite->init();
 	pSprite->autorelease();
 	return pSprite;

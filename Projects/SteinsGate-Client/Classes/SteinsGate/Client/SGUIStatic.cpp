@@ -10,11 +10,13 @@
 #include "GameCoreHeader.h"
 #include "SGUIStatic.h"
 
+#include <SteinsGate/Client/SGUIMasterGroup.h>
+
 USING_NS_CC;
 USING_NS_JC;
 
-SGUIStatic::SGUIStatic(SGUIGroup* parent, SGUIStaticInfo* staticInfo)
-	: SGUIElement(parent, staticInfo)
+SGUIStatic::SGUIStatic(SGUIMasterGroup* master, SGUIGroup* parent, SGUIStaticInfo* staticInfo)
+	: SGUIElement(master, parent, staticInfo)
 	, m_bVisible(false)
 	, m_pInfo(staticInfo)
 	, m_pDebugTexture{}
@@ -25,8 +27,8 @@ SGUIStatic::~SGUIStatic() {
 	CC_SAFE_RELEASE(m_pDebugTexture);
 }
 
-SGUIStatic* SGUIStatic::create(SGUIGroup* parent, SGUIStaticInfo* staticInfo) {
-	SGUIStatic* pStatic = dbg_new SGUIStatic(parent, staticInfo);
+SGUIStatic* SGUIStatic::create(SGUIMasterGroup* master, SGUIGroup* parent, SGUIStaticInfo* staticInfo) {
+	SGUIStatic* pStatic = dbg_new SGUIStatic(master, parent, staticInfo);
 	pStatic->init();
 	pStatic->autorelease();
 	return pStatic;

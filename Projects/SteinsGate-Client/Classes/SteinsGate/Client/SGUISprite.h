@@ -13,15 +13,16 @@
 class SGUISprite : public SGUIElement
 {
 public:
-	SGUISprite(SGUIGroup* parent, SGUISpriteInfo* staticInfo);
+	SGUISprite(SGUIMasterGroup* master, SGUIGroup* parent, SGUISpriteInfo* staticInfo);
 	~SGUISprite() override;
 
 	bool init() override;
 	void load() override;
 	void unload() override;
 
-	static SGUISprite* create(SGUIGroup* parent, SGUISpriteInfo* spriteInfo);
+	static SGUISprite* create(SGUIMasterGroup* master, SGUIGroup* parent, SGUISpriteInfo* spriteInfo);
 	UIElementType_t getElementType() override { return UIElementType::Sprite; }
+	SGString toString() override { return SGStringUtil::Format("스프라이트(%d)", m_pInfo->Code); }
 private:
 	SGUISpriteInfo* m_pInfo;
 	SGFrameTexture* m_pTexture;

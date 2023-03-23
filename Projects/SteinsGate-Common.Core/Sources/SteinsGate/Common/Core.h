@@ -127,6 +127,9 @@ using SGDateTime = JCore::DateTime;
 using SGNormalLock = JCore::NormalLock;
 using SGRecursiveLock = JCore::RecursiveLock;
 
+template <typename... Args>
+using SGEventList = JCore::Event<Args...>;
+
 template <typename... TArgs>
 using SGTuple = JCore::Tuple<TArgs...>;
 

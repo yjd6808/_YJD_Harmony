@@ -2,6 +2,14 @@
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__3": "캐릭터 기본 정보",
 
+    "common": {
+        "default_equip_slot_count": 124,
+        "default_consume_slot_count": 64,
+        "default_etc_slot_count": 256,
+        "default_quest_slot_count": 32,
+        "default_avatar_slot_count": 256,
+    },
+
 
     "gunner": {
         "hp": 100,

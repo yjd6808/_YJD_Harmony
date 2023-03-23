@@ -13,12 +13,13 @@
 class SGUIEditBox : public SGUIElement
 {
 public:
-	SGUIEditBox(SGUIGroup* parent, SGUIEditBoxInfo* editBoxInfo);
+	SGUIEditBox(SGUIMasterGroup* maserGroup, SGUIGroup* parent, SGUIEditBoxInfo* editBoxInfo);
 	~SGUIEditBox() override;
 
 	bool init() override;
-	static SGUIEditBox* create(SGUIGroup* parent, SGUIEditBoxInfo* editBoxInfo);
+	static SGUIEditBox* create(SGUIMasterGroup* master, SGUIGroup* parent, SGUIEditBoxInfo* editBoxInfo);
 	UIElementType_t getElementType() override { return UIElementType::EditBox; }
+    SGString toString() override { return SGStringUtil::Format("에딧박스(%d)", m_pInfo->Code); }
 
     void setTextEditBeginCallback(const SGActionFn<SGUIEditBox*>& fnTextEditBegin) const;
     void setTextChangedCallback(const SGActionFn<SGUIEditBox*, const SGString&>& fnTextChanged) const;
@@ -37,6 +38,9 @@ private:
          * @param editBox The edit box object that generated the event.
          */
         void editBoxEditingDidBegin(SGEditBox* /*editBox*/) override;
+
+
+        void nativeEditBoxFocused(SGEditBox* /*editBox*/) override;
 
         /**
          * This method is called when the edit box text was changed.
@@ -67,7 +71,11 @@ private:
 	};
   
 private:
+    HWND m_hNativeHandle;
 	SGUIEditBoxInfo* m_pInfo;
+    SGLabel* m_pLabel;
+    SGLabel* m_pLabelPlaceholder;
+    SGEditBoxImplWin* m_pImpl;
 	SGEditBox* m_pEditBox;
     Listener* m_pListener;
 };

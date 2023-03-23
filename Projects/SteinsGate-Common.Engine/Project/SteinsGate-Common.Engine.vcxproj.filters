@@ -5,6 +5,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\SGColor.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SGRandomEx.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\GridLayer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGRectEx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine.h" />

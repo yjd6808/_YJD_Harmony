@@ -146,7 +146,7 @@ void SGActorPartSprite::onAnimationEnd(SGActorPartAnimation* animation, SGFrameT
 
 void SGActorPartSprite::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* texture) {
 
-	const SgaSpriteRect& rect = texture->getRect();
+	const SgaSpriteRect& rect = texture->getFullRect();
 	const int iFrameIndex = texture->getFrameIndex();
 	const int iFrameIndexInAnimation = animation->getFrameIndexInAnimation();
 

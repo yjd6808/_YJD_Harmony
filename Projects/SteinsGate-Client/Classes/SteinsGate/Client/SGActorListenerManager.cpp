@@ -21,7 +21,7 @@ SGActorListenerManager::~SGActorListenerManager() {
 	});
 }
 
-void SGActorListenerManager::initialize() {
+void SGActorListenerManager::init() {
 	m_hProjectileListenerMap.Insert(PROJECTILE_LISTENER_GUNNER_BULLET_LISTENER, dbg_new SGGunnerBulletListener);
 }
 

@@ -18,9 +18,9 @@ public:
 	ConsoleLogger();
 
 	void Flush() override;
-	void Log(Level level, const char* fmt, va_list list) override;
+	void LogVaList(Level level, const char* fmt, va_list list) override;
 	void Log(Level level, const char* fmt, ...) override ;
-	void LogPlain(const char* fmt, va_list list) override;
+	void LogPlainVaList(const char* fmt, va_list list) override;
 	void LogPlain(const char* fmt, ...) override;
 	void LogPlain(const JCore::String& str) override;
 	JCore::String CreateHeader(Level level) override;

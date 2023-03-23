@@ -6,16 +6,16 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "SGUIButton.h"
 
-#include <SteinsGate/Client/SGImagePackManager.h>
-#include <SteinsGate/Client/SGUIManager.h>
+#include <SteinsGate/Client/SGUIMasterGroup.h>
 
 USING_NS_CC;
 USING_NS_JC;
 
-SGUIButton::SGUIButton(SGUIGroup* parent, SGUIButtonInfo* btnInfo)
-	: SGUIElement(parent, btnInfo)
+SGUIButton::SGUIButton(SGUIMasterGroup* master, SGUIGroup* parent, SGUIButtonInfo* btnInfo)
+	: SGUIElement(master, parent, btnInfo)
 	, m_pInfo(btnInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -27,6 +27,14 @@ SGUIButton::~SGUIButton() {
 	CC_SAFE_RELEASE(m_pTexture[ePressed]);
 	CC_SAFE_RELEASE(m_pTexture[eDisabled]);
 }
+
+SGUIButton* SGUIButton::create(SGUIMasterGroup* master, SGUIGroup* parent, SGUIButtonInfo* btnInfo) {
+	SGUIButton* pBtn = dbg_new SGUIButton(master, parent, btnInfo);
+	pBtn->init();
+	pBtn->autorelease();
+	return pBtn;
+}
+
 
 void SGUIButton::setVisibleState(State state) {
 	for (int i = 0; i < eMax; ++i) {
@@ -56,12 +64,6 @@ void SGUIButton::setEnabled(bool enabled) {
 	setVisibleState(eDisabled);
 }
 
-SGUIButton* SGUIButton::create(SGUIGroup* parent, SGUIButtonInfo* btnInfo) {
-	SGUIButton* pBtn = dbg_new SGUIButton(parent,btnInfo);
-	pBtn->init();
-	pBtn->autorelease();
-	return pBtn;
-}
 
 void SGUIButton::restoreState(State state) {
 	if (m_eState == eDisabled)
@@ -71,9 +73,29 @@ void SGUIButton::restoreState(State state) {
 		setVisibleState(eNormal);
 }
 
+void SGUIButton::onMouseEnterDetail(SGEventMouse* mouseEvent) {
+	setVisibleState(eOver);
+}
+
+void SGUIButton::onMouseLeaveDetail(SGEventMouse* mouseEvent) {
+	setVisibleState(eNormal);
+}
+
+bool SGUIButton::onMouseMoveDetail(SGEventMouse* mouseEvent) {
+	return false;
+}
+bool SGUIButton::onMouseDownDetail(SGEventMouse* mouseEvent) {
+	setVisibleState(ePressed);
+	return false;
+}
+void SGUIButton::onMouseUpDetail(SGEventMouse* mouseEvent) {
+	setVisibleState(eNormal);
+}
+
+
 bool SGUIButton::init() {
-	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	const SGImagePack* pPack = pPackManager->getPackUnsafe(m_pInfo->Sga);
+	const SGImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+	setContentSize(DefaultSize30);
 
 	if (pPack == nullptr) {
 		_LogWarn_("버튼 Sga패키지를 찾지 못했습니다.");
@@ -136,59 +158,3 @@ void SGUIButton::unload() {
 }
 
 
-bool SGUIButton::onMouseMove(SGEventMouse* mouseEvent) {
-	if (m_eState == eDisabled ||
-		m_eState == ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const SGRect worldRect = getWorldBoundingBox();
-	const bool bContainedMouse = worldRect.containsPoint(mousePos);
-
-	if (!bContainedMouse) {
-		setVisibleState(eNormal);
-		return true;
-	}
-
-	setVisibleState(eOver);
-	return false;
-}
-
-bool SGUIButton::onMouseDown(SGEventMouse* mouseEvent) {
-	if (m_eState == eDisabled ||
-		m_eState == ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
-
-	if (!bContainedMouse) {
-		return true;
-	}
-
-	setVisibleState(ePressed);
-	return false;
-}
-
-bool SGUIButton::onMouseUp(SGEventMouse* mouseEvent) {
-	if (m_eState != ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
-
-	setVisibleState(eNormal);
-
-	if (!bContainedMouse) {
-		return true;
-	}
-
-	if (m_fnMouseClickCallback)
-		m_fnMouseClickCallback(mouseEvent);
-	
-	return false;
-}
-
-bool SGUIButton::onMouseScroll(SGEventMouse* mouseEvent) {
-	return true;
-}

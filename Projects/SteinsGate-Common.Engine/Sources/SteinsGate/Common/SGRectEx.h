@@ -9,7 +9,6 @@
 #pragma once
 
 #include "Engine.h"
-#include <JCore/Math.h>
 
 class SGRectEx : SGRect
 {
@@ -18,28 +17,8 @@ public:
 	 * \brief 인터섹트 결과와 더불어 겹쳐진 영역의 위치를 반환하도록 한다.
 	 * 하단 테스트코드 참고
 	 */
-	static bool intersect(const SGRect& rc, const SGRect& rc2, SGRect& intersectRect) {
-		if (!rc.intersectsRect(rc2)) {
-			return false;
-		}
-
-		using namespace JCore;
-
-		const float x = Math::Max(rc.getMinX(), rc2.getMinX());
-		const float y = Math::Max(rc.getMinY(), rc2.getMinY());
-		const float width = Math::Min(rc.getMaxX(), rc2.getMaxX()) - x;
-		const float height = Math::Min(rc.getMaxY(), rc2.getMaxY()) - y;
-
-		intersectRect.origin.x = x;
-		intersectRect.origin.y = y;
-		intersectRect.size.width = width;
-		intersectRect.size.height = height;
-		return true;
-	}
-
-    static void log(const SGRect& rc) {
-        CCLOG(":: 위치 [%d, %d], 크기 [%d, %d]\n", int(rc.getMinX()), int(rc.getMinY()), int(rc.getWidth()), int(rc.getHeight()));
-	}
+    static bool intersect(const SGRect& rc, const SGRect& rc2, SGRect& intersectRect);
+    static void log(const SGRect& rc);
 
     /*
     {
@@ -143,15 +122,13 @@ public:
     */
 
 
-     static bool intersectY(const SGRect& lhsThick, const SGRect& rhsThick) {
-        if (lhsThick.origin.y > rhsThick.origin.y &&
-            lhsThick.origin.y < rhsThick.origin.y + rhsThick.size.height)
-            return true;
+    // lhs와 rhs의 세로길이가 겹치는지
+	static bool intersectY(const SGRect& lhs, const SGRect& rhs);
 
-        if (lhsThick.origin.y + lhsThick.size.height > rhsThick.origin.y &&
-            lhsThick.origin.y + lhsThick.size.height < rhsThick.origin.y + rhsThick.size.height)
-            return true;
+     // rc의 가로길이와 pos의 x좌표가 겹치는지
+    static bool containsX(const SGRect& rc, const float x);
 
-        return false;
-     }
+     // rc의 세로길이와 pos의 y좌표가 겹치는지
+    static bool containsY(const SGRect& rc, const float y);
+     
 };

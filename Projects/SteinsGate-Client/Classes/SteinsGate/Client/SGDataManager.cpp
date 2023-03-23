@@ -69,7 +69,7 @@ void SGDataManager::initializeLoader() {
 	 m_pConfigFileLoaders[ConfigFileType::AI]				 = dbg_new SGAIInfoLoader(this);
 	 // m_pConfigFileLoaders[ConfigFileType::AttackBox]
 	 m_pConfigFileLoaders[ConfigFileType::AttackData]		 = dbg_new SGAttackDataInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Channel]			 = dbg_new SGCharInfoLoader(this);
+	 // m_pConfigFileLoaders[ConfigFileType::Channel]			 = dbg_new SGChannel(this);
 	 m_pConfigFileLoaders[ConfigFileType::Char_Animation]	 = dbg_new SGCharAnimationInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::Char_Base]	     = dbg_new SGCharInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::Client]			 = dbg_new SGClientInfoLoader(this);

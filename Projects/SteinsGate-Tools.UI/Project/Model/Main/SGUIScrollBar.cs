@@ -36,21 +36,22 @@ namespace SGToolsUI.Model.Main
     [CategoryOrder(Constant.ScrollBarCategoryName, Constant.OtherCategoryOrder)]
     public class SGUIScrollBar : SGUIElement, ISizeRestorable
     {
+        public const int TextureCount = 7;
         public const int IndexUpNormal = 0;
-        public const int IndexUpOver = 1;
+        public const int IndexUpPressed = 1;
         public const int IndexDownNormal = 2;
-        public const int IndexDownOver = 3;
+        public const int IndexDownPressed = 3;
         public const int IndexThumbNormal = 4;
-        public const int IndexThumbOver = 5;
+        public const int IndexThumbPressed = 5;
         public const int IndexTrack = 6;
 
         public const int OrderUpNormal = 1;
-        public const int OrderUpOver = 2;
+        public const int OrderUpPressed = 2;
         public const int OrderDownNormal = 3;
-        public const int OrderDownOver = 4;
+        public const int OrderDownPressed = 4;
         public const int OrderTrack = 5;
         public const int OrderThumbNormal = 6;
-        public const int OrderThumbOver = 7;
+        public const int OrderThumbPressed = 7;
         public const int OrderSize = 8;
         public const int OrderTrackSize = 9;
 
@@ -58,7 +59,7 @@ namespace SGToolsUI.Model.Main
 
         public SGUIScrollBar()
         {
-            _sprites = new SGUISpriteInfo[7];
+            _sprites = new SGUISpriteInfo[TextureCount];
             _visualSize = Constant.DefaultVisualSize;
         }
 
@@ -77,18 +78,18 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (ViewModel.IsEventMode)
-                    for (int i = IndexUpNormal; i <= IndexUpOver; ++i)
+                    for (int i = IndexUpNormal; i <= IndexUpPressed; ++i)
                         if (i == _upState)
                             return _sprites[i];
 
                 // 현재 상태를 우선해서 보여준다.
-                for (int i = IndexUpNormal; i <= IndexUpOver; ++i)
+                for (int i = IndexUpNormal; i <= IndexUpPressed; ++i)
                     if (i == _upState && !_sprites[i].IsNull)
                         return _sprites[i];
 
                 // 현재 상태에 맞는 스프라이트가 세팅되어있지 않으면 Order순서대로 확인해서 스프라이트 세팅된 놈으로
 
-                return _sprites.Take(new Range(IndexUpNormal, IndexUpOver)).FirstOrDefault(x => !x.IsNull);
+                return _sprites.Take(new Range(IndexUpNormal, IndexUpPressed)).FirstOrDefault(x => !x.IsNull);
             }
         }
 
@@ -101,17 +102,17 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (ViewModel.IsEventMode)
-                    for (int i = IndexDownNormal; i <= IndexDownOver; ++i)
+                    for (int i = IndexDownNormal; i <= IndexDownPressed; ++i)
                         if (i == _downState)
                             return _sprites[i];
 
                 // 현재 상태를 우선해서 보여준다.
-                for (int i = IndexDownNormal; i <= IndexDownOver; ++i)
+                for (int i = IndexDownNormal; i <= IndexDownPressed; ++i)
                     if (i == _downState && !_sprites[i].IsNull)
                         return _sprites[i];
 
                 // 현재 상태에 맞는 스프라이트가 세팅되어있지 않으면 Order순서대로 확인해서 스프라이트 세팅된 놈으로
-                return _sprites.Take(new Range(IndexDownNormal, IndexDownOver)).FirstOrDefault(x => !x.IsNull);
+                return _sprites.Take(new Range(IndexDownNormal, IndexDownPressed)).FirstOrDefault(x => !x.IsNull);
             }
         }
 
@@ -123,17 +124,17 @@ namespace SGToolsUI.Model.Main
             get
             {
                 if (ViewModel.IsEventMode)
-                    for (int i = IndexThumbNormal; i <= IndexThumbOver; ++i)
+                    for (int i = IndexThumbNormal; i <= IndexThumbPressed; ++i)
                         if (i == _thumbState)
                             return _sprites[i];
 
                 // 현재 상태를 우선해서 보여준다.
-                for (int i = IndexThumbNormal; i <= IndexThumbOver; ++i)
+                for (int i = IndexThumbNormal; i <= IndexThumbPressed; ++i)
                     if (i == _thumbState && !_sprites[i].IsNull)
                         return _sprites[i];
 
                 // 현재 상태에 맞는 스프라이트가 세팅되어있지 않으면 Order순서대로 확인해서 스프라이트 세팅된 놈으로
-                return _sprites.Take(new Range(IndexThumbNormal, IndexThumbOver)).FirstOrDefault(x => !x.IsNull);
+                return _sprites.Take(new Range(IndexThumbNormal, IndexThumbPressed)).FirstOrDefault(x => !x.IsNull);
             }
         }
 
@@ -198,13 +199,13 @@ namespace SGToolsUI.Model.Main
             OnPropertyChanged(nameof(VisualRect));
         }
 
-        [Category(Constant.ScrollBarCategoryName), DisplayName("위 Over"), PropertyOrder(OrderUpOver)]
-        public SGUISpriteInfo UpOver
+        [Category(Constant.ScrollBarCategoryName), DisplayName("위 Pressed"), PropertyOrder(OrderUpPressed)]
+        public SGUISpriteInfo UpPressed
         {
-            get => _sprites[IndexUpOver];
+            get => _sprites[IndexUpPressed];
             set
             {
-                _sprites[IndexUpOver] = value;
+                _sprites[IndexUpPressed] = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualUpSprite));
                 OnPropertyChanged(nameof(VisualUpHeight));
@@ -226,13 +227,13 @@ namespace SGToolsUI.Model.Main
                 OnSpriteChanged();
             }
         }
-        [Category(Constant.ScrollBarCategoryName), DisplayName("아래 Over"), PropertyOrder(OrderDownOver)]
-        public SGUISpriteInfo DownOver
+        [Category(Constant.ScrollBarCategoryName), DisplayName("아래 Pressed"), PropertyOrder(OrderDownPressed)]
+        public SGUISpriteInfo DownPressed
         {
-            get => _sprites[IndexDownOver];
+            get => _sprites[IndexDownPressed];
             set
             {
-                _sprites[IndexDownOver] = value;
+                _sprites[IndexDownPressed] = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualDownSprite));
                 OnPropertyChanged(nameof(VisualDownHeight));
@@ -256,13 +257,13 @@ namespace SGToolsUI.Model.Main
             }
         }
 
-        [Category(Constant.ScrollBarCategoryName), DisplayName("바 Over"), PropertyOrder(OrderThumbOver)]
-        public SGUISpriteInfo ThumbOver
+        [Category(Constant.ScrollBarCategoryName), DisplayName("바 Pressed"), PropertyOrder(OrderThumbPressed)]
+        public SGUISpriteInfo ThumbPressed
         {
-            get => _sprites[IndexThumbOver];
+            get => _sprites[IndexThumbPressed];
             set
             {
-                _sprites[IndexThumbOver] = value;
+                _sprites[IndexThumbPressed] = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VisualThumbSprite));
                 OnPropertyChanged(nameof(VisualThumbHeight));
@@ -465,11 +466,7 @@ namespace SGToolsUI.Model.Main
 
             State = StateOver;
 
-            p = ConvertElementPosition(p);
-
-            UpState = IsVisualUpRectContainPoint(p) ? IndexUpOver : IndexUpNormal;
-            DownState = IsVisualDownRectContainPoint(p) ? IndexDownOver : IndexDownNormal;
-            ThumbState = IsVisualThumbRectContainPoint(p) ? IndexThumbOver : IndexThumbNormal;
+           
 
             return false;
         }
@@ -485,6 +482,13 @@ namespace SGToolsUI.Model.Main
                 return true;
 
             State = StatePressed;
+
+            p = ConvertElementPosition(p);
+
+            UpState = IsVisualUpRectContainPoint(p) ? IndexUpPressed : IndexUpNormal;
+            DownState = IsVisualDownRectContainPoint(p) ? IndexDownPressed : IndexDownNormal;
+            ThumbState = IsVisualThumbRectContainPoint(p) ? IndexThumbPressed : IndexThumbNormal;
+
             return false;
         }
 
@@ -546,7 +550,7 @@ namespace SGToolsUI.Model.Main
 
             SgaImage img = ViewModel.PackManager.GetImg(sgaName, imgName);
             SgaPackage sga = img.Parent;
-            int[] sprites = new int[7];
+            int[] sprites = new int[TextureCount];
             StringEx.ParseIntNumberN((string)root[JsonSpriteKey], sprites);
             SGUISpriteInfoExt.ParseInfo(sga, img, in sprites, in _sprites);
 

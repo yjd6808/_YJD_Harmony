@@ -10,11 +10,13 @@
 #include "GameCoreHeader.h"
 #include "SGUIToggleButton.h"
 
+#include <SteinsGate/Client/SGUIMasterGroup.h>
+
 USING_NS_CC;
 USING_NS_JC;
 
-SGUIToggleButton::SGUIToggleButton(SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo)
-	: SGUIElement(parent, btnInfo)
+SGUIToggleButton::SGUIToggleButton(SGUIMasterGroup* master, SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo)
+	: SGUIElement(master, parent, btnInfo)
 	, m_iToggleState(StateOne)
 	, m_pInfo(btnInfo)
 	, m_pTexture{}
@@ -33,6 +35,13 @@ SGUIToggleButton::~SGUIToggleButton() {
 	CC_SAFE_RELEASE(m_pTexture[StateTwo][eDisabled]);
 }
 
+SGUIToggleButton* SGUIToggleButton::create(SGUIMasterGroup* master, SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo) {
+	SGUIToggleButton* pBtn = dbg_new SGUIToggleButton(master, parent, btnInfo);
+	pBtn->init();
+	pBtn->autorelease();
+	return pBtn;
+}
+
 void SGUIToggleButton::setVisibleState(State state) {
 
 	for (int i = 0; i < 2; i++) {
@@ -42,7 +51,6 @@ void SGUIToggleButton::setVisibleState(State state) {
 	}
 
 	m_pSprite[m_iToggleState][state]->setVisible(true);
-	m_eState = state;
 }
 
 void SGUIToggleButton::setEnabled(bool enabled) {
@@ -61,13 +69,6 @@ void SGUIToggleButton::setEnabled(bool enabled) {
 	setVisibleState(eDisabled);
 }
 
-SGUIToggleButton* SGUIToggleButton::create(SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo) {
-	SGUIToggleButton* pBtn = dbg_new SGUIToggleButton(parent, btnInfo);
-	pBtn->init();
-	pBtn->autorelease();
-	return pBtn;
-}
-
 void SGUIToggleButton::restoreState(State state) {
 	if (m_eState == eDisabled)
 		return;
@@ -77,17 +78,18 @@ void SGUIToggleButton::restoreState(State state) {
 }
 
 bool SGUIToggleButton::init() {
-	SGImagePackManager* pPackManager = SGImagePackManager::get();
-	const SGImagePack* pPack = pPackManager->getPackUnsafe(m_pInfo->Sga);
+	const SGImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+	setContentSize(DefaultSize30);
 
-	if (pPack == nullptr)
+	if (pPack == nullptr) {
+		_LogWarn_("토글버튼 Sga패키지를 찾지 못했습니다.");
 		return false;
+	}
 
 	const SgaSpriteAbstractPtr spSprite = pPack->getSpriteUnsafe(m_pInfo->Img, m_pInfo->Sprites[StateOne][eNormal]);
 
-	if (spSprite == nullptr)
-	{
-		DebugAssertMsg(false, "토글 버튼 스프라이트없음");
+	if (spSprite == nullptr) {
+		_LogWarn_("토글버튼 노말 스프라이트를 찾지 못했습니다.");
 		return false;
 	}
 
@@ -145,60 +147,28 @@ void SGUIToggleButton::unload() {
 	m_bLoaded = false;
 }
 
-
-bool SGUIToggleButton::onMouseMove(SGEventMouse* mouseEvent) {
-	if (m_eState == eDisabled ||
-		m_eState == ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const SGRect worldRect = getWorldBoundingBox();
-	const bool bContainedMouse = worldRect.containsPoint(mousePos);
-
-	if (!bContainedMouse) {
-		setVisibleState(eNormal);
-		return true;
-	}
-
+void SGUIToggleButton::onMouseEnterDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(eOver);
-	return false;
+}
+void SGUIToggleButton::onMouseLeaveDetail(SGEventMouse* mouseEvent) {
+	setVisibleState(eNormal);
 }
 
-bool SGUIToggleButton::onMouseDown(SGEventMouse* mouseEvent) {
-	if (m_eState == eDisabled ||
-		m_eState == ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
-
-	if (!bContainedMouse) {
-		return true;
-	}
-
+bool SGUIToggleButton::onMouseMoveDetail(SGEventMouse* mouseEvent) {
+	return false;
+}
+bool SGUIToggleButton::onMouseDownDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(ePressed);
 	return false;
 }
 
-bool SGUIToggleButton::onMouseUp(SGEventMouse* mouseEvent) {
-	if (m_eState != ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
-
-	if (!bContainedMouse) {
-		setVisibleState(eNormal);
-		return true;
-	}
-
-	m_iToggleState = m_iToggleState == 0 ? 1 : 0;
+void SGUIToggleButton::onMouseUpDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(eNormal);
-
-	if (m_fnMouseClickCallback)
-		m_fnMouseClickCallback(mouseEvent);
-
-	return false;
 }
 
+bool SGUIToggleButton::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
+	m_iToggleState = m_iToggleState == 0 ? 1 : 0;
+	setVisibleState(eNormal);
+	return false;
+}
 

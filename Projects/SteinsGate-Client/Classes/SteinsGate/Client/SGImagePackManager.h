@@ -18,7 +18,6 @@ public:
 		static SGImagePackManager* loader;
 		if (loader == nullptr) {
 			loader = dbg_new SGImagePackManager;
-			loader->loadAllPackages();
 		}
 		return loader;
 	}

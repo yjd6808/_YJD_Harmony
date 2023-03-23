@@ -16,26 +16,14 @@ USING_NS_JC;
 
 UI_Login::UI_Login(SGUIGroupInfo* groupInfo)
 	: SGUIMasterGroup(groupInfo)
-{
-}
+{}
 
+void UI_Login::onInit() {
 
-bool UI_Login::init() {
-
-	if (!SGUIGroup::init()) {
-		return false;
-	}
-
-	return true;
 }
 
 
 bool UI_Login::onUpdate(float dt) {
-	return true;
-}
-
-bool UI_Login::onMouseScroll(SGEventMouse* mouseEvent) {
-
 	return true;
 }
 

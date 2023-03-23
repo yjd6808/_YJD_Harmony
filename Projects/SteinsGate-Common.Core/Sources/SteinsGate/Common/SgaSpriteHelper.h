@@ -40,18 +40,20 @@ public:
 	static float GetMaxHeightF(TSprites&&... spriteArgs) {
         static_assert(sizeof...(spriteArgs) >= 1, "... need sprite parameter");
         SgaSpriteAbstractPtr sprites[] { spriteArgs... };
-        int iMaxWidth = sprites[0] != nullptr ? sprites[0]->GetWidth() : 0;
+        int iMaxHeight = sprites[0] != nullptr ? sprites[0]->GetHeight() : 0;
 
         for (int i = 1; i < sizeof...(spriteArgs); ++i) {
             if (sprites[i] == nullptr)
                 continue;
 
-            const int iTargetWidth = sprites[i]->GetWidth();
-            if (iTargetWidth > iMaxWidth) {
-                iMaxWidth = iTargetWidth;
+            const int iTargetHeight = sprites[i]->GetHeight();
+            if (iTargetHeight > iMaxHeight) {
+                iMaxHeight = iTargetHeight;
             }
         }
 
-        return iMaxWidth;
+        return iMaxHeight;
 	}
+
+
 };

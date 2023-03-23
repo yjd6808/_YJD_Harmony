@@ -16,13 +16,8 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGUIElement.h>
-#include <SteinsGate/Client/SGUIButton.h>
-#include <SteinsGate/Client/SGUISprite.h>
-#include <SteinsGate/Client/SGUILabel.h>
 #include <SteinsGate/Client/SGImagePack.h>
 #include <SteinsGate/Client/SGUIGroupMaster.h>
-
 
 class SGUIManager
 {
@@ -33,21 +28,33 @@ public:
 	static SGUIManager* get();
 
 	void init();
-	void registerGroup(SGUIGroup* group);
+	void registerMasterGroup(SGUIMasterGroup* group);
 	void registerLoadedUITexture(SgaResourceIndex index);
 	void unloadAll();
+	void onUpdate(float dt);
 
-	SGUIGroup* getGroup(int groupCode);
+	void callUIElementsUpdateCallback(float dt);
+
+	SGUIMasterGroup* getMasterGroup(int groupCode);
 	SGUIElement* getElement(int elementCode);
+	SGUIGroup* getGroup(int groupCode);
 	SGUIButton* getButton(int buttonCode);
 	SGUISprite* getSprite(int spriteCode);
 	SGUILabel* getLabel(int labelCode);
+	SGUICheckBox* getCheckBox(int checkBoxCode);
+	SGUIEditBox* getEditBox(int editBoxCode);
+	SGUIToggleButton* getToggleButton(int toggleButtonCode);
+	SGUIProgressBar* getProgressBar(int progressBarCode);
+	SGUIScrollBar* getScrollBar(int scrollBarCode);
+	SGUIStatic* getStatic(int staticCode);
 public:
 	SGUIGroupMaster* Master;
 
 private:
 	SGHashMap<Int32U, SgaResourceIndex> m_hLoadedUITexture;		// 어떤 이미지 팩 로딩했는지 기록용
 	SGHashMap<int, SGUIElement*> m_hUIElements;
-	SGHashMap<int, SGUIGroup*> m_hMasterUIGroups;
+	SGHashMap<int, SGUIMasterGroup*> m_hMasterUIGroups;
+	
+	SGHashMap<SGUIElement*, SGEventList<SGUIElement*, float>> m_hUIElementsUpdateEvent;
 };
 

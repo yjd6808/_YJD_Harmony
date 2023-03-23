@@ -22,7 +22,6 @@ public:
 
 		if (inst == nullptr) {
 			inst = new SGFontPackage;
-			inst->init();
 		}
 
 		return inst;

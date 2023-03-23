@@ -20,13 +20,16 @@ SGCharBaseInfoLoader::SGCharBaseInfoLoader(DataManagerAbstract* manager)
 
 bool SGCharBaseInfoLoader::load() {
 
-	Json::Value root;
+	Value root;
 
 	if (!loadJson(root))
 		return false;
 
 	try {
-		Json::Value& gunnerRoot = root["gunner"];
+		Value& commonRoot = root["common"];
+		readCommonInfo(commonRoot);
+
+		Value& gunnerRoot = root["gunner"];
 
 		// 다른 캐릭이 만약 추가되면 코드 변경 필요
 		SGGunnerInfo* pGunnerInfo = dbg_new SGGunnerInfo();
@@ -42,8 +45,16 @@ bool SGCharBaseInfoLoader::load() {
 	return true;
 }
 
-
-
+void SGCharBaseInfoLoader::readCommonInfo(Json::Value& commonRoot) {
+	DeleteSafe(SGCharBaseInfo::Common);
+	SGCharBaseInfo::CommonInfo* pCommon = dbg_new SGCharBaseInfo::CommonInfo;
+	pCommon->DefaultInvenSlotCount[InvenItemType::Equip] = commonRoot["default_equip_slot_count"].asInt();
+	pCommon->DefaultInvenSlotCount[InvenItemType::Consume] = commonRoot["default_consume_slot_count"].asInt();
+	pCommon->DefaultInvenSlotCount[InvenItemType::Etc] = commonRoot["default_etc_slot_count"].asInt();
+	pCommon->DefaultInvenSlotCount[InvenItemType::Quest] = commonRoot["default_quest_slot_count"].asInt();
+	pCommon->DefaultInvenSlotCount[InvenItemType::Avatar] = commonRoot["default_avatar_slot_count"].asInt();
+	SGCharBaseInfo::Common = pCommon;
+}
 
 
 void SGCharBaseInfoLoader::readCharBaseInfo(Json::Value& charBaseRoot, SGCharBaseInfo* baseInfo) {

@@ -83,7 +83,6 @@ bool SGWorldScene::init() {
 	if (!Scene::init())
 		return false;
 
-	SGDataManager::get()->loadAll();
 	initEventListeners();
 	InitUILayer();
 	reserveScene(SceneType::Login);

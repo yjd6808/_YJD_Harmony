@@ -34,24 +34,22 @@ void AppDelegate::initGLContextAttrs()
 
 
 bool AppDelegate::applicationDidFinishLaunching() {
-    
-    SGDataManager* pDataManager = SGDataManager::get();
-    SGDirector* pDirector = Director::getInstance();
 
-    CoreCommon_v = pDataManager->getCommonInfo(1);
-    CoreInfo_v = SGDataManager::get()->getClientInfo(1);
-  
     FileUtils::getInstance()->setPopupNotify(false);    // 파일못찾은 경우 알람 안하도록 함
     SGConsole::SetSize(1200, 800);
 
+    SGDataManager* pDataManager = SGDataManager::get();
+    CoreCommon_v = pDataManager->getCommonInfo(1);
+    CoreInfo_v = pDataManager->getClientInfo(1);
+
     CreateOpenGLWindow();
-    InitializeJCore();
+	InitializeJCore();
     InitializeCommonCore();
-    InitializeDefaultLogger();
     InitializeClientCore();
+    InitializeDefaultLogger();
     InitializeClientLogo();
-    InitializeWindowProcedure();
     CreateWorldScene();
+    
     
     
     return true;

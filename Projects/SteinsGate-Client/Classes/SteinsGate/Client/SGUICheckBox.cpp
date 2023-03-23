@@ -9,11 +9,13 @@
 #include "SGUICheckBox.h"
 #include "GameCoreHeader.h"
 
+#include <SteinsGate/Client/SGUIMasterGroup.h>
+
 USING_NS_CC;
 USING_NS_JC;
 
-SGUICheckBox::SGUICheckBox(SGUIGroup* parent, SGUICheckBoxInfo* checkBoxInfo)
-	: SGUIElement(parent, checkBoxInfo)
+SGUICheckBox::SGUICheckBox(SGUIMasterGroup* master, SGUIGroup* parent, SGUICheckBoxInfo* checkBoxInfo)
+	: SGUIElement(master, parent, checkBoxInfo)
 	, m_pInfo(checkBoxInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -26,6 +28,14 @@ SGUICheckBox::~SGUICheckBox() {
 	}
 }
 
+SGUICheckBox* SGUICheckBox::create(SGUIMasterGroup* master, SGUIGroup* parent, SGUICheckBoxInfo* btnInfo) {
+	SGUICheckBox* pCheckBox = dbg_new SGUICheckBox(master, parent, btnInfo);
+	pCheckBox->init();
+	pCheckBox->autorelease();
+	return pCheckBox;
+}
+
+
 void SGUICheckBox::setCheck(bool checked) {
 
 	if (m_eState == eDisabled)
@@ -34,8 +44,8 @@ void SGUICheckBox::setCheck(bool checked) {
 	m_pSprite[IndexCross]->setVisible(checked);
 	m_bChecked = checked;
 
-	if (m_fnCheckStateChangedCallback)
-		m_fnCheckStateChangedCallback(this, m_bChecked);
+	if (m_bChecked != checked)
+		m_pMasterGroup->onCheckedStateChanged(this);
 }
 
 void SGUICheckBox::setEnabled(bool enabled) {
@@ -71,20 +81,16 @@ bool SGUICheckBox::isChecked() const {
 	return m_bChecked;
 }
 
-SGUICheckBox* SGUICheckBox::create(SGUIGroup* parent, SGUICheckBoxInfo* btnInfo) {
-	SGUICheckBox* pCheckBox = dbg_new SGUICheckBox(parent, btnInfo);
-	pCheckBox->init();
-	pCheckBox->autorelease();
-	return pCheckBox;
-}
 
 bool SGUICheckBox::init() {
 
 	const SGImagePack* pBackgroundPack = CorePackManager_v->getPackUnsafe(m_pInfo->BackgroundSga);
 	const SGImagePack* pCrossPack = CorePackManager_v->getPackUnsafe(m_pInfo->CrossSga);
+	setContentSize(DefaultSize30);
 
 	// 백그라운드 팩은 없을 수도 있다. 크로스팩은 필수
 	if (pCrossPack == nullptr) {
+		_LogWarn_("체크박스 크로스 Sga패키지를 찾지 못했습니다.");
 		return false;
 	}
 
@@ -154,26 +160,7 @@ void SGUICheckBox::unload() {
 }
 
 
-
-bool SGUICheckBox::onMouseUp(SGEventMouse* mouseEvent) {
-	if (m_eState != ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
-
-	if (!bContainedMouse) {
-		return true;
-	}
-
+bool SGUICheckBox::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
 	setCheck(!m_bChecked);
-
-	if (m_fnMouseClickCallback)
-		m_fnMouseClickCallback(mouseEvent);
-
 	return false;
-}
-
-void SGUICheckBox::setCallbackCheckStateChanged(const SGActionFn<SGUICheckBox*, bool>& fnCheckStateChangedCallback) {
-	m_fnCheckStateChangedCallback = fnCheckStateChangedCallback;
 }

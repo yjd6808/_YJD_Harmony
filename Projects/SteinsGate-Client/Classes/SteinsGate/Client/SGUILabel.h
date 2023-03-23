@@ -15,12 +15,13 @@
 class SGUILabel : public SGUIElement
 {
 public:
-	SGUILabel(SGUIGroup* parent, SGUILabelInfo* labelInfo);
+	SGUILabel(SGUIMasterGroup* master, SGUIGroup* parent, SGUILabelInfo* labelInfo);
 	~SGUILabel() override;
 
 	bool init() override;
-	static SGUILabel* create(SGUIGroup* parent, SGUILabelInfo* labelInfo);
+	static SGUILabel* create(SGUIMasterGroup* master, SGUIGroup* parent, SGUILabelInfo* labelInfo);
 	UIElementType_t getElementType() override { return UIElementType::Sprite; }
+	SGString toString() override { return SGStringUtil::Format("라벨(%d)", m_pInfo->Code); }
 
 private:
 	SGUILabelInfo* m_pInfo;

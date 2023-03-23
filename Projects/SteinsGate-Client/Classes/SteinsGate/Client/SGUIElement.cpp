@@ -9,16 +9,26 @@
 #include "GameCoreHeader.h"
 #include "SGUIElement.h"
 
+#include <SteinsGate/Client/SGUIMasterGroup.h>
+#include <SteinsGate/Client/SGUIDefine.h>
+
 USING_NS_CC;
 USING_NS_JC;
 
-SGUIElement::SGUIElement(SGUIGroup* parent, SGUIElementInfo* info)
+SGUIElement::SGUIElement(SGUIMasterGroup* masterGroup, SGUIGroup* parent, SGUIElementInfo* info)
 	: m_pBaseInfo(info)
+	, m_pMasterGroup(masterGroup)
 	, m_pParent(parent)
 	, m_eState(eNormal)
 	, m_bLoaded(false)
 	, m_bFocused(false)
-	, m_fnMouseClickCallback(nullptr) {
+	, m_pMouseEventMap{}
+{}
+
+SGUIElement::~SGUIElement() {
+	for (int i = 0; i < eMouseEventMax; ++i) {
+		DeleteSafe(m_pMouseEventMap[i]);
+	}
 }
 
 void SGUIElement::load() {
@@ -48,55 +58,77 @@ void SGUIElement::restoreState(State state) {
 	m_eState = eNormal;
 }
 
+
+bool SGUIElement::isContainPoint(SGEventMouse* mouseEvent) {
+	const Vec2 mousePos = mouseEvent->getCursorPos();
+	const Rect boundingBox = { _position.x, _position.y, _contentSize.width, _contentSize.height };
+	return boundingBox.containsPoint(mousePos);
+}
+
+
 bool SGUIElement::onMouseMove(SGEventMouse* mouseEvent) {
-	if (m_eState == eDisabled ||
-		m_eState == ePressed)
+	if (m_eState == eDisabled)
 		return true;
 
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const SGRect worldRect = getWorldBoundingBox();
-	const bool bContainedMouse = worldRect.containsPoint(mousePos);
+	if (!isContainPoint(mouseEvent)) {
 
-	if (!bContainedMouse) {
+		if (m_eState == eOver) {
+			m_pMasterGroup->onMouseLeave(this, mouseEvent);
+			onMouseLeaveDetail(mouseEvent);
+			invokeMouseEvent(eMouseEventLeave, mouseEvent);
+
+			// 눌리고있는 상태인 경우, 눌린걸 해제했을때 Normal로 바꿔줘야한다.
+			if (m_eState != ePressed)
+				m_eState = eNormal;
+		}
+
+		return true;
+	}
+
+	if (m_eState == eNormal) {
+		m_pMasterGroup->onMouseEnter(this, mouseEvent);
+		invokeMouseEvent(eMouseEventEnter, mouseEvent);
+		onMouseEnterDetail(mouseEvent);
+		m_eState = eOver;
+		
+	}
+
+	m_pMasterGroup->onMouseMove(this, mouseEvent);
+	invokeMouseEvent(eMouseEventMove, mouseEvent);
+	return onMouseMoveDetail(mouseEvent);
+}
+
+bool SGUIElement::onMouseDown(SGEventMouse* mouseEvent) {
+	if (m_eState == eDisabled)
+		return true;
+
+	if (!isContainPoint(mouseEvent)) {
+		return true;
+	}
+
+	m_pMasterGroup->onMouseDown(this, mouseEvent);
+	invokeMouseEvent(eMouseEventDown, mouseEvent);
+	m_eState = ePressed;
+	return onMouseDownDetail(mouseEvent);
+}
+
+bool SGUIElement::onMouseUp(SGEventMouse* mouseEvent) {
+	onMouseUpDetail(mouseEvent);
+	invokeMouseEvent(eMouseEventUp, mouseEvent);
+
+	if (!isContainPoint(mouseEvent)) {
 		m_eState = eNormal;
 		return true;
 	}
 
-	m_eState = eOver;
-	return true;
-}
+	if (m_eState == ePressed) {
+		m_pMasterGroup->onMouseUp(this, mouseEvent);
+		invokeMouseEvent(eMouseEventUpContained, mouseEvent);
+		const bool bPropagate = onMouseUpContainedDetail(mouseEvent);
 
-bool SGUIElement::onMouseDown(SGEventMouse* mouseEvent) {
-	if (m_eState == eDisabled ||
-		m_eState == ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
-
-	if (!bContainedMouse) {
-		return true;
+		m_eState = eNormal;
+		return bPropagate;
 	}
-
-	m_eState = ePressed;
-	return true;
-}
-
-bool SGUIElement::onMouseUp(SGEventMouse* mouseEvent) {
-	if (m_eState != ePressed)
-		return true;
-
-	const Vec2 mousePos = mouseEvent->getCursorPos();
-	const bool bContainedMouse = getWorldBoundingBox().containsPoint(mousePos);
-
-	m_eState = eNormal;
-
-	if (!bContainedMouse) {
-		return true;
-	}
-
-	if (m_fnMouseClickCallback)
-		m_fnMouseClickCallback(mouseEvent);
 
 	return true;
 }
@@ -105,14 +137,35 @@ bool SGUIElement::onMouseScroll(SGEventMouse* mouseEvent) {
 	if (m_eState == eDisabled)
 		return true;
 
-	return true;
+	if (!isContainPoint(mouseEvent)) {
+		return true;
+	}
+
+	m_pMasterGroup->onMouseScroll(this, mouseEvent);
+	invokeMouseEvent(eMouseEventScroll, mouseEvent);
+	return onMouseScrollDetail(mouseEvent);
 }
 
-void SGUIElement::updateState() {
+void SGUIElement::onMouseEnterDetail(SGEventMouse* mouseEvent) {}
+void SGUIElement::onMouseLeaveDetail(SGEventMouse* mouseEvent) {}
+bool SGUIElement::onMouseMoveDetail(SGEventMouse* mouseEvent) { return true; }
+bool SGUIElement::onMouseDownDetail(SGEventMouse* mouseEvent) { return true; }
+void SGUIElement::onMouseUpDetail(SGEventMouse* mouseEvent) {}
+bool SGUIElement::onMouseUpContainedDetail(SGEventMouse* mouseEvent) { return true; }
+bool SGUIElement::onMouseScrollDetail(SGEventMouse* mouseEvent) { return true; }
+
+void SGUIElement::updateState() {}
+
+SGVec2 SGUIElement::getAbsolutePosition() const {
+	SGVec2 thisAbsolutePos = getPosition();
+	while (m_pParent != nullptr) {
+		thisAbsolutePos += m_pParent->getPosition();
+	}
+	return thisAbsolutePos;
 }
 
-void SGUIElement::setCallbackClick(const SGActionFn<SGEventMouse*>& callback) {
-	m_fnMouseClickCallback = callback;
+SGVec2 SGUIElement::getRelativePositionOnElement(SGVec2 absolutePos) const {
+	return absolutePos - getAbsolutePosition();
 }
 
 SGRect SGUIElement::getWorldBoundingBox() const {
@@ -137,7 +190,7 @@ void SGUIElement::setEnabled(bool enabled) {
 }
 
 
-SGVec2 SGUIElement::relativePositionInRect(
+SGVec2 SGUIElement::getRelativePositionInRect(
 	const SGRect& rc,
 	float origin_x,
 	float origin_y) const
@@ -164,10 +217,35 @@ SGVec2 SGUIElement::relativePositionInRect(
 void SGUIElement::setPositionRelative(float x, float y) {
 	// 마스터 그룹들은 실제 부모가 없음.
 	const SGRect rect = isMasterGroup() ? SGRect{0, 0, CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight} : m_pParent->getWorldBoundingBox();
-	const SGVec2 realPos = relativePositionInRect(rect, x, y);
+	const SGVec2 realPos = getRelativePositionInRect(rect, x, y);
 	setPosition(realPos);
 }
 
 void SGUIElement::setPositionRelative(const SGVec2& pos) {
 	setPositionRelative(pos.x, pos.y);
+}
+
+void SGUIElement::invokeMouseEvent(MouseEventType mouseEventType, SGEventMouse* mouseEvent) {
+	if (m_pMouseEventMap[mouseEventType] == nullptr) {
+		return;
+	}
+
+	m_pMouseEventMap[mouseEventType]->Invoke(mouseEvent);
+}
+
+void SGUIElement::addMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn) {
+	if (m_pMouseEventMap[mouseEventType] == nullptr)
+		m_pMouseEventMap[mouseEventType] = new SGMouseEventList;
+
+	m_pMouseEventMap[mouseEventType]->Register(fn);
+}
+
+void SGUIElement::removeMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn) {
+	if (m_pMouseEventMap[mouseEventType] == nullptr) {
+		return;
+	}
+
+	if (!m_pMouseEventMap[mouseEventType]->Unregister(fn)) {
+		_LogWarn_("%s %d 마우스 이벤트를 제거하는데 실패했습니다..", toString().Source(), mouseEventType);
+	}
 }

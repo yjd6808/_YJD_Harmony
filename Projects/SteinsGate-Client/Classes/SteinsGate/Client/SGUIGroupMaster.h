@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGUIGroup.h>
+#include <SteinsGate/Client/SGUIMasterGroup.h>
+
 
 class SGUIGroupMaster : public cocos2d::Ref
 {
@@ -18,10 +19,10 @@ public:
 
 	static SGUIGroupMaster* createRetain();
 	void init();
-	void addMasterGroup(SGUIGroup* group);
-	void forEach(const SGActionFn<SGUIGroup*>& action);
+	void addMasterGroup(SGUIMasterGroup* group);
+	void forEach(const SGActionFn<SGUIMasterGroup*>& action);
 private:
 	SGUIGroupInfo* m_pInfo;
-	SGVector<SGUIGroup*> m_vMasterGroupList;
+	SGVector<SGUIMasterGroup*> m_vMasterGroupList;
 };
 

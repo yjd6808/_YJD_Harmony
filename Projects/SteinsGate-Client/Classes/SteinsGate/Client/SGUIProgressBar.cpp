@@ -9,11 +9,13 @@
 #include "GameCoreHeader.h"
 #include "SGUIProgressBar.h"
 
+#include <SteinsGate/Client/SGUIMasterGroup.h>
+
 USING_NS_CC;
 USING_NS_JC;
 
-SGUIProgressBar::SGUIProgressBar(SGUIGroup* parent, SGUIProgressBarInfo* progressBarInfo)
-	: SGUIElement(parent, progressBarInfo)
+SGUIProgressBar::SGUIProgressBar(SGUIMasterGroup* master, SGUIGroup* parent, SGUIProgressBarInfo* progressBarInfo)
+	: SGUIElement(master, parent, progressBarInfo)
 	, m_pInfo(progressBarInfo)
 	, m_pTexture{}
 	, m_pProgressBar{}
@@ -24,8 +26,8 @@ SGUIProgressBar::~SGUIProgressBar() {
 	CC_SAFE_RELEASE(m_pTexture);
 }
 
-SGUIProgressBar* SGUIProgressBar::create(SGUIGroup* parent, SGUIProgressBarInfo* progressBarInfo) {
-	SGUIProgressBar* pProgressBar = dbg_new SGUIProgressBar(parent, progressBarInfo);
+SGUIProgressBar* SGUIProgressBar::create(SGUIMasterGroup* master, SGUIGroup* parent, SGUIProgressBarInfo* progressBarInfo) {
+	SGUIProgressBar* pProgressBar = dbg_new SGUIProgressBar(master, parent, progressBarInfo);
 	pProgressBar->init();
 	pProgressBar->autorelease();
 	return pProgressBar;

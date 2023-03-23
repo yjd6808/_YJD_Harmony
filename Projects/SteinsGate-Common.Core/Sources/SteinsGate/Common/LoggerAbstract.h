@@ -30,9 +30,9 @@ public:
 
 	
 	virtual void Flush() = 0;
-	virtual void Log(Level level, const char* fmt, va_list list) = 0;
+	virtual void LogVaList(Level level, const char* fmt, va_list list) = 0;
 	virtual void Log(Level level, const char* fmt, ...);
-	virtual void LogPlain(const char* fmt, va_list list) = 0;
+	virtual void LogPlainVaList(const char* fmt, va_list list) = 0;
 	virtual void LogPlain(const char* fmt, ...);
 	virtual void LogPlain(const JCore::String& str);
 	virtual JCore::String CreateHeader(Level level);

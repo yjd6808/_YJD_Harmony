@@ -62,7 +62,7 @@ public:
 		m_MethodChain.Clear();
 	}
 
-	void Invoke(Args&&... params) {
+	void Invoke(Args... params) {
 		m_MethodChain.Extension().ForEach([&params...](Callback& fn) {
 			fn.Invoke(Forward<Args>(params)...);
 		});

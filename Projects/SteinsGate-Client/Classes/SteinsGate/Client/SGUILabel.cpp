@@ -11,11 +11,13 @@
 #include "SGUILabel.h"
 #include "GameCoreHeader.h"
 
+#include <SteinsGate/Client/SGUIMasterGroup.h>
+
 USING_NS_CC;
 USING_NS_JC;
 
-SGUILabel::SGUILabel(SGUIGroup* parent, SGUILabelInfo* labelInfo)
-	: SGUIElement(parent, labelInfo)
+SGUILabel::SGUILabel(SGUIMasterGroup* master, SGUIGroup* parent, SGUILabelInfo* labelInfo)
+	: SGUIElement(master, parent, labelInfo)
 	, m_pInfo(labelInfo)
 	, m_pLabel{nullptr}
 {}
@@ -23,8 +25,8 @@ SGUILabel::SGUILabel(SGUIGroup* parent, SGUILabelInfo* labelInfo)
 SGUILabel::~SGUILabel() {
 }
 
-SGUILabel* SGUILabel::create(SGUIGroup* parent, SGUILabelInfo* labelInfo) {
-	SGUILabel* pLabel = dbg_new SGUILabel(parent, labelInfo);
+SGUILabel* SGUILabel::create(SGUIMasterGroup* master, SGUIGroup* parent, SGUILabelInfo* labelInfo) {
+	SGUILabel* pLabel = dbg_new SGUILabel(master, parent, labelInfo);
 	pLabel->init();
 	pLabel->autorelease();
 	return pLabel;
@@ -43,7 +45,7 @@ bool SGUILabel::init() {
 	m_pLabel->enableWrap(m_pInfo->TextWrap);
 	m_pLabel->setAnchorPoint(Vec2::ZERO);
 	this->addChild(m_pLabel);
-
+	this->setContentSize(m_pInfo->Size);
 	return true;
 }
 

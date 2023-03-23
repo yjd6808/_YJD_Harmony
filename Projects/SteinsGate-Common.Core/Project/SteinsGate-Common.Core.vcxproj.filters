@@ -240,5 +240,8 @@
     <Filter Include="Data\Enchant">
       <UniqueIdentifier>{7ecb621d-16c9-4574-9790-51505d3f1d42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data\Database">
+      <UniqueIdentifier>{fc0ef7b1-0e5f-4208-8da9-997f50e6e087}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

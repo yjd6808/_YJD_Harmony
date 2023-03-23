@@ -11,8 +11,10 @@
 
 class SGUIToggleButton : public SGUIElement
 {
+	static constexpr int StateOne = 0;
+	static constexpr int StateTwo = 1;
 public:
-	SGUIToggleButton(SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo);
+	SGUIToggleButton(SGUIMasterGroup* master, SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo);
 	~SGUIToggleButton() override;
 
 	bool init() override;
@@ -23,12 +25,18 @@ public:
 	void setEnabled(bool enabled) override;
 	int getToggleState() const { return m_iToggleState; }
 
-	static SGUIToggleButton* create(SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo);
+	static SGUIToggleButton* create(SGUIMasterGroup* master, SGUIGroup* parent, SGUIToggleButtonInfo* btnInfo);
 	void restoreState(State state) override;
-	bool onMouseMove(SGEventMouse* mouseEvent) override;
-	bool onMouseDown(SGEventMouse* mouseEvent) override;
-	bool onMouseUp(SGEventMouse* mouseEvent) override;
+
+	void onMouseEnterDetail(SGEventMouse* mouseEvent) override;
+	void onMouseLeaveDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;
+	void onMouseUpDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseUpContainedDetail(SGEventMouse* mouseEvent) override;
+
 	UIElementType_t getElementType() override { return UIElementType::ToggleButton; }
+	SGString toString() override { return SGStringUtil::Format("토글버튼(%d)", m_pInfo->Code); }
 private:
 	int m_iToggleState;
 	SGUIToggleButtonInfo* m_pInfo;

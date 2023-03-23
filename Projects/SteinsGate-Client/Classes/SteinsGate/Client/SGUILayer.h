@@ -28,6 +28,8 @@ public:
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
+	SGUIMasterGroup* findGroup(int groupCode);
+	void forEach(const SGActionFn<SGUIMasterGroup*>& actionFn);
 	void addUIGroup(int groupCode);
 	void removeUIGroup(int groupCode);
 	void clear();

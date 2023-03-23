@@ -17,10 +17,11 @@ USING_NS_JS;
 USING_NS_CC;
 
 SGInven::SGInven()
-	: m_hashInven{}
-	, m_EquipedItemList{}
+	: m_EquipedItemList{}
 	, m_EquipedAvatarList{}
-{}
+	, m_hashInven{}
+	, m_iAvailableSlotCount{} {
+}
 
 SGInven* SGInven::get() {
 	static SGInven* s_pInst;
@@ -30,6 +31,13 @@ SGInven* SGInven::get() {
 	}
 
 	return s_pInst;
+}
+
+void SGInven::init() {
+	for (int i = 0; i < InvenItemType::Max; ++i) {
+		const SGCharBaseInfo::CommonInfo* pCommon = SGCharBaseInfo::getCommon();
+		m_iAvailableSlotCount[i] = pCommon->DefaultInvenSlotCount[i];
+	}
 }
 
 WeaponType_t SGInven::getWeaponType() {
@@ -81,4 +89,8 @@ void SGInven::getVisualInfo(Out_ VisualInfo& info, int defaultCharType) {
 		// 디폴트는 존재하고 낀 비주얼 장비가 없으면 교체한다.
 		info.PushBack(&pCharInfo->Visual[i][0], pCharInfo->VisualCount[i]);
 	}
+}
+
+int SGInven::getAvailableSlotCount(InvenItemType_t invenType) {
+	return m_iAvailableSlotCount[invenType];
 }

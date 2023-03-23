@@ -38,7 +38,14 @@ void InitializeClientCore() {
 	CoreWorld_v					= SGWorldScene::get();
 	CoreActorListenerManager_v  = SGActorListenerManager::get();
 	CoreActorBox_v				= SGActorBox::get();
-	
+
+	CoreGlobal_v->init();
+	CorePackManager_v->loadAllPackages();
+	CoreFont_v->init();
+	CoreDataManager_v->loadAll();
+	CoreUIManager_v->init();
+	CoreInven_v->init();
+	CoreActorListenerManager_v->init();
 }
 
 void FinalizeClientCore() {

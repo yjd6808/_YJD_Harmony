@@ -18,14 +18,13 @@ private:
 public:
 	~SGActorListenerManager();
 
-	void initialize();
+	void init();
 
 	static SGActorListenerManager* get() {
 		static SGActorListenerManager* s_pManager;
 
 		if (s_pManager == nullptr) {
 			s_pManager = dbg_new SGActorListenerManager;
-			s_pManager->initialize();
 		}
 		return s_pManager;
 	}

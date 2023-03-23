@@ -14,7 +14,7 @@
 class SGUIStatic : public SGUIElement
 {
 public:
-	SGUIStatic(SGUIGroup* parent, SGUIStaticInfo* staticInfo);
+	SGUIStatic(SGUIMasterGroup* master, SGUIGroup* parent, SGUIStaticInfo* staticInfo);
 	~SGUIStatic() override;
 
 	bool init() override;
@@ -22,8 +22,9 @@ public:
 	void unload() override;
 
 	void setDebugVisible(bool visible);
-	static SGUIStatic* create(SGUIGroup* parent, SGUIStaticInfo* staticInfo);
+	static SGUIStatic* create(SGUIMasterGroup* master, SGUIGroup* parent, SGUIStaticInfo* staticInfo);
 	UIElementType_t getElementType() override { return UIElementType::Static; }
+	SGString toString() override { return SGStringUtil::Format("스태틱(%d)", m_pInfo->Code); }
 private:
 	bool m_bVisible;
 	SGUIStaticInfo* m_pInfo;

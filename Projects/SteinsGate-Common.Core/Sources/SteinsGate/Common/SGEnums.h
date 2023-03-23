@@ -409,8 +409,24 @@ ScrollBar,
 ProgressBar,
 Static,
 Max
-SEnumEnd(UIElementType)
 
+SEnumMiddle(UIElementType)
+
+static constexpr const char* Name[Max]{
+	"그룹",
+	"버튼",
+	"라벨",
+	"스프라이트",
+	"에딧박스",
+	"체크박스",
+	"토글버튼",
+	"스크롤바",
+	"프로그래스바",
+	"스태틱"
+};
+
+
+SEnumMiddleEnd(UIElementType)
 
 
 SEnumBegin(ConfigFileType)
@@ -507,6 +523,7 @@ Weapon,				// 무기
 Title,				// 칭호
 Avatar,				// 아바타
 EndEquip = Avatar,
+MaxInvenEquip = EndEquip,
 MaxEquip = EndEquip + 1,
 Consume = MaxEquip,	// 소모품
 Etc,				// 기타

@@ -21,7 +21,6 @@ public:
 
 		if (loader == nullptr) {
 			loader = dbg_new SGGlobal;
-			loader->initialize();
 		}
 		return loader;
 	}
@@ -29,6 +28,7 @@ public:
 	SGGlobal();
 	~SGGlobal();
 
+	void init();
 	int convertAvatarPartNameToType(const SGString& str);
 	void toggleDrawThicknessBox();
 	void toggleDrawBodyBoundingBox();
@@ -48,7 +48,7 @@ public:
 	bool DrawEffect;
 	bool DrawUIStatic;
 private:
-	void initialize();
+	
 
 	// 런타임 중 변경가능
 	

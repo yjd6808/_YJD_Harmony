@@ -37,7 +37,7 @@ void ConsoleLogger::Flush() {
 		m_Lock.Unlock();
 }
 
-void ConsoleLogger::Log(Level level, const char* fmt, va_list list) {
+void ConsoleLogger::LogVaList(Level level, const char* fmt, va_list list) {
 
 	bool bUseLock = m_bUseLock;
 
@@ -61,11 +61,11 @@ void ConsoleLogger::Log(Level level, const char* fmt, va_list list) {
 void ConsoleLogger::Log(Level level, const char* fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	Log(level, fmt, args);
+	LogVaList(level, fmt, args);
 	va_end(args);
 }
 
-void ConsoleLogger::LogPlain(const char* fmt, va_list list) {
+void ConsoleLogger::LogPlainVaList(const char* fmt, va_list list) {
 	bool bUseLock = m_bUseLock;
 
 	if (bUseLock)
@@ -87,7 +87,7 @@ void ConsoleLogger::LogPlain(const char* fmt, va_list list) {
 void ConsoleLogger::LogPlain(const char* fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
-	LogPlain(fmt, args);
+	LogPlainVaList(fmt, args);
 	va_end(args);
 }
 

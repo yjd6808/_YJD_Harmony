@@ -13,7 +13,7 @@
 class SGUIProgressBar : public SGUIElement
 {
 public:
-	SGUIProgressBar(SGUIGroup* parent, SGUIProgressBarInfo* progressBarInfo);
+	SGUIProgressBar(SGUIMasterGroup* master, SGUIGroup* parent, SGUIProgressBarInfo* progressBarInfo);
 	~SGUIProgressBar() override;
 
 	bool init() override;
@@ -23,8 +23,9 @@ public:
 	void setPercent(float percent) const;
 	float getPercent() const;
 
-	static SGUIProgressBar* create(SGUIGroup* parent, SGUIProgressBarInfo* progressBarInfo);
+	static SGUIProgressBar* create(SGUIMasterGroup* master, SGUIGroup* parent, SGUIProgressBarInfo* progressBarInfo);
 	UIElementType_t getElementType() override { return UIElementType::ProgressBar; }
+	SGString toString() override { return SGStringUtil::Format("프로그래스바(%d)", m_pInfo->Code); }
 private:
 	SGUIProgressBarInfo* m_pInfo;
 	SGFrameTexture* m_pTexture;

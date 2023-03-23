@@ -26,9 +26,9 @@ public:
 	virtual int getY()			 = 0;
 	virtual int getFrameWidth()	 = 0;
 	virtual int getFrameHeight() = 0;
-	
-	virtual int getTargetFrameIndex()		= 0;
-	virtual const SgaSpriteRect& getRect()  = 0;
+
+	virtual int getTargetFrameIndex()			= 0;
+	virtual const SgaSpriteRect& getFullRect()  = 0;
 
 	virtual float getWidthF() 	 	= 0;
 	virtual float getHeightF()	 	= 0;
@@ -39,7 +39,9 @@ public:
 	virtual SGTexture* getTexture() = 0;
 	virtual bool isLinearDodged()	= 0;
 	virtual SGSize getSize()		= 0;
+	virtual SGRect getRect()		= 0;
 	virtual SGString toString()		= 0;
+	virtual bool isDefaultTexture() const { return false; }
 
 	virtual bool isLink()  = 0;
 	virtual bool isDummy() = 0;
@@ -48,8 +50,6 @@ public:
 protected:
 	int m_iFrameIndex;
 };
-
-
 
 class SGSpriteFrameTexture : public SGFrameTexture
 {
@@ -80,7 +80,8 @@ public:
 	
 
 	int getTargetFrameIndex()		override { return m_iFrameIndex; }
-	const SgaSpriteRect& getRect() 	override { return m_Rect; }
+	const SgaSpriteRect& getFullRect() 	override { return m_Rect; }
+	SGRect getRect() override { return { (float)m_Rect.X, (float)m_Rect.Y, (float)m_Rect.Width, (float)m_Rect.Height }; }
 	SGTexture* getTexture() { return m_pTexture; }
 
 	bool isLink()  override { return false;		}
@@ -116,13 +117,14 @@ public:
 	float getFrameWidthF()	 override { return 0; }
 	float getFrameHeightF()  override { return 1; }
 	SGSize getSize()		 override { return { 1, 1 }; }
+	SGRect getRect() override { return { 0, 0, 1, 1 }; }
 
 	int getTargetFrameIndex()		 override { return m_iTargetFrameIndex; }
 	SGString toString()		 override { return SGStringUtil::Format("프레임(%d) 링크(%d)", m_iFrameIndex, m_iTargetFrameIndex); }
 
 #pragma warning(push, 1)
 #pragma warning(disable: 4172) // return local variable address
-	const SgaSpriteRect& getRect() 	 override { return {}; }
+	const SgaSpriteRect& getFullRect() 	 override { return {}; }
 #pragma warning(pop)
 	SGTexture* getTexture() override { return nullptr; }
 
@@ -131,6 +133,14 @@ public:
 	bool isLinearDodged() override { return false; }
 protected:
 	int m_iTargetFrameIndex;
+};
+
+class SGSpriteFrameDefaultTexture : public SGSpriteFrameTexture
+{
+public:
+	SGSpriteFrameDefaultTexture(SGTexture* texture, const SgaSpriteRect& rect)
+		: SGSpriteFrameTexture(texture, rect, 0, false, false) {}
+	bool isDefaultTexture() const override { return true; }
 };
 
 

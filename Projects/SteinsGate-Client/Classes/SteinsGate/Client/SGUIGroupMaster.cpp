@@ -55,11 +55,11 @@ void SGUIGroupMaster::init() {
 	createMasterGroup<UI_Inventory>(this, hMasterGroupInfoMap[GROUP_UI_INVENTORY]);
 }
 
-void SGUIGroupMaster::addMasterGroup(SGUIGroup* group) {
+void SGUIGroupMaster::addMasterGroup(SGUIMasterGroup* group) {
 	m_vMasterGroupList.PushBack(group);
 }
 
-void SGUIGroupMaster::forEach(const SGActionFn<SGUIGroup*>& action) {
+void SGUIGroupMaster::forEach(const SGActionFn<SGUIMasterGroup*>& action) {
 	m_vMasterGroupList.Extension().ForEach(action);
 }
 
