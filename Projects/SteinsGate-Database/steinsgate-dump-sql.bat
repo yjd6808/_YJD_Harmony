@@ -1,0 +1,1 @@
+mysqldump --defaults-extra-file=steinsgate-dump.conf --databases steinsgate --user=root > steinsgate-dump.sql

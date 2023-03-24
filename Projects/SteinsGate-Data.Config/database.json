@@ -1,0 +1,21 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "DB 설정 파일",
+    "__comment__2": "max_connection, thread_count, connection_pool_size, use 숫자 배열은 SGEnum.h의 ServerProcessType[Center, Auth, Lobby, Game] 순이다.",
+
+    "database": [
+        {
+            "code": 1,
+            "name": "게임 DB",
+            "hostname": "127.0.0.1",
+            "connection_port": 3306,
+            "use": "1 1 1 1",
+            "connection_pool_size": "5 10 10 25",
+            "max_connection": "5 20 20 50",
+            "iocp_thread_count": "1 2 2 4",
+            "account_id": "root",
+            "account_pass": "1234",
+            "schema_name": "steinsgate"
+        }
+    ]
+}

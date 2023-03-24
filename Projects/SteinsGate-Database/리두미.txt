@@ -1,0 +1,13 @@
+[steinsgate.mwb]
+MySQL 모델파일, 워크벤치 ERD 툴로 그린 슈타인즈게이트 테이블 구조
+워크벤치로 실행하면됨.
+
+[steinsgate.sql]
+직접 손으로 작성한 쿼리
+
+[steinsgate-dump.conf]
+mysqldump의 -p 파라미터 전달로 물어보는 패스워드 입력용
+https://serverfault.com/questions/303537/mysqldump-is-there-any-way-i-can-enter-the-password-with-p-or-password
+
+[steinsgate-dump-sql.bat]
+현재 구성된 슈타인즈게이트 스키마를 SQL파일로 추출함
