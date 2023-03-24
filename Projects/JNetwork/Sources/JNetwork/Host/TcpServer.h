@@ -29,6 +29,9 @@ public:
 	~TcpServer() override;
 
 
+	// 커스텀 세션 생성을 위한 버철
+	virtual TcpSession* CreateSession();
+
 	// 초기 IOCP 쓰레드 수
 	// TcpServer를 상속받은 서버에서 이 함수를 오버라이딩 해서 IOCP에서 관리할 쓰레드 수를 조절 할 수 있도록 하자.
 	bool Start(const IPv4EndPoint& localEndPoint) override;

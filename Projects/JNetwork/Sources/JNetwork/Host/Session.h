@@ -60,8 +60,8 @@ public:
 	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) = 0;
 	virtual void NotifyCommand(ICommand* cmd) = 0;
 
-	void AddPendingCount()		{ ++m_iOveralappedPendingCount;		}
-	void DecreasePendingCount()	{ --m_iOveralappedPendingCount;		}
+	int	 AddPendingCount()		{ return ++m_iOveralappedPendingCount;	}
+	int  DecreasePendingCount()	{ return --m_iOveralappedPendingCount;	}
 	int  GetPendingCount()		{ return m_iOveralappedPendingCount;	}
 	void WaitForZeroPending();
 protected:

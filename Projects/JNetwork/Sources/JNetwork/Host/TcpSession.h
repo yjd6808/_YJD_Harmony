@@ -34,7 +34,8 @@ public:
 	bool Accepted(Int32UL receivedBytes);
 	void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) override;
 	Type GetType() const override { return eSession; }
-private:
+
+protected:
 	TcpServer* m_pServer;
 };
 

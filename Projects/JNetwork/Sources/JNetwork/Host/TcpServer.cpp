@@ -34,6 +34,10 @@ TcpServer::~TcpServer() {
 	DeleteSafe(m_pContainer);
 }
 
+TcpSession* TcpServer::CreateSession() {
+	return dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
+}
+
 
 void TcpServer::SessionDisconnected(TcpSession* session) {
 	m_pEventListener->OnDisconnected(session);
@@ -106,7 +110,7 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 
 	// 세션을 미리 생성해놓고 연결 대기 상태로 둠
 	for (int i = 0; i < MaxConnection(); i++) {
-		TcpSession* session = dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
+		TcpSession* session = CreateSession(); 
 
 		session->AcceptWait();
 

@@ -62,6 +62,7 @@ public:
 		m_MethodChain.Clear();
 	}
 
+	// 복사 버라이어딕 주의
 	void Invoke(Args... params) {
 		m_MethodChain.Extension().ForEach([&params...](Callback& fn) {
 			fn.Invoke(Forward<Args>(params)...);
