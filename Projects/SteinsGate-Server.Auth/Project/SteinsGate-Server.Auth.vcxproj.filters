@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthCore.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\DataManager.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\Auth.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthServer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthNetMaster.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthNetGroup.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthEventListener.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthSession.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthCoreHeader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthCore.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\Auth.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthServer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthNetMaster.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthNetGroup.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthEventListener.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthSession.h" />
+  </ItemGroup>
+</Project>
