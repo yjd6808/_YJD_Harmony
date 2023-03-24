@@ -102,7 +102,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{A77DCD
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Auth", "Projects\SteinsGate-Server.Auth\Project\SteinsGate-Server.Auth.vcxproj", "{DFE68FBE-4862-4DC7-B042-1C96E9FEB54B}"
 	ProjectSection(ProjectDependencies) = postProject
-		{0A422C66-4F4D-424C-835F-2B9A99FE2737} = {0A422C66-4F4D-424C-835F-2B9A99FE2737}
+		{59C54A2A-4525-46F7-9F25-CCCA6D58151F} = {59C54A2A-4525-46F7-9F25-CCCA6D58151F}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Center", "Projects\SteinsGate-Server.Center\Project\SteinsGate-Server.Center.vcxproj", "{216F78E9-0AA6-4084-BEBF-AD3C274949E7}"

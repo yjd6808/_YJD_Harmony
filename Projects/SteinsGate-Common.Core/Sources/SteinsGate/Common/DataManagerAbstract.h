@@ -19,6 +19,7 @@
 #include <SteinsGate/Common/ItemOptInfo.h>
 #include <SteinsGate/Common/EnchantInfo.h>
 #include <SteinsGate/Common/ServerInfo.h>
+#include <SteinsGate/Common/DatabaseInfo.h>
 
 class DataManagerAbstract
 {
@@ -26,7 +27,6 @@ public:
 	DataManagerAbstract();
 	virtual ~DataManagerAbstract();
 
-	
 	virtual void initializeLoader() = 0;
 
 	void loadCommon();
@@ -51,6 +51,7 @@ public:
 	ChannelInfo* getChannelInfo(int channelCode);
 	EnchantInfo* getEnchantInfo(int enchantCode);
 	ServerInfo* getServerInfo(int serverCode);
+	DatabaseInfo* getDatabaseInfo(int databaseCode);
 protected:
 	ConfigFileLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max];
 	bool m_bLoaded[ConfigFileType::Max]; // Lazy Loading을 기본으로 하자.

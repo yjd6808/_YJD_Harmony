@@ -7,7 +7,7 @@
         "default_consume_slot_count": 64,
         "default_etc_slot_count": 256,
         "default_quest_slot_count": 32,
-        "default_avatar_slot_count": 256,
+        "default_avatar_slot_count": 256
     },
 
 

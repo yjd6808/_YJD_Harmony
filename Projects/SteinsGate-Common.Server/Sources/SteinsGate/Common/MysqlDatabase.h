@@ -4,28 +4,21 @@
 
 #pragma once
 
-#include <SteinsGate/Common/ServerOverlapped/IOCPOverlappedQuery.h>
-#include <SteinsGate/Common/ServerDatabase/MysqlConnectionPool.h>
-#include <SteinsGate/Common/ServerDatabase/MysqlStatementBuilder.h>
-#include <SteinsGate/Common/ServerDatabase/MysqlQuery.h>
+#include <SteinsGate/Common/IOCPOverlappedQuery.h>
+#include <SteinsGate/Common/MysqlConnectionPool.h>
+#include <SteinsGate/Common/MysqlStatementBuilder.h>
+#include <SteinsGate/Common/MysqlQuery.h>
+#include <SteinsGate/Common/MysqlQueryFuture.h>
+#include <SteinsGate/Common/DatabaseInfo.h>
 
-#define _MysqlConnPool MysqlDatabase::GetInstance()->GetConnectionPool()
-
-class MysqlQueryFuture;
 class MysqlDatabase
 {
-private:
-	MysqlDatabase()
-		: m_pIocp(new JNetwork::IOCP)
-		, m_pConnectionPool(nullptr) {
-	}
-	
 public:
+	MysqlDatabase(DatabaseInfo* info);
 	virtual ~MysqlDatabase();
-	static MysqlDatabase* GetInstance();
 	
-	bool Initialize();
-	bool Finalize();
+	bool Initialize(ServerProcessType_t serverProcessType);
+	void Finalize();
 
 	MysqlConnectionPool* GetConnectionPool() const { return m_pConnectionPool; }
 
@@ -44,7 +37,7 @@ public:
 
 		MysqlQueryFuture* future = new MysqlQueryFuture(preparedStatement);
 		future->AddRef(2);	
-		IOCPOverlappedQuery* pOverlapped = new IOCPOverlappedQuery(m_pIocp, future);
+		IOCPOverlappedQuery* pOverlapped = new IOCPOverlappedQuery(m_pIocp, this, future);
 
 		if (m_pIocp->Post(0, NULL, pOverlapped) == FALSE) {
 			DebugAssertMsg(false, "MysqlDatabase::QueryAsync() Failed");
@@ -69,7 +62,7 @@ public:
 			return nullptr;
 		}
 
-		auto pConn = _MysqlConnPool->GetConnection();
+		auto pConn = m_pConnectionPool->GetConnection();
 
 		if (pConn == nullptr) {
 			// 실패
@@ -77,7 +70,7 @@ public:
 			return nullptr;
 		}
 
-		AutoReleaseConnection autoRelease(pConn, _MysqlConnPool);
+		AutoReleaseConnection autoRelease(pConn, m_pConnectionPool);
 		const JCore::String preparedStatement = MysqlStatementBuilder::Build(statement, JCore::Forward<Args>(args)...);
 
 		if (preparedStatement == "")
@@ -90,12 +83,12 @@ public:
 		return spQuery;
 	}
 private:
+	
 	JNetwork::IOCP* m_pIocp;
 	MysqlConnectionPool* m_pConnectionPool;
+	DatabaseInfo* m_pInfo{};
+	bool m_bFinalized;
 
 	// 쿼리 수행 통계
 	// 실패 등 처리할 것들은 여기다가 추가 하면 된다
-
-	inline static MysqlDatabase* ms_pInstance = nullptr;
-
 };

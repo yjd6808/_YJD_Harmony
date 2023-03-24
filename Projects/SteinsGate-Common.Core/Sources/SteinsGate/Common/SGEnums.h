@@ -451,6 +451,7 @@ Item,
 ItemOpt,
 Enchant,
 Common,
+Database,
 End,
 Max = End
 SEnumMiddle(ConfigFileType)
@@ -475,7 +476,9 @@ static constexpr const char* FileName[Max]{
 	"수동로딩"				,
 	"item_opt.json"			,
 	"enchant.json"			,
-	"common.json"
+	"common.json"			, // common.json에서 다른 이름으로 변경시, 클라이언트와 각 서버프로젝트들 PostBuild이벤트로 수행하는 설정파일이름도 변경필요
+	"database.json"
+	
 };
 SEnumMiddleEnd(ConfigFileType)
 
@@ -704,8 +707,7 @@ SEnumMiddle(ItemOptType)
 
 SEnumMiddleEnd(ItemOptType)
 
-
-SEnumBegin(ServerType)
+SEnumBegin(GameServerType)
 Begin = 1,
 Luke = Begin,
 Hilder,
@@ -716,9 +718,9 @@ Diregie,
 Cain,
 Seria,
 End = Seria
-SEnumMiddle(ServerType)
+SEnumMiddle(GameServerType)
 
-SEnumMiddleEnd(ServerType)
+SEnumMiddleEnd(GameServerType)
 
 SEnumBegin(EnteranceType)
 Begin = 1,
@@ -761,3 +763,24 @@ RightLeft,
 TopBottom,
 BottomTop
 SEnumEnd(ProgressIncreaseDirection)
+
+SEnumBegin(DatabaseType)
+Game = 1
+SEnumEnd(DatabaseType)
+
+SEnumBegin(ServerProcessType)
+Center,
+Auth,
+Lobby,
+Game,
+Max
+SEnumEnd(ServerProcessType)
+
+SEnumBegin(ServerType)
+Center,
+Auth,
+Lobby,
+Game,
+Chat,
+Area
+SEnumEnd(ServerType)

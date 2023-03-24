@@ -6,6 +6,7 @@
 *.pdb
 *.exe
 *.user
+*.bak
 .editorconfig
 *.Settings
 *.sga

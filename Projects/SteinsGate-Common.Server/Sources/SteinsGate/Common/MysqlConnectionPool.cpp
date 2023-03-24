@@ -7,17 +7,22 @@ USING_NS_JC;
 USING_NS_JC;
 USING_NS_STD;
 
-MysqlConnectionPool::MysqlConnectionPool(const String& sHostname, const uint16_t& wPort, const String& sUsername, const
-                                         String& sPassword, const String& sDB, const uint32_t wMaxConn) :
-	m_HostName(sHostname),
-	m_UserName(sUsername),
-	m_Password(sPassword),
-	m_DatabaseName(sDB),
-	m_DatabasePort(wPort),
-	m_MaxConnection(wMaxConn),
+MysqlConnectionPool::MysqlConnectionPool(
+	const String& hostname, 
+	Int16U port,
+	const String& id, 
+	const String& pass, 
+	const String& schemaName, 
+	const int maxConn
+) :
+	m_HostName(hostname),
+	m_AccountId(id),
+	m_AccountPass(pass),
+	m_SchemeName(schemaName),
+	m_iPort(port),
+	m_MaxConnection(maxConn),
 	m_iCurConnSize(0)
-{
-}
+{}
 
 MysqlConnectionPool::~MysqlConnectionPool() {
 	TerminateAllConnections();
@@ -98,6 +103,6 @@ MysqlConnection* MysqlConnectionPool::CreateConnection() const {
 	if (connection == nullptr) {
 		return nullptr;
 	}
-	connection->Connect(m_HostName, m_DatabasePort, m_UserName, m_Password, m_DatabaseName);
+	connection->Connect(m_HostName, m_iPort, m_AccountId, m_AccountPass, m_SchemeName);
 	return connection;
 }

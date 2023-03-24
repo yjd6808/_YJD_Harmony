@@ -68,6 +68,9 @@
       <Filter>Packet</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\NetGroup.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\Packet\CommandParser.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
@@ -166,6 +169,9 @@
       <Filter>Packet</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\NetGroup.h" />
+    <ClInclude Include="..\Sources\JNetwork\Packet\CommandParser.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">

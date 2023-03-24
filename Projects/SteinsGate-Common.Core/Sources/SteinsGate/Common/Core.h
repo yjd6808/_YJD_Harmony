@@ -41,6 +41,7 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/NetMaster.h>
 #include <JNetwork/IPEndPoint.h>
+#include <JNetwork/Winsock.h>
 
 #include <JNetwork/Host/TcpServer.h>
 #include <JNetwork/Host/TcpClient.h>
@@ -154,6 +155,10 @@ using SGTcpClientWPtr = JNetwork::TcpClientPtr;
 using SGUdpClientWPtr = JNetwork::UdpClientPtr;
 using SGTcpSessionWPtr = JNetwork::TcpSessionPtr;
 using SGTcpServerWPtr = JNetwork::TcpServerPtr;
+
+using SGNetGroup = JNetwork::NetGroup;
+using SGNetMaster = JNetwork::NetMaster;
+using SGIOCP = JNetwork::IOCP;
 
 using SGOverlapped = JNetwork::IOCPOverlapped;
 using SGISendPacket = JNetwork::ISendPacket;

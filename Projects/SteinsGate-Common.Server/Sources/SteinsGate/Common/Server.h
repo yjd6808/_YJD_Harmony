@@ -9,5 +9,6 @@
 #pragma once
 
 #include <SteinsGate/Common/Core.h>
+#include <SteinsGate/Common/ServerCore.h>
 
 #include <mysql.h>

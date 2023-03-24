@@ -7,15 +7,11 @@
 
 #pragma once
 
-#include <map>
-#include <sstream>
-
 #include <JCore/Time.h>
 #include <JCore/Container/HashMap.h>
-#include <JCore/Utils/Console.h>
-
 #include <SteinsGate/Common/MysqlConnection.h>
 
+struct DatabaseInfo;
 class MysqlStatementBuilder
 {
 	using TFieldMap = JCore::HashMap<int, JCore::String>;
@@ -158,23 +154,9 @@ public:
 		return statement;
 	}
 
-	static bool Initialize() {
-		if (ms_pConn != nullptr)
-			return true;
-
-		// mysql_real_escape_string 이 함수 사용하기위해서 어쩔수없이 커넥션 사용하도록 함
-		ms_pConn = new MysqlConnection();
-		return ms_pConn->Connect(DB_HOST, DB_PORT, DB_ID, DB_PASS, DB_NAME);
-	}
-
-	static void Finalize() {
-		if (ms_pConn) {
-			ms_pConn->Disconnect();
-			delete ms_pConn;
-			ms_pConn = nullptr;
-		}
-	}
+	static bool Initialize(const DatabaseInfo* dbInfo);
+	static void Finalize();
 
 private:
-	inline static MysqlConnection* ms_pConn = nullptr;	// escape용 연결
+	static MysqlConnection* ms_pConn;
 };

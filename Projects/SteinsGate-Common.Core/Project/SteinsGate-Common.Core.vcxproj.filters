@@ -78,6 +78,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\EnchantInfoLoader.cpp">
       <Filter>Data\Enchant</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\DatabaseInfoLoader.cpp">
+      <Filter>Data\Database</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -202,6 +205,12 @@
       <Filter>Sga</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\TypeTraits.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\DatabaseInfoLoader.h">
+      <Filter>Data\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\DatabaseInfo.h">
+      <Filter>Data\Database</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">

@@ -220,5 +220,16 @@ ServerInfo* DataManagerAbstract::getServerInfo(int serverCode) {
 	return pRet;
 }
 
+DatabaseInfo* DataManagerAbstract::getDatabaseInfo(int databaseCode) {
+	auto eType = ConfigFileType::Database;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<DatabaseInfo*>(getData(eType, databaseCode));
+	DebugAssertMsg(pRet, "데이터베이스 인포 타입이 아닙니다.");
+	return pRet;
+}
+
 
 

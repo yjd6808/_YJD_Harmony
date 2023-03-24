@@ -28,7 +28,7 @@ public:
 	bool init() final; 
 
 	// 로딩전, 자식 컨트롤들 init만 전부 이뤄진상태
-	// 처음 한번만 호출 하도록 함 (여기서는 하위 자식 초기화만 수행해줄 것)
+	// 처음 한번만 호출 하도록 함
 	virtual void onInit() = 0;
 
 	// 로딩후, 자식 컨트롤들 텍스쳐, 스프라이트 모두 로딩되었을 때
@@ -58,7 +58,6 @@ public:
 	virtual void onEditBoxReturn(SGUIEditBox* editBox);
 	virtual void onEditBoxEditingDidEndWithAction(SGUIEditBox* editBox);
 	
-
 	SGString toString() override { return SGStringUtil::Format("마스터그룹(%d)", m_pInfo->Code); }
 };
 

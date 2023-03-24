@@ -104,6 +104,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Packet\CommandParser.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Packet\SendPacket.cpp">
       <SubType>
       </SubType>
@@ -227,6 +231,10 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
     <ClInclude Include="..\Sources\JNetwork\Packet\Command.h" />
+    <ClInclude Include="..\Sources\JNetwork\Packet\CommandParser.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Packet\RecvPacket.h">
       <SubType>
       </SubType>

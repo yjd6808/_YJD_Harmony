@@ -27,21 +27,26 @@ private:
 	MysqlConnection* CreateConnection() const;
 	
 private:
-	MysqlConnectionPool(const JCore::String& sHostname, const uint16_t& wPort, const JCore::String& sUsername, const JCore::String& sPassword, const JCore::String& sDB, uint32_t wMaxConn);
+	MysqlConnectionPool(
+		const JCore::String& hostname, 
+		Int16U port, 
+		const JCore::String& id, 
+		const JCore::String& pass,
+		const JCore::String& schemaName, 
+		int maxConn
+	);
 	
 	JCore::String m_HostName;
-	JCore::String m_UserName;
-	JCore::String m_Password;
-	JCore::String m_DatabaseName;
-	Int16U m_DatabasePort;
+	JCore::String m_AccountId;
+	JCore::String m_AccountPass;
+	JCore::String m_SchemeName;
+	Int16U m_iPort;
 	Int32U m_MaxConnection;
 
 	int m_iCurConnSize;
 	JCore::NormalLock m_Mtx;
 	JCore::LinkedList<MysqlConnection*> m_ConnectionList;
 
-
-	inline static MysqlConnectionPool* ms_pInstance = nullptr;
 	friend class MysqlDatabase;
 };
 

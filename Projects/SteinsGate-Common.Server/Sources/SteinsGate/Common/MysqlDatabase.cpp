@@ -6,66 +6,95 @@
 
 USING_NS_JC;
 USING_NS_JC;
+USING_NS_JNET;
 USING_NS_STD;
 
+MysqlDatabase::MysqlDatabase(DatabaseInfo* info)
+	: m_pIocp(nullptr)
+	, m_pConnectionPool(nullptr)
+	, m_pInfo(info)
+	, m_bFinalized(false)
+{}
+
 MysqlDatabase::~MysqlDatabase() {
+	Finalize();
 	DeleteSafe(m_pIocp);
 }
 
-MysqlDatabase* MysqlDatabase::GetInstance() {
-	if (ms_pInstance == nullptr) {
-		ms_pInstance = new MysqlDatabase();
+
+bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
+
+	if (m_bFinalized) {
+		_LogError_("이미 삭제처리된 객체입니다.");
+		return false;
 	}
 
-	return ms_pInstance;
-}
+	const int iUse = m_pInfo->Use[serverProcessType];
+	const int iConnectionPoolSize = m_pInfo->ConnectionPoolSize[serverProcessType];
+	const int iMaxConnection = m_pInfo->MaxConnection[serverProcessType];
+	const int iThreadCount = m_pInfo->IocpThreadCount[serverProcessType];
 
-bool MysqlDatabase::Initialize() {
+	if (iUse != 1) {
+		_LogError_("해당 데이터베이스는 사용하지 않습니다.");
+		return false;
+	}
+
+
 
 	if (m_pConnectionPool == nullptr)
-		m_pConnectionPool = new MysqlConnectionPool(DB_HOST, DB_PORT, DB_ID, DB_PASS, DB_NAME, 50);
+		m_pConnectionPool = dbg_new MysqlConnectionPool(
+			m_pInfo->HostName, 
+			m_pInfo->ConnectionPort, 
+			m_pInfo->AccountId, 
+			m_pInfo->AccountPass, 
+			m_pInfo->SchemaName,
+			iMaxConnection
+		);
 
 	// 커넥션 25개 풀 초기화
 	// 프로그램 종료 될때 알아서 연결들 모두 종료함
-	if (!m_pConnectionPool->Init(DB_CONN_POOL_SIZE)) {
+	if (!m_pConnectionPool->Init(iConnectionPoolSize)) {
 		_LogError_("DB 커넥션 풀 초기화 실패");
 		return false;
 	}
 
 	// 빌더 커넥션 초기화
-	// ㄹㅇ; String Escape 하나를 위해서 어쩔수없이 초기화함;
-	if (!MysqlStatementBuilder::Initialize()) {
+	// String Escape 하나를 위해서 어쩔수없이 초기화함;
+	if (!MysqlStatementBuilder::Initialize(m_pInfo)) {
 		_LogError_("DB 스테이트먼트 빌더 초기화 실패");
 		return false;
 	}
 
-	_LogInfo_("데이터베이스 커넥션 풀(%d)이 성공적으로 초기화되었습니다. [localhost/%d]", DB_CONN_POOL_SIZE, DB_PORT);
+	_LogInfo_("데이터베이스 커넥션 풀(크기: %d)이 성공적으로 초기화되었습니다. [%s/%d]", 
+		m_pInfo->ConnectionPoolSize, 
+		m_pInfo->HostName.Source(), 
+		m_pInfo->ConnectionPort
+	);
 
-	if (!m_pIocp->Create(4)) {
-		return false;
-	}
-
-
-	_LogInfo_("데이터베이스 IOCP가 성공적으로 생서되었습니다.");
-
+	m_pIocp = dbg_new IOCP(iThreadCount);
 	m_pIocp->Run();
+
+	_LogInfo_("%s IOCP 실행완료 (쓰레드 수: %d)", m_pInfo->Name.Source(), m_pInfo->IocpThreadCount);
 	return true;
 }
 
-bool MysqlDatabase::Finalize() {
+void MysqlDatabase::Finalize() {
+
+	if (m_bFinalized)
+		return;
+
+	m_bFinalized = true;
+
 	while (m_pIocp->GetPendingCount() != 0) {}
 
 	m_pIocp->Join();
-
-	if (!m_pIocp->Destroy()) {
-		return false;
-	}
+	m_pIocp->Destroy();
 
 	if (m_pConnectionPool)
 		DeleteSafe(m_pConnectionPool);
 
 
 	MysqlStatementBuilder::Finalize();
-
-	return true;
 }
+
+

@@ -22,16 +22,16 @@ public:
 	// 제일 마지막 오류
 	JCore::String GetLastError() const;
 
-	MYSQL *GetConnection() const;
+	MYSQL* GetConnection() const;
 	bool IsConnected() const;
 
 	// 이스케이프 스트링 반환
 	JCore::String EscapeString(const JCore::String& value) const;
 
 private:
-	MYSQL *m_MySQLConn;
+	MYSQL* m_MySQLConn;
 	bool m_bIsConnected;
-	JCore::String m_sHostname = "";
+	JCore::String m_szHostname = "";
 	JCore::String m_sUsername = "";
 	JCore::String m_sPassword = "";
 	JCore::String m_sSchemaName = "";

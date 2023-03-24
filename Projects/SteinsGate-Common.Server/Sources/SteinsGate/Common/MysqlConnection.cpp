@@ -24,7 +24,7 @@ bool MysqlConnection::Connect(const JCore::String &hostname, const uint16_t &por
 	// 이미 연결된 경우 우선 연결을 끊어준다.
 	Disconnect();
 
-	m_sHostname = hostname;
+	m_szHostname = hostname;
 	m_sUsername = username;
 	m_sPassword = password;
 	m_wPort = port;
@@ -38,7 +38,7 @@ bool MysqlConnection::Connect(const JCore::String &hostname, const uint16_t &por
 	mysql_options(m_MySQLConn, MYSQL_INIT_COMMAND, "SET NAMES utf8");
 
 
-	MySQLConnRet = mysql_real_connect(m_MySQLConn, m_sHostname.Source(), m_sUsername.Source(), m_sPassword.Source(), m_sSchemaName.Source(), m_wPort, NULL, 0);
+	MySQLConnRet = mysql_real_connect(m_MySQLConn, m_szHostname.Source(), m_sUsername.Source(), m_sPassword.Source(), m_sSchemaName.Source(), m_wPort, NULL, 0);
 
 	if (MySQLConnRet == NULL) {
 		m_bIsConnected = false;

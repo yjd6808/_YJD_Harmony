@@ -17,8 +17,8 @@ IOCPOverlappedAccept::IOCPOverlappedAccept(TcpSession* session, IOCP* iocp) :
 }
 
 IOCPOverlappedAccept::~IOCPOverlappedAccept() {
-	m_pAcceptedSession->DecreasePendingCount();
-	NetLog("Accept 오버랩피트 소멸 (%d)\n", m_pIocp->GetPendingCount());
+	const int pending = m_pAcceptedSession->DecreasePendingCount();
+	NetLog("Accept 오버랩피트 소멸 (%d)\n", pending);
 }
 
 void IOCPOverlappedAccept::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
