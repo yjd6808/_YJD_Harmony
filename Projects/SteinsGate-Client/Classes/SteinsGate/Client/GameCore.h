@@ -22,7 +22,7 @@ class SGActorBox;
 class SGImagePackManager;
 class SGGlobal;
 
-extern SGClientInfo* CoreInfo_v;
+extern SGClientInfo* CoreClient_v;
 extern SGHostPlayer* CorePlayer_v;
 extern SGDataManager* CoreDataManager_v;
 extern SGUIManager* CoreUIManager_v;

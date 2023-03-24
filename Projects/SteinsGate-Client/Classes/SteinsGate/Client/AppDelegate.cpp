@@ -40,7 +40,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     SGDataManager* pDataManager = SGDataManager::get();
     CoreCommon_v = pDataManager->getCommonInfo(1);
-    CoreInfo_v = pDataManager->getClientInfo(1);
+    CoreClient_v = pDataManager->getClientInfo(1);
 
     CreateOpenGLWindow();
 	InitializeJCore();
@@ -59,12 +59,12 @@ void AppDelegate::CreateOpenGLWindow() {
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
-    Rect viewRect = { 0, 0, CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight };
+    Rect viewRect = { 0, 0, CoreClient_v->ResolutionWidth, CoreClient_v->ResolutionHeight };
 
     if (glview == nullptr) {
-        glview = CoreInfo_v->FullScreen ? 
+        glview = CoreClient_v->FullScreen ? 
             GLViewImpl::createWithFullScreen(AppName) :
-            GLViewImpl::createWithRect(AppName, viewRect, CoreInfo_v->GameScale, true);
+            GLViewImpl::createWithRect(AppName, viewRect, CoreClient_v->GameScale, true);
         
         director->setOpenGLView(glview);
     }

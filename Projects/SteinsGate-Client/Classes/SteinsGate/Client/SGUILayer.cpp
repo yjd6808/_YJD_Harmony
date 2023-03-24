@@ -44,7 +44,7 @@ bool SGUILayer::init() {
 	if (!Layer::init())
 		return false;
 
-	setContentSize(CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight);
+	setContentSize(CoreClient_v->ResolutionWidth, CoreClient_v->ResolutionHeight);
 	return true;
 }
 

@@ -216,7 +216,7 @@ SGVec2 SGUIElement::getRelativePositionInRect(
 
 void SGUIElement::setPositionRelative(float x, float y) {
 	// 마스터 그룹들은 실제 부모가 없음.
-	const SGRect rect = isMasterGroup() ? SGRect{0, 0, CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight} : m_pParent->getWorldBoundingBox();
+	const SGRect rect = isMasterGroup() ? SGRect{0, 0, CoreClient_v->ResolutionWidth, CoreClient_v->ResolutionHeight} : m_pParent->getWorldBoundingBox();
 	const SGVec2 realPos = getRelativePositionInRect(rect, x, y);
 	setPosition(realPos);
 }

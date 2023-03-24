@@ -56,6 +56,7 @@ void SGDataManager::initializeLoader() {
 	// ItemOpt
 	// Enchant
 	// Common
+	// Database
 
 	 m_pConfigFileLoaders[ConfigFileType::Effect]			 = dbg_new SGEffectInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::Map]				 = dbg_new SGMapInfoLoader(this);
@@ -75,7 +76,7 @@ void SGDataManager::initializeLoader() {
 	 m_pConfigFileLoaders[ConfigFileType::Client]			 = dbg_new SGClientInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::Item]				 = dbg_new ItemInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::ItemOpt]			 = dbg_new ItemOptInfoLoader(this);
-	// m_pConfigFileLoaders[ConfigFileType::Enchant]			 = dbg_new EnchantInfoLoader(this);
+	 // m_pConfigFileLoaders[ConfigFileType::Enchant]			 = dbg_new EnchantInfoLoader(this);
 	 m_bInitialized = true;
 }
 

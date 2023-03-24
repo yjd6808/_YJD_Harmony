@@ -9,13 +9,16 @@
 #include "GameCore.h"
 #include "GameCoreHeader.h"
 
+#include <SteinsGate/Common/SgaElementInitializer.h>
+#include <SteinsGate/Common/AudioPlayer.h>
+
 
 // ===========================================================
 //     슈타인즈 게이트 모든 세계션이 만나는 곳
 //     사실.. 소괄호 작성하기 귀찮아서 이렇게 모아놓음
 // ===========================================================
 
-SGClientInfo*				CoreInfo_v;
+SGClientInfo*				CoreClient_v;
 SGHostPlayer*				CorePlayer_v;
 SGDataManager*				CoreDataManager_v;
 SGUIManager*				CoreUIManager_v;
@@ -46,9 +49,13 @@ void InitializeClientCore() {
 	CoreUIManager_v->init();
 	CoreInven_v->init();
 	CoreActorListenerManager_v->init();
+
+	SgaElementInitializer::Initialize();
+	AudioPlayer::Initilize();
 }
 
 void FinalizeClientCore() {
+	
 	DeleteSafe(CoreUIManager_v);
 	DeleteSafe(CorePlayer_v);
 	DeleteSafe(CoreDataManager_v);
@@ -59,4 +66,8 @@ void FinalizeClientCore() {
 	DeleteSafe(CorePackManager_v);
 	DeleteSafe(CoreGlobal_v);
 	Null(CoreWorld_v);
+
+	SgaElementInitializer::Finalize();
+	AudioPlayer::Finalize();
+
 }
