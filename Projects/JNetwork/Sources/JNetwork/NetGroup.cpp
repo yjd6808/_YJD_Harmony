@@ -16,13 +16,25 @@ USING_NS_JC;
 
 NS_JNET_BEGIN
 
-NetGroup::NetGroup(const JCore::String& name) : m_Name(name) {}
+NetGroup::NetGroup()
+	: m_Name(0)
+	, m_bFinalized(false)
+{}
+
+NetGroup::NetGroup(const String& name)
+	: m_Name(name)
+	, m_bFinalized(false)
+{}
+
+NetGroup::~NetGroup() {
+	NetGroup::Finalize();
+}
 
 void NetGroup::CreateIocp(int threadCount) {
 	m_spIOCP = MakeShared<IOCP>(threadCount);
 }
 
-void NetGroup::CreateBufferPool(const JCore::HashMap<int, int>& poolInfo) {
+void NetGroup::CreateBufferPool(const HashMap<int, int>& poolInfo) {
 	m_spBufferPool = MakeShared<IndexedMemoryPool>(poolInfo);
 }
 
@@ -35,7 +47,14 @@ void NetGroup::AddHost(const HostPtr& host) {
 	m_vHostList.PushBack(host);
 }
 
+void NetGroup::SetName(const String& name) {
+	m_Name = name;
+}
+
 void NetGroup::Finalize() {
+
+	if (m_bFinalized)
+		return;
 
 	for (int i = 0; i < m_vHostList.Size(); ++i) {
 		auto& spHost = m_vHostList[i];
@@ -46,6 +65,7 @@ void NetGroup::Finalize() {
 	m_spIOCP->Join();
 	m_spIOCP->Destroy();
 	m_spBufferPool = nullptr;
+	m_bFinalized = true;
 }
 
 
