@@ -16,8 +16,14 @@
 
 #include <JCore/Core.h>
 
+
 #ifdef DebugMode
-	#define NetLog(fmt, ...) printf(fmt, __VA_ARGS__)
+#define EnableNetLog 0
+	#if EnableNetLog
+		#define NetLog(fmt, ...) printf(fmt, __VA_ARGS__)
+	#else
+		#define NetLog(...)
+	#endif
 #else
 	#define NetLog(...)
 #endif
