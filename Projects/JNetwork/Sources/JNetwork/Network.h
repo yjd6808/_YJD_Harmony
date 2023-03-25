@@ -15,19 +15,7 @@
 #include <sstream>
 
 #include <JCore/Core.h>
-
-
-#ifdef DebugMode
-#define EnableNetLog 0
-	#if EnableNetLog
-		#define NetLog(fmt, ...) printf(fmt, __VA_ARGS__)
-	#else
-		#define NetLog(...)
-	#endif
-#else
-	#define NetLog(...)
-#endif
-
+#include <JNetwork/NetLoggerDefine.h>
 
 #define MAX_MSS 1460
 #define MAX_MTU 1500

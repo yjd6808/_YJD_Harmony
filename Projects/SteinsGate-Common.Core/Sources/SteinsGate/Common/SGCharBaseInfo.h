@@ -10,6 +10,8 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
+
+
 struct SGCharBaseInfo : ConfigDataAbstract
 {
 	~SGCharBaseInfo() override = default;
@@ -30,21 +32,6 @@ struct SGCharBaseInfo : ConfigDataAbstract
 	float DownRecoverTime;
 	ThicknessBox ThicknessBox;
 	WeaponType_t DefaultWeaponType;
-
-	// 공통 정보
-	struct CommonInfo
-	{
-		int DefaultInvenSlotCount[InvenItemType::Max];
-	};
-
-private:
-	inline static CommonInfo* Common = nullptr;
-	friend class SGCharBaseInfoLoader;
-public:
-	static CommonInfo* getCommon() {
-		DebugAssertMsg(Common != nullptr, "아직 캐릭터 공통 정보가 로딩되지 않았습니다.");
-		return Common;
-	}
 };
 
 struct SGCharInfo : SGCharBaseInfo

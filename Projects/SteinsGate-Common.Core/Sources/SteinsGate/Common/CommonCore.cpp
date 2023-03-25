@@ -11,6 +11,7 @@
 
 // 메인 프로그램에서 주입해줄 것
 CommonInfo* CoreCommon_v = nullptr;
+SGCharCommonInfo* CoreCharCommon_v = nullptr;
 
 void InitializeCommonCore() {
 

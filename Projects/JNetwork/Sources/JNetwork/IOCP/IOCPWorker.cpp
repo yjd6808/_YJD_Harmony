@@ -32,7 +32,7 @@ void IOCPWorker::JoinWait(WinHandle waitHandle) {
 	const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
 
 	if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {  // 어느 쓰레드가 꺠어날지 모르기 때문에 여기서 join을 수행하면 안됨
-		DebugAssertMsg(false, "IOCPWorker::Pause() Failed");
+		_NetLogWarn_("IOCPWorker::Pause() Failed");
 		pPostOrder->Release();
 	}
 }
@@ -49,7 +49,7 @@ void IOCPWorker::Join() {
 // --> 서버 종료시를 제외하고는 Join() 함수 호출을 하면안됨
 
 void IOCPWorker::WorkerThread(void* param) {
-	NetLog("IOCPWorker 쓰레드가 실행되었습니다. (%d)\n", Thread::GetThreadId());
+	_NetLogDebug_("IOCPWorker 쓰레드가 실행되었습니다. (%d)", Thread::GetThreadId());
 
 	for (;;) {
 		Int32UL numberOfBytesTransffered;
@@ -86,7 +86,7 @@ void IOCPWorker::WorkerThread(void* param) {
 	}
 
 THREAD_END:
-	NetLog("IOCPWorker 쓰레드가 종료되었습니다. (%d)\n", Thread::GetThreadId());
+	_NetLogDebug_("IOCPWorker 쓰레드가 종료되었습니다. (%d)", Thread::GetThreadId());
 	m_eState = State::JoinWait;
 }
 

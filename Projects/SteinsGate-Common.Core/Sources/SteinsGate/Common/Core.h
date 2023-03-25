@@ -54,7 +54,6 @@
 
 #include <SteinsGate/Common/SGStruct.h>
 #include <SteinsGate/Common/SGConfig.h>
-#include <SteinsGate/Common/LoggerDefine.h>
 #include <SteinsGate/Common/Logo.h>
 #include <SteinsGate/Common/CommonCore.h>
 

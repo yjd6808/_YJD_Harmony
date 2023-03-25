@@ -94,6 +94,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\NetLoggerDefine.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\NetMaster.cpp">
       <SubType>
       </SubType>
@@ -225,6 +229,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\NetLoggerDefine.h" />
     <ClInclude Include="..\Sources\JNetwork\NetMaster.h">
       <SubType>
       </SubType>

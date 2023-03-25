@@ -49,9 +49,6 @@ void InitializeClientCore() {
 	CoreUIManager_v->init();
 	CoreInven_v->init();
 	CoreActorListenerManager_v->init();
-
-	SgaElementInitializer::Initialize();
-	AudioPlayer::Initilize();
 }
 
 void FinalizeClientCore() {
@@ -66,8 +63,4 @@ void FinalizeClientCore() {
 	DeleteSafe(CorePackManager_v);
 	DeleteSafe(CoreGlobal_v);
 	Null(CoreWorld_v);
-
-	SgaElementInitializer::Finalize();
-	AudioPlayer::Finalize();
-
 }

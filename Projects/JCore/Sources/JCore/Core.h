@@ -26,6 +26,7 @@
 
 #include <JCore/Encoding/CodePage.h>
 #include <JCore/Utils/Console.h>
+#include <JCore/Logger/LoggerDefine.h>
 #include <JCore/Define.h>
 #include <JCore/Assert.h>
 

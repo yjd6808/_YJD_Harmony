@@ -32,10 +32,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\ConsoleLogger.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Core.cpp">
       <SubType>
       </SubType>
@@ -55,14 +51,6 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\LoggerAbstract.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\LoggerDefine.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -87,6 +75,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGCharCommonInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SGEnum.cpp">
       <SubType>
       </SubType>
@@ -121,10 +110,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ConsoleLogger.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h">
       <SubType>
       </SubType>
@@ -154,14 +139,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\LoggerAbstract.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\LoggerDefine.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -202,6 +179,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfo.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfo.h">

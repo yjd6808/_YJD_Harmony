@@ -10,3 +10,4 @@
 
 
 #include <SteinsGate/Common/CommonInfo.h>
+#include <SteinsGate/Common/SGCharCommonInfo.h>

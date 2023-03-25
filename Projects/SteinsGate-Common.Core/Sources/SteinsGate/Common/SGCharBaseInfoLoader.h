@@ -20,7 +20,6 @@ public:
 	
 	bool load() override;
 
-	static void readCommonInfo(Json::Value& commonRoot);
 	static void readCharBaseInfo(Json::Value& charBaseRoot, SGCharBaseInfo* baseInfo);
 	static void readGunnerInfo(Json::Value& gunnerBaseRoot, SGGunnerInfo* baseInfo);
 };

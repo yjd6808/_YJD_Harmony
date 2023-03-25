@@ -164,14 +164,14 @@ void SgaElementInitializer::Initialize() {
 		return;
 
 	// 인덱스 = 버전이므로 사이에 비어있으면 채워줄 것
-	InitializerMap_v.PushBack(new SgaElementInitializerImpl<0>{});
-	InitializerMap_v.PushBack(new SgaElementInitializerImpl<1>{});
-	InitializerMap_v.PushBack(new SgaElementInitializerImpl<2>{});
+	InitializerMap_v.PushBack(dbg_new SgaElementInitializerImpl<0>{});
+	InitializerMap_v.PushBack(dbg_new SgaElementInitializerImpl<1>{});
+	InitializerMap_v.PushBack(dbg_new SgaElementInitializerImpl<2>{});
 }
 
 void SgaElementInitializer::Finalize() {
 	for (int i = 0; i < InitializerMap_v.Size(); ++i) {
-		delete InitializerMap_v[i];
+		DeleteSafe(InitializerMap_v[i]);
 	}
 
 	InitializerMap_v.~Vector();

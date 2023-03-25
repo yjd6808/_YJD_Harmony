@@ -31,9 +31,6 @@ bool SGCharInfoLoader::load() {
 		return false;
 
 	try {
-		Json::Value commonRoot = root["common"];
-		readCommonInfo(commonRoot);
-
 		Json::Value gunnerRoot = root["gunner"];
 		// 다른 캐릭이 만약 추가되면 코드 변경 필요
 		SGGunnerInfo* pGunnerInfo = dbg_new SGGunnerInfo();

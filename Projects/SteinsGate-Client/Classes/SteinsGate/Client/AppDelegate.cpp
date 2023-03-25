@@ -2,6 +2,8 @@
 #include "AppDelegate.h"
 #include "GameCoreHeader.h"
 #include "SGWin32Helper.h"
+#include "SteinsGate/Common/AudioPlayer.h"
+#include "SteinsGate/Common/SgaElementInitializer.h"
 
 #define AppName "SteinsGate-Client"
 
@@ -23,6 +25,9 @@ AppDelegate::~AppDelegate()
     // 따라서 WorldScene 삭제시 해제해주도록 하자.
     if (m_hWndProcHook != nullptr)
 		UnhookWindowsHookEx(m_hWndProcHook);
+
+    SgaElementInitializer::Finalize();
+    AudioPlayer::Finalize();
 }
 
 void AppDelegate::initGLContextAttrs()
@@ -35,19 +40,22 @@ void AppDelegate::initGLContextAttrs()
 
 bool AppDelegate::applicationDidFinishLaunching() {
 
+    AudioPlayer::Initilize();
+    SgaElementInitializer::Initialize();
     FileUtils::getInstance()->setPopupNotify(false);    // 파일못찾은 경우 알람 안하도록 함
     SGConsole::SetSize(1200, 800);
 
     SGDataManager* pDataManager = SGDataManager::get();
     CoreCommon_v = pDataManager->getCommonInfo(1);
     CoreClient_v = pDataManager->getClientInfo(1);
+    CoreCharCommon_v = pDataManager->getCharCommonInfo(1);
 
     CreateOpenGLWindow();
 	InitializeJCore();
     InitializeCommonCore();
     InitializeClientCore();
     InitializeDefaultLogger();
-    InitializeClientLogo();
+    InitializeClientLogo(true, 5);
     CreateWorldScene();
     
     

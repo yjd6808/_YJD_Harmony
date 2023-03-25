@@ -16,8 +16,8 @@ extern const int LogoWidth_v;
 extern const int LogoHeight_v;
 
 
-void InitializeClientLogo();
-void InitializeServerCenterLogo();
-void InitializeServerAuthLogo();
-void InitializeServerGameLogo();
-void InitializeServerLobbyLogo();
+void InitializeClientLogo(bool print, int leftPadding);
+void InitializeServerCenterLogo(bool print, int leftPadding);
+void InitializeServerAuthLogo(bool print, int leftPadding);
+void InitializeServerGameLogo(bool print, int leftPadding);
+void InitializeServerLobbyLogo(bool print, int leftPadding);

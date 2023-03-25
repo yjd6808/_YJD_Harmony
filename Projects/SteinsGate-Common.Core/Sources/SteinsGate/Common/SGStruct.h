@@ -96,6 +96,11 @@ struct PlayerData
 };
 
 
+// 31                               0
+// +-------+-------+-------+--------+
+// |  Type |Detail2|Detail1|  Code  |
+// +-------+-------+-------+--------+
+
 union ItemCode
 {
 	inline static constexpr int BitCode = 16;	// 65535

@@ -231,5 +231,16 @@ DatabaseInfo* DataManagerAbstract::getDatabaseInfo(int databaseCode) {
 	return pRet;
 }
 
+SGCharCommonInfo* DataManagerAbstract::getCharCommonInfo(int charCommonCode) {
+	auto eType = ConfigFileType::Char_Common;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	auto pRet = dynamic_cast<SGCharCommonInfo*>(getData(eType, charCommonCode));
+	DebugAssertMsg(pRet, "데이터베이스 인포 타입이 아닙니다.");
+	return pRet;
+}
+
 
 

@@ -5,10 +5,11 @@
  *
  */
 
-#include "Core.h"
-#include "ConsoleLogger.h"
+#include <JCore/Core.h>
+#include <JCore/Time.h>
+#include <JCore/Logger/ConsoleLogger.h>
 
-USING_NS_JC;
+NS_JC_BEGIN
 
 ConsoleLogger::ConsoleLogger() 
 	: m_szBuffer(4096)
@@ -39,6 +40,9 @@ void ConsoleLogger::Flush() {
 
 void ConsoleLogger::LogVaList(Level level, const char* fmt, va_list list) {
 
+	if (!m_bEnableLog[level])
+		return;
+
 	bool bUseLock = m_bUseLock;
 
 	if (bUseLock)
@@ -59,6 +63,10 @@ void ConsoleLogger::LogVaList(Level level, const char* fmt, va_list list) {
 }
 
 void ConsoleLogger::Log(Level level, const char* fmt, ...) {
+
+	if (!m_bEnableLog[level])
+		return;
+
 	va_list args;
 	va_start(args, fmt);
 	LogVaList(level, fmt, args);
@@ -66,6 +74,9 @@ void ConsoleLogger::Log(Level level, const char* fmt, ...) {
 }
 
 void ConsoleLogger::LogPlainVaList(const char* fmt, va_list list) {
+	if (!m_bEnablePlainLog)
+		return;
+
 	bool bUseLock = m_bUseLock;
 
 	if (bUseLock)
@@ -85,6 +96,9 @@ void ConsoleLogger::LogPlainVaList(const char* fmt, va_list list) {
 }
 
 void ConsoleLogger::LogPlain(const char* fmt, ...) {
+	if (!m_bEnablePlainLog)
+		return;
+
 	va_list args;
 	va_start(args, fmt);
 	LogPlainVaList(fmt, args);
@@ -92,6 +106,9 @@ void ConsoleLogger::LogPlain(const char* fmt, ...) {
 }
 
 void ConsoleLogger::LogPlain(const JCore::String& str) {
+	if (!m_bEnablePlainLog)
+		return;
+
 	bool bUseLock = m_bUseLock;
 
 	if (bUseLock)
@@ -109,7 +126,7 @@ void ConsoleLogger::LogPlain(const JCore::String& str) {
 }
 
 
-SGString ConsoleLogger::CreateHeader(Level level) {
+String ConsoleLogger::CreateHeader(Level level) {
 
 	if (m_szHeaderFormat.Length() == 0) {
 		return {};
@@ -124,8 +141,8 @@ SGString ConsoleLogger::CreateHeader(Level level) {
 	if (m_bShowDateTime)
 		DebugAssertMsg(iDateTimeIndex != -1, "헤더에 데이트타임 태그가 없습니다.");
 
-	SGString szDateTimeFmt = SGDateTime::Now().Format(m_szDateTimeFormat.Source());
-	SGString szHeader(256);
+	String szDateTimeFmt = DateTime::Now().Format(m_szDateTimeFormat.Source());
+	String szHeader(256);
 
 	char szTempBuff[256];
 
@@ -154,19 +171,21 @@ SGString ConsoleLogger::CreateHeader(Level level) {
 	return szHeader;
 }
 
-void ConsoleLogger::SetHeaderLevelColor(Level level, SGConsoleColor color) {
+void ConsoleLogger::SetHeaderLevelColor(Level level, ConsoleColor color) {
 	m_eLevelColors[level] = color;
 }
 
-void ConsoleLogger::SetHeaderTimeColor(Level level, SGConsoleColor color) {
+void ConsoleLogger::SetHeaderTimeColor(Level level, ConsoleColor color) {
 	m_eTimeColors[level] = color;
 }
 
-void ConsoleLogger::SetHeaderDefaultColor(Level level, SGConsoleColor color) {
+void ConsoleLogger::SetHeaderDefaultColor(Level level, ConsoleColor color) {
 	m_eHeaderColors[level] = color;
 }
 
-void ConsoleLogger::SetLogColor(Level level, SGConsoleColor color) {
+void ConsoleLogger::SetLogColor(Level level, ConsoleColor color) {
 	m_eLogColors[level] = color;
 }
 
+
+NS_JC_END

@@ -13,12 +13,10 @@ IOCPOverlappedAccept::IOCPOverlappedAccept(TcpSession* session, IOCP* iocp) :
 	m_pAcceptedSession(session)
 {
 	m_pAcceptedSession->AddPendingCount();
-	NetLog("Accept 오버랩피트 생성 (%d)\n", m_pIocp->GetPendingCount());
 }
 
 IOCPOverlappedAccept::~IOCPOverlappedAccept() {
-	const int pending = m_pAcceptedSession->DecreasePendingCount();
-	NetLog("Accept 오버랩피트 소멸 (%d)\n", pending);
+	m_pAcceptedSession->DecreasePendingCount();
 }
 
 void IOCPOverlappedAccept::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {

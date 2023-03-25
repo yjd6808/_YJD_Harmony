@@ -6,15 +6,13 @@
  */
 
 
-#include "Core.h"
-#include "LoggerDefine.h"
-
-#include <SteinsGate/Common/ConsoleLogger.h>
-
-LoggerAbstract* Logger_v;
+#include <JCore/Core.h>
+#include <JCore/Logger/LoggerDefine.h>
+#include <JCore/Logger/ConsoleLogger.h>
 
 USING_NS_JC;
-USING_NS_JS;
+
+LoggerAbstract* Logger_v;
 
 void InitializeDefaultLogger() {
 	DebugAssertMsg(Logger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
@@ -39,5 +37,4 @@ void InitializeDefaultLogger() {
 void FinalizeDefaultLogger() {
 	DeleteSafe(Logger_v);
 }
-
 

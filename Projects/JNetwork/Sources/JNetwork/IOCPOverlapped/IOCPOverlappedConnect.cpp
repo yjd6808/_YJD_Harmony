@@ -13,13 +13,8 @@ IOCPOverlappedConnect::IOCPOverlappedConnect(TcpClient* client, IOCP* iocp, ISen
 	IOCPOverlapped(iocp, Type::Connect),
 	m_pClient(client),
 	m_pSentPacket(sentPacket)
-{
-	NetLog("Connect 오버랩피트 생성 (%d)\n", m_pIocp->GetPendingCount());
-}
-
-IOCPOverlappedConnect::~IOCPOverlappedConnect() {
-	NetLog("Connect 오버랩피트 소멸 (%d)\n", m_pIocp->GetPendingCount());
-}
+{}
+IOCPOverlappedConnect::~IOCPOverlappedConnect() {}
 
 void IOCPOverlappedConnect::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hConnectedSock = m_pClient->SocketHandle();

@@ -65,8 +65,8 @@ bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
 		return false;
 	}
 
-	_LogInfo_("데이터베이스 커넥션 풀(크기: %d)이 성공적으로 초기화되었습니다. [%s/%d]", 
-		m_pInfo->ConnectionPoolSize, 
+	_LogInfo_("데이터베이스 커넥션 풀(크기: %d) 초기화 [%s:%d]", 
+		iConnectionPoolSize,
 		m_pInfo->HostName.Source(), 
 		m_pInfo->ConnectionPort
 	);
@@ -74,7 +74,7 @@ bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
 	m_pIocp = dbg_new IOCP(iThreadCount);
 	m_pIocp->Run();
 
-	_LogInfo_("%s IOCP 실행완료 (쓰레드 수: %d)", m_pInfo->Name.Source(), m_pInfo->IocpThreadCount);
+	_LogInfo_("%s IOCP 실행완료 (쓰레드 수: %d)", m_pInfo->Name.Source(), iThreadCount);
 	return true;
 }
 

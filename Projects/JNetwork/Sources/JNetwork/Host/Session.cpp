@@ -33,7 +33,10 @@ Session::~Session() = default;
 
 void Session::Initialize() {
 
-	DebugAssertMsg(m_eState == eNone || m_eState == eDisconnected , "초기화 되지 않았거나 혹은 연결이 끊긴 대상만 초기화를 진행할 수 있습니다.");
+	if (m_eState != eNone && m_eState != eDisconnected) {
+		_NetLogWarn_("초기화 되지 않았거나 혹은 연결이 끊긴 대상만 초기화를 진행할 수 있습니다.");
+		return;
+	}
 
 	m_LocalEndPoint = {};
 	m_RemoteEndPoint = {};
@@ -51,10 +54,10 @@ bool Session::Bind(const IPv4EndPoint& bindAddr) {
 	DebugAssertMsg(m_Socket.IsValid(), "유효하지 않은 소켓입니다.");
 	int iBindRet = m_Socket.Bind(bindAddr);
 	if (iBindRet == SOCKET_ERROR) {
-		DebugAssertMsg(false, "소켓 바인드 실패 (%u)", Winsock::LastError());
+		_NetLogError_("소켓 바인드 실패 (%u)", Winsock::LastError());
 		return false;
 	}
-	NetLog("%s 바인드 완료\n", bindAddr.ToString().Source());
+	_NetLogInfo_("%s 바인드 완료", bindAddr.ToString().Source());
 	m_LocalEndPoint = bindAddr;
 	return true;
 }
@@ -64,10 +67,10 @@ bool Session::Connect(const IPv4EndPoint& remoteAddr) {
 	DebugAssertMsg(m_Socket.IsValid(), "연결에 실패했습니다. INVALID_SOCKET 입니다.");
 	int iConnectRet = m_Socket.Connect(remoteAddr);
 	if (iConnectRet == SOCKET_ERROR) {
-		DebugAssertMsg(false, "연결에 실패했습니다. (%u)", Winsock::LastError());
+		_NetLogError_("연결에 실패했습니다. (%u)", Winsock::LastError());
 		return false;
 	}
-	NetLog("%s 연결 완료\n", remoteAddr.ToString().Source());
+	_NetLogInfo_("%s 연결 완료", remoteAddr.ToString().Source());
 	m_RemoteEndPoint = remoteAddr;
 	return true;
 }
@@ -92,7 +95,7 @@ bool Session::Disconnect() {
 	
 	if (eState == eConnected)
 		Disconnected();
-
+	_NetLogInfo_("연결 해제");
 	return true;
 }
 
@@ -109,7 +112,7 @@ bool Session::SendAsync(ISendPacket* packet) {
 	if (iSendRet == SOCKET_ERROR) {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "SendAsync 실패 (%u)", uiErrorCode);
+			_NetLogError_("SendAsync 실패 (%u)", uiErrorCode);
 			pOverlapped->Release();
 			packet->Release();
 			return false;
@@ -141,7 +144,10 @@ CommandBufferPacket* Session::GetCommandBufferForSending() {
 	CommandBufferPacket* pWrappedPacket = dbg_new CommandBufferPacket(spOldSendBuffer);
 	
 #ifdef DebugMode
-	DebugAssertMsg(spOldSendBuffer->IsValid(), "무야! 보내고자하는 커맨드 센드 버퍼 데이터가 이상합니다.");
+	if (!spOldSendBuffer->IsValid()) {
+		_NetLogError_("무야! 보내고자하는 커맨드 센드 버퍼 데이터가 이상합니다.");
+		return nullptr;
+	}
 #endif
 	return pWrappedPacket;
 }
@@ -163,7 +169,7 @@ bool Session::RecvAsync() {
 	if (iResult == SOCKET_ERROR) {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "RecvAsync 실패 (%u)", uiErrorCode);
+			_NetLogError_("RecvAsync 실패 (%u)", uiErrorCode);
 			return false;
 		}
 	}
@@ -195,7 +201,7 @@ void Session::Received(Int32UL receivedBytes) {
 			NotifyCommand(pCmd);
 
 			if (m_spRecvBuffer->MoveReadPos(uiCmdLen) == false) {
-				DebugAssertMsg(false, "커맨드 크기가 이상합니다.");
+				_NetLogWarn_("커맨드 크기가 이상합니다.");
 				m_spRecvBuffer->ResetPosition();
 				return;
 			}
@@ -222,8 +228,11 @@ void Session::WaitForZeroPending() {
 		if (iPending == 0)
 			break;
 
-		DebugAssertMsg(iPending >= 0, "멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", iPending);
-		JCore::Thread::Sleep(10);
+		if (iPending < 0) {
+			_NetLogWarn_("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)");
+			Thread::Sleep(500);
+		}
+		Thread::Sleep(10);
 	}
 }
 

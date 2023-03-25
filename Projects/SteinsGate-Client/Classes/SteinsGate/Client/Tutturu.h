@@ -9,8 +9,6 @@
 #pragma once
 
 #include <SteinsGate/Common/Engine.h>
-#include <SteinsGate/Common/LoggerAbstract.h>
-#include <SteinsGate/Common/LoggerDefine.h>
 #include <SteinsGate/Common/Logo.h>
 
 #include <SteinsGate/Client/SGStruct.h>

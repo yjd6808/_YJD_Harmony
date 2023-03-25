@@ -11,6 +11,7 @@
 #include <SteinsGate/Common/ItemOptInfoLoader.h>
 #include <SteinsGate/Common/ChannelInfoLoader.h>
 #include <SteinsGate/Common/EnchantInfoLoader.h>
+#include <SteinsGate/Common/SGCharCommonInfoLoader.h>
 #include <SteinsGate/Common/ServerInfoLoader.h>
 #include <SteinsGate/Common/ItemInfoLoader.h>
 #include <SteinsGate/Client/SGActionInfoLoader.h>
@@ -70,13 +71,14 @@ void SGDataManager::initializeLoader() {
 	 m_pConfigFileLoaders[ConfigFileType::AI]				 = dbg_new SGAIInfoLoader(this);
 	 // m_pConfigFileLoaders[ConfigFileType::AttackBox]
 	 m_pConfigFileLoaders[ConfigFileType::AttackData]		 = dbg_new SGAttackDataInfoLoader(this);
-	 // m_pConfigFileLoaders[ConfigFileType::Channel]			 = dbg_new SGChannel(this);
+	 // m_pConfigFileLoaders[ConfigFileType::Channel]		 = dbg_new SGChannel(this);
 	 m_pConfigFileLoaders[ConfigFileType::Char_Animation]	 = dbg_new SGCharAnimationInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::Char_Base]	     = dbg_new SGCharInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::Client]			 = dbg_new SGClientInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::Item]				 = dbg_new ItemInfoLoader(this);
 	 m_pConfigFileLoaders[ConfigFileType::ItemOpt]			 = dbg_new ItemOptInfoLoader(this);
-	 // m_pConfigFileLoaders[ConfigFileType::Enchant]			 = dbg_new EnchantInfoLoader(this);
+	 m_pConfigFileLoaders[ConfigFileType::Char_Common]		 = dbg_new SGCharCommonInfoLoader(this);
+	 // m_pConfigFileLoaders[ConfigFileType::Enchant]		 = dbg_new EnchantInfoLoader(this);
 	 m_bInitialized = true;
 }
 

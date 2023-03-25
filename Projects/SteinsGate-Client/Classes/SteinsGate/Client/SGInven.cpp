@@ -35,8 +35,7 @@ SGInven* SGInven::get() {
 
 void SGInven::init() {
 	for (int i = 0; i < InvenItemType::Max; ++i) {
-		const SGCharBaseInfo::CommonInfo* pCommon = SGCharBaseInfo::getCommon();
-		m_iAvailableSlotCount[i] = pCommon->DefaultInvenSlotCount[i];
+		m_iAvailableSlotCount[i] = CoreCharCommon_v->DefaultInvenSlotCount[i];
 	}
 }
 

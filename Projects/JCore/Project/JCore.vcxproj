@@ -58,6 +58,9 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Logger\ConsoleLogger.cpp" />
+    <ClCompile Include="..\Sources\JCore\Logger\LoggerAbstract.cpp" />
+    <ClCompile Include="..\Sources\JCore\Logger\LoggerDefine.cpp" />
     <ClCompile Include="..\Sources\JCore\Memory.cpp" />
     <ClCompile Include="..\Sources\JCore\Pool\MemoryChunkQueue.cpp">
       <SubType>
@@ -277,6 +280,9 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Logger\ConsoleLogger.h" />
+    <ClInclude Include="..\Sources\JCore\Logger\LoggerAbstract.h" />
+    <ClInclude Include="..\Sources\JCore\Logger\LoggerDefine.h" />
     <ClInclude Include="..\Sources\JCore\Namespace.h">
       <SubType>
       </SubType>

@@ -71,6 +71,7 @@
     <ClCompile Include="..\Sources\JNetwork\Packet\CommandParser.cpp">
       <Filter>Packet</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\NetLoggerDefine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\Sources\JNetwork\Packet\CommandParser.h">
       <Filter>Packet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\NetLoggerDefine.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">

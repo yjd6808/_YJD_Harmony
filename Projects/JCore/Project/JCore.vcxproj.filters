@@ -43,6 +43,9 @@
     <Filter Include="Natvis">
       <UniqueIdentifier>{cd93ccfc-1929-4e3a-af4d-c7be6197f686}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{e21d1f4f-2b34-488d-a9ae-e8e4e2a2b398}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp" />
@@ -126,6 +129,15 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Debug\New.cpp">
       <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Logger\LoggerDefine.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Logger\ConsoleLogger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Logger\LoggerAbstract.cpp">
+      <Filter>Logger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -410,6 +422,15 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Bit.h" />
+    <ClInclude Include="..\Sources\JCore\Logger\LoggerAbstract.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Logger\LoggerDefine.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Logger\ConsoleLogger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

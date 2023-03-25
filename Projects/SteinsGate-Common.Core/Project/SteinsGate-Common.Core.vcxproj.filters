@@ -31,18 +31,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\DataManagerAbstract.cpp">
       <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\LoggerAbstract.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\ConsoleLogger.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\LoggerDefine.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Logo.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.cpp">
       <Filter>Data\MobBase</Filter>
     </ClCompile>
@@ -80,6 +68,10 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\DatabaseInfoLoader.cpp">
       <Filter>Data\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Logo.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\SGCharCommonInfoLoader.cpp">
+      <Filter>Data\CharCommon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -126,18 +118,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
       <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\LoggerAbstract.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ConsoleLogger.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\LoggerDefine.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h">
-      <Filter>Logger</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfo.h">
       <Filter>Data\MobBase</Filter>
@@ -211,13 +191,17 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\DatabaseInfo.h">
       <Filter>Data\Database</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfoLoader.h">
+      <Filter>Data\CharCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfo.h">
+      <Filter>Data\CharCommon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
       <UniqueIdentifier>{1edcb01f-acdf-4c32-aa70-a5f17ddc8615}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Logger">
-      <UniqueIdentifier>{fc588ce2-7aa2-4072-a3d3-aa9f737e607e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Data\MobBase">
       <UniqueIdentifier>{2f9aa599-999d-4d63-bf3e-df9f190b26cf}</UniqueIdentifier>
@@ -251,6 +235,9 @@
     </Filter>
     <Filter Include="Data\Database">
       <UniqueIdentifier>{fc0ef7b1-0e5f-4208-8da9-997f50e6e087}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\CharCommon">
+      <UniqueIdentifier>{7d01469f-122b-464d-b700-a03cd2e3f866}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

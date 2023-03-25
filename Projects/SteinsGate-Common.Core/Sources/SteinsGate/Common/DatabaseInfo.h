@@ -21,7 +21,7 @@ struct DatabaseInfo : ConfigDataAbstract
 	int ConnectionPoolSize[ServerProcessType::Max];
 	SGString AccountId;		 // root
 	SGString AccountPass;	 // 1234
-	SGString SchemaName;	 // steins-gate
+	SGString SchemaName;	 // steinsgate
 	int MaxConnection[ServerProcessType::Max];
 	int IocpThreadCount[ServerProcessType::Max];
 	
