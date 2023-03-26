@@ -56,7 +56,7 @@ namespace SGToolsCommon.Primitive
         public bool Contains(IntRect otherRect)
         {
             return (otherRect.X >= X && otherRect.X + otherRect.Width <= X + Width &&
-                    otherRect.X >= X && otherRect.X + otherRect.Height <= X + Height);
+                    otherRect.Y >= Y && otherRect.Y + otherRect.Height <= Y + Height);
         }
 
         public override string ToString()

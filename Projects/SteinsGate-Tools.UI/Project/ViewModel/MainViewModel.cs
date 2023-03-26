@@ -75,7 +75,11 @@ namespace SGToolsUI.ViewModel
 
             // ZoomLevel 업데이트를 한다고해서 윈도우의 Width, Height 업데이트가 즉시 이뤄지지 않는다.
             // 이번 업데이트가 지나간 후 가운데로 옮겨주기 위해서 BeginInvoke로 처리하였다.
-            View.Dispatcher.BeginInvoke(() => View.MoveToClosestDisplayCenter());
+            View.Dispatcher.BeginInvoke(async () =>
+            {
+                await Task.Delay(10);
+                View.MoveToClosestDisplayCenter();
+            });
 
             LogBox.Style = (Style)Application.Current.FindResource("LogListBox");
             
