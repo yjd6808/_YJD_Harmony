@@ -175,6 +175,7 @@ namespace SGToolsUI.Model.Main
         public override object Clone()
         {
             SGUIGroup group = new SGUIGroup();
+            group._visualSize = _visualSize;
             group.CopyFrom(this);
 
             for (int i = 0; i < _children.Count; ++i)
