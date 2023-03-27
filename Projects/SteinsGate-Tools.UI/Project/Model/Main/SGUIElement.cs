@@ -803,6 +803,8 @@ namespace SGToolsUI.Model.Main
         {
             ViewModel = element.ViewModel;
 
+            _horizontalAlignment = element._horizontalAlignment;
+            _verticalAlignment = element._verticalAlignment;
             _canvasSelectable = element._canvasSelectable;
             _visualName = element._visualName;
             _visualPosition = element._visualPosition;
