@@ -71,11 +71,15 @@ namespace SGToolsCommon.Sga
                     return;
 
                 if (!value)
+                {
+                    _linearDodge = false;
+                    Unload();
                     Load();
+                }
                 else
+                {
                     ApplyLinearDodge();
-
-                _linearDodge = value;
+                }
             }
         }
 
