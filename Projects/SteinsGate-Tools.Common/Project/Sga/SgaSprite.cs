@@ -87,6 +87,9 @@ namespace SGToolsCommon.Sga
                 if (!Loaded)
                     Load();
 
+                if (_linearDodge)
+                    ApplyLinearDodge();
+
                 // 얕은 복사 좋아
                 var source = BitmapSource.Create(Width, Height, 0, 0, PixelFormats.Bgra32, null, _data, 4 * Width);
                 return source;
@@ -144,11 +147,14 @@ namespace SGToolsCommon.Sga
             stream.Read(_data, 0, _dataLength);
 
             Decompress();
+
+            if (_linearDodge)
+                ApplyLinearDodge(true);
         }
 
-        public void ApplyLinearDodge()
+        public void ApplyLinearDodge(bool force = false)
         {
-            if (_linearDodge)
+            if (!force && _linearDodge)
                 return;
 
             if (!Loaded)
@@ -164,7 +170,6 @@ namespace SGToolsCommon.Sga
         public override void Unload()
         {
             _data = null;
-            
         }
 
         private void Decompress()

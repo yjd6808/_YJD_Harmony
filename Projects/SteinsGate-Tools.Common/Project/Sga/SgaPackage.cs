@@ -112,7 +112,6 @@ namespace SGToolsCommon.Sga
         {
             foreach (var element in _elementMap.Values)
                 element.Unload();
-            _elementMap.Clear();
             OnPropertyChanged(nameof(ElementHeaderList));
         }
 

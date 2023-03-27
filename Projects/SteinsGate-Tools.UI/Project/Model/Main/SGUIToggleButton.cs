@@ -93,7 +93,17 @@ namespace SGToolsUI.Model.Main
         }
 
         [Browsable(false)]
-        public BitmapSource VisualSpriteSource => VisualSprite.Source;
+        public BitmapSource VisualSpriteSource
+        {
+            get
+            {
+                SGUISpriteInfo visualSprite = VisualSprite;
+                // 팩 언로딩되었다가 다시 로딩된 경우 텍스쳐의 선형 닷지가 초기화되어있기때문에, 소스 가져올때 재적용해줘야함
+                if (_linearDodge && !visualSprite.IsNull)
+                    visualSprite.LinearDodge = _linearDodge;
+                return visualSprite.Source;
+            }
+        }
 
         private void NotifySpriteChanged()
         {

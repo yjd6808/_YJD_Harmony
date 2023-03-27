@@ -69,8 +69,6 @@ namespace SGToolsCommon.Sga
 
             foreach (var sgaPackage in _packages)
                 sgaPackage.UnloadAll();
-
-            PackageMap.Clear();
             _packages = null;
             NotifyUpdateList();
         }
