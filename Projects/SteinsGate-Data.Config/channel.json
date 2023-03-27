@@ -1,38 +1,46 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "채널 목록",
-    "__comment__2": "엔터런스 타입: 1: 초보, 엔터런스 타입: 2: 경매,  엔터런스 타입: 3: 일반",
+    "__comment__2": "엔터런스 타입: 초보(0), 경매(1), 일반(2)",
+    "__comment__3": "sga: sprite_interface.sga",
+    "__comment__4": "img: channel_monster.img",
 
     "channel_type": [
         {
             "code": 1,
             "name": "초보 - 엘븐 가드",
-            "enterance_type": 1
+            "monster_sprite": "8 9",
+            "enterance_type": 0
         },
         {
             "code": 2,
             "name": "거래 - 경매장",
-            "enterance_type": 2
+            "monster_sprite": "10 11",
+            "enterance_type": 1
         },
         {
             "code": 3,
             "name": "그란플로리스",
-            "enterance_type": 3
+            "monster_sprite": "0 1",
+            "enterance_type": 2
         },
         {
             "code": 4,
             "name": "하늘성",
-            "enterance_type": 3
+            "monster_sprite": "2 3",
+            "enterance_type": 2
         },
         {
             "code": 5,
             "name": "베히모스",
-            "enterance_type": 3
+            "monster_sprite": "4 5",
+            "enterance_type": 2
         },
         {
             "code": 6,
             "name": "알프라이라",
-            "enterance_type": 3
+            "monster_sprite": "6 7",
+            "enterance_type": 2
         }
     ]
 

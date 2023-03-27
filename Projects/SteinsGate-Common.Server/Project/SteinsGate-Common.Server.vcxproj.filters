@@ -58,8 +58,5 @@
     <Filter Include="Database">
       <UniqueIdentifier>{b67e8325-f0df-4416-9a2c-c3994194080e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="InterServer">
-      <UniqueIdentifier>{30d5f809-b83d-4e6a-9182-18fb46469213}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

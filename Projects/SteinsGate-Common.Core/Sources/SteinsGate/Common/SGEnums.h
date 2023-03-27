@@ -725,14 +725,15 @@ SEnumMiddle(GameServerType)
 SEnumMiddleEnd(GameServerType)
 
 SEnumBegin(EnteranceType)
-Begin = 1,
-Newbie = Begin,
+Newbie,
+Begin = Newbie,
 Auction,
 Normal,
 End = Normal
 SEnumMiddle(EnteranceType)
 
 SEnumMiddleEnd(EnteranceType)
+
 
 
 SEnumBegin(ChannelDensity)

@@ -48,6 +48,7 @@ bool SGCharCommonInfoLoader::load() {
 }
 
 void SGCharCommonInfoLoader::readCharCommonInfo(Value& charCommonRoot, SGCharCommonInfo* charCommonInfo) {
+	charCommonInfo->Code = charCommonRoot["code"].asInt();
 	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Equip] = charCommonRoot["default_equip_slot_count"].asInt();
 	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Consume] = charCommonRoot["default_consume_slot_count"].asInt();
 	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Etc] = charCommonRoot["default_etc_slot_count"].asInt();
@@ -55,9 +56,8 @@ void SGCharCommonInfoLoader::readCharCommonInfo(Value& charCommonRoot, SGCharCom
 	charCommonInfo->DefaultInvenSlotCount[InvenItemType::Avatar] = charCommonRoot["default_avatar_slot_count"].asInt();
 
 	Value& expRoot = charCommonRoot["exp"];
-	int z = expRoot.size();
 	for (int i = 0; i < expRoot.size(); ++i) {
-		charCommonInfo[i].Exp.PushBack(expRoot[i].asInt());
+		charCommonInfo->Exp.PushBack(expRoot[i].asInt());
 	}
 }
 
