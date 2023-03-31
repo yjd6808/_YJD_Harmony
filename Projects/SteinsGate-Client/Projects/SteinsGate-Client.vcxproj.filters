@@ -91,8 +91,17 @@
     <Filter Include="Action\Gunner">
       <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Extension">
+    <Filter Include="Net">
       <UniqueIdentifier>{afca49d9-5dad-4dcb-8803-7f73c14f3200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Listener">
+      <UniqueIdentifier>{374a8a12-c841-4241-8c2e-917902a40305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Send">
+      <UniqueIdentifier>{189d1ff7-f473-4a4d-8bc7-2f009d21e5ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Parse">
+      <UniqueIdentifier>{95abad0d-5fc9-48a1-a3f1-0039e977b60b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -390,6 +399,18 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGWin32Helper.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetClientEventListener.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetClientGroup.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetAuthEventListener.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetLobbyEventListener.cpp">
+      <Filter>Net\Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -747,6 +768,21 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGWin32Helper.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetClientEventListener.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetClientGroup.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetAuthEventListener.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetLobbyEventListener.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetCore.h">
+      <Filter>Net</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

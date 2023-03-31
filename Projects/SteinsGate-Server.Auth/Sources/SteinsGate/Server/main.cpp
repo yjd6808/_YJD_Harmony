@@ -1,8 +1,11 @@
-#include "Auth.h"
+﻿#include "Auth.h"
 #include "AuthCoreHeader.h"
 
 USING_NS_JC;
 USING_NS_JNET;
+
+
+
 
 int main() {
 	Winsock::Initialize(2, 2);
@@ -10,7 +13,7 @@ int main() {
 	InitializeServerAuthLogo(true, 24);
 	InitializeDefaultLogger();
 	InitializeAuthCore();
-	
+
 	{
 		CoreNetMaster_v->MainLoop();
 	}

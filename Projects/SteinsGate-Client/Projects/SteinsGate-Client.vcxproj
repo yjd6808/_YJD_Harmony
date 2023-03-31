@@ -54,6 +54,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGAttackDataInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetAuthEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGCamera.cpp">
       <SubType>
       </SubType>
@@ -120,6 +121,9 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterWalkActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetClientEventListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetClientGroup.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetLobbyEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGPhysicsActor.cpp">
       <SubType>
       </SubType>
@@ -406,6 +410,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAttackDataInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAttackDataInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetAuthEventListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGCamera.h">
       <SubType>
       </SubType>
@@ -415,6 +420,13 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetClientEventListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetClientGroup.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetCore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetLobbyEventListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.h">
       <SubType>
       </SubType>

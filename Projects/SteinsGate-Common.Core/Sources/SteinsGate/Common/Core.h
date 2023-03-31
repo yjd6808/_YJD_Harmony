@@ -26,6 +26,8 @@
 #include <JCore/Utils/Console.h>
 
 #include <JCore/Threading/Thread.h>
+#include <JCore/Threading/Pulser.h>
+
 #include <JCore/FileSystem/File.h>
 #include <JCore/FileSystem/Path.h>
 #include <JCore/FileSystem/FileStream.h>
@@ -51,6 +53,8 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecvFrom.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
+#include <JNetwork/Packet/CommandParser.h>
+
 
 #include <SteinsGate/Common/SGStruct.h>
 #include <SteinsGate/Common/SGConfig.h>
@@ -167,6 +171,7 @@ using SGCommandBufferPacket = JNetwork::CommandBufferPacket;
 using SGOverlappedPtr = JNetwork::IOCPOverlappedPtr;
 using SGISendPacketPtr = JNetwork::ISendPacketPtr;
 using SGCommandBufferPtr = JNetwork::CommandBufferPtr;
+using SGCommandParser = JNetwork::CommandParser;
 
 
 // ============================================================
