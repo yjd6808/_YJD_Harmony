@@ -10,10 +10,6 @@
 #include <JNetwork/IPEndPoint.h>
 
 
-#ifndef Out_
-	#define Out_
-#endif
-
 NS_JNET_BEGIN
 
 	NS_DETAIL_BEGIN
@@ -49,6 +45,7 @@ public:
 	int GetRecvBufferSize() const;
 	int GetLingerTimeout() const;
 	int GetMaximumSegmentSize() const;
+	int GetErrorCode() const;
 	
 	// 활성화된 경우 TRUE(1), 비활성화된 경우 FALSE(0)을 반환
 	// 오류로 실패한 경우 SOCKET_ERROR(-1) 반환

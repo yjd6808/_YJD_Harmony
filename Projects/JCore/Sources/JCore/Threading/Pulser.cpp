@@ -12,11 +12,11 @@
 
 NS_JC_BEGIN
 
-Pulser::Pulser(Int32U interval) : Interval(interval) {}
+Pulser::Pulser(Int32U intervalMiliseconds) : Interval(intervalMiliseconds) {}
 
 int Pulser::Wait()  {
 	const TimeSpan gap = Watch.StopContinue();
-	const Int32U uiGap = (Int32U)gap.GetTotalMicroSecondsInt();
+	const Int32U uiGap = (Int32U)gap.GetTotalMiliSeconds();
 	int iIntervalCount = 1;
 
 	if (uiGap <= Interval) {

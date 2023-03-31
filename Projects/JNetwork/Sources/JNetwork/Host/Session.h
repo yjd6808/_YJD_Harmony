@@ -34,7 +34,6 @@ public:
 
 	void Initialize() override;
 	bool Bind(const IPv4EndPoint& bindAddr);
-	bool Connect(const IPv4EndPoint& remoteAddr);
 	bool Disconnect();
 	bool SendAsync(ISendPacket* packet);
 	bool SendAsync(const CommandBufferPtr& buffer);

@@ -46,6 +46,71 @@ void TcpClient::Initialize() {
 }
 
 
+// https://stackoverflow.com/questions/46045434/winsock-c-connect-timeout
+// select로 타임아웃 연결 구현가능
+bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) {
+
+	if (!m_Socket.IsValid()) {
+		_NetLogError_("연결에 실패했습니다. INVALID_SOCKET 입니다.", Winsock::LastError());
+		return false;
+	}
+
+
+	if (m_Socket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
+		const Int32U uiErrorCode = Winsock::LastError();
+		_NetLogError_("연결에 실패했습니다. 논블로킹 소켓 전환실패 (%u)", uiErrorCode);
+		return false;
+	}
+
+	if (m_Socket.Connect(remoteAddr) == SOCKET_ERROR) {
+
+		const Int32U uiErrorCode = Winsock::LastError();
+
+		if (uiErrorCode != WSAEWOULDBLOCK) {
+			_NetLogError_("연결에 실패했습니다. (%u)", uiErrorCode);
+			return false;
+		}
+
+		fd_set setWrite, setException;
+
+		FD_ZERO(&setWrite);
+		FD_ZERO(&setException);
+
+		FD_SET(m_Socket.Handle, &setWrite);
+		FD_SET(m_Socket.Handle, &setException);
+
+		timeval timeout;
+		timeout.tv_sec = timeoutMiliseconds / 1000;
+		timeout.tv_usec = (timeoutMiliseconds % 1000) * 1000;
+
+		const int iSelectRet = select(0, nullptr, &setWrite, &setException, timeoutMiliseconds == 0 ? nullptr : &timeout);
+		if (iSelectRet <= 0) {
+			// 이때 연결을 시도 중(10037)일 수도 있지만 시간이 지났으므로 타임아웃 처리
+			m_Socket.Close();
+			m_eState = eDisconnected;
+			Initialize();
+			_NetLogError_("연결에 실패했습니다.(타임아웃)");
+			WSASetLastError(WSAETIMEDOUT);
+			return false;
+		}
+
+		if (FD_ISSET(m_Socket.Handle, &setException)) {
+			const int err = m_Socket.Option().GetErrorCode();
+			_NetLogError_("연결에 실패했습니다.(예외발생: %d)", err);
+			m_Socket.Close();
+			m_eState = eDisconnected;
+			Initialize();
+			WSASetLastError(err);
+			return false;
+		}
+	}
+
+	_NetLogInfo_("%s 연결 완료", remoteAddr.ToString().Source());
+	m_RemoteEndPoint = remoteAddr;
+	return true;
+}
+
+
 bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 	// 초기화된 상태에서만 연결을 진행할 수 있습니다.

@@ -51,8 +51,12 @@ void Session::Initialize() {
 }
 
 bool Session::Bind(const IPv4EndPoint& bindAddr) {
-	DebugAssertMsg(m_Socket.IsValid(), "유효하지 않은 소켓입니다.");
-	int iBindRet = m_Socket.Bind(bindAddr);
+	if (!m_Socket.IsValid()) {
+		_NetLogError_("바인드에 실패했습니다. INVALID_SOCKET 입니다.");
+		return false;
+	}
+
+	const int iBindRet = m_Socket.Bind(bindAddr);
 	if (iBindRet == SOCKET_ERROR) {
 		_NetLogError_("소켓 바인드 실패 (%u)", Winsock::LastError());
 		return false;
@@ -62,18 +66,6 @@ bool Session::Bind(const IPv4EndPoint& bindAddr) {
 	return true;
 }
 
-bool Session::Connect(const IPv4EndPoint& remoteAddr) {
-
-	DebugAssertMsg(m_Socket.IsValid(), "연결에 실패했습니다. INVALID_SOCKET 입니다.");
-	int iConnectRet = m_Socket.Connect(remoteAddr);
-	if (iConnectRet == SOCKET_ERROR) {
-		_NetLogError_("연결에 실패했습니다. (%u)", Winsock::LastError());
-		return false;
-	}
-	_NetLogInfo_("%s 연결 완료", remoteAddr.ToString().Source());
-	m_RemoteEndPoint = remoteAddr;
-	return true;
-}
 
 bool Session::Disconnect() {
 

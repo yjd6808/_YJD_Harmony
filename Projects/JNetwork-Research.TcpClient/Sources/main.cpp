@@ -19,7 +19,7 @@ TcpClientNetGroup* pClientGroup;
 
 int main() {
 	Winsock::Initialize(2, 2);
-
+	InitializeNetLogger();
 	pClientGroup = dbg_new TcpClientNetGroup;
 	pClientGroup->Initialize();
 
@@ -39,6 +39,7 @@ int main() {
 
 	DeleteSafe(pClientGroup);
 
+	FinalizeNetLogger();
 	Winsock::Finalize();
 	return 0;
 }

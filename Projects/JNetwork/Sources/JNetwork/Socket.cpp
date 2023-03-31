@@ -514,6 +514,18 @@ int SocketOption::GetMaximumSegmentSize() const {
 	return mss;
 }
 
+int SocketOption::GetErrorCode() const {
+	int errorCode;
+	int sz = sizeof(int);
+	const int ret = getsockopt(m_Socket, SOL_SOCKET, SO_ERROR, (char*)&errorCode, &sz);
+
+	if (ret == SOCKET_ERROR) {
+		return SOCKET_ERROR;
+	}
+
+	return errorCode;
+}
+
 int SocketOption::IsNagleEnabled() const {
 	int op;
 	int sz = sizeof(int);
@@ -568,7 +580,6 @@ int SocketOption::IsKeepAliveEnabled() const {
 
 	return op != FALSE ? TRUE : FALSE;
 }
-
 
 
 NS_JNET_END

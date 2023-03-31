@@ -11,6 +11,7 @@ USING_NS_JNET;
 
 int main() {
 	Winsock::Initialize(2, 2);
+	InitializeNetLogger();
 	{
 		/*
 		auto pPacket = dbg_new DynamicPacket<DynamicMessage, DynamicMessage, DynamicMessage>(5, 6, 7);
@@ -19,12 +20,14 @@ int main() {
 		auto a3 = pPacket->Get<2>();
 		*/
 
+		Sleep(5000);
 		ServerNetMaster master;
 		master.Initialize();
 
 		while (getchar() != 'c') {}
 
 	}
+	FinalizeNetLogger();
 	Winsock::Finalize();
 	return 0;
 }

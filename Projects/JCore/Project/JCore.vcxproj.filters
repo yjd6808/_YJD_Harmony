@@ -139,6 +139,9 @@
     <ClCompile Include="..\Sources\JCore\Logger\LoggerAbstract.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Threading\Pulser.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -430,6 +433,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Logger\ConsoleLogger.h">
       <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\Pulser.h">
+      <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

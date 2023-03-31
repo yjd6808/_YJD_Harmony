@@ -16,7 +16,7 @@ struct Pulser
 {
 	using PulserWatch = StopWatch<StopWatchMode::System>;
 
-	Pulser(Int32U interval);
+	Pulser(Int32U intervalMiliseconds);
 	int Wait();
 
 	PulserWatch Watch;

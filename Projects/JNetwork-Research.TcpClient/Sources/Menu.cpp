@@ -25,15 +25,18 @@ extern TcpClientNetGroup* pClientGroup;
 static void SendMsg(TcpClient* client);
 
 void ConnectLogin() {
-	pClientGroup->GetLogin()->ConnectAsync(ServerLoginTcpAddr);
+	// pClientGroup->GetLogin()->ConnectAsync(ServerLoginTcpAddr);
+	pClientGroup->GetLogin()->Connect(ServerLoginTcpAddr, 1000);
 }
 
 void ConnectChannel() {
-	pClientGroup->GetChannel()->ConnectAsync(ServerChannelTcpAddr);
+	// pClientGroup->GetChannel()->ConnectAsync(ServerChannelTcpAddr);
+	pClientGroup->GetLogin()->Connect(ServerChannelTcpAddr, 1000);
 }
 
 void ConnectGame() {
-	pClientGroup->GetGame()->ConnectAsync(ServerGameTcpAddr);
+	// pClientGroup->GetGame()->ConnectAsync(ServerGameTcpddr);
+	pClientGroup->GetLogin()->Connect(ServerGameTcpAddr, 1000);
 }
 
 void SendLogin() {

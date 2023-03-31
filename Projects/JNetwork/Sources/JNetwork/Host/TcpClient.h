@@ -23,6 +23,7 @@ public:
 	~TcpClient() override;
 
 	void Initialize() override;
+	bool Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds = 0);
 	bool ConnectAsync(const IPv4EndPoint& destination);
 	void Connected() override;
 	void ConnectFailed(Int32U errorCode);
