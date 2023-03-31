@@ -8,11 +8,11 @@
 #include <JCore/Exception.h>
 #include <JCore/Sync/LockGuard.h>
 #include <JCore/Sync/NormalLock.h>
+#include <JCore/Threading/Thread.h>
 
 
 NS_JC_BEGIN
-
-template class LockGuard<NormalLock>;
+	template class LockGuard<NormalLock>;
 
 NormalLock::NormalLock() {
 	InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
@@ -23,15 +23,17 @@ NormalLock::~NormalLock() {
 }
 
 void NormalLock::Lock() {
-	if (m_hOwnThread != nullptr)
-		throw RuntimeException("이미 잠겨있습니다.");
+	if (m_hOwnThread == (int)Thread::GetThreadId()) {
+		DebugAssertMsg(false, "같은 쓰레드에서 재잠금을 시도했습니다.");
+		throw RuntimeException("같은 쓰레드에서 재잠금을 시도했습니다.");
+	}
 
 	EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
-	m_hOwnThread = m_CriticalSection.OwningThread;
+	m_hOwnThread = Thread::GetThreadId();
 }
 
 void NormalLock::Unlock() {
-	m_hOwnThread.Store(nullptr);
+	m_hOwnThread = -1;
 	LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
 }
 
@@ -41,14 +43,14 @@ bool NormalLock::TryLock() {
         return false;
 
 	if ((bool)TryEnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection))) {
-		m_hOwnThread = m_CriticalSection.OwningThread;
+		m_hOwnThread = Thread::GetThreadId();
 		return true;
 	}
 	return false;
 }
 
 bool NormalLock::IsLocked() {
-	return m_hOwnThread != nullptr;
+	return m_hOwnThread != -1;
 }
 
 NS_JC_END
