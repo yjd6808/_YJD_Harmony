@@ -54,13 +54,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JCore-Test", "Projects\JCor
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Research.TcpClient", "Projects\JNetwork-Research.TcpClient\Project\JNetwork-Research.TcpClient.vcxproj", "{D4072F29-4BBA-4686-BD94-73BD73E960F1}"
 	ProjectSection(ProjectDependencies) = postProject
-		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
 		{F1F50093-ABEE-4EA6-BF7A-7583CDFFD414} = {F1F50093-ABEE-4EA6-BF7A-7583CDFFD414}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JNetwork-Research.Server", "Projects\JNetwork-Research.TcpServer\Project\JNetwork-Research.TcpServer.vcxproj", "{AF76CC7C-83B4-4B7C-A737-333DCC649CB1}"
 	ProjectSection(ProjectDependencies) = postProject
-		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
 		{F1F50093-ABEE-4EA6-BF7A-7583CDFFD414} = {F1F50093-ABEE-4EA6-BF7A-7583CDFFD414}
 	EndProjectSection
 EndProject
@@ -143,6 +141,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp1", "C:\Users\jdyun\Desktop\WpfApp1\WpfApp1.csproj", "{F1C62165-7A8C-4F48-AD2F-54A24F9089D5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{660B1B6C-126B-4F66-990E-2C0C738ABB17} = {660B1B6C-126B-4F66-990E-2C0C738ABB17}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Center", "Projects\SteinsGate-Server.Center\Project\SteinsGate-Server.Center.vcxproj", "{3E130255-093D-4254-8099-7A83450949A4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59C54A2A-4525-46F7-9F25-CCCA6D58151F} = {59C54A2A-4525-46F7-9F25-CCCA6D58151F}
 	EndProjectSection
 EndProject
 Global
@@ -419,6 +422,18 @@ Global
 		{F1C62165-7A8C-4F48-AD2F-54A24F9089D5}.Release|x64.Build.0 = Release|Any CPU
 		{F1C62165-7A8C-4F48-AD2F-54A24F9089D5}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1C62165-7A8C-4F48-AD2F-54A24F9089D5}.Release|x86.Build.0 = Release|Any CPU
+		{3E130255-093D-4254-8099-7A83450949A4}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{3E130255-093D-4254-8099-7A83450949A4}.Debug|Any CPU.Build.0 = Debug|x64
+		{3E130255-093D-4254-8099-7A83450949A4}.Debug|x64.ActiveCfg = Debug|x64
+		{3E130255-093D-4254-8099-7A83450949A4}.Debug|x64.Build.0 = Debug|x64
+		{3E130255-093D-4254-8099-7A83450949A4}.Debug|x86.ActiveCfg = Debug|Win32
+		{3E130255-093D-4254-8099-7A83450949A4}.Debug|x86.Build.0 = Debug|Win32
+		{3E130255-093D-4254-8099-7A83450949A4}.Release|Any CPU.ActiveCfg = Release|x64
+		{3E130255-093D-4254-8099-7A83450949A4}.Release|Any CPU.Build.0 = Release|x64
+		{3E130255-093D-4254-8099-7A83450949A4}.Release|x64.ActiveCfg = Release|x64
+		{3E130255-093D-4254-8099-7A83450949A4}.Release|x64.Build.0 = Release|x64
+		{3E130255-093D-4254-8099-7A83450949A4}.Release|x86.ActiveCfg = Release|Win32
+		{3E130255-093D-4254-8099-7A83450949A4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -454,6 +469,7 @@ Global
 		{59C54A2A-4525-46F7-9F25-CCCA6D58151F} = {A77DCD97-7D38-4BD9-9152-AFB12EBCC3EB}
 		{CAB28390-FB50-4E46-8907-CF3C29DECA8C} = {8FA09AC2-3AAE-4501-80EA-48EDE2627953}
 		{F1C62165-7A8C-4F48-AD2F-54A24F9089D5} = {8FA09AC2-3AAE-4501-80EA-48EDE2627953}
+		{3E130255-093D-4254-8099-7A83450949A4} = {9D7356D0-B912-44B2-BF18-60E410CB7623}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C994231-C2E1-4E94-8705-982F33CCBE70}

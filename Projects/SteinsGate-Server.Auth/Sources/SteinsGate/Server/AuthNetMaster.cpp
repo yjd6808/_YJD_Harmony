@@ -14,8 +14,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-AuthNetMaster::AuthNetMaster()
-{}
+AuthNetMaster::AuthNetMaster() {}
 
 void AuthNetMaster::Initialize() {
 	const auto spAuthNetGroup = MakeShared<AuthNetGroup>();
@@ -24,5 +23,11 @@ void AuthNetMaster::Initialize() {
 }
 
 void AuthNetMaster::MainLoop() {
-	
+	constexpr int PulseInterval = 100;
+	Pulser pulser(PulseInterval);
+
+	while (true) {
+		int iPulseIntervalCount = pulser.Wait();
+		
+	}
 }

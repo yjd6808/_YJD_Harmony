@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterCore.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\DataManager.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\Center.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterServer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetMaster.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetGroup.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterEventListener.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterSession.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterCoreHeader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterCore.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\Center.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterServer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetMaster.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetGroup.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterEventListener.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterSession.h" />
+  </ItemGroup>
+</Project>

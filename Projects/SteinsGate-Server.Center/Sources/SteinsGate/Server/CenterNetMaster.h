@@ -10,18 +10,18 @@
 
 #include <JNetwork/NetMaster.h>
 
-class AuthNetMaster : public JNetwork::NetMaster
+class CenterNetMaster : public JNetwork::NetMaster
 {
 private:
-	AuthNetMaster();
+	CenterNetMaster();
 public:
 	void Initialize() override;
 	void MainLoop();
 
-	static AuthNetMaster* Get() {
-		static AuthNetMaster* pInst;
+	static CenterNetMaster* Get() {
+		static CenterNetMaster* pInst;
 		if (pInst == nullptr) {
-			pInst = dbg_new AuthNetMaster();
+			pInst = dbg_new CenterNetMaster();
 		}
 		return pInst;
 	}

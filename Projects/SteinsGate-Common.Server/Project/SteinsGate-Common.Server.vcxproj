@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\IOCPOverlappedQuery.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnection.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h" />

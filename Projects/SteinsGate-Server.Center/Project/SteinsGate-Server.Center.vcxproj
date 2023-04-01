@@ -18,10 +18,78 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Server\Center.cpp">
+      <SubType>
+      </SubType>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterEventListener.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetGroup.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetMaster.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterServer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterSession.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\DataManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterCore.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Server\Center.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterEventListener.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetGroup.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterServer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetMaster.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterCore.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterCoreHeader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterSession.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{216F78E9-0AA6-4084-BEBF-AD3C274949E7}</ProjectGuid>
+    <ProjectGuid>{3E130255-093D-4254-8099-7A83450949A4}</ProjectGuid>
     <RootNamespace>JNetworkMain</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>SteinsGate-Server.Center</ProjectName>
@@ -75,12 +143,12 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\JNetwork-Research.Common\Sources</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JNetwork-Research.Common\Output\$(Platform)\$(Configuration)\;$(LibraryPath);$(LibraryPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Server\Sources;$(SolutionDir)ThirdParty\MySQL80\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JNetwork-Research.Common\Output\$(Platform)\$(Configuration)\;;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Server\Sources;$(SolutionDir)ThirdParty\MySQL80\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
@@ -89,12 +157,12 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JNetwork-Research.Common\Output\$(Platform)\$(Configuration)\;;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Server\Sources;$(SolutionDir)ThirdParty\MySQL80\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JNetwork-Research.Common\Output\$(Platform)\$(Configuration)\;;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Server\Sources;$(SolutionDir)ThirdParty\MySQL80\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
@@ -108,12 +176,23 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Center.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Center.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;JNetwork-Research.Common.lib</AdditionalDependencies>
+      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;libmysql.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Server.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>x86 플랫폼은 지원하지 않습니다.</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -124,12 +203,20 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Center.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Center.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;JNetwork-Research.Common.lib</AdditionalDependencies>
+      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;libmysql.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Server.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -143,14 +230,25 @@
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Center.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Center.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;JNetwork-Research.Common.lib</AdditionalDependencies>
+      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;libmysql.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Server.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>x86 플랫폼은 지원하지 않습니다.</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -164,14 +262,22 @@
       <AdditionalOptions>/utf-8</AdditionalOptions>
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Center.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)Center.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;JNetwork-Research.Common.lib</AdditionalDependencies>
+      <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;libmysql.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Server.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

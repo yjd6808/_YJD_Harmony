@@ -28,6 +28,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
+      <Filter>InterServer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
@@ -57,6 +60,9 @@
   <ItemGroup>
     <Filter Include="Database">
       <UniqueIdentifier>{b67e8325-f0df-4416-9a2c-c3994194080e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InterServer">
+      <UniqueIdentifier>{913d5943-136d-45e8-9591-f68f5ba708f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
