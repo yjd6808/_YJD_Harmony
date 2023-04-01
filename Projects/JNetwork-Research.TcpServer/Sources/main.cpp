@@ -9,7 +9,19 @@
 USING_NS_JC;
 USING_NS_JNET;
 
+StaticCmdBegin(AOZS, 150)
+char Msg[20];
+StaticCmdEnd(AOZS)
+
+DynamicCmdBegin(AOZ, Cmd_DynamicMessage, char)
+Dummy dmg;
+long long d = 4;
+char Msg[1];
+DynamicCmdEnd(AOZ)
+
 int main() {
+	int a = AOZS::Size();
+
 	Winsock::Initialize(2, 2);
 	InitializeNetLogger();
 	{
@@ -20,7 +32,6 @@ int main() {
 		auto a3 = pPacket->Get<2>();
 		*/
 
-		Sleep(5000);
 		ServerNetMaster master;
 		master.Initialize();
 

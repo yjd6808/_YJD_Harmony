@@ -44,10 +44,15 @@ bool TcpSession::AcceptAsync() {
 	SOCKET hListeningSock = m_pServer->SocketHandle();
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedAccept(this, m_spIocp.GetPtr());
 
+
 	if (m_Socket.AcceptEx(
 		hListeningSock,
 		m_spRecvBuffer->GetRemainBuffer().buf,
+#if TEST_DUMMY_PACKET_TRANSFER
 		TEST_DUMMY_PACKET_SIZE,	// TcpClient에서 테스트 더미 패킷을 보내기 땜에 8로 세팅
+#else
+		0,
+#endif
 		&receivedBytes,
 		pOverlapped
 	) == FALSE) {

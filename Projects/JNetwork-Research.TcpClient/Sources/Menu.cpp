@@ -74,6 +74,7 @@ static void SendMsg(TcpClient* client) {
 	}
 
 	int length = s.LengthWithNull();
+	
 
 	// 클라이언트 송신 버퍼를 활용한 전송
 	StaticMessage& msg1 =client->SendAlloc<StaticMessage>();
@@ -106,8 +107,15 @@ static void SendMsg(TcpClient* client) {
 	// auto msg9 = dbg_new SinglePacket<DynamicMessage>(); assert 발사: 다이나믹 커맨드는 명시적으로 무조건 사이즈 전달
 	auto msg9 = dbg_new SinglePacket<DynamicMessage>(length);
 	StringUtil::CopyUnsafe(msg9->Cmd.Msg, s.Source);
+
+	// 스태틱 패킷 전송
+	auto pPacket = dbg_new StaticPacket<StaticMessage>();
+	StaticMessage* arg1 = pPacket->Get<0>();
+	arg1->Msg.SetString(s);
+	auto g = pPacket->GetWSABuf();
 	
 
+	client->SendAsync(pPacket);
 	client->SendAsync(msg9);
 	client->SendAsync(buffer);
 	client->SendAsync(packet1);

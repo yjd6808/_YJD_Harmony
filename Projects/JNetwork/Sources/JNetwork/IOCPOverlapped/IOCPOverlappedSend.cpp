@@ -27,6 +27,7 @@ void IOCPOverlappedSend::Process(BOOL result, Int32UL bytesTransffered, IOCPPost
 		return;
 	}
 
+	_NetLogDebug_("%d 바이트 전송", bytesTransffered);
 	m_pSender->Sent(m_pSentPacket, bytesTransffered);
 	m_pSentPacket->Release();
 }

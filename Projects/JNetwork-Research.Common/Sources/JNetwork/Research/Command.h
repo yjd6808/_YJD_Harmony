@@ -18,7 +18,17 @@ JCore::StaticString<512> Msg;
 StaticCmdEnd(StaticMessage)
 
 
-DynamicCmdBegin(DynamicMessage, Cmd_DynamicMessage, char, Msg)
+struct Dummy
+{
+	short a = 1;
+	int b = 2;
+	short c = 3;
+};
+
+DynamicCmdBegin(DynamicMessage, Cmd_DynamicMessage, char)
+Dummy dmg;
+long long d = 4;
+char Msg[1];
 DynamicCmdEnd(DynamicMessage)
 
 #pragma pack(pop)

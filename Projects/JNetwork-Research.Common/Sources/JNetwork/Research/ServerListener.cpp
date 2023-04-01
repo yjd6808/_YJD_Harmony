@@ -53,9 +53,19 @@ void ServerListener::OnReceived(Session* receiver, ICommand* cmd) {
 
 		if (!receiver->SendAsync(pPacket)) {
 			Console::WriteLine("[%s] 스태틱 에코 실패", m_Name.Source());
+			return;
 		}
+
+		Console::WriteLine("[%s] 스태틱 에코", m_Name.Source());
 	} else if (cmd->GetCommand() == Cmd_DynamicMessage) {
 		DynamicMessage* pDynamicMessage = cmd->CastCommand<DynamicMessage*>();
+		Dummy* pDummy = &pDynamicMessage->dmg;
+
+		if (pDummy->a != 1 || pDummy->b != 2 || pDummy->c != 3 || pDynamicMessage->d != 4) {
+			Console::WriteLine("데이터를 올바르게 수신하지 못했습니다.");
+			return;
+		}
+
 		int iLen = pDynamicMessage->Count - 1;
 		Console::WriteLine("[%s] 다이나믹 메시지를 수신했습니다. : %s(길이 : %d)", m_Name.Source(), pDynamicMessage->Msg, iLen);
 
@@ -66,7 +76,10 @@ void ServerListener::OnReceived(Session* receiver, ICommand* cmd) {
 
 		if (!receiver->SendAsync(pPacket)) {
 			Console::WriteLine("[%s] 다이나믹 에코 실패", m_Name.Source());
+			return;
 		}
+
+		Console::WriteLine("[%s] 다이나믹 에코", m_Name.Source());
 	}
 }
 

@@ -122,10 +122,8 @@ struct __struct__ : JNetwork::StaticCommand {								\
 #define StaticCmdEnd(__struct__) };
 
 
-// 가장큰 멤버가 먼저 오도록 하는게 좋다고 한다. (왜 그런지는 모름)
-// 따라서 그냥 다이나믹 멤버타입을 상단에 박도록하자.
 // @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
-#define DynamicCmdBegin(__struct__, __cmd__, __countable_elem_type__, __countable_elem_type_name__)							\
+#define DynamicCmdBegin(__struct__, __cmd__, __countable_elem_type__)							\
 struct __struct__ : JNetwork::DynamicCommand {																				\
 	__struct__(int count) {																									\
 		Cmd = __cmd__;																										\
@@ -134,6 +132,5 @@ struct __struct__ : JNetwork::DynamicCommand {																				\
 	}																														\
 	static constexpr const char* Name() { return #__struct__; }																\
 	static constexpr int Size(int count) { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
-	__countable_elem_type__ __countable_elem_type_name__[1];
 
 #define DynamicCmdEnd(__struct__)	};

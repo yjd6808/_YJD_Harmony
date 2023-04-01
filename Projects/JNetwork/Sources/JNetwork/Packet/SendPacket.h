@@ -112,15 +112,20 @@ public:
 		<------------------ ISendPacket ---------------- >
 		<-- RefCount--> <-------- IRecvPacket ----------->
 		===========================================================================
-		 vfptr | m_Ref | m_iCommandCount | m_iPacketLen | Command<A> | Command<B>
+		 vfptr | m_Ref | m_iCommandCount | m_iPacketLen | Command<A> | Command<B> |
+		|      |       |                 m_pBuf                                   |
 		===========================================================================
 		↑              ↑ <----------------- 전송해줘야하는 구간 ---------------------->
 	   this     this + sizeof(RefCount)
 
 		*/
+		// 패킷 상위 4바이트는 패킷 헤더로 사용한다.
+		*(CmdCnt_t*)(m_pBuf + 0) = m_iCommandCount;
+		*(PktLen_t*)(m_pBuf + sizeof(CmdCnt_t)) = m_iPacketLen;
+
 		WSABUF wsaBuf;
 		wsaBuf.len = PacketHeaderSize_v + m_iPacketLen;
-		wsaBuf.buf = (char*)this + sizeof(SafeRefCount);
+		wsaBuf.buf = (char*)m_pBuf;
 		return wsaBuf;
 	}
 
@@ -145,22 +150,25 @@ private:
 		}
 	}
 
+	char* CommandBuf() const {
+		return (char*)m_pBuf + PacketHeaderSize_v; // 상위 4바이트는 헤더로 사용하기 때문에
+	}
 public:
 	
 	template <int Index>
 	constexpr TypeAt<Index>* Get() {
 		static_assert(Index < sizeof...(CommandArgs),  "... Index must be less than parameter pack count");
 		if constexpr (Index == 0) {
-			return (TypeAt<Index>*)m_pBuf;
+			return (TypeAt<Index>*)CommandBuf();
 		} else {
-			return (TypeAt<Index>*)(m_pBuf + SumOfSizeRecursive<Index - 1>());
+			return (TypeAt<Index>*)(CommandBuf() + SumOfSizeRecursive<Index - 1>());
 		}
 	}
 private:
 	static constexpr int PacketLen = (... + sizeof(CommandArgs));
 	static constexpr int CommandCount = sizeof...(CommandArgs);
 
-	char m_pBuf[PacketLen];
+	char m_pBuf[PacketLen + PacketHeaderSize_v];
 };
 
 
