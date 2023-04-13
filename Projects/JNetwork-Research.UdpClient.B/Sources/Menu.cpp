@@ -25,19 +25,19 @@ extern UdpClientNetGroup* pClientGroup;
 static void SendMsg(UdpClient* client, const IPv4EndPoint& target);
 
 void ConnectLogin() {
-	pClientGroup->Get()->Connect(ServerLoginUdpAddr);
+	pClientGroup->Get()->SetRemoteEndpoint(ServerLoginUdpAddr);
 }
 
 void ConnectChannel() {
-	pClientGroup->Get()->Connect(ServerChannelUdpAddr);
+	pClientGroup->Get()->SetRemoteEndpoint(ServerChannelUdpAddr);
 }
 
 void ConnectGame() {
-	pClientGroup->Get()->Connect(ServerGameUdpAddr);
+	pClientGroup->Get()->SetRemoteEndpoint(ServerGameUdpAddr);
 }
 
 void ConnectClientA() {
-	pClientGroup->Get()->Connect(ClientUdpAAddr);
+	pClientGroup->Get()->SetRemoteEndpoint(ClientUdpAAddr);
 }
 
 void SendLogin() {

@@ -19,7 +19,7 @@ public:
 	virtual ~ClientEventListener() = default;
 
 	virtual void OnConnected() = 0;
-	virtual void OnConnectFailed(Int32U errorMessage) {}	// Tcp클라이언트 전용
+	virtual void OnConnectFailed(Int32U errorCode) {}	// Tcp클라이언트 전용
 };
 
 

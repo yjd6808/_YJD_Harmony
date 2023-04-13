@@ -52,7 +52,10 @@ void UdpClient::Initialize() {
 
 bool UdpClient::RecvFromAsync() {
 
-	DebugAssertMsg(m_Socket.IsBinded(), "소켓이 바인딩된 상태여야 수신이 가능합니다. 상대방에게 먼저 송신하여 오토 바인딩해주거나 수동 바인딩을 해주세요.");
+	if (!m_Socket.IsBinded()) {
+		_NetLogError_("소켓이 바인딩된 상태여야 수신이 가능합니다. 상대방에게 먼저 송신하여 오토 바인딩해주거나 수동 바인딩을 해주세요.");
+		return false;
+	}
 
 	WSABUF buf = m_spRecvBuffer->GetRemainBuffer();
 	Int32UL uiReceivedBytes = 0;
@@ -116,12 +119,20 @@ void UdpClient::FlushSendBuffer() {
 	if (pWrappedPacket) SendToAsync(pWrappedPacket, m_RemoteEndPoint);
 }
 
+void UdpClient::SetRemoteEndpoint(const IPv4EndPoint& remoteEp) {
+	m_RemoteEndPoint = remoteEp;
+}
+
 void UdpClient::Connected() {
+	// UDP는 연결이라는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
+	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
 	m_Socket.State = Socket::eBinded;
 	m_pClientEventListener->OnConnected();
 }
 
 void UdpClient::Disconnected() {
+	// UDP는 연결이 끊긴다는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
+	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
 	m_pClientEventListener->OnDisconnected();
 }
 

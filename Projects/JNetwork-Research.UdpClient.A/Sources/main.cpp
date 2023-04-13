@@ -63,11 +63,11 @@ bool SelectMenu(int menu) {
 	case eConnectLogin:		ConnectLogin();		break;
 	case eConnectChannel:	ConnectChannel();	break;
 	case eConnectGame:		ConnectGame();		break;
-	case eConnectClientA:	ConnectClientB();	break;
+	case eConnectClientB:	ConnectClientB();	break;
 	case eSendLogin:		SendLogin();		break;
 	case eSendChannel:		SendChannel();		break;
 	case eSendGame:			SendGame();			break;
-	case eSendClientA:		SendClientB();		break;
+	case eSendClientB:		SendClientB();		break;
 	case eBindRecvFrom:		BindRecvFrom();		break;
 	case eDisconnect:		Disconnect();		break;
 	default: return false;

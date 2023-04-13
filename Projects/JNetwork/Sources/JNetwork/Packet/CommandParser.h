@@ -25,7 +25,7 @@ public:
 	virtual void AddCommand(Int16 cmd, JCore::Action<Session*, JNetwork::ICommand*> fn);
 	virtual bool RunCommand(Session* session, JNetwork::ICommand* cmd) const;
 private:
-	JCore::HashMap<Int16, JCore::Action<Session*, ICommand*>> m_CommandMap;
+	JCore::HashMap<Int16, JCore::Action<Session*, ICommand*>> m_CommandActionMap;
 };
 
 

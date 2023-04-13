@@ -22,6 +22,7 @@ public:
 	virtual void Finalize();
 
 	void AddNetGroup(int id, const NetGroupPtr& group);
+	NetGroupPtr GetNetGroup(int id);
 protected:
 	JCore::HashMap<int, NetGroupPtr> m_hNetGroup;
 };

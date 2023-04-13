@@ -20,8 +20,19 @@ void NetMaster::Finalize() {
 }
 
 void NetMaster::AddNetGroup(int groupId, const NetGroupPtr& group) {
-	DebugAssertMsg(m_hNetGroup.Exist(groupId) == false, "이미 해당 네트 그룹이 있습니다.");
-	m_hNetGroup.Insert(groupId, group);
+	if (!m_hNetGroup.Insert(groupId, group)) {
+		_NetLogWarn_("이미 해당 네트 그룹이 있습니다.");
+	}
+}
+
+NetGroupPtr NetMaster::GetNetGroup(int id) {
+
+	if (!m_hNetGroup.Exist(id)) {
+		_NetLogWarn_("%d ID의 네트 그룹이 없습니다.", id);
+		return nullptr;
+	}
+
+	return m_hNetGroup.Get(id);
 }
 
 NS_JNET_END

@@ -26,14 +26,14 @@ using PktLen_t  = Int16U;
 using Cmd_t		= Int16U;
 using CmdLen_t	= Int16U;
 
-#pragma pack(push, 1)
+#define CMD_ALIGNMENT 4
 
 NS_JNET_BEGIN
 
-inline static constexpr int PacketHeaderSize_v = sizeof(CmdCnt_t) + sizeof(PktLen_t);
-inline static constexpr int CommandHeaderSize_v = sizeof(Cmd_t) + sizeof(CmdLen_t);
+inline constexpr int PacketHeaderSize_v = sizeof(CmdCnt_t) + sizeof(PktLen_t);
+inline constexpr int CommandHeaderSize_v = sizeof(Cmd_t) + sizeof(CmdLen_t);
 
-
+#pragma pack(push, CMD_ALIGNMENT)
 
 struct ICommand
 {
@@ -100,8 +100,7 @@ constexpr bool IsDynamicCommand_v = Detail::IsDynamicCommand<T>::Value;
 
 NS_JNET_END
 
-
-#pragma pack(pop) // pack 1 end
+#pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)
 
 
 /*=====================================================================================

@@ -101,6 +101,7 @@ bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) 
 			Initialize();
 			_NetLogError_("연결에 실패했습니다.(타임아웃)");
 			WSASetLastError(WSAETIMEDOUT);
+			m_pClientEventListener->OnConnectFailed(WSAETIMEDOUT);
 			return false;
 		}
 
@@ -111,13 +112,14 @@ bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) 
 			m_eState = eDisconnected;
 			Initialize();
 			WSASetLastError(err);
+			m_pClientEventListener->OnConnectFailed(err);
 			return false;
 		}
 	}
 
 	_NetLogInfo_("%s 연결 완료", remoteAddr.ToString().Source());
 	m_RemoteEndPoint = remoteAddr;
-
+	m_pClientEventListener->OnConnected();
 #if TEST_DUMMY_PACKET_TRANSFER
 	// 연결 후 곧장 데이터 전송 테스트
 	if (SendAsync(GenerateTestDummyPacket())) {

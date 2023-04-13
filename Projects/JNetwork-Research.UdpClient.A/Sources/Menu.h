@@ -14,11 +14,11 @@ enum Menu
 	eConnectLogin = 1,
 	eConnectChannel,
 	eConnectGame,
-	eConnectClientA,
+	eConnectClientB,
 	eSendLogin,
 	eSendChannel,
 	eSendGame,
-	eSendClientA,
+	eSendClientB,
 	eBindRecvFrom,
 	eDisconnect,
 };
