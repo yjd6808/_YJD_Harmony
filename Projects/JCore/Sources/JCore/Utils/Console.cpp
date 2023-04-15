@@ -134,6 +134,16 @@ ConsoleColor Console::GetColor() {
     return ms_iDefaultColor;
 }
 
+String Console::ReadLine() {
+    String s;
+    char ch;
+
+    while (std::cin.get(ch) && ch != '\n')
+        s += ch;
+
+    return s;
+}
+
 void Console::Clear() {
     TLockGuard guard(ms_ConsoleLock);
     CRuntime::System("cls");

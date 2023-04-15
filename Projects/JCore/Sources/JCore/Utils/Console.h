@@ -123,7 +123,7 @@ public:
         return printf_s(format, Forward<TArgs>(args)...);
     }
 
-
+    static String ReadLine();
 
     template <typename... TArgs>
     static int WriteLine(ConsoleColor color, char* format, TArgs&&... args) {
