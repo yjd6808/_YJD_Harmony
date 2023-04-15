@@ -11,19 +11,27 @@
 #include <Jnetwork/NetGroup.h>
 
 #include <SteinsGate/Server/AuthServer.h>
-#include <SteinsGate/Server/AuthEventListener.h>
+#include <SteinsGate/Server/ListenerAuthServer.h>
+#include <SteinsGate/Server/ListenerCenterClient.h>
+#include <SteinsGate/Server/ListenerInterServerClient.h>
 
 
-class AuthEventListener;
+class ListenerAuthServer;
 class AuthNetGroup final : public SGNetGroup
 {
 public:
 	AuthNetGroup();
 	~AuthNetGroup() override;
 	void Initialize() override;
+	bool ConnectCenterServer(int tryCount);
+
+	SGTcpServer* Server;						// 인증 서버 역할
+	SGTcpClient* CenterClient;					// 중앙 서버와 통신용
+	SGUdpClient* InterServerClient;				// 각종 서버와 통신용
 private:
-	SGTcpServerWPtr m_spAuthServer;
-	AuthEventListener m_AuthEventListener;
+	ListenerAuthServer m_AuthServerEventListener;
+	ListenerCenterClient m_AuthCenterClientEventLIstener;
+	ListenerInterServerClient m_InterServerEventListener;
 };
 
 

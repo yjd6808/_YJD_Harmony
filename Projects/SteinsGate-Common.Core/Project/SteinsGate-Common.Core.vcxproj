@@ -182,8 +182,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfo.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnumDefine.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -193,6 +197,22 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetAuthCmd.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetCmdType.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetGameCmd.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetLobbyCmd.h">
       <SubType>
       </SubType>
     </ClInclude>

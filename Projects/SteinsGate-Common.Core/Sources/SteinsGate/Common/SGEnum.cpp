@@ -7,7 +7,7 @@
 
 
 #include "Core.h"
-#include "SGEnums.h"
+#include "SGEnum.h"
 
 
 

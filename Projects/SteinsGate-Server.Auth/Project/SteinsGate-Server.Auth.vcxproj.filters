@@ -8,8 +8,16 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthServer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthNetMaster.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthNetGroup.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\AuthEventListener.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthSession.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterClient.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerAuthServer.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCoreHeader.h" />
@@ -19,7 +27,33 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthNetMaster.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthNetGroup.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthEventListener.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthSession.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\RecvAuth.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\RecvCenter.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterClient.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerAuthServer.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\InputAction.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Recv">
+      <UniqueIdentifier>{775bf26d-5d03-472e-892e-6fb4ea8d4ca5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Send">
+      <UniqueIdentifier>{b14ebb94-abc9-4678-83bf-ecef8247cc36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{a9efac3b-967a-4517-90db-7dbafbee409d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

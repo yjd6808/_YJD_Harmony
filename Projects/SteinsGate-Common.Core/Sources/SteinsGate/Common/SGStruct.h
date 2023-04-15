@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/SGEnums.h>
+#include <SteinsGate/Common/SGEnum.h>
 #include <SteinsGate/Common/SGConfig.h>
 
 #include <JCore/Time.h>

@@ -10,3 +10,4 @@
 
 
 #include <SteinsGate/Common/ServerInfo.h>
+#include <SteinsGate/Common/InputThread.h>

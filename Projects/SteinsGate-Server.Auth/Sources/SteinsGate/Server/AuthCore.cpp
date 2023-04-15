@@ -15,6 +15,7 @@ USING_NS_JNET;
 DataManager* CoreDataManager_v;
 MysqlDatabase* CoreGameDB_v;
 AuthNetMaster* CoreNetMaster_v;
+AuthNetGroup* CoreNetGroup_v;
 
 void InitializeAuthCore() {
 	CoreDataManager_v = DataManager::get();
@@ -24,6 +25,8 @@ void InitializeAuthCore() {
 	CoreGameDB_v->Initialize(ServerProcessType::Auth);
 	CoreNetMaster_v = AuthNetMaster::Get();
 	CoreNetMaster_v->Initialize();
+	CoreNetGroup_v = CoreNetMaster_v->GetNetGroup(1).Get<AuthNetGroup*>();
+
 }
 
 void FinalizeAuthCore() {

@@ -13,3 +13,4 @@
 #include <SteinsGate/Common/MysqlDatabase.h>
 #include <SteinsGate/Server/DataManager.h>
 #include <SteinsGate/Server/AuthNetMaster.h>
+#include <SteinsGate/Server/AuthNetGroup.h>

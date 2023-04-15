@@ -100,7 +100,7 @@
     <Filter Include="Net\Send">
       <UniqueIdentifier>{189d1ff7-f473-4a4d-8bc7-2f009d21e5ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Net\Parse">
+    <Filter Include="Net\Recv">
       <UniqueIdentifier>{95abad0d-5fc9-48a1-a3f1-0039e977b60b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

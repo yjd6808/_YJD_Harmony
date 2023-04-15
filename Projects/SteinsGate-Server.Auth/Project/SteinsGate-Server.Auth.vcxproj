@@ -27,7 +27,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\AuthEventListener.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterClient.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerAuthServer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -51,6 +55,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthCore.cpp" />
   </ItemGroup>
@@ -59,7 +64,15 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthEventListener.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\InputAction.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterClient.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerAuthServer.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -77,11 +90,23 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCoreHeader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\RecvAuth.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthSession.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\RecvCenter.h">
       <SubType>
       </SubType>
     </ClInclude>

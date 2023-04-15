@@ -14,6 +14,10 @@ class AuthNetMaster : public JNetwork::NetMaster
 {
 private:
 	AuthNetMaster();
+
+private:
+	void ProcessInputEvent();
+
 public:
 	void Initialize() override;
 	void MainLoop();
@@ -25,6 +29,9 @@ public:
 		}
 		return pInst;
 	}
+private:
+	bool m_bRunning;
+	JCore::Vector<int> m_vInputEvents;
 };
 
 

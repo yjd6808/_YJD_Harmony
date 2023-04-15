@@ -10,7 +10,7 @@
 
 #include <JNetwork/EventListener/TcpServerEventListener.h>
 
-class AuthEventListener : public JNetwork::TcpServerEventListener
+class ListenerAuthServer : public JNetwork::TcpServerEventListener
 {
 public:
 	void OnStarted() override;

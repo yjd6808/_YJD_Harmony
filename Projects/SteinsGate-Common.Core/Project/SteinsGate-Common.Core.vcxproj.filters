@@ -114,7 +114,7 @@
       <Filter>Sga</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\SGStruct.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnums.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
       <Filter>Data</Filter>
@@ -198,6 +198,19 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfo.h">
       <Filter>Data\CharCommon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetAuthCmd.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetLobbyCmd.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetGameCmd.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetCmdType.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnumDefine.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -238,6 +251,9 @@
     </Filter>
     <Filter Include="Data\CharCommon">
       <UniqueIdentifier>{7d01469f-122b-464d-b700-a03cd2e3f866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{9c008121-a467-48e8-9eaf-74f475cfd80b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

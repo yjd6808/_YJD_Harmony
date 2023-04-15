@@ -14,10 +14,12 @@
 class DataManager;
 class MysqlDatabase;
 class AuthNetMaster;
+class AuthNetGroup;
 
 extern DataManager* CoreDataManager_v;
 extern MysqlDatabase* CoreGameDB_v;;
 extern AuthNetMaster* CoreNetMaster_v;
+extern AuthNetGroup* CoreNetGroup_v;
 
 void InitializeAuthCore();
 void FinalizeAuthCore();

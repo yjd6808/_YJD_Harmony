@@ -11,10 +11,11 @@
 
 #include <SteinsGate/Common/CommonCore.h>
 
-
 struct ServerInfo;
+class InputThread;
 
 extern ServerInfo* CoreServer_v;
+extern InputThread* CoreInputThread_v;
 
 void InitializeServerCore();
 void FinalizeServerCore();
