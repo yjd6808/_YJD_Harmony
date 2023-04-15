@@ -20,14 +20,24 @@ NS_JC_BEGIN
 
 class Thread
 {
+protected:
     enum State
     {
-        Uninitialized,
-        RunningWait,
-        Running,
-        JoinWait,
-        Joined,
-        Aborted
+        eUninitialized,
+        eRunningWait,
+        eRunning,
+        eJoinWait,
+        eJoined,
+        eAborted
+    };
+
+    enum JoinResult
+    {
+        eSuccess,
+        eNotJoinable,       // 쓰레드가 Join가능한 상태가 아닌 경우
+        eAlreadyJoined,     // 이미 Join된 경우
+        eTimeout,           // 타임아웃된 경우
+        eError              // Join 시도중 오류가 발생한 경우(GetLastError로 오류코드 확인할 것)
     };
 
     using TRunnable = Action<void*>;
@@ -39,11 +49,11 @@ class Thread
         void* Param;
     };
 public:
-    Thread(const char* name = nullptr, bool autoJoin = false) : m_hHandle(nullptr), m_Name(name), m_uiThreadId(0), m_eState(Uninitialized), m_RunningSignal(1, 0), m_bAutoJoin(autoJoin) {}
+    Thread(const char* name = nullptr, bool autoJoin = false) : m_hHandle(nullptr), m_Name(name), m_uiThreadId(0), m_eState(eUninitialized), m_RunningSignal(1, 0), m_bAutoJoin(autoJoin) {}
     Thread(TRunnable&& fn, void* param = nullptr, const char* name = nullptr, bool autoJoin = false); 
     Thread(const Thread& other) = delete;
     Thread(Thread&& other) noexcept;
-    ~Thread() noexcept;
+    virtual ~Thread() noexcept;
 
     Thread& operator=(const Thread& other) = delete;
     Thread& operator=(Thread&&) noexcept;               // 초기화 안된 경우만 이동복사 허용
@@ -51,7 +61,7 @@ public:
 public:
     int Start(TRunnable&& fn, void* param = nullptr);
     void AutoJoin(bool enabled) { m_bAutoJoin = enabled; }
-    bool Join();
+    JoinResult Join(int timeoutMiliSeconds = JCoreInfinite);
     bool Joinable();
     void Abort();
     bool SetPriority(int priority);
@@ -65,7 +75,7 @@ public:
 	static void Sleep(Int32U ms);
 private:
     static Int32U JCoreStdCall ThreadRoutine(void* param);
-private:
+protected:
     WinHandle m_hHandle;
     String m_Name;
     Int32U m_uiThreadId;

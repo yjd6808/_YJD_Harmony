@@ -49,7 +49,7 @@ int Thread::GetPriority() {
 
 Int32U Thread::GetId() {
     
-    if (m_eState >= Running)
+    if (m_eState >= eRunning)
         return m_uiThreadId;
 
     return 0;
@@ -64,7 +64,7 @@ Thread& Thread::operator=(Thread&& other) noexcept {
 
     other.m_hHandle = nullptr;
     other.m_uiThreadId = 0;
-    other.m_eState = Uninitialized;
+    other.m_eState = eUninitialized;
     other.m_bAutoJoin = false;
 
     return *this;
@@ -91,15 +91,15 @@ Int32U JCoreStdCall Thread::ThreadRoutine(void* param) {
     pThis->m_uiThreadId = Thread::GetThreadId();
     pThis->m_RunningSignal.Release();
     runnable(pParam);
-    pThis->m_eState = JoinWait;
+    pThis->m_eState = eJoinWait;
     
     CRuntime::EndThreadEx(0);
     return 0;
 }
 
 int Thread::Start(TRunnable&& fn, void* param) {
-    DebugAssertMsg(m_eState == Uninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
-    m_eState = RunningWait;
+    DebugAssertMsg(m_eState == eUninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
+    m_eState = eRunningWait;
     SharedPtr<ThreadParam> spSend = MakeShared<ThreadParam>();
     spSend->Param = param;
     spSend->Self = this;
@@ -108,45 +108,51 @@ int Thread::Start(TRunnable&& fn, void* param) {
     m_hHandle = reinterpret_cast<WinHandle>(CRuntime::BeginThreadEx(ThreadRoutine, spSend.GetPtr()));
     
     if (m_hHandle == NULL) {
-        m_eState = Aborted;
+        m_eState = eAborted;
         return CRuntime::ErrorNo();
     }
 
     m_RunningSignal.Acquire();
-    m_eState = Running;
+    m_eState = eRunning;
 
     return 0;
 }
 
-bool Thread::Join() {
-    int state = m_eState;
+Thread::JoinResult Thread::Join(int timeoutMiliSeconds) {
+    const int state = m_eState;
 
-    if (state == Uninitialized || state == Aborted)
-        return false;
+    if (state == eUninitialized || state == eAborted)
+        return eNotJoinable;
 
-    if (state == Joined)
-        return true;
+    if (state == eJoined)
+        return eAlreadyJoined;
 
-    Int32U iWaitResult = WinApi::WaitForMultipleObjectsEx(1, &m_hHandle, true);
+    const Int32U iWaitResult = WinApi::WaitForMultipleObjectsEx(1, &m_hHandle, true, timeoutMiliSeconds);
 
+    if (iWaitResult == WAIT_TIMEOUT) {
+        return eTimeout;
+    }
+
+	// https://learn.microsoft.com/ko-kr/windows/win32/sync/waiting-for-multiple-objects
     if (iWaitResult != WAIT_OBJECT_0) {
-        std::terminate();
+        // ::GetLastError();
+        return eError;
     }
 
     WinApi::CloseHandle(m_hHandle);
     m_hHandle = nullptr;
-    m_eState = Joined;
-    return true;
+    m_eState = eJoined;
+    return eSuccess;
 }
 
 bool Thread::Joinable() {
-    int state = m_eState;
-    return state >= RunningWait && state <= JoinWait;
+    const int state = m_eState;
+    return state >= eRunningWait && state <= eJoinWait;
 }
 
 void Thread::Abort() {
     WinApi::CloseHandle(m_hHandle);
-    m_eState = Aborted;
+    m_eState = eAborted;
 }
 
 NS_JC_END

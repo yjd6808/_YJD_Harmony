@@ -27,7 +27,7 @@ public:
     WaitHandle(WaitHandle&& handle) noexcept;           // 이동 생성만 허용
     virtual ~WaitHandle();
 
-    bool Wait(Int32U timeout = JCoreInfinite);
+    bool Wait(Int32U timeout = JCoreInfinite, Out_ Int32U* result = nullptr);
     bool Signal();
     bool Reset();
     const String& Name() { return m_Name; }

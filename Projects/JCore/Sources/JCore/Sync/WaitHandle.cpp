@@ -28,11 +28,12 @@ WaitHandle::~WaitHandle() {
     }
 }
 
-bool WaitHandle::Wait(Int32U timeout) {
+bool WaitHandle::Wait(Int32U timeout, Out_ Int32U* result) {
     if (m_hHandle == nullptr)
         return false;
 
-    return WinApi::WaitForMultipleObjectsEx(1, &m_hHandle, true) == WAIT_OBJECT_0;
+    *result = WinApi::WaitForMultipleObjectsEx(1, &m_hHandle, true, timeout);
+    return *result == WAIT_OBJECT_0;
 }
 
 bool WaitHandle::Signal() {
