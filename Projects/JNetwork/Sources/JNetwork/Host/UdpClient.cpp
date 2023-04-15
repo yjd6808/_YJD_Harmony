@@ -82,7 +82,11 @@ bool UdpClient::RecvFromAsync() {
 }
 
 bool UdpClient::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination) {
-	DebugAssertMsg(destination.IsValidRemoteEndPoint(), "유효한 목적지 주소가 아닙니다.");
+
+	if (!destination.IsValidRemoteEndPoint()) {
+		_NetLogError_("유효한 목적지 주소가 아닙니다.");
+		return false;
+	}
 
 	packet->AddRef();
 	WSABUF buf = packet->GetWSABuf();

@@ -13,7 +13,7 @@
 NS_JNET_BEGIN
 
 class IOCPWorker;
-class IOCP
+class IOCP : public JCore::MakeSharedFromThis<IOCP>
 {
 public:
 	enum class State
@@ -52,6 +52,7 @@ protected:
 };
 
 using IOCPPtr = JCore::SharedPtr<IOCP>;
+using IOCPWPtr = JCore::WeakPtr<IOCP>;
 
 NS_JNET_END
 

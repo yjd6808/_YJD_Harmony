@@ -84,10 +84,9 @@ bool Session::Disconnect() {
 	m_Socket.Close();
 	m_Socket.Invalidate();
 
-	
 	if (eState == eConnected)
 		Disconnected();
-	_NetLogInfo_("연결 해제");
+
 	return true;
 }
 

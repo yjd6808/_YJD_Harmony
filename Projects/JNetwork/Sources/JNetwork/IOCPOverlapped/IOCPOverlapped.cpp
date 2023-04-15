@@ -29,6 +29,8 @@ void IOCPOverlapped::Release() {
 
 void IOCPOverlapped::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {}
 
+
+
 bool IOCPOverlapped::IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffered, Out_ Int32U& errorCode) {
 	if (result == FALSE) {
 		// GetQueuedCompletionStatus이 실패한 경우 GetLastError()로 오류 코드를 얻을 수 있다.
@@ -40,6 +42,16 @@ bool IOCPOverlapped::IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffe
 		Int32UL dwFlag = 0;
 		WSAGetOverlappedResult(hSocket, this, &dwTransfer, FALSE, &dwFlag);
 		errorCode = Winsock::LastError();
+		return true;
+	}
+
+	return false;
+}
+
+bool IOCPOverlapped::IsFailed(BOOL result, Int32U& errorCode) {
+
+	if (result == FALSE) {
+		errorCode = ::GetLastError();
 		return true;
 	}
 
