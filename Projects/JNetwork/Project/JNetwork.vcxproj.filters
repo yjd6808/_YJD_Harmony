@@ -174,6 +174,12 @@
       <Filter>Packet</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\NetLoggerDefine.h" />
+    <ClInclude Include="..\Sources\JNetwork\IOCP\IOCPTask.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedTask.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">

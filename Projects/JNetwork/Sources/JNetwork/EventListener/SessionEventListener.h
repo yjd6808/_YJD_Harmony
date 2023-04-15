@@ -19,9 +19,9 @@ public:
 	SessionEventListener() = default;
 	virtual ~SessionEventListener() = default;
 
-	virtual void OnDisconnected() = 0;
-	virtual void OnSent(ISendPacket* sentPacket, Int32UL sentBytes) = 0;
-	virtual void OnReceived(ICommand* cmd) = 0;
+	virtual void OnDisconnected() {}
+	virtual void OnSent(ISendPacket* sentPacket, Int32UL sentBytes) {}
+	virtual void OnReceived(ICommand* cmd) {}
 };
 
 NS_JNET_END

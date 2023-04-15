@@ -201,6 +201,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedTask.h" />
     <ClInclude Include="..\Sources\JNetwork\IOCP\IOCP.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -208,6 +209,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\IOCP\IOCPPostOrder.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCP\IOCPTask.h">
       <SubType>
       </SubType>
     </ClInclude>
