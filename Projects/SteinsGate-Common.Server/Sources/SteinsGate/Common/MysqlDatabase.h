@@ -4,12 +4,17 @@
 
 #pragma once
 
-#include <SteinsGate/Common/IOCPOverlappedQuery.h>
+#include <JNetwork/IOCP/IOCPTask.h>
+
 #include <SteinsGate/Common/MysqlConnectionPool.h>
 #include <SteinsGate/Common/MysqlStatementBuilder.h>
 #include <SteinsGate/Common/MysqlQuery.h>
-#include <SteinsGate/Common/MysqlQueryFuture.h>
 #include <SteinsGate/Common/DatabaseInfo.h>
+
+using MysqlQueryTask = JNetwork::IOCPTask<MysqlQueryPtr>;
+using MysqlQueryTaskPtr = JCore::SharedPtr<MysqlQueryTask>;
+
+#define IOCPTASK_FAILED_DB	50001
 
 class MysqlDatabase
 {
@@ -23,31 +28,21 @@ public:
 	MysqlConnectionPool* GetConnectionPool() const { return m_pConnectionPool; }
 
 	/*
-	 * 비동기 Query 실행 후 Wait() 함수를 호출해서 결과값을 원할 때 받아볼 수 있다.
-     *	
-	 * 결과로 받아서 사용할 때 그리고 오버랩에서 사용하기 위해 2로 설정해줌
-	 * 퓨쳐는 이 함수 밖에서 꼭 Release를 해줄 것
+	 * 비동기 Query 실행
 	*/
 	template <typename... Args>
-	MysqlQueryFuture* QueryAsync(const JCore::String& statement, Args&&... args) {
-		const JCore::String preparedStatement = MysqlStatementBuilder::Build(statement, JCore::Forward<Args>(args)...);
+	MysqlQueryTaskPtr QueryAsync(const JCore::String& statement, Args&&... args) {
+		const auto& fnTask = [this](MysqlQueryTask::TResult& result) {
+			result.Success = result.Value->Execute();
+			result.ErrorCode = !result.Success ? IOCPTASK_FAILED_DB : 0;
+		};
 
-		if (preparedStatement == "")
-			return nullptr;
+		const auto& fnFinally = [this](MysqlQueryTask::TResult& result) {
+			m_pConnectionPool->ReleaseConnection(result.Value->GetConnection());
+		};
 
-		MysqlQueryFuture* future = new MysqlQueryFuture(preparedStatement);
-		future->AddRef(2);	
-		IOCPOverlappedQuery* pOverlapped = new IOCPOverlappedQuery(m_pIocp, this, future);
-
-		if (m_pIocp->Post(0, NULL, pOverlapped) == FALSE) {
-			DebugAssertMsg(false, "MysqlDatabase::QueryAsync() Failed");
-			pOverlapped->Release();
-			future->Release(2);
-			return nullptr;
-		}
-
-		
-		return future;
+		MysqlQueryPtr spQuery = MysqlQuery::Create(m_pConnectionPool->GetConnection(), statement, JCore::Forward<Args>(args)...);
+		return MysqlQueryTask::Run(m_pIocp, fnTask, fnFinally, spQuery);
 	}
 
 	/*
@@ -56,12 +51,7 @@ public:
 	 */
 
 	template <typename... Args>
-	JCore::SharedPtr<MysqlQuery> Query(const JCore::String& statement, Args&&... args) {
-		if (statement.Length() <= 6) {
-			DebugAssertMsg(false, "MysqlDatabase::Query() 쿼리를 똑바로 입력해주세요.");
-			return nullptr;
-		}
-
+	MysqlQueryPtr Query(const JCore::String& statement, Args&&... args) {
 		auto pConn = m_pConnectionPool->GetConnection();
 
 		if (pConn == nullptr) {
@@ -70,16 +60,8 @@ public:
 			return nullptr;
 		}
 
-		AutoReleaseConnection autoRelease(pConn, m_pConnectionPool);
-		const JCore::String preparedStatement = MysqlStatementBuilder::Build(statement, JCore::Forward<Args>(args)...);
-
-		if (preparedStatement == "")
-			return nullptr;
-
-		
-		JCore::SharedPtr<MysqlQuery> spQuery = JCore::MakeShared<MysqlQuery>(pConn, preparedStatement);
-		spQuery->ExecuteAuto();
-
+		MysqlQueryPtr spQuery = MysqlQuery::Create(pConn, statement, JCore::Forward<Args>(args)...);
+		spQuery->Execute();
 		return spQuery;
 	}
 private:

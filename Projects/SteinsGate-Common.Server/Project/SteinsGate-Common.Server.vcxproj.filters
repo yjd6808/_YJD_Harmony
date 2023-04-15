@@ -8,9 +8,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQueryFuture.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h">
       <Filter>Database</Filter>
     </ClInclude>
@@ -23,21 +20,25 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\IOCPOverlappedQuery.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\CenterCmd.h">
+      <Filter>Net\Center</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CenterEnum.h">
+      <Filter>Net\Center</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
-      <Filter>InterServer</Filter>
+      <Filter>Net\InterServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerEnum.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQuery.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQueryFuture.cpp">
       <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnection.cpp">
@@ -49,20 +50,30 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\IOCPOverlappedQuery.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp">
       <Filter>Database</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ServerEnum.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Database">
       <UniqueIdentifier>{b67e8325-f0df-4416-9a2c-c3994194080e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="InterServer">
-      <UniqueIdentifier>{913d5943-136d-45e8-9591-f68f5ba708f7}</UniqueIdentifier>
+    <Filter Include="Net">
+      <UniqueIdentifier>{49b73bd5-7afb-4461-b558-0644e505ebff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Center">
+      <UniqueIdentifier>{5e092420-d0cf-4492-9f37-7826ad566399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\InterServer">
+      <UniqueIdentifier>{446e2dd5-dd48-4ec7-b8c4-7616dafdb92f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{47a75455-218d-4948-bee5-5a8abccab001}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

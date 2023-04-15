@@ -53,6 +53,9 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecvFrom.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedTask.h>
+
+#include <JNetwork/IOCP/IOCPTask.h>
 #include <JNetwork/Packet/CommandParser.h>
 
 
