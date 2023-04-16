@@ -323,6 +323,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\ObjectPool.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\ArraySegment.h">
       <SubType>
       </SubType>

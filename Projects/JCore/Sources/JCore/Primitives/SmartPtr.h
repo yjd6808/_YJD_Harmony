@@ -72,18 +72,25 @@
 
 NS_JC_BEGIN
 
+template <typename T>
+class ObjectPool;
 
 NS_DETAIL_BEGIN
 // 스마트포인터는 배열타입은 기본 타입으로 붕괴해서 체크하자.. ㅠ
 template <typename Lhs, typename Rhs>
-constexpr bool IsSmartPtrCastable_v = IsDynamicCastable_v<NakedType_t<Lhs>*, NakedType_t<Rhs>*>;
+static constexpr bool IsSmartPtrCastable_v = IsDynamicCastable_v<NakedType_t<Lhs>*, NakedType_t<Rhs>*>;
 
 template <typename Lhs, typename Rhs>
-void CheckDynamicCastable() {
+static void CheckDynamicCastable() {
 	static_assert(IsSmartPtrCastable_v<Lhs, Rhs>, 
 		"... cannot convert! Type T* and U* must be dynamic castable each other");
-
 }
+
+template <typename T>
+static void PreventCreatingObjectPoolItem() {
+	static_assert(!IsBaseOf_v<ObjectPool<T>, T>, "... cannot create object pool item using this method");
+}
+
 NS_DETAIL_END
 
 
@@ -98,11 +105,13 @@ template <typename>	class MakeSharedFromThis; struct MakeSharedFromThisBase;
 
 template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
 constexpr decltype(auto) MakeShared(Args&&... args) {
+	Detail::PreventCreatingObjectPoolItem<NakedType_t<T>>();
 	return SharedMaker<T, TAllocator>::Create(Forward<Args>(args)...);
 }
 
 template <typename T, typename TAllocator = DefaultAllocator, typename... Args>
 constexpr decltype(auto) MakeUnique(Args&&... args) {
+	Detail::PreventCreatingObjectPoolItem<NakedType_t<T>>();
 	return UniqueMaker<T, TAllocator>::Create(Forward<Args>(args)...);
 }
 
@@ -443,7 +452,11 @@ struct SharedObject<T*, TAllocator> : ControlBlock
 	~SharedObject() override {}
 
 	void DestroyObject() override {
-		TDeletor()(Object);
+		if constexpr (IsBaseOf_v<ObjectPool<T>, T>) {
+			ObjectPool<T>::PushObjectWithDestroy(Object);
+		} else {
+			TDeletor()(Object);
+		}
 	}
 
 	void DeleteSelf() override {
@@ -628,7 +641,7 @@ protected:
 	}
 
 	// SharedPtr에서만 호출
-	template <typename U>
+	template <typename U, DefaultEnableIf_t<IsPointerType_v<U>> = nullptr>
     void MakeShared(U ptr) {
 	    m_pControlBlock = dbg_new SharedObject<U, DefaultAllocator>(ptr);
         m_pPtr = ptr;
