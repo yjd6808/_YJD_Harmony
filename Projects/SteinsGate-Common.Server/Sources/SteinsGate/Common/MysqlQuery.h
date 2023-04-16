@@ -20,7 +20,6 @@
 #include <SteinsGate/Common/MysqlStatementBuilder.h>
 #include <SteinsGate/Common/StatementType.h>
 
-
 class MysqlQuery;
 class MysqlQuerySelect;
 class MysqlQueryUpdate;
@@ -107,32 +106,37 @@ private:
 	Int64U m_uiInsertId;
 };
 
+// 기존의 모든 행 로딩 방식에서 Lazy Loading 방식으로 변경
+// 전부터 자꾸 거슬렸다.
+// 참고 소스: https://github.com/otland/forgottenserver 깃허브 (src/database.cpp) 코드 참고
 class MysqlQuerySelect : public MysqlQuery
 {
-	using TResultRow = JCore::HashMap<int, JCore::String>;
 public:
 	MysqlQuerySelect(MysqlConnection* conn, const JCore::String& preparedStatement, StatementType type)
 		: MysqlQuery(conn, preparedStatement, type)
+		, m_SqlResult(nullptr)
+		, m_SqlRow(nullptr)
 	{}
-	~MysqlQuerySelect() override = default;
+	~MysqlQuerySelect() override;
 
 	bool Execute() override;
+	bool HasNext() const;
+	bool Next();
 
-	JCore::String GetFieldName(const unsigned int& field);
-	JCore::String GetString(const unsigned int& rowIdx, const unsigned int& fieldIdx);
-	JCore::String GetString(const unsigned int& rowIdx, const JCore::String& fieldName);
-	int GetInt(const unsigned int& rowIdx, const unsigned int& fieldIdx);
-	int GetInt(const unsigned int& rowIdx, const JCore::String& fieldName);
-	double GetDouble(const unsigned int& rowIdx, const unsigned int& fieldIdx);
-	double GetDouble(const unsigned int& rowIdx, const JCore::String& fieldName);
-	JCore::DateTime GetTime(const unsigned int& rowIdx, const unsigned int& fieldIdx);
-	JCore::DateTime GetTime(const unsigned int& rowIdx, const JCore::String& fieldName);
+	int GetFieldIndex(const JCore::String& fieldName);
+	char* GetRawString(const JCore::String& fieldName);
+	JCore::String GetString(const JCore::String& fieldName);
+	int GetInt(const JCore::String& fieldName);
+	double GetDouble(const JCore::String& fieldName);
+	JCore::DateTime GetTime(const JCore::String& fieldName);
 
-	unsigned int GetResultRowCount() const;
-	unsigned int GetFieldCount() const;
+	Int32U GetRowCount() const;
+	Int32U GetFieldCount() const;
+
 private:
-	JCore::HashMap<int, TResultRow> m_hResultMap;
-	JCore::HashMap<int, JCore::String> m_hFieldMap;
-	JCore::HashMap<JCore::String, int> m_hFieldStringToIntMap;
+	MYSQL_RES*	m_SqlResult;
+	MYSQL_ROW	m_SqlRow;
+
+	JCore::HashMap<JCore::String, int> m_hFieldList;
 };
 

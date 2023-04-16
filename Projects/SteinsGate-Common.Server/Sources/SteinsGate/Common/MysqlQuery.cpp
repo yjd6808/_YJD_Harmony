@@ -6,11 +6,10 @@ USING_NS_JC;
 USING_NS_STD;
 
 MysqlQuery::MysqlQuery(MysqlConnection* conn, const String& preparedStatement, StatementType type)
-	: m_pConn(conn)
-	, m_PreparedStatement(preparedStatement)
-	, m_bSuccess(false)
-	, m_eType(type)
-{}
+	: m_eType(type),
+	  m_pConn(conn),
+	  m_PreparedStatement(preparedStatement),
+	  m_bSuccess(false) {}
 
 StatementType MysqlQuery::ParseStatement(const String& statement) {
 	StatementType eStatement = StatementType::None;
@@ -57,174 +56,84 @@ bool MysqlQueryInsert::Execute() {
 
 
 
-String MysqlQuerySelect::GetFieldName(const unsigned int& field) {
-	if (m_hFieldMap.Size() < field) {
-		_LogError_("%d개의 필드밖에 없습니다.", m_hFieldMap.Size());
-		return NULL;
+int MysqlQuerySelect::GetFieldIndex(const String& fieldName) {
+	const int* pFind = m_hFieldList.Find(fieldName);
+
+	if (pFind == nullptr) {
+		return InvalidValue_v;
 	}
 
-	return m_hFieldMap[field];
+	return *pFind;
 }
 
-String MysqlQuerySelect::GetString(const unsigned int& rowIdx, const unsigned int& fieldIdx) {
-	if (GetResultRowCount() < 1) {
-		_LogError_("쿼리 수행결과가 존재하지 않습니다");
-		return NULL;
+// 필드 값이 존재하지 않는 경우 nullptr이 반환될 수 있음
+char* MysqlQuerySelect::GetRawString(const String& fieldName) {
+	if (!IsSuccess()) {
+		_LogError_("쿼리 수행결과가 존재하지 않습니다. %s", "GetRawString()");
+		return nullptr;
 	}
 
-	if (GetResultRowCount() <= rowIdx) {
-		_LogError_("%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
-		return NULL;
+	const int iFieldIndex = GetFieldIndex(fieldName);
+
+	if (iFieldIndex == InvalidValue_v) {
+		_LogError_("%s 필드를 찾지 못했습니다. %s", fieldName.Source(), "GetRawString()");
+		return nullptr;
 	}
 
-	TResultRow& rSelectedRow = m_hResultMap[rowIdx];
-	String sValue = rSelectedRow[fieldIdx];
-
-	return sValue;
+	return m_SqlRow[iFieldIndex];
 }
 
-String MysqlQuerySelect::GetString(const unsigned int& rowIdx, const String& fieldName) {
-	if (GetResultRowCount() < 1) {
-		_LogError_("쿼리 수행결과가 존재하지 않습니다");
-		return NULL;
+
+String MysqlQuerySelect::GetString(const String& fieldName) {
+	const char* pRawString = GetRawString(fieldName);
+
+	if (pRawString == nullptr) {
+		_LogError_("%s 필드의 값을 얻지 못했습니다. %s", fieldName.Source(), "GetString()");
+		return "";
 	}
 
-	if (GetResultRowCount() <= rowIdx) {
-		_LogError_("%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
-		return NULL;
-	}
-
-	TResultRow& rSelectedRow = m_hResultMap[rowIdx];
-	const int iFieldID = m_hFieldStringToIntMap[fieldName];
-	String sValue = rSelectedRow[iFieldID];
-
-	return sValue;
+	return pRawString;
 }
 
-int MysqlQuerySelect::GetInt(const unsigned int& rowIdx, const unsigned int& fieldIdx)
-{
-	if (GetResultRowCount() < 1) {
-		_LogError_("쿼리 수행결과가 존재하지 않습니다");
-		return NULL;
+
+int MysqlQuerySelect::GetInt(const String& fieldName) {
+	const char* pRawString = GetRawString(fieldName);
+
+	if (pRawString == nullptr) {
+		_LogError_("%s 필드의 값을 얻지 못했습니다. %s", fieldName.Source(), "GetInt()");
+		return 0;
 	}
 
-	if (GetResultRowCount() <= rowIdx) {
-		_LogError_("%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
-		return NULL;
-	}
-
-	TResultRow& rSelectedRow = m_hResultMap[rowIdx];
-	const int iValue = atoi(rSelectedRow[fieldIdx].Source());
-
-	return iValue;
+	return std::atoi(pRawString);
 }
 
-int MysqlQuerySelect::GetInt(const unsigned int& rowIdx, const String& fieldName)
-{
-	if (GetResultRowCount() < 1) {
-		_LogError_("쿼리 수행결과가 존재하지 않습니다");
-		return NULL;
+double MysqlQuerySelect::GetDouble(const String& fieldName) {
+	const char* pRawString = GetRawString(fieldName);
+
+	if (pRawString == nullptr) {
+		_LogError_("%s 필드의 값을 얻지 못했습니다. %s", fieldName.Source(), "GetDouble()");
+		return 0;
 	}
 
-	if (GetResultRowCount() <= rowIdx) {
-		_LogError_("%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
-		return NULL;
-	}
-	TResultRow& rSelectedRow = m_hResultMap[rowIdx];
-
-	const int iFieldID = m_hFieldStringToIntMap[fieldName];
-	const int iValue = atoi(rSelectedRow[iFieldID].Source());
-	return iValue;
+	return std::atof(pRawString);
 }
 
-double MysqlQuerySelect::GetDouble(const unsigned int& rowIdx, const unsigned int& fieldIdx) {
-	if (GetResultRowCount() < 1) {
+
+DateTime MysqlQuerySelect::GetTime(const String& fieldName) {
+
+	if (!IsSuccess()) {
 		_LogError_("쿼리 수행결과가 존재하지 않습니다");
 		return 0;
 	}
 
-	if (GetResultRowCount() <= rowIdx) {
-		_LogError_("%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
-		return 0;
-	}
-
-	TResultRow& rSelectedRow = m_hResultMap[rowIdx];
-	const double dValue = atof(rSelectedRow[fieldIdx].Source());
-
-	return dValue;
-}
-
-double MysqlQuerySelect::GetDouble(const unsigned int& rowIdx, const String& fieldName) {
-	if (GetResultRowCount() < 1) {
-		_LogError_("쿼리 수행결과가 존재하지 않습니다");
-		return 0;
-	}
-	if (GetResultRowCount() <= rowIdx) {
-		_LogError_("%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
-		return 0;
-	}
-
-	TResultRow& rSelectedRow = m_hResultMap[rowIdx];
-
-	const int iFieldID = m_hFieldStringToIntMap[fieldName];
-	const double dValue = atof(rSelectedRow[iFieldID].Source());
-
-	return dValue;
-}
-
-DateTime MysqlQuerySelect::GetTime(const unsigned int& rowIdx, const unsigned int& fieldIdx) {
-	if (GetResultRowCount() < 1) {
-		_LogError_("쿼리 수행결과가 존재하지 않습니다");
-		return 0;
-	}
-
-	if (GetResultRowCount() <= rowIdx) {
-		_LogError_("%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
-		return 0;
-	}
-
-	TResultRow& rSelectedRow = m_hResultMap[rowIdx];
-	const String& val = rSelectedRow[fieldIdx];
-
-	int precision = atoi(val.GetRange(20, 5).Source());
-	const int mili = precision / 1000;
-
-	precision -= precision * mili;
-	const int micro = precision;
-
-	return JCore::DateAndTime(
-		atoi(val.GetRange(0, 3).Source()),
-		atoi(val.GetRange(5, 6).Source()),
-		atoi(val.GetRange(8, 9).Source()),
-		atoi(val.GetRange(11, 12).Source()),
-		atoi(val.GetRange(14, 15).Source()),
-		atoi(val.GetRange(17, 18).Source()),
-		mili,
-		micro
-	).ToDateTime();
-}
-
-DateTime MysqlQuerySelect::GetTime(const unsigned int& rowIdx, const String& fieldName) {
-	if (GetResultRowCount() < 1) {
-		_LogError_("쿼리 수행결과가 존재하지 않습니다");
-		return 0;
-	}
-	if (GetResultRowCount() <= rowIdx) {
-		_LogError_("%d개의 쿼리 결과만 존재합니다. 입력하신 행 인덱스값이 %d입니다.", GetResultRowCount(), rowIdx);
-		return 0;
-	}
-
-	TResultRow& rSelectedRow = m_hResultMap[rowIdx];
-
-	const int iFieldID = m_hFieldStringToIntMap[fieldName];
-	const String& val = rSelectedRow[iFieldID];
+	const String& val = GetString(fieldName);
 	int precision = atoi(val.GetRange(20, 25).Source());
 	const int mili = precision / 1000;
 
 	precision -= precision * mili;
 	const int micro = precision;
 
-	return JCore::DateAndTime(
+	return DateAndTime(
 		atoi(val.GetRange(0, 3).Source()),
 		atoi(val.GetRange(5, 6).Source()),
 		atoi(val.GetRange(8, 9).Source()),
@@ -237,16 +146,33 @@ DateTime MysqlQuerySelect::GetTime(const unsigned int& rowIdx, const String& fie
 }
 
 
-unsigned int MysqlQuerySelect::GetResultRowCount() const {
-	const int iRowCount = m_hResultMap.Size();
-	return iRowCount;
+Int32U MysqlQuerySelect::GetRowCount() const {
+
+	if (!IsSuccess()) {
+		_LogError_("쿼리 수행결과가 존재하지 않습니다. GetFieldCount()");
+		return 0;
+	}
+
+	return (Int32U)mysql_num_rows(m_SqlResult);
 }
 
-unsigned int MysqlQuerySelect::GetFieldCount() const {
-	const int iFieldCount = m_hFieldMap.Size();
-	return iFieldCount;
+Int32U MysqlQuerySelect::GetFieldCount() const {
+
+	if (!IsSuccess()) {
+		_LogError_("쿼리 수행결과가 존재하지 않습니다. GetFieldCount()");
+		return 0;
+	}
+
+	return m_hFieldList.Size();
 }
 
+
+MysqlQuerySelect::~MysqlQuerySelect() {
+	if (m_SqlResult) {
+		mysql_free_result(m_SqlResult);
+		m_SqlResult = nullptr;
+	}
+}
 
 bool MysqlQuerySelect::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
@@ -257,9 +183,9 @@ bool MysqlQuerySelect::Execute() {
 		return false;
 	}
 
-	MYSQL_RES* result = mysql_store_result(m_pConn->GetConnection());
+	m_SqlResult = mysql_store_result(m_pConn->GetConnection());
 
-	if (result == NULL) {
+	if (m_SqlResult == nullptr) {
 		const String erstr = m_pConn->GetLastError();
 		if (erstr.Length() > 2)
 			_LogError_("MySQL 오류 : %s", m_pConn->GetLastError().Source());
@@ -267,30 +193,25 @@ bool MysqlQuerySelect::Execute() {
 	}
 
 
-	const int iNumFields = mysql_num_fields(result);
-	MYSQL_ROW row;
 	MYSQL_FIELD* field;
 
 	// 필드 이름에서 필드 인덱스를 얻을 수 있도록 하고
 	// 필드 인덱스에서 필드 이름을 얻을 수 있도록 한다.
 	int i = 0;
-	while ((field = mysql_fetch_field(result))) {
-		m_hFieldMap.Insert(i, field->name);
-		m_hFieldStringToIntMap.Insert(field->name, i);
+	while ((field = mysql_fetch_field(m_SqlResult))) {
+		m_hFieldList.Insert(field->name, i);
 		i++;
 	}
 
-	// 쿼리 실행 결과로 출력된 행들을 가져온다.
-	i = 0;
-	while ((row = mysql_fetch_row(result))) {
-		TResultRow resRow;
-		for (int n = 0; n < iNumFields; n++)
-			resRow.Insert(n, row[n] ? row[n] : "NULL");
+	m_SqlRow = mysql_fetch_row(m_SqlResult);
+	return m_bSuccess = true;
+}
 
-		m_hResultMap.Insert(i, resRow);
+bool MysqlQuerySelect::HasNext() const {
+	return m_SqlRow;
+}
 
-		i++;
-	}
-
-	return m_hResultMap.Size();
+bool MysqlQuerySelect::Next() {
+	m_SqlRow = mysql_fetch_row(m_SqlResult);
+	return m_SqlRow;
 }

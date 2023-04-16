@@ -13,7 +13,7 @@ USING_NS_JC;
 LoggerAbstract* NetLogger_v;
 
 void InitializeNetLogger() {
-	DebugAssertMsg(Logger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
+	DebugAssertMsg(NetLogger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
 
 	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
 	pConsoleLogger->SetEnableLock(true);
@@ -33,5 +33,5 @@ void InitializeNetLogger() {
 }
 
 void FinalizeNetLogger() {
-	DeleteSafe(Logger_v);
+	DeleteSafe(NetLogger_v);
 }

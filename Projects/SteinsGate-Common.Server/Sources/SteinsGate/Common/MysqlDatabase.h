@@ -53,6 +53,7 @@ public:
 	template <typename... Args>
 	MysqlQueryPtr Query(const JCore::String& statement, Args&&... args) {
 		auto pConn = m_pConnectionPool->GetConnection();
+		AutoReleaseConnection autoRelease(pConn, m_pConnectionPool);
 
 		if (pConn == nullptr) {
 			// 실패
