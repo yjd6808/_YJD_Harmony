@@ -145,6 +145,20 @@ void StringUtil::ConcatInnerFront(char* buf, int bufCapacity, const char* concat
 	ConcatInnerFront(buf, iBufLen, bufCapacity, concatStr, iConcatLen);
 }
 
+// https://github.com/otland/forgottenserver/blob/545516299b607ef25471f84d1805a22311ab72de/src/pugicast.h
+template <> float StringUtil::ToNumber(const char* str) { return std::strtof(str, nullptr); }
+template <> double StringUtil::ToNumber(const char* str) { return std::strtod(str, nullptr); }
+template <> Int32L StringUtil::ToNumber(const char* str) { return std::strtol(str, nullptr, 0); }
+template <> Int64 StringUtil::ToNumber(const char* str) { return std::strtoll(str, nullptr, 0); }
+template <> Int32UL StringUtil::ToNumber(const char* str) { return std::strtoul(str, nullptr, 0); }
+template <> Int64U StringUtil::ToNumber(const char* str) { return std::strtoull(str, nullptr, 0); }
+template <> Char StringUtil::ToNumber(const char* str) { return static_cast<Char>(std::strtol(str, nullptr, 0)); }
+template <> Byte StringUtil::ToNumber(const char* str) { return static_cast<Byte>(std::strtoul(str, nullptr, 0)); }
+template <> Int16 StringUtil::ToNumber(const char* str) { return static_cast<Int16>(std::strtol(str, nullptr, 0)); }
+template <> Int16U StringUtil::ToNumber(const char* str) { return static_cast<Int16U>(std::strtoul(str, nullptr, 0)); }
+template <> Int32 StringUtil::ToNumber(const char* str) { return static_cast<Int32>(std::strtol(str, nullptr, 0)); }
+template <> Int32U StringUtil::ToNumber(const char* str) { return static_cast<Int32U>(std::strtoul(str, nullptr, 0)); }
+
 
 /*
 constexpr Int64 StringUtil::ConvertInt64(const char* src, const int len) {

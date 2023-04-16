@@ -769,6 +769,28 @@ String DateTime::Format(const char* fmt) const {
 	return szRet;
 }
 
+bool DateTime::TryParse(DateTime& datetime, String fmt, const String& dateString) {
+	DebugAssertMsg(false, "구현 안됨");
+
+	if (fmt.IsNull()) {
+		return false;
+	}
+
+	// TODO: DateTime::TryParse 구현
+	return true;
+}
+
+DateTime DateTime::FromUnixTime(double unixTimestamp, TimeStandard timeStandard) {
+	Int64 uiTick = ADBeginTick_v + Int64(unixTimestamp * 1'000'000); // DateTimne은 마이크로초단위이므로 백만 곱해줌
+
+	// 로컬 시간은 타임존 편차만큼 더해준다.
+	if (timeStandard == TimeStandard::Local) {
+		const Int32 uiBias = TimeZoneBiasMinute();
+		uiTick += (uiBias * -1) * TicksPerMinute_v;
+	}
+
+	return uiTick;	
+}
 
 // 타임존 시간 편차 얻는 함수
 // @참고 : https://docs.microsoft.com/ko-kr/windows/win32/api/timezoneapi/nf-timezoneapi-gettimezoneinformation?redirectedfrom=MSDN (타임존 정보 얻는법)

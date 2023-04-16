@@ -51,8 +51,7 @@ bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
 			iMaxConnection
 		);
 
-	// 커넥션 25개 풀 초기화
-	// 프로그램 종료 될때 알아서 연결들 모두 종료함
+	// 커넥션 풀 초기화
 	if (!m_pConnectionPool->Init(iConnectionPoolSize)) {
 		_LogError_("DB 커넥션 풀 초기화 실패");
 		return false;

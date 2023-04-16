@@ -49,50 +49,6 @@ void AuthNetGroup::Initialize() {
 	Server = spServer.Get<TcpServer*>();
 	CenterClient = spCenterClient.Get<TcpClient*>();
 	InterServerClient = spInterServerClient.Get<UdpClient*>();
-
-
-	struct Region
-	{
-		Region(int k, int g) : a(k), b(g) {}
-		int a;
-		int b;
-	};
-	auto task = IOCPTask<int>::Run(m_spIOCP.GetPtr(), [](IOCPTaskResult<int>& result) {
-
-		for (int i = 0; i < 5; ++i) {
-			_NetLogDebug_("%d", i);
-			Thread::Sleep(1000);
-		}
-		result.Value = 20;
-	});
-
-	task = IOCPTask<Region>::Run(m_spIOCP.GetPtr(), [](IOCPTaskResult<Region>& result) {
-
-		for (int i = 0; i < 5; ++i) {
-			_NetLogDebug_("%d", i);
-			Thread::Sleep(1000);
-		}
-
-		result.Value.a = 30;
-		result.Value.b = 40;
-	}, nullptr, 1, 2);
-
-
-	task = IOCPTask<void>::Run(m_spIOCP.GetPtr(), [](IOCPTaskResult<void>& result) {
-
-		for (int i = 0; i < 5; ++i) {
-			_NetLogDebug_("%d", i);
-			Thread::Sleep(1000);
-		}
-
-	}, [](IOCPTaskResult<void>& result) {
-		Console::WriteLine("오하요");
-	});
-
-	char s[] = "wjdeh616";
-	auto task2 = CoreGameDB_v->QueryAsync("insert into t_account (c_id, c_pass) values (?, ?)", s, s);
-
-	auto& r = task2->Wait();
 }
 
 bool AuthNetGroup::ConnectCenterServer(int tryCount) {

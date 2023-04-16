@@ -1,5 +1,39 @@
-/*
- * 작성자 : 윤정도
+/*	
+ *	작성자 : 윤정도
+ *	사용 에시코드
+ *
+ *	--계정 테이블
+ *	create table t_account(
+ *		c_account_id				int				primary key auto_increment			comment '계정 PK',
+ *		c_id						varchar(20) 	unique								comment '계정 아이디',
+ *		c_pass						varchar(20)		not null							comment '계정 비번',
+ *		c_created					timestamp		default current_timestamp			comment '계정 생성날짜',
+ *		c_created2					timestamp(3)	default current_timestamp(3)		comment '계정 생성날짜',
+ *		c_logined					timestamp		default null						comment '계정 접속날짜'
+ *	);
+ *	
+ *	char id[] = "wjdeh818";
+ *	auto spQueryTask = CoreGameDB_v->QueryAsync("insert into t_account (c_id, c_pass) values (?, ?)", id, id);
+ *	auto& queryResult = spQueryTask->Wait();
+ *	
+ *	SharedPtr<MysqlQuerySelect> q = CoreGameDB_v->Query(
+ *		"select c_account_id, c_id, c_pass, unix_timestamp(c_created) as c_created, unix_timestamp(c_created2) as c_created2, unix_timestamp(c_logined) as c_logined from t_account"
+ *	);
+ *	
+ *	int iFieldCount = q->GetFieldCount();
+ *	int iRowCount = q->GetRowCount();
+ *
+ *	if (!q->HasNext())
+ *		return;
+ *
+ *	do {
+ *		auto c1 = q->GetNumber<Int32>("c_account_id");
+ *		auto c2 = q->GetString("c_id");
+ *		auto c3 = q->GetString("c_pass");
+ *		auto c4 = q->GetNumber<double>("c_created2");
+ *	
+ *		DateTime dtCreated = DateTime::FromUnixTime(c4).FormatMysqlTime();
+ *	} while (q->Next());
  */
 
 #pragma once

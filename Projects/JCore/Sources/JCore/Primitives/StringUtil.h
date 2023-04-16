@@ -24,6 +24,8 @@ public:
 	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, ...);
 	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, va_list va);
 
+	template <typename TInteger>
+	static TInteger ToNumber(const char* str);
 
 	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);

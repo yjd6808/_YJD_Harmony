@@ -19,7 +19,6 @@ void InitializeServerCore() {
 }
 
 void FinalizeServerCore() {
-	CoreInputThread_v->Stop();
-
-	DeleteSafe(CoreInputThread_v);	// 소멸자에서 Stop() 하도록 함
+	CoreInputThread_v->Abort();		// std::cin에서 입력받는 상태를 강제로 부수기 위해서 어보트처리
+	DeleteSafe(CoreInputThread_v);
 }

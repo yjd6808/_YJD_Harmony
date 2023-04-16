@@ -152,6 +152,7 @@ bool Thread::Joinable() {
 
 void Thread::Abort() {
     WinApi::CloseHandle(m_hHandle);
+    m_hHandle = nullptr;
     m_eState = eAborted;
 }
 

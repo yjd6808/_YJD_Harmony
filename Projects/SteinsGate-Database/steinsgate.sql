@@ -15,6 +15,7 @@ create table t_account (
     c_id						varchar(20) 	unique								comment '계정 아이디',
     c_pass						varchar(20)		not null							comment '계정 비번',
     c_created					timestamp		default current_timestamp			comment '계정 생성날짜',
+    c_created2					timestamp(3)	default current_timestamp(3)		comment '계정 생성날짜 [테스트]',
     c_logined					timestamp		default null						comment '계정 접속날짜'
 );
 

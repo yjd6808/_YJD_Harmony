@@ -84,67 +84,13 @@ char* MysqlQuerySelect::GetRawString(const String& fieldName) {
 }
 
 
+bool MysqlQuerySelect::TryGetString(const JCore::String* fieldName, JCore::String& str, const char* defaultValue) {
+	return GetRawString(fieldName);
+}
+
 String MysqlQuerySelect::GetString(const String& fieldName) {
-	const char* pRawString = GetRawString(fieldName);
-
-	if (pRawString == nullptr) {
-		_LogError_("%s 필드의 값을 얻지 못했습니다. %s", fieldName.Source(), "GetString()");
-		return "";
-	}
-
-	return pRawString;
+	return GetRawString(fieldName);
 }
-
-
-int MysqlQuerySelect::GetInt(const String& fieldName) {
-	const char* pRawString = GetRawString(fieldName);
-
-	if (pRawString == nullptr) {
-		_LogError_("%s 필드의 값을 얻지 못했습니다. %s", fieldName.Source(), "GetInt()");
-		return 0;
-	}
-
-	return std::atoi(pRawString);
-}
-
-double MysqlQuerySelect::GetDouble(const String& fieldName) {
-	const char* pRawString = GetRawString(fieldName);
-
-	if (pRawString == nullptr) {
-		_LogError_("%s 필드의 값을 얻지 못했습니다. %s", fieldName.Source(), "GetDouble()");
-		return 0;
-	}
-
-	return std::atof(pRawString);
-}
-
-
-DateTime MysqlQuerySelect::GetTime(const String& fieldName) {
-
-	if (!IsSuccess()) {
-		_LogError_("쿼리 수행결과가 존재하지 않습니다");
-		return 0;
-	}
-
-	const String& val = GetString(fieldName);
-	int precision = atoi(val.GetRange(20, 25).Source());
-	const int mili = precision / 1000;
-
-	precision -= precision * mili;
-	const int micro = precision;
-
-	return DateAndTime(
-		atoi(val.GetRange(0, 3).Source()),
-		atoi(val.GetRange(5, 6).Source()),
-		atoi(val.GetRange(8, 9).Source()),
-		atoi(val.GetRange(11, 12).Source()),
-		atoi(val.GetRange(14, 15).Source()),
-		atoi(val.GetRange(17, 18).Source()),
-		mili,
-		micro
-	).ToDateTime();
-}
-
 
 Int32U MysqlQuerySelect::GetRowCount() const {
 

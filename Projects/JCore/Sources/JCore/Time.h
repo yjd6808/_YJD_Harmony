@@ -478,11 +478,13 @@ public: // public non-static
 	bool operator==(const DateAndTime& other) const;
 
 	String Format(const char* fmt) const;
-	String FormatMysqlTime() const { return Format("yyyy-MM-dd hh:mm:ss.ffffff"); };
+	
+	String FormatMysqlTime() const { return Format("yyyy-MM-dd hh:mm:ss.ffffff"); }
 
 private: // private static
 	static Tuple<int, int, int, int, int> GetYearsFromDays(int days);		// 단위 년도별로 일수를 가져옴
 	static int GetDatePart(const Int64 tick, const DatePart part);
+	
 private: // private non-static
 	int GetDatePart(const DatePart part) const { return GetDatePart(m_Tick, part); }
 	void ReflectFormat(const DateAndTime& time, String& ret, char token, int count) const;
@@ -492,6 +494,9 @@ public: // public static
 	static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
 	static Int32 TimeZoneBiasMinute();
 	static bool IsLeapYear(int year);
+	static bool TryParse(DateTime& parsed, String fmt, const String& dateString);
+	static bool TryParse(DateTime& parsed, const char* fmt, const String& dateString) { return TryParse(parsed, fmt, dateString); }
+	static DateTime FromUnixTime(double unixTimestamp, TimeStandard timeStandard = TimeStandard::Local);	// 초단위 스탬프를 DateTime으로 변환
 
 	static const char* GetAbbreviationWeekendName(DayOfWeek week) {
 		return ms_szWeekAbbrevName[int(week)];

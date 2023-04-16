@@ -125,10 +125,28 @@ public:
 
 	int GetFieldIndex(const JCore::String& fieldName);
 	char* GetRawString(const JCore::String& fieldName);
+
+	// 잘못된 필드를 주입하거나, 해당 행의 필드가 비어있는 경우(NULL)인경우 JCore::String(0)반환
 	JCore::String GetString(const JCore::String& fieldName);
-	int GetInt(const JCore::String& fieldName);
-	double GetDouble(const JCore::String& fieldName);
-	JCore::DateTime GetTime(const JCore::String& fieldName);
+
+	template <typename TInteger>
+	bool TryGetNumber(const JCore::String& fieldName, TInteger& val, TInteger defaultValue = 0) {
+		const char* pRawString = GetRawString(fieldName);
+
+		if (pRawString == nullptr) {
+			val = defaultValue;
+			return false;
+		}
+
+		return JCore::StringUtil::ToNumber<TInteger>(pRawString);
+	}
+
+	template <typename TInteger>
+	TInteger GetNumber(const JCore::String& fieldName) {
+		const char* pRawString = GetRawString(fieldName);
+		if (pRawString == nullptr) return 0;
+		return JCore::StringUtil::ToNumber<TInteger>(pRawString);
+	}
 
 	Int32U GetRowCount() const;
 	Int32U GetFieldCount() const;
