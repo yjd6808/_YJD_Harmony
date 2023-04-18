@@ -18,7 +18,7 @@ int IOCPPostOrder::Process(IOCPWorker* worker) {
 
 	switch (Order) {
 	case IOCP_POST_ORDER_TERMINATE:
-		SetEvent(Handle);
+		Handle->Signal();
 		return IOCP_POST_ORDER_TERMINATE;
 	default: 
 		return -1;

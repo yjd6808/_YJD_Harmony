@@ -18,7 +18,7 @@ public:
 	~IOCPWorker() override;
 
 	void Run(void* param = nullptr) override;
-	void JoinWait(WinHandle waitHandle) override;
+	void JoinWait(JCore::WaitHandle* waitHandle) override;
 	void Join() override;
 
 	void WorkerThread(void* param) override;

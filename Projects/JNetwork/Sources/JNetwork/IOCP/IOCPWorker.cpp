@@ -23,11 +23,11 @@ void IOCPWorker::Run(void* param) {
 	// @참고 : https://stackoverflow.com/questions/10673585/start-thread-with-member-function
 	//  ==> 내가 구현한 쓰레드로 변경
 
-	m_eState = State::Running;
+	m_eState = State::eRunning;
 	m_Thread = Thread([this](void* param) { WorkerThread(param); });
 }
 
-void IOCPWorker::JoinWait(WinHandle waitHandle) {
+void IOCPWorker::JoinWait(WaitHandle* waitHandle) {
 	IOCPPostOrder* pPostOrder = dbg_new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
 	const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
 
@@ -39,7 +39,7 @@ void IOCPWorker::JoinWait(WinHandle waitHandle) {
 
 void IOCPWorker::Join() {
 	m_Thread.Join();
-	m_eState = State::Joined;
+	m_eState = State::eJoined;
 }
 
 
@@ -87,7 +87,7 @@ void IOCPWorker::WorkerThread(void* param) {
 
 THREAD_END:
 	_NetLogDebug_("IOCPWorker 쓰레드가 종료되었습니다. (%d)", Thread::GetThreadId());
-	m_eState = State::JoinWait;
+	m_eState = State::eJoinWait;
 }
 
 NS_JNET_END

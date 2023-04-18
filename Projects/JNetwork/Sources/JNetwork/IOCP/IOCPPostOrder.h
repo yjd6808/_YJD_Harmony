@@ -8,15 +8,18 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/Sync/WaitHandle.h>
+
 #include <JNetwork/Namespace.h>
 
 NS_JNET_BEGIN
 
 class IOCPWorker;
+
 struct IOCPPostOrder
 {
 	int Order = 0;
-	WinHandle Handle = nullptr;
+	JCore::WaitHandle* Handle = nullptr;
 
 	// Order값 그대로 반환해줌
 	// 세부적인 처리를 진행하고 이후 Worker쓰레드에서 이 반환값을 확인하여 계속 진행할지 아니면 종료할지 등의 여부를 결정하도록 한다.

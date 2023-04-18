@@ -15,24 +15,24 @@ NS_JNET_BEGIN
 class Worker
 {
 public:
-	enum class State
+	enum State
 	{
-		Prepared,
-		Running,
-		JoinWait,
-		Joined
+		ePrepared,
+		eRunning,
+		eJoinWait,
+		eJoined
 	};
 
-	Worker() : m_eState(State::Prepared) {}
+	Worker() : m_eState(State::ePrepared) {}
 	virtual ~Worker() = default;
 
 	virtual void Run(void* param = nullptr) = 0;
-	virtual void JoinWait(WinHandle waitHandle) = 0;
+	virtual void JoinWait(JCore::WaitHandle* waitHandle) = 0;
 	virtual void Join() = 0;
 	virtual void WorkerThread(void* param) = 0;
 protected:
 	JCore::Thread m_Thread;
-	State m_eState;
+	JCore::AtomicInt m_eState;
 	
 };
 

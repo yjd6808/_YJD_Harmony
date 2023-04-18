@@ -10,6 +10,7 @@
 
 
 #include <JCore/Sync/ManualResetEvent.h>
+#include <JCore/Sync/SpinLock.h>
 
 #include <JNetwork/IOCP/IOCP.h>
 
@@ -82,7 +83,9 @@ protected:
 	JCore::AtomicInt m_eState;
 
 	IOCP* m_pIocp;
+
 	IOCPTaskAbstractPtr m_spContinuousTask;
+	JCore::SpinLock m_lkContinuousTaskLock;
 };
 
 
@@ -165,11 +168,15 @@ public:
 	IOCPTaskAbstractPtr ContinuousWith(const TFnTask& fnTask, const TFnTask& fnFinally = nullptr) {
 		TIOCPTaskPtr spTask = Create(m_pIocp, fnTask, fnFinally);
 		spTask->m_spResult = m_spResult;
-
-		if (m_eState >= IOCPTaskState::eFinished)
+		if (m_eState >= IOCPTaskState::eFinished) {
 			spTask->Start();
+			return spTask;
+		}
 
-		m_spContinuousTask = spTask;
+		{
+			JCore::SpinLockGuard guard(m_lkContinuousTaskLock);
+			m_spContinuousTask = spTask;
+		}
 		return spTask;
 	}
 
