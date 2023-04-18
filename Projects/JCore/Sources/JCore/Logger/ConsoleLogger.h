@@ -30,12 +30,25 @@ public:
 	void SetHeaderTimeColor(Level level, ConsoleColor color);
 	void SetHeaderDefaultColor(Level level, ConsoleColor color);
 	void SetLogColor(Level level, ConsoleColor color);
+	ConsoleColor GetLogColor(Level level);
+	void SetLoggerOption(LoggerOption* option) override;
 private:
-	ConsoleColor m_eLevelColors[eMax];
-	ConsoleColor m_eTimeColors[eMax];
-	ConsoleColor m_eHeaderColors[eMax];
-	ConsoleColor m_eLogColors[eMax];
 	String m_szBuffer;
+};
+
+class ConsoleLoggerOption final : public LoggerOption
+{
+public:
+	ConsoleLoggerOption();
+	ConsoleLoggerOption(const ConsoleLoggerOption& other) { this->operator=(other); }
+	ConsoleLoggerOption& operator=(const ConsoleLoggerOption& other);
+
+	ConsoleColor LevelColors[LoggerAbstract::eMax];
+	ConsoleColor TimeColors[LoggerAbstract::eMax];
+	ConsoleColor HeaderColors[LoggerAbstract::eMax];
+	ConsoleColor LogColors[LoggerAbstract::eMax];
+
+	static ConsoleLoggerOption Default;
 };
 
 NS_JC_END

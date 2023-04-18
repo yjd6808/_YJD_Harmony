@@ -12,23 +12,18 @@ USING_NS_JC;
 
 LoggerAbstract* NetLogger_v;
 
-void InitializeNetLogger() {
+void InitializeNetLogger(LoggerOption* option) {
 	DebugAssertMsg(NetLogger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
 
 	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
 	pConsoleLogger->SetEnableLock(true);
 	pConsoleLogger->SetAutoFlush(true);
-	pConsoleLogger->SetHeaderLevelColor(LoggerAbstract::eInfo, LightGreen);
-
-	pConsoleLogger->SetHeaderTimeColor(LoggerAbstract::eDebug, Yellow);
-	pConsoleLogger->SetHeaderTimeColor(LoggerAbstract::eInfo, Yellow);
-	pConsoleLogger->SetHeaderTimeColor(LoggerAbstract::eError, Yellow);
-	pConsoleLogger->SetHeaderTimeColor(LoggerAbstract::eWarn, Yellow);
-
 	pConsoleLogger->SetHeaderFormat("[ level ✓  datetime ] ");
 
 	pConsoleLogger->ShowDateTime(true);
 	pConsoleLogger->ShowLevel(true);
+
+	if (option) { pConsoleLogger->SetLoggerOption(option); }
 	NetLogger_v = pConsoleLogger;
 }
 

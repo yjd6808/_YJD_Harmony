@@ -13,6 +13,9 @@
 
 NS_JC_BEGIN
 
+
+
+class LoggerOption;
 class LoggerAbstract
 {
 public:
@@ -27,7 +30,7 @@ public:
 		eMax
 	};
 
-	LoggerAbstract();
+	LoggerAbstract(LoggerOption* option);
 	virtual ~LoggerAbstract() = default;
 
 	
@@ -55,19 +58,36 @@ public:
 	void SetEnableLock(bool lockEnabled);
 	void SetEnableLog(Level level, bool enabled);
 	void SetEnablePlainLog(bool enabled);
+
+	virtual void SetLoggerOption(LoggerOption* option) = 0;
+	LoggerOption* GetLoggerOption() { return m_pOption; }
 protected:
 	bool m_bAutoFlush;
-	bool m_bShowLevel;
-	bool m_bShowDateTime;
-	bool m_bShowHeader;
-	bool m_bEnableLog[eMax];
-	bool m_bEnablePlainLog;
 	bool m_bUseLock;
 
+	LoggerOption* m_pOption;
 	String m_szHeaderFormat;
 	String m_szDateTimeFormat;
 	String m_szLevelText[eMax];
 	RecursiveLock m_Lock;
 };
+
+class LoggerOption
+{
+public:
+	LoggerOption();
+	LoggerOption(const LoggerOption& other) { this->operator=(other); }
+	LoggerOption& operator=(const LoggerOption& other);
+	virtual ~LoggerOption() = 0;
+
+	bool ShowLevel;
+	bool ShowDateTime;
+	bool ShowHeader;
+	bool EnableLog[LoggerAbstract::eMax];
+	bool EnablePlainLog;
+};
+
+inline LoggerOption::~LoggerOption() { /* Abstract */ }
+
 
 NS_JC_END

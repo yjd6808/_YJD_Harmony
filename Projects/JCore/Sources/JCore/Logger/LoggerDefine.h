@@ -18,6 +18,6 @@ extern JCore::LoggerAbstract* Logger_v;
 #define _LogError_(fmt, ...)	do { if (Logger_v) Logger_v->Log(JCore::LoggerAbstract::eError,fmt, __VA_ARGS__); } while (0)
 #define _LogDebug_(fmt, ...)	do { if (Logger_v) Logger_v->Log(JCore::LoggerAbstract::eDebug,fmt, __VA_ARGS__); } while (0)
 
-void InitializeDefaultLogger();
+void InitializeDefaultLogger(JCore::LoggerOption* option = nullptr);
 void FinalizeDefaultLogger();
 

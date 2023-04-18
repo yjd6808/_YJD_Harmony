@@ -7,16 +7,14 @@
 
 #include <JCore/Core.h>
 #include <JCore/Time.h>
+#include <JCore/Container/Arrays.h>
 #include <JCore/Logger/ConsoleLogger.h>
 
 NS_JC_BEGIN
 
-ConsoleLogger::ConsoleLogger() 
-	: m_szBuffer(4096)
-	, m_eLevelColors{ White, Yellow, LightRed, LightGray }			// [ level : datatime ] -> 레벨 섹상을 바꿈
-	, m_eTimeColors{ White, Yellow, LightRed, LightGray }			// [ level : datatime ] -> 시간 섹상을 바꿈
-	, m_eHeaderColors{ White, White, White, White }					// [ level : datatime ] -> 그외 [ : ]이런 녀석들 색상을 바꿈
-	, m_eLogColors{ Gray, Gray , Gray , Gray }
+ConsoleLogger::ConsoleLogger()
+	: LoggerAbstract(&ConsoleLoggerOption::Default)
+	, m_szBuffer(4096)
 {}
 
 void ConsoleLogger::Flush() {
@@ -40,7 +38,7 @@ void ConsoleLogger::Flush() {
 
 void ConsoleLogger::LogVaList(Level level, const char* fmt, va_list list) {
 
-	if (!m_bEnableLog[level])
+	if (!m_pOption->EnableLog[level])
 		return;
 
 	bool bUseLock = m_bUseLock;
@@ -51,7 +49,7 @@ void ConsoleLogger::LogVaList(Level level, const char* fmt, va_list list) {
 	String szFmt = StringUtil::Format(fmt, list);
 
 	m_szBuffer += CreateHeader(level);
-	m_szBuffer += Console::VTForeColor[m_eLogColors[level]];
+	m_szBuffer += Console::VTForeColor[GetLogColor(level)];
 	m_szBuffer += szFmt;
 
 	if (m_bAutoFlush) {
@@ -64,7 +62,7 @@ void ConsoleLogger::LogVaList(Level level, const char* fmt, va_list list) {
 
 void ConsoleLogger::Log(Level level, const char* fmt, ...) {
 
-	if (!m_bEnableLog[level])
+	if (!m_pOption->EnableLog[level])
 		return;
 
 	va_list args;
@@ -74,7 +72,7 @@ void ConsoleLogger::Log(Level level, const char* fmt, ...) {
 }
 
 void ConsoleLogger::LogPlainVaList(const char* fmt, va_list list) {
-	if (!m_bEnablePlainLog)
+	if (!m_pOption->EnablePlainLog)
 		return;
 
 	bool bUseLock = m_bUseLock;
@@ -96,7 +94,7 @@ void ConsoleLogger::LogPlainVaList(const char* fmt, va_list list) {
 }
 
 void ConsoleLogger::LogPlain(const char* fmt, ...) {
-	if (!m_bEnablePlainLog)
+	if (!m_pOption->EnablePlainLog)
 		return;
 
 	va_list args;
@@ -106,7 +104,7 @@ void ConsoleLogger::LogPlain(const char* fmt, ...) {
 }
 
 void ConsoleLogger::LogPlain(const JCore::String& str) {
-	if (!m_bEnablePlainLog)
+	if (!m_pOption->EnablePlainLog)
 		return;
 
 	bool bUseLock = m_bUseLock;
@@ -135,35 +133,36 @@ String ConsoleLogger::CreateHeader(Level level) {
 	int iLevelIndex = m_szHeaderFormat.Find("level");
 	int iDateTimeIndex = m_szHeaderFormat.Find("datetime");
 
-	if (m_bShowLevel)
+	if (m_pOption->ShowLevel)
 		DebugAssertMsg(iLevelIndex != -1, "헤더에 레벨 태그가 없습니다.");
 
-	if (m_bShowDateTime)
+	if (m_pOption->ShowDateTime)
 		DebugAssertMsg(iDateTimeIndex != -1, "헤더에 데이트타임 태그가 없습니다.");
 
 	String szDateTimeFmt = DateTime::Now().Format(m_szDateTimeFormat.Source());
 	String szHeader(256);
-
 	char szTempBuff[256];
 
 
-	szHeader += Console::VTForeColor[m_eHeaderColors[level]];
+	ConsoleLoggerOption* pConsoleOption = static_cast<ConsoleLoggerOption*>(m_pOption);
+
+	szHeader += Console::VTForeColor[pConsoleOption->HeaderColors[level]];
 	szHeader += m_szHeaderFormat;
 
-	if (m_bShowLevel) {
+	if (m_pOption->ShowLevel) {
 		StringUtil::FormatBuffer(szTempBuff, 256, "%s%s%s",
-			Console::VTForeColor[m_eLevelColors[level]],
+			Console::VTForeColor[pConsoleOption->LevelColors[level]],
 			m_szLevelText[level].Source(),
-			Console::VTForeColor[m_eHeaderColors[level]]
+			Console::VTForeColor[pConsoleOption->HeaderColors[level]]
 		);
 		szHeader.ReplaceAll("level", szTempBuff);
 	}
 
-	if (m_bShowDateTime) {
+	if (m_pOption->ShowDateTime) {
 		StringUtil::FormatBuffer(szTempBuff, 256, "%s%s%s",
-			Console::VTForeColor[m_eTimeColors[level]],
+			Console::VTForeColor[pConsoleOption->TimeColors[level]],
 			szDateTimeFmt.Source(),
-			Console::VTForeColor[m_eHeaderColors[level]]
+			Console::VTForeColor[pConsoleOption->HeaderColors[level]]
 		);
 		szHeader.ReplaceAll("datetime", szTempBuff);
 	}
@@ -172,19 +171,48 @@ String ConsoleLogger::CreateHeader(Level level) {
 }
 
 void ConsoleLogger::SetHeaderLevelColor(Level level, ConsoleColor color) {
-	m_eLevelColors[level] = color;
+	static_cast<ConsoleLoggerOption*>(m_pOption)->LevelColors[level] = color;
 }
 
 void ConsoleLogger::SetHeaderTimeColor(Level level, ConsoleColor color) {
-	m_eTimeColors[level] = color;
+	static_cast<ConsoleLoggerOption*>(m_pOption)->TimeColors[level] = color;
 }
 
 void ConsoleLogger::SetHeaderDefaultColor(Level level, ConsoleColor color) {
-	m_eHeaderColors[level] = color;
+	static_cast<ConsoleLoggerOption*>(m_pOption)->HeaderColors[level] = color;
 }
 
 void ConsoleLogger::SetLogColor(Level level, ConsoleColor color) {
-	m_eLogColors[level] = color;
+	static_cast<ConsoleLoggerOption*>(m_pOption)->LogColors[level] = color;
+}
+
+ConsoleColor ConsoleLogger::GetLogColor(Level level) {
+	return static_cast<ConsoleLoggerOption*>(m_pOption)->LogColors[level];
+}
+
+void ConsoleLogger::SetLoggerOption(LoggerOption* option) {
+	ConsoleLoggerOption* pOption = dynamic_cast<ConsoleLoggerOption*>(option);
+	DebugAssertMsg(pOption != nullptr, "콘솔 로거 옵션 타입이 아닙니다.");
+	m_pOption = pOption;
+}
+
+ConsoleLoggerOption ConsoleLoggerOption::Default;
+
+ConsoleLoggerOption::ConsoleLoggerOption()
+	: LevelColors{ White, Yellow, LightRed, LightGray }		// [ level : datatime ] -> 레벨 섹상을 바꿈
+	, TimeColors{ Yellow, Yellow, Yellow, Yellow }			// [ level : datatime ] -> 시간 섹상을 바꿈
+	, HeaderColors{ LightGreen, White, White, White }		// [ level : datatime ] -> 그외 [ : ]이런 녀석들 색상을 바꿈
+	, LogColors{ Gray, Gray , Gray , Gray }
+{}
+
+ConsoleLoggerOption& ConsoleLoggerOption::operator=(const ConsoleLoggerOption& other) {
+	LoggerOption::operator=(other);
+
+	Arrays::Copy(LevelColors, other.LevelColors);
+	Arrays::Copy(TimeColors, other.TimeColors);
+	Arrays::Copy(HeaderColors, other.HeaderColors);
+	Arrays::Copy(LogColors, other.LogColors);
+	return *this;
 }
 
 
