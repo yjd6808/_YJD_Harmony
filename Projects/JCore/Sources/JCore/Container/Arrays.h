@@ -301,6 +301,23 @@ struct Arrays final
 		for (int i = 0; i < size; ++i) arr[i] = Forward<T>(value);
 	}
 
+	template <typename T, Int32U Size>
+	static void Copy(T(&dst)[Size], const T(&src)[Size]) {
+		for (int i = 0; i < Size; ++i)
+			dst[i] = src[i];
+	}
+
+	template <typename T>
+	static void CopyUnsafe(T* dst, const T* src, int count) {
+		for (int i = 0; i < count; ++i)
+			dst[i] = src[i];
+	}
+
+	template <typename T>
+	static void Copy(T* dst, int capacity, const T* src, int count) {
+		for (int i = 0; i < count && i < capacity; ++i)
+			dst[i] = src[i];
+	}
 
 	template <typename T>
 	static void Swap(T* arr, int l, int r) {

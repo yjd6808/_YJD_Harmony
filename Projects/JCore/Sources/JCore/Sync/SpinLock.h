@@ -15,6 +15,8 @@ NS_JC_BEGIN
 class SpinLock final : public ILock
 {
 public:
+	using TGuard = LockGuard<SpinLock>;
+
 	SpinLock();
 	~SpinLock() override;
 

@@ -15,6 +15,8 @@ NS_JC_BEGIN
 class NormalRwLock final : public IRwLock
 {
 public:
+	using TGuard = LockGuard<NormalRwLock>;
+
 	NormalRwLock();
 
 	void WriteLock() override;

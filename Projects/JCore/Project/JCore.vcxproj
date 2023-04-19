@@ -297,6 +297,14 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Natvis\NatvisByteOrder.h" />
     <ClInclude Include="..\Sources\JCore\Natvis\NatvisFloat.h" />
+    <ClInclude Include="..\Sources\JCore\Pattern\NonCopyableh.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pattern\Singleton.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Pool\BinarySearchMemoryPool.h">
       <SubType>
       </SubType>

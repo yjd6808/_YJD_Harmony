@@ -16,6 +16,8 @@ NS_JC_BEGIN
 class NormalLock final : public ILock
 {
 public:
+	using TGuard = LockGuard<NormalLock>;
+
 	NormalLock();
 	~NormalLock() override;
 

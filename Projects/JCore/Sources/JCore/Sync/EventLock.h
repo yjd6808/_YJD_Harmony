@@ -22,6 +22,8 @@ NS_JC_BEGIN
 class EventLock final : public ILock
 {
 public:
+	using TGuard = LockGuard<EventLock>;
+
 	EventLock();
 	~EventLock() override;
 

@@ -14,6 +14,8 @@ NS_JC_BEGIN
 class RecursiveLock final : public ILock
 {
 public:
+	using TGuard = LockGuard<RecursiveLock>;
+
 	RecursiveLock();
 	~RecursiveLock() override = default;
 

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <JCore/Declspec.h>
+#include <JCore/Define.h>
 #include <JCore/Sync/LockGuard.h>
 
 
@@ -35,3 +36,5 @@ struct JCORE_NOVTABLE ILock
 };
 
 NS_JC_END;
+
+#define LOCK_GUARD(lock) JCore::LockGuard<JCore::ILock> JCoreCounterConcat(__guard__)(lock)
