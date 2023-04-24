@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/ServerInfo.h>
+#include <SteinsGate/Common/ServerProcessInfo.h>
 #include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 
 struct ServerInfoLoader : ConfigFileLoaderAbstract
@@ -20,8 +20,8 @@ public:
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Server; }
 	bool load() override;
 
-	static void readCenterInfo(Json::Value& serverRoot, Out_ ServerInfo* serverInfo);
-	static void readAuthInfo(Json::Value& serverRoot, Out_ ServerInfo* serverInfo);
-	static void readLobbyInfo(Json::Value& serverRoot, Out_ ServerInfo* serverInfo);
-	static void readGameInfo(Json::Value& serverRoot, Out_ ServerInfo* serverInfo);
+	static void readCenterInfo(Json::Value& serverRoot, Out_ ServerProcessInfo* serverInfo);
+	static void readAuthInfo(Json::Value& serverRoot, Out_ ServerProcessInfo* serverInfo);
+	static void readLobbyInfo(Json::Value& serverRoot, Out_ ServerProcessInfo* serverInfo);
+	static void readGameInfo(Json::Value& serverRoot, Out_ ServerProcessInfo* serverInfo);
 };

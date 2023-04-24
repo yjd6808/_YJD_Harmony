@@ -16,18 +16,22 @@ USING_NS_JNET;
 
 CenterNetMaster::CenterNetMaster() {}
 
+CenterNetMaster::~CenterNetMaster() {
+}
+
 void CenterNetMaster::Initialize() {
 	const auto spCenterNetGroup = MakeShared<CenterNetGroup>();
 	AddNetGroup(1, spCenterNetGroup);
 	spCenterNetGroup->Initialize();
 }
 
-void CenterNetMaster::MainLoop() {
-	constexpr int PulseInterval = 100;
-	Pulser pulser(PulseInterval);
-
-	while (true) {
-		int iPulseIntervalCount = pulser.Wait();
-		
-	}
+void CenterNetMaster::OnLoop(int sleepMs) {
 }
+
+void CenterNetMaster::OnCapturedInputEvent(int inputEvent) {
+	CommonNetMaster::OnCapturedInputEvent(inputEvent);
+}
+
+void CenterNetMaster::OnStopped() {
+}
+

@@ -10,33 +10,39 @@
 #include "AuthCoreHeader.h"
 #include "ListenerAuthServer.h"
 
+#include <JNetwork/Packet/SendHelper.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
+ListenerAuthServer::ListenerAuthServer() {
+	// Parser;
+}
+
 void ListenerAuthServer::OnStarted() {
 	_LogInfo_("서버가 시작되었습니다.");
-	/*
-	const auto spQueryResult = CoreGameDB_v->Query("select c_uid, c_id from t_account");
-	const int iResultRowCount = spQueryResult->GetResultRowCount();
-	for (int i = 0; i < iResultRowCount; i++) {
-		_LogPlain_("%d", spQueryResult->GetInt(i, 0));
-		_LogPlain_("%s", spQueryResult->GetString(i, 1).Source());
+}
+
+void ListenerAuthServer::OnConnected(Session* connectedSession) {
+}
+
+void ListenerAuthServer::OnDisconnected(Session* disconnetedSession) {
+}
+
+void ListenerAuthServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+}
+
+void ListenerAuthServer::OnReceived(Session* receiver, ICommand* cmd) {
+	if (!Parser.RunCommand(CoreCenterClient_v, cmd)) {
+		_LogWarn_("커맨드: %d 수행 실패 (Auth)", cmd->GetCommand());
 	}
-	*/
-}
 
-void ListenerAuthServer::OnConnected(JNetwork::Session* connectedSession) {
-}
-
-void ListenerAuthServer::OnDisconnected(JNetwork::Session* disconnetedSession) {
-}
-
-void ListenerAuthServer::OnSent(JNetwork::Session* sender, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
-}
-
-void ListenerAuthServer::OnReceived(JNetwork::Session* receiver, JNetwork::ICommand* cmd) {
+	if (SendHelper::SendInformation.Strategy == eSendAlloc)
+		SendHelper::FlushSendBuffer();
 }
 
 void ListenerAuthServer::OnStopped() {
 	_LogInfo_("서버가 중지되었습니다.");
 }
+
+

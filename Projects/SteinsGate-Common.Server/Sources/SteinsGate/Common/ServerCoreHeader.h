@@ -9,5 +9,8 @@
 #pragma once
 
 
-#include <SteinsGate/Common/ServerInfo.h>
+#include <SteinsGate/Common/ServerProcessInfo.h>
 #include <SteinsGate/Common/InputThread.h>
+#include <SteinsGate/Common/CommonNetMaster.h>
+#include <SteinsGate/Common/CommonNetGroup.h>
+#include <SteinsGate/Common/CommonServer.h>

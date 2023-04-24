@@ -20,8 +20,6 @@ NS_JNET_BEGIN
 class IOCPOverlapped;
 class JCORE_NOVTABLE Session : public Host
 {
-	using SessionLockGuard = JCore::LockGuard<JCore::RecursiveLock>;
-
 public:
 	Session(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator, int recvBufferSize, int sendBufferSize);
 	virtual ~Session();
@@ -35,13 +33,20 @@ public:
 	void Initialize() override;
 	bool Bind(const IPv4EndPoint& bindAddr);
 	bool Disconnect();
+
 	bool SendAsync(ISendPacket* packet);
 	bool SendAsync(const CommandBufferPtr& buffer);
+	bool SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination);
+	bool SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& destination);
+	bool SendToAsyncEcho(ISendPacket* packet);
+
 	bool RecvAsync();
+	bool RecvFromAsync();
 
 	template <typename TCommand>
 	TCommand& SendAlloc(int count = 1) {
-		SessionLockGuard guard(m_SendBufferLock);
+		LOCK_GUARD(m_SendBufferLock);
+
 		const int CmdSize = TCommand::Size(count);
 		if (m_spSendBuffer->GetWritePos() + CmdSize >= MAX_MSS) {
 			FlushSendBuffer();

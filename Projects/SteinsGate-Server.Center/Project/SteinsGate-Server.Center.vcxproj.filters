@@ -8,8 +8,19 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterServer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetMaster.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetGroup.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\CenterEventListener.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterSession.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterServer.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_CENTER.cpp">
+      <Filter>Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_CENTER.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterCoreHeader.h" />
@@ -19,7 +30,29 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetMaster.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetGroup.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\CenterEventListener.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterSession.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterServer.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_CENTER.h">
+      <Filter>Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_CENTER.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{7bbab08f-50d0-4c07-8e61-d773b12cd13f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Recv">
+      <UniqueIdentifier>{a2682916-a9ed-46a9-9276-73c5d77d6882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Send">
+      <UniqueIdentifier>{1accb1ca-c832-4eb7-85eb-3da32e43ca08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -14,10 +14,14 @@
 class DataManager;
 class MysqlDatabase;
 class CenterNetMaster;
+class CenterNetGroup;
+class CenterServer;
 
 extern DataManager* CoreDataManager_v;
 extern MysqlDatabase* CoreGameDB_v;;
 extern CenterNetMaster* CoreNetMaster_v;
+extern CenterNetGroup* CoreNetGroup_v;
+extern CenterServer* CoreServer_v;
 
 void InitializeCenterCore();
 void FinalizeCenterCore();

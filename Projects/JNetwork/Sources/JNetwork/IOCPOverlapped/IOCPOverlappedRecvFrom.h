@@ -16,12 +16,12 @@ NS_JNET_BEGIN
 class IOCPOverlappedRecvFrom : public IOCPOverlapped
 {
 public:
-	IOCPOverlappedRecvFrom(UdpClient* client, IOCP* iocp);
+	IOCPOverlappedRecvFrom(Session* client, IOCP* iocp);
 	~IOCPOverlappedRecvFrom() override;
 public:
 	void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) override;
 private:
-	UdpClient* m_pReceiver;
+	Session* m_pReceiver;
 };
 
 NS_JNET_END

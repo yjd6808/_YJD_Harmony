@@ -8,30 +8,23 @@
 
 #pragma once
 
-#include <JNetwork/NetMaster.h>
+#include <SteinsGate/Common/CommonNetMaster.h>
+#include <JCore/Pattern/Singleton.h>
 
-class AuthNetMaster : public JNetwork::NetMaster
+class AuthNetMaster final : public CommonNetMaster, public JCore::SingletonPointer<AuthNetMaster>
 {
-private:
+	friend class TSingleton;
+
 	AuthNetMaster();
-
-private:
-	void ProcessInputEvent();
-
+	~AuthNetMaster() override;
 public:
 	void Initialize() override;
-	void MainLoop();
-
-	static AuthNetMaster* Get() {
-		static AuthNetMaster* pInst;
-		if (pInst == nullptr) {
-			pInst = dbg_new AuthNetMaster();
-		}
-		return pInst;
-	}
-private:
-	bool m_bRunning;
-	JCore::Vector<int> m_vInputEvents;
+	CenterClientType_t GetClientType() override { return CenterClientType::Auth; }
+	ServerProcessType_t GetProcessType() override { return ServerProcessType::Auth; }
+protected:
+	void OnLoop(int sleepMs) override;
+	void OnCapturedInputEvent(int inputEvent) override;
+	void OnStopped() override;
 };
 
 

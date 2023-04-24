@@ -8,22 +8,27 @@
 
 #pragma once
 
-#include <Jnetwork/NetGroup.h>
-
-#include <SteinsGate/Server/CenterServer.h>
-#include <SteinsGate/Server/CenterEventListener.h>
+#include <SteinsGate/Common/CommonNetGroup.h>
+#include <SteinsGate/Server/ListenerInterServerClient.h>
+#include <SteinsGate/Server/ListenerCenterServer.h>
 
 
 class CenterEventListener;
-class CenterNetGroup final : public SGNetGroup
+class CenterNetGroup final : public CommonNetGroup
 {
 public:
 	CenterNetGroup();
 	~CenterNetGroup() override;
-	void Initialize() override;
+protected:
+	void InitializeBufferPool() override;
+	void InitializeIOCP() override;
+	void InitializeServer() override;
+	void InitializeCenterClient() override;
+	void InitializeInterServerClient() override;
+	void OnLoop(int sleepMs) override;
 private:
-	SGTcpServerWPtr m_spCenterServer;
-	CenterEventListener m_CenterEventListener;
+	ListenerCenterServer m_CenterServerEventListener;
+	ListenerInterServerClient m_InterServerEventListener;
 };
 
 

@@ -27,10 +27,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\CenterEventListener.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetGroup.cpp">
       <SubType>
       </SubType>
@@ -51,15 +47,21 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterServer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterCore.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_CENTER.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_CENTER.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\Center.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\CenterEventListener.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -82,6 +84,16 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterServer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_CENTER.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_CENTER.h">
       <SubType>
       </SubType>
     </ClInclude>

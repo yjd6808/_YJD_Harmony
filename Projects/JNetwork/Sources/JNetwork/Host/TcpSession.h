@@ -24,8 +24,9 @@ public:
 		int sendBufferSize
 	);
 
-	void NotifyCommand(ICommand* cmd) override;
+	virtual void ConnectedInit() {}	// 연결시마다 호출될 세션초기화 함수
 
+	void NotifyCommand(ICommand* cmd) override;
 	void Initialize() override;
 	void Connected() override;
 	void Disconnected() override;

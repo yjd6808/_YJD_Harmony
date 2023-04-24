@@ -16,6 +16,8 @@ NS_JNET_BEGIN
 class SessionContainer
 {
 public:
+	using Iterator = JCore::SharedPtr<JCore::HashMap<SOCKET, Session*>::ValueCollectionIterator>;
+
 	SessionContainer(int size);
 	~SessionContainer();
 
@@ -24,13 +26,15 @@ public:
 	Session* GetSession(SOCKET socket);
 	void DisconnectAllSessions();
 	void Clear();
-	
+
+	Iterator Begin() { return m_hAllSession.Values().Begin(); }
+	Iterator End() { return m_hAllSession.Values().End(); }
+	void ForEach(JCore::Action<Session*> fnForEach);
+	void ForEachConnected(JCore::Action<Session*> fnForEach);
 private:
-	bool m_bReuse;
 	int m_iMaxConnection;
 	JCore::NormalLock m_ContainerLock;
 	JCore::HashMap<SOCKET, Session*> m_hAllSession;
-	JCore::ArrayQueue<Session*> m_qReuseSessions;
 };
 
 NS_JNET_END

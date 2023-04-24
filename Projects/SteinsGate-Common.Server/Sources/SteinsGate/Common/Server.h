@@ -12,3 +12,4 @@
 #include <SteinsGate/Common/ServerCore.h>
 
 #include <mysql.h>
+#include <conio.h>

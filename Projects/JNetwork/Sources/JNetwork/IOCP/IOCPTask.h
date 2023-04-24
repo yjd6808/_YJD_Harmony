@@ -174,7 +174,7 @@ public:
 		}
 
 		{
-			JCore::SpinLockGuard guard(m_lkContinuousTaskLock);
+			LOCK_GUARD(m_lkContinuousTaskLock);
 			m_spContinuousTask = spTask;
 		}
 		return spTask;

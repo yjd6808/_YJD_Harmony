@@ -8,26 +8,26 @@
 
 #pragma once
 
-#include <Jnetwork/NetGroup.h>
+#include <SteinsGate/Common/CommonNetGroup.h>
 
-#include <SteinsGate/Server/AuthServer.h>
 #include <SteinsGate/Server/ListenerAuthServer.h>
 #include <SteinsGate/Server/ListenerCenterClient.h>
 #include <SteinsGate/Server/ListenerInterServerClient.h>
 
 
-class ListenerAuthServer;
-class AuthNetGroup final : public SGNetGroup
+class ListenerCenterServer;
+class AuthNetGroup final : public CommonNetGroup
 {
 public:
 	AuthNetGroup();
 	~AuthNetGroup() override;
-	void Initialize() override;
-	bool ConnectCenterServer(int tryCount);
-
-	SGTcpServer* Server;						// 인증 서버 역할
-	SGTcpClient* CenterClient;					// 중앙 서버와 통신용
-	SGUdpClient* InterServerClient;				// 각종 서버와 통신용
+protected:
+	void InitializeBufferPool() override;
+	void InitializeIOCP() override;
+	void InitializeServer() override;
+	void InitializeCenterClient() override;
+	void InitializeInterServerClient() override;
+	void OnLoop(int sleepMs) override;
 private:
 	ListenerAuthServer m_AuthServerEventListener;
 	ListenerCenterClient m_AuthCenterClientEventLIstener;

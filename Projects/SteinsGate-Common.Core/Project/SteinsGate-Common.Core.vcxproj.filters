@@ -163,7 +163,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.h">
       <Filter>Data\ItemOpt</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ServerInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerProcessInfo.h">
       <Filter>Data\Server</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerInfoLoader.h">

@@ -244,6 +244,18 @@ void Socketv4::AcceptExResult(char* buff, Int32UL receiveDatalen, Out_ IPv4EndPo
 		&iRemoteAddrLen);
 
 	if (localEp) {
+		ULONG ip = pSockLocalAddrIn->sin_addr.S_un.S_addr;
+		char ipstr[256];
+		sprintf_s(
+			ipstr, 
+			"%d.%d.%d.%d:%d\n", 
+			(ip >> 0) & 0xff, 
+			(ip >> 8) & 0xff, 
+			(ip >> 16) & 0xff, 
+			(ip >> 24) & 0xff, 
+			pSockLocalAddrIn->sin_port
+		);
+
 		const IPv4Address v4Address{ ByteOrder::NetworkToHost(pSockLocalAddrIn->sin_addr.S_un.S_addr) };
 		const IPv4EndPoint v4EndPoint{ v4Address, ByteOrder::NetworkToHost(pSockLocalAddrIn->sin_port) };
 

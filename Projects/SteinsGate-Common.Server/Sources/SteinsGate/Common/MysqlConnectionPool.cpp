@@ -98,11 +98,16 @@ void MysqlConnectionPool::ReleaseConnection(MysqlConnection* conn) {
 }
 
 MysqlConnection* MysqlConnectionPool::CreateConnection() const {
-	MysqlConnection* connection = new (std::nothrow) MysqlConnection();
+	MysqlConnection* connection = dbg_new MysqlConnection();
 
 	if (connection == nullptr) {
 		return nullptr;
 	}
-	connection->Connect(m_HostName, m_iPort, m_AccountId, m_AccountPass, m_SchemeName);
+
+	if (!connection->Connect(m_HostName, m_iPort, m_AccountId, m_AccountPass, m_SchemeName)) {
+		delete connection;
+		return nullptr;
+	}
+
 	return connection;
 }

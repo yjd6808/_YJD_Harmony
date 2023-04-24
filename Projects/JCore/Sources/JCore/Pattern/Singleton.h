@@ -2,7 +2,6 @@
  * 작성자: 윤정도
  * 생성일: 4/19/2023 5:36:01 PM
  * =====================
- * 나만의 슁글톤
  *
  * 포인터 싱글톤과 스타릭 싱글톤 특징
  * @참고: https://stackoverflow.com/questions/13047526/difference-between-singleton-implemention-using-pointer-and-using-static-object
@@ -16,35 +15,6 @@
  *    1. 정적 객체는 프로그램 시작시 메모리에 용량을 차지하고 있기 때문에
  *	     늦게 생성된다고 하더라도 무거운 객체의 경우 비효율적일 수 있다.
  *
- *
- *  ==========================================================================
- *  OnDestroy()함수는 소멸자 호출 대용이다. (소멸자는 신경쓰지 않고 매크로로 처리하기 위함.)
- *
- *  [예시코드]
- *	struct A final : SingletonStatic<A>
- *	{
- *	private:
- *		JCoreSingletonNoConstructor(A) : p(1, 2) {}
- *	protected:
- *		void OnDestroy() override {
- *			std::cout << "객체 소멸시 수행할 작업은 여기서 처리\n";
- *		}
- *	private:
- *		Point p;	// 만약 Point가 생성자를 필수로 요구한다면 JCoreSingletonNoConstructor 매크로를 사용
- *	};
- *
- *  [예시코드 - 생성자로 초기화 해줄게 없는 경우]
- *	struct A final : SingletonStatic<A>
- *	{
- *	private:
- *		JCoreSingletonSimple(A);
- *	protected:
- *		void OnDestroy() override {
- *			std::cout << "객체 소멸시 수행할 작업은 여기서 처리\n";
- *		}
- *	private:
- *		Point p;	// 만약 Point가 디폴트 생성자가 있다면 JCoreSingletonSimple 매크로로 생략해서 구현
- *	};
  *
  */
 
@@ -62,14 +32,9 @@ class SingletonStatic : private NonCopyableNonMovable
 {
 protected:
 	SingletonStatic() = default;
-
-	virtual ~SingletonStatic() {
-		((T*)this)->OnSingletonDestroy();
-	}
+	virtual ~SingletonStatic() = default;
 public:
 	using TSingleton = SingletonStatic<T>;
-	virtual void OnSingletonDestroy() = 0;
-
 	static T* Get() {
 		static T instance;
 		return &instance;
@@ -81,13 +46,9 @@ class SingletonPointer : private NonCopyableNonMovable
 {
 protected:
 	SingletonPointer() = default;
-
-	virtual ~SingletonPointer() {
-		((T*)this)->OnSingletonDestroy();
-	}
+	virtual ~SingletonPointer() = default;
 public:
 	using TSingleton = SingletonPointer<T>;
-	virtual void OnSingletonDestroy() = 0;
 
 	static T* Get() {
 		if (ms_pInst == nullptr) {
@@ -115,8 +76,6 @@ public:
 			}
 		}
 	}
-
-	
 private:
 	inline static T* ms_pInst;
 	inline static NormalLock ms_Lock;
@@ -124,18 +83,3 @@ private:
 };
 
 NS_JC_END
-
-#define JCoreSingletonSimple(class_name)								   \
-friend class TSingleton;												   \
-private:																   \
-	~class_name() = default;											   \
-	class_name() = default											   
-
-#define JCoreSingletonNoConstructor(class_name)							   \
-friend class TSingleton;												   \
-private:																   \
-	~class_name() = default;											   \
-	class_name()														  
-
-								   
-

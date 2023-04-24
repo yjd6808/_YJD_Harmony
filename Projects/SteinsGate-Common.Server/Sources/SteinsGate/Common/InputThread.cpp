@@ -31,7 +31,8 @@ bool InputThread::PreStop() {
 void InputThread::WorkerThread() {
 	while (m_bRunning) {
 		String read = Console::ReadLine();
-		TInputLockGuard guard(m_Lock);
+
+		LOCK_GUARD(m_Lock);
 		const int* pEventCode = m_hInputEventMap.Find(read);
 
 		if (pEventCode == nullptr)
@@ -47,12 +48,12 @@ void InputThread::WorkerThread() {
 }
 
 void InputThread::SetEventMap(const HashMap<String, int>& eventMap) {
-	TInputLockGuard guard(m_Lock);
+	LOCK_GUARD(m_Lock);
 	m_hInputEventMap = eventMap;
 }
 
 int InputThread::PopEvent() {
-	TInputLockGuard guard(m_Lock);
+	LOCK_GUARD(m_Lock);
 
 	if (m_qInputEvent.Size() <= 0) 
 		return CommonInputEvent::NoEvent;
@@ -66,8 +67,7 @@ int InputThread::PopEvent() {
 void InputThread::PopAllEvents(Vector<int>& eventList) {
 	eventList.Clear();
 
-	TInputLockGuard guard(m_Lock);
-
+	LOCK_GUARD(m_Lock);
 	while (!m_qInputEvent.IsEmpty()) {
 		eventList.PushBack(m_qInputEvent.Front());
 		m_qInputEvent.Dequeue();

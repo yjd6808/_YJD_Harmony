@@ -13,6 +13,10 @@
 #include <SteinsGate/Common/DatabaseInfoLoader.h>
 #include <SteinsGate/Common/ServerInfoLoader.h>
 
+DataManager::DataManager() {
+	DataManager::initializeLoader();
+}
+
 void DataManager::initializeLoader() {
 	m_pConfigFileLoaders[ConfigFileType::Database] = dbg_new DatabaseInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Server] = dbg_new ServerInfoLoader(this);

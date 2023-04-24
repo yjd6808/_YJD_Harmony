@@ -22,18 +22,30 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\CenterCmd.h">
-      <Filter>Net\Center</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\CenterEnum.h">
-      <Filter>Net\Center</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
-      <Filter>Net\InterServer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerEnum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_CENTER_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_CENTER_COMMON.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetGroup.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetMaster.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonServer.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CenterCmd.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
+      <Filter>Net\Cmd</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +70,21 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerEnum.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_CENTER_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_CENTER_COMMON.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonNetGroup.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonNetMaster.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonServer.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Database">
@@ -66,14 +93,17 @@
     <Filter Include="Net">
       <UniqueIdentifier>{49b73bd5-7afb-4461-b558-0644e505ebff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Net\Center">
-      <UniqueIdentifier>{5e092420-d0cf-4492-9f37-7826ad566399}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Net\InterServer">
-      <UniqueIdentifier>{446e2dd5-dd48-4ec7-b8c4-7616dafdb92f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{47a75455-218d-4948-bee5-5a8abccab001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Recv">
+      <UniqueIdentifier>{7d6217ad-83c2-431a-b2c7-71c666320a1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Send">
+      <UniqueIdentifier>{6b1f231b-af01-479d-8ae0-4738e1d223af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Cmd">
+      <UniqueIdentifier>{26966038-820f-486e-9eab-255c8f6394ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

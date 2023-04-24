@@ -25,9 +25,10 @@ USING_NS_JC;
 							IPv4EndPoint
 =======================================================================================*/
 
-
+IPv4EndPoint IPv4EndPoint::Default;
 
 IPv4EndPoint::IPv4EndPoint() : InternetAddr() {
+	Memory::Set(&InternetAddr, sizeof(SOCKADDR_IN), 0);
 	InternetAddr.sin_family = AF_INET;
 }
 

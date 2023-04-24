@@ -104,7 +104,7 @@ private:
 	JNetwork::IOCP* m_pIocp;
 	MysqlConnectionPool* m_pConnectionPool;
 	DatabaseInfo* m_pInfo{};
-	bool m_bFinalized;
+	bool m_bInitialized;
 
 	// 쿼리 수행 통계
 	// 실패 등 처리할 것들은 여기다가 추가 하면 된다

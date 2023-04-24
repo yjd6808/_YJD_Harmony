@@ -8,11 +8,10 @@
 
 #pragma once
 
-#include <JNetwork/Host/TcpServer.h>
 
-#include <SteinsGate/Server/AuthSession.h>
+#include <SteinsGate/Common/CommonServer.h>
 
-class AuthServer final : public JNetwork::TcpServer
+class AuthServer final : public CommonServer
 {
 public:
 	AuthServer(
@@ -25,4 +24,8 @@ public:
 	);
 
 	SGTcpSession* CreateSession() override;
+	ServerType_t GetServerType() override { return ServerType::Auth; }
+	ServerInfo GetServerInfo() override;
+protected:
+	void OnLoop(int sleepMs) override;
 };

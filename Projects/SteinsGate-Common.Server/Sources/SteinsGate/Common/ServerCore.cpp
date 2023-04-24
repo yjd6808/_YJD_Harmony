@@ -9,9 +9,16 @@
 #include "ServerCore.h"
 #include "ServerCoreHeader.h"
 
+USING_NS_JC;
+USING_NS_JNET;
 
-ServerInfo* CoreServer_v;	// 메인 프로그램에서 주입해줄 것
+ServerProcessInfo* CoreServerProcessInfo_v;			// 메인 서버 프로그램에서 주입해줄 것
 InputThread* CoreInputThread_v;
+CommonNetMaster* CoreCommonNetMaster_v;				// 메인 서버 프로그램에서 주입해줄 것
+CommonNetGroup* CoreCommonNetGroup_v;				// 메인 서버 프로그램에서 주입해줄 것
+CommonServer* CoreCommonServer_v;					// 메인 서버 프로그램에서 주입해줄 것
+TcpClient* CoreCenterClient_v;						// 메인 서버 프로그램에서 주입해줄 것
+UdpClient* CoreInterServerClient_v;					// 메인 서버 프로그램에서 주입해줄 것
 
 void InitializeServerCore() {
 	CoreInputThread_v = dbg_new InputThread();

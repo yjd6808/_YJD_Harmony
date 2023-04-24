@@ -20,7 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\CenterCmd.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\CenterEnum.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetGroup.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetMaster.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonServer.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -34,6 +39,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_CENTER_COMMON.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Server.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
@@ -42,14 +48,28 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\StatementType.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_CENTER_COMMON.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonNetGroup.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonNetMaster.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonServer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnection.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQuery.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_CENTER_COMMON.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -58,6 +78,10 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerEnum.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_CENTER_COMMON.cpp">
       <SubType>
       </SubType>
     </ClCompile>

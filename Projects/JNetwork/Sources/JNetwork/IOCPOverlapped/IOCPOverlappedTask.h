@@ -40,10 +40,14 @@ public:
 		pTask->m_eState = IOCPTaskState::eReady;
 		pTask->m_WaitHandle.Signal();
 
+		pTask->m_lkContinuousTaskLock.Lock();
 		if (pTask->m_spContinuousTask != nullptr)
 			pTask->m_spContinuousTask->Start();
 
 		pTask->m_eState = IOCPTaskState::eFinished;
+		pTask->m_lkContinuousTaskLock.Unlock();
+
+		
 		ProcessFinally();
 	}
 

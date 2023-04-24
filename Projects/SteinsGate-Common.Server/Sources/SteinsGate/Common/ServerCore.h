@@ -11,11 +11,25 @@
 
 #include <SteinsGate/Common/CommonCore.h>
 
-struct ServerInfo;
+struct ServerProcessInfo;
 class InputThread;
+class CommonNetMaster;
+class CommonNetGroup;
+class CommonServer;
 
-extern ServerInfo* CoreServer_v;
+namespace JNetwork
+{
+	class TcpClient;
+	class UdpClient;
+}
+
+extern ServerProcessInfo* CoreServerProcessInfo_v;
 extern InputThread* CoreInputThread_v;
+extern CommonNetMaster* CoreCommonNetMaster_v;
+extern CommonNetGroup* CoreCommonNetGroup_v;
+extern CommonServer* CoreCommonServer_v;
+extern JNetwork::TcpClient* CoreCenterClient_v;
+extern JNetwork::UdpClient* CoreInterServerClient_v;
 
 void InitializeServerCore();
 void FinalizeServerCore();

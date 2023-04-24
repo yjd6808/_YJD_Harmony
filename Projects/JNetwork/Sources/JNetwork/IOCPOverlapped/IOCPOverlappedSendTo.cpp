@@ -14,7 +14,7 @@
 
 NS_JNET_BEGIN
 
-IOCPOverlappedSendTo::IOCPOverlappedSendTo(UdpClient* sender, IOCP* iocp, ISendPacket* sentPacket)
+IOCPOverlappedSendTo::IOCPOverlappedSendTo(Session* sender, IOCP* iocp, ISendPacket* sentPacket)
 	: IOCPOverlapped(iocp, Type::SendTo)
 	, m_pSender(sender)
 	, m_pSentPacket(sentPacket)

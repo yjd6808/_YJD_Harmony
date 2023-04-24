@@ -13,3 +13,5 @@
 #include <SteinsGate/Common/MysqlDatabase.h>
 #include <SteinsGate/Server/DataManager.h>
 #include <SteinsGate/Server/CenterNetMaster.h>
+#include <SteinsGate/Server/CenterNetGroup.h>
+#include <SteinsGate/Server/CenterServer.h>

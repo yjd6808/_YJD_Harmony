@@ -8,7 +8,7 @@
 
 #pragma once
 
-struct RecvAuth
+struct R_AUTH
 {
 public:
 };

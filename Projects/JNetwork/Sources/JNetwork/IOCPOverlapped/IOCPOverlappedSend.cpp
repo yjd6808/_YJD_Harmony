@@ -13,10 +13,9 @@ IOCPOverlappedSend::IOCPOverlappedSend(Session* session, IOCP* iocp, ISendPacket
 	: IOCPOverlapped(iocp, Type::Send)
 	, m_pSender(session)
 	, m_pSentPacket(sentPacket)
-{
-}
+{}
 
-IOCPOverlappedSend::~IOCPOverlappedSend() = default;
+IOCPOverlappedSend::~IOCPOverlappedSend() {}
 
 void IOCPOverlappedSend::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hSentSock = m_pSender->SocketHandle();

@@ -42,10 +42,11 @@ public:
 	void SessionConnected(TcpSession* session);
 	void SessionSent(TcpSession* session, ISendPacket* sentPacket, Int32UL receivedBytes);
 	void SessionReceived(TcpSession* session, ICommand* command);
+	void BroadcastAsync(ISendPacket* packet);
 
-	// 접속 가능한 최대 사용자 수
-	virtual int MaxConnection() const { return m_pContainer->MaxConnection(); }
+	int GetMaxConnection() const { return m_pContainer->MaxConnection(); }
 	IPv4EndPoint GetBindEndPoint() const { return m_Socket.GetLocalEndPoint(); }
+	SessionContainer* GetSessionContainer() const { return m_pContainer; }
 protected:
 	JCore::Atomic<int> m_iSessionRecvBufferSize;
 	JCore::Atomic<int> m_iSessionSendBufferSize;

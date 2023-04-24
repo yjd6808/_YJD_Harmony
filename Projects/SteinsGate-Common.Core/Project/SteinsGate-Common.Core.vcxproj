@@ -146,7 +146,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ServerInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerProcessInfo.h">
       <SubType>
       </SubType>
     </ClInclude>

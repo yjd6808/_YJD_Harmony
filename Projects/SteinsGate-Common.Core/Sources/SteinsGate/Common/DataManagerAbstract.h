@@ -18,7 +18,7 @@
 #include <SteinsGate/Common/ItemInfo.h>
 #include <SteinsGate/Common/ItemOptInfo.h>
 #include <SteinsGate/Common/EnchantInfo.h>
-#include <SteinsGate/Common/ServerInfo.h>
+#include <SteinsGate/Common/ServerProcessInfo.h>
 #include <SteinsGate/Common/DatabaseInfo.h>
 #include <SteinsGate/Common/SGCharCommonInfo.h>
 
@@ -51,7 +51,7 @@ public:
 	ItemOptInfo* getItemOptInfo(const SGString& itemOptEngName);
 	ChannelInfo* getChannelInfo(int channelCode);
 	EnchantInfo* getEnchantInfo(int enchantCode);
-	ServerInfo* getServerInfo(int serverCode);
+	ServerProcessInfo* getServerProcessInfo(int serverCode);
 	DatabaseInfo* getDatabaseInfo(int databaseCode);
 	SGCharCommonInfo* getCharCommonInfo(int charCommonCode);
 protected:

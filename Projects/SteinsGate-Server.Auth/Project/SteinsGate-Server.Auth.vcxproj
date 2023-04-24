@@ -58,6 +58,19 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthCore.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTH.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_CENTER.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_AUTH.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_CENTER.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\Auth.h">
@@ -94,7 +107,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\RecvAuth.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTH.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -106,7 +119,12 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\RecvCenter.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_CENTER.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_AUTH.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_CENTER.h">
       <SubType>
       </SubType>
     </ClInclude>

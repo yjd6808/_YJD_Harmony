@@ -50,6 +50,8 @@ public:
 	static IPv4EndPoint Parse(const JCore::String& endPointAddr);
 	
 	SOCKADDR_IN InternetAddr;
+
+	static IPv4EndPoint Default;
 };
 
 

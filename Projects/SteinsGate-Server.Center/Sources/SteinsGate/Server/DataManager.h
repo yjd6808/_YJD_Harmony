@@ -9,19 +9,14 @@
 #pragma once
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
+#include <JCore/Pattern/Singleton.h>
 
-class DataManager : public DataManagerAbstract
+class DataManager
+	: public DataManagerAbstract
+	, public JCore::SingletonPointer<DataManager>
 {
-public:
-	static DataManager* get() {
-		static DataManager* loader;
-
-		if (loader == nullptr) {
-			loader = dbg_new DataManager;
-			loader->initializeLoader();
-		}
-		return loader;
-	}
-
+	friend class TSingleton;
+	DataManager();
+	~DataManager() override = default;
 	void initializeLoader() override;
 };

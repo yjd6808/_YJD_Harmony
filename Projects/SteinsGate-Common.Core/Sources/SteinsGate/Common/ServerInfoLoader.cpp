@@ -34,7 +34,7 @@ bool ServerInfoLoader::load() {
 			int gameServerCount = (int)gameServerInfoListRoot.size();
 
 			DebugAssertMsg(gameServerCount > 0, "게임 서버 카운트가 0입니다.");
-			ServerInfo* pServerInfo = dbg_new ServerInfo(gameServerCount);
+			ServerProcessInfo* pServerInfo = dbg_new ServerProcessInfo(gameServerCount);
 			pServerInfo->Code = serverInfoRoot["code"].asInt();
 			pServerInfo->Name = SGJson::getString(serverInfoRoot["name"]);
 			readCenterInfo(serverInfoRoot["center"], pServerInfo);
@@ -54,7 +54,7 @@ bool ServerInfoLoader::load() {
 
 
 
-void ServerInfoLoader::readCenterInfo(Json::Value& serverRoot, ServerInfo* serverInfo) {
+void ServerInfoLoader::readCenterInfo(Json::Value& serverRoot, ServerProcessInfo* serverInfo) {
 	SGString szBindInterServerUdp = SGJson::getString(serverRoot["bind_interserver_udp"]);
 	SGString szBindCenterTcp = SGJson::getString(serverRoot["bind_center_tcp"]);
 	SGString szRemoteCenter = SGJson::getString(serverRoot["remote_center"]);
@@ -66,7 +66,7 @@ void ServerInfoLoader::readCenterInfo(Json::Value& serverRoot, ServerInfo* serve
 	DebugAssertMsg(serverInfo->Center.MaxSessionCount > 0, "센터 맥스 세션 수는 0보다 커야합니다.");
 }
 
-void ServerInfoLoader::readAuthInfo(Json::Value& serverRoot, ServerInfo* serverInfo) {
+void ServerInfoLoader::readAuthInfo(Json::Value& serverRoot, ServerProcessInfo* serverInfo) {
 	SGString szBindAuthTcp = SGJson::getString(serverRoot["bind_auth_tcp"]);
 	SGString szRemoteAuth = SGJson::getString(serverRoot["remote_auth"]);
 	SGString szBindInterServerUdp = SGJson::getString(serverRoot["bind_interserver_udp"]);
@@ -80,7 +80,7 @@ void ServerInfoLoader::readAuthInfo(Json::Value& serverRoot, ServerInfo* serverI
 	DebugAssertMsg(serverInfo->Auth.MaxSessionCount > 0, "오쓰 맥스 세션 수는 0보다 커야합니다.");
 }
 
-void ServerInfoLoader::readLobbyInfo(Json::Value& serverRoot, ServerInfo* serverInfo) {
+void ServerInfoLoader::readLobbyInfo(Json::Value& serverRoot, ServerProcessInfo* serverInfo) {
 	SGString szBindLobbyTcp = SGJson::getString(serverRoot["bind_lobby_tcp"]);
 	SGString szRemoteLobby = SGJson::getString(serverRoot["remote_lobby"]);
 	SGString szBindInterServerUdp = SGJson::getString(serverRoot["bind_interserver_udp"]);
@@ -95,7 +95,7 @@ void ServerInfoLoader::readLobbyInfo(Json::Value& serverRoot, ServerInfo* server
 }
 
 
-void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerInfo* serverInfo) {
+void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProcessInfo* serverInfo) {
 
 	int iGameServerCount = (int)gameServerLostRoot.size();
 
@@ -110,7 +110,7 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerInfo*
 		Value& gameChannelListRoot = gameServerRoot["active_channel"];
 		int iGameChannelCount = int(gameChannelListRoot.size());
 		DebugAssertMsg(iGameChannelCount > 0, "액티브 게임서버인데 활성화된 채널 정보가 아무것도 없습니다.");
-		GameServerInfo info(iGameChannelCount);
+		GameServerProcessInfo info(iGameChannelCount);
 
 		info.Code = (ServerType_t)gameServerRoot["code"].asInt();
 		info.Name = SGJson::getString(gameServerRoot["name"]);

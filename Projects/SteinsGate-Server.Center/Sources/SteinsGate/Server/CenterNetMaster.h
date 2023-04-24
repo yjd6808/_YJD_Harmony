@@ -8,23 +8,25 @@
 
 #pragma once
 
-#include <JNetwork/NetMaster.h>
+#include <SteinsGate/Common/CommonNetMaster.h>
+#include <JCore/Pattern/Singleton.h>
 
-class CenterNetMaster : public JNetwork::NetMaster
+class CenterNetMaster final
+	: public CommonNetMaster
+	, public JCore::SingletonPointer<CenterNetMaster>
 {
 private:
+	friend class TSingleton;
 	CenterNetMaster();
+	~CenterNetMaster() override;
 public:
 	void Initialize() override;
-	void MainLoop();
-
-	static CenterNetMaster* Get() {
-		static CenterNetMaster* pInst;
-		if (pInst == nullptr) {
-			pInst = dbg_new CenterNetMaster();
-		}
-		return pInst;
-	}
+	CenterClientType_t GetClientType() override { return CenterClientType::None; }
+	ServerProcessType_t GetProcessType() override { return ServerProcessType::Center; }
+protected:
+	void OnLoop(int sleepMs) override;
+	void OnCapturedInputEvent(int inputEvent) override;
+	void OnStopped() override;
 };
 
 

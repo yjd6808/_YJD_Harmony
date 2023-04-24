@@ -84,10 +84,6 @@ char* MysqlQuerySelect::GetRawString(const String& fieldName) {
 }
 
 
-bool MysqlQuerySelect::TryGetString(const JCore::String* fieldName, JCore::String& str, const char* defaultValue) {
-	return GetRawString(fieldName);
-}
-
 String MysqlQuerySelect::GetString(const String& fieldName) {
 	return GetRawString(fieldName);
 }

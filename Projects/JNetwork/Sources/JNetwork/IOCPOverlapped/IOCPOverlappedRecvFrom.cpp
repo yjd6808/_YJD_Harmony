@@ -11,9 +11,9 @@
 NS_JNET_BEGIN
 
 
-IOCPOverlappedRecvFrom::IOCPOverlappedRecvFrom(UdpClient* client, IOCP* iocp)
+IOCPOverlappedRecvFrom::IOCPOverlappedRecvFrom(Session* session, IOCP* iocp)
 	: IOCPOverlapped(iocp, Type::ReceiveFrom)
-	, m_pReceiver(client)
+	, m_pReceiver(session)
 {
 }
 

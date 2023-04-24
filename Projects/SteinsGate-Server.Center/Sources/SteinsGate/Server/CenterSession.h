@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JNetwork/Host/TcpSession.h>
-#include <SteinsGate/Server/Center.h>
+#include <SteinsGate/Common/ServerEnum.h>
 
 class CenterSession : public JNetwork::TcpSession
 {
@@ -21,6 +21,17 @@ public:
 		int recvBufferSize,
 		int sendBufferSize
 	);
+
+	void ConnectedInit() override;
+
+	CenterClientType_t GetClientType() const { return m_eClientType; }
+	void SetClientType(CenterClientType_t type) { m_eClientType = type; }
+
+	ServerBootState_t GetBootState() const { return m_eBootState; }
+	void SetBootState(ServerBootState_t state);
+private:
+	CenterClientType_t m_eClientType;
+	ServerBootState_t m_eBootState;
 };
 
 

@@ -12,14 +12,12 @@ NS_JNET_BEGIN
 SessionContainer::SessionContainer(int maxSize)
 	: m_iMaxConnection(maxSize)
 	, m_hAllSession(maxSize)
-	, m_bReuse(true)
-{
-}
+{}
 
 SessionContainer::~SessionContainer() = default;
 
 bool SessionContainer::AddSession(Session* session) {
-	NormalLockGuard guard(m_ContainerLock);
+	LOCK_GUARD(m_ContainerLock);
 
 	if (m_hAllSession.Size() >= m_iMaxConnection) {
 		return false;
@@ -34,7 +32,8 @@ bool SessionContainer::AddSession(Session* session) {
 }
 
 Session* SessionContainer::GetSession(SOCKET socket) {
-	NormalLockGuard guard(m_ContainerLock);
+	LOCK_GUARD(m_ContainerLock);
+
 	if (!m_hAllSession.Exist(socket))
 		return nullptr;
 
@@ -42,7 +41,7 @@ Session* SessionContainer::GetSession(SOCKET socket) {
 }
 
 void SessionContainer::DisconnectAllSessions() {
-	NormalLockGuard guard(m_ContainerLock);
+	LOCK_GUARD(m_ContainerLock);
 	m_hAllSession.Values().Extension().ForEach([](Session* session) {
 		session->Disconnect();
 		session->WaitForZeroPending();
@@ -50,7 +49,7 @@ void SessionContainer::DisconnectAllSessions() {
 }
 
 void SessionContainer::Clear() {
-	NormalLockGuard guard(m_ContainerLock);
+	LOCK_GUARD(m_ContainerLock);
 
 	m_hAllSession.Values().Extension().ForEach([](Session* session) {
 		delete session;
@@ -58,6 +57,17 @@ void SessionContainer::Clear() {
 	m_hAllSession.Clear();
 }
 
-
-
+void SessionContainer::ForEach(Action<Session*> fnForEach) {
+	m_hAllSession.Values().Extension().ForEach([&fnForEach](Session* session) {
+		fnForEach(session);
+	});
 }
+
+void SessionContainer::ForEachConnected(JCore::Action<Session*> fnForEach) {
+	m_hAllSession.Values().Extension().ForEach([&fnForEach](Session* session) {
+		if (session->GetState() == Host::eConnected)
+			fnForEach(session);
+	});
+}
+
+NS_JNET_END

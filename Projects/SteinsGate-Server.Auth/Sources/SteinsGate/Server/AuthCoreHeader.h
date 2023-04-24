@@ -14,3 +14,4 @@
 #include <SteinsGate/Server/DataManager.h>
 #include <SteinsGate/Server/AuthNetMaster.h>
 #include <SteinsGate/Server/AuthNetGroup.h>
+#include <SteinsGate/Server/AuthServer.h>

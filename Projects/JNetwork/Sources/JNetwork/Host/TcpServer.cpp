@@ -38,7 +38,6 @@ TcpSession* TcpServer::CreateSession() {
 	return dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
 }
 
-
 void TcpServer::SessionDisconnected(TcpSession* session) {
 	m_pEventListener->OnDisconnected(session);
 
@@ -51,12 +50,11 @@ void TcpServer::SessionDisconnected(TcpSession* session) {
 		return;
 	}
 
-	_NetLogDebug_("세션을 재사용합니다.");
 	session->Initialize();
 	session->AcceptWait();
 
-	if (session->AcceptAsync()) {
-		return;
+	if (!session->AcceptAsync()) {
+		_NetLogDebug_("세션을 재사용 실패");
 	}
 }
 
@@ -70,6 +68,21 @@ void TcpServer::SessionSent(TcpSession* session, ISendPacket* sentPacket, Int32U
 
 void TcpServer::SessionReceived(TcpSession* session, ICommand* command) {
 	m_pEventListener->OnReceived(session, command);
+}
+
+void TcpServer::BroadcastAsync(ISendPacket* packet) {
+	if (m_eState != eListening) {
+		_NetLogError_("리스닝 상태가 아니므로 브로드캐스트를 수행할 수 없습니다.");
+		return;
+	}
+
+	packet->AddRef();
+
+	m_pContainer->ForEachConnected([packet](Session* session) {
+		session->SendAsync(packet);
+	});
+
+	packet->Release();
 }
 
 void TcpServer::Initialize() {
@@ -95,7 +108,6 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 		return false;
 	}
 	
-
 	if (m_Socket.Option().SetReuseAddrEnabled(true) == SOCKET_ERROR) {
 		_NetLogWarn_("서버 소켓 SetReuseAddrEnabled(true) 실패");
 	}
@@ -110,8 +122,10 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 		return false;
 	}
 
+	const int iMaxConn = m_pContainer->MaxConnection();
+
 	// 세션을 미리 생성해놓고 연결 대기 상태로 둠
-	for (int i = 0; i < MaxConnection(); i++) {
+	for (int i = 0; i < iMaxConn; i++) {
 		TcpSession* session = CreateSession(); 
 
 		session->AcceptWait();
@@ -145,14 +159,12 @@ bool TcpServer::Stop() {
 
 	if (m_Socket.Close() == SOCKET_ERROR) {
 		_NetLogError_("서버 소켓을 닫는데 실패했습니다. (%d)", Winsock::LastError());
-		return false;
 	}
+
 	m_Socket.Invalidate();
 
 	// 동적할당된 세션들을 모두 해제해주자.
 	m_pContainer->Clear();
-
-	
 	m_pEventListener->OnStopped();
 	return true;
 }

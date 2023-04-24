@@ -12,7 +12,8 @@ USING_NS_JC;
 
 const char* CommonInputEvent::CommonName[CommonMax] {
 	"__no_name__",
-	"exit"
+	"exit",
+	"help"
 };
 
 
@@ -30,5 +31,26 @@ const char* AuthInputEvent::NameOf(int inputEvent) {
 }
 
 Pair<String, int> AuthInputEvent::PairOf(int inputEvent) {
+	return { NameOf(inputEvent), inputEvent };
+}
+
+const char* CenterInputEvent::CenterName[CenterMax]{
+	"shutdown_all",
+	"shutdown_auth",
+	"shutdown_lobby",
+	"shutdown_game",
+	"state"
+};
+
+
+const char* CenterInputEvent::NameOf(int inputEvent) {
+	if (inputEvent < CommonMax) {
+		return CommonName[inputEvent];
+	}
+
+	return CenterName[inputEvent];
+}
+
+Pair<String, int> CenterInputEvent::PairOf(int inputEvent) {
 	return { NameOf(inputEvent), inputEvent };
 }

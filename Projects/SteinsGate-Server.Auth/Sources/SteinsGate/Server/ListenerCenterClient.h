@@ -13,15 +13,15 @@
 
 class ListenerCenterClient : public JNetwork::ClientEventListener
 {
-public:
-	ListenerCenterClient();
 protected:
 	void OnConnected() override;
 	void OnDisconnected() override;
 	void OnSent(JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::ICommand* cmd) override;
 	void OnConnectFailed(Int32U errorCode) override;
-private:
-	JNetwork::CommandParser m_Parser;
+public:
+	ListenerCenterClient();
+
+	JNetwork::CommandParser Parser;
 };
 

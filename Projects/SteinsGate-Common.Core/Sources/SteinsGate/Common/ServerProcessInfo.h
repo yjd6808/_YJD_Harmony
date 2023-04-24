@@ -10,7 +10,7 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct CenterServerInfo
+struct CenterServerProcessInfo
 {
 	SGEndPoint BindInterServerUdp;
 	SGEndPoint BindCenterTcp;
@@ -19,7 +19,7 @@ struct CenterServerInfo
 };
 
 
-struct AuthServerInfo
+struct AuthServerProcessInfo
 {
 	SGEndPoint BindAuthTcp;
 	SGEndPoint RemoteAuth;
@@ -28,7 +28,7 @@ struct AuthServerInfo
 	int MaxSessionCount;
 };
 
-struct LobbyServerInfo
+struct LobbyServerProcessInfo
 {
 	SGEndPoint BindLobbyTcp;
 	SGEndPoint RemoteLobby;
@@ -44,10 +44,10 @@ struct GameChannelInfo
 	int MaxPlayerCount;
 };
 
-struct GameServerInfo
+struct GameServerProcessInfo
 {
-	GameServerInfo() : GameChannelInfoList(1) {}
-	GameServerInfo(int channelCount)
+	GameServerProcessInfo() : GameChannelInfoList(1) {}
+	GameServerProcessInfo(int channelCount)
 		: GameChannelInfoList(channelCount)
 		, MaxSessionCount(0) {}
 
@@ -72,14 +72,14 @@ struct GameServerInfo
 };
 
 
-struct ServerInfo : ConfigDataAbstract
+struct ServerProcessInfo : ConfigDataAbstract
 {
-	ServerInfo(int activeGameServerCount) : GameList(activeGameServerCount) {}
-	~ServerInfo() override = default;
+	ServerProcessInfo(int activeGameServerCount) : GameList(activeGameServerCount) {}
+	~ServerProcessInfo() override = default;
 
 	SGString Name;
-	CenterServerInfo Center;
-	AuthServerInfo Auth;
-	LobbyServerInfo Lobby;
-	SGVector<GameServerInfo> GameList;
+	CenterServerProcessInfo Center;
+	AuthServerProcessInfo Auth;
+	LobbyServerProcessInfo Lobby;
+	SGVector<GameServerProcessInfo> GameList;
 };

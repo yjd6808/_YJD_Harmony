@@ -10,7 +10,8 @@
 
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecv.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
-
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedRecvFrom.h>
 
 
 using namespace JCore;
@@ -61,7 +62,8 @@ bool Session::Bind(const IPv4EndPoint& bindAddr) {
 		_NetLogError_("소켓 바인드 실패 (%u)", Winsock::LastError());
 		return false;
 	}
-	_NetLogInfo_("%s 바인드 완료", bindAddr.ToString().Source());
+
+	_NetLogDebug_("%s 바인드 완료", bindAddr.ToString().Source());
 	m_LocalEndPoint = bindAddr;
 	return true;
 }
@@ -98,6 +100,7 @@ bool Session::SendAsync(ISendPacket* packet) {
 	Int32UL uiSendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, m_spIocp.GetPtr(), packet);
 
+	// 0으로 즉시 성공하더라도 IOCP 워커에서 오버랩이 처리되므로 여기서 삭제를 해줄필요가 없다.
 	const int iSendRet = m_Socket.SendEx(&buf, &uiSendBytes, pOverlapped);
 
 	if (iSendRet == SOCKET_ERROR) {
@@ -107,8 +110,8 @@ bool Session::SendAsync(ISendPacket* packet) {
 			pOverlapped->Release();
 			packet->Release();
 			return false;
-		} 
-	}
+		}
+	} 
 	
 	return true;
 }
@@ -117,12 +120,11 @@ bool Session::SendAsync(const CommandBufferPtr& buffer) {
 #ifdef DebugMode
 	DebugAssertMsg(buffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
 #endif
-	return SendAsync(new CommandBufferPacket(buffer));
+	return SendAsync(dbg_new CommandBufferPacket(buffer));
 }
 
 CommandBufferPacket* Session::GetCommandBufferForSending() {
-
-	SessionLockGuard guard(m_SendBufferLock);
+	LOCK_GUARD(m_SendBufferLock);
 
 	if (m_spSendBuffer->GetCommandCount() == 0)
 		return nullptr;
@@ -148,6 +150,43 @@ void Session::FlushSendBuffer() {
 	if (pWrappedPacket) SendAsync(pWrappedPacket);
 }
 
+bool Session::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination) {
+
+	if (!destination.IsValidRemoteEndPoint()) {
+		_NetLogError_("유효한 목적지 주소가 아닙니다.");
+		return false;
+	}
+
+	packet->AddRef();
+	WSABUF buf = packet->GetWSABuf();
+	Int32UL uiSendBytes = 0;
+	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSendTo(this, m_spIocp.GetPtr(), packet);
+
+	const int iResult = m_Socket.SendToEx(&buf, &uiSendBytes, pOverlapped, destination);
+	if (iResult == SOCKET_ERROR) {
+		Int32U uiErrorCode = Winsock::LastError();
+		if (uiErrorCode != WSA_IO_PENDING) {
+			DebugAssertMsg(false, "SendToAsync 실패 (%d)", uiErrorCode);
+			pOverlapped->Release();
+			packet->Release();
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Session::SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& destination) {
+#ifdef DebugMode
+	DebugAssertMsg(buffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
+#endif
+	return SendToAsync(dbg_new CommandBufferPacket(buffer), destination);
+}
+
+bool Session::SendToAsyncEcho(ISendPacket* packet) {
+	return SendToAsync(packet, m_RemoteEndPoint);
+}
+
 
 bool Session::RecvAsync() {
 
@@ -167,7 +206,36 @@ bool Session::RecvAsync() {
 	return true;
 }
 
+bool Session::RecvFromAsync() {
 
+	if (!m_Socket.IsBinded()) {
+		_NetLogError_("소켓이 바인딩된 상태여야 수신이 가능합니다. 상대방에게 먼저 송신하여 오토 바인딩해주거나 수동 바인딩을 해주세요.");
+		return false;
+	}
+
+	WSABUF buf = m_spRecvBuffer->GetRemainBuffer();
+	Int32UL uiReceivedBytes = 0;
+	IOCPOverlappedRecvFrom* pRecvFromOverlapped = dbg_new IOCPOverlappedRecvFrom(this, m_spIocp.GetPtr());
+
+	const int iResult = m_Socket.ReceiveFromEx(
+		&buf,
+		&uiReceivedBytes,
+		pRecvFromOverlapped,
+		&m_RemoteEndPoint.InternetAddr
+	);
+
+	if (iResult == SOCKET_ERROR) {
+		Int32U uiErrorCode = Winsock::LastError();
+		if (uiErrorCode != WSA_IO_PENDING) {
+			DebugAssertMsg(false, "RecvFromAsync 실패 (%d)", uiErrorCode);
+			return false;
+		}
+	}
+
+
+
+	return true;
+}
 
 void Session::Received(Int32UL receivedBytes) {
 	m_spRecvBuffer->MoveWritePos(receivedBytes);

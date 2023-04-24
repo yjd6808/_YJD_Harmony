@@ -13,19 +13,21 @@ MysqlDatabase::MysqlDatabase(DatabaseInfo* info)
 	: m_pIocp(nullptr)
 	, m_pConnectionPool(nullptr)
 	, m_pInfo(info)
-	, m_bFinalized(false)
+	, m_bInitialized(false)
 {}
 
 MysqlDatabase::~MysqlDatabase() {
-	Finalize();
-	DeleteSafe(m_pIocp);
+	if (m_bInitialized) {
+		Finalize();
+		DeleteSafe(m_pIocp);
+	}
 }
 
 
 bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
 
-	if (m_bFinalized) {
-		_LogError_("이미 삭제처리된 객체입니다.");
+	if (m_bInitialized) {
+		_LogError_("이미 생성된 객체입니다.");
 		return false;
 	}
 
@@ -53,6 +55,7 @@ bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
 
 	// 커넥션 풀 초기화
 	if (!m_pConnectionPool->Init(iConnectionPoolSize)) {
+		DeleteSafe(m_pConnectionPool);
 		_LogError_("DB 커넥션 풀 초기화 실패");
 		return false;
 	}
@@ -72,17 +75,17 @@ bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
 
 	m_pIocp = dbg_new IOCP(iThreadCount);
 	m_pIocp->Run();
-
+	m_bInitialized = true;
 	_LogInfo_("%s IOCP 실행완료 (쓰레드 수: %d)", m_pInfo->Name.Source(), iThreadCount);
 	return true;
 }
 
 void MysqlDatabase::Finalize() {
 
-	if (m_bFinalized)
+	if (m_bInitialized == false)
 		return;
 
-	m_bFinalized = true;
+	m_bInitialized = false;
 
 	while (m_pIocp->GetPendingCount() != 0) {}
 

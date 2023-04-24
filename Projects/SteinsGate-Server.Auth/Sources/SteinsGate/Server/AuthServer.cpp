@@ -10,6 +10,8 @@
 #include "AuthCoreHeader.h"
 #include "AuthServer.h"
 
+#include <SteinsGate/Server/AuthSession.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -19,11 +21,19 @@ AuthServer::AuthServer(
 	TcpServerEventListener* eventListener, 
 	int maxConn, 
 	int sessionRecvBufferSize,
-	int sessionSendBufferSize) : TcpServer(iocp, bufferAllocator, eventListener, maxConn, sessionRecvBufferSize, sessionSendBufferSize)
+	int sessionSendBufferSize) : CommonServer(iocp, bufferAllocator, eventListener, maxConn, sessionRecvBufferSize, sessionSendBufferSize)
 {}
 
 SGTcpSession* AuthServer::CreateSession() {
 	return dbg_new AuthSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
+}
+
+ServerInfo AuthServer::GetServerInfo() {
+	return { CoreServerProcessInfo_v->Auth.BindAuthTcp, CoreServerProcessInfo_v->Auth.MaxSessionCount };
+}
+
+void AuthServer::OnLoop(int sleepMs) {
+
 }
 
 

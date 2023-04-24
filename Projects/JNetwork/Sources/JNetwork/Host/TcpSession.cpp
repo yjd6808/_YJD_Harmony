@@ -9,9 +9,10 @@
 
 #include <JNetwork/Host/TcpServer.h>
 
-
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecv.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedAccept.h>
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
+#include <JNetwork/IOCPOverlapped/IOCPOverlappedRecvFrom.h>
 
 NS_JNET_BEGIN
 
@@ -73,7 +74,7 @@ void TcpSession::AcceptWait() {
 }
 
 bool TcpSession::Accepted(Int32UL receivedBytes) {
-	char* pReads = m_spRecvBuffer->Peek<char*>();
+	
 	// AcceptEx 함수  호출 후 연결된 소켓에 대해서 로컬 주소와 리모트 주소를 가져올 수 있도록 업데이트 해준다.
 	// 이걸 실행하지 않으면 해당 소켓에 바인딩된 로컬 주소와 리모트 주소를 못가져옴
 	//    = getsockname(), getpeername() 안먹힘
@@ -81,7 +82,12 @@ bool TcpSession::Accepted(Int32UL receivedBytes) {
 		return false;
 	}
 
+	char* pReads = m_spRecvBuffer->Peek<char*>();
+#if TEST_DUMMY_PACKET_TRANSFER
 	m_Socket.AcceptExResult(pReads, TEST_DUMMY_PACKET_SIZE, &m_LocalEndPoint, &m_RemoteEndPoint);
+#else
+	m_Socket.AcceptExResult(pReads, 0, &m_LocalEndPoint, &m_RemoteEndPoint);
+#endif
 	m_eState = State::eAccepted;
 
 	Connected();
@@ -94,6 +100,7 @@ void TcpSession::NotifyCommand(ICommand* cmd) {
 
 
 void TcpSession::Connected() {
+	ConnectedInit();
 	m_pServer->SessionConnected(this);
 }
 

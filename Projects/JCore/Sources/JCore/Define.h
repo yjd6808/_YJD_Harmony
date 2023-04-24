@@ -61,6 +61,14 @@
 	    }						\
     } while (0)
 
+	#define DeleteSingletonSafe(x)	\
+    do {							\
+	    if (x) {					\
+		    x->Free();				\
+        (x) = nullptr;				\
+	    }							\
+    } while (0)
+
     #define DeleteArraySafe(x)	\
     do {						\
 	    if (x) {				\

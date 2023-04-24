@@ -207,4 +207,8 @@ struct InvenItemEquip : InvenItem
 };
 
 
-
+struct ServerInfo
+{
+	JNetwork::IPv4EndPoint BindEndPoint;
+	int MaxConnection;
+};
