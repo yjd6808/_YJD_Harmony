@@ -10,14 +10,14 @@
 #include "GameCoreHeader.h"
 #include "UI_Inventory.h"
 
-#include <SteinsGate/Client/SGUIDefine.h>
+#include <SteinsGate/Client/UIDefine.h>
 
 USING_NS_CC;
 USING_NS_JC;
 
 
-UI_Inventory::UI_Inventory(SGUIGroupInfo* groupInfo)
-	: SGUIMasterGroup(groupInfo)
+UI_Inventory::UI_Inventory(UIGroupInfo* groupInfo)
+	: UIMasterGroup(groupInfo)
 	, m_pBackground(nullptr)
 	, m_pScrollBar(nullptr)
 	, m_pInvenSlotGroup(nullptr)

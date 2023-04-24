@@ -10,7 +10,7 @@
 #include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
-#include <SteinsGate/Common/SGJson.h>
+#include <SteinsGate/Common/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
@@ -47,7 +47,7 @@ bool ChannelInfoLoader::load() {
 
 void ChannelInfoLoader::readChannelBaseInfo(Json::Value& channelRoot, Out_ ChannelInfo* channelInfo) {
  	channelInfo->Code = channelRoot["code"].asInt();
-	channelInfo->Name = SGJson::getString(channelRoot["name"]);
+	channelInfo->Name = JsonUtil::getString(channelRoot["name"]);
 	channelInfo->EnteranceType = (EnteranceType_t)channelRoot["enterance_type"].asInt();
 }
 

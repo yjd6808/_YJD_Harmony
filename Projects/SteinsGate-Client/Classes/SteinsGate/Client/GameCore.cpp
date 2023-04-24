@@ -18,29 +18,29 @@
 //     사실.. 소괄호 작성하기 귀찮아서 이렇게 모아놓음
 // ===========================================================
 
-SGClientInfo*				CoreClient_v;
-SGHostPlayer*				CorePlayer_v;
-SGDataManager*				CoreDataManager_v;
-SGUIManager*				CoreUIManager_v;
-SGWorldScene*				CoreWorld_v;
-SGInven*					CoreInven_v;
-SGFontPackage*				CoreFont_v;
-SGActorListenerManager*		CoreActorListenerManager_v;
-SGActorBox*					CoreActorBox_v;
-SGImagePackManager*			CorePackManager_v;
+ClientInfo*				CoreClient_v;
+HostPlayer*				CorePlayer_v;
+DataManager*				CoreDataManager_v;
+UIManager*				CoreUIManager_v;
+WorldScene*				CoreWorld_v;
+Inven*					CoreInven_v;
+FontPackage*				CoreFont_v;
+ActorListenerManager*		CoreActorListenerManager_v;
+ActorBox*					CoreActorBox_v;
+ImagePackManager*			CorePackManager_v;
 SGGlobal*					CoreGlobal_v;
 
 void InitializeClientCore() {
 	CoreGlobal_v				= SGGlobal::get();
-	CorePackManager_v			= SGImagePackManager::get();
-	CoreFont_v					= SGFontPackage::get();
-	CoreDataManager_v			= SGDataManager::get();
-	CoreUIManager_v				= SGUIManager::get();
-	CorePlayer_v				= SGHostPlayer::get();
-	CoreInven_v					= SGInven::get();
-	CoreWorld_v					= SGWorldScene::get();
-	CoreActorListenerManager_v  = SGActorListenerManager::get();
-	CoreActorBox_v				= SGActorBox::get();
+	CorePackManager_v			= ImagePackManager::get();
+	CoreFont_v					= FontPackage::get();
+	CoreDataManager_v			= DataManager::get();
+	CoreUIManager_v				= UIManager::get();
+	CorePlayer_v				= HostPlayer::get();
+	CoreInven_v					= Inven::get();
+	CoreWorld_v					= WorldScene::get();
+	CoreActorListenerManager_v  = ActorListenerManager::get();
+	CoreActorBox_v				= ActorBox::get();
 
 	CoreGlobal_v->init();
 	CorePackManager_v->loadAllPackages();

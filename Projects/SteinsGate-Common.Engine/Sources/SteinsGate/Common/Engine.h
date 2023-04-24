@@ -12,7 +12,7 @@
 #include <cocos/ui/CocosGUI.h>
 
 #include <SteinsGate/Common/Core.h>
-#include <SteinsGate/Common/SGColor.h>
+#include <SteinsGate/Common/Color.h>
 
 #define USING_NS_CCUI	using namespace cocos2d::ui
 

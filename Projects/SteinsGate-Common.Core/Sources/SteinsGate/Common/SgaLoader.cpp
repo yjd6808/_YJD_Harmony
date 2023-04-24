@@ -178,11 +178,11 @@ SgaPackagePtr SgaLoader::LoadHeaderOnly(const String& sgaPath) {
 	return Load(sgaPath, true, true);
 }
 
-SGVector<String> SgaLoader::LoadAllImagePackPaths(const String& path) {
+Vector<String> SgaLoader::LoadAllImagePackPaths(const String& path) {
 	return Directory::Files(path.Source(), true);
 }
 
-SGVector<String> SgaLoader::LoadAllSoundPackPaths(const String& path) {
+Vector<String> SgaLoader::LoadAllSoundPackPaths(const String& path) {
 	return Directory::Files(path.Source(), true);
 }
 

@@ -11,7 +11,7 @@
 #include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
-#include <SteinsGate/Common/SGJson.h>
+#include <SteinsGate/Common/JsonUtil.h>
 
 USING_NS_JC;
 USING_NS_JS;
@@ -60,8 +60,8 @@ void ItemInfoLoader::readCommonInfo(
 
 	iCode = itemRoot["code"].asInt();
 	itemInfo->Code = ItemCode(iCode, detail1, detail2, itemType).Code;
-	itemInfo->Name = SGJson::getString(itemRoot["name_kor"]);
-	itemInfo->NameEng = SGJson::getStringOrNull(itemRoot["name_eng"]);
+	itemInfo->Name = JsonUtil::getString(itemRoot["name_kor"]);
+	itemInfo->NameEng = JsonUtil::getStringOrNull(itemRoot["name_eng"]);
 	itemInfo->Rarity = (RarityType_t)itemRoot["rarity"].asInt();
 	itemInfo->Icon = itemRoot["icon"].asInt();
 	itemInfo->SellPrice = itemRoot["sell_price"].asInt();
@@ -77,8 +77,8 @@ void ItemInfoLoader::readArmorInfo(Json::Value& armorRoot, ItemArmorInfo* itemAr
 
 
 void ItemInfoLoader::readVisualInfo(Json::Value& visualRoot, ItemVisualInfo* pVisual) {
-	pVisual->Shape = SGJson::getString(visualRoot["shape"]);
-	pVisual->ShapeAlpha = SGJson::getString(visualRoot["shape_alpha"]);
+	pVisual->Shape = JsonUtil::getString(visualRoot["shape"]);
+	pVisual->ShapeAlpha = JsonUtil::getString(visualRoot["shape_alpha"]);
 }
 
 void ItemInfoLoader::readWeaponInfo(Json::Value& weaponRoot, ItemWeaponInfo* pWeapon) {

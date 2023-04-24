@@ -25,298 +25,298 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\main.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorBox.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorBox.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorListenerManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAIActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIActivity.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAIActor.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAIInfo.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIInfo.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAIInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAnimationInfo.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AnimationInfo.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAttackDataInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetAuthEventListener.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCamera.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetAuthEventListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\MimicCamera.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharAnimationInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharProjectileListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharAnimationInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharProjectileListener.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGEffect.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Effect.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGFontPackage.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\EffectInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\FontPackage.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerAction.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerAction.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerBulletListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerBulletListener.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerFallDown.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerFallDown.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerHit.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerHit.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerSitRecover.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerSitRecover.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGHitRecorder.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\HitRecorder.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGInven.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Inven.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGLoginScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\LoginScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterActivity.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterAttackActivity.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterFallDownActivity.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterHitActivity.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterIdleActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterHitActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterSitActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterSitActivity.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterWalkActivity.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetClientEventListener.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetClientGroup.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetLobbyEventListener.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPhysicsActor.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetClientGroup.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\PhysicsActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMapInfo.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapInfo.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMapInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGObstacle.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Obstacle.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGObstacleInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ObstacleInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGClientInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ClientInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGComboTree.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ComboTree.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\SGAction.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGComboKeyList.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActionInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActionManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ComboKeyList.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActionInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActionMgr.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActor.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Actor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorPartAnimation.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorPartAnimation.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorSprite.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorSprite.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharacter.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Character.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorPartSprite.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGDataManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorPartSprite.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\DataManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGFrameTexture.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\FrameTexture.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGlobal.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Global.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerGunShot.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerIdle.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerGunShot.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerIdle.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerJump.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerRun.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerSliding.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerWalk.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePack.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerJump.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerRun.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerSliding.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerWalk.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ImagePack.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePackManager.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGameScene.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGJsonEx.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ImagePackManager.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\GameScene.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\JsonUtilEx.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonster.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Monster.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMobInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGHostPlayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MobInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\HostPlayer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Player.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayerController.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\PlayerController.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayerPool.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\PlayerPool.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectile.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Projectile.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectileInfo.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileInfo.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectileInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectileListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileListener.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGSceneBase.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SceneBase.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ChannelSelectScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGStruct.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Struct.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMapLayer.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGTileInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapLayer.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\TileInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIButton.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIButton.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUICheckBox.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UICheckBox.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIEditBox.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIEditBox.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIElement.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIElement.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIGroup.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIGroup.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIGroupMaster.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIGroupMaster.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUILabel.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UILabel.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUILayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UILayer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIMasterGroup.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIProgressBar.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIScrollBar.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIProgressBar.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIScrollBar.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUISprite.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UISprite.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIStatic.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIStatic.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIToggleButton.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIToggleButton.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -324,15 +324,15 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGWin32Helper.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Win32Helper.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGWndMessage.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\WndMessage.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGWorldScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\WorldScene.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -367,85 +367,85 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorBox.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorBox.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListener.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorListenerDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerDefine.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAIActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIActivity.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAIActor.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIActor.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAIInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAIInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAllActions.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AllActions.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AppDelegate.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionDefine.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAllActorListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AllActorListener.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAttackDataInfo.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAttackDataInfoLoader.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetAuthEventListener.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCamera.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfo.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetAuthEventListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\MimicCamera.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharAnimationInfoLoader.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharProjectileListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharAnimationInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharProjectileListener.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetClientEventListener.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetClientGroup.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetCore.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetClientEventListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetClientGroup.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetCore.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetLobbyEventListener.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIMasterGroup.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUICheckBox.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UICheckBox.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGClientInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ClientInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGClientInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ClientInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGComboTree.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGComboKeyList.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ComboTree.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\ComboKeyList.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionMgr.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -453,283 +453,283 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAnimationDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AnimationDefine.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActor.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Actor.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorPartAnimation.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorPartAnimation.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorSprite.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorSprite.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharacter.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Character.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorPartSprite.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGConfig.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEffect.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorPartSprite.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Config.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Effect.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\EffectDefine.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfo.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGFontPackage.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfo.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\FontPackage.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerAction.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerAction.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerBulletListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerBulletListener.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerFallDown.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerFallDown.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerGunShot.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerHit.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerGunShot.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerHit.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerIdle.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerIdle.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerJump.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerRun.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerSitRecover.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerJump.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerRun.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerSitRecover.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerSliding.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerWalk.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGHitRecorder.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerSliding.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerWalk.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\HitRecorder.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorListenerManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerManager.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGInven.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Inven.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGLoginScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\LoginScene.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMapInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMapInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonster.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Monster.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterActivity.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterAttackActivity.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterFallDownActivity.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterHitActivity.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterIdleActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterHitActivity.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterSitActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterSitActivity.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterWalkActivity.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGObstacle.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Obstacle.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGObstacleInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ObstacleInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGObstacleInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ObstacleInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGHostPlayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\HostPlayer.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGlobal.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Global.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGJsonEx.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\JsonUtilEx.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMobInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MobInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGFrameTexture.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\FrameTexture.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAnimationInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AnimationInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGDataManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\DataManager.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePack.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ImagePack.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePackManager.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGameScene.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMobInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ImagePackManager.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\GameScene.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\MobInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Player.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayerController.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\PlayerController.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayerPool.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectile.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\PlayerPool.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Projectile.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileDefine.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPhysicsActor.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\PhysicsActor.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileListener.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGSceneBase.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SceneBase.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ChannelSelectScene.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGStruct.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Struct.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGTileInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\TileInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGTileInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\TileInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIButton.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIButton.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIDefine.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIEditBox.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIDefine.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIEditBox.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIElement.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIElement.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIGroup.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIGroup.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIGroupMaster.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIGroupMaster.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUILabel.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UILabel.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUILayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UILayer.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIManager.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIProgressBar.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIScrollBar.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUISprite.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIProgressBar.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIScrollBar.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\UISprite.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIStatic.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIStatic.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIToggleButton.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIToggleButton.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -737,14 +737,14 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGWin32Helper.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Win32Helper.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGWndMessage.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\WndMessage.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Tutturu.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMapLayer.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGWorldScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapLayer.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\WorldScene.h">
       <SubType>
       </SubType>
     </ClInclude>

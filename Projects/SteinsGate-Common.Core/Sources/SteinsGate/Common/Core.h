@@ -59,8 +59,8 @@
 #include <JNetwork/Packet/CommandParser.h>
 
 
-#include <SteinsGate/Common/SGStruct.h>
-#include <SteinsGate/Common/SGConfig.h>
+#include <SteinsGate/Common/Struct.h>
+#include <SteinsGate/Common/Config.h>
 #include <SteinsGate/Common/Logo.h>
 #include <SteinsGate/Common/CommonCore.h>
 
@@ -182,12 +182,12 @@ using SGCommandParser = JNetwork::CommandParser;
 // ============================================================
 
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
-class alignas(SG_CACHELINE_SIZE) AlignedVector : public SGVector<T, TAllocator> {};
+class alignas(SG_CACHELINE_SIZE) SGAlignedVector : public SGVector<T, TAllocator> {};
 
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
-class alignas(SG_CACHELINE_SIZE) AlignedLinkedList : public SGLinkedList<T, TAllocator> {};
+class alignas(SG_CACHELINE_SIZE) SGAlignedLinkedList : public SGLinkedList<T, TAllocator> {};
 
 template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
-class alignas(SG_CACHELINE_SIZE) AlignedHashMap : public SGHashMap<TKey, TValue, TAllocator> {};
+class alignas(SG_CACHELINE_SIZE) SGAlignedHashMap : public SGHashMap<TKey, TValue, TAllocator> {};
 
 

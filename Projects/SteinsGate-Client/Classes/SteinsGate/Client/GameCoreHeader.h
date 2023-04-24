@@ -11,13 +11,13 @@
 
 #include <SteinsGate/Common/CommonInfo.h>
 
-#include <SteinsGate/Client/SGDataManager.h>
-#include <SteinsGate/Client/SGUIManager.h>
-#include <SteinsGate/Client/SGHostPlayer.h>
-#include <SteinsGate/Client/SGInven.h>
-#include <SteinsGate/Client/SGWorldScene.h>
-#include <SteinsGate/Client/SGFontPackage.h>
-#include <SteinsGate/Client/SGActorListenerManager.h>
-#include <SteinsGate/Client/SGActorBox.h>
-#include <SteinsGate/Client/SGGlobal.h>
-#include <SteinsGate/Client/SGImagePackManager.h>
+#include <SteinsGate/Client/DataManager.h>
+#include <SteinsGate/Client/UIManager.h>
+#include <SteinsGate/Client/HostPlayer.h>
+#include <SteinsGate/Client/Inven.h>
+#include <SteinsGate/Client/WorldScene.h>
+#include <SteinsGate/Client/FontPackage.h>
+#include <SteinsGate/Client/ActorListenerManager.h>
+#include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/Global.h>
+#include <SteinsGate/Client/ImagePackManager.h>

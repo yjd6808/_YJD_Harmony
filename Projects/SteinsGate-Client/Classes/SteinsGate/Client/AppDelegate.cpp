@@ -1,7 +1,7 @@
 #include "Tutturu.h"
 #include "AppDelegate.h"
 #include "GameCoreHeader.h"
-#include "SGWin32Helper.h"
+#include "Win32Helper.h"
 #include "SteinsGate/Common/AudioPlayer.h"
 #include "SteinsGate/Common/SgaElementInitializer.h"
 
@@ -45,8 +45,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     FileUtils::getInstance()->setPopupNotify(false);    // 파일못찾은 경우 알람 안하도록 함
     SGConsole::SetSize(1200, 800);
 
-    SGDataManager* pDataManager = SGDataManager::get();
-    CoreCommon_v = pDataManager->getCommonInfo(1);
+    DataManager* pDataManager = DataManager::get();
+    CoreCommonInfo_v = pDataManager->getCommonInfo(1);
     CoreClient_v = pDataManager->getClientInfo(1);
     CoreCharCommon_v = pDataManager->getCharCommonInfo(1);
 
@@ -83,7 +83,7 @@ void AppDelegate::CreateOpenGLWindow() {
     //glview->setDesignResolutionSize(CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight, ResolutionPolicy::SHOW_ALL);
     director->setContentScaleFactor(1.0f);
 
-    SGWin32Helper::LazyInit();
+    Win32Helper::LazyInit();
 }
 
 void AppDelegate::CreateWorldScene() {

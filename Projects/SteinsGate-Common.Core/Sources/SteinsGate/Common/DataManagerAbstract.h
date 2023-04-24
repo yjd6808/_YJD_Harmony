@@ -20,7 +20,7 @@
 #include <SteinsGate/Common/EnchantInfo.h>
 #include <SteinsGate/Common/ServerProcessInfo.h>
 #include <SteinsGate/Common/DatabaseInfo.h>
-#include <SteinsGate/Common/SGCharCommonInfo.h>
+#include <SteinsGate/Common/CharCommonInfo.h>
 
 class DataManagerAbstract
 {
@@ -53,7 +53,7 @@ public:
 	EnchantInfo* getEnchantInfo(int enchantCode);
 	ServerProcessInfo* getServerProcessInfo(int serverCode);
 	DatabaseInfo* getDatabaseInfo(int databaseCode);
-	SGCharCommonInfo* getCharCommonInfo(int charCommonCode);
+	CharCommonInfo* getCharCommonInfo(int charCommonCode);
 protected:
 	ConfigFileLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max];
 	bool m_bLoaded[ConfigFileType::Max]; // Lazy Loading을 기본으로 하자.

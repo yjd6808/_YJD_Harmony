@@ -12,7 +12,7 @@
 #include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
-#include <SteinsGate/Common/SGJson.h>
+#include <SteinsGate/Common/JsonUtil.h>
 
 
 USING_NS_JS;
@@ -65,7 +65,7 @@ void EnchantInfoLoader::readEnchantInfo(Json::Value& enchantRoot, Out_ EnchantIn
 	for (int i = 0; i < iArmorBonusOptCount; ++i) {
 		Value& armorBonusOptRoot = armorBonusOptListRoot[i];
 
-		SGString szOptName = SGJson::getString(armorBonusOptRoot["opt_name"]);
+		SGString szOptName = JsonUtil::getString(armorBonusOptRoot["opt_name"]);
 		Value& szOptValListRoot = armorBonusOptRoot["opt_val"];
 		DebugAssertMsg(szOptValListRoot.size() == MaxEnchantLevel_v, "방어구 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", szOptValListRoot.size(), MaxEnchantLevel_v);
 
@@ -79,7 +79,7 @@ void EnchantInfoLoader::readEnchantInfo(Json::Value& enchantRoot, Out_ EnchantIn
 	for (int i = 0; i < iAcceossoryBonusOptCount; ++i) {
 		Value& accessoryBonusOptRoot = accessoryBonusOptListRoot[i];
 
-		SGString szOptName = SGJson::getString(accessoryBonusOptRoot["opt_name"]);
+		SGString szOptName = JsonUtil::getString(accessoryBonusOptRoot["opt_name"]);
 		Value& szOptValListRoot = accessoryBonusOptRoot["opt_val"];
 		DebugAssertMsg(szOptValListRoot.size() == MaxEnchantLevel_v, "악세서리 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", szOptValListRoot.size(), MaxEnchantLevel_v);
 

@@ -2,17 +2,17 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Engine.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGColor.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGRandomEx.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\Color.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\RandomEx.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\GridLayer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGRectEx.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\RectEx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGColor.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGRandomEx.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGRectEx.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGVec2Ex.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Color.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\RandomEx.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\RectEx.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Vec2Ex.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\GridLayer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\RectPoly.h" />
   </ItemGroup>

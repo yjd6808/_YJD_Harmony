@@ -10,28 +10,28 @@
 
 #include <SteinsGate/Common/CommonCore.h>
 
-class SGClientInfo;
-class SGHostPlayer;
-class SGDataManager;
-class SGUIManager;
-class SGInven;
-class SGWorldScene;
-class SGFontPackage;
-class SGActorListenerManager;
-class SGActorBox;
-class SGImagePackManager;
+class ClientInfo;
+class HostPlayer;
+class DataManager;
+class UIManager;
+class Inven;
+class WorldScene;
+class FontPackage;
+class ActorListenerManager;
+class ActorBox;
+class ImagePackManager;
 class SGGlobal;
 
-extern SGClientInfo* CoreClient_v;
-extern SGHostPlayer* CorePlayer_v;
-extern SGDataManager* CoreDataManager_v;
-extern SGUIManager* CoreUIManager_v;
-extern SGInven* CoreInven_v;
-extern SGWorldScene* CoreWorld_v;
-extern SGFontPackage* CoreFont_v;
-extern SGActorListenerManager* CoreActorListenerManager_v;
-extern SGActorBox* CoreActorBox_v;
-extern SGImagePackManager* CorePackManager_v;
+extern ClientInfo* CoreClient_v;
+extern HostPlayer* CorePlayer_v;
+extern DataManager* CoreDataManager_v;
+extern UIManager* CoreUIManager_v;
+extern Inven* CoreInven_v;
+extern WorldScene* CoreWorld_v;
+extern FontPackage* CoreFont_v;
+extern ActorListenerManager* CoreActorListenerManager_v;
+extern ActorBox* CoreActorBox_v;
+extern ImagePackManager* CorePackManager_v;
 extern SGGlobal* CoreGlobal_v;
 
 void InitializeClientCore();

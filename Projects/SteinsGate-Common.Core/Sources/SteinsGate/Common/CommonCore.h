@@ -10,10 +10,10 @@
 
 
 class CommonInfo;
-struct SGCharCommonInfo;
+struct CharCommonInfo;
 
 extern CommonInfo* CoreCommonInfo_v;
-extern SGCharCommonInfo* CoreCharCommon_v;
+extern CharCommonInfo* CoreCharCommon_v;
 
 void InitializeCommonCore();
 void FinalizeCommonCore();

@@ -19,7 +19,7 @@
 #include "CommonInfoLoader.h"
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
-#include <SteinsGate/Common/SGJson.h>
+#include <SteinsGate/Common/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
@@ -59,7 +59,7 @@ bool CommonInfoLoader::load() {
 
 void CommonInfoLoader::readCommonInfo(Json::Value& commonRoot, CommonInfo* commonInfo) {
 	commonInfo->Code = commonRoot["code"].asInt();
-	commonInfo->ConfigPath = SGJson::getString(commonRoot["config_dir"]);
-	commonInfo->DataPath = SGJson::getString(commonRoot["data_dir"]);
+	commonInfo->ConfigPath = JsonUtil::getString(commonRoot["config_dir"]);
+	commonInfo->DataPath = JsonUtil::getString(commonRoot["data_dir"]);
 }
 

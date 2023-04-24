@@ -9,7 +9,7 @@
 #include "ServerInfoLoader.h"
 #include "CommonCoreHeader.h"
 
-#include <SteinsGate/Common/SGJson.h>
+#include <SteinsGate/Common/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
@@ -36,7 +36,7 @@ bool ServerInfoLoader::load() {
 			DebugAssertMsg(gameServerCount > 0, "게임 서버 카운트가 0입니다.");
 			ServerProcessInfo* pServerInfo = dbg_new ServerProcessInfo(gameServerCount);
 			pServerInfo->Code = serverInfoRoot["code"].asInt();
-			pServerInfo->Name = SGJson::getString(serverInfoRoot["name"]);
+			pServerInfo->Name = JsonUtil::getString(serverInfoRoot["name"]);
 			readCenterInfo(serverInfoRoot["center"], pServerInfo);
 			readAuthInfo(serverInfoRoot["auth"], pServerInfo);
 			readLobbyInfo(serverInfoRoot["lobby"], pServerInfo);
@@ -55,9 +55,9 @@ bool ServerInfoLoader::load() {
 
 
 void ServerInfoLoader::readCenterInfo(Json::Value& serverRoot, ServerProcessInfo* serverInfo) {
-	SGString szBindInterServerUdp = SGJson::getString(serverRoot["bind_interserver_udp"]);
-	SGString szBindCenterTcp = SGJson::getString(serverRoot["bind_center_tcp"]);
-	SGString szRemoteCenter = SGJson::getString(serverRoot["remote_center"]);
+	SGString szBindInterServerUdp = JsonUtil::getString(serverRoot["bind_interserver_udp"]);
+	SGString szBindCenterTcp = JsonUtil::getString(serverRoot["bind_center_tcp"]);
+	SGString szRemoteCenter = JsonUtil::getString(serverRoot["remote_center"]);
 
 	serverInfo->Center.BindInterServerUdp = szBindInterServerUdp;
 	serverInfo->Center.BindCenterTcp = szBindCenterTcp;
@@ -67,10 +67,10 @@ void ServerInfoLoader::readCenterInfo(Json::Value& serverRoot, ServerProcessInfo
 }
 
 void ServerInfoLoader::readAuthInfo(Json::Value& serverRoot, ServerProcessInfo* serverInfo) {
-	SGString szBindAuthTcp = SGJson::getString(serverRoot["bind_auth_tcp"]);
-	SGString szRemoteAuth = SGJson::getString(serverRoot["remote_auth"]);
-	SGString szBindInterServerUdp = SGJson::getString(serverRoot["bind_interserver_udp"]);
-	SGString szBindCenterTcp = SGJson::getString(serverRoot["bind_center_tcp"]);
+	SGString szBindAuthTcp = JsonUtil::getString(serverRoot["bind_auth_tcp"]);
+	SGString szRemoteAuth = JsonUtil::getString(serverRoot["remote_auth"]);
+	SGString szBindInterServerUdp = JsonUtil::getString(serverRoot["bind_interserver_udp"]);
+	SGString szBindCenterTcp = JsonUtil::getString(serverRoot["bind_center_tcp"]);
 
 	serverInfo->Auth.BindAuthTcp = szBindAuthTcp;
 	serverInfo->Auth.RemoteAuth = szRemoteAuth;
@@ -81,10 +81,10 @@ void ServerInfoLoader::readAuthInfo(Json::Value& serverRoot, ServerProcessInfo* 
 }
 
 void ServerInfoLoader::readLobbyInfo(Json::Value& serverRoot, ServerProcessInfo* serverInfo) {
-	SGString szBindLobbyTcp = SGJson::getString(serverRoot["bind_lobby_tcp"]);
-	SGString szRemoteLobby = SGJson::getString(serverRoot["remote_lobby"]);
-	SGString szBindInterServerUdp = SGJson::getString(serverRoot["bind_interserver_udp"]);
-	SGString szBindCenterTcp = SGJson::getString(serverRoot["bind_center_tcp"]);
+	SGString szBindLobbyTcp = JsonUtil::getString(serverRoot["bind_lobby_tcp"]);
+	SGString szRemoteLobby = JsonUtil::getString(serverRoot["remote_lobby"]);
+	SGString szBindInterServerUdp = JsonUtil::getString(serverRoot["bind_interserver_udp"]);
+	SGString szBindCenterTcp = JsonUtil::getString(serverRoot["bind_center_tcp"]);
 
 	serverInfo->Lobby.BindLobbyTcp = szBindLobbyTcp;
 	serverInfo->Lobby.RemoteLobby = szRemoteLobby;
@@ -113,21 +113,21 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 		GameServerProcessInfo info(iGameChannelCount);
 
 		info.Code = (ServerType_t)gameServerRoot["code"].asInt();
-		info.Name = SGJson::getString(gameServerRoot["name"]);
+		info.Name = JsonUtil::getString(gameServerRoot["name"]);
 		info.Active = true;
 
-		SGString szBindGameTcp = SGJson::getStringOrNull(gameServerRoot["bind_game_tcp"]);
-		SGString szBindGameUdp = SGJson::getStringOrNull(gameServerRoot["bind_game_udp"]);
-		SGString szRemoteGame = SGJson::getStringOrNull(gameServerRoot["remote_game"]);
+		SGString szBindGameTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_game_tcp"]);
+		SGString szBindGameUdp = JsonUtil::getStringOrNull(gameServerRoot["bind_game_udp"]);
+		SGString szRemoteGame = JsonUtil::getStringOrNull(gameServerRoot["remote_game"]);
 
-		SGString szBindTownTcp = SGJson::getStringOrNull(gameServerRoot["bind_town_tcp"]);
-		SGString szRemoteTown = SGJson::getStringOrNull(gameServerRoot["remote_town"]);
+		SGString szBindTownTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_town_tcp"]);
+		SGString szRemoteTown = JsonUtil::getStringOrNull(gameServerRoot["remote_town"]);
 
-		SGString szBindChatTcp = SGJson::getStringOrNull(gameServerRoot["bind_chat_tcp"]);
-		SGString szRemoteChat = SGJson::getStringOrNull(gameServerRoot["remote_chat"]);
+		SGString szBindChatTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_chat_tcp"]);
+		SGString szRemoteChat = JsonUtil::getStringOrNull(gameServerRoot["remote_chat"]);
 
-		SGString szBindInterServerUdp = SGJson::getStringOrNull(gameServerRoot["bind_interserver_udp"]);
-		SGString szBindCenterTcp = SGJson::getStringOrNull(gameServerRoot["bind_center_tcp"]);
+		SGString szBindInterServerUdp = JsonUtil::getStringOrNull(gameServerRoot["bind_interserver_udp"]);
+		SGString szBindCenterTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_center_tcp"]);
 
 		DebugAssertMsg(
 			!szBindGameTcp.IsNull() &&
@@ -165,7 +165,7 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 			int iChannelType;
 			int iMaxPlayerCount;
 
-			SGJson::parseIntNumber3(gameChannelListRoot[j], iChannelNumber, iChannelType, iMaxPlayerCount);
+			JsonUtil::parseIntNumber3(gameChannelListRoot[j], iChannelNumber, iChannelType, iMaxPlayerCount);
 
 			info.MaxSessionCount += iMaxPlayerCount;
 			info.GameChannelInfoList.PushBack({

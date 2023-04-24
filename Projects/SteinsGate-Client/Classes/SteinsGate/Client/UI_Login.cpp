@@ -8,14 +8,14 @@
 
 #include "Tutturu.h"
 #include "UI_Login.h"
-#include "SGUIGroup.h"
+#include "UIGroup.h"
 
 USING_NS_CC;
 USING_NS_JC;
 
 
-UI_Login::UI_Login(SGUIGroupInfo* groupInfo)
-	: SGUIMasterGroup(groupInfo)
+UI_Login::UI_Login(UIGroupInfo* groupInfo)
+	: UIMasterGroup(groupInfo)
 {}
 
 void UI_Login::onInit() {

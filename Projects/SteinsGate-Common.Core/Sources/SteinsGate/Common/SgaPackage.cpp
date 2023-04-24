@@ -77,6 +77,6 @@ SgaElement& SgaPackage::operator[](const int idx) {
 	return m_ElementMap[idx].GetRef();
 }
 
-SGString SgaPackage::ToString() const {
-	return SGStringUtil::Format("Sga(%s)", m_szPath.Source());
+String SgaPackage::ToString() const {
+	return StringUtil::Format("Sga(%s)", m_szPath.Source());
 }

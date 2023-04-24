@@ -11,7 +11,7 @@
 #include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
-#include <SteinsGate/Common/SGJson.h>
+#include <SteinsGate/Common/JsonUtil.h>
 
 USING_NS_JC;
 USING_NS_JS;
@@ -47,16 +47,16 @@ bool DatabaseInfoLoader::load() {
 
 void DatabaseInfoLoader::readDatabaseInfo(Value& databaseRoot, DatabaseInfo* databaseInfo) {
 	databaseInfo->Code = databaseRoot["code"].asInt();
-	databaseInfo->Name = SGJson::getString(databaseRoot["name"]);
-	databaseInfo->HostName = SGJson::getString(databaseRoot["hostname"]);
+	databaseInfo->Name = JsonUtil::getString(databaseRoot["name"]);
+	databaseInfo->HostName = JsonUtil::getString(databaseRoot["hostname"]);
 	databaseInfo->ConnectionPort = (Int16U)databaseRoot["connection_port"].asInt();
-	SGJson::parseIntNumberN(databaseRoot["use"], databaseInfo->Use, ServerProcessType::Max);
-	SGJson::parseIntNumberN(databaseRoot["connection_pool_size"], databaseInfo->ConnectionPoolSize, ServerProcessType::Max);
-	SGJson::parseIntNumberN(databaseRoot["max_connection"], databaseInfo->MaxConnection, ServerProcessType::Max);
-	SGJson::parseIntNumberN(databaseRoot["iocp_thread_count"], databaseInfo->IocpThreadCount, ServerProcessType::Max);
-	databaseInfo->AccountId = SGJson::getString(databaseRoot["account_id"]);
-	databaseInfo->AccountPass = SGJson::getString(databaseRoot["account_pass"]);
-	databaseInfo->SchemaName = SGJson::getString(databaseRoot["schema_name"]);
+	JsonUtil::parseIntNumberN(databaseRoot["use"], databaseInfo->Use, ServerProcessType::Max);
+	JsonUtil::parseIntNumberN(databaseRoot["connection_pool_size"], databaseInfo->ConnectionPoolSize, ServerProcessType::Max);
+	JsonUtil::parseIntNumberN(databaseRoot["max_connection"], databaseInfo->MaxConnection, ServerProcessType::Max);
+	JsonUtil::parseIntNumberN(databaseRoot["iocp_thread_count"], databaseInfo->IocpThreadCount, ServerProcessType::Max);
+	databaseInfo->AccountId = JsonUtil::getString(databaseRoot["account_id"]);
+	databaseInfo->AccountPass = JsonUtil::getString(databaseRoot["account_pass"]);
+	databaseInfo->SchemaName = JsonUtil::getString(databaseRoot["schema_name"]);
 }
 
 

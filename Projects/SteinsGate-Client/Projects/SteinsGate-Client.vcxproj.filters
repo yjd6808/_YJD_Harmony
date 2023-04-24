@@ -105,620 +105,620 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePackManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ImagePackManager.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGImagePack.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ImagePack.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGDataManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\DataManager.cpp">
       <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGlobal.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Global.cpp">
       <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGJsonEx.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\JsonUtilEx.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGComboKeyList.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ComboKeyList.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActor.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Actor.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharacter.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Character.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectile.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Projectile.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonster.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Monster.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorSprite.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorSprite.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorPartSprite.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorPartSprite.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorPartAnimation.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorPartAnimation.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGFrameTexture.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\FrameTexture.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGAction.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGComboTree.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ComboTree.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerIdle.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerIdle.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerJump.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerJump.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerRun.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerRun.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerSliding.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerSliding.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerWalk.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerWalk.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerGunShot.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerGunShot.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharInfoLoader.cpp">
       <Filter>Data\Char</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGClientInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ClientInfoLoader.cpp">
       <Filter>Data\Client</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMobInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MobInfoLoader.cpp">
       <Filter>Data\Mob</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectileInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileInfoLoader.cpp">
       <Filter>Data\Projectile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGTileInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\TileInfoLoader.cpp">
       <Filter>Data\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGObstacleInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ObstacleInfoLoader.cpp">
       <Filter>Data\Obstacle</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMapInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapInfoLoader.cpp">
       <Filter>Data\Map</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGObstacle.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Obstacle.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMapInfo.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapInfo.cpp">
       <Filter>Data\Map</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPhysicsActor.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\PhysicsActor.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerHit.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerHit.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerAction.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerAction.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAIActor.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIActor.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAIActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIActivity.cpp">
       <Filter>Actor\AI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterIdleActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.cpp">
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterAttackActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.cpp">
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterWalkActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.cpp">
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterHitActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterHitActivity.cpp">
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterFallDownActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.cpp">
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAIInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIInfoLoader.cpp">
       <Filter>Data\AI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAIInfo.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIInfo.cpp">
       <Filter>Data\AI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGVec2Ex.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AppDelegate.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAnimationInfo.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AnimationInfo.cpp">
       <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGAttackDataInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.cpp">
       <Filter>Data\AttackData</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerFallDown.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerFallDown.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGStruct.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGHitRecorder.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Struct.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\HitRecorder.cpp">
       <Filter>Actor\Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterSitActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterSitActivity.cpp">
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMonsterActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterActivity.cpp">
       <Filter>Actor\AI\Monster</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerSitRecover.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerSitRecover.cpp">
       <Filter>Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorListenerManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerManager.cpp">
       <Filter>Actor\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectileListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileListener.cpp">
       <Filter>Actor\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGunnerBulletListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerBulletListener.cpp">
       <Filter>Actor\Listener\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharProjectileListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharProjectileListener.cpp">
       <Filter>Actor\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Tutturu.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActionInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActionInfoLoader.cpp">
       <Filter>Data\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\main.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCharAnimationInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharAnimationInfoLoader.cpp">
       <Filter>Data\CharAnimation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGEffect.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Effect.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\EffectInfoLoader.cpp">
       <Filter>Data\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGProjectileInfo.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileInfo.cpp">
       <Filter>Data\Projectile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGWorldScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\WorldScene.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ChannelSelectScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGLoginScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\LoginScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGGameScene.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\GameScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGMapLayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapLayer.cpp">
       <Filter>Game\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGSceneBase.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SceneBase.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUILayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UILayer.cpp">
       <Filter>Game\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIInfoLoader.cpp">
       <Filter>Data\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActorBox.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorBox.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIGroup.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIGroup.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIButton.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIButton.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIElement.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIElement.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Login.cpp">
       <Filter>Game\UI\Group</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIManager.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUILabel.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UILabel.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUISprite.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UISprite.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGFontPackage.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\FontPackage.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GameCore.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGHostPlayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\HostPlayer.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayer.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Player.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayerController.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\PlayerController.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGPlayerPool.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\PlayerPool.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGActionManager.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActionMgr.cpp">
       <Filter>Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGInven.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Inven.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\VisualHelper.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGCamera.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MimicCamera.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIEditBox.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIEditBox.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUICheckBox.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UICheckBox.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIGroupMaster.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIGroupMaster.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIToggleButton.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIToggleButton.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIProgressBar.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIProgressBar.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIStatic.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIStatic.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Inventory.cpp">
       <Filter>Game\UI\Group</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIScrollBar.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIScrollBar.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIMasterGroup.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGWndMessage.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\WndMessage.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGWin32Helper.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\Win32Helper.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetClientEventListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetClientGroup.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetClientGroup.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetAuthEventListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetAuthEventListener.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGNetLobbyEventListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePackManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ImagePackManager.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGImagePack.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ImagePack.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAnimationInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AnimationInfo.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGDataManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\DataManager.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGlobal.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Global.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGJsonEx.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\JsonUtilEx.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGComboKeyList.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ComboKeyList.h">
       <Filter>Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActor.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Actor.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharacter.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Character.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectile.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Projectile.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonster.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Monster.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorSprite.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorSprite.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorPartSprite.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorPartSprite.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorPartAnimation.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorPartAnimation.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGFrameTexture.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\FrameTexture.h">
       <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAction.h">
       <Filter>Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGComboTree.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ComboTree.h">
       <Filter>Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAnimationDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AnimationDefine.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionDefine.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerIdle.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerIdle.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerGunShot.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerGunShot.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerJump.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerJump.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerRun.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerRun.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerSliding.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerSliding.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerWalk.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerWalk.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAllActions.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AllActions.h">
       <Filter>Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileDefine.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharInfoLoader.h">
       <Filter>Data\Char</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharInfo.h">
       <Filter>Data\Char</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGClientInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ClientInfoLoader.h">
       <Filter>Data\Client</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGClientInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ClientInfo.h">
       <Filter>Data\Client</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMobInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MobInfoLoader.h">
       <Filter>Data\Mob</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMobInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MobInfo.h">
       <Filter>Data\Mob</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileInfo.h">
       <Filter>Data\Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileInfoLoader.h">
       <Filter>Data\Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGTileInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\TileInfoLoader.h">
       <Filter>Data\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGTileInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\TileInfo.h">
       <Filter>Data\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGObstacleInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ObstacleInfoLoader.h">
       <Filter>Data\Obstacle</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGObstacleInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ObstacleInfo.h">
       <Filter>Data\Obstacle</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMapInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapInfo.h">
       <Filter>Data\Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMapInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapInfoLoader.h">
       <Filter>Data\Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGObstacle.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Obstacle.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPhysicsActor.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\PhysicsActor.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerHit.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerHit.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerAction.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerAction.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAIActor.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIActor.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAIActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIActivity.h">
       <Filter>Actor\AI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterIdleActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.h">
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterAttackActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.h">
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterWalkActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.h">
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterHitActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterHitActivity.h">
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterFallDownActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.h">
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAIInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIInfo.h">
       <Filter>Data\AI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAIInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIInfoLoader.h">
       <Filter>Data\AI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGVec2Ex.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AppDelegate.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGStruct.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Struct.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Tutturu.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAttackDataInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.h">
       <Filter>Data\AttackData</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAttackDataInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfo.h">
       <Filter>Data\AttackData</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerFallDown.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerFallDown.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGHitRecorder.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\HitRecorder.h">
       <Filter>Actor\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterSitActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterSitActivity.h">
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMonsterActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterActivity.h">
       <Filter>Actor\AI\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerSitRecover.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerSitRecover.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGProjectileListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorListenerDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerDefine.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorListenerManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerManager.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGAllActorListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AllActorListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGunnerBulletListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerBulletListener.h">
       <Filter>Actor\Listener\Gunner</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharProjectileListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharProjectileListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGConfig.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Config.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionInfo.h">
       <Filter>Data\Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionInfoLoader.h">
       <Filter>Data\Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCharAnimationInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharAnimationInfoLoader.h">
       <Filter>Data\CharAnimation</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEffect.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Effect.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\EffectDefine.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfo.h">
       <Filter>Data\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGEffectInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfoLoader.h">
       <Filter>Data\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGWorldScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\WorldScene.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGSceneBase.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SceneBase.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGChannelSelectScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ChannelSelectScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGLoginScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\LoginScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGGameScene.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\GameScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGMapLayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapLayer.h">
       <Filter>Game\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUILayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UILayer.h">
       <Filter>Game\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIInfo.h">
       <Filter>Data\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIInfoLoader.h">
       <Filter>Data\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIManager.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIElement.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIElement.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActorBox.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorBox.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIButton.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIButton.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIGroup.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIGroup.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Login.h">
       <Filter>Game\UI\Group</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUILabel.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UILabel.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUISprite.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UISprite.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGFontPackage.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\FontPackage.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GameCore.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Player.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGHostPlayer.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\HostPlayer.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayerPool.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\PlayerPool.h">
       <Filter>Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGActionManager.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionMgr.h">
       <Filter>Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGPlayerController.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\PlayerController.h">
       <Filter>Action</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGInven.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Inven.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GameCoreHeader.h">
@@ -730,58 +730,58 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\PackHelper.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGCamera.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MimicCamera.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIEditBox.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIEditBox.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUICheckBox.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UICheckBox.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIDefine.h">
       <Filter>Define</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIGroupMaster.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIGroupMaster.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIToggleButton.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIToggleButton.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIProgressBar.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIProgressBar.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIStatic.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIStatic.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Inventory.h">
       <Filter>Game\UI\Group</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIScrollBar.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIScrollBar.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGUIMasterGroup.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIMasterGroup.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGWndMessage.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\WndMessage.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGWin32Helper.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Win32Helper.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetClientEventListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetClientEventListener.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetClientGroup.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetClientGroup.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetAuthEventListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetAuthEventListener.h">
       <Filter>Net\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetLobbyEventListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.h">
       <Filter>Net\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGNetCore.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetCore.h">
       <Filter>Net</Filter>
     </ClInclude>
   </ItemGroup>

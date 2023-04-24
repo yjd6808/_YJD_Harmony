@@ -10,9 +10,8 @@
 #include "Logo.h"
 
 USING_NS_JC;
-USING_NS_JS;
 
-SGString Logo_v{2048};
+String Logo_v{2048};
 const int LogoWidth_v = 600;
 const int LogoHeight_v = 800;
 /* ================================================================================================================
@@ -42,17 +41,17 @@ void InitializeServerAuthLogo(bool print, int leftPadding) {
 	Arrays::Fill(leftPad, leftPadding, ' ');
 
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_RED   , leftPad, "        ",  COLOR_WHITE,		 "                          \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_RED   , leftPad, "        ",  COLOR_WHITE,		 "                          \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_RED   , leftPad, "█████╗  ",  COLOR_WHITE,		 "██╗   ██╗████████╗██╗  ██╗\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_RED   , leftPad, "██╔══██╗",  COLOR_WHITE,		 "██║   ██║╚══██╔══╝██║  ██║\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_RED   , leftPad, "███████║",  COLOR_WHITE,		 "██║   ██║   ██║   ███████║\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_RED   , leftPad, "██╔══██║",  COLOR_WHITE,		 "██║   ██║   ██║   ██╔══██║\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_RED   , leftPad, "██║  ██║",  COLOR_WHITE,		 "╚██████╔╝   ██║   ██║  ██║\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_RED   , leftPad, "╚═╝  ╚═╝",  COLOR_WHITE,		 " ╚═════╝    ╚═╝   ╚═╝  ╚═╝\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN , leftPad, "--───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,"\n");
-	Logo_v += MoveConcat<SGString>(CSI_GRAPHIC_RENDITION(0));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "        ",  COLOR_WHITE,		 "                          \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "        ",  COLOR_WHITE,		 "                          \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "█████╗  ",  COLOR_WHITE,		 "██╗   ██╗████████╗██╗  ██╗\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "██╔══██╗",  COLOR_WHITE,		 "██║   ██║╚══██╔══╝██║  ██║\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "███████║",  COLOR_WHITE,		 "██║   ██║   ██║   ███████║\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "██╔══██║",  COLOR_WHITE,		 "██║   ██║   ██║   ██╔══██║\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "██║  ██║",  COLOR_WHITE,		 "╚██████╔╝   ██║   ██║  ██║\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_RED   , leftPad, "╚═╝  ╚═╝",  COLOR_WHITE,		 " ╚═════╝    ╚═╝   ╚═╝  ╚═╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN , leftPad, "--───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,"\n");
+	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 	if (print) printf(Logo_v.Source());
 }
 
@@ -64,17 +63,17 @@ void InitializeServerLobbyLogo(bool print, int leftPadding) {
 	char leftPad[MAX_PADDING_SIZE + 1]{};
 	Arrays::Fill(leftPad, leftPadding, ' ');
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "        " COLOR_WHITE "                                   \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "        " COLOR_WHITE "                                   \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "██╗     " COLOR_WHITE "  ██████╗ ██████╗ ██████╗ ██╗   ██╗\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██║   ██║██████╔╝██████╔╝ ╚████╔╝ \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██║   ██║██╔══██╗██╔══██╗  ╚██╔╝  \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "███████╗" COLOR_WHITE " ╚██████╔╝██████╔╝██████╔╝   ██║   \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "╚══════╝" COLOR_WHITE "  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN ,leftPad, "    --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "\n");
-	Logo_v += MoveConcat<SGString>(CSI_GRAPHIC_RENDITION(0));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "        " COLOR_WHITE "                                   \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "        " COLOR_WHITE "                                   \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "██╗     " COLOR_WHITE "  ██████╗ ██████╗ ██████╗ ██╗   ██╗\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██║   ██║██████╔╝██████╔╝ ╚████╔╝ \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "██║     " COLOR_WHITE " ██║   ██║██╔══██╗██╔══██╗  ╚██╔╝  \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "███████╗" COLOR_WHITE " ╚██████╔╝██████╔╝██████╔╝   ██║   \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "╚══════╝" COLOR_WHITE "  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN ,leftPad, "    --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN "\n");
+	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 	if (print) printf(Logo_v.Source());
 }
 
@@ -87,17 +86,17 @@ void InitializeServerGameLogo(bool print, int leftPadding) {
 	char leftPad[MAX_PADDING_SIZE + 1]{};
 	Arrays::Fill(leftPad, leftPadding, ' ');
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW , leftPad, "        " COLOR_WHITE "                            \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW , leftPad, "        " COLOR_WHITE "                            \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW , leftPad, " ██████╗" COLOR_WHITE "  █████╗ ███╗   ███╗███████╗\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW , leftPad, "██╔════╝" COLOR_WHITE " ██╔══██╗████╗ ████║██╔════╝\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW , leftPad, "██║  ███" COLOR_WHITE "╗███████║██╔████╔██║█████╗  \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW , leftPad, "██║   ██" COLOR_WHITE "║██╔══██║██║╚██╔╝██║██╔══╝  \n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW , leftPad, "╚██████╔" COLOR_WHITE "╝██║  ██║██║ ╚═╝ ██║███████╗\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_YELLOW , leftPad, " ╚═════╝" COLOR_WHITE " ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN  , leftPad, "   --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "\n");
-	Logo_v += MoveConcat<SGString>(CSI_GRAPHIC_RENDITION(0));
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "        " COLOR_WHITE "                            \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "        " COLOR_WHITE "                            \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, " ██████╗" COLOR_WHITE "  █████╗ ███╗   ███╗███████╗\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "██╔════╝" COLOR_WHITE " ██╔══██╗████╗ ████║██╔════╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "██║  ███" COLOR_WHITE "╗███████║██╔████╔██║█████╗  \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "██║   ██" COLOR_WHITE "║██╔══██║██║╚██╔╝██║██╔══╝  \n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, "╚██████╔" COLOR_WHITE "╝██║  ██║██║ ╚═╝ ██║███████╗\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_YELLOW , leftPad, " ╚═════╝" COLOR_WHITE " ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN  , leftPad, "   --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN "\n");
+	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 	if (print) printf(Logo_v.Source());
 }
 
@@ -110,17 +109,17 @@ void InitializeServerCenterLogo(bool print, int leftPadding) {
 	Arrays::Fill(leftPad, leftPadding, ' ');
 
 	Logo_v.SetLength(0);
-	Logo_v += MoveConcat<SGString>(COLOR_CYAN		 , leftPad, "        " COLOR_WHITE "                                           \n");
-	Logo_v += MoveConcat<SGString>(COLOR_CYAN		 , leftPad, "        " COLOR_WHITE "                                           \n");
-	Logo_v += MoveConcat<SGString>(COLOR_CYAN		 , leftPad, "  ██████" COLOR_WHITE "╗███████╗███╗  ██╗████████╗███████╗██████╗ \n");
-	Logo_v += MoveConcat<SGString>(COLOR_CYAN		 , leftPad, "██╔════╝" COLOR_WHITE "██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗\n");
-	Logo_v += MoveConcat<SGString>(COLOR_CYAN		 , leftPad, "██║     " COLOR_WHITE "█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝\n");
-	Logo_v += MoveConcat<SGString>(COLOR_CYAN		 , leftPad, "██║     " COLOR_WHITE "██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗\n");
-	Logo_v += MoveConcat<SGString>(COLOR_CYAN		 , leftPad, "╚██████╗" COLOR_WHITE "███████╗██║ ╚████║   ██║   ███████╗██║  ██║\n");
-	Logo_v += MoveConcat<SGString>(COLOR_CYAN		 , leftPad, " ╚═════╝" COLOR_WHITE "╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN , leftPad, "           --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
-	Logo_v += MoveConcat<SGString>(COLOR_LIGHT_GREEN "\n");
-	Logo_v += MoveConcat<SGString>(CSI_GRAPHIC_RENDITION(0));
+	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "        " COLOR_WHITE "                                           \n");
+	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "        " COLOR_WHITE "                                           \n");
+	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "  ██████" COLOR_WHITE "╗███████╗███╗  ██╗████████╗███████╗██████╗ \n");
+	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "██╔════╝" COLOR_WHITE "██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗\n");
+	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "██║     " COLOR_WHITE "█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝\n");
+	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "██║     " COLOR_WHITE "██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗\n");
+	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, "╚██████╗" COLOR_WHITE "███████╗██║ ╚████║   ██║   ███████╗██║  ██║\n");
+	Logo_v += MoveConcat<String>(COLOR_CYAN		 , leftPad, " ╚═════╝" COLOR_WHITE "╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN , leftPad, "           --───▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬───--\n");
+	Logo_v += MoveConcat<String>(COLOR_LIGHT_GREEN "\n");
+	Logo_v += MoveConcat<String>(CSI_GRAPHIC_RENDITION(0));
 	if (print) printf(Logo_v.Source());
 }
 

@@ -8,19 +8,19 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGActionInfo.h>
-#include <SteinsGate/Client/SGHitRecorder.h>
+#include <SteinsGate/Client/ActionInfo.h>
+#include <SteinsGate/Client/HitRecorder.h>
 
-struct SGActionInfo;
+struct ActionInfo;
 
-class SGHostPlayer;
-class SGPlayerController;
-class SGFrameTexture;
-class SGActor;
-class SGActorPartAnimation;
+class HostPlayer;
+class PlayerController;
+class FrameTexture;
+class Actor;
+class ActorPartAnimation;
 class SGAction {
 public:
-	SGAction(SGHostPlayer* player, SGActionInfo* actionInfo);
+	SGAction(HostPlayer* player, ActionInfo* actionInfo);
 	virtual ~SGAction();
 
 	virtual void play();
@@ -28,14 +28,14 @@ public:
 
 	virtual void init() {}	// 실행 직전 호출 (초기화 용도)
 	virtual bool onConditionCheck() = 0;
-	virtual void onKeyPressed(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);
-	virtual void onKeyReleased(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);
-	virtual void onKeyPressedBefore(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);
-	virtual void onKeyReleasedBefore(SGPlayerController* controller, SGEventKeyboard::KeyCode keyCode);
-	virtual void onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* frame);
-	virtual void onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame);
-	virtual void onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* frame);
-	virtual void onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame);
+	virtual void onKeyPressed(PlayerController* controller, SGEventKeyboard::KeyCode keyCode);
+	virtual void onKeyReleased(PlayerController* controller, SGEventKeyboard::KeyCode keyCode);
+	virtual void onKeyPressedBefore(PlayerController* controller, SGEventKeyboard::KeyCode keyCode);
+	virtual void onKeyReleasedBefore(PlayerController* controller, SGEventKeyboard::KeyCode keyCode);
+	virtual void onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame);
+	virtual void onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame);
+	virtual void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame);
+	virtual void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame);
 	virtual void onActionBegin();
 	virtual void onActionEnd(); 	// 정의안하면 해당 애니메이션 시퀀스가 끝나면 중단토록 한다.
 	virtual void onUpdate(float dt) {}
@@ -48,7 +48,7 @@ public:
 	
 	int getActionCode()  { return m_pActionInfo->Code; }
 	const SGString& getActionName() { return m_pActionInfo->ActionName; }
-	const SGComboKeyList& getCommand() { return m_pActionInfo->Command; }
+	const ComboKeyList& getCommand() { return m_pActionInfo->Command; }
 	float getMoveSpeedX() { return m_fMoveSpeedFPSX; }
 	float getMoveSpeedY() { return m_fMoveSpeedFPSY; }
 
@@ -76,11 +76,11 @@ public:
 	);
 protected:
 	// 주입 하는 필드
-	SGHostPlayer* m_pPlayer;
-	SGActionInfo* m_pActionInfo;
+	HostPlayer* m_pPlayer;
+	ActionInfo* m_pActionInfo;
 
 	// 자체 필드
-	SGHitRecorder* m_pHitRecorder;
+	HitRecorder* m_pHitRecorder;
 	WeaponType_t m_eWeaponType;
 
 	bool m_bMoveablePositiveX;

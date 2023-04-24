@@ -1,5 +1,5 @@
-##ÀÛ¼ºÀÚ : À±Á¤µµ
-##ÀÛ¼ºÀÏ : 20-02-25
+##ï¿½Û¼ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+##ï¿½Û¼ï¿½ï¿½ï¿½ : 20-02-25
 
 using module ".\Logger.psm1"
 
@@ -11,9 +11,9 @@ using namespace System.Collections.Generic
 class FileUtil
 {
     <#########################################################################
-                          Æú´õ¾È¿¡ ÆÄÀÏµé °¡Á®¿À±â
-     recursive - Æú´õ¾ÈÀÇ ÆÄÀÏµµ °Ë»çÇÒ°ÇÁö
-     exceptFolder - Æú´õ´Â Á¦¿ÜÇÒÁö
+                          ï¿½ï¿½ï¿½ï¿½ï¿½È¿ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     recursive - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ ï¿½Ë»ï¿½ï¿½Ò°ï¿½ï¿½ï¿½
+     exceptFolder - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     ##########################################################################>
     [Array] static GetChildrenInDirectory([string]$folderPath, [bool] $recursive, [bool] $exceptFolder)
     {
@@ -21,13 +21,13 @@ class FileUtil
 
         if ([Directory]::Exists( $folderPath ) -eq $false)
         {
-            [Logger]::WriteLineNotice($folderPath + " °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.")
+            [Logger]::WriteLineNotice($folderPath + " ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.")
             return 0
         }
         
         if ([FileUtil]::IsDirectoryPath($folderPath) -eq $false)
         {
-            [Logger]::WriteLineError($folderPath + " ´Â Æú´õ°æ·Î°¡ ¾Æ´Õ´Ï´Ù")
+            [Logger]::WriteLineError($folderPath + " ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î°ï¿½ ï¿½Æ´Õ´Ï´ï¿½")
             exit -1
         }
 
@@ -57,21 +57,21 @@ class FileUtil
     }
 
     <#########################################################################
-                          Æú´õ¾È¿¡ ÆÄÀÏ °¹¼ö ¶Ç´Â Æú´õÆ÷ÇÔ ÆÄÀÏ °¹¼ö °¡Á®¿À±â
-     recursive - Æú´õ¾ÈÀÇ ÆÄÀÏµµ °Ë»çÇÒ°ÇÁö
-     exceptFolder - Æú´õ´Â °¹¼ö¿¡¼­ Á¦¿ÜÇÒ°ÇÁö
+                          ï¿½ï¿½ï¿½ï¿½ï¿½È¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     recursive - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ ï¿½Ë»ï¿½ï¿½Ò°ï¿½ï¿½ï¿½
+     exceptFolder - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò°ï¿½ï¿½ï¿½
     ##########################################################################>
     [int] static GetChildrenCountInDirectory([string]$folderPath, [bool] $recursive, [bool] $exceptFolder)
     {
         if ([Directory]::Exists( $folderPath ) -eq $false)
         {
-            [Logger]::WriteLineNotice($folderPath + " °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.")
+            [Logger]::WriteLineNotice($folderPath + " ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.")
             return 0
         }
         
         if ([FileUtil]::IsDirectoryPath($folderPath) -eq $false)
         {
-            [Logger]::WriteLineError($folderPath + " ´Â Æú´õ°æ·Î°¡ ¾Æ´Õ´Ï´Ù")
+            [Logger]::WriteLineError($folderPath + " ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î°ï¿½ ï¿½Æ´Õ´Ï´ï¿½")
             exit -1
         }
 
@@ -101,7 +101,7 @@ class FileUtil
     }
 
     <#########################################################################
-                            ÆÄÀÏ ¶Ç´Â Æú´õ »èÁ¦
+                            ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     ##########################################################################>
     [void] static RemoveFileOrDirectory([string] $item)
     {
@@ -109,19 +109,19 @@ class FileUtil
         if( (Test-Path $item) -eq $true )
         {
             Remove-Item $item -Recurse -Force
-            [Logger]::WriteLineNotice($item + "Ç×¸ñÀ» »èÁ¦Çß½À´Ï´Ù.")
+            [Logger]::WriteLineNotice($item + "ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.")
         }
     }
 
     <#########################################################################
-                            XML ÆÄÀÏ ÀÐ±â
+                            XML ï¿½ï¿½ï¿½ï¿½ ï¿½Ð±ï¿½
     ##########################################################################>
     [xml] static ReadXmlFile([string]$xmlFilePath)
     {
         
         if( (Test-Path $xmlFilePath) -eq $FALSE )
         {
-           [Logger]::WriteLineErrorCovered([string]::Format("{0} ÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù. ÆÄÀÏÀ» »ý¼ºÇÏ°í ¼³Á¤°ªÀ» ³Ö¾îÁÖ¼¼¿ä.", $xmlFilePath)) 
+           [Logger]::WriteLineErrorCovered([string]::Format("{0} ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.", $xmlFilePath)) 
             exit -1
         }
 
@@ -129,7 +129,7 @@ class FileUtil
 
         if( ($xmlData -eq $NULL) )
         {
-            [Logger]::WriteLineErrorCovered([string]::Format("{0} ÆÄÀÏÀÇ ¼³Á¤°ªÀ» È®ÀÎÇÏ¼¼¿ä.", $xmlFilePath)) 
+            [Logger]::WriteLineErrorCovered([string]::Format("{0} ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½.", $xmlFilePath)) 
             exit -1
         }
 
@@ -137,60 +137,61 @@ class FileUtil
     }
 
     <#########################################################################
-                            XML ÆÄÀÏ ÀúÀå
+                            XML ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     ##########################################################################>
     [void] static SaveXmlFile([xml] $xmlData, [string] $filePath)
     {
         [string]$directoryName = [Path]::GetDirectoryName($filePath)
         if ([Directory]::Exists( $directoryName ) -eq $false)
         {
-            [Logger]::WriteLineNotice($directoryName + " °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ »ý¼ºÇß½À´Ï´Ù.")
+            [Logger]::WriteLineNotice($directoryName + " ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.")
             New-Item $directoryName -Type Directory
         }
 
-        # Patch Version ¼³Á¤°ª ÀúÀå
+        # Patch Version ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         $xmlData.save($filePath)
-        [Logger]::WriteLineNotice($filePath + " µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ¿´½À´Ï´Ù")
+        [Logger]::WriteLineNotice($filePath + " ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½")
     }
     <#########################################################################
-                            7z ÆÄÀÏ·Î ¾ÐÃàÇÏ±â
+                            7z ï¿½ï¿½ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
     ##########################################################################>
     [void] static MakeDirectoryTo7zFile( [string] $srcDirectory, [string]$saveFilePath)
     {
         & 7z a $saveFilePath $srcDirectory | Out-Host
-        [Logger]::WriteLineNotice( $srcDirectory + " °æ·Î¸¦ " + [Path]::GetFileName($saveFilePath) + " ÀÌ¸§À¸·Î ¾ÐÃàÇÏ¿´½À´Ï´Ù.")
+        [Logger]::WriteLineNotice( $srcDirectory + " ï¿½ï¿½Î¸ï¿½ " + [Path]::GetFileName($saveFilePath) + " ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.")
     }
 
     <#########################################################################
-                              ÆÄÀÏ º¹»ç
+                              ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     ##########################################################################>
     [void] static FileCopy( [string] $srcPath, [string] $dstPath )
     {
         $srcDirectoryPath = [Path]::GetDirectoryName($srcPath)
         if ([Directory]::Exists($srcDirectoryPath) -eq $false)
         {
-            [Logger]::WriteLineErrorCovered($srcDirectoryPath + " °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù. º¹»ç¿¡ ½ÇÆÐÇß½À´Ï´Ù.", "")
+            [Logger]::WriteLineErrorCovered($srcDirectoryPath + " ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ç¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.", "")
             return
         }
 
         if( (Test-Path $srcPath) -eq $FALSE )
-        {[Logger]::WriteLineErrorCovered($srcPath + "ÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù. º¹»ç¿¡ ½ÇÆÐÇß½À´Ï´Ù.", "")
+        {[Logger]::WriteLineErrorCovered($srcPath + "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½. ï¿½ï¿½ï¿½ç¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.", "")
             return
         }
 
         $dstDirectoryPath = [Path]::GetDirectoryName($dstPath)
         if( [Directory]::Exists($dstDirectoryPath) -eq $false )
         {
-            [Logger]::WriteLineNotice($dstDirectoryPath + " °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ »ý¼ºÇß½À´Ï´Ù.")
+            [Logger]::WriteLineNotice($dstDirectoryPath + " ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.")
             New-Item $dstDirectoryPath -Type Directory
         }
         
         Copy-Item -Path $srcPath -Destination $dstPath -Recurse -Force
-        [Logger]::WriteLineNotice($dstPath + "·Î ÆÄÀÏ º¹»ç°¡ ¼º°øÇÏ¿´½À´Ï´Ù.")
+        [Logger]::WriteLineNotice($dstPath + "ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ç°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.")
     }
 
     <#########################################################################
-                              INI ÆÄÀÏ ÀÐ±â
+                              INI ï¿½ï¿½ï¿½ï¿½ ï¿½Ð±ï¿½
+                              https://stackoverflow.com/questions/43690336/powershell-to-read-single-value-from-simple-ini-file
     ##########################################################################>
     [Array] static ReadInifile([string] $iniFilePath)
     {
@@ -203,14 +204,14 @@ class FileUtil
 
         switch -regex -file $iniFilePath  
         {  
-            "^\[(.+)\]$" # ±¸ºÐ ÆÄ½Ì
+            "^\[(.+)\]$" # ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½
             {  
                 $section = $matches[1]  
                 $ini[$section] = @{}  
                 $CommentCount = 0  
             }  
 
-            "^(#.*)$" # ÁÖ¼® ÆÄ½Ì
+            "^(#.*)$" # ï¿½Ö¼ï¿½ ï¿½Ä½ï¿½
             {  
                 if ($section -eq $null)  
                 {  
@@ -223,7 +224,7 @@ class FileUtil
                 $ini[$section][$name] = $value  
             }   
 
-            "(.+?)\s*=\s*(.*)" # Å°°ª ÆÄ½Ì  
+            "(.+?)\s*=\s*(.*)" # Å°ï¿½ï¿½ ï¿½Ä½ï¿½  
             {  
                 if ($section -eq $null)  
                 {  
@@ -242,27 +243,27 @@ class FileUtil
 
 
     <#########################################################################
-                              ÆÄÀÏ ÀúÀå
+                              ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     ##########################################################################>
     [void] static Savefile([string] $path, [string] $content)
     {
         if ( (Test-Path $path) -and [FileUtil]::IsDirectoryPath($path) -eq $true)
         {
-            [Logger]::WriteLineNotice([string]::Format("ÀÔ·ÂÇÑ {0} °æ·Î´Â Æú´õ °æ·ÎÀÔ´Ï´Ù. ¿Ã¹Ù¸¥ ÆÄÀÏ¸íÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä", $path))
+            [Logger]::WriteLineNotice([string]::Format("ï¿½Ô·ï¿½ï¿½ï¿½ {0} ï¿½ï¿½Î´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½. ï¿½Ã¹Ù¸ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½", $path))
             exit -1
         }
 
         ([Directory]::Exists( [Path]::GetDirectoryName($path)) -eq $false)
         {
             [Directory]::CreateDirectory([Path]::GetDirectoryName($path))
-            [Logger]::WriteLineNotice( "ÇØ´ç °æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ¼­ »ý¼ºÇß½À´Ï´Ù.")
+            [Logger]::WriteLineNotice( "ï¿½Ø´ï¿½ ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.")
         }
 
         [File]::WriteAllText($path, $content)
     }
 
     <#########################################################################
-                      ÀÔ·ÂÇÑ °æ·Î°¡ ÆÄÀÏÀÎÁö Æú´õÀÎÁö È®ÀÎ
+                      ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
     ##########################################################################>
     [bool] static IsDirectoryPath([string]$path)
     {
@@ -277,7 +278,7 @@ class FileUtil
     }
 
     <#########################################################################
-                              ¹ÙÀÌ³Ê¸® ÆÄÀÏÀÎÁö
+                              ï¿½ï¿½ï¿½Ì³Ê¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     ##########################################################################>
     static [bool] IsBinaryFile([string]$path)
     {
@@ -301,9 +302,9 @@ class FileUtil
     }
 
     <#########################################################################
-                          ÆÄÀÏ °æ·Î¸¦ ¸®´ª½º ½ºÅ¸ÀÏ·Î º¯È¯
+                          ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½Ï·ï¿½ ï¿½ï¿½È¯
 
-    À©µµ¿ì»ó¿¡ ¿ìºÐÅõ °æ·ÎÀÓ
+    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
     ##########################################################################>
     static [string] ChangePathStyleToLinux([string]$path)
     {
@@ -329,13 +330,13 @@ class FileUtil
 
 
     <#########################################################################
-     Json ÆÄÀÏ ÀÐ±â (¾î¼Àºí¸® ÂüÁ¶ ÈÄ »ç¿ëÇØ¾ßÇÔ)
+     Json ï¿½ï¿½ï¿½ï¿½ ï¿½Ð±ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½)
     ##########################################################################>
 #    [JObject] static ReadJsonfile([string] $jsonfilepath)
 #    {
 #        if ((Test-Path $jsonfilepath) -eq $false)
 #        {
-#            [Logger]::WriteLineNoticeError($jsonfilepath + " ÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù", "")
+#            [Logger]::WriteLineNoticeError($jsonfilepath + " ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½", "")
 #            exit -1
 #        }
 

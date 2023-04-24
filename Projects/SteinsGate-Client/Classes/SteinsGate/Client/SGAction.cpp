@@ -11,10 +11,10 @@
 #include "SGAction.h"
 #include "GameCoreHeader.h"
 
-#include <SteinsGate/Client/SGHostPlayer.h>
+#include <SteinsGate/Client/HostPlayer.h>
 #include <JCore/Utils/Console.h>
 
-SGAction::SGAction(SGHostPlayer* player, SGActionInfo* actionInfo)
+SGAction::SGAction(HostPlayer* player, ActionInfo* actionInfo)
 	: m_pPlayer(player)
 	, m_pActionInfo(actionInfo)
 	, m_bMoveablePositiveX(m_pActionInfo->Moveable)
@@ -58,14 +58,14 @@ void SGAction::stop() {
 
 void SGAction::onActionBegin() {}
 void SGAction::onActionEnd() {}
-void SGAction::onKeyPressed(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
-void SGAction::onKeyReleased(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
-void SGAction::onKeyPressedBefore(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
-void SGAction::onKeyReleasedBefore(SGPlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
-void SGAction::onFrameBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {}
-void SGAction::onFrameEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {}
-void SGAction::onAnimationBegin(SGActorPartAnimation* animation, SGFrameTexture* frame) {}
-void SGAction::onAnimationEnd(SGActorPartAnimation* animation, SGFrameTexture* frame) {}
+void SGAction::onKeyPressed(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
+void SGAction::onKeyReleased(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
+void SGAction::onKeyPressedBefore(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
+void SGAction::onKeyReleasedBefore(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {}
+void SGAction::onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
+void SGAction::onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) {}
+void SGAction::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
+void SGAction::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {}
 
 void SGAction::setMoveable(bool moveable) {
 	m_bMoveablePositiveX = moveable;

@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGUIMasterGroup.h>
+#include <SteinsGate/Client/UIMasterGroup.h>
 
 #define MAX_INVEN_SLOT_COUNT		32
 #define INVEN_ITEM_COUNT_PER_ROW	8
 #define INVEN_ROW_COUNT				4
 
-class UI_Inventory : public SGUIMasterGroup
+class UI_Inventory : public UIMasterGroup
 {
 public:
-	UI_Inventory(SGUIGroupInfo* groupInfo);
+	UI_Inventory(UIGroupInfo* groupInfo);
 
 	void onInit() override;
 	void onLoaded() override;
@@ -27,14 +27,14 @@ public:
 	bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
 private:
-	SGUISprite* m_pBackground;
-	SGUIScrollBar* m_pScrollBar;
+	UISprite* m_pBackground;
+	UIScrollBar* m_pScrollBar;
 
-	SGUIGroup* m_pInvenSlotGroup;
-	SGUISprite* m_pInvenSlotSprites[MAX_INVEN_SLOT_COUNT];
+	UIGroup* m_pInvenSlotGroup;
+	UISprite* m_pInvenSlotSprites[MAX_INVEN_SLOT_COUNT];
 
-	SGUIGroup* m_pEquipSlotGroup;
-	SGUIStatic* m_pEquipSlotStatics[ItemType::MaxInvenEquip];
+	UIGroup* m_pEquipSlotGroup;
+	UIStatic* m_pEquipSlotStatics[ItemType::MaxInvenEquip];
 
 	InvenItemType_t m_iCurTab;
 };

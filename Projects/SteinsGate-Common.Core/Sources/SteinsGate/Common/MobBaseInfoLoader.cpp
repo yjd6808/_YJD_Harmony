@@ -11,7 +11,7 @@
 #include "MobBaseInfoLoader.h"
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
-#include <SteinsGate/Common/SGJson.h>
+#include <SteinsGate/Common/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
@@ -48,7 +48,7 @@ bool MobBaseInfoLoader::load() {
 void MobBaseInfoLoader::readMobBaseInfo(Json::Value& monsterRoot, Out_ MobBaseInfo* mobInfo) {
 
 	mobInfo->Code = monsterRoot["code"].asInt();
-	mobInfo->Name = SGJson::getString(monsterRoot["kor_name"]);
+	mobInfo->Name = JsonUtil::getString(monsterRoot["kor_name"]);
 	mobInfo->HP = monsterRoot["hp"].asInt();
 	mobInfo->MP = monsterRoot.get("mp", 0).asInt();
 	mobInfo->PhysicalDamage = monsterRoot["physical_damage"].asInt();
@@ -60,5 +60,5 @@ void MobBaseInfoLoader::readMobBaseInfo(Json::Value& monsterRoot, Out_ MobBaseIn
 	mobInfo->MoveSpeedY = monsterRoot["move_speed_y"].asFloat();
 	mobInfo->DownRecoverTime = monsterRoot.get("down_recover_time", 1.0).asFloat();
 	mobInfo->Weight = monsterRoot["weight"].asFloat();
-	SGJson::parseThicknessInfo(monsterRoot["thickness_box"], mobInfo->ThicknessBox);
+	JsonUtil::parseThicknessInfo(monsterRoot["thickness_box"], mobInfo->ThicknessBox);
 }

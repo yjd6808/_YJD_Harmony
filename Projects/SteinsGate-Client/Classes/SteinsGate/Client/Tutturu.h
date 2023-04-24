@@ -11,8 +11,8 @@
 #include <SteinsGate/Common/Engine.h>
 #include <SteinsGate/Common/Logo.h>
 
-#include <SteinsGate/Client/SGStruct.h>
-#include <SteinsGate/Client/SGConfig.h>
+#include <SteinsGate/Client/Struct.h>
+#include <SteinsGate/Client/Config.h>
 #include <SteinsGate/Client/GameCore.h>
 
 

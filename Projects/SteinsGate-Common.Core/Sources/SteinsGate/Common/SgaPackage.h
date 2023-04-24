@@ -49,7 +49,7 @@ public:
 
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
 	SgaElement& operator[](const int idx);
-	SGString ToString() const;
+	JCore::String ToString() const;
 protected:
 	JCore::String m_szPath;
 	JCore::StreamPtr m_spStream;

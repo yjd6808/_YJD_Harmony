@@ -11,7 +11,7 @@
 #include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
-#include <SteinsGate/Common/SGJson.h>
+#include <SteinsGate/Common/JsonUtil.h>
 
 USING_NS_JS;
 USING_NS_JC;
@@ -58,8 +58,8 @@ bool ItemOptInfoLoader::load() {
 
 void ItemOptInfoLoader::readItemOptInfo(Json::Value& optRoot, ItemOptInfo* optInfo) {
 	optInfo->Code = optRoot["code"].asInt();
-	optInfo->Format = SGJson::getString(optRoot["fmt"]);
-	optInfo->EName = SGJson::getString(optRoot["ename"]);
+	optInfo->Format = JsonUtil::getString(optRoot["fmt"]);
+	optInfo->EName = JsonUtil::getString(optRoot["ename"]);
 	optInfo->IsInteger = optRoot["is_integer"].asBool();
 
 	Value& optLevelListRoot = optRoot["lv"];
@@ -68,7 +68,7 @@ void ItemOptInfoLoader::readItemOptInfo(Json::Value& optRoot, ItemOptInfo* optIn
 		int iLevel;
 		int iMin;
 		int iMax;
-		SGJson::parseIntNumber3(optLevelListRoot[i], iLevel, iMin, iMax);
+		JsonUtil::parseIntNumber3(optLevelListRoot[i], iLevel, iMin, iMax);
 		optInfo->OptLevelList.PushBack({iLevel, iMin, iMax });
 	}
 }

@@ -27,26 +27,26 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\SgaSprite.cpp">
       <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGStruct.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\Struct.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\DataManagerAbstract.cpp">
       <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.cpp">
       <Filter>Data\MobBase</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGTextParser.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\TextParser.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGJson.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\JsonUtil.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.cpp">
       <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\CharBaseInfoLoader.cpp">
       <Filter>Data\CharBase</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGEnum.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\Enum.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp">
       <Filter>Data\Item</Filter>
     </ClCompile>
@@ -70,7 +70,7 @@
       <Filter>Data\Database</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Logo.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\SGCharCommonInfoLoader.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\CharCommonInfoLoader.cpp">
       <Filter>Data\CharCommon</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,9 +113,9 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SgaSpriteRect.h">
       <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGStruct.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnum.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGConfig.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Config.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
       <Filter>Data</Filter>
     </ClInclude>
@@ -125,10 +125,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.h">
       <Filter>Data\MobBase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGJson.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\JsonUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGTextParser.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\TextParser.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ConfigFileLoaderAbstract.h">
@@ -137,10 +137,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ConfigDataAbstract.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\CharBaseInfo.h">
       <Filter>Data\CharBase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharBaseInfoLoader.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\CharBaseInfoLoader.h">
       <Filter>Data\CharBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfo.h">
@@ -192,25 +192,25 @@
       <Filter>Data\Database</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfoLoader.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\CharCommonInfoLoader.h">
       <Filter>Data\CharCommon</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGCharCommonInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\CharCommonInfo.h">
       <Filter>Data\CharCommon</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetAuthCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NetAuthCmd.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetLobbyCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NetLobbyCmd.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetGameCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NetGameCmd.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGNetCmdType.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\NetCmdType.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\SGEnumDefine.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\EnumDefine.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">

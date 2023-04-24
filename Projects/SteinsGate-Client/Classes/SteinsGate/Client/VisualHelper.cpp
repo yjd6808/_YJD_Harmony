@@ -21,7 +21,7 @@ int VisualHelper::getVisualData(Out_ VisualData& visualData, int code) {
 	CharType_t eCharType = pVisualInfo->getCharType();
 	ItemType_t eItemType = pVisualInfo->getItemType();
 	VisualType_t eVisualType = pVisualInfo->getVisualType();
-	SGImagePack* pPack = nullptr;
+	ImagePack* pPack = nullptr;
 
 	char* ImgPrefix = nullptr;
 

@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <SteinsGate/Client/SGUIMasterGroup.h>
+#include <SteinsGate/Client/UIMasterGroup.h>
 
-class UI_Login : public SGUIMasterGroup
+class UI_Login : public UIMasterGroup
 {
 public:
-	UI_Login(SGUIGroupInfo* groupInfo);
+	UI_Login(UIGroupInfo* groupInfo);
 
 	void onInit() override;
 	bool onUpdate(float dt) override;
