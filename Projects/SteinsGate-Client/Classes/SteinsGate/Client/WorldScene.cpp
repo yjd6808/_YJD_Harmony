@@ -259,6 +259,7 @@ void WorldScene::onExit() {
 	FinalizeClientCore();
 	FinalizeCommonCore();
 	FinalizeDefaultLogger();
+	FinalizeNetLogger();
 }
 
 

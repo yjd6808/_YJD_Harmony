@@ -18,7 +18,7 @@
 //     사실.. 소괄호 작성하기 귀찮아서 이렇게 모아놓음
 // ===========================================================
 
-ClientInfo*				CoreClient_v;
+ClientInfo*				CoreClientInfo_v;
 HostPlayer*				CorePlayer_v;
 DataManager*			CoreDataManager_v;
 UIManager*				CoreUIManager_v;

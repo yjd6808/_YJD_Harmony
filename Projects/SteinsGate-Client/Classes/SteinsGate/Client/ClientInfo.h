@@ -14,8 +14,12 @@ class ClientInfo : public ConfigDataAbstract
 {
 public:
 	~ClientInfo() override = default;
-	float GameScale;
-	float ResolutionWidth;
-	float ResolutionHeight;
+	SGSize FrameSize;
+	SGSize GameResolutionSize;
+	ResolutionPolicy GameResolutionPolicy;
+	bool Resizable;
 	bool FullScreen;
+
+	SGRect getFrameRect() { return { 0, 0, FrameSize.width, FrameSize.height }; }
+	SGRect getGameResolutionRect() { return { 0, 0, GameResolutionSize.width, GameResolutionSize.height }; }
 };

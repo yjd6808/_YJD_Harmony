@@ -1,15 +1,19 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "클라이언트 화면 정보",
-    "__comment__2": "game_scale: 화면내 보일 오브젝트 스케일 2.0 설정시 모든게 기존보다 2배 커짐",
-    "__comment__3": "resulution_width, height: 게임 화면 크기",
+    "__comment__4": "frame_width, height: 윈도우 크기",
+    "__comment__3": "resulution_width, height: 게임 해상도",
+    "__comment__4": "resolution_policy: 윈도우에 대해서 게임 해상도가 어떻게 적용될지에 대한 정책 EXACT_FIT(0), NO_BORDER(1), SHOW_ALL(2)",
 
     "client": [
         {
             "code": 1,
-            "game_scale": 1.5,
-            "resolution_width": 640,
-            "resolution_height": 480,
+            "frame_width": 960,
+            "frame_height": 640,
+            "game_resolution_width": 640,
+            "game_resolution_height": 480,
+            "game_resolution_policy": 0,
+            "resizable": false,
             "fullsreen": false
         }
     ]

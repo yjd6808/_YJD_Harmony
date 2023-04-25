@@ -22,7 +22,7 @@ class ActorBox;
 class ImagePackManager;
 class Global;
 
-extern ClientInfo* CoreClient_v;
+extern ClientInfo* CoreClientInfo_v;
 extern HostPlayer* CorePlayer_v;
 extern DataManager* CoreDataManager_v;
 extern UIManager* CoreUIManager_v;

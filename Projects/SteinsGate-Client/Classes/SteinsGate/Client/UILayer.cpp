@@ -44,7 +44,7 @@ bool UILayer::init() {
 	if (!Layer::init())
 		return false;
 
-	setContentSize(CoreClient_v->ResolutionWidth, CoreClient_v->ResolutionHeight);
+	setContentSize(CoreClientInfo_v->GameResolutionSize);
 	return true;
 }
 

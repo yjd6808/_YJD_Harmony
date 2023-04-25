@@ -43,9 +43,12 @@ bool ClientInfoLoader::load() {
 
 void ClientInfoLoader::readClientInfo(Json::Value& clientRoot, Out_ ClientInfo* clientInfo) {
 	clientInfo->Code = clientRoot["code"].asInt();
-	clientInfo->GameScale = clientRoot["game_scale"].asFloat();
-	clientInfo->ResolutionWidth = clientRoot["resolution_width"].asFloat();
-	clientInfo->ResolutionHeight = clientRoot["resolution_height"].asFloat();
+	clientInfo->FrameSize.width = clientRoot["frame_width"].asFloat();
+	clientInfo->FrameSize.height = clientRoot["frame_height"].asFloat();
+	clientInfo->GameResolutionSize.width = clientRoot["game_resolution_width"].asFloat();
+	clientInfo->GameResolutionSize.height = clientRoot["game_resolution_height"].asFloat();
+	clientInfo->GameResolutionPolicy = (ResolutionPolicy)clientRoot["game_resolution_policy"].asInt();
+	clientInfo->Resizable = clientRoot["resizable"].asBool();
 	clientInfo->FullScreen = clientRoot["fullscreen"].asBool();
 	
 }

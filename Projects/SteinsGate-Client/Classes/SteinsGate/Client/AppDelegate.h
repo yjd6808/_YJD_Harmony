@@ -7,16 +7,18 @@
 class AppDelegate : private cocos2d::Application
 {
 public:
-    HHOOK m_hWndProcHook;
-
     AppDelegate();
     virtual ~AppDelegate();
-
     virtual void initGLContextAttrs();
 
 	void CreateOpenGLWindow();
 	void CreateWorldScene();
 
+    HHOOK GetWndProcHook() { return m_hWndProcHook; }
+    WNDPROC GetPrevWndProc() { return m_hPrevWndProc; }
+
+    static LRESULT CALLBACK GLFWWindowHookProc(int code, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     void InitializeWindowProcedure();
     /**
@@ -37,6 +39,10 @@ public:
     @param  애플리케이션 포인터
     */
     virtual void applicationWillEnterForeground();
+
+private:
+    HHOOK m_hWndProcHook;
+    WNDPROC m_hPrevWndProc;
 };
 
 #endif // _APP_DELEGATE_H_

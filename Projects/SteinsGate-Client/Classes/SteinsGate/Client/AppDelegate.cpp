@@ -1,15 +1,36 @@
 #include "Tutturu.h"
 #include "AppDelegate.h"
 #include "GameCoreHeader.h"
-#include "Win32Helper.h"
-#include "SteinsGate/Common/AudioPlayer.h"
-#include "SteinsGate/Common/SgaElementInitializer.h"
+
+#include <JCore/Logger/ConsoleLogger.h>
+#include <SteinsGate/Common/AudioPlayer.h>
+#include <SteinsGate/Common/SgaElementInitializer.h>
+#include <SteinsGate/Client/Win32Helper.h>
 
 #define AppName "SteinsGate-Client"
 
 USING_NS_CC;
 USING_NS_JC;
 USING_NS_DETAIL;
+
+ConsoleLoggerOption NetLoggerOption_v = [] {
+    ConsoleLoggerOption option;
+    option.EnableLog[LoggerAbstract::eDebug] = false;
+    option.EnableLog[LoggerAbstract::eError] = true;
+    option.EnableLog[LoggerAbstract::eWarn] = true;
+    option.EnableLog[LoggerAbstract::eInfo] = true;
+    return option;
+}();
+
+ConsoleLoggerOption LoggerOption_v = [] {
+    ConsoleLoggerOption option;
+    option.EnableLog[LoggerAbstract::eDebug] = false;
+    option.EnableLog[LoggerAbstract::eError] = true;
+    option.EnableLog[LoggerAbstract::eWarn] = true;
+    option.EnableLog[LoggerAbstract::eInfo] = true;
+    return option;
+}();
+
 
 AppDelegate::AppDelegate()
 	: m_hWndProcHook(nullptr)
@@ -48,14 +69,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
     DataManager* pDataManager = DataManager::Get();
     pDataManager->initializeLoader();
     CoreCommonInfo_v = pDataManager->getCommonInfo(1);
-    CoreClient_v = pDataManager->getClientInfo(1);
+    CoreClientInfo_v = pDataManager->getClientInfo(1);
     CoreCharCommon_v = pDataManager->getCharCommonInfo(1);
 
     CreateOpenGLWindow();
+    InitializeWindowProcedure();
 	InitializeJCore();
+    InitializeNetLogger(&NetLoggerOption_v);
+    InitializeDefaultLogger(&LoggerOption_v);
     InitializeCommonCore();
     InitializeClientCore();
-    InitializeDefaultLogger();
     InitializeClientLogo(true, 5);
     CreateWorldScene();
     
@@ -68,20 +91,19 @@ void AppDelegate::CreateOpenGLWindow() {
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
-    Rect viewRect = { 0, 0, CoreClient_v->ResolutionWidth, CoreClient_v->ResolutionHeight };
+    Rect resolutionRect = CoreClientInfo_v->getGameResolutionRect();
+    Rect frameRect = CoreClientInfo_v->getFrameRect();
 
     if (glview == nullptr) {
-        glview = CoreClient_v->FullScreen ? 
+        glview = CoreClientInfo_v->FullScreen ? 
             GLViewImpl::createWithFullScreen(AppName) :
-            GLViewImpl::createWithRect(AppName, viewRect, CoreClient_v->GameScale, true);
-        
-        director->setOpenGLView(glview);
+            GLViewImpl::createWithRect(AppName, frameRect, 1.0f, CoreClientInfo_v->Resizable);
+        glview->setDesignResolutionSize(resolutionRect.size.width, resolutionRect.size.height, CoreClientInfo_v->GameResolutionPolicy);
     }
 
-    director->setDisplayStats(false);
+    director->setOpenGLView(glview);
+	director->setDisplayStats(false);
     director->setAnimationInterval(1.0f / 120);
-    glview->setDesignResolutionSize(viewRect.size.width, viewRect.size.height, ResolutionPolicy::NO_BORDER);
-    //glview->setDesignResolutionSize(CoreInfo_v->ResolutionWidth, CoreInfo_v->ResolutionHeight, ResolutionPolicy::SHOW_ALL);
     director->setContentScaleFactor(1.0f);
 
     Win32Helper::LazyInit();
@@ -94,27 +116,47 @@ void AppDelegate::CreateWorldScene() {
     Director::getInstance()->runWithScene(scene);
 }
 
-static LRESULT CALLBACK GLFWWindowHookProc(int code, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK AppDelegate::GLFWWindowHookProc(int code, WPARAM wParam, LPARAM lParam)
 {
-    Scene* runningScene = Director::getInstance()->getRunningScene();
+    AppDelegate* pApp = (AppDelegate*)Application::getInstance();
+    Scene* pRunningScene = Director::getInstance()->getRunningScene();
+    WorldScene* pWorld;
 
-    /*if (runningScene != nullptr) {
-        static_cast<SGWorldScene*>(runningScene)->onWndMessageReceived(code, wParam, lParam);
-    }*/
+    if (pRunningScene != nullptr && pApp != nullptr && (pWorld = dynamic_cast<WorldScene*>(pRunningScene)) != nullptr) {
+        
+    }
 
     _LogDebug_("%d", code);
-
     return ::CallNextHookEx(NULL, code, wParam, lParam);
 }
 
-void AppDelegate::InitializeWindowProcedure() {
-    const HWND hWndCocos = Director::getInstance()->getOpenGLView()->getWin32Window();
-    const DWORD dwThreadId = GetWindowThreadProcessId(hWndCocos, NULL);
-    const HINSTANCE hInstance = ::GetModuleHandleW(nullptr);
-    //m_hWndProcHook = SetWindowsHookEx(WH_CALLWNDPROC, GLFWWindowHookProc, hInstance, dwThreadId);
 
-    //if (m_hWndProcHook == nullptr)
-        //_LogError_("코코스 윈도우 프로시저 후킹에 실패했습니다.");
+LRESULT CALLBACK AppDelegate::GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+    AppDelegate* pApp = (AppDelegate*)Application::getInstance();
+    Scene* pRunningScene = Director::getInstance()->getRunningScene();
+    WorldScene* pWorld;
+
+
+    return ::CallWindowProcW(pApp->GetPrevWndProc(), hwnd, uMsg, wParam, lParam);
+}
+
+
+void AppDelegate::InitializeWindowProcedure() {
+    return;
+
+    const HWND hWndCocos = Director::getInstance()->getOpenGLView()->getWin32Window();
+    // TODO: SetWindowsHookExA 함수로 후킹하면 메모리릭이 대량 발생하는데.. 원인을 잘 모르겠다.
+    /*
+     const DWORD dwThreadId = GetWindowThreadProcessId(hWndCocos, NULL);
+     const HINSTANCE hInstance = ::GetModuleHandleW(nullptr);
+     m_hWndProcHook = SetWindowsHookExA(WH_CALLWNDPROC, GLFWWindowHookProc, hInstance, dwThreadId);
+	 if (m_hWndProcHook == nullptr)
+	     _LogError_("코코스 윈도우 프로시저 후킹에 실패했습니다.");
+	     */
+
+    // TODO: SetWindowLongPtrW로 프로시저 처리해도 릭 발생함. 원인을 잘 모르겠다. (동일한 원인 같은데)
+    // m_hPrevWndProc = (WNDPROC)SetWindowLongPtrW(hWndCocos, GWLP_WNDPROC, (LONG_PTR)GLFWWindowProc);
 }
 
 void AppDelegate::applicationDidEnterBackground() {
