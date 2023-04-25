@@ -193,7 +193,7 @@ void GunnerGunShot::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_SMALL, info, true);
+	ActorBox::Get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_SMALL, info, true);
 	info.HitTarget->hit(info);
 }
 

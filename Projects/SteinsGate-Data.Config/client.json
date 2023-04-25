@@ -7,7 +7,7 @@
     "client": [
         {
             "code": 1,
-            "game_scale": 1.0,
+            "game_scale": 1.5,
             "resolution_width": 640,
             "resolution_height": 480,
             "fullsreen": false

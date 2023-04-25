@@ -40,7 +40,7 @@ void GunnerBulletListener::onDistanceOver() {
 }
 
 void GunnerBulletListener::onCollisionWithGround() {
-	ActorBox::get()->createEffectOnMapAbsolute(
+	ActorBox::Get()->createEffectOnMapAbsolute(
 		EFFECT_COLLISION_FLOOR,
 		m_pProjectile->getPositionRealCenterX(),
 		m_pProjectile->getPositionRealCenterY(),
@@ -55,7 +55,7 @@ void GunnerBulletListener::onEnemySingleHit(SGHitInfo& info) {
 		return;
 
 	EffectInfo* pHitEffectInfo = m_pProjectile->getHitEffectInfo();
-	ActorBox::get()->createEffectOnMapTargetCollision(
+	ActorBox::Get()->createEffectOnMapTargetCollision(
 		pHitEffectInfo->Code,
 		SpriteDirection::Reverse[info.HitDirection],
 		info);

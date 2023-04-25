@@ -45,7 +45,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     FileUtils::getInstance()->setPopupNotify(false);    // 파일못찾은 경우 알람 안하도록 함
     SGConsole::SetSize(1200, 800);
 
-    DataManager* pDataManager = DataManager::get();
+    DataManager* pDataManager = DataManager::Get();
+    pDataManager->initializeLoader();
     CoreCommonInfo_v = pDataManager->getCommonInfo(1);
     CoreClient_v = pDataManager->getClientInfo(1);
     CoreCharCommon_v = pDataManager->getCharCommonInfo(1);
@@ -87,7 +88,7 @@ void AppDelegate::CreateOpenGLWindow() {
 }
 
 void AppDelegate::CreateWorldScene() {
-    auto scene = CoreWorld_v;
+    auto scene = WorldScene::get();
     scene->setAnchorPoint(Vec2::ZERO);
     DebugAssertMsg(scene, "월드씬 생성에 실패했습니다.");
     Director::getInstance()->runWithScene(scene);

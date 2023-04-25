@@ -83,8 +83,8 @@ void SGGameScene::cmdLoadChar() {
 }
 
 void SGGameScene::cmdEnterMap() {
-    HostPlayer* pHost = HostPlayer::get();
-    ActorBox* pActorBox = ActorBox::get();
+    HostPlayer* pHost = HostPlayer::Get();
+    ActorBox* pActorBox = ActorBox::Get();
 
     if (m_pMapLayer) {
         m_pMapLayer->release();
@@ -102,6 +102,6 @@ void SGGameScene::cmdEnterMap() {
 }
 
 void SGGameScene::onExit() {
-    ActorBox::get()->clearAll();
+    ActorBox::Get()->clearAll();
     //SGSceneBase::onExit();
 }

@@ -103,8 +103,8 @@ void Projectile::initPosition() {
 
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
 void Projectile::initActorSprite() {
-	DataManager* pDataManager = DataManager::get();
-	ImagePackManager* pImgPackManager = ImagePackManager::get();
+	DataManager* pDataManager = DataManager::Get();
+	ImagePackManager* pImgPackManager = ImagePackManager::Get();
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, 1);	// 프로젝틸도 파츠, 애니메이션 모두 한개
 
 	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->SgaIndex, m_pBaseInfo->ImgIndex });

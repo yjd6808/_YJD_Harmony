@@ -51,8 +51,8 @@ Monster* Monster::create(MobInfo* baseInfo, AIInfo* aiInfo) {
 }
 
 void Monster::initActorSprite() {
-	DataManager* pDataManager = DataManager::get();
-	ImagePackManager* pImgPackManager = ImagePackManager::get();
+	DataManager* pDataManager = DataManager::Get();
+	ImagePackManager* pImgPackManager = ImagePackManager::Get();
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(m_pBaseInfo->PartsCount, m_pBaseInfo->AnimationList.Size());
 
 	for (int i = 0; i < m_pBaseInfo->PartsCount; ++i) {

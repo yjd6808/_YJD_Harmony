@@ -10,23 +10,13 @@
 
 #include "Tutturu.h"
 
-class FontPackage
+class FontPackage final : public JCore::SingletonPointer<FontPackage>
 {
-public:
+	friend class TSingleton;
 	FontPackage();
-
+	~FontPackage() override;
+public:
 	void init();
-
-	static FontPackage* get() {
-		static FontPackage* inst = nullptr;
-
-		if (inst == nullptr) {
-			inst = new FontPackage;
-		}
-
-		return inst;
-	}
-
 	SGString& getFontName(int fontCode);
 	int getFontCode(const SGString& fontName);
 

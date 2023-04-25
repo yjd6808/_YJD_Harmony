@@ -44,7 +44,7 @@ void MonsterAttackActivity::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
+	ActorBox::Get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

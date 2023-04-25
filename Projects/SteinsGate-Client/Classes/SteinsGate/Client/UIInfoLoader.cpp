@@ -127,7 +127,7 @@ UIElementInfo* UIInfoLoader::readElementButton(Value& buttonRoot) {
 
 	readElementCommon(buttonRoot, pInfo);
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 	const SGString& sgaName = JsonUtilEx::getString(buttonRoot[JsonSgaKey]);
 	const SGString& imgName = JsonUtilEx::getString(buttonRoot[JsonImgKey]);
 
@@ -144,14 +144,14 @@ UIElementInfo* UIInfoLoader::readElementButton(Value& buttonRoot) {
 
 UIElementInfo* UIInfoLoader::readElementLabel(Value& labelRoot) {
 	UILabelInfo* pInfo = dbg_new UILabelInfo();
-	DataManager* pDataManager = DataManager::get();
+	DataManager* pDataManager = DataManager::Get();
 
 	readElementCommon(labelRoot, pInfo);
 
 	const SGString szFontName = JsonUtilEx::getString(labelRoot[JsonFontKey]);
 
 	pInfo->Type = UIElementType::Label;
-	pInfo->FontCode =  FontPackage::get()->getFontCode(szFontName);
+	pInfo->FontCode =  FontPackage::Get()->getFontCode(szFontName);
 	pInfo->FontSize = labelRoot[JsonFontSizeKey].asInt();
 	pInfo->TextWrap = labelRoot[JsonTextWrapKey].asBool();
 	JsonUtilEx::parseColor4B(labelRoot[JsonFontColorKey], pInfo->FontColor);
@@ -168,7 +168,7 @@ UIElementInfo* UIInfoLoader::readElementSprite(Value& spriteRoot) {
 
 	readElementCommon(spriteRoot, pInfo);
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	const SGString& sgaName = JsonUtilEx::getString(spriteRoot[JsonSgaKey]);
 	const SGString& imgName = JsonUtilEx::getString(spriteRoot[JsonImgKey]);
@@ -190,7 +190,7 @@ UIElementInfo* UIInfoLoader::readElementEditBox(Value& editBoxRoot) {
 
 	readElementCommon(editBoxRoot, pInfo);
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	pInfo->Type = UIElementType::EditBox;
 	JsonUtilEx::parseSize(editBoxRoot[JsonVisualSizeKey], pInfo->Size);
@@ -211,7 +211,7 @@ UIElementInfo* UIInfoLoader::readElementCheckBox(Value& checkBoxRoot) {
 	UICheckBoxInfo* pInfo = dbg_new UICheckBoxInfo();
 	readElementCommon(checkBoxRoot, pInfo);
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	const SGString sgaNameBackground = JsonUtilEx::getString(checkBoxRoot[JsonBackgroundSga]);
 	const SGString imgNameBackground = JsonUtilEx::getString(checkBoxRoot[JsonBackgroundImg]);
@@ -242,7 +242,7 @@ UIElementInfo* UIInfoLoader::readElementToggleButton(Value& toggleButtonRoot) {
 	UIToggleButtonInfo* pInfo = dbg_new UIToggleButtonInfo();
 	readElementCommon(toggleButtonRoot, pInfo);
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	const SGString sgaName = JsonUtilEx::getString(toggleButtonRoot[JsonSgaKey]);
 	const SGString imgName = JsonUtilEx::getString(toggleButtonRoot[JsonImgKey]);
@@ -263,7 +263,7 @@ UIElementInfo* UIInfoLoader::readElementScrollBar(Value& scrollBarRoot) {
 	UIScrollBarInfo* pInfo = dbg_new UIScrollBarInfo();
 	readElementCommon(scrollBarRoot, pInfo);
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	const SGString sgaName = JsonUtilEx::getString(scrollBarRoot[JsonSgaKey]);
 	const SGString imgName = JsonUtilEx::getString(scrollBarRoot[JsonImgKey]);
@@ -282,7 +282,7 @@ UIElementInfo* UIInfoLoader::readElementProgressBar(Value& progressBarRoot) {
 	UIProgressBarInfo* pInfo = dbg_new UIProgressBarInfo();
 	readElementCommon(progressBarRoot, pInfo);
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	const SGString sgaName = JsonUtilEx::getString(progressBarRoot[JsonSgaKey]);
 	const SGString imgName = JsonUtilEx::getString(progressBarRoot[JsonImgKey]);

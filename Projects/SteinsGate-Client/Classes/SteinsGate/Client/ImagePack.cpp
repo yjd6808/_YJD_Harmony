@@ -73,7 +73,7 @@ SgaSpriteAbstractPtr ImagePack::getSpriteUnsafe(int imgIndex, int frameIndex) co
 FrameTexture* ImagePack::createFrameTexture(int imgIndex, int frameIndex, bool linearDodge) {
 
 	if (frameIndex == InvalidValue_v) {
-		return SGGlobal::get()->getDefaultFrameTexture();
+		return Global::Get()->getDefaultFrameTexture();
 	}
 
 	SgaResourceIndex index;

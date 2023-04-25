@@ -80,7 +80,7 @@ void ActorPartAnimation::run(int frameIndexInAnimation) {
 }
 
 void ActorPartAnimation::constructFrames(int sgaIndex, int imgIndex) {
-	ImagePack* pImgPack = ImagePackManager::get()->getPack(sgaIndex);
+	ImagePack* pImgPack = ImagePackManager::Get()->getPack(sgaIndex);
 
 	m_iSgaIndex = sgaIndex;
 	m_iImgIndex = imgIndex;

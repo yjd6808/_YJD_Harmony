@@ -49,7 +49,7 @@ bool MapLayer::init() {
 		return false;
 	}
 
-	m_pActorBox = ActorBox::get();
+	m_pActorBox = ActorBox::Get();
 	m_pCamera = MimicCamera::create();
 	this->addChild(m_pCamera);
 	return true;
@@ -58,11 +58,11 @@ bool MapLayer::init() {
 
 
 void MapLayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
-	HostPlayer::get()->onKeyPressed(keyCode, event);
+	HostPlayer::Get()->onKeyPressed(keyCode, event);
 }
 
 void MapLayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
-	HostPlayer::get()->onKeyReleased(keyCode, event);
+	HostPlayer::Get()->onKeyReleased(keyCode, event);
 }
 
 MapInfo* MapLayer::getMapInfo() {
@@ -80,8 +80,8 @@ void MapLayer::update(float dt) {
 }
 
 void MapLayer::loadMap(int mapCode) {
-	DataManager* pDataManager = DataManager::get();
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	DataManager* pDataManager = DataManager::Get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 	MapInfo* pMap = pDataManager->getMapInfo(mapCode);
 
 	m_pMapInfo = pMap;

@@ -330,7 +330,7 @@ bool PhysicsActor::hasForce() {
 // 어택박스 위치가 제대로 맞나 눈으로 확인하기 위한 용도
 void PhysicsActor::updateDebug(float dt) {
 
-	if (!SGGlobal::get()->DrawAttackBox) {
+	if (!Global::Get()->DrawAttackBox) {
 		if (m_pAtkThicknessBox) m_pAtkThicknessBox->setOpacity(0);
 		if (m_pAtkHitBox) m_pAtkHitBox->setOpacity(0);
 		return;

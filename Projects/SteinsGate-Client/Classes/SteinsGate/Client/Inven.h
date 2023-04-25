@@ -10,15 +10,13 @@
 
 #include "Tutturu.h"
 
-class Inven
+class Inven final : public JCore::SingletonPointer<Inven>
 {
-public:
+	friend class TSingleton;
 	Inven();
-
-	static Inven* get();
-
+	~Inven() override;
+public:
 	void init();
-
 	WeaponType_t getWeaponType();
 	void getVisualInfo(Out_ VisualInfo& info, int defaultCharType);
 

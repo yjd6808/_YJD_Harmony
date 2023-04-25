@@ -63,8 +63,8 @@ bool ProjectileInfoLoader::load() {
 
 void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRoot, Out_ ProjectileInfo* projectileInfo) {
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
-	DataManager* pDataManager = DataManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
+	DataManager* pDataManager = DataManager::Get();
 
 	projectileInfo->Code = projectileRoot["code"].asInt();
 	projectileInfo->Name = JsonUtilEx::getString(projectileRoot["name"]);
@@ -154,8 +154,8 @@ void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRo
 
 void ProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, Out_ ProjectileInfo* projectileInfo) {
 	// 초기화 안된 변수가 없어야함 
-	ImagePackManager* pPackManager = ImagePackManager::get();
-	DataManager* pDataManager = DataManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
+	DataManager* pDataManager = DataManager::Get();
 
 
 	projectileInfo->Code = projectileRoot["code"].asInt();

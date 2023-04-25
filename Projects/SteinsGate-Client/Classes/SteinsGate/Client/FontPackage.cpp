@@ -30,6 +30,9 @@ FontPackage::FontPackage()
 	, m_hFontCodeToNameMap(8)
 {}
 
+FontPackage::~FontPackage() {
+}
+
 void FontPackage::init() {
 	SGString szFontDirPath = JCore::Path::Combine(CoreCommonInfo_v->DataPath, FontDirName_v);
 	Vector<SGString> vFontFiles = Directory::Files(szFontDirPath.Source());

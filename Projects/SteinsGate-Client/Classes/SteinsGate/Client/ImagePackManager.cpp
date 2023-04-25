@@ -97,7 +97,7 @@ ImagePack* ImagePackManager::getAvatarPack(CharType_t charType, AvatarType_t par
 	DebugAssertMsg(part >= AvatarType::Begin && part < AvatarType::Max, "아바타 타입이 올바르지 않습니다.");
 
 	if (m_AvatarPacks[charType][part] == nullptr) {
-		const SGString& sgaName = SGGlobal::get()->getAvatarSgaName(charType, part);
+		const SGString& sgaName = Global::Get()->getAvatarSgaName(charType, part);
 		m_AvatarPacks[charType][part] = getPack(sgaName);
 	}
 
@@ -108,7 +108,7 @@ ImagePack* ImagePackManager::getWeaponPack(WeaponType_t weaponType) {
 	DebugAssertMsg(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "무기 타입이 올바르지 않습니다.");
 
 	if (m_WeaponPacks[weaponType] == nullptr) {
-		const SGString& sgaName = SGGlobal::get()->getWeaponSgaName(weaponType);
+		const SGString& sgaName = Global::Get()->getWeaponSgaName(weaponType);
 		m_WeaponPacks[weaponType] = getPack(sgaName);
 	}
 

@@ -365,7 +365,7 @@ bool Actor::isOnTheGround() {
 
 void Actor::cleanUpNext() {
 	DebugAssertMsg(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
-	ActorBox::get()->registerCleanUp(this);
+	ActorBox::Get()->registerCleanUp(this);
 	m_bCleanUp = true;
 }
 

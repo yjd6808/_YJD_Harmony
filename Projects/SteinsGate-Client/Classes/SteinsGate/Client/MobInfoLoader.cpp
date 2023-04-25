@@ -50,7 +50,7 @@ bool MobInfoLoader::load() {
 
 void MobInfoLoader::readMobInfo(Json::Value& mobRoot, MobInfo* mobInfo) {
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	Value& partListRoot = mobRoot["parts"];
 	mobInfo->PartsCount = partListRoot.size();

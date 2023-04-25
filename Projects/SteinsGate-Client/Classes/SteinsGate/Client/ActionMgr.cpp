@@ -47,7 +47,7 @@ void ActionMgr::init(int charType) {
 }
 
 void ActionMgr::initGunnerActions() {
-	DataManager* pConfig = DataManager::get();
+	DataManager* pConfig = DataManager::Get();
 
 	m_pBaseAction[BaseAction::Idle] = dbg_new GunnerIdle(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_IDLE));
 	m_pBaseAction[BaseAction::Walk] = dbg_new GunnerWalk(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_WALK));

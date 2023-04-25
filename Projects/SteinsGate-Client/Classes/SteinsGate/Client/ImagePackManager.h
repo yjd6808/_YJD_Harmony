@@ -11,20 +11,13 @@
 
 #include <SteinsGate/Client/ImagePack.h>
 
-class ImagePackManager
+class ImagePackManager final : public JCore::SingletonPointer<ImagePackManager>
 {
-public:
-	static ImagePackManager* get() {
-		static ImagePackManager* loader;
-		if (loader == nullptr) {
-			loader = dbg_new ImagePackManager;
-		}
-		return loader;
-	}
-
+private:
+	friend class TSingleton;
 	ImagePackManager();
 	~ImagePackManager();
-
+public:
 	void loadAllPackages();
 	void unloadPackData(int packIndex);
 

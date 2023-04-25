@@ -57,7 +57,7 @@ void GunnerSliding::onFrameEnd(ActorPartAnimation* animation, FrameTexture* fram
 	if (animation->getFrameIndex() == 111) {
 		m_bSlidingStarted = true;
 
-		ActorBox::get()->createEffectOnMapBySpawner(pCharacter, EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
+		ActorBox::Get()->createEffectOnMapBySpawner(pCharacter, EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
 
 		if (eDir == SpriteDirection::Right) 
 			pCharacter->addForceX(pCharacter->getBaseInfo()->SlidingForce);
@@ -75,7 +75,7 @@ void GunnerSliding::onEnemySingleHit(SGHitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
+	ActorBox::Get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

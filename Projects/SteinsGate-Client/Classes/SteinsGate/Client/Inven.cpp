@@ -23,14 +23,7 @@ Inven::Inven()
 	, m_iAvailableSlotCount{} {
 }
 
-Inven* Inven::get() {
-	static Inven* s_pInst;
-
-	if (s_pInst == nullptr) {
-		s_pInst = dbg_new Inven;
-	}
-
-	return s_pInst;
+Inven::~Inven() {
 }
 
 void Inven::init() {

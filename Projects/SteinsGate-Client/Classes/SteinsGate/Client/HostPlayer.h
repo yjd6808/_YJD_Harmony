@@ -14,21 +14,15 @@
 #include <SteinsGate/Client/ActionMgr.h>
 
 
-class HostPlayer : public Player
+class HostPlayer
+	: public Player
+	, public JCore::SingletonPointer<HostPlayer>
 {
+private:
+	friend class TSingleton;
 	HostPlayer();
-public:
 	~HostPlayer() override;
-
-	static HostPlayer* get() {
-		static HostPlayer* s_pInstance = nullptr;
-
-		if (s_pInstance == nullptr) {
-			s_pInstance = dbg_new HostPlayer;
-		}
-		return s_pInstance;
-	}
-
+public:
 	bool init();
 	void initActionManager();
 	void initController();

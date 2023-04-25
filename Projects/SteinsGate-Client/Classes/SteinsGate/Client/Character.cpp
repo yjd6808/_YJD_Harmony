@@ -71,14 +71,14 @@ void Character::initVisualInfo(const VisualInfo& visualInfo) {
 
 void Character::initBaseInfo(int code) {
 	m_iCode = code;
-	CharBaseInfo* pBaseInfo = DataManager::get()->getCharInfo(code);
+	CharBaseInfo* pBaseInfo = DataManager::Get()->getCharInfo(code);
 	m_pBaseInfo = pBaseInfo;
 }
 
 void Character::initActorSprite() {
 	DebugAssertMsg(m_VisualInfo.Size() > 0, "액터 스프라이트 초기화 실패: 유효하지 않은 비주얼 정보입니다.");
 
-	DataManager* pDataManager = DataManager::get();
+	DataManager* pDataManager = DataManager::Get();
 	AnimationList& animationList = pDataManager->getCharAnimationInfoList(m_iCode);
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(15, animationList.Size());
 
@@ -123,7 +123,7 @@ void Character::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* text
 void Character::cleanUpImmediate() {
 	m_bCleanUp = true;
 	m_pMapLayer = nullptr;
-	ActorBox::get()->cleanUpCharacter(this);
+	ActorBox::Get()->cleanUpCharacter(this);
 }
 
 CharBaseInfo* Character::getBaseInfo() {

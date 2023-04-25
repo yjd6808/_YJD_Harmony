@@ -20,27 +20,28 @@
 
 ClientInfo*				CoreClient_v;
 HostPlayer*				CorePlayer_v;
-DataManager*				CoreDataManager_v;
+DataManager*			CoreDataManager_v;
 UIManager*				CoreUIManager_v;
 WorldScene*				CoreWorld_v;
 Inven*					CoreInven_v;
-FontPackage*				CoreFont_v;
-ActorListenerManager*		CoreActorListenerManager_v;
-ActorBox*					CoreActorBox_v;
-ImagePackManager*			CorePackManager_v;
-SGGlobal*					CoreGlobal_v;
+FontPackage*			CoreFont_v;
+ActorListenerManager*	CoreActorListenerManager_v;
+ActorBox*				CoreActorBox_v;
+ImagePackManager*		CorePackManager_v;
+Global*					CoreGlobal_v;
 
 void InitializeClientCore() {
-	CoreGlobal_v				= SGGlobal::get();
-	CorePackManager_v			= ImagePackManager::get();
-	CoreFont_v					= FontPackage::get();
-	CoreDataManager_v			= DataManager::get();
-	CoreUIManager_v				= UIManager::get();
-	CorePlayer_v				= HostPlayer::get();
-	CoreInven_v					= Inven::get();
+	CoreGlobal_v				= Global::Get();
+	CorePackManager_v			= ImagePackManager::Get();
+	CoreFont_v					= FontPackage::Get();
+	CoreDataManager_v			= DataManager::Get();
+	CoreUIManager_v				= UIManager::Get();
+	CorePlayer_v				= HostPlayer::Get();
+	CoreInven_v					= Inven::Get();
 	CoreWorld_v					= WorldScene::get();
-	CoreActorListenerManager_v  = ActorListenerManager::get();
-	CoreActorBox_v				= ActorBox::get();
+	CoreActorListenerManager_v  = ActorListenerManager::Get();
+	CoreActorBox_v				= ActorBox::Get();
+
 
 	CoreGlobal_v->init();
 	CorePackManager_v->loadAllPackages();
@@ -53,14 +54,14 @@ void InitializeClientCore() {
 
 void FinalizeClientCore() {
 	
-	DeleteSafe(CoreUIManager_v);
-	DeleteSafe(CorePlayer_v);
-	DeleteSafe(CoreDataManager_v);
-	DeleteSafe(CoreInven_v);
-	DeleteSafe(CoreFont_v);
-	DeleteSafe(CoreActorListenerManager_v);
-	DeleteSafe(CoreActorBox_v);
-	DeleteSafe(CorePackManager_v);
-	DeleteSafe(CoreGlobal_v);
-	Null(CoreWorld_v);
+	DeleteSingletonSafe(CoreUIManager_v);
+	DeleteSingletonSafe(CorePlayer_v);
+	DeleteSingletonSafe(CoreDataManager_v);
+	DeleteSingletonSafe(CoreInven_v);
+	DeleteSingletonSafe(CoreFont_v);
+	DeleteSingletonSafe(CoreActorListenerManager_v);
+	DeleteSingletonSafe(CoreActorBox_v);
+	DeleteSingletonSafe(CorePackManager_v);
+	DeleteSingletonSafe(CoreGlobal_v);
+	Null(CoreWorld_v);	// 월드는 코코스에서 알아서 제거해줌
 }

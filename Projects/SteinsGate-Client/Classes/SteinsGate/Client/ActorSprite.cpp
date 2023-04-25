@@ -56,7 +56,7 @@ bool ActorSprite::init() {
 	vPartsData.Sort([](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
 
 	// 바디 파츠 기준으로 전체 프레임수를 얻는다.
-	m_iFrameCount = ImagePackManager::get()
+	m_iFrameCount = ImagePackManager::Get()
 		->getPack(vPartsData[0].SgaIndex)
 		->getSpriteCount(vPartsData[0].ImgIndex);
 

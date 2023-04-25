@@ -49,8 +49,8 @@ bool CharInfoLoader::load() {
 }
 
 void CharInfoLoader::readDefaultVisualInfo(Json::Value& charRoot, Out_ CharInfo* charInfo) {
-	ImagePackManager* pPackManager = ImagePackManager::get();
-	SGGlobal* pGlobal = SGGlobal::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
+	Global* pGlobal = Global::Get();
 	Json::Value& defaultVisualInfoRoot = charRoot["default_visual_img"];
 
 	auto eCharType = (CharType_t)charInfo->Code;

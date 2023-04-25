@@ -16,7 +16,7 @@
 
 template <typename TMasterGroup>
 TMasterGroup* createMasterGroup(UIGroupMaster* parent, const UIGroupElemInfo* masterGroupInfo) {
-	DataManager* pDataManager = DataManager::get();
+	DataManager* pDataManager = DataManager::Get();
 	UIElementInfo* pInfo = pDataManager->getUIElementInfo(masterGroupInfo->Code);
 	DebugAssertMsg(pInfo->Type == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
 	TMasterGroup* pGroup = dbg_new TMasterGroup(static_cast<UIGroupInfo*>(pInfo));

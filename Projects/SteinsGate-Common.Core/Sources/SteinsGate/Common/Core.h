@@ -18,6 +18,8 @@
 #include <JCore/Env.h>
 #include <JCore/Bit.h>
 
+#include <JCore/Pattern/Singleton.h>
+
 #include <JCore/Primitives/StaticString.h>
 #include <JCore/Primitives/StringUtil.h>
 #include <JCore/Primitives/String.h>

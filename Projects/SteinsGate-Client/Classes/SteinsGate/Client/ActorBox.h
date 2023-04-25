@@ -26,21 +26,13 @@ using ObstacleList = SGVector<Obstacle*>;
 using EffectList = SGVector<Effect*>;
 
 class MapLayer;
-class ActorBox
+class ActorBox final : public JCore::SingletonPointer<ActorBox>
 {
+private:
+	friend class TSingleton;
 	ActorBox();
+	~ActorBox() override;
 public:
-	~ActorBox();
-
-	static ActorBox* get() {
-		static ActorBox* s_pInstance = nullptr;
-
-		if (s_pInstance == nullptr) {
-			s_pInstance = dbg_new ActorBox;
-		}
-		return s_pInstance;
-	}
-
 	void init(MapLayer* mapLayer);
 	
 	void update(float dt);

@@ -20,7 +20,7 @@ class FontPackage;
 class ActorListenerManager;
 class ActorBox;
 class ImagePackManager;
-class SGGlobal;
+class Global;
 
 extern ClientInfo* CoreClient_v;
 extern HostPlayer* CorePlayer_v;
@@ -32,7 +32,7 @@ extern FontPackage* CoreFont_v;
 extern ActorListenerManager* CoreActorListenerManager_v;
 extern ActorBox* CoreActorBox_v;
 extern ImagePackManager* CorePackManager_v;
-extern SGGlobal* CoreGlobal_v;
+extern Global* CoreGlobal_v;
 
 void InitializeClientCore();
 void FinalizeClientCore();

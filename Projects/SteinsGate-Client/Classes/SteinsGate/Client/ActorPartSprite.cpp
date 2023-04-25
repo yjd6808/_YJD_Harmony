@@ -72,14 +72,14 @@ bool ActorPartSprite::init() {
 
 	
 
-	ImagePack* pImgPack = ImagePackManager::get()->getPack(m_PartData.SgaIndex);
+	ImagePack* pImgPack = ImagePackManager::Get()->getPack(m_PartData.SgaIndex);
 
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
 
 		m_vFrames[i] = pImgPack->createFrameTexture(m_PartData.ImgIndex, i);
 
 		if (m_vFrames[i] == nullptr) {
-			m_vFrames[i] = SGGlobal::get()->getDefaultFrameTexture();
+			m_vFrames[i] = Global::Get()->getDefaultFrameTexture();
 		}
 
 		m_vFrames[i]->retain();
@@ -106,7 +106,7 @@ void ActorPartSprite::update(float dt) {
 }
 
 void ActorPartSprite::updateBoundingBoxVisibleState() {
-	if (SGGlobal::get()->DrawBodyBoundingBox)
+	if (Global::Get()->DrawBodyBoundingBox)
 		m_pBoundingBox->setOpacity(255);
 	else
 		m_pBoundingBox->setOpacity(0);

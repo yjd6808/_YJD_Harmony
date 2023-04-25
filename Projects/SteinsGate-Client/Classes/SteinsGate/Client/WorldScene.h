@@ -16,18 +16,19 @@
 
 class MimicCamera;
 class MapLayer;
-class WorldScene : public SGScene
+class WorldScene final : public SGScene
 {
 private:
+	friend class TSingleton;
 	WorldScene();
-public:
 	~WorldScene() override;
+public:
+	static WorldScene* get();
 
 	bool init() override;
 	void initEventListeners();
 	void InitUILayer();
 	
-
 	void update(float dt) override;
 	void updateScene(float dt);
 
@@ -52,9 +53,6 @@ public:
 	static SceneBase* createScene(SceneType_t sceneType);
 
 	UILayer* getUILayer() const;
-
-	static WorldScene* get();
-	
 	MapLayer* getMap();
 	MimicCamera* getCamera();
 private:

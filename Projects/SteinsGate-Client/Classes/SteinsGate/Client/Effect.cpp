@@ -60,8 +60,8 @@ void Effect::initListener(ActorListener* listener) {
 
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
 void Effect::initActorSprite() {
-	DataManager* pDataManager = DataManager::get();
-	ImagePackManager* pImgPackManager = ImagePackManager::get();
+	DataManager* pDataManager = DataManager::Get();
+	ImagePackManager* pImgPackManager = ImagePackManager::Get();
 	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(1, 1);	// 프로젝틸도 파츠, 애니메이션 모두 한개
 
 	spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->SgaIndex, m_pBaseInfo->ImgIndex });
@@ -77,7 +77,7 @@ void Effect::update(float delta) {
 	Actor::update(delta);
 
 
-	if (SGGlobal::get()->DrawEffect) {
+	if (Global::Get()->DrawEffect) {
 		m_pActorSprite->getParts().Extension().ForEach([](ActorSprite::PartData& part) { part.Part->setOpacity(255); });
 	} else {
 		m_pActorSprite->getParts().Extension().ForEach([](ActorSprite::PartData& part) { part.Part->setOpacity(0); });

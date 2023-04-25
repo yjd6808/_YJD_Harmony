@@ -26,22 +26,14 @@
 
 using AnimationList = SGVector<AnimationInfo*>;
 
-class DataManager : public DataManagerAbstract
+class DataManager
+	: public DataManagerAbstract
+	, public JCore::SingletonPointer<DataManager>
 {
-public:
-	static DataManager* get() {
-		static DataManager* loader;
-
-		if (loader == nullptr) {
-			loader = dbg_new DataManager;
-			loader->initializeLoader();
-		}
-		return loader;
-	}
-
+	friend class TSingleton;
 	DataManager();
 	~DataManager() override = default;
-
+public:
 	void initializeLoader() override;
 
 	MobInfo* getMonsterInfo(int mobCode);

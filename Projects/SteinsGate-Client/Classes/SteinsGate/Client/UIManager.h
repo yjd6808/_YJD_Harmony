@@ -19,14 +19,13 @@
 #include <SteinsGate/Client/ImagePack.h>
 #include <SteinsGate/Client/UIGroupMaster.h>
 
-class UIManager
+class UIManager final : public JCore::SingletonPointer<UIManager>
 {
-public:
+private:
+	friend class TSingleton;
 	UIManager();
-	~UIManager();
-
-	static UIManager* get();
-
+	~UIManager() override;
+public:
 	void init();
 	void registerMasterGroup(UIMasterGroup* group);
 	void registerLoadedUITexture(SgaResourceIndex index);

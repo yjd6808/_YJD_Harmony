@@ -47,7 +47,7 @@ bool ObstacleInfoLoader::load() {
 }
 
 void ObstacleInfoLoader::readObstacleInfo(Json::Value& obstacleRoot, ObstacleInfo* obstacleInfo) {
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 	obstacleInfo->Code = obstacleRoot["code"].asInt();
 	obstacleInfo->Name = JsonUtilEx::getString(obstacleRoot["name"]);
 	obstacleInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(obstacleRoot["sga"]));

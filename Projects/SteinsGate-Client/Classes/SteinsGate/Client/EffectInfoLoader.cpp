@@ -48,8 +48,8 @@ bool EffectInfoLoader::load() {
 
 
 void EffectInfoLoader::readEffectInfo(Json::Value& effectRoot, EffectInfo* effectInfo) {
-	ImagePackManager* pPackManager = ImagePackManager::get();
-	DataManager* pDataManager = DataManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
+	DataManager* pDataManager = DataManager::Get();
 
 	Value& animationRoot = effectRoot["animation"];
 	effectInfo->Code = effectRoot["code"].asInt();

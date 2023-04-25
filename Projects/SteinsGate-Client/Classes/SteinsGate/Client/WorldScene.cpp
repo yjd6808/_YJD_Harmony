@@ -182,15 +182,15 @@ void WorldScene::onWndCursorLeave(SGEventCustom* custom) {
 void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) const {
 
 	if (keyCode == EventKeyboard::KeyCode::KEY_F1)
-		SGGlobal::get()->toggleDrawBodyBoundingBox();
+		Global::Get()->toggleDrawBodyBoundingBox();
 	else if (keyCode == EventKeyboard::KeyCode::KEY_F2)
-		SGGlobal::get()->toggleDrawThicknessBox();
+		Global::Get()->toggleDrawThicknessBox();
 	else if (keyCode == EventKeyboard::KeyCode::KEY_F3)
-		SGGlobal::get()->toggleDrawAttackBox();
+		Global::Get()->toggleDrawAttackBox();
 	else if (keyCode == EventKeyboard::KeyCode::KEY_F4)
-		SGGlobal::get()->toggleDrawEffect();
+		Global::Get()->toggleDrawEffect();
 	else if (keyCode == EventKeyboard::KeyCode::KEY_F5)
-		SGGlobal::get()->toggleDrawUIStatic();
+		Global::Get()->toggleDrawUIStatic();
 
 	if (m_pRunningScene)
 		m_pRunningScene->onKeyPressed(keyCode, event);

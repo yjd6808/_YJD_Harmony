@@ -24,7 +24,7 @@ void CharProjectileListener::initPlayer() {
 	m_pCharacter = pCharacter;
 
 	if (pCharacter == CorePlayer_v) {
-		m_pPlayer = HostPlayer::get();
+		m_pPlayer = CorePlayer_v;
 		m_bPlayerProjectile = true;
 	}
 }

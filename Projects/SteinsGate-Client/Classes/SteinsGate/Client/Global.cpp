@@ -15,7 +15,7 @@
 USING_NS_JC;
 USING_NS_CC;
 
-SGGlobal::SGGlobal()
+Global::Global()
 	: DrawThicknessBox(false)
 	, DrawBodyBoundingBox(false)
 	, DrawAttackBox(false)
@@ -24,37 +24,37 @@ SGGlobal::SGGlobal()
 	, m_pDefaultFrameTexture(nullptr)
 {}
 
-SGGlobal::~SGGlobal() {
+Global::~Global() {
 	CC_SAFE_RELEASE(m_pDefaultFrameTexture);
 }
 
-int SGGlobal::convertAvatarPartNameToType(const SGString& str) {
+int Global::convertAvatarPartNameToType(const SGString& str) {
 
 	return -1;
 }
 
 
-void SGGlobal::toggleDrawThicknessBox() {
+void Global::toggleDrawThicknessBox() {
 	DrawThicknessBox = !DrawThicknessBox;
 }
 
-void SGGlobal::toggleDrawBodyBoundingBox() {
+void Global::toggleDrawBodyBoundingBox() {
 	DrawBodyBoundingBox = !DrawBodyBoundingBox;
 }
 
-void SGGlobal::toggleDrawAttackBox() {
+void Global::toggleDrawAttackBox() {
 	DrawAttackBox = !DrawAttackBox;
 }
 
-void SGGlobal::toggleDrawEffect() {
+void Global::toggleDrawEffect() {
 	DrawEffect = !DrawEffect;
 }
 
-void SGGlobal::toggleDrawUIStatic() {
+void Global::toggleDrawUIStatic() {
 	DrawUIStatic = !DrawUIStatic;
 }
 
-void SGGlobal::init() {
+void Global::init() {
 	
 
 	for (int i = 0; i < CharType::Max; ++i) {
@@ -77,18 +77,18 @@ void SGGlobal::init() {
 
 
 
-const SGString& SGGlobal::getAvatarSgaName(int charType, int avatarType) {
+const SGString& Global::getAvatarSgaName(int charType, int avatarType) {
 	DebugAssertMsg(charType >= CharType::Begin && charType >= CharType::End, "올바르지 않은 캐릭터 타입입니다. [1]");
 	DebugAssertMsg(avatarType >= AvatarType::Begin && avatarType < AvatarType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
 	return m_AvatarPackName[charType][avatarType];
 }
 
-const SGString& SGGlobal::getWeaponSgaName(int weaponType) {
+const SGString& Global::getWeaponSgaName(int weaponType) {
 	DebugAssertMsg(weaponType >= WeaponType::Begin && weaponType < WeaponType::Max, "올바르지 않은 비주얼 아바타 타입입니다.");
 	return m_WeaponPackName[weaponType];
 }
 
-SpriteFrameTexture* SGGlobal::getDefaultFrameTexture() {
+SpriteFrameTexture* Global::getDefaultFrameTexture() {
 
 	if (m_pDefaultFrameTexture != nullptr) {
 		return m_pDefaultFrameTexture;

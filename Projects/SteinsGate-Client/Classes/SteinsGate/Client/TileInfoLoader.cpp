@@ -46,7 +46,7 @@ bool TileInfoLoader::load() {
 }
 
 void TileInfoLoader::readTileInfo(Json::Value& tileRoot, TileInfo* tileInfo) {
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 	tileInfo->Code = tileRoot["code"].asInt();
 	tileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(tileRoot["sga"]));
 	tileInfo->ImgIndex = pPackManager->getPack(tileInfo->SgaIndex)->getImgIndex(JsonUtilEx::getString(tileRoot["img"]));

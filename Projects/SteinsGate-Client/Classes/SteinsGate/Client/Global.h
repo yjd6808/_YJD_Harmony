@@ -13,21 +13,13 @@
 #include <SteinsGate/Client/Config.h>
 
 class SpriteFrameTexture;
-class SGGlobal
+class Global : public JCore::SingletonPointer<Global>
 {
+private:
+	friend class TSingleton;
+	Global();
+	~Global() override;
 public:
-	static SGGlobal* get() {
-		static SGGlobal* loader;
-
-		if (loader == nullptr) {
-			loader = dbg_new SGGlobal;
-		}
-		return loader;
-	}
-
-	SGGlobal();
-	~SGGlobal();
-
 	void init();
 	int convertAvatarPartNameToType(const SGString& str);
 	void toggleDrawThicknessBox();

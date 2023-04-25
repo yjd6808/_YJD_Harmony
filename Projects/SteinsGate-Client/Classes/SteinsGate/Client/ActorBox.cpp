@@ -261,7 +261,7 @@ Character* ActorBox::createCharacterOnMap(CharType_t charType, float x, float y,
 Projectile* ActorBox::createProejctileOnMap(Actor* spawner, int projectileId) {
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 프로젝틸을 생성해주세요");
 
-	ProjectileInfo* pInfo = DataManager::get()->getProjectileInfo(projectileId);
+	ProjectileInfo* pInfo = CoreDataManager_v->getProjectileInfo(projectileId);
 	
 
 	if (!m_hProjectilePool.Exist(projectileId)) {
@@ -269,7 +269,7 @@ Projectile* ActorBox::createProejctileOnMap(Actor* spawner, int projectileId) {
 	}
 	
 	Projectile* pProjectile = nullptr;
-	ActorListenerManager* pActorListenerManager = ActorListenerManager::get();
+	ActorListenerManager* pActorListenerManager = CoreActorListenerManager_v;
 	SGLinkedList<Projectile*>& projectileList = m_hProjectilePool[projectileId];
 
 	if (projectileList.IsEmpty()) {
@@ -309,10 +309,8 @@ Projectile* ActorBox::createProejctileOnMap(Actor* spawner, int projectileId) {
 Monster* ActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, float y) {
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 몬스터를 생성해주세요");
 
-	DataManager* pDataManager = DataManager::get();
-
-	MobInfo* pMonsterInfo = pDataManager->getMonsterInfo(monsterCode);
-	AIInfo* pAIInfo = pDataManager->getAIInfo(aiCode);
+	MobInfo* pMonsterInfo = CoreDataManager_v->getMonsterInfo(monsterCode);
+	AIInfo* pAIInfo = CoreDataManager_v->getAIInfo(aiCode);
 
 	if (!m_hMonsterPool.Exist(monsterCode)) {
 		m_hMonsterPool.Insert(Move(monsterCode), SGLinkedList<Monster*>());
@@ -343,7 +341,7 @@ Monster* ActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, floa
 Obstacle* ActorBox::createObstacleOnMap(int obstacleCode, float x, float y) {
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 옵스터클을 생성해주세요");
 
-	ObstacleInfo* pObstacleInfo = DataManager::get()->getObstacleInfo(obstacleCode);
+	ObstacleInfo* pObstacleInfo = CoreDataManager_v->getObstacleInfo(obstacleCode);
 
 	if (!m_hObstaclePool.Exist(obstacleCode)) {
 		m_hObstaclePool.Insert(Move(obstacleCode), SGLinkedList<Obstacle*>());
@@ -463,7 +461,7 @@ Effect* ActorBox::createEffectOnMapTargetCollision(int effectCode, const SGHitIn
 Effect* ActorBox::createEffectOnMap(int effectCode) {
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 이펙트를 생성해주세요");
 
-	EffectInfo* pEffectInfo = DataManager::get()->getEffectInfo(effectCode);
+	EffectInfo* pEffectInfo = CoreDataManager_v->getEffectInfo(effectCode);
 
 	if (!m_hEffectPool.Exist(effectCode)) {
 		m_hEffectPool.Insert(Move(effectCode), SGLinkedList<Effect*>());

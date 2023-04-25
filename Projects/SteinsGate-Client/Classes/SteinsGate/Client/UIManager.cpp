@@ -37,15 +37,6 @@ UIManager::~UIManager() {
 	});
 }
 
-UIManager* UIManager::get() {
-	static UIManager* manager;
-
-	if (manager == nullptr) {
-		manager = dbg_new UIManager;
-	}
-	return manager;
-}
-
 
 // =====================================================
 //           마스타 유아이 그룹 등록
@@ -79,7 +70,7 @@ void UIManager::registerLoadedUITexture(SgaResourceIndex index) {
 
 void UIManager::unloadAll() {
 
-	ImagePackManager* pPackManager = ImagePackManager::get();
+	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	// 이미지 텍스쳐 모두 릴리즈
 	m_hMasterUIGroups.Values().Extension().ForEach([](UIGroup* group) {
