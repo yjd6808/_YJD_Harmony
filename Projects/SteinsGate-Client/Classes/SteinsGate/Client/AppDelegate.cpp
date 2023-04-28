@@ -15,7 +15,7 @@ USING_NS_DETAIL;
 
 ConsoleLoggerOption NetLoggerOption_v = [] {
     ConsoleLoggerOption option;
-    option.EnableLog[LoggerAbstract::eDebug] = false;
+    option.EnableLog[LoggerAbstract::eDebug] = true;
     option.EnableLog[LoggerAbstract::eError] = true;
     option.EnableLog[LoggerAbstract::eWarn] = true;
     option.EnableLog[LoggerAbstract::eInfo] = true;
@@ -24,7 +24,7 @@ ConsoleLoggerOption NetLoggerOption_v = [] {
 
 ConsoleLoggerOption LoggerOption_v = [] {
     ConsoleLoggerOption option;
-    option.EnableLog[LoggerAbstract::eDebug] = false;
+    option.EnableLog[LoggerAbstract::eDebug] = true;
     option.EnableLog[LoggerAbstract::eError] = true;
     option.EnableLog[LoggerAbstract::eWarn] = true;
     option.EnableLog[LoggerAbstract::eInfo] = true;
@@ -73,7 +73,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
     CoreCharCommon_v = pDataManager->getCharCommonInfo(1);
 
     CreateOpenGLWindow();
-    InitializeWindowProcedure();
 	InitializeJCore();
     InitializeNetLogger(&NetLoggerOption_v);
     InitializeDefaultLogger(&LoggerOption_v);
@@ -81,7 +80,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     InitializeClientCore();
     InitializeClientLogo(true, 5);
     CreateWorldScene();
-    
+    InitializeWindowProcedure();
     
     
     return true;
@@ -153,7 +152,7 @@ void AppDelegate::InitializeWindowProcedure() {
      m_hWndProcHook = SetWindowsHookExA(WH_CALLWNDPROC, GLFWWindowHookProc, hInstance, dwThreadId);
 	 if (m_hWndProcHook == nullptr)
 	     _LogError_("코코스 윈도우 프로시저 후킹에 실패했습니다.");
-	     */
+	*/
 
     // TODO: SetWindowLongPtrW로 프로시저 처리해도 릭 발생함. 원인을 잘 모르겠다. (동일한 원인 같은데)
     // m_hPrevWndProc = (WNDPROC)SetWindowLongPtrW(hWndCocos, GWLP_WNDPROC, (LONG_PTR)GLFWWindowProc);

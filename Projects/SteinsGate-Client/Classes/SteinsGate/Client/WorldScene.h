@@ -50,6 +50,8 @@ public:
 
 	void reserveScene(SceneType_t sceneType);
 	void changeScene(SceneType_t sceneType);
+	void terminate();
+
 	static SceneBase* createScene(SceneType_t sceneType);
 
 	UILayer* getUILayer() const;

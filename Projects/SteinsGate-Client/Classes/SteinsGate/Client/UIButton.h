@@ -13,6 +13,8 @@
 class UIButton : public UIElement
 {
 public:
+	static UIButton* create(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo);
+
 	UIButton(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo);
 	~UIButton() override;
 	 
@@ -21,21 +23,20 @@ public:
 	void unload() override;
 	
 	void setVisibleState(State state);
+	void setContentSize(const SGSize& size) override;
 	void setEnabled(bool enabled) override;
-
-	static UIButton* create(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo);
 	void restoreState(State state) override;
-
+	UIElementType_t getElementType() override { return UIElementType::Button; }
+	SGString toString() override { return SGStringUtil::Format("버튼(%d)", m_pInfo->Code); }
+protected:
 	void onMouseEnterDetail(SGEventMouse* mouseEvent) override;
 	void onMouseLeaveDetail(SGEventMouse* mouseEvent) override;
 	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;
 	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;
 	void onMouseUpDetail(SGEventMouse* mouseEvent) override;
-
-	UIElementType_t getElementType() override { return UIElementType::Button; }
-	SGString toString() override { return SGStringUtil::Format("버튼(%d)", m_pInfo->Code); }
 private:
 	UIButtonInfo* m_pInfo;
 	FrameTexture* m_pTexture[eMax];
 	SGSprite* m_pSprite[eMax];
 };
+

@@ -22,7 +22,7 @@ public:
 	void onInit() override;
 	void onLoaded() override;
 	void onAdded() override;
-	bool onUpdate(float dt) override;
+	void onUpdate(float dt) override;
 	bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 	bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 

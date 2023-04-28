@@ -23,6 +23,7 @@ namespace SGToolsUI.Model.Main
         public const int OrderSize = 1;
         public const int OrderSprite = 2;
         public const int OrderLinearDodge = 3;
+        public const int OrderScale9 = 4;
 
         public SGUISprite()
         {
@@ -120,6 +121,13 @@ namespace SGToolsUI.Model.Main
             }
         }
 
+        [Category(Constant.SpriteCategoryName), DisplayName("Scale9"), PropertyOrder(OrderScale9)]
+        public bool Scale9
+        {
+            get => _scale9;
+            set => _scale9 = value;
+        }
+
         public override SGUIElementType UIElementType => SGUIElementType.Sprite;
         [Browsable(false)] public override bool Manipulatable => true;
 
@@ -129,6 +137,8 @@ namespace SGToolsUI.Model.Main
             sprite.CopyFrom(this);
             sprite._visualSize = _visualSize;
             sprite._sprite = _sprite;
+            sprite._linearDodge = _linearDodge;
+            sprite._scale9 = _scale9;
             return sprite;
         }
 
@@ -142,7 +152,12 @@ namespace SGToolsUI.Model.Main
             root[JsonImgKey] = img;
             root[JsonSpriteKey] = _sprite.SpriteIndex;
             root[JsonVisualSizeKey] = _visualSize.ToFullString();
-            root[JsonLinearDodgeKey] = _linearDodge;
+
+            if (_linearDodge)
+                root[JsonLinearDodgeKey] = _linearDodge;
+            if (_scale9)
+                root[JsonScale9] = _linearDodge;
+
             return root;
         }
 
@@ -151,6 +166,7 @@ namespace SGToolsUI.Model.Main
             base.ParseJObject(root);
 
             root.TryGetValueDefault(JsonLinearDodgeKey, out _linearDodge, false);
+            root.TryGetValueDefault(JsonScale9, out _scale9, false);
 
             string sgaName = (string)root[JsonSgaKey];
 
@@ -180,7 +196,9 @@ namespace SGToolsUI.Model.Main
         public static int Seq;
         private SGUISpriteInfo _sprite;
         private bool _linearDodge;
+        private bool _scale9;
         private IntSize _visualSize;
+        
 
         public void RestoreSize()
         {

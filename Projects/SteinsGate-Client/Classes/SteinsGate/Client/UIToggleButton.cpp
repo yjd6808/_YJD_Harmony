@@ -17,7 +17,7 @@ USING_NS_JC;
 
 UIToggleButton::UIToggleButton(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo)
 	: UIElement(master, parent, btnInfo)
-	, m_iToggleState(StateOne)
+	, m_eToggleState(ToggleState::eNormal)
 	, m_pInfo(btnInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -35,6 +35,11 @@ UIToggleButton::~UIToggleButton() {
 	CC_SAFE_RELEASE(m_pTexture[StateTwo][eDisabled]);
 }
 
+void UIToggleButton::setToggleState(ToggleState state) {
+	m_eToggleState = state;
+	setVisibleState(m_eState);
+}
+
 UIToggleButton* UIToggleButton::create(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo) {
 	UIToggleButton* pBtn = dbg_new UIToggleButton(master, parent, btnInfo);
 	pBtn->init();
@@ -50,7 +55,7 @@ void UIToggleButton::setVisibleState(State state) {
 		}
 	}
 
-	m_pSprite[m_iToggleState][state]->setVisible(true);
+	m_pSprite[(int)m_eToggleState][state]->setVisible(true);
 }
 
 void UIToggleButton::setEnabled(bool enabled) {
@@ -67,6 +72,30 @@ void UIToggleButton::setEnabled(bool enabled) {
 
 	m_eState = eDisabled;
 	setVisibleState(eDisabled);
+}
+
+void UIToggleButton::setContentSize(const SGSize& contentSize) {
+	if (!m_bResizable)
+		return;
+
+	_contentSize = contentSize;
+
+	if (!m_bLoaded)
+		return;
+
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < eMax; ++j) {
+			FrameTexture* pTexture = m_pTexture[i][j];
+			Sprite* pSprite = m_pSprite[i][j];
+
+			if (pTexture == nullptr || pSprite == nullptr) {
+				continue;
+			}
+
+			pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
+			pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+		}
+	}
 }
 
 void UIToggleButton::restoreState(State state) {
@@ -94,7 +123,7 @@ bool UIToggleButton::init() {
 	}
 
 	const SgaSpriteRect spriteRect = spSprite->GetRect();
-	setContentSize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
+	_contentSize = Size{ spriteRect.GetWidthF(), spriteRect.GetHeightF() };
 	return true;
 }
 
@@ -114,9 +143,10 @@ void UIToggleButton::load() {
 			pTexture->retain();
 
 			Sprite* pSprite = Sprite::create();
-			pSprite = Sprite::create();
 			pSprite->initWithTexture(pTexture->getTexture());
 			pSprite->setAnchorPoint(Vec2::ZERO);
+			pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
+			pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
 
 			m_pTexture[i][j] = pTexture;
 			m_pSprite[i][j] = pSprite;
@@ -151,7 +181,7 @@ void UIToggleButton::onMouseEnterDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(eOver);
 }
 void UIToggleButton::onMouseLeaveDetail(SGEventMouse* mouseEvent) {
-	setVisibleState(eNormal);
+	setVisibleState(State::eNormal);
 }
 
 bool UIToggleButton::onMouseMoveDetail(SGEventMouse* mouseEvent) {
@@ -163,12 +193,13 @@ bool UIToggleButton::onMouseDownDetail(SGEventMouse* mouseEvent) {
 }
 
 void UIToggleButton::onMouseUpDetail(SGEventMouse* mouseEvent) {
-	setVisibleState(eNormal);
+	setVisibleState(State::eNormal);
 }
 
 bool UIToggleButton::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
-	m_iToggleState = m_iToggleState == 0 ? 1 : 0;
-	setVisibleState(eNormal);
+	m_eToggleState = m_eToggleState == ToggleState::eNormal ? ToggleState::eToggled : ToggleState::eNormal;
+	m_pMasterGroup->onToggleStateChanged(this, m_eToggleState);
+	setVisibleState(State::eNormal);
 	return false;
 }
 

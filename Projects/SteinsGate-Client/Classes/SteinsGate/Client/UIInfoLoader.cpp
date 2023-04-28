@@ -179,7 +179,8 @@ UIElementInfo* UIInfoLoader::readElementSprite(Value& spriteRoot) {
 	pInfo->Sga = pPack->getPackIndex();
 	pInfo->Img = pPack->getImgIndex(imgName);
 	pInfo->Sprite = spriteRoot[JsonSpriteKey].asInt();
-	pInfo->LinearDodge = spriteRoot[JsonLinearDodgeKey].asBool();
+	pInfo->LinearDodge = spriteRoot.get(JsonLinearDodgeKey, false).asBool();
+	pInfo->Scale9 = spriteRoot.get(JsonScale9, false).asBool();
 	JsonUtilEx::parseSize(spriteRoot[JsonVisualSizeKey], pInfo->Size);
 
 	return pInfo;
@@ -223,6 +224,7 @@ UIElementInfo* UIInfoLoader::readElementCheckBox(Value& checkBoxRoot) {
 	ImagePack* pPackCross = pPackManager->getPack(sgaNameCross);
 
 	pInfo->Type = UIElementType::CheckBox;
+	pInfo->Check = checkBoxRoot.get(JsonCheck, false).asBool();
 
 	if (pPackBackground != nullptr) {
 		pInfo->BackgroundSga = pPackBackground->getPackIndex();

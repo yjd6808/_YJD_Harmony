@@ -54,7 +54,7 @@ void SGChannelSelectScene::update(float dt) {
 }
 
 void SGChannelSelectScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
-	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
+	if (keyCode == EventKeyboard::KeyCode::KEY_F8) {
 		WorldScene::get()->reserveScene(SceneType::Game);
 	}
 }

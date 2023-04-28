@@ -19,6 +19,8 @@ public:
 	static constexpr int IndexCross = 2;
 	static constexpr int IndexCrossDisabled = 3;
 
+	static UICheckBox* create(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo);
+
 	UICheckBox(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo);
 	~UICheckBox() override;
 
@@ -28,14 +30,13 @@ public:
 
 	void setCheck(bool checked);
 	void setEnabled(bool enabled) override;
+	void setContentSize(const SGSize& size) override;
 	bool isChecked() const;
-
-	static UICheckBox* create(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo);
-
-	bool onMouseUpContainedDetail(SGEventMouse* mouseEvent) override;
 
 	UIElementType_t getElementType() override { return UIElementType::CheckBox; }
 	SGString toString() override { return SGStringUtil::Format("체크박스(%d)", m_pInfo->Code); }
+protected:
+	bool onMouseUpContainedDetail(SGEventMouse* mouseEvent) override;
 private:
 	UICheckBoxInfo* m_pInfo;
 	FrameTexture* m_pTexture[TextureCount];

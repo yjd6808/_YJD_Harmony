@@ -13,6 +13,10 @@
 #include <SteinsGate/Client/UIDefine.h>
 #include <SteinsGate/Client/UI_Login.h>
 #include <SteinsGate/Client/UI_Inventory.h>
+#include <SteinsGate/Client/UI_Test.h>
+
+// TODO: 문제점: 기본 해상도로 두고 확대하면 텍스쳐는 당연히 흐릿해지는게 맞는데 라벨(글자)도 흐릿해지는데..
+// 라벨 스케일링시 자동으로 스케일된 크기만큼 폰트 크기가 재조정될 수 있어야한다.
 
 template <typename TMasterGroup>
 TMasterGroup* createMasterGroup(UIGroupMaster* parent, const UIGroupElemInfo* masterGroupInfo) {
@@ -23,13 +27,12 @@ TMasterGroup* createMasterGroup(UIGroupMaster* parent, const UIGroupElemInfo* ma
 	pGroup->init();
 	pGroup->retain();
 	pGroup->autorelease();
-	pGroup->setPositionRelative(masterGroupInfo->Pos.x, masterGroupInfo->Pos.y);
+	pGroup->setRelativePosition(masterGroupInfo->Pos.x, masterGroupInfo->Pos.y);
 	pGroup->initChildren();
 
 	// 그룹의 자식 생성은 무조건 그룹의 포지션이 결졍되고나서 수행해줘야함. 그룹의 자식들을 초기화하면서
 	// 자식들은 부모의 위치에 대한 상대적 위치로 결정되기 때문이다.
 	parent->addMasterGroup(pGroup);
-
 	return pGroup;
 }
 
@@ -53,6 +56,7 @@ void UIGroupMaster::init() {
 
 	createMasterGroup<UI_Login>(this, hMasterGroupInfoMap[GROUP_UI_LOGIN]);
 	createMasterGroup<UI_Inventory>(this, hMasterGroupInfoMap[GROUP_UI_INVENTORY]);
+	createMasterGroup<UI_Test>(this, hMasterGroupInfoMap[GROUP_UI_TEST]);
 }
 
 void UIGroupMaster::addMasterGroup(UIMasterGroup* group) {

@@ -29,7 +29,10 @@ void UIMasterGroup::onMouseDown(UIElement* element, SGEventMouse* mouseEvent) {}
 void UIMasterGroup::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {}
 void UIMasterGroup::onMouseLeave(UIElement* element, SGEventMouse* mouseEvent) {}
 void UIMasterGroup::onMouseScroll(UIElement* element, SGEventMouse* mouseEvent) {}
-void UIMasterGroup::onCheckedStateChanged(UICheckBox* checkBox) {}
+
+void UIMasterGroup::onCheckedStateChanged(UICheckBox* checkBox, bool checked) {}
+void UIMasterGroup::onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state) {}
+
 void UIMasterGroup::onScrollBarUpButtonPressed(UIScrollBar* scrollBar, int rowPos) {}
 void UIMasterGroup::onScrollBarDownButtonPressed(UIScrollBar* scrollBar, int rowPos) {}
 void UIMasterGroup::onScrollBarThumbButtonPressed(UIScrollBar* scrollBar, int rowPos) {}
@@ -38,4 +41,4 @@ void UIMasterGroup::onScrollBarPositionChanged(UIScrollBar* scrollBar, int prevR
 void UIMasterGroup::onEditBoxEditingDidBegin(UIEditBox* editBox) {}
 void UIMasterGroup::onEditBoxTextChanged(UIEditBox* editBox, const std::string& str) {}
 void UIMasterGroup::onEditBoxReturn(UIEditBox* editBox) {}
-void UIMasterGroup::onEditBoxEditingDidEndWithAction(UIEditBox* editBox) {}
+void UIMasterGroup::onEditBoxEditingDidEndWithAction(UIEditBox* editBox, SGEditBoxEndAction endAction) {}

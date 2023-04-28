@@ -46,7 +46,7 @@ bool SGLoginScene::init() {
 	}
 
 	m_pUILayer->clear();
-	m_pUILayer->addUIGroup(GROUP_UI_LOGIN);
+	m_pUILayer->addUIGroup(GROUP_UI_TEST);
 
 	return true;
 }
@@ -57,7 +57,7 @@ void SGLoginScene::update(float dt) {
 }
 
 void SGLoginScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
-	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
+	if (keyCode == EventKeyboard::KeyCode::KEY_F8) {
 		WorldScene::get()->reserveScene(SceneType::ChannelSelect);
 	}
 }

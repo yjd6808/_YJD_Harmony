@@ -14,6 +14,7 @@
 #include <SteinsGate/Client/UIMasterGroup.h>
 
 USING_NS_CC;
+USING_NS_CCUI;
 USING_NS_JC;
 
 UISprite::UISprite(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* staticInfo)
@@ -35,7 +36,7 @@ UISprite* UISprite::create(UIMasterGroup* master, UIGroup* parent, UISpriteInfo*
 }
 
 bool UISprite::init() {
-	setContentSize(m_pInfo->Size);
+	_contentSize = m_pInfo->Size;
 	return true;
 }
 
@@ -62,7 +63,7 @@ void UISprite::load() {
 	const float fScaleX = m_pInfo->Size.width / spriteSize.width;
 	const float fScaleY = m_pInfo->Size.height / spriteSize.height;
 
-	m_pSprite = Sprite::create();
+	m_pSprite = m_pInfo->Scale9 ? Scale9Sprite::create() : Sprite::create();
 	m_pSprite->initWithTexture(m_pTexture->getTexture());
 	m_pSprite->setAnchorPoint(Vec2::ZERO);
 	m_pSprite->setScale(fScaleX, fScaleY);
@@ -81,3 +82,18 @@ void UISprite::unload() {
 }
 
 
+void UISprite::setContentSize(const SGSize& contentSize) {
+	if (!m_bResizable)
+		return;
+
+	_contentSize = contentSize;
+
+	if (!m_bLoaded) 
+		return;
+
+	if (m_pTexture == nullptr || m_pSprite == nullptr)
+		return;
+
+	m_pSprite->setScaleX(_contentSize.width / m_pTexture->getWidthF());
+	m_pSprite->setScaleY(_contentSize.height / m_pTexture->getHeightF());
+}

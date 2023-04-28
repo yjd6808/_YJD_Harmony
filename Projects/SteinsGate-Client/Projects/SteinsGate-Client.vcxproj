@@ -149,6 +149,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ComboTree.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\PopupManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGAction.cpp">
       <SubType>
       </SubType>
@@ -324,6 +328,14 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UI_Popup.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UI_Test.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Win32Helper.cpp">
       <SubType>
       </SubType>
@@ -427,6 +439,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\PopupManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIMasterGroup.h">
       <SubType>
       </SubType>
@@ -734,6 +750,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGVec2Ex.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UI_Popup.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UI_Test.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -87,19 +87,37 @@ public:
 	}
 
 	virtual SGString toString() = 0;
-
 	int getCode() const { return m_pBaseInfo->Code; }
 
-	SGVec2 getAbsolutePosition() const;
-	SGVec2 getRelativePositionOnElement(SGVec2 absolutePos) const;
-	SGVec2 getRelativePositionInRect(const SGRect& rc, float origin_x, float origin_y) const;
+	
+	SGVec2 calculateZeroPosition(const SGRect& rc) const;
+	SGVec2 calculateRelativePosition(const SGSize& parentSize) const;
 
-	void setPositionRelative(float x, float y);		// 부모가 그룹이면 그룹 내에서 상대적 위치 반영
-	void setPositionRelative(const SGVec2& pos);
+	SGRect getParentAbsoluteRect();
+	SGRect getParentRect();
+	SGSize getParentSize();
+
+	float getAbsoluteScaleX();
+	float getAbsoluteScaleY();
+	SGVec2 getAbsoluteScale();
+	SGVec2 getAbsolutePosition() const;
+	
+
+	// getPosition : 그룹내에서 엘리먼트의 좌하단 위치를 반환
+	SGVec2 getPositionCenter() const;	// 그룹내에서 엘리먼트의 중앙 위치를 반환
+	SGVec2 getPositionRightTop() const;	// 그룹내에서 엘리먼트의 우상단 위치를 반환
+	SGVec2 getRelativePosition();
+	SGVec2 getRelativePositionOnElement(SGVec2 absolutePos) const;
+
+	void setRelativePosition(float x, float y);		// 부모가 그룹이면 그룹 내에서 상대적 위치 반영
+	void setRelativePosition(const SGVec2& pos);
 
 	void invokeMouseEvent(MouseEventType mouseEventType, SGEventMouse* mouseEvent);
 	void addMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn);
 	void removeMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn);
+
+	void setResizable(bool resizable) { m_bResizable = resizable; }
+	bool isResizable() const { return m_bResizable; }
 protected:
 	bool isContainPoint(SGEventMouse* mouseEvent);
 
@@ -112,6 +130,7 @@ protected:
 
 	bool m_bLoaded;
 	bool m_bFocused;
+	bool m_bResizable;				// 처음 크기가 결정된 후 UIGroup::setContentSize() 호출시 크기 업데이트가 이뤄질지 여부
 };
 
 

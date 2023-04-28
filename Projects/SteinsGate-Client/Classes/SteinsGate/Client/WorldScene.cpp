@@ -278,6 +278,10 @@ void WorldScene::changeScene(SceneType_t sceneType) {
 	this->addChild(m_pRunningScene);
 }
 
+void WorldScene::terminate() {
+	Director::getInstance()->end();
+}
+
 SceneBase* WorldScene::createScene(SceneType_t sceneType) {
 	SceneBase* pCreatedScene = nullptr;
 

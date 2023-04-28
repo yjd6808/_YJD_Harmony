@@ -22,13 +22,18 @@ UIScrollBar::UIScrollBar(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo
 	, m_iRowCountPerPage(4)
 	, m_iPos(10)
 	, m_iEndPos(m_iRowCount - m_iRowCountPerPage)
+	, m_fThumbHeight(0)
 	, m_fUpButtonHeight(DefaultSize15.height)
 	, m_fDownButtonHeight(DefaultSize15.height)
+	, m_fSplitedTrackHeight(0)
+	, m_fTrackHeight(0.0f)
+	, m_bDragBegin(false)
+	, m_fDragStartYPos(0)
+	, m_iDragStartPos(0)
 	, m_pLink(nullptr)
 	, m_pInfo(scrollBarInfo)
 	, m_pTexture{}
-	, m_pSprite{}
-	, m_bDragBegin(false)
+    , m_pSprite{}
 {}
 
 UIScrollBar* UIScrollBar::create(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo) {
@@ -104,7 +109,7 @@ void UIScrollBar::restoreState(State state) {
 
 bool UIScrollBar::init() {
 	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
-	setContentSize(m_pInfo->TrackSize + SGSize{0, m_fUpButtonHeight + m_fDownButtonHeight }); // 위 아래 버튼높이 임시 추가 (이미지가 전혀 없더라도 스크롤바 기능이 가능토록. 하기위함)
+	_contentSize = m_pInfo->TrackSize + Size{0, m_fUpButtonHeight + m_fDownButtonHeight }; // 위 아래 버튼높이 임시 추가 (이미지가 전혀 없더라도 스크롤바 기능이 가능토록. 하기위함)
 
 	if (pPack == nullptr) {
 		_LogWarn_("스크롤바 Sga패키지를 찾지 못했습니다.");
@@ -129,7 +134,8 @@ bool UIScrollBar::init() {
 	if (m_fDownButtonHeight == 0)
 		m_fDownButtonHeight = DefaultSize15.height;
 
-	setContentSize(m_pInfo->TrackSize + SGSize{ 0, m_fUpButtonHeight + m_fDownButtonHeight });
+	_contentSize = m_pInfo->TrackSize + SGSize{ 0, m_fUpButtonHeight + m_fDownButtonHeight };
+	m_fTrackHeight = m_pInfo->TrackSize.height;
 	return true;
 }
 
@@ -140,47 +146,6 @@ void UIScrollBar::load() {
 	
 
 	createSprites();
-
-	// =============================================================
-	//                        사이즈 스케일링
-	// 1. 영구적으로 변하지 않는 컨트롤의 너비와 높이를 결정한다.
-	// 2. 손잡이의 경우 너비는 트랙 너비와 동일하게 변하지 않는다. 하지만 높이의 경우 로카운트에따라 변한다.
-	// =============================================================
-
-	// 업 버튼
-	const SGSize upNormalSize = m_pSprite[IndexUpNormal]->getContentSize();
-	const SGSize upPressedSize = m_pSprite[IndexUpPressed]->getContentSize();
-
-	m_pSprite[IndexUpNormal]->setScaleX(m_pInfo->TrackSize.width / upNormalSize.width);
-	m_pSprite[IndexUpPressed]->setScaleX(m_pInfo->TrackSize.width / upPressedSize.width);
-
-	m_pSprite[IndexUpNormal]->setScaleY(m_fUpButtonHeight / upNormalSize.height);
-	m_pSprite[IndexUpPressed]->setScaleY(m_fUpButtonHeight / upPressedSize.height);
-
-	// 다운 버튼
-	const SGSize downNormalSize = m_pSprite[IndexDownNormal]->getContentSize();
-	const SGSize downPressedSize = m_pSprite[IndexDownPressed]->getContentSize();
-
-	m_pSprite[IndexDownNormal]->setScaleX(m_pInfo->TrackSize.width / downNormalSize.width);
-	m_pSprite[IndexDownPressed]->setScaleX(m_pInfo->TrackSize.width / downPressedSize.width);
-
-	m_pSprite[IndexDownNormal]->setScaleY(m_fDownButtonHeight / downNormalSize.height);
-	m_pSprite[IndexDownPressed]->setScaleY(m_fDownButtonHeight / downPressedSize.height);
-
-	// 트랙
-	const SGSize trackSize = m_pSprite[IndexTrack]->getContentSize();
-
-	m_pSprite[IndexTrack]->setScaleX(m_pInfo->TrackSize.width / trackSize.width);
-	m_pSprite[IndexTrack]->setScaleY(m_pInfo->TrackSize.height / trackSize.height);
-
-	// 손잡이 너비는 평생 고정
-	const SGSize thumbNormalSize = m_pSprite[IndexThumbNormal]->getContentSize();
-	const SGSize thumbPressedSize = m_pSprite[IndexThumbPressed]->getContentSize();
-
-	m_pSprite[IndexThumbNormal]->setScaleX(m_pInfo->TrackSize.width / thumbNormalSize.width);
-	m_pSprite[IndexThumbPressed]->setScaleX(m_pInfo->TrackSize.width / thumbPressedSize.width);
-
-	// 손잡이 높이 업데이트: 현재 로카운트 기준으로 높이 결정
 	updateThumbSize();
 
 
@@ -191,23 +156,7 @@ void UIScrollBar::load() {
 	// 이때 모든 컨트롤의 X좌표는 0으로 고정되므로 Y좌표만 신경써주면 된다.
 	// =============================================================
 
-	// 업 버튼
-	m_pSprite[IndexUpNormal]->setPosition(0, m_fDownButtonHeight + m_pInfo->TrackSize.height);
-	m_pSprite[IndexUpPressed]->setPosition(0, m_fDownButtonHeight + m_pInfo->TrackSize.height);
-
-	// 다운 버튼 (어차피 0이므로 생략)
-	// m_pSprite[IndexDownNormal]->setPosition(0, 0);
-	// m_pSprite[IndexDownPressed]->setPosition(0, 0);
-
-	// 트랙
-	m_pSprite[IndexTrack]->setPosition(0, m_fDownButtonHeight);
-
-	// 손잡이 X 위치
-	// m_pSprite[IndexThumbNormal]->setPositionX(0);
-	// m_pSprite[IndexThumbPressed]->setPositionX(0);
-	
-
-	// 손잡이 Y 위치업데이트
+	updateTrackAndButtonPosition();
 	updateThumbPosition();
 
 	// =============================================================
@@ -258,15 +207,16 @@ void UIScrollBar::createSprites() {
 			SpriteFrame* pFrame = SpriteFrame::createWithTexture(pTexture->getTexture(), pTexture->getRect());
 			SGScale9Sprite* pScale9 = SGScale9Sprite::createWithSpriteFrame(pFrame);
 			pSprite = pScale9;
-			pSprite->setContentSize({ m_pInfo->TrackSize.width, DefaultSize45.height }); // 높이는 일단 암거나 지정, 어차피 업데이트 할거라
+
+			// 높이는 일단 암거나 지정, 어차피 이후 updateThumbSize() 함수에서 업데이트를 하기 때문..
+			pSprite->setContentSize({ _contentSize.width, DefaultSize45.height }); 
 			
 		} else {
 			const SGSize size = pTexture->getSize();
-			const float fWidthScaleX = m_pInfo->TrackSize.width / size.width;
+			const float fWidthScaleX = _contentSize.width / size.width;
 
 			pSprite = Sprite::createWithTexture(pTexture->getTexture());
 			pSprite->setScaleX(fWidthScaleX);
-			pSprite->setContentSize({ size.width * fWidthScaleX, size.height });
 		}
 
 		pSprite->setAnchorPoint(Vec2::ZERO);
@@ -274,6 +224,10 @@ void UIScrollBar::createSprites() {
 		m_pTexture[i] = pTexture;
 		m_pSprite[i] = pSprite;
 	}
+
+	// 높이의 경우 트랙과 손잡이만 contentSize.height에 영향을 받으므로 스케일을 변경해줘야한다.
+	// 손잡이의 경우 Scale9 스프이고 updateThumbSize()에서 수행하므로 트랙만 스케일 적용
+	m_pSprite[IndexTrack]->setScaleY(m_fTrackHeight / m_pTexture[IndexTrack]->getHeightF());
 
 	this->addChild(m_pSprite[IndexUpNormal]);
 	this->addChild(m_pSprite[IndexUpPressed]);
@@ -284,20 +238,37 @@ void UIScrollBar::createSprites() {
 	this->addChild(m_pSprite[IndexThumbPressed]);
 }
 
+void UIScrollBar::updateTrackAndButtonPosition() {
+	// 업 버튼
+	m_pSprite[IndexUpNormal]->setPosition(0, m_fDownButtonHeight + m_fTrackHeight);
+	m_pSprite[IndexUpPressed]->setPosition(0, m_fDownButtonHeight + m_fTrackHeight);
+
+	// m_pSprite[IndexDownNormal]->setPosition(0, 0);
+	// m_pSprite[IndexDownPressed]->setPosition(0, 0);
+
+	// 트랙
+	m_pSprite[IndexTrack]->setPosition(0, m_fDownButtonHeight);
+
+}
+
 void UIScrollBar::updateThumbSize() {
-	const float fSplitedHeight = m_pInfo->TrackSize.height / m_iRowCount;
+	const float fSplitedHeight = m_fTrackHeight / m_iRowCount;
 	const float fThumbHeight = Math::Max(fSplitedHeight * m_iRowCountPerPage, MinThumbHeight);
 
 	// 스케일스프는 콘텐츠 사이즈로 변경해야함
 	m_fThumbHeight = fThumbHeight;
-	m_pSprite[IndexThumbNormal]->setContentSize({ m_pInfo->TrackSize.width, fThumbHeight });
-	m_pSprite[IndexThumbPressed]->setContentSize({ m_pInfo->TrackSize.width, fThumbHeight });
+	m_pSprite[IndexThumbNormal]->setContentSize({ _contentSize.width, fThumbHeight });
+	m_pSprite[IndexThumbPressed]->setContentSize({ _contentSize.width, fThumbHeight });
 }
 
 void UIScrollBar::updateThumbPosition() {
-	const float fSplitedHeight = m_pInfo->TrackSize.height / m_iRowCount;
+	// 손잡이 X 위치
+	// m_pSprite[IndexThumbNormal]->setPositionX(0);
+	// m_pSprite[IndexThumbPressed]->setPositionX(0);
+
+	const float fSplitedHeight = m_fTrackHeight / m_iRowCount;
 	const float fThumbHeight = Math::Max(fSplitedHeight * m_iRowCountPerPage, MinThumbHeight);
-	const float fLeftTrackHeight = m_pInfo->TrackSize.height - fThumbHeight;
+	const float fLeftTrackHeight = m_fTrackHeight - fThumbHeight;
 
 	m_fSplitedTrackHeight = m_iEndPos != 0 ? fLeftTrackHeight / m_iEndPos : 0;
 	m_fThumbHeight = fThumbHeight;
@@ -367,16 +338,49 @@ void UIScrollBar::setRowCountPerPage(int count) {
 	updateThumbPosition();
 }
 
+void UIScrollBar::setContentSize(const SGSize& contentSize) {
+	if (!m_bResizable)
+		return;
+
+	_contentSize = contentSize;
+	m_fTrackHeight = contentSize.height - m_fDownButtonHeight - m_fUpButtonHeight;
+
+	if (!m_bLoaded)
+		return;
+
+	for (int i = 0; i < TextureCount; ++i) {
+		FrameTexture* pTexture = m_pTexture[i];
+		Sprite* pSprite = m_pSprite[i];
+
+		if (pTexture == nullptr || pSprite == nullptr) {
+			continue;
+		}
+
+		// Scale9 스프이므로 updateThumbSize()에서 업데이트함
+		if (i == IndexThumbNormal || i == IndexThumbPressed) {
+			continue;
+		}
+
+		pSprite->setScaleX(_contentSize.width / m_pTexture[i]->getWidthF());
+	}
+
+	m_pSprite[IndexTrack]->setScaleY(m_fTrackHeight / m_pTexture[IndexTrack]->getHeightF());
+
+	updateTrackAndButtonPosition();
+	updateThumbSize();
+	updateThumbPosition();
+}
+
 
 bool UIScrollBar::isUpButtonContainPoint(SGVec2 pos) {
 	const SGVec2 upButtonPos = m_pSprite[IndexUpNormal]->getPosition();
-	const Rect upButtonBoundingBox = { _position + upButtonPos, m_pSprite[IndexUpNormal]->getContentSize() };
+	const Rect upButtonBoundingBox = { _position + upButtonPos, SGSize{ _contentSize.width, m_fUpButtonHeight } };
 	return upButtonBoundingBox.containsPoint(pos);
 }
 
 bool UIScrollBar::isDownButtonContainPoint(SGVec2 pos) {
 	const SGVec2 downButtonPos = m_pSprite[IndexDownNormal]->getPosition();
-	const Rect downButtonBoundingBox = { _position + downButtonPos, m_pSprite[IndexDownNormal]->getContentSize() };
+	const Rect downButtonBoundingBox = { _position + downButtonPos, SGSize{ _contentSize.width, m_fDownButtonHeight } };
 	return downButtonBoundingBox.containsPoint(pos);
 }
 
@@ -435,12 +439,10 @@ void UIScrollBar::onMouseUpDetail(SGEventMouse* mouseEvent) {
 	if (isUpButtonContainPoint(cursorPos)) {
 		setRowPos(m_iPos - 1);
 		m_pMasterGroup->onScrollBarUpButtonPressed(this, m_iPos);
-	}
-	else if (isDownButtonContainPoint(cursorPos)) {
+	} else if (isDownButtonContainPoint(cursorPos)) {
 		setRowPos(m_iPos + 1);
 		m_pMasterGroup->onScrollBarDownButtonPressed(this, m_iPos);
-	}
-	else if (isThumbButtonContainPoint(cursorPos)) {
+	} else if (isThumbButtonContainPoint(cursorPos)) {
 		m_pMasterGroup->onScrollBarThumbButtonPressed(this, m_iPos);
 	}
 }

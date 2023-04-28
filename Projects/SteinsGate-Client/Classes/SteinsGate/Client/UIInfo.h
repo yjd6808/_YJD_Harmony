@@ -85,13 +85,14 @@ struct UISpriteInfo : UIElementInfo
 		Sga = InvalidValue_v;
 		Sprite = InvalidValue_v;
 		LinearDodge = false;
-
+		Scale9 = false;
 	}
 
 	int Img;
 	int Sga;
 	int Sprite;
 	bool LinearDodge;
+	bool Scale9;
 	SGSize Size;
 };
 
@@ -126,6 +127,7 @@ struct UICheckBoxInfo : UIElementInfo
 {
 	UICheckBoxInfo()
 	{
+		Check = false;
 		BackgroundSga = InvalidValue_v;
 		BackgroundImg = InvalidValue_v;
 		CrossSga = InvalidValue_v;
@@ -133,6 +135,7 @@ struct UICheckBoxInfo : UIElementInfo
 		SGArrays::Fill(Sprites, InvalidValue_v);
 	}
 
+	bool Check;
 	int BackgroundSga;
 	int BackgroundImg;
 	int CrossSga;

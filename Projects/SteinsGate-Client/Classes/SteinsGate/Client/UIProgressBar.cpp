@@ -34,7 +34,7 @@ UIProgressBar* UIProgressBar::create(UIMasterGroup* master, UIGroup* parent, UIP
 }
 
 bool UIProgressBar::init() {
-	setContentSize(m_pInfo->Size);
+	_contentSize = m_pInfo->Size;
 	return true;
 }
 
@@ -58,8 +58,8 @@ void UIProgressBar::load() {
 	CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite });
 
 	const Size progressSpriteSize = m_pTexture->getSize();
-	const float fScaleX = m_pInfo->Size.width / progressSpriteSize.width;
-	const float fScaleY = m_pInfo->Size.height / progressSpriteSize.height;
+	const float fScaleX = _contentSize.width / progressSpriteSize.width;
+	const float fScaleY = _contentSize.height / progressSpriteSize.height;
 
 	m_pProgressSprite = Sprite::create();
 	m_pProgressSprite->initWithTexture(m_pTexture->getTexture());
@@ -92,8 +92,6 @@ void UIProgressBar::load() {
 	this->addChild(m_pProgressBar);
 	auto progressTo = ProgressTo::create(10.0f, 100);
 	m_pProgressBar->runAction(progressTo);
-	
-
 	m_bLoaded = true;
 }
 
@@ -108,6 +106,22 @@ void UIProgressBar::unload() {
 	m_bLoaded = false;
 
 	init();
+}
+
+void UIProgressBar::setContentSize(const SGSize& size) {
+	if (!m_bResizable)
+		return;
+
+	_contentSize = size;
+
+	if (!m_bLoaded)
+		return;
+
+	if (m_pTexture == nullptr || m_pProgressSprite == nullptr)
+		return;
+
+	m_pProgressBar->setScaleX(_contentSize.width / m_pTexture->getWidthF());
+	m_pProgressBar->setScaleY(_contentSize.height / m_pTexture->getHeightF());
 }
 
 void UIProgressBar::setPercent(float percent) const {

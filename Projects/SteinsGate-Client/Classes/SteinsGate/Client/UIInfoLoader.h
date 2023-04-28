@@ -58,6 +58,8 @@ public:
     static constexpr const char* JsonSpriteKey = "sprite";
 
     // 스프라이트
+    static constexpr const char* JsonScale9 = "scale9";
+
     // 라벨
     static constexpr const char* JsonFontKey = "font";
     static constexpr const char* JsonFontSizeKey = "font_size";
@@ -75,6 +77,7 @@ public:
     static constexpr const char* JsonInputModeKey = "input_mode";
 
     // 체크 박스
+    static constexpr const char* JsonCheck = "check";
     static constexpr const char* JsonBackgroundSga = "bg_sga";
     static constexpr const char* JsonBackgroundImg = "bg_img";
     static constexpr const char* JsonCrossSga = "cross_sga";

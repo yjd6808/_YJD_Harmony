@@ -60,8 +60,7 @@ void UI_Inventory::onAdded() {
 	m_pScrollBar->setRowCount(iRowCount);
 }
 
-bool UI_Inventory::onUpdate(float dt) {
-	return true;
+void UI_Inventory::onUpdate(float dt) {
 }
 
 bool UI_Inventory::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {

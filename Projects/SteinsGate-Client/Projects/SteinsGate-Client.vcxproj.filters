@@ -412,6 +412,15 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UI_Popup.cpp">
+      <Filter>Game\UI\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\PopupManager.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UI_Test.cpp">
+      <Filter>Game\UI\Group</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ImagePackManager.h">
@@ -783,6 +792,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\NetCore.h">
       <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UI_Popup.h">
+      <Filter>Game\UI\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\PopupManager.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UI_Test.h">
+      <Filter>Game\UI\Group</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

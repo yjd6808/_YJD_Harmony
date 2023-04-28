@@ -187,6 +187,7 @@ namespace SGToolsUI.Model.Main
         {
             SGUICheckBox checkBox = new SGUICheckBox();
             checkBox.CopyFrom(this);
+            checkBox._checked = _checked;
             Array.Copy(_sprites, checkBox._sprites, _sprites.Length);
             return checkBox;
         }
@@ -198,6 +199,9 @@ namespace SGToolsUI.Model.Main
             // 인덱스를 뛰어쓰기로 구분해서 돌려줌
             GetSgaImgFileName(true, out string bgSga, out string bgImg);
             GetSgaImgFileName(false, out string crossSga, out string crossImg);
+
+            if (_checked)
+                root[JsonCheck] = true;
 
             root[JsonBackgroundSga] = bgSga;
             root[JsonBackgroundImg] = bgImg;
@@ -242,6 +246,8 @@ namespace SGToolsUI.Model.Main
         public override void ParseJObject(JObject root)
         {
             base.ParseJObject(root);
+
+            root.TryGetValueDefault(JsonCheck, out _checked, false);
 
             string bg_sga = (string)root[JsonBackgroundSga];
             string bg_img = (string)root[JsonBackgroundImg];

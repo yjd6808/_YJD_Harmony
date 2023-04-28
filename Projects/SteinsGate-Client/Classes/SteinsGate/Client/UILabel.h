@@ -15,14 +15,23 @@
 class UILabel : public UIElement
 {
 public:
+	static UILabel* create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo);
+
 	UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo);
 	~UILabel() override;
 
 	bool init() override;
-	static UILabel* create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo);
-	UIElementType_t getElementType() override { return UIElementType::Sprite; }
-	SGString toString() override { return SGStringUtil::Format("라벨(%d)", m_pInfo->Code); }
 
+	
+	SGString getFontPath() const;
+	void setText(const std::string& text);
+	void setText(const std::string& text, float width, float height);
+	void setContentSize(const SGSize& contentSize) override;
+
+	SGLabel* source() const { return m_pLabel; }
+	UILabelInfo* getInfo() const { return m_pInfo; }
+	UIElementType_t getElementType() override { return UIElementType::Label; }
+	SGString toString() override { return SGStringUtil::Format("라벨(%d)", m_pInfo->Code); }
 private:
 	UILabelInfo* m_pInfo;
 	SGLabel* m_pLabel;

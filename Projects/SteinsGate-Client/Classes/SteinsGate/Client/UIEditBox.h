@@ -19,13 +19,20 @@ public:
 	bool init() override;
 	static UIEditBox* create(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo);
 	UIElementType_t getElementType() override { return UIElementType::EditBox; }
+    std::string getText();
+    SGEditBox* source() const { return m_pEditBox; }
     SGString toString() override { return SGStringUtil::Format("에딧박스(%d)", m_pInfo->Code); }
-
+    
     void setTextEditBeginCallback(const SGActionFn<UIEditBox*>& fnTextEditBegin) const;
     void setTextChangedCallback(const SGActionFn<UIEditBox*, const SGString&>& fnTextChanged) const;
     void setReturnCallback(const SGActionFn<UIEditBox*>& fnEditBoxReturn) const;
     void setLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAction>& fnLoseFocus) const;
+    void setContentSize(const SGSize& size) override;
+
     void focus() override;
+    void setInputFlag(SGEditBox::InputFlag inputFlag);
+    void setInputMode(SGEditBox::InputMode inputMode);
+    // ANY 모드에서는 VK_RETURN이 안먹히므로 오류라고 생각하지 말것
 private:
     struct Listener : cocos2d::ui::EditBoxDelegate
 	{

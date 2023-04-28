@@ -29,7 +29,7 @@ void SGGameScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event)
         m_pMapLayer->onKeyPressed(keyCode, event);
 
    
-    if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
+    if (keyCode == EventKeyboard::KeyCode::KEY_F8) {
         WorldScene::get()->reserveScene(SceneType::Login);
     } else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
         if (m_pGridLayer == nullptr) {

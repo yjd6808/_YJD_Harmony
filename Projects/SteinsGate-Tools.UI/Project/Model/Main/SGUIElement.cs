@@ -84,6 +84,8 @@ namespace SGToolsUI.Model.Main
         public const string JsonSpriteKey = "sprite";
 
         // 스프라이트
+        public const string JsonScale9 = "scale9";
+
         // 라벨
         public const string JsonFontKey = "font";
         public const string JsonFontSizeKey = "font_size";
@@ -101,10 +103,12 @@ namespace SGToolsUI.Model.Main
         public const string JsonInputModeKey = "input_mode";
 
         // 체크 박스
+        public const string JsonCheck = "check";
         public const string JsonBackgroundSga = "bg_sga";
         public const string JsonBackgroundImg = "bg_img";
         public const string JsonCrossSga = "cross_sga";
         public const string JsonCrossImg = "cross_img";
+        
 
         // 토글 버튼
         public const string JsonToggleSpriteKey = "sprite2";

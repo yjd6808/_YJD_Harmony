@@ -13,6 +13,8 @@
 class UIProgressBar : public UIElement
 {
 public:
+	static UIProgressBar* create(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo);
+
 	UIProgressBar(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo);
 	~UIProgressBar() override;
 
@@ -20,10 +22,11 @@ public:
 	void load() override;
 	void unload() override;
 
+	void setContentSize(const SGSize& size) override;
 	void setPercent(float percent) const;
 	float getPercent() const;
 
-	static UIProgressBar* create(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo);
+	SGProgressTimer* source() const { return m_pProgressBar; }
 	UIElementType_t getElementType() override { return UIElementType::ProgressBar; }
 	SGString toString() override { return SGStringUtil::Format("프로그래스바(%d)", m_pInfo->Code); }
 private:

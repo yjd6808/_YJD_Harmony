@@ -14,6 +14,8 @@
 class UIStatic : public UIElement
 {
 public:
+	static UIStatic* create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo);
+
 	UIStatic(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo);
 	~UIStatic() override;
 
@@ -22,7 +24,9 @@ public:
 	void unload() override;
 
 	void setDebugVisible(bool visible);
-	static UIStatic* create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo);
+	void setContentSize(const SGSize& contentSize) override;
+
+	UIStaticInfo* getInfo() const { return m_pInfo; }
 	UIElementType_t getElementType() override { return UIElementType::Static; }
 	SGString toString() override { return SGStringUtil::Format("스태틱(%d)", m_pInfo->Code); }
 private:

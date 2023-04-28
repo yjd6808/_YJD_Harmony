@@ -120,10 +120,7 @@ void UILayer::update(float delta) {
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIMasterGroup* uiGroup = static_cast<UIMasterGroup*>(_children.at(i));
 		uiGroup->forEachRecursiveSpecificType<UIStatic>([](auto child) { child->setDebugVisible(CoreGlobal_v->DrawUIStatic); });
-
-		if (!uiGroup->onUpdate(delta)) {
-			return;
-		}
+		uiGroup->onUpdate(delta);
 	}
 
 	CoreUIManager_v->onUpdate(delta);

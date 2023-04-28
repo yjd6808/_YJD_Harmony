@@ -48,6 +48,31 @@ void UIButton::setVisibleState(State state) {
 	m_eState = state;
 }
 
+void UIButton::setContentSize(const SGSize& size) {
+	if (!m_bResizable)
+		return;
+
+	_contentSize = size;
+
+	if (!m_bLoaded) 
+		return;
+
+	for (int i = 0; i < eMax; ++i) {
+
+		FrameTexture* pTexture = m_pTexture[i];
+		Sprite* pSprite = m_pSprite[i];
+
+		if (pTexture == nullptr || pSprite == nullptr) {
+			continue;
+		}
+
+		pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
+		pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+	}
+	
+}
+
+
 void UIButton::setEnabled(bool enabled) {
 
 	if (enabled) {
@@ -110,7 +135,7 @@ bool UIButton::init() {
 	}
 
 	const SgaSpriteRect spriteRect = spSprite->GetRect();
-	setContentSize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
+	_contentSize = Size{ spriteRect.GetWidthF(), spriteRect.GetHeightF() };
 	return true;
 }
 
@@ -123,12 +148,18 @@ void UIButton::load() {
 	for (int i = 0; i < eMax; ++i) {
 		const int iSprite = m_pInfo->Sprites[i];
 
+		if (iSprite == InvalidValue_v) {
+			_LogWarn_("설정되지 않은 스프라이트입니다.");
+			continue;
+		}
+
 		FrameTexture* pTexture = pPack->createFrameTexture(m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
 		pTexture->retain();
 
 		Sprite* pSprite = Sprite::create();
-		pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());
+		pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
+		pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
 		pSprite->setAnchorPoint(Vec2::ZERO);
 
 		m_pTexture[i] = pTexture;

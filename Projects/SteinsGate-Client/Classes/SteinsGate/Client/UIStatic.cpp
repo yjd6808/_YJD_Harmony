@@ -35,19 +35,20 @@ UIStatic* UIStatic::create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo*
 }
 
 bool UIStatic::init() {
-	setContentSize(m_pInfo->Size);
+	_contentSize = m_pInfo->Size;
 	return true;
 }
 
 void UIStatic::load() {
 	if (m_bLoaded)
 		return;
+
 	m_pDebugTexture = CoreGlobal_v->getDefaultFrameTexture();
 	m_pDebugTexture->retain();
 
 	const Size spriteSize = m_pDebugTexture->getSize();
-	const float fScaleX = m_pInfo->Size.width / spriteSize.width;
-	const float fScaleY = m_pInfo->Size.height / spriteSize.height;
+	const float fScaleX = _contentSize.width / spriteSize.width;
+	const float fScaleY = _contentSize.height / spriteSize.height;
 
 	m_pDebugSprite = Sprite::create();
 	m_pDebugSprite->initWithTexture(m_pDebugTexture->getTexture());
@@ -64,6 +65,7 @@ void UIStatic::load() {
 void UIStatic::unload() {
 	if (m_bLoaded == false)
 		return;
+
 	removeAllChildren(); // autorelease 되기땜
 	m_pDebugSprite = nullptr;
 	CC_SAFE_RELEASE_NULL(m_pDebugTexture);
@@ -75,6 +77,25 @@ void UIStatic::setDebugVisible(bool visible) {
 
 	if (m_pDebugSprite)
 		m_pDebugSprite->setVisible(m_bVisible);
+}
+
+void UIStatic::setContentSize(const SGSize& contentSize) {
+	if (!m_bResizable)
+		return;
+
+	UIElement::setContentSize(contentSize);
+
+	if (!m_bLoaded)
+		return;
+
+	m_pDebugTexture = CoreGlobal_v->getDefaultFrameTexture();
+
+	const Size spriteSize = m_pDebugTexture->getSize();
+	const float fScaleX = _contentSize.width / spriteSize.width;
+	const float fScaleY = _contentSize.height / spriteSize.height;
+
+	m_pDebugSprite->setScale(fScaleX, fScaleY);
+
 }
 
 

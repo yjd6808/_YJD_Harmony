@@ -33,9 +33,7 @@ public:
 	bool onMouseUp(SGEventMouse* mouseEvent) final;
 	bool onMouseScroll(SGEventMouse* mouseEvent) final;
 
-	// 마스터 그룹들만 적용 (자식 그룹은 쓸일 없을 듯? 구현 안해노음)
-	// return false시에는 ZOrder이 true를 반환한 그룹보다 낮은 대상들에게 전파되지 않음
-	virtual bool onUpdate(float dt) { return true; }
+	virtual void onUpdate(float dt) { }
 	virtual bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) { return true; }
 	virtual bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) { return true; }
 
@@ -43,7 +41,7 @@ public:
 	SGString toString() override { return SGStringUtil::Format("그룹(%d)", m_pInfo->Code); }
 	bool isGroup() const override { return true; }
 
-	void addUIElement(const UIGroupElemInfo& groupElemInfo);
+	void addUIElement(UIGroupElemInfo* groupElemInfo);
 
 	template <typename TElem>
 	void forEachRecursiveSpecificType(const SGActionFn<TElem*>& action) const {
@@ -68,7 +66,9 @@ public:
 	void forEachRecursive(const SGActionFn<UIElement*>& action) const;
 	void forEach(const SGActionFn<UIElement*>& action) const;
 	void restoreState(State state) override;
+
 	
+	void setContentSize(const SGSize& contentSize) override;
 protected:
 	UIGroupInfo* m_pInfo;
 };

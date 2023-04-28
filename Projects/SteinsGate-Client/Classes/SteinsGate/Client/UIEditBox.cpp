@@ -35,6 +35,10 @@ UIEditBox* UIEditBox::create(UIMasterGroup* master, UIGroup* parent, UIEditBoxIn
 	return pEditBox;
 }
 
+std::string UIEditBox::getText() {
+	return m_pEditBox->getText();
+}
+
 bool UIEditBox::init() {
 
 	// 에딧박스는 좌우 패딩 5씩 줘서 실제 컨텐츠 사이즈는 너비가 10 작아진다.
@@ -63,8 +67,8 @@ bool UIEditBox::init() {
 	m_pEditBox->setInputMode(m_pInfo->InputMode);
 	m_pEditBox->setDelegate(m_pListener);
 	this->addChild(m_pEditBox);
-	this->setContentSize(m_pInfo->Size);
 
+	_contentSize = m_pInfo->Size;
 	return true;
 }
 
@@ -84,8 +88,35 @@ void UIEditBox::setLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAc
 	m_pListener->FnEditBoxEditingDidEndWithAction = fnLoseFocus;
 }
 
+void UIEditBox::setContentSize(const SGSize& size) {
+	if (!m_bResizable)
+		return;
+
+	Size prevSize = _contentSize;
+	UIElement::setContentSize(size);
+
+	// 에딧박스의 컨텐트 사이즈를 변경하면 라벨은 변경되는데, 플레이스홀더 라벨은 사이즈 변경이 안되서 수동으로 해줘야함.
+	// EditBoxImplCommon::setContentSize 참조
+
+	m_pEditBox->setContentSize(size);
+	m_pLabelPlaceholder->setDimensions(size.width, size.height);
+
+	float fScaleX = _contentSize.width / prevSize.width;
+	float fScaleY = _contentSize.height / prevSize.height;
+
+	// TODO: 사이즈 변경에 따라 폰트 크기도 알맞게 변경 되어야한다.
+}
+
 void UIEditBox::focus() {
 	m_pEditBox->openKeyboard();
+}
+
+void UIEditBox::setInputFlag(SGEditBox::InputFlag inputFlag) {
+	m_pEditBox->setInputFlag(inputFlag);
+}
+
+void UIEditBox::setInputMode(SGEditBox::InputMode inputMode) {
+	m_pEditBox->setInputMode(inputMode);
 }
 
 
@@ -119,5 +150,5 @@ void UIEditBox::Listener::editBoxEditingDidEndWithAction(SGEditBox* /* editBox *
 	if (FnEditBoxEditingDidEndWithAction)
 		FnEditBoxEditingDidEndWithAction(EditBox, editBoxEndAction);
 
-	EditBox->m_pMasterGroup->onEditBoxEditingDidEndWithAction(EditBox);
+	EditBox->m_pMasterGroup->onEditBoxEditingDidEndWithAction(EditBox, editBoxEndAction);
 }

@@ -38,14 +38,16 @@ UICheckBox* UICheckBox::create(UIMasterGroup* master, UIGroup* parent, UICheckBo
 
 void UICheckBox::setCheck(bool checked) {
 
-	if (m_eState == eDisabled)
-		return;
+	if (m_pSprite[IndexCross])
+		m_pSprite[IndexCross]->setVisible(checked);
+	if (m_pSprite[IndexCrossDisabled])
+		m_pSprite[IndexCrossDisabled]->setVisible(checked);
 
-	m_pSprite[IndexCross]->setVisible(checked);
+	const bool bPrevChecked = m_bChecked;
 	m_bChecked = checked;
 
-	if (m_bChecked != checked)
-		m_pMasterGroup->onCheckedStateChanged(this);
+	if (bPrevChecked != checked)
+		m_pMasterGroup->onCheckedStateChanged(this, checked);
 }
 
 void UICheckBox::setEnabled(bool enabled) {
@@ -54,27 +56,64 @@ void UICheckBox::setEnabled(bool enabled) {
 
 		updateState();
 
-		m_pSprite[IndexBackground]->setVisible(true);
-		m_pSprite[IndexBackgroundDisabled]->setVisible(false);
+		if (m_pSprite[IndexBackground])
+			m_pSprite[IndexBackground]->setVisible(true);
 
-		if (m_bChecked) {
+		if (m_pSprite[IndexBackgroundDisabled])
+			m_pSprite[IndexBackgroundDisabled]->setVisible(false);
+
+		if (!m_bChecked)
+			return;
+
+		if (m_pSprite[IndexCross])
 			m_pSprite[IndexCross]->setVisible(true);
-			m_pSprite[IndexCrossDisabled]->setVisible(false);
-		}
 
+		if (m_pSprite[IndexCrossDisabled])
+			m_pSprite[IndexCrossDisabled]->setVisible(false);
+
+		m_eState = eNormal;
 		return;
 	}
 
 
-	m_pSprite[IndexBackground]->setVisible(false);
-	m_pSprite[IndexBackgroundDisabled]->setVisible(true);
+	if (m_pSprite[IndexBackground])
+		m_pSprite[IndexBackground]->setVisible(false);
+
+	if (m_pSprite[IndexBackgroundDisabled])
+		m_pSprite[IndexBackgroundDisabled]->setVisible(true);
 
 	if (m_bChecked) {
-		m_pSprite[IndexCross]->setVisible(false);
-		m_pSprite[IndexCrossDisabled]->setVisible(true);
+		if (m_pSprite[IndexCross])
+			m_pSprite[IndexCross]->setVisible(false);
+
+		if (m_pSprite[IndexCrossDisabled])
+			m_pSprite[IndexCrossDisabled]->setVisible(true);
 	}
 
 	m_eState = eDisabled;
+}
+
+void UICheckBox::setContentSize(const SGSize& size) {
+	if (!m_bResizable)
+		return;
+
+	_contentSize = size;
+
+	if (!m_bLoaded)
+		return;
+
+	for (int i = 0; i < eMax; ++i) {
+
+		FrameTexture* pTexture = m_pTexture[i];
+		Sprite* pSprite = m_pSprite[i];
+
+		if (pTexture == nullptr || pSprite == nullptr) {
+			continue;
+		}
+
+		pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
+		pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+	}
 }
 
 bool UICheckBox::isChecked() const {
@@ -86,7 +125,8 @@ bool UICheckBox::init() {
 
 	const ImagePack* pBackgroundPack = CorePackManager_v->getPackUnsafe(m_pInfo->BackgroundSga);
 	const ImagePack* pCrossPack = CorePackManager_v->getPackUnsafe(m_pInfo->CrossSga);
-	setContentSize(DefaultSize30);
+	_contentSize = DefaultSize30;
+	m_bChecked = m_pInfo->Check;
 
 	// 백그라운드 팩은 없을 수도 있다. 크로스팩은 필수
 	if (pCrossPack == nullptr) {
@@ -98,8 +138,8 @@ bool UICheckBox::init() {
 	SgaSpriteAbstractPtr spBackgroundDisabledSprite;
 
 	if (pBackgroundPack != nullptr) {
-		spBackgroundSprite = pBackgroundPack->getSpriteUnsafe(m_pInfo->BackgroundImg, m_pInfo->Sprites[IndexCross]);
-		spBackgroundDisabledSprite = pBackgroundPack->getSpriteUnsafe(m_pInfo->BackgroundImg, m_pInfo->Sprites[IndexCrossDisabled]);
+		spBackgroundSprite = pBackgroundPack->getSpriteUnsafe(m_pInfo->BackgroundImg, m_pInfo->Sprites[IndexBackground]);
+		spBackgroundDisabledSprite = pBackgroundPack->getSpriteUnsafe(m_pInfo->BackgroundImg, m_pInfo->Sprites[IndexBackgroundDisabled]);
 	}
 	 
 	SgaSpriteAbstractPtr spCrossSprite = pCrossPack->getSpriteUnsafe(m_pInfo->CrossImg, m_pInfo->Sprites[IndexCross]);
@@ -107,7 +147,8 @@ bool UICheckBox::init() {
 
 	const float fWidth = SgaSpriteHelper::GetMaxWidthF(spBackgroundSprite, spBackgroundDisabledSprite, spCrossSprite, spCrossDisabledSprite);
 	const float fHeight = SgaSpriteHelper::GetMaxHeightF(spBackgroundSprite, spBackgroundDisabledSprite, spCrossSprite, spCrossDisabledSprite);
-	setContentSize(fWidth, fHeight);
+	_contentSize = Size(fWidth, fHeight);
+	
 	return true;
 }
 
@@ -124,15 +165,19 @@ void UICheckBox::load() {
 	for (int i = 0; i < TextureCount; ++i) {
 		const int iSprite = m_pInfo->Sprites[i];
 
-		FrameTexture* pTexture = pPack[i] == nullptr ?
-			CoreGlobal_v->getDefaultFrameTexture() :
-			pPack[i]->createFrameTexture(Img[i], iSprite);
+		if (iSprite == InvalidValue_v) {
+			continue;
+		}
+
+		FrameTexture* pTexture = pPack[i]->createFrameTexture(Img[i], iSprite);
 		pTexture->retain();
 
 		Sprite* pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());
 		pSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-		pSprite->setPosition(getContentSize() / 2);
+		pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
+		pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+		pSprite->setPosition(_contentSize / 2);
 
 		m_pTexture[i] = pTexture;
 		m_pSprite[i] = pSprite;
@@ -142,6 +187,7 @@ void UICheckBox::load() {
 	}
 
 	setEnabled(true);
+	setCheck(m_bChecked);
 	m_bLoaded = true;
 }
 
@@ -161,6 +207,8 @@ void UICheckBox::unload() {
 
 
 bool UICheckBox::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
-	setCheck(!m_bChecked);
+	if (m_eState != eDisabled)
+		setCheck(!m_bChecked);
+
 	return false;
 }
