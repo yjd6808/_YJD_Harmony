@@ -6,6 +6,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -170,7 +171,7 @@ namespace SGToolsUI.Model.Main
             root[JsonFontKey] = _font + ".ttf";
             root[JsonFontSizeKey] = _fontSize;
             root[JsonFontColorKey] = _fontColor.ToFullString4B();
-            root[JsonTextKey] = _text;
+            root[JsonTextKey] = _text.Unescape();
             root[JsonTextWrapKey] = _textWrap;
             root[JsonTextVAlignKey] = (int)_textVAlign;
             root[JsonTextHAlignKey] = (int)_textHAlign;

@@ -1,21 +1,6 @@
 {
-	"date": "4/28/2023 9:38:49 PM",
+	"date": "4/30/2023 12:36:19 AM",
 	"elements": [
-		{
-			"code": 27008,
-			"type": 4,
-			"valign": 2,
-			"halign": 0,
-			"size": "119 16",
-			"text_halign": 0,
-			"font_size": 12,
-			"font_color": "255 255 0 255",
-			"p_text": "텍스트를 입력해주세요.",
-			"p_font_color": "128 128 128 255",
-			"p_font_size": 16,
-			"max_length": 20,
-			"input_mode": 0
-		},
 		{
 			"code": 28008,
 			"type": 4,
@@ -104,6 +89,21 @@
 			"sprite": "6 7 8 18",
 			"sprite2": "9 10 11 19",
 			"linear_dodge": false
+		},
+		{
+			"code": 27008,
+			"type": 4,
+			"valign": 2,
+			"halign": 0,
+			"size": "119 16",
+			"text_halign": 0,
+			"font_size": 12,
+			"font_color": "255 255 0 255",
+			"p_text": "텍스트를 입력해주세요.",
+			"p_font_color": "128 128 128 255",
+			"p_font_size": 16,
+			"max_length": 20,
+			"input_mode": 0
 		},
 		{
 			"code": 27007,
@@ -224,6 +224,62 @@
 			"direction": 2
 		},
 		{
+			"code": 25010,
+			"type": 2,
+			"valign": 2,
+			"halign": 0,
+			"size": "114 32",
+			"font": "DF.ttf",
+			"font_size": 12,
+			"font_color": "100 149 237 255",
+			"text": "라인\n브레이크",
+			"text_wrap": true,
+			"text_valign": 0,
+			"text_halign": 0
+		},
+		{
+			"code": 25009,
+			"type": 2,
+			"valign": 2,
+			"halign": 0,
+			"size": "128 18",
+			"font": "DF.ttf",
+			"font_size": 12,
+			"font_color": "100 149 237 255",
+			"text": "스케일링 테스트 시작",
+			"text_wrap": true,
+			"text_valign": 0,
+			"text_halign": 0
+		},
+		{
+			"code": 25008,
+			"type": 2,
+			"valign": 2,
+			"halign": 0,
+			"size": "103 18",
+			"font": "DF.ttf",
+			"font_size": 12,
+			"font_color": "0 128 128 255",
+			"text": "팝업 테스트 시작",
+			"text_wrap": true,
+			"text_valign": 0,
+			"text_halign": 0
+		},
+		{
+			"code": 25007,
+			"type": 2,
+			"valign": 2,
+			"halign": 0,
+			"size": "103 18",
+			"font": "DF.ttf",
+			"font_size": 12,
+			"font_color": "255 127 80 255",
+			"text": "폰트 테스트 시작",
+			"text_wrap": true,
+			"text_valign": 0,
+			"text_halign": 0
+		},
+		{
 			"code": 25006,
 			"type": 2,
 			"valign": 2,
@@ -297,7 +353,7 @@
 		{
 			"code": 24005,
 			"type": 2,
-			"valign": 2,
+			"valign": 0,
 			"halign": 0,
 			"size": "155 17",
 			"font": "N2G.ttf",
@@ -2875,7 +2931,7 @@
 				"24002 -35 10",
 				"24003 35 10",
 				"24004 0 10",
-				"24005 14 148"
+				"24005 14 -15"
 			]
 		},
 		{
@@ -2891,6 +2947,10 @@
 				"25004 272 9",
 				"25005 8 6",
 				"25006 383 5",
+				"25007 8 51",
+				"25008 7 73",
+				"25009 7 31",
+				"25010 519 94",
 				"26000 300 41",
 				"27000 3 153"
 			]

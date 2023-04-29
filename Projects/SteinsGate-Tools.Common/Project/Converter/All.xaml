@@ -12,4 +12,5 @@
     <local:SGAlignmentWpfAlignmentConverter x:Key="SGAlignmentWpfAlignmentConverter"/>
     <local:SGHorizontalAlignmentWpfTextAlignmentConverter x:Key="SGHorizontalAlignmentWpfTextAlignmentConverter" />
     <local:ColorSolidBrushConverter x:Key="ColorSolidBrushConverter"/>
+    <local:StringUnescapeConverter x:Key="StringUnescapeConverter" />
 </ResourceDictionary>

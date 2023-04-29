@@ -6,7 +6,7 @@
 
         <Grid Width="{Binding VisualSize.Width}"
               Height="{Binding VisualSize.Height}">
-            <TextBlock Text="{Binding Text}"
+            <TextBlock Text="{Binding Text, Converter={StaticResource StringUnescapeConverter}}"
                        HorizontalAlignment="{Binding TextHAlign, Converter={StaticResource SGAlignmentWpfAlignmentConverter}}"
                        VerticalAlignment="{Binding TextVAlign, Converter={StaticResource SGAlignmentWpfAlignmentConverter}}"
                        FontSize="{Binding FontSize}"
