@@ -21,6 +21,7 @@ UIElement::UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo*
 	, m_pMasterGroup(masterGroup)
 	, m_pParent(parent)
 	, m_eState(eNormal)
+	, m_bInitialized(false)
 	, m_bLoaded(false)
 	, m_bFocused(false)
 	, m_bResizable(true)
@@ -67,11 +68,24 @@ bool UIElement::isContainPoint(SGEventMouse* mouseEvent) {
 	const Rect boundingBox = {
 		_position.x,
 		_position.y,
-		_contentSize.width,
-		_contentSize.height
+		m_UISize.width,
+		m_UISize.height
 	};
 
 	return boundingBox.containsPoint(mousePos);
+}
+
+void UIElement::setInitialUISize(SGSize size) {
+	if (m_bInitialized) {
+		_LogWarn_("초기화 수행 후 setInitialUISize 함수 호출 금지");
+		return;
+	}
+
+	size.width *= CoreClientInfo_v->UIScaleXFactor;
+	size.height *= CoreClientInfo_v->UIScaleYFactor;
+
+	_contentSize = size;
+	m_UISize = size;
 }
 
 
@@ -116,7 +130,6 @@ bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
 	}
 
 	_LogDebug_("%d", m_pBaseInfo->Code);
-
 	m_pMasterGroup->onMouseDown(this, mouseEvent);
 	invokeMouseEvent(eMouseEventDown, mouseEvent);
 	m_eState = ePressed;
@@ -124,6 +137,9 @@ bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
 }
 
 bool UIElement::onMouseUp(SGEventMouse* mouseEvent) {
+	if (m_eState == eDisabled)
+		return true;
+
 	onMouseUpDetail(mouseEvent);
 	invokeMouseEvent(eMouseEventUp, mouseEvent);
 
@@ -179,15 +195,15 @@ SGVec2 UIElement::getRelativePositionOnElement(SGVec2 absolutePos) const {
 
 SGVec2 UIElement::getPositionCenter() const {
 	return {
-		_position.x + _contentSize.width / 2.0f,
-		_position.y + _contentSize.height / 2.0f,
+		_position.x + m_UISize.width / 2.0f,
+		_position.y + m_UISize.height / 2.0f,
 	};
 }
 
 SGVec2 UIElement::getPositionRightTop() const {
 	return {
-		_position.x + _contentSize.width,
-		_position.y + _contentSize.height,
+		_position.x + m_UISize.width,
+		_position.y + m_UISize.height,
 	};
 }
 
@@ -203,22 +219,19 @@ SGVec2 UIElement::getRelativePosition() {
 }
 
 SGRect UIElement::getParentAbsoluteRect() {
-	// TODO: UI 해상도는 640 x 480이기 떄문에. 게임 해상도와 구분해야할 듯? 일단 게임 해상도로 처리하고 추후 수정할 것
-	// 게임해상도가 1280, 720이면 UI해상도는 그 비율(640 x 2, 480 x 720 / 480)만큼 scale을 변환해서 표시할수 있도록 해야한다.
-	// 마스터 그룹들은 실제 부모가 없음.
 	return isMasterGroup() ? CoreClientInfo_v->getGameResolutionRect() : m_pParent->getWorldBoundingBox();
 }
 
 SGRect UIElement::getParentRect() {
 	return isMasterGroup() ? 
 		CoreClientInfo_v->getGameResolutionRect() :
-		SGRect{ 0, 0, m_pParent->_contentSize.width, m_pParent->_contentSize.height };
+		SGRect{ 0, 0, m_pParent->m_UISize.width, m_pParent->m_UISize.height };
 }
 
 SGSize UIElement::getParentSize() {
 	return isMasterGroup() ?
 		CoreClientInfo_v->GameResolutionSize :
-		m_pParent->_contentSize;
+		m_pParent->m_UISize;
 }
 
 float UIElement::getAbsoluteScaleX() {
@@ -267,7 +280,7 @@ SGRect UIElement::getWorldBoundingBox() const {
 	else
 		origin = _parent->convertToWorldSpace(_position);
 
-	return { origin, _contentSize };
+	return { origin, m_UISize };
 }
 
 void UIElement::setEnabled(bool enabled) {
@@ -280,21 +293,24 @@ void UIElement::setEnabled(bool enabled) {
 // 예를들어 모두 중앙 정렬된 엘리먼트인 경우의 사각형의 크기가 200, 200이라고 가정하고 origin은 0, 0이라고하자.
 // 이때 엘리먼트의 크기가 50 x 40이면
 // (100 - 25, 100 - 20)이 엘리먼트의 좌하단 좌표이다.
-SGVec2 UIElement::calculateZeroPosition(const SGRect& rc) const
-{
+SGVec2 UIElement::calculateZeroPosition(const SGRect& rc) const {
+	return calculateZeroPosition(rc, m_pBaseInfo->HAlignment, m_pBaseInfo->VAlignment);
+}
+
+SGVec2 UIElement::calculateZeroPosition(const SGRect& rc, HAlignment_t halign, VAlignment_t valign) const {
 	float xPos = 0;
 	float yPos = 0;
 
-	switch (m_pBaseInfo->HAlignment) {
+	switch (halign) {
 	case HAlignment::Left:		xPos = 0;											break;
-	case HAlignment::Center:	xPos = rc.size.width / 2 - _contentSize.width / 2;	break;
-	case HAlignment::Right:		xPos = rc.size.width - _contentSize.width;			break;
+	case HAlignment::Center:	xPos = rc.size.width / 2 - m_UISize.width / 2;	break;
+	case HAlignment::Right:		xPos = rc.size.width - m_UISize.width;			break;
 	}
 
-	switch (m_pBaseInfo->VAlignment) {
+	switch (valign) {
 	case VAlignment::Bottom:	yPos = 0;												break;
-	case VAlignment::Center:	yPos = rc.size.height / 2 - _contentSize.height / 2;	break;
-	case VAlignment::Top:		yPos = rc.size.height - _contentSize.height;			break;
+	case VAlignment::Center:	yPos = rc.size.height / 2 - m_UISize.height / 2;	break;
+	case VAlignment::Top:		yPos = rc.size.height - m_UISize.height;			break;
 	}
 
 	return { xPos, yPos };
@@ -309,10 +325,10 @@ SGVec2 UIElement::calculateRelativePosition(const SGSize& parentSize) const {
 		pos.x = _position.x;
 		break;
 	case HAlignment::Center:
-		pos.x = _position.x + _contentSize.width / 2.0f - parentSize.width / 2.0f;
+		pos.x = _position.x + m_UISize.width / 2.0f - parentSize.width / 2.0f;
 		break;
 	case HAlignment::Right:
-		pos.x = _position.x + _contentSize.width - parentSize.width;
+		pos.x = _position.x + m_UISize.width - parentSize.width;
 		break;
 	}
 
@@ -321,10 +337,10 @@ SGVec2 UIElement::calculateRelativePosition(const SGSize& parentSize) const {
 		pos.y = _position.y;
 		break;
 	case VAlignment::Center:
-		pos.y = _position.y + _contentSize.height / 2.0f - parentSize.height / 2.0f;
+		pos.y = _position.y + m_UISize.height / 2.0f - parentSize.height / 2.0f;
 		break;
 	case VAlignment::Top:
-		pos.y = _position.y + _contentSize.height - parentSize.height;
+		pos.y = _position.y + m_UISize.height - parentSize.height;
 		break;
 	}
 	return pos;
@@ -335,6 +351,12 @@ void UIElement::setRelativePosition(float x, float y) {
 	const Rect rect = { Vec2{}, getParentSize() };
 	const Vec2 realPos = calculateZeroPosition(rect);
 	setPosition(realPos + Vec2{x, y});
+}
+
+void UIElement::setRelativePosition(float x, float y, HAlignment_t halign, VAlignment_t valign) {
+	const Rect rect = { Vec2{}, getParentSize() };
+	const Vec2 realPos = calculateZeroPosition(rect, halign, valign);
+	setPosition(realPos + Vec2{ x, y });
 }
 
 void UIElement::setRelativePosition(const SGVec2& pos) {

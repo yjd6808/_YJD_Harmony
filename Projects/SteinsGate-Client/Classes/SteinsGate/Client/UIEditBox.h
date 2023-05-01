@@ -16,8 +16,10 @@ public:
 	UIEditBox(UIMasterGroup* maserGroup, UIGroup* parent, UIEditBoxInfo* editBoxInfo);
 	~UIEditBox() override;
 
-	bool init() override;
 	static UIEditBox* create(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo);
+    static constexpr UIElementType_t type() { return UIElementType::EditBox; }
+
+    bool init() override;
 	UIElementType_t getElementType() override { return UIElementType::EditBox; }
     std::string getText();
     SGEditBox* source() const { return m_pEditBox; }
@@ -27,7 +29,7 @@ public:
     void setTextChangedCallback(const SGActionFn<UIEditBox*, const SGString&>& fnTextChanged) const;
     void setReturnCallback(const SGActionFn<UIEditBox*>& fnEditBoxReturn) const;
     void setLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAction>& fnLoseFocus) const;
-    void setContentSize(const SGSize& size) override;
+    void setUISize(const SGSize& size) override;
 
     void focus() override;
     void setInputFlag(SGEditBox::InputFlag inputFlag);

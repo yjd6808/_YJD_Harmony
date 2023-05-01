@@ -36,8 +36,8 @@ UISprite* UISprite::create(UIMasterGroup* master, UIGroup* parent, UISpriteInfo*
 }
 
 bool UISprite::init() {
-	_contentSize = m_pInfo->Size;
-	return true;
+	setInitialUISize(m_pInfo->Size);
+	return m_bInitialized = true;
 }
 
 void UISprite::load() {
@@ -60,13 +60,18 @@ void UISprite::load() {
 	CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite });
 
 	const Size spriteSize = m_pTexture->getSize();
-	const float fScaleX = m_pInfo->Size.width / spriteSize.width;
-	const float fScaleY = m_pInfo->Size.height / spriteSize.height;
+	const float fScaleX = m_UISize.width / spriteSize.width;
+	const float fScaleY = m_UISize.height / spriteSize.height;
 
 	m_pSprite = m_pInfo->Scale9 ? Scale9Sprite::create() : Sprite::create();
 	m_pSprite->initWithTexture(m_pTexture->getTexture());
 	m_pSprite->setAnchorPoint(Vec2::ZERO);
-	m_pSprite->setScale(fScaleX, fScaleY);
+	if (m_pInfo->Scale9) {
+		m_pSprite->setContentSize({m_UISize.width * fScaleX, m_UISize.height * fScaleY });
+	} else {
+		m_pSprite->setScale(fScaleX, fScaleY);
+	}
+	
 	this->addChild(m_pSprite);
 	m_bLoaded = true;
 }
@@ -81,12 +86,26 @@ void UISprite::unload() {
 	m_bLoaded = false;
 }
 
+void UISprite::setCapInsets(const SGRect& insets) {
+	if (!m_pInfo->Scale9) {
+		_LogWarn_("스케일9 스프가 아닌데 setCapInsets 시도");
+		return;
+	}
 
-void UISprite::setContentSize(const SGSize& contentSize) {
+	if (!m_bLoaded) {
+		_LogWarn_("로딩 안됬는데 setCapInsets 시도");
+		return;
+	}
+
+	dynamic_cast<Scale9Sprite*>(m_pSprite)->setCapInsets(insets);
+}
+
+
+void UISprite::setUISize(const SGSize& contentSize) {
 	if (!m_bResizable)
 		return;
 
-	_contentSize = contentSize;
+	m_UISize = contentSize;
 
 	if (!m_bLoaded) 
 		return;
@@ -94,6 +113,14 @@ void UISprite::setContentSize(const SGSize& contentSize) {
 	if (m_pTexture == nullptr || m_pSprite == nullptr)
 		return;
 
-	m_pSprite->setScaleX(_contentSize.width / m_pTexture->getWidthF());
-	m_pSprite->setScaleY(_contentSize.height / m_pTexture->getHeightF());
+	const Size spriteSize = m_pTexture->getSize();
+	const float fScaleX = m_UISize.width / spriteSize.width;
+	const float fScaleY = m_UISize.height / spriteSize.height;
+
+	if (m_pInfo->Scale9) {
+		m_pSprite->setContentSize({ spriteSize.width * fScaleX, spriteSize.height * fScaleY });
+	} else {
+		m_pSprite->setScale(fScaleX, fScaleY);
+	}
+	
 }

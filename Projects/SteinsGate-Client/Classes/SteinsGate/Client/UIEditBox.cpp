@@ -68,8 +68,8 @@ bool UIEditBox::init() {
 	m_pEditBox->setDelegate(m_pListener);
 	this->addChild(m_pEditBox);
 
-	_contentSize = m_pInfo->Size;
-	return true;
+	setInitialUISize(m_pInfo->Size);
+	return m_bInitialized = true;
 }
 
 void UIEditBox::setTextEditBeginCallback(const SGActionFn<UIEditBox*>& fnTextEditBegin) const {
@@ -88,11 +88,11 @@ void UIEditBox::setLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAc
 	m_pListener->FnEditBoxEditingDidEndWithAction = fnLoseFocus;
 }
 
-void UIEditBox::setContentSize(const SGSize& size) {
+void UIEditBox::setUISize(const SGSize& size) {
 	if (!m_bResizable)
 		return;
 
-	Size prevSize = _contentSize;
+	Size prevSize = m_UISize;
 	UIElement::setContentSize(size);
 
 	// 에딧박스의 컨텐트 사이즈를 변경하면 라벨은 변경되는데, 플레이스홀더 라벨은 사이즈 변경이 안되서 수동으로 해줘야함.
@@ -101,8 +101,8 @@ void UIEditBox::setContentSize(const SGSize& size) {
 	m_pEditBox->setContentSize(size);
 	m_pLabelPlaceholder->setDimensions(size.width, size.height);
 
-	float fScaleX = _contentSize.width / prevSize.width;
-	float fScaleY = _contentSize.height / prevSize.height;
+	float fScaleX = m_UISize.width / prevSize.width;
+	float fScaleY = m_UISize.height / prevSize.height;
 
 	// TODO: 사이즈 변경에 따라 폰트 크기도 알맞게 변경 되어야한다.
 }

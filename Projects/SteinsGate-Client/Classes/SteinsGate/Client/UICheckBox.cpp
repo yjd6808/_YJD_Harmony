@@ -93,11 +93,11 @@ void UICheckBox::setEnabled(bool enabled) {
 	m_eState = eDisabled;
 }
 
-void UICheckBox::setContentSize(const SGSize& size) {
+void UICheckBox::setUISize(const SGSize& size) {
 	if (!m_bResizable)
 		return;
 
-	_contentSize = size;
+	m_UISize = size;
 
 	if (!m_bLoaded)
 		return;
@@ -111,8 +111,8 @@ void UICheckBox::setContentSize(const SGSize& size) {
 			continue;
 		}
 
-		pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
-		pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+		pSprite->setScaleX(m_UISize.width / pTexture->getWidthF());
+		pSprite->setScaleY(m_UISize.height / pTexture->getHeightF());
 	}
 }
 
@@ -125,7 +125,7 @@ bool UICheckBox::init() {
 
 	const ImagePack* pBackgroundPack = CorePackManager_v->getPackUnsafe(m_pInfo->BackgroundSga);
 	const ImagePack* pCrossPack = CorePackManager_v->getPackUnsafe(m_pInfo->CrossSga);
-	_contentSize = DefaultSize30;
+	setInitialUISize(DefaultSize30);
 	m_bChecked = m_pInfo->Check;
 
 	// 백그라운드 팩은 없을 수도 있다. 크로스팩은 필수
@@ -147,9 +147,9 @@ bool UICheckBox::init() {
 
 	const float fWidth = SgaSpriteHelper::GetMaxWidthF(spBackgroundSprite, spBackgroundDisabledSprite, spCrossSprite, spCrossDisabledSprite);
 	const float fHeight = SgaSpriteHelper::GetMaxHeightF(spBackgroundSprite, spBackgroundDisabledSprite, spCrossSprite, spCrossDisabledSprite);
-	_contentSize = Size(fWidth, fHeight);
-	
-	return true;
+	m_UISize = Size(fWidth, fHeight);
+	_contentSize = m_UISize;
+	return m_bInitialized = true;
 }
 
 void UICheckBox::load() {
@@ -175,9 +175,9 @@ void UICheckBox::load() {
 		Sprite* pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());
 		pSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-		pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
-		pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
-		pSprite->setPosition(_contentSize / 2);
+		pSprite->setScaleX(m_UISize.width / pTexture->getWidthF());
+		pSprite->setScaleY(m_UISize.height / pTexture->getHeightF());
+		pSprite->setPosition(m_UISize / 2);
 
 		m_pTexture[i] = pTexture;
 		m_pSprite[i] = pSprite;

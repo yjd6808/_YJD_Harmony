@@ -8,10 +8,10 @@
     "client": [
         {
             "code": 1,
-            "frame_width": 640,
-            "frame_height": 480,
-            "game_resolution_width": 640,
-            "game_resolution_height": 480,
+            "frame_width": 960,
+            "frame_height": 720,
+            "game_resolution_width": 960,
+            "game_resolution_height": 720,
             "game_resolution_policy": 0,
             "resizable": false,
             "fullsreen": false

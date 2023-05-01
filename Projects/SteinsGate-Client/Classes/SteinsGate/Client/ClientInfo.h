@@ -16,10 +16,14 @@ public:
 	~ClientInfo() override = default;
 	SGSize FrameSize;
 	SGSize GameResolutionSize;
+	SGSize UIResolutionSize = { 640, 480 };
 	ResolutionPolicy GameResolutionPolicy;
+	float UIScaleXFactor;
+	float UIScaleYFactor;
 	bool Resizable;
 	bool FullScreen;
 
 	SGRect getFrameRect() { return { 0, 0, FrameSize.width, FrameSize.height }; }
 	SGRect getGameResolutionRect() { return { 0, 0, GameResolutionSize.width, GameResolutionSize.height }; }
+	SGRect getUIResolutionRect() { return { 0, 0, UIResolutionSize.width, UIResolutionSize.height }; }
 };

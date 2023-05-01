@@ -55,7 +55,7 @@ void UIManager::registerMasterGroup(UIMasterGroup* group) {
 	group->forEachRecursive([this](UIElement* uiElement) {
 		const int code = uiElement->getCode();
 		const bool bInsert = m_hUIElements.Insert(code, uiElement);
-		DebugAssertMsg(bInsert, "이미 %d UI 엘리먼트가 그룹내 포함되어 있습니다.", code);
+		if (!bInsert) _LogWarn_("이미 UI 엘리먼트(%d)가 그룹내 포함되어 있습니다.", code);
 	});
 }
 

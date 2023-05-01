@@ -19,6 +19,7 @@ public:
 	void init();
 	SGString& getFontName(int fontCode);
 	int getFontCode(const SGString& fontName);
+	int getFontCount() const { return m_hFontCodeToNameMap.Size(); }
 
 private:
 	SGHashMap<SGString, int> m_hFontNameToCodeMap;

@@ -13,6 +13,7 @@ using SGToolsCommon.Extension;
 using SGToolsCommon.Primitive;
 using SGToolsCommon.Sga;
 using SGToolsUI.Model.Main;
+using Vanara.PInvoke;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace SGToolsUI.Model.Main
@@ -156,7 +157,7 @@ namespace SGToolsUI.Model.Main
             if (_linearDodge)
                 root[JsonLinearDodgeKey] = _linearDodge;
             if (_scale9)
-                root[JsonScale9] = _linearDodge;
+                root[JsonScale9] = _scale9;
 
             return root;
         }

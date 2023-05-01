@@ -14,6 +14,7 @@ class UIButton : public UIElement
 {
 public:
 	static UIButton* create(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo);
+	static constexpr UIElementType_t type() { return UIElementType::Button; }
 
 	UIButton(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo);
 	~UIButton() override;
@@ -23,7 +24,7 @@ public:
 	void unload() override;
 	
 	void setVisibleState(State state);
-	void setContentSize(const SGSize& size) override;
+	void setUISize(const SGSize& size) override;
 	void setEnabled(bool enabled) override;
 	void restoreState(State state) override;
 	UIElementType_t getElementType() override { return UIElementType::Button; }

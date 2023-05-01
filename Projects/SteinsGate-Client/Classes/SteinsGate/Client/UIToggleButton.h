@@ -23,6 +23,7 @@ class UIToggleButton : public UIElement
 	static constexpr int StateTwo = 1;
 public:
 	static UIToggleButton* create(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo);
+	static constexpr UIElementType_t type() { return UIElementType::ToggleButton; }
 
 	UIToggleButton(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo);
 	~UIToggleButton() override;
@@ -33,7 +34,7 @@ public:
 
 	void setVisibleState(State state);
 	void setEnabled(bool enabled) override;
-	void setContentSize(const SGSize& contentSize) override;
+	void setUISize(const SGSize& contentSize) override;
 
 	ToggleState getToggleState() const { return m_eToggleState; }
 	void setToggleState(ToggleState state);

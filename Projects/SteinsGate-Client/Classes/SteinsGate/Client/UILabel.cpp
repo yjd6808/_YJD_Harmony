@@ -18,6 +18,7 @@ USING_NS_JC;
 
 UILabel::UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo)
 	: UIElement(master, parent, labelInfo)
+	, m_bFontAutoScaling(true)
 	, m_pInfo(labelInfo)
 	, m_pLabel{nullptr}
 {}
@@ -39,44 +40,72 @@ SGString UILabel::getFontPath() const {
 }
 
 void UILabel::setText(const std::string& text) {
-	m_pLabel->initWithTTF(text, getFontPath().Source(), m_pInfo->FontSize, m_pInfo->Size);
+	m_pLabel->setString(text);
 }
 
-void UILabel::setText(const std::string& text, float width, float height) {
-	m_pLabel->initWithTTF(text, getFontPath().Source(), m_pInfo->FontSize, SGSize{ width, height });
+void UILabel::setText(const std::string& text, float fontSize) {
+	m_pLabel->initWithTTF(text, getFontPath().Source(), fontSize);
+	setContentSize({ m_pInfo->Size.width, m_pInfo->Size.height });
 }
 
-void UILabel::setContentSize(const SGSize& contentSize) {
+void UILabel::setText(const std::string& text, float fontSize, const SGSize& dimension) {
+	m_pLabel->initWithTTF(text, getFontPath().Source(), fontSize);
+	setContentSize(dimension);
+}
+
+void UILabel::setUISize(const SGSize& contentSize) {
 	if (!m_bResizable)
 		return;
 
-	Size prevSize = _contentSize;
-	UIElement::setContentSize(contentSize);
+	Size prevSize = m_UISize;
+	m_UISize = contentSize;
 
 	if (m_pLabel == nullptr)
 		return;
 
-	m_pLabel->setDimensions(_contentSize.width, _contentSize.height);
+	// TODO: (완료) 폰트 사이즈도 변경되야함.
+	if (m_bFontAutoScaling) {
+		float fScaleY = m_UISize.height / prevSize.height;
+		float fFontSize = getFontSize() * fScaleY;
 
-	float fScaleX = _contentSize.width / prevSize.width;
-	float fScaleY = _contentSize.height / prevSize.height;
+		m_pLabel->initWithTTF(m_pLabel->getString(), getFontPath().Source(), fFontSize, { m_UISize.width, m_UISize.height });
+	} else {
+		m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
+	}
+}
 
-	// TODO: 폰트 사이즈도 변경되야함.
+void UILabel::setVAlignment(VAlignment_t valign) {
+	m_pLabel->setVerticalAlignment((TextVAlignment)valign);
+}
+
+void UILabel::setHAlignment(HAlignment_t halign) {
+	m_pLabel->setHorizontalAlignment((TextHAlignment)halign);
+}
+
+
+float UILabel::getFontSize() const {
+	return m_pLabel->getTTFConfig().fontSize;
+}
+
+int UILabel::getLineCount() const {
+	return m_pLabel->getStringNumLines();
 }
 
 bool UILabel::init() {
 
-	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), getFontPath().Source(), m_pInfo->FontSize, Size::ZERO);
+	setInitialUISize(m_pInfo->Size);
+
+	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), getFontPath().Source(), m_pInfo->FontSize * CoreClientInfo_v->UIScaleYFactor, Size::ZERO);
 	m_pLabel->setHorizontalAlignment((TextHAlignment)m_pInfo->TextHAlignment);
 	m_pLabel->setVerticalAlignment((TextVAlignment)m_pInfo->TextVAlignment);
-	m_pLabel->setDimensions(m_pInfo->Size.width, m_pInfo->Size.height);
+	m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
 	m_pLabel->setTextColor(m_pInfo->FontColor);
 	m_pLabel->enableWrap(m_pInfo->TextWrap);
 	m_pLabel->setAnchorPoint(Vec2::ZERO);
 	this->addChild(m_pLabel);
 
-	_contentSize = m_pInfo->Size;
-	return true;
+	
+	return m_bInitialized = true;
 }
 
 

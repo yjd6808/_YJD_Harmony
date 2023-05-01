@@ -30,8 +30,10 @@ public:
 
 	UIMasterGroup* findGroup(int groupCode);
 	void forEach(const SGActionFn<UIMasterGroup*>& actionFn);
-	void addUIGroup(int groupCode);
+	void addUIGroup(int groupCode, int zorder = 0);
+	void addUIGroup(UIMasterGroup* group, int zorder = 0);
 	void removeUIGroup(int groupCode);
+	void removeUIGroup(UIMasterGroup* group);
 	void clear();
 	void clearUnload();
 private:

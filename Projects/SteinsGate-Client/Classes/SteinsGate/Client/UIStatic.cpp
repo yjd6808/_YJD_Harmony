@@ -35,8 +35,8 @@ UIStatic* UIStatic::create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo*
 }
 
 bool UIStatic::init() {
-	_contentSize = m_pInfo->Size;
-	return true;
+	setInitialUISize(m_pInfo->Size);
+	return m_bInitialized = true;
 }
 
 void UIStatic::load() {
@@ -47,8 +47,8 @@ void UIStatic::load() {
 	m_pDebugTexture->retain();
 
 	const Size spriteSize = m_pDebugTexture->getSize();
-	const float fScaleX = _contentSize.width / spriteSize.width;
-	const float fScaleY = _contentSize.height / spriteSize.height;
+	const float fScaleX = m_UISize.width / spriteSize.width;
+	const float fScaleY = m_UISize.height / spriteSize.height;
 
 	m_pDebugSprite = Sprite::create();
 	m_pDebugSprite->initWithTexture(m_pDebugTexture->getTexture());
@@ -79,7 +79,7 @@ void UIStatic::setDebugVisible(bool visible) {
 		m_pDebugSprite->setVisible(m_bVisible);
 }
 
-void UIStatic::setContentSize(const SGSize& contentSize) {
+void UIStatic::setUISize(const SGSize& contentSize) {
 	if (!m_bResizable)
 		return;
 
@@ -91,8 +91,8 @@ void UIStatic::setContentSize(const SGSize& contentSize) {
 	m_pDebugTexture = CoreGlobal_v->getDefaultFrameTexture();
 
 	const Size spriteSize = m_pDebugTexture->getSize();
-	const float fScaleX = _contentSize.width / spriteSize.width;
-	const float fScaleY = _contentSize.height / spriteSize.height;
+	const float fScaleX = m_UISize.width / spriteSize.width;
+	const float fScaleY = m_UISize.height / spriteSize.height;
 
 	m_pDebugSprite->setScale(fScaleX, fScaleY);
 

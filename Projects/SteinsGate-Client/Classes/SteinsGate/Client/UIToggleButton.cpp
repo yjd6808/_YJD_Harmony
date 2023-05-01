@@ -74,11 +74,11 @@ void UIToggleButton::setEnabled(bool enabled) {
 	setVisibleState(eDisabled);
 }
 
-void UIToggleButton::setContentSize(const SGSize& contentSize) {
+void UIToggleButton::setUISize(const SGSize& contentSize) {
 	if (!m_bResizable)
 		return;
 
-	_contentSize = contentSize;
+	m_UISize = contentSize;
 
 	if (!m_bLoaded)
 		return;
@@ -92,8 +92,8 @@ void UIToggleButton::setContentSize(const SGSize& contentSize) {
 				continue;
 			}
 
-			pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
-			pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+			pSprite->setScaleX(m_UISize.width / pTexture->getWidthF());
+			pSprite->setScaleY(m_UISize.height / pTexture->getHeightF());
 		}
 	}
 }
@@ -108,8 +108,7 @@ void UIToggleButton::restoreState(State state) {
 
 bool UIToggleButton::init() {
 	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
-	setContentSize(DefaultSize30);
-
+	setInitialUISize(DefaultSize30);
 	if (pPack == nullptr) {
 		_LogWarn_("토글버튼 Sga패키지를 찾지 못했습니다.");
 		return false;
@@ -123,8 +122,8 @@ bool UIToggleButton::init() {
 	}
 
 	const SgaSpriteRect spriteRect = spSprite->GetRect();
-	_contentSize = Size{ spriteRect.GetWidthF(), spriteRect.GetHeightF() };
-	return true;
+	setInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
+	return m_bInitialized = true;
 }
 
 void UIToggleButton::load() {
@@ -145,8 +144,8 @@ void UIToggleButton::load() {
 			Sprite* pSprite = Sprite::create();
 			pSprite->initWithTexture(pTexture->getTexture());
 			pSprite->setAnchorPoint(Vec2::ZERO);
-			pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
-			pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+			pSprite->setScaleX(m_UISize.width / pTexture->getWidthF());
+			pSprite->setScaleY(m_UISize.height / pTexture->getHeightF());
 
 			m_pTexture[i][j] = pTexture;
 			m_pSprite[i][j] = pSprite;

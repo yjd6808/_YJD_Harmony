@@ -8,12 +8,12 @@
 
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "LoginScene.h"
 
 #include <SteinsGate/Client/WorldScene.h>
 #include <SteinsGate/Client/UILayer.h>
 #include <SteinsGate/Client/UIDefine.h>
-
 
 USING_NS_CC;
 USING_NS_JC;

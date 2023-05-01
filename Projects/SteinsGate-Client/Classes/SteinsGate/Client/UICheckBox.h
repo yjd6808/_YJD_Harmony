@@ -20,6 +20,7 @@ public:
 	static constexpr int IndexCrossDisabled = 3;
 
 	static UICheckBox* create(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo);
+	static constexpr UIElementType_t type() { return UIElementType::CheckBox; }
 
 	UICheckBox(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo);
 	~UICheckBox() override;
@@ -30,7 +31,7 @@ public:
 
 	void setCheck(bool checked);
 	void setEnabled(bool enabled) override;
-	void setContentSize(const SGSize& size) override;
+	void setUISize(const SGSize& size) override;
 	bool isChecked() const;
 
 	UIElementType_t getElementType() override { return UIElementType::CheckBox; }

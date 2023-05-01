@@ -50,5 +50,8 @@ void ClientInfoLoader::readClientInfo(Json::Value& clientRoot, Out_ ClientInfo* 
 	clientInfo->GameResolutionPolicy = (ResolutionPolicy)clientRoot["game_resolution_policy"].asInt();
 	clientInfo->Resizable = clientRoot["resizable"].asBool();
 	clientInfo->FullScreen = clientRoot["fullscreen"].asBool();
-	
+
+
+	clientInfo->UIScaleXFactor = clientInfo->GameResolutionSize.width / clientInfo->UIResolutionSize.width;
+	clientInfo->UIScaleYFactor = clientInfo->GameResolutionSize.height / clientInfo->UIResolutionSize.height;
 }

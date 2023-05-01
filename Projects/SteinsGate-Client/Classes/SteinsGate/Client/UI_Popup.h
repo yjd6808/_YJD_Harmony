@@ -23,31 +23,34 @@ public:
 protected:
 	void onInit() override;
 	void onLoaded() override;
+
+	void onMouseUp(UIElement* element, SGEventMouse* mouseEvent) override;
+	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseScrollDetail(SGEventMouse* mouseEvent) override;
 public:
 	void setType(Type type);
 	Type getType() const { return m_eType; }
-	void setPopupSize(const SGSize& size);
 	void setText(const std::string& text);
-	void setYesCallback(const SGActionFn<>& fnYes) { m_fnYes = fnYes; }
-	void setNoCallback(const SGActionFn<>& fnNo) { m_fnNo = fnNo; }
-	void setOkCallback(const SGActionFn<>& fnOk) { m_fnOk = fnOk; }
+	void setYesCallback(const SGActionFn<>& fnYes);
+	void setNoCallback(const SGActionFn<>& fnNo);
+	void setOkCallback(const SGActionFn<>& fnOk);
+	void setClosed(bool closed) { m_bClosed = closed; }
+	bool isClosed() const { return m_bClosed; }
+	void close();
 	void adjust();
-	void setPadding(float padding) { m_fPadding = padding; }
-
-	// 홀더 박스 내부 기준으로의 에리어임
-	SGRect getTextArea();
-	SGRect getButtonArea();
 private:
 
-	// #define POPUP_GROUP_HOLDER
-	// #define POPUP_HOLDER_SPRITE_BACKGROUND
-	// #define POPUP_HOLDER_BUTTON_YES
-	// #define POPUP_HOLDER_BUTTON_NO
-	// #define POPUP_HOLDER_BUTTON_OK
-	// #define POPUP_HOLDER_LABEL_TEXT
+	// #define UI_POPUP_GROUP_HOLDER
+	// #define UI_POPUP_HOLDER_SPRITE_BACKGROUND
+	// #define UI_POPUP_HOLDER_LABEL_TEXT
+	// #define UI_POPUP_HOLDER_GROUP_BTN_HOLDER
+	// #define UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_YES
+	// #define UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_NO
+	// #define UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_OK
 
 	UIGroup* m_pGroupHolder;
 	UISprite* m_pSpriteBackground;
+	UIGroup* m_pGroupButtonHolder;
 	UIButton* m_pBtnYes;
 	UIButton* m_pBtnNo;
 	UIButton* m_pBtnOk;
@@ -56,7 +59,7 @@ private:
 	// =========================================
 
 	Type m_eType;
-	float m_fPadding;
+	bool m_bClosed;
 
 	SGActionFn<> m_fnYes;
 	SGActionFn<> m_fnNo;

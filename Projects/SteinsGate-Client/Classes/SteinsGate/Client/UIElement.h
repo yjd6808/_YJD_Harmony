@@ -2,7 +2,7 @@
  * 작성자: 윤정도
  * 생성일: 2/15/2023 4:56:57 AM
  * =====================
- *
+ * 
  */
 
 
@@ -91,6 +91,7 @@ public:
 
 	
 	SGVec2 calculateZeroPosition(const SGRect& rc) const;
+	SGVec2 calculateZeroPosition(const SGRect& rc, HAlignment_t halign, VAlignment_t valign) const;
 	SGVec2 calculateRelativePosition(const SGSize& parentSize) const;
 
 	SGRect getParentAbsoluteRect();
@@ -110,27 +111,48 @@ public:
 	SGVec2 getRelativePositionOnElement(SGVec2 absolutePos) const;
 
 	void setRelativePosition(float x, float y);		// 부모가 그룹이면 그룹 내에서 상대적 위치 반영
+	void setRelativePosition(float x, float y, HAlignment_t halign, VAlignment_t valign);
 	void setRelativePosition(const SGVec2& pos);
 
 	void invokeMouseEvent(MouseEventType mouseEventType, SGEventMouse* mouseEvent);
 	void addMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn);
 	void removeMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn);
 
+	void setUISize(const float width, const float height) { setUISize({ width, height }); }
+	virtual void setUISize(const SGSize& size) { m_UISize = size; }
+	SGRect getUIRect() const { return { SGVec2{}, m_UISize }; }
+	const SGSize& getUISize() const { return m_UISize; }
+
+	void setUIScale(float scale)				{ setUISize({ _contentSize.width * scale, _contentSize.height * scale }); }
+	void setUIScale(float scaleX, float scaleY)	{ setUISize({ _contentSize.width * scaleX, _contentSize.height * scaleY }); }
+	void setUIScaleX(float scaleX)				{ setUISize({ _contentSize.width * scaleX, m_UISize.height }); }
+	void setUIScaleY(float scaleY)				{ setUISize({ m_UISize.width, _contentSize.height * scaleY }); }
+
+	float getUIScaleX()							{ return m_UISize.width / _contentSize.width; }
+	float getUIScaleY()							{ return m_UISize.height / _contentSize.height; }
+
 	void setResizable(bool resizable) { m_bResizable = resizable; }
 	bool isResizable() const { return m_bResizable; }
 protected:
 	bool isContainPoint(SGEventMouse* mouseEvent);
+	virtual void setInitialUISize(SGSize size);
+
+	// _contentSize = 실제 UI 크기(설정파일상)
+	// _position = 부모 노드 기준 좌하단 좌표
 
 	SGMouseEventList* m_pMouseEventMap[eMouseEventMax];
 	UIElementInfo* m_pBaseInfo;
 	UIMasterGroup* m_pMasterGroup;	// 대통령
 	UIGroup* m_pParent;				// 직속 상관
-	SGVec2 m_AbsolutePosition;
+	SGSize m_UISize;				// 화면상 보이는 UI 크기 
 	State m_eState;
 
+	bool m_bInitialized;
 	bool m_bLoaded;
 	bool m_bFocused;
 	bool m_bResizable;				// 처음 크기가 결정된 후 UIGroup::setContentSize() 호출시 크기 업데이트가 이뤄질지 여부
 };
+
+
 
 

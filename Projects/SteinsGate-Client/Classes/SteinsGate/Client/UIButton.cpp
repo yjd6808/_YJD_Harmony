@@ -48,11 +48,11 @@ void UIButton::setVisibleState(State state) {
 	m_eState = state;
 }
 
-void UIButton::setContentSize(const SGSize& size) {
+void UIButton::setUISize(const SGSize& size) {
 	if (!m_bResizable)
 		return;
 
-	_contentSize = size;
+	m_UISize = size;
 
 	if (!m_bLoaded) 
 		return;
@@ -66,8 +66,8 @@ void UIButton::setContentSize(const SGSize& size) {
 			continue;
 		}
 
-		pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
-		pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+		pSprite->setScaleX(m_UISize.width / pTexture->getWidthF());
+		pSprite->setScaleY(m_UISize.height / pTexture->getHeightF());
 	}
 	
 }
@@ -120,7 +120,7 @@ void UIButton::onMouseUpDetail(SGEventMouse* mouseEvent) {
 
 bool UIButton::init() {
 	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
-	setContentSize(DefaultSize30);
+	setInitialUISize(DefaultSize30);
 
 	if (pPack == nullptr) {
 		_LogWarn_("버튼 Sga패키지를 찾지 못했습니다.");
@@ -135,8 +135,8 @@ bool UIButton::init() {
 	}
 
 	const SgaSpriteRect spriteRect = spSprite->GetRect();
-	_contentSize = Size{ spriteRect.GetWidthF(), spriteRect.GetHeightF() };
-	return true;
+	setInitialUISize({ spriteRect.GetWidthF(), spriteRect.GetHeightF() });
+	return m_bInitialized = true;
 }
 
 void UIButton::load() { 
@@ -158,8 +158,8 @@ void UIButton::load() {
 
 		Sprite* pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());
-		pSprite->setScaleX(_contentSize.width / pTexture->getWidthF());
-		pSprite->setScaleY(_contentSize.height / pTexture->getHeightF());
+		pSprite->setScaleX(m_UISize.width / pTexture->getWidthF());
+		pSprite->setScaleY(m_UISize.height / pTexture->getHeightF());
 		pSprite->setAnchorPoint(Vec2::ZERO);
 
 		m_pTexture[i] = pTexture;

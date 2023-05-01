@@ -24,6 +24,7 @@ class UIScrollBar : public UIElement
 	static constexpr float MinThumbHeight = 8;
 public:
 	static UIScrollBar* create(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo);
+	static constexpr UIElementType_t type() { return UIElementType::ScrollBar; }
 
 	UIScrollBar(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo);
 	~UIScrollBar() override;
@@ -41,7 +42,7 @@ public:
 	void setRowPos(int pos);
 	void setRowCount(int count);
 	void setRowCountPerPage(int count);
-	void setContentSize(const SGSize& contentSize) override;
+	void setUISize(const SGSize& contentSize) override;
 	int getRowPos() const { return m_iPos; }
 	int getEndRowPos() const { return m_iEndPos; }
 
@@ -66,6 +67,8 @@ protected:
 	bool onMouseScrollDetail(SGEventMouse* mouseEvent) override;
 
 	void onLinkElementMouseScroll(SGEventMouse* mouseEvent);
+
+	void setInitialUISize(SGSize size) override;
 private:
 	int m_iRowCount;
 	int m_iRowCountPerPage;

@@ -44,7 +44,8 @@ bool UILayer::init() {
 	if (!Layer::init())
 		return false;
 
-	setContentSize(CoreClientInfo_v->GameResolutionSize);
+	
+	_contentSize = CoreClientInfo_v->GameResolutionSize;
 	return true;
 }
 
@@ -54,7 +55,7 @@ void UILayer::onMouseMove(SGEventMouse* mouseEvent) {
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getBoundingBox().containsPoint(mouseEvent->getCursorPos())) {
+		if (uiGroup->getUIRect().containsPoint(mouseEvent->getCursorPos())) {
 			pTopGroup = uiGroup;
 			pTopGroup->onMouseMove(mouseEvent);
 			break;
@@ -75,7 +76,7 @@ void UILayer::onMouseDown(SGEventMouse* mouseEvent) {
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getBoundingBox().containsPoint(mouseEvent->getCursorPos()) &&
+		if (uiGroup->getUIRect().containsPoint(mouseEvent->getCursorPos()) &&
 			uiGroup->onMouseDown(mouseEvent) == false) {
 			pTopGroup = uiGroup;
 			break;
@@ -90,7 +91,7 @@ void UILayer::onMouseUp(SGEventMouse* mouseEvent) {
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getBoundingBox().containsPoint(mouseEvent->getCursorPos())) {
+		if (uiGroup->getUIRect().containsPoint(mouseEvent->getCursorPos())) {
 			pTopGroup = uiGroup;
 			pTopGroup->onMouseUp(mouseEvent);
 			break;
@@ -162,14 +163,27 @@ void UILayer::forEach(const SGActionFn<UIMasterGroup*>& actionFn) {
 	}
 }
 
-void UILayer::addUIGroup(int groupCode) {
+void UILayer::addUIGroup(int groupCode, int zorder) {
 	UIMasterGroup* pGroup = CoreUIManager_v->getMasterGroup(groupCode);
 
 	if (!pGroup->loaded())
 		pGroup->load();
 
-	addChild(pGroup, 0, pGroup->getCode());
+	
+	addChild(pGroup, zorder, pGroup->getCode());
 	pGroup->onAdded();
+	
+	
+}
+
+void UILayer::addUIGroup(UIMasterGroup* group, int zorder) {
+	if (!group->loaded())
+		group->load();
+
+	addChild(group, zorder);
+
+	if (group->isMasterGroup())
+		group->onAdded();
 }
 
 void UILayer::removeUIGroup(int groupCode) {
@@ -180,8 +194,29 @@ void UILayer::removeUIGroup(int groupCode) {
 	}
 
 	UIMasterGroup* uiGroup = static_cast<UIMasterGroup*>(pChild);
-	removeChild(pChild);
 	uiGroup->onRemoved();
+	removeChild(pChild);
+	
+}
+
+void UILayer::removeUIGroup(UIMasterGroup* group) {
+
+	Node* pChild = nullptr;
+
+	for (int i = _children.size() - 1; i >= 0; i--) {
+		if (_children.at(i) == group) {
+			pChild = group;
+			break;
+		}
+	}
+
+	if (pChild == nullptr) {
+		_LogWarn_("%d 그룹을 제거하는데 실패했습니다.", group->getCode());
+		return;
+	}
+
+	group->onRemoved();
+	removeChild(group);
 }
 
 void UILayer::clear() {

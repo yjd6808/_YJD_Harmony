@@ -21,6 +21,7 @@ class ActorListenerManager;
 class ActorBox;
 class ImagePackManager;
 class Global;
+class PopupManager;
 
 extern ClientInfo* CoreClientInfo_v;
 extern HostPlayer* CorePlayer_v;
@@ -33,6 +34,7 @@ extern ActorListenerManager* CoreActorListenerManager_v;
 extern ActorBox* CoreActorBox_v;
 extern ImagePackManager* CorePackManager_v;
 extern Global* CoreGlobal_v;
+extern PopupManager* CorePopupManager_v;
 
 void InitializeClientCore();
 void FinalizeClientCore();

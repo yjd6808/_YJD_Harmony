@@ -52,8 +52,8 @@ bool UIGroup::init() {
 	if (!UIElement::init())
 		return false;
 
-	_contentSize = m_pInfo->Size;
-	return true;
+	setInitialUISize(m_pInfo->Size);
+	return m_bInitialized = true;
 }
 
 void UIGroup::initChildren() {
@@ -95,8 +95,6 @@ void UIGroup::unload() {
 
 
 bool UIGroup::onMouseMove(SGEventMouse* mouseEvent) {
-	UIElement::onMouseMove(mouseEvent);
-
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
 
@@ -110,12 +108,11 @@ bool UIGroup::onMouseMove(SGEventMouse* mouseEvent) {
 	}
 
 	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
-
-	return true;
+	return UIElement::onMouseMove(mouseEvent);
 }
 
 bool UIGroup::onMouseDown(SGEventMouse* mouseEvent) {
-	UIElement::onMouseDown(mouseEvent);
+	
 
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
@@ -129,12 +126,10 @@ bool UIGroup::onMouseDown(SGEventMouse* mouseEvent) {
 	}
 
 	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
-
-	return true;
+	return UIElement::onMouseDown(mouseEvent);;
 }
 
 bool UIGroup::onMouseUp(SGEventMouse* mouseEvent) {
-	UIElement::onMouseUp(mouseEvent);
 	// 계층적 상대좌표로 변환
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
@@ -148,12 +143,10 @@ bool UIGroup::onMouseUp(SGEventMouse* mouseEvent) {
 	}
 
 	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
-	return true;
+	return UIElement::onMouseUp(mouseEvent);
 }
 
 bool UIGroup::onMouseScroll(SGEventMouse* mouseEvent) {
-	UIElement::onMouseScroll(mouseEvent);
-
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
 
@@ -167,8 +160,30 @@ bool UIGroup::onMouseScroll(SGEventMouse* mouseEvent) {
 
 	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
 
-	return true;
+	return UIElement::onMouseScroll(mouseEvent);
 }
+
+UIElement* UIGroup::findElement(int code) {
+	UIElement* find = findElementRecursiveInternal(this, code);
+
+	if (find == nullptr) {
+		_LogWarn_("%d를 찾지 못했습니다.", code);
+	}
+
+	return find;
+}
+
+UIGroup* UIGroup::findGroup(int groupCode) { return findElementTemplated<UIGroup>(this, groupCode); }
+UIButton* UIGroup::findButton(int buttonCode) { return findElementTemplated<UIButton>(this, buttonCode); }
+UISprite* UIGroup::findSprite(int spriteCode) { return findElementTemplated<UISprite>(this, spriteCode); }
+UILabel* UIGroup::findLabel(int labelCode) { return findElementTemplated<UILabel>(this, labelCode); }
+UICheckBox* UIGroup::findCheckBox(int checkBoxCode) { return findElementTemplated<UICheckBox>(this, checkBoxCode); }
+UIEditBox* UIGroup::findEditBox(int editBoxCode) { return findElementTemplated<UIEditBox>(this, editBoxCode); }
+UIToggleButton* UIGroup::findToggleButton(int toggleButtonCode) { return findElementTemplated<UIToggleButton>(this, toggleButtonCode); }
+UIProgressBar* UIGroup::findProgressBar(int progressBarCode) { return findElementTemplated<UIProgressBar>(this, progressBarCode); }
+UIScrollBar* UIGroup::findScrollBar(int scrollBarCode) { return findElementTemplated<UIScrollBar>(this, scrollBarCode); }
+UIStatic* UIGroup::findStatic(int staticCode) { return findElementTemplated<UIStatic>(this, staticCode); }
+
 
 void UIGroup::addUIElement(UIGroupElemInfo* groupElemInfo) {
 	UIElementInfo* pElemInfo = CoreDataManager_v->getUIElementInfo(groupElemInfo->Code);
@@ -194,13 +209,8 @@ void UIGroup::addUIElement(UIGroupElemInfo* groupElemInfo) {
 	}
 
 	this->addChild(pChildElement);
-
+	pChildElement->setRelativePosition(groupElemInfo->Pos.x * CoreClientInfo_v->UIScaleXFactor, groupElemInfo->Pos.y * CoreClientInfo_v->UIScaleYFactor);
 	
-
-	pChildElement->setRelativePosition(groupElemInfo->Pos.x, groupElemInfo->Pos.y);
-	
-	
-
 	if (pChildElement->isGroup())
 		static_cast<UIGroup*>(pChildElement)->initChildren();
 }
@@ -234,22 +244,44 @@ void UIGroup::restoreState(State state) {
 	forEachRecursive([state](UIElement* child) { child->restoreState(state); });
 }
 
-void UIGroup::setContentSize(const SGSize& size) {
-	Size prevContentSize = _contentSize;
-	_contentSize = size;
+void UIGroup::setUISize(const SGSize& size) {
 
-	float fScaleX = _contentSize.width / prevContentSize.width;
-	float fScaleY = _contentSize.height / prevContentSize.height;
+	if (!m_bResizable)
+		return;
+
+	Size prevContentSize = m_UISize;
+	m_UISize = size;
+
+	float fScaleX = m_UISize.width / prevContentSize.width;
+	float fScaleY = m_UISize.height / prevContentSize.height;
 
 	// 자식요소간의 간격, 자식요소의 크기 모두 변경된 크기에 맞게 변환되어야한다.
-	forEachRecursive([&](UIElement* child) {
-		Size childPrevContentSize = child->getContentSize();
-		Vec2 childPrevRelativePos = child->calculateRelativePosition(prevContentSize);
+	forEach([&](UIElement* child) {
+		if (!child->isResizable())
+			return;
 
-		child->setContentSize({ childPrevContentSize.width * fScaleX, childPrevContentSize.height * fScaleY });
+		Size childPrevContentSize = child->getUISize();
+		Vec2 childPrevRelativePos = child->calculateRelativePosition(prevContentSize);
+		child->setUISize({ childPrevContentSize.width * fScaleX, childPrevContentSize.height * fScaleY });
 		child->setRelativePosition(childPrevRelativePos.x * fScaleX, childPrevRelativePos.y * fScaleY);
 	});
 
 	
+}
+
+UIElement* UIGroup::findElementRecursiveInternal(UIGroup* parent, int code) {
+	for (int i = 0; i < parent->_children.size(); ++i) {
+		UIElement* pElem = static_cast<UIElement*>(parent->_children.at(i));
+
+		if (pElem->getCode() == code) {
+			return pElem;
+		}
+
+		if (pElem->getElementType() == UIElementType::Group) {
+			return findElementRecursiveInternal(static_cast<UIGroup*>(pElem), code);
+		}
+	}
+
+	return nullptr;
 }
 

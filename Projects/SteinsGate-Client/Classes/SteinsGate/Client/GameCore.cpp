@@ -29,6 +29,7 @@ ActorListenerManager*	CoreActorListenerManager_v;
 ActorBox*				CoreActorBox_v;
 ImagePackManager*		CorePackManager_v;
 Global*					CoreGlobal_v;
+PopupManager*			CorePopupManager_v;
 
 void InitializeClientCore() {
 	CoreGlobal_v				= Global::Get();
@@ -41,6 +42,7 @@ void InitializeClientCore() {
 	CoreWorld_v					= WorldScene::get();
 	CoreActorListenerManager_v  = ActorListenerManager::Get();
 	CoreActorBox_v				= ActorBox::Get();
+	CorePopupManager_v			= PopupManager::Get();
 
 
 	CoreGlobal_v->init();
@@ -53,7 +55,8 @@ void InitializeClientCore() {
 }
 
 void FinalizeClientCore() {
-	
+
+	DeleteSingletonSafe(CorePopupManager_v);
 	DeleteSingletonSafe(CoreUIManager_v);
 	DeleteSingletonSafe(CorePlayer_v);
 	DeleteSingletonSafe(CoreDataManager_v);
@@ -63,5 +66,6 @@ void FinalizeClientCore() {
 	DeleteSingletonSafe(CoreActorBox_v);
 	DeleteSingletonSafe(CorePackManager_v);
 	DeleteSingletonSafe(CoreGlobal_v);
+	
 	Null(CoreWorld_v);	// 월드는 코코스에서 알아서 제거해줌
 }

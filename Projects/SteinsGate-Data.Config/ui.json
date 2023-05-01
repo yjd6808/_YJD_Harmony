@@ -1,6 +1,106 @@
 {
-	"date": "4/30/2023 12:36:19 AM",
+	"date": "5/2/2023 12:59:54 AM",
 	"elements": [
+		{
+			"code": 24001,
+			"type": 3,
+			"valign": 1,
+			"halign": 1,
+			"sga": "sprite_interface.sga",
+			"img": "selectdungeon_.img",
+			"sprite": 17,
+			"size": "108 25",
+			"scale9": true
+		},
+		{
+			"code": 29008,
+			"type": 4,
+			"valign": 2,
+			"halign": 0,
+			"size": "119 16",
+			"text_halign": 0,
+			"font_size": 12,
+			"font_color": "255 255 0 255",
+			"p_text": "텍스트를 입력해주세요.",
+			"p_font_color": "128 128 128 255",
+			"p_font_size": 16,
+			"max_length": 20,
+			"input_mode": 0
+		},
+		{
+			"code": 29007,
+			"type": 1,
+			"valign": 2,
+			"halign": 2,
+			"sga": "sprite.sga",
+			"img": "login.img",
+			"sprite": "6 7 8 18",
+			"linear_dodge": false
+		},
+		{
+			"code": 29006,
+			"type": 2,
+			"valign": 2,
+			"halign": 0,
+			"size": "49 17",
+			"font": "DF.ttf",
+			"font_size": 12,
+			"font_color": "255 228 196 255",
+			"text": "안녕",
+			"text_wrap": false,
+			"text_valign": 0,
+			"text_halign": 0
+		},
+		{
+			"code": 29005,
+			"type": 5,
+			"valign": 2,
+			"halign": 0,
+			"bg_sga": "sprite_interface.sga",
+			"bg_img": "avatar_converting.img",
+			"cross_sga": "sprite.sga",
+			"cross_img": "login.img",
+			"sprite": "13 -1 1 -1"
+		},
+		{
+			"code": 29004,
+			"type": 9,
+			"valign": 0,
+			"halign": 2,
+			"size": "30 30"
+		},
+		{
+			"code": 29003,
+			"type": 7,
+			"valign": 2,
+			"halign": 0,
+			"sga": "sprite_interface_chatting.sga",
+			"img": "chatting2.img",
+			"sprite": "2 3 4 5 8 9 6",
+			"track_size": "12 97"
+		},
+		{
+			"code": 29002,
+			"type": 8,
+			"valign": 2,
+			"halign": 2,
+			"sga": "sprite_interface.sga",
+			"img": "base.img",
+			"sprite": 1,
+			"size": "34 45",
+			"direction": 2
+		},
+		{
+			"code": 29001,
+			"type": 6,
+			"valign": 2,
+			"halign": 0,
+			"sga": "sprite.sga",
+			"img": "login.img",
+			"sprite": "6 7 8 18",
+			"sprite2": "9 10 11 19",
+			"linear_dodge": false
+		},
 		{
 			"code": 28008,
 			"type": 4,
@@ -91,96 +191,7 @@
 			"linear_dodge": false
 		},
 		{
-			"code": 27008,
-			"type": 4,
-			"valign": 2,
-			"halign": 0,
-			"size": "119 16",
-			"text_halign": 0,
-			"font_size": 12,
-			"font_color": "255 255 0 255",
-			"p_text": "텍스트를 입력해주세요.",
-			"p_font_color": "128 128 128 255",
-			"p_font_size": 16,
-			"max_length": 20,
-			"input_mode": 0
-		},
-		{
-			"code": 27007,
-			"type": 1,
-			"valign": 2,
-			"halign": 2,
-			"sga": "sprite.sga",
-			"img": "login.img",
-			"sprite": "6 7 8 18",
-			"linear_dodge": false
-		},
-		{
-			"code": 27006,
-			"type": 2,
-			"valign": 2,
-			"halign": 0,
-			"size": "49 17",
-			"font": "DF.ttf",
-			"font_size": 12,
-			"font_color": "255 228 196 255",
-			"text": "안녕",
-			"text_wrap": false,
-			"text_valign": 0,
-			"text_halign": 0
-		},
-		{
-			"code": 27005,
-			"type": 5,
-			"valign": 2,
-			"halign": 0,
-			"bg_sga": "sprite_interface.sga",
-			"bg_img": "avatar_converting.img",
-			"cross_sga": "sprite.sga",
-			"cross_img": "login.img",
-			"sprite": "13 -1 1 -1"
-		},
-		{
 			"code": 27004,
-			"type": 9,
-			"valign": 0,
-			"halign": 2,
-			"size": "30 30"
-		},
-		{
-			"code": 27003,
-			"type": 7,
-			"valign": 2,
-			"halign": 0,
-			"sga": "sprite_interface_chatting.sga",
-			"img": "chatting2.img",
-			"sprite": "2 3 4 5 8 9 6",
-			"track_size": "12 97"
-		},
-		{
-			"code": 27002,
-			"type": 8,
-			"valign": 2,
-			"halign": 2,
-			"sga": "sprite_interface.sga",
-			"img": "base.img",
-			"sprite": 1,
-			"size": "34 45",
-			"direction": 2
-		},
-		{
-			"code": 27001,
-			"type": 6,
-			"valign": 2,
-			"halign": 0,
-			"sga": "sprite.sga",
-			"img": "login.img",
-			"sprite": "6 7 8 18",
-			"sprite2": "9 10 11 19",
-			"linear_dodge": false
-		},
-		{
-			"code": 26004,
 			"type": 8,
 			"valign": 2,
 			"halign": 0,
@@ -191,7 +202,7 @@
 			"direction": 1
 		},
 		{
-			"code": 26003,
+			"code": 27003,
 			"type": 8,
 			"valign": 2,
 			"halign": 0,
@@ -202,7 +213,7 @@
 			"direction": 0
 		},
 		{
-			"code": 26002,
+			"code": 27002,
 			"type": 8,
 			"valign": 2,
 			"halign": 0,
@@ -213,7 +224,7 @@
 			"direction": 3
 		},
 		{
-			"code": 26001,
+			"code": 27001,
 			"type": 8,
 			"valign": 2,
 			"halign": 0,
@@ -224,7 +235,7 @@
 			"direction": 2
 		},
 		{
-			"code": 25010,
+			"code": 26010,
 			"type": 2,
 			"valign": 2,
 			"halign": 0,
@@ -238,7 +249,7 @@
 			"text_halign": 0
 		},
 		{
-			"code": 25009,
+			"code": 26009,
 			"type": 2,
 			"valign": 2,
 			"halign": 0,
@@ -252,7 +263,7 @@
 			"text_halign": 0
 		},
 		{
-			"code": 25008,
+			"code": 26008,
 			"type": 2,
 			"valign": 2,
 			"halign": 0,
@@ -266,7 +277,7 @@
 			"text_halign": 0
 		},
 		{
-			"code": 25007,
+			"code": 26007,
 			"type": 2,
 			"valign": 2,
 			"halign": 0,
@@ -280,7 +291,7 @@
 			"text_halign": 0
 		},
 		{
-			"code": 25006,
+			"code": 26006,
 			"type": 2,
 			"valign": 2,
 			"halign": 0,
@@ -294,7 +305,7 @@
 			"text_halign": 1
 		},
 		{
-			"code": 25005,
+			"code": 26005,
 			"type": 4,
 			"valign": 2,
 			"halign": 0,
@@ -309,7 +320,7 @@
 			"input_mode": 0
 		},
 		{
-			"code": 25004,
+			"code": 26004,
 			"type": 7,
 			"valign": 2,
 			"halign": 0,
@@ -319,7 +330,7 @@
 			"track_size": "20 97"
 		},
 		{
-			"code": 25003,
+			"code": 26003,
 			"type": 5,
 			"valign": 2,
 			"halign": 0,
@@ -330,7 +341,7 @@
 			"sprite": "13 -1 1 -1"
 		},
 		{
-			"code": 25002,
+			"code": 26002,
 			"type": 3,
 			"valign": 2,
 			"halign": 0,
@@ -340,7 +351,7 @@
 			"size": "117 86"
 		},
 		{
-			"code": 25001,
+			"code": 26001,
 			"type": 6,
 			"valign": 2,
 			"halign": 0,
@@ -351,7 +362,37 @@
 			"linear_dodge": false
 		},
 		{
-			"code": 24005,
+			"code": 25003,
+			"type": 1,
+			"valign": 0,
+			"halign": 2,
+			"sga": "sprite_interface.sga",
+			"img": "commonbtn01.img",
+			"sprite": "0 1 2 3",
+			"linear_dodge": false
+		},
+		{
+			"code": 25002,
+			"type": 1,
+			"valign": 2,
+			"halign": 1,
+			"sga": "sprite_interface.sga",
+			"img": "commonbtn01.img",
+			"sprite": "29 30 31 29",
+			"linear_dodge": false
+		},
+		{
+			"code": 25001,
+			"type": 1,
+			"valign": 2,
+			"halign": 1,
+			"sga": "sprite_interface.sga",
+			"img": "commonbtn01.img",
+			"sprite": "23 24 25 23",
+			"linear_dodge": false
+		},
+		{
+			"code": 24002,
 			"type": 2,
 			"valign": 0,
 			"halign": 0,
@@ -363,46 +404,6 @@
 			"text_wrap": false,
 			"text_valign": 0,
 			"text_halign": 0
-		},
-		{
-			"code": 24004,
-			"type": 1,
-			"valign": 2,
-			"halign": 1,
-			"sga": "sprite_interface.sga",
-			"img": "commonbtn01.img",
-			"sprite": "0 1 2 3",
-			"linear_dodge": false
-		},
-		{
-			"code": 24003,
-			"type": 1,
-			"valign": 2,
-			"halign": 1,
-			"sga": "sprite_interface.sga",
-			"img": "commonbtn01.img",
-			"sprite": "29 30 31 29",
-			"linear_dodge": false
-		},
-		{
-			"code": 24002,
-			"type": 1,
-			"valign": 2,
-			"halign": 1,
-			"sga": "sprite_interface.sga",
-			"img": "commonbtn01.img",
-			"sprite": "23 24 25 23",
-			"linear_dodge": false
-		},
-		{
-			"code": 24001,
-			"type": 3,
-			"valign": 1,
-			"halign": 1,
-			"sga": "sprite_interface.sga",
-			"img": "windowcommon.img",
-			"sprite": 57,
-			"size": "180 180"
 		},
 		{
 			"code": 22005,
@@ -2928,44 +2929,41 @@
 			"size": "180 180",
 			"children": [
 				"24001 0 0",
-				"24002 -35 10",
-				"24003 35 10",
-				"24004 0 10",
-				"24005 14 -15"
+				"24002 14 -15",
+				"25000 0 5"
 			]
 		},
 		{
 			"code": 25000,
 			"type": 0,
-			"valign": 1,
+			"valign": 2,
 			"halign": 1,
-			"size": "640 480",
+			"size": "131 30",
 			"children": [
-				"25001 298 6",
-				"25002 517 5",
-				"25003 203 11",
-				"25004 272 9",
-				"25005 8 6",
-				"25006 383 5",
-				"25007 8 51",
-				"25008 7 73",
-				"25009 7 31",
-				"25010 519 94",
-				"26000 300 41",
-				"27000 3 153"
+				"25001 -35 3",
+				"25002 35 3",
+				"25003 -39 -3"
 			]
 		},
 		{
 			"code": 26000,
 			"type": 0,
-			"valign": 2,
-			"halign": 0,
-			"size": "213 89",
+			"valign": 1,
+			"halign": 1,
+			"size": "640 480",
 			"children": [
-				"26001 7 22",
-				"26002 43 17",
-				"26003 78 56",
-				"26004 83 22"
+				"26001 298 6",
+				"26002 517 5",
+				"26003 203 11",
+				"26004 272 9",
+				"26005 8 6",
+				"26006 383 5",
+				"26007 8 51",
+				"26008 7 73",
+				"26009 7 31",
+				"26010 519 94",
+				"27000 300 41",
+				"28000 3 153"
 			]
 		},
 		{
@@ -2973,17 +2971,12 @@
 			"type": 0,
 			"valign": 2,
 			"halign": 0,
-			"size": "323 249",
+			"size": "213 89",
 			"children": [
-				"27001 221 47",
-				"27002 -59 104",
-				"27003 199 27",
-				"27004 -125 -195",
-				"27005 224 -12",
-				"27006 289 131",
-				"27007 24 24",
-				"27008 24 10",
-				"28000 11 99"
+				"27001 7 22",
+				"27002 43 17",
+				"27003 78 56",
+				"27004 83 22"
 			]
 		},
 		{
@@ -2991,16 +2984,34 @@
 			"type": 0,
 			"valign": 2,
 			"halign": 0,
+			"size": "323 249",
+			"children": [
+				"28001 221 47",
+				"28002 -59 104",
+				"28003 199 27",
+				"28004 -125 -195",
+				"28005 224 -12",
+				"28006 289 131",
+				"28007 24 24",
+				"28008 24 10",
+				"29000 11 99"
+			]
+		},
+		{
+			"code": 29000,
+			"type": 0,
+			"valign": 2,
+			"halign": 0,
 			"size": "179 139",
 			"children": [
-				"28001 54 26",
-				"28002 -82 83",
-				"28003 32 6",
-				"28004 -148 -106",
-				"28005 57 -33",
-				"28006 122 110",
-				"28007 -8 2",
-				"28008 57 60"
+				"29001 54 26",
+				"29002 -82 83",
+				"29003 32 6",
+				"29004 -148 -106",
+				"29005 57 -33",
+				"29006 122 110",
+				"29007 -8 2",
+				"29008 57 60"
 			]
 		}
 	],
@@ -3018,7 +3029,7 @@
 			"19000 0 0",
 			"22000 0 100",
 			"23000 0 0",
-			"25000 0 0"
+			"26000 0 0"
 		]
 	},
 	"mode": "GameData"

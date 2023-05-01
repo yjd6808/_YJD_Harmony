@@ -586,6 +586,9 @@ public:
 
     FontAtlas* getFontAtlas() { return _fontAtlas; }
 
+    // 윤정도: 각 라인별 너비 반환
+    std::vector<float>& getLinesWidth() { return _linesWidth; }
+
     virtual const BlendFunc& getBlendFunc() const override { return _blendFunc; }
     virtual void setBlendFunc(const BlendFunc &blendFunc) override;
 

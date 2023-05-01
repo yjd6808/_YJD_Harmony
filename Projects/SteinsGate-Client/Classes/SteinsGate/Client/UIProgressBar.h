@@ -14,6 +14,7 @@ class UIProgressBar : public UIElement
 {
 public:
 	static UIProgressBar* create(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo);
+	static constexpr UIElementType_t type() { return UIElementType::ProgressBar; }
 
 	UIProgressBar(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo);
 	~UIProgressBar() override;
@@ -22,7 +23,7 @@ public:
 	void load() override;
 	void unload() override;
 
-	void setContentSize(const SGSize& size) override;
+	void setUISize(const SGSize& size) override;
 	void setPercent(float percent) const;
 	float getPercent() const;
 

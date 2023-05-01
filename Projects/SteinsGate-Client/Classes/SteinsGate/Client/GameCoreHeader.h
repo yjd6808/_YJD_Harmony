@@ -21,3 +21,4 @@
 #include <SteinsGate/Client/ActorBox.h>
 #include <SteinsGate/Client/Global.h>
 #include <SteinsGate/Client/ImagePackManager.h>
+#include <SteinsGate/Client/PopupManager.h>

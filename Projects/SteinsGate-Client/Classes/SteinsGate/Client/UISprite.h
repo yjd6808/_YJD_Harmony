@@ -14,6 +14,7 @@ class UISprite : public UIElement
 {
 public:
 	static UISprite* create(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* spriteInfo);
+	static constexpr UIElementType_t type() { return UIElementType::Sprite; }
 
 	UISprite(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* staticInfo);
 	~UISprite() override;
@@ -22,7 +23,9 @@ public:
 	void load() override;
 	void unload() override;
 
-	void setContentSize(const SGSize& contentSize) override;
+	
+	void setCapInsets(const SGRect& insets);
+	void setUISize(const SGSize& contentSize) override;
 	bool isScale9() const { return m_pInfo->Scale9; }
 
 	UISpriteInfo* getInfo() const { return m_pInfo; }
