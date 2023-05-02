@@ -220,15 +220,23 @@ void UILayer::removeUIGroup(UIMasterGroup* group) {
 }
 
 void UILayer::clear() {
-	forEach([](UIMasterGroup* child) {child->onRemoved(); });
+	SGVector<UIMasterGroup*> vTempList;	// 레퍼런스 카운트가 1일 경우 레이어에서 해제될때 카운트가 0이되서 소멸해버림.
+
+	forEach([&vTempList](UIMasterGroup* child) {
+		child->retain();
+		vTempList.PushBack(child);
+	});
+
 	removeAllChildren();
-	
+
+	for (int i = 0; i < vTempList.Size(); ++i) {
+		vTempList[i]->onRemoved();
+		vTempList[i]->release();
+	}
 }
 
 void UILayer::clearUnload() {
-	forEach([](UIMasterGroup* child) {child->onRemoved(); });
-	removeAllChildren();
-
+	clear();
 	CoreUIManager_v->unloadAll();
 }
 

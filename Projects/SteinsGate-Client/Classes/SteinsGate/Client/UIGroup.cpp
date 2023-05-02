@@ -249,24 +249,21 @@ void UIGroup::setUISize(const SGSize& size) {
 	if (!m_bResizable)
 		return;
 
-	Size prevContentSize = m_UISize;
+	Vec2 relativePos = getRelativePosition();
 	m_UISize = size;
 
-	float fScaleX = m_UISize.width / prevContentSize.width;
-	float fScaleY = m_UISize.height / prevContentSize.height;
+	const float fScaleX = getScaleX();
+	const float fScaleY = getScaleY();
 
 	// 자식요소간의 간격, 자식요소의 크기 모두 변경된 크기에 맞게 변환되어야한다.
 	forEach([&](UIElement* child) {
 		if (!child->isResizable())
 			return;
 
-		Size childPrevContentSize = child->getUISize();
-		Vec2 childPrevRelativePos = child->calculateRelativePosition(prevContentSize);
-		child->setUISize({ childPrevContentSize.width * fScaleX, childPrevContentSize.height * fScaleY });
-		child->setRelativePosition(childPrevRelativePos.x * fScaleX, childPrevRelativePos.y * fScaleY);
+		child->setUIScale(fScaleX, fScaleY);
 	});
 
-	
+	setRelativePosition(relativePos);
 }
 
 UIElement* UIGroup::findElementRecursiveInternal(UIGroup* parent, int code) {

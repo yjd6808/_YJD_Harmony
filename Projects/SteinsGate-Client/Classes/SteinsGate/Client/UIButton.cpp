@@ -57,17 +57,19 @@ void UIButton::setUISize(const SGSize& size) {
 	if (!m_bLoaded) 
 		return;
 
+	const float fScaleX = getScaleX();
+	const float fScaleY = getScaleY();
+
 	for (int i = 0; i < eMax; ++i) {
 
-		FrameTexture* pTexture = m_pTexture[i];
 		Sprite* pSprite = m_pSprite[i];
 
-		if (pTexture == nullptr || pSprite == nullptr) {
+		if (pSprite == nullptr) {
 			continue;
 		}
 
-		pSprite->setScaleX(m_UISize.width / pTexture->getWidthF());
-		pSprite->setScaleY(m_UISize.height / pTexture->getHeightF());
+		pSprite->setScaleX(fScaleX);
+		pSprite->setScaleY(fScaleY);
 	}
 	
 }
@@ -144,6 +146,8 @@ void UIButton::load() {
 		return;
 
 	ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+
+
 
 	for (int i = 0; i < eMax; ++i) {
 		const int iSprite = m_pInfo->Sprites[i];

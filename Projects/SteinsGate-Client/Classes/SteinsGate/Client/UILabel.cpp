@@ -18,6 +18,8 @@ USING_NS_JC;
 
 UILabel::UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo)
 	: UIElement(master, parent, labelInfo)
+	, m_fInitialFontSize(12.0f)
+	, m_fFontSize(12.0f)
 	, m_bFontAutoScaling(true)
 	, m_pInfo(labelInfo)
 	, m_pLabel{nullptr}
@@ -57,7 +59,6 @@ void UILabel::setUISize(const SGSize& contentSize) {
 	if (!m_bResizable)
 		return;
 
-	Size prevSize = m_UISize;
 	m_UISize = contentSize;
 
 	if (m_pLabel == nullptr)
@@ -65,10 +66,8 @@ void UILabel::setUISize(const SGSize& contentSize) {
 
 	// TODO: (완료) 폰트 사이즈도 변경되야함.
 	if (m_bFontAutoScaling) {
-		float fScaleY = m_UISize.height / prevSize.height;
-		float fFontSize = getFontSize() * fScaleY;
-
-		m_pLabel->initWithTTF(m_pLabel->getString(), getFontPath().Source(), fFontSize, { m_UISize.width, m_UISize.height });
+		m_fFontSize = m_fInitialFontSize * getUIScaleY();
+		m_pLabel->initWithTTF(m_pLabel->getString(), getFontPath().Source(), (int)m_fFontSize, { m_UISize.width, m_UISize.height });
 	} else {
 		m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
 	}
@@ -83,7 +82,9 @@ void UILabel::setHAlignment(HAlignment_t halign) {
 }
 
 
-float UILabel::getFontSize() const {
+
+
+float UILabel::getAppliedFontSize() const {
 	return m_pLabel->getTTFConfig().fontSize;
 }
 
@@ -94,8 +95,7 @@ int UILabel::getLineCount() const {
 bool UILabel::init() {
 
 	setInitialUISize(m_pInfo->Size);
-
-	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), getFontPath().Source(), m_pInfo->FontSize * CoreClientInfo_v->UIScaleYFactor, Size::ZERO);
+	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), getFontPath().Source(), int(m_fFontSize), Size::ZERO);
 	m_pLabel->setHorizontalAlignment((TextHAlignment)m_pInfo->TextHAlignment);
 	m_pLabel->setVerticalAlignment((TextVAlignment)m_pInfo->TextVAlignment);
 	m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
@@ -109,3 +109,8 @@ bool UILabel::init() {
 }
 
 
+void UILabel::setInitialUISize(SGSize size) {
+	UIElement::setInitialUISize(size);
+	m_fFontSize = m_pInfo->FontSize * CoreClientInfo_v->UIScaleYFactor;
+	m_fInitialFontSize = m_fFontSize;
+}

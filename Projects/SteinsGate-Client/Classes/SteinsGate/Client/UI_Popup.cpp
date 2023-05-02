@@ -64,6 +64,10 @@ void UI_Popup::onLoaded() {
 	);
 }
 
+void UI_Popup::onRemoved() {
+	close();
+}
+
 void UI_Popup::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
 
 	switch (element->getCode()) {
@@ -149,7 +153,7 @@ void UI_Popup::adjust() {
 	// 4. 팝업 상단부와 하단부 사이에 패딩 너비를 포함하여 여백의 미를 준다.
 
 	const float fPadding = CorePopupManager_v->getPadding();
-	const float fFontSize = m_pLabelText->getFontSize();
+	const float fFontSize = m_pLabelText->getInitialFontSize();
 	const int iLineCount = m_pLabelText->getLineCount();
 	const Size& buttonArea = m_pGroupButtonHolder->getUISize();
 	const float fWidth = Math::Max(CorePopupManager_v->getWidth(), buttonArea.width + fPadding * 2);

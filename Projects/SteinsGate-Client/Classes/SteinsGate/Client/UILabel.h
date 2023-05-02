@@ -32,19 +32,22 @@ public:
 	void setVAlignment(VAlignment_t valign);
 	void setHAlignment(HAlignment_t halign);
 
+	void setInitialUISize(SGSize size) override;
 	void setEnableFontAutoScaling(bool enableScaling) { m_bFontAutoScaling = enableScaling; }
 	bool isFontAutoScalingEnabled() const { return m_bFontAutoScaling; }
 
-	float getFontSize() const;
+	float getAppliedFontSize() const;
+	float getFontSize() const { return m_fFontSize; }
+	float getInitialFontSize() const { return m_fInitialFontSize; }
 	int getLineCount() const;
-
-	
 
 	SGLabel* source() const { return m_pLabel; }
 	UILabelInfo* getInfo() const { return m_pInfo; }
 	UIElementType_t getElementType() override { return UIElementType::Label; }
 	SGString toString() override { return SGStringUtil::Format("라벨(%d)", m_pInfo->Code); }
 private:
+	float m_fInitialFontSize;
+	float m_fFontSize;
 	bool m_bFontAutoScaling;	// UI 사이즈 변경시 변경된 사이즈 비율에 맞게 폰트 크기도 변경시킬지 여부
 	UILabelInfo* m_pInfo;
 	SGLabel* m_pLabel;

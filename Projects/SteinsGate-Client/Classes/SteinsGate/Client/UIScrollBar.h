@@ -1,6 +1,6 @@
-/*
- * ÀÛ¼ºÀÚ: À±Á¤µµ
- * »ý¼ºÀÏ: 3/22/2023 2:23:20 AM
+ï»¿/*
+ * ìž‘ì„±ìž: ìœ¤ì •ë„
+ * ìƒì„±ì¼: 3/22/2023 2:23:20 AM
  * =====================
  *
  */
@@ -58,7 +58,7 @@ public:
 
 	UIScrollBarInfo* getInfo() const { return m_pInfo; }
 	UIElementType_t getElementType() override { return UIElementType::ScrollBar; }
-	SGString toString() override { return SGStringUtil::Format("½ºÅ©·Ñ¹Ù(%d)", m_pInfo->Code); }
+	SGString toString() override { return SGStringUtil::Format("ìŠ¤í¬ë¡¤ë°”(%d)", m_pInfo->Code); }
 protected:
 	void onMouseLeaveDetail(SGEventMouse* mouseEvent) override;
 	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;

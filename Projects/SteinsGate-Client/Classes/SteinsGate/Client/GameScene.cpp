@@ -103,5 +103,5 @@ void SGGameScene::cmdEnterMap() {
 
 void SGGameScene::onExit() {
     ActorBox::Get()->clearAll();
-    //SGSceneBase::onExit();
+    SceneBase::onExit();
 }

@@ -16,6 +16,7 @@
 
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "SceneBase.h"
 
 #include <SteinsGate/Client/WorldScene.h>
@@ -40,11 +41,15 @@ bool SceneBase::init() {
 
 	return true;
 }
+
 void SceneBase::onEnter() {
 	_LogDebug_("%s 씬을 시작", SceneType::Name[getType()]);
+	Scene::onEnter();
 }
+
 void SceneBase::onExit() {
 	_LogDebug_("%s 씬을 종료", SceneType::Name[getType()]);
+	m_pUILayer->clearUnload();
 	Scene::onExit();
 }
 

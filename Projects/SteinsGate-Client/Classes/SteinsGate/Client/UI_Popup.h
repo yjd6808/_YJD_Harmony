@@ -23,6 +23,7 @@ public:
 protected:
 	void onInit() override;
 	void onLoaded() override;
+	void onRemoved() override;
 
 	void onMouseUp(UIElement* element, SGEventMouse* mouseEvent) override;
 	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;

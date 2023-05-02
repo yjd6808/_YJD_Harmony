@@ -104,6 +104,7 @@ void UIProgressBar::unload() {
 	m_pProgressBar = nullptr;
 	CC_SAFE_RELEASE_NULL(m_pTexture);
 	m_bLoaded = false;
+	m_bInitialized = false;
 
 	init();
 }
@@ -117,11 +118,14 @@ void UIProgressBar::setUISize(const SGSize& size) {
 	if (!m_bLoaded)
 		return;
 
-	if (m_pTexture == nullptr || m_pProgressSprite == nullptr)
+	const float fScaleX = getScaleX();
+	const float fScaleY = getScaleY();
+
+	if (m_pProgressBar == nullptr)
 		return;
 
-	m_pProgressBar->setScaleX(m_UISize.width / m_pTexture->getWidthF());
-	m_pProgressBar->setScaleY(m_UISize.height / m_pTexture->getHeightF());
+	m_pProgressBar->setScaleX(fScaleX);
+	m_pProgressBar->setScaleY(fScaleY);
 }
 
 void UIProgressBar::setPercent(float percent) const {

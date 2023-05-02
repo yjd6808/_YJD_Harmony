@@ -247,7 +247,7 @@ void WorldScene::onMouseScroll(SGEventMouse* mouseEvent) const {
 void WorldScene::onExit() {
 
 	// 삭제전 마지막 발악, 모든 UI 리소스 정리
-	m_pUILayer->clearUnload();	
+	m_pUILayer->clearUnload();
 
 	// 강종시 하위 씬들의 onExit을 수동호출해주자.
 	Scene::onExit();		
