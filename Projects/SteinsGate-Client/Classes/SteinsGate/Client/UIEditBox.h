@@ -24,7 +24,8 @@ public:
     std::string getText();
     SGEditBox* source() const { return m_pEditBox; }
     SGString toString() override { return SGStringUtil::Format("에딧박스(%d)", m_pInfo->Code); }
-    
+
+    void setInitialUISize(SGSize size) override;
     void setTextEditBeginCallback(const SGActionFn<UIEditBox*>& fnTextEditBegin) const;
     void setTextChangedCallback(const SGActionFn<UIEditBox*, const SGString&>& fnTextChanged) const;
     void setReturnCallback(const SGActionFn<UIEditBox*>& fnEditBoxReturn) const;
@@ -80,11 +81,17 @@ private:
 	};
   
 private:
-    HWND m_hNativeHandle;
+    bool m_bFontAutoScaling;
+    float m_fFontSizeInitial;
+    float m_fFontSize;
+    float m_fPlaceholderFontSizeInitial;
+    float m_fPlaceholderFontSize;
+
+    HWND m_hNativeHandle{};
 	UIEditBoxInfo* m_pInfo;
-    SGLabel* m_pLabel;
-    SGLabel* m_pLabelPlaceholder;
-    SGEditBoxImplWin* m_pImpl;
+    SGLabel* m_pLabel{};
+    SGLabel* m_pLabelPlaceholder{};
+    SGEditBoxImplWin* m_pImpl{};
 	SGEditBox* m_pEditBox;
     Listener* m_pListener;
 };
