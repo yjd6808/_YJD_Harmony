@@ -19,7 +19,7 @@ USING_NS_JC;
 
 
 UIManager::UIManager()
-	: Master(nullptr)
+	: m_pMaster(nullptr)
 	, m_hLoadedUITexture(1024) // 창을 64개까지 만들일이 있을려나 ㅋㅋ
 	, m_hUIElements(512)
 	, m_hMasterUIGroups(64)
@@ -27,7 +27,7 @@ UIManager::UIManager()
 
 UIManager::~UIManager() {
 
-	CC_SAFE_RELEASE(Master);
+	CC_SAFE_RELEASE(m_pMaster);
 
 	// 마스터 UI 그룹만 제거해주면 된다.
 	// 어차피 내부 자식들은 모두 마스터 UI 그룹에 addChild 되어 있기 때문에
@@ -43,9 +43,9 @@ UIManager::~UIManager() {
 // =====================================================
 
 void UIManager::init() {
-	Master = UIGroupMaster::createRetain();
-	Master->forEach([this](UIMasterGroup* pMasterGroup) { registerMasterGroup(pMasterGroup); });
-	Master->forEach([this](UIMasterGroup* pMasterGroup) { pMasterGroup->onInit(); });
+	m_pMaster = UIGroupMaster::createRetain();
+	m_pMaster->forEach([this](UIMasterGroup* pMasterGroup) { registerMasterGroup(pMasterGroup); });
+	m_pMaster->forEach([this](UIMasterGroup* pMasterGroup) { pMasterGroup->onInit(); });
 }
 
 void UIManager::registerMasterGroup(UIMasterGroup* group) {

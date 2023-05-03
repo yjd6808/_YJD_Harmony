@@ -25,6 +25,7 @@ public:
 	void onExit() override;
 	void onEnterTransitionDidFinish() override;
 	void onExitTransitionDidStart() override;
+	void removeAllChildren() override;
 
 	virtual SceneType_t getType() = 0;
 

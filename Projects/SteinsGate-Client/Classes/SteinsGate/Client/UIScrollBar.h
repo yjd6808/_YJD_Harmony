@@ -64,6 +64,7 @@ protected:
 	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;
 	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;
 	void onMouseUpDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseUpContainedDetail(SGEventMouse* mouseEvent) override;
 	bool onMouseScrollDetail(SGEventMouse* mouseEvent) override;
 
 	void onLinkElementMouseScroll(SGEventMouse* mouseEvent);

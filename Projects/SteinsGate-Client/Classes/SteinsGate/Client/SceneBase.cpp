@@ -59,3 +59,13 @@ void SceneBase::onEnterTransitionDidFinish() {
 void SceneBase::onExitTransitionDidStart() {
 }
 
+
+
+void SceneBase::removeAllChildren() {
+
+	// Scene::removeAllChildren() 함수는 디폴트 카메라를 삭제하지 않기 때문에
+	// 디폴트 카메라도 삭제해주도록 하기 위해서 오버라이딩 구현함
+
+	Node::removeAllChildren();
+}
+

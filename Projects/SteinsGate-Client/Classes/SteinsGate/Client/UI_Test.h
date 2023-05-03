@@ -38,7 +38,10 @@ private:
 
 	int m_iFontCode;
 	SGVector<SGLabel*> m_vTestLabelList;
+	bool m_bTestFont;
 
 	float m_fScale;
 	ScaleState m_eScaleState;
+
+	
 };

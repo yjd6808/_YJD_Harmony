@@ -31,7 +31,6 @@ public:
 	void registerLoadedUITexture(SgaResourceIndex index);
 	void unloadAll();
 	void onUpdate(float dt);
-
 	void callUIElementsUpdateCallback(float dt);
 
 	UIMasterGroup* getMasterGroup(int groupCode);
@@ -46,14 +45,33 @@ public:
 	UIProgressBar* getProgressBar(int progressBarCode);
 	UIScrollBar* getScrollBar(int scrollBarCode);
 	UIStatic* getStatic(int staticCode);
-public:
-	UIGroupMaster* Master;
 
 private:
+	template <typename TElement>
+	TElement* getElementTemplated(int code) {
+		static_assert(JCore::IsPointerType_v<TElement>, "... TElem must be pointer type");
+		constexpr UIElementType_t eTargetType = TElement::type();
+
+		if (!m_hUIElements.Exist(code)) {
+			_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], code);
+			return nullptr;
+		}
+
+		UIElement* pElem = m_hUIElements[code];
+		const UIElementType_t eType = pElem->getElementType();
+
+		if (eType != eTargetType) {
+			_LogWarn_("%d가 %s타입이 아니고, %s입니다.", code, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
+			return nullptr;
+		}
+		return (TElement*)pElem;
+	}
+
+
+	UIGroupMaster* m_pMaster;
 	SGHashMap<Int32U, SgaResourceIndex> m_hLoadedUITexture;		// 어떤 이미지 팩 로딩했는지 기록용
 	SGHashMap<int, UIElement*> m_hUIElements;
 	SGHashMap<int, UIMasterGroup*> m_hMasterUIGroups;
-	
 	SGHashMap<UIElement*, SGEventList<UIElement*, float>> m_hUIElementsUpdateEvent;
 };
 

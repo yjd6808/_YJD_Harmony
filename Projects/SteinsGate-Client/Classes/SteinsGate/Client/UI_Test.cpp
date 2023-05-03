@@ -21,6 +21,7 @@ UI_Test::UI_Test(UIGroupInfo* groupInfo)
 	, m_iFontCode(1)
 	, m_fScale(0.0f)
 	, m_eScaleState(eDecrease)
+	, m_bTestFont(false)
 {}
 
 void UI_Test::onInit() {
@@ -29,12 +30,47 @@ void UI_Test::onInit() {
 }
 
 void UI_Test::onLoaded() {
+
+	// #define UI_TEST_TOGGLEBUTTON_T1	
+	// #define UI_TEST_SPRITE_T2	
+	// #define UI_TEST_CHECKBOX_T3	
+	// #define UI_TEST_SCROLLBAR_T4	
+	// #define UI_TEST_EDITBOX_T5	
+	// #define UI_TEST_LABEL_T6	
+	// #define UI_TEST_LABEL_FONT_TEST	
+	// #define UI_TEST_LABEL_POPUP_TEST	
+	// #define UI_TEST_LABEL_DRAG_TEST	
+	// #define UI_TEST_LABEL_SCALE_TEST	
+	// #define UI_TEST_LABEL_LINE_BREAK	
+	// #define UI_TEST_GROUP_O1	
+	// #define UI_TEST_O1_PROGRESSBAR_T1	
+	// #define UI_TEST_O1_PROGRESSBAR_T2	
+	// #define UI_TEST_O1_PROGRESSBAR_T3	
+	// #define UI_TEST_O1_PROGRESSBAR_T4	
+	// #define UI_TEST_GROUP_O2	
+	// #define UI_TEST_O2_TOGGLEBUTTON_T1	
+	// #define UI_TEST_O2_PROGRESSBAR_TOPBOTTOM	
+	// #define UI_TEST_O2_SCROLLBAR_T3	
+	// #define UI_TEST_O2_STATIC_T4	
+	// #define UI_TEST_O2_CHECKBOX_T5	
+	// #define UI_TEST_O2_LABEL_T6	
+	// #define UI_TEST_O2_BUTTON_T7	
+	// #define UI_TEST_O2_EDITBOX_T8	
+	// #define UI_TEST_O2_GROUP_O21	
+	// #define UI_TEST_O2_O21_TOGGLEBUTTON_T1	
+	// #define UI_TEST_O2_O21_PROGRESSBAR_TOPBOTTOM	
+	// #define UI_TEST_O2_O21_SCROLLBAR_T3	
+	// #define UI_TEST_O2_O21_STATIC_T4	
+	// #define UI_TEST_O2_O21_CHECKBOX_T5	
+	// #define UI_TEST_O2_O21_LABEL_T6	
+	// #define UI_TEST_O2_O21_BUTTON_T7	
+	// #define UI_TEST_O2_O21_EDITBOX_T8	
+
 	m_pGroupO1 = CoreUIManager_v->getGroup(UI_TEST_GROUP_O1);
 	m_pGroupO2 = CoreUIManager_v->getGroup(UI_TEST_GROUP_O2);
 
 	m_GroupO1DefaultSize = m_pGroupO1->getContentSize();
 	m_GroupO2DefaultSize = m_pGroupO2->getContentSize();
-
 }
 
 void UI_Test::onUpdate(float dt) {
@@ -81,12 +117,15 @@ void UI_Test::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
 	}
 
 	else if (element->getCode() == UI_TEST_LABEL_FONT_TEST) {
+		m_bTestFont = !m_bTestFont;
 
 		for (int i = 0; i < m_vTestLabelList.Size(); ++i) {
 			CoreWorld_v->removeChild(m_vTestLabelList[i]);
 		}
 		m_vTestLabelList.Clear();
 
+		if (!m_bTestFont) 
+			return;
 
 		// 1: DF.ttf
 		// 2: DM.ttf
@@ -132,5 +171,15 @@ void UI_Test::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
 		if (m_iFontCode >= CoreFont_v->getFontCount()) {
 			m_iFontCode = 1;
 		}
+	}
+
+	else if (element->getCode() == UI_TEST_LABEL_DRAG_TEST) {
+		forEachRecursiveContainedSelf([](UIElement* element) {
+			element->setDraggable(!element->isDraggable());
+		});
+	}
+
+	else if (element->getCode() == UI_TEST_LABEL_RESET_POSITION) {
+		resetChildrenPosition();
 	}
 }

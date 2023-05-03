@@ -31,7 +31,7 @@ struct UIGroupElemInfo
 
 struct UIGroupInfo : UIElementInfo
 {
-	UIGroupInfo(int elemCount) : InfoList(elemCount) {}
+	UIGroupInfo(int elemCount) : InfoList(elemCount == 0 ? 1 : elemCount) {}	// 용량이 0일수는 없으므로.
 	~UIGroupInfo() override = default;
 
 	SGSize Size;

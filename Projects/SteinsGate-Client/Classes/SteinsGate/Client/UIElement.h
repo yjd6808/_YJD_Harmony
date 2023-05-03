@@ -36,6 +36,7 @@ public:
 	inline static const SGSize DefaultSize45 = { 45, 45 };
 	inline static const SGSize DefaultSize30 = { 30, 30 };
 	inline static const SGSize DefaultSize15 = { 15, 15 };
+	inline static const int MinDragStartDistance = 5.0f;		// 드래그 시작 최단 거리
 
 	enum State
 	{
@@ -44,6 +45,13 @@ public:
 		ePressed,
 		eDisabled,
 		eMax
+	};
+
+	struct DragState
+	{
+		SGVec2 StartElementPosition;
+		SGVec2 StartCursorPosition;
+		bool Dragging = false;
 	};
 
 	UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo* info);
@@ -79,11 +87,11 @@ public:
 	SGRect getWorldBoundingBox() const;
 	virtual void updateState();
 
-	template <typename TElem>
-	TElem cast() {
-		static_assert(JCore::IsPointerType_v<TElem>, "... TElem must be pointer type");
-		static_assert(JCore::IsBaseOf_v<UIElement, JCore::RemovePointer_t<TElem>>, "... TElem must be SGUIElement type");
-		return static_cast<TElem>(this);
+	template <typename TElement>
+	TElement cast() {
+		static_assert(JCore::IsPointerType_v<TElement>, "... TElement must be pointer type");
+		static_assert(JCore::IsBaseOf_v<UIElement, JCore::RemovePointer_t<TElement>>, "... TElement must be UIElement type");
+		return static_cast<TElement>(this);
 	}
 
 	virtual SGString toString() = 0;
@@ -133,11 +141,18 @@ public:
 
 	void setResizable(bool resizable) { m_bResizable = resizable; }
 	bool isResizable() const { return m_bResizable; }
+
+	void setDraggable(bool draggable) { m_bDraggable = draggable; }
+	bool isDraggable() const { return m_bDraggable; }
+	bool isDragging() const { return m_DragState.Dragging; }
 protected:
 	bool isContainPoint(SGEventMouse* mouseEvent);
 	virtual void setInitialUISize(SGSize size);
 
-	// _contentSize = 실제 UI 크기(설정파일상)
+	// 현재 내가 정립한 UI 규격
+	// m_pInfo->Size = 실제 UI 크기(설정파일)
+	// _contentSize = 게임 해상도가 반영된 UI 크기
+	// m_UISize = 사용자 지정 변경된 UI 크기
 	// _position = 부모 노드 기준 좌하단 좌표
 
 	SGMouseEventList* m_pMouseEventMap[eMouseEventMax];
@@ -146,8 +161,11 @@ protected:
 	UIGroup* m_pParent;				// 직속 상관
 	SGSize m_UISize;				// 화면상 보이는 UI 크기 
 	State m_eState;
+	DragState m_DragState;
 
+	bool m_bDevloperCreated;		// 개발자가 수동으로 생성한 커스텀 객체인 경우
 	bool m_bInitialized;
+	bool m_bDraggable;
 	bool m_bLoaded;
 	bool m_bFocused;
 	bool m_bResizable;				// 처음 크기가 결정된 후 UIGroup::setContentSize() 호출시 크기 업데이트가 이뤄질지 여부

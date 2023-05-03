@@ -446,20 +446,31 @@ bool UIScrollBar::onMouseDownDetail(SGEventMouse* mouseEvent) {
 }
 
 void UIScrollBar::onMouseUpDetail(SGEventMouse* mouseEvent) {
-	const SGVec2 cursorPos = mouseEvent->getCursorPos();
-
 	setVisibleStateNormal();
 	m_bDragBegin = false;
+}
+
+bool UIScrollBar::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
+	const SGVec2 cursorPos = mouseEvent->getCursorPos();
 
 	if (isUpButtonContainPoint(cursorPos)) {
 		setRowPos(m_iPos - 1);
 		m_pMasterGroup->onScrollBarUpButtonPressed(this, m_iPos);
-	} else if (isDownButtonContainPoint(cursorPos)) {
+		return false;
+	}
+
+	if (isDownButtonContainPoint(cursorPos)) {
 		setRowPos(m_iPos + 1);
 		m_pMasterGroup->onScrollBarDownButtonPressed(this, m_iPos);
-	} else if (isThumbButtonContainPoint(cursorPos)) {
-		m_pMasterGroup->onScrollBarThumbButtonPressed(this, m_iPos);
+		return false;
 	}
+
+	if (isThumbButtonContainPoint(cursorPos)) {
+		m_pMasterGroup->onScrollBarThumbButtonPressed(this, m_iPos);
+		return false;
+	}
+
+	return true;
 }
 
 bool UIScrollBar::onMouseScrollDetail(SGEventMouse* mouseEvent) {

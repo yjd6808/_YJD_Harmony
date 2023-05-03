@@ -30,6 +30,10 @@ void UIMasterGroup::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {}
 void UIMasterGroup::onMouseLeave(UIElement* element, SGEventMouse* mouseEvent) {}
 void UIMasterGroup::onMouseScroll(UIElement* element, SGEventMouse* mouseEvent) {}
 
+void UIMasterGroup::onDragEnter(UIElement* element) {}
+void UIMasterGroup::onDragMove(UIElement* element) {}
+void UIMasterGroup::onDragEnd(UIElement* element) {}
+
 void UIMasterGroup::onCheckedStateChanged(UICheckBox* checkBox, bool checked) {}
 void UIMasterGroup::onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state) {}
 

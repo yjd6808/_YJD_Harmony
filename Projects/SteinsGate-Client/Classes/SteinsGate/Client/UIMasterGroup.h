@@ -47,6 +47,10 @@ public:
 	virtual void onMouseLeave(UIElement* element, SGEventMouse* mouseEvent);
 	virtual void onMouseScroll(UIElement* element, SGEventMouse* mouseEvent);
 
+	virtual void onDragEnter(UIElement* element);
+	virtual void onDragMove(UIElement* element);
+	virtual void onDragEnd(UIElement* element);
+
 	virtual void onCheckedStateChanged(UICheckBox* checkBox, bool checked);
 	virtual void onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state);
 
@@ -59,7 +63,7 @@ public:
 	virtual void onEditBoxTextChanged(UIEditBox* editBox, const std::string& str);
 	virtual void onEditBoxReturn(UIEditBox* editBox);
 	virtual void onEditBoxEditingDidEndWithAction(UIEditBox* editBox, SGEditBoxEndAction endAction);
-	
+
 	SGString toString() override { return SGStringUtil::Format("마스터그룹(%d)", m_pInfo->Code); }
 };
 

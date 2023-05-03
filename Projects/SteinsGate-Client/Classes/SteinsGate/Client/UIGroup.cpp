@@ -61,6 +61,24 @@ void UIGroup::initChildren() {
 		UIGroupElemInfo* elemInfo = &m_pInfo->InfoList[i];
 		addUIElement(elemInfo);
 	}
+
+	initChildrenPosition();
+}
+
+void UIGroup::initChildrenPosition() {
+	for (int i = 0; i < m_pInfo->InfoList.Size(); ++i) {
+
+		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
+		const UIGroupElemInfo& elemInfo = m_pInfo->InfoList[i];
+		pElem->setRelativePosition(
+			elemInfo.Pos.x * CoreClientInfo_v->UIScaleXFactor,
+			elemInfo.Pos.y * CoreClientInfo_v->UIScaleYFactor
+		);
+
+		if (pElem->isGroup()) {
+			static_cast<UIGroup*>(pElem)->initChildrenPosition();
+		}
+	}
 }
 
 void UIGroup::load() {
@@ -112,8 +130,6 @@ bool UIGroup::onMouseMove(SGEventMouse* mouseEvent) {
 }
 
 bool UIGroup::onMouseDown(SGEventMouse* mouseEvent) {
-	
-
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
 
@@ -121,12 +137,13 @@ bool UIGroup::onMouseDown(SGEventMouse* mouseEvent) {
 
 	for (int i = _children.size() - 1; i >= 0; --i) {
 		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
-		if (!pElem->onMouseDown(mouseEvent))
+		if (!pElem->onMouseDown(mouseEvent)) {
 			return false;
+		}
 	}
 
 	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
-	return UIElement::onMouseDown(mouseEvent);;
+	return UIElement::onMouseDown(mouseEvent);
 }
 
 bool UIGroup::onMouseUp(SGEventMouse* mouseEvent) {
@@ -208,11 +225,10 @@ void UIGroup::addUIElement(UIGroupElemInfo* groupElemInfo) {
 		return;
 	}
 
-	this->addChild(pChildElement);
-	pChildElement->setRelativePosition(groupElemInfo->Pos.x * CoreClientInfo_v->UIScaleXFactor, groupElemInfo->Pos.y * CoreClientInfo_v->UIScaleYFactor);
-	
 	if (pChildElement->isGroup())
 		static_cast<UIGroup*>(pChildElement)->initChildren();
+
+	this->addChild(pChildElement);
 }
 
 void UIGroup::forEachRecursive(const SGActionFn<UIElement*>& action) const {
@@ -230,10 +246,20 @@ void UIGroup::forEachRecursive(const SGActionFn<UIElement*>& action) const {
 	}
 }
 
+void UIGroup::forEachRecursiveContainedSelf(const SGActionFn<UIElement*>& action) const {
+	action((UIElement*)this);
+	forEachRecursive(action);
+}
+
 void UIGroup::forEach(const SGActionFn<UIElement*>& action) const {
 	for (int i = 0; i < _children.size(); ++i) {
 		action(static_cast<UIElement*>(_children.at(i)));
 	}
+}
+
+void UIGroup::forEachContainedSelf(const SGActionFn<UIElement*>& action) const {
+	action((UIElement*)this);
+	forEach(action);
 }
 
 
@@ -242,6 +268,11 @@ void UIGroup::restoreState(State state) {
 		return;
 
 	forEachRecursive([state](UIElement* child) { child->restoreState(state); });
+}
+
+void UIGroup::reload() {
+	unload();
+	load();
 }
 
 void UIGroup::setUISize(const SGSize& size) {

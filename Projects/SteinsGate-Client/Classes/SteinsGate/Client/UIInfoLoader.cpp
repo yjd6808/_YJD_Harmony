@@ -68,7 +68,8 @@ bool UIInfoLoader::load()
 			Value& uiGroupRoot = uiGroupListRoot[i];
 			Value& groupElemInfoListRoot = uiGroupRoot[JsonChildrenKey];
 
-			DebugAssertMsg(groupElemInfoListRoot.size() != 0, "그룹에 자식이 없습니다.");
+			// 키값이 "groups" = []으로 들어가버린경우
+			_LogWarnIf_(groupElemInfoListRoot.empty(), "그룹에 자식이 없습니다.");
 			UIGroupInfo* groupInfo = dbg_new UIGroupInfo(groupElemInfoListRoot.size());
 
 			readElementCommon(uiGroupRoot, groupInfo);

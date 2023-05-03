@@ -21,7 +21,9 @@ UIElement::UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo*
 	, m_pMasterGroup(masterGroup)
 	, m_pParent(parent)
 	, m_eState(eNormal)
+	, m_bDevloperCreated(false)
 	, m_bInitialized(false)
+	, m_bDraggable(false)
 	, m_bLoaded(false)
 	, m_bFocused(false)
 	, m_bResizable(true)
@@ -89,7 +91,37 @@ void UIElement::setInitialUISize(SGSize size) {
 }
 
 
+bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
+	if (m_eState == eDisabled)
+		return true;
+
+	if (!isContainPoint(mouseEvent)) {
+		return true;
+	}
+
+	m_pMasterGroup->onMouseDown(this, mouseEvent);
+	invokeMouseEvent(eMouseEventDown, mouseEvent);
+	m_eState = ePressed;
+	bool bPropagate = onMouseDownDetail(mouseEvent);
+
+	if (m_bDraggable) {
+		m_DragState.StartCursorPosition = mouseEvent->getCursorPos();
+		m_DragState.StartElementPosition = _position;
+		bPropagate = false;
+	}
+	return bPropagate;
+}
+
+
 bool UIElement::onMouseMove(SGEventMouse* mouseEvent) {
+
+	if (m_bDraggable && m_DragState.Dragging) {
+		const Vec2 dragDelta = mouseEvent->getCursorPos() - m_DragState.StartCursorPosition;
+		setPosition(m_DragState.StartElementPosition + dragDelta);
+		_LogDebug_("drgaDelta: (%.f %.f), position: (%.f %.f)", dragDelta.x, dragDelta.y, _position.x, _position.y);
+		return false;
+	}
+
 	if (m_eState == eDisabled)
 		return true;
 
@@ -108,40 +140,48 @@ bool UIElement::onMouseMove(SGEventMouse* mouseEvent) {
 		return true;
 	}
 
+	
+
 	if (m_eState == eNormal) {
 		m_pMasterGroup->onMouseEnter(this, mouseEvent);
 		invokeMouseEvent(eMouseEventEnter, mouseEvent);
 		onMouseEnterDetail(mouseEvent);
 		m_eState = eOver;
-		
 	}
+
+	if (m_eState == ePressed) {
+
+		// 주의사항: 스크롤바가 포함된  드래깅 활성화시 손잡이 드래그보다 먼저 Element에서 드래그 체크를 수행하기 때문에
+		// 스크롤바는 
+
+		if (m_bDraggable && !m_DragState.Dragging) {
+			m_DragState.Dragging = true;
+			const Vec2 dragDelta = mouseEvent->getCursorPos() - m_DragState.StartCursorPosition;
+			setPosition(m_DragState.StartElementPosition + dragDelta);
+			return false;
+		}
+	}
+	
 
 	m_pMasterGroup->onMouseMove(this, mouseEvent);
 	invokeMouseEvent(eMouseEventMove, mouseEvent);
 	return onMouseMoveDetail(mouseEvent);
 }
 
-bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
-	if (m_eState == eDisabled)
-		return true;
-
-	if (!isContainPoint(mouseEvent)) {
-		return true;
-	}
-
-	_LogDebug_("%d", m_pBaseInfo->Code);
-	m_pMasterGroup->onMouseDown(this, mouseEvent);
-	invokeMouseEvent(eMouseEventDown, mouseEvent);
-	m_eState = ePressed;
-	return onMouseDownDetail(mouseEvent);
-}
 
 bool UIElement::onMouseUp(SGEventMouse* mouseEvent) {
+
 	if (m_eState == eDisabled)
 		return true;
 
 	onMouseUpDetail(mouseEvent);
 	invokeMouseEvent(eMouseEventUp, mouseEvent);
+
+	if (m_DragState.Dragging) {
+		m_DragState.Dragging = false;
+		m_eState = eNormal;
+		return false;
+	}
 
 	if (!isContainPoint(mouseEvent)) {
 		m_eState = eNormal;

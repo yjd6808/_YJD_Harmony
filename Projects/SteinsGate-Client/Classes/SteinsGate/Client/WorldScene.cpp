@@ -312,6 +312,18 @@ SceneBase* WorldScene::createScene(SceneType_t sceneType) {
 	default: DebugAssertMsg(false, "[SGWorldScene] 이상한 씬 타입입니다."); return nullptr;
 	}
 
+
+	// 씬을 생성하면 생성자에서 디폴트 카메라를 생성하고 자식으로 추가해버리는데
+	// 월드 씬에서만 디폴트 카메라가 필요하므로 자식 씬에서는 카메라가 불필요하다.
+	// 삭제하는 이유는 월드씬에서 부착한 이벤트들(마우스, 키보드 같은)이 카메라를 기준으로 실행되는데
+	// 카메라가 여러개가 되면 이벤트도 여러번 호출되기때문에 중복 이벤트 실행 방지를 위해서이다.
+	// 
+	// 자세하게 이해하고 싶으면 아래 코드 참고
+	// 1. void EventDispatcher::dispatchTouchEventToListeners
+	// 2. void Camera::setScene
+	// 3. SceneBase::removeAllChildren
+
+	pCreatedScene->removeAllChildren();	
 	return pCreatedScene;
 }
 

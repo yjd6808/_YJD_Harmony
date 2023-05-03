@@ -1,16 +1,19 @@
 {
-	"date": "5/2/2023 12:59:54 AM",
+	"date": "5/3/2023 10:35:19 PM",
 	"elements": [
 		{
-			"code": 24001,
-			"type": 3,
-			"valign": 1,
-			"halign": 1,
-			"sga": "sprite_interface.sga",
-			"img": "selectdungeon_.img",
-			"sprite": 17,
-			"size": "108 25",
-			"scale9": true
+			"code": 26010,
+			"type": 2,
+			"valign": 2,
+			"halign": 0,
+			"size": "103 18",
+			"font": "DF.ttf",
+			"font_size": 12,
+			"font_color": "100 149 237 255",
+			"text": "위치 복구",
+			"text_wrap": true,
+			"text_valign": 0,
+			"text_halign": 0
 		},
 		{
 			"code": 29008,
@@ -235,7 +238,7 @@
 			"direction": 2
 		},
 		{
-			"code": 26010,
+			"code": 26012,
 			"type": 2,
 			"valign": 2,
 			"halign": 0,
@@ -249,7 +252,7 @@
 			"text_halign": 0
 		},
 		{
-			"code": 26009,
+			"code": 26011,
 			"type": 2,
 			"valign": 2,
 			"halign": 0,
@@ -257,7 +260,21 @@
 			"font": "DF.ttf",
 			"font_size": 12,
 			"font_color": "100 149 237 255",
-			"text": "스케일링 테스트 시작",
+			"text": "스케일링 테스트",
+			"text_wrap": true,
+			"text_valign": 0,
+			"text_halign": 0
+		},
+		{
+			"code": 26009,
+			"type": 2,
+			"valign": 2,
+			"halign": 0,
+			"size": "83 18",
+			"font": "DF.ttf",
+			"font_size": 12,
+			"font_color": "100 149 237 255",
+			"text": "드래그 테스트",
 			"text_wrap": true,
 			"text_valign": 0,
 			"text_halign": 0
@@ -271,7 +288,7 @@
 			"font": "DF.ttf",
 			"font_size": 12,
 			"font_color": "0 128 128 255",
-			"text": "팝업 테스트 시작",
+			"text": "팝업 테스트",
 			"text_wrap": true,
 			"text_valign": 0,
 			"text_halign": 0
@@ -285,7 +302,7 @@
 			"font": "DF.ttf",
 			"font_size": 12,
 			"font_color": "255 127 80 255",
-			"text": "폰트 테스트 시작",
+			"text": "폰트 테스트",
 			"text_wrap": true,
 			"text_valign": 0,
 			"text_halign": 0
@@ -404,6 +421,17 @@
 			"text_wrap": false,
 			"text_valign": 0,
 			"text_halign": 0
+		},
+		{
+			"code": 24001,
+			"type": 3,
+			"valign": 1,
+			"halign": 1,
+			"sga": "sprite_interface.sga",
+			"img": "selectdungeon_.img",
+			"sprite": 17,
+			"size": "108 25",
+			"scale9": true
 		},
 		{
 			"code": 22005,
@@ -2960,8 +2988,10 @@
 				"26006 383 5",
 				"26007 8 51",
 				"26008 7 73",
-				"26009 7 31",
-				"26010 519 94",
+				"26009 6 96",
+				"26010 98 97",
+				"26011 7 31",
+				"26012 519 94",
 				"27000 300 41",
 				"28000 3 153"
 			]

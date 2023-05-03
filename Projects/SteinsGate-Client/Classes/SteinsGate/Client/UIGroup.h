@@ -35,6 +35,8 @@ public:
 
 	bool init() override;
 	void initChildren();
+	void initChildrenPosition();
+
 	void load() override;
 	void unload() override;
 
@@ -87,8 +89,13 @@ public:
 
 	}
 	void forEachRecursive(const SGActionFn<UIElement*>& action) const;
+	void forEachRecursiveContainedSelf(const SGActionFn<UIElement*>& action) const;
 	void forEach(const SGActionFn<UIElement*>& action) const;
+	void forEachContainedSelf(const SGActionFn<UIElement*>& action) const;
+
 	void restoreState(State state) override;
+	void reload();
+	void resetChildrenPosition() { initChildrenPosition(); }
 
 	void setUISize(const SGSize& contentSize) override;
 protected:
