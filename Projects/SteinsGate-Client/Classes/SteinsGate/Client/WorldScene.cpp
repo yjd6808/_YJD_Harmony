@@ -191,6 +191,26 @@ void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) 
 		Global::Get()->toggleDrawEffect();
 	else if (keyCode == EventKeyboard::KeyCode::KEY_F5)
 		Global::Get()->toggleDrawUIStatic();
+	else if (keyCode == EventKeyboard::KeyCode::KEY_F6) {
+
+		// TODO: 게임 해상도 변경 기능 구현
+		// UI의 경우 대대적인 코드 수정인 필요하다.
+		// 내가 m_UISize라는 변수를 추가해서 게임 해상도에 맞게 UI 해상도를 변경시켜주도록 구현했는데
+		// Cocos2d-x에서 자체적으로 관리하는 해상도(GLViewImpl의 DesignResolution)에
+		// 맞게 자동으로 UI 해상도가 변경되도록 하기 위해서는 2가지 방법이 우선 떠올랐다.
+		// 
+		// 1. 현재 구현에서 UI 해상도를 게임 해상도에 맞게 자동으로 변경시키는 방법
+		// 현재 내가 구현한 UI 프레임워크는 처음 UI컨트롤을 생성할 때 _contentSize를 해상도에 맞게 변경시켜주는데
+		// UI의 원본 크기 정보를 저장할 변수를 하나더 추가해놓고 _contentSize를 해상도에 맞게 다시 재설정해주는 방법이 있을 수 있겠다.
+		// 이에 따라 m_UISize를 또 변경해줘야함 코드수정을 별로하지 않고 현재 구현한 기능을 개선가능하다.
+		//
+		// 2. 현재 구현 방법을 폐기하고 새롭게 UI 해상도 기능 구현
+		// m_UISize를 사용하지 않고 기존 노드 변수인 _contentSize와 _scale을 활용해서 UI가 "해상도에 맞게" 보이도록 해줘야함.
+		// 코드를 좀 많이 수정해줘야할 것 같다.
+
+		CoreApp_v->SetDesignResolutionSize(640.0f, 480.0f);
+		CoreApp_v->SetFrameSize(960.0f, 720.0f);
+	}
 
 	if (m_pRunningScene)
 		m_pRunningScene->onKeyPressed(keyCode, event);

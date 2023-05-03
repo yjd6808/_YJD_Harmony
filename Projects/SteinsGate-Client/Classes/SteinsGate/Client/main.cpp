@@ -4,13 +4,13 @@
  */
 
 #include "Tutturu.h"
-#include "AppDelegate.h"
+#include "SGApplication.h"
 
 int main()
 {
     int iResult = -1;
     {
-        AppDelegate app;
+        SGApplication app;
         iResult = cocos2d::Application::getInstance()->run();
     }
     return iResult;

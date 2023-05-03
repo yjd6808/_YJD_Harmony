@@ -18,6 +18,7 @@
 //     사실.. 소괄호 작성하기 귀찮아서 이렇게 모아놓음
 // ===========================================================
 
+SGApplication*			CoreApp_v;
 ClientInfo*				CoreClientInfo_v;
 HostPlayer*				CorePlayer_v;
 DataManager*			CoreDataManager_v;
@@ -31,7 +32,9 @@ ImagePackManager*		CorePackManager_v;
 Global*					CoreGlobal_v;
 PopupManager*			CorePopupManager_v;
 
+
 void InitializeClientCore() {
+	CoreApp_v					= (SGApplication*)cocos2d::Application::getInstance();
 	CoreGlobal_v				= Global::Get();
 	CorePackManager_v			= ImagePackManager::Get();
 	CoreFont_v					= FontPackage::Get();

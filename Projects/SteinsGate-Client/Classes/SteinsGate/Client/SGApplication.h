@@ -1,15 +1,20 @@
-﻿
-#ifndef  _APP_DELEGATE_H_
-#define  _APP_DELEGATE_H_
+﻿#pragma once
 
 #include "cocos2d.h"
 
-class AppDelegate : private cocos2d::Application
+class SGApplication : public cocos2d::Application
 {
 public:
-    AppDelegate();
-    virtual ~AppDelegate();
-    virtual void initGLContextAttrs();
+    SGApplication();
+    ~SGApplication() override;
+
+    void initGLContextAttrs() override;
+
+    void SetDesignResolutionSize(float width, float height);
+    void SetDesignResolutionSize(const cocos2d::Size& resolutionSize) { SetDesignResolutionSize(resolutionSize.width, resolutionSize.height); }
+    void SetFrameSize(float width, float height);
+    void SetFrameSize(const cocos2d::Size& frameSize) { SetFrameSize(frameSize.width, frameSize.height); }
+
 
 	void CreateOpenGLWindow();
 	void CreateWorldScene();
@@ -21,6 +26,8 @@ public:
     static LRESULT CALLBACK GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     void InitializeWindowProcedure();
+
+
     /**
     @brief    디렉터 씬 초기화 코드 삽입
     @return true    작업 성공시 앱은 계속 실행된다.
@@ -40,10 +47,12 @@ public:
     */
     virtual void applicationWillEnterForeground();
 
+public:
+    cocos2d::GLViewImpl* View;
+    
+
 private:
     HHOOK m_hWndProcHook;
     WNDPROC m_hPrevWndProc;
 };
-
-#endif // _APP_DELEGATE_H_
 

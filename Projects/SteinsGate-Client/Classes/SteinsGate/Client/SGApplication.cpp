@@ -1,5 +1,5 @@
 #include "Tutturu.h"
-#include "AppDelegate.h"
+#include "SGApplication.h"
 #include "GameCoreHeader.h"
 
 #include <JCore/Logger/ConsoleLogger.h>
@@ -32,11 +32,11 @@ ConsoleLoggerOption LoggerOption_v = [] {
 }();
 
 
-AppDelegate::AppDelegate()
+SGApplication::SGApplication()
 	: m_hWndProcHook(nullptr)
 {}
 
-AppDelegate::~AppDelegate() 
+SGApplication::~SGApplication() 
 {
     // 여기서 코코스관련 오브젝트 삭제되도록 하면 릭 발생위험 있음.
     // 예를 들어서 Label의 경우 _fontAtlas 멤버 변수가 포함되어있는데
@@ -51,7 +51,17 @@ AppDelegate::~AppDelegate()
     AudioPlayer::Finalize();
 }
 
-void AppDelegate::initGLContextAttrs()
+void SGApplication::SetDesignResolutionSize(float width, float height) {
+    DebugAssertMsg(View, "아직 View가 설정되지 않았습니다.");
+    View->setDesignResolutionSize(width, height, CoreClientInfo_v->GameResolutionPolicy);
+}
+
+void SGApplication::SetFrameSize(float width, float height) {
+    DebugAssertMsg(View, "아직 View가 설정되지 않았습니다.");
+    View->setFrameSize(width, height);
+}
+
+void SGApplication::initGLContextAttrs()
 {
     GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8, 0};
     GLView::setGLContextAttrs(glContextAttrs);
@@ -59,7 +69,7 @@ void AppDelegate::initGLContextAttrs()
 
 
 
-bool AppDelegate::applicationDidFinishLaunching() {
+bool SGApplication::applicationDidFinishLaunching() {
 
     AudioPlayer::Initilize();
     SgaElementInitializer::Initialize();
@@ -86,7 +96,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     return true;
 }
 
-void AppDelegate::CreateOpenGLWindow() {
+void SGApplication::CreateOpenGLWindow() {
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
@@ -106,18 +116,20 @@ void AppDelegate::CreateOpenGLWindow() {
     director->setContentScaleFactor(1.0f);
 
     Win32Helper::LazyInit();
+
+    View = (GLViewImpl*)glview;
 }
 
-void AppDelegate::CreateWorldScene() {
+void SGApplication::CreateWorldScene() {
     auto scene = WorldScene::get();
     scene->setAnchorPoint(Vec2::ZERO);
     DebugAssertMsg(scene, "월드씬 생성에 실패했습니다.");
     Director::getInstance()->runWithScene(scene);
 }
 
-LRESULT CALLBACK AppDelegate::GLFWWindowHookProc(int code, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK SGApplication::GLFWWindowHookProc(int code, WPARAM wParam, LPARAM lParam)
 {
-    AppDelegate* pApp = (AppDelegate*)Application::getInstance();
+    SGApplication* pApp = (SGApplication*)Application::getInstance();
     Scene* pRunningScene = Director::getInstance()->getRunningScene();
     WorldScene* pWorld;
 
@@ -130,9 +142,9 @@ LRESULT CALLBACK AppDelegate::GLFWWindowHookProc(int code, WPARAM wParam, LPARAM
 }
 
 
-LRESULT CALLBACK AppDelegate::GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK SGApplication::GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
-    AppDelegate* pApp = (AppDelegate*)Application::getInstance();
+    SGApplication* pApp = (SGApplication*)Application::getInstance();
     Scene* pRunningScene = Director::getInstance()->getRunningScene();
     WorldScene* pWorld;
 
@@ -141,7 +153,7 @@ LRESULT CALLBACK AppDelegate::GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam
 }
 
 
-void AppDelegate::InitializeWindowProcedure() {
+void SGApplication::InitializeWindowProcedure() {
     return;
 
     const HWND hWndCocos = Director::getInstance()->getOpenGLView()->getWin32Window();
@@ -158,11 +170,11 @@ void AppDelegate::InitializeWindowProcedure() {
     // m_hPrevWndProc = (WNDPROC)SetWindowLongPtrW(hWndCocos, GWLP_WNDPROC, (LONG_PTR)GLFWWindowProc);
 }
 
-void AppDelegate::applicationDidEnterBackground() {
+void SGApplication::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 }
 
-void AppDelegate::applicationWillEnterForeground() {
+void SGApplication::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 }
 

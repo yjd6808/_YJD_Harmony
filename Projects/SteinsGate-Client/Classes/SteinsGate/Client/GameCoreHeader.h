@@ -11,6 +11,7 @@
 
 #include <SteinsGate/Common/CommonInfo.h>
 
+#include <SteinsGate/Client/SGApplication.h>
 #include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/UIManager.h>
 #include <SteinsGate/Client/HostPlayer.h>

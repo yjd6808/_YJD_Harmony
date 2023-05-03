@@ -10,6 +10,7 @@
 
 #include <SteinsGate/Common/CommonCore.h>
 
+class SGApplication;
 class ClientInfo;
 class HostPlayer;
 class DataManager;
@@ -23,6 +24,7 @@ class ImagePackManager;
 class Global;
 class PopupManager;
 
+extern SGApplication* CoreApp_v;
 extern ClientInfo* CoreClientInfo_v;
 extern HostPlayer* CorePlayer_v;
 extern DataManager* CoreDataManager_v;
@@ -35,6 +37,7 @@ extern ActorBox* CoreActorBox_v;
 extern ImagePackManager* CorePackManager_v;
 extern Global* CoreGlobal_v;
 extern PopupManager* CorePopupManager_v;
+
 
 void InitializeClientCore();
 void FinalizeClientCore();

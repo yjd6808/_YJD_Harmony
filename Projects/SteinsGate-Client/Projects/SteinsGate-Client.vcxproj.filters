@@ -237,7 +237,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGVec2Ex.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGApplication.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\AnimationInfo.cpp">
       <Filter>Data</Filter>
     </ClCompile>
@@ -588,7 +588,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGVec2Ex.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AppDelegate.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGApplication.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Struct.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Tutturu.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.h">

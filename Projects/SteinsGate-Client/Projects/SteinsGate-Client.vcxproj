@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Classes\SteinsGate\Client\AppDelegate.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SGApplication.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\GameCore.cpp">
       <SubType>
       </SubType>
@@ -411,7 +411,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AppDelegate.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SGApplication.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ActionDefine.h">
       <SubType>
       </SubType>
