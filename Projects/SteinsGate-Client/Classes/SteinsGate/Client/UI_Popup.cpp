@@ -53,6 +53,8 @@ void UI_Popup::onInit() {
 	m_pLabelText = findLabel(UI_POPUP_HOLDER_LABEL_TEXT);
 
 	m_pGroupButtonHolder->setResizable(false);
+	m_pSpriteBackground->setDraggable(true);
+	m_pSpriteBackground->setDragLinkElement(this);
 }
 
 void UI_Popup::onLoaded() {

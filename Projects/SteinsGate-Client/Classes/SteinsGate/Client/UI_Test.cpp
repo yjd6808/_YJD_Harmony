@@ -177,6 +177,8 @@ void UI_Test::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
 		forEachRecursiveContainedSelf([](UIElement* element) {
 			element->setDraggable(!element->isDraggable());
 		});
+
+		CoreUIManager_v->getToggleButton(UI_TEST_TOGGLEBUTTON_T1)->setDragLinkElement(this);
 	}
 
 	else if (element->getCode() == UI_TEST_LABEL_RESET_POSITION) {

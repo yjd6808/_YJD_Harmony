@@ -138,6 +138,8 @@ public:
 
 	void setDraggable(bool draggable) { m_bDraggable = draggable; }
 	bool isDraggable() const { return m_bDraggable; }
+
+	void setDragLinkElement(UIElement* dragLinkElement) { m_pDragLinkElement = dragLinkElement; }
 protected:
 	bool isContainPoint(SGEventMouse* mouseEvent);
 	virtual void setInitialUISize(SGSize size);
@@ -150,6 +152,7 @@ protected:
 
 	SGMouseEventList* m_pMouseEventMap[eMouseEventMax];
 	UIElementInfo* m_pBaseInfo;
+	UIElement* m_pDragLinkElement;	// 이 엘리먼트를 드래그할 때 실제로 움직일 엘리먼트 (이 엘리먼트와, 링크 엘리먼트 모두 Draggable 옵션이 활성화되어 있어야함.) 추가한 이유: 타이틀바를 잡고 드래그할 때 그룹 전체를 움직이기 위함.
 	UIMasterGroup* m_pMasterGroup;	// 대통령
 	UIGroup* m_pParent;				// 직속 상관
 	SGSize m_UISize;				// 화면상 보이는 UI 크기 

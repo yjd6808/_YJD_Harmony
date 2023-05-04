@@ -23,9 +23,10 @@
 
 struct DragState
 {
-	UIElement* Element;
+	UIElement* HostElement;			// 드래그 주체
+	UIElement* TargetElement;		// 실제로 드래깅될 대상
 	SGVec2 StartElementPosition;
-	SGVec2 StartCursorPosition;
+	SGVec2 StartCursorPosition;	
 	SGVec2 DragDelta;
 	bool Dragging;
 };
@@ -52,28 +53,25 @@ public:
 	void dragMove(const SGEventMouse* mouseEvent);
 	void dragEnd();
 
-	UIElement* getDraggingElement() { return m_DragState.Element; }
 	bool isDragging() { return m_DragState.Dragging; }
 	const DragState& getDragState() const { return m_DragState; }
 
-
 	UIMasterGroup* getMasterGroup(int groupCode);
 	UIElement* getElement(int elementCode);
-	UIGroup* getGroup(int groupCode);
-	UIButton* getButton(int buttonCode);
-	UISprite* getSprite(int spriteCode);
-	UILabel* getLabel(int labelCode);
-	UICheckBox* getCheckBox(int checkBoxCode);
-	UIEditBox* getEditBox(int editBoxCode);
-	UIToggleButton* getToggleButton(int toggleButtonCode);
-	UIProgressBar* getProgressBar(int progressBarCode);
-	UIScrollBar* getScrollBar(int scrollBarCode);
-	UIStatic* getStatic(int staticCode);
+	UIGroup* getGroup(int groupCode) { return getElementTemplated<UIGroup>(groupCode); }
+	UIButton* getButton(int buttonCode) { return getElementTemplated<UIButton>(buttonCode); }
+	UISprite* getSprite(int spriteCode) { return getElementTemplated<UISprite>(spriteCode); }
+	UILabel* getLabel(int labelCode) { return getElementTemplated<UILabel>(labelCode); }
+	UICheckBox* getCheckBox(int checkBoxCode) { return getElementTemplated<UICheckBox>(checkBoxCode); }
+	UIEditBox* getEditBox(int editBoxCode) { return getElementTemplated<UIEditBox>(editBoxCode); }
+	UIToggleButton* getToggleButton(int toggleButtonCode) { return getElementTemplated<UIToggleButton>(toggleButtonCode); }
+	UIProgressBar* getProgressBar(int progressBarCode) { return getElementTemplated<UIProgressBar>(progressBarCode); }
+	UIScrollBar* getScrollBar(int scrollBarCode) { return getElementTemplated<UIScrollBar>(scrollBarCode); }
+	UIStatic* getStatic(int staticCode) { return getElementTemplated<UIStatic>(staticCode); }
 
 private:
 	template <typename TElement>
 	TElement* getElementTemplated(int code) {
-		static_assert(JCore::IsPointerType_v<TElement>, "... TElem must be pointer type");
 		constexpr UIElementType_t eTargetType = TElement::type();
 
 		if (!m_hUIElements.Exist(code)) {

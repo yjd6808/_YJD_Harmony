@@ -51,11 +51,12 @@ bool UILayer::init() {
 
 void UILayer::onMouseMove(SGEventMouse* mouseEvent) {
 
+	const Vec2 absolutePosition = mouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getUIRect().containsPoint(mouseEvent->getCursorPos())) {
+		if (uiGroup->getUIRect().containsPoint(absolutePosition)) {
 			pTopGroup = uiGroup;
 			pTopGroup->onMouseMove(mouseEvent);
 			break;
@@ -72,11 +73,12 @@ void UILayer::onMouseMove(SGEventMouse* mouseEvent) {
 }
 
 void UILayer::onMouseDown(SGEventMouse* mouseEvent) {
+	const Vec2 absolutePosition = mouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getUIRect().containsPoint(mouseEvent->getCursorPos()) &&
+		if (uiGroup->getUIRect().containsPoint(absolutePosition) &&
 			uiGroup->onMouseDown(mouseEvent) == false) {
 			pTopGroup = uiGroup;
 			break;
@@ -87,11 +89,12 @@ void UILayer::onMouseDown(SGEventMouse* mouseEvent) {
 }
 
 void UILayer::onMouseUp(SGEventMouse* mouseEvent) {
+	const Vec2 absolutePosition = mouseEvent->getCursorPos();
 	UIGroup* pTopGroup = nullptr;
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getUIRect().containsPoint(mouseEvent->getCursorPos())) {
+		if (uiGroup->getUIRect().containsPoint(absolutePosition)) {
 			pTopGroup = uiGroup;
 			pTopGroup->onMouseUp(mouseEvent);
 			break;

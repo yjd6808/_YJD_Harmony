@@ -113,6 +113,9 @@ public:
         }
     }
 
+    // 윤정도: 스타트포지션 게터 추가, getStartLocationInView 함수와 동일한 기능, 이름이 마음에 안들어서 추가함
+    Vec2 getStartCursorPos() const { return _startPoint; }
+
     /** Set mouse button.
      * 
      * @param button a given mouse button.

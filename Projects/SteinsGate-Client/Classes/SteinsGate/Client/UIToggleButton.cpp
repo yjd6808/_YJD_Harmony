@@ -184,7 +184,7 @@ void UIToggleButton::onMouseLeaveDetail(SGEventMouse* mouseEvent) {
 }
 
 bool UIToggleButton::onMouseMoveDetail(SGEventMouse* mouseEvent) {
-	return false;
+	return true;
 }
 bool UIToggleButton::onMouseDownDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(ePressed);

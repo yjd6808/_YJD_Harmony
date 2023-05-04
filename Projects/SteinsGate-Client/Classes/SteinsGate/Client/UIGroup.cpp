@@ -112,23 +112,6 @@ void UIGroup::unload() {
 }
 
 
-bool UIGroup::onMouseMove(SGEventMouse* mouseEvent) {
-	const SGVec2 mousePos = mouseEvent->getCursorPos();
-	const SGVec2 relativePos = mousePos - _position;
-
-	mouseEvent->setCursorPosition(relativePos.x, relativePos.y);
-
-	for (int i = _children.size() - 1; i >= 0; --i) {
-		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
-
-		if (!pElem->onMouseMove(mouseEvent))
-			return false;
-	}
-
-	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
-	return UIElement::onMouseMove(mouseEvent);
-}
-
 bool UIGroup::onMouseDown(SGEventMouse* mouseEvent) {
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
@@ -144,6 +127,23 @@ bool UIGroup::onMouseDown(SGEventMouse* mouseEvent) {
 
 	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
 	return UIElement::onMouseDown(mouseEvent);
+}
+
+bool UIGroup::onMouseMove(SGEventMouse* mouseEvent) {
+	const SGVec2 mousePos = mouseEvent->getCursorPos();
+	const SGVec2 relativePos = mousePos - _position;
+
+	mouseEvent->setCursorPosition(relativePos.x, relativePos.y);
+
+	for (int i = _children.size() - 1; i >= 0; --i) {
+		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
+
+		if (!pElem->onMouseMove(mouseEvent))
+			return false;
+	}
+
+	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
+	return UIElement::onMouseMove(mouseEvent);
 }
 
 bool UIGroup::onMouseUp(SGEventMouse* mouseEvent) {

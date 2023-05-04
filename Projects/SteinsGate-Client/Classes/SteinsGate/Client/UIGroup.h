@@ -41,8 +41,8 @@ public:
 	void unload() override;
 
 	// 이하 자식들 오버라이딩을 금하기 위해 파이널로 처리
-	bool onMouseMove(SGEventMouse* mouseEvent) final;
 	bool onMouseDown(SGEventMouse* mouseEvent) final;
+	bool onMouseMove(SGEventMouse* mouseEvent) final;
 	bool onMouseUp(SGEventMouse* mouseEvent) final;
 	bool onMouseScroll(SGEventMouse* mouseEvent) final;
 
@@ -54,6 +54,7 @@ public:
 	SGString toString() override { return SGStringUtil::Format("그룹(%d)", m_pInfo->Code); }
 	bool isGroup() const override { return true; }
 
+	// UI 매니저에 등록되지 않은 그룹내 엘리먼트들을 검색할 떄 사용하는 용도의 함수들
 	UIElement* findElement(int code);
 	UIGroup* findGroup(int groupCode);						
 	UIButton* findButton(int buttonCode);					

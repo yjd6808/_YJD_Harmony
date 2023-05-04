@@ -101,8 +101,8 @@ void UIManager::draginit(const DragState& state) {
 
 void UIManager::dragEnter(const SGEventMouse* mouseEvent) {
 	
-	UIElement* pDragElement = m_DragState.Element;
-	const Vec2 dragDelta = mouseEvent->getCursorPos() - m_DragState.StartCursorPosition;
+	UIElement* pDragElement = m_DragState.TargetElement;
+	const Vec2 dragDelta = mouseEvent->getStartCursorPos() - m_DragState.StartCursorPosition;
 
 	pDragElement->setPosition(m_DragState.StartElementPosition + dragDelta);
 	pDragElement->getMasterGroup()->onDragEnter(pDragElement, m_DragState);
@@ -112,8 +112,8 @@ void UIManager::dragEnter(const SGEventMouse* mouseEvent) {
 }
 
 void UIManager::dragMove(const SGEventMouse* mouseEvent) {
-	UIElement* pDragElement = m_DragState.Element;
-	const Vec2 dragDelta = mouseEvent->getCursorPos() - m_DragState.StartCursorPosition;
+	UIElement* pDragElement = m_DragState.TargetElement;
+	const Vec2 dragDelta = mouseEvent->getStartCursorPos() - m_DragState.StartCursorPosition;
 
 	pDragElement->setPosition(m_DragState.StartElementPosition + dragDelta);
 	pDragElement->getMasterGroup()->onDragMove(pDragElement, m_DragState);
@@ -123,7 +123,8 @@ void UIManager::dragMove(const SGEventMouse* mouseEvent) {
 
 
 void UIManager::dragEnd() {
-	m_DragState.Element = nullptr;
+	m_DragState.HostElement = nullptr;
+	m_DragState.TargetElement = nullptr;
 	m_DragState.Dragging = false;
 	m_DragState.DragDelta = {};
 }
@@ -144,197 +145,4 @@ UIElement* UIManager::getElement(int elementCode) {
 
 	return m_hUIElements[elementCode];
 }
-
-UIGroup* UIManager::getGroup(int groupCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::Group;
-
-	if (!m_hUIElements.Exist(groupCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], groupCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[groupCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", groupCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-	return (UIGroup*)pElem;
-}
-
-UIButton* UIManager::getButton(int buttonCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::Button;
-
-	if (!m_hUIElements.Exist(buttonCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], buttonCode);
-		return nullptr;
-	}
-	
-	UIElement* pElem = m_hUIElements[buttonCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", buttonCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-	return (UIButton*)pElem;
-}
-
-UISprite* UIManager::getSprite(int spriteCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::Sprite;
-
-	if (!m_hUIElements.Exist(spriteCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], spriteCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[spriteCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", spriteCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-	return (UISprite*)pElem;
-}
-
-UILabel* UIManager::getLabel(int labelCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::Label;
-
-	if (!m_hUIElements.Exist(labelCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], labelCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[labelCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", labelCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-	return (UILabel*)pElem;
-}
-
-UICheckBox* UIManager::getCheckBox(int checkBoxCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::CheckBox;
-
-	if (!m_hUIElements.Exist(checkBoxCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], checkBoxCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[checkBoxCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", checkBoxCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-	return (UICheckBox*)pElem;
-}
-
-UIEditBox* UIManager::getEditBox(int editBoxCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::EditBox;
-
-	if (!m_hUIElements.Exist(editBoxCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], editBoxCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[editBoxCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", editBoxCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-	return (UIEditBox*)pElem;
-}
-
-UIToggleButton* UIManager::getToggleButton(int toggleButtonCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::ToggleButton;
-
-	if (!m_hUIElements.Exist(toggleButtonCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], toggleButtonCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[toggleButtonCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", toggleButtonCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-	return (UIToggleButton*)pElem;
-}
-
-UIProgressBar* UIManager::getProgressBar(int progressBarCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::ProgressBar;
-
-	if (!m_hUIElements.Exist(progressBarCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], progressBarCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[progressBarCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", progressBarCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-
-	return (UIProgressBar*)pElem;
-}
-
-UIScrollBar* UIManager::getScrollBar(int scrollBarCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::ScrollBar;
-
-	if (!m_hUIElements.Exist(scrollBarCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], scrollBarCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[scrollBarCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", scrollBarCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-	return (UIScrollBar*)pElem;
-}
-
-UIStatic* UIManager::getStatic(int staticCode) {
-	constexpr UIElementType_t eTargetType = UIElementType::Static;
-
-	if (!m_hUIElements.Exist(staticCode)) {
-		_LogWarn_("%s(%d)를 찾지 못했습니다.", UIElementType::Name[eTargetType], staticCode);
-		return nullptr;
-	}
-
-	UIElement* pElem = m_hUIElements[staticCode];
-	const UIElementType_t eType = pElem->getElementType();
-
-	if (eType != eTargetType) {
-		_LogWarn_("%d가 %s타입이 아니고, %s입니다.", staticCode, UIElementType::Name[eTargetType], UIElementType::Name[eType]);
-		return nullptr;
-	}
-
-
-	return (UIStatic*)pElem;
-}
-
 
