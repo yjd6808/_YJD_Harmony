@@ -22,7 +22,7 @@ ActionMgr::ActionMgr(HostPlayer* player)
 	, m_pBaseAction{{}}  {}
 
 ActionMgr::~ActionMgr() {
-	m_ActionMap.Values().Extension().ForEach([](SGAction* action) { DeleteSafe(action); });
+	m_ActionMap.ForEachValue([](SGAction* action) { DeleteSafe(action); });
 	_LogDebug_("액션 매니저 소멸");
 }
 

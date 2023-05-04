@@ -46,7 +46,7 @@ void ActorBox::init(MapLayer* mapLayer) {
 template <typename TActor>
 static int releasePool(SGHashMap<int, SGLinkedList<TActor*>>& pool) {
 	int iReleaseCount = 0;
-	pool.Keys().Extension().ForEach([&iReleaseCount , &pool](int& code) {
+	pool.ForEachKey([&iReleaseCount , &pool](int& code) {
 		SGLinkedList<TActor*>& li = pool[code];
 		auto it = li.Begin();
 		while (it->HasNext()) {
@@ -62,7 +62,7 @@ static int releasePool(SGHashMap<int, SGLinkedList<TActor*>>& pool) {
 template <typename TActor>
 static int releaseList(SGVector<TActor*>& actorList) {
 	int iReleaseCount = 0;
-	actorList.Extension().ForEach([&iReleaseCount](TActor* actor) {
+	actorList.ForEach([&iReleaseCount](TActor* actor) {
 		CC_SAFE_RELEASE(actor);
 		++iReleaseCount;	
 	});
@@ -74,7 +74,7 @@ static int releaseList(SGVector<TActor*>& actorList) {
 template <typename TActor>
 static int cleanUpList(SGVector<TActor*>& actorList) {
 	int iCleanUpCount = 0;
-	actorList.Extension().ForEach([&iCleanUpCount](TActor* actor) {
+	actorList.ForEach([&iCleanUpCount](TActor* actor) {
 		actor->cleanUpNext();
 		++iCleanUpCount;
 	});

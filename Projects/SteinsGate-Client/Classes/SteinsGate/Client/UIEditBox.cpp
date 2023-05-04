@@ -70,6 +70,7 @@ bool UIEditBox::init() {
 	m_pEditBox->setMaxLength(m_pInfo->MaxLength);
 	m_pEditBox->setInputMode(m_pInfo->InputMode);
 	m_pEditBox->setDelegate(m_pListener);
+	m_pEditBox->setPassiveFocusable(true);
 	this->addChild(m_pEditBox);
 
 	
@@ -138,12 +139,15 @@ void UIEditBox::setInputMode(SGEditBox::InputMode inputMode) {
 	m_pEditBox->setInputMode(inputMode);
 }
 
+bool UIEditBox::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
+	m_pEditBox->openKeyboard();
+	return false;
+}
+
 
 void UIEditBox::Listener::editBoxEditingDidBegin(SGEditBox* /* editBox */) {
 	if (FnEditBoxEditingDidBegin)
 		FnEditBoxEditingDidBegin(EditBox);
-
-	
 
 	EditBox->m_pMasterGroup->onEditBoxEditingDidBegin(EditBox);
 }

@@ -78,9 +78,9 @@ void Effect::update(float delta) {
 
 
 	if (Global::Get()->DrawEffect) {
-		m_pActorSprite->getParts().Extension().ForEach([](ActorSprite::PartData& part) { part.Part->setOpacity(255); });
+		m_pActorSprite->getParts().ForEach([](ActorSprite::PartData& part) { part.Part->setOpacity(255); });
 	} else {
-		m_pActorSprite->getParts().Extension().ForEach([](ActorSprite::PartData& part) { part.Part->setOpacity(0); });
+		m_pActorSprite->getParts().ForEach([](ActorSprite::PartData& part) { part.Part->setOpacity(0); });
 	}
 }
 void Effect::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {}

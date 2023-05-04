@@ -47,13 +47,6 @@ public:
 		eMax
 	};
 
-	struct DragState
-	{
-		SGVec2 StartElementPosition;
-		SGVec2 StartCursorPosition;
-		bool Dragging = false;
-	};
-
 	UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo* info);
 	~UIElement() override;
 
@@ -95,8 +88,9 @@ public:
 	}
 
 	virtual SGString toString() = 0;
-	int getCode() const { return m_pBaseInfo->Code; }
 
+	int getCode() const { return m_pBaseInfo->Code; }
+	UIMasterGroup* getMasterGroup() const { return m_pMasterGroup; }
 	
 	SGVec2 calculateZeroPosition(const SGRect& rc) const;
 	SGVec2 calculateZeroPosition(const SGRect& rc, HAlignment_t halign, VAlignment_t valign) const;
@@ -144,7 +138,6 @@ public:
 
 	void setDraggable(bool draggable) { m_bDraggable = draggable; }
 	bool isDraggable() const { return m_bDraggable; }
-	bool isDragging() const { return m_DragState.Dragging; }
 protected:
 	bool isContainPoint(SGEventMouse* mouseEvent);
 	virtual void setInitialUISize(SGSize size);
@@ -161,7 +154,6 @@ protected:
 	UIGroup* m_pParent;				// 직속 상관
 	SGSize m_UISize;				// 화면상 보이는 UI 크기 
 	State m_eState;
-	DragState m_DragState;
 
 	bool m_bDevloperCreated;		// 개발자가 수동으로 생성한 커스텀 객체인 경우
 	bool m_bInitialized;

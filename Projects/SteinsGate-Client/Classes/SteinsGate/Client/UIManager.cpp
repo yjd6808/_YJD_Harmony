@@ -32,7 +32,7 @@ UIManager::~UIManager() {
 	// 마스터 UI 그룹만 제거해주면 된다.
 	// 어차피 내부 자식들은 모두 마스터 UI 그룹에 addChild 되어 있기 때문에
 	// 이녀석만 제거하면 도미노 마냥 다 제거댐
-	m_hMasterUIGroups.Values().Extension().ForEach([](UIGroup* group) {
+	m_hMasterUIGroups.ForEachValue([](UIGroup* group) {
 		CC_SAFE_RELEASE(group);
 	});
 }
@@ -73,12 +73,12 @@ void UIManager::unloadAll() {
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	// 이미지 텍스쳐 모두 릴리즈
-	m_hMasterUIGroups.Values().Extension().ForEach([](UIGroup* group) {
+	m_hMasterUIGroups.ForEachValue([](UIGroup* group) {
 		group->unload();
-	});
+		});
 
 	// 관련 캐쉬, 팩 모두 언로드
-	m_hLoadedUITexture.Values().Extension().ForEach([pPackManager](SgaResourceIndex& resourceIndex) {
+	m_hLoadedUITexture.ForEachValue([pPackManager](SgaResourceIndex& resourceIndex) {
 		pPackManager->releaseFrameTexture(resourceIndex);
 		pPackManager->unloadPackData(resourceIndex.Un.SgaIndex);
 	});
@@ -90,9 +90,42 @@ void UIManager::onUpdate(float dt) {
 }
 
 void UIManager::callUIElementsUpdateCallback(float dt) {
-	m_hUIElementsUpdateEvent.Extension().ForEach([&dt](Pair<UIElement*, SGEventList<UIElement*, float>>& pair) {
+	m_hUIElementsUpdateEvent.ForEach([&dt](Pair<UIElement*, SGEventList<UIElement*, float>>& pair) {
 		pair.Value.Invoke((UIElement*)pair.Key, (float)dt);
 	});
+}
+
+void UIManager::draginit(const DragState& state) {
+	m_DragState = state;
+}
+
+void UIManager::dragEnter(const SGEventMouse* mouseEvent) {
+	
+	UIElement* pDragElement = m_DragState.Element;
+	const Vec2 dragDelta = mouseEvent->getCursorPos() - m_DragState.StartCursorPosition;
+
+	pDragElement->setPosition(m_DragState.StartElementPosition + dragDelta);
+	pDragElement->getMasterGroup()->onDragEnter(pDragElement, m_DragState);
+
+	m_DragState.DragDelta = dragDelta;
+	m_DragState.Dragging = true;
+}
+
+void UIManager::dragMove(const SGEventMouse* mouseEvent) {
+	UIElement* pDragElement = m_DragState.Element;
+	const Vec2 dragDelta = mouseEvent->getCursorPos() - m_DragState.StartCursorPosition;
+
+	pDragElement->setPosition(m_DragState.StartElementPosition + dragDelta);
+	pDragElement->getMasterGroup()->onDragMove(pDragElement, m_DragState);
+
+	m_DragState.DragDelta = dragDelta;
+}
+
+
+void UIManager::dragEnd() {
+	m_DragState.Element = nullptr;
+	m_DragState.Dragging = false;
+	m_DragState.DragDelta = {};
 }
 
 UIMasterGroup* UIManager::getMasterGroup(int groupCode) {

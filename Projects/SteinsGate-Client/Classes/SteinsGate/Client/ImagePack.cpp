@@ -193,7 +193,7 @@ void ImagePack::unload() {
 }
 
 void ImagePack::clearCache() {
-	m_TextureCacheMap.Values().Extension().ForEach([](FrameTexture* tex) {
+	m_TextureCacheMap.ForEachValue([](FrameTexture* tex) {
 		//DebugAssertMsg(tex->getReferenceCount() == 1, "레퍼런스 카운트가 1이 아닙니다.");
 		CC_SAFE_RELEASE(tex);
 	});

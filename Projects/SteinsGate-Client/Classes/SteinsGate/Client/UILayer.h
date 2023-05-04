@@ -29,6 +29,7 @@ public:
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
 	UIMasterGroup* findGroup(int groupCode);
+
 	void forEach(const SGActionFn<UIMasterGroup*>& actionFn);
 	void addUIGroup(int groupCode, int zorder = 0);
 	void addUIGroup(UIMasterGroup* group, int zorder = 0);

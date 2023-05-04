@@ -492,6 +492,15 @@ protected:
 		return nullptr;
 	}
 
+	template <typename Consumer>
+	void ForEach(Consumer&& consumer) {
+		TListNode* pCur = m_pHead;
+		while (pCur != nullptr) {
+			consumer(pCur->value);
+			pCur = pCur->Next;
+		}
+	}
+
 	CollectionType GetCollectionType() override { return CollectionType::List; }
 protected:
 	TListNode* m_pHead;

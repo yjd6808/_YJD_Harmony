@@ -370,6 +370,13 @@ public:
 		return MakeShared<TVectorIterator, TAllocator>(this->GetOwner(), this->Size());
 	}
 
+	template <typename Consumer>
+	void ForEach(Consumer&& consumer) {
+		for (int i = 0; i < this->m_iSize; ++i) {
+			consumer(this->m_pArray[i]);
+		}
+	}
+
 	ContainerType GetContainerType() override { return ContainerType::Vector; }
 
 	struct Iterator 

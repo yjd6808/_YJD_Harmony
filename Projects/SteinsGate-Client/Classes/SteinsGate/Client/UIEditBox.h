@@ -36,6 +36,8 @@ public:
     void setInputFlag(SGEditBox::InputFlag inputFlag);
     void setInputMode(SGEditBox::InputMode inputMode);
     // ANY 모드에서는 VK_RETURN이 안먹히므로 오류라고 생각하지 말것
+protected:
+    bool onMouseUpContainedDetail(SGEventMouse* mouseEvent) override;
 private:
     struct Listener : cocos2d::ui::EditBoxDelegate
 	{

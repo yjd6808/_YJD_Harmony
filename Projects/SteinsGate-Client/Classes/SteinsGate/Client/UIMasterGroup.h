@@ -19,6 +19,7 @@
 #include <SteinsGate/Client/UIScrollBar.h>
 #include <SteinsGate/Client/UIStatic.h>
 
+struct DragState;
 class UIMasterGroup : public UIGroup
 {
 public:
@@ -47,8 +48,8 @@ public:
 	virtual void onMouseLeave(UIElement* element, SGEventMouse* mouseEvent);
 	virtual void onMouseScroll(UIElement* element, SGEventMouse* mouseEvent);
 
-	virtual void onDragEnter(UIElement* element);
-	virtual void onDragMove(UIElement* element);
+	virtual void onDragEnter(UIElement* element, const DragState& dragState);
+	virtual void onDragMove(UIElement* element, const DragState& dragState);
 	virtual void onDragEnd(UIElement* element);
 
 	virtual void onCheckedStateChanged(UICheckBox* checkBox, bool checked);

@@ -58,7 +58,7 @@ ActorPartSprite::ActorPartSprite(
 {}
 
 ActorPartSprite::~ActorPartSprite() {
-	m_AnimationMap.Values().Extension().ForEach([](ActorPartAnimation* animation) { CC_SAFE_RELEASE(animation); });
+	m_AnimationMap.ForEachValue([](ActorPartAnimation* animation) { CC_SAFE_RELEASE(animation); });
 
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
 		CC_SAFE_RELEASE(m_vFrames[i]);

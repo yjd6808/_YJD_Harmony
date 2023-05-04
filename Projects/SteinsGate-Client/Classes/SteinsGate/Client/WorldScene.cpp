@@ -254,6 +254,8 @@ void WorldScene::onMouseUp(SGEventMouse* mouseEvent) const {
 
 	if (m_pUILayer)
 		m_pUILayer->onMouseUp(mouseEvent);
+
+	CoreUIManager_v->dragEnd();
 }
 
 void WorldScene::onMouseScroll(SGEventMouse* mouseEvent) const {

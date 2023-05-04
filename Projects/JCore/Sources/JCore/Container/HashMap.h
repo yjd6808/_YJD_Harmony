@@ -537,6 +537,48 @@ public:
 		return iCount;
 	}
 
+
+	// ==========================================
+	// 동적할당 안하고 해쉬맵 순회할 수 있도록 기능 구현
+	// ==========================================
+	template <typename Consumer>
+	void ForEach(Consumer&& consumer) {
+		TBucket* pCurBucket = m_pHeadBucket;
+		while (pCurBucket != nullptr) {
+			for (int i = 0; i < pCurBucket->Size; i++) {
+				TBucketNode& node = pCurBucket->GetAt(i);
+				consumer(node.Pair);
+			}
+			pCurBucket = pCurBucket->Next;
+		}
+	}
+
+	template <typename Consumer>
+	void ForEachKey(Consumer&& consumer) {
+		TBucket* pCurBucket = m_pHeadBucket;
+		while (pCurBucket != nullptr) {
+			for (int i = 0; i < pCurBucket->Size; i++) {
+				TBucketNode& node = pCurBucket->GetAt(i);
+				consumer(node.Pair.Key);
+			}
+			pCurBucket = pCurBucket->Next;
+		}
+	}
+
+	template <typename Consumer>
+	void ForEachValue(Consumer&& consumer) {
+		TBucket* pCurBucket = m_pHeadBucket;
+		while (pCurBucket != nullptr) {
+			for (int i = 0; i < pCurBucket->Size; i++) {
+				TBucketNode& node = pCurBucket->GetAt(i);
+				consumer(node.Pair.Value);
+			}
+			pCurBucket = pCurBucket->Next;
+		}
+	}
+
+
+
 	/*int Elements() {
 		for (int i = 0; i < m_iCapacity; i++) {
 			if (m_pTable[i].IsEmpty()) {

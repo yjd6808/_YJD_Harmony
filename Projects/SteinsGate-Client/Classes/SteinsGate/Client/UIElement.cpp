@@ -92,6 +92,7 @@ void UIElement::setInitialUISize(SGSize size) {
 
 
 bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
+
 	if (m_eState == eDisabled)
 		return true;
 
@@ -104,10 +105,17 @@ bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
 	m_eState = ePressed;
 	bool bPropagate = onMouseDownDetail(mouseEvent);
 
+	// 마우스를 눌렀을 때는 실질적인 드래그를 수행하지는 않기 때문에
+	// 드래그 시작 위치만 계속 업데이트시키도록 한다.
 	if (m_bDraggable) {
-		m_DragState.StartCursorPosition = mouseEvent->getCursorPos();
-		m_DragState.StartElementPosition = _position;
+		DragState dragState;
+		dragState.Dragging = false;	// 아직 실제 드래그가 시작된 상태가 아니므로
+		dragState.StartCursorPosition = mouseEvent->getCursorPos();
+		dragState.StartElementPosition = _position;
+		dragState.Element = this;	
 		bPropagate = false;
+
+		CoreUIManager_v->draginit(dragState);
 	}
 	return bPropagate;
 }
@@ -115,10 +123,18 @@ bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
 
 bool UIElement::onMouseMove(SGEventMouse* mouseEvent) {
 
-	if (m_bDraggable && m_DragState.Dragging) {
-		const Vec2 dragDelta = mouseEvent->getCursorPos() - m_DragState.StartCursorPosition;
-		setPosition(m_DragState.StartElementPosition + dragDelta);
-		_LogDebug_("drgaDelta: (%.f %.f), position: (%.f %.f)", dragDelta.x, dragDelta.y, _position.x, _position.y);
+	const DragState& dragState = CoreUIManager_v->getDragState();
+
+	// 만약 onMouseDown에서 드래그 초기화된 엘리먼트가 있는 경우
+	// 엘리먼트에 포함되어있지 않더라도 드래그 중일 경우 따라서 움직여야하므로 제일 먼저 처리하도록 하자.
+	if (dragState.Dragging && dragState.Element) {
+
+		// 자기자신이 아닌 경우 대상을 찾아야하므로 이벤트는 상위 엘리먼트로 전파되도록 해줘야한다.
+		if (dragState.Element != this) {
+			return true;
+		}
+
+		CoreUIManager_v->dragMove(mouseEvent);
 		return false;
 	}
 
@@ -151,13 +167,9 @@ bool UIElement::onMouseMove(SGEventMouse* mouseEvent) {
 
 	if (m_eState == ePressed) {
 
-		// 주의사항: 스크롤바가 포함된  드래깅 활성화시 손잡이 드래그보다 먼저 Element에서 드래그 체크를 수행하기 때문에
-		// 스크롤바는 
-
-		if (m_bDraggable && !m_DragState.Dragging) {
-			m_DragState.Dragging = true;
-			const Vec2 dragDelta = mouseEvent->getCursorPos() - m_DragState.StartCursorPosition;
-			setPosition(m_DragState.StartElementPosition + dragDelta);
+		// 주의사항: 스크롤바에 드래깅 활성화시 손잡이 드래그보다 먼저 Element에서 드래그 체크를 수행하기 때문에 손잡이 드래그가 안먹힌다.
+		if (dragState.Element == this) {
+			CoreUIManager_v->dragEnter(mouseEvent);
 			return false;
 		}
 	}
@@ -170,6 +182,7 @@ bool UIElement::onMouseMove(SGEventMouse* mouseEvent) {
 
 
 bool UIElement::onMouseUp(SGEventMouse* mouseEvent) {
+	// 기본적으로 싱글 엘리먼트 드래그만 지원하기 떄문에 마우스를 땠을때 드래그 해제 처리는 WorldScene::onMouseUp에서 처리함
 
 	if (m_eState == eDisabled)
 		return true;
@@ -177,20 +190,20 @@ bool UIElement::onMouseUp(SGEventMouse* mouseEvent) {
 	onMouseUpDetail(mouseEvent);
 	invokeMouseEvent(eMouseEventUp, mouseEvent);
 
-	if (m_DragState.Dragging) {
-		m_DragState.Dragging = false;
-		m_eState = eNormal;
-		return false;
-	}
-
 	if (!isContainPoint(mouseEvent)) {
 		m_eState = eNormal;
 		return true;
 	}
 
+	bool bPropagate = true;
+	
 	m_pMasterGroup->onMouseUp(this, mouseEvent);
 	invokeMouseEvent(eMouseEventUpContained, mouseEvent);
-	const bool bPropagate = onMouseUpContainedDetail(mouseEvent);
+
+	// 마우스를 땠을때 드래그 중인 상태인 경우 자식 엘리먼트 구현체들(버튼, 스크롤바, 에딧박스..등등)에게 이벤트가 전달되지 않도록 한다.
+	if (!CoreUIManager_v->isDragging()) {
+		bPropagate = onMouseUpContainedDetail(mouseEvent);
+	}
 
 	m_eState = eNormal;
 	return bPropagate;

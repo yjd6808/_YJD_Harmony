@@ -439,7 +439,9 @@ void EditBox::onPressStateChangedToDisabled()
 void EditBox::releaseUpEvent()
 {
     Widget::releaseUpEvent();
-    openKeyboard();
+
+    if (!_passiveFocusable)
+		openKeyboard();
 }
 
 void EditBox::setDelegate(EditBoxDelegate* pDelegate)

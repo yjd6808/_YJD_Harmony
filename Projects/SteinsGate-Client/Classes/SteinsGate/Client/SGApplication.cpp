@@ -123,7 +123,6 @@ void SGApplication::CreateOpenGLWindow() {
 void SGApplication::CreateWorldScene() {
     auto scene = WorldScene::get();
     scene->setAnchorPoint(Vec2::ZERO);
-    auto a =  scene->getCameras();
     DebugAssertMsg(scene, "월드씬 생성에 실패했습니다.");
     Director::getInstance()->runWithScene(scene);
 }

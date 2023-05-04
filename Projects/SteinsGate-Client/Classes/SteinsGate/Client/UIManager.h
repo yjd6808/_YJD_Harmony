@@ -10,6 +10,8 @@
  *	   Group        Button          Group
  *	  ....                      ┌────┴─────┐
  *							  Button     Label
+ *
+ *
  *	             
  */
 
@@ -19,6 +21,15 @@
 #include <SteinsGate/Client/ImagePack.h>
 #include <SteinsGate/Client/UIGroupMaster.h>
 
+struct DragState
+{
+	UIElement* Element;
+	SGVec2 StartElementPosition;
+	SGVec2 StartCursorPosition;
+	SGVec2 DragDelta;
+	bool Dragging;
+};
+
 class UIManager final : public JCore::SingletonPointer<UIManager>
 {
 private:
@@ -26,12 +37,25 @@ private:
 	UIManager();
 	~UIManager() override;
 public:
+
+
+
 	void init();
 	void registerMasterGroup(UIMasterGroup* group);
 	void registerLoadedUITexture(SgaResourceIndex index);
 	void unloadAll();
 	void onUpdate(float dt);
 	void callUIElementsUpdateCallback(float dt);
+
+	void draginit(const DragState& state);
+	void dragEnter(const SGEventMouse* mouseEvent);
+	void dragMove(const SGEventMouse* mouseEvent);
+	void dragEnd();
+
+	UIElement* getDraggingElement() { return m_DragState.Element; }
+	bool isDragging() { return m_DragState.Dragging; }
+	const DragState& getDragState() const { return m_DragState; }
+
 
 	UIMasterGroup* getMasterGroup(int groupCode);
 	UIElement* getElement(int elementCode);
@@ -67,7 +91,7 @@ private:
 		return (TElement*)pElem;
 	}
 
-
+	DragState m_DragState;
 	UIGroupMaster* m_pMaster;
 	SGHashMap<Int32U, SgaResourceIndex> m_hLoadedUITexture;		// 어떤 이미지 팩 로딩했는지 기록용
 	SGHashMap<int, UIElement*> m_hUIElements;

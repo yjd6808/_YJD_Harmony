@@ -676,6 +676,8 @@ namespace ui {
         // 윤정도: 에딧박스 임플 겟터 추가
         EditBoxImplCommon* getImpl() const;
 
+        // 윤정도: 마우스 땟을 때 에딧박스가 기본적으로 포커싱되는데 내가 이걸 제어할 수 있도록 하기위함.
+        void setPassiveFocusable(bool passiveFocuable) { _passiveFocusable = passiveFocuable; }
     protected:
         virtual void releaseUpEvent() override;
 
@@ -719,6 +721,7 @@ namespace ui {
         bool _normalTextureAdaptDirty;
         bool _pressedTextureAdaptDirty;
         bool _disabledTextureAdaptDirty;
+        bool _passiveFocusable;
 
         std::string _normalFileName;
         std::string _pressedFileName;

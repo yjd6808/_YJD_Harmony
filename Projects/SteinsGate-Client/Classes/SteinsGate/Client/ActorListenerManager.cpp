@@ -16,7 +16,7 @@ ActorListenerManager::ActorListenerManager() {}
 
 ActorListenerManager::~ActorListenerManager() {
 
-	m_hProjectileListenerMap.Values().Extension().ForEach([](ProjectileListener* listener) {
+	m_hProjectileListenerMap.ForEachValue([](ProjectileListener* listener) {
 		delete listener;
 	});
 }

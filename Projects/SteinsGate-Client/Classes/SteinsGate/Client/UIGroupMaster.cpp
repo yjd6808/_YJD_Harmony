@@ -64,7 +64,7 @@ void UIGroupMaster::addMasterGroup(UIMasterGroup* group) {
 }
 
 void UIGroupMaster::forEach(const SGActionFn<UIMasterGroup*>& action) {
-	m_vMasterGroupList.Extension().ForEach(action);
+	m_vMasterGroupList.ForEach(action);
 }
 
 UIGroupMaster* UIGroupMaster::createRetain() {

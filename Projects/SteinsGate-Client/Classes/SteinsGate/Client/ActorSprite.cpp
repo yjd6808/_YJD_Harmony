@@ -294,7 +294,7 @@ void ActorSprite::updateSpriteData(const SGActorSpriteDataPtr& spriteData) {
 
 	// Step 3. 제거된 기존 파츠 목록과 메모리에서 제거한다.
 	//         이때 Step4에서 애니메이션으로 등록할 파츠가 제거될 수 있으므로 메모리에서 제거는 하지 않는다.
-	vRemoveParts.Extension().ForEach([this](PartData& removePart) {
+	vRemoveParts.ForEach([this](PartData& removePart) {
 
 		// 캔버스만 제거하면 
 		// 캔버스에 붙은 파츠
@@ -321,7 +321,7 @@ void ActorSprite::updateSpriteData(const SGActorSpriteDataPtr& spriteData) {
 	}
 
 	// Step 7. 마지막으로 제거되어야할 대상들을 메모리에서 제거
-	vRemoveParts.Extension().ForEach([this](PartData& removePart) {
+	vRemoveParts.ForEach([this](PartData& removePart) {
 		// 파츠에 붙은 바운딩박스 알아서 제거됨
 		this->removeChild(removePart.Part, true);
 	});
