@@ -42,6 +42,10 @@ std::string UIEditBox::getText() {
 	return m_pEditBox->getText();
 }
 
+const char* UIEditBox::getTextRaw() {
+	return m_pEditBox->getText();
+}
+
 bool UIEditBox::init() {
 
 	setInitialUISize(m_pInfo->Size);

@@ -11,7 +11,9 @@
 
 USING_NS_CC;
 USING_NS_JC;
-USING_NS_DETAIL;
+USING_NS_JC_DETAIL;
+USING_NS_JNET;
+USING_NS_JNET_DETAIL;
 
 ConsoleLoggerOption NetLoggerOption_v = [] {
     ConsoleLoggerOption option;
@@ -71,6 +73,7 @@ void SGApplication::initGLContextAttrs()
 
 bool SGApplication::applicationDidFinishLaunching() {
 
+    Winsock::Initialize(2, 2);
     AudioPlayer::Initilize();
     SgaElementInitializer::Initialize();
     FileUtils::getInstance()->setPopupNotify(false);    // 파일못찾은 경우 알람 안하도록 함

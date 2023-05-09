@@ -259,6 +259,10 @@ struct StaticString
 		return StringUtil::CopyUnsafe(Source, str.Source());
 	}
 
+	int SetStringUnsafe(const std::string& str) {
+		return StringUtil::CopyUnsafe(Source, str.c_str());
+	}
+
 	template <Int32U ParamSize>
 	int SetStringUnsafe(const StaticString<ParamSize>& str) {
 		return StringUtil::CopyUnsafe(Source, str.Source);

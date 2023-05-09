@@ -23,6 +23,8 @@ class ActorBox;
 class ImagePackManager;
 class Global;
 class PopupManager;
+class TimeManager;
+class NetCore;
 
 extern SGApplication* CoreApp_v;
 extern ClientInfo* CoreClientInfo_v;
@@ -37,7 +39,8 @@ extern ActorBox* CoreActorBox_v;
 extern ImagePackManager* CorePackManager_v;
 extern Global* CoreGlobal_v;
 extern PopupManager* CorePopupManager_v;
-
+extern TimeManager* CoreTimeManager_v;
+extern NetCore* CoreNet_v;
 
 void InitializeClientCore();
 void FinalizeClientCore();

@@ -18,6 +18,10 @@
 #include <JCore/Env.h>
 #include <JCore/Bit.h>
 
+#include <JCore/Pool/BinarySearchMemoryPool.h>
+#include <JCore/Pool/IndexedMemoryPool.h>
+#include <JCore/Pool/ObjectPool.h>
+
 #include <JCore/Pattern/Singleton.h>
 
 #include <JCore/Primitives/StaticString.h>
@@ -45,6 +49,7 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/NetMaster.h>
 #include <JNetwork/IPEndPoint.h>
+#include <JNetwork/Socket.h>
 #include <JNetwork/Winsock.h>
 
 #include <JNetwork/Host/TcpServer.h>
@@ -132,6 +137,7 @@ using SGFileStreamPtr = JCore::FileStreamPtr;
 
 using SGConsoleColor = JCore::ConsoleColor;
 using SGDateTime = JCore::DateTime;
+using SGTimeSpan = JCore::TimeSpan;
 
 using SGNormalLock = JCore::NormalLock;
 using SGRecursiveLock = JCore::RecursiveLock;
@@ -142,6 +148,18 @@ using SGEventList = JCore::Event<Args...>;
 template <typename... TArgs>
 using SGTuple = JCore::Tuple<TArgs...>;
 
+using SGIndexMemroyPool = JCore::IndexedMemoryPool;
+using SGBinarySearchMemroyPool = JCore::BinarySearchMemoryPool;
+
+template <typename T>
+using SGObjectPool = JCore::ObjectPool<T>;
+
+template <typename T>
+using SGSingletonStatic = JCore::SingletonStatic<T>;
+template <typename T>
+using SGSingletonPointer = JCore::SingletonPointer<T>;
+
+
 // ============================================================
  //     JNework
  // ============================================================
@@ -149,6 +167,7 @@ using SGTuple = JCore::Tuple<TArgs...>;
 using SGSocket = JNetwork::Socketv4;
 using SGEndPoint = JNetwork::IPv4EndPoint;
 using SGAddress = JNetwork::IPv4Address;
+using SGSession = JNetwork::Session;
 using SGTcpClient = JNetwork::TcpClient;
 using SGUdpClient = JNetwork::UdpClient;
 using SGTcpSession = JNetwork::TcpSession;

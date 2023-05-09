@@ -19,19 +19,19 @@ NS_JNET_BEGIN
 
 ClientListener::ClientListener(const JCore::String& name) : m_Name(name) {}
 
-void ClientListener::OnConnected() {
+void ClientListener::OnConnected(Session* session) {
 	Console::WriteLine("[%s] 연결되었습니다.", m_Name.Source());
 }
 
-void ClientListener::OnDisconnected() {
+void ClientListener::OnDisconnected(Session* session) {
 	Console::WriteLine("[%s] 연결이 종료되었습니다.", m_Name.Source());
 }
 
-void ClientListener::OnSent(ISendPacket* sentPacket, Int32UL sentBytes) {
+void ClientListener::OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {
 	Console::WriteLine("[%s] 커맨드 %d개를 송신했습니다.", m_Name.Source(), sentPacket->GetCommandCount());
 }
 
-void ClientListener::OnReceived(ICommand* cmd) {
+void ClientListener::OnReceived(Session* session, ICommand* cmd) {
 	if (cmd->GetCommand() == Cmd_SaticMessage)
 		Console::WriteLine("[%s] 스태틱 메시지를 수신했습니다. : %s", m_Name.Source(), cmd->CastCommand<StaticMessage*>()->Msg.Source);
 	else if (cmd->GetCommand() == Cmd_DynamicMessage) {
@@ -40,7 +40,7 @@ void ClientListener::OnReceived(ICommand* cmd) {
 	}
 }
 
-void ClientListener::OnConnectFailed(Int32U errorMessage) {
+void ClientListener::OnConnectFailed(Session* session, Int32U errorMessage) {
 	Console::WriteLine("[%s] 서버 접속에 실패했습니다 (오류코드: %u)", m_Name.Source(), errorMessage);
 }
 

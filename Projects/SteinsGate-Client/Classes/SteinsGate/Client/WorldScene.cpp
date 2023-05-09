@@ -30,6 +30,7 @@
 USING_NS_CC;
 USING_NS_CCUI;
 USING_NS_JC;
+USING_NS_JNET;
 
 // ==============================================================
 // 퍼블릭 스태틱
@@ -117,7 +118,6 @@ void WorldScene::initEventListeners() {
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pResizedListener, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pCursorEnterListener, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(pCursorLeaveListener, this);
-
 }
 
 
@@ -129,12 +129,15 @@ void WorldScene::InitUILayer() {
 
 
 void WorldScene::update(float dt) {
+	updateTime(dt);
+	updateNet(dt);
 	updateScene(dt);
 }
 
 
 
 void WorldScene::updateScene(float dt) {
+
 
 	if (m_pRunningScene)
 		m_pRunningScene->update(dt);
@@ -147,6 +150,14 @@ void WorldScene::updateScene(float dt) {
 		changeScene(m_eReservedScene);
 	}
 
+}
+
+void WorldScene::updateNet(float dt) {
+	CoreNet_v->pollNetEvents();
+}
+
+void WorldScene::updateTime(float dt) {
+	CoreTimeManager_v->updateAppTime();
 }
 
 void WorldScene::onWndMessageReceived(int code, WPARAM wParam, LPARAM lParam) {
@@ -282,6 +293,7 @@ void WorldScene::onExit() {
 	FinalizeCommonCore();
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
+	Winsock::Finalize();
 }
 
 

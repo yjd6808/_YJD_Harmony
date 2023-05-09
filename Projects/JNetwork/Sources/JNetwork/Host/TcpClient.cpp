@@ -100,7 +100,7 @@ bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) 
 			m_eState = eDisconnected;
 			Initialize();
 			WSASetLastError(WSAETIMEDOUT);
-			m_pClientEventListener->OnConnectFailed(WSAETIMEDOUT);
+			m_pClientEventListener->OnConnectFailed(this, WSAETIMEDOUT);
 			return false;
 		}
 
@@ -110,7 +110,7 @@ bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) 
 			m_eState = eDisconnected;
 			Initialize();
 			WSASetLastError(err);
-			m_pClientEventListener->OnConnectFailed(err);
+			m_pClientEventListener->OnConnectFailed(this, err);
 			return false;
 		}
 	}
@@ -183,16 +183,16 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 
 void TcpClient::Disconnected() {
-	m_pClientEventListener->OnDisconnected();
+	m_pClientEventListener->OnDisconnected(this);
 	Initialize();
 }
 
 void TcpClient::NotifyCommand(ICommand* cmd) {
-	m_pClientEventListener->OnReceived(cmd);
+	m_pClientEventListener->OnReceived(this, cmd);
 }
 
 void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
-	m_pClientEventListener->OnSent(sentPacket, sentBytes);
+	m_pClientEventListener->OnSent(this, sentPacket, sentBytes);
 }
 
 
@@ -215,11 +215,11 @@ void TcpClient::Connected() {
 		DebugAssertMsg(false, "클라이언트 소켓 린저 타임아웃 설정 실패");
 	}
 
-	m_pClientEventListener->OnConnected();
+	m_pClientEventListener->OnConnected(this);
 }
 
 void TcpClient::ConnectFailed(Int32U errorCode) {
-	m_pClientEventListener->OnConnectFailed(errorCode);
+	m_pClientEventListener->OnConnectFailed(this, errorCode);
 	Initialize();
 }
 

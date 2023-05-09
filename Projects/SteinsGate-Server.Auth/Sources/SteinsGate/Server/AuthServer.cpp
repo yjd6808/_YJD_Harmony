@@ -18,7 +18,7 @@ USING_NS_JNET;
 AuthServer::AuthServer(
 	const IOCPPtr& iocp, 
 	const MemoryPoolAbstractPtr& bufferAllocator,
-	TcpServerEventListener* eventListener, 
+	ServerEventListener* eventListener, 
 	int maxConn, 
 	int sessionRecvBufferSize,
 	int sessionSendBufferSize) : CommonServer(iocp, bufferAllocator, eventListener, maxConn, sessionRecvBufferSize, sessionSendBufferSize)

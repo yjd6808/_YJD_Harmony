@@ -18,8 +18,8 @@ class Env
 {
 public:
 	static String CurrentDirectory();
-	static TimeSpan AppTime();
-	static TimeSpan SystemTime();
+	static TimeSpan AppTime();			// 앱 실행후 시간이 얼마나 결과했는지
+	static TimeSpan SystemTime();		// OS 실행후 시간이 얼마나 경과했는지
 };
 
 

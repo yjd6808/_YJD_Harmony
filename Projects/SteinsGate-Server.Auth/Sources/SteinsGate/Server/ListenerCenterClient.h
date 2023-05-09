@@ -14,11 +14,11 @@
 class ListenerCenterClient : public JNetwork::ClientEventListener
 {
 protected:
-	void OnConnected() override;
-	void OnDisconnected() override;
-	void OnSent(JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
-	void OnReceived(JNetwork::ICommand* cmd) override;
-	void OnConnectFailed(Int32U errorCode) override;
+	void OnConnected(SGSession* session) override;
+	void OnDisconnected(SGSession* session) override;
+	void OnSent(SGSession* sessionm, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
+	void OnReceived(SGSession* session, JNetwork::ICommand* cmd) override;
+	void OnConnectFailed(SGSession* session, Int32U errorCode) override;
 public:
 	ListenerCenterClient();
 

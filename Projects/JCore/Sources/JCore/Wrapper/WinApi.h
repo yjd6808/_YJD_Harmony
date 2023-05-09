@@ -81,7 +81,7 @@ struct WinApi {
      * \return If the function succeeds, the return value is a handle to the event object. If the named event object existed before the function call, the function returns a handle to the existing object and GetLastError returns ERROR_ALREADY_EXISTS.
      *         If the function fails, the return value is NULL. To get extended error information, call GetLastError.
      */
-    static WinHandle       JCoreStdCall CreateEvent(In_ bool initialState, In_ bool manualReset, InOpt_ const char* name = nullptr);
+    static WinHandle       JCoreStdCall CreateEventA(In_ bool initialState, In_ bool manualReset, InOpt_ const char* name = nullptr);
 
     /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
      * \brief Waits until one or all of the specified objects are in the signaled state, an I/O completion routine or asynchronous procedure call (APC) is queued to the thread, or the time-out interval elapses.
@@ -254,7 +254,7 @@ struct Interlocked final
      * \return The function returns the original value of the Destination parameter.
      */
     static TOperand Xor(InOut_ TOperand* destination, In_ TOperand value);
-
+    static TOperand Read(InOut_ TOperand* destination) { return Interlocked::Add(destination, 0); }
 }; // struct Interlocked final
 
 
@@ -292,6 +292,10 @@ struct Interlocked<TOperand*> final
         return reinterpret_cast<TOperand*>(TInterlocked::ExchangeAdd(
             reinterpret_cast<TReinterpretedType*>(destination),
             sizeof(TOperand) * value));
+    }
+
+    static TOperand* Read(InOut_ TOperand** destination) {
+        return reinterpret_cast<TOperand*>(TInterlocked::Add(reinterpret_cast<TReinterpretedType*>(destination), 0));
     }
 
 }; // struct Interlocked final

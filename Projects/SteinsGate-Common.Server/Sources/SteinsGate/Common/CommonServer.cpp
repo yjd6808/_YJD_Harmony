@@ -16,7 +16,7 @@ USING_NS_JNET;
 CommonServer::CommonServer(
 	const IOCPPtr& iocp, 
 	const MemoryPoolAbstractPtr& bufferAllocator,
-	TcpServerEventListener* eventListener, 
+	ServerEventListener* eventListener, 
 	int maxConn, 
 	int sessionRecvBufferSize,
 	int sessionSendBufferSize)

@@ -31,7 +31,8 @@ ActorBox*				CoreActorBox_v;
 ImagePackManager*		CorePackManager_v;
 Global*					CoreGlobal_v;
 PopupManager*			CorePopupManager_v;
-
+TimeManager*			CoreTimeManager_v;
+NetCore*				CoreNet_v;
 
 void InitializeClientCore() {
 	CoreApp_v					= (SGApplication*)cocos2d::Application::getInstance();
@@ -46,7 +47,8 @@ void InitializeClientCore() {
 	CoreActorListenerManager_v  = ActorListenerManager::Get();
 	CoreActorBox_v				= ActorBox::Get();
 	CorePopupManager_v			= PopupManager::Get();
-
+	CoreTimeManager_v			= TimeManager::Get();
+	CoreNet_v					= NetCore::Get();
 
 	CoreGlobal_v->init();
 	CorePackManager_v->loadAllPackages();
@@ -55,10 +57,13 @@ void InitializeClientCore() {
 	CoreUIManager_v->init();
 	CoreInven_v->init();
 	CoreActorListenerManager_v->init();
+	CoreNet_v->Initialize();
 }
 
 void FinalizeClientCore() {
 
+	DeleteSingletonSafe(CoreNet_v);
+	DeleteSingletonSafe(CoreTimeManager_v);
 	DeleteSingletonSafe(CorePopupManager_v);
 	DeleteSingletonSafe(CoreUIManager_v);
 	DeleteSingletonSafe(CorePlayer_v);

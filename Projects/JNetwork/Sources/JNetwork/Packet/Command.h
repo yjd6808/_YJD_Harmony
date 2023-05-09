@@ -41,6 +41,8 @@ struct ICommand
 	void SetCommandLen(const CmdLen_t cmdlen) { CmdLen = cmdlen; }
 	void AddCommandLen(const CmdLen_t cmdlen) { CmdLen += cmdlen; }
 	Cmd_t GetCommand() const { return this->Cmd; }
+	char* GetData() const { return (char*)this + sizeof(ICommand); }
+	int GetDataLen() const { return CmdLen - sizeof(ICommand); }
 	CmdLen_t GetCommandLen() const { return this->CmdLen; }
 
 	// 전체 캐스팅 - 상속받은 커스텀 커맨드 전용
@@ -57,7 +59,8 @@ struct ICommand
 		return reinterpret_cast<T>(((char*)this) + sizeof(ICommand));
 	}
 
-protected:
+	
+
 	Cmd_t	 Cmd{};		// 사용자 지정 커맨드 ID값
 	CmdLen_t CmdLen{};	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
 	// ex) Commnad<char>의 CmdLen은 1이 아니고 5임

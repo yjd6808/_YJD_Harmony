@@ -69,7 +69,6 @@ void IOCPWorker::WorkerThread(void* param) {
 		}
 
 		if (numberOfBytesTransffered == 0 && completionKey != NULL) {
-
 			// 실제 로직처리는 IOCPPostOrder의 Process() 함수에서 진행
 			// pIOCPPostOrder 메모리 해제는 Process 내부에서 처리
 			switch (pIOCPPostOrder->Process(this)) {

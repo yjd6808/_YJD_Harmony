@@ -37,10 +37,12 @@ void InitializeAuthCore() {
 		CoreCenterClient_v = CoreNetGroup_v->GetCenterClient();
 		CoreInterServerClient_v = CoreNetGroup_v->GetInterServerClient();
 	}
+
 }
 
 void FinalizeAuthCore() {
 	DeleteSingletonSafe(CoreNetMaster_v);
 	DeleteSingletonSafe(CoreDataManager_v);
 	DeleteSafe(CoreGameDB_v);
+	
 }

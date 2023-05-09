@@ -9,9 +9,10 @@
 #include "CommonCore.h"
 #include "CommonCoreHeader.h"
 
-// 메인 프로그램에서 주입해줄 것
-CommonInfo* CoreCommonInfo_v = nullptr;
-CharCommonInfo* CoreCharCommon_v = nullptr;
+
+ServerProcessInfo* CoreServerProcessInfo_v;			// 메인 서버 프로그램에서 주입해줄 것
+CommonInfo* CoreCommonInfo_v = nullptr;				// 메인 프로그램에서 주입해줄 것
+CharCommonInfo* CoreCharCommon_v = nullptr;			// 메인 프로그램에서 주입해줄 것
 
 void InitializeCommonCore() {
 

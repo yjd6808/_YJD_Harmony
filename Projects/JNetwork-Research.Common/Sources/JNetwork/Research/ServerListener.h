@@ -9,12 +9,12 @@
 #pragma once
 
 
-#include <JNetwork/EventListener/TcpServerEventListener.h>
+#include <JNetwork/EventListener/ServerEventListener.h>
 #include <JCore/Primitives/String.h>
 
 NS_JNET_BEGIN
 
-class ServerListener : public TcpServerEventListener
+class ServerListener : public ServerEventListener
 {
 public:
 	ServerListener(const JCore::String& name);

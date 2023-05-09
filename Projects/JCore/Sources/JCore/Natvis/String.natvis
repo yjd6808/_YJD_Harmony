@@ -19,7 +19,9 @@
 
 	
 	<Type Name="JCore::String;">
-		<DisplayString>{m_pBuffer,na}</DisplayString>
+		<!-- 유니코드 문자열 포맷: s8(UTF-8), su(UTF-16), s32(UTF-32)  -->
+		<!-- 기본: na  -->
+		<DisplayString>{m_pBuffer,s8}</DisplayString>
 		<Expand>
 			<ArrayItems>
 				<Size>m_iLen</Size>

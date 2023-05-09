@@ -335,6 +335,23 @@ public:
 		--this->m_iSize;
 	}
 
+	template <typename Predicate>
+	bool RemoveIf(Predicate&& predicate) {
+		int iRemoveIndex = -1;
+		for (int i = 0; i < this->m_iSize; ++i) {
+			if (predicate(this->m_pArray[i])) {
+				iRemoveIndex = i;
+				break;
+			}
+		}
+		if (iRemoveIndex != -1) {
+			RemoveAt(iRemoveIndex);
+			return true;
+		}
+
+		return false;
+	}
+
 	void Sort() {
 		TArrayCollection::Sort(NaturalOrder{});
 	}
@@ -376,6 +393,8 @@ public:
 			consumer(this->m_pArray[i]);
 		}
 	}
+
+	
 
 	ContainerType GetContainerType() override { return ContainerType::Vector; }
 

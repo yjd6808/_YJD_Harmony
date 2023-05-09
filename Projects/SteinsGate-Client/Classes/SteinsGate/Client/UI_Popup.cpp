@@ -52,6 +52,7 @@ void UI_Popup::onInit() {
 	m_pBtnOk = findButton(UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_OK);
 	m_pLabelText = findLabel(UI_POPUP_HOLDER_LABEL_TEXT);
 
+	m_pLabelText->setEnableFontAutoScaling(false);
 	m_pGroupButtonHolder->setResizable(false);
 	m_pSpriteBackground->setDraggable(true);
 	m_pSpriteBackground->setDragLinkElement(this);
@@ -174,7 +175,7 @@ void UI_Popup::adjust() {
 	m_pLabelText->setUISize(textArea);
 	m_pLabelText->setRelativePosition(fPadding, -fPadding, HAlignment::Left, VAlignment::Top);
 	
-	m_pGroupButtonHolder->setRelativePosition(0, fPadding);
+	m_pGroupButtonHolder->setRelativePosition(0, fPadding, HAlignment::Center, VAlignment::Bottom);
 }
 
 // 버튼과 패딩

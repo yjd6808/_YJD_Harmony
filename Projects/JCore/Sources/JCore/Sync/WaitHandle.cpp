@@ -13,9 +13,9 @@
 
 NS_JC_BEGIN
 
-WaitHandle::WaitHandle(bool initialState, bool manualReset, const char* name) :
-    m_hHandle(WinApi::CreateEvent(initialState, manualReset, name)),
-    m_Name(name)
+WaitHandle::WaitHandle(bool initialState, bool manualReset, const char* name)
+	: m_hHandle(WinApi::CreateEventA(initialState, manualReset, name))
+	, m_Name(name)
 {}
 
 WaitHandle::WaitHandle(WaitHandle&& handle) noexcept {
@@ -64,19 +64,28 @@ void WaitHandle::operator=(WaitHandle&& other) noexcept {
 // =====================================================================
 // static
 // =====================================================================
-bool WaitHandle::WaitAll(WaitHandle* handles, Int32U count) {
+bool WaitHandle::WaitAll(WaitHandle* handles, Int32U count, OutOpt_ Int32U* result) {
     DebugAssert(count <= MAXIMUM_WAIT_OBJECTS);
     WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
     for (Int32U i = 0; i < count; ++i) {
         waitHandles[i] = handles[i].m_hHandle;
     }
 
-    return WinApi::WaitForMultipleObjectsEx(count, waitHandles, true) == WAIT_OBJECT_0;
+    const Int32U uiResult = WinApi::WaitForMultipleObjectsEx(count, waitHandles, true) == WAIT_OBJECT_0;
+
+    if (result)
+        *result = uiResult;
+
+    if (uiResult == WAIT_OBJECT_0) {
+        return true;
+    }
+
+    return false;
 }
 
 
 
-WaitHandle* WaitHandle::WaitAny(WaitHandle* handles, Int32U count) {
+WaitHandle* WaitHandle::WaitAny(WaitHandle* handles, Int32U count, OutOpt_ Int32U* result) {
     DebugAssert(count <= MAXIMUM_WAIT_OBJECTS);
     WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
@@ -84,10 +93,13 @@ WaitHandle* WaitHandle::WaitAny(WaitHandle* handles, Int32U count) {
         waitHandles[i] = handles[i].m_hHandle;
     }
 
-    Int32U iResult = WinApi::WaitForMultipleObjectsEx(count, waitHandles, false);
+    const Int32U uiResult = WinApi::WaitForMultipleObjectsEx(count, waitHandles, false);
 
-    if (iResult >= WAIT_OBJECT_0 && iResult <= WAIT_OBJECT_0 + count - 1)
-        return &handles[iResult - WAIT_OBJECT_0];
+    if (result)
+        *result = uiResult;
+
+    if (uiResult >= WAIT_OBJECT_0 && uiResult <= WAIT_OBJECT_0 + count - 1)
+        return &handles[uiResult - WAIT_OBJECT_0];
 
     return nullptr;
 }

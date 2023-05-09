@@ -110,6 +110,6 @@
     #define InOut_
     #define InOpt_
 	
-	#define JCoreSwap(Val1, Val2, Type) do { Type temp = Val1; Val1 = Val2; Val2 = temp; } while (0)
+	#define JCoreSwap(val1, val2, type) do { type temp = val1; val1 = val2; val2 = temp; } while (0)
 
 #endif

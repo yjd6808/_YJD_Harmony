@@ -42,6 +42,10 @@ void NetGroup::RunIocp() {
 	m_spIOCP->Run();
 }
 
+IOCPPtr NetGroup::GetIocp() {
+	return m_spIOCP;
+}
+
 void NetGroup::AddHost(const HostPtr& host) {
 	DebugAssertMsg(host != nullptr , "따끈따끈한 호스트만 넣어주세요");
 	m_vHostList.PushBack(host);

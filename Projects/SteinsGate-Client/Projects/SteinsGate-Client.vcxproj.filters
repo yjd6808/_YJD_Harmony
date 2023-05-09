@@ -76,9 +76,6 @@
     <Filter Include="Game\UI">
       <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\UI\Group">
-      <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\Mob">
       <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,9 @@
     </Filter>
     <Filter Include="Net\Recv">
       <UniqueIdentifier>{95abad0d-5fc9-48a1-a3f1-0039e977b60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI_M">
+      <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -326,7 +326,7 @@
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Login.cpp">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI_M</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UIManager.cpp">
       <Filter>Game\UI</Filter>
@@ -386,7 +386,7 @@
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Inventory.cpp">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI_M</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UIScrollBar.cpp">
       <Filter>Game\UI</Filter>
@@ -413,13 +413,28 @@
       <Filter>Net\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Popup.cpp">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI_M</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\PopupManager.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Test.cpp">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI_M</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\TimeManager.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetCore.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\R_AUTH.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\S_AUTH.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\CommandSynchronizer.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -698,7 +713,7 @@
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Login.h">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI_M</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UILabel.h">
       <Filter>Game\UI</Filter>
@@ -764,7 +779,7 @@
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Inventory.h">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI_M</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIScrollBar.h">
       <Filter>Game\UI</Filter>
@@ -794,13 +809,25 @@
       <Filter>Net</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Popup.h">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI_M</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\PopupManager.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Test.h">
-      <Filter>Game\UI\Group</Filter>
+      <Filter>Game\UI_M</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\TimeManager.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\R_AUTH.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\S_AUTH.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\CommandSynchronizer.h">
+      <Filter>Net</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -65,7 +65,7 @@ WinApi::GetStdoutHandle() {
 
 WinHandle
 JCoreStdCall
-WinApi::CreateEvent(bool initialState, bool manualReset, const char* name) {
+WinApi::CreateEventA(bool initialState, bool manualReset, const char* name) {
     return ::CreateEventA(NULL, manualReset ? TRUE : FALSE, initialState ? TRUE : FALSE, name);
 }
 

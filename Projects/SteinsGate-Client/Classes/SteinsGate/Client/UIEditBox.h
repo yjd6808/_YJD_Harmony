@@ -22,6 +22,7 @@ public:
     bool init() override;
 	UIElementType_t getElementType() override { return UIElementType::EditBox; }
     std::string getText();
+    const char* getTextRaw();
     SGEditBox* source() const { return m_pEditBox; }
     SGString toString() override { return SGStringUtil::Format("에딧박스(%d)", m_pInfo->Code); }
 

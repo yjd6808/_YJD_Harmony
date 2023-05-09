@@ -14,26 +14,14 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-SGNetAuthEventListener::SGNetAuthEventListener(SGCommandParser* parser)
-	: SGNetClientEventListener(parser)
-{}
-
-void SGNetAuthEventListener::OnStarted() {
-	_LogPlain_("서버가 시작되었습니다.");
+void NetAuthEventListener::OnConnected(Session* session) {
 }
-
-void SGNetAuthEventListener::OnConnected(JNetwork::Session* connectedSession) {
+void NetAuthEventListener::OnDisconnected(Session* session) {
 }
-
-void SGNetAuthEventListener::OnDisconnected(JNetwork::Session* disconnetedSession) {
+void NetAuthEventListener::OnConnectFailed(Session* session, Int32U errorCode) {
 }
-
-void SGNetAuthEventListener::OnSent(JNetwork::Session* sender, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
+void NetAuthEventListener::OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {
 }
-
-void SGNetAuthEventListener::OnReceived(JNetwork::Session* receiver, JNetwork::ICommand* cmd) {
-}
-
-void SGNetAuthEventListener::OnStopped() {
-	_LogPlain_("서버가 중지되었습니다.");
+void NetAuthEventListener::OnReceived(Session* session, ICommand* cmd) {
+	SynchronizedOnReceived(session, cmd);
 }

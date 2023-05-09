@@ -11,9 +11,11 @@
 
 class CommonInfo;
 struct CharCommonInfo;
+struct ServerProcessInfo;
 
 extern CommonInfo* CoreCommonInfo_v;
 extern CharCommonInfo* CoreCharCommon_v;
+extern ServerProcessInfo* CoreServerProcessInfo_v;
 
 void InitializeCommonCore();
 void FinalizeCommonCore();

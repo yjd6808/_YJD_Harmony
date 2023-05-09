@@ -11,7 +11,6 @@
 
 #include <SteinsGate/Common/CommonCore.h>
 
-struct ServerProcessInfo;
 class InputThread;
 class CommonNetMaster;
 class CommonNetGroup;
@@ -23,7 +22,6 @@ namespace JNetwork
 	class UdpClient;
 }
 
-extern ServerProcessInfo* CoreServerProcessInfo_v;
 extern InputThread* CoreInputThread_v;
 extern CommonNetMaster* CoreCommonNetMaster_v;
 extern CommonNetGroup* CoreCommonNetGroup_v;

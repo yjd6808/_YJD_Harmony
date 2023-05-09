@@ -138,7 +138,7 @@
     <ClInclude Include="..\Sources\JNetwork\ByteOrder.h" />
     <ClInclude Include="..\Sources\JNetwork\EventListener\ClientEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\EventListener\SessionEventListener.h" />
-    <ClInclude Include="..\Sources\JNetwork\EventListener\TcpServerEventListener.h" />
+    <ClInclude Include="..\Sources\JNetwork\EventListener\ServerEventListener.h" />
     <ClInclude Include="..\Sources\JNetwork\Host\Host.h">
       <SubType>
       </SubType>

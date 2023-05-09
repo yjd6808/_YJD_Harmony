@@ -9,9 +9,10 @@
 #pragma once
 
 #include <SteinsGate/Common/CommonNetMaster.h>
-#include <JCore/Pattern/Singleton.h>
 
-class AuthNetMaster final : public CommonNetMaster, public JCore::SingletonPointer<AuthNetMaster>
+class AuthNetMaster final
+	: public CommonNetMaster
+	, public SGSingletonPointer<AuthNetMaster>
 {
 	friend class TSingleton;
 

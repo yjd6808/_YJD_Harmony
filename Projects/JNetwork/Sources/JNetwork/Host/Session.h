@@ -10,7 +10,7 @@
 
 #include <JNetwork/Host/Host.h>
 
-#include <JNetwork/EventListener/TcpServerEventListener.h>
+#include <JNetwork/EventListener/ServerEventListener.h>
 
 #include <JNetwork/Packet/SendPacket.h>
 #include <JNetwork/Packet/RecvPacket.h>

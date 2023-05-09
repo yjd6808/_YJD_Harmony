@@ -15,9 +15,6 @@
 
 class InputThread : public JCore::RunnableThread
 {
-	using TInputLock = JCore::NormalLock;
-	using TInputLockGuard = JCore::NormalLockGuard;
-
 protected:
 	bool PreStart() override;
 	bool PreStop() override;
@@ -31,7 +28,7 @@ public:
 	void PopAllEvents(JCore::Vector<int>& eventList);
 protected:
 	volatile bool m_bRunning;
-	TInputLock m_Lock;
+	JCore::NormalLock m_Lock;
 	JCore::ArrayQueue<int> m_qInputEvent;
 	JCore::HashMap<JCore::String, int> m_hInputEventMap;
 	int m_iMaxInputEventCount;

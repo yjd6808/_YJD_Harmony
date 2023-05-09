@@ -31,11 +31,23 @@ public:
 
 
 	template <typename Consumer>
-	void ForEach(Consumer&& consumer) {
+	TCollectionExtension& ForEach(Consumer&& consumer) {
 		TEnumerator it = m_pCollection->Begin();
 		while (it->HasNext()) {
 			consumer(it->Next());
 		}
+		return *this;
+	}
+
+	template <typename IndexConsumer>
+	TCollectionExtension& ForEachWithIndex(IndexConsumer&& consumer) {
+		TEnumerator it = m_pCollection->Begin();
+		int i = 0;
+		while (it->HasNext()) {
+			consumer(it->Next(), i);
+			++i;
+		}
+		return *this;
 	}
 
 	bool Exist(const T& val) {

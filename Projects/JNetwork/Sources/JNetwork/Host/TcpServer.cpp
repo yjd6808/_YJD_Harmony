@@ -14,7 +14,7 @@ NS_JNET_BEGIN
 TcpServer::TcpServer(
 	const IOCPPtr& iocp,
 	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	TcpServerEventListener* eventListener,
+	ServerEventListener* eventListener,
 	int maxConn,
 	int sessionRecvBufferSize, 
 	int sessionSendBufferSize

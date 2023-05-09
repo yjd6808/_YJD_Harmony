@@ -60,21 +60,21 @@ void UdpClient::Connected() {
 	// UDP는 연결이라는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
 	m_Socket.State = Socket::eBinded;
-	m_pClientEventListener->OnConnected();
+	m_pClientEventListener->OnConnected(this);
 }
 
 void UdpClient::Disconnected() {
 	// UDP는 연결이 끊긴다는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
-	m_pClientEventListener->OnDisconnected();
+	m_pClientEventListener->OnDisconnected(this);
 }
 
 void UdpClient::NotifyCommand(ICommand* cmd) {
-	m_pClientEventListener->OnReceived(cmd);
+	m_pClientEventListener->OnReceived(this, cmd);
 }
 
 void UdpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
-	m_pClientEventListener->OnSent(sentPacket, sentBytes);
+	m_pClientEventListener->OnSent(this, sentPacket, sentBytes);
 }
 
 NS_JNET_END

@@ -14,7 +14,7 @@
 NS_JC_BEGIN
 
 Int32U Thread::ms_uiMainThreadId = WinApi::GetCurrentThreadId();
-thread_local Int32U Thread::tls_uiThreadId = WinApi::GetCurrentThreadId();
+thread_local Int32U Thread::tls_uiThreadId = 0;
 
 Thread::Thread(TRunnable&& fn, void* param, const char* name, bool autoJoin): Thread(name, autoJoin) {
     Start(Move(fn), param);
@@ -74,7 +74,7 @@ Int32U Thread::GetThreadId() {
     if (tls_uiThreadId != 0)
         return tls_uiThreadId;
 
-    return WinApi::GetCurrentThreadId();
+    return tls_uiThreadId = WinApi::GetCurrentThreadId();
 }
 
 void Thread::Sleep(Int32U ms) {

@@ -16,7 +16,7 @@ class ImagePackManager final : public JCore::SingletonPointer<ImagePackManager>
 private:
 	friend class TSingleton;
 	ImagePackManager();
-	~ImagePackManager();
+	~ImagePackManager() override;
 public:
 	void loadAllPackages();
 	void unloadPackData(int packIndex);

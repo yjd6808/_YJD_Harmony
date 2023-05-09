@@ -8,7 +8,7 @@
 #include <JNetwork/Host/Server.h>
 #include <JNetwork/Host/SessionContainer.h>
 #include <JNetwork/Host/TcpSession.h>
-#include <JNetwork/EventListener/TcpServerEventListener.h>
+#include <JNetwork/EventListener/ServerEventListener.h>
 
 #include <JNetwork/IOCP/IOCP.h>
 
@@ -21,7 +21,7 @@ public:
 	TcpServer(
 		const IOCPPtr& iocp,
 		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		TcpServerEventListener* eventListener,
+		ServerEventListener* eventListener,
 		int maxConn = 10,
 		int sessionRecvBufferSize = 6000, 
 		int sessionSendBufferSize = 6000
@@ -32,8 +32,6 @@ public:
 	// 커스텀 세션 생성을 위한 버철
 	virtual TcpSession* CreateSession();
 
-	// 초기 IOCP 쓰레드 수
-	// TcpServer를 상속받은 서버에서 이 함수를 오버라이딩 해서 IOCP에서 관리할 쓰레드 수를 조절 할 수 있도록 하자.
 	bool Start(const IPv4EndPoint& localEndPoint) override;
 	bool Stop() override;
 
@@ -52,7 +50,7 @@ protected:
 	JCore::Atomic<int> m_iSessionSendBufferSize;
 	JCore::MemoryPoolAbstractPtr m_spBufferAllocator;
 
-	TcpServerEventListener* m_pEventListener;
+	ServerEventListener* m_pEventListener;
 	SessionContainer* m_pContainer;
 };
 

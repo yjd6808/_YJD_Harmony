@@ -35,8 +35,8 @@ public:
     void operator=(const WaitHandle& other) = delete;
     void operator=(WaitHandle&& other) noexcept;
 public:
-    static bool WaitAll(WaitHandle* handles, Int32U count);
-    static WaitHandle* WaitAny(WaitHandle* handles, Int32U count);
+    static bool WaitAll(WaitHandle* handles, Int32U count, OutOpt_ Int32U* result = nullptr);
+    static WaitHandle* WaitAny(WaitHandle* handles, Int32U count, OutOpt_ Int32U* result = nullptr);
 
     template <typename TAllocator>
 	static bool WaitAll(Collection<WaitHandle, TAllocator>& handles) {

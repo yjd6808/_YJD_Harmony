@@ -31,6 +31,8 @@ public:
 	
 	void update(float dt) override;
 	void updateScene(float dt);
+	void updateNet(float dt);
+	void updateTime(float dt);
 
 	void onWndMessageReceived(int code, WPARAM wParam, LPARAM lParam);
 	void onWndFocused(SGEventCustom* custom);

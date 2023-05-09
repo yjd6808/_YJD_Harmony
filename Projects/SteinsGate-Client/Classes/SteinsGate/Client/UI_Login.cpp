@@ -11,6 +11,7 @@
 #include "UI_Login.h"
 
 #include <SteinsGate/Client/UIDefine.h>
+#include <SteinsGate/Client/S_AUTH.h>
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -139,11 +140,16 @@ void UI_Login::login() {
 		return;
 	}
 
-	_LogDebug_("아이디: %s", m_pEbId->getText().data());
-	_LogDebug_("패스워드: %s", m_pEbPass->getText().data());
+	std::string id = m_pEbId->getText();
+	std::string pw = m_pEbPass->getText();
 
-	_LogDebug_("아이디: %s", m_pEbId->getText().c_str());
-	_LogDebug_("패스워드: %s", m_pEbPass->getText().c_str());
+	_LogDebug_("아이디: %s", id.data());
+	_LogDebug_("패스워드: %s", pw.data());
+
+	_LogDebug_("아이디: %s", id.c_str());
+	_LogDebug_("패스워드: %s", pw.c_str());
+
+	S_AUTH::SendLogin(id, pw);
 }
 
 

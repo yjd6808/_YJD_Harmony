@@ -41,7 +41,6 @@ class ObjectPool
 public:
 	using TPool = ObjectPool<T>;
 	using TLock = RecursiveLock;
-	using TLockGuard = LockGuard<TLock>;
 
 	ObjectPool() : m_pNext(nullptr) {}
 	virtual	~ObjectPool() = default;
@@ -73,7 +72,7 @@ public:
 
 
 	static void	FreeAllObjects() {
-		TLockGuard g(ms_Lock);
+		LOCK_GUARD(ms_Lock);
 
 		if (ms_uiAllocatedCount != 0) {
 			_LogWarn_("아직 반환되지 않은 데이터가 존재합니다.");
@@ -104,7 +103,7 @@ public:
 	
 
 	void* operator new(size_t size, int blockUse, char const* fileName, int lineNumber) {
-		TLockGuard g(ms_Lock);
+		LOCK_GUARD(ms_Lock);
 
 		T* pInst;
 		if (ms_pHead != nullptr) {
@@ -122,7 +121,7 @@ public:
 	}
 
 	void* operator new(size_t size) {
-		TLockGuard g(ms_Lock);
+		LOCK_GUARD(ms_Lock);
 
 		T* pInst;
 		if (ms_pHead != nullptr) {
@@ -144,7 +143,7 @@ public:
 			return;
 		}
 
-		TLockGuard g(ms_Lock);
+		LOCK_GUARD(ms_Lock);
 
 		T* pInst = (T*)obj;
 

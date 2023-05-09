@@ -56,7 +56,10 @@ void IOCP::Run() {
 		return;
 	}
 
-	m_pWorkerManager->Run();
+	{
+		LOCK_GUARD(m_WorkerManagerLock);
+		m_pWorkerManager->Run();
+	}
 	m_eState = State::eRunning;
 }
 
@@ -69,7 +72,10 @@ void IOCP::Join() {
 	// 펜딩카운트가 0이 될때까지 기다린다.
 	WaitForZeroPending();
 
-	m_pWorkerManager->Join();
+	{
+		LOCK_GUARD(m_WorkerManagerLock);
+		m_pWorkerManager->Join();
+	}
 	m_eState = State::eJoined;
 }
 
@@ -84,6 +90,15 @@ void IOCP::WaitForZeroPending() {
 		DebugAssertMsg(iPending >= 0, "멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", iPending);
 		JCore::Thread::Sleep(10);
 	}
+}
+
+JCore::Vector<Int32U> IOCP::GetWorkThreadIdList() {
+	LOCK_GUARD(m_WorkerManagerLock);
+	JCore::Vector<Int32U> vThreadIdList(m_pWorkerManager->m_vWorkers.Size());
+	for (int i = 0; i < m_pWorkerManager->m_vWorkers.Size(); ++i) {
+		vThreadIdList.PushBack(m_pWorkerManager->m_vWorkers[i]->GetThreadId());
+	}
+	return vThreadIdList;
 }
 
 bool IOCP::Connect(WinHandle handle, ULONG_PTR completionKey) const {

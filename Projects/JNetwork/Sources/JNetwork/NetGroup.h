@@ -24,6 +24,7 @@ public:
 	void CreateIocp(int threadCount);
 	void CreateBufferPool(const JCore::HashMap<int, int>& poolInfo);
 	void RunIocp();
+	IOCPPtr GetIocp();
 	void AddHost(const HostPtr& host);
 	void SetName(const JCore::String& name);
 

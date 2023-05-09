@@ -67,7 +67,7 @@ void UILabel::setUISize(const SGSize& contentSize) {
 	// TODO: (완료) 폰트 사이즈도 변경되야함.
 	if (m_bFontAutoScaling) {
 		m_fFontSize = m_fInitialFontSize * getUIScaleY();
-		m_pLabel->initWithTTF(m_pLabel->getString(), getFontPath().Source(), (int)m_fFontSize, { m_UISize.width, m_UISize.height });
+		m_pLabel->initWithTTF(m_pLabel->getString(), getFontPath().Source(), m_fFontSize, { m_UISize.width, m_UISize.height });
 	} else {
 		m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
 	}
@@ -95,12 +95,14 @@ int UILabel::getLineCount() const {
 bool UILabel::init() {
 
 	setInitialUISize(m_pInfo->Size);
-	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), getFontPath().Source(), int(m_fFontSize), Size::ZERO);
+
+	m_pLabel = SGLabel::createWithTTF(m_pInfo->Text.ToStd(), getFontPath().Source(), m_fFontSize, Size::ZERO);
 	m_pLabel->setHorizontalAlignment((TextHAlignment)m_pInfo->TextHAlignment);
 	m_pLabel->setVerticalAlignment((TextVAlignment)m_pInfo->TextVAlignment);
 	m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
 	m_pLabel->setTextColor(m_pInfo->FontColor);
 	m_pLabel->enableWrap(m_pInfo->TextWrap);
+	m_pLabel->setLineHeight(m_fFontSize);
 	m_pLabel->setAnchorPoint(Vec2::ZERO);
 	this->addChild(m_pLabel);
 

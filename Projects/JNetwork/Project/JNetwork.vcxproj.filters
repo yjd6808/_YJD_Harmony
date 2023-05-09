@@ -157,7 +157,7 @@
     <ClInclude Include="..\Sources\JNetwork\EventListener\SessionEventListener.h">
       <Filter>EventListener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\JNetwork\EventListener\TcpServerEventListener.h">
+    <ClInclude Include="..\Sources\JNetwork\EventListener\ServerEventListener.h">
       <Filter>EventListener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\EventListener\ClientEventListener.h">

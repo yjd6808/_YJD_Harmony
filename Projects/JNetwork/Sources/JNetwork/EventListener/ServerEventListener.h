@@ -15,8 +15,7 @@
 
 #pragma once
 
-#include <JCore/Type.h>
-#include <JNetwork/Namespace.h>
+#include <JNetwork/EventListener/SessionEventListener.h>
 
 NS_JNET_BEGIN
 
@@ -24,18 +23,18 @@ struct ICommand;
 struct ISendPacket;
 class TcpServer;
 class Session;
-class TcpServerEventListener
+class Server;
+
+class ServerEventListener
 {
 public:
-	TcpServerEventListener() = default;
-	virtual ~TcpServerEventListener() = default;
-
-	virtual void OnStarted() = 0;
-	virtual void OnConnected(Session* connectedSession) = 0;
-	virtual void OnDisconnected(Session* disconnetedSession) = 0;
-	virtual void OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) = 0;
-	virtual void OnReceived(Session* receiver, ICommand* cmd) = 0;
-	virtual void OnStopped() = 0;		// TCP 서버를 종료한 후 호출된다.
+	virtual ~ServerEventListener() = default;
+	virtual void OnStarted() {}
+	virtual void OnStopped() {}
+	virtual void OnConnected(Session* session) {}
+	virtual void OnDisconnected(Session* session) {}
+	virtual void OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {}
+	virtual void OnReceived(Session* session, ICommand* cmd) {}
 };
 
 NS_JNET_END

@@ -16,7 +16,7 @@ USING_NS_JNET;
 CenterServer::CenterServer(
 	const IOCPPtr& iocp, 
 	const MemoryPoolAbstractPtr& bufferAllocator,
-	TcpServerEventListener* eventListener, 
+	ServerEventListener* eventListener, 
 	int maxConn, 
 	int sessionRecvBufferSize,
 	int sessionSendBufferSize)

@@ -45,8 +45,7 @@ bool SGLoginScene::init() {
 		return false;
 	}
 
-	m_pUILayer->addUIGroup(GROUP_UI_TEST);
-
+	m_pUILayer->addUIGroup(GROUP_UI_LOGIN);
 	return true;
 }
 

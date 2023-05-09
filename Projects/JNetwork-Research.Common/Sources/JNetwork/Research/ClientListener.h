@@ -18,11 +18,11 @@ class ClientListener : public ClientEventListener
 public:
 	ClientListener(const JCore::String& name);
 protected:
-	void OnConnected() override;
-	void OnDisconnected() override;
-	void OnSent(ISendPacket* sentPacket, Int32UL sentBytes) override;
-	void OnReceived(ICommand* cmd) override;
-	void OnConnectFailed(Int32U errorMessage) override;
+	void OnConnected(Session* session) override;
+	void OnDisconnected(Session* session) override;
+	void OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) override;
+	void OnReceived(Session* session, ICommand* cmd) override;
+	void OnConnectFailed(Session* session, Int32U errorMessage) override;
 private:
 	JCore::String m_Name;
 };

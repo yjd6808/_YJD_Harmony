@@ -14,26 +14,14 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-SGNetLobbyEventListener::SGNetLobbyEventListener(SGCommandParser* parser)
-	: SGNetClientEventListener(parser)
-{}
-
-void SGNetLobbyEventListener::OnStarted() {
-	_LogPlain_("서버가 시작되었습니다.");
+void NetLobbyEventListener::OnConnected(Session* session) {
 }
-
-void SGNetLobbyEventListener::OnConnected(JNetwork::Session* connectedSession) {
+void NetLobbyEventListener::OnDisconnected(Session* session) {
 }
-
-void SGNetLobbyEventListener::OnDisconnected(JNetwork::Session* disconnetedSession) {
+void NetLobbyEventListener::OnConnectFailed(Session* session, Int32U errorCode) {
 }
-
-void SGNetLobbyEventListener::OnSent(JNetwork::Session* sender, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
+void NetLobbyEventListener::OnSent(Session* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
 }
-
-void SGNetLobbyEventListener::OnReceived(JNetwork::Session* receiver, JNetwork::ICommand* cmd) {
-}
-
-void SGNetLobbyEventListener::OnStopped() {
-	_LogPlain_("서버가 중지되었습니다.");
+void NetLobbyEventListener::OnReceived(Session* session, JNetwork::ICommand* cmd) {
+	SynchronizedOnReceived(session, cmd);
 }

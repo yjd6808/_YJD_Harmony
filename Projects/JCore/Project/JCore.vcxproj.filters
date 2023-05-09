@@ -455,6 +455,9 @@
     <ClInclude Include="..\Sources\JCore\Pattern\NonCopyableh.h">
       <Filter>Pattern</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\CollectionStreamIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

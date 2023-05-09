@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <JNetwork/EventListener/TcpServerEventListener.h>
+#include <JNetwork/EventListener/ServerEventListener.h>
 
-class ListenerAuthServer : public JNetwork::TcpServerEventListener
+class ListenerAuthServer : public JNetwork::ServerEventListener
 {
 protected:
 	void OnStarted() override;

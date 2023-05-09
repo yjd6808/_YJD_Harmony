@@ -13,9 +13,8 @@
 #include <SteinsGate/Common/InterServerCmd.h>
 
 ListenerInterServerClient::ListenerInterServerClient() {
-	
 }
 
-void ListenerInterServerClient::OnReceived(JNetwork::ICommand* cmd) {
+void ListenerInterServerClient::OnReceived(SGSession* ssession, JNetwork::ICommand* cmd) {
 
 }

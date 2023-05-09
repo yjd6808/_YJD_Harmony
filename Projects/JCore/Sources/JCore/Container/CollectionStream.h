@@ -7,11 +7,13 @@
 #include <JCore/Comparator.h>
 #include <JCore/Container/CollectionType.h>
 #include <JCore/Container/ContainerType.h>
+#include <JCore/Container/CollectionStreamIterator.h>
 
 NS_JC_BEGIN
 
-template <typename, typename>
-class CollectionExtension;
+template <typename, typename> class CollectionExtension;
+template <typename, typename> class Vector;
+template <typename, typename> class LinkedList;
 
 template <typename T>
 struct StreamNode
@@ -42,7 +44,7 @@ class CollectionStream : public Collection<T, TAllocator>
 	using TEnumerator		= Enumerator<T, TAllocator>;
 	using TCollection		= Collection<T, TAllocator>;
 	using TCollectionStream	= CollectionStream<T, TAllocator>;
-
+	using TCollectionStreamIterator = CollectionStreamIterator<T, TAllocator>;
 private: 
 	// [1] : CollectionStream은 CollectionExtension 에서만 직접생성 가능하도록 한다.
 	CollectionStream(TCollection* collection): TCollection() {
@@ -100,12 +102,13 @@ public:
 		if (m_pArray) TAllocator::template Deallocate(m_pArray, m_iAllocatedSize);
 	}
 
+	// TODO: 더미노드 없앨 시 수정
     TEnumerator Begin() const override {
-		return nullptr;
+		return MakeShared<TCollectionStreamIterator , TAllocator>(this->GetOwner(), this->m_pHead->Next);
 	}
 
 	TEnumerator End() const override {
-		return nullptr;
+		return MakeShared<TCollectionStreamIterator, TAllocator>(this->GetOwner(), this->m_pTail->Previous);
 	}
 
 	
@@ -115,12 +118,25 @@ public:
 	
 
 	template <typename Consumer>
-	void ForEach(Consumer consumer) const {
+	TCollectionStream& ForEach(Consumer consumer) {
 		TStreamNode* pCur = m_pHead->Next;
 		while (pCur != m_pTail) {
 			consumer(pCur->Ref());
 			pCur = pCur->Next;
 		}
+		return *this;
+	}
+
+	template <typename IndexConsumer>
+	TCollectionStream& ForEachWithIndex(IndexConsumer consumer) {
+		TStreamNode* pCur = m_pHead->Next;
+		int i = 0;
+		while (pCur != m_pTail) {
+			consumer(pCur->Ref(), i);
+			pCur = pCur->Next;
+			++i;
+		}
+		return *this;
 	}
 
 	template <typename TPredicate>
@@ -158,6 +174,19 @@ public:
 	T& Last() const {
 		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
 		return *m_pTail->Previous->Pointer;
+	}
+
+
+	Vector<T, TAllocator> ToVector() {
+		Vector<T, TAllocator> v;
+		v.PushBackAll(*this);
+		return v;
+	}
+
+	LinkedList<T, TAllocator> ToLinkedList() {
+		LinkedList<T, TAllocator> l;
+		l.PushBackAll(*this);
+		return l;
 	}
 
 protected:
@@ -269,12 +298,13 @@ protected:
 private:
 	int m_iAllocatedSize{};
 
-	// 이거 추후 없앨 것;
+	// TODO: 추후 시간나면 더미노드 없앨 것
 	TStreamNode m_ValtyHead;
 	TStreamNode m_ValtyTail;
 	TStreamNode m_ValtyTemp;
 
 	friend class CollectionExtension<T, TAllocator>;
+	friend class CollectionStreamIterator<T, TAllocator>;
 };
 
 NS_JC_END

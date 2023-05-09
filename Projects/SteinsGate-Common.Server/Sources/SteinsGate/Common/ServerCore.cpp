@@ -12,7 +12,6 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ServerProcessInfo* CoreServerProcessInfo_v;			// 메인 서버 프로그램에서 주입해줄 것
 InputThread* CoreInputThread_v;
 CommonNetMaster* CoreCommonNetMaster_v;				// 메인 서버 프로그램에서 주입해줄 것
 CommonNetGroup* CoreCommonNetGroup_v;				// 메인 서버 프로그램에서 주입해줄 것

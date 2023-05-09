@@ -17,7 +17,7 @@ public:
 	AuthServer(
 		const JNetwork::IOCPPtr& iocp,
 		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		JNetwork::TcpServerEventListener* eventListener,
+		JNetwork::ServerEventListener* eventListener,
 		int maxConn,
 		int sessionRecvBufferSize,
 		int sessionSendBufferSize

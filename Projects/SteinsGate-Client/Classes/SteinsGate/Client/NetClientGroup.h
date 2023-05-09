@@ -9,33 +9,27 @@
 #pragma once
 
 
-#include <SteinsGate/Client/NetAuthEventListener.h>
-#include <SteinsGate/Client/NetLobbyEventListener.h>
+#include <SteinsGate/Client/NetClientEventListener.h>
 
-class SGNetClientGroup final : public SGNetGroup
+class NetClientGroup final : public SGNetGroup
 {
 public:
-	SGNetClientGroup();
-	~SGNetClientGroup() override;
+	NetClientGroup();
+	~NetClientGroup() override;
 
 	void Initialize() override;
-private:
-	SGTcpClientPtr m_spAuthTcp;
-	SGTcpClientPtr m_spLobbyTcp;
-	SGTcpClientPtr m_spGameTcp;
-	SGUdpClientPtr m_spGameUdp;
-	SGTcpClientPtr m_spAreaTcp;
-	SGTcpClientPtr m_spChatTcp;
-	
-	//SGNetClientEventListener m_AuthEventListener;
-	//SGNetClientEventListener m_LobbyEventListener;
-	//SGNetClientEventListener m_GameEventListener;
-	//SGNetClientEventListener m_ChatEventListener;
-	//SGNetClientEventListener m_AreaEventListener;
 
-	SGCommandParser m_AuthParser;
-	SGCommandParser m_LobbyParser;
-	SGCommandParser m_GameParser;
+	SGTcpClient* AuthTcp;
+	SGTcpClient* LobbyTcp;
+	SGTcpClient* GameTcp;
+	SGUdpClient* GameUdp;
+	SGTcpClient* AreaTcp;
+	SGTcpClient* ChatTcp;
+private:
+	SGVector<NetClientEventListener*> m_vListeners;
+	SGCommandParser m_Parser;
+
+	friend class NetCore;
 };
 
 

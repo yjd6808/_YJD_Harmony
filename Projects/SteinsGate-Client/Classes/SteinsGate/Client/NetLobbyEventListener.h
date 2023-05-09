@@ -10,15 +10,12 @@
 
 #include <SteinsGate/Client/NetClientEventListener.h>
 
-class SGNetLobbyEventListener : public SGNetClientEventListener
+class NetLobbyEventListener : public NetClientEventListener
 {
 public:
-	SGNetLobbyEventListener(SGCommandParser* parser);
-
-	void OnStarted() override;
-	void OnConnected(JNetwork::Session* connectedSession) override;
-	void OnDisconnected(JNetwork::Session* disconnetedSession) override;
-	void OnSent(JNetwork::Session* sender, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
-	void OnReceived(JNetwork::Session* receiver, JNetwork::ICommand* cmd) override;
-	void OnStopped() override;
+	void OnConnected(JNetwork::Session* session) override;
+	void OnDisconnected(JNetwork::Session* session) override;
+	void OnConnectFailed(JNetwork::Session* session, Int32U errorCode) override;
+	void OnSent(JNetwork::Session* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
+	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* cmd) override;
 };

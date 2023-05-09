@@ -103,7 +103,9 @@ void UI_Test::onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state)
 void UI_Test::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
 
 	if (element->getCode() == UI_TEST_LABEL_POPUP_TEST) {
-		CorePopupManager_v->showOk("안녕하세요");
+		CorePopupManager_v->showOk(
+			"안녕하세요\n안녕하세요2\n안녕하세요3\n안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요"
+		);
 	}
 
 	else if (element->getCode() == UI_TEST_LABEL_SCALE_TEST) {

@@ -30,6 +30,7 @@ public:
 	virtual void JoinWait(JCore::WaitHandle* waitHandle) = 0;
 	virtual void Join() = 0;
 	virtual void WorkerThread(void* param) = 0;
+	Int32U GetThreadId() { return m_Thread.GetId(); }
 protected:
 	JCore::Thread m_Thread;
 	JCore::AtomicInt m_eState;

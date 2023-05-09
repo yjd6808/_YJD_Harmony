@@ -8,16 +8,31 @@
 
 #pragma once
 
-
 #include <SteinsGate/Client/NetClientGroup.h>
+#include <SteinsGate/Client/CommandSynchronizer.h>
 
-class SGNetCore
+class NetCore
+	: public SGNetMaster
+	, public SGSingletonPointer<NetCore>
 {
+	friend class TSingleton;
+	NetCore();
+	~NetCore() override;
 public:
+	void Initialize() override;
+	void pollNetEvents();
+	void runCommand(JNetwork::ICommand* cmd);
 
-
+	NetClientGroup* Group;
+	SGTcpClient* AuthTcp;
+	SGTcpClient* LobbyTcp;
+	SGTcpClient* GameTcp;
+	SGUdpClient* GameUdp;
+	SGTcpClient* AreaTcp;
+	SGTcpClient* ChatTcp;
 private:
-	SGNetClientGroup m_NetGroup;
-
-
+	CommandSynchronizer* m_pCommandSynchronizer;
 };
+
+
+

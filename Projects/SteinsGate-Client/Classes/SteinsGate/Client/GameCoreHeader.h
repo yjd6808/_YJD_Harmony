@@ -23,3 +23,5 @@
 #include <SteinsGate/Client/Global.h>
 #include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/PopupManager.h>
+#include <SteinsGate/Client/TimeManager.h>
+#include <SteinsGate/Client/NetCore.h>

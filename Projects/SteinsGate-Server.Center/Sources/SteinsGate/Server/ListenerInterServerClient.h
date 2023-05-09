@@ -16,7 +16,7 @@ class ListenerInterServerClient : public JNetwork::ClientEventListener
 public:
 	ListenerInterServerClient();
 protected:
-	void OnReceived(JNetwork::ICommand* cmd) override;
+	void OnReceived(SGSession* ssession, JNetwork::ICommand* cmd) override;
 private:
 	JNetwork::CommandParser m_Parser;
 };
