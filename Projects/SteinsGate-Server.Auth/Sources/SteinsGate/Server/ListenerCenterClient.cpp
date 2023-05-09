@@ -45,9 +45,6 @@ void ListenerCenterClient::OnReceived(SGSession* session, JNetwork::ICommand* cm
 	if (!Parser.RunCommand(session, cmd)) {
 		_LogWarn_("커맨드: %d 수행 실패 (Center)", cmd->GetCommand());
 	}
-
-	if (SendHelper::SendInformation.Strategy == eSendAlloc)
-		SendHelper::FlushSendBuffer();
 }
 
 void ListenerCenterClient::OnConnectFailed(SGSession* session, Int32U errorCode) {

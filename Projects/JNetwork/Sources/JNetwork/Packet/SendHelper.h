@@ -22,9 +22,10 @@ enum SendStrategy
 	eSendToAsyncEcho
 };
 
+template <typename>
 struct SendHelper;
 
-template <typename TCommand>
+template <typename T, typename TCommand>
 struct Sending : JCore::NonCopyableButMovable
 {
 	Sending(TCommand& cmd, ISendPacket* packet)
@@ -32,31 +33,21 @@ struct Sending : JCore::NonCopyableButMovable
 		, Packet(packet)
 	{}
 
-	~Sending() { SendHelper::SendEnd(Packet); }
+	~Sending() { SendHelper<T>::SendEnd(Packet); }
 
 	TCommand& Cmd;
 	ISendPacket* Packet;
 };
 
+
+
+template <typename T>	// 상속시 static 필드 공유를 선택적으로 설정가능하도록 만들기 위한 템플릿
 struct SendHelper
 {
 	template <typename TCommand>
-	static Sending<TCommand> SendBegin(int count = 1) {
-		if (SendInformation.Strategy == eSendAlloc) {
-			return Sending<TCommand>(SendInformation.Sender->SendAlloc<TCommand>(count), nullptr);
-		}
+	using TSending = Sending<T, TCommand>;
+	using THelper = SendHelper<T>;
 
-		auto pPacket = dbg_new SinglePacket<TCommand>(count);
-		return Sending<TCommand>(pPacket->Cmd, pPacket);
-	}
-
-	static void SendEnd(ISendPacket* packet);
-
-	static void FlushSendBuffer();
-	static void SetInformation(Session* sender);
-	static void SetInformation(Session* sender, SendStrategy strategy);
-	static void SetInformation(Session* sender, SendStrategy strategy, const IPv4EndPoint& destination);
-private:
 	struct Information
 	{
 		Session* Sender = nullptr;
@@ -64,9 +55,85 @@ private:
 		IPv4EndPoint Destination;
 	};
 
+	struct AuthFlush
+	{
+		~AuthFlush() { FlushSendBuffer(); }
+	};
 
-public:
+
+	template <typename TCommand>
+	static TSending<TCommand> SendBegin(int count = 1) {
+		DebugAssertMsg(SendInformation.Sender, "샌더가 설정되어있지 않습니다.");
+
+		if (SendInformation.Strategy == eSendAlloc) {
+			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(count), nullptr);
+		}
+
+		auto pPacket = dbg_new SinglePacket<TCommand>(count);
+		return TSending<TCommand>(pPacket->Cmd, pPacket);
+	}
+
+
+	static void FlushSendBuffer() {
+		if (SendInformation.Sender == nullptr) {
+			_LogError_("샌더 미할당");
+			return;
+		}
+
+		SendInformation.Sender->FlushSendBuffer();
+	}
+
+	
+
+	static void SetInformation(Session* sender) {
+		SendInformation.Sender = sender;
+	}
+
+	static void SetInformation(Session* sender, SendStrategy strategy) {
+		SendInformation.Sender = sender;
+		SendInformation.Strategy = strategy;
+	}
+
+	static void SetInformation(Session* sender, SendStrategy strategy, const IPv4EndPoint& destination) {
+		SendInformation.Sender = sender;
+		SendInformation.Strategy = strategy;
+		SendInformation.Destination = destination;
+	}
+
+	static void SetStrategy(SendStrategy strategy) {
+		SendInformation.Strategy = strategy;
+	}
+
+	static void SetDestination(const IPv4EndPoint& destination) {
+		SendInformation.Destination = destination;
+	}
+
+	static void SendEnd(ISendPacket* packet) {
+		switch (SendInformation.Strategy) {
+		case eSendAsync:
+			SendInformation.Sender->SendAsync(packet);
+			break;
+		case eSendToAsync:
+			SendInformation.Sender->SendToAsync(packet, SendInformation.Destination);
+			break;
+		case eSendToAsyncEcho: 
+			SendInformation.Sender->SendToAsyncEcho(packet);
+			break;
+		case eSendAlloc:
+			// 할거 없음
+			break;
+		default:
+			_LogWarn_("전송전략이 제대로 설정되어있지 않습니다. (커맨드 유실 위험)");
+		}
+	}
+
+
+#ifdef STEINSGATE_CLIENT
+	inline static Information SendInformation;
+#else
 	inline static thread_local Information SendInformation;
+#endif
+
 };
 
 

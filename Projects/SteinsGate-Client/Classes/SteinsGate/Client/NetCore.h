@@ -21,7 +21,7 @@ class NetCore
 public:
 	void Initialize() override;
 	void pollNetEvents();
-	void runCommand(JNetwork::ICommand* cmd);
+	void runCommand(SGSession* session, JNetwork::ICommand* cmd);
 
 	NetClientGroup* Group;
 	SGTcpClient* AuthTcp;

@@ -10,14 +10,14 @@
 #include "GameCoreHeader.h"
 #include "S_AUTH.h"
 
-#include <SteinsGate/Common/NetAuthCmd.h>
+#include <SteinsGate/Common/AuthCmd.h>
 
 USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
 void S_AUTH::SendLogin(const std::string& id, const std::string& pw) {
-	auto sending = SendBegin<CmdLogin>();
+	const auto sending = SendBegin<CmdLogin>();
 	sending.Cmd.Id.SetStringUnsafe(id);
 	sending.Cmd.Pw.SetStringUnsafe(pw);
 }

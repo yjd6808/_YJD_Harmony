@@ -11,7 +11,6 @@
 
 
 #include <JNetwork/Host/Session.h>
-#include <SteinsGate/Common/NetAuthCmd.h>
 
 struct R_AUTH
 {

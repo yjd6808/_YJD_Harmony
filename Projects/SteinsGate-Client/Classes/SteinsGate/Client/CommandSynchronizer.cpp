@@ -78,8 +78,8 @@ void CommandSynchronizer::processCommands() {
 		}
 
 		while (!pQueue->IsEmpty()) {
-			ICommand* pCmd = pQueue->Front();
-			CoreNet_v->runCommand(pCmd);
+			CommandHolder* pCmd = (CommandHolder*)pQueue->Front();
+			CoreNet_v->runCommand(pCmd->Sender, pCmd);
 			pQueue->Dequeue();
 			delete pCmd;
 		}

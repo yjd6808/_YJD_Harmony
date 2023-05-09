@@ -7,11 +7,15 @@
 
 #include "Auth.h"
 #include "AuthCoreHeader.h"
-#include "S_CENTER.h"
+#include "S_AUTH.h"
 
-#include <SteinsGate/Common/CenterCmd.h>
+#include <SteinsGate/Common/AuthCmd.h>
 
 USING_NS_JC;
 USING_NS_JNET;
 
-
+void S_AUTH::SendLoginAck(bool success, int result) {
+	const auto sending = SendBegin<CmdLoginAck>();
+	sending.Cmd.Result = result;
+	sending.Cmd.Success = success;
+}

@@ -10,13 +10,15 @@
 #include "AuthCoreHeader.h"
 #include "ListenerAuthServer.h"
 
-#include <JNetwork/Packet/SendHelper.h>
+#include <SteinsGate/Common/AuthCmd.h>
+
+#include <SteinsGate/Server/R_AUTH.h>
 
 USING_NS_JC;
 USING_NS_JNET;
 
 ListenerAuthServer::ListenerAuthServer() {
-	// Parser;
+	Parser.AddCommand(CmdLogin_CS,			R_AUTH::RecvLogin);
 }
 
 void ListenerAuthServer::OnStarted() {
@@ -33,12 +35,9 @@ void ListenerAuthServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32U
 }
 
 void ListenerAuthServer::OnReceived(Session* receiver, ICommand* cmd) {
-	if (!Parser.RunCommand(CoreCenterClient_v, cmd)) {
+	if (!Parser.RunCommand(receiver, cmd)) {
 		_LogWarn_("커맨드: %d 수행 실패 (Auth)", cmd->GetCommand());
 	}
-
-	if (SendHelper::SendInformation.Strategy == eSendAlloc)
-		SendHelper::FlushSendBuffer();
 }
 
 void ListenerAuthServer::OnStopped() {

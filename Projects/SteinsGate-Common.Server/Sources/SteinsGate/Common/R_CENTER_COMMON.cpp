@@ -13,8 +13,6 @@
 #include <SteinsGate/Common/CenterCmd.h>
 #include <SteinsGate/Common/S_CENTER_COMMON.h>
 
-#include "JCore/RAII/AutoPtr.h"
-
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -29,6 +27,7 @@ void R_CENTER_COMMON::RecvAlreadyConnected(Session* session, ICommand* cmd) {
 }
 
 void R_CENTER_COMMON::RecvYouNeedToDoThis(Session* session, ICommand* cmd) {
+	S_CENTER_COMMON::AuthFlush _;
 	S_CENTER_COMMON::SetInformation(session, eSendAlloc);
 	const CmdYouNeedToDoThis* pCmd = (CmdYouNeedToDoThis*)cmd;
 

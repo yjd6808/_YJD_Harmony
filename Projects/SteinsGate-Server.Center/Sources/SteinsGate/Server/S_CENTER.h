@@ -12,7 +12,7 @@
 #include <JNetwork/Packet/SendHelper.h>
 #include <SteinsGate/Common/ServerEnum.h>
 
-struct S_CENTER : JNetwork::SendHelper
+struct S_CENTER : JNetwork::SendHelper<S_CENTER>
 {
 public:
 	static bool SendWhoAreYou();

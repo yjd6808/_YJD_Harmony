@@ -198,16 +198,13 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\CharCommonInfo.h">
       <Filter>Data\CharCommon</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NetAuthCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\AuthCmd.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NetLobbyCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyCmd.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NetGameCmd.h">
-      <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NetCmdType.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\GameCmd.h">
       <Filter>Net</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\EnumDefine.h" />

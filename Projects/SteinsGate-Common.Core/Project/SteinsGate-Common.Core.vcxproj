@@ -200,19 +200,15 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NetAuthCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\AuthCmd.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NetCmdType.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\GameCmd.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NetGameCmd.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\NetLobbyCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyCmd.h">
       <SubType>
       </SubType>
     </ClInclude>

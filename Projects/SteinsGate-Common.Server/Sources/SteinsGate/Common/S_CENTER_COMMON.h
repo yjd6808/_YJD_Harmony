@@ -8,13 +8,11 @@
 
 #pragma once
 
-#include <JNetwork/Host/Session.h>
 #include <JNetwork/Packet/SendHelper.h>
-
 #include <SteinsGate/Common/ServerEnum.h>
 
 
-struct S_CENTER_COMMON : JNetwork::SendHelper
+struct S_CENTER_COMMON : JNetwork::SendHelper<S_CENTER_COMMON>
 {
 public:
 	static bool SendItsMe(CenterClientType_t clientType);

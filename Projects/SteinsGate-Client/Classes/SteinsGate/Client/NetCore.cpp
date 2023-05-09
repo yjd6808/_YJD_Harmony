@@ -50,7 +50,9 @@ void NetCore::pollNetEvents() {
 	m_pCommandSynchronizer->processCommands();
 }
 
-void NetCore::runCommand(ICommand* cmd) {
-	Group->m_Parser.RunCommand(nullptr, cmd);
+void NetCore::runCommand(Session* session, ICommand* cmd) {
+	if (Group->m_Parser.RunCommand(session, cmd) == false) {
+		_NetLogWarn_("처리 불가능한 커맨드(%d) 수신", cmd->GetCommand());
+	}
 }
 

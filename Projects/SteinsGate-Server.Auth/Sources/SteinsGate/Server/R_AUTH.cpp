@@ -11,8 +11,16 @@
 #include "AuthCoreHeader.h"
 #include "R_AUTH.h"
 
-#include <SteinsGate/Common/CenterCmd.h>
+#include <SteinsGate/Common/AuthCmd.h>
 #include <SteinsGate/Server/S_AUTH.h>
 
 USING_NS_JC;
 USING_NS_JNET;
+
+void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
+	CmdLogin* pCmd = (CmdLogin*)cmd;
+
+	S_AUTH::SetInformation(session, eSendAlloc);
+	S_AUTH::SendLoginAck(true, 100);
+	S_AUTH::FlushSendBuffer();
+}

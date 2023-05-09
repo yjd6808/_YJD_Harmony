@@ -9,9 +9,16 @@
 #include "GameCoreHeader.h"
 #include "NetClientGroup.h"
 
-#include <SteinsGate/Common/NetAuthCmd.h>
-#include <SteinsGate/Common/NetLobbyCmd.h>
-#include <SteinsGate/Common/NetGameCmd.h>
+#include <SteinsGate/Common/AuthCmd.h>
+#include <SteinsGate/Common/LobbyCmd.h>
+#include <SteinsGate/Common/GameCmd.h>
+
+#include <SteinsGate/Client/S_AUTH.h>
+#include <SteinsGate/Client/S_LOBBY.h>
+#include <SteinsGate/Client/S_GAME.h>
+#include <SteinsGate/Client/S_GAME_UDP.h>
+#include <SteinsGate/Client/S_CHAT.h>
+#include <SteinsGate/Client/S_AREA.h>
 
 #include <SteinsGate/Client/R_AUTH.h>
 
@@ -67,7 +74,20 @@ void NetClientGroup::Initialize() {
 
 
 	// ==========================================================
-	//
+	// 샌더 초기화
+	// ==========================================================
+
+	S_AUTH::SetInformation(AuthTcp, eSendAsync);
+	S_LOBBY::SetInformation(LobbyTcp, eSendAsync);
+	S_GAME::SetInformation(GameTcp, eSendAsync);
+	S_GAME_UDP::SetInformation(GameUdp, eSendToAsync, CoreServerProcessInfo_v->Center.RemoteCenter);
+	S_CHAT::SetInformation(ChatTcp, eSendAsync);
+	S_AREA::SetInformation(AreaTcp, eSendAsync);
+
+
+
+	// ==========================================================
+	// 커맨드 초기화
 	// ==========================================================
 
 	m_Parser.AddCommand(CmdLoginAck_SC, R_AUTH::RecvLoginAck);

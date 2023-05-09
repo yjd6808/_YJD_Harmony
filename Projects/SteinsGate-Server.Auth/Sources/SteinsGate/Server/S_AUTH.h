@@ -9,4 +9,15 @@
 #pragma once
 
 
+#include <JNetwork/Packet/SendHelper.h>
+#include <SteinsGate/Common/ServerEnum.h>
+
+struct S_AUTH : JNetwork::SendHelper<S_AUTH>
+{
+	static void SendLoginAck(bool success, int result);
+};
+
+
+
+
 

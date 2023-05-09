@@ -436,6 +436,21 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\CommandSynchronizer.cpp">
       <Filter>Net</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\S_GAME_UDP.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\S_GAME.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\S_LOBBY.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\S_AREA.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\S_CHAT.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ImagePackManager.h">
@@ -828,6 +843,21 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CommandSynchronizer.h">
       <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\S_GAME_UDP.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\S_GAME.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\S_LOBBY.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\S_AREA.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\S_CHAT.h">
+      <Filter>Net\Send</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

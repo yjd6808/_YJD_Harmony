@@ -10,12 +10,15 @@
 #include "GameCoreHeader.h"
 #include "R_AUTH.h"
 
+#include <SteinsGate/Common/AuthCmd.h>
+
 #include <SteinsGate/Client/S_AUTH.h>
 
 USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-void R_AUTH::RecvLoginAck(JNetwork::Session* session, JNetwork::ICommand* cmd) {
-
+void R_AUTH::RecvLoginAck(Session* session, ICommand* cmd) {
+	CmdLoginAck* pCmd = (CmdLoginAck*)cmd;
+	int a = 40;
 }

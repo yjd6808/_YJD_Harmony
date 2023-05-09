@@ -8,13 +8,10 @@
 
 #pragma once
 
-
-#include <JNetwork/Host/Session.h>
 #include <JNetwork/Packet/SendHelper.h>
 
-struct S_AUTH : JNetwork::SendHelper
+struct S_AUTH : JNetwork::SendHelper<S_AUTH>
 {
-public:
 	static void SendLogin(const std::string& id, const std::string& pw);
 };
 

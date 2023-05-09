@@ -49,6 +49,7 @@ void InitializeClientCore() {
 	CorePopupManager_v			= PopupManager::Get();
 	CoreTimeManager_v			= TimeManager::Get();
 	CoreNet_v					= NetCore::Get();
+	CoreServerProcessInfo_v		= CoreDataManager_v->getServerProcessInfo(1);
 
 	CoreGlobal_v->init();
 	CorePackManager_v->loadAllPackages();
@@ -58,6 +59,7 @@ void InitializeClientCore() {
 	CoreInven_v->init();
 	CoreActorListenerManager_v->init();
 	CoreNet_v->Initialize();
+	
 }
 
 void FinalizeClientCore() {
