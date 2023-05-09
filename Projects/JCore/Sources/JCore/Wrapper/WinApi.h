@@ -308,6 +308,7 @@ struct Interlocked<bool> final
 
     static bool CompareExchange(InOut_ bool* destination, In_ bool expected, In_ bool desired);
     static bool Exchange(InOut_ bool* destination, In_ bool value);
+    static bool Read(InOut_ bool* destination);
 }; // struct Interlocked final
 
 

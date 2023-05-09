@@ -322,6 +322,10 @@ Interlocked<bool>::Exchange(bool* destination, bool value) {
     return TInterlocked::Exchange(reinterpret_cast<Boundary8*>(destination), iValue) ? true : false;
 }
 
+bool Interlocked<bool>::Read(bool* destination) {
+    return TInterlocked::Read(reinterpret_cast<Boundary8*>(destination));
+}
+
 template struct Interlocked<Int8>;
 template struct Interlocked<Int8U>;
 template struct Interlocked<Int16>;

@@ -20,7 +20,7 @@ NS_JC_BEGIN
 
 class Thread
 {
-protected:
+public:
     enum State
     {
         eUninitialized,
@@ -48,7 +48,7 @@ protected:
         Thread* Self;
         void* Param;
     };
-public:
+
     Thread(const char* name = nullptr, bool autoJoin = false) : m_hHandle(nullptr), m_Name(name), m_uiThreadId(0), m_eState(eUninitialized), m_RunningSignal(1, 0), m_bAutoJoin(autoJoin) {}
     Thread(TRunnable&& fn, void* param = nullptr, const char* name = nullptr, bool autoJoin = false); 
     Thread(const Thread& other) = delete;

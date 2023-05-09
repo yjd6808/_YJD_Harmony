@@ -24,7 +24,7 @@ NormalLock::~NormalLock() {
 
 void NormalLock::Lock() {
 	if (m_hOwnThread == (int)Thread::GetThreadId()) {
-		DebugAssertMsg(false, "같은 쓰레드에서 재잠금을 시도했습니다.");
+		// DebugAssertMsg(false, "같은 쓰레드에서 재잠금을 시도했습니다.");
 		throw RuntimeException("같은 쓰레드에서 재잠금을 시도했습니다.");
 	}
 

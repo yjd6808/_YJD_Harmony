@@ -51,7 +51,7 @@ static void TestPool(TPool& pool) {
 		{4,  32},
 		{8,  32},
 		{16, 32}
-		});
+	});
 
 	int leakDetail[Detail::MemoryBlockSizeMapSize_v];
 	pool.StartDetectLeak();		// 릭 체크 시작

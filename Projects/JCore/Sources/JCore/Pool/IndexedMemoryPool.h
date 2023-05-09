@@ -49,7 +49,7 @@ NS_JC_BEGIN
 
 class IndexedMemoryPool : public MemoryPoolAbstract
 {
-	using MemoryChunkQueueTargetrList = JCore::Vector<MemoryChunckQueue*>;
+	using MemoryChunkQueueTargetrList = JCore::Vector<MemoryChunckQueue**>;
 public:
 	IndexedMemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
 		IndexedMemoryPool::Initialize(allocationMap);
@@ -150,7 +150,7 @@ public:
 			}
 		}
 
-		MemoryChunckQueue* pChuckQueue = pTargeterList->At(iChunkQueueIndex);
+		MemoryChunckQueue* pChuckQueue = *pTargeterList->At(iChunkQueueIndex);
 		return pChuckQueue;
 	}
 
@@ -225,7 +225,7 @@ public:
 			// 4: 3 ~ 4
 			// 8: 5 ~ 8
 			for (int iSize = iBeforeMax + 1; iSize <= iMaxSize; ++iSize) {
-				m_PoolTargeterLow->At(iSize) = m_Pool[i];
+				m_PoolTargeterLow->At(iSize) = &m_Pool[i];
 			}
 
 			iBeforeMax = iMaxSize;
@@ -249,7 +249,7 @@ public:
 			// 살짝 손해가 있긴하다.
 
 			for (int iSize = iBeforeMax; iSize <= iMaxSize - 1; ++iSize) {
-				m_PoolTargeterHigh->At(iSize) = m_Pool[i];
+				m_PoolTargeterHigh->At(iSize) = &m_Pool[i];
 			}
 
 			

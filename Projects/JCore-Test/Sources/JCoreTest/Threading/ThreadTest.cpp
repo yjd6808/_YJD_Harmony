@@ -19,10 +19,8 @@ TEST(Test, Thread) {
 		// 시작안하는 경우
 		LeakCheck;
 		Thread thread("정도의 쓰레드");
-		EXPECT_FALSE(thread.Join());
+		EXPECT_TRUE(thread.Join() != Thread::eSuccess);	// 실패해야함
 		thread.AutoJoin(true);
-
-		// 그냥
 	}
 
 	{
@@ -52,9 +50,11 @@ TEST(Vector, Thread) {
 
 	for (int i = 0; i < 48; ++i) {
 		for (int j = 0; j < 16; ++j) 
-			threads.EmplaceBack([](void* v) { ++g; });
+			threads.EmplaceBack([](void* v) {
+				++g;
+			});
 		for (int j = 0; j < 16; ++j) 
-			EXPECT_TRUE(threads[j].Join());
+			EXPECT_TRUE(threads[j].Join() == Thread::eSuccess);
 
 		EXPECT_TRUE(g == 16 * (i + 1));
 		threads.Clear();
