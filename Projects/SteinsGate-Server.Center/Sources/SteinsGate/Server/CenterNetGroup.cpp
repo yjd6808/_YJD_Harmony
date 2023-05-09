@@ -28,7 +28,7 @@ void CenterNetGroup::InitializeIOCP() {
 }
 
 void CenterNetGroup::InitializeServer() {
-	auto spServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool, &m_CenterServerEventListener, CoreServerProcessInfo_v->Auth.MaxSessionCount, RecvBufferSize_v, SendBufferSize_v);
+	auto spServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool, &m_CenterServerEventListener, CoreServerProcessInfo_v->Center.MaxSessionCount, RecvBufferSize_v, SendBufferSize_v);
 	AddHost(spServer);
 	m_pServer = spServer.Get<CenterServer*>();
 }
