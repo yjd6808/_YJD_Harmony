@@ -449,6 +449,8 @@ public:
     void setVR(VRIRenderer* vrrenderer);
     VRIRenderer* getVR() const;
 
+
+    virtual void close() {}
 protected:
     void updateDesignResolutionSize();
     

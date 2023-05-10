@@ -141,6 +141,10 @@ public:
     id getNSGLContext() override { return glfwGetNSGLContext(_mainWindow); } // stevetranby: added
 #endif // #if (CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 
+
+    // 윤정도: 윈도우 창만 닫은 상태로 변경
+    void close() override;
+
 protected:
     GLViewImpl(bool initglfw = true);
     virtual ~GLViewImpl();

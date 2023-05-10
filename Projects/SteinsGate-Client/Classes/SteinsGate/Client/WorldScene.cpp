@@ -313,7 +313,14 @@ void WorldScene::changeScene(SceneType_t sceneType) {
 }
 
 void WorldScene::terminate() {
-	Director::getInstance()->end();
+	// 이렇게 종료하면 게임엔진의 메모리릭이 간혹 다다다닥 뜨는데.. 윈도우 타이틀바로 종료하면 깔끔하게 정리잘됨.
+	// Director::getInstance()->end();
+
+	// 코코스 게임엔진 소스코드의 Application::run() 함수를보면 GLViewImpl::windowShouldClose로 윈도우가 닫혔는지 체크하는
+	// 코드가 있던데.. 이걸 true로 변경해주면 될 듯?
+	// 기존의 GLViewImpl::end() 는 메인윈도우를 완전히 해제해버려서 glview->isOpenGLReady() 조건이 만족하지 못해서
+	// 리소스 정리를 안해준다. 그래서 따로 close 함수를 하나 추가함
+	Director::getInstance()->getOpenGLView()->close();
 }
 
 SceneBase* WorldScene::createScene(SceneType_t sceneType) {

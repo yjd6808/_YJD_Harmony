@@ -196,6 +196,12 @@ static keyCodeItem g_keyCodeStructArray[] = {
 //////////////////////////////////////////////////////////////////////////
 
 
+void GLViewImpl::close() {
+    if (_mainWindow) {
+        glfwSetWindowShouldClose(_mainWindow, 1);
+    }
+}
+
 GLViewImpl::GLViewImpl(bool initglfw)
 : _captured(false)
 , _supportTouch(false)
