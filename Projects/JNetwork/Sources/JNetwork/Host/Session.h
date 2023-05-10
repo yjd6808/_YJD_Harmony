@@ -59,7 +59,8 @@ public:
 	CommandBufferPacket* GetCommandBufferForSending();
 	virtual void FlushSendBuffer();
 	virtual void Connected() = 0;
-	virtual void Disconnected() = 0;
+	virtual void ConnectFailed(Int32U errorCode) = 0;
+	virtual void Disconnected() = 0;	
 	virtual void Received(Int32UL receivedBytes);						
 	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) = 0;
 	virtual void NotifyCommand(ICommand* cmd) = 0;

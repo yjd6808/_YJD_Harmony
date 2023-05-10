@@ -8,12 +8,16 @@
 
 NS_JNET_BEGIN
 
-IOCPOverlappedRecv::IOCPOverlappedRecv(Session* session, IOCP* iocp) :
-	IOCPOverlapped(iocp, Type::Receive),
-	m_pReceivedSession(session)
+IOCPOverlappedRecv::IOCPOverlappedRecv(Session* session, IOCP* iocp)
+	: IOCPOverlapped(iocp, Type::Receive)
+	, m_pReceivedSession(session)
 {
+	m_pReceivedSession->AddPendingCount();
 }
 
+IOCPOverlappedRecv::~IOCPOverlappedRecv() {
+	m_pReceivedSession->DecreasePendingCount();
+}
 
 
 void IOCPOverlappedRecv::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
@@ -21,6 +25,7 @@ void IOCPOverlappedRecv::Process(BOOL result, Int32UL bytesTransffered, IOCPPost
 	Int32U uiErrorCode = 0;
 	if (IsFailed(hReceiveSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
 		m_pReceivedSession->Disconnect();
+		m_pReceivedSession->Disconnected();
 		return;
 	}
 
@@ -30,6 +35,7 @@ void IOCPOverlappedRecv::Process(BOOL result, Int32UL bytesTransffered, IOCPPost
 	// TODO: 리시브 오버랩 재사용 기능 구현
 	if (m_pReceivedSession->RecvAsync() == false) {
 		m_pReceivedSession->Disconnect();
+		m_pReceivedSession->Disconnected();
 	}
 }
 

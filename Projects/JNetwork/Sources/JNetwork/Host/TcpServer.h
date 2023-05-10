@@ -38,6 +38,7 @@ public:
 	void Initialize() override;
 	void SessionDisconnected(TcpSession* session);
 	void SessionConnected(TcpSession* session);
+	void SessionConnectFailed(TcpSession* session, Int32U errorCode);
 	void SessionSent(TcpSession* session, ISendPacket* sentPacket, Int32UL receivedBytes);
 	void SessionReceived(TcpSession* session, ICommand* command);
 	void BroadcastAsync(ISendPacket* packet);

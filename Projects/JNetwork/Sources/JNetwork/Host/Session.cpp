@@ -70,11 +70,11 @@ bool Session::Bind(const IPv4EndPoint& bindAddr) {
 
 
 bool Session::Disconnect() {
+	const int ePrevState = m_eState;
 
-	if (m_eState == eDisconnected)
+	if (ePrevState == eDisconnected)
 		return true;
 
-	int eState = m_eState;
 	m_eState = eDisconnected;
 	m_bIocpConneced = false;
 
@@ -86,8 +86,11 @@ bool Session::Disconnect() {
 	m_Socket.Close();
 	m_Socket.Invalidate();
 
-	if (eState == eConnected)
-		Disconnected();
+	WaitForZeroPending();
+
+	// 여기서 Disconnected를 호춡토록 구현했었는데 잘못된 로직이었다.
+	// 예를들어서 TcpClient가 Connect 시도중 Disconnect를 시도하면
+	// Connect 오버랩이 실패하면서 한번더 Disconnect를 호출하게되어버림.
 
 	return true;
 }
@@ -288,7 +291,7 @@ void Session::WaitForZeroPending() {
 			break;
 
 		if (iPending < 0) {
-			_NetLogWarn_("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)");
+			_NetLogWarn_("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", iPending);
 			Thread::Sleep(500);
 		}
 		Thread::Sleep(10);

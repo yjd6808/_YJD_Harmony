@@ -15,9 +15,12 @@ IOCPOverlappedRecvFrom::IOCPOverlappedRecvFrom(Session* session, IOCP* iocp)
 	: IOCPOverlapped(iocp, Type::ReceiveFrom)
 	, m_pReceiver(session)
 {
+	m_pReceiver->AddPendingCount();
 }
 
-IOCPOverlappedRecvFrom::~IOCPOverlappedRecvFrom() = default;
+IOCPOverlappedRecvFrom::~IOCPOverlappedRecvFrom() {
+	m_pReceiver->DecreasePendingCount();
+}
 
 void IOCPOverlappedRecvFrom::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hReceiveSock = m_pReceiver->SocketHandle();

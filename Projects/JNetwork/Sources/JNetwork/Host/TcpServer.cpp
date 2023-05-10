@@ -62,6 +62,10 @@ void TcpServer::SessionConnected(TcpSession* session) {
 	m_pEventListener->OnConnected(session);
 }
 
+void TcpServer::SessionConnectFailed(TcpSession* session, Int32U errorCode) {
+	m_pEventListener->OnConnectFailed(session, errorCode);
+}
+
 void TcpServer::SessionSent(TcpSession* session, ISendPacket* sentPacket, Int32UL receivedBytes) {
 	m_pEventListener->OnSent(session, sentPacket, receivedBytes);
 }

@@ -13,9 +13,13 @@ IOCPOverlappedSend::IOCPOverlappedSend(Session* session, IOCP* iocp, ISendPacket
 	: IOCPOverlapped(iocp, Type::Send)
 	, m_pSender(session)
 	, m_pSentPacket(sentPacket)
-{}
+{
+	m_pSender->AddPendingCount();
+}
 
-IOCPOverlappedSend::~IOCPOverlappedSend() {}
+IOCPOverlappedSend::~IOCPOverlappedSend() {
+	m_pSender->DecreasePendingCount();
+}
 
 void IOCPOverlappedSend::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hSentSock = m_pSender->SocketHandle();
@@ -23,6 +27,7 @@ void IOCPOverlappedSend::Process(BOOL result, Int32UL bytesTransffered, IOCPPost
 
 	if (IsFailed(hSentSock, result, bytesTransffered, uiErrorCode) || bytesTransffered == 0) {
 		m_pSender->Disconnect();
+		m_pSender->Disconnected();
 		return;
 	}
 

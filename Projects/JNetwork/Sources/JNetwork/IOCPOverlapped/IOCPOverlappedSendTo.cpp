@@ -19,9 +19,12 @@ IOCPOverlappedSendTo::IOCPOverlappedSendTo(Session* sender, IOCP* iocp, ISendPac
 	, m_pSender(sender)
 	, m_pSentPacket(sentPacket)
 {
+	m_pSender->AddPendingCount();
 }
 
-IOCPOverlappedSendTo::~IOCPOverlappedSendTo() = default;
+IOCPOverlappedSendTo::~IOCPOverlappedSendTo() {
+	m_pSender->DecreasePendingCount();
+}
 
 void IOCPOverlappedSendTo::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hSentSock = m_pSender->SocketHandle();

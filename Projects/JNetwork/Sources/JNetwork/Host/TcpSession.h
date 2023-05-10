@@ -29,6 +29,7 @@ public:
 	void NotifyCommand(ICommand* cmd) override;
 	void Initialize() override;
 	void Connected() override;
+	void ConnectFailed(Int32U errorCode) override;
 	void Disconnected() override;
 	bool AcceptAsync();
 	void AcceptWait();

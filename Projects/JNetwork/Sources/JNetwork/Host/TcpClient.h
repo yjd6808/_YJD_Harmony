@@ -26,7 +26,7 @@ public:
 	bool Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds = 0);
 	bool ConnectAsync(const IPv4EndPoint& destination);
 	void Connected() override;
-	void ConnectFailed(Int32U errorCode);
+	void ConnectFailed(Int32U errorCode) override;
 	void Disconnected() override;
 	void NotifyCommand(ICommand* cmd) override;
 	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;

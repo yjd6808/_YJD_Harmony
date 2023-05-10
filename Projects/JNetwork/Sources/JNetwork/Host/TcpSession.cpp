@@ -88,9 +88,7 @@ bool TcpSession::Accepted(Int32UL receivedBytes) {
 #else
 	m_Socket.AcceptExResult(pReads, 0, &m_LocalEndPoint, &m_RemoteEndPoint);
 #endif
-	m_eState = State::eAccepted;
 
-	Connected();
 	return true;
 }
 
@@ -100,8 +98,13 @@ void TcpSession::NotifyCommand(ICommand* cmd) {
 
 
 void TcpSession::Connected() {
+	m_eState = State::eAccepted;
 	ConnectedInit();
 	m_pServer->SessionConnected(this);
+}
+
+void TcpSession::ConnectFailed(Int32U errorCode) {
+	m_pServer->SessionConnectFailed(this, errorCode);
 }
 
 void TcpSession::Disconnected() {

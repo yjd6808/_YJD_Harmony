@@ -32,6 +32,7 @@ public:
 	void FlushSendBuffer() override;
 	void SetRemoteEndpoint(const IPv4EndPoint& remoteEp);
 	void Connected() override;
+	void ConnectFailed(Int32U errorCode) override;
 	void Disconnected() override;
 
 	void NotifyCommand(ICommand* cmd) override;

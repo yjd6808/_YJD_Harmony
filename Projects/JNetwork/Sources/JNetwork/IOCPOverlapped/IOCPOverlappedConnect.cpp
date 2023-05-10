@@ -12,9 +12,12 @@ NS_JNET_BEGIN
 IOCPOverlappedConnect::IOCPOverlappedConnect(TcpClient* client, IOCP* iocp, ISendPacket* sentPacket) :
 	IOCPOverlapped(iocp, Type::Connect),
 	m_pClient(client),
-	m_pSentPacket(sentPacket)
-{}
-IOCPOverlappedConnect::~IOCPOverlappedConnect() {}
+	m_pSentPacket(sentPacket) {
+	m_pClient->AddPendingCount();
+}
+IOCPOverlappedConnect::~IOCPOverlappedConnect() {
+	m_pClient->DecreasePendingCount();
+}
 
 void IOCPOverlappedConnect::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
 	const SOCKET hConnectedSock = m_pClient->SocketHandle();
@@ -22,7 +25,9 @@ void IOCPOverlappedConnect::Process(BOOL result, Int32UL bytesTransffered, IOCPP
 	if (IsFailed(hConnectedSock, result, bytesTransffered, uiErrorCode)) {
 		m_pClient->Disconnect();
 		m_pClient->ConnectFailed(uiErrorCode);
+#if TEST_DUMMY_PACKET_TRANSFER
 		m_pSentPacket->Release();
+#endif
 		return;
 	}
 

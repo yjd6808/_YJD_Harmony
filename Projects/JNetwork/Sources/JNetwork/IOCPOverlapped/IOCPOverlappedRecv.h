@@ -13,7 +13,7 @@ class IOCPOverlappedRecv : public IOCPOverlapped
 {
 public:
 	IOCPOverlappedRecv(Session* session, IOCP* iocp);
-	~IOCPOverlappedRecv() override = default;
+	~IOCPOverlappedRecv() override;
 public:
 	void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) override;
 private:

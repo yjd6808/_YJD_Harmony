@@ -32,6 +32,7 @@ public:
 	virtual void OnStarted() {}
 	virtual void OnStopped() {}
 	virtual void OnConnected(Session* session) {}
+	virtual void OnConnectFailed(Session* session, Int32U errorCode) {}
 	virtual void OnDisconnected(Session* session) {}
 	virtual void OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {}
 	virtual void OnReceived(Session* session, ICommand* cmd) {}
