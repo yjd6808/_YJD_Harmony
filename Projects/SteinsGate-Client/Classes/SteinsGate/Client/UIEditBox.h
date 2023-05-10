@@ -27,6 +27,7 @@ public:
     SGString toString() override { return SGStringUtil::Format("에딧박스(%d)", m_pInfo->Code); }
 
     void setInitialUISize(SGSize size) override;
+    void setMaxLength(int maxLen);
     void setTextEditBeginCallback(const SGActionFn<UIEditBox*>& fnTextEditBegin) const;
     void setTextChangedCallback(const SGActionFn<UIEditBox*, const SGString&>& fnTextChanged) const;
     void setReturnCallback(const SGActionFn<UIEditBox*>& fnEditBoxReturn) const;

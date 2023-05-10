@@ -25,6 +25,7 @@ public:
 	NetGroupPtr GetNetGroup(int id);
 protected:
 	JCore::HashMap<int, NetGroupPtr> m_hNetGroup;
+	bool m_bFinalized;
 };
 
 NS_JNET_END

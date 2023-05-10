@@ -128,7 +128,7 @@ struct SendHelper
 	}
 
 
-#ifdef STEINSGATE_CLIENT
+#ifdef SEND_HELPER_NONE_THREAD_LOCAL_INFORMATION
 	inline static Information SendInformation;
 #else
 	inline static thread_local Information SendInformation;

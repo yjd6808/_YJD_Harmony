@@ -45,9 +45,10 @@ public:
 
 	ActionMgr* actionManager();
 	PlayerController* ctrl();
+	AccountData* accountData() { return &m_AccountData; }
+
 private:
 	AccountData m_AccountData;
-
 	ActionMgr* m_pActionManager;
 	PlayerController* m_pController;
 };

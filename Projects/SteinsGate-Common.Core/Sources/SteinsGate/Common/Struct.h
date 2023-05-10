@@ -67,15 +67,22 @@ union SgaResourceIndex
 	Int32U Value;
 };
 
+struct AuthToken
+{
+	SGStaticString<AuthTokenLen_v> Data;		// 토큰 데이터
+	SGDateTime Updated;							// 최신화된 시간
+};
+
 struct AccountData
 {
 	AccountData();
 
-	int AccountId;	// 계정 고유 아이디
+	int UUId;	// 계정 고유 아이디
 	SGStaticString<AccountIdLen_v> Name;
 	SGStaticString<AccountPassLen_v> Pass;
 	SGDateTime LastLogin;
 	int LastServer;
+	bool Logined;
 };
 
 struct PlayerData

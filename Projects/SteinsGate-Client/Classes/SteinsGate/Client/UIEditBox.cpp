@@ -92,6 +92,10 @@ void UIEditBox::setInitialUISize(SGSize size) {
 
 }
 
+void UIEditBox::setMaxLength(int maxLen) {
+	m_pEditBox->setMaxLength(maxLen);
+}
+
 void UIEditBox::setTextEditBeginCallback(const SGActionFn<UIEditBox*>& fnTextEditBegin) const {
 	m_pListener->FnEditBoxEditingDidBegin = fnTextEditBegin;
 }

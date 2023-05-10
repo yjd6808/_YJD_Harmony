@@ -59,8 +59,10 @@ void UI_Login::onInit() {
 	m_pBtnStart = CoreUIManager_v->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_START);
 	m_pBtnTerminate = CoreUIManager_v->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_TERMINATE);
 	m_pEbId = CoreUIManager_v->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_ID);
+	m_pEbId->setMaxLength(AccountIdLen_v);
 	m_pEbPass = CoreUIManager_v->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_PW);
 	m_pEbPass->setInputFlag(SGEditBox::InputFlag::PASSWORD);
+	m_pEbPass->setMaxLength(AccountPassLen_v);
 }
 
 void UI_Login::onLoaded() {
@@ -136,20 +138,20 @@ void UI_Login::setTab(Tab tab) {
 }
 
 void UI_Login::login() {
-	if (m_pEbId->getText().length() == 0) {
+	if (m_pEbId->getText().length() == 0 || m_pEbPass->getText().length() == 0) {
+		CorePopupManager_v->showOk("아이디와 패스워드를 입력해주세요.");
 		return;
 	}
 
-	std::string id = m_pEbId->getText();
-	std::string pw = m_pEbPass->getText();
+	// TODO: 벨리데이터 구현
 
-	_LogDebug_("아이디: %s", id.data());
-	_LogDebug_("패스워드: %s", pw.data());
+	AccountData* pData = CorePlayer_v->accountData();
+	pData->Name.SetStringUnsafe(m_pEbId->getText());
+	pData->Name.SetStringUnsafe(m_pEbPass->getText());
 
-	_LogDebug_("아이디: %s", id.c_str());
-	_LogDebug_("패스워드: %s", pw.c_str());
-
-	S_AUTH::SendLogin(id, pw);
+	if (!CoreNet_v->connectAuthTcp()) {
+		CorePopupManager_v->showOk("서버 접속에 실패했습니다.");
+	}
 }
 
 

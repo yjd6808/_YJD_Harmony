@@ -13,10 +13,15 @@ NS_JNET_BEGIN
 
 NetMaster::NetMaster()
 	: m_hNetGroup(8)
+	, m_bFinalized(false)
 {}
 
 void NetMaster::Finalize() {
+	if (m_bFinalized)
+		return;
+
 	m_hNetGroup.Clear();
+	m_bFinalized = true;
 }
 
 void NetMaster::AddNetGroup(int groupId, const NetGroupPtr& group) {

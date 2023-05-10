@@ -48,7 +48,7 @@ void SgaPackage::LoadElement(const int index, bool elementOnly) {
 int SgaPackage::UnloadAllElementData() {
 	int iUnloadedElementCount = 0;
 
-	m_ElementMap.Values().Extension().ForEach([&iUnloadedElementCount](const SgaElementPtr& element) {
+	m_ElementMap.ForEachValue([&iUnloadedElementCount](const SgaElementPtr& element) {
 		if (element->Unload()) {
 			++iUnloadedElementCount;
 		}

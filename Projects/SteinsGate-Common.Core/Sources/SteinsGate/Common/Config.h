@@ -36,9 +36,10 @@ inline const char* FontDirName_v = "font";
 inline constexpr int InvalidValue_v = -1;
 inline constexpr int CharWeaponTypeCount_v = 5;	
 
-inline constexpr int CharNameLen_v = 40;
-inline constexpr int AccountIdLen_v = 40;
-inline constexpr int AccountPassLen_v = 40;
+inline constexpr int CharNameLen_v = 16;
+inline constexpr int AccountIdLen_v = 16;
+inline constexpr int AccountPassLen_v = 16;
+inline constexpr int AuthTokenLen_v = 32;
 
 inline constexpr int MaxOptCount_v = 7;
 inline constexpr int MaxVisualCount_v = 3;

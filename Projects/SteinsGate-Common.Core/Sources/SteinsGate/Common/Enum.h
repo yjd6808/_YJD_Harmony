@@ -770,11 +770,27 @@ Game,
 Max
 SEnumEnd(ServerProcessType)
 
-SEnumBegin(ServerType)
-Center,
+// 클라이언트가 게임을 플레이하는 동안 한번이라도 접속하게되는 서버타입
+SEnumBegin(ClientConnectServerType)
 Auth,
+Begin = Auth,
 Lobby,
 Game,
 Chat,
-Area
+Area,
+End = Area,
+Max
+SEnumEnd(ClientConnectServerType)
+
+// 전체 서버 종류
+SEnumBegin(ServerType)
+Auth,
+Begin = Auth,
+Lobby,
+Game,
+Chat,
+Area,
+Center,
+End = Center,
+Max
 SEnumEnd(ServerType)

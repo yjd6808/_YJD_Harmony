@@ -14,45 +14,63 @@ USING_NS_CC;
 USING_NS_JNET;
 
 NetCore::NetCore()
-	: Group(nullptr)
-	, AuthTcp(nullptr)
-	, LobbyTcp(nullptr)
-	, GameTcp(nullptr)
-	, GameUdp(nullptr)
-	, AreaTcp(nullptr)
-	, ChatTcp(nullptr)
+	: m_pNetGroup(nullptr)
+	, m_pAuthTcp(nullptr)
+	, m_pLobbyTcp(nullptr)
+	, m_pGameTcp(nullptr)
+	, m_pGameUdp(nullptr)
+	, m_pChatTcp(nullptr)
+	, m_pAreaTcp(nullptr)
 	, m_pCommandSynchronizer(CommandSynchronizer::Get())
+	, m_pConnectionSynchronizer(ConnectionSynchronizer::Get())
 {}
 
 NetCore::~NetCore() {
-	DeleteSingletonSafe(m_pCommandSynchronizer);
+	NetCore::Finalize();
 }
 
 void NetCore::Initialize() {
 	const auto spCenterNetGroup = MakeShared<NetClientGroup>();
 	AddNetGroup(1, spCenterNetGroup);
-	Group = spCenterNetGroup.Get<NetClientGroup*>();
-	Group->Initialize();
-	m_pCommandSynchronizer->initialize();	// 무조건 IOCP 초기화이후 수행
+	m_pNetGroup = spCenterNetGroup.Get<NetClientGroup*>();
+	m_pNetGroup->Initialize();
 
-	AuthTcp = Group->AuthTcp;
-	LobbyTcp = Group->LobbyTcp;
-	GameTcp = Group->GameTcp;
-	GameUdp = Group->GameUdp;
-	ChatTcp = Group->ChatTcp;
-	AreaTcp = Group->AreaTcp;
+	m_pCommandSynchronizer->initialize();	// 이녀석은 무조건 IOCP 초기화이후 수행
+	m_pConnectionSynchronizer->initialize();
 
-	
+	m_pAuthTcp = m_pNetGroup->AuthTcp;
+	m_pLobbyTcp = m_pNetGroup->LobbyTcp;
+	m_pGameTcp = m_pNetGroup->GameTcp;
+	m_pGameUdp = m_pNetGroup->GameUdp;
+	m_pChatTcp = m_pNetGroup->ChatTcp;
+	m_pAreaTcp = m_pNetGroup->AreaTcp;
+}
+
+void NetCore::Finalize() {
+	NetMaster::Finalize();
+
+	DeleteSingletonSafe(m_pCommandSynchronizer);
+	DeleteSingletonSafe(m_pConnectionSynchronizer);
+
 }
 
 
 void NetCore::pollNetEvents() {
+	m_pConnectionSynchronizer->processConnections();
 	m_pCommandSynchronizer->processCommands();
 }
 
-void NetCore::runCommand(Session* session, ICommand* cmd) {
-	if (Group->m_Parser.RunCommand(session, cmd) == false) {
+void NetCore::runCommand(ClientConnectServerType_t listenerType, Session* session, ICommand* cmd) {
+	if (m_pNetGroup->getParser(listenerType)->RunCommand(session, cmd) == false) {
 		_NetLogWarn_("처리 불가능한 커맨드(%d) 수신", cmd->GetCommand());
 	}
+}
+
+bool NetCore::connectAuthTcp() {
+	if (m_pAuthTcp == nullptr) {
+		return false;
+	}
+
+	return m_pAuthTcp->ConnectAsync(CoreServerProcessInfo_v->Auth.RemoteAuth);
 }
 

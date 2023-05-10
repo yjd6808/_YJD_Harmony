@@ -13,7 +13,9 @@
 class NetClientEventListener : public JNetwork::ClientEventListener
 {
 protected:
-	void SynchronizedOnReceived(SGSession* session, JNetwork::ICommand* cmd);
+	static void SyncConnectionResult(ClientConnectServerType_t listenerType, JNetwork::Session* session, bool success, Int32U errorCode);
+	static void SyncDisconnectionResult(ClientConnectServerType_t listenerType, JNetwork::Session* session);
+	static void SyncReceivedCommand(ClientConnectServerType_t listenerType, SGSession* session, JNetwork::ICommand* cmd);
 };
 
 

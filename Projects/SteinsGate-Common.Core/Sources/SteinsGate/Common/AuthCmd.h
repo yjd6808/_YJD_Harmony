@@ -21,15 +21,8 @@
 #pragma pack(push, CMD_ALIGNMENT)
 
 StaticCmdBegin(CmdLogin, CmdLogin_CS)
-
-enum
-{
-	ID_BYTE_LEN = 16,
-	PW_BYTE_LEN = 16
-};
-
-SGStaticString<ID_BYTE_LEN> Id;
-SGStaticString<PW_BYTE_LEN> Pw;
+SGStaticString<AccountIdLen_v> Id;
+SGStaticString<AccountPassLen_v> Pw;
 StaticCmdEnd(CmdLogin)
 
 StaticCmdBegin(CmdLoginAck, CmdLoginAck_SC)

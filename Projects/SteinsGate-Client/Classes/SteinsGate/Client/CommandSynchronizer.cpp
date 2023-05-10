@@ -25,21 +25,23 @@ CommandSynchronizer::CommandQueueHolder CommandSynchronizer::registerPacketQueue
 	}
 
 	CommandSynchronizer* pInst = Get();
-	pInst->m_vIOCPThreadAccessPacketQueueList.PushBack({ Thread::GetThreadId(), &tlsCommandQueueHolder });
+	pInst->m_vIOCPThreadAccessCommandQueueList.PushBack({ Thread::GetThreadId(), &tlsCommandQueueHolder });
 	return { initCapacity };
 }
 
-CommandSynchronizer::CommandHolder::CommandHolder(Session* sender, ICommand* copy) {
+CommandSynchronizer::CommandHolder::CommandHolder(ClientConnectServerType_t listenerType, Session* sender, ICommand* copy) {
 	int _;
 	Sender = sender;
 	Cmd = copy->Cmd;
 	CmdLen = copy->CmdLen;
+	ListenerType = listenerType;
+	MemPool = tlsCommandQueueHolder.MemPool;
 	Data = (char*)tlsCommandQueueHolder.MemPool->DynamicPop(CmdLen, _);
 	Memory::CopyUnsafe(Data, copy->GetData(), copy->GetDataLen());
 }
 
 CommandSynchronizer::CommandHolder::~CommandHolder() {
-	tlsCommandQueueHolder.MemPool->DynamicPush(Data, CmdLen);
+	MemPool->DynamicPush(Data, CmdLen);
 }
 
 
@@ -60,26 +62,26 @@ void CommandSynchronizer::initialize() {
 	RegistrationEnd = true;
 }
 
-void CommandSynchronizer::enqueueCommand(Session* session, ICommand* cmd) {
+void CommandSynchronizer::enqueueCommand(ClientConnectServerType_t listenerType, Session* session, ICommand* cmd) {
 	LOCK_GUARD(*tlsCommandQueueHolder.Lock);
-	ICommand* pCmd = dbg_new CommandHolder(session, cmd);
+	ICommand* pCmd = dbg_new CommandHolder(listenerType, session, cmd);
 	tlsCommandQueueHolder.Queue->Enqueue(pCmd);
 }
 
 void CommandSynchronizer::processCommands() {
 	for (int i = 0; i < m_iPacketQueueCount; ++i) {
-		CommandQueueHolder* pIOCPPacketQueueHolder = m_vIOCPThreadAccessPacketQueueList[i].Value;
+		CommandQueueHolder* pIOCPCommandQueueHolder = m_vIOCPThreadAccessCommandQueueList[i].Value;
 		CommandQueue* pQueue;
 		{
-			LOCK_GUARD(*pIOCPPacketQueueHolder->Lock);
-			pQueue = pIOCPPacketQueueHolder->Queue;
-			pIOCPPacketQueueHolder->Queue = m_vSwapPacketQueue[i];
-			m_vSwapPacketQueue[i] = pQueue;
+			LOCK_GUARD(*pIOCPCommandQueueHolder->Lock);
+			pQueue = pIOCPCommandQueueHolder->Queue;
+			pIOCPCommandQueueHolder->Queue = m_vSwapCommandQueue[i];
+			m_vSwapCommandQueue[i] = pQueue;
 		}
 
 		while (!pQueue->IsEmpty()) {
 			CommandHolder* pCmd = (CommandHolder*)pQueue->Front();
-			CoreNet_v->runCommand(pCmd->Sender, pCmd);
+			CoreNet_v->runCommand(pCmd->ListenerType, pCmd->Sender, pCmd);
 			pQueue->Dequeue();
 			delete pCmd;
 		}
@@ -89,10 +91,10 @@ void CommandSynchronizer::processCommands() {
 
 void CommandSynchronizer::filterUnusedCommandQueue() {
 	// 필터완료 전까지는 IOCP쓰레드가 아닌 쓰레드도 생성될 수 있으므로. 완료전까지 생성된 쓸모없는 패킷큐는 걸러줘야함
-	SGVector<Int32U> vIocpThreadIdList = CoreNet_v->Group->GetIocp()->GetWorkThreadIdList();
+	SGVector<Int32U> vIocpThreadIdList = CoreNet_v->getGroup()->GetIocp()->GetWorkThreadIdList();
 	auto fnContained = [&vIocpThreadIdList](const IOCPThreadId$CommandQueuePair& pair) { return vIocpThreadIdList.Exist(pair.Key); };
-	m_vIOCPThreadAccessPacketQueueList = m_vIOCPThreadAccessPacketQueueList.Extension().Filter(fnContained).ToVector();
-	m_iPacketQueueCount = m_vIOCPThreadAccessPacketQueueList.Size();
+	m_vIOCPThreadAccessCommandQueueList = m_vIOCPThreadAccessCommandQueueList.Extension().Filter(fnContained).ToVector();
+	m_iPacketQueueCount = m_vIOCPThreadAccessCommandQueueList.Size();
 }
 
 void CommandSynchronizer::allocateCommandQueue() {
@@ -104,20 +106,41 @@ void CommandSynchronizer::allocateCommandQueue() {
 		pHolder->Lock = dbg_new SGNormalLock;
 		pHolder->MemPool = dbg_new SGIndexMemroyPool(true);
 		pHolder->Queue = pReceiverQueue;
-		m_vSwapPacketQueue.PushBack(pSwapQueue);
+		m_vSwapCommandQueue.PushBack(pSwapQueue);
 	};
-	m_vIOCPThreadAccessPacketQueueList.ForEach(fnAllocator);
+	m_vIOCPThreadAccessCommandQueueList.ForEach(fnAllocator);
 }
 
 void CommandSynchronizer::finalize() {
 	for (int i = 0; i < m_iPacketQueueCount; ++i) {
-		CommandQueueHolder* pIOCPPacketQueueHolder = m_vIOCPThreadAccessPacketQueueList[i].Value;
+		CommandQueueHolder* pIOCPPacketQueueHolder = m_vIOCPThreadAccessCommandQueueList[i].Value;
+		CommandQueue* pQueue;
+
+		// 미처리 데이터 삭제
+		{
+			pQueue = pIOCPPacketQueueHolder->Queue;
+			while (!pQueue->IsEmpty()) {
+				delete pQueue->Front();
+				pQueue->Dequeue();
+			}
+		}
+		{
+			pQueue = m_vSwapCommandQueue[i];
+			while (!pQueue->IsEmpty()) {
+				delete pQueue->Front();
+				pQueue->Dequeue();
+			}
+		}
+
 		DeleteSafe(pIOCPPacketQueueHolder->Queue);
 		DeleteSafe(pIOCPPacketQueueHolder->Lock);
 		DeleteSafe(pIOCPPacketQueueHolder->MemPool);
-		DeleteSafe(m_vSwapPacketQueue[i]);
+		DeleteSafe(m_vSwapCommandQueue[i]);
 	}
-	m_vIOCPThreadAccessPacketQueueList.Clear();
-	m_vSwapPacketQueue.Clear();
+	m_vIOCPThreadAccessCommandQueueList.Clear();
+	m_vSwapCommandQueue.Clear();
+	m_iPacketQueueCount = 0;
+
+	CommandHolder::FreeAllObjects();
 }
 

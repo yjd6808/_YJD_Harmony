@@ -23,5 +23,4 @@ void NetLobbyEventListener::OnConnectFailed(Session* session, Int32U errorCode) 
 void NetLobbyEventListener::OnSent(Session* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
 }
 void NetLobbyEventListener::OnReceived(Session* session, JNetwork::ICommand* cmd) {
-	SynchronizedOnReceived(session, cmd);
 }

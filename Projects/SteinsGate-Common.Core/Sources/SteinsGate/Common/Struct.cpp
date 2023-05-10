@@ -33,11 +33,12 @@ String SgaResourceIndex::ToString() const {
 }
 
 AccountData::AccountData()
-	: Name{""}
-	, AccountId(InvalidValue_v)
+	: UUId(InvalidValue_v)
+	, Name{""}
 	, Pass{""}
 	, LastLogin(0)
 	, LastServer(0)
+	, Logined(false)
 {}
 
 PlayerData::PlayerData()

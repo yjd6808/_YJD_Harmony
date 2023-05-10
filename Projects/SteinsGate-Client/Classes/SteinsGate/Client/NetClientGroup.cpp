@@ -41,11 +41,10 @@ NetClientGroup::NetClientGroup()
     , GameUdp(nullptr)
     , AreaTcp(nullptr)
     , ChatTcp(nullptr)
-	, m_vListeners(8)
 {}
 
 NetClientGroup::~NetClientGroup() {
-	m_vListeners.ForEach([](auto listener) { delete listener; });
+	NetClientGroup::Finalize();
 }
 
 void NetClientGroup::Initialize() {
@@ -56,12 +55,15 @@ void NetClientGroup::Initialize() {
 
 	NetClientEventListener* pAuthListener = dbg_new NetAuthEventListener();
 	NetClientEventListener* pLobbyListener = dbg_new NetLobbyEventListener();
-	NetClientEventListener* pGameListener;
-	NetClientEventListener* pChatListener;
-	NetClientEventListener* pAreaListener;
+	NetClientEventListener* pGameListener = nullptr;
+	NetClientEventListener* pChatListener = nullptr;
+	NetClientEventListener* pAreaListener = nullptr;
 
-	m_vListeners.PushBack(pAuthListener);
-	m_vListeners.PushBack(pLobbyListener);
+	m_Listeners[ClientConnectServerType::Auth] = pAuthListener;
+	m_Listeners[ClientConnectServerType::Lobby] = pLobbyListener;
+	m_Listeners[ClientConnectServerType::Game] = pGameListener;
+	m_Listeners[ClientConnectServerType::Chat] = pChatListener;
+	m_Listeners[ClientConnectServerType::Area] = pAreaListener;
 
 	const auto spAuthTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, pAuthListener, AuthRecvBufferSize_v, AuthSendBufferSize_v);
 	const auto spLobbyTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, pLobbyListener, LobbyRecvBufferSize_v, LobbySendBufferSize_v);
@@ -90,6 +92,54 @@ void NetClientGroup::Initialize() {
 	// 커맨드 초기화
 	// ==========================================================
 
-	m_Parser.AddCommand(CmdLoginAck_SC, R_AUTH::RecvLoginAck);
+	SGCommandParser* parser = nullptr;
+	{
+		parser = &m_Parser[ClientConnectServerType::Auth];
+		parser->AddCommand(CmdLoginAck_SC, R_AUTH::RecvLoginAck);
+	}
+
+	{
+		parser = &m_Parser[ClientConnectServerType::Lobby];
+
+		// TCP
+
+
+		// UDP
+	}
+
+	{
+		parser = &m_Parser[ClientConnectServerType::Game];
+
+		// TCP
+
+
+		// UDP
+	}
+
+	{
+		parser = &m_Parser[ClientConnectServerType::Chat];
+	}
+
+	{
+		parser = &m_Parser[ClientConnectServerType::Area];
+	}
 }
+
+void NetClientGroup::Finalize() {
+	NetGroup::Finalize();
+
+	// 리스너는 호스트에 의존성이있으므로.. 호스트들을 먼저 제거후 수행해줘야한다.
+	for (int i = 0; i < ClientConnectServerType::Max; ++i) {
+		DeleteSafe(m_Listeners[i]);
+	}
+}
+
+NetClientEventListener* NetClientGroup::getListener(ClientConnectServerType_t serverType) {
+	return m_Listeners[serverType];
+}
+
+SGCommandParser* NetClientGroup::getParser(ClientConnectServerType_t serverType) {
+	return &m_Parser[serverType];
+}
+
 

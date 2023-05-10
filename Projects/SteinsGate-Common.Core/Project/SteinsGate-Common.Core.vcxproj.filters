@@ -208,6 +208,12 @@
       <Filter>Net</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\EnumDefine.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChatCmd.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\AreaCmd.h">
+      <Filter>Net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">

@@ -103,6 +103,12 @@
     <Filter Include="Game\UI_M">
       <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Net\Connection">
+      <UniqueIdentifier>{bf59ba58-2f02-44e4-a7cd-452836a2dd40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Sync">
+      <UniqueIdentifier>{0754ca7c-0ffe-457e-8016-747afd443af4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\ImagePackManager.cpp">
@@ -433,9 +439,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\S_AUTH.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\CommandSynchronizer.cpp">
-      <Filter>Net</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\S_GAME_UDP.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
@@ -450,6 +453,27 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\S_CHAT.cpp">
       <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\CommandSynchronizer.cpp">
+      <Filter>Net\Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ConnectionSynchronizer.cpp">
+      <Filter>Net\Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\C_AUTH.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\C_CHAT.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\C_GAME.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\C_LOBBY.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\C_AREA.cpp">
+      <Filter>Net\Connection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -841,9 +865,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\S_AUTH.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\CommandSynchronizer.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\S_GAME_UDP.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
@@ -858,6 +879,27 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\S_CHAT.h">
       <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\CommandSynchronizer.h">
+      <Filter>Net\Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ConnectionSynchronizer.h">
+      <Filter>Net\Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\C_AUTH.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\C_AREA.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\C_CHAT.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\C_GAME.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\C_LOBBY.h">
+      <Filter>Net\Connection</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

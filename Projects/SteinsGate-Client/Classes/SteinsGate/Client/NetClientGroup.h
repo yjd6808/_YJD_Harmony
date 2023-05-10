@@ -18,6 +18,7 @@ public:
 	~NetClientGroup() override;
 
 	void Initialize() override;
+	void Finalize() override;
 
 	SGTcpClient* AuthTcp;
 	SGTcpClient* LobbyTcp;
@@ -25,9 +26,12 @@ public:
 	SGUdpClient* GameUdp;
 	SGTcpClient* AreaTcp;
 	SGTcpClient* ChatTcp;
+
+	NetClientEventListener* getListener(ClientConnectServerType_t serverType);
+	SGCommandParser* getParser(ClientConnectServerType_t serverType);
 private:
-	SGVector<NetClientEventListener*> m_vListeners;
-	SGCommandParser m_Parser;
+	NetClientEventListener* m_Listeners[ClientConnectServerType::Max];
+	SGCommandParser m_Parser[ClientConnectServerType::Max];
 
 	friend class NetCore;
 };
