@@ -70,7 +70,7 @@ String::String(char ch, int count) {
 	}
 }
 
-String::String(std::string& str) : String(str.c_str()) {
+String::String(const std::string& str) : String(str.c_str()) {
 }
 
 String::String(const String& str) : String(str.m_pBuffer) {

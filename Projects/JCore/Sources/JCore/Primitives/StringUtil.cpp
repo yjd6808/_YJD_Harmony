@@ -159,6 +159,20 @@ template <> Int16U StringUtil::ToNumber(const char* str) { return static_cast<In
 template <> Int32 StringUtil::ToNumber(const char* str) { return static_cast<Int32>(std::strtol(str, nullptr, 0)); }
 template <> Int32U StringUtil::ToNumber(const char* str) { return static_cast<Int32U>(std::strtoul(str, nullptr, 0)); }
 
+template <> String StringUtil::ToString(bool value) { return value ? "true" : "false"; }
+template <> String StringUtil::ToString(float value) { return std::to_string(value); }
+template <> String StringUtil::ToString(double value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Int32L value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Int64 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Int32UL value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Int64U value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Char value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Byte value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Int16 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Int16U value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Int32 value) { return std::to_string(value); }
+template <> String StringUtil::ToString(Int32U value) { return std::to_string(value); }
+
 
 /*
 constexpr Int64 StringUtil::ConvertInt64(const char* src, const int len) {

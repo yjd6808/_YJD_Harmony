@@ -83,7 +83,9 @@ public:
 		}
 
 		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
+#ifdef DebugMode
 		AddAllocated(iIndex, bNewAlloc);
+#endif
 		return pMemoryBlock;
 	}
 

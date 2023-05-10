@@ -27,6 +27,9 @@ public:
 	template <typename TInteger>
 	static TInteger ToNumber(const char* str);
 
+	template <typename TInteger>
+	static String ToString(TInteger integer);
+
 	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);
 	static int CopyUnsafe(char* buffer, const char* copy);

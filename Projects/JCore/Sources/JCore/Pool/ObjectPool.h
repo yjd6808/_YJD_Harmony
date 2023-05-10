@@ -3,6 +3,7 @@
  * 생성일: 4/16/2023 2:21:27 PM
  * =====================
  * 연결리스트 기반 오브젝트풀
+ * 다중상속시 베이스 클래스는 버철 소멸자 선언해줄것
  *
  * class Legend : public MakeSharedFromThis<Legend>, public ObjectPool<Legend>
  * {
