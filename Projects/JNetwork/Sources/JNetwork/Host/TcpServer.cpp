@@ -117,9 +117,10 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 	}
 
 	if (m_Socket.Bind(localEndPoint) == SOCKET_ERROR) {
-		_NetLogError_("서버 소켓 Bind 실패 (%d)", Winsock::LastError());
+		_NetLogError_("%s %s %s 바인드 실패 (%u)", TypeName(), localEndPoint.ToString().Source(), m_Socket.ProtocolName(), Winsock::LastError());
 		return false;
 	}
+	_NetLogDebug_("%s %s %s 바인드 완료", TypeName(), localEndPoint.ToString().Source(), m_Socket.ProtocolName());
 
 	if (m_Socket.Listen() == SOCKET_ERROR) {
 		_NetLogError_("서버 소켓 리슨 실패 (%d)", Winsock::LastError());

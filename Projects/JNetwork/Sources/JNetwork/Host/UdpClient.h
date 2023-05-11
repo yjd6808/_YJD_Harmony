@@ -38,6 +38,7 @@ public:
 	void NotifyCommand(ICommand* cmd) override;
 	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;
 	Type GetType() const override { return eClient; }
+	const char* TypeName() override { return "UDP 클라"; }
 protected:
 	ClientEventListener* m_pClientEventListener;
 };

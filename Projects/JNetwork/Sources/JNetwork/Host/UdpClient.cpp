@@ -31,6 +31,7 @@ UdpClient::UdpClient(
 
 UdpClient::~UdpClient() {
 	Disconnect();
+	WaitForZeroPending();
 }
 
 

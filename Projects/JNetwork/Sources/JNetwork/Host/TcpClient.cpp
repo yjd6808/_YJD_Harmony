@@ -30,6 +30,7 @@ TcpClient::TcpClient(
 
 TcpClient::~TcpClient() {
 	Disconnect();
+	WaitForZeroPending();
 }
 
 static StaticPacket<Command<int>, Command<int>>* GenerateTestDummyPacket() {

@@ -46,6 +46,8 @@ public:
 	int GetMaxConnection() const { return m_pContainer->MaxConnection(); }
 	IPv4EndPoint GetBindEndPoint() const { return m_Socket.GetLocalEndPoint(); }
 	SessionContainer* GetSessionContainer() const { return m_pContainer; }
+	const char* TypeName() override { return "TCP 서버"; }
+	
 protected:
 	JCore::Atomic<int> m_iSessionRecvBufferSize;
 	JCore::Atomic<int> m_iSessionSendBufferSize;

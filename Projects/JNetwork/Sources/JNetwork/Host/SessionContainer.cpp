@@ -44,6 +44,7 @@ void SessionContainer::DisconnectAllSessions() {
 	LOCK_GUARD(m_ContainerLock);
 	m_hAllSession.Values().Extension().ForEach([](Session* session) {
 		session->Disconnect();
+		session->WaitForZeroPending();
 	});
 }
 

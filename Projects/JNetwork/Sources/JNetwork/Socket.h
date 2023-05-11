@@ -88,10 +88,12 @@ public:
 	int ShutdownWrite() const;
 	int ShutdownRead() const;
 	int Close();
+	const char* ProtocolName();
 
 	static Socketv4 CreateV4(TransportProtocol tpproto, bool overlapped);
 	static Socketv4 CreateTcpV4(bool overlapped);
 	static Socketv6 CreateV6(TransportProtocol tpproto, bool overlapped);
+
 
 	State State;
 	SOCKET Handle;

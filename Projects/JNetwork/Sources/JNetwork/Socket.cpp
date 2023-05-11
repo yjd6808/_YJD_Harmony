@@ -120,6 +120,16 @@ int Socket::Close() {
 	return ret;
 }
 
+const char* Socket::ProtocolName() {
+	switch (Protocol) {
+	case TransportProtocol::None:	return "NONE";
+	case TransportProtocol::TCP:	return "TCP";
+	case TransportProtocol::UDP:	return "UDP";
+	}
+
+	return "";
+}
+
 Socketv4 Socket::CreateV4(TransportProtocol tpproto, bool overlapped) {
 	
 	SOCKET hSocket = WSASocketW(

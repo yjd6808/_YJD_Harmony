@@ -36,6 +36,7 @@ public:
 	bool Accepted(Int32UL receivedBytes);
 	void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) override;
 	Type GetType() const override { return eSession; }
+	const char* TypeName() override { return "TCP 세션"; }
 
 protected:
 	TcpServer* m_pServer;

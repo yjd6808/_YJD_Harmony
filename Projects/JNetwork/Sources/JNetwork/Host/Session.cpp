@@ -59,11 +59,11 @@ bool Session::Bind(const IPv4EndPoint& bindAddr) {
 
 	const int iBindRet = m_Socket.Bind(bindAddr);
 	if (iBindRet == SOCKET_ERROR) {
-		_NetLogError_("소켓 바인드 실패 (%u)", Winsock::LastError());
+		_NetLogError_("%s %s %s 바인드 실패 (%u)", TypeName(), bindAddr.ToString().Source(), m_Socket.ProtocolName(), Winsock::LastError());
 		return false;
 	}
 
-	_NetLogDebug_("%s 바인드 완료", bindAddr.ToString().Source());
+	_NetLogDebug_("%s %s %s 바인드 완료", TypeName(), bindAddr.ToString().Source(), m_Socket.ProtocolName());
 	m_LocalEndPoint = bindAddr;
 	return true;
 }
@@ -85,8 +85,6 @@ bool Session::Disconnect() {
 	m_Socket.ShutdownBoth();
 	m_Socket.Close();
 	m_Socket.Invalidate();
-
-	WaitForZeroPending();
 
 	// 여기서 Disconnected를 호춡토록 구현했었는데 잘못된 로직이었다.
 	// 예를들어서 TcpClient가 Connect 시도중 Disconnect를 시도하면
@@ -235,8 +233,6 @@ bool Session::RecvFromAsync() {
 		}
 	}
 
-
-
 	return true;
 }
 
@@ -285,10 +281,16 @@ void Session::Received(Int32UL receivedBytes) {
 void Session::WaitForZeroPending() {
 	while (true) {
 
-		int iPending = m_iOveralappedPendingCount;
+		const int iPending = m_iOveralappedPendingCount;
 
 		if (iPending == 0)
 			break;
+#ifdef DebugMode
+		// 클라이언트 정상종료 테스트
+		if (GetType() == eClient) {
+			JCorePass;
+		}
+#endif
 
 		if (iPending < 0) {
 			_NetLogWarn_("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", iPending);

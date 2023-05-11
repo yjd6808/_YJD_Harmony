@@ -29,7 +29,6 @@ void IOCPOverlappedRecv::Process(BOOL result, Int32UL bytesTransffered, IOCPPost
 		return;
 	}
 
-	_NetLogDebug_("%d 바이트 수신", bytesTransffered);
 	m_pReceivedSession->Received(bytesTransffered);
 
 	// TODO: 리시브 오버랩 재사용 기능 구현
