@@ -403,7 +403,7 @@ public:
 			PushBackNewBucket(&m_pTable[uiBucket]);
 		}
 
-		m_pTable[uiBucket].EmplaceBack(TKeyValuePair{ Forward<Ky>(key), Forward<Vy>(value) }, uiHash);
+		m_pTable[uiBucket].EmplaceBack(TKeyValuePair{ static_cast<TKey>(Forward<Ky>(key)), static_cast<TValue>(Forward<Vy>(value))}, uiHash);
 		++this->m_iSize;
 		return true;
 	}
