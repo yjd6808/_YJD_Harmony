@@ -55,7 +55,7 @@ void UI_Popup::onInit() {
 	m_pLabelText->setEnableFontAutoScaling(false);
 	m_pGroupButtonHolder->setResizable(false);
 	m_pSpriteBackground->setDraggable(true);
-	m_pSpriteBackground->setDragLinkElement(this);
+	m_pSpriteBackground->setDragLinkElement(m_pGroupHolder);
 }
 
 void UI_Popup::onLoaded() {
@@ -65,6 +65,7 @@ void UI_Popup::onLoaded() {
 	m_pSpriteBackground->setCapInsets(
 		{ fBorderThickness, fBorderThickness, size.width - fBorderThickness * 2, size.height - fBorderThickness * 2 }
 	);
+
 }
 
 void UI_Popup::onRemoved() {
@@ -98,9 +99,23 @@ void UI_Popup::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
 
 }
 
+bool UI_Popup::onMouseMoveDetail(SGEventMouse* mouseEvent) {
+	return false;
+}
+
 // 팝업이 활성화된 동안 해당 팝업보다 우선순위(_localZOrder)가 낮은 대상에게는 이벤트가 전파되지 않도록 하기 위해
-bool UI_Popup::onMouseDownDetail(SGEventMouse* mouseEvent) { return false; }
-bool UI_Popup::onMouseScrollDetail(SGEventMouse* mouseEvent) { return false; }
+bool UI_Popup::onMouseDownDetail(SGEventMouse* mouseEvent) {
+	return false;
+}
+bool UI_Popup::onMouseScrollDetail(SGEventMouse* mouseEvent) {
+	return false;
+}
+bool UI_Popup::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+	return true;
+}
+bool UI_Popup::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+	return true;
+}
 
 void UI_Popup::setType(Type type) {
 	m_eType = type;
@@ -147,6 +162,8 @@ void UI_Popup::close() {
 	CorePopupManager_v->close(this);
 }
 
+
+
 void UI_Popup::adjust() {
 
 	// 내가 정한 팝업박스 규칙
@@ -154,22 +171,28 @@ void UI_Popup::adjust() {
 	// 2. 팝업창의 너비는 패딩 길이를 포함한 너비이다.
 	// 3. 팝업의 하단부의 버튼영역과 상단부의 텍스트 영역으로 구분한다.
 	// 4. 팝업 상단부와 하단부 사이에 패딩 너비를 포함하여 여백의 미를 준다.
-
 	const float fPadding = CorePopupManager_v->getPadding();
-	const float fFontSize = m_pLabelText->getInitialFontSize();
-	const int iLineCount = m_pLabelText->getLineCount();
 	const Size& buttonArea = m_pGroupButtonHolder->getUISize();
-	const float fWidth = Math::Max(CorePopupManager_v->getWidth(), buttonArea.width + fPadding * 2);
-	const float fHeight = fPadding * 3 + iLineCount * fFontSize + buttonArea.height;
+	const float fTextAreaWidth = Math::Max(CorePopupManager_v->getWidth(), buttonArea.width + fPadding * 2);
+
+	// 라벨의 Dimension이 UI 설정파일상의 너비, 높이 정보로 처음 세팅되기 때문에
+	// setText()후 getLineCount()를 수행할때 이 기본 정보를 바탕으로 라인수를 얻게된다.
+	// 팝업매니저에서 설정한 팝업의 기본너비에 맞게 라벨의 너비정보도 수정해줘야
+	// 텍스트 수정 후 Cocos2d-x 엔진이 너비에 맞춰서 올바르게 계산된 라인수를 얻어낼 수 있게된다.
+
+	m_pLabelText->source()->setDimensions(fTextAreaWidth, 0);		// 1. 먼저 텍스트영역 너비를 결정해준다.
+	const int iLineCount = m_pLabelText->getLineCount();			// 2. 1. 작업덕분에 게임엔진의 라벨이 해당 너비를 기준으로 올바르게 라인수를 계산할 수 있게된다.
+	const float fFontSize = m_pLabelText->getInitialFontSize();
+	const float fTextAreaHeight = fPadding * 3 + iLineCount * fFontSize + buttonArea.height;
 	const Size& textArea = {
-		fWidth - fPadding * 2,
+		fTextAreaWidth - fPadding * 2,
 		iLineCount * fFontSize
 	};
 
-	m_pGroupHolder->setUISize({ fWidth, fHeight });
+	m_pGroupHolder->setUISize({ fTextAreaWidth, fTextAreaHeight });
 	m_pGroupHolder->setRelativePosition(0, 0);
 
-	m_pSpriteBackground->setUISize({ fWidth, fHeight });
+	m_pSpriteBackground->setUISize({ fTextAreaWidth, fTextAreaHeight });
 	m_pSpriteBackground->setRelativePosition(0, 0);
 
 	m_pLabelText->setUISize(textArea);

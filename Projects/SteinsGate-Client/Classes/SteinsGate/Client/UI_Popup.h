@@ -26,8 +26,11 @@ protected:
 	void onRemoved() override;
 
 	void onMouseUp(UIElement* element, SGEventMouse* mouseEvent) override;
+	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;
 	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;
 	bool onMouseScrollDetail(SGEventMouse* mouseEvent) override;
+	bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
+	bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 public:
 	void setType(Type type);
 	Type getType() const { return m_eType; }
