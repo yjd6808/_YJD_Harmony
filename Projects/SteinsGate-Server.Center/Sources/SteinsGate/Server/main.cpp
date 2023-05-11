@@ -17,7 +17,7 @@ ConsoleLoggerOption LoggerOption_v = [] {
 
 ConsoleLoggerOption NetLoggerOption_v = [] {
 	ConsoleLoggerOption option;
-	option.EnableLog[LoggerAbstract::eDebug] = false;
+	option.EnableLog[LoggerAbstract::eDebug] = true;
 	option.EnableLog[LoggerAbstract::eError] = true;
 	option.EnableLog[LoggerAbstract::eWarn] = true;
 	option.EnableLog[LoggerAbstract::eInfo] = true;

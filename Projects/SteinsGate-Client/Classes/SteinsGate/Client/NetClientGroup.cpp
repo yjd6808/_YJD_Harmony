@@ -95,7 +95,7 @@ void NetClientGroup::Initialize() {
 	SGCommandParser* parser = nullptr;
 	{
 		parser = &m_Parser[ClientConnectServerType::Auth];
-		parser->AddCommand(CmdLoginAck_SC, R_AUTH::RecvLoginAck);
+		//parser->AddCommand<CmdLoginAck>(R_AUTH::RecvLoginAck);
 	}
 
 	{

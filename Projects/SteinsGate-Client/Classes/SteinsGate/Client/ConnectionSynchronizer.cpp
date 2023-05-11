@@ -56,9 +56,15 @@ void ConnectionSynchronizer::processConnections() {
 	ResultQueue* pQueue;
 	{
 		LOCK_GUARD(m_Lock);
+
+		if (m_qConnectionResults->Size() == 0) {
+			return;
+		}
+
 		pQueue = m_qConnectionResults;
 		m_qConnectionResults = m_qSwap;
 		m_qSwap = pQueue;
+		
 	}
 
 	while (!pQueue->IsEmpty()) {

@@ -10,6 +10,7 @@
 
 #include <JCore/Type.h>
 #include <JCore/TypeTraits.h>
+
 #include <JNetwork/Namespace.h>
 
 
@@ -101,38 +102,69 @@ constexpr bool IsStaticCommand_v = Detail::IsStaticCommand<T>::Value;
 template <typename T>
 constexpr bool IsDynamicCommand_v = Detail::IsDynamicCommand<T>::Value;
 
+
 NS_JNET_END
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)
 
+enum CmdDirection
+{
+	eClientToServer = 0b0001,
+	eServerToClient = 0b0010,
+	eServerToServer = 0b0100,
+	eClientToClient = 0b1000
+};
+
+inline static constexpr const char* CmdDirectionName[(1 << 4) - 1] = {
+	"ClientToServer",
+	"ServerToClient",
+	"ServerToClient | ClientToServer",
+	"ServerToServer",
+	"ServerToServer | ClientToServer",
+	"ServerToServer | ServerToClient",
+	"ServerToServer | ServerToClient | ClientToServer",
+	"ClientToClient",
+	"ClientToClient | ClientToServer",
+	"ClientToClient | ServerToClient",
+	"ClientToClient | ServerToClient | ClientToServer",
+	"ClientToClient | ServerToServer",
+	"ClientToClient | ServerToServer | ClientToServer",
+	"ClientToClient | ServerToServer | ServerToClient",
+	"ClientToClient | ServerToServer | ServerToClient | ClientToServer",
+};
 
 /*=====================================================================================
 								 커맨드 생성 규칙
 					  아래 규칙에 맞게 커맨드를 생성토록 한다.
  =====================================================================================*/
 
-
-#define StaticCmdBegin(__struct__, __cmd__)									\
-struct __struct__ : JNetwork::StaticCommand {								\
-	__struct__(int count = 1) {												\
-		Cmd = __cmd__;														\
-		CmdLen = sizeof(__struct__);										\
-	}																		\
-	static constexpr const char* Name() { return #__struct__; }				\
-	static constexpr int Size(int count = 1) { return sizeof(__struct__);	}	
+#define StaticCmdBegin(__struct__, __cmd__, __cmd_direction__)					\
+struct __struct__ : JNetwork::StaticCommand {									\
+	__struct__(int count = 1) {													\
+		Cmd = __cmd__;															\
+		CmdLen = sizeof(__struct__);											\
+	}																			\
+																				\
+	static constexpr int Size(int count = 1) { return sizeof(__struct__); }		\
+	static constexpr const char* Name() { return #__struct__; }					\
+	static constexpr int Command() { return __cmd__; }							\
+	static constexpr int Direction() { return __cmd_direction__; }
+	
 
 #define StaticCmdEnd(__struct__) };
 
 
 // @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
-#define DynamicCmdBegin(__struct__, __cmd__, __countable_elem_type__)							\
+#define DynamicCmdBegin(__struct__, __cmd__, __cmd_direction__, __countable_elem_type__)									\
 struct __struct__ : JNetwork::DynamicCommand {																				\
 	__struct__(int count) {																									\
 		Cmd = __cmd__;																										\
 		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);										\
 		Count = count;																										\
 	}																														\
-	static constexpr const char* Name() { return #__struct__; }																\
 	static constexpr int Size(int count) { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
+	static constexpr const char* Name() { return #__struct__; }																\
+	static constexpr int Command() { return __cmd__; }																		\
+	static constexpr int Direction() { return __cmd_direction__; }
 
 #define DynamicCmdEnd(__struct__)	};

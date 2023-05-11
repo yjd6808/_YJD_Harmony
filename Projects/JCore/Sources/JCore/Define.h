@@ -10,7 +10,7 @@
 	#define JCoreCounterConcatRedirection(a, b) JCoreCounterConcatRedirectionImpl(a, b)
 	#define JCoreCounterConcatRedirectionImpl(a, b) a##b
 	#define JCoreCounterConcat(a) JCoreCounterConcatRedirection(a, __COUNTER__)
-
+	#define JCorePass do { int JCoreCounterConcat(__pass__); } while(0)
 
 	#ifdef DebugMode
 		#define JCoreInlineHeaderMessage(format, ...)	inline auto JCoreCounterConcat(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()

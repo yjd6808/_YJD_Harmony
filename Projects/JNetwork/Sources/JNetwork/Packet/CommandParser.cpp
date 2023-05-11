@@ -12,14 +12,6 @@ USING_NS_JC;
 
 NS_JNET_BEGIN
 
-void CommandParser::AddCommand(Int16 cmd, Action<Session*, ICommand*> fn) {
-	if (m_CommandActionMap.Exist(cmd)) {
-		DebugAssertMsg(false, "해당 커맨드가 이미 있습니다.");
-		return;
-	}
-
-	m_CommandActionMap.Insert(cmd, fn);
-}
 
 bool CommandParser::RunCommand(Session* session, ICommand* cmd) const {
 	const Int16 uiCmd = cmd->GetCommand();
@@ -30,6 +22,14 @@ bool CommandParser::RunCommand(Session* session, ICommand* cmd) const {
 
 	m_CommandActionMap.Get(uiCmd)(session, cmd);
 	return true;
+}
+
+const char* CommandParser::GetCommandName(Int16 cmd) {
+	if (!m_CommandActionMap.Exist(cmd)) {
+		return "";
+	}
+
+	return m_CommandNameMap.Get(cmd);
 }
 
 NS_JNET_END

@@ -19,9 +19,9 @@ USING_NS_JC;
 USING_NS_JNET;
 
 ListenerCenterServer::ListenerCenterServer() {
-	Parser.AddCommand(CmdItsMe_CS,				R_CENTER::RecvItsMe);
-	Parser.AddCommand(CmdCenterMessage_CS,		R_CENTER::RecvCenterMessage);
-	Parser.AddCommand(CmdNotifyBootState_CS,	R_CENTER::RecvNotifyBootState);
+	Parser.AddCommand<CmdItsMe>(R_CENTER::RecvItsMe);
+	Parser.AddCommand<CmdCenterMessage>(R_CENTER::RecvCenterMessage);
+	Parser.AddCommand<CmdNotifyBootState>(R_CENTER::RecvNotifyBootState);
 }
 
 void ListenerCenterServer::OnStarted() {

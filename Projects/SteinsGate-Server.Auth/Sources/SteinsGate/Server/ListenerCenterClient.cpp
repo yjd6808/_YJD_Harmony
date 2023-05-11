@@ -21,9 +21,9 @@ USING_NS_JC;
 USING_NS_JNET;
 
 ListenerCenterClient::ListenerCenterClient() {
-	Parser.AddCommand(CmdAlreadyConnected_SC,	R_CENTER::RecvAlreadyConnected);
-	Parser.AddCommand(CmdWhoAreYou_SC,			R_CENTER::RecvWhoAreYou);
-	Parser.AddCommand(CmdYouNeedToDoThis_SC,	R_CENTER::RecvYouNeedToDoThis);
+	Parser.AddCommand<CmdAlreadyConnected>	(R_CENTER::RecvAlreadyConnected);
+	Parser.AddCommand<CmdWhoAreYou>			(R_CENTER::RecvWhoAreYou);
+	Parser.AddCommand<CmdYouNeedToDoThis>	(R_CENTER::RecvYouNeedToDoThis);
 		
 }
 

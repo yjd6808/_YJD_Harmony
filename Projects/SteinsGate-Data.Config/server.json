@@ -7,28 +7,28 @@
             "code": 1,
             "name": "로컬 테스트",
             "center": {
-                "bind_center_tcp": "127.0.0.1:10000",
-                "remote_center": "127.0.0.1:10000",
+                "bind_center_tcp": "127.0.0.1:10100",
+                "remote_center": "127.0.0.1:10100",
 
-                "bind_interserver_udp": "127.0.0.1:10000",
+                "bind_interserver_udp": "127.0.0.1:10100",
                 "max_session_count": 50
             },
         
             "auth": {
-                "bind_auth_tcp": "127.0.0.1:10010",
-                "remote_auth": "127.0.0.1:10010",
+                "bind_auth_tcp": "127.0.0.1:10110",
+                "remote_auth": "127.0.0.1:10110",
 
-                "bind_interserver_udp": "127.0.0.1:10010",
-                "bind_center_tcp": "127.0.0.1:10011",
+                "bind_interserver_udp": "127.0.0.1:10110",
+                "bind_center_tcp": "127.0.0.1:10111",
                 "max_session_count": 50
             },
         
             "lobby": {
-                "bind_lobby_tcp": "127.0.0.1:10020",
-                "remote_lobby": "127.0.0.1:10020",
+                "bind_lobby_tcp": "127.0.0.1:10120",
+                "remote_lobby": "127.0.0.1:10120",
 
-                "bind_interserver_udp": "127.0.0.1:10020",
-                "bind_center_tcp": "127.0.0.1:10021",
+                "bind_interserver_udp": "127.0.0.1:10120",
+                "bind_center_tcp": "127.0.0.1:10121",
                 "max_session_count": 50
             },
         
@@ -37,18 +37,18 @@
                 {
                     "code": 1,
                     "name": "루크",
-                    "bind_game_tcp": "127.0.0.1:10030",
-                    "bind_game_udp": "127.0.0.1:10030",
-                    "remote_game": "127.0.0.1:10030",
+                    "bind_game_tcp": "127.0.0.1:10130",
+                    "bind_game_udp": "127.0.0.1:10130",
+                    "remote_game": "127.0.0.1:10130",
 
-                    "bind_town_tcp": "127.0.0.1:10031",
-                    "remote_town": "127.0.0.1:10031",
+                    "bind_town_tcp": "127.0.0.1:10131",
+                    "remote_town": "127.0.0.1:10131",
 
-                    "bind_chat_tcp": "127.0.0.1:10032",
-                    "remote_chat": "127.0.0.1:10032",
+                    "bind_chat_tcp": "127.0.0.1:10132",
+                    "remote_chat": "127.0.0.1:10132",
 
-                    "bind_interserver_udp": "127.0.0.1:10033",
-                    "bind_center_tcp": "127.0.0.1:10033",
+                    "bind_interserver_udp": "127.0.0.1:10133",
+                    "bind_center_tcp": "127.0.0.1:10133",
                     "active": true,
                     "active_channel": [
                         "1 1 200",
@@ -63,18 +63,18 @@
                 {
                     "code": 2,
                     "name": "힐더",
-                    "bind_game_tcp": "127.0.0.1:10040",
-                    "bind_game_udp": "127.0.0.1:10040",
-                    "remote_game": "127.0.0.1:10040",
+                    "bind_game_tcp": "127.0.0.1:10140",
+                    "bind_game_udp": "127.0.0.1:10140",
+                    "remote_game": "127.0.0.1:10140",
 
-                    "bind_town_tcp": "127.0.0.1:10041",
-                    "remote_town": "127.0.0.1:10041",
+                    "bind_town_tcp": "127.0.0.1:10141",
+                    "remote_town": "127.0.0.1:10141",
 
-                    "bind_chat_tcp": "127.0.0.1:10042",
-                    "remote_chat": "127.0.0.1:10042",
+                    "bind_chat_tcp": "127.0.0.1:10142",
+                    "remote_chat": "127.0.0.1:10142",
 
-                    "bind_interserver_udp": "127.0.0.1:10043",
-                    "bind_center_tcp": "127.0.0.1:10043",
+                    "bind_interserver_udp": "127.0.0.1:10143",
+                    "bind_center_tcp": "127.0.0.1:10143",
                     "active": true,
                     "active_channel": [
                         "1 1 500"

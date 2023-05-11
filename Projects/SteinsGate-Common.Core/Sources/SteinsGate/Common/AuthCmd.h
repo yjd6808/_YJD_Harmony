@@ -15,19 +15,34 @@
 
 #include <SteinsGate/Common/Struct.h>
 
-#define CmdLogin_CS						100
-#define CmdLoginAck_SC					101
+// ======================= CMD LIST =======================
+// CmdLogin
+// CmdLoginAck
+// ======================= CMD LIST =======================
 
 #pragma pack(push, CMD_ALIGNMENT)
 
-StaticCmdBegin(CmdLogin, CmdLogin_CS)
+StaticCmdBegin
+	( CmdLogin
+	, 100
+	, eClientToServer
+	)
+// ===========================================
 SGStaticString<AccountIdLen_v> Id;
 SGStaticString<AccountPassLen_v> Pw;
+// ===========================================
 StaticCmdEnd(CmdLogin)
 
-StaticCmdBegin(CmdLoginAck, CmdLoginAck_SC)
+
+StaticCmdBegin
+	( CmdLoginAck
+	, 101
+	, eServerToClient
+	)
+// ===========================================
 bool Success;
 int Result;
+// ===========================================
 StaticCmdEnd(CmdLoginAck)
 
 
