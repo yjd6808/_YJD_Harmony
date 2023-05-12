@@ -121,9 +121,9 @@ union ItemCode
 	inline static constexpr int BitTypeShift = 26;
 
 	inline static constexpr int BitCodeMask = 0x0000ffff;
-	inline static constexpr int BitDetail1Mask = JCore::FillBitRightInt32<22>() & ~0x0000ffff;
-	inline static constexpr int BitDetail2Mask = JCore::FillBitRightInt32<26>() & ~JCore::FillBitRightInt32<22>();
-	inline static constexpr int BitTypeMask = 0xffffffff & JCore::FillBitRightInt32<26>();
+	inline static constexpr int BitDetail1Mask = JCore::FillBitRight32<22>() & ~0x0000ffff;
+	inline static constexpr int BitDetail2Mask = JCore::FillBitRight32<26>() & ~JCore::FillBitRight32<22>();
+	inline static constexpr int BitTypeMask = 0xffffffff & JCore::FillBitRight32<26>();
 
 
 	ItemCode() : Code(InvalidValue_v) {}

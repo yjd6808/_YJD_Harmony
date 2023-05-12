@@ -32,6 +32,7 @@ public:
 
 	virtual void OnLoop(int sleepMs) = 0;
 	virtual ServerType_t GetServerType() = 0;
+	const char* GetServerName() { return ServerType::Name[GetServerType()]; }
 	virtual ServerInfo GetServerInfo() = 0;
 private:
 	JCore::AtomicInt m_eBootState;

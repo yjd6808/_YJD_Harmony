@@ -25,26 +25,27 @@ ListenerCenterServer::ListenerCenterServer() {
 }
 
 void ListenerCenterServer::OnStarted() {
-	_LogInfo_("서버가 시작되었습니다.");
+	ListenerCommonServer::OnStarted();
 }
 
 void ListenerCenterServer::OnConnected(Session* connectedSession) {
+	ListenerCommonServer::OnConnected(connectedSession);
 }
 
 void ListenerCenterServer::OnDisconnected(Session* disconnetedSession) {
+	ListenerCommonServer::OnDisconnected(disconnetedSession);
 	CenterSession* pSession = (CenterSession*)disconnetedSession;
 	CoreServer_v->SetCenterSession(pSession->GetClientType(), nullptr);
 }
 
 void ListenerCenterServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+	ListenerCommonServer::OnSent(sender, sentPacket, sentBytes);
 }
 
 void ListenerCenterServer::OnReceived(Session* receiver, ICommand* cmd) {
-	if (!Parser.RunCommand(receiver, cmd)) {
-		_LogWarn_("커맨드: %d 수행 실패 (Center)", cmd->GetCommand());
-	}
+	ListenerCommonServer::OnReceived(receiver, cmd);
 }
 
 void ListenerCenterServer::OnStopped() {
-	_LogInfo_("서버가 중지되었습니다.");
+	ListenerCommonServer::OnStopped();
 }

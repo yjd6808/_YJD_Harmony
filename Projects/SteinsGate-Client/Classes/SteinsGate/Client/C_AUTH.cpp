@@ -14,6 +14,7 @@
 #include <SteinsGate/Common/AuthCmd.h>
 
 #include <SteinsGate/Client/S_AUTH.h>
+#include <SteinsGate/Client/PopupDefine.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -21,8 +22,11 @@ USING_NS_JNET;
 
 
 void C_AUTH::OnConnected(Session* session) {
-	const AccountData* pAccountData = CorePlayer_v->accountData();
-	S_AUTH::SendLogin(pAccountData->Name.Source, pAccountData->Pass.Source);
+	const AccountData& accountData = CorePlayer_v->accountData();
+	S_AUTH::SendLogin(accountData.Name.Source, accountData.Pass.Source);
+
+	CorePopupManager_v->close(POPUP_LOGIN_WAIT);
+	CorePopupManager_v->showNone("로그인 시도중입니다.", POPUP_LOGIN);
 }
 
 void C_AUTH::OnConnectFailed(Session* session, Int32U errorCode) {

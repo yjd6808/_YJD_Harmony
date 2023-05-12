@@ -24,8 +24,8 @@ public:
 	Session(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator, int recvBufferSize, int sendBufferSize);
 	virtual ~Session();
 
-	IPv4EndPoint GetLocalEndPoint() const { return m_LocalEndPoint; }
-	IPv4EndPoint GetRemoteEndPoint() const { return m_RemoteEndPoint; }
+	const IPv4EndPoint& GetLocalEndPoint() const { return m_LocalEndPoint; }
+	const IPv4EndPoint& GetRemoteEndPoint() const { return m_RemoteEndPoint; }
 	CommandBufferPtr GetRecvBuffer() { return m_spRecvBuffer; }
 	CommandBufferPtr GetSendBuffer() { return m_spSendBuffer; }
 	JCore::MemoryPoolAbstractPtr GetBufferAllocator() { return m_spBufferAllocator; }

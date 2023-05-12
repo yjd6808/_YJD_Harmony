@@ -742,7 +742,7 @@ float Density[Max]{
 	100.0f
 };
 
-inline static const char* Name[Max]{
+static constexpr const char* Name[Max]{
 	"쾌적",
 	"보통",
 	"혼잡",
@@ -793,4 +793,15 @@ Area,
 Center,
 End = Center,
 Max
-SEnumEnd(ServerType)
+SEnumMiddle(ServerType)
+
+static constexpr const char* Name[Max]{
+	"인증",
+	"로비",
+	"게임",
+	"채팅",
+	"지역",
+	"중앙"
+};
+
+SEnumMiddleEnd(ServerType)

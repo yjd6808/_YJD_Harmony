@@ -7,6 +7,9 @@
 
 #include "Tutturu.h"
 #include "Inven.h"
+
+#include <bitset>
+
 #include "GameCoreHeader.h"
 
 #include <SteinsGate/Client/DataManager.h>
@@ -38,7 +41,7 @@ WeaponType_t Inven::getWeaponType() {
 	if (pItemWeapon == nullptr) {
 		return CorePlayer_v->getBaseInfo()->DefaultWeaponType;
 	}
-
+	std::bitset<128> g;
 	return pItemWeapon->Code.WeaponUn.WeaponType;
 }
 

@@ -16,5 +16,5 @@ ListenerInterServerClient::ListenerInterServerClient() {
 }
 
 void ListenerInterServerClient::OnReceived(SGSession* ssession, JNetwork::ICommand* cmd) {
-
+	ListenerCommonClient::OnReceived(ssession, cmd);
 }

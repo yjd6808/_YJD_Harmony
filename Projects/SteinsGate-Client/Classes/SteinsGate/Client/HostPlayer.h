@@ -45,7 +45,7 @@ public:
 
 	ActionMgr* actionManager();
 	PlayerController* ctrl();
-	AccountData* accountData() { return &m_AccountData; }
+	AccountData& accountData() { return m_AccountData; }
 
 private:
 	AccountData m_AccountData;

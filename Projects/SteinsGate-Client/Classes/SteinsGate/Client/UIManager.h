@@ -23,6 +23,12 @@
 
 struct DragState
 {
+	DragState()
+		: HostElement(nullptr)
+		, TargetElement(nullptr)
+		, Dragging(false)
+	{}
+
 	UIElement* HostElement;			// 드래그 주체
 	UIElement* TargetElement;		// 실제로 드래깅될 대상
 	SGVec2 StartElementPosition;
@@ -31,6 +37,11 @@ struct DragState
 	bool Dragging;
 };
 
+class UI_Inventory;
+class UI_Login;
+class UI_Popup;
+class UI_Test;
+
 class UIManager final : public JCore::SingletonPointer<UIManager>
 {
 private:
@@ -38,10 +49,8 @@ private:
 	UIManager();
 	~UIManager() override;
 public:
-
-
-
 	void init();
+	void initPublic();
 	void registerMasterGroup(UIMasterGroup* group);
 	void registerLoadedUITexture(SgaResourceIndex index);
 	void unloadAll();
@@ -69,6 +78,10 @@ public:
 	UIScrollBar* getScrollBar(int scrollBarCode) { return getElementTemplated<UIScrollBar>(scrollBarCode); }
 	UIStatic* getStatic(int staticCode) { return getElementTemplated<UIStatic>(staticCode); }
 
+	UI_Inventory* Inventory;
+	UI_Login* Login;
+	UI_Popup* Popup;
+	UI_Test* Test;
 private:
 	template <typename TElement>
 	TElement* getElementTemplated(int code) {

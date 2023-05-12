@@ -34,6 +34,11 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonClient.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnection.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h" />
@@ -64,6 +69,8 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonClient.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonServer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnection.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp" />

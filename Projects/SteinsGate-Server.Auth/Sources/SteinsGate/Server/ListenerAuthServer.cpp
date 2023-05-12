@@ -22,26 +22,27 @@ ListenerAuthServer::ListenerAuthServer() {
 }
 
 void ListenerAuthServer::OnStarted() {
-	_LogInfo_("서버가 시작되었습니다.");
+	ListenerCommonServer::OnStarted();
 }
 
 void ListenerAuthServer::OnConnected(Session* connectedSession) {
+	ListenerCommonServer::OnConnected(connectedSession);
 }
 
 void ListenerAuthServer::OnDisconnected(Session* disconnetedSession) {
+	ListenerCommonServer::OnDisconnected(disconnetedSession);
 }
 
 void ListenerAuthServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+	ListenerCommonServer::OnSent(sender, sentPacket, sentBytes);
 }
 
 void ListenerAuthServer::OnReceived(Session* receiver, ICommand* cmd) {
-	if (!Parser.RunCommand(receiver, cmd)) {
-		_LogWarn_("커맨드: %d 수행 실패 (Auth)", cmd->GetCommand());
-	}
+	ListenerCommonServer::OnReceived(receiver, cmd);
 }
 
 void ListenerAuthServer::OnStopped() {
-	_LogInfo_("서버가 중지되었습니다.");
+	ListenerCommonServer::OnStopped();
 }
 
 

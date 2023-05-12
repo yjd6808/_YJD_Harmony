@@ -19,9 +19,15 @@ class PopupManager : public JCore::SingletonPointer<PopupManager>
 public:
 	void setWidth(float width);
 	void setPadding(float padding);
-	void showYesNo(const std::string& text, const SGActionFn<>& yes = nullptr, const SGActionFn<>& no = nullptr);
-	void showOk(const std::string& text, const SGActionFn<>& ok = nullptr);
-	void close(UI_Popup* popup);
+	UI_Popup* showYesNo(const std::string& text, const SGActionFn<>& yes = nullptr, const SGActionFn<>& no = nullptr);
+	UI_Popup* showYesNo(const std::string& text, int tag, const SGActionFn<>& yes = nullptr, const SGActionFn<>& no = nullptr);
+	UI_Popup* showOk(const std::string& text, const SGActionFn<>& ok = nullptr);
+	UI_Popup* showOk(const std::string& text, int tag, const SGActionFn<>& ok = nullptr);
+	UI_Popup* showNone(const std::string& text, int tag, HAlignment_t halign = HAlignment::Center, VAlignment_t valign = VAlignment::Center);
+	bool close(UI_Popup* popup);
+	bool close(int tag);
+	UI_Popup* findByTag(int tag);
+	int closeAll();
 	void releaseAll();
 
 	float getWidth() const { return m_fWidth; }

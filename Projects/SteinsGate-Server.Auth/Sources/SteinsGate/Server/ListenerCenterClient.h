@@ -8,20 +8,17 @@
 
 #pragma once
 
-#include <JNetwork/EventListener/ClientEventListener.h>
-#include <JNetwork/Packet/CommandParser.h>
+#include <SteinsGate/Common/ListenerCommonClient.h>
 
-class ListenerCenterClient : public JNetwork::ClientEventListener
+class ListenerCenterClient : public ListenerCommonClient
 {
+public:
+	ListenerCenterClient();
 protected:
 	void OnConnected(SGSession* session) override;
 	void OnDisconnected(SGSession* session) override;
 	void OnSent(SGSession* sessionm, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(SGSession* session, JNetwork::ICommand* cmd) override;
 	void OnConnectFailed(SGSession* session, Int32U errorCode) override;
-public:
-	ListenerCenterClient();
-
-	JNetwork::CommandParser Parser;
 };
 

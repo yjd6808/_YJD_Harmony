@@ -8,15 +8,12 @@
 
 #pragma once
 
-#include <JNetwork/EventListener/ClientEventListener.h>
-#include <JNetwork/Packet/CommandParser.h>
+#include <SteinsGate/Common/ListenerCommonClient.h>
 
-class ListenerInterServerClient : public JNetwork::ClientEventListener
+class ListenerInterServerClient : public ListenerCommonClient
 {
 public:
 	ListenerInterServerClient();
 protected:
 	void OnReceived(SGSession* ssession, JNetwork::ICommand* cmd) override;
-private:
-	JNetwork::CommandParser m_Parser;
 };

@@ -30,6 +30,7 @@ UI_Popup* PopupManager::createPopup() {
 	DebugAssertMsg(pInfo->Type == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
 	UIMasterGroup* popup = dbg_new UI_Popup(static_cast<UIGroupInfo*>(pInfo));
 	popup->autorelease();
+	popup->setTag(InvalidValue_v);
 	popup->init();
 	popup->initChildren();
 	popup->onInit();
@@ -63,7 +64,7 @@ UI_Popup* PopupManager::pop() {
 	return popup;
 }
 
-void PopupManager::showYesNo(const std::string& text, const SGActionFn<>& yes, const SGActionFn<>& no) {
+UI_Popup* PopupManager::showYesNo(const std::string& text, const SGActionFn<>& yes, const SGActionFn<>& no) {
 	UI_Popup* popup = pop();
 	popup->setText(text);
 	popup->setType(UI_Popup::Type::eYesNo);
@@ -72,9 +73,23 @@ void PopupManager::showYesNo(const std::string& text, const SGActionFn<>& yes, c
 	popup->adjust();
 	CoreWorld_v->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);
+	return popup;
 }
 
-void PopupManager::showOk(const std::string& text, const SGActionFn<>& ok) {
+UI_Popup* PopupManager::showYesNo(const std::string& text, int tag, const SGActionFn<>& yes, const SGActionFn<>& no) {
+	UI_Popup* popup = pop();
+	popup->setTag(tag);
+	popup->setText(text);
+	popup->setType(UI_Popup::Type::eYesNo);
+	popup->setYesCallback(yes);
+	popup->setNoCallback(no);
+	popup->adjust();
+	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	m_vOpendList.PushBack(popup);
+	return popup;
+}
+
+UI_Popup* PopupManager::showOk(const std::string& text, const SGActionFn<>& ok) {
 	UI_Popup* popup = pop();
 	popup->setText(text);
 	popup->setType(UI_Popup::Type::eOk);
@@ -82,18 +97,74 @@ void PopupManager::showOk(const std::string& text, const SGActionFn<>& ok) {
 	popup->adjust();
 	CoreWorld_v->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);
+	return popup;
 }
 
-void PopupManager::close(UI_Popup* popup) {
+UI_Popup* PopupManager::showOk(const std::string& text, int tag, const SGActionFn<>& ok) {
+	UI_Popup* popup = pop();
+	popup->setTag(tag);
+	popup->setText(text);
+	popup->setType(UI_Popup::Type::eOk);
+	popup->setOkCallback(ok);
+	popup->adjust();
+	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	m_vOpendList.PushBack(popup);
+	return popup;
+}
+
+UI_Popup* PopupManager::showNone(const std::string& text, int tag, HAlignment_t halign, VAlignment_t valign) {
+	UI_Popup* popup = pop();
+	popup->setTextHAlign(halign);
+	popup->setTextVAlign(valign);
+	popup->setTag(tag);
+	popup->setText(text);
+	popup->setType(UI_Popup::Type::eNone);
+	popup->adjust();
+	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	m_vOpendList.PushBack(popup);
+	return popup;
+}
+
+bool PopupManager::close(UI_Popup* popup) {
 
 	if (popup->isClosed()) {
-		return;
+		return false;
 	}
 
 	popup->setClosed(true);
 	CoreWorld_v->getUILayer()->removeUIGroup(popup);
 	m_qPopupPool.Enqueue(popup);
-	m_vOpendList.Remove(popup);
+	return m_vOpendList.Remove(popup);
+}
+
+bool PopupManager::close(int tag) {
+	UI_Popup** pFind = m_vOpendList.Extension().FindIf([tag](UI_Popup* popup) { return popup->getTag() == tag; });
+
+	if (pFind == nullptr) {
+		return false;
+	}
+
+	return close(*pFind);
+}
+
+UI_Popup* PopupManager::findByTag(int tag) {
+	for (int i = 0; i < m_vOpendList.Size(); ++i) {
+		if (m_vOpendList[i]->getTag() == tag) {
+			return m_vOpendList[i];
+		}
+	}
+	return nullptr;
+}
+
+int PopupManager::closeAll() {
+	int iClosedCount = 0;
+	for (int i = 0; i < m_vOpendList.Size(); ++i) {
+		if (close(m_vOpendList[i])) {
+			--i;
+			++iClosedCount;
+		}
+	}
+	return iClosedCount;
 }
 
 void PopupManager::releaseAll() {

@@ -24,29 +24,27 @@ ListenerCenterClient::ListenerCenterClient() {
 	Parser.AddCommand<CmdAlreadyConnected>	(R_CENTER::RecvAlreadyConnected);
 	Parser.AddCommand<CmdWhoAreYou>			(R_CENTER::RecvWhoAreYou);
 	Parser.AddCommand<CmdYouNeedToDoThis>	(R_CENTER::RecvYouNeedToDoThis);
-		
 }
 
 void ListenerCenterClient::OnConnected(SGSession* session) {
-	_LogInfo_("중앙 서버에 성공적으로 접속하였습니다.");
+	ListenerCommonClient::OnConnected(session);
+
 	S_CENTER::SetInformation(CoreCenterClient_v, eSendAsync);
 	S_CENTER::SendItsMe(CenterClientType::Auth);
 }
 
 void ListenerCenterClient::OnDisconnected(SGSession* session) {
-	_LogInfo_("중앙 서버와 연결이 끊어졌습니다.");
+	ListenerCommonClient::OnDisconnected(session);
 }
 
 void ListenerCenterClient::OnSent(SGSession* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
-
+	ListenerCommonClient::OnSent(session, sentPacket, sentBytes);
 }
 
 void ListenerCenterClient::OnReceived(SGSession* session, JNetwork::ICommand* cmd) {
-	if (!Parser.RunCommand(session, cmd)) {
-		_LogWarn_("커맨드: %d 수행 실패 (Center)", cmd->GetCommand());
-	}
+	ListenerCommonClient::OnReceived(session, cmd);
 }
 
 void ListenerCenterClient::OnConnectFailed(SGSession* session, Int32U errorCode) {
-	_LogDebug_("중앙 서버접속에 실패했습니다. (%u)", errorCode);
+	ListenerCommonClient::OnConnectFailed(session, errorCode);
 }

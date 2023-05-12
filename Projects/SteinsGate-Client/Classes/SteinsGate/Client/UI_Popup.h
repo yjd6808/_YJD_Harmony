@@ -10,6 +10,8 @@
 
 #include <SteinsGate/Client/UIMasterGroup.h>
 
+
+
 class UI_Popup : public UIMasterGroup
 {
 public:
@@ -17,9 +19,24 @@ public:
 
 	enum class Type
 	{
+		eNone,
 		eYesNo,
 		eOk
 	};
+
+
+	// 팝업이 여러 속성을 가질 수도 있지 않을까 해서 일단 둠
+	enum Attribute
+	{
+		eMessaging			= 0b00000001,
+		eCanCloseWithEsc	= 0b00000010,
+		eElse1				= 0b00000100,
+		eElse2				= 0b00001000,
+		eAll = eMessaging
+	};
+
+
+
 protected:
 	void onInit() override;
 	void onLoaded() override;
@@ -34,6 +51,15 @@ protected:
 public:
 	void setType(Type type);
 	Type getType() const { return m_eType; }
+
+	void setAttribute(Attribute attr) { m_iAttribute = attr; }
+	void setTextHAlign(HAlignment_t halign) { m_pLabelText->setHAlignment(halign); }
+	void setTextVAlign(VAlignment_t valign) { m_pLabelText->setVAlignment(valign); }
+	void addAttribute(Attribute attr) { m_iAttribute |= attr; }
+	void removeAttribute(Attribute attr) { m_iAttribute &= ~attr; }
+	bool hasAttribute(Attribute attr) { return (m_iAttribute & attr) == attr; }
+	int getAttribute() const { return m_iAttribute; }
+
 	void setText(const std::string& text);
 	void setYesCallback(const SGActionFn<>& fnYes);
 	void setNoCallback(const SGActionFn<>& fnNo);
@@ -42,6 +68,7 @@ public:
 	bool isClosed() const { return m_bClosed; }
 	void close();
 	void adjust();
+
 private:
 
 	// #define UI_POPUP_GROUP_HOLDER
@@ -63,6 +90,7 @@ private:
 	// =========================================
 
 	Type m_eType;
+	int m_iAttribute;
 	bool m_bClosed;
 
 	SGActionFn<> m_fnYes;

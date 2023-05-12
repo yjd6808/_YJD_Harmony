@@ -13,6 +13,12 @@
 #include <SteinsGate/Client/UIGroup.h>
 #include <SteinsGate/Client/UIMasterGroup.h>
 
+#include <SteinsGate/Client/UIDefine.h>
+
+#include <SteinsGate/Client/UI_Inventory.h>
+#include <SteinsGate/Client/UI_Login.h>
+#include <SteinsGate/Client/UI_Popup.h>
+#include <SteinsGate/Client/UI_Test.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -23,7 +29,12 @@ UIManager::UIManager()
 	, m_hLoadedUITexture(1024) // 창을 64개까지 만들일이 있을려나 ㅋㅋ
 	, m_hUIElements(512)
 	, m_hMasterUIGroups(64)
-{}
+{
+	Inventory = nullptr;
+	Login = nullptr;
+	Popup = nullptr;
+	Test = nullptr;
+}
 
 UIManager::~UIManager() {
 
@@ -46,7 +57,10 @@ void UIManager::init() {
 	m_pMaster = UIGroupMaster::createRetain();
 	m_pMaster->forEach([this](UIMasterGroup* pMasterGroup) { registerMasterGroup(pMasterGroup); });
 	m_pMaster->forEach([this](UIMasterGroup* pMasterGroup) { pMasterGroup->onInit(); });
+
+	initPublic();
 }
+
 
 void UIManager::registerMasterGroup(UIMasterGroup* group) {
 	m_hUIElements.Insert(group->getCode(), group);
@@ -144,5 +158,12 @@ UIElement* UIManager::getElement(int elementCode) {
 	}
 
 	return m_hUIElements[elementCode];
+}
+
+void UIManager::initPublic() {
+	Login				= (UI_Login*)getMasterGroup(GROUP_UI_LOGIN);
+	Inventory			= (UI_Inventory*)getMasterGroup(GROUP_UI_INVENTORY);
+	Popup				= nullptr;		// 팝업 매니저에서 관리
+	Test				= (UI_Test*)getMasterGroup(GROUP_UI_TEST);
 }
 

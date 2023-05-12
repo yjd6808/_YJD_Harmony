@@ -901,5 +901,8 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\C_LOBBY.h">
       <Filter>Net\Connection</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\PopupDefine.h">
+      <Filter>Define</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

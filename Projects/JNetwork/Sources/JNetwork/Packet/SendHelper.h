@@ -26,7 +26,7 @@ template <typename>
 struct SendHelper;
 
 template <typename T, typename TCommand>
-struct Sending : JCore::NonCopyableButMovable
+struct Sending : JCore::NonCopyable
 {
 	Sending(TCommand& cmd, ISendPacket* packet)
 		: Cmd(cmd)

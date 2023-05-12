@@ -47,6 +47,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonServer.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonClient.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
@@ -85,6 +91,12 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonServer.cpp">
       <Filter>Net</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonServer.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonClient.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Database">
@@ -104,6 +116,9 @@
     </Filter>
     <Filter Include="Net\Cmd">
       <UniqueIdentifier>{26966038-820f-486e-9eab-255c8f6394ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Listener">
+      <UniqueIdentifier>{c33adf12-f613-4b94-95f7-fdd3446da358}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

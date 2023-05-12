@@ -8,10 +8,12 @@
 
 #pragma once
 
-#include <JNetwork/EventListener/ServerEventListener.h>
+#include <SteinsGate/Common/ListenerCommonServer.h>
 
-class ListenerAuthServer : public JNetwork::ServerEventListener
+class ListenerAuthServer : public ListenerCommonServer
 {
+public:
+	ListenerAuthServer();
 protected:
 	void OnStarted() override;
 	void OnConnected(JNetwork::Session* connectedSession) override;
@@ -19,8 +21,4 @@ protected:
 	void OnSent(JNetwork::Session* sender, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* receiver, JNetwork::ICommand* cmd) override;
 	void OnStopped() override;
-public:
-	ListenerAuthServer();
-
-	JNetwork::CommandParser Parser;
 };

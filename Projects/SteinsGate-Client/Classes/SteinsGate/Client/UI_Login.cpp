@@ -11,6 +11,7 @@
 #include "UI_Login.h"
 
 #include <SteinsGate/Client/UIDefine.h>
+#include <SteinsGate/Client/PopupDefine.h>
 #include <SteinsGate/Client/S_AUTH.h>
 
 USING_NS_CC;
@@ -145,13 +146,16 @@ void UI_Login::login() {
 
 	// TODO: 벨리데이터 구현
 
-	AccountData* pData = CorePlayer_v->accountData();
-	pData->Name.SetStringUnsafe(m_pEbId->getText());
-	pData->Name.SetStringUnsafe(m_pEbPass->getText());
+	AccountData& pData = CorePlayer_v->accountData();
+	pData.Name.SetStringUnsafe(m_pEbId->getText());
+	pData.Pass.SetStringUnsafe(m_pEbPass->getText());
 
 	if (!CoreNet_v->connectAuthTcp()) {
 		CorePopupManager_v->showOk("서버 접속에 실패했습니다.");
+		return;
 	}
+
+	CorePopupManager_v->showNone("인증서버에 접속중입니다.", POPUP_LOGIN_WAIT);
 }
 
 
