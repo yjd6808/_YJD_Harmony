@@ -20,6 +20,6 @@ public:
 	ConfigFileType_t getConfigFileType() override { return  ConfigFileType::Projectile; }
 	bool load() override;
 private:
-	static void readOverridedProjectileInfo(Json::Value& projectileRoot, Out_ ProjectileInfo* projectileInfo);
-	static void readProjectileInfo(Json::Value& projectileRoot, Out_ ProjectileInfo* projectileInfo);
+	static void readOverridedProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo);
+	static void readProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo);
 };

@@ -20,7 +20,7 @@ public:
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Client; }
 
-	static void readClientInfo(Json::Value& clientRoot, Out_ ClientInfo* clientInfo);
+	static void readClientInfo(Json::Value& clientRoot, JCORE_OUT ClientInfo* clientInfo);
 };
 
 

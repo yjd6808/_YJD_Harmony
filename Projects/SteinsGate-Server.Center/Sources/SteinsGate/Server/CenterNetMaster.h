@@ -24,7 +24,7 @@ public:
 	CenterClientType_t GetClientType() override { return CenterClientType::None; }
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Center; }
 protected:
-	void OnLoop(int sleepMs) override;
+	void OnLoop(JCore::PulserStatistics* pulserStat) override;
 	void OnCapturedInputEvent(int inputEvent) override;
 	void OnStopped() override;
 };

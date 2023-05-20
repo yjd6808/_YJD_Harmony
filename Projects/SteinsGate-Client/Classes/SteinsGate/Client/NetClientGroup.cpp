@@ -130,7 +130,7 @@ void NetClientGroup::Finalize() {
 
 	// 리스너는 호스트에 의존성이있으므로.. 호스트들을 먼저 제거후 수행해줘야한다.
 	for (int i = 0; i < ClientConnectServerType::Max; ++i) {
-		DeleteSafe(m_Listeners[i]);
+		JCORE_DELETE_SAFE(m_Listeners[i]);
 	}
 }
 

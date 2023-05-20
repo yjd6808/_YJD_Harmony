@@ -24,8 +24,8 @@ ConsoleLoggerOption NetLoggerOption_v = [] {
 	return option;
 }();
 
-int main() {
 
+int main() {
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
 	InitializeNetLogger(&NetLoggerOption_v);

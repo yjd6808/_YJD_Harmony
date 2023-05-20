@@ -49,8 +49,8 @@ void NetCore::Initialize() {
 void NetCore::Finalize() {
 	NetMaster::Finalize();
 
-	DeleteSingletonSafe(m_pCommandSynchronizer);
-	DeleteSingletonSafe(m_pConnectionSynchronizer);
+	JCORE_DELETE_SINGLETON_SAFE(m_pCommandSynchronizer);
+	JCORE_DELETE_SINGLETON_SAFE(m_pConnectionSynchronizer);
 
 }
 

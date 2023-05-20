@@ -20,7 +20,7 @@ public:
 
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Tile; }
-	static void readTileInfo(Json::Value& tileRoot, Out_ TileInfo* tileInfo);
+	static void readTileInfo(Json::Value& tileRoot, JCORE_OUT TileInfo* tileInfo);
 };
 
 

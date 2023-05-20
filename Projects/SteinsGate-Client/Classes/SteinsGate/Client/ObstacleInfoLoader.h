@@ -23,7 +23,7 @@ public:
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Obstacle; }
 
-	static void readObstacleInfo(Json::Value& obstacleRoot, Out_ ObstacleInfo* obstacleInfo);
+	static void readObstacleInfo(Json::Value& obstacleRoot, JCORE_OUT ObstacleInfo* obstacleInfo);
 };
 
 

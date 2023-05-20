@@ -21,22 +21,23 @@ CommonNetMaster::CommonNetMaster()
 
 
 void CommonNetMaster::ProcessMainLoop() {
-	Pulser pulser(m_iPulseInterval);
+
+	PulserStatistics pulseStat;
+	Pulser pulser(m_iPulseInterval, &pulseStat);
 
 	while (m_bRunning) {
-		const int iPulseIntervalCount = pulser.Wait();
-		const int iSleepMs = m_iPulseInterval * iPulseIntervalCount;
+		pulser.Wait();
 
 		ProcessInputEvent();
-		ProcessSubLoop(iSleepMs);
-		OnLoop(iSleepMs);
+		ProcessSubLoop(&pulseStat);
+		OnLoop(&pulseStat);
 	}
 
 	OnStopped();
 }
 
-void CommonNetMaster::ProcessSubLoop(int sleepMs) {
-	CoreCommonNetGroup_v->ProcessLoop(sleepMs);
+void CommonNetMaster::ProcessSubLoop(PulserStatistics* pulseStat) {
+	CoreCommonNetGroup_v->ProcessLoop(pulseStat);
 }
 
 void CommonNetMaster::ProcessInputEvent() {

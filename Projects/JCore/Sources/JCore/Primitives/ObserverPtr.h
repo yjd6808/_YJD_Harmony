@@ -80,7 +80,7 @@ protected:
 		}
 
 		if (!m_bNoDelete) {
-			DeleteSafe(m_pPointer);
+			JCORE_DELETE_SAFE(m_pPointer);
 		}
 
 		m_pPointer = nullptr;
@@ -88,7 +88,7 @@ protected:
 		m_pCounter->Counter--;
 
 		if (m_pCounter->Counter == 0) {
-			DeleteSafe(m_pCounter);
+			JCORE_DELETE_SAFE(m_pCounter);
 		}
 	}
 
@@ -99,7 +99,7 @@ protected:
 
 		m_pCounter->Counter--;
 		if (m_pCounter->Counter == 0) {
-			DeleteSafe(m_pCounter);
+			JCORE_DELETE_SAFE(m_pCounter);
 		}
 	}
 
@@ -335,7 +335,7 @@ protected:
 		if (m_bMaked) {
 			m_pCounter->DestroyObject();
 		} else {
-			DeleteSafe(m_pPointer);
+			JCORE_DELETE_SAFE(m_pPointer);
 		}
 		
 		m_pCounter->Alive = false;
@@ -349,7 +349,7 @@ protected:
 
 		m_pCounter->Counter--;
 		if (m_pCounter->Counter == 0) {
-			DeleteSafe(m_pCounter);
+			JCORE_DELETE_SAFE(m_pCounter);
 		}
 	}
 

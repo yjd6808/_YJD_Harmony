@@ -34,7 +34,7 @@ public:
 
 	void SetStartupLaunching(bool startupLaunching) { m_bStartupLaunching = startupLaunching; }
 	bool IsStartupLaunching() { return m_bStartupLaunching; }
-	void OnLoop(int sleepMs) override;
+	void OnLoop(JCore::PulserStatistics* pulserStat) override;
 private:
 	JCore::Atomic<CenterSession*> m_pSession[CenterClientType::Max];
 	bool m_bStartupLaunching;	// 모든 서버세션들이 접속완료되어서 서버 시작명령을 내렸는지 여부

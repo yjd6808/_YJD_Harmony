@@ -149,7 +149,7 @@ public:
 		}
 	}
 
-	TResult& Wait(int timeout = JCoreInfinite) {
+	TResult& Wait(int timeout = JCORE_INFINITE) {
 
 		if (m_eState >= IOCPTaskState::eReady)
 			return *m_spResult;

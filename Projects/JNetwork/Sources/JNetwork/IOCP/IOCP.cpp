@@ -46,7 +46,7 @@ void IOCP::Destroy() {
 		m_hIOCP = INVALID_HANDLE_VALUE;
 	}
 
-	DeleteSafe(m_pWorkerManager);
+	JCORE_DELETE_SAFE(m_pWorkerManager);
 	m_eState = State::eDestroyed;
 }
 

@@ -3,23 +3,17 @@
     #define __JCORE_DEFINE_H__
 
 	// https://stackoverflow.com/questions/8487986/file-macro-shows-full-path
-	#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
-
-
-	// __COUNTER__매크로는 리다이렉션 한번 필요하다캄
-	#define JCoreCounterConcatRedirection(a, b) JCoreCounterConcatRedirectionImpl(a, b)
-	#define JCoreCounterConcatRedirectionImpl(a, b) a##b
-	#define JCoreCounterConcat(a) JCoreCounterConcatRedirection(a, __COUNTER__)
-	#define JCorePass do { int JCoreCounterConcat(__pass__); } while(0)
+	#define JCORE_FILENAME (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+	#define JCORE_PASS do { int JCORE_CONCAT_COUNTER(__pass__); } while(0)
 
 	#ifdef DebugMode
-		#define JCoreInlineHeaderMessage(format, ...)	inline auto JCoreCounterConcat(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
-		#define JCoreInlineClassMessage(format, ...)	inline static auto JCoreCounterConcat(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
-		#define JCoreInlineReturnMessage(type, value, format, ...)	[]()->type { Console::WriteLine(format, __VA_ARGS__); return value; }()
+		#define JCORE_INLINE_HEADER_MESSAGE(format, ...) inline auto JCORE_CONCAT_COUNTER(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
+		#define JCORE_INLINE_CLASS_MESSAGE(format, ...)	inline static auto JCORE_CONCAT_COUNTER(_) = [] { return Console::WriteLine(format, __VA_ARGS__); }()
+		#define JCORE_INLINE_RETURN_MESSAGE(type, value, format, ...) []()->type { Console::WriteLine(format, __VA_ARGS__); return value; }()
 	#else
-		#define JCoreInlineHeaderMessage(format) 
-		#define JCoreInlineClassMessage(format) 
-		#define JCoreInlineReturnMessage(type, value, format, ...)	value
+		#define JCORE_INLINE_HEADER_MESSAGE(format) 
+		#define JCORE_INLINE_CLASS_MESSAGE(format) 
+		#define JCORE_INLINE_RETURN_MESSAGE(type, value, format, ...)	value
 	#endif
 	/* !! 주의해서 쓸 것 !!
 	 * 헤더파일에서 사용시 멀티플 TU에서 정의되지 않도록 JCoreInlineHeaderMessage를 사용하고
@@ -44,16 +38,16 @@
 	 */
 
 
-    #define JCoreStdCall        __stdcall
-    #define JCoreCdecl          __cdecl
-    #define JCoreForceInline    __forceinline
-    #define JCoreInfinite       0xffffffff
+    #define JCORE_STDCALL        __stdcall
+    #define JCORE_CDECL          __cdecl
+    #define JCORE_FORCEINLINE    __forceinline
+    #define JCORE_INFINITE       0xffffffff
 
-    #define Null(x	)			\
-    do {						\
-        (x) = nullptr;			\
+    #define JCORE_MAKE_NULL(x	)		\
+    do {								\
+        (x) = nullptr;					\
     } while (0)
-    #define DeleteSafe(x)		\
+    #define JCORE_DELETE_SAFE(x)		\
     do {						\
 	    if (x) {				\
 		    delete (x);			\
@@ -61,7 +55,7 @@
 	    }						\
     } while (0)
 
-	#define DeleteSingletonSafe(x)	\
+	#define JCORE_DELETE_SINGLETON_SAFE(x)	\
     do {							\
 	    if (x) {					\
 		    x->Free();				\
@@ -69,7 +63,7 @@
 	    }							\
     } while (0)
 
-    #define DeleteArraySafe(x)	\
+    #define JCORE_DELETE_ARRAY_SAFE(x)	\
     do {						\
 	    if (x) {				\
 		    delete[] (x);		\
@@ -77,15 +71,15 @@
 	    }						\
     } while (0)		
 
-	#define AllocatorStaticDeallocateSafe(type, ptr)		\
-    do {													\
-	    if ((ptr)) {										\
-		    TAllocator::template Deallocate<type>(ptr);		\
-			(ptr) = nullptr;		  						\
-	    }													\
+	#define JCORE_ALLOCATOR_STATIC_DEALLOCATE_SAFE(type, ptr)		\
+    do {															\
+	    if ((ptr)) {												\
+		    TAllocator::template Deallocate<type>(ptr);				\
+			(ptr) = nullptr;		  								\
+	    }															\
     } while (0)		
 
-	#define AllocatorDynamicDeallocateSafe(ptr, size)		\
+	#define JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(ptr, size)		\
 	do {													\
 	    if ((ptr)) {										\
 		    TAllocator::Deallocate((ptr), (size));			\
@@ -94,22 +88,22 @@
     } while (0)		
 
 
-	#define	PlacementDeleteArraySafe(arr, size)				\
+	#define	JCORE_PLACEMENT_DELETE_ARRAY_SAFE(arr, size)				\
 	do {													\
 	    if ((arr)) {										\
 		    Memory::PlacementDeleteArray((arr), (size));	\
 	    }													\
     } while (0)	
 	
-	#define LeakCheckAssert		JCore::AutoMemoryLeakDetector JCoreCounterConcat(_) {[](Int32U leakedBytes ) { DebugAssertMsg(leakedBytes == 0, "%ul 바이트 메모리 릭이 있습니다.", leakedBytes); }}
-	#define DefaultCodePage		JCore::CodePage::UTF8
+	#define JCORE_LEAK_CHECK_ASSERT		JCore::AutoMemoryLeakDetector JCoreCounterConcat(_) {[](Int32U leakedBytes ) { DebugAssertMsg(leakedBytes == 0, "%ul 바이트 메모리 릭이 있습니다.", leakedBytes); }}
+	#define JCORE_DEFAULT_CODE_PAGE		JCore::CodePage::UTF8
 
-    #define In_
-    #define Out_
-	#define OutOpt_
-    #define InOut_
-    #define InOpt_
+    #define JCORE_IN
+    #define JCORE_OUT
+	#define JCORE_OUT_OPT
+    #define JCORE_IN_OUT
+    #define JCORE_IN_OPT
 	
-	#define JCoreSwap(val1, val2, type) do { type temp = val1; val1 = val2; val2 = temp; } while (0)
+	#define JCORE_SWAP(val1, val2, type) do { type temp = val1; val1 = val2; val2 = temp; } while (0)
 
 #endif

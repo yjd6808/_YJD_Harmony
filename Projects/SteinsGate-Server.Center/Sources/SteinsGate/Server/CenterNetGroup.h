@@ -25,7 +25,7 @@ protected:
 	void InitializeServer() override;
 	void InitializeCenterClient() override;
 	void InitializeInterServerClient() override;
-	void OnLoop(int sleepMs) override;
+	void OnLoop(JCore::PulserStatistics* pulserStat) override;
 private:
 	ListenerCenterServer m_CenterServerEventListener;
 	ListenerInterServerClient m_InterServerEventListener;

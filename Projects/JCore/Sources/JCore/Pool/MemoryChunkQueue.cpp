@@ -24,7 +24,7 @@ MemoryChunckQueue::~MemoryChunckQueue() {
 	DebugAssertMsg(FreeCount() == m_iTotalChunkCount, "모도테코나이 메모리 청크가 있습니다.");
 
 	while (!m_ChunkQueue.IsEmpty()) {
-		DeleteArraySafe(m_ChunkQueue.Top());
+		JCORE_DELETE_ARRAY_SAFE(m_ChunkQueue.Top());
 		m_ChunkQueue.Pop();
 	}
 }
@@ -36,7 +36,7 @@ void MemoryChunckQueue::Push(void* chunk) {
 	DebugAssertMsg(iFreeCount <= m_iTotalChunkCount, "알 수 없는 메모리가 스택에 포함되어있는 듯 합니다. Free가 Total보다 많네요...");
 }
 
-void* MemoryChunckQueue::Pop(Out_ bool& newAlloc) {
+void* MemoryChunckQueue::Pop(JCORE_OUT bool& newAlloc) {
 	QueueGuard guard(m_Lock);
 	
 	void* pChunk;

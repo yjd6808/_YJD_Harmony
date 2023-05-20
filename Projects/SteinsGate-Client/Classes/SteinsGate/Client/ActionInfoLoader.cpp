@@ -47,7 +47,7 @@ bool ActionInfoLoader::load() {
 	return true;
 }
 
-void ActionInfoLoader::readActionInfo(Json::Value& actionRoot, Out_ ActionInfo* actionInfo) {
+void ActionInfoLoader::readActionInfo(Json::Value& actionRoot, JCORE_OUT ActionInfo* actionInfo) {
 	actionInfo->ActionName = JsonUtilEx::getString(actionRoot["name"]);
 	actionInfo->Code = actionRoot["code"].asInt();
 	actionInfo->ForceCancelable = actionRoot["force_cancelable"].asBool();

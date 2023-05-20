@@ -198,7 +198,7 @@ public:
 		ConstructRecursive<0>(counts...);
 	}
 	~DynamicPacket() override {
-		DeleteArraySafe(m_pDynamicBuf);
+		JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
 	}
 
 
@@ -319,7 +319,7 @@ public:
 		JCore::Memory::PlacementNew(Cmd, count);
 	}
 	~SinglePacket() override {
-		DeleteArraySafe(m_pDynamicBuf);
+		JCORE_DELETE_ARRAY_SAFE(m_pDynamicBuf);
 	}
 
 	WSABUF GetWSABuf() const override {

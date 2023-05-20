@@ -97,7 +97,7 @@ FileStream::~FileStream() {
 	FileStream::Close();
 }
 
-int FileStream::Read(Out_ Byte* bytes, int offset, int len) {
+int FileStream::Read(JCORE_OUT Byte* bytes, int offset, int len) {
 	DebugAssertMsg(CanRead(), "읽기가 불가능한 스트림입니다.");
 	DebugAssertMsg(m_hHandle, "스트림이 닫혀 있습니다.");
 	int iReadCount = CRuntime::FileRead(bytes + offset, 1, (int)len, m_hHandle);

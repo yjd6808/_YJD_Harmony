@@ -17,5 +17,5 @@ public:
 	CharInfoLoader(DataManagerAbstract* manager);
 
 	bool load() override;
-	static void readDefaultVisualInfo(Json::Value& charRoot, Out_ CharInfo* charInfo);
+	static void readDefaultVisualInfo(Json::Value& charRoot, JCORE_OUT CharInfo* charInfo);
 };

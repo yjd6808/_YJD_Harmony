@@ -95,8 +95,8 @@ public:
 	void setForwardDirection();
 	void setBackwardDirection();
 
-	bool isCollide(Actor* other, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect);
-	bool isCollide(const SGActorRect& otherRect, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect);
+	bool isCollide(Actor* other, JCORE_OUT SpriteDirection_t& otherHitDirection, JCORE_OUT SGRect& hitRect);
+	bool isCollide(const SGActorRect& otherRect, JCORE_OUT SpriteDirection_t& otherHitDirection, JCORE_OUT SGRect& hitRect);
 	bool isCollide(const SGActorRect& otherRect);
 	bool isOnTheGround();
 

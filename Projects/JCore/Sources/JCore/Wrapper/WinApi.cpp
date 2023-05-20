@@ -15,8 +15,8 @@ NS_JC_BEGIN
 WinHandle WinApi::InvalidHandleValue = INVALID_HANDLE_VALUE;
 
 bool
-JCoreStdCall
-WinApi::SetConsoleCursorPosition(In_ WinHandle hStdoutHandle, In_ int x, In_ int y) {
+JCORE_STDCALL
+WinApi::SetConsoleCursorPosition(JCORE_IN WinHandle hStdoutHandle, JCORE_IN int x, JCORE_IN int y) {
     COORD p;
     p.X = static_cast<Int16>(x);
     p.Y = static_cast<Int16>(y);
@@ -24,8 +24,8 @@ WinApi::SetConsoleCursorPosition(In_ WinHandle hStdoutHandle, In_ int x, In_ int
 }
 
 bool
-JCoreStdCall
-WinApi::GetConsoleCursorPosition(In_ WinHandle hStdoutHandle, Out_ int& x, Out_ int& y) {
+JCORE_STDCALL
+WinApi::GetConsoleCursorPosition(JCORE_IN WinHandle hStdoutHandle, JCORE_OUT int& x, JCORE_OUT int& y) {
     CONSOLE_SCREEN_BUFFER_INFO cbsi;
 
     if (::GetConsoleScreenBufferInfo(hStdoutHandle, &cbsi)) {
@@ -38,88 +38,88 @@ WinApi::GetConsoleCursorPosition(In_ WinHandle hStdoutHandle, Out_ int& x, Out_ 
 }
 
 bool
-JCoreStdCall
-WinApi::SetConsoleTextAttribute(In_ WinHandle hStdoutHandle, In_ Int16 attribute) {
+JCORE_STDCALL
+WinApi::SetConsoleTextAttribute(JCORE_IN WinHandle hStdoutHandle, JCORE_IN Int16 attribute) {
     return ::SetConsoleTextAttribute(hStdoutHandle, attribute) != 0;
 }
 
 
 bool
-JCoreStdCall
-WinApi::SetConsoleOutputCodePage(In_ Int codePage) {
+JCORE_STDCALL
+WinApi::SetConsoleOutputCodePage(JCORE_IN Int codePage) {
     return ::SetConsoleOutputCP(codePage) != 0;
 }
 
 
 Int
-JCoreStdCall
+JCORE_STDCALL
 WinApi::GetConsoleOutputCodePage() {
     return static_cast<int>(::GetConsoleOutputCP());
 }
 
 WinHandle
-JCoreStdCall
+JCORE_STDCALL
 WinApi::GetStdoutHandle() {
     return ::GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 WinHandle
-JCoreStdCall
+JCORE_STDCALL
 WinApi::CreateEventA(bool initialState, bool manualReset, const char* name) {
     return ::CreateEventA(NULL, manualReset ? TRUE : FALSE, initialState ? TRUE : FALSE, name);
 }
 
 Int32U
-JCoreStdCall
-WinApi::WaitForMultipleObjectsEx(In_ Int32U eventCount, In_ WinHandle* handles, In_ bool waitAll, In_ Int32U timeout, In_ bool alertable) {
+JCORE_STDCALL
+WinApi::WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout, JCORE_IN bool alertable) {
     return ::WaitForMultipleObjectsEx(eventCount, handles, waitAll ? TRUE : FALSE, timeout, alertable ? TRUE: FALSE);
 }
 
 Int32U
-JCoreStdCall
+JCORE_STDCALL
 WinApi::GetLastError() {
     return ::GetLastError();
 }
 
 bool
-JCoreStdCall
-WinApi::SetEvent(In_ WinHandle handle) {
+JCORE_STDCALL
+WinApi::SetEvent(JCORE_IN WinHandle handle) {
     return ::SetEvent(handle) != 0;
 }
 
 bool
-JCoreStdCall
-WinApi::ResetEvent(In_ WinHandle handle) {
+JCORE_STDCALL
+WinApi::ResetEvent(JCORE_IN WinHandle handle) {
     return ::ResetEvent(handle) != 0;   
 }
 
 bool
-JCoreStdCall
-WinApi::CloseHandle(In_ WinHandle handle) {
+JCORE_STDCALL
+WinApi::CloseHandle(JCORE_IN WinHandle handle) {
     return ::CloseHandle(handle) != 0;
 }
 
 int
-JCoreStdCall
-WinApi::GetThreadPriority(In_ WinHandle threadHandle) {
+JCORE_STDCALL
+WinApi::GetThreadPriority(JCORE_IN WinHandle threadHandle) {
     return ::GetThreadPriority(threadHandle);
 }
 
 bool
-JCoreStdCall
-WinApi::SetThreadPriority(In_ WinHandle threadHandle, In_ int priority) {
+JCORE_STDCALL
+WinApi::SetThreadPriority(JCORE_IN WinHandle threadHandle, JCORE_IN int priority) {
     return ::SetThreadPriority(threadHandle, priority) != 0;
 }
 
 
 Int32U
-JCoreStdCall
+JCORE_STDCALL
 WinApi::GetCurrentThreadId() {
     return ::GetCurrentThreadId();
 }
 
 Int32U
-JCoreStdCall
+JCORE_STDCALL
 WinApi::GetModuleFilePath(WinModule module, char* filenameBuffer, int filenameBufferCapacity) {
     return GetModuleFileNameA((HMODULE)module, filenameBuffer, filenameBufferCapacity);
 }
@@ -132,13 +132,13 @@ WinApi::GetModuleFilePath(WinModule module, char* filenameBuffer, int filenameBu
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Add(InOut_ TOperand* destination, In_ TOperand value) {
+Interlocked<TOperand>::Add(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
     return ExchangeAdd(destination, value) + value;
 }
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::CompareExchange(InOut_ TOperand* destination, In_ TOperand expected, TOperand desired) {
+Interlocked<TOperand>::CompareExchange(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand expected, TOperand desired) {
     if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
         return static_cast<TOperand>(::_InterlockedCompareExchange8(reinterpret_cast<volatile Boundary8*>(destination), desired, expected));
     }
@@ -156,7 +156,7 @@ Interlocked<TOperand>::CompareExchange(InOut_ TOperand* destination, In_ TOperan
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Exchange(InOut_ TOperand* destination, In_ TOperand value) {
+Interlocked<TOperand>::Exchange(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
     if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
         return static_cast<TOperand>(::_InterlockedExchange8(reinterpret_cast<volatile Boundary8*>(destination), value));
     }
@@ -178,7 +178,7 @@ Interlocked<TOperand>::Exchange(InOut_ TOperand* destination, In_ TOperand value
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::ExchangeAdd(InOut_ TOperand* destination, In_ TOperand value) {
+Interlocked<TOperand>::ExchangeAdd(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
     if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
         return static_cast<TOperand>(_InterlockedExchangeAdd8(reinterpret_cast<volatile Boundary8*>(destination), value));
     }
@@ -200,7 +200,7 @@ Interlocked<TOperand>::ExchangeAdd(InOut_ TOperand* destination, In_ TOperand va
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Increment(InOut_ TOperand* destination) {
+Interlocked<TOperand>::Increment(JCORE_IN_OUT TOperand* destination) {
     if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
         return Add(destination, 1);
     }
@@ -221,7 +221,7 @@ Interlocked<TOperand>::Increment(InOut_ TOperand* destination) {
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Decrement(InOut_ TOperand* destination) {
+Interlocked<TOperand>::Decrement(JCORE_IN_OUT TOperand* destination) {
     if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
         return Add(destination, -1);
     }
@@ -243,7 +243,7 @@ Interlocked<TOperand>::Decrement(InOut_ TOperand* destination) {
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::And(InOut_ TOperand* destination, In_ TOperand value) {
+Interlocked<TOperand>::And(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
     if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
         return static_cast<TOperand>(::_InterlockedAnd8(reinterpret_cast<volatile Boundary8*>(destination), value));
     }
@@ -265,7 +265,7 @@ Interlocked<TOperand>::And(InOut_ TOperand* destination, In_ TOperand value) {
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Or(InOut_ TOperand* destination, In_ TOperand value) {
+Interlocked<TOperand>::Or(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
     if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
         return static_cast<TOperand>(::_InterlockedOr8(reinterpret_cast<volatile Boundary8*>(destination), value));
     }
@@ -287,7 +287,7 @@ Interlocked<TOperand>::Or(InOut_ TOperand* destination, In_ TOperand value) {
 
 template <typename TOperand>
 TOperand
-Interlocked<TOperand>::Xor(InOut_ TOperand* destination, In_ TOperand value) {
+Interlocked<TOperand>::Xor(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value) {
     if constexpr (sizeof(TOperand) == sizeof(Boundary8)) {
         return static_cast<TOperand>(::_InterlockedXor8(reinterpret_cast<volatile Boundary8*>(destination), value));
     }
@@ -309,7 +309,7 @@ Interlocked<TOperand>::Xor(InOut_ TOperand* destination, In_ TOperand value) {
 
 
 bool
-Interlocked<bool>::CompareExchange(InOut_ bool* destination, In_ bool expected, In_ bool desired) {
+Interlocked<bool>::CompareExchange(JCORE_IN_OUT bool* destination, JCORE_IN bool expected, JCORE_IN bool desired) {
         Boundary8 iExpected = expected ? 1 : 0;
         Boundary8 iDesired = desired ? 1 : 0;
 

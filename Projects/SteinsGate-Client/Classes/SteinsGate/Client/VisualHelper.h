@@ -13,7 +13,7 @@
 class VisualHelper
 {
 public:
-	static int getVisualData(Out_ VisualData& visualData, int code);
+	static int getVisualData(JCORE_OUT VisualData& visualData, int code);
 };
 
 

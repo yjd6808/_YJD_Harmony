@@ -31,7 +31,7 @@ Monster::Monster(MobInfo* baseInfo, AIInfo* aiInfo)
 
 Monster::~Monster() {
 	for (int i = 0; i < AIActivityType::Max; ++i) {
-		DeleteSafe(m_ActivityMap[i]);
+		JCORE_DELETE_SAFE(m_ActivityMap[i]);
 	}
 }
 

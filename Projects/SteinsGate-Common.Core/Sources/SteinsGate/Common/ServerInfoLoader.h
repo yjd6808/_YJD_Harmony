@@ -20,8 +20,8 @@ public:
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Server; }
 	bool load() override;
 
-	static void readCenterInfo(Json::Value& serverRoot, Out_ ServerProcessInfo* serverInfo);
-	static void readAuthInfo(Json::Value& serverRoot, Out_ ServerProcessInfo* serverInfo);
-	static void readLobbyInfo(Json::Value& serverRoot, Out_ ServerProcessInfo* serverInfo);
-	static void readGameInfo(Json::Value& serverRoot, Out_ ServerProcessInfo* serverInfo);
+	static void readCenterInfo(Json::Value& serverRoot, JCORE_OUT ServerProcessInfo* serverInfo);
+	static void readAuthInfo(Json::Value& serverRoot, JCORE_OUT ServerProcessInfo* serverInfo);
+	static void readLobbyInfo(Json::Value& serverRoot, JCORE_OUT ServerProcessInfo* serverInfo);
+	static void readGameInfo(Json::Value& serverRoot, JCORE_OUT ServerProcessInfo* serverInfo);
 };

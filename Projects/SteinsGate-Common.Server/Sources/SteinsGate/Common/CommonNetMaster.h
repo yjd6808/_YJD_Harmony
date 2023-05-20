@@ -8,16 +8,18 @@
 
 #pragma once
 
+#include <JCore/Threading/Pulser.h>
 #include <JNetwork/NetMaster.h>
 #include <SteinsGate/Common/ServerEnum.h>
 
-class CommonNetMaster : public JNetwork::NetMaster
+class JCORE_NOVTABLE CommonNetMaster : public JNetwork::NetMaster
 {
 public:
 	CommonNetMaster();
 
+	// virtual void Initialize() = 0; 자식에서 구현
 	void ProcessMainLoop();
-	void ProcessSubLoop(int sleepMs);
+	void ProcessSubLoop(JCore::PulserStatistics* pulseStat);
 	void ProcessInputEvent();
 	void Terminate() { m_bRunning = false; }
 
@@ -25,7 +27,7 @@ public:
 	virtual CenterClientType_t GetClientType() = 0;
 	virtual ServerProcessType_t GetProcessType() = 0;
 protected:
-	virtual void OnLoop(int sleepMs) = 0;
+	virtual void OnLoop(JCore::PulserStatistics* pulseStat) = 0;
 	virtual void OnStopped() = 0;
 	virtual void OnCapturedInputEvent(int inputEvent);
 private:

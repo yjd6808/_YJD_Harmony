@@ -31,7 +31,7 @@ MapLayer* MapLayer::create() {
 		return pMap;
 	}
 
-	DeleteSafe(pMap);
+	JCORE_DELETE_SAFE(pMap);
 	return nullptr;
 }
 
@@ -155,7 +155,7 @@ Character* MapLayer::findNearestCharacterInRadious(Actor* stdActor, float radiou
 bool MapLayer::collectEnemiesInActorRect(
 	Actor* attacker,
 	const SGActorRect& absoluteActorRect,
-	Out_ SGVector<SGHitInfo>& hitTargets) {
+	JCORE_OUT SGVector<SGHitInfo>& hitTargets) {
 
 	PhysicsActorList& physcisActorList = m_pActorBox->getPhysicsActorList();
 	bool bFind = false;
@@ -180,7 +180,7 @@ bool MapLayer::collectEnemiesInActorRect(
 }
 
 
-bool MapLayer::collectEnemiesInActor(Actor* collector, Out_ SGVector<SGHitInfo>& hitTargets) {
+bool MapLayer::collectEnemiesInActor(Actor* collector, JCORE_OUT SGVector<SGHitInfo>& hitTargets) {
 	return collectEnemiesInActorRect(collector, collector->getActorRect(), hitTargets);
 }
 

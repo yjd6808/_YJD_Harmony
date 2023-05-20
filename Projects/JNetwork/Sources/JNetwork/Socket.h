@@ -118,8 +118,8 @@ public:
 
 	// 반환값 실패시 FALSE, WSAGetLastError로 확인
 	//       성공시 TRUE
-	int AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ Int32UL* receivedBytes, LPOVERLAPPED overlapped) const;
-	static void AcceptExResult(char* buff, Int32UL receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp);
+	int AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, JCORE_OUT Int32UL* receivedBytes, LPOVERLAPPED overlapped) const;
+	static void AcceptExResult(char* buff, Int32UL receiveDatalen, JCORE_OUT IPv4EndPoint* localEp, JCORE_OUT IPv4EndPoint* remoteEp);
 
 	// 반환값 실패시 SOCKET_ERROR
 	//		 성공시 0
@@ -127,17 +127,17 @@ public:
 
 	// 반환값 실패시 FALSE, WSAGetLastError로 확인
 	//       성공시 TRUE
-	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ Int32UL* sentBytes) const;
+	int ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, JCORE_OUT Int32UL* sentBytes) const;
 	int DisconnectEx(LPOVERLAPPED overlapped, Int32UL flag);
 	 
 	int Send(char* buff, Int32U len, Int32U flag = 0) const;
 	int SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag = 0) const;
 	int Receive(char* buff, Int32U buffSize, Int32U flag = 0) const;
-	int ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag = 0) const;
+	int ReceiveFrom(char* buff, Int32U buffSize, JCORE_OUT IPv4EndPoint* ipv4EndPoint, Int32U flag = 0) const;
 
 	int SendEx(
 		LPWSABUF lpBuf, 
-		Out_ Int32UL* pBytesSent, 
+		JCORE_OUT Int32UL* pBytesSent, 
 		LPOVERLAPPED lpOverlapped, 
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, 
 		Int32U flag = 0
@@ -145,7 +145,7 @@ public:
 
 	int SendToEx(
 		LPWSABUF lpBuffers, 
-		Out_ Int32UL* pBytesSent, 
+		JCORE_OUT Int32UL* pBytesSent, 
 		LPOVERLAPPED lpOverlapped, 
 		const IPv4EndPoint& to,
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL
@@ -153,7 +153,7 @@ public:
 
 	int ReceiveEx(
 		LPWSABUF lpBuf, 
-		Out_ Int32UL* pBytesReceived, 
+		JCORE_OUT Int32UL* pBytesReceived, 
 		LPOVERLAPPED lpOverlapped, 
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, 
 		Int32U flag = 0
@@ -161,9 +161,9 @@ public:
 
 	int ReceiveFromEx(
 		LPWSABUF lpBuf, 
-		Out_ Int32UL* pBytesReceived, 
+		JCORE_OUT Int32UL* pBytesReceived, 
 		LPOVERLAPPED lpOverlapped, 
-		Out_ SOCKADDR_IN* senderAddr, 
+		JCORE_OUT SOCKADDR_IN* senderAddr, 
 		LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine = NULL, 
 		Int32U flag = 0
 	) const;

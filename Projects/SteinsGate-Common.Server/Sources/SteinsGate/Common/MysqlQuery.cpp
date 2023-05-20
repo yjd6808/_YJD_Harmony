@@ -56,7 +56,7 @@ bool MysqlQueryInsert::Execute() {
 
 
 
-int MysqlQuerySelect::GetFieldIndex(const String& fieldName) {
+int MysqlQuerySelect::GetFieldIndex(const char* fieldName) {
 	const int* pFind = m_hFieldList.Find(fieldName);
 
 	if (pFind == nullptr) {
@@ -67,7 +67,7 @@ int MysqlQuerySelect::GetFieldIndex(const String& fieldName) {
 }
 
 // 필드 값이 존재하지 않는 경우 nullptr이 반환될 수 있음
-char* MysqlQuerySelect::GetRawString(const String& fieldName) {
+const char* MysqlQuerySelect::GetRawString(const char* fieldName) {
 	if (!IsSuccess()) {
 		_LogError_("쿼리 수행결과가 존재하지 않습니다. %s", "GetRawString()");
 		return nullptr;
@@ -76,7 +76,7 @@ char* MysqlQuerySelect::GetRawString(const String& fieldName) {
 	const int iFieldIndex = GetFieldIndex(fieldName);
 
 	if (iFieldIndex == InvalidValue_v) {
-		_LogError_("%s 필드를 찾지 못했습니다. %s", fieldName.Source(), "GetRawString()");
+		_LogError_("%s 필드를 찾지 못했습니다. %s", fieldName, "GetRawString()");
 		return nullptr;
 	}
 
@@ -84,7 +84,7 @@ char* MysqlQuerySelect::GetRawString(const String& fieldName) {
 }
 
 
-String MysqlQuerySelect::GetString(const String& fieldName) {
+String MysqlQuerySelect::GetString(const char* fieldName) {
 	return GetRawString(fieldName);
 }
 

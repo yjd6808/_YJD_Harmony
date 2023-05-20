@@ -28,6 +28,6 @@ void InitializeDefaultLogger(LoggerOption* option) {
 }
 
 void FinalizeDefaultLogger() {
-	DeleteSafe(Logger_v);
+	JCORE_DELETE_SAFE(Logger_v);
 }
 

@@ -104,7 +104,7 @@ public:
 			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
 
 			if (m_Pool[iIndex]) {
-				DeleteSafe(m_Pool[iIndex]);
+				JCORE_DELETE_SAFE(m_Pool[iIndex]);
 			}
 			
 			m_Pool[iIndex] = dbg_new MemoryChunckQueue(iSize, iCount);
@@ -119,7 +119,7 @@ public:
 		DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
 
 		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
-			DeleteSafe(m_Pool[i]);
+			JCORE_DELETE_SAFE(m_Pool[i]);
 		}
 	}
 

@@ -145,7 +145,7 @@ public:
 	/// </summary>
 	void Clear(bool removeHeap = false) override {
 		if (this->IsEmpty()) {
-			if (removeHeap) AllocatorDynamicDeallocateSafe(this->m_pArray, sizeof(T) * this->m_iCapacity);
+			if (removeHeap) JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->m_pArray, sizeof(T) * this->m_iCapacity);
 			return;
 		}
 
@@ -171,7 +171,7 @@ public:
 		m_iTail = 0;
 		m_iHead = 0;
 
-		if (removeHeap) AllocatorDynamicDeallocateSafe(this->m_pArray, sizeof(T) * this->m_iCapacity);
+		if (removeHeap) JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->m_pArray, sizeof(T) * this->m_iCapacity);
 	}
 
 	TEnumerator Begin() const override {
@@ -281,7 +281,7 @@ protected:
 				sizeof(T) * iBeginToTailSize);
 		}
 
-		AllocatorDynamicDeallocateSafe(this->m_pArray, sizeof(T) * this->m_iCapacity);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->m_pArray, sizeof(T) * this->m_iCapacity);
 
 		this->m_pArray = pNewArray;
 		this->m_iCapacity = capacity;

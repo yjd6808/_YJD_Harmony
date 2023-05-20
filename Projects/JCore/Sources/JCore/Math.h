@@ -7,12 +7,8 @@
 
 NS_JC_BEGIN
 
-class Math final
+struct Math final
 {
-public:
-	Math() = default;
-	~Math() = default;
-public:
 	template <typename T>
 	static T Pow(T base, const int exponent) {
 		if (exponent == 0) {
@@ -52,7 +48,6 @@ public:
 	static constexpr T Abs(const T arg) {
 		return arg < 0 ? arg * -1 : arg;
 	}
-private:
 };
 
 NS_JC_END

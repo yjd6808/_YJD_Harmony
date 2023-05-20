@@ -50,7 +50,7 @@ bool CenterServer::IsConnected(CenterSession* session) {
 	return false;
 }
 
-void CenterServer::OnLoop(int sleepMs) {
+void CenterServer::OnLoop(PulserStatistics* pulserStat) {
 }
 
 

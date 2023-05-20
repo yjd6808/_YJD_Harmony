@@ -22,7 +22,7 @@ public:
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::AttackData; }
 
-	static void readAttackDataInfo(Json::Value& attackDataRoot, Out_ AttackDataInfo* attackDataInfo);
+	static void readAttackDataInfo(Json::Value& attackDataRoot, JCORE_OUT AttackDataInfo* attackDataInfo);
 };
 
 

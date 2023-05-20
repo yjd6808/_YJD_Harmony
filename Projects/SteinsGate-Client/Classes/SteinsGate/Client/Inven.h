@@ -18,7 +18,7 @@ class Inven final : public JCore::SingletonPointer<Inven>
 public:
 	void init();
 	WeaponType_t getWeaponType();
-	void getVisualInfo(Out_ VisualInfo& info, int defaultCharType);
+	void getVisualInfo(JCORE_OUT VisualInfo& info, int defaultCharType);
 
 	int getAvailableSlotCount(InvenItemType_t invenType);
 private:

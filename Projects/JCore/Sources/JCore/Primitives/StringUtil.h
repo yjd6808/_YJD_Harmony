@@ -68,6 +68,11 @@ public:
 	}
 
 	// 문자열에서 문자를 찾아서 인덱스값을 반환 0번 인덱스부터 올라가면서 하나씩 검사
+	static constexpr int CTCountChar(const char* str, const char ch) {
+		return CTCountCharRecursive(str, ch, 0, 0);
+	}
+
+	// 문자열에서 문자를 찾아서 인덱스값을 반환 0번 인덱스부터 올라가면서 하나씩 검사
 	static constexpr int CTFindChar(const char* str, const char ch) {
 		return CTFindCharRecursive(str, ch, 0);
 	}
@@ -133,6 +138,19 @@ private:
 		}
 
 		return CTFindCharReverseRecursive(str - 1, ch, position - 1);
+	}
+
+	static constexpr int CTCountCharRecursive(const char* str, const char ch, const int position, int count) {
+
+		if (*str == '\0') {
+			return count;
+		}
+
+		if (*str == ch) {
+			count++;
+		}
+
+		return CTCountCharRecursive(str + 1, ch, position + 1, count);
 	}
 };
 

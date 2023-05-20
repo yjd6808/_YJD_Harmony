@@ -29,6 +29,16 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryField.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
       <SubType>

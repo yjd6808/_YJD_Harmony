@@ -41,8 +41,8 @@ void InitializeAuthCore() {
 }
 
 void FinalizeAuthCore() {
-	DeleteSingletonSafe(CoreNetMaster_v);
-	DeleteSingletonSafe(CoreDataManager_v);
-	DeleteSafe(CoreGameDB_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreNetMaster_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreDataManager_v);
+	JCORE_DELETE_SAFE(CoreGameDB_v);
 	
 }

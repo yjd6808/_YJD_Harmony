@@ -33,7 +33,7 @@ AnimationInfo& AnimationInfo::operator=(AnimationInfo&& other) noexcept {
 
 AnimationInfo::~AnimationInfo() {
 	for (int i = 0; i < Frames.Size(); ++i) {
-		DeleteSafe(Frames[i]);
+		JCORE_DELETE_SAFE(Frames[i]);
 	}
 }
 

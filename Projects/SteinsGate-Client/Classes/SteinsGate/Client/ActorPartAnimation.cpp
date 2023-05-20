@@ -48,7 +48,7 @@ ActorPartAnimation* ActorPartAnimation::create(
 		return pAnimation;
 	}
 
-	DeleteSafe(pAnimation);
+	JCORE_DELETE_SAFE(pAnimation);
 	return nullptr;
 }
 

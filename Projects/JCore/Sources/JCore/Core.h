@@ -28,6 +28,7 @@
 #include <JCore/Utils/Console.h>
 #include <JCore/Logger/LoggerDefine.h>
 #include <JCore/Define.h>
+#include <JCore/Macro.h>
 #include <JCore/Assert.h>
 
 

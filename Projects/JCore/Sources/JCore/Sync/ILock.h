@@ -37,4 +37,4 @@ struct JCORE_NOVTABLE ILock
 
 NS_JC_END;
 
-#define LOCK_GUARD(lock) JCore::LockGuard<JCore::ILock> JCoreCounterConcat(__guard__)(lock)
+#define LOCK_GUARD(lock) JCore::LockGuard<JCore::ILock> JCORE_CONCAT_COUNTER(__guard__)(lock)

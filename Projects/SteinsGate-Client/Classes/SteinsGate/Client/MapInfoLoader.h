@@ -21,7 +21,7 @@ public:
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Map; }
 
-	static void readMapInfo(Json::Value& mapRoot, Out_ MapInfo* mapInfo);
+	static void readMapInfo(Json::Value& mapRoot, JCORE_OUT MapInfo* mapInfo);
 };
 
 

@@ -22,7 +22,7 @@ public:
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::AI; }
 
-	static void readAIInfo(Json::Value& aiRoot, Out_ AIInfo* aiInfo);
+	static void readAIInfo(Json::Value& aiRoot, JCORE_OUT AIInfo* aiInfo);
 };
 
 

@@ -16,14 +16,14 @@ public:
 	static SGString getString(Json::Value& value);
 	static SGString getStringOrNull(Json::Value& value);
 	static SGString getStringOrDefault(Json::Value& value, const SGString& defaultValue = 0); // 내 문자열은 0으로 초기화하면 동적 할당 안함
-	static void parseThicknessInfo(Json::Value& thicknessRoot, Out_ ThicknessBox& box);
+	static void parseThicknessInfo(Json::Value& thicknessRoot, JCORE_OUT ThicknessBox& box);
 
-	static void parseIntNumber3(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3);
-	static void parseIntNumber4(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3, Out_ int& num4);
-	static void parseIntNumberN(Json::Value& root, Out_ int* numArr, int count);
+	static void parseIntNumber3(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3);
+	static void parseIntNumber4(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3, JCORE_OUT int& num4);
+	static void parseIntNumberN(Json::Value& root, JCORE_OUT int* numArr, int count);
 
-	static void parseFloatNumber2(Json::Value& root, Out_ float& num1, Out_ float& num2);
-	static void parseFloatNumberN(Json::Value& root, Out_ float* numArr, int count);
+	static void parseFloatNumber2(Json::Value& root, JCORE_OUT float& num1, JCORE_OUT float& num2);
+	static void parseFloatNumberN(Json::Value& root, JCORE_OUT float* numArr, int count);
 
 	static int getIntDefault(Json::Value& value, int defaultValue = 0);
 	static float getFloatDefault(Json::Value& value, float defaultValue = 0);

@@ -34,7 +34,7 @@ SGString JsonUtil::getStringOrNull(Json::Value& value)
 	return getString(value);
 }
 
-void JsonUtil::parseThicknessInfo(Json::Value& thicknessRoot, Out_ ThicknessBox& info) {
+void JsonUtil::parseThicknessInfo(Json::Value& thicknessRoot, JCORE_OUT ThicknessBox& info) {
 
 	int num[4];
 	TextParser::parserIntNumbers(getString(thicknessRoot), num, 4);
@@ -45,7 +45,7 @@ void JsonUtil::parseThicknessInfo(Json::Value& thicknessRoot, Out_ ThicknessBox&
 	info.Height = (float)num[3];
 }
 
-void JsonUtil::parseIntNumber3(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3) {
+void JsonUtil::parseIntNumber3(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3) {
 	int num[3];
 	TextParser::parserIntNumbers(getString(root), num, 3);
 
@@ -54,7 +54,7 @@ void JsonUtil::parseIntNumber3(Json::Value& root, Out_ int& num1, Out_ int& num2
 	num3 = num[2];
 }
 
-void JsonUtil::parseIntNumber4(Json::Value& root, Out_ int& num1, Out_ int& num2, Out_ int& num3, Out_ int& num4) {
+void JsonUtil::parseIntNumber4(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3, JCORE_OUT int& num4) {
 
 	int num[4];
 	TextParser::parserIntNumbers(getString(root), num, 4);
@@ -65,18 +65,18 @@ void JsonUtil::parseIntNumber4(Json::Value& root, Out_ int& num1, Out_ int& num2
 	num4 = num[3];
 }
 
-void JsonUtil::parseIntNumberN(Json::Value& root, Out_ int* numArr, int count) {
+void JsonUtil::parseIntNumberN(Json::Value& root, JCORE_OUT int* numArr, int count) {
 	TextParser::parserIntNumbers(getString(root), numArr, count);
 }
 
-void JsonUtil::parseFloatNumber2(Json::Value& root, Out_ float& num1, Out_ float& num2) {
+void JsonUtil::parseFloatNumber2(Json::Value& root, JCORE_OUT float& num1, JCORE_OUT float& num2) {
 	float num[2];
 	TextParser::parserFloatNumbers(getString(root), num, 2);
 	num1 = num[0];
 	num2 = num[1];
 }
 
-void JsonUtil::parseFloatNumberN(Json::Value& root, Out_ float* numArr, int count) {
+void JsonUtil::parseFloatNumberN(Json::Value& root, JCORE_OUT float* numArr, int count) {
 	TextParser::parserFloatNumbers(getString(root), numArr, count);
 }
 

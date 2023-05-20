@@ -36,7 +36,7 @@ UILayer* UILayer::create() {
 		return pUILayer;
 	}
 
-	DeleteSafe(pUILayer);
+	JCORE_DELETE_SAFE(pUILayer);
 	return nullptr;
 }
 

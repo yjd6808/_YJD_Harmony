@@ -50,7 +50,7 @@ void AuthNetGroup::InitializeInterServerClient() {
 	m_pInterServerClient = spInterServerClient.Get<UdpClient*>();
 }
 
-void AuthNetGroup::OnLoop(int sleepMs) {
+void AuthNetGroup::OnLoop(PulserStatistics* pulserStat) {
 
 }
 

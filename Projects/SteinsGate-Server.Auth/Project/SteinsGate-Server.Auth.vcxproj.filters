@@ -30,6 +30,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\S_AUTH.cpp">
       <Filter>Send</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOGIN.cpp">
+      <Filter>Query</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCoreHeader.h" />
@@ -62,6 +65,9 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\S_AUTH.h">
       <Filter>Send</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOGIN.h">
+      <Filter>Query</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">
@@ -72,6 +78,9 @@
     </Filter>
     <Filter Include="Listener">
       <UniqueIdentifier>{a9efac3b-967a-4517-90db-7dbafbee409d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Query">
+      <UniqueIdentifier>{48b1d56e-da03-4184-9565-ead55f0a7a31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -47,7 +47,7 @@ bool EnchantInfoLoader::load() {
 	return true;
 }
 
-void EnchantInfoLoader::readEnchantInfo(Json::Value& enchantRoot, Out_ EnchantInfo* enchantInfo) {
+void EnchantInfoLoader::readEnchantInfo(Json::Value& enchantRoot, JCORE_OUT EnchantInfo* enchantInfo) {
 	enchantInfo->Code = enchantRoot["code"].asInt();
 
 	Value& armorBonusOptListRoot = enchantRoot["armor_bonus_opt"];

@@ -101,7 +101,7 @@ public:
 		if (this->m_iSize > 0) DestroyAtRange(0, this->m_iSize - 1);
 		this->m_iSize = 0;
 		if (removeHeap) {
-			AllocatorDynamicDeallocateSafe(m_pArray, sizeof(T) * m_iCapacity);
+			JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pArray, sizeof(T) * m_iCapacity);
 		}
 	}
 

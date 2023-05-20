@@ -35,7 +35,7 @@ ActorPartSprite* ActorPartSprite::create(
 		return pPartSprite;
 	}
 
-	DeleteSafe(pPartSprite);
+	JCORE_DELETE_SAFE(pPartSprite);
 	return nullptr;
 }
 

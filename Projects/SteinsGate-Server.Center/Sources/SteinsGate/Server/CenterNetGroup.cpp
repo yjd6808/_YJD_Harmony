@@ -44,5 +44,5 @@ void CenterNetGroup::InitializeInterServerClient() {
 	m_pInterServerClient = spInterServerClient.Get<UdpClient*>();
 }
 
-void CenterNetGroup::OnLoop(int sleepMs) {
+void CenterNetGroup::OnLoop(PulserStatistics* pulserStat) {
 }

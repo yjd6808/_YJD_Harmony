@@ -88,7 +88,7 @@ void DataManagerAbstract::unload(ConfigFileType_t configFileType) {
 
 void DataManagerAbstract::finalizeLoader() {
 	for (int i = 0; i < ConfigFileType::Max; ++i) {
-		DeleteSafe(m_pConfigFileLoaders[i]);
+		JCORE_DELETE_SAFE(m_pConfigFileLoaders[i]);
 		m_bLoaded[i] = false;
 	}
 

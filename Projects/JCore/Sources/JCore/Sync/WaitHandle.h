@@ -27,7 +27,7 @@ public:
     WaitHandle(WaitHandle&& handle) noexcept;           // 이동 생성만 허용
     virtual ~WaitHandle();
 
-    bool Wait(Int32U timeout = JCoreInfinite, Out_ Int32U* result = nullptr);
+    bool Wait(Int32U timeout = JCORE_INFINITE, JCORE_OUT Int32U* result = nullptr);
     bool Signal();
     bool Reset();
     const String& Name() { return m_Name; }
@@ -35,8 +35,8 @@ public:
     void operator=(const WaitHandle& other) = delete;
     void operator=(WaitHandle&& other) noexcept;
 public:
-    static bool WaitAll(WaitHandle* handles, Int32U count, OutOpt_ Int32U* result = nullptr);
-    static WaitHandle* WaitAny(WaitHandle* handles, Int32U count, OutOpt_ Int32U* result = nullptr);
+    static bool WaitAll(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U* result = nullptr);
+    static WaitHandle* WaitAny(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U* result = nullptr);
 
     template <typename TAllocator>
 	static bool WaitAll(Collection<WaitHandle, TAllocator>& handles) {

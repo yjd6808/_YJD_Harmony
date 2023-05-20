@@ -21,6 +21,6 @@ public:
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Channel; }
 	bool load() override;
 
-	static void readChannelBaseInfo(Json::Value& channelRoot, Out_ ChannelInfo* channelInfo);
+	static void readChannelBaseInfo(Json::Value& channelRoot, JCORE_OUT ChannelInfo* channelInfo);
 };
 

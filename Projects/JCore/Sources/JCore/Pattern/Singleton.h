@@ -71,7 +71,7 @@ public:
 		if (ms_pInst != nullptr) {
 			LOCK_GUARD(ms_Lock);
 			if (ms_pInst != nullptr) {
-				DeleteSafe(ms_pInst);
+				JCORE_DELETE_SAFE(ms_pInst);
 				ms_bDeleted = true;
 			}
 		}

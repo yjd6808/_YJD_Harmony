@@ -34,8 +34,8 @@ public:
 	virtual void Release();
 	Type GetType() const { return m_eType; }
 
-	bool IsFailed(BOOL result, Out_ Int32U& errorCode);
-	bool IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffered, Out_ Int32U& errorCode);
+	bool IsFailed(BOOL result, JCORE_OUT Int32U& errorCode);
+	bool IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffered, JCORE_OUT Int32U& errorCode);
 protected:
 	Type m_eType;
 	IOCP* m_pIocp;

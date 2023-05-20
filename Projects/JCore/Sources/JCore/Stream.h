@@ -56,7 +56,7 @@ public:
 	}
 
 	// bytes의 offset 위치부터 len 만큼 스트림으로부터 읽어서 저장한다.
-	virtual int Read(Out_ Byte* bytes, int offset, int len) = 0;
+	virtual int Read(JCORE_OUT Byte* bytes, int offset, int len) = 0;
 
 	String ReadString();
 	Int8 ReadInt8();

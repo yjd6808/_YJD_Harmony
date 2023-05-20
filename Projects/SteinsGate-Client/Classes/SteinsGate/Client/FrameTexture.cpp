@@ -14,6 +14,6 @@ FrameTexture::~FrameTexture() {
 }
 
 SpriteFrameTexture::~SpriteFrameTexture() {
-	DeleteSafe(m_pTexture);
+	JCORE_DELETE_SAFE(m_pTexture);
 }
 

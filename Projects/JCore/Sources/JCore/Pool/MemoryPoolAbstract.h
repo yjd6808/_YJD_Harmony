@@ -69,7 +69,7 @@ public:
 	}
 
 	template <bool KeepDetectingState = true>	// 릭 디텍팅 상태를 복구할지
-	Int64U StopDetectLeak(OutOpt_ int* detail = nullptr) {
+	Int64U StopDetectLeak(JCORE_OUT_OPT int* detail = nullptr) {
 		DebugAssertMsg(Detecting(), "어라? StartDetectLeak()이 호출되지 않았어요.");
 		Int64U uiLeakedBytes = 0;
 
@@ -134,7 +134,7 @@ public:
 
 	void StartDetectLeak() {}
 	template <bool KeepDetectingState = true>
-	Int64U StopDetectLeak(OutOpt_ int* detail = nullptr) { return 0; }
+	Int64U StopDetectLeak(JCORE_OUT_OPT int* detail = nullptr) { return 0; }
 	bool Detecting() { return false; }
 	void CancelDetectLeak() {}
 protected:

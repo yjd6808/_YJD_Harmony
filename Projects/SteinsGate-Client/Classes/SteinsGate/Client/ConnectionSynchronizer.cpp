@@ -121,8 +121,8 @@ void ConnectionSynchronizer::finalize() {
 		}
 	}
 
-	DeleteSafe(m_qConnectionResults);
-	DeleteSafe(m_qSwap);
+	JCORE_DELETE_SAFE(m_qConnectionResults);
+	JCORE_DELETE_SAFE(m_qSwap);
 
 	ConnectionResult::FreeAllObjects();
 	DisconnectionResult::FreeAllObjects();

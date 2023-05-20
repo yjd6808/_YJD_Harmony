@@ -25,7 +25,7 @@ void CenterNetMaster::Initialize() {
 	spCenterNetGroup->Initialize();
 }
 
-void CenterNetMaster::OnLoop(int sleepMs) {
+void CenterNetMaster::OnLoop(PulserStatistics* pulserStat) {
 }
 
 void CenterNetMaster::OnCapturedInputEvent(int inputEvent) {

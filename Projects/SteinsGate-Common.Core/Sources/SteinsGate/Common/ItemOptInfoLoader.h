@@ -20,7 +20,7 @@ public:
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::ItemOpt; }
 	bool load() override;
 
-	static void readItemOptInfo(Json::Value& optRoot, Out_ ItemOptInfo* optInfo);
+	static void readItemOptInfo(Json::Value& optRoot, JCORE_OUT ItemOptInfo* optInfo);
 	ItemOptInfo* getData(const SGString& name);
 private:
 	SGHashMap<SGString, ItemOptInfo*> m_DataMapByName;

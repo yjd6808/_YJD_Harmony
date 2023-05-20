@@ -41,7 +41,7 @@ public:
 		m_uiObjectId = ++ms_uiObjectUniuqeIdSeq;
 
 		thread_local TlsRefMap tls_RefMap
-			= JCoreInlineReturnMessage(TlsRefMap, {}, "[%5d] ThreadLocal<%s> 해쉬맵 초기화", Thread::GetThreadId(), typeid(T).name());
+			= JCORE_INLINE_RETURN_MESSAGE(TlsRefMap, {}, "[%5d] ThreadLocal<%s> 해쉬맵 초기화", Thread::GetThreadId(), typeid(T).name());
 
 
 

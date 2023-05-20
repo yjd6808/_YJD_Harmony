@@ -84,13 +84,13 @@ String::String(String&& str) noexcept {
 }
 
 String::~String() {
-	DeleteArraySafe(m_pBuffer);
+	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
 }
 
 /* ========================================================== */
 
 void String::ExchangeSource(char* src, int len) {
-	DeleteArraySafe(m_pBuffer);
+	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
 	m_pBuffer = src;
 	m_iLen = len;
 	m_iCapacity = len + 1;
@@ -183,7 +183,7 @@ void String::Resize(const int capacity) {
 	m_iCapacity = capacity;
 
 	StringUtil::Copy(m_pBuffer, m_iCapacity, pTempBuffer);
-	DeleteArraySafe(pTempBuffer);
+	JCORE_DELETE_ARRAY_SAFE(pTempBuffer);
 }
 
 // len길이가 현재 capacity를 초과할 경우 확장을 해준다.
@@ -612,7 +612,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 }
 
 void String::Initialize(int capacity) {
-	DeleteArraySafe(m_pBuffer);
+	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
 
 	m_pBuffer = dbg_new char[capacity];
 	m_iLen = 0;
@@ -695,7 +695,7 @@ String& String::operator=(const String& other) {
 // @참고 : https://modoocode.com/227
 String& String::operator=(String&& other) noexcept {
 	// 기존 문자열 제거해줘야함
-	DeleteArraySafe(m_pBuffer);
+	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
 
 	// 이동 생성자 학습 후 적용
 	m_iCapacity = other.m_iCapacity;

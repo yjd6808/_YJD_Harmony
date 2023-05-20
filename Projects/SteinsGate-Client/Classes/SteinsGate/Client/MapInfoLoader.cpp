@@ -49,7 +49,7 @@ bool MapInfoLoader::load() {
 	return true;
 }
 
-void MapInfoLoader::readMapInfo(Json::Value& mapRoot, Out_ MapInfo* mapInfo) {
+void MapInfoLoader::readMapInfo(Json::Value& mapRoot, JCORE_OUT MapInfo* mapInfo) {
 
 	Value& areaRoot = mapRoot["area"];
 	Value& npcListRoot = mapRoot["npc"];

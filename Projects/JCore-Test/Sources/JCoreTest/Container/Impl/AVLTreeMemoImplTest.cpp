@@ -53,9 +53,9 @@ struct Node
 
 	void DeleteChild(Node* node) {
 		if (Left == node) {
-			DeleteSafe(Left);
+			JCORE_DELETE_SAFE(Left);
 		} else if (Right == node) {
-			DeleteSafe(Right);
+			JCORE_DELETE_SAFE(Right);
 		} else {
 			assert("몽미?");
 		}
@@ -86,7 +86,7 @@ public:
 	}
 	~AVLTree() {
 		Clear();
-		DeleteSafe(m_pVirtualRoot);
+		JCORE_DELETE_SAFE(m_pVirtualRoot);
 	}
 public:
 	void Add(int data) {
@@ -155,7 +155,7 @@ public:
 
 		DeleteElementRecursive(pRoot->Left);
 		DeleteElementRecursive(pRoot->Right);
-		DeleteSafe(pRoot);
+		JCORE_DELETE_SAFE(pRoot);
 		m_iSize = 0;
 	}
 private:
@@ -166,7 +166,7 @@ private:
 
 		DeleteElementRecursive(node->Left);
 		DeleteElementRecursive(node->Right);
-		DeleteSafe(node);
+		JCORE_DELETE_SAFE(node);
 	}
 
 	int Show(vector<vector<int>>& values, Node* node, int depth) {
@@ -224,7 +224,7 @@ private:
 		}
 
 		pChild->Parent = pParent;
-		DeleteSafe(del);
+		JCORE_DELETE_SAFE(del);
 		return pBalanceStartingNode;
 	}
 
@@ -248,7 +248,7 @@ private:
 			if (pSmallest->Right)
 				pSmallest->Right->Parent = pSmallestParent;
 		}
-		DeleteSafe(pSmallest);
+		JCORE_DELETE_SAFE(pSmallest);
 		return pSmallestParent;
 	}
 

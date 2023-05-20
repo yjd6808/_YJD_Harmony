@@ -24,7 +24,7 @@ USING_NS_JC;
 ImagePackManager::ImagePackManager() {}
 ImagePackManager::~ImagePackManager() {
 	for (int i = 0; i < MaxSgaFileCount_v; ++i) {
-		DeleteSafe(m_LoadedPackages[i]);
+		JCORE_DELETE_SAFE(m_LoadedPackages[i]);
 	}
 }
 

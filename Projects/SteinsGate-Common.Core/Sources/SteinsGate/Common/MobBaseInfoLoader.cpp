@@ -45,7 +45,7 @@ bool MobBaseInfoLoader::load() {
 	return true;
 }
 
-void MobBaseInfoLoader::readMobBaseInfo(Json::Value& monsterRoot, Out_ MobBaseInfo* mobInfo) {
+void MobBaseInfoLoader::readMobBaseInfo(Json::Value& monsterRoot, JCORE_OUT MobBaseInfo* mobInfo) {
 
 	mobInfo->Code = monsterRoot["code"].asInt();
 	mobInfo->Name = JsonUtil::getString(monsterRoot["kor_name"]);

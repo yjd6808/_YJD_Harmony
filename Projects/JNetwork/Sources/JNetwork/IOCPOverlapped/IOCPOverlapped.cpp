@@ -31,7 +31,7 @@ void IOCPOverlapped::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrde
 
 
 
-bool IOCPOverlapped::IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffered, Out_ Int32U& errorCode) {
+bool IOCPOverlapped::IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffered, JCORE_OUT Int32U& errorCode) {
 	if (result == FALSE) {
 		// GetQueuedCompletionStatus이 실패한 경우 GetLastError()로 오류 코드를 얻을 수 있다.
 		// 하지만 이 코드는 일반적인 윈도우 오류 코드이다. (윈도우 오류 코드표 : https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes--500-999-)

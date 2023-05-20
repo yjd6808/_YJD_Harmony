@@ -41,7 +41,7 @@ bool ClientInfoLoader::load() {
 	return true;
 }
 
-void ClientInfoLoader::readClientInfo(Json::Value& clientRoot, Out_ ClientInfo* clientInfo) {
+void ClientInfoLoader::readClientInfo(Json::Value& clientRoot, JCORE_OUT ClientInfo* clientInfo) {
 	clientInfo->Code = clientRoot["code"].asInt();
 	clientInfo->FrameSize.width = clientRoot["frame_width"].asFloat();
 	clientInfo->FrameSize.height = clientRoot["frame_height"].asFloat();

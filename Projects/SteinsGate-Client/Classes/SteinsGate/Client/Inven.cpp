@@ -45,7 +45,7 @@ WeaponType_t Inven::getWeaponType() {
 	return pItemWeapon->Code.WeaponUn.WeaponType;
 }
 
-void Inven::getVisualInfo(Out_ VisualInfo& info, int defaultCharType) {
+void Inven::getVisualInfo(JCORE_OUT VisualInfo& info, int defaultCharType) {
 
 	CharInfo* pCharInfo = CoreDataManager_v->getCharInfo(defaultCharType);
 	bool bEquiped[VisualType::Max]{};	// 착용중인지

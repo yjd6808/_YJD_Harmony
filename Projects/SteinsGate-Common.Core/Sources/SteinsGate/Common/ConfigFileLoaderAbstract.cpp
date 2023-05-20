@@ -20,7 +20,7 @@ ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract() {
 	});
 }
 
-bool ConfigFileLoaderAbstract::loadJson(Out_ Json::Value& root) {
+bool ConfigFileLoaderAbstract::loadJson(JCORE_OUT Json::Value& root) {
 	DebugAssertMsg(CoreCommonInfo_v != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
 	SGString path = JCore::Path::Combine(CoreCommonInfo_v->ConfigPath, getConfigFileName());
 	std::ifstream reader(path.Source(), std::ifstream::in | std::ifstream::binary);
@@ -34,7 +34,7 @@ bool ConfigFileLoaderAbstract::loadJson(Out_ Json::Value& root) {
 	return true;
 }
 
-bool ConfigFileLoaderAbstract::loadJson(const char* fileName, Out_ Json::Value& root) {
+bool ConfigFileLoaderAbstract::loadJson(const char* fileName, JCORE_OUT Json::Value& root) {
 	std::ifstream reader(fileName, std::ifstream::in | std::ifstream::binary);
 	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", fileName);
 	try {
@@ -46,7 +46,7 @@ bool ConfigFileLoaderAbstract::loadJson(const char* fileName, Out_ Json::Value& 
 	return true;
 }
 
-bool ConfigFileLoaderAbstract::loadJson(const SGString& fileName, Out_ Json::Value& root) {
+bool ConfigFileLoaderAbstract::loadJson(const SGString& fileName, JCORE_OUT Json::Value& root) {
 	return loadJson(fileName.Source(), root);
 }
 

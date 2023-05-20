@@ -28,5 +28,5 @@ void InitializeNetLogger(LoggerOption* option) {
 }
 
 void FinalizeNetLogger() {
-	DeleteSafe(NetLogger_v);
+	JCORE_DELETE_SAFE(NetLogger_v);
 }

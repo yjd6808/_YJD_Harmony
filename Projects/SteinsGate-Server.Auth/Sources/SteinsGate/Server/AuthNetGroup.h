@@ -27,7 +27,7 @@ protected:
 	void InitializeServer() override;
 	void InitializeCenterClient() override;
 	void InitializeInterServerClient() override;
-	void OnLoop(int sleepMs) override;
+	void OnLoop(JCore::PulserStatistics* pulserStat) override;
 private:
 	ListenerAuthServer m_AuthServerEventListener;
 	ListenerCenterClient m_AuthCenterClientEventLIstener;

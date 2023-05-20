@@ -20,7 +20,7 @@ public:
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Effect; }
 	bool load() override;
 
-	static void readEffectInfo(Json::Value& effectRoot, Out_ EffectInfo* effectInfo);
+	static void readEffectInfo(Json::Value& effectRoot, JCORE_OUT EffectInfo* effectInfo);
 };
 
 

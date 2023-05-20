@@ -58,18 +58,18 @@ struct WinApi {
 
     static WinHandle InvalidHandleValue;
 
-    static bool            JCoreStdCall SetConsoleCursorPosition(In_ WinHandle hStdoutHandle, In_ int x, In_ int y);
-    static bool            JCoreStdCall GetConsoleCursorPosition(In_ WinHandle hStdoutHandle, Out_ int& x, Out_ int& y);
-    static bool            JCoreStdCall SetConsoleTextAttribute(In_ WinHandle hStdoutHandle, In_ Int16 attribute);
-    static bool            JCoreStdCall SetConsoleOutputCodePage(In_ Int32 codePage);
-    static Int             JCoreStdCall GetConsoleOutputCodePage();
+    static bool            JCORE_STDCALL SetConsoleCursorPosition(JCORE_IN WinHandle hStdoutHandle, JCORE_IN int x, JCORE_IN int y);
+    static bool            JCORE_STDCALL GetConsoleCursorPosition(JCORE_IN WinHandle hStdoutHandle, JCORE_OUT int& x, JCORE_OUT int& y);
+    static bool            JCORE_STDCALL SetConsoleTextAttribute(JCORE_IN WinHandle hStdoutHandle, JCORE_IN Int16 attribute);
+    static bool            JCORE_STDCALL SetConsoleOutputCodePage(JCORE_IN Int32 codePage);
+    static Int             JCORE_STDCALL GetConsoleOutputCodePage();
 
 
     /** https://learn.microsoft.com/en-us/windows/console/getstdhandle
      * \brief Retrieves a handle to the specified standard device
      * \return The standard output device. Initially, this is the active console screen buffer,
      */
-    static WinHandle       JCoreStdCall GetStdoutHandle();
+    static WinHandle       JCORE_STDCALL GetStdoutHandle();
 
 
 
@@ -81,7 +81,7 @@ struct WinApi {
      * \return If the function succeeds, the return value is a handle to the event object. If the named event object existed before the function call, the function returns a handle to the existing object and GetLastError returns ERROR_ALREADY_EXISTS.
      *         If the function fails, the return value is NULL. To get extended error information, call GetLastError.
      */
-    static WinHandle       JCoreStdCall CreateEventA(In_ bool initialState, In_ bool manualReset, InOpt_ const char* name = nullptr);
+    static WinHandle       JCORE_STDCALL CreateEventA(JCORE_IN bool initialState, JCORE_IN bool manualReset, JCORE_IN_OPT const char* name = nullptr);
 
     /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjectsex
      * \brief Waits until one or all of the specified objects are in the signaled state, an I/O completion routine or asynchronous procedure call (APC) is queued to the thread, or the time-out interval elapses.
@@ -92,8 +92,8 @@ struct WinApi {
      * \param alertable If this parameter is TRUE and the thread is in the waiting state, the function returns when the system queues an I/O completion routine or APC, and the thread runs the routine or function. Otherwise, the function does not return and the completion routine or APC function is not executed.
      * \return If the function succeeds, the return value indicates the event that caused the function to return. It can be one of the following values. (Note that WAIT_OBJECT_0 is defined as 0 and WAIT_ABANDONED_0 is defined as 0x00000080L.)
      */
-    static Int32U          JCoreStdCall WaitForMultipleObjectsEx(In_ Int32U eventCount, In_ WinHandle* handles, In_ bool waitAll, In_ Int32U timeout = JCoreInfinite, In_ bool alertable = false);
-    static Int32U          JCoreStdCall GetLastError();
+    static Int32U          JCORE_STDCALL WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout = JCORE_INFINITE, JCORE_IN bool alertable = false);
+    static Int32U          JCORE_STDCALL GetLastError();
 
 
     /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent#return-value
@@ -101,21 +101,21 @@ struct WinApi {
      * \param handle  A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
      * \return If the function succeeds, the return value is nonzero.
      */
-    static bool            JCoreStdCall SetEvent(In_ WinHandle handle);
+    static bool            JCORE_STDCALL SetEvent(JCORE_IN WinHandle handle);
 
     /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-resetevent
      * \brief Sets the specified event object to the nonsignaled state.
      * \param handle A handle to the event object. The CreateEvent or OpenEvent function returns this handle.
      * \return If the function succeeds, the return value is nonzero.
      */
-    static bool            JCoreStdCall ResetEvent(In_ WinHandle handle);
+    static bool            JCORE_STDCALL ResetEvent(JCORE_IN WinHandle handle);
 
     /** https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle
      * \brief Closes an open object handle.
      * \param handle A valid handle to an open object.
      * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
      */
-    static bool            JCoreStdCall CloseHandle(In_ WinHandle handle);
+    static bool            JCORE_STDCALL CloseHandle(JCORE_IN WinHandle handle);
 
 
     /** https://learn.microsoft.com/ko-kr/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadpriority
@@ -131,7 +131,7 @@ struct WinApi {
      * THREAD_PRIORITY_NORMAL           0
      * THREAD_PRIORITY_TIME_CRITICAL    15
      */
-    static int             JCoreStdCall GetThreadPriority(In_ WinHandle threadHandle);
+    static int             JCORE_STDCALL GetThreadPriority(JCORE_IN WinHandle threadHandle);
 
     /** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority
      * \brief Sets the priority value for the specified thread. This value, together with the priority class of the thread's process, determines the thread's base priority level.
@@ -139,14 +139,14 @@ struct WinApi {
      * \param priority The priority value for the thread.
      * \return If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.
      */
-    static bool            JCoreStdCall SetThreadPriority(In_ WinHandle threadHandle, In_ Int priority);
+    static bool            JCORE_STDCALL SetThreadPriority(JCORE_IN WinHandle threadHandle, JCORE_IN Int priority);
 
     /** https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
      * \brief Retrieves the thread identifier of the calling thread. 
      * \remarks Until the thread terminates, the thread identifier uniquely identifies the thread throughout the system.
      * \return The return value is the thread identifier of the calling thread.
      */
-    static Int32U          JCoreStdCall GetCurrentThreadId();
+    static Int32U          JCORE_STDCALL GetCurrentThreadId();
 
 
 	/**
@@ -154,7 +154,7 @@ struct WinApi {
 	 * Retrieves the fully qualified path for the file that contains the specified module. The module must have been loaded by the current process.
 	 * \return the return value is the length of the string that is copied to the buffer
 	 */
-	static Int32U          JCoreStdCall GetModuleFilePath(InOpt_ WinModule module, Out_ char* filenameBuffer, In_ int filenameBufferCapacity);
+	static Int32U          JCORE_STDCALL GetModuleFilePath(JCORE_IN_OPT WinModule module, JCORE_OUT char* filenameBuffer, JCORE_IN int filenameBufferCapacity);
     
 }; // struct WinApi
 
@@ -181,7 +181,7 @@ struct Interlocked final
      * \param value The second operand.
      * \return The function returns the result of the operation.
      */
-    static TOperand Add(InOut_ TOperand* destination, In_ TOperand value);
+    static TOperand Add(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedcompareexchange
     /**
@@ -191,7 +191,7 @@ struct Interlocked final
      * \param desired The exchange value.
      * \return The function returns the initial value of the Destination parameter.
      */
-    static TOperand CompareExchange(InOut_ TOperand* destination, In_ TOperand expected, TOperand desired);
+    static TOperand CompareExchange(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand expected, TOperand desired);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchange
     /**
@@ -200,7 +200,7 @@ struct Interlocked final
      * \param value The value to be exchanged with the value pointed to by Target.
      * \return The function returns the initial value of the Target parameter.
      */
-    static TOperand Exchange(InOut_ TOperand* destination, In_ TOperand value);
+    static TOperand Exchange(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchangeadd
     /**
@@ -209,7 +209,7 @@ struct Interlocked final
      * \param value The value to be added to the variable pointed to by the Addend parameter.
      * \return The function returns the initial value of the Addend parameter.
      */
-    static TOperand ExchangeAdd(InOut_ TOperand* destination, In_ TOperand value);
+    static TOperand ExchangeAdd(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedincrement
     /**
@@ -217,7 +217,7 @@ struct Interlocked final
      * \param destination A pointer to the variable to be incremented.
      * \return The function returns the resulting incremented value.
      */
-    static TOperand Increment(InOut_ TOperand* destination);
+    static TOperand Increment(JCORE_IN_OUT TOperand* destination);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockeddecrement
     /**
@@ -225,7 +225,7 @@ struct Interlocked final
      * \param destination A pointer to the variable to be decremented.
      * \return The function returns the resulting decremented value.
      */
-    static TOperand Decrement(InOut_ TOperand* destination);
+    static TOperand Decrement(JCORE_IN_OUT TOperand* destination);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedand
     /**
@@ -234,7 +234,7 @@ struct Interlocked final
      * \param value The second operand.
      * \return The function returns the original value of the Destination parameter.
      */
-    static TOperand And(InOut_ TOperand* destination, In_ TOperand value);
+    static TOperand And(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedor
     /**
@@ -243,7 +243,7 @@ struct Interlocked final
      * \param value The second operand.
      * \return The function returns the original value of the Destination parameter.
      */
-    static TOperand Or(InOut_ TOperand* destination, In_ TOperand value);
+    static TOperand Or(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
 
 
     // https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedxor
@@ -253,8 +253,8 @@ struct Interlocked final
      * \param value The second operand.
      * \return The function returns the original value of the Destination parameter.
      */
-    static TOperand Xor(InOut_ TOperand* destination, In_ TOperand value);
-    static TOperand Read(InOut_ TOperand* destination) { return Interlocked::Add(destination, 0); }
+    static TOperand Xor(JCORE_IN_OUT TOperand* destination, JCORE_IN TOperand value);
+    static TOperand Read(JCORE_IN_OUT TOperand* destination) { return Interlocked::Add(destination, 0); }
 }; // struct Interlocked final
 
 
@@ -270,31 +270,31 @@ struct Interlocked<TOperand*> final
     using TReinterpretedType = Conditional_t<PlatformPtrSize == 4, Boundary32, Boundary64>;
     using TInterlocked = Interlocked<TReinterpretedType>;
 
-    static TOperand* Add(InOut_ TOperand** destination, In_ int value) {
+    static TOperand* Add(JCORE_IN_OUT TOperand** destination, JCORE_IN int value) {
         return reinterpret_cast<TOperand*>(TInterlocked::Add(
             reinterpret_cast<TReinterpretedType*>(destination), 
             sizeof(TOperand) * value));
     }
 
-    static TOperand* CompareExchange(InOut_ TOperand** destination, In_ TOperand* expected, In_ TOperand* desired) {
+    static TOperand* CompareExchange(JCORE_IN_OUT TOperand** destination, JCORE_IN TOperand* expected, JCORE_IN TOperand* desired) {
         return reinterpret_cast<TOperand*>(TInterlocked::CompareExchange(
             reinterpret_cast<TReinterpretedType*>(destination),
             reinterpret_cast<TReinterpretedType>(expected),
             reinterpret_cast<TReinterpretedType>(desired)));
     }
-    static TOperand* Exchange(InOut_ TOperand** destination, In_ TOperand* value) {
+    static TOperand* Exchange(JCORE_IN_OUT TOperand** destination, JCORE_IN TOperand* value) {
         return reinterpret_cast<TOperand*>(TInterlocked::Exchange(
             reinterpret_cast<TReinterpretedType*>(destination),
             reinterpret_cast<TReinterpretedType>(value)));
     }
 
-    static TOperand* ExchangeAdd(InOut_ TOperand** destination, In_ int value) {
+    static TOperand* ExchangeAdd(JCORE_IN_OUT TOperand** destination, JCORE_IN int value) {
         return reinterpret_cast<TOperand*>(TInterlocked::ExchangeAdd(
             reinterpret_cast<TReinterpretedType*>(destination),
             sizeof(TOperand) * value));
     }
 
-    static TOperand* Read(InOut_ TOperand** destination) {
+    static TOperand* Read(JCORE_IN_OUT TOperand** destination) {
         return reinterpret_cast<TOperand*>(TInterlocked::Add(reinterpret_cast<TReinterpretedType*>(destination), 0));
     }
 
@@ -306,9 +306,9 @@ struct Interlocked<bool> final
 {
     using TInterlocked = Interlocked<Boundary8>;
 
-    static bool CompareExchange(InOut_ bool* destination, In_ bool expected, In_ bool desired);
-    static bool Exchange(InOut_ bool* destination, In_ bool value);
-    static bool Read(InOut_ bool* destination);
+    static bool CompareExchange(JCORE_IN_OUT bool* destination, JCORE_IN bool expected, JCORE_IN bool desired);
+    static bool Exchange(JCORE_IN_OUT bool* destination, JCORE_IN bool value);
+    static bool Read(JCORE_IN_OUT bool* destination);
 }; // struct Interlocked final
 
 

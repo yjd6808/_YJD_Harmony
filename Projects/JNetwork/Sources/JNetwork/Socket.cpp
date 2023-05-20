@@ -197,7 +197,7 @@ Socketv4 Socketv4::Accept() {
 	return { this->Protocol, accept(Handle, nullptr, nullptr) };
 }
 
-int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, Out_ Int32UL* receivedBytes, LPOVERLAPPED overlapped) const {
+int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveDatalen, JCORE_OUT Int32UL* receivedBytes, LPOVERLAPPED overlapped) const {
 
 	// @참고 : https://docs.microsoft.com/en-us/windows/win32/api/mswsock/nf-mswsock-acceptex
 	// sListenSocket : 서버 소켓
@@ -227,7 +227,7 @@ int Socketv4::AcceptEx(SOCKET listenSocket, void* outputBuffer, Int32UL receiveD
 	);
 }
 
-void Socketv4::AcceptExResult(char* buff, Int32UL receiveDatalen, Out_ IPv4EndPoint* localEp, Out_ IPv4EndPoint* remoteEp) {
+void Socketv4::AcceptExResult(char* buff, Int32UL receiveDatalen, JCORE_OUT IPv4EndPoint* localEp, JCORE_OUT IPv4EndPoint* remoteEp) {
 
 	LPSOCKADDR_IN pSockLocalAddrIn;
 	LPSOCKADDR_IN pSockRemoteAddrIn;
@@ -309,7 +309,7 @@ int Socketv4::Connect(const IPv4EndPoint& ipv4EndPoint) const {
 // [out]		lpdwBytesSent : 함수 반환값이 TRUE 된 경우 이 연결이 성립된 후 전송된 바이트 크기를 반환해준다. lpSendBuffer를 NULL로 전달하면 이 값은 무시된다.
 // [in]			lpOverlapped : 절대 NULL 전달하면 안됨
 
-int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, Out_ Int32UL* sentBytes) const {
+int Socketv4::ConnectEx(const IPv4EndPoint& ipv4EndPoint, LPOVERLAPPED overlapped, char* sendbuf, Int32UL sendbufSize, JCORE_OUT Int32UL* sentBytes) const {
 	SOCKADDR_IN addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = ByteOrder::HostToNetwork(ipv4EndPoint.GetPort());
@@ -343,7 +343,7 @@ int Socketv4::Receive(char* buff, Int32U buffSize, Int32U flag) const {
 	return recv(Handle, buff, buffSize, flag);
 }
 
-int Socketv4::ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4EndPoint, Int32U flag) const {
+int Socketv4::ReceiveFrom(char* buff, Int32U buffSize, JCORE_OUT IPv4EndPoint* ipv4EndPoint, Int32U flag) const {
 	SOCKADDR_IN addr;
 	int sz = sizeof(SOCKADDR_IN);
 	const int recvBytes = recvfrom(Handle, buff, buffSize, flag, (sockaddr*)&addr, &sz);
@@ -354,7 +354,7 @@ int Socketv4::ReceiveFrom(char* buff, Int32U buffSize, Out_ IPv4EndPoint* ipv4En
 
 int Socketv4::SendEx(
 	LPWSABUF lpBuf, 
-	Out_ Int32UL* pBytesSent, 
+	JCORE_OUT Int32UL* pBytesSent, 
 	LPOVERLAPPED lpOverlapped, 
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, 
 	Int32U flag) const
@@ -364,7 +364,7 @@ int Socketv4::SendEx(
 
 int Socketv4::SendToEx(
 	LPWSABUF lpBuffers, 
-	Out_ Int32UL* pBytesSent, 
+	JCORE_OUT Int32UL* pBytesSent, 
 	LPOVERLAPPED lpOverlapped, 
 	const IPv4EndPoint& to,
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine) const
@@ -378,7 +378,7 @@ int Socketv4::SendToEx(
 
 int Socketv4::ReceiveEx(
 	LPWSABUF lpBuf, 
-	Out_ Int32UL* pBytesReceived, 
+	JCORE_OUT Int32UL* pBytesReceived, 
 	LPOVERLAPPED lpOverlapped, 
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, 
 	Int32U flag) const
@@ -388,9 +388,9 @@ int Socketv4::ReceiveEx(
 
 int Socketv4::ReceiveFromEx(
 	LPWSABUF lpBuf, 
-	Out_ Int32UL* pBytesReceived,
+	JCORE_OUT Int32UL* pBytesReceived,
 	LPOVERLAPPED lpOverlapped, 
-	Out_ SOCKADDR_IN* senderAddr,
+	JCORE_OUT SOCKADDR_IN* senderAddr,
 	LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompRoutine, 
 	Int32U flag) const
 {

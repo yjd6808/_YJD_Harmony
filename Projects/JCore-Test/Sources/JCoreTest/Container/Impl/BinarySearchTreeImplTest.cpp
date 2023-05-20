@@ -171,7 +171,7 @@ public:
 			} else {
 				pSmallestParent->Right = pSmallest->Right;
 			}
-			DeleteSafe(pSmallest);
+			JCORE_DELETE_SAFE(pSmallest);
 		}
 		m_iSize--;
 		return true;
@@ -199,9 +199,9 @@ private:
 		}
 
 		if (parent->Left == child) {
-			DeleteSafe(parent->Left);
+			JCORE_DELETE_SAFE(parent->Left);
 		} else {
-			DeleteSafe(parent->Right);
+			JCORE_DELETE_SAFE(parent->Right);
 		}
 	}
 

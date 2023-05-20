@@ -31,7 +31,7 @@ TcpServer::TcpServer(
 
 TcpServer::~TcpServer() {
 	TcpServer::Stop();
-	DeleteSafe(m_pContainer);
+	JCORE_DELETE_SAFE(m_pContainer);
 }
 
 TcpSession* TcpServer::CreateSession() {

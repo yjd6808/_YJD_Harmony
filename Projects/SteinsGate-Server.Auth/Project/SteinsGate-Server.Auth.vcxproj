@@ -58,6 +58,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthCore.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOGIN.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTH.cpp">
       <SubType>
       </SubType>
@@ -107,6 +111,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOGIN.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTH.h">
       <SubType>
       </SubType>

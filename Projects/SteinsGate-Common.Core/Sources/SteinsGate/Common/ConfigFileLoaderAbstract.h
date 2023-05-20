@@ -17,11 +17,11 @@ public:
 	ConfigFileLoaderAbstract(DataManagerAbstract* manager);
 	virtual ~ConfigFileLoaderAbstract();
 
-	virtual bool loadJson(Out_ Json::Value& root);
-	virtual bool loadJson(const char* fileName, Out_ Json::Value& root);
-	virtual bool loadJson(const SGString& fileName, Out_ Json::Value& root);
-	virtual void loadJsonThrow(const char* fileName, Out_ Json::Value& root);
-	virtual void loadJsonThrow(const SGString& fileName, Out_ Json::Value& root);
+	virtual bool loadJson(JCORE_OUT Json::Value& root);
+	virtual bool loadJson(const char* fileName, JCORE_OUT Json::Value& root);
+	virtual bool loadJson(const SGString& fileName, JCORE_OUT Json::Value& root);
+	virtual void loadJsonThrow(const char* fileName, JCORE_OUT Json::Value& root);
+	virtual void loadJsonThrow(const SGString& fileName, JCORE_OUT Json::Value& root);
 	virtual bool load() = 0;
 	
 	virtual ConfigFileType_t getConfigFileType() = 0;

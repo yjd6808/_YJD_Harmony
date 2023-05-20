@@ -64,18 +64,18 @@ void InitializeClientCore() {
 
 void FinalizeClientCore() {
 
-	DeleteSingletonSafe(CoreNet_v);
-	DeleteSingletonSafe(CoreTimeManager_v);
-	DeleteSingletonSafe(CorePopupManager_v);
-	DeleteSingletonSafe(CoreUIManager_v);
-	DeleteSingletonSafe(CorePlayer_v);
-	DeleteSingletonSafe(CoreDataManager_v);
-	DeleteSingletonSafe(CoreInven_v);
-	DeleteSingletonSafe(CoreFont_v);
-	DeleteSingletonSafe(CoreActorListenerManager_v);
-	DeleteSingletonSafe(CoreActorBox_v);
-	DeleteSingletonSafe(CorePackManager_v);
-	DeleteSingletonSafe(CoreGlobal_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreNet_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreTimeManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CorePopupManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreUIManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CorePlayer_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreDataManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreInven_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreFont_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreActorListenerManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreActorBox_v);
+	JCORE_DELETE_SINGLETON_SAFE(CorePackManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreGlobal_v);
 	
-	Null(CoreWorld_v);	// 월드는 코코스에서 알아서 제거해줌
+	JCORE_MAKE_NULL(CoreWorld_v);	// 월드는 코코스에서 알아서 제거해줌
 }

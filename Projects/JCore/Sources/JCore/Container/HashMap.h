@@ -119,8 +119,8 @@ struct Bucket
 	, Capacity(1)
 	, Size(0) {}
 	~Bucket() {
-		PlacementDeleteArraySafe(DynamicArray, Size);
-		AllocatorDynamicDeallocateSafe(DynamicArray, sizeof(TBucketNode) * Capacity);
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(DynamicArray, Size);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(DynamicArray, sizeof(TBucketNode) * Capacity);
 	}
 
 	template <typename... Args>
@@ -188,7 +188,7 @@ struct Bucket
 	}
 
 	void Clear() {
-		PlacementDeleteArraySafe(DynamicArray, Size);
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(DynamicArray, Size);
 		Size = 0;
 	}
 
@@ -327,8 +327,8 @@ public:
 	~HashMap() noexcept override {
 		THashMap::Clear();
 
-		PlacementDeleteArraySafe(m_pTable, m_iCapacity);
-		AllocatorDynamicDeallocateSafe(m_pTable, m_iCapacity * sizeof(TBucket));
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, m_iCapacity);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, m_iCapacity * sizeof(TBucket));
 	}
 public:
 
@@ -353,7 +353,7 @@ public:
 
 	THashMap& operator=(THashMap&& other) noexcept {
 		Clear();
-		AllocatorDynamicDeallocateSafe(m_pTable, sizeof(TBucket) * m_iCapacity);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, sizeof(TBucket) * m_iCapacity);
 
 		this->m_Owner = Move(other.m_Owner);
 		this->m_iSize = other.m_iSize;
@@ -652,8 +652,8 @@ public:
 			}
 		}
 
-		PlacementDeleteArraySafe(m_pTable, iPrevCapacity);
-		AllocatorDynamicDeallocateSafe(m_pTable, sizeof(TBucket) * iPrevCapacity);
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, iPrevCapacity);
+		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, sizeof(TBucket) * iPrevCapacity);
 		m_pTable = pNewTable;
 	}
 

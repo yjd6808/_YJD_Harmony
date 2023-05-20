@@ -27,7 +27,7 @@ public:
 	FileMode GetMode() { return m_eMode;  }
 	FileAccess GetAccess() { return m_eAccess; }
 
-	int Read(Out_ Byte* bytes, int offset, int len) override;
+	int Read(JCORE_OUT Byte* bytes, int offset, int len) override;
 	void Write(const Byte* bytes, int offset, int len) override;
 	void Seek(int offset, Origin origin = Origin::eBegin) override;
 	bool Flush() override;

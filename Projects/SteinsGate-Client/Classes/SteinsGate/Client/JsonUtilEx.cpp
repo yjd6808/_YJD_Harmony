@@ -67,7 +67,7 @@ void JsonUtilEx::parseAnimationInfo(Json::Value& animationRoot, AnimationInfo& i
 	}
 }
 
-void JsonUtilEx::parseColor4B(Json::Value& root, Out_ SGColor4B& color) {
+void JsonUtilEx::parseColor4B(Json::Value& root, JCORE_OUT SGColor4B& color) {
 
 	int iR;
 	int iG;

@@ -9,10 +9,10 @@
 #include "TextParser.h"
 
 char* TextParser::parserFrameInfo(SGString& frameString, 
-	Out_ int& frameIndex, 
-	Out_ int& delay,
-	Out_ int& frameEvent,
-	Out_ int& frameEventCode) {
+	JCORE_OUT int& frameIndex, 
+	JCORE_OUT int& delay,
+	JCORE_OUT int& frameEvent,
+	JCORE_OUT int& frameEventCode) {
 
 	char* pSource = frameString.Source();
 	int* p[4];
@@ -47,7 +47,7 @@ char* TextParser::parserFrameInfo(SGString& frameString,
 	return nullptr;
 }
 
-void TextParser::parserIntNumbers(const SGString& numStr, Out_ int* numArr, int count) {
+void TextParser::parserIntNumbers(const SGString& numStr, JCORE_OUT int* numArr, int count) {
 	char* pSoruce = numStr.Source();
 	int iPtrIdx = 0;
 	int iBuffIdx = 0;

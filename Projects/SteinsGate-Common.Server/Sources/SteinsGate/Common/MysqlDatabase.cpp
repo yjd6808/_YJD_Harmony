@@ -19,7 +19,7 @@ MysqlDatabase::MysqlDatabase(DatabaseInfo* info)
 MysqlDatabase::~MysqlDatabase() {
 	if (m_bInitialized) {
 		Finalize();
-		DeleteSafe(m_pIocp);
+		JCORE_DELETE_SAFE(m_pIocp);
 	}
 }
 
@@ -55,7 +55,7 @@ bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
 
 	// 커넥션 풀 초기화
 	if (!m_pConnectionPool->Init(iConnectionPoolSize)) {
-		DeleteSafe(m_pConnectionPool);
+		JCORE_DELETE_SAFE(m_pConnectionPool);
 		_LogError_("DB 커넥션 풀 초기화 실패");
 		return false;
 	}
@@ -93,7 +93,7 @@ void MysqlDatabase::Finalize() {
 	m_pIocp->Destroy();
 
 	if (m_pConnectionPool)
-		DeleteSafe(m_pConnectionPool);
+		JCORE_DELETE_SAFE(m_pConnectionPool);
 
 
 	MysqlStatementBuilder::Finalize();

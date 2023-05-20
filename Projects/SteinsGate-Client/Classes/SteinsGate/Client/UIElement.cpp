@@ -32,7 +32,7 @@ UIElement::UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo*
 
 UIElement::~UIElement() {
 	for (int i = 0; i < eMouseEventMax; ++i) {
-		DeleteSafe(m_pMouseEventMap[i]);
+		JCORE_DELETE_SAFE(m_pMouseEventMap[i]);
 	}
 }
 

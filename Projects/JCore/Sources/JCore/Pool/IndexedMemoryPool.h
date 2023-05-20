@@ -173,7 +173,7 @@ public:
 			DebugAssertMsg(iSize <= MaxAllocatableSize, "이 풀 인덱싱은 최대 %d 만큼만 할당가능합니다. (%d바이트 블록을 초기화하려함)", MaxAllocatableSize, iSize);
 			DebugAssertMsg(Detail::AllocationLengthMapConverter::ValidateSize(iSize), "뭐야! 사이즈가 안맞자나!");
 			if (m_Pool[iIndex])
-				DeleteSafe(m_Pool[iIndex]);
+				JCORE_DELETE_SAFE(m_Pool[iIndex]);
 
 			m_Pool[iIndex] = dbg_new MemoryChunckQueue(iSize, iCount);
 			AddInitBlock(iIndex, iCount);
@@ -187,21 +187,21 @@ public:
 		DebugAssertMsg(HasUsingBlock() == false, "현재 사용중인 블록이 있습니다. !!!");
 
 		for (int i = 0; i <= HighBoundaryIndex; ++i) {
-			DeleteSafe(m_Pool[i]);
+			JCORE_DELETE_SAFE(m_Pool[i]);
 		}
 
 		if (m_PoolTargeterLow != nullptr) {
 			for (int i = 0; i < m_PoolTargeterLow->Size(); ++i) {
 				m_PoolTargeterLow->At(i) = nullptr;
 			}
-			DeleteSafe(m_PoolTargeterLow);
+			JCORE_DELETE_SAFE(m_PoolTargeterLow);
 		}
 
 		if (m_PoolTargeterHigh != nullptr) {
 			for (int i = 0; i < m_PoolTargeterHigh->Size(); ++i) {
 				m_PoolTargeterHigh->At(i) = nullptr;
 			}
-			DeleteSafe(m_PoolTargeterHigh);
+			JCORE_DELETE_SAFE(m_PoolTargeterHigh);
 		}
 	}
 

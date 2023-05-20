@@ -20,5 +20,5 @@ public:
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Common; }
 	bool load() override;
 
-	static void readCommonInfo(Json::Value& commonRoot, Out_ CommonInfo* commonInfo);
+	static void readCommonInfo(Json::Value& commonRoot, JCORE_OUT CommonInfo* commonInfo);
 };

@@ -81,7 +81,7 @@ void Thread::Sleep(Int32U ms) {
     return ::Sleep(ms);
 }
 
-Int32U JCoreStdCall Thread::ThreadRoutine(void* param) {
+Int32U JCORE_STDCALL Thread::ThreadRoutine(void* param) {
     auto* pRecvParam = static_cast<ThreadParam*>(param);
     Thread* pThis = pRecvParam->Self;
     TRunnable runnable = Move(pRecvParam->ThreadFunc);

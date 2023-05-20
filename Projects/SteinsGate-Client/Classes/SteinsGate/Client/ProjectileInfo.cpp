@@ -45,5 +45,5 @@ ProjectileInfo::~ProjectileInfo() {
 	if (AnimationRef)
 		return;
 
-	DeleteSafe(Animation);
+	JCORE_DELETE_SAFE(Animation);
 }

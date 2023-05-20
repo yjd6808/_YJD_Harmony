@@ -295,6 +295,10 @@
     <ClInclude Include="..\Sources\JCore\Logger\ConsoleLogger.h" />
     <ClInclude Include="..\Sources\JCore\Logger\LoggerAbstract.h" />
     <ClInclude Include="..\Sources\JCore\Logger\LoggerDefine.h" />
+    <ClInclude Include="..\Sources\JCore\Macro.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Namespace.h">
       <SubType>
       </SubType>

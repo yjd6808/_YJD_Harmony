@@ -19,8 +19,8 @@
  */
 
 #if DebugMode
-	#define dbg_new new (_NORMAL_BLOCK, __FILENAME__, __LINE__)
-	#define dbg_operator_new(size) operator new((size), _NORMAL_BLOCK, __FILENAME__, __LINE__)
+	#define dbg_new new (_NORMAL_BLOCK, JCORE_FILENAME, __LINE__)
+	#define dbg_operator_new(size) operator new((size), _NORMAL_BLOCK, JCORE_FILENAME, __LINE__)
 #else
 	#define dbg_new new
 	#define dbg_operator_new(size) operator new((size))

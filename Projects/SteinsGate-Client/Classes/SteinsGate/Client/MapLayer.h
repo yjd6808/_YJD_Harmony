@@ -21,9 +21,9 @@ public:
 	void update(float dt) override;
 
 	void runFrameEvent(Actor* runner, FrameEventType_t frameEventType, int frameEventId);
-	Character* findNearestCharacterInRadious(Actor* stdActor, float radious, Out_ float& enemyDist);
-	bool collectEnemiesInActorRect(Actor* attacker, const SGActorRect& rect, Out_ SGVector<SGHitInfo>& hitTargets);
-	bool collectEnemiesInActor(Actor* collector, Out_ SGVector<SGHitInfo>& hitTargets);
+	Character* findNearestCharacterInRadious(Actor* stdActor, float radious, JCORE_OUT float& enemyDist);
+	bool collectEnemiesInActorRect(Actor* attacker, const SGActorRect& rect, JCORE_OUT SGVector<SGHitInfo>& hitTargets);
+	bool collectEnemiesInActor(Actor* collector, JCORE_OUT SGVector<SGHitInfo>& hitTargets);
 	bool isCollideWithObstacles(const SGRect& rect);
 
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;

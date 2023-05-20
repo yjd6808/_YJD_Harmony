@@ -26,7 +26,8 @@ void AuthNetMaster::Initialize() {
 	spCenterNetGroup->Initialize();
 }
 
-void AuthNetMaster::OnLoop(int sleepMs) {
+void AuthNetMaster::OnLoop(PulserStatistics* pulserStat) {
+
 }
 
 void AuthNetMaster::OnCapturedInputEvent(int inputEvent) {

@@ -20,5 +20,5 @@ public:
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::Enchant; }
 	bool load() override;
 
-	/* static */ void readEnchantInfo(Json::Value & enchantRoot, Out_ EnchantInfo * enchantInfo);
+	/* static */ void readEnchantInfo(Json::Value & enchantRoot, JCORE_OUT EnchantInfo * enchantInfo);
 };

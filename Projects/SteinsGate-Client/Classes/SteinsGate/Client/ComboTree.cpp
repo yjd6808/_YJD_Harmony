@@ -87,7 +87,7 @@ SGComboTree::SGComboTree() {
 
 SGComboTree::~SGComboTree() {
 	removeAll();
-	DeleteSafe(m_pRoot);
+	JCORE_DELETE_SAFE(m_pRoot);
 }
 
 void SGComboTree::addComboAction(SGAction* action) {

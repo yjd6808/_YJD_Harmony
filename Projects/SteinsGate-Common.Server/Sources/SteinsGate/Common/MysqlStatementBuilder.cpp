@@ -28,7 +28,7 @@ bool MysqlStatementBuilder::Initialize(const DatabaseInfo* dbInfo) {
 void MysqlStatementBuilder::Finalize() {
 	if (ms_pConn) {
 		ms_pConn->Disconnect();
-		DeleteSafe(ms_pConn);
+		JCORE_DELETE_SAFE(ms_pConn);
 		ms_pConn = nullptr;
 	}
 }

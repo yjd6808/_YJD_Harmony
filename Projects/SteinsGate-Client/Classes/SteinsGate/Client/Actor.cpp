@@ -35,8 +35,8 @@ Actor::Actor(ActorType_t type, int code)
 {}
 
 Actor::~Actor() {
-	DeleteSafe(m_pHitRecorder);
-	DeleteSafe(m_pListener);
+	JCORE_DELETE_SAFE(m_pHitRecorder);
+	JCORE_DELETE_SAFE(m_pListener);
 }
 
 
@@ -311,7 +311,7 @@ void Actor::setBackwardDirection() {
 	m_pActorSprite->setBackwardDirection();
 }
 
-bool Actor::isCollide(Actor* other, Out_ SpriteDirection_t& otherHitDirection, Out_ SGRect& hitRect) {
+bool Actor::isCollide(Actor* other, JCORE_OUT SpriteDirection_t& otherHitDirection, JCORE_OUT SGRect& hitRect) {
 	SGRect myThick = getThicknessBoxRect();
 	SGRect otherBox = other->getThicknessBoxRect();
 

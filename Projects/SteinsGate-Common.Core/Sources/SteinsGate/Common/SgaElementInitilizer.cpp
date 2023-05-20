@@ -171,7 +171,7 @@ void SgaElementInitializer::Initialize() {
 
 void SgaElementInitializer::Finalize() {
 	for (int i = 0; i < InitializerMap_v.Size(); ++i) {
-		DeleteSafe(InitializerMap_v[i]);
+		JCORE_DELETE_SAFE(InitializerMap_v[i]);
 	}
 
 	InitializerMap_v.~Vector();

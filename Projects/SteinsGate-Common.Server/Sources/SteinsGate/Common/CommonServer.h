@@ -8,8 +8,10 @@
 
 #pragma once
 
+#include <JCore/Threading/Pulser.h>
 #include <JNetwork/Host/TcpServer.h>
 #include <SteinsGate/Common/ServerEnum.h>
+
 
 class CommonServer : public JNetwork::TcpServer
 {
@@ -25,12 +27,12 @@ protected:
 
 public:
 	bool ProcessOrder(CenterOrder_t order);
-	void ProcessLoop(int sleepMs);
+	void ProcessLoop(JCore::PulserStatistics* pulseStat);
 
 	void SetBootState(ServerBootState_t state) { m_eBootState = state; }
 	ServerBootState_t GetBootState() { return (ServerBootState_t)m_eBootState.Load(); }
 
-	virtual void OnLoop(int sleepMs) = 0;
+	virtual void OnLoop(JCore::PulserStatistics* pulseStat) = 0;
 	virtual ServerType_t GetServerType() = 0;
 	const char* GetServerName() { return ServerType::Name[GetServerType()]; }
 	virtual ServerInfo GetServerInfo() = 0;

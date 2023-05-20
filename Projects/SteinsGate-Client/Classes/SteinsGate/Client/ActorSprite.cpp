@@ -44,7 +44,7 @@ ActorSprite* ActorSprite::create(
 		return pSprite;
 	}
 
-	DeleteSafe(pSprite);
+	JCORE_DELETE_SAFE(pSprite);
 	return pSprite;
 }
 

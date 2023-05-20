@@ -132,10 +132,10 @@ void CommandSynchronizer::finalize() {
 			}
 		}
 
-		DeleteSafe(pIOCPPacketQueueHolder->Queue);
-		DeleteSafe(pIOCPPacketQueueHolder->Lock);
-		DeleteSafe(pIOCPPacketQueueHolder->MemPool);
-		DeleteSafe(m_vSwapCommandQueue[i]);
+		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->Queue);
+		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->Lock);
+		JCORE_DELETE_SAFE(pIOCPPacketQueueHolder->MemPool);
+		JCORE_DELETE_SAFE(m_vSwapCommandQueue[i]);
 	}
 	m_vIOCPThreadAccessCommandQueueList.Clear();
 	m_vSwapCommandQueue.Clear();

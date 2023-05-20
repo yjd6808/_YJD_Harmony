@@ -45,7 +45,7 @@ bool ChannelInfoLoader::load() {
 	return true;
 }
 
-void ChannelInfoLoader::readChannelBaseInfo(Json::Value& channelRoot, Out_ ChannelInfo* channelInfo) {
+void ChannelInfoLoader::readChannelBaseInfo(Json::Value& channelRoot, JCORE_OUT ChannelInfo* channelInfo) {
  	channelInfo->Code = channelRoot["code"].asInt();
 	channelInfo->Name = JsonUtil::getString(channelRoot["name"]);
 	channelInfo->EnteranceType = (EnteranceType_t)channelRoot["enterance_type"].asInt();

@@ -25,13 +25,13 @@ CommonServer::CommonServer(
 {}
 
 
-void CommonServer::ProcessLoop(int sleepMs) {
+void CommonServer::ProcessLoop(PulserStatistics* pulseStat) {
 
 	if (m_eBootState == ServerBootState::Launched) {
 		return;
 	}
 
-	OnLoop(sleepMs);
+	OnLoop(pulseStat);
 }
 
 

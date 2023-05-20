@@ -123,14 +123,14 @@ public:
 	bool HasNext() const;
 	bool Next();
 
-	int GetFieldIndex(const JCore::String& fieldName);
-	char* GetRawString(const JCore::String& fieldName);
+	int GetFieldIndex(const char* fieldName);
+	const char* GetRawString(const char* fieldName);
 
 	// 잘못된 필드를 주입하거나, 해당 행의 필드가 비어있는 경우(NULL)인경우 JCore::String(0)반환
-	JCore::String GetString(const JCore::String& fieldName);
+	JCore::String GetString(const char* fieldName);
 
 	template <typename TInteger>
-	bool TryGetNumber(const JCore::String& fieldName, TInteger& val, TInteger defaultValue = 0) {
+	bool TryGetNumber(const char* fieldName, TInteger& val, TInteger defaultValue = 0) {
 		const char* pRawString = GetRawString(fieldName);
 
 		if (pRawString == nullptr) {
@@ -142,7 +142,7 @@ public:
 	}
 
 	template <typename TInteger>
-	TInteger GetNumber(const JCore::String& fieldName) {
+	TInteger GetNumber(const char* fieldName) {
 		const char* pRawString = GetRawString(fieldName);
 		if (pRawString == nullptr) return 0;
 		return JCore::StringUtil::ToNumber<TInteger>(pRawString);

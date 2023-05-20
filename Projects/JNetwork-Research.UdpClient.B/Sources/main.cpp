@@ -37,7 +37,7 @@ int main() {
 		}
 	}
 
-	DeleteSafe(pClientGroup);
+	JCORE_DELETE_SAFE(pClientGroup);
 
 	Winsock::Finalize();
 	return 0;

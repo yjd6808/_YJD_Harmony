@@ -458,6 +458,7 @@
     <ClInclude Include="..\Sources\JCore\Container\CollectionStreamIterator.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Macro.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

@@ -27,5 +27,5 @@ public:
 	ServerType_t GetServerType() override { return ServerType::Auth; }
 	ServerInfo GetServerInfo() override;
 protected:
-	void OnLoop(int sleepMs) override;
+	void OnLoop(JCore::PulserStatistics* pulserStat) override;
 };

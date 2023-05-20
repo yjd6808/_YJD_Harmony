@@ -12,9 +12,12 @@
 
 NS_JC_BEGIN
 
-Pulser::Pulser(Int32U intervalMiliseconds) : Interval(intervalMiliseconds) {}
+Pulser::Pulser(Int32U intervalMiliseconds, JCORE_IN PulserStatistics* statistics)
+	: Interval(intervalMiliseconds)
+	, Statistics(statistics)
+{}
 
-int Pulser::Wait()  {
+void Pulser::Wait()  {
 	const TimeSpan gap = Watch.StopContinue();
 	const Int32U uiGap = (Int32U)gap.GetTotalMiliSeconds();
 	int iIntervalCount = 1;
@@ -28,8 +31,13 @@ int Pulser::Wait()  {
 		Thread::Sleep(iIntervalCount * Interval - uiGap);
 	}
 
+	if (Statistics) {
+		Statistics->PulseCount += 1;
+		Statistics->SleepIntervalLast = iIntervalCount * Interval;
+		Statistics->TotalSleepTime += Statistics->SleepIntervalLast;
+	}
+
 	Watch.Start();
-	return iIntervalCount;
 }
 
 NS_JC_END

@@ -61,7 +61,7 @@ bool ProjectileInfoLoader::load() {
 	return true;
 }
 
-void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRoot, Out_ ProjectileInfo* projectileInfo) {
+void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo) {
 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	DataManager* pDataManager = DataManager::Get();
@@ -152,7 +152,7 @@ void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRo
 	projectileInfo->Animation = pAnimationInfo;
 }
 
-void ProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, Out_ ProjectileInfo* projectileInfo) {
+void ProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo) {
 	// 초기화 안된 변수가 없어야함 
 	ImagePackManager* pPackManager = ImagePackManager::Get();
 	DataManager* pDataManager = DataManager::Get();

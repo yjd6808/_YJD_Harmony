@@ -53,6 +53,16 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonClient.h">
       <Filter>Net\Listener</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryField.h">
+      <Filter>Database</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />

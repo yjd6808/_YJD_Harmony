@@ -62,14 +62,14 @@ TcpClient* CommonNetGroup::GetCenterClient() {
 	return m_pCenterClient;
 }
 
-void CommonNetGroup::ProcessLoop(int sleepMs) {
+void CommonNetGroup::ProcessLoop(PulserStatistics* pulseStat) {
 	CommonServer* pServer = dynamic_cast<CommonServer*>(m_pServer);
 
 	if (pServer) {
-		pServer->ProcessLoop(sleepMs);
+		pServer->ProcessLoop(pulseStat);
 	}
 
-	OnLoop(sleepMs);
+	OnLoop(pulseStat);
 }
 
 

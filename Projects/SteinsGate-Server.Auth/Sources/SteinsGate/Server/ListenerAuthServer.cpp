@@ -14,6 +14,8 @@
 
 #include <SteinsGate/Server/R_AUTH.h>
 
+#include "SteinsGate/Common/QueryDefine.h"
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -23,6 +25,8 @@ ListenerAuthServer::ListenerAuthServer() {
 
 void ListenerAuthServer::OnStarted() {
 	ListenerCommonServer::OnStarted();
+	QrySelectAccountInfoResult result;
+	QrySelectAccountInfo::Execute(CoreGameDB_v, result, "abcd", "efef");
 }
 
 void ListenerAuthServer::OnConnected(Session* connectedSession) {

@@ -20,8 +20,8 @@ public:
 
 	bool load() override;
 
-	static void readElementCommon(Json::Value& elementRoot, Out_ UIElementInfo* elementInfo);
-	static void readElementGroup(Json::Value& uiGroupRoot, Out_ UIGroupInfo* groupInfo);
+	static void readElementCommon(Json::Value& elementRoot, JCORE_OUT UIElementInfo* elementInfo);
+	static void readElementGroup(Json::Value& uiGroupRoot, JCORE_OUT UIGroupInfo* groupInfo);
 	static UIElementInfo* readElementButton(Json::Value& buttonRoot);
 	static UIElementInfo* readElementLabel(Json::Value& labelRoot);
 	static UIElementInfo* readElementSprite(Json::Value& spriteRoot);

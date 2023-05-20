@@ -14,14 +14,14 @@
 #include <Jnetwork/Host/TcpClient.h>
 #include <Jnetwork/Host/UdpClient.h>
 
-class CommonNetGroup : public JNetwork::NetGroup
+class JCORE_NOVTABLE CommonNetGroup : public JNetwork::NetGroup
 {
 public:
 	CommonNetGroup();
 
 	void Initialize() override;
 	bool ConnectCenterServer(int tryCount);
-	void ProcessLoop(int sleepMs);
+	void ProcessLoop(JCore::PulserStatistics* pulseStat);
 
 	JNetwork::TcpServer* GetServer() { return m_pServer; }
 	JNetwork::TcpClient* GetCenterClient();
@@ -34,7 +34,7 @@ protected:
 	virtual void InitializeCenterClient() = 0;
 	virtual void InitializeInterServerClient() = 0;
 
-	virtual void OnLoop(int sleepMs) = 0;
+	virtual void OnLoop(JCore::PulserStatistics* pulseStat) = 0;
 
 	JNetwork::TcpServer* m_pServer;
 	JNetwork::TcpClient* m_pCenterClient;

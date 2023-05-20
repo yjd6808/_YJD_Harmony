@@ -28,7 +28,7 @@ UIEditBox::UIEditBox(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* edit
 {}
 
 UIEditBox::~UIEditBox() {
-	DeleteSafe(m_pListener);
+	JCORE_DELETE_SAFE(m_pListener);
 }
 
 UIEditBox* UIEditBox::create(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo) {

@@ -71,7 +71,7 @@ MysqlConnection* MysqlConnectionPool::GetConnection() {
 		m_ConnectionList.PopFront();
 
 		if (pConn->IsConnected() == false) {
-			DeleteSafe(pConn);
+			JCORE_DELETE_SAFE(pConn);
 			pConn = this->CreateConnection();
 		}
 

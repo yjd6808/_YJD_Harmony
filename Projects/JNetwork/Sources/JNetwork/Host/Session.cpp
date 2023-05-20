@@ -288,7 +288,7 @@ void Session::WaitForZeroPending() {
 #ifdef DebugMode
 		// 클라이언트 정상종료 테스트
 		if (GetType() == eClient) {
-			JCorePass;
+			JCORE_PASS;
 		}
 #endif
 
