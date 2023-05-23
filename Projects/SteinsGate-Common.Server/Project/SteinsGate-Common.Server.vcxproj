@@ -30,11 +30,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryField.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefineAuth.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst.h">
       <SubType>
       </SubType>
@@ -59,6 +58,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerEnum.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerNamespace.h">
       <SubType>
       </SubType>
     </ClInclude>

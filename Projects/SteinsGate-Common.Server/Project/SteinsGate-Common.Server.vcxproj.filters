@@ -54,15 +54,13 @@
       <Filter>Net\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryField.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefineAuth.h">
       <Filter>Database</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerNamespace.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />

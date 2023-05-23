@@ -25,7 +25,7 @@ private:
 	template <Int32U Size>
 	struct Setter<const char[Size]>
 	{
-		void operator()(TFieldMap& refArgMap, int idx, const char(str)[Size]) const {
+		void operator()(TFieldMap& refArgMap, int idx, const char* str) const {
 			refArgMap[idx] = MysqlStatementBuilder::ms_pConn->EscapeString(JCore::String(str));
 		}
 	};
@@ -33,7 +33,7 @@ private:
 	template <Int32U Size>
 	struct Setter<char[Size]>
 	{
-		void operator()(TFieldMap& refArgMap, int idx, char(str)[Size]) const {
+		void operator()(TFieldMap& refArgMap, int idx, const char* str) const {
 			refArgMap[idx] = MysqlStatementBuilder::ms_pConn->EscapeString(JCore::String(str));
 		}
 	};

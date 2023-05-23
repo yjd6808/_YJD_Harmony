@@ -25,7 +25,11 @@ class MysqlQuerySelect;
 class MysqlQueryUpdate;
 class MysqlQueryInsert;
 
+
 using MysqlQueryPtr = JCore::SharedPtr<MysqlQuery>;
+using MysqlQuerySelectPtr = JCore::SharedPtr<MysqlQuerySelect>;
+using MysqlQueryUpdatePtr = JCore::SharedPtr<MysqlQueryUpdate>;
+using MysqlQueryInsertPtr = JCore::SharedPtr<MysqlQueryInsert>;
 class MysqlQuery
 {
 public:
@@ -73,6 +77,7 @@ public:
 	virtual bool Execute() = 0;
 	virtual bool IsSuccess() const { return m_bSuccess; }
 	virtual bool IsFailed() const { return !m_bSuccess; }
+	StatementType GetStatementType() { return m_eType; }
 protected:
 	StatementType m_eType;
 	MysqlConnection* m_pConn;

@@ -3,6 +3,8 @@
 
 #include <JCore/Logger/ConsoleLogger.h>
 
+#include <SteinsGate/Common/QueryDefineAuth.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -35,6 +37,13 @@ int main() {
 	InitializeAuthCore();
 
 	{
+		Qry::SelectAccountInfoResult result;
+		Qry::SelectAccountInfo::Execute(CoreGameDB_v, result);
+
+		while (result.Next()) {
+			result.FetchRow();
+		}
+
 		CoreInputThread_v->SetEventMap({
 			AuthInputEvent::PairOf(AuthInputEvent::TerminateProgram)
 		});

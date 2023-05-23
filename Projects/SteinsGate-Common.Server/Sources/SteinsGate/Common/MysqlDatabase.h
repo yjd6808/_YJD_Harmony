@@ -96,6 +96,12 @@ public:
 		}
 
 		MysqlQueryPtr spQuery = MysqlQuery::Create(pConn, statement, JCore::Forward<Args>(args)...);
+
+		if (spQuery == nullptr) {
+			DebugAssertMsg(false, "MysqlDatabase::Query() 쿼리문 파싱 실패");
+			return nullptr;
+		}
+
 		spQuery->Execute();
 		return spQuery;
 	}

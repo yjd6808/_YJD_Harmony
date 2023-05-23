@@ -37,7 +37,7 @@ create table t_character (
     c_int						int				default 0							comment '캐릭터 지능',
     c_hp						int 			default 0							comment '캐릭터 HP',
     c_mp						int 			default 0							comment '캐릭터 MP',
-    c_left_stat					int				default 0							comment '부여가능한 남은 스탯',
+    c_left_stat					int				default 0	q						comment '부여가능한 남은 스탯',
     
 	constraint t_character_fk_account_id foreign key (c_account_id) references t_account(c_account_id) on delete cascade
 );
