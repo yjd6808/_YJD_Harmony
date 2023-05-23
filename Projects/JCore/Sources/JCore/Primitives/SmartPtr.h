@@ -897,7 +897,7 @@ public:
 	template <typename U>
 	TSharedPtr& operator=(const SharedPtr<U>& other) {
 		Detail::CheckDynamicCastable<U, T>();
-		this->SharedMoveToShared(other);
+		this->SharedMoveToShared(const_cast<SharedPtr<U>&>(other));
 		return *this;
 	}
 
