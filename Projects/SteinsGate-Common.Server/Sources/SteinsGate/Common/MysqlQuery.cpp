@@ -88,6 +88,12 @@ String MysqlQuerySelect::GetString(const char* fieldName) {
 	return GetRawString(fieldName);
 }
 
+DateTime MysqlQuerySelect::GetDateTime(const char* fieldName) {
+	const char* pRawString = GetRawString(fieldName);
+	if (pRawString == nullptr) return 0;
+	return DateTime::TryParse()
+}
+
 Int32U MysqlQuerySelect::GetRowCount() const {
 
 	if (!IsSuccess()) {

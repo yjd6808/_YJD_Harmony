@@ -12,6 +12,8 @@
 
 NS_QRY_BEGIN
 
+
+
 struct SelectAccountInfo : SelectStatement<SelectAccountInfo> {
 	static constexpr const char* Script = "select c_id, c_pass from t_account";
 };

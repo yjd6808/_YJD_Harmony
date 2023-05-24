@@ -265,36 +265,8 @@ Vector<int, DefaultAllocator> String::FindAll(const String& str) const {
 	return FindAll(str.m_pBuffer);
 }
 
-
-// 문자열의 startIdx(시작인덱스 - 포함)부터 endIdx(종료인덱스 - 포함) 포함하여 str문자열이 있을 경우의 위치 인덱스를 반환해줍니다.
-// O(n)
 int String::Find(int startIdx, int endIdx, const char* str) const {
-	const int iFindStrLen = StringUtil::Length(str);
-	const int iSrcLen = endIdx - startIdx + 1;
-
-	if (iFindStrLen == 0) {
-		return 0;
-	}
-
-	ThrowIfInvalidRangeIndex(startIdx, endIdx);
-
-	if (iFindStrLen > iSrcLen) {
-		return -1;
-	}
-
-	for (int i = startIdx; i <= endIdx; i++) {
-		int iContinuous = 0;
-
-		while (iContinuous < iFindStrLen && m_pBuffer[i + iContinuous] == str[iContinuous]) {
-			iContinuous++;
-		}
-
-		if (iContinuous == iFindStrLen) {
-			return i;
-		}
-	}
-
-	return -1;
+	return StringUtil::Find(m_pBuffer, m_iLen, startIdx, endIdx, str);
 }
 
 int String::Find(int startIdx, const char* str) const {
@@ -528,35 +500,12 @@ char String::GetAt(const int idx) const {
 }
 
 String String::GetRange(const int startIdx, const int endIdx) const {
-	String dummy(0);
-
-	auto [ pBuffer, iLen, iCapacity ] = GetRangeUnsafe(startIdx, endIdx);
-
-	dummy.m_pBuffer = pBuffer;
-	dummy.m_iLen = iLen;
-	dummy.m_iCapacity = iCapacity;
-
-	return dummy;
+	return StringUtil::GetRange(m_pBuffer, m_iLen, startIdx, endIdx);
 }
 
 // 기존 문자열의 시작인덱스(포함)부터 종료인덱스(포함)까지의 부분 문자열을 반환합니다.
 Tuple<char*, int, int> String::GetRangeUnsafe(const int startIdx, const int endIdx) const {
-	ThrowIfInvalidRangeIndex(startIdx, endIdx);
-
-	char* pStr = m_pBuffer + startIdx;
-	int iCurIdx = startIdx;
-	int iIdx = 0;
-	const int iAllocCapacity = endIdx - startIdx + 10;
-	char* szRange = dbg_new char[iAllocCapacity];
-
-	while (iCurIdx <= endIdx) {
-		szRange[iIdx] = m_pBuffer[iCurIdx];
-		iCurIdx++;
-		iIdx++;
-	}
-
-	szRange[iIdx] = NULL;
-	return { szRange, iIdx, iAllocCapacity };
+	return StringUtil::GetRangeUnsafe(m_pBuffer, m_iLen, startIdx, endIdx);
 }
 
 // delimiter 문자열 기준으로 분리합니다.

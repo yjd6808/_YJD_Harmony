@@ -133,6 +133,7 @@ public:
 
 	// 잘못된 필드를 주입하거나, 해당 행의 필드가 비어있는 경우(NULL)인경우 JCore::String(0)반환
 	JCore::String GetString(const char* fieldName);
+	JCore::DateTime GetDateTime(const char* fieldName);
 
 	template <typename TInteger>
 	bool TryGetNumber(const char* fieldName, TInteger& val, TInteger defaultValue = 0) {
@@ -145,6 +146,8 @@ public:
 
 		return JCore::StringUtil::ToNumber<TInteger>(pRawString);
 	}
+
+	
 
 	template <typename TInteger>
 	TInteger GetNumber(const char* fieldName) {

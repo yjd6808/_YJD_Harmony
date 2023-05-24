@@ -7,10 +7,11 @@
 #include <JCore/Core.h>
 #include <JCore/Time.h>
 #include <JCore/Math.h>
-#include <JCore/Primitives/String.h>
 #include <JCore/Ascii.h>
 #include <JCore/Exception.h>
 #include <JCore/Container/HashMap.h>
+#include <JCore/Primitives/String.h>
+#include <JCore/Primitives/StaticString.h>
 
 #include <chrono>
 #include <timezoneapi.h>
@@ -675,6 +676,7 @@ const char* DateTime::ms_szMonthFullName[] = {
 };
 const char* DateTime::ms_szAMPMAbbrevName[] = {"A", "P"};
 const char* DateTime::ms_szAMPMFullName[] = {"AM", "PM"};
+thread_local int DateTime::ms_tlsiLastError;
 
 /*
 	키 : char (포맷 시작 앞문자)
@@ -701,6 +703,42 @@ HashMap<char, Tuple<char, DateFormat, int>> FormatTokenMap_v =
 	{'K', {'K', DateFormat::K, 1}},
 	{'z', {'z', DateFormat::z, 3}},
 	{'f', {'f', DateFormat::f, 6}}
+};
+
+HashMap<String, DateFormat> DateFormatMap_v =
+{
+	{ "d", DateFormat::d },
+	{ "dd", DateFormat::dd },
+	{ "ddd", DateFormat::ddd },
+	{ "dddd", DateFormat::dddd },
+	{ "h", DateFormat::h },
+	{ "hh", DateFormat::hh },
+	{ "H", DateFormat::H },
+	{ "HH", DateFormat::HH },
+	{ "m", DateFormat::m },
+	{ "mm", DateFormat::mm },
+	{ "M", DateFormat::M },
+	{ "MM", DateFormat::MM },
+	{ "MMM", DateFormat::MMM },
+	{ "MMMM", DateFormat::MMMM },
+	{ "s", DateFormat::s },
+	{ "ss", DateFormat::ss },
+	{ "t", DateFormat::t },
+	{ "tt", DateFormat::tt },
+	{ "y", DateFormat::y },
+	{ "yy", DateFormat::yy },
+	{ "yyy", DateFormat::yyy },
+	{ "yyyy", DateFormat::yyyy },
+	{ "K", DateFormat::K },
+	{ "z", DateFormat::z },
+	{ "zz", DateFormat::zz },
+	{ "zzz", DateFormat::zzz },
+	{ "f", DateFormat::f },
+	{ "ff", DateFormat::ff },
+	{ "fff", DateFormat::fff },
+	{ "ffff", DateFormat::ffff },
+	{ "fffff", DateFormat::fffff },
+	{ "ffffff", DateFormat::ffffff }
 };
 
 
@@ -769,14 +807,289 @@ String DateTime::Format(const char* fmt) const {
 	return szRet;
 }
 
-bool DateTime::TryParse(DateTime& datetime, String fmt, const String& dateString) {
-	DebugAssertMsg(false, "구현 안됨");
+bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const char* dateString, int dateStringLen) {
 
-	if (fmt.IsNull()) {
+	if (fmt == nullptr || dateString == nullptr) {
+		ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_ARGUMENT_NULL;
 		return false;
 	}
 
-	// TODO: DateTime::TryParse 구현
+	DateAndTime result;
+	Vector<String> vDelimiterList;
+	Vector<DateFormat> vFormatList = ParseFormat(fmt, fmtLen, &vDelimiterList);			// 1. dateString과 fmt을 1:1대응 시키기 위함 2. 동일한 포맷 토큰이 포함되어 있는지 (YYYY-mm-YYYY) 이런식으로 중복된 포멧이 있는 경우를 체크하는 용도
+	Vector<Pair<int, String>> vDateStringList;	// 기존 인덱스정보도 함께 저장
+
+	// ParseFormat 수행중 오류가 발생한 경우
+	if (ms_tlsiLastError != 0) {
+		return false;
+	}
+
+	// DateFormat이 하나도 없는 경우
+	if (vFormatList.Size() == 0) {
+		parsed.m_Tick = 0;
+		return true;
+	}
+
+	int iDateStringDelimiterPos = 0;
+
+	// 예를들어서
+	// fmt = "YYYY===mm-DD 라는 형식이 들어온 경우
+	//  => vFormatList = { YYYY, mm, DD }
+	//  => vDelimiterList = { ===, - } 와 같이 설정
+	// dateString = 2023===43-01과 같이 구분자가 일치해야한다.
+	for (int i = 0; i < vDelimiterList.Size(); ++i) {
+		const String& szDelimiter = vDelimiterList[i];
+		const int iPrevDateStringDelimiterPos = iDateStringDelimiterPos;
+		iDateStringDelimiterPos = StringUtil::Find(dateString, dateStringLen, iPrevDateStringDelimiterPos, szDelimiter.Source());
+
+		// 포맷에는 현재 구분자가 있지만 dateString에는 해당 구분자가 없는 경우
+		if (iDateStringDelimiterPos == -1) {
+			ms_tlsiLastError = DATETIME_PARSE_ERROR_FORMAT_AND_DATESTRING_DELIMITER_MISMATCH;
+			return false;
+		}
+
+		String szDateString = StringUtil::GetRange(dateString, dateStringLen, iPrevDateStringDelimiterPos, iDateStringDelimiterPos - 1);
+		vDateStringList.PushBack({ vDateStringList.Size(), Move(szDateString)});
+		iDateStringDelimiterPos += szDelimiter.Length();
+	}
+
+	if (iDateStringDelimiterPos < dateStringLen) {
+		String szDateString = StringUtil::GetRange(dateString, dateStringLen, iDateStringDelimiterPos, dateStringLen - 1);
+		vDateStringList.PushBack({ vDateStringList.Size(), Move(szDateString) });
+	}
+
+	if (vDateStringList.Size() != vFormatList.Size()) {
+		ms_tlsiLastError = DATETIME_PARSE_ERROR_FORMAT_AND_DATESTRING_SIZE_NOT_EQUAL;
+		return false;
+	}
+
+	// 잘못된 파싱결과를 방지하기 위해 포맷별로 우선순위 수치를 지정
+	// 예를들어 AM, PM에 대한 정보를 우선적으로 얻어야지 d와 dd 포맷에 대해서 올바른 값을 얻을 수 있다.
+	static Vector<int> s_DateFormatParsePriority = {
+		4, /* d			*/
+		4, /* dd		*/
+		4, /* ddd		*/
+		4, /* dddd		*/
+		5, /* h			*/
+		5, /* hh		*/
+		5, /* H			*/
+		5, /* HH		*/
+		6, /* m			*/
+		6, /* mm		*/
+		3, /* M			*/
+		3, /* MM		*/
+		3, /* MMM		*/
+		3, /* MMMM		*/
+		7, /* s			*/
+		7, /* ss		*/
+		1, /* t			*/
+		1, /* tt		*/
+		2, /* y			*/
+		2, /* yy		*/
+		2, /* yyy		*/
+		2, /* yyyy		*/
+		0, /* K			*/
+		0, /* z			*/
+		0, /* zz		*/
+		0, /* zzz		*/
+		8, /* f			*/
+		8, /* ff		*/
+		8, /* fff		*/
+		8, /* ffff		*/
+		8, /* fffff		*/
+		8  /* ffffff	*/
+	};
+
+
+	// vFormatList를 정렬해서 위치가 변경되기 전에 먼저 vDateStringList 정렬해줘야함.
+	vDateStringList.Sort([&vFormatList](auto& lhs, auto& rhs) {
+		return s_DateFormatParsePriority[int(vFormatList[lhs.Key])] < s_DateFormatParsePriority[int(vFormatList[rhs.Key])];
+	});
+
+	vFormatList.Sort([](DateFormat& lhs, DateFormat& rhs) {
+		return s_DateFormatParsePriority[int(lhs)] < s_DateFormatParsePriority[int(rhs)];
+	});
+
+	AMPM eAMPM = AMPM::None;
+	
+	for (int i = 0; i < vFormatList.Size(); ++i) {
+		const DateFormat eFormatToken = vFormatList[i];
+		const String& szDateStringToken = vDateStringList[i].Value;
+
+		switch (eFormatToken) {
+		case DateFormat::d:
+		case DateFormat::dd: {
+			const int day = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (day < 1 || day > 31) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+
+			result.Day = static_cast<Int8>(day);
+			break;
+		}
+		case DateFormat::ddd:
+		case DateFormat::dddd: {
+			ms_tlsiLastError = DATETIME_PARSE_ERROR_NOT_IMPLEMENTED_TOKEN;
+			break;
+		}
+		case DateFormat::h:
+		case DateFormat::hh: {
+			int hour = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+
+			if (eAMPM == AMPM::None) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_AMBIGUOUS_DATESTRING_TOKEN;
+				break;
+			}
+
+			if (hour < 0 || hour > 12) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+
+			if (eAMPM == AMPM::PM) {
+				hour += 12;
+			}
+
+			result.Hour = static_cast<Int8>(hour);
+			break;
+		}
+		case DateFormat::H:
+		case DateFormat::HH: {
+			const int hour = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (hour < 0 || hour > 23) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+			result.Hour = static_cast<Int8>(hour);
+			break;
+		}
+		case DateFormat::m:
+		case DateFormat::mm: {
+			const int minute = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (minute < 0 || minute > 59) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+			result.Minute = static_cast<Int8>(minute);
+			break;
+		}
+		case DateFormat::M:
+		case DateFormat::MM: {
+			const int month = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (month < 0 || month > 12) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+			result.Month = static_cast<Int8>(month);
+			break;
+		}
+		case DateFormat::MMM:
+		case DateFormat::MMMM: {
+			ms_tlsiLastError = DATETIME_PARSE_ERROR_NOT_IMPLEMENTED_TOKEN;
+			break;
+		}
+		case DateFormat::s:
+		case DateFormat::ss: {
+			const int sec = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (sec < 0 || sec > 59) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+			result.Second = static_cast<Int8>(sec);
+			break;
+		}
+		case DateFormat::t: {
+			if (szDateStringToken == "A") {
+				eAMPM = AMPM::AM;
+				break;
+			}
+
+			if (szDateStringToken == "P") {
+				eAMPM = AMPM::PM;
+				break;
+			}
+
+			ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+			break;
+		}
+		case DateFormat::tt: {
+			if (szDateStringToken == "AM") {
+				eAMPM = AMPM::AM;
+				break;
+			}
+
+			if (szDateStringToken == "PM") {
+				eAMPM = AMPM::PM;
+				break;
+			}
+			ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+			break;
+		}
+		case DateFormat::y:
+		case DateFormat::yy: {
+			const int year2 = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (year2 < 0 || year2 > 99) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+			result.Year = static_cast<Int16>(year2 + 2000);
+			break;
+		}
+		case DateFormat::yyy:
+		case DateFormat::yyyy: {
+			const int year4 = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (year4 < 0 || year4 > 9999) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+			result.Year = static_cast<Int16>(year4);
+			break;
+		}
+		case DateFormat::K:
+		case DateFormat::z:
+		case DateFormat::zz:
+		case DateFormat::zzz: {
+			ms_tlsiLastError = DATETIME_PARSE_ERROR_NOT_SUPPORTED_TOKEN;
+			break;
+		}
+		case DateFormat::f:
+		case DateFormat::ff:
+		case DateFormat::fff: {
+			const int milisec = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (milisec < 0 || milisec > 999) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+			result.MiliSecond = static_cast<Int16>(milisec);
+			break;
+		}
+		case DateFormat::ffff:
+		case DateFormat::fffff:
+		case DateFormat::ffffff: {
+			const int microsec = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
+			if (microsec < 0 || microsec > 999999) {
+				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
+				break;
+			}
+
+			result.MiliSecond = microsec / TicksPerMiliSecond_v;
+			result.MicroSecond = microsec % TicksPerMiliSecond_v;
+			break;
+		}
+		} // switch 끝
+
+		if (ms_tlsiLastError != 0) {
+			return false;
+		}
+	}
+
+	
+	parsed.m_Tick = result.ToTick();
+	ms_tlsiLastError = 0;
+
+	
+
 	return true;
 }
 
@@ -790,6 +1103,89 @@ DateTime DateTime::FromUnixTime(double unixTimestamp, TimeStandard timeStandard)
 	}
 
 	return uiTick;	
+}
+
+// YYYY-MM-dd===
+// fmtList = { YYYY, MM, dd }
+// delimiters = { -, -, === }
+// 이런식으로 파싱해주는 함수
+Vector<DateFormat> DateTime::ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters) {
+
+	static auto FnAddDelimiter = [](String& delimiter, Vector<String>* delimiterList)->void {
+		if (delimiterList == nullptr) return;
+		if (delimiter.Length() == 0) return;
+		delimiterList->PushBack(delimiter);
+		delimiter.Clear();
+	};
+
+	static auto FnAddDateFormat = [](String& dateFormat, Vector<DateFormat>& dateFormatList)->bool {
+		if (dateFormat.Length() == 0) 
+			return true;
+
+		const DateFormat* pFind = DateFormatMap_v.Find(dateFormat);
+		dateFormat.Clear();
+
+		if (pFind == nullptr) {
+			ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATE_FORMAT;
+			return false;
+		}
+
+
+		dateFormatList.PushBack(*pFind);
+		return true;
+	};
+
+	HashMap<char, bool> hTokenDuplicateCheckMap;
+	Vector<DateFormat> fmtList;
+	String szTempDateFormat;
+	String szTempDelimiter;
+
+	for (int i = 0; i < fmtLen; ++i) {
+
+		char fmtToken = fmt[i];
+
+		// 아예 DateFormat 토큰 문자가 아닌 경우
+		if (!FormatTokenMap_v.Exist(fmtToken)) {
+			if (!FnAddDateFormat(szTempDateFormat, fmtList)) {
+				return {};
+			}
+			szTempDelimiter += fmtToken;
+			continue;
+		}
+
+		// yyy-mm-y와 같이 중복된 토큰(y)가 존재하는 경우
+		if (szTempDateFormat.Length() == 0 && !hTokenDuplicateCheckMap.Insert(fmtToken, true)) {
+			ms_tlsiLastError = DATETIME_PARSE_ERROR_DUPLICATE_FORMAT_TOKEN;
+			return {};
+		}
+
+		FnAddDelimiter(szTempDelimiter, delimiters);
+		szTempDateFormat += fmtToken;
+	}
+
+	FnAddDelimiter(szTempDelimiter, delimiters);
+
+	if (!FnAddDateFormat(szTempDateFormat, fmtList))
+		return {};
+
+	ms_tlsiLastError = 0;
+	return fmtList;
+}
+
+const char* DateTime::GetFullAMPMName(AMPM ampm) {
+	if (ampm == AMPM::None) {
+		DebugAssert(false);
+		return "";
+	}
+	return ms_szAMPMFullName[int(ampm)];
+}
+
+const char* DateTime::GetAbbreviationAMPMName(AMPM ampm) {
+	if (ampm == AMPM::None) {
+		DebugAssert(false);
+		return "";
+	}
+	return ms_szAMPMAbbrevName[int(ampm)];
 }
 
 // 타임존 시간 편차 얻는 함수

@@ -119,6 +119,119 @@ void StringUtil::Swap(String& src, String& dst) {
 	dst = std::move(temp);
 }
 
+const char* StringUtil::SkipLeadingChar(const char* str, char skipChar) {
+	int iPos = FindCharUncontained(str, skipChar);
+	if (iPos < 0) iPos = 0;
+	return str + iPos;
+}
+
+int StringUtil::FindChar(const char* source, char ch) {
+	int i = 0;
+
+	while (true) {
+		const char sch = *(source + i);
+
+		if (sch == NULL) {
+			return -1;
+		}
+
+		if (sch == ch) {
+			return i;
+		}
+
+		++i;
+	}
+}
+
+int StringUtil::FindCharUncontained(const char* source, char ch) {
+	int i = 0;
+
+	while (true) {
+		const char sch = *(source + i);
+
+		if (sch == NULL) {
+			return -1;
+		}
+
+		if (sch != ch) {
+			return i;
+		}
+
+		++i;
+	}
+}
+
+// 문자열의 startIdx(시작인덱스 - 포함)부터 endIdx(종료인덱스 - 포함) 포함하여 str문자열이 있을 경우의 위치 인덱스를 반환해줍니다.
+// O(n)
+int StringUtil::Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str) {
+	const int iFindStrLen = Length(str);
+	const int iSrcLen = endIdx - startIdx + 1;
+
+	if (iFindStrLen == 0) {
+		return 0;
+	}
+
+	if (startIdx > endIdx || startIdx < 0 || endIdx >= sourceLen) {
+		throw OutOfRangeException("인덱스 범위를 벗어났습니다.");
+	}
+
+	if (iFindStrLen > iSrcLen) {
+		return -1;
+	}
+
+	for (int i = startIdx; i <= endIdx; i++) {
+		int iContinuous = 0;
+
+		while (iContinuous < iFindStrLen && source[i + iContinuous] == str[iContinuous]) {
+			iContinuous++;
+		}
+
+		if (iContinuous == iFindStrLen) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int StringUtil::Find(const char* source, int sourceLen, int startIdx, const char* str) {
+	return Find(source, sourceLen, startIdx, sourceLen - 1, str);
+}
+
+String StringUtil::GetRange(const char* source, int sourceLen, int startIdx, int endIdx) {
+	String subString{0};
+
+	auto [pBuffer, iLen, iCapacity] = GetRangeUnsafe(source, sourceLen, startIdx, endIdx);
+
+	subString.m_pBuffer = pBuffer;
+	subString.m_iLen = iLen;
+	subString.m_iCapacity = iCapacity;
+
+	return subString;
+}
+
+Tuple<char*, int, int> StringUtil::GetRangeUnsafe(const char* source, int sourceLen, int startIdx, int endIdx) {
+	if (startIdx > endIdx || startIdx < 0 || endIdx >= sourceLen) {
+		throw OutOfRangeException("인덱스 범위를 벗어났습니다.");
+	}
+
+	const char* pStr = source + startIdx;
+	int iCurIdx = startIdx;
+	int iIdx = 0;
+	const int iAllocCapacity = endIdx - startIdx + 10;
+	char* szRange = dbg_new char[iAllocCapacity];
+
+	while (iCurIdx <= endIdx) {
+		szRange[iIdx] = source[iCurIdx];
+		iCurIdx++;
+		iIdx++;
+	}
+
+	szRange[iIdx] = NULL;
+	return { szRange, iIdx, iAllocCapacity };
+}
+
+
 void StringUtil::ConcatInnerBack(char* buf, int buflen, int bufCapacity, const char* concatStr, int concatStrLen) {
 	DebugAssertMsg(buflen + concatStrLen + 1 <= bufCapacity, "버퍼 용량을 초과할 수 없습니다.");
 	Memory::CopyUnsafe(buf + buflen, concatStr, concatStrLen);
@@ -146,18 +259,19 @@ void StringUtil::ConcatInnerFront(char* buf, int bufCapacity, const char* concat
 }
 
 // https://github.com/otland/forgottenserver/blob/545516299b607ef25471f84d1805a22311ab72de/src/pugicast.h
-template <> float StringUtil::ToNumber(const char* str) { return std::strtof(str, nullptr); }
-template <> double StringUtil::ToNumber(const char* str) { return std::strtod(str, nullptr); }
-template <> Int32L StringUtil::ToNumber(const char* str) { return std::strtol(str, nullptr, 0); }
-template <> Int64 StringUtil::ToNumber(const char* str) { return std::strtoll(str, nullptr, 0); }
-template <> Int32UL StringUtil::ToNumber(const char* str) { return std::strtoul(str, nullptr, 0); }
-template <> Int64U StringUtil::ToNumber(const char* str) { return std::strtoull(str, nullptr, 0); }
-template <> Char StringUtil::ToNumber(const char* str) { return static_cast<Char>(std::strtol(str, nullptr, 0)); }
-template <> Byte StringUtil::ToNumber(const char* str) { return static_cast<Byte>(std::strtoul(str, nullptr, 0)); }
-template <> Int16 StringUtil::ToNumber(const char* str) { return static_cast<Int16>(std::strtol(str, nullptr, 0)); }
-template <> Int16U StringUtil::ToNumber(const char* str) { return static_cast<Int16U>(std::strtoul(str, nullptr, 0)); }
-template <> Int32 StringUtil::ToNumber(const char* str) { return static_cast<Int32>(std::strtol(str, nullptr, 0)); }
-template <> Int32U StringUtil::ToNumber(const char* str) { return static_cast<Int32U>(std::strtoul(str, nullptr, 0)); }
+template <> float StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtof(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr); }
+template <> double StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtod(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr); }
+template <> Int32L StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtol(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0); }
+template <> Int64 StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtoll(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0); }
+template <> Int32UL StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtoul(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0); }
+template <> Int64U StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtoull(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0); }
+template <> Char StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Char>(std::strtol(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0)); }
+template <> WideChar StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<WideChar>(std::strtoul(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0)); }
+template <> Byte StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Byte>(std::strtoul(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0)); }
+template <> Int16 StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Int16>(std::strtol(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0)); }
+template <> Int16U StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Int16U>(std::strtoul(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0)); }
+template <> Int32 StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Int32>(std::strtol(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0)); }
+template <> Int32U StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Int32U>(std::strtoul(ignoreLeadingZero ? SkipLeadingChar(str, '0') : str, nullptr, 0)); }
 
 template <> String StringUtil::ToString(bool value) { return value ? "true" : "false"; }
 template <> String StringUtil::ToString(float value) { return std::to_string(value); }

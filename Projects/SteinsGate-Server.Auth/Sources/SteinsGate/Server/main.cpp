@@ -37,12 +37,6 @@ int main() {
 	InitializeAuthCore();
 
 	{
-		Qry::SelectAccountInfoResult result;
-		Qry::SelectAccountInfo::Execute(CoreGameDB_v, result);
-
-		while (result.Next()) {
-			result.FetchRow();
-		}
 
 		CoreInputThread_v->SetEventMap({
 			AuthInputEvent::PairOf(AuthInputEvent::TerminateProgram)

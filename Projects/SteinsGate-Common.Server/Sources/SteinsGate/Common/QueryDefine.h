@@ -114,6 +114,15 @@ struct SelectResultBinder
 	constexpr static void BindField(const char* fieldName, TField& fieldVariable, MysqlQuerySelect* executedQuery) {
 		if constexpr (JCore::IsString_v<TField>) {
 			fieldVariable = executedQuery->GetRawString(fieldName);
+		} else if constexpr (
+			JCore::Or_v<
+				JCore::IsIntegerType_v<TField>, 
+				JCore::IsCharaterType_v<TField>, 
+				JCore::IsFloatType_v<TField>
+			>) {
+			fieldVariable = executedQuery->GetNumber<TField>(fieldName);
+		} else if constexpr (JCore::IsDateTime_v<TField>) {
+			fieldVariable = executedQuery->GetDateTime(fieldName);
 		} else {
 			DebugAssertMsg(false, "바인딩 할 수 없는 필드입니다. (TField = %s)", typeid(TField).name());
 		}

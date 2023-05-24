@@ -14,6 +14,7 @@
 #include <JCore/Tuple.h>
 #include <JCore/Comparator.h>
 #include <JCore/Natvis/NatvisFloat.h>
+#include <JCore/Container/Vector.h>
 
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
@@ -98,7 +99,8 @@ enum class MonthOfYear
 enum class AMPM
 {
 	AM,
-	PM
+	PM,
+	None
 };
 
 enum class TimeStandard
@@ -173,7 +175,11 @@ enum class TimeUnit
 struct Date
 {
 public:
-	Date() = delete;
+	Date()
+		: Year(0)
+		, Month(0)
+		, Day(0)
+	{}
 	Date(Int32 year, Int32 month, Int32 day);
 	Date(const Date& other) : Year(other.Year), Month(other.Month), Day(other.Day) {}
 
@@ -205,9 +211,9 @@ public:
 
 	Int64 ToTick() const;
 protected:
-	Int16	Year{};
-	Int8	Month{};
-	Int8	Day{};
+	Int16	Year;
+	Int8	Month;
+	Int8	Day;
 
 	friend class DateTime;
 };
@@ -222,7 +228,13 @@ protected:
 struct Time
 {
 public:
-	Time() = delete;
+	Time()
+		: Hour(0)
+		, Minute(0)
+		, Second(0)
+		, MiliSecond(0)
+		, MicroSecond(0)
+	{}
 	Time(Int32 hour, Int32 minute, Int32 second, Int32 miliSecond, Int32 microSecond);
 	Time(const Time& other) : Hour(other.Hour), Minute(other.Minute), Second(other.Second), MiliSecond(other.MiliSecond), MicroSecond(other.MicroSecond) {}
 
@@ -261,11 +273,11 @@ public:
 
 	Int64 ToTick() const;
 protected:
-	Int8 Hour{};
-	Int8 Minute{};
-	Int8 Second{};
-	Int16 MiliSecond{};
-	Int16 MicroSecond{};
+	Int8 Hour;
+	Int8 Minute;
+	Int8 Second;
+	Int16 MiliSecond;
+	Int16 MicroSecond;
 
 	friend class DateTime;
 };
@@ -276,7 +288,7 @@ protected:
  =====================================================================================*/
 class DateTime;
 struct DateAndTime : Date, Time {
-	DateAndTime() = delete;
+	DateAndTime() = default;
 	DateAndTime(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 miliSecond, Int32 microSecond)
 		: Date(year, month, day), Time(hour, minute, second, miliSecond, microSecond)
 	{}
@@ -385,6 +397,17 @@ struct TimeSpan
 								 DateTime
  =====================================================================================*/
 
+#define DATETIME_PARSE_ERROR_INVALID_ARGUMENT_NULL							10000			// 인자가 nullptr로 전달된 경우
+#define DATETIME_PARSE_ERROR_INVALID_ARGUMENT_FORMAT						10001			// 올바르지 않은 Format
+#define DATETIME_PARSE_ERROR_DUPLICATE_FORMAT_TOKEN							10002			// yyy-mm-y와 같이 중복된 토큰(y)가 존재하는 경우
+#define DATETIME_PARSE_ERROR_INVALID_DATE_FORMAT							10003
+#define DATETIME_PARSE_ERROR_FORMAT_AND_DATESTRING_DELIMITER_MISMATCH		10004			// Format과 DateString의 구분자가 서로 일치하지 않는 경우
+#define DATETIME_PARSE_ERROR_FORMAT_AND_DATESTRING_SIZE_NOT_EQUAL			10005			// 구분자로 분리된 Format과 DateString이 서로 크기가 일치하지 않는 경우
+#define DATETIME_PARSE_ERROR_NOT_SUPPORTED_TOKEN							10006			// 타임존, AP, PM과 같이 시간계산에 관련된 토큰이 아닌 경우 파싱지원을 안하도록 함.
+#define DATETIME_PARSE_ERROR_NOT_IMPLEMENTED_TOKEN							10007			// 문자열 일, 월의 숫자 변환(Monday -> 1)은 아직 구현안함. 쓸데 없을 듯해서..
+#define DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN						10008			// fmt: yyyy-mm, dateString: 2023-99일때, 99월은 있을 수가 없으므로
+#define DATETIME_PARSE_ERROR_AMBIGUOUS_DATESTRING_TOKEN						10009			// 1) AMPM 정보가 주어지지 않고 h와 hh에 해당하는 정보를 얻을려고하는 경우
+
 
 class String;
 class DateTime
@@ -478,8 +501,7 @@ public: // public non-static
 	bool operator==(const DateAndTime& other) const;
 
 	String Format(const char* fmt) const;
-	
-	String FormatMysqlTime() const { return Format("yyyy-MM-dd hh:mm:ss.ffffff"); }
+	String FormatMysqlTime() const { return Format("yyyy-MM-dd HH:mm:ss.ffffff"); }
 
 private: // private static
 	static Tuple<int, int, int, int, int> GetYearsFromDays(int days);		// 단위 년도별로 일수를 가져옴
@@ -488,15 +510,20 @@ private: // private static
 private: // private non-static
 	int GetDatePart(const DatePart part) const { return GetDatePart(m_Tick, part); }
 	void ReflectFormat(const DateAndTime& time, String& ret, char token, int count) const;
-
 	static void CheckOverFlow(Int64U tick);
 public: // public static
 	static DateTime Now(TimeStandard timeStandard = TimeStandard::Local);
 	static Int32 TimeZoneBiasMinute();
 	static bool IsLeapYear(int year);
-	static bool TryParse(DateTime& parsed, String fmt, const String& dateString);
-	static bool TryParse(DateTime& parsed, const char* fmt, const String& dateString) { return TryParse(parsed, fmt, dateString); }
+
+	// TODO: TryParse 유닛 테스트
+	static bool TryParse(DateTime& parsed, const char* fmt, const String& dateString) { return TryParse(parsed, fmt, StringUtil::Length(fmt), dateString.Source(), dateString.Length()); }
+	static bool TryParse(DateTime& parsed, const char* fmt, const char* dateString) { return TryParse(parsed, fmt, StringUtil::Length(fmt), dateString, StringUtil::Length(dateString)); }
+	static bool TryParse(DateTime& parsed, const char* fmt, int fmtLen, const char* dateString, int dateStringLen);
 	static DateTime FromUnixTime(double unixTimestamp, TimeStandard timeStandard = TimeStandard::Local);	// 초단위 스탬프를 DateTime으로 변환
+	static int LastError() { return ms_tlsiLastError; }
+	static Vector<DateFormat> ParseFormat(const String& fmt, JCORE_IN_OPT Vector<String>* delimiters = nullptr) { return ParseFormat(fmt.Source(), fmt.Length(), delimiters); }
+	static Vector<DateFormat> ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters = nullptr);
 
 	static const char* GetAbbreviationWeekendName(DayOfWeek week) {
 		return ms_szWeekAbbrevName[int(week)];
@@ -514,13 +541,8 @@ public: // public static
 		return ms_szMonthFullName[int(month)];
 	}
 
-	static const char* GetFullAMPMName(AMPM ampm) {
-		return ms_szAMPMFullName[int(ampm)];
-	}
-
-	static const char* GetAbbreviationAMPMName(AMPM ampm) {
-		return ms_szAMPMAbbrevName[int(ampm)];
-	}
+	static const char* GetFullAMPMName(AMPM ampm);
+	static const char* GetAbbreviationAMPMName(AMPM ampm);
 private:
 	Int64U m_Tick{};
 
@@ -530,6 +552,7 @@ private:
 	static const char* ms_szMonthFullName[];
 	static const char* ms_szAMPMAbbrevName[];
 	static const char* ms_szAMPMFullName[];
+	static thread_local int ms_tlsiLastError;
 			
 	friend struct DateAndTime;
 	friend struct Date;
