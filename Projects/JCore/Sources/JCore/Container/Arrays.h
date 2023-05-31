@@ -257,7 +257,23 @@ struct Arrays final
 		return std::upper_bound(arr, arr + arrSize, data) - arr;
 	}
 
+	template <typename T, Int32U Size>
+	static bool AllEqual(T(&arr)[Size]) {
+		return AllEqual(arr, Size);
+	}
 
+	template <typename T>
+	static bool AllEqual(T* arr, const int size) {
+		DebugAssert(size > 0);
+
+		T& elem = arr[0];
+		for (int i = 1; i < size; ++i) {
+			if (elem != arr[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	template <typename T, Int32U Size, typename TAction>
 	static void ForEach(T(&arr)[Size], TAction&& action) {

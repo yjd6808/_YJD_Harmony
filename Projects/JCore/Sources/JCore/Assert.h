@@ -13,7 +13,7 @@
 // 헤더파일 의존성 회피를 위함
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
-	void __DebugAssertMsgImpl(bool expect, const char* filePath, int lineNum, const char* functionName, const char* fmt, ...);
+	void __DebugAssertMsgImpl(const char* filePath, int lineNum, const char* functionName, const char* fmt, ...);
 	NS_DETAIL_END
 NS_JC_END
 
@@ -22,7 +22,8 @@ NS_JC_END
     #if DebugMode
 		#define DebugAssertMsg(expect, fmt, ...)																\
 		do {																									\
-			JCore::Detail::__DebugAssertMsgImpl((expect), __FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__);	\
+			if ((expect)) break;																				\
+			JCore::Detail::__DebugAssertMsgImpl(__FILE__, __LINE__, __FUNCTION__, fmt, __VA_ARGS__);			\
 		} while (0)
         #define DebugAssert(expect)            DebugAssertMsg(expect, "메시지 없음")
 
