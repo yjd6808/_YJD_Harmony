@@ -21,11 +21,17 @@ enum class TreeNodeColor
 	Black
 };
 
+enum class TreeNodeRotateMode
+{
+	RR,
+	LL,
+	RL,
+	LR
+};
+
 const char* TreeNodeColorName(TreeNodeColor color) {
 	return color == TreeNodeColor::Red ? "Red" : "Black";
 }
-
-
 
 struct TreeNode
 {
@@ -85,13 +91,17 @@ struct TreeNode
 		child->Parent = parent;
 	}
 };
-
 struct TreeNodeFamily
 {
 	/* Not Null */ TreeNode* Parent;
 	/* Not Null */ TreeNode* Sibling;
 	/* Nullable */ TreeNode* NephewLine;
 	/* Nullable */ TreeNode* NephewTri;
+
+	TreeNodeColor ParentColor;
+	TreeNodeColor SiblingColor;
+	TreeNodeColor NephewLineColor;
+	TreeNodeColor NephewTriColor;
 
 	TreeNodeFamily(TreeNode* child) {
 		const bool bRightChild = child->IsRight();
@@ -111,6 +121,12 @@ struct TreeNodeFamily
 			NephewLine = Sibling->Right;
 			NephewTri = Sibling->Left;
 		}
+
+		// 노드가 없는 경우 Black으로 판정토록한다.
+		ParentColor = Parent->Color;
+		SiblingColor = Sibling->Color;
+		NephewTriColor = NephewTri ? NephewTri->Color : TreeNodeColor::Black;
+		NephewLineColor = NephewLine ? NephewLine->Color : TreeNodeColor::Black;
 	}
 };
 
@@ -542,112 +558,7 @@ private:
 			return;
 		}
 
-		// [2. 삭제될 노드가 자식이 없는 경우]
-		DebugAssertMsg(child->Count() == 0, "2. 삭제될 노드에 자식이 없어야하는 구간인데.. 있습니다.");
-		const bool bRightChild = child->IsRight();
-		const TreeNodeFamily family(child);
-
-		// 케이스 2: 부모가 Red인 경우 (부모가 Red라는 말은 부모의 부모는 무조건 Black이다.)
-		if (family.Parent->Color == TreeNodeColor::Red) {
-
-			// 케이스 2-1: 형제가 자식이 없는 경우
-			if (family.Sibling->Any() == nullptr) {
-				family.Parent->Color = TreeNodeColor::Black;
-				family.Sibling->Color = TreeNodeColor::Red;
-				return;
-			}
-
-			DebugAssertMsg(family.Parent->Parent, "[케이스 1-2, 1-3] 부모의 부모가 없습니다.");
-			DebugAssertMsg(family.Parent->Parent->Color == TreeNodeColor::Black, "[케이스 1-2, 1-3] 부모의 부모가 없습니다.");
-
-			
-			if (family.NephewLine) {
-				// 케이스 2-2, 2-4: 형제가 자식이 하나라도 있는 경우
-				if (bRightChild) {
-					RotateLL(family.Parent);
-				} else {
-					RotateRR(family.Parent);
-				}
-
-				// 케이스 2-4는 형제의 자식이 2명다 있을 경우 색상 변경을 해줘야함.
-				if (family.NephewTri == nullptr) {
-					return;
-				}
-
-				// 회전으로 인해서 형제 노드가 부모자리로 올라감 (색상 변경 수행)
-				family.Sibling->Color = TreeNodeColor::Red;
-
-				if (family.Sibling->Left)
-					family.Sibling->Left->Color = TreeNodeColor::Black;
-				if (family.Sibling->Right)
-					family.Sibling->Right->Color = TreeNodeColor::Black;
-
-			} else {
-				// 케이스 2-3: 형제가 우측 꺽인 자식이 있는 경우
-				DebugAssertMsg(family.Sibling->Color == TreeNodeColor::Black, "[케이스 2-3] 형제가 블랙이 아닙니다.");
-				DebugAssertMsg(family.NephewTri->Color == TreeNodeColor::Red, "[케이스 2-3] 꺽인 조카가 레드가 아닙니다.");
-				family.Sibling->Color = TreeNodeColor::Red;
-				family.NephewTri->Color = TreeNodeColor::Black;
-
-				if (bRightChild) {
-					RotateLR(family.Parent);
-				} else {
-					RotateRL(family.Parent);
-				}
-			}
-			return;
-		} 
-
-		const bool bHasNephew = family.NephewLine && family.NephewTri;
-
-		// 케이스 3. 부모가 Black인 경우
-		if (!bHasNephew) {
-
-			// 케이스 3-1. 조카가 없는 경우
-			DebugAssertMsg(family.Sibling->Color == TreeNodeColor::Black, "ㄷㄷ 형제가 Black이 아니라면.? 조카가 있다는 말인데? 여기선 내가 Black, 부모가 Black이면 형제는 당연히 Black이어야함.. bHasNephew가 False라니.. 심각한 오류다..");
-			family.Sibling->Color = TreeNodeColor::Red;
-			RemoveFixupExtraBlack(family.Parent);
-			return;
-		}
-
-		
-		if (family.Sibling->Color == TreeNodeColor::Black) {
-
-			if (family.NephewLine) {
-				// 케이스 3-2, 3-3: 라인 조카가 있는 경우
-				family.NephewLine->Color = TreeNodeColor::Black;
-
-				if (bRightChild)
-					RotateLL(family.Parent);
-				else
-					RotateRR(family.Parent);
-				
-			} else {
-				// 케이스 3-4: 꺽인 조카가 있는 경우
-				DebugAssertMsg(family.Sibling->Color == TreeNodeColor::Black, "[케이스 3-4] 형제가 블랙이 아닙니다.");
-				DebugAssertMsg(family.NephewTri->Color == TreeNodeColor::Red, "[케이스 3-4] 꺽인 조카가 레드가 아닙니다.");
-				family.NephewTri->Color = TreeNodeColor::Black;
-
-				if (bRightChild) {
-					RotateLR(family.Parent);
-				} else {
-					RotateRL(family.Parent);
-				}
-			}
-
-			return;
-		}
-
-		// 케이스 3-5
-		family.Parent->Color = TreeNodeColor::Red;
-		family.Sibling->Color = TreeNodeColor::Black;
-		
-		if (bRightChild)
-			RotateLL(family.Parent);
-		else
-			RotateRR(family.Parent);
-
-		RemoveFixup(child);
+		RemoveFixupExtraBlack(child);
 	}
 
 	// 엑스트라 Black 속성이 부여된 노드를 대상으로 위반 수정
@@ -663,59 +574,85 @@ private:
 
 		const bool bRightChild = child->IsRight();
 		const TreeNodeFamily family(child);
+		
 
-		// 엑스트라 Black이 더해진 Black 노드라면 조카들이 2명다 없을 수 없다.
-		DebugAssertMsg(family.NephewLine, "라인 조카가 없습니다.");
-		DebugAssertMsg(family.NephewTri, "꺽인 조카가 없습니다.");
+		// 그룹 케이스 2: 부모의 색이 Black인 경우
+		if (family.ParentColor == TreeNodeColor::Black) {
 
-		if (family.Parent->Color == TreeNodeColor::Red) {
-
-			const TreeNodeColor eNephewLineColor = family.NephewLine->Color;
-			const TreeNodeColor eNephewTriColor = family.NephewTri->Color;
-
-			
-			if (eNephewLineColor == TreeNodeColor::Black) {
-				
-				if (eNephewTriColor == TreeNodeColor::Black) {
-					// 케이스 3-1-1
-					family.Sibling->Color = TreeNodeColor::Red;
-					family.Parent->Color = TreeNodeColor::Black;
-				} else {
-					// 케이스 3-1-2
-					family.NephewTri->Color = TreeNodeColor::Black;
-					family.Sibling->Color = TreeNodeColor::Red;
-					RemoveFixupExtraBlack(child);	// 케이스 3-1-3 수행을 위해
-				}
-			} else {
-				// 케이스 3-1-3
-				family.NephewLine->Color = TreeNodeColor::Black;
-
-				if (bRightChild)
-					RotateLL(family.Parent);
-				else
-					RotateRR(family.Parent);
+			// 케이스 5. (형제가 Red인 경우)
+			if (family.SiblingColor == TreeNodeColor::Red) {
+				family.Parent->Color = TreeNodeColor::Red;
+				family.Sibling->Color = TreeNodeColor::Black;
+				RotateNode(family.Parent, bRightChild ? TreeNodeRotateMode::LL : TreeNodeRotateMode::RR);
+				RemoveFixupExtraBlack(child);
+				return;
 			}
-			
+
+			// 케이스 1 ~ 4 (형제가 Black인 경우)
+			if (family.NephewTriColor == TreeNodeColor::Black &&
+				family.NephewLineColor == TreeNodeColor::Black) {
+				// 케이스 1. 조카 모두 Black인 경우
+				family.Sibling->Color = TreeNodeColor::Red;
+				RemoveFixupExtraBlack(family.Parent);			// Extra Black을 없앨 수 없으므로 부모로 전달
+				return;
+			}
+
+			if (family.NephewLineColor == TreeNodeColor::Red) {
+				// 케이스 2. 라인조카가 Red인 경우
+				family.NephewLine->Color = TreeNodeColor::Black;
+				RotateNode(family.Parent, bRightChild ? TreeNodeRotateMode::LL : TreeNodeRotateMode::RR);
+				return;
+			}
+
+			if (family.NephewTriColor == TreeNodeColor::Red) {
+				// 케이스 3. 꺽인조카가 Red인 경우
+				family.NephewTri->Color = TreeNodeColor::Black;
+				family.Sibling->Color = TreeNodeColor::Red;
+				RotateNode(family.Sibling, bRightChild ? TreeNodeRotateMode::RR : TreeNodeRotateMode::LL);
+				RemoveFixupExtraBlack(child);	// 케이스 2로 처리하기위해 재호출
+				return;
+			}
+
 			return;
 		}
 
-		// 케이스 3-1-4
-		if (family.Sibling->Color == TreeNodeColor::Black) {
+		DebugAssertMsg(family.SiblingColor == TreeNodeColor::Black, "[그룹 케이스 1] 형제노드가 Black이 아닙니다.");
+		// 그룹 케이스 1: 부모의 색이 Red인 경우
+		if (family.NephewTriColor == TreeNodeColor::Black &&
+			family.NephewLineColor == TreeNodeColor::Black) {
+			// 케이스 1. 조카 모두 Black인 경우
 			family.Sibling->Color = TreeNodeColor::Red;
-			RemoveFixupExtraBlack(family.Parent);
+			family.Parent->Color = TreeNodeColor::Black;
 			return;
-		} 
+		}
 
-		// 케이스 3-1-5
-		family.Parent->Color = TreeNodeColor::Red;
-		family.Sibling->Color = TreeNodeColor::Black;
+		if (family.NephewLineColor == TreeNodeColor::Red) {
+			// 케이스 2. 라인조카가 Red인 경우
+			
+			family.NephewLine->Color = TreeNodeColor::Black;
+			family.Sibling->Color = TreeNodeColor::Red;
+			family.Parent->Color = TreeNodeColor::Black;
+			RotateNode(family.Parent, bRightChild ? TreeNodeRotateMode::LL : TreeNodeRotateMode::RR);
+			return;
+		}
 
-		if (bRightChild)
-			RotateLL(family.Parent);
-		else
-			RotateRR(family.Parent);
+		if (family.NephewTriColor == TreeNodeColor::Red) {
+			// 케이스 3. 꺽인조카가 Red인 경우
+			family.NephewTri->Color = TreeNodeColor::Black;
+			family.Sibling->Color = TreeNodeColor::Red;
+			RotateNode(family.Sibling, bRightChild ? TreeNodeRotateMode::RR : TreeNodeRotateMode::LL);
+			RemoveFixupExtraBlack(child); // 케이스 2로 처리하기위해 재호출
+		}
 
-		RemoveFixupExtraBlack(child);
+	}
+
+	void RotateNode(TreeNode* node, TreeNodeRotateMode mode) {
+		switch (mode) {
+		case TreeNodeRotateMode::RR: RotateRR(node); return;
+		case TreeNodeRotateMode::LL: RotateLL(node); return;
+		case TreeNodeRotateMode::RL: RotateRL(node); return;
+		case TreeNodeRotateMode::LR: RotateLR(node); return;
+		}
 	}
 
 	// 노드가 왼쪽/왼쪽으로 붙은 경우
@@ -755,7 +692,6 @@ private:
 			m_pRoot = pChild;
 		}
 	}
-
 	// 노드가 오른쪽/오른쪽으로 붙은 경우
 	void RotateRR(TreeNode* node) {
 		//  ?   		- ? : pParent
@@ -795,12 +731,10 @@ private:
 			m_pRoot = pChild;
 		}
 	}
-
 	void RotateLR(TreeNode* cur) {
 		RotateRR(cur->Left);
 		RotateLL(cur);
 	}
-
 	void RotateRL(TreeNode* cur) {
 		RotateLL(cur->Right);
 		RotateRR(cur);
@@ -812,14 +746,12 @@ private:
 		RecordDataOnHierarchy(node->Left, depth + 1, hierarchy);
 		RecordDataOnHierarchy(node->Right, depth + 1, hierarchy);
 	}
-
 	static void DeleteNodeRecursive(TreeNode* node) {
 		if (node == nullptr) return;
 		DeleteNodeRecursive(node->Left);
 		DeleteNodeRecursive(node->Right);
 		delete node;
 	}
-
 	static void GetMaxHeightRecursive(TreeNode* node, int height, int& maxHeight) {
 		if (node == nullptr) {
 			maxHeight = Math::Max(maxHeight, height);
@@ -829,7 +761,6 @@ private:
 		GetMaxHeightRecursive(node->Left, height + 1, maxHeight);
 		GetMaxHeightRecursive(node->Right, height + 1, maxHeight);
 	}
-
 	static void CountRecursive(TreeNode* node, int& count) {
 		if (node == nullptr) {
 			return;
@@ -838,7 +769,6 @@ private:
 		CountRecursive(node->Left, count);
 		CountRecursive(node->Right, count);
 	}
-
 
 	TreeNode* m_pRoot;
 };
@@ -857,7 +787,7 @@ private:
 #define CASE_3_1_3	OFF
 #define CASE_3_1_3	OFF
 
-#define CASE_ALL_RANDOM OFF
+#define CASE_ALL_RANDOM ON
 
 int main() {
 	Console::SetSize(800, 600);
@@ -1019,7 +949,7 @@ int main() {
 #if CASE_ALL_RANDOM
 	Vector<int> nodes;
 	Random::EngineInitialize();
-	constexpr int itemCount = 16;
+	constexpr int itemCount = 128;
 	for (int i = 0; i < itemCount; ++i) { nodes.PushBack(i); }
 	
 	for (int i = 0; i < 100; ++i) {
@@ -1052,44 +982,26 @@ int main() {
 			}
 		}
 
-		Console::Write("삽입 순서: ");
-		pushOrder.ForEach([](auto s) { Console::Write("%d ", s); }); Console::WriteLine("");
-
-		Console::Write("삭제 순서: ");
-		popOrder.ForEach([](auto s) { Console::Write("%d ", s); }); Console::WriteLine("");
-
 		TreeSet set;
 		for (int j = 0; j < itemCount; ++j) {
 			set.Insert(nodes[pushOrder[j]]);
 		}
-		set.DbgPrintHierarchical();
+
+		Console::WriteLine("[%d] 높이 %d", i, set.GetMaxHeight());
+
 		for (int j = 0; j < itemCount; ++j) {
 			int r = nodes[popOrder[j]];
-			Console::WriteLine("%d 삭제시도", r);
 			DebugAssert(set.Remove(r));
-			set.DbgPrintHierarchical();
 		}
-
-		Console::WriteLine("[%d]", i);
 	}
 #endif
-	/*5 삭제시도
-	[1] 4(Black, -1, -)
-	[2] 1(Red, 4, L) 7(Black, 4, R)
-	[3] 0(Black, 1, L) 3(Black, 1, R) 6(Red, 7, L)
-	[4] 2(Red, 3, L)
-	==============================
-	4 삭제시도
-	[1] 3(Black, -1, -)
-	[2] 2(Black, 3, L) 7(Black, 3, R)
-	[3] 6(Red, 7, L)*/
 
-	{
+
+	/*{
 		TreeSet set;
 		set.DbgGenerateTreeWithString("9 7 0 15 14 12 3 13 1 10 6 2 4 5 8 11");
 		set.DbgRemoveWithString("10 15 14 0 1 9 6 4 11 13 5 3 8 2 12 7");
-
-	}
+	}*/
 
 	return 0;
 }
