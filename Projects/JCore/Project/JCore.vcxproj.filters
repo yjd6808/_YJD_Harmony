@@ -512,5 +512,8 @@
     <Natvis Include="..\Sources\JCore\Natvis\NatvisByteOrder.natvis">
       <Filter>Natvis</Filter>
     </Natvis>
+    <Natvis Include="..\Sources\JCore\Natvis\TreeMap.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
   </ItemGroup>
 </Project>
