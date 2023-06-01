@@ -21,5 +21,7 @@ enum class ContainerType {
 	TreeMap,
 	ReferenceStream,
 	HashMapKeyCollection,
-	HashMapValueCollection
+	HashMapValueCollection,
+	TreeMapKeyCollection,
+	TreeMapValueCollection
 };

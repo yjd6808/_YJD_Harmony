@@ -137,6 +137,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\TreeMap.h" />
+    <ClInclude Include="..\Sources\JCore\Container\TreeMapIterator.h" />
     <ClInclude Include="..\Sources\JCore\Debug\MemoryLeakDetector.h">
       <SubType>
       </SubType>

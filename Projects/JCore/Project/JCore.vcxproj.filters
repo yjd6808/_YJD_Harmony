@@ -459,6 +459,12 @@
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Macro.h" />
+    <ClInclude Include="..\Sources\JCore\Container\TreeMap.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\TreeMapIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

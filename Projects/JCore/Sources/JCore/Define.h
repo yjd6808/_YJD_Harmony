@@ -79,6 +79,15 @@
 	    }															\
     } while (0)		
 
+	#define JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(type, ptr)		\
+    do {																		\
+	    if ((ptr)) {															\
+			Memory::PlacementDelete(ptr);										\
+		    TAllocator::template Deallocate<type>(ptr);							\
+			(ptr) = nullptr;		  											\
+	    }																		\
+    } while (0)		
+
 	#define JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(ptr, size)		\
 	do {													\
 	    if ((ptr)) {										\
@@ -86,6 +95,7 @@
 			(ptr) = nullptr;		 						\
 	    }													\
     } while (0)		
+
 
 
 	#define	JCORE_PLACEMENT_DELETE_ARRAY_SAFE(arr, size)				\

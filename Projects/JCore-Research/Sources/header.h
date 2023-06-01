@@ -14,6 +14,7 @@
 #include <JCore/Allocator/DefaultArrayAllocator.h>
 
 #include <JCore/Container/HashMap.h>
+#include <JCore/Container/TreeMap.h>
 #include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/Vector.h>
 
