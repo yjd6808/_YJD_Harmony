@@ -72,6 +72,7 @@ using namespace JCore;
         #define	TEST_ArrayQueueTest				    ON
         #define	TEST_ArraysTest					    ON
         #define TEST_HashMapTest                    ON
+		#define TEST_TreeMapTest                    ON
         #define	TEST_LinkedListTest					ON
         #define	TEST_ListQueueTest					ON
         #define	TEST_ListStackTest					ON

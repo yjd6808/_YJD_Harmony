@@ -122,6 +122,9 @@
     <ClCompile Include="..\Sources\JCoreTest\FileSystem\PathUtilTest.cpp">
       <Filter>FileSystem</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Container\TreeMapTest.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

@@ -80,6 +80,7 @@ struct TreeNode
 template <typename TKey, typename TValue, typename TKeyComparator = Comparator<TKey>, typename TAllocator = DefaultAllocator>
 class TreeMap : public MapCollection<TKey, TValue, TAllocator>
 {
+	static_assert(IsComparator_v<TKeyComparator>, "... TKeyComparator is not comparator");
 	/*
 	 * 트리맵은 이터레이션을 어떻게 수행해야할까? (생각의 흐름)
 	 *  -> 우선 중위순회(inorder traverse)와 역방향 중위순회(reverse inorder traverse)를 활용해야 할 것이다.
@@ -87,7 +88,14 @@ class TreeMap : public MapCollection<TKey, TValue, TAllocator>
 	 *	-> 이때 1단계 더 큰 노드가 다음 노드가 될 것이다.
 	 *	-> 1단계 더 큰 노드는 어떤 노드일까?
 	 *	-> A라는 노드가 있을 때 A노드 기준 우측 서브트리에서 가장 작은 노드(Successor)가 1단계 큰 노드가 될 수 있다.
-	 *	   만약 A의 우측 서브트리가 존재하지 않고, A의 부모가 있을 때 A가 좌측 자식인 경우 A의 부모가 1단계 큰 노드가 될 수 있다.
+	 *	    - 1. 만약 A의 우측 서브트리가 존재하지 않고, A의 부모가 있을 때 A가 좌측 자식인 경우 A의 부모가 1단계 큰 노드가 될 수 있다.
+	 *      - 2. 만약 A의 우측 서버트리가 존재하지 않고, A의 부모가 있을 때 A가 우측 자식인 경우 연속 우측 분기가 종료되는 지점의 노드의 부모가 1단계 더 큰 노드이다.
+	 *		     우측자식인 경우는 이해가 잘 안될 수 있어서 예시 자료를 첨부한다.
+	 *           https://drive.google.com/file/d/1rpboZM-cm4NS0VkQFhEF934L2OsFKmes/view?usp=sharing
+	 *			 150의 연속 우측 분기가 종료되는 지점은 200
+	 *			 275의 연속 우측 분기가 종료되는 지점은 300
+	 *			 375의 연속 우측 분기가 종료되는 지점은 400이된다.
+	 *			
 	 *	-> 이 2가지 조건에 만족하는 노드가 없다면 A는 해당 트리에서 가장 큰 노드라는 것이다.
 	 *  -> 이 생각의 흐름을 토대로 함수: FindBiggerNode를 정의해보자.
 	 */
@@ -128,32 +136,32 @@ public:
 		, m_pRoot(nullptr)
 	{}
 
-	TreeMap(const TTreeMap& other) {
+	TreeMap(const TTreeMap& other) : TreeMap() {
 		operator=(other);
 	}
 
-	TreeMap(TTreeMap&& other) noexcept {
+	TreeMap(TTreeMap&& other) noexcept : TreeMap() {
 		operator=(Move(other));
 	}
 
-	TreeMap(std::initializer_list<TKeyValuePair> ilist) {
+	TreeMap(std::initializer_list<TKeyValuePair> ilist) : TreeMap() {
 		operator=(ilist);
 	}
 
 	~TreeMap() noexcept override {
-		Clear();
+		TTreeMap::Clear();
 	}
 public:
 
 	TTreeMap& operator=(const TTreeMap& other) {
-		Clear();
-		InorderTraverseForEach<TraverseValueType::Pair>([this](auto& pair) { Insert(pair.Key, pair.Value); });
+		TTreeMap::Clear();
+		InorderTraverseForEach<TraverseValueType::Pair>(other.m_pRoot, [this](auto& pair) { Insert(pair.Key, pair.Value); });
 		this->m_iSize = other.m_iSize;
 		return *this;
 	}
 
 	TTreeMap& operator=(TTreeMap&& other) noexcept {
-		Clear();
+		TTreeMap::Clear();
 
 		this->m_Owner = Move(other.m_Owner);
 		this->m_pRoot = other.m_pRoot;
@@ -203,7 +211,9 @@ public:
 			pNewNode = TAllocator::template AllocateInit<TTreeNode>(Forward<Ky>(key), Forward<Vy>(value));
 			pNewNode->Parent = pParent;
 
-			if (ms_KeyComparator(key, pParent->Pair.Key) > 0) {
+			// key, value가 pNewNode를 생성할 때 포워딩되기 때문에 만약 rvalue로 들어올 경우 잘못된 결과를 얻을 수 있다.
+			// 따라서 key 대신 pNewNode->Pair.Key를 사용해야함.
+			if (ms_KeyComparator(pNewNode->Pair.Key, pParent->Pair.Key) > 0) {
 				pParent->Right = pNewNode;
 			} else {
 				pParent->Left = pNewNode;
@@ -457,32 +467,18 @@ protected:
 					pGrandParent->Color = TreeNodeColor::eRed;
 					pParent->Color = TreeNodeColor::eBlack;
 					RotateLL(pGrandParent);
-
-					// 조상이 루트노드였다면 회전 후 부모가 루트노드로 올라오므로 변경해줘야함
-					if (m_pRoot == pGrandParent) {
-						m_pRoot = pParent;
-					}
-
-				}
-				else {
+				} else {
 					// Case 1-3
 					RotateRR(pParent);
 					InsertFixup(pParent);
 				}
-			}
-			else {
+			} else {
 				if (child->IsRight()) {
 					// Case 1-2
 					pGrandParent->Color = TreeNodeColor::eRed;
 					pParent->Color = TreeNodeColor::eBlack;
 					RotateRR(pGrandParent);
-
-					// 조상이 루트노드였다면 회전 후 부모가 루트노드로 올라오므로 변경해줘야함
-					if (m_pRoot == pGrandParent) {
-						m_pRoot = pParent;
-					}
-				}
-				else {
+				} else {
 					// Case 1-4
 					RotateLL(pParent);
 					InsertFixup(pParent);
@@ -844,8 +840,24 @@ protected:
 	static TTreeNode* FindBiggerNode(TTreeNode* node) {
 		TTreeNode* pBigger = TTreeMap::FindSuccessorNode(node);
 
-		if (pBigger == nullptr && node->Parent && node->Parent->Left == node)
-			pBigger = node->Parent;
+		if (pBigger == nullptr) {
+			TTreeNode* pParent = node->Parent;
+
+			if (pParent && pParent->Left == node)
+				pBigger = pParent;
+			else {
+				// 연속 우측 분기가 종료되는 지점의 부모가 다음 큰 수이다.
+				while (pParent) {
+					TTreeNode* pNextParent = pParent->Parent;
+					if (pNextParent && pNextParent->Left == pParent) {
+						pBigger = pNextParent;
+						break;
+					}
+					pParent = pNextParent;
+				}
+			}
+
+		}
 
 		return pBigger;
 	}
@@ -854,8 +866,22 @@ protected:
 	static TTreeNode* FindSmallerNode(TTreeNode* node) {
 		TTreeNode* pSmaller = TTreeMap::FindPredecessorNode(node);
 
-		if (pSmaller == nullptr && node->Parent && node->Parent->Right == node)
-			pSmaller = node->Parent;
+		if (pSmaller == nullptr) {
+			TTreeNode* pParent = node->Parent;
+			if (pParent && pParent->Right == node)
+				pSmaller = pParent;
+			else {
+				// 연속 좌측 분기가 종료되는 지점의 부모가 다음 큰 수이다.
+				while (pParent) {
+					TTreeNode* pNextParent = pParent->Parent;
+					if (pNextParent && pNextParent->Right == pParent) {
+						pSmaller = pNextParent;
+						break;
+					}
+					pParent = pNextParent;
+				}
+			}
+		}
 
 		return pSmaller;
 	}
@@ -863,7 +889,7 @@ protected:
 	template <TraverseValueType ValueType, typename Consumer>
 	static void InorderTraverseForEach(TTreeNode* node, Consumer&& consumer) {
 		if (node == nullptr) return;
-		InorderTraverseForEach(node->Left, Forward<Consumer>(consumer));
+		InorderTraverseForEach<ValueType>(node->Left, Forward<Consumer>(consumer));
 		if constexpr (ValueType == TraverseValueType::Pair)
 			consumer(node->Pair);
 		else if constexpr (ValueType == TraverseValueType::Key)
@@ -872,13 +898,13 @@ protected:
 			consumer(node->Pair.Value);
 		else
 			DebugAssert(false);
-		InorderTraverseForEach(node->Right, Forward<Consumer>(consumer));
+		InorderTraverseForEach<ValueType>(node->Right, Forward<Consumer>(consumer));
 	}
 
 	template <TraverseValueType ValueType, typename Consumer>
 	static void InorderTraverseReverseForEach(TTreeNode* node, Consumer&& consumer) {
 		if (node == nullptr) return;
-		InorderTraverseForEach(node->Right, Forward<Consumer>(consumer));
+		InorderTraverseForEach<ValueType>(node->Right, Forward<Consumer>(consumer));
 		if constexpr (ValueType == TraverseValueType::Pair)
 			consumer(node->Pair);
 		else if constexpr (ValueType == TraverseValueType::Key)
@@ -887,7 +913,7 @@ protected:
 			consumer(node->Pair.Value);
 		else
 			DebugAssert(false);
-		InorderTraverseForEach(node->Left, Forward<Consumer>(consumer));
+		InorderTraverseForEach<ValueType>(node->Left, Forward<Consumer>(consumer));
 	}
 
 	static void DeleteNodeRecursive(TTreeNode* node) {
@@ -947,7 +973,7 @@ public:
 			return TKeyCollection::IsEmpty();
 		}
 
-		TEnumerator Begin() const override { return MakeShared<TreeMapKeyCollectionIterator, TAllocator>(m_pTreeMap->GetOwner(), TTreeMap::FindSmallerNode(m_pTreeMap->m_pRoot)); }
+		TEnumerator Begin() const override { return MakeShared<TreeMapKeyCollectionIterator, TAllocator>(m_pTreeMap->GetOwner(), TTreeMap::FindSmallestNode(m_pTreeMap->m_pRoot)); }
 		TEnumerator End() const override { return MakeShared<TreeMapKeyCollectionIterator, TAllocator>(m_pTreeMap->GetOwner(), TTreeMap::FindBiggestNode(m_pTreeMap->m_pRoot)); }
 
 		ContainerType GetContainerType() override { return ContainerType::TreeMapKeyCollection; }
@@ -983,7 +1009,7 @@ public:
 		}
 
 
-		TEnumerator Begin() const override { return MakeShared<TreeMapValueCollectionIterator, TAllocator>(m_pTreeMap->GetOwner(), TTreeMap::FindSmallerNode(m_pTreeMap->m_pRoot)); }
+		TEnumerator Begin() const override { return MakeShared<TreeMapValueCollectionIterator, TAllocator>(m_pTreeMap->GetOwner(), TTreeMap::FindSmallestNode(m_pTreeMap->m_pRoot)); }
 		TEnumerator End() const override { return MakeShared<TreeMapValueCollectionIterator, TAllocator>(m_pTreeMap->GetOwner(), TTreeMap::FindBiggestNode(m_pTreeMap->m_pRoot)); }
 		ContainerType GetContainerType() override { return ContainerType::TreeMapValueCollection; }
 		TTreeMap* m_pTreeMap;

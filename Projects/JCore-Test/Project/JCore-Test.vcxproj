@@ -32,6 +32,7 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\LinkedListTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ListQueueTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ListStackTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\TreeMapTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\VectorTest.cpp">
       <SubType>
       </SubType>

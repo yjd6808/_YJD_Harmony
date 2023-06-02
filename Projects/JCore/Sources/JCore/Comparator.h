@@ -10,7 +10,6 @@
 #include <JCore/TypeCast.h>
 
 NS_JC_BEGIN
-
 template <typename T>
 struct Comparator
 {
@@ -58,5 +57,13 @@ struct ReverseOrder
 		return Comparator<NaturalType_t<U>>()(Forward<U>(lhs), Forward<U>(rhs)) > 0;
 	}
 };
+
+template <typename>
+struct IsComparator : FalseType {};
+template <typename T>
+struct IsComparator<Comparator<T>> : TrueType {};
+
+template <typename TComparator>
+constexpr bool IsComparator_v = IsComparator<TComparator>::Value;
 
 NS_JC_END
