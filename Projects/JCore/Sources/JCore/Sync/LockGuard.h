@@ -21,6 +21,8 @@ public:
 		m_Mtx->Unlock();
 	}
 
+	TLock* Handle() const { return m_Mtx; }
+
 	LockGuard(const TLockGuard& mtx) = delete;
 	TLock& operator=(const TLockGuard& mtx) = delete;
 private:

@@ -389,6 +389,13 @@ struct TimeSpan
 	bool operator<=(const TimeSpan& other) const { return Tick <= other.Tick; }
 	bool operator==(const TimeSpan& other) const { return Tick == other.Tick; }
 
+	static TimeSpan FromMicroSeocnd(Int64 v) { return TimeSpan{ v }; }
+	static TimeSpan FromMiliSeocnd(Int64 v) { return TimeSpan{ v * Detail::TicksPerMiliSecond_v }; }
+	static TimeSpan FromSecond(Int64 v) { return TimeSpan{ v * Detail::TicksPerSecond_v }; }
+	static TimeSpan FromMinute(Int64 v) { return TimeSpan{ v * Detail::TicksPerMinute_v }; }
+	static TimeSpan FromHour(Int64 v) { return TimeSpan{ v * Detail::TicksPerHour_v }; }
+	static TimeSpan FromDay(Int64 v) { return TimeSpan{ v * Detail::TicksPerDay_v }; }
+
 	Int64 Tick{};
 };
 

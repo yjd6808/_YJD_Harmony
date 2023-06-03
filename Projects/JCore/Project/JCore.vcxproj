@@ -78,6 +78,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\ConditionVariable.cpp" />
     <ClCompile Include="..\Sources\JCore\Sync\EventLock.cpp" />
     <ClCompile Include="..\Sources\JCore\Sync\ManualResetEvent.cpp">
       <SubType>
@@ -374,6 +375,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Sync\AutoResetEvent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\ConditionVariable.h">
       <SubType>
       </SubType>
     </ClInclude>

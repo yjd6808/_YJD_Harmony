@@ -30,6 +30,7 @@
 
 #include <JCore/Sync/SpinLock.h>
 #include <JCore/Sync/WaitHandle.h>
+#include <JCore/Sync/ConditionVariable.h>
 
 #include <JCore/Wrapper/WinApi.h>
 #include <JCore/Wrapper/CRuntime.h>

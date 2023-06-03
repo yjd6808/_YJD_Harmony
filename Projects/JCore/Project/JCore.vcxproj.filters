@@ -148,6 +148,9 @@
     <ClCompile Include="..\Sources\JCore\Threading\RunnableThread.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Sync\ConditionVariable.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -464,6 +467,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\TreeMapIterator.h">
       <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Sync\ConditionVariable.h">
+      <Filter>Sync</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

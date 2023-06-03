@@ -54,6 +54,7 @@ struct WinApi {
         IntPtr SpinCount;            // force size on 64-bit systems when packed
     };
 	#pragma pack(pop)
+
 	#pragma endregion
 
     static WinHandle InvalidHandleValue;

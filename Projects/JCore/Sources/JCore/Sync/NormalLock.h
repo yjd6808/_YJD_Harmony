@@ -27,7 +27,9 @@ public:
 	bool IsLocked() override;
 private:
 	WinApi::CriticalSection m_CriticalSection;
-	Atomic<int> m_hOwnThread;
+	Atomic<int> m_hOwnThreadId;
+
+	friend class ConditionVariable;
 };
 
 /* ================================================================================= */

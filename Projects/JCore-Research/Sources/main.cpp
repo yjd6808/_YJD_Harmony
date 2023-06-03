@@ -4,37 +4,69 @@ using namespace std::chrono_literals;
 
 USING_NS_STD_CHRONO;
 
-//system_clock::time_point ToTimePoint() {
-//	auto t = DateTime::Now().GetTick();
-//	t -= Detail::ADBeginTick_v;
-//	const Int32 uiBias = DateTime::TimeZoneBiasMinute();
-//	t -= (uiBias * -1) * Detail::TicksPerMinute_v;
-//	return system_clock::time_point(system_clock::duration{t});
-//}
+bool ready = false;
 
-//auto a = system_clock::now();
-//duration<double> kk = a.time_since_epoch();
-//auto b = duration_cast<seconds>(kk);
-//auto k = ToTimePoint();
+#define STD_
+#ifdef STD_
+condition_variable condvar;
+mutex lk;
+#else
+ConditionVariable condvar;
+NormalLock lk;
+#endif
 
 int main() {
-	TreeMap<int, int> tm;
+	Thread th{ [](void*) {
+		for (;;) {
+			#ifdef STD_
+			unique_lock lg(lk);
+			bool r = condvar.wait_for(lg, seconds{2}, [] { return ready; });
+			if (!r) {
+				Console::WriteLine("타임아웃");
+			} else {
+				Console::WriteLine("신호수신");
+				ready = false;
+			}
+			#else
+			NormalLockGuard lock_guard(lk);
+			int r = condvar.WaitFor(lock_guard, TimeSpan::FromMiliSeocnd(2000), [] { return ready; });
+			if (r == CvStatus::eTimeout) {
+				Console::WriteLine("타임아웃");
+			} else {
+				Console::WriteLine("신호수신");
+				ready = false;
+			}
+			#endif
+
+
+
+		}
+	}};
+
+
+	while (true) {
+		int a;
+		std::cin >> a;
+
+		if (a == 1) {
+#ifdef STD_
+			unique_lock lg(lk);
+			ready = true;
+			condvar.notify_all();
+#else
+			NormalLockGuard lock_guard(lk);
+			ready = true;
+			condvar.NotifyAll();
+#endif
+			break;
+		}
+	}
+
+
+	th.Join();
+
+
 	Random::EngineInitialize();
-	for (int i = 0; i < 100; ++i) {
-		tm.Insert(i*10, i*10);
-	}
-
-	for (int i = -1; i < 1100; ++i) {
-		int* pv = tm.UpperBoundValue(i);
-		if (pv == nullptr)
-			Console::WriteLine("[%d] %s", i, "없음");
-		else
-			Console::WriteLine("[%d] %d", i, *pv);
-	}
-	
-
-	
-	
 	return 0;
 }
 

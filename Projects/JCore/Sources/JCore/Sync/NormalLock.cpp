@@ -23,17 +23,17 @@ NormalLock::~NormalLock() {
 }
 
 void NormalLock::Lock() {
-	if (m_hOwnThread == (int)Thread::GetThreadId()) {
+	if (m_hOwnThreadId == (int)Thread::GetThreadId()) {
 		// DebugAssertMsg(false, "같은 쓰레드에서 재잠금을 시도했습니다.");
 		throw RuntimeException("같은 쓰레드에서 재잠금을 시도했습니다.");
 	}
 
 	EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
-	m_hOwnThread = Thread::GetThreadId();
+	m_hOwnThreadId = Thread::GetThreadId();
 }
 
 void NormalLock::Unlock() {
-	m_hOwnThread = -1;
+	m_hOwnThreadId = -1;
 	LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection));
 }
 
@@ -43,14 +43,14 @@ bool NormalLock::TryLock() {
         return false;
 
 	if ((bool)TryEnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(&m_CriticalSection))) {
-		m_hOwnThread = Thread::GetThreadId();
+		m_hOwnThreadId = Thread::GetThreadId();
 		return true;
 	}
 	return false;
 }
 
 bool NormalLock::IsLocked() {
-	return m_hOwnThread != -1;
+	return m_hOwnThreadId != -1;
 }
 
 NS_JC_END
