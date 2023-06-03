@@ -11,7 +11,7 @@
 
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
-	void __DebugAssertMsgImpl(const char* filePath, int lineNum, const char* functionName, const char* fmt, ...) {
+	void __DebugAssertMsgImpl(const char* expectStr, const char* filePath, int lineNum, const char* functionName, const char* fmt, ...) {
 
 		// 내부에서 오류 발생시 DebugAssert 재귀 호출되기땜에 여기선 오류 절대 발생하면안댐
 		static bool PreventUnrechableCode = true;
@@ -26,6 +26,7 @@ NS_JC_BEGIN
 		StringUtil::ConcatInnerFront(szFmtBuf, BufSize, "┌ 어썰트 발생 : ");
 		printf("%s\n", szFmtBuf);															
 		Path::FileNameLevel(szFmtBuf, BufSize, filePath, StringUtil::Length(filePath), 2);
+		printf("│ EXP : %s\n", expectStr);
 		printf("│ 파일 : %s\n", szFmtBuf);												    
 		printf("│ 라인 : %d\n", lineNum);
 		printf("└ 함수 : %s\n", functionName);

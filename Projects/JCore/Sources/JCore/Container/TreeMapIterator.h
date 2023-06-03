@@ -65,7 +65,6 @@ public:
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
-
 		return m_pIteratorNode->Pair;
 	}
 

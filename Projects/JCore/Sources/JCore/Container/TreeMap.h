@@ -213,10 +213,13 @@ public:
 
 			// key, value가 pNewNode를 생성할 때 포워딩되기 때문에 만약 rvalue로 들어올 경우 잘못된 결과를 얻을 수 있다.
 			// 따라서 key 대신 pNewNode->Pair.Key를 사용해야함.
-			if (ms_KeyComparator(pNewNode->Pair.Key, pParent->Pair.Key) > 0) {
+			const int iComp = ms_KeyComparator(pNewNode->Pair.Key, pParent->Pair.Key);
+			if (iComp > 0) {
 				pParent->Right = pNewNode;
-			} else {
+			} else if (iComp < 0){
 				pParent->Left = pNewNode;
+			} else {
+				DebugAssert(false);
 			}
 		}
 
@@ -320,6 +323,39 @@ public:
 		return iMaxHeight;
 	}
 
+	TKeyValuePair* LowerBoundPair(const TKey& key) const {
+		TTreeNode* pNode = LowerBoundNode(m_pRoot, key);
+		if (pNode == nullptr) return nullptr;
+		return &pNode->Pair;
+	}
+
+	TValue* LowerBoundValue(const TKey& key) const {
+		TTreeNode* pNode = LowerBoundNode(m_pRoot, key);
+		if (pNode == nullptr) return nullptr;
+		return &pNode->Pair.Value;
+	}
+
+	SharedPtr<TIterator> LowerBoundIterator(const TKey& key) const {
+		TTreeNode* pNode = LowerBoundNode(m_pRoot, key);
+		return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), pNode);
+	}
+
+	TKeyValuePair* UpperBoundPair(const TKey& key) const {
+		TTreeNode* pNode = UpperBoundNode(m_pRoot, key);
+		if (pNode == nullptr) return nullptr;
+		return &pNode->Pair;
+	}
+
+	TValue* UpperBoundValue(const TKey& key) const {
+		TTreeNode* pNode = UpperBoundNode(m_pRoot, key);
+		if (pNode == nullptr) return nullptr;
+		return &pNode->Pair.Value;
+	}
+
+	SharedPtr<TIterator> UpperBoundIterator(const TKey& key) const {
+		TTreeNode* pNode = UpperBoundNode(m_pRoot, key);
+		return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), pNode);
+	}
 
 	// ==========================================
 	// 동적할당 안하고 트리맵 순회할 수 있도록 기능 구현
@@ -942,6 +978,50 @@ protected:
 
 		predecessor->Parent->Left = predecessorLeftChild;
 		predecessorLeftChild->Parent = predecessor->Parent;
+	}
+
+	// node를 root로 하는 트리에서의 key보다 처음으로 같거나 커지는 노드
+	static TTreeNode* LowerBoundNode(TTreeNode* rootNode, const TKey& key) {
+		DebugAssert(rootNode != nullptr);
+		TTreeNode* pHigh = FindBiggestNode(rootNode);
+		TTreeNode* pCur = rootNode;
+
+		while (pCur) {
+			const int iComp = ms_KeyComparator(key, pCur->Pair.Key);
+			if (iComp > 0) {
+				pCur = pCur->Right;
+			} else {
+				pHigh = pCur;
+				pCur = pCur->Left;
+			}
+		}
+
+		if (ms_KeyComparator(key, pHigh->Pair.Key) > 0)
+			return nullptr;
+
+		return pHigh;
+	}
+
+	// node를 root로 하는 트리에서의 key보다 처음으로 커지는 노드
+	static TTreeNode* UpperBoundNode(TTreeNode* rootNode, const TKey& key) {
+		DebugAssert(rootNode != nullptr);
+		TTreeNode* pHigh = FindBiggestNode(rootNode);
+		TTreeNode* pCur = rootNode;
+
+		while (pCur) {
+			const int iComp = ms_KeyComparator(key, pCur->Pair.Key);
+			if (iComp >= 0) {
+				pCur = pCur->Right;
+			} else {
+				pHigh = pCur;
+				pCur = pCur->Left;
+			}
+		}
+
+		if (ms_KeyComparator(key, pHigh->Pair.Key) >= 0)
+			return nullptr;
+
+		return pHigh;
 	}
 
 	TTreeNode* m_pRoot;
