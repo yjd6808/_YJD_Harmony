@@ -194,7 +194,7 @@ public:
 
 		// 1. 데이터를 먼저 넣는다.
 		if (m_pRoot == nullptr) {
-			pNewNode = m_pRoot = TAllocator::template AllocateInit<TTreeNode>(Forward<Ky>(key), Forward<Vy>(value));
+			pNewNode = m_pRoot = TAllocator::template AllocateInitStatic<TTreeNode>(Forward<Ky>(key), Forward<Vy>(value));
 		} else {
 			// data가 삽입될 부모 노드를 찾는다.
 			TTreeNode* pParent = FindParentDataInserted(key);
@@ -208,7 +208,7 @@ public:
 				return false;
 			}
 
-			pNewNode = TAllocator::template AllocateInit<TTreeNode>(Forward<Ky>(key), Forward<Vy>(value));
+			pNewNode = TAllocator::template AllocateInitStatic<TTreeNode>(Forward<Ky>(key), Forward<Vy>(value));
 			pNewNode->Parent = pParent;
 
 			// key, value가 pNewNode를 생성할 때 포워딩되기 때문에 만약 rvalue로 들어올 경우 잘못된 결과를 얻을 수 있다.

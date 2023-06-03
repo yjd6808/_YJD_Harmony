@@ -37,7 +37,7 @@ public:
 	ArrayCollection(int capacity) : TCollection() {
 		DebugAssertMsg(capacity >= 1, "컨테이너의 크기가 0이하가 될 수 없습니다. (%d)", capacity);
 		int iAllocatedSize;
-		m_pArray = TAllocator::template Allocate<T*>(capacity * sizeof(T), iAllocatedSize);
+		m_pArray = TAllocator::template AllocateDynamic<T*>(capacity * sizeof(T), iAllocatedSize);
 		m_iCapacity = capacity;
 	}
 
@@ -214,9 +214,9 @@ protected:
 	virtual void Expand(int newCapacity) {
 		DebugAssertMsg(newCapacity > m_iCapacity, "현재 용량보다 더 작은 용량입니다.");
 		int iAllocatedSize;
-		T* pNewArray = TAllocator::template Allocate<T*>(newCapacity * sizeof(T), iAllocatedSize);
+		T* pNewArray = TAllocator::template AllocateDynamic<T*>(newCapacity * sizeof(T), iAllocatedSize);
 		Memory::Copy(pNewArray, sizeof(T) * newCapacity, m_pArray, sizeof(T) * this->m_iSize);
-		TAllocator::template Deallocate(m_pArray, sizeof(T) * m_iCapacity);
+		TAllocator::template DeallocateDynamic(m_pArray, sizeof(T) * m_iCapacity);
 		m_pArray = pNewArray;
 		m_iCapacity = newCapacity;
 	}

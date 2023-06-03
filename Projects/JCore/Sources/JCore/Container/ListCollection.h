@@ -27,7 +27,7 @@ class ListCollection : public Collection<T, TAllocator>
 public:
 	ListCollection() {
 		/* [더미노드 방법 1]
-		m_pHead = Memory::Allocate<TListNode*>(sizeof(TListNode) * 2);	// 양쪽 더미를 한번에 생성하자.
+		m_pHead = Memory::AllocateStatic<TListNode*>(sizeof(TListNode) * 2);	// 양쪽 더미를 한번에 생성하자.
 		m_pTail = &m_pHead[1];
 
 		--> 더미를 굳이 동적할당할 필요가 없지않나..?
@@ -428,7 +428,7 @@ protected:
             DebugAssertMsg(false, "복사 생성할 수 없는 객체입니다.");
             return nullptr;
 		} else {
-			TListNode* pNewNode = TAllocator::template AllocateInit<TListNode>();
+			TListNode* pNewNode = TAllocator::template AllocateInitStatic<TListNode>();
             pNewNode->Construct(data);
             return pNewNode;
 		}
@@ -439,7 +439,7 @@ protected:
             DebugAssertMsg(false, "이동 생성할 수 없는 객체입니다.");
             return nullptr;
         } else {
-			TListNode* pNewNode = TAllocator::template AllocateInit<TListNode>();
+			TListNode* pNewNode = TAllocator::template AllocateInitStatic<TListNode>();
             pNewNode->Construct(Move(data));
             return pNewNode;
         }
@@ -447,7 +447,7 @@ protected:
 
 	template <typename... Args>
 	TListNode* EmplaceNewNode(Args&&... args) {
-		TListNode* pNewNode = TAllocator::template AllocateInit<TListNode>();
+		TListNode* pNewNode = TAllocator::template AllocateInitStatic<TListNode>();
 		pNewNode->Construct(Forward<Args>(args)...);
 		return pNewNode;
 	}
@@ -515,7 +515,7 @@ ListCollection<T, TAllocator>::~ListCollection() noexcept {
 	Clear();
 
 	// 더미노드 제거
-	// Memory::Deallocate(m_pHead);
+	// Memory::DeallocateStatic(m_pHead);
 }
 
 

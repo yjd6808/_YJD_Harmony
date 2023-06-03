@@ -57,9 +57,9 @@ private:
 			return;
 		}
 
-		// Memory::Allocate<TStreamNode*>(sizeof(TStreamNode) * size);
+		// Memory::AllocateStatic<TStreamNode*>(sizeof(TStreamNode) * size);
 		// 물리적 배열 생성
-		m_pArray = TAllocator::template Allocate<TStreamNode*>(sizeof(TStreamNode) * size, m_iAllocatedSize);
+		m_pArray = TAllocator::template AllocateDynamic<TStreamNode*>(sizeof(TStreamNode) * size, m_iAllocatedSize);
 
 		// 논리적 연결리스트 구성
 		ConnectNode(m_pHead, &m_pArray[0]);
@@ -99,7 +99,7 @@ public:
 	}
 
 	virtual ~CollectionStream() noexcept {
-		if (m_pArray) TAllocator::template Deallocate(m_pArray, m_iAllocatedSize);
+		if (m_pArray) TAllocator::template DeallocateDynamic(m_pArray, m_iAllocatedSize);
 	}
 
 	// TODO: 더미노드 없앨 시 수정

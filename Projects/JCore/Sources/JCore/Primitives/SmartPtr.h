@@ -137,7 +137,7 @@ struct UniqueObject : UniqueBase
 	void DeleteSelf() override {
 		TDeletor()(AddressOf(Object));
 
-		TAllocator::template Deallocate<decltype(*this)>(this);		// static push
+		TAllocator::template DeallocateStatic<decltype(*this)>(this);		// static push
 	}
 
 	T* Address() const {
@@ -163,7 +163,7 @@ struct UniqueObject<T[Size], TAllocator> : UniqueBase
 
 	void DeleteSelf() override {
 		TDeletor()(Object);
-		TAllocator::template Deallocate<decltype(*this)>(this);
+		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 	}
 
 	T* Address() const {
@@ -180,7 +180,7 @@ struct UniqueObject<T[], TAllocator> : UniqueBase
 
 	template <typename... Args>
 	explicit UniqueObject(int Size, Args&&... args) {
-		Pointer = TAllocator::template Allocate<T*>(sizeof(T) * Size, m_Allocated);
+		Pointer = TAllocator::template AllocateDynamic<T*>(sizeof(T) * Size, m_Allocated);
 
 		for (int i = 0; i < Size; i++) {
 			::new (Pointer + i) T{ Forward<Args>(args)... };
@@ -195,10 +195,10 @@ struct UniqueObject<T[], TAllocator> : UniqueBase
 		// Pointer가 가리키는 배열 원소들 명시적으로 소멸자 호출
 		TDeletor()(Pointer, m_Size);
 		// Pointer메모리 해제
-		TAllocator::Deallocate(Pointer, m_Allocated);		// dynamic push
+		TAllocator::DeallocateDynamic(Pointer, m_Allocated);		// dynamic push
 
 		// 이 객체의 메모리를 해제
-		TAllocator::template Deallocate<decltype(*this)>(this);		// static push
+		TAllocator::template DeallocateStatic<decltype(*this)>(this);		// static push
 	}
 
 	T* Address() const {
@@ -331,7 +331,7 @@ class UniqueMaker
 public:
 	template <typename... Args>
 	static constexpr TUniquePtr Create(Args&&... args) {
-		auto obj = TAllocator::template Allocate<TUniqueObject>();
+		auto obj = TAllocator::template AllocateStatic<TUniqueObject>();
 		Memory::PlacementNew(obj, Forward<Args>(args)...);
 		TUniquePtr sp;
 		sp.SetUniquePtr(obj->Address(), obj, ms_uiArraySize);
@@ -347,7 +347,7 @@ class UniqueMaker<T[ArraySize], TAllocator>
 public:
 	template <typename... Args>
 	static constexpr TUniquePtr Create(Args&&... args) {
-		auto obj = TAllocator::template Allocate<TUniqueObject>();
+		auto obj = TAllocator::template AllocateStatic<TUniqueObject>();
 		Memory::PlacementNew(obj, Forward<Args>(args)...);
 		TUniquePtr sp;
 		sp.SetUniquePtr(obj->Address(), obj, ArraySize);
@@ -364,7 +364,7 @@ class UniqueMaker<T[], TAllocator>
 public:
 	template <typename... Args>
 	static constexpr TUniquePtr Create(int Size, Args&&... args) {
-		auto obj = TAllocator::template Allocate<TUniqueObject>();
+		auto obj = TAllocator::template AllocateStatic<TUniqueObject>();
 		Memory::PlacementNew(obj, Size, Forward<Args>(args)...);
 		TUniquePtr sp;
 		sp.SetUniquePtr(obj->Address(), obj, Size);
@@ -428,7 +428,7 @@ struct SharedObject : ControlBlock
 	}
 
 	void DeleteSelf() override {
-		TAllocator::template Deallocate<decltype(*this)>(this);
+		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 	}
 
 	T* Address() const {
@@ -460,7 +460,7 @@ struct SharedObject<T*, TAllocator> : ControlBlock
 	}
 
 	void DeleteSelf() override {
-		TAllocator::template Deallocate<decltype(*this)>(this);
+		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 	}
 
 	T* Address() const {
@@ -489,7 +489,7 @@ struct SharedObject<T[Size], TAllocator> : ControlBlock
 	}
 
 	void DeleteSelf() override {
-		TAllocator::template Deallocate<decltype(*this)>(this);
+		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 	}
 
 	T* Address() const {
@@ -506,7 +506,7 @@ struct SharedObject<T[], TAllocator> : ControlBlock
 
 	template <typename... Args>
 	explicit SharedObject(int Size, Args&&... args) {
-		Pointer = TAllocator::template Allocate<T*>(sizeof(T) * Size, m_Allocated);
+		Pointer = TAllocator::template AllocateDynamic<T*>(sizeof(T) * Size, m_Allocated);
 
 		for (int i = 0; i < Size; i++) {
 			::new (Pointer + i) T{ Forward<Args>(args)... };
@@ -525,10 +525,10 @@ struct SharedObject<T[], TAllocator> : ControlBlock
 		// Pointer가 가리키는 배열 원소들 명시적으로 소멸자 호출
 		TDeletor()(Pointer, m_Size);
 		// Pointer메모리 해제
-		TAllocator::Deallocate(Pointer, m_Allocated);		// dynamic push
+		TAllocator::DeallocateDynamic(Pointer, m_Allocated);		// dynamic push
 
 		// 이 객체의 메모리를 해제
-		TAllocator::template Deallocate<decltype(*this)>(this);		// static push
+		TAllocator::template DeallocateStatic<decltype(*this)>(this);		// static push
 	}
 
 	T* Address() const {
@@ -1024,7 +1024,7 @@ class SharedMaker
 public:
 	template <typename... Args>
 	static constexpr TSharedPtr Create(Args&&... args) {
-		auto obj = TAllocator::template Allocate<TSharedObject>();
+		auto obj = TAllocator::template AllocateStatic<TSharedObject>();
 		Memory::PlacementNew(obj, Forward<Args>(args)...);
 		TSharedPtr sp;
 		sp.SetSharedPtr(obj->Address(), obj, ms_uiArraySize);
@@ -1040,7 +1040,7 @@ class SharedMaker<T[ArraySize], TAllocator>
 public:
 	template <typename... Args>
 	static constexpr TSharedPtr Create(Args&&... args) {
-		auto obj = TAllocator::template Allocate<TSharedObject>();
+		auto obj = TAllocator::template AllocateStatic<TSharedObject>();
 		Memory::PlacementNew(obj, Forward<Args>(args)...);
 		TSharedPtr sp;
 		sp.SetSharedPtr(obj->Address(), obj, ArraySize);
@@ -1057,7 +1057,7 @@ class SharedMaker<T[], TAllocator>
 public:
 	template <typename... Args>
 	static constexpr TSharedPtr Create(int size, Args&&... args) {
-		auto obj = TAllocator::template Allocate<TSharedObject>();
+		auto obj = TAllocator::template AllocateStatic<TSharedObject>();
 		Memory::PlacementNew(obj, size, Forward<Args>(args)...);
 		TSharedPtr sp;
 		sp.SetSharedPtr(obj->Address(), obj, size);

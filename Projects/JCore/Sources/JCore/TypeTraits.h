@@ -274,14 +274,14 @@ NS_JC_BEGIN
     {
         using Type = NakedType_t<T>;
 
-        // Allocate 함수 리턴타입 검사
-        static constexpr bool TestAllocateReturn1() { return IsPointerType<decltype(TAllocator::template Allocate<Type>())>::Value; }
-        static constexpr bool TestAllocateReturn2() { return IsPointerType<decltype(TAllocator::template Allocate<Type*>())>::Value; }
-        static constexpr bool TestAllocateReturn3(int dummy = 0) { return IsPointerType<decltype(TAllocator::template Allocate<Type>(dummy, dummy))>::Value; }
-        static constexpr bool TestAllocateReturn4(int dummy = 0) { return IsPointerType<decltype(TAllocator::template Allocate<Type*>(dummy, dummy))>::Value; }
+        // AllocateStatic 함수 리턴타입 검사
+        static constexpr bool TestAllocateReturn1() { return IsPointerType<decltype(TAllocator::template AllocateStatic<Type>())>::Value; }
+        static constexpr bool TestAllocateReturn2() { return IsPointerType<decltype(TAllocator::template AllocateStatic<Type*>())>::Value; }
+        static constexpr bool TestAllocateReturn3(int dummy = 0) { return IsPointerType<decltype(TAllocator::template AllocateDynamic<Type>(dummy, dummy))>::Value; }
+        static constexpr bool TestAllocateReturn4(int dummy = 0) { return IsPointerType<decltype(TAllocator::template AllocateDynamic<Type*>(dummy, dummy))>::Value; }
 
 
-        // Allocate 함수 파라미터 타입 검사
+        // AllocateStatic 함수 파라미터 타입 검사
         template <typename Pack>
         struct AllocateParamCheck : FalseType {};
 
@@ -290,32 +290,35 @@ NS_JC_BEGIN
 
         // Static
         template <template<typename...> typename Pack>
-        struct AllocateParamCheck<Pack<void>> : TrueType {};
+        struct AllocateParamCheck<Pack<>> : TrueType {};    // 인자없는 함수는 void가 아니고 걍 비어있음
 
         // Dynamic
         template <template<typename...> typename Pack>
         struct AllocateParamCheck<Pack<int, int&>> : TrueType {};
 
         static constexpr bool TestAllocateParam1() {
-            // Dynamic Allocate 함수는
-            // 디폴트 템플릿 파라미터를 설정해놔서
-            // 무조건 타입을 명시해서 전달해야하는 Static Allocate와 구분되도록 한다.
-            using Signature = decltype(TAllocator::template Allocate<>); 
+            using Signature = decltype(TAllocator::template AllocateStatic<Type>); 
+            using Param = typename FuncSig<Signature>::Parameters;
+            return AllocateParamCheck<Param>::Value;
+        }
+
+        static constexpr bool TestAllocateParam2() {
+            using Signature = decltype(TAllocator::template AllocateDynamic<Type>);
             using Param = typename FuncSig<Signature>::Parameters;
             return AllocateParamCheck<Param>::Value;
         }
         
         static constexpr bool IsValidAllocateReturnType = TestAllocateReturn1() && TestAllocateReturn2() && TestAllocateReturn3() && TestAllocateReturn4();
-        static constexpr bool IsValidAllocateParamType = TestAllocateParam1();
-
+        static constexpr bool IsValidAllocateParamType = TestAllocateParam1() && TestAllocateParam2();
+ 
 
         // ============================================================================
 
-        // Deallocate 함수 리턴 검사
-        static constexpr bool TestDeallocateReturn1(void* dummy = nullptr) { return IsVoidType_v<decltype(TAllocator::template Deallocate<Type>(dummy))>; }
-        static constexpr bool TestDeallocateReturn2(void* dummy1 = nullptr, int dummy2 = 0) { return IsVoidType_v<decltype(TAllocator::template Deallocate(dummy1, dummy2))>; }
+        // DeallocateStatic 함수 리턴 검사
+        static constexpr bool TestDeallocateReturn1(void* dummy = nullptr) { return IsVoidType_v<decltype(TAllocator::template DeallocateStatic<Type>(dummy))>; }
+        static constexpr bool TestDeallocateReturn2(void* dummy1 = nullptr, int dummy2 = 0) { return IsVoidType_v<decltype(TAllocator::template DeallocateDynamic(dummy1, dummy2))>; }
      
-        // Deallocate 함수 파라미터 타입 검사
+        // DeallocateStatic 함수 파라미터 타입 검사
         template <typename Pack>
         struct DeallocateParamCheck : FalseType {};
 
@@ -332,14 +335,14 @@ NS_JC_BEGIN
 
         // Static
         static constexpr bool TestDeallocateParam1() {
-            using Signature = decltype(TAllocator::template Deallocate<Type>);
+            using Signature = decltype(TAllocator::template DeallocateStatic<Type>);
             using Param = typename FuncSig<Signature>::Parameters;
             return DeallocateParamCheck<Param>::Value;
         }
 
         // Dynamic
         static constexpr bool TestDeallocateParam2() {
-            using Signature = decltype(TAllocator::Deallocate);
+            using Signature = decltype(TAllocator::DeallocateDynamic);
             using Param = typename FuncSig<Signature>::Parameters;
             return DeallocateParamCheck<Param>::Value;
         }

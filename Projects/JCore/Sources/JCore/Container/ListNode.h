@@ -26,7 +26,7 @@ struct ListNode final
 	void DeleteSelf() {
 		Value.~T();
 
-		TAllocator::template Deallocate<decltype(*this)>(this);
+		TAllocator::template DeallocateStatic<decltype(*this)>(this);
 		// delete this;
 	}
 

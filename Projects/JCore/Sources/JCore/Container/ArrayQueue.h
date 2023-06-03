@@ -230,7 +230,7 @@ protected:
 	// 크기 확장
 	void Expand(int capacity) override {
 		int iAllocated;
-		T* pNewArray = TAllocator::template Allocate<T*>(sizeof(T) * capacity, iAllocated);
+		T* pNewArray = TAllocator::template AllocateDynamic<T*>(sizeof(T) * capacity, iAllocated);
 
 		if (IsForwardedTail()) {
 			/*	  아래와 같은 상황에서의 배열 확장방법

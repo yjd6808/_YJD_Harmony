@@ -74,7 +74,7 @@
 	#define JCORE_ALLOCATOR_STATIC_DEALLOCATE_SAFE(type, ptr)		\
     do {															\
 	    if ((ptr)) {												\
-		    TAllocator::template Deallocate<type>(ptr);				\
+		    TAllocator::template DeallocateStatic<type>(ptr);		\
 			(ptr) = nullptr;		  								\
 	    }															\
     } while (0)		
@@ -83,7 +83,7 @@
     do {																		\
 	    if ((ptr)) {															\
 			Memory::PlacementDelete(ptr);										\
-		    TAllocator::template Deallocate<type>(ptr);							\
+		    TAllocator::template DeallocateStatic<type>(ptr);					\
 			(ptr) = nullptr;		  											\
 	    }																		\
     } while (0)		
@@ -91,7 +91,7 @@
 	#define JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(ptr, size)		\
 	do {													\
 	    if ((ptr)) {										\
-		    TAllocator::Deallocate((ptr), (size));			\
+		    TAllocator::DeallocateDynamic((ptr), (size));	\
 			(ptr) = nullptr;		 						\
 	    }													\
     } while (0)		

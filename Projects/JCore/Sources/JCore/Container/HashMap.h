@@ -156,13 +156,13 @@ struct Bucket
 
 	void Initialize() {
 		int iAllocated;
-		DynamicArray = TAllocator::template Allocate<TBucketNode*>(sizeof(TBucketNode) * Capacity, iAllocated);
+		DynamicArray = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * Capacity, iAllocated);
 		// Memory::Set(DynamicArray, sizeof(TBucketNode) * Capacity, 0);
 	}
 
 	void Expand(int newCapacity) {
 		int iAllocated;
-		TBucketNode* pNewDynamicArray = TAllocator::template Allocate<TBucketNode*>(sizeof(TBucketNode) * newCapacity, iAllocated);
+		TBucketNode* pNewDynamicArray = TAllocator::template AllocateDynamic<TBucketNode*>(sizeof(TBucketNode) * newCapacity, iAllocated);
 
 		// 2023/02/23
 		// 키가 String 같은 타입인 경우 그냥 대입 해버리면 Key의 생성자로 초기화가 수행이 안되어있기때문에 오류가 발생한다.
@@ -182,7 +182,7 @@ struct Bucket
 				Memory::PlacementNew(pNewDynamicArray[i], Move(DynamicArray[i]));
 		}
 
-		TAllocator::Deallocate(DynamicArray, sizeof(TBucketNode) * Capacity);
+		TAllocator::DeallocateDynamic(DynamicArray, sizeof(TBucketNode) * Capacity);
 		DynamicArray = pNewDynamicArray;
 		Capacity = newCapacity;
 	}
@@ -303,7 +303,7 @@ public:
 		, m_iCapacity(capacity)
 	{
 		int iAllocatedSize;
-		m_pTable = TAllocator::template Allocate<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
+		m_pTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
 		Memory::PlacementNewArray(m_pTable, capacity);
 	}
 
@@ -624,7 +624,7 @@ public:
 		DebugAssertMsg(capacity > m_iCapacity, "이전 해쉬맵 크기보다 커야합니다.");
 
 		int iAllocatedSize;
-		TBucket* pNewTable = TAllocator::template Allocate<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
+		TBucket* pNewTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
 		Memory::PlacementNewArray(pNewTable, capacity);
 		const int iPrevCapacity = m_iCapacity;
 

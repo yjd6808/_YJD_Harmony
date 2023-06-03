@@ -109,7 +109,7 @@ public:
 		NormalLockGuard guard(m_Lock);
 		m_pRefMap = &tls_RefMap;
 		m_pRefMap->Insert(m_uiObjectId, T(Forward<Args>(args)...));
-		m_ValueMaps = TAllocator::template Allocate<TlsValueMaps>();
+		m_ValueMaps = TAllocator::template AllocateStatic<TlsValueMaps>();
 		Memory::PlacementNew(m_ValueMaps);
 	}
 	~ThreadLocal() {
@@ -129,7 +129,7 @@ public:
 			}
 		}
 		Memory::PlacementDelete(m_ValueMaps);
-		TAllocator::template Deallocate<TlsValueMaps>(m_ValueMaps);
+		TAllocator::template DeallocateStatic<TlsValueMaps>(m_ValueMaps);
 	}
 public:
 	// ThreadLocal<T>와 생명주기가 같음
