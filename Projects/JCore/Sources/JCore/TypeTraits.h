@@ -227,41 +227,132 @@ NS_JC_BEGIN
     };
 
 
-    // 함수 반환타입/매개변수 타입 가져오기
-    // 람다는 어케해야할지 몰겠다.
-    // template <typename R, typename... Args>
-    // R fn(Args&&... args) { return R(); }
-    template <typename Fn>
-    struct FuncSig
+    /* 함수 반환타입/매개변수 타입 가져오기
+     * 람다는 어케해야할지 몰겠다. -> @https://stackoverflow.com/questions/7943525/is-it-possible-to-figure-out-the-parameter-type-and-return-type-of-a-lambda
+     * 위 글을 읽으면 람다는 결국 익명 펑터?
+     *
+     * struct op { bool operator()(); };
+     *
+     * 아래 2가지 타입 모두 템플릿 파리머터가 동일한 형식으로 추론되었다
+     * decltype([]->bool{})
+     * decltype(op)
+     *
+     */
+
+	struct IsFunctor
+	{
+        /* https://stackoverflow.com/questions/87372/check-if-a-class-has-a-member-function-of-a-given-signature
+         * SFINAE를 활용해서 해당 멤버 함수를 가지고 있는지 확인한다.
+         * 이를 활용하면 펑터인지 여부도 판단가능할 것 같다.
+         */
+
+        template <typename Fn>
+        struct SFINAE : FalseType {};
+        template <typename C, typename Ret, typename...Args>
+        struct SFINAE<Ret(C::*)(Args...) const> : TrueType {};
+        template <typename C, typename Ret, typename...Args>
+        struct SFINAE<Ret(C::*)(Args...)> : TrueType {};
+
+        // 구현핵싱은 함수 오버로딩의 우선순위 때문에 좀더 정의가 구체적인 함수가 먼저 실행한다는 특징을 활용했다.
+        // 왜 그런지 자세히 적어보자.
+        //
+        // 예를들어
+        // Value<int>는 1함수가 Substitution이 실패해서 당연히 2함수의 반환값의 정보를 얻게된다.
+        // Value<펑터>는 1함수의 Substitution이 성공해서 1, 2함수 모두 정의가 되는데
+        // 이때 1의 함수가 가변인자 함수인 2보다 좀 더 구체적으로 정의되어있기 때문에 1함수가 실행되게 된다.
+
+        // 방법1(스택오버플로에서 제시한 방법 - 인자에서 SFINAE 발동, 깔끔하다)
+        /* 1 */ template <typename Fn> static constexpr char Test1(SFINAE<decltype(&Fn::operator())>*) { return 1; }
+        /* 2 */ template <typename Fn> static constexpr int Test1(...) { return 1; }
+
+        // 방법2(내가 생각한 방법 - 템플릿 파라미터에서 SFINAE 발동)
+        template <typename Fn, typename _ = EnableIf<SFINAE<decltype(&Fn::operator())>::Value>::Type>
+        /* 1. */ static constexpr char Test2(int*) { return 1; }
+        template <typename Fn>
+        /* 2. */ static constexpr int Test2(...) { return 1; }
+
+
+        template <typename Fn>
+        static constexpr bool Value = sizeof(decltype(Test2<Fn>(nullptr))) == sizeof(char);
+	};
+
+	// 이제 펑터(람다)의 구분이 가능해졌다. 이를 활용해서 Callable을 구현해보자.
+	template <typename Fn>
+    struct IsCallable
+	{
+        static constexpr bool Value = IsFunctor::Value<Fn>;
+	};
+
+	// 정적함수, 전역함수
+	template <typename Ret, typename... Args>
+	struct IsCallable<Ret(*)(Args...)> : TrueType {};
+    template <typename Ret, typename... Args>
+    struct IsCallable<Ret(Args...)> : TrueType {};
+    template <typename Ret, typename Class, typename... Args>
+    struct IsCallable<Ret(Class::*)(Args...)> : TrueType {};
+
+
+	// 펑터 시그니쳐
+	struct FunctorSignature
+	{
+        // IsFunctor를 구현했던것 처럼 SFINAE를 활용해서 펑터의 매겨변수와 반환타입 정보를 얻어내자.
+        template <typename Fn>
+        struct SFINAE;
+        template <typename C, typename Ret, typename...Args>
+        struct SFINAE<Ret(C::*)(Args...) const>
+        {
+            using Parameters = ParameterPack<Args...>;
+            using Return = Ret;
+        };
+        template <typename C, typename Ret, typename...Args>
+        struct SFINAE<Ret(C::*)(Args...)>
+        {
+            using Parameters = ParameterPack<Args...>;
+            using Return = Ret;
+        };
+
+
+        /* 1 */ template <typename Fn>
+		static constexpr typename SFINAE<decltype(&Fn::operator())>::Parameters TestParam(int*) { return {}; }
+        /* 2 */ template <typename Fn>
+		static constexpr ParameterPack<__End__> TestParam(...) { return {}; }
+
+        /* 1 */ template <typename Fn>
+        static constexpr typename SFINAE<decltype(&Fn::operator())>::Return TestReturn(int*) { return {}; }
+        /* 2 */ template <typename Fn>
+        static constexpr ParameterPack<__End__> TestReturn(...) { return {}; }
+
+        template <typename Fn>
+        using Parameters = decltype(TestParam<Fn>(nullptr));
+        template <typename Fn>
+        using Return = decltype(TestReturn<Fn>(nullptr));
+	};
+
+	// 모든 호출가능한 타입의 시그니쳐
+	template <typename Fn>
+    struct CallableSignature
+	{
+        using Parameters = FunctorSignature::Parameters<Fn>;
+        using Return = FunctorSignature::Return<Fn>;
+	};
+
+    template <typename Ret, typename... Args>
+    struct CallableSignature<Ret(*)(Args...)>
     {
-        using Parameters = ParameterPack<__End__>;
-        using Return = __End__;
-        static constexpr bool Valid = false;
+        using Parameters = ParameterPack<Args...>;
+        using Return = Ret;
     };
-
-
-    template <typename R, typename... Args>
-    struct FuncSig<R(*)(Args...)>
+    template <typename Ret, typename... Args>
+    struct CallableSignature<Ret(Args...)>
     {
-        using Parameters = Detail::ParameterPack<Args...>;
-        using Return = R;
-        static constexpr bool Valid = true;
+        using Parameters = ParameterPack<Args...>;
+        using Return = Ret;
     };
-
-    template <typename R, typename... Args>
-    struct FuncSig<R(Args...)>
+    template <typename Ret, typename Class, typename... Args>
+    struct CallableSignature<Ret(Class::*)(Args...)>
     {
-        using Parameters = Detail::ParameterPack<Args...>;
-        using Return = R;
-        static constexpr bool Valid = true;
-    };
-
-    template <typename R, typename... Args>
-    struct FuncSig<R(&)(Args...)>
-    {
-        using Parameters = Detail::ParameterPack<Args...>;
-        using Return = R;
-        static constexpr bool Valid = true;
+        using Parameters = ParameterPack<Args...>;
+        using Return = Ret;
     };
 
    
@@ -297,14 +388,14 @@ NS_JC_BEGIN
         struct AllocateParamCheck<Pack<int, int&>> : TrueType {};
 
         static constexpr bool TestAllocateParam1() {
-            using Signature = decltype(TAllocator::template AllocateStatic<Type>); 
-            using Param = typename FuncSig<Signature>::Parameters;
+            using Fn = decltype(TAllocator::template AllocateStatic<Type>);
+            using Param = typename CallableSignature<Fn>::Parameters;
             return AllocateParamCheck<Param>::Value;
         }
 
         static constexpr bool TestAllocateParam2() {
-            using Signature = decltype(TAllocator::template AllocateDynamic<Type>);
-            using Param = typename FuncSig<Signature>::Parameters;
+            using Fn = decltype(TAllocator::template AllocateDynamic<Type>);
+            using Param = typename CallableSignature<Fn>::Parameters;
             return AllocateParamCheck<Param>::Value;
         }
         
@@ -335,15 +426,15 @@ NS_JC_BEGIN
 
         // Static
         static constexpr bool TestDeallocateParam1() {
-            using Signature = decltype(TAllocator::template DeallocateStatic<Type>);
-            using Param = typename FuncSig<Signature>::Parameters;
+            using Fn = decltype(TAllocator::template DeallocateStatic<Type>);
+            using Param = typename CallableSignature<Fn>::Parameters;
             return DeallocateParamCheck<Param>::Value;
         }
 
         // Dynamic
         static constexpr bool TestDeallocateParam2() {
-            using Signature = decltype(TAllocator::DeallocateDynamic);
-            using Param = typename FuncSig<Signature>::Parameters;
+            using Fn = decltype(TAllocator::DeallocateDynamic);
+            using Param = typename CallableSignature<Fn>::Parameters;
             return DeallocateParamCheck<Param>::Value;
         }
       
@@ -464,11 +555,13 @@ template<Int Index, typename... Args>
 using IndexOf_t = typename Detail::EndAssert<typename Detail::IndexOf<0, Index, Args..., Detail::__End__>::Type>::Type;
 
 template <typename Fn>
-using FuncSigParam_t = typename Detail::FuncSig<Fn>::Parameters;
+using CallableSignature_t = Detail::CallableSignature<Fn>;
 
 template <typename Fn>
-using FuncSigReturn_t = typename Detail::FuncSig<Fn>::Return;
+using CallableSignatureParam_t = typename Detail::CallableSignature<Fn>::Parameters;
 
+template <typename Fn>
+using CallableSignatureReturn_t = typename Detail::CallableSignature<Fn>::Return;
 
 template<typename... Args>
 using ParameterPack_t = typename Detail::ParameterPack<Args...>::Type;
@@ -483,6 +576,12 @@ using ParameterPackCombine_t = typename Detail::ParameterPackCombine<ParameterPa
 
 template<typename T, typename Allocator>
 constexpr bool IsValidAllocator_v = Detail::IsValidAllocator<T, Allocator>::Valid;
+
+template <typename Fn>
+constexpr bool IsFunctor_v = Detail::IsFunctor::Value<Fn>;
+
+template <typename Fn>
+constexpr bool IsCallable_v = Detail::IsCallable<Fn>::Value;
 
 
 NS_JC_END
