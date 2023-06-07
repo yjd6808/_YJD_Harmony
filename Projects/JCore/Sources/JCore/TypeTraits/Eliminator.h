@@ -57,6 +57,8 @@ struct RemoveReference<T&&>
 template <typename T>
 using RemoveReference_t = typename RemoveReference<T>::Type;
 
+template <typename T>
+using RemoveQulifierReference_t = RemoveQulifier_t<RemoveReference_t<T>>;
 
 // 배열 괄호 제거해서 기본 타입만 얻도록 하는 템플릿
 template <typename T>
@@ -98,7 +100,6 @@ struct RevmovePointer<T*>
 
 template <typename T>
 using RemovePointer_t = typename RevmovePointer<T>::Type;
-
 
 // 한정자, 참조타입을 모두 제거해주는 템플릿
 // ex) const voaltile int&& -> int타입으로댐

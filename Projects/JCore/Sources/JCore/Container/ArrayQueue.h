@@ -130,6 +130,15 @@ public:
 		return this->m_pArray[m_iHead];
 	}
 
+	bool TryDequeue(JCORE_OUT T& v) {
+		if (this->m_iSize > 0) {
+			v = Front();
+			Dequeue();
+			return true;
+		}
+		return false;
+	}
+
 	/*
 	T& Back() const {
 		this->ThrowIfContainerIsEmpty();

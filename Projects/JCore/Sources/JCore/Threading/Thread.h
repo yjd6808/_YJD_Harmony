@@ -13,6 +13,8 @@
 #include <JCore/Functional.h>
 #include <JCore/Event.h>
 #include <JCore/Sync/Semaphore.h>
+
+#include <JCore/Primitives/SmartPtr.h>
 #include <JCore/Primitives/Atomic.h>
 #include <JCore/Primitives/String.h>
 
@@ -87,6 +89,7 @@ protected:
     static thread_local Int32U tls_uiThreadId;
 };
 
-
+using ThreadPtr = SharedPtr<Thread>;
+using ThreadWPtr = WeakPtr<Thread>;
 
 NS_JC_END;

@@ -13,7 +13,7 @@ template <typename... Args>
 struct Tuple;
 
 template <>
-struct Tuple<>;
+struct Tuple<> {};
 
 // 4개 이상은 안쓰겠지..?
 template <typename T1>
