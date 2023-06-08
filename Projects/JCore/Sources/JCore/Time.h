@@ -421,17 +421,16 @@ class DateTime
 {
 public: // constructors
 	DateTime() = default;
-	DateTime(Int64 tick) : m_Tick(tick) {}
+	DateTime(Int64 tick) : Tick(tick) {}
 
 public: // public non-static
 	// 특정 타입유닛에 해당하는 전체시간 얻기
-	Int64 GetTick() const { return m_Tick; }
-	Int64 GetTotalDays() const { return m_Tick / Detail::TicksPerDay_v; }
-	Int64 GetTotalHours() const { return m_Tick / Detail::TicksPerHour_v; }
-	Int64 GetTotalMinutes() const { return m_Tick / Detail::TicksPerMinute_v; }
-	Int64 GetTotalSeconds() const { return m_Tick / Detail::TicksPerSecond_v; }
-	Int64 GetTotalMiliSeconds() const { return m_Tick / Detail::TicksPerMiliSecond_v; }
-	Int64 GetTotalMicroSeconds() const { return m_Tick; }
+	Int64 GetTotalDays() const { return Tick / Detail::TicksPerDay_v; }
+	Int64 GetTotalHours() const { return Tick / Detail::TicksPerHour_v; }
+	Int64 GetTotalMinutes() const { return Tick / Detail::TicksPerMinute_v; }
+	Int64 GetTotalSeconds() const { return Tick / Detail::TicksPerSecond_v; }
+	Int64 GetTotalMiliSeconds() const { return Tick / Detail::TicksPerMiliSecond_v; }
+	Int64 GetTotalMicroSeconds() const { return Tick; }
 
 	// 타입유닛별로 시간 얻기
 	int GetYear() const { return GetDatePart(DatePart::Year); }
@@ -476,7 +475,7 @@ public: // public non-static
 	DateTime SubtractMicroSecond(Int64 microSecond);
 	DateTime SubtractDateTime(const DateTime& other);
 
-	int Compare(const DateTime& other) const { return Comparator<Int64>()(m_Tick, other.m_Tick); }
+	int Compare(const DateTime& other) const { return Comparator<Int64>()(Tick, other.Tick); }
 	TimeSpan Diff(const DateTime& other) const;
 
 	DateTime operator-(const DateTime& other) const;
@@ -515,7 +514,7 @@ private: // private static
 	static int GetDatePart(const Int64 tick, const DatePart part);
 	
 private: // private non-static
-	int GetDatePart(const DatePart part) const { return GetDatePart(m_Tick, part); }
+	int GetDatePart(const DatePart part) const { return GetDatePart(Tick, part); }
 	void ReflectFormat(const DateAndTime& time, String& ret, char token, int count) const;
 	static void CheckOverFlow(Int64U tick);
 public: // public static
@@ -550,8 +549,8 @@ public: // public static
 
 	static const char* GetFullAMPMName(AMPM ampm);
 	static const char* GetAbbreviationAMPMName(AMPM ampm);
-private:
-	Int64U m_Tick{};
+
+	Int64U Tick{};
 
 	static const char* ms_szWeekAbbrevName[];
 	static const char* ms_szWeekFullName[];

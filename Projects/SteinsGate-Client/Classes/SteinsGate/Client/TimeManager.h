@@ -24,8 +24,8 @@ private:
 public:
 	void updateAppTime();
 
-	Int64 getAppStartUpTick() const { return m_AppStartupTime.GetTick(); }
-	Int64 getAppTick() const { return m_AppTime.GetTick(); }
+	Int64 getAppStartUpTick() const { return m_AppStartupTime.Tick; }
+	Int64 getAppTick() const { return m_AppTime.Tick; }
 
 	const SGDateTime& getAppTime() const { return m_AppTime; }
 	const SGTimeSpan& getElapsedAppTime() const { return m_AppRunningTime; }

@@ -590,7 +590,7 @@ DateAndTime& DateAndTime::operator+=(const DateAndTime& other) {
 }
 
 DateAndTime DateAndTime::operator-(const DateTime& other) const {
-	const Int64 iTick = ToTick() - other.m_Tick;
+	const Int64 iTick = ToTick() - other.Tick;
 
 	if (iTick < 0) {
 		throw UnderFlowException("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
@@ -600,7 +600,7 @@ DateAndTime DateAndTime::operator-(const DateTime& other) const {
 }
 
 DateAndTime DateAndTime::operator+(const DateTime& other) const {
-	const Int64 iTick = ToTick() + other.m_Tick;
+	const Int64 iTick = ToTick() + other.Tick;
 
 	if (iTick < 0) {
 		throw UnderFlowException("DateAndTime 연산 수행중 오류가 발생하였습니다. 음수가 나오면 안됩니다.");
@@ -610,12 +610,12 @@ DateAndTime DateAndTime::operator+(const DateTime& other) const {
 }
 
 DateAndTime& DateAndTime::operator-=(const DateTime& other) {
-	SubtractMicroSecond(other.m_Tick);
+	SubtractMicroSecond(other.Tick);
 	return *this;
 }
 
 DateAndTime& DateAndTime::operator+=(const DateTime& other) {
-	AddMicroSecond(other.m_Tick);
+	AddMicroSecond(other.Tick);
 	return *this;
 }
 
@@ -640,23 +640,23 @@ bool DateAndTime::operator==(const DateAndTime& other) {
 }
 
 bool DateAndTime::operator>(const DateTime& other) const {
-	return ToTick() > other.m_Tick;
+	return ToTick() > other.Tick;
 }
 
 bool DateAndTime::operator<(const DateTime& other) const {
-	return ToTick() < other.m_Tick;
+	return ToTick() < other.Tick;
 }
 
 bool DateAndTime::operator>=(const DateTime& other) const {
-	return ToTick() >= other.m_Tick;
+	return ToTick() >= other.Tick;
 }
 
 bool DateAndTime::operator<=(const DateTime& other) const {
-	return ToTick() <= other.m_Tick;
+	return ToTick() <= other.Tick;
 }
 
 bool DateAndTime::operator==(const DateTime& other) const {
-	return ToTick() == other.m_Tick;
+	return ToTick() == other.Tick;
 }
 
 /*=====================================================================================
@@ -826,7 +826,7 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 
 	// DateFormat이 하나도 없는 경우
 	if (vFormatList.Size() == 0) {
-		parsed.m_Tick = 0;
+		parsed.Tick = 0;
 		return true;
 	}
 
@@ -1085,7 +1085,7 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 	}
 
 	
-	parsed.m_Tick = result.ToTick();
+	parsed.Tick = result.ToTick();
 	ms_tlsiLastError = 0;
 
 	
@@ -1250,54 +1250,54 @@ DateTime DateTime::AddYear(const Int32 years) {
 DateTime DateTime::AddMonth(const Int32 months) {
 	DateAndTime current = ToDateAndTime();
 	current.AddMonth(months);
-	m_Tick = current.ToTick();
+	Tick = current.ToTick();
 	return *this;
 }
 
 DateTime DateTime::AddDay(Int32 day) {
-	const Int64U uiTick = m_Tick + day * TicksPerDay_v;
+	const Int64U uiTick = Tick + day * TicksPerDay_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::AddHour(Int64 hour) {
-	const Int64U uiTick = m_Tick + hour * TicksPerHour_v;
+	const Int64U uiTick = Tick + hour * TicksPerHour_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::AddMinute(Int64 minute) {
-	const Int64U uiTick = m_Tick + minute * TicksPerMinute_v;
+	const Int64U uiTick = Tick + minute * TicksPerMinute_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::AddSecond(Int64 second) {
-	const Int64U uiTick = m_Tick + second * TicksPerSecond_v;
+	const Int64U uiTick = Tick + second * TicksPerSecond_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::AddMiliSecond(Int64 miliSecond) {
-	const Int64U uiTick = m_Tick + miliSecond * TicksPerMiliSecond_v;
+	const Int64U uiTick = Tick + miliSecond * TicksPerMiliSecond_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::AddMicroSecond(Int64 microSecond) {
-	const Int64U uiTick = m_Tick + microSecond;
+	const Int64U uiTick = Tick + microSecond;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::AddDateTime(const DateTime& other) {
-	AddMicroSecond(other.m_Tick);
+	AddMicroSecond(other.Tick);
 	return *this;
 }
 
@@ -1309,91 +1309,91 @@ DateTime DateTime::SubtractYear(Int32 years) {
 DateTime DateTime::SubtractMonth(Int32 months) {
 	DateAndTime current = ToDateAndTime();
 	current.SubtractMonth(months);
-	m_Tick = current.ToTick();
+	Tick = current.ToTick();
 	return *this;
 }
 
 DateTime DateTime::SubtractDay(Int32 day) {
-	const Int64U uiTick = m_Tick - day * TicksPerDay_v;
+	const Int64U uiTick = Tick - day * TicksPerDay_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::SubtractHour(const Int64 hour) {
-	const Int64U uiTick = m_Tick - hour * TicksPerHour_v;
+	const Int64U uiTick = Tick - hour * TicksPerHour_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::SubtractMinute(const Int64 minute) {
-	const Int64U uiTick = m_Tick - minute * TicksPerMinute_v;
+	const Int64U uiTick = Tick - minute * TicksPerMinute_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::SubtractSecond(const Int64 second) {
-	const Int64U uiTick = m_Tick - second * TicksPerSecond_v;
+	const Int64U uiTick = Tick - second * TicksPerSecond_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::SubtractMiliSecond(const Int64 miliSecond) {
-	const Int64U uiTick = m_Tick - miliSecond * TicksPerMiliSecond_v;
+	const Int64U uiTick = Tick - miliSecond * TicksPerMiliSecond_v;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::SubtractMicroSecond(const Int64 microSecond) {
-	const Int64U uiTick = m_Tick - microSecond;
+	const Int64U uiTick = Tick - microSecond;
 	CheckOverFlow(uiTick);
-	m_Tick = uiTick;
+	Tick = uiTick;
 	return *this;
 }
 
 DateTime DateTime::SubtractDateTime(const DateTime& other) {
-	SubtractMicroSecond(other.m_Tick);
+	SubtractMicroSecond(other.Tick);
 	return *this;
 }
 
 TimeSpan DateTime::Diff(const DateTime& other) const {
-	return TimeSpan(m_Tick - other.m_Tick);
+	return TimeSpan(Tick - other.Tick);
 }
 
 DateTime DateTime::operator-(const DateTime& other) const {
-	DateTime temp(m_Tick);
-	temp.SubtractMicroSecond(other.m_Tick);
+	DateTime temp(Tick);
+	temp.SubtractMicroSecond(other.Tick);
 	return temp;
 }
 
 DateTime DateTime::operator+(const DateTime& other) const {
-	DateTime temp(m_Tick);
-	temp.AddMicroSecond(other.m_Tick);
+	DateTime temp(Tick);
+	temp.AddMicroSecond(other.Tick);
 	return temp;
 }
 
 DateTime& DateTime::operator-=(const DateTime& other) {
-	SubtractMicroSecond(other.m_Tick);
+	SubtractMicroSecond(other.Tick);
 	return *this;
 }
 
 DateTime& DateTime::operator+=(const DateTime& other) {
-	AddMicroSecond(other.m_Tick);
+	AddMicroSecond(other.Tick);
 	return *this;
 }
 
 DateTime DateTime::operator-(const TimeSpan& other) const {
-	DateTime temp(m_Tick);
+	DateTime temp(Tick);
 	temp.SubtractMicroSecond(other.Tick);
 	return temp;
 }
 
 DateTime DateTime::operator+(const TimeSpan& other) const {
-	DateTime temp(m_Tick);
+	DateTime temp(Tick);
 	temp.AddMicroSecond(other.Tick);
 	return temp;
 }
@@ -1409,13 +1409,13 @@ DateTime& DateTime::operator+=(const DateAndTime& other) {
 }
 
 DateTime DateTime::operator-(const DateAndTime& other) const {
-	DateTime temp(m_Tick);
+	DateTime temp(Tick);
 	temp.SubtractMicroSecond(other.ToTick());
 	return temp;
 }
 
 DateTime DateTime::operator+(const DateAndTime& other) const {
-	DateTime temp(m_Tick);
+	DateTime temp(Tick);
 	temp.AddMicroSecond(other.ToTick());
 	return temp;
 }
