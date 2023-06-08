@@ -109,6 +109,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Threading\ThreadPool.cpp" />
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
     <ClCompile Include="..\Sources\JCore\Utils\Console.cpp" />
     <ClCompile Include="..\Sources\JCore\Wrapper\CRuntime.cpp" />
@@ -416,6 +417,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Threading\ThreadLocal.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadPool.h">
       <SubType>
       </SubType>
     </ClInclude>

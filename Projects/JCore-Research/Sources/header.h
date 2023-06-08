@@ -38,7 +38,7 @@
 #include <JCore/Utils/Console.h>
 
 #include <JCore/Threading/Thread.h>
-#include <JCore/Threading/RunnableThread.h>
+#include <JCore/Threading/ThreadPool.h>
 #include <JCore/Threading/ThreadLocal.h>
 
 USING_NS_JC;

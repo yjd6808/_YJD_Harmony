@@ -82,33 +82,38 @@ void Thread::Sleep(Int32U ms) {
 }
 
 Int32U JCORE_STDCALL Thread::ThreadRoutine(void* param) {
-    auto* pRecvParam = static_cast<ThreadParam*>(param);
-    Thread* pThis = pRecvParam->Self;
-    TRunnable runnable = Move(pRecvParam->ThreadFunc);
-    void* pParam = pRecvParam->Param;
 
-    // ↑ 시그널 주기전에 미리 매개변수들 가져와야함 (pRecvParam은 이제 사용하지 말 것)
-    pThis->m_uiThreadId = Thread::GetThreadId();
-    pThis->m_RunningSignal.Release();
-    runnable(pParam);
-    pThis->m_eState = eJoinWait;
-    
-    CRuntime::EndThreadEx(0);
+    {
+        auto* pRecvParam = static_cast<ThreadParam*>(param);
+        Thread* pThis = pRecvParam->Self;
+        TRunnable runnable = Move(pRecvParam->ThreadFunc);
+        void* pParam = pRecvParam->Param;
+
+        pThis->m_uiThreadId = Thread::GetThreadId();
+        pThis->m_RunningSignal.Release();
+        runnable(pParam);
+        pThis->m_eState = eJoinWait;
+
+        delete pRecvParam;
+    }
+
+    CRuntime::EndThreadEx(0);       // 스택프레임 해제가 안되고 종료되네..(그래서 강제로 스코프 만듬)
     return 0;
 }
 
 int Thread::Start(TRunnable&& fn, void* param) {
     DebugAssertMsg(m_eState == eUninitialized, "이미 시작된적이 있는 쓰레드입니다.");      // 재시작 막음
     m_eState = eRunningWait;
-    SharedPtr<ThreadParam> spSend = MakeShared<ThreadParam>();
-    spSend->Param = param;
-    spSend->Self = this;
-    spSend->ThreadFunc = Move(fn);
+    ThreadParam* pStartParam = dbg_new ThreadParam;
+    pStartParam->Param = param;
+    pStartParam->Self = this;
+    pStartParam->ThreadFunc = Move(fn);
 
-    m_hHandle = reinterpret_cast<WinHandle>(CRuntime::BeginThreadEx(ThreadRoutine, spSend.GetPtr()));
+    m_hHandle = reinterpret_cast<WinHandle>(CRuntime::BeginThreadEx(ThreadRoutine, pStartParam));
     
     if (m_hHandle == NULL) {
         m_eState = eAborted;
+        delete pStartParam;
         return CRuntime::ErrorNo();
     }
 

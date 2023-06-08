@@ -151,6 +151,9 @@
     <ClCompile Include="..\Sources\JCore\Sync\ConditionVariable.cpp">
       <Filter>Sync</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Threading\ThreadPool.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -470,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Sync\ConditionVariable.h">
       <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\ThreadPool.h">
+      <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

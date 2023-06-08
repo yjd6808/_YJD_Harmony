@@ -517,6 +517,9 @@ constexpr bool IsCopyAssignable_v = std::is_copy_assignable_v<From>;
 template <typename From>
 constexpr bool IsMoveAssignable_v = std::is_move_assignable_v<From>;
 
+template <typename T>
+constexpr bool IsDefaultConstructiable_v = std::is_default_constructible_v<T>;
+
 template <typename From>
 constexpr bool IsCopyConstructible_v = std::is_copy_constructible_v<From>;
 
