@@ -46,7 +46,7 @@ public:
 
 	template <typename TPredicate>
 	bool WaitUntil(LockGuard<NormalLock>& lockGuard, const DateTime& dt, TPredicate&& predicate) {
-		return WaitFor(lockGuard, dt.Diff(DateTime::Now()));
+		return WaitFor(lockGuard, dt.Diff(DateTime::Now()), predicate);
 	}
 
 	void NotifyOne();
