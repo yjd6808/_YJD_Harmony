@@ -27,6 +27,7 @@
 #include <JCore/Encoding/CodePage.h>
 
 #include <JCore/Pool/IndexedMemoryPool.h>
+#include <JCore/Pool/ObjectPool.h>
 
 #include <JCore/Sync/SpinLock.h>
 #include <JCore/Sync/WaitHandle.h>

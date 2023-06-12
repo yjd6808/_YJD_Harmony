@@ -4,7 +4,7 @@
 NS_JC_BEGIN
 
 
-Int64 AppTime_v = DateTime::Now().GetTick();
+Int64 AppTime_v = DateTime::Now().Tick;
 
 
 	NS_DETAIL_BEGIN
