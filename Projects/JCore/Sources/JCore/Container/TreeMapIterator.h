@@ -20,6 +20,7 @@ class TreeMapIterator : public MapCollectionIterator<TKey, TValue, TAllocator>
 {
 	using TTreeNode				 = TreeNode<TKey, TValue>;
 	using TTreeMap				 = TreeMap<TKey, TValue, TKeyComparator, TAllocator>;
+	using TTreeMapIterator		 = TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator>;
 	using TKeyValuePair			 = Pair<TKey, TValue>;
 	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue, TAllocator>;
 public:
@@ -68,6 +69,7 @@ public:
 		return m_pIteratorNode->Pair;
 	}
 
+	// TODO: 올바르게 수정
 	bool IsEnd() const override {
 		return HasNext() == false;
 	}
@@ -75,9 +77,9 @@ public:
 	bool IsBegin() const override {
 		return HasPrevious() == false;
 	}
-
 protected:
 	TTreeNode* m_pIteratorNode;
+
 	friend class TTreeMap;
 };
 

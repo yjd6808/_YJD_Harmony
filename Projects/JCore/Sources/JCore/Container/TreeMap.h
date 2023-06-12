@@ -118,6 +118,7 @@ public:
 	using TMapCollection			= MapCollection<TKey, TValue, TAllocator>;
 	using TKeyValuePair				= Pair<TKey, TValue>;
 	using TIterator					= Iterator<TKeyValuePair, TAllocator>;
+	using TEnumerator				= SharedPtr<TIterator>;
 	using TTreeMap					= TreeMap<TKey, TValue, TKeyComparator, TAllocator>;
 	using TTreeMapIterator			= TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator>;
 	using TKeyCollection			= typename TMapCollection::KeyCollection;
@@ -261,6 +262,21 @@ public:
 		return pFind->Pair.Value;
 	}
 
+	// 실제 삭제되는 노드가 달라질 수 있어서 이터레이터를 올바로 재설정해줘야한다.
+	bool RemoveByIterator(TEnumerator& iterator) {
+		if (!iterator->IsValid()) {
+			return false;
+		}
+
+		// https://stackoverflow.com/questions/610245/where-and-why-do-i-have-to-put-the-template-and-typename-keywords
+		TTreeMapIterator* pIt = iterator.template Get<TTreeMapIterator*>();
+		TKey temp = pIt->m_pIteratorNode->Pair.Key;
+		RemoveByNode(pIt->m_pIteratorNode);
+		pIt->m_pIteratorNode = m_pRoot == nullptr ? nullptr : UpperBoundNode(m_pRoot, temp);
+		return true;
+	}
+
+
 	bool Remove(const TKey& key) override {
 		TTreeNode* pDelNode = FindNode(key);
 
@@ -268,45 +284,7 @@ public:
 			return false;
 		}
 
-		// 자식이 없는 경우 그냥 바로 제거 진행
-		int iCount = 0;
-		TTreeNode* pChild = pDelNode->AnyWithChildrenCount(iCount);
-
-		if (iCount == 2) {
-			// 자식이 둘 다 있는 경우
-			TTreeNode* pPredecessor = FindBiggestNode(pDelNode->Left);
-
-			// 전임자는 값을 이동해주고 전임자의 자식을 전임자의 부모와 다시 이어줘야한다.
-			pDelNode->Pair = Move(pPredecessor->Pair);
-
-			if (pPredecessor->Left)
-				ConnectPredecessorChildToParent(pPredecessor, pPredecessor->Left);
-
-			// 전임자가 실제로 삭제될 노드이다.
-			pDelNode = pPredecessor;
-
-
-		} else if (iCount == 1) {
-			// 자식이 한쪽만 있는 경우
-			TTreeNode* pParent = pDelNode->Parent;
-			pChild->Parent = pParent;
-
-			// 삭제되는 노드의 부모가 있을 경우, 삭제되는 노드의 자식과 부모를 올바른 위치로 연결해준다.
-			if (pParent) {
-				if (pParent->Left == pDelNode)
-					pParent->Left = pChild;
-				else
-					pParent->Right = pChild;
-			} else {
-				// pDelNode의 부모가 없다는 말은
-				//  => pDelNode = 루트라는 뜻이므로, 자식을 루트로 만들어준다.
-				m_pRoot = pChild;
-			}
-		}
-
-		RemoveFixup(pDelNode);
-		DeleteNode(pDelNode);
-		this->m_iSize -= 1;
+		RemoveByNode(pDelNode);
 		return true;
 	}
 
@@ -352,6 +330,12 @@ public:
 		return &pNode->Pair.Value;
 	}
 
+	TKey* UpperBoundKey(const TKey& key) const {
+		TTreeNode* pNode = UpperBoundNode(m_pRoot, key);
+		if (pNode == nullptr) return nullptr;
+		return &pNode->Pair.Key;
+	}
+
 	SharedPtr<TIterator> UpperBoundIterator(const TKey& key) const {
 		TTreeNode* pNode = UpperBoundNode(m_pRoot, key);
 		return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), pNode);
@@ -375,8 +359,48 @@ public:
 		InorderTraverseForEach<TraverseValueType::Value>(m_pRoot, Forward<Consumer>(consumer));
 	}
 
-	SharedPtr<TIterator> Begin() const override { return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), FindSmallestNode(m_pRoot)); }
-	SharedPtr<TIterator> End() const override { return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), FindBiggestNode(m_pRoot)); }
+	bool TryGetFirst(JCORE_OUT TKeyValuePair& pair) const {
+		TTreeNode* pFirst = FindSmallestNode(m_pRoot);
+		if (pFirst == nullptr) {
+			return false;
+		}
+
+		pair = pFirst->Pair;
+		return true;
+	}
+
+	bool TryGetLast(JCORE_OUT TKeyValuePair& pair) const {
+		TTreeNode* pLast = FindBiggestNode(m_pRoot);
+		if (pLast == nullptr) {
+			return false;
+		}
+
+		pair = pLast->Pair;
+		return true;
+	}
+
+	bool TryGetFirstValue(JCORE_OUT TValue& pair) const {
+		TTreeNode* pFirst = FindSmallestNode(m_pRoot);
+		if (pFirst == nullptr) {
+			return false;
+		}
+
+		pair = pFirst->Pair.Value;
+		return true;
+	}
+
+	bool TryGetLastValue(JCORE_OUT TValue& pair) const {
+		TTreeNode* pLast = FindBiggestNode(m_pRoot);
+		if (pLast == nullptr) {
+			return false;
+		}
+
+		pair = pLast->Pair.Value;
+		return true;
+	}
+
+	TEnumerator Begin() const override { return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), FindSmallestNode(m_pRoot)); }
+	TEnumerator End() const override { return MakeShared<TTreeMapIterator, TAllocator>(this->GetOwner(), FindBiggestNode(m_pRoot)); }
 	TreeMapKeyCollection Keys() { return TreeMapKeyCollection(this); }
 	TreeMapValueCollection Values() { return TreeMapValueCollection(this); }
 	ContainerType GetContainerType() override { return ContainerType::TreeMap; }
@@ -398,6 +422,51 @@ protected:
 		}
 
 		return nullptr;
+	}
+
+	// 실제로 삭제되어야하는 노드를 반환
+	TTreeNode* RemoveByNode(TTreeNode* delNode) {
+		
+		// 자식이 없는 경우 그냥 바로 제거 진행
+		int iCount = 0;
+		TTreeNode* pChild = delNode->AnyWithChildrenCount(iCount);
+
+		if (iCount == 2) {
+			// 자식이 둘 다 있는 경우
+			TTreeNode* pPredecessor = FindBiggestNode(delNode->Left);
+
+			// 전임자는 값을 이동해주고 전임자의 자식을 전임자의 부모와 다시 이어줘야한다.
+			delNode->Pair = Move(pPredecessor->Pair);
+
+			if (pPredecessor->Left)
+				ConnectPredecessorChildToParent(pPredecessor, pPredecessor->Left);
+
+			// 전임자가 실제로 삭제될 노드이다.
+			delNode = pPredecessor;
+
+		} else if (iCount == 1) {
+			// 자식이 한쪽만 있는 경우
+			TTreeNode* pParent = delNode->Parent;
+			pChild->Parent = pParent;
+
+			// 삭제되는 노드의 부모가 있을 경우, 삭제되는 노드의 자식과 부모를 올바른 위치로 연결해준다.
+			if (pParent) {
+				if (pParent->Left == delNode)
+					pParent->Left = pChild;
+				else
+					pParent->Right = pChild;
+			}
+			else {
+				// delNode의 부모가 없다는 말은
+				//  => delNode = 루트라는 뜻이므로, 자식을 루트로 만들어준다.
+				m_pRoot = pChild;
+			}
+		}
+
+		RemoveFixup(delNode);
+		DeleteNode(delNode);
+		this->m_iSize -= 1;
+		return delNode;
 	}
 
 	// data가 삽입될 부모를 찾는다.
@@ -568,7 +637,7 @@ protected:
 
 	void DeleteNode(TTreeNode* node) {
 		if (node == m_pRoot) {
-			JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, node);
+			JCORE_ALLOCATOR_STATIC_DEALLOCATE_AND_DESTROY_SAFE(TTreeNode, m_pRoot);
 			return;
 		}
 
@@ -822,6 +891,9 @@ protected:
 	//   = 중위순회[inorder]시 제일 처음 출력될 노드
 	//   = 제일 작은 노드
 	static TTreeNode* FindSmallestNode(TTreeNode* node) {
+		if (node == nullptr)
+			return nullptr;
+
 		TTreeNode* pCur = node;
 		for (;;) {
 			if (pCur->Left == nullptr)
@@ -835,6 +907,9 @@ protected:
 	//   = 역방향 중위순회시[inorder] 제일 처음 출력될 노드
 	//   = 제일 큰 노드
 	static TTreeNode* FindBiggestNode(TTreeNode* node) {
+		if (node == nullptr)
+			return nullptr;
+
 		TTreeNode* pCur = node;
 		for (;;) {
 			if (pCur->Right == nullptr)
