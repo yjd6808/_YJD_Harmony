@@ -14,7 +14,7 @@
 #include <JCore/Container/Vector.h>
 #include <JCore/Threading/RunnableThread.h>
 
-#define TASKPOOL_DEBUG_LOG_ENABLE	1
+#define TASKPOOL_DEBUG_LOG_ENABLE	0
 
 #if TASKPOOL_DEBUG_LOG_ENABLE
 	#include <JCore/Utils/Console.h>
@@ -411,6 +411,6 @@ private:
 	bool m_bStopFlag;
 };
 
-
+using ThreadPoolPtr = SharedPtr<ThreadPool>;
 
 NS_JC_END

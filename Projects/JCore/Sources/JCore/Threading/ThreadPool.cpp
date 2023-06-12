@@ -120,7 +120,7 @@ void TaskThread::WorkerThread()
 		m_qPoolWaitingTasks.TryDequeue(spRunningTask);
 	}
 
-	Console::WriteLine("쓰레드 %d 종료됨", m_iCode);
+	TASKPOOL_LOG("쓰레드 %d 종료됨", m_iCode);
 
 	m_bJoinWait = true;
 	m_JoinCondVar.NotifyOne();
@@ -134,7 +134,8 @@ void TaskThread::WorkerThread()
 
 ThreadPool::ThreadPool(int poolSize)
 	: m_vThreads(poolSize)
-	, m_eState(eRunning) {
+	, m_eState(eRunning)
+	, m_bStopFlag(false) {
 	for (int i = 0; i < poolSize; ++i) {
 		TaskThreadPtr spThread = MakeShared<TaskThread>(m_CondVar, m_JoinCondVar, m_Lock, m_bStopFlag, m_qWaitingTasks, i);
 		m_vThreads.PushBack(spThread);
@@ -164,11 +165,11 @@ void ThreadPool::Join() {
 	{
 		NormalLockGuard guard(m_Lock);
 		for (int i = 0; i < m_vThreads.Size(); ++i) {
-			Console::WriteLine("조인1-%d 시작", i);
+			TASKPOOL_LOG("조인1-%d 시작", i);
 			TaskThread* pThread = m_vThreads[i].GetPtr();
 			m_JoinCondVar.Wait(guard, [pThread] { return pThread->IsJoinWait(); });
 			pThread->Join();
-			Console::WriteLine("조인1-%d 완료", i);
+			TASKPOOL_LOG("조인1-%d 완료", i);
 		}
 		m_vThreads.Clear();
 	}
