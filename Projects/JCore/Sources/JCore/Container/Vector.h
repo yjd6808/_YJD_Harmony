@@ -58,7 +58,7 @@ public:
 		return *this;
 	}
 
-	T& At(const int idx) {
+	T& At(const int idx) const {
 		return this->GetAt(idx);
 	}
 
