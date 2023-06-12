@@ -30,7 +30,7 @@ public:
 
 
     void Store(T operand) { Exchange(operand); }
-    T Load() { return TInterlocked::Read(&m_Value); }
+    T Load() const { return TInterlocked::Read(const_cast<T*>(&m_Value)); }
 
     T Add(T operand) { return TInterlocked::Add(&m_Value, operand); }
 
@@ -112,7 +112,7 @@ public:
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
     void Store(U operand) { Exchange(operand); }
 
-    T* Load() { return TInterlocked::Read(&m_Value); }
+    T* Load() const { return TInterlocked::Read(const_cast<T**>(&m_Value)); }
     T* Add(int operand) {  return TInterlocked::Add(&m_Value, operand); }
 
     template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
@@ -174,7 +174,7 @@ public:
     Atomic(TAtomic& other) : m_Value(other.Load()) {}
 
     void Store(bool operand) { Exchange(operand); }
-    bool Load() { return TInterlocked::Read(&m_Value); }
+    bool Load() const { return TInterlocked::Read(const_cast<bool*>(&m_Value)); }
 
     bool Exchange(bool operand) { return TInterlocked::Exchange(&m_Value, operand); }
 
@@ -213,14 +213,7 @@ public:
     Atomic(TAtomic& other) : m_Value(other.Load()) {}
 
     void Store(void* operand) { Exchange(operand); }
-    void* Load() {
-        void* expected = nullptr;
-        if (CompareExchange(expected, nullptr)) {
-            return nullptr;
-        }
-
-        return expected;
-    }
+    void* Load() const { TInterlocked::Read(const_cast<void**>(&m_Value)); }
 
     void* Exchange(void* operand) { return TInterlocked::Exchange(&m_Value, operand); }
 
