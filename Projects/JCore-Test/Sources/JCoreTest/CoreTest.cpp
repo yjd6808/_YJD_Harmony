@@ -6,7 +6,11 @@
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Encoding/CodePage.h>
 #include <JCore/Utils/Console.h>
+#include <JCore/Random.h>
 
+int R(int min, int max) {
+	return Random::GenerateInt(min, max);
+}
 
 #if TEST_CoreTest == ON
 
@@ -30,5 +34,6 @@ TEST(JCoreTest, DeleteArraySafe) {
 // 전 프로젝트 UTF8로 교체함에따라 main 함수 명시적으로 추가해줌
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
+	Random::EngineInitialize();
     return RUN_ALL_TESTS();
 }

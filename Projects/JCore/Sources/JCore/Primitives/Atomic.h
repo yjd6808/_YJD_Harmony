@@ -213,7 +213,7 @@ public:
     Atomic(TAtomic& other) : m_Value(other.Load()) {}
 
     void Store(void* operand) { Exchange(operand); }
-    void* Load() const { TInterlocked::Read(const_cast<void**>(&m_Value)); }
+    void* Load() const { return TInterlocked::Read(const_cast<void**>(&m_Value)); }
 
     void* Exchange(void* operand) { return TInterlocked::Exchange(&m_Value, operand); }
 

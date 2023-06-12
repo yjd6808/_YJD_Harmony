@@ -125,6 +125,12 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\TreeMapTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadPoolTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Threading\SchedulerTest.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

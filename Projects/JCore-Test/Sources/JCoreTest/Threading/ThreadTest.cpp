@@ -10,7 +10,7 @@
 #include <JCore/Threading/Thread.h>
 #include <JCore/Container/Vector.h>
 
-using namespace std;
+USING_NS_STD;
 
 #if TEST_ThreadTest == ON
 

@@ -97,7 +97,15 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Threading\SchedulerTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadLocalTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Threading\ThreadPoolTest.cpp">
       <SubType>
       </SubType>
     </ClCompile>
