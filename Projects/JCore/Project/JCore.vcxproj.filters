@@ -154,6 +154,9 @@
     <ClCompile Include="..\Sources\JCore\Threading\ThreadPool.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Threading\Scheduler.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -475,6 +478,9 @@
       <Filter>Sync</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Threading\ThreadPool.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\Scheduler.h">
       <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>

@@ -105,6 +105,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Threading\Scheduler.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Threading\Thread.cpp">
       <SubType>
       </SubType>
@@ -409,6 +413,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Threading\RunnableThread.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\Scheduler.h">
       <SubType>
       </SubType>
     </ClInclude>
