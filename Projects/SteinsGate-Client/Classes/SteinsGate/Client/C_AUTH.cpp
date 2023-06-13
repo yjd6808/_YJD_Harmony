@@ -25,14 +25,15 @@ void C_AUTH::OnConnected(Session* session) {
 	const AccountData& accountData = CorePlayer_v->accountData();
 	S_AUTH::SendLogin(accountData.Name.Source, accountData.Pass.Source);
 
-	CorePopupManager_v->close(POPUP_LOGIN_WAIT);
+	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
 	CorePopupManager_v->showNone("로그인 시도중입니다.", POPUP_LOGIN);
 }
 
 void C_AUTH::OnConnectFailed(Session* session, Int32U errorCode) {
+	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
 	CorePopupManager_v->showOk(StringUtils::format("인증 서버 접속에 실패했습니다. (%d)", errorCode));
 }
 
 void C_AUTH::OnDisconnected(Session* session) {
-	
+	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
 }
