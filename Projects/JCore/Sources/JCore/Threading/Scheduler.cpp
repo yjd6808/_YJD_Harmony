@@ -23,7 +23,6 @@ Scheduler::~Scheduler() {
 }
 
 void Scheduler::AddFirstTask(SchedulerTask* task) {
-	const Int64U uiTick = task->At().Tick;
 	{
 		NormalLockGuard guard(m_Lock);
 		if (m_eState != State::Running) {
