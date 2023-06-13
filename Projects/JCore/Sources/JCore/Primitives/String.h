@@ -126,6 +126,8 @@ public:
 	String ToLowerCase() const;
 	String ToUpperCase() const;
 
+	int LeadingZeroCount() const;
+
 	std::string ToStd();
 public:
 	char& operator[](const int idx) const;

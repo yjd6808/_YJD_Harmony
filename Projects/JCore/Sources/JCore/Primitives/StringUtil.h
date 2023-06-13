@@ -28,6 +28,7 @@ public:
 	static TInteger ToNumber(const char* str, bool ignoreLeadingZero = true);
 
 	static const char* SkipLeadingChar(const char* str, char skipChar);
+	static const char* SkipLeadingNumberZero(const char* str);
 
 	template <typename TInteger>
 	static String ToString(TInteger integer);
@@ -38,8 +39,14 @@ public:
 	static bool IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen);
 	static void Swap(String& src, String& dst);
 	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
+	static int Find(const char* source, int sourceLen, int startIdx, int endIdx, const char* str, int strLen);
 	static int Find(const char* source, int sourceLen, int startIdx, const char* str);
+	static int FindAll(JCORE_OUT int* positionArray, const char* source, const char* str);
+	static int FindAll(JCORE_OUT int* positionArray, const char* source, int sourceLen, const char* str);
+	static int FindAll(JCORE_OUT int* positionArray, const char* source, int sourceLen, int startIdx, int endIdx, const char* str);
 	static int FindChar(const char* source, char ch);
+	static int FindCharReverse(const char* source, char ch);
+	static int FindCharReverse(const char* source, int len, char ch);
 	static int FindCharUncontained(const char* source, char ch);
 	static String GetRange(const char* source, int sourceLen, int startIdx, int endIdx);
 	static Tuple<char*, int, int> GetRangeUnsafe(const char* source, int sourceLen, int startIdx, int endIdx);

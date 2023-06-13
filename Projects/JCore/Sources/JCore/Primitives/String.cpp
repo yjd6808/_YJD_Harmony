@@ -594,6 +594,18 @@ String String::ToUpperCase() const {
 	return copy;
 }
 
+int String::LeadingZeroCount() const {
+	int iCount = 0;
+	for (int i = 0; i < m_iLen; ++i) {
+		if (m_pBuffer[i] == '0')
+			++iCount;
+		else
+			break;
+	}
+
+	return iCount;
+}
+
 std::string String::ToStd() {
 	return Source();
 }
