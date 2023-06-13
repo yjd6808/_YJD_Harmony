@@ -137,7 +137,7 @@ bool PopupManager::close(UI_Popup* popup) {
 	return m_vOpendList.Remove(popup);
 }
 
-bool PopupManager::close(int tag) {
+bool PopupManager::closeByTag(int tag) {
 	UI_Popup** pFind = m_vOpendList.Extension().FindIf([tag](UI_Popup* popup) { return popup->getTag() == tag; });
 
 	if (pFind == nullptr) {

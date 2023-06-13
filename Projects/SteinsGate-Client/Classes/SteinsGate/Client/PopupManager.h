@@ -25,7 +25,7 @@ public:
 	UI_Popup* showOk(const std::string& text, int tag, const SGActionFn<>& ok = nullptr);
 	UI_Popup* showNone(const std::string& text, int tag, HAlignment_t halign = HAlignment::Center, VAlignment_t valign = VAlignment::Center);
 	bool close(UI_Popup* popup);
-	bool close(int tag);
+	bool closeByTag(int tag);
 	UI_Popup* findByTag(int tag);
 	int closeAll();
 	void releaseAll();
