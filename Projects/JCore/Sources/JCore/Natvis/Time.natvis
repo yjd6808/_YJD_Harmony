@@ -19,11 +19,11 @@
 
 	<Type Name="JCore::DateTime;">
 		<DisplayString>
-			{m_Tick}
+			{Tick}
 		</DisplayString>
 		<Expand>
-			<Item Name="[tick]" ExcludeView="simple">m_Tick</Item>
-			<Item Name="[string]" ExcludeView="simple">Format("yyyy-MM-dd hh:mm:ss.ffffff")</Item>
+			<Item Name="[tick]" ExcludeView="simple">Tick</Item>
+			<Item Name="[string]" ExcludeView="simple">Format("yyyy-MM-dd HH:mm:ss.ffffff")</Item>
 		</Expand>
 	</Type>
 
