@@ -84,6 +84,7 @@ void UIButton::setEnabled(bool enabled) {
 
 		// 이전 상태가 비활성화 상태 인경우 현재 상태가 Pressed인지, Moved인지 체크해서 업데이트
 		updateState();
+		setVisibleState(eNormal);
 		return;
 	}
 
