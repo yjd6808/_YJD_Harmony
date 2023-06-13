@@ -40,6 +40,7 @@ struct CRuntime {
     static void     JCORE_CDECL EndThreadEx(JCORE_IN Int32U exitCode);
 
     /** https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/get-errno?view=msvc-170
+     * 참고: C 라이브러리에서 전역 에러값을 체크하는 함수들은 함수실행전 0로 초기화시킴 (https://cplusplus.com/reference/cerrno/errno/)
      * \brief Gets the current value of the errno global variable.
      * \return Returns zero if successful;
      */

@@ -292,6 +292,48 @@ TEST(DateTimeTest, Format) {
 	EXPECT_TRUE(dt3.Format("tt") == "PM");
 }
 
+
+TEST(DateTimeTest, TryParse) {
+	DateTime n = DateTime::Now();
+	DateAndTime dateAndTime = n.ToDateAndTime();
+	dateAndTime.MiliSecond = 1;
+	dateAndTime.MicroSecond = 900;
+	n = dateAndTime.ToTick();
+	DateTime k;
+	auto z = n.Format("yyyy-MM-dd HH:mm:ss.f");
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.f", z));			dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.fff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ffff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.fffff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ffffff", z));	dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+
+	z = n.Format("yyyy-MM-dd HH:mm:ss.ff");
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.f", z));			dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.fff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ffff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.fffff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ffffff", z));	dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+
+	z = n.Format("yyyy-MM-dd HH:mm:ss.fff");
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.f", z));			dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.fff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 1); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ffff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 1); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.fffff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 1); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ffffff", z));	dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 1); EXPECT_TRUE(dateAndTime.MicroSecond == 0);	
+
+	z = n.Format("yyyy-MM-dd HH:mm:ss.ffff");
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.f", z));			dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 0); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.fff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 1); EXPECT_TRUE(dateAndTime.MicroSecond == 0);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ffff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 1); EXPECT_TRUE(dateAndTime.MicroSecond == 900);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.fffff", z));		dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 1); EXPECT_TRUE(dateAndTime.MicroSecond == 900);
+	EXPECT_TRUE(DateTime::TryParse(k, "yyyy-MM-dd HH:mm:ss.ffffff", z));	dateAndTime = k.ToDateAndTime(); EXPECT_TRUE(dateAndTime.MiliSecond == 1); EXPECT_TRUE(dateAndTime.MicroSecond == 900);
+}
+
+
 #endif // TEST_TimeTest == ON
 
 

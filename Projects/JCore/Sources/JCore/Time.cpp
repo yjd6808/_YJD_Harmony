@@ -914,7 +914,7 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 	
 	for (int i = 0; i < vFormatList.Size(); ++i) {
 		const DateFormat eFormatToken = vFormatList[i];
-		const String& szDateStringToken = vDateStringList[i].Value;
+		String& szDateStringToken = vDateStringList[i].Value;
 
 		switch (eFormatToken) {
 		case DateFormat::d:
@@ -1054,30 +1054,74 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 			break;
 		}
 		case DateFormat::f:
-		case DateFormat::ff:
-		case DateFormat::fff: {
-			const int milisec = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
-			if (milisec < 0 || milisec > 999) {
-				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
-				break;
-			}
-			result.MiliSecond = static_cast<Int16>(milisec);
-			break;
-		}
+		case DateFormat::ff: 
+		case DateFormat::fff: 
 		case DateFormat::ffff:
 		case DateFormat::fffff:
 		case DateFormat::ffffff: {
-			const int microsec = StringUtil::ToNumber<Int32>(szDateStringToken.Source());
-			if (microsec < 0 || microsec > 999999) {
+			// 어떻게 변환하면 좋을까... 케이스를 하나로 통합할 방법을 고민해보자.
+			// 0.12 -> 6자리로 만듬 -> 120000 -> 상위 3자리, 하위 3자리 숫자 분리
+			// 0.0012 -> 6자리로 만듬 -> 001200 -> 상위 3자리, 하위 3자리 숫자 분리
+
+			// 1) f라면? 상위 3자리 숫자 / 100 * 100, 하위 3자리 0 => 상위 3자리 숫자의 1과 10의 자리수를 없애야하므로 100으로 나눈 후 100을 곱해준다.
+			// 2) ff라면? 상위 3자리 숫자 / 10 * 10,  하위 3자리 0 => 상위 3자리 숫자의 1의 자리수를 없애야하므로 10으로 나눈 후 10을 곱해준다.
+			// 3) fff라면? 상위 3자리 숫자, 하위 3자리 0
+			// 4) ffff라면? 상위 3자리 숫자, 하위 3자리 숫자 / 100 * 100 => 하위 3자리 숫자의 1과 10의 자리수를 없애야하므로 100으로 나눈 후 100을 곱해준다.
+			// 생략...
+
+			if (szDateStringToken.Length() >= 7) {
+				// 소수점 자릿수가 7자리 이상인 경우는 오류로 판정함
 				ms_tlsiLastError = DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN;
 				break;
 			}
 
-			result.MiliSecond = microsec / TicksPerMiliSecond_v;
-			result.MicroSecond = microsec % TicksPerMiliSecond_v;
-			break;
-		}
-		} // switch 끝
+			// 6자리가 될 수 있도록 나머지 자리는 0으로 채워준다.
+			while (szDateStringToken.Length() < 6)
+				szDateStringToken += '0';
+
+			// 상위 3자리(밀리초), 하위 3자리 숫자(마이크로초)로 분리
+			char upper[4]{};
+			char lower[4]{};
+
+			Memory::Copy(upper, 3, szDateStringToken.Source(), 3);
+			Memory::Copy(lower, 3, szDateStringToken.Source() + 3, 3);
+			int iMiliSeconds = StringUtil::ToNumber<Int32>(upper);
+			int iMicroSeconds = StringUtil::ToNumber<Int32>(lower);
+
+			switch (eFormatToken) {
+			case DateFormat::f: {
+				result.MiliSecond = Int16(iMiliSeconds / 100 * 100);
+				result.MicroSecond = 0;
+				break;
+			}
+			case DateFormat::ff: {
+				result.MiliSecond = Int16(iMiliSeconds / 10 * 10);
+				result.MicroSecond = 0;
+				break;
+			}
+			case DateFormat::fff: {
+				result.MiliSecond = Int16(iMiliSeconds);
+				result.MicroSecond = 0;
+				break;
+			}
+			case DateFormat::ffff: {
+				result.MiliSecond = Int16(iMiliSeconds);
+				result.MicroSecond = Int16(iMicroSeconds / 100 * 100);
+				break;
+			}
+			case DateFormat::fffff: {
+				result.MiliSecond = Int16(iMiliSeconds);
+				result.MicroSecond = Int16(iMicroSeconds / 10 * 10);
+				break;
+			}
+			case DateFormat::ffffff: {
+				result.MiliSecond = Int16(iMiliSeconds);
+				result.MicroSecond = Int16(iMicroSeconds);
+				break;
+			}
+			} // switch End
+		} 
+		} // switch End
 
 		if (ms_tlsiLastError != 0) {
 			return false;
@@ -1103,6 +1147,31 @@ DateTime DateTime::FromUnixTime(double unixTimestamp, TimeStandard timeStandard)
 	}
 
 	return uiTick;	
+}
+
+const char* DateTime::LastErrorMessage() {
+	switch (ms_tlsiLastError) {
+	case 0: return "오류 없음";
+	case DATETIME_PARSE_ERROR_INVALID_ARGUMENT_NULL:  
+		return "인자가 nullptr로 전달된 경우";
+	case DATETIME_PARSE_ERROR_DUPLICATE_FORMAT_TOKEN:  
+		return "yyy-mm-y와 같이 중복된 토큰(y)가 존재하는 경우";
+	case DATETIME_PARSE_ERROR_INVALID_DATE_FORMAT:
+		return "올바르지 않은 Format인 경우";
+	case DATETIME_PARSE_ERROR_FORMAT_AND_DATESTRING_DELIMITER_MISMATCH:
+		return "Format과 DateString의 구분자가 서로 일치하지 않는 경우";
+	case DATETIME_PARSE_ERROR_FORMAT_AND_DATESTRING_SIZE_NOT_EQUAL:
+		return "구분자로 분리된 Format과 DateString이 서로 크기가 일치하지 않는 경우";
+	case DATETIME_PARSE_ERROR_NOT_SUPPORTED_TOKEN:
+		return "타임존, AP, PM과 같이 시간계산에 관련된 토큰이 아닌 경우 파싱지원을 안하도록 함.";
+	case DATETIME_PARSE_ERROR_NOT_IMPLEMENTED_TOKEN:
+		return "문자열 일, 월의 숫자 변환(Monday -> 1)은 아직 구현안함. 쓸데 없을 듯해서..";
+	case DATETIME_PARSE_ERROR_INVALID_DATESTRING_TOKEN:
+		return "fmt: yyyy-mm, dateString: 2023-99일때, 99월은 있을 수가 없으므로";
+	case DATETIME_PARSE_ERROR_AMBIGUOUS_DATESTRING_TOKEN:
+		return "1) AMPM 정보가 주어지지 않고 h와 hh에 해당하는 정보를 얻을려고하는 경우";
+	default: return "알 수 없는 오류";
+	}
 }
 
 // YYYY-MM-dd===
@@ -1603,21 +1672,21 @@ void DateTime::ReflectFormat(const DateAndTime& time, String& ret, const char to
 		ret += StringUtil::Format("%d", time.MiliSecond / 100);
 		break;
 	case DateFormat::ff:
-		ret += StringUtil::Format("%d", time.MiliSecond / 10);
+		ret += StringUtil::Format("%02d", time.MiliSecond / 10);
 		break;
 	case DateFormat::fff:
-		ret += StringUtil::Format("%d", time.MiliSecond / 1);
+		ret += StringUtil::Format("%03d", time.MiliSecond / 1);
 		break;
 	case DateFormat::ffff:
 	case DateFormat::fffff:
 	case DateFormat::ffffff:
 		const int miliMicro = time.MiliSecond * MaxMiliSecond_v + time.MicroSecond;
 		if (count == 4)
-			ret += StringUtil::Format("%d", miliMicro / 100);
+			ret += StringUtil::Format("%04d", miliMicro / 100);
 		else if (count == 5)
-			ret += StringUtil::Format("%d", miliMicro / 10);
+			ret += StringUtil::Format("%05d", miliMicro / 10);
 		else if (count == 6)
-			ret += StringUtil::Format("%d", miliMicro / 1);
+			ret += StringUtil::Format("%06d", miliMicro / 1);
 		break;
 	}
 }

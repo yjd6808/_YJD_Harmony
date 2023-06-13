@@ -210,7 +210,7 @@ public:
 	bool operator==(const Date& other);
 
 	Int64 ToTick() const;
-protected:
+
 	Int16	Year;
 	Int8	Month;
 	Int8	Day;
@@ -272,7 +272,7 @@ public:
 
 
 	Int64 ToTick() const;
-protected:
+
 	Int8 Hour;
 	Int8 Minute;
 	Int8 Second;
@@ -405,9 +405,8 @@ struct TimeSpan
  =====================================================================================*/
 
 #define DATETIME_PARSE_ERROR_INVALID_ARGUMENT_NULL							10000			// 인자가 nullptr로 전달된 경우
-#define DATETIME_PARSE_ERROR_INVALID_ARGUMENT_FORMAT						10001			// 올바르지 않은 Format
 #define DATETIME_PARSE_ERROR_DUPLICATE_FORMAT_TOKEN							10002			// yyy-mm-y와 같이 중복된 토큰(y)가 존재하는 경우
-#define DATETIME_PARSE_ERROR_INVALID_DATE_FORMAT							10003
+#define DATETIME_PARSE_ERROR_INVALID_DATE_FORMAT							10003			// 올바르지 않은 Format인 경우
 #define DATETIME_PARSE_ERROR_FORMAT_AND_DATESTRING_DELIMITER_MISMATCH		10004			// Format과 DateString의 구분자가 서로 일치하지 않는 경우
 #define DATETIME_PARSE_ERROR_FORMAT_AND_DATESTRING_SIZE_NOT_EQUAL			10005			// 구분자로 분리된 Format과 DateString이 서로 크기가 일치하지 않는 경우
 #define DATETIME_PARSE_ERROR_NOT_SUPPORTED_TOKEN							10006			// 타임존, AP, PM과 같이 시간계산에 관련된 토큰이 아닌 경우 파싱지원을 안하도록 함.
@@ -528,6 +527,7 @@ public: // public static
 	static bool TryParse(DateTime& parsed, const char* fmt, int fmtLen, const char* dateString, int dateStringLen);
 	static DateTime FromUnixTime(double unixTimestamp, TimeStandard timeStandard = TimeStandard::Local);	// 초단위 스탬프를 DateTime으로 변환
 	static int LastError() { return ms_tlsiLastError; }
+	static const char* LastErrorMessage();
 	static Vector<DateFormat> ParseFormat(const String& fmt, JCORE_IN_OPT Vector<String>* delimiters = nullptr) { return ParseFormat(fmt.Source(), fmt.Length(), delimiters); }
 	static Vector<DateFormat> ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters = nullptr);
 

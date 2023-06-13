@@ -61,7 +61,8 @@ using namespace JCore;
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-	#define TEST_AtomicTest                    ON
+	#define TEST_AtomicTest                     ON
+	#define TEST_TimeTest                       ON
 #endif
 
 #if TestEnabled == ON
