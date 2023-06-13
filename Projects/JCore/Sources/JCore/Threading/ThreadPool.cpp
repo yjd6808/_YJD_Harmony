@@ -65,15 +65,15 @@ void TaskContext::Cancel() {
 // TaskThread
 // =============================================================================================
 
-TaskThread::TaskThread(ConditionVariable& poolCv, ConditionVariable& joinCv, NormalLock& poolLock, bool& poolStopFlag, TaskQueue& poolTaskQueue, int code)
+TaskThread::TaskThread(ConditionVariable& poolCv, ConditionVariable& joinCv, NormalLock& poolLock, int& poolState, TaskQueue& poolTaskQueue, int code)
 	: RunnableThread()
 	, m_PoolCondVar(poolCv)
 	, m_JoinCondVar(joinCv)
 	, m_PoolLock(poolLock)
-	, m_bPoolStopFlag(poolStopFlag)
+	, m_ePoolState(poolState)
 	, m_qPoolWaitingTasks(poolTaskQueue)
-	, m_bJoinWait(false)
 	, m_iCode(code)
+	, m_bJoinWait(false)
 {}
 
 TaskThread::~TaskThread()
@@ -107,21 +107,27 @@ void TaskThread::WorkerThread()
 			spRunningTask = nullptr;
 		}
 
+		if (bExit)
+			break;
+
 		NormalLockGuard guard(m_PoolLock);
 		m_PoolCondVar.Wait(guard, [this, &iCount, &bExit] {
 			iCount = m_qPoolWaitingTasks.Size();
-			bExit = m_bPoolStopFlag || m_bThisStopFlag;
+			bExit = false;
+
+			if (m_ePoolState == ThreadPool::State::eJoinWaitAll) {
+				bExit = iCount <= 0;
+			} else if (m_ePoolState == ThreadPool::State::eJoinWaitOnlyRunningTask) {
+				bExit = true;
+			}
+
 			return bExit || iCount > 0;
 		});
-
-		if (bExit)
-			break;
 
 		m_qPoolWaitingTasks.TryDequeue(spRunningTask);
 	}
 
 	TASKPOOL_LOG("쓰레드 %d 종료됨", m_iCode);
-
 	m_bJoinWait = true;
 	m_JoinCondVar.NotifyOne();
 }
@@ -134,31 +140,31 @@ void TaskThread::WorkerThread()
 
 ThreadPool::ThreadPool(int poolSize)
 	: m_vThreads(poolSize)
-	, m_eState(eRunning)
-	, m_bStopFlag(false) {
+	, m_eState(eRunning) {
 	for (int i = 0; i < poolSize; ++i) {
-		TaskThreadPtr spThread = MakeShared<TaskThread>(m_CondVar, m_JoinCondVar, m_Lock, m_bStopFlag, m_qWaitingTasks, i);
+		TaskThreadPtr spThread = MakeShared<TaskThread>(m_CondVar, m_JoinCondVar, m_Lock, m_eState, m_qWaitingTasks, i);
 		m_vThreads.PushBack(spThread);
 		spThread->Start();
 	}
 }
 
-void ThreadPool::Join() {
-	m_eState = eJoinWait;
+void ThreadPool::Join(JoinStrategy strategy) {
+	
 	{
 		NormalLockGuard guard(m_Lock);
-		m_bStopFlag = true;
+		m_eState = strategy == JoinStrategy::WaitOnlyRunningTask ? eJoinWaitOnlyRunningTask : eJoinWaitAll;
 
-		while (!m_qWaitingTasks.IsEmpty()) {
-			TaskContextPtr& spTask = m_qWaitingTasks.Front();
-			spTask->Cancel();
-			m_qWaitingTasks.Dequeue();
+		if (strategy == JoinStrategy::WaitOnlyRunningTask) {
+			while (!m_qWaitingTasks.IsEmpty()) {
+				TaskContextPtr& spTask = m_qWaitingTasks.Front();
+				spTask->Cancel();
+				m_qWaitingTasks.Dequeue();
+			}
 		}
 
 		// for (int i = 0; i < m_vThreads.Size(); ++i) {
 		// 		m_vThreads[i]->CancelRunningTask();	// 이미 실행중인 작업은 완료될때까지 기다리도록 하는게 나을듯?
 		// }
-
 	}
 	m_CondVar.NotifyAll();
 
@@ -172,9 +178,8 @@ void ThreadPool::Join() {
 			TASKPOOL_LOG("조인1-%d 완료", i);
 		}
 		m_vThreads.Clear();
+		m_eState = eJoined;
 	}
-
-	m_eState = eJoined;
 }
 
 int ThreadPool::WaitingTaskCount() {

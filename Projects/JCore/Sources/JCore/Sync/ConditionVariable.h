@@ -26,7 +26,9 @@ public:
 
 	template <typename TPredicate>
 	void Wait(LockGuard<NormalLock>& lockGuard, TPredicate&& predicate) {
-		while (!predicate()) { Wait(lockGuard); }
+		while (!predicate()) {
+			Wait(lockGuard);
+		}
 	}
 
 	int WaitFor(LockGuard<NormalLock>& lockGuard, const TimeSpan& ts);
@@ -34,7 +36,8 @@ public:
 	template <typename TPredicate>
 	bool WaitFor(LockGuard<NormalLock>& lockGuard, const TimeSpan& ts, TPredicate&& predicate) {
 		while (!predicate()) {
-			if (WaitFor(lockGuard, ts) == CvStatus::eTimeout) {
+			const int status = WaitFor(lockGuard, ts);
+			if (status == CvStatus::eTimeout) {
 				return predicate();
 			}
 		}
@@ -46,7 +49,8 @@ public:
 
 	template <typename TPredicate>
 	bool WaitUntil(LockGuard<NormalLock>& lockGuard, const DateTime& dt, TPredicate&& predicate) {
-		return WaitFor(lockGuard, dt.Diff(DateTime::Now()), predicate);
+		TimeSpan ts = dt.Diff(DateTime::Now());
+		return WaitFor(lockGuard, ts, predicate);
 	}
 
 	void NotifyOne();

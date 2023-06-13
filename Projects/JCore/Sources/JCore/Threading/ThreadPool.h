@@ -339,7 +339,7 @@ using TaskQueue = ArrayQueue<TaskContextPtr>;
 class TaskThread : public RunnableThread
 {
 public:
-	TaskThread(ConditionVariable& poolCv, ConditionVariable& joinCv, NormalLock& poolLock, bool& poolStopFlag, TaskQueue& poolTaskQueue, int code);
+	TaskThread(ConditionVariable& poolCv, ConditionVariable& joinCv, NormalLock& poolLock, int& poolState, TaskQueue& poolTaskQueue, int code);
 	~TaskThread() override;
 
 	void CancelRunningTask();
@@ -353,7 +353,7 @@ private:
 	ConditionVariable& m_PoolCondVar;
 	ConditionVariable& m_JoinCondVar;
 	NormalLock& m_PoolLock;
-	bool& m_bPoolStopFlag;
+	int& m_ePoolState;
 	TaskQueue& m_qPoolWaitingTasks;
 
 	NormalLock m_Lock;
@@ -371,8 +371,15 @@ public:
 	enum State
 	{
 		eRunning,
-		eJoinWait,
+		eJoinWaitAll,
+		eJoinWaitOnlyRunningTask,
 		eJoined
+	};
+
+	enum class JoinStrategy
+	{
+		WaitAllTasks,			// 대기중인 작업이 완료될떄가지 기다림
+		WaitOnlyRunningTask		// 실행중인 작업만 기다림
 	};
 
 	ThreadPool(int poolSize);
@@ -386,6 +393,11 @@ public:
 		TaskContextPtr spContext;
 		{
 			NormalLockGuard guard(m_Lock);
+			if (m_eState != eRunning) {
+				DebugAssertMsg(m_eState == eRunning, "쓰레드풀이 작업을 실행가능한 상태가 아닙니다.");
+				return Task<_Ret>{ nullptr };
+			}
+
 			spContext = MakeShared<TaskContextImpl<_Ret>>(Move(fn));
 			m_qWaitingTasks.Enqueue(spContext);
 		}
@@ -399,7 +411,7 @@ public:
 		return false;
 	}
 
-	void Join();
+	void Join(JoinStrategy strategy = JoinStrategy::WaitOnlyRunningTask);
 	int WaitingTaskCount();
 private:
 	Vector<TaskThreadPtr> m_vThreads;
@@ -407,8 +419,7 @@ private:
 	ConditionVariable m_CondVar;
 	ConditionVariable m_JoinCondVar;
 	NormalLock m_Lock;
-	AtomicInt m_eState;
-	bool m_bStopFlag;
+	int m_eState;
 };
 
 using ThreadPoolPtr = SharedPtr<ThreadPool>;

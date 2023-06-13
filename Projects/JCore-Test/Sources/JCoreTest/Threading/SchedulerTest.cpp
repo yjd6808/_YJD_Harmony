@@ -11,41 +11,57 @@
 
 #if TEST_SchedulerTest == ON
 
-TEST(SchedulerTest, General) {
-	LeakCheck;
+DateTime start;
+AtomicInt counter;
 
+static void JoinTest(Scheduler::JoinStrategy strategy) {
 	int i = 0;
-	DateTime begin;
-	DateTime end;
 	for (;;)
 	{
-		begin = DateTime::Now();
+		start = DateTime::Now();
+		counter = 0;
+
 		Console::WriteLine(" ======================= [%d] ======================= ", ++i);
 		Scheduler s(6);
 
 		s.IntervalAt([](SchedulerTask* task) {
-			Thread::Sleep(R(10, 100));
-			Console::WriteLine("A");
-		}, DateTime::Now() + TimeSpan::FromMiliSeocnd(R(0, 300)), TimeSpan::FromMiliSeocnd(R(50, 400)), 5);
+			Console::WriteLine("0.1초당 한번 (%.1f초 경화 후 호출됨)", DateTime::Now().Diff(start).GetTotalSeconds());
+			++counter;
+		}, DateTime::Now() + TimeSpan::FromMiliSeocnd(R(2000, 2001)), TimeSpan::FromMiliSeocnd(R(100, 101)), 5);
 
 		s.IntervalAt([](SchedulerTask* task) {
-			Thread::Sleep(R(1, 100));
-			Console::WriteLine("B");
-		}, DateTime::Now() + TimeSpan::FromMiliSeocnd(R(0, 150)), TimeSpan::FromMiliSeocnd(R(10, 50)), 5);
+			Console::WriteLine("0.2초당 한번 (%.1f초 경화 후 호출됨)", DateTime::Now().Diff(start).GetTotalSeconds());
+			++counter;
+		}, DateTime::Now() + TimeSpan::FromMiliSeocnd(R(1000, 1001)), TimeSpan::FromMiliSeocnd(R(200, 201)), 5);
 
 		s.IntervalAt([](SchedulerTask* task) {
-			Thread::Sleep(R(1, 50));
-			Console::WriteLine("C");
-		}, DateTime::Now(), TimeSpan::FromMiliSeocnd(R(0, 300)), 5);
+			Console::WriteLine("0.3초당 한번 (%.1f초 경화 후 호출됨)", DateTime::Now().Diff(start).GetTotalSeconds());
+			++counter;
+		}, DateTime::Now(), TimeSpan::FromMiliSeocnd(R(300, 301)), 5);
 
-		s.Join(Scheduler::JoinStrategy::WaitOnlyRunningTask);
+		Thread::Sleep(1);
+		s.Join(strategy);
 
-		end = DateTime::Now();
-		EXPECT_TRUE(end.Diff(begin).GetTotalMiliSecondsInt() <= 300);
+		if (strategy == Scheduler::JoinStrategy::WaitOnlyRunningTask) {
+			EXPECT_TRUE(counter == 1);	// 0.3초마다 한번씩 수행되는 태스크 하나만 딱 한번 수행될 것이기 때문
+		} else if (strategy == Scheduler::JoinStrategy::WaitAllTasks) {
+			EXPECT_TRUE(counter == 15);	// 모든 태스크가가 5번씩 정상 실행
+		}
 
-		if (i == 3)
+		if (i == 3) {
 			break;
+		}
 	}
+}
+
+TEST(SchedulerTest, WaitOnlyRunningTask) {
+	LeakCheck;
+	JoinTest(Scheduler::JoinStrategy::WaitOnlyRunningTask);
+}
+
+TEST(SchedulerTest, WaitAll) {
+	LeakCheck;
+	JoinTest(Scheduler::JoinStrategy::WaitAllTasks);
 }
 
 #endif // TEST_SchedulerTest == ON

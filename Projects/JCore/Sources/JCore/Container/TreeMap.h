@@ -360,6 +360,10 @@ public:
 	}
 
 	bool TryGetFirst(JCORE_OUT TKeyValuePair& pair) const {
+		if (m_pRoot == nullptr) {
+			return false;
+		}
+
 		TTreeNode* pFirst = FindSmallestNode(m_pRoot);
 		if (pFirst == nullptr) {
 			return false;
@@ -370,6 +374,10 @@ public:
 	}
 
 	bool TryGetLast(JCORE_OUT TKeyValuePair& pair) const {
+		if (m_pRoot == nullptr) {
+			return false;
+		}
+
 		TTreeNode* pLast = FindBiggestNode(m_pRoot);
 		if (pLast == nullptr) {
 			return false;
@@ -380,6 +388,10 @@ public:
 	}
 
 	bool TryGetFirstValue(JCORE_OUT TValue& pair) const {
+		if (m_pRoot == nullptr) {
+			return false;
+		}
+
 		TTreeNode* pFirst = FindSmallestNode(m_pRoot);
 		if (pFirst == nullptr) {
 			return false;
@@ -390,12 +402,30 @@ public:
 	}
 
 	bool TryGetLastValue(JCORE_OUT TValue& pair) const {
+		if (m_pRoot == nullptr) {
+			return false;
+		}
+
 		TTreeNode* pLast = FindBiggestNode(m_pRoot);
 		if (pLast == nullptr) {
 			return false;
 		}
 
 		pair = pLast->Pair.Value;
+		return true;
+	}
+
+	bool TryGetFirstKey(JCORE_OUT TKey& key) const {
+		if (m_pRoot == nullptr) {
+			return false;
+		}
+
+		TTreeNode* pFirst = FindSmallestNode(m_pRoot);
+		if (pFirst == nullptr) {
+			return false;
+		}
+
+		key = pFirst->Pair.Key;
 		return true;
 	}
 
@@ -1057,7 +1087,9 @@ protected:
 
 	// node를 root로 하는 트리에서의 key보다 처음으로 같거나 커지는 노드
 	static TTreeNode* LowerBoundNode(TTreeNode* rootNode, const TKey& key) {
-		DebugAssert(rootNode != nullptr);
+		if (rootNode == nullptr)
+			return nullptr;
+
 		TTreeNode* pHigh = FindBiggestNode(rootNode);
 		TTreeNode* pCur = rootNode;
 
@@ -1079,7 +1111,9 @@ protected:
 
 	// node를 root로 하는 트리에서의 key보다 처음으로 커지는 노드
 	static TTreeNode* UpperBoundNode(TTreeNode* rootNode, const TKey& key) {
-		DebugAssert(rootNode != nullptr);
+		if (rootNode == nullptr)
+			return nullptr;
+
 		TTreeNode* pHigh = FindBiggestNode(rootNode);
 		TTreeNode* pCur = rootNode;
 

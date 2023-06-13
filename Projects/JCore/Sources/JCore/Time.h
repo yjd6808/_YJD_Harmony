@@ -365,12 +365,12 @@ struct TimeSpan
 	double GetTotalMiliSeconds() const { return (double)Tick / Detail::TicksPerMiliSecond_v; }
 	double GetTotalMicroSeconds() const { return (double)Tick; }
 
-	Int64U GetTotalDaysInt() const { return Tick / Detail::TicksPerDay_v; }
-	Int64U GetTotalHoursInt() const { return Tick / Detail::TicksPerHour_v; }
-	Int64U GetTotalMinutesInt() const { return Tick / Detail::TicksPerMinute_v; }
-	Int64U GetTotalSecondsInt() const { return Tick / Detail::TicksPerSecond_v; }
-	Int64U GetTotalMiliSecondsInt() const { return Tick / Detail::TicksPerMiliSecond_v; }
-	Int64U GetTotalMicroSecondsInt() const { return Tick; }
+	Int64 GetTotalDaysInt() const { return Tick / Detail::TicksPerDay_v; }
+	Int64 GetTotalHoursInt() const { return Tick / Detail::TicksPerHour_v; }
+	Int64 GetTotalMinutesInt() const { return Tick / Detail::TicksPerMinute_v; }
+	Int64 GetTotalSecondsInt() const { return Tick / Detail::TicksPerSecond_v; }
+	Int64 GetTotalMiliSecondsInt() const { return Tick / Detail::TicksPerMiliSecond_v; }
+	Int64 GetTotalMicroSecondsInt() const { return Tick; }
 
 	int GetDay() const { return int(Tick / Detail::TicksPerDay_v); }
 	int GetHour() const { return (Tick / Detail::TicksPerHour_v) % Detail::MaxHour_v; }
