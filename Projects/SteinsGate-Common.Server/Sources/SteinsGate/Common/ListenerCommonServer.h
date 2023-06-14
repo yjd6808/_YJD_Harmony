@@ -20,6 +20,9 @@ protected:
 	void OnSent(JNetwork::Session* sender, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* receiver, JNetwork::ICommand* cmd) override;
 	void OnStopped() override;
+
+	virtual ServerType_t GetServerType() = 0;
+	const char* GetServerName() { return ServerType::Name[GetServerType()]; }
 public:
 	JNetwork::CommandParser Parser;
 };

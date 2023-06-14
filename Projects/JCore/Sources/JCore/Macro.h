@@ -30,6 +30,8 @@
 
 
 // 인자 갯수를 반환한다. (적기 귀찮으므로 10개까지만 적음, 추후 확장시 추가할 것
+//   -> 확장사유: 2023/06/13 인자 40개로 확장함. SteinsGate/Common/QueryDefine.h의 SelectResult<TQry> 바인딩시 인자가 수십개 전달될 수도 있기 때문
+//               매크로함수에 인자 수십개를 전달할 일이 있을까 했지만 있었다. ㄷㄷ
 #define JCORE_ARGS_COUNT(...) JCORE_ARGS_COUNT_(__VA_ARGS__, JCORE_ARGS_COUNT_REST)
 #define JCORE_ARGS_COUNT_(...) JCORE_EXPAND_1(JCORE_ARGS_COUNT__(__VA_ARGS__))			// JCORE_ARGS_COUNT_REST를 확장시켜주기 위한 중간 매크로
 #define JCORE_ARGS_COUNT__(_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,_13,_14,_15,_16,_17,_18,_19,_20,_21,_22,_23,_24,_25,_26,_27,_28,_29,_30,_31,_32,_33,_34,_35,_36,_37,_38,_49,_40,N,...) N
