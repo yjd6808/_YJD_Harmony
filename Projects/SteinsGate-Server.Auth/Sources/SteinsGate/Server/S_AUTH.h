@@ -11,10 +11,11 @@
 
 #include <JNetwork/Packet/SendHelper.h>
 #include <SteinsGate/Common/ServerEnum.h>
+#include <SteinsGate/Common/AuthEnum.h>
 
 struct S_AUTH : JNetwork::SendHelper<S_AUTH>
 {
-	static void SendLoginAck(bool success, int result);
+	static void SendLoginAck(LoginResult_t result);
 };
 
 

@@ -33,6 +33,15 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOGIN.cpp">
       <Filter>Query</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthTokenManager.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthTokenManagerSchedule.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthContents.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCoreHeader.h" />
@@ -68,6 +77,15 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOGIN.h">
       <Filter>Query</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManager.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManagerSchedule.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthContents.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">
@@ -81,6 +99,9 @@
     </Filter>
     <Filter Include="Query">
       <UniqueIdentifier>{48b1d56e-da03-4184-9565-ead55f0a7a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{fe79c973-98af-462a-a693-69f34dcce325}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

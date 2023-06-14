@@ -17,6 +17,7 @@ MysqlDatabase* CoreGameDB_v;
 AuthNetMaster* CoreNetMaster_v;
 AuthNetGroup* CoreNetGroup_v;
 AuthServer* CoreServer_v;
+AuthTokenManager* CoreTokenManager_v;
 
 void InitializeAuthCore() {
 	CoreDataManager_v = DataManager::Get();
@@ -28,6 +29,7 @@ void InitializeAuthCore() {
 	CoreNetMaster_v->Initialize();
 	CoreNetGroup_v = CoreNetMaster_v->GetNetGroup(1).Get<AuthNetGroup*>();
 	CoreServer_v = dynamic_cast<AuthServer*>(CoreNetGroup_v->GetServer());
+	CoreTokenManager_v = AuthTokenManager::Get();
 
 	// 공통 라이브러리 주입용
 	{
@@ -36,13 +38,21 @@ void InitializeAuthCore() {
 		CoreCommonServer_v = CoreServer_v;
 		CoreCenterClient_v = CoreNetGroup_v->GetCenterClient();
 		CoreInterServerClient_v = CoreNetGroup_v->GetInterServerClient();
+
+		CoreThreadPool_v = dbg_new ThreadPool{ 2 };
+		CoreScheduler_v = dbg_new Scheduler{ 2 };
 	}
 
 }
 
 void FinalizeAuthCore() {
+	CoreThreadPool_v->Join(ThreadPool::JoinStrategy::WaitAllTasks);
+	CoreScheduler_v->Join(Scheduler::JoinStrategy::WaitOnlyRunningTask);
+
 	JCORE_DELETE_SINGLETON_SAFE(CoreNetMaster_v);
 	JCORE_DELETE_SINGLETON_SAFE(CoreDataManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreTokenManager_v);
+	JCORE_DELETE_SAFE(CoreThreadPool_v);
+	JCORE_DELETE_SAFE(CoreScheduler_v);
 	JCORE_DELETE_SAFE(CoreGameDB_v);
-	
 }

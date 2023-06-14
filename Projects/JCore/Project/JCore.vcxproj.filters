@@ -157,6 +157,7 @@
     <ClCompile Include="..\Sources\JCore\Threading\Scheduler.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Digit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -483,6 +484,7 @@
     <ClInclude Include="..\Sources\JCore\Threading\Scheduler.h">
       <Filter>Threading</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Digit.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

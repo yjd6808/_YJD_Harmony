@@ -22,6 +22,7 @@ public:
 		int sessionRecvBufferSize,
 		int sessionSendBufferSize
 	);
+	~CenterServer() override;
 
 	SGTcpSession* CreateSession() override;
 	ServerInfo GetServerInfo() override;

@@ -14,8 +14,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void S_AUTH::SendLoginAck(bool success, int result) {
+void S_AUTH::SendLoginAck(LoginResult_t result) {
 	const auto sending = SendBegin<CmdLoginAck>();
 	sending.Cmd.Result = result;
-	sending.Cmd.Success = success;
 }

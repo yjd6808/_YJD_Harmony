@@ -5,7 +5,7 @@
  *
  * [셀렉트 바인딩 예시]
  * Qry::SelectAccountInfoResult result;
- * Qry::SelectAccountInfo::Execute(CoreGameDB_v, result);
+ * Qry::SelectAccountList::Execute(CoreGameDB_v, result);
  * 
  * while (result.Next()) {
  * 	   result.FetchRow();
@@ -80,32 +80,44 @@ struct Visitable<struct_name>																							\
 	constexpr static int FieldCount = Fields::Count;																	\
 };																														\
 
+#define QRY_RESULT_DEBUG_ASSERT DebugAssertMsg(Query != nullptr, "쿼리 변수가 NULL임");
 
 template <typename TQryResult>
 struct SelectResult
 {
 	MysqlQuerySelectPtr Query;
+	bool Success = false;
 
 	bool HasNext() const {
-		DebugAssertMsg(Query != nullptr, "쿼리 변수가 NULL임");
+		QRY_RESULT_DEBUG_ASSERT
+		if (!Success) return false;
 		return Query->HasNext();
 	}
 
-	bool Next() const {
-		DebugAssertMsg(Query != nullptr, "쿼리 변수가 NULL임");
-		return Query->Next();
-	}
-
-	void FetchRow() {
-		DebugAssertMsg(Query != nullptr, "쿼리 변수가 NULL임");
+	void FetchCurrentRow() {
+		QRY_RESULT_DEBUG_ASSERT
 		TQryResult& result = static_cast<TQryResult&>(*this);
 		BindSelectResult(result, Query.GetPtr());
 	}
 
+	bool FetchNextRow() {
+		QRY_RESULT_DEBUG_ASSERT
+		if (!Success) return false;
+
+		if (Query->Next()) {
+			TQryResult& result = static_cast<TQryResult&>(*this);
+			BindSelectResult(result, Query.GetPtr());
+			return true;
+		}
+		return false;
+	}
+
 	int GetRowCount() {
-		DebugAssertMsg(Query != nullptr, "쿼리 변수가 NULL임");
+		QRY_RESULT_DEBUG_ASSERT
+		if (!Success) return 0;
 		return Query->GetRowCount();
 	}
+
 };
 
 struct SelectResultBinder
@@ -152,12 +164,80 @@ struct SelectStatement
 
 		result.Query = spQuery;
 
-		if (result.Query->HasNext()) {
-			result.FetchRow();
+		if (!result.Query->HasNext()) {
+			return;
 		}
+
+		result.FetchCurrentRow();
 	}
 };
 
 
+struct InsertResult
+{
+	MysqlQueryInsertPtr Query;
+	bool Success = false;
+
+	Int64U GetInsertId() {
+		QRY_RESULT_DEBUG_ASSERT
+		if (!Success) return 0;
+		return Query->GetInsertId();
+	}
+};
+
+template <typename TQry>
+struct InsertStatement
+{
+	template <typename... Args>
+	constexpr static void Execute(MysqlDatabase* database, InsertResult& result, Args&&... args) {
+
+		if constexpr (SGStringUtil::CTCountChar(TQry::Script, '?') != sizeof...(args)) {
+			_LogWarn_("쿼리 스크립트에서 요구하는 인자갯수와 전달받은 인자 갯수가 틀립니다.");
+			return;
+		}
+
+		auto spQuery = database->Query(TQry::Script, JCore::Forward<Args>(args)...);
+
+		if (spQuery == nullptr) {
+			return;
+		}
+
+		DebugAssertMsg(spQuery->GetStatementType() == StatementType::Insert, "인설트 스테이트먼트가 아닙니다.");
+		result.Query = spQuery;
+		result.Success = spQuery->IsSuccess();
+	}
+};
+
+struct DeleteResult
+{
+	MysqlQueryInsertPtr Query;
+	bool Success = false;
+};
+
+
+struct UpdateResult
+{
+	MysqlQueryInsertPtr Query;
+	bool Success = false;
+};
+
+
+
+
 NS_QRY_END
 
+#define QRY_SELECT_STATEMENT_BEGIN(struct_name) struct struct_name : SelectStatement<struct_name> {
+#define QRY_SELECT_STATEMENT_END(struct_name) };
+
+#define QRY_SELECT_RESULT_BEGIN(struct_name) struct struct_name : SelectResult<struct_name> {
+#define QRY_SELECT_RESULT_END(struct_name) };
+
+
+#define QRY_INSERT_STATEMENT_BEGIN(struct_name) struct struct_name : InsertStatement<struct_name> {
+#define QRY_INSERT_STATEMENT_END(struct_name) };
+
+#define QRY_DELETE_STATEMENT_BEGIN(struct_name) struct struct_name : DeleteStatement<struct_name> {
+#define QRY_DELETE_STATEMENT_END(struct_name) };
+
+#define QRY_UPDATE_STATEMENT_BEGIN(struct_name) struct struct_name : UpdateStatement<struct_name> {
+#define QRY_UPDATE_STATEMENT_END(struct_name) };

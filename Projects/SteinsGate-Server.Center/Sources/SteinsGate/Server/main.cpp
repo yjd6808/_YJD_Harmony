@@ -2,6 +2,7 @@
 #include "CenterCoreHeader.h"
 
 #include <JCore/Logger/ConsoleLogger.h>
+#include <JCore/Random.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -25,11 +26,12 @@ ConsoleLoggerOption NetLoggerOption_v = [] {
 }();
 
 int main() {
-
+	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
 	InitializeNetLogger(&NetLoggerOption_v);
 	InitializeDefaultLogger(&LoggerOption_v);
+	InitializeCommonCore();
 	InitializeServerCore();
 	InitializeServerCenterLogo(true, 14);
 	InitializeCenterCore();
@@ -50,6 +52,7 @@ int main() {
 
 	FinalizeCenterCore();
 	FinalizeServerCore();
+	FinalizeCommonCore();
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
 	Winsock::Finalize();

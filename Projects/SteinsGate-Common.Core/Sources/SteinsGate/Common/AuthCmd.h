@@ -14,6 +14,7 @@
 #include <JCore/Primitives/StaticString.h>
 
 #include <SteinsGate/Common/Struct.h>
+#include <SteinsGate/Common/AuthEnum.h>
 
 // ======================= CMD LIST =======================
 // CmdLogin
@@ -29,7 +30,7 @@ StaticCmdBegin
 	)
 // ===========================================
 SGStaticString<AccountIdLen_v> Id;
-SGStaticString<AccountPassLen_v> Pw;
+SGStaticString<AccountPassLen_v> Pass;
 // ===========================================
 StaticCmdEnd(CmdLogin)
 
@@ -40,8 +41,7 @@ StaticCmdBegin
 	, eServerToClient
 	)
 // ===========================================
-bool Success;
-int Result;
+LoginResult_t Result;
 // ===========================================
 StaticCmdEnd(CmdLoginAck)
 

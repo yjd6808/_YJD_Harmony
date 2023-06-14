@@ -30,7 +30,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefineAuth.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_LOGIN.h">
       <SubType>
       </SubType>
     </ClInclude>

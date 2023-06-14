@@ -23,12 +23,14 @@
 class MysqlQuery;
 class MysqlQuerySelect;
 class MysqlQueryUpdate;
+class MysqlQueryDelete;
 class MysqlQueryInsert;
 
 
 using MysqlQueryPtr = JCore::SharedPtr<MysqlQuery>;
 using MysqlQuerySelectPtr = JCore::SharedPtr<MysqlQuerySelect>;
 using MysqlQueryUpdatePtr = JCore::SharedPtr<MysqlQueryUpdate>;
+using MysqlQueryDeletePtr = JCore::SharedPtr<MysqlQueryDelete>;
 using MysqlQueryInsertPtr = JCore::SharedPtr<MysqlQueryInsert>;
 class MysqlQuery
 {
@@ -60,7 +62,7 @@ public:
 			spQuery = JCore::MakeShared<MysqlQueryUpdate>(conn, preparedStatement, StatementType::Update);
 			break;
 		case StatementType::Delete:
-			spQuery = JCore::MakeShared<MysqlQueryUpdate>(conn, preparedStatement, StatementType::Delete);
+			spQuery = JCore::MakeShared<MysqlQueryDelete>(conn, preparedStatement, StatementType::Delete);
 			break;
 		case StatementType::Insert: 
 			spQuery = JCore::MakeShared<MysqlQueryInsert>(conn, preparedStatement, StatementType::Insert);
@@ -92,6 +94,17 @@ public:
 		: MysqlQuery(conn, preparedStatement, type)
 	{}
 	~MysqlQueryUpdate() override = default;
+
+	bool Execute() override;
+};
+
+class MysqlQueryDelete : public MysqlQuery
+{
+public:
+	MysqlQueryDelete(MysqlConnection* conn, const JCore::String& preparedStatement, StatementType type)
+		: MysqlQuery(conn, preparedStatement, type)
+	{}
+	~MysqlQueryDelete() override = default;
 
 	bool Execute() override;
 };

@@ -91,6 +91,10 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AreaCmd.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\AuthEnum.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ChannelInfo.h">
       <SubType>
       </SubType>

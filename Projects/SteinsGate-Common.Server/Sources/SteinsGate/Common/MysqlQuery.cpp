@@ -34,7 +34,18 @@ bool MysqlQueryUpdate::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
 		const String erstr = m_pConn->GetLastError();
 		if (erstr.Length() > 2)
-			_LogError_("MySQL 오류 : %s", m_pConn->GetLastError().Source());
+			_LogError_("MySQL UPDATE 오류 : %s", m_pConn->GetLastError().Source());
+		return false;
+	}
+
+	return m_bSuccess = true;
+}
+
+bool MysqlQueryDelete::Execute() {
+	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
+		const String erstr = m_pConn->GetLastError();
+		if (erstr.Length() > 2)
+			_LogError_("MySQL DELETE 오류 : %s", m_pConn->GetLastError().Source());
 		return false;
 	}
 
@@ -45,13 +56,13 @@ bool MysqlQueryInsert::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
 		const String erstr = m_pConn->GetLastError();
 		if (erstr.Length() > 2)
-			_LogError_("MySQL 오류 : %s", m_pConn->GetLastError().Source());
+			_LogError_("MySQL ISNERT 오류 : %s", m_pConn->GetLastError().Source());
 		return false;
 	}
 
 	// https://dev.mysql.com/doc/c-api/5.7/en/mysql-insert-id.html
 	m_uiInsertId = mysql_insert_id(m_pConn->GetConnection());
-	return true;
+	return m_bSuccess = true;
 }
 
 
@@ -89,9 +100,45 @@ String MysqlQuerySelect::GetString(const char* fieldName) {
 }
 
 DateTime MysqlQuerySelect::GetDateTime(const char* fieldName) {
+
+	// TryParse 소수점 파싱 구현을 좀 범용성있게 했기땜에 ".ffffff"와 "" 두개로만 구분해도 무방함.
+	// 일단 처음 구현할때 자릿수별로 세분화했기 땜에 그냥 두도록 한다.
+	// TODO: GetDateTime 추후 좀더 간결하게 수정할 것
+	static const char* DecimalPointFormats[]{
+		"",
+		".f",
+		".ff",
+		".fff",
+		".ffff",
+		".fffff",
+		".ffffff"
+	};
+
 	const char* pRawString = GetRawString(fieldName);
 	if (pRawString == nullptr) return 0;
-	return DateTime::TryParse()
+	DateTime parsed;
+
+	char szDateFormat[64] = "yyyy-MM-dd HH:mm:ss%s";	// Mysql 날짜형식 포맷
+	char szDateFormatBuff[64];
+	int iDecimalPointPos = StringUtil::FindCharReverse(pRawString, '.') ;
+	int iDecimalPlaceCount = 0;
+
+	// 예를들어 12:34:56.1234라는 시각 문자열정보가 있을 때 iDecimalPos는 소수점(.)의 위치를 의미
+	// iDecimalPlaceCount = 소수점 자릿수, 4를 나타낸다.
+	// 아래코드는 소수점 자릿수를 계산하는 코드를 구현한거다.
+
+	if (iDecimalPointPos != -1) {
+		while (pRawString[++iDecimalPointPos] != NULL) {
+			iDecimalPlaceCount++;
+		}
+
+		DebugAssertMsg(iDecimalPlaceCount > 0, "소수점(.)이 있는데 소수점 자릿수가 하나도 없습니다.");
+	}
+
+	StringUtil::FormatBuffer(szDateFormatBuff, 64, szDateFormat, DecimalPointFormats[iDecimalPlaceCount]);
+	DateTime::TryParse(parsed, szDateFormatBuff, pRawString);
+	DebugAssertMsg(DateTime::LastError() == 0, "소수점 날짜 포맷 파싱수행중 오류가 발생하였습니다. (%s)", DateTime::LastErrorMessage());
+	return parsed;
 }
 
 Int32U MysqlQuerySelect::GetRowCount() const {

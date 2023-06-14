@@ -7,6 +7,7 @@
 
 #include <JCore/Primitives/StringUtil.h>
 #include <JCore/Primitives/String.h>
+#include <JCore/Primitives/StaticString.h>
 #include <JCore/TypeCast.h>
 
 NS_JC_BEGIN
@@ -39,6 +40,15 @@ struct Comparator<String>
 {
 	int operator()(const String& lhs, const String& rhs) const {
 		return lhs.Compare(rhs);
+	}
+
+	int operator()(const String& lhs, const char* rhs) const {
+		return lhs.Compare(rhs);
+	}
+
+	template <Int32U Size>
+	int operator()(const String& lhs, const StaticString<Size>& rhs) const {
+		return lhs.Compare(rhs.Source);
 	}
 };
 

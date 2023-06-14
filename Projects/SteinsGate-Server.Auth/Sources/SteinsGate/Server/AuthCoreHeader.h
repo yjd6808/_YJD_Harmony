@@ -15,3 +15,6 @@
 #include <SteinsGate/Server/AuthNetMaster.h>
 #include <SteinsGate/Server/AuthNetGroup.h>
 #include <SteinsGate/Server/AuthServer.h>
+#include <SteinsGate/Server/AuthTokenManager.h>
+
+

@@ -24,6 +24,9 @@ CenterServer::CenterServer(
 	, m_bStartupLaunching(true)
 {}
 
+CenterServer::~CenterServer() {
+}
+
 SGTcpSession* CenterServer::CreateSession() {
 	return dbg_new CenterSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
 }
