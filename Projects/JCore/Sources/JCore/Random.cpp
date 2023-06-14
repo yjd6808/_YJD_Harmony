@@ -45,5 +45,10 @@ double Random::GenerateDouble(double begin, double end) {
 	return dist(ms_DefaultRandomEngine);
 }
 
+char Random::GenerateAlphabat() {
+	static char s_Alphabats[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	return s_Alphabats[GenerateInt(0, sizeof s_Alphabats)];
+}
+
 
 NS_JC_END

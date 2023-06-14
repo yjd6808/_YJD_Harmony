@@ -27,7 +27,8 @@ struct Random final
 
 	static int GenerateInt(int inclusiveBegin, int exclusiveEnd);
 	static double GenerateDouble(double inclusiveBegin, double inclusiveEnd);
-
+	static char GenerateAlphabat();
+	
 	static void EngineInitialize();
 private:
 	inline static bool ms_bInitialized;
