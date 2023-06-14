@@ -28,18 +28,40 @@ class SchedulerTask
 {
 public:
 	virtual ~SchedulerTask() = default;
-	virtual void OnScheduled(SchedulerTask* task) {}
 	virtual DateTime At() = 0;
 	virtual TimeSpan Interval() = 0;
 	virtual bool CanNextCall() = 0;
 	virtual bool HasCallbackFunc() const { return false; }
 	virtual bool Executed() const { return m_bExecuted; }
-	virtual Int32U LeftCallCount() { return m_bExecuted ? 0 : 1; }
 	virtual Int32U MaxRepeatCount() { return 1; }
-	virtual void CallCallback() { m_bExecuted = true; OnScheduled(this); }
+	virtual void CallCallback() = 0;
 protected:
-	SpinLock m_TaskLock;
-	AtomicBool m_bExecuted;
+	AtomicBool m_bExecuted = false;
+};
+
+// 스케쥴 작업을 상속받은 클래스 자체에 반복작업 내용을 정의 가능하도록 한다.
+class SchedulerTaskRunnableRepeat : public SchedulerTask
+{
+public:
+	SchedulerTaskRunnableRepeat() : m_At(DateTime::Now()) {}
+	SchedulerTaskRunnableRepeat(DateTime at) : m_At(at) {}
+
+	DateTime At() override { return m_At; }
+	bool CanNextCall() override { return true; }
+	void CallCallback() override {
+		m_At = DateTime::Now() + Interval();
+		if (!m_bExecuted) {
+			OnFirstScheduled(this);
+			m_bExecuted = true;
+		}
+
+		OnScheduled(this);
+	}
+
+	virtual void OnScheduled(SchedulerTask* task) {}		// 처음을 포함해서 스케쥴링 될떄마다 호출
+	virtual void OnFirstScheduled(SchedulerTask* task) {}	// 제일 처음에만 호출
+protected:
+	DateTime m_At;
 };
 
 template <typename TCallback>
@@ -57,7 +79,7 @@ public:
 	{}
 
 	DateTime At() override { return m_At; }
-	TimeSpan Interval() override { return 0; }
+	TimeSpan Interval() override { return { 0 }; }
 	bool CanNextCall() override { return false; }
 	void CallCallback() override { m_bExecuted = true; m_Callback(this); }
 	bool HasCallbackFunc() const override { return true; }
@@ -81,7 +103,6 @@ public:
 	DateTime At() override { return { m_At.Load() }; }
 	TimeSpan Interval() override { return m_Interval; }
 	bool CanNextCall() override { return m_uiCurRepeat < m_uiMaxRepeat; }
-	Int32U LeftCallCount() override { return m_uiMaxRepeat - m_uiCurRepeat; }
 	Int32U MaxRepeatCount() override { return m_uiMaxRepeat; }
 	void CallCallback() override {
 		m_bExecuted = true;
