@@ -147,7 +147,7 @@ void UI_Login::login() {
 	// TODO: 벨리데이터 구현
 
 	AccountData& pData = CorePlayer_v->accountData();
-	pData.Name.SetStringUnsafe(m_pEbId->getText());
+	pData.Id.SetStringUnsafe(m_pEbId->getText());
 	pData.Pass.SetStringUnsafe(m_pEbPass->getText());
 
 	if (!CoreNet_v->connectAuthTcp()) {

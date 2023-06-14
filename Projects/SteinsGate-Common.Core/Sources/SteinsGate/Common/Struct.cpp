@@ -33,17 +33,16 @@ String SgaResourceIndex::ToString() const {
 }
 
 AccountData::AccountData()
-	: UUId(InvalidValue_v)
-	, Name{""}
+	: DBTableId(InvalidValue_v)
+	, Id{""}
 	, Pass{""}
 	, LastLogin(0)
 	, LastServer(0)
-	, Logined(false)
 {}
 
 PlayerData::PlayerData()
-	: Name{""}
-	, CharId(InvalidValue_v)
+	: CharId(InvalidValue_v)
+	, Name{""}
 	, CharType(CharType::Gunner)
 	, Gold(0)
 	, Str(0)

@@ -23,7 +23,7 @@ USING_NS_JNET;
 
 void C_AUTH::OnConnected(Session* session) {
 	const AccountData& accountData = CorePlayer_v->accountData();
-	S_AUTH::SendLogin(accountData.Name.Source, accountData.Pass.Source);
+	S_AUTH::SendLogin(accountData.Id.Source, accountData.Pass.Source);
 
 	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
 	CorePopupManager_v->showNone("로그인 시도중입니다.", POPUP_LOGIN);

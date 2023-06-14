@@ -19,5 +19,5 @@ USING_NS_JNET;
 void S_AUTH::SendLogin(const char* id, const char* pw) {
 	const auto sending = SendBegin<CmdLogin>();
 	sending.Cmd.Id.SetStringUnsafe(id);
-	sending.Cmd.Pw.SetStringUnsafe(pw);
+	sending.Cmd.Pass.SetStringUnsafe(pw);
 }
