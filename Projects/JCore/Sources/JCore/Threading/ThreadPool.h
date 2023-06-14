@@ -226,10 +226,7 @@ using TaskContextPtr = SharedPtr<TaskContext>;
 
 struct TaskBase 
 {
-	~TaskBase()
-	{
-		JCORE_PASS;
-	}
+	~TaskBase() = default;
 	TaskContext::State GetContextState() { 
 		if (m_spContext == nullptr) { DebugAssert(false); return TaskContext::State::eFinished; }
 		return (TaskContext::State)m_spContext->GetState().Load(); 

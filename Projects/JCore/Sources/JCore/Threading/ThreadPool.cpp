@@ -78,7 +78,6 @@ TaskThread::TaskThread(ConditionVariable& poolCv, ConditionVariable& joinCv, Nor
 
 TaskThread::~TaskThread()
 {
-	JCORE_PASS;
 }
 
 void TaskThread::CancelRunningTask() {
