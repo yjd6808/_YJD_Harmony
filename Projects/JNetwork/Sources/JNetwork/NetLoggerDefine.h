@@ -18,6 +18,6 @@ extern JCore::LoggerAbstract* NetLogger_v;
 #define _NetLogError_(fmt, ...)		do { if (NetLogger_v) NetLogger_v->Log(JCore::LoggerAbstract::eError,	fmt, __VA_ARGS__); } while (0)
 #define _NetLogDebug_(fmt, ...)		do { if (NetLogger_v) NetLogger_v->Log(JCore::LoggerAbstract::eDebug,	fmt, __VA_ARGS__); } while (0)
 
-void InitializeNetLogger(JCore::LoggerOption* option = nullptr);
+void InitializeNetLogger(JCore::LoggerOption* option = nullptr, const char* specifier = "");
 void FinalizeNetLogger();
 

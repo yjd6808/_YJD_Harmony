@@ -3,6 +3,8 @@
 #include "GameCoreHeader.h"
 
 #include <JCore/Logger/ConsoleLogger.h>
+
+#include <SteinsGate/Common/LogSpecifier.h>
 #include <SteinsGate/Common/AudioPlayer.h>
 #include <SteinsGate/Common/SgaElementInitializer.h>
 #include <SteinsGate/Client/Win32Helper.h>
@@ -77,7 +79,7 @@ bool SGApplication::applicationDidFinishLaunching() {
     AudioPlayer::Initilize();
     SgaElementInitializer::Initialize();
     FileUtils::getInstance()->setPopupNotify(false);    // 파일못찾은 경우 알람 안하도록 함
-    SGConsole::SetSize(1200, 800);
+    JCore::Console::SetSize(1200, 800);
 
     DataManager* pDataManager = DataManager::Get();
     pDataManager->initializeLoader();
@@ -87,8 +89,8 @@ bool SGApplication::applicationDidFinishLaunching() {
 
     CreateOpenGLWindow();
 	InitializeJCore();
-    InitializeNetLogger(&NetLoggerOption_v);
-    InitializeDefaultLogger(&LoggerOption_v);
+    InitializeNetLogger(&NetLoggerOption_v, LOG_SPECIFIER_CLIENT);
+    InitializeDefaultLogger(&LoggerOption_v, LOG_SPECIFIER_CLIENT);
     InitializeCommonCore();
     InitializeClientCore();
     InitializeClientLogo(true, 5);

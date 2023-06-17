@@ -7,18 +7,19 @@
 
 #include <JNetwork/Network.h>
 #include <JCore/Logger/ConsoleLogger.h>
+#include <JCore/Primitives/StringUtil.h>
 
 USING_NS_JC;
 
 LoggerAbstract* NetLogger_v;
 
-void InitializeNetLogger(LoggerOption* option) {
+void InitializeNetLogger(LoggerOption* option, const char* specifier) {
 	DebugAssertMsg(NetLogger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
 
 	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
 	pConsoleLogger->SetEnableLock(true);
 	pConsoleLogger->SetAutoFlush(true);
-	pConsoleLogger->SetHeaderFormat("[ level ✓  datetime ] ");
+	pConsoleLogger->SetHeaderFormat(StringUtil::Format("%s[ level ✓  datetime ] ", specifier));
 
 	pConsoleLogger->ShowDateTime(true);
 	pConsoleLogger->ShowLevel(true);

@@ -23,6 +23,6 @@ extern JCore::LoggerAbstract* Logger_v;
 #define _LogErrorIf_(cond, fmt, ...)	do { if (Logger_v && (cond)) Logger_v->Log(JCore::LoggerAbstract::eError,fmt, __VA_ARGS__); } while (0)
 #define _LogDebugIf_(cond, fmt, ...)	do { if (Logger_v && (cond)) Logger_v->Log(JCore::LoggerAbstract::eDebug,fmt, __VA_ARGS__); } while (0)
 
-void InitializeDefaultLogger(JCore::LoggerOption* option = nullptr);
+void InitializeDefaultLogger(JCore::LoggerOption* option = nullptr, const char* specifier = "");
 void FinalizeDefaultLogger();
 
