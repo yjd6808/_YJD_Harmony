@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JNetwork/Host/Session.h>
+#include <JNetwork/Packet/RecvPacket.h>
 
 NS_JNET_BEGIN
 
@@ -27,6 +28,7 @@ public:
 	virtual void ConnectedInit() {}	// 연결시마다 호출될 세션초기화 함수
 
 	void NotifyCommand(ICommand* cmd) override;
+	void NotifyPacket(IRecvPacket* recvPacket) override;
 	void Initialize() override;
 	void Connected() override;
 	void ConnectFailed(Int32U errorCode) override;
@@ -36,6 +38,7 @@ public:
 	bool Accepted(Int32UL receivedBytes);
 	void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) override;
 	Type GetType() const override { return eSession; }
+	DetailType GetDetailType() const override { return eTcpSession; }
 	const char* TypeName() override { return "TCP 세션"; }
 
 protected:

@@ -420,8 +420,8 @@ protected:
 	static constexpr int ms_iExpandingFactor = 4;	// 꽉차면 4배씩 확장
 	static constexpr int ms_iDefaultCapacity = 32;	// 초기 배열 크기
 protected:
-	T* m_pArray;
 	int m_iCapacity;
+	T* m_pArray;
 
 	friend class TArrayCollectionIterator;
 };

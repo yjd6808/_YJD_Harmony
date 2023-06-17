@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <SteinsGate/Common/S_CENTER_COMMON.h>
+#include <SteinsGate/Common/S_INTERSERVER_COMMON.h>
 
-struct S_CENTER : S_CENTER_COMMON
+struct S_INTERSERVER : S_INTERSERVER_COMMON
 {
 };
 

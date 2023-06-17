@@ -74,6 +74,7 @@ public:
         return ++iResult;
     }
 
+    TAtomic& operator=(T other) { Exchange(other); return *this; }
     T operator+=(T other) { return ExchangeAdd(other) + other; }
     T operator-=(T other) { return ExchangeAdd(other * -1) - other; }
     T operator|(T other) { return Load() | other; }
@@ -150,6 +151,8 @@ public:
         return ++iResult;
     }
 
+    template <typename U, DefaultEnableIf_t<IsConvertible_v<U, T*>> = nullptr>
+    TAtomic& operator=(U other) { Exchange(other); return *this; }
     T* operator+=(int other) { return ExchangeAdd(other) + (sizeof(T) * other); }
     T* operator-=(int other) { return ExchangeAdd(other * -1) - (sizeof(T) * other); }
 
@@ -195,7 +198,7 @@ public:
     // =====================================================================================
     operator bool() const { return Load(); }
 
-
+    TAtomic& operator=(bool other) { Exchange(other); return *this; }
     bool operator==(bool other) { return Load() == other; }
     bool operator!=(bool other) { return Load() != other; }
 private:
@@ -234,7 +237,7 @@ public:
     // =====================================================================================
     operator bool() const { return Load(); }
 
-
+    TAtomic& operator=(void* other) { Exchange(other); return *this; }
     bool operator==(void* other) { return Load() == other; }
     bool operator!=(void* other) { return Load() != other; }
 private:

@@ -209,13 +209,13 @@ EnchantInfo* DataManagerAbstract::getEnchantInfo(int enchantCode) {
 	return pRet;
 }
 
-ServerProcessInfo* DataManagerAbstract::getServerProcessInfo(int serverCode) {
+ServerProcessInfoPackage* DataManagerAbstract::getServerProcessInfoPackage(int serverCode) {
 	auto eType = ConfigFileType::Server;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<ServerProcessInfo*>(getData(eType, serverCode));
+	auto pRet = dynamic_cast<ServerProcessInfoPackage*>(getData(eType, serverCode));
 	DebugAssertMsg(pRet, "서버 인포 타입이 아닙니다.");
 	return pRet;
 }

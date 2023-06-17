@@ -31,6 +31,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthInterServerClientNetGroup.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthTokenManager.cpp">
       <SubType>
       </SubType>
@@ -39,7 +43,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterClient.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -67,7 +71,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOGIN.cpp">
@@ -78,12 +82,12 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_CENTER.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_INTERSERVER.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\S_AUTH.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_CENTER.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_INTERSERVER.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -94,6 +98,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthContents.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthInterServerClientNetGroup.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -109,7 +117,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterClient.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -131,7 +139,7 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCoreHeader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -148,12 +156,12 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_CENTER.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_INTERSERVER.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\S_AUTH.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_CENTER.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_INTERSERVER.h">
       <SubType>
       </SubType>
     </ClInclude>

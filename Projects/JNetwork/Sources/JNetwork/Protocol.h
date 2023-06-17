@@ -23,5 +23,14 @@ enum class TransportProtocol
 	UDP  = IPPROTO_UDP 
 };
 
+inline const char* TransportProtocolName(TransportProtocol protocol) {
+	if (protocol == TransportProtocol::TCP)
+		return "TCP";
+	if (protocol == TransportProtocol::UDP)
+		return "UDP";
+
+	return "None";
+}
+
 NS_JNET_END
 

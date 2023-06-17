@@ -17,6 +17,9 @@ USING_NS_JC;
 void IntializeScheduler();
 void FinalizeScheduler();
 
+
+AuthTokenManagerSchedule* g_pAuthTokenManagerSchedule;
+
 void InitializeAuthContents() {
 	IntializeScheduler();
 }
@@ -27,8 +30,13 @@ void FinalizeAuthContents() {
 
 
 void IntializeScheduler() {
-	CoreScheduler_v->AddFirstTask(dbg_new AuthTokenManagerSchedule());
+	g_pAuthTokenManagerSchedule = dbg_new AuthTokenManagerSchedule();
+
+	g_pAuthTokenManagerSchedule->Initialize();
+
+	CoreScheduler_v->AddFirstTask(g_pAuthTokenManagerSchedule);
 }
 
 void FinalizeScheduler() {
+	g_pAuthTokenManagerSchedule->Finalize();
 }

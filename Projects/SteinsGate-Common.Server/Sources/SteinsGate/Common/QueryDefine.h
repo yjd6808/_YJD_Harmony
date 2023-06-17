@@ -2,15 +2,6 @@
  * 작성자: 윤정도
  * 생성일: 5/20/2023 9:54:20 AM
  * =====================
- *
- * [셀렉트 바인딩 예시]
- * Qry::SelectAccountInfoResult result;
- * Qry::SelectAccountList::Execute(CoreGameDB_v, result);
- * 
- * while (result.Next()) {
- * 	   result.FetchRow();
- * }
- *
  */
 
 #pragma once

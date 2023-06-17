@@ -10,9 +10,9 @@
 
 #include <JNetwork/Host/Session.h>
 
-#include <SteinsGate/Common/CenterCmd.h>
-#include <SteinsGate/Common/R_CENTER_COMMON.h>
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/R_INTERSERVER_COMMON.h>
 
-struct R_CENTER : R_CENTER_COMMON
+struct R_INTERSERVER : R_INTERSERVER_COMMON
 {
 };

@@ -69,13 +69,13 @@ WinApi::CreateEventA(bool initialState, bool manualReset, const char* name) {
     return ::CreateEventA(NULL, manualReset ? TRUE : FALSE, initialState ? TRUE : FALSE, name);
 }
 
-Int32U
+Int32UL
 JCORE_STDCALL
 WinApi::WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout, JCORE_IN bool alertable) {
     return ::WaitForMultipleObjectsEx(eventCount, handles, waitAll ? TRUE : FALSE, timeout, alertable ? TRUE: FALSE);
 }
 
-Int32U
+Int32UL
 JCORE_STDCALL
 WinApi::GetLastError() {
     return ::GetLastError();

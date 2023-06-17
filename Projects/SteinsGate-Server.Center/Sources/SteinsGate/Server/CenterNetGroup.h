@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <SteinsGate/Common/CommonNetGroup.h>
-#include <SteinsGate/Server/ListenerInterServerClient.h>
-#include <SteinsGate/Server/ListenerCenterServer.h>
+#include <SteinsGate/Common/InterServerClientNetGroup.h>
+#include <SteinsGate/Server/ListenerInterServerClientUdp.h>
+#include <SteinsGate/Server/ListenerInterServerHostTcp.h>
 
 
 class CenterEventListener;
@@ -23,12 +23,10 @@ protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
 	void InitializeServer() override;
-	void InitializeCenterClient() override;
-	void InitializeInterServerClient() override;
 	void OnLoop(JCore::PulserStatistics* pulserStat) override;
 private:
-	ListenerCenterServer m_CenterServerEventListener;
-	ListenerInterServerClient m_InterServerEventListener;
+	ListenerInterServerHostTcp m_CenterServerEventListener;
+	ListenerInterServerClientUdp m_InterServerEventListener;
 };
 
 

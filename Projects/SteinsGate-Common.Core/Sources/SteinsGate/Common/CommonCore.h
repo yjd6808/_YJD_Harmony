@@ -8,19 +8,18 @@
 
 #pragma once
 
-namespace JCore {
+NS_JC_BEGIN
 	class Scheduler;
 	class ThreadPool;
-}
+NS_JC_END
 
 class CommonInfo;
 struct CharCommonInfo;
-struct ServerProcessInfo;
-
+struct ServerProcessInfoPackage;
 
 extern CommonInfo* CoreCommonInfo_v;
 extern CharCommonInfo* CoreCharCommon_v;
-extern ServerProcessInfo* CoreServerProcessInfo_v;
+extern ServerProcessInfoPackage* CoreServerProcessInfoPackage_v;
 extern JCore::Scheduler* CoreScheduler_v;
 extern JCore::ThreadPool* CoreThreadPool_v;
 

@@ -1,34 +1,41 @@
 {
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "서버 목록",
+    "__comment__2": "서버 ID는 32 이하로 설정할것 SteinsGate/Common/Config.h에 MaxServerId_v = 32로 설정해놈",
 
     "server": [
         {
             "code": 1,
             "name": "로컬 테스트",
             "center": {
-                "bind_center_tcp": "127.0.0.1:10100",
                 "remote_center": "127.0.0.1:10100",
+                "remote_interserver": "127.0.0.1:10100",
 
                 "bind_interserver_udp": "127.0.0.1:10100",
+                "bind_interserver_tcp": "127.0.0.1:10100",
+                "server_id": 1,
                 "max_session_count": 50
             },
         
             "auth": {
+                "server_id": 2,
                 "bind_auth_tcp": "127.0.0.1:10110",
                 "remote_auth": "127.0.0.1:10110",
 
-                "bind_interserver_udp": "127.0.0.1:10110",
-                "bind_center_tcp": "127.0.0.1:10111",
+                "bind_interserver_udp": "127.0.0.1:10111",
+                "bind_interserver_tcp": "127.0.0.1:10111",
+                "remote_interserver": "127.0.0.1:10111",
                 "max_session_count": 50
             },
         
             "lobby": {
+                "server_id": 3,
                 "bind_lobby_tcp": "127.0.0.1:10120",
                 "remote_lobby": "127.0.0.1:10120",
 
-                "bind_interserver_udp": "127.0.0.1:10120",
-                "bind_center_tcp": "127.0.0.1:10121",
+                "bind_interserver_udp": "127.0.0.1:10121",
+                "bind_interserver_tcp": "127.0.0.1:10121",
+                "remote_interserver": "127.0.0.1:10121",
                 "max_session_count": 50
             },
         
@@ -36,6 +43,7 @@
             "game": [
                 {
                     "code": 1,
+                    "server_id": 4,
                     "name": "루크",
                     "bind_game_tcp": "127.0.0.1:10130",
                     "bind_game_udp": "127.0.0.1:10130",
@@ -48,7 +56,8 @@
                     "remote_chat": "127.0.0.1:10132",
 
                     "bind_interserver_udp": "127.0.0.1:10133",
-                    "bind_center_tcp": "127.0.0.1:10133",
+                    "bind_interserver_tcp": "127.0.0.1:10133",
+                    "remote_interserver": "127.0.0.1:10133",
                     "active": true,
                     "active_channel": [
                         "1 1 200",
@@ -62,6 +71,7 @@
                 },
                 {
                     "code": 2,
+                    "server_id": 5,
                     "name": "힐더",
                     "bind_game_tcp": "127.0.0.1:10140",
                     "bind_game_udp": "127.0.0.1:10140",
@@ -74,7 +84,8 @@
                     "remote_chat": "127.0.0.1:10142",
 
                     "bind_interserver_udp": "127.0.0.1:10143",
-                    "bind_center_tcp": "127.0.0.1:10143",
+                    "bind_interserver_tcp": "127.0.0.1:10143",
+                    "remote_interserver": "127.0.0.1:10143",
                     "active": true,
                     "active_channel": [
                         "1 1 500"
@@ -82,30 +93,36 @@
                 },
                 {
                     "code": 3,
+                    "server_id": 6,
                     "name": "시로코",
                     "active": false
                 },
                 {
                     "code": 4,
+                    "server_id": 7,
                     "name": "프레이",
                     "active": false
                 },
                 {
                     "code": 5,
+                    "server_id": 8,
                     "name": "카시야스",
                     "active": false
                 },
                 {
                     "code": 6,
+                    "server_id": 9,
                     "name": "디레지에",
                     "active": false
                 },
                 {
+                    "server_id": 10,
                     "code": 7,
                     "name": "카인",
                     "active": false
                 },
                 {
+                    "server_id": 11,
                     "code": 8,
                     "name": "세리아",
                     "active": false

@@ -6,7 +6,8 @@
 #include <JNetwork/Winsock.h>
 
 #include <JNetwork/Host/Session.h>
-#include <JNetwork/Buffer/StaticBuffer.h>
+#include <JNetwork/Buffer/CommandBuffer.h>
+#include <JNetwork/Packet/RecvPacket.h>
 
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecv.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSend.h>
@@ -236,21 +237,36 @@ bool Session::RecvFromAsync() {
 	return true;
 }
 
+void Session::SendAlloc(ICommand* cmd) {
+	LOCK_GUARD(m_SendBufferLock);
+
+	const int iCmdSize = cmd->CmdLen;
+	if (m_spSendBuffer->GetWritePos() + iCmdSize >= MAX_MSS) {
+		FlushSendBuffer();
+	}
+
+	DebugAssertMsg(iCmdSize <= m_spSendBuffer->GetRemainBufferSize(), "버퍼의 남은 공간에 넣을 커맨드가 너무 큽니다. (CmdSize: %d, RemainBufferCapacity: %d)", iCmdSize, m_spSendBuffer->GetRemainBufferSize());
+	m_spSendBuffer->Alloc(cmd);
+}
+
 void Session::Received(Int32UL receivedBytes) {
 	m_spRecvBuffer->MoveWritePos(receivedBytes);
 
 	for (;;) {
+		const int iReadableBufferSize = m_spRecvBuffer->GetReadableBufferSize();
 		// 패킷의 헤더 크기만큼 데이터를 수신하지 않았으면 모일때까지 기달
-		if (m_spRecvBuffer->GetReadableBufferSize() < PacketHeaderSize_v)
+		if (iReadableBufferSize < PacketHeaderSize_v)
 			return;
 
 		// 패킷 헤더 길이 + 패킷 길이 만큼 수신하지 않았으면 다시 모일때까지 기다린다.
-		const IRecvPacket* packet = m_spRecvBuffer->Peek<IRecvPacket*>();
-		if (m_spRecvBuffer->GetReadableBufferSize() < (PacketHeaderSize_v + packet->GetPacketLength())) {
+		IRecvPacket* packet = m_spRecvBuffer->Peek<IRecvPacket*>();
+		const int iPacketLength = packet->GetPacketLength();
+		if (iReadableBufferSize < (PacketHeaderSize_v + iPacketLength)) {
 			return;
 		}
 
 		m_spRecvBuffer->MoveReadPos(PacketHeaderSize_v);
+		NotifyPacket(packet);
 
 		for (int i = 0; i < packet->GetCommandCount(); i++) {
 			ICommand* pCmd = m_spRecvBuffer->Peek<ICommand*>();

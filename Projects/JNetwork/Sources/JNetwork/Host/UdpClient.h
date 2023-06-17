@@ -36,9 +36,12 @@ public:
 	void Disconnected() override;
 
 	void NotifyCommand(ICommand* cmd) override;
+	void NotifyPacket(IRecvPacket* packet) override;
 	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;
 	Type GetType() const override { return eClient; }
+	DetailType GetDetailType() const override { return eUdpClient; }
 	const char* TypeName() override { return "UDP 클라"; }
+	
 protected:
 	ClientEventListener* m_pClientEventListener;
 };

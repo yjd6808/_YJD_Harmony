@@ -10,31 +10,29 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct CenterServerProcessInfo
+struct ServerProcessInfo
 {
 	SGEndPoint BindInterServerUdp;
-	SGEndPoint BindCenterTcp;
-	SGEndPoint RemoteCenter;
-	int MaxSessionCount;
+	SGEndPoint BindInterServerTcp;
+	SGEndPoint RemoteInterServerEP;
+	SGEndPoint RemoteEP;
+	int ServerId = - 1;
+	int MaxSessionCount = 0;
+};
+
+struct CenterServerProcessInfo : ServerProcessInfo
+{
 };
 
 
-struct AuthServerProcessInfo
+struct AuthServerProcessInfo : ServerProcessInfo
 {
 	SGEndPoint BindAuthTcp;
-	SGEndPoint RemoteAuth;
-	SGEndPoint BindInterServerUdp;
-	SGEndPoint BindCenterTcp;
-	int MaxSessionCount;
 };
 
-struct LobbyServerProcessInfo
+struct LobbyServerProcessInfo : ServerProcessInfo
 {
 	SGEndPoint BindLobbyTcp;
-	SGEndPoint RemoteLobby;
-	SGEndPoint BindInterServerUdp;
-	SGEndPoint BindCenterTcp;
-	int MaxSessionCount;
 };
 
 struct GameChannelInfo
@@ -44,19 +42,18 @@ struct GameChannelInfo
 	int MaxPlayerCount;
 };
 
-struct GameServerProcessInfo
+struct GameServerProcessInfo : ServerProcessInfo
 {
 	GameServerProcessInfo() : GameChannelInfoList(1) {}
 	GameServerProcessInfo(int channelCount)
 		: GameChannelInfoList(channelCount)
-		, MaxSessionCount(0) {}
+	{}
 
 	ServerType_t Code;
 	SGString Name;
 	
 	SGEndPoint BindGameTcp;
 	SGEndPoint BindGameUdp;
-	SGEndPoint RemoteGame;
 
 	SGEndPoint BindChatTcp;
 	SGEndPoint RemoteChat;
@@ -64,22 +61,24 @@ struct GameServerProcessInfo
 	SGEndPoint BindTownTcp;
 	SGEndPoint RemoteTown;
 
-	SGEndPoint BindInterServerUdp;
-	SGEndPoint BindCenterTcp;
 	bool Active;
 	SGVector<GameChannelInfo> GameChannelInfoList;
-	int MaxSessionCount;
 };
 
 
-struct ServerProcessInfo : ConfigDataAbstract
+struct ServerProcessInfoPackage : ConfigDataAbstract
 {
-	ServerProcessInfo(int activeGameServerCount) : GameList(activeGameServerCount) {}
-	~ServerProcessInfo() override = default;
+	ServerProcessInfoPackage(int activeGameServerCount)
+		: GameList(activeGameServerCount)
+		, ActiveServerIdList(3 + activeGameServerCount)	// 인증 + 로비 + 중앙 + 게임 서버들
+	{}
+	~ServerProcessInfoPackage() override = default;
 
 	SGString Name;
 	CenterServerProcessInfo Center;
 	AuthServerProcessInfo Auth;
 	LobbyServerProcessInfo Lobby;
 	SGVector<GameServerProcessInfo> GameList;
+	SGVector<int> ActiveServerIdList;
+	ServerProcessInfo* InfoMap[MaxServerId_v];
 };

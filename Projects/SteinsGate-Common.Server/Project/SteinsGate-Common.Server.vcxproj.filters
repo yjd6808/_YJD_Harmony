@@ -26,10 +26,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\S_CENTER_COMMON.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\R_CENTER_COMMON.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.h">
       <Filter>Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetGroup.h">
@@ -41,10 +41,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonServer.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\CenterCmd.h">
-      <Filter>Net\Cmd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_HOST.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonServer.h">
@@ -61,6 +58,30 @@
       <Filter>Database</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerNamespace.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerBatchHost.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerSendHelper.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmdDefine.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerRecvHelper.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerInterServerCommonClient.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_RELAY.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelper.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
@@ -84,10 +105,10 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerEnum.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\S_CENTER_COMMON.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\R_CENTER_COMMON.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.cpp">
       <Filter>Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonNetGroup.cpp">
@@ -103,6 +124,21 @@
       <Filter>Net\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonClient.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\InterServerSendHelper.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerInterServerCommonClient.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\InterServerRecvHelper.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerHelper.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
   </ItemGroup>

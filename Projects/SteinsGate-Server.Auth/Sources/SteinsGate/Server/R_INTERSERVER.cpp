@@ -8,10 +8,10 @@
 
 #include "Auth.h"
 #include "AuthCoreHeader.h"
-#include "R_CENTER.h"
+#include "R_INTERSERVER.h"
 
-#include <SteinsGate/Common/CenterCmd.h>
-#include <SteinsGate/Server/S_CENTER.h>
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Server/S_INTERSERVER.h>
 
 USING_NS_JC;
 USING_NS_JNET;

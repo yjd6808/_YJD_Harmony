@@ -10,6 +10,7 @@
 #include "AuthNetMaster.h"
 
 #include <SteinsGate/Server/AuthNetGroup.h>
+#include <SteinsGate/Server/AuthInterServerClientNetGroup.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -21,9 +22,16 @@ AuthNetMaster::~AuthNetMaster() {
 }
 
 void AuthNetMaster::Initialize() {
-	const auto spCenterNetGroup = MakeShared<AuthNetGroup>();
-	AddNetGroup(1, spCenterNetGroup);
-	spCenterNetGroup->Initialize();
+	CommonNetMaster::Initialize();
+
+	const auto spAuthNetGroup = MakeShared<AuthNetGroup>();
+	const auto spInterServerNetGroup = MakeShared<AuthInterServerClientNetGroup>();
+
+	AddNetGroup(NETGROUP_ID_MAIN,			spAuthNetGroup);
+	AddNetGroup(NETGROUP_ID_INTERSERVER,	spInterServerNetGroup);
+
+	spAuthNetGroup->Initialize();
+	spInterServerNetGroup->Initialize();
 }
 
 void AuthNetMaster::OnLoop(PulserStatistics* pulserStat) {

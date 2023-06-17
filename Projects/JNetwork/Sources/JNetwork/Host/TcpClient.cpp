@@ -33,8 +33,8 @@ TcpClient::~TcpClient() {
 	WaitForZeroPending();
 }
 
-static StaticPacket<Command<int>, Command<int>>* GenerateTestDummyPacket() {
-	auto* dummyPacket = dbg_new StaticPacket<Command<int>, Command<int>>;
+static StaticPacket<GenericCommand<int>, GenericCommand<int>>* GenerateTestDummyPacket() {
+	auto* dummyPacket = dbg_new StaticPacket<GenericCommand<int>, GenericCommand<int>>;
 	dummyPacket->Get<0>()->SetCommand(1);
 	dummyPacket->Get<0>()->Value = 2;
 	dummyPacket->Get<1>()->SetCommand(3);
@@ -190,6 +190,10 @@ void TcpClient::Disconnected() {
 
 void TcpClient::NotifyCommand(ICommand* cmd) {
 	m_pClientEventListener->OnReceived(this, cmd);
+}
+
+void TcpClient::NotifyPacket(IRecvPacket* packet) {
+	m_pClientEventListener->OnReceived(this, packet);
 }
 
 void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {

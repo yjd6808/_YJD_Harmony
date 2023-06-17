@@ -74,6 +74,10 @@ void TcpServer::SessionReceived(TcpSession* session, ICommand* command) {
 	m_pEventListener->OnReceived(session, command);
 }
 
+void TcpServer::SessionReceived(TcpSession* session, IRecvPacket* recvPacket) {
+	m_pEventListener->OnReceived(session, recvPacket);
+}
+
 void TcpServer::BroadcastAsync(ISendPacket* packet) {
 	if (m_eState != eListening) {
 		_NetLogError_("리스닝 상태가 아니므로 브로드캐스트를 수행할 수 없습니다.");

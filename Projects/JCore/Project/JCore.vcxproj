@@ -127,6 +127,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\JCore\Aligner.h" />
     <ClInclude Include="..\Sources\JCore\Allocator\DefaultAllocator.h" />
     <ClInclude Include="..\Sources\JCore\Allocator\DefaultArrayAllocator.h">
       <SubType>

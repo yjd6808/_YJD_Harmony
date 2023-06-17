@@ -24,6 +24,7 @@ using CmdCnt_t  = Int16U;
 using PktLen_t  = Int16U;
 
 // 커맨드 헤더
+using CmdType_t = Int8U;
 using Cmd_t		= Int16U;
 using CmdLen_t	= Int16U;
 
@@ -32,9 +33,20 @@ using CmdLen_t	= Int16U;
 NS_JNET_BEGIN
 
 inline constexpr int PacketHeaderSize_v = sizeof(CmdCnt_t) + sizeof(PktLen_t);
-inline constexpr int CommandHeaderSize_v = sizeof(Cmd_t) + sizeof(CmdLen_t);
+inline constexpr int CommandHeaderSize_v = sizeof(CmdType_t) + sizeof(Cmd_t) + sizeof(CmdLen_t);
 
 #pragma pack(push, CMD_ALIGNMENT)
+
+struct CmdType
+{
+	enum
+	{
+		Generic = 1,
+		Static,
+		Dynamic,
+		Max
+	};
+};
 
 struct ICommand
 {
@@ -45,6 +57,7 @@ struct ICommand
 	char* GetData() const { return (char*)this + sizeof(ICommand); }
 	int GetDataLen() const { return CmdLen - sizeof(ICommand); }
 	CmdLen_t GetCommandLen() const { return this->CmdLen; }
+	bool IsExtraCmdType() const { return Type > (int)CmdType::Dynamic; }
 
 	// 전체 캐스팅 - 상속받은 커스텀 커맨드 전용
 	template <typename T>
@@ -53,7 +66,7 @@ struct ICommand
 		return reinterpret_cast<T>(this);
 	}
 
-	// 뒷부분만 캐스팅 - Command<T> 전용
+	// 뒷부분만 캐스팅 - GenericCommand<T> 전용
 	template <typename T>
 	T CastValue() {
 		static_assert(JCore::IsPointerType_v<T>, "... T must be pointer type");
@@ -61,39 +74,71 @@ struct ICommand
 	}
 
 	
-
-	Cmd_t	 Cmd{};		// 사용자 지정 커맨드 ID값
-	CmdLen_t CmdLen{};	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
+	CmdType_t Type;
+	Cmd_t	 Cmd;		// 사용자 지정 커맨드 ID값
+	CmdLen_t CmdLen;	// 커맨드 길이 이때 CmdLen은 커맨드 헤더의 크기를 더한 값으로 설정하도록한다.
 	// ex) Commnad<char>의 CmdLen은 1이 아니고 5임
 };
 
 // 쓸일은 없겟지만 테스트용도
 template <typename T>
-struct Command : ICommand
+struct GenericCommand : ICommand
 {
-	Command() {
+	GenericCommand() {
+		Type = CmdType::Generic;
 		Cmd = 0;
-		CmdLen = sizeof(Command<T>);		// sizeof(T)로 할 경우 alignment 문제 때문에 커맨드길이는 T의 길이까지 포함해서 전송하도록 하자.
+		CmdLen = sizeof(GenericCommand<T>);		// sizeof(T)로 할 경우 alignment 문제 때문에 커맨드길이는 T의 길이까지 포함해서 전송하도록 하자.
 		Value = T();
 	}
-	Command(const Int16U cmd) {
+	GenericCommand(const Int16U cmd) {
+		Type = CmdType::Generic;
 		Cmd = cmd;
-		CmdLen = sizeof(Command<T>);
+		CmdLen = sizeof(GenericCommand<T>);
 		Value = T();
 	}
 
 	T Value;
 };
 
+struct Staticity { static constexpr bool IsStatic = true; };
+struct Dynamicity { static constexpr bool IsDynamic = true; };
+struct DynamicCommandBase { int Count{}; };
 
-struct StaticCommand : ICommand {};
-struct DynamicCommand : ICommand { int Count{}; };	// 0 초기화
+template <int CmdType>
+struct Command
+{
+	static constexpr bool IsValid = false;
+	static constexpr bool IsDynamic = false;
+	static constexpr bool IsStatic = false;
+};
+
+template <>
+struct Command<CmdType::Static> : ICommand
+{
+	static constexpr bool IsValid = true;
+	static constexpr bool IsDynamic = false;
+	static constexpr bool IsStatic = true;
+};
+
+template <>
+struct Command<CmdType::Dynamic> : ICommand, DynamicCommandBase
+{
+	static constexpr bool IsValid = true;
+	static constexpr bool IsDynamic = true;
+	static constexpr bool IsStatic = false;
+};
+
+
+
+
+using StaticCommand = Command<CmdType::Static>;
+using DynamicCommand = Command<CmdType::Dynamic>;
 
 	NS_DETAIL_BEGIN
 	template<typename T>
-	struct IsStaticCommand : JCore::IntegralConstant<bool, JCore::IsBaseOf_v<StaticCommand, T>> {};
+	struct IsStaticCommand : JCore::IntegralConstant<bool, JCore::IsBaseOf_v<Staticity, T>> {};
 	template<typename T>
-	struct IsDynamicCommand : JCore::IntegralConstant<bool, JCore::IsBaseOf_v<DynamicCommand, T>> {};
+	struct IsDynamicCommand : JCore::IntegralConstant<bool, JCore::IsBaseOf_v<Dynamicity, T>> {};
 	NS_DETAIL_END
 
 template <typename T>
@@ -138,9 +183,10 @@ inline static constexpr const char* CmdDirectionName[(1 << 4) - 1] = {
 					  아래 규칙에 맞게 커맨드를 생성토록 한다.
  =====================================================================================*/
 
-#define StaticCmdBegin(__struct__, __cmd__, __cmd_direction__)					\
+#define STATIC_CMD_BEGIN(__struct__, __cmd__, __cmd_direction__)				\
 struct __struct__ : JNetwork::StaticCommand {									\
 	__struct__(int count = 1) {													\
+		Type = JNetwork::CmdType::Static;										\
 		Cmd = __cmd__;															\
 		CmdLen = sizeof(__struct__);											\
 	}																			\
@@ -151,13 +197,14 @@ struct __struct__ : JNetwork::StaticCommand {									\
 	static constexpr int Direction() { return __cmd_direction__; }
 	
 
-#define StaticCmdEnd(__struct__) };
+#define STATIC_CMD_END(__struct__) };
 
 
 // @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
-#define DynamicCmdBegin(__struct__, __cmd__, __cmd_direction__, __countable_elem_type__)									\
+#define DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __cmd_direction__, __countable_elem_type__)									\
 struct __struct__ : JNetwork::DynamicCommand {																				\
 	__struct__(int count) {																									\
+		Type = JNetwork::CmdType::Dynamic;																					\
 		Cmd = __cmd__;																										\
 		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);										\
 		Count = count;																										\
@@ -167,4 +214,4 @@ struct __struct__ : JNetwork::DynamicCommand {																				\
 	static constexpr int Command() { return __cmd__; }																		\
 	static constexpr int Direction() { return __cmd_direction__; }
 
-#define DynamicCmdEnd(__struct__)	};
+#define DYNAMIC_CMD_END(__struct__)	};

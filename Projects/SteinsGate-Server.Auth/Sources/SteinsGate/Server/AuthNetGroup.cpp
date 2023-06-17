@@ -31,23 +31,9 @@ void AuthNetGroup::InitializeIOCP() {
 }
 
 void AuthNetGroup::InitializeServer() {
-	auto spServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool, &m_AuthServerEventListener, CoreServerProcessInfo_v->Auth.MaxSessionCount, RecvBufferSize_v, SendBufferSize_v);
+	auto spServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool, &m_AuthServerEventListener, CoreServerProcessInfoPackage_v->Auth.MaxSessionCount, RecvBufferSize_v, SendBufferSize_v);
 	AddHost(spServer);
 	m_pServer = spServer.Get<AuthServer*>();
-}
-
-void AuthNetGroup::InitializeCenterClient() {
-	auto spCenterClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, &m_AuthCenterClientEventLIstener, RecvBufferSize_v, SendBufferSize_v);
-	spCenterClient->Bind(CoreServerProcessInfo_v->Auth.BindCenterTcp);
-	AddHost(spCenterClient);
-	m_pCenterClient = spCenterClient.Get<TcpClient*>();
-}
-
-void AuthNetGroup::InitializeInterServerClient() {
-	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_InterServerEventListener, RecvBufferSize_v, SendBufferSize_v);
-	spInterServerClient->Bind(CoreServerProcessInfo_v->Auth.BindInterServerUdp);
-	AddHost(spInterServerClient);
-	m_pInterServerClient = spInterServerClient.Get<UdpClient*>();
 }
 
 void AuthNetGroup::OnLoop(PulserStatistics* pulserStat) {

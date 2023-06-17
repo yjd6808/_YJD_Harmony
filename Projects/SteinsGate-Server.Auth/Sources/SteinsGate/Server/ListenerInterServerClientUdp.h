@@ -10,10 +10,10 @@
 
 #include <SteinsGate/Common/ListenerCommonClient.h>
 
-class ListenerInterServerClient : public ListenerCommonClient
+class ListenerInterServerClientUdp : public ListenerCommonClient
 {
 public:
-	ListenerInterServerClient();
+	ListenerInterServerClientUdp();
 protected:
 	void OnReceived(SGSession* ssession, JNetwork::ICommand* cmd) override;
 };

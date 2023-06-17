@@ -13,7 +13,18 @@
 
 #include <SteinsGate/Common/Enum.h>
 
-SEnumBegin(CenterClientType)
+// 메인 서버가 하나만 존재하는 서버 타입 (게임서버는 여러개 존재할 수 있으므로)
+SEnumBegin(SingleServerType)
+Center,
+Begin = Center,
+Auth,
+Lobby,
+End = Lobby,
+Max
+SEnumEnd(SingleServerType)
+
+// Center 서버를 경유해 릴레이통신을 수행하는 서버들
+SEnumBegin(InterServerClientType)
 None,
 Auth,
 Begin = Auth,
@@ -21,8 +32,7 @@ Lobby,
 Game,
 End = Game,
 Max
-SEnumMiddle(CenterClientType)
-
+SEnumMiddle(InterServerClientType)
 static constexpr const char* Name[Max]{
 	"",
 	"인증",
@@ -30,7 +40,7 @@ static constexpr const char* Name[Max]{
 	"게임",
 };
 
-SEnumMiddleEnd(CenterClientType)
+SEnumMiddleEnd(InterServerClientType)
 
 SEnumBegin(CommonInputEvent)
 NoEvent,

@@ -11,11 +11,11 @@
 #include <SteinsGate/Common/CommonNetGroup.h>
 
 #include <SteinsGate/Server/ListenerAuthServer.h>
-#include <SteinsGate/Server/ListenerCenterClient.h>
-#include <SteinsGate/Server/ListenerInterServerClient.h>
+#include <SteinsGate/Server/ListenerInterServerClientTcp.h>
+#include <SteinsGate/Server/ListenerInterServerClientUdp.h>
 
 
-class ListenerCenterServer;
+class ListenerInterServerHostTcp;
 class AuthNetGroup final : public CommonNetGroup
 {
 public:
@@ -25,13 +25,9 @@ protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
 	void InitializeServer() override;
-	void InitializeCenterClient() override;
-	void InitializeInterServerClient() override;
 	void OnLoop(JCore::PulserStatistics* pulserStat) override;
 private:
 	ListenerAuthServer m_AuthServerEventListener;
-	ListenerCenterClient m_AuthCenterClientEventLIstener;
-	ListenerInterServerClient m_InterServerEventListener;
 };
 
 

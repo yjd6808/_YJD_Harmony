@@ -19,13 +19,42 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\SteinsGate\Common\CenterCmd.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_HOST.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerBatchHost.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmdDefine.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetGroup.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetMaster.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonServer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_RELAY.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerRecvHelper.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerSendHelper.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelper.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerInterServerCommonClient.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -39,10 +68,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonClient.h">
       <SubType>
       </SubType>
@@ -53,7 +78,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\R_CENTER_COMMON.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Server.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
@@ -66,7 +91,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\StatementType.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\S_CENTER_COMMON.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -82,14 +107,34 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\InterServerRecvHelper.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\InterServerSendHelper.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonClient.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonServer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerInterServerCommonClient.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerHelper.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnection.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQuery.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\R_CENTER_COMMON.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -101,7 +146,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\S_CENTER_COMMON.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.cpp">
       <SubType>
       </SubType>
     </ClCompile>

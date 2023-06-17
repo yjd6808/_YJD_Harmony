@@ -31,7 +31,10 @@ void ListenerCommonClient::OnDisconnected(SGSession* session) {
 }
 
 void ListenerCommonClient::OnSent(SGSession* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
+	int iMax = sentPacket->GetCommandCount();
+	int iPos = 0;
 
+	_LogInfo_("%d개 %s 커맨드 송신 (%d 바이트)", iMax, JNetwork::TransportProtocolName(session->Protocol()), sentBytes);
 }
 
 void ListenerCommonClient::OnReceived(SGSession* session, JNetwork::ICommand* cmd) {

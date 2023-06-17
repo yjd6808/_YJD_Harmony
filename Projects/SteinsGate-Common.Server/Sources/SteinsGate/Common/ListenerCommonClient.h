@@ -10,8 +10,11 @@
 
 #include <JNetwork/EventListener/ClientEventListener.h>
 #include <JNetwork/Packet/CommandParser.h>
+#include <SteinsGate/Common/ListenerHelper.h>
 
-class ListenerCommonClient : public JNetwork::ClientEventListener
+class ListenerCommonClient
+	: public JNetwork::ClientEventListener
+	, public ListenerHelper
 {
 protected:
 	void OnConnected(JNetwork::Session* session) override;

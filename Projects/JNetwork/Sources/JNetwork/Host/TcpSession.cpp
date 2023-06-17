@@ -96,6 +96,9 @@ void TcpSession::NotifyCommand(ICommand* cmd) {
 	m_pServer->SessionReceived(this, cmd);
 }
 
+void TcpSession::NotifyPacket(IRecvPacket* recvPacket) {
+	m_pServer->SessionReceived(this, recvPacket);
+}
 
 void TcpSession::Connected() {
 	m_eState = State::eAccepted;

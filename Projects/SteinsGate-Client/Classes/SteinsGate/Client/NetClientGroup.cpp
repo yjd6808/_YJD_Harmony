@@ -82,7 +82,7 @@ void NetClientGroup::Initialize() {
 	S_AUTH::SetInformation(AuthTcp, eSendAsync);
 	S_LOBBY::SetInformation(LobbyTcp, eSendAsync);
 	S_GAME::SetInformation(GameTcp, eSendAsync);
-	S_GAME_UDP::SetInformation(GameUdp, eSendToAsync, CoreServerProcessInfo_v->Center.RemoteCenter);
+	S_GAME_UDP::SetInformation(GameUdp, eSendToAsync);
 	S_CHAT::SetInformation(ChatTcp, eSendAsync);
 	S_AREA::SetInformation(AreaTcp, eSendAsync);
 

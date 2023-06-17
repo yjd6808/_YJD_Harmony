@@ -10,8 +10,11 @@
 
 #include <JNetwork/Packet/CommandParser.h>
 #include <JNetwork/EventListener/ServerEventListener.h>
+#include <SteinsGate/Common/ListenerHelper.h>
 
-class ListenerCommonServer : public JNetwork::ServerEventListener
+class ListenerCommonServer
+	: public JNetwork::ServerEventListener
+	, public ListenerHelper
 {
 protected:
 	void OnStarted() override;

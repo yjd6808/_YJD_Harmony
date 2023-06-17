@@ -20,7 +20,7 @@ class AuthNetMaster final
 	~AuthNetMaster() override;
 public:
 	void Initialize() override;
-	CenterClientType_t GetClientType() override { return CenterClientType::Auth; }
+	InterServerClientType_t GetClientType() override { return InterServerClientType::Auth; }
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Auth; }
 protected:
 	void OnLoop(JCore::PulserStatistics* pulserStat) override;

@@ -9,7 +9,9 @@
 #include "ServerCoreHeader.h"
 #include "CommonNetMaster.h"
 
-#include "CommonNetGroup.h"
+#include <SteinsGate/Common/CommonNetGroup.h>
+#include <SteinsGate/Common/InterServerClientNetGroup.h>
+#include <SteinsGate/Common/InterServerSendHelper.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -19,9 +21,12 @@ CommonNetMaster::CommonNetMaster()
 	, m_bRunning(true)
 {}
 
+void CommonNetMaster::Initialize() {
+
+}
+
 
 void CommonNetMaster::ProcessMainLoop() {
-
 	PulserStatistics pulseStat;
 	Pulser pulser(m_iPulseInterval, &pulseStat);
 
@@ -37,7 +42,11 @@ void CommonNetMaster::ProcessMainLoop() {
 }
 
 void CommonNetMaster::ProcessSubLoop(PulserStatistics* pulseStat) {
-	CoreCommonNetGroup_v->ProcessLoop(pulseStat);
+	if (CoreCommonNetGroup_v)
+		CoreCommonNetGroup_v->ProcessLoop(pulseStat);
+
+	if (CoreInterServerClientNetGroup_v)
+		CoreInterServerClientNetGroup_v->ProcessLoop(pulseStat);
 }
 
 void CommonNetMaster::ProcessInputEvent() {

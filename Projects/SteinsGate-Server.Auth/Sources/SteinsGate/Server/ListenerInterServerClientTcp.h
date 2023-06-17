@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include <SteinsGate/Common/ListenerCommonClient.h>
+#include <SteinsGate/Common/ListenerInterServerCommonClient.h>
 
-class ListenerCenterClient : public ListenerCommonClient
+class ListenerInterServerClientTcp : public ListenerInterServerCommonClient
 {
 public:
-	ListenerCenterClient();
+	ListenerInterServerClientTcp();
 protected:
 	void OnConnected(SGSession* session) override;
 	void OnDisconnected(SGSession* session) override;

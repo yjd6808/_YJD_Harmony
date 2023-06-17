@@ -40,13 +40,13 @@ NS_JNET_BEGIN
 
 
 		 <---------------------- Session Buffer ----------------------------------->
-		 <--- Packet<Command<A>, Command<B>> ----><---  Packet<Command<C>> --->
+		 <--- Packet<GenericCommand<A>, GenericCommand<B>> ----><---  Packet<GenericCommand<C>> --->
 		 ===========================================================================
-		ISendPacket  |  Command<A>  |  Command<B> | ISendPacket | Command<C>  |
+		ISendPacket  |  GenericCommand<A>  |  GenericCommand<B> | ISendPacket | GenericCommand<C>  |
 		 ===========================================================================
 		 PACKET_HEADER_SIZE      GetPacketLength()
 				↓                        ↓
-				4      sizeof(Command<A>) + sizeof(Command<B>)
+				4      sizeof(GenericCommand<A>) + sizeof(GenericCommand<B>)
 
   =====================================================================================*/
 
@@ -64,10 +64,23 @@ struct ISendPacket : JCore::SafeRefCount
 
 	~ISendPacket() override = default;
 
-	PktLen_t	GetPacketLength() const { return m_iPacketLen; }
+	PktLen_t 	GetPacketLength() const { return m_iPacketLen; }
 	CmdCnt_t	GetCommandCount() const { return m_iCommandCount; }
 	void ReleaseAction() override { delete this; }
 	virtual WSABUF GetWSABuf() const = 0;
+	virtual char* GetCommandSource() const = 0;		// 커맨드 시작위치 반환
+
+	void ForEach(const JCore::Action<ICommand*>& consumer) {
+		int iCmdIndex = 0;
+		char* pCmdData = GetCommandSource();
+
+		while (iCmdIndex < m_iCommandCount) {
+			ICommand* pCurCmd = reinterpret_cast<ICommand*>(pCmdData);
+			consumer(pCurCmd);
+			pCmdData += pCurCmd->CmdLen;
+			iCmdIndex += 1;
+		}
+	}
 protected:
 	CmdCnt_t m_iCommandCount{};
 	PktLen_t m_iPacketLen{};		// IPacket 크기를 제외한 커맨드들의 총 크기
@@ -94,7 +107,7 @@ public:
 	StaticPacket() : ISendPacket(CommandCount, PacketLen) {
 
 		// m_pBuf에 각 커맨드의 시작주소 마다 디폴트 초기화를 수행해준다.
-		// 예를들어서 Packet<Commant<A>, Command<B>> 패킷을 생성했다면
+		// 예를들어서 Packet<Commant<A>, GenericCommand<B>> 패킷을 생성했다면
 		// 
 		// m_pBuf + 0		  에다가 A를 디폴트 초기화하고
 		// m_pBuf + sizeof(A) 에다가 B를 디폴트 초기화하도록 한다.
@@ -108,11 +121,11 @@ public:
 	WSABUF GetWSABuf() const override {
 		/*
 
-		<---------------    StaticPacket<Command<A>, Command<B>> ----------------------->
+		<---------------    StaticPacket<GenericCommand<A>, GenericCommand<B>> ----------------------->
 		<------------------ ISendPacket ---------------- >
 		<-- RefCount--> <-------- IRecvPacket ----------->
 		===========================================================================
-		 vfptr | m_Ref | m_iCommandCount | m_iPacketLen | Command<A> | Command<B> |
+		 vfptr | m_Ref | m_iCommandCount | m_iPacketLen | GenericCommand<A> | GenericCommand<B> |
 		|      |       |                 m_pBuf                                   |
 		===========================================================================
 		↑              ↑ <----------------- 전송해줘야하는 구간 ---------------------->
@@ -129,7 +142,7 @@ public:
 		return wsaBuf;
 	}
 
-	
+	char* GetCommandSource() const override { return const_cast<char*>(m_pBuf) + PacketHeaderSize_v; }
 private:
 	template <int Index, typename Cmd, typename... CmdArgs>
 	constexpr void PlacementDefaultAllocateRecursive() {
@@ -213,7 +226,7 @@ public:
 		return wsaBuf;
 	}
 
-
+	char* GetCommandSource() const override { return const_cast<char*>(m_pDynamicBuf) + PacketHeaderSize_v; }
 
 	template <int Index>
 	TypeAt<Index>* Get() {
@@ -287,7 +300,7 @@ public:
 	WSABUF GetWSABuf() const override {
 		return { (ULONG)m_Buffer->GetWritePos(), m_Buffer->Source() };
 	}
-
+	char* GetCommandSource() const override { return m_Buffer->Source() + PacketHeaderSize_v; }
 private:
 	CommandBufferPtr m_Buffer;
 };
@@ -331,6 +344,8 @@ public:
 		wsaBuf.buf = m_pDynamicBuf;
 		return wsaBuf;
 	}
+
+	char* GetCommandSource() const override { return const_cast<char*>(m_pDynamicBuf) + PacketHeaderSize_v; }
 
 	// @참고: https://stackoverflow.com/questions/2669888/initialization-order-of-class-data-members
 	// 클래스 필드는 배열한 순서대로 초기화가 이뤄진다.

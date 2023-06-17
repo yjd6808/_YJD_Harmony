@@ -15,10 +15,14 @@ class WorkerGroup final
 {
 public:
 	WorkerGroup(int threadCount)
-		: m_vWorkers(threadCount, nullptr)
-		, m_vHandles(threadCount, nullptr)
+		: m_vWorkers(threadCount)
+		, m_vHandles(threadCount)
 	{}
-
+	~WorkerGroup() noexcept {
+		for (int i = 0; i < m_vWorkers.Size(); i++) {
+			delete m_vWorkers[i];
+		}
+	}
 
 	template <typename TWorker, typename... Args>
 	static WorkerGroup* Create(int threadCount, Args&&... args) {
@@ -35,38 +39,39 @@ public:
 
 			String workerName = StringUtil::Format("%s 워커(%d)", typeid(TWorker).name(), i);
 
-			pManager->m_vWorkers[i] = MakeShared<TWorker>(Forward<Args>(args)...);
-			pManager->m_vHandles[i] = MakeShared<AutoResetEvent>(false, workerName.Source());
+			pManager->m_vWorkers.PushBack(dbg_new TWorker(Forward<Args>(args)...));
+			pManager->m_vHandles.EmplaceBack(false, workerName.Source());
 		}
 
 		return pManager;
 	}
 
 	void Run(void* param = nullptr) {
-		m_vWorkers.Extension().ForEach([param](WorkerPtr& worker) { 
+		m_vWorkers.Extension().ForEach([param](Worker* worker) { 
 			worker->Run(param);
 		});
 	}
 
 	void Join() const {
 		for (int i = 0; i < m_vWorkers.Size(); i++) {
-			m_vWorkers[i]->JoinWait(m_vHandles[i].GetPtr());
+			m_vWorkers[i]->JoinWait(&m_vHandles[i]);
 		}
 
-		Int32U uiResult;
-		if (JCore::WaitHandle::WaitAll(m_vHandles[0].GetPtr(), m_vHandles.Size(), &uiResult) == false) {
-			_NetLogError_("워커그룹 Join시도중 오류 발생");
+		Int32UL uiResult;
+		if (JCore::WaitHandle::WaitAll(m_vHandles, &uiResult) == false) {
+			_NetLogError_("워커그룹 Join시도중 오류 발생 (%ul)", uiResult);
 		}
 
 		for (int i = 0; i < m_vWorkers.Size(); i++) {
-			m_vHandles[i]->Reset();
+			m_vHandles[i].Reset();
 			m_vWorkers[i]->Join();
 		}
 	}
 
+
 private:
-	JCore::Vector<WorkerPtr> m_vWorkers;
-	JCore::Vector<JCore::WaitHandlePtr> m_vHandles;
+	JCore::Vector<Worker*> m_vWorkers;
+	JCore::Vector<JCore::AutoResetEvent> m_vHandles;
 	
 	friend class IOCP;
 };

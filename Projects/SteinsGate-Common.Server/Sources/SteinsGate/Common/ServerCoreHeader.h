@@ -16,3 +16,4 @@
 #include <SteinsGate/Common/CommonNetMaster.h>
 #include <SteinsGate/Common/CommonNetGroup.h>
 #include <SteinsGate/Common/CommonServer.h>
+#include <SteinsGate/Common/InterServerClientNetGroup.h>

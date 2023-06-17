@@ -29,7 +29,7 @@ SGTcpSession* AuthServer::CreateSession() {
 }
 
 ServerInfo AuthServer::GetServerInfo() {
-	return { CoreServerProcessInfo_v->Auth.BindAuthTcp, CoreServerProcessInfo_v->Auth.MaxSessionCount };
+	return { CoreServerProcessInfoPackage_v->Auth.BindAuthTcp, CoreServerProcessInfoPackage_v->Auth.MaxSessionCount };
 }
 
 void AuthServer::OnLoop(PulserStatistics* pulserStat) {

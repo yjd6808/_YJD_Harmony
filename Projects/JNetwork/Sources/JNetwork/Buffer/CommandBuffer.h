@@ -47,6 +47,16 @@ public:
 		return *cmd;
 	}
 
+	void Alloc(ICommand* cmd) {
+		const int CmdSize = cmd->CmdLen;
+		if (MoveWritePos(cmd->CmdLen) == false) {
+			DebugAssertMsg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
+		}
+
+		AddCommandCount();
+		AddPacketLength(CmdSize);
+	}
+
 	static JCore::SharedPtr<CommandBuffer> Create(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize = 6000);
 
 	void Initialize();

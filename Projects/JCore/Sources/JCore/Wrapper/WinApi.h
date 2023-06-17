@@ -93,8 +93,8 @@ struct WinApi {
      * \param alertable If this parameter is TRUE and the thread is in the waiting state, the function returns when the system queues an I/O completion routine or APC, and the thread runs the routine or function. Otherwise, the function does not return and the completion routine or APC function is not executed.
      * \return If the function succeeds, the return value indicates the event that caused the function to return. It can be one of the following values. (Note that WAIT_OBJECT_0 is defined as 0 and WAIT_ABANDONED_0 is defined as 0x00000080L.)
      */
-    static Int32U          JCORE_STDCALL WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout = JCORE_INFINITE, JCORE_IN bool alertable = false);
-    static Int32U          JCORE_STDCALL GetLastError();
+    static Int32UL          JCORE_STDCALL WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout = JCORE_INFINITE, JCORE_IN bool alertable = false);
+    static Int32UL          JCORE_STDCALL GetLastError();
 
 
     /** https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent#return-value

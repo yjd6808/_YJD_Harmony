@@ -38,8 +38,8 @@ public:
     static bool WaitAll(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U* result = nullptr);
     static WaitHandle* WaitAny(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U* result = nullptr);
 
-    template <typename TAllocator>
-	static bool WaitAll(Collection<WaitHandle, TAllocator>& handles) {
+    template <typename TCollection>
+	static bool WaitAll(const TCollection& handles, JCORE_OUT_OPT Int32UL* result = nullptr) {
 	    DebugAssert(handles.Size() <= MAXIMUM_WAIT_OBJECTS && handles.Size() > 0);
 	    WinHandle waitHandles[MAXIMUM_WAIT_OBJECTS];
 
@@ -48,8 +48,12 @@ public:
 	    while (it->HasNext()) {
 	        waitHandles[idx++] = it->Next().m_hHandle;
 	    }
+        const Int32UL uiResult = WinApi::WaitForMultipleObjectsEx(handles.Size(), waitHandles, true);
 
-	    return WinApi::WaitForMultipleObjectsEx(handles.Size(), waitHandles, true) == WAIT_OBJECT_0;
+        if (result)
+            *result = uiResult;
+
+	    return uiResult == WAIT_OBJECT_0;
 	}
 
 	template <typename TAllocator>

@@ -8,14 +8,15 @@
 
 #pragma once
 
-#include <JNetwork/Packet/SendHelper.h>
+#include <SteinsGate/Common/InterServerSendHelper.h>
 #include <SteinsGate/Common/ServerEnum.h>
+#include <JNetwork/Packet/SendHelper.h>
 
 
-struct S_CENTER_COMMON : JNetwork::SendHelper<S_CENTER_COMMON>
+struct S_INTERSERVER_COMMON : InterServerSendHelper<S_INTERSERVER_COMMON>
 {
 public:
-	static bool SendItsMe(CenterClientType_t clientType);
+	static bool SendItsMe(InterServerClientType_t clientType, int serverId);
 	static bool SendCenterMessage(const JCore::String& msg);
 	static bool SendNotifyBootState(ServerBootState_t state);
 };

@@ -21,7 +21,7 @@ private:
 	~CenterNetMaster() override;
 public:
 	void Initialize() override;
-	CenterClientType_t GetClientType() override { return CenterClientType::None; }
+	InterServerClientType_t GetClientType() override { return InterServerClientType::None; }
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Center; }
 protected:
 	void OnLoop(JCore::PulserStatistics* pulserStat) override;

@@ -9,10 +9,10 @@
 #pragma once
 
 #include <JNetwork/Host/Session.h>
-#include <JNetwork/Packet/SendHelper.h>
 #include <SteinsGate/Common/ServerEnum.h>
+#include <SteinsGate/Common/InterServerSendHelper.h>
 
-struct S_CENTER : JNetwork::SendHelper<S_CENTER>
+struct S_CENTER : InterServerSendHelper<S_CENTER>
 {
 public:
 	static bool SendWhoAreYou();

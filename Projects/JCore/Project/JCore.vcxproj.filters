@@ -485,6 +485,7 @@
       <Filter>Threading</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Digit.h" />
+    <ClInclude Include="..\Sources\JCore\Aligner.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

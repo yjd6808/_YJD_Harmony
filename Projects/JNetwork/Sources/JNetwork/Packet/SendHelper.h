@@ -55,9 +55,9 @@ struct SendHelper
 		IPv4EndPoint Destination;
 	};
 
-	struct AuthFlush
+	struct AutoFlush
 	{
-		~AuthFlush() { FlushSendBuffer(); }
+		~AutoFlush() { FlushSendBuffer(); }
 	};
 
 

@@ -15,6 +15,10 @@ class AuthTokenManagerSchedule : public JCore::SchedulerTaskRunnableRepeat
 public:
 	void OnFirstScheduled(SchedulerTask* task) override;
 	void OnScheduled(SchedulerTask* task) override;
+
+	void Initialize();
+	void Finalize();
+
 	JCore::TimeSpan Interval() override { return JCore::TimeSpan::FromMiliSeocnd(994); }
 };
 

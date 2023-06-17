@@ -10,6 +10,7 @@
 #include "CenterNetMaster.h"
 
 #include <SteinsGate/Server/CenterNetGroup.h>
+#include <SteinsGate/Server/CenterInterServerClientNetGroup.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -20,9 +21,16 @@ CenterNetMaster::~CenterNetMaster() {
 }
 
 void CenterNetMaster::Initialize() {
+	CommonNetMaster::Initialize();
+
 	const auto spCenterNetGroup = MakeShared<CenterNetGroup>();
-	AddNetGroup(1, spCenterNetGroup);
+	const auto spInterServerNetGroup = MakeShared<CenterInterServerClientNetGroup>();
+
+	AddNetGroup(NETGROUP_ID_MAIN, spCenterNetGroup);
+	AddNetGroup(NETGROUP_ID_INTERSERVER, spInterServerNetGroup);
+
 	spCenterNetGroup->Initialize();
+	spInterServerNetGroup->Initialize();
 }
 
 void CenterNetMaster::OnLoop(PulserStatistics* pulserStat) {

@@ -21,6 +21,7 @@ NS_JNET_BEGIN
 
 struct ICommand;
 struct ISendPacket;
+struct IRecvPacket;
 class TcpServer;
 class Session;
 class Server;
@@ -36,6 +37,7 @@ public:
 	virtual void OnDisconnected(Session* session) {}
 	virtual void OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {}
 	virtual void OnReceived(Session* session, ICommand* cmd) {}
+	virtual void OnReceived(Session* session, IRecvPacket* packet) {}
 };
 
 NS_JNET_END

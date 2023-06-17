@@ -29,8 +29,10 @@ public:
 	void ConnectFailed(Int32U errorCode) override;
 	void Disconnected() override;
 	void NotifyCommand(ICommand* cmd) override;
+	void NotifyPacket(IRecvPacket* packet) override;
 	void Sent(ISendPacket* sentPacket, Int32UL sentBytes) override;
 	Type GetType() const override { return eClient; }
+	DetailType GetDetailType() const override { return eTcpClient; }
 	const char* TypeName() override { return "TCP 클라"; }
 protected:
 	ClientEventListener* m_pClientEventListener;

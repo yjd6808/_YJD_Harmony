@@ -80,6 +80,10 @@ void UdpClient::NotifyCommand(ICommand* cmd) {
 	m_pClientEventListener->OnReceived(this, cmd);
 }
 
+void UdpClient::NotifyPacket(IRecvPacket* packet) {
+	m_pClientEventListener->OnReceived(this, packet);
+}
+
 void UdpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
 	m_pClientEventListener->OnSent(this, sentPacket, sentBytes);
 }

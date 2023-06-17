@@ -9,9 +9,10 @@
 #pragma once
 
 #include <JNetwork/Host/Session.h>
-#include <SteinsGate/Common/CenterCmd.h>
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/InterServerRecvHelper.h>
 
-struct R_CENTER
+struct R_CENTER : InterServerRecvHelper
 {
 public:
 	static void RecvItsMe(JNetwork::Session* session, JNetwork::ICommand* cmd);

@@ -33,6 +33,14 @@ public:
 		eSession
 	};
 
+	enum DetailType
+	{
+		eTcpListener,
+		eTcpSession,
+		eTcpClient,
+		eUdpClient
+	};
+
 	enum State
 	{
 		eNone			= 0,
@@ -48,12 +56,16 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual Type GetType() const = 0;
+	virtual DetailType GetDetailType() const = 0;
 	virtual const char* TypeName() = 0;
 	State GetState() { return (State)m_eState.Load(); }
 	bool CreateSocket(TransportProtocol protocol, bool nonBlocking = true);
 	bool ConnectIocp();
 	const Socketv4& Socket() const { return m_Socket; }
 	SOCKET SocketHandle() const { return m_Socket.Handle; }
+	bool IsTCP() const { return m_Socket.Protocol == TransportProtocol::TCP; }
+	bool IsUDP() const { return m_Socket.Protocol == TransportProtocol::UDP; }
+	TransportProtocol Protocol() const { return m_Socket.Protocol; }
 protected:
 	IOCPPtr m_spIocp;
 	Socketv4 m_Socket;

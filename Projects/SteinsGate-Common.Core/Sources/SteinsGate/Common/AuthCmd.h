@@ -23,7 +23,7 @@
 
 #pragma pack(push, CMD_ALIGNMENT)
 
-StaticCmdBegin
+STATIC_CMD_BEGIN
 	( CmdLogin
 	, 100
 	, eClientToServer
@@ -32,10 +32,10 @@ StaticCmdBegin
 SGStaticString<AccountIdLen_v> Id;
 SGStaticString<AccountPassLen_v> Pass;
 // ===========================================
-StaticCmdEnd(CmdLogin)
+STATIC_CMD_END(CmdLogin)
 
 
-StaticCmdBegin
+STATIC_CMD_BEGIN
 	( CmdLoginAck
 	, 101
 	, eServerToClient
@@ -43,7 +43,7 @@ StaticCmdBegin
 // ===========================================
 LoginResult_t Result;
 // ===========================================
-StaticCmdEnd(CmdLoginAck)
+STATIC_CMD_END(CmdLoginAck)
 
 
 #pragma pack(pop)

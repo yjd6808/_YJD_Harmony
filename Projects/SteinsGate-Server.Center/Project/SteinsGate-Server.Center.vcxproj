@@ -27,6 +27,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterInterServerClientNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetGroup.cpp">
       <SubType>
       </SubType>
@@ -47,8 +48,8 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterServer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerHostTcp.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\R_CENTER.cpp">
@@ -65,6 +66,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterInterServerClientNetGroup.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetGroup.h">
       <SubType>
       </SubType>
@@ -87,8 +89,8 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterServer.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerHostTcp.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\R_CENTER.h">
       <SubType>
       </SubType>

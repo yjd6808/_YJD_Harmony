@@ -10,7 +10,7 @@
 #include "CenterCoreHeader.h"
 #include "S_CENTER.h"
 
-#include <SteinsGate/Common/CenterCmd.h>
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
 
 USING_NS_JC;
 USING_NS_JNET;

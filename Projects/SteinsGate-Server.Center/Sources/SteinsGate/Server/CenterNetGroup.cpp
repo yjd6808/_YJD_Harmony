@@ -28,20 +28,9 @@ void CenterNetGroup::InitializeIOCP() {
 }
 
 void CenterNetGroup::InitializeServer() {
-	auto spServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool, &m_CenterServerEventListener, CoreServerProcessInfo_v->Center.MaxSessionCount, RecvBufferSize_v, SendBufferSize_v);
+	auto spServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool, &m_CenterServerEventListener, CoreServerProcessInfoPackage_v->Center.MaxSessionCount, RecvBufferSize_v, SendBufferSize_v);
 	AddHost(spServer);
 	m_pServer = spServer.Get<CenterServer*>();
-}
-
-void CenterNetGroup::InitializeCenterClient() {
-	// 중앙서버는 필요없음
-}
-
-void CenterNetGroup::InitializeInterServerClient() {
-	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_InterServerEventListener, RecvBufferSize_v, SendBufferSize_v);
-	spInterServerClient->Bind(CoreServerProcessInfo_v->Center.BindInterServerUdp);
-	AddHost(spInterServerClient);
-	m_pInterServerClient = spInterServerClient.Get<UdpClient*>();
 }
 
 void CenterNetGroup::OnLoop(PulserStatistics* pulserStat) {

@@ -54,7 +54,6 @@ bool WaitHandle::Reset() {
     return WinApi::ResetEvent(m_hHandle);
 }
 
-
 void WaitHandle::operator=(WaitHandle&& other) noexcept {
     m_hHandle = other.m_hHandle;
     other.m_hHandle = nullptr;
@@ -75,7 +74,7 @@ bool WaitHandle::WaitAll(WaitHandle* handles, Int32U count, JCORE_OUT_OPT Int32U
         waitHandles[i] = handles[i].m_hHandle;
     }
 
-    const Int32U uiResult = WinApi::WaitForMultipleObjectsEx(count, waitHandles, true) == WAIT_OBJECT_0;
+    const Int32UL uiResult = WinApi::WaitForMultipleObjectsEx(count, waitHandles, true);
 
     if (result)
         *result = uiResult;

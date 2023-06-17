@@ -15,19 +15,23 @@ class InputThread;
 class CommonNetMaster;
 class CommonNetGroup;
 class CommonServer;
+struct ServerProcessInfo;
+class InterServerClientNetGroup;
 
-namespace JNetwork
-{
-	class TcpClient;
-	class UdpClient;
-}
+NS_JNET_BEGIN
+class TcpClient;
+class UdpClient;
+NS_JNET_END
 
 extern InputThread* CoreInputThread_v;
 extern CommonNetMaster* CoreCommonNetMaster_v;
 extern CommonNetGroup* CoreCommonNetGroup_v;
 extern CommonServer* CoreCommonServer_v;
-extern JNetwork::TcpClient* CoreCenterClient_v;
-extern JNetwork::UdpClient* CoreInterServerClient_v;
+extern ServerProcessInfo* CoreServerProcessInfo_v;
+
+extern InterServerClientNetGroup* CoreInterServerClientNetGroup_v;
+extern JNetwork::TcpClient* CoreInterServerClientTcp_v;
+extern JNetwork::UdpClient* CoreInterServerClientUdp_v;
 
 void InitializeServerCore();
 void FinalizeServerCore();

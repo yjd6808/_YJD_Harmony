@@ -32,12 +32,30 @@ SGTcpSession* CenterServer::CreateSession() {
 }
 
 ServerInfo CenterServer::GetServerInfo() {
-	return { CoreServerProcessInfo_v->Auth.BindAuthTcp, CoreServerProcessInfo_v->Auth.MaxSessionCount };
+	return { CoreServerProcessInfoPackage_v->Auth.BindAuthTcp, CoreServerProcessInfoPackage_v->Auth.MaxSessionCount };
+}
+
+void CenterServer::AddSession(CenterSession* session) {
+	DebugAssert(session->IsValid());
+	const Int8 id = session->GetServerId();
+
+	m_pSession[id].Session = session;
+	m_pSession[id].Type = session->GetClientType();
+}
+
+void CenterServer::RemoveSession(CenterSession* session) {
+	const Int8 id = session->GetServerId();
+
+	m_pSession[id].Session = nullptr;
+	m_pSession[id].Type = InterServerClientType::None;
 }
 
 bool CenterServer::IsAllCenterSessionConnected() {
-	for (int i = CenterClientType::Begin; i <= CenterClientType::End; ++i) {
-		if (m_pSession[i] == nullptr) {
+	const Vector<int>& vActiveServerIdList = CoreServerProcessInfoPackage_v->ActiveServerIdList;
+	const int iServerCount = vActiveServerIdList.Size();
+
+	for (int i = 0; i < iServerCount; ++i) {
+		if (m_pSession[vActiveServerIdList[i]].Session == nullptr) {
 			return false;
 		}
 	}
@@ -45,10 +63,17 @@ bool CenterServer::IsAllCenterSessionConnected() {
 }
 
 bool CenterServer::IsConnected(CenterSession* session) {
-	for (int i = CenterClientType::Begin; i <= CenterClientType::End; ++i) {
-		if (m_pSession[i] == session) {
+	for (int i = 0; i < MaxServerId_v; ++i) {
+		if (m_pSession[i].Session == session) {
 			return true;
 		}
+	}
+	return false;
+}
+
+bool CenterServer::IsConnected(int serverId) {
+	if (m_pSession[serverId].Session != nullptr) {
+		return true;
 	}
 	return false;
 }

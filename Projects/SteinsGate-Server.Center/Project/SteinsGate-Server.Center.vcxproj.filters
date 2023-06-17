@@ -9,10 +9,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetMaster.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterSession.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterServer.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerHostTcp.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\S_CENTER.cpp">
@@ -21,6 +21,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\R_CENTER.cpp">
       <Filter>Recv</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterInterServerClientNetGroup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterCoreHeader.h" />
@@ -31,10 +32,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetMaster.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetGroup.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterSession.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterServer.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerHostTcp.h">
       <Filter>Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClient.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h">
       <Filter>Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\S_CENTER.h">
@@ -43,6 +44,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\R_CENTER.h">
       <Filter>Recv</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterInterServerClientNetGroup.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Listener">

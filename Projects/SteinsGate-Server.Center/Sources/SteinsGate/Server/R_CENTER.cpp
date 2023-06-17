@@ -2,7 +2,7 @@
  * 작성자: 윤정도
  * 생성일: 4/18/2023 2:20:54 PM
  * =====================
- *
+ * 중앙 서버가 다른 서버로부터 수신한 커맨드 처리
  */
 
 
@@ -11,18 +11,18 @@
 #include "CenterCoreHeader.h"
 #include "R_CENTER.h"
 
-#include <SteinsGate/Common/CenterCmd.h>
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
 #include <SteinsGate/Server/S_CENTER.h>
 
 USING_NS_JC;
 USING_NS_JNET;
 
 void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
-	S_CENTER::SetInformation(session, eSendAsync);
-	CmdItsMe* pItsMe = (CmdItsMe*)cmd;
+	S_CENTER::SetInformation(session, eSendAsync, LastFromId);
+	CmdItsMe* pCmd = (CmdItsMe*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
 
-	if (pItsMe->ClientType < CenterClientType::Begin || pItsMe->ClientType > CenterClientType::End) {
+	if (pCmd->ClientType < InterServerClientType::Begin || pCmd->ClientType > InterServerClientType::End) {
 		_LogWarn_("누군지 알 수 없는 세션이 접속을 시도하였습니다.");
 		pSession->Disconnect();
 		return;
@@ -33,14 +33,14 @@ void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
 		return;
 	}
 
-	if (CoreServer_v->GetCenterSession(pItsMe->ClientType) != nullptr) {
-		_LogWarn_("%s서버는 이미 접속중입니다.", CenterClientType::Name[pItsMe->ClientType]);
+	if (CoreServer_v->GetCenterSession(pCmd->ClientType) != nullptr) {
+		_LogWarn_("%s서버는 이미 접속중입니다.", InterServerClientType::Name[pCmd->ClientType]);
 		S_CENTER::SendAlreadyConnected();
 		return;
 	}
 
-	pSession->SetClientType(pItsMe->ClientType);
-	CoreServer_v->SetCenterSession(pItsMe->ClientType, pSession);
+	pSession->SetClientInformation(pCmd->ClientType, pCmd->ServerId);
+	CoreServer_v->AddSession(pSession);
 	S_CENTER::SendYouNeedToDoThis(CenterOrder::LaunchServer);
 
 	/*if (CoreServer_v->IsAllCenterSessionConnected()) {
@@ -51,7 +51,7 @@ void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
 
 
 void R_CENTER::RecvCenterMessage(Session* session, ICommand* cmd) {
-	CmdCenterMessage* pCmd = (CmdCenterMessage*)cmd;
+	CmdInterServerMessage* pCmd = (CmdInterServerMessage*)cmd;
 	_LogInfo_(pCmd->Msg.Source);
 }
 

@@ -51,7 +51,7 @@ public:
 	ItemOptInfo* getItemOptInfo(const SGString& itemOptEngName);
 	ChannelInfo* getChannelInfo(int channelCode);
 	EnchantInfo* getEnchantInfo(int enchantCode);
-	ServerProcessInfo* getServerProcessInfo(int serverCode);
+	ServerProcessInfoPackage* getServerProcessInfoPackage(int serverCode);
 	DatabaseInfo* getDatabaseInfo(int databaseCode);
 	CharCommonInfo* getCharCommonInfo(int charCommonCode);
 protected:

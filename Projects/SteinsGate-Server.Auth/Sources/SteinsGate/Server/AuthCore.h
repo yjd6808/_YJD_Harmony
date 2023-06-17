@@ -23,7 +23,6 @@ extern MysqlDatabase* CoreGameDB_v;;
 extern AuthNetMaster* CoreNetMaster_v;
 extern AuthNetGroup* CoreNetGroup_v;
 extern AuthServer* CoreServer_v;
-extern SGTcpClient* CoreCenterClient_v;
 extern AuthTokenManager* CoreTokenManager_v;
 
 void InitializeAuthCore();

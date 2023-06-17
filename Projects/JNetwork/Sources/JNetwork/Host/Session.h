@@ -43,6 +43,7 @@ public:
 	bool RecvAsync();
 	bool RecvFromAsync();
 
+	void SendAlloc(ICommand* cmd);
 	template <typename TCommand>
 	TCommand& SendAlloc(int count = 1) {
 		LOCK_GUARD(m_SendBufferLock);
@@ -64,6 +65,7 @@ public:
 	virtual void Received(Int32UL receivedBytes);						
 	virtual void Sent(ISendPacket* sentPacket, Int32UL receivedBytes) = 0;
 	virtual void NotifyCommand(ICommand* cmd) = 0;
+	virtual void NotifyPacket(IRecvPacket* packet) = 0;
 
 	int	 AddPendingCount()		{ return ++m_iOveralappedPendingCount;	}
 	int  DecreasePendingCount()	{ return --m_iOveralappedPendingCount;	}

@@ -8,6 +8,7 @@
 #include "Auth.h"
 #include "AuthCore.h"
 #include "AuthCoreHeader.h"
+#include "SteinsGate/Common/InterServerClientNetGroup.h"
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -22,22 +23,24 @@ AuthTokenManager* CoreTokenManager_v;
 void InitializeAuthCore() {
 	CoreDataManager_v = DataManager::Get();
 	CoreCommonInfo_v = CoreDataManager_v->getCommonInfo(1);
-	CoreServerProcessInfo_v = CoreDataManager_v->getServerProcessInfo(1);
+	CoreServerProcessInfoPackage_v = CoreDataManager_v->getServerProcessInfoPackage(1);				// 공통 라이브러리 주입
+	CoreServerProcessInfo_v = &CoreServerProcessInfoPackage_v->Auth;								// 공통 라이브러리 주입
 	CoreGameDB_v = dbg_new MysqlDatabase(CoreDataManager_v->getDatabaseInfo(DatabaseType::Game));
 	CoreGameDB_v->Initialize(ServerProcessType::Auth);
 	CoreNetMaster_v = AuthNetMaster::Get();
 	CoreNetMaster_v->Initialize();
-	CoreNetGroup_v = CoreNetMaster_v->GetNetGroup(1).Get<AuthNetGroup*>();
+	CoreNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_MAIN).Get<AuthNetGroup*>();
+	CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_INTERSERVER).Get<InterServerClientNetGroup*>();
 	CoreServer_v = dynamic_cast<AuthServer*>(CoreNetGroup_v->GetServer());
 	CoreTokenManager_v = AuthTokenManager::Get();
 
-	// 공통 라이브러리 주입용
+	// 공통 라이브러리 주입
 	{
 		CoreCommonNetMaster_v = CoreNetMaster_v;
 		CoreCommonNetGroup_v = CoreNetGroup_v;
 		CoreCommonServer_v = CoreServer_v;
-		CoreCenterClient_v = CoreNetGroup_v->GetCenterClient();
-		CoreInterServerClient_v = CoreNetGroup_v->GetInterServerClient();
+		CoreInterServerClientTcp_v = CoreInterServerClientNetGroup_v->GetInterServerClientTcp();
+		CoreInterServerClientUdp_v = CoreInterServerClientNetGroup_v->GetInterServerClientUdp();
 
 		CoreThreadPool_v = dbg_new ThreadPool{ 2 };
 		CoreScheduler_v = dbg_new Scheduler{ 2 };

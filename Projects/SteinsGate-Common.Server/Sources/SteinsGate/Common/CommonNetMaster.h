@@ -12,20 +12,24 @@
 #include <JNetwork/NetMaster.h>
 #include <SteinsGate/Common/ServerEnum.h>
 
+#define NETGROUP_ID_MAIN 1				// 각 서버 프로세별로 있는 메인(인증, 중앙, 로비, 게임)서버 그룹 코드
+#define NETGROUP_ID_INTERSERVER 2		// 각 서버 프로세별로 있는 인터서버 그룹 코드
+
 class JCORE_NOVTABLE CommonNetMaster : public JNetwork::NetMaster
 {
 public:
 	CommonNetMaster();
 
-	// virtual void Initialize() = 0; 자식에서 구현
+	void Initialize() override;
+	virtual InterServerClientType_t GetClientType() = 0;
+	virtual ServerProcessType_t GetProcessType() = 0;
+
 	void ProcessMainLoop();
 	void ProcessSubLoop(JCore::PulserStatistics* pulseStat);
 	void ProcessInputEvent();
 	void Terminate() { m_bRunning = false; }
 
 	int GetPulseInterval() { return m_iPulseInterval; }
-	virtual CenterClientType_t GetClientType() = 0;
-	virtual ServerProcessType_t GetProcessType() = 0;
 protected:
 	virtual void OnLoop(JCore::PulserStatistics* pulseStat) = 0;
 	virtual void OnStopped() = 0;

@@ -8,7 +8,13 @@ NS_JC_BEGIN
 template <typename T, T Val>
 struct IntegralConstant { static constexpr T Value = Val; };
 
+template <bool Val>
+struct ValidConstant { static constexpr bool Valid = Val; };
+
 struct TrueType : IntegralConstant<bool, true> {};
 struct FalseType : IntegralConstant<bool, false> {};
+struct ValidType : ValidConstant<true> {};
+struct InvalidType : ValidConstant<false> {};
+
 
 NS_JC_END
