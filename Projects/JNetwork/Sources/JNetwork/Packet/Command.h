@@ -154,13 +154,16 @@ NS_JNET_END
 
 enum CmdDirection
 {
+	eNone = 0b0000,
 	eClientToServer = 0b0001,
 	eServerToClient = 0b0010,
 	eServerToServer = 0b0100,
-	eClientToClient = 0b1000
+	eClientToClient = 0b1000,
+	eAll = eClientToServer | eServerToClient | eServerToServer | eClientToClient
 };
 
-inline static constexpr const char* CmdDirectionName[(1 << 4) - 1] = {
+inline static constexpr const char* CmdDirectionName[1 << 4] = {
+	"None",
 	"ClientToServer",
 	"ServerToClient",
 	"ServerToClient | ClientToServer",
