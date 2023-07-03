@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Config.h>
+#include <SteinsGate/Common/Const.h>
 
 inline constexpr int MaxSgaFileCount_v = 200;
 inline constexpr int MaxSgaParallelLoadingThreadCount_v = 8;

@@ -191,7 +191,7 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CharCommonInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\CharCommonInfoLoader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Config.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Enum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfo.h">
       <SubType>

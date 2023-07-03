@@ -9,7 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Common/Enum.h>
-#include <SteinsGate/Common/Config.h>
+#include <SteinsGate/Common/Const.h>
 
 #include <JCore/Time.h>
 #include <JCore/Primitives/StaticString.h>

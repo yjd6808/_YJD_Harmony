@@ -67,7 +67,7 @@
 
 
 #include <SteinsGate/Common/Struct.h>
-#include <SteinsGate/Common/Config.h>
+#include <SteinsGate/Common/Const.h>
 #include <SteinsGate/Common/Logo.h>
 #include <SteinsGate/Common/Type.h>
 #include <SteinsGate/Common/CommonCore.h>

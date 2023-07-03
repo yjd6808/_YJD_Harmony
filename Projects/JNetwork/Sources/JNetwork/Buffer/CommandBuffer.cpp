@@ -70,8 +70,10 @@ void CommandBuffer::AddPacketLength(int size) {
 bool CommandBuffer::IsValid() const {
 	CommandBuffer dbgBuffer(*this);	// 기존꺼 무결성 보장
 
+	int iWritePos = this->GetWritePos();
+
 	dbgBuffer.ResetPosition();
-	dbgBuffer.MoveWritePos(this->GetWritePos());
+	dbgBuffer.MoveWritePos(iWritePos);
 
 	int iCommandCount = dbgBuffer.GetCommandCount();
 	int iPacketLen = dbgBuffer.GetPacketLength();
@@ -80,8 +82,9 @@ bool CommandBuffer::IsValid() const {
 
 	for (int i = 0; i < iCommandCount; i++) {
 		ICommand* pCmd = dbgBuffer.Peek<ICommand*>();
+		int iCommandLen = pCmd->GetCommandLen();
 
-		if (dbgBuffer.MoveReadPos(pCmd->GetCommandLen()) == false) {
+		if (dbgBuffer.MoveReadPos(iCommandLen) == false) {
 			return false;
 		}
 	}

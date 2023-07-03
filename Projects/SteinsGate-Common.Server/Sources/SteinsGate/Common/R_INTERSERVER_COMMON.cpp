@@ -44,3 +44,13 @@ void R_INTERSERVER_COMMON::RecvYouNeedToDoThis(Session* session, ICommand* cmd) 
 
 	S_INTERSERVER_COMMON::SendCenterMessage("요청을 수행할 수 없는 상태입니다.");
 }
+
+void R_INTERSERVER_COMMON::RecvP2PRelayStaticTest(Session* session, ICommand* cmd) {
+	CmdP2PRelayStaticTest* pCmd = (CmdP2PRelayStaticTest*)cmd;
+	Console::WriteLine("%s", pCmd->Msg.Source);
+}
+
+void R_INTERSERVER_COMMON::RecvP2PRelayDynamicTest(Session* session, ICommand* cmd) {
+	CmdP2PRelayDynamicTest* pCmd = (CmdP2PRelayDynamicTest*)cmd;
+	Console::WriteLine("%s", pCmd->Msg.Source);
+}

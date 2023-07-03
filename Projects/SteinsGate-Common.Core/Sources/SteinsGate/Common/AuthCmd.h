@@ -21,6 +21,8 @@
 // CmdLoginAck
 // ======================= CMD LIST =======================
 
+inline constexpr Int16U TotalAuthCmdCount_v = 2;
+
 #pragma pack(push, CMD_ALIGNMENT)
 
 STATIC_CMD_BEGIN

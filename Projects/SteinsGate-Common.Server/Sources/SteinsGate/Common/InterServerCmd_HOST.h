@@ -21,15 +21,22 @@
 // CmdItsMe					: 클라가 누구인지 서버에게 알려줌
 // CmdAlreadyConnected		: 서버가 접속한 클라이언트에게 넌 이미 접속중이라고 알려줌
 // CmdYouNeedToDoThis		: 서버가 접속한 클라이언트에게 명령을 내림
-// CmdInterServerMessage	: 서버/클라간 주고받는 문자열 메시지
+// CmdHostMessage			: 서버/클라간 주고받는 문자열 메시지
 // CmdNotifyBootState		: 클라가 현재 자신의 부팅상태를 서버에게 알려줌
 // ======================= CMD LIST =======================
+
+#define CMDID_CmdWhoAreYou					50000
+#define CMDID_CmdItsMe						50001
+#define CMDID_CmdAlreadyConnected			50002
+#define CMDID_CmdYouNeedToDoThis			50003
+#define CMDID_CmdHostMessage				50004
+#define CMDID_CmdNotifyBootState			50005
 
 #pragma pack(push, CMD_ALIGNMENT)
 
 HOST_STATIC_CMD_BEGIN
 	( CmdWhoAreYou
-	, 100
+	, CMDID_CmdWhoAreYou
 	, eCenterToPeer
 	)
 // ───────────────────────────────────────────
@@ -41,7 +48,7 @@ HOST_STATIC_CMD_END(CmdWhoAreYou)
 
 HOST_STATIC_CMD_BEGIN
 	( CmdItsMe
-	, 101
+	, CMDID_CmdItsMe
 	, eClientToServer
 	)
 // ───────────────────────────────────────────
@@ -54,7 +61,7 @@ HOST_STATIC_CMD_END(CmdItsMe)
 
 HOST_STATIC_CMD_BEGIN
 	( CmdAlreadyConnected
-	, 102
+	, CMDID_CmdAlreadyConnected
 	, eCenterToPeer
 	)
 // ───────────────────────────────────────────
@@ -66,7 +73,7 @@ HOST_STATIC_CMD_END(CmdAlreadyConnected)
 
 HOST_STATIC_CMD_BEGIN
 	( CmdYouNeedToDoThis
-	, 103
+	, CMDID_CmdYouNeedToDoThis
 	, eCenterToPeer
 	)
 // ───────────────────────────────────────────
@@ -75,21 +82,21 @@ CenterOrder_t Order;
 HOST_STATIC_CMD_END(CmdYouNeedToDoThis)
 
 HOST_DYNAMIC_CMD_BEGIN
-	( CmdInterServerMessage
-	, 104
+	( CmdHostMessage
+	, CMDID_CmdHostMessage
 	, eCenterToPeer | ePeerToCenter
-	, char 
+	, JCore::StaticString<1>
 	)
 // ───────────────────────────────────────────
 JCore::StaticString<1> Msg;
 // ───────────────────────────────────────────
-HOST_DYNAMIC_CMD_END(CmdInterServerMessage)
+HOST_DYNAMIC_CMD_END(CmdHostMessage)
 
 // ======================================================================================
 
 HOST_STATIC_CMD_BEGIN
 	( CmdNotifyBootState
-	, 105
+	, CMDID_CmdNotifyBootState
 	, ePeerToCenter
 	)
 // ───────────────────────────────────────────

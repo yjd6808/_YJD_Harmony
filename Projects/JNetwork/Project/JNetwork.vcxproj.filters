@@ -72,6 +72,9 @@
       <Filter>Packet</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\NetLoggerDefine.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\Packet\CommandNameDictionary.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />
@@ -181,6 +184,9 @@
       <Filter>IOCPOverlapped</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JNetwork\Packet\SendHelper.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Packet\CommandNameDictionary.h">
       <Filter>Packet</Filter>
     </ClInclude>
   </ItemGroup>

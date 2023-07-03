@@ -115,10 +115,7 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Struct.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Enum.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Config.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
-      <Filter>Data</Filter>
-    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfo.h">
       <Filter>Data\MobBase</Filter>
     </ClInclude>
@@ -219,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Type.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\LogSpecifier.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
+      <Filter>Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">

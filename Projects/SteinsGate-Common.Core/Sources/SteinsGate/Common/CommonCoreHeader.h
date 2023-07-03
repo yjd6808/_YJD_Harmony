@@ -12,6 +12,8 @@
 #include <JCore/Threading/ThreadPool.h>
 #include <JCore/Threading/Scheduler.h>
 
+#include <JNetwork/Packet/CommandNameDictionary.h>
+
 #include <SteinsGate/Common/CommonInfo.h>
 #include <SteinsGate/Common/CharCommonInfo.h>
 #include <SteinsGate/Common/ServerProcessInfo.h>

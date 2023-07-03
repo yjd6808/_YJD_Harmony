@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JNetwork/Packet/Command.h>
-#include <SteinsGate/Common/Config.h>
+#include <SteinsGate/Common/Const.h>
 #include <SteinsGate/Common/EnumDefine.h>
 
 struct InterServerCmdType : JNetwork::CmdType
@@ -68,7 +68,7 @@ struct Command<InterServerCmdType::RelayStatic> : ICommand, RelayCommandBase
 };
 
 template <>
-struct Command<InterServerCmdType::RelayDynamic> : ICommand, DynamicCommandBase, RelayCommandBase
+struct Command<InterServerCmdType::RelayDynamic> : ICommand, RelayCommandBase, DynamicCommandBase
 {
 	static constexpr bool IsValid = true;
 	static constexpr bool IsDynamic = false;
@@ -121,20 +121,21 @@ template<typename T> constexpr bool IsInterServerRelayCommand_v = IsInterServerR
 
 enum InterServerCmdDirection
 {
-	eAuthToCenter	= 0b00000000000001,	
-	eAuthToLobby	= 0b00000000000010,
-	eAuthToGame		= 0b00000000000100,
-	eCenterToGame	= 0b00000000001000,
-	eCenterToLobby	= 0b00000000010000,
-	eCenterToAuth	= 0b00000000100000,
-	eLobbyToCenter	= 0b00000001000000,
-	eLobbyToAuth	= 0b00000010000000,
-	eLobbyToGame	= 0b00000100000000,
-	eGameToCenter	= 0b00001000000000,
-	eGameToAuth	 	= 0b00010000000000,
-	eGameToLobby	= 0b00100000000000,
-	ePeerToCenter	= 0b01000000000000,	// 개별 서버 모두가 중앙서버로
-	eCenterToPeer	= 0b10000000000000, // 중앙 서버가 다른 모든 서버로
+	eAuthToCenter	= 0b000000000000001,	
+	eAuthToLobby	= 0b000000000000010,
+	eAuthToGame		= 0b000000000000100,
+	eCenterToGame	= 0b000000000001000,
+	eCenterToLobby	= 0b000000000010000,
+	eCenterToAuth	= 0b000000000100000,
+	eLobbyToCenter	= 0b000000001000000,
+	eLobbyToAuth	= 0b000000010000000,
+	eLobbyToGame	= 0b000000100000000,
+	eGameToCenter	= 0b000001000000000,
+	eGameToAuth	 	= 0b000010000000000,
+	eGameToLobby	= 0b000100000000000,
+	ePeerToCenter	= 0b001000000000000,	// 개별 서버 모두가 중앙서버로
+	eCenterToPeer	= 0b010000000000000,	// 중앙 서버가 다른 모든 서버로
+	ePeerToPeer		= 0b100000000000000,	// 개별 서버간 통신
 };
 
 #define HOST_STATIC_CMD_BEGIN(__struct__, __cmd__, __cmd_direction__)							\
@@ -180,7 +181,7 @@ struct __struct__ : RelayStaticCommand {														\
 	static constexpr const char* Name() { return #__struct__; }									\
 	static constexpr int Command() { return __cmd__; }											\
 	static constexpr int Direction() { return __cmd_direction__; }
-#define HOST_STATIC_CMD_END(__struct__) };
+#define RELAY_STATIC_CMD_END(__struct__) };
 
 
 #define RELAY_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __cmd_direction__, __countable_elem_type__)							\
@@ -196,4 +197,4 @@ struct __struct__ : RelayDynamicCommand {																					\
 	static constexpr int Command() { return __cmd__; }																		\
 	static constexpr int Direction() { return __cmd_direction__; }
 
-#define HOST_DYNAMIC_CMD_END(__struct__)	};
+#define RELAY_DYNAMIC_CMD_END(__struct__)	};

@@ -47,6 +47,8 @@ public:
 	void LogWarn(const char* fmt, ...);
 	void LogError(const char* fmt, ...);
 	void LogDebug(const char* fmt, ...);
+	void Lock() { m_Lock.Lock(); }
+	void Unlock() { m_Lock.Unlock(); }
 	
 	void ShowDateTime(bool enabled);
 	void ShowLevel(bool enabled);

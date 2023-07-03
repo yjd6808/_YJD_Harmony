@@ -8,7 +8,7 @@
 #include "Core.h"
 #include "Struct.h"
 
-#include <SteinsGate/Common/Config.h>
+#include <SteinsGate/Common/Const.h>
 
 USING_NS_JC;
 

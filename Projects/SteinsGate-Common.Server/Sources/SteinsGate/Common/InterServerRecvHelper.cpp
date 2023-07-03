@@ -10,7 +10,7 @@
 #include "ServerCoreHeader.h"
 #include "InterServerRecvHelper.h"
 
-#include <SteinsGate/Common/Config.h>
+#include <SteinsGate/Common/Const.h>
 
 
 thread_local Int8 InterServerRecvHelper::LastFromId = InvalidValue_v;

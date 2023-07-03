@@ -20,7 +20,7 @@ USING_NS_JNET;
 
 ListenerInterServerHostTcp::ListenerInterServerHostTcp() {
 	Parser.AddCommand<CmdItsMe>(R_CENTER::RecvItsMe);
-	Parser.AddCommand<CmdInterServerMessage>(R_CENTER::RecvCenterMessage);
+	Parser.AddCommand<CmdHostMessage>(R_CENTER::RecvCenterMessage);
 	Parser.AddCommand<CmdNotifyBootState>(R_CENTER::RecvNotifyBootState);
 }
 
@@ -58,7 +58,13 @@ void ListenerInterServerHostTcp::OnReceived(Session* sender, IRecvPacket* recvPa
 
 		if (IsRelayCommand(cmd)) {
 			// 릴레이 커맨드인 경우
-			RelayCommandBase* pInterServerCmd = static_cast<RelayStaticCommand*>(cmd);
+			RelayCommandBase* pInterServerCmd;
+
+			if (cmd->Type == InterServerCmdType::RelayStatic)
+				pInterServerCmd = static_cast<RelayStaticCommand*>(cmd);
+			else
+				pInterServerCmd = static_cast<RelayDynamicCommand*>(cmd);
+
 			R_CENTER::LastFromId = pInterServerCmd->From;
 
 			// 클라(나)가 수신처인 경우 그대로 처리

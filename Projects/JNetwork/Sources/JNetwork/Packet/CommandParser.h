@@ -32,16 +32,13 @@ public:
 		}
 
 		m_CommandActionMap.Insert(Cmd::Command(), fn);
-		m_CommandNameMap.Insert(Cmd::Command(), Cmd::Name());
 	}
 	virtual bool RunCommand(Session* session, JNetwork::ICommand* cmd) const;
-	virtual const char* GetCommandName(Int16 cmd);
 private:
 	// JCore::Action<Session*, ICommand*> m_fnPreRun;
 	// JCore::Action<Session*, ICommand*> m_fnPostRun;
 
-	JCore::HashMap<Int16, JCore::Action<Session*, ICommand*>> m_CommandActionMap;
-	JCore::HashMap<Int16, const char*> m_CommandNameMap;
+	JCore::HashMap<Cmd_t, JCore::Action<Session*, ICommand*>> m_CommandActionMap;
 };
 
 

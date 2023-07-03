@@ -16,7 +16,13 @@
 struct S_INTERSERVER_COMMON : InterServerSendHelper<S_INTERSERVER_COMMON>
 {
 public:
+
+	// HOST
 	static bool SendItsMe(InterServerClientType_t clientType, int serverId);
 	static bool SendCenterMessage(const JCore::String& msg);
 	static bool SendNotifyBootState(ServerBootState_t state);
+
+	// RELAY
+	static bool SendP2PRelayStaticTest(const char* msg);
+	static bool SendP2PRelayDynamicTest(const char* msg);
 };

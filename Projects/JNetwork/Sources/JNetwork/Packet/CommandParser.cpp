@@ -24,12 +24,4 @@ bool CommandParser::RunCommand(Session* session, ICommand* cmd) const {
 	return true;
 }
 
-const char* CommandParser::GetCommandName(Int16 cmd) {
-	if (!m_CommandActionMap.Exist(cmd)) {
-		return "";
-	}
-
-	return m_CommandNameMap.Get(cmd);
-}
-
 NS_JNET_END

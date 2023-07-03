@@ -100,8 +100,18 @@ struct GenericCommand : ICommand
 	T Value;
 };
 
-struct Staticity { static constexpr bool IsStatic = true; };
-struct Dynamicity { static constexpr bool IsDynamic = true; };
+struct Staticity
+{
+	static constexpr bool IsStatic = true;
+	static constexpr bool IsDyamic = false;
+};
+
+struct Dynamicity
+{
+	static constexpr bool IsStatic = false;
+	static constexpr bool IsDynamic = true;
+};
+
 struct DynamicCommandBase { int Count{}; };
 
 template <int CmdType>
@@ -113,19 +123,15 @@ struct Command
 };
 
 template <>
-struct Command<CmdType::Static> : ICommand
+struct Command<CmdType::Static> : ICommand, Staticity
 {
 	static constexpr bool IsValid = true;
-	static constexpr bool IsDynamic = false;
-	static constexpr bool IsStatic = true;
 };
 
 template <>
-struct Command<CmdType::Dynamic> : ICommand, DynamicCommandBase
+struct Command<CmdType::Dynamic> : ICommand, Dynamicity, DynamicCommandBase
 {
 	static constexpr bool IsValid = true;
-	static constexpr bool IsDynamic = true;
-	static constexpr bool IsStatic = false;
 };
 
 

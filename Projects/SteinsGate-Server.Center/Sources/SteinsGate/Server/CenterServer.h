@@ -11,7 +11,7 @@
 #include <JCore/Aligner.h>
 
 #include <SteinsGate/Common/CommonServer.h>
-#include <SteinsGate/Common/Config.h>
+#include <SteinsGate/Common/Const.h>
 #include <SteinsGate/Common/Type.h>
 #include <SteinsGate/Server/CenterSession.h>
 

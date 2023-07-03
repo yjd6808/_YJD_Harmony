@@ -34,6 +34,7 @@ public:
 	template <typename TInteger>
 	static String ToString(TInteger integer);
 
+	static bool IsNullOrEmpty(const char* str);
 	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);
 	static int CopyUnsafe(char* buffer, const char* copy);

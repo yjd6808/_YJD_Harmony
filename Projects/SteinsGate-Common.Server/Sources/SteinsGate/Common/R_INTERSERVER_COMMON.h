@@ -11,12 +11,18 @@
 #include <JNetwork/Host/Session.h>
 #include <JNetwork/Packet/SendHelper.h>
 #include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/InterServerCmd_RELAY.h>
 #include <SteinsGate/Common/InterServerRecvHelper.h>
 
 struct R_INTERSERVER_COMMON : InterServerRecvHelper
 {
 public:
+	// HOST
 	static void RecvWhoAreYou(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RecvAlreadyConnected(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RecvYouNeedToDoThis(JNetwork::Session* session, JNetwork::ICommand* cmd);
+
+	// RELAY
+	static void RecvP2PRelayStaticTest(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RecvP2PRelayDynamicTest(JNetwork::Session* session, JNetwork::ICommand* cmd);
 };

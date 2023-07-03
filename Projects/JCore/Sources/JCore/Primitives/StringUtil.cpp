@@ -52,6 +52,12 @@ void StringUtil::FormatBuffer(char* buff, const int buffCapacity, const char* fo
 }
 
 
+bool StringUtil::IsNullOrEmpty(const char* str) {
+	if (str == nullptr) return true;
+	if (str[0] == '\0') return true;
+	return false;
+}
+
 int StringUtil::Length(const char* str) {
 	if (str == nullptr) {
 		return -1;

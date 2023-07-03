@@ -8,10 +8,17 @@
 
 #pragma once
 
+#include <JCore/Namespace.h>
+#include <JNetwork/Namespace.h>
+
 NS_JC_BEGIN
 	class Scheduler;
 	class ThreadPool;
 NS_JC_END
+
+NS_JNET_BEGIN
+	class CommandNameDictionary;
+NS_JNET_END
 
 class CommonInfo;
 struct CharCommonInfo;
@@ -22,6 +29,7 @@ extern CharCommonInfo* CoreCharCommon_v;
 extern ServerProcessInfoPackage* CoreServerProcessInfoPackage_v;
 extern JCore::Scheduler* CoreScheduler_v;
 extern JCore::ThreadPool* CoreThreadPool_v;
+extern JNetwork::CommandNameDictionary CoreCommandNameDictionary_v;
 
 void InitializeCommonCore();
 void FinalizeCommonCore();

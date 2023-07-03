@@ -32,15 +32,31 @@ void ListenerCommonServer::OnDisconnected(Session* disconnetedSession) {
 }
 
 void ListenerCommonServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+	int iCmdCount = sentPacket->GetCommandCount();
+	int iPos = 0;
+
+	String szSentText(512);
+	szSentText += StringUtil::Format("%s 커맨드 %d개 송신 (%d B)\n", JNetwork::TransportProtocolName(sender->Protocol()), iCmdCount, sentBytes);
+	sentPacket->ForEach([&](ICommand* cmd) {
+		const char* szBreakLine = iPos < iCmdCount - 1 ? "\n" : "";
+		const Cmd_t id = cmd->GetCommand();
+		szSentText += StringUtil::Format(" - %s(%d)%s", CoreCommandNameDictionary_v.Get(id), id, szBreakLine);
+		++iPos;
+	});
+
+	_LogInfo_(szSentText.Source());
 }
 
 void ListenerCommonServer::OnReceived(Session* receiver, ICommand* cmd) {
+	const Cmd_t id = cmd->GetCommand();
+
 	if (!Parser.RunCommand(receiver, cmd)) {
-		_LogWarn_("커맨드: %d 수행 실패 (%s)", cmd->GetCommand());
+		_LogWarn_("커맨드: %s(%d) 수행 실패", CoreCommandNameDictionary_v.Get(id), id);
 		return;
 	}
 
-	_LogDebug_("%s 실행완료", Parser.GetCommandName(cmd->GetCommand()), GetServerName());
+	
+	_LogDebug_("커맨드: %s(%d) 실행완료", CoreCommandNameDictionary_v.Get(id), id);
 }
 
 void ListenerCommonServer::OnStopped() {

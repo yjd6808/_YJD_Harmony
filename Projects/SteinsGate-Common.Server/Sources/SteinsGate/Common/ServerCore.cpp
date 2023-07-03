@@ -9,6 +9,9 @@
 #include "ServerCore.h"
 #include "ServerCoreHeader.h"
 
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/InterServerCmd_RELAY.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -24,6 +27,19 @@ UdpClient* CoreInterServerClientUdp_v;					// 메인 서버 프로그램에서 �
 void InitializeServerCore() {
 	CoreInputThread_v = dbg_new InputThread();
 	CoreInputThread_v->Start();
+
+	// 공통 커맨드 이름 등록
+	// [ INTER_SERVER - HOST ]
+	CoreCommandNameDictionary_v.Add<CmdWhoAreYou>();
+	CoreCommandNameDictionary_v.Add<CmdItsMe>();
+	CoreCommandNameDictionary_v.Add<CmdAlreadyConnected>();
+	CoreCommandNameDictionary_v.Add<CmdYouNeedToDoThis>();
+	CoreCommandNameDictionary_v.Add<CmdHostMessage>();
+	CoreCommandNameDictionary_v.Add<CmdNotifyBootState>();
+
+	// [ INTER_SERVER - RELAY ]
+	CoreCommandNameDictionary_v.Add<CmdP2PRelayStaticTest>();
+	CoreCommandNameDictionary_v.Add<CmdP2PRelayDynamicTest>();
 }
 
 void FinalizeServerCore() {

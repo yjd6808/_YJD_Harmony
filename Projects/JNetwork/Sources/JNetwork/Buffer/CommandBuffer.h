@@ -49,9 +49,14 @@ public:
 
 	void Alloc(ICommand* cmd) {
 		const int CmdSize = cmd->CmdLen;
+
 		if (MoveWritePos(cmd->CmdLen) == false) {
 			DebugAssertMsg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");
 		}
+
+		char* pMem = Peek<char*>();
+		JCore::Memory::CopyUnsafe(pMem, cmd, cmd->CmdLen);
+		MoveReadPos(CmdSize);
 
 		AddCommandCount();
 		AddPacketLength(CmdSize);

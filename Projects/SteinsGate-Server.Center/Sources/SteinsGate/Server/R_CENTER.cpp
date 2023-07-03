@@ -51,7 +51,7 @@ void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
 
 
 void R_CENTER::RecvCenterMessage(Session* session, ICommand* cmd) {
-	CmdInterServerMessage* pCmd = (CmdInterServerMessage*)cmd;
+	CmdHostMessage* pCmd = (CmdHostMessage*)cmd;
 	_LogInfo_(pCmd->Msg.Source);
 }
 
