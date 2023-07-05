@@ -4,6 +4,8 @@
 		{
 			"code": 17036,
 			"type": 3,
+			"dname": "slot_8_border",
+			"name": "슬롯 8 테두리",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -15,6 +17,8 @@
 		{
 			"code": 17031,
 			"type": 3,
+			"dname": "slot_7_border",
+			"name": "슬롯 7 테두리",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -26,6 +30,8 @@
 		{
 			"code": 17026,
 			"type": 3,
+			"dname": "slot_6_border",
+			"name": "슬롯 6 테두리",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -37,6 +43,8 @@
 		{
 			"code": 17021,
 			"type": 3,
+			"dname": "slot_5_border",
+			"name": "슬롯 5 테두리",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -48,6 +56,8 @@
 		{
 			"code": 17040,
 			"type": 2,
+			"dname": "slot_8_job",
+			"name": "슬롯 8 직업",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -62,6 +72,8 @@
 		{
 			"code": 17039,
 			"type": 2,
+			"dname": "slot_8_nick",
+			"name": "슬롯 8 닉네임",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -76,6 +88,8 @@
 		{
 			"code": 17038,
 			"type": 3,
+			"dname": "slot_8_footholder_selected",
+			"name": "슬롯 8 발판 (선택됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -87,6 +101,8 @@
 		{
 			"code": 17037,
 			"type": 3,
+			"dname": "slot_8_footholder_unselected",
+			"name": "슬롯 8 발판 (선택안됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -98,6 +114,8 @@
 		{
 			"code": 17035,
 			"type": 2,
+			"dname": "slot_7_nick",
+			"name": "슬롯 7 닉네임",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -112,6 +130,8 @@
 		{
 			"code": 17034,
 			"type": 2,
+			"dname": "slot_7_job",
+			"name": "슬롯 7 직업",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -126,6 +146,8 @@
 		{
 			"code": 17033,
 			"type": 3,
+			"dname": "slot_7_footholder_selected",
+			"name": "슬롯 7 발판 (선택됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -137,6 +159,8 @@
 		{
 			"code": 17032,
 			"type": 3,
+			"dname": "slot_7_footholder_unselected",
+			"name": "슬롯 7 발판 (선택안됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -148,6 +172,8 @@
 		{
 			"code": 17030,
 			"type": 2,
+			"dname": "slot_6_job",
+			"name": "슬롯 6 직업",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -162,6 +188,8 @@
 		{
 			"code": 17029,
 			"type": 2,
+			"dname": "slot_6_nick",
+			"name": "슬롯 6 닉네임",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -176,6 +204,8 @@
 		{
 			"code": 17028,
 			"type": 3,
+			"dname": "slot_6_footholder_selected",
+			"name": "슬롯 6 발판 (선택됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -187,6 +217,8 @@
 		{
 			"code": 17027,
 			"type": 3,
+			"dname": "slot_6_footholder_unselected",
+			"name": "슬롯 6 발판 (선택안됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -198,6 +230,8 @@
 		{
 			"code": 17025,
 			"type": 2,
+			"dname": "slot_5_job",
+			"name": "슬롯 5 직업",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -212,6 +246,8 @@
 		{
 			"code": 17024,
 			"type": 2,
+			"dname": "slot_5_nick",
+			"name": "슬롯 5 닉네임",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -226,6 +262,8 @@
 		{
 			"code": 17023,
 			"type": 3,
+			"dname": "slot_5_footholder_selected",
+			"name": "슬롯 5 발판 (선택됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -237,6 +275,8 @@
 		{
 			"code": 17022,
 			"type": 3,
+			"dname": "slot_1_footholder_unselected",
+			"name": "슬롯 5 발판 (선택안됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -248,6 +288,8 @@
 		{
 			"code": 17016,
 			"type": 3,
+			"dname": "slot_4_border",
+			"name": "슬롯 4 테두리",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -259,6 +301,8 @@
 		{
 			"code": 17018,
 			"type": 3,
+			"dname": "slot_4_footholder_selected",
+			"name": "슬롯 4 발판 (선택됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -270,6 +314,8 @@
 		{
 			"code": 17011,
 			"type": 3,
+			"dname": "slot_3_border",
+			"name": "슬롯 3 테두리",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -281,6 +327,8 @@
 		{
 			"code": 17020,
 			"type": 2,
+			"dname": "slot_4_job",
+			"name": "슬롯 4 직업",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -295,6 +343,8 @@
 		{
 			"code": 17019,
 			"type": 2,
+			"dname": "slot_4_nick",
+			"name": "슬롯 4 닉네임",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -309,6 +359,8 @@
 		{
 			"code": 17017,
 			"type": 3,
+			"dname": "slot_4_footholder_unselected",
+			"name": "슬롯 4 발판 (선택안됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -320,6 +372,8 @@
 		{
 			"code": 17015,
 			"type": 2,
+			"dname": "slot_3_job",
+			"name": "슬롯 3 직업",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -334,6 +388,8 @@
 		{
 			"code": 17014,
 			"type": 2,
+			"dname": "slot_3_nick",
+			"name": "슬롯 3 닉네임",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -348,6 +404,8 @@
 		{
 			"code": 17013,
 			"type": 3,
+			"dname": "slot_3_footholder_selected",
+			"name": "슬롯 3 발판 (선택됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -359,6 +417,8 @@
 		{
 			"code": 17012,
 			"type": 3,
+			"dname": "slot_3_footholder_unselected",
+			"name": "슬롯 3 발판 (선택안됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -370,6 +430,8 @@
 		{
 			"code": 17010,
 			"type": 2,
+			"dname": "slot_2_job",
+			"name": "슬롯 2 직업",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -384,6 +446,8 @@
 		{
 			"code": 17009,
 			"type": 2,
+			"dname": "slot_2_nick",
+			"name": "슬롯 2 닉네임",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -398,6 +462,8 @@
 		{
 			"code": 17008,
 			"type": 3,
+			"dname": "slot_2_footholder_selected",
+			"name": "슬롯 2 발판 (선택됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -409,6 +475,8 @@
 		{
 			"code": 17007,
 			"type": 3,
+			"dname": "slot_2_footholder_unselected",
+			"name": "슬롯 2 발판 (선택안됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -420,6 +488,8 @@
 		{
 			"code": 17003,
 			"type": 3,
+			"dname": "slot_1_footholder_selected",
+			"name": "슬롯 1 발판 (선택됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -431,6 +501,8 @@
 		{
 			"code": 17002,
 			"type": 3,
+			"dname": "slot_1_footholder_unselected",
+			"name": "슬롯 1 발판 (선택안됨)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -442,6 +514,8 @@
 		{
 			"code": 32008,
 			"type": 4,
+			"dname": "t8",
+			"name": "PW",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 16",
@@ -457,6 +531,8 @@
 		{
 			"code": 32007,
 			"type": 1,
+			"dname": "t7",
+			"name": "버튼",
 			"valign": 2,
 			"halign": 2,
 			"sga": "sprite.sga",
@@ -467,6 +543,8 @@
 		{
 			"code": 32006,
 			"type": 2,
+			"dname": "t6",
+			"name": "라벨_0",
 			"valign": 2,
 			"halign": 0,
 			"size": "49 17",
@@ -481,6 +559,8 @@
 		{
 			"code": 32005,
 			"type": 5,
+			"dname": "t5",
+			"name": "체크박스 테스트",
 			"valign": 2,
 			"halign": 0,
 			"bg_sga": "sprite_interface.sga",
@@ -492,6 +572,8 @@
 		{
 			"code": 32004,
 			"type": 9,
+			"dname": "t4",
+			"name": "스태틱",
 			"valign": 0,
 			"halign": 2,
 			"size": "30 30"
@@ -499,6 +581,8 @@
 		{
 			"code": 32003,
 			"type": 7,
+			"dname": "t3",
+			"name": "스크롤바 테스트2",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -509,6 +593,8 @@
 		{
 			"code": 32002,
 			"type": 8,
+			"dname": "topbottom",
+			"name": "탑바텀",
 			"valign": 2,
 			"halign": 2,
 			"sga": "sprite_interface.sga",
@@ -520,6 +606,8 @@
 		{
 			"code": 32001,
 			"type": 6,
+			"dname": "t1",
+			"name": "토글버튼",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -531,6 +619,8 @@
 		{
 			"code": 31008,
 			"type": 4,
+			"dname": "t8",
+			"name": "PW",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 16",
@@ -546,6 +636,8 @@
 		{
 			"code": 31007,
 			"type": 1,
+			"dname": "t7",
+			"name": "버튼",
 			"valign": 2,
 			"halign": 2,
 			"sga": "sprite.sga",
@@ -556,6 +648,8 @@
 		{
 			"code": 31006,
 			"type": 2,
+			"dname": "t6",
+			"name": "라벨_0",
 			"valign": 2,
 			"halign": 0,
 			"size": "49 17",
@@ -570,6 +664,8 @@
 		{
 			"code": 31005,
 			"type": 5,
+			"dname": "t5",
+			"name": "체크박스 테스트",
 			"valign": 2,
 			"halign": 0,
 			"bg_sga": "sprite_interface.sga",
@@ -581,6 +677,8 @@
 		{
 			"code": 31004,
 			"type": 9,
+			"dname": "t4",
+			"name": "스태틱",
 			"valign": 0,
 			"halign": 2,
 			"size": "30 30"
@@ -588,6 +686,8 @@
 		{
 			"code": 31003,
 			"type": 7,
+			"dname": "t3",
+			"name": "스크롤바 테스트2",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -598,6 +698,8 @@
 		{
 			"code": 31002,
 			"type": 8,
+			"dname": "topbottom",
+			"name": "탑바텀",
 			"valign": 2,
 			"halign": 2,
 			"sga": "sprite_interface.sga",
@@ -609,6 +711,8 @@
 		{
 			"code": 31001,
 			"type": 6,
+			"dname": "t1",
+			"name": "토글버튼",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -620,6 +724,8 @@
 		{
 			"code": 30004,
 			"type": 8,
+			"dname": "t4",
+			"name": "롸잇레프트",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -631,6 +737,8 @@
 		{
 			"code": 30003,
 			"type": 8,
+			"dname": "t3",
+			"name": "레프트롸잇",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -642,6 +750,8 @@
 		{
 			"code": 30002,
 			"type": 8,
+			"dname": "t2",
+			"name": "바텀탑",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -653,6 +763,8 @@
 		{
 			"code": 30001,
 			"type": 8,
+			"dname": "t1",
+			"name": "탑바텀",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -664,6 +776,8 @@
 		{
 			"code": 29012,
 			"type": 2,
+			"dname": "line_break",
+			"name": "라인브레이크",
 			"valign": 2,
 			"halign": 0,
 			"size": "114 32",
@@ -678,6 +792,8 @@
 		{
 			"code": 29011,
 			"type": 2,
+			"dname": "scale_test",
+			"name": "스케일링 테스트",
 			"valign": 2,
 			"halign": 0,
 			"size": "128 18",
@@ -692,6 +808,8 @@
 		{
 			"code": 29010,
 			"type": 2,
+			"dname": "reset_position",
+			"name": "위치 복구",
 			"valign": 2,
 			"halign": 0,
 			"size": "103 18",
@@ -706,6 +824,8 @@
 		{
 			"code": 29009,
 			"type": 2,
+			"dname": "drag_test",
+			"name": "드래그 테스트",
 			"valign": 2,
 			"halign": 0,
 			"size": "103 18",
@@ -720,6 +840,8 @@
 		{
 			"code": 29008,
 			"type": 2,
+			"dname": "popup_test",
+			"name": "팝업 테스트",
 			"valign": 2,
 			"halign": 0,
 			"size": "103 18",
@@ -734,6 +856,8 @@
 		{
 			"code": 29007,
 			"type": 2,
+			"dname": "font_test",
+			"name": "폰트 테스트",
 			"valign": 2,
 			"halign": 0,
 			"size": "103 18",
@@ -748,6 +872,8 @@
 		{
 			"code": 29006,
 			"type": 2,
+			"dname": "t6",
+			"name": "라벨 테스트",
 			"valign": 2,
 			"halign": 0,
 			"size": "131 30",
@@ -762,6 +888,8 @@
 		{
 			"code": 29005,
 			"type": 4,
+			"dname": "t5",
+			"name": "PW",
 			"valign": 2,
 			"halign": 0,
 			"size": "141 16",
@@ -777,6 +905,8 @@
 		{
 			"code": 29004,
 			"type": 7,
+			"dname": "t4",
+			"name": "스크롤바 테스트2",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -787,6 +917,8 @@
 		{
 			"code": 29003,
 			"type": 5,
+			"dname": "t3",
+			"name": "체크박스 테스트",
 			"valign": 2,
 			"halign": 0,
 			"bg_sga": "sprite_interface.sga",
@@ -798,6 +930,8 @@
 		{
 			"code": 29002,
 			"type": 3,
+			"dname": "t2",
+			"name": "스프라이트",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -808,6 +942,8 @@
 		{
 			"code": 29001,
 			"type": 6,
+			"dname": "t1",
+			"name": "토글버튼 테스트",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -819,6 +955,8 @@
 		{
 			"code": 28003,
 			"type": 1,
+			"dname": "ok",
+			"name": "확인",
 			"valign": 0,
 			"halign": 2,
 			"sga": "sprite_interface.sga",
@@ -829,6 +967,8 @@
 		{
 			"code": 28002,
 			"type": 1,
+			"dname": "no",
+			"name": "아니오",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -839,6 +979,8 @@
 		{
 			"code": 28001,
 			"type": 1,
+			"dname": "yes",
+			"name": "예",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -849,6 +991,8 @@
 		{
 			"code": 27002,
 			"type": 2,
+			"dname": "text",
+			"name": "텍스트",
 			"valign": 0,
 			"halign": 0,
 			"size": "155 17",
@@ -863,6 +1007,8 @@
 		{
 			"code": 27001,
 			"type": 3,
+			"dname": "background",
+			"name": "Scale9 배경",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -874,6 +1020,8 @@
 		{
 			"code": 25005,
 			"type": 4,
+			"dname": "input",
+			"name": "입력",
 			"valign": 2,
 			"halign": 1,
 			"size": "483 15",
@@ -889,6 +1037,8 @@
 		{
 			"code": 25004,
 			"type": 3,
+			"dname": "type_guild",
+			"name": "길드",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface_chatting.sga",
@@ -899,6 +1049,8 @@
 		{
 			"code": 25003,
 			"type": 3,
+			"dname": "type_party",
+			"name": "파티",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface_chatting.sga",
@@ -909,6 +1061,8 @@
 		{
 			"code": 25002,
 			"type": 3,
+			"dname": "type_normal",
+			"name": "일반",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface_chatting.sga",
@@ -919,6 +1073,8 @@
 		{
 			"code": 25001,
 			"type": 3,
+			"dname": "backgroud",
+			"name": "배경",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface_chatting.sga",
@@ -929,6 +1085,8 @@
 		{
 			"code": 24010,
 			"type": 9,
+			"dname": "title",
+			"name": "칭호",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -936,6 +1094,8 @@
 		{
 			"code": 24009,
 			"type": 9,
+			"dname": "weapon",
+			"name": "무기",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -943,6 +1103,8 @@
 		{
 			"code": 24008,
 			"type": 9,
+			"dname": "bracelt",
+			"name": "브레이슬릿",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -950,6 +1112,8 @@
 		{
 			"code": 24007,
 			"type": 9,
+			"dname": "neck",
+			"name": "목걸이",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -957,6 +1121,8 @@
 		{
 			"code": 24006,
 			"type": 9,
+			"dname": "ring",
+			"name": "반지",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -964,6 +1130,8 @@
 		{
 			"code": 24005,
 			"type": 9,
+			"dname": "belt",
+			"name": "벨트",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -971,6 +1139,8 @@
 		{
 			"code": 24004,
 			"type": 9,
+			"dname": "shoes",
+			"name": "슈즈",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -978,6 +1148,8 @@
 		{
 			"code": 24003,
 			"type": 9,
+			"dname": "bottom",
+			"name": "바텀",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -985,6 +1157,8 @@
 		{
 			"code": 24002,
 			"type": 9,
+			"dname": "top",
+			"name": "탑",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -992,6 +1166,8 @@
 		{
 			"code": 24001,
 			"type": 9,
+			"dname": "shoulder",
+			"name": "숄더",
 			"valign": 2,
 			"halign": 0,
 			"size": "30 30"
@@ -999,6 +1175,8 @@
 		{
 			"code": 23032,
 			"type": 3,
+			"dname": "slot47",
+			"name": "슬롯47",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1009,6 +1187,8 @@
 		{
 			"code": 23031,
 			"type": 3,
+			"dname": "slot46",
+			"name": "슬롯46",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1019,6 +1199,8 @@
 		{
 			"code": 23030,
 			"type": 3,
+			"dname": "slot45",
+			"name": "슬롯45",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1029,6 +1211,8 @@
 		{
 			"code": 23029,
 			"type": 3,
+			"dname": "slot44",
+			"name": "슬롯44",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1039,6 +1223,8 @@
 		{
 			"code": 23028,
 			"type": 3,
+			"dname": "slot43",
+			"name": "슬롯43",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1049,6 +1235,8 @@
 		{
 			"code": 23027,
 			"type": 3,
+			"dname": "slot42",
+			"name": "슬롯42",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1059,6 +1247,8 @@
 		{
 			"code": 23026,
 			"type": 3,
+			"dname": "slot41",
+			"name": "슬롯41",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1069,6 +1259,8 @@
 		{
 			"code": 23025,
 			"type": 3,
+			"dname": "slot40",
+			"name": "슬롯40",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1079,6 +1271,8 @@
 		{
 			"code": 23024,
 			"type": 3,
+			"dname": "slot37",
+			"name": "슬롯37",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1089,6 +1283,8 @@
 		{
 			"code": 23023,
 			"type": 3,
+			"dname": "slot36",
+			"name": "슬롯36",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1099,6 +1295,8 @@
 		{
 			"code": 23022,
 			"type": 3,
+			"dname": "slot35",
+			"name": "슬롯35",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1109,6 +1307,8 @@
 		{
 			"code": 23021,
 			"type": 3,
+			"dname": "slot34",
+			"name": "슬롯34",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1119,6 +1319,8 @@
 		{
 			"code": 23020,
 			"type": 3,
+			"dname": "slot33",
+			"name": "슬롯33",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1129,6 +1331,8 @@
 		{
 			"code": 23019,
 			"type": 3,
+			"dname": "slot32",
+			"name": "슬롯32",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1139,6 +1343,8 @@
 		{
 			"code": 23018,
 			"type": 3,
+			"dname": "slot31",
+			"name": "슬롯31",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1149,6 +1355,8 @@
 		{
 			"code": 23017,
 			"type": 3,
+			"dname": "slot30",
+			"name": "슬롯30",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1159,6 +1367,8 @@
 		{
 			"code": 23016,
 			"type": 3,
+			"dname": "slot27",
+			"name": "슬롯27",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1169,6 +1379,8 @@
 		{
 			"code": 23015,
 			"type": 3,
+			"dname": "slot26",
+			"name": "슬롯26",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1179,6 +1391,8 @@
 		{
 			"code": 23014,
 			"type": 3,
+			"dname": "slot25",
+			"name": "슬롯25",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1189,6 +1403,8 @@
 		{
 			"code": 23013,
 			"type": 3,
+			"dname": "slot24",
+			"name": "슬롯24",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1199,6 +1415,8 @@
 		{
 			"code": 23012,
 			"type": 3,
+			"dname": "slot23",
+			"name": "슬롯23",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1209,6 +1427,8 @@
 		{
 			"code": 23011,
 			"type": 3,
+			"dname": "slot22",
+			"name": "슬롯22",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1219,6 +1439,8 @@
 		{
 			"code": 23010,
 			"type": 3,
+			"dname": "slot21",
+			"name": "슬롯21",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1229,6 +1451,8 @@
 		{
 			"code": 23009,
 			"type": 3,
+			"dname": "slot20",
+			"name": "슬롯20",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1239,6 +1463,8 @@
 		{
 			"code": 23008,
 			"type": 3,
+			"dname": "slot17",
+			"name": "슬롯17",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1249,6 +1475,8 @@
 		{
 			"code": 23007,
 			"type": 3,
+			"dname": "slot16",
+			"name": "슬롯16",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1259,6 +1487,8 @@
 		{
 			"code": 23006,
 			"type": 3,
+			"dname": "slot15",
+			"name": "슬롯15",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1269,6 +1499,8 @@
 		{
 			"code": 23005,
 			"type": 3,
+			"dname": "slot14",
+			"name": "슬롯14",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1279,6 +1511,8 @@
 		{
 			"code": 23004,
 			"type": 3,
+			"dname": "slot13",
+			"name": "슬롯13",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1289,6 +1523,8 @@
 		{
 			"code": 23003,
 			"type": 3,
+			"dname": "slot12",
+			"name": "슬롯12",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1299,6 +1535,8 @@
 		{
 			"code": 23002,
 			"type": 3,
+			"dname": "slot11",
+			"name": "슬롯11",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1309,6 +1547,8 @@
 		{
 			"code": 23001,
 			"type": 3,
+			"dname": "slot10",
+			"name": "슬롯10",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1319,6 +1559,8 @@
 		{
 			"code": 22002,
 			"type": 7,
+			"dname": "",
+			"name": "스크롤바",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -1329,6 +1571,8 @@
 		{
 			"code": 22001,
 			"type": 3,
+			"dname": "background",
+			"name": "인벤토리 베이스",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1339,6 +1583,8 @@
 		{
 			"code": 21001,
 			"type": 3,
+			"dname": "background",
+			"name": "배경",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1349,6 +1595,8 @@
 		{
 			"code": 20002,
 			"type": 7,
+			"dname": "",
+			"name": "스크롤바",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -1359,6 +1607,8 @@
 		{
 			"code": 20001,
 			"type": 3,
+			"dname": "background",
+			"name": "배경",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -1369,6 +1619,8 @@
 		{
 			"code": 19003,
 			"type": 6,
+			"dname": "party",
+			"name": "파티",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -1380,6 +1632,8 @@
 		{
 			"code": 19002,
 			"type": 6,
+			"dname": "normal",
+			"name": "일반",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -1391,6 +1645,8 @@
 		{
 			"code": 19001,
 			"type": 6,
+			"dname": "expand",
+			"name": "확장",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_chatting.sga",
@@ -1402,6 +1658,8 @@
 		{
 			"code": 17006,
 			"type": 3,
+			"dname": "slot_1_border",
+			"name": "슬롯 2 테두리",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1413,6 +1671,8 @@
 		{
 			"code": 17005,
 			"type": 2,
+			"dname": "slot_1_job",
+			"name": "슬롯 1 직업",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -1427,6 +1687,8 @@
 		{
 			"code": 17004,
 			"type": 2,
+			"dname": "slot_1_nick",
+			"name": "슬롯 1 닉네임",
 			"valign": 2,
 			"halign": 0,
 			"size": "119 18",
@@ -1441,6 +1703,8 @@
 		{
 			"code": 17001,
 			"type": 3,
+			"dname": "slot_1_border",
+			"name": "슬롯 1 테두리",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1452,6 +1716,8 @@
 		{
 			"code": 16005,
 			"type": 1,
+			"dname": "down",
+			"name": "아래로",
 			"valign": 0,
 			"halign": 2,
 			"sga": "sprite_interface.sga",
@@ -1462,6 +1728,8 @@
 		{
 			"code": 16004,
 			"type": 1,
+			"dname": "up",
+			"name": "위로",
 			"valign": 0,
 			"halign": 2,
 			"sga": "sprite_interface.sga",
@@ -1472,6 +1740,8 @@
 		{
 			"code": 16003,
 			"type": 1,
+			"dname": "delete_character",
+			"name": "캐릭터 삭제",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1482,6 +1752,8 @@
 		{
 			"code": 16002,
 			"type": 1,
+			"dname": "create_character",
+			"name": "캐릭터 생성",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1492,6 +1764,8 @@
 		{
 			"code": 16001,
 			"type": 3,
+			"dname": "",
+			"name": "배경",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1502,6 +1776,8 @@
 		{
 			"code": 15007,
 			"type": 1,
+			"dname": "back",
+			"name": "뒤로가기",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1512,6 +1788,8 @@
 		{
 			"code": 15006,
 			"type": 1,
+			"dname": "terminate",
+			"name": "종료",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1522,6 +1800,8 @@
 		{
 			"code": 15005,
 			"type": 1,
+			"dname": "start",
+			"name": "시작",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -1532,6 +1812,8 @@
 		{
 			"code": 15004,
 			"type": 3,
+			"dname": "background_start",
+			"name": "시작 배경",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -1542,6 +1824,8 @@
 		{
 			"code": 15003,
 			"type": 3,
+			"dname": "",
+			"name": "배경_캐릭터 선택",
 			"valign": 0,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -1552,6 +1836,8 @@
 		{
 			"code": 15002,
 			"type": 3,
+			"dname": "background_gear",
+			"name": "배경_톱니바퀴",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1563,6 +1849,8 @@
 		{
 			"code": 15001,
 			"type": 3,
+			"dname": "background",
+			"name": "배경",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1573,6 +1861,8 @@
 		{
 			"code": 14065,
 			"type": 2,
+			"dname": "page",
+			"name": "페이지",
 			"valign": 2,
 			"halign": 0,
 			"size": "41 17",
@@ -1587,6 +1877,8 @@
 		{
 			"code": 14064,
 			"type": 2,
+			"dname": "slot_10_density",
+			"name": "슬롯 10 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -1601,6 +1893,8 @@
 		{
 			"code": 14063,
 			"type": 2,
+			"dname": "slot_10_name",
+			"name": "슬롯 10 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -1615,6 +1909,8 @@
 		{
 			"code": 14062,
 			"type": 3,
+			"dname": "slot_10_selection",
+			"name": "슬롯 10 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1625,6 +1921,8 @@
 		{
 			"code": 14061,
 			"type": 6,
+			"dname": "slot_10_type_2",
+			"name": "슬롯 10(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1636,6 +1934,8 @@
 		{
 			"code": 14060,
 			"type": 6,
+			"dname": "slot_10_type_1",
+			"name": "슬롯 10(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1647,6 +1947,8 @@
 		{
 			"code": 14059,
 			"type": 6,
+			"dname": "slot_10_type_0",
+			"name": "슬롯 10(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1658,6 +1960,8 @@
 		{
 			"code": 14058,
 			"type": 2,
+			"dname": "slot_9_density",
+			"name": "슬롯 9 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -1672,6 +1976,8 @@
 		{
 			"code": 14057,
 			"type": 2,
+			"dname": "slot_9_name",
+			"name": "슬롯 9 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -1686,6 +1992,8 @@
 		{
 			"code": 14056,
 			"type": 3,
+			"dname": "slot_9_selection",
+			"name": "슬롯 9 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1696,6 +2004,8 @@
 		{
 			"code": 14055,
 			"type": 6,
+			"dname": "slot_9_type_2",
+			"name": "슬롯 9(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1707,6 +2017,8 @@
 		{
 			"code": 14054,
 			"type": 6,
+			"dname": "slot_9_type_1",
+			"name": "슬롯 9(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1718,6 +2030,8 @@
 		{
 			"code": 14053,
 			"type": 6,
+			"dname": "slot_9_type_0",
+			"name": "슬롯 9(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1729,6 +2043,8 @@
 		{
 			"code": 14052,
 			"type": 2,
+			"dname": "slot_8_density",
+			"name": "슬롯 8 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -1743,6 +2059,8 @@
 		{
 			"code": 14051,
 			"type": 2,
+			"dname": "slot_8_name",
+			"name": "슬롯 8 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -1757,6 +2075,8 @@
 		{
 			"code": 14050,
 			"type": 3,
+			"dname": "slot_8_selection",
+			"name": "슬롯 8 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1767,6 +2087,8 @@
 		{
 			"code": 14049,
 			"type": 6,
+			"dname": "slot_8_type_2",
+			"name": "슬롯 8(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1778,6 +2100,8 @@
 		{
 			"code": 14048,
 			"type": 6,
+			"dname": "slot_8_type_1",
+			"name": "슬롯 8(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1789,6 +2113,8 @@
 		{
 			"code": 14047,
 			"type": 6,
+			"dname": "slot_8_type_0",
+			"name": "슬롯 8(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1800,6 +2126,8 @@
 		{
 			"code": 14046,
 			"type": 2,
+			"dname": "slot_7_density",
+			"name": "슬롯 7 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -1814,6 +2142,8 @@
 		{
 			"code": 14045,
 			"type": 2,
+			"dname": "slot_7_name",
+			"name": "슬롯 7 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -1828,6 +2158,8 @@
 		{
 			"code": 14044,
 			"type": 3,
+			"dname": "slot_7_selection",
+			"name": "슬롯 7 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1838,6 +2170,8 @@
 		{
 			"code": 14043,
 			"type": 6,
+			"dname": "slot_7_type_2",
+			"name": "슬롯 7(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1849,6 +2183,8 @@
 		{
 			"code": 14042,
 			"type": 6,
+			"dname": "slot_7_type_1",
+			"name": "슬롯 7(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1860,6 +2196,8 @@
 		{
 			"code": 14041,
 			"type": 6,
+			"dname": "slot_7_type_0",
+			"name": "슬롯 7(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1871,6 +2209,8 @@
 		{
 			"code": 14040,
 			"type": 2,
+			"dname": "slot_6_density",
+			"name": "슬롯 6 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -1885,6 +2225,8 @@
 		{
 			"code": 14039,
 			"type": 2,
+			"dname": "slot_6_name",
+			"name": "슬롯 6 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -1899,6 +2241,8 @@
 		{
 			"code": 14038,
 			"type": 3,
+			"dname": "slot_6_selection",
+			"name": "슬롯 6 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1909,6 +2253,8 @@
 		{
 			"code": 14037,
 			"type": 6,
+			"dname": "slot_6_type_2",
+			"name": "슬롯 6(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1920,6 +2266,8 @@
 		{
 			"code": 14036,
 			"type": 6,
+			"dname": "slot_6_type_1",
+			"name": "슬롯 6(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1931,6 +2279,8 @@
 		{
 			"code": 14035,
 			"type": 6,
+			"dname": "slot_6_type_0",
+			"name": "슬롯 6(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1942,6 +2292,8 @@
 		{
 			"code": 14034,
 			"type": 2,
+			"dname": "slot_5_density",
+			"name": "슬롯 5 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -1956,6 +2308,8 @@
 		{
 			"code": 14033,
 			"type": 2,
+			"dname": "slot_5_name",
+			"name": "슬롯 5 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -1970,6 +2324,8 @@
 		{
 			"code": 14032,
 			"type": 3,
+			"dname": "slot_5_selection",
+			"name": "슬롯 5 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1980,6 +2336,8 @@
 		{
 			"code": 14031,
 			"type": 6,
+			"dname": "slot_5_type_2",
+			"name": "슬롯 5(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -1991,6 +2349,8 @@
 		{
 			"code": 14030,
 			"type": 6,
+			"dname": "slot_5_type_1",
+			"name": "슬롯 5(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2002,6 +2362,8 @@
 		{
 			"code": 14029,
 			"type": 6,
+			"dname": "slot_5_type_0",
+			"name": "슬롯 5(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2013,6 +2375,8 @@
 		{
 			"code": 14028,
 			"type": 2,
+			"dname": "slot_4_density",
+			"name": "슬롯 4 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -2027,6 +2391,8 @@
 		{
 			"code": 14027,
 			"type": 2,
+			"dname": "slot_4_name",
+			"name": "슬롯 4 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -2041,6 +2407,8 @@
 		{
 			"code": 14026,
 			"type": 3,
+			"dname": "slot_4_selection",
+			"name": "슬롯 4 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2051,6 +2419,8 @@
 		{
 			"code": 14025,
 			"type": 6,
+			"dname": "slot_4_type_2",
+			"name": "슬롯 4(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2062,6 +2432,8 @@
 		{
 			"code": 14024,
 			"type": 6,
+			"dname": "slot_4_type_1",
+			"name": "슬롯 4(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2073,6 +2445,8 @@
 		{
 			"code": 14023,
 			"type": 6,
+			"dname": "slot_4_type_0",
+			"name": "슬롯 4(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2084,6 +2458,8 @@
 		{
 			"code": 14022,
 			"type": 2,
+			"dname": "slot_3_density",
+			"name": "슬롯 3 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -2098,6 +2474,8 @@
 		{
 			"code": 14021,
 			"type": 2,
+			"dname": "slot_3_name",
+			"name": "슬롯 3 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -2112,6 +2490,8 @@
 		{
 			"code": 14020,
 			"type": 3,
+			"dname": "slot_3_selection",
+			"name": "슬롯 3 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2122,6 +2502,8 @@
 		{
 			"code": 14019,
 			"type": 6,
+			"dname": "slot_3_type_2",
+			"name": "슬롯 3(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2133,6 +2515,8 @@
 		{
 			"code": 14018,
 			"type": 6,
+			"dname": "slot_3_type_1",
+			"name": "슬롯 3(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2144,6 +2528,8 @@
 		{
 			"code": 14017,
 			"type": 6,
+			"dname": "slot_3_type_0",
+			"name": "슬롯 3(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2155,6 +2541,8 @@
 		{
 			"code": 14016,
 			"type": 2,
+			"dname": "slot_2_density",
+			"name": "슬롯 2 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -2169,6 +2557,8 @@
 		{
 			"code": 14015,
 			"type": 2,
+			"dname": "slot_2_name",
+			"name": "슬롯 2 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -2183,6 +2573,8 @@
 		{
 			"code": 14014,
 			"type": 3,
+			"dname": "slot_2_selection",
+			"name": "슬롯 2 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2193,6 +2585,8 @@
 		{
 			"code": 14013,
 			"type": 6,
+			"dname": "slot_2_type_2",
+			"name": "슬롯 2(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2204,6 +2598,8 @@
 		{
 			"code": 14012,
 			"type": 6,
+			"dname": "slot_2_type_1",
+			"name": "슬롯 2(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2215,6 +2611,8 @@
 		{
 			"code": 14011,
 			"type": 6,
+			"dname": "slot_2_type_0",
+			"name": "슬롯 2(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2226,6 +2624,8 @@
 		{
 			"code": 14010,
 			"type": 2,
+			"dname": "slot_1_density",
+			"name": "슬롯 1 포화도",
 			"valign": 2,
 			"halign": 0,
 			"size": "37 21",
@@ -2240,6 +2640,8 @@
 		{
 			"code": 14009,
 			"type": 2,
+			"dname": "slot_1_name",
+			"name": "슬롯 1 이름",
 			"valign": 2,
 			"halign": 0,
 			"size": "109 21",
@@ -2254,6 +2656,8 @@
 		{
 			"code": 14008,
 			"type": 3,
+			"dname": "slot_1_selection",
+			"name": "슬롯 1 선택",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2265,6 +2669,8 @@
 		{
 			"code": 14007,
 			"type": 6,
+			"dname": "slot_1_type_2",
+			"name": "슬롯 1(타입2)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2276,6 +2682,8 @@
 		{
 			"code": 14006,
 			"type": 6,
+			"dname": "slot_1_type_1",
+			"name": "슬롯 1(타입1)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2287,6 +2695,8 @@
 		{
 			"code": 14005,
 			"type": 6,
+			"dname": "slot_1_type_0",
+			"name": "슬롯 1(타입0)",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2298,6 +2708,8 @@
 		{
 			"code": 14004,
 			"type": 6,
+			"dname": "adult",
+			"name": "성인",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2309,6 +2721,8 @@
 		{
 			"code": 14003,
 			"type": 6,
+			"dname": "teen",
+			"name": "청소년",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2320,6 +2734,8 @@
 		{
 			"code": 14002,
 			"type": 1,
+			"dname": "refresh",
+			"name": "새로고침",
 			"valign": 2,
 			"halign": 2,
 			"sga": "sprite_interface.sga",
@@ -2330,6 +2746,8 @@
 		{
 			"code": 14001,
 			"type": 3,
+			"dname": "",
+			"name": "배경",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2340,6 +2758,8 @@
 		{
 			"code": 13006,
 			"type": 3,
+			"dname": "disabled",
+			"name": "비활성",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2350,6 +2770,8 @@
 		{
 			"code": 13005,
 			"type": 3,
+			"dname": "normal_border",
+			"name": "노말(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2361,6 +2783,8 @@
 		{
 			"code": 13004,
 			"type": 3,
+			"dname": "normal",
+			"name": "노말",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2371,6 +2795,8 @@
 		{
 			"code": 13003,
 			"type": 3,
+			"dname": "selected_border",
+			"name": "선택됨(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2382,6 +2808,8 @@
 		{
 			"code": 13002,
 			"type": 3,
+			"dname": "selected",
+			"name": "선택됨",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2392,6 +2820,8 @@
 		{
 			"code": 13001,
 			"type": 3,
+			"dname": "selected_background",
+			"name": "선택됨(배경)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2402,6 +2832,8 @@
 		{
 			"code": 12006,
 			"type": 3,
+			"dname": "disabled",
+			"name": "비활성",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2412,6 +2844,8 @@
 		{
 			"code": 12005,
 			"type": 3,
+			"dname": "normal_border",
+			"name": "노말(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2423,6 +2857,8 @@
 		{
 			"code": 12004,
 			"type": 3,
+			"dname": "normal",
+			"name": "노말",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2433,6 +2869,8 @@
 		{
 			"code": 12003,
 			"type": 3,
+			"dname": "selected_border",
+			"name": "선택됨(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2444,6 +2882,8 @@
 		{
 			"code": 12002,
 			"type": 3,
+			"dname": "selected",
+			"name": "선택됨",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2454,6 +2894,8 @@
 		{
 			"code": 12001,
 			"type": 3,
+			"dname": "selected_background",
+			"name": "선택됨(배경)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2464,6 +2906,8 @@
 		{
 			"code": 11006,
 			"type": 3,
+			"dname": "disabled",
+			"name": "비활성",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2474,6 +2918,8 @@
 		{
 			"code": 11005,
 			"type": 3,
+			"dname": "normal_border",
+			"name": "노말(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2485,6 +2931,8 @@
 		{
 			"code": 11004,
 			"type": 3,
+			"dname": "normal",
+			"name": "노말",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2495,6 +2943,8 @@
 		{
 			"code": 11003,
 			"type": 3,
+			"dname": "selected_border",
+			"name": "선택됨(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2506,6 +2956,8 @@
 		{
 			"code": 11002,
 			"type": 3,
+			"dname": "selected",
+			"name": "선택됨",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2516,6 +2968,8 @@
 		{
 			"code": 11001,
 			"type": 3,
+			"dname": "selected_background",
+			"name": "선택됨(배경)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2526,6 +2980,8 @@
 		{
 			"code": 10006,
 			"type": 3,
+			"dname": "disabled",
+			"name": "비활성",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2536,6 +2992,8 @@
 		{
 			"code": 10005,
 			"type": 3,
+			"dname": "normal_border",
+			"name": "노말(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2547,6 +3005,8 @@
 		{
 			"code": 10004,
 			"type": 3,
+			"dname": "normal",
+			"name": "노말",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2557,6 +3017,8 @@
 		{
 			"code": 10003,
 			"type": 3,
+			"dname": "selected_border",
+			"name": "선택됨(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2568,6 +3030,8 @@
 		{
 			"code": 10002,
 			"type": 3,
+			"dname": "selected",
+			"name": "선택됨",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2578,6 +3042,8 @@
 		{
 			"code": 10001,
 			"type": 3,
+			"dname": "selected_background",
+			"name": "선택됨(배경)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2588,6 +3054,8 @@
 		{
 			"code": 9006,
 			"type": 3,
+			"dname": "disabled",
+			"name": "비활성",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2598,6 +3066,8 @@
 		{
 			"code": 9005,
 			"type": 3,
+			"dname": "normal_border",
+			"name": "노말(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2609,6 +3079,8 @@
 		{
 			"code": 9004,
 			"type": 3,
+			"dname": "normal",
+			"name": "노말",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2619,6 +3091,8 @@
 		{
 			"code": 9003,
 			"type": 3,
+			"dname": "selected_border",
+			"name": "선택됨(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2630,6 +3104,8 @@
 		{
 			"code": 9002,
 			"type": 3,
+			"dname": "selected",
+			"name": "선택됨",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2640,6 +3116,8 @@
 		{
 			"code": 9001,
 			"type": 3,
+			"dname": "selected_background",
+			"name": "선택됨(배경)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2650,6 +3128,8 @@
 		{
 			"code": 8006,
 			"type": 3,
+			"dname": "disabled",
+			"name": "비활성",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2660,6 +3140,8 @@
 		{
 			"code": 8005,
 			"type": 3,
+			"dname": "normal_border",
+			"name": "노말(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2671,6 +3153,8 @@
 		{
 			"code": 8004,
 			"type": 3,
+			"dname": "normal",
+			"name": "노말",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2681,6 +3165,8 @@
 		{
 			"code": 8003,
 			"type": 3,
+			"dname": "selected_border",
+			"name": "선택됨(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2692,6 +3178,8 @@
 		{
 			"code": 8002,
 			"type": 3,
+			"dname": "selected",
+			"name": "선택됨",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2702,6 +3190,8 @@
 		{
 			"code": 8001,
 			"type": 3,
+			"dname": "selected_background",
+			"name": "선택됨(배경)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2712,6 +3202,8 @@
 		{
 			"code": 7006,
 			"type": 3,
+			"dname": "disabled",
+			"name": "비활성",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2722,6 +3214,8 @@
 		{
 			"code": 7005,
 			"type": 3,
+			"dname": "normal_border",
+			"name": "노말(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2733,6 +3227,8 @@
 		{
 			"code": 7004,
 			"type": 3,
+			"dname": "normal",
+			"name": "노말",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2743,6 +3239,8 @@
 		{
 			"code": 7003,
 			"type": 3,
+			"dname": "selected_border",
+			"name": "선택됨(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2754,6 +3252,8 @@
 		{
 			"code": 7002,
 			"type": 3,
+			"dname": "selected",
+			"name": "선택됨",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2764,6 +3264,8 @@
 		{
 			"code": 7001,
 			"type": 3,
+			"dname": "selected_background",
+			"name": "선택됨(배경)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2775,6 +3277,8 @@
 		{
 			"code": 6006,
 			"type": 3,
+			"dname": "disabled",
+			"name": "비활성",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2785,6 +3289,8 @@
 		{
 			"code": 6005,
 			"type": 3,
+			"dname": "normal_border",
+			"name": "노말(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2796,6 +3302,8 @@
 		{
 			"code": 6004,
 			"type": 3,
+			"dname": "normal",
+			"name": "노말",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2806,6 +3314,8 @@
 		{
 			"code": 6003,
 			"type": 3,
+			"dname": "selected_border",
+			"name": "선택됨(테두리)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2817,6 +3327,8 @@
 		{
 			"code": 6002,
 			"type": 3,
+			"dname": "selected",
+			"name": "선택됨",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2827,6 +3339,8 @@
 		{
 			"code": 6001,
 			"type": 3,
+			"dname": "selected_background",
+			"name": "선택됨(배경)",
 			"valign": 1,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2838,6 +3352,8 @@
 		{
 			"code": 4008,
 			"type": 3,
+			"dname": "seria",
+			"name": "세리아",
 			"valign": 0,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2848,6 +3364,8 @@
 		{
 			"code": 4007,
 			"type": 3,
+			"dname": "cain",
+			"name": "카인",
 			"valign": 0,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2858,6 +3376,8 @@
 		{
 			"code": 4006,
 			"type": 3,
+			"dname": "diregie",
+			"name": "디레지에",
 			"valign": 0,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2868,6 +3388,8 @@
 		{
 			"code": 4005,
 			"type": 3,
+			"dname": "kasias",
+			"name": "카시야스",
 			"valign": 0,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2879,6 +3401,8 @@
 		{
 			"code": 4004,
 			"type": 3,
+			"dname": "prey",
+			"name": "프레이",
 			"valign": 0,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2889,6 +3413,8 @@
 		{
 			"code": 4003,
 			"type": 3,
+			"dname": "siroco",
+			"name": "시로코",
 			"valign": 0,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2899,6 +3425,8 @@
 		{
 			"code": 4002,
 			"type": 3,
+			"dname": "hilder",
+			"name": "힐더",
 			"valign": 0,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2909,6 +3437,8 @@
 		{
 			"code": 4001,
 			"type": 3,
+			"dname": "luke",
+			"name": "루크",
 			"valign": 0,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2919,6 +3449,8 @@
 		{
 			"code": 3006,
 			"type": 1,
+			"dname": "terminate",
+			"name": "종료",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2929,6 +3461,8 @@
 		{
 			"code": 3005,
 			"type": 1,
+			"dname": "start",
+			"name": "시작",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2939,6 +3473,8 @@
 		{
 			"code": 3004,
 			"type": 3,
+			"dname": "background_start",
+			"name": "시작 배경",
 			"valign": 2,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2949,6 +3485,8 @@
 		{
 			"code": 3003,
 			"type": 3,
+			"dname": "server_select",
+			"name": "서버 선택",
 			"valign": 0,
 			"halign": 1,
 			"sga": "sprite_interface.sga",
@@ -2959,6 +3497,8 @@
 		{
 			"code": 3002,
 			"type": 3,
+			"dname": "background_gear",
+			"name": "배경_톱니바퀴",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2970,6 +3510,8 @@
 		{
 			"code": 3001,
 			"type": 3,
+			"dname": "background",
+			"name": "배경",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface.sga",
@@ -2980,6 +3522,8 @@
 		{
 			"code": 2009,
 			"type": 9,
+			"dname": "id_save",
+			"name": "아이디 저장 링크",
 			"valign": 2,
 			"halign": 0,
 			"size": "36 15"
@@ -2987,6 +3531,8 @@
 		{
 			"code": 2008,
 			"type": 5,
+			"dname": "id_save",
+			"name": "아이디 저장",
 			"valign": 2,
 			"halign": 0,
 			"check": true,
@@ -2999,6 +3545,8 @@
 		{
 			"code": 2007,
 			"type": 4,
+			"dname": "pw",
+			"name": "PW",
 			"valign": 2,
 			"halign": 0,
 			"size": "141 16",
@@ -3014,6 +3562,8 @@
 		{
 			"code": 2006,
 			"type": 4,
+			"dname": "id",
+			"name": "ID",
 			"valign": 2,
 			"halign": 0,
 			"size": "141 16",
@@ -3029,6 +3579,8 @@
 		{
 			"code": 2005,
 			"type": 1,
+			"dname": "terminate",
+			"name": "종료",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -3039,6 +3591,8 @@
 		{
 			"code": 2004,
 			"type": 1,
+			"dname": "start",
+			"name": "시작",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -3049,6 +3603,8 @@
 		{
 			"code": 2003,
 			"type": 6,
+			"dname": "dnf_login",
+			"name": "던파 로그인",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -3060,6 +3616,8 @@
 		{
 			"code": 2002,
 			"type": 6,
+			"dname": "hangame_login",
+			"name": "한게임 로그인",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -3071,6 +3629,8 @@
 		{
 			"code": 2001,
 			"type": 3,
+			"dname": "background",
+			"name": "배경",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite.sga",
@@ -3081,6 +3641,8 @@
 		{
 			"code": 1005,
 			"type": 2,
+			"dname": "developer",
+			"name": "만든사람",
 			"valign": 2,
 			"halign": 2,
 			"size": "152 16",
@@ -3095,6 +3657,8 @@
 		{
 			"code": 1004,
 			"type": 2,
+			"dname": "source",
+			"name": "출처",
 			"valign": 2,
 			"halign": 0,
 			"size": "152 17",
@@ -3109,6 +3673,8 @@
 		{
 			"code": 1003,
 			"type": 3,
+			"dname": "ganzi",
+			"name": "간지용",
 			"valign": 2,
 			"halign": 0,
 			"sga": "sprite_interface_assault.sga",
@@ -3119,6 +3685,8 @@
 		{
 			"code": 1002,
 			"type": 3,
+			"dname": "logo",
+			"name": "로고",
 			"valign": 2,
 			"halign": 2,
 			"sga": "sprite.sga",
@@ -3129,6 +3697,8 @@
 		{
 			"code": 1001,
 			"type": 3,
+			"dname": "age_18",
+			"name": "청소년이용불가",
 			"valign": 0,
 			"halign": 2,
 			"sga": "sprite.sga",
@@ -3141,6 +3711,8 @@
 		{
 			"code": 1000,
 			"type": 0,
+			"dname": "ui_login",
+			"name": "로그인",
 			"valign": 1,
 			"halign": 1,
 			"size": "640 480",
@@ -3156,6 +3728,8 @@
 		{
 			"code": 2000,
 			"type": 0,
+			"dname": "login_box",
+			"name": "로그인 박스",
 			"valign": 2,
 			"halign": 2,
 			"size": "283 141",
@@ -3174,6 +3748,8 @@
 		{
 			"code": 3000,
 			"type": 0,
+			"dname": "ui_channel",
+			"name": "채널",
 			"valign": 2,
 			"halign": 0,
 			"size": "640 480",
@@ -3192,6 +3768,8 @@
 		{
 			"code": 4000,
 			"type": 0,
+			"dname": "server_character_list",
+			"name": "서버 캐릭터 목록",
 			"valign": 0,
 			"halign": 0,
 			"size": "640 480",
@@ -3209,6 +3787,8 @@
 		{
 			"code": 5000,
 			"type": 0,
+			"dname": "server_button_list",
+			"name": "서버 버튼 목록",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 480",
@@ -3226,6 +3806,8 @@
 		{
 			"code": 6000,
 			"type": 0,
+			"dname": "luke",
+			"name": "루크",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 42",
@@ -3241,6 +3823,8 @@
 		{
 			"code": 7000,
 			"type": 0,
+			"dname": "hilder",
+			"name": "힐더",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 42",
@@ -3256,6 +3840,8 @@
 		{
 			"code": 8000,
 			"type": 0,
+			"dname": "siroco",
+			"name": "시로코",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 42",
@@ -3271,6 +3857,8 @@
 		{
 			"code": 9000,
 			"type": 0,
+			"dname": "prey",
+			"name": "프레이",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 42",
@@ -3286,6 +3874,8 @@
 		{
 			"code": 10000,
 			"type": 0,
+			"dname": "kasias",
+			"name": "카시야스",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 42",
@@ -3301,6 +3891,8 @@
 		{
 			"code": 11000,
 			"type": 0,
+			"dname": "diregie",
+			"name": "디레지에",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 42",
@@ -3316,6 +3908,8 @@
 		{
 			"code": 12000,
 			"type": 0,
+			"dname": "cain",
+			"name": "카인",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 42",
@@ -3331,6 +3925,8 @@
 		{
 			"code": 13000,
 			"type": 0,
+			"dname": "seria",
+			"name": "세리아",
 			"valign": 0,
 			"halign": 0,
 			"size": "158 42",
@@ -3346,6 +3942,8 @@
 		{
 			"code": 14000,
 			"type": 0,
+			"dname": "channel_list",
+			"name": "채널 목록",
 			"valign": 0,
 			"halign": 2,
 			"size": "433 383",
@@ -3420,6 +4018,8 @@
 		{
 			"code": 15000,
 			"type": 0,
+			"dname": "ui_select_character",
+			"name": "캐릭터 선택",
 			"valign": 2,
 			"halign": 0,
 			"size": "640 480",
@@ -3437,6 +4037,8 @@
 		{
 			"code": 16000,
 			"type": 0,
+			"dname": "character_list",
+			"name": "캐릭터 목록",
 			"valign": 2,
 			"halign": 0,
 			"size": "539 411",
@@ -3452,6 +4054,8 @@
 		{
 			"code": 17000,
 			"type": 0,
+			"dname": "selection",
+			"name": "슬롯",
 			"valign": 2,
 			"halign": 0,
 			"size": "508 364",
@@ -3501,6 +4105,8 @@
 		{
 			"code": 18000,
 			"type": 0,
+			"dname": "ui_chat",
+			"name": "채팅",
 			"valign": 0,
 			"halign": 0,
 			"size": "350 163",
@@ -3512,6 +4118,8 @@
 		{
 			"code": 19000,
 			"type": 0,
+			"dname": "tab",
+			"name": "탭",
 			"valign": 0,
 			"halign": 0,
 			"size": "350 31",
@@ -3524,6 +4132,8 @@
 		{
 			"code": 20000,
 			"type": 0,
+			"dname": "chatbox_small",
+			"name": "채팅 박스(Small)",
 			"valign": 2,
 			"halign": 0,
 			"size": "350 138",
@@ -3535,6 +4145,8 @@
 		{
 			"code": 21000,
 			"type": 0,
+			"dname": "ui_hud",
+			"name": "HUD",
 			"valign": 2,
 			"halign": 0,
 			"size": "640 480",
@@ -3545,6 +4157,8 @@
 		{
 			"code": 22000,
 			"type": 0,
+			"dname": "ui_inventory",
+			"name": "인벤토리",
 			"valign": 2,
 			"halign": 0,
 			"size": "640 480",
@@ -3558,6 +4172,8 @@
 		{
 			"code": 23000,
 			"type": 0,
+			"dname": "inven_slots",
+			"name": "인벤 슬롯",
 			"valign": 2,
 			"halign": 0,
 			"size": "268 138",
@@ -3599,6 +4215,8 @@
 		{
 			"code": 24000,
 			"type": 0,
+			"dname": "equip_slots",
+			"name": "장비 슬롯",
 			"valign": 2,
 			"halign": 0,
 			"size": "273 76",
@@ -3618,6 +4236,8 @@
 		{
 			"code": 25000,
 			"type": 0,
+			"dname": "ui_chat_input",
+			"name": "채팅 입력창",
 			"valign": 2,
 			"halign": 1,
 			"size": "576 100",
@@ -3632,6 +4252,8 @@
 		{
 			"code": 26000,
 			"type": 0,
+			"dname": "ui_popup",
+			"name": "팝업",
 			"valign": 1,
 			"halign": 1,
 			"size": "640 480",
@@ -3642,6 +4264,8 @@
 		{
 			"code": 27000,
 			"type": 0,
+			"dname": "holder",
+			"name": "홀더",
 			"valign": 1,
 			"halign": 1,
 			"size": "180 180",
@@ -3654,6 +4278,8 @@
 		{
 			"code": 28000,
 			"type": 0,
+			"dname": "btn_holder",
+			"name": "버튼홀더",
 			"valign": 2,
 			"halign": 1,
 			"size": "131 30",
@@ -3666,6 +4292,8 @@
 		{
 			"code": 29000,
 			"type": 0,
+			"dname": "ui_select_charactor",
+			"name": "테스트 그룹",
 			"valign": 1,
 			"halign": 1,
 			"size": "640 480",
@@ -3689,6 +4317,8 @@
 		{
 			"code": 30000,
 			"type": 0,
+			"dname": "o1",
+			"name": "프로그래스바 그룹",
 			"valign": 2,
 			"halign": 0,
 			"size": "213 89",
@@ -3702,6 +4332,8 @@
 		{
 			"code": 31000,
 			"type": 0,
+			"dname": "o2",
+			"name": "외부 그룹",
 			"valign": 2,
 			"halign": 0,
 			"size": "323 249",
@@ -3720,6 +4352,8 @@
 		{
 			"code": 32000,
 			"type": 0,
+			"dname": "o21",
+			"name": "내부 그룹",
 			"valign": 2,
 			"halign": 0,
 			"size": "179 139",
@@ -3738,6 +4372,8 @@
 	"group_master": {
 		"code": 0,
 		"type": 0,
+		"dname": "group_master",
+		"name": "그룹 마스터",
 		"valign": 0,
 		"halign": 0,
 		"size": "640 480",
@@ -3753,5 +4389,5 @@
 			"29000 0 0"
 		]
 	},
-	"mode": "GameData"
+	"mode": "UIToolData"
 }
