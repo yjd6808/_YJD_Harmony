@@ -36,6 +36,16 @@ void AuthNetMaster::Initialize() {
 
 void AuthNetMaster::OnLoop(PulserStatistics* pulserStat) {
 
+#if DebugMode
+	static PulserTimer s;
+	s.ElapsedMs += pulserStat->SleepIntervalLast;
+
+	if (s.ElapsedSeconds(5)) {
+		_LogDebug_("중앙 시각 %s", CoreTimeManager_v->Now().FormatMysqlTime().Source());
+		_LogDebug_("현재 시각 %s", DateTime::Now().FormatMysqlTime().Source());
+	}
+#endif
+
 }
 
 void AuthNetMaster::OnCapturedInputEvent(int inputEvent) {

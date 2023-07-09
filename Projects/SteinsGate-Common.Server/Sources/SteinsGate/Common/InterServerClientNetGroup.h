@@ -18,7 +18,7 @@ public:
 
 	void Initialize() override;
 	bool ConnectCenterServer(int tryCount);
-	void ProcessLoop(JCore::PulserStatistics* pulseStat);
+	void ProcessLoop(JCore::PulserStatistics* pulserStat);
 
 	JNetwork::TcpClient* GetInterServerClientTcp() const { return m_pInterServerClientTcp; }
 	JNetwork::UdpClient* GetInterServerClientUdp() const { return m_pInterServerClientUdp; }
@@ -28,7 +28,13 @@ protected:
 	virtual void InitializeInterServerTcp() = 0;
 	virtual void InitializeInterServerUdp() = 0;
 
-	virtual void OnLoop(JCore::PulserStatistics* pulseStat) = 0;
+	
+
+	void OnLoopCommon(JCore::PulserStatistics* pulserStat);
+	virtual void OnLoop(JCore::PulserStatistics* pulserStat) = 0;
+	virtual bool IsPeerServer() { return true; }	// 중앙 서버만 false
+
+	void SyncPeerServerTime(JCore::PulserStatistics* pulserStat);
 
 	JNetwork::TcpClient* m_pInterServerClientTcp;
 	JNetwork::UdpClient* m_pInterServerClientUdp;

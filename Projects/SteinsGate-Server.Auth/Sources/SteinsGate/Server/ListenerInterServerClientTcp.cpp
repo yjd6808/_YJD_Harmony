@@ -25,6 +25,7 @@ ListenerInterServerClientTcp::ListenerInterServerClientTcp() {
 	Parser.AddCommand<CmdAlreadyConnected>		(R_INTERSERVER::RecvAlreadyConnected);
 	Parser.AddCommand<CmdWhoAreYou>				(R_INTERSERVER::RecvWhoAreYou);
 	Parser.AddCommand<CmdYouNeedToDoThis>		(R_INTERSERVER::RecvYouNeedToDoThis);
+	Parser.AddCommand<CmdTimeSyncAck>			(R_INTERSERVER::RecvTimeSyncAck);
 	Parser.AddCommand<CmdP2PRelayStaticTest>	(R_INTERSERVER::RecvP2PRelayStaticTest);
 	Parser.AddCommand<CmdP2PRelayDynamicTest>	(R_INTERSERVER::RecvP2PRelayDynamicTest);
 }

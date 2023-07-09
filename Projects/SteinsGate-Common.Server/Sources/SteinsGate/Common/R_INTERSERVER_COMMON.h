@@ -21,6 +21,7 @@ public:
 	static void RecvWhoAreYou(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RecvAlreadyConnected(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RecvYouNeedToDoThis(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RecvTimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd);
 
 	// RELAY
 	static void RecvP2PRelayStaticTest(JNetwork::Session* session, JNetwork::ICommand* cmd);

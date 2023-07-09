@@ -35,6 +35,7 @@ public:
 	CenterSession* GetCenterSession(int serverId) { return m_pSession[serverId].Session; }
 	void AddSession(CenterSession* session);
 	void RemoveSession(CenterSession* session);
+	void BroadcastPacket(JNetwork::ISendPacket* packet);
 
 	bool IsAllCenterSessionConnected();
 	bool IsConnected(CenterSession* session);

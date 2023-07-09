@@ -12,13 +12,16 @@
 #include <SteinsGate/Common/ServerEnum.h>
 #include <SteinsGate/Common/InterServerSendHelper.h>
 
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/InterServerCmd_Relay.h>
+
 struct S_CENTER : InterServerSendHelper<S_CENTER>
 {
 public:
 	static bool SendWhoAreYou();
 	static bool SendAlreadyConnected();
 	static bool SendYouNeedToDoThis(CenterOrder_t order);
-
+	static bool SendTimeSyncAck(CmdTimeSync& time);
 
 	static bool BroadcastYouNeedToDoThis(JNetwork::TcpServer* server, CenterOrder_t order);
 };

@@ -23,6 +23,8 @@
 // CmdYouNeedToDoThis		: 서버가 접속한 클라이언트에게 명령을 내림
 // CmdHostMessage			: 서버/클라간 주고받는 문자열 메시지
 // CmdNotifyBootState		: 클라가 현재 자신의 부팅상태를 서버에게 알려줌
+// CmdTimeSync				: 시간 정보 요청
+// CmdTimeSyncAck			: 시간 정보 요청 응답
 // ======================= CMD LIST =======================
 
 #define CMDID_CmdWhoAreYou					50000
@@ -31,6 +33,8 @@
 #define CMDID_CmdYouNeedToDoThis			50003
 #define CMDID_CmdHostMessage				50004
 #define CMDID_CmdNotifyBootState			50005
+#define CMDID_CmdTimeSync					50006
+#define CMDID_CmdTimeSyncAck				50007
 
 #pragma pack(push, CMD_ALIGNMENT)
 
@@ -103,6 +107,31 @@ HOST_STATIC_CMD_BEGIN
 ServerBootState_t State;
 // ───────────────────────────────────────────
 HOST_STATIC_CMD_END(CmdNotifyBootState)
+
+// ======================================================================================
+
+HOST_STATIC_CMD_BEGIN
+	( CmdTimeSync
+	, CMDID_CmdTimeSync
+	, ePeerToCenter
+	)
+// ───────────────────────────────────────────
+JCore::DateTime PeerServerTime;
+// ───────────────────────────────────────────
+HOST_STATIC_CMD_END(CmdTimeSync)
+
+// ======================================================================================
+
+HOST_STATIC_CMD_BEGIN
+	( CmdTimeSyncAck
+	, CMDID_CmdTimeSyncAck
+	, eCenterToPeer
+	)
+// ───────────────────────────────────────────
+JCore::DateTime PeerServerTime;
+JCore::DateTime MasterServerTime;
+// ───────────────────────────────────────────
+HOST_STATIC_CMD_END(CmdTimeSyncAck)
 
 // ======================================================================================
 

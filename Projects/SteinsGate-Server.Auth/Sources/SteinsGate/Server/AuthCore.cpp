@@ -8,7 +8,6 @@
 #include "Auth.h"
 #include "AuthCore.h"
 #include "AuthCoreHeader.h"
-#include "SteinsGate/Common/InterServerClientNetGroup.h"
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -41,6 +40,7 @@ void InitializeAuthCore() {
 		CoreCommonServer_v = CoreServer_v;
 		CoreInterServerClientTcp_v = CoreInterServerClientNetGroup_v->GetInterServerClientTcp();
 		CoreInterServerClientUdp_v = CoreInterServerClientNetGroup_v->GetInterServerClientUdp();
+		CoreTimeManager_v = TimeManager::Get();
 
 		CoreThreadPool_v = dbg_new ThreadPool{ 2 };
 		CoreScheduler_v = dbg_new Scheduler{ 2 };
@@ -55,6 +55,7 @@ void FinalizeAuthCore() {
 	JCORE_DELETE_SINGLETON_SAFE(CoreNetMaster_v);
 	JCORE_DELETE_SINGLETON_SAFE(CoreDataManager_v);
 	JCORE_DELETE_SINGLETON_SAFE(CoreTokenManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreTimeManager_v);
 	JCORE_DELETE_SAFE(CoreThreadPool_v);
 	JCORE_DELETE_SAFE(CoreScheduler_v);
 	JCORE_DELETE_SAFE(CoreGameDB_v);

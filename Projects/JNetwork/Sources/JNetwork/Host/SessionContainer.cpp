@@ -42,7 +42,7 @@ Session* SessionContainer::GetSession(SOCKET socket) {
 
 void SessionContainer::DisconnectAllSessions() {
 	LOCK_GUARD(m_ContainerLock);
-	m_hAllSession.Values().Extension().ForEach([](Session* session) {
+	m_hAllSession.ForEachValue([](Session* session) {
 		session->Disconnect();
 		session->WaitForZeroPending();
 	});
@@ -51,20 +51,22 @@ void SessionContainer::DisconnectAllSessions() {
 void SessionContainer::Clear() {
 	LOCK_GUARD(m_ContainerLock);
 
-	m_hAllSession.Values().Extension().ForEach([](Session* session) {
+	m_hAllSession.ForEachValue([](Session* session) {
 		delete session;
 	});
 	m_hAllSession.Clear();
 }
 
 void SessionContainer::ForEach(Action<Session*> fnForEach) {
-	m_hAllSession.Values().Extension().ForEach([&fnForEach](Session* session) {
+	LOCK_GUARD(m_ContainerLock);
+	m_hAllSession.ForEachValue([&fnForEach](Session* session) {
 		fnForEach(session);
 	});
 }
 
 void SessionContainer::ForEachConnected(JCore::Action<Session*> fnForEach) {
-	m_hAllSession.Values().Extension().ForEach([&fnForEach](Session* session) {
+	LOCK_GUARD(m_ContainerLock);
+	m_hAllSession.ForEachValue([&fnForEach](Session* session) {
 		if (session->GetState() == Host::eConnected)
 			fnForEach(session);
 	});

@@ -45,6 +45,11 @@ void R_INTERSERVER_COMMON::RecvYouNeedToDoThis(Session* session, ICommand* cmd) 
 	S_INTERSERVER_COMMON::SendCenterMessage("요청을 수행할 수 없는 상태입니다.");
 }
 
+void R_INTERSERVER_COMMON::RecvTimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+	const CmdTimeSyncAck* pCmd = (CmdTimeSyncAck*)cmd;
+	CoreTimeManager_v->UpdateMasterServerTime(pCmd->MasterServerTime);
+}
+
 void R_INTERSERVER_COMMON::RecvP2PRelayStaticTest(Session* session, ICommand* cmd) {
 	CmdP2PRelayStaticTest* pCmd = (CmdP2PRelayStaticTest*)cmd;
 	Console::WriteLine("%s", pCmd->Msg.Source);

@@ -17,6 +17,7 @@ class CommonNetGroup;
 class CommonServer;
 struct ServerProcessInfo;
 class InterServerClientNetGroup;
+class TimeManager;
 
 NS_JNET_BEGIN
 class TcpClient;
@@ -32,6 +33,7 @@ extern ServerProcessInfo* CoreServerProcessInfo_v;
 extern InterServerClientNetGroup* CoreInterServerClientNetGroup_v;
 extern JNetwork::TcpClient* CoreInterServerClientTcp_v;
 extern JNetwork::UdpClient* CoreInterServerClientUdp_v;
+extern TimeManager* CoreTimeManager_v;
 
 void InitializeServerCore();
 void FinalizeServerCore();

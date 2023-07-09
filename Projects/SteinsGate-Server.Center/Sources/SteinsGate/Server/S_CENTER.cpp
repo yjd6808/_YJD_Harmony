@@ -31,6 +31,13 @@ bool S_CENTER::SendYouNeedToDoThis(CenterOrder_t order) {
 	return true;
 }
 
+bool S_CENTER::SendTimeSyncAck(CmdTimeSync& time) {
+	auto sending = SendBegin<CmdTimeSyncAck>();
+	sending.Cmd.PeerServerTime = time.PeerServerTime;
+	sending.Cmd.MasterServerTime = DateTime::Now().Tick - TimeSpan::FromHour(3).Tick;
+	return true;
+}
+
 bool S_CENTER::BroadcastYouNeedToDoThis(TcpServer* server, CenterOrder_t order) {
 	auto pPacket = dbg_new SinglePacket<CmdYouNeedToDoThis>();
 	pPacket->Cmd.Order = order;

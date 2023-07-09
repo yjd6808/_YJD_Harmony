@@ -50,6 +50,19 @@ void CenterServer::RemoveSession(CenterSession* session) {
 	m_pSession[id].Type = InterServerClientType::None;
 }
 
+void CenterServer::BroadcastPacket(ISendPacket* packet) {
+	const Vector<int>& vActiveServerIdList = CoreServerProcessInfoPackage_v->ActiveServerIdList;
+	const int iServerCount = vActiveServerIdList.Size();
+
+	for (int i = 0; i < iServerCount; ++i) {
+		Session* pSession = m_pSession[vActiveServerIdList[i]].Session;
+		if (pSession == nullptr) {
+			continue;
+		}
+		pSession->SendAsync(packet);
+	}
+}
+
 bool CenterServer::IsAllCenterSessionConnected() {
 	const Vector<int>& vActiveServerIdList = CoreServerProcessInfoPackage_v->ActiveServerIdList;
 	const int iServerCount = vActiveServerIdList.Size();
@@ -79,6 +92,8 @@ bool CenterServer::IsConnected(int serverId) {
 }
 
 void CenterServer::OnLoop(PulserStatistics* pulserStat) {
+
+	
 }
 
 

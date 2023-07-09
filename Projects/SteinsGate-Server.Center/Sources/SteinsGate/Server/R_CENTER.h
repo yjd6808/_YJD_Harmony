@@ -18,4 +18,5 @@ public:
 	static void RecvItsMe(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RecvCenterMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RecvNotifyBootState(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RecvTimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd);
 };

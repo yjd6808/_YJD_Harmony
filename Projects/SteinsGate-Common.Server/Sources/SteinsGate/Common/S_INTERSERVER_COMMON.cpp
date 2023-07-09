@@ -35,8 +35,10 @@ bool S_INTERSERVER_COMMON::SendNotifyBootState(ServerBootState_t state) {
 	return true;
 }
 
-
-
+bool S_INTERSERVER_COMMON::SendTimeSync() {
+	auto sending = SendBegin<CmdTimeSync>();
+	return true;
+}
 
 
 // ===============================================================================

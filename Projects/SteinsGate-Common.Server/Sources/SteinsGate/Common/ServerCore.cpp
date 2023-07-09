@@ -23,6 +23,7 @@ ServerProcessInfo* CoreServerProcessInfo_v;				// 메인 서버 프로그램에�
 InterServerClientNetGroup* CoreInterServerClientNetGroup_v;	// 메인 서버 프로그램에서 주입해줄 것
 TcpClient* CoreInterServerClientTcp_v;					// 메인 서버 프로그램에서 주입해줄 것
 UdpClient* CoreInterServerClientUdp_v;					// 메인 서버 프로그램에서 주입해줄 것
+TimeManager* CoreTimeManager_v;							// 메인 서버 프로그램에서 주입해줄 것
 
 void InitializeServerCore() {
 	CoreInputThread_v = dbg_new InputThread();

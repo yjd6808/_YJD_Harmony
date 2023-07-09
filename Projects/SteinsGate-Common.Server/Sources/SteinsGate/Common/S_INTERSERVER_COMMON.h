@@ -21,6 +21,8 @@ public:
 	static bool SendItsMe(InterServerClientType_t clientType, int serverId);
 	static bool SendCenterMessage(const JCore::String& msg);
 	static bool SendNotifyBootState(ServerBootState_t state);
+	static bool SendTimeSync();
+	
 
 	// RELAY
 	static bool SendP2PRelayStaticTest(const char* msg);

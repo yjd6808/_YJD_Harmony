@@ -17,3 +17,4 @@
 #include <SteinsGate/Common/CommonNetGroup.h>
 #include <SteinsGate/Common/CommonServer.h>
 #include <SteinsGate/Common/InterServerClientNetGroup.h>
+#include <SteinsGate/Common/TimeManager.h>

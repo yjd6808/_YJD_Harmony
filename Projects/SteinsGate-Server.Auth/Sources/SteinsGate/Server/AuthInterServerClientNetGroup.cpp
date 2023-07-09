@@ -10,6 +10,8 @@
 #include "AuthCoreHeader.h"
 #include "AuthInterServerClientNetGroup.h"
 
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -29,20 +31,20 @@ void AuthInterServerClientNetGroup::InitializeIOCP() {
 }
 
 void AuthInterServerClientNetGroup::InitializeInterServerTcp() {
-	auto spInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, &m_InterServerClientTcpListener, RecvBufferSize_v, SendBufferSize_v);
+	auto spInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, &m_InterServerClientTcpEventListener, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Auth.BindInterServerTcp);
 	AddHost(spInterServerClient);
 	m_pInterServerClientTcp = spInterServerClient.Get<TcpClient*>();
 }
 
 void AuthInterServerClientNetGroup::InitializeInterServerUdp() {
-	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_InterServerClientUdpListener, RecvBufferSize_v, SendBufferSize_v);
+	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_InterServerClientUdpEventListener, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Auth.BindInterServerUdp);
 	AddHost(spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
 	m_pInterServerClientUdp->RecvFromAsync();
 }
 
-void AuthInterServerClientNetGroup::OnLoop(JCore::PulserStatistics* pulseStat) {
-
+void AuthInterServerClientNetGroup::OnLoop(JCore::PulserStatistics* pulserStat) {
+	
 }

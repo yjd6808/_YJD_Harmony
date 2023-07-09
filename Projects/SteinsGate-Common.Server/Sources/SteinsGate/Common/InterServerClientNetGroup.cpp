@@ -11,6 +11,7 @@
 #include "InterServerClientNetGroup.h"
 
 #include <SteinsGate/Common/InterServerSendHelper.h>
+#include <SteinsGate/Common/InterServerCmd_HOST.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -31,8 +32,34 @@ void InterServerClientNetGroup::Initialize() {
 	InterServerSendHelperBase::InitSingleServerDestinations();
 }
 
-void InterServerClientNetGroup::ProcessLoop(PulserStatistics* pulseStat) {
-	OnLoop(pulseStat);
+void InterServerClientNetGroup::ProcessLoop(PulserStatistics* pulserStat) {
+	OnLoopCommon(pulserStat);
+	OnLoop(pulserStat);
+}
+
+void InterServerClientNetGroup::OnLoopCommon(PulserStatistics* pulserStat) {
+	SyncPeerServerTime(pulserStat);
+}
+
+void InterServerClientNetGroup::SyncPeerServerTime(PulserStatistics* pulserStat) {
+	// 피어서버는 중앙서버로 주기적으로(10초 정도마다) 시간 동기화 요청 수행
+	// 따라서 중앙서버에서는 이 기능을 수행해서는 안된다.
+	if (!IsPeerServer())
+		return;
+
+	if (m_pInterServerClientTcp == nullptr || m_pInterServerClientTcp->GetState() != Host::eConnected)
+		return;
+
+	static PulserTimer s_Timer{ 0, PulserTimer::eCheckReset };
+	s_Timer.ElapsedMs += pulserStat->SleepIntervalLast;
+
+	if (!s_Timer.ElapsedSeconds(10)) {
+		return;
+	}
+
+	auto pPacket = dbg_new SinglePacket<CmdTimeSync>;
+	pPacket->Cmd.PeerServerTime.Tick = DateTime::Now().Tick;
+	m_pInterServerClientTcp->SendAsync(pPacket);
 }
 
 bool InterServerClientNetGroup::ConnectCenterServer(int tryCount) {

@@ -13,6 +13,32 @@
 
 NS_JC_BEGIN
 
+struct PulserTimer
+{
+	enum Mode
+	{
+		eCheckReset,	// 조건 만족시 초기화
+		eNoReset
+	};
+
+	bool ElapsedSeconds(float seconds) {
+		bool bTimeOver = false;
+
+		if (float(ElapsedMs) >= seconds * 1000.0f) {
+			bTimeOver = true;
+		}
+
+		if (bTimeOver && Mode == eCheckReset)
+			ElapsedMs = 0;
+
+		return bTimeOver;
+	}
+
+	int ElapsedMs = 0;
+	int Mode = eCheckReset;
+};
+
+
 struct PulserStatistics
 {
 	PulserStatistics()

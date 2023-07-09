@@ -23,6 +23,7 @@ public:
 	void InitializeInterServerUdp() override;
 protected:
 	void OnLoop(JCore::PulserStatistics* pulseStat) override;
+	bool IsPeerServer() override { return false; }
 private:
 	ListenerInterServerClientUdp m_InterServerClientUdpListener;
 };

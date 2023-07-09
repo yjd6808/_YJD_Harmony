@@ -22,6 +22,7 @@ ListenerInterServerHostTcp::ListenerInterServerHostTcp() {
 	Parser.AddCommand<CmdItsMe>(R_CENTER::RecvItsMe);
 	Parser.AddCommand<CmdHostMessage>(R_CENTER::RecvCenterMessage);
 	Parser.AddCommand<CmdNotifyBootState>(R_CENTER::RecvNotifyBootState);
+	Parser.AddCommand<CmdTimeSync>(R_CENTER::RecvTimeSync);
 }
 
 void ListenerInterServerHostTcp::OnStarted() {

@@ -61,6 +61,15 @@ void R_CENTER::RecvNotifyBootState(Session* session, ICommand* cmd) {
 	pSession->SetBootState(pCmd->State);
 }
 
+void R_CENTER::RecvTimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+	CmdTimeSync* pCmd = (CmdTimeSync*)cmd;
+	CenterSession* pSession = (CenterSession*)session;
+
+	S_CENTER::AutoFlush _;
+	S_CENTER::SetInformation(session, eSendAsync);
+	S_CENTER::SendTimeSyncAck(*pCmd);
+}
+
 
 
 

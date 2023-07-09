@@ -61,9 +61,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerBatchHost.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerSendHelper.h">
       <Filter>Net</Filter>
     </ClInclude>
@@ -81,6 +78,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelper.h">
       <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\TimeManager.h">
+      <Filter>Net</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ListenerHelper.cpp">
       <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\TimeManager.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

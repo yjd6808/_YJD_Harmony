@@ -21,8 +21,8 @@ public:
 	void InitializeInterServerTcp() override;
 	void InitializeInterServerUdp() override;
 protected:
-	void OnLoop(JCore::PulserStatistics* pulseStat) override;
+	void OnLoop(JCore::PulserStatistics* pulserStat) override;
 private:
-	ListenerInterServerClientTcp m_InterServerClientTcpListener;
-	ListenerInterServerClientUdp m_InterServerClientUdpListener;
+	ListenerInterServerClientTcp m_InterServerClientTcpEventListener;
+	ListenerInterServerClientUdp m_InterServerClientUdpEventListener;
 };
