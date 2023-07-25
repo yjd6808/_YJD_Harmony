@@ -67,7 +67,7 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->SetAtUnsafe(this->m_iSize++, data);
+		this->SetAt(this->m_iSize++, data);
 	}
 
 	template <Int32U Size>
@@ -75,7 +75,7 @@ public:
 		this->ExpandIfNeeded(this->Size() + Size);
 
 		for (int i = 0; i < Size; ++i) {
-			this->SetAtUnsafe(this->m_iSize++, data[i]);
+			this->SetAt(this->m_iSize++, data[i]);
 		}
 	}
 
@@ -83,7 +83,7 @@ public:
 		this->ExpandIfNeeded(this->Size() + count);
 
 		for (int i = 0; i < count; ++i) {
-			this->SetAtUnsafe(this->m_iSize++, data[i]);
+			this->SetAt(this->m_iSize++, data[i]);
 		}
 	}
 
@@ -92,7 +92,7 @@ public:
 			this->ExpandAuto();
 		}
 
-		this->SetAtUnsafe(this->m_iSize++, Move(data));
+		this->SetAt(this->m_iSize++, Move(data));
 	}
 
 	/**
@@ -115,7 +115,7 @@ public:
 
 		TEnumerator it = collection.Begin();
 		while (it->HasNext()) {
-			this->SetAtUnsafe(this->m_iSize++, it->Next());
+			this->SetAt(this->m_iSize++, it->Next());
 		}
 	}
 

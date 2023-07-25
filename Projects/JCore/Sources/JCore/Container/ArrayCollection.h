@@ -262,8 +262,12 @@ protected:
 		DebugAssertMsg(this->IsValidRange(startIdx, endIdx),
 			"올바르지 않은 인덱스 범위(%d ~ %d) 입니다. (%d, 컨테이너 크기: %d)", startIdx, endIdx, this->m_iSize);
 
+		// 포인터 타입은 소멸자 호출을 하지 않도록 한다.
+		if constexpr (IsPointerType_v<T>)
+			return;
+
 		for (int i = startIdx; i <= endIdx; i++) {
-			Memory::PlacementDelete<IsPointerType_v<T>>(m_pArray[i]);
+			Memory::PlacementDelete(m_pArray[i]);
 		}
 	}
 
@@ -300,11 +304,14 @@ protected:
 	}
 
 
-
 	void SetAt(const int idx, const T& data) {
 		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
-		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
-		m_pArray[idx] = data;
+		ConstructAt(idx, data);
+	}
+
+	void SetAt(const int idx, T&& data) {
+		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
+		ConstructAt(idx, Move(data));
 	}
 
 	/// <summary>
@@ -312,21 +319,23 @@ protected:
 	///            예외를 던지기 때문에..
 	/// </summary>
 	void SetAtUnsafe(const int idx, const T& data) noexcept {
-		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
-		m_pArray[idx] = data;
+		ConstructAt(idx, data);
 	}
 
 	void SetAtUnsafe(const int idx, T&& data) noexcept {
-		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
-		m_pArray[idx] = Move(data);
+		ConstructAt(idx, Move(data));
+	}
+
+	template <typename Ty>
+	void ConstructAt(const int idx, Ty&& data) {
+		if constexpr (IsPointerType_v<T>) {
+			m_pArray[idx] = data;
+		} else {
+			Memory::PlacementNew(m_pArray[idx], Forward<Ty>(data));
+		}
 	}
 
 	
-
-	void SetAt(const int idx, T&& data) {
-		Memory::PlacementNew<IsPointerType_v<T>>(m_pArray[idx]);
-		m_pArray[idx] = Move(data);
-	}
 
 	template <typename... Args>
 	void EmplaceAt(const int idx, Args&&... args) {
@@ -341,7 +350,11 @@ protected:
 	void DestroyAt(const int idx) {
 		DebugAssertMsg(IsValidIndex(idx), "올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", idx, this->m_iSize);
 
-		Memory::PlacementDelete<IsPointerType_v<T>>(m_pArray[idx]);
+		// 포인터 타입은 소멸자 호출을 하지 않도록 한다.
+		if constexpr (IsPointerType_v<T>)
+			return;
+
+		Memory::PlacementDelete(m_pArray[idx]);
 	}
 
 	/// <summary>

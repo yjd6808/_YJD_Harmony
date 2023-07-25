@@ -83,28 +83,30 @@ public:
 	 *	  => 순수가상함수가 구현되어서 인스턴스를 생성할 수 없는 상태인 경우
 	 *	
 	 */
-	template <bool Ignore = false, typename T, typename... Args >
+	template <typename T, typename... Args >
 	static void PlacementNew(T& ref, Args&&... args) {
 		using GenType = NakedType_t<T>;
 
-		if constexpr (Ignore)
-			return;
-		else if constexpr (IsPointerType_v<T>)								
-			::new (ref) GenType{ Forward<Args>(args)... };	// (1)
-		else															
-			::new (AddressOf(ref)) GenType(Forward<Args>(args)...); // (2)
+		if constexpr (IsConstructible_v<GenType, Args...>) {
+			if constexpr (IsPointerType_v<T>)
+				::new (ref) GenType{ Forward<Args>(args)... };	// (1)
+			else
+				::new (AddressOf(ref)) GenType(Forward<Args>(args)...); // (2)		
+		}
+		
 	}
 
 	template <bool Ignore = false, typename T, typename... Args >
-	static void PlacementNewArray(T* ref, int size, Args&&... args) {
+	static bool PlacementNewArray(T* ref, int size, Args&&... args) {
 		using GenType = NakedType_t<T>;
 
 		if constexpr (Ignore)
-			return;
+			return false;
 
 		for (int i = 0; i < size; ++i) {
 			PlacementNew(ref[i], Forward<Args>(args)...);
 		}
+		return true;
 	}
 
 	template <bool Ignore = false, typename T>
