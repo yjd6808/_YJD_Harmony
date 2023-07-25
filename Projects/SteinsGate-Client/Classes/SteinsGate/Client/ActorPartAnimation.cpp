@@ -10,6 +10,7 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "ActorPartAnimation.h"
 
 #include <SteinsGate/Client/ActorPartSprite.h>
@@ -22,13 +23,13 @@ ActorPartAnimation::ActorPartAnimation(
 	AnimationInfo* animationInfo,
 	SGVector<FrameTexture*>& frames
 )
-	: m_pTarget(animationTarget)
-	, m_pAnimationInfo(animationInfo)
+	: m_pAnimationInfo(animationInfo)
+	, m_pTarget(animationTarget)
 	, m_vAnimationFrames(animationInfo->Frames.Size(), nullptr)
 	, m_vFrames(frames)
 	, m_fRunningFrameTime(0.0f)
-	, m_fPlaySpeed(1.0f)			// 기본 재생속도
-	, m_fPauseDelay(0.0f)
+	, m_fPauseDelay(0.0f)			// 기본 재생속도
+	, m_fPlaySpeed(1.0f)
 	, m_iFrameIndexInAnimation(0)
 	, m_bFinished(false)
 	, m_bPaused(false)
@@ -71,7 +72,7 @@ void ActorPartAnimation::run(int frameIndexInAnimation) {
 	m_iFrameIndexInAnimation = frameIndexInAnimation;
 
 	FrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
-	float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation]->Delay;
+	const float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
 
 	m_pTarget->onAnimationBegin(this, pStartFrameTexture);
 	m_pTarget->onFrameBegin(this, pStartFrameTexture);
@@ -80,8 +81,6 @@ void ActorPartAnimation::run(int frameIndexInAnimation) {
 }
 
 void ActorPartAnimation::constructFrames(int sgaIndex, int imgIndex) {
-	ImagePack* pImgPack = ImagePackManager::Get()->getPack(sgaIndex);
-
 	m_iSgaIndex = sgaIndex;
 	m_iImgIndex = imgIndex;
 
@@ -91,9 +90,16 @@ void ActorPartAnimation::constructFrames(int sgaIndex, int imgIndex) {
 
 	// 애니메이션 프레임 구성
 	for (int i = 0; i < m_pAnimationInfo->Frames.Size(); ++i) {
-		FrameInfo* frameInfo = m_pAnimationInfo->Frames[i];
-		int iFrameIndex = frameInfo->FrameIndex;
-		DebugAssertMsg(iFrameIndex >= 0 && iFrameIndex < m_vFrames.Size(), "전체 프레임 수(%d)에 포함되지 않는 애니메이션 프레임 인덱스(%d)입니다.", m_vFrames.Size(), iFrameIndex);
+		const FrameInfo& frameInfo = m_pAnimationInfo->Frames[i];
+		const int iFrameIndex = frameInfo.FrameIndex;
+
+		if (iFrameIndex < 0 || iFrameIndex >= m_vFrames.Size()) {
+			// 예를들어서 애니메이션이 5프레임으로 구성하여 설정파일에 작성했는데
+			// 이미지를 구성하는 텍스쳐가 4개 밖에 없는 경우 5번째 프레임텍스쳐를 가져오는 것 자체가 불가능하므로.. 체크함.
+			CorePackManager_v->logTexture("ActorPartAnimation::constructFrames()", { m_iSgaIndex, m_iImgIndex, InvalidValue_v }, JCore::LoggerAbstract::eError);
+			DebugAssertMsg(false, "전체 프레임 수(%d)에 포함되지 않는 애니메이션 프레임 인덱스(%d)입니다.", m_vFrames.Size(), iFrameIndex);
+		}
+		
 		m_vAnimationFrames[i] = m_vFrames[iFrameIndex];
 	}
 }
@@ -112,7 +118,7 @@ void ActorPartAnimation::setLoopSequence() {
 
 void ActorPartAnimation::update(float dt) {
 
-	float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation]->Delay;
+	const float fCurrentFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
 	FrameTexture* pCurrentFrameTexture = getTexture(m_iFrameIndexInAnimation);
 
 	updateLoopSequence(dt);
@@ -173,7 +179,7 @@ void ActorPartAnimation::updateAnimation(float currentFrameDelay, FrameTexture* 
 		++m_iFrameIndexInAnimation;
 
 		FrameTexture* pNextFrameTexture = changeTexture(m_iFrameIndexInAnimation);
-		float fNextFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation]->Delay;
+		float fNextFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
 
 		m_pTarget->onFrameBegin(this, pNextFrameTexture);
 
@@ -197,7 +203,7 @@ void ActorPartAnimation::updateAnimation(float currentFrameDelay, FrameTexture* 
 	if (m_pAnimationInfo->Loop) {
 		m_iFrameIndexInAnimation = 0;
 		FrameTexture* pStartFrameTexture = changeTexture(m_iFrameIndexInAnimation);
-		float fStartFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation]->Delay;
+		float fStartFrameDelay = m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].Delay;
 
 		m_pTarget->onAnimationBegin(this, pStartFrameTexture);
 		m_pTarget->onFrameBegin(this, pStartFrameTexture);
@@ -249,13 +255,17 @@ int ActorPartAnimation::getPartIndex() {
 	return m_pTarget->getPartIndex();
 }
 
-FrameInfo* ActorPartAnimation::getFrameInfo(int frameIndexInAnimation) {
+FrameInfo& ActorPartAnimation::getFrameInfo(int frameIndexInAnimation) {
 	DebugAssertMsg(frameIndexInAnimation >= 0 && frameIndexInAnimation < m_pAnimationInfo->Frames.Size(), "애니메이션 내 프레임 인덱스가 이상합니다.");
 	return m_pAnimationInfo->Frames[frameIndexInAnimation];
 }
 
-FrameInfo* ActorPartAnimation::getRunningFrameInfo() {
+FrameInfo& ActorPartAnimation::getRunningFrameInfo() {
 	return m_pAnimationInfo->Frames[m_iFrameIndexInAnimation];
+}
+
+int ActorPartAnimation::getRunningFrameEventCode() {
+	return m_pAnimationInfo->Frames[m_iFrameIndexInAnimation].FrameEventCode;
 }
 
 void ActorPartAnimation::reflectAnimation(ActorPartAnimation* runningAnimation) {
@@ -267,6 +277,10 @@ void ActorPartAnimation::reflectAnimation(ActorPartAnimation* runningAnimation) 
 	m_bPaused = runningAnimation->m_bPaused;
 	m_bZeroFramePaused = runningAnimation->m_bZeroFramePaused;
 	m_bLoopSequence = runningAnimation->m_bLoopSequence;
+}
+
+void ActorPartAnimation::setAnimationInfo(AnimationInfo* animationInfo) {
+	m_pAnimationInfo = animationInfo;
 }
 
 FrameTexture* ActorPartAnimation::changeTexture(int frameIndexInAnimation) {

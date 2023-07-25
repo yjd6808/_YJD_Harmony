@@ -13,11 +13,9 @@
     "projectile": [
         {
             "code": 1,
-            "attakdata_code": 1,
+            "attack_data_code": 1,
             "listener_code": 1,
             "name": "gunner_auto_right",
-            "sga": "sprite_character_gunner_effect_bullet.sga",
-            "img": "pistol.img",
             "spawn_offset_x": 342.0,
             "spawn_offset_y": 245.0,
             "spawn_effect_code": 3,
@@ -31,23 +29,35 @@
             "life_time": 10.0,
             "rehit_delay": 0.0,
             "thickness_box": "0 -1 30 30",
-            "animation": 
-            {
-                "code": 1,
-                "name": "gunner_auto",
-                "loop": true,
-                "frames": [
-                    "0 50",
-                    "1 50",
-                    "2 50",
-                    "3 50"
+            "actor_sprite_data": {
+                "positioning_rule": 2,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect_bullet.sga",
+                        "img": "pistol.img",
+                        "z_order": 0    
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "gunner_auto",
+                        "loop": true,
+                        "frames": [
+                            "0 50",
+                            "1 50",
+                            "2 50",
+                            "3 50"
+                        ]
+                    }
                 ]
             }
+            
         },
         {
             "override_code": 1,
             "code": 2,
-            "attakdata_code": 2,
+            "attack_data_code": 2,
             "name": "gunner_auto_left",
             "spawn_offset_x": 374.0,
             "spawn_offset_y": 239.0,
@@ -83,7 +93,7 @@
         {
             "override_code": 3,
             "code": 5,
-            "attakdata_code": 3,
+            "attack_data_code": 3,
             "name": "gunner_auto_jump_right",
             "spawn_offset_x": 301.0,
             "spawn_offset_y": 197.0,

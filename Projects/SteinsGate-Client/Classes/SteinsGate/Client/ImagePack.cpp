@@ -13,6 +13,8 @@
 #include <SteinsGate/Common/SgaColorFormat.h>
 #include <SteinsGate/Client/Global.h>
 
+#include "ImagePackManager.h"
+
 USING_NS_CC;
 USING_NS_JC;
 
@@ -142,6 +144,9 @@ FrameTexture* ImagePack::createFrameTexture(int imgIndex, int frameIndex, bool l
 	pSpriteTexture->retain();	// m_TextureCacheMap에서 수명연장시키기 위한 용도
 	m_bHasLoadedData = true;
 	m_TextureCacheMap.Insert(index.Value, pSpriteTexture);
+#if DebugMode
+	CorePackManager_v->increaseCounter();
+#endif
 	return pSpriteTexture;
 }
 
@@ -150,12 +155,18 @@ void ImagePack::releaseFrameTexture(int imgIndex, int frameIndex) {
 	DebugAssertMsg(m_TextureCacheMap.Exist(index.Value), "%s, 해당하는 프레임 데이터가 없습니다. [1]", index.ToString().Source());
 	CC_SAFE_RELEASE(m_TextureCacheMap[index.Value]);
 	m_TextureCacheMap.Remove(index.Value);
+#if DebugMode
+	CorePackManager_v->decreaseCounter();
+#endif
 }
 
 void ImagePack::releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex) {
 	DebugAssertMsg(m_TextureCacheMap.Exist(sgaResourceIndex.Value), "%s, 해당하는 프레임 데이터가 없습니다. [2]", sgaResourceIndex.ToString().Source());
 	CC_SAFE_RELEASE(m_TextureCacheMap[sgaResourceIndex.Value]);
 	m_TextureCacheMap.Remove(sgaResourceIndex.Value);
+#if DebugMode
+	CorePackManager_v->decreaseCounter();
+#endif
 }
 
 SGString ImagePack::getFileName() const {
@@ -166,9 +177,26 @@ bool ImagePack::hasImgIndex(const SGString& imgName) const {
 	return m_Package->HasElementIndex(imgName);
 }
 
-SGString& ImagePack::getImgName(const int imgIndex) const {
-	return m_Package->Get(imgIndex)->GetName();
+SGString ImagePack::getImgName(const int imgIndex) const {
+	const SgaElementPtr spElement = m_Package->GetUnsafe(imgIndex);
+
+	if (spElement == nullptr) {
+		return { 0 };
+	}
+
+	return spElement->GetName();
 }
+
+SGString ImagePack::getImgNameOrDefault(const int imgIndex, const SGString& defaultValue) const {
+	const SgaElementPtr spElement = m_Package->GetUnsafe(imgIndex);
+
+	if (spElement == nullptr) {
+		return defaultValue;
+	}
+
+	return spElement->GetName();
+}
+
 
 void ImagePack::applyLinearDodge(Byte* pixelData, int len) const {
 	for (int i = 0; i < len; i += 4)
@@ -196,6 +224,7 @@ void ImagePack::clearCache() {
 	m_TextureCacheMap.ForEachValue([](FrameTexture* tex) {
 		//DebugAssertMsg(tex->getReferenceCount() == 1, "레퍼런스 카운트가 1이 아닙니다.");
 		CC_SAFE_RELEASE(tex);
+		CorePackManager_v->decreaseCounter();
 	});
 	m_TextureCacheMap.Clear();
 }

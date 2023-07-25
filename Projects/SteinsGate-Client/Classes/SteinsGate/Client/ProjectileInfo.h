@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Client/AnimationInfo.h>
+#include <SteinsGate/Client/Struct.h>
 
 struct AttackDataInfo;
 struct EffectInfo;
@@ -26,8 +26,8 @@ struct ProjectileInfo : ConfigDataAbstract
 	int ProjectileListenerCode;
 	AttackDataInfo* AttackData;
 	SGString Name;
-	int SgaIndex;
-	int ImgIndex;
+	//int SgaIndex;
+	//int ImgIndex;
 	float SpawnOffsetX;
 	float SpawnOffsetY;
 	EffectInfo* SpawnEffect;
@@ -41,10 +41,10 @@ struct ProjectileInfo : ConfigDataAbstract
 	float MoveSpeed;
 	float LifeTime;
 	float RehitDelay;
-	bool AnimationRef;	// 오버라이딩 추가에따라 애니메이션 원본인지 참조본인지 구분용도
+	bool IsSpriteDataRef;	// 오버라이딩 추가에따라 스프라이트 데이터가 원본인지 참조본인지 구분용도
 
 	ThicknessBox ThicknessBox;
-	AnimationInfo* Animation;
+	ActorSpriteData* SpriteData;
 };
 
 

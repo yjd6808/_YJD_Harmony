@@ -10,7 +10,7 @@
 #include "CharAnimationInfoLoader.h"
 
 #include <SteinsGate/Client/ImagePackManager.h>
-#include <SteinsGate/Client/AnimationInfo.h>
+#include <SteinsGate/Client/Struct.h>
 #include <SteinsGate/Client/JsonUtilEx.h>
 
 

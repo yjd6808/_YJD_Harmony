@@ -55,19 +55,7 @@
             "attack_x_force": 150.0,
             "attack_y_force": 350.0,
             "is_fall_down_attack": true
-        },
+        }
 
-
-
-        {
-            "code": 10000,
-            "name": "monster_goblin_attack",
-            "attack_damage_type": 1,
-            "attack_damage_ratio": 100.0,
-            "attack_x_force_dir": 3,
-            "attack_x_force": 150.0,
-            "attack_y_force": 350.0,
-            "is_fall_down_attack": true
-        }     
     ]
 }

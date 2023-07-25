@@ -6,65 +6,119 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "JsonUtilEx.h"
 
-#include <SteinsGate/Client/AnimationInfo.h>
+#include <SteinsGate/Common/Struct.h>
 #include <SteinsGate/Common/TextParser.h>
 
 USING_NS_JC;
-USING_NS_CC;
 
 void JsonUtilEx::parseAnimationInfo(Json::Value& animationRoot, AnimationInfo& info) {
-	info.Name = JsonUtilEx::getString(animationRoot["name"]);
-	info.Code = animationRoot["code"].asInt();
-	info.Loop = animationRoot["loop"].asBool();
-
+	info.Name = getStringOrNull(animationRoot["name"]);
+	info.Code = getIntDefault(animationRoot["code"], 1); 
+	info.Loop = getBooleanDefault(animationRoot["loop"]);
+	if (!info.Name.IsNull() && info.Name == "sliding")
+		int a = 40;
 	Json::Value& frameListRoot = animationRoot["frames"];
 	for (int i = 0; i < frameListRoot.size(); ++i) {
 		Json::Value& frameRoot = frameListRoot[i];
 
 		int iFrameIndex;	// 필수
 		int iDelay;			// 필수
-		int iFrameEvent = InvalidValue_v;
 		int iFrameEventId = InvalidValue_v;
 
-		SGString frameInfo = JsonUtilEx::getString(frameRoot);
-		char* pInstantAttackBoxSourceOffset = TextParser::parserFrameInfo(frameInfo, iFrameIndex, iDelay, iFrameEvent, iFrameEventId);
-
-		// 인스턴트 공격 박스외에는 전부 4개의 값만 넣어주면 됨
-		if (iFrameEvent == FrameEventType::AttackBoxInstant) {
-			float instantAttackBoxData[8];
-
-			TextParser::parserFloatNumbers(
-				pInstantAttackBoxSourceOffset, 
-				SGStringUtil::Length(pInstantAttackBoxSourceOffset), 
-				instantAttackBoxData, 
-				8
-			);
-
-			FrameInfoAttackBoxInstant* pInfo = dbg_new FrameInfoAttackBoxInstant{};
-			pInfo->FrameIndex = iFrameIndex;
-			pInfo->Delay = (float)iDelay / 1000.0f;
-			pInfo->FrameEvent = iFrameEvent;
-			pInfo->FrameEventId = iFrameEventId;
-
-			pInfo->Rect.ThicknessRect.origin.x = instantAttackBoxData[0];
-			pInfo->Rect.ThicknessRect.origin.y = instantAttackBoxData[1];
-			pInfo->Rect.ThicknessRect.size.width = instantAttackBoxData[2];
-			pInfo->Rect.ThicknessRect.size.height = instantAttackBoxData[3];
-
-			pInfo->Rect.BodyRect.origin.x = instantAttackBoxData[4];
-			pInfo->Rect.BodyRect.origin.y = instantAttackBoxData[5];
-			pInfo->Rect.BodyRect.size.width = instantAttackBoxData[6];
-			pInfo->Rect.BodyRect.size.height = instantAttackBoxData[7];
-
-			info.Frames.PushBack(pInfo);
-		} else {
-			FrameInfo* pInfo = dbg_new FrameInfo{ iFrameIndex, (float)iDelay / 1000.0f, iFrameEvent, iFrameEventId };
-			info.Frames.PushBack(pInfo);
-		}
-		
+		int szFrameLen;
+		const char* szFrame = getStringRaw(frameRoot, &szFrameLen);
+		TextParser::parseFrameInfo(szFrame, szFrameLen, iFrameIndex, iDelay, iFrameEventId);
+		info.Frames.EmplaceBack(iFrameIndex, (float)iDelay / 1000.0f, iFrameEventId);
 	}
+}
+
+void JsonUtilEx::parseActorRect(Json::Value& root, ActorRect& actorRect) {
+	int actorRectData[8];
+	parseIntNumberN(root, actorRectData, sizeof(actorRectData) / sizeof(int));
+
+	actorRect.ThicknessRect.origin.x = actorRectData[0];
+	actorRect.ThicknessRect.origin.y = actorRectData[1];
+	actorRect.ThicknessRect.size.width = actorRectData[2];
+	actorRect.ThicknessRect.size.height = actorRectData[3];
+
+	actorRect.BodyRect.origin.x = actorRectData[4];
+	actorRect.BodyRect.origin.y = actorRectData[5];
+	actorRect.BodyRect.size.width = actorRectData[6];
+	actorRect.BodyRect.size.height = actorRectData[7];
+}
+
+/**
+ * TODO: ActorSpriteData 기능 개선 필요 (추후 좀더 확장성있게 개발할려면 필수적으로 수행되어야함.)
+ * 현재 ActorSpriteData는 캐릭터, 몬스터의 애니메이션 재생 구현에 초점을 두고 기능을 구현해서.
+ * 모든 파츠마다 동일한 애니메이션을 실행한다고 가정하여 구현하였기 때문에 
+ * 액터의 각 파츠가 다른 애니메이션으로 구성된 경우에 대해서 처리하지 못한다.
+ *
+ * runAnimation을 ActorSprite에서 처리하도록 하고 있는데.. 이걸 빼야하나.. ㅠㅠ
+ * 우선 다 만들고 고민하는걸로..
+ */
+
+void JsonUtilEx::parseActorSpriteData(Json::Value& actorSpriteDataRoot, JCORE_OUT ActorSpriteData** info) {
+	Json::Value& partListRoot = actorSpriteDataRoot["parts"];
+	Json::Value& animationListRoot = actorSpriteDataRoot["animation"];
+	int iPrevPartZOrder = 0;
+
+
+	const ActorPartSpritePositioningRule_t ePositioningRule = (ActorPartSpritePositioningRule_t)getIntDefault(actorSpriteDataRoot["positioning_rule"], 0);;
+	const int iPartCount = partListRoot.size();
+	const int iAnimationCount = animationListRoot.size();
+	
+	ActorSpriteData* pInfo = dbg_new ActorSpriteData{ePositioningRule, iPartCount, iAnimationCount };
+	pInfo->PositioningRule = ePositioningRule;
+
+	for (int i = 0; i < iPartCount; i++) {
+		Json::Value& partRoot = partListRoot[i];
+
+		SGString sgaName = getString(partRoot["sga"]);
+		SGString imgName = getString(partRoot["img"]);
+		ImagePack* pImgPack = CorePackManager_v->getPack(sgaName);
+
+		const int iZOrder = getIntDefault(partRoot["z_order"], iPrevPartZOrder + 1);	// z_order가 없는 경우 이전 파츠 인덱스보다 점점 더 커지도록 
+		const int iSga = pImgPack->getPackIndex();
+		const int iImg = pImgPack->getImgIndex(imgName);
+		
+		//ActorPartSpriteData* pPartSpriteData = nullptr;
+
+		//switch (ePositioningRule) {
+		//case ActorPartSpritePositioningRule::InFrameSize:
+		//	pPartSpriteData = dbg_new ActorPartSpriteData{ iZOrder, iSga, iImg };
+		//	break;
+		//case ActorPartSpritePositioningRule::InCustomFrameSize:
+		//	ActorPartSpriteDataCustom* pPartSpriteDataCustom = dbg_new ActorPartSpriteDataCustom{ iZOrder, iSga, iImg };
+		//	// pPartSpriteDataCustom->CustomSizeInfo.X =
+		//	pPartSpriteData = pPartSpriteDataCustom;
+		//	break;
+		//case ActorPartSpritePositioningRule::InIgnoredFrameSize:
+		//	pPartSpriteData = dbg_new ActorPartSpriteData{ iZOrder, iSga, iImg };
+		//	break;
+		//}
+		// DebugAssert(pPartSpriteData != nullptr);
+
+		pInfo->Parts.EmplaceBack(iZOrder, iSga, iImg);
+		iPrevPartZOrder = iZOrder;
+	}
+
+	DebugAssert(pInfo->Parts.Capacity() == iPartCount);		// parts 값 로딩 후 벡터 용량이 변경된 경우 (이런 경우는 없겠지?)
+	DebugAssert(iAnimationCount > 0);						// 액터에 애니메이션이 하나도 없는 경우
+
+	for (int i = 0; i < iAnimationCount; ++i) {
+		Json::Value& animationRoot = animationListRoot[i];
+		const int iFrameCount = animationRoot["frames"].size();
+		AnimationInfo animation { iFrameCount };
+		parseAnimationInfo(animationListRoot[i], animation);
+		pInfo->Animations.PushBack(Move(animation));
+	}
+
+	DebugAssert(pInfo->Animations.Capacity() == iAnimationCount); // animation 값 로딩 후 벡터 용량이 변경된 경우 (이런 경우는 없겠지?)
+
+	*info = pInfo;
 }
 
 void JsonUtilEx::parseColor4B(Json::Value& root, JCORE_OUT SGColor4B& color) {

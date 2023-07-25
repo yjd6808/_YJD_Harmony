@@ -146,10 +146,6 @@ void UIButton::load() {
 	if (m_bLoaded)
 		return;
 
-	ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
-
-
-
 	for (int i = 0; i < eMax; ++i) {
 		const int iSprite = m_pInfo->Sprites[i];
 
@@ -158,8 +154,7 @@ void UIButton::load() {
 			continue;
 		}
 
-		FrameTexture* pTexture = pPack->createFrameTexture(m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
-		pTexture->retain();
+		FrameTexture* pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
 
 		Sprite* pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());
@@ -170,7 +165,6 @@ void UIButton::load() {
 		m_pTexture[i] = pTexture;
 		m_pSprite[i] = pSprite;
 
-		CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iSprite });
 		this->addChild(pSprite);
 	}
 
@@ -187,7 +181,7 @@ void UIButton::unload() {
 
 	for (int i = 0; i < eMax; ++i) {
 		m_pSprite[i] = nullptr;
-		CC_SAFE_RELEASE_NULL(m_pTexture[eNormal]);
+		CC_SAFE_RELEASE_NULL(m_pTexture[i]);
 	}
 
 	m_bLoaded = false;

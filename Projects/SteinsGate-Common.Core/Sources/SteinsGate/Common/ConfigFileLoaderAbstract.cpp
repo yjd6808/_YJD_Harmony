@@ -15,7 +15,7 @@ ConfigFileLoaderAbstract::ConfigFileLoaderAbstract(DataManagerAbstract* manager)
 {}
 
 ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract() {
-	m_hConfigDataAbstract.Values().Extension().ForEach([](ConfigDataAbstract* data) {
+	m_hConfigDataAbstract.ForEachValue([](ConfigDataAbstract* data) {
 		delete data;
 	});
 }

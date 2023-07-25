@@ -31,8 +31,7 @@ bool EffectInfoLoader::load() {
 
 		for (int i = 0; i < effectListRoot.size(); ++i) {
 			Value& effectRoot = effectListRoot[i];
-			int iAnimationCount = effectRoot["animation"].size();
-			EffectInfo* pInfo = dbg_new EffectInfo(iAnimationCount);
+			EffectInfo* pInfo = dbg_new EffectInfo();
 			readEffectInfo(effectRoot, pInfo);
 			addData(pInfo);
 		}
@@ -48,13 +47,7 @@ bool EffectInfoLoader::load() {
 
 
 void EffectInfoLoader::readEffectInfo(Json::Value& effectRoot, EffectInfo* effectInfo) {
-	ImagePackManager* pPackManager = ImagePackManager::Get();
-	DataManager* pDataManager = DataManager::Get();
-
-	Value& animationRoot = effectRoot["animation"];
 	effectInfo->Code = effectRoot["code"].asInt();
 	effectInfo->Name = JsonUtilEx::getString(effectRoot["name"]);
-	effectInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(effectRoot["sga"]));
-	effectInfo->ImgIndex = pPackManager->getPack(effectInfo->SgaIndex)->getImgIndex(JsonUtilEx::getString(effectRoot["img"]));
-	JsonUtilEx::parseAnimationInfo(animationRoot, effectInfo->Animation);
+	JsonUtilEx::parseActorSpriteData(effectRoot["actor_sprite_data"], &effectInfo->SpriteData);
 }

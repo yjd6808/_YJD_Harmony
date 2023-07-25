@@ -31,10 +31,7 @@ bool MobInfoLoader::load() {
 
 		for (int i = 0; i < monsterListRoot.size(); ++i) {
 			Value& monterRoot = monsterListRoot[i];
-			Value& animationListRoot = monterRoot["animation"];
-			DebugAssertMsg(animationListRoot.size() > 0, "몬스터의 애니메이션이 없습니다.");
-			MobInfo* monsterInfo = dbg_new MobInfo(animationListRoot.size());
-
+			MobInfo* monsterInfo = dbg_new MobInfo();
 			readMobBaseInfo(monterRoot, monsterInfo);
 			readMobInfo(monterRoot, monsterInfo);
 			addData(monsterInfo);
@@ -49,15 +46,15 @@ bool MobInfoLoader::load() {
 }
 
 void MobInfoLoader::readMobInfo(Json::Value& mobRoot, MobInfo* mobInfo) {
-
-	ImagePackManager* pPackManager = ImagePackManager::Get();
+	JsonUtilEx::parseActorSpriteData(mobRoot["actor_sprite_data"], &mobInfo->SpriteData);
+	/*ImagePackManager* pPackManager = ImagePackManager::Get();
 
 	Value& partListRoot = mobRoot["parts"];
 	mobInfo->PartsCount = partListRoot.size();
 	DebugAssertMsg(mobInfo->PartsCount > 0, "몬스터의 파츠가 없습니다.");
 	for (int j = 0; j < mobInfo->PartsCount; j++) {
 		Value& partRoot = partListRoot[j];
-		MobPartInfo partInfo;
+		ActorPartSpriteData partInfo;
 
 		SGString sgaName = JsonUtilEx::getString(partRoot["sga"]);
 		SGString imgName = JsonUtilEx::getString(partRoot["img"]);
@@ -77,5 +74,5 @@ void MobInfoLoader::readMobInfo(Json::Value& mobRoot, MobInfo* mobInfo) {
 		AnimationInfo animationInfo(animationRoot["frames"].size());
 		JsonUtilEx::parseAnimationInfo(animationRoot, animationInfo);
 		mobInfo->AnimationList.PushBack(Move(animationInfo));
-	}
+	}*/
 }

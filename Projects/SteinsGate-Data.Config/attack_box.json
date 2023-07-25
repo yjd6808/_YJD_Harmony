@@ -7,9 +7,9 @@
         {
             "code": 1,
             "name": "우선 양식만",
-            "follow_actor": false,
+            "follow_spawner": false,
             "rehit": false,
-            "rehit_delay": 0.0,
+            "rehit_delay": 100,
             "spawn_effect_code": 1,
             "hit_effect_code": 2,
             "thickness_box": "0 -50 50 30",

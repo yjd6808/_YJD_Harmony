@@ -20,11 +20,10 @@ public:
 
 	void update(float dt) override;
 
-	void runFrameEvent(Actor* runner, FrameEventType_t frameEventType, int frameEventId);
 	Character* findNearestCharacterInRadious(Actor* stdActor, float radious, JCORE_OUT float& enemyDist);
-	bool collectEnemiesInActorRect(Actor* attacker, const SGActorRect& rect, JCORE_OUT SGVector<SGHitInfo>& hitTargets);
-	bool collectEnemiesInActor(Actor* collector, JCORE_OUT SGVector<SGHitInfo>& hitTargets);
-	bool isCollideWithObstacles(const SGRect& rect);
+	bool collectEnemiesInActorRect(Actor* attacker, const ActorRect& rect, JCORE_OUT SGVector<HitInfo>& hitTargets);
+	bool collectEnemiesInActor(Actor* collector, JCORE_OUT SGVector<HitInfo>& hitTargets);
+	bool isCollideWithMapObjects(const SGRect& rect);
 
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;

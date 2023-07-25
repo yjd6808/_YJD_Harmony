@@ -16,3 +16,12 @@ Player::Player()
 
 Player::~Player()
 {}
+
+bool Player::init() {
+	initPlayerData();
+	return true;
+}
+
+void Player::initPlayerData() {
+	m_PlayerData.clear();
+}

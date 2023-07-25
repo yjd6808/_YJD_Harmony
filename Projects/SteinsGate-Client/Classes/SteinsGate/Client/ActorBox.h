@@ -13,7 +13,7 @@
 #include <SteinsGate/Client/Struct.h>
 #include <SteinsGate/Client/Projectile.h>
 #include <SteinsGate/Client/Monster.h>
-#include <SteinsGate/Client/Obstacle.h>
+#include <SteinsGate/Client/MapObject.h>
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/Effect.h>
 
@@ -22,7 +22,7 @@ using CharacterList = SGVector<Character*>;
 using ProjectileList = SGVector<Projectile*>;
 using MonsterList = SGVector<Monster*>;
 using PhysicsActorList = SGVector<PhysicsActor*>;
-using ObstacleList = SGVector<Obstacle*>;
+using MapObjectList = SGVector<MapObject*>;
 using EffectList = SGVector<Effect*>;
 
 class MapLayer;
@@ -49,7 +49,7 @@ public:
 	Character* createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& info);
 	Projectile* createProejctileOnMap(Actor* spawner, int projectileId);
 	Monster* createMonsterOnMap(int monsterCode, int aiCode, float x, float y);
-	Obstacle* createObstacleOnMap(int obstacleCode, float x, float y);
+	MapObject* createMapObjectOnMap(int mapObjectCode, float x, float y);
 	void registerPlayerOnMap(Player* player);
 
 	// spawner 캔버스 기준 상대좌표로 이펙트를 만든다.
@@ -68,53 +68,53 @@ public:
 	
 
 	// 대상과 충돌한 지점에 이펙트 생성
-	Effect* createEffectOnMapTargetCollision(int effectCode, SpriteDirection_t direction, const SGHitInfo& info, bool randomRotation = false);
-	Effect* createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, bool randomRotation = false);
-	Effect* createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, float offsetX, float offsetY, bool randomRotation = false);
-	Effect* createEffectOnMapTargetCollision(int effectCode, const SGHitInfo& info, const SGVec2& offset, bool randomRotation = false);
+	Effect* createEffectOnMapTargetCollision(int effectCode, SpriteDirection_t direction, const HitInfo& info, bool randomRotation = false);
+	Effect* createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, bool randomRotation = false);
+	Effect* createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, float offsetX, float offsetY, bool randomRotation = false);
+	Effect* createEffectOnMapTargetCollision(int effectCode, const HitInfo& info, const SGVec2& offset, bool randomRotation = false);
 
 	// 일단 생성
 	Effect* createEffectOnMap(int effectCode);
 
-	void sortZOrderActor();
-	void registerCleanUp(Actor* actor);
-	void unregisterZOrderActor(Actor* actor);
-
-	void registerProjectile(Projectile* projectile);
-	void registerCharacter(Character* character);
-	void registerMonster(Monster* mosnter);
-	void registerObstacle(Obstacle* obstacle);
-	void registerEffect(Effect* effect);
-	void registerActor(Actor* actor);
-
-	void cleanUpProjectile(Projectile* projectile);
-	void cleanUpMonster(Monster* monster);
-	void cleanUpObstacle(Obstacle* obstacle);
-	void cleanUpCharacter(Character* character);
-	void cleanUpEffect(Effect* effect);
-
-	void unregisterProjectile(Projectile* projectile);
-	void unregisterCharacter(Character* chracter);
-	void unregisterMonster(Monster* mosnter);
-	void unregisterObstacle(Obstacle* obstacle);
-	void unregisterEffect(Effect* effect);
-	void unregisterColidableObstacle(Obstacle* obstacle);
-	void unregisterPhysicsActor(PhysicsActor* physicsActor);
-	void unregisterActor(Actor* actor);
-
-	
+	void cleanUpAtNextFrame(Actor* actor);
+	void cleanUp(Actor* actor);
 
 	ActorList& getZOrderActorList() { return m_vZOrderedActors; }
 	ProjectileList& getProjectileList() { return m_vProjectiles; }
 	MonsterList& getMonsterList() { return m_vMonsters; }
-	ObstacleList& getCollidableObstacleList() { return m_vCollidableObstacles; }
+	MapObjectList& getCollidableMapObjectList() { return m_vCollidableMapObjects; }
 	CharacterList& getCharacterList() { return m_vCharacters; }
 	PhysicsActorList& getPhysicsActorList() { return m_vPhysicsActors; }
 	Actor* getActor(int actorId) { return m_hActorMap[actorId]; }
 private:
+	void sortZOrderActor();
+	void unregisterZOrderActor(Actor* actor);
+
+	void cleanUpProjectile(Projectile* projectile);
+	void cleanUpMonster(Monster* monster);
+	void cleanUpMapObject(MapObject* mapObject);
+	void cleanUpCharacter(Character* character);
+	void cleanUpEffect(Effect* effect);
+
+	void registerProjectile(Projectile* projectile);
+	void registerCharacter(Character* character);
+	void registerMonster(Monster* mosnter);
+	void registerMapObject(MapObject* mapObject);
+	void registerEffect(Effect* effect);
+	void registerActor(Actor* actor);
+
+	void unregisterProjectile(Projectile* projectile);
+	void unregisterCharacter(Character* chracter);
+	void unregisterMonster(Monster* mosnter);
+	void unregisterMapObject(MapObject* mapObject);
+	void unregisterEffect(Effect* effect);
+	void unregisterColidableMapObject(MapObject* mapObject);
+	void unregisterPhysicsActor(PhysicsActor* physicsActor);
+	void unregisterActor(Actor* actor);
+private:
 	// 풀링용 리스트
 	SGHashMap<int, SGLinkedList<Monster*>> m_hMonsterPool;
-	SGHashMap<int, SGLinkedList<Obstacle*>> m_hObstaclePool;
+	SGHashMap<int, SGLinkedList<MapObject*>> m_hMapObjectPool;
 	SGHashMap<int, SGLinkedList<Projectile*>> m_hProjectilePool;
 	SGHashMap<int, SGLinkedList<Effect*>> m_hEffectPool;
 
@@ -127,8 +127,8 @@ private:
 	ActorList m_vZOrderedActors;		
 	ProjectileList m_vProjectiles;		
 	MonsterList m_vMonsters;
-	ObstacleList m_vCollidableObstacles;
-	ObstacleList m_vObstacles;
+	MapObjectList m_vCollidableMapObjects;
+	MapObjectList m_vMapObjects;
 	CharacterList m_vCharacters;
 	PhysicsActorList m_vPhysicsActors;
 	EffectList m_vEffectList;

@@ -19,33 +19,19 @@ public:
 
 	static Projectile* create(Actor* spawner, ProjectileInfo* baseInfo);
 
-	bool initVariables() override;
 	void initActorSprite() override;
 	void initThicknessBox(const ThicknessBox& thicknessBox) override;
-	void initListener(ActorListener* listener) override;
 	void initPosition();
-
-	void update(float dt) override;
-	void updateListenerEvent(float dt);
-
-	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
 
 	EffectInfo* getSpawnEffectInfo();
 	EffectInfo* getHitEffectInfo();
 
-	bool isLifeTimeOver();
-	bool isDistanceOver();
 	void setSpawner(Actor* spawner);
 
 	Actor* getSpawner();
 	ProjectileInfo* getBaseInfo();
+	int getCode() override { return m_pBaseInfo->Code; }
 private:
-	float m_fMoveDistance;
-	float m_fElapsedLifeTime;
-
 	Actor* m_pSpawner;
 	ProjectileInfo* m_pBaseInfo;
 };

@@ -147,6 +147,44 @@ void ImagePackManager::releaseFrameTexture(const SgaResourceIndex& sgaResourceIn
 		sgaResourceIndex.Un.FrameIndex);
 }
 
+void ImagePackManager::releaseAllFrameTexture() {
+	for (int i = 0; i < m_iLoadedPackageCount; ++i) {
+		ImagePack* pPack = m_LoadedPackages[i];
+		pPack->clearCache();
+	}
+}
+
+void ImagePackManager::increaseCounter() {
+	m_TextureCounter.CachedCount++;
+	m_TextureCounter.MaxCachedCount = Math::Max(m_TextureCounter.CachedCount, m_TextureCounter.MaxCachedCount);
+}
+
+void ImagePackManager::decreaseCounter() {
+	m_TextureCounter.CachedCount--;
+}
+
+void ImagePackManager::resetCounter() {
+	m_TextureCounter.CachedCount = 0;
+}
+
+void ImagePackManager::logTexture(const SGString& text, const SgaResourceIndex& resource, LoggerAbstract::Level logLevel) {
+#if DebugMode
+	const ImagePack* pPack = getPackUnsafe(resource.Un.SgaIndex);
+	const SGString szSgaName = pPack ? pPack->getFileName() : "없음";
+	const SGString szImgName = pPack ? pPack->getImgNameOrDefault(resource.Un.ImgIndex, "없음") : "없음";
+
+	if (!Logger_v)
+		return;
+
+	if (resource.Un.FrameIndex == InvalidValue_v) {
+		Logger_v->Log(logLevel, "%s / Sga: %s(%d) / Img: %s(%d)", text.Source(), szSgaName.Source(), resource.Un.SgaIndex, szImgName.Source(), resource.Un.ImgIndex);
+		return;
+	}
+
+	Logger_v->Log(logLevel, "%s / Sga: %s(%d) / Img: %s(%d) / Frame: %d", text.Source(), szSgaName.Source(), resource.Un.SgaIndex, szImgName.Source(), resource.Un.ImgIndex, resource.Un.FrameIndex);
+#endif
+}
+
 bool ImagePackManager::IsValidPackIndex(int idx) {
 	if (idx >= 0 && idx < m_iLoadedPackageCount)
 		return true;

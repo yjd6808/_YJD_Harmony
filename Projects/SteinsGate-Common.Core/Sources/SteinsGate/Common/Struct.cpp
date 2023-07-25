@@ -15,15 +15,23 @@ USING_NS_JC;
 
 ActorPartSpriteData::ActorPartSpriteData()
 	: SgaIndex(InvalidValue_v)
-	, ZOrder(0)
 	, ImgIndex(InvalidValue_v)
+	, ZOrder(0)
 {}
 
 ActorPartSpriteData::ActorPartSpriteData(int zorder, int sga, int img)
 	: SgaIndex(sga)
-	, ZOrder(zorder)
 	, ImgIndex(img)
+	, ZOrder(zorder)
 {}
+
+//ActorPartSpriteDataCustom::ActorPartSpriteDataCustom()
+//	: ActorPartSpriteData()
+//{}
+//
+//ActorPartSpriteDataCustom::ActorPartSpriteDataCustom(int zorder, int sga, int img)
+//	: ActorPartSpriteData(zorder, sga, img)
+//{}
 
 SgaResourceIndex::SgaResourceIndex() : Value(0) {}
 
@@ -44,15 +52,34 @@ PlayerData::PlayerData()
 	: CharId(InvalidValue_v)
 	, Name{""}
 	, CharType(CharType::Gunner)
+	, Life(0)
+	, MaxLife(0)
+	, Mana(0)
+	, MaxMana(0)
+	, Level(0)
 	, Gold(0)
 	, Str(0)
 	, Dex(0)
 	, Int(0)
 	, Vit(0)
-	, Life(0)
-	, Mana(0)
-	, Level(0)
 {}
+
+void PlayerData::clear() {
+	CharId = InvalidValue_v;
+	Name = "";
+	CharType = CharType::Gunner;
+	Life = 0;
+	MaxLife = 0;
+	Mana = 0;
+	MaxMana = 0;
+	Level = 0;
+
+	Gold = 0;
+	Str = 0;
+	Dex = 0;
+	Int = 0;
+	Vit = 0;
+}
 
 ItemCode::ItemCode(int Total)
 	: Code(Total)

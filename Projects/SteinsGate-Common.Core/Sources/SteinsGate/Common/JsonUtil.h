@@ -14,6 +14,7 @@ struct JsonUtil
 {
 public:
 	static SGString getString(Json::Value& value);
+	static const char* getStringRaw(Json::Value& value, JCORE_OUT_OPT int* len = nullptr);
 	static SGString getStringOrNull(Json::Value& value);
 	static SGString getStringOrDefault(Json::Value& value, const SGString& defaultValue = 0); // 내 문자열은 0으로 초기화하면 동적 할당 안함
 	static void parseThicknessInfo(Json::Value& thicknessRoot, JCORE_OUT ThicknessBox& box);
@@ -26,6 +27,7 @@ public:
 	static void parseFloatNumberN(Json::Value& root, JCORE_OUT float* numArr, int count);
 
 	static int getIntDefault(Json::Value& value, int defaultValue = 0);
+	static bool getBooleanDefault(Json::Value& value, bool defaultValue = false);
 	static float getFloatDefault(Json::Value& value, float defaultValue = 0);
 	
 };

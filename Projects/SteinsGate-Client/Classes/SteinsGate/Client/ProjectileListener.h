@@ -11,19 +11,31 @@
 #include <SteinsGate/Client/ActorListener.h>
 #include <SteinsGate/Client/Struct.h>
 
+#include "Projectile.h"
+
 class Projectile;
-class ProjectileListener : public ActorListener
+class JCORE_NOVTABLE ProjectileListener : public ActorListener
 {
 public:
-	ProjectileListener() : ActorListener(ActorType::Projectile) {}
+	ProjectileListener();
 
 	void injectActor(Actor* actor) override;
 
-	virtual void onCollisionWithGround() {}
-	virtual void onLifeTimeOver() {}
-	virtual void onDistanceOver() {}
+	void onCreated() override;
+	void onUpdate(float dt) override;
+	Type getListenerType() const override { return eProjectile; }
+
+	virtual void onCollisionWithGround();
+	virtual void onLifeTimeOver();
+	virtual void onDistanceOver();
+
+	bool isLifeTimeOver() const { return m_fElapsedLifeTime >= m_pProjectile->getBaseInfo()->LifeTime; }
+	bool isDistanceOver() const { return m_fMoveDistance >= m_pProjectile->getBaseInfo()->Distance; }
 protected:
-	Projectile* m_pProjectile{};
+	float m_fMoveDistance;
+	float m_fElapsedLifeTime;
+
+	Projectile* m_pProjectile;
 };
 
 

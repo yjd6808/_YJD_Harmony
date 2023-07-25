@@ -52,7 +52,7 @@ public:
 	void init();
 	void initPublic();
 	void registerMasterGroup(UIMasterGroup* group);
-	void registerLoadedUITexture(SgaResourceIndex index);
+	void registerUITexture(SgaResourceIndex index);
 	void unloadAll();
 	void onUpdate(float dt);
 	void callUIElementsUpdateCallback(float dt);
@@ -77,6 +77,9 @@ public:
 	UIProgressBar* getProgressBar(int progressBarCode) { return getElementTemplated<UIProgressBar>(progressBarCode); }
 	UIScrollBar* getScrollBar(int scrollBarCode) { return getElementTemplated<UIScrollBar>(scrollBarCode); }
 	UIStatic* getStatic(int staticCode) { return getElementTemplated<UIStatic>(staticCode); }
+
+	FrameTexture* createUITexture(int sga, int img, int frame, bool linearDodge = false);
+	FrameTexture* createUITextureRetained(int sga, int img, int frame, bool linearDodge = false);
 
 	UI_Inventory* Inventory;
 	UI_Login* Login;

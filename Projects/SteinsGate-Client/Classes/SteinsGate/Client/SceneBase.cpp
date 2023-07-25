@@ -39,6 +39,7 @@ bool SceneBase::init() {
 	m_pWorldScene = WorldScene::get();
 	m_pUILayer = m_pWorldScene->getUILayer();
 
+	removeChild(_defaultCamera);
 	return true;
 }
 
@@ -49,8 +50,10 @@ void SceneBase::onEnter() {
 
 void SceneBase::onExit() {
 	_LogDebug_("%s 씬을 종료", SceneType::Name[getType()]);
-	m_pUILayer->clearUnload();
 	Scene::onExit();
+	m_pUILayer->clearUnload();
+	CorePackManager_v->releaseAllFrameTexture();
+	
 }
 
 void SceneBase::onEnterTransitionDidFinish() {

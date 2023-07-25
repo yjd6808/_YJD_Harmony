@@ -9,7 +9,9 @@
 #pragma once
 
 #include "Tutturu.h"
+
 #include <SteinsGate/Client/ProjectileListener.h>
+#include <SteinsGate/Client/CharacterListener.h>
 
 class ActorListenerManager final : public JCore::SingletonPointer<ActorListenerManager>
 {
@@ -19,9 +21,12 @@ private:
 	~ActorListenerManager() override;
 public:
 	void init();
+
 	ProjectileListener* createProjectileListener(int projectileListenerCode);
+	CharacterListener* createCharacterListener(CharType_t charType);				
 private:
 	SGHashMap<int, ProjectileListener*> m_hProjectileListenerMap;
+	SGHashMap<int, CharacterListener*> m_hCharacterListenerMap;
 };
 
 

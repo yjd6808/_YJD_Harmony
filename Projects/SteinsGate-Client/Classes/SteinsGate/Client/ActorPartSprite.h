@@ -24,7 +24,7 @@ public:
 		SGNode* canvas,
 		SGDrawNode* boundingBox,
 		const ActorPartSpriteData& partData,
-		SGVector<AnimationInfo*>& animations
+		SGVector<AnimationInfo>* animations
 	);
 
 	ActorPartSprite(
@@ -33,13 +33,18 @@ public:
 		SGNode* canvas,
 		SGDrawNode* boundingBox,
 		const ActorPartSpriteData& partData,
-		SGVector<AnimationInfo*>& animations
+		SGVector<AnimationInfo>* animations
 	);
 	~ActorPartSprite() override;
 
 	bool init() override;
+	void initFrames();
+	void initAnimations();
+
 	void update(float dt) override;
 	void updateBoundingBoxVisibleState();
+	void updateAnimationReference(SGVector<AnimationInfo>* animations);
+
 	void runAnimation(int code);
 	void runAnimation(int code, int startFrameIndexInAnimation);
 
@@ -64,7 +69,7 @@ private:
 	int m_iPartIndex;	// 몇번째 파츠인지
 	ActorSprite* m_pActorSprite;
 	ActorPartSpriteData m_PartData;
-	SGVector<AnimationInfo*>& m_refAnimationInfoList;
+	SGVector<AnimationInfo>* m_pAnimationInfoList;
 
 	// 자체 데이터
 	SGNode* m_pCanvas;

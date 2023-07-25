@@ -73,9 +73,3 @@ void SGAction::setMoveable(bool moveable) {
 	m_bMoveableNegativeX = moveable;
 	m_bMoveableNegativeY = moveable;
 }
-
-void SGAction::runFrameEvent(FrameEventType_t frameEventType, int frameEventId) {
-	DebugAssertMsg(m_pPlayer->getMapLayer() != nullptr, "플레이가 속한 맵 레이어가 없습니다.");
-	m_pPlayer->runFrameEvent(frameEventType, frameEventId);
-}
-

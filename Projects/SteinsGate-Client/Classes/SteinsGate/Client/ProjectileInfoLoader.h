@@ -14,12 +14,21 @@
 struct ProjectileInfoLoader : ConfigFileLoaderAbstract
 {
 public:
-	ProjectileInfoLoader(DataManagerAbstract* manager);
+	ProjectileInfoLoader(DataManagerAbstract* manager, ActorType_t actorType);
 	~ProjectileInfoLoader() override = default;
 
-	ConfigFileType_t getConfigFileType() override { return  ConfigFileType::Projectile; }
+	ConfigFileType_t getConfigFileType() override {
+		switch (m_eActorType) {
+		case ActorType::Character:	return ConfigFileType::Char_Projectile;
+		case ActorType::Monster:	return ConfigFileType::Monster_Projectile;
+		default: DebugAssert(false);
+		}
+		return ConfigFileType::Max;
+	}
 	bool load() override;
 private:
-	static void readOverridedProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo);
-	static void readProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo);
+	void readOverridedProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo);
+	void readProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo);
+
+	ActorType_t m_eActorType;
 };

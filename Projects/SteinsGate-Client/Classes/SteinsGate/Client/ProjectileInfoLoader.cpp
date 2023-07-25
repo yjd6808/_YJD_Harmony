@@ -16,8 +16,9 @@
 USING_NS_JC;
 USING_NS_JS;
 
-ProjectileInfoLoader::ProjectileInfoLoader(DataManagerAbstract* manager)
+ProjectileInfoLoader::ProjectileInfoLoader(DataManagerAbstract* manager, ActorType_t actorType)
 	: ConfigFileLoaderAbstract(manager)
+	, m_eActorType(actorType)
 {}
 
 bool ProjectileInfoLoader::load() {
@@ -38,17 +39,15 @@ bool ProjectileInfoLoader::load() {
 				DebugAssertMsg(m_hConfigDataAbstract.Exist(iOverride), "오버라이딩할 프로젝틸 데이터가 없습니다. 문서 똑바로 안만들어!!?");
 				const ProjectileInfo& ref = static_cast<ProjectileInfo&>( *m_hConfigDataAbstract[iOverride] );
 				ProjectileInfo* pInfo = dbg_new ProjectileInfo(ref);
-				pInfo->AnimationRef = true;
+				pInfo->IsSpriteDataRef = true;
 				readOverridedProjectileInfo(projectile, pInfo);
 				addData(pInfo);
 				continue;
 			}
 
 			// 원본 읽기
-			Value& animationListRoot = projectile["animation"];
-			DebugAssertMsg(animationListRoot.size() > 0, "애니메이션이 없는 프로젝틸입니다.");
 			ProjectileInfo* pInfo = dbg_new ProjectileInfo;
-			pInfo->AnimationRef = false;
+			pInfo->IsSpriteDataRef = false;
 			readProjectileInfo(projectile, pInfo);
 			addData(pInfo);
 		}
@@ -69,15 +68,15 @@ void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRo
 	projectileInfo->Code = projectileRoot["code"].asInt();
 	projectileInfo->Name = JsonUtilEx::getString(projectileRoot["name"]);
 
-	int iAttackDataCode = JsonUtilEx::getIntDefault(projectileRoot["attakdata_code"], 0);
+	int iAttackDataCode = JsonUtilEx::getIntDefault(projectileRoot["attack_data_code"], 0);
 	if (iAttackDataCode != 0)
-		projectileInfo->AttackData = pDataManager->getAttackDataInfo(iAttackDataCode);
+		projectileInfo->AttackData = pDataManager->getAttackDataInfo(m_eActorType, iAttackDataCode);
 
 	int iProjectileListenerCode = JsonUtilEx::getIntDefault(projectileRoot["listener_code"], 0);
 	if (iProjectileListenerCode != 0)
 		projectileInfo->ProjectileListenerCode = iProjectileListenerCode;
 
-	const SGString& sgaName = JsonUtilEx::getStringOrNull(projectileRoot["sga"]);
+	/*const SGString& sgaName = JsonUtilEx::getStringOrNull(projectileRoot["sga"]);
 	if (!sgaName.IsNull()) {
 		projectileInfo->SgaIndex = pPackManager->getPackIndex(sgaName);
 	}
@@ -85,7 +84,7 @@ void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRo
 	const SGString& imgName = JsonUtilEx::getStringOrNull(projectileRoot["img"]);
 	if (!imgName.IsNull()) {
 		projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->SgaIndex)->getImgIndex(imgName);
-	}
+	}*/
 
 	float fSpawnOffsetX = JsonUtilEx::getFloatDefault(projectileRoot["spawn_offset_x"], 0);
 	if ((int)fSpawnOffsetX != 0)
@@ -145,11 +144,8 @@ void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRo
 		return;
 	}
 
-	projectileInfo->AnimationRef = false;
-	Value& animationRoot = projectileRoot["animation"];
-	AnimationInfo* pAnimationInfo = dbg_new AnimationInfo(animationRoot["frames"].size());
-	JsonUtilEx::parseAnimationInfo(animationRoot, *pAnimationInfo);
-	projectileInfo->Animation = pAnimationInfo;
+	projectileInfo->IsSpriteDataRef = false;
+	JsonUtilEx::parseActorSpriteData(projectileRoot["actor_sprite_data"], &projectileInfo->SpriteData);
 }
 
 void ProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, JCORE_OUT ProjectileInfo* projectileInfo) {
@@ -160,10 +156,10 @@ void ProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, JCORE
 
 	projectileInfo->Code = projectileRoot["code"].asInt();
 	projectileInfo->ProjectileListenerCode = projectileRoot["listener_code"].asInt();
-	projectileInfo->AttackData = pDataManager->getAttackDataInfo(projectileRoot["attakdata_code"].asInt());
+	projectileInfo->AttackData = pDataManager->getAttackDataInfo(m_eActorType, projectileRoot["attack_data_code"].asInt());
 	projectileInfo->Name = JsonUtilEx::getString(projectileRoot["name"]);
-	projectileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(projectileRoot["sga"]));
-	projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->SgaIndex)->getImgIndex(JsonUtilEx::getString(projectileRoot["img"]));
+	//projectileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(projectileRoot["sga"]));
+	//projectileInfo->ImgIndex = pPackManager->getPack(projectileInfo->SgaIndex)->getImgIndex(JsonUtilEx::getString(projectileRoot["img"]));
 	projectileInfo->SpawnOffsetX = projectileRoot["spawn_offset_x"].asFloat();
 	projectileInfo->SpawnOffsetY = projectileRoot["spawn_offset_y"].asFloat();
 	projectileInfo->SpawnEffect = pDataManager->getEffectInfo(projectileRoot["spawn_effect_code"].asInt());
@@ -177,9 +173,5 @@ void ProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, JCORE
 	projectileInfo->LifeTime = projectileRoot["life_time"].asFloat();
 	projectileInfo->RehitDelay = projectileRoot["rehit_delay"].asFloat();
 	JsonUtilEx::parseThicknessInfo(projectileRoot["thickness_box"], projectileInfo->ThicknessBox);
-
-	Value& animationRoot = projectileRoot["animation"];
-	AnimationInfo* pAnimationInfo = dbg_new AnimationInfo(animationRoot["frames"].size());
-	JsonUtilEx::parseAnimationInfo(animationRoot, *pAnimationInfo);
-	projectileInfo->Animation = pAnimationInfo;
+	JsonUtilEx::parseActorSpriteData(projectileRoot["actor_sprite_data"], &projectileInfo->SpriteData);
 }

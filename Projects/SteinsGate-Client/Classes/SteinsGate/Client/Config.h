@@ -12,9 +12,10 @@
 
 inline constexpr int MaxSgaFileCount_v = 200;
 inline constexpr int MaxSgaParallelLoadingThreadCount_v = 8;
-inline constexpr int MaxMonsterPartsCount_v = 5;
+inline constexpr int MaxMonsterPartsCount_v = 5;				// 일단 5개로 둠.
+inline constexpr int MaxMapObjectGatePartsCount_v = 3;			// 문 테두리, 문, 빛 게이트는 이렇게 3개의 파츠로 구성됨
 
-inline constexpr int ComboSequenceCount_v = 5;				// 콤보 가능키 최대 몇개?
+inline constexpr int ComboSequenceCount_v = 5;					// 콤보 가능키 최대 몇개?
 inline constexpr float ComboSequenceDelay_v = FPS18_v;			// 콤보 입력 제한 시간
 
 inline constexpr int MaxCommandCount_v = 3;	

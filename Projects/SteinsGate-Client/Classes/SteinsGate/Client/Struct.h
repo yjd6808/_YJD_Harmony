@@ -17,30 +17,15 @@ struct AttackDataInfo;
 class Actor;
 class PhysicsActor;
 
-
-
-struct SGActorRect
+struct ActorRect
 {
 	SGRect ThicknessRect;
 	SGRect BodyRect;
 
-	bool isCollide(const SGActorRect& rect, SpriteDirection_t& otherHitDirection, SGRect& hitRect);
+	bool isCollide(const ActorRect& rect, SpriteDirection_t& otherHitDirection, SGRect& hitRect);
 };
 
-
-struct SGActorSpriteData
-{
-	SGActorSpriteData(int partCount, int animationCount)
-		: Parts(partCount)
-		, Animations(animationCount) {}
-
-	SGVector<ActorPartSpriteData> Parts;
-	SGVector<AnimationInfo*> Animations;
-};
-
-using SGActorSpriteDataPtr = JCore::SharedPtr<SGActorSpriteData>;
-
-struct SGHitInfo
+struct HitInfo
 {
 	Actor* Attacker;
 	PhysicsActor* HitTarget;
@@ -48,4 +33,3 @@ struct SGHitInfo
 	SGRect HitRect;
 	AttackDataInfo* AttackDataInfo;
 };
-

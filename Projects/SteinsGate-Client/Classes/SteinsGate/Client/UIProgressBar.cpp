@@ -42,20 +42,12 @@ void UIProgressBar::load() {
 	if (m_bLoaded)
 		return;
 
-	ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
-
-	if (pPack == nullptr)
-		return;
-
-	m_pTexture = pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Sprite);
-	m_pTexture->retain();
+	m_pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite);
 
 	if (m_pTexture->isLink()) {
 		CC_SAFE_RELEASE_NULL(m_pTexture);
 		return;
 	}
-
-	CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite });
 
 	const Size progressSpriteSize = m_pTexture->getSize();
 	const float fScaleX = m_UISize.width / progressSpriteSize.width;

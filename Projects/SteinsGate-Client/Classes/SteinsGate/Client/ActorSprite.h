@@ -27,15 +27,8 @@ public:
 		bool operator==(const PartData& other);
 	};
 
-	ActorSprite(
-		Actor* actor, 
-		const SGActorSpriteDataPtr& actorData
-	);
-
-	static ActorSprite* create(
-		Actor* actor, 
-		const SGActorSpriteDataPtr& actorData
-	);
+	ActorSprite(Actor* actor, ActorSpriteData* actorSpriteData);
+	static ActorSprite* create(Actor* actor, ActorSpriteData* actorSpriteData);
 
 	bool init() override;
 	void update(float dt) override;
@@ -67,16 +60,12 @@ public:
 	SpriteDirection_t getSpriteDirection();
 	int getRunningAnimationCode();
 	ActorPartAnimation* getRunningAnimation();
-	void updateSpriteData(const SGActorSpriteDataPtr& spriteData);
+	void updateSpriteData(ActorSpriteData* spriteData);
 private:
-
 	int m_iFrameCount;
 	Actor* m_pActor;
-	SGActorSpriteDataPtr m_spActorData;
+	ActorSpriteData* m_pActorData;
 	SGVector<PartData> m_vParts;
-	//SGVector<SGSprite*> m_vPartsCanvas;
-	//SGVector<SGActorPartSprite*> m_vParts;
-	//SGVector<SGDrawNode*> m_vPartsBoundingBox;
 	SpriteDirection_t m_eDirection;
 };
 

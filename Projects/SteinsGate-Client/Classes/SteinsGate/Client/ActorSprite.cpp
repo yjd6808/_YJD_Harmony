@@ -20,24 +20,21 @@ bool ActorSprite::PartData::operator==(const PartData& other) {
 
 ActorSprite::ActorSprite(
 	Actor* actor, 
-	const SGActorSpriteDataPtr& actorData)
+	ActorSpriteData* actorSpriteData)
 	: m_iFrameCount(InvalidValue_v)
 	, m_pActor(actor)
-	, m_spActorData(actorData)
-	, m_vParts(actorData->Parts.Size())
-	// , m_vPartsCanvas(actorData->Parts.Size(), nullptr)
-	// , m_vParts(actorData->Parts.Size(), nullptr)
-	// , m_vPartsBoundingBox(actorData->Parts.Size(), nullptr)
+	, m_pActorData(actorSpriteData)
+	, m_vParts(actorSpriteData->Parts.Size())
+	// , m_vPartsCanvas(actorSpriteData->Parts.Size(), nullptr)
+	// , m_vParts(actorSpriteData->Parts.Size(), nullptr)
+	// , m_vPartsBoundingBox(actorSpriteData->Parts.Size(), nullptr)
 	, m_eDirection(SpriteDirection::Right)
 
 {
 }
 
-ActorSprite* ActorSprite::create(
-	Actor* actor, const 
-	SGActorSpriteDataPtr& actorData)
-{
-	ActorSprite* pSprite = dbg_new ActorSprite(actor, actorData);
+ActorSprite* ActorSprite::create(Actor* actor, ActorSpriteData* actorSpriteData) {
+	ActorSprite* pSprite = dbg_new ActorSprite(actor, actorSpriteData);
 
 	if (pSprite && pSprite->init()) {
 		pSprite->autorelease();
@@ -52,8 +49,7 @@ bool ActorSprite::init() {
 	if (!Sprite::init())
 		return false;
 
-	SGVector<ActorPartSpriteData>& vPartsData = m_spActorData->Parts;
-	vPartsData.Sort([](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
+	SGVector<ActorPartSpriteData>& vPartsData = m_pActorData->Parts;
 
 	// 바디 파츠 기준으로 전체 프레임수를 얻는다.
 	m_iFrameCount = ImagePackManager::Get()
@@ -63,11 +59,7 @@ bool ActorSprite::init() {
 	for (int i = 0; i < vPartsData.Size(); ++i) {
 
 		if (i == 0) {
-			ImagePack* pPack = CorePackManager_v->getPack(vPartsData[i].SgaIndex);
-			SGString szPackName = pPack->getFileName();
-			SGString& szImgName = pPack->getImgName(vPartsData[i].ImgIndex);
-
-			_LogDebug_("액터 로딩: %s || sga: %s || img: %s || z: %d", ActorType::Name[m_pActor->getType()], szPackName.Source(), szImgName.Source(), vPartsData[i].ZOrder);
+			CorePackManager_v->logTexture("ActorSprite::init()", { vPartsData[i].SgaIndex, vPartsData[i].ImgIndex, InvalidValue_v }, LoggerAbstract::eDebug);
 		}
 
 		PartData partData = createPart(vPartsData[i], m_iFrameCount);
@@ -203,17 +195,17 @@ ActorSprite::PartData ActorSprite::createPart(const ActorPartSpriteData& partSpr
 		partData.Canvas,
 		partData.BoundingBox,
 		partSpriteData,
-		m_spActorData->Animations
+		&m_pActorData->Animations
 	);
 
 	// 프로젝틸은 캔버스를 사용하지 않을 거기 땜에
 	// 앵커를 0.5, 0.5로 하도록 한다.
 	// 캔버스 위에서 그려지는 캐릭터나 몬스터, 기타 오브젝트들은 ZERO로 처리하도록..
+
 	if (m_pActor->getType() == ActorType::Projectile) {
 		partData.Part->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 		partData.Canvas->addChild(partData.BoundingBox);
-	}
-	else {
+	} else {
 		partData.Part->setAnchorPoint(Vec2::ZERO);
 		partData.Part->addChild(partData.BoundingBox);
 	}
@@ -237,12 +229,14 @@ ActorPartAnimation* ActorSprite::getRunningAnimation() {
 	return pRunningAnimation;
 }
 
-void ActorSprite::updateSpriteData(const SGActorSpriteDataPtr& spriteData) {
+void ActorSprite::updateSpriteData(ActorSpriteData* spriteData) {
+	m_pActorData = spriteData;
 
 	// 다른 부위만 업데이트 해줘야함
-	SGVector<ActorPartSpriteData>& vPartsData = m_spActorData->Parts;
+	SGVector<ActorPartSpriteData>& vPartsData = m_pActorData->Parts;
 
 	// 기존 파츠에서 실행중인 애니메이션 정보를 가져온다.
+	// 바디 파츠는 액터 생성중 불변이므로, 바디 파츠 애니메이션 정보 또한 교체될일이 없다.
 	ActorPartAnimation* pRunningAnimation = getRunningAnimation();
 
 	
@@ -302,6 +296,11 @@ void ActorSprite::updateSpriteData(const SGActorSpriteDataPtr& spriteData) {
 		m_vParts.Remove(removePart);
 	});
 
+
+	// Step 4. 기존 파츠들의 참조 ActorSpriteData를 참조하고 있는 변수들의 데이터를 업데이트 시켜준다.
+	for (int i = 0; i < m_vParts.Size(); ++i) {
+		m_vParts[i].Part->updateAnimationReference(&m_pActorData->Animations);
+	}
 
 	// Step 4. 신규 파츠들을 생성한 후 추가한 후 애니메이션 정보를 세팅해준다.
 	for (int i = 0; i < vNewParts.Size(); ++i) {

@@ -25,9 +25,6 @@
     <Filter Include="Data\Map">
       <UniqueIdentifier>{289afa04-b017-4b77-9941-fe0017a1a0ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Obstacle">
-      <UniqueIdentifier>{2b54d70f-de2d-4218-b6da-f13abcaa0677}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\AI">
       <UniqueIdentifier>{aa9500ff-549d-4d4e-a96c-163a6cd1ef3d}</UniqueIdentifier>
     </Filter>
@@ -48,9 +45,6 @@
     </Filter>
     <Filter Include="Actor\Listener">
       <UniqueIdentifier>{0fa2fea9-9552-4752-90b5-a9bf05025453}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\Listener\Gunner">
-      <UniqueIdentifier>{df3446cd-34aa-48ae-8424-768cb480f8e3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Data\Action">
       <UniqueIdentifier>{0520369f-7e38-45ca-a074-74c59d0d3cb2}</UniqueIdentifier>
@@ -108,6 +102,18 @@
     </Filter>
     <Filter Include="Net\Sync">
       <UniqueIdentifier>{0754ca7c-0ffe-457e-8016-747afd443af4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\MapObject">
+      <UniqueIdentifier>{2b54d70f-de2d-4218-b6da-f13abcaa0677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\FrameEvent">
+      <UniqueIdentifier>{d5a45180-26a8-4266-a6b7-f2cb9e3600b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Listener\Character">
+      <UniqueIdentifier>{db2db770-f105-45f0-a847-4dd3d248e338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Listener\Character\Gunner">
+      <UniqueIdentifier>{df3446cd-34aa-48ae-8424-768cb480f8e3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -192,13 +198,13 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\TileInfoLoader.cpp">
       <Filter>Data\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\ObstacleInfoLoader.cpp">
-      <Filter>Data\Obstacle</Filter>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapObjectInfoLoader.cpp">
+      <Filter>Data\MapObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MapInfoLoader.cpp">
       <Filter>Data\Map</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\Obstacle.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapObject.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MapInfo.cpp">
@@ -244,9 +250,6 @@
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGApplication.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\AnimationInfo.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.cpp">
       <Filter>Data\AttackData</Filter>
     </ClCompile>
@@ -270,12 +273,6 @@
       <Filter>Actor\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileListener.cpp">
-      <Filter>Actor\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerBulletListener.cpp">
-      <Filter>Actor\Listener\Gunner</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\CharProjectileListener.cpp">
       <Filter>Actor\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Tutturu.cpp" />
@@ -475,6 +472,24 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\C_AREA.cpp">
       <Filter>Net\Connection</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\FrameEventLoader.cpp">
+      <Filter>Data\FrameEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListener.cpp">
+      <Filter>Actor\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerBulletListener.cpp">
+      <Filter>Actor\Listener\Character\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener.cpp">
+      <Filter>Actor\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerCollection.cpp">
+      <Filter>Actor\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerListener.cpp">
+      <Filter>Actor\Listener\Character\Gunner</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ImagePackManager.h">
@@ -482,9 +497,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ImagePack.h">
       <Filter>Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AnimationInfo.h">
-      <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\DataManager.h">
       <Filter>Data</Filter>
@@ -588,11 +600,11 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\TileInfo.h">
       <Filter>Data\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ObstacleInfoLoader.h">
-      <Filter>Data\Obstacle</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapObjectInfoLoader.h">
+      <Filter>Data\MapObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ObstacleInfo.h">
-      <Filter>Data\Obstacle</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapObjectInfo.h">
+      <Filter>Data\MapObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MapInfo.h">
       <Filter>Data\Map</Filter>
@@ -600,7 +612,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\MapInfoLoader.h">
       <Filter>Data\Map</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\Obstacle.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapObject.h">
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\PhysicsActor.h">
@@ -679,12 +691,6 @@
       <Filter>Actor\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AllActorListener.h">
-      <Filter>Actor\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerBulletListener.h">
-      <Filter>Actor\Listener\Gunner</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\CharProjectileListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Config.h" />
@@ -903,6 +909,24 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\PopupDefine.h">
       <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\FrameEventLoader.h">
+      <Filter>Data\FrameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\FrameEvent.h">
+      <Filter>Data\FrameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerBulletListener.h">
+      <Filter>Actor\Listener\Character\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h">
+      <Filter>Actor\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerCollection.h">
+      <Filter>Actor\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerListener.h">
+      <Filter>Actor\Listener\Character\Gunner</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

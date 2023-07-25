@@ -201,14 +201,13 @@ void UIScrollBar::load() {
 
 
 void UIScrollBar::createSprites() {
-	ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
-	const bool bPackIsNull = pPack == nullptr;
-	FrameTexture* pDefaultTexture = CoreGlobal_v->getDefaultFrameTexture();
+	// ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+	// const bool bPackIsNull = pPack == nullptr;
+	// FrameTexture* pDefaultTexture = CoreGlobal_v->getDefaultFrameTexture();
 
 	for (int i = 0; i < TextureCount; ++i) {
-		FrameTexture* pTexture = bPackIsNull || m_pInfo->Sprites[i] == InvalidValue_v ? pDefaultTexture : pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Sprites[i]);
-		pTexture->retain();
-
+		//FrameTexture* pTexture = bPackIsNull || m_pInfo->Sprites[i] == InvalidValue_v ? pDefaultTexture : pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Sprites[i]);
+		FrameTexture* pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprites[i]);
 		Sprite* pSprite;
 
 		// 나인 렉트의 중앙 렉트 크기는 setCapInsets로 설정할 수 있다.

@@ -20,7 +20,7 @@ public:
 	
 	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) override;
 	void onUpdate(float dt) override;
-	void onEnemySingleHit(SGHitInfo& info);
+	void onEnemySingleHit(HitInfo& info);
 	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 private:
 	HitRecorder* m_pHitRecorder;

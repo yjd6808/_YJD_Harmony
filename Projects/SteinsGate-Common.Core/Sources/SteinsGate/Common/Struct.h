@@ -10,9 +10,15 @@
 
 #include <SteinsGate/Common/Enum.h>
 #include <SteinsGate/Common/Const.h>
+#include <SteinsGate/Common/Type.h>
+#include <SteinsGate/Common/ConfigDataAbstract.h>
+#include <SteinsGate/Common/SgaSpriteRect.h>
 
 #include <JCore/Time.h>
+#include <JCore/Container/Vector.h>
 #include <JCore/Primitives/StaticString.h>
+
+
 
 template <Int32U Size>
 using SGStaticString = JCore::StaticString<Size>;
@@ -34,16 +40,62 @@ struct ThicknessBox
 		, Height(height) {}
 };
 
+
+struct FrameInfo
+{
+	int FrameIndex;
+	float Delay;
+	int FrameEventCode;
+};
+
+
+struct AnimationInfo : ConfigDataAbstract
+{
+	AnimationInfo() { DebugAssertMsg(false, "호출 금지"); }
+	AnimationInfo(int frameSize)
+		: Loop(false)
+		, Name{0}
+		, Frames(frameSize)
+	{}
+
+	bool Loop;
+	SGString Name;
+	SGVector<FrameInfo> Frames;
+};
+
 struct ActorPartSpriteData
 {
 	ActorPartSpriteData();
 	ActorPartSpriteData(int zorder, int sga, int img);
 
-	int ZOrder;
+	// 스프라이트 정보(필수)
 	int SgaIndex;
 	int ImgIndex;
+
+	// 미입력시 순서대로 1씩증가
+	int ZOrder;
+	SgaSpriteRect CustomSizeInfo;
 };
 
+//struct ActorPartSpriteDataCustom : ActorPartSpriteData
+//{
+//	ActorPartSpriteDataCustom();
+//	ActorPartSpriteDataCustom(int zorder, int sga, int img);
+//};
+
+struct ActorSpriteData
+{
+	ActorSpriteData(ActorPartSpritePositioningRule_t positioningRule, int partCount, int animationCount)
+		: PositioningRule(positioningRule)
+		, Parts(partCount)
+		, Animations(animationCount) {}
+
+	ActorPartSpritePositioningRule_t PositioningRule;
+	SGVector<ActorPartSpriteData> Parts;
+	SGVector<AnimationInfo> Animations;
+};
+
+using ActorSpriteDataPtr = JCore::SharedPtr<ActorSpriteData>;
 using VisualData = ActorPartSpriteData[MaxVisualCount_v];
 using VisualInfo = JCore::Vector<ActorPartSpriteData>;
 
@@ -90,18 +142,25 @@ struct PlayerData
 {
 	PlayerData();
 
+	void clear();
+
 	int CharId;	// 캐릭터 고유 아이디
 	SGStaticString<CharNameLen_v> Name;
 	CharType_t CharType;
-	int Gold;
-	int Str;
-	int Dex;
-	int Int;
-	int Vit;
-	int Life;
-	int Mana;
-	int Level;
+	Int32 Life;
+	Int32 MaxLife;
+	Int32 Mana;
+	Int32 MaxMana;
+	Int32 Level;
+
+	// 호스트 플레이어 데이터
+	Int64 Gold;
+	Int32 Str;
+	Int32 Dex;
+	Int32 Int;
+	Int32 Vit;
 };
+
 
 
 // 31                               0

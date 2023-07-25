@@ -79,7 +79,6 @@ void PhysicsActor::update(float dt) {
 		return;
 
 	Actor::update(dt);
-
 	updatePauseTime(dt);
 	updatePhysics(dt);
 	updateDebug(dt);		// TODO: 디버깅용 임시 코드
@@ -166,7 +165,7 @@ void PhysicsActor::updateFriction(float dt) {
 		return;
 	}
 
-	if (m_pMapLayer->isCollideWithObstacles(groundRect))
+	if (m_pMapLayer->isCollideWithMapObjects(groundRect))
 		return;
 
 	setPositionRealX(groundRect.origin.x);
@@ -209,7 +208,7 @@ bool PhysicsActor::hasForceY() {
 
 
 
-void PhysicsActor::hit(const SGHitInfo& hitInfo) {
+void PhysicsActor::hit(const HitInfo& hitInfo) {
 	hit(hitInfo.Attacker, hitInfo.HitDirection, hitInfo.HitRect, hitInfo.AttackDataInfo);
 }
 
@@ -329,7 +328,6 @@ bool PhysicsActor::hasForce() {
 // 디버깅용으로 임시로 추가한 코드
 // 어택박스 위치가 제대로 맞나 눈으로 확인하기 위한 용도
 void PhysicsActor::updateDebug(float dt) {
-
 	if (!Global::Get()->DrawAttackBox) {
 		if (m_pAtkThicknessBox) m_pAtkThicknessBox->setOpacity(0);
 		if (m_pAtkHitBox) m_pAtkHitBox->setOpacity(0);
@@ -347,17 +345,18 @@ void PhysicsActor::updateDebugSub1(float dt) {
 	if (pAnimation == nullptr)
 		return;
 
-	FrameInfo* pFrameInfo = pAnimation->getRunningFrameInfo();
+	const FrameInfo& frameInfo = pAnimation->getRunningFrameInfo();
+	const FrameEvent* pFrameEvent = CoreDataManager_v->getFrameEvent(m_eActorType, frameInfo.FrameEventCode);
 
-	if (pFrameInfo->FrameEvent != FrameEventType::AttackBoxInstant) {
+	if (pFrameEvent && pFrameEvent->Type != FrameEventType::AttackBoxInstant) {
 		return;
 	}
 
 	// 어택박스 프레임 발견할때마다 초기화
 	m_fAtkBoxInstantElapsedTime = 0.0f;
 
-	FrameInfoAttackBoxInstant* pAttackBoxInstantInfo = (FrameInfoAttackBoxInstant*)pFrameInfo;
-	SGActorRect absoluteActorRect = Actor::convertAbsoluteActorRect(this, pAttackBoxInstantInfo->Rect);
+	FrameEventAttackBoxInstant* pAttackBoxInstantInfo = (FrameEventAttackBoxInstant*)pFrameEvent;
+	ActorRect absoluteActorRect = convertAbsoluteActorRect(this, pAttackBoxInstantInfo->Rect);
 
 	RectPoly hitPoly = RectPoly::createFromLeftBottom(
 		absoluteActorRect.BodyRect.origin,

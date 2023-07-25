@@ -28,7 +28,7 @@ public:
 	void updateDownKeyCheck(PlayerController* controller);
 	void updateRightShotTime(PlayerController* controller, float dt);
 
-	void onEnemySingleHit(SGHitInfo& info);
+	void onEnemySingleHit(HitInfo& info);
 	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 
 	bool runRightShotAnimation(ActorSprite* character);

@@ -1,0 +1,48 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "발생 이벤트 타입 종류: spawn(1), instant_attack_box(2)",
+    "__comment__2": "                             ┌ 스폰 이벤트",
+    "__comment__3": "프레임 정보 <--> 프레임 이벤트 ├ 어택 박스 이벤트",
+    "__comment__4": "                             └ ...",
+    "__comment__5": "기존에는 프레임 정보에 이벤트 정보를 그대로 넣어줬었는데. 이렇게할 경우 커플링이 너무 심해서 활용성이 떨어지는 문제가 있다.",
+    "__comment__6": "원래 분리 안할려고했는데 캐릭터의 경우 아바타를 바꿔끼거나 할 경우 actor_sprite_data의 parts 정보를 런타임상에서 수정해야하기 때문에 프레임 정보와 이벤트가 분라되어야 Animation 정보를 단순복사해서 사용가능하기 때문",
+    
+
+    "frame_event": [
+        {
+            "code": 1,
+            "type": 2,
+            "name": "sliding",
+            "attack_data_code": 5,
+            "actor_rect": "202 117 108 36 202 117 108 36"
+        },
+        {
+            "code": 2,
+            "type": 2,
+            "name": "shot_right_begin",
+            "attack_data_code": 4,
+            "actor_rect": "242 102 56 33 226 166 86 80"
+        },
+        {
+            "code": 3,
+            "type": 2,
+            "name": "shot_right_down_begin",
+            "attack_data_code": 4,
+            "actor_rect": "242 102 56 33 226 166 86 80"
+        },
+        {
+            "code": 4,
+            "type": 2,
+            "name": "shot_left",
+            "attack_data_code": 4,
+            "actor_rect": "249 102 51 34 229 167 81 80"
+        },
+        {
+            "code": 5,
+            "type": 2,
+            "name": "shot_left_down",
+            "attack_data_code": 4,
+            "actor_rect": "249 102 51 34 229 167 81 80"
+        }
+    ]
+}

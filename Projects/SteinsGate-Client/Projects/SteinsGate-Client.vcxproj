@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerCollection.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\FrameEventLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\CommandSynchronizer.cpp">
       <SubType>
       </SubType>
@@ -35,6 +39,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\C_CHAT.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\C_GAME.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\C_LOBBY.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetCore.cpp">
       <SubType>
       </SubType>
@@ -73,10 +78,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\AnimationInfo.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetAuthEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\MimicCamera.cpp">
@@ -84,10 +85,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\CharAnimationInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\CharProjectileListener.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Effect.cpp">
       <SubType>
       </SubType>
@@ -160,11 +157,11 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\Obstacle.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapObject.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\ObstacleInfoLoader.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\MapObjectInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -419,6 +416,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerCollection.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\FrameEvent.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\FrameEventLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ConnectionSynchronizer.h">
       <SubType>
       </SubType>
@@ -443,6 +444,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\PackHelper.h">
       <SubType>
       </SubType>
@@ -504,10 +506,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CharAnimationInfoLoader.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\CharProjectileListener.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\NetClientEventListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\NetClientGroup.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\NetCore.h">
@@ -682,15 +680,15 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\Obstacle.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapObject.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ObstacleInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapObjectInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ObstacleInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MapObjectInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -720,10 +718,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameTexture.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ActionInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AnimationInfo.h">
       <SubType>
       </SubType>
     </ClInclude>

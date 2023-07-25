@@ -19,8 +19,8 @@ ProjectileInfo& ProjectileInfo::operator=(ProjectileInfo&& other) noexcept {
 	ProjectileListenerCode = other.ProjectileListenerCode;
 	AttackData = other.AttackData;
 	Name = Move(other.Name);
-	SgaIndex = other.SgaIndex;
-	ImgIndex = other.ImgIndex;
+	//SgaIndex = other.SgaIndex;
+	//ImgIndex = other.ImgIndex;
 	SpawnOffsetX = other.SpawnOffsetX;
 	SpawnOffsetY = other.SpawnOffsetY;
 	SpawnEffect = other.SpawnEffect;
@@ -34,16 +34,16 @@ ProjectileInfo& ProjectileInfo::operator=(ProjectileInfo&& other) noexcept {
 	MoveSpeed = other.MoveSpeed;
 	LifeTime = other.LifeTime;
 	RehitDelay = other.RehitDelay;
-	AnimationRef = other.AnimationRef;
+	IsSpriteDataRef = other.IsSpriteDataRef;
 	ThicknessBox = other.ThicknessBox;
-	Animation = other.Animation;
-	other.Animation = nullptr;
+	SpriteData = other.SpriteData;
+	other.SpriteData = nullptr;
 	return *this;
 }
 
 ProjectileInfo::~ProjectileInfo() {
-	if (AnimationRef)
+	if (IsSpriteDataRef)
 		return;
 
-	JCORE_DELETE_SAFE(Animation);
+	JCORE_DELETE_SAFE(SpriteData);
 }

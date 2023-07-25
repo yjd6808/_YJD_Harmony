@@ -280,25 +280,24 @@ void GunnerJump::reboundY(Character* character) {
 void GunnerJump::createBullet() {
 
 	// 거너 총 종류에따라 프로젝틸 혹은 히트박스 생성
-	FrameEventType_t eFrameEventType = WeaponType::ShotFrameEventType[m_eWeaponType];
-
-	int iFrameEventId = -1;
+	FrameEventSpawnType_t eFrameEventType = WeaponType::ShotFrameEventSpawnType[m_eWeaponType];
+	int iSpawnCode = InvalidValue_v;
 
 	if (m_bRightFire) {
 		switch (m_eWeaponType) {
-		case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
-		case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
+		case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
+		case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
 		default: DebugAssertMsg(false, "총 종류가 이상합니다. (1)");
 		}
 	}
 	else {
 		switch (m_eWeaponType) {
-		case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
-		case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
+		case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
+		case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
 		default: DebugAssertMsg(false, "총 종류가 이상합니다. (2)");
 		}
 	}
 
-	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 설정되지 않았습니다.");
-	runFrameEvent(eFrameEventType, iFrameEventId);
+	DebugAssertMsg(iSpawnCode != InvalidValue_v, "프레임 이벤트 ID가 설정되지 않았습니다.");
+	m_pPlayer->runFrameEventSpawn(eFrameEventType, iSpawnCode);
 }

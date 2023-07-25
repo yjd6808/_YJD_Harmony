@@ -51,20 +51,8 @@ Monster* Monster::create(MobInfo* baseInfo, AIInfo* aiInfo) {
 }
 
 void Monster::initActorSprite() {
-	DataManager* pDataManager = DataManager::Get();
-	ImagePackManager* pImgPackManager = ImagePackManager::Get();
-	SGActorSpriteDataPtr spActorSpriteData = MakeShared<SGActorSpriteData>(m_pBaseInfo->PartsCount, m_pBaseInfo->AnimationList.Size());
-
-	for (int i = 0; i < m_pBaseInfo->PartsCount; ++i) {
-		MobPartInfo& part = m_pBaseInfo->Parts[i];
-		spActorSpriteData->Parts.PushBack({ part.ZOrder, part.SgaIndex, part.ImgIndex });
-	}
-
-	for (int i = 0; i < m_pBaseInfo->AnimationList.Size(); ++i) {
-		spActorSpriteData->Animations.PushBack(&m_pBaseInfo->AnimationList[i]);
-	}
-
-	m_pActorSprite = ActorSprite::create(this, spActorSpriteData);
+	DebugAssert(m_pBaseInfo->SpriteData != nullptr);
+	m_pActorSprite = ActorSprite::create(this, m_pBaseInfo->SpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
 	this->addChild(m_pActorSprite);
 }
@@ -81,14 +69,7 @@ void Monster::initAIActivities() {
 	
 }
 
-void Monster::initListener(ActorListener* listener) {
-	DebugAssertMsg(m_pListener == nullptr, "이미 액터 리스너가 초기화 되어있습니다.");
-	DebugAssertMsg(listener->getActorType() == ActorType::Monster, "몬스터 리스너만 초기화 가능합니다.");
-	m_pListener = listener;
-}
-
-
-void Monster::hit(const SGHitInfo& hitInfo) {
+void Monster::hit(const HitInfo& hitInfo) {
 	AIActor::hit(hitInfo);
 
 	if (hitInfo.AttackDataInfo->IsFallDownAttack) {
@@ -154,19 +135,22 @@ void Monster::onSelectedActivity(AIActivity* selectedActivity) {
 }
 
 void Monster::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
+	AIActor::onFrameBegin(animation, texture);
 	m_pRunningActivity->onFrameBegin(animation, texture);
 }
 
 void Monster::onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) {
+	AIActor::onFrameEnd(animation, texture);
 	m_pRunningActivity->onFrameEnd(animation, texture);
 }
 
 void Monster::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) {
+	AIActor::onAnimationBegin(animation, texture);
 	m_pRunningActivity->onAnimationBegin(animation, texture);
-	
 }
 
 void Monster::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) {
+	AIActor::onAnimationEnd(animation, texture);
 	m_pRunningActivity->onAnimationEnd(animation, texture);
 }
 

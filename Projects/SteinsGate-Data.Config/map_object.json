@@ -1,0 +1,554 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "지형 지물 관련 정보",
+    "__comment__2": "맵을 구성하는 지형 지물이다.",
+    "__comment__3": "type: 0(obstacle), 1(gate)",
+
+    "map_object": [
+        {
+            "code": 1,
+            "type": 0,
+            "name": "flower_01",
+            "thickness_box": "1 -21 16 14",
+            "hitable": false,
+            "collidable": false,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "flower_01",
+                        "loop": true,
+                        "frames": [
+                            "0 -1"
+                        ]
+                    }
+                ]
+            }
+            
+        },
+
+        {
+            "code": 2,
+            "type": 0,
+            "name": "flower_02",
+            "thickness_box": "1 -19 16 18",
+            "hitable": false,
+            "collidable": false,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "flower_02",
+                        "loop": true,
+                        "frames": [
+                            "0 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 3,
+            "type": 0,
+            "name": "flower_03",
+            "thickness_box": "-1 -21 14 16",
+            "hitable": false,
+            "collidable": false,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "flower_03",
+                        "loop": true,
+                        "frames": [
+                            "2 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 4,
+            "type": 0,
+            "name": "rock_01",
+            "sga": "sprite_map.sga",
+            "img": "00obj0.img",
+            "thickness_box": "5 -22 42 22",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "rock_01",
+                        "loop": true,
+                        "frames": [
+                            "3 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 5,
+            "type": 0,
+            "name": "rock_02",
+            "thickness_box": "0 -23 40 20",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "rock_02",
+                        "loop": true,
+                        "frames": [
+                            "4 -1"
+                        ]
+                    }
+                ]
+            }
+
+        },
+        
+        
+        {
+            "code": 6,
+            "type": 0,
+            "name": "rock_03",
+            "thickness_box": "-1 -29 42 28",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "rock_03",
+                        "loop": true,
+                        "frames": [
+                            "5 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+
+        {
+            "code": 7,
+            "type": 0,
+            "name": "poll_01",
+            "thickness_box": "0 -37 42 32",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "poll_01",
+                        "loop": true,
+                        "frames": [
+                            "6 -1"
+                        ]
+                    }
+                ]
+            }
+
+        },
+
+        {
+            "code": 8,
+            "type": 0,
+            "name": "poll_02",
+            "thickness_box": "3 -37 162 56",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "poll_02",
+                        "loop": true,
+                        "frames": [
+                            "8 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 9,
+            "type": 0,
+            "name": "rock_04",
+            "thickness_box": "1 -13 120 54",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "rock_04",
+                        "loop": true,
+                        "frames": [
+                            "9 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 10,
+            "type": 0,
+            "name": "tree_01",
+            "thickness_box": "-15 -81 24 2",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj0.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "tree_01",
+                        "loop": true,
+                        "frames": [
+                            "11 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 11,
+            "type": 0,
+            "name": "bg_tree_01",
+            "thickness_box": "-4 -138 152 58",
+            "hitable": false,
+            "collidable": false,
+            "z_orderable": false,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj1.img",
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "bg_tree_01",
+                        "loop": true,
+                        "frames": [
+                            "0 -1"
+                        ]
+                    }
+                ]
+            }
+
+        },
+        {
+            "code": 12,
+            "type": 0,
+            "name": "bg_tree_02",
+            "thickness_box": "-6 -136 150 62",
+            "hitable": false,
+            "collidable": false,
+            "z_orderable": false,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj1.img",
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "bg_tree_02",
+                        "loop": true,
+                        "frames": [
+                            "1 -1"
+                        ]
+                    }
+                ]
+            }
+
+        },
+        {
+            "code": 13,
+            "type": 0,
+            "name": "bg_tree_03",
+            "thickness_box": "6 -143 116 44",
+            "hitable": false,
+            "collidable": false,
+            "z_orderable": false,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj1.img",
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "bg_tree_03",
+                        "loop": true,
+                        "frames": [
+                            "2 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "code": 14,
+            "type": 0,
+            "name": "bg_tree_04",
+            "thickness_box": "-8 -138 92 46",
+            "hitable": false,
+            "collidable": false,
+            "z_orderable": false,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj1.img",
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "bg_tree_04",
+                        "loop": true,
+                        "frames": [
+                            "3 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 15,
+            "type": 0,
+            "name": "bg_tree_05",
+            "thickness_box": "-5 -125 114 52",
+            "hitable": false,
+            "collidable": false,
+            "z_orderable": false,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj1.img",
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "bg_tree_05",
+                        "loop": true,
+                        "frames": [
+                            "4 -1"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 16,
+            "type": 0,
+            "name": "tree_02",
+            "thickness_box": "-7 -69 82 48",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj3.img",
+                    }
+                ],
+                "animation" : [
+                    {
+                        "code": 1,
+                        "name": "tree_02",
+                        "loop": true,
+                        "frames": [
+                            "0 100",
+                            "1 100",
+                            "2 100",
+                            "3 100",
+                            "4 100",
+                            "5 100",
+                            "6 100"
+                        ]
+                    }
+                ]
+            }
+        },
+
+        {
+            "code": 17,
+            "type": 0,
+            "name": "tree_03",
+            "sga": "sprite_map.sga",
+            "img": "00obj4.img",
+            "thickness_box": "-10 -75 64 42",
+            "hitable": false,
+            "collidable": true,
+            "z_orderable": true,
+
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_map.sga",
+                        "img": "00obj4.img",
+                    }
+                ],
+                "animation" : [
+                    {
+                        "code": 1,
+                        "name": "tree_03",
+                        "loop": true,
+                        "frames": [
+                            "0 100",
+                            "1 100",
+                            "2 100",
+                            "3 100",
+                            "4 100",
+                            "5 100",
+                            "6 100"
+                        ]
+                    }
+                ],
+            }
+        },
+
+        {
+            "code": 10000,
+            "type": 1,
+            "name": "act1_gate_side_01",
+            "thickness_box": "-1 -45 183 38",
+            "actor_sprite_data": {
+                "positioning_rule": 1,
+                "parts": [
+                {
+                    "sga": "sprite_map_pathgate.sga",
+                    "img": "granflorisdowngate01.img",
+                },
+                {
+                    "sga": "sprite_map_pathgate.sga",
+                    "img": "granflorissidedoor01.img",
+                    "z_order": 1
+                },
+                {
+                    "sga": "sprite_map_pathgate.sga",
+                    "img": "granflorissidelight01.img",
+                    "z_order": 2
+                }
+            ],
+            "animation": [
+                    {
+                        "frames": [ "0 -1" ]
+                    },
+                ]    
+            }
+            
+        }
+    ]
+}

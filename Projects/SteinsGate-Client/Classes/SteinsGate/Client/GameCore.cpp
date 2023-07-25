@@ -38,6 +38,7 @@ void InitializeClientCore() {
 	CoreApp_v					= (SGApplication*)cocos2d::Application::getInstance();
 	CoreGlobal_v				= Global::Get();
 	CorePackManager_v			= ImagePackManager::Get();
+	CorePackManager_v->loadAllPackages();
 	CoreFont_v					= FontPackage::Get();
 	CoreDataManager_v			= DataManager::Get();
 	CoreUIManager_v				= UIManager::Get();
@@ -52,7 +53,6 @@ void InitializeClientCore() {
 	CoreServerProcessInfoPackage_v = CoreDataManager_v->getServerProcessInfoPackage(1);
 
 	CoreGlobal_v->init();
-	CorePackManager_v->loadAllPackages();
 	CoreFont_v->init();
 	CoreDataManager_v->loadAll();
 	CoreUIManager_v->init();

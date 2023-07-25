@@ -24,8 +24,7 @@ public:
 	static Monster* create(MobInfo* baseInfo, AIInfo* aiInfo);
 	void initActorSprite() override;
 	void initAIActivities() override;
-	void initListener(ActorListener* listener) override;
-	void hit(const SGHitInfo& hitInfo) override;
+	void hit(const HitInfo& hitInfo) override;
 
 	void update(float dt) override;
 
@@ -40,6 +39,7 @@ public:
 	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
 
 	MobInfo* getBaseInfo();
+	int getCode() override { return m_pBaseInfo->Code; }
 private:
 	MobInfo* m_pBaseInfo;
 };

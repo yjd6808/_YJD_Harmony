@@ -130,16 +130,10 @@ void UIToggleButton::load() {
 	if (m_bLoaded)
 		return;
 
-	ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
-
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < eMax; ++j) {
 			const int iSprite = m_pInfo->Sprites[i][j];
-			FrameTexture* pTexture = pPack == nullptr ? 
-				CoreGlobal_v->getDefaultFrameTexture() :
-				pPack->createFrameTexture(m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
-
-			pTexture->retain();
+			FrameTexture* pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
 
 			Sprite* pSprite = Sprite::create();
 			pSprite->initWithTexture(pTexture->getTexture());
@@ -150,7 +144,6 @@ void UIToggleButton::load() {
 			m_pTexture[i][j] = pTexture;
 			m_pSprite[i][j] = pSprite;
 
-			CoreUIManager_v->registerLoadedUITexture({ m_pInfo->Sga, m_pInfo->Img, iSprite });
 			this->addChild(pSprite);
 		}
 	}

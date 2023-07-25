@@ -33,10 +33,10 @@ bool MapInfoLoader::load() {
 
 			Value& areaRoot = mapRoot["area"];
 			Value& npcListRoot = mapRoot["npc"];
-			Value& obstacleListRoot = mapRoot["obstacle"];
+			Value& mapObjectListRoot = mapRoot["map_object"];
 
 			// TODO: NPC 추가시 수정 필요
-			MapInfo* pInfo = dbg_new MapInfo((int)areaRoot.size(), /* (int)npcRoot.size() */ 1, (int)obstacleListRoot.size());
+			MapInfo* pInfo = dbg_new MapInfo((int)areaRoot.size(), /* (int)npcRoot.size() */ 1, (int)mapObjectListRoot.size());
 			readMapInfo(mapRoot, pInfo);
 			addData(pInfo);
 		}
@@ -53,7 +53,7 @@ void MapInfoLoader::readMapInfo(Json::Value& mapRoot, JCORE_OUT MapInfo* mapInfo
 
 	Value& areaRoot = mapRoot["area"];
 	Value& npcListRoot = mapRoot["npc"];
-	Value& obstacleListRoot = mapRoot["obstacle"];
+	Value& mapObjectListRoot = mapRoot["map_object"];
 
 	mapInfo->Code = mapRoot["code"].asInt();
 	mapInfo->Name = JsonUtilEx::getString(mapRoot["name"]);
@@ -69,11 +69,11 @@ void MapInfoLoader::readMapInfo(Json::Value& mapRoot, JCORE_OUT MapInfo* mapInfo
 		// TODO: NPC 추가시 구현 필요
 	}
 
-	for (int j = 0; j < obstacleListRoot.size(); ++j) {
-		Value& obstacleRoot = obstacleListRoot[j];
-		MapObjectInfo objectInfo;
-		JsonUtilEx::parseIntNumber3(obstacleRoot, objectInfo.Code, objectInfo.X, objectInfo.Y);
-		mapInfo->ObstacleList.PushBack(objectInfo);
+	for (int j = 0; j < mapObjectListRoot.size(); ++j) {
+		Value& mapObjectRoot = mapObjectListRoot[j];
+		MapObjectPositionInfo objectInfo;
+		JsonUtilEx::parseIntNumber3(mapObjectRoot, objectInfo.Code, objectInfo.X, objectInfo.Y);
+		mapInfo->MapObjectList.PushBack(objectInfo);
 	}
 
 	mapInfo->TileWidth = mapRoot["tile_width"].asInt();

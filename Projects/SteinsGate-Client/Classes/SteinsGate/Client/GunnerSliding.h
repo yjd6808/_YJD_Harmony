@@ -20,7 +20,7 @@ public:
 	void onUpdate(float dt) override;
 	void onActionBegin() override;
 	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) override;
-	void onEnemySingleHit(SGHitInfo& info);
+	void onEnemySingleHit(HitInfo& info);
 	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 private:
 	bool m_bSlidingStarted{};

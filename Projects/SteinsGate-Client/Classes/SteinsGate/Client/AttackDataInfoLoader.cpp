@@ -17,8 +17,9 @@
 USING_NS_JS;
 USING_NS_JC;
 
-AttackDataInfoLoader::AttackDataInfoLoader(DataManagerAbstract* manager)
+AttackDataInfoLoader::AttackDataInfoLoader(DataManagerAbstract* manager, ActorType_t actorType)
 	: ConfigFileLoaderAbstract(manager)
+	, m_eActorType(actorType)
 {}
 
 bool AttackDataInfoLoader::load() {

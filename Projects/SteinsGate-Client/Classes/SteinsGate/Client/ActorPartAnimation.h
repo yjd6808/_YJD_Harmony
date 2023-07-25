@@ -15,8 +15,8 @@
 
 
 #include "Tutturu.h"
-#include <SteinsGate/Client/AnimationInfo.h>
 #include <SteinsGate/Client/FrameTexture.h>
+#include <SteinsGate/Client/FrameEvent.h>
 
 class ActorPartSprite;
 class ActorPartAnimation : public cocos2d::Ref
@@ -56,6 +56,7 @@ public:
 	void resume();
 	void setPlaySpeed(float speed);
 	void setLoopSequence();
+	void setAnimationInfo(AnimationInfo* animationInfo);
 
 	AnimationInfo* getAnimationInfo() { return m_pAnimationInfo; }
 
@@ -65,13 +66,15 @@ public:
 	int getPartIndex();
 	int getAnimationCode() { return m_pAnimationInfo->Code; }
 
-	FrameInfo* getFrameInfo(int frameIndexInAnimation);
-	FrameInfo* getRunningFrameInfo();
+	FrameInfo& getFrameInfo(int frameIndexInAnimation);
+	FrameInfo& getRunningFrameInfo();
+	int getRunningFrameEventCode();
 
 	bool isFinished() { return m_bFinished; }
 	bool isPaused() { return m_bPaused || m_bZeroFramePaused; }
 	bool isZeroFramePaused() { return m_bZeroFramePaused; }
 	void reflectAnimation(ActorPartAnimation* runningAnimation); // runningAnimation과 동일한 상태의 애니메이션 상태로 바꿈
+	
 
 private:
 	FrameTexture* changeTexture(int frameIndexInAnimation);
@@ -84,7 +87,7 @@ private:
 	AnimationInfo* m_pAnimationInfo;
 	ActorPartSprite* m_pTarget;
 	SGVector<FrameTexture*>	m_vAnimationFrames;	// 해당 애니메이션을 구성하는 프레임들만
-	SGVector<FrameTexture*>&	m_vFrames;			// 이미지 팩의 전체 프레임 참조본 / 원본은 파츠가 들고있음
+	SGVector<FrameTexture*>& m_vFrames;			// 이미지 팩의 전체 프레임 참조본 / 원본은 파츠가 들고있음
 
 	// 자체 데이터
 	float m_fRunningFrameTime;

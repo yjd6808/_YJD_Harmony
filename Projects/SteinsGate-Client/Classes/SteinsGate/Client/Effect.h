@@ -22,9 +22,9 @@ public:
 
 	bool initVariables() override;
 	void initActorSprite() override;
-	void initListener(ActorListener* listener) override;
 	
 	EffectInfo* getBaseInfo() { return m_pBaseInfo; }
+	int getCode() override { return m_pBaseInfo->Code; }
 
 	void update(float delta) override;
 	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) override;

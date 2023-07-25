@@ -17,6 +17,10 @@ public:
 	Player();
 	~Player() override;
 
+	bool init() override;
+	void initPlayerData();
+
+	PlayerData& getPlayerData() { return m_PlayerData; }
 protected:
 	PlayerData m_PlayerData;
 };

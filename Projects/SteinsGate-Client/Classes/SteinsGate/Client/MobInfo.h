@@ -9,27 +9,19 @@
 #pragma once
 
 #include <SteinsGate/Common/MobBaseInfo.h>
-#include <SteinsGate/Client/AnimationInfo.h>
 #include <SteinsGate/Client/Struct.h>
-
-struct MobPartInfo
-{
-	int SgaIndex;
-	int ImgIndex;
-	int ZOrder;
-};
-
 
 struct MobInfo : MobBaseInfo
 {
-	MobInfo(int animationSize) : AnimationList(animationSize) {}
-	~MobInfo() override = default;
+	MobInfo() : SpriteData(nullptr) {}
+	~MobInfo() override { JCORE_DELETE_SAFE(SpriteData); }
 
-	int PackIndex;
+	ActorSpriteData* SpriteData;
+	/*int PackIndex;
 	int SkinImgIndex;
 	int PartsIndex[MaxMonsterPartsCount_v];
 	int PartsCount;
 	
-	MobPartInfo Parts[MaxMonsterPartsCount_v];
-	SGVector<AnimationInfo> AnimationList;
+	ActorPartSpriteData Parts[MaxMonsterPartsCount_v];
+	SGVector<AnimationInfo> AnimationList;*/
 };

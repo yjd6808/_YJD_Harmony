@@ -53,18 +53,7 @@ void AIActivity::updateLimitTime(float dt) {
 	}
 }
 
-void AIActivity::onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame) {
-	FrameInfo* pFrameInfo = animation->getFrameInfo(animation->getFrameIndexInAnimation());
-
-	return;
-
-	if (pFrameInfo->FrameEventId != InvalidValue_v) {
-		DebugAssertMsg(pFrameInfo->FrameEvent >= 0 && pFrameInfo->FrameEvent < FrameEventType::Max, "AI 액터의 프레임 이벤트 타입이 이상합니다.");
-		DebugAssertMsg(pFrameInfo->FrameEventId != InvalidValue_v, "AI 액터의 프레임 이벤트 ID 값이 이상합니다.");
-		getAIActor()->runFrameEvent((FrameEventType_t)pFrameInfo->FrameEvent, pFrameInfo->FrameEventId);
-	}
-}
-
+void AIActivity::onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
 void AIActivity::onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) {}
 void AIActivity::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
 void AIActivity::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {}

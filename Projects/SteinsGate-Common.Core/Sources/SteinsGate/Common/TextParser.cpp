@@ -8,24 +8,22 @@
 #include "Core.h"
 #include "TextParser.h"
 
-char* TextParser::parserFrameInfo(SGString& frameString, 
+char* TextParser::parseFrameInfo(const char* frameString, int len,
 	JCORE_OUT int& frameIndex, 
 	JCORE_OUT int& delay,
-	JCORE_OUT int& frameEvent,
 	JCORE_OUT int& frameEventCode) {
 
-	char* pSource = frameString.Source();
-	int* p[4];
+	char* pSource = (char*)frameString;
+	int* p[3];
 	p[0] = &frameIndex;
 	p[1] = &delay;
-	p[2] = &frameEvent;
-	p[3] = &frameEventCode;
+	p[2] = &frameEventCode;
 
 	int iPtrIdx = 0;
 	int iBuffIdx = 0;
 	char buff[16];
 
-	for (int i = 0; i < frameString.Length() + 1; ++i) {
+	for (int i = 0; i < len + 1; ++i) {
 		buff[iBuffIdx] = pSource[i];
 
 		if (pSource[i] == ' ' || pSource[i] == NULL) {
@@ -47,7 +45,7 @@ char* TextParser::parserFrameInfo(SGString& frameString,
 	return nullptr;
 }
 
-void TextParser::parserIntNumbers(const SGString& numStr, JCORE_OUT int* numArr, int count) {
+void TextParser::parseIntNumbers(const SGString& numStr, JCORE_OUT int* numArr, int count) {
 	char* pSoruce = numStr.Source();
 	int iPtrIdx = 0;
 	int iBuffIdx = 0;
@@ -71,12 +69,12 @@ void TextParser::parserIntNumbers(const SGString& numStr, JCORE_OUT int* numArr,
 	DebugAssertMsg(iReadCount == count, "읽은 숫자와 작성된 숫자가 틀립니다.");
 }
 
-void TextParser::parserFloatNumbers(const SGString& numStr, float* numArr, int count) {
-	parserFloatNumbers(numStr.Source(), numStr.Length(), numArr, count);
+void TextParser::parseFloatNumbers(const SGString& numStr, float* numArr, int count) {
+	parseFloatNumbers(numStr.Source(), numStr.Length(), numArr, count);
 	
 }
 
-void TextParser::parserFloatNumbers(char* source, int len, float* numArr, int count) {
+void TextParser::parseFloatNumbers(char* source, int len, float* numArr, int count) {
 	int iPtrIdx = 0;
 	int iBuffIdx = 0;
 	int iReadCount = 0;

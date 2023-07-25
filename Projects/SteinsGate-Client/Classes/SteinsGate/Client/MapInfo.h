@@ -10,7 +10,7 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct MapObjectInfo
+struct MapObjectPositionInfo
 {
 	int Code;
 	int X;
@@ -19,10 +19,10 @@ struct MapObjectInfo
 
 struct MapInfo : ConfigDataAbstract
 {
-	MapInfo(int areaHeight, int npcCount, int obstacleCount)
+	MapInfo(int areaHeight, int npcCount, int mapObjectCount)
 		: Area(areaHeight)
 		, NpcList(npcCount)
-		, ObstacleList(obstacleCount) {}
+		, MapObjectList(mapObjectCount) {}
 	~MapInfo() override = default;
 
 	SGString Name;
@@ -35,8 +35,8 @@ struct MapInfo : ConfigDataAbstract
 	float Friction;
 	float ElasticityDividedForce;
 	SGVector<SGString> Area;
-	SGVector<MapObjectInfo> NpcList;
-	SGVector<MapObjectInfo> ObstacleList;
+	SGVector<MapObjectPositionInfo> NpcList;
+	SGVector<MapObjectPositionInfo> MapObjectList;
 
 	bool checkWall(float x, float y);
 	bool checkWall(const SGVec2& pos);

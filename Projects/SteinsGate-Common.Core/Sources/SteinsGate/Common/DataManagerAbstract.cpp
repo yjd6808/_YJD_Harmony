@@ -105,12 +105,12 @@ void DataManagerAbstract::finalizeLoader() {
 
 MobBaseInfo* DataManagerAbstract::getMobBaseInfo(int monsterCode) {
 
-	auto eType = ConfigFileType::Monster;
+	const auto eType = ConfigFileType::Monster;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<MobBaseInfo*>(getData(eType, monsterCode));
+	const auto pRet = dynamic_cast<MobBaseInfo*>(getData(eType, monsterCode));
 	DebugAssertMsg(pRet, "아바타 타입이 아닙니다.");
 	return pRet;
 }
@@ -118,46 +118,46 @@ MobBaseInfo* DataManagerAbstract::getMobBaseInfo(int monsterCode) {
 
 
 ItemAvatarInfo* DataManagerAbstract::getAvatarInfo(int avatarCode) {
-	auto eType = ConfigFileType::Item;
+	const auto eType = ConfigFileType::Item;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<ItemAvatarInfo*>(getData(eType, avatarCode));
+	const auto pRet = dynamic_cast<ItemAvatarInfo*>(getData(eType, avatarCode));
 	DebugAssertMsg(pRet, "아바타 타입이 아닙니다.");
 	return pRet;
 
 }
 
 ItemWeaponInfo* DataManagerAbstract::getWeaponInfo(int weaponCode) {
-	auto eType = ConfigFileType::Item;
+	const auto eType = ConfigFileType::Item;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<ItemWeaponInfo*>(getData(eType, weaponCode));
+	const auto pRet = dynamic_cast<ItemWeaponInfo*>(getData(eType, weaponCode));
 	DebugAssertMsg(pRet, "무기 타입이 아닙니다.");
 	return pRet;
 }
 
 ItemArmorInfo* DataManagerAbstract::getArmorInfo(int armorCode) {
-	auto eType = ConfigFileType::Item;
+	const auto eType = ConfigFileType::Item;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<ItemArmorInfo*>(getData(eType, armorCode));
+	const auto pRet = dynamic_cast<ItemArmorInfo*>(getData(eType, armorCode));
 	DebugAssertMsg(pRet, "방어구 | 장신구 | 칭호 타입이 아닙니다.");
 	return pRet;
 }
 
 ItemVisualInfo* DataManagerAbstract::getVisualInfo(int visualCode) {
-	auto eType = ConfigFileType::Item;
+	const auto eType = ConfigFileType::Item;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<ItemVisualInfo*>(getData(eType, visualCode));
+	const auto pRet = dynamic_cast<ItemVisualInfo*>(getData(eType, visualCode));
 	DebugAssertMsg(pRet, "아바타 | 무기가 아닙니다.");
 	return pRet;
 }
@@ -168,18 +168,18 @@ CommonInfo* DataManagerAbstract::getCommonInfo(int commonConfigCode) {
 }
 
 ItemOptInfo* DataManagerAbstract::getItemOptInfo(int itemOptCode) {
-	auto eType = ConfigFileType::ItemOpt;
+	const auto eType = ConfigFileType::ItemOpt;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<ItemOptInfo*>(getData(eType, itemOptCode));
+	const auto pRet = dynamic_cast<ItemOptInfo*>(getData(eType, itemOptCode));
 	DebugAssertMsg(pRet, "아이템 옵트 타입이 아닙니다.");
 	return pRet;
 }
 
 ItemOptInfo* DataManagerAbstract::getItemOptInfo(const SGString& itemOptEngName) {
-	auto eType = ConfigFileType::ItemOpt;
+	const auto eType = ConfigFileType::ItemOpt;
 
 	if (!m_bLoaded[eType])
 		load(eType);
@@ -188,56 +188,56 @@ ItemOptInfo* DataManagerAbstract::getItemOptInfo(const SGString& itemOptEngName)
 }
 
 ChannelInfo* DataManagerAbstract::getChannelInfo(int channelCode) {
-	auto eType = ConfigFileType::Channel;
+	const auto eType = ConfigFileType::Channel;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<ChannelInfo*>(getData(eType, channelCode));
+	const auto pRet = dynamic_cast<ChannelInfo*>(getData(eType, channelCode));
 	DebugAssertMsg(pRet, "채널 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 EnchantInfo* DataManagerAbstract::getEnchantInfo(int enchantCode) {
-	auto eType = ConfigFileType::Enchant;
+	const auto eType = ConfigFileType::Enchant;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<EnchantInfo*>(getData(eType, enchantCode));
+	const auto pRet = dynamic_cast<EnchantInfo*>(getData(eType, enchantCode));
 	DebugAssertMsg(pRet, "인챈트 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 ServerProcessInfoPackage* DataManagerAbstract::getServerProcessInfoPackage(int serverCode) {
-	auto eType = ConfigFileType::Server;
+	const auto eType = ConfigFileType::Server;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<ServerProcessInfoPackage*>(getData(eType, serverCode));
+	const auto pRet = dynamic_cast<ServerProcessInfoPackage*>(getData(eType, serverCode));
 	DebugAssertMsg(pRet, "서버 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 DatabaseInfo* DataManagerAbstract::getDatabaseInfo(int databaseCode) {
-	auto eType = ConfigFileType::Database;
+	const auto eType = ConfigFileType::Database;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<DatabaseInfo*>(getData(eType, databaseCode));
+	const auto pRet = dynamic_cast<DatabaseInfo*>(getData(eType, databaseCode));
 	DebugAssertMsg(pRet, "데이터베이스 인포 타입이 아닙니다.");
 	return pRet;
 }
 
 CharCommonInfo* DataManagerAbstract::getCharCommonInfo(int charCommonCode) {
-	auto eType = ConfigFileType::Char_Common;
+	const auto eType = ConfigFileType::Char_Common;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	auto pRet = dynamic_cast<CharCommonInfo*>(getData(eType, charCommonCode));
+	const auto pRet = dynamic_cast<CharCommonInfo*>(getData(eType, charCommonCode));
 	DebugAssertMsg(pRet, "데이터베이스 인포 타입이 아닙니다.");
 	return pRet;
 }

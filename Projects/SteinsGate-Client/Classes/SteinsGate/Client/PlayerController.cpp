@@ -223,7 +223,7 @@ void PlayerController::updateLeftMove(MapLayer* mapLayer, MapInfo* mapInfo,  con
 	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// lb, lt 체크
-	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithObstacles(thicknessRect))
+	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pPlayer->setPositionRealX(thicknessRect.origin.x);
@@ -235,7 +235,7 @@ void PlayerController::updateRightMove(MapLayer* mapLayer, MapInfo* mapInfo, con
 	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// rb, rt 체크
-	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
+	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pPlayer->setPositionRealX(thicknessRect.origin.x);
@@ -246,7 +246,7 @@ void PlayerController::updateUpMove(MapLayer* mapLayer, MapInfo* mapInfo, const 
 	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// lt, rt 체크
-	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
+	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pPlayer->setPositionRealY(thicknessRect.origin.y);
@@ -257,7 +257,7 @@ void PlayerController::updateDownMove(MapLayer* mapLayer, MapInfo* mapInfo, cons
 	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
 
 	// lb, rb 체크
-	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithObstacles(thicknessRect))
+	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pPlayer->setPositionRealY(thicknessRect.origin.y);

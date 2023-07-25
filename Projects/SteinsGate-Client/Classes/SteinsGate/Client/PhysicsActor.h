@@ -20,7 +20,7 @@ public:
 
 	bool initVariables() override;
 
-	virtual void hit(const SGHitInfo& hitInfo);
+	virtual void hit(const HitInfo& hitInfo);
 	virtual void hit(Actor* attacker, const SpriteDirection_t hitDirection, const SGRect& hitRect, AttackDataInfo* attackDataInfo);
 	virtual void dead();
 

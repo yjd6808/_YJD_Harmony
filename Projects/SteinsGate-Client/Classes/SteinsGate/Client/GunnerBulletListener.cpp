@@ -16,6 +16,7 @@
 #include <SteinsGate/Client/ActorBox.h>
 
 void GunnerBulletListener::onCreated() {
+	ProjectileListener::onCreated();
 	HitRecorder* pHitRecorder = m_pProjectile->getHitRecorder();
 
 	pHitRecorder->clear();
@@ -25,32 +26,25 @@ void GunnerBulletListener::onCreated() {
 }
 
 void GunnerBulletListener::onUpdate(float dt) {
-	const SGActorRect& projectileActorRect = m_pProjectile->getActorRect();
+	ProjectileListener::onUpdate(dt);
+
+	const ActorRect& projectileActorRect = m_pProjectile->getActorRect();
 	const int iAttackData = m_pProjectile->getBaseInfo()->AttackData->Code;
 
 	m_pProjectile->getHitRecorder()->record(projectileActorRect, iAttackData);
 }
 
-void GunnerBulletListener::onLifeTimeOver() {
-	m_pProjectile->cleanUpNext();
-}
-
-void GunnerBulletListener::onDistanceOver() {
-	m_pProjectile->cleanUpNext();
-}
-
 void GunnerBulletListener::onCollisionWithGround() {
+	ProjectileListener::onCollisionWithGround();
 	ActorBox::Get()->createEffectOnMapAbsolute(
 		EFFECT_COLLISION_FLOOR,
 		m_pProjectile->getPositionRealCenterX(),
 		m_pProjectile->getPositionRealCenterY(),
 		m_pProjectile->getLocalZOrder() + 1
 	);
-
-	m_pProjectile->cleanUpNext();
 }
 
-void GunnerBulletListener::onEnemySingleHit(SGHitInfo& info) {
+void GunnerBulletListener::onEnemySingleHit(HitInfo& info) {
 	if (m_pProjectile->getHitRecorder()->isAlreadyHit(info.HitTarget))
 		return;
 
@@ -60,7 +54,7 @@ void GunnerBulletListener::onEnemySingleHit(SGHitInfo& info) {
 		SpriteDirection::Reverse[info.HitDirection],
 		info);
 	info.HitTarget->hit(info);
-	m_pProjectile->cleanUpNext();
+	m_pProjectile->cleanUpAtNextFrame();
 }
 
 

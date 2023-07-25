@@ -16,24 +16,34 @@
 class Actor;
 class ActorPartAnimation;
 class FrameTexture;
-class ActorListener
+class JCORE_NOVTABLE ActorListener
 {
 public:
-	ActorListener(ActorType_t type) : m_eActorType(type) {}
+	enum Type
+	{
+		eCharacter,
+		eProjectile
+	};
+
+	ActorListener() : m_pActor(nullptr) {}
 	virtual ~ActorListener() = default;
 
-	virtual void injectActor(Actor* actor) = 0;
-	virtual void onCreated() {}
+	virtual void injectActor(Actor* actor) { m_pActor = actor; }
+	virtual void onCreated() {}		// 
+	virtual void onCleanUp();		// 엑터 박스에서 제거되어 더이상 사용하지 않는 경우
 	virtual void onUpdate(float dt) {}
 	virtual void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture)	{}
 	virtual void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) {}
 	virtual void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {}
 	virtual void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) {}
+	virtual Type getListenerType() const = 0;
 
 	virtual ActorListener* createNew() = 0;
-	ActorType_t getActorType() { return m_eActorType; }
-private:
-	ActorType_t m_eActorType;
+	Actor* getActor() const { return m_pActor; }
+	ActorType_t getActorType() const;
+	
+protected:
+	Actor* m_pActor;
 };
 
 

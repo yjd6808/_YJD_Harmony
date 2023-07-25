@@ -1,11 +1,9 @@
-
 {
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "몬스터 관련 데이터",
     "__comment__2": "영문 이름 적은 이유는 전처리 파일 생성시 사용할 수 있을 것 같아서 넣음",
     "__comment__3": "파츠는 5개 이하로만 할 것 클라에 고정크기로 박음",
     "__comment__4": "몬스터 애니메이션 기본 코드는 고정임 idle은 무조건 1, attack은 2, hit 3, die 4, walk 5 ",
-
     "monsters": [
         {
             "code": 1,
@@ -24,105 +22,104 @@
             "fall_down_idx": 3,
             "weight": 200,
             "thickness_box": "0 -50 50 30",
-            "parts": [
-                {
-                    "sga": "sprite_monster_goblin.sga",
-                    "img": "body0.img",
-                    "z_order": 0
-                },
-                {
-                    "sga": "sprite_monster_goblin_equipment.sga",
-                    "img": "weapon1.img",
-                    "z_order": 1
-                },
-                {
-                    "sga": "sprite_monster_goblin_equipment.sga",
-                    "img": "gcc1-2.img",
-                    "z_order": 2
-                }
-            ],
-            "animation": [
-                {
-                    "code": 1,
-                    "name": "idle",
-                    "loop": true,
-                    "frames": [
-                        "0 5000"
-                    ]
-                },
-                {
-                    "code": 2,
-                    "name": "attack",
-                    "loop": false,
-                    "frames": [
-                        "0 100",
-                        "1 100",
-                        "2 100",
-                        "3 100 3 10000 97 38 54 24 93 62 54 42",
-                        "4 100"
-                    ]
-                },
-                {
-                    "code": 3,
-                    "name": "hit_small",
-                    "loop": false,
-                    "frames": [
-                        "5 -1"
-                    ]
-                },
-                {
-                    "code": 4,
-                    "name": "hit_big",
-                    "loop": false,
-                    "frames": [
-                        "6 -1"
-                    ]
-                },
-                {
-                    "code": 5,
-                    "name": "walk",
-                    "loop": true,
-                    "frames": [
-                        "11 200",
-                        "12 200",
-                        "13 200",
-                        "14 200",
-                        "15 200",
-                        "16 200"
-                    ]
-                },
-                {
-                    "code": 6,
-                    "name": "fall_down_begin",
-                    "loop": false,
-                    "frames": [
-                        "5 100",
-                        "6 100",
-                        "7 100"
-                    ]
-                },
-                {
-                    "code": 7,
-                    "name": "fall_down_bounce",
-                    "loop": false,
-                    "frames": [
-                        "8 -1"
-                    ]
-                },
-                {
-                    "code": 8,
-                    "name": "fall_down_end",
-                    "loop": false,
-                    "frames": [
-                        "9 -1"
-                    ]
-                }
-
-
-            ]
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_monster_goblin.sga",
+                        "img": "body0.img",
+                        "z_order": 0
+                    },
+                    {
+                        "sga": "sprite_monster_goblin_equipment.sga",
+                        "img": "weapon1.img",
+                        "z_order": 1
+                    },
+                    {
+                        "sga": "sprite_monster_goblin_equipment.sga",
+                        "img": "gcc1-2.img",
+                        "z_order": 2
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "idle",
+                        "loop": true,
+                        "frames": [
+                            "0 5000"
+                        ]
+                    },
+                    {
+                        "code": 2,
+                        "name": "attack",
+                        "loop": false,
+                        "frames": [
+                            "0 100",
+                            "1 100",
+                            "2 100",
+                            "3 100 1",
+                            "4 100"
+                        ]
+                    },
+                    {
+                        "code": 3,
+                        "name": "hit_small",
+                        "loop": false,
+                        "frames": [
+                            "5 -1"
+                        ]
+                    },
+                    {
+                        "code": 4,
+                        "name": "hit_big",
+                        "loop": false,
+                        "frames": [
+                            "6 -1"
+                        ]
+                    },
+                    {
+                        "code": 5,
+                        "name": "walk",
+                        "loop": true,
+                        "frames": [
+                            "11 200",
+                            "12 200",
+                            "13 200",
+                            "14 200",
+                            "15 200",
+                            "16 200"
+                        ]
+                    },
+                    {
+                        "code": 6,
+                        "name": "fall_down_begin",
+                        "loop": false,
+                        "frames": [
+                            "5 100",
+                            "6 100",
+                            "7 100"
+                        ]
+                    },
+                    {
+                        "code": 7,
+                        "name": "fall_down_bounce",
+                        "loop": false,
+                        "frames": [
+                            "8 -1"
+                        ]
+                    },
+                    {
+                        "code": 8,
+                        "name": "fall_down_end",
+                        "loop": false,
+                        "frames": [
+                            "9 -1"
+                        ]
+                    }
+                ]
+            }
         },
-
-
         {
             "code": 2,
             "eng_name": "dark_goblin",
@@ -139,108 +136,111 @@
             "down_recover_time": 1.0,
             "weight": 200,
             "thickness_box": "0 -50 50 30",
-            "parts": [
-                {
-                    "sga": "sprite_monster_goblin.sga",
-                    "img": "body1.img",
-                    "z_order": 0
-                },
-                {
-                    "sga": "sprite_monster_goblin_equipment.sga",
-                    "img": "weapon1-2.img",
-                    "z_order": 1
-                },
-                {
-                    "sga": "sprite_monster_goblin_equipment.sga",
-                    "img": "acc2.img",
-                    "z_order": 2
-                }
-            ],
-            "animation": [
-                {
-                    "code": 1,
-                    "name": "idle",
-                    "loop": true,
-                    "frames": [
-                        "0 5000"
-                    ]
-                },
-                {
-                    "code": 2,
-                    "name": "attack",
-                    "loop": false,
-                    "frames": [
-                        "0 100",
-                        "1 100",
-                        "2 100",
-                        "3 100 3 10000 97 38 54 24 93 62 54 42",
-                        "4 100"
-                    ]
-                },
-                {
-                    "code": 3,
-                    "name": "hit",
-                    "loop": false,
-                    "frames": [
-                        "5 -1"
-                    ]
-                },
-                {
-                    "code": 4,
-                    "name": "hit_big",
-                    "loop": false,
-                    "frames": [
-                        "6 -1"
-                    ]
-                },
-                {
-                    "code": 5,
-                    "name": "walk",
-                    "loop": true,
-                    "frames": [
-                        "11 200",
-                        "12 200",
-                        "13 200",
-                        "14 200",
-                        "15 200",
-                        "16 200"
-                    ]
-                },
-                {
-                    "code": 6,
-                    "name": "fall_down_begin",
-                    "loop": false,
-                    "frames": [
-                        "5 100",
-                        "6 100",
-                        "7 100"
-                    ]
-                },
-                {
-                    "code": 7,
-                    "name": "fall_down_bounce",
-                    "loop": false,
-                    "frames": [
-                        "8 -1"
-                    ]
-                },
-                {
-                    "code": 8,
-                    "name": "fall_down_end",
-                    "loop": false,
-                    "frames": [
-                        "9 -1"
-                    ]
-                },
-                {
-                    "code": 9,
-                    "name": "sit",
-                    "loop": false,
-                    "frames": [
-                        "10 -1"
-                    ]
-                }
-            ]
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [
+                    {
+                        "sga": "sprite_monster_goblin.sga",
+                        "img": "body1.img",
+                        "z_order": 0
+                    },
+                    {
+                        "sga": "sprite_monster_goblin_equipment.sga",
+                        "img": "weapon1-2.img",
+                        "z_order": 1
+                    },
+                    {
+                        "sga": "sprite_monster_goblin_equipment.sga",
+                        "img": "acc2.img",
+                        "z_order": 2
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "idle",
+                        "loop": true,
+                        "frames": [
+                            "0 5000"
+                        ]
+                    },
+                    {
+                        "code": 2,
+                        "name": "attack",
+                        "loop": false,
+                        "frames": [
+                            "0 100",
+                            "1 100",
+                            "2 100",
+                            "3 100 1",
+                            "4 100"
+                        ]
+                    },
+                    {
+                        "code": 3,
+                        "name": "hit",
+                        "loop": false,
+                        "frames": [
+                            "5 -1"
+                        ]
+                    },
+                    {
+                        "code": 4,
+                        "name": "hit_big",
+                        "loop": false,
+                        "frames": [
+                            "6 -1"
+                        ]
+                    },
+                    {
+                        "code": 5,
+                        "name": "walk",
+                        "loop": true,
+                        "frames": [
+                            "11 200",
+                            "12 200",
+                            "13 200",
+                            "14 200",
+                            "15 200",
+                            "16 200"
+                        ]
+                    },
+                    {
+                        "code": 6,
+                        "name": "fall_down_begin",
+                        "loop": false,
+                        "frames": [
+                            "5 100",
+                            "6 100",
+                            "7 100"
+                        ]
+                    },
+                    {
+                        "code": 7,
+                        "name": "fall_down_bounce",
+                        "loop": false,
+                        "frames": [
+                            "8 -1"
+                        ]
+                    },
+                    {
+                        "code": 8,
+                        "name": "fall_down_end",
+                        "loop": false,
+                        "frames": [
+                            "9 -1"
+                        ]
+                    },
+                    {
+                        "code": 9,
+                        "name": "sit",
+                        "loop": false,
+                        "frames": [
+                            "10 -1"
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

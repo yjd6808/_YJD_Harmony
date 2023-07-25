@@ -33,7 +33,7 @@ void MimicCamera::update(float dt) {
 	updateView(dt);
 }
 
-
+// TODO: 무빙 자연스럽게
 void MimicCamera::updateView(float dt) {
 
 	if (m_pTarget == nullptr)

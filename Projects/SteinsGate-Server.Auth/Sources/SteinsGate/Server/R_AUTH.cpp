@@ -20,8 +20,6 @@ USING_NS_JNET;
 
 void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 	CmdLogin* pCmd = (CmdLogin*)cmd;
-
-
 	S_AUTH::AutoFlush _;
 	S_AUTH::SetInformation(session, eSendAlloc);
 	AccountData accountData;

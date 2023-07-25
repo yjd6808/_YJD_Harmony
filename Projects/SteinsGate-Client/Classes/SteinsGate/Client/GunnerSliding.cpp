@@ -35,8 +35,6 @@ void GunnerSliding::onActionBegin() {
 void GunnerSliding::onUpdate(float dt) {
 
 	Character* pCharacter = m_pPlayer;
-	ActorPartAnimation* pAnimation = pCharacter->getRunningAnimation();
-	m_pHitRecorder->record(pAnimation);
 
 	if (!m_bSlidingStarted)
 		return;
@@ -71,7 +69,7 @@ void GunnerSliding::onFrameEnd(ActorPartAnimation* animation, FrameTexture* fram
 	}
 }
 
-void GunnerSliding::onEnemySingleHit(SGHitInfo& info) {
+void GunnerSliding::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 

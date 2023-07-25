@@ -8,6 +8,6 @@
 #include "Tutturu.h"
 #include "Struct.h"
 
-bool SGActorRect::isCollide(const SGActorRect& rect, SpriteDirection_t& otherHitDirection, SGRect& hitRect) {
+bool ActorRect::isCollide(const ActorRect& rect, SpriteDirection_t& otherHitDirection, SGRect& hitRect) {
 	return true;
 }

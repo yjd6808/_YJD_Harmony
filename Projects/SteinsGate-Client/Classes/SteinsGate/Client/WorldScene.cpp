@@ -310,6 +310,7 @@ void WorldScene::changeScene(SceneType_t sceneType) {
 	m_pUILayer->clearUnload();
 	m_pRunningScene = createScene(sceneType);
 	this->addChild(m_pRunningScene);
+
 }
 
 void WorldScene::terminate() {
@@ -333,7 +334,6 @@ SceneBase* WorldScene::createScene(SceneType_t sceneType) {
 	default: DebugAssertMsg(false, "[SGWorldScene] 이상한 씬 타입입니다."); return nullptr;
 	}
 
-
 	// 씬을 생성하면 생성자에서 디폴트 카메라를 생성하고 자식으로 추가해버리는데
 	// 월드 씬에서만 디폴트 카메라가 필요하므로 자식 씬에서는 카메라가 불필요하다.
 	// 삭제하는 이유는 월드씬에서 부착한 이벤트들(마우스, 키보드 같은)이 카메라를 기준으로 실행되는데
@@ -344,7 +344,6 @@ SceneBase* WorldScene::createScene(SceneType_t sceneType) {
 	// 2. void Camera::setScene
 	// 3. SceneBase::removeAllChildren
 
-	pCreatedScene->removeAllChildren();	
 	return pCreatedScene;
 }
 

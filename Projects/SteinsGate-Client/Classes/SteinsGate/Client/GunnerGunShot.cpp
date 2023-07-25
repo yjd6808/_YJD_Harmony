@@ -30,7 +30,7 @@ GunnerGunShot::GunnerGunShot(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo) {}
 
 bool GunnerGunShot::onConditionCheck() {
-	int iRunningActionCode = m_pPlayer->getRunningActionCode();
+	const int iRunningActionCode = m_pPlayer->getRunningActionCode();
 	return iRunningActionCode == GUNNER_ACTION_IDLE || iRunningActionCode == GUNNER_ACTION_WALK;
 }
 
@@ -121,7 +121,7 @@ void GunnerGunShot::onFrameBegin(ActorPartAnimation* animation, FrameTexture* fr
 	// 왼쪽 공격, 왼쪽 아래 총알 발사 시점을 특정할게 프레임 인덱스 뿐임..
 	// 한번만 딱 쏘는 왼손 애니메이션도 3개로 분리하긴 귀찮다.
 
-	int iFrameIndex = animation->getFrameIndex();	
+	const int iFrameIndex = animation->getFrameIndex();	
 	
 	if (iFrameIndex == 35) {
 		shotLeft(m_pPlayer->getActorSprite());
@@ -131,7 +131,7 @@ void GunnerGunShot::onFrameBegin(ActorPartAnimation* animation, FrameTexture* fr
 }
 
 void GunnerGunShot::onKeyPressed(PlayerController* controller, SGEventKeyboard::KeyCode keyCode) {
-	ControlKey_t key = controller->convertControlKey(keyCode);
+	const ControlKey_t key = controller->convertControlKey(keyCode);
 	if (!m_bNextFireCheck)
 		return;
 
@@ -146,8 +146,6 @@ void GunnerGunShot::onKeyPressed(PlayerController* controller, SGEventKeyboard::
 // ================================================================
 
 void GunnerGunShot::onUpdate(float dt) {
-	m_pHitRecorder->record(m_pPlayer->getRunningAnimation());
-
 	PlayerController* controller = m_pPlayer->ctrl();
 
 	updateDownKeyCheck(controller);
@@ -189,7 +187,7 @@ void GunnerGunShot::updateRightShotTime(PlayerController* controller, float dt) 
 }
 
 
-void GunnerGunShot::onEnemySingleHit(SGHitInfo& info) {
+void GunnerGunShot::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
@@ -242,68 +240,69 @@ void GunnerGunShot::runLeftShotAnimation(ActorSprite* actorSprite, int animation
 
 
 void GunnerGunShot::shotRight(ActorSprite* actorSprite) {
-	actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_SHOT);	
+	actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_SHOT);
 
-	FrameEventType_t frameEventType = WeaponType::ShotFrameEventType[m_eWeaponType];
-	int iFrameEventId;
+	const FrameEventSpawnType_t spawnType = WeaponType::ShotFrameEventSpawnType[m_eWeaponType];
+	int iSpawnCode;
 
 	switch (m_eWeaponType) {
-	case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_RIGHT; break;
-	case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_RIGHT; break;
+	case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_RIGHT; break;
+	case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_RIGHT; break;
 
-	default: iFrameEventId = -1;
+	default: iSpawnCode = -1;
 	}
 
-	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (1)");
-	runFrameEvent(frameEventType, iFrameEventId);
+	DebugAssertMsg(iSpawnCode != -1, "프레임 이벤트 ID가 이상합니다. (1)");
+	m_pPlayer->runFrameEventSpawn(spawnType, iSpawnCode);
 }
 
 void GunnerGunShot::shotRightDown(ActorSprite* actorSprite) {
 
 	actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT);
-	FrameEventType_t frameEventType = WeaponType::ShotFrameEventType[m_eWeaponType];
-	int iFrameEventId;
+	const FrameEventSpawnType_t spawnType = WeaponType::ShotFrameEventSpawnType[m_eWeaponType];
+	int iSpawnCode;
 
 	switch (m_eWeaponType) {
-	case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_RIGHT_DOWN; break;
-	case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_RIGHT_DOWN; break;
-	default: iFrameEventId = -1;
+	case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_RIGHT_DOWN; break;
+	case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_RIGHT_DOWN; break;
+	default: iSpawnCode = -1;
 	}
 
-	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (2)");
-	runFrameEvent(frameEventType, iFrameEventId);
-	
+	DebugAssertMsg(iSpawnCode != -1, "프레임 이벤트 ID가 이상합니다. (2)");
+	m_pPlayer->runFrameEventSpawn(spawnType, iSpawnCode);
+
 }
+
 
 void GunnerGunShot::shotLeft(ActorSprite* actorSprite) {
 	// 왼쪽 손은 애니메이션 이 함수로 실행 안함.
 
-	FrameEventType_t frameEventType = WeaponType::ShotFrameEventType[m_eWeaponType]; 
-	int iFrameEventId;
+	const FrameEventSpawnType_t spawnType = WeaponType::ShotFrameEventSpawnType[m_eWeaponType];
+	int iSpawnCode;
 
 	switch (m_eWeaponType) {
-	case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_LEFT; break;
-	case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_LEFT; break;
-	default: iFrameEventId = -1;
+	case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_LEFT; break;
+	case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_LEFT; break;
+	default: iSpawnCode = -1;
 	}
 
-	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (3)");
-	runFrameEvent(frameEventType, iFrameEventId);
+	DebugAssertMsg(iSpawnCode != -1, "프레임 이벤트 ID가 이상합니다. (3)");
+	m_pPlayer->runFrameEventSpawn(spawnType, iSpawnCode);
 }
 
 void GunnerGunShot::shotLeftDown(ActorSprite* actorSprite) {
 	// 왼쪽 손은 애니메이션 이 함수로 실행 안함.
 
-	FrameEventType_t frameEventType = WeaponType::ShotFrameEventType[m_eWeaponType];
-	int iFrameEventId;
+	const FrameEventSpawnType_t spawnType = WeaponType::ShotFrameEventSpawnType[m_eWeaponType];
+	int iSpawnCode;
 
 	switch (m_eWeaponType) {
-	case WeaponType::Automatic: iFrameEventId = GUNNER_PROJECTILE_AUTO_LEFT_DOWN; break;
-	case WeaponType::Revolver: iFrameEventId = GUNNER_PROJECTILE_AUTO_LEFT_DOWN; break;
-	default: iFrameEventId = -1;
+	case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_LEFT_DOWN; break;
+	case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_LEFT_DOWN; break;
+	default: iSpawnCode = -1;
 	}
 
-	DebugAssertMsg(iFrameEventId != -1, "프레임 이벤트 ID가 이상합니다. (4)");
-	runFrameEvent(frameEventType, iFrameEventId);
+	DebugAssertMsg(iSpawnCode != -1, "프레임 이벤트 ID가 이상합니다. (4)");
+	m_pPlayer->runFrameEventSpawn(spawnType, iSpawnCode);
 }
 

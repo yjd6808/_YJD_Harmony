@@ -29,8 +29,6 @@ void MonsterAttackActivity::onActivityBegin() {
 }
 
 void MonsterAttackActivity::onUpdate(float dt) {
-	ActorPartAnimation* pAnimation = m_pMonster->getRunningAnimation();
-	m_pHitRecorder->record(pAnimation);
 }
 
 void MonsterAttackActivity::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {
@@ -40,7 +38,7 @@ void MonsterAttackActivity::onAnimationEnd(ActorPartAnimation* animation, FrameT
 }
 
 
-void MonsterAttackActivity::onEnemySingleHit(SGHitInfo& info) {
+void MonsterAttackActivity::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 

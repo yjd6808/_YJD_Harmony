@@ -153,7 +153,7 @@ void SgaElementInitializerImpl<2>::Initialize(const SgaElementPtr& element, Stre
 //                       버전별 SgaElement 초기화 수행자맵 구성하기
 // ============================================================================
 
-using SgaElementInitializerMap = JCore::Vector<SgaElementInitializer*>;
+using SgaElementInitializerMap = Vector<SgaElementInitializer*>;
 static SgaElementInitializerMap InitializerMap_v {2};
 
 static int MinVersion_v = 0;

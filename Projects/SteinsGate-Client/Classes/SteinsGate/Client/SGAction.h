@@ -64,8 +64,6 @@ public:
 	bool isMoveableNegativeX() { return m_bMoveableNegativeX; }
 	bool isMoveableNegativeY() { return m_bMoveableNegativeY; }
 
-	void runFrameEvent(FrameEventType_t frameEventType, int frameEventId);
-
 	void setMoveable(bool moveable);
 
 	void initHitRecorder(

@@ -35,6 +35,14 @@ public:
 
 	void releaseFrameTexture(int packIndex, int imgIndex, int frameIndex);
 	void releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex);
+	void releaseAllFrameTexture();
+
+	void increaseCounter();
+	void decreaseCounter();
+	void resetCounter();
+	CachedTextureCounter& getCounter() { return m_TextureCounter; }
+
+	void logTexture(const SGString& text, const SgaResourceIndex& resource, JCore::LoggerAbstract::Level logLevel);
 
 	// TODO: 로딩된 패키지들 모두 Unload 하는 기능
 	// void unloadAll();
@@ -46,6 +54,7 @@ private:
 	ImagePack* m_LoadedPackages[MaxSgaFileCount_v]{};
 	ImagePack* m_AvatarPacks[CharType::Max][AvatarType::Max]{};
 	ImagePack* m_WeaponPacks[WeaponType::Max]{};
+	CachedTextureCounter m_TextureCounter;
 	int m_iLoadedPackageCount{};
 };
 

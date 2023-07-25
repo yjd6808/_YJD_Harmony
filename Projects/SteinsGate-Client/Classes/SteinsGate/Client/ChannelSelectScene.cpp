@@ -13,6 +13,8 @@
 
 #include <SteinsGate/Client/WorldScene.h>
 
+#include "FontPackage.h"
+
 USING_NS_CC;
 USING_NS_JC;
 
@@ -21,7 +23,8 @@ USING_NS_JC;
 // ==============================================================
 
 SGChannelSelectScene* SGChannelSelectScene::create() {
-	SGChannelSelectScene*  scene = dbg_new SGChannelSelectScene();
+	SGChannelSelectScene* scene = dbg_new SGChannelSelectScene();
+
 	if (scene && scene->init()) {
 		scene->autorelease();
 		return scene;
@@ -41,7 +44,12 @@ bool SGChannelSelectScene::init() {
 		return false;
 	}
 
-	SGText* text = SGText::create("서버 셀렉", "nexon_gothic.ttf", 16);
+	auto a = Sprite::create("rect.png");
+	a->setAnchorPoint(Vec2::ZERO);
+	a->setPosition({ 200.0f, 200.0f });
+	this->addChild(a);
+
+	SGText* text = SGText::create("abcd", CoreFont_v->getFontName(0).Source(), 16);
 	text->setPosition({ 300, 300 });
 	this->addChild(text);
 
@@ -56,6 +64,8 @@ void SGChannelSelectScene::update(float dt) {
 void SGChannelSelectScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
 	if (keyCode == EventKeyboard::KeyCode::KEY_F8) {
 		WorldScene::get()->reserveScene(SceneType::Game);
+	} else if (keyCode == EventKeyboard::KeyCode::KEY_F7) {
+		WorldScene::get()->reserveScene(SceneType::Login);
 	}
 }
 

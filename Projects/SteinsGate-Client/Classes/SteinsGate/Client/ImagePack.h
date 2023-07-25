@@ -17,6 +17,11 @@
 #include <SteinsGate/Common/SgaPackage.h>
 #include <SteinsGate/Common/SgaImage.h>
 
+struct CachedTextureCounter
+{
+	int CachedCount{};			// 현재 캐싱된 텍스쳐 갯수
+	int MaxCachedCount{};		// 최대로 캐싱되었던 텍스쳐 갯수
+};
 
 class ImagePack
 {
@@ -38,7 +43,8 @@ public:
 	SGString getFileName() const;
 	bool hasImgIndex(const SGString& imgName) const;
 	int getImgIndex(const SGString& imgName) const { return m_Package->GetElementIndex(imgName); }
-	SGString& getImgName(const int imgIndex) const;
+	SGString getImgName(const int imgIndex) const;
+	SGString getImgNameOrDefault(const int imgIndex, const SGString& defaultValue) const;
 	void applyLinearDodge(Byte* pixelData, int len) const;
 
 	int getPackIndex() { return m_iIndex; }

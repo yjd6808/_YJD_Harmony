@@ -158,9 +158,6 @@ void UICheckBox::load() {
 	if (m_bLoaded)
 		return;
 
-	ImagePack* pBackgroundPack = CorePackManager_v->getPackUnsafe(m_pInfo->BackgroundSga);
-	ImagePack* pCrossPack = CorePackManager_v->getPack(m_pInfo->CrossSga);
-	ImagePack* pPack[TextureCount] = { pBackgroundPack, pBackgroundPack, pCrossPack, pCrossPack };
 	const int Sga[TextureCount] { m_pInfo->BackgroundSga, m_pInfo->BackgroundSga, m_pInfo->CrossSga, m_pInfo->CrossSga };
 	const int Img[TextureCount] { m_pInfo->BackgroundImg, m_pInfo->BackgroundImg, m_pInfo->CrossImg, m_pInfo->CrossImg };
 
@@ -171,9 +168,7 @@ void UICheckBox::load() {
 			continue;
 		}
 
-		FrameTexture* pTexture = pPack[i]->createFrameTexture(Img[i], iSprite);
-		pTexture->retain();
-
+		FrameTexture* pTexture = CoreUIManager_v->createUITextureRetained(Sga[i], Img[i], iSprite);
 		Sprite* pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());
 		pSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -184,7 +179,6 @@ void UICheckBox::load() {
 		m_pTexture[i] = pTexture;
 		m_pSprite[i] = pSprite;
 
-		CoreUIManager_v->registerLoadedUITexture({ Sga[i], Img[i], iSprite});
 		this->addChild(pSprite);
 	}
 

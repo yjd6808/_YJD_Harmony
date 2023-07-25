@@ -41,6 +41,7 @@ MapLayer::MapLayer()
 {}
 
 MapLayer::~MapLayer() {
+	_LogDebug_("맵 레이어 소멸");
 }
 
 bool MapLayer::init() {
@@ -105,9 +106,9 @@ void MapLayer::loadMap(int mapCode) {
 	}
 
 	// 오브젝트 로딩
-	for (int i = 0; i < pMap->ObstacleList.Size(); ++i) {
-		MapObjectInfo& objInfo = pMap->ObstacleList[i];
-		m_pActorBox->createObstacleOnMap(objInfo.Code, objInfo.X, objInfo.Y);
+	for (int i = 0; i < pMap->MapObjectList.Size(); ++i) {
+		MapObjectPositionInfo& objInfo = pMap->MapObjectList[i];
+		m_pActorBox->createMapObjectOnMap(objInfo.Code, objInfo.X, objInfo.Y);
 	}
 
 	// NPC 로딩
@@ -116,17 +117,6 @@ void MapLayer::loadMap(int mapCode) {
 	m_pActorBox->createMonsterOnMap(2, 1, 600, 350);  // 테스트 몬스터 생성
 	m_bMapLoaded = true;
 }
-
-
-void MapLayer::runFrameEvent(Actor* runner, FrameEventType_t frameEventType, int frameEventId) {
-
-	if (frameEventType == FrameEventType::Projectile)
-		m_pActorBox->createProejctileOnMap(runner, frameEventId);
-	else if (frameEventType == FrameEventType::AttackBox) {
-		// TODO: 어택박스 구현
-	}
-}
-
 
 Character* MapLayer::findNearestCharacterInRadious(Actor* stdActor, float radious, float& enemyDist) {
 
@@ -154,8 +144,8 @@ Character* MapLayer::findNearestCharacterInRadious(Actor* stdActor, float radiou
 
 bool MapLayer::collectEnemiesInActorRect(
 	Actor* attacker,
-	const SGActorRect& absoluteActorRect,
-	JCORE_OUT SGVector<SGHitInfo>& hitTargets) {
+	const ActorRect& absoluteActorRect,
+	JCORE_OUT SGVector<HitInfo>& hitTargets) {
 
 	PhysicsActorList& physcisActorList = m_pActorBox->getPhysicsActorList();
 	bool bFind = false;
@@ -180,17 +170,17 @@ bool MapLayer::collectEnemiesInActorRect(
 }
 
 
-bool MapLayer::collectEnemiesInActor(Actor* collector, JCORE_OUT SGVector<SGHitInfo>& hitTargets) {
+bool MapLayer::collectEnemiesInActor(Actor* collector, JCORE_OUT SGVector<HitInfo>& hitTargets) {
 	return collectEnemiesInActorRect(collector, collector->getActorRect(), hitTargets);
 }
 
 
-bool MapLayer::isCollideWithObstacles(const SGRect& rect) {
+bool MapLayer::isCollideWithMapObjects(const SGRect& rect) {
 
-	ObstacleList& collidableObstacles = m_pActorBox->getCollidableObstacleList();
+	MapObjectList& collidableMapObjects = m_pActorBox->getCollidableMapObjectList();
 
-	for (int i = 0; i < collidableObstacles.Size(); ++i) {
-		SGRect thicknessBox = collidableObstacles[i]->getThicknessBoxRect();
+	for (int i = 0; i < collidableMapObjects.Size(); ++i) {
+		SGRect thicknessBox = collidableMapObjects[i]->getThicknessBoxRect();
 
 		if (thicknessBox.intersectsRect(rect))
 			return true;

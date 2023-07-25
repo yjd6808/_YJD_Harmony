@@ -12,15 +12,16 @@
 class SGGameScene : public SceneBase
 {
 public:
+    CREATE_FUNC(SGGameScene)
+
     SGGameScene();
+    ~SGGameScene() override;
 
     void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
     void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
     void update(float dt) override;
     bool init() override;
-    CREATE_FUNC(SGGameScene)
-    ~SGGameScene() override;
 
     MapLayer* getMap() { return m_pMapLayer; }
 

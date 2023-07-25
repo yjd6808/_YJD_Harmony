@@ -25,7 +25,7 @@ ActorPartSprite* ActorPartSprite::create(
 	SGNode* canvas, 
 	SGDrawNode* boundingBox, 
 	const ActorPartSpriteData& partData, 
-	SGVector<AnimationInfo*>& animations
+	SGVector<AnimationInfo>* animations
 )
 {
 	ActorPartSprite* pPartSprite = dbg_new ActorPartSprite(frameCount, actor, canvas, boundingBox, partData, animations);
@@ -45,15 +45,15 @@ ActorPartSprite::ActorPartSprite(
 	SGNode* canvas,
 	SGDrawNode* boundingBox,
 	const ActorPartSpriteData& partData,
-	SGVector<AnimationInfo*>& animations)
+	SGVector<AnimationInfo>* animations)
 		: m_pActorSprite(actor)
-		, m_pCanvas(canvas)
 		, m_PartData(partData)
-		, m_refAnimationInfoList(animations)
+		, m_pAnimationInfoList(animations)
+		, m_pCanvas(canvas)
 		, m_pBoundingBox(boundingBox)
 		, m_pRunningAnimation(nullptr)
-		, m_AnimationMap(animations.Size())
-		, m_vAnimationList(animations.Size())
+		, m_AnimationMap(animations->Size())
+		, m_vAnimationList(animations->Size())
 		, m_vFrames(frameCount, nullptr)	
 {}
 
@@ -70,8 +70,13 @@ bool ActorPartSprite::init() {
 	if (!Sprite::init())
 		return false;
 
-	
+	initFrames();
+	initAnimations();
 
+	return true;
+}
+
+void ActorPartSprite::initFrames() {
 	ImagePack* pImgPack = ImagePackManager::Get()->getPack(m_PartData.SgaIndex);
 
 	for (int i = 0; i < m_vFrames.Size(); ++i) {
@@ -84,17 +89,17 @@ bool ActorPartSprite::init() {
 
 		m_vFrames[i]->retain();
 	}
+}
 
-	for (int i = 0; i < m_refAnimationInfoList.Size(); ++i) {
-		AnimationInfo* pAnimationInfo = m_refAnimationInfoList[i];
-		ActorPartAnimation* pPartAnimation = ActorPartAnimation::create(this, pAnimationInfo, m_vFrames);
+void ActorPartSprite::initAnimations() {
+	for (int i = 0; i < m_pAnimationInfoList->Size(); ++i) {
+		AnimationInfo& animationInfo = m_pAnimationInfoList->At(i);
+		ActorPartAnimation* pPartAnimation = ActorPartAnimation::create(this, &animationInfo, m_vFrames);
 		pPartAnimation->constructFrames(m_PartData.SgaIndex, m_PartData.ImgIndex);
 		pPartAnimation->retain();
-		m_AnimationMap.Insert(pAnimationInfo->Code, pPartAnimation);
+		m_AnimationMap.Insert(animationInfo.Code, pPartAnimation);
 		m_vAnimationList.PushBack(pPartAnimation);
 	}
-
-	return true;
 }
 
 void ActorPartSprite::update(float dt) { 
@@ -110,6 +115,26 @@ void ActorPartSprite::updateBoundingBoxVisibleState() {
 		m_pBoundingBox->setOpacity(255);
 	else
 		m_pBoundingBox->setOpacity(0);
+}
+
+// ActorSprite의 ActorSpriteData가 변경될 경우 애니메이션 참조 변수들이 잘못될 수 있기 때문에 포인터 정보를 알맞게 업데이트 해주기 위함.
+void ActorPartSprite::updateAnimationReference(SGVector<AnimationInfo>* animations) {
+	m_pAnimationInfoList = animations;
+	SGVector<ActorPartAnimation*> vAnimationList(m_vAnimationList.Size());
+
+	for (int i = 0; i < m_pAnimationInfoList->Size(); ++i) {
+		AnimationInfo& animationInfo = m_pAnimationInfoList->At(i);
+
+		if (!m_AnimationMap.Exist(animationInfo.Code)) {
+			DebugAssertMsg(false, "애니메이션 업데이트 중 오류발생 - 현재 파츠에서 %s 애니메이션은 존재하지 않음", animationInfo.Name.Source());
+			return;
+		}
+		ActorPartAnimation* pAnimation = m_AnimationMap[animationInfo.Code];
+		pAnimation->setAnimationInfo(&animationInfo);
+		vAnimationList.PushBack(pAnimation);
+	}
+	DebugAssert(m_vAnimationList.Size() == vAnimationList.Size(), "업데이트될 애니메이션의 갯수가 기존과 다릅니다.");
+	m_vAnimationList = vAnimationList;
 }
 
 void ActorPartSprite::runAnimation(int code) {

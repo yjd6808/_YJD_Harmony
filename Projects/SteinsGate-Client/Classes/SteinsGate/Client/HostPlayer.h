@@ -23,11 +23,15 @@ private:
 	HostPlayer();
 	~HostPlayer() override;
 public:
-	bool init();
+	bool init() override;
 	void initActionManager();
 	void initController();
-	void hit(const SGHitInfo& hitInfo) override;
-	
+	void initListeners();
+	void hit(const HitInfo& hitInfo) override;
+
+	void removeActionManager();
+	void removeController();
+
 	void update(float dt) override;
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event);
@@ -43,9 +47,11 @@ public:
 
 	int getRunningActionCode();
 
+
 	ActionMgr* actionManager();
 	PlayerController* ctrl();
 	AccountData& accountData() { return m_AccountData; }
+	
 
 private:
 	AccountData m_AccountData;

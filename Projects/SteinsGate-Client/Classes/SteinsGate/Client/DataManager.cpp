@@ -20,13 +20,14 @@
 #include <SteinsGate/Client/ProjectileInfoLoader.h>
 #include <SteinsGate/Client/ClientInfoLoader.h>
 #include <SteinsGate/Client/TileInfoLoader.h>
-#include <SteinsGate/Client/ObstacleInfoLoader.h>
+#include <SteinsGate/Client/MapObjectInfoLoader.h>
 #include <SteinsGate/Client/MapInfoLoader.h>
 #include <SteinsGate/Client/AIInfoLoader.h>
 #include <SteinsGate/Client/AttackDataInfoLoader.h>
 #include <SteinsGate/Client/CharAnimationInfoLoader.h>
 #include <SteinsGate/Client/EffectInfoLoader.h>
 #include <SteinsGate/Client/UIInfoLoader.h>
+#include <SteinsGate/Client/FrameEventLoader.h>
 
 
 
@@ -40,7 +41,7 @@ void DataManager::initializeLoader() {
 	// Effect
 	// Map
 	// Monster
-	// Obstacle
+	// MapObject
 	// Projectile
 	// Server
 	// Tile
@@ -59,27 +60,31 @@ void DataManager::initializeLoader() {
 	// Common
 	// Database
 
-	 m_pConfigFileLoaders[ConfigFileType::Effect]			 = dbg_new EffectInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Map]				 = dbg_new MapInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Monster]			 = dbg_new MobInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Obstacle]			 = dbg_new ObstacleInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Projectile]		 = dbg_new ProjectileInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Server]			 = dbg_new ServerInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Tile]				 = dbg_new TileInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::UI]				 = dbg_new UIInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Action]			 = dbg_new ActionInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::AI]				 = dbg_new AIInfoLoader(this);
-	 // m_pConfigFileLoaders[ConfigFileType::AttackBox]
-	 m_pConfigFileLoaders[ConfigFileType::AttackData]		 = dbg_new AttackDataInfoLoader(this);
-	 // m_pConfigFileLoaders[ConfigFileType::Channel]		 = dbg_new SGChannel(this);
-	 m_pConfigFileLoaders[ConfigFileType::Char_Animation]	 = dbg_new CharAnimationInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Char_Base]	     = dbg_new CharInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Client]			 = dbg_new ClientInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Item]				 = dbg_new ItemInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::ItemOpt]			 = dbg_new ItemOptInfoLoader(this);
-	 m_pConfigFileLoaders[ConfigFileType::Char_Common]		 = dbg_new CharCommonInfoLoader(this);
-	 // m_pConfigFileLoaders[ConfigFileType::Enchant]		 = dbg_new EnchantInfoLoader(this);
-	 m_bInitialized = true;
+	m_pConfigFileLoaders[ConfigFileType::Effect]						= dbg_new EffectInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Map]							= dbg_new MapInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Monster]						= dbg_new MobInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Monster_Animation_Frame_Event]	= dbg_new FrameEventLoader(this, ActorType::Monster);
+	m_pConfigFileLoaders[ConfigFileType::Monster_Projectile]			= dbg_new ProjectileInfoLoader(this, ActorType::Monster);
+	m_pConfigFileLoaders[ConfigFileType::Monster_Attack_Data]			= dbg_new AttackDataInfoLoader(this, ActorType::Monster);
+	m_pConfigFileLoaders[ConfigFileType::MapObject]						= dbg_new MapObjectInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Server]						= dbg_new ServerInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Tile]							= dbg_new TileInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::UI]							= dbg_new UIInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Action]						= dbg_new ActionInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::AI]							= dbg_new AIInfoLoader(this);
+	// m_pConfigFileLoaders[ConfigFileType::AttackBox]
+	m_pConfigFileLoaders[ConfigFileType::Char_Attack_Data]				= dbg_new AttackDataInfoLoader(this, ActorType::Character);
+	m_pConfigFileLoaders[ConfigFileType::Char_Projectile]				= dbg_new ProjectileInfoLoader(this, ActorType::Character);
+	// m_pConfigFileLoaders[ConfigFileType::Channel]					= dbg_new SGChannel(this);
+	m_pConfigFileLoaders[ConfigFileType::Char_Animation]				= dbg_new CharAnimationInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Char_Animation_Frame_Event]	= dbg_new FrameEventLoader(this, ActorType::Character);
+	m_pConfigFileLoaders[ConfigFileType::Char_Base]						= dbg_new CharInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Client]						= dbg_new ClientInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Item]							= dbg_new ItemInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::ItemOpt]						= dbg_new ItemOptInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Char_Common]					= dbg_new CharCommonInfoLoader(this);
+	// m_pConfigFileLoaders[ConfigFileType::Enchant]					= dbg_new EnchantInfoLoader(this);
+	m_bInitialized = true;
 }
 
 MobInfo* DataManager::getMonsterInfo(int mobCode) {
@@ -102,8 +107,15 @@ ActionInfo* DataManager::getActionInfo(int actionCode) {
 }
 
 
-ProjectileInfo* DataManager::getProjectileInfo(int projectileCode) {
-	auto eType = ConfigFileType::Projectile;
+ProjectileInfo* DataManager::getProjectileInfo(ActorType_t actorType, int projectileCode) {
+	ConfigFileType_t eType = ConfigFileType::Max;
+
+	switch (actorType) {
+		
+	case ActorType::Character: eType = ConfigFileType::Char_Projectile;	break;
+	case ActorType::Monster:   eType = ConfigFileType::Monster_Projectile; break;
+	default: DebugAssert(false) ;
+	}
 
 	if (!m_bLoaded[eType])
 		load(eType);
@@ -158,13 +170,13 @@ TileInfo* DataManager::getTileInfo(int tileCode) {
 	return (TileInfo*)getData(eType, tileCode);
 }
 
-ObstacleInfo* DataManager::getObstacleInfo(int obstacleCode) {
-	auto eType = ConfigFileType::Obstacle;
+MapObjectInfo* DataManager::getMapObjectInfo(int mapObjectCode) {
+	auto eType = ConfigFileType::MapObject;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (ObstacleInfo*)getData(eType, obstacleCode);
+	return (MapObjectInfo*)getData(eType, mapObjectCode);
 }
 
 MapInfo* DataManager::getMapInfo(int mapCode) {
@@ -185,9 +197,16 @@ AIInfo* DataManager::getAIInfo(int aiCode) {
 	return (AIInfo*)getData(eType, aiCode);
 }
 
-AttackDataInfo* DataManager::getAttackDataInfo(int attackDataCode) {
+AttackDataInfo* DataManager::getAttackDataInfo(ActorType_t actorType, int attackDataCode) {
 
-	auto eType = ConfigFileType::AttackData;
+	ConfigFileType_t eType = ConfigFileType::Max;
+
+	switch (actorType) {
+		
+	case ActorType::Character: eType = ConfigFileType::Char_Attack_Data;	break;
+	case ActorType::Monster:   eType = ConfigFileType::Monster_Attack_Data; break;
+	default: DebugAssert(false) ;
+	}
 
 	if (!m_bLoaded[eType])
 		load(eType);
@@ -215,5 +234,21 @@ UIElementInfo* DataManager::getUIElementInfo(int uiElementCode) {
 
 	return (UIElementInfo*)getData(eType, uiElementCode);
 
+}
+
+FrameEvent* DataManager::getFrameEvent(ActorType_t actorType, int frameEventCode) {
+
+	ConfigFileType_t eType = ConfigFileType::Max;
+
+	switch (actorType) {
+	case ActorType::Character: eType = ConfigFileType::Char_Animation_Frame_Event;	break;
+	case ActorType::Monster:   eType = ConfigFileType::Monster_Animation_Frame_Event; break;
+	default: DebugAssert(false);
+	}
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (FrameEvent*)getData(eType, frameEventCode);
 }
 

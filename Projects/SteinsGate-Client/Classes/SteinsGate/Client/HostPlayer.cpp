@@ -6,19 +6,21 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "HostPlayer.h"
 
 #include <SteinsGate/Client/CharInfo.h>
 #include <SteinsGate/Client/MapLayer.h>
 #include <SteinsGate/Client/ActionDefine.h>
 #include <SteinsGate/Client/AttackDataInfo.h>
+#include <SteinsGate/Client/CharacterListener.h>
 #include <SteinsGate/Client/Inven.h>
 
 
 HostPlayer::HostPlayer()
 	: Player()
-	, m_pController(nullptr)
-	, m_pActionManager(nullptr) {
+	, m_pActionManager(nullptr)
+	, m_pController(nullptr) {
 	
 }
 
@@ -29,6 +31,7 @@ HostPlayer::~HostPlayer() {
 }
 
 bool HostPlayer::init() {
+	Player::init();
 
 	m_PlayerData.CharType = CharType::Gunner;
 
@@ -37,6 +40,7 @@ bool HostPlayer::init() {
 
 
 	initInfo(m_PlayerData.CharType, info);
+	initListeners();
 	initActionManager();
 	initController();
 	m_pActionManager->runBaseAction(BaseAction::Idle);
@@ -48,7 +52,7 @@ void HostPlayer::initActionManager() {
 	CC_SAFE_DELETE(m_pActionManager);
 
 	m_pActionManager = dbg_new ActionMgr(this);
-	m_pActionManager->init(getBaseInfo()->Code);
+	m_pActionManager->init(m_pBaseInfo->Code);
 }
 
 void HostPlayer::initController() {
@@ -57,7 +61,10 @@ void HostPlayer::initController() {
 	m_pController = dbg_new PlayerController(this, m_pActionManager);
 }
 
-void HostPlayer::hit(const SGHitInfo& hitInfo) {
+void HostPlayer::initListeners() {
+}
+
+void HostPlayer::hit(const HitInfo& hitInfo) {
 	Player::hit(hitInfo);
 
 	if (hitInfo.AttackDataInfo->IsFallDownAttack) {
@@ -66,6 +73,14 @@ void HostPlayer::hit(const SGHitInfo& hitInfo) {
 	}
 
 	playBaseActionForce(BaseAction::Hit);
+}
+
+void HostPlayer::removeActionManager() {
+	JCORE_DELETE_SAFE(m_pActionManager);
+}
+
+void HostPlayer::removeController() {
+	JCORE_DELETE_SAFE(m_pController);
 }
 
 void HostPlayer::update(float dt) {
@@ -87,26 +102,35 @@ void HostPlayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* 
 }
 
 void HostPlayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+
 	if (m_pController)
 		m_pController->onKeyReleased(keyCode, event);
 }
 
 void HostPlayer::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
+	Player::onFrameBegin(animation, texture);
+
 	if (m_pActionManager)
 		m_pActionManager->onFrameBegin(animation, texture);
 }
 
 void HostPlayer::onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) {
+	Player::onFrameEnd(animation, texture);
+
 	if (m_pActionManager)
 		m_pActionManager->onFrameEnd(animation, texture);
 }
 
 void HostPlayer::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) {
+	Player::onAnimationBegin(animation, texture);
+
 	if (m_pActionManager)
 		m_pActionManager->onAnimationBegin(animation, texture);
 }
 
 void HostPlayer::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) {
+	Player::onAnimationEnd(animation, texture);
+
 	if (m_pActionManager)
 		m_pActionManager->onAnimationEnd(animation, texture);
 }

@@ -23,6 +23,10 @@ SGGameScene::SGGameScene()
 	, m_pGridLayer(nullptr)
 {}
 
+SGGameScene::~SGGameScene() {
+    CC_SAFE_RELEASE(m_pGridLayer);
+}
+
 void SGGameScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
 
     if (m_pMapLayer)
@@ -31,6 +35,8 @@ void SGGameScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event)
    
     if (keyCode == EventKeyboard::KeyCode::KEY_F8) {
         WorldScene::get()->reserveScene(SceneType::Login);
+    } else if (keyCode == EventKeyboard::KeyCode::KEY_F7) {
+		WorldScene::get()->reserveScene(SceneType::ChannelSelect);
     } else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
         if (m_pGridLayer == nullptr) {
             return;
@@ -62,6 +68,12 @@ bool SGGameScene::init()
     m_pGridLayer->retain();
     //this->addChild(m_pGridLayer);
     
+    m_pMapLayer = MapLayer::create();
+    m_pMapLayer->setAnchorPoint(Vec2::ZERO);
+    m_pMapLayer->addChild(m_pGridLayer, 1);
+    this->addChild(m_pMapLayer);
+
+    CoreActorBox_v->init(m_pMapLayer);                   // 맵 레이어 초기화
 
     cmdEnterMap();
     cmdLoadChar();
@@ -69,39 +81,23 @@ bool SGGameScene::init()
     return true;
 }
 
-SGGameScene::~SGGameScene() {
-    CC_SAFE_RELEASE(m_pGridLayer);
-}
-
 void SGGameScene::cmdLoadChar() {
 
     CorePlayer_v->init();
     CorePlayer_v->setPositionRealCenter(300, 200);
+    CorePlayer_v->setMapLayer(m_pMapLayer);
+    CorePlayer_v->setCleanUpFlag(Actor::CF_ReleaseActorSprite);
 
     CoreActorBox_v->registerPlayerOnMap(CorePlayer_v);
     m_pMapLayer->getCamera()->setFollowTarget(CorePlayer_v);
 }
 
 void SGGameScene::cmdEnterMap() {
-    HostPlayer* pHost = HostPlayer::Get();
-    ActorBox* pActorBox = ActorBox::Get();
-
-    if (m_pMapLayer) {
-        m_pMapLayer->release();
-    }
-    
-    m_pMapLayer = MapLayer::create();
-    m_pMapLayer->setAnchorPoint(Vec2::ZERO);
-
-    pActorBox->init(m_pMapLayer);                   // 맵 레이어 초기화
-    pHost->setMapLayer(m_pMapLayer);
-    
-    m_pMapLayer->addChild(m_pGridLayer, 1);
     m_pMapLayer->loadMap(1);
-    this->addChild(m_pMapLayer);
 }
 
 void SGGameScene::onExit() {
+    CorePlayer_v->cleanUp();
     ActorBox::Get()->clearAll();
     SceneBase::onExit();
 }

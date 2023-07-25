@@ -109,7 +109,7 @@ void MonsterWalkActivity::updateLeftMove(MapLayer* mapLayer, MapInfo* mapInfo, c
 	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// lb, lt 체크
-	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithObstacles(thicknessRect))
+	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pMonster->setPositionRealX(thicknessRect.origin.x);
@@ -121,7 +121,7 @@ void MonsterWalkActivity::updateRightMove(MapLayer* mapLayer, MapInfo* mapInfo, 
 	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// rb, rt 체크
-	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
+	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pMonster->setPositionRealX(thicknessRect.origin.x);
@@ -132,7 +132,7 @@ void MonsterWalkActivity::updateUpMove(MapLayer* mapLayer, MapInfo* mapInfo, con
 	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// lt, rt 체크
-	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithObstacles(thicknessRect))
+	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pMonster->setPositionRealY(thicknessRect.origin.y);
@@ -143,7 +143,7 @@ void MonsterWalkActivity::updateDownMove(MapLayer* mapLayer, MapInfo* mapInfo, c
 	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
 
 	// lb, rb 체크
-	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithObstacles(thicknessRect))
+	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pMonster->setPositionRealY(thicknessRect.origin.y);

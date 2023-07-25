@@ -17,14 +17,13 @@
 #include <SteinsGate/Client/ProjectileInfo.h>
 #include <SteinsGate/Client/ClientInfo.h>
 #include <SteinsGate/Client/TileInfo.h>
-#include <SteinsGate/Client/ObstacleInfo.h>
+#include <SteinsGate/Client/MapObjectInfo.h>
 #include <SteinsGate/Client/MapInfo.h>
 #include <SteinsGate/Client/AIInfo.h>
 #include <SteinsGate/Client/AttackDataInfo.h>
 #include <SteinsGate/Client/EffectInfo.h>
 #include <SteinsGate/Client/UIInfo.h>
-
-using AnimationList = SGVector<AnimationInfo*>;
+#include <SteinsGate/Client/FrameEvent.h>
 
 class DataManager
 	: public DataManagerAbstract
@@ -38,19 +37,19 @@ public:
 
 	MobInfo* getMonsterInfo(int mobCode);
 	ActionInfo* getActionInfo(int actionCode);
-	ProjectileInfo* getProjectileInfo(int projectileCode);
+	ProjectileInfo* getProjectileInfo(ActorType_t actorType, int projectileCode);
 	CharInfo* getCharInfo(int charCode);
 	AnimationInfo* getCharAnimationInfo(int charAnimationCode);
 	SGVector<AnimationInfo*>& getCharAnimationInfoList(int charCode);
 	ClientInfo* getClientInfo(int code);
 	TileInfo* getTileInfo(int tileCode);
-	ObstacleInfo* getObstacleInfo(int obstacleCode);
+	MapObjectInfo* getMapObjectInfo(int mapObjectCode);
 	MapInfo* getMapInfo(int mapCode);
 	AIInfo* getAIInfo(int aiCode);
-	AttackDataInfo* getAttackDataInfo(int attackDataCode);
+	AttackDataInfo* getAttackDataInfo(ActorType_t actorType, int attackDataCode);
 	EffectInfo* getEffectInfo(int effectCode);
 	UIElementInfo* getUIElementInfo(int uiElementCode);
-
+	FrameEvent* getFrameEvent(ActorType_t actorType, int frameEventCode);
 
 };
 

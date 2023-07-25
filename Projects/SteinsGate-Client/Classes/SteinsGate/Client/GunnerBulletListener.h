@@ -9,21 +9,19 @@
 #pragma once
 
 
-#include <SteinsGate/Client/CharProjectileListener.h>
+#include <SteinsGate/Client/ProjectileListener.h>
 
 #include "HitRecorder.h"
 
 class HostPlayer;
 class HitRecorder;
-class GunnerBulletListener : public CharProjectileListener
+class GunnerBulletListener : public ProjectileListener
 {
 public:
 	void onCreated() override;
 	void onUpdate(float dt) override;
-	void onLifeTimeOver() override;
-	void onDistanceOver() override;
 	void onCollisionWithGround() override;
-	void onEnemySingleHit(SGHitInfo& info);
+	void onEnemySingleHit(HitInfo& info);
 	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 
 	CreateNew(GunnerBulletListener)

@@ -9,34 +9,50 @@
         {
             "code": 1,
             "name": "knocksmall",
-            "sga": "sprite_common_hiteffect.sga",
-            "img": "knocksmall.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "knocksmall",
-                "loop": false,
-                "frames": [
-                    "0 77",
-                    "1 77",
-                    "2 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_common_hiteffect.sga",
+                        "img": "knocksmall.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "gunner_auto",
+                        "loop": true,
+                        "frames": [
+                            "0 77",
+                            "1 77",
+                            "2 77"
+                        ]
+                    }   
                 ]
             }
         },
         {
             "code": 2,
             "name": "knocklarge",
-            "sga": "sprite_common_hiteffect.sga",
-            "img": "knocklarge.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "knocklarge",
-                "loop": false,
-                "frames": [
-                    "0 77",
-                    "1 77",
-                    "2 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_common_hiteffect.sga",
+                        "img": "knocklarge.img",
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "knocklarge",
+                        "loop": false,
+                        "frames": [
+                            "0 77",
+                            "1 77",
+                            "2 77"
+                        ]
+                    }   
                 ]
             }
         },
@@ -44,35 +60,51 @@
         {
             "code": 3,
             "name": "pistol_shoot",
-            "sga": "sprite_character_gunner_effect_shooteffect.sga",
-            "img": "pistol00.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "pistol_shoot",
-                "loop": false,
-                "frames": [
-                    "4 77",
-                    "5 77",
-                    "6 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect_shooteffect.sga",
+                        "img": "pistol00.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "pistol_shoot",
+                        "loop": false,
+                        "frames": [
+                            "4 77",
+                            "5 77",
+                            "6 77"
+                        ]
+                    }   
                 ]
             }
         }, 
         {
             "code": 4,
             "name": "pistol_hit",
-            "sga": "sprite_character_gunner_effect_shooteffect.sga",
-            "img": "pistol00.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "pistol_hit",
-                "loop": false,
-                "frames": [
-                    "0 77",
-                    "1 77",
-                    "2 77",
-                    "3 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect_shooteffect.sga",
+                        "img": "pistol00.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "pistol_hit",
+                        "loop": false,
+                        "frames": [
+                            "0 77",
+                            "1 77",
+                            "2 77",
+                            "3 77"
+                        ]
+                    }   
                 ]
             }
         },
@@ -80,17 +112,25 @@
         {
             "code": 5,
             "name": "pistol_shoot_down",
-            "sga": "sprite_character_gunner_effect_shooteffect.sga",
-            "img": "pistol00.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "pistol_shoot_down",
-                "loop": false,
-                "frames": [
-                    "14 77",
-                    "15 77",
-                    "16 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect_shooteffect.sga",
+                        "img": "pistol00.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "pistol_shoot_down",
+                        "loop": false,
+                        "frames": [
+                            "14 77",
+                            "15 77",
+                            "16 77"
+                        ]
+                    }   
                 ]
             }
         },
@@ -99,108 +139,158 @@
         {
             "code": 6,
             "name": "pistol_hit_down",
-            "sga": "sprite_character_gunner_effect_shooteffect.sga",
-            "img": "pistol00.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "pistol_hit_down",
-                "loop": false,
-                "frames": [
-                    "8 77",
-                    "9 77",
-                    "10 77",
-                    "11 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect_shooteffect.sga",
+                        "img": "pistol00.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "pistol_hit_down",
+                        "loop": false,
+                        "frames": [
+                            "8 77",
+                            "9 77",
+                            "10 77",
+                            "11 77"
+                        ]
+                    }   
                 ]
             }
         },
         {
             "code": 7,
             "name": "collision_wall",
-            "sga": "sprite_character_gunner_effect_hiteffect.sga",
-            "img": "collisionwall.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "collisionwall",
-                "loop": false,
-                "frames": [
-                    "0 77",
-                    "1 77",
-                    "2 77",
-                    "3 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect_hiteffect.sga",
+                        "img": "collisionwall.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "collisionwall",
+                        "loop": false,
+                        "frames": [
+                            "0 77",
+                            "1 77",
+                            "2 77",
+                            "3 77"
+                        ]
+                    }   
                 ]
             }
+
+
         },
         {
             "code": 8,
             "name": "collision_floor",
-            "sga": "sprite_character_gunner_effect_hiteffect.sga",
-            "img": "collisionfloor.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "collisionfloor",
-                "loop": false,
-                "frames": [
-                    "0 77",
-                    "1 77",
-                    "2 77",
-                    "3 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect_hiteffect.sga",
+                        "img": "collisionfloor.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "collisionfloor",
+                        "loop": false,
+                        "frames": [
+                            "0 77",
+                            "1 77",
+                            "2 77",
+                            "3 77"
+                        ]
+                    }   
                 ]
             }
         },
         {
             "code": 9,
             "name": "gunner_sliding_begin",
-            "sga": "sprite_character_gunner_effect.sga",
-            "img": "dashattackdust1.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "gunner_sliding_begin",
-                "loop": false,
-                "frames": [
-                    "0 77",
-                    "1 77",
-                    "2 77",
-                    "3 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect.sga",
+                        "img": "dashattackdust1.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "gunner_sliding_begin",
+                        "loop": false,
+                        "frames": [
+                            "0 77",
+                            "1 77",
+                            "2 77",
+                            "3 77"
+                        ]
+                    }   
                 ]
             }
+
+
         },
         {
             "code": 10,
             "name": "gunner_sliding_attach",
-            "sga": "sprite_character_gunner_effect.sga",
-            "img": "dashattackdust2.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "gunner_sliding_attach",
-                "loop": false,
-                "frames": [
-                    "0 77",
-                    "1 77",
-                    "2 77"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_character_gunner_effect.sga",
+                        "img": "dashattackdust2.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "gunner_sliding_attach",
+                        "loop": false,
+                        "frames": [
+                            "0 77",
+                            "1 77",
+                            "2 77"
+                        ]
+                    }   
                 ]
             }
         },
         {
             "code": 11,
             "name": "ground_marker",
-            "sga": "sprite_common_etc.sga",
-            "img": "auraminion.img",
-            "animation": 
-            {
-                "code": 1,
-                "name": "ground_marker",
-                "loop": false,
-                "frames": [
-                    "0 -1"
+            "actor_sprite_data": {
+                "positioning_rule": 0,
+                "parts": [                    
+                    {
+                        "sga": "sprite_common_etc.sga",
+                        "img": "auraminion.img"
+                    }
+                ],
+                "animation": [
+                    {
+                        "code": 1,
+                        "name": "ground_marker",
+                        "loop": false,
+                        "frames": [
+                            "0 -1"
+                        ]
+                    }   
                 ]
             }
         }
-
-        
     ]
 }

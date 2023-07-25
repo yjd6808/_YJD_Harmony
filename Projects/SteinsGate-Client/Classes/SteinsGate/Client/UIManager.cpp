@@ -20,6 +20,8 @@
 #include <SteinsGate/Client/UI_Popup.h>
 #include <SteinsGate/Client/UI_Test.h>
 
+#include "Global.h"
+
 USING_NS_CC;
 USING_NS_JC;
 
@@ -73,12 +75,18 @@ void UIManager::registerMasterGroup(UIMasterGroup* group) {
 	});
 }
 
-void UIManager::registerLoadedUITexture(SgaResourceIndex index) {
+void UIManager::registerUITexture(SgaResourceIndex index) {
 
-	if (index.Un.FrameIndex == InvalidValue_v)
+	if (index.Un.FrameIndex == InvalidValue_v) {
 		return;
+	}
 
-	m_hLoadedUITexture.Insert(index.Value, index);
+	
+	const bool bInserted = m_hLoadedUITexture.Insert(index.Value, index);
+
+	if (bInserted) {
+		CorePackManager_v->logTexture("로드", index, LoggerAbstract::eDebug);
+	}
 }
 
 
@@ -89,8 +97,8 @@ void UIManager::unloadAll() {
 	// 이미지 텍스쳐 모두 릴리즈
 	m_hMasterUIGroups.ForEachValue([](UIGroup* group) {
 		group->unload();
-		});
-
+	});
+	
 	// 관련 캐쉬, 팩 모두 언로드
 	m_hLoadedUITexture.ForEachValue([pPackManager](SgaResourceIndex& resourceIndex) {
 		pPackManager->releaseFrameTexture(resourceIndex);
@@ -158,6 +166,25 @@ UIElement* UIManager::getElement(int elementCode) {
 	}
 
 	return m_hUIElements[elementCode];
+}
+
+FrameTexture* UIManager::createUITexture(int sga, int img, int frame, bool linearDodge /* = false  */) {
+	ImagePack* pPack = CorePackManager_v->getPackUnsafe(sga);
+
+	if (pPack == nullptr) {
+		CorePackManager_v->logTexture("UIManager::createUITexture()", SgaResourceIndex{sga, img, frame}, LoggerAbstract::eWarn);
+		return CoreGlobal_v->getDefaultFrameTexture();
+	}
+
+	FrameTexture* pTexture = pPack->createFrameTexture(img, frame, linearDodge);
+	registerUITexture({ sga, img, frame });
+	return pTexture;
+}
+
+FrameTexture* UIManager::createUITextureRetained(int sga, int img, int frame, bool linearDodge) {
+	FrameTexture* pTexture = createUITexture(sga, img, frame, linearDodge);
+	pTexture->retain();
+	return pTexture;
 }
 
 void UIManager::initPublic() {

@@ -8,18 +8,14 @@
 
 #pragma once
 
-#include <SteinsGate/Client/AnimationInfo.h>
 #include <SteinsGate/Common/ConfigDataAbstract.h>
+#include <SteinsGate/Client/Struct.h>
 
 struct EffectInfo : ConfigDataAbstract
 {
-	EffectInfo() {}
-	EffectInfo(int animationFrameSize) :
-		Animation(animationFrameSize) {}
-	~EffectInfo() override = default;
+	EffectInfo() = default;
+	~EffectInfo() override { JCORE_DELETE_SAFE(SpriteData); }
 
 	SGString Name;
-	int SgaIndex;
-	int ImgIndex;
-	AnimationInfo Animation;
+	ActorSpriteData* SpriteData;
 };

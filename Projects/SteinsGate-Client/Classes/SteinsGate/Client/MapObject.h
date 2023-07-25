@@ -13,15 +13,16 @@
 
 
 #include <SteinsGate/Client/Actor.h>
-#include <SteinsGate/Client/ObstacleInfo.h>
+#include <SteinsGate/Client/MapObjectInfo.h>
 
-class Obstacle : public Actor
+class MapObject : public Actor
 {
 public:
-	Obstacle(ObstacleInfo* baseInfo);
-	static Obstacle* create(ObstacleInfo* baseInfo);
+	MapObject(MapObjectInfo* baseInfo);
+	static MapObject* create(MapObjectInfo* baseInfo);
 	void initActorSprite() override;
-	void initListener(ActorListener* listener) override;
+	void initActorSpriteObstacle();
+	void initActorSpriteGate();
 	bool initVariables() override;
 
 	void update(float dt) override;
@@ -30,13 +31,12 @@ public:
 	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
 	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
 
-	bool hitable();
-	bool collidable();
-	bool z_orderable();
+	MapObjectType_t getObjectType() const { return m_pBaseInfo->Type; }
+	int getCode() override { return m_pBaseInfo->Code; }
 
-	ObstacleInfo* getBaseInfo();
+	MapObjectInfo* getBaseInfo();
 private:
-	ObstacleInfo* m_pBaseInfo;
+	MapObjectInfo* m_pBaseInfo;
 };
 
 

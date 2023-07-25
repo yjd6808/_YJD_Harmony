@@ -12,45 +12,39 @@
 #include <SteinsGate/Client/MapLayer.h>
 #include <SteinsGate/Client/DataManager.h>
 
-HitRecorder::HitRecorder(Actor* recorder)
-	: m_pRecorder(recorder)
+HitRecorder::HitRecorder(Actor* owner, Actor* recorder)
+	: m_pOwner(owner)
+	, m_pRecorder(recorder)
 	, m_vHitPossibleList(16)
 	, m_hAlreadyHitEnemy(32)
-	, m_bRecord(true)
 	, m_bRecordAlreadyHit(false)
+	, m_bRecord(true)
 {}
 
-HitRecorder::HitRecorder(Actor* recorder, int hitPossibleListSize, int alreadyHitEnemySize)
-	: m_pRecorder(recorder)
+HitRecorder::HitRecorder(Actor* owner, Actor* recorder, int hitPossibleListSize, int alreadyHitEnemySize)
+	: m_pOwner(owner)
+	, m_pRecorder(recorder)
 	, m_vHitPossibleList(hitPossibleListSize)
 	, m_hAlreadyHitEnemy(alreadyHitEnemySize)
-	, m_bRecord(true)
 	, m_bRecordAlreadyHit(false)
+	, m_bRecord(true)
 {}
 
 bool HitRecorder::isAlreadyHit(Actor* hitEnemy) {
 	return m_hAlreadyHitEnemy.Exist(hitEnemy);
 }
 
-void HitRecorder::record(ActorPartAnimation* animation) {
+void HitRecorder::record(const FrameEventAttackBoxInstant* frameEvent) {
 
 	if (!m_bRecord)
 		return;
 
-	FrameInfo* pFrameInfo = animation->getRunningFrameInfo();
-
-	if (pFrameInfo->FrameEvent != FrameEventType::AttackBoxInstant) {
-		return;
-	}
-
-	FrameInfoAttackBoxInstant* pAttackBoxInstantInfo = (FrameInfoAttackBoxInstant*)pFrameInfo;
-
 	// 절대 위치 박스로 변환
-	SGActorRect absoluteActorRect = Actor::convertAbsoluteActorRect(m_pRecorder, pAttackBoxInstantInfo->Rect);	
-	record(absoluteActorRect, pAttackBoxInstantInfo->FrameEventId);
+	ActorRect absoluteActorRect = Actor::convertAbsoluteActorRect(m_pRecorder, frameEvent->Rect);
+	record(absoluteActorRect, frameEvent->AttackDataCode);
 }
 
-void HitRecorder::record(const SGActorRect& absoluteActorRect, int attackDataCode) {
+void HitRecorder::record(const ActorRect& absoluteActorRect, int attackDataCode) {
 	MapLayer* pMapLayer = m_pRecorder->getMapLayer();
 
 	int iNewHitCount = 0;
@@ -59,8 +53,8 @@ void HitRecorder::record(const SGActorRect& absoluteActorRect, int attackDataCod
 	pMapLayer->collectEnemiesInActorRect(m_pRecorder, absoluteActorRect, m_vHitPossibleList);
 
 	for (int i = 0; i < m_vHitPossibleList.Size(); ++i) {
-		SGHitInfo& hitInfo = m_vHitPossibleList[i];
-		hitInfo.AttackDataInfo = DataManager::Get()->getAttackDataInfo(attackDataCode);
+		HitInfo& hitInfo = m_vHitPossibleList[i];
+		hitInfo.AttackDataInfo = DataManager::Get()->getAttackDataInfo(m_pOwner->getType(), attackDataCode);
 		hitInfo.Attacker = m_pRecorder;
 
 		if (m_fnHitSingleCallback)
