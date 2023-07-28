@@ -1,9 +1,6 @@
 ### 문서 종류
 
 * 프로젝트 시작 배경 [문서 보기](Documents/project_beginning_background.md)
-* 프로젝트 종류 [문서 보기](Documents/project_structure.md)
-* JCore 프로젝트 [문서 보기](Documents/project_jcore.md)
-* JNetwork 프로젝트 [문서 보기](Documents/project_jnetwork.md)
-* TankFighter 프로젝트 [문서 보기](Documents/project_tankfighter.md)
-* [TankFighter 시연 영상 보기](https://youtu.be/2aqGhMcjXNk)
-* 빌드 및 실행 방법 [문서 보기](Documents/project_build_and_execute.md)
+* TODO: 프로젝트 구조 (각 프로젝트별로 설명도 포함할 것)
+* TODO: 프로젝트 개발 로그(대단위)
+* 프로젝트를 시작하고 벌써 1년이 지났다. 하지만 아직도 개발중 언제 끝날려나

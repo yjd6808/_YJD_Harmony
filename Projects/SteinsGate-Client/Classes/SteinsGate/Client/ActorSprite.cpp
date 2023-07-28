@@ -302,24 +302,24 @@ void ActorSprite::updateSpriteData(ActorSpriteData* spriteData) {
 		m_vParts[i].Part->updateAnimationReference(&m_pActorData->Animations);
 	}
 
-	// Step 4. 신규 파츠들을 생성한 후 추가한 후 애니메이션 정보를 세팅해준다.
+	// Step 5. 신규 파츠들을 생성한 후 추가한 후 애니메이션 정보를 세팅해준다.
 	for (int i = 0; i < vNewParts.Size(); ++i) {
 		 PartData partData = createPart(vNewParts[i], m_iFrameCount);
 		 partData.Part->reflectAnimation(pRunningAnimation);
 		 m_vParts.PushBack(partData);
 	}
 
-	// Step 5. Z 오더 정렬을 수행한다.
+	// Step 6. Z 오더 정렬을 수행한다.
 	m_vParts.Sort([](PartData& lhs, PartData& rhs) {
 		return lhs.Part->getPartData().ZOrder < rhs.Part->getPartData().ZOrder;
 	});
 
-	// Step 6. 변경된 파츠 인덱스 반영
+	// Step 7. 변경된 파츠 인덱스 반영
 	for (int i = 0; i < m_vParts.Size(); ++i) {
 		m_vParts[i].Part->setPartIndex(i);
 	}
 
-	// Step 7. 마지막으로 제거되어야할 대상들을 메모리에서 제거
+	// Step 8. 마지막으로 제거되어야할 대상들을 메모리에서 제거
 	vRemoveParts.ForEach([this](PartData& removePart) {
 		// 파츠에 붙은 바운딩박스 알아서 제거됨
 		this->removeChild(removePart.Part, true);
