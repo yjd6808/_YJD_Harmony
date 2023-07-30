@@ -73,7 +73,7 @@ public:
 
 
 	static void	FreeAllObjects() {
-		LOCK_GUARD(ms_Lock);
+		JCORE_LOCK_GUARD(ms_Lock);
 
 		if (ms_uiAllocatedCount != 0) {
 			_LogWarn_("아직 반환되지 않은 데이터가 존재합니다.");
@@ -104,7 +104,7 @@ public:
 	
 
 	void* operator new(size_t size, int blockUse, char const* fileName, int lineNumber) {
-		LOCK_GUARD(ms_Lock);
+		JCORE_LOCK_GUARD(ms_Lock);
 
 		T* pInst;
 		if (ms_pHead != nullptr) {
@@ -122,7 +122,7 @@ public:
 	}
 
 	void* operator new(size_t size) {
-		LOCK_GUARD(ms_Lock);
+		JCORE_LOCK_GUARD(ms_Lock);
 
 		T* pInst;
 		if (ms_pHead != nullptr) {
@@ -144,7 +144,7 @@ public:
 			return;
 		}
 
-		LOCK_GUARD(ms_Lock);
+		JCORE_LOCK_GUARD(ms_Lock);
 
 		T* pInst = (T*)obj;
 

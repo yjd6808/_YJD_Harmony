@@ -22,6 +22,7 @@
 #include <JCore/Primitives/SmartPtr.h>
 #include <JCore/Primitives/String.h>
 #include <JCore/Primitives/StaticString.h>
+#include <JCore/Primitives/RefCountObjectPtr.h>
 
 #include <JCore/FileSystem/Path.h>
 #include <JCore/Encoding/CodePage.h>

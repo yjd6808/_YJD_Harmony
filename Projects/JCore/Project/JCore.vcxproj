@@ -71,6 +71,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Primitives\ObserverPtr.cpp" />
+    <ClCompile Include="..\Sources\JCore\Primitives\RefCountObject.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Primitives\String.cpp" />
     <ClCompile Include="..\Sources\JCore\Primitives\StringUtil.cpp" />
     <ClCompile Include="..\Sources\JCore\Random.cpp" />
@@ -365,17 +369,18 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\AutoPtr.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\AutoRef.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\ObserverPtr.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\RefCountObject.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\RefCountObjectPtr.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Primitives\SmartPtr.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\StaticString.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\String.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\StringUtil.h" />
-    <ClInclude Include="..\Sources\JCore\RAII\AutoPtr.h" />
-    <ClInclude Include="..\Sources\JCore\RAII\AutoRef.h" />
-    <ClInclude Include="..\Sources\JCore\SafeRefCount.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Hasher.h">
       <SubType>
       </SubType>

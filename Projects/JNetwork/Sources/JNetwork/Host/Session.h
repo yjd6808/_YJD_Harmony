@@ -46,7 +46,7 @@ public:
 	void SendAlloc(ICommand* cmd);
 	template <typename TCommand>
 	TCommand& SendAlloc(int count = 1) {
-		LOCK_GUARD(m_SendBufferLock);
+		JCORE_LOCK_GUARD(m_SendBufferLock);
 
 		const int CmdSize = TCommand::Size(count);
 		if (m_spSendBuffer->GetWritePos() + CmdSize >= MAX_MSS) {

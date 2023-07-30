@@ -9,6 +9,8 @@
 #include <JNetwork/Host/TcpSession.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedAccept.h>
 
+#include <JCore/Primitives/RefCountObjectPtr.h>
+
 NS_JNET_BEGIN
 
 TcpServer::TcpServer(
@@ -84,13 +86,10 @@ void TcpServer::BroadcastAsync(ISendPacket* packet) {
 		return;
 	}
 
-	packet->AddRef();
-
+	JCORE_REF_COUNT_GUARD(packet);
 	m_pContainer->ForEachConnected([packet](Session* session) {
 		session->SendAsync(packet);
 	});
-
-	packet->Release();
 }
 
 void TcpServer::Initialize() {

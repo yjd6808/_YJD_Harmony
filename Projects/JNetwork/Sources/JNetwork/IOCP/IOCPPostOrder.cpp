@@ -5,7 +5,7 @@
 #include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 
-#include <JCore/RAII/AutoPtr.h>
+#include <JCore/Primitives/AutoPtr.h>
 
 #include <JNetwork/IOCP/IOCP.h>
 #include <JNetwork/IOCP/IOCPPostOrder.h>

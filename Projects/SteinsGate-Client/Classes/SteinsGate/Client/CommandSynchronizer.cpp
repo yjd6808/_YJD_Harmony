@@ -63,7 +63,7 @@ void CommandSynchronizer::initialize() {
 }
 
 void CommandSynchronizer::enqueueCommand(ClientConnectServerType_t listenerType, Session* session, ICommand* cmd) {
-	LOCK_GUARD(*tlsCommandQueueHolder.Lock);
+	JCORE_LOCK_GUARD(*tlsCommandQueueHolder.Lock);
 	ICommand* pCmd = dbg_new CommandHolder(listenerType, session, cmd);
 	tlsCommandQueueHolder.Queue->Enqueue(pCmd);
 }
@@ -73,7 +73,7 @@ void CommandSynchronizer::processCommands() {
 		CommandQueueHolder* pIOCPCommandQueueHolder = m_vIOCPThreadAccessCommandQueueList[i].Value;
 		CommandQueue* pQueue;
 		{
-			LOCK_GUARD(*pIOCPCommandQueueHolder->Lock);
+			JCORE_LOCK_GUARD(*pIOCPCommandQueueHolder->Lock);
 			pQueue = pIOCPCommandQueueHolder->Queue;
 			pIOCPCommandQueueHolder->Queue = m_vSwapCommandQueue[i];
 			m_vSwapCommandQueue[i] = pQueue;

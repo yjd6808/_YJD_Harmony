@@ -174,7 +174,7 @@ public:
 		}
 
 		{
-			LOCK_GUARD(m_lkContinuousTaskLock);
+			JCORE_LOCK_GUARD(m_lkContinuousTaskLock);
 			m_spContinuousTask = spTask;
 		}
 		return spTask;

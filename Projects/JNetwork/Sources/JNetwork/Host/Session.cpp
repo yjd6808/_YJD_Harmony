@@ -14,14 +14,15 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedRecvFrom.h>
 
+#include <JCore/Primitives/RefCountObjectPtr.h>
 
-using namespace JCore;
+USING_NS_JC;
 
 NS_JNET_BEGIN
 
 Session::Session(
 	const IOCPPtr& iocp, 
-	const JCore::MemoryPoolAbstractPtr& bufferAllocator, 
+	const MemoryPoolAbstractPtr& bufferAllocator, 
 	int recvBufferSize, 
 	int sendBufferSize
 )
@@ -96,8 +97,7 @@ bool Session::Disconnect() {
 
 
 bool Session::SendAsync(ISendPacket* packet) {
-
-	packet->AddRef();
+	JCORE_REF_COUNT_GUARD(packet);
 	WSABUF buf = packet->GetWSABuf();
 	Int32UL uiSendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, m_spIocp.GetPtr(), packet);
@@ -110,7 +110,6 @@ bool Session::SendAsync(ISendPacket* packet) {
 		if (uiErrorCode != WSA_IO_PENDING) {
 			_NetLogError_("SendAsync 실패 (%u)", uiErrorCode);
 			pOverlapped->Release();
-			packet->Release();
 			return false;
 		}
 	} 
@@ -126,7 +125,7 @@ bool Session::SendAsync(const CommandBufferPtr& buffer) {
 }
 
 CommandBufferPacket* Session::GetCommandBufferForSending() {
-	LOCK_GUARD(m_SendBufferLock);
+	JCORE_LOCK_GUARD(m_SendBufferLock);
 
 	if (m_spSendBuffer->GetCommandCount() == 0)
 		return nullptr;
@@ -159,7 +158,7 @@ bool Session::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination) 
 		return false;
 	}
 
-	packet->AddRef();
+	JCORE_REF_COUNT_GUARD(packet);
 	WSABUF buf = packet->GetWSABuf();
 	Int32UL uiSendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSendTo(this, m_spIocp.GetPtr(), packet);
@@ -170,7 +169,6 @@ bool Session::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination) 
 		if (uiErrorCode != WSA_IO_PENDING) {
 			DebugAssertMsg(false, "SendToAsync 실패 (%d)", uiErrorCode);
 			pOverlapped->Release();
-			packet->Release();
 			return false;
 		}
 	}
@@ -238,7 +236,7 @@ bool Session::RecvFromAsync() {
 }
 
 void Session::SendAlloc(ICommand* cmd) {
-	LOCK_GUARD(m_SendBufferLock);
+	JCORE_LOCK_GUARD(m_SendBufferLock);
 
 	const int iCmdSize = cmd->CmdLen;
 	if (m_spSendBuffer->GetWritePos() + iCmdSize >= MAX_MSS) {

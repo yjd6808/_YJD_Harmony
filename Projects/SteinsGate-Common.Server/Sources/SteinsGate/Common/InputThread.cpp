@@ -32,7 +32,7 @@ void InputThread::WorkerThread() {
 	while (m_bRunning) {
 		String read = Console::ReadLine();
 
-		LOCK_GUARD(m_Lock);
+		JCORE_LOCK_GUARD(m_Lock);
 		const int* pEventCode = m_hInputEventMap.Find(read);
 
 		if (pEventCode == nullptr)
@@ -48,12 +48,12 @@ void InputThread::WorkerThread() {
 }
 
 void InputThread::SetEventMap(const HashMap<String, int>& eventMap) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	m_hInputEventMap = eventMap;
 }
 
 int InputThread::PopEvent() {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 
 	if (m_qInputEvent.Size() <= 0) 
 		return CommonInputEvent::NoEvent;
@@ -67,7 +67,7 @@ int InputThread::PopEvent() {
 void InputThread::PopAllEvents(Vector<int>& eventList) {
 	eventList.Clear();
 
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	while (!m_qInputEvent.IsEmpty()) {
 		eventList.PushBack(m_qInputEvent.Front());
 		m_qInputEvent.Dequeue();

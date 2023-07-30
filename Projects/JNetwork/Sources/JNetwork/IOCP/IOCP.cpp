@@ -57,7 +57,7 @@ void IOCP::Run() {
 	}
 
 	{
-		LOCK_GUARD(m_WorkerManagerLock);
+		JCORE_LOCK_GUARD(m_WorkerManagerLock);
 		m_pWorkerManager->Run();
 	}
 	m_eState = State::eRunning;
@@ -73,7 +73,7 @@ void IOCP::Join() {
 	WaitForZeroPending();
 
 	{
-		LOCK_GUARD(m_WorkerManagerLock);
+		JCORE_LOCK_GUARD(m_WorkerManagerLock);
 		m_pWorkerManager->Join();
 	}
 	m_eState = State::eJoined;
@@ -93,7 +93,7 @@ void IOCP::WaitForZeroPending() {
 }
 
 JCore::Vector<Int32U> IOCP::GetWorkThreadIdList() {
-	LOCK_GUARD(m_WorkerManagerLock);
+	JCORE_LOCK_GUARD(m_WorkerManagerLock);
 	JCore::Vector<Int32U> vThreadIdList(m_pWorkerManager->m_vWorkers.Size());
 	for (int i = 0; i < m_pWorkerManager->m_vWorkers.Size(); ++i) {
 		vThreadIdList.PushBack(m_pWorkerManager->m_vWorkers[i]->GetThreadId());

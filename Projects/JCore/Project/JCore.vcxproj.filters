@@ -31,9 +31,6 @@
     <Filter Include="TypeTraits">
       <UniqueIdentifier>{4a9cda0d-0713-4d88-9cb8-58c348e3d522}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RAII">
-      <UniqueIdentifier>{6bbbfc96-8265-48d9-bf09-eaf309673f0b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pool">
       <UniqueIdentifier>{a943bf96-41ea-4b46-a660-1db5bcc34f35}</UniqueIdentifier>
     </Filter>
@@ -158,6 +155,9 @@
       <Filter>Threading</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Digit.cpp" />
+    <ClCompile Include="..\Sources\JCore\Primitives\RefCountObject.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -259,7 +259,6 @@
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Event.h" />
-    <ClInclude Include="..\Sources\JCore\SafeRefCount.h" />
     <ClInclude Include="..\Sources\JCore\Declspec.h" />
     <ClInclude Include="..\Sources\JCore\Define.h" />
     <ClInclude Include="..\Sources\JCore\Assert.h" />
@@ -351,12 +350,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Sync\AutoResetEvent.h">
       <Filter>Sync</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\RAII\AutoPtr.h">
-      <Filter>RAII</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\JCore\RAII\AutoRef.h">
-      <Filter>RAII</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\CollectionType.h">
       <Filter>Container</Filter>
@@ -486,6 +479,18 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Digit.h" />
     <ClInclude Include="..\Sources\JCore\Aligner.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\AutoPtr.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\AutoRef.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\RefCountObjectPtr.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\RefCountObject.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

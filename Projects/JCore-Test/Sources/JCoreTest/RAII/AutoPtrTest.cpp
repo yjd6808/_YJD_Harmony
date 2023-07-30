@@ -6,7 +6,7 @@
 
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Deletor.h>
-#include <JCore/RAII/AutoPtr.h>
+#include <JCore/Primitives/AutoPtr.h>
 
 
 using namespace std;

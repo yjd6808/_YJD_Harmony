@@ -52,7 +52,7 @@ public:
 
 	static T* Get() {
 		if (ms_pInst == nullptr) {
-			LOCK_GUARD(ms_Lock);
+			JCORE_LOCK_GUARD(ms_Lock);
 
 			if (ms_bDeleted) {
 				DebugAssertMsg(false, "삭제된 객체에 접근을 시도했습니다.");
@@ -69,7 +69,7 @@ public:
 
 	static void Free() {
 		if (ms_pInst != nullptr) {
-			LOCK_GUARD(ms_Lock);
+			JCORE_LOCK_GUARD(ms_Lock);
 			if (ms_pInst != nullptr) {
 				JCORE_DELETE_SAFE(ms_pInst);
 				ms_bDeleted = true;

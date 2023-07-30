@@ -55,7 +55,7 @@ void ConnectionSynchronizer::initialize() {
 void ConnectionSynchronizer::processConnections() {
 	ResultQueue* pQueue;
 	{
-		LOCK_GUARD(m_Lock);
+		JCORE_LOCK_GUARD(m_Lock);
 
 		if (m_qConnectionResults->Size() == 0) {
 			return;
@@ -129,7 +129,7 @@ void ConnectionSynchronizer::finalize() {
 }
 
 void ConnectionSynchronizer::enqueueConnection(ClientConnectServerType_t listenerType, SGSession* session, bool success, Int32U errorCode) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	ConnectionResult* pResult = dbg_new ConnectionResult;
 	pResult->ConnType = eConnection;
 	pResult->Success = success;
@@ -140,7 +140,7 @@ void ConnectionSynchronizer::enqueueConnection(ClientConnectServerType_t listene
 }
 
 void ConnectionSynchronizer::enqueueDisconnection(ClientConnectServerType_t listenerType, SGSession* session) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	DisconnectionResult* pResult = dbg_new DisconnectionResult;
 	pResult->ConnType = eDisconnection;
 	pResult->ListenerType = listenerType;

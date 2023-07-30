@@ -48,28 +48,36 @@
         (x) = nullptr;					\
     } while (0)
     #define JCORE_DELETE_SAFE(x)		\
-    do {						\
-	    if (x) {				\
-		    delete (x);			\
-        (x) = nullptr;			\
-	    }						\
+    do {								\
+	    if (x) {						\
+		    delete (x);					\
+        (x) = nullptr;					\
+	    }								\
     } while (0)
 
 	#define JCORE_DELETE_SINGLETON_SAFE(x)	\
-    do {							\
-	    if (x) {					\
-		    x->Free();				\
-        (x) = nullptr;				\
-	    }							\
+    do {									\
+	    if (x) {							\
+		    x->Free();						\
+        (x) = nullptr;						\
+	    }									\
     } while (0)
 
     #define JCORE_DELETE_ARRAY_SAFE(x)	\
-    do {						\
-	    if (x) {				\
-		    delete[] (x);		\
-        (x) = nullptr;		  	\
-	    }						\
+    do {								\
+	    if (x) {						\
+		    delete[] (x);				\
+        (x) = nullptr;		  			\
+	    }								\
     } while (0)		
+
+	#define JCORE_RELEASE_SAFE(x)		\
+    do {								\
+	    if (x) {						\
+		    x->Release();				\
+        (x) = nullptr;					\
+	    }								\
+    } while (0)
 
 	#define JCORE_ALLOCATOR_STATIC_DEALLOCATE_SAFE(type, ptr)		\
     do {															\

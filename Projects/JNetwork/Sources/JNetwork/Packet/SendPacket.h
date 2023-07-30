@@ -15,7 +15,7 @@
 #include <JCore/Type.h>
 #include <JCore/TypeCast.h>
 #include <JCore/TypeTraits.h>
-#include <JCore/SafeRefCount.h>
+#include <JCore/Primitives/RefCountObject.h>
 
 #include <WinSock2.h>
 
@@ -54,7 +54,7 @@ NS_JNET_BEGIN
 
 
 
-struct ISendPacket : JCore::SafeRefCount
+struct ISendPacket : JCore::RefCountObject
 {
 	ISendPacket() {}
 	ISendPacket(CmdCnt_t iCommandCount, PktLen_t iPacketLen)
