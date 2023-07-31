@@ -9,14 +9,17 @@
 #include "AuthCoreHeader.h"
 #include "AuthNetMaster.h"
 
+#include <SteinsGate/Common/ServerConst.h>
+
 #include <SteinsGate/Server/AuthNetGroup.h>
 #include <SteinsGate/Server/AuthInterServerClientNetGroup.h>
+
+
 
 USING_NS_JC;
 USING_NS_JNET;
 
-AuthNetMaster::AuthNetMaster() {
-}
+AuthNetMaster::AuthNetMaster() : CommonNetMaster(LoopPerSecondAuth_v) {}
 
 AuthNetMaster::~AuthNetMaster() {
 }
@@ -37,7 +40,7 @@ void AuthNetMaster::Initialize() {
 void AuthNetMaster::OnLoop(PulserStatistics* pulserStat) {
 
 #if DebugMode
-	static PulserTimer s;
+	static TimeCounter s;
 	s.ElapsedMs += pulserStat->SleepIntervalLast;
 
 	if (s.ElapsedSeconds(5)) {

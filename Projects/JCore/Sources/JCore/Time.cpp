@@ -1787,14 +1787,14 @@ Int64U StopWatch<StopWatchMode::System>::Start() {
 	return StartTick = ::GetTickCount();
 }
 
-TimeSpan StopWatch<StopWatchMode::System>::StopReset() {
+TimeSpan StopWatch<StopWatchMode::System>::Stop() {
 	Int32U uiStopTick = ::GetTickCount();
 	Int32U uiGap = uiStopTick - StartTick;
 	StartTick = uiStopTick;
 	return uiGap * 1'000;
 }
 
-TimeSpan StopWatch<StopWatchMode::System>::StopContinue() {
+TimeSpan StopWatch<StopWatchMode::System>::GetElapsed() {
 	return (::GetTickCount() - StartTick) * 1'000;
 }
 
@@ -1820,7 +1820,7 @@ Int64U StopWatch<StopWatchMode::HighResolution>::Start() {
 	return StartCounter;
 }
 
-TimeSpan StopWatch<StopWatchMode::HighResolution>::StopReset() {
+TimeSpan StopWatch<StopWatchMode::HighResolution>::Stop() {
 	Int64U StopCounter;
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
 		DebugAssertMsg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());
@@ -1831,7 +1831,7 @@ TimeSpan StopWatch<StopWatchMode::HighResolution>::StopReset() {
 	return uiGap / Precision;
 }
 
-TimeSpan StopWatch<StopWatchMode::HighResolution>::StopContinue() {
+TimeSpan StopWatch<StopWatchMode::HighResolution>::GetElapsed() {
 	Int64U StopCounter;
 	if (!QueryPerformanceCounter((LARGE_INTEGER*)&StopCounter)) {
 		DebugAssertMsg(false, "쿼리퍼포먼스 카운터 획득 실패 (오류코드: %d)", ::GetLastError());

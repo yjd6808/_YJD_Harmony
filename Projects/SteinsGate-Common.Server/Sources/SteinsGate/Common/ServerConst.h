@@ -8,7 +8,7 @@
 
 #pragma once
 
-enum PulseInterval
-{
-	MainThread = 100
-};
+static constexpr int LoopPerSecondAuth_v = 10;
+static constexpr int LoopPerSecondLobby_v = 5;
+static constexpr int LoopPerSecondGame_v = 4;
+static constexpr int LoopPerSecondCenter_v = 10;

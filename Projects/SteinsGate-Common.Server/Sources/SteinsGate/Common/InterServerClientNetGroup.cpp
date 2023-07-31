@@ -50,7 +50,7 @@ void InterServerClientNetGroup::SyncPeerServerTime(PulserStatistics* pulserStat)
 	if (m_pInterServerClientTcp == nullptr || m_pInterServerClientTcp->GetState() != Host::eConnected)
 		return;
 
-	static PulserTimer s_Timer{ 0, PulserTimer::eCheckReset };
+	static TimeCounter s_Timer{ 0, TimeCounter::eCheckReset };
 	s_Timer.ElapsedMs += pulserStat->SleepIntervalLast;
 
 	if (!s_Timer.ElapsedSeconds(10)) {

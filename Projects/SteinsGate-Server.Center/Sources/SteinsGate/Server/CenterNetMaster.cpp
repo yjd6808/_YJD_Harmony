@@ -9,13 +9,15 @@
 #include "CenterCoreHeader.h"
 #include "CenterNetMaster.h"
 
+#include <SteinsGate/Common/ServerConst.h>
+
 #include <SteinsGate/Server/CenterNetGroup.h>
 #include <SteinsGate/Server/CenterInterServerClientNetGroup.h>
 
 USING_NS_JC;
 USING_NS_JNET;
 
-CenterNetMaster::CenterNetMaster() {}
+CenterNetMaster::CenterNetMaster() : CommonNetMaster(LoopPerSecondCenter_v) {}
 
 CenterNetMaster::~CenterNetMaster() {
 }

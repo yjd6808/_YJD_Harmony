@@ -16,8 +16,8 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CommonNetMaster::CommonNetMaster()
-	: m_iPulseInterval(100)
+CommonNetMaster::CommonNetMaster(int loopPerSecond)
+	: m_iLoopPerSecond(loopPerSecond)
 	, m_bRunning(true)
 {}
 
@@ -28,14 +28,15 @@ void CommonNetMaster::Initialize() {
 
 void CommonNetMaster::ProcessMainLoop() {
 	PulserStatistics pulseStat;
-	Pulser pulser(m_iPulseInterval, &pulseStat);
+	Pulser pulser(1000 / m_iLoopPerSecond, Pulser::eSliceCycle, &pulseStat);
 
+	pulser.Start();
 	while (m_bRunning) {
-		pulser.Wait();
-
 		ProcessInputEvent();
 		ProcessSubLoop(&pulseStat);
 		OnLoop(&pulseStat);
+
+		TimeSpan elapsed = pulser.Wait();
 	}
 
 	OnStopped();

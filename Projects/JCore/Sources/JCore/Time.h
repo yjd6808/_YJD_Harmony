@@ -372,6 +372,13 @@ struct TimeSpan
 	Int64 GetTotalMiliSecondsInt() const { return Tick / Detail::TicksPerMiliSecond_v; }
 	Int64 GetTotalMicroSecondsInt() const { return Tick; }
 
+	Int32 GetTotalDaysInt32() const { return Int32(Tick / Detail::TicksPerDay_v); }
+	Int32 GetTotalHoursInt32() const { return Int32(Tick / Detail::TicksPerHour_v); }
+	Int32 GetTotalMinutesInt32() const { return Int32(Tick / Detail::TicksPerMinute_v); }
+	Int32 GetTotalSecondsInt32() const { return Int32(Tick / Detail::TicksPerSecond_v); }
+	Int32 GetTotalMiliSecondsInt32() const { return Int32(Tick / Detail::TicksPerMiliSecond_v); }
+	Int32 GetTotalMicroSecondsInt32() const { return Int32(Tick); }
+
 	int GetDay() const { return int(Tick / Detail::TicksPerDay_v); }
 	int GetHour() const { return (Tick / Detail::TicksPerHour_v) % Detail::MaxHour_v; }
 	int GetMinute() const { return (Tick / Detail::TicksPerMinute_v) % Detail::MaxMinute_v; }
@@ -585,8 +592,8 @@ template <>
 struct StopWatch<StopWatchMode::System>
 {
 	Int64U	 Start();			// 시작 지점 등록
-	TimeSpan StopReset();		// 시작 틱을 정지 틱으로 초기화
-	TimeSpan StopContinue();	// 시작 틱을 초기화 하지 않고 차이를 반환
+	TimeSpan Stop();			// 시작 틱을 정지 틱으로 초기화
+	TimeSpan GetElapsed();		// 시작 후 경과 시간
 
 	int StartTick{};
 };
@@ -598,8 +605,8 @@ struct StopWatch<StopWatchMode::HighResolution>
 	StopWatch();
 
 	Int64U	 Start();
-	TimeSpan StopReset();	
-	TimeSpan StopContinue();
+	TimeSpan Stop();	
+	TimeSpan GetElapsed();		// 시작 후 경과 시간
 
 	Int64U Precision;
 	Int64U Frequency{};
@@ -607,6 +614,30 @@ struct StopWatch<StopWatchMode::HighResolution>
 };
 
 
+struct TimeCounter
+{
+	enum Mode
+	{
+		eCheckReset,	// 조건 만족시 초기화
+		eNoReset
+	};
+
+	bool ElapsedSeconds(float seconds) {
+		bool bTimeOver = false;
+
+		if (float(ElapsedMs) >= seconds * 1000.0f) {
+			bTimeOver = true;
+		}
+
+		if (bTimeOver && Mode == eCheckReset)
+			ElapsedMs = 0;
+
+		return bTimeOver;
+	}
+
+	int ElapsedMs = 0;
+	int Mode = eCheckReset;
+};
 
 NS_JC_END
 
