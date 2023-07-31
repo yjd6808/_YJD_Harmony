@@ -10,7 +10,6 @@
 
 
 #include "Tutturu.h"
-#include <SteinsGate/Client/Config.h>
 
 class SpriteFrameTexture;
 class Global : public JCore::SingletonPointer<Global>

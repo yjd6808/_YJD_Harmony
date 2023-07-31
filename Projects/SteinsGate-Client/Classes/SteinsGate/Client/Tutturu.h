@@ -12,7 +12,7 @@
 #include <SteinsGate/Common/Logo.h>
 
 #include <SteinsGate/Client/Struct.h>
-#include <SteinsGate/Client/Config.h>
+#include <SteinsGate/Client/Const.h>
 #include <SteinsGate/Client/GameCore.h>
 
 

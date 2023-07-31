@@ -10,8 +10,6 @@
 
 #include <SteinsGate/Common/SgaSpriteRect.h>
 
-
-#include <SteinsGate/Client/Config.h>
 #include "Tutturu.h"
 
 class FrameTexture : public cocos2d::Ref

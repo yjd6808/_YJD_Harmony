@@ -699,7 +699,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\AllActorListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\Config.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ActionInfo.h">
       <Filter>Data\Action</Filter>
     </ClInclude>

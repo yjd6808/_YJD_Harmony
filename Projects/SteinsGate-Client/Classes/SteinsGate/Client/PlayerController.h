@@ -10,8 +10,6 @@
 
 #include "Tutturu.h"
 
-#include <SteinsGate/Client/Config.h>
-
 #include <JCore/Time.h>
 
 struct MapInfo;
