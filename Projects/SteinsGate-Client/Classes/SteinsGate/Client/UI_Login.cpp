@@ -140,23 +140,19 @@ void UI_Login::setTab(Tab tab) {
 
 void UI_Login::login() {
 	if (m_pEbId->getText().length() == 0 || m_pEbPass->getText().length() == 0) {
-		CorePopupManager_v->showOk("아이디와 패스워드를 입력해주세요.");
+		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_REQUIRED_ID_PASS"));
 		return;
 	}
 
 	// TODO: 벨리데이터 구현
-
 	AccountData& pData = CorePlayer_v->accountData();
 	pData.Id.SetStringUnsafe(m_pEbId->getText());
 	pData.Pass.SetStringUnsafe(m_pEbPass->getText());
 
 	if (!CoreNet_v->connectAuthTcp()) {
-		CorePopupManager_v->showOk("서버 접속에 실패했습니다.");
+		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_CONNECT_FAILED_UNCONNECTABLE_STATE"));
 		return;
 	}
 
-	CorePopupManager_v->showNone("인증서버에 접속중입니다.", POPUP_LOGIN_WAIT);
+	CorePopupManager_v->showNone(SG_TEXT_RAW("LOGIN_CONNECT_AUTH"), POPUP_LOGIN_WAIT);
 }
-
-
-

@@ -22,6 +22,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\ActorListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerCollection.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\FrameEventLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\CommandSynchronizer.cpp">
       <SubType>
@@ -418,6 +419,7 @@
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerCollection.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameEvent.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameEventLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ConnectionSynchronizer.h">

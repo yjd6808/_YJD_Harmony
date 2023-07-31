@@ -15,49 +15,49 @@
 USING_NS_JC;
 
 bool AuthTokenManager::Issue(int accountTableId, const char* id) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	return IssueRaw(accountTableId, id);
 }
 
 bool AuthTokenManager::Check(const String& token, const char* id) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	return CheckRaw(token, id);
 }
 
 bool AuthTokenManager::Check(int accountTableId, const char* id) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	return CheckRaw(accountTableId, id);
 }
 
 bool AuthTokenManager::Update(const String& token) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	return UpdateRaw(token);
 }
 
 bool AuthTokenManager::Update(int accountTableId) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	return UpdateRaw(accountTableId);
 }
 
 void AuthTokenManager::Clear() {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	m_tmTokenMap.ForEachValue([](AuthToken* token) { delete token; });
 	m_tmTokenMap.Clear();
 	m_tmAccountTableIdMap.Clear();
 }
 
 bool AuthTokenManager::Remove(const String& token) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	return RemoveRaw(token);
 }
 
 bool AuthTokenManager::Remove(int accountTableId) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 	return RemoveRaw(accountTableId);
 }
 
 void AuthTokenManager::OnScheduled(SchedulerTask* task) {
-	LOCK_GUARD(m_Lock);
+	JCORE_LOCK_GUARD(m_Lock);
 
 	// TODO: 
 }

@@ -6,10 +6,10 @@ USING_NS_JC;
 USING_NS_STD;
 
 MysqlQuery::MysqlQuery(MysqlConnection* conn, const String& preparedStatement, StatementType type)
-	: m_eType(type),
-	  m_pConn(conn),
-	  m_PreparedStatement(preparedStatement),
-	  m_bSuccess(false) {}
+	: m_eType(type)
+	, m_pConn(conn)
+	, m_PreparedStatement(preparedStatement)
+	, m_iErrorCode(0) {}
 
 StatementType MysqlQuery::ParseStatement(const String& statement) {
 	StatementType eStatement = StatementType::None;
@@ -32,37 +32,40 @@ StatementType MysqlQuery::ParseStatement(const String& statement) {
 
 bool MysqlQueryUpdate::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
-		const String erstr = m_pConn->GetLastError();
+		const String erstr = m_pConn->GetLastErrorString();
+		m_iErrorCode = m_pConn->GetLastErrorCode();
 		if (erstr.Length() > 2)
-			_LogError_("MySQL UPDATE 오류 : %s", m_pConn->GetLastError().Source());
+			_LogError_("MySQL UPDATE 오류 : %s", m_pConn->GetLastErrorString().Source());
 		return false;
 	}
 
-	return m_bSuccess = true;
+	return true;
 }
 
 bool MysqlQueryDelete::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
-		const String erstr = m_pConn->GetLastError();
+		const String erstr = m_pConn->GetLastErrorString();
+		m_iErrorCode = m_pConn->GetLastErrorCode();
 		if (erstr.Length() > 2)
-			_LogError_("MySQL DELETE 오류 : %s", m_pConn->GetLastError().Source());
+			_LogError_("MySQL DELETE 오류 : %s", m_pConn->GetLastErrorString().Source());
 		return false;
 	}
 
-	return m_bSuccess = true;
+	return true;
 }
 
 bool MysqlQueryInsert::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
-		const String erstr = m_pConn->GetLastError();
+		const String erstr = m_pConn->GetLastErrorString();
+		m_iErrorCode = m_pConn->GetLastErrorCode();
 		if (erstr.Length() > 2)
-			_LogError_("MySQL ISNERT 오류 : %s", m_pConn->GetLastError().Source());
+			_LogError_("MySQL ISNERT 오류 : %s", m_pConn->GetLastErrorString().Source());
 		return false;
 	}
 
 	// https://dev.mysql.com/doc/c-api/5.7/en/mysql-insert-id.html
 	m_uiInsertId = mysql_insert_id(m_pConn->GetConnection());
-	return m_bSuccess = true;
+	return true;
 }
 
 
@@ -171,9 +174,10 @@ MysqlQuerySelect::~MysqlQuerySelect() {
 
 bool MysqlQuerySelect::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
-		const String erstr = m_pConn->GetLastError();
+		const String erstr = m_pConn->GetLastErrorString();
+		m_iErrorCode = m_pConn->GetLastErrorCode();
 		if (erstr.Length() > 2)
-			_LogError_("MySQL 오류 : %s", m_pConn->GetLastError().Source());
+			_LogError_("MySQL 오류 : %s", m_pConn->GetLastErrorString().Source());
 
 		return false;
 	}
@@ -181,9 +185,10 @@ bool MysqlQuerySelect::Execute() {
 	m_SqlResult = mysql_store_result(m_pConn->GetConnection());
 
 	if (m_SqlResult == nullptr) {
-		const String erstr = m_pConn->GetLastError();
+		const String erstr = m_pConn->GetLastErrorString();
+		m_iErrorCode = m_pConn->GetLastErrorCode();
 		if (erstr.Length() > 2)
-			_LogError_("MySQL 오류 : %s", m_pConn->GetLastError().Source());
+			_LogError_("MySQL 오류 : %s", m_pConn->GetLastErrorString().Source());
 		return false;
 	}
 
@@ -199,7 +204,7 @@ bool MysqlQuerySelect::Execute() {
 	}
 
 	m_SqlRow = mysql_fetch_row(m_SqlResult);
-	return m_bSuccess = true;
+	return true;
 }
 
 bool MysqlQuerySelect::HasNext() const {

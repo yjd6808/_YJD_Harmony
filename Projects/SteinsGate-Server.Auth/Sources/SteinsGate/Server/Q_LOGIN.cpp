@@ -16,7 +16,7 @@ USING_NS_JNET;
 
 void Q_LOGIN::SelectAccountInfoList() {
 	Qry::SelectAccountInfoResult result;
-	Qry::SelectAccountInfo::Execute(CoreGameDB_v, result);
+	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result);
 
 	do {
 
@@ -25,19 +25,19 @@ void Q_LOGIN::SelectAccountInfoList() {
 
 bool Q_LOGIN::CheckAccountExist(const char* id, const char* pass) {
 	Qry::SelectAccountInfoResult result;
-	Qry::SelectAccountInfo::Execute(CoreGameDB_v, result, id, pass);
+	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result, id, pass);
 	return result.HasNext();
 }
 
 bool Q_LOGIN::RegisterAccount(const char* id, const char* pass) {
 	Qry::InsertResult result;
-	Qry::InsertAccountInfo::Execute(CoreGameDB_v, result, id, pass);
-	return result.Success;
+	Qry::InsertAccountInfo::Execute<THelper>(CoreGameDB_v, result, id, pass);
+	return IsSuccess;
 }
 
 bool Q_LOGIN::SelectAccountInfo(const char* id, const char* pass, JCORE_OUT AccountData& accountData) {
 	Qry::SelectAccountInfoResult result;
-	Qry::SelectAccountInfo::Execute(CoreGameDB_v, result, id, pass);
+	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result, id, pass);
 
 	if (!result.HasNext())
 		return false;
@@ -47,6 +47,5 @@ bool Q_LOGIN::SelectAccountInfo(const char* id, const char* pass, JCORE_OUT Acco
 	accountData.DBTableId = result.AccountId;
 	accountData.Id = result.Id;
 	accountData.Pass = result.Pass;
-
 	return true;
 }

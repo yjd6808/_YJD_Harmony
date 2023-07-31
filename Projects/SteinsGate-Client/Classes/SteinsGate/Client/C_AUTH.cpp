@@ -26,14 +26,18 @@ void C_AUTH::OnConnected(Session* session) {
 	S_AUTH::SendLogin(accountData.Id.Source, accountData.Pass.Source);
 
 	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
-	CorePopupManager_v->showNone("로그인 시도중입니다.", POPUP_LOGIN);
+	CorePopupManager_v->showNone(SG_TEXT_RAW("LOGIN_BEGIN"), POPUP_LOGIN);
 }
 
 void C_AUTH::OnConnectFailed(Session* session, Int32U errorCode) {
 	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
-	CorePopupManager_v->showOk(StringUtils::format("인증 서버 접속에 실패했습니다. (%d)", errorCode));
+	CorePopupManager_v->showOk(SG_TEXT_RAW_FMT_STD("CONNECT_AUTH_FAILED_WITH_CODE", errorCode));
+
+	session->Initialize();
 }
 
 void C_AUTH::OnDisconnected(Session* session) {
 	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
+
+	session->Initialize();
 }

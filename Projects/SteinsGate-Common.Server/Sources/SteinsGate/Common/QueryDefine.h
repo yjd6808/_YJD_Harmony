@@ -13,6 +13,7 @@
 #include <SteinsGate/Common/ServerNamespace.h>
 #include <SteinsGate/Common/MysqlDatabase.h>
 #include <SteinsGate/Common/StatementType.h>
+#include <SteinsGate/Common/QueryHelper.h>
 
 NS_QRY_BEGIN
 
@@ -137,8 +138,11 @@ struct SelectResultBinder
 template <typename TQry>
 struct SelectStatement
 {
-	template <typename TResult, typename... Args>
+	template <typename THelper, typename TResult, typename... Args>
 	constexpr static void Execute(MysqlDatabase* database, TResult& result, Args&&... args) {
+		static_assert(IsQryHelper_v<THelper>, "... THelper is not QueryHelper<T>");
+
+		THelper::SetLastErrorCode(InvalidValue_v);
 
 		if constexpr (SGStringUtil::CTCountChar(TQry::Script, '?') != sizeof...(args)) {
 			_LogWarn_("쿼리 스크립트에서 요구하는 인자갯수와 전달받은 인자 갯수가 틀립니다.");
@@ -154,6 +158,7 @@ struct SelectStatement
 		DebugAssertMsg(spQuery->GetStatementType() == StatementType::Select, "셀렉트 스테이트먼트가 아닙니다.");
 
 		result.Query = spQuery;
+		THelper::SetLastErrorCode(spQuery->GetErrorCode());
 
 		if (!result.Query->HasNext()) {
 			return;
@@ -163,15 +168,13 @@ struct SelectStatement
 	}
 };
 
-
 struct InsertResult
 {
 	MysqlQueryInsertPtr Query;
-	bool Success = false;
 
 	Int64U GetInsertId() {
 		QRY_RESULT_DEBUG_ASSERT
-		if (!Success) return 0;
+		if (Query->IsFailed()) return 0;
 		return Query->GetInsertId();
 	}
 };
@@ -179,8 +182,11 @@ struct InsertResult
 template <typename TQry>
 struct InsertStatement
 {
-	template <typename... Args>
+	template <typename THelper, typename... Args>
 	constexpr static void Execute(MysqlDatabase* database, InsertResult& result, Args&&... args) {
+		static_assert(IsQryHelper_v<THelper>, "... THelper is not QueryHelper<T>");
+
+		THelper::SetLastErrorCode(InvalidValue_v);
 
 		if constexpr (SGStringUtil::CTCountChar(TQry::Script, '?') != sizeof...(args)) {
 			_LogWarn_("쿼리 스크립트에서 요구하는 인자갯수와 전달받은 인자 갯수가 틀립니다.");
@@ -195,21 +201,20 @@ struct InsertStatement
 
 		DebugAssertMsg(spQuery->GetStatementType() == StatementType::Insert, "인설트 스테이트먼트가 아닙니다.");
 		result.Query = spQuery;
-		result.Success = spQuery->IsSuccess();
+
+		THelper::SetLastErrorCode(spQuery->GetErrorCode());
 	}
 };
 
 struct DeleteResult
 {
 	MysqlQueryInsertPtr Query;
-	bool Success = false;
 };
 
 
 struct UpdateResult
 {
-	MysqlQueryInsertPtr Query;
-	bool Success = false;
+	MysqlQueryUpdatePtr Query;
 };
 
 

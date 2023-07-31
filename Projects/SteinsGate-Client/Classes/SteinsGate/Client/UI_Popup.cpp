@@ -74,6 +74,11 @@ void UI_Popup::onRemoved() {
 	close();
 }
 
+void UI_Popup::onUpdate(float dt) {
+	if (hasAttribute(eTimed)) {
+	}
+}
+
 void UI_Popup::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
 
 	switch (element->getCode()) {

@@ -30,9 +30,8 @@ public:
 	{
 		eMessaging			= 0b00000001,
 		eCanCloseWithEsc	= 0b00000010,
-		eElse1				= 0b00000100,
-		eElse2				= 0b00001000,
-		eAll = eMessaging
+		eTimed				= 0b00000100,
+		eElse2				= 0b00001000
 	};
 
 
@@ -42,6 +41,7 @@ protected:
 	void onLoaded() override;
 	void onRemoved() override;
 
+	void onUpdate(float dt) override;
 	void onMouseUp(UIElement* element, SGEventMouse* mouseEvent) override;
 	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;
 	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;

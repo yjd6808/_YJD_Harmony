@@ -28,37 +28,13 @@
 #include <SteinsGate/Client/EffectInfoLoader.h>
 #include <SteinsGate/Client/UIInfoLoader.h>
 #include <SteinsGate/Client/FrameEventLoader.h>
-
-
-
+#include <SteinsGate/Client/ClientTextInfoLoader.h>
 
 DataManager::DataManager()
 	: DataManagerAbstract()
 {}
 
 void DataManager::initializeLoader() {
-
-	// Effect
-	// Map
-	// Monster
-	// MapObject
-	// Projectile
-	// Server
-	// Tile
-	// UI
-	// Action
-	// AI
-	// AttackBox
-	// AttackData
-	// Channel
-	// Char_Animation
-	// Char_Base
-	// Client
-	// Item
-	// ItemOpt
-	// Enchant
-	// Common
-	// Database
 
 	m_pConfigFileLoaders[ConfigFileType::Effect]						= dbg_new EffectInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Map]							= dbg_new MapInfoLoader(this);
@@ -80,6 +56,7 @@ void DataManager::initializeLoader() {
 	m_pConfigFileLoaders[ConfigFileType::Char_Animation_Frame_Event]	= dbg_new FrameEventLoader(this, ActorType::Character);
 	m_pConfigFileLoaders[ConfigFileType::Char_Base]						= dbg_new CharInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Client]						= dbg_new ClientInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::ClientText]					= dbg_new ClientTextInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Item]							= dbg_new ItemInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::ItemOpt]						= dbg_new ItemOptInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Char_Common]					= dbg_new CharCommonInfoLoader(this);
@@ -250,5 +227,32 @@ FrameEvent* DataManager::getFrameEvent(ActorType_t actorType, int frameEventCode
 		load(eType);
 
 	return (FrameEvent*)getData(eType, frameEventCode);
+}
+
+char* DataManager::getTextRaw(const char* szId) {
+	auto eType = ConfigFileType::ClientText;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return ((ClientTextInfoLoader*)m_pConfigFileLoaders[eType])->getTextRaw(szId);
+}
+
+SGString& DataManager::getText(const char* szId) {
+	auto eType = ConfigFileType::ClientText;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return ((ClientTextInfoLoader*)m_pConfigFileLoaders[eType])->getText(szId);
+}
+
+SGString& DataManager::getText(const SGString& szId) {
+	auto eType = ConfigFileType::ClientText;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return ((ClientTextInfoLoader*)m_pConfigFileLoaders[eType])->getText(szId);
 }
 

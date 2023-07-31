@@ -77,14 +77,17 @@ public:
 
 	MysqlConnection* GetConnection() const { return m_pConn; }
 	virtual bool Execute() = 0;
-	virtual bool IsSuccess() const { return m_bSuccess; }
-	virtual bool IsFailed() const { return !m_bSuccess; }
+
+	bool IsSuccess() const { return m_iErrorCode == 0; }
+	bool IsFailed() const { return m_iErrorCode != 0; }
+	int GetErrorCode() const { return m_iErrorCode; }
+
 	StatementType GetStatementType() { return m_eType; }
 protected:
 	StatementType m_eType;
 	MysqlConnection* m_pConn;
 	JCore::String m_PreparedStatement;
-	bool m_bSuccess;
+	int m_iErrorCode;
 };
 
 class MysqlQueryUpdate : public MysqlQuery

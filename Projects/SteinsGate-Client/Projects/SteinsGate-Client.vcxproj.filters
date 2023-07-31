@@ -115,6 +115,9 @@
     <Filter Include="Actor\Listener\Character\Gunner">
       <UniqueIdentifier>{df3446cd-34aa-48ae-8424-768cb480f8e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data\Text">
+      <UniqueIdentifier>{f98a811f-e686-4426-ba7c-4fe2cc0b617e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\ImagePackManager.cpp">
@@ -489,6 +492,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerListener.cpp">
       <Filter>Actor\Listener\Character\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.cpp">
+      <Filter>Data\Text</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -927,6 +933,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerListener.h">
       <Filter>Actor\Listener\Character\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h">
+      <Filter>Data\Text</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

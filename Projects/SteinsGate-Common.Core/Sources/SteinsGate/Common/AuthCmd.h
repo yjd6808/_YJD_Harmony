@@ -44,6 +44,8 @@ STATIC_CMD_BEGIN
 	)
 // ===========================================
 LoginResult_t Result;
+JCore::DateTime BanBeginDate;
+JCore::DateTime BanEndDate;
 // ===========================================
 STATIC_CMD_END(CmdLoginAck)
 

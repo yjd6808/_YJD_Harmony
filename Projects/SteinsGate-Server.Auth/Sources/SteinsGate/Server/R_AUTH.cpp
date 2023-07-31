@@ -24,17 +24,35 @@ void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 	S_AUTH::SetInformation(session, eSendAlloc);
 	AccountData accountData;
 
-	if (!Q_LOGIN::SelectAccountInfo(pCmd->Id.Source, pCmd->Pass.Source, accountData))  {
-		const bool bRegistered = Q_LOGIN::RegisterAccount(pCmd->Id.Source, pCmd->Pass.Source);
-		if (bRegistered) { S_AUTH::SendLoginAck(LoginResult::RegisterSuccess); }
-		else { S_AUTH::SendLoginAck(LoginResult::IdAlreadyExist); }
+	LoginResult_t eResult = LoginResult::LoginSuccess;
+
+	bool bHasAccount = Q_LOGIN::SelectAccountInfo(pCmd->Id.Source, pCmd->Pass.Source, accountData);
+	bool bRegistered = false;
+
+	if (!Q_LOGIN::IsSuccess) {
+		S_AUTH::SendLoginAck(LoginResult::QueryFailed);
 		return;
 	}
 
-	if (!CoreTokenManager_v->Issue(accountData.DBTableId, accountData.Id.Source)) {
-		S_AUTH::SendLoginAck(LoginResult::Logined);
+	// 계정이 없는 경우, 회원가입시도
+	if (!bHasAccount)  {
+		bRegistered = Q_LOGIN::RegisterAccount(pCmd->Id.Source, pCmd->Pass.Source);
+
+		if (!Q_LOGIN::IsSuccess) {
+			S_AUTH::SendLoginAck(LoginResult::QueryFailed);
+			return;
+		}
+
+		if (bRegistered) 
+			eResult = LoginResult::RegisterSuccess;
+		else 
+			eResult = LoginResult::IdAlreadyExist;
+	}
+
+	if (!bRegistered && !CoreTokenManager_v->Issue(accountData.DBTableId, accountData.Id.Source)) {
+		eResult = LoginResult::Logined;
 		return;
 	}
 
-	S_AUTH::SendLoginAck(LoginResult::LoginSuccess);
+	S_AUTH::SendLoginAck(eResult);
 }

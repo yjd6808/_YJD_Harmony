@@ -30,30 +30,32 @@ void ListenerCommonClient::OnDisconnected(SGSession* session) {
 	_LogInfo_("%s와 연결이 종료되었습니다.", remoteEndPointString.Source());
 }
 
-void ListenerCommonClient::OnSent(SGSession* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
+void ListenerCommonClient::OnSent(SGSession* session, ISendPacket* sentPacket, Int32UL sentBytes) {
 	int iCmdCount = sentPacket->GetCommandCount();
 	int iPos = 0;
 
 	String szSentText(512);
-	szSentText += StringUtil::Format("%s 커맨드 %d개 송신 (%d B)\n", JNetwork::TransportProtocolName(session->Protocol()), iCmdCount, sentBytes);
+	String szSentPackets(256);
+
 	sentPacket->ForEach([&](ICommand* cmd) {
-		const char* szBreakLine = iPos < iCmdCount - 1 ? "\n" : "";
+		const char* szDelim = iPos < iCmdCount - 1 ? ", " : "";
 		const Cmd_t id = cmd->GetCommand();
-		szSentText += StringUtil::Format(" - %s(%d)%s", CoreCommandNameDictionary_v.Get(id), id, szBreakLine);
+		szSentPackets += StringUtil::Format("%s(%d)%s", CoreCommandNameDictionary_v.Get(id), id, szDelim);
 		++iPos;
 	});
-
+	szSentText += StringUtil::Format("[S][%d %s][%d B][%s]", iCmdCount, TransportProtocolName(session->Protocol()), sentBytes, szSentPackets.Source());
 	_LogInfo_(szSentText.Source());
 }
 
-void ListenerCommonClient::OnReceived(SGSession* session, JNetwork::ICommand* cmd) {
+void ListenerCommonClient::OnReceived(SGSession* session, ICommand* cmd) {
 	const Cmd_t id = cmd->GetCommand();
+	const char* szName = CoreCommandNameDictionary_v.Get(id);
 
 	if (!Parser.RunCommand(session, cmd)) {
-		_LogWarn_("커맨드: %s(%d) 수행 실패", CoreCommandNameDictionary_v.Get(id), id);
+		_LogWarn_("[R Failed][%s][%d B][%s(%d)]", TransportProtocolName(session->Protocol()), cmd->CmdLen, szName, id);
 		return;
 	}
 
-	_LogDebug_("커맨드: %s(%d) 실행완료", CoreCommandNameDictionary_v.Get(id), id);
+	_LogInfo_("[R][%s][%d B][%s(%d)]", TransportProtocolName(session->Protocol()), cmd->CmdLen, szName, id);
 }
 

@@ -17,6 +17,7 @@ IdAlreadyExist,				// 회원가입 실패\n 이미 입력하신 ID로 회원가�
 IdPasswordMismatch,			// 아이디 또는 비밀번호가 일치하지 않음.
 Banned,						// 정지된 계정입니다.\n정지일: yyyy-MM-dd HH:mm:ss\n해제일: yyyy-MM-dd HH:mm:ss
 Logined,					// 현재 접속중인 계정입니다.
+QueryFailed,				// 서버에서 쿼리 수행중 오류가 발생하였습니다.
 Max
 SEnumEnd(LoginResult)
 

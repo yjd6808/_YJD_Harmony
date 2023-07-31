@@ -77,13 +77,22 @@ bool MysqlConnection::SelectDB(const JCore::String &schemaName)
 	return true;
 }
 
-JCore::String MysqlConnection::GetLastError() const {
+JCore::String MysqlConnection::GetLastErrorString() const {
 	if (!m_bIsConnected) {
-		_LogWarn_("GetLastError() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
+		_LogWarn_("GetLastErrorString() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
 		return "연결 안되있음";
 	}
 
 	return (char*)mysql_error(m_MySQLConn);
+}
+
+int MysqlConnection::GetLastErrorCode() const {
+	if (!m_bIsConnected) {
+		_LogWarn_("GetLastErrorCode() 실패 : MySQL 데이터베이스에 연결되어 있지 않습니다.");
+		return -1;
+	}
+
+	return (int)mysql_errno(m_MySQLConn);
 }
 
 MYSQL *MysqlConnection::GetConnection() const {

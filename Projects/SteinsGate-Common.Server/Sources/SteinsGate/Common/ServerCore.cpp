@@ -37,7 +37,9 @@ void InitializeServerCore() {
 	CoreCommandNameDictionary_v.Add<CmdYouNeedToDoThis>();
 	CoreCommandNameDictionary_v.Add<CmdHostMessage>();
 	CoreCommandNameDictionary_v.Add<CmdNotifyBootState>();
-
+	CoreCommandNameDictionary_v.Add<CmdTimeSync>();
+	CoreCommandNameDictionary_v.Add<CmdTimeSyncAck>();
+	
 	// [ INTER_SERVER - RELAY ]
 	CoreCommandNameDictionary_v.Add<CmdP2PRelayStaticTest>();
 	CoreCommandNameDictionary_v.Add<CmdP2PRelayDynamicTest>();

@@ -7,6 +7,7 @@
 
 #include <JCore/Type.h>
 #include <JCore/Primitives/String.h>
+#include <JCore/Primitives/StringUtil.h>
 #include <JCore/TypeTraits.h>
 
 #pragma warning (push)
@@ -73,15 +74,28 @@ struct Hasher<T*>
 template <>
 struct Hasher<String> {
 	Int32U operator()(const String& val) const {
+		return Hash(val.Source(), val.Length());
+	}
+
+	Int32U operator()(const char* val) const {
+		return Hash(val, JCore::StringUtil::Length(val));
+	}
+
+	template <Int32U Size>
+	Int32U operator()(const char(&val)[Size]) const {
+		return Hash(val, Size);
+	}
+
+	static Int32U Hash(const char* val, int len) {
 		Int32U uiConv = PrimeInt32U_v;
-		char* pBuffer = val.Source();
+		char* pBuffer = const_cast<char*>(val);
 #if defined(_WIN64)
 		using TStepType = Int64U;
 #else
 		using TStepType = Int32U;
 #endif
 		constexpr int iStep = sizeof(TStepType);	// 플랫폼에 따라.. 다르게
-		const int iStepCount = val.Length() / iStep;
+		const int iStepCount = len / iStep;
 
 		int i = 0;
 		for (; i < iStepCount; i += iStep) {
@@ -89,7 +103,7 @@ struct Hasher<String> {
 			uiConv *= PrimeInt32U_v;
 		}
 
-		for (; i < val.Length(); ++i) {
+		for (; i < len; ++i) {
 			uiConv ^= pBuffer[i] ^ HashXorKey_v;
 			uiConv *= PrimeInt32U_v;
 		}

@@ -20,7 +20,8 @@ public:
 	void Disconnect();
 
 	// 제일 마지막 오류
-	JCore::String GetLastError() const;
+	JCore::String GetLastErrorString() const;
+	int GetLastErrorCode() const;
 
 	MYSQL* GetConnection() const;
 	bool IsConnected() const;

@@ -1,0 +1,30 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+
+    "text": [
+        {"__comment__": "서버 접속관련"},
+        ["CONNECT_AUTH",                                "인증서버에 접속중입니다."],
+        ["CONNECT_AUTH_FAILED_WITH_CODE",               "인증서버 접속에 실패했습니다. (%d)"],
+        ["CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE",     "인증서버에 접속가능한 상태가 아닙니다."],
+
+        ["CONNECT_LOBBY",                               "로그인 성공\n로비서버에 접속중입니다."],
+
+        {"__comment__": "로그인 관련"},
+        
+        
+        ["LOGIN_REQUIRED_ID_PASS"                       "아이디와 패스워드를 입력해주세요."],
+        ["LOGIN_BEGIN",                                 "인증서버 접속성공\n로그인 시도중입니다."],
+        ["LOGIN_RESULT_REGISTER_SUCCESS",               "회원가입 성공\n다시 입력 후 로그인 해주세요."],
+        ["LOGIN_RESULT_ID_ALREADY_EXIST",               "회원가입 실패\n이미 입력하신 ID로 회원가입된 계정이 존재합니다."],
+        ["LOGIN_RESULT_ID_PASSWORD_MISMATCH",           "로그인 실패\n아이디 또는 비밀번호가 일치하지 않음."],
+        ["LOGIN_RESULT_BANNED",                         "정지된 계정입니다.\n정지일: %s\n해제일: %s"],
+        ["LOGIN_RESULT_LOGINED",                        "현재 접속중인 계정입니다."],
+        ["LOGIN_RESULT_QUERY_FAILED",                   "서버에서 쿼리 수행중 오류가 발생하였습니다."],
+        ["LOGIN_RESULT_UNKNONW",                        "알 수 없는 이유로 로그인에 실패했습니다."],
+
+
+        {"__comment__": "로그인 관련"}
+    ]
+    
+    
+}

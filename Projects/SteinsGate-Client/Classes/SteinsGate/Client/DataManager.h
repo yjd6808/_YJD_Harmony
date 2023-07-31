@@ -51,5 +51,13 @@ public:
 	UIElementInfo* getUIElementInfo(int uiElementCode);
 	FrameEvent* getFrameEvent(ActorType_t actorType, int frameEventCode);
 
+	char* getTextRaw(const char* szId);
+	SGString& getText(const char* szId);
+	SGString& getText(const SGString& szId);
 };
 
+#define SG_TEXT_RAW(id)					CoreDataManager_v->getTextRaw(id)
+#define SG_TEXT(id)						CoreDataManager_v->getText(id)
+
+#define SG_TEXT_RAW_FMT(id, ...)		JCore::StringUtil::Format(CoreDataManager_v->getTextRaw(id), __VA_ARGS__)
+#define SG_TEXT_RAW_FMT_STD(id, ...)	StringUtils::format(CoreDataManager_v->getTextRaw(id), __VA_ARGS__)
