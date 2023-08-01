@@ -29,7 +29,7 @@ void R_INTERSERVER_COMMON::RecvAlreadyConnected(Session* session, ICommand* cmd)
 void R_INTERSERVER_COMMON::RecvYouNeedToDoThis(Session* session, ICommand* cmd) {
 	S_INTERSERVER_COMMON::AutoFlush _;
 	S_INTERSERVER_COMMON::SetInformation(session, eSendAlloc);
-	const CmdYouNeedToDoThis* pCmd = (CmdYouNeedToDoThis*)cmd;
+	const CES_YouNeedToDoThis* pCmd = (CES_YouNeedToDoThis*)cmd;
 
 	if (CoreCommonNetMaster_v->GetProcessType() == ServerProcessType::Center) {
 		_LogWarn_("잘못된 요청입니다.");
@@ -46,7 +46,7 @@ void R_INTERSERVER_COMMON::RecvYouNeedToDoThis(Session* session, ICommand* cmd) 
 }
 
 void R_INTERSERVER_COMMON::RecvTimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd) {
-	const CmdTimeSyncAck* pCmd = (CmdTimeSyncAck*)cmd;
+	const CES_TimeSyncAck* pCmd = (CES_TimeSyncAck*)cmd;
 	CoreTimeManager_v->UpdateMasterServerTime(pCmd->MasterServerTime);
 }
 

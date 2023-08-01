@@ -19,10 +19,10 @@ USING_NS_JC;
 USING_NS_JNET;
 
 ListenerInterServerHostTcp::ListenerInterServerHostTcp() {
-	Parser.AddCommand<CmdItsMe>(R_CENTER::RecvItsMe);
-	Parser.AddCommand<CmdHostMessage>(R_CENTER::RecvCenterMessage);
-	Parser.AddCommand<CmdNotifyBootState>(R_CENTER::RecvNotifyBootState);
-	Parser.AddCommand<CmdTimeSync>(R_CENTER::RecvTimeSync);
+	Parser.AddCommand<SCE_ItsMe>(R_CENTER::RecvItsMe);
+	Parser.AddCommand<SS_HostMessage>(R_CENTER::RecvCenterMessage);
+	Parser.AddCommand<SCE_NotifyBootState>(R_CENTER::RecvNotifyBootState);
+	Parser.AddCommand<SCE_TimeSync>(R_CENTER::RecvTimeSync);
 }
 
 void ListenerInterServerHostTcp::OnStarted() {

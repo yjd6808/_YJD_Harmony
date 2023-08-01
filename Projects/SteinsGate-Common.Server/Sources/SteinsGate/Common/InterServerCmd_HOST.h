@@ -4,8 +4,6 @@
  * =====================
  * 중앙 <-> 개별서버간 통신
  *
- * 개별서버는 여기서 클라라고 지칭하였고
- * 중앙서버는 여기서 서버라고 지칭함.
  */
 
 
@@ -17,121 +15,121 @@
 
 
 // ======================= CMD LIST =======================
-// CmdWhoAreYou				: 서버가 접속한 클라이언트가 누군지 물어봄
-// CmdItsMe					: 클라가 누구인지 서버에게 알려줌
-// CmdAlreadyConnected		: 서버가 접속한 클라이언트에게 넌 이미 접속중이라고 알려줌
-// CmdYouNeedToDoThis		: 서버가 접속한 클라이언트에게 명령을 내림
-// CmdHostMessage			: 서버/클라간 주고받는 문자열 메시지
-// CmdNotifyBootState		: 클라가 현재 자신의 부팅상태를 서버에게 알려줌
-// CmdTimeSync				: 시간 정보 요청
-// CmdTimeSyncAck			: 시간 정보 요청 응답
+// CES_WhoAreYou			: 서버가 접속한 클라이언트가 누군지 물어봄
+// SCE_ItsMe				: 클라가 누구인지 서버에게 알려줌
+// CES_AlreadyConnected		: 서버가 접속한 클라이언트에게 넌 이미 접속중이라고 알려줌
+// CES_YouNeedToDoThis		: 서버가 접속한 클라이언트에게 명령을 내림
+// SS_HostMessage			: 서버/클라간 주고받는 문자열 메시지
+// SCE_NotifyBootState		: 클라가 현재 자신의 부팅상태를 서버에게 알려줌
+// SCE_TimeSync				: 시간 정보 요청
+// CES_TimeSyncAck			: 시간 정보 요청 응답
 // ======================= CMD LIST =======================
 
-#define CMDID_CmdWhoAreYou					50000
-#define CMDID_CmdItsMe						50001
-#define CMDID_CmdAlreadyConnected			50002
-#define CMDID_CmdYouNeedToDoThis			50003
-#define CMDID_CmdHostMessage				50004
-#define CMDID_CmdNotifyBootState			50005
-#define CMDID_CmdTimeSync					50006
-#define CMDID_CmdTimeSyncAck				50007
+#define CMDID_CES_WhoAreYou					50000
+#define CMDID_SCE_ItsMe						50001
+#define CMDID_CES_AlreadyConnected			50002
+#define CMDID_CES_YouNeedToDoThis			50003
+#define CMDID_SS_HostMessage				50004
+#define CMDID_SCE_NotifyBootState			50005
+#define CMDID_SCE_TimeSync					50006
+#define CMDID_CES_TimeSyncAck				50007
 
 #pragma pack(push, CMD_ALIGNMENT)
 
 HOST_STATIC_CMD_BEGIN
-	( CmdWhoAreYou
-	, CMDID_CmdWhoAreYou
+	( CES_WhoAreYou
+	, CMDID_CES_WhoAreYou
 	, eCenterToPeer
 	)
 // ───────────────────────────────────────────
 // 필드 없음
 // ───────────────────────────────────────────
-HOST_STATIC_CMD_END(CmdWhoAreYou)
+HOST_STATIC_CMD_END(CES_WhoAreYou)
 
 // ======================================================================================
 
 HOST_STATIC_CMD_BEGIN
-	( CmdItsMe
-	, CMDID_CmdItsMe
+	( SCE_ItsMe
+	, CMDID_SCE_ItsMe
 	, eClientToServer
 	)
 // ───────────────────────────────────────────
 InterServerClientType_t ClientType;
 int ServerId;
 // ───────────────────────────────────────────
-HOST_STATIC_CMD_END(CmdItsMe)
+HOST_STATIC_CMD_END(SCE_ItsMe)
 
 // ======================================================================================
 
 HOST_STATIC_CMD_BEGIN
-	( CmdAlreadyConnected
-	, CMDID_CmdAlreadyConnected
+	( CES_AlreadyConnected
+	, CMDID_CES_AlreadyConnected
 	, eCenterToPeer
 	)
 // ───────────────────────────────────────────
 // 필드 없음
 // ───────────────────────────────────────────
-HOST_STATIC_CMD_END(CmdAlreadyConnected)
+HOST_STATIC_CMD_END(CES_AlreadyConnected)
 
 // ======================================================================================
 
 HOST_STATIC_CMD_BEGIN
-	( CmdYouNeedToDoThis
-	, CMDID_CmdYouNeedToDoThis
+	( CES_YouNeedToDoThis
+	, CMDID_CES_YouNeedToDoThis
 	, eCenterToPeer
 	)
 // ───────────────────────────────────────────
 CenterOrder_t Order;
 // ───────────────────────────────────────────
-HOST_STATIC_CMD_END(CmdYouNeedToDoThis)
+HOST_STATIC_CMD_END(CES_YouNeedToDoThis)
 
 HOST_DYNAMIC_CMD_BEGIN
-	( CmdHostMessage
-	, CMDID_CmdHostMessage
+	( SS_HostMessage
+	, CMDID_SS_HostMessage
 	, eCenterToPeer | ePeerToCenter
 	, JCore::StaticString<1>
 	)
 // ───────────────────────────────────────────
 JCore::StaticString<1> Msg;
 // ───────────────────────────────────────────
-HOST_DYNAMIC_CMD_END(CmdHostMessage)
+HOST_DYNAMIC_CMD_END(SS_HostMessage)
 
 // ======================================================================================
 
 HOST_STATIC_CMD_BEGIN
-	( CmdNotifyBootState
-	, CMDID_CmdNotifyBootState
+	( SCE_NotifyBootState
+	, CMDID_SCE_NotifyBootState
 	, ePeerToCenter
 	)
 // ───────────────────────────────────────────
 ServerBootState_t State;
 // ───────────────────────────────────────────
-HOST_STATIC_CMD_END(CmdNotifyBootState)
+HOST_STATIC_CMD_END(SCE_NotifyBootState)
 
 // ======================================================================================
 
 HOST_STATIC_CMD_BEGIN
-	( CmdTimeSync
-	, CMDID_CmdTimeSync
+	( SCE_TimeSync
+	, CMDID_SCE_TimeSync
 	, ePeerToCenter
 	)
 // ───────────────────────────────────────────
 JCore::DateTime PeerServerTime;
 // ───────────────────────────────────────────
-HOST_STATIC_CMD_END(CmdTimeSync)
+HOST_STATIC_CMD_END(SCE_TimeSync)
 
 // ======================================================================================
 
 HOST_STATIC_CMD_BEGIN
-	( CmdTimeSyncAck
-	, CMDID_CmdTimeSyncAck
+	( CES_TimeSyncAck
+	, CMDID_CES_TimeSyncAck
 	, eCenterToPeer
 	)
 // ───────────────────────────────────────────
 JCore::DateTime PeerServerTime;
 JCore::DateTime MasterServerTime;
 // ───────────────────────────────────────────
-HOST_STATIC_CMD_END(CmdTimeSyncAck)
+HOST_STATIC_CMD_END(CES_TimeSyncAck)
 
 // ======================================================================================
 

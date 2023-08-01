@@ -21,7 +21,7 @@ public:
 	static bool SendWhoAreYou();
 	static bool SendAlreadyConnected();
 	static bool SendYouNeedToDoThis(CenterOrder_t order);
-	static bool SendTimeSyncAck(CmdTimeSync& time);
+	static bool SendTimeSyncAck(SCE_TimeSync& time);
 
 	static bool BroadcastYouNeedToDoThis(JNetwork::TcpServer* server, CenterOrder_t order);
 };

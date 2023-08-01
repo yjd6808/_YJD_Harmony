@@ -57,7 +57,7 @@ void InterServerClientNetGroup::SyncPeerServerTime(PulserStatistics* pulserStat)
 		return;
 	}
 
-	auto pPacket = dbg_new SinglePacket<CmdTimeSync>;
+	auto pPacket = dbg_new SinglePacket<SCE_TimeSync>;
 	pPacket->Cmd.PeerServerTime.Tick = DateTime::Now().Tick;
 	m_pInterServerClientTcp->SendAsync(pPacket);
 }

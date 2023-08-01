@@ -28,8 +28,8 @@ void InitializeCommonCore() {
 
 	// 공통 커맨드 이름 등록
 	// [ AUTH ]
-	CoreCommandNameDictionary_v.Add<CmdLogin>();
-	CoreCommandNameDictionary_v.Add<CmdLoginAck>();
+	CoreCommandNameDictionary_v.Add<CAU_Login>();
+	CoreCommandNameDictionary_v.Add<AUC_LoginAck>();
 }
 
 void FinalizeCommonCore() {

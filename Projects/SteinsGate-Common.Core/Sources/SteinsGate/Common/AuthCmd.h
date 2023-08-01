@@ -17,8 +17,8 @@
 #include <SteinsGate/Common/AuthEnum.h>
 
 // ======================= CMD LIST =======================
-// CmdLogin
-// CmdLoginAck
+// CAU_Login
+// AUC_LoginAck
 // ======================= CMD LIST =======================
 
 inline constexpr Int16U TotalAuthCmdCount_v = 2;
@@ -26,7 +26,7 @@ inline constexpr Int16U TotalAuthCmdCount_v = 2;
 #pragma pack(push, CMD_ALIGNMENT)
 
 STATIC_CMD_BEGIN
-	( CmdLogin
+	( CAU_Login
 	, 100
 	, eClientToServer
 	)
@@ -34,11 +34,11 @@ STATIC_CMD_BEGIN
 SGStaticString<AccountIdLen_v> Id;
 SGStaticString<AccountPassLen_v> Pass;
 // ===========================================
-STATIC_CMD_END(CmdLogin)
+STATIC_CMD_END(CAU_Login)
 
 
 STATIC_CMD_BEGIN
-	( CmdLoginAck
+	( AUC_LoginAck
 	, 101
 	, eServerToClient
 	)
@@ -47,7 +47,7 @@ LoginResult_t Result;
 JCore::DateTime BanBeginDate;
 JCore::DateTime BanEndDate;
 // ===========================================
-STATIC_CMD_END(CmdLoginAck)
+STATIC_CMD_END(AUC_LoginAck)
 
 
 #pragma pack(pop)

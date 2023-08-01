@@ -31,14 +31,14 @@ void InitializeServerCore() {
 
 	// 공통 커맨드 이름 등록
 	// [ INTER_SERVER - HOST ]
-	CoreCommandNameDictionary_v.Add<CmdWhoAreYou>();
-	CoreCommandNameDictionary_v.Add<CmdItsMe>();
-	CoreCommandNameDictionary_v.Add<CmdAlreadyConnected>();
-	CoreCommandNameDictionary_v.Add<CmdYouNeedToDoThis>();
-	CoreCommandNameDictionary_v.Add<CmdHostMessage>();
-	CoreCommandNameDictionary_v.Add<CmdNotifyBootState>();
-	CoreCommandNameDictionary_v.Add<CmdTimeSync>();
-	CoreCommandNameDictionary_v.Add<CmdTimeSyncAck>();
+	CoreCommandNameDictionary_v.Add<CES_WhoAreYou>();
+	CoreCommandNameDictionary_v.Add<SCE_ItsMe>();
+	CoreCommandNameDictionary_v.Add<CES_AlreadyConnected>();
+	CoreCommandNameDictionary_v.Add<CES_YouNeedToDoThis>();
+	CoreCommandNameDictionary_v.Add<SS_HostMessage>();
+	CoreCommandNameDictionary_v.Add<SCE_NotifyBootState>();
+	CoreCommandNameDictionary_v.Add<SCE_TimeSync>();
+	CoreCommandNameDictionary_v.Add<CES_TimeSyncAck>();
 	
 	// [ INTER_SERVER - RELAY ]
 	CoreCommandNameDictionary_v.Add<CmdP2PRelayStaticTest>();

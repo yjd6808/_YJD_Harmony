@@ -17,26 +17,26 @@ USING_NS_JC;
 USING_NS_JNET;
 
 bool S_INTERSERVER_COMMON::SendItsMe(InterServerClientType_t clientType, int serverId) {
-	auto sending = SendBegin<CmdItsMe>();
+	auto sending = SendBegin<SCE_ItsMe>();
 	sending.Cmd.ClientType = clientType;
 	sending.Cmd.ServerId = serverId;
 	return true;
 }
 
 bool S_INTERSERVER_COMMON::SendCenterMessage(const String& msg) {
-	auto sending = SendBegin<CmdHostMessage>(msg.LengthWithNull());
+	auto sending = SendBegin<SS_HostMessage>(msg.LengthWithNull());
 	sending.Cmd.Msg.SetStringUnsafe(msg);
 	return true;
 }
 
 bool S_INTERSERVER_COMMON::SendNotifyBootState(ServerBootState_t state) {
-	auto sending = SendBegin<CmdNotifyBootState>();
+	auto sending = SendBegin<SCE_NotifyBootState>();
 	sending.Cmd.State = state;
 	return true;
 }
 
 bool S_INTERSERVER_COMMON::SendTimeSync() {
-	auto sending = SendBegin<CmdTimeSync>();
+	auto sending = SendBegin<SCE_TimeSync>();
 	return true;
 }
 

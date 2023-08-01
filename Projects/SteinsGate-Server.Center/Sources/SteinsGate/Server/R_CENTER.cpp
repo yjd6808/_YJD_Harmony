@@ -19,7 +19,7 @@ USING_NS_JNET;
 
 void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
 	S_CENTER::SetInformation(session, eSendAsync, LastFromId);
-	CmdItsMe* pCmd = (CmdItsMe*)cmd;
+	SCE_ItsMe* pCmd = (SCE_ItsMe*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
 
 	if (pCmd->ClientType < InterServerClientType::Begin || pCmd->ClientType > InterServerClientType::End) {
@@ -51,18 +51,18 @@ void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
 
 
 void R_CENTER::RecvCenterMessage(Session* session, ICommand* cmd) {
-	CmdHostMessage* pCmd = (CmdHostMessage*)cmd;
+	SS_HostMessage* pCmd = (SS_HostMessage*)cmd;
 	_LogInfo_(pCmd->Msg.Source);
 }
 
 void R_CENTER::RecvNotifyBootState(Session* session, ICommand* cmd) {
-	CmdNotifyBootState* pCmd = (CmdNotifyBootState*)cmd;
+	SCE_NotifyBootState* pCmd = (SCE_NotifyBootState*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
 	pSession->SetBootState(pCmd->State);
 }
 
 void R_CENTER::RecvTimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd) {
-	CmdTimeSync* pCmd = (CmdTimeSync*)cmd;
+	SCE_TimeSync* pCmd = (SCE_TimeSync*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
 
 	S_CENTER::AutoFlush _;

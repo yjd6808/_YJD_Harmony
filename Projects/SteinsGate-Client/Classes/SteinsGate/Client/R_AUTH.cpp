@@ -21,7 +21,7 @@ USING_NS_CC;
 USING_NS_JNET;
 
 void R_AUTH::RecvLoginAck(Session* session, ICommand* cmd) {
-	CmdLoginAck* pCmd = (CmdLoginAck*)cmd;
+	AUC_LoginAck* pCmd = (AUC_LoginAck*)cmd;
 	CorePopupManager_v->closeByTag(POPUP_LOGIN);
 	
 	switch (pCmd->Type) {
