@@ -12,7 +12,7 @@
         {"__comment__": "로그인 관련"},
         
         
-        ["LOGIN_REQUIRED_ID_PASS"                       "아이디와 패스워드를 입력해주세요."],
+        ["LOGIN_REQUIRED_ID_PASS",                      "아이디와 패스워드를 입력해주세요."],
         ["LOGIN_BEGIN",                                 "인증서버 접속성공\n로그인 시도중입니다."],
         ["LOGIN_RESULT_REGISTER_SUCCESS",               "회원가입 성공\n다시 입력 후 로그인 해주세요."],
         ["LOGIN_RESULT_ID_ALREADY_EXIST",               "회원가입 실패\n이미 입력하신 ID로 회원가입된 계정이 존재합니다."],

@@ -52,28 +52,34 @@ bool ClientTextInfoLoader::load() {
 	return true;
 }
 
-char* ClientTextInfoLoader::getTextRaw(const char* szId) {
-	const SGString* pFind = m_TextMap.Find(szId);
+bool ClientTextInfoLoader::tryGetTextRaw(const char* id, JCORE_OUT char** text) {
+	const SGString* pFind = m_TextMap.Find(id);
 	if (pFind == nullptr) {
-		return nullptr;
+		*text = DummyText.Source();
+		return false;
 	}
-	return pFind->Source();
+	*text = pFind->Source();
+	return true;
 }
 
-SGString& ClientTextInfoLoader::getText(const char* szId) {
-	SGString* pFind = m_TextMap.Find(szId);
+bool ClientTextInfoLoader::tryGetText(const char* id, JCORE_OUT SGString** text) {
+	SGString* pFind = m_TextMap.Find(id);
 	if (pFind == nullptr) {
-		return m_Dummy;
+		*text = &DummyText;
+		return false;
 	}
-	return *pFind;
+	*text = pFind;
+	return true;
 }
 
-SGString& ClientTextInfoLoader::getText(const SGString& szId) {
-	SGString* pFind = m_TextMap.Find(szId);
+bool ClientTextInfoLoader::tryGetText(const SGString& id, JCORE_OUT SGString** text) {
+	SGString* pFind = m_TextMap.Find(id);
 	if (pFind == nullptr) {
-		return m_Dummy;
+		*text = &DummyText;
+		return false;
 	}
-	return *pFind;
+	*text = pFind;
+	return true;
 }
 
 bool ClientTextInfoLoader::readClientTextInfo(Json::Value& clientTextRoot, JCORE_OUT SGString& szId, JCORE_OUT SGString& szText) {

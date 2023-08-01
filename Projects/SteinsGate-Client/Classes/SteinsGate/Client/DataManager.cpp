@@ -235,7 +235,19 @@ char* DataManager::getTextRaw(const char* szId) {
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return ((ClientTextInfoLoader*)m_pConfigFileLoaders[eType])->getTextRaw(szId);
+	const auto pLoader = dynamic_cast<ClientTextInfoLoader*>(m_pConfigFileLoaders[eType]);
+
+	if (pLoader == nullptr) {
+		_LogWarn_("텍스트 로더가 없습니다.");
+		return ClientTextInfoLoader::DummyText.Source();
+	}
+
+	char* ppText = nullptr;
+	if (!pLoader->tryGetTextRaw(szId, &ppText)) {
+		_LogWarn_("%s 텍스트를 찾지 못했습니다.", szId);
+	}
+
+	return ppText;
 }
 
 SGString& DataManager::getText(const char* szId) {
@@ -244,15 +256,22 @@ SGString& DataManager::getText(const char* szId) {
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return ((ClientTextInfoLoader*)m_pConfigFileLoaders[eType])->getText(szId);
+	const auto pLoader = dynamic_cast<ClientTextInfoLoader*>(m_pConfigFileLoaders[eType]);
+
+	if (pLoader == nullptr) {
+		_LogWarn_("텍스트 로더가 없습니다.");
+		return ClientTextInfoLoader::DummyText;
+	}
+
+	SGString* ppText = nullptr;
+	if (!pLoader->tryGetText(szId, &ppText)) {
+		_LogWarn_("%s 텍스트를 찾지 못했습니다.", szId);
+	}
+
+	return *ppText;
 }
 
 SGString& DataManager::getText(const SGString& szId) {
-	auto eType = ConfigFileType::ClientText;
-
-	if (!m_bLoaded[eType])
-		load(eType);
-
-	return ((ClientTextInfoLoader*)m_pConfigFileLoaders[eType])->getText(szId);
+	return getText(szId.Source());
 }
 

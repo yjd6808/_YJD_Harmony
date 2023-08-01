@@ -150,9 +150,9 @@ void UI_Login::login() {
 	pData.Pass.SetStringUnsafe(m_pEbPass->getText());
 
 	if (!CoreNet_v->connectAuthTcp()) {
-		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_CONNECT_FAILED_UNCONNECTABLE_STATE"));
+		CorePopupManager_v->showOk(SG_TEXT_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
 		return;
 	}
 
-	CorePopupManager_v->showNone(SG_TEXT_RAW("LOGIN_CONNECT_AUTH"), POPUP_LOGIN_WAIT);
+	CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_AUTH"), POPUP_LOGIN_WAIT);
 }

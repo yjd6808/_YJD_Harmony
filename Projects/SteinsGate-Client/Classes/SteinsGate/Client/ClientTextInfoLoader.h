@@ -14,29 +14,20 @@
 
 struct ClientTextInfoLoader : ConfigFileLoaderAbstract
 {
-public:
+	inline static SGString DummyText{ "메시지가 엄떠용 ㅠㅠ" };
+
 	ClientTextInfoLoader(DataManagerAbstract* manager);
 	bool load() override;
 	ConfigFileType_t getConfigFileType() override { return ConfigFileType::ClientText; }
 
-	char* getTextRaw(const char* szId);
-	SGString& getText(const char* szId);
-
-	template <Int32U Size>
-	SGString& getText(const char (&szId)[Size]) {
-		SGString* pFind = m_TextMap.Find(szId);
-		if (pFind == nullptr) {
-			return m_Dummy;
-		}
-		return *pFind;
-	}
-
-	SGString& getText(const SGString& szId);
+	bool tryGetTextRaw(const char* id, JCORE_OUT char** text);
+	bool tryGetText(const char* id, JCORE_OUT SGString** text);
+	bool tryGetText(const SGString& id, JCORE_OUT SGString** text);
 
 	static bool readClientTextInfo(Json::Value& clientTextRoot, JCORE_OUT SGString& szId, JCORE_OUT SGString& szText);
 
 private:
-	SGString m_Dummy{ 0 };
+	
 	SGHashMap<SGString, SGString> m_TextMap;
 };
 
