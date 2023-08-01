@@ -25,38 +25,38 @@
 class AuthTokenManager : public JCore::SingletonPointer<AuthTokenManager>
 {
 	using AccountId$TokenDataMap = JCore::TreeMap<int, AuthToken*>;
-	using Token$TokenDataMap = JCore::HashMap<JCore::String, AuthToken*>;
+	using Token$TokenDataMap = JCore::HashMap<AuthTokenSerial_t, AuthToken*>;
 
 	friend class TSingleton;
 	AuthTokenManager() = default;
 	~AuthTokenManager() override = default;
 public:
 	bool Issue(int accountTableId, const char* id);			// 발급
-	bool Check(const JCore::String& token, const char* id);	// 발급되었는지 확인
-	bool Check(int accountTableId, const char* id);
-	bool Update(const JCore::String& token);									// 최신화시각 갱신
-	bool Update(int accountTableId);
+	bool CheckBySerial(AuthTokenSerial_t serial, const char* id);	// 발급되었는지 확인
+	bool CheckByTableId(int accountTableId, const char* id);
+	bool UpdateBySerial(AuthTokenSerial_t serial);									// 최신화시각 갱신
+	bool UpdateByTableId(int accountTableId);
 	void Clear();
-	bool Remove(const JCore::String& token);
-	bool Remove(int accountTableId);
+	bool RemoveBySerial(AuthTokenSerial_t serial);
+	bool RemoveByTableId(int accountTableId);
 
 	void OnScheduled(JCore::SchedulerTask* task);								// 스케쥴링 될때마다 수행할 작업
 private:
 	bool IssueRaw(int accountTableId, const char* id);
-	bool CheckRaw(const JCore::String& token);
-	bool CheckRaw(int accountTableId);
-	bool CheckRaw(const JCore::String& token, const char* id);
-	bool CheckRaw(int accountTableId, const char* id);
-	bool UpdateRaw(const JCore::String& token);
-	bool UpdateRaw(int accountTableId);
-	bool RemoveRaw(const JCore::String& token);
-	bool RemoveRaw(int accountTableId);
+	bool CheckRawBySerial(AuthTokenSerial_t serial);
+	bool CheckRawByTableId(int accountTableId);
+	bool CheckRawBySerial(AuthTokenSerial_t serial, const char* id);
+	bool CheckRawByTableId(int accountTableId, const char* id);
+	bool UpdateRawBySerial(AuthTokenSerial_t serial);
+	bool UpdateRawByTableId(int accountTableId);
+	bool RemoveRawBySerial(AuthTokenSerial_t serial);
+	bool RemoveRawByTableId(int accountTableId);
 
-	void GenerateTokenData(JCORE_OUT JCore::StaticString<AuthTokenLen_v>& token);
+	void GenerateSerial(JCORE_OUT AuthTokenSerial_t& token);
 private:
 	JCore::NormalLock m_Lock;
 
 	// 2가지 방식으로 관리
 	AccountId$TokenDataMap m_tmAccountTableIdMap;	// 발급된 토큰 데이터를 DB테이블의 계정 고유ID와 묶어서 관리
-	Token$TokenDataMap m_tmTokenMap;				// 발급된 토큰 데이터를 인덱싱하여 관리
+	Token$TokenDataMap m_tmSerialMap;				// 발급된 토큰 데이터를 인덱싱하여 관리
 };

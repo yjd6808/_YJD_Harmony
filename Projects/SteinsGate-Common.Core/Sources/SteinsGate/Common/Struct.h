@@ -119,10 +119,11 @@ union SgaResourceIndex
 	Int32U Value;
 };
 
+using AuthTokenSerial_t = Int32;
 struct AuthToken
 {
-	Int32 AccountTableId;
-	SGStaticString<AuthTokenLen_v> Data;		// 토큰 데이터
+	Int32 AccountDBTableId;
+	AuthTokenSerial_t Serial;					// 토큰 데이터
 	SGStaticString<AccountIdLen_v> Id;
 	SGDateTime Updated;							// 최신화된 시간
 };

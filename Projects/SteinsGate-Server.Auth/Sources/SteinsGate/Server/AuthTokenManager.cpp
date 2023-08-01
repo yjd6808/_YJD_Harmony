@@ -19,41 +19,41 @@ bool AuthTokenManager::Issue(int accountTableId, const char* id) {
 	return IssueRaw(accountTableId, id);
 }
 
-bool AuthTokenManager::Check(const String& token, const char* id) {
+bool AuthTokenManager::CheckBySerial(AuthTokenSerial_t serial, const char* id) {
 	JCORE_LOCK_GUARD(m_Lock);
-	return CheckRaw(token, id);
+	return CheckRawBySerial(serial, id);
 }
 
-bool AuthTokenManager::Check(int accountTableId, const char* id) {
+bool AuthTokenManager::CheckByTableId(int accountTableId, const char* id) {
 	JCORE_LOCK_GUARD(m_Lock);
-	return CheckRaw(accountTableId, id);
+	return CheckRawByTableId (accountTableId, id);
 }
 
-bool AuthTokenManager::Update(const String& token) {
+bool AuthTokenManager::UpdateBySerial(AuthTokenSerial_t serial) {
 	JCORE_LOCK_GUARD(m_Lock);
-	return UpdateRaw(token);
+	return UpdateRawBySerial(serial);
 }
 
-bool AuthTokenManager::Update(int accountTableId) {
+bool AuthTokenManager::UpdateByTableId(int accountTableId) {
 	JCORE_LOCK_GUARD(m_Lock);
-	return UpdateRaw(accountTableId);
+	return UpdateRawByTableId(accountTableId);
 }
 
 void AuthTokenManager::Clear() {
 	JCORE_LOCK_GUARD(m_Lock);
-	m_tmTokenMap.ForEachValue([](AuthToken* token) { delete token; });
-	m_tmTokenMap.Clear();
+	m_tmSerialMap.ForEachValue([](AuthToken* token) { delete token; });
+	m_tmSerialMap.Clear();
 	m_tmAccountTableIdMap.Clear();
 }
 
-bool AuthTokenManager::Remove(const String& token) {
+bool AuthTokenManager::RemoveBySerial(AuthTokenSerial_t serial) {
 	JCORE_LOCK_GUARD(m_Lock);
-	return RemoveRaw(token);
+	return RemoveRawBySerial(serial);
 }
 
-bool AuthTokenManager::Remove(int accountTableId) {
+bool AuthTokenManager::RemoveByTableId(int accountTableId) {
 	JCORE_LOCK_GUARD(m_Lock);
-	return RemoveRaw(accountTableId);
+	return RemoveRawByTableId(accountTableId);
 }
 
 void AuthTokenManager::OnScheduled(SchedulerTask* task) {
@@ -65,68 +65,68 @@ void AuthTokenManager::OnScheduled(SchedulerTask* task) {
 bool AuthTokenManager::IssueRaw(int accountTableId, const char* id) {
 	AuthToken* pToken = dbg_new AuthToken{};
 
-	if (CheckRaw(accountTableId, id)) {
+	if (CheckRawByTableId(accountTableId, id)) {
 		return false;
 	}
 
-	GenerateTokenData(pToken->Data);
+	GenerateSerial(pToken->Serial);
 	pToken->Id = id;
-	pToken->AccountTableId = accountTableId;
+	pToken->AccountDBTableId = accountTableId;
 	pToken->Updated = DateTime::Now();
 
 	m_tmAccountTableIdMap.Insert(accountTableId, pToken);
-	m_tmTokenMap.Insert(pToken->Data.Source, pToken);
+	m_tmSerialMap.Insert(pToken->Serial, pToken);
 	return true;
 }
 
-bool AuthTokenManager::CheckRaw(const String& token) {
-	return m_tmTokenMap.Exist(token);
+bool AuthTokenManager::CheckRawBySerial(AuthTokenSerial_t serial) {
+	return m_tmSerialMap.Exist(serial);
 }
 
-bool AuthTokenManager::CheckRaw(int accountTableId) {
+bool AuthTokenManager::CheckRawByTableId(int accountTableId) {
 	return m_tmAccountTableIdMap.Exist(accountTableId);
 }
 
 
-bool AuthTokenManager::CheckRaw(const String& token, const char* id) {
-	if (!m_tmTokenMap.Exist(token)) {
+bool AuthTokenManager::CheckRawBySerial(AuthTokenSerial_t serial, const char* id) {
+	if (!m_tmSerialMap.Exist(serial)) {
 		return false;
 	}
 
-	const AuthToken* pToken = m_tmTokenMap[token];
+	const AuthToken* pToken = m_tmSerialMap[serial];
 	if (pToken->Id != id) {
-		RemoveRaw(token);		// 토큰은 동일한데, 아디 비번이 틀리면 강제로 제거
+		RemoveRawBySerial(serial);		// 토큰은 동일한데(해킹 의심), 아디 비번이 틀리면 강제로 제거
 		return false;
 	}
 
 	return true;
 }
 
-bool AuthTokenManager::CheckRaw(int accountTableId, const char* id) {
+bool AuthTokenManager::CheckRawByTableId(int accountTableId, const char* id) {
 	if (!m_tmAccountTableIdMap.Exist(accountTableId)) {
 		return false;
 	}
 
 	const AuthToken* pToken = m_tmAccountTableIdMap[accountTableId];
 	if (pToken->Id != id) {
-		RemoveRaw(pToken->AccountTableId);	// 테이블 ID가 동일한데, 아디 비번이 틀리면 강제 제거
+		RemoveRawByTableId(pToken->AccountDBTableId);	// 테이블 ID가 동일한데, 아디 비번이 틀리면 강제 제거
 		return false;
 	}
 	return true;
 }
 
-bool AuthTokenManager::UpdateRaw(const String& token) {
+bool AuthTokenManager::UpdateRawBySerial(AuthTokenSerial_t serial) {
 
-	if (!CheckRaw(token)) {
+	if (!CheckRawBySerial(serial)) {
 		return false;
 	}
 
-	m_tmTokenMap[token]->Updated = DateTime::Now();
+	m_tmSerialMap[serial]->Updated = DateTime::Now();
 	return true;
 }
 
-bool AuthTokenManager::UpdateRaw(int accountTableId) {
-	if (!CheckRaw(accountTableId)) {
+bool AuthTokenManager::UpdateRawByTableId(int accountTableId) {
+	if (!CheckRawByTableId(accountTableId)) {
 		return false;
 	}
 
@@ -134,47 +134,44 @@ bool AuthTokenManager::UpdateRaw(int accountTableId) {
 	return true;
 }
 
-bool AuthTokenManager::RemoveRaw(const JCore::String& token) {
+bool AuthTokenManager::RemoveRawBySerial(AuthTokenSerial_t serial) {
 	AuthToken* pToken;
-	AuthToken** ppFind = m_tmTokenMap.Find(token);
+	AuthToken** ppFind = m_tmSerialMap.Find(serial);
 	if (ppFind == nullptr) {
 		return false;
 	}
 	pToken = *ppFind;
-	m_tmTokenMap.Remove(token);
-	m_tmAccountTableIdMap.Remove(pToken->AccountTableId);
+	m_tmSerialMap.Remove(serial);
+	m_tmAccountTableIdMap.Remove(pToken->AccountDBTableId);
 	delete pToken;
 	return true;
 }
 
-bool AuthTokenManager::RemoveRaw(int accountTableId) {
+bool AuthTokenManager::RemoveRawByTableId(int accountTableId) {
 	AuthToken* pToken;
 	AuthToken** ppFind = m_tmAccountTableIdMap.Find(accountTableId);
 	if (ppFind == nullptr) {
 		return false;
 	}
 	pToken = *ppFind;
-	m_tmTokenMap.Remove(pToken->Data.Source);
-	m_tmAccountTableIdMap.Remove(pToken->AccountTableId);
+	m_tmSerialMap.Remove(pToken->Serial);
+	m_tmAccountTableIdMap.Remove(pToken->AccountDBTableId);
 	delete pToken;
 	return true;
 }
 
-void AuthTokenManager::GenerateTokenData(JCORE_OUT StaticString<AuthTokenLen_v>& token) {
-	String szTokenData;
+void AuthTokenManager::GenerateSerial(JCORE_OUT AuthTokenSerial_t& data) {
+	AuthTokenSerial_t iGeneratedSerial;
 	do {
-		for (int i = 0; i < AuthTokenLen_v; ++i) {
-			szTokenData += Random::GenerateAlphabat();
-		}
+		iGeneratedSerial = Random::GenerateInt(100, 10000000);
 		
-		if (!CheckRaw(szTokenData)) {
+		if (!CheckRawBySerial(iGeneratedSerial)) {
 			break;
 		}
 
-		szTokenData.Clear(); // 있으면 다시 생성
 	} while (true); 
 
-	token = szTokenData;
+	data = iGeneratedSerial;
 }
 
 

@@ -37,6 +37,7 @@ void CommonNetMaster::ProcessMainLoop() {
 		OnLoop(&pulseStat);
 
 		TimeSpan elapsed = pulser.Wait();
+		// Console::WriteLine("%d", elapsed.GetTotalMiliSecondsInt());
 	}
 
 	OnStopped();

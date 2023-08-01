@@ -81,13 +81,13 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManager.h">
       <Filter>Contents</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManagerSchedule.h">
-      <Filter>Contents</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthContents.h">
       <Filter>Contents</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthInterServerClientNetGroup.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManagerSchedule.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">

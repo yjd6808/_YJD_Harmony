@@ -1,21 +1,18 @@
 use steinsgate;
 
-select * from t_account;
+# 기존 테이블에 컬럼 추가
+alter table t_account add column c_created3 timestamp(3) not null after c_created2;
 
+# 기존 테이블에 컬럼 여러개 추가
+alter table t_account 
+	add column c_created4 timestamp(3) not null after c_created3,
+	add column gender enum('Male', 'Female') not null after c_created3;
+						
+# 테이블 컬럼 정보보기
+show columns from t_account;
 
-select c_account_id
-	 , c_id
-	 , c_pass
-     , c_created
-     , c_created2t_account
-	 , CONVERT_TZ(c_created, '+00:00', @@global.time_zone) as c_zz1
-     , unix_timestamp(CONVERT_TZ(c_created, '+00:00', @@global.time_zone)) as c_zz1
-     , unix_timestamp(c_created2) as c_zz2
-     , unix_timestamp(c_logined) as c_logined 
-  from t_account
-  
-  
-select * from t_account where c_id = 'wjdeh717' and c_pass = 'wjdeh717';
-  
-# delete from t_account where 
+# 데이터 삽입
+insert into t_account (c_id, c_pass) values ('wjdeh515', 'wjdeh414');
 
+# 데이터 삭제
+delete from t_account;
