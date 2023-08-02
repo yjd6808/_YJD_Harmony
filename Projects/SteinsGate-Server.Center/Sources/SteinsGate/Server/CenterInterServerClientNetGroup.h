@@ -21,6 +21,6 @@ public:
 	void InitializeInterServerTcp() override;
 	void InitializeInterServerUdp() override;
 protected:
-	void OnLoop(JCore::PulserStatistics* pulseStat) override;
+	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 	bool IsPeerServer() override { return false; }
 };

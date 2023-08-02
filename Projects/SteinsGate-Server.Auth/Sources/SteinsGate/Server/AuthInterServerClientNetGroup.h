@@ -21,5 +21,5 @@ public:
 	void InitializeInterServerTcp() override;
 	void InitializeInterServerUdp() override;
 protected:
-	void OnLoop(JCore::PulserStatistics* pulserStat) override;
+	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 };

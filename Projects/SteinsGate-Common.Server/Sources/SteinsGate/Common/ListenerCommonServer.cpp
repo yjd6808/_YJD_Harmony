@@ -10,6 +10,8 @@
 #include "ServerCoreHeader.h"
 #include "ListenerCommonServer.h"
 
+#include "JCore/Logger/ConsoleLogger.h"
+
 USING_NS_JC;
 USING_NS_JNET;
 

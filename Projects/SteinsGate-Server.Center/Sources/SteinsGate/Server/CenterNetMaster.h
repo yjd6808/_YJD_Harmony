@@ -24,7 +24,7 @@ public:
 	InterServerClientType_t GetClientType() override { return InterServerClientType::None; }
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Center; }
 protected:
-	void OnLoop(JCore::PulserStatistics* pulserStat) override;
+	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 	void OnCapturedInputEvent(int inputEvent) override;
 	void OnStopped() override;
 };

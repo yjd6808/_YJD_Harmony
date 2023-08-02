@@ -20,7 +20,7 @@ public:
 	CommonNetGroup();
 
 	void Initialize() override;
-	void ProcessLoop(JCore::PulserStatistics* pulseStat);
+	void ProcessUpdate(const JCore::TimeSpan& elapsed);
 
 	JNetwork::TcpServer* GetServer() { return m_pServer; }
 protected:
@@ -29,7 +29,7 @@ protected:
 	virtual void InitializeBufferPool() = 0;
 	virtual void InitializeServer() = 0;
 
-	virtual void OnLoop(JCore::PulserStatistics* pulseStat) = 0;
+	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
 
 	JNetwork::TcpServer* m_pServer;
 };

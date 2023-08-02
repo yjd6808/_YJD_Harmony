@@ -19,7 +19,7 @@ protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
 	void InitializeServer() override;
-	void OnLoop(JCore::PulserStatistics* pulserStat) override;
+	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 };
 
 

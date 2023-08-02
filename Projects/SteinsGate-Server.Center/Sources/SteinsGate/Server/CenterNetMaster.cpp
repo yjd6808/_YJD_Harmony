@@ -35,7 +35,7 @@ void CenterNetMaster::Initialize() {
 	spInterServerNetGroup->Initialize();
 }
 
-void CenterNetMaster::OnLoop(PulserStatistics* pulserStat) {
+void CenterNetMaster::OnUpdate(const TimeSpan& elapsed) {
 }
 
 void CenterNetMaster::OnCapturedInputEvent(int inputEvent) {

@@ -38,5 +38,5 @@ void CenterNetGroup::InitializeServer() {
 	m_pServer->SetEventListener(dbg_new ListenerInterServerHostTcp);
 }
 
-void CenterNetGroup::OnLoop(PulserStatistics* pulserStat) {
+void CenterNetGroup::OnUpdate(const TimeSpan& elapsed) {
 }

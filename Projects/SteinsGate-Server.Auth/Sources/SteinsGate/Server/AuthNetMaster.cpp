@@ -37,11 +37,11 @@ void AuthNetMaster::Initialize() {
 	spInterServerNetGroup->Initialize();
 }
 
-void AuthNetMaster::OnLoop(PulserStatistics* pulserStat) {
+void AuthNetMaster::OnUpdate(const TimeSpan& elapsed) {
 
 #if DebugMode
 	static TimeCounter s;
-	s.ElapsedMs += pulserStat->SleepIntervalLast;
+	s.Elapsed += elapsed;
 
 	Thread::Sleep(30);
 

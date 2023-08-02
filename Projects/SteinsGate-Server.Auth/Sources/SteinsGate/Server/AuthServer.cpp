@@ -27,7 +27,7 @@ ServerInfo AuthServer::GetServerInfo() {
 	return { CoreServerProcessInfoPackage_v->Auth.BindAuthTcp, CoreServerProcessInfoPackage_v->Auth.MaxSessionCount };
 }
 
-void AuthServer::OnLoop(PulserStatistics* pulserStat) {
+void AuthServer::OnUpdate(const TimeSpan& elapsed) {
 
 }
 

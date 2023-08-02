@@ -20,5 +20,5 @@ public:
 	ServerType_t GetServerType() override { return ServerType::Auth; }
 	ServerInfo GetServerInfo() override;
 protected:
-	void OnLoop(JCore::PulserStatistics* pulserStat) override;
+	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 };

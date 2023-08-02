@@ -85,7 +85,7 @@ bool CenterServer::IsConnected(int serverId) {
 	return false;
 }
 
-void CenterServer::OnLoop(PulserStatistics* pulserStat) {
+void CenterServer::OnUpdate(const TimeSpan& elapsed) {
 
 	
 }

@@ -18,22 +18,22 @@
 class JCORE_NOVTABLE CommonNetMaster : public JNetwork::NetMaster
 {
 public:
-	CommonNetMaster(int loopPerSecond);
+	CommonNetMaster(int updatePerSecond);
 
 	void Initialize() override;
 	virtual InterServerClientType_t GetClientType() = 0;
 	virtual ServerProcessType_t GetProcessType() = 0;
 
-	void ProcessMainLoop();
-	void ProcessSubLoop(JCore::PulserStatistics* pulseStat);
+	void ProcessMainUpdate();
+	void ProcessSubUpdate(const JCore::TimeSpan& elapsed);
 	void ProcessInputEvent();
 	void Terminate() { m_bRunning = false; }
 protected:
-	virtual void OnLoop(JCore::PulserStatistics* pulseStat) = 0;
+	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
 	virtual void OnStopped() = 0;
 	virtual void OnCapturedInputEvent(int inputEvent);
 private:
-	int m_iLoopPerSecond;
+	int m_iUpdatePerSecond;
 	bool m_bRunning;
 	JCore::Vector<int> m_vInputEvents;
 };

@@ -23,7 +23,7 @@ USING_NS_JNET;
 
 ListenerInterServerClientTcp::ListenerInterServerClientTcp() {
 	Parser.AddCommand<CES_AlreadyConnected>		(R_INTERSERVER::RecvAlreadyConnected);
-	Parser.AddCommand<CES_WhoAreYou>				(R_INTERSERVER::RecvWhoAreYou);
+	Parser.AddCommand<CES_WhoAreYou>			(R_INTERSERVER::RecvWhoAreYou);
 	Parser.AddCommand<CES_YouNeedToDoThis>		(R_INTERSERVER::RecvYouNeedToDoThis);
 	Parser.AddCommand<CES_TimeSyncAck>			(R_INTERSERVER::RecvTimeSyncAck);
 	Parser.AddCommand<CmdP2PRelayStaticTest>	(R_INTERSERVER::RecvP2PRelayStaticTest);
@@ -35,16 +35,6 @@ void ListenerInterServerClientTcp::OnConnected(SGSession* session) {
 
 	S_INTERSERVER::SetInformation(CoreInterServerClientTcp_v, eSendAsync, SingleServerType::Center);
 	S_INTERSERVER::SendItsMe(InterServerClientType::Auth, InterServerSendHelperBase::GetSenderId());
-
-
-	// TODO: UDP 송신 테스트 (추후 지울 것)
-	S_INTERSERVER::SetInformation(CoreInterServerClientUdp_v, eSendToAsync, SingleServerType::Center);
-	S_INTERSERVER::SendItsMe(InterServerClientType::Auth, InterServerSendHelperBase::GetSenderId());
-
-	// TODO: 인터서버 통신 테스트 테스트 (추후 지울 것)
-	S_INTERSERVER::SetInformation(CoreInterServerClientTcp_v, eSendAsync, SingleServerType::Auth);
-	S_INTERSERVER::SendP2PRelayStaticTest("안녕1");
-	S_INTERSERVER::SendP2PRelayDynamicTest("안녕2");
 }
 
 void ListenerInterServerClientTcp::OnDisconnected(SGSession* session) {

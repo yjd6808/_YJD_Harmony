@@ -32,16 +32,13 @@ void InterServerClientNetGroup::Initialize() {
 	InterServerSendHelperBase::InitSingleServerDestinations();
 }
 
-void InterServerClientNetGroup::ProcessLoop(PulserStatistics* pulserStat) {
-	OnLoopCommon(pulserStat);
-	OnLoop(pulserStat);
+void InterServerClientNetGroup::ProcessUpdate(const TimeSpan& elpased) {
+	SyncPeerServerTime(elpased);
+	OnUpdate(elpased);
 }
 
-void InterServerClientNetGroup::OnLoopCommon(PulserStatistics* pulserStat) {
-	SyncPeerServerTime(pulserStat);
-}
 
-void InterServerClientNetGroup::SyncPeerServerTime(PulserStatistics* pulserStat) {
+void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {
 	// 피어서버는 중앙서버로 주기적으로(10초 정도마다) 시간 동기화 요청 수행
 	// 따라서 중앙서버에서는 이 기능을 수행해서는 안된다.
 	if (!IsPeerServer())
@@ -50,8 +47,8 @@ void InterServerClientNetGroup::SyncPeerServerTime(PulserStatistics* pulserStat)
 	if (m_pInterServerClientTcp == nullptr || m_pInterServerClientTcp->GetState() != Host::eConnected)
 		return;
 
-	static TimeCounter s_Timer{ 0, TimeCounter::eCheckReset };
-	s_Timer.ElapsedMs += pulserStat->SleepIntervalLast;
+	static TimeCounter s_Timer(TimeCounter::eTimeOverReset | TimeCounter::eFirstFire);
+	s_Timer.Elapsed += elapsed;
 
 	if (!s_Timer.ElapsedSeconds(10)) {
 		return;

@@ -49,7 +49,7 @@ int main() {
 			CenterInputEvent::PairOf(CenterInputEvent::ServerState),
 		});
 
-		CoreNetMaster_v->ProcessMainLoop();
+		CoreNetMaster_v->ProcessMainUpdate();
 	}
 
 	FinalizeCenterCore();

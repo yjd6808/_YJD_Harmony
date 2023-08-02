@@ -36,7 +36,7 @@ public:
 
 	void SetStartupLaunching(bool startupLaunching) { m_bStartupLaunching = startupLaunching; }
 	bool IsStartupLaunching() { return m_bStartupLaunching; }
-	void OnLoop(JCore::PulserStatistics* pulserStat) override;
+	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 private:
 	ANONYMOUS_CACHE_ALIGNED_VAR(
 		CenterSession* Session = nullptr;

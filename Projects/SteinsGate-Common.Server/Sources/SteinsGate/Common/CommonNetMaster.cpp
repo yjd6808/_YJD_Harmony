@@ -16,8 +16,8 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CommonNetMaster::CommonNetMaster(int loopPerSecond)
-	: m_iLoopPerSecond(loopPerSecond)
+CommonNetMaster::CommonNetMaster(int updatePerSecond)
+	: m_iUpdatePerSecond(updatePerSecond)
 	, m_bRunning(true)
 {}
 
@@ -26,29 +26,30 @@ void CommonNetMaster::Initialize() {
 }
 
 
-void CommonNetMaster::ProcessMainLoop() {
+void CommonNetMaster::ProcessMainUpdate() {
 	PulserStatistics pulseStat;
-	Pulser pulser(1000 / m_iLoopPerSecond, Pulser::eSliceCycle, &pulseStat);
+	Pulser pulser(1000 / m_iUpdatePerSecond, Pulser::eSliceCycle, &pulseStat);
+	TimeSpan elapsed;
 
 	pulser.Start();
 	while (m_bRunning) {
 		ProcessInputEvent();
-		ProcessSubLoop(&pulseStat);
-		OnLoop(&pulseStat);
+		ProcessSubUpdate(elapsed);
+		OnUpdate(elapsed);
 
-		TimeSpan elapsed = pulser.Wait();
+		elapsed = pulser.Wait();
 		// Console::WriteLine("%d", elapsed.GetTotalMiliSecondsInt());
 	}
 
 	OnStopped();
 }
 
-void CommonNetMaster::ProcessSubLoop(PulserStatistics* pulseStat) {
+void CommonNetMaster::ProcessSubUpdate(const TimeSpan& elapsed) {
 	if (CoreCommonNetGroup_v)
-		CoreCommonNetGroup_v->ProcessLoop(pulseStat);
+		CoreCommonNetGroup_v->ProcessUpdate(elapsed);
 
 	if (CoreInterServerClientNetGroup_v)
-		CoreInterServerClientNetGroup_v->ProcessLoop(pulseStat);
+		CoreInterServerClientNetGroup_v->ProcessUpdate(elapsed);
 }
 
 void CommonNetMaster::ProcessInputEvent() {

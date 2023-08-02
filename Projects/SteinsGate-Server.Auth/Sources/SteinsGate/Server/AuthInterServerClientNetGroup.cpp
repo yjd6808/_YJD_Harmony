@@ -51,5 +51,5 @@ void AuthInterServerClientNetGroup::InitializeInterServerUdp() {
 	m_pInterServerClientUdp->RecvFromAsync();
 }
 
-void AuthInterServerClientNetGroup::OnLoop(JCore::PulserStatistics* pulserStat) {
+void AuthInterServerClientNetGroup::OnUpdate(const JCore::TimeSpan& elapsed) {
 }

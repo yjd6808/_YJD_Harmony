@@ -39,7 +39,7 @@ void AuthNetGroup::InitializeServer() {
 	m_pServer->SetEventListener(dbg_new ListenerAuthServer);
 }
 
-void AuthNetGroup::OnLoop(PulserStatistics* pulserStat) {
+void AuthNetGroup::OnUpdate(const TimeSpan& elapsed) {
 
 }
 

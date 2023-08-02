@@ -19,13 +19,13 @@ CommonServer::CommonServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& buf
 {}
 
 
-void CommonServer::ProcessLoop(PulserStatistics* pulseStat) {
+void CommonServer::ProcessUpdate(const TimeSpan& elapsed) {
 
 	if (m_eBootState == ServerBootState::Launched) {
 		return;
 	}
 
-	OnLoop(pulseStat);
+	OnUpdate(elapsed);
 }
 
 

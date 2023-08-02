@@ -616,27 +616,40 @@ struct StopWatch<StopWatchMode::HighResolution>
 
 struct TimeCounter
 {
-	enum Mode
+	TimeCounter() : Elapsed(0), Attr(eFirstFire | eTimeOverReset) {}
+	TimeCounter(int attr) : Attr(attr) {}
+
+	enum Attribute
 	{
-		eCheckReset,	// 조건 만족시 초기화
-		eNoReset
+		eNone			= 0b0000,
+		eFirstFire		= 0b0001,
+		eTimeOverReset  = 0b0010
 	};
 
 	bool ElapsedSeconds(float seconds) {
 		bool bTimeOver = false;
 
-		if (float(ElapsedMs) >= seconds * 1000.0f) {
+		if ((Attr & eFirstFire) == eFirstFire) {
+			bTimeOver = true;
+			Attr &= ~eFirstFire;
+		}
+
+		if (Elapsed.GetTotalSeconds() >= seconds) {
 			bTimeOver = true;
 		}
 
-		if (bTimeOver && Mode == eCheckReset)
-			ElapsedMs = 0;
+		if (bTimeOver && (Attr & eTimeOverReset) == eTimeOverReset)
+			Elapsed.Tick = 0;
 
 		return bTimeOver;
 	}
 
-	int ElapsedMs = 0;
-	int Mode = eCheckReset;
+	bool ElapsedMiliSeconds(float miliSec) {
+		return ElapsedSeconds(miliSec / 1000);
+	}
+
+	TimeSpan Elapsed;
+	int Attr;
 };
 
 NS_JC_END

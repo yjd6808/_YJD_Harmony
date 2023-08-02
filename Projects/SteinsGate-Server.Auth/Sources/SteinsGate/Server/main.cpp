@@ -47,7 +47,7 @@ int main() {
 		});
 
 		if (CoreInterServerClientNetGroup_v->ConnectCenterServer(5)) {
-			CoreNetMaster_v->ProcessMainLoop();
+			CoreNetMaster_v->ProcessMainUpdate();
 		}
 	}
 

@@ -45,6 +45,6 @@ void CenterInterServerClientNetGroup::InitializeInterServerUdp() {
 	
 }
 
-void CenterInterServerClientNetGroup::OnLoop(JCore::PulserStatistics* pulseStat) {
+void CenterInterServerClientNetGroup::OnUpdate(const JCore::TimeSpan& elapsed) {
 
 }

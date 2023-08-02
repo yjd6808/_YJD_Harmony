@@ -25,14 +25,14 @@ void CommonNetGroup::Initialize() {
 	InitializeServer();
 }
 
-void CommonNetGroup::ProcessLoop(PulserStatistics* pulseStat) {
+void CommonNetGroup::ProcessUpdate(const JCore::TimeSpan& elapsed) {
 	CommonServer* pServer = dynamic_cast<CommonServer*>(m_pServer);
 
 	if (pServer) {
-		pServer->ProcessLoop(pulseStat);
+		pServer->ProcessUpdate(elapsed);
 	}
 
-	OnLoop(pulseStat);
+	OnUpdate(elapsed);
 }
 
 
