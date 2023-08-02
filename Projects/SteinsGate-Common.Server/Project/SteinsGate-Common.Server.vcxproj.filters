@@ -85,6 +85,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h">
       <Filter>Database</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\IUpdatable.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\UpdatableCollection.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
@@ -147,6 +153,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\TimeManager.cpp">
       <Filter>Net</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\UpdatableCollection.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Database">
@@ -169,6 +178,9 @@
     </Filter>
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{c33adf12-f613-4b94-95f7-fdd3446da358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{6ab2279c-2d0e-4df7-b9f1-3b8b28e333ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

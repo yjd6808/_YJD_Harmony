@@ -46,6 +46,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\IUpdatable.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelper.h">
       <SubType>
       </SubType>
@@ -96,6 +97,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\TimeManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\UpdatableCollection.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -155,6 +160,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\TimeManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\UpdatableCollection.cpp">
       <SubType>
       </SubType>
     </ClCompile>
