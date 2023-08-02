@@ -32,6 +32,7 @@ CommandSynchronizer::CommandQueueHolder CommandSynchronizer::registerPacketQueue
 CommandSynchronizer::CommandHolder::CommandHolder(ClientConnectServerType_t listenerType, Session* sender, ICommand* copy) {
 	int _;
 	Sender = sender;
+	Type = copy->Type;
 	Cmd = copy->Cmd;
 	CmdLen = copy->CmdLen;
 	ListenerType = listenerType;

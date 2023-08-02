@@ -45,10 +45,10 @@ class CommandSynchronizer final : public SGSingletonPointer<CommandSynchronizer>
 		CommandHolder(ClientConnectServerType_t listenerType, SGSession* sender, ICommand* copy);
 		~CommandHolder() override;
 
-		SGIndexMemroyPool* MemPool;	// 데이터를 돌려놓을 메모리풀(홀더 해제를 메인쓰레드에서 수행하기 때문에 포인터정보가 필요함)
+		char* Data;								// 무조건 위쪽에 위치해야 캐스팅이 정상적으로 동작함
+		SGIndexMemroyPool* MemPool;				// 데이터를 돌려놓을 메모리풀(홀더 해제를 메인쓰레드에서 수행하기 때문에 포인터정보가 필요함)
 		ClientConnectServerType_t ListenerType;
 		SGSession* Sender;
-		char* Data;
 	};
 
 	using IOCPThreadId$CommandQueuePair = JCore::Pair<Int32U, CommandQueueHolder*>;			// IOCP 쓰레드의 ID와 커맨드큐 페어
