@@ -11,10 +11,12 @@
 #include "ListenerAuthServer.h"
 
 #include <SteinsGate/Common/AuthCmd.h>
+#include <SteinsGate/Common/QueryDefine.h>
+#include <SteinsGate/Common/PacketViewer.h>
 
 #include <SteinsGate/Server/R_AUTH.h>
 
-#include <SteinsGate/Common/QueryDefine.h>
+
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -37,6 +39,8 @@ void ListenerAuthServer::OnDisconnected(Session* disconnetedSession) {
 }
 
 void ListenerAuthServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
+	PacketViewer::View(sentPacket);
+	sentPacket->ForEach([](ICommand* cmd) { PacketViewer::View(cmd); });
 	ListenerCommonServer::OnSent(sender, sentPacket, sentBytes);
 }
 

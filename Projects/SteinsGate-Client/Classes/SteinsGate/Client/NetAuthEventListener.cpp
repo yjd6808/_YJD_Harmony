@@ -10,6 +10,8 @@
 #include "GameCoreHeader.h"
 #include "NetAuthEventListener.h"
 
+#include <SteinsGate/Common/PacketViewer.h>
+
 #include <SteinsGate/Client/S_AUTH.h>
 
 USING_NS_JC;
@@ -32,4 +34,9 @@ void NetAuthEventListener::OnSent(Session* session, ISendPacket* sentPacket, Int
 
 void NetAuthEventListener::OnReceived(Session* session, ICommand* cmd) {
 	SyncReceivedCommand(ClientConnectServerType::Auth, session, cmd);
+}
+
+void NetAuthEventListener::OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* packet) {
+	PacketViewer::View(packet);
+	packet->ForEach([](ICommand* cmd) { PacketViewer::View(cmd); });
 }

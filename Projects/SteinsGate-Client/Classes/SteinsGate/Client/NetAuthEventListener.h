@@ -18,4 +18,5 @@ protected:
 	void OnConnectFailed(JNetwork::Session* session, Int32U errorCode) override;
 	void OnSent(JNetwork::Session* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* cmd) override;
+	void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* packet) override;
 };

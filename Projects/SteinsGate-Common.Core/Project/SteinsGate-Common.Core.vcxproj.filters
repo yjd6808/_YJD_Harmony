@@ -73,6 +73,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\CharCommonInfoLoader.cpp">
       <Filter>Data\CharCommon</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\PacketViewer.cpp">
+      <Filter>Net\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -195,29 +198,32 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\CharCommonInfo.h">
       <Filter>Data\CharCommon</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AuthCmd.h">
-      <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyCmd.h">
-      <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\GameCmd.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\EnumDefine.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChatCmd.h">
-      <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AreaCmd.h">
-      <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AuthEnum.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Type.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\LogSpecifier.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
       <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\AreaCmd.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\AuthCmd.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChatCmd.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\GameCmd.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyCmd.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\AuthEnum.h">
+      <Filter>Net\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\PacketViewer.h">
+      <Filter>Net\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +271,15 @@
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{e5dfe8dd-1566-4fd0-9870-954606ad6feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Cmd">
+      <UniqueIdentifier>{6468c181-5a92-447d-becd-6ce66d66ea74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Enum">
+      <UniqueIdentifier>{c112c9b0-1e81-4ea0-a18d-01aa4bd40704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Util">
+      <UniqueIdentifier>{ed25dfc5-ea7c-479b-a189-aeb099faab3b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
