@@ -13,14 +13,8 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CenterServer::CenterServer(
-	const IOCPPtr& iocp, 
-	const MemoryPoolAbstractPtr& bufferAllocator,
-	ServerEventListener* eventListener, 
-	int maxConn, 
-	int sessionRecvBufferSize,
-	int sessionSendBufferSize)
-	: CommonServer(iocp, bufferAllocator, eventListener, maxConn, sessionRecvBufferSize, sessionSendBufferSize)
+CenterServer::CenterServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
+	: CommonServer(iocp, bufferAllocator)
 	, m_bStartupLaunching(true)
 {}
 
@@ -28,7 +22,7 @@ CenterServer::~CenterServer() {
 }
 
 SGTcpSession* CenterServer::CreateSession() {
-	return dbg_new CenterSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
+	return dbg_new CenterSession(this, m_spIocp, m_spBufferAllocator, 4096, 4096);
 }
 
 ServerInfo CenterServer::GetServerInfo() {

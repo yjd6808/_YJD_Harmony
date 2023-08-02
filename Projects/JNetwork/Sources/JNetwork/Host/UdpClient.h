@@ -22,7 +22,6 @@ public:
 	UdpClient(
 		const IOCPPtr& iocp,
 		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		ClientEventListener* listener,
 		int recvBufferSize = 6000,
 		int sendBufferSize = 6000 
 	);
@@ -41,9 +40,9 @@ public:
 	Type GetType() const override { return eClient; }
 	DetailType GetDetailType() const override { return eUdpClient; }
 	const char* TypeName() override { return "UDP 클라"; }
-	
+	void SetEventListener(ClientEventListener* listener) { m_pEventListener = listener; }
 protected:
-	ClientEventListener* m_pClientEventListener;
+	ClientEventListener* m_pEventListener;
 };
 
 using UdpClientPtr = JCore::SharedPtr<UdpClient>;

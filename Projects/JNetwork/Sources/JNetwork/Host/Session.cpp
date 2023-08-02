@@ -27,9 +27,11 @@ Session::Session(
 	int sendBufferSize
 )
 	: Host(iocp)
+	, m_iHandle(-1)
 	, m_spBufferAllocator(bufferAllocator)
-	, m_spRecvBuffer(MakeShared<CommandBuffer>(m_spBufferAllocator, recvBufferSize))
-	, m_spSendBuffer(MakeShared<CommandBuffer>(m_spBufferAllocator, sendBufferSize)) {
+	, m_spSendBuffer(MakeShared<CommandBuffer>(m_spBufferAllocator, sendBufferSize))
+	, m_spRecvBuffer(MakeShared<CommandBuffer>(m_spBufferAllocator, recvBufferSize)) {
+
 }
 
 Session::~Session() = default;

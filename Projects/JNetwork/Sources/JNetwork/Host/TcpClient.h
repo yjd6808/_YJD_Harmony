@@ -15,7 +15,6 @@ public:
 	TcpClient(
 		const IOCPPtr& iocp,
 		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		ClientEventListener* listener, 
 		int sendBufferSize = 6000, 
 		int recvBufferSize = 6000
 	);
@@ -34,8 +33,9 @@ public:
 	Type GetType() const override { return eClient; }
 	DetailType GetDetailType() const override { return eTcpClient; }
 	const char* TypeName() override { return "TCP 클라"; }
+	void SetEventListener(ClientEventListener* listener) { m_pEventListener = listener; }
 protected:
-	ClientEventListener* m_pClientEventListener;
+	ClientEventListener* m_pEventListener;
 };
 
 using TcpClientPtr = JCore::SharedPtr<TcpClient>;

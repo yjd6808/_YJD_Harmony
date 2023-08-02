@@ -5,36 +5,34 @@
 
 #pragma once
 
-#include <JCore/Container/HashMap.h>
-#include <JCore/Container/ArrayQueue.h>
+#include <JCore/Container/Vector.h>
 
-#include <JCore/Sync/NormalLock.h>
+#include <JNetwork/Host/ISessionContainer.h>
 #include <JNetwork/Host/Session.h>
 
 NS_JNET_BEGIN
 
-class SessionContainer
+class SessionContainer : public ISessionContainer
 {
 public:
-	using Iterator = JCore::SharedPtr<JCore::HashMap<SOCKET, Session*>::ValueCollectionIterator>;
+	using TContainer = JCore::Vector<Session*>;
 
-	SessionContainer(int size);
-	~SessionContainer();
+	SessionContainer(int capacity);
+	~SessionContainer() override;
 
-	int MaxConnection() const { return m_iMaxConnection; }
-	bool AddSession(Session* session);
-	Session* GetSession(SOCKET socket);
-	void DisconnectAllSessions();
-	void Clear();
-
-	Iterator Begin() { return m_hAllSession.Values().Begin(); }
-	Iterator End() { return m_hAllSession.Values().End(); }
-	void ForEach(JCore::Action<Session*> fnForEach);
-	void ForEachConnected(JCore::Action<Session*> fnForEach);
-private:
-	int m_iMaxConnection;
-	JCore::NormalLock m_ContainerLock;
-	JCore::HashMap<SOCKET, Session*> m_hAllSession;
+	int Capacity() override { return m_vSessionList.Capacity(); }
+	bool Add(Session* session) override;
+	int Size() override { return m_iSize; }
+	Session* Get(int handle) override;
+	bool Remove(int handle) override;
+	void DisconnectAll() override;
+	void Clear() override;
+	void ForEach(JCore::Action<Session*> fn) override;
+	void ForEachConnected(JCore::Action<Session*> fn) override;
+	bool IsValidHandle(int handle) override;
+protected:
+	int m_iSize;
+	TContainer m_vSessionList; // TODO: StaticVector
 };
 
 NS_JNET_END

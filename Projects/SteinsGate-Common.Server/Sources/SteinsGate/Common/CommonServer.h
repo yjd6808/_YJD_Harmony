@@ -16,15 +16,7 @@
 class CommonServer : public JNetwork::TcpServer
 {
 protected:
-	CommonServer(
-		const JNetwork::IOCPPtr& iocp,
-		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		JNetwork::ServerEventListener* eventListener,
-		int maxConn,
-		int sessionRecvBufferSize,
-		int sessionSendBufferSize
-	);
-
+	CommonServer(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
 public:
 	bool ProcessOrder(CenterOrder_t order);
 	void ProcessLoop(JCore::PulserStatistics* pulseStat);

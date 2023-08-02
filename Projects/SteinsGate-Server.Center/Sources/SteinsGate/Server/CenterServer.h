@@ -18,14 +18,7 @@
 class CenterServer final : public CommonServer
 {
 public:
-	CenterServer(
-		const JNetwork::IOCPPtr& iocp,
-		const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-		JNetwork::ServerEventListener* eventListener,
-		int maxConn,
-		int sessionRecvBufferSize,
-		int sessionSendBufferSize
-	);
+	CenterServer(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator);
 	~CenterServer() override;
 
 	SGTcpSession* CreateSession() override;

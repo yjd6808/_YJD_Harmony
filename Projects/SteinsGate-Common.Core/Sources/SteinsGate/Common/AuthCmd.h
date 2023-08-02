@@ -21,13 +21,16 @@
 // AUC_LoginAck
 // ======================= CMD LIST =======================
 
+#define CMDID_CAU_Login			100
+#define CMDID_AUC_LoginAck		101
+
 inline constexpr Int16U TotalAuthCmdCount_v = 2;
 
 #pragma pack(push, CMD_ALIGNMENT)
 
 STATIC_CMD_BEGIN
 	( CAU_Login
-	, 100
+	, CMDID_CAU_Login
 	, eClientToServer
 	)
 // ===========================================
@@ -39,7 +42,7 @@ STATIC_CMD_END(CAU_Login)
 
 STATIC_CMD_BEGIN
 	( AUC_LoginAck
-	, 101
+	, CMDID_AUC_LoginAck
 	, eServerToClient
 	)
 // ===========================================

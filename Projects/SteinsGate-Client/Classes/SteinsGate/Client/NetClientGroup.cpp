@@ -59,20 +59,17 @@ void NetClientGroup::Initialize() {
 	NetClientEventListener* pChatListener = nullptr;
 	NetClientEventListener* pAreaListener = nullptr;
 
-	m_Listeners[ClientConnectServerType::Auth] = pAuthListener;
-	m_Listeners[ClientConnectServerType::Lobby] = pLobbyListener;
-	m_Listeners[ClientConnectServerType::Game] = pGameListener;
-	m_Listeners[ClientConnectServerType::Chat] = pChatListener;
-	m_Listeners[ClientConnectServerType::Area] = pAreaListener;
-
-	const auto spAuthTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, pAuthListener, AuthRecvBufferSize_v, AuthSendBufferSize_v);
-	const auto spLobbyTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, pLobbyListener, LobbyRecvBufferSize_v, LobbySendBufferSize_v);
+	const auto spAuthTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, AuthRecvBufferSize_v, AuthSendBufferSize_v);
+	const auto spLobbyTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, LobbyRecvBufferSize_v, LobbySendBufferSize_v);
 
 	AddHost(spAuthTcp);
 	AddHost(spLobbyTcp);
 
 	AuthTcp = spAuthTcp.Get<TcpClient*>();
+	AuthTcp->SetEventListener(pAuthListener);
+
 	LobbyTcp = spLobbyTcp.Get<TcpClient*>();
+	LobbyTcp->SetEventListener(pLobbyListener);
 
 
 	// ==========================================================
@@ -127,15 +124,6 @@ void NetClientGroup::Initialize() {
 
 void NetClientGroup::Finalize() {
 	NetGroup::Finalize();
-
-	// 리스너는 호스트에 의존성이있으므로.. 호스트들을 먼저 제거후 수행해줘야한다.
-	for (int i = 0; i < ClientConnectServerType::Max; ++i) {
-		JCORE_DELETE_SAFE(m_Listeners[i]);
-	}
-}
-
-NetClientEventListener* NetClientGroup::getListener(ClientConnectServerType_t serverType) {
-	return m_Listeners[serverType];
 }
 
 SGCommandParser* NetClientGroup::getParser(ClientConnectServerType_t serverType) {

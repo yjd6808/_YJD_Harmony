@@ -27,10 +27,8 @@ public:
 	SGTcpClient* AreaTcp;
 	SGTcpClient* ChatTcp;
 
-	NetClientEventListener* getListener(ClientConnectServerType_t serverType);
 	SGCommandParser* getParser(ClientConnectServerType_t serverType);
 private:
-	NetClientEventListener* m_Listeners[ClientConnectServerType::Max];
 	SGCommandParser m_Parser[ClientConnectServerType::Max];
 
 	friend class NetCore;

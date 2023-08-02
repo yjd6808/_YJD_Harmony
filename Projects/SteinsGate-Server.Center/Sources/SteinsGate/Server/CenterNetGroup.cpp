@@ -9,11 +9,12 @@
 #include "CenterCoreHeader.h"
 #include "CenterNetGroup.h"
 
+#include <JNetwork/Host/SessionContainer.h>
+#include <SteinsGate/Server/ListenerInterServerHostTcp.h>
+
+
 USING_NS_JC;
 USING_NS_JNET;
-
-static constexpr int RecvBufferSize_v = 2048;
-static constexpr int SendBufferSize_v = 2048;
 
 CenterNetGroup::CenterNetGroup() {}
 CenterNetGroup::~CenterNetGroup() {}
@@ -28,9 +29,13 @@ void CenterNetGroup::InitializeIOCP() {
 }
 
 void CenterNetGroup::InitializeServer() {
-	auto spServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool, &m_CenterServerEventListener, CoreServerProcessInfoPackage_v->Center.MaxSessionCount, RecvBufferSize_v, SendBufferSize_v);
+	auto spServer = MakeShared<CenterServer>(m_spIOCP, m_spBufferPool);
+
 	AddHost(spServer);
+
 	m_pServer = spServer.Get<CenterServer*>();
+	m_pServer->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfoPackage_v->Center.MaxSessionCount));
+	m_pServer->SetEventListener(dbg_new ListenerInterServerHostTcp);
 }
 
 void CenterNetGroup::OnLoop(PulserStatistics* pulserStat) {

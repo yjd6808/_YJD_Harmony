@@ -9,14 +9,13 @@
 #include "AuthCoreHeader.h"
 #include "AuthNetGroup.h"
 
+#include <JNetwork/Host/SessionContainer.h>
+
 #include <SteinsGate/Server/AuthServer.h>
+#include <SteinsGate/Server/ListenerAuthServer.h>
 
 USING_NS_JC;
 USING_NS_JNET;
-
-static constexpr int RecvBufferSize_v = 2048;
-static constexpr int SendBufferSize_v = 2048;
-	
 
 AuthNetGroup::AuthNetGroup() {}
 AuthNetGroup::~AuthNetGroup() {}
@@ -31,9 +30,13 @@ void AuthNetGroup::InitializeIOCP() {
 }
 
 void AuthNetGroup::InitializeServer() {
-	auto spServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool, &m_AuthServerEventListener, CoreServerProcessInfoPackage_v->Auth.MaxSessionCount, RecvBufferSize_v, SendBufferSize_v);
+	auto spServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool);
+
 	AddHost(spServer);
+
 	m_pServer = spServer.Get<AuthServer*>();
+	m_pServer->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfoPackage_v->Auth.MaxSessionCount));
+	m_pServer->SetEventListener(dbg_new ListenerAuthServer);
 }
 
 void AuthNetGroup::OnLoop(PulserStatistics* pulserStat) {

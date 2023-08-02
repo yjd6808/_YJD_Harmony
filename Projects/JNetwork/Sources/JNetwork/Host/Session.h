@@ -9,6 +9,7 @@
 #include <JCore/Sync/RecursiveLock.h>
 
 #include <JNetwork/Host/Host.h>
+#include <JNetwork/Host/ISessionContainer.h>
 
 #include <JNetwork/EventListener/ServerEventListener.h>
 
@@ -22,7 +23,7 @@ class JCORE_NOVTABLE Session : public Host
 {
 public:
 	Session(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator, int recvBufferSize, int sendBufferSize);
-	virtual ~Session();
+	~Session() override;
 
 	const IPv4EndPoint& GetLocalEndPoint() const { return m_LocalEndPoint; }
 	const IPv4EndPoint& GetRemoteEndPoint() const { return m_RemoteEndPoint; }
@@ -71,7 +72,12 @@ public:
 	int  DecreasePendingCount()	{ return --m_iOveralappedPendingCount;	}
 	int  GetPendingCount()		{ return m_iOveralappedPendingCount;	}
 	void WaitForZeroPending();
+
+	void SetHandle(int handle) { m_iHandle = handle; }
+	int GetHandle() const { return m_iHandle; }
 protected:
+	int m_iHandle;
+
 	JCore::AtomicInt m_iOveralappedPendingCount;
 	JCore::MemoryPoolAbstractPtr m_spBufferAllocator;
 	JCore::RecursiveLock m_SendBufferLock;

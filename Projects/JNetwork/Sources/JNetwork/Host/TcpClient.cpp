@@ -19,11 +19,10 @@ NS_JNET_BEGIN
 TcpClient::TcpClient(
 	const IOCPPtr& iocp,
 	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	ClientEventListener* listener,
 	int sendBuffSize, 
 	int recvBufferSize)
 	: Session(iocp, bufferAllocator, sendBuffSize, recvBufferSize)
-	, m_pClientEventListener(listener) {
+	, m_pEventListener(nullptr) {
 
 	TcpClient::Initialize();
 }
@@ -31,6 +30,7 @@ TcpClient::TcpClient(
 TcpClient::~TcpClient() {
 	Disconnect();
 	WaitForZeroPending();
+	JCORE_DELETE_SAFE(m_pEventListener);
 }
 
 static StaticPacket<GenericCommand<int>, GenericCommand<int>>* GenerateTestDummyPacket() {
@@ -101,7 +101,9 @@ bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) 
 			m_eState = eDisconnected;
 			Initialize();
 			WSASetLastError(WSAETIMEDOUT);
-			m_pClientEventListener->OnConnectFailed(this, WSAETIMEDOUT);
+
+			if (m_pEventListener)
+				m_pEventListener->OnConnectFailed(this, WSAETIMEDOUT);
 			return false;
 		}
 
@@ -111,7 +113,10 @@ bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) 
 			m_eState = eDisconnected;
 			Initialize();
 			WSASetLastError(err);
-			m_pClientEventListener->OnConnectFailed(this, err);
+
+			if (m_pEventListener)
+				m_pEventListener->OnConnectFailed(this, err);
+
 			return false;
 		}
 	}
@@ -184,20 +189,24 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 
 void TcpClient::Disconnected() {
-	m_pClientEventListener->OnDisconnected(this);
+	if (m_pEventListener)
+		m_pEventListener->OnDisconnected(this);
 	Initialize();
 }
 
 void TcpClient::NotifyCommand(ICommand* cmd) {
-	m_pClientEventListener->OnReceived(this, cmd);
+	if (m_pEventListener)
+		m_pEventListener->OnReceived(this, cmd);
 }
 
 void TcpClient::NotifyPacket(IRecvPacket* packet) {
-	m_pClientEventListener->OnReceived(this, packet);
+	if (m_pEventListener)
+		m_pEventListener->OnReceived(this, packet);
 }
 
 void TcpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
-	m_pClientEventListener->OnSent(this, sentPacket, sentBytes);
+	if (m_pEventListener)
+		m_pEventListener->OnSent(this, sentPacket, sentBytes);
 }
 
 
@@ -220,11 +229,14 @@ void TcpClient::Connected() {
 		DebugAssertMsg(false, "클라이언트 소켓 린저 타임아웃 설정 실패");
 	}
 
-	m_pClientEventListener->OnConnected(this);
+	if (m_pEventListener)
+		m_pEventListener->OnConnected(this);
 }
 
 void TcpClient::ConnectFailed(Int32U errorCode) {
-	m_pClientEventListener->OnConnectFailed(this, errorCode);
+	if (m_pEventListener)
+		m_pEventListener->OnConnectFailed(this, errorCode);
+
 	Initialize();
 }
 

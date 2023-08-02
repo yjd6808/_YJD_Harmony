@@ -19,12 +19,11 @@ USING_NS_JC;
 UdpClient::UdpClient(
 	const IOCPPtr& iocp,
 	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	ClientEventListener* listener, 
 	int recvBufferSize, 
 	int sendBufferSize
 )
 	: Session(iocp, bufferAllocator, recvBufferSize, sendBufferSize)
-	, m_pClientEventListener(listener)
+	, m_pEventListener(nullptr)
 {
 	UdpClient::Initialize();
 }
@@ -32,6 +31,8 @@ UdpClient::UdpClient(
 UdpClient::~UdpClient() {
 	Disconnect();
 	WaitForZeroPending();
+
+	JCORE_DELETE_SAFE(m_pEventListener);
 }
 
 
@@ -61,31 +62,39 @@ void UdpClient::Connected() {
 	// UDP는 연결이라는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
 	m_Socket.State = Socket::eBinded;
-	m_pClientEventListener->OnConnected(this);
+
+	if (m_pEventListener)
+		m_pEventListener->OnConnected(this);
 }
 
 void UdpClient::ConnectFailed(Int32U errorCode) {
 	// UDP는 연결이라는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
-	m_pClientEventListener->OnConnectFailed(this, errorCode);
+
+	if (m_pEventListener)
+		m_pEventListener->OnConnectFailed(this, errorCode);
 }
 
 void UdpClient::Disconnected() {
 	// UDP는 연결이 끊긴다는 개념이 존재하지 않는다. 이 함수는 아무데서도 호출하지 않음
 	// 추후 ReliableUDP를 구현하게된다면 활용할 듯?
-	m_pClientEventListener->OnDisconnected(this);
+	if (m_pEventListener)
+		m_pEventListener->OnDisconnected(this);
 }
 
 void UdpClient::NotifyCommand(ICommand* cmd) {
-	m_pClientEventListener->OnReceived(this, cmd);
+	if (m_pEventListener)
+		m_pEventListener->OnReceived(this, cmd);
 }
 
 void UdpClient::NotifyPacket(IRecvPacket* packet) {
-	m_pClientEventListener->OnReceived(this, packet);
+	if (m_pEventListener)
+		m_pEventListener->OnReceived(this, packet);
 }
 
 void UdpClient::Sent(ISendPacket* sentPacket, Int32UL sentBytes) {
-	m_pClientEventListener->OnSent(this, sentPacket, sentBytes);
+	if (m_pEventListener)
+		m_pEventListener->OnSent(this, sentPacket, sentBytes);
 }
 
 NS_JNET_END

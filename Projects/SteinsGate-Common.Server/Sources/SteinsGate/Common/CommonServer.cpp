@@ -13,14 +13,8 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CommonServer::CommonServer(
-	const IOCPPtr& iocp, 
-	const MemoryPoolAbstractPtr& bufferAllocator,
-	ServerEventListener* eventListener, 
-	int maxConn, 
-	int sessionRecvBufferSize,
-	int sessionSendBufferSize)
-	: TcpServer(iocp, bufferAllocator, eventListener, maxConn, sessionRecvBufferSize, sessionSendBufferSize)
+CommonServer::CommonServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
+	: TcpServer(iocp, bufferAllocator)
 	, m_eBootState(ServerBootState::Initialized)
 {}
 

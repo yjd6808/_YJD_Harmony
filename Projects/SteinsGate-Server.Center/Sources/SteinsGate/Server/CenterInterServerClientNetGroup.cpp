@@ -10,6 +10,8 @@
 #include "CenterCoreHeader.h"
 #include "CenterInterServerClientNetGroup.h"
 
+#include <SteinsGate/Server/ListenerInterServerClientUdp.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
@@ -33,11 +35,14 @@ void CenterInterServerClientNetGroup::InitializeInterServerTcp() {
 }
 
 void CenterInterServerClientNetGroup::InitializeInterServerUdp() {
-	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_InterServerClientUdpListener, RecvBufferSize_v, SendBufferSize_v);
+	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Center.BindInterServerUdp);
 	AddHost(spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
+	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClientUdp);
 	m_pInterServerClientUdp->RecvFromAsync();
+
+	
 }
 
 void CenterInterServerClientNetGroup::OnLoop(JCore::PulserStatistics* pulseStat) {

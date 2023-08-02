@@ -7,41 +7,45 @@
 
 #include <JNetwork/Host/TcpServer.h>
 #include <JNetwork/Host/TcpSession.h>
+#include <JNetwork/Host/SessionContainer.h>
+
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedAccept.h>
 
 #include <JCore/Primitives/RefCountObjectPtr.h>
 
 NS_JNET_BEGIN
 
-TcpServer::TcpServer(
-	const IOCPPtr& iocp,
-	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
-	ServerEventListener* eventListener,
-	int maxConn,
-	int sessionRecvBufferSize, 
-	int sessionSendBufferSize
-)
+TcpServer::TcpServer(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator)
 	: Server(iocp)
-	, m_iSessionRecvBufferSize(sessionRecvBufferSize)
-	, m_iSessionSendBufferSize(sessionSendBufferSize)
 	, m_spBufferAllocator(bufferAllocator)
-	, m_pEventListener(eventListener)
-	, m_pContainer(dbg_new SessionContainer(maxConn))
+	, m_pContainer(nullptr)
 {
 	TcpServer::Initialize();
 }
 
 TcpServer::~TcpServer() {
 	TcpServer::Stop();
+
 	JCORE_DELETE_SAFE(m_pContainer);
+	JCORE_DELETE_SAFE(m_pEventListener);
 }
 
 TcpSession* TcpServer::CreateSession() {
-	return dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, m_iSessionRecvBufferSize, m_iSessionSendBufferSize);
+	return dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, 6000, 6000);
+}
+
+ISessionContainer* TcpServer::CreateSessionContainer() {
+	return dbg_new SessionContainer(10);
+}
+
+int TcpServer::CreateHandle() {
+	static int s_Handle = 0;
+	return JCore::Interlocked<int>::Increment(&s_Handle) - 1;
 }
 
 void TcpServer::SessionDisconnected(TcpSession* session) {
-	m_pEventListener->OnDisconnected(session);
+	if (m_pEventListener)
+		m_pEventListener->OnDisconnected(session);
 
 	// 세션 재사용... 이거땜에 State를 Atomic으로 변경함.
 	// 서버가 다른 쓰레드에서 Stop을 실행하는 순간
@@ -61,23 +65,28 @@ void TcpServer::SessionDisconnected(TcpSession* session) {
 }
 
 void TcpServer::SessionConnected(TcpSession* session) {
-	m_pEventListener->OnConnected(session);
+	if (m_pEventListener)
+		m_pEventListener->OnConnected(session);
 }
 
 void TcpServer::SessionConnectFailed(TcpSession* session, Int32U errorCode) {
-	m_pEventListener->OnConnectFailed(session, errorCode);
+	if (m_pEventListener)
+		m_pEventListener->OnConnectFailed(session, errorCode);
 }
 
 void TcpServer::SessionSent(TcpSession* session, ISendPacket* sentPacket, Int32UL receivedBytes) {
-	m_pEventListener->OnSent(session, sentPacket, receivedBytes);
+	if (m_pEventListener)
+		m_pEventListener->OnSent(session, sentPacket, receivedBytes);
 }
 
 void TcpServer::SessionReceived(TcpSession* session, ICommand* command) {
-	m_pEventListener->OnReceived(session, command);
+	if (m_pEventListener)
+		m_pEventListener->OnReceived(session, command);
 }
 
 void TcpServer::SessionReceived(TcpSession* session, IRecvPacket* recvPacket) {
-	m_pEventListener->OnReceived(session, recvPacket);
+	if (m_pEventListener)
+		m_pEventListener->OnReceived(session, recvPacket);
 }
 
 void TcpServer::BroadcastAsync(ISendPacket* packet) {
@@ -92,7 +101,28 @@ void TcpServer::BroadcastAsync(ISendPacket* packet) {
 	});
 }
 
+ISessionContainer* TcpServer::GetSessionContainer() {
+	JCORE_LOCK_GUARD(m_Sync);
+	return m_pContainer;
+}
+
+ServerEventListener* TcpServer::GetEventListener() {
+	JCORE_LOCK_GUARD(m_Sync);
+	return m_pEventListener;
+}
+
+void TcpServer::SetSesssionContainer(ISessionContainer* container) {
+	JCORE_LOCK_GUARD(m_Sync);
+	m_pContainer = container;
+}
+
+void TcpServer::SetEventListener(ServerEventListener* listener) {
+	JCORE_LOCK_GUARD(m_Sync);
+	m_pEventListener = listener;
+}
+
 void TcpServer::Initialize() {
+	JCORE_LOCK_GUARD(m_Sync);
 
 	if (CreateSocket(TransportProtocol::TCP) == false) {
 		_NetLogError_("TCP 서버 소켓 생성 실패");
@@ -108,8 +138,9 @@ void TcpServer::Initialize() {
 }
 
 
-
 bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
+	JCORE_LOCK_GUARD(m_Sync);
+
 	if (m_eState != eInitailized) {
 		_NetLogError_("서버가 초기화 상태여야 시작할 수 있습니다.");
 		return false;
@@ -130,40 +161,45 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 		return false;
 	}
 
-	const int iMaxConn = m_pContainer->MaxConnection();
+	if (m_pContainer == nullptr) {
+		m_pContainer = CreateSessionContainer();
+	}
+
+	m_pContainer->Clear();
+	const int iMaxConn = m_pContainer->Capacity();
 
 	// 세션을 미리 생성해놓고 연결 대기 상태로 둠
 	for (int i = 0; i < iMaxConn; i++) {
-		TcpSession* session = CreateSession(); 
+		TcpSession* session = CreateSession();
 
+		session->SetHandle(CreateHandle());
 		session->AcceptWait();
 
 		if (!session->AcceptAsync()) {
-			m_pContainer->DisconnectAllSessions();
+			m_pContainer->DisconnectAll();
 			m_pContainer->Clear();
 			return false;
 		}
-		m_pContainer->AddSession(session);
+		m_pContainer->Add(session);
 	}
 
 
-	m_pEventListener->OnStarted();
+	if (m_pEventListener)
+		m_pEventListener->OnStarted();
 	return bool(m_eState = eListening);
 }
 
 
 bool TcpServer::Stop() {
-	
+	JCORE_LOCK_GUARD(m_Sync);
+
 	if (m_eState == eStopped)
 		return true;
 
-	_NetLogDebug_("서버를 정지합니다.");
-
-	// 제일먼저 세팅해줘야한다.
 	m_eState = eStopped;
 
 	// 강종 진행: GetQueuedCompletionStatus에서 995번에러를 뱉음(I / O operation has been aborted)
-	m_pContainer->DisconnectAllSessions();
+	m_pContainer->DisconnectAll();
 
 	if (m_Socket.Close() == SOCKET_ERROR) {
 		_NetLogError_("서버 소켓을 닫는데 실패했습니다. (%d)", Winsock::LastError());
@@ -173,7 +209,9 @@ bool TcpServer::Stop() {
 
 	// 동적할당된 세션들을 모두 해제해주자.
 	m_pContainer->Clear();
-	m_pEventListener->OnStopped();
+
+	if (m_pEventListener)
+		m_pEventListener->OnStopped();
 	return true;
 }
 

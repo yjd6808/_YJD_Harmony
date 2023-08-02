@@ -189,6 +189,9 @@
     <ClInclude Include="..\Sources\JNetwork\Packet\CommandNameDictionary.h">
       <Filter>Packet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\ISessionContainer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Host">

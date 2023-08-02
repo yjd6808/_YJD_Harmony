@@ -10,7 +10,6 @@
 
 
 #include <SteinsGate/Common/InterServerClientNetGroup.h>
-#include <SteinsGate/Server/ListenerInterServerClientUdp.h>
 
 class CenterInterServerClientNetGroup : public InterServerClientNetGroup
 {
@@ -24,6 +23,4 @@ public:
 protected:
 	void OnLoop(JCore::PulserStatistics* pulseStat) override;
 	bool IsPeerServer() override { return false; }
-private:
-	ListenerInterServerClientUdp m_InterServerClientUdpListener;
 };

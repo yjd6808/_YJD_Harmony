@@ -10,12 +10,6 @@
 
 #include <SteinsGate/Common/CommonNetGroup.h>
 
-#include <SteinsGate/Server/ListenerAuthServer.h>
-#include <SteinsGate/Server/ListenerInterServerClientTcp.h>
-#include <SteinsGate/Server/ListenerInterServerClientUdp.h>
-
-
-class ListenerInterServerHostTcp;
 class AuthNetGroup final : public CommonNetGroup
 {
 public:
@@ -26,8 +20,6 @@ protected:
 	void InitializeIOCP() override;
 	void InitializeServer() override;
 	void OnLoop(JCore::PulserStatistics* pulserStat) override;
-private:
-	ListenerAuthServer m_AuthServerEventListener;
 };
 
 
