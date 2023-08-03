@@ -53,6 +53,7 @@ SEnumMiddleEnd(CommonInputEvent)
 
 // =================================================
 
+// TODO: 커맨드 추가시 AuthMax, LobbyMax, GameMax 0으로 변경할 것 배열 크기가 0이 될 수 없어서 일단 값을 넣어놓음
 SEnumInteritedBegin(AuthInputEvent, CommonInputEvent)
 AuthMax = 2
 SEnumMiddle(AuthInputEvent)

@@ -28,6 +28,19 @@ public:
 	template <typename TInteger>
 	static TInteger ToNumber(const char* str, bool ignoreLeadingZero = true);
 
+
+	// https://stackoverflow.com/questions/26080829/detecting-strtol-failure
+	template <typename TInteger>
+	static bool TryToNumber(JCORE_OUT TInteger& val, const char* str, bool ignoreLeadingZero = true) {
+		errno = 0;
+		TInteger v = ToNumber<TInteger>(str, ignoreLeadingZero);
+		if (errno != 0) {
+			return false;
+		}
+		val = v;
+		return true;
+	}
+
 	static const char* SkipLeadingChar(const char* str, char skipChar);
 	static const char* SkipLeadingNumberZero(const char* str);
 

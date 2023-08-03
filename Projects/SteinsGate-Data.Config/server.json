@@ -42,12 +42,12 @@
             "__comment__": "채널 번호, 타입, 접속가능한 인원수",
             "game": [
                 {
-                    "code": 1,
+                    "game_server_type": 1,
                     "server_id": 4,
                     "name": "루크",
-                    "bind_game_tcp": "127.0.0.1:10130",
-                    "bind_game_udp": "127.0.0.1:10130",
-                    "remote_game": "127.0.0.1:10130",
+                    "bind_logic_tcp": "127.0.0.1:10130",
+                    "bind_logic_udp": "127.0.0.1:10130",
+                    "remote_logic": "127.0.0.1:10130",
 
                     "bind_town_tcp": "127.0.0.1:10131",
                     "remote_town": "127.0.0.1:10131",
@@ -70,12 +70,12 @@
                     ]
                 },
                 {
-                    "code": 2,
+                    "game_server_type": 2,
                     "server_id": 5,
                     "name": "힐더",
-                    "bind_game_tcp": "127.0.0.1:10140",
-                    "bind_game_udp": "127.0.0.1:10140",
-                    "remote_game": "127.0.0.1:10140",
+                    "bind_logic_tcp": "127.0.0.1:10140",
+                    "bind_logic_udp": "127.0.0.1:10140",
+                    "remote_logic": "127.0.0.1:10140",
 
                     "bind_town_tcp": "127.0.0.1:10141",
                     "remote_town": "127.0.0.1:10141",
@@ -92,38 +92,38 @@
                     ]
                 },
                 {
-                    "code": 3,
+                    "game_server_type": 3,
                     "server_id": 6,
                     "name": "시로코",
                     "active": false
                 },
                 {
-                    "code": 4,
+                    "game_server_type": 4,
                     "server_id": 7,
                     "name": "프레이",
                     "active": false
                 },
                 {
-                    "code": 5,
+                    "game_server_type": 5,
                     "server_id": 8,
                     "name": "카시야스",
                     "active": false
                 },
                 {
-                    "code": 6,
+                    "game_server_type": 6,
                     "server_id": 9,
                     "name": "디레지에",
                     "active": false
                 },
                 {
                     "server_id": 10,
-                    "code": 7,
+                    "game_server_type": 7,
                     "name": "카인",
                     "active": false
                 },
                 {
                     "server_id": 11,
-                    "code": 8,
+                    "game_server_type": 8,
                     "name": "세리아",
                     "active": false
                 }

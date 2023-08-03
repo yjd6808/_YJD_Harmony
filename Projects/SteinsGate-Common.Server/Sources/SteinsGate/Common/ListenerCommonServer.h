@@ -11,6 +11,7 @@
 #include <JNetwork/Packet/CommandParser.h>
 #include <JNetwork/EventListener/ServerEventListener.h>
 #include <SteinsGate/Common/ListenerHelper.h>
+#include <SteinsGate/Common/Enum.h>
 
 class ListenerCommonServer
 	: public JNetwork::ServerEventListener

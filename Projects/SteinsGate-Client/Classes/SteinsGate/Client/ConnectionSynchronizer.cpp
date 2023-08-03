@@ -35,19 +35,19 @@ void ConnectionSynchronizer::initialize() {
 
 	m_fnOnConnected[ClientConnectServerType::Auth] = C_AUTH::OnConnected;
 	m_fnOnConnected[ClientConnectServerType::Lobby] = C_LOBBY::OnConnected;
-	m_fnOnConnected[ClientConnectServerType::Game] = C_GAME::OnConnected;
+	m_fnOnConnected[ClientConnectServerType::Logic] = C_GAME::OnConnected;
 	m_fnOnConnected[ClientConnectServerType::Chat] = C_CHAT::OnConnected;
 	m_fnOnConnected[ClientConnectServerType::Area] = C_AREA::OnConnected;
 
 	m_fnOnConnectFailed[ClientConnectServerType::Auth] = C_AUTH::OnConnectFailed;
 	m_fnOnConnectFailed[ClientConnectServerType::Lobby] = C_LOBBY::OnConnectFailed;
-	m_fnOnConnectFailed[ClientConnectServerType::Game] = C_GAME::OnConnectFailed;
+	m_fnOnConnectFailed[ClientConnectServerType::Logic] = C_GAME::OnConnectFailed;
 	m_fnOnConnectFailed[ClientConnectServerType::Chat] = C_CHAT::OnConnectFailed;
 	m_fnOnConnectFailed[ClientConnectServerType::Area] = C_AREA::OnConnectFailed;
 
 	m_fnOnDisconnected[ClientConnectServerType::Auth] = C_AUTH::OnDisconnected;
 	m_fnOnDisconnected[ClientConnectServerType::Lobby] = C_LOBBY::OnDisconnected;
-	m_fnOnDisconnected[ClientConnectServerType::Game] = C_GAME::OnDisconnected;
+	m_fnOnDisconnected[ClientConnectServerType::Logic] = C_GAME::OnDisconnected;
 	m_fnOnDisconnected[ClientConnectServerType::Chat] = C_CHAT::OnDisconnected;
 	m_fnOnDisconnected[ClientConnectServerType::Area] = C_AREA::OnDisconnected;
 }

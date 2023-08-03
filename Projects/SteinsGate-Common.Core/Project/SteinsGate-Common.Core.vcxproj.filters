@@ -76,6 +76,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\PacketViewer.cpp">
       <Filter>Net\Util</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ServerProcessInfo.cpp">
+      <Filter>Data\Server</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -224,6 +227,12 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\PacketViewer.h">
       <Filter>Net\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\GameEnum.h">
+      <Filter>Net\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyEnum.h">
+      <Filter>Net\Enum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

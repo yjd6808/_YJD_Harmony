@@ -133,15 +133,22 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 		DebugAssertMsg(iGameChannelCount > 0, "액티브 게임서버인데 활성화된 채널 정보가 아무것도 없습니다.");
 		GameServerProcessInfo info(iGameChannelCount);
 		int iServerId = gameServerRoot["server_id"].asInt();
+		int eGameServerType = gameServerRoot["game_server_type"].asInt();
 
-		info.Code = (ServerType_t)gameServerRoot["code"].asInt();
+		if (eGameServerType < GameServerType::Begin || eGameServerType > GameServerType::End) {
+			_LogWarn_("올바른 게임서버 타입이 아닙니다.");
+			continue;
+		}
+
+			
+		info.Type = (GameServerType_t)eGameServerType;
 		info.Name = JsonUtil::getString(gameServerRoot["name"]);
 		info.Active = true;
 		info.ServerId = iServerId;
 
-		SGString szBindGameTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_game_tcp"]);
-		SGString szBindGameUdp = JsonUtil::getStringOrNull(gameServerRoot["bind_game_udp"]);
-		SGString szRemoteGame = JsonUtil::getStringOrNull(gameServerRoot["remote_game"]);
+		SGString szBindLogicTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_logic_tcp"]);
+		SGString szBindLogicUdp = JsonUtil::getStringOrNull(gameServerRoot["bind_logic_udp"]);
+		SGString szRemoteLogic = JsonUtil::getStringOrNull(gameServerRoot["remote_logic"]);
 		SGString szRemoteInterServer = JsonUtil::getString(gameServerRoot["remote_interserver"]);
 
 		SGString szBindTownTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_town_tcp"]);
@@ -154,9 +161,9 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 		SGString szBindInterServerTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_interserver_tcp"]);
 
 		DebugAssertMsg(
-			!szBindGameTcp.IsNull() &&
-			!szBindGameUdp.IsNull() &&
-			!szRemoteGame.IsNull() &&
+			!szBindLogicTcp.IsNull() &&
+			!szBindLogicUdp.IsNull() &&
+			!szRemoteLogic.IsNull() &&
 
 			!szBindTownTcp.IsNull() &&
 			!szRemoteTown.IsNull() &&
@@ -171,9 +178,9 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 		);
 
 		
-		info.BindGameTcp = Move(szBindGameTcp);
-		info.BindGameUdp = Move(szBindGameUdp);
-		info.RemoteEP = Move(szRemoteGame);
+		info.BindLogicTcp = Move(szBindLogicTcp);
+		info.BindLogicUdp = Move(szBindLogicUdp);
+		info.RemoteEP = Move(szRemoteLogic);
 		info.RemoteInterServerEP = Move(szRemoteInterServer);
 		
 		info.BindTownTcp = Move(szBindTownTcp);

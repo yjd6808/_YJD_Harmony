@@ -729,6 +729,17 @@ Seria,
 End = Seria
 SEnumMiddle(GameServerType)
 
+static constexpr const char* Name[End + 1]{
+	"",
+	"루크",
+	"힐더",
+	"시로코",
+	"프레이",
+	"카시아스",
+	"디레지에",
+	"카인",
+	"세리아"
+};
 SEnumMiddleEnd(GameServerType)
 
 SEnumBegin(EnteranceType)
@@ -791,7 +802,7 @@ SEnumBegin(ClientConnectServerType)
 Auth,
 Begin = Auth,
 Lobby,
-Game,
+Logic,
 Chat,
 Area,
 End = Area,
@@ -803,7 +814,7 @@ SEnumBegin(ServerType)
 Auth,
 Begin = Auth,
 Lobby,
-Game,
+Logic,
 Chat,
 Area,
 Center,
@@ -814,7 +825,7 @@ SEnumMiddle(ServerType)
 static constexpr const char* Name[Max]{
 	"인증",
 	"로비",
-	"게임",
+	"로직",
 	"채팅",
 	"지역",
 	"중앙"

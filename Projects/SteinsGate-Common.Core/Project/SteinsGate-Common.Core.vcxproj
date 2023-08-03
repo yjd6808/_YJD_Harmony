@@ -66,6 +66,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ServerProcessInfo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SgaElement.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SgaElementInitilizer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SgaImage.cpp" />
@@ -146,12 +150,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\GameEnum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyEnum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h">
       <SubType>
       </SubType>

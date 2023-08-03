@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyCore.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\DataManager.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\Lobby.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerLobbyServer.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_INTERSERVER.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_INTERSERVER.cpp">
+      <Filter>Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_LOBBY.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_LOBBY.cpp">
+      <Filter>Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyContents.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyInterServerClientNetGroup.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyNetGroup.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyNetMaster.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyServer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbySession.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOBBY.cpp">
+      <Filter>Query</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyCoreHeader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyCore.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\Lobby.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_LOBBY.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_INTERSERVER.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerLobbyServer.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_INTERSERVER.h">
+      <Filter>Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_LOBBY.h">
+      <Filter>Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyContents.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyInterServerClientNetGroup.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyNetGroup.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyServer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyNetMaster.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbySession.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOBBY.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Recv">
+      <UniqueIdentifier>{775bf26d-5d03-472e-892e-6fb4ea8d4ca5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Send">
+      <UniqueIdentifier>{b14ebb94-abc9-4678-83bf-ecef8247cc36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{a9efac3b-967a-4517-90db-7dbafbee409d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Query">
+      <UniqueIdentifier>{48b1d56e-da03-4184-9565-ead55f0a7a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{fe79c973-98af-462a-a693-69f34dcce325}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

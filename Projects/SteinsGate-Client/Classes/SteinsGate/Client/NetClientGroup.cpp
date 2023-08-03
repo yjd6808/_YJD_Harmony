@@ -105,7 +105,7 @@ void NetClientGroup::Initialize() {
 	}
 
 	{
-		parser = &m_Parser[ClientConnectServerType::Game];
+		parser = &m_Parser[ClientConnectServerType::Logic];
 
 		// TCP
 

@@ -49,11 +49,11 @@ struct GameServerProcessInfo : ServerProcessInfo
 		: GameChannelInfoList(channelCount)
 	{}
 
-	ServerType_t Code;
+	GameServerType_t Type;
 	SGString Name;
 	
-	SGEndPoint BindGameTcp;
-	SGEndPoint BindGameUdp;
+	SGEndPoint BindLogicTcp;
+	SGEndPoint BindLogicUdp;
 
 	SGEndPoint BindChatTcp;
 	SGEndPoint RemoteChat;
@@ -74,6 +74,8 @@ struct ServerProcessInfoPackage : ConfigDataAbstract
 	{}
 	~ServerProcessInfoPackage() override = default;
 
+	GameServerProcessInfo* getGameServerProcessInfo(GameServerType_t gameServerType);
+
 	SGString Name;
 	CenterServerProcessInfo Center;
 	AuthServerProcessInfo Auth;
@@ -82,3 +84,5 @@ struct ServerProcessInfoPackage : ConfigDataAbstract
 	SGVector<int> ActiveServerIdList;
 	ServerProcessInfo* InfoMap[MaxServerId_v];
 };
+
+
