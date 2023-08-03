@@ -26,14 +26,20 @@ public:
 	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, va_list va);
 
 	template <typename TInteger>
-	static TInteger ToNumber(const char* str, bool ignoreLeadingZero = true);
+	static TInteger ToNumber(const char* str, JCORE_OUT char** endptr = nullptr, bool ignoreLeadingZero = true);
 
 
 	// https://stackoverflow.com/questions/26080829/detecting-strtol-failure
 	template <typename TInteger>
 	static bool TryToNumber(JCORE_OUT TInteger& val, const char* str, bool ignoreLeadingZero = true) {
 		errno = 0;
-		TInteger v = ToNumber<TInteger>(str, ignoreLeadingZero);
+		char* pEnd = nullptr;
+		TInteger v = ToNumber<TInteger>(str, &pEnd, ignoreLeadingZero);
+
+		if (pEnd == str) {	// 숫자 못찾는 경우 에로노 셋안됨;
+			return false;
+		}
+
 		if (errno != 0) {
 			return false;
 		}

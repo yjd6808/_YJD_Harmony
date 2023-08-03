@@ -323,19 +323,19 @@ void StringUtil::ConcatInnerFront(char* buf, int bufCapacity, const char* concat
 }
 
 // https://github.com/otland/forgottenserver/blob/545516299b607ef25471f84d1805a22311ab72de/src/pugicast.h
-template <> float StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtof(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr); }
-template <> double StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtod(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr); }
-template <> Int32L StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0); }
-template <> Int64 StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtoll(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0); }
-template <> Int32UL StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0); }
-template <> Int64U StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return std::strtoull(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0); }
-template <> Char StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Char>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0)); }
-template <> WideChar StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<WideChar>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0)); }
-template <> Byte StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Byte>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0)); }
-template <> Int16 StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Int16>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0)); }
-template <> Int16U StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Int16U>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0)); }
-template <> Int32 StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Int32>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0)); }
-template <> Int32U StringUtil::ToNumber(const char* str, bool ignoreLeadingZero) { return static_cast<Int32U>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, nullptr, 0)); }
+template <> float StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtof(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr); }
+template <> double StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtod(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr); }
+template <> Int32L StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
+template <> Int64 StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoll(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
+template <> Int32UL StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
+template <> Int64U StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return std::strtoull(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10); }
+template <> Char StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Char>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> WideChar StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<WideChar>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> Byte StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Byte>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> Int16 StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Int16>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> Int16U StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Int16U>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> Int32 StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Int32>(std::strtol(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
+template <> Int32U StringUtil::ToNumber(const char* str, JCORE_OUT char** endptr /* = nullptr */, bool ignoreLeadingZero /* = true */ ) { return static_cast<Int32U>(std::strtoul(ignoreLeadingZero ? SkipLeadingNumberZero(str) : str, endptr, 10)); }
 
 template <> String StringUtil::ToString(bool value) { return value ? "true" : "false"; }
 template <> String StringUtil::ToString(float value) { return std::to_string(value); }
