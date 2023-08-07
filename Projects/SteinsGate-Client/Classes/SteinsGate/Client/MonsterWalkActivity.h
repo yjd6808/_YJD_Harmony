@@ -10,8 +10,9 @@
 
 
 #include "Tutturu.h"
+#include <SteinsGate/Common/MapInfo.h>
 #include <SteinsGate/Client/MonsterActivity.h>
-#include <SteinsGate/Client/MapInfo.h>
+
 
 class Actor;
 class MapLayer;
@@ -33,10 +34,10 @@ public:
 	void updateWander(float dt);
 	void updateTrack(float dt);
 	void updateMove(float dt, MapLayer* pMapLayer);
-	void updateLeftMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect);
-	void updateRightMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect);
-	void updateUpMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect);
-	void updateDownMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect);
+	void updateLeftMove(MapLayer* mapLayer, MapAreaInfo* mapInfo, const SGRect& thicknessRect);
+	void updateRightMove(MapLayer* mapLayer, MapAreaInfo* mapInfo, const SGRect& thicknessRect);
+	void updateUpMove(MapLayer* mapLayer, MapAreaInfo* mapInfo, const SGRect& thicknessRect);
+	void updateDownMove(MapLayer* mapLayer, MapAreaInfo* mapInfo, const SGRect& thicknessRect);
 
 	void setDestination(const SGVec2& destination);
 	void setTarget(Actor* target);

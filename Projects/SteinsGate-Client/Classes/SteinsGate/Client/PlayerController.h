@@ -12,7 +12,7 @@
 
 #include <JCore/Time.h>
 
-struct MapInfo;
+struct MapAreaInfo;
 
 class HostPlayer;
 class Character;
@@ -55,10 +55,10 @@ public:
 	void walk();
 
 	void updateMove(float dt);
-	void updateLeftMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect);
-	void updateRightMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& nextThicknessRect);
-	void updateUpMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& nextThicknessRect);
-	void updateDownMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& nextThicknessRect);
+	void updateLeftMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect);
+	void updateRightMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& nextThicknessRect);
+	void updateUpMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& nextThicknessRect);
+	void updateDownMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& nextThicknessRect);
 	void updateDirection(ControlKey_t pressedKey);
 	void reflectPressedMoveKeys();	// 액션 수행동안 키 입력을 무시하는데 그사이 눌린 키들에 대한 처리
 	void setCommandable(bool commandable) { m_bCabUseCommand = commandable; }

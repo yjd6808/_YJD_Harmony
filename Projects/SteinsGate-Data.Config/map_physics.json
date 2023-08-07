@@ -1,0 +1,15 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "물리 데이터",
+
+    "physics": [
+        {
+            "code": 1,
+            "gravity": 900.0,
+            "friction": 1500.0,
+            "elasticity_divided_force": 4.0,
+
+            "__comment__name": "지구",
+        }
+    ]
+}

@@ -8,10 +8,12 @@
 #include "Tutturu.h"
 #include "PlayerController.h"
 
+#include <SteinsGate/Common/MapInfo.h>
+
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/SGAction.h>
 #include <SteinsGate/Client/MapLayer.h>
-#include <SteinsGate/Client/MapInfo.h>
+
 
 USING_NS_CC;
 USING_NS_JC;
@@ -177,7 +179,7 @@ void PlayerController::updateMove(float dt) {
 	if (pMapLayer == nullptr)
 		return;
 
-	MapInfo* pMapInfo = pMapLayer->getMapInfo();
+	MapAreaInfo* pAreaInfo = pMapLayer->getMapAreaInfo();
 	SGAction* pRunningAction = m_pActionManager->getRunningAction();
 
 	// 액션중 이동가능한 액션인 경우 해당 액션의 이동속도로 움직일 수 있도록 한다.
@@ -197,11 +199,11 @@ void PlayerController::updateMove(float dt) {
 
 	if (isKeyPressed(ControlKey::Left) && pRunningAction->isMoveableNegativeX()) {
 		thicknessPosLR.origin.x -= fSpeedX;
-		updateLeftMove(pMapLayer, pMapInfo, thicknessPosLR);
+		updateLeftMove(pMapLayer, pAreaInfo, thicknessPosLR);
 
 	} else if (isKeyPressed(ControlKey::Right) && pRunningAction->isMoveablePositiveX()) {
 		thicknessPosLR.origin.x += fSpeedX;
-		updateRightMove(pMapLayer, pMapInfo, thicknessPosLR);
+		updateRightMove(pMapLayer, pAreaInfo, thicknessPosLR);
 
 	}
 
@@ -209,55 +211,55 @@ void PlayerController::updateMove(float dt) {
 
 	if (isKeyPressed(ControlKey::Up) && pRunningAction->isMoveablePositiveY()) {
 		thicknessPosUD.origin.y += fSpeedY;
-		updateUpMove(pMapLayer, pMapInfo, thicknessPosUD);
+		updateUpMove(pMapLayer, pAreaInfo, thicknessPosUD);
 
 	} else if (isKeyPressed(ControlKey::Down) && pRunningAction->isMoveableNegativeY()) {
 		thicknessPosUD.origin.y -= fSpeedY;
-		updateDownMove(pMapLayer, pMapInfo, thicknessPosUD);
+		updateDownMove(pMapLayer, pAreaInfo, thicknessPosUD);
 
 	}
 }
 
-void PlayerController::updateLeftMove(MapLayer* mapLayer, MapInfo* mapInfo,  const SGRect& thicknessRect) {
+void PlayerController::updateLeftMove(MapLayer* mapLayer, MapAreaInfo* areaInfo,  const SGRect& thicknessRect) {
 	SGVec2 lb{ thicknessRect.origin.x, thicknessRect.origin.y };
 	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// lb, lt 체크
-	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithMapObjects(thicknessRect))
+	if (areaInfo->checkWall(lb.x, lb.y) || areaInfo->checkWall(lt.x, lt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pPlayer->setPositionRealX(thicknessRect.origin.x);
 }
 
 
-void PlayerController::updateRightMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect) {
+void PlayerController::updateRightMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
 	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
 	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// rb, rt 체크
-	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithMapObjects(thicknessRect))
+	if (areaInfo->checkWall(rb.x, rb.y) || areaInfo->checkWall(rt.x, rt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pPlayer->setPositionRealX(thicknessRect.origin.x);
 }
 
-void PlayerController::updateUpMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect) {
+void PlayerController::updateUpMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
 	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
 	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// lt, rt 체크
-	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithMapObjects(thicknessRect))
+	if (areaInfo->checkWall(lt.x, lt.y) || areaInfo->checkWall(rt.x, rt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pPlayer->setPositionRealY(thicknessRect.origin.y);
 }
 
-void PlayerController::updateDownMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect) {
+void PlayerController::updateDownMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
 	SGVec2 lb{ thicknessRect.origin.x, thicknessRect.origin.y };
 	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
 
 	// lb, rb 체크
-	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithMapObjects(thicknessRect))
+	if (areaInfo->checkWall(lb.x, lb.y) || areaInfo->checkWall(rb.x, rb.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pPlayer->setPositionRealY(thicknessRect.origin.y);

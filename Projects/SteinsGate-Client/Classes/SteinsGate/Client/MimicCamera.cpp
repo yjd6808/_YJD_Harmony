@@ -39,8 +39,20 @@ void MimicCamera::updateView(float dt) {
 	if (m_pTarget == nullptr)
 		return;
 
-	MapLayer* pMapLayer = (MapLayer*)_parent;
-	SGSize mapSize = pMapLayer->getMapInfo()->getMapSize();
+	MapLayer* pMapLayer = dynamic_cast<MapLayer*>(_parent);
+
+	if (pMapLayer == nullptr) {
+		DebugAssert(false);
+		return;
+	}
+
+	MapAreaInfo* pAreaInfo = pMapLayer->getMapAreaInfo();
+
+	if (pAreaInfo == nullptr) {
+		return;
+	}
+
+	SGSize mapSize { pAreaInfo->getAreaWidth(), pAreaInfo->getAreaHeight() };
 	SGSize winSize = _director->getWinSize();
 
 	Vec2 mapLayerPos = pMapLayer->getPosition();

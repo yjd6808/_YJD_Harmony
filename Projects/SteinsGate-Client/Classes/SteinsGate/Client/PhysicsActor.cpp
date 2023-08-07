@@ -103,10 +103,10 @@ void PhysicsActor::updatePhysics(float dt) {
 }
 
 void PhysicsActor::updateGravity(float dt) {
-	MapInfo* pMapInfo = m_pMapLayer->getMapInfo();
+	const MapPhysicsInfo* pPhysicsInfo = m_pMapLayer->getMapPhysicsInfo();
 
 	float y = m_pActorSprite->getPositionY() + m_fVelocityY * FPS1_v;
-	m_fVelocityY -= pMapInfo->Gravity * FPS1_v;
+	m_fVelocityY -= pPhysicsInfo->Gravity * FPS1_v;
 
 	if (y > SG_FLT_EPSILON && m_fVelocityY > 0.0f) {
 		m_fUpTime += dt;
@@ -121,7 +121,7 @@ void PhysicsActor::updateGravity(float dt) {
 	if (y <= SG_FLT_EPSILON) {
 
 		if (m_bUseElasticity && !m_bBounced && m_fDownTime > 0.0f) {
-			m_fVelocityY = Math::Abs(m_fVelocityY / pMapInfo->ElasticityDividedForce);
+			m_fVelocityY = Math::Abs(m_fVelocityY / pPhysicsInfo->ElasticityDividedForce);
 			m_bBounced = true;
 
 		} else {
@@ -137,7 +137,8 @@ void PhysicsActor::updateGravity(float dt) {
 }
 
 void PhysicsActor::updateFriction(float dt) {
-	MapInfo* pMapInfo = m_pMapLayer->getMapInfo();
+	MapAreaInfo* pAreaInfo = m_pMapLayer->getMapAreaInfo();
+	MapPhysicsInfo* pPhysicsInfo = m_pMapLayer->getMapPhysicsInfo();
 	SGRect groundRect = getThicknessBoxRect();
 
 	groundRect.origin.x += m_fVelocityX * FPS1_v;
@@ -145,7 +146,7 @@ void PhysicsActor::updateFriction(float dt) {
 	if (isOnTheGround()) {
 
 		if (m_fVelocityX > 0.0f) {
-			m_fVelocityX -= pMapInfo->Friction * FPS1_v;
+			m_fVelocityX -= pPhysicsInfo->Friction * FPS1_v;
 
 			if (m_fVelocityX <= 0.0f) {
 				m_fVelocityX = 0.0f;
@@ -153,7 +154,7 @@ void PhysicsActor::updateFriction(float dt) {
 		}
 		
 		else if (m_fVelocityX < 0.0f) { 
-			m_fVelocityX += pMapInfo->Friction * FPS1_v;
+			m_fVelocityX += pPhysicsInfo->Friction * FPS1_v;
 
 			if (m_fVelocityX >= 0.0f) {
 				m_fVelocityX = 0.0f;
@@ -161,7 +162,7 @@ void PhysicsActor::updateFriction(float dt) {
 		}
 	}
 
-	if (pMapInfo->checkWall(groundRect.origin.x, groundRect.origin.y)) {
+	if (pAreaInfo->checkWall(groundRect.origin.x, groundRect.origin.y)) {
 		return;
 	}
 

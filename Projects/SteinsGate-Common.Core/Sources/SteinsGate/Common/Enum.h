@@ -430,11 +430,12 @@ SEnumBegin(ConfigFileType)
 Effect,
 Begin = Effect,
 Map,
+MapPhysics,
+MapObject,
 Monster,
 Monster_Animation_Frame_Event,
 Monster_Attack_Data,
 Monster_Projectile,
-MapObject,
 Server,
 Tile,
 UI,
@@ -460,33 +461,34 @@ Max = End
 SEnumMiddle(ConfigFileType)
 
 static constexpr const char* FileName[Max]{
-	"effect.json"						,
-	"map.json"							,
-	"monster.json"						,
-	"monster_animation_frame_event.json",
-	"monster_attack_data.json"			,
-	"monster_projectile.json"			,
-	"map_object.json"					,
-	"server.json"						,
-	"tile.json"							,
-	"ui.json"							,
-	"action.json"						,
-	"ai.json"							,
-	"attack_box.json"					,
-	"channel.json"						,
-	"char_animation.json"				,
-	"char_animation_frame_event.json"	,
-	"char_attack_data.json"				,
-	"char_base.json"					,
-	"char_common.json"					,
-	"char_projectile.json"				,
-	"client.json"						,
-	"client_text.json"					,
-	"수동로딩"							,
-	"item_opt.json"						,
-	"enchant.json"						,
-	"common.json"						, // common.json에서 다른 이름으로 변경시, 클라이언트와 각 서버프로젝트들 PostBuild이벤트로 수행하는 설정파일이름도 변경필요
-	"database.json"
+	"effect.json"						,		// 파일
+	"map"								,		// 디렉토리
+	"map_physics.json"					,		// 파일
+	"map_object.json"					,		// 파일
+	"monster.json"						,		// 파일
+	"monster_animation_frame_event.json",		// 파일
+	"monster_attack_data.json"			,		// 파일
+	"monster_projectile.json"			,		// 파일
+	"server.json"						,		// 파일
+	"tile.json"							,		// 파일
+	"ui.json"							,		// 파일
+	"action.json"						,		// 파일
+	"ai.json"							,		// 파일
+	"attack_box.json"					,		// 파일
+	"channel.json"						,		// 파일
+	"char_animation.json"				,		// 파일
+	"char_animation_frame_event.json"	,		// 파일
+	"char_attack_data.json"				,		// 파일
+	"char_base.json"					,		// 파일
+	"char_common.json"					,		// 파일
+	"char_projectile.json"				,		// 파일
+	"client.json"						,		// 파일
+	"client_text.json"					,		// 파일
+	"item"								,		// 디렉토리
+	"item_opt.json"						,		// 파일
+	"enchant.json"						,		// 파일
+	"common.json"						,		// 파일 common.json에서 다른 이름으로 변경시, 클라이언트와 각 서버프로젝트들 PostBuild이벤트로 수행하는 설정파일이름도 변경필요
+	"database.json"								// 파일
 	
 };
 SEnumMiddleEnd(ConfigFileType)
@@ -840,6 +842,17 @@ Begin = Obstacle,
 Gate,
 End = Gate,
 SEnumEnd(MapObjectType)
+
+SEnumBegin(MapType)
+Dungeon,
+Private,
+Town
+SEnumEnd(MapType)
+
+SEnumBegin(MapBundleType)
+Dungeon,
+Town
+SEnumEnd(MapBundleType)
 
 
 /*

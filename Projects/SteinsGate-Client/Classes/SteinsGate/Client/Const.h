@@ -29,15 +29,10 @@ inline constexpr float DefaultMoveSpeedPerFPSY_v = DefaultMoveSpeedPerSecX_v * F
 inline constexpr float DefaultRunSpeedPerSecX_v = 225.0f;		// 기본 달리기 속도 (1초당 이동 가능한 픽셀 수)
 inline constexpr float DefaultRunSpeedPerFPSX_v = DefaultRunSpeedPerSecX_v * FPS1_v;
 
-
-inline constexpr int TileWidth_v = 224;		// 맵 타일들 모두 가로길이가 224픽셀임
-inline constexpr int TileHeight_v= 184;		// 내가 자른 타일 높이
-inline constexpr int BlockSize_v = 20;		// 16 고려해볼 것 타일 가로길이가 다 224임. 일단 테스트 끝나고 수정
-
 inline constexpr int MaxHitList_v = 8;		// 프로젝틸 관통된 객체 기록용 컨테이너 용량
 
 
-inline constexpr int DeathDownTime_v = FPS6_v;	// 바닥에 사망상태로 닿았을 때 몇초뒤 사망확정될지
-inline constexpr int MinPlayHitAnimationOnTheAir_v = FPS18_v;	// 공중에서 Hit 모션 얼마나 재생할지
+inline constexpr float DeathDownTime_v = FPS6_v;	// 바닥에 사망상태로 닿았을 때 몇초뒤 사망확정될지
+inline constexpr float MinPlayHitAnimationOnTheAir_v = FPS18_v;	// 공중에서 Hit 모션 얼마나 재생할지
 
 inline constexpr float ZReodrerDelay_v = FPS6_v;

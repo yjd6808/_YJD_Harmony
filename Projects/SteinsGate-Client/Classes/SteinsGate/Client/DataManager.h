@@ -18,7 +18,6 @@
 #include <SteinsGate/Client/ClientInfo.h>
 #include <SteinsGate/Client/TileInfo.h>
 #include <SteinsGate/Client/MapObjectInfo.h>
-#include <SteinsGate/Client/MapInfo.h>
 #include <SteinsGate/Client/AIInfo.h>
 #include <SteinsGate/Client/AttackDataInfo.h>
 #include <SteinsGate/Client/EffectInfo.h>
@@ -44,7 +43,6 @@ public:
 	ClientInfo* getClientInfo(int code);
 	TileInfo* getTileInfo(int tileCode);
 	MapObjectInfo* getMapObjectInfo(int mapObjectCode);
-	MapInfo* getMapInfo(int mapCode);
 	AIInfo* getAIInfo(int aiCode);
 	AttackDataInfo* getAttackDataInfo(ActorType_t actorType, int attackDataCode);
 	EffectInfo* getEffectInfo(int effectCode);

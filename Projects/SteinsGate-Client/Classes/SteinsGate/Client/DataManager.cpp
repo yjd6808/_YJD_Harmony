@@ -14,6 +14,9 @@
 #include <SteinsGate/Common/CharCommonInfoLoader.h>
 #include <SteinsGate/Common/ServerInfoLoader.h>
 #include <SteinsGate/Common/ItemInfoLoader.h>
+#include <SteinsGate/Common/MapInfoLoader.h>
+#include <SteinsGate/Common/MapPhysicsInfoLoader.h>
+
 #include <SteinsGate/Client/ActionInfoLoader.h>
 #include <SteinsGate/Client/MobInfoLoader.h>
 #include <SteinsGate/Client/CharInfoLoader.h>
@@ -21,7 +24,6 @@
 #include <SteinsGate/Client/ClientInfoLoader.h>
 #include <SteinsGate/Client/TileInfoLoader.h>
 #include <SteinsGate/Client/MapObjectInfoLoader.h>
-#include <SteinsGate/Client/MapInfoLoader.h>
 #include <SteinsGate/Client/AIInfoLoader.h>
 #include <SteinsGate/Client/AttackDataInfoLoader.h>
 #include <SteinsGate/Client/CharAnimationInfoLoader.h>
@@ -38,11 +40,13 @@ void DataManager::initializeLoader() {
 
 	m_pConfigFileLoaders[ConfigFileType::Effect]						= dbg_new EffectInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Map]							= dbg_new MapInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::MapPhysics]					= dbg_new MapPhysicsInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::MapObject]						= dbg_new MapObjectInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Monster]						= dbg_new MobInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Monster_Animation_Frame_Event]	= dbg_new FrameEventLoader(this, ActorType::Monster);
 	m_pConfigFileLoaders[ConfigFileType::Monster_Projectile]			= dbg_new ProjectileInfoLoader(this, ActorType::Monster);
 	m_pConfigFileLoaders[ConfigFileType::Monster_Attack_Data]			= dbg_new AttackDataInfoLoader(this, ActorType::Monster);
-	m_pConfigFileLoaders[ConfigFileType::MapObject]						= dbg_new MapObjectInfoLoader(this);
+	
 	m_pConfigFileLoaders[ConfigFileType::Server]						= dbg_new ServerInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Tile]							= dbg_new TileInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::UI]							= dbg_new UIInfoLoader(this);
@@ -154,15 +158,6 @@ MapObjectInfo* DataManager::getMapObjectInfo(int mapObjectCode) {
 		load(eType);
 
 	return (MapObjectInfo*)getData(eType, mapObjectCode);
-}
-
-MapInfo* DataManager::getMapInfo(int mapCode) {
-	auto eType = ConfigFileType::Map;
-
-	if (!m_bLoaded[eType])
-		load(eType);
-
-	return (MapInfo*)getData(eType, mapCode);
 }
 
 AIInfo* DataManager::getAIInfo(int aiCode) {

@@ -66,6 +66,14 @@ void MapLayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
 	HostPlayer::Get()->onKeyReleased(keyCode, event);
 }
 
+MapPhysicsInfo* MapLayer::getMapPhysicsInfo() {
+	return m_pMapPhysicsInfo;
+}
+
+MapAreaInfo* MapLayer::getMapAreaInfo() {
+	return m_pMapAreaInfo;
+}
+
 MapInfo* MapLayer::getMapInfo() {
 	return m_pMapInfo;
 }
@@ -81,22 +89,20 @@ void MapLayer::update(float dt) {
 }
 
 void MapLayer::loadMap(int mapCode) {
-	DataManager* pDataManager = DataManager::Get();
-	ImagePackManager* pPackManager = ImagePackManager::Get();
-	MapInfo* pMap = pDataManager->getMapInfo(mapCode);
-
-	m_pMapInfo = pMap;
+	m_pMapInfo = CoreDataManager_v->getMapInfo(mapCode);
+	m_pMapAreaInfo = CoreDataManager_v->getMapAreaInfo(mapCode);
+	m_pMapPhysicsInfo = CoreDataManager_v->getMapPhysicsInfo(m_pMapInfo->PhysicsCode);
 
 	// 배경 로딩
 
 	// 타일 로딩, 맨 밑에 타일들부터 차곡차곡 쌓아서 올린다.
-	for (int i = pMap->TileHeight - 1, k = 0; i >= 0; --i, ++k) {	
-		for (int j = 0; j < pMap->TileWidth; j++) {
-			float fTileXPos = float(TileWidth_v) * j;
-			float fTileYPos = float(TileHeight_v) * k;
+	for (int i = m_pMapInfo->TileHeight - 1, k = 0; i >= 0; --i, ++k) {
+		for (int j = 0; j < m_pMapInfo->TileWidth; j++) {
+			const float fTileXPos = TileWidth_v * j;
+			const float fTileYPos = TileHeight_v * k;
 
-			TileInfo* pTileInfo = pDataManager->getTileInfo(pMap->TileArray[i][j]);
-			FrameTexture* pFrameTexture = pPackManager->getPack(pTileInfo->SgaIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
+			const TileInfo* pTileInfo = CoreDataManager_v->getTileInfo(m_pMapInfo->TileArray[i][j]);
+			FrameTexture* pFrameTexture = CorePackManager_v->getPack(pTileInfo->SgaIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
 
 			SGSprite* pTileSprite = SGSprite::createWithTexture(pFrameTexture->getTexture());
 			pTileSprite->setAnchorPoint(Vec2::ZERO);
@@ -106,8 +112,8 @@ void MapLayer::loadMap(int mapCode) {
 	}
 
 	// 오브젝트 로딩
-	for (int i = 0; i < pMap->MapObjectList.Size(); ++i) {
-		MapObjectPositionInfo& objInfo = pMap->MapObjectList[i];
+	for (int i = 0; i < m_pMapInfo->MapObjectList.Size(); ++i) {
+		MapObjectPositionInfo& objInfo = m_pMapInfo->MapObjectList[i];
 		m_pActorBox->createMapObjectOnMap(objInfo.Code, objInfo.X, objInfo.Y);
 	}
 

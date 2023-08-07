@@ -15,6 +15,7 @@
 #include <SteinsGate/Common/ChannelInfoLoader.h>
 #include <SteinsGate/Common/EnchantInfoLoader.h>
 #include <SteinsGate/Common/ServerInfoLoader.h>
+#include <SteinsGate/Common/MapInfoLoader.h>
 
 DataManagerAbstract::DataManagerAbstract()
 	: m_pConfigFileLoaders{}
@@ -239,6 +240,49 @@ CharCommonInfo* DataManagerAbstract::getCharCommonInfo(int charCommonCode) {
 
 	const auto pRet = dynamic_cast<CharCommonInfo*>(getData(eType, charCommonCode));
 	DebugAssertMsg(pRet, "데이터베이스 인포 타입이 아닙니다.");
+	return pRet;
+}
+
+MapInfo* DataManagerAbstract::getMapInfo(int mapCode) {
+	const auto eType = ConfigFileType::Map;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	const auto pRet = dynamic_cast<MapInfo*>(getData(eType, mapCode));
+	DebugAssertMsg(pRet, "맵 인포 타입이 아닙니다.");
+	return pRet;
+}
+
+MapAreaInfo* DataManagerAbstract::getMapAreaInfo(int mapCode) {
+	const auto eType = ConfigFileType::Map;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	const auto pLoader = dynamic_cast<MapInfoLoader*>(m_pConfigFileLoaders[eType]);
+
+	if (pLoader == nullptr) {
+		_LogWarn_("맵 인포 로더가 없습니다.");
+		return nullptr;
+	}
+
+	MapAreaInfo* pRet = pLoader->getMapAreaInfo(mapCode);
+	if (pRet == nullptr) {
+		_LogWarn_("%d 맵의 Area 데이터를 찾지 못했습니다.", mapCode);
+		return nullptr;
+	}
+	return pRet;
+}
+
+MapPhysicsInfo* DataManagerAbstract::getMapPhysicsInfo(int physicsCode) {
+	const auto eType = ConfigFileType::MapPhysics;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	const auto pRet = dynamic_cast<MapPhysicsInfo*>(getData(eType, physicsCode));
+	DebugAssertMsg(pRet, "맵 피직스 타입이 아닙니다.");
 	return pRet;
 }
 

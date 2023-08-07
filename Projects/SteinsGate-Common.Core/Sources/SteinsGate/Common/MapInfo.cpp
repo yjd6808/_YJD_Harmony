@@ -6,24 +6,21 @@
  */
 
 
-#include "Tutturu.h"
+#include "Core.h"
 #include "MapInfo.h"
 
-#include <SteinsGate/Client/Struct.h>
+#include <SteinsGate/Common/Const.h>
 
-
-bool MapInfo::checkWall(float x, float y) {
+bool MapAreaInfo::checkWall(float x, float y) {
 
 	if (x < 0.0f || y < 0.0f)
 		return true;
 
-	int iX = x / BlockSize_v;
-	int iY = y / BlockSize_v;
+	int iX = x / MapAreaBlockSize_v;
+	int iY = y / MapAreaBlockSize_v;
 	int iWidth = Area[0].Length();
 	int iHeight = Area.Size();
 
-	// 컴팔러가 알아서 최적화하겠지.
-	// 조건 들어오는거 쉽게 확인할려고 일부러 떼어놓음
 	if (iY >= iHeight)
 		return true;
 
@@ -39,6 +36,11 @@ bool MapInfo::checkWall(float x, float y) {
 	return Area[iY][iX] == '1';
 }
 
-bool MapInfo::checkWall(const SGVec2& pos) {
-	return checkWall(pos.x, pos.y);
+float MapAreaInfo::getAreaWidth() {
+	return getAreaHorizontolBlockCount() * MapAreaBlockSize_v;
 }
+
+float MapAreaInfo::getAreaHeight() {
+	return getAreaVerticalBlockCount() * MapAreaBlockSize_v;
+}
+

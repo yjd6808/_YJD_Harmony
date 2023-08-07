@@ -22,7 +22,7 @@ ItemInfoLoader::ItemInfoLoader(DataManagerAbstract* manager)
 
 bool ItemInfoLoader::load() {
 
-	SGString itemRootPath = SGPath::Combine(CoreCommonInfo_v->ConfigPath, "item");
+	SGString itemRootPath = SGPath::Combine(CoreCommonInfo_v->ConfigPath, getConfigFileName());
 
 	if (!JCore::Directory::Exist(itemRootPath))
 		return false;

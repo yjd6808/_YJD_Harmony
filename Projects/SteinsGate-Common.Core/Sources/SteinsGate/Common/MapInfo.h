@@ -17,32 +17,34 @@ struct MapObjectPositionInfo
 	int Y;
 };
 
+struct MapAreaInfo
+{
+	MapAreaInfo(int areaHeight) : Area(areaHeight) {}
+	SGVector<SGString> Area;
+
+	bool checkWall(float x, float y);
+
+	int getAreaHorizontolBlockCount() { return Area[0].Length(); }
+	int getAreaVerticalBlockCount() { return Area.Size(); }
+	float getAreaWidth();
+	float getAreaHeight();
+};
+
 struct MapInfo : ConfigDataAbstract
 {
-	MapInfo(int areaHeight, int npcCount, int mapObjectCount)
-		: Area(areaHeight)
-		, NpcList(npcCount)
+	MapInfo(int npcCount, int mapObjectCount)
+		: NpcList(npcCount)
 		, MapObjectList(mapObjectCount) {}
 	~MapInfo() override = default;
 
 	SGString Name;
-	int MapWidth;
-	int MapHeight;
+	MapType_t Type;
 	int TileWidth;
 	int TileHeight;
 	int TileArray[10][10];
-	float Gravity;
-	float Friction;
-	float ElasticityDividedForce;
-	SGVector<SGString> Area;
+	int PhysicsCode;
 	SGVector<MapObjectPositionInfo> NpcList;
 	SGVector<MapObjectPositionInfo> MapObjectList;
-
-	bool checkWall(float x, float y);
-	bool checkWall(const SGVec2& pos);
-	int getAreaWidth() { return Area[0].Length(); }
-	int getAreaHeight() { return Area.Size(); }
-	SGSize getMapSize() { return { float(MapWidth), float(MapHeight) }; }
 };
 
 

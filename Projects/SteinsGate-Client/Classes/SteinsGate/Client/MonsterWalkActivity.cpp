@@ -79,71 +79,69 @@ void MonsterWalkActivity::updateMove(float dt, MapLayer* pMapLayer) {
 	}
 
 	MobInfo* pMonsterInfo = m_pMonster->getBaseInfo();
-	MapInfo* pMapInfo = pMapLayer->getMapInfo();
+	MapAreaInfo* pAreaInfo = pMapLayer->getMapAreaInfo();
 
 	float fSpeedX = pMonsterInfo->MoveSpeedX * FPS1_v;
 
 	if (!bXFinished && lr == Direction::Left) {
 		thicknessPosLR.origin.x -= fSpeedX;
-		updateLeftMove(pMapLayer, pMapInfo, thicknessPosLR);
+		updateLeftMove(pMapLayer, pAreaInfo, thicknessPosLR);
 	} else if (!bXFinished && lr == Direction::Right && !bXFinished) {
 		thicknessPosLR.origin.x += fSpeedX;
-		updateRightMove(pMapLayer, pMapInfo, thicknessPosLR);
+		updateRightMove(pMapLayer, pAreaInfo, thicknessPosLR);
 	}
 
 	float fSpeedY = pMonsterInfo->MoveSpeedY / 60.0f;
 
 	if (!bYFinished && ud == Direction::Up) {
 		thicknessPosUD.origin.y += fSpeedY;
-		updateUpMove(pMapLayer, pMapInfo, thicknessPosUD);
+		updateUpMove(pMapLayer, pAreaInfo, thicknessPosUD);
 	} else if (!bYFinished && ud == Direction::Down) {
 		thicknessPosUD.origin.y -= fSpeedY;
-		updateDownMove(pMapLayer, pMapInfo, thicknessPosUD);
+		updateDownMove(pMapLayer, pAreaInfo, thicknessPosUD);
 	}
-
-	
 }
 
-void MonsterWalkActivity::updateLeftMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect) {
+void MonsterWalkActivity::updateLeftMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
 	SGVec2 lb{ thicknessRect.origin.x, thicknessRect.origin.y };
 	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// lb, lt 체크
-	if (mapInfo->checkWall(lb) || mapInfo->checkWall(lt) || mapLayer->isCollideWithMapObjects(thicknessRect))
+	if (areaInfo->checkWall(lb.x, lb.y) || areaInfo->checkWall(lt.x, lt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pMonster->setPositionRealX(thicknessRect.origin.x);
 }
 
 
-void MonsterWalkActivity::updateRightMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect) {
+void MonsterWalkActivity::updateRightMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
 	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
 	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// rb, rt 체크
-	if (mapInfo->checkWall(rb) || mapInfo->checkWall(rt) || mapLayer->isCollideWithMapObjects(thicknessRect))
+	if (areaInfo->checkWall(rb.x, rb.y) || areaInfo->checkWall(rt.x, rt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pMonster->setPositionRealX(thicknessRect.origin.x);
 }
 
-void MonsterWalkActivity::updateUpMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect) {
+void MonsterWalkActivity::updateUpMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
 	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
 	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
 
 	// lt, rt 체크
-	if (mapInfo->checkWall(lt) || mapInfo->checkWall(rt) || mapLayer->isCollideWithMapObjects(thicknessRect))
+	if (areaInfo->checkWall(lt.x, lt.y) || areaInfo->checkWall(rt.x, rt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pMonster->setPositionRealY(thicknessRect.origin.y);
 }
 
-void MonsterWalkActivity::updateDownMove(MapLayer* mapLayer, MapInfo* mapInfo, const SGRect& thicknessRect) {
+void MonsterWalkActivity::updateDownMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
 	SGVec2 lb{ thicknessRect.origin.x, thicknessRect.origin.y };
 	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
 
 	// lb, rb 체크
-	if (mapInfo->checkWall(lb) || mapInfo->checkWall(rb) || mapLayer->isCollideWithMapObjects(thicknessRect))
+	if (areaInfo->checkWall(lb.x, lb.y) || areaInfo->checkWall(rb.x, rb.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
 		return;
 
 	m_pMonster->setPositionRealY(thicknessRect.origin.y);

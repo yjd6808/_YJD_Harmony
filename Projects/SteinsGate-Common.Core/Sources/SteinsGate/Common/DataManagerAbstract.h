@@ -13,7 +13,8 @@
 #include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
 #include <SteinsGate/Common/MobBaseInfo.h>
 #include <SteinsGate/Common/ItemInfo.h>
-
+#include <SteinsGate/Common/MapInfo.h>
+#include <SteinsGate/Common/MapPhysicsInfo.h>
 #include <SteinsGate/Common/ChannelInfo.h>
 #include <SteinsGate/Common/ItemInfo.h>
 #include <SteinsGate/Common/ItemOptInfo.h>
@@ -54,6 +55,9 @@ public:
 	ServerProcessInfoPackage* getServerProcessInfoPackage(int serverCode);
 	DatabaseInfo* getDatabaseInfo(int databaseCode);
 	CharCommonInfo* getCharCommonInfo(int charCommonCode);
+	MapInfo* getMapInfo(int mapCode);
+	MapAreaInfo* getMapAreaInfo(int mapCode);
+	MapPhysicsInfo* getMapPhysicsInfo(int physicsCode);
 protected:
 	ConfigFileLoaderAbstract* m_pConfigFileLoaders[ConfigFileType::Max];
 	bool m_bLoaded[ConfigFileType::Max]; // Lazy Loading을 기본으로 하자.

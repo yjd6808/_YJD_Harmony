@@ -45,4 +45,8 @@ inline constexpr int MaxVisualCount_v = 3;
 inline constexpr int MaxEnchantLevel_v = 25;
 inline constexpr int MaxServerId_v = 32;
 
+inline constexpr float TileWidth_v = 224;		// 맵 타일들 모두 가로길이가 224픽셀임
+inline constexpr float TileHeight_v = 184;		// 내가 자른 타일 높이
+inline constexpr int MapAreaBlockSize_v = 20;		// 16 고려해볼 것 타일 가로길이가 다 224임. 일단 테스트 끝나고 수정
+
 inline constexpr int ArmorEnchantBonusOptCount_v = 2;

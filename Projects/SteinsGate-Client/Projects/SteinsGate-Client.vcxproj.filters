@@ -22,9 +22,6 @@
     <Filter Include="Data\Tile">
       <UniqueIdentifier>{2f9a977b-b328-4a02-baab-7ae19e2c593a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Map">
-      <UniqueIdentifier>{289afa04-b017-4b77-9941-fe0017a1a0ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\AI">
       <UniqueIdentifier>{aa9500ff-549d-4d4e-a96c-163a6cd1ef3d}</UniqueIdentifier>
     </Filter>
@@ -204,14 +201,8 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\MapObjectInfoLoader.cpp">
       <Filter>Data\MapObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MapInfoLoader.cpp">
-      <Filter>Data\Map</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MapObject.cpp">
       <Filter>Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MapInfo.cpp">
-      <Filter>Data\Map</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\PhysicsActor.cpp">
       <Filter>Actor</Filter>
@@ -611,12 +602,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MapObjectInfo.h">
       <Filter>Data\MapObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MapInfo.h">
-      <Filter>Data\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MapInfoLoader.h">
-      <Filter>Data\Map</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MapObject.h">
       <Filter>Actor</Filter>

@@ -3,8 +3,10 @@
  */
 #pragma once
 
+#include <SteinsGate/Common/MapInfo.h>
+#include <SteinsGate/Common/MapPhysicsInfo.h>
+
 #include <SteinsGate/Client/ActorBox.h>
-#include <SteinsGate/Client/MapInfo.h>
 #include <SteinsGate/Client/MimicCamera.h>
 
 class MapLayer : public SGLayer
@@ -28,12 +30,17 @@ public:
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
+	MapPhysicsInfo* getMapPhysicsInfo();
+	MapAreaInfo* getMapAreaInfo();
 	MapInfo* getMapInfo();
 	MimicCamera* getCamera();
 public:
 	bool m_bMapLoaded;
 
 	MimicCamera* m_pCamera;
+
+	MapPhysicsInfo* m_pMapPhysicsInfo;
+	MapAreaInfo* m_pMapAreaInfo;
 	MapInfo* m_pMapInfo;
 	ActorBox* m_pActorBox;
 };

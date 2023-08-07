@@ -28,7 +28,6 @@ ConsoleLoggerOption NetLoggerOption_v = [] {
 	return option;
 }();
 
-
 int main(int argc, char* argv[]) {
 
 	if (argc == 0) {

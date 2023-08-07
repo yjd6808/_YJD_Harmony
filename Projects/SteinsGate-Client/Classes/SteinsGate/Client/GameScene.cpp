@@ -93,7 +93,7 @@ void SGGameScene::cmdLoadChar() {
 }
 
 void SGGameScene::cmdEnterMap() {
-    m_pMapLayer->loadMap(1);
+    m_pMapLayer->loadMap(10000);
 }
 
 void SGGameScene::onExit() {

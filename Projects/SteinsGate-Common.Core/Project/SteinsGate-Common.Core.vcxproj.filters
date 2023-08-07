@@ -79,6 +79,15 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerProcessInfo.cpp">
       <Filter>Data\Server</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MapInfoLoader.cpp">
+      <Filter>Data\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MapInfo.cpp">
+      <Filter>Data\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MapPhysicsInfoLoader.cpp">
+      <Filter>Data\MapPhysics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -234,6 +243,18 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\LobbyEnum.h">
       <Filter>Net\Enum</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MapInfo.h">
+      <Filter>Data\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MapInfoLoader.h">
+      <Filter>Data\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MapPhysicsInfo.h">
+      <Filter>Data\MapPhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MapPhysicsInfoLoader.h">
+      <Filter>Data\MapPhysics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -289,6 +310,12 @@
     </Filter>
     <Filter Include="Net\Util">
       <UniqueIdentifier>{ed25dfc5-ea7c-479b-a189-aeb099faab3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Map">
+      <UniqueIdentifier>{150a3c40-2749-4017-aa09-04204413547d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\MapPhysics">
+      <UniqueIdentifier>{b68a5418-4661-4f7f-b071-5af45a7ca187}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
