@@ -2,16 +2,48 @@
     "__comment__0": "작성한 사람: 윤정도",
     "__comment__1": "마을 구성 목록",
 
-    "town": [
+    "map_bundle": [
         {
             "code": 1,
-            "name": "마을",
-            "newbie_starter_map": "elvenguard_private_room",
-            "map_connection": [
-                "elvenguard_private_room elvenguard",
-                "elvenguard elvenguard_dungeon_enterance",
-                "elvenguard alflyra_post_enterance",
-                "elvenguard hendon_myre"
+            "name": "엘븐가드",
+            "map": [
+                
+            ],
+            "__comment__map": [
+                "elven_main",
+                "elven_lorien_dungeon_entrance",
+                "elven_to_alfhlyra_alley"
+            ]
+        },
+        {
+            "code": 2,
+            "name": "헨돈마이어",
+            "map": [
+
+            ],
+            "__comment__map": [
+                "hendon_main",
+                "hendon_south_street",
+                "hendon_north_street",
+                "hendon_glanfloris_dungeon_entrance_upper",
+                "hendon_glanfloris_dungeon_entrance_lower"
+                "hendon_black_market"
+                "hendon_to_stormpass_alley",
+            ]
+        }
+        {
+            "code": 3,
+            "name": "웨스트코스트",
+            "map": [
+            
+            ],
+            "__comment__map": [
+                "westcoast_main",
+                "westcoast_upper_street",
+                "westcoast_behemoth_dugeon_entrance_upper",
+                "westcoast_behemoth_dugeon_entrance_lower",
+                "westcoast_skycastle_dungeon_enterance_upper",
+                "westcoast_skycastle_dungeon_enterance_upper",
             ]
         }
     ]
