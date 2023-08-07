@@ -84,8 +84,8 @@ public:
 	int FindReverse(const String& str) const;
 	int FindReverse(const char* str) const;
 
-	bool EndWith(const String& str) { return FindReverse(str.Source()) == m_iLen - str.Length();  }
-	bool StartWith(const String& str) { return Find(str) == 0; }
+	bool EndWith(const String& str) const { return FindReverse(str.Source()) == m_iLen - str.Length();  }
+	bool StartWith(const String& str) const { return Find(str) == 0; }
 
 	char Last() const { return GetAt(m_iLen - 1); }
 	char First() const { return GetAt(0); }
