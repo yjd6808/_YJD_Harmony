@@ -78,10 +78,16 @@ void MonsterWalkActivity::updateMove(float dt, MapLayer* pMapLayer) {
 		return;
 	}
 
-	MobInfo* pMonsterInfo = m_pMonster->getBaseInfo();
+	MonsterStatInfo* pStatInfo = m_pMonster->getStatInfo();
+
+	if (!pStatInfo)
+		return;
+
 	MapAreaInfo* pAreaInfo = pMapLayer->getMapAreaInfo();
 
-	float fSpeedX = pMonsterInfo->MoveSpeedX * FPS1_v;
+	
+
+	float fSpeedX = pStatInfo->MoveSpeedX * FPS1_v;
 
 	if (!bXFinished && lr == Direction::Left) {
 		thicknessPosLR.origin.x -= fSpeedX;
@@ -91,7 +97,7 @@ void MonsterWalkActivity::updateMove(float dt, MapLayer* pMapLayer) {
 		updateRightMove(pMapLayer, pAreaInfo, thicknessPosLR);
 	}
 
-	float fSpeedY = pMonsterInfo->MoveSpeedY / 60.0f;
+	float fSpeedY = pStatInfo->MoveSpeedY / 60.0f;
 
 	if (!bYFinished && ud == Direction::Up) {
 		thicknessPosUD.origin.y += fSpeedY;

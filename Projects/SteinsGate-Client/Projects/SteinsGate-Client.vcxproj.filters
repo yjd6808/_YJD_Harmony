@@ -67,9 +67,6 @@
     <Filter Include="Game\UI">
       <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Mob">
-      <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\Char">
       <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
     </Filter>
@@ -114,6 +111,9 @@
     </Filter>
     <Filter Include="Data\Text">
       <UniqueIdentifier>{f98a811f-e686-4426-ba7c-4fe2cc0b617e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\Monster">
+      <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -189,8 +189,8 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\ClientInfoLoader.cpp">
       <Filter>Data\Client</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MobInfoLoader.cpp">
-      <Filter>Data\Mob</Filter>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterInfoLoader.cpp">
+      <Filter>Data\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileInfoLoader.cpp">
       <Filter>Data\Projectile</Filter>
@@ -579,11 +579,11 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientInfo.h">
       <Filter>Data\Client</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MobInfoLoader.h">
-      <Filter>Data\Mob</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterInfoLoader.h">
+      <Filter>Data\Monster</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MobInfo.h">
-      <Filter>Data\Mob</Filter>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterInfo.h">
+      <Filter>Data\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileInfo.h">
       <Filter>Data\Projectile</Filter>

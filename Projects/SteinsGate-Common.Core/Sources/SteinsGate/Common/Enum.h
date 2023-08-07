@@ -436,6 +436,7 @@ Monster,
 Monster_Animation_Frame_Event,
 Monster_Attack_Data,
 Monster_Projectile,
+Monster_Stat,
 Server,
 Tile,
 UI,
@@ -469,6 +470,7 @@ static constexpr const char* FileName[Max]{
 	"monster_animation_frame_event.json",		// 파일
 	"monster_attack_data.json"			,		// 파일
 	"monster_projectile.json"			,		// 파일
+	"monster_stat.json"					,		// 파일
 	"server.json"						,		// 파일
 	"tile.json"							,		// 파일
 	"ui.json"							,		// 파일

@@ -19,9 +19,12 @@ MonsterHitActivity::MonsterHitActivity(Monster* monster)
 
 
 void MonsterHitActivity::onActivityBegin() {
+
+	const MonsterStatInfo* pStatInfo = m_pMonster->getStatInfo();
+
 	m_fElapsedDownTime = 0.0f;
 	m_bDownTimeCheckBegin = false;
-	m_fDownRecoverTime = m_pMonster->getBaseInfo()->DownRecoverTime / 2;
+	m_fDownRecoverTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 0.0f;
 
 	selectHitAnimation();
 	checkPosition();

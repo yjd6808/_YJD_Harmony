@@ -23,11 +23,11 @@
 USING_NS_CC;
 USING_NS_JC;
 
-Monster::Monster(MobInfo* baseInfo, AIInfo* aiInfo)
+Monster::Monster(MonsterInfo* baseInfo, AIInfo* aiInfo)
 	: AIActor(ActorType::Monster, baseInfo->Code, aiInfo)
 	, m_pBaseInfo(baseInfo)
-{
-}
+	, m_pStatInfo(nullptr)
+{}
 
 Monster::~Monster() {
 	for (int i = 0; i < AIActivityType::Max; ++i) {
@@ -35,7 +35,7 @@ Monster::~Monster() {
 	}
 }
 
-Monster* Monster::create(MobInfo* baseInfo, AIInfo* aiInfo) {
+Monster* Monster::create(MonsterInfo* baseInfo, AIInfo* aiInfo) {
 	Monster* pMonster = dbg_new Monster(baseInfo, aiInfo);
 
 	if (pMonster && pMonster->init()) {
@@ -154,6 +154,14 @@ void Monster::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* textur
 	m_pRunningActivity->onAnimationEnd(animation, texture);
 }
 
-MobInfo* Monster::getBaseInfo() {
+void Monster::setStatInfo(MonsterStatInfo* statInfo) {
+	m_pStatInfo = statInfo;
+}
+
+MonsterInfo* Monster::getBaseInfo() {
 	return m_pBaseInfo;
+}
+
+MonsterStatInfo* Monster::getStatInfo() {
+	return m_pStatInfo;
 }

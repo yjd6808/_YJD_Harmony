@@ -18,7 +18,7 @@
 #include <SteinsGate/Common/MapPhysicsInfoLoader.h>
 
 #include <SteinsGate/Client/ActionInfoLoader.h>
-#include <SteinsGate/Client/MobInfoLoader.h>
+#include <SteinsGate/Client/MonsterInfoLoader.h>
 #include <SteinsGate/Client/CharInfoLoader.h>
 #include <SteinsGate/Client/ProjectileInfoLoader.h>
 #include <SteinsGate/Client/ClientInfoLoader.h>
@@ -42,7 +42,7 @@ void DataManager::initializeLoader() {
 	m_pConfigFileLoaders[ConfigFileType::Map]							= dbg_new MapInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::MapPhysics]					= dbg_new MapPhysicsInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::MapObject]						= dbg_new MapObjectInfoLoader(this);
-	m_pConfigFileLoaders[ConfigFileType::Monster]						= dbg_new MobInfoLoader(this);
+	m_pConfigFileLoaders[ConfigFileType::Monster]						= dbg_new MonsterInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Monster_Animation_Frame_Event]	= dbg_new FrameEventLoader(this, ActorType::Monster);
 	m_pConfigFileLoaders[ConfigFileType::Monster_Projectile]			= dbg_new ProjectileInfoLoader(this, ActorType::Monster);
 	m_pConfigFileLoaders[ConfigFileType::Monster_Attack_Data]			= dbg_new AttackDataInfoLoader(this, ActorType::Monster);
@@ -68,14 +68,14 @@ void DataManager::initializeLoader() {
 	m_bInitialized = true;
 }
 
-MobInfo* DataManager::getMonsterInfo(int mobCode) {
+MonsterInfo* DataManager::getMonsterInfo(int mobCode) {
 
 	auto eType = ConfigFileType::Monster;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	return (MobInfo*)getData(eType, mobCode);
+	return (MonsterInfo*)getData(eType, mobCode);
 }
 
 ActionInfo* DataManager::getActionInfo(int actionCode) {

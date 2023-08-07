@@ -11,7 +11,7 @@
 #include <SteinsGate/Common/DataManagerAbstract.h>
 
 #include <SteinsGate/Common/ItemInfo.h>
-#include <SteinsGate/Client/MobInfo.h>
+#include <SteinsGate/Client/MonsterInfo.h>
 #include <SteinsGate/Client/ActionInfo.h>
 #include <SteinsGate/Client/CharInfo.h>
 #include <SteinsGate/Client/ProjectileInfo.h>
@@ -34,7 +34,7 @@ class DataManager
 public:
 	void initializeLoader() override;
 
-	MobInfo* getMonsterInfo(int mobCode);
+	MonsterInfo* getMonsterInfo(int mobCode);
 	ActionInfo* getActionInfo(int actionCode);
 	ProjectileInfo* getProjectileInfo(ActorType_t actorType, int projectileCode);
 	CharInfo* getCharInfo(int charCode);

@@ -18,7 +18,10 @@ MonsterSitActivity::MonsterSitActivity(Monster* monster)
 	: MonsterActivity(monster, AIActivityType::Idle) {}
 
 void MonsterSitActivity::onActivityBegin() {
-	setLimit(m_pMonster->getBaseInfo()->DownRecoverTime / 2);
+	const MonsterStatInfo* pStatInfo = m_pMonster->getStatInfo();
+	const float fLimitTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 0.0f;
+
+	setLimit(fLimitTime);
 	m_pMonster->runAnimation(MONSTER_ANIMATION_SIT);
 }
 

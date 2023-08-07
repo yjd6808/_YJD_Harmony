@@ -10,18 +10,16 @@
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
 
-struct MobBaseInfo : ConfigDataAbstract
+struct MonsterStatInfo : ConfigDataAbstract
 {
-	virtual ~MobBaseInfo() = default;
+	~MonsterStatInfo() override = default;
 
-	SGString Name;
 	int HP;
 	int MP;
 	int PhysicalDamage;
 	int MagicDamage;
 	int Armor;
 	int MagicArmor;
-	float EnhancePerLevel;
 	float Weight;
 	float MoveSpeedX;
 	float MoveSpeedY;

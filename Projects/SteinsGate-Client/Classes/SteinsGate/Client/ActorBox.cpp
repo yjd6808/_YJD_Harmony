@@ -283,7 +283,7 @@ Projectile* ActorBox::createProejctileOnMap(Actor* spawner, int projectileId) {
 Monster* ActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, float y) {
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 몬스터를 생성해주세요");
 
-	MobInfo* pMonsterInfo = CoreDataManager_v->getMonsterInfo(monsterCode);
+	MonsterInfo* pMonsterInfo = CoreDataManager_v->getMonsterInfo(monsterCode);
 	AIInfo* pAIInfo = CoreDataManager_v->getAIInfo(aiCode);
 
 	if (!m_hMonsterPool.Exist(monsterCode)) {

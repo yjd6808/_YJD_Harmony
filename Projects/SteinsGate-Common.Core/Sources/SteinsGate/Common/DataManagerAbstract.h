@@ -11,7 +11,7 @@
 #include "Core.h"
 
 #include <SteinsGate/Common/ConfigFileLoaderAbstract.h>
-#include <SteinsGate/Common/MobBaseInfo.h>
+#include <SteinsGate/Common/MonsterBaseInfo.h>
 #include <SteinsGate/Common/ItemInfo.h>
 #include <SteinsGate/Common/MapInfo.h>
 #include <SteinsGate/Common/MapPhysicsInfo.h>
@@ -41,7 +41,7 @@ public:
 	void unload(ConfigFileType_t configFileType); 
 	void finalizeLoader();
 
-	MobBaseInfo* getMobBaseInfo(int monsterCode);
+	MonsterBaseInfo* getMobBaseInfo(int monsterCode);
 	ItemAvatarInfo* getAvatarInfo(int avatarCode);		// 아바타
 	ItemWeaponInfo* getWeaponInfo(int weaponCode);		// 무기
 	ItemArmorInfo* getArmorInfo(int armorCode);			// 장신구 혹은 방어구

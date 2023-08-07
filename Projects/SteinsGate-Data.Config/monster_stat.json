@@ -1,0 +1,34 @@
+{
+    "__comment__0": "작성한 사람: 윤정도",
+    "__comment__1": "몬스터 능력치 데이터",
+
+    "monster_stat": [
+        {
+            "code": 1,
+            "hp": 100,
+            "mp": 0,
+            "physical_damage": 10,
+            "magical_damage": 0,
+            "armor": 0,
+            "magic_armor": 0,
+            "down_recover_time": 1.0,
+            "move_speed_x": 90,
+            "move_speed_y": 45,
+            "fall_down_idx": 3,
+            "weight": 200,
+        },
+        {
+            "code": 2,
+            "hp": 120,
+            "mp": 0,
+            "physical_damage": 12,
+            "magical_damage": 0,
+            "armor": 3,
+            "magic_armor": 0,
+            "move_speed_x": 90,
+            "move_speed_y": 45,
+            "down_recover_time": 1.0,
+            "weight": 200,
+        }
+    ]
+}

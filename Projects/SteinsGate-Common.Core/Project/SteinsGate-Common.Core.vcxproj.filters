@@ -31,8 +31,8 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\DataManagerAbstract.cpp">
       <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.cpp">
-      <Filter>Data\MobBase</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MonsterBaseInfoLoader.cpp">
+      <Filter>Data\MonsterBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\TextParser.cpp">
       <Filter>Util</Filter>
@@ -88,6 +88,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MapPhysicsInfoLoader.cpp">
       <Filter>Data\MapPhysics</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.cpp">
+      <Filter>Data\MonsterStat</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -131,11 +134,11 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Struct.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Enum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Const.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfo.h">
-      <Filter>Data\MobBase</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MonsterBaseInfo.h">
+      <Filter>Data\MonsterBase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.h">
-      <Filter>Data\MobBase</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MonsterBaseInfoLoader.h">
+      <Filter>Data\MonsterBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\JsonUtil.h">
       <Filter>Util</Filter>
@@ -255,13 +258,16 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MapPhysicsInfoLoader.h">
       <Filter>Data\MapPhysics</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfo.h">
+      <Filter>Data\MonsterStat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.h">
+      <Filter>Data\MonsterStat</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
       <UniqueIdentifier>{1edcb01f-acdf-4c32-aa70-a5f17ddc8615}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data\MobBase">
-      <UniqueIdentifier>{2f9aa599-999d-4d63-bf3e-df9f190b26cf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{6490a88f-7352-4290-bdc4-4cd44e99280e}</UniqueIdentifier>
@@ -316,6 +322,12 @@
     </Filter>
     <Filter Include="Data\MapPhysics">
       <UniqueIdentifier>{b68a5418-4661-4f7f-b071-5af45a7ca187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\MonsterBase">
+      <UniqueIdentifier>{2f9aa599-999d-4d63-bf3e-df9f190b26cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\MonsterStat">
+      <UniqueIdentifier>{7e87883b-be6f-4b81-85d1-7040d281963d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

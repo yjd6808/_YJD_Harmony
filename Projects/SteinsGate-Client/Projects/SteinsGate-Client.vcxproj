@@ -230,7 +230,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MobInfoLoader.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\HostPlayer.cpp">
       <SubType>
       </SubType>
@@ -698,7 +698,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MobInfo.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -721,7 +721,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ImagePackManager.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\GameScene.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\MobInfoLoader.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

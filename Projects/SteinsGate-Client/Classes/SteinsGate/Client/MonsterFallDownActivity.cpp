@@ -15,10 +15,12 @@ MonsterFallDownActivity::MonsterFallDownActivity(Monster* monster)
 	: MonsterActivity(monster, AIActivityType::FallDown) {}
 
 void MonsterFallDownActivity::onActivityBegin() {
+	const MonsterStatInfo* pStatInfo = m_pMonster->getStatInfo();
+
 	m_pMonster->runAnimation(MONSTER_ANIMATION_FALL_DOWN_BEGIN);
 	m_pMonster->enableElasticity();
 	m_fElapsedDownTime = 0.0f;
-	m_fDownRecoverTime = m_pMonster->getBaseInfo()->DownRecoverTime / 2.0f;
+	m_fDownRecoverTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 0.0f;
 	m_bBounced = false;
 	m_bDown = false;
 }

@@ -104,14 +104,14 @@ void DataManagerAbstract::finalizeLoader() {
 // ========================================================================================
 
 
-MobBaseInfo* DataManagerAbstract::getMobBaseInfo(int monsterCode) {
+MonsterBaseInfo* DataManagerAbstract::getMobBaseInfo(int monsterCode) {
 
 	const auto eType = ConfigFileType::Monster;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	const auto pRet = dynamic_cast<MobBaseInfo*>(getData(eType, monsterCode));
+	const auto pRet = dynamic_cast<MonsterBaseInfo*>(getData(eType, monsterCode));
 	DebugAssertMsg(pRet, "아바타 타입이 아닙니다.");
 	return pRet;
 }

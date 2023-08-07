@@ -61,6 +61,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MapInfo.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MapPhysicsInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MapInfoLoader.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\PacketViewer.cpp">
       <SubType>
       </SubType>
@@ -92,7 +93,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\JsonUtil.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\MonsterBaseInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -173,6 +174,8 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MapInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MapPhysicsInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MapInfoLoader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfo.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\PacketViewer.h">
       <SubType>
       </SubType>
@@ -223,11 +226,11 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\JsonUtil.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\MonsterBaseInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\MobBaseInfoLoader.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\MonsterBaseInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

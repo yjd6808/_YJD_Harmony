@@ -11,17 +11,19 @@
 
 
 
+#include <SteinsGate/Common/MonsterStatInfo.h>
+
 #include <SteinsGate/Client/AIActor.h>
-#include <SteinsGate/Client/MobInfo.h>
+#include <SteinsGate/Client/MonsterInfo.h>
 #include <SteinsGate/Client/AIInfo.h>
 
 class Monster : public AIActor
 {
 public:
-	Monster(MobInfo* baseInfo, AIInfo* aiInfo);
+	Monster(MonsterInfo* baseInfo, AIInfo* aiInfo);
 	~Monster() override;
 
-	static Monster* create(MobInfo* baseInfo, AIInfo* aiInfo);
+	static Monster* create(MonsterInfo* baseInfo, AIInfo* aiInfo);
 	void initActorSprite() override;
 	void initAIActivities() override;
 	void hit(const HitInfo& hitInfo) override;
@@ -38,10 +40,15 @@ public:
 	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
 	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
 
-	MobInfo* getBaseInfo();
+	void setStatInfo(MonsterStatInfo* statInfo);
+
+	MonsterInfo* getBaseInfo();
+	MonsterStatInfo* getStatInfo();
+
 	int getCode() override { return m_pBaseInfo->Code; }
 private:
-	MobInfo* m_pBaseInfo;
+	MonsterInfo* m_pBaseInfo;
+	MonsterStatInfo* m_pStatInfo;
 };
 
 
