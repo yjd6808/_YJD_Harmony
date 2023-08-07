@@ -41,11 +41,48 @@ bool Directory::Delete(const String& path) {
     return Delete(path.Source());
 }
 
-Vector<String> Directory::Files(const String& path, bool recursive) {
+int Directory::DirectoryCount(const String& path, bool recursive /* = true */) {
+    return DirectoryCount(path.Source(), recursive);
+}
+
+int Directory::DirectoryCount(const char* path, bool recursive /* = true */) {
+    int iCount = 0;
+    if (recursive) {
+         for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(path))
+             if (std::filesystem::is_directory(dirEntry))
+                 iCount++;
+    } else {
+        for (const auto& dirEntry : std::filesystem::directory_iterator(path))
+            if (std::filesystem::is_directory(dirEntry))
+                iCount++;
+    }
+    return iCount;
+}
+
+int Directory::FileCount(const String& path, bool recursive /* = true */) {
+    return FileCount(path.Source(), recursive);
+}
+
+int Directory::FileCount(const char* path, bool recursive /* = true */) {
+    int iCount = 0;
+    if (recursive) {
+        for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(path))
+            if (dirEntry.is_regular_file())
+                iCount++;
+    }
+    else {
+        for (const auto& dirEntry : std::filesystem::directory_iterator(path))
+            if (dirEntry.is_regular_file())
+                iCount++;
+    }
+    return iCount;
+}
+
+Vector<String> Directory::Files(const String& path, bool recursive /* = true */) {
     return Files(path.Source(), recursive);
 }
 
-Vector<String, DefaultAllocator> Directory::Files(const char* path, bool recursive) {
+Vector<String, DefaultAllocator> Directory::Files(const char* path, bool recursive /* = true */) {
     Vector<String, DefaultAllocator> result;
 
     if (recursive) {
@@ -59,6 +96,26 @@ Vector<String, DefaultAllocator> Directory::Files(const char* path, bool recursi
     }
 
 
+    return result;
+}
+
+Vector<String> Directory::Directories(const String& path, bool recursive) {
+    return Directories(path.Source(), recursive);
+}
+
+Vector<String> Directory::Directories(const char* path, bool recursive) {
+    Vector<String, DefaultAllocator> result;
+
+    if (recursive) {
+        for (const auto& dirEntry : std::filesystem::recursive_directory_iterator(path))
+            if (std::filesystem::is_directory(dirEntry))
+                result.PushBack(dirEntry.path().string().c_str());
+    }
+    else {
+        for (const auto& dirEntry : std::filesystem::directory_iterator(path))
+            if (std::filesystem::is_directory(dirEntry))
+                result.PushBack(dirEntry.path().string().c_str());
+    }
     return result;
 }
 

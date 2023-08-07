@@ -26,8 +26,17 @@ public:
 	static bool Delete(const char* path);
 	static bool Delete(const String& path);
 
+	static int DirectoryCount(const String& path, bool recursive = true);
+	static int DirectoryCount(const char* path, bool recursive = true);
+
+	static int FileCount(const String& path, bool recursive = true);
+	static int FileCount(const char* path, bool recursive = true);
+
 	static Vector<String, DefaultAllocator> Files(const String& path, bool recursive = true);
 	static Vector<String, DefaultAllocator> Files(const char* path, bool recursive = true);
+
+	static Vector<String, DefaultAllocator> Directories(const String& path, bool recursive = true);
+	static Vector<String, DefaultAllocator> Directories(const char* path, bool recursive = true);
 
 private:
 	static void FilesRecursive(Vector<String, DefaultAllocator>& files, String path, bool recursive);
