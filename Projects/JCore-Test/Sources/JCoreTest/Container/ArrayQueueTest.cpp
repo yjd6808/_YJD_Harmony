@@ -312,6 +312,20 @@ TEST(ArrayQueueTest, MemoryPool) {
 	for (int i = 0; i < 100'000; i++) q.Enqueue(1);
 }
 
+TEST(ArrayQueueTest, ZeroCapacityTest) {
+	LeakCheck;
+	ArrayQueue<int> queue1(0);
+	ArrayQueue<int> queue2(queue1);
+
+	EXPECT_EQ(queue1.Capacity(), 0);
+	EXPECT_EQ(queue2.Capacity(), 0);
+
+	queue1.Enqueue(1);
+	queue2.Enqueue(1);
+
+	EXPECT_TRUE(queue1.Capacity() > 0);
+	EXPECT_TRUE(queue2.Capacity() > 0);
+}
+
+
 #endif // TEST_ArrayQueueTest == ON
-
-

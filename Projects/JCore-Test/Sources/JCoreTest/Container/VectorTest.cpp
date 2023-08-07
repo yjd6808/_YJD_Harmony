@@ -325,7 +325,22 @@ TEST(VectorTest, BinarySearch) {
 		int ioffset = vModels.OffsetLowerBound(i, [](const Model& m, const int& v) { return m.b < v; });
 		EXPECT_TRUE(vModels[i].b == i);
 	}
-
 }
+
+TEST(VectorTest, ZeroCapacityTest) {
+	LeakCheck;
+	Vector<int> vector1(0);
+	Vector<int> vector2(vector1);
+
+	EXPECT_EQ(vector1.Capacity(), 0);
+	EXPECT_EQ(vector2.Capacity(), 0);
+
+	vector1.PushBack(1);
+	vector2.PushBack(1);
+
+	EXPECT_TRUE(vector1.Capacity() > 0);
+	EXPECT_TRUE(vector2.Capacity() > 0);
+}
+
 
 #endif // TEST_VectorTest == ON

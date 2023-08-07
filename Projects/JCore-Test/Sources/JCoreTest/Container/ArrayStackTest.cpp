@@ -190,6 +190,22 @@ TEST(ArrayStackTest, MemoryPool) {
 	for (int i = 0; i < 100'000; i++) q.Push("1");
 }
 
+TEST(ArrayStackTest, ZeroCapacityTest) {
+	LeakCheck;
+	ArrayStack<int> stack1(0);
+	ArrayStack<int> stack2(stack1);
+
+	EXPECT_EQ(stack1.Capacity(), 0);
+	EXPECT_EQ(stack2.Capacity(), 0);
+
+	stack1.Push(1);
+	stack2.Push(1);
+
+	EXPECT_TRUE(stack1.Capacity() > 0);
+	EXPECT_TRUE(stack2.Capacity() > 0);
+}
+
+
 #endif // TEST_ArrayStackTest == ON
 
 

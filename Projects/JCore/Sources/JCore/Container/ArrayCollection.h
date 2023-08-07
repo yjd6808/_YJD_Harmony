@@ -35,10 +35,14 @@ public:
 
 	// [2]
 	ArrayCollection(int capacity) : TCollection() {
-		DebugAssertMsg(capacity >= 1, "컨테이너의 크기가 0이하가 될 수 없습니다. (%d)", capacity);
-		int iAllocatedSize;
-		m_pArray = TAllocator::template AllocateDynamic<T*>(capacity * sizeof(T), iAllocatedSize);
-		m_iCapacity = capacity;
+		if (capacity == 0) {
+			m_pArray = nullptr;
+			m_iCapacity = 0;
+		} else {
+			int iAllocatedSize;
+			m_pArray = TAllocator::template AllocateDynamic<T*>(capacity * sizeof(T), iAllocatedSize);
+			m_iCapacity = capacity;
+		}
 	}
 
 	
@@ -129,6 +133,7 @@ protected:
 
 		Clear();
 
+
 		const int iCapacity = other.Capacity();
 
 		if (iCapacity > m_iCapacity) {
@@ -137,6 +142,10 @@ protected:
 
 		this->m_iSize = other.m_iSize;
 		m_iCapacity = iCapacity;
+
+		if (other.m_iSize == 0) {
+			return;
+		}
 
 
 		// !!!! Emergency !!!!
@@ -193,7 +202,13 @@ protected:
 		m_iCapacity = capacity;
 	}
 
+	// 현재 용량이 전달받은 사이즈를 충분히 커버 가능한지
 	virtual bool ExpandIfNeeded(int size) {
+
+		if (size == 0) {
+			return false;
+		}
+
 		if (size < m_iCapacity) {
 			return false;
 		}
@@ -215,8 +230,12 @@ protected:
 		DebugAssertMsg(newCapacity > m_iCapacity, "현재 용량보다 더 작은 용량입니다.");
 		int iAllocatedSize;
 		T* pNewArray = TAllocator::template AllocateDynamic<T*>(newCapacity * sizeof(T), iAllocatedSize);
-		Memory::Copy(pNewArray, sizeof(T) * newCapacity, m_pArray, sizeof(T) * this->m_iSize);
-		TAllocator::template DeallocateDynamic(m_pArray, sizeof(T) * m_iCapacity);
+
+		if (m_pArray) {
+			Memory::Copy(pNewArray, sizeof(T) * newCapacity, m_pArray, sizeof(T) * this->m_iSize);
+			TAllocator::template DeallocateDynamic(m_pArray, sizeof(T) * m_iCapacity);
+		}
+		
 		m_pArray = pNewArray;
 		m_iCapacity = newCapacity;
 	}
@@ -250,6 +269,9 @@ protected:
 	}
 
 	virtual void ExpandAuto() {
+		if (m_iCapacity == 0)
+			m_iCapacity = 1;
+
 		Expand(m_iCapacity * ms_iExpandingFactor);
 	}
 
@@ -413,7 +435,7 @@ protected:
 			return m_iCapacity;
 		}
 
-		int iExpectedCapacity = m_iCapacity;
+		int iExpectedCapacity = m_iCapacity == 0 ? 1 : m_iCapacity;
 
 		while (true) {
 			iExpectedCapacity *= ms_iExpandingFactor;

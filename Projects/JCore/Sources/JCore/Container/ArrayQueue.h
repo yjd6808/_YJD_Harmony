@@ -208,6 +208,10 @@ protected:
 		this->ExpandIfNeeded(other.m_iSize);	// 확장이 필요한 경우 확장 진행
 		this->m_iSize = other.m_iSize;
 
+		if (other.m_iSize == 0) {
+			return;
+		}
+
 		if (other.IsForwardedTail()) {
 			Memory::CopyUnsafe(
 				this->m_pArray,
@@ -241,56 +245,59 @@ protected:
 		int iAllocated;
 		T* pNewArray = TAllocator::template AllocateDynamic<T*>(sizeof(T) * capacity, iAllocated);
 
-		if (IsForwardedTail()) {
-			/*	  아래와 같은 상황에서의 배열 확장방법
-			
-				  - : 빈 데이터
-				  □ : 데이터
+		if (this->m_pArray) {
+			if (IsForwardedTail()) {
+				/*	  아래와 같은 상황에서의 배열 확장방법
 
-				 ========================================================
-				 -----------------□□□□□□□□□□□□□□□□□□□□□□□□□□□------------
-				 ========================================================
-				 ↑			     ↑                          ↑
-				 0              head                       tail
-								 └------ this->Size() ------┘
+					  - : 빈 데이터
+					  □ : 데이터
 
-			 */
+					 ========================================================
+					 -----------------□□□□□□□□□□□□□□□□□□□□□□□□□□□------------
+					 ========================================================
+					 ↑			     ↑                          ↑
+					 0              head                       tail
+									 └------ this->Size() ------┘
 
-			Memory::CopyUnsafe(
-				pNewArray,
-				this->m_pArray + m_iHead,
-				sizeof(T) * this->Size());
-		} else {
+				 */
 
-			/*	  아래와 같은 상황에서의 배열 확장방법
-			
-				  - : 빈 데이터
-				  □ : 데이터
+				Memory::CopyUnsafe(
+					pNewArray,
+					this->m_pArray + m_iHead,
+					sizeof(T) * this->Size());
+			}
+			else {
 
-				 ========================================================
-				 □□□□□□□□□□□□□□□□□□□□□------------------□□□□□□□□□□□□□□□□□
-				 ========================================================
-				 ↑			         ↑                  ↑
-				 0                  tail              head
-				 └--iBeginToTail-----┘					└---iHeadToEnd--┘
+				/*	  아래와 같은 상황에서의 배열 확장방법
 
-			 */
+					  - : 빈 데이터
+					  □ : 데이터
 
-			int iHeadToEndSize		= this->Capacity() - m_iHead;
-			const int iBeginToTailSize	= m_iTail; 
+					 ========================================================
+					 □□□□□□□□□□□□□□□□□□□□□------------------□□□□□□□□□□□□□□□□□
+					 ========================================================
+					 ↑			         ↑                  ↑
+					 0                  tail              head
+					 └--iBeginToTail-----┘					└---iHeadToEnd--┘
 
-			Memory::CopyUnsafe(
-				pNewArray,
-				this->m_pArray + m_iHead,
-				sizeof(T) * iHeadToEndSize);
+				 */
 
-			Memory::CopyUnsafe(
-				pNewArray + iHeadToEndSize,
-				this->m_pArray,
-				sizeof(T) * iBeginToTailSize);
+				int iHeadToEndSize = this->Capacity() - m_iHead;
+				const int iBeginToTailSize = m_iTail;
+
+				Memory::CopyUnsafe(
+					pNewArray,
+					this->m_pArray + m_iHead,
+					sizeof(T) * iHeadToEndSize);
+
+				Memory::CopyUnsafe(
+					pNewArray + iHeadToEndSize,
+					this->m_pArray,
+					sizeof(T) * iBeginToTailSize);
+			}
+
+			JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->m_pArray, sizeof(T) * this->m_iCapacity);
 		}
-
-		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(this->m_pArray, sizeof(T) * this->m_iCapacity);
 
 		this->m_pArray = pNewArray;
 		this->m_iCapacity = capacity;
@@ -346,7 +353,8 @@ protected:
 	///  - From ArrayCollection
 	/// </summary>
 	bool IsFull() const override {
-		return this->m_iSize == this->m_iCapacity - 1;
+		// 큐는 용량이 없는 경우를 꽉찬 경우로 처리해야한다.
+		return this->m_iSize == this->m_iCapacity - 1 || this->m_iCapacity == 0; 
 	}
 
 protected:
