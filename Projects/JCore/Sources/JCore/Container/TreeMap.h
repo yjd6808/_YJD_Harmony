@@ -359,6 +359,15 @@ public:
 		InorderTraverseForEach<TraverseValueType::Value>(m_pRoot, Forward<Consumer>(consumer));
 	}
 
+	void ForEachValueDelete() {
+		if constexpr (!IsPointerType_v<TValue>) {
+			DebugAssert(false);
+			return;
+		}
+
+		InorderTraverseForEach<TraverseValueType::Value>(m_pRoot, [](TValue v) { delete v; });
+	}
+
 	bool TryGetFirst(JCORE_OUT TKeyValuePair& pair) const {
 		if (m_pRoot == nullptr) {
 			return false;

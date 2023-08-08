@@ -394,7 +394,16 @@ public:
 		}
 	}
 
-	
+	void ForEachDelete() {
+		if constexpr (!IsPointerType_v<T>) {
+			DebugAssert(false);
+			return;
+		}
+
+		for (int i = 0; i < this->m_iSize; ++i) {
+			delete this->m_pArray[i];
+		}
+	}
 
 	ContainerType GetContainerType() override { return ContainerType::Vector; }
 

@@ -586,7 +586,23 @@ public:
 		}
 	}
 
+	// Value들만 순회해서 삭제하는 작업
+	// 자주 사용해서 그냥 라이브러리에 박음
+	void ForEachValueDelete() {
+		if constexpr (!IsPointerType_v<TValue>) {
+			DebugAssert(false);
+			return;
+		}
 
+		TBucket* pCurBucket = m_pHeadBucket;
+		while (pCurBucket != nullptr) {
+			for (int i = 0; i < pCurBucket->Size; i++) {
+				TBucketNode& node = pCurBucket->GetAt(i);
+				delete node.Pair.Value;
+			}
+			pCurBucket = pCurBucket->Next;
+		}
+	}
 
 	/*int Elements() {
 		for (int i = 0; i < m_iCapacity; i++) {

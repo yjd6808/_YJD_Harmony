@@ -88,6 +88,30 @@ public:
 
 		this->m_iSize = 0;
 	}
+
+	template <typename Consumer>
+	void ForEach(Consumer&& consumer) {
+		TListNode* pCur = m_pHead;
+		while (pCur != nullptr) {
+			TListNode* pNext = pCur->Next;
+			consumer(pCur->value);
+			pCur = pNext;
+		}
+	}
+
+	void ForEachDelete() {
+		if constexpr (!IsPointerType_v<T>) {
+			DebugAssert(false);
+			return;
+		}
+
+		TListNode* pCur = m_pHead;
+		while (pCur != nullptr) {
+			TListNode* pNext = pCur->Next;
+			delete pCur->Value;
+			pCur = pNext;
+		}
+	}
 protected:
 
 	template <typename U = T, typename UAllocator>
@@ -490,15 +514,6 @@ protected:
 		}
 
 		return nullptr;
-	}
-
-	template <typename Consumer>
-	void ForEach(Consumer&& consumer) {
-		TListNode* pCur = m_pHead;
-		while (pCur != nullptr) {
-			consumer(pCur->value);
-			pCur = pCur->Next;
-		}
 	}
 
 	CollectionType GetCollectionType() override { return CollectionType::List; }
