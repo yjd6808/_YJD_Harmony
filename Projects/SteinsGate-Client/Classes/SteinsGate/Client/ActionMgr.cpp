@@ -22,7 +22,7 @@ ActionMgr::ActionMgr(HostPlayer* player)
 	, m_pBaseAction{{}}  {}
 
 ActionMgr::~ActionMgr() {
-	m_ActionMap.ForEachValue([](SGAction* action) { JCORE_DELETE_SAFE(action); });
+	m_ActionMap.ForEachValueDelete();
 	_LogDebug_("액션 매니저 소멸");
 }
 

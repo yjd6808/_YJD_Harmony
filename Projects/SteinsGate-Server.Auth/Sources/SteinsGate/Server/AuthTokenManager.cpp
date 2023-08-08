@@ -41,7 +41,7 @@ bool AuthTokenManager::UpdateByTableId(int accountTableId) {
 
 void AuthTokenManager::Clear() {
 	JCORE_LOCK_GUARD(m_Lock);
-	m_tmSerialMap.ForEachValue([](AuthToken* token) { delete token; });
+	m_tmSerialMap.ForEachValueDelete();
 	m_tmSerialMap.Clear();
 	m_tmAccountTableIdMap.Clear();
 }
