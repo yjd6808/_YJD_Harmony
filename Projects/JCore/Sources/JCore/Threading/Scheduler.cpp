@@ -246,7 +246,7 @@ void Scheduler::ClearWaitingTaskListRaw() {
 	while (it->HasNext()) {
 
 		TaskList* pList = it->Current().Value;
-		pList->ForEach([](auto task) { delete task; });
+		pList->ForEachDelete();
 		delete pList;
 		m_tmWaitTasks.RemoveByIterator(it);
 	}
