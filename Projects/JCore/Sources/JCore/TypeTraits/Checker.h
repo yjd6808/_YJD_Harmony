@@ -26,6 +26,37 @@ class String;
     template <typename T>
     struct IsReferenceType<T&&> : TrueType {};
 
+	// 한정자를 가진 타입인지 확인
+    template <typename T>
+    struct IsQulifiedType : FalseType {};
+
+    template <typename T>
+    struct IsQulifiedType<const T> : TrueType {};
+
+    template <typename T>
+    struct IsQulifiedType<const T&> : TrueType {};
+
+    template <typename T>
+    struct IsQulifiedType<const T&&> : TrueType {};
+
+    template <typename T>
+    struct IsQulifiedType<const volatile T> : TrueType {};
+
+    template <typename T>
+    struct IsQulifiedType<const volatile T&> : TrueType {};
+
+    template <typename T>
+    struct IsQulifiedType<const volatile T&&> : TrueType {};
+
+    template <typename T>
+    struct IsQulifiedType<volatile T> : TrueType {};
+
+    template <typename T>
+    struct IsQulifiedType<volatile T&> : TrueType {};
+
+    template <typename T>
+    struct IsQulifiedType<volatile T&&> : TrueType {};
+
     // 정수 타입인지 확인하는 템플릿
     template <typename T>
     struct IsIntegerType : FalseType {};
@@ -166,6 +197,9 @@ constexpr bool IsPointerType_v = Detail::IsPointerType<RemoveReference_t<T>>::Va
 
 template <typename T>
 constexpr bool IsReferenceType_v = Detail::IsReferenceType<T>::Value;
+
+template <typename T>
+constexpr bool IsNaturalType_v = !Detail::IsReferenceType<T>::Value && !Detail::IsPointerType<T>::Value && !Detail::IsQulifiedType<T>::Value;
 
 template <typename T>
 constexpr bool IsIntegerType_v = Detail::IsIntegerType<NaturalType_t<T>>::Value;
