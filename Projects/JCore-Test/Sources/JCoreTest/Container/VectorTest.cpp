@@ -331,15 +331,20 @@ TEST(VectorTest, ZeroCapacityTest) {
 	LeakCheck;
 	Vector<int> vector1(0);
 	Vector<int> vector2(vector1);
+	Vector<int> _(vector1);
+	Vector<int> vector3(Move(_));
 
 	EXPECT_EQ(vector1.Capacity(), 0);
 	EXPECT_EQ(vector2.Capacity(), 0);
+	EXPECT_EQ(vector3.Capacity(), 0);
 
 	vector1.PushBack(1);
 	vector2.PushBack(1);
+	vector3.PushBack(1);
 
 	EXPECT_TRUE(vector1.Capacity() > 0);
 	EXPECT_TRUE(vector2.Capacity() > 0);
+	EXPECT_TRUE(vector3.Capacity() > 0);
 }
 
 

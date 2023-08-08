@@ -316,15 +316,20 @@ TEST(ArrayQueueTest, ZeroCapacityTest) {
 	LeakCheck;
 	ArrayQueue<int> queue1(0);
 	ArrayQueue<int> queue2(queue1);
+	ArrayQueue<int> _(queue1);
+	ArrayQueue<int> queue3(Move(_));
 
 	EXPECT_EQ(queue1.Capacity(), 0);
 	EXPECT_EQ(queue2.Capacity(), 0);
+	EXPECT_EQ(queue3.Capacity(), 0);
 
 	queue1.Enqueue(1);
 	queue2.Enqueue(1);
+	queue3.Enqueue(1);
 
 	EXPECT_TRUE(queue1.Capacity() > 0);
 	EXPECT_TRUE(queue2.Capacity() > 0);
+	EXPECT_TRUE(queue3.Capacity() > 0);
 }
 
 

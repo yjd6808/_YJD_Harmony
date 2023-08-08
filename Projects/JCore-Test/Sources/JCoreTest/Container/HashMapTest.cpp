@@ -202,6 +202,36 @@ TEST(HashMapTest, MemoryPool) {
 		q.Insert(StringUtil::Format("ss%d", i), StringUtil::Format("ss%d", i));
 }
 
+
+TEST(HashMapTest, ZeroCapacityTest) {
+	LeakCheck;
+	HashMap<int, int> hashMap1(0);
+	HashMap<int, int> hashMap2(hashMap1);
+	HashMap<int, int> _(hashMap1);
+	HashMap<int, int> hashMap3(Move(_));
+
+	EXPECT_EQ(hashMap1.BucketCount(), 0);
+	EXPECT_EQ(hashMap2.BucketCount(), 0);
+	EXPECT_EQ(hashMap3.BucketCount(), 0);
+
+	hashMap1.Insert(1, 1);
+	hashMap2.Insert(1, 1);
+	hashMap3.Insert(1, 1);
+
+	EXPECT_TRUE(hashMap1.BucketCount() > 0);
+	EXPECT_TRUE(hashMap2.BucketCount() > 0);
+	EXPECT_TRUE(hashMap3.BucketCount() > 0);
+
+	EXPECT_TRUE(hashMap1.Exist(1));
+	EXPECT_TRUE(hashMap2.Exist(1));
+	EXPECT_TRUE(hashMap3.Exist(1));
+
+	if (hashMap1.Exist(1)) EXPECT_TRUE(hashMap1[1] == 1);
+	if (hashMap2.Exist(1)) EXPECT_TRUE(hashMap2[1] == 1);
+	if (hashMap3.Exist(1)) EXPECT_TRUE(hashMap3[1] == 1);
+}
+
+
 #endif // TEST_HashMapTest == ON
 
 

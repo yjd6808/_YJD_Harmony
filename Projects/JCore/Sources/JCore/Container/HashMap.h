@@ -298,13 +298,16 @@ public:
 public:
 	HashMap(int capacity = ms_iTableDefaultCapacity)
 		: TMapCollection()
+		, m_pTable(nullptr)
 		, m_pHeadBucket(nullptr)
 		, m_pTailBucket(nullptr)
 		, m_iCapacity(capacity)
 	{
-		int iAllocatedSize;
-		m_pTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
-		Memory::PlacementNewArray(m_pTable, capacity);
+		if (m_iCapacity > 0) {
+			int iAllocatedSize;
+			m_pTable = TAllocator::template AllocateDynamic<TBucket*>(sizeof(TBucket) * capacity, iAllocatedSize);
+			Memory::PlacementNewArray(m_pTable, capacity);
+		} 
 	}
 
 	HashMap(const THashMap& other) : THashMap(other.m_iCapacity) {
@@ -451,10 +454,13 @@ public:
 	}
 
 	bool Exist(const TKey& key) const override {
+		if (m_pTable == nullptr) return false;
 		return m_pTable[HashBucket(key)].ExistByKey(key);
 	}
 
 	virtual TValue* Find(const TKey& key) const {
+		if (m_pTable == nullptr) return nullptr;
+
 		TValue* pVal = m_pTable[HashBucket(key)].FindByKey(key);
 
 		if (pVal == nullptr) {
@@ -465,6 +471,9 @@ public:
 	}
 
 	TValue& Get(const TKey& key) const override {
+		if (m_pTable == nullptr) 
+			throw InvalidOperationException("초기화 되지 않은 해쉬맵입니다.");;
+
 		TValue* pVal = m_pTable[HashBucket(key)].FindByKey(key);
 
 		if (pVal == nullptr) {
@@ -621,6 +630,11 @@ public:
 	}
 
 	void Expand(int capacity) {
+
+		// 0 용량 해쉬맵 기능 추가때문에
+		if (capacity == 0)
+			capacity = 4;
+
 		DebugAssertMsg(capacity > m_iCapacity, "이전 해쉬맵 크기보다 커야합니다.");
 
 		int iAllocatedSize;
@@ -660,7 +674,7 @@ public:
 	ContainerType GetContainerType() override { return ContainerType::HashMap; }
 
 	bool ExpandIfNeeded(int size) {
-		if (size < m_iCapacity) {
+		if (size <= 0 || size < m_iCapacity) {
 			return false;
 		}
 
