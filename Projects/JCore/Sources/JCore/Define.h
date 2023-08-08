@@ -130,5 +130,7 @@
 	#define JCORE_CALLBACK_2(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, ##__VA_ARGS__)
 	#define JCORE_CALLBACK_3(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, ##__VA_ARGS__)
 
-
+	// 부모 클래스 팡션 숨기는법
+	// https://stackoverflow.com/questions/4908539/a-way-in-c-to-hide-a-specific-function
+	#define JCORE_HIDE_BASE_CLASS_METHOD(base_class_type, method) private: using base_class_type::method;
 #endif
