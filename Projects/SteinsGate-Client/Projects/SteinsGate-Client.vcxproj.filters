@@ -115,6 +115,12 @@
     <Filter Include="Data\Monster">
       <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actor\Component">
+      <UniqueIdentifier>{e2bffae1-e6b6-4d2c-a948-411e9267f569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{f3c8eaa2-3cff-4932-a33b-be045449ca55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\ImagePackManager.cpp">
@@ -486,6 +492,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.cpp">
       <Filter>Data\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ComponentCollection.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MoveComponent.cpp">
+      <Filter>Actor\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -921,6 +933,21 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h">
       <Filter>Data\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\IComponent.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\IUpdatable.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ComponentCollection.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorComponent.h">
+      <Filter>Actor\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MoveComponent.h">
+      <Filter>Actor\Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -305,9 +305,6 @@
     <Filter Include="Net">
       <UniqueIdentifier>{9c008121-a467-48e8-9eaf-74f475cfd80b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents">
-      <UniqueIdentifier>{e5dfe8dd-1566-4fd0-9870-954606ad6feb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Net\Cmd">
       <UniqueIdentifier>{6468c181-5a92-447d-becd-6ce66d66ea74}</UniqueIdentifier>
     </Filter>
@@ -328,6 +325,9 @@
     </Filter>
     <Filter Include="Data\MonsterStat">
       <UniqueIdentifier>{7e87883b-be6f-4b81-85d1-7040d281963d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{7845d01b-e1ff-42ba-a673-676be240ab0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
