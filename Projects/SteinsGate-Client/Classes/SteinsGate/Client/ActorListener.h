@@ -11,7 +11,7 @@
 #include "Tutturu.h"
 #include <SteinsGate/Client/Struct.h>
 
-#define CreateNew(Type) public: ActorListener* createNew() override { return dbg_new Type; }
+#define SG_ACTOR_LISTENER_CREATE(Type) public: ActorListener* createNew() override { return dbg_new Type; }
 
 class Actor;
 class ActorPartAnimation;

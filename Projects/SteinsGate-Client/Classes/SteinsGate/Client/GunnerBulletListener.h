@@ -10,8 +10,7 @@
 
 
 #include <SteinsGate/Client/ProjectileListener.h>
-
-#include "HitRecorder.h"
+#include <SteinsGate/Client/HitRecorder.h>
 
 class HostPlayer;
 class HitRecorder;
@@ -24,7 +23,7 @@ public:
 	void onEnemySingleHit(HitInfo& info);
 	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 
-	CreateNew(GunnerBulletListener)
+	SG_ACTOR_LISTENER_CREATE(GunnerBulletListener)
 };
 
 

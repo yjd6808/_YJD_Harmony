@@ -13,7 +13,7 @@
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/SGAction.h>
 #include <SteinsGate/Client/MapLayer.h>
-
+#include <SteinsGate/Client/MoveComponent.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -174,95 +174,36 @@ void PlayerController::walk() {
 
 void PlayerController::updateMove(float dt) {
 
-	MapLayer* pMapLayer = m_pPlayer->getMapLayer();
+	MoveComponent* pMoveComponent = m_pPlayer->getComponent<MoveComponent>();
 
-	if (pMapLayer == nullptr)
+	if (pMoveComponent == nullptr)
 		return;
 
-	MapAreaInfo* pAreaInfo = pMapLayer->getMapAreaInfo();
+	
 	SGAction* pRunningAction = m_pActionManager->getRunningAction();
 
 	// 액션중 이동가능한 액션인 경우 해당 액션의 이동속도로 움직일 수 있도록 한다.
-	if (pRunningAction == nullptr)
+	if (pRunningAction == nullptr) {
+		pMoveComponent->setSpeed(0, 0);
 		return;
+	}
 
-	// 좌,우 | 위,아래 독립적으로 계산해야함
-	// 한개로만 하게되면 예를들어 Left, Down을 동시에 눌렀을 때
-	// thickness.origin.x -= fSpeedX 적용된 값이 Down 체크시에도 적용되어버려서
-	// 이 적용된 값 때문에 Down에서 lb, rb 충돌 체크가 항상 참이 되어버림
-	// --------------------------------------------------------------
-	//  23/01/28 -> 좌,우,위,아래 모두 독립적으로 가능하도록 추가
-	SGRect thicknessPosLR = m_pPlayer->getThicknessBoxRect();
-	SGRect thicknessPosUD = thicknessPosLR;
-
-	float fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
+	float fSpeedX = 0.0f;
+	float fSpeedY = 0.0f;
 
 	if (isKeyPressed(ControlKey::Left) && pRunningAction->isMoveableNegativeX()) {
-		thicknessPosLR.origin.x -= fSpeedX;
-		updateLeftMove(pMapLayer, pAreaInfo, thicknessPosLR);
-
+		fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f * -1;
 	} else if (isKeyPressed(ControlKey::Right) && pRunningAction->isMoveablePositiveX()) {
-		thicknessPosLR.origin.x += fSpeedX;
-		updateRightMove(pMapLayer, pAreaInfo, thicknessPosLR);
-
+		fSpeedX = pRunningAction->getMoveSpeedX() / 60.0f;
 	}
-
-	float fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f;
 
 	if (isKeyPressed(ControlKey::Up) && pRunningAction->isMoveablePositiveY()) {
-		thicknessPosUD.origin.y += fSpeedY;
-		updateUpMove(pMapLayer, pAreaInfo, thicknessPosUD);
-
+		fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f;
 	} else if (isKeyPressed(ControlKey::Down) && pRunningAction->isMoveableNegativeY()) {
-		thicknessPosUD.origin.y -= fSpeedY;
-		updateDownMove(pMapLayer, pAreaInfo, thicknessPosUD);
-
+		fSpeedY = pRunningAction->getMoveSpeedY() / 60.0f * -1;
 	}
-}
 
-void PlayerController::updateLeftMove(MapLayer* mapLayer, MapAreaInfo* areaInfo,  const SGRect& thicknessRect) {
-	SGVec2 lb{ thicknessRect.origin.x, thicknessRect.origin.y };
-	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
-
-	// lb, lt 체크
-	if (areaInfo->checkWall(lb.x, lb.y) || areaInfo->checkWall(lt.x, lt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
-		return;
-
-	m_pPlayer->setPositionRealX(thicknessRect.origin.x);
-}
-
-
-void PlayerController::updateRightMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
-	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
-	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
-
-	// rb, rt 체크
-	if (areaInfo->checkWall(rb.x, rb.y) || areaInfo->checkWall(rt.x, rt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
-		return;
-
-	m_pPlayer->setPositionRealX(thicknessRect.origin.x);
-}
-
-void PlayerController::updateUpMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
-	SGVec2 lt{ thicknessRect.origin.x, thicknessRect.origin.y + thicknessRect.size.height };
-	SGVec2 rt{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y + thicknessRect.size.height };
-
-	// lt, rt 체크
-	if (areaInfo->checkWall(lt.x, lt.y) || areaInfo->checkWall(rt.x, rt.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
-		return;
-
-	m_pPlayer->setPositionRealY(thicknessRect.origin.y);
-}
-
-void PlayerController::updateDownMove(MapLayer* mapLayer, MapAreaInfo* areaInfo, const SGRect& thicknessRect) {
-	SGVec2 lb{ thicknessRect.origin.x, thicknessRect.origin.y };
-	SGVec2 rb{ thicknessRect.origin.x + thicknessRect.size.width, thicknessRect.origin.y };
-
-	// lb, rb 체크
-	if (areaInfo->checkWall(lb.x, lb.y) || areaInfo->checkWall(rb.x, rb.y) || mapLayer->isCollideWithMapObjects(thicknessRect))
-		return;
-
-	m_pPlayer->setPositionRealY(thicknessRect.origin.y);
+	pMoveComponent->setSpeed(fSpeedX, fSpeedY);
 }
 
 void PlayerController::updateDirection(ControlKey_t pressedKey) {

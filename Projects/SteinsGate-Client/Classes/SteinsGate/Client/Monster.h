@@ -26,6 +26,7 @@ public:
 	static Monster* create(MonsterInfo* baseInfo, AIInfo* aiInfo);
 	void initActorSprite() override;
 	void initAIActivities() override;
+	void initComponents() override;
 	void hit(const HitInfo& hitInfo) override;
 
 	void update(float dt) override;

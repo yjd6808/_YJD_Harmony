@@ -20,6 +20,8 @@
 #include <SteinsGate/Client/MonsterIdleActivity.h>
 #include <SteinsGate/Client/MonsterSitActivity.h>
 
+#include <SteinsGate/Client/MoveComponent.h>
+
 USING_NS_CC;
 USING_NS_JC;
 
@@ -43,6 +45,7 @@ Monster* Monster::create(MonsterInfo* baseInfo, AIInfo* aiInfo) {
 		pMonster->initActorSprite();
 		pMonster->initHitRecorder();		// 먼저 초기화 필요 (AIActivity에서 초기화해서 씀)
 		pMonster->initAI();
+		pMonster->initComponents();
 		pMonster->autorelease();
 		return pMonster;
 	}
@@ -67,6 +70,12 @@ void Monster::initAIActivities() {
 
 	runActivity(m_ActivityMap[AIActivityType::Idle]);	// 아무것도 설정안하면 기본 실행 시간 1초
 	
+}
+
+void Monster::initComponents() {
+	Actor::initComponents();
+
+	m_Components.add(dbg_new MoveComponent(this));
 }
 
 void Monster::hit(const HitInfo& hitInfo) {

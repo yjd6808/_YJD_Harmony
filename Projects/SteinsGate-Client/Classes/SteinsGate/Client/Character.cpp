@@ -19,6 +19,7 @@
 #include <SteinsGate/Client/ActionDefine.h>
 #include <SteinsGate/Client/ActorBox.h>
 #include <SteinsGate/Client/CharacterListener.h>
+#include <SteinsGate/Client/MoveComponent.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -60,6 +61,7 @@ void Character::initInfo(int code, const VisualInfo& visualInfo) {
 	initActorSprite();
 	initHitRecorder(32, 64);
 	initListener();
+	initComponents();
 }
 
 void Character::initBaseInfo(int code) {
@@ -100,6 +102,12 @@ void Character::initListener() {
 	}
 
 	pListener->onCreated();
+}
+
+void Character::initComponents() {
+	Actor::initComponents();
+
+	m_Components.add(dbg_new MoveComponent(this));
 }
 
 void Character::hit(const HitInfo& hitInfo) {

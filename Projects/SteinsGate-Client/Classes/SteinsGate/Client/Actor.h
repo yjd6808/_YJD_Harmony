@@ -21,15 +21,20 @@
 #pragma once
 
 #include "Tutturu.h"
+
 #include <SteinsGate/Client/Struct.h>
 #include <SteinsGate/Client/ActorSprite.h>
 #include <SteinsGate/Client/HitRecorder.h>
 #include <SteinsGate/Client/ActorListenerCollection.h>
 
+#include <SteinsGate/Client/ComponentCollection.h>
+
 class Actor;
 class MapLayer;
 class Actor : public SGNode
 {
+	JCORE_HIDE_BASE_CLASS_METHOD(SGNode, addComponent)
+	JCORE_HIDE_BASE_CLASS_METHOD(SGNode, cleanup)
 public:
 	enum CleanUpFlag
 	{
@@ -49,11 +54,17 @@ public:
 	virtual void initHitRecorder(int hitPossibleListSize = 16, int alreadyHitMapSize = 32, Actor* owner = nullptr);
 	virtual bool isPhysicsActor() { return false; }
 	virtual bool initVariables();
+	virtual void initComponents();
 
 	bool addListener(ActorListener* listener);
 	bool hasListener(ActorListener::Type type);
 	ActorListener* getListener(ActorListener::Type type);
 	void update(float dt) override;				// 자식에서도 오버라이딩시 이거 호출하도록
+
+	void addComponent(IComponent* componenet);
+	bool hasComponent(IComponent::Type type) const;
+	template <typename TComponent>
+	TComponent* getComponent() const { return m_Components.get<TComponent>(); }
 
 	ActorType_t getType()					const;
 	const char* getTypeName()				const;
@@ -80,7 +91,7 @@ public:
 	HitRecorder* getHitRecorder() { return m_pHitRecorder; }
 	int getActorId() { return m_iActorId; }
 	virtual int getCode() = 0;
-	ActorListenerCollection& getListenerCollection() { return m_vListeners; }
+	ActorListenerCollection& getListenerCollection() { return m_Listeners; }
 
 	void setPositionReal(float x, float y);
 	void setPositionReal(const SGVec2& v);
@@ -131,7 +142,8 @@ protected:
 	ActorType_t m_eActorType;
 	ActorSprite* m_pActorSprite;
 	HitRecorder* m_pHitRecorder;
-	ActorListenerCollection m_vListeners;
+	ActorListenerCollection m_Listeners;
+	ComponentCollection m_Components;
 
 	int m_iActorId;					// 액터 박스에게서 부여된 고유 ID
 	int m_iAllyFlag;				// 값이 같으면 동맹, 다르면 적

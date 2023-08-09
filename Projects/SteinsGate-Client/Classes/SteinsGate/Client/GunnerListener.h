@@ -14,7 +14,7 @@
 class GunnerListener : public CharacterListener
 {
 public:
-	CreateNew(GunnerListener)
+	SG_ACTOR_LISTENER_CREATE(GunnerListener)
 };
 
 

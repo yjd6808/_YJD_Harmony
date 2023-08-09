@@ -36,7 +36,7 @@ Actor::Actor(ActorType_t type, int code)
 
 Actor::~Actor() {
 	JCORE_DELETE_SAFE(m_pHitRecorder);
-	m_vListeners.deleteAll();
+	m_Listeners.deleteAll();
 }
 
 
@@ -61,16 +61,20 @@ bool Actor::initVariables() {
 	return true;
 }
 
+void Actor::initComponents() {
+
+}
+
 bool Actor::addListener(ActorListener* listener) {
-	return m_vListeners.add(listener);
+	return m_Listeners.add(listener);
 }
 
 bool Actor::hasListener(ActorListener::Type type) {
-	return m_vListeners.has(type);
+	return m_Listeners.has(type);
 }
 
 ActorListener* Actor::getListener(ActorListener::Type type) {
-	return m_vListeners.get(type);
+	return m_Listeners.get(type);
 }
 
 void Actor::initThicknessBox(const ThicknessBox& thicknessBox) {
@@ -111,7 +115,8 @@ void Actor::update(float dt) {
 	DebugAssertMsg(m_pMapLayer, "맵 레이어가 세팅되지 않았습니다.");
 
 	m_pActorSprite->update(dt);
-	m_vListeners.onUpdate(dt);
+	m_Listeners.onUpdate(dt);
+	m_Components.onUpdate(dt);
 
 
 	if (CoreGlobal_v->DrawThicknessBox)
@@ -120,6 +125,13 @@ void Actor::update(float dt) {
 		m_pThicknessBox->setOpacity(125);
 }
 
+void Actor::addComponent(IComponent* componenet) {
+	m_Components.add(componenet);
+}
+
+bool Actor::hasComponent(IComponent::Type type) const {
+	return m_Components.has(type);
+}
 
 ActorType_t Actor::getType() const {
 	return m_eActorType;
@@ -362,7 +374,7 @@ void Actor::runFrameEvent(FrameEvent* frameEvent) {
 }
 
 void Actor::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
-	m_vListeners.onFrameBegin(animation, texture);
+	m_Listeners.onFrameBegin(animation, texture);
 
 	const int iFrameEventCode = animation->getRunningFrameEventCode();
 
@@ -378,13 +390,13 @@ void Actor::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
 }
 
 void Actor::onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) {
-	m_vListeners.onFrameEnd(animation, texture);
+	m_Listeners.onFrameEnd(animation, texture);
 }
 void Actor::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) {
-	m_vListeners.onAnimationBegin(animation, texture);
+	m_Listeners.onAnimationBegin(animation, texture);
 }
 void Actor::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) {
-	m_vListeners.onAnimationEnd(animation, texture);
+	m_Listeners.onAnimationEnd(animation, texture);
 }
 
 

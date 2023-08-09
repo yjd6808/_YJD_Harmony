@@ -33,11 +33,7 @@ public:
 
 	void updateWander(float dt);
 	void updateTrack(float dt);
-	void updateMove(float dt, MapLayer* pMapLayer);
-	void updateLeftMove(MapLayer* mapLayer, MapAreaInfo* mapInfo, const SGRect& thicknessRect);
-	void updateRightMove(MapLayer* mapLayer, MapAreaInfo* mapInfo, const SGRect& thicknessRect);
-	void updateUpMove(MapLayer* mapLayer, MapAreaInfo* mapInfo, const SGRect& thicknessRect);
-	void updateDownMove(MapLayer* mapLayer, MapAreaInfo* mapInfo, const SGRect& thicknessRect);
+	void updateMove(float dt);
 
 	void setDestination(const SGVec2& destination);
 	void setTarget(Actor* target);

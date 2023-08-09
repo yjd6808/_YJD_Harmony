@@ -26,6 +26,7 @@ public:
 	void initActorSpriteData(const VisualInfo& visualInfo);
 	void initActorSprite() override;
 	void initListener();
+	void initComponents() override;
 	void hit(const HitInfo& hitInfo) override;
 
 	void update(float dt) override;
