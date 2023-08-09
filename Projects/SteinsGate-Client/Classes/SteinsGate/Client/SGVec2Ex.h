@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Tutturu.h"
+#include <SteinsGate/Client/Tutturu.h>
 #include <SteinsGate/Client/Struct.h>
 
  // TODO: 나중에 Engine으로 빼야함

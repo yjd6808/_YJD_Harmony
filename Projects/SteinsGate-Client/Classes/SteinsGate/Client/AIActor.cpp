@@ -23,7 +23,7 @@
 #endif
 
 AIActor::AIActor(ActorType_t type, int code, AIInfo* aiInfo)
-	: PhysicsActor(type, code)
+	: Actor(type, code)
 	, m_pAiInfo(aiInfo)
 	, m_ActivityMap{}
 	, m_pRunningActivity()
@@ -39,7 +39,7 @@ void AIActor::initAI() {
 
 
 bool AIActor::initVariables() {
-	PhysicsActor::initVariables();
+	Actor::initVariables();
 
 	// m_pAiInfo = aiInfo;
 	// m_ActivityMap = ;
@@ -53,7 +53,7 @@ bool AIActor::initVariables() {
 }
 
 void AIActor::update(float dt) {
-	PhysicsActor::update(dt);
+	Actor::update(dt);
 
 	DebugAssertMsg(m_pAiInfo != nullptr, "AI 정보가 주입되지 않았습니다.");
 	DebugAssertMsg(m_pRunningActivity != nullptr, "동작중인 액티비티가 없습니다.");

@@ -20,9 +20,8 @@
 
 #pragma once
 
-#include "Tutturu.h"
+#include <SteinsGate/Client/Tutturu.h>
 
-#include <SteinsGate/Client/Struct.h>
 #include <SteinsGate/Client/ActorSprite.h>
 #include <SteinsGate/Client/HitRecorder.h>
 #include <SteinsGate/Client/ActorListenerCollection.h>
@@ -31,6 +30,7 @@
 
 class Actor;
 class MapLayer;
+
 class Actor : public SGNode
 {
 	JCORE_HIDE_BASE_CLASS_METHOD(SGNode, addComponent)
@@ -52,7 +52,8 @@ public:
 	virtual void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture);
 	virtual void initThicknessBox(const ThicknessBox& thicknessBox);
 	virtual void initHitRecorder(int hitPossibleListSize = 16, int alreadyHitMapSize = 32, Actor* owner = nullptr);
-	virtual bool isPhysicsActor() { return false; }
+	virtual void hit(const HitInfo& hitInfo);
+
 	virtual bool initVariables();
 	virtual void initComponents();
 
@@ -132,8 +133,6 @@ public:
 	void detach(Actor* actor);	// 이 액터에게서 전달받은 액터를 떼어냄
 	Actor* getAttacher();
 	bool hasAttacher();
-	
-
 public:
 	// stdActor기준으로 절대 액터 렉트를 얻도록 해줌
 	static ActorRect convertAbsoluteActorRect(Actor* stdActor, const ActorRect& relativeRect);
@@ -151,8 +150,6 @@ protected:
 	bool m_bCleanUp;				// 액터가 될 예정 혹은 제거되었는지 여부
 
 	SGDrawNode* m_pThicknessBox;
-
-	
 	SGVector<Actor*> m_vAttches;			// 내게 붙어 있는 녀석들
 	Actor* m_pAttacher;						// 내가 누구에게 붙어있는가?
 };

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Tutturu.h"
+#include <SteinsGate/Client/Tutturu.h>
 #include <SteinsGate/Client/ActorPartSprite.h>
 
 
@@ -59,7 +59,7 @@ public:
 	SGVector<PartData>& getParts() { return m_vParts; }
 	SpriteDirection_t getSpriteDirection();
 	int getRunningAnimationCode();
-	ActorPartAnimation* getRunningAnimation();
+	ActorPartAnimation* getRunningAnimation() const;
 	void updateSpriteData(ActorSpriteData* spriteData);
 private:
 	int m_iFrameCount;

@@ -13,6 +13,7 @@
 #include <SteinsGate/Client/AnimationDefine.h>
 #include <SteinsGate/Client/EffectDefine.h>
 #include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 GunnerSliding::GunnerSliding(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo)
@@ -34,12 +35,17 @@ void GunnerSliding::onActionBegin() {
 
 void GunnerSliding::onUpdate(float dt) {
 
-	Character* pCharacter = m_pPlayer;
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
 
 	if (!m_bSlidingStarted)
 		return;
 
-	if (pCharacter->hasForceX())
+	if (!pPhysicsComponent) {
+		stop();
+		return;
+	}
+
+	if (pPhysicsComponent->hasForceX())
 		return;
 
 	// 더이상 X축 힘이 존재하지 않는 경우 중지
@@ -48,19 +54,23 @@ void GunnerSliding::onUpdate(float dt) {
 
 
 void GunnerSliding::onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) {
-	Character* pCharacter = m_pPlayer;
-	SpriteDirection_t eDir = pCharacter->getSpriteDirection();
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+	const SpriteDirection_t eDir = m_pPlayer->getSpriteDirection();
 
 	// 거너 특유의 슬라이딩 시작전 경직 효과를 주기위해 111번 프레임 끝난 후
 	if (animation->getFrameIndex() == 111) {
 		m_bSlidingStarted = true;
 
-		ActorBox::Get()->createEffectOnMapBySpawner(pCharacter, EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
+		ActorBox::Get()->createEffectOnMapBySpawner(m_pPlayer, EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
+
+		if (pPhysicsComponent == nullptr) {
+			return;
+		}
 
 		if (eDir == SpriteDirection::Right) 
-			pCharacter->addForceX(pCharacter->getBaseInfo()->SlidingForce);
+			pPhysicsComponent->addForceX(m_pPlayer->getBaseInfo()->SlidingForce);
 		else
-			pCharacter->addForceX(-pCharacter->getBaseInfo()->SlidingForce);
+			pPhysicsComponent->addForceX(-m_pPlayer->getBaseInfo()->SlidingForce);
 	}
 
 	// 일시정지 프레임 만나면 1번부터 다시 재시작
@@ -79,7 +89,12 @@ void GunnerSliding::onEnemySingleHit(HitInfo& info) {
 
 
 void GunnerSliding::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent == nullptr)
+		return;
+
 	if (newHitCount > 0) {
-		m_pPlayer->stiffenBody(FPS6_v);
+		pPhysicsComponent->stiffenBody(FPS6_v);
 	}
 }

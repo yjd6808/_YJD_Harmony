@@ -10,29 +10,38 @@
 
 #include <SteinsGate/Client/Monster.h>
 #include <SteinsGate/Client/AnimationDefine.h>
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 MonsterFallDownActivity::MonsterFallDownActivity(Monster* monster)
 	: MonsterActivity(monster, AIActivityType::FallDown) {}
 
 void MonsterFallDownActivity::onActivityBegin() {
 	const MonsterStatInfo* pStatInfo = m_pMonster->getStatInfo();
+	PhysicsComponent* pPhysicsComponent = m_pMonster->getComponent<PhysicsComponent>();
 
 	m_pMonster->runAnimation(MONSTER_ANIMATION_FALL_DOWN_BEGIN);
-	m_pMonster->enableElasticity();
 	m_fElapsedDownTime = 0.0f;
-	m_fDownRecoverTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 0.0f;
+	m_fDownRecoverTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 1.0f;
 	m_bBounced = false;
 	m_bDown = false;
+
+	if (pPhysicsComponent)
+		pPhysicsComponent->enableElasticity();
 }
 
 void MonsterFallDownActivity::onActivityEnd() {
-	m_pMonster->disableElasticity();
+	PhysicsComponent* pPhysicsComponent = m_pMonster->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent)
+		pPhysicsComponent->disableElasticity();
 }
 
 void MonsterFallDownActivity::onUpdate(float dt) {
 
+	PhysicsComponent* pPhysicsComponent = m_pMonster->getComponent<PhysicsComponent>();
+
 	// Step 1. 바닥에 충돌해서 공중으로 튀어올랐는지 확인
-	if (m_pMonster->isBounced() && !m_bBounced) {
+	if (pPhysicsComponent && pPhysicsComponent->isBounced() && !m_bBounced) {
 		m_bBounced = true;
 		m_pMonster->runAnimation(MONSTER_ANIMATION_FALL_DOWN_BOUNCE);
 		return;

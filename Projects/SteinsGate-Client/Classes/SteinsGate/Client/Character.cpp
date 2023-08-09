@@ -20,18 +20,19 @@
 #include <SteinsGate/Client/ActorBox.h>
 #include <SteinsGate/Client/CharacterListener.h>
 #include <SteinsGate/Client/MoveComponent.h>
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 USING_NS_JC;
 USING_NS_CC;
 
 Character::Character() 
-	: PhysicsActor(ActorType::Character, InvalidValue_v)
+	: Actor(ActorType::Character, InvalidValue_v)
 	, m_pBaseInfo(nullptr)
 	, m_pSpriteData(nullptr)
 {}
 
 Character::Character(int code)
-	: PhysicsActor(ActorType::Character, code)
+	: Actor(ActorType::Character, code)
 	, m_pBaseInfo(nullptr)
 	, m_pSpriteData(nullptr)
 {}
@@ -108,30 +109,7 @@ void Character::initComponents() {
 	Actor::initComponents();
 
 	m_Components.add(dbg_new MoveComponent(this));
-}
-
-void Character::hit(const HitInfo& hitInfo) {
-	PhysicsActor::hit(hitInfo);
-}
-
-void Character::update(float dt) {
-	PhysicsActor::update(dt);
-}
-
-void Character::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
-	PhysicsActor::onFrameBegin(animation, texture);
-}
-
-void Character::onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) {
-	PhysicsActor::onFrameEnd(animation, texture);
-}
-
-void Character::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) {
-	PhysicsActor::onAnimationBegin(animation, texture);
-}
-
-void Character::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) {
-	PhysicsActor::onAnimationEnd(animation, texture);
+	m_Components.add(dbg_new PhysicsComponent(this));
 }
 
 CharBaseInfo* Character::getBaseInfo() {

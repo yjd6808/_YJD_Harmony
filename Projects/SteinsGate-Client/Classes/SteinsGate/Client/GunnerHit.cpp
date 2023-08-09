@@ -10,6 +10,7 @@
 
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/AnimationDefine.h>
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 GunnerHit::GunnerHit(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo)
@@ -19,7 +20,11 @@ GunnerHit::GunnerHit(HostPlayer* player, ActionInfo* actionInfo)
 }
 
 void GunnerHit::onActionBegin() {
-	m_pPlayer->enableElasticity();
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent)
+		pPhysicsComponent->enableElasticity();
+
 	m_fElapsedDownTime = 0.0f;
 	m_bDownTimeCheckBegin = false;
 	m_fDownRecoverTime = m_pBaseInfo->DownRecoverTime / 2.0f;
@@ -29,8 +34,11 @@ void GunnerHit::onActionBegin() {
 
 }
 
-void GunnerHit::onActionEnd() { 
-	m_pPlayer->disableElasticity();
+void GunnerHit::onActionEnd() {
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent)
+		pPhysicsComponent->disableElasticity();
 }
 
 void GunnerHit::onUpdate(float dt) {
@@ -52,7 +60,9 @@ void GunnerHit::selectHitAnimation() {
 	m_bHitSmall = !m_bHitSmall;
 }
 void GunnerHit::checkPosition() {
-	if (!m_pPlayer->hasForceY()) {
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (!pPhysicsComponent->hasForceY() && m_pPlayer->getPositionActorY() <= SG_FLT_EPSILON) {
 		m_bOnTheGround = true;
 		return;
 	}
@@ -62,7 +72,9 @@ void GunnerHit::checkPosition() {
 
 
 void GunnerHit::updateGroundHitState(float dt) {
-	if (m_pPlayer->hasForceX())
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent && pPhysicsComponent->hasForceX())
 		return;
 
 	// TODO: 죽음 확인 후 사망처리

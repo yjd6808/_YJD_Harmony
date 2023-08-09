@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include <SteinsGate/Client/PhysicsActor.h>
+#include <SteinsGate/Client/Actor.h>
 #include <SteinsGate/Client/HitRecorder.h>
 #include <SteinsGate/Client/AIActivity.h>
 #include <SteinsGate/Client/AIInfo.h>
 
-class AIActor : public PhysicsActor
+class AIActor : public Actor
 {
 public:
 	enum State

@@ -22,7 +22,7 @@ struct MapAreaInfo
 	MapAreaInfo(int areaHeight) : Area(areaHeight) {}
 	SGVector<SGString> Area;
 
-	bool checkWall(float x, float y);
+	bool checkWall(float x, float y) const;
 
 	int getAreaHorizontolBlockCount() { return Area[0].Length(); }
 	int getAreaVerticalBlockCount() { return Area.Size(); }

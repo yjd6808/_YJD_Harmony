@@ -15,7 +15,6 @@ struct AnimationInfo;
 struct AttackDataInfo;
 
 class Actor;
-class PhysicsActor;
 
 struct ActorRect
 {
@@ -28,7 +27,7 @@ struct ActorRect
 struct HitInfo
 {
 	Actor* Attacker;
-	PhysicsActor* HitTarget;
+	Actor* HitTarget;
 	SpriteDirection_t HitDirection;
 	SGRect HitRect;
 	AttackDataInfo* AttackDataInfo;

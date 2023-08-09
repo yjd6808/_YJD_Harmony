@@ -19,7 +19,7 @@ MonsterSitActivity::MonsterSitActivity(Monster* monster)
 
 void MonsterSitActivity::onActivityBegin() {
 	const MonsterStatInfo* pStatInfo = m_pMonster->getStatInfo();
-	const float fLimitTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 0.0f;
+	const float fLimitTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 1.0f;
 
 	setLimit(fLimitTime);
 	m_pMonster->runAnimation(MONSTER_ANIMATION_SIT);

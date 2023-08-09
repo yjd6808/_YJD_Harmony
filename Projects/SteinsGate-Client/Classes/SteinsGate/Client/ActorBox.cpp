@@ -604,7 +604,7 @@ void ActorBox::unregisterEffect(Effect* effect) {
 		DebugAssertMsg(false, "이펙트 목록에서 삭제하고자하는 대상을 찾지못했습니다.");
 }
 
-void ActorBox::unregisterPhysicsActor(PhysicsActor* physicsActor) {
+void ActorBox::unregisterPhysicsActor(Actor* physicsActor) {
 	if (!m_vPhysicsActors.Remove(physicsActor))
 		DebugAssertMsg(false, "피직스 액터 목록에서 액터를 제거하는데 실패했습니다.");
 }
@@ -629,7 +629,10 @@ void ActorBox::cleanUpProjectile(Projectile* projectile) {
 void ActorBox::cleanUpMonster(Monster* monster) {
 	unregisterMonster(monster);
 	unregisterZOrderActor(monster);
-	unregisterPhysicsActor(monster);
+
+	if (monster->hasComponent(IComponent::ePhysics))
+		unregisterPhysicsActor(monster);
+
 	unregisterActor(monster);
 	m_hMonsterPool[monster->getBaseInfo()->Code].PushBack(monster);
 	_LogDebug_("삭제> 몬스터 (%s), 남은 몬스터 수 : %d, Z오더 액터 수: %d", monster->getBaseInfo()->Name.Source(), m_vMonsters.Size(), m_vZOrderedActors.Size());

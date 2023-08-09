@@ -21,6 +21,7 @@
 #include <SteinsGate/Client/MonsterSitActivity.h>
 
 #include <SteinsGate/Client/MoveComponent.h>
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -76,6 +77,7 @@ void Monster::initComponents() {
 	Actor::initComponents();
 
 	m_Components.add(dbg_new MoveComponent(this));
+	m_Components.add(dbg_new PhysicsComponent(this));
 }
 
 void Monster::hit(const HitInfo& hitInfo) {

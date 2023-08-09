@@ -66,19 +66,19 @@ void MapLayer::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
 	HostPlayer::Get()->onKeyReleased(keyCode, event);
 }
 
-MapPhysicsInfo* MapLayer::getMapPhysicsInfo() {
+MapPhysicsInfo* MapLayer::getMapPhysicsInfo() const {
 	return m_pMapPhysicsInfo;
 }
 
-MapAreaInfo* MapLayer::getMapAreaInfo() {
+MapAreaInfo* MapLayer::getMapAreaInfo() const {
 	return m_pMapAreaInfo;
 }
 
-MapInfo* MapLayer::getMapInfo() {
+MapInfo* MapLayer::getMapInfo() const {
 	return m_pMapInfo;
 }
 
-MimicCamera* MapLayer::getCamera() {
+MimicCamera* MapLayer::getCamera() const {
 	return m_pCamera;
 }
 
@@ -153,7 +153,7 @@ bool MapLayer::collectEnemiesInActorRect(
 	const ActorRect& absoluteActorRect,
 	JCORE_OUT SGVector<HitInfo>& hitTargets) {
 
-	PhysicsActorList& physcisActorList = m_pActorBox->getPhysicsActorList();
+	ActorList& physcisActorList = m_pActorBox->getPhysicsActorList();
 	bool bFind = false;
 
 	for (int i = 0; i < physcisActorList.Size(); ++i) {
@@ -181,7 +181,7 @@ bool MapLayer::collectEnemiesInActor(Actor* collector, JCORE_OUT SGVector<HitInf
 }
 
 
-bool MapLayer::isCollideWithMapObjects(const SGRect& rect) {
+bool MapLayer::isCollideWithMapObjects(const SGRect& rect) const {
 
 	MapObjectList& collidableMapObjects = m_pActorBox->getCollidableMapObjectList();
 

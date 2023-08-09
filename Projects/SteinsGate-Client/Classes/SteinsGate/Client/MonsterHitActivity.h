@@ -25,7 +25,7 @@ public:
 	void onUpdate(float dt) override;
 private:
 	bool m_bHitSmall;
-	bool m_bOnTheGround;		// 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지
+	bool m_bOnTheGround;		// 초기 Hit 판정시 공중이었는지 아니면 바닥이었는지 (false시 공중)
 	bool m_bDownTimeCheckBegin;
 	float m_fElapsedDownTime;
 	float m_fDownRecoverTime;

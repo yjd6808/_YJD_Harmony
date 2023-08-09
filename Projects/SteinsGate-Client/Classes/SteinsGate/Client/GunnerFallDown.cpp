@@ -10,6 +10,7 @@
 
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/AnimationDefine.h>
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 GunnerFallDown::GunnerFallDown(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo)
@@ -19,10 +20,13 @@ GunnerFallDown::GunnerFallDown(HostPlayer* player, ActionInfo* actionInfo)
 }
 
 void GunnerFallDown::onActionBegin() {
-	
-	m_pPlayer->runAnimation(GUNNER_ANIMATION_FALL_DOWN_BEGIN);
-	m_pPlayer->enableElasticity();
 
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent)
+		pPhysicsComponent->enableElasticity();
+
+	m_pPlayer->runAnimation(GUNNER_ANIMATION_FALL_DOWN_BEGIN);
 	m_fElapsedDownTime = 0.0f;
 	m_fDownRecoverTime = m_pBaseInfo->DownRecoverTime / 2.0f;
 	m_bBounced = false;
@@ -30,15 +34,19 @@ void GunnerFallDown::onActionBegin() {
 }
 
 void GunnerFallDown::onActionEnd() {
-	m_pPlayer->disableElasticity();
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent)
+		pPhysicsComponent->disableElasticity();
 }
 
 void GunnerFallDown::onUpdate(float dt) {
 	Character* pCharacter = m_pPlayer;
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
 
 
 	// Step 1. 바닥에 충돌해서 공중으로 튀어올랐는지 확인
-	if (pCharacter->isBounced() && !m_bBounced) {
+	if (pPhysicsComponent && pPhysicsComponent->isBounced() && !m_bBounced) {
 		m_bBounced = true;
 		pCharacter->runAnimation(GUNNER_ANIMATION_FALL_DOWN_BOUNCE);
 		return;

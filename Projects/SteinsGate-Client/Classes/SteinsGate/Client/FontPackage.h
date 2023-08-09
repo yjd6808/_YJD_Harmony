@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Tutturu.h"
+#include <SteinsGate/Client/Tutturu.h>
 
 class FontPackage final : public JCore::SingletonPointer<FontPackage>
 {

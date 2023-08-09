@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MoveComponent.cpp">
       <SubType>
       </SubType>
@@ -50,6 +54,10 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\C_LOBBY.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\PhysicsComponent.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -154,10 +162,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientGroup.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\PhysicsActor.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MapObject.cpp">
       <SubType>
       </SubType>
@@ -418,6 +422,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerCollection.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ComponentCollection.h" />
@@ -488,6 +496,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AllActions.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\PhysicsComponent.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -763,10 +775,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileInfoLoader.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\PhysicsActor.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -7,6 +7,7 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "GunnerGunShot.h"
 
 #include <SteinsGate/Client/HostPlayer.h>
@@ -14,7 +15,7 @@
 #include <SteinsGate/Client/ProjectileDefine.h>
 #include <SteinsGate/Client/ActionDefine.h>
 #include <SteinsGate/Client/EffectDefine.h>
-#include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 #define MaxWaitRightShotTime 0.1f // (6fps)
 
@@ -197,8 +198,10 @@ void GunnerGunShot::onEnemySingleHit(HitInfo& info) {
 
 
 void GunnerGunShot::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
-	if (newHitCount > 0) {
-		m_pPlayer->stiffenBody(FPS6_v);
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent && newHitCount > 0) {
+		pPhysicsComponent->stiffenBody(FPS6_v);
 	}
 }
 

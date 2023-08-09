@@ -20,7 +20,9 @@ class JCORE_NOVTABLE IComponent
 public:
 	enum Type
 	{
-		eMove
+		eMove,
+		eAI,
+		ePhysics
 	};
 
 	virtual ~IComponent() = default;

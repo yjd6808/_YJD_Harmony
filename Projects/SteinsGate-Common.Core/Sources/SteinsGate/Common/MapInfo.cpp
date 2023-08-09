@@ -11,7 +11,7 @@
 
 #include <SteinsGate/Common/Const.h>
 
-bool MapAreaInfo::checkWall(float x, float y) {
+bool MapAreaInfo::checkWall(float x, float y) const {
 
 	if (x < 0.0f || y < 0.0f)
 		return true;

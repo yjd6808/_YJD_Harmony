@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include "Tutturu.h"
+#include <SteinsGate/Client/Tutturu.h>
 
 class SpriteFrameTexture;
 class Global : public JCore::SingletonPointer<Global>

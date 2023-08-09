@@ -9,8 +9,7 @@
 
 #pragma once
 
-#include "Tutturu.h"
-#include <SteinsGate/Client/Struct.h>
+#include <SteinsGate/Client/Tutturu.h>
 #include <SteinsGate/Client/ActorPartAnimation.h>
 
 

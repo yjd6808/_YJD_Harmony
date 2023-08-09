@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <SteinsGate/Client/PhysicsActor.h>
+#include <SteinsGate/Client/Actor.h>
 #include <SteinsGate/Client/CharInfo.h>
 
-class Character : public PhysicsActor
+class Character : public Actor
 {
 public:
 	Character();
@@ -27,13 +27,6 @@ public:
 	void initActorSprite() override;
 	void initListener();
 	void initComponents() override;
-	void hit(const HitInfo& hitInfo) override;
-
-	void update(float dt) override;
-	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
 
 	CharBaseInfo* getBaseInfo();
 	int getCode() override { return m_pBaseInfo->Code; }

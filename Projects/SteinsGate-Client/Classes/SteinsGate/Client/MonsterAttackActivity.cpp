@@ -12,6 +12,7 @@
 #include <SteinsGate/Client/AnimationDefine.h>
 #include <SteinsGate/Client/ActorBox.h>
 #include <SteinsGate/Client/EffectDefine.h>
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 
 MonsterAttackActivity::MonsterAttackActivity(Monster* monster)
@@ -48,7 +49,9 @@ void MonsterAttackActivity::onEnemySingleHit(HitInfo& info) {
 
 
 void MonsterAttackActivity::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
-	if (newHitCount > 0) {
-		m_pMonster->stiffenBody(FPS6_v);
+	PhysicsComponent* pPhysicsComponent = m_pMonster->getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent && newHitCount > 0) {
+		pPhysicsComponent->stiffenBody(FPS6_v);
 	}
 }

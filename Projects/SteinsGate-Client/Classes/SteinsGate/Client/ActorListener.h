@@ -8,12 +8,10 @@
 
 #pragma once
 
-#include "Tutturu.h"
-#include <SteinsGate/Client/Struct.h>
+#include <SteinsGate/Client/Tutturu.h>
 
 #define SG_ACTOR_LISTENER_CREATE(Type) public: ActorListener* createNew() override { return dbg_new Type; }
 
-class Actor;
 class ActorPartAnimation;
 class FrameTexture;
 class JCORE_NOVTABLE ActorListener

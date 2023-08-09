@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Tutturu.h"
+#include <SteinsGate/Client/Tutturu.h>
 #include "Struct.h"
 
 #include <SteinsGate/Client/SceneBase.h>

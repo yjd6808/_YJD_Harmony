@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include "Tutturu.h"
+#include <SteinsGate/Client/Tutturu.h>
 #include <SteinsGate/Client/FrameEvent.h>
-#include <SteinsGate/Client/Struct.h>
 
 class ActorPartAnimation;
 class Actor;

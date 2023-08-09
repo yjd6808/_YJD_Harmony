@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "Tutturu.h"
-
 #include <SteinsGate/Client/Struct.h>
 #include <SteinsGate/Client/Projectile.h>
 #include <SteinsGate/Client/Monster.h>
@@ -21,7 +19,6 @@ using ActorList = SGVector<Actor*>;
 using CharacterList = SGVector<Character*>;
 using ProjectileList = SGVector<Projectile*>;
 using MonsterList = SGVector<Monster*>;
-using PhysicsActorList = SGVector<PhysicsActor*>;
 using MapObjectList = SGVector<MapObject*>;
 using EffectList = SGVector<Effect*>;
 
@@ -84,7 +81,7 @@ public:
 	MonsterList& getMonsterList() { return m_vMonsters; }
 	MapObjectList& getCollidableMapObjectList() { return m_vCollidableMapObjects; }
 	CharacterList& getCharacterList() { return m_vCharacters; }
-	PhysicsActorList& getPhysicsActorList() { return m_vPhysicsActors; }
+	ActorList& getPhysicsActorList() { return m_vPhysicsActors; }
 	Actor* getActor(int actorId) { return m_hActorMap[actorId]; }
 private:
 	void sortZOrderActor();
@@ -109,7 +106,7 @@ private:
 	void unregisterMapObject(MapObject* mapObject);
 	void unregisterEffect(Effect* effect);
 	void unregisterColidableMapObject(MapObject* mapObject);
-	void unregisterPhysicsActor(PhysicsActor* physicsActor);
+	void unregisterPhysicsActor(Actor* physicsActor);
 	void unregisterActor(Actor* actor);
 private:
 	// 풀링용 리스트
@@ -130,7 +127,7 @@ private:
 	MapObjectList m_vCollidableMapObjects;
 	MapObjectList m_vMapObjects;
 	CharacterList m_vCharacters;
-	PhysicsActorList m_vPhysicsActors;
+	ActorList m_vPhysicsActors;
 	EffectList m_vEffectList;
 
 	SGHashMap<Actor*, Actor*> m_hRemoveActorMap;	// 중복 큐잉 방지용

@@ -8,9 +8,6 @@
 
 #pragma once
 
-
-
-
 #include <SteinsGate/Client/GunnerAction.h>
 
 class Character;

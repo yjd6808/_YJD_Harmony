@@ -25,15 +25,15 @@ public:
 	Character* findNearestCharacterInRadious(Actor* stdActor, float radious, JCORE_OUT float& enemyDist);
 	bool collectEnemiesInActorRect(Actor* attacker, const ActorRect& rect, JCORE_OUT SGVector<HitInfo>& hitTargets);
 	bool collectEnemiesInActor(Actor* collector, JCORE_OUT SGVector<HitInfo>& hitTargets);
-	bool isCollideWithMapObjects(const SGRect& rect);
+	bool isCollideWithMapObjects(const SGRect& rect) const;
 
 	void onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 	void onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 
-	MapPhysicsInfo* getMapPhysicsInfo();
-	MapAreaInfo* getMapAreaInfo();
-	MapInfo* getMapInfo();
-	MimicCamera* getCamera();
+	MapPhysicsInfo* getMapPhysicsInfo() const;
+	MapAreaInfo* getMapAreaInfo() const;
+	MapInfo* getMapInfo() const;
+	MimicCamera* getCamera() const;
 public:
 	bool m_bMapLoaded;
 

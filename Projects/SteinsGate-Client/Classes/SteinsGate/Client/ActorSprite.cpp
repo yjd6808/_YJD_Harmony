@@ -223,7 +223,7 @@ int ActorSprite::getRunningAnimationCode() {
 	return pRunningAnimation->getAnimationCode();
 }
 
-ActorPartAnimation* ActorSprite::getRunningAnimation() {
+ActorPartAnimation* ActorSprite::getRunningAnimation() const {
 	ActorPartAnimation* pRunningAnimation = m_vParts[0].Part->getRunningAnimation();
 	DebugAssertMsg(pRunningAnimation != nullptr, "실행중인 애니메이션이 없을 수 없습니다.");
 	return pRunningAnimation;

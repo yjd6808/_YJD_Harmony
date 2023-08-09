@@ -16,6 +16,8 @@
 #include <SteinsGate/Client/ActionDefine.h>
 #include <SteinsGate/Client/CharInfo.h>
 
+#include "PhysicsComponent.h"
+
 #define MinimumShotHeight 30.0f
 
 GunnerJump::GunnerJump(HostPlayer* player, ActionInfo* actionInfo)
@@ -78,7 +80,7 @@ void GunnerJump::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* f
 
 void GunnerJump::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {
 	int iAnimationCode = animation->getAnimationCode();
-	Character* pCharacter = m_pPlayer;
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
 
 	if (iAnimationCode == GUNNER_ANIMATION_JUMP_START) {
 		setMoveable(true);
@@ -86,10 +88,13 @@ void GunnerJump::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* fra
 		m_bJumpUpbegin = true;
 		m_bCanFire = true;
 
-		pCharacter->runAnimation(GUNNER_ANIMATION_JUMP_UP);
-		pCharacter->addForceY(pCharacter->getBaseInfo()->JumpForce);
+		m_pPlayer->runAnimation(GUNNER_ANIMATION_JUMP_UP);
+
+		if (pPhysicsComponent)
+			pPhysicsComponent->addForceY(m_pPlayer->getBaseInfo()->JumpForce);
+
 	} else if (iAnimationCode == GUNNER_ANIMATION_JUMP_SHOT_BEGIN) {
-		shot(pCharacter);
+		shot(m_pPlayer);
 	} else if (iAnimationCode == GUNNER_ANIMATION_JUMP_END) {
 		stop();
 	} 
@@ -157,8 +162,10 @@ void GunnerJump::updateJumpUp(Character* character, float dt) {
 	if (!m_bJumpUpbegin)
 		return;
 
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
 	// Step 1. 상승 중
-	if (m_bJumpUpbegin && character->getDownTime() > 0.0f) {
+	if (m_bJumpUpbegin && pPhysicsComponent && pPhysicsComponent->getDownTime() > 0.0f) {
 		m_bJumpUpbegin = false;
 		m_bJumpDownBegin = true;
 
@@ -202,9 +209,11 @@ bool GunnerJump::shot(Character* character) {
 void GunnerJump::reboundX(Character* character) {
 	
 	SpriteDirection_t eDirection = character->getSpriteDirection();
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
 
 	// 반동 초기화
-	character->removeForceX();
+	if (pPhysicsComponent)
+		pPhysicsComponent->removeForceX();
 
 	// 1. 우측키를 누른 상태
 	switch (eDirection) {
@@ -216,7 +225,7 @@ void GunnerJump::reboundX(Character* character) {
 
 void GunnerJump::reboundXLeft(Character* character) {
 	PlayerController* pController = m_pPlayer->ctrl();
-
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
 
 	/*
 	 * 생각 정리.
@@ -235,18 +244,21 @@ void GunnerJump::reboundXLeft(Character* character) {
 	}
 
 	if (!pController->isMoveKeyPressed()) {
-		character->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType] * -1);
+		if (pPhysicsComponent)
+			pPhysicsComponent->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType] * -1);
 		return;
 	}
 
 	if (pController->isKeyPressed(ControlKey::Left)) {
-		character->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType] * -1);
+		if (pPhysicsComponent)
+			pPhysicsComponent->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType] * -1);
 		m_fMoveSpeedFPSX = m_pBaseInfo->JumpShotMoveSpeedX[m_eWeaponType];
 	}
 }
 
 void GunnerJump::reboundXRight(Character* character) {
 	PlayerController* pController = m_pPlayer->ctrl();
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
 
 	m_bMoveableNegativeX = false;
 	m_fMoveSpeedFPSX = 0.0f;
@@ -256,12 +268,15 @@ void GunnerJump::reboundXRight(Character* character) {
 	}
 
 	if (!pController->isMoveKeyPressed()) {
-		character->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType]);
+		if (pPhysicsComponent)
+			pPhysicsComponent->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType]);
 		return;
 	}
 
 	if (pController->isKeyPressed(ControlKey::Right)) {
-		character->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType]);
+		if (pPhysicsComponent)
+			pPhysicsComponent->addForceX(m_pBaseInfo->JumpShotForceX[m_eWeaponType]);
+
 		m_fMoveSpeedFPSX = m_pBaseInfo->JumpShotMoveSpeedX[m_eWeaponType];
 	}
 }
@@ -269,10 +284,15 @@ void GunnerJump::reboundXRight(Character* character) {
 
 
 void GunnerJump::reboundY(Character* character) {
+	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
+
+	if (!pPhysicsComponent)
+		return;
+
 	// 중력 역행
-	float fRemovedYForce = character->removeForceY();
+	float fRemovedYForce = pPhysicsComponent->removeForceY();
 	if (fRemovedYForce > 0.0f) {
-		character->addForceY(m_pBaseInfo->JumpShotForceY[m_eWeaponType]);
+		pPhysicsComponent->addForceY(m_pBaseInfo->JumpShotForceY[m_eWeaponType]);
 	}
 
 }

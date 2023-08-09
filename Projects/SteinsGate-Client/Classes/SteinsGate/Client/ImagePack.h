@@ -9,13 +9,12 @@
 #pragma once
 
 
-#include "Tutturu.h"
-
-#include <SteinsGate/Client/FrameTexture.h>
-
+#include <SteinsGate/Common/Type.h>
 #include <SteinsGate/Common/SgaSpriteAbstract.h>
 #include <SteinsGate/Common/SgaPackage.h>
 #include <SteinsGate/Common/SgaImage.h>
+
+#include <SteinsGate/Client/FrameTexture.h>
 
 struct CachedTextureCounter
 {

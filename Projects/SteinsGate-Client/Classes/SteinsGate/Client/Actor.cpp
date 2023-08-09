@@ -16,6 +16,8 @@
 #include <SteinsGate/Client/Global.h>
 #include <SteinsGate/Client/MapLayer.h>
 
+#include "PhysicsComponent.h"
+
 
 USING_NS_CC;
 USING_NS_JC;
@@ -107,6 +109,15 @@ void Actor::initHitRecorder(int hitPossibleListSize /* = 16 */, int alreadyHitMa
 	else
 		_LogDebug_("%s 이미 히트 레코터가 초기화 되어 있습니다.", ActorType::Name[m_eActorType]);
 #endif
+}
+
+void Actor::hit(const HitInfo& hitInfo) {
+	PhysicsComponent* pPhysicsComponent = getComponent<PhysicsComponent>();
+
+	if (pPhysicsComponent) {
+		pPhysicsComponent->hit(hitInfo);
+	}
+
 }
 
 void Actor::update(float dt) {
