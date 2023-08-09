@@ -15,16 +15,13 @@
 
 #include <SteinsGate/Client/Global.h>
 #include <SteinsGate/Client/MapLayer.h>
-
-#include "PhysicsComponent.h"
-
+#include <SteinsGate/Client/PhysicsComponent.h>
 
 USING_NS_CC;
 USING_NS_JC;
 
-Actor::Actor(ActorType_t type, int code)
+Actor::Actor()
 	: m_pMapLayer(nullptr)
-	, m_eActorType(type)
 	, m_pActorSprite(nullptr)
 	, m_pHitRecorder(nullptr)
 	, m_iActorId(InvalidValue_v)
@@ -63,19 +60,15 @@ bool Actor::initVariables() {
 	return true;
 }
 
-void Actor::initComponents() {
-
-}
-
-bool Actor::addListener(ActorListener* listener) {
+bool Actor::addListener(IActorListener* listener) {
 	return m_Listeners.add(listener);
 }
 
-bool Actor::hasListener(ActorListener::Type type) {
+bool Actor::hasListener(IActorListener::Type type) {
 	return m_Listeners.has(type);
 }
 
-ActorListener* Actor::getListener(ActorListener::Type type) {
+IActorListener* Actor::getListener(IActorListener::Type type) {
 	return m_Listeners.get(type);
 }
 
@@ -105,10 +98,6 @@ void Actor::initHitRecorder(int hitPossibleListSize /* = 16 */, int alreadyHitMa
 
 	if (m_pHitRecorder == nullptr)
 		m_pHitRecorder = dbg_new HitRecorder(pOwner, this, hitPossibleListSize, alreadyHitMapSize);
-#if DebugMode
-	else
-		_LogDebug_("%s 이미 히트 레코터가 초기화 되어 있습니다.", ActorType::Name[m_eActorType]);
-#endif
 }
 
 void Actor::hit(const HitInfo& hitInfo) {
@@ -144,12 +133,8 @@ bool Actor::hasComponent(IComponent::Type type) const {
 	return m_Components.has(type);
 }
 
-ActorType_t Actor::getType() const {
-	return m_eActorType;
-}
-
 const char* Actor::getTypeName() const {
-	return ActorType::Name[m_eActorType];
+	return ActorType::Name[getType()];
 }
 
 ActorRect Actor::getActorRect() const {
@@ -392,7 +377,7 @@ void Actor::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
 	if (iFrameEventCode == InvalidValue_v)
 		return;
 
-	FrameEvent* pFrameEvent = CoreDataManager_v->getFrameEvent(m_eActorType, iFrameEventCode);
+	FrameEvent* pFrameEvent = CoreDataManager_v->getFrameEvent(getType(), iFrameEventCode);
 
 	if (pFrameEvent == nullptr)
 		return;

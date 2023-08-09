@@ -11,15 +11,14 @@
 #include "CharacterListener.h"
 
 void CharacterListener::onCleanUp() {
-	ActorListener::onCleanUp();
+	IActorListener::onCleanUp();
 
-	if (m_pActor->hasCleanUpFlag(Actor::CF_ReleaseActorSprite)) {
-		m_pActor->releaseActorSprite();
+	if (m_pCharacter->hasCleanUpFlag(Actor::CF_ReleaseActorSprite)) {
+		m_pCharacter->releaseActorSprite();
 	}
 }
 
-void CharacterListener::injectActor(Actor* actor) {
-	DebugAssertMsg(actor->getType() == ActorType::Character, "캐릭터 타입이 아닙니다.");
-	m_pActor = actor;
+void CharacterListener::setActor(Actor* actor) {
 	m_pCharacter = dynamic_cast<Character*>(actor);
+	DebugAssert(m_pCharacter);
 }

@@ -83,7 +83,7 @@ bool SGGameScene::init()
 
 void SGGameScene::cmdLoadChar() {
 
-    CorePlayer_v->init();
+    CorePlayer_v->initialize();
     CorePlayer_v->setPositionRealCenter(300, 200);
     CorePlayer_v->setMapLayer(m_pMapLayer);
     CorePlayer_v->setCleanUpFlag(Actor::CF_ReleaseActorSprite);

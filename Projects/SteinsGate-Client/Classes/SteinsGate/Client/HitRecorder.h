@@ -30,6 +30,7 @@ public:
 	void record(const ActorRect& absoluteActorRect, int attackDataCode);
 	void clear();
 
+	void setOwner(Actor* owner);
 	void setRecord(bool enabled);
 	void setAlreadyHitRecord(bool enabled);
 	void setSingleHitCallback(const SGHitSingleCallbackFn& callback);		// 한마리 한마리 호출

@@ -26,14 +26,13 @@ USING_NS_JC;
 USING_NS_CC;
 
 Character::Character() 
-	: Actor(ActorType::Character, InvalidValue_v)
-	, m_pBaseInfo(nullptr)
+	: m_pBaseInfo(nullptr)
 	, m_pSpriteData(nullptr)
 {}
 
-Character::Character(int code)
-	: Actor(ActorType::Character, code)
-	, m_pBaseInfo(nullptr)
+Character::Character(CharBaseInfo* charInfo, const VisualInfo& visualInfo)
+	: m_pBaseInfo(charInfo)
+	, m_VisualInfo(visualInfo)
 	, m_pSpriteData(nullptr)
 {}
 
@@ -42,32 +41,21 @@ Character::~Character() {
 	_LogDebug_("캐릭터 소멸");
 }
 
-Character* Character::create(int code, const VisualInfo& info) {
-	Character* pCharacter = dbg_new Character(code);
-	pCharacter->initInfo(code, info);
+Character* Character::create(CharBaseInfo* charInfo, const VisualInfo& info) {
+	Character* pCharacter = dbg_new Character(charInfo, info);
+	pCharacter->initialize();
 	pCharacter->autorelease();
 	return pCharacter;
 }
 
-void Character::initActorId() {
-	m_iActorId = InvalidValue_v;
-}
-
-void Character::initInfo(int code, const VisualInfo& visualInfo) {
+void Character::initialize() {
 	initVariables();
-	initActorId();
-	initBaseInfo(code);
 	initThicknessBox(m_pBaseInfo->ThicknessBox);
-	initActorSpriteData(visualInfo);
+	initActorSpriteData(m_VisualInfo);
 	initActorSprite();
 	initHitRecorder(32, 64);
-	initListener();
+	initListeners();
 	initComponents();
-}
-
-void Character::initBaseInfo(int code) {
-	CharBaseInfo* pBaseInfo = DataManager::Get()->getCharInfo(code);
-	m_pBaseInfo = pBaseInfo;
 }
 
 void Character::initActorSpriteData(const VisualInfo& visualInfo) {
@@ -93,12 +81,12 @@ void Character::initActorSprite() {
 	this->addChild(m_pActorSprite);
 }
 
-void Character::initListener() {
-	ActorListener* pListener = getListener(ActorListener::Type::eCharacter);
+void Character::initListeners() {
+	IActorListener* pListener = getListener(IActorListener::Type::eCharacter);
 
 	if (pListener == nullptr) {
 		pListener = CoreActorListenerManager_v->createCharacterListener((CharType_t)m_pBaseInfo->Code);
-		pListener->injectActor(this);
+		pListener->setActor(this);
 		addListener(pListener);
 	}
 
@@ -106,10 +94,11 @@ void Character::initListener() {
 }
 
 void Character::initComponents() {
-	Actor::initComponents();
+	if (!m_Components.has(IComponent::eMove))
+		m_Components.add(dbg_new MoveComponent(this));
 
-	m_Components.add(dbg_new MoveComponent(this));
-	m_Components.add(dbg_new PhysicsComponent(this));
+	if (!m_Components.has(IComponent::ePhysics))
+		m_Components.add(dbg_new PhysicsComponent(this));
 }
 
 CharBaseInfo* Character::getBaseInfo() {

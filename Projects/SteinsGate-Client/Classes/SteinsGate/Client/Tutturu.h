@@ -18,7 +18,7 @@
 
 
 #ifdef DebugMode
-	#define LogTick(time, fmt, ...)							\
+	#define SG_LOG_TICK(time, fmt, ...)						\
 							static float __timer__;			\
 							__timer__ += dt;				\
 							if (__timer__ >= time) {		\
@@ -27,5 +27,5 @@
 							}
 
 #else
-	#define LogTick(...)
+	#define SG_LOG_TICK(...)
 #endif

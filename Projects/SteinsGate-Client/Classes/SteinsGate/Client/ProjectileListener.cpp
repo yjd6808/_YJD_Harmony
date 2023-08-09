@@ -14,25 +14,32 @@ ProjectileListener::ProjectileListener()
 	: m_fMoveDistance(0.0f)
 	, m_fElapsedLifeTime(0.0f)
 	, m_pProjectile(nullptr)
+	, m_pSpawner(nullptr)
 {}
 
-void ProjectileListener::injectActor(Actor* actor) {
-	DebugAssertMsg(actor->getType() == ActorType::Projectile, "프로젝틸 타입이 아닙니다.");
-	m_pActor = actor;
+void ProjectileListener::setActor(Actor* actor) {
 	m_pProjectile = dynamic_cast<Projectile*>(actor);
+	DebugAssert(m_pProjectile);
+}
+
+void ProjectileListener::setSpawner(Actor* spawner) {
+	CC_SAFE_RELEASE_NULL(m_pSpawner);
+	m_pSpawner = spawner;
 }
 
 void ProjectileListener::onCreated() {
-	ActorListener::onCreated();
+	IActorListener::onCreated();
 
 	m_fElapsedLifeTime = 0.0f;
 	m_fMoveDistance = 0.0f;
 }
 
-void ProjectileListener::onUpdate(float dt) {
-	DebugAssert(m_pActor);
+void ProjectileListener::onCleanUp() {
+	CC_SAFE_RELEASE_NULL(m_pSpawner);
+}
 
-	ActorSprite* pActorSprite = m_pActor->getActorSprite();
+void ProjectileListener::onUpdate(float dt) {
+	ActorSprite* pActorSprite = m_pProjectile->getActorSprite();
 
 	const float currentRotation = pActorSprite->getBodyPart()->getRotation();
 	const float fMoveSpeedFPS = m_pProjectile->getBaseInfo()->MoveSpeed / 60.0f;
@@ -40,7 +47,7 @@ void ProjectileListener::onUpdate(float dt) {
 	const float fMoveDistanceFPSY = fMoveSpeedFPS * sinf(CC_DEGREES_TO_RADIANS(currentRotation));
 
 	// x축 이동은 액터를 이동
-	m_pActor->setPositionX(m_pActor->getPositionX() + (m_pActor->getSpriteDirection() == SpriteDirection::Right ? fMoveDistanceFPSX : -fMoveDistanceFPSX));
+	m_pProjectile->setPositionX(m_pProjectile->getPositionX() + (m_pProjectile->getSpriteDirection() == SpriteDirection::Right ? fMoveDistanceFPSX : -fMoveDistanceFPSX));
 
 	// y축 이동은 엑터 스프라이트를 이동
 	pActorSprite->setPositionY(pActorSprite->getPositionY() - fMoveDistanceFPSY);
@@ -55,7 +62,7 @@ void ProjectileListener::onUpdate(float dt) {
 		onDistanceOver();
 	}
 
-	if (pActorSprite->getPositionY() <= m_pActor->getThicknessBoxNode()->getPositionY()) {
+	if (pActorSprite->getPositionY() <= m_pProjectile->getThicknessBoxNode()->getPositionY()) {
 		onCollisionWithGround();
 	}
 

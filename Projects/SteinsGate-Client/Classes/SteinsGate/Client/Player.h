@@ -17,7 +17,7 @@ public:
 	Player();
 	~Player() override;
 
-	bool init() override;
+	void initialize() override;
 	void initPlayerData();
 
 	PlayerData& getPlayerData() { return m_PlayerData; }

@@ -14,24 +14,27 @@
 class Projectile : public Actor
 {
 public:
-	Projectile(Actor* spawner, ProjectileInfo* baseInfo);
+	Projectile(ProjectileInfo* baseInfo);
 	~Projectile() override;
 
-	static Projectile* create(Actor* spawner, ProjectileInfo* baseInfo);
+	static Projectile* create(ProjectileInfo* baseInfo, Actor* spawner);
 
+	void initialize() override;
 	void initActorSprite() override;
 	void initThicknessBox(const ThicknessBox& thicknessBox) override;
 	void initPosition();
+	void initListeners() override;
+	void initComponents() override;
 
 	EffectInfo* getSpawnEffectInfo();
 	EffectInfo* getHitEffectInfo();
 
 	void setSpawner(Actor* spawner);
-
 	Actor* getSpawner();
 	ProjectileInfo* getBaseInfo();
+	ActorType_t getType() const override { return ActorType::Projectile; }
 	int getCode() override { return m_pBaseInfo->Code; }
 private:
-	Actor* m_pSpawner;
 	ProjectileInfo* m_pBaseInfo;
+	Actor* m_pSpawner;
 };

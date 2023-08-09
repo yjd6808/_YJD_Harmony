@@ -23,7 +23,7 @@ private:
 	HostPlayer();
 	~HostPlayer() override;
 public:
-	bool init() override;
+	void initialize() override;
 	void initActionManager();
 	void initController();
 	void initListeners();

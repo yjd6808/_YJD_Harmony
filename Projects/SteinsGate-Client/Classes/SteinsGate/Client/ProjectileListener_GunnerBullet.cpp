@@ -6,7 +6,7 @@
  */
 
 #include "Tutturu.h"
-#include "GunnerBulletListener.h"
+#include "ProjectileListener_GunnerBullet.h"
 
 #include <SteinsGate/Client/Projectile.h>
 #include <SteinsGate/Client/HostPlayer.h>
@@ -15,17 +15,17 @@
 #include <SteinsGate/Client/EffectDefine.h>
 #include <SteinsGate/Client/ActorBox.h>
 
-void GunnerBulletListener::onCreated() {
+void ProjectileListener_GunnerBullet::onCreated() {
 	ProjectileListener::onCreated();
 	HitRecorder* pHitRecorder = m_pProjectile->getHitRecorder();
 
 	pHitRecorder->clear();
 	pHitRecorder->setAlreadyHitRecord(true);
-	pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(GunnerBulletListener::onEnemySingleHit, this));
-	pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(GunnerBulletListener::onEnemyMultiHit, this));
+	pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(ProjectileListener_GunnerBullet::onEnemySingleHit, this));
+	pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(ProjectileListener_GunnerBullet::onEnemyMultiHit, this));
 }
 
-void GunnerBulletListener::onUpdate(float dt) {
+void ProjectileListener_GunnerBullet::onUpdate(float dt) {
 	ProjectileListener::onUpdate(dt);
 
 	const ActorRect& projectileActorRect = m_pProjectile->getActorRect();
@@ -34,7 +34,7 @@ void GunnerBulletListener::onUpdate(float dt) {
 	m_pProjectile->getHitRecorder()->record(projectileActorRect, iAttackData);
 }
 
-void GunnerBulletListener::onCollisionWithGround() {
+void ProjectileListener_GunnerBullet::onCollisionWithGround() {
 	ProjectileListener::onCollisionWithGround();
 	ActorBox::Get()->createEffectOnMapAbsolute(
 		EFFECT_COLLISION_FLOOR,
@@ -44,7 +44,7 @@ void GunnerBulletListener::onCollisionWithGround() {
 	);
 }
 
-void GunnerBulletListener::onEnemySingleHit(HitInfo& info) {
+void ProjectileListener_GunnerBullet::onEnemySingleHit(HitInfo& info) {
 	if (m_pProjectile->getHitRecorder()->isAlreadyHit(info.HitTarget))
 		return;
 
@@ -58,5 +58,5 @@ void GunnerBulletListener::onEnemySingleHit(HitInfo& info) {
 }
 
 
-void GunnerBulletListener::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
+void ProjectileListener_GunnerBullet::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
 }

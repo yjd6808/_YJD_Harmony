@@ -8,41 +8,42 @@
 
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "Projectile.h"
 
-#include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/ActorSprite.h>
-#include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/ProjectileListener.h>
-#include <SteinsGate/Client/HostPlayer.h>
 
 #include <SteinsGate/Common/RectPoly.h>
 
 USING_NS_JC;
 USING_NS_CC;
 
-Projectile::Projectile(Actor* spawner, ProjectileInfo* baseInfo)
-	: Actor(ActorType::Projectile, baseInfo->Code)
-	, m_pSpawner(spawner)
-	, m_pBaseInfo(baseInfo)
+Projectile::Projectile(ProjectileInfo* baseInfo)
+	: m_pBaseInfo(baseInfo)
+	, m_pSpawner(nullptr)
 {}
 
 Projectile::~Projectile() {
-	CC_SAFE_RELEASE(m_pSpawner);
+	CC_SAFE_RELEASE_NULL(m_pSpawner);
 }
 
-Projectile* Projectile::create(Actor* spawner, ProjectileInfo* baseInfo) {
-	Projectile* pProjectile = dbg_new Projectile(spawner, baseInfo);
-
-	spawner->retain();
-	pProjectile->initThicknessBox(baseInfo->ThicknessBox);
-	pProjectile->initActorSprite();
-	pProjectile->initHitRecorder(8, 16, spawner);
-	pProjectile->initVariables();
-	pProjectile->initPosition();
-
+Projectile* Projectile::create(ProjectileInfo* baseInfo, Actor* spawner) {
+	Projectile* pProjectile = dbg_new Projectile(baseInfo);
+	pProjectile->setSpawner(spawner);
+	pProjectile->initialize();
 	pProjectile->autorelease();
 	return pProjectile;
+}
+
+void Projectile::initialize() {
+	initThicknessBox(m_pBaseInfo->ThicknessBox);
+	initActorSprite();
+	initHitRecorder(8, 16, m_pSpawner);
+	initVariables();
+	initPosition();
+	initListeners();
+	initComponents();
 }
 
 void Projectile::initThicknessBox(const ThicknessBox& thicknessBox) {
@@ -83,23 +84,33 @@ void Projectile::initPosition() {
 	m_pActorSprite->setPosition(0, 0);
 }
 
+void Projectile::initListeners() {
+
+	IActorListener* pListener = getListener(IActorListener::Type::eProjectile);
+
+	if (pListener == nullptr) {
+		pListener = CoreActorListenerManager_v->createProjectileListener(m_pBaseInfo->ProjectileListenerCode);
+		pListener->setActor(this);
+		addListener(pListener);
+	}
+}
+
+void Projectile::initComponents() {
+
+}
+
 // 프로젝틸은 파츠, 애니메이션 다 1개씩임
 void Projectile::initActorSprite() {
-	DataManager* pDataManager = DataManager::Get();
-	ImagePackManager* pImgPackManager = ImagePackManager::Get();
-	//ActorSpriteDataPtr spActorSpriteData = MakeShared<ActorSpriteData>(1, 1);	// 프로젝틸도 파츠, 애니메이션 모두 한개
 
-	//spActorSpriteData->Parts.PushBack({ 0, m_pBaseInfo->SgaIndex, m_pBaseInfo->ImgIndex });
-	//spActorSpriteData->Animations.PushBack(m_pBaseInfo->Animation);
+	const float fRotation = m_pBaseInfo->Rotation + SGRandom::random_real(m_pBaseInfo->RamdomRotationRangeMin, m_pBaseInfo->RamdomRotationRangeMax);
 
-	m_pActorSprite = ActorSprite::create(this, m_pBaseInfo->SpriteData);
-	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-	m_pActorSprite->getBodyPart()->setRotation(
-		m_pBaseInfo->Rotation + 
-		SGRandom::random_real(m_pBaseInfo->RamdomRotationRangeMin, m_pBaseInfo->RamdomRotationRangeMax)
-	);
+	if (!m_pActorSprite) {
+		m_pActorSprite = ActorSprite::create(this, m_pBaseInfo->SpriteData);
+		m_pActorSprite->setAnchorPoint(Vec2::ZERO);
+		this->addChild(m_pActorSprite);
+	}
 
-	this->addChild(m_pActorSprite);
+	m_pActorSprite->getBodyPart()->setRotation(fRotation);
 }
 
 EffectInfo* Projectile::getSpawnEffectInfo() {
@@ -113,7 +124,16 @@ EffectInfo* Projectile::getHitEffectInfo() {
 }
 
 void Projectile::setSpawner(Actor* spawner) {
+	CC_SAFE_RELEASE_NULL(m_pSpawner);
+
+	if (!spawner)
+		return;
+
 	m_pSpawner = spawner;
+	m_pSpawner->retain();
+
+	if (m_pHitRecorder)
+		m_pHitRecorder->setOwner(spawner);
 }
 
 Actor* Projectile::getSpawner() { return m_pSpawner; }

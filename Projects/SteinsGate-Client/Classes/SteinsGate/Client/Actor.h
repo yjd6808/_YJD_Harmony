@@ -34,6 +34,7 @@ class MapLayer;
 class Actor : public SGNode
 {
 	JCORE_HIDE_BASE_CLASS_METHOD(SGNode, addComponent)
+	JCORE_HIDE_BASE_CLASS_METHOD(SGNode, init)
 	JCORE_HIDE_BASE_CLASS_METHOD(SGNode, cleanup)
 public:
 	enum CleanUpFlag
@@ -42,9 +43,10 @@ public:
 		CF_ReleaseActorSprite	= 1
 	};
 
-	Actor(ActorType_t type, int code);
+	Actor();
 	~Actor() override;
 
+	virtual void initialize() = 0;
 	virtual void initActorSprite() = 0;
 	virtual void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture);
 	virtual void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture);
@@ -55,11 +57,12 @@ public:
 	virtual void hit(const HitInfo& hitInfo);
 
 	virtual bool initVariables();
-	virtual void initComponents();
+	virtual void initComponents() = 0;
+	virtual void initListeners() = 0;
 
-	bool addListener(ActorListener* listener);
-	bool hasListener(ActorListener::Type type);
-	ActorListener* getListener(ActorListener::Type type);
+	bool addListener(IActorListener* listener);
+	bool hasListener(IActorListener::Type type);
+	IActorListener* getListener(IActorListener::Type type);
 	void update(float dt) override;				// 자식에서도 오버라이딩시 이거 호출하도록
 
 	void addComponent(IComponent* componenet);
@@ -67,7 +70,7 @@ public:
 	template <typename TComponent>
 	TComponent* getComponent() const { return m_Components.get<TComponent>(); }
 
-	ActorType_t getType()					const;
+	virtual ActorType_t getType()			const = 0;
 	const char* getTypeName()				const;
 	ActorRect getActorRect()				const;
 	SGRect getThicknessBoxRect()			const;
@@ -138,7 +141,6 @@ public:
 	static ActorRect convertAbsoluteActorRect(Actor* stdActor, const ActorRect& relativeRect);
 protected:
 	MapLayer* m_pMapLayer;
-	ActorType_t m_eActorType;
 	ActorSprite* m_pActorSprite;
 	HitRecorder* m_pHitRecorder;
 	ActorListenerCollection m_Listeners;

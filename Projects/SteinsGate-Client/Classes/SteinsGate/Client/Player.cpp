@@ -17,9 +17,10 @@ Player::Player()
 Player::~Player()
 {}
 
-bool Player::init() {
+void Player::initialize() {
+	Character::initialize();
+
 	initPlayerData();
-	return true;
 }
 
 void Player::initPlayerData() {

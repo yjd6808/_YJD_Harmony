@@ -9,8 +9,8 @@
 #include "GameCoreHeader.h"
 #include "ActorListenerCollection.h"
 
-bool ActorListenerCollection::add(ActorListener* listener) {
-	const ActorListener::Type eType = listener->getListenerType();
+bool ActorListenerCollection::add(IActorListener* listener) {
+	const IActorListener::Type eType = listener->getListenerType();
 
 	if (m_hListeners.Exist(eType)) {
 		return false;
@@ -21,12 +21,12 @@ bool ActorListenerCollection::add(ActorListener* listener) {
 	return true;
 }
 
-bool ActorListenerCollection::has(ActorListener::Type type) {
+bool ActorListenerCollection::has(IActorListener::Type type) {
 	return m_hListeners.Exist(type);
 }
 
-ActorListener* ActorListenerCollection::get(ActorListener::Type type) {
-	ActorListener** ppFindListner = m_hListeners.Find(type);
+IActorListener* ActorListenerCollection::get(IActorListener::Type type) {
+	IActorListener** ppFindListner = m_hListeners.Find(type);
 	if (ppFindListner == nullptr) {
 		return nullptr;
 	}

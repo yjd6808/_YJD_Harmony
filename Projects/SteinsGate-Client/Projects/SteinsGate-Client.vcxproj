@@ -27,7 +27,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\IActorListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerCollection.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.cpp" />
@@ -52,7 +52,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\C_CHAT.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\C_GAME.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\C_LOBBY.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener_Gunner.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetCore.cpp">
       <SubType>
       </SubType>
@@ -115,7 +115,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerBulletListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileListener_GunnerBullet.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -422,6 +422,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerCollection.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIActivityDefine.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AIComponent.h">
       <SubType>
       </SubType>
@@ -455,7 +459,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener_Gunner.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorComponent.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\IComponent.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\IUpdatable.h" />
@@ -471,7 +475,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\IActorListener.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -513,10 +517,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGApplication.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ActionDefine.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AllActorListener.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -633,7 +633,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerBulletListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileListener_GunnerBullet.h">
       <SubType>
       </SubType>
     </ClInclude>

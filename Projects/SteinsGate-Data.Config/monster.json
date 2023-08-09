@@ -104,6 +104,14 @@
                         "frames": [
                             "9 -1"
                         ]
+                    },
+                    {
+                        "code": 9,
+                        "name": "sit",
+                        "loop": false,
+                        "frames": [
+                            "10 -1"
+                        ]
                     }
                 ]
             }

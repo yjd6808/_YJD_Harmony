@@ -22,15 +22,15 @@
 #define AILog(...)
 #endif
 
-AIActor::AIActor(ActorType_t type, int code, AIInfo* aiInfo)
-	: Actor(type, code)
-	, m_pAiInfo(aiInfo)
-	, m_ActivityMap{}
-	, m_pRunningActivity()
-	, m_eState(eNone)
-	, m_ePreviousState(eNone)
-	, m_pTarget(nullptr)
-{}
+AIActor::AIActor(AIInfo* aiInfo)
+	: m_ActivityMap{},
+	  m_pRunningActivity(),
+	  m_pTarget(nullptr),
+	  m_pAiInfo(aiInfo),
+	  m_eState(eNone),
+	  m_eActivityState(eNone),
+	  m_ePreviousState(eNone) {
+}
 
 void AIActor::initAI() {
 	initAIActivities();

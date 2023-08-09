@@ -20,10 +20,14 @@ public:
 
 	static Effect* create(EffectInfo* baseInfo);
 
+	void initialize() override;
 	bool initVariables() override;
 	void initActorSprite() override;
+	void initListeners() override;
+	void initComponents() override;
 	
 	EffectInfo* getBaseInfo() { return m_pBaseInfo; }
+	ActorType_t getType() const override { return ActorType::Effect; }
 	int getCode() override { return m_pBaseInfo->Code; }
 
 	void update(float delta) override;

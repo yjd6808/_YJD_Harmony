@@ -45,7 +45,8 @@ WeaponType_t Inven::getWeaponType() {
 	return pItemWeapon->Code.WeaponUn.WeaponType;
 }
 
-void Inven::getVisualInfo(JCORE_OUT VisualInfo& info, int defaultCharType) {
+VisualInfo Inven::getVisualInfo(int defaultCharType) {
+	VisualInfo info;
 
 	CharInfo* pCharInfo = CoreDataManager_v->getCharInfo(defaultCharType);
 	bool bEquiped[VisualType::Max]{};	// 착용중인지
@@ -84,6 +85,8 @@ void Inven::getVisualInfo(JCORE_OUT VisualInfo& info, int defaultCharType) {
 		// 디폴트는 존재하고 낀 비주얼 장비가 없으면 교체한다.
 		info.PushBack(&pCharInfo->Visual[i][0], pCharInfo->VisualCount[i]);
 	}
+
+	return info;
 }
 
 int Inven::getAvailableSlotCount(InvenItemType_t invenType) {

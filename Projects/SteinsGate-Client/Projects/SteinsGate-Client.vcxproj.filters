@@ -103,9 +103,6 @@
     <Filter Include="Actor\Listener\Character">
       <UniqueIdentifier>{db2db770-f105-45f0-a847-4dd3d248e338}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\Listener\Character\Gunner">
-      <UniqueIdentifier>{df3446cd-34aa-48ae-8424-768cb480f8e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\Text">
       <UniqueIdentifier>{f98a811f-e686-4426-ba7c-4fe2cc0b617e}</UniqueIdentifier>
     </Filter>
@@ -121,8 +118,14 @@
     <Filter Include="Actor\AI\Activity">
       <UniqueIdentifier>{76bc5b7f-5d57-4b1f-a16a-0b3d8b11bd05}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\AI\Activity\Monster">
-      <UniqueIdentifier>{a04a1656-fe9e-4635-b941-9c765b01f84b}</UniqueIdentifier>
+    <Filter Include="Actor\AI\Routine">
+      <UniqueIdentifier>{27843851-410d-4a69-becb-1448a5cb3fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Listener\Projectile">
+      <UniqueIdentifier>{39dcc5c9-1f06-4e8c-aa0a-99fb80ec8b27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor\Listener\Monster">
+      <UniqueIdentifier>{ed8ea471-f4d4-402e-9eda-dd9784676ae3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -222,21 +225,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\AIActor.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.cpp">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.cpp">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.cpp">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterHitActivity.cpp">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.cpp">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AIInfoLoader.cpp">
       <Filter>Data\AI</Filter>
     </ClCompile>
@@ -256,12 +244,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\Struct.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\HitRecorder.cpp">
       <Filter>Actor\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterSitActivity.cpp">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterActivity.cpp">
-      <Filter>Actor\AI\Activity\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerSitRecover.cpp">
       <Filter>Action\Gunner</Filter>
@@ -472,20 +454,14 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\FrameEventLoader.cpp">
       <Filter>Data\FrameEvent</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListener.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\IActorListener.cpp">
       <Filter>Actor\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerBulletListener.cpp">
-      <Filter>Actor\Listener\Character\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener.cpp">
       <Filter>Actor\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerCollection.cpp">
       <Filter>Actor\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\GunnerListener.cpp">
-      <Filter>Actor\Listener\Character\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.cpp">
       <Filter>Data\Text</Filter>
@@ -504,6 +480,33 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AIActivity.cpp">
       <Filter>Actor\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterActivity.cpp">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.cpp">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.cpp">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterHitActivity.cpp">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.cpp">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterSitActivity.cpp">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.cpp">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener_Gunner.cpp">
+      <Filter>Actor\Listener\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileListener_GunnerBullet.cpp">
+      <Filter>Actor\Listener\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -633,21 +636,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\AIActor.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.h">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.h">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.h">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterHitActivity.h">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.h">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AIInfo.h">
       <Filter>Data\AI</Filter>
     </ClInclude>
@@ -672,12 +660,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\HitRecorder.h">
       <Filter>Actor\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterSitActivity.h">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterActivity.h">
-      <Filter>Actor\AI\Activity\Monster</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerSitRecover.h">
       <Filter>Action\Gunner</Filter>
     </ClInclude>
@@ -690,10 +672,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerManager.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListener.h">
-      <Filter>Actor\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AllActorListener.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\IActorListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
@@ -919,17 +898,11 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameEvent.h">
       <Filter>Data\FrameEvent</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerBulletListener.h">
-      <Filter>Actor\Listener\Character\Gunner</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerCollection.h">
       <Filter>Actor\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\GunnerListener.h">
-      <Filter>Actor\Listener\Character\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h">
       <Filter>Data\Text</Filter>
@@ -957,6 +930,36 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AIActivity.h">
       <Filter>Actor\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterActivity.h">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.h">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.h">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterHitActivity.h">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.h">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterSitActivity.h">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.h">
+      <Filter>Actor\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener_Gunner.h">
+      <Filter>Actor\Listener\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileListener_GunnerBullet.h">
+      <Filter>Actor\Listener\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIActivityDefine.h">
+      <Filter>Define</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

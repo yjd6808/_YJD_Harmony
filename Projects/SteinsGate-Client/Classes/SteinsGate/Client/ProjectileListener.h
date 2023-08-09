@@ -8,23 +8,24 @@
 
 #pragma once
 
-#include <SteinsGate/Client/ActorListener.h>
-#include <SteinsGate/Client/Struct.h>
+#include <SteinsGate/Client/IActorListener.h>
+#include <SteinsGate/Client/Projectile.h>
 
-#include "Projectile.h"
-
-class Projectile;
-class JCORE_NOVTABLE ProjectileListener : public ActorListener
+class JCORE_NOVTABLE ProjectileListener : public IActorListener
 {
 public:
 	ProjectileListener();
 
-	void injectActor(Actor* actor) override;
+	void setActor(Actor* actor) override;
+	void setSpawner(Actor* spawner);
 
-	void onCreated() override;
-	void onUpdate(float dt) override;
+	Actor* getActor() override { return m_pProjectile; }
 	Type getListenerType() const override { return eProjectile; }
 
+	void onCreated() override;
+	void onCleanUp() override;
+	void onUpdate(float dt) override;
+	
 	virtual void onCollisionWithGround();
 	virtual void onLifeTimeOver();
 	virtual void onDistanceOver();
@@ -36,6 +37,7 @@ protected:
 	float m_fElapsedLifeTime;
 
 	Projectile* m_pProjectile;
+	Actor* m_pSpawner;
 };
 
 

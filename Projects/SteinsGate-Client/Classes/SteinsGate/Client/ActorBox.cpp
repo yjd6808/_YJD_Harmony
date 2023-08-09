@@ -216,15 +216,17 @@ void ActorBox::updateActors(float dt) {
 }
 
 
-Character* ActorBox::createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& info) {
+Character* ActorBox::createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& visualInfo) {
 	DebugAssertMsg(m_pMapLayer, "맵 레이어 생성 및 init 후 캐릭터를 생성해주세요");
 
-	Character* pCharacter = Character::create(charType, info);
+	CharBaseInfo* pCharInfo = CoreDataManager_v->getCharInfo(charType);
+	Character* pCharacter = Character::create(pCharInfo, visualInfo);
 
 	pCharacter->setPositionRealCenter(x, y);
 	pCharacter->retain();
 	pCharacter->setAllyFlag(0);
 	pCharacter->setMapLayer(m_pMapLayer);
+	pCharacter->getListenerCollection().onCreated();
 
 	registerCharacter(pCharacter);
 	m_pMapLayer->addChild(pCharacter);
@@ -245,26 +247,16 @@ Projectile* ActorBox::createProejctileOnMap(Actor* spawner, int projectileId) {
 	SGLinkedList<Projectile*>& projectileList = m_hProjectilePool[projectileId];
 
 	if (projectileList.IsEmpty()) {
-		ActorListener* pListener = CoreActorListenerManager_v->createProjectileListener(pInfo->ProjectileListenerCode);
-
-		pProjectile = Projectile::create(spawner, pInfo);
-		pProjectile->getListenerCollection().add(pListener);
+		pProjectile = Projectile::create(pInfo, spawner);
 		pProjectile->retain();
-
-		pListener->injectActor(pProjectile);
-		pListener->onCreated();
-
 	} else {
 		pProjectile = projectileList.Front();
-		pProjectile->initVariables();
 		pProjectile->setSpawner(spawner);											// 위치 세팅전 스포너 세팅 먼저 해줘야함
-		pProjectile->initThicknessBox(pProjectile->getBaseInfo()->ThicknessBox);	// 두께 박스 위치 재조정
-		pProjectile->initPosition();												// 살제 위치 초기화
-		pProjectile->getListenerCollection().onCreated();
+		pProjectile->initialize();
 		projectileList.PopFront();
 	}
 
-
+	pProjectile->getListenerCollection().onCreated();
 	pProjectile->runAnimation(1);
 	pProjectile->setAllyFlag(spawner->getAllyFlag());
 	pProjectile->setMapLayer(m_pMapLayer);
@@ -298,10 +290,11 @@ Monster* ActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, floa
 		pMonster->retain();
 	} else {
 		pMonster = monsterList.Front();
-		pMonster->initVariables();
+		pMonster->initialize();
 		monsterList.PopFront();
 	}
 
+	pMonster->getListenerCollection().onCreated();
 	pMonster->setPositionReal(x, y);
 	pMonster->setMapLayer(m_pMapLayer);
 	pMonster->setAllyFlag(1);
@@ -329,9 +322,11 @@ MapObject* ActorBox::createMapObjectOnMap(int mapObjectCode, float x, float y) {
 		pMapObject->retain();
 	} else {
 		pMapObject = mapObjectList.Front();
-		pMapObject->initVariables();
+		pMapObject->initialize();
 		mapObjectList.PopFront();
 	}
+
+	pMapObject->getListenerCollection().onCreated();
 	pMapObject->setPositionReal(x, y);
 	pMapObject->setMapLayer(m_pMapLayer);
 

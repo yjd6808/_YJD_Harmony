@@ -26,7 +26,7 @@ public:
 		eAngry
 	};
 public:
-	AIActor(ActorType_t type, int code, AIInfo* aiInfo);
+	AIActor(AIInfo* aiInfo);
 	~AIActor() override = 0;
 
 	void initAI();

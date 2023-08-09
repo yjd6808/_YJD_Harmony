@@ -43,7 +43,7 @@ public:
 
 	// 캐릭터는 액터 박스가 생성/소멸을 관리하는 객체가 아니다.
 	// 단지 생성만 도와줌
-	Character* createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& info);
+	Character* createCharacterOnMap(CharType_t charType, float x, float y, VisualInfo& visualInfo);
 	Projectile* createProejctileOnMap(Actor* spawner, int projectileId);
 	Monster* createMonsterOnMap(int monsterCode, int aiCode, float x, float y);
 	MapObject* createMapObjectOnMap(int mapObjectCode, float x, float y);

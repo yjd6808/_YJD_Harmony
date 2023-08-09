@@ -22,24 +22,21 @@
 USING_NS_JC;
 USING_NS_CC;
 
-Effect::Effect(EffectInfo* baseInfo)
-	: Actor(ActorType::Effect, baseInfo->Code)
-	, m_pBaseInfo(baseInfo)
-{}
-
-Effect::~Effect() {
-}
-
-
+Effect::Effect(EffectInfo* baseInfo) : m_pBaseInfo(baseInfo) {}
+Effect::~Effect() {}
 
 Effect* Effect::create(EffectInfo* baseInfo) {
 	Effect* pEffect = dbg_new Effect(baseInfo);
-
-	pEffect->initActorSprite();
-	pEffect->initVariables();
+	pEffect->initialize();
 	pEffect->autorelease();
-
 	return pEffect;
+}
+
+void Effect::initialize() {
+	initActorSprite();
+	initVariables();
+	initListeners();
+	initComponents();
 }
 
 bool Effect::initVariables() {
@@ -53,6 +50,12 @@ void Effect::initActorSprite() {
 	m_pActorSprite = ActorSprite::create(this, m_pBaseInfo->SpriteData);
 	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
 	this->addChild(m_pActorSprite);
+}
+
+void Effect::initListeners() {
+}
+
+void Effect::initComponents() {
 }
 
 

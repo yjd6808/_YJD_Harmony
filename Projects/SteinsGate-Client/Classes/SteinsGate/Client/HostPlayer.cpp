@@ -18,8 +18,7 @@
 
 
 HostPlayer::HostPlayer()
-	: Player()
-	, m_pActionManager(nullptr)
+	: m_pActionManager(nullptr)
 	, m_pController(nullptr) {
 	
 }
@@ -30,22 +29,16 @@ HostPlayer::~HostPlayer() {
 	CC_SAFE_DELETE(m_pActionManager);
 }
 
-bool HostPlayer::init() {
-	Player::init();
-
+void HostPlayer::initialize() {
 	m_PlayerData.CharType = CharType::Gunner;
+	m_VisualInfo = CoreInven_v->getVisualInfo(m_PlayerData.CharType);
+	m_pBaseInfo = CoreDataManager_v->getCharInfo(m_PlayerData.CharType);
 
-	VisualInfo info;
-	CoreInven_v->getVisualInfo(info, m_PlayerData.CharType);
-
-
-	initInfo(m_PlayerData.CharType, info);
-	initListeners();
+	Player::initialize();
 	initActionManager();
 	initController();
-	m_pActionManager->runBaseAction(BaseAction::Idle);
 
-	return true;
+	m_pActionManager->runBaseAction(BaseAction::Idle);
 }
 
 void HostPlayer::initActionManager() {

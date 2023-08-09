@@ -20,10 +20,14 @@ class MapObject : public Actor
 public:
 	MapObject(MapObjectInfo* baseInfo);
 	static MapObject* create(MapObjectInfo* baseInfo);
+
+	void initialize() override;
 	void initActorSprite() override;
 	void initActorSpriteObstacle();
 	void initActorSpriteGate();
 	bool initVariables() override;
+	void initListeners() override;
+	void initComponents() override;
 
 	void update(float dt) override;
 	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
@@ -32,6 +36,8 @@ public:
 	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
 
 	MapObjectType_t getObjectType() const { return m_pBaseInfo->Type; }
+	ActorType_t getType() const override { return ActorType::MapObject; }
+
 	int getCode() override { return m_pBaseInfo->Code; }
 
 	MapObjectInfo* getBaseInfo();

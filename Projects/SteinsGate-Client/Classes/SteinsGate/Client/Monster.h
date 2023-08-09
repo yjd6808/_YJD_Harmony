@@ -24,9 +24,13 @@ public:
 	~Monster() override;
 
 	static Monster* create(MonsterInfo* baseInfo, AIInfo* aiInfo);
+
+	void initialize() override;
 	void initActorSprite() override;
 	void initAIActivities() override;
+	void initListeners() override;
 	void initComponents() override;
+
 	void hit(const HitInfo& hitInfo) override;
 
 	void update(float dt) override;
@@ -43,6 +47,7 @@ public:
 
 	void setStatInfo(MonsterStatInfo* statInfo);
 
+	ActorType_t getType() const override { return ActorType::Monster; }
 	MonsterInfo* getBaseInfo();
 	MonsterStatInfo* getStatInfo();
 

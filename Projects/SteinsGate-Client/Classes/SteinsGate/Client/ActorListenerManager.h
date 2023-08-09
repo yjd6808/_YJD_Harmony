@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <SteinsGate/Client/Tutturu.h>
-
 #include <SteinsGate/Client/ProjectileListener.h>
 #include <SteinsGate/Client/CharacterListener.h>
 

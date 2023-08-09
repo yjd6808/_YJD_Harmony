@@ -73,6 +73,10 @@ void HitRecorder::clear() {
 	m_hAlreadyHitEnemy.Clear();
 }
 
+void HitRecorder::setOwner(Actor* owner) {
+	m_pOwner = owner;
+}
+
 void HitRecorder::setRecord(bool enabled) {
 	m_bRecord = enabled;
 }

@@ -8,22 +8,25 @@
 
 #pragma once
 
-#include <SteinsGate/Client/ActorListener.h>
-#include <SteinsGate/Client/Struct.h>
+#include <SteinsGate/Client/IActorListener.h>
+#include <SteinsGate/Client/Character.h>
 
-class Character;
-class JCORE_NOVTABLE CharacterListener : public ActorListener
+class JCORE_NOVTABLE CharacterListener : public IActorListener
 {
 public:
 	CharacterListener() : m_pCharacter(nullptr) {}
 
 	void onCleanUp() override;
-	void injectActor(Actor* actor) override;
 
 	virtual void onCollisionWithGround() {}
 	virtual void onLifeTimeOver() {}
 	virtual void onDistanceOver() {}
+
 	Type getListenerType() const override { return eCharacter; }
+
+	void setActor(Actor* actor) override;
+	Actor* getActor() override { return m_pCharacter; }
+	
 protected:
 	Character* m_pCharacter;
 };

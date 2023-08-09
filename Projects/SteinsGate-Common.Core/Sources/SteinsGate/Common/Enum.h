@@ -880,3 +880,17 @@ InFrameSize,		// 캐릭터 모션
 InCustomFrameSize,	// 맵 오브젝트(게이트, 장애물)
 InIgnoredFrameSize	// 프로젝틸
 SEnumEnd(ActorPartSpritePositioningRule)
+
+
+SEnumBegin(GamePlayMode)
+Single,
+PublicServer,
+Max
+SEnumMiddle(GamePlayMode)
+
+static constexpr bool IsNetworkMode[Max]{
+	false,
+	true,
+};
+
+SEnumMiddleEnd(GamePlayMode)

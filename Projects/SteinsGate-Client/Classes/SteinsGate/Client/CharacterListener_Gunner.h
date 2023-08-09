@@ -11,10 +11,10 @@
 
 #include <SteinsGate/Client/CharacterListener.h>
 
-class GunnerListener : public CharacterListener
+class CharacterListener_Gunner : public CharacterListener
 {
 public:
-	SG_ACTOR_LISTENER_CREATE(GunnerListener)
+	SG_ACTOR_LISTENER_CREATE(CharacterListener_Gunner)
 };
 
 

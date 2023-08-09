@@ -27,7 +27,7 @@ USING_NS_CC;
 USING_NS_JC;
 
 Monster::Monster(MonsterInfo* baseInfo, AIInfo* aiInfo)
-	: AIActor(ActorType::Monster, baseInfo->Code, aiInfo)
+	: AIActor(aiInfo)
 	, m_pBaseInfo(baseInfo)
 	, m_pStatInfo(nullptr)
 {}
@@ -40,44 +40,62 @@ Monster::~Monster() {
 
 Monster* Monster::create(MonsterInfo* baseInfo, AIInfo* aiInfo) {
 	Monster* pMonster = dbg_new Monster(baseInfo, aiInfo);
-
-	if (pMonster && pMonster->init()) {
-		pMonster->initThicknessBox(baseInfo->ThicknessBox);
-		pMonster->initActorSprite();
-		pMonster->initHitRecorder();		// 먼저 초기화 필요 (AIActivity에서 초기화해서 씀)
-		pMonster->initAI();
-		pMonster->initComponents();
-		pMonster->autorelease();
-		return pMonster;
-	}
-
+	pMonster->initialize();
+	pMonster->autorelease();
 	return pMonster;
 }
 
+void Monster::initialize() {
+	initVariables();
+	initThicknessBox(m_pBaseInfo->ThicknessBox);
+	initActorSprite();
+	initHitRecorder();		// 먼저 초기화 필요 (AIActivity에서 초기화해서 씀)
+	initAI();
+	initListeners();
+	initComponents();
+}
+
 void Monster::initActorSprite() {
-	DebugAssert(m_pBaseInfo->SpriteData != nullptr);
-	m_pActorSprite = ActorSprite::create(this, m_pBaseInfo->SpriteData);
-	m_pActorSprite->setAnchorPoint(Vec2::ZERO);
-	this->addChild(m_pActorSprite);
+	if (!m_pActorSprite) {
+		DebugAssert(m_pBaseInfo->SpriteData != nullptr);
+		m_pActorSprite = ActorSprite::create(this, m_pBaseInfo->SpriteData);
+		m_pActorSprite->setAnchorPoint(Vec2::ZERO);
+		this->addChild(m_pActorSprite);
+	}
 }
 
 void Monster::initAIActivities() {
-	m_ActivityMap[AIActivityType::Walk] = dbg_new MonsterWalkActivity(this);
-	m_ActivityMap[AIActivityType::Idle] = dbg_new MonsterIdleActivity(this);
-	m_ActivityMap[AIActivityType::Attack] = dbg_new MonsterAttackActivity(this);
-	m_ActivityMap[AIActivityType::Hit] = dbg_new MonsterHitActivity(this);
-	m_ActivityMap[AIActivityType::FallDown] = dbg_new MonsterFallDownActivity(this);
-	m_ActivityMap[AIActivityType::Sit] = dbg_new MonsterSitActivity(this);
+	if (!m_ActivityMap[AIActivityType::Walk])
+		m_ActivityMap[AIActivityType::Walk] = dbg_new MonsterWalkActivity(this);
+
+	if (!m_ActivityMap[AIActivityType::Idle])
+		m_ActivityMap[AIActivityType::Idle] = dbg_new MonsterIdleActivity(this);
+
+	if (!m_ActivityMap[AIActivityType::Attack])
+		m_ActivityMap[AIActivityType::Attack] = dbg_new MonsterAttackActivity(this);
+
+	if (!m_ActivityMap[AIActivityType::Hit])
+		m_ActivityMap[AIActivityType::Hit] = dbg_new MonsterHitActivity(this);
+
+	if (!m_ActivityMap[AIActivityType::FallDown])
+		m_ActivityMap[AIActivityType::FallDown] = dbg_new MonsterFallDownActivity(this);
+
+	if (!m_ActivityMap[AIActivityType::Sit])
+		m_ActivityMap[AIActivityType::Sit] = dbg_new MonsterSitActivity(this);
 
 	runActivity(m_ActivityMap[AIActivityType::Idle]);	// 아무것도 설정안하면 기본 실행 시간 1초
 	
 }
 
-void Monster::initComponents() {
-	Actor::initComponents();
+void Monster::initListeners() {
+}
 
-	m_Components.add(dbg_new MoveComponent(this));
-	m_Components.add(dbg_new PhysicsComponent(this));
+void Monster::initComponents() {
+	if (!m_Components.has(IComponent::eMove))
+		m_Components.add(dbg_new MoveComponent(this));
+
+	if (!m_Components.has(IComponent::ePhysics))
+		m_Components.add(dbg_new PhysicsComponent(this));
 }
 
 void Monster::hit(const HitInfo& hitInfo) {
