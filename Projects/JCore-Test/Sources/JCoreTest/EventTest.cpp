@@ -16,39 +16,40 @@ TEST(EventTest, General) {
 	struct functor1 { int& ref; void operator()() const { ref += 3; } };
 	struct functor2 { int& ref; void operator()() const { ref += 4; } };
 
-	e += lmb1;				// named lambda
-	e += lmb2;				// named lambda
-	e += functor1{ test };	// unnamed functor
-	e += functor2{ test };	// unnamed functor
+	e.Register(0, lmb1);							// named lambda
+	e.Register(1, lmb2);							// named lambda
+
+	e.Register(2, functor1{ test });				// unnamed functor
+	e.Register(3, functor2{ test });				// unnamed functor
 
 	e();	// (+10) lmb1, lmb2, functor1, functor2;
 	EXPECT_TRUE(test == 10);
 
-	e -= lmb2;
+	e.Unregister(1);
 	e();	// (+8) lmb2, functor1, functor2
 	EXPECT_TRUE(test == 18);	
 
-	e -= lmb1;
+	e.Unregister(0);
 	e();	// (+7) functor1, functor2
 	EXPECT_TRUE(test == 25);
 
-	e.UnregisterByType(typeid(functor1)); // (+4) functor2
+	e.Unregister(2);
 	e();	
 	EXPECT_TRUE(test == 29);
 
-	e.UnregisterByType(typeid(functor2)); // (+0) 없음
+	e.Unregister(3);
 	e();
 	EXPECT_TRUE(test == 29);
 
 	functor1 ex_1{ test };
 	functor2 ex_2{ test };
 
-	e += ex_1;
-	e += ex_2;
+	e.Register(4, ex_1);
+	e.Register(5, ex_2);
 	e();	// (+7) ex_1, ex_2
 	EXPECT_TRUE(test == 36);
 
-	e -= ex_1;
+	e.Unregister(4);
 	e();	// (+4) ex_2
 	EXPECT_TRUE(test == 40);
 }
@@ -70,29 +71,21 @@ TEST(EventTest, ClassMethod) {
 	Legend t1{ "t1" };
 	Legend t2{ "t2" };
 
-	e += Legend::test;		// 정적 함수는 가능
-	// e += t1.member_test;	// 이렇게 멤버 함수는 추가할 수가 없음
+	e.Register(0, Legend::test);
 
 	// 방법1
-	e += std::bind(&Legend::member_test, &t1, std::placeholders::_1, std::placeholders::_2);
-	e += std::bind(&Legend::member_test, &t2, std::placeholders::_1, std::placeholders::_2);
+	e.Register(1, std::bind(&Legend::member_test, &t1, std::placeholders::_1, std::placeholders::_2));
+	e.Register(2, std::bind(&Legend::member_test, &t1, std::placeholders::_1, std::placeholders::_2));
 
 	// 방법2
-	e += [&t1](int a, int b) {
-		t1.member_test(a, b);
-	};
-	e += [&t2](int a, int b) {
-		t2.member_test(a, b);
-	};
-	
-	
-
+	e.Register(3, [&t1](int a, int b) { t1.member_test(a, b); });
+	e.Register(4, [&t2](int a, int b) { t2.member_test(a, b); });
 
 	// 호출
 	e(1, 5);
 	EXPECT_TRUE(g_event_testal == 5);
 
-	e -= Legend::test;
+	e.Unregister(0);
 	e(1, 5);
 	EXPECT_TRUE(g_event_testal == 9);
 }

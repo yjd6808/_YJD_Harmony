@@ -14,7 +14,7 @@ NS_JC_BEGIN
 
 Scheduler::Scheduler(int threadCount)
 	: m_pThreadPool(dbg_new ThreadPool(threadCount))
-	, m_SchedulingThread(std::bind(&Scheduler::SchedulingRoutine, this))
+	, m_SchedulingThread(JCORE_CALLBACK_0(Scheduler::SchedulingRoutine, this))
 	, m_eState(State::Running)
 {}
 

@@ -280,16 +280,25 @@ NS_JC_BEGIN
 	template <typename Fn>
     struct IsCallable
 	{
-        static constexpr bool Value = IsFunctor::Value<Fn>;
+        static constexpr bool Value = IsFunctor::Value<NakedType_t<Fn>>;   // 2023/08/11: 템플릿 경우의 수를 줄이기 위해.. 다 벗겨줌
 	};
 
 	// 정적함수, 전역함수
 	template <typename Ret, typename... Args>
 	struct IsCallable<Ret(*)(Args...)> : TrueType {};
+
     template <typename Ret, typename... Args>
     struct IsCallable<Ret(Args...)> : TrueType {};
     template <typename Ret, typename Class, typename... Args>
     struct IsCallable<Ret(Class::*)(Args...)> : TrueType {};
+
+    // 2023/08/11: 아래 2가지 케이스는 Event 구현 후 테스트 중 발견한 케이스들
+	// std::_Binder는 생각도 못했다.
+    template <template <typename...> typename Binder, typename... Args>
+    struct IsCallable<Binder<Args...>> : IntegralConstant<bool, std::is_same_v<Binder<Args...>, std::_Binder<Args...>>> {};
+    template <typename Ret, typename... Args>
+    struct IsCallable<Ret(&)(Args...)> : TrueType {}; 
+
 
 
 	// 펑터 시그니쳐

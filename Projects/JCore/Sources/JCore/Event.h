@@ -6,90 +6,70 @@
 #pragma once
 
 #include <JCore/Functional.h>
-#include <JCore/Container/LinkedList.h>
+#include <JCore/TypeTraits.h>
+#include <JCore/Container/HashMap.h>
 
 NS_JC_BEGIN
 
 template <typename... Args>
 class Event
 {
-private:
 	using TEvent  = Event<Args...>;
 	using TAction = Action<Args...>;
-private:
-	
-	struct Callback
+
+	struct Holder
 	{
-		void*	FnPointer = nullptr;
 		TAction Action;
 
-		Callback() {}
-		Callback(const TAction& fn, void* fnptr) {
-			this->Action = fn; 
-			this->FnPointer = fnptr;
-		}
+		Holder(const TAction& fn) : Action(fn) {}
+		Holder(TAction&& fn) : Action(Move(fn)) {}
 
-		void Invoke(Args&&... args) {
-			this->Action(Forward<Args>(args)...);
-		}
-
-		const type_info& TargetType() {
-			return this->Action.target_type();
-		}
+		void Invoke(Args&&... args) { this->Action(Forward<Args>(args)...); }
+		const type_info& TargetType() { return this->Action.target_type(); }
 	};
-
 public:
+	~Event() { Clear(); }
 
 	template <typename TInvoker>
-	void Register(const TInvoker& fn) {
-		m_MethodChain.PushBack({fn, (void*)AddressOf(fn)});
+	bool Register(int id, TInvoker&& fn) {
+		static_assert(IsCallable_v<TInvoker>, "... TInvoker is not callable");
+		if (m_Chain.Exist(id)) {
+			return false;
+		}
+
+		return m_Chain.Insert(id, dbg_new Holder{ Forward<TInvoker>(fn) });
 	}
 
-	template <typename TInvoker>
-	bool Unregister(const TInvoker& fn) {
-		return m_MethodChain.RemoveIf([&fn](Callback& call) {
-			return AddressOf(fn) == call.FnPointer;
-		});
-	}
+	bool Unregister(int id) {
+		Holder** ppFind = m_Chain.Find(id);
 
-	bool UnregisterByType(const type_info& fnType) {
-		return m_MethodChain.RemoveIf([&fnType](Callback& call) {
-			return fnType == call.TargetType();
-		});
+		if (ppFind == nullptr) {
+			return false;
+		}
+
+		delete (*ppFind);
+		return m_Chain.Remove(id);
 	}
 
 	void Clear() {
-		m_MethodChain.Clear();
+		m_Chain.ForEachValueDelete();
 	}
 
-	// 복사 버라이어딕 주의
-	void Invoke(Args... params) {
-		m_MethodChain.Extension().ForEach([&params...](Callback& fn) {
-			fn.Invoke(Forward<Args>(params)...);
+	void Invoke(Args&&... params) {
+		m_Chain.ForEachValue([&params...](Holder* holder) {
+			holder->Invoke(Forward<Args>(params)...);
 		});
 	}
 
 	int Size() const {
-		return m_MethodChain.Size();
-	}
-
-	template <typename TInvoker>
-	TEvent& operator+=(const TInvoker& fn) {
-		Register(fn);
-		return *this;
-	}
-
-	template <typename TInvoker>
-	TEvent& operator-=(const TInvoker& fn) {
-		Unregister(fn);
-		return *this;
+		return m_Chain.Size();
 	}
 
 	void operator()(Args&&... args) {
 		Invoke(Forward<Args>(args)...);
 	}
 private:
-	LinkedList<Callback> m_MethodChain;
+	HashMap<int, Holder*> m_Chain;
 };
 
 

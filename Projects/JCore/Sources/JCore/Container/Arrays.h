@@ -287,6 +287,24 @@ struct Arrays final
 		}
 	}
 
+	template <typename T, Int32U Size>
+	static void ForEachDelete(T(&arr)[Size]) {
+		if constexpr (IsPointerType_v<T>) {
+			for (int i = 0; i < Size; ++i) {
+				JCORE_DELETE_SAFE(arr[i]);
+			}
+		}
+	}
+
+	template <typename T>
+	static void ForEachDelete(T* arr, const int size) {
+		if constexpr (IsPointerType_v<T>) {
+			for (int i = 0; i < size; ++i) {
+				JCORE_DELETE_SAFE(arr[i]);
+			}
+		}
+	}
+
 	template <typename T, typename TPredicate>
 	static int FindIf(const T* arr, const int size, TPredicate&& predicate) {
 		for (int i = 0; i < size; ++i)
