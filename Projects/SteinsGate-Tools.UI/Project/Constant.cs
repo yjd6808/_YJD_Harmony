@@ -33,7 +33,6 @@ namespace SGToolsUI
         public const string SettingFileName = "setting.json";
         public const string UIToolDataFileName = "data.json";
         public const string GameDataFileName = "ui.json";
-        public const string HeaderFileName = "UIDefine.h";
         public const string BackupDirectoryRoot = "backup";
         public const string BackupDirectoryFmt = "yyyy-MM-dd";
         public const string BackupFileFmt = "HH.mm.ss";

@@ -143,7 +143,7 @@ namespace SGToolsUI.FileSystem
         public async Task<bool> ExportAsync(string path = null)
         {
             if (path == null)
-                path = Path.Combine(_viewModel.Setting.OutputDefinePath, Constant.HeaderFileName);
+                path = Path.Combine(_viewModel.Setting.OutputDefineHeaderFilePath, _viewModel.Setting.OutputDefineHeaderFileName);
 
             return await Task.Run(() => Export(path));
         }
