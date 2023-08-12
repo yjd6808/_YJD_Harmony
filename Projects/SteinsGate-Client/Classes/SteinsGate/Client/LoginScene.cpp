@@ -13,7 +13,7 @@
 
 #include <SteinsGate/Client/WorldScene.h>
 #include <SteinsGate/Client/UILayer.h>
-#include <SteinsGate/Client/UIDefine.h>
+#include <SteinsGate/Client/Define_UI.h>
 
 USING_NS_CC;
 USING_NS_JC;

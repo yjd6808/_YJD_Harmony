@@ -12,7 +12,7 @@
 #include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/ActorSprite.h>
-#include <SteinsGate/Client/AnimationDefine.h>
+#include <SteinsGate/Client/Define_Animation.h>
 
 USING_NS_CC;
 USING_NS_JC;

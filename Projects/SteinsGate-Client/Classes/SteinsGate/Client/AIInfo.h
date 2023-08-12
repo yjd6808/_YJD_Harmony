@@ -27,7 +27,7 @@ struct AIInfo : ConfigDataAbstract
 
 	float IdleTime[2];			// min, max
 	float WanderWalkTime[2];
-	float FollowWalkTime[2];
+	float TrackWalkTime[2];
 
 	bool ForceTrack;
 	bool ForceAngry;

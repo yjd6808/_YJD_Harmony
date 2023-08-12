@@ -16,8 +16,7 @@ class PhysicsComponent : public ActorComponent, public IUpdatable
 public:
 	PhysicsComponent(Actor* actor);
 
-	void initVariables();
-
+	void initialize() override;
 	void onUpdate(float dt) override;
 
 	void hit(const HitInfo& info);

@@ -8,13 +8,10 @@
 #include "Tutturu.h"
 #include "AIActivity.h"
 
-#include "Tutturu.h"
-#include <SteinsGate/Client/AIActor.h>
-#include <SteinsGate/Client/ActorPartAnimation.h>
-
-AIActivity::AIActivity(AIActivityType_t type)
-	: m_eState(eInitialized)
+AIActivity::AIActivity(Actor* actor, AIActivityType_t type)
+	: m_pActor(actor)
 	, m_eType(type)
+	, m_eState(eInitialized)
 	, m_fElasedTime(0.0f)
 	, m_fLimitTime(1.0f)
 {}
@@ -38,10 +35,6 @@ bool AIActivity::isRunning() {
 	return m_eState == eRunning;
 }
 
-void AIActivity::setLimit(float limit) {
-	m_fLimitTime = limit;
-}
-
 void AIActivity::updateLimitTime(float dt) {
 	if (!isRunning())
 		return;
@@ -52,8 +45,3 @@ void AIActivity::updateLimitTime(float dt) {
 		stop();
 	}
 }
-
-void AIActivity::onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
-void AIActivity::onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) {}
-void AIActivity::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
-void AIActivity::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {}

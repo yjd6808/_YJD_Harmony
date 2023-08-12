@@ -13,7 +13,7 @@
 #include <SteinsGate/Client/UIGroup.h>
 #include <SteinsGate/Client/UIMasterGroup.h>
 
-#include <SteinsGate/Client/UIDefine.h>
+#include <SteinsGate/Client/Define_UI.h>
 
 #include <SteinsGate/Client/UI_Inventory.h>
 #include <SteinsGate/Client/UI_Login.h>

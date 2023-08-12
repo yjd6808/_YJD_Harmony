@@ -326,6 +326,13 @@ SitPickUp,
 Max
 SEnumEnd(BaseAction)
 
+SEnumBegin(AIState)
+None,
+Wander,
+Track,
+Angry
+SEnumEnd(AIState)
+
 SEnumBegin(AIWanderDecision)
 Walk,
 Idle,
@@ -355,7 +362,8 @@ Hit,
 FallDown,
 Sit,
 // TODO: Custom 몬스터 특수행동 그런거 추가할 수 있을 듯?
-Max
+Max,
+None
 SEnumMiddle(AIActivityType)
 static constexpr const char* Name[Max]{
 	"Idle",

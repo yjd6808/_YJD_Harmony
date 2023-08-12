@@ -74,7 +74,7 @@ void ProjectileInfoLoader::readOverridedProjectileInfo(Json::Value& projectileRo
 
 	int iProjectileListenerCode = JsonUtilEx::getIntDefault(projectileRoot["listener_code"], 0);
 	if (iProjectileListenerCode != 0)
-		projectileInfo->ProjectileListenerCode = iProjectileListenerCode;
+		projectileInfo->ListenerCode = iProjectileListenerCode;
 
 	/*const SGString& sgaName = JsonUtilEx::getStringOrNull(projectileRoot["sga"]);
 	if (!sgaName.IsNull()) {
@@ -155,7 +155,7 @@ void ProjectileInfoLoader::readProjectileInfo(Json::Value& projectileRoot, JCORE
 
 
 	projectileInfo->Code = projectileRoot["code"].asInt();
-	projectileInfo->ProjectileListenerCode = projectileRoot["listener_code"].asInt();
+	projectileInfo->ListenerCode = projectileRoot["listener_code"].asInt();
 	projectileInfo->AttackData = pDataManager->getAttackDataInfo(m_eActorType, projectileRoot["attack_data_code"].asInt());
 	projectileInfo->Name = JsonUtilEx::getString(projectileRoot["name"]);
 	//projectileInfo->SgaIndex = pPackManager->getPackIndex(JsonUtilEx::getString(projectileRoot["sga"]));

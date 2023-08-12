@@ -26,6 +26,7 @@ public:
 	};
 
 	virtual ~IComponent() = default;
+	virtual void initialize() = 0;
 	virtual Type getType() const = 0;
 };
 

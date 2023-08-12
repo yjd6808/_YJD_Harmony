@@ -12,17 +12,22 @@
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/ActorPartAnimation.h>
 #include <SteinsGate/Client/AttackDataInfo.h>
-#include <SteinsGate/Client/EffectDefine.h>
+#include <SteinsGate/Client/Define_Effect.h>
+#include <SteinsGate/Client/Define_Event.h>
 #include <SteinsGate/Client/ActorBox.h>
+
+ProjectileListener_GunnerBullet::ProjectileListener_GunnerBullet(Projectile* projectile, Actor* spawner)
+	: ProjectileListener(projectile, spawner)
+{}
 
 void ProjectileListener_GunnerBullet::onCreated() {
 	ProjectileListener::onCreated();
 	HitRecorder* pHitRecorder = m_pProjectile->getHitRecorder();
 
-	pHitRecorder->clear();
+	pHitRecorder->clearAlreadyHitEnemies();
 	pHitRecorder->setAlreadyHitRecord(true);
-	pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(ProjectileListener_GunnerBullet::onEnemySingleHit, this));
-	pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(ProjectileListener_GunnerBullet::onEnemyMultiHit, this));
+	pHitRecorder->addSingleHitCallback(DEF_EVENT_SINGLE_HIT_GUNNER_BULLET, CC_CALLBACK_1(ProjectileListener_GunnerBullet::onEnemySingleHit, this));
+	pHitRecorder->addMultiHitCallback(DEF_EVENT_MULTI_HIT_GUNNER_BULLET, CC_CALLBACK_2(ProjectileListener_GunnerBullet::onEnemyMultiHit, this));
 }
 
 void ProjectileListener_GunnerBullet::onUpdate(float dt) {

@@ -23,6 +23,14 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\HitActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\IdleActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterListener_DarkGoblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterListener_NormalGoblin.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\MoveComponent.cpp">
       <SubType>
       </SubType>
@@ -83,10 +91,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\AIActor.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AIInfo.cpp">
       <SubType>
       </SubType>
@@ -143,22 +147,18 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\HitActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\IdleActivity.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterHitActivity.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\SitActivity.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterSitActivity.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SitActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\WalkActivity.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientGroup.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.cpp" />
@@ -390,6 +390,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\WalkActivity_Goblin.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\Win32Helper.cpp">
       <SubType>
       </SubType>
@@ -422,17 +423,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerCollection.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\AIActivityDefine.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AIComponent.h">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ComponentCollection.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define_Event.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameEvent.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameEventLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ConnectionSynchronizer.h">
@@ -461,8 +462,13 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener_Gunner.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorComponent.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\HitActivity_Goblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\IComponent.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\IdleActivity_Goblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\IUpdatable.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterListener.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterListener_DarkGoblin.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterListener_NormalGoblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\MoveComponent.h">
       <SubType>
       </SubType>
@@ -479,15 +485,11 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define_ActorListener.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AIActivity.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AIActor.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -507,7 +509,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\PopupDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define_Popup.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -516,7 +518,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGApplication.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\ActionDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define_Action.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -539,6 +541,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SitActivity_Goblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\S_AREA.h">
       <SubType>
       </SubType>
@@ -593,7 +596,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AnimationDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define_Animation.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -619,7 +622,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\EffectDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define_Effect.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -678,22 +681,17 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\HitActivity.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\IdleActivity.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterAttackActivity.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterFallDownActivity.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterHitActivity.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterIdleActivity.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\SitActivity.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterSitActivity.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MonsterWalkActivity.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\WalkActivity.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\MapObject.h">
       <SubType>
       </SubType>
@@ -766,7 +764,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileDefine.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define_Projectile.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -806,7 +804,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\UIDefine.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define_UI.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\UIEditBox.h">
       <SubType>
       </SubType>
@@ -869,6 +867,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\WalkActivity_Goblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Win32Helper.h">
       <SubType>
       </SubType>

@@ -19,6 +19,11 @@ MoveComponent::MoveComponent(Actor* actor)
 	: ActorComponent(actor)
 {}
 
+void MoveComponent::initialize() {
+	m_Speed.x = 0;
+	m_Speed.y = 0;
+}
+
 void MoveComponent::onUpdate(float dt) {
 	MapLayer* pMapLayer = m_pActor->getMapLayer();
 	if (pMapLayer == nullptr) {

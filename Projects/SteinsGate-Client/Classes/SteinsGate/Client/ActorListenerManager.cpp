@@ -9,10 +9,14 @@
 #include "Tutturu.h"
 #include "ActorListenerManager.h"
 
-#include <SteinsGate/Client/ActorListenerDefine.h>
+#include <SteinsGate/Client/Define_ActorListener.h>
 
 // 캐릭터 리스너
 #include <SteinsGate/Client/ProjectileListener_GunnerBullet.h>
+
+// 몬스터 리스너
+#include <SteinsGate/Client/MonsterListener_NormalGoblin.h>
+#include <SteinsGate/Client/MonsterListener_DarkGoblin.h>
 
 // 프로젝틸 리스너
 #include <SteinsGate/Client/CharacterListener_Gunner.h>
@@ -20,32 +24,57 @@
 ActorListenerManager::ActorListenerManager() {}
 
 ActorListenerManager::~ActorListenerManager() {
-	m_hProjectileListenerMap.ForEachValueDelete();
 	m_hCharacterListenerMap.ForEachValueDelete();
+	m_hMonsterListenerMap.ForEachValueDelete();
+	m_hProjectileListenerMap.ForEachValueDelete();
 }
 
 void ActorListenerManager::init() {
 	// 캐릭터 리스너 등록
-	m_hCharacterListenerMap.Insert(CharType::Gunner, dbg_new CharacterListener_Gunner);
+	m_hCharacterListenerMap.Insert(CHARACTER_LISTENER_GUNNER, dbg_new CharacterListener_Gunner::Factory);
 
 	// 몬스터 리스너 등록
+	m_hMonsterListenerMap.Insert(MONSTER_LISTENER_NORMAL_GOBLIN, dbg_new MonsterListener_NormalGoblin::Factory);
+	m_hMonsterListenerMap.Insert(MONSTER_LISTENER_DARK_GOBLIN, dbg_new MonsterListener_DarkGoblin::Factory);
 
 	// 프로젝틸 리스너 등록
-	m_hProjectileListenerMap.Insert(PROJECTILE_LISTENER_GUNNER_BULLET, dbg_new ProjectileListener_GunnerBullet);
-
-	
+	m_hProjectileListenerMap.Insert(PROJECTILE_LISTENER_GUNNER_BULLET, dbg_new ProjectileListener_GunnerBullet::Factory);
 }
 
-ProjectileListener* ActorListenerManager::createProjectileListener(int projectileListenerCode) {
-	DebugAssertMsg(m_hProjectileListenerMap.Exist(projectileListenerCode), "해당 코드의 프로젝틸 리스너가 존재하지 않습니다.");
-	ProjectileListener* pListener =  dynamic_cast<ProjectileListener*>(m_hProjectileListenerMap[projectileListenerCode]->createNew());
-	DebugAssertMsg(pListener, "오잉? 프로젝틸 리스너가 아닌 타입이 프로젝틸 리스너 목록에 존재합니다. 수정이 필요합니다");
-	return pListener;
+CharacterListener* ActorListenerManager::createCharacterListener(Character* character) {
+	const int iCharacterCode = character->getCode();
+	CharacterListener::IFactory** ppFactory = m_hCharacterListenerMap.Find(iCharacterCode);
+
+	if (ppFactory == nullptr) {
+		DebugAssertMsg(false, "해당 %sListener를 찾지 못했습니다.", ActorType::Name[ActorType::Character]);
+		return nullptr;
+	}
+
+	return (*ppFactory)->create(character);
 }
 
-CharacterListener* ActorListenerManager::createCharacterListener(CharType_t charType) {
-	DebugAssertMsg(m_hCharacterListenerMap.Exist(charType), "해당 코드의 %s 리스너가 존재하지 않습니다.", CharType::Name[charType]);
-	CharacterListener* pListener = dynamic_cast<CharacterListener*>(m_hCharacterListenerMap[charType]->createNew());
-	DebugAssertMsg(pListener, "오잉? 프로젝틸 리스너가 아닌 타입이 프로젝틸 리스너 목록에 존재합니다. 수정이 필요합니다");
-	return pListener;
+MonsterListener* ActorListenerManager::createMonsterListener(Monster* monster) {
+	const int iMonsterCode = monster->getCode();
+	MonsterListener::IFactory** ppFactory = m_hMonsterListenerMap.Find(iMonsterCode);
+
+	if (ppFactory == nullptr) {
+		DebugAssertMsg(false, "해당 %sListener를 찾지 못했습니다.", ActorType::Name[ActorType::Monster]);
+		return nullptr;
+	}
+
+	return (*ppFactory)->create(monster);
 }
+
+ProjectileListener* ActorListenerManager::createProjectileListener(Projectile* projectile, Actor* spawner /* = nullptr */) {
+	const int iProjectileListenerCode = projectile->getListenerCode();
+	ProjectileListener::IFactory** ppFactory = m_hProjectileListenerMap.Find(iProjectileListenerCode);
+
+	if (ppFactory == nullptr) {
+		DebugAssertMsg(false, "해당 %sListener를 찾지 못했습니다.", ActorType::Name[ActorType::Projectile]);
+		return nullptr;
+	}
+
+	return (*ppFactory)->create(projectile, spawner);
+}
+
+

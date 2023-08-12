@@ -9,21 +9,20 @@
 #pragma once
 
 
-#include <SteinsGate/Client/MonsterActivity.h>
+#include <SteinsGate/Client/AttackActivity.h>
 
-class MonsterAttackActivity : public MonsterActivity
+class AttackActivity_Goblin : public AttackActivity
 {
 public:
-	MonsterAttackActivity(Monster* monster);
+	AttackActivity_Goblin(Actor* actor);
 
+	void onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIState_t aiState) override;
 	void onActivityBegin() override;
 	
 	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) override;
 	void onUpdate(float dt) override;
 	void onEnemySingleHit(HitInfo& info);
 	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
-private:
-	HitRecorder* m_pHitRecorder;
 };
 
 

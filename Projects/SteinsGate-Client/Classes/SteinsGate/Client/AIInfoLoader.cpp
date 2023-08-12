@@ -50,7 +50,7 @@ void AIInfoLoader::readAIInfo(Json::Value& aiRoot, JCORE_OUT AIInfo* aiInfo) {
 	JsonUtilEx::parseFloatNumberN(aiRoot["angry_prob"], aiInfo->AngryProbs, AIAngryDecision::Max - 1);
 	JsonUtilEx::parseFloatNumberN(aiRoot["idle_time"], aiInfo->IdleTime, 2);
 	JsonUtilEx::parseFloatNumberN(aiRoot["wander_walk_time"], aiInfo->WanderWalkTime, 2);
-	JsonUtilEx::parseFloatNumberN(aiRoot["follow_walk_time"], aiInfo->FollowWalkTime, 2);
+	JsonUtilEx::parseFloatNumberN(aiRoot["track_walk_time"], aiInfo->TrackWalkTime, 2);
 	aiInfo->ForceTrack = aiRoot["force_track"].asBool();
 	aiInfo->ForceAngry = aiRoot["force_angry"].asBool();
 	aiInfo->SightRadious = aiRoot["sight_radious"].asFloat();

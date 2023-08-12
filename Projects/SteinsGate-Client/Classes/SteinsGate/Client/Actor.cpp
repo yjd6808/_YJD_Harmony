@@ -15,7 +15,9 @@
 
 #include <SteinsGate/Client/Global.h>
 #include <SteinsGate/Client/MapLayer.h>
+
 #include <SteinsGate/Client/PhysicsComponent.h>
+#include <SteinsGate/Client/AIComponent.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -107,6 +109,7 @@ void Actor::hit(const HitInfo& hitInfo) {
 		pPhysicsComponent->hit(hitInfo);
 	}
 
+	getListenerCollection().onHit(hitInfo);
 }
 
 void Actor::update(float dt) {
@@ -337,6 +340,19 @@ void Actor::runFrameEventSpawn(FrameEventSpawnType_t spawnType,  int spawnCode) 
 	}
 }
 
+void Actor::runFrameEvent(int frameEventCode) {
+	if (frameEventCode == InvalidValue_v)
+		return;
+
+	FrameEvent* pFrameEvent = CoreDataManager_v->getFrameEvent(getType(), frameEventCode);
+
+	if (pFrameEvent == nullptr)
+		return;
+
+	runFrameEvent(pFrameEvent);
+}
+
+
 void Actor::runFrameEvent(FrameEvent* frameEvent) {
 	switch (frameEvent->Type) {
 	case FrameEventType::Spawn: {
@@ -371,28 +387,41 @@ void Actor::runFrameEvent(FrameEvent* frameEvent) {
 
 void Actor::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
 	m_Listeners.onFrameBegin(animation, texture);
+	runFrameEvent(animation->getRunningFrameEventCode());
 
-	const int iFrameEventCode = animation->getRunningFrameEventCode();
+	AIActivity* pRunningActivity = getRunningAIActivity();
 
-	if (iFrameEventCode == InvalidValue_v)
-		return;
-
-	FrameEvent* pFrameEvent = CoreDataManager_v->getFrameEvent(getType(), iFrameEventCode);
-
-	if (pFrameEvent == nullptr)
-		return;
-
-	runFrameEvent(pFrameEvent);
+	if (pRunningActivity) {
+		pRunningActivity->onFrameBegin(animation, texture);
+	}
 }
 
 void Actor::onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) {
 	m_Listeners.onFrameEnd(animation, texture);
+
+	AIActivity* pRunningActivity = getRunningAIActivity();
+
+	if (pRunningActivity) {
+		pRunningActivity->onFrameEnd(animation, texture);
+	}
 }
 void Actor::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) {
 	m_Listeners.onAnimationBegin(animation, texture);
+
+	AIActivity* pRunningActivity = getRunningAIActivity();
+
+	if (pRunningActivity) {
+		pRunningActivity->onAnimationBegin(animation, texture);
+	}
 }
 void Actor::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) {
 	m_Listeners.onAnimationEnd(animation, texture);
+
+	AIActivity* pRunningActivity = getRunningAIActivity();
+
+	if (pRunningActivity) {
+		pRunningActivity->onAnimationEnd(animation, texture);
+	}
 }
 
 
@@ -545,5 +574,15 @@ ActorRect Actor::convertAbsoluteActorRect(Actor* stdActor, const ActorRect& rela
 	absoluteActorRect.BodyRect.size = relativeRect.BodyRect.size;
 
 	return absoluteActorRect;
+}
+
+AIActivity* Actor::getRunningAIActivity() {
+	const AIComponent* pAIComponent = m_Components.get<AIComponent>();
+
+	if (pAIComponent == nullptr) {
+		return nullptr;
+	}
+
+	return pAIComponent->getRunningActivity();
 }
 

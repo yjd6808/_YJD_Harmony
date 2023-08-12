@@ -10,11 +10,13 @@
 
 #include <SteinsGate/Client/ActorComponent.h>
 
+struct MapAreaInfo;
 class MoveComponent : public ActorComponent, public IUpdatable
 {
 public:
 	MoveComponent(Actor* actor);
 
+	void initialize() override;
 	void onUpdate(float dt) override;
 
 	void setSpeed(const SGVec2& speed);

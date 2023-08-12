@@ -57,19 +57,17 @@ void HitRecorder::record(const ActorRect& absoluteActorRect, int attackDataCode)
 		hitInfo.AttackDataInfo = DataManager::Get()->getAttackDataInfo(m_pOwner->getType(), attackDataCode);
 		hitInfo.Attacker = m_pRecorder;
 
-		if (m_fnHitSingleCallback)
-			m_fnHitSingleCallback(hitInfo);
+		m_SingleHitEvent.Invoke(hitInfo);
 
 		if (m_bRecordAlreadyHit && m_hAlreadyHitEnemy.Insert(hitInfo.HitTarget, hitInfo.HitTarget)) {
 			++iNewHitCount;
 		}
 	}
 
-	if (m_fnHitMultiCallback)
-		m_fnHitMultiCallback(m_vHitPossibleList, iNewHitCount);
+	m_MultiHitEvent.Invoke(m_vHitPossibleList, iNewHitCount);
 }
 
-void HitRecorder::clear() {
+void HitRecorder::clearAlreadyHitEnemies() {
 	m_hAlreadyHitEnemy.Clear();
 }
 
@@ -85,10 +83,42 @@ void HitRecorder::setAlreadyHitRecord(bool enabled) {
 	m_bRecordAlreadyHit = enabled;
 }
 
-void HitRecorder::setSingleHitCallback(const SGHitSingleCallbackFn& callback) {
-	m_fnHitSingleCallback = callback;
+bool HitRecorder::hasSingleHitCallback(int definedEventId) {
+	return m_SingleHitEvent.IsRegistered(definedEventId);
 }
 
-void HitRecorder::setMultiHitCallback(const SGHitMultiCallbackFn& callback) {
-	m_fnHitMultiCallback = callback;
+bool HitRecorder::addSingleHitCallback(int definedEventId, const SGHitSingleCallbackFn& callback) {
+	return m_SingleHitEvent.Register(definedEventId, callback);
+}
+
+bool HitRecorder::addSingleHitCallback(int definedEventId, SGHitSingleCallbackFn&& callback) {
+	return m_SingleHitEvent.Register(definedEventId, JCore::Move(callback));
+}
+
+bool HitRecorder::removeSingleHitCallback(int definedEventId) {
+	return m_SingleHitEvent.Unregister(definedEventId);
+}
+
+void HitRecorder::clearSingleHitCallback() {
+	m_SingleHitEvent.Clear();
+}
+
+bool HitRecorder::hasMultiHitCallback(int definedEventId) {
+	return m_MultiHitEvent.IsRegistered(definedEventId);
+}
+
+bool HitRecorder::addMultiHitCallback(int definedEventId, const SGHitMultiCallbackFn& callback) {
+	return m_MultiHitEvent.Register(definedEventId, callback);
+}
+
+bool HitRecorder::addMultiHitCallback(int definedEventId, SGHitMultiCallbackFn&& callback) {
+	return m_MultiHitEvent.Register(definedEventId, Move(callback));
+}
+
+bool HitRecorder::removeMultiHitCallback(int definedEventId) {
+	return m_MultiHitEvent.Unregister(definedEventId);
+}
+
+void HitRecorder::clearMultiHitCallback() {
+	m_MultiHitEvent.Clear();
 }

@@ -33,7 +33,7 @@ SGAction::~SGAction() {
 void SGAction::play() {
 	// 플레이어가 사용가능한지 체크
 	m_pHitRecorder = m_pPlayer->getHitRecorder();
-	m_pHitRecorder->clear();
+	m_pHitRecorder->clearAlreadyHitEnemies();
 	m_eWeaponType = CoreInven_v->getWeaponType();
 
 	onActionBegin();
@@ -45,8 +45,9 @@ void SGAction::stop() {
 	m_pPlayer->ctrl()->setCommandable(true);			// 다시 콤보 입력이 가능하도록 변경해준다.
 
 	m_pHitRecorder->setAlreadyHitRecord(false);
-	m_pHitRecorder->setSingleHitCallback(nullptr);
-	m_pHitRecorder->setMultiHitCallback(nullptr);
+	m_pHitRecorder->clearAlreadyHitEnemies();
+	m_pHitRecorder->clearSingleHitCallback();
+	m_pHitRecorder->clearMultiHitCallback();
 
 	if (!isForceCancelable()) {
 		m_pPlayer->ctrl()->reflectPressedMoveKeys();

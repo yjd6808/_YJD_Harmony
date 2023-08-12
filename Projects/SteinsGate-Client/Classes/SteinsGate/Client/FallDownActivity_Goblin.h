@@ -9,12 +9,12 @@
 #pragma once
 
 
-#include <SteinsGate/Client/MonsterActivity.h>
+#include <SteinsGate/Client/FallDownActivity.h>
 
-class MonsterFallDownActivity : public MonsterActivity
+class FallDownActivity_Goblin : public FallDownActivity
 {
 public:
-	MonsterFallDownActivity(Monster* monster);
+	FallDownActivity_Goblin(Actor* actor);
 
 	void onActivityBegin() override;
 	void onActivityEnd() override;

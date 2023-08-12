@@ -117,6 +117,7 @@ public:
 
 	void runFrameEventSpawn(FrameEventSpawnType_t frameEventSpawnType, int code);
 	void runFrameEvent(FrameEvent* frameEvent);
+	void runFrameEvent(int frameEventCode);
 
 	void setSpriteDirection(SpriteDirection_t direction);
 	void setForwardDirection();
@@ -139,10 +140,13 @@ public:
 public:
 	// stdActor기준으로 절대 액터 렉트를 얻도록 해줌
 	static ActorRect convertAbsoluteActorRect(Actor* stdActor, const ActorRect& relativeRect);
+private:
+	AIActivity* getRunningAIActivity();
 protected:
-	MapLayer* m_pMapLayer;
-	ActorSprite* m_pActorSprite;
-	HitRecorder* m_pHitRecorder;
+	JCORE_NOT_NULL MapLayer* m_pMapLayer;
+	JCORE_NOT_NULL ActorSprite* m_pActorSprite;
+	JCORE_NULLABLE HitRecorder* m_pHitRecorder;
+
 	ActorListenerCollection m_Listeners;
 	ComponentCollection m_Components;
 
@@ -151,9 +155,9 @@ protected:
 	int m_iCleanUpFlag;				// 클린업 될 때 수행할 작업 플래그
 	bool m_bCleanUp;				// 액터가 될 예정 혹은 제거되었는지 여부
 
-	SGDrawNode* m_pThicknessBox;
-	SGVector<Actor*> m_vAttches;			// 내게 붙어 있는 녀석들
-	Actor* m_pAttacher;						// 내가 누구에게 붙어있는가?
+	JCORE_NOT_NULL SGDrawNode* m_pThicknessBox;			// TODO: Debug 시각화를 위해 노드로 표현하였다. 추후에는 단순 렉트로 표현해도 됨
+	JCORE_NULLABLE Actor* m_pAttacher;					// 내가 누구에게 붙어있는가?
+	SGVector<Actor*> m_vAttches;						// 내게 붙어 있는 녀석들
 };
 
 

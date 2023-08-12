@@ -10,8 +10,8 @@
 #include "GameCoreHeader.h"
 #include "UI_Login.h"
 
-#include <SteinsGate/Client/UIDefine.h>
-#include <SteinsGate/Client/PopupDefine.h>
+#include <SteinsGate/Client/Define_UI.h>
+#include <SteinsGate/Client/Define_Popup.h>
 #include <SteinsGate/Client/S_AUTH.h>
 
 USING_NS_CC;

@@ -10,7 +10,7 @@
 #include "UIElement.h"
 
 #include <SteinsGate/Client/UIMasterGroup.h>
-#include <SteinsGate/Client/UIDefine.h>
+#include <SteinsGate/Client/Define_UI.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -422,7 +422,7 @@ void UIElement::setRelativePosition(const SGVec2& pos) {
 	setRelativePosition(pos.x, pos.y);
 }
 
-void UIElement::invokeMouseEvent(MouseEventType mouseEventType, SGEventMouse* mouseEvent) {
+void UIElement::invokeMouseEvent(MouseEventType mouseEventType, cocos2d::EventMouse* mouseEvent) {
 	if (m_pMouseEventMap[mouseEventType] == nullptr) {
 		return;
 	}
@@ -430,19 +430,26 @@ void UIElement::invokeMouseEvent(MouseEventType mouseEventType, SGEventMouse* mo
 	m_pMouseEventMap[mouseEventType]->Invoke(mouseEvent);
 }
 
-void UIElement::addMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn) {
+void UIElement::addMouseEvent(MouseEventType mouseEventType, int id, const SGActionFn<SGEventMouse*>& fn) {
 	if (m_pMouseEventMap[mouseEventType] == nullptr)
 		m_pMouseEventMap[mouseEventType] = new SGMouseEventList;
 
-	m_pMouseEventMap[mouseEventType]->Register(fn);
+	m_pMouseEventMap[mouseEventType]->Register(id, fn);
 }
 
-void UIElement::removeMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn) {
+void UIElement::addMouseEvent(MouseEventType mouseEventType, int id, SGActionFn<SGEventMouse*>&& fn) {
+	if (m_pMouseEventMap[mouseEventType] == nullptr)
+		m_pMouseEventMap[mouseEventType] = new SGMouseEventList;
+
+	m_pMouseEventMap[mouseEventType]->Register(id, Move(fn));
+}
+
+void UIElement::removeMouseEvent(MouseEventType mouseEventType, int id) {
 	if (m_pMouseEventMap[mouseEventType] == nullptr) {
 		return;
 	}
 
-	if (!m_pMouseEventMap[mouseEventType]->Unregister(fn)) {
+	if (!m_pMouseEventMap[mouseEventType]->Unregister(id)) {
 		_LogWarn_("%s %d 마우스 이벤트를 제거하는데 실패했습니다..", toString().Source(), mouseEventType);
 	}
 }

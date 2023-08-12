@@ -24,5 +24,4 @@ struct MonsterStatInfo : ConfigDataAbstract
 	float MoveSpeedX;
 	float MoveSpeedY;
 	float DownRecoverTime;
-	ThicknessBox ThicknessBox;
 };

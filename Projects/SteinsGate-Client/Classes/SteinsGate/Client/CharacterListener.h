@@ -11,24 +11,30 @@
 #include <SteinsGate/Client/IActorListener.h>
 #include <SteinsGate/Client/Character.h>
 
-class JCORE_NOVTABLE CharacterListener : public IActorListener
+#define SG_CHARACTER_LISTENER_FACTORY(Type)								\
+public:																	\
+	struct Factory : IFactory {											\
+		CharacterListener* create(Character* character) override {		\
+			return dbg_new Type(character);								\
+		}																\
+	};
+
+class CharacterListener : public IActorListener
 {
 public:
-	CharacterListener() : m_pCharacter(nullptr) {}
+	struct IFactory
+	{
+		virtual ~IFactory() = default;
+		virtual CharacterListener* create(Character* character) = 0;
+	};
+
+	CharacterListener(Character* character) : m_pCharacter(character) {}
 
 	void onCleanUp() override;
 
-	virtual void onCollisionWithGround() {}
-	virtual void onLifeTimeOver() {}
-	virtual void onDistanceOver() {}
-
 	Type getListenerType() const override { return eCharacter; }
-
-	void setActor(Actor* actor) override;
-	Actor* getActor() override { return m_pCharacter; }
-	
 protected:
-	Character* m_pCharacter;
+	JCORE_NOT_NULL Character* m_pCharacter;
 };
 
 

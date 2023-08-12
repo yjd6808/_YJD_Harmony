@@ -10,7 +10,7 @@
 #include "GameCoreHeader.h"
 #include "UIGroupMaster.h"
 
-#include <SteinsGate/Client/UIDefine.h>
+#include <SteinsGate/Client/Define_UI.h>
 #include <SteinsGate/Client/UI_Login.h>
 #include <SteinsGate/Client/UI_Inventory.h>
 #include <SteinsGate/Client/UI_Test.h>

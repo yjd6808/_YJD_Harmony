@@ -34,51 +34,63 @@ IActorListener* ActorListenerCollection::get(IActorListener::Type type) {
 }
 
 void ActorListenerCollection::deleteAll() {
-	for (int i = 0; i < m_vListeners.Size(); ++i) {
-		delete m_vListeners[i];
-	}
+	m_vListeners.ForEachDelete();
 	m_vListeners.Clear();
 	m_hListeners.Clear();
 }
 
 void ActorListenerCollection::onCreated() {
 	for (int i = 0; i < m_vListeners.Size(); ++i) {
-		m_vListeners[i]->onCreated();
+		const auto pListener = m_vListeners[i];
+		pListener->onCreated();
 	}
 }
 
 void ActorListenerCollection::onCleanUp() {
 	for (int i = 0; i < m_vListeners.Size(); ++i) {
-		m_vListeners[i]->onCleanUp();
+		const auto pListener = m_vListeners[i];
+		pListener->onCleanUp();
 	}
 }
 
 void ActorListenerCollection::onUpdate(float dt) {
 	for (int i = 0; i < m_vListeners.Size(); ++i) {
-		m_vListeners[i]->onUpdate(dt);
+		const auto pListener = m_vListeners[i];
+		pListener->onUpdate(dt);
 	}
 }
 
 void ActorListenerCollection::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) {
 	for (int i = 0; i < m_vListeners.Size(); ++i) {
-		m_vListeners[i]->onAnimationBegin(animation, texture);
+		const auto pListener = m_vListeners[i];
+		pListener->onAnimationBegin(animation, texture);
 	}
 }
 
 void ActorListenerCollection::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) {
 	for (int i = 0; i < m_vListeners.Size(); ++i) {
-		m_vListeners[i]->onAnimationEnd(animation, texture);
+		const auto pListener = m_vListeners[i];
+		pListener->onAnimationEnd(animation, texture);
 	}
 }
 
 void ActorListenerCollection::onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) {
 	for (int i = 0; i < m_vListeners.Size(); ++i) {
-		m_vListeners[i]->onFrameBegin(animation, texture);
+		const auto pListener = m_vListeners[i];
+		pListener->onFrameBegin(animation, texture);
 	}
 }
 
 void ActorListenerCollection::onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) {
 	for (int i = 0; i < m_vListeners.Size(); ++i) {
-		m_vListeners[i]->onFrameEnd(animation, texture);
+		const auto pListener = m_vListeners[i];
+		pListener->onFrameEnd(animation, texture);
+	}
+}
+
+void ActorListenerCollection::onHit(const HitInfo& hitInfo) {
+	for (int i = 0; i < m_vListeners.Size(); ++i) {
+		const auto pListener = m_vListeners[i];
+		pListener->onHit(hitInfo);
 	}
 }

@@ -33,6 +33,7 @@ public:
 	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture);
 	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture);
 	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture);
+	void onHit(const HitInfo& hitInfo);
 	
 protected:
 	SGVector<IActorListener*> m_vListeners;

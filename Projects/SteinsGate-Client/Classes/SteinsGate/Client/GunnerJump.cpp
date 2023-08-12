@@ -11,9 +11,9 @@
 #include "GunnerJump.h"
 
 #include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/AnimationDefine.h>
-#include <SteinsGate/Client/ProjectileDefine.h>
-#include <SteinsGate/Client/ActionDefine.h>
+#include <SteinsGate/Client/Define_Animation.h>
+#include <SteinsGate/Client/Define_Projectile.h>
+#include <SteinsGate/Client/Define_Action.h>
 #include <SteinsGate/Client/CharInfo.h>
 
 #include "PhysicsComponent.h"

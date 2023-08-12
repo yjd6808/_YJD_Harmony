@@ -34,7 +34,8 @@ public:
 	ProjectileInfo* getBaseInfo();
 	ActorType_t getType() const override { return ActorType::Projectile; }
 	int getCode() override { return m_pBaseInfo->Code; }
+	int getListenerCode() const { return m_pBaseInfo->ListenerCode; }
 private:
-	ProjectileInfo* m_pBaseInfo;
-	Actor* m_pSpawner;
+	JCORE_NOT_NULL ProjectileInfo* m_pBaseInfo;
+	JCORE_NULLABLE Actor* m_pSpawner;
 };

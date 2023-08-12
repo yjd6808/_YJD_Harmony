@@ -23,7 +23,7 @@ struct ProjectileInfo : ConfigDataAbstract
 
 	~ProjectileInfo() override;
 
-	int ProjectileListenerCode;
+	int ListenerCode;
 	AttackDataInfo* AttackData;
 	SGString Name;
 	//int SgaIndex;

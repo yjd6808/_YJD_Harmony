@@ -9,7 +9,7 @@
 #include "GunnerHit.h"
 
 #include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/AnimationDefine.h>
+#include <SteinsGate/Client/Define_Animation.h>
 #include <SteinsGate/Client/PhysicsComponent.h>
 
 GunnerHit::GunnerHit(HostPlayer* player, ActionInfo* actionInfo)

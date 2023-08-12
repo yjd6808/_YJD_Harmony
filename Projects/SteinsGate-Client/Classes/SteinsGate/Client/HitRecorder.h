@@ -28,13 +28,24 @@ public:
 	bool isAlreadyHit(Actor* hitEnemy);
 	void record(const FrameEventAttackBoxInstant* frameEvent);
 	void record(const ActorRect& absoluteActorRect, int attackDataCode);
-	void clear();
+	void clearAlreadyHitEnemies();
 
 	void setOwner(Actor* owner);
 	void setRecord(bool enabled);
 	void setAlreadyHitRecord(bool enabled);
-	void setSingleHitCallback(const SGHitSingleCallbackFn& callback);		// 한마리 한마리 호출
-	void setMultiHitCallback(const SGHitMultiCallbackFn& callback);			// 해당 프레임내에서 타격된 모든 몬스터 정보 호출
+
+	bool hasSingleHitCallback(int definedEventId);
+	bool addSingleHitCallback(int definedEventId, const SGHitSingleCallbackFn& callback);		// 한마리 한마리 호출
+	bool addSingleHitCallback(int definedEventId, SGHitSingleCallbackFn&& callback);			// 한마리 한마리 호출
+	bool removeSingleHitCallback(int definedEventId);
+	void clearSingleHitCallback();
+
+	bool hasMultiHitCallback(int definedEventId);
+	bool addMultiHitCallback(int definedEventId, const SGHitMultiCallbackFn& callback);		// 해당 프레임내에서 타격된 모든 몬스터 정보 호출
+	bool addMultiHitCallback(int definedEventId, SGHitMultiCallbackFn&& callback);			// 해당 프레임내에서 타격된 모든 몬스터 정보 호출
+	bool removeMultiHitCallback(int definedEventId);
+	void clearMultiHitCallback();
+
 private:
 
 	/*
@@ -46,8 +57,8 @@ private:
 
 	Actor* m_pOwner;		// 레코더 소유자
 	Actor* m_pRecorder;		// 히트박스 대상
-	SGHitSingleCallbackFn m_fnHitSingleCallback;
-	SGHitMultiCallbackFn m_fnHitMultiCallback;
+	JCore::Event<HitInfo&> m_SingleHitEvent;
+	JCore::Event<SGHitInfoList&, int> m_MultiHitEvent;
 	SGVector<HitInfo> m_vHitPossibleList;
 	SGHashMap<Actor*, Actor*> m_hAlreadyHitEnemy;
 	bool m_bRecordAlreadyHit;

@@ -28,7 +28,7 @@ AIInfo::AIInfo(const AIInfo& other) {
 	for (int i = 0; i < 2; ++i) {
 		IdleTime[i] = other.IdleTime[i];
 		WanderWalkTime[i] = other.WanderWalkTime[i];
-		FollowWalkTime[i] = other.FollowWalkTime[i];
+		TrackWalkTime[i] = other.TrackWalkTime[i];
 	}
 
 	ForceTrack = other.ForceTrack;

@@ -16,7 +16,7 @@ ProjectileInfo::ProjectileInfo(ProjectileInfo&& other) noexcept {
 
 ProjectileInfo& ProjectileInfo::operator=(ProjectileInfo&& other) noexcept {
 	Code = other.Code;
-	ProjectileListenerCode = other.ProjectileListenerCode;
+	ListenerCode = other.ListenerCode;
 	AttackData = other.AttackData;
 	Name = Move(other.Name);
 	//SgaIndex = other.SgaIndex;

@@ -12,7 +12,7 @@
 
 #include <SteinsGate/Common/AuthCmd.h>
 
-#include <SteinsGate/Client/PopupDefine.h>
+#include <SteinsGate/Client/Define_Popup.h>
 #include <SteinsGate/Client/S_AUTH.h>
 
 

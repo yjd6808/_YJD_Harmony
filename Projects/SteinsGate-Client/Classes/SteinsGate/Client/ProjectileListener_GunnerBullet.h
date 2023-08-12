@@ -15,13 +15,15 @@
 class ProjectileListener_GunnerBullet : public ProjectileListener
 {
 public:
+	ProjectileListener_GunnerBullet(Projectile* projectile, Actor* spawner);
+
 	void onCreated() override;
 	void onUpdate(float dt) override;
 	void onCollisionWithGround() override;
 	void onEnemySingleHit(HitInfo& info);
 	void onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount);
 
-	SG_ACTOR_LISTENER_CREATE(ProjectileListener_GunnerBullet)
+	SG_PROJECTILE_LISTENER_FACTORY(ProjectileListener_GunnerBullet)
 };
 
 

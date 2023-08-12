@@ -8,23 +8,30 @@
 
 #pragma once
 
-#include <SteinsGate/Client/ProjectileListener.h>
 #include <SteinsGate/Client/CharacterListener.h>
+#include <SteinsGate/Client/MonsterListener.h>
+#include <SteinsGate/Client/ProjectileListener.h>
 
 class ActorListenerManager final : public JCore::SingletonPointer<ActorListenerManager>
 {
 private:
+	using CharacterFactoryMap = SGHashMap<int, CharacterListener::IFactory*>;
+	using MonsterFactoryMap = SGHashMap<int, MonsterListener::IFactory*>;
+	using ProjectileFactoryMap = SGHashMap<int, ProjectileListener::IFactory*>;
+
 	friend class TSingleton;
 	ActorListenerManager();
 	~ActorListenerManager() override;
 public:
 	void init();
 
-	ProjectileListener* createProjectileListener(int projectileListenerCode);
-	CharacterListener* createCharacterListener(CharType_t charType);				
+	CharacterListener* createCharacterListener(Character* character);
+	MonsterListener* createMonsterListener(Monster* monster);
+	ProjectileListener* createProjectileListener(Projectile* projectile, Actor* spawner = nullptr);
 private:
-	SGHashMap<int, ProjectileListener*> m_hProjectileListenerMap;
-	SGHashMap<int, CharacterListener*> m_hCharacterListenerMap;
+	ProjectileFactoryMap m_hProjectileListenerMap;
+	MonsterFactoryMap m_hMonsterListenerMap;
+	CharacterFactoryMap m_hCharacterListenerMap;
 };
 
 

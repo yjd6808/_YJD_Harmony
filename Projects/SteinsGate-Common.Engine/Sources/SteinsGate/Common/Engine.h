@@ -42,7 +42,6 @@ using SGEventListenerKeyboard = cocos2d::EventListenerKeyboard;
 using SGEventListenerMouse = cocos2d::EventListenerMouse;
 using SGEvent = cocos2d::Event;
 using SGEventMouse = cocos2d::EventMouse;
-using SGMouseEventList = SGEventList<SGEventMouse*>;
 using SGRandom = cocos2d::RandomHelper;
 using SGDirector = cocos2d::Director;
 using SGColor3B = cocos2d::Color3B;

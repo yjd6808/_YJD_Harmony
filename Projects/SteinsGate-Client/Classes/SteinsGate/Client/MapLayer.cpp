@@ -8,7 +8,7 @@
 #include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/Global.h>
-#include <SteinsGate/Client/ActionDefine.h>
+#include <SteinsGate/Client/Define_Action.h>
 #include <SteinsGate/Client/HostPlayer.h>
 
 #include <SteinsGate/Common/RectEx.h>
@@ -145,6 +145,7 @@ Character* MapLayer::findNearestCharacterInRadious(Actor* stdActor, float radiou
 			character = pCharacter;
 		}
 	}
+	enemyDist = minDist;
 	return character;
 }
 

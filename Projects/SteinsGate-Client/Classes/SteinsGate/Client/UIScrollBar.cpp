@@ -10,8 +10,10 @@
 #include "GameCoreHeader.h"
 #include "UIScrollBar.h"
 
-#include <SteinsGate/Client/UIMasterGroup.h>
 #include <SteinsGate/Common/RectEx.h>
+
+#include <SteinsGate/Client/UIMasterGroup.h>
+#include <SteinsGate/Client/Define_Event.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -79,11 +81,11 @@ void UIScrollBar::setEnabled(bool enabled) {
 
 void UIScrollBar::setLinkElement(UIElement* element) {
 	if (m_pLink != nullptr) {
-		m_pLink->removeMouseEvent(eMouseEventScroll, CC_CALLBACK_1(UIScrollBar::onLinkElementMouseScroll, this));
+		m_pLink->removeMouseEvent(eMouseEventScroll, DEF_EVENT_UI_ON_MOUSE_SCROLL);
 	}
 
 	m_pLink = element;
-	m_pLink->addMouseEvent(eMouseEventScroll, CC_CALLBACK_1(UIScrollBar::onLinkElementMouseScroll, this));
+	m_pLink->addMouseEvent(eMouseEventScroll, DEF_EVENT_UI_ON_MOUSE_SCROLL, CC_CALLBACK_1(UIScrollBar::onLinkElementMouseScroll, this));
 }
 
 void UIScrollBar::onLinkElementMouseScroll(SGEventMouse* mouseEvent) {

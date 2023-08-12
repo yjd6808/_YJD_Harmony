@@ -11,21 +11,14 @@
 #include "GunnerGunShot.h"
 
 #include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/AnimationDefine.h>
-#include <SteinsGate/Client/ProjectileDefine.h>
-#include <SteinsGate/Client/ActionDefine.h>
-#include <SteinsGate/Client/EffectDefine.h>
+#include <SteinsGate/Client/Define_Animation.h>
+#include <SteinsGate/Client/Define_Projectile.h>
+#include <SteinsGate/Client/Define_Action.h>
+#include <SteinsGate/Client/Define_Effect.h>
+#include <SteinsGate/Client/Define_Event.h>
 #include <SteinsGate/Client/PhysicsComponent.h>
 
 #define MaxWaitRightShotTime 0.1f // (6fps)
-
-// #define GUNNER_ANIMATION_SHOT_RIGHT_BEGIN			6
-// #define GUNNER_ANIMATION_SHOT_RIGHT_SHOT				7
-// #define GUNNER_ANIMATION_SHOT_RIGHT_DOWN_BEGIN		9
-// #define GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT		10
-
-// #define GUNNER_ANIMATION_SHOT_LEFT					12
-// #define GUNNER_ANIMATION_SHOT_LEFT_DOWN				13
 
 GunnerGunShot::GunnerGunShot(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo) {}
@@ -39,8 +32,8 @@ void GunnerGunShot::onActionBegin() {
 	setMoveable(false);
 
 	m_pHitRecorder->setAlreadyHitRecord(true);
-	m_pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(GunnerGunShot::onEnemySingleHit, this));
-	m_pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(GunnerGunShot::onEnemyMultiHit, this));
+	m_pHitRecorder->addSingleHitCallback(DEF_EVENT_SINGLE_HIT_GUNNER_GUN_SHOT,  CC_CALLBACK_1(GunnerGunShot::onEnemySingleHit, this));
+	m_pHitRecorder->addMultiHitCallback(DEF_EVENT_MULTI_HIT_GUNNER_GUN_SHOT, CC_CALLBACK_2(GunnerGunShot::onEnemyMultiHit, this));
 
 	m_bShotEnd = false;
 	m_bDownShotKeyPressedFirst = false;
@@ -233,7 +226,7 @@ bool GunnerGunShot::runRightShotAnimation(ActorSprite* actorSprite) {
 void GunnerGunShot::runLeftShotAnimation(ActorSprite* actorSprite, int animationCode) {
 	// 우측 방향으로 더이상 못쏘는 경우
 	// 반대총으로 쏘도록 한다.
-	m_pHitRecorder->clear();
+	m_pHitRecorder->clearAlreadyHitEnemies();
 
 	if (animationCode == GUNNER_ANIMATION_SHOT_RIGHT_SHOT)
 		actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_LEFT);

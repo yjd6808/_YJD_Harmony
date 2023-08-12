@@ -10,13 +10,12 @@
 
 #include <SteinsGate/Client/Tutturu.h>
 
-#define SG_ACTOR_LISTENER_CREATE(Type) public: IActorListener* createNew() override { return dbg_new Type; }
-
 class Actor;
 class ActorPartAnimation;
 class FrameTexture;
 class HostPlayer;
 class HitRecorder;
+class AIActivity;
 
 class JCORE_NOVTABLE IActorListener
 {
@@ -25,13 +24,11 @@ public:
 	{
 		eCharacter,
 		eMonster,
-		eProjectile
+		eProjectile,
+		eHost
 	};
 
 	virtual ~IActorListener() = default;
-
-	virtual void setActor(Actor* actor) = 0;
-	virtual Actor* getActor() = 0;
 
 	virtual void onCreated() {}			// 액터 박스에서 생성되어 맵 레이어에 등록될 때마다 호출
 	virtual void onCleanUp() {}			// 엑터 박스에서 제거되어 맵 레이어에서 제거되어 더이상 사용되지 않는 경우 (풀에 돌아간 경우도 포함)
@@ -46,9 +43,13 @@ public:
 	virtual void onMouseMove() {}
 	virtual void onMouseEnd() {}
 
-	virtual Type getListenerType() const = 0;
+	// AI 컴포넌트가 부착된 경우
+	virtual void onActivitiyBegin(AIActivity* activity) {}
+	virtual void onActivitiyEnd(AIActivity* activity) {}
 
-	virtual IActorListener* createNew() = 0;
+	virtual void onHit(const HitInfo& info) {}
+
+	virtual Type getListenerType() const = 0;
 };
 
 

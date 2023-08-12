@@ -11,7 +11,7 @@
 
 #include <SteinsGate/Client/CharInfo.h>
 #include <SteinsGate/Client/MapLayer.h>
-#include <SteinsGate/Client/ActionDefine.h>
+#include <SteinsGate/Client/Define_Action.h>
 #include <SteinsGate/Client/AttackDataInfo.h>
 #include <SteinsGate/Client/CharacterListener.h>
 #include <SteinsGate/Client/Inven.h>

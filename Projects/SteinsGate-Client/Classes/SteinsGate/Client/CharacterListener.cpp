@@ -17,8 +17,3 @@ void CharacterListener::onCleanUp() {
 		m_pCharacter->releaseActorSprite();
 	}
 }
-
-void CharacterListener::setActor(Actor* actor) {
-	m_pCharacter = dynamic_cast<Character*>(actor);
-	DebugAssert(m_pCharacter);
-}

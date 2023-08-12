@@ -9,7 +9,7 @@
 #include "GunnerSitRecover.h"
 
 #include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/AnimationDefine.h>
+#include <SteinsGate/Client/Define_Animation.h>
 
 GunnerSitRecover::GunnerSitRecover(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo)

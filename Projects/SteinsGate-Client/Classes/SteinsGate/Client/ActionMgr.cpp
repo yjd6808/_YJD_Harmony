@@ -11,7 +11,7 @@
 #include <SteinsGate/Client/SGAction.h>
 #include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/AllActions.h>
-#include <SteinsGate/Client/ActionDefine.h>
+#include <SteinsGate/Client/Define_Action.h>
 #include <SteinsGate/Client/FrameTexture.h>
 
 

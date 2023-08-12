@@ -13,37 +13,24 @@
 
 #include <SteinsGate/Common/MonsterStatInfo.h>
 
-#include <SteinsGate/Client/AIActor.h>
+#include <SteinsGate/Client/Actor.h>
 #include <SteinsGate/Client/MonsterInfo.h>
 #include <SteinsGate/Client/AIInfo.h>
 
-class Monster : public AIActor
+class Monster : public Actor
 {
 public:
-	Monster(MonsterInfo* baseInfo, AIInfo* aiInfo);
+	Monster(MonsterInfo* baseInfo);
 	~Monster() override;
 
-	static Monster* create(MonsterInfo* baseInfo, AIInfo* aiInfo);
+	static Monster* create(MonsterInfo* baseInfo);
 
 	void initialize() override;
 	void initActorSprite() override;
-	void initAIActivities() override;
 	void initListeners() override;
 	void initComponents() override;
 
 	void hit(const HitInfo& hitInfo) override;
-
-	void update(float dt) override;
-
-	void initWanderAcitivity(AIActivity* wanderActivity);
-	void initTrackAcitivity(AIActivity* trackActivity);
-	void initAngryAcitivity(AIActivity* angryActivity);
-
-	void onSelectedActivity(AIActivity* selectedActivity) override;
-	void onFrameBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onFrameEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* texture) override;
-	void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* texture) override;
 
 	void setStatInfo(MonsterStatInfo* statInfo);
 

@@ -11,16 +11,24 @@
 #include <SteinsGate/Client/IActorListener.h>
 #include <SteinsGate/Client/Projectile.h>
 
-class JCORE_NOVTABLE ProjectileListener : public IActorListener
+#define SG_PROJECTILE_LISTENER_FACTORY(Type)												\
+public:																						\
+	struct Factory : IFactory {																\
+		ProjectileListener* create(Projectile* projectile, Actor* spawner) override {		\
+			return dbg_new Type(projectile, spawner);										\
+		}																					\
+	};
+
+class ProjectileListener : public IActorListener
 {
 public:
-	ProjectileListener();
+	struct IFactory
+	{
+		virtual ~IFactory() = default;
+		virtual ProjectileListener* create(Projectile* projectile, Actor* spawner) = 0;
+	};
 
-	void setActor(Actor* actor) override;
-	void setSpawner(Actor* spawner);
-
-	Actor* getActor() override { return m_pProjectile; }
-	Type getListenerType() const override { return eProjectile; }
+	ProjectileListener(Projectile* projectile, Actor* spawner);
 
 	void onCreated() override;
 	void onCleanUp() override;
@@ -32,12 +40,14 @@ public:
 
 	bool isLifeTimeOver() const { return m_fElapsedLifeTime >= m_pProjectile->getBaseInfo()->LifeTime; }
 	bool isDistanceOver() const { return m_fMoveDistance >= m_pProjectile->getBaseInfo()->Distance; }
+
+	Type getListenerType() const override { return eProjectile; }
 protected:
+	JCORE_NOT_NULL Projectile* m_pProjectile;
+	JCORE_NULLABLE Actor* m_pSpawner;
+
 	float m_fMoveDistance;
 	float m_fElapsedLifeTime;
-
-	Projectile* m_pProjectile;
-	Actor* m_pSpawner;
 };
 
 

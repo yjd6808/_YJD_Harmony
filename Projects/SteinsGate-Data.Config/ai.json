@@ -14,7 +14,7 @@
             "angry_prob": "20 20",
             "idle_time": "1.0 4.0",
             "wander_walk_time": "3.0 5.0",
-            "follow_walk_time": "3.0 5.0",
+            "track_walk_time": "3.0 5.0",
             "sight_radious": 450.0,
             "attack_radious": 50.0,
             "force_track": false,

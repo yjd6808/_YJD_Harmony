@@ -14,7 +14,7 @@
 #include <SteinsGate/Common/AuthCmd.h>
 
 #include <SteinsGate/Client/S_AUTH.h>
-#include <SteinsGate/Client/PopupDefine.h>
+#include <SteinsGate/Client/Define_Popup.h>
 
 USING_NS_JC;
 USING_NS_CC;

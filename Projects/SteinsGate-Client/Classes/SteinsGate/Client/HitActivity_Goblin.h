@@ -8,13 +8,12 @@
 
 #pragma once
 
-#include <SteinsGate/Client/MonsterActivity.h>
+#include <SteinsGate/Client/HitActivity.h>
 
-class HitRecorder;
-class MonsterHitActivity : public MonsterActivity
+class HitActivity_Goblin : public HitActivity
 {
 public:
-	MonsterHitActivity(Monster* actor);
+	HitActivity_Goblin(Actor* actor);
 
 	void selectHitAnimation();
 	void checkPosition();

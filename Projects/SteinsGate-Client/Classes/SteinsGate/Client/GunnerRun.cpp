@@ -9,7 +9,7 @@
 #include "GunnerRun.h"
 
 #include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/AnimationDefine.h>
+#include <SteinsGate/Client/Define_Animation.h>
 #include <SteinsGate/Client/PlayerController.h>
 
 GunnerRun::GunnerRun(HostPlayer* player, ActionInfo* actionInfo)

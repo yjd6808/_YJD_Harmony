@@ -8,13 +8,16 @@
 
 #pragma once
 
+#include <JCore/Declspec.h>
+
 #include <SteinsGate/Client/Struct.h>
 #include <SteinsGate/Client/HitRecorder.h>
 
-class AIActor;
 class ActorPartAnimation;
 class FrameTexture;
-class AIActivity
+struct AIInfo;
+
+class JCORE_NOVTABLE AIActivity
 {
 public:
 	enum State
@@ -24,27 +27,28 @@ public:
 		eFinished,
 	};
 
-	AIActivity(AIActivityType_t type);
+	AIActivity(Actor* actor, AIActivityType_t type);
 	virtual ~AIActivity() = default;
-	virtual AIActor* getAIActor() = 0;
 
 	virtual void run();
 	virtual void stop();
 
 	bool isRunning();
-	void setLimit(float limit);
 	AIActivityType_t getType() { return m_eType; }
 
 	void updateLimitTime(float dt);
 
 	virtual void onUpdate(float dt) = 0;
+	virtual void onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIState_t aiState) {}		// AI 루틴 실행중 선택된 경우
 	virtual void onActivityBegin() = 0;
 	virtual void onActivityEnd() {}
-	virtual void onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame);
-	virtual void onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame);
-	virtual void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame);
-	virtual void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame);
+	virtual void onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
+	virtual void onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) {}
+	virtual void onAnimationBegin(ActorPartAnimation* animation, FrameTexture* frame) {}
+	virtual void onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {}
 protected:
+	JCORE_NOT_NULL Actor* m_pActor;
+
 	AIActivityType_t m_eType;
 	State m_eState;
 

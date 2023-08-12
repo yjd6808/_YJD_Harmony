@@ -89,8 +89,7 @@ void Projectile::initListeners() {
 	IActorListener* pListener = getListener(IActorListener::Type::eProjectile);
 
 	if (pListener == nullptr) {
-		pListener = CoreActorListenerManager_v->createProjectileListener(m_pBaseInfo->ProjectileListenerCode);
-		pListener->setActor(this);
+		pListener = CoreActorListenerManager_v->createProjectileListener(this, m_pSpawner);
 		addListener(pListener);
 	}
 }

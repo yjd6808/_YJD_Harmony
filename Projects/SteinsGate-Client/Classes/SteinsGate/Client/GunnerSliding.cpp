@@ -9,9 +9,10 @@
 #include "GunnerSliding.h"
 
 #include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/ActionDefine.h>
-#include <SteinsGate/Client/AnimationDefine.h>
-#include <SteinsGate/Client/EffectDefine.h>
+#include <SteinsGate/Client/Define_Action.h>
+#include <SteinsGate/Client/Define_Animation.h>
+#include <SteinsGate/Client/Define_Effect.h>
+#include <SteinsGate/Client/Define_Event.h>
 #include <SteinsGate/Client/ActorBox.h>
 #include <SteinsGate/Client/PhysicsComponent.h>
 
@@ -28,8 +29,8 @@ void GunnerSliding::onActionBegin() {
 	m_bSlidingStarted = false;
 	m_pPlayer->runAnimation(GUNNER_ANIMATION_SLIDING);
 	m_pHitRecorder->setAlreadyHitRecord(true);
-	m_pHitRecorder->setSingleHitCallback(CC_CALLBACK_1(GunnerSliding::onEnemySingleHit, this));
-	m_pHitRecorder->setMultiHitCallback(CC_CALLBACK_2(GunnerSliding::onEnemyMultiHit, this));
+	m_pHitRecorder->addSingleHitCallback(DEF_EVENT_SINGLE_HIT_GUNNER_SLIDING, CC_CALLBACK_1(GunnerSliding::onEnemySingleHit, this));
+	m_pHitRecorder->addMultiHitCallback(DEF_EVENT_MULTI_HIT_GUNNER_SLIDING, CC_CALLBACK_2(GunnerSliding::onEnemyMultiHit, this));
 	
 }
 

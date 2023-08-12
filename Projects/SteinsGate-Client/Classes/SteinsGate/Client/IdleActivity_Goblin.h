@@ -9,14 +9,16 @@
 #pragma once
 
 
-#include <SteinsGate/Client/MonsterActivity.h>
+#include <SteinsGate/Client/IdleActivity.h>
 
-class MonsterIdleActivity : public MonsterActivity
+class IdleActivity_Goblin : public IdleActivity
 {
 public:
-	MonsterIdleActivity(Monster* monster);
+	IdleActivity_Goblin(Actor* actor);
 
 	void onUpdate(float dt) override;
+
+	void onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIState_t aiState) override;
 	void onActivityBegin() override;
 	void onActivityEnd() override;
 };

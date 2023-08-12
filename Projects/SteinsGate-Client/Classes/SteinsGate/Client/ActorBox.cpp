@@ -17,6 +17,7 @@
 #include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/ActorListenerManager.h>
 #include <SteinsGate/Client/MapLayer.h>
+#include <SteinsGate/Client/AIComponent.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -286,12 +287,18 @@ Monster* ActorBox::createMonsterOnMap(int monsterCode, int aiCode, float x, floa
 	SGLinkedList<Monster*>& monsterList = m_hMonsterPool[monsterCode];
 
 	if (monsterList.IsEmpty()) {
-		pMonster = Monster::create(pMonsterInfo, pAIInfo);
+		pMonster = Monster::create(pMonsterInfo);
 		pMonster->retain();
 	} else {
 		pMonster = monsterList.Front();
 		pMonster->initialize();
 		monsterList.PopFront();
+	}
+
+	if (!pMonster->hasComponent(IComponent::eAI)) {
+		AIComponent* pAIComponent = dbg_new AIComponent(pMonster);
+		pAIComponent->setAIInfo(pAIInfo);
+		pMonster->addComponent(pAIComponent);
 	}
 
 	pMonster->getListenerCollection().onCreated();

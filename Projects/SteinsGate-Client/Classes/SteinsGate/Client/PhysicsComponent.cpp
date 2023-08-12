@@ -24,14 +24,14 @@ PhysicsComponent::PhysicsComponent(Actor* actor)
 	, m_fWeight(0.0f)
 	, m_fUpTime(0.0f)
 	, m_fDownTime(0.0f)
-	, m_fPuaseTime(0.0f)
 	, m_fElapsedPausedTime(0.0f)
+	, m_fPuaseTime(0.0f)
 	, m_fAtkBoxInstantElapsedTime(0.0f)
 	, m_pAtkThicknessBox(nullptr)
 	, m_pAtkHitBox(nullptr)
 {}
 
-void PhysicsComponent::initVariables() {
+void PhysicsComponent::initialize() {
 	m_bUseElasticity = false;
 	m_bBounced = false;
 	m_fUpTime = 0.0f;

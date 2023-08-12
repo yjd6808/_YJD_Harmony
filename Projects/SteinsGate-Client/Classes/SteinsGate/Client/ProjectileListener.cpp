@@ -10,22 +10,12 @@
 
 #include <SteinsGate/Client/Projectile.h>
 
-ProjectileListener::ProjectileListener()
-	: m_fMoveDistance(0.0f)
+ProjectileListener::ProjectileListener(Projectile* projectile, Actor* spawner)
+	: m_pProjectile(projectile)
+	, m_pSpawner(spawner)
+	, m_fMoveDistance(0.0f)
 	, m_fElapsedLifeTime(0.0f)
-	, m_pProjectile(nullptr)
-	, m_pSpawner(nullptr)
 {}
-
-void ProjectileListener::setActor(Actor* actor) {
-	m_pProjectile = dynamic_cast<Projectile*>(actor);
-	DebugAssert(m_pProjectile);
-}
-
-void ProjectileListener::setSpawner(Actor* spawner) {
-	CC_SAFE_RELEASE_NULL(m_pSpawner);
-	m_pSpawner = spawner;
-}
 
 void ProjectileListener::onCreated() {
 	IActorListener::onCreated();

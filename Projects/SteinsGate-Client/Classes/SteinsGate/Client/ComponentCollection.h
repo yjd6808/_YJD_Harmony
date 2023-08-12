@@ -29,8 +29,10 @@ public:
 	template <typename TComponent>
 	TComponent* get() const {
 		static_assert(JCore::IsNaturalType_v<TComponent>, "... TComponent must be natural type");
+		static_assert(JCore::IsBaseOf_v<IComponent, TComponent>, "... TComponent must be derived from IComponent");
 
-		IComponent** ppFoundComponent = m_hComponentMap.Find(int(TComponent::type()));
+		IComponent::Type eType = TComponent::type();
+		IComponent** ppFoundComponent = m_hComponentMap.Find(int(eType));
 
 		if (ppFoundComponent == nullptr) {
 			return nullptr;

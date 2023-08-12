@@ -27,6 +27,8 @@ enum MouseEventType
 };
 
 
+using SGMouseEventList = JCore::Event<cocos2d::EventMouse*>;
+
 
 class UIGroup;
 class UIMasterGroup;
@@ -117,8 +119,9 @@ public:
 	void setRelativePosition(const SGVec2& pos);
 
 	void invokeMouseEvent(MouseEventType mouseEventType, SGEventMouse* mouseEvent);
-	void addMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn);
-	void removeMouseEvent(MouseEventType mouseEventType, const SGActionFn<SGEventMouse*>& fn);
+	void addMouseEvent(MouseEventType mouseEventType, int id, const SGActionFn<SGEventMouse*>& fn);
+	void addMouseEvent(MouseEventType mouseEventType, int id, SGActionFn<SGEventMouse*>&& fn);
+	void removeMouseEvent(MouseEventType mouseEventType, int id);
 
 	void setUISize(const float width, const float height) { setUISize({ width, height }); }
 	virtual void setUISize(const SGSize& size) { m_UISize = size; }

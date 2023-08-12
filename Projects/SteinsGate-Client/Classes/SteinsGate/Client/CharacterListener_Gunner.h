@@ -14,7 +14,8 @@
 class CharacterListener_Gunner : public CharacterListener
 {
 public:
-	SG_ACTOR_LISTENER_CREATE(CharacterListener_Gunner)
+	CharacterListener_Gunner(Character* character) : CharacterListener(character) {}
+	SG_CHARACTER_LISTENER_FACTORY(CharacterListener_Gunner)
 };
 
 

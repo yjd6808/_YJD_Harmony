@@ -16,7 +16,7 @@
 #include <SteinsGate/Client/ActorSprite.h>
 #include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/ActionDefine.h>
+#include <SteinsGate/Client/Define_Action.h>
 #include <SteinsGate/Client/ActorBox.h>
 #include <SteinsGate/Client/CharacterListener.h>
 #include <SteinsGate/Client/MoveComponent.h>
@@ -85,8 +85,7 @@ void Character::initListeners() {
 	IActorListener* pListener = getListener(IActorListener::Type::eCharacter);
 
 	if (pListener == nullptr) {
-		pListener = CoreActorListenerManager_v->createCharacterListener((CharType_t)m_pBaseInfo->Code);
-		pListener->setActor(this);
+		pListener = CoreActorListenerManager_v->createCharacterListener(this);
 		addListener(pListener);
 	}
 

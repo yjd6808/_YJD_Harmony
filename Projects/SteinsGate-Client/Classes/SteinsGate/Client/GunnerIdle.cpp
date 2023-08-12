@@ -9,7 +9,7 @@
 #include "GunnerIdle.h"
 
 #include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/AnimationDefine.h>
+#include <SteinsGate/Client/Define_Animation.h>
 
 GunnerIdle::GunnerIdle(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo)
