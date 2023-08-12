@@ -170,16 +170,20 @@ TEST(ArrayStackTest, OperatorTest) {
 
 
 TEST(ArrayStackTest, InnerDestructorTest) {
-	LeakCheck;
 
-	ArrayStack<String> aq;
-	for (int i = 0; i < 1024; i++) {
-		if (i && i % 4 == 0) {
-			aq.Pop();
-		} else {
-			aq.Push("ab");
+	{
+		LeakCheck;
+		ArrayStack<String> aq(1);
+		for (int i = 0; i < 5; i++) {
+			if (i && i % 4 == 0) {
+				aq.Pop();
+			} else {
+				aq.Push("ab");
+			}
 		}
 	}
+
+
 }
 
 

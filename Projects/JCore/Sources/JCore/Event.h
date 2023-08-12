@@ -7,69 +7,100 @@
 
 #include <JCore/Functional.h>
 #include <JCore/TypeTraits.h>
-#include <JCore/Container/HashMap.h>
+#include <JCore/Container/Vector.h>
 
 NS_JC_BEGIN
 
 template <typename... Args>
 class Event
 {
-	using TEvent  = Event<Args...>;
 	using TAction = Action<Args...>;
 
 	struct Holder
 	{
+		int ID;
 		TAction Action;
 
-		Holder(const TAction& fn) : Action(fn) {}
-		Holder(TAction&& fn) : Action(Move(fn)) {}
+		template <typename TInvoker>
+		Holder(int id, TInvoker&& fn)
+			: ID(id)
+			, Action(Forward<TInvoker>(fn))
+		{}
 
-		void Invoke(Args&&... args) { this->Action(Forward<Args>(args)...); }
+		template <typename... _Args>
+		void Invoke(_Args&&... args) {
+			this->Action.operator()(Forward<_Args>(args)...);
+		}
+
 		const type_info& TargetType() { return this->Action.target_type(); }
 	};
 public:
+	Event(int capacity = 2) : m_Chain(capacity) {}
 	~Event() { Clear(); }
 
-	template <typename TInvoker>
-	bool Register(int id, TInvoker&& fn) {
-		static_assert(IsCallable_v<TInvoker>, "... TInvoker is not callable");
-		if (m_Chain.Exist(id)) {
+	bool Register(int id, const TAction& fn) {
+		if (IsRegistered(id)) {
 			return false;
 		}
 
-		return m_Chain.Insert(id, dbg_new Holder{ Forward<TInvoker>(fn) });
+		m_Chain.PushBack({ id, fn });
+		return true;
+	}
+
+	bool Register(int id, TAction&& fn) {
+		if (IsRegistered(id)) {
+			return false;
+		}
+
+		m_Chain.PushBack({ id, Move(fn) });
+		return true;
 	}
 
 	bool Unregister(int id) {
-		Holder** ppFind = m_Chain.Find(id);
-
-		if (ppFind == nullptr) {
-			return false;
+		for (int i = 0; i < m_Chain.Size(); ++i) {
+			if (m_Chain[i].ID == id) {
+				m_Chain.RemoveAt(i);
+				return true;
+			}
 		}
 
-		delete (*ppFind);
-		return m_Chain.Remove(id);
+		return false;
+	}
+
+	bool IsRegistered(int id) const {
+		for (int i = 0; i < m_Chain.Size(); ++i) {
+			if (m_Chain[i].ID == id) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	void Clear() {
-		m_Chain.ForEachValueDelete();
+		m_Chain.Clear();
 	}
 
-	void Invoke(Args&&... params) {
-		m_Chain.ForEachValue([&params...](Holder* holder) {
-			holder->Invoke(Forward<Args>(params)...);
-		});
+	template <typename... _Args>
+	void Invoke(_Args&&... params) {
+		for (int i = 0; i < m_Chain.Size(); ++i) {
+			m_Chain[i].Action(Forward<_Args>(params)...);
+		}
+		// m_Chain.ForEach([&params...](Holder* holder) {
+		// 	  holder->Invoke(Forward<_Args>(params)...);
+		// });
 	}
 
 	int Size() const {
 		return m_Chain.Size();
 	}
 
-	void operator()(Args&&... args) {
-		Invoke(Forward<Args>(args)...);
+	template <typename... _Args>
+	void operator()(_Args&&... args) {
+		Invoke(Forward<_Args>(args)...);
 	}
 private:
-	HashMap<int, Holder*> m_Chain;
+	Vector<Holder> m_Chain;
 };
 
 

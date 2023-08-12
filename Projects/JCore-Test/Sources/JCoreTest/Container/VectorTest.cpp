@@ -347,5 +347,25 @@ TEST(VectorTest, ZeroCapacityTest) {
 	EXPECT_TRUE(vector3.Capacity() > 0);
 }
 
+TEST(VectorTest, Pointer) {
+	{
+		LeakCheck;
+		Vector vector({ new int, new int });
+
+		delete vector[0];
+		delete vector[1];
+	}
+
+	{
+		LeakCheck;
+		Vector<int*> vector(1);
+		vector.PushBack(new int);
+		vector.PushBack(new int);
+		vector.PushBack(new int);
+		vector.PushBack(new int);
+		vector.ForEachDelete();
+	}
+
+}
 
 #endif // TEST_VectorTest == ON

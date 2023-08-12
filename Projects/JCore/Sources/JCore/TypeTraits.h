@@ -8,7 +8,12 @@
 
 #include <JCore/TypeTraits/Checker.h>
 #include <type_traits>
-#include <iostream>
+
+NS_STD_BEGIN
+// STD 바인더 포워딩
+template <typename, typename, typename...>
+class _Binder;
+NS_STD_END
 
 NS_JC_BEGIN
 
@@ -283,6 +288,7 @@ NS_JC_BEGIN
         static constexpr bool Value = IsFunctor::Value<NakedType_t<Fn>>;   // 2023/08/11: 템플릿 경우의 수를 줄이기 위해.. 다 벗겨줌
 	};
 
+	
 	// 정적함수, 전역함수
 	template <typename Ret, typename... Args>
 	struct IsCallable<Ret(*)(Args...)> : TrueType {};
@@ -294,8 +300,8 @@ NS_JC_BEGIN
 
     // 2023/08/11: 아래 2가지 케이스는 Event 구현 후 테스트 중 발견한 케이스들
 	// std::_Binder는 생각도 못했다.
-    template <template <typename...> typename Binder, typename... Args>
-    struct IsCallable<Binder<Args...>> : IntegralConstant<bool, std::is_same_v<Binder<Args...>, std::_Binder<Args...>>> {};
+    template <template <typename...> typename Binder, typename Ret, typename Fx, typename... Types>
+    struct IsCallable<Binder<Ret, Fx, Types...>> : IntegralConstant<bool, std::is_same_v<Binder<Ret, Fx, Types...>, std::_Binder<Ret, Fx, Types...>>> {};
     template <typename Ret, typename... Args>
     struct IsCallable<Ret(&)(Args...)> : TrueType {}; 
 

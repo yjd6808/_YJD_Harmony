@@ -7,6 +7,9 @@
 
 #pragma once
 
+#define NS_STD_BEGIN	namespace std {
+#define NS_STD_END		}
+
 #define NS_JC_BEGIN		namespace JCore {
 #define NS_JC_END		}
 
@@ -16,7 +19,6 @@
 #define USING_NS_JC			using namespace JCore
 #define USING_NS_JC_DETAIL	using namespace JCore::Detail
 #define USING_NS_DETAIL		using namespace Detail
-
 
 #define USING_NS_STD		using namespace std
 #define USING_NS_STD_CHRONO using namespace std::chrono

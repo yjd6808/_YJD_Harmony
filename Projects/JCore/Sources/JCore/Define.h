@@ -113,7 +113,7 @@
 	    }													\
     } while (0)	
 	
-	#define JCORE_LEAK_CHECK_ASSERT		JCore::AutoMemoryLeakDetector JCoreCounterConcat(_) {[](Int32U leakedBytes ) { DebugAssertMsg(leakedBytes == 0, "%ul 바이트 메모리 릭이 있습니다.", leakedBytes); }}
+	#define JCORE_LEAK_CHECK_ASSERT		JCore::AutoMemoryLeakDetector JCORE_CONCAT_COUNTER(_) {[](Int32U leakedBytes ) { DebugAssertMsg(leakedBytes == 0, "%u 바이트 메모리 릭이 있습니다.", leakedBytes); }}
 	#define JCORE_DEFAULT_CODE_PAGE		JCore::CodePage::UTF8
 
     #define JCORE_IN

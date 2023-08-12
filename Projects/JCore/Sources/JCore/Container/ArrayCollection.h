@@ -133,7 +133,6 @@ protected:
 
 		Clear();
 
-
 		const int iCapacity = other.Capacity();
 
 		if (iCapacity > m_iCapacity) {
@@ -147,22 +146,7 @@ protected:
 			return;
 		}
 
-
-		// !!!! Emergency !!!!
-		// 메모리만 복사해버리면 안된다.
-		// 깊은 복사가 발생하도록 대입연산을 수행해줘야한다.
-		// Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
-
-
-		// 해결책: Vector<String*> 같은건 메모리만 복사해줘도 된다.
-		if constexpr (IsPointerType_v<T>) {
-			Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
-		} else if constexpr (IsCopyConstructible_v<T>) {	// 복사 생성이 가능해야함
-			// 해결책: Vector<String> 같은건 대입 생성을 수행해줘야한다.
-			for (int i = 0; i < other.m_iSize; ++i) {
-				Memory::PlacementNew(m_pArray[i], other.m_pArray[i]);
-			}
-		}
+		CopyElements(this->m_pArray, iCapacity, other.m_pArray, other.m_iSize);
 	}
 
 	virtual void CopyFrom(TArrayCollection&& other) {
@@ -180,6 +164,63 @@ protected:
 		other.m_iSize = 0;
 	}
 
+	template <bool Reverse = false>
+	void CopyElements(T* to, int toCapacity, T* from, int fromCount) {
+
+		// !!!! Emergency !!!!
+		// 메모리만 복사해버리면 안된다.
+		// 깊은 복사가 발생하도록 대입연산을 수행해줘야한다.
+		// Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
+		// 해결책: Vector<String*> 같은건 메모리만 복사해줘도 된다.
+
+		DebugAssert(fromCount < toCapacity);
+
+		if constexpr (IsPointerType_v<T>) {
+			if constexpr (Reverse)
+				Memory::CopyReverse(to, sizeof(T) * toCapacity, from, sizeof(T) * fromCount);
+			else
+				Memory::Copy(to, sizeof(T) * toCapacity, from, sizeof(T) * fromCount);
+		} else if constexpr (IsCopyConstructible_v<T>) {	// 복사 생성이 가능해야함
+			// 해결책: Vector<String> 같은건 대입 생성을 수행해줘야한다.
+			if constexpr (Reverse)
+				for (int i = fromCount - 1; i >= 0 && i < toCapacity; --i)
+					Memory::PlacementNew(to[i], from[i]);
+			else
+				for (int i = 0; i < fromCount && i < toCapacity; ++i)
+					Memory::PlacementNew(to[i], from[i]);
+		} else {
+			DebugAssert(false);
+		}
+	}
+
+
+	template <bool Reverse = false>
+	void MoveElements(T* to, int toCapacity, T* from, int fromCount) {
+		// 메모리만 복사해버리면 안된다.
+		// 깊은 복사가 발생하도록 대입연산을 수행해줘야한다.
+		// Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
+		// 해결책: Vector<String*> 같은건 메모리만 복사해줘도 된다.
+
+		DebugAssert(fromCount < toCapacity);
+
+		if constexpr (IsPointerType_v<T>) {
+			if constexpr (Reverse)
+				Memory::CopyReverse(to, sizeof(T) * toCapacity, from, sizeof(T) * fromCount);
+			else
+				Memory::Copy(to, sizeof(T) * toCapacity, from, sizeof(T) * fromCount);
+		} else if constexpr (IsMoveConstructible_v<T>) {	// 복사 생성이 가능해야함
+			if constexpr (Reverse)
+				for (int i = fromCount - 1; i >= 0 && i < toCapacity; --i)
+					Memory::PlacementNew(to[i], Move(from[i]));
+			else
+				for (int i = 0; i < fromCount && i < toCapacity; ++i)
+					Memory::PlacementNew(to[i], Move(from[i]));
+		} else {
+			DebugAssert(false);
+		}
+	}
+
+
 	/// <summary>
 	/// 이니셜라이저 리스트로부터의 복사
 	/// </summary>
@@ -187,7 +228,11 @@ protected:
 		Clear();
 		ExpandIfNeeded(other.size());
 		this->m_iSize = other.size();
-		Memory::CopyUnsafe(m_pArray, other.begin(), sizeof(T) * other.size());
+
+		int i = 0;
+		for (const T& otherElem : other) {
+			ConstructAt(i++, Move(otherElem));
+		}
 	}
 
 	// 용량 수정
@@ -232,7 +277,8 @@ protected:
 		T* pNewArray = TAllocator::template AllocateDynamic<T*>(newCapacity * sizeof(T), iAllocatedSize);
 
 		if (m_pArray) {
-			Memory::Copy(pNewArray, sizeof(T) * newCapacity, m_pArray, sizeof(T) * this->m_iSize);
+			CopyElements(pNewArray, newCapacity, m_pArray, this->m_iSize);
+			if (this->m_iSize > 0) DestroyAtRange(0, this->m_iSize - 1);
 			TAllocator::template DeallocateDynamic(m_pArray, sizeof(T) * m_iCapacity);
 		}
 		
@@ -412,18 +458,28 @@ protected:
 		DebugAssertMsg(IsValidIndexCapacity(moveIdx + blockSize - 1),
 			"(4) 올바르지 않은 데이터 인덱스(%d) 입니다. (컨테이너 크기: %d)", moveIdx + blockSize - 1, this->m_iSize);
 
+		
+
 		if (moveIdx > blockIdx) {
-			Memory::CopyUnsafeReverse(
+			// □□□□□□□□□□□□□■■■■□□□□□□□□
+			// └ blockIdx	└ moveIdx
+			// └── blocksize ──┘
+			// 검게칠해진 겹치는 영역이 있을 수 있으므로 뒤에서부터 복사해줘야함.
+
+			MoveElements<true>(m_pArray + moveIdx, m_iCapacity - moveIdx, m_pArray + blockIdx, blockSize);
+			/*Memory::CopyUnsafeReverse(
 				m_pArray + moveIdx,
 				m_pArray + blockIdx,
-				blockSize * sizeof(T));
+				blockSize * sizeof(T));*/
 			return;
 		}
 
-		Memory::CopyUnsafe(
+		MoveElements<false>(m_pArray + moveIdx, m_iCapacity - moveIdx, m_pArray + blockIdx, blockSize);
+
+		/*Memory::CopyUnsafe(
 			m_pArray + moveIdx,
 			m_pArray + blockIdx,
-			blockSize * sizeof(T));
+			blockSize * sizeof(T));*/
 	}
 
 
