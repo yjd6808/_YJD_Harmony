@@ -11,8 +11,6 @@
 #include "GameCoreHeader.h"
 #include "C_GAME.h"
 
-#include <SteinsGate/Common/GameCmd.h>
-
 #include <SteinsGate/Client/S_GAME.h>
 #include <SteinsGate/Client/S_GAME_UDP.h>
 

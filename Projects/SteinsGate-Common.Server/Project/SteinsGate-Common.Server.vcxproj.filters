@@ -54,7 +54,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_LOGIN.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_AUTH.h">
       <Filter>Database</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerNamespace.h" />

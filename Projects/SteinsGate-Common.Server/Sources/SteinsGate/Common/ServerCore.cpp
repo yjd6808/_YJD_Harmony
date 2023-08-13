@@ -41,8 +41,8 @@ void InitializeServerCore() {
 	CoreCommandNameDictionary_v.Add<CES_TimeSyncAck>();
 	
 	// [ INTER_SERVER - RELAY ]
-	CoreCommandNameDictionary_v.Add<CmdP2PRelayStaticTest>();
-	CoreCommandNameDictionary_v.Add<CmdP2PRelayDynamicTest>();
+	CoreCommandNameDictionary_v.Add<SS_P2PRelayStaticTest>();
+	CoreCommandNameDictionary_v.Add<SS_P2PRelayDynamicTest>();
 }
 
 void FinalizeServerCore() {

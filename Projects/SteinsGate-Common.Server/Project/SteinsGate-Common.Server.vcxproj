@@ -56,7 +56,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_LOGIN.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_AUTH.h">
       <SubType>
       </SubType>
     </ClInclude>

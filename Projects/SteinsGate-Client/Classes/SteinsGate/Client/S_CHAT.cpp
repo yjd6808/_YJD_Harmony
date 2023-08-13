@@ -11,7 +11,7 @@
 #include "GameCoreHeader.h"
 #include "S_CHAT.h"
 
- // #include <SteinsGate/Common/ChatCmd.h>
+ // #include <SteinsGate/Common/Cmd_CHAT.h>
 
 USING_NS_JC;
 USING_NS_CC;

@@ -11,7 +11,7 @@
 #include "GameCoreHeader.h"
 #include "C_AREA.h"
 
-#include <SteinsGate/Common/AreaCmd.h>
+// #include <SteinsGate/Common/Cmd_AREA.h>
 #include <SteinsGate/Client/S_AREA.h>
 
 USING_NS_JC;

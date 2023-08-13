@@ -58,8 +58,8 @@ struct GameServerProcessInfo : ServerProcessInfo
 	SGEndPoint BindChatTcp;
 	SGEndPoint RemoteChat;
 
-	SGEndPoint BindTownTcp;
-	SGEndPoint RemoteTown;
+	SGEndPoint BindAreaTcp;
+	SGEndPoint RemoteArea;
 
 	bool Active;
 	SGVector<GameChannelInfo> GameChannelInfoList;

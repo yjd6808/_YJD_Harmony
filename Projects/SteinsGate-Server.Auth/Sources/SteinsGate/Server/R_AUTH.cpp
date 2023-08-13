@@ -11,7 +11,7 @@
 #include "AuthCoreHeader.h"
 #include "R_AUTH.h"
 
-#include <SteinsGate/Common/AuthCmd.h>
+#include <SteinsGate/Common/Cmd_AUTH.h>
 #include <SteinsGate/Server/Q_LOGIN.h>
 #include <SteinsGate/Server/S_AUTH.h>
 

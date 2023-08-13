@@ -26,8 +26,8 @@ ListenerInterServerClientTcp::ListenerInterServerClientTcp() {
 	Parser.AddCommand<CES_WhoAreYou>			(R_INTERSERVER::RecvWhoAreYou);
 	Parser.AddCommand<CES_YouNeedToDoThis>		(R_INTERSERVER::RecvYouNeedToDoThis);
 	Parser.AddCommand<CES_TimeSyncAck>			(R_INTERSERVER::RecvTimeSyncAck);
-	Parser.AddCommand<CmdP2PRelayStaticTest>	(R_INTERSERVER::RecvP2PRelayStaticTest);
-	Parser.AddCommand<CmdP2PRelayDynamicTest>	(R_INTERSERVER::RecvP2PRelayDynamicTest);
+	Parser.AddCommand<SS_P2PRelayStaticTest>	(R_INTERSERVER::RecvP2PRelayStaticTest);
+	Parser.AddCommand<SS_P2PRelayDynamicTest>	(R_INTERSERVER::RecvP2PRelayDynamicTest);
 }
 
 void ListenerInterServerClientTcp::OnConnected(SGSession* session) {

@@ -49,8 +49,8 @@
                     "bind_logic_udp": "127.0.0.1:10130",
                     "remote_logic": "127.0.0.1:10130",
 
-                    "bind_town_tcp": "127.0.0.1:10131",
-                    "remote_town": "127.0.0.1:10131",
+                    "bind_area_tcp": "127.0.0.1:10131",
+                    "remote_area": "127.0.0.1:10131",
 
                     "bind_chat_tcp": "127.0.0.1:10132",
                     "remote_chat": "127.0.0.1:10132",
@@ -77,8 +77,8 @@
                     "bind_logic_udp": "127.0.0.1:10140",
                     "remote_logic": "127.0.0.1:10140",
 
-                    "bind_town_tcp": "127.0.0.1:10141",
-                    "remote_town": "127.0.0.1:10141",
+                    "bind_area_tcp": "127.0.0.1:10141",
+                    "remote_area": "127.0.0.1:10141",
 
                     "bind_chat_tcp": "127.0.0.1:10142",
                     "remote_chat": "127.0.0.1:10142",

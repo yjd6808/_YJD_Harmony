@@ -9,7 +9,7 @@
 #include "AuthCoreHeader.h"
 #include "S_AUTH.h"
 
-#include <SteinsGate/Common/AuthCmd.h>
+#include <SteinsGate/Common/Cmd_AUTH.h>
 
 USING_NS_JC;
 USING_NS_JNET;

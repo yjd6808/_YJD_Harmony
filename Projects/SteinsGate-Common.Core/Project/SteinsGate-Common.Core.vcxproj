@@ -101,7 +101,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\TextParser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AreaCmd.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\AuthEnum.h">
       <SubType>
@@ -115,7 +114,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChatCmd.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_CHAT.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonInfo.h">
       <SubType>
       </SubType>
@@ -234,15 +233,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AuthCmd.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\GameCmd.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_AUTH.h">
       <SubType>
       </SubType>
     </ClInclude>

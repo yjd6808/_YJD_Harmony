@@ -10,7 +10,7 @@
 #include "AuthCoreHeader.h"
 #include "ListenerAuthServer.h"
 
-#include <SteinsGate/Common/AuthCmd.h>
+#include <SteinsGate/Common/Cmd_AUTH.h>
 #include <SteinsGate/Common/QueryDefine.h>
 #include <SteinsGate/Common/PacketViewer.h>
 

@@ -11,8 +11,6 @@
 #include "GameCoreHeader.h"
 #include "C_LOBBY.h"
 
-#include <SteinsGate/Common/LobbyCmd.h>
-
 #include <SteinsGate/Client/S_LOBBY.h>
 
 USING_NS_JC;

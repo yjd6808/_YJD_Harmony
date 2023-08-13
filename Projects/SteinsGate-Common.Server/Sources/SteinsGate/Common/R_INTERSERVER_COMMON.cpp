@@ -51,11 +51,11 @@ void R_INTERSERVER_COMMON::RecvTimeSyncAck(JNetwork::Session* session, JNetwork:
 }
 
 void R_INTERSERVER_COMMON::RecvP2PRelayStaticTest(Session* session, ICommand* cmd) {
-	CmdP2PRelayStaticTest* pCmd = (CmdP2PRelayStaticTest*)cmd;
+	SS_P2PRelayStaticTest* pCmd = (SS_P2PRelayStaticTest*)cmd;
 	Console::WriteLine("%s", pCmd->Msg.Source);
 }
 
 void R_INTERSERVER_COMMON::RecvP2PRelayDynamicTest(Session* session, ICommand* cmd) {
-	CmdP2PRelayDynamicTest* pCmd = (CmdP2PRelayDynamicTest*)cmd;
+	SS_P2PRelayDynamicTest* pCmd = (SS_P2PRelayDynamicTest*)cmd;
 	Console::WriteLine("%s", pCmd->Msg.Source);
 }

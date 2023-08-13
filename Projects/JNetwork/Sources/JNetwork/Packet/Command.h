@@ -158,41 +158,12 @@ NS_JNET_END
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)
 
-enum CmdDirection
-{
-	eNone = 0b0000,
-	eClientToServer = 0b0001,
-	eServerToClient = 0b0010,
-	eServerToServer = 0b0100,
-	eClientToClient = 0b1000,
-	eAll = eClientToServer | eServerToClient | eServerToServer | eClientToClient
-};
-
-inline static constexpr const char* CmdDirectionName[1 << 4] = {
-	"None",
-	"ClientToServer",
-	"ServerToClient",
-	"ServerToClient | ClientToServer",
-	"ServerToServer",
-	"ServerToServer | ClientToServer",
-	"ServerToServer | ServerToClient",
-	"ServerToServer | ServerToClient | ClientToServer",
-	"ClientToClient",
-	"ClientToClient | ClientToServer",
-	"ClientToClient | ServerToClient",
-	"ClientToClient | ServerToClient | ClientToServer",
-	"ClientToClient | ServerToServer",
-	"ClientToClient | ServerToServer | ClientToServer",
-	"ClientToClient | ServerToServer | ServerToClient",
-	"ClientToClient | ServerToServer | ServerToClient | ClientToServer",
-};
-
 /*=====================================================================================
 								 커맨드 생성 규칙
 					  아래 규칙에 맞게 커맨드를 생성토록 한다.
  =====================================================================================*/
 
-#define STATIC_CMD_BEGIN(__struct__, __cmd__, __cmd_direction__)				\
+#define STATIC_CMD_BEGIN(__struct__, __cmd__)									\
 struct __struct__ : JNetwork::StaticCommand {									\
 	__struct__(int count = 1) {													\
 		Type = JNetwork::CmdType::Static;										\
@@ -203,14 +174,13 @@ struct __struct__ : JNetwork::StaticCommand {									\
 	static constexpr int Size(int count = 1) { return sizeof(__struct__); }		\
 	static constexpr const char* Name() { return #__struct__; }					\
 	static constexpr int Command() { return __cmd__; }							\
-	static constexpr int Direction() { return __cmd_direction__; }
 	
 
 #define STATIC_CMD_END(__struct__) };
 
 
 // @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
-#define DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __cmd_direction__, __countable_elem_type__)									\
+#define DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)														\
 struct __struct__ : JNetwork::DynamicCommand {																				\
 	__struct__(int count) {																									\
 		Type = JNetwork::CmdType::Dynamic;																					\
@@ -221,6 +191,5 @@ struct __struct__ : JNetwork::DynamicCommand {																				\
 	static constexpr int Size(int count) { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
 	static constexpr const char* Name() { return #__struct__; }																\
 	static constexpr int Command() { return __cmd__; }																		\
-	static constexpr int Direction() { return __cmd_direction__; }
 
 #define DYNAMIC_CMD_END(__struct__)	};

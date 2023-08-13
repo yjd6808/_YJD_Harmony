@@ -151,8 +151,8 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 		SGString szRemoteLogic = JsonUtil::getStringOrNull(gameServerRoot["remote_logic"]);
 		SGString szRemoteInterServer = JsonUtil::getString(gameServerRoot["remote_interserver"]);
 
-		SGString szBindTownTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_town_tcp"]);
-		SGString szRemoteTown = JsonUtil::getStringOrNull(gameServerRoot["remote_town"]);
+		SGString szBindAreaTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_area_tcp"]);
+		SGString szRemoteArea = JsonUtil::getStringOrNull(gameServerRoot["remote_area"]);
 
 		SGString szBindChatTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_chat_tcp"]);
 		SGString szRemoteChat = JsonUtil::getStringOrNull(gameServerRoot["remote_chat"]);
@@ -165,8 +165,8 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 			!szBindLogicUdp.IsNull() &&
 			!szRemoteLogic.IsNull() &&
 
-			!szBindTownTcp.IsNull() &&
-			!szRemoteTown.IsNull() &&
+			!szBindAreaTcp.IsNull() &&
+			!szRemoteArea.IsNull() &&
 
 			!szBindChatTcp.IsNull() &&
 			!szRemoteChat.IsNull() &&
@@ -183,8 +183,8 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 		info.RemoteEP = Move(szRemoteLogic);
 		info.RemoteInterServerEP = Move(szRemoteInterServer);
 		
-		info.BindTownTcp = Move(szBindTownTcp);
-		info.RemoteTown = Move(szRemoteTown);
+		info.BindAreaTcp = Move(szBindAreaTcp);
+		info.RemoteArea = Move(szRemoteArea);
 
 		info.BindChatTcp = Move(szBindChatTcp);
 		info.RemoteChat = Move(szRemoteChat);

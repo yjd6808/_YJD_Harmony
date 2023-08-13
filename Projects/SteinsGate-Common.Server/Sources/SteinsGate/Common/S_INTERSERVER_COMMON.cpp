@@ -45,13 +45,13 @@ bool S_INTERSERVER_COMMON::SendTimeSync() {
 // 
 // ===============================================================================
 bool S_INTERSERVER_COMMON::SendP2PRelayStaticTest(const char* msg) {
-	auto sending = SendBegin<CmdP2PRelayStaticTest>();
+	auto sending = SendBegin<SS_P2PRelayStaticTest>();
 	sending.Cmd.Msg = msg;
 	return true;
 }
 
 bool S_INTERSERVER_COMMON::SendP2PRelayDynamicTest(const char* msg) {
-	auto sending = SendBegin<CmdP2PRelayDynamicTest>(64);
+	auto sending = SendBegin<SS_P2PRelayDynamicTest>(64);
 	sending.Cmd.Msg.SetStringUnsafe(msg);
 	return true;
 }

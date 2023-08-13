@@ -219,19 +219,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AreaCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_AUTH.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AuthCmd.h">
-      <Filter>Net\Cmd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChatCmd.h">
-      <Filter>Net\Cmd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\GameCmd.h">
-      <Filter>Net\Cmd</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyCmd.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_CHAT.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\AuthEnum.h">

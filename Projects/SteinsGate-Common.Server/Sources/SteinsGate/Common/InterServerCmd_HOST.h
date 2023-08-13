@@ -36,101 +36,37 @@
 
 #pragma pack(push, CMD_ALIGNMENT)
 
-HOST_STATIC_CMD_BEGIN
-	( CES_WhoAreYou
-	, CMDID_CES_WhoAreYou
-	, eCenterToPeer
-	)
-// ───────────────────────────────────────────
-// 필드 없음
-// ───────────────────────────────────────────
+HOST_STATIC_CMD_BEGIN(CES_WhoAreYou, CMDID_CES_WhoAreYou)
 HOST_STATIC_CMD_END(CES_WhoAreYou)
-
 // ======================================================================================
-
-HOST_STATIC_CMD_BEGIN
-	( SCE_ItsMe
-	, CMDID_SCE_ItsMe
-	, eClientToServer
-	)
-// ───────────────────────────────────────────
+HOST_STATIC_CMD_BEGIN(SCE_ItsMe, CMDID_SCE_ItsMe)
 InterServerClientType_t ClientType;
 int ServerId;
-// ───────────────────────────────────────────
 HOST_STATIC_CMD_END(SCE_ItsMe)
-
 // ======================================================================================
-
-HOST_STATIC_CMD_BEGIN
-	( CES_AlreadyConnected
-	, CMDID_CES_AlreadyConnected
-	, eCenterToPeer
-	)
-// ───────────────────────────────────────────
-// 필드 없음
-// ───────────────────────────────────────────
+HOST_STATIC_CMD_BEGIN(CES_AlreadyConnected, CMDID_CES_AlreadyConnected)
 HOST_STATIC_CMD_END(CES_AlreadyConnected)
-
 // ======================================================================================
-
-HOST_STATIC_CMD_BEGIN
-	( CES_YouNeedToDoThis
-	, CMDID_CES_YouNeedToDoThis
-	, eCenterToPeer
-	)
-// ───────────────────────────────────────────
+HOST_STATIC_CMD_BEGIN(CES_YouNeedToDoThis, CMDID_CES_YouNeedToDoThis)
 CenterOrder_t Order;
-// ───────────────────────────────────────────
 HOST_STATIC_CMD_END(CES_YouNeedToDoThis)
-
-HOST_DYNAMIC_CMD_BEGIN
-	( SS_HostMessage
-	, CMDID_SS_HostMessage
-	, eCenterToPeer | ePeerToCenter
-	, JCore::StaticString<1>
-	)
-// ───────────────────────────────────────────
+// ======================================================================================
+HOST_DYNAMIC_CMD_BEGIN(SS_HostMessage, CMDID_SS_HostMessage, JCore::StaticString<1>)
 JCore::StaticString<1> Msg;
-// ───────────────────────────────────────────
 HOST_DYNAMIC_CMD_END(SS_HostMessage)
-
 // ======================================================================================
-
-HOST_STATIC_CMD_BEGIN
-	( SCE_NotifyBootState
-	, CMDID_SCE_NotifyBootState
-	, ePeerToCenter
-	)
-// ───────────────────────────────────────────
+HOST_STATIC_CMD_BEGIN(SCE_NotifyBootState, CMDID_SCE_NotifyBootState)
 ServerBootState_t State;
-// ───────────────────────────────────────────
 HOST_STATIC_CMD_END(SCE_NotifyBootState)
-
 // ======================================================================================
-
-HOST_STATIC_CMD_BEGIN
-	( SCE_TimeSync
-	, CMDID_SCE_TimeSync
-	, ePeerToCenter
-	)
-// ───────────────────────────────────────────
+HOST_STATIC_CMD_BEGIN(SCE_TimeSync, CMDID_SCE_TimeSync)
 JCore::DateTime PeerServerTime;
-// ───────────────────────────────────────────
 HOST_STATIC_CMD_END(SCE_TimeSync)
-
 // ======================================================================================
-
-HOST_STATIC_CMD_BEGIN
-	( CES_TimeSyncAck
-	, CMDID_CES_TimeSyncAck
-	, eCenterToPeer
-	)
-// ───────────────────────────────────────────
+HOST_STATIC_CMD_BEGIN(CES_TimeSyncAck, CMDID_CES_TimeSyncAck)
 JCore::DateTime PeerServerTime;
 JCore::DateTime MasterServerTime;
-// ───────────────────────────────────────────
 HOST_STATIC_CMD_END(CES_TimeSyncAck)
-
 // ======================================================================================
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)

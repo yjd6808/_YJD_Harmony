@@ -9,11 +9,8 @@
 #include "CommonCore.h"
 #include "CommonCoreHeader.h"
 
-#include <SteinsGate/Common/AuthCmd.h>
-#include <SteinsGate/Common/AreaCmd.h>
-#include <SteinsGate/Common/ChatCmd.h>
-#include <SteinsGate/Common/GameCmd.h>
-#include <SteinsGate/Common/LobbyCmd.h>
+#include <SteinsGate/Common/Cmd_AUTH.h>
+#include <SteinsGate/Common/Cmd_CHAT.h>
 
 USING_NS_JC;
 

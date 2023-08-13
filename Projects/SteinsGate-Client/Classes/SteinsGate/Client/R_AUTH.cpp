@@ -10,7 +10,7 @@
 #include "GameCoreHeader.h"
 #include "R_AUTH.h"
 
-#include <SteinsGate/Common/AuthCmd.h>
+#include <SteinsGate/Common/Cmd_AUTH.h>
 
 #include <SteinsGate/Client/Define_Popup.h>
 #include <SteinsGate/Client/S_AUTH.h>

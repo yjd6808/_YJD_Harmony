@@ -28,28 +28,16 @@ inline constexpr Int16U TotalAuthCmdCount_v = 2;
 
 #pragma pack(push, CMD_ALIGNMENT)
 
-STATIC_CMD_BEGIN
-	( CAU_Login
-	, CMDID_CAU_Login
-	, eClientToServer
-	)
-// ===========================================
+STATIC_CMD_BEGIN(CAU_Login, CMDID_CAU_Login)
 SGStaticString<AccountIdLen_v> Id;
 SGStaticString<AccountPassLen_v> Pass;
-// ===========================================
 STATIC_CMD_END(CAU_Login)
 
 
-STATIC_CMD_BEGIN
-	( AUC_LoginAck
-	, CMDID_AUC_LoginAck
-	, eServerToClient
-	)
-// ===========================================
+STATIC_CMD_BEGIN(AUC_LoginAck, CMDID_AUC_LoginAck)
 LoginResult_t Result;
 JCore::DateTime BanBeginDate;
 JCore::DateTime BanEndDate;
-// ===========================================
 STATIC_CMD_END(AUC_LoginAck)
 
 
