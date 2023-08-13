@@ -32,12 +32,8 @@ void C_AUTH::OnConnected(Session* session) {
 void C_AUTH::OnConnectFailed(Session* session, Int32U errorCode) {
 	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
 	CorePopupManager_v->showOk(SG_TEXT_RAW_FMT_STD("CONNECT_AUTH_FAILED_WITH_CODE", errorCode));
-
-	session->Initialize();
 }
 
 void C_AUTH::OnDisconnected(Session* session) {
 	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
-
-	session->Initialize();
 }

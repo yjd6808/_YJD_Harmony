@@ -10,9 +10,11 @@
 
 #include <SteinsGate/Client/Tutturu.h>
 
-using CommandQueue = SGArrayQueue<JNetwork::ICommand*>;
 class CommandSynchronizer final : public SGSingletonPointer<CommandSynchronizer>
 {
+	struct CommandHolder;
+	using CommandQueue = SGArrayQueue<CommandHolder*>;
+
 	struct CommandQueueHolder
 	{
 		CommandQueueHolder()
@@ -34,18 +36,18 @@ class CommandSynchronizer final : public SGSingletonPointer<CommandSynchronizer>
 		SGNormalLock* Lock;
 	};
 
-	struct CommandHolder : JNetwork::ICommand, SGObjectPool<CommandHolder>
+	struct CommandHolder : SGObjectPool<CommandHolder>
 	{
 		CommandHolder()
-			: MemPool(nullptr)
+			: Command(nullptr)
+			, MemPool(nullptr)
 			, ListenerType(ClientConnectServerType::Max)
 			, Sender(nullptr)
-			, Data(nullptr)
 		{}
-		CommandHolder(ClientConnectServerType_t listenerType, SGSession* sender, ICommand* copy);
+		CommandHolder(ClientConnectServerType_t listenerType, SGSession* sender, JNetwork::ICommand* copy);
 		~CommandHolder() override;
 
-		char* Data;								// 무조건 위쪽에 위치해야 캐스팅이 정상적으로 동작함
+		JNetwork::ICommand* Command;								// 무조건 위쪽에 위치해야 캐스팅이 정상적으로 동작함
 		SGIndexMemroyPool* MemPool;				// 데이터를 돌려놓을 메모리풀(홀더 해제를 메인쓰레드에서 수행하기 때문에 포인터정보가 필요함)
 		ClientConnectServerType_t ListenerType;
 		SGSession* Sender;

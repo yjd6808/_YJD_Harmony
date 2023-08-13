@@ -32,17 +32,14 @@ CommandSynchronizer::CommandQueueHolder CommandSynchronizer::registerPacketQueue
 CommandSynchronizer::CommandHolder::CommandHolder(ClientConnectServerType_t listenerType, Session* sender, ICommand* copy) {
 	int _;
 	Sender = sender;
-	Type = copy->Type;
-	Cmd = copy->Cmd;
-	CmdLen = copy->CmdLen;
 	ListenerType = listenerType;
 	MemPool = tlsCommandQueueHolder.MemPool;
-	Data = (char*)tlsCommandQueueHolder.MemPool->DynamicPop(CmdLen, _);
-	Memory::CopyUnsafe(Data, copy->GetData(), copy->GetDataLen());
+	Command = (ICommand*)tlsCommandQueueHolder.MemPool->DynamicPop(copy->CmdLen, _);
+	Memory::CopyUnsafe(Command, copy, copy->CmdLen);
 }
 
 CommandSynchronizer::CommandHolder::~CommandHolder() {
-	MemPool->DynamicPush(Data, CmdLen);
+	MemPool->DynamicPush(Command, Command->CmdLen);
 }
 
 
@@ -65,8 +62,8 @@ void CommandSynchronizer::initialize() {
 
 void CommandSynchronizer::enqueueCommand(ClientConnectServerType_t listenerType, Session* session, ICommand* cmd) {
 	JCORE_LOCK_GUARD(*tlsCommandQueueHolder.Lock);
-	ICommand* pCmd = dbg_new CommandHolder(listenerType, session, cmd);
-	tlsCommandQueueHolder.Queue->Enqueue(pCmd);
+	auto pHolder = dbg_new CommandHolder(listenerType, session, cmd);
+	tlsCommandQueueHolder.Queue->Enqueue(pHolder);
 }
 
 void CommandSynchronizer::processCommands() {
@@ -81,10 +78,10 @@ void CommandSynchronizer::processCommands() {
 		}
 
 		while (!pQueue->IsEmpty()) {
-			CommandHolder* pCmd = (CommandHolder*)pQueue->Front();
-			CoreNet_v->runCommand(pCmd->ListenerType, pCmd->Sender, pCmd);
+			CommandHolder* pHolder = pQueue->Front();
+			CoreNet_v->runCommand(pHolder->ListenerType, pHolder->Sender, pHolder->Command);
 			pQueue->Dequeue();
-			delete pCmd;
+			delete pHolder;
 		}
 	}
 }

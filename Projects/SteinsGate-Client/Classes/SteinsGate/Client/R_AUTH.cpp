@@ -21,13 +21,15 @@ USING_NS_CC;
 USING_NS_JNET;
 
 void R_AUTH::RecvLoginAck(Session* session, ICommand* cmd) {
+	session->Disconnect();
+
 	AUC_LoginAck* pCmd = (AUC_LoginAck*)cmd;
 	CorePopupManager_v->closeByTag(POPUP_LOGIN);
 	
-	switch (pCmd->Type) {
+	switch (pCmd->Result) {
 	case LoginResult::LoginSuccess:
-		CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_LOBBY"), POPUP_LOBBY_WAIT);
-
+		CorePopupManager_v->showOk(SG_TEXT_RAW("CONNECT_LOBBY"));
+		// CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_LOBBY"), POPUP_LOBBY_WAIT);
 		// TODO: 로비서버 접속
 		break;
 	case LoginResult::RegisterSuccess:
