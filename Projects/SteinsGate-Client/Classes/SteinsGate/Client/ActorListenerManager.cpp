@@ -31,14 +31,14 @@ ActorListenerManager::~ActorListenerManager() {
 
 void ActorListenerManager::init() {
 	// 캐릭터 리스너 등록
-	m_hCharacterListenerMap.Insert(CHARACTER_LISTENER_GUNNER, dbg_new CharacterListener_Gunner::Factory);
+	m_hCharacterListenerMap.Insert(DEF_CHARACTER_LISTENER_GUNNER, dbg_new CharacterListener_Gunner::Factory);
 
 	// 몬스터 리스너 등록
-	m_hMonsterListenerMap.Insert(MONSTER_LISTENER_NORMAL_GOBLIN, dbg_new MonsterListener_NormalGoblin::Factory);
-	m_hMonsterListenerMap.Insert(MONSTER_LISTENER_DARK_GOBLIN, dbg_new MonsterListener_DarkGoblin::Factory);
+	m_hMonsterListenerMap.Insert(DEF_MONSTER_LISTENER_NORMAL_GOBLIN, dbg_new MonsterListener_NormalGoblin::Factory);
+	m_hMonsterListenerMap.Insert(DEF_MONSTER_LISTENER_DARK_GOBLIN, dbg_new MonsterListener_DarkGoblin::Factory);
 
 	// 프로젝틸 리스너 등록
-	m_hProjectileListenerMap.Insert(PROJECTILE_LISTENER_GUNNER_BULLET, dbg_new ProjectileListener_GunnerBullet::Factory);
+	m_hProjectileListenerMap.Insert(DEF_PROJECTILE_LISTENER_GUNNER_BULLET, dbg_new ProjectileListener_GunnerBullet::Factory);
 }
 
 CharacterListener* ActorListenerManager::createCharacterListener(Character* character) {

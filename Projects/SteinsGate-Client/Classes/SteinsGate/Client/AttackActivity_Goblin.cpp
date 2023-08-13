@@ -21,7 +21,7 @@ void AttackActivity_Goblin::onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIStat
 
 void AttackActivity_Goblin::onActivityBegin() {
 	m_pHitRecorder = m_pActor->getHitRecorder();
-	m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_ATTACK);
+	m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_ATTACK);
 
 	if (m_pHitRecorder == nullptr) {
 		return;
@@ -30,15 +30,15 @@ void AttackActivity_Goblin::onActivityBegin() {
 	m_pHitRecorder->setRecord(true);
 	m_pHitRecorder->setAlreadyHitRecord(true);
 	m_pHitRecorder->clearAlreadyHitEnemies();
-	m_pHitRecorder->addSingleHitCallback(DEF_EVENT_SINGLE_HIT_GOBLIN_ATTACK,  CC_CALLBACK_1(AttackActivity_Goblin::onEnemySingleHit, this));
-	m_pHitRecorder->addMultiHitCallback(DEF_EVENT_MULTI_HIT_GOBLIN_ATTACK, CC_CALLBACK_2(AttackActivity_Goblin::onEnemyMultiHit, this));
+	m_pHitRecorder->addSingleHitCallback(DEF_EVENT_HIT_GOBLIN_ATTACK,  CC_CALLBACK_1(AttackActivity_Goblin::onEnemySingleHit, this));
+	m_pHitRecorder->addMultiHitCallback(DEF_EVENT_HIT_GOBLIN_ATTACK, CC_CALLBACK_2(AttackActivity_Goblin::onEnemyMultiHit, this));
 }
 
 void AttackActivity_Goblin::onUpdate(float dt) {
 }
 
 void AttackActivity_Goblin::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {
-	if (animation->getAnimationCode() == MONSTER_ANIMATION_GOBLIN_ATTACK)
+	if (animation->getAnimationCode() == DEF_ANIMATION_MONSTER_GOBLIN_ATTACK)
 		stop();
 	
 }
@@ -48,7 +48,7 @@ void AttackActivity_Goblin::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::Get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
+	ActorBox::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

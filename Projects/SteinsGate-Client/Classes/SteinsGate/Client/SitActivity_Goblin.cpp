@@ -25,5 +25,5 @@ void SitActivity_Goblin::onActivityBegin() {
 	const float fLimitTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 1.0f;
 
 	m_fLimitTime = fLimitTime;
-	m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_SIT);
+	m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_SIT);
 }

@@ -51,9 +51,9 @@ void HitActivity_Goblin::onUpdate(float dt) {
 
 void HitActivity_Goblin::selectHitAnimation() {
 	if (m_bHitSmall) {
-		m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_HIT_SMALL);
+		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_SMALL);
 	} else {
-		m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_HIT_BIG);
+		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_HIT_BIG);
 	}
 	m_bHitSmall = !m_bHitSmall;
 }
@@ -90,7 +90,7 @@ void HitActivity_Goblin::updateAirHitState(float dt) {
 	// TODO: 죽음 확인 후 사망처리
 
 	if (!m_bDownTimeCheckBegin) {
-		m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_FALL_DOWN_END);
+		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
 		m_bDownTimeCheckBegin = true;
 		return;
 	}

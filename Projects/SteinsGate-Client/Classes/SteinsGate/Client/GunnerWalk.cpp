@@ -15,7 +15,7 @@ GunnerWalk::GunnerWalk(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo) {}
 
 void GunnerWalk::onActionBegin() {
-	m_pPlayer->runAnimation(GUNNER_ANIMATION_WALK);
+	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_WALK);
 }
 
 void GunnerWalk::onKeyPressed(PlayerController* controller, SGEventKeyboard::KeyCode keyCode) {

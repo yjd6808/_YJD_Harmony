@@ -26,8 +26,8 @@ void ProjectileListener_GunnerBullet::onCreated() {
 
 	pHitRecorder->clearAlreadyHitEnemies();
 	pHitRecorder->setAlreadyHitRecord(true);
-	pHitRecorder->addSingleHitCallback(DEF_EVENT_SINGLE_HIT_GUNNER_BULLET, CC_CALLBACK_1(ProjectileListener_GunnerBullet::onEnemySingleHit, this));
-	pHitRecorder->addMultiHitCallback(DEF_EVENT_MULTI_HIT_GUNNER_BULLET, CC_CALLBACK_2(ProjectileListener_GunnerBullet::onEnemyMultiHit, this));
+	pHitRecorder->addSingleHitCallback(DEF_EVENT_HIT_GUNNER_BULLET, CC_CALLBACK_1(ProjectileListener_GunnerBullet::onEnemySingleHit, this));
+	pHitRecorder->addMultiHitCallback(DEF_EVENT_HIT_GUNNER_BULLET, CC_CALLBACK_2(ProjectileListener_GunnerBullet::onEnemyMultiHit, this));
 }
 
 void ProjectileListener_GunnerBullet::onUpdate(float dt) {
@@ -42,7 +42,7 @@ void ProjectileListener_GunnerBullet::onUpdate(float dt) {
 void ProjectileListener_GunnerBullet::onCollisionWithGround() {
 	ProjectileListener::onCollisionWithGround();
 	ActorBox::Get()->createEffectOnMapAbsolute(
-		EFFECT_COLLISION_FLOOR,
+		DEF_EFFECT_COLLISION_FLOOR,
 		m_pProjectile->getPositionRealCenterX(),
 		m_pProjectile->getPositionRealCenterY(),
 		m_pProjectile->getLocalZOrder() + 1

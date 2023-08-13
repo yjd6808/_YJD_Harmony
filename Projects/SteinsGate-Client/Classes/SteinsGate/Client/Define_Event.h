@@ -15,24 +15,11 @@
 
 
 // ======================================================
-// 싱글힛 이벤트
+// 힛 이벤트
 // ======================================================
-#define DEF_EVENT_SINGLE_HIT_GUNNER_SLIDING				1
-#define DEF_EVENT_SINGLE_HIT_GUNNER_GUN_SHOT			2
+#define DEF_EVENT_HIT_GUNNER_SLIDING			1
+#define DEF_EVENT_HIT_GUNNER_GUN_SHOT			2
 
-#define DEF_EVENT_SINGLE_HIT_GUNNER_BULLET				100
+#define DEF_EVENT_HIT_GUNNER_BULLET				100
 
-#define DEF_EVENT_SINGLE_HIT_GOBLIN_ATTACK				1000
-
-
-
-
-// ======================================================
-// 멀티힛 이벤트
-// ======================================================
-#define DEF_EVENT_MULTI_HIT_GUNNER_SLIDING				1
-#define DEF_EVENT_MULTI_HIT_GUNNER_GUN_SHOT				2
-
-#define DEF_EVENT_MULTI_HIT_GUNNER_BULLET				100
-
-#define DEF_EVENT_MULTI_HIT_GOBLIN_ATTACK				1000
+#define DEF_EVENT_HIT_GOBLIN_ATTACK				1000

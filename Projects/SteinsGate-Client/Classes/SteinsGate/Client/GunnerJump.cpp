@@ -23,14 +23,14 @@
 GunnerJump::GunnerJump(HostPlayer* player, ActionInfo* actionInfo)
 	: GunnerAction(player, actionInfo) {}
 
-// #define GUNNER_ANIMATION_JUMP_START					14
-// #define GUNNER_ANIMATION_JUMP_UP						15
-// #define GUNNER_ANIMATION_JUMP_DOWN					16
-// #define GUNNER_ANIMATION_JUMP_END					17
+// #define DEF_ANIMATION_GUNNER_JUMP_START					14
+// #define DEF_ANIMATION_GUNNER_JUMP_UP						15
+// #define DEF_ANIMATION_GUNNER_JUMP_DOWN					16
+// #define DEF_ANIMATION_GUNNER_JUMP_END					17
 // 
-// #define GUNNER_ANIMATION_JUMP_SHOT_BEGIN				18
-// #define GUNNER_ANIMATION_JUMP_SHOT_SHOT				19
-// #define GUNNER_ANIMATION_JUMP_SHOT_END				20
+// #define DEF_ANIMATION_GUNNER_JUMP_SHOT_BEGIN				18
+// #define DEF_ANIMATION_GUNNER_JUMP_SHOT_SHOT				19
+// #define DEF_ANIMATION_GUNNER_JUMP_SHOT_END				20
 
 void GunnerJump::onActionBegin() {
 	ActionMgr* pActionManager = m_pPlayer->actionManager();
@@ -48,7 +48,7 @@ void GunnerJump::onActionBegin() {
 	m_iShotCount = 0;
 	m_iMaxShotCount = m_pBaseInfo->JumpShotCount[m_eWeaponType];
 
-	if (pPrevious->getActionCode() == GUNNER_ACTION_RUN) {
+	if (pPrevious->getActionCode() == DEF_ACTION_GUNNER_RUN) {
 		m_fMoveSpeedFPSX = pPrevious->getMoveSpeedX();
 		m_fMoveSpeedFPSY = pPrevious->getMoveSpeedY();
 	} else {
@@ -57,7 +57,7 @@ void GunnerJump::onActionBegin() {
 		m_fMoveSpeedFPSY = pWalkAction->getMoveSpeedY();
 	}
 
-	m_pPlayer->runAnimation(GUNNER_ANIMATION_JUMP_START);
+	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_JUMP_START);
 }
 
 void GunnerJump::onUpdate(float dt) {
@@ -73,7 +73,7 @@ void GunnerJump::onAnimationBegin(ActorPartAnimation* animation, FrameTexture* f
 	PlayerController* pController = m_pPlayer->ctrl();
 
 	// 착지 경지 효과를 위해 움직임 봉인
-	if (iAnimationCode == GUNNER_ANIMATION_JUMP_END) {
+	if (iAnimationCode == DEF_ANIMATION_GUNNER_JUMP_END) {
 		setMoveable(false);
 	} 
 }
@@ -82,20 +82,20 @@ void GunnerJump::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* fra
 	int iAnimationCode = animation->getAnimationCode();
 	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
 
-	if (iAnimationCode == GUNNER_ANIMATION_JUMP_START) {
+	if (iAnimationCode == DEF_ANIMATION_GUNNER_JUMP_START) {
 		setMoveable(true);
 
 		m_bJumpUpbegin = true;
 		m_bCanFire = true;
 
-		m_pPlayer->runAnimation(GUNNER_ANIMATION_JUMP_UP);
+		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_JUMP_UP);
 
 		if (pPhysicsComponent)
 			pPhysicsComponent->addForceY(m_pPlayer->getBaseInfo()->JumpForce);
 
-	} else if (iAnimationCode == GUNNER_ANIMATION_JUMP_SHOT_BEGIN) {
+	} else if (iAnimationCode == DEF_ANIMATION_GUNNER_JUMP_SHOT_BEGIN) {
 		shot(m_pPlayer);
-	} else if (iAnimationCode == GUNNER_ANIMATION_JUMP_END) {
+	} else if (iAnimationCode == DEF_ANIMATION_GUNNER_JUMP_END) {
 		stop();
 	} 
 }
@@ -106,7 +106,7 @@ void GunnerJump::onFrameBegin(ActorPartAnimation* animation, FrameTexture* frame
 
 void GunnerJump::onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) {
 	int iAnimationCode = animation->getAnimationCode();
-	if (iAnimationCode != GUNNER_ANIMATION_JUMP_SHOT_SHOT) {
+	if (iAnimationCode != DEF_ANIMATION_GUNNER_JUMP_SHOT_SHOT) {
 		return;
 	}
 
@@ -118,7 +118,7 @@ void GunnerJump::onFrameEnd(ActorPartAnimation* animation, FrameTexture* frame) 
 
 		// 쏘고 나서 높이가 0인경우 바로 정지시켜주도록 하자.
 		if (pCharacter->getPositionActorY() == 0) {
-			pCharacter->runAnimation(GUNNER_ANIMATION_JUMP_END);
+			pCharacter->runAnimation(DEF_ANIMATION_GUNNER_JUMP_END);
 			m_bJumpDownBegin = false;
 			return;
 		}
@@ -148,7 +148,7 @@ void GunnerJump::onKeyPressed(PlayerController* controller, SGEventKeyboard::Key
 	++m_iChargedShotCount;
 
 	if (!m_bFireMode) {
-		pCharacter->runAnimation(GUNNER_ANIMATION_JUMP_SHOT_BEGIN);
+		pCharacter->runAnimation(DEF_ANIMATION_GUNNER_JUMP_SHOT_BEGIN);
 		m_bFireMode = true;
 	}
 	
@@ -170,7 +170,7 @@ void GunnerJump::updateJumpUp(Character* character, float dt) {
 		m_bJumpDownBegin = true;
 
 		if (!m_bFireMode) {
-			character->runAnimation(GUNNER_ANIMATION_JUMP_DOWN);
+			character->runAnimation(DEF_ANIMATION_GUNNER_JUMP_DOWN);
 		}
 	}
 }
@@ -180,7 +180,7 @@ void GunnerJump::updateJumpDown(Character* character, float dt) {
 
 	// Step 2. 하강 중
 	if (m_bJumpDownBegin && character->isOnTheGround()) {
-		character->runAnimation(GUNNER_ANIMATION_JUMP_END);
+		character->runAnimation(DEF_ANIMATION_GUNNER_JUMP_END);
 		m_bJumpDownBegin = false;
 	}
 }
@@ -196,7 +196,7 @@ bool GunnerJump::shot(Character* character) {
 	m_iShotCount++;
 	--m_iChargedShotCount;
 	m_bRightFire = !m_bRightFire;		// 좌/우 토글
-	character->runAnimation(GUNNER_ANIMATION_JUMP_SHOT_SHOT);
+	character->runAnimation(DEF_ANIMATION_GUNNER_JUMP_SHOT_SHOT);
 	
 	reboundX(character);			// X축 반동
 	reboundY(character);			// Y축 반동
@@ -305,15 +305,15 @@ void GunnerJump::createBullet() {
 
 	if (m_bRightFire) {
 		switch (m_eWeaponType) {
-		case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
-		case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_JUMP_RIGHT; break;
+		case WeaponType::Automatic: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_JUMP_RIGHT; break;
+		case WeaponType::Revolver: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_JUMP_RIGHT; break;
 		default: DebugAssertMsg(false, "총 종류가 이상합니다. (1)");
 		}
 	}
 	else {
 		switch (m_eWeaponType) {
-		case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
-		case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_JUMP_LEFT; break;
+		case WeaponType::Automatic: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_JUMP_LEFT; break;
+		case WeaponType::Revolver: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_JUMP_LEFT; break;
 		default: DebugAssertMsg(false, "총 종류가 이상합니다. (2)");
 		}
 	}

@@ -25,15 +25,15 @@ GunnerGunShot::GunnerGunShot(HostPlayer* player, ActionInfo* actionInfo)
 
 bool GunnerGunShot::onConditionCheck() {
 	const int iRunningActionCode = m_pPlayer->getRunningActionCode();
-	return iRunningActionCode == GUNNER_ACTION_IDLE || iRunningActionCode == GUNNER_ACTION_WALK;
+	return iRunningActionCode == DEF_ACTION_GUNNER_IDLE || iRunningActionCode == DEF_ACTION_GUNNER_WALK;
 }
 
 void GunnerGunShot::onActionBegin() {
 	setMoveable(false);
 
 	m_pHitRecorder->setAlreadyHitRecord(true);
-	m_pHitRecorder->addSingleHitCallback(DEF_EVENT_SINGLE_HIT_GUNNER_GUN_SHOT,  CC_CALLBACK_1(GunnerGunShot::onEnemySingleHit, this));
-	m_pHitRecorder->addMultiHitCallback(DEF_EVENT_MULTI_HIT_GUNNER_GUN_SHOT, CC_CALLBACK_2(GunnerGunShot::onEnemyMultiHit, this));
+	m_pHitRecorder->addSingleHitCallback(DEF_EVENT_HIT_GUNNER_GUN_SHOT,  CC_CALLBACK_1(GunnerGunShot::onEnemySingleHit, this));
+	m_pHitRecorder->addMultiHitCallback(DEF_EVENT_HIT_GUNNER_GUN_SHOT, CC_CALLBACK_2(GunnerGunShot::onEnemyMultiHit, this));
 
 	m_bShotEnd = false;
 	m_bDownShotKeyPressedFirst = false;
@@ -52,9 +52,9 @@ void GunnerGunShot::onActionBegin() {
 
 	if (pController->isKeyPressed(ControlKey::Down)) {
 		m_bDownShotKeyPressed = true;
-		pActorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_DOWN_BEGIN);
+		pActorSprite->runAnimation(DEF_ANIMATION_GUNNER_SHOT_RIGHT_DOWN_BEGIN);
 	} else {
-		pActorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_BEGIN);
+		pActorSprite->runAnimation(DEF_ANIMATION_GUNNER_SHOT_RIGHT_BEGIN);
 	}
 }
 
@@ -67,8 +67,8 @@ void GunnerGunShot::onAnimationBegin(ActorPartAnimation* animation, FrameTexture
 	const int iAnimationCode = animation->getAnimationInfo()->Code;
 
 
-	if (iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_SHOT ||
-			 iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT) {
+	if (iAnimationCode == DEF_ANIMATION_GUNNER_SHOT_RIGHT_SHOT ||
+			 iAnimationCode == DEF_ANIMATION_GUNNER_SHOT_RIGHT_DOWN_SHOT) {
 		m_bNextFireCheck = true;
 	} 
 }
@@ -78,11 +78,11 @@ void GunnerGunShot::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* 
 	const int iAnimationCode = animation->getAnimationInfo()->Code;
 	ActorSprite* pActorSprite = m_pPlayer->getActorSprite();
 
-	if (iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_BEGIN ||
-		iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_DOWN_BEGIN) {
+	if (iAnimationCode == DEF_ANIMATION_GUNNER_SHOT_RIGHT_BEGIN ||
+		iAnimationCode == DEF_ANIMATION_GUNNER_SHOT_RIGHT_DOWN_BEGIN) {
 		runRightShotAnimation(pActorSprite);
-	} else if (	iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_SHOT || 
-				iAnimationCode == GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT) {
+	} else if (	iAnimationCode == DEF_ANIMATION_GUNNER_SHOT_RIGHT_SHOT || 
+				iAnimationCode == DEF_ANIMATION_GUNNER_SHOT_RIGHT_DOWN_SHOT) {
 
 
 		// 총을 쏠 수 있는 경우 바로 발사 해줌
@@ -104,8 +104,8 @@ void GunnerGunShot::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* 
 			stop();
 		}
 	} else if (
-		iAnimationCode == GUNNER_ANIMATION_SHOT_LEFT ||
-		iAnimationCode == GUNNER_ANIMATION_SHOT_LEFT_DOWN) {
+		iAnimationCode == DEF_ANIMATION_GUNNER_SHOT_LEFT ||
+		iAnimationCode == DEF_ANIMATION_GUNNER_SHOT_LEFT_DOWN) {
 		stop();
 	}
 }
@@ -185,7 +185,7 @@ void GunnerGunShot::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::Get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_SMALL, info, true);
+	ActorBox::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_SMALL, info, true);
 	info.HitTarget->hit(info);
 }
 
@@ -228,22 +228,22 @@ void GunnerGunShot::runLeftShotAnimation(ActorSprite* actorSprite, int animation
 	// 반대총으로 쏘도록 한다.
 	m_pHitRecorder->clearAlreadyHitEnemies();
 
-	if (animationCode == GUNNER_ANIMATION_SHOT_RIGHT_SHOT)
-		actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_LEFT);
-	else if (animationCode == GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT)
-		actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_LEFT_DOWN);
+	if (animationCode == DEF_ANIMATION_GUNNER_SHOT_RIGHT_SHOT)
+		actorSprite->runAnimation(DEF_ANIMATION_GUNNER_SHOT_LEFT);
+	else if (animationCode == DEF_ANIMATION_GUNNER_SHOT_RIGHT_DOWN_SHOT)
+		actorSprite->runAnimation(DEF_ANIMATION_GUNNER_SHOT_LEFT_DOWN);
 }
 
 
 void GunnerGunShot::shotRight(ActorSprite* actorSprite) {
-	actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_SHOT);
+	actorSprite->runAnimation(DEF_ANIMATION_GUNNER_SHOT_RIGHT_SHOT);
 
 	const FrameEventSpawnType_t spawnType = WeaponType::ShotFrameEventSpawnType[m_eWeaponType];
 	int iSpawnCode;
 
 	switch (m_eWeaponType) {
-	case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_RIGHT; break;
-	case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_RIGHT; break;
+	case WeaponType::Automatic: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_RIGHT; break;
+	case WeaponType::Revolver: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_RIGHT; break;
 
 	default: iSpawnCode = -1;
 	}
@@ -254,13 +254,13 @@ void GunnerGunShot::shotRight(ActorSprite* actorSprite) {
 
 void GunnerGunShot::shotRightDown(ActorSprite* actorSprite) {
 
-	actorSprite->runAnimation(GUNNER_ANIMATION_SHOT_RIGHT_DOWN_SHOT);
+	actorSprite->runAnimation(DEF_ANIMATION_GUNNER_SHOT_RIGHT_DOWN_SHOT);
 	const FrameEventSpawnType_t spawnType = WeaponType::ShotFrameEventSpawnType[m_eWeaponType];
 	int iSpawnCode;
 
 	switch (m_eWeaponType) {
-	case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_RIGHT_DOWN; break;
-	case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_RIGHT_DOWN; break;
+	case WeaponType::Automatic: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_RIGHT_DOWN; break;
+	case WeaponType::Revolver: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_RIGHT_DOWN; break;
 	default: iSpawnCode = -1;
 	}
 
@@ -277,8 +277,8 @@ void GunnerGunShot::shotLeft(ActorSprite* actorSprite) {
 	int iSpawnCode;
 
 	switch (m_eWeaponType) {
-	case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_LEFT; break;
-	case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_LEFT; break;
+	case WeaponType::Automatic: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_LEFT; break;
+	case WeaponType::Revolver: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_LEFT; break;
 	default: iSpawnCode = -1;
 	}
 
@@ -293,8 +293,8 @@ void GunnerGunShot::shotLeftDown(ActorSprite* actorSprite) {
 	int iSpawnCode;
 
 	switch (m_eWeaponType) {
-	case WeaponType::Automatic: iSpawnCode = GUNNER_PROJECTILE_AUTO_LEFT_DOWN; break;
-	case WeaponType::Revolver: iSpawnCode = GUNNER_PROJECTILE_AUTO_LEFT_DOWN; break;
+	case WeaponType::Automatic: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_LEFT_DOWN; break;
+	case WeaponType::Revolver: iSpawnCode = DEF_PROJECTILE_GUNNER_AUTO_LEFT_DOWN; break;
 	default: iSpawnCode = -1;
 	}
 

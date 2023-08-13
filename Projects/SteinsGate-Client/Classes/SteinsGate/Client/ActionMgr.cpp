@@ -49,26 +49,26 @@ void ActionMgr::init(int charType) {
 void ActionMgr::initGunnerActions() {
 	DataManager* pConfig = DataManager::Get();
 
-	m_pBaseAction[BaseAction::Idle] = dbg_new GunnerIdle(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_IDLE));
-	m_pBaseAction[BaseAction::Walk] = dbg_new GunnerWalk(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_WALK));
-	m_pBaseAction[BaseAction::Run] = dbg_new GunnerRun(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_RUN));
-	m_pBaseAction[BaseAction::Attack] = dbg_new GunnerGunShot(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_GUN_SHOT));
-	m_pBaseAction[BaseAction::Sliding] = dbg_new GunnerSliding(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SLIDING));
-	m_pBaseAction[BaseAction::Jump] = dbg_new GunnerJump(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_JUMP));
-	m_pBaseAction[BaseAction::Hit] = dbg_new GunnerHit(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_HIT));
-	m_pBaseAction[BaseAction::FallDown] = dbg_new GunnerFallDown(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_FALL_DOWN));
-	m_pBaseAction[BaseAction::SitRecover] = dbg_new GunnerSitRecover(m_pPlayer, pConfig->getActionInfo(GUNNER_ACTION_SIT_RECOVER));
+	m_pBaseAction[BaseAction::Idle] = dbg_new GunnerIdle(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_IDLE));
+	m_pBaseAction[BaseAction::Walk] = dbg_new GunnerWalk(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_WALK));
+	m_pBaseAction[BaseAction::Run] = dbg_new GunnerRun(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_RUN));
+	m_pBaseAction[BaseAction::Attack] = dbg_new GunnerGunShot(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_GUN_SHOT));
+	m_pBaseAction[BaseAction::Sliding] = dbg_new GunnerSliding(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_SLIDING));
+	m_pBaseAction[BaseAction::Jump] = dbg_new GunnerJump(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_JUMP));
+	m_pBaseAction[BaseAction::Hit] = dbg_new GunnerHit(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_HIT));
+	m_pBaseAction[BaseAction::FallDown] = dbg_new GunnerFallDown(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_FALL_DOWN));
+	m_pBaseAction[BaseAction::SitRecover] = dbg_new GunnerSitRecover(m_pPlayer, pConfig->getActionInfo(DEF_ACTION_GUNNER_SIT_RECOVER));
 	
 
-	m_ActionMap.Insert(GUNNER_ACTION_IDLE, m_pBaseAction[BaseAction::Idle]);
-	m_ActionMap.Insert(GUNNER_ACTION_WALK, m_pBaseAction[BaseAction::Walk]);
-	m_ActionMap.Insert(GUNNER_ACTION_RUN, m_pBaseAction[BaseAction::Run]);
-	m_ActionMap.Insert(GUNNER_ACTION_GUN_SHOT, m_pBaseAction[BaseAction::Attack]);
-	m_ActionMap.Insert(GUNNER_ACTION_SLIDING, m_pBaseAction[BaseAction::Sliding]);
-	m_ActionMap.Insert(GUNNER_ACTION_JUMP, m_pBaseAction[BaseAction::Jump]);
-	m_ActionMap.Insert(GUNNER_ACTION_HIT, m_pBaseAction[BaseAction::Hit]);
-	m_ActionMap.Insert(GUNNER_ACTION_FALL_DOWN, m_pBaseAction[BaseAction::FallDown]);
-	m_ActionMap.Insert(GUNNER_ACTION_SIT_RECOVER, m_pBaseAction[BaseAction::SitRecover]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_IDLE, m_pBaseAction[BaseAction::Idle]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_WALK, m_pBaseAction[BaseAction::Walk]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_RUN, m_pBaseAction[BaseAction::Run]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_GUN_SHOT, m_pBaseAction[BaseAction::Attack]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_SLIDING, m_pBaseAction[BaseAction::Sliding]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_JUMP, m_pBaseAction[BaseAction::Jump]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_HIT, m_pBaseAction[BaseAction::Hit]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_FALL_DOWN, m_pBaseAction[BaseAction::FallDown]);
+	m_ActionMap.Insert(DEF_ACTION_GUNNER_SIT_RECOVER, m_pBaseAction[BaseAction::SitRecover]);
 	
 }
 

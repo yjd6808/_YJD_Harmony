@@ -24,12 +24,12 @@ void R_AUTH::RecvLoginAck(Session* session, ICommand* cmd) {
 	session->Disconnect();
 
 	AUC_LoginAck* pCmd = (AUC_LoginAck*)cmd;
-	CorePopupManager_v->closeByTag(POPUP_LOGIN);
+	CorePopupManager_v->closeByTag(DEF_POPUP_LOGIN);
 	
 	switch (pCmd->Result) {
 	case LoginResult::LoginSuccess:
 		CorePopupManager_v->showOk(SG_TEXT_RAW("CONNECT_LOBBY"));
-		// CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_LOBBY"), POPUP_LOBBY_WAIT);
+		// CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_LOBBY"), DEF_POPUP_LOBBY_WAIT);
 		// TODO: 로비서버 접속
 		break;
 	case LoginResult::RegisterSuccess:

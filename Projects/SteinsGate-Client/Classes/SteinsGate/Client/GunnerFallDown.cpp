@@ -26,7 +26,7 @@ void GunnerFallDown::onActionBegin() {
 	if (pPhysicsComponent)
 		pPhysicsComponent->enableElasticity();
 
-	m_pPlayer->runAnimation(GUNNER_ANIMATION_FALL_DOWN_BEGIN);
+	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_BEGIN);
 	m_fElapsedDownTime = 0.0f;
 	m_fDownRecoverTime = m_pBaseInfo->DownRecoverTime / 2.0f;
 	m_bBounced = false;
@@ -48,13 +48,13 @@ void GunnerFallDown::onUpdate(float dt) {
 	// Step 1. 바닥에 충돌해서 공중으로 튀어올랐는지 확인
 	if (pPhysicsComponent && pPhysicsComponent->isBounced() && !m_bBounced) {
 		m_bBounced = true;
-		pCharacter->runAnimation(GUNNER_ANIMATION_FALL_DOWN_BOUNCE);
+		pCharacter->runAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_BOUNCE);
 		return;
 	}
 
 	// Step 2. 공중으로 튀어올랐다가 다시 바닥에 닿았는지 확인
 	if (!m_bDown && m_bBounced && pCharacter->isOnTheGround()) {
-		pCharacter->runAnimation(GUNNER_ANIMATION_FALL_DOWN_END);
+		pCharacter->runAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_END);
 		m_bDown = true;
 		return;
 	}

@@ -19,7 +19,7 @@ GunnerSitRecover::GunnerSitRecover(HostPlayer* player, ActionInfo* actionInfo)
 void GunnerSitRecover::onActionBegin() {
 	m_fElaspedSitTime = 0.0f;
 	m_fRecoverSitTime = m_pBaseInfo->DownRecoverTime / 2.0f;
-	m_pPlayer->runAnimation(GUNNER_ANIMATION_SIT);
+	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_SIT);
 }
 
 void GunnerSitRecover::onUpdate(float dt) {

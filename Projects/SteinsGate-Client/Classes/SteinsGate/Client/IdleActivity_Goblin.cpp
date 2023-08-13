@@ -25,7 +25,7 @@ void IdleActivity_Goblin::onActivitySelectFromAIRoutine(AIInfo* aiInfo, AIState_
 }
 
 void IdleActivity_Goblin::onActivityBegin() {
-	m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_IDLE);
+	m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_IDLE);
 }
 
 void IdleActivity_Goblin::onActivityEnd() {

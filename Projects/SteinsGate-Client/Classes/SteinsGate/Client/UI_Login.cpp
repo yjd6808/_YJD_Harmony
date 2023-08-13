@@ -154,5 +154,5 @@ void UI_Login::login() {
 		return;
 	}
 
-	CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_AUTH"), POPUP_LOGIN_WAIT);
+	CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_AUTH"), DEF_POPUP_LOGIN_WAIT);
 }

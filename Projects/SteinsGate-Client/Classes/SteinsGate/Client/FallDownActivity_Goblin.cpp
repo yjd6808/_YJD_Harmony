@@ -29,7 +29,7 @@ void FallDownActivity_Goblin::onActivityBegin() {
 	const MonsterStatInfo* pStatInfo = pMonster->getStatInfo();
 	PhysicsComponent* pPhysicsComponent = pMonster->getComponent<PhysicsComponent>();
 
-	pMonster->runAnimation(MONSTER_ANIMATION_GOBLIN_FALL_DOWN_BEGIN);
+	pMonster->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BEGIN);
 	m_fElapsedDownTime = 0.0f;
 	m_fDownRecoverTime = pStatInfo ? pStatInfo->DownRecoverTime / 2 : 1.0f;
 	m_bBounced = false;
@@ -53,13 +53,13 @@ void FallDownActivity_Goblin::onUpdate(float dt) {
 	// Step 1. 바닥에 충돌해서 공중으로 튀어올랐는지 확인
 	if (pPhysicsComponent && pPhysicsComponent->isBounced() && !m_bBounced) {
 		m_bBounced = true;
-		m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_FALL_DOWN_BOUNCE);
+		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_BOUNCE);
 		return;
 	}
 
 	// Step 2. 공중으로 튀어올랐다가 다시 바닥에 닿았는지 확인
 	if (!m_bDown && m_bBounced && m_pActor->isOnTheGround()) {
-		m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_FALL_DOWN_END);
+		m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_FALL_DOWN_END);
 		m_bDown = true;
 		return;
 	}

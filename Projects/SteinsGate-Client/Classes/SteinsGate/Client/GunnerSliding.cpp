@@ -22,15 +22,15 @@ GunnerSliding::GunnerSliding(HostPlayer* player, ActionInfo* actionInfo)
 }
 
 bool GunnerSliding::onConditionCheck() {
-	return m_pPlayer->getRunningActionCode() == GUNNER_ACTION_RUN;
+	return m_pPlayer->getRunningActionCode() == DEF_ACTION_GUNNER_RUN;
 }
 
 void GunnerSliding::onActionBegin() {
 	m_bSlidingStarted = false;
-	m_pPlayer->runAnimation(GUNNER_ANIMATION_SLIDING);
+	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_SLIDING);
 	m_pHitRecorder->setAlreadyHitRecord(true);
-	m_pHitRecorder->addSingleHitCallback(DEF_EVENT_SINGLE_HIT_GUNNER_SLIDING, CC_CALLBACK_1(GunnerSliding::onEnemySingleHit, this));
-	m_pHitRecorder->addMultiHitCallback(DEF_EVENT_MULTI_HIT_GUNNER_SLIDING, CC_CALLBACK_2(GunnerSliding::onEnemyMultiHit, this));
+	m_pHitRecorder->addSingleHitCallback(DEF_EVENT_HIT_GUNNER_SLIDING, CC_CALLBACK_1(GunnerSliding::onEnemySingleHit, this));
+	m_pHitRecorder->addMultiHitCallback(DEF_EVENT_HIT_GUNNER_SLIDING, CC_CALLBACK_2(GunnerSliding::onEnemyMultiHit, this));
 	
 }
 
@@ -62,7 +62,7 @@ void GunnerSliding::onFrameEnd(ActorPartAnimation* animation, FrameTexture* fram
 	if (animation->getFrameIndex() == 111) {
 		m_bSlidingStarted = true;
 
-		ActorBox::Get()->createEffectOnMapBySpawner(m_pPlayer, EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
+		ActorBox::Get()->createEffectOnMapBySpawner(m_pPlayer, DEF_EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
 
 		if (pPhysicsComponent == nullptr) {
 			return;
@@ -76,7 +76,7 @@ void GunnerSliding::onFrameEnd(ActorPartAnimation* animation, FrameTexture* fram
 
 	// 일시정지 프레임 만나면 1번부터 다시 재시작
 	if (animation->getFrameIndex() == 114 && animation->isZeroFramePaused()) {
-		m_pPlayer->runAnimation(GUNNER_ANIMATION_SLIDING, 1);
+		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_SLIDING, 1);
 	}
 }
 
@@ -84,7 +84,7 @@ void GunnerSliding::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::Get()->createEffectOnMapTargetCollision(EFFECT_KNOCK_BIG, info, true);
+	ActorBox::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

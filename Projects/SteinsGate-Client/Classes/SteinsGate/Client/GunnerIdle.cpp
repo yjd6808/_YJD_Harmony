@@ -21,16 +21,16 @@ void GunnerIdle::init() {
 }
 
 void GunnerIdle::onActionBegin() {
-	m_pPlayer->runAnimation(GUNNER_ANIMATION_IDLE_BREATH);
+	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_IDLE_BREATH);
 }
 
 void GunnerIdle::onAnimationEnd(ActorPartAnimation* animation, FrameTexture* frame) {
 	int iAnimationCode = animation->getAnimationInfo()->Code;
 	
-	if (iAnimationCode == GUNNER_ANIMATION_IDLE_BREATH) {
+	if (iAnimationCode == DEF_ANIMATION_GUNNER_IDLE_BREATH) {
 		++m_iIdleCount;
-	} else if (iAnimationCode == GUNNER_ANIMATION_IDLE_GUN_ROLLING) {
-		m_pPlayer->runAnimation(GUNNER_ANIMATION_IDLE_BREATH);
+	} else if (iAnimationCode == DEF_ANIMATION_GUNNER_IDLE_GUN_ROLLING) {
+		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_IDLE_BREATH);
 		m_iIdleCount = 0;
 	}
 }

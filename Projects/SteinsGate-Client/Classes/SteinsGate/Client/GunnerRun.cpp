@@ -18,7 +18,7 @@ GunnerRun::GunnerRun(HostPlayer* player, ActionInfo* actionInfo)
 }
 
 void GunnerRun::onActionBegin() {
-	m_pPlayer->runAnimation(GUNNER_ANIMATION_RUN);
+	m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_RUN);
 }
 
 void GunnerRun::onKeyPressed(PlayerController* controller, cocos2d::EventKeyboard::KeyCode keyCode) {

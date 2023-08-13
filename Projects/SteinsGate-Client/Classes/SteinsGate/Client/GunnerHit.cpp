@@ -53,9 +53,9 @@ void GunnerHit::onUpdate(float dt) {
 void GunnerHit::selectHitAnimation() {
 
 	if (m_bHitSmall) {
-		m_pPlayer->runAnimation(GUNNER_ANIMATION_HIT_SMALL);
+		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_HIT_SMALL);
 	} else {
-		m_pPlayer->runAnimation(GUNNER_ANIMATION_HIT_BIG);
+		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_HIT_BIG);
 	}
 	m_bHitSmall = !m_bHitSmall;
 }
@@ -88,7 +88,7 @@ void GunnerHit::updateAirHitState(float dt) {
 	// TODO: 죽음 확인 후 사망처리
 
 	if (!m_bDownTimeCheckBegin) {
-		m_pPlayer->runAnimation(GUNNER_ANIMATION_FALL_DOWN_END);
+		m_pPlayer->runAnimation(DEF_ANIMATION_GUNNER_FALL_DOWN_END);
 		m_bDownTimeCheckBegin = true;
 		return;
 	}

@@ -24,15 +24,15 @@ void C_AUTH::OnConnected(Session* session) {
 	const AccountData& accountData = CorePlayer_v->accountData();
 	S_AUTH::SendLogin(accountData.Id.Source, accountData.Pass.Source);
 
-	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
-	CorePopupManager_v->showNone(SG_TEXT_RAW("LOGIN_BEGIN"), POPUP_LOGIN);
+	CorePopupManager_v->closeByTag(DEF_POPUP_LOGIN_WAIT);
+	CorePopupManager_v->showNone(SG_TEXT_RAW("LOGIN_BEGIN"), DEF_POPUP_LOGIN);
 }
 
 void C_AUTH::OnConnectFailed(Session* session, Int32U errorCode) {
-	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
+	CorePopupManager_v->closeByTag(DEF_POPUP_LOGIN_WAIT);
 	CorePopupManager_v->showOk(SG_TEXT_RAW_FMT_STD("CONNECT_AUTH_FAILED_WITH_CODE", errorCode));
 }
 
 void C_AUTH::OnDisconnected(Session* session) {
-	CorePopupManager_v->closeByTag(POPUP_LOGIN_WAIT);
+	CorePopupManager_v->closeByTag(DEF_POPUP_LOGIN_WAIT);
 }

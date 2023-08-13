@@ -19,7 +19,7 @@ WalkActivity_Goblin::WalkActivity_Goblin(Actor* actor)
 {}
 
 void WalkActivity_Goblin::onActivityBegin() {
-	m_pActor->runAnimation(MONSTER_ANIMATION_GOBLIN_WALK);
+	m_pActor->runAnimation(DEF_ANIMATION_MONSTER_GOBLIN_WALK);
 }
 
 void WalkActivity_Goblin::updateMoveImpl(float dt, MoveComponent* moveComponent, bool arrivedX, bool arrivedY, Direction_t lr, Direction_t ud) {
