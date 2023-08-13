@@ -66,6 +66,11 @@ public:
 	*/
 	template <typename... Args>
 	MysqlQueryTaskPtr QueryAsync(const JCore::String& statement, Args&&... args) {
+		if (m_pConnectionPool == nullptr) {
+			DebugAssertMsg(false, "커넥션 풀이 초기화되지 않았습니다. 데이터베이스가 연결되어있는지 확인해주세요.");
+			return nullptr;
+		}
+		
 		const auto& fnTask = [this](MysqlQueryTask::TResult& result) {
 			result.Success = result.Value->Execute();
 			result.ErrorCode = !result.Success ? IOCPTASK_FAILED_DB : 0;
@@ -86,6 +91,11 @@ public:
 
 	template <typename... Args>
 	MysqlQueryPtr Query(const JCore::String& statement, Args&&... args) {
+		if (m_pConnectionPool == nullptr) {
+			DebugAssertMsg(false, "커넥션 풀이 초기화되지 않았습니다. 데이터베이스가 연결되어있는지 확인해주세요.");
+			return nullptr;
+		}
+
 		auto pConn = m_pConnectionPool->GetConnection();
 		AutoReleaseConnection autoRelease(pConn, m_pConnectionPool);
 

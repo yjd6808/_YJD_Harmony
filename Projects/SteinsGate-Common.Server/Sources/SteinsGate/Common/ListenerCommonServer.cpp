@@ -37,6 +37,7 @@ void ListenerCommonServer::OnSent(Session* sender, ISendPacket* sentPacket, Int3
 	int iCmdCount = sentPacket->GetCommandCount();
 	int iPos = 0;
 
+	/*
 	String szSentText(512);
 	String szSentPackets(256);
 
@@ -47,7 +48,13 @@ void ListenerCommonServer::OnSent(Session* sender, ISendPacket* sentPacket, Int3
 		++iPos;
 	});
 	szSentText += StringUtil::Format("[S][%d %s][%d B][%s]", iCmdCount, TransportProtocolName(sender->Protocol()), sentBytes, szSentPackets.Source());
-	_LogInfo_(szSentText.Source());
+	*/
+
+	sentPacket->ForEach([&](ICommand* cmd) {
+		const Cmd_t id = cmd->GetCommand();
+		_LogInfo_("S %s %sB %s(%d)", TransportProtocolName(sender->Protocol()), StringUtil::FillLeft(cmd->CmdLen, ' ', 4).Source(), CoreCommandNameDictionary_v.Get(id), id);
+		++iPos;
+	});
 }
 
 void ListenerCommonServer::OnReceived(Session* receiver, ICommand* cmd) {
@@ -55,12 +62,12 @@ void ListenerCommonServer::OnReceived(Session* receiver, ICommand* cmd) {
 	const char* szName = CoreCommandNameDictionary_v.Get(id);
 
 	if (!Parser.RunCommand(receiver, cmd)) {
-		_LogWarn_("[R Failed][%s][%d B][%s(%d)]", TransportProtocolName(receiver->Protocol()), cmd->CmdLen, szName, id);
+		_LogInfo_("R %s %sB %s(%d) - Failed", TransportProtocolName(receiver->Protocol()), StringUtil::FillLeft(cmd->CmdLen, ' ', 4).Source(), szName, id);
 		return;
 	}
 
 
-	_LogInfo_("[R][%s][%d B][%s(%d)]", TransportProtocolName(receiver->Protocol()), cmd->CmdLen, szName, id);
+	_LogInfo_("R %s %sB %s(%d)", TransportProtocolName(receiver->Protocol()), StringUtil::FillLeft(cmd->CmdLen, ' ', 4).Source(), szName, id);
 }
 
 void ListenerCommonServer::OnStopped() {

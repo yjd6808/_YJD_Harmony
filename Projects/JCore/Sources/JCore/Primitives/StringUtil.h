@@ -25,6 +25,30 @@ public:
 	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, ...);
 	static void FormatBuffer(char* buff, const int buffCapacity, const char* format, va_list va);
 
+
+	// FillLeft(20, '0', 3) -> 020
+	// FillLeft(20, '0', 4) -> 0020
+	template <typename T>
+	static String FillLeft(const T& v, char paddingCharacter, int len) {
+		if (len >= 1023) {
+			DebugAssert(false);
+			return { 0 };
+		}
+
+		char szFill[1024];
+		String szRet;
+		szRet += v;
+
+		const int iFillCount = len - szRet.Length();
+		int i = 0;
+		for (i = 0; i < iFillCount; ++i) {
+			szFill[i] = paddingCharacter;
+		}
+		szFill[i] = '\0';
+		szRet.Insert(0, szFill);
+		return szRet;
+	}
+
 	template <typename TInteger>
 	static TInteger ToNumber(const char* str, JCORE_OUT char** endptr = nullptr, bool ignoreLeadingZero = true);
 
