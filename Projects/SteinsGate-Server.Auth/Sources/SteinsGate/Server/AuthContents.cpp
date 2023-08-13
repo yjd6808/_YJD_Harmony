@@ -8,9 +8,9 @@
 
 #include "Auth.h"
 #include "AuthCoreHeader.h"
-#include "AuthTokenManager.h"
+#include "AuthenticationManager.h"
 
-#include <SteinsGate/Server/AuthTokenManagerSchedule.h>
+#include <SteinsGate/Server/AuthenticationManagerSchedule.h>
 
 USING_NS_JC;
 
@@ -18,7 +18,7 @@ void IntializeScheduler();
 void FinalizeScheduler();
 
 
-AuthTokenManagerSchedule* g_pAuthTokenManagerSchedule;
+AuthenticationManagerSchedule* g_pAuthTokenManagerSchedule;
 
 void InitializeAuthContents() {
 	IntializeScheduler();
@@ -30,7 +30,7 @@ void FinalizeAuthContents() {
 
 
 void IntializeScheduler() {
-	g_pAuthTokenManagerSchedule = dbg_new AuthTokenManagerSchedule();
+	g_pAuthTokenManagerSchedule = dbg_new AuthenticationManagerSchedule();
 
 	g_pAuthTokenManagerSchedule->Initialize();
 

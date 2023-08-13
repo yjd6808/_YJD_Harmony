@@ -35,11 +35,11 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\AuthTokenManager.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthenticationManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\AuthTokenManagerSchedule.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthenticationManagerSchedule.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -105,11 +105,11 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManager.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthenticationManager.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManagerSchedule.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthenticationManagerSchedule.h">
       <SubType>
       </SubType>
     </ClInclude>

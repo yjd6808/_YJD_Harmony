@@ -892,7 +892,8 @@ SEnumEnd(ActorPartSpritePositioningRule)
 
 SEnumBegin(GamePlayMode)
 Single,
-PublicServer,
+Lan,
+Wan,
 Max
 SEnumMiddle(GamePlayMode)
 
@@ -902,3 +903,22 @@ static constexpr bool IsNetworkMode[Max]{
 };
 
 SEnumMiddleEnd(GamePlayMode)
+
+
+SEnumBegin(AuthenticationState)
+LobbyWait,
+Lobby,
+GameWait,
+Game,
+Max
+SEnumMiddle(AuthenticationState)
+
+static constexpr const char* Name[Max]{
+	"LobbyWait",
+	"Lobby",
+	"GameWait",
+	"Game"
+};
+
+SEnumMiddleEnd(AuthenticationState)
+

@@ -47,11 +47,10 @@ void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 			eResult = LoginResult::RegisterSuccess;
 		else 
 			eResult = LoginResult::IdAlreadyExist;
-	}
-
-	if (!bRegistered && !CoreTokenManager_v->Issue(accountData.DBTableId, accountData.Id.Source)) {
-		eResult = LoginResult::Logined;
-		return;
+	} else {
+		if (!CoreTokenManager_v->Issue(accountData.Id.Source)) {
+			eResult = LoginResult::Logined;
+		}
 	}
 
 	S_AUTH::SendLoginAck(eResult);

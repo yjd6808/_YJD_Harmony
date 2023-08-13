@@ -26,7 +26,7 @@ void Q_LOGIN::SelectAccountInfoList() {
 bool Q_LOGIN::CheckAccountExist(const char* id, const char* pass) {
 	Qry::SelectAccountInfoResult result;
 	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result, id, pass);
-	return result.HasNext();
+	return IsSuccess;
 }
 
 bool Q_LOGIN::RegisterAccount(const char* id, const char* pass) {
@@ -39,7 +39,7 @@ bool Q_LOGIN::SelectAccountInfo(const char* id, const char* pass, JCORE_OUT Acco
 	Qry::SelectAccountInfoResult result;
 	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result, id, pass);
 
-	if (!result.HasNext())
+	if (!IsSuccess)
 		return false;
 
 	accountData.LastLogin = DateTime::Now();

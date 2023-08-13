@@ -16,14 +16,14 @@ class MysqlDatabase;
 class AuthNetMaster;
 class AuthNetGroup;
 class AuthServer;
-class AuthTokenManager;
+class AuthenticationManager;
 
 extern DataManager* CoreDataManager_v;
 extern MysqlDatabase* CoreGameDB_v;;
 extern AuthNetMaster* CoreNetMaster_v;
 extern AuthNetGroup* CoreNetGroup_v;
 extern AuthServer* CoreServer_v;
-extern AuthTokenManager* CoreTokenManager_v;
+extern AuthenticationManager* CoreTokenManager_v;
 
 void InitializeAuthCore();
 void FinalizeAuthCore();

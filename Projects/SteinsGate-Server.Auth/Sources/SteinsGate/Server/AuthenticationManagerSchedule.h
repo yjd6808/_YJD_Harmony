@@ -10,7 +10,7 @@
 
  #include <JCore/Threading/Scheduler.h>
 
-class AuthTokenManagerSchedule : public JCore::SchedulerTaskRunnableRepeat
+class AuthenticationManagerSchedule : public JCore::SchedulerTaskRunnableRepeat
 {
 public:
 	void OnFirstScheduled(SchedulerTask* task) override;

@@ -33,10 +33,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOGIN.cpp">
       <Filter>Query</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\AuthTokenManager.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthenticationManager.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\AuthTokenManagerSchedule.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthenticationManagerSchedule.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthContents.cpp">
@@ -78,14 +78,14 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOGIN.h">
       <Filter>Query</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManager.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthenticationManager.h">
       <Filter>Contents</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthContents.h">
       <Filter>Contents</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthInterServerClientNetGroup.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthTokenManagerSchedule.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthenticationManagerSchedule.h">
       <Filter>Contents</Filter>
     </ClInclude>
   </ItemGroup>

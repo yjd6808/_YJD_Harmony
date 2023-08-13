@@ -17,7 +17,7 @@ MysqlDatabase* CoreGameDB_v;
 AuthNetMaster* CoreNetMaster_v;
 AuthNetGroup* CoreNetGroup_v;
 AuthServer* CoreServer_v;
-AuthTokenManager* CoreTokenManager_v;
+AuthenticationManager* CoreTokenManager_v;
 
 void InitializeAuthCore() {
 	CoreDataManager_v = DataManager::Get();
@@ -31,7 +31,7 @@ void InitializeAuthCore() {
 	CoreNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_MAIN).Get<AuthNetGroup*>();
 	CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_INTERSERVER).Get<InterServerClientNetGroup*>();
 	CoreServer_v = dynamic_cast<AuthServer*>(CoreNetGroup_v->GetServer());
-	CoreTokenManager_v = AuthTokenManager::Get();
+	CoreTokenManager_v = AuthenticationManager::Get();
 
 	// 공통 라이브러리 주입
 	{
