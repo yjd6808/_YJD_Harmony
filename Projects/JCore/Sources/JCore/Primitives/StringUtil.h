@@ -14,6 +14,9 @@ NS_JC_BEGIN
 
 class DefaultAllocator;
 
+template <typename...>
+struct Tuple;
+
 template <typename, typename>
 class Vector;
 class String;

@@ -8,6 +8,8 @@
 #include <JCore/Primitives/StringUtil.h>
 #include <JCore/Primitives/String.h>
 #include <JCore/Primitives/StaticString.h>
+
+#include <JCore/TypeTraits/IntegralConstant.h>
 #include <JCore/TypeCast.h>
 
 NS_JC_BEGIN
