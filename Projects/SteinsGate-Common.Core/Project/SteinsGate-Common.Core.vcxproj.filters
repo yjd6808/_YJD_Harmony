@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Core.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\SgaElement.cpp">
       <Filter>Sga</Filter>
     </ClCompile>
@@ -91,10 +90,15 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.cpp">
       <Filter>Data\MonsterStat</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\SgaColorFormat.h">
       <Filter>Sga</Filter>
     </ClInclude>
@@ -255,6 +259,15 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.h">
       <Filter>Data\MonsterStat</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\RuntimeConfig.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -319,6 +332,9 @@
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{7845d01b-e1ff-42ba-a673-676be240ab0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{df07d7b3-ec11-400e-bd40-3989d5caf2ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

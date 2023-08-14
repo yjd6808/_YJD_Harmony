@@ -16,7 +16,8 @@
 #pragma once
 
 #include <JCore/Sync/NormalRwLock.h>
-#include <JCore/Container/Vector.h>
+#include <JCore/Container/LinkedList.h>
+#include <JCore/Container/HashMap.h>
 #include <JCore/Threading/Thread.h>
 
 

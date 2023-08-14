@@ -135,6 +135,7 @@ public:
 	TreeMap()
 		: TMapCollection()
 		, m_pRoot(nullptr)
+		, m_iSize(0)
 	{}
 
 	TreeMap(const TTreeMap& other) : TreeMap() {
@@ -443,6 +444,9 @@ public:
 	TreeMapKeyCollection Keys() { return TreeMapKeyCollection(this); }
 	TreeMapValueCollection Values() { return TreeMapValueCollection(this); }
 	ContainerType GetContainerType() override { return ContainerType::TreeMap; }
+
+	bool IsEmpty() const override { return m_iSize == 0; }
+	int Size() const override { return m_iSize; }
 protected:
 
 	TTreeNode* FindNode(const TKey& key) const {
@@ -1143,6 +1147,7 @@ protected:
 	}
 
 	TTreeNode* m_pRoot;
+	int m_iSize;
 
 	inline static TKyComparator ms_KeyComparator;
 public:

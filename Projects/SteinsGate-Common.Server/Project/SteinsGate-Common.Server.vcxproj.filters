@@ -23,9 +23,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerEnum.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
@@ -109,9 +106,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp">
       <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp">
-      <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerEnum.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.cpp">

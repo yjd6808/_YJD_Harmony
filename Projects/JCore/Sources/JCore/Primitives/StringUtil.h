@@ -7,6 +7,7 @@
 
 #include <JCore/Type.h>
 #include <JCore/Define.h>
+#include <JCore/Assert.h>
 #include <JCore/Namespace.h>
 
 NS_JC_BEGIN

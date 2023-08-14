@@ -28,19 +28,22 @@ class ArrayCollection : public Collection<T, TAllocator>
 	using TArrayCollectionIterator  = ArrayCollectionIterator<T, TAllocator>;
 public:
 	// [1]
-	ArrayCollection() : TCollection() {
-		m_pArray = nullptr;
-		m_iCapacity = 0;
-	}
+	ArrayCollection()
+		: m_iCapacity(0)
+		, m_iSize(0)
+		, m_pArray(nullptr)
+	{}
 
 	// [2]
-	ArrayCollection(int capacity) : TCollection() {
+	ArrayCollection(int capacity) {
 		if (capacity == 0) {
 			m_pArray = nullptr;
+			m_iSize = 0;
 			m_iCapacity = 0;
 		} else {
 			int iAllocatedSize;
 			m_pArray = TAllocator::template AllocateDynamic<T*>(capacity * sizeof(T), iAllocatedSize);
+			m_iSize = 0;
 			m_iCapacity = capacity;
 		}
 	}
@@ -120,6 +123,9 @@ public:
 	virtual bool IsFull() const {
 		return this->m_iSize == m_iCapacity;
 	}
+
+	bool IsEmpty() const override { return m_iSize == 0; }
+	int Size() const override { return m_iSize; }
 protected:
 	/// <summary>
 	/// 다른 배열 컨테이너로부터 복사를 받는다.
@@ -512,6 +518,7 @@ protected:
 	static constexpr int ms_iDefaultCapacity = 32;	// 초기 배열 크기
 protected:
 	int m_iCapacity;
+	int m_iSize;
 	T* m_pArray;
 
 	friend class TArrayCollectionIterator;

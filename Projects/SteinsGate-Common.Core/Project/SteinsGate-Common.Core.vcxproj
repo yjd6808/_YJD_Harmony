@@ -49,6 +49,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.cpp">
       <SubType>
@@ -154,6 +155,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\GameEnum.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.h">
@@ -176,6 +178,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\PacketViewer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\RuntimeConfig.h">
       <SubType>
       </SubType>
     </ClInclude>

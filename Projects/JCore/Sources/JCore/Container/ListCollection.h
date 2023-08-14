@@ -46,6 +46,7 @@ public:
 		// 다루는 데이터가 무거워지니까 메모리뻥튀기가 너무심하다.
 		m_pHead = nullptr;
 		m_pTail = nullptr;
+		m_iSize = 0;
 	}
 
 	ListCollection(const TListCollection& other) : TListCollection() {
@@ -112,6 +113,9 @@ public:
 			pCur = pNext;
 		}
 	}
+
+	bool IsEmpty() const override { return m_iSize == 0; }
+	int Size() const override { return m_iSize; }
 protected:
 
 	template <typename U = T, typename UAllocator>
@@ -520,7 +524,8 @@ protected:
 protected:
 	TListNode* m_pHead;
 	TListNode* m_pTail;
-
+	int m_iSize;
+	
 	friend class TListCollectionIterator;
 };
 

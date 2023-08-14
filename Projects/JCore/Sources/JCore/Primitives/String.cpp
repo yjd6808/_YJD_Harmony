@@ -80,7 +80,7 @@ String::String(const String& str) : String(str.m_pBuffer) {
 
 String::String(String&& str) noexcept {
 	// 이동 대입 연산자 호출
-	*this = std::move(str);
+	this->operator=(Move(str));
 }
 
 String::~String() {

@@ -68,7 +68,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonClient.h">
       <SubType>
       </SubType>
@@ -115,7 +114,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.cpp">
       <SubType>
       </SubType>

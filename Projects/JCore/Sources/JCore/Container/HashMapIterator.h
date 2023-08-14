@@ -11,23 +11,22 @@ NS_JC_BEGIN
 // 전방 선언
 class VoidOwner; 
 template <typename> struct Hasher;
-template <typename, typename, typename> class  HashMap; 
-template <typename, typename, typename> struct Bucket;
-template <typename, typename> struct BucketNode;
+template <typename> struct BucketNode;
+
+template <typename...> struct Bucket;
+template <typename, typename, typename> class  HashMap;
 template <typename, typename> struct Pair;
 
 template <typename TKey, typename TValue, typename TAllocator>
 class HashMapIterator : public MapCollectionIterator<TKey, TValue, TAllocator>
 {
 	using TBucket				 = Bucket<TKey, TValue, TAllocator>;
-	using TBucketNode			 = BucketNode<TKey, TValue>;
-	using THashMap				 = HashMap<TKey, TValue, TAllocator>;
 	using TKeyValuePair			 = Pair<TKey, TValue>;
+	using TBucketNode			 = BucketNode<TKeyValuePair>;
+	using THashMap				 = HashMap<TKey, TValue, TAllocator>;
 	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue, TAllocator>;
 public:
 	HashMapIterator(VoidOwner& owner, TBucket* currentBucket, int currentBucketIndex) : TMapCollectionIterator(owner) {
-		m_pMap = CastHashMap();
-
 		m_pCurrentBucket = currentBucket;
 		m_iCurrentBucketIndex = currentBucketIndex;
 	}
@@ -59,7 +58,7 @@ public:
 		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex++);
 
 		if (m_iCurrentBucketIndex < m_pCurrentBucket->Size) {
-			return val.Pair;
+			return val.Data;
 		}
 
 		m_pCurrentBucket = m_pCurrentBucket->Next;
@@ -68,7 +67,7 @@ public:
 			m_iCurrentBucketIndex = 0;
 		}
 
-		return val.Pair;
+		return val.Data;
 	}
 
 	TKeyValuePair& Previous() override {
@@ -76,7 +75,7 @@ public:
 		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex--);
 
 		if (m_iCurrentBucketIndex >= 0) {
-			return val.Pair;
+			return val.Data;
 		}
 
 		m_pCurrentBucket = m_pCurrentBucket->Previous;
@@ -85,12 +84,12 @@ public:
 			m_iCurrentBucketIndex = m_pCurrentBucket->Size - 1;
 		}
 
-		return val.Pair;
+		return val.Data;
 	}
 
 	TKeyValuePair& Current() override {
 		TBucketNode& val = m_pCurrentBucket->GetAt(m_iCurrentBucketIndex);
-		return val.Pair;
+		return val.Data;
 	}
 
 	bool IsEnd() const override {
@@ -109,7 +108,6 @@ protected:
 protected:
 	int m_iCurrentBucketIndex;
 	TBucket* m_pCurrentBucket;
-	THashMap* m_pMap;
 	friend class THashMap;
 };
 

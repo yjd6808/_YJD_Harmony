@@ -37,8 +37,7 @@ public:
 	Collection() 
 		: TIterable()
 		, m_Owner(this, true)
-	{
-	}
+	{}
 
 	~Collection() noexcept override = default;
 protected:
@@ -50,27 +49,14 @@ public:
 	///  - HashMapKeyCollection
 	///  - HashMapValueCollection
 	/// </summary>
-	virtual bool IsEmpty() const { 
-		return m_iSize == 0; 
-	}
-
-	virtual int Size() const {
-		return m_iSize; 
-	}
-
-	virtual bool Valid() {
-		return true;
-	}
-
+	virtual bool IsEmpty() const = 0;
+	virtual int Size() const = 0;
 	virtual ContainerType GetContainerType() = 0;
 	virtual CollectionType GetCollectionType() = 0;
 
-	TCollectionExtension Extension() {
-		return TCollectionExtension(this);
-	}
+	TCollectionExtension Extension() { return TCollectionExtension(this); }
 protected:
 	VoidOwner m_Owner;
-	int m_iSize = 0;
 };
 
 NS_JC_END

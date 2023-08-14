@@ -2,8 +2,8 @@
  * 작성자 : 윤정도
  */
 
-#include "Server.h"
-#include "ServerCoreHeader.h"
+#include "Core.h"
+#include "CommonCoreHeader.h"
 #include "InputThread.h"
 
 #include <csignal>
@@ -56,7 +56,7 @@ int InputThread::PopEvent() {
 	JCORE_LOCK_GUARD(m_Lock);
 
 	if (m_qInputEvent.Size() <= 0) 
-		return CommonInputEvent::NoEvent;
+		return 0;
 
 	const int inputEvent = m_qInputEvent.Front();
 	m_qInputEvent.Dequeue();

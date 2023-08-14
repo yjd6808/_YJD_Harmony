@@ -189,6 +189,9 @@ public:
 		return l;
 	}
 
+	int Size() const override { return m_iSize; }
+	bool IsEmpty() const override { return m_iSize == 0; }
+
 protected:
 	static void ConnectNode(TStreamNode* lhs, TStreamNode* rhs) {
 		lhs->Next = rhs;
@@ -297,6 +300,7 @@ protected:
 	TStreamNode* m_pTail = &m_ValtyTail;
 private:
 	int m_iAllocatedSize{};
+	int m_iSize;
 
 	// TODO: 추후 시간나면 더미노드 없앨 것
 	TStreamNode m_ValtyHead;

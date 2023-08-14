@@ -11,7 +11,7 @@
 #include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/HashMap.h>
 
-#include <SteinsGate/Common/ServerEnum.h>
+#include <SteinsGate/Common/Enum.h>
 
 class InputThread : public JCore::RunnableThread
 {
