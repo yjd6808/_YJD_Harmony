@@ -951,6 +951,8 @@ protected:
 	int m_iSize;
 
 	inline static TKyComparator ms_KeyComparator;
+
+	template <typename...> friend class TreeSet;
 }; // class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, TreeTableImplementation::RedBlackTree>
 
 #pragma endregion
@@ -1961,6 +1963,9 @@ protected:
 	int m_iSize;
 
 	inline static TKyComparator ms_KeyComparator;
+
+	template <typename, typename, typename, typename, TreeTableImplementation> friend class TreeMap;
+	template <typename, typename, typename, typename, TreeTableImplementation> friend class TreeMapIterator;
 }; // class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, TreeTableImplementation::RedBlackTree>
 
 #pragma endregion

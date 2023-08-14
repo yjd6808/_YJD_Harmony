@@ -9,19 +9,20 @@
 NS_JC_BEGIN
 
 // 전방 선언
+enum class TreeTableImplementation;
 class VoidOwner; 
-template <typename> struct Hasher;
-template <typename, typename, typename, typename> class  TreeMap; 
-template <typename, typename> struct TreeNode;
+template <typename> struct TreeNode;
+template <typename, typename, typename, typename, TreeTableImplementation> class TreeMap;
 template <typename, typename> struct Pair;
 
-template <typename TKey, typename TValue, typename TKeyComparator, typename TAllocator>
+template <typename TKey, typename TValue, typename TKeyComparator, typename TAllocator, TreeTableImplementation Implementation>
 class TreeMapIterator : public MapCollectionIterator<TKey, TValue, TAllocator>
 {
-	using TTreeNode				 = TreeNode<TKey, TValue>;
-	using TTreeMap				 = TreeMap<TKey, TValue, TKeyComparator, TAllocator>;
-	using TTreeMapIterator		 = TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator>;
 	using TKeyValuePair			 = Pair<TKey, TValue>;
+	using TTreeNode				 = TreeNode<TKeyValuePair>;
+	using TTreeMap				 = TreeMap<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
+	using TTreeTable			 = TreeTable<ParameterPack_t<TKey, TValue, TKeyComparator, TAllocator>, Implementation>;
+	using TTreeMapIterator		 = TreeMapIterator<TKey, TValue, TKeyComparator, TAllocator, Implementation>;
 	using TMapCollectionIterator = MapCollectionIterator<TKey, TValue, TAllocator>;
 public:
 	TreeMapIterator(VoidOwner& owner, TTreeNode* node) : TMapCollectionIterator(owner) { m_pIteratorNode = node; }
@@ -46,8 +47,8 @@ public:
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
-		TKeyValuePair& pair = m_pIteratorNode->Pair;
-		m_pIteratorNode = TTreeMap::FindBiggerNode(m_pIteratorNode);
+		TKeyValuePair& pair = m_pIteratorNode->Data;
+		m_pIteratorNode = TTreeTable::FindBiggerNode(m_pIteratorNode);
 		return pair;
 	}
 
@@ -56,8 +57,8 @@ public:
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
-		TKeyValuePair& pair = m_pIteratorNode->Pair;
-		m_pIteratorNode = TTreeMap::FindSmallerNode(m_pIteratorNode);
+		TKeyValuePair& pair = m_pIteratorNode->Data;
+		m_pIteratorNode = TTreeTable::FindSmallerNode(m_pIteratorNode);
 		return pair;
 	}
 
@@ -66,7 +67,7 @@ public:
 			throw InvalidOperationException("데이터가 없습니다.");
 		}
 
-		return m_pIteratorNode->Pair;
+		return m_pIteratorNode->Data;
 	}
 
 	// TODO: 올바르게 수정
