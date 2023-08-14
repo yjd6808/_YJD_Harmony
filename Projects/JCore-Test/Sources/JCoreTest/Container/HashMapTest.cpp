@@ -1,6 +1,6 @@
 ﻿/*
 	작성자 : 윤정도
-	Arrays 클래스를 테스트합니다.
+	HashMap 클래스를 테스트합니다.
 */
 
 
@@ -10,8 +10,7 @@
 #include <JCore/Container/HashMap.h>
 #include <JCore/Random.h>
 
-
-using namespace std;
+USING_NS_STD;
 
 #if TEST_HashMapTest == ON
 

@@ -132,11 +132,6 @@ public:
 				return false;
 			}
 
-			// 동일한 키값을 가진 데이터가 있으면 안되므로..
-			if (ms_KeyComparator(key, pParent->Data) == 0) {
-				return false;
-			}
-
 			pNewNode = TAllocator::template AllocateInitStatic<TTreeNode>(Forward<Ky>(key));
 			pNewNode->Parent = pParent;
 
@@ -318,10 +313,13 @@ protected:
 		while (pCur != nullptr) {
 			pParent = pCur;
 
-			if (ms_KeyComparator(key, pCur->Data) > 0) {
+			const int iComp = ms_KeyComparator(key, pCur->Data);
+			if (iComp > 0) {
 				pCur = pCur->Right;
-			} else {
+			} else if (iComp < 0) {
 				pCur = pCur->Left;
+			} else {
+				return nullptr;
 			}
 		}
 
@@ -1033,11 +1031,6 @@ public:
 				return false;
 			}
 
-			// 동일한 키값을 가진 데이터가 있으면 안되므로..
-			if (ms_KeyComparator(key, pParent->Data.Key) == 0) {
-				return false;
-			}
-
 			pNewNode = TAllocator::template AllocateInitStatic<TTreeNode>(TKeyValuePair{ Forward<Ky>(key), Forward<Vy>(value) });
 			pNewNode->Parent = pParent;
 
@@ -1320,10 +1313,13 @@ protected:
 		while (pCur != nullptr) {
 			pParent = pCur;
 
-			if (ms_KeyComparator(key, pCur->Data.Key) > 0) {
+			const int iComp = ms_KeyComparator(key, pCur->Data.Key);
+			if (iComp > 0) {
 				pCur = pCur->Right;
-			} else {
+			} else if (iComp < 0) {
 				pCur = pCur->Left;
+			} else {
+				return nullptr;
 			}
 		}
 

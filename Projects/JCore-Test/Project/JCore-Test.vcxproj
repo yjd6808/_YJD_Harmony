@@ -24,6 +24,7 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\ArrayStackTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ArraysTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\HashMapTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\HashSetTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\Impl\AVLTreeImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\Impl\AVLTreeMemoImplTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\Impl\BinarySearchTreeImplTest.cpp" />
@@ -33,6 +34,10 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\ListQueueTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\ListStackTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Container\TreeMapTest.cpp" />
+    <ClCompile Include="..\Sources\JCoreTest\Container\TreeSetTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\Container\VectorTest.cpp">
       <SubType>
       </SubType>

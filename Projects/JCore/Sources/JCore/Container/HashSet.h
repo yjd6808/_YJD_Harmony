@@ -101,8 +101,8 @@ public:
 
 	// Value들만 순회해서 삭제하는 작업
 	// 자주 사용해서 그냥 라이브러리에 박음
-	void ForEachValueDelete() {
-		Table.ForEachValueDelete();
+	void ForEachDelete() {
+		Table.ForEachDelete();
 	}
 
 	SharedPtr<TIterator> Begin() const override {

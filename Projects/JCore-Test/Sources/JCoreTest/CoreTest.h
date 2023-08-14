@@ -38,8 +38,8 @@
 #include <JCore/Debug/MemoryLeakDetector.h>
 #include <JCore/Debug/MemoryPoolLeakDetector.h>
 
-using namespace std;
-using namespace JCore;
+USING_NS_JC;
+USING_NS_STD;
 
 #define ON		1
 #define OFF		0
@@ -61,8 +61,10 @@ using namespace JCore;
 
 // 개별 테스트 수행시 사용
 #if TestEnabled == OFF
-	#define TEST_AtomicTest                     ON
-	#define TEST_TimeTest                       ON
+	// #define TEST_HashSetTest                     ON
+	#define TEST_TreeSetTest                     ON
+	// #define TEST_HashMapTest                     ON
+	// #define TEST_TreeMapTest                     ON
 #endif
 
 #if TestEnabled == ON
@@ -73,7 +75,9 @@ using namespace JCore;
         #define	TEST_ArrayQueueTest				    ON
         #define	TEST_ArraysTest					    ON
         #define TEST_HashMapTest                    ON
+		#define TEST_HashSetTest                    ON
 		#define TEST_TreeMapTest                    ON
+		#define TEST_TreeSetTest                    ON
         #define	TEST_LinkedListTest					ON
         #define	TEST_ListQueueTest					ON
         #define	TEST_ListStackTest					ON
