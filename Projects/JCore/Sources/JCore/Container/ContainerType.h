@@ -19,6 +19,8 @@ enum class ContainerType {
 	LinkedList,
 	HashMap,
 	TreeMap,
+	HashSet,
+	TreeSet,
 	ReferenceStream,
 	HashMapKeyCollection,
 	HashMapValueCollection,

@@ -30,6 +30,7 @@ public:
 		, m_pHeadBucket(nullptr)
 		, m_pTailBucket(nullptr)
 		, m_iCapacity(capacity)
+		, m_iSize(0)
 	{
 		if (m_iCapacity > 0) {
 			int iAllocatedSize;
@@ -126,14 +127,14 @@ public:
 			PushBackNewBucket(&m_pTable[uiBucket]);
 		}
 
-		m_pTable[uiBucket].EmplaceBack(static_cast<TKey>(Forward<Ky>(key), uiHash));
+		m_pTable[uiBucket].EmplaceBack(Forward<Ky>(key), uiHash);
 		++this->m_iSize;
 		return true;
 	}
 
 	bool Exist(const TKey& key) const {
 		if (m_pTable == nullptr) return false;
-		return m_pTable[HashBucket(key)].ExistByKey(key);
+		return m_pTable[HashBucket(key)].Exist(key);
 	}
 
 	bool Remove(const TKey& key) {
@@ -370,6 +371,9 @@ protected:
 	TBucket* m_pTailBucket;
 	Int32 m_iCapacity;
 	Int32 m_iSize;
+
+	template <typename, typename> friend class HashSet;
+	template <typename, typename> friend class HashSetIterator;
 }; // class HashTable<TKey, TAllocator>
 
 #pragma endregion
@@ -800,6 +804,7 @@ protected:
 	Int32 m_iSize;
 
 	template <typename, typename, typename> friend class HashMap;
+	template <typename, typename, typename> friend class HashMapIterator;
 }; // class HashTable<TKey, TValue, TAllocator>
 
 #pragma endregion

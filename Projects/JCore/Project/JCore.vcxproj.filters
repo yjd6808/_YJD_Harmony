@@ -503,6 +503,24 @@
     <ClInclude Include="..\Sources\JCore\Container\TreeTable_Node.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\SetCollection.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\SetCollectionIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\TreeSet.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\TreeSetIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\HashSetIterator.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\HashSet.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

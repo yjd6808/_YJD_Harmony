@@ -241,20 +241,6 @@ public:
 		return true;
 	}
 
-	bool TryGetFirstKey(JCORE_OUT TKey& key) const {
-		if (m_pRoot == nullptr) {
-			return false;
-		}
-
-		TTreeNode* pFirst = FindSmallestNode(m_pRoot);
-		if (pFirst == nullptr) {
-			return false;
-		}
-
-		key = pFirst->Data;
-		return true;
-	}
-
 	bool IsEmpty() const { return m_iSize == 0; }
 	int Size() const { return m_iSize; }
 protected:
@@ -952,7 +938,8 @@ protected:
 
 	inline static TKyComparator ms_KeyComparator;
 
-	template <typename...> friend class TreeSet;
+	template <typename, typename, typename, TreeTableImplementation> friend class TreeSet;
+	template <typename, typename, typename, TreeTableImplementation> friend class TreeSetIterator;
 }; // class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, TreeTableImplementation::RedBlackTree>
 
 #pragma endregion

@@ -13,6 +13,7 @@ enum class CollectionType
 	Array,
 	List,
 	Map,
+	Set,
 	Stream,
 	KeyCollection,
 	ValueCollection
