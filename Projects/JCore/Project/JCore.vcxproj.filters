@@ -574,5 +574,11 @@
     <Natvis Include="..\Sources\JCore\Natvis\TreeMap.natvis">
       <Filter>Natvis</Filter>
     </Natvis>
+    <Natvis Include="..\Sources\JCore\Natvis\TreeSet.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
+    <Natvis Include="..\Sources\JCore\Natvis\HashSet.natvis">
+      <Filter>Natvis</Filter>
+    </Natvis>
   </ItemGroup>
 </Project>

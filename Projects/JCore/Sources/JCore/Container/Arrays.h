@@ -298,6 +298,7 @@ struct Arrays final
 
 	template <typename T>
 	static void ForEachDelete(T* arr, const int size) {
+		if (arr == nullptr) return;
 		if constexpr (IsPointerType_v<T>) {
 			for (int i = 0; i < size; ++i) {
 				JCORE_DELETE_SAFE(arr[i]);

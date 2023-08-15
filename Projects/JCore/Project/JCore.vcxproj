@@ -523,6 +523,7 @@
     <Natvis Include="..\Sources\JCore\Natvis\ArrayStack.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\Atomic.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\HashMap.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\HashSet.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\LinkedList.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\ListStack.natvis" />
@@ -533,6 +534,7 @@
     <Natvis Include="..\Sources\JCore\Natvis\String.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\Time.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\TreeMap.natvis" />
+    <Natvis Include="..\Sources\JCore\Natvis\TreeSet.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\Tuple.natvis" />
     <Natvis Include="..\Sources\JCore\Natvis\Vector.natvis" />
   </ItemGroup>
