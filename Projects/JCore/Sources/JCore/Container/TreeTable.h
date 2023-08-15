@@ -36,7 +36,7 @@ enum class RotateMode
 template <typename Pack, TreeTableImplementation Implementation>	
 class TreeTable;
 
-#pragma region TreeTable<Pack<TKey, TKeyComparator, TAllocator>, TreeTableImplementation::RedBlackTree>
+#pragma region TreeTable<TKey> - 레드블랙트리 기반 구현
 
 template <template <typename...> typename Pack, typename TKey, typename TKeyComparator, typename TAllocator>
 class TreeTable<Pack<TKey, TKeyComparator, TAllocator>, TreeTableImplementation::RedBlackTree>
@@ -942,7 +942,7 @@ protected:
 
 #pragma endregion
 
-#pragma region TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, TreeTableImplementation::RedBlackTree>
+#pragma region TreeTable<TKey, TValue> - 레드블랙트리 기반 구현
 template <template <typename...> typename Pack, typename TKey, typename TValue, typename TKeyComparator, typename TAllocator>
 class TreeTable<Pack<TKey, TValue, TKeyComparator, TAllocator>, TreeTableImplementation::RedBlackTree>
 {

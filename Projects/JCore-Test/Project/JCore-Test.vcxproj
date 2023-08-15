@@ -83,6 +83,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\BitFlagTest.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCoreTest\Primitives\ObserverPtrTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Primitives\SmartPtrTest.cpp" />
     <ClCompile Include="..\Sources\JCoreTest\Primitives\StaticStringTest.cpp" />

@@ -402,6 +402,10 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Primitives\AutoPtr.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\AutoRef.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\BitFlag.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Primitives\ObserverPtr.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\RefCountObject.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\RefCountObjectPtr.h">

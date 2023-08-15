@@ -137,6 +137,9 @@
     <ClCompile Include="..\Sources\JCoreTest\Container\TreeSetTest.cpp">
       <Filter>Container</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Primitives\BitFlagTest.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />

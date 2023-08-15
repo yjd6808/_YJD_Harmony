@@ -521,6 +521,9 @@
     <ClInclude Include="..\Sources\JCore\Container\HashSet.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Primitives\BitFlag.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">
