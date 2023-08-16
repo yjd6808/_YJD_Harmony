@@ -33,6 +33,15 @@ using SGArrays = JCore::Arrays;
 template <typename TKey, typename TValue, typename TAllocator = JCore::DefaultAllocator>
 using SGHashMap = JCore::HashMap<TKey, TValue, TAllocator>;
 
+template <typename TKey, typename TAllocator = JCore::DefaultAllocator>
+using SGHashSet = JCore::HashSet<TKey, TAllocator>;
+
+template <typename TKey, typename TValue, typename TComparator = JCore::Comparator<TKey>, typename TAllocator = JCore::DefaultAllocator>
+using SGTreeMap = JCore::TreeMap<TKey, TValue, TComparator, TAllocator>;
+
+template <typename TKey, typename TComparator = JCore::Comparator<TKey>, typename TAllocator = JCore::DefaultAllocator>
+using SGTreeSet = JCore::TreeSet<TKey, TComparator, TAllocator>;
+
 template <typename T, typename TAllocator = JCore::DefaultAllocator>
 using SGVector = JCore::Vector<T, TAllocator>;
 

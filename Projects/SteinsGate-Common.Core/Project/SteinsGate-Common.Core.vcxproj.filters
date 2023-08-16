@@ -93,7 +93,13 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\InputThread.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\CLIThread.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CLIListenerBase.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\RuntimeConfigBase.cpp">
       <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
@@ -262,10 +268,16 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InputThread.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\CLIThread.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\RuntimeConfig.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\RuntimeConfigBase.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ICLIListener.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CLIListenerBase.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
@@ -335,6 +347,9 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{df07d7b3-ec11-400e-bd40-3989d5caf2ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{22fee212-3e25-40e8-89e1-794cc68791dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

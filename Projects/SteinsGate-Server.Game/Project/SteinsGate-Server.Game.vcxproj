@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CLIListener.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Game.cpp">
       <SubType>
       </SubType>
@@ -70,6 +71,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\R_LOGIC.cpp">
       <SubType>
       </SubType>
@@ -85,6 +87,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CLIListener.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Game.h">
       <SubType>
       </SubType>
@@ -124,6 +127,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_CHAR.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\R_LOGIC.h">
       <SubType>
       </SubType>

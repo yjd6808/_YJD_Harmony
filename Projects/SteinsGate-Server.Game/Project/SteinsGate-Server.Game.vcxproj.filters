@@ -37,6 +37,12 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\Q_CHAR.cpp">
       <Filter>Query</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CLIListener.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\GameCoreHeader.h" />
@@ -75,6 +81,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_CHAR.h">
       <Filter>Query</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CLIListener.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">
@@ -91,6 +103,9 @@
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{fe79c973-98af-462a-a693-69f34dcce325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{1f78515d-b123-4873-afd1-38797882ad85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

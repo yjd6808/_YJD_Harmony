@@ -10,7 +10,6 @@
 #include "GameCoreHeader.h"
 #include "ListenerLogicServer.h"
 
-#include <SteinsGate/Common/GameCmd.h>
 #include <SteinsGate/Common/QueryDefine.h>
 #include <SteinsGate/Common/PacketViewer.h>
 

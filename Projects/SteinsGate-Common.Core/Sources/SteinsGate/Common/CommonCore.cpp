@@ -14,14 +14,18 @@
 
 USING_NS_JC;
 
+CLIThread* CoreCLIThread_v;
 ServerProcessInfoPackage* CoreServerProcessInfoPackage_v = nullptr;	// 메인 프로그램에서 주입해줄 것
-CommonInfo* CoreCommonInfo_v = nullptr;					// 메인 프로그램에서 주입해줄 것
-CharCommonInfo* CoreCharCommon_v = nullptr;				// 메인 프로그램에서 주입해줄 것
-ThreadPool* CoreThreadPool_v = nullptr;					// 메인 프로그램에서 주입해줄 것
-Scheduler* CoreScheduler_v = nullptr;					// 메인 프로그램에서 주입해줄 것
+CommonInfo* CoreCommonInfo_v = nullptr;								// 메인 프로그램에서 주입해줄 것
+CharCommonInfo* CoreCharCommon_v = nullptr;							// 메인 프로그램에서 주입해줄 것
+ThreadPool* CoreThreadPool_v = nullptr;								// 메인 프로그램에서 주입해줄 것
+Scheduler* CoreScheduler_v = nullptr;								// 메인 프로그램에서 주입해줄 것
+RuntimeConfigBase* CoreRuntimeConfigBase_v = nullptr;				// 메인 프로그램에서 주입해줄 것
 JNetwork::CommandNameDictionary CoreCommandNameDictionary_v;
 
 void InitializeCommonCore() {
+	CoreCLIThread_v = dbg_new CLIThread();
+	CoreCLIThread_v->Start();
 
 	// 공통 커맨드 이름 등록
 	// [ AUTH ]
@@ -30,4 +34,7 @@ void InitializeCommonCore() {
 }
 
 void FinalizeCommonCore() {
+	CoreCLIThread_v->SendInterrupt();
+	CoreCLIThread_v->Join();
+	JCORE_DELETE_SAFE(CoreCLIThread_v);
 }

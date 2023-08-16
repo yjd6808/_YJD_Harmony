@@ -19,6 +19,7 @@ class GameNetGroup;
 class LogicServer;
 class GameTokenManager;
 struct GameServerProcessInfo;
+struct RuntimeConfig;
 
 extern DataManager* CoreDataManager_v;
 extern MysqlDatabase* CoreGameDB_v;;
@@ -28,6 +29,7 @@ extern LogicServer* CoreServer_v;
 extern GameTokenManager* CoreTokenManager_v;
 extern GameServerType_t CoreGameServerType_v;
 extern GameServerProcessInfo* CoreGameServerProcessInfo_v;
+extern RuntimeConfig* CoreRuntimeConfig_v;
 
 bool InitializeGameCore(GameServerType_t gameServerType);
 void FinalizeGameCore();

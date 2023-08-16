@@ -42,41 +42,6 @@ static constexpr const char* Name[Max]{
 
 SEnumMiddleEnd(InterServerClientType)
 
-SEnumBegin(CommonInputEvent)
-NoEvent,
-TerminateProgram,
-Help,
-CommonMax
-SEnumMiddle(CommonInputEvent)
-static const char* CommonName[CommonMax];
-SEnumMiddleEnd(CommonInputEvent)
-
-// =================================================
-
-// TODO: 커맨드 추가시 AuthMax, LobbyMax, GameMax 0으로 변경할 것 배열 크기가 0이 될 수 없어서 일단 값을 넣어놓음
-SEnumInteritedBegin(AuthInputEvent, CommonInputEvent)
-AuthMax = 2
-SEnumMiddle(AuthInputEvent)
-static const char* AuthName[AuthMax];
-static const char* NameOf(int inputEvent);
-static JCore::Pair<JCore::String, int> PairOf(int inputEvent);
-SEnumMiddleEnd(AuthInputEvent)
-
-
-SEnumInteritedBegin(CenterInputEvent, CommonInputEvent)
-ShutdownAllServer,
-ShutdownAuthServer,
-ShutdownLobbyServer,
-ShutdownGameServer,
-ServerState,
-CenterMax
-SEnumMiddle(CenterInputEvent)
-static const char* CenterName[CenterMax];
-static const char* NameOf(int inputEvent);
-static JCore::Pair<JCore::String, int> PairOf(int inputEvent);
-SEnumMiddleEnd(CenterInputEvent)
-
-
 SEnumBegin(CenterOrder)
 RebootServer,
 LaunchServer,

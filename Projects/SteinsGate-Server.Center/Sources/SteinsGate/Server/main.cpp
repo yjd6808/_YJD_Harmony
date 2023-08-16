@@ -28,7 +28,7 @@ ConsoleLoggerOption NetLoggerOption_v = [] {
 }();
 
 int main() {
-
+	new char;
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
 	InitializeNetLogger(&NetLoggerOption_v, LOG_SPECIFIER_CENTER);
@@ -37,21 +37,10 @@ int main() {
 	InitializeServerCore();
 	InitializeServerCenterLogo(true, 14);
 	InitializeCenterCore();
-
 	{
 		CoreServer_v->Start(CoreServerProcessInfoPackage_v->Center.BindInterServerTcp);
-		CoreInputThread_v->SetEventMap({
-			CenterInputEvent::PairOf(CenterInputEvent::TerminateProgram),
-			CenterInputEvent::PairOf(CenterInputEvent::ShutdownAllServer),
-			CenterInputEvent::PairOf(CenterInputEvent::ShutdownAuthServer),
-			CenterInputEvent::PairOf(CenterInputEvent::ShutdownLobbyServer),
-			CenterInputEvent::PairOf(CenterInputEvent::ShutdownGameServer),
-			CenterInputEvent::PairOf(CenterInputEvent::ServerState),
-		});
-
 		CoreNetMaster_v->ProcessMainUpdate();
 	}
-
 	FinalizeCenterCore();
 	FinalizeServerCore();
 	FinalizeCommonCore();

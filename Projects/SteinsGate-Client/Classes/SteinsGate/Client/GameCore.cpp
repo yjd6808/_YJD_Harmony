@@ -12,6 +12,8 @@
 #include <SteinsGate/Common/SgaElementInitializer.h>
 #include <SteinsGate/Common/AudioPlayer.h>
 
+#include <SteinsGate/Client/CLIListener.h>
+
 
 // ===========================================================
 //     슈타인즈 게이트 모든 세계션이 만나는 곳
@@ -33,6 +35,7 @@ Global*					CoreGlobal_v;
 PopupManager*			CorePopupManager_v;
 TimeManager*			CoreTimeManager_v;
 NetCore*				CoreNet_v;
+RuntimeConfig*			CoreRuntimeConfig_v;
 
 void InitializeClientCore() {
 	CoreApp_v					= (SGApplication*)cocos2d::Application::getInstance();
@@ -50,8 +53,11 @@ void InitializeClientCore() {
 	CorePopupManager_v			= PopupManager::Get();
 	CoreTimeManager_v			= TimeManager::Get();
 	CoreNet_v					= NetCore::Get();
+	CoreRuntimeConfig_v			= RuntimeConfig::Get();
 	CoreServerProcessInfoPackage_v = CoreDataManager_v->getServerProcessInfoPackage(1);
 
+
+	CoreRuntimeConfig_v->Load();
 	CoreGlobal_v->init();
 	CoreFont_v->init();
 	CoreDataManager_v->loadAll();
@@ -59,7 +65,7 @@ void InitializeClientCore() {
 	CoreInven_v->init();
 	CoreActorListenerManager_v->init();
 	CoreNet_v->Initialize();
-	
+	CoreCLIThread_v->SetListener(dbg_new CLIListener);
 }
 
 void FinalizeClientCore() {
@@ -76,6 +82,7 @@ void FinalizeClientCore() {
 	JCORE_DELETE_SINGLETON_SAFE(CoreActorBox_v);
 	JCORE_DELETE_SINGLETON_SAFE(CorePackManager_v);
 	JCORE_DELETE_SINGLETON_SAFE(CoreGlobal_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreRuntimeConfig_v);
 	
 	JCORE_MAKE_NULL(CoreWorld_v);	// 월드는 코코스에서 알아서 제거해줌
 }

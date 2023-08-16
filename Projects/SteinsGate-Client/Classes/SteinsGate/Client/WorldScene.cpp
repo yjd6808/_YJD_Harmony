@@ -129,6 +129,7 @@ void WorldScene::InitUILayer() {
 
 
 void WorldScene::update(float dt) {
+	updateCLI(dt);
 	updateTime(dt);
 	updateNet(dt);
 	updateScene(dt);
@@ -158,6 +159,10 @@ void WorldScene::updateNet(float dt) {
 
 void WorldScene::updateTime(float dt) {
 	CoreTimeManager_v->updateAppTime();
+}
+
+void WorldScene::updateCLI(float dt) {
+	CoreCLIThread_v->ProcessInputs();
 }
 
 void WorldScene::onWndMessageReceived(int code, WPARAM wParam, LPARAM lParam) {

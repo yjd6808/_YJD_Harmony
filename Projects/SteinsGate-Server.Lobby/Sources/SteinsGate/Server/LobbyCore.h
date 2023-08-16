@@ -17,6 +17,7 @@ class LobbyNetMaster;
 class LobbyNetGroup;
 class LobbyServer;
 class LobbyTokenManager;
+struct RuntimeConfig;
 
 extern DataManager* CoreDataManager_v;
 extern MysqlDatabase* CoreGameDB_v;;
@@ -24,6 +25,7 @@ extern LobbyNetMaster* CoreNetMaster_v;
 extern LobbyNetGroup* CoreNetGroup_v;
 extern LobbyServer* CoreServer_v;
 extern LobbyTokenManager* CoreTokenManager_v;
+extern RuntimeConfig* CoreRuntimeConfig_v;
 
 void InitializeLobbyCore();
 void FinalizeLobbyCore();

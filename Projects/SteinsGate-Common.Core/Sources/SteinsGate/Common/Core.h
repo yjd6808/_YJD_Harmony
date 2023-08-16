@@ -44,6 +44,9 @@
 #include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/Arrays.h>
 #include <JCore/Container/HashMap.h>
+#include <JCore/Container/HashSet.h>
+#include <JCore/Container/TreeMap.h>
+#include <JCore/Container/TreeSet.h>
 #include <JCore/Container/LinkedList.h>
 
 #include <JNetwork/Network.h>

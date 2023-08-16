@@ -150,7 +150,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Center", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Lobby", "Projects\SteinsGate-Server.Lobby\Project\SteinsGate-Server.Lobby.vcxproj", "{807F840B-0920-4665-8105-94AC7C94B538}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Lobby", "Projects\SteinsGate-Server.Game\Project\SteinsGate-Server.Game.vcxproj", "{EE3650D7-28FB-4CD7-9836-606010001E90}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Game", "Projects\SteinsGate-Server.Game\Project\SteinsGate-Server.Game.vcxproj", "{EE3650D7-28FB-4CD7-9836-606010001E90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

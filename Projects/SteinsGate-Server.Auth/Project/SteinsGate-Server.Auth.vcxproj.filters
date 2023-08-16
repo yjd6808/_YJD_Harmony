@@ -43,6 +43,12 @@
       <Filter>Contents</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthInterServerClientNetGroup.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CLIListener.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCoreHeader.h" />
@@ -68,7 +74,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h">
       <Filter>Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\InputAction.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\S_INTERSERVER.h">
       <Filter>Send</Filter>
     </ClInclude>
@@ -88,6 +93,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthenticationManagerSchedule.h">
       <Filter>Contents</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CLIListener.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">
@@ -104,6 +115,9 @@
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{fe79c973-98af-462a-a693-69f34dcce325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{10b62b62-a2d4-47e9-93b1-713373df9e4f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

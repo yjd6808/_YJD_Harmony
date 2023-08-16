@@ -14,6 +14,8 @@
 
 #include <JNetwork/Packet/CommandNameDictionary.h>
 
+#include <SteinsGate/Common/CLIThread.h>
 #include <SteinsGate/Common/CommonInfo.h>
 #include <SteinsGate/Common/CharCommonInfo.h>
 #include <SteinsGate/Common/ServerProcessInfo.h>
+#include <SteinsGate/Common/RuntimeConfigBase.h>

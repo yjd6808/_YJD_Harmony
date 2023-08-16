@@ -33,6 +33,7 @@ public:
 	void updateScene(float dt);
 	void updateNet(float dt);
 	void updateTime(float dt);
+	void updateCLI(float dt);
 
 	void onWndMessageReceived(int code, WPARAM wParam, LPARAM lParam);
 	void onWndFocused(SGEventCustom* custom);

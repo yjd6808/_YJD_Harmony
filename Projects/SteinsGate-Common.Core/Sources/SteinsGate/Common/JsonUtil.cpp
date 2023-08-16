@@ -10,6 +10,40 @@
 
 #include <SteinsGate/Common/TextParser.h>
 
+
+bool JsonUtil::load(const char* fileName, JCORE_OUT Json::Value& root) {
+
+	if (JCore::Path::Extension(fileName) != ".json") {
+		return false;
+	}
+
+	std::ifstream reader(fileName, std::ifstream::in | std::ifstream::binary);
+	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", fileName);
+	try {
+		reader >> root;
+	}
+	catch (std::exception& ex) {
+		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", fileName, ex.what());
+		return false;
+	}
+	return true;
+}
+
+bool JsonUtil::load(const SGString& fileName, JCORE_OUT Json::Value& root) {
+	return load(fileName.Source(), root);
+}
+
+void JsonUtil::loadThrow(const char* fileName, Json::Value& root) {
+	std::ifstream reader(fileName, std::ifstream::in | std::ifstream::binary);
+	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", fileName);
+	reader >> root;
+}
+
+void JsonUtil::loadThrow(const SGString& fileName, Json::Value& root) {
+	loadThrow(fileName.Source(), root);
+}
+
+
 SGString JsonUtil::getString(Json::Value& value) {
 	DebugAssertMsg(!value.isNull(), "인자로 전달한 Json 오브젝트에 문자열 데이터가 없습니다.");
 	const char* pBegin;

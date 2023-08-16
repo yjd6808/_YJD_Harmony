@@ -15,6 +15,7 @@ class AuthInterServerClientNetGroup : public InterServerClientNetGroup
 {
 public:
 	AuthInterServerClientNetGroup();
+	~AuthInterServerClientNetGroup() override;
 
 	void InitializeIOCP() override;
 	void InitializeBufferPool() override;

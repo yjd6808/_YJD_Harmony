@@ -29,7 +29,7 @@ ConsoleLoggerOption NetLoggerOption_v = [] {
 }();
 
 int main(int argc, char* argv[]) {
-
+	new char;
 	if (argc == 0) {
 		Console::WriteLine("게임 서버 타입을 인자로 전달해주세요");
 		return -1;
@@ -63,10 +63,6 @@ int main(int argc, char* argv[]) {
 	InitializeGameContents();
 
 	{
-		CoreInputThread_v->SetEventMap({
-			AuthInputEvent::PairOf(AuthInputEvent::TerminateProgram)
-		});
-
 		if (CoreInterServerClientNetGroup_v->ConnectCenterServer(5)) {
 			CoreNetMaster_v->ProcessMainUpdate();
 		}
@@ -75,6 +71,7 @@ int main(int argc, char* argv[]) {
 	FinalizeGameContents();
 	FinalizeGameCore();
 	FinalizeServerCore();
+	FinalizeCommonCore();
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
 	Winsock::Finalize();

@@ -10,6 +10,8 @@
 #include "DataManagerAbstract.h"
 #include "CommonCoreHeader.h"
 
+#include <SteinsGate/Common/JsonUtil.h>
+
 #include <filesystem>
 
 bool ConfigFileLoaderAbstract::DirectoryTree::init(const SGString& rootDirectoryName) {
@@ -123,7 +125,7 @@ void ConfigFileLoaderAbstract::DirectoryTree::loadRecursive(DirectoryTree* tree,
 			Json::Value root;
 			SGString szFileName = dirEntry.path().string().c_str();
 
-			if (!loadJson(szFileName.Source(), root)) {
+			if (!JsonUtil::load(szFileName.Source(), root)) {
 				_LogDebug_("%s 파일 로딩 실패 (무시함)", JCore::Path::FileName(szFileName.Source()));
 				continue;
 			}
@@ -189,37 +191,6 @@ bool ConfigFileLoaderAbstract::loadDirectory(JCORE_OUT DirectoryTree& tree) {
 	}
 
 	return tree.init(path);
-}
-
-bool ConfigFileLoaderAbstract::loadJson(const char* fileName, JCORE_OUT Json::Value& root) {
-
-	if (JCore::Path::Extension(fileName) != ".json") {
-		return false;
-	}
-
-	std::ifstream reader(fileName, std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", fileName);
-	try {
-		reader >> root;
-	} catch (std::exception& ex) {
-		_LogError_("설정파일 %s을 로드하는중 오류가 발생하였습니다. (%s)", fileName, ex.what());
-		return false;
-	}
-	return true;
-}
-
-bool ConfigFileLoaderAbstract::loadJson(const SGString& fileName, JCORE_OUT Json::Value& root) {
-	return loadJson(fileName.Source(), root);
-}
-
-void ConfigFileLoaderAbstract::loadJsonThrow(const char* fileName, Json::Value& root) {
-	std::ifstream reader(fileName, std::ifstream::in | std::ifstream::binary);
-	DebugAssertMsg(reader.is_open(), "%s 파일을 여는데 실패했습니다.", fileName);
-	reader >> root;
-}
-
-void ConfigFileLoaderAbstract::loadJsonThrow(const SGString& fileName, Json::Value& root) {
-	loadJsonThrow(fileName.Source(), root);
 }
 
 void ConfigFileLoaderAbstract::addData(ConfigDataAbstract* data) {

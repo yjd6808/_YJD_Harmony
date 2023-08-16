@@ -53,10 +53,6 @@ void GameNetMaster::OnUpdate(const TimeSpan& elapsed) {
 
 }
 
-void GameNetMaster::OnCapturedInputEvent(int inputEvent) {
-	CommonNetMaster::OnCapturedInputEvent(inputEvent);
-}
-
 void GameNetMaster::OnStopped() {
 }
 

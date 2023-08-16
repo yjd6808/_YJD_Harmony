@@ -24,6 +24,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\CLIListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\HitActivity_Goblin.cpp" />
@@ -69,6 +70,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\RuntimeConfig.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\R_AUTH.cpp">
       <SubType>
       </SubType>
@@ -430,6 +432,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\CLIListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ComponentCollection.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Event.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity.h" />
@@ -513,6 +516,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\RuntimeConfig.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\R_AUTH.h">
       <SubType>
       </SubType>

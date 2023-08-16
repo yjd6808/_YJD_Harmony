@@ -122,12 +122,13 @@ public:
 
 		Int32U uiHash = Hash(key);
 		Int32U uiBucket = BucketIndex(uiHash);
+		TBucket& bucket = m_pTable[uiBucket];
 
-		if (m_pTable[uiBucket].IsEmpty()) {
-			PushBackNewBucket(&m_pTable[uiBucket]);
+		if (bucket.IsEmpty()) {
+			PushBackNewBucket(&bucket);
 		}
 
-		m_pTable[uiBucket].EmplaceBack(Forward<Ky>(key), uiHash);
+		bucket.EmplaceBack(Forward<Ky>(key), uiHash);
 		++this->m_iSize;
 		return true;
 	}
@@ -506,12 +507,13 @@ public:
 
 		Int32U uiHash = Hash(key);
 		Int32U uiBucket = BucketIndex(uiHash);
+		TBucket& bucket = m_pTable[uiBucket];
 
-		if (m_pTable[uiBucket].IsEmpty()) {
-			PushBackNewBucket(&m_pTable[uiBucket]);
+		if (bucket.IsEmpty()) {
+			PushBackNewBucket(&bucket);
 		}
 
-		m_pTable[uiBucket].EmplaceBack(TKeyValuePair{ static_cast<TKey>(Forward<Ky>(key)), static_cast<TValue>(Forward<Vy>(value))}, uiHash);
+		bucket.EmplaceBack(TKeyValuePair{ static_cast<TKey>(Forward<Ky>(key)), static_cast<TValue>(Forward<Vy>(value))}, uiHash);
 		++this->m_iSize;
 		return true;
 	}

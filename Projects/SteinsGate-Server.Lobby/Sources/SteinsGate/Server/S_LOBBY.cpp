@@ -9,8 +9,6 @@
 #include "LobbyCoreHeader.h"
 #include "S_LOBBY.h"
 
-#include <SteinsGate/Common/LobbyCmd.h>
-
 USING_NS_JC;
 USING_NS_JNET;
 

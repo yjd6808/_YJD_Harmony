@@ -9,8 +9,6 @@
 #include "GameCoreHeader.h"
 #include "S_LOGIC.h"
 
-#include <SteinsGate/Common/GameCmd.h>
-
 USING_NS_JC;
 USING_NS_JNET;
 

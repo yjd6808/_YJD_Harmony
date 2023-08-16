@@ -66,8 +66,13 @@ void NetGroup::Finalize() {
 	}
 
 	m_vHostList.Clear();
-	m_spIOCP->Join();
-	m_spIOCP->Destroy();
+
+	if (m_spIOCP.Exist()) {
+		m_spIOCP->Join();
+		m_spIOCP->Destroy();
+		m_spIOCP = nullptr;
+	}
+
 	m_spBufferPool = nullptr;
 	m_bFinalized = true;
 }

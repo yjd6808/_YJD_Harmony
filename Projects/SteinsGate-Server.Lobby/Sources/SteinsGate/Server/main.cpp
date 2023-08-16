@@ -30,6 +30,7 @@ ConsoleLoggerOption NetLoggerOption_v = [] {
 
 
 int main() {
+	new char; // 릭 확인용
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
@@ -42,10 +43,6 @@ int main() {
 	InitializeLobbyContents();
 
 	{
-		CoreInputThread_v->SetEventMap({
-			AuthInputEvent::PairOf(AuthInputEvent::TerminateProgram)
-		});
-
 		if (CoreInterServerClientNetGroup_v->ConnectCenterServer(5)) {
 			CoreNetMaster_v->ProcessMainUpdate();
 		}
@@ -54,6 +51,7 @@ int main() {
 	FinalizeLobbyContents();
 	FinalizeLobbyCore();
 	FinalizeServerCore();
+	FinalizeCommonCore();
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
 	Winsock::Finalize();

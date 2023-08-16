@@ -12,10 +12,9 @@
 
 class AuthNetMaster final
 	: public CommonNetMaster
-	, public SGSingletonPointer<AuthNetMaster>
+	, public JCore::SingletonPointer<AuthNetMaster>
 {
 	friend class TSingleton;
-
 	AuthNetMaster();
 	~AuthNetMaster() override;
 public:
@@ -24,7 +23,6 @@ public:
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Auth; }
 protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
-	void OnCapturedInputEvent(int inputEvent) override;
 	void OnStopped() override;
 };
 

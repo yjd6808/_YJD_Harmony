@@ -128,7 +128,7 @@ void ItemInfoLoader::loadAccessory(const SGString& equipAccessoryPath, int itemT
 		throw std::exception(StringUtil::Format("%s 파일을 찾지 못했습니다.\n", equipAccessoryPath.Source()).Source());
 
 	Json::Value root;
-	loadJsonThrow(equipAccessoryPath, root);
+	JsonUtil::loadThrow(equipAccessoryPath, root);
 
 	Json::Value& accessoryListRoot = root[ItemType::Name[itemType]];
 
@@ -146,7 +146,7 @@ void ItemInfoLoader::loadArmor(const JCore::String& equipItemArmorPath, int armo
 		throw std::exception(StringUtil::Format("%s 파일을 찾지 못했습니다.\n", equipItemArmorPath.Source()).Source());
 
 	Json::Value root;
-	loadJsonThrow(equipItemArmorPath, root);
+	JsonUtil::loadThrow(equipItemArmorPath, root);
 
 	const char* ArmorTypeName = EquipArmorType::Name[armorType];
 	Json::Value& armorListRoot = root[ArmorTypeName];
@@ -166,7 +166,7 @@ void ItemInfoLoader::loadAvatar(const JCore::String& equipItemAvatarPath, int ch
 		SGString avatarPath = SGPath::Combine(equipItemAvatarPath, AvatarType::Name[eAvatarType]) + ".json";
 
 		Json::Value root;
-		loadJsonThrow(avatarPath, root);
+		JsonUtil::loadThrow(avatarPath, root);
 
 		const char* avatarPartName = AvatarType::Name[eAvatarType];
 		Json::Value& avatarPartListRoot = root[avatarPartName];
@@ -187,7 +187,7 @@ void ItemInfoLoader::loadWeapon(const JCore::String& equipItemWeaponPath, int ch
 		SGString weaponPath = SGPath::Combine(equipItemWeaponPath, WeaponType::Name[eWeaponType]) + ".json";
 
 		Json::Value root;
-		loadJsonThrow(weaponPath, root);
+		JsonUtil::loadThrow(weaponPath, root);
 
 		const char* weaponName = WeaponType::Name[eWeaponType];
 		Json::Value& weaponListRoot = root[weaponName];

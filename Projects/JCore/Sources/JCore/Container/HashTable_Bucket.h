@@ -18,14 +18,8 @@ NS_JC_BEGIN
 template <typename T>
 struct BucketNode
 {
-	using TBucketNode = BucketNode<T>;
-
-	bool operator==(const TBucketNode& other) {
-		return Data == other.Data && Hash == other.Hash;
-	}
-
 	T Data;
-	Int32U Hash{};	// 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
+	Int32U Hash;	// 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
 };
 
 /* ==============================================================

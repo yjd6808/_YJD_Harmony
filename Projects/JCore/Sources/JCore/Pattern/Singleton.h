@@ -15,6 +15,7 @@
  *    1. 정적 객체는 프로그램 시작시 메모리에 용량을 차지하고 있기 때문에
  *	     늦게 생성된다고 하더라도 무거운 객체의 경우 비효율적일 수 있다.
  *
+ * 아래 3가지 케이스 모두 장단점이 존재한다.
  *
  */
 
@@ -22,8 +23,8 @@
 #pragma once
 
 #include <JCore/Pattern/NonCopyableh.h>
+#include <JCore/Sync/ILock.h>
 #include <JCore/Debug/New.h>
-#include <JCore/Sync/NormalLock.h>
 
 NS_JC_BEGIN
 
@@ -41,6 +42,36 @@ public:
 	}
 };
 
+
+
+template <typename T>
+class SingletonStaticPointer : private NonCopyableNonMovable
+{
+	struct Guard { ~Guard() { JCORE_DELETE_SAFE(ms_pInst); } };
+protected:
+	SingletonStaticPointer() = default;
+	virtual ~SingletonStaticPointer() = default;
+public:
+	using TSingleton = SingletonStaticPointer<T>;
+	static T* Get() {
+		static T* s_pInst = [] { ms_pInst = dbg_new T; return ms_pInst; } ();
+		static Guard s_Guard;
+
+		if (s_pInst == nullptr) {
+			DebugAssertMsg(false, "삭제된 객체에 접근을 시도했습니다.");
+			return nullptr;
+		}
+
+		return s_pInst;
+	}
+
+	static void Free() {
+		JCORE_DELETE_SAFE(ms_pInst);
+	}
+
+	inline static T* ms_pInst;
+};
+
 template <typename T>
 class SingletonPointer : private NonCopyableNonMovable
 {
@@ -49,11 +80,10 @@ protected:
 	virtual ~SingletonPointer() = default;
 public:
 	using TSingleton = SingletonPointer<T>;
-
+		
 	static T* Get() {
 		if (ms_pInst == nullptr) {
-			JCORE_LOCK_GUARD(ms_Lock);
-
+			ms_Lock.Lock();
 			if (ms_bDeleted) {
 				DebugAssertMsg(false, "삭제된 객체에 접근을 시도했습니다.");
 				return nullptr;
@@ -62,6 +92,7 @@ public:
 			if (ms_pInst == nullptr) {
 				ms_pInst = dbg_new T;
 			}
+			ms_Lock.Unlock();
 		}
 
 		return ms_pInst;
@@ -69,11 +100,12 @@ public:
 
 	static void Free() {
 		if (ms_pInst != nullptr) {
-			JCORE_LOCK_GUARD(ms_Lock);
+			ms_Lock.Lock();
 			if (ms_pInst != nullptr) {
 				JCORE_DELETE_SAFE(ms_pInst);
 				ms_bDeleted = true;
 			}
+			ms_Lock.Unlock();
 		}
 	}
 private:

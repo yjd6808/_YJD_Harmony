@@ -15,5 +15,6 @@
 #include <SteinsGate/Server/GameNetMaster.h>
 #include <SteinsGate/Server/GameNetGroup.h>
 #include <SteinsGate/Server/LogicServer.h>
+#include <SteinsGate/Server/RuntimeConfig.h>
 
 

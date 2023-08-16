@@ -53,10 +53,6 @@ void LobbyNetMaster::OnUpdate(const TimeSpan& elapsed) {
 
 }
 
-void LobbyNetMaster::OnCapturedInputEvent(int inputEvent) {
-	CommonNetMaster::OnCapturedInputEvent(inputEvent);
-}
-
 void LobbyNetMaster::OnStopped() {
 }
 

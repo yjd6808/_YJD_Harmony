@@ -34,7 +34,7 @@ bool CommonInfoLoader::load() {
 	SGString szCommonFileName = ConfigFileType::FileName[getConfigFileType()];
 	SGString szExeDir = SGPath::Combine(Env::CurrentDirectory(), szCommonFileName);
 
-	if (!loadJson(szExeDir, root)) {
+	if (!JsonUtil::load(szExeDir, root)) {
 		return false;
 	}
 

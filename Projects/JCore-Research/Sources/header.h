@@ -3,6 +3,7 @@
 #include <JCore/Random.h>
 #include <JCore/TypeTraits.h>
 #include <JCore/Time.h>
+#include <JCore/Ascii.h>
 #include <JCore/Limit.h>
 #include <JCore/ByteUnit.h>
 #include <JCore/Env.h>
@@ -38,6 +39,8 @@
 
 #include <JCore/Wrapper/WinApi.h>
 #include <JCore/Wrapper/CRuntime.h>
+
+#include <JCore/Pattern/Singleton.h>
 
 #include <JCore/Utils/Console.h>
 

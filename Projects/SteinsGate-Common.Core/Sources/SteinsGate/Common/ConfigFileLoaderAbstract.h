@@ -68,11 +68,6 @@ public:
 	virtual bool loadDirectory(JCORE_OUT DirectoryTree& tree);
 	virtual bool load() = 0;
 
-	static bool loadJson(const char* fileName, JCORE_OUT Json::Value& root);
-	static bool loadJson(const SGString& fileName, JCORE_OUT Json::Value& root);
-	static void loadJsonThrow(const char* fileName, JCORE_OUT Json::Value& root);
-	static void loadJsonThrow(const SGString& fileName, JCORE_OUT Json::Value& root);
-
 	virtual ConfigFileType_t getConfigFileType() = 0;
 	const char* getConfigFileName() { return ConfigFileType::FileName[getConfigFileType()]; }
 

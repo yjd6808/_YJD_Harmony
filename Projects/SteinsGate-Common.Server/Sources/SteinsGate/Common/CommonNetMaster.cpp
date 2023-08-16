@@ -33,7 +33,10 @@ void CommonNetMaster::ProcessMainUpdate() {
 
 	pulser.Start();
 	while (m_bRunning) {
-		ProcessInputEvent();
+
+		if (CoreCLIThread_v)
+			CoreCLIThread_v->ProcessInputs();
+
 		ProcessSubUpdate(elapsed);
 		OnUpdate(elapsed);
 
@@ -50,23 +53,5 @@ void CommonNetMaster::ProcessSubUpdate(const TimeSpan& elapsed) {
 
 	if (CoreInterServerClientNetGroup_v)
 		CoreInterServerClientNetGroup_v->ProcessUpdate(elapsed);
-}
-
-void CommonNetMaster::ProcessInputEvent() {
-	CoreInputThread_v->PopAllEvents(m_vInputEvents);
-
-	for (int i = 0; i < m_vInputEvents.Size(); ++i) {
-		OnCapturedInputEvent(m_vInputEvents[i]);
-	}
-}
-
-void CommonNetMaster::OnCapturedInputEvent(int inputEvent) {
-	switch (inputEvent) {
-	case AuthInputEvent::TerminateProgram:
-		Terminate();
-		break;
-	default:
-		break;
-	}
 }
 

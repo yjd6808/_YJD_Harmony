@@ -10,7 +10,6 @@
 #include "LobbyCoreHeader.h"
 #include "ListenerLobbyServer.h"
 
-#include <SteinsGate/Common/LobbyCmd.h>
 #include <SteinsGate/Common/QueryDefine.h>
 #include <SteinsGate/Common/PacketViewer.h>
 

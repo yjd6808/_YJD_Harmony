@@ -22,7 +22,7 @@ USING_NS_JC;
 USING_NS_JNET;
 
 ListenerAuthServer::ListenerAuthServer() {
-	Parser.AddCommand<CAU_Login>(R_AUTH::RecvLogin);
+	// Parser.AddCommand<CAU_Login>(R_AUTH::RecvLogin);
 }
 
 void ListenerAuthServer::OnStarted() {

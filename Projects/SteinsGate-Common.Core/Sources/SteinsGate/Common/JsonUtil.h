@@ -13,6 +13,11 @@
 struct JsonUtil
 {
 public:
+	static bool load(const char* fileName, JCORE_OUT Json::Value& root);
+	static bool load(const SGString& fileName, JCORE_OUT Json::Value& root);
+	static void loadThrow(const char* fileName, JCORE_OUT Json::Value& root);
+	static void loadThrow(const SGString& fileName, JCORE_OUT Json::Value& root);
+
 	static SGString getString(Json::Value& value);
 	static const char* getStringRaw(Json::Value& value, JCORE_OUT_OPT int* len = nullptr);
 	static SGString getStringOrNull(Json::Value& value);

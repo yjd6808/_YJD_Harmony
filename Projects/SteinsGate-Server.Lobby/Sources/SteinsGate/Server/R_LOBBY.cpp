@@ -11,7 +11,6 @@
 #include "LobbyCoreHeader.h"
 #include "R_LOBBY.h"
 
-#include <SteinsGate/Common/LobbyCmd.h>
 #include <SteinsGate/Server/Q_LOBBY.h>
 #include <SteinsGate/Server/S_LOBBY.h>
 

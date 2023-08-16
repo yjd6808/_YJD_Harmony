@@ -24,6 +24,9 @@ static constexpr int SendBufferSize_v = 2048;
 AuthInterServerClientNetGroup::AuthInterServerClientNetGroup() {
 }
 
+AuthInterServerClientNetGroup::~AuthInterServerClientNetGroup() {
+}
+
 void AuthInterServerClientNetGroup::InitializeBufferPool() {
 	CreateBufferPool({});
 }

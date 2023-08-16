@@ -38,10 +38,6 @@ void CenterNetMaster::Initialize() {
 void CenterNetMaster::OnUpdate(const TimeSpan& elapsed) {
 }
 
-void CenterNetMaster::OnCapturedInputEvent(int inputEvent) {
-	CommonNetMaster::OnCapturedInputEvent(inputEvent);
-}
-
 void CenterNetMaster::OnStopped() {
 }
 

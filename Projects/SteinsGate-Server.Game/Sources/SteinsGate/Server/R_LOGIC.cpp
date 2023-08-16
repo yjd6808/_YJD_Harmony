@@ -11,7 +11,6 @@
 #include "GameCoreHeader.h"
 #include "R_LOGIC.h"
 
-#include <SteinsGate/Common/GameCmd.h>
 #include <SteinsGate/Server/Q_CHAR.h>
 #include <SteinsGate/Server/S_LOGIC.h>
 

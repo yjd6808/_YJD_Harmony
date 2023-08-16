@@ -9,37 +9,46 @@
 #include "GameCore.h"
 #include "GameCoreHeader.h"
 
+#include <SteinsGate/Server/CLIListener.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
-DataManager* CoreDataManager_v;
-MysqlDatabase* CoreGameDB_v;
-GameNetMaster* CoreNetMaster_v;
-GameNetGroup* CoreNetGroup_v;
-LogicServer* CoreServer_v;
-GameTokenManager* CoreTokenManager_v;
-GameServerType_t CoreGameServerType_v;
-GameServerProcessInfo* CoreGameServerProcessInfo_v;
+DataManager*			CoreDataManager_v;
+MysqlDatabase*			CoreGameDB_v;
+GameNetMaster*			CoreNetMaster_v;
+GameNetGroup*			CoreNetGroup_v;
+LogicServer*			CoreServer_v;
+GameTokenManager*		CoreTokenManager_v;
+GameServerType_t		CoreGameServerType_v;
+GameServerProcessInfo*	CoreGameServerProcessInfo_v;
+RuntimeConfig*			CoreRuntimeConfig_v;
 
 bool InitializeGameCore(GameServerType_t gameServerType) {
-	CoreGameServerType_v = gameServerType;
-	CoreDataManager_v = DataManager::Get();
-	CoreCommonInfo_v = CoreDataManager_v->getCommonInfo(1);
-	CoreServerProcessInfoPackage_v = CoreDataManager_v->getServerProcessInfoPackage(1);						// 공통 라이브러리 주입
-	CoreGameServerProcessInfo_v = CoreServerProcessInfoPackage_v->getGameServerProcessInfo(gameServerType);
-	CoreServerProcessInfo_v = CoreGameServerProcessInfo_v;		// 공통 라이브러리 주입
+	CoreGameServerType_v			= gameServerType;
+	CoreDataManager_v				= DataManager::Get();
+	CoreCommonInfo_v				= CoreDataManager_v->getCommonInfo(1);
+	CoreServerProcessInfoPackage_v	= CoreDataManager_v->getServerProcessInfoPackage(1);						// 공통 라이브러리 주입
+	CoreGameServerProcessInfo_v		= CoreServerProcessInfoPackage_v->getGameServerProcessInfo(gameServerType);
+	CoreServerProcessInfo_v			= CoreGameServerProcessInfo_v;		// 공통 라이브러리 주입
 
 	if (CoreServerProcessInfo_v == nullptr) {
 		return false;
 	}
 
-	CoreGameDB_v = dbg_new MysqlDatabase(CoreDataManager_v->getDatabaseInfo(DatabaseType::Game));
+	CoreGameDB_v					= dbg_new MysqlDatabase(CoreDataManager_v->getDatabaseInfo(DatabaseType::Game));
 	CoreGameDB_v->Initialize(ServerProcessType::Game);
-	CoreNetMaster_v = GameNetMaster::Get();
+	CoreNetMaster_v					= GameNetMaster::Get();
 	CoreNetMaster_v->Initialize();
-	CoreNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_MAIN).Get<GameNetGroup*>();
+	CoreNetGroup_v					= CoreNetMaster_v->GetNetGroup(NETGROUP_ID_MAIN).Get<GameNetGroup*>();
 	CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_INTERSERVER).Get<InterServerClientNetGroup*>();
-	CoreServer_v = dynamic_cast<LogicServer*>(CoreNetGroup_v->GetServer());
+	CoreServer_v					= dynamic_cast<LogicServer*>(CoreNetGroup_v->GetServer());
+
+	if (CoreCLIThread_v)	// 커몬코어에서 초기화되므로 체크
+		CoreCLIThread_v->SetListener(dbg_new CLIListener);
+
+	CoreRuntimeConfig_v = RuntimeConfig::Get();
+	CoreRuntimeConfig_v->Load();
 
 	// 공통 라이브러리 주입
 	{
@@ -52,6 +61,9 @@ bool InitializeGameCore(GameServerType_t gameServerType) {
 
 		CoreThreadPool_v = dbg_new ThreadPool{ 2 };
 		CoreScheduler_v = dbg_new Scheduler{ 2 };
+
+		CoreRuntimeConfigBase_v = CoreRuntimeConfig_v;
+		CoreRuntimeConfigCommon_v = CoreRuntimeConfig_v;
 	}
 
 	return true;
@@ -64,6 +76,7 @@ void FinalizeGameCore() {
 	JCORE_DELETE_SINGLETON_SAFE(CoreNetMaster_v);
 	JCORE_DELETE_SINGLETON_SAFE(CoreDataManager_v);
 	JCORE_DELETE_SINGLETON_SAFE(CoreTimeManager_v);
+	JCORE_DELETE_SINGLETON_SAFE(CoreRuntimeConfig_v);
 	JCORE_DELETE_SAFE(CoreThreadPool_v);
 	JCORE_DELETE_SAFE(CoreScheduler_v);
 	JCORE_DELETE_SAFE(CoreGameDB_v);

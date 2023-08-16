@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CLIListenerCommon.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_HOST.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmdDefine.h">
       <SubType>
@@ -64,6 +65,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\RuntimeConfigCommon.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst.h">
       <SubType>
       </SubType>
@@ -114,6 +116,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CLIListenerCommon.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.cpp">
       <SubType>
       </SubType>
@@ -141,6 +144,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQuery.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\RuntimeConfigCommon.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

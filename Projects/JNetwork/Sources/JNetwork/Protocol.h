@@ -9,6 +9,12 @@
 
 NS_JNET_BEGIN
 
+enum class Transmission
+{
+	Send,
+	Recv
+};
+
 enum class InternetProtocol
 {
 	None = 0,

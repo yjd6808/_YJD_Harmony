@@ -30,6 +30,7 @@ ConsoleLoggerOption NetLoggerOption_v = [] {
 
 
 int main() {
+	new char;
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
@@ -42,11 +43,7 @@ int main() {
 	InitializeAuthContents();
 
 	{
-		CoreInputThread_v->SetEventMap({
-			AuthInputEvent::PairOf(AuthInputEvent::TerminateProgram)
-		});
-
-		if (CoreInterServerClientNetGroup_v->ConnectCenterServer(5)) {
+		if (CoreInterServerClientNetGroup_v->ConnectCenterServer(1)) {
 			CoreNetMaster_v->ProcessMainUpdate();
 		}
 	}
@@ -54,6 +51,7 @@ int main() {
 	FinalizeAuthContents();
 	FinalizeAuthCore();
 	FinalizeServerCore();
+	FinalizeCommonCore();
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
 	Winsock::Finalize();

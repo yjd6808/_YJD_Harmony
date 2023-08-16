@@ -22,6 +22,12 @@
       <Filter>Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterInterServerClientNetGroup.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\CLIListener.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterCoreHeader.h" />
@@ -45,6 +51,12 @@
       <Filter>Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterInterServerClientNetGroup.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\CLIListener.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Listener">
@@ -55,6 +67,9 @@
     </Filter>
     <Filter Include="Send">
       <UniqueIdentifier>{1accb1ca-c832-4eb7-85eb-3da32e43ca08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{a299b670-ab58-438c-bfe6-346d33399117}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

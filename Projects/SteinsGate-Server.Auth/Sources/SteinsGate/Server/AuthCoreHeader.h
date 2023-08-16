@@ -16,5 +16,6 @@
 #include <SteinsGate/Server/AuthNetGroup.h>
 #include <SteinsGate/Server/AuthServer.h>
 #include <SteinsGate/Server/AuthenticationManager.h>
+#include <SteinsGate/Server/RuntimeConfig.h>
 
 

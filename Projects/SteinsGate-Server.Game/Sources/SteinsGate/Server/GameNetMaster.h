@@ -24,7 +24,6 @@ public:
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Game; }
 protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
-	void OnCapturedInputEvent(int inputEvent) override;
 	void OnStopped() override;
 };
 

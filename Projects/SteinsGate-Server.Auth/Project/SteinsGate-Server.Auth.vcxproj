@@ -43,6 +43,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CLIListener.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.cpp">
       <SubType>
       </SubType>
@@ -78,6 +79,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTH.cpp">
       <SubType>
       </SubType>
@@ -113,10 +115,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\InputAction.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CLIListener.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.h">
       <SubType>
       </SubType>
@@ -144,6 +143,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOGIN.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTH.h">
       <SubType>
       </SubType>

@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include <SteinsGate/Common/CommonInfo.h>
+#include <SteinsGate/Common/CommonCoreHeader.h>
 
 #include <SteinsGate/Client/SGApplication.h>
 #include <SteinsGate/Client/DataManager.h>
@@ -25,3 +25,4 @@
 #include <SteinsGate/Client/PopupManager.h>
 #include <SteinsGate/Client/TimeManager.h>
 #include <SteinsGate/Client/NetCore.h>
+#include <SteinsGate/Client/RuntimeConfig.h>

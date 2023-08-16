@@ -16,15 +16,17 @@ class JCORE_NOVTABLE NetMaster
 {
 public:
 	NetMaster();
-	virtual ~NetMaster() = default;
+	virtual ~NetMaster();
 
 	virtual void Initialize() = 0;
-	virtual void Finalize();
+
+	void Finalize();
 
 	void AddNetGroup(int id, const NetGroupPtr& group);
 	NetGroupPtr GetNetGroup(int id);
 protected:
 	JCore::HashMap<int, NetGroupPtr> m_hNetGroup;
+	// JCore::Vector<JCore::Tuple<int, NetGroupPtr>> m_hNetGroup;
 	bool m_bFinalized;
 };
 

@@ -74,7 +74,7 @@ class Console
     inline static bool          ms_UseConsoleLock{};
     inline static int           ms_iCursorPosX{};
     inline static int           ms_iCursorPosY{};
-    inline static int           TempBufferLen = 1024;
+    inline constexpr static int TempBufferLen = 1024;
 public:
     static const char*   VTForeColor[ConsoleColor::Max];
     static const char*   VTBackColor[ConsoleColor::Max];
@@ -147,11 +147,15 @@ public:
 
     template <typename... TArgs>
     static int WriteLine(char* format, TArgs&&... args) {
-        
-        char buf[TempBufferLen + 1];
-        sprintf_s(buf, TempBufferLen + 1, format);
-        TLockGuard guard(ms_ConsoleLock);
-        return Math::Min(printf_s("\n"), printf_s(buf, Forward<TArgs>(args)...));
+        if constexpr (sizeof...(args) == 0) {
+            printf("%s\n", format);
+            return 0;
+        } else {
+            char buf[TempBufferLen + 1];
+            sprintf_s(buf, TempBufferLen + 1, format);
+            TLockGuard guard(ms_ConsoleLock);
+            return Math::Min(printf_s("\n"), printf_s(buf, Forward<TArgs>(args)...));
+        }
     }
 
     template <Int32U FormatBufferLen, typename... TArgs>
