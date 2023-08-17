@@ -124,6 +124,10 @@
     <ClCompile Include="..\Sources\JCore\Threading\ThreadPool.cpp" />
     <ClCompile Include="..\Sources\JCore\Time.cpp" />
     <ClCompile Include="..\Sources\JCore\Utils\Console.cpp" />
+    <ClCompile Include="..\Sources\JCore\Utils\ProgressNotifier.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Wrapper\CRuntime.cpp" />
     <ClCompile Include="..\Sources\JCore\Wrapper\WinApi.cpp">
       <SubType>
@@ -506,6 +510,14 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Utils\ConsoleColor.h" />
     <ClInclude Include="..\Sources\JCore\Utils\Concatenation.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\IProgressListener.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\ProgressNotifier.h">
       <SubType>
       </SubType>
     </ClInclude>

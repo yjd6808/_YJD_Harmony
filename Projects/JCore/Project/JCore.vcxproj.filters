@@ -158,6 +158,9 @@
     <ClCompile Include="..\Sources\JCore\Primitives\RefCountObject.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Utils\ProgressNotifier.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />
@@ -523,6 +526,12 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Primitives\BitFlag.h">
       <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\ProgressNotifier.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\IProgressListener.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

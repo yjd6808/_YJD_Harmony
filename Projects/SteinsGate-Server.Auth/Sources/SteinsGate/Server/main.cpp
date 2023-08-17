@@ -43,7 +43,7 @@ int main() {
 	InitializeAuthContents();
 
 	{
-		if (CoreInterServerClientNetGroup_v->ConnectCenterServer(1)) {
+		if (CoreInterServerClientNetGroup_v && CoreInterServerClientNetGroup_v->ConnectCenterServer(1)) {
 			CoreNetMaster_v->ProcessMainUpdate();
 		}
 	}

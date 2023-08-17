@@ -28,13 +28,16 @@ void AuthNetMaster::Initialize() {
 	CommonNetMaster::Initialize();
 
 	const auto spAuthNetGroup = MakeShared<AuthNetGroup>();
-	const auto spInterServerNetGroup = MakeShared<AuthInterServerClientNetGroup>();
+	const auto spAuthNetGroup2 = MakeShared<AuthNetGroup>();
+	//const auto spInterServerNetGroup = MakeShared<AuthInterServerClientNetGroup>();
 
 	AddNetGroup(NETGROUP_ID_MAIN, spAuthNetGroup);
-	AddNetGroup(NETGROUP_ID_INTERSERVER, spInterServerNetGroup);
+	AddNetGroup(NETGROUP_ID_MAIN + 2, spAuthNetGroup2);
+	//AddNetGroup(NETGROUP_ID_INTERSERVER, spInterServerNetGroup);
 
 	spAuthNetGroup->Initialize();
-	spInterServerNetGroup->Initialize();
+	spAuthNetGroup2->Initialize();
+	//spInterServerNetGroup->Initialize();
 }
 
 void AuthNetMaster::OnUpdate(const TimeSpan& elapsed) {
