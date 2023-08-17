@@ -16,9 +16,14 @@
 
 #include <JCore/Core.h>
 #include <JNetwork/NetLoggerDefine.h>
+#include <JNetwork/Namespace.h>
 
 #define MAX_MSS 1460
 #define MAX_MTU 1500
 
 #define TEST_DUMMY_PACKET_TRANSFER 0
 #define TEST_DUMMY_PACKET_SIZE	20
+
+NS_JNET_BEGIN
+inline int DbgFlag_v = 0;	// 외부 프로젝트에서 JNetwork 프로젝트에 브레이크 포인트 걸기위해 추가함.
+NS_JNET_END

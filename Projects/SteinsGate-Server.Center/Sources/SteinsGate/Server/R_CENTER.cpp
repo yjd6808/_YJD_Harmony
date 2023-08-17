@@ -33,7 +33,7 @@ void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
 		return;
 	}
 
-	if (CoreServer_v->GetCenterSession(pCmd->ClientType) != nullptr) {
+	if (CoreServer_v->GetCenterSession(pCmd->ServerId) != nullptr) {
 		_LogWarn_("%s서버는 이미 접속중입니다.", InterServerClientType::Name[pCmd->ClientType]);
 		S_CENTER::SendAlreadyConnected();
 		return;

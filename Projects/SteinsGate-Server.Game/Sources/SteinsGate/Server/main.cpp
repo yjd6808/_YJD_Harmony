@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 		Console::WriteLine("전달받은 인자가 올바른 게임 서버 타입이 아닙니다. (%d)", eGameServerType);
 		return -3;
 	}
-
+	JNetwork::DbgFlag_v = 1;
 	const String szLogSpecifier = StringUtil::Format(LOG_SPECIFIER_GAME, GameServerType::Name[eGameServerType]);
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);

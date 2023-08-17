@@ -312,7 +312,6 @@ void Session::WaitForZeroPending() {
 			_NetLogWarn_("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", iPending);
 			Thread::Sleep(500);
 		}
-		Thread::Sleep(10);
 	}
 }
 

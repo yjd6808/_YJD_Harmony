@@ -63,6 +63,8 @@ bool SessionContainer::Remove(int handle) {
 
 void SessionContainer::DisconnectAll() {
 	const int iSize = m_vSessionList.Size();
+	bool bCheck[10]{};
+
 	for (int i = 0; i < iSize; ++i) {
 		Session* pSession = m_vSessionList[i];
 
@@ -72,7 +74,15 @@ void SessionContainer::DisconnectAll() {
 			
 		pSession->Disconnect();
 		pSession->WaitForZeroPending();
+
+		// 10등분
+		const int step = int(((float(i) / float(iSize)) * 100.0f) / 10);
+		if (!bCheck[step]) {
+			bCheck[step] = true;
+			_NetLogDebug_("세션 연결 닫음: %d/%d(%d%%)", i, iSize, step * 10);
+		}
 	}
+	_NetLogDebug_("세션 연결 닫음: %d/%d(%d%%)", iSize, iSize, 100);
 }
 
 void SessionContainer::Clear() {
