@@ -72,7 +72,14 @@ public:
 			for (int i = 0; i < pOtherBucketCur->Size; i++) {
 				TBucketNode& node = pOtherBucketCur->GetAt(i);
 				Int32U uiBucket = BucketIndex(node.Hash);
-				m_pTable[uiBucket].PushBack(node);
+				TBucket& bucket = m_pTable[uiBucket];
+
+				if (bucket.IsEmpty()) {
+					PushBackNewBucket(&bucket);
+				}
+
+				bucket.PushBack(node);
+				
 			}
 			pOtherBucketCur = pOtherBucketCur->Next;
 		}
@@ -83,6 +90,8 @@ public:
 
 	THashTable& operator=(THashTable&& other) noexcept {
 		Clear();
+
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, m_iCapacity);
 		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, sizeof(TBucket) * m_iCapacity);
 
 		this->m_iSize = other.m_iSize;
@@ -452,7 +461,14 @@ public:
 			for (int i = 0; i < pOtherBucketCur->Size; i++) {
 				TBucketNode& node = pOtherBucketCur->GetAt(i);
 				Int32U uiBucket = BucketIndex(node.Hash);
-				m_pTable[uiBucket].PushBack(node);
+				TBucket& bucket = m_pTable[uiBucket];
+				
+				if (bucket.IsEmpty()) {
+					PushBackNewBucket(&bucket);
+				}
+
+				bucket.PushBack(node);
+
 			}
 			pOtherBucketCur = pOtherBucketCur->Next;
 		}
@@ -463,6 +479,8 @@ public:
 
 	THashTable& operator=(THashTable&& other) noexcept {
 		Clear();
+
+		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(m_pTable, m_iCapacity);
 		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(m_pTable, sizeof(TBucket) * m_iCapacity);
 
 		this->m_iSize = other.m_iSize;

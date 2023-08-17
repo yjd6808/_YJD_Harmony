@@ -26,7 +26,6 @@ public:
 	NetGroupPtr GetNetGroup(int id);
 protected:
 	JCore::HashMap<int, NetGroupPtr> m_hNetGroup;
-	// JCore::Vector<JCore::Tuple<int, NetGroupPtr>> m_hNetGroup;
 	bool m_bFinalized;
 };
 

@@ -11,6 +11,7 @@
 #include <JCore/Hasher.h>
 #include <JCore/Memory.h>
 
+#include <JCore/Pattern/NonCopyableh.h>
 #include <JCore/Container/Pair.h>
 
 NS_JC_BEGIN
@@ -18,8 +19,40 @@ NS_JC_BEGIN
 template <typename T>
 struct BucketNode
 {
+	using TThis = BucketNode<T>;
+
+	BucketNode(const T& data, Int32U hash) : Data(data), Hash(hash) {}
+	BucketNode(T&& data, Int32U hash) : Data(Move(data)), Hash(hash) {}						// 호출됨: HashTable:Insert()
+	BucketNode(const TThis& other) : Data(other.Data), Hash(other.Hash) {}					// 호출됨: HashTable:operator=(const THashTable& other)
+	BucketNode(TThis&& other) noexcept { Data = Move(other.Data); Hash = other.Hash; }		// 호출됨: HashTable:Expand
+	~BucketNode() {}
+
+	TThis& operator=(const TThis& other) = delete;
+	TThis& operator=(TThis&& other) noexcept { Data = Move(other.Data); Hash = other.Hash; return *this; }
+
+	
+
 	T Data;
 	Int32U Hash;	// 처음에 한번 계산해놓으면 성능이 좀더 개선될 듯?
+};
+
+template <typename TKey, typename TValue>
+struct BucketNode<Pair<TKey, TValue>>
+{
+	using TPair = Pair<TKey, TValue>;
+	using TThis = BucketNode<Pair<TKey, TValue>>;
+
+	BucketNode(const TPair& data, Int32U hash) : Data(data), Hash(hash) {}
+	BucketNode(TPair&& data, Int32U hash) : Data(Move(data)), Hash(hash) {}					// 호출됨: HashTable:Insert()
+	BucketNode(const TThis& other) : Data(other.Data), Hash(other.Hash) {}					// 호출됨: HashTable:operator=(const THashTable& other)
+	BucketNode(TThis&& other) noexcept { Data = Move(other.Data); Hash = other.Hash; }		// 호출됨: HashTable:Expand
+	~BucketNode() {}
+
+	TThis& operator=(const TThis& other) = delete;
+	TThis& operator=(TThis&& other) noexcept { Data = Move(other.Data); Hash = other.Hash; return *this; }
+
+	Pair<TKey, TValue> Data;
+	Int32U Hash;
 };
 
 /* ==============================================================
@@ -189,6 +222,7 @@ struct Bucket<TKey, TAllocator>
 template <typename TKey, typename TValue, typename TAllocator>
 struct Bucket<TKey, TValue, TAllocator>
 {
+	using TBucket = Bucket<TKey, TValue, TAllocator>;
 	using TBucketNode = BucketNode<Pair<TKey, TValue>>;
 
 	Bucket()
@@ -197,6 +231,7 @@ struct Bucket<TKey, TValue, TAllocator>
 		, DynamicArray(nullptr)
 		, Capacity(1)
 		, Size(0) {}
+
 	~Bucket() {
 		JCORE_PLACEMENT_DELETE_ARRAY_SAFE(DynamicArray, Size);
 		JCORE_ALLOCATOR_DYNAMIC_DEALLOCATE_SAFE(DynamicArray, sizeof(TBucketNode) * Capacity);

@@ -23,7 +23,7 @@
 #pragma once
 
 #include <JCore/Pattern/NonCopyableh.h>
-#include <JCore/Sync/ILock.h>
+#include <JCore/Sync/NormalLock.h>
 #include <JCore/Debug/New.h>
 
 NS_JC_BEGIN
@@ -83,6 +83,9 @@ public:
 		
 	static T* Get() {
 		if (ms_pInst == nullptr) {
+			// TODO: 락가드 사용시 오류난다. 인증/로비/게임 서버 프로젝트에서 JNetwork::NetMaster 소멸시 넷그룹 해쉬맵 제거되면서 오류가 발생함. 왜 그런지 모르겠다.
+			// 해쉬맵 말고 다른 컨테이너를 사용할땐 문제가 없는데..
+
 			ms_Lock.Lock();
 			if (ms_bDeleted) {
 				DebugAssertMsg(false, "삭제된 객체에 접근을 시도했습니다.");

@@ -62,9 +62,7 @@ public:
 		operator=(ilist);
 	}
 
-	~HashMap() noexcept override {
-		THashMap::Clear();
-	}
+	~HashMap() noexcept override {}
 public:
 
 

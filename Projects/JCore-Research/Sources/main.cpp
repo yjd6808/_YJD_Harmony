@@ -1,44 +1,24 @@
 ﻿#include "header.h"
 
-struct NetGroup
+struct _Base
 {
-	virtual ~NetGroup() = default;
+	virtual ~_Base() = default;
+	virtual void foo() {
+		Console::WriteLine("_base");
+	}
 };
 
-struct AuthNetGroup : NetGroup
+struct _Derived : _Base
 {
-	AuthNetGroup(int _1, int _2) {
-		sss.Insert(_1, _2);
+	void foo() override {
+		Console::WriteLine("_derived");
 	}
-	~AuthNetGroup() override {
-		
-	}
-
-
-
-	HashMap<int, int> sss;
-};
-
-struct BaseCollection
-{
-	virtual ~BaseCollection() {
-		
-	}
-
-	HashMap<int, SharedPtr<NetGroup>> Map;
-};
-
-class DerivedCollection final : public BaseCollection, public SingletonPointer<DerivedCollection>
-{
-	friend class TSingleton;
 };
 
 int main() {
-	auto derived = DerivedCollection::Get();
-	derived->Map.Insert(1, MakeShared<AuthNetGroup>(1, 2));
-	derived->Map.Insert(2, MakeShared<AuthNetGroup>(1, 3));
-	derived->Free();
-	
+	_Derived v;
+	_Base* z = &v;
+	z->foo();
 	return 0;
 }
 

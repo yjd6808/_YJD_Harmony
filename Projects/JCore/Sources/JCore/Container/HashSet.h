@@ -34,9 +34,7 @@ public:
 		operator=(ilist);
 	}
 
-	~HashSet() noexcept override {
-		THashSet::Clear();
-	}
+	~HashSet() noexcept override {}
 public:
 
 

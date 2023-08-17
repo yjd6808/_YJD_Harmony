@@ -13,7 +13,7 @@
 NS_JNET_BEGIN
 
 class IOCPWorker;
-class IOCP : public JCore::MakeSharedFromThis<IOCP>
+class IOCP
 {
 public:
 	enum class State
