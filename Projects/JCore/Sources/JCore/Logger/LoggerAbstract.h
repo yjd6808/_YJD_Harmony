@@ -8,15 +8,19 @@
 
 #pragma once
 
+#include <JCore/Declspec.h>
 #include <JCore/Primitives/String.h>
 #include <JCore/Sync/RecursiveLock.h>
 
 NS_JC_BEGIN
 
-
+enum class LoggerType
+{
+	Console
+};
 
 class LoggerOption;
-class LoggerAbstract
+class JCORE_NOVTABLE LoggerAbstract
 {
 public:
 	using TLockGuard = RecursiveLockGuard;
@@ -61,6 +65,7 @@ public:
 	void SetEnableLog(Level level, bool enabled);
 	void SetEnablePlainLog(bool enabled);
 
+	virtual LoggerType GetType() const = 0;
 	virtual void SetLoggerOption(LoggerOption* option) = 0;
 	LoggerOption* GetLoggerOption() { return m_pOption; }
 protected:
@@ -74,13 +79,14 @@ protected:
 	RecursiveLock m_Lock;
 };
 
-class LoggerOption
+class JCORE_NOVTABLE LoggerOption
 {
 public:
 	LoggerOption();
 	LoggerOption(const LoggerOption& other) { this->operator=(other); }
 	LoggerOption& operator=(const LoggerOption& other);
 	virtual ~LoggerOption() = 0;
+	virtual LoggerType GetLoggerType() const = 0;
 
 	bool ShowLevel;
 	bool ShowDateTime;

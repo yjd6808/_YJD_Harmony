@@ -23,18 +23,9 @@ CLIThread::Input::Input(Input&& other) noexcept {
 	this->operator=(Move(other));
 }
 
-CLIThread::Input::~Input() {
-	// Arrays::ForEachDelete(Arguments, ArgumentCount);
-	// JCORE_DELETE_ARRAY_SAFE(Arguments);
-}
+CLIThread::Input::~Input() {}
 
 CLIThread::Input& CLIThread::Input::operator=(Input&& other) noexcept {
-	// this->ArgumentCount = other.ArgumentCount;
-	// this->Arguments = other.Arguments;
-
-	// other.ArgumentCount = 0;
-	// other.Arguments = nullptr;
-
 	this->Arguments = Move(other.Arguments);
 	return *this;
 }

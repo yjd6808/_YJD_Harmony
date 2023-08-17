@@ -35,6 +35,15 @@ struct Comparator<const char*>
 	int operator()(const char* lhs, const char* rhs) const {
 		return StringUtil::CTCompare(lhs, rhs);
 	}
+
+	int operator()(const char* lhs, const String& rhs) const {
+		return StringUtil::CTCompare(lhs, rhs.Source());
+	}
+
+	template <Int32U Size>
+	int operator()(const char* lhs, const StaticString<Size>& rhs) const {
+		return StringUtil::CTCompare(lhs, rhs.Source());
+	}
 };
 
 template <>

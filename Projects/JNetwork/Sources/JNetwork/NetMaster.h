@@ -19,8 +19,7 @@ public:
 	virtual ~NetMaster();
 
 	virtual void Initialize() = 0;
-
-	void Finalize();
+	virtual void Finalize();
 
 	void AddNetGroup(int id, const NetGroupPtr& group);
 	NetGroupPtr GetNetGroup(int id);

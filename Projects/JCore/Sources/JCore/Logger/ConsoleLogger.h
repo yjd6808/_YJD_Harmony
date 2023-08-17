@@ -32,6 +32,7 @@ public:
 	void SetLogColor(Level level, ConsoleColor color);
 	ConsoleColor GetLogColor(Level level);
 	void SetLoggerOption(LoggerOption* option) override;
+	LoggerType GetType() const override { return LoggerType::Console; }
 private:
 	String m_szBuffer;
 };
@@ -42,6 +43,8 @@ public:
 	ConsoleLoggerOption();
 	ConsoleLoggerOption(const ConsoleLoggerOption& other) { this->operator=(other); }
 	ConsoleLoggerOption& operator=(const ConsoleLoggerOption& other);
+
+	LoggerType GetLoggerType() const override { return LoggerType::Console; }
 
 	ConsoleColor LevelColors[LoggerAbstract::eMax];
 	ConsoleColor TimeColors[LoggerAbstract::eMax];

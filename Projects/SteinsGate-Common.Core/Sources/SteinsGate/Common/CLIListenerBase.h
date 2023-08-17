@@ -13,13 +13,21 @@
 class CLIListenerBase : public ICLIListener
 {
 public:
-	bool OnInputProcessing(int argc, JCore::String* argv) override;
+	using TCLI_Callback = SGFuncFn<bool, int, SGString*>;
+	using TCLI_Table = SGHashMap<const char*, TCLI_Callback>;
 
-	bool CLI_HelpBase();
+	CLIListenerBase();
+
+	bool OnInputProcessing(int argc, JCore::String* argv) override;
+private:
+	bool CLI_HelpBase(int argc, JCore::String* argv);
 	bool CLI_SendCommandFilter(int argc, JCore::String* argv);
 	bool CLI_RecvCommandFilter(int argc, JCore::String* argv);
 	bool CLI_ViewSendCommand(int argc, JCore::String* argv);
 	bool CLI_ViewRecvCommand(int argc, JCore::String* argv);
 	bool CLI_ViewSendPacketHex(int argc, JCore::String* argv);
 	bool CLI_ViewRecvPacketHex(int argc, JCore::String* argv);
+	bool CLI_SaveRuntimeConfig(int argc, JCore::String* argv);
+
+	TCLI_Table m_Table;
 };

@@ -12,45 +12,27 @@
 
 USING_NS_JC;
 
+CLIListenerBase::CLIListenerBase() {
+	m_Table.Insert("help",										JCORE_CALLBACK_2(CLIListenerBase::CLI_HelpBase, this));
+	m_Table.Insert(RuntimeConfigBase::SendCommandFilterKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_SendCommandFilter, this));
+	m_Table.Insert(RuntimeConfigBase::RecvCommandFilterKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_RecvCommandFilter, this));
+	m_Table.Insert(RuntimeConfigBase::ViewSendCommandKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ViewSendCommand, this));
+	m_Table.Insert(RuntimeConfigBase::ViewRecvCommandKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ViewRecvCommand, this));
+	m_Table.Insert(RuntimeConfigBase::ViewSendPacketHexKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ViewSendPacketHex, this));
+	m_Table.Insert(RuntimeConfigBase::ViewRecvPacketHexKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ViewRecvPacketHex, this));
+	m_Table.Insert("save_runtime_config",						JCORE_CALLBACK_2(CLIListenerBase::CLI_SaveRuntimeConfig, this));
+}
+
 bool CLIListenerBase::OnInputProcessing(int argc, String* argv) {
-
-	if (argv[0] == "help") {
-		return CLI_HelpBase();
-	}
-
-	if (argv[0] == RuntimeConfigBase::SendCommandFilterKey) {
-		return CLI_SendCommandFilter(argc, argv);
-	}
-
-	if (argv[0] == RuntimeConfigBase::RecvCommandFilterKey) {
-		return CLI_RecvCommandFilter(argc, argv);
-	}
-
-	if (argv[0] == RuntimeConfigBase::ViewSendCommandKey) {
-		return CLI_ViewSendCommand(argc, argv);
-	}
-
-	if (argv[0] == RuntimeConfigBase::ViewRecvCommandKey) {
-		return CLI_ViewRecvCommand(argc, argv);
-	}
-
-	if (argv[0] == RuntimeConfigBase::ViewSendPacketHexKey) {
-		return CLI_ViewSendPacketHex(argc, argv);
-	}
-
-	if (argv[0] == RuntimeConfigBase::ViewRecvPacketHexKey) {
-		return CLI_ViewRecvPacketHex(argc, argv);
-	}
-
-	if (argv[0] == "save_runtime_config") {
-		CoreRuntimeConfigBase_v->Save();
-		return false;
+	const TCLI_Callback* pCallback = m_Table.Find(argv[0].Source());
+	if (pCallback) {
+		return (*pCallback)(argc, argv);
 	}
 
 	return true;
 }
 
-bool CLIListenerBase::CLI_HelpBase() {
+bool CLIListenerBase::CLI_HelpBase(int argc, JCore::String* argv) {
 	String szHelpText{ 1024 };
 	szHelpText += " - send_command_filter [add|remove] [커맨드 ID]\n";
 	szHelpText += " - recv_command_filter [add|remove] [커맨드 ID]\n";
@@ -239,5 +221,10 @@ bool CLIListenerBase::CLI_ViewRecvPacketHex(int argc, String* argv) {
 	} else {
 		Console::WriteLine("수신 커맨드 헥스 보기 활성화");
 	}
+	return false;
+}
+
+bool CLIListenerBase::CLI_SaveRuntimeConfig(int argc, JCore::String* argv) {
+	CoreRuntimeConfigBase_v->Save();
 	return false;
 }

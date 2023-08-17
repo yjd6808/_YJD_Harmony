@@ -149,7 +149,7 @@ struct Bucket<TKey, TAllocator>
 
 	bool Exist(const TKey& key) {
 		for (int i = 0; i < Size; i++) {
-			if (DynamicArray[i].Data == key) {
+			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
 				return true;
 			}
 		}
@@ -159,7 +159,7 @@ struct Bucket<TKey, TAllocator>
 
 	TKey* Find(const TKey& key) {
 		for (int i = 0; i < Size; i++) {
-			if (DynamicArray[i].Data == key) {
+			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
 				return AddressOf(DynamicArray[i].Data);
 			}
 		}
@@ -170,7 +170,7 @@ struct Bucket<TKey, TAllocator>
 	bool Remove(const TKey& key) {
 		int iFind = -1;
 		for (int i = 0; i < Size; i++) {
-			if (DynamicArray[i].Data == key) {
+			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
 				Memory::PlacementDelete(DynamicArray[i]);
 				iFind = i;
 				break;
@@ -308,7 +308,7 @@ struct Bucket<TKey, TValue, TAllocator>
 
 	bool Exist(const TKey& key) {
 		for (int i = 0; i < Size; i++) {
-			if (DynamicArray[i].Data.Key == key) {
+			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {
 				return true;
 			}
 		}
@@ -318,7 +318,7 @@ struct Bucket<TKey, TValue, TAllocator>
 
 	TValue* Find(const TKey& key) {
 		for (int i = 0; i < Size; i++) {
-			if (DynamicArray[i].Data.Key == key) {
+			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {
 				return AddressOf(DynamicArray[i].Data.Value);
 			}
 		}
@@ -329,7 +329,7 @@ struct Bucket<TKey, TValue, TAllocator>
 	bool Remove(const TKey& key) {
 		int iFind = -1;
 		for (int i = 0; i < Size; i++) {
-			if (DynamicArray[i].Data.Key == key) {
+			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {
 				Memory::PlacementDelete(DynamicArray[i]);
 				iFind = i;
 				break;
