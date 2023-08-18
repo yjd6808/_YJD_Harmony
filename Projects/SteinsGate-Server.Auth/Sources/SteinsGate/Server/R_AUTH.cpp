@@ -26,13 +26,14 @@ void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 
 	LoginResult_t eResult = LoginResult::LoginSuccess;
 
-	bool bHasAccount = Q_LOGIN::SelectAccountInfo(pCmd->Id.Source, pCmd->Pass.Source, accountData);
+	bool bHasAccount = Q_LOGIN::SelectAccountInfo(pCmd->Id.Source, accountData);
 	bool bRegistered = false;
 
 	if (!Q_LOGIN::IsSuccess) {
 		S_AUTH::SendLoginAck(LoginResult::QueryFailed);
 		return;
 	}
+
 
 	// 계정이 없는 경우, 회원가입시도
 	if (!bHasAccount)  {
@@ -48,6 +49,11 @@ void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 		else 
 			eResult = LoginResult::IdAlreadyExist;
 	} else {
+		if (accountData.Pass != pCmd->Pass) {
+			S_AUTH::SendLoginAck(LoginResult::IdPasswordMismatch);
+			return;
+		}
+
 		if (!CoreTokenManager_v->Issue(accountData.Id.Source)) {
 			eResult = LoginResult::Logined;
 		}

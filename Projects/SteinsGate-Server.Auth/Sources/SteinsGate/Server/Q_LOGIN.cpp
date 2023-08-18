@@ -35,11 +35,12 @@ bool Q_LOGIN::RegisterAccount(const char* id, const char* pass) {
 	return IsSuccess;
 }
 
-bool Q_LOGIN::SelectAccountInfo(const char* id, const char* pass, JCORE_OUT AccountData& accountData) {
+bool Q_LOGIN::SelectAccountInfo(const char* id, JCORE_OUT AccountData& accountData) {
 	Qry::SelectAccountInfoResult result;
-	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result, id, pass);
+	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result, id);
 
-	if (!IsSuccess)
+	// 쿼리는 성공했지만 바인딩된 결과물이 없으면 실패로 간주
+	if (!IsSuccess || !result.HasBindedResult)
 		return false;
 
 	accountData.LastLogin = DateTime::Now();

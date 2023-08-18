@@ -78,6 +78,7 @@ template <typename TQryResult>
 struct SelectResult
 {
 	MysqlQuerySelectPtr Query;
+	bool HasBindedResult = false;
 	bool Success = false;
 
 	bool HasNext() const {
@@ -90,6 +91,7 @@ struct SelectResult
 		QRY_RESULT_DEBUG_ASSERT
 		TQryResult& result = static_cast<TQryResult&>(*this);
 		BindSelectResult(result, Query.GetPtr());
+		HasBindedResult = true;
 	}
 
 	bool FetchNextRow() {
@@ -99,8 +101,11 @@ struct SelectResult
 		if (Query->Next()) {
 			TQryResult& result = static_cast<TQryResult&>(*this);
 			BindSelectResult(result, Query.GetPtr());
+			HasBindedResult = true;
 			return true;
 		}
+
+		HasBindedResult = false;
 		return false;
 	}
 
