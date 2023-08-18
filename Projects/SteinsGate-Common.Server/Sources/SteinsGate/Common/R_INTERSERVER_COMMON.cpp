@@ -37,7 +37,6 @@ void R_INTERSERVER_COMMON::RecvYouNeedToDoThis(Session* session, ICommand* cmd) 
 	}
 
 	if (CoreCommonServer_v->ProcessOrder(pCmd->Order)) {
-		S_INTERSERVER_COMMON::SendCenterMessage("성공적으로 요청을 수행하였습니다.");
 		S_INTERSERVER_COMMON::SendNotifyBootState(CoreCommonServer_v->GetBootState());
 		return;
 	}

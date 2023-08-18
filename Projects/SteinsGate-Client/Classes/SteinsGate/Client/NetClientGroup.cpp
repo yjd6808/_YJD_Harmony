@@ -21,9 +21,6 @@
 
 #include <SteinsGate/Client/R_AUTH.h>
 
-#include <SteinsGate/Client/NetAuthEventListener.h>
-#include <SteinsGate/Client/NetLobbyEventListener.h>
-
 USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
@@ -52,12 +49,6 @@ void NetClientGroup::Initialize() {
 	CreateBufferPool({});
 	RunIocp();
 
-	NetClientEventListener* pAuthListener = dbg_new NetAuthEventListener();
-	NetClientEventListener* pLobbyListener = dbg_new NetLobbyEventListener();
-	NetClientEventListener* pGameListener = nullptr;
-	NetClientEventListener* pChatListener = nullptr;
-	NetClientEventListener* pAreaListener = nullptr;
-
 	const auto spAuthTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, AuthRecvBufferSize_v, AuthSendBufferSize_v);
 	const auto spLobbyTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, LobbyRecvBufferSize_v, LobbySendBufferSize_v);
 
@@ -65,10 +56,10 @@ void NetClientGroup::Initialize() {
 	AddHost(spLobbyTcp);
 
 	AuthTcp = spAuthTcp.Get<TcpClient*>();
-	AuthTcp->SetEventListener(pAuthListener);
+	AuthTcp->SetEventListener(dbg_new NetClientEventListener{ClientConnectServerType::Auth});
 
 	LobbyTcp = spLobbyTcp.Get<TcpClient*>();
-	LobbyTcp->SetEventListener(pLobbyListener);
+	LobbyTcp->SetEventListener(dbg_new NetClientEventListener{ClientConnectServerType::Lobby});
 
 
 	// ==========================================================

@@ -28,6 +28,7 @@ SEnumBegin(InterServerClientType)
 None,
 Auth,
 Begin = Auth,
+Center,
 Lobby,
 Game,
 End = Game,
@@ -36,6 +37,7 @@ SEnumMiddle(InterServerClientType)
 static constexpr const char* Name[Max]{
 	"",
 	"인증",
+	"중앙",
 	"로비",
 	"게임",
 };

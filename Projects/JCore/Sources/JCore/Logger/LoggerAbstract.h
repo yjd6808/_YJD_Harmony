@@ -31,11 +31,12 @@ public:
 		eWarn,
 		eError,
 		eDebug,
+		eNormal,
 		eMax
 	};
 
 	LoggerAbstract(LoggerOption* option);
-	virtual ~LoggerAbstract() = default;
+	virtual ~LoggerAbstract();
 
 	
 	virtual void Flush() = 0;
@@ -66,17 +67,18 @@ public:
 	void SetEnablePlainLog(bool enabled);
 
 	virtual LoggerType GetType() const = 0;
-	virtual void SetLoggerOption(LoggerOption* option) = 0;
 	LoggerOption* GetLoggerOption() { return m_pOption; }
 protected:
 	bool m_bAutoFlush;
 	bool m_bUseLock;
+	bool m_bOptionOwner;
 
 	LoggerOption* m_pOption;
 	String m_szHeaderFormat;
 	String m_szDateTimeFormat;
 	String m_szLevelText[eMax];
 	RecursiveLock m_Lock;
+	
 };
 
 class JCORE_NOVTABLE LoggerOption

@@ -17,12 +17,23 @@ USING_NS_JNET;
 
 CommonNetGroup::CommonNetGroup()
 	: m_pServer(nullptr)
+	, m_pParser(dbg_new CommandParser)
 {}
 
 void CommonNetGroup::Initialize() {
 	InitializeBufferPool();
 	InitializeIOCP();
+	InitializeParser();
 	InitializeServer();
+}
+
+void CommonNetGroup::Finalize() {
+	NetGroup::Finalize();
+	JCORE_DELETE_SAFE(m_pParser);
+}
+
+void CommonNetGroup::InitializeParser() {
+	// 서버 공통 커맨드 정의
 }
 
 void CommonNetGroup::ProcessUpdate(const JCore::TimeSpan& elapsed) {
@@ -34,5 +45,7 @@ void CommonNetGroup::ProcessUpdate(const JCore::TimeSpan& elapsed) {
 
 	OnUpdate(elapsed);
 }
+
+
 
 

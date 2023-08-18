@@ -5,6 +5,8 @@
 #pragma once
 
 #include <JCore/Type.h>
+#include <JCore/Declspec.h>
+
 #include <JNetwork/Namespace.h>
 
 NS_JNET_BEGIN
@@ -14,7 +16,7 @@ struct ISendPacket;
 struct IRecvPacket;
 
 class Session;
-class SessionEventListener
+class JCORE_NOVTABLE SessionEventListener
 {
 public:
 	SessionEventListener() = default;
@@ -23,8 +25,8 @@ public:
 	virtual void OnConnected(Session* session) {}
 	virtual void OnDisconnected(Session* session) {}
 	virtual void OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {}
-	virtual void OnReceived(Session* session, ICommand* cmd) {}
-	virtual void OnReceived(Session* session, IRecvPacket* packet) {}
+	virtual void OnReceived(Session* session, ICommand* recvCmd) {}
+	virtual void OnReceived(Session* session, IRecvPacket* recvPacket) {}
 };
 
 NS_JNET_END

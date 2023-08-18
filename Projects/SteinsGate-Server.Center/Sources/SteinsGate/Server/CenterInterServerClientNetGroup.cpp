@@ -10,7 +10,7 @@
 #include "CenterCoreHeader.h"
 #include "CenterInterServerClientNetGroup.h"
 
-#include <SteinsGate/Server/ListenerInterServerClientUdp.h>
+#include <SteinsGate/Common/ListenerInterServerClient.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -30,6 +30,9 @@ void CenterInterServerClientNetGroup::InitializeIOCP() {
 	RunIocp();
 }
 
+void CenterInterServerClientNetGroup::InitializeParser() {
+}
+
 void CenterInterServerClientNetGroup::InitializeInterServerTcp() {
 	// 중앙 서버 자체가 인터서버 호스트이므로.. TCP 클라이언트는 사용하지 않는다.
 }
@@ -39,7 +42,7 @@ void CenterInterServerClientNetGroup::InitializeInterServerUdp() {
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Center.BindInterServerUdp);
 	AddHost(spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
-	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClientUdp);
+	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Center, m_pParser });
 	m_pInterServerClientUdp->RecvFromAsync();
 
 	

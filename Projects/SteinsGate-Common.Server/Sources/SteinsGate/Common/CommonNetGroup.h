@@ -20,6 +20,8 @@ public:
 	CommonNetGroup();
 
 	void Initialize() override;
+	void Finalize() override;
+
 	void ProcessUpdate(const JCore::TimeSpan& elapsed);
 
 	JNetwork::TcpServer* GetServer() { return m_pServer; }
@@ -28,8 +30,10 @@ protected:
 	virtual void InitializeIOCP() = 0;
 	virtual void InitializeBufferPool() = 0;
 	virtual void InitializeServer() = 0;
+	virtual void InitializeParser();
 
 	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
 
 	JNetwork::TcpServer* m_pServer;
+	JNetwork::CommandParser* m_pParser;
 };

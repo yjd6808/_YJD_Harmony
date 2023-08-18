@@ -88,6 +88,7 @@ public:
     static void SetColor(ConsoleColor color);
     static void GetColor(ConsoleColor color);
     static ConsoleColor GetColor();
+    static ConsoleColor ConvertColorString(const String& colorString);
 
     template <typename... TArgs>
     static int Write(ConsoleColor color, char* format, TArgs&&... args) {

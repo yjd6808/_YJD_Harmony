@@ -18,6 +18,7 @@ public:
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
+	void InitializeParser() override;
 	void InitializeServer() override;
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 };

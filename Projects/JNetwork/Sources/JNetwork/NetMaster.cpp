@@ -16,15 +16,13 @@ NetMaster::NetMaster()
 	, m_bFinalized(false)
 {}
 
-NetMaster::~NetMaster() {
-	// m_hNetGroup.Clear();
-	// Finalize();
-}
+NetMaster::~NetMaster() {}
 
 void NetMaster::Finalize() {
 	if (m_bFinalized)
 		return;
 
+	m_hNetGroup.ForEachValue([](NetGroupPtr& group) { group->Finalize(); });
 	m_hNetGroup.Clear();
 	m_bFinalized = true;
 }

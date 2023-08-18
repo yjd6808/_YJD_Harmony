@@ -102,6 +102,15 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\RuntimeConfigBase.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerClientBase.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerServerBase.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerHelperBase.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -280,6 +289,15 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\CLIListenerBase.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerClientBase.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerServerBase.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelperBase.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -350,6 +368,9 @@
     </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{22fee212-3e25-40e8-89e1-794cc68791dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Listener">
+      <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

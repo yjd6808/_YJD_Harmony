@@ -13,6 +13,7 @@
 
 NS_JC_BEGIN
 
+class ConsoleLoggerOption;
 class ConsoleLogger : public LoggerAbstract
 {
 public:
@@ -31,7 +32,7 @@ public:
 	void SetHeaderDefaultColor(Level level, ConsoleColor color);
 	void SetLogColor(Level level, ConsoleColor color);
 	ConsoleColor GetLogColor(Level level);
-	void SetLoggerOption(LoggerOption* option) override;
+	void SetLoggerOption(ConsoleLoggerOption* option, bool transferOwnership);
 	LoggerType GetType() const override { return LoggerType::Console; }
 private:
 	String m_szBuffer;

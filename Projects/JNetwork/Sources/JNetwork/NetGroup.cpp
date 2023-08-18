@@ -26,9 +26,7 @@ NetGroup::NetGroup(const String& name)
 	, m_bFinalized(false)
 {}
 
-NetGroup::~NetGroup() {
-	NetGroup::Finalize();
-}
+NetGroup::~NetGroup() {}
 
 void NetGroup::CreateIocp(int threadCount) {
 	m_spIOCP = MakeShared<IOCP>(threadCount);

@@ -102,7 +102,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\NetAuthEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\MimicCamera.cpp">
       <SubType>
       </SubType>
@@ -163,7 +162,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\WalkActivity.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientGroup.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\MapObject.cpp">
       <SubType>
       </SubType>
@@ -528,7 +526,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\NetAuthEventListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\MimicCamera.h">
       <SubType>
       </SubType>
@@ -540,7 +537,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\PopupManager.h">
       <SubType>
       </SubType>
@@ -995,7 +991,7 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -1005,7 +1001,7 @@
     <IntDir>$(ProjectDir)..\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform);$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Engine\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform);$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)..\Classes;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Engine\Sources;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -1029,7 +1025,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>JNetwork.lib;JCore.lib;Mswsock.lib;ws2_32.lib;Bass.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Engine.lib;Version.lib;libcocos2d.lib;librecast.lib;libcurl.lib;zlib.lib;jsoncpp.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
+      <AdditionalDependencies>JNetwork.lib;JCore.lib;Mswsock.lib;ws2_32.lib;Bass.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Engine.lib;Version.lib;libcocos2d.lib;librecast.lib;libcurl.lib;zlibd.lib;jsoncpp.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories);$(_COCOS_LIB_PATH_WIN32_BEGIN);$(_COCOS_LIB_PATH_WIN32_END)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -1039,8 +1035,8 @@
     <PostBuildEvent>
       <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
@@ -1119,7 +1115,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <PrecompiledHeaderOutputFile>$(IntDir)Tutturu.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>JNetwork.lib;JCore.lib;Mswsock.lib;ws2_32.lib;Bass.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Engine.lib;Version.lib;libcocos2d.lib;librecast.lib;libcurl.lib;zlib.lib;jsoncpp.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
+      <AdditionalDependencies>JNetwork.lib;JCore.lib;Mswsock.lib;ws2_32.lib;Bass.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Engine.lib;Version.lib;libcocos2d.lib;librecast.lib;libcurl.lib;zlibd.lib;jsoncpp.lib;%(AdditionalDependencies);$(_COCOS_LIB_WIN32_BEGIN);$(_COCOS_LIB_WIN32_END)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories);$(_COCOS_LIB_PATH_WIN32_BEGIN);$(_COCOS_LIB_PATH_WIN32_END)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -1131,8 +1127,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <PostBuildEvent>
       <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll" "$(OutDir)"
-xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
+xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>

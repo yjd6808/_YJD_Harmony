@@ -29,6 +29,12 @@ void LobbyNetGroup::InitializeIOCP() {
 	RunIocp();
 }
 
+void LobbyNetGroup::InitializeParser() {
+	CommonNetGroup::InitializeParser();
+
+
+}
+
 void LobbyNetGroup::InitializeServer() {
 	auto spServer = MakeShared<LobbyServer>(m_spIOCP, m_spBufferPool);
 
@@ -36,7 +42,7 @@ void LobbyNetGroup::InitializeServer() {
 
 	m_pServer = spServer.Get<LobbyServer*>();
 	m_pServer->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfoPackage_v->Lobby.MaxSessionCount));
-	m_pServer->SetEventListener(dbg_new ListenerLobbyServer);
+	m_pServer->SetEventListener(dbg_new ListenerLobbyServer{ m_pParser });
 }
 
 void LobbyNetGroup::OnUpdate(const TimeSpan& elapsed) {

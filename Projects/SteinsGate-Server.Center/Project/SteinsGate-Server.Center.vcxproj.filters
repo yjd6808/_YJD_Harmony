@@ -9,10 +9,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetMaster.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterSession.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerHostTcp.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterServer.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\S_CENTER.cpp">
@@ -38,10 +35,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetMaster.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetGroup.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterSession.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerHostTcp.h">
-      <Filter>Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterServer.h">
       <Filter>Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\S_CENTER.h">

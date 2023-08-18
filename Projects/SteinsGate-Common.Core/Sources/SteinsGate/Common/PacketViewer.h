@@ -25,7 +25,7 @@ struct PacketViewer
 	static void View(JNetwork::IRecvPacket* packet);
 	static void View(JNetwork::ICommand* cmd);
 private:
-	static void View(char* data, int len, int cmdCount);
+	static void View(JNetwork::Transmission transmission, char* data, int len, int cmdCount);
 	static void Hex(char* data, int len, JCORE_OUT JCore::String& hex);
 };
 

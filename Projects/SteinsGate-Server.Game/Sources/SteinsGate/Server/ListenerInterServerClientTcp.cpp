@@ -31,18 +31,18 @@ ListenerInterServerClientTcp::ListenerInterServerClientTcp() {
 }
 
 void ListenerInterServerClientTcp::OnConnected(SGSession* session) {
-	ListenerCommonClient::OnConnected(session);
+	ListenerClientCommon::OnConnected(session);
 
 	S_INTERSERVER::SetInformation(CoreInterServerClientTcp_v, eSendAsync, SingleServerType::Center);
 	S_INTERSERVER::SendItsMe(InterServerClientType::Game, InterServerSendHelperBase::GetSenderId());
 }
 
 void ListenerInterServerClientTcp::OnDisconnected(SGSession* session) {
-	ListenerCommonClient::OnDisconnected(session);
+	ListenerClientCommon::OnDisconnected(session);
 }
 
 void ListenerInterServerClientTcp::OnSent(SGSession* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) {
-	ListenerCommonClient::OnSent(session, sentPacket, sentBytes);
+	ListenerClientCommon::OnSent(session, sentPacket, sentBytes);
 }
 
 void ListenerInterServerClientTcp::OnReceived(SGSession* session, JNetwork::ICommand* cmd) {
@@ -50,5 +50,5 @@ void ListenerInterServerClientTcp::OnReceived(SGSession* session, JNetwork::ICom
 }
 
 void ListenerInterServerClientTcp::OnConnectFailed(SGSession* session, Int32U errorCode) {
-	ListenerCommonClient::OnConnectFailed(session, errorCode);
+	ListenerClientCommon::OnConnectFailed(session, errorCode);
 }

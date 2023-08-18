@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <JCore/Logger/LoggerAbstract.h>
+
 #include <SteinsGate/Common/Core.h>
 #include <SteinsGate/Common/Type.h>
 
@@ -19,6 +21,7 @@ struct JCORE_NOVTABLE RuntimeConfigBase
 	virtual ~RuntimeConfigBase() = default;
 
 	void Load();
+	void Delete();
 	void Save();
 
 	virtual void OnLoading(Json::Value& root) = 0;
@@ -29,6 +32,8 @@ struct JCORE_NOVTABLE RuntimeConfigBase
 
 	void ShowCommandFilter(JNetwork::Transmission transmission);
 
+	void ApplyLoggerOption();
+	void ApplyNetLoggerOption();
 
 
 	// 특정 커맨드에 대해서 로그를 보여줄지
@@ -39,19 +44,31 @@ struct JCORE_NOVTABLE RuntimeConfigBase
 	SGVector<Cmd_t> SendCommandFilter;
 
 	// 수신/송신 커맨드 로그를 출역할지 여부
-	bool ViewRecvCommand;
-	bool ViewSendCommand;
+	bool ShowRecvCommand;
+	bool ShowSendCommand;
 
 	// 수신/송신 패킷을 16진수 형식의 바이너리 데이터를 출력할지
-	bool ViewRecvPacketHex;
-	bool ViewSendPacketHex;
+	bool ShowRecvPacketHex;
+	bool ShowSendPacketHex;
+
+	JCore::ConsoleColor ConsoleLogColor[JCore::LoggerAbstract::Level::eMax];
+	JCore::ConsoleColor ConsoleNetLogColor[JCore::LoggerAbstract::Level::eMax];
+
+	bool ShowConsoleLog[JCore::LoggerAbstract::Level::eMax];
+	bool ShowConsoleNetLog[JCore::LoggerAbstract::Level::eMax];
 
 	static constexpr char RecvCommandFilterKey[] = "recv_command_filter";
 	static constexpr char SendCommandFilterKey[] = "send_command_filter";
 
-	static constexpr char ViewRecvCommandKey[] = "view_recv_command";
-	static constexpr char ViewSendCommandKey[] = "view_send_command";
+	static constexpr char ShowRecvCommandKey[] = "show_recv_command";
+	static constexpr char ShowSendCommandKey[] = "show_send_command";
 
-	static constexpr char ViewRecvPacketHexKey[] = "view_recv_packet_hex";
-	static constexpr char ViewSendPacketHexKey[] = "view_send_packet_hex";
+	static constexpr char ShowRecvPacketHexKey[] = "show_recv_packet_hex";
+	static constexpr char ShowSendPacketHexKey[] = "show_send_packet_hex";
+
+	static constexpr char ConsoleLogColorKey[] = "console_log_color";
+	static constexpr char ConsoleNetLogColorKey[] = "console_net_log_color";
+
+	static constexpr char ShowConsoleLogKey[] = "show_console_log";
+	static constexpr char ShowConsoleNetLogKey[] = "show_console_net_log";
 };

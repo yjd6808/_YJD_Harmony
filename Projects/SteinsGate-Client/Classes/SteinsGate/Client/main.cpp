@@ -6,8 +6,7 @@
 #include "Tutturu.h"
 #include "SGApplication.h"
 
-int main()
-{
+int main() {
     int iResult = -1;
     {
         SGApplication app;

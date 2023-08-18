@@ -284,6 +284,10 @@ void WorldScene::onMouseScroll(SGEventMouse* mouseEvent) const {
 
 void WorldScene::onExit() {
 
+	// ======================================================
+	// 메인 리소스 정리
+	// ======================================================
+
 	// 삭제전 마지막 발악, 모든 UI 리소스 정리
 	m_pUILayer->clearUnload();
 

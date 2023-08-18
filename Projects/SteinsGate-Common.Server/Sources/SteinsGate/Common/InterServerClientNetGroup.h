@@ -17,6 +17,8 @@ public:
 	InterServerClientNetGroup();
 
 	void Initialize() override;
+	void Finalize() override;
+
 	bool ConnectCenterServer(int tryCount);
 	void ProcessUpdate(const JCore::TimeSpan& elpased);
 
@@ -25,8 +27,10 @@ public:
 protected:
 	virtual void InitializeIOCP() = 0;
 	virtual void InitializeBufferPool() = 0;
+	virtual void InitializeParser();
 	virtual void InitializeInterServerTcp() = 0;
 	virtual void InitializeInterServerUdp() = 0;
+	
 
 	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
 	virtual bool IsPeerServer() { return true; }	// 중앙 서버만 false
@@ -35,4 +39,5 @@ protected:
 
 	JNetwork::TcpClient* m_pInterServerClientTcp;
 	JNetwork::UdpClient* m_pInterServerClientUdp;
+	JNetwork::CommandParser* m_pParser;
 };

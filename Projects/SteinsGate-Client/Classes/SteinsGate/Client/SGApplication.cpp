@@ -17,25 +17,6 @@ USING_NS_JC_DETAIL;
 USING_NS_JNET;
 USING_NS_JNET_DETAIL;
 
-ConsoleLoggerOption NetLoggerOption_v = [] {
-    ConsoleLoggerOption option;
-    option.EnableLog[LoggerAbstract::eDebug] = true;
-    option.EnableLog[LoggerAbstract::eError] = true;
-    option.EnableLog[LoggerAbstract::eWarn] = true;
-    option.EnableLog[LoggerAbstract::eInfo] = true;
-    return option;
-}();
-
-ConsoleLoggerOption LoggerOption_v = [] {
-    ConsoleLoggerOption option;
-    option.EnableLog[LoggerAbstract::eDebug] = true;
-    option.EnableLog[LoggerAbstract::eError] = true;
-    option.EnableLog[LoggerAbstract::eWarn] = true;
-    option.EnableLog[LoggerAbstract::eInfo] = true;
-    return option;
-}();
-
-
 SGApplication::SGApplication()
 	: m_hWndProcHook(nullptr)
 {}
@@ -75,6 +56,10 @@ void SGApplication::initGLContextAttrs()
 
 bool SGApplication::applicationDidFinishLaunching() {
 
+    // ======================================================
+	// 메인 리소스 초기화
+	// ======================================================
+
     Winsock::Initialize(2, 2);
     AudioPlayer::Initilize();
     SgaElementInitializer::Initialize();
@@ -89,14 +74,13 @@ bool SGApplication::applicationDidFinishLaunching() {
 
     CreateOpenGLWindow();
 	InitializeJCore();
-    InitializeNetLogger(&NetLoggerOption_v, LOG_SPECIFIER_CLIENT);
-    InitializeDefaultLogger(&LoggerOption_v, LOG_SPECIFIER_CLIENT);
+    InitializeNetLogger(LOG_SPECIFIER_CLIENT);
+    InitializeDefaultLogger(LOG_SPECIFIER_CLIENT);
     InitializeCommonCore();
     InitializeClientCore();
     InitializeClientLogo(true, 5);
     CreateWorldScene();
     InitializeWindowProcedure();
-    
     
     return true;
 }

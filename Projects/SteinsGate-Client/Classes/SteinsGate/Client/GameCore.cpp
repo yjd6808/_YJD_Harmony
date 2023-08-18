@@ -54,6 +54,7 @@ void InitializeClientCore() {
 	CoreTimeManager_v			= TimeManager::Get();
 	CoreNet_v					= NetCore::Get();
 	CoreRuntimeConfig_v			= RuntimeConfig::Get();
+	CoreRuntimeConfigBase_v		= CoreRuntimeConfig_v;
 	CoreServerProcessInfoPackage_v = CoreDataManager_v->getServerProcessInfoPackage(1);
 
 
@@ -66,6 +67,7 @@ void InitializeClientCore() {
 	CoreActorListenerManager_v->init();
 	CoreNet_v->Initialize();
 	CoreCLIThread_v->SetListener(dbg_new CLIListener);
+	
 }
 
 void FinalizeClientCore() {

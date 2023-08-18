@@ -11,8 +11,13 @@
 
 #include <JNetwork/Host/SessionContainer.h>
 
+#include <SteinsGate/Common/Cmd_AUTH.h>
+
 #include <SteinsGate/Server/AuthServer.h>
 #include <SteinsGate/Server/ListenerAuthServer.h>
+#include <SteinsGate/Server/R_AUTH.h>
+
+
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -29,6 +34,12 @@ void AuthNetGroup::InitializeIOCP() {
 	RunIocp();
 }
 
+void AuthNetGroup::InitializeParser() {
+	CommonNetGroup::InitializeParser();
+
+	m_pParser->AddCommand<CAU_Login>(R_AUTH::RecvLogin);
+}
+
 void AuthNetGroup::InitializeServer() {
 	auto spServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool);
 
@@ -36,7 +47,7 @@ void AuthNetGroup::InitializeServer() {
 
 	m_pServer = spServer.Get<AuthServer*>();
 	m_pServer->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfoPackage_v->Auth.MaxSessionCount));
-	m_pServer->SetEventListener(dbg_new ListenerAuthServer);
+	m_pServer->SetEventListener(dbg_new ListenerAuthServer{m_pParser});
 }
 
 void AuthNetGroup::OnUpdate(const TimeSpan& elapsed) {

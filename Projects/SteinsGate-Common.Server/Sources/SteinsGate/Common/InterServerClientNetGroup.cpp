@@ -11,7 +11,9 @@
 #include "InterServerClientNetGroup.h"
 
 #include <SteinsGate/Common/InterServerSendHelper.h>
+#include <SteinsGate/Common/R_INTERSERVER_COMMON.h>
 #include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/InterServerCmd_RELAY.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -19,17 +21,24 @@ USING_NS_JNET;
 InterServerClientNetGroup::InterServerClientNetGroup()
 	: m_pInterServerClientTcp(nullptr)
 	, m_pInterServerClientUdp(nullptr)
+	, m_pParser(dbg_new SGCommandParser)
 {}
 
 void InterServerClientNetGroup::Initialize() {
 	InitializeBufferPool();
 	InitializeIOCP();
+	InitializeParser();
 	InitializeInterServerTcp();
 	InitializeInterServerUdp();
-
+	
 	InterServerSendHelperBase::InitDefaultToId(CoreServerProcessInfoPackage_v->Center.ServerId);
 	InterServerSendHelperBase::InitSingleServerIds();
 	InterServerSendHelperBase::InitSingleServerDestinations();
+}
+
+void InterServerClientNetGroup::Finalize() {
+	NetGroup::Finalize();
+	JCORE_DELETE_SAFE(m_pParser);
 }
 
 void InterServerClientNetGroup::ProcessUpdate(const TimeSpan& elpased) {
@@ -37,6 +46,15 @@ void InterServerClientNetGroup::ProcessUpdate(const TimeSpan& elpased) {
 	OnUpdate(elpased);
 }
 
+
+void InterServerClientNetGroup::InitializeParser() {
+	m_pParser->AddCommand<CES_AlreadyConnected>		(R_INTERSERVER_COMMON::RecvAlreadyConnected);
+	m_pParser->AddCommand<CES_WhoAreYou>			(R_INTERSERVER_COMMON::RecvWhoAreYou);
+	m_pParser->AddCommand<CES_YouNeedToDoThis>		(R_INTERSERVER_COMMON::RecvYouNeedToDoThis);
+	m_pParser->AddCommand<CES_TimeSyncAck>			(R_INTERSERVER_COMMON::RecvTimeSyncAck);
+	m_pParser->AddCommand<SS_P2PRelayStaticTest>	(R_INTERSERVER_COMMON::RecvP2PRelayStaticTest);
+	m_pParser->AddCommand<SS_P2PRelayDynamicTest>	(R_INTERSERVER_COMMON::RecvP2PRelayDynamicTest);
+}
 
 void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {
 	// 피어서버는 중앙서버로 주기적으로(10초 정도마다) 시간 동기화 요청 수행

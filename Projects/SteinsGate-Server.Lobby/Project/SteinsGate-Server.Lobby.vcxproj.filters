@@ -5,13 +5,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\DataManager.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Lobby.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerLobbyServer.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\R_INTERSERVER.cpp">
@@ -55,13 +49,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\R_INTERSERVER.h">
       <Filter>Recv</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.h">
-      <Filter>Listener</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerLobbyServer.h">
-      <Filter>Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h">
       <Filter>Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\S_INTERSERVER.h">

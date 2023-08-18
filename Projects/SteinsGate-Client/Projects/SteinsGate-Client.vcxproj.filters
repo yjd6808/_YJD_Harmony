@@ -397,17 +397,8 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\Win32Helper.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp">
-      <Filter>Net</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientGroup.cpp">
       <Filter>Net</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\NetAuthEventListener.cpp">
-      <Filter>Net\Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.cpp">
-      <Filter>Net\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Popup.cpp">
       <Filter>Game\UI_M</Filter>
@@ -555,6 +546,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\CLIListener.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp">
+      <Filter>Net\Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -862,17 +856,8 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\Win32Helper.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\NetClientEventListener.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\NetClientGroup.h">
       <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\NetAuthEventListener.h">
-      <Filter>Net\Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\NetLobbyEventListener.h">
-      <Filter>Net\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\NetCore.h">
       <Filter>Net</Filter>
@@ -1035,6 +1020,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CLIListener.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\NetClientEventListener.h">
+      <Filter>Net\Listener</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

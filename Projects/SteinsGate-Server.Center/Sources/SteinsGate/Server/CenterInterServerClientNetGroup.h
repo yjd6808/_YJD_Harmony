@@ -17,6 +17,7 @@ public:
 	CenterInterServerClientNetGroup();
 
 	void InitializeIOCP() override;
+	void InitializeParser() override;
 	void InitializeBufferPool() override;
 	void InitializeInterServerTcp() override;
 	void InitializeInterServerUdp() override;

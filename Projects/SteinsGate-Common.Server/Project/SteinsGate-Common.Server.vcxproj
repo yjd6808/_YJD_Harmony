@@ -48,14 +48,8 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\IUpdatable.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelper.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerInterServerCommonClient.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelperCommon.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerInterServerClient.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_AUTH.h">
       <SubType>
@@ -70,11 +64,11 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonClient.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerClientCommon.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerCommonServer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerServerCommon.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnection.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h" />
@@ -129,16 +123,10 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonClient.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerCommonServer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerInterServerCommonClient.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerHelper.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerClientCommon.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerInterServerClient.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerServerCommon.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerHelperCommon.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnection.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp" />

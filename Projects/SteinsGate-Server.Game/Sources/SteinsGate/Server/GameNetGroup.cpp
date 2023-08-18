@@ -29,6 +29,12 @@ void GameNetGroup::InitializeIOCP() {
 	RunIocp();
 }
 
+void GameNetGroup::InitializeParser() {
+	CommonNetGroup::InitializeParser();
+
+
+}
+
 void GameNetGroup::InitializeServer() {
 	auto spServer = MakeShared<LogicServer>(m_spIOCP, m_spBufferPool);
 
@@ -36,7 +42,7 @@ void GameNetGroup::InitializeServer() {
 
 	m_pServer = spServer.Get<LogicServer*>();
 	m_pServer->SetSesssionContainer(dbg_new SessionContainer(CoreGameServerProcessInfo_v->MaxSessionCount));
-	m_pServer->SetEventListener(dbg_new ListenerLogicServer);
+	m_pServer->SetEventListener(dbg_new ListenerLogicServer{ m_pParser });
 }
 
 void GameNetGroup::OnUpdate(const TimeSpan& elapsed) {

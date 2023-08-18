@@ -36,10 +36,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerLobbyServer.cpp">
       <SubType>
       </SubType>
@@ -64,7 +60,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOBBY.cpp">
@@ -100,10 +95,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerLobbyServer.h">
       <SubType>
       </SubType>
@@ -122,10 +113,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyCoreHeader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOBBY.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\R_LOBBY.h">
@@ -208,11 +195,11 @@
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Server\Sources;$(SolutionDir)ThirdParty\MySQL80\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Server\Sources;$(SolutionDir)ThirdParty\MySQL80\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
@@ -222,11 +209,11 @@
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Server\Sources;$(SolutionDir)ThirdParty\MySQL80\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)..\Sources;$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\SteinsGate-Common.Core\Sources;$(SolutionDir)Projects\SteinsGate-Common.Server\Sources;$(SolutionDir)ThirdParty\MySQL80\include;$(SolutionDir)ThirdParty\JsonCpp195\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Core\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\SteinsGate-Common.Server\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\;$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)..\Output\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Intermediate\$(Platform)\$(Configuration)\</IntDir>
@@ -253,7 +240,7 @@
       <Command>x86 플랫폼은 지원하지 않습니다.</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
     </PostBuildEvent>
@@ -277,7 +264,7 @@ xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDi
       <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;libmysql.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Server.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
     </PostBuildEvent>
@@ -309,7 +296,7 @@ xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDi
       <Command>x86 플랫폼은 지원하지 않습니다.</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
     </PostBuildEvent>
@@ -338,7 +325,7 @@ xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDi
       <AdditionalDependencies>JCore.lib;JNetwork.lib;ws2_32.lib;Mswsock.lib;libmysql.lib;SteinsGate-Common.Core.lib;SteinsGate-Common.Server.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\*.dll" "$(OutDir)"
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\JsonCpp195\lib\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"
 xcopy /Y /Q "$(SolutionDir)Projects\SteinsGate-Data.Config\common.json" "$(OutDir)"</Command>
     </PostBuildEvent>

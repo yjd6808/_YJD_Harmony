@@ -11,9 +11,7 @@
 #include "AuthInterServerClientNetGroup.h"
 
 #include <SteinsGate/Common/InterServerCmd_HOST.h>
-
-#include <SteinsGate/Server/ListenerInterServerClientTcp.h>
-#include <SteinsGate/Server/ListenerInterServerClientUdp.h>
+#include <SteinsGate/Common/ListenerInterServerClient.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -42,7 +40,7 @@ void AuthInterServerClientNetGroup::InitializeInterServerTcp() {
 	AddHost(spInterServerClient);
 
 	m_pInterServerClientTcp = spInterServerClient.Get<TcpClient*>();
-	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClientTcp);
+	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Auth, m_pParser });
 }
 
 void AuthInterServerClientNetGroup::InitializeInterServerUdp() {
@@ -50,7 +48,7 @@ void AuthInterServerClientNetGroup::InitializeInterServerUdp() {
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Auth.BindInterServerUdp);
 	AddHost(spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
-	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClientUdp);
+	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Auth, m_pParser });
 	m_pInterServerClientUdp->RecvFromAsync();
 }
 

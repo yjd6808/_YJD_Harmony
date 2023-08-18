@@ -10,41 +10,39 @@
 #include "GameCoreHeader.h"
 #include "ListenerLogicServer.h"
 
-#include <SteinsGate/Common/QueryDefine.h>
-#include <SteinsGate/Common/PacketViewer.h>
-
-#include <SteinsGate/Server/R_LOGIC.h>
-
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerLogicServer::ListenerLogicServer() {
-}
+ListenerLogicServer::ListenerLogicServer(CommandParser* parser)
+	: ListenerServerCommon(parser)
+{}
 
 void ListenerLogicServer::OnStarted() {
-	ListenerCommonServer::OnStarted();
+	ListenerServerCommon::OnStarted();
 }
 
 void ListenerLogicServer::OnConnected(Session* connectedSession) {
-	ListenerCommonServer::OnConnected(connectedSession);
+	ListenerServerCommon::OnConnected(connectedSession);
 }
 
 void ListenerLogicServer::OnDisconnected(Session* disconnetedSession) {
-	ListenerCommonServer::OnDisconnected(disconnetedSession);
+	ListenerServerCommon::OnDisconnected(disconnetedSession);
 }
 
 void ListenerLogicServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
-	PacketViewer::View(sentPacket);
-	sentPacket->ForEach([](ICommand* cmd) { PacketViewer::View(cmd); });
-	ListenerCommonServer::OnSent(sender, sentPacket, sentBytes);
+	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
 }
 
 void ListenerLogicServer::OnReceived(Session* receiver, ICommand* cmd) {
-	ListenerCommonServer::OnReceived(receiver, cmd);
+	ListenerServerCommon::OnReceived(receiver, cmd);
+}
+
+void ListenerLogicServer::OnReceived(Session* session, IRecvPacket* recvPacket) {
+	ListenerServerCommon::OnReceived(session, recvPacket);
 }
 
 void ListenerLogicServer::OnStopped() {
-	ListenerCommonServer::OnStopped();
+	ListenerServerCommon::OnStopped();
 }
 
 

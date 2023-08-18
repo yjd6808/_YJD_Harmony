@@ -128,6 +128,26 @@ ConsoleColor Console::GetColor() {
     return ms_iDefaultColor;
 }
 
+ConsoleColor Console::ConvertColorString(const String& colorString) {
+    if (colorString == "black") { return Black; }
+    if (colorString == "blue") { return Blue; }
+    if (colorString == "green") { return Green; }
+    if (colorString == "cyan") { return Cyan; }
+    if (colorString == "red") { return Red; }
+    if (colorString == "magenta") { return Magenta; }
+    if (colorString == "yellow") { return Yellow; }
+    if (colorString == "lightgray") { return LightGray; }
+    if (colorString == "gray") { return Gray; }
+    if (colorString == "lightblue") { return LightBlue; }
+    if (colorString == "lightgreen") { return LightGreen; }
+    if (colorString == "lightcyan") { return LightCyan; }
+    if (colorString == "lightred") { return LightRed; }
+    if (colorString == "lightmagenta") { return LightMagenta; }
+    if (colorString == "lightyellow") { return LightYellow; }
+    if (colorString == "white") { return White; }
+    return Max;
+}
+
 String Console::ReadLine() {
     String s;
     char ch;

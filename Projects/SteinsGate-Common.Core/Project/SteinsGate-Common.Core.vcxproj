@@ -59,6 +59,9 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerClientBase.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerHelperBase.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\ListenerServerBase.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\Logo.cpp">
       <SubType>
       </SubType>
@@ -178,6 +181,9 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerClientBase.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerServerBase.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelperBase.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\LobbyEnum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h">
       <SubType>

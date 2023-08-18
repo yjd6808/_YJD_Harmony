@@ -15,14 +15,24 @@ NS_JC_BEGIN
 
 LoggerAbstract::LoggerAbstract(LoggerOption* option)
 	: m_bAutoFlush(false)
+	, m_bUseLock(true)
+	, m_bOptionOwner(false)
 	, m_pOption(option)	//yyyy-MM-dd
 	, m_szDateTimeFormat("HH:mm:ss")
 	, m_szLevelText {
-		"Info ",
-		"Warn ",
-		"Error",
-		"Debug"}
+		"Info  ",
+		"Warn  ",
+		"Error ",
+		"Debug ",
+		"Normal"}
+	
 {}
+
+LoggerAbstract::~LoggerAbstract() {
+	if (m_bOptionOwner && m_pOption) {
+		JCORE_DELETE_SAFE(m_pOption);
+	}
+}
 
 void LoggerAbstract::Log(Level level, const char* fmt, ...) {
 	if (!m_pOption->EnableLog[level])

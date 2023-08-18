@@ -44,6 +44,7 @@ void CommonNetMaster::ProcessMainUpdate() {
 		// Console::WriteLine("%d", elapsed.GetTotalMiliSecondsInt());
 	}
 
+	Finalize();
 	OnStopped();
 }
 

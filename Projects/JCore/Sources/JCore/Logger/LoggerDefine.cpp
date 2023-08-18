@@ -15,7 +15,7 @@ USING_NS_JC;
 
 LoggerAbstract* Logger_v;
 
-void InitializeDefaultLogger(LoggerOption* option, const char* specifier) {
+void InitializeDefaultLogger(const char* specifier) {
 	DebugAssertMsg(Logger_v == nullptr, "이미 로거가 초기화되어 있습니다.");
 
 	ConsoleLogger* pConsoleLogger = dbg_new ConsoleLogger;
@@ -24,7 +24,6 @@ void InitializeDefaultLogger(LoggerOption* option, const char* specifier) {
 	pConsoleLogger->SetHeaderFormat(StringUtil::Format("%s[ level ✓  datetime ] ", specifier));
 	pConsoleLogger->ShowDateTime(true);
 	pConsoleLogger->ShowLevel(true);
-	if (option != nullptr) pConsoleLogger->SetLoggerOption(option);
 	Logger_v = pConsoleLogger;
 }
 

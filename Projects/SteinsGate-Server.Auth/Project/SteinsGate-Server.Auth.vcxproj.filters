@@ -9,13 +9,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthNetMaster.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthSession.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerAuthServer.cpp">
-      <Filter>Listener</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\R_INTERSERVER.cpp">
@@ -65,13 +59,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\R_INTERSERVER.h">
       <Filter>Recv</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientTcp.h">
-      <Filter>Listener</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerAuthServer.h">
-      <Filter>Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerInterServerClientUdp.h">
       <Filter>Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\S_INTERSERVER.h">

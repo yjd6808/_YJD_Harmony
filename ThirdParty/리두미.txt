@@ -1,0 +1,21 @@
+JsonCpp195
+	x86 Debug:   O
+		Release: O
+	x64 Debug:   O
+		Release: O
+
+Bass24:
+	따로 Debug,Release 구분 없는듯?
+	x86: O
+	x64: O
+
+Zlib
+	x86 Debug:   O
+		Release: O
+	x64 Debug:   O
+		Release: O
+
+MySQL80:
+	MySQL 설치 디렉토리에서 복사해서 가져온거라 Debug 버전은 애초에 없고, x86은 사용불가능함
+	x86: X
+	x64: O

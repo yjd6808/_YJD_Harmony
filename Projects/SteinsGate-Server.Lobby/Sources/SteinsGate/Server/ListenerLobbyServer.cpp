@@ -18,33 +18,37 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerLobbyServer::ListenerLobbyServer() {
-}
+ListenerLobbyServer::ListenerLobbyServer(CommandParser* parser)
+	: ListenerServerCommon(parser)
+{}
 
 void ListenerLobbyServer::OnStarted() {
-	ListenerCommonServer::OnStarted();
+	ListenerServerCommon::OnStarted();
 }
 
 void ListenerLobbyServer::OnConnected(Session* connectedSession) {
-	ListenerCommonServer::OnConnected(connectedSession);
+	ListenerServerCommon::OnConnected(connectedSession);
 }
 
 void ListenerLobbyServer::OnDisconnected(Session* disconnetedSession) {
-	ListenerCommonServer::OnDisconnected(disconnetedSession);
+	ListenerServerCommon::OnDisconnected(disconnetedSession);
 }
 
 void ListenerLobbyServer::OnSent(Session* sender, ISendPacket* sentPacket, Int32UL sentBytes) {
-	PacketViewer::View(sentPacket);
-	sentPacket->ForEach([](ICommand* cmd) { PacketViewer::View(cmd); });
-	ListenerCommonServer::OnSent(sender, sentPacket, sentBytes);
+	ListenerServerCommon::OnSent(sender, sentPacket, sentBytes);
 }
 
 void ListenerLobbyServer::OnReceived(Session* receiver, ICommand* cmd) {
-	ListenerCommonServer::OnReceived(receiver, cmd);
+	ListenerServerCommon::OnReceived(receiver, cmd);
 }
 
+void ListenerLobbyServer::OnReceived(Session* session, IRecvPacket* recvPacket) {
+	ListenerServerCommon::OnReceived(session, recvPacket);
+}
+
+
 void ListenerLobbyServer::OnStopped() {
-	ListenerCommonServer::OnStopped();
+	ListenerServerCommon::OnStopped();
 }
 
 

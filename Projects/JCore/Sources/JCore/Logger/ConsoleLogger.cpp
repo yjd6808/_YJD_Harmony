@@ -190,19 +190,18 @@ ConsoleColor ConsoleLogger::GetLogColor(Level level) {
 	return static_cast<ConsoleLoggerOption*>(m_pOption)->LogColors[level];
 }
 
-void ConsoleLogger::SetLoggerOption(LoggerOption* option) {
-	ConsoleLoggerOption* pOption = dynamic_cast<ConsoleLoggerOption*>(option);
-	DebugAssertMsg(pOption != nullptr, "콘솔 로거 옵션 타입이 아닙니다.");
-	m_pOption = pOption;
+void ConsoleLogger::SetLoggerOption(ConsoleLoggerOption* option, bool transferOwnership) {
+	m_pOption = option;
+	m_bOptionOwner = transferOwnership;
 }
 
 ConsoleLoggerOption ConsoleLoggerOption::Default;
 
 ConsoleLoggerOption::ConsoleLoggerOption()
-	: LevelColors{ White, Yellow, LightRed, LightGray }		// [ level : datatime ] -> 레벨 섹상을 바꿈
-	, TimeColors{ Yellow, Yellow, Yellow, Yellow }			// [ level : datatime ] -> 시간 섹상을 바꿈
-	, HeaderColors{ LightGreen, White, White, White }		// [ level : datatime ] -> 그외 [ : ]이런 녀석들 색상을 바꿈
-	, LogColors{ Gray, Gray , Gray , Gray }
+	: LevelColors{ LightGreen, Yellow, LightRed, Gray, LightGray }	// [ level : datatime ] -> 레벨 섹상을 바꿈
+	, TimeColors{ Yellow, Yellow, Yellow, Yellow, Yellow }			// [ level : datatime ] -> 시간 섹상을 바꿈
+	, HeaderColors{ White, White, White, White, White }				// [ level : datatime ] -> 그외 [ : ]이런 녀석들 색상을 바꿈
+	, LogColors{ LightGreen, Yellow , LightRed, Gray, LightGray }
 {}
 
 ConsoleLoggerOption& ConsoleLoggerOption::operator=(const ConsoleLoggerOption& other) {

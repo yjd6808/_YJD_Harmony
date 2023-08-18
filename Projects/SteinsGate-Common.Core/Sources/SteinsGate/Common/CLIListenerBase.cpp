@@ -16,11 +16,13 @@ CLIListenerBase::CLIListenerBase() {
 	m_Table.Insert("help",										JCORE_CALLBACK_2(CLIListenerBase::CLI_HelpBase, this));
 	m_Table.Insert(RuntimeConfigBase::SendCommandFilterKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_SendCommandFilter, this));
 	m_Table.Insert(RuntimeConfigBase::RecvCommandFilterKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_RecvCommandFilter, this));
-	m_Table.Insert(RuntimeConfigBase::ViewSendCommandKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ViewSendCommand, this));
-	m_Table.Insert(RuntimeConfigBase::ViewRecvCommandKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ViewRecvCommand, this));
-	m_Table.Insert(RuntimeConfigBase::ViewSendPacketHexKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ViewSendPacketHex, this));
-	m_Table.Insert(RuntimeConfigBase::ViewRecvPacketHexKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ViewRecvPacketHex, this));
-	m_Table.Insert("save_runtime_config",						JCORE_CALLBACK_2(CLIListenerBase::CLI_SaveRuntimeConfig, this));
+	m_Table.Insert(RuntimeConfigBase::ShowSendCommandKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ShowSendCommand, this));
+	m_Table.Insert(RuntimeConfigBase::ShowRecvCommandKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ShowRecvCommand, this));
+	m_Table.Insert(RuntimeConfigBase::ShowSendPacketHexKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ShowSendPacketHex, this));
+	m_Table.Insert(RuntimeConfigBase::ShowRecvPacketHexKey,		JCORE_CALLBACK_2(CLIListenerBase::CLI_ShowRecvPacketHex, this));
+	m_Table.Insert("console_log",								JCORE_CALLBACK_2(CLIListenerBase::CLI_ConsoleLog, this));
+	m_Table.Insert("console_net_log",							JCORE_CALLBACK_2(CLIListenerBase::CLI_ConsoleNetLog, this));
+	m_Table.Insert("runtime_config",							JCORE_CALLBACK_2(CLIListenerBase::CLI_RuntimeConfig, this));
 }
 
 bool CLIListenerBase::OnInputProcessing(int argc, String* argv) {
@@ -33,19 +35,40 @@ bool CLIListenerBase::OnInputProcessing(int argc, String* argv) {
 }
 
 bool CLIListenerBase::CLI_HelpBase(int argc, JCore::String* argv) {
-	String szHelpText{ 1024 };
+	String szHelpText{ 2048 };
 	szHelpText += " - send_command_filter [add|remove] [커맨드 ID]\n";
 	szHelpText += " - recv_command_filter [add|remove] [커맨드 ID]\n";
 	szHelpText += " - send_command_filter [show]\n";
 	szHelpText += " - recv_command_filter [show]\n";
 	szHelpText += "   송/수신 커맨드의 출력 로그에서 제외할 커맨드 ID를 등록하거나 제거합니다.\n";
-	szHelpText += " - view_send_command [1|0]\n";
-	szHelpText += " - view_recv_command [1|0]\n";
+	szHelpText += " - show_send_command [1|0]\n";
+	szHelpText += " - show_recv_command [1|0]\n";
 	szHelpText += "   송/수신한 커맨드 정보를 출력합니다.\n";
-	szHelpText += " - view_send_packet_hex [1|0]\n";
-	szHelpText += " - view_recv_packet_hex [1|0]";
+	szHelpText += " - show_send_packet_hex [1|0]\n";
+	szHelpText += " - show_recv_packet_hex [1|0]\n";
 	szHelpText += "   송/수신한 패킷의 바이너리 데이터를 16진수 형식으로 출력합니다.\n";
-	szHelpText += " - save_runtime_config: 런타임 설정을 실행파일 디렉토리에 저장합니다.";
+	szHelpText += " - console_log [debug|warn|error|info|normal] enable [1|0]\n";
+	szHelpText += " - console_log [debug|warn|error|info|normal] color [콘솔 색상 영어 문자열]\n";
+	szHelpText += " - console_net_log [debug|warn|error|info|normal] enable [1|0]\n";
+	szHelpText += " - console_net_log [debug|warn|error|info|normal] color [콘솔 색상 영어 문자열]\n";
+	szHelpText += "\t\t콘솔 색상 문자열\n";
+	szHelpText += "\t\t* black\n";
+	szHelpText += "\t\t* blue\n";
+	szHelpText += "\t\t* green\n";
+	szHelpText += "\t\t* cyan\n";
+	szHelpText += "\t\t* red\n";
+	szHelpText += "\t\t* magenta\n";
+	szHelpText += "\t\t* yellow\n";
+	szHelpText += "\t\t* lightgray\n";
+	szHelpText += "\t\t* gray\n";
+	szHelpText += "\t\t* lightblue\n";
+	szHelpText += "\t\t* lightgreen\n";
+	szHelpText += "\t\t* lightcyan\n";
+	szHelpText += "\t\t* lightred\n";
+	szHelpText += "\t\t* lightmagenta\n";
+	szHelpText += "\t\t* lightyellow\n";
+	szHelpText += "\t\t* white\n";
+	szHelpText += " - runtime_config [save|delete]: 런타임 설정을 저장 또는 삭제합니다.";
 	Console::WriteLine(szHelpText.Source());
 	return true;
 }
@@ -135,63 +158,62 @@ bool CLIListenerBase::CLI_RecvCommandFilter(int argc, String* argv) {
 	return false;
 }
 
-bool CLIListenerBase::CLI_ViewSendCommand(int argc, String* argv) {
+bool CLIListenerBase::CLI_ShowSendCommand(int argc, String* argv) {
 	if (argc <= 1) {
 		Console::WriteLine("인자 갯수가 올바르지 않습니다.");
 		return false;
 	}
 
-	int bEnable;
-	if (!StringUtil::TryToNumber(bEnable, argv[1].Source())) {
-		Console::WriteLine("올바르지 않은 커맨드 ID입니다.");
+	const int bEnable = ToNumber(argv[1], 1);
+	if (bEnable == InvalidValue_v) {
 		return false;
 	}
 
-	CoreRuntimeConfigBase_v->ViewSendCommand = bEnable;
+	CoreRuntimeConfigBase_v->ShowSendCommand = bEnable;
 
 	if (bEnable) {
 		Console::WriteLine("송신 커맨드 보기 활성화");
-	} else {
+	}
+	else {
 		Console::WriteLine("송신 커맨드 보기 비활성화");
 	}
 	return false;
 }
 
-bool CLIListenerBase::CLI_ViewRecvCommand(int argc, String* argv) {
+bool CLIListenerBase::CLI_ShowRecvCommand(int argc, String* argv) {
 	if (argc <= 1) {
 		Console::WriteLine("인자 갯수가 올바르지 않습니다.");
 		return false;
 	}
 
-	int bEnable;
-	if (!StringUtil::TryToNumber(bEnable, argv[1].Source())) {
-		Console::WriteLine("올바르지 않은 커맨드 ID입니다.");
+	const int bEnable = ToNumber(argv[1], 1);
+	if (bEnable == InvalidValue_v) {
 		return false;
 	}
 
-	CoreRuntimeConfigBase_v->ViewRecvCommand = bEnable;
+	CoreRuntimeConfigBase_v->ShowRecvCommand = bEnable;
 
 	if (bEnable) {
 		Console::WriteLine("수신 커맨드 보기 활성화");
-	} else {
+	}
+	else {
 		Console::WriteLine("수신 커맨드 보기 비활성화");
 	}
 	return false;
 }
 
-bool CLIListenerBase::CLI_ViewSendPacketHex(int argc, String* argv) {
+bool CLIListenerBase::CLI_ShowSendPacketHex(int argc, String* argv) {
 	if (argc <= 1) {
 		Console::WriteLine("인자 갯수가 올바르지 않습니다.");
 		return false;
 	}
 
-	int bEnable;
-	if (!StringUtil::TryToNumber(bEnable, argv[1].Source())) {
-		Console::WriteLine("올바르지 않은 커맨드 ID입니다.");
+	const int bEnable = ToNumber(argv[1], 1);
+	if (bEnable == InvalidValue_v) {
 		return false;
 	}
 
-	CoreRuntimeConfigBase_v->ViewSendPacketHex = bEnable;
+	CoreRuntimeConfigBase_v->ShowSendPacketHex = bEnable;
 
 	if (bEnable) {
 		Console::WriteLine("송신 패킷 헥스 보기 활성화");
@@ -202,19 +224,18 @@ bool CLIListenerBase::CLI_ViewSendPacketHex(int argc, String* argv) {
 	return false;
 }
 
-bool CLIListenerBase::CLI_ViewRecvPacketHex(int argc, String* argv) {
+bool CLIListenerBase::CLI_ShowRecvPacketHex(int argc, String* argv) {
 	if (argc <= 1) {
 		Console::WriteLine("인자 갯수가 올바르지 않습니다.");
 		return false;
 	}
 
-	int bEnable;
-	if (!StringUtil::TryToNumber(bEnable, argv[1].Source())) {
-		Console::WriteLine("올바르지 않은 커맨드 ID입니다.");
+	const int bEnable = ToNumber(argv[1], 1);
+	if (bEnable == InvalidValue_v) {
 		return false;
 	}
 
-	CoreRuntimeConfigBase_v->ViewRecvPacketHex = bEnable;
+	CoreRuntimeConfigBase_v->ShowRecvPacketHex = bEnable;
 
 	if (bEnable) {
 		Console::WriteLine("수신 패킷 헥스 보기 활성화");
@@ -224,7 +245,113 @@ bool CLIListenerBase::CLI_ViewRecvPacketHex(int argc, String* argv) {
 	return false;
 }
 
-bool CLIListenerBase::CLI_SaveRuntimeConfig(int argc, JCore::String* argv) {
-	CoreRuntimeConfigBase_v->Save();
+bool CLIListenerBase::CLI_ConsoleLog(int argc, JCore::String* argv) {
+	if (argc <= 3) {
+		Console::WriteLine("인자 갯수가 올바르지 않습니다.");
+		return false;
+	}
+
+	const LoggerAbstract::Level eLevel = ConvertLogLevel(argv[1]);
+	if (eLevel == LoggerAbstract::eMax) {
+		Console::WriteLine("두번째 인자가 올바르지 않습니다.");
+		return false;
+	}
+
+	if (argv[2] == "enable") {
+		const int bEnable = ToNumber(argv[3], 3);
+		if (bEnable == InvalidValue_v) {
+			return false;
+		}
+		CoreRuntimeConfigBase_v->ShowConsoleLog[eLevel] = bEnable;
+		CoreRuntimeConfigBase_v->ApplyLoggerOption();
+		return false;
+	} 
+
+	if (argv[2] == "color") {
+		ConsoleColor eColor = Console::ConvertColorString(argv[3]);
+		if (eColor == ConsoleColor::Max) {
+			Console::WriteLine("색상 문자열이 올바르지 않습니다.");
+		}
+		CoreRuntimeConfigBase_v->ConsoleLogColor[eLevel] = eColor;
+		CoreRuntimeConfigBase_v->ApplyLoggerOption();
+		return false;
+	}
+
 	return false;
+}
+
+bool CLIListenerBase::CLI_ConsoleNetLog(int argc, String* argv) {
+	if (argc <= 3) {
+		Console::WriteLine("인자 갯수가 올바르지 않습니다.");
+		return false;
+	}
+
+	const LoggerAbstract::Level eLevel = ConvertLogLevel(argv[1]);
+	if (eLevel == LoggerAbstract::eMax) {
+		Console::WriteLine("두번째 인자가 올바르지 않습니다.");
+		return false;
+	}
+
+	if (argv[2] == "enable") {
+		const int bEnable = ToNumber(argv[3], 3);
+		if (bEnable == InvalidValue_v) {
+			return false;
+		}
+		CoreRuntimeConfigBase_v->ShowConsoleNetLog[eLevel] = bEnable;
+		CoreRuntimeConfigBase_v->ApplyNetLoggerOption();
+		return false;
+	}
+
+	if (argv[2] == "color") {
+		ConsoleColor eColor = Console::ConvertColorString(argv[3]);
+		if (eColor == ConsoleColor::Max) {
+			Console::WriteLine("색상 문자열이 올바르지 않습니다.");
+		}
+		CoreRuntimeConfigBase_v->ConsoleNetLogColor[eLevel] = eColor;
+		CoreRuntimeConfigBase_v->ApplyNetLoggerOption();
+		return false;
+	}
+
+	return false;
+}
+
+bool CLIListenerBase::CLI_RuntimeConfig(int argc, String* argv) {
+	if (argc <= 1) {
+		Console::WriteLine("인자 갯수가 올바르지 않습니다.");
+		return false;
+	}
+
+
+	if (argv[1] == "save") {
+		CoreRuntimeConfigBase_v->Save();
+		return false;
+	}
+
+	if (argv[1] == "delete") {
+		CoreRuntimeConfigBase_v->Delete();
+		return false;
+	}
+	
+	return false;
+}
+
+
+// ===========================================================================================================
+
+LoggerAbstract::Level CLIListenerBase::ConvertLogLevel(const SGString& logLevelString) {
+	if (logLevelString == "debug") return LoggerAbstract::eDebug;
+	if (logLevelString == "warn") return LoggerAbstract::eWarn;
+	if (logLevelString == "error") return LoggerAbstract::eError;
+	if (logLevelString == "info") return LoggerAbstract::eInfo;
+	if (logLevelString == "normal") return LoggerAbstract::eInfo;
+	return LoggerAbstract::eMax;
+}
+
+int CLIListenerBase::ToNumber(const SGString& numString, int argIndex) {
+	int v;
+	if (!StringUtil::TryToNumber(v, numString.Source())) {
+		Console::WriteLine("%d번째 인자가 올바르지 않습니다.", argIndex + 1);
+		return InvalidValue_v;
+	}
+	return v;
 }

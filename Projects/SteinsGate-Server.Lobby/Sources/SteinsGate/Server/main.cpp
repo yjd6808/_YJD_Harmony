@@ -1,7 +1,6 @@
 ﻿#include "Lobby.h"
 #include "LobbyCoreHeader.h"
 
-#include <JCore/Logger/ConsoleLogger.h>
 #include <JCore/Random.h>
 
 #include <SteinsGate/Server/LobbyContents.h>
@@ -10,43 +9,35 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ConsoleLoggerOption LoggerOption_v = [] {
-	ConsoleLoggerOption option;
-	option.EnableLog[LoggerAbstract::eDebug] = true;
-	option.EnableLog[LoggerAbstract::eError] = true;
-	option.EnableLog[LoggerAbstract::eWarn] = true;
-	option.EnableLog[LoggerAbstract::eInfo] = true;
-	return option;
-}();
-
-ConsoleLoggerOption NetLoggerOption_v = [] {
-	ConsoleLoggerOption option;
-	option.EnableLog[LoggerAbstract::eDebug] = true;
-	option.EnableLog[LoggerAbstract::eError] = true;
-	option.EnableLog[LoggerAbstract::eWarn] = true;
-	option.EnableLog[LoggerAbstract::eInfo] = true;
-	return option;
-}();
-
-
 int main() {
 	new char; // 릭 확인용
+
+	// ======================================================
+	// 메인 리소스 초기화
+	// ======================================================
+
 	Random::EngineInitialize();
 	Winsock::Initialize(2, 2);
 	Console::SetSize(800, 400);
-	InitializeNetLogger(&NetLoggerOption_v, LOG_SPECIFIER_LOBBY);
-	InitializeDefaultLogger(&LoggerOption_v, LOG_SPECIFIER_LOBBY);
+	InitializeNetLogger(LOG_SPECIFIER_LOBBY);
+	InitializeDefaultLogger(LOG_SPECIFIER_LOBBY);
 	InitializeCommonCore();
 	InitializeServerCore();
 	InitializeServerLobbyLogo(true, 24);
 	InitializeLobbyCore();
 	InitializeLobbyContents();
 
-	{
-		if (CoreInterServerClientNetGroup_v->ConnectCenterServer(5)) {
-			CoreNetMaster_v->ProcessMainUpdate();
-		}
+	// ======================================================
+	// 메인 루틴
+	// ======================================================
+
+	if (CoreInterServerClientNetGroup_v && CoreInterServerClientNetGroup_v->ConnectCenterServer(5)) {
+		CoreNetMaster_v->ProcessMainUpdate();
 	}
+
+	// ======================================================
+	// 메인 리소스 정리
+	// ======================================================
 
 	FinalizeLobbyContents();
 	FinalizeLobbyCore();

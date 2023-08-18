@@ -11,9 +11,7 @@
 #include "LobbyInterServerClientNetGroup.h"
 
 #include <SteinsGate/Common/InterServerCmd_HOST.h>
-
-#include <SteinsGate/Server/ListenerInterServerClientTcp.h>
-#include <SteinsGate/Server/ListenerInterServerClientUdp.h>
+#include <SteinsGate/Common/ListenerInterServerClient.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -39,7 +37,7 @@ void LobbyInterServerClientNetGroup::InitializeInterServerTcp() {
 	AddHost(spInterServerClient);
 
 	m_pInterServerClientTcp = spInterServerClient.Get<TcpClient*>();
-	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClientTcp);
+	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Lobby, m_pParser });
 }
 
 void LobbyInterServerClientNetGroup::InitializeInterServerUdp() {
@@ -47,7 +45,7 @@ void LobbyInterServerClientNetGroup::InitializeInterServerUdp() {
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Lobby.BindInterServerUdp);
 	AddHost(spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
-	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClientUdp);
+	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Lobby, m_pParser });
 	m_pInterServerClientUdp->RecvFromAsync();
 }
 
