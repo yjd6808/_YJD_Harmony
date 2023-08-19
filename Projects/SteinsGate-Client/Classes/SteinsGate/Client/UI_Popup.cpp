@@ -218,6 +218,7 @@ void UI_Popup::adjust() {
 	const float fPadding = CorePopupManager_v->getPadding();
 	const Size& buttonArea = m_pGroupButtonHolder->getUISize();	
 	const float fPopupAreaWidth = Math::Max(CorePopupManager_v->getWidth(), buttonArea.width + fPadding * 2);
+	const float fPopupTextAreaWidth = fPopupAreaWidth - fPadding * 2;
 
 	// 라벨의 Dimension이 UI 설정파일상의 너비, 높이 정보로 처음 세팅되기 때문에
 	// setText()후 getLineCount()를 수행할때 이 기본 정보를 바탕으로 라인수를 얻게된다.
@@ -225,20 +226,15 @@ void UI_Popup::adjust() {
 	// 텍스트 수정 후 Cocos2d-x 엔진이 너비에 맞춰서 올바르게 계산된 라인수를 얻어낼 수 있게된다.
 
 	// 1. 먼저 텍스트영역 너비를 결정해줘서 라인카운트를 올바르게 계산할 수 있도록 만듬
-	m_pLabelText->source()->setDimensions(fPopupAreaWidth, 0);		
+	m_pLabelText->source()->setDimensions(fPopupTextAreaWidth, 0);
 
 	// 2. 위 작업 덕분에 게임엔진의 라벨이 해당 너비를 기준으로 올바르게 라인수를 계산할 수 있게된다.
-	// getLineCount()에 1을 더해주는 이유는 엔진에서 한글 문자열을 너비에 맞게 완벽하게 Wrap을 못하는 경우가 있다.
-	// 예를들어서 1번째줄을 꽉 채우고 2번째줄에 1글자만 포함된 경우 라인카운트를 1로 계산해버림
-	// 엔진의 라인 수 계산 로직은 Label::alignText() -> Label::multilineTextWrap() 함수를 찾고하면된다.
-	// TODO: 언젠가 시간나면 라벨 Wrap기능 개선해볼것
-	const int iLineCount = m_pLabelText->getLineCount() + 1;		
-
+	const int iLineCount = m_pLabelText->getLineCount();		
 	const float fFontSize = m_pLabelText->getInitialFontSize();
 	const float fPopupAreaHeight = fPadding * 3 + iLineCount * fFontSize + buttonArea.height;
 
 	Size textArea = {
-		fPopupAreaWidth - fPadding * 2,
+		fPopupTextAreaWidth,
 		iLineCount * fFontSize
 	};
 
