@@ -30,3 +30,7 @@ void TimeManager::updateAppTime() {
 	m_AppTime = m_AppStartupTime.Tick + iElpasedAppTime;
 	m_AppRunningTime = iElpasedAppTime;
 }
+
+void TimeManager::updateServerTime() {
+
+}

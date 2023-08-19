@@ -135,4 +135,38 @@
 	// 부모 클래스 팡션 숨기는법
 	// https://stackoverflow.com/questions/4908539/a-way-in-c-to-hide-a-specific-function
 	#define JCORE_HIDE_BASE_CLASS_METHOD(base_class_type, method) private: using base_class_type::method;
+
+
+	#define JCORE_ENUM_CLASS_BIT_OPERATION_OVERLOADING(enum_class)			\
+	enum class enum_class;													\
+	constexpr enum_class operator&(enum_class lhs, enum_class rhs) {		\
+		return enum_class(int(lhs) & int(rhs));								\
+	}																		\
+																			\
+	constexpr enum_class operator|(enum_class lhs, enum_class rhs) {		\
+		return enum_class(int(lhs) | int(rhs));								\
+	}																		\
+																			\
+	constexpr enum_class operator^(enum_class lhs, enum_class rhs) {		\
+		return enum_class(int(lhs) ^ int(rhs));								\
+	}																		\
+																			\
+	constexpr enum_class operator~(enum_class lhs) {						\
+		return enum_class(~int(lhs));										\
+	}																		\
+																			\
+	inline enum_class& operator&=(enum_class& x, enum_class y) {			\
+		x = x & y;															\
+		return x;															\
+	}																		\
+																			\
+	inline enum_class& operator|=(enum_class& x, enum_class y) {			\
+		x = x | y;															\
+		return x;															\
+	}																		\
+																			\
+	inline enum_class& operator^=(enum_class& x, enum_class y) {			\
+		x = x ^ y;															\
+		return x;															\
+	}
 #endif

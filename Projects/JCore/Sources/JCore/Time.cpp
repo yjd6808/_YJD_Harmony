@@ -1840,4 +1840,63 @@ TimeSpan StopWatch<StopWatchMode::HighResolution>::GetElapsed() {
 	return (StopCounter - StartCounter) / Precision;
 }
 
+bool TimeCounter::ElapsedSeconds(float seconds) {
+
+	if (AttributeFlag.Check(TimeCounterAttribute::DontFire))
+		return false;
+
+	bool bTimeOver = false;
+
+	if (AttributeFlag.Check(TimeCounterAttribute::FirstCheckFire)) {
+		bTimeOver = true;
+		AttributeFlag.Unset(TimeCounterAttribute::FirstCheckFire);
+	}
+
+	if (Elapsed.GetTotalSeconds() >= seconds) {
+		bTimeOver = true;
+	}
+
+	if (bTimeOver) {
+		if (AttributeFlag.Check(TimeCounterAttribute::TimeOverReset)) {
+			Elapsed.Tick = 0;
+		}
+
+		if (AttributeFlag.Check(TimeCounterAttribute::FirstElpasedFire)) {
+			AttributeFlag.Add(TimeCounterAttribute::DontFire);
+		}
+	}
+
+	return bTimeOver;
+}
+
+
+bool TimeCounterF::ElapsedSeconds(float seconds) {
+
+	if (AttributeFlag.Check(TimeCounterAttribute::DontFire))
+		return false;
+
+	bool bTimeOver = false;
+
+	if (AttributeFlag.Check(TimeCounterAttribute::FirstCheckFire)) {
+		bTimeOver = true;
+		AttributeFlag.Unset(TimeCounterAttribute::FirstCheckFire);
+	}
+
+	if (Elapsed.GetTotalSeconds() >= seconds) {
+		bTimeOver = true;
+	}
+
+	if (bTimeOver) {
+		if (AttributeFlag.Check(TimeCounterAttribute::TimeOverReset)) {
+			Elapsed.Second = 0;
+		}
+
+		if (AttributeFlag.Check(TimeCounterAttribute::FirstElpasedFire)) {
+			AttributeFlag.Add(TimeCounterAttribute::DontFire);
+		}
+	}
+
+	return bTimeOver;
+}
+
 NS_JC_END

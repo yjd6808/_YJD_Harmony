@@ -16,6 +16,7 @@
 #include <JCore/Time.h>
 #include <JCore/Stream.h>
 #include <JCore/Env.h>
+#include <JCore/Random.h>
 #include <JCore/Bit.h>
 
 #include <JCore/Pool/BinarySearchMemoryPool.h>
@@ -27,6 +28,7 @@
 #include <JCore/Primitives/StaticString.h>
 #include <JCore/Primitives/StringUtil.h>
 #include <JCore/Primitives/String.h>
+#include <JCore/Primitives/BitFlag.h>
 
 #include <JCore/Utils/Concatenation.h>
 #include <JCore/Utils/Console.h>

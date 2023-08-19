@@ -65,7 +65,7 @@ void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {
 	if (m_pInterServerClientTcp == nullptr || m_pInterServerClientTcp->GetState() != Host::eConnected)
 		return;
 
-	static TimeCounter s_Timer(TimeCounter::eTimeOverReset | TimeCounter::eFirstFire);
+	static TimeCounter s_Timer(TimeCounterAttribute::FirstCheckFire | TimeCounterAttribute::TimeOverReset);
 	s_Timer.Elapsed += elapsed;
 
 	if (!s_Timer.ElapsedSeconds(10)) {

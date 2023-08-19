@@ -20,6 +20,9 @@
 
 using SGString = JCore::String;
 
+template <typename TEnum>
+using SGBitFlag = JCore::BitFlag<TEnum>;
+
 template <Int32U Size>
 using SGStaticString = JCore::StaticString<Size>;
 using SGPath = JCore::Path;
@@ -72,6 +75,9 @@ using SGFileStreamPtr = JCore::FileStreamPtr;
 using SGConsoleColor = JCore::ConsoleColor;
 using SGDateTime = JCore::DateTime;
 using SGTimeSpan = JCore::TimeSpan;
+
+using SGTimeCounterF = JCore::TimeCounterF;
+using SGTimeCounter = JCore::TimeCounter;
 
 using SGNormalLock = JCore::NormalLock;
 using SGRecursiveLock = JCore::RecursiveLock;

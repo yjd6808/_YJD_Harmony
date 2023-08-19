@@ -64,61 +64,150 @@ UI_Popup* PopupManager::pop() {
 	return popup;
 }
 
-UI_Popup* PopupManager::showYesNo(const std::string& text, const SGActionFn<>& yes, const SGActionFn<>& no) {
+UI_Popup* PopupManager::showYesNo(
+	const std::string& text,
+	const PopupCallback& yes /* = nullptr */,
+	const PopupCallback& no /* = nullptr */,
+	bool closeWithEsc /* = false */,
+	float timeout /* = SG_POPUP_NO_TIMEOUT */,
+	const PopupCallback& timeoutFn /*= nullptr*/,
+	HAlignment_t halign /* = HAlignment::Left */,
+	VAlignment_t valign /* = VAlignment::Top */
+) {
 	UI_Popup* popup = pop();
 	popup->setText(text);
 	popup->setType(UI_Popup::Type::eYesNo);
 	popup->setYesCallback(yes);
 	popup->setNoCallback(no);
-	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
-	m_vOpendList.PushBack(popup);
-	return popup;
-}
-
-UI_Popup* PopupManager::showYesNo(const std::string& text, int tag, const SGActionFn<>& yes, const SGActionFn<>& no) {
-	UI_Popup* popup = pop();
-	popup->setTag(tag);
-	popup->setText(text);
-	popup->setType(UI_Popup::Type::eYesNo);
-	popup->setYesCallback(yes);
-	popup->setNoCallback(no);
-	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
-	m_vOpendList.PushBack(popup);
-	return popup;
-}
-
-UI_Popup* PopupManager::showOk(const std::string& text, const SGActionFn<>& ok) {
-	UI_Popup* popup = pop();
-	popup->setText(text);
-	popup->setType(UI_Popup::Type::eOk);
-	popup->setOkCallback(ok);
-	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
-	m_vOpendList.PushBack(popup);
-	return popup;
-}
-
-UI_Popup* PopupManager::showOk(const std::string& text, int tag, const SGActionFn<>& ok) {
-	UI_Popup* popup = pop();
-	popup->setTag(tag);
-	popup->setText(text);
-	popup->setType(UI_Popup::Type::eOk);
-	popup->setOkCallback(ok);
-	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
-	m_vOpendList.PushBack(popup);
-	return popup;
-}
-
-UI_Popup* PopupManager::showNone(const std::string& text, int tag, HAlignment_t halign, VAlignment_t valign) {
-	UI_Popup* popup = pop();
+	popup->setCloseWithEsc(closeWithEsc);
+	popup->setTimeout(timeout);
+	popup->setTimeoutCallback(timeoutFn);
 	popup->setTextHAlign(halign);
 	popup->setTextVAlign(valign);
+	popup->adjust();
+	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	m_vOpendList.PushBack(popup);
+	return popup;
+}
+
+UI_Popup* PopupManager::showYesNo(
+	const std::string& text,
+	int tag,
+	const PopupCallback& yes /* = nullptr */,
+	const PopupCallback& no /* = nullptr */,
+	bool closeWithEsc /* = false */,
+	float timeout /* = SG_POPUP_NO_TIMEOUT */,
+	const PopupCallback& timeoutFn /*= nullptr*/,
+	HAlignment_t halign /* = HAlignment::Left */,
+	VAlignment_t valign /* = VAlignment::Top */
+) {
+	UI_Popup* popup = pop();
+	popup->setTag(tag);
+	popup->setText(text);
+	popup->setType(UI_Popup::Type::eYesNo);
+	popup->setYesCallback(yes);
+	popup->setNoCallback(no);
+	popup->setCloseWithEsc(closeWithEsc);
+	popup->setTimeout(timeout);
+	popup->setTimeoutCallback(timeoutFn);
+	popup->setTextHAlign(halign);
+	popup->setTextVAlign(valign);
+	popup->adjust();
+	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	m_vOpendList.PushBack(popup);
+	return popup;
+}
+
+UI_Popup* PopupManager::showOk(
+	const std::string& text,
+	const PopupCallback& ok /* = nullptr */,
+	bool closeWithEsc /* = false */,
+	float timeout /* = SG_POPUP_NO_TIMEOUT */,
+	const PopupCallback& timeoutFn /*= nullptr*/,
+	HAlignment_t halign /* = HAlignment::Left */,
+	VAlignment_t valign /* = VAlignment::Top */
+) {
+	UI_Popup* popup = pop();
+	popup->setText(text);
+	popup->setType(UI_Popup::Type::eOk);
+	popup->setOkCallback(ok);
+	popup->setCloseWithEsc(closeWithEsc);
+	popup->setTimeout(timeout);
+	popup->setTimeoutCallback(timeoutFn);
+	popup->setTextHAlign(halign);
+	popup->setTextVAlign(valign);
+	popup->adjust();
+	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	m_vOpendList.PushBack(popup);
+	return popup;
+}
+
+UI_Popup* PopupManager::showOk(
+	const std::string& text,
+	int tag,
+	const PopupCallback& ok /* = nullptr */,
+	bool closeWithEsc /* = false */,
+	float timeout /* = SG_POPUP_NO_TIMEOUT */,
+	const PopupCallback& timeoutFn /*= nullptr*/,
+	HAlignment_t halign /* = HAlignment::Left */,
+	VAlignment_t valign /* = VAlignment::Top */
+) {
+	UI_Popup* popup = pop();
+	popup->setTag(tag);
+	popup->setText(text);
+	popup->setType(UI_Popup::Type::eOk);
+	popup->setOkCallback(ok);
+	popup->setCloseWithEsc(closeWithEsc);
+	popup->setTimeout(timeout);
+	popup->setTimeoutCallback(timeoutFn);
+	popup->setTextHAlign(halign);
+	popup->setTextVAlign(valign);
+	popup->adjust();
+	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	m_vOpendList.PushBack(popup);
+	return popup;
+}
+
+UI_Popup* PopupManager::showNone(
+	const std::string& text,
+	bool closeWithEsc /* = false */,
+	float timeout /* = SG_POPUP_NO_TIMEOUT */,
+	const PopupCallback& timeoutFn /* = nullptr */,
+	HAlignment_t halign /* = HAlignment::Center */,
+	VAlignment_t valign /* = VAlignment::Center */
+) {
+	UI_Popup* popup = pop();
+	popup->setText(text);
+	popup->setType(UI_Popup::Type::eNone);
+	popup->setCloseWithEsc(closeWithEsc);
+	popup->setTimeout(timeout);
+	popup->setTimeoutCallback(timeoutFn);
+	popup->setTextHAlign(halign);
+	popup->setTextVAlign(valign);
+	popup->adjust();
+	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	m_vOpendList.PushBack(popup);
+	return popup;
+}
+
+UI_Popup* PopupManager::showNone(
+	const std::string& text,
+	int tag,
+	bool closeWithEsc /* = false */,
+	float timeout /* = SG_POPUP_NO_TIMEOUT */,
+	const PopupCallback& timeoutFn /* = nullptr */,
+	HAlignment_t halign /* = HAlignment::Center */,
+	VAlignment_t valign /* = VAlignment::Center */
+) {
+	UI_Popup* popup = pop();
 	popup->setTag(tag);
 	popup->setText(text);
 	popup->setType(UI_Popup::Type::eNone);
+	popup->setCloseWithEsc(closeWithEsc);
+	popup->setTimeout(timeout);
+	popup->setTimeoutCallback(timeoutFn);
+	popup->setTextHAlign(halign);
+	popup->setTextVAlign(valign);
 	popup->adjust();
 	CoreWorld_v->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);

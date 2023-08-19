@@ -27,6 +27,8 @@
 #include <SteinsGate/Client/WndMessage.h>
 #include <SteinsGate/Client/Win32Helper.h>
 
+
+
 USING_NS_CC;
 USING_NS_CCUI;
 USING_NS_JC;
@@ -135,11 +137,8 @@ void WorldScene::update(float dt) {
 	updateScene(dt);
 }
 
-
-
 void WorldScene::updateScene(float dt) {
-
-
+	
 	if (m_pRunningScene)
 		m_pRunningScene->update(dt);
 
@@ -159,6 +158,7 @@ void WorldScene::updateNet(float dt) {
 
 void WorldScene::updateTime(float dt) {
 	CoreTimeManager_v->updateAppTime();
+	CoreTimeManager_v->updateServerTime();
 }
 
 void WorldScene::updateCLI(float dt) {

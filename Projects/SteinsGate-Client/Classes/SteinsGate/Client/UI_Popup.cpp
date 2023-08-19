@@ -16,23 +16,18 @@ USING_NS_CC;
 USING_NS_CCUI;
 USING_NS_JC;
 
-
-void DefaultCallbackMethod() {}
-
 UI_Popup::UI_Popup(UIGroupInfo* groupInfo)
 	: UIMasterGroup(groupInfo)
 	, m_pGroupHolder(nullptr)
 	, m_pSpriteBackground(nullptr)
+	, m_pGroupButtonHolder(nullptr)
 	, m_pBtnYes(nullptr)
 	, m_pBtnNo(nullptr)
 	, m_pBtnOk(nullptr)
 	, m_pLabelText(nullptr)
 	, m_eType(Type::eNone)
-	, m_iAttribute(eMessaging)
+	, m_fTimeout(-1.f)
 	, m_bClosed(true)
-	, m_fnYes(DefaultCallbackMethod)
-	, m_fnNo(DefaultCallbackMethod)
-	, m_fnOk(DefaultCallbackMethod)
 {}
 
 void UI_Popup::onInit() {
@@ -70,12 +65,24 @@ void UI_Popup::onLoaded() {
 	setType(m_eType);
 }
 
+void UI_Popup::onAdded() {
+	m_OpenedTime.Elapsed.Second = 0;
+}
+
 void UI_Popup::onRemoved() {
 	close();
 }
 
 void UI_Popup::onUpdate(float dt) {
-	if (hasAttribute(eTimed)) {
+	if (!m_AttributeFlag.Check(eTimeout)) {
+		return;
+	}
+
+	m_OpenedTime.Elapsed.Second += dt;
+
+	if (m_OpenedTime.ElapsedSeconds(m_fTimeout) && m_fnTimeout) {
+		m_fnTimeout();
+		close();
 	}
 }
 
@@ -118,6 +125,12 @@ bool UI_Popup::onMouseScrollDetail(SGEventMouse* mouseEvent) {
 	return false;
 }
 bool UI_Popup::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
+
+	if (m_AttributeFlag.Check(eCloseWithEsc) && keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
+		close();
+		return false;
+	}
+
 	return true;
 }
 bool UI_Popup::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
@@ -155,19 +168,37 @@ void UI_Popup::setText(const std::string& text) {
 	m_pLabelText->setText(text);
 }
 
-void UI_Popup::setYesCallback(const SGActionFn<>& fnYes) {
-	if (fnYes != nullptr)
-		m_fnYes = fnYes;
+void UI_Popup::setYesCallback(const PopupCallback& fnYes) {
+	m_fnYes = fnYes;
 }
 
-void UI_Popup::setNoCallback(const SGActionFn<>& fnNo) {
-	if (fnNo != nullptr)
-		m_fnNo = fnNo;
+void UI_Popup::setNoCallback(const PopupCallback& fnNo) {
+	m_fnNo = fnNo;
 }
 
-void UI_Popup::setOkCallback(const SGActionFn<>& fnOk) {
-	if (fnOk != nullptr)
-		m_fnOk = fnOk;
+void UI_Popup::setOkCallback(const PopupCallback& fnOk) {
+	m_fnOk = fnOk;
+}
+
+void UI_Popup::setCloseWithEsc(bool closeWithEsc) {
+	if (closeWithEsc) {
+		m_AttributeFlag.Add(eCloseWithEsc);
+	} else {
+		m_AttributeFlag.Unset(eCloseWithEsc);
+	}
+}
+
+void UI_Popup::setTimeoutCallback(const PopupCallback& fnTimeout) {
+	m_fnTimeout = fnTimeout;
+}
+
+void UI_Popup::setTimeout(float timeout) {
+	if (timeout >= 0.0f) {
+		m_fTimeout = timeout;
+		m_AttributeFlag.Add(eTimeout);
+	} else {
+		m_AttributeFlag.Unset(eTimeout);
+	}
 }
 
 
@@ -193,8 +224,16 @@ void UI_Popup::adjust() {
 	// 팝업매니저에서 설정한 팝업의 기본너비에 맞게 라벨의 너비정보도 수정해줘야
 	// 텍스트 수정 후 Cocos2d-x 엔진이 너비에 맞춰서 올바르게 계산된 라인수를 얻어낼 수 있게된다.
 
-	m_pLabelText->source()->setDimensions(fPopupAreaWidth, 0);		// 1. 먼저 텍스트영역 너비를 결정해준다.
-	const int iLineCount = m_pLabelText->getLineCount();			// 2. 1. 작업덕분에 게임엔진의 라벨이 해당 너비를 기준으로 올바르게 라인수를 계산할 수 있게된다.
+	// 1. 먼저 텍스트영역 너비를 결정해줘서 라인카운트를 올바르게 계산할 수 있도록 만듬
+	m_pLabelText->source()->setDimensions(fPopupAreaWidth, 0);		
+
+	// 2. 위 작업 덕분에 게임엔진의 라벨이 해당 너비를 기준으로 올바르게 라인수를 계산할 수 있게된다.
+	// getLineCount()에 1을 더해주는 이유는 엔진에서 한글 문자열을 너비에 맞게 완벽하게 Wrap을 못하는 경우가 있다.
+	// 예를들어서 1번째줄을 꽉 채우고 2번째줄에 1글자만 포함된 경우 라인카운트를 1로 계산해버림
+	// 엔진의 라인 수 계산 로직은 Label::alignText() -> Label::multilineTextWrap() 함수를 찾고하면된다.
+	// TODO: 언젠가 시간나면 라벨 Wrap기능 개선해볼것
+	const int iLineCount = m_pLabelText->getLineCount() + 1;		
+
 	const float fFontSize = m_pLabelText->getInitialFontSize();
 	const float fPopupAreaHeight = fPadding * 3 + iLineCount * fFontSize + buttonArea.height;
 

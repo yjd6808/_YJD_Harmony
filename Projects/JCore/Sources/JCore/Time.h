@@ -13,8 +13,10 @@
 #include <JCore/Type.h>
 #include <JCore/Tuple.h>
 #include <JCore/Comparator.h>
+#include <JCore/Primitives/BitFlag.h>
 #include <JCore/Natvis/NatvisFloat.h>
 #include <JCore/Container/Vector.h>
+
 
 NS_JC_BEGIN
 	NS_DETAIL_BEGIN
@@ -25,6 +27,13 @@ NS_JC_BEGIN
 	constexpr Int64 MaxSecond_v			= 60;
 	constexpr Int64 MaxMiliSecond_v		= 1000;
 	constexpr Int64 MaxMicroSecond_v	= 1000;
+
+	constexpr float MaxDayf_v			= 365.f;
+	constexpr float MaxHourf_v			= 24.f;
+	constexpr float MaxMinutef_v		= 60.f;
+	constexpr float MaxSecondf_v		= 60.f;
+	constexpr float MaxMiliSecondf_v	= 1000.f;
+	constexpr float MaxMicroSecondf_v	= 1000.f;
 		
 	// 1틱당 1마이크로초
 	constexpr Int64 TicksPerMicroSecond_v	= 1;										// 마이크로초당 몇 틱인지 	1틱당					1마이크로초
@@ -33,6 +42,13 @@ NS_JC_BEGIN
 	constexpr Int64 TicksPerMinute_v		= TicksPerSecond_v * MaxSecond_v;				// 1분당 몇 틱인지		1000000 * 60			1분
 	constexpr Int64 TicksPerHour_v		    = TicksPerMinute_v * MaxMinute_v;				// 1시간당 몇 틱인지		1000000 * 60 * 60		1시간
 	constexpr Int64 TicksPerDay_v			= TicksPerHour_v * MaxHour_v;					// 1일당 몇 틱인지		1000000 * 60 * 60 * 24	1일
+
+	constexpr float SecondsPerMicroSecondf_v = 0.000001f;
+	constexpr float SecondsPerMiliSecondf_v = 0.001f;
+	constexpr float SecondsPerSecondf_v = 1.0f;
+	constexpr float SecondsPerMinutef_v = SecondsPerSecondf_v * MaxSecondf_v;
+	constexpr float SecondsPerHourf_v = SecondsPerMinutef_v * MaxMinutef_v;
+	constexpr float SecondsPerDayf_v = SecondsPerHourf_v * MaxHourf_v;
 
 	constexpr int DaysPer1Years_v = MaxDay_v;
 	constexpr int DaysPer4Years_v = MaxDay_v * 4 + 1;				// 4년이 몇일인지 : 1461일
@@ -352,11 +368,13 @@ struct DateAndTime : Date, Time {
  =====================================================================================*/
 
 
-// 음수 시간을 다룰 수 있는 구조체
+// 음수 시간을 다룰 수 있는 구조체 (마이크로초단위 자릿수, 마이크로초단위 정밀도)
 struct TimeSpan
 {
 	TimeSpan(Int64 tick = 0) : Tick(tick) {}
 	TimeSpan(Int32 days, Int64 hours, Int64 minutes, Int64 seconds, Int64 miliSeconds, Int64 microSeconds);
+
+	void SetZero() { Tick = 0; }
 
 	double GetTotalDays() const { return (double)Tick / Detail::TicksPerDay_v; }
 	double GetTotalHours() const { return (double)Tick / Detail::TicksPerHour_v; }
@@ -379,6 +397,13 @@ struct TimeSpan
 	Int32 GetTotalMiliSecondsInt32() const { return Int32(Tick / Detail::TicksPerMiliSecond_v); }
 	Int32 GetTotalMicroSecondsInt32() const { return Int32(Tick); }
 
+	void AddMicroSecond(int microsec) { Tick += microsec * Detail::TicksPerMicroSecond_v; }
+	void AddMiliSecond(int milisec) { Tick += milisec * Detail::TicksPerMiliSecond_v; }
+	void AddSecond(int sec) { Tick += sec * Detail::TicksPerSecond_v; }
+	void AddMinute(int minute) { Tick += minute * Detail::TicksPerMinute_v;  }
+	void AddHour(int hour) { Tick += hour * Detail::TicksPerHour_v; }
+	void AddDay(int day) { Tick += day * Detail::TicksPerDay_v; }
+	
 	int GetDay() const { return int(Tick / Detail::TicksPerDay_v); }
 	int GetHour() const { return (Tick / Detail::TicksPerHour_v) % Detail::MaxHour_v; }
 	int GetMinute() const { return (Tick / Detail::TicksPerMinute_v) % Detail::MaxMinute_v; }
@@ -403,7 +428,44 @@ struct TimeSpan
 	static TimeSpan FromHour(Int64 v) { return TimeSpan{ v * Detail::TicksPerHour_v }; }
 	static TimeSpan FromDay(Int64 v) { return TimeSpan{ v * Detail::TicksPerDay_v }; }
 
+	
+
 	Int64 Tick{};
+};
+
+// 음수 시간을 다룰 수 있는 구조체 (초단위 자릿수, 마이크로초단위 정밀도)
+// Cocos2d-x의 프레임 시간단위가 float 타입의 초단위라서 추가함
+struct TimeSpanF
+{
+	TimeSpanF(float sec = 0) : Second(sec) {}
+
+	void SetZero() { Second = 0; }
+
+	float GetTotalDays() const { return Second / Detail::SecondsPerDayf_v; }
+	float GetTotalHours() const { return Second / Detail::SecondsPerHourf_v; }
+	float GetTotalMinutes() const { return Second / Detail::SecondsPerMinutef_v; }
+	float GetTotalSeconds() const { return Second / Detail::SecondsPerSecondf_v; }
+	float GetTotalMiliSeconds() const { return Second / Detail::SecondsPerMiliSecondf_v; }
+	float GetTotalMicroSeconds() const { return Second / Detail::SecondsPerMicroSecondf_v; }
+
+	TimeSpanF operator-(const TimeSpanF& other) const { return { Second - other.Second }; }
+	TimeSpanF operator+(const TimeSpanF& other) const { return { Second + other.Second }; }
+	TimeSpanF& operator+=(const TimeSpanF& other) { Second += other.Second; return *this; }
+	TimeSpanF& operator-=(const TimeSpanF& other) { Second -= other.Second; return *this; }
+	bool operator>(const TimeSpanF& other) const { return Second > other.Second; }
+	bool operator<(const TimeSpanF& other) const { return Second < other.Second; }
+	bool operator>=(const TimeSpanF& other) const { return Second >= other.Second; }
+	bool operator<=(const TimeSpanF& other) const { return Second <= other.Second; }
+	bool operator==(const TimeSpanF& other) const { return Second == other.Second; }
+
+	static TimeSpanF FromMicroSeocnd(float microsec) { return TimeSpanF{ microsec * Detail::SecondsPerMicroSecondf_v }; }
+	static TimeSpanF FromMiliSeocnd(float milisec) { return TimeSpanF{ milisec * Detail::SecondsPerMiliSecondf_v }; }
+	static TimeSpanF FromSecond(float sec) { return TimeSpanF{ sec }; }
+	static TimeSpanF FromMinute(float minute) { return TimeSpanF{ minute * Detail::SecondsPerMinutef_v }; }
+	static TimeSpanF FromHour(float hour) { return TimeSpanF{ hour * Detail::SecondsPerHourf_v }; }
+	static TimeSpanF FromDay(float day) { return TimeSpanF{ day * Detail::SecondsPerDayf_v }; }
+
+	float Second;
 };
 
 
@@ -613,44 +675,75 @@ struct StopWatch<StopWatchMode::HighResolution>
 	Int64U StartCounter{};
 };
 
-
-struct TimeCounter
+JCORE_ENUM_CLASS_BIT_OPERATION_OVERLOADING(TimeCounterAttribute)
+enum class TimeCounterAttribute
 {
-	TimeCounter() : Elapsed(0), Attr(eFirstFire | eTimeOverReset) {}
-	TimeCounter(int attr) : Attr(attr) {}
+	None				= 0b0000,
+	FirstCheckFire		= 0b0001,	// 처음 ElapsedSeconds가 실행되면 무조건 true 반환
+	FirstElpasedFire	= 0b0010,	// 처음 ElapsedSeconds만큼 시간이 경과되었을때만 true를 반환
+	TimeOverReset		= 0b0100,	// Elapsed만큼 경과시 0으로 초기화
+	DontFire			= 0b1000	// ElapsedSeconds함수가 무조건 false를 반환(Fire 특성들이 있더라도 이게 우선 적용됨)
+};
 
-	enum Attribute
-	{
-		eNone			= 0b0000,
-		eFirstFire		= 0b0001,
-		eTimeOverReset  = 0b0010
-	};
+struct TimeCounterBase
+{
+	TimeCounterBase() : AttributeFlag(TimeCounterAttribute::None) {}
+	TimeCounterBase(TimeCounterAttribute flag) : AttributeFlag(flag) {}
 
-	bool ElapsedSeconds(float seconds) {
-		bool bTimeOver = false;
+	BitFlag<TimeCounterAttribute> AttributeFlag;
+};
 
-		if ((Attr & eFirstFire) == eFirstFire) {
-			bTimeOver = true;
-			Attr &= ~eFirstFire;
-		}
+struct TimeCounter : TimeCounterBase
+{
+	TimeCounter() : Elapsed(0) {}
+	TimeCounter(TimeCounterAttribute attribute)
+		: TimeCounterBase(attribute)
+		, Elapsed(0)
+	{}
 
-		if (Elapsed.GetTotalSeconds() >= seconds) {
-			bTimeOver = true;
-		}
-
-		if (bTimeOver && (Attr & eTimeOverReset) == eTimeOverReset)
-			Elapsed.Tick = 0;
-
-		return bTimeOver;
+	TimeCounter(const TimeCounter& other) {
+		AttributeFlag.Value = other.AttributeFlag.Value;
+		Elapsed.Tick = other.Elapsed.Tick;
 	}
 
-	bool ElapsedMiliSeconds(float miliSec) {
-		return ElapsedSeconds(miliSec / 1000);
+	TimeCounter& operator=(const TimeCounter& other) {
+		AttributeFlag.Value = other.AttributeFlag.Value;
+		Elapsed.Tick = other.Elapsed.Tick;
+		return *this;
 	}
+
+	bool ElapsedSeconds(float seconds);
+	bool ElapsedMiliSeconds(float miliSec) { return ElapsedSeconds(miliSec / 1000); }
 
 	TimeSpan Elapsed;
-	int Attr;
 };
+
+struct TimeCounterF : TimeCounterBase
+{
+	TimeCounterF() : Elapsed(0) {}
+	TimeCounterF(TimeCounterAttribute attribute)
+		: TimeCounterBase(attribute)
+		, Elapsed(0)
+	{}
+
+	TimeCounterF(const TimeCounterF& other) {
+		AttributeFlag.Value = other.AttributeFlag.Value;
+		Elapsed.Second = other.Elapsed.Second;
+	}
+
+	TimeCounterF& operator=(const TimeCounterF& other) {
+		AttributeFlag.Value = other.AttributeFlag.Value;
+		Elapsed.Second = other.Elapsed.Second;
+		return *this;
+	}
+
+	bool ElapsedSeconds(float seconds);
+	bool ElapsedMiliSeconds(float miliSec) { return ElapsedSeconds(miliSec / 1000); }
+
+	TimeSpanF Elapsed;
+};
+
+
 
 NS_JC_END
 

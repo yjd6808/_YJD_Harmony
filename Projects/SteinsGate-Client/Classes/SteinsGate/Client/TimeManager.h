@@ -23,6 +23,7 @@ private:
 	~TimeManager() override;
 public:
 	void updateAppTime();
+	void updateServerTime();
 
 	Int64 getAppStartUpTick() const { return m_AppStartupTime.Tick; }
 	Int64 getAppTick() const { return m_AppTime.Tick; }
@@ -35,8 +36,7 @@ private:
 	SGDateTime m_AppTime;				// App 현재 시각
 	SGTimeSpan m_AppRunningTime;		// App 시작 후 경과 시간
 
-	SGDateTime m_LobbyServerTime;
-	SGDateTime m_GameServerTime;
+	SGDateTime m_ServerTime;
 
 	bool m_bLobbyServerTimeUpdated;
 	bool m_bGameServerTimeUpdated;
