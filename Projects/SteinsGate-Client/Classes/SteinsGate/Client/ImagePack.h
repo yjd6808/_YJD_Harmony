@@ -42,6 +42,8 @@ public:
 	SGString getFileName() const;
 	bool hasImgIndex(const SGString& imgName) const;
 	int getImgIndex(const SGString& imgName) const { return m_Package->GetElementIndex(imgName); }
+	int getImgIndex(const char* imgName) const { return m_Package->GetElementIndex(imgName); }
+	int getImgIndexUnsafe(const char* imgName) const;
 	SGString getImgName(const int imgIndex) const;
 	SGString getImgNameOrDefault(const int imgIndex, const SGString& defaultValue) const;
 	void applyLinearDodge(Byte* pixelData, int len) const;

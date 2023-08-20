@@ -23,10 +23,13 @@ class UIScrollBar : public UIElement
 
 	static constexpr float MinThumbHeight = 8;
 public:
-	static UIScrollBar* create(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo);
+	static UIScrollBar* create(UIMasterGroup* master, UIGroup* parent);
+	static UIScrollBar* create(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo, bool infoOwner);
+
 	static constexpr UIElementType_t type() { return UIElementType::ScrollBar; }
 
-	UIScrollBar(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo);
+	UIScrollBar(UIMasterGroup* master, UIGroup* parent);
+	UIScrollBar(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo, bool infoOwner);
 	~UIScrollBar() override;
 
 	bool init() override;
@@ -43,6 +46,8 @@ public:
 	void setRowCount(int count);
 	void setRowCountPerPage(int count);
 	void setUISize(const SGSize& contentSize) override;
+	void setInfo(UIElementInfo* info, bool infoOwner) override;
+	void setInfoScrollBar(UIScrollBarInfo* info, bool infoOwner);
 	int getRowPos() const { return m_iPos; }
 	int getEndRowPos() const { return m_iEndPos; }
 
@@ -60,12 +65,12 @@ public:
 	UIElementType_t getElementType() override { return UIElementType::ScrollBar; }
 	SGString toString() override { return SGStringUtil::Format("스크롤바(%d)", m_pInfo->Code); }
 protected:
-	void onMouseLeaveDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;
-	void onMouseUpDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseUpContainedDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseScrollDetail(SGEventMouse* mouseEvent) override;
+	void onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseMoveInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseDownInternalDetail(SGEventMouse* mouseEvent) override;
+	void onMouseUpInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseScrollInternalDetail(SGEventMouse* mouseEvent) override;
 
 	void onLinkElementMouseScroll(SGEventMouse* mouseEvent);
 

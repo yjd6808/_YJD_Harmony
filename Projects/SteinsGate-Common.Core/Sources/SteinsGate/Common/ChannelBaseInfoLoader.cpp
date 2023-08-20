@@ -6,7 +6,7 @@
  */
 
 #include "Core.h"
-#include "ChannelInfoLoader.h"
+#include "ChannelBaseInfoLoader.h"
 #include "CommonCoreHeader.h"
 
 #include <SteinsGate/Common/DataManagerAbstract.h>
@@ -15,12 +15,12 @@
 USING_NS_JS;
 USING_NS_JC;
 
-ChannelInfoLoader::ChannelInfoLoader(DataManagerAbstract* manager)
+ChannelBaseInfoLoader::ChannelBaseInfoLoader(DataManagerAbstract* manager)
 	: ConfigFileLoaderAbstract(manager)
 {}
 
 
-bool ChannelInfoLoader::load() {
+bool ChannelBaseInfoLoader::load() {
 	Json::Value root;
 
 	if (!loadJson(root)) {
@@ -32,7 +32,7 @@ bool ChannelInfoLoader::load() {
 
 		for (int i = 0; i < channelInfoRootList.size(); ++i) {
 			Value& channelInfoRoot = channelInfoRootList[i];
-			ChannelInfo* pChannelInfo = dbg_new ChannelInfo;
+			ChannelBaseInfo* pChannelInfo = dbg_new ChannelBaseInfo;
 			readChannelBaseInfo(channelInfoRoot, pChannelInfo);
 			addData(pChannelInfo);
 		}
@@ -45,7 +45,7 @@ bool ChannelInfoLoader::load() {
 	return true;
 }
 
-void ChannelInfoLoader::readChannelBaseInfo(Json::Value& channelRoot, JCORE_OUT ChannelInfo* channelInfo) {
+void ChannelBaseInfoLoader::readChannelBaseInfo(Json::Value& channelRoot, JCORE_OUT ChannelBaseInfo* channelInfo) {
  	channelInfo->Code = channelRoot["code"].asInt();
 	channelInfo->Name = JsonUtil::getString(channelRoot["name"]);
 	channelInfo->EnteranceType = (EnteranceType_t)channelRoot["enterance_type"].asInt();

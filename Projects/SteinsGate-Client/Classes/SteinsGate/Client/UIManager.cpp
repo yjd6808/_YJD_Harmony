@@ -12,6 +12,7 @@
 #include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/UIGroup.h>
 #include <SteinsGate/Client/UIMasterGroup.h>
+#include <SteinsGate/Client/Global.h>
 
 #include <SteinsGate/Client/Define_UI.h>
 
@@ -19,8 +20,7 @@
 #include <SteinsGate/Client/UI_Login.h>
 #include <SteinsGate/Client/UI_Popup.h>
 #include <SteinsGate/Client/UI_Test.h>
-
-#include "Global.h"
+#include <SteinsGate/Client/UI_ChannelSelect.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -36,6 +36,7 @@ UIManager::UIManager()
 	Login = nullptr;
 	Popup = nullptr;
 	Test = nullptr;
+	ChannelSelect = nullptr;
 }
 
 UIManager::~UIManager() {
@@ -65,6 +66,7 @@ void UIManager::init() {
 
 
 void UIManager::registerMasterGroup(UIMasterGroup* group) {
+	group->retain();	// 그룹마스터에서 생성/관리하기때문에 리테인했고 UIManager에서도 마스터를 참조하므로, 리테인해줘야함. 빼먹고있었넹
 	m_hUIElements.Insert(group->getCode(), group);
 	m_hMasterUIGroups.Insert(group->getCode(), group);
 
@@ -192,5 +194,6 @@ void UIManager::initPublic() {
 	Inventory			= (UI_Inventory*)getMasterGroup(GROUP_UI_INVENTORY);
 	Popup				= nullptr;		// 팝업 매니저에서 관리
 	Test				= (UI_Test*)getMasterGroup(GROUP_UI_TEST);
+	ChannelSelect		= (UI_ChannelSelect*)getMasterGroup(GROUP_UI_CHANNEL);
 }
 

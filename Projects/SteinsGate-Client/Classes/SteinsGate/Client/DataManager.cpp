@@ -9,7 +9,7 @@
 #include "DataManager.h"
 
 #include <SteinsGate/Common/ItemOptInfoLoader.h>
-#include <SteinsGate/Common/ChannelInfoLoader.h>
+#include <SteinsGate/Common/ChannelBaseInfoLoader.h>
 #include <SteinsGate/Common/EnchantInfoLoader.h>
 #include <SteinsGate/Common/CharCommonInfoLoader.h>
 #include <SteinsGate/Common/ServerInfoLoader.h>
@@ -31,6 +31,7 @@
 #include <SteinsGate/Client/UIInfoLoader.h>
 #include <SteinsGate/Client/FrameEventLoader.h>
 #include <SteinsGate/Client/ClientTextInfoLoader.h>
+#include <SteinsGate/Client/ChannelInfoLoader.h>
 
 DataManager::DataManager()
 	: DataManagerAbstract()
@@ -55,7 +56,7 @@ void DataManager::initializeLoader() {
 	// m_pConfigFileLoaders[ConfigFileType::AttackBox]
 	m_pConfigFileLoaders[ConfigFileType::Char_Attack_Data]				= dbg_new AttackDataInfoLoader(this, ActorType::Character);
 	m_pConfigFileLoaders[ConfigFileType::Char_Projectile]				= dbg_new ProjectileInfoLoader(this, ActorType::Character);
-	// m_pConfigFileLoaders[ConfigFileType::Channel]					= dbg_new SGChannel(this);
+	m_pConfigFileLoaders[ConfigFileType::Channel]						= dbg_new ChannelInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Char_Animation]				= dbg_new CharAnimationInfoLoader(this);
 	m_pConfigFileLoaders[ConfigFileType::Char_Animation_Frame_Event]	= dbg_new FrameEventLoader(this, ActorType::Character);
 	m_pConfigFileLoaders[ConfigFileType::Char_Base]						= dbg_new CharInfoLoader(this);
@@ -222,6 +223,15 @@ FrameEvent* DataManager::getFrameEvent(ActorType_t actorType, int frameEventCode
 		load(eType);
 
 	return (FrameEvent*)getData(eType, frameEventCode);
+}
+
+ChannelInfo* DataManager::getChannelInfo(int channelCode) {
+	auto eType = ConfigFileType::Channel;
+
+	if (!m_bLoaded[eType])
+		load(eType);
+
+	return (ChannelInfo*)getData(eType, channelCode);
 }
 
 char* DataManager::getTextRaw(const char* szId) {

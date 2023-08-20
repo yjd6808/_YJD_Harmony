@@ -24,6 +24,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\CLIListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.cpp" />
@@ -159,6 +160,11 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SitActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIInfo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UI_ChannelSelect.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\WalkActivity.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientGroup.cpp" />
@@ -428,6 +434,8 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfo.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\CLIListener.h" />
@@ -691,6 +699,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UI_ChannelSelect.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\WalkActivity.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\MapObject.h">
       <SubType>

@@ -89,6 +89,14 @@ void JsonUtil::parseThicknessInfo(Json::Value& thicknessRoot, JCORE_OUT Thicknes
 	info.Height = (float)num[3];
 }
 
+void JsonUtil::parseIntNumber2(Json::Value& root, int& num1, int& num2) {
+	int num[2];
+	TextParser::parseIntNumbers(getString(root), num, 2);
+
+	num1 = num[0];
+	num2 = num[1];
+}
+
 void JsonUtil::parseIntNumber3(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3) {
 	int num[3];
 	TextParser::parseIntNumbers(getString(root), num, 3);

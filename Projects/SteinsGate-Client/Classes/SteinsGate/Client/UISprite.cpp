@@ -17,9 +17,16 @@ USING_NS_CC;
 USING_NS_CCUI;
 USING_NS_JC;
 
-UISprite::UISprite(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* staticInfo)
-	: UIElement(master, parent, staticInfo)
-	, m_pInfo(staticInfo)
+UISprite::UISprite(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
+	, m_pInfo(nullptr)
+	, m_pTexture{}
+	, m_pSprite{}
+{}
+
+UISprite::UISprite(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* spriteInfo, bool infoOwner)
+	: UIElement(master, parent, spriteInfo, infoOwner)
+	, m_pInfo(spriteInfo)
 	, m_pTexture{}
 	, m_pSprite{}
 {}
@@ -28,15 +35,32 @@ UISprite::~UISprite() {
 	CC_SAFE_RELEASE(m_pTexture);
 }
 
-UISprite* UISprite::create(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* spriteInfo) {
-	UISprite* pSprite = dbg_new UISprite(master, parent, spriteInfo);
+UISprite* UISprite::create(UIMasterGroup* master, UIGroup* parent) {
+	UISprite* pSprite = dbg_new UISprite(master, parent);
+	pSprite->init();
+	pSprite->autorelease();
+	return pSprite;
+}
+
+UISprite* UISprite::create(UIMasterGroup* master, UIGroup* parent, UISpriteInfo* spriteInfo, bool infoOwner) {
+	UISprite* pSprite = dbg_new UISprite(master, parent, spriteInfo, infoOwner);
 	pSprite->init();
 	pSprite->autorelease();
 	return pSprite;
 }
 
 bool UISprite::init() {
-	setInitialUISize(m_pInfo->Size);
+	if (!UIElement::init()) {
+		return false;
+	}
+
+	SGSize initialSize = m_pInfo->Size;
+
+	if (int(initialSize.width) == 0 || int(initialSize.width) == 0) {
+		initialSize = CorePackManager_v->getTextureSize(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite);
+	}
+
+	setInitialUISize(initialSize);
 	return m_bInitialized = true;
 }
 
@@ -52,14 +76,22 @@ void UISprite::load() {
 	}
 
 	const Size spriteSize = m_pTexture->getSize();
-	const float fScaleX = m_UISize.width / spriteSize.width;
-	const float fScaleY = m_UISize.height / spriteSize.height;
+	float fScaleX = 1.0f;
+	float fScaleY = 1.0f;
+
+	if (m_UISize.width > 0.0f) {
+		fScaleX = m_UISize.width / spriteSize.width;
+	}
+
+	if (m_UISize.height > 0.0f) {
+		fScaleY = m_UISize.height / spriteSize.height;
+	}
 
 	m_pSprite = m_pInfo->Scale9 ? Scale9Sprite::create() : Sprite::create();
 	m_pSprite->initWithTexture(m_pTexture->getTexture());
 	m_pSprite->setAnchorPoint(Vec2::ZERO);
 	if (m_pInfo->Scale9) {
-		m_pSprite->setContentSize({m_UISize.width * fScaleX, m_UISize.height * fScaleY });
+		m_pSprite->setContentSize({ spriteSize.width * fScaleX, spriteSize.height * fScaleY });
 	} else {
 		m_pSprite->setScale(fScaleX, fScaleY);
 	}
@@ -115,4 +147,32 @@ void UISprite::setUISize(const SGSize& contentSize) {
 		m_pSprite->setScale(fScaleX, fScaleY);
 	}
 	
+}
+
+
+
+void UISprite::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::Sprite) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UISpriteInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UISprite::setInfoSprite(UISpriteInfo* info, bool infoOwner) {
+	return setInfo(info, infoOwner);
+}
+
+void UISprite::setOpacity(GLubyte opacity) {
+	UIElement::setOpacity(opacity);
+
+	if (m_pSprite)
+		m_pSprite->setOpacity(opacity);
 }

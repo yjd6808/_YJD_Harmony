@@ -86,7 +86,7 @@ void UI_Popup::onUpdate(float dt) {
 	}
 }
 
-void UI_Popup::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
+void UI_Popup::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 
 	switch (element->getCode()) {
 	case UI_POPUP_HOLDER_BTN_HOLDER_BUTTON_YES:
@@ -113,15 +113,15 @@ void UI_Popup::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
 
 }
 
-bool UI_Popup::onMouseMoveDetail(SGEventMouse* mouseEvent) {
+bool UI_Popup::onMouseMoveInternalDetail(SGEventMouse* mouseEvent) {
 	return false;
 }
 
 // 팝업이 활성화된 동안 해당 팝업보다 우선순위(_localZOrder)가 낮은 대상에게는 이벤트가 전파되지 않도록 하기 위해
-bool UI_Popup::onMouseDownDetail(SGEventMouse* mouseEvent) {
+bool UI_Popup::onMouseDownInternalDetail(SGEventMouse* mouseEvent) {
 	return false;
 }
-bool UI_Popup::onMouseScrollDetail(SGEventMouse* mouseEvent) {
+bool UI_Popup::onMouseScrollInternalDetail(SGEventMouse* mouseEvent) {
 	return false;
 }
 bool UI_Popup::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {

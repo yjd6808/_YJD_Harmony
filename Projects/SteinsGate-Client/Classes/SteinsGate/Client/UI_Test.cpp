@@ -100,7 +100,7 @@ void UI_Test::onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state)
 	
 }
 
-void UI_Test::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
+void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 
 	if (element->getCode() == UI_TEST_LABEL_POPUP_TEST) {
 		CorePopupManager_v->showOk(

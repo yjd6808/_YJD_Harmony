@@ -14,8 +14,15 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UIButton::UIButton(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo)
-	: UIElement(master, parent, btnInfo)
+UIButton::UIButton(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
+	, m_pInfo(nullptr)
+	, m_pTexture{}
+	, m_pSprite{}
+{}
+
+UIButton::UIButton(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo, bool infoOwner)
+	: UIElement(master, parent, btnInfo, infoOwner)
 	, m_pInfo(btnInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -28,8 +35,15 @@ UIButton::~UIButton() {
 	CC_SAFE_RELEASE(m_pTexture[eDisabled]);
 }
 
-UIButton* UIButton::create(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo) {
-	UIButton* pBtn = dbg_new UIButton(master, parent, btnInfo);
+UIButton* UIButton::create(UIMasterGroup* master, UIGroup* parent) {
+	UIButton* pBtn = dbg_new UIButton(master, parent);
+	pBtn->init();
+	pBtn->autorelease();
+	return pBtn;
+}
+
+UIButton* UIButton::create(UIMasterGroup* master, UIGroup* parent, UIButtonInfo* btnInfo, bool infoOwner) {
+	UIButton* pBtn = dbg_new UIButton(master, parent, btnInfo, infoOwner);
 	pBtn->init();
 	pBtn->autorelease();
 	return pBtn;
@@ -38,11 +52,16 @@ UIButton* UIButton::create(UIMasterGroup* master, UIGroup* parent, UIButtonInfo*
 
 void UIButton::setVisibleState(State state) {
 	for (int i = 0; i < eMax; ++i) {
+		Sprite* pSprite = m_pSprite[i];
+
+		if (pSprite == nullptr)
+			continue;
+
 		if (i == state) {
-			m_pSprite[i]->setVisible(true);
+			pSprite->setVisible(true);
 			continue;
 		}
-		m_pSprite[i]->setVisible(false);
+		pSprite->setVisible(false);
 	}
 
 	m_eState = state;
@@ -74,6 +93,26 @@ void UIButton::setUISize(const SGSize& size) {
 	
 }
 
+void UIButton::setInfo(UIElementInfo* info, bool infoOwner) {
+
+	if (info->Type != UIElementType::Button) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UIButtonInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UIButton::setInfoButton(UIButtonInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
+}
+
 
 void UIButton::setEnabled(bool enabled) {
 
@@ -92,7 +131,6 @@ void UIButton::setEnabled(bool enabled) {
 	setVisibleState(eDisabled);
 }
 
-
 void UIButton::restoreState(State state) {
 	if (m_eState == eDisabled)
 		return;
@@ -101,27 +139,37 @@ void UIButton::restoreState(State state) {
 		setVisibleState(eNormal);
 }
 
-void UIButton::onMouseEnterDetail(SGEventMouse* mouseEvent) {
+void UIButton::onMouseEnterInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(eOver);
 }
 
-void UIButton::onMouseLeaveDetail(SGEventMouse* mouseEvent) {
+void UIButton::onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(eNormal);
 }
 
-bool UIButton::onMouseMoveDetail(SGEventMouse* mouseEvent) {
+bool UIButton::onMouseMoveInternalDetail(SGEventMouse* mouseEvent) {
 	return false;
 }
-bool UIButton::onMouseDownDetail(SGEventMouse* mouseEvent) {
+bool UIButton::onMouseDownInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(ePressed);
 	return false;
 }
-void UIButton::onMouseUpDetail(SGEventMouse* mouseEvent) {
+void UIButton::onMouseUpInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(eNormal);
 }
 
 
 bool UIButton::init() {
+
+	if (!UIElement::init()) {
+		return false;
+	}
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return false;
+	}
+
 	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
 	setInitialUISize(DefaultSize30);
 

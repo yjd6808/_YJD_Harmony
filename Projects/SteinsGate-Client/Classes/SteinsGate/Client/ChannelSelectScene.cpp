@@ -12,8 +12,7 @@
 #include "ChannelSelectScene.h"
 
 #include <SteinsGate/Client/WorldScene.h>
-
-#include "FontPackage.h"
+#include <SteinsGate/Client/Define_UI.h>
 
 USING_NS_CC;
 USING_NS_JC;
@@ -44,15 +43,7 @@ bool SGChannelSelectScene::init() {
 		return false;
 	}
 
-	auto a = Sprite::create("rect.png");
-	a->setAnchorPoint(Vec2::ZERO);
-	a->setPosition({ 200.0f, 200.0f });
-	this->addChild(a);
-
-	SGText* text = SGText::create("abcd", CoreFont_v->getFontName(0).Source(), 16);
-	text->setPosition({ 300, 300 });
-	this->addChild(text);
-
+	m_pUILayer->addUIGroup(GROUP_UI_CHANNEL);
 	return true;
 }
 

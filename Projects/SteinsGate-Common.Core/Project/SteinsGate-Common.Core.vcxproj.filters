@@ -59,8 +59,8 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerInfoLoader.cpp">
       <Filter>Data\Server</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\ChannelInfoLoader.cpp">
-      <Filter>Data\Channel</Filter>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.cpp">
+      <Filter>Data\ChannelBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\EnchantInfoLoader.cpp">
       <Filter>Data\Enchant</Filter>
@@ -203,11 +203,11 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerInfoLoader.h">
       <Filter>Data\Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelInfo.h">
-      <Filter>Data\Channel</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfo.h">
+      <Filter>Data\ChannelBase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelInfoLoader.h">
-      <Filter>Data\Channel</Filter>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.h">
+      <Filter>Data\ChannelBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\EnchantInfo.h">
       <Filter>Data\Enchant</Filter>
@@ -324,9 +324,6 @@
     <Filter Include="Data\Server">
       <UniqueIdentifier>{527118c2-9bf2-4cd7-a878-360b0f1d3879}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data\Channel">
-      <UniqueIdentifier>{a7851926-c0b9-465c-99d8-b322f51ea50f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\Enchant">
       <UniqueIdentifier>{7ecb621d-16c9-4574-9790-51505d3f1d42}</UniqueIdentifier>
     </Filter>
@@ -371,6 +368,9 @@
     </Filter>
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data\ChannelBase">
+      <UniqueIdentifier>{a7851926-c0b9-465c-99d8-b322f51ea50f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

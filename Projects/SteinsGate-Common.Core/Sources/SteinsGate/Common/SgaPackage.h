@@ -45,7 +45,9 @@ public:
 
 	bool IsElementLoaded(const int index) const;
 	int GetElementIndex(const JCore::String& elementName);
+	int GetElementIndex(const char* elementName);
 	bool HasElementIndex(const JCore::String& elementName) const;
+	bool HasElementIndex(const char* elementName) const;
 
 	// 연산자를 사용할 때는 레퍼런스로 가져오도록 하자.
 	SgaElement& operator[](const int idx);

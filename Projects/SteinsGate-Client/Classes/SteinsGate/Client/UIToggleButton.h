@@ -22,10 +22,12 @@ class UIToggleButton : public UIElement
 	static constexpr int StateOne = 0;
 	static constexpr int StateTwo = 1;
 public:
-	static UIToggleButton* create(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo);
+	static UIToggleButton* create(UIMasterGroup* master, UIGroup* parent);
+	static UIToggleButton* create(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo, bool infoOwner);
 	static constexpr UIElementType_t type() { return UIElementType::ToggleButton; }
 
-	UIToggleButton(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo);
+	UIToggleButton(UIMasterGroup* master, UIGroup* parent);
+	UIToggleButton(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo, bool infoOwner);
 	~UIToggleButton() override;
 
 	bool init() override;
@@ -35,6 +37,8 @@ public:
 	void setVisibleState(State state);
 	void setEnabled(bool enabled) override;
 	void setUISize(const SGSize& contentSize) override;
+	void setInfo(UIElementInfo* info, bool infoOwner) override;
+	void setInfoToggleButton(UIToggleButtonInfo* info, bool infoOwner);
 
 	ToggleState getToggleState() const { return m_eToggleState; }
 	void setToggleState(ToggleState state);
@@ -43,12 +47,12 @@ public:
 	UIElementType_t getElementType() override { return UIElementType::ToggleButton; }
 	SGString toString() override { return SGStringUtil::Format("토글버튼(%d)", m_pInfo->Code); }
 protected:
-	void onMouseEnterDetail(SGEventMouse* mouseEvent) override;
-	void onMouseLeaveDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;
-	void onMouseUpDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseUpContainedDetail(SGEventMouse* mouseEvent) override;
+	void onMouseEnterInternalDetail(SGEventMouse* mouseEvent) override;
+	void onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseMoveInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseDownInternalDetail(SGEventMouse* mouseEvent) override;
+	void onMouseUpInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) override;
 private:
 	ToggleState m_eToggleState;
 	UIToggleButtonInfo* m_pInfo;

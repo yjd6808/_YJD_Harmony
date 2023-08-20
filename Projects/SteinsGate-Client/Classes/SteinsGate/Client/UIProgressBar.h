@@ -13,10 +13,13 @@
 class UIProgressBar : public UIElement
 {
 public:
-	static UIProgressBar* create(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo);
+	static UIProgressBar* create(UIMasterGroup* master, UIGroup* parent);
+	static UIProgressBar* create(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo, bool infoOwner);
+
 	static constexpr UIElementType_t type() { return UIElementType::ProgressBar; }
 
-	UIProgressBar(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo);
+	UIProgressBar(UIMasterGroup* master, UIGroup* parent);
+	UIProgressBar(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo, bool infoOwner);
 	~UIProgressBar() override;
 
 	bool init() override;
@@ -24,6 +27,8 @@ public:
 	void unload() override;
 
 	void setUISize(const SGSize& size) override;
+	void setInfo(UIElementInfo* info, bool infoOwner) override;
+	void setInfoProgressBar(UIProgressBarInfo* info, bool infoOwner);
 	void setPercent(float percent) const;
 	float getPercent() const;
 

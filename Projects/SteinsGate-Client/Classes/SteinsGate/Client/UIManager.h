@@ -41,6 +41,7 @@ class UI_Inventory;
 class UI_Login;
 class UI_Popup;
 class UI_Test;
+class UI_ChannelSelect;
 
 class UIManager final : public JCore::SingletonPointer<UIManager>
 {
@@ -85,6 +86,7 @@ public:
 	UI_Login* Login;
 	UI_Popup* Popup;
 	UI_Test* Test;
+	UI_ChannelSelect* ChannelSelect;
 private:
 	template <typename TElement>
 	TElement* getElementTemplated(int code) {

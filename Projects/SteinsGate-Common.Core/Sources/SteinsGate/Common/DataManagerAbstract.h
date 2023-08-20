@@ -15,7 +15,7 @@
 #include <SteinsGate/Common/ItemInfo.h>
 #include <SteinsGate/Common/MapInfo.h>
 #include <SteinsGate/Common/MapPhysicsInfo.h>
-#include <SteinsGate/Common/ChannelInfo.h>
+#include <SteinsGate/Common/ChannelBaseInfo.h>
 #include <SteinsGate/Common/ItemInfo.h>
 #include <SteinsGate/Common/ItemOptInfo.h>
 #include <SteinsGate/Common/EnchantInfo.h>
@@ -50,7 +50,7 @@ public:
 
 	ItemOptInfo* getItemOptInfo(int itemOptCode);
 	ItemOptInfo* getItemOptInfo(const SGString& itemOptEngName);
-	ChannelInfo* getChannelInfo(int channelCode);
+	ChannelBaseInfo* getChannelBaseInfo(int channelCode);
 	EnchantInfo* getEnchantInfo(int enchantCode);
 	ServerProcessInfoPackage* getServerProcessInfoPackage(int serverCode);
 	DatabaseInfo* getDatabaseInfo(int databaseCode);

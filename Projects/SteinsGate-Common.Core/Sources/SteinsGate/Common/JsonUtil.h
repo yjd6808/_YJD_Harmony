@@ -24,6 +24,7 @@ public:
 	static SGString getStringOrDefault(Json::Value& value, const SGString& defaultValue = 0); // 내 문자열은 0으로 초기화하면 동적 할당 안함
 	static void parseThicknessInfo(Json::Value& thicknessRoot, JCORE_OUT ThicknessBox& box);
 
+	static void parseIntNumber2(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2);
 	static void parseIntNumber3(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3);
 	static void parseIntNumber4(Json::Value& root, JCORE_OUT int& num1, JCORE_OUT int& num2, JCORE_OUT int& num3, JCORE_OUT int& num4);
 	static void parseIntNumberN(Json::Value& root, JCORE_OUT int* numArr, int count);

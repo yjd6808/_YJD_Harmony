@@ -37,12 +37,11 @@ void SGGameScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event)
         WorldScene::get()->reserveScene(SceneType::Login);
     } else if (keyCode == EventKeyboard::KeyCode::KEY_F7) {
 		WorldScene::get()->reserveScene(SceneType::ChannelSelect);
-    } else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
+    } else if (keyCode == EventKeyboard::KeyCode::KEY_F9) {
         if (m_pGridLayer == nullptr) {
             return;
         }
 
-        Director::getInstance()->setDisplayStats(!Director::getInstance()->isDisplayStats());
         m_pGridLayer->setVisible(!m_pGridLayer->isVisible());
     }
 }
@@ -66,7 +65,6 @@ bool SGGameScene::init()
     m_pGridLayer->setAnchorPoint(Vec2::ZERO);
     m_pGridLayer->setVisible(false);
     m_pGridLayer->retain();
-    //this->addChild(m_pGridLayer);
     
     m_pMapLayer = MapLayer::create();
     m_pMapLayer->setAnchorPoint(Vec2::ZERO);

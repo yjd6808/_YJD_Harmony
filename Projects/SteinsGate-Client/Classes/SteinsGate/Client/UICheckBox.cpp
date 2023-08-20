@@ -14,8 +14,16 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UICheckBox::UICheckBox(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo)
-	: UIElement(master, parent, checkBoxInfo)
+UICheckBox::UICheckBox(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
+	, m_pInfo(nullptr)
+	, m_pTexture{}
+	, m_pSprite{}
+	, m_bChecked(false)
+{}
+
+UICheckBox::UICheckBox(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo, bool infoOwner)
+	: UIElement(master, parent, checkBoxInfo, infoOwner)
 	, m_pInfo(checkBoxInfo)
 	, m_pTexture{}
 	, m_pSprite{}
@@ -28,8 +36,16 @@ UICheckBox::~UICheckBox() {
 	}
 }
 
-UICheckBox* UICheckBox::create(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* btnInfo) {
-	UICheckBox* pCheckBox = dbg_new UICheckBox(master, parent, btnInfo);
+UICheckBox* UICheckBox::create(UIMasterGroup* master, UIGroup* parent) {
+	UICheckBox* pCheckBox = dbg_new UICheckBox(master, parent);
+	pCheckBox->init();
+	pCheckBox->autorelease();
+	return pCheckBox;
+}
+
+
+UICheckBox* UICheckBox::create(UIMasterGroup* master, UIGroup* parent, UICheckBoxInfo* checkBoxInfo, bool infoOwner) {
+	UICheckBox* pCheckBox = dbg_new UICheckBox(master, parent, checkBoxInfo, infoOwner);
 	pCheckBox->init();
 	pCheckBox->autorelease();
 	return pCheckBox;
@@ -118,12 +134,40 @@ void UICheckBox::setUISize(const SGSize& size) {
 	}
 }
 
+void UICheckBox::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::CheckBox) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UICheckBoxInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UICheckBox::setInfoCheckBox(UICheckBoxInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
+}
+
 bool UICheckBox::isChecked() const {
 	return m_bChecked;
 }
 
 
 bool UICheckBox::init() {
+
+	if (!UIElement::init()) {
+		return false;
+	}
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return false;
+	}
 
 	const ImagePack* pBackgroundPack = CorePackManager_v->getPackUnsafe(m_pInfo->BackgroundSga);
 	const ImagePack* pCrossPack = CorePackManager_v->getPackUnsafe(m_pInfo->CrossSga);
@@ -155,6 +199,12 @@ bool UICheckBox::init() {
 }
 
 void UICheckBox::load() {
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return;
+	}
+
 	if (m_bLoaded)
 		return;
 
@@ -202,7 +252,7 @@ void UICheckBox::unload() {
 }
 
 
-bool UICheckBox::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
+bool UICheckBox::onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) {
 	if (m_eState != eDisabled)
 		setCheck(!m_bChecked);
 

@@ -12,7 +12,7 @@
 
 #include <SteinsGate/Common/CommonInfoLoader.h>
 #include <SteinsGate/Common/ItemOptInfoLoader.h>
-#include <SteinsGate/Common/ChannelInfoLoader.h>
+#include <SteinsGate/Common/ChannelBaseInfoLoader.h>
 #include <SteinsGate/Common/EnchantInfoLoader.h>
 #include <SteinsGate/Common/ServerInfoLoader.h>
 #include <SteinsGate/Common/MapInfoLoader.h>
@@ -188,13 +188,13 @@ ItemOptInfo* DataManagerAbstract::getItemOptInfo(const SGString& itemOptEngName)
 	return ((ItemOptInfoLoader*)m_pConfigFileLoaders[eType])->getData(itemOptEngName);
 }
 
-ChannelInfo* DataManagerAbstract::getChannelInfo(int channelCode) {
+ChannelBaseInfo* DataManagerAbstract::getChannelBaseInfo(int channelCode) {
 	const auto eType = ConfigFileType::Channel;
 
 	if (!m_bLoaded[eType])
 		load(eType);
 
-	const auto pRet = dynamic_cast<ChannelInfo*>(getData(eType, channelCode));
+	const auto pRet = dynamic_cast<ChannelBaseInfo*>(getData(eType, channelCode));
 	DebugAssertMsg(pRet, "채널 인포 타입이 아닙니다.");
 	return pRet;
 }

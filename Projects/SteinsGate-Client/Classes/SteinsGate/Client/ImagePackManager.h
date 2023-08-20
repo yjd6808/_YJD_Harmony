@@ -22,7 +22,9 @@ public:
 	void unloadPackData(int packIndex);
 
 	ImagePack* getPack(const SGString& packName);
+	ImagePack* getPack(const char* packName);
 	ImagePack* getPackUnsafe(const SGString& packName);
+	ImagePack* getPackUnsafe(const char* packName);
 	ImagePack* getPack(const int idx);
 	ImagePack* getPackUnsafe(const int idx);
 	ImagePack* getAvatarPack(CharType_t charType, AvatarType_t avatarType);
@@ -30,8 +32,14 @@ public:
 
 	int getAvatarPackIndex(CharType_t charType, AvatarType_t avatarType);
 	int getWeaponPackIndex(WeaponType_t weaponType);
-	int getPackIndex(const SGString& packPath);
-	int getPackIndexDefault(const SGString& packPath, int defaultIndex);
+	int getPackIndex(const SGString& packName);
+	int getPackIndexDefault(const char* packName, int defaultIndex = InvalidValue_v);
+	int getPackIndexDefault(const SGString& packName, int defaultIndex = InvalidValue_v);
+
+	int getImgIndexUnsafe(int sgaIndex, const char* imgName);
+	int getImgIndexUnsafe(int sgaIndex, const SGString& imgName);
+
+	SGSize getTextureSize(int packIndex, int imgIndex, int frameIndex);
 
 	void releaseFrameTexture(int packIndex, int imgIndex, int frameIndex);
 	void releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex);

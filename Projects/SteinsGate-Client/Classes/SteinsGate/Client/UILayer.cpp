@@ -56,17 +56,25 @@ void UILayer::onMouseMove(SGEventMouse* mouseEvent) {
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getUIRect().containsPoint(absolutePosition)) {
-			pTopGroup = uiGroup;
-			pTopGroup->onMouseMove(mouseEvent);
-			break;
+		if (!uiGroup->getUIRect().containsPoint(absolutePosition))
+			continue;
+		
+		pTopGroup = uiGroup;
+		pTopGroup->onMouseMoveInternal(mouseEvent);
+
+		if (pTopGroup->isMasterGroup()) {
+			static_cast<UIMasterGroup*>(pTopGroup)->onMouseMove(mouseEvent);
 		}
 	}
 
 	// 다른 그룹으로 전환된경우 마우스 Over 상태인 녀석들을 원래대로 돌려놓기 위해 벗어난 위치에서 이벤트를 한번 전파해주도록 한다.
 	if (pTopGroup != m_pPrevOverStateGroup && m_pPrevOverStateGroup != nullptr) {
 		// m_pPrevOverStateGroup->restoreState(SGUIElement::eOver);
-		m_pPrevOverStateGroup->onMouseMove(mouseEvent);
+		m_pPrevOverStateGroup->onMouseMoveInternal(mouseEvent);
+
+		if (m_pPrevOverStateGroup->isMasterGroup()) {
+			static_cast<UIMasterGroup*>(m_pPrevOverStateGroup)->onMouseMove(mouseEvent);
+		}
 	}
 
 	m_pPrevOverStateGroup = pTopGroup;
@@ -78,11 +86,28 @@ void UILayer::onMouseDown(SGEventMouse* mouseEvent) {
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getUIRect().containsPoint(absolutePosition) &&
-			uiGroup->onMouseDown(mouseEvent) == false) {
+		/*if (uiGroup->getUIRect().containsPoint(absolutePosition) &&
+			uiGroup->onMouseDownInternal(mouseEvent) == false) {
 			pTopGroup = uiGroup;
 			break;
+		}*/
+
+
+		if (!uiGroup->getUIRect().containsPoint(absolutePosition))
+			continue;
+
+		const bool bPropagate = uiGroup->onMouseDownInternal(mouseEvent);
+		pTopGroup = uiGroup;
+
+		if (pTopGroup->isMasterGroup()) {
+			static_cast<UIMasterGroup*>(pTopGroup)->onMouseDown(mouseEvent);
 		}
+
+
+		if (!bPropagate) {
+			break;
+		}
+
 	}
 
 	m_pPrevPressedStateGroup = pTopGroup;
@@ -94,17 +119,25 @@ void UILayer::onMouseUp(SGEventMouse* mouseEvent) {
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIGroup*>(_children.at(i));
-		if (uiGroup->getUIRect().containsPoint(absolutePosition)) {
-			pTopGroup = uiGroup;
-			pTopGroup->onMouseUp(mouseEvent);
-			break;
+		if (!uiGroup->getUIRect().containsPoint(absolutePosition))
+			continue;
+
+		pTopGroup = uiGroup;
+		pTopGroup->onMouseUpInternal(mouseEvent);
+
+		if (pTopGroup->isMasterGroup()) {
+			static_cast<UIMasterGroup*>(pTopGroup)->onMouseUp(mouseEvent);
 		}
 	}
 
 	// 다른 그룹으로 전환된경우 마우스 Pressed 상태인 녀석들을 원래대로 돌려놔야함, 벗어난 위치에서 이벤트를 한번 전파해주도록 한다.
 	if (pTopGroup != m_pPrevPressedStateGroup && m_pPrevPressedStateGroup != nullptr) {
 		// m_pPrevPressedStateGroup->restoreState(SGUIElement::ePressed);
-		m_pPrevPressedStateGroup->onMouseUp(mouseEvent);
+		m_pPrevPressedStateGroup->onMouseUpInternal(mouseEvent);
+
+		if (m_pPrevPressedStateGroup->isMasterGroup()) {
+			static_cast<UIMasterGroup*>(m_pPrevPressedStateGroup)->onMouseUp(mouseEvent);
+		}
 	}
 
 	m_pPrevPressedStateGroup = nullptr;
@@ -113,8 +146,14 @@ void UILayer::onMouseUp(SGEventMouse* mouseEvent) {
 void UILayer::onMouseScroll(SGEventMouse* mouseEvent) const {
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIGroup* uiGroup = static_cast<UIMasterGroup*>(_children.at(i));
-		if (!uiGroup->onMouseScroll(mouseEvent)) {
-			return;
+		const bool bPropagate = uiGroup->onMouseScrollInternal(mouseEvent);
+
+		if (uiGroup->isMasterGroup()) {
+			static_cast<UIMasterGroup*>(uiGroup)->onMouseDown(mouseEvent);
+		}
+
+		if (!bPropagate) {
+			break;
 		}
 	}
 }
@@ -168,6 +207,11 @@ void UILayer::forEach(const SGActionFn<UIMasterGroup*>& actionFn) {
 
 void UILayer::addUIGroup(int groupCode, int zorder) {
 	UIMasterGroup* pGroup = CoreUIManager_v->getMasterGroup(groupCode);
+
+	if (pGroup == nullptr) {
+		_LogWarn_("%d 마스터 UI그룹을 찾지 못했습니다. %s파일을 확인해주세요.", ConfigFileType::FileName[ConfigFileType::UI]);
+		return;
+	}
 
 	if (!pGroup->loaded())
 		pGroup->load();

@@ -15,24 +15,35 @@ USING_NS_CC;
 USING_NS_CCUI;
 USING_NS_JC;
 
-UIEditBox::UIEditBox(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo)
-	: UIElement(master, parent, editBoxInfo)
+UIEditBox::UIEditBox(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
 	, m_bFontAutoScaling(true)
 	, m_fFontSizeInitial(12.0f)
 	, m_fFontSize(12.0f)
 	, m_fPlaceholderFontSizeInitial(12.0f)
 	, m_fPlaceholderFontSize(12.0f)
-	, m_pInfo(editBoxInfo)
-	, m_pEditBox{nullptr}
+	, m_pInfo(nullptr)
+	, m_pEditBox{ nullptr }
 	, m_pListener(nullptr)
 {}
+
+UIEditBox::UIEditBox(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo, bool infoOwner) : UIEditBox(master, parent) {
+	setInfoEditBox(editBoxInfo, infoOwner);
+}
 
 UIEditBox::~UIEditBox() {
 	JCORE_DELETE_SAFE(m_pListener);
 }
 
-UIEditBox* UIEditBox::create(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo) {
-	UIEditBox* pEditBox = dbg_new UIEditBox(master, parent, editBoxInfo);
+UIEditBox* UIEditBox::create(UIMasterGroup* master, UIGroup* parent) {
+	UIEditBox* pEditBox = dbg_new UIEditBox(master, parent);
+	pEditBox->init();
+	pEditBox->autorelease();
+	return pEditBox;
+}
+
+UIEditBox* UIEditBox::create(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo, bool infoOwner) {
+	UIEditBox* pEditBox = dbg_new UIEditBox(master, parent, editBoxInfo, infoOwner);
 	pEditBox->init();
 	pEditBox->autorelease();
 	return pEditBox;
@@ -47,6 +58,15 @@ const char* UIEditBox::getTextRaw() {
 }
 
 bool UIEditBox::init() {
+
+	if (!UIElement::init()) {
+		return false;
+	}
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return false;
+	}
 
 	setInitialUISize(m_pInfo->Size);
 
@@ -135,6 +155,25 @@ void UIEditBox::setUISize(const SGSize& size) {
 	}
 }
 
+void UIEditBox::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::EditBox) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UIEditBoxInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UIEditBox::setInfoEditBox(UIEditBoxInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
+}
+
 void UIEditBox::focus() {
 	m_pEditBox->openKeyboard();
 }
@@ -147,7 +186,7 @@ void UIEditBox::setInputMode(SGEditBox::InputMode inputMode) {
 	m_pEditBox->setInputMode(inputMode);
 }
 
-bool UIEditBox::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
+bool UIEditBox::onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) {
 	m_pEditBox->openKeyboard();
 	return false;
 }

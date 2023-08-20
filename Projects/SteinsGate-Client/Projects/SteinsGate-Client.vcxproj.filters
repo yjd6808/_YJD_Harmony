@@ -148,6 +148,9 @@
     <Filter Include="System">
       <UniqueIdentifier>{d542f741-7eda-4d22-b1e1-fc031bc51b07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data\Channel">
+      <UniqueIdentifier>{7ce628d4-c979-4b15-b8d3-f03c3611a513}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\ImagePackManager.cpp">
@@ -549,6 +552,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\NetClientEventListener.cpp">
       <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UI_ChannelSelect.cpp">
+      <Filter>Game\UI_M</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.cpp">
+      <Filter>Data\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIInfo.cpp">
+      <Filter>Data\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1023,6 +1035,15 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\NetClientEventListener.h">
       <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UI_ChannelSelect.h">
+      <Filter>Game\UI_M</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfo.h">
+      <Filter>Data\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.h">
+      <Filter>Data\Channel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

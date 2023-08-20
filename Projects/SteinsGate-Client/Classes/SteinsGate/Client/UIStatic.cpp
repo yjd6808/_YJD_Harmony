@@ -15,8 +15,16 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UIStatic::UIStatic(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo)
-	: UIElement(master, parent, staticInfo)
+UIStatic::UIStatic(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
+	, m_bVisible(false)
+	, m_pInfo(nullptr)
+	, m_pDebugTexture{}
+	, m_pDebugSprite{}
+{}
+
+UIStatic::UIStatic(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo, bool infoOwner)
+	: UIElement(master, parent, staticInfo, infoOwner)
 	, m_bVisible(false)
 	, m_pInfo(staticInfo)
 	, m_pDebugTexture{}
@@ -27,14 +35,30 @@ UIStatic::~UIStatic() {
 	CC_SAFE_RELEASE(m_pDebugTexture);
 }
 
-UIStatic* UIStatic::create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo) {
-	UIStatic* pStatic = dbg_new UIStatic(master, parent, staticInfo);
+UIStatic* UIStatic::create(UIMasterGroup* master, UIGroup* parent) {
+	UIStatic* pStatic = dbg_new UIStatic(master, parent);
+	pStatic->init();
+	pStatic->autorelease();
+	return pStatic;
+}
+
+UIStatic* UIStatic::create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo, bool infoOwner) {
+	UIStatic* pStatic = dbg_new UIStatic(master, parent, staticInfo, infoOwner);
 	pStatic->init();
 	pStatic->autorelease();
 	return pStatic;
 }
 
 bool UIStatic::init() {
+	if (!UIElement::init()) {
+		return false;
+	}
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return false;
+	}
+
 	setInitialUISize(m_pInfo->Size);
 	return m_bInitialized = true;
 }
@@ -96,6 +120,25 @@ void UIStatic::setUISize(const SGSize& contentSize) {
 
 	m_pDebugSprite->setScale(fScaleX, fScaleY);
 
+}
+
+void UIStatic::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::Static) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UIStaticInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UIStatic::setInfoStatic(UIStaticInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
 }
 
 

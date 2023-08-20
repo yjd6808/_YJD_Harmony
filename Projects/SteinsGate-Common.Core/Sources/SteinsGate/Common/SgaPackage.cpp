@@ -17,7 +17,7 @@ USING_NS_JC;
 
 SgaPackage::~SgaPackage() {}
 
-SgaPackagePtr SgaPackage::Create(const JCore::StreamPtr& readOnlyStream, const String& path, int capacity) {
+SgaPackagePtr SgaPackage::Create(const StreamPtr& readOnlyStream, const String& path, int capacity) {
 	return MakeShared<SgaPackage>(readOnlyStream, path, capacity);
 }
 
@@ -61,15 +61,24 @@ bool SgaPackage::IsElementLoaded(const int index) const {
 	return m_ElementMap.Exist(index);
 }
 
-int SgaPackage::GetElementIndex(const JCore::String& elementName) {
+int SgaPackage::GetElementIndex(const String& elementName) {
 	bool bExist = m_ElementNameToIndex.Exist(elementName);
 	DebugAssertMsg(bExist, "해당 엘리먼트 이름에 해당하는 인덱스가 없습니다.");
 	return m_ElementNameToIndex[elementName];
 }
 
-bool SgaPackage::HasElementIndex(const JCore::String& elementName) const {
+int SgaPackage::GetElementIndex(const char* elementName) {
 	bool bExist = m_ElementNameToIndex.Exist(elementName);
-	return bExist;
+	DebugAssertMsg(bExist, "해당 엘리먼트 이름에 해당하는 인덱스가 없습니다.");
+	return m_ElementNameToIndex[elementName];
+}
+
+bool SgaPackage::HasElementIndex(const String& elementName) const {
+	return m_ElementNameToIndex.Exist(elementName);
+}
+
+bool SgaPackage::HasElementIndex(const char* elementName) const {
+	return m_ElementNameToIndex.Exist(elementName);
 }
 
 SgaElement& SgaPackage::operator[](const int idx) {

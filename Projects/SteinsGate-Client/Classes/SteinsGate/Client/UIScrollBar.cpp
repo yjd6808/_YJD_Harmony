@@ -18,8 +18,8 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UIScrollBar::UIScrollBar(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo)
-	: UIElement(master, parent, scrollBarInfo)
+UIScrollBar::UIScrollBar(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
 	, m_iRowCount(30)
 	, m_iRowCountPerPage(4)
 	, m_iPos(10)
@@ -33,13 +33,26 @@ UIScrollBar::UIScrollBar(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo
 	, m_fDragStartYPos(0)
 	, m_iDragStartPos(0)
 	, m_pLink(nullptr)
-	, m_pInfo(scrollBarInfo)
+	, m_pInfo(nullptr)
 	, m_pTexture{}
-    , m_pSprite{}
+	, m_pSprite{}
 {}
 
-UIScrollBar* UIScrollBar::create(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo) {
-	UIScrollBar* pScrollBar = dbg_new UIScrollBar(master, parent, scrollBarInfo);
+UIScrollBar::UIScrollBar(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo, bool infoOwner)
+	: UIScrollBar(master, parent) {
+	setInfoScrollBar(scrollBarInfo, infoOwner);
+}
+
+
+UIScrollBar* UIScrollBar::create(UIMasterGroup* master, UIGroup* parent) {
+	UIScrollBar* pScrollBar = dbg_new UIScrollBar(master, parent);
+	pScrollBar->init();
+	pScrollBar->autorelease();
+	return pScrollBar;
+}
+
+UIScrollBar* UIScrollBar::create(UIMasterGroup* master, UIGroup* parent, UIScrollBarInfo* scrollBarInfo, bool infoOwner) {
+	UIScrollBar* pScrollBar = dbg_new UIScrollBar(master, parent, scrollBarInfo, infoOwner);
 	pScrollBar->init();
 	pScrollBar->autorelease();
 	return pScrollBar;
@@ -55,12 +68,18 @@ UIScrollBar::~UIScrollBar() {
 
 // 스크롤바 버튼들은 비활성화, 마우스 오버가 없으므로.. 비활성상태를 노말로 처리한다.
 void UIScrollBar::setVisibleStateNormal() {
-	m_pSprite[IndexUpNormal]->setVisible(true);
-	m_pSprite[IndexDownNormal]->setVisible(true);
-	m_pSprite[IndexThumbNormal]->setVisible(true);
-	m_pSprite[IndexUpPressed]->setVisible(false);
-	m_pSprite[IndexDownPressed]->setVisible(false);
-	m_pSprite[IndexThumbPressed]->setVisible(false);
+	if (m_pSprite[IndexUpNormal])
+		m_pSprite[IndexUpNormal]->setVisible(true);
+	if (m_pSprite[IndexDownNormal])
+		m_pSprite[IndexDownNormal]->setVisible(true);
+	if (m_pSprite[IndexThumbNormal])
+		m_pSprite[IndexThumbNormal]->setVisible(true);
+	if (m_pSprite[IndexUpPressed])
+		m_pSprite[IndexUpPressed]->setVisible(false);
+	if (m_pSprite[IndexDownPressed])
+		m_pSprite[IndexDownPressed]->setVisible(false);
+	if (m_pSprite[IndexThumbPressed])
+		m_pSprite[IndexThumbPressed]->setVisible(false);
 }
 
 void UIScrollBar::setEnabled(bool enabled) {
@@ -118,6 +137,15 @@ void UIScrollBar::restoreState(State state) {
 }
 
 bool UIScrollBar::init() {
+	if (!UIElement::init()) {
+		return false;
+	}
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return false;
+	}
+
 	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
 
 	// 위 아래 버튼높이 임시 추가 (이미지가 전혀 없더라도 스크롤바 기능이 가능토록. 하기위함)
@@ -151,10 +179,13 @@ bool UIScrollBar::init() {
 }
 
 void UIScrollBar::load() {
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return;
+	}
+
 	if (m_bLoaded)
 		return;
-
-	
 
 	createSprites();
 	updateThumbSize();
@@ -387,31 +418,59 @@ void UIScrollBar::setUISize(const SGSize& contentSize) {
 	updateThumbPosition();
 }
 
+void UIScrollBar::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::ScrollBar) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UIScrollBarInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UIScrollBar::setInfoScrollBar(UIScrollBarInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
+}
+
 
 bool UIScrollBar::isUpButtonContainPoint(SGVec2 pos) {
+	if (m_pSprite[IndexUpNormal] == nullptr)
+		return false;
+
 	const SGVec2 upButtonPos = m_pSprite[IndexUpNormal]->getPosition();
 	const Rect upButtonBoundingBox = { _position + upButtonPos, SGSize{ m_UISize.width, m_fUpButtonHeight } };
 	return upButtonBoundingBox.containsPoint(pos);
 }
 
 bool UIScrollBar::isDownButtonContainPoint(SGVec2 pos) {
+	if (m_pSprite[IndexDownNormal] == nullptr)
+		return false;
+
 	const SGVec2 downButtonPos = m_pSprite[IndexDownNormal]->getPosition();
 	const Rect downButtonBoundingBox = { _position + downButtonPos, SGSize{ m_UISize.width, m_fDownButtonHeight } };
 	return downButtonBoundingBox.containsPoint(pos);
 }
 
 bool UIScrollBar::isThumbButtonContainPoint(SGVec2 pos) {
+	if (m_pSprite[IndexThumbNormal] == nullptr)
+		return false;
+
 	const SGVec2 thumbButtonPos = m_pSprite[IndexThumbNormal]->getPosition();
 	const Rect thumbButtonBoundingBox = { _position + thumbButtonPos, m_pSprite[IndexThumbNormal]->getContentSize() };
 	return thumbButtonBoundingBox.containsPoint(pos);
 }
 
 
-void UIScrollBar::onMouseLeaveDetail(SGEventMouse* mouseEvent) {
+void UIScrollBar::onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) {
 	//setVisibleStateNormal();
 }
 
-bool UIScrollBar::onMouseMoveDetail(SGEventMouse* mouseEvent) {
+bool UIScrollBar::onMouseMoveInternalDetail(SGEventMouse* mouseEvent) {
 	const SGVec2 cursorPos = mouseEvent->getCursorPos();
 
 	if (!m_bDragBegin)
@@ -424,21 +483,27 @@ bool UIScrollBar::onMouseMoveDetail(SGEventMouse* mouseEvent) {
 	setRowPos(m_iDragStartPos + iPosDelta);
 	return false;
 }
-bool UIScrollBar::onMouseDownDetail(SGEventMouse* mouseEvent) {
+bool UIScrollBar::onMouseDownInternalDetail(SGEventMouse* mouseEvent) {
 	const SGVec2 cursorPos = mouseEvent->getCursorPos();
 
 	const bool bUpButtonContained = isUpButtonContainPoint(cursorPos);
 	const bool bDownButtonContained = isDownButtonContainPoint(cursorPos);
 	const bool bThumbButtonContained = isThumbButtonContainPoint(cursorPos);
 
-	m_pSprite[IndexUpPressed]->setVisible(bUpButtonContained);
-	m_pSprite[IndexUpNormal]->setVisible(!bUpButtonContained);
+	if (m_pSprite[IndexUpPressed])
+		m_pSprite[IndexUpPressed]->setVisible(bUpButtonContained);
+	if (m_pSprite[IndexUpNormal])
+		m_pSprite[IndexUpNormal]->setVisible(!bUpButtonContained);
 
-	m_pSprite[IndexDownPressed]->setVisible(bDownButtonContained);
-	m_pSprite[IndexDownNormal]->setVisible(!bDownButtonContained);
+	if (m_pSprite[IndexDownPressed])
+		m_pSprite[IndexDownPressed]->setVisible(bDownButtonContained);
+	if (m_pSprite[IndexDownNormal])
+		m_pSprite[IndexDownNormal]->setVisible(!bDownButtonContained);
 
-	m_pSprite[IndexThumbPressed]->setVisible(bThumbButtonContained);
-	m_pSprite[IndexThumbNormal]->setVisible(!bThumbButtonContained);
+	if (m_pSprite[IndexThumbPressed])
+		m_pSprite[IndexThumbPressed]->setVisible(bThumbButtonContained);
+	if (m_pSprite[IndexThumbNormal])
+		m_pSprite[IndexThumbNormal]->setVisible(!bThumbButtonContained);
 
 	m_bDragBegin = bThumbButtonContained;
 	m_fDragStartYPos = cursorPos.y - _position.y - m_fDownButtonHeight;
@@ -446,12 +511,12 @@ bool UIScrollBar::onMouseDownDetail(SGEventMouse* mouseEvent) {
 	return false;
 }
 
-void UIScrollBar::onMouseUpDetail(SGEventMouse* mouseEvent) {
+void UIScrollBar::onMouseUpInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleStateNormal();
 	m_bDragBegin = false;
 }
 
-bool UIScrollBar::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
+bool UIScrollBar::onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) {
 	const SGVec2 cursorPos = mouseEvent->getCursorPos();
 
 	if (isUpButtonContainPoint(cursorPos)) {
@@ -474,7 +539,7 @@ bool UIScrollBar::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
 	return true;
 }
 
-bool UIScrollBar::onMouseScrollDetail(SGEventMouse* mouseEvent) {
+bool UIScrollBar::onMouseScrollInternalDetail(SGEventMouse* mouseEvent) {
 
 	if (mouseEvent->getScrollY() < 0) {
 		setRowPos(m_iPos - 1);

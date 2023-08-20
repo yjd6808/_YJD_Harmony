@@ -16,8 +16,17 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UILabel::UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo)
-	: UIElement(master, parent, labelInfo)
+UILabel::UILabel(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
+	, m_fInitialFontSize(12.0f)
+	, m_fFontSize(12.0f)
+	, m_bFontAutoScaling(true)
+	, m_pInfo( nullptr )
+	, m_pLabel{ nullptr }
+{}
+
+UILabel::UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo, bool infoOwner)
+	: UIElement(master, parent, labelInfo, infoOwner)
 	, m_fInitialFontSize(12.0f)
 	, m_fFontSize(12.0f)
 	, m_bFontAutoScaling(true)
@@ -28,8 +37,15 @@ UILabel::UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo)
 UILabel::~UILabel() {
 }
 
-UILabel* UILabel::create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo) {
-	UILabel* pLabel = dbg_new UILabel(master, parent, labelInfo);
+UILabel* UILabel::create(UIMasterGroup* master, UIGroup* parent) {
+	UILabel* pLabel = dbg_new UILabel(master, parent);
+	pLabel->init();
+	pLabel->autorelease();
+	return pLabel;
+}
+
+UILabel* UILabel::create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo, bool infoOwner) {
+	UILabel* pLabel = dbg_new UILabel(master, parent, labelInfo, infoOwner);
 	pLabel->init();
 	pLabel->autorelease();
 	return pLabel;
@@ -72,8 +88,25 @@ void UILabel::setUISize(const SGSize& contentSize) {
 	} else {
 		m_pLabel->setDimensions(m_UISize.width, m_UISize.height);
 	}
+}
 
-	
+void UILabel::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::Label) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UILabelInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UILabel::setInfoLabel(UILabelInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
 }
 
 void UILabel::setVAlignment(VAlignment_t valign) {
@@ -96,6 +129,15 @@ int UILabel::getLineCount() const {
 }
 
 bool UILabel::init() {
+
+	if (!UIElement::init()) {
+		return false;
+	}
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return false;
+	}
 
 	setInitialUISize(m_pInfo->Size);
 

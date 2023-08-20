@@ -12,9 +12,7 @@
 #include "Engine.h"
 #include <JCore/Math.h>
 
-class Vec2Ex : SGRect
+struct Vec2Ex
 {
-public:
-
-
+	static void log(const SGVec2& vec);
 };

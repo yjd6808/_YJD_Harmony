@@ -40,6 +40,13 @@ bool SceneBase::init() {
 	m_pUILayer = m_pWorldScene->getUILayer();
 
 	removeChild(_defaultCamera);
+
+	// 필수, 엔진에서 디폴트 카메라 접근하는 경우가 있음.
+	// Scene::onProjectionChanged 함수 참고.
+	// 디폴트 카메라는 removeChild하면 레퍼런스카운트가 1남아서 알아서 오토릴리즈 되기때문에 nullptr로
+	// 초기화만 해주면 문제 없음
+	_defaultCamera = nullptr;	 
+
 	return true;
 }
 

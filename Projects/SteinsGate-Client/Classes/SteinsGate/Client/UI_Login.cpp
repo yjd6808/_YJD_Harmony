@@ -69,18 +69,18 @@ void UI_Login::onInit() {
 void UI_Login::onLoaded() {
 	setTab(m_eTab);
 
-	auto g = m_pGroupLoginBox->getContentSize() * 1.2;
-	m_pGroupLoginBox->setContentSize(g);
+	const Size scaledContentSize = m_pGroupLoginBox->getContentSize() * 1.2;
+	m_pGroupLoginBox->setContentSize(scaledContentSize);
 }
 
 
 void UI_Login::onUpdate(float dt) {
 }
 
-void UI_Login::onMouseDown(UIElement* element, SGEventMouse* mouseEvent) {
+void UI_Login::onMouseDownTarget(UIElement* element, SGEventMouse* mouseEvent) {
 }
 
-void UI_Login::onMouseUp(UIElement* element, SGEventMouse* mouseEvent) {
+void UI_Login::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 	switch (element->getCode()) {
 	case UI_LOGIN_LOGIN_BOX_BUTTON_START:
 		login();

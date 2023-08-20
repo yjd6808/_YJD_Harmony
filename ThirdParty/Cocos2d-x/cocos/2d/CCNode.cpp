@@ -2012,6 +2012,10 @@ GLubyte Node::getOpacity(void) const
     return _realOpacity;
 }
 
+float Node::getOpacityF() const {
+    return _realOpacity * 255.0f;
+}
+
 GLubyte Node::getDisplayedOpacity() const
 {
     return _displayedOpacity;
@@ -2022,6 +2026,15 @@ void Node::setOpacity(GLubyte opacity)
     _displayedOpacity = _realOpacity = opacity;
     
     updateCascadeOpacity();
+}
+
+void Node::setOpacityF(float opacity) {
+    if (opacity > 1.0f)
+        opacity = 1.0f;
+    else if (opacity < 0.0f)
+        opacity = 0.0f;
+
+    setOpacity(GLubyte(opacity * 255.0f));
 }
 
 void Node::updateDisplayedOpacity(GLubyte parentOpacity)

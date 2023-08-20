@@ -111,13 +111,15 @@ CC_CONSTRUCTOR_ACCESS:
     /** Initializes an AtlasNode  with a texture the width and height of each item measured in points and the quantity of items to render*/
     bool initWithTexture(Texture2D* texture, int tileWidth, int tileHeight, int itemsToRender);
 
+    // 5120바이트 릭 발생해서, 테스트를 위해 public으로 변경
+    void setIgnoreContentScaleFactor(bool bIgnoreContentScaleFactor);
 protected:
     void calculateMaxItems();
     void updateBlendFunc();
     void updateOpacityModifyRGB();
 
     friend class Director;
-    void setIgnoreContentScaleFactor(bool bIgnoreContentScaleFactor);
+    
 
     /** Chars per row. */
     int    _itemsPerRow;

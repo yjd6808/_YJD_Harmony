@@ -729,7 +729,7 @@ SEnumMiddle(ItemOptType)
 SEnumMiddleEnd(ItemOptType)
 
 SEnumBegin(GameServerType)
-Begin = 1,
+Begin,
 Luke = Begin,
 Hilder,
 Siroco,
@@ -738,11 +738,11 @@ Kasias,		// 대충 발음나는데..
 Diregie,
 Cain,
 Seria,
-End = Seria
+End = Seria,
+Max
 SEnumMiddle(GameServerType)
 
-static constexpr const char* Name[End + 1]{
-	"",
+static constexpr const char* Name[Max]{
 	"루크",
 	"힐더",
 	"시로코",
@@ -759,7 +759,8 @@ Newbie,
 Begin = Newbie,
 Auction,
 Normal,
-End = Normal
+End = Normal,
+Max
 SEnumMiddle(EnteranceType)
 
 SEnumMiddleEnd(EnteranceType)

@@ -80,14 +80,13 @@ WorldScene::~WorldScene() {
 	
 }
 
-
 bool WorldScene::init() {
 
 	if (!Scene::init())
 		return false;
 
 	initEventListeners();
-	InitUILayer();
+	InitLayers();
 	reserveScene(SceneType::Login);
 	scheduleUpdate();	// 즉시 update 1회 호출함
 
@@ -124,9 +123,14 @@ void WorldScene::initEventListeners() {
 
 
 
-void WorldScene::InitUILayer() {
+void WorldScene::InitLayers() {
 	m_pUILayer = UILayer::create();
 	this->addChild(m_pUILayer, 1000);
+
+	m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
+	m_pGridLayer->setAnchorPoint(Vec2::ZERO);
+	m_pGridLayer->setVisible(false);
+	this->addChild(m_pGridLayer, 1001);
 }
 
 
@@ -226,6 +230,14 @@ void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) 
 
 		CoreApp_v->SetDesignResolutionSize(640.0f, 480.0f);
 		CoreApp_v->SetFrameSize(960.0f, 720.0f);
+	} else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
+		if (m_pGridLayer == nullptr) {
+			return;
+		}
+
+		const bool bDisplaying = Director::getInstance()->isDisplayStats();
+		Director::getInstance()->setDisplayStats(!bDisplaying);
+		m_pGridLayer->setVisible(!m_pGridLayer->isVisible());
 	}
 
 	if (m_pRunningScene)
@@ -245,6 +257,7 @@ void WorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event)
 }
 
 void WorldScene::onMouseMove(SGEventMouse* mouseEvent) const {
+	_LogDebug_("마우스 움직임");
 
 	if (m_pRunningScene)
 		m_pRunningScene->onMouseMove(mouseEvent);
@@ -310,15 +323,21 @@ void WorldScene::reserveScene(SceneType_t sceneType) {
 	m_eReservedScene = sceneType;
 }
 
+
+
 void WorldScene::changeScene(SceneType_t sceneType) {
+	_LogDebug_("-- 씬변경 시작");
+
 	if (m_pRunningScene) {
 		this->removeChild(m_pRunningScene);
 	}
 
+	
 	// 씬전환 시 UI 리소스 모두 해제
 	m_pUILayer->clearUnload();
 	m_pRunningScene = createScene(sceneType);
 	this->addChild(m_pRunningScene);
+	_LogDebug_("-- 씬전환 완료");
 
 }
 

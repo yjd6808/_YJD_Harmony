@@ -41,10 +41,10 @@ protected:
 	void onRemoved() override;
 
 	void onUpdate(float dt) override;
-	void onMouseUp(UIElement* element, SGEventMouse* mouseEvent) override;
-	bool onMouseMoveDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseDownDetail(SGEventMouse* mouseEvent) override;
-	bool onMouseScrollDetail(SGEventMouse* mouseEvent) override;
+	void onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) override;
+	bool onMouseMoveInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseDownInternalDetail(SGEventMouse* mouseEvent) override;
+	bool onMouseScrollInternalDetail(SGEventMouse* mouseEvent) override;
 	bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 	bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 public:

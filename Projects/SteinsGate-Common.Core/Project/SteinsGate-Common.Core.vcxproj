@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\ChannelInfoLoader.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -118,11 +118,11 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelInfo.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfo.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelInfoLoader.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.h">
       <SubType>
       </SubType>
     </ClInclude>

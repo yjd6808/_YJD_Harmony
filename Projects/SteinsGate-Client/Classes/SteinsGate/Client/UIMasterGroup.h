@@ -41,13 +41,15 @@ public:
 	virtual void onAdded();
 	virtual void onRemoved();
 
-	virtual void onMouseEnter(UIElement* element, SGEventMouse* mouseEvent);
-	virtual void onMouseMove(UIElement* element, SGEventMouse* mouseEvent);
-	virtual void onMouseDown(UIElement* element, SGEventMouse* mouseEvent);
-	virtual void onMouseUp(UIElement* element, SGEventMouse* mouseEvent);
-	virtual void onMouseLeave(UIElement* element, SGEventMouse* mouseEvent);
-	virtual void onMouseScroll(UIElement* element, SGEventMouse* mouseEvent);
+	// 마스터 그룹 자식들중에서 발생하는 이벤트들
+	virtual void onMouseEnterTarget(UIElement* element, SGEventMouse* mouseEvent);
+	virtual void onMouseMoveTarget(UIElement* element, SGEventMouse* mouseEvent);
+	virtual void onMouseDownTarget(UIElement* element, SGEventMouse* mouseEvent);
+	virtual void onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent);
+	virtual void onMouseLeaveTarget(UIElement* element, SGEventMouse* mouseEvent);
+	virtual void onMouseScrollTarget(UIElement* element, SGEventMouse* mouseEvent);
 
+	
 	virtual void onDragEnter(UIElement* element, const DragState& dragState);
 	virtual void onDragMove(UIElement* element, const DragState& dragState);
 	virtual void onDragEnd(UIElement* element);
@@ -64,6 +66,15 @@ public:
 	virtual void onEditBoxTextChanged(UIEditBox* editBox, const std::string& str);
 	virtual void onEditBoxReturn(UIEditBox* editBox);
 	virtual void onEditBoxEditingDidEndWithAction(UIEditBox* editBox, SGEditBoxEndAction endAction);
+
+	// 마스터 그룹에서 마우스 이벤트 발생시
+	virtual void onMouseEnter(SGEventMouse* mouseEvent);
+	virtual void onMouseMove(SGEventMouse* mouseEvent);
+	virtual void onMouseDown(SGEventMouse* mouseEvent);
+	virtual void onMouseUp(SGEventMouse* mouseEvent);
+	virtual void onMouseLeave(SGEventMouse* mouseEvent);
+	virtual void onMouseScroll(SGEventMouse* mouseEvent);
+
 
 	SGString toString() override { return SGStringUtil::Format("마스터그룹(%d)", m_pInfo->Code); }
 };

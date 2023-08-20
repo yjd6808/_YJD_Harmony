@@ -15,25 +15,42 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UIElement::UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo* info)
+UIElement::UIElement(UIMasterGroup* masterGroup, UIGroup* parent)
 	: m_pMouseEventMap{}
-	, m_pBaseInfo(info)
+	, m_pBaseInfo(nullptr)
 	, m_pDragLinkElement(nullptr)
 	, m_pMasterGroup(masterGroup)
 	, m_pParent(parent)
 	, m_eState(eNormal)
 	, m_bDevloperCreated(false)
+	, m_bInfoOwner(false)
 	, m_bInitialized(false)
 	, m_bDraggable(false)
 	, m_bLoaded(false)
 	, m_bFocused(false)
 	, m_bResizable(true)
+	, m_bInternalDetailEventEnabled(true)
 {}
+
+UIElement::UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo* info, bool infoOwner) : UIElement(masterGroup, parent) {
+	m_pBaseInfo = info;
+	m_bInfoOwner = infoOwner;
+}
 
 UIElement::~UIElement() {
 	for (int i = 0; i < eMouseEventMax; ++i) {
 		JCORE_DELETE_SAFE(m_pMouseEventMap[i]);
 	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pBaseInfo);
+	}
+}
+
+bool UIElement::init() {
+	_cascadeColorEnabled = true;
+	_cascadeOpacityEnabled = true;
+	return true;
 }
 
 void UIElement::load() {
@@ -42,6 +59,11 @@ void UIElement::load() {
 
 void UIElement::unload() {
 	m_bLoaded = false;
+}
+
+void UIElement::reload() {
+	unload();
+	load();
 }
 
 bool UIElement::loaded() const {
@@ -91,8 +113,18 @@ void UIElement::setInitialUISize(SGSize size) {
 	m_UISize = size;
 }
 
+void UIElement::logWarnMissingInfo() {
+	_LogWarn_("%s::m_pInfo가 초기화안됨.", UIElementType::Name[getElementType()]);
+}
 
-bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
+void UIElement::logWarnInvalidInfo(UIElementType_t targetType) {
+	_LogWarn_("%s::setInfo() 실패, 잘못된 타입의 UI 엘리먼트 정보(%s) 주입"
+		, UIElementType::Name[getElementType()]
+		, UIElementType::Name[targetType]
+	);
+}
+
+bool UIElement::onMouseDownInternal(SGEventMouse* mouseEvent) {
 
 	if (m_eState == eDisabled)
 		return true;
@@ -101,10 +133,13 @@ bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
 		return true;
 	}
 
-	m_pMasterGroup->onMouseDown(this, mouseEvent);
+	m_pMasterGroup->onMouseDownTarget(this, mouseEvent);
 	invokeMouseEvent(eMouseEventDown, mouseEvent);
 	m_eState = ePressed;
-	bool bPropagate = onMouseDownDetail(mouseEvent);
+	bool bPropagate = true;
+
+	if (m_bInternalDetailEventEnabled)
+		bPropagate = onMouseDownInternalDetail(mouseEvent);
 
 	// 마우스를 눌렀을 때는 실질적인 드래그를 수행하지는 않기 때문에
 	// 드래그 시작 위치만 계속 업데이트시키도록 한다.
@@ -130,7 +165,7 @@ bool UIElement::onMouseDown(SGEventMouse* mouseEvent) {
 }
 
 
-bool UIElement::onMouseMove(SGEventMouse* mouseEvent) {
+bool UIElement::onMouseMoveInternal(SGEventMouse* mouseEvent) {
 
 
 	const DragState& dragState = CoreUIManager_v->getDragState();
@@ -161,8 +196,11 @@ bool UIElement::onMouseMove(SGEventMouse* mouseEvent) {
 	if (!isContainPoint(mouseEvent)) {
 
 		if (m_eState == eOver) {
-			m_pMasterGroup->onMouseLeave(this, mouseEvent);
-			onMouseLeaveDetail(mouseEvent);
+			m_pMasterGroup->onMouseLeaveTarget(this, mouseEvent);
+
+			if (m_bInternalDetailEventEnabled)
+				onMouseLeaveInternalDetail(mouseEvent);
+
 			invokeMouseEvent(eMouseEventLeave, mouseEvent);
 
 			// 눌리고있는 상태인 경우, 눌린걸 해제했을때 Normal로 바꿔줘야한다.
@@ -174,26 +212,30 @@ bool UIElement::onMouseMove(SGEventMouse* mouseEvent) {
 	}
 
 	if (m_eState == eNormal) {
-		m_pMasterGroup->onMouseEnter(this, mouseEvent);
+		m_pMasterGroup->onMouseEnterTarget(this, mouseEvent);
 		invokeMouseEvent(eMouseEventEnter, mouseEvent);
-		onMouseEnterDetail(mouseEvent);
+
+		if (m_bInternalDetailEventEnabled)
+			onMouseEnterInternalDetail(mouseEvent);
 		m_eState = eOver;
 	}
 
-	m_pMasterGroup->onMouseMove(this, mouseEvent);
+	m_pMasterGroup->onMouseMoveTarget(this, mouseEvent);
 	invokeMouseEvent(eMouseEventMove, mouseEvent);
-	const bool bPropagate = onMouseMoveDetail(mouseEvent);
+	const bool bPropagate = onMouseMoveInternalDetail(mouseEvent);
 	return bPropagate;
 }
 
 
-bool UIElement::onMouseUp(SGEventMouse* mouseEvent) {
+bool UIElement::onMouseUpInternal(SGEventMouse* mouseEvent) {
 	// 기본적으로 싱글 엘리먼트 드래그만 지원하기 떄문에 마우스를 땠을때 드래그 해제 처리는 WorldScene::onMouseUp에서 처리함
 	
 	if (m_eState == eDisabled)
 		return true;
 
-	onMouseUpDetail(mouseEvent);
+	if (m_bInternalDetailEventEnabled)
+		onMouseUpInternalDetail(mouseEvent);
+
 	invokeMouseEvent(eMouseEventUp, mouseEvent);
 
 	if (!isContainPoint(mouseEvent)) {
@@ -203,19 +245,21 @@ bool UIElement::onMouseUp(SGEventMouse* mouseEvent) {
 
 	bool bPropagate = true;
 	
-	m_pMasterGroup->onMouseUp(this, mouseEvent);
+	m_pMasterGroup->onMouseUpTarget(this, mouseEvent);
 	invokeMouseEvent(eMouseEventUpContained, mouseEvent);
 
 	// 마우스를 땠을때 드래그 중인 상태인 경우 자식 엘리먼트 구현체들(버튼, 스크롤바, 에딧박스..등등)에게 이벤트가 전달되지 않도록 한다.
 	if (!CoreUIManager_v->isDragging()) {
-		bPropagate = onMouseUpContainedDetail(mouseEvent);
+		if (m_bInternalDetailEventEnabled) {
+			bPropagate = onMouseUpContainedInternalDetail(mouseEvent);
+		}
 	}
 
 	m_eState = eNormal;
 	return bPropagate;
 }
 
-bool UIElement::onMouseScroll(SGEventMouse* mouseEvent) {
+bool UIElement::onMouseScrollInternal(SGEventMouse* mouseEvent) {
 	if (m_eState == eDisabled)
 		return true;
 
@@ -223,18 +267,24 @@ bool UIElement::onMouseScroll(SGEventMouse* mouseEvent) {
 		return true;
 	}
 
-	m_pMasterGroup->onMouseScroll(this, mouseEvent);
+	m_pMasterGroup->onMouseScrollTarget(this, mouseEvent);
 	invokeMouseEvent(eMouseEventScroll, mouseEvent);
-	return onMouseScrollDetail(mouseEvent);
+
+	bool bPropagate = true;
+
+	if (m_bInternalDetailEventEnabled) {
+		bPropagate = onMouseScrollInternalDetail(mouseEvent);
+	}
+	return bPropagate;
 }
 
-void UIElement::onMouseEnterDetail(SGEventMouse* mouseEvent) {}
-void UIElement::onMouseLeaveDetail(SGEventMouse* mouseEvent) {}
-bool UIElement::onMouseMoveDetail(SGEventMouse* mouseEvent) { return true; }
-bool UIElement::onMouseDownDetail(SGEventMouse* mouseEvent) { return true; }
-void UIElement::onMouseUpDetail(SGEventMouse* mouseEvent) {}
-bool UIElement::onMouseUpContainedDetail(SGEventMouse* mouseEvent) { return true; }
-bool UIElement::onMouseScrollDetail(SGEventMouse* mouseEvent) { return true; }
+void UIElement::onMouseEnterInternalDetail(SGEventMouse* mouseEvent) {}
+void UIElement::onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) {}
+bool UIElement::onMouseMoveInternalDetail(SGEventMouse* mouseEvent) { return true; }
+bool UIElement::onMouseDownInternalDetail(SGEventMouse* mouseEvent) { return true; }
+void UIElement::onMouseUpInternalDetail(SGEventMouse* mouseEvent) {}
+bool UIElement::onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) { return true; }
+bool UIElement::onMouseScrollInternalDetail(SGEventMouse* mouseEvent) { return true; }
 
 void UIElement::updateState() {}
 
@@ -361,13 +411,13 @@ SGVec2 UIElement::calculateZeroPosition(const SGRect& rc, HAlignment_t halign, V
 	float yPos = 0;
 
 	switch (halign) {
-	case HAlignment::Left:		xPos = 0;											break;
+	case HAlignment::Left:		xPos = 0;										break;
 	case HAlignment::Center:	xPos = rc.size.width / 2 - m_UISize.width / 2;	break;
 	case HAlignment::Right:		xPos = rc.size.width - m_UISize.width;			break;
 	}
 
 	switch (valign) {
-	case VAlignment::Bottom:	yPos = 0;												break;
+	case VAlignment::Bottom:	yPos = 0;											break;
 	case VAlignment::Center:	yPos = rc.size.height / 2 - m_UISize.height / 2;	break;
 	case VAlignment::Top:		yPos = rc.size.height - m_UISize.height;			break;
 	}
@@ -416,6 +466,19 @@ void UIElement::setRelativePosition(float x, float y, HAlignment_t halign, VAlig
 	const Rect rect = { Vec2{}, getParentSize() };
 	const Vec2 realPos = calculateZeroPosition(rect, halign, valign);
 	setPosition(realPos + Vec2{ x, y });
+}
+
+void UIElement::setRelativePosition(UIElement* target, float x, float y, HAlignment_t halign, VAlignment_t valign) {
+	// 1. 먼저 대상의 0,0좌표로 이 대상을 이동시킨다.
+	const Vec2 thisAbsPos = getAbsolutePosition();
+	const Vec2 targetAbsPos = target->getAbsolutePosition();
+	const Vec2 zeroPos = _position + targetAbsPos - thisAbsPos;
+	setPosition(zeroPos);
+
+	// 2. 대상 사각형 기준 상대좌표를 구한다.
+	const Rect rect = { Vec2{}, target->getUISize() };
+	const Vec2 realPos = calculateZeroPosition(rect, halign, valign);
+	setPosition(_position + realPos + Vec2{x, y});
 }
 
 void UIElement::setRelativePosition(const SGVec2& pos) {

@@ -13,7 +13,8 @@ private:
 	enum LabelTag
 	{
 		GridMousePosition,
-		TouchMousePosition
+		TouchMousePosition,
+		MouseMovePosition
 	};
 public:
 	enum GridEvent
@@ -25,11 +26,11 @@ public:
 	};
 public:
 	GridLayer(const int interval, const GridEvent userGridEvent);
-	~GridLayer();
+	~GridLayer() override;
 private:
 	int interval;
 	GridEvent userGridEvent = GridEvent::NoOption;
-
+	SGDrawNode* m_pDrawNode;
 public:
 	void DrawGridWindow(const int interval, const cocos2d::Color4F & color);
 	static GridLayer* create(const int interval, const cocos2d::Color4F & color, const GridEvent userGridEvent);
@@ -38,6 +39,8 @@ public:
 	virtual bool onMouseMove(cocos2d::Event*);
 	virtual bool onTouchBegan(cocos2d::Touch*, cocos2d::Event*);
 	virtual void onTouchEnded(cocos2d::Touch*, cocos2d::Event*);
+
+	void onExit() override;
 };
 
 #endif //_DFGRID_VIWER_H__

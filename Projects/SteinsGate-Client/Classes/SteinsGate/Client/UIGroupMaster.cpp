@@ -14,6 +14,7 @@
 #include <SteinsGate/Client/UI_Login.h>
 #include <SteinsGate/Client/UI_Inventory.h>
 #include <SteinsGate/Client/UI_Test.h>
+#include <SteinsGate/Client/UI_ChannelSelect.h>
 
 // TODO: 문제점: 기본 해상도로 두고 확대하면 텍스쳐는 당연히 흐릿해지는게 맞는데 라벨(글자)도 흐릿해지는데..
 // 라벨 스케일링시 자동으로 스케일된 크기만큼 폰트 크기가 재조정될 수 있어야한다.
@@ -47,6 +48,7 @@ UIGroupMaster::~UIGroupMaster() {
 }
 
 void UIGroupMaster::init() {
+
 	SGHashMap<int, UIGroupElemInfo*> hMasterGroupInfoMap(m_pInfo->InfoList.Size());
 
 	for (int i = 0; i < m_pInfo->InfoList.Size(); ++i) {
@@ -54,9 +56,10 @@ void UIGroupMaster::init() {
 		hMasterGroupInfoMap.Insert(elemInfo.Code, &elemInfo);
 	}
 
-	createMasterGroup<UI_Login>(this, hMasterGroupInfoMap[GROUP_UI_LOGIN]);
-	createMasterGroup<UI_Inventory>(this, hMasterGroupInfoMap[GROUP_UI_INVENTORY]);
-	createMasterGroup<UI_Test>(this, hMasterGroupInfoMap[GROUP_UI_TEST]);
+	createMasterGroup<UI_Login>				(this, hMasterGroupInfoMap[GROUP_UI_LOGIN]);
+	createMasterGroup<UI_Inventory>			(this, hMasterGroupInfoMap[GROUP_UI_INVENTORY]);
+	createMasterGroup<UI_Test>				(this, hMasterGroupInfoMap[GROUP_UI_TEST]);
+	createMasterGroup<UI_ChannelSelect>		(this, hMasterGroupInfoMap[GROUP_UI_CHANNEL]);
 }
 
 void UIGroupMaster::addMasterGroup(UIMasterGroup* group) {

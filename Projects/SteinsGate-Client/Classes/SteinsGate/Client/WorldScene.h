@@ -9,10 +9,11 @@
 #pragma once
 
 #include <SteinsGate/Client/Tutturu.h>
-#include "Struct.h"
 
 #include <SteinsGate/Client/SceneBase.h>
+
 #include <SteinsGate/Client/UILayer.h>
+#include <SteinsGate/Common/GridLayer.h>
 
 class MimicCamera;
 class MapLayer;
@@ -27,7 +28,7 @@ public:
 
 	bool init() override;
 	void initEventListeners();
-	void InitUILayer();
+	void InitLayers();
 	
 	void update(float dt) override;
 	void updateScene(float dt);
@@ -64,5 +65,6 @@ private:
 	SceneBase* m_pRunningScene;
 	SceneType_t m_eReservedScene;
 	UILayer* m_pUILayer;
+	GridLayer* m_pGridLayer;
 };
 

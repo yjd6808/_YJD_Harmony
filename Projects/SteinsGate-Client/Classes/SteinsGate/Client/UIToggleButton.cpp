@@ -15,8 +15,16 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UIToggleButton::UIToggleButton(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo)
-	: UIElement(master, parent, btnInfo)
+UIToggleButton::UIToggleButton(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
+	, m_eToggleState(ToggleState::eNormal)
+	, m_pInfo(nullptr)
+	, m_pTexture{}
+	, m_pSprite{}
+{}
+
+UIToggleButton::UIToggleButton(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo, bool infoOwner)
+	: UIElement(master, parent, btnInfo, infoOwner)
 	, m_eToggleState(ToggleState::eNormal)
 	, m_pInfo(btnInfo)
 	, m_pTexture{}
@@ -40,8 +48,15 @@ void UIToggleButton::setToggleState(ToggleState state) {
 	setVisibleState(m_eState);
 }
 
-UIToggleButton* UIToggleButton::create(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo) {
-	UIToggleButton* pBtn = dbg_new UIToggleButton(master, parent, btnInfo);
+UIToggleButton* UIToggleButton::create(UIMasterGroup* master, UIGroup* parent) {
+	UIToggleButton* pBtn = dbg_new UIToggleButton(master, parent);
+	pBtn->init();
+	pBtn->autorelease();
+	return pBtn;
+}
+
+UIToggleButton* UIToggleButton::create(UIMasterGroup* master, UIGroup* parent, UIToggleButtonInfo* btnInfo, bool infoOwner) {
+	UIToggleButton* pBtn = dbg_new UIToggleButton(master, parent, btnInfo, infoOwner);
 	pBtn->init();
 	pBtn->autorelease();
 	return pBtn;
@@ -49,11 +64,13 @@ UIToggleButton* UIToggleButton::create(UIMasterGroup* master, UIGroup* parent, U
 
 void UIToggleButton::setVisibleState(State state) {
 
-	for (int i = 0; i < 2; i++) {
-		for (int j = 0; j < eMax; ++j) {
+	// 로딩안됬으면 모두 nullptr이므로 널포익 발생함
+	if (!m_bLoaded)
+		return;
+
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < eMax; ++j) 
 			m_pSprite[i][j]->setVisible(false);
-		}
-	}
 
 	m_pSprite[(int)m_eToggleState][state]->setVisible(true);
 }
@@ -98,6 +115,25 @@ void UIToggleButton::setUISize(const SGSize& contentSize) {
 	}
 }
 
+void UIToggleButton::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::ToggleButton) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UIToggleButtonInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UIToggleButton::setInfoToggleButton(UIToggleButtonInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
+}
+
 void UIToggleButton::restoreState(State state) {
 	if (m_eState == eDisabled)
 		return;
@@ -107,6 +143,10 @@ void UIToggleButton::restoreState(State state) {
 }
 
 bool UIToggleButton::init() {
+	if (!UIElement::init()) {
+		return false;
+	}
+
 	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
 	setInitialUISize(DefaultSize30);
 	if (pPack == nullptr) {
@@ -148,9 +188,9 @@ void UIToggleButton::load() {
 		}
 	}
 
-	
-	setVisibleState(eNormal);
+
 	m_bLoaded = true;
+	setVisibleState(eNormal);
 }
 
 void UIToggleButton::unload() {
@@ -169,26 +209,26 @@ void UIToggleButton::unload() {
 	m_bLoaded = false;
 }
 
-void UIToggleButton::onMouseEnterDetail(SGEventMouse* mouseEvent) {
+void UIToggleButton::onMouseEnterInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(eOver);
 }
-void UIToggleButton::onMouseLeaveDetail(SGEventMouse* mouseEvent) {
+void UIToggleButton::onMouseLeaveInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(State::eNormal);
 }
 
-bool UIToggleButton::onMouseMoveDetail(SGEventMouse* mouseEvent) {
+bool UIToggleButton::onMouseMoveInternalDetail(SGEventMouse* mouseEvent) {
 	return true;
 }
-bool UIToggleButton::onMouseDownDetail(SGEventMouse* mouseEvent) {
+bool UIToggleButton::onMouseDownInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(ePressed);
 	return false;
 }
 
-void UIToggleButton::onMouseUpDetail(SGEventMouse* mouseEvent) {
+void UIToggleButton::onMouseUpInternalDetail(SGEventMouse* mouseEvent) {
 	setVisibleState(State::eNormal);
 }
 
-bool UIToggleButton::onMouseUpContainedDetail(SGEventMouse* mouseEvent) {
+bool UIToggleButton::onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) {
 	m_eToggleState = m_eToggleState == ToggleState::eNormal ? ToggleState::eToggled : ToggleState::eNormal;
 	m_pMasterGroup->onToggleStateChanged(this, m_eToggleState);
 	setVisibleState(State::eNormal);

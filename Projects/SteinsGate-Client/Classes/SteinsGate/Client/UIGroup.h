@@ -25,12 +25,30 @@ class UIStatic;
 
 class UIGroup : public UIElement
 {
+	JCORE_HIDE_BASE_CLASS_METHOD(Node, addChild)
+
+	struct CursorPositionGuard
+	{
+		CursorPositionGuard(SGEventMouse* mouseEvent, const SGVec2& position)
+			: Event(mouseEvent)
+			, ResetCursorPosition(position)
+		{}
+		~CursorPositionGuard() {
+			Event->setCursorPosition(ResetCursorPosition);
+		}
+
+		SGEventMouse* Event;
+		const SGVec2& ResetCursorPosition; // 복귀할 위치
+	};
+
 public:
-	UIGroup(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo);
+	UIGroup(UIMasterGroup* master, UIGroup* parent);
+	UIGroup(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo, bool infoOwner);
 	~UIGroup() override;
 
-	static UIGroup* createRetain(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo);
-	static UIGroup* create(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo);
+	static UIGroup* create(UIMasterGroup* master, UIGroup* parent);
+	static UIGroup* create(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo, bool infoOwner);
+
 	static constexpr UIElementType_t type() { return UIElementType::Group; }
 
 	bool init() override;
@@ -40,11 +58,13 @@ public:
 	void load() override;
 	void unload() override;
 
+	void addChild(UIElement* child);
+
 	// 이하 자식들 오버라이딩을 금하기 위해 파이널로 처리
-	bool onMouseDown(SGEventMouse* mouseEvent) final;
-	bool onMouseMove(SGEventMouse* mouseEvent) final;
-	bool onMouseUp(SGEventMouse* mouseEvent) final;
-	bool onMouseScroll(SGEventMouse* mouseEvent) final;
+	bool onMouseDownInternal(SGEventMouse* mouseEvent) final;
+	bool onMouseMoveInternal(SGEventMouse* mouseEvent) final;
+	bool onMouseUpInternal(SGEventMouse* mouseEvent) final;
+	bool onMouseScrollInternal(SGEventMouse* mouseEvent) final;
 
 	virtual void onUpdate(float dt) { }
 	virtual bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) { return true; }
@@ -55,6 +75,25 @@ public:
 	bool isGroup() const override { return true; }
 
 	// UI 매니저에 등록되지 않은 그룹내 엘리먼트들을 검색할 떄 사용하는 용도의 함수들
+	UIElement* getAt(int index);
+
+	template <typename TElem>
+	TElem* getAtTemplated(int index) {
+		if (index >= _children.size()) {
+			_LogWarn_("%d 그룹에서 %d번째 인덱스 원소를 찾지 못했습니다.", m_pBaseInfo->Code, index);
+			return nullptr;
+		}
+
+		UIElement* pElement = static_cast<UIElement*>(_children.at(index));
+		if (pElement->getElementType() != TElem::type()) {
+			_LogWarn_("%d 그룹에서 %d번째 인덱스 원소가 캐스팅할려는 타입과 다릅니다.", m_pBaseInfo->Code, index);
+			return nullptr;
+		}
+
+		return static_cast<TElem*>(pElement);
+	}
+
+
 	UIElement* findElement(int code);
 	UIGroup* findGroup(int groupCode);						
 	UIButton* findButton(int buttonCode);					
@@ -95,10 +134,11 @@ public:
 	void forEachContainedSelf(const SGActionFn<UIElement*>& action) const;
 
 	void restoreState(State state) override;
-	void reload();
 	void resetChildrenPosition() { initChildrenPosition(); }
 
 	void setUISize(const SGSize& contentSize) override;
+	void setInfo(UIElementInfo* info, bool infoOwner) override;
+	void setInfoGroup(UIGroupInfo* info, bool infoOwner);
 protected:
 	static UIElement* findElementRecursiveInternal(UIGroup* parent, int code);
 

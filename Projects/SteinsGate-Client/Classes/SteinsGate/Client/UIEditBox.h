@@ -13,10 +13,13 @@
 class UIEditBox : public UIElement
 {
 public:
-	UIEditBox(UIMasterGroup* maserGroup, UIGroup* parent, UIEditBoxInfo* editBoxInfo);
+    UIEditBox(UIMasterGroup* master, UIGroup* parent);
+	UIEditBox(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo, bool infoOwner);
 	~UIEditBox() override;
 
-	static UIEditBox* create(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo);
+    static UIEditBox* create(UIMasterGroup* master, UIGroup* parent);
+	static UIEditBox* create(UIMasterGroup* master, UIGroup* parent, UIEditBoxInfo* editBoxInfo, bool infoOwner);
+
     static constexpr UIElementType_t type() { return UIElementType::EditBox; }
 
     bool init() override;
@@ -33,13 +36,15 @@ public:
     void setReturnCallback(const SGActionFn<UIEditBox*>& fnEditBoxReturn) const;
     void setLoseFocusCallback(const SGActionFn<UIEditBox*, SGEditBoxEndAction>& fnLoseFocus) const;
     void setUISize(const SGSize& size) override;
+    void setInfo(UIElementInfo* info, bool infoOwner) override;
+    void setInfoEditBox(UIEditBoxInfo* info, bool infoOwner);
 
     void focus() override;
     void setInputFlag(SGEditBox::InputFlag inputFlag);
     void setInputMode(SGEditBox::InputMode inputMode);
     // ANY 모드에서는 VK_RETURN이 안먹히므로 오류라고 생각하지 말것
 protected:
-    bool onMouseUpContainedDetail(SGEventMouse* mouseEvent) override;
+    bool onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent) override;
 private:
     struct Listener : cocos2d::ui::EditBoxDelegate
 	{

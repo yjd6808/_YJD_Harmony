@@ -14,8 +14,16 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UIProgressBar::UIProgressBar(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo)
-	: UIElement(master, parent, progressBarInfo)
+UIProgressBar::UIProgressBar(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
+	, m_pInfo(nullptr)
+	, m_pTexture{}
+	, m_pProgressBar{}
+	, m_pProgressSprite(nullptr)
+{}
+
+UIProgressBar::UIProgressBar(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo, bool infoOwner)
+	: UIElement(master, parent, progressBarInfo, infoOwner)
 	, m_pInfo(progressBarInfo)
 	, m_pTexture{}
 	, m_pProgressBar{}
@@ -26,19 +34,40 @@ UIProgressBar::~UIProgressBar() {
 	CC_SAFE_RELEASE(m_pTexture);
 }
 
-UIProgressBar* UIProgressBar::create(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo) {
-	UIProgressBar* pProgressBar = dbg_new UIProgressBar(master, parent, progressBarInfo);
+UIProgressBar* UIProgressBar::create(UIMasterGroup* master, UIGroup* parent) {
+	UIProgressBar* pProgressBar = dbg_new UIProgressBar(master, parent);
+	pProgressBar->init();
+	pProgressBar->autorelease();
+	return pProgressBar;
+}
+
+UIProgressBar* UIProgressBar::create(UIMasterGroup* master, UIGroup* parent, UIProgressBarInfo* progressBarInfo, bool infoOwner) {
+	UIProgressBar* pProgressBar = dbg_new UIProgressBar(master, parent, progressBarInfo, infoOwner);
 	pProgressBar->init();
 	pProgressBar->autorelease();
 	return pProgressBar;
 }
 
 bool UIProgressBar::init() {
+	if (!UIElement::init()) {
+		return false;
+	}
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return false;
+	}
+
 	setInitialUISize(m_pInfo->Size);
 	return m_bInitialized = true;
 }
 
 void UIProgressBar::load() {
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return;
+	}
+
 	if (m_bLoaded)
 		return;
 
@@ -118,6 +147,25 @@ void UIProgressBar::setUISize(const SGSize& size) {
 
 	m_pProgressBar->setScaleX(fScaleX);
 	m_pProgressBar->setScaleY(fScaleY);
+}
+
+void UIProgressBar::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::ProgressBar) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UIProgressBarInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UIProgressBar::setInfoProgressBar(UIProgressBarInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
 }
 
 void UIProgressBar::setPercent(float percent) const {

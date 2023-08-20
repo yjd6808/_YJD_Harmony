@@ -27,8 +27,8 @@ protected:
 	void onInit() override;
 	void onLoaded() override;
 	void onUpdate(float dt) override;
-	void onMouseDown(UIElement* element, SGEventMouse* mouseEvent) override;
-	void onMouseUp(UIElement* element, SGEventMouse* mouseEvent) override;
+	void onMouseDownTarget(UIElement* element, SGEventMouse* mouseEvent) override;
+	void onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) override;
 	void onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state) override;
 	bool onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;
 	bool onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event) override;

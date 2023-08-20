@@ -15,10 +15,13 @@
 class UILabel : public UIElement
 {
 public:
-	static UILabel* create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo);
+	static UILabel* create(UIMasterGroup* master, UIGroup* parent);
+	static UILabel* create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo, bool infoOwner);
+
 	static constexpr UIElementType_t type() { return UIElementType::Label; }
 
-	UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo);
+	UILabel(UIMasterGroup* master, UIGroup* parent);
+	UILabel(UIMasterGroup* master, UIGroup* parent, UILabelInfo* labelInfo, bool infoOwner);
 	~UILabel() override;
 
 	bool init() override;
@@ -29,6 +32,8 @@ public:
 	void setText(const std::string& text, float fontSize);
 	void setText(const std::string& text, float fontSize, const SGSize& dimesion);
 	void setUISize(const SGSize& contentSize) override;
+	void setInfo(UIElementInfo* info, bool infoOwner) override;
+	void setInfoLabel(UILabelInfo* info, bool infoOwner);
 	void setVAlignment(VAlignment_t valign);
 	void setHAlignment(HAlignment_t halign);
 

@@ -29,7 +29,7 @@ bool RectEx::intersect(const SGRect& rc, const SGRect& rc2, SGRect& intersectRec
 }
 
 void RectEx::log(const SGRect& rc) {
-	CCLOG(":: 위치 [%d, %d], 크기 [%d, %d]\n", int(rc.getMinX()), int(rc.getMinY()), int(rc.getWidth()), int(rc.getHeight()));
+	JCore::Console::WriteLine(":: 위치 [%d, %d], 크기 [%d, %d]", int(rc.getMinX()), int(rc.getMinY()), int(rc.getWidth()), int(rc.getHeight()));
 }
 
 bool RectEx::intersectY(const SGRect& lhs, const SGRect& rhs) {

@@ -587,6 +587,12 @@ public:
 	 * \brief GPU 정보 출력 여부
 	 */
     void printGpuInfo();
+
+    // 스탯 라벨 강제로 제거
+    void releaseStatsLabel();
+
+    // 5120바이트 릭때문에 테스트를 위해 public으로 옮김
+    void getFPSImageData(unsigned char** datapointer, ssize_t* length);
 protected:
     void reset();
     
@@ -607,7 +613,7 @@ protected:
     void showStats();
     void createStatsLabel();
     void calculateMPF();
-    void getFPSImageData(unsigned char** datapointer, ssize_t* length);
+    
 #endif
     
     /** calculates delta time since last time it was called */    

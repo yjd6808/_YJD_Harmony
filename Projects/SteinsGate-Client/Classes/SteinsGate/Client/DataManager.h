@@ -23,6 +23,7 @@
 #include <SteinsGate/Client/EffectInfo.h>
 #include <SteinsGate/Client/UIInfo.h>
 #include <SteinsGate/Client/FrameEvent.h>
+#include <SteinsGate/Client/ChannelInfo.h>
 
 class DataManager
 	: public DataManagerAbstract
@@ -48,6 +49,7 @@ public:
 	EffectInfo* getEffectInfo(int effectCode);
 	UIElementInfo* getUIElementInfo(int uiElementCode);
 	FrameEvent* getFrameEvent(ActorType_t actorType, int frameEventCode);
+	ChannelInfo* getChannelInfo(int channelCode);
 
 	char* getTextRaw(const char* szId);
 	SGString& getText(const char* szId);

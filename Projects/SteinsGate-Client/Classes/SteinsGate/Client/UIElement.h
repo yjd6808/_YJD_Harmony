@@ -49,9 +49,11 @@ public:
 		eMax
 	};
 
-	UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo* info);
+	UIElement(UIMasterGroup* masterGroup, UIGroup* parent);
+	UIElement(UIMasterGroup* masterGroup, UIGroup* parent, UIElementInfo* info, bool infoOwner);
 	~UIElement() override;
 
+	bool init() override;
 	bool loaded() const;
 
 	virtual void focus();
@@ -60,19 +62,21 @@ public:
 	virtual void restoreState(State state);
 	virtual void load();
 	virtual void unload();
-	virtual bool onMouseMove(SGEventMouse* mouseEvent);
-	virtual bool onMouseDown(SGEventMouse* mouseEvent);
-	virtual bool onMouseUp(SGEventMouse* mouseEvent);
-	virtual bool onMouseScroll(SGEventMouse* mouseEvent);
+	virtual void reload();
+	virtual bool onMouseMoveInternal(SGEventMouse* mouseEvent);
+	virtual bool onMouseDownInternal(SGEventMouse* mouseEvent);
+	virtual bool onMouseUpInternal(SGEventMouse* mouseEvent);
+	virtual bool onMouseScrollInternal(SGEventMouse* mouseEvent);
 
-	virtual void onMouseEnterDetail(SGEventMouse* mouseEvent);
-	virtual void onMouseLeaveDetail(SGEventMouse* mouseEvent);
-	virtual bool onMouseMoveDetail(SGEventMouse* mouseEvent);
-	virtual bool onMouseDownDetail(SGEventMouse* mouseEvent);
-	virtual void onMouseUpDetail(SGEventMouse* mouseEvent);
-	virtual bool onMouseUpContainedDetail(SGEventMouse* mouseEvent);
-	virtual bool onMouseScrollDetail(SGEventMouse* mouseEvent);
+	virtual void onMouseEnterInternalDetail(SGEventMouse* mouseEvent);
+	virtual void onMouseLeaveInternalDetail(SGEventMouse* mouseEvent);
+	virtual bool onMouseMoveInternalDetail(SGEventMouse* mouseEvent);
+	virtual bool onMouseDownInternalDetail(SGEventMouse* mouseEvent);
+	virtual void onMouseUpInternalDetail(SGEventMouse* mouseEvent);
+	virtual bool onMouseUpContainedInternalDetail(SGEventMouse* mouseEvent);
+	virtual bool onMouseScrollInternalDetail(SGEventMouse* mouseEvent);
 
+	virtual void setInfo(UIElementInfo* info, bool infoOwner) = 0;
 	virtual void setEnabled(bool enabled);
 	virtual UIElementType_t getElementType() = 0;
 
@@ -114,9 +118,11 @@ public:
 	SGVec2 getRelativePosition();
 	SGVec2 getRelativePositionOnElement(SGVec2 absolutePos) const;
 
-	void setRelativePosition(float x, float y);		// 부모가 그룹이면 그룹 내에서 상대적 위치 반영
-	void setRelativePosition(float x, float y, HAlignment_t halign, VAlignment_t valign);
-	void setRelativePosition(const SGVec2& pos);
+	void setRelativePosition(float x, float y);																	// 부모기준 상대적 위치 반영
+	void setRelativePosition(const SGVec2& pos);																// 부모기준 상대적 위치 반영
+	void setRelativePosition(float x, float y, HAlignment_t halign, VAlignment_t valign);						// 부모기준 상대적 위치 반영
+	void setRelativePosition(UIElement* target, float x, float y, HAlignment_t halign, VAlignment_t valign);	// 타겟기준 상대적 위치 반영
+	
 
 	void invokeMouseEvent(MouseEventType mouseEventType, SGEventMouse* mouseEvent);
 	void addMouseEvent(MouseEventType mouseEventType, int id, const SGActionFn<SGEventMouse*>& fn);
@@ -142,10 +148,18 @@ public:
 	void setDraggable(bool draggable) { m_bDraggable = draggable; }
 	bool isDraggable() const { return m_bDraggable; }
 
+	void setDeveloperCreated(bool developerCreated) { m_bDevloperCreated = developerCreated; }
+	bool isDeveloperCreated() const { return m_bDevloperCreated; }
+
 	void setDragLinkElement(UIElement* dragLinkElement) { m_pDragLinkElement = dragLinkElement; }
+
+	void setInternalDetailEventEnabled(bool enabledInternalDetailEnabled) { m_bInternalDetailEventEnabled = enabledInternalDetailEnabled; }
 protected:
 	bool isContainPoint(SGEventMouse* mouseEvent);
 	virtual void setInitialUISize(SGSize size);
+
+	void logWarnMissingInfo();
+	void logWarnInvalidInfo(UIElementType_t targetType);
 
 	// 현재 내가 정립한 UI 규격
 	// m_pInfo->Size = 실제 UI 크기(설정파일)
@@ -161,12 +175,15 @@ protected:
 	SGSize m_UISize;				// 화면상 보이는 UI 크기 
 	State m_eState;
 
-	bool m_bDevloperCreated;		// 개발자가 수동으로 생성한 커스텀 객체인 경우
+	bool m_bDevloperCreated;		// 개발자가 수동으로 생성한 커스텀 객체인 경우 (해당 엘리먼트를 포함하는 그룹이 unload될 때 소멸됨)
+	bool m_bInfoOwner;				// m_pBaseInfo의 주인인지
 	bool m_bInitialized;
 	bool m_bDraggable;
 	bool m_bLoaded;
 	bool m_bFocused;
-	bool m_bResizable;				// 처음 크기가 결정된 후 UIGroup::setContentSize() 호출시 크기 업데이트가 이뤄질지 여부
+	bool m_bResizable;					// 처음 크기가 결정된 후 UIGroup::setContentSize() 호출시 크기 업데이트가 이뤄질지 여부
+	bool m_bInternalDetailEventEnabled; // 구현된 엘리먼트(UIButton, UICheckBox 같은)에 디테일 이벤트(~~~InternalDetail 함수) 전달할지
+	
 };
 
 

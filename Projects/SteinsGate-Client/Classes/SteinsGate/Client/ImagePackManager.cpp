@@ -72,7 +72,19 @@ ImagePack* ImagePackManager::getPack(const SGString& packName) {
 	return m_LoadedPackages[m_PathToIdMap[packName]];
 }
 
+ImagePack* ImagePackManager::getPack(const char* packName) {
+	DebugAssertMsg(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다.");
+	return m_LoadedPackages[m_PathToIdMap[packName]];
+}
+
 ImagePack* ImagePackManager::getPackUnsafe(const SGString& packName) {
+	if (!m_PathToIdMap.Exist(packName))
+		return nullptr;
+
+	return m_LoadedPackages[m_PathToIdMap[packName]];
+}
+
+ImagePack* ImagePackManager::getPackUnsafe(const char* packName) {
 	if (!m_PathToIdMap.Exist(packName))
 		return nullptr;
 
@@ -125,16 +137,46 @@ int ImagePackManager::getWeaponPackIndex(WeaponType_t weaponType) {
 }
 
 
-int ImagePackManager::getPackIndex(const SGString& packPath) {
-	DebugAssertMsg(m_PathToIdMap.Exist(packPath), "해당 패키지가 존재하지 않습니다. (2)");
-	return m_PathToIdMap[packPath];
+int ImagePackManager::getPackIndex(const SGString& packName) {
+	DebugAssertMsg(m_PathToIdMap.Exist(packName), "해당 패키지가 존재하지 않습니다. (2)");
+	return m_PathToIdMap[packName];
 }
 
-int ImagePackManager::getPackIndexDefault(const SGString& packPath, int defaultIndex) {
-	if (!m_PathToIdMap.Exist(packPath))
+int ImagePackManager::getPackIndexDefault(const char* packName, int defaultIndex /* = InvalidValue_v */) {
+	if (!m_PathToIdMap.Exist(packName))
 		return defaultIndex;
 
-	return m_PathToIdMap[packPath];
+	return m_PathToIdMap[packName];
+}
+
+int ImagePackManager::getPackIndexDefault(const SGString& packName, int defaultIndex /* = InvalidValue_v */) {
+	if (!m_PathToIdMap.Exist(packName))
+		return defaultIndex;
+
+	return m_PathToIdMap[packName];
+}
+
+int ImagePackManager::getImgIndexUnsafe(int sgaIndex, const char* imgName) {
+	const ImagePack* pPack = getPackUnsafe(sgaIndex);
+	if (pPack == nullptr) { return InvalidValue_v; }
+	return pPack->getImgIndex(imgName);
+}
+
+int ImagePackManager::getImgIndexUnsafe(int sgaIndex, const SGString& imgName) {
+	const ImagePack* pPack = getPackUnsafe(sgaIndex);
+	if (pPack == nullptr) { return InvalidValue_v; }
+	return pPack->getImgIndex(imgName);
+}
+
+SGSize ImagePackManager::getTextureSize(int packIndex, int imgIndex, int frameIndex) {
+	const ImagePack* pPack = getPackUnsafe(packIndex);
+	if (pPack == nullptr) { logTexture("이미지팩을 찾지 못함.", { packIndex, imgIndex, frameIndex }, LoggerAbstract::eWarn); return {}; }
+
+	SgaSpriteAbstractPtr sprite = pPack->getSpriteUnsafe(imgIndex, frameIndex);
+	if (sprite == nullptr) { logTexture("스프라이트를 찾지 못함.", { packIndex, imgIndex, frameIndex }, LoggerAbstract::eWarn); return {}; }
+
+	SgaSpriteRect rect = sprite->GetRect();
+	return { rect.GetWidthF(), rect.GetHeightF() };
 }
 
 void ImagePackManager::releaseFrameTexture(int packIndex, int imgIndex, int frameIndex) {

@@ -179,7 +179,7 @@ protected:
 		// Memory::Copy(this->m_pArray, sizeof(T) * iCapacity, other.m_pArray, sizeof(T) * other.m_iSize);
 		// 해결책: Vector<String*> 같은건 메모리만 복사해줘도 된다.
 
-		DebugAssert(fromCount < toCapacity);
+		DebugAssert(fromCount <= toCapacity);
 
 		if constexpr (IsPointerType_v<T>) {
 			if constexpr (Reverse)

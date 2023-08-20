@@ -4,8 +4,9 @@
     "__comment__2": "엔터런스 타입: 초보(0), 경매(1), 일반(2)",
     "__comment__3": "sga: sprite_interface.sga",
     "__comment__4": "img: channel_monster.img",
+    "__comment__5": "몬스터 스프라이트: 활성화 img 인덱스, 비활성화 img 인덱스",
 
-    "channel_type": [
+    "channel": [
         {
             "code": 1,
             "name": "초보 - 엘븐 가드",

@@ -23,25 +23,31 @@
 USING_NS_CC;
 USING_NS_JC;
 
-UIGroup::UIGroup(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo)
-	: UIElement(master, parent, groupInfo)
+
+#define SG_CURSOR_POSITION_GUARD(mouse_event, cursor_pos) UIGroup::CursorPositionGuard JCORE_CONCAT_COUNTER(__guard__)(mouse_event, cursor_pos)
+
+UIGroup::UIGroup(UIMasterGroup* master, UIGroup* parent)
+	: UIElement(master, parent)
+	, m_pInfo(nullptr)
+{}
+
+UIGroup::UIGroup(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo, bool infoOwner)
+	: UIElement(master, parent, groupInfo, infoOwner)
 	, m_pInfo(groupInfo)
 {}
 
 UIGroup::~UIGroup() {
 }
 
-
-UIGroup* UIGroup::createRetain(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo) {
-	UIGroup* pGroup = dbg_new UIGroup(master, parent, groupInfo);
+UIGroup* UIGroup::create(UIMasterGroup* master, UIGroup* parent) {
+	UIGroup* pGroup = dbg_new UIGroup(master, parent);
 	pGroup->init();
-	pGroup->retain();
 	pGroup->autorelease();
 	return pGroup;
 }
 
-UIGroup* UIGroup::create(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo) {
-	UIGroup* pGroup = dbg_new UIGroup(master, parent, groupInfo);
+UIGroup* UIGroup::create(UIMasterGroup* master, UIGroup* parent, UIGroupInfo* groupInfo, bool infoOwner) {
+	UIGroup* pGroup = dbg_new UIGroup(master, parent, groupInfo, infoOwner);
 	pGroup->init();
 	pGroup->autorelease();
 	return pGroup;
@@ -57,6 +63,12 @@ bool UIGroup::init() {
 }
 
 void UIGroup::initChildren() {
+
+	if (m_pInfo == nullptr) {
+		logWarnMissingInfo();
+		return;
+	}
+
 	for (int i = 0; i < m_pInfo->InfoList.Size(); ++i) {
 		UIGroupElemInfo* elemInfo = &m_pInfo->InfoList[i];
 		addUIElement(elemInfo);
@@ -66,6 +78,7 @@ void UIGroup::initChildren() {
 }
 
 void UIGroup::initChildrenPosition() {
+
 	for (int i = 0; i < m_pInfo->InfoList.Size(); ++i) {
 
 		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
@@ -97,12 +110,24 @@ void UIGroup::load() {
 }
 
 void UIGroup::unload() {
+	static SGVector<UIElement*> s_vDeveloperCreated;
+
 	if (m_bLoaded == false)
 		return;
 
+	s_vDeveloperCreated.Clear();
+
 	forEachRecursive([](UIElement* elem) {
+		if (elem->isDeveloperCreated()) {
+			s_vDeveloperCreated.PushBack(elem);
+		}
+
 		elem->unload();
 	});
+
+	for (int i = 0; i < s_vDeveloperCreated.Size(); ++i) {
+		removeChild(s_vDeveloperCreated[i]);
+	}
 
 	m_bLoaded = false;
 
@@ -111,73 +136,82 @@ void UIGroup::unload() {
 	}
 }
 
+void UIGroup::addChild(UIElement* child) {
+	Node::addChild(child);
+}
 
-bool UIGroup::onMouseDown(SGEventMouse* mouseEvent) {
+
+bool UIGroup::onMouseDownInternal(SGEventMouse* mouseEvent) {
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
-
-	mouseEvent->setCursorPosition(relativePos.x, relativePos.y);
+	mouseEvent->setCursorPosition(relativePos);
+	SG_CURSOR_POSITION_GUARD(mouseEvent, mousePos);
+	
 
 	for (int i = _children.size() - 1; i >= 0; --i) {
 		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
-		if (!pElem->onMouseDown(mouseEvent)) {
+		if (!pElem->onMouseDownInternal(mouseEvent)) {
 			return false;
 		}
 	}
 
-	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
-	return UIElement::onMouseDown(mouseEvent);
+	return UIElement::onMouseDownInternal(mouseEvent);
 }
 
-bool UIGroup::onMouseMove(SGEventMouse* mouseEvent) {
+bool UIGroup::onMouseMoveInternal(SGEventMouse* mouseEvent) {
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
-
-	mouseEvent->setCursorPosition(relativePos.x, relativePos.y);
+	mouseEvent->setCursorPosition(relativePos);
+	SG_CURSOR_POSITION_GUARD(mouseEvent, mousePos);
 
 	for (int i = _children.size() - 1; i >= 0; --i) {
 		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
 
-		if (!pElem->onMouseMove(mouseEvent))
+		if (!pElem->onMouseMoveInternal(mouseEvent))
 			return false;
 	}
 
-	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
-	return UIElement::onMouseMove(mouseEvent);
+	return UIElement::onMouseMoveInternal(mouseEvent);
 }
 
-bool UIGroup::onMouseUp(SGEventMouse* mouseEvent) {
+bool UIGroup::onMouseUpInternal(SGEventMouse* mouseEvent) {
 	// 계층적 상대좌표로 변환
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
-
-	mouseEvent->setCursorPosition(relativePos.x, relativePos.y);
+	mouseEvent->setCursorPosition(relativePos);
+	SG_CURSOR_POSITION_GUARD(mouseEvent, mousePos);
 
 	for (int i = _children.size() - 1; i >= 0; --i) {
 		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
-		if (!pElem->onMouseUp(mouseEvent))
+		if (!pElem->onMouseUpInternal(mouseEvent))
 			return false;
 	}
 
-	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
-	return UIElement::onMouseUp(mouseEvent);
+	return UIElement::onMouseUpInternal(mouseEvent);
 }
 
-bool UIGroup::onMouseScroll(SGEventMouse* mouseEvent) {
+bool UIGroup::onMouseScrollInternal(SGEventMouse* mouseEvent) {
 	const SGVec2 mousePos = mouseEvent->getCursorPos();
 	const SGVec2 relativePos = mousePos - _position;
-
-	mouseEvent->setCursorPosition(relativePos.x, relativePos.y);
+	mouseEvent->setCursorPosition(relativePos);
+	SG_CURSOR_POSITION_GUARD(mouseEvent, mousePos);
 
 	for (int i = _children.size() - 1; i >= 0; --i) {
 		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
-		if (!pElem->onMouseScroll(mouseEvent))
+		if (!pElem->onMouseScrollInternal(mouseEvent))
 			return false;
 	}
 
-	mouseEvent->setCursorPosition(mousePos.x, mousePos.y);	// 기존 상태로 복구
+	return UIElement::onMouseScrollInternal(mouseEvent);
+}
 
-	return UIElement::onMouseScroll(mouseEvent);
+UIElement* UIGroup::getAt(int index) {
+	if (index >= _children.size()) {
+		_LogWarn_("%d 그룹에서 %d번째 인덱스 원소를 찾지 못했습니다.", m_pBaseInfo->Code, index);
+		return nullptr;
+	}
+
+	return static_cast<UIElement*>(_children.at(index));
 }
 
 UIElement* UIGroup::findElement(int code) {
@@ -207,16 +241,16 @@ void UIGroup::addUIElement(UIGroupElemInfo* groupElemInfo) {
 	UIElement* pChildElement = nullptr;
 
 	switch (pElemInfo->Type) {
-	case UIElementType::Group: pChildElement = UIGroup::create(m_pMasterGroup, this, static_cast<UIGroupInfo*>(pElemInfo)); break;
-	case UIElementType::Button: pChildElement = UIButton::create(m_pMasterGroup, this, static_cast<UIButtonInfo*>(pElemInfo)); break;
-	case UIElementType::Label: pChildElement = UILabel::create(m_pMasterGroup, this, static_cast<UILabelInfo*>(pElemInfo)); break;
-	case UIElementType::Sprite: pChildElement = UISprite::create(m_pMasterGroup, this, static_cast<UISpriteInfo*>(pElemInfo)); break;
-	case UIElementType::EditBox: pChildElement = UIEditBox::create(m_pMasterGroup, this, static_cast<UIEditBoxInfo*>(pElemInfo)); break;
-	case UIElementType::CheckBox: pChildElement = UICheckBox::create(m_pMasterGroup, this, static_cast<UICheckBoxInfo*>(pElemInfo)); break;
-	case UIElementType::ToggleButton: pChildElement = UIToggleButton::create(m_pMasterGroup, this, static_cast<UIToggleButtonInfo*>(pElemInfo)); break;
-	case UIElementType::ProgressBar: pChildElement = UIProgressBar::create(m_pMasterGroup, this, static_cast<UIProgressBarInfo*>(pElemInfo)); break;
-	case UIElementType::ScrollBar: pChildElement = UIScrollBar::create(m_pMasterGroup, this, static_cast<UIScrollBarInfo*>(pElemInfo)); break;
-	case UIElementType::Static: pChildElement = UIStatic::create(m_pMasterGroup, this, static_cast<UIStaticInfo*>(pElemInfo)); break;
+	case UIElementType::Group: pChildElement = UIGroup::create(m_pMasterGroup, this, static_cast<UIGroupInfo*>(pElemInfo), false); break;
+	case UIElementType::Button: pChildElement = UIButton::create(m_pMasterGroup, this, static_cast<UIButtonInfo*>(pElemInfo), false); break;
+	case UIElementType::Label: pChildElement = UILabel::create(m_pMasterGroup, this, static_cast<UILabelInfo*>(pElemInfo), false); break;
+	case UIElementType::Sprite: pChildElement = UISprite::create(m_pMasterGroup, this, static_cast<UISpriteInfo*>(pElemInfo), false); break;
+	case UIElementType::EditBox: pChildElement = UIEditBox::create(m_pMasterGroup, this, static_cast<UIEditBoxInfo*>(pElemInfo), false); break;
+	case UIElementType::CheckBox: pChildElement = UICheckBox::create(m_pMasterGroup, this, static_cast<UICheckBoxInfo*>(pElemInfo), false); break;
+	case UIElementType::ToggleButton: pChildElement = UIToggleButton::create(m_pMasterGroup, this, static_cast<UIToggleButtonInfo*>(pElemInfo), false); break;
+	case UIElementType::ProgressBar: pChildElement = UIProgressBar::create(m_pMasterGroup, this, static_cast<UIProgressBarInfo*>(pElemInfo), false); break;
+	case UIElementType::ScrollBar: pChildElement = UIScrollBar::create(m_pMasterGroup, this, static_cast<UIScrollBarInfo*>(pElemInfo), false); break;
+	case UIElementType::Static: pChildElement = UIStatic::create(m_pMasterGroup, this, static_cast<UIStaticInfo*>(pElemInfo), false); break;
 	default: _LogWarn_("알 수 없는 타입의 엘리먼트를 추가할려고했습니다. (%d)", pElemInfo->Type); return;
 	}
 
@@ -270,11 +304,6 @@ void UIGroup::restoreState(State state) {
 	forEachRecursive([state](UIElement* child) { child->restoreState(state); });
 }
 
-void UIGroup::reload() {
-	unload();
-	load();
-}
-
 void UIGroup::setUISize(const SGSize& size) {
 
 	if (!m_bResizable)
@@ -295,6 +324,25 @@ void UIGroup::setUISize(const SGSize& size) {
 	});
 
 	setRelativePosition(relativePos);
+}
+
+void UIGroup::setInfo(UIElementInfo* info, bool infoOwner) {
+	if (info->Type != UIElementType::Group) {
+		logWarnInvalidInfo(info->Type);
+		return;
+	}
+
+	if (m_bInfoOwner) {
+		JCORE_DELETE_SAFE(m_pInfo);
+	}
+
+	m_pBaseInfo = info;
+	m_pInfo = static_cast<UIGroupInfo*>(info);
+	m_bInfoOwner = infoOwner;
+}
+
+void UIGroup::setInfoGroup(UIGroupInfo* info, bool infoOwner) {
+	setInfo(info, infoOwner);
 }
 
 UIElement* UIGroup::findElementRecursiveInternal(UIGroup* parent, int code) {

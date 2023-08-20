@@ -14,10 +14,13 @@
 class UIStatic : public UIElement
 {
 public:
-	static UIStatic* create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo);
+	static UIStatic* create(UIMasterGroup* master, UIGroup* parent);
+	static UIStatic* create(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo, bool infoOwner);
+
 	static constexpr UIElementType_t type() { return UIElementType::Static; }
 
-	UIStatic(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo);
+	UIStatic(UIMasterGroup* master, UIGroup* parent);
+	UIStatic(UIMasterGroup* master, UIGroup* parent, UIStaticInfo* staticInfo, bool infoOwner);
 	~UIStatic() override;
 
 	bool init() override;
@@ -26,6 +29,8 @@ public:
 
 	void setDebugVisible(bool visible);
 	void setUISize(const SGSize& contentSize) override;
+	void setInfo(UIElementInfo* info, bool infoOwner) override;
+	void setInfoStatic(UIStaticInfo* info, bool infoOwner);
 
 	UIStaticInfo* getInfo() const { return m_pInfo; }
 	UIElementType_t getElementType() override { return UIElementType::Static; }

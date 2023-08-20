@@ -27,7 +27,7 @@ protected:
 	void onLoaded() override;
 	void onUpdate(float dt) override;
 	void onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state) override;
-	void onMouseUp(UIElement* element, SGEventMouse* mouseEvent) override;
+	void onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) override;
 private:
 	UIGroup* m_pGroupO1;
 	UIGroup* m_pGroupO2;

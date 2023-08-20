@@ -1739,6 +1739,8 @@ public:
      * @return A GLubyte value.
      */
     virtual GLubyte getOpacity() const;
+
+    float getOpacityF() const;
     /**
      * Return the node's display opacity.
      * The difference between opacity and displayedOpacity is:
@@ -1751,6 +1753,11 @@ public:
      * @param opacity A GLubyte opacity value.
      */
     virtual void setOpacity(GLubyte opacity);
+
+    // 윤정도: 0 ~ 1.0f 사이로 제어가능하도록 변경
+    void setOpacityF(float opacity);
+
+
     /**
      * Update the displayed opacity of node with it's parent opacity;
      * @param parentOpacity The opacity of parent node.

@@ -177,6 +177,14 @@ bool ImagePack::hasImgIndex(const SGString& imgName) const {
 	return m_Package->HasElementIndex(imgName);
 }
 
+int ImagePack::getImgIndexUnsafe(const char* imgName) const {
+	if (!m_Package->HasElementIndex(imgName)) {
+		return InvalidValue_v;
+	}
+
+	return m_Package->GetElementIndex(imgName);
+}
+
 SGString ImagePack::getImgName(const int imgIndex) const {
 	const SgaElementPtr spElement = m_Package->GetUnsafe(imgIndex);
 
@@ -199,8 +207,7 @@ SGString ImagePack::getImgNameOrDefault(const int imgIndex, const SGString& defa
 
 
 void ImagePack::applyLinearDodge(Byte* pixelData, int len) const {
-	for (int i = 0; i < len; i += 4)
-	{
+	for (int i = 0; i < len; i += 4) {
 		const Byte max = Math::Max(pixelData[i + 0], Math::Max(pixelData[i + 1], pixelData[i + 2]));
 		const Byte sub = 0xff - max;
 

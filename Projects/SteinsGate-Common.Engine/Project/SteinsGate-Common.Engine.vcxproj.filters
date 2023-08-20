@@ -6,6 +6,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\RandomEx.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\GridLayer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\RectEx.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\Vec2Ex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Engine.h" />
