@@ -76,8 +76,7 @@ public:
 		void mouseLeave();
 
 		void initMonsterSprites(UI_ChannelSelect* masterGroup);
-		void setChannelInfo(int channelTypeCode, int channelNum, char sequence);
-		void setDensity(ChannelDensity_t channelDensity);
+		void setChannelInfo(const LobbyChannelInfo& channelInfo, char sequence);
 
 		bool containsPoint(const SGVec2& pos);
 

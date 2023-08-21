@@ -43,6 +43,12 @@ Color3B::Color3B()
 , b(0)
 {}
 
+Color3B::Color3B(const Color3B& other)
+: r(other.r)
+, g(other.g)
+, b(other.b)
+{}
+
 Color3B::Color3B(GLubyte _r, GLubyte _g, GLubyte _b)
 : r(_r)
 , g(_g)

@@ -53,6 +53,7 @@ struct Color4F;
 struct CC_DLL Color3B
 {
     Color3B();
+    Color3B(const Color3B& other);    // 컬러복사 추가
     Color3B(GLubyte _r, GLubyte _g, GLubyte _b);
     explicit Color3B(const Color4B& color);
     explicit Color3B(const Color4F& color);

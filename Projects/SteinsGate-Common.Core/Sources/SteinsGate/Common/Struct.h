@@ -274,9 +274,10 @@ struct InvenItemEquip : InvenItem
 	ItemOptVal Opt[MaxOptCount_v];
 };
 
-
-struct ServerInfo
+struct LobbyChannelInfo
 {
-	JNetwork::IPv4EndPoint BindEndPoint;
-	int MaxConnection;
+	int Type;
+	int Number;
+	ChannelDensity_t Desity;
 };
+

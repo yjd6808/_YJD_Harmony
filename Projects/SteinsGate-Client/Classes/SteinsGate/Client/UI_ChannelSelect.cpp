@@ -180,6 +180,7 @@ void UI_ChannelSelect::ChannelButton::initSprites() {
 	SpriteMouseOverBorder = CoreUIManager_v->getSprite(UI_CHANNEL_CHANNEL_LIST_SPRITE_SLOT_1_OVER + 6 * Index);
 	LabelName = CoreUIManager_v->getLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_SLOT_1_NAME + 6 * Index);
 	LabelDensity = CoreUIManager_v->getLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_SLOT_1_DENSITY + 6 * Index);
+	LabelDensity->source()->enableOutline(Color4B::BLACK, 3);
 }
 
 void UI_ChannelSelect::ChannelButton::setState(State state) {
@@ -289,19 +290,15 @@ void UI_ChannelSelect::ChannelButton::initMonsterSprites(UI_ChannelSelect* maste
 		SpriteMonster[1]->getInfo()->Sprite = Info->NormalSpriteIndex;
 		SpriteMonster[1]->reload();
 	}
-
-	
 }
 
-void UI_ChannelSelect::ChannelButton::setChannelInfo(int channelTypeCode, int channelNum, char sequence) {
-	Info = CoreDataManager_v->getChannelInfo(channelTypeCode);
+void UI_ChannelSelect::ChannelButton::setChannelInfo(const LobbyChannelInfo& channelData, char sequence) {
+	Info = CoreDataManager_v->getChannelInfo(channelData.Type);
 	const SGString& szFmtName = LabelName->getInfo()->Text;	// szFmtName = "ch%02d.%s %c"
-	LabelName->setText(StringUtils::format(szFmtName.Source(), channelNum, Info->Name.Source(), sequence));
-}
+	LabelName->setText(StringUtils::format(szFmtName.Source(), channelData.Number, Info->Name.Source(), sequence));
 
-void UI_ChannelSelect::ChannelButton::setDensity(ChannelDensity_t channelDensity) {
-	LabelDensity->setText(ChannelDensity::Name[channelDensity]);
-	LabelDensity->setColor(SGColorList::Darkbluegray_v);
+	LabelDensity->setText(ChannelDensity::Name[channelData.Desity]);
+	LabelDensity->setColor(ChannelDensityEx::Color[channelData.Desity]);
 }
 
 bool UI_ChannelSelect::ChannelButton::containsPoint(const SGVec2& pos) {
@@ -360,10 +357,28 @@ void UI_ChannelSelect::onLoaded() {
 		pButton->setState(ChannelButton::Normal);
 	}
 
-	m_arrChannelButtonList[0]->setChannelInfo(1, 16, 'A');
+	LobbyChannelInfo a[4]{
+		 {1, 1, ChannelDensity::Free },
+		  {2, 11, ChannelDensity::Normal },
+		 {3, 13, ChannelDensity::Busy },
+		 {4, 14, ChannelDensity::Full },
+	};
+
+	m_arrChannelButtonList[0]->setChannelInfo(a[0], 'A');
 	m_arrChannelButtonList[0]->initMonsterSprites(this);
 	m_arrChannelButtonList[0]->setState(ChannelButton::Selected);
-	m_arrChannelButtonList[0]->setDensity(ChannelDensity::Full);
+
+	m_arrChannelButtonList[1]->setChannelInfo(a[1], 'A');
+	m_arrChannelButtonList[1]->initMonsterSprites(this);
+	m_arrChannelButtonList[1]->setState(ChannelButton::Normal);
+
+	m_arrChannelButtonList[2]->setChannelInfo(a[2], 'A');
+	m_arrChannelButtonList[2]->initMonsterSprites(this);
+	m_arrChannelButtonList[2]->setState(ChannelButton::Normal);
+
+	m_arrChannelButtonList[3]->setChannelInfo(a[3], 'A');
+	m_arrChannelButtonList[3]->initMonsterSprites(this);
+	m_arrChannelButtonList[3]->setState(ChannelButton::Normal);
 }
 
 void UI_ChannelSelect::onUnloaded() {
