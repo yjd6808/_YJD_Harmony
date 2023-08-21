@@ -57,6 +57,6 @@ void AttackActivity_Goblin::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCo
 	PhysicsComponent* pPhysicsComponent = m_pActor->getComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent && newHitCount > 0) {
-		pPhysicsComponent->stiffenBody(FPS6_v);
+		pPhysicsComponent->stiffenBody(Const::FPS::_6);
 	}
 }

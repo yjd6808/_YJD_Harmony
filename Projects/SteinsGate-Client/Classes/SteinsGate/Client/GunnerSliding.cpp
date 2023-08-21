@@ -96,6 +96,6 @@ void GunnerSliding::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
 		return;
 
 	if (newHitCount > 0) {
-		pPhysicsComponent->stiffenBody(FPS6_v);
+		pPhysicsComponent->stiffenBody(Const::FPS::_6);
 	}
 }

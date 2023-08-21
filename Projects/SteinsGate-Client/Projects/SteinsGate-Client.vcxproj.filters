@@ -723,7 +723,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\IActorListener.h">
       <Filter>Actor\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ActionInfo.h">
       <Filter>Data\Action</Filter>
     </ClInclude>
@@ -1045,5 +1044,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.h">
       <Filter>Data\Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
   </ItemGroup>
 </Project>

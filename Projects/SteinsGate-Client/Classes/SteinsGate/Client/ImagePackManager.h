@@ -59,7 +59,7 @@ private:
 
 	SGHashMap<SGString, int> m_PathToIdMap;
 	
-	ImagePack* m_LoadedPackages[MaxSgaFileCount_v]{};
+	ImagePack* m_LoadedPackages[Const::Resource::MaxSgaFileCount]{};
 	ImagePack* m_AvatarPacks[CharType::Max][AvatarType::Max]{};
 	ImagePack* m_WeaponPacks[WeaponType::Max]{};
 	CachedTextureCounter m_TextureCounter;

@@ -98,8 +98,8 @@ void MapLayer::loadMap(int mapCode) {
 	// 타일 로딩, 맨 밑에 타일들부터 차곡차곡 쌓아서 올린다.
 	for (int i = m_pMapInfo->TileHeight - 1, k = 0; i >= 0; --i, ++k) {
 		for (int j = 0; j < m_pMapInfo->TileWidth; j++) {
-			const float fTileXPos = TileWidth_v * j;
-			const float fTileYPos = TileHeight_v * k;
+			const float fTileXPos = Const::Map::TileWidth * j;
+			const float fTileYPos = Const::Map::TileHeight * k;
 
 			const TileInfo* pTileInfo = CoreDataManager_v->getTileInfo(m_pMapInfo->TileArray[i][j]);
 			FrameTexture* pFrameTexture = CorePackManager_v->getPack(pTileInfo->SgaIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);

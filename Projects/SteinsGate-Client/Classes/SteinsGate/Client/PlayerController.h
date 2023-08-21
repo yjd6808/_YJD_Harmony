@@ -70,7 +70,7 @@ private:
 	bool m_ControlKeyPressedMap[ControlKey::Max]{};
 	InputTime m_LastestPressedKey;							// 제일 최근에 누른 키
 	InputTime m_LastestReleasedKey;							// 제일 최근에 땐 키
-	InputTime m_ControlKeySequence[ComboSequenceCount_v]{}; // 맨 앞이 제일 최근에 입력한 키
+	InputTime m_ControlKeySequence[Const::Action::ComboSequenceCount]{}; // 맨 앞이 제일 최근에 입력한 키
 	bool m_bCabUseCommand{};
 };
 

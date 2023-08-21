@@ -52,3 +52,8 @@
 USING_NS_JC;
 USING_NS_STD;
 
+namespace Const
+{
+	extern int a;
+}
+

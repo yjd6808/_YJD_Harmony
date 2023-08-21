@@ -60,10 +60,10 @@ void UI_Login::onInit() {
 	m_pBtnStart = CoreUIManager_v->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_START);
 	m_pBtnTerminate = CoreUIManager_v->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_TERMINATE);
 	m_pEbId = CoreUIManager_v->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_ID);
-	m_pEbId->setMaxLength(AccountIdLen_v);
+	m_pEbId->setMaxLength(Const::StringLen::AccountId);
 	m_pEbPass = CoreUIManager_v->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_PW);
 	m_pEbPass->setInputFlag(SGEditBox::InputFlag::PASSWORD);
-	m_pEbPass->setMaxLength(AccountPassLen_v);
+	m_pEbPass->setMaxLength(Const::StringLen::AccountPass);
 }
 
 void UI_Login::onLoaded() {

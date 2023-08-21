@@ -440,6 +440,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\CLIListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ComponentCollection.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Event.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.h" />
@@ -625,7 +626,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorPartSprite.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Effect.h">
       <SubType>
       </SubType>

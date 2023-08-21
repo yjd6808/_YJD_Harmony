@@ -145,12 +145,12 @@ void PhysicsComponent::updateFriction(float dt) {
 	
 
 	SGRect groundRect = m_pActor->getThicknessBoxRect();
-	groundRect.origin.x += m_Velocity.x * FPS1_v;
+	groundRect.origin.x += m_Velocity.x * dt;
 
 	if (m_pActor->isOnTheGround()) {
 
 		if (m_Velocity.x > 0.0f) {
-			m_Velocity.x -= pPhysicsInfo->Friction * FPS1_v;
+			m_Velocity.x -= pPhysicsInfo->Friction * dt;
 
 			if (m_Velocity.x <= 0.0f) {
 				m_Velocity.x = 0.0f;
@@ -158,7 +158,7 @@ void PhysicsComponent::updateFriction(float dt) {
 		}
 
 		else if (m_Velocity.x < 0.0f) {
-			m_Velocity.x += pPhysicsInfo->Friction * FPS1_v;
+			m_Velocity.x += pPhysicsInfo->Friction * dt;
 
 			if (m_Velocity.x >= 0.0f) {
 				m_Velocity.x = 0.0f;

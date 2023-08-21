@@ -54,7 +54,7 @@ struct AnimationInfo : ConfigDataAbstract
 	AnimationInfo() { DebugAssertMsg(false, "호출 금지"); }
 	AnimationInfo(int frameSize)
 		: Loop(false)
-		, Name{0}
+		, Name{ 0 }
 		, Frames(frameSize)
 	{}
 
@@ -96,7 +96,13 @@ struct ActorSpriteData
 };
 
 using ActorSpriteDataPtr = JCore::SharedPtr<ActorSpriteData>;
-using VisualData = ActorPartSpriteData[MaxVisualCount_v];
+
+// 캐릭터의 비주얼 아이템(아바타 혹은 무기)는 여러 조합을 만들기위해 하나의 부위가 여러개의 쉐이프(그냥 대충 지은 이름)로 구성된다.
+// 그래서 모든 아바타+무기는 각각 최대 3개씩의 파츠 데이터를 가질 수 있도록 구성하였다.
+// 예를들어 거너 아바타 하의는 2개의 파츠 데이터로 구성되었다고하자.
+// shape: 2203, shape_alpha: ab라고 하면
+// pants_2203a, pants_2203b 이미지팩 각각의 ActorPartSpriteData 2개를 뭉뚱그려서 VisualData라 명명하였다.
+using VisualData = ActorPartSpriteData[Const::Visual::MaxShapeCount];
 using VisualInfo = JCore::Vector<ActorPartSpriteData>;
 
 
@@ -104,15 +110,15 @@ union SgaResourceIndex
 {
 	SgaResourceIndex();
 	SgaResourceIndex(int sgaIndex, int imgIndex, int frameIndex)
-		: Un{sgaIndex, imgIndex, frameIndex}
+		: Un{ sgaIndex, imgIndex, frameIndex }
 	{}
 
 	struct
 	{
-		int SgaIndex	: 9;	// 512
-		int ImgIndex	: 11;	// 2048
-		int FrameIndex  : 12;	// 4096
-		
+		int SgaIndex : 9;	// 512
+		int ImgIndex : 11;	// 2048
+		int FrameIndex : 12;	// 4096
+
 	} Un;
 
 	SGString ToString() const;
@@ -124,7 +130,7 @@ struct AuthenticationData
 {
 	AuthenticationState_t State;
 	AuthenticationSerial_t Serial;				// 토큰 데이터
-	SGStaticString<AccountIdLen_v> AccountId;
+	SGStaticString<Const::StringLen::AccountId> AccountId;
 	SGDateTime TimeId;							// 최신화된 시각 및 고유 시각ID
 };
 
@@ -133,8 +139,8 @@ struct AccountData
 	AccountData();
 
 	int DBTableId;	// 계정 고유 아이디
-	SGStaticString<AccountIdLen_v> Id;
-	SGStaticString<AccountPassLen_v> Pass;
+	SGStaticString<Const::StringLen::AccountId> Id;
+	SGStaticString<Const::StringLen::AccountPass> Pass;
 	SGDateTime LastLogin;
 	int LastServer;
 };
@@ -146,7 +152,7 @@ struct PlayerData
 	void clear();
 
 	int CharId;	// 캐릭터 고유 아이디
-	SGStaticString<CharNameLen_v> Name;
+	SGStaticString<Const::StringLen::CharacterName> Name;
 	CharType_t CharType;
 	Int32 Life;
 	Int32 MaxLife;
@@ -203,34 +209,34 @@ union ItemCode
 
 	struct
 	{
-		int Code		 : BitCode;
-		int Detail1		 : BitDetail1;		// 아바타 부위 || 갑옷 종류 || 무기 종류
-		int Detail2		 : BitDetail2;		// 캐릭터 타입
-		ItemType_t Type	 : BitType;			// 소모품, 아바타, 무기
+		int Code : BitCode;
+		int Detail1 : BitDetail1;		// 아바타 부위 || 갑옷 종류 || 무기 종류
+		int Detail2 : BitDetail2;		// 캐릭터 타입
+		ItemType_t Type : BitType;			// 소모품, 아바타, 무기
 	} CommonUn;
 
 	struct
 	{
-		int Code				: BitCode;
-		AvatarType_t PartType	: BitDetail1;	
-		CharType_t CharType		: BitDetail2;	
-		ItemType_t ItemType		: BitType;		
+		int Code : BitCode;
+		AvatarType_t PartType : BitDetail1;
+		CharType_t CharType : BitDetail2;
+		ItemType_t ItemType : BitType;
 	} AvatarUn;
 
 	struct
 	{
-		int Code					: BitCode;
-		WeaponType_t WeaponType		: BitDetail1;	
-		CharType_t CharType			: BitDetail2;	
-		ItemType_t ItemType			: BitType;
+		int Code : BitCode;
+		WeaponType_t WeaponType : BitDetail1;
+		CharType_t CharType : BitDetail2;
+		ItemType_t ItemType : BitType;
 	} WeaponUn;
 
 	struct
 	{
-		int Code					: BitCode;
-		EquipArmorType_t ArmorType	: BitDetail1;	
-		int _						: BitDetail2;	
-		ItemType_t ItemType			: BitType;		
+		int Code : BitCode;
+		EquipArmorType_t ArmorType : BitDetail1;
+		int _ : BitDetail2;
+		ItemType_t ItemType : BitType;
 	} ArmorUn;
 
 
@@ -271,7 +277,7 @@ struct InvenItemEquip : InvenItem
 	int AttackMagic;
 
 	int OptCount;
-	ItemOptVal Opt[MaxOptCount_v];
+	ItemOptVal Opt[Const::Item::MaxOptCount];
 };
 
 struct LobbyChannelInfo

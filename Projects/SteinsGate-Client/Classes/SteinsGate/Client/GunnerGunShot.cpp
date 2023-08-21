@@ -194,7 +194,7 @@ void GunnerGunShot::onEnemyMultiHit(SGHitInfoList& hitList, int newHitCount) {
 	PhysicsComponent* pPhysicsComponent = m_pPlayer->getComponent<PhysicsComponent>();
 
 	if (pPhysicsComponent && newHitCount > 0) {
-		pPhysicsComponent->stiffenBody(FPS6_v);
+		pPhysicsComponent->stiffenBody(Const::FPS::_6);
 	}
 }
 

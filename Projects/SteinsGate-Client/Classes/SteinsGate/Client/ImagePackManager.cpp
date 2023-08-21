@@ -23,15 +23,17 @@ USING_NS_JC;
 
 ImagePackManager::ImagePackManager() {}
 ImagePackManager::~ImagePackManager() {
-	for (int i = 0; i < MaxSgaFileCount_v; ++i) {
+	for (int i = 0; i < Const::Resource::MaxSgaFileCount; ++i) {
 		JCORE_DELETE_SAFE(m_LoadedPackages[i]);
 	}
 }
 
 void ImagePackManager::loadAllPackages() {
 
-	SGThread loaderThread[MaxSgaParallelLoadingThreadCount_v];
-	SGString imageDirPath = Path::Combine(CoreCommonInfo_v->DataPath, ImageDirName_v);
+	constexpr int ThreadCount = Const::Resource::MaxSgaParallelLoadingThreadCount;
+
+	SGThread loaderThread[ThreadCount];
+	SGString imageDirPath = Path::Combine(CoreCommonInfo_v->DataPath, Const::Resource::ImageDirName);
 	SGVector<SGString> paths = Directory::Files(imageDirPath, false);
 	SGVector<SGString> sgaPaths;
 
@@ -48,16 +50,16 @@ void ImagePackManager::loadAllPackages() {
 	m_iLoadedPackageCount = sgaPaths.Size();
 
 	// 8개씩 병렬 로딩 진행
-	for (int i = 0; i < MaxSgaParallelLoadingThreadCount_v; ++i) {
+	for (int i = 0; i < ThreadCount; ++i) {
 		loaderThread[i].Start([i, this, &sgaPaths](void*) {
-			for (int j = i; j < m_iLoadedPackageCount; j += MaxSgaParallelLoadingThreadCount_v) {
+			for (int j = i; j < m_iLoadedPackageCount; j += ThreadCount) {
 				SgaPackagePtr package = SgaLoader::LoadHeaderOnly(sgaPaths[j]);
 				m_LoadedPackages[j] = dbg_new ImagePack(package, j);
 			}
-		});
+			});
 	}
 
-	for (int i = 0; i < MaxSgaParallelLoadingThreadCount_v; ++i) {
+	for (int i = 0; i < ThreadCount; ++i) {
 		loaderThread[i].Join();
 	}
 	_LogInfo_("sga 파일 %d개 헤더 인덱싱 완료", m_iLoadedPackageCount);

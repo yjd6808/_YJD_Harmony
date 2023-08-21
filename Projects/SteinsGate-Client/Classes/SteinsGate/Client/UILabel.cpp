@@ -53,7 +53,7 @@ UILabel* UILabel::create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* la
 
 SGString UILabel::getFontPath() const {
 	const SGString fontName = CoreFont_v->getFontName(m_pInfo->FontCode);
-	const SGString fontPath = Path::Combine(CoreCommonInfo_v->DataPath, FontDirName_v, fontName);
+	const SGString fontPath = Path::Combine(CoreCommonInfo_v->DataPath, Const::Resource::FontDirName, fontName);
 	return fontPath;
 }
 

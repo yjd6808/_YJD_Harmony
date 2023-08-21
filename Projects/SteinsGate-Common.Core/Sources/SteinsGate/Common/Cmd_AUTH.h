@@ -29,8 +29,8 @@ inline constexpr Int16U TotalAuthCmdCount_v = 2;
 #pragma pack(push, CMD_ALIGNMENT)
 
 STATIC_CMD_BEGIN(CAU_Login, CMDID_CAU_Login)
-SGStaticString<AccountIdLen_v> Id;
-SGStaticString<AccountPassLen_v> Pass;
+SGStaticString<Const::StringLen::AccountId> Id;
+SGStaticString<Const::StringLen::AccountPass> Pass;
 STATIC_CMD_END(CAU_Login)
 
 

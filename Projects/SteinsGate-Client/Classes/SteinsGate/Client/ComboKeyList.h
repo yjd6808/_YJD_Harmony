@@ -32,7 +32,7 @@ public:
 	SGString string() const;
 	int count() const;
 
-	ControlKey_t Keys[ComboSequenceCount_v];
+	ControlKey_t Keys[Const::Action::ComboSequenceCount];
 };
 
 using ComboKeyListPtr = JCore::SharedPtr<ComboKeyList>;

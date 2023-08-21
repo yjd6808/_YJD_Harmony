@@ -34,7 +34,7 @@ FontPackage::~FontPackage() {
 }
 
 void FontPackage::init() {
-	SGString szFontDirPath = JCore::Path::Combine(CoreCommonInfo_v->DataPath, FontDirName_v);
+	SGString szFontDirPath = JCore::Path::Combine(CoreCommonInfo_v->DataPath, Const::Resource::FontDirName);
 	Vector<SGString> vFontFiles = Directory::Files(szFontDirPath.Source());
 
 	for (int i = 0; i < vFontFiles.Size(); ++i) {

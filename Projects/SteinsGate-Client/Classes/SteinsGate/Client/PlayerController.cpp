@@ -81,7 +81,7 @@ void PlayerController::onKeyPressed(ControlKey_t pressedKey) {
 		return;
 
 	// 덮어쓰기 방지를 위해 뒤에서부터 복사
-	for (int i = ComboSequenceCount_v - 2; i >= 0; --i) {
+	for (int i = Const::Action::ComboSequenceCount - 2; i >= 0; --i) {
 		m_ControlKeySequence[i + 1] = m_ControlKeySequence[i];
 	}
 
@@ -123,11 +123,11 @@ void PlayerController::checkComboSequence() {
 	DateTime dtCurrent = m_ControlKeySequence[0].Time;
 	sequence[0] = m_ControlKeySequence[0].ControlKey;
 
-	for (int i = 1; i <= ComboSequenceCount_v; ++i, ++iSequenceCount) {
+	for (int i = 1; i <= Const::Action::ComboSequenceCount; ++i, ++iSequenceCount) {
 		DateTime& dtBefore = m_ControlKeySequence[i].Time;
 		float diff = float(dtCurrent.Diff(dtBefore).GetTotalSeconds());
 
-		if (diff > ComboSequenceDelay_v) {
+		if (diff > Const::Action::ComboSequenceDelay) {
 			break;
 		}
 

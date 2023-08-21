@@ -139,7 +139,7 @@ void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 
 		float fHeight = 0;
 		const SGString fontName = CoreFont_v->getFontName(m_iFontCode);
-		const SGString fontPath = Path::Combine(CoreCommonInfo_v->DataPath, FontDirName_v, fontName);
+		const SGString fontPath = Path::Combine(CoreCommonInfo_v->DataPath, Const::Resource::FontDirName, fontName);
 		std::string txt;
 
 		_LogDebug_("폰트이름: %s", fontName.Source());

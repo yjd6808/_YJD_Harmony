@@ -19,13 +19,13 @@ struct EnchantBonusOptInfo
 	EnchantBonusOptInfo& operator=(const EnchantBonusOptInfo& other) {
 		DebugAssertMsg(this != &other, "셀프 어사인 하지마!");
 		Opt = other.Opt;
-		SGMemory::CopyUnsafe(Value, other.Value, sizeof(int) * MaxEnchantLevel_v);
+		SGMemory::CopyUnsafe(Value, other.Value, sizeof(int) * Const::Item::MaxEnchantLevel);
 		return *this;
 	}
 
 
 	ItemOptInfo* Opt;
-	int Value[MaxEnchantLevel_v];
+	int Value[Const::Item::MaxEnchantLevel];
 };
 
 struct EnchantInfo : ConfigDataAbstract
@@ -34,14 +34,14 @@ struct EnchantInfo : ConfigDataAbstract
 
 	int ArmorBonusOptCount;
 	int AccessoryBonusOptCount;
-	EnchantBonusOptInfo ArmorBonusOptList[ArmorEnchantBonusOptCount_v];
-	EnchantBonusOptInfo AccessoryBonusOptList[ArmorEnchantBonusOptCount_v];
+	EnchantBonusOptInfo ArmorBonusOptList[Const::Item::ArmorEnchantBonusOptCount];
+	EnchantBonusOptInfo AccessoryBonusOptList[Const::Item::ArmorEnchantBonusOptCount];
 
-	float WeaponAttackPhysicalMultiplyValue[MaxEnchantLevel_v];
+	float WeaponAttackPhysicalMultiplyValue[Const::Item::MaxEnchantLevel];
 	float ArmorRarityConstant[RarityType::Max];
 	float AccesorryRarityConstant[RarityType::Max];
 	float WeaponRarityConstant[RarityType::Max];
-	float EnchangeProbs[MaxEnchantLevel_v];
-	float SellBonus[MaxEnchantLevel_v];
+	float EnchangeProbs[Const::Item::MaxEnchantLevel];
+	float SellBonus[Const::Item::MaxEnchantLevel];
 };
 

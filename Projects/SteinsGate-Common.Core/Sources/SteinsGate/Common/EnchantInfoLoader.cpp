@@ -67,11 +67,11 @@ void EnchantInfoLoader::readEnchantInfo(Json::Value& enchantRoot, JCORE_OUT Ench
 
 		SGString szOptName = JsonUtil::getString(armorBonusOptRoot["opt_name"]);
 		Value& szOptValListRoot = armorBonusOptRoot["opt_val"];
-		DebugAssertMsg(szOptValListRoot.size() == MaxEnchantLevel_v, "방어구 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", szOptValListRoot.size(), MaxEnchantLevel_v);
+		DebugAssertMsg(szOptValListRoot.size() == Const::Item::MaxEnchantLevel, "방어구 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", szOptValListRoot.size(), Const::Item::MaxEnchantLevel);
 
 		enchantInfo->ArmorBonusOptList[i].Opt = m_pManager->getItemOptInfo(szOptName);
 
-		for (int j = 0; j < MaxEnchantLevel_v; j++) {
+		for (int j = 0; j < Const::Item::MaxEnchantLevel; j++) {
 			enchantInfo->ArmorBonusOptList[i].Value[j] = szOptValListRoot[j].asInt();
 		}
 	}
@@ -81,11 +81,11 @@ void EnchantInfoLoader::readEnchantInfo(Json::Value& enchantRoot, JCORE_OUT Ench
 
 		SGString szOptName = JsonUtil::getString(accessoryBonusOptRoot["opt_name"]);
 		Value& szOptValListRoot = accessoryBonusOptRoot["opt_val"];
-		DebugAssertMsg(szOptValListRoot.size() == MaxEnchantLevel_v, "악세서리 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", szOptValListRoot.size(), MaxEnchantLevel_v);
+		DebugAssertMsg(szOptValListRoot.size() == Const::Item::MaxEnchantLevel, "악세서리 보너스 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", szOptValListRoot.size(), Const::Item::MaxEnchantLevel);
 
 		enchantInfo->AccessoryBonusOptList[i].Opt = m_pManager->getItemOptInfo(szOptName);
 
-		for (int j = 0; j < MaxEnchantLevel_v; j++) {
+		for (int j = 0; j < Const::Item::MaxEnchantLevel; j++) {
 			enchantInfo->AccessoryBonusOptList[i].Value[j] = szOptValListRoot[j].asInt();
 		}
 	}
@@ -106,15 +106,15 @@ void EnchantInfoLoader::readEnchantInfo(Json::Value& enchantRoot, JCORE_OUT Ench
 	int iArmorRarityConstantCount = (int)armorRarityConstantListRoot.size();
 	int iAccessoryRarityConstantCount = (int)accessoryRarityConstantListRoot.size();
 
-	DebugAssertMsg(iWeaponBonusOptValueCount == MaxEnchantLevel_v, "무기 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", iWeaponBonusOptValueCount, MaxEnchantLevel_v);
-	DebugAssertMsg(iProbCount == MaxEnchantLevel_v, "강화 확률 값이 %d개 입니다. (%d개로 맞춰야함)", iProbCount, MaxEnchantLevel_v);
-	DebugAssertMsg(iSellBonusCount == MaxEnchantLevel_v, "판매 보너스 값이 %d개 입니다. (%d개로 맞춰야함)", iSellBonusCount, MaxEnchantLevel_v);
+	DebugAssertMsg(iWeaponBonusOptValueCount == Const::Item::MaxEnchantLevel, "무기 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", iWeaponBonusOptValueCount, Const::Item::MaxEnchantLevel);
+	DebugAssertMsg(iProbCount == Const::Item::MaxEnchantLevel, "강화 확률 값이 %d개 입니다. (%d개로 맞춰야함)", iProbCount, Const::Item::MaxEnchantLevel);
+	DebugAssertMsg(iSellBonusCount == Const::Item::MaxEnchantLevel, "판매 보너스 값이 %d개 입니다. (%d개로 맞춰야함)", iSellBonusCount, Const::Item::MaxEnchantLevel);
 
 	DebugAssertMsg(iWeaponRarityConstantCount == RarityType::Max, "무기 옵트 벨류 값이 %d개 입니다. (%d개로 맞춰야함)", iWeaponBonusOptValueCount, RarityType::Max);
 	DebugAssertMsg(iArmorRarityConstantCount == RarityType::Max, "강화 확률 값이 %d개 입니다. (%d개로 맞춰야함)", iProbCount, RarityType::Max);
 	DebugAssertMsg(iAccessoryRarityConstantCount == RarityType::Max, "판매 보너스 값이 %d개 입니다. (%d개로 맞춰야함)", iSellBonusCount, RarityType::Max);
 
-	for (int i = 0; i < MaxEnchantLevel_v; ++i) {
+	for (int i = 0; i < Const::Item::MaxEnchantLevel; ++i) {
 		enchantInfo->WeaponAttackPhysicalMultiplyValue[i] = weaponBonusMulitplyValueListRoot[i].asFloat();
 		enchantInfo->EnchangeProbs[i] = probListRoot[i].asFloat();
 		enchantInfo->SellBonus[i] = sellBonusListRoot[i].asFloat();
