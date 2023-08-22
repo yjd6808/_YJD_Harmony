@@ -18,7 +18,6 @@ public:
 
 	SGTcpSession* CreateSession() override;
 	ServerType_t GetServerType() override { return ServerType::Logic; }
-	ServerInfo GetServerInfo() override;
 protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 };

@@ -30,8 +30,8 @@ void InitializeCenterCore() {
 	CoreGameDB_v->Initialize(ServerProcessType::Center);
 	CoreNetMaster_v					= CenterNetMaster::Get();
 	CoreNetMaster_v->Initialize();
-	CoreNetGroup_v					= CoreNetMaster_v->GetNetGroup(NETGROUP_ID_MAIN).Get<CenterNetGroup*>();
-	CoreServer_v					= dynamic_cast<CenterServer*>(CoreNetGroup_v->GetServer());
+	CoreNetGroup_v					= CoreNetMaster_v->GetNetGroup(Const::NetGroup::MainId).Get<CenterNetGroup*>();
+	CoreServer_v					= CoreNetGroup_v->GetCenterTcp();
 
 	if (CoreCLIThread_v)
 		CoreCLIThread_v->SetListener(dbg_new CLIListener);
@@ -41,7 +41,7 @@ void InitializeCenterCore() {
 	
 	// 공통 라이브러리 주입용
 	{
-		CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_INTERSERVER).Get<InterServerClientNetGroup*>();
+		CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
 		CoreCommonNetMaster_v = CoreNetMaster_v;
 		CoreCommonNetGroup_v = CoreNetGroup_v;
 		CoreCommonServer_v = CoreServer_v;

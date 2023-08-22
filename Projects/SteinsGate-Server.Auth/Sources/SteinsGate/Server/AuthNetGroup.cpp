@@ -43,15 +43,15 @@ void AuthNetGroup::InitializeParser() {
 void AuthNetGroup::InitializeServer() {
 	auto spServer = MakeShared<AuthServer>(m_spIOCP, m_spBufferPool);
 
-	AddHost(spServer);
+	AddHost(Const::Host::AuthTcpId, spServer);
 
-	m_pServer = spServer.Get<AuthServer*>();
-	m_pServer->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfoPackage_v->Auth.MaxSessionCount));
-	m_pServer->SetEventListener(dbg_new ListenerAuthServer{m_pParser});
+	m_pAuthTcp = spServer.Get<AuthServer*>();
+	m_pAuthTcp->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount));
+	m_pAuthTcp->SetEventListener(dbg_new ListenerAuthServer{ m_pAuthTcp, m_pParser });
+
+	AddUpdatable(Const::Host::AuthTcpId, m_pAuthTcp);
 }
 
 void AuthNetGroup::OnUpdate(const TimeSpan& elapsed) {
 
 }
-
-

@@ -19,7 +19,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-AuthNetMaster::AuthNetMaster() : CommonNetMaster(LoopPerSecondAuth_v) {}
+AuthNetMaster::AuthNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondAuth) {}
 
 AuthNetMaster::~AuthNetMaster() {
 }
@@ -30,8 +30,8 @@ void AuthNetMaster::Initialize() {
 	const auto spAuthNetGroup = MakeShared<AuthNetGroup>();
 	const auto spInterServerNetGroup = MakeShared<AuthInterServerClientNetGroup>();
 
-	AddNetGroup(NETGROUP_ID_MAIN, spAuthNetGroup);
-	AddNetGroup(NETGROUP_ID_INTERSERVER, spInterServerNetGroup);
+	AddNetGroup(Const::NetGroup::MainId, spAuthNetGroup);
+	AddNetGroup(Const::NetGroup::InterServerId, spInterServerNetGroup);
 
 	spAuthNetGroup->Initialize();
 	spInterServerNetGroup->Initialize();

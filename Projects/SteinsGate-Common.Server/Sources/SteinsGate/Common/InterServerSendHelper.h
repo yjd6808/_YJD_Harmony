@@ -23,7 +23,7 @@ struct InterServerSendHelperBase
 		JNetwork::Session* Sender;				// 패킷을 전송할 호스트
 		JNetwork::SendStrategy Strategy;
 		JNetwork::IPv4EndPoint Destination;
-		Int8 ToId;
+		int ToId;
 
 		Information();
 	};
@@ -35,27 +35,29 @@ struct InterServerSendHelperBase
 
 	static void InitSingleServerIds();
 	static void InitSingleServerDestinations();
-	static void InitDefaultToId(Int8 id = InvalidValue_v);
+	static void InitDefaultToId(int id = InvalidValue_v);
 
 	static void FlushSendBuffer();
-	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, Int8 toServerId = InvalidValue_v);
-	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, SingleServerType_t singleServerType);
+	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId = InvalidValue_v);
+	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, SingleServerType_t toServerType);
 	static void SendEnd(JNetwork::ISendPacket* packet);
 
-	static void SetReceiverId(Int8 serverId);
+	static void SetReceiverId(int serverId);
 	static void SetStrategy(JNetwork::SendStrategy strategy);
 
 	static bool IsUDPStrategy(JNetwork::SendStrategy strategy);
+
+	static bool IsValidInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy);
+	static bool IsValidInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId);
 	
-	static Int8 GetSenderId();
+	
+	static int GetSenderId();
 
 	inline static thread_local Information SendInformation;
-	inline static /* readonly */ Int8 DefaultToId = InvalidValue_v;	// 누구에게 보낼지 설정하지 않는 경우 중앙서버에게 기본적으로 보냄
-	inline static /* readonly */ Int8 SingleServerId[SingleServerType::Max];
+	inline static /* readonly */ int DefaultToId = InvalidValue_v;	// 누구에게 보낼지 설정하지 않는 경우 중앙서버에게 기본적으로 보냄
+	inline static /* readonly */ int SingleServerId[SingleServerType::Max];
 	inline static /* readonly */ JNetwork::IPv4EndPoint SingleServerInterServerEP[SingleServerType::Max];
 };
-
-
 
 template <typename T, typename TCommand>
 struct InterServerSending : JCore::NonCopyable

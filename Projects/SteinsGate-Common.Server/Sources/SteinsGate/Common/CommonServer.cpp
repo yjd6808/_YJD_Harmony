@@ -10,74 +10,51 @@
 #include "ServerCoreHeader.h"
 #include "CommonServer.h"
 
+#include <SteinsGate/Common/S_INTERSERVER_COMMON.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
 CommonServer::CommonServer(const IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
 	: TcpServer(iocp, bufferAllocator)
-	, m_eBootState(ServerBootState::Initialized)
+	, m_eBootState(ServerBootState::Stopped)
 {}
 
+void CommonServer::OnStarted() {
+	const ServerType_t eType = GetServerType();
 
-void CommonServer::ProcessUpdate(const TimeSpan& elapsed) {
-
-	if (m_eBootState == ServerBootState::Launched) {
+	// 중앙서버는 자신이 부트상태를 관리하므로
+	if (eType == ServerType::Center)
 		return;
-	}
 
-	OnUpdate(elapsed);
+	m_eBootState = ServerBootState::Launched;
+	S_INTERSERVER_COMMON::SetInformation(CoreInterServerClientTcp_v, eSendAsync);
+	S_INTERSERVER_COMMON::SEND_SCE_NotifyBootState(CoreServerProcessInfo_v->ServerId, eType, ServerBootState::Launched);
 }
 
+void CommonServer::OnStartFailed(Int32U errorCode) {
+	const ServerType_t eType = GetServerType();
 
+	// 중앙서버는 자신이 부트상태를 관리하므로
+	if (eType == ServerType::Center)
+		return;
 
-
-bool CommonServer::ProcessOrder(CenterOrder_t order) {
-	const ServerInfo info = GetServerInfo();
-	const int eState = m_eBootState;
-
-	switch (order) {
-	case CenterOrder::LaunchServer:
-		if (eState != ServerBootState::Stopped && eState != ServerBootState::Initialized) {
-			return false;
-		}
-
-		m_eBootState = ServerBootState::Launching;
-		if (Start(info.BindEndPoint)) {
-			m_eBootState = ServerBootState::Launched;
-			return true;
-		}
-
-		_NetLogError_("서버 실행을 실패했습니다.");
-		Initialize();
-		m_eBootState = ServerBootState::Initialized;
-		return false;
-	case CenterOrder::StopServer:
-		if (m_eBootState != ServerBootState::Launched)
-			return false;
-
-		m_eBootState = ServerBootState::Stopping;
-		Stop();
-		Initialize();
-		m_eBootState = ServerBootState::Stopped;
-		return false;
-	case CenterOrder::RebootServer:
-		if (eState == ServerBootState::Stopping || eState == ServerBootState::Launching) {
-			return false;
-		}
-
-		// 이미 정지중인 경우
-		if (eState == ServerBootState::Stopped || eState == ServerBootState::Initialized) {
-			return ProcessOrder(CenterOrder::LaunchServer);
-		}
-
-		// 실행중인 경우: 정지 후 실행
-		if (eState == ServerBootState::Launched) {
-			return ProcessOrder(CenterOrder::StopServer) && ProcessOrder(CenterOrder::LaunchServer);
-		}
-
-		return false;
-	}
-
-	return false;
+	S_INTERSERVER_COMMON::SetInformation(CoreInterServerClientTcp_v, eSendAsync);
+	S_INTERSERVER_COMMON::SEND_SCE_NotifyOrderFailed(CoreServerProcessInfo_v->ServerId, eType, CenterOrder::LaunchServer, errorCode);
 }
 
+void CommonServer::OnStopped() {
+	const ServerType_t eType = GetServerType();
+
+	// 중앙서버는 자신이 부트상태를 관리하므로
+	if (eType == ServerType::Center)
+		return;
+
+	m_eBootState = ServerBootState::Stopped;
+	S_INTERSERVER_COMMON::SetInformation(CoreInterServerClientTcp_v, eSendAsync);
+	S_INTERSERVER_COMMON::SEND_SCE_NotifyBootState(CoreServerProcessInfo_v->ServerId, eType, ServerBootState::Stopped);
+}
+
+void CommonServer::OnUpdate(const JCore::TimeSpan& elapsed) {
+
+}

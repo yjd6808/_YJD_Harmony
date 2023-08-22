@@ -5,10 +5,8 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\DataManager.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Auth.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\AuthServer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthNetMaster.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\AuthNetGroup.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\AuthSession.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerAuthServer.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
@@ -43,16 +41,20 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AuthSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCoreHeader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Auth.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthNetMaster.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthNetGroup.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\AuthSession.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTH.h">
       <Filter>Recv</Filter>
     </ClInclude>
@@ -87,6 +89,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AuthServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Recv">
@@ -106,6 +114,9 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{10b62b62-a2d4-47e9-93b1-713373df9e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{99a0955d-a924-487f-a894-69665fd2dc8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

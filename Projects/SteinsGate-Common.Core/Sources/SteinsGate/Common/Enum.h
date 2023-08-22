@@ -8,24 +8,24 @@
 
 #pragma once
 
-#include <SteinsGate/Common/EnumDefine.h>
+#include <JCore/Define.h>
 
-SEnumBegin(CharType)
+JCORE_SENUM_BEGIN(CharType)
 Gunner,
 Begin = Gunner,
 End = Gunner,
 Max
-SEnumMiddle(CharType)
+JCORE_SENUM_MIDDLE(CharType)
 static constexpr const char* Name[Max]{
 	"gunner"
 };
-SEnumMiddleEnd(CharType)
+JCORE_SENUM_MIDDLE_END(CharType)
 
-SEnumBegin(SpriteDirection)
+JCORE_SENUM_BEGIN(SpriteDirection)
 Right,
 Left,
 Max
-SEnumMiddle(SpriteDirection)
+JCORE_SENUM_MIDDLE(SpriteDirection)
 static constexpr const char* Name[Max]{
 	"Right",
 	"Left"
@@ -35,27 +35,27 @@ static constexpr SpriteDirection_t Reverse[Max]{
 	Left,
 	Right
 };
-SEnumMiddleEnd(SpriteDirection)
+JCORE_SENUM_MIDDLE_END(SpriteDirection)
 
 
-SEnumBegin(Direction)
+JCORE_SENUM_BEGIN(Direction)
 Right,
 Left,
 Up,
 Down,
 Max,
 None
-SEnumEnd(Direction)
+JCORE_SENUM_END(Direction)
 
 
 
-SEnumBegin(JumpDirection)
+JCORE_SENUM_BEGIN(JumpDirection)
 None,
 Up = Direction::Up,
 Down
-SEnumEnd(JumpDirection)
+JCORE_SENUM_END(JumpDirection)
 
-SEnumBegin(AvatarType)
+JCORE_SENUM_BEGIN(AvatarType)
 Skin,
 Begin = Skin,
 Shoes,
@@ -69,7 +69,7 @@ Belt,
 End,
 Max = End,
 None
-SEnumMiddle(AvatarType)
+JCORE_SENUM_MIDDLE(AvatarType)
 static constexpr const char* Name[Max]{
 	"skin"	,
 	"shoes"	,
@@ -95,10 +95,10 @@ static constexpr const char* ImgPrefix[Max]{
 };
 
 
-SEnumMiddleEnd(AvatarType)
+JCORE_SENUM_MIDDLE_END(AvatarType)
 
 
-SEnumBegin(VisualType)
+JCORE_SENUM_BEGIN(VisualType)
 Skin	= AvatarType::Skin	,
 Begin = Skin,
 AvatarBegin = Begin,
@@ -114,7 +114,7 @@ AvatarEnd = Belt,
 Weapon,
 Max,
 None
-SEnumMiddle(VisualType)
+JCORE_SENUM_MIDDLE(VisualType)
 
 
 // 스킨 0으로 두면 안됨
@@ -173,12 +173,12 @@ inline static constexpr bool IsWeapon[Max]{
 
 
 
-SEnumMiddleEnd(VisualType)
+JCORE_SENUM_MIDDLE_END(VisualType)
 
 
 // 인덱스 기반 타입이므로 무조건 0부터 시작해야한다.
 // 변수 초기화는 None으로 수동으로 할 것
-SEnumBegin(ControlKey)
+JCORE_SENUM_BEGIN(ControlKey)
 Right		,
 Left		,
 Up			,
@@ -187,7 +187,7 @@ Attack		,
 Jump		,
 Max			,
 None
-SEnumMiddle(ControlKey)
+JCORE_SENUM_MIDDLE(ControlKey)
 
 static constexpr const char* Name[Max]{
 	"→"	,
@@ -209,11 +209,11 @@ static constexpr ControlKey_t ReverseDirection[Direction::Max]{
 	Up
 };
 
-SEnumMiddleEnd(ControlKey)
+JCORE_SENUM_MIDDLE_END(ControlKey)
 
 
 
-SEnumBegin(ActorType)
+JCORE_SENUM_BEGIN(ActorType)
 None,
 Character,
 Monster,
@@ -222,7 +222,7 @@ Projectile,
 MapObject,
 Effect,
 Max
-SEnumMiddle(ActorType)
+JCORE_SENUM_MIDDLE(ActorType)
 
 static constexpr const char* Name[Max]{
 	"None",
@@ -234,23 +234,23 @@ static constexpr const char* Name[Max]{
 	"Effect"
 };
 
-SEnumMiddleEnd(ActorType)
+JCORE_SENUM_MIDDLE_END(ActorType)
 
 
-SEnumBegin(FrameEventType)
+JCORE_SENUM_BEGIN(FrameEventType)
 None,
 Spawn,
 AttackBoxInstant,
 Max
-SEnumEnd(FrameEventType)
+JCORE_SENUM_END(FrameEventType)
 
-SEnumBegin(FrameEventSpawnType)
+JCORE_SENUM_BEGIN(FrameEventSpawnType)
 Projectile,
 AttackBox,
 Max
-SEnumEnd(FrameEventSpawnType)
+JCORE_SENUM_END(FrameEventSpawnType)
 
-SEnumBegin(WeaponType)
+JCORE_SENUM_BEGIN(WeaponType)
 Automatic,
 Begin = Automatic,
 GunnerBegin = Begin,
@@ -260,7 +260,7 @@ Musket,
 HandCannon,
 GunnerEnd = HandCannon,
 Max
-SEnumMiddle(WeaponType)
+JCORE_SENUM_MIDDLE(WeaponType)
 
 // 핸드캐논은 총 쏘는 방식이 히트박스임, 나머진 투사체 날림
 static constexpr FrameEventSpawnType_t ShotFrameEventSpawnType[Max]{
@@ -291,28 +291,28 @@ static constexpr const char* ImgPrefix[] {
 
 static WeaponType_t getType(const JCore::String& name);
 
-SEnumMiddleEnd(WeaponType)
+JCORE_SENUM_MIDDLE_END(WeaponType)
 
 
 
-SEnumBegin(AttackDamageType)
+JCORE_SENUM_BEGIN(AttackDamageType)
 None,
 Physics,
 Magic,
 Fixed,
 Max
-SEnumEnd(AttackDamageType)
+JCORE_SENUM_END(AttackDamageType)
 
-SEnumBegin(AttackXForceDirection)
+JCORE_SENUM_BEGIN(AttackXForceDirection)
 None,
 Forward,
 Backward,
 Spread,
 Max
-SEnumEnd(AttackXForceDirection)
+JCORE_SENUM_END(AttackXForceDirection)
 
 
-SEnumBegin(BaseAction)
+JCORE_SENUM_BEGIN(BaseAction)
 Idle,
 Walk,
 Run,
@@ -324,37 +324,37 @@ FallDown,
 SitRecover,
 SitPickUp,
 Max
-SEnumEnd(BaseAction)
+JCORE_SENUM_END(BaseAction)
 
-SEnumBegin(AIState)
+JCORE_SENUM_BEGIN(AIState)
 None,
 Wander,
 Track,
 Angry
-SEnumEnd(AIState)
+JCORE_SENUM_END(AIState)
 
-SEnumBegin(AIWanderDecision)
+JCORE_SENUM_BEGIN(AIWanderDecision)
 Walk,
 Idle,
 Max
-SEnumEnd(AIWanderDecision)
+JCORE_SENUM_END(AIWanderDecision)
 
-SEnumBegin(AITrackDecision)
+JCORE_SENUM_BEGIN(AITrackDecision)
 Wander,
 Attack,
 Follow,
 Max
-SEnumEnd(AITrackDecision)
+JCORE_SENUM_END(AITrackDecision)
 
-SEnumBegin(AIAngryDecision)
+JCORE_SENUM_BEGIN(AIAngryDecision)
 Wander,
 Track,
 Attack,
 Max
-SEnumEnd(AIAngryDecision)
+JCORE_SENUM_END(AIAngryDecision)
 
 
-SEnumBegin(AIActivityType)
+JCORE_SENUM_BEGIN(AIActivityType)
 Idle,
 Walk,
 Attack,
@@ -364,7 +364,7 @@ Sit,
 // TODO: Custom 몬스터 특수행동 그런거 추가할 수 있을 듯?
 Max,
 None
-SEnumMiddle(AIActivityType)
+JCORE_SENUM_MIDDLE(AIActivityType)
 static constexpr const char* Name[Max]{
 	"Idle",
 	"Walk",
@@ -374,35 +374,35 @@ static constexpr const char* Name[Max]{
 	"Sit"
 };
 
-SEnumMiddleEnd(AIActivityType)
+JCORE_SENUM_MIDDLE_END(AIActivityType)
 
-SEnumBegin(SceneType)
+JCORE_SENUM_BEGIN(SceneType)
 Login,
 ChannelSelect,
 Game,
 None,
 Max = None
-SEnumMiddle(SceneType)
+JCORE_SENUM_MIDDLE(SceneType)
 static constexpr const char* Name[Max]{
 	"로그인",
 	"채널 선택",
 	"게임",
 };
-SEnumMiddleEnd(SceneType)
+JCORE_SENUM_MIDDLE_END(SceneType)
 
-SEnumBegin(HAlignment)
+JCORE_SENUM_BEGIN(HAlignment)
 Left,
 Center,
 Right
-SEnumEnd(HAlignment)
+JCORE_SENUM_END(HAlignment)
 
-SEnumBegin(VAlignment)
+JCORE_SENUM_BEGIN(VAlignment)
 Top,
 Center,
 Bottom
-SEnumEnd(VAlignment)
+JCORE_SENUM_END(VAlignment)
 
-SEnumBegin(UIElementType)
+JCORE_SENUM_BEGIN(UIElementType)
 Group,
 Button,
 Label,
@@ -415,7 +415,7 @@ ProgressBar,
 Static,
 Max
 
-SEnumMiddle(UIElementType)
+JCORE_SENUM_MIDDLE(UIElementType)
 
 static constexpr const char* Name[Max]{
 	"그룹",
@@ -431,10 +431,10 @@ static constexpr const char* Name[Max]{
 };
 
 
-SEnumMiddleEnd(UIElementType)
+JCORE_SENUM_MIDDLE_END(UIElementType)
 
 
-SEnumBegin(ConfigFileType)
+JCORE_SENUM_BEGIN(ConfigFileType)
 Effect,
 Begin = Effect,
 Map,
@@ -467,7 +467,7 @@ Common,
 Database,
 End,
 Max = End
-SEnumMiddle(ConfigFileType)
+JCORE_SENUM_MIDDLE(ConfigFileType)
 
 static constexpr const char* FileName[Max]{
 	"effect.json"						,		// 파일
@@ -501,17 +501,17 @@ static constexpr const char* FileName[Max]{
 	"database.json"								// 파일
 	
 };
-SEnumMiddleEnd(ConfigFileType)
+JCORE_SENUM_MIDDLE_END(ConfigFileType)
 
 
-SEnumBegin(InvenItemType)
+JCORE_SENUM_BEGIN(InvenItemType)
 Quest,
 Etc,
 Consume,
 Equip,
 Avatar,
 Max
-SEnumMiddle(InvenItemType)
+JCORE_SENUM_MIDDLE(InvenItemType)
 
 static constexpr bool Stackable[Max] {
 	true,
@@ -528,11 +528,11 @@ static constexpr const char* Name[Max]{
 	"equip",
 	"avatar"
 };
-SEnumMiddleEnd(InvenItemType)
+JCORE_SENUM_MIDDLE_END(InvenItemType)
 
 
 // https://wiki.dfo-world.com/view/Armor
-SEnumBegin(ItemType)
+JCORE_SENUM_BEGIN(ItemType)
 Shoulder,			// 어깨
 Begin = Shoulder,
 BeginEquip = Begin,
@@ -554,7 +554,7 @@ Etc,				// 기타
 Quest,				// 퀘스트
 End,
 Max = End
-SEnumMiddle(ItemType)
+JCORE_SENUM_MIDDLE(ItemType)
 
 inline static constexpr bool IsEquip[Max]{
 	true,			// 어깨
@@ -624,10 +624,10 @@ inline static constexpr const char* Name[Max]{
 	"quest"			// 퀘스트
 };
 
-SEnumMiddleEnd(ItemType)
+JCORE_SENUM_MIDDLE_END(ItemType)
 
 
-SEnumBegin(EquipArmorType)
+JCORE_SENUM_BEGIN(EquipArmorType)
 Cloth,			// 천
 Begin = Cloth,
 Leather,		// 가죽
@@ -636,7 +636,7 @@ Heavy,			// 중갑
 Place,			// 판금
 End,
 Max = End
-SEnumMiddle(EquipArmorType)
+JCORE_SENUM_MIDDLE(EquipArmorType)
 
 static constexpr const char* Name[Max]{
 	"cloth"		,
@@ -646,11 +646,11 @@ static constexpr const char* Name[Max]{
 	"plate"	  	
 };
 
-SEnumMiddleEnd(EquipArmorType)
+JCORE_SENUM_MIDDLE_END(EquipArmorType)
 
 
 
-SEnumBegin(RarityType)
+JCORE_SENUM_BEGIN(RarityType)
 Normal,
 Begin = Normal,
 Magic,
@@ -660,7 +660,7 @@ Unique,
 Epic,
 End = Epic,
 Max
-SEnumMiddle(RarityType)
+JCORE_SENUM_MIDDLE(RarityType)
 
 static constexpr const char* Name[Max]{
 	"Normal"	,
@@ -689,11 +689,11 @@ static constexpr int OptMaxCount[Max]{
 	0
 };
 
-SEnumMiddleEnd(RarityType)
+JCORE_SENUM_MIDDLE_END(RarityType)
 
 
 
-SEnumBegin(ItemOptType)
+JCORE_SENUM_BEGIN(ItemOptType)
 Begin = 1,
 Str = Begin,					// 1
 Dex,							// 2
@@ -724,11 +724,11 @@ MoveSpeedInDungeon,				// 26
 MoveSpeedInTown,				// 27
 End = MoveSpeedInTown,
 Max
-SEnumMiddle(ItemOptType)
+JCORE_SENUM_MIDDLE(ItemOptType)
 
-SEnumMiddleEnd(ItemOptType)
+JCORE_SENUM_MIDDLE_END(ItemOptType)
 
-SEnumBegin(GameServerType)
+JCORE_SENUM_BEGIN(GameServerType)
 Begin,
 Luke = Begin,
 Hilder,
@@ -740,7 +740,7 @@ Cain,
 Seria,
 End = Seria,
 Max
-SEnumMiddle(GameServerType)
+JCORE_SENUM_MIDDLE(GameServerType)
 
 static constexpr const char* Name[Max]{
 	"루크",
@@ -752,28 +752,28 @@ static constexpr const char* Name[Max]{
 	"카인",
 	"세리아"
 };
-SEnumMiddleEnd(GameServerType)
+JCORE_SENUM_MIDDLE_END(GameServerType)
 
-SEnumBegin(EnteranceType)
+JCORE_SENUM_BEGIN(EnteranceType)
 Newbie,
 Begin = Newbie,
 Auction,
 Normal,
 End = Normal,
 Max
-SEnumMiddle(EnteranceType)
+JCORE_SENUM_MIDDLE(EnteranceType)
 
-SEnumMiddleEnd(EnteranceType)
+JCORE_SENUM_MIDDLE_END(EnteranceType)
 
 
 
-SEnumBegin(ChannelDensity)
+JCORE_SENUM_BEGIN(ChannelDensity)
 Free,
 Normal,
 Busy,
 Full,
 Max
-SEnumMiddle(ChannelDensity)
+JCORE_SENUM_MIDDLE(ChannelDensity)
 
 float Density[Max]{
 	25.0f,
@@ -789,29 +789,29 @@ static constexpr const char* Name[Max]{
 	"포화"
 };
 
-SEnumMiddleEnd(ChannelDensity)
+JCORE_SENUM_MIDDLE_END(ChannelDensity)
 
-SEnumBegin(ProgressIncreaseDirection)
+JCORE_SENUM_BEGIN(ProgressIncreaseDirection)
 LeftRight,
 RightLeft,
 TopBottom,
 BottomTop
-SEnumEnd(ProgressIncreaseDirection)
+JCORE_SENUM_END(ProgressIncreaseDirection)
 
-SEnumBegin(DatabaseType)
+JCORE_SENUM_BEGIN(DatabaseType)
 Game = 1
-SEnumEnd(DatabaseType)
+JCORE_SENUM_END(DatabaseType)
 
-SEnumBegin(ServerProcessType)
+JCORE_SENUM_BEGIN(ServerProcessType)
 Center,
 Auth,
 Lobby,
 Game,
 Max
-SEnumEnd(ServerProcessType)
+JCORE_SENUM_END(ServerProcessType)
 
 // 클라이언트가 게임을 플레이하는 동안 한번이라도 접속하게되는 서버타입
-SEnumBegin(ClientConnectServerType)
+JCORE_SENUM_BEGIN(ClientConnectServerType)
 Auth,
 Begin = Auth,
 Lobby,
@@ -820,10 +820,10 @@ Chat,
 Area,
 End = Area,
 Max
-SEnumEnd(ClientConnectServerType)
+JCORE_SENUM_END(ClientConnectServerType)
 
 // 전체 서버 종류
-SEnumBegin(ServerType)
+JCORE_SENUM_BEGIN(ServerType)
 Auth,
 Begin = Auth,
 Lobby,
@@ -833,7 +833,7 @@ Area,
 Center,
 End = Center,
 Max
-SEnumMiddle(ServerType)
+JCORE_SENUM_MIDDLE(ServerType)
 
 static constexpr const char* Name[Max]{
 	"인증",
@@ -844,26 +844,26 @@ static constexpr const char* Name[Max]{
 	"중앙"
 };
 
-SEnumMiddleEnd(ServerType)
+JCORE_SENUM_MIDDLE_END(ServerType)
 
 
-SEnumBegin(MapObjectType)
+JCORE_SENUM_BEGIN(MapObjectType)
 Obstacle,
 Begin = Obstacle,
 Gate,
 End = Gate,
-SEnumEnd(MapObjectType)
+JCORE_SENUM_END(MapObjectType)
 
-SEnumBegin(MapType)
+JCORE_SENUM_BEGIN(MapType)
 Dungeon,
 Private,
 Town
-SEnumEnd(MapType)
+JCORE_SENUM_END(MapType)
 
-SEnumBegin(MapBundleType)
+JCORE_SENUM_BEGIN(MapBundleType)
 Dungeon,
 Town
-SEnumEnd(MapBundleType)
+JCORE_SENUM_END(MapBundleType)
 
 
 /*
@@ -884,35 +884,35 @@ SEnumEnd(MapBundleType)
  * [InIgnoredFrameSize]
  * 프레임없이 
  */ 
-SEnumBegin(ActorPartSpritePositioningRule)
+JCORE_SENUM_BEGIN(ActorPartSpritePositioningRule)
 InFrameSize,		// 캐릭터 모션
 InCustomFrameSize,	// 맵 오브젝트(게이트, 장애물)
 InIgnoredFrameSize	// 프로젝틸
-SEnumEnd(ActorPartSpritePositioningRule)
+JCORE_SENUM_END(ActorPartSpritePositioningRule)
 
 
-SEnumBegin(GamePlayMode)
+JCORE_SENUM_BEGIN(GamePlayMode)
 Single,
 Lan,
 Wan,
 Max
-SEnumMiddle(GamePlayMode)
+JCORE_SENUM_MIDDLE(GamePlayMode)
 
 static constexpr bool IsNetworkMode[Max]{
 	false,
 	true,
 };
 
-SEnumMiddleEnd(GamePlayMode)
+JCORE_SENUM_MIDDLE_END(GamePlayMode)
 
 
-SEnumBegin(AuthenticationState)
+JCORE_SENUM_BEGIN(AuthenticationState)
 LobbyWait,
 Lobby,
 GameWait,
 Game,
 Max
-SEnumMiddle(AuthenticationState)
+JCORE_SENUM_MIDDLE(AuthenticationState)
 
 static constexpr const char* Name[Max]{
 	"LobbyWait",
@@ -921,5 +921,14 @@ static constexpr const char* Name[Max]{
 	"Game"
 };
 
-SEnumMiddleEnd(AuthenticationState)
+JCORE_SENUM_MIDDLE_END(AuthenticationState)
 
+
+JCORE_SENUM_BEGIN(SingleServerType)
+Center,
+Begin = Center,
+Auth,
+Lobby,
+End = Lobby,
+Max
+JCORE_SENUM_END(SingleServerType)

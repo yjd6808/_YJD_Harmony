@@ -26,7 +26,9 @@ NetGroup::NetGroup(const String& name)
 	, m_bFinalized(false)
 {}
 
-NetGroup::~NetGroup() {}
+NetGroup::~NetGroup() {
+	NetGroup::Finalize();
+}
 
 void NetGroup::CreateIocp(int threadCount) {
 	m_spIOCP = MakeShared<IOCP>(threadCount);
@@ -44,9 +46,16 @@ IOCPPtr NetGroup::GetIocp() {
 	return m_spIOCP;
 }
 
-void NetGroup::AddHost(const HostPtr& host) {
-	DebugAssertMsg(host != nullptr , "따끈따끈한 호스트만 넣어주세요");
-	m_vHostList.PushBack(host);
+bool NetGroup::AddHost(int id, const HostPtr& host) {
+	DebugAssertMsg(host != nullptr, "따끈따끈한 호스트만 넣어주세요");
+
+	if (m_hHostMap.Exist(id)) {
+		DebugAssert("%d 호스트가 이미 %s 넷그룹에 존재합니다.", id, m_Name.Source());
+		return false;
+	}
+
+	m_hHostMap.Insert(id, host);
+	return true;
 }
 
 void NetGroup::SetName(const String& name) {
@@ -58,12 +67,10 @@ void NetGroup::Finalize() {
 	if (m_bFinalized)
 		return;
 
-	for (int i = 0; i < m_vHostList.Size(); ++i) {
-		auto& spHost = m_vHostList[i];
-		DebugAssertMsg(spHost.RefCount() == 1, "넷 그룹 소멸전에 외부 레퍼런스를 모두 정리해주세요. (윅포를 사용해주세요)");
-	}
-
-	m_vHostList.Clear();
+	m_hHostMap.ForEachValue([](const HostPtr& host) {
+		DebugAssertMsg(host.RefCount() == 1, "넷 그룹 소멸전에 외부 레퍼런스를 모두 정리해주세요. (윅포를 사용해주세요)");
+	});
+	m_hHostMap.Clear();
 
 	if (m_spIOCP.Exist()) {
 		m_spIOCP->Join();

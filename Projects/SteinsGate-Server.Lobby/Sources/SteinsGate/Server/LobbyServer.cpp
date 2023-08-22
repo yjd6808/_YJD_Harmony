@@ -23,12 +23,8 @@ SGTcpSession* LobbyServer::CreateSession() {
 	return dbg_new LobbySession(this, m_spIocp, m_spBufferAllocator, 6144, 6144);
 }
 
-ServerInfo LobbyServer::GetServerInfo() {
-	return { CoreServerProcessInfoPackage_v->Lobby.BindLobbyTcp, CoreServerProcessInfoPackage_v->Lobby.MaxSessionCount };
-}
-
 void LobbyServer::OnUpdate(const TimeSpan& elapsed) {
-
+	CommonServer::OnUpdate(elapsed);
 }
 
 

@@ -26,8 +26,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyInterServerClientNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyNetMaster.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyServer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\LobbySession.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOBBY.cpp">
       <Filter>Query</Filter>
     </ClCompile>
@@ -36,6 +34,12 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\CLIListener.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbySession.cpp">
+      <Filter>Host</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,9 +67,7 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyInterServerClientNetGroup.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyNetGroup.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyNetMaster.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\LobbySession.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOBBY.h">
       <Filter>Query</Filter>
     </ClInclude>
@@ -74,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbySession.h">
+      <Filter>Host</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +102,9 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{4b1aac58-cbba-4ee0-b6a9-736208bcbbb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{34c7c14a-ff4a-4cd9-8fe9-13e8b5e97685}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

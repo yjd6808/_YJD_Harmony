@@ -9,18 +9,25 @@
 #pragma once
 
 #include <SteinsGate/Common/CommonNetGroup.h>
+#include <SteinsGate/Server/LobbyServer.h>
 
 class LobbyNetGroup final : public CommonNetGroup
 {
 public:
 	LobbyNetGroup();
 	~LobbyNetGroup() override;
+
+	CommonServer* GetMainTcp() const override { return m_pLobbyTcp; }
+	LobbyServer* GetLobbyTcp() const { return m_pLobbyTcp; }
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
 	void InitializeParser() override;
 	void InitializeServer() override;
+
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+
+	LobbyServer* m_pLobbyTcp;
 };
 
 

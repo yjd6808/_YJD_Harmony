@@ -12,9 +12,6 @@
 #include <JNetwork/NetMaster.h>
 #include <SteinsGate/Common/ServerEnum.h>
 
-#define NETGROUP_ID_MAIN 1				// 각 서버 프로세별로 있는 메인(인증, 중앙, 로비, 게임)서버 그룹 코드
-#define NETGROUP_ID_INTERSERVER 2		// 각 서버 프로세별로 있는 인터서버 그룹 코드
-
 class CommonNetMaster : public JNetwork::NetMaster
 {
 public:

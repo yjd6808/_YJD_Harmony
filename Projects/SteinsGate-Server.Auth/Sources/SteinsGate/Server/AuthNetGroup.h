@@ -9,12 +9,16 @@
 #pragma once
 
 #include <SteinsGate/Common/CommonNetGroup.h>
+#include <SteinsGate/Server/AuthServer.h>
 
 class AuthNetGroup final : public CommonNetGroup
 {
 public:
 	AuthNetGroup();
 	~AuthNetGroup() override;
+
+	AuthServer* GetAuthTcp() const { return m_pAuthTcp; }
+	CommonServer* GetMainTcp() const override { return m_pAuthTcp; }
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
@@ -22,6 +26,8 @@ protected:
 	void InitializeServer() override;
 
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
+
+	AuthServer* m_pAuthTcp;
 };
 
 

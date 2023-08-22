@@ -26,8 +26,8 @@ int main() {
 	// 메인 루틴
 	// ======================================================
 
-	if (CoreServer_v)
-		CoreServer_v->Start(CoreServerProcessInfoPackage_v->Center.BindInterServerTcp);
+	if (CoreNetGroup_v)
+		CoreNetGroup_v->LaunchServer();
 
 	if (CoreNetMaster_v)
 		CoreNetMaster_v->ProcessMainUpdate();
@@ -42,5 +42,5 @@ int main() {
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
 	Winsock::Finalize();
-	return 0;
+	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
 }

@@ -47,11 +47,11 @@ struct GunnerInfo : CharInfo
 {
 	~GunnerInfo() override = default;
 
-	int ShotCount[CharWeaponTypeCount_v];				// 지상 공격 횟수
-	int JumpShotCount[CharWeaponTypeCount_v];			// 점프 공격 횟수
-	float AttackSpeed[CharWeaponTypeCount_v];			// 공속
-	float JumpShotForceX[CharWeaponTypeCount_v];		// 점프 공격 X 반동
-	float JumpShotForceY[CharWeaponTypeCount_v];		// 점프 공격 Y 반동
-	float JumpShotMoveSpeedX[CharWeaponTypeCount_v];	// 점프 공격 X 반동스피드
+	int ShotCount[WeaponType::Max];				// 지상 공격 횟수
+	int JumpShotCount[WeaponType::Max];			// 점프 공격 횟수
+	float AttackSpeed[WeaponType::Max];			// 공속
+	float JumpShotForceX[WeaponType::Max];		// 점프 공격 X 반동
+	float JumpShotForceY[WeaponType::Max];		// 점프 공격 Y 반동
+	float JumpShotMoveSpeedX[WeaponType::Max];	// 점프 공격 X 반동스피드
 };
 

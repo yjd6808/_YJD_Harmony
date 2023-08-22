@@ -14,6 +14,12 @@
 class CenterSession : public JNetwork::TcpSession
 {
 public:
+	struct BootState
+	{
+		ServerType_t ServerType;
+		ServerBootState_t State;
+	};
+
 	CenterSession(
 		JNetwork::TcpServer* server,
 		const JNetwork::IOCPPtr& iocp,
@@ -22,7 +28,8 @@ public:
 		int sendBufferSize
 	);
 
-	void ConnectedInit() override;
+	void OnConnected() override;
+	void OnDisconnected() override;
 
 	InterServerClientType_t GetClientType() const { return m_eClientType; }
 	Int8 GetServerId() const { return m_iServerId; }
@@ -30,12 +37,8 @@ public:
 	void SetClientType(InterServerClientType_t type) { m_eClientType = type; }
 	void SetClientInformation(InterServerClientType_t type, Int8 serverId);
 	bool IsValid() const;
-
-	ServerBootState_t GetBootState() const { return m_eBootState; }
-	void SetBootState(ServerBootState_t state);
 private:
 	InterServerClientType_t m_eClientType;
-	ServerBootState_t m_eBootState;
 	Int8 m_iServerId;
 };
 

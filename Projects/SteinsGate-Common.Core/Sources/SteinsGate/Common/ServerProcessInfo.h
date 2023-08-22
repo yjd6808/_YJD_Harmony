@@ -9,30 +9,23 @@
 #pragma once
 
 #include <SteinsGate/Common/ConfigDataAbstract.h>
+#include <SteinsGate/Common/Enum.h>
 
 struct ServerProcessInfo
 {
+	ServerProcessType_t ProcessType;
+	SGString Name;
+
+	// JSON에서 읽은 데이터
 	SGEndPoint BindInterServerUdp;
-	SGEndPoint BindInterServerTcp;
+	SGEndPoint BindInterServerTcp;	// 중앙서버X
+	SGEndPoint BindTcp;				// 게임서버는 로직서버
+	SGEndPoint BindUdp;				// 게임서버는 로직서버
 	SGEndPoint RemoteInterServerEP;
 	SGEndPoint RemoteEP;
 	int ServerId = - 1;
 	int MaxSessionCount = 0;
-};
 
-struct CenterServerProcessInfo : ServerProcessInfo
-{
-};
-
-
-struct AuthServerProcessInfo : ServerProcessInfo
-{
-	SGEndPoint BindAuthTcp;
-};
-
-struct LobbyServerProcessInfo : ServerProcessInfo
-{
-	SGEndPoint BindLobbyTcp;
 };
 
 struct GameChannelInfo
@@ -49,16 +42,13 @@ struct GameServerProcessInfo : ServerProcessInfo
 		: GameChannelInfoList(channelCount)
 	{}
 
-	GameServerType_t Type;
-	SGString Name;
-	
-	SGEndPoint BindLogicTcp;
-	SGEndPoint BindLogicUdp;
-
+	GameServerType_t GameServerType;
 	SGEndPoint BindChatTcp;
+	SGEndPoint BindChatUdp;
 	SGEndPoint RemoteChat;
 
 	SGEndPoint BindAreaTcp;
+	SGEndPoint BindAreaUdp;
 	SGEndPoint RemoteArea;
 
 	bool Active;
@@ -69,20 +59,22 @@ struct GameServerProcessInfo : ServerProcessInfo
 struct ServerProcessInfoPackage : ConfigDataAbstract
 {
 	ServerProcessInfoPackage(int activeGameServerCount)
-		: GameList(activeGameServerCount)
+		: GameServerList(activeGameServerCount)
 		, ActiveServerIdList(3 + activeGameServerCount)	// 인증 + 로비 + 중앙 + 게임 서버들
 	{}
 	~ServerProcessInfoPackage() override = default;
 
+	SGString getServerProcessName(int serverId);
+	ServerProcessInfo* getServerProcessInfo(int serverId);
 	GameServerProcessInfo* getGameServerProcessInfo(GameServerType_t gameServerType);
 
 	SGString Name;
-	CenterServerProcessInfo Center;
-	AuthServerProcessInfo Auth;
-	LobbyServerProcessInfo Lobby;
-	SGVector<GameServerProcessInfo> GameList;
+	ServerProcessInfo Auth;
+	ServerProcessInfo Center;
+	ServerProcessInfo Lobby;
+	SGVector<GameServerProcessInfo> GameServerList;
 	SGVector<int> ActiveServerIdList;
-	ServerProcessInfo* InfoMap[MaxServerId_v];
+	ServerProcessInfo* InfoMap[Const::Server::MaxId];
 };
 
 

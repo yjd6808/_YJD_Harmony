@@ -20,13 +20,15 @@ CenterSession::CenterSession(
 	int sendBufferSize)
 	: TcpSession(server, iocp, bufferAllocator, recvBufferSize, sendBufferSize)
 	, m_eClientType(InterServerClientType::None)
-	, m_eBootState(ServerBootState::Initialized)
 	, m_iServerId(InvalidValue_v)
 {}
 
-void CenterSession::ConnectedInit() {
+void CenterSession::OnConnected() {
 	m_eClientType = InterServerClientType::None;
-	m_eBootState = ServerBootState::Initialized;
+}
+
+void CenterSession::OnDisconnected() {
+
 }
 
 void CenterSession::SetClientInformation(InterServerClientType_t type, Int8 serverId) {
@@ -37,15 +39,3 @@ void CenterSession::SetClientInformation(InterServerClientType_t type, Int8 serv
 bool CenterSession::IsValid() const {
 	return m_eClientType != InterServerClientType::None && m_iServerId != InvalidValue_v;
 }
-
-void CenterSession::SetBootState(ServerBootState_t state) {
-	m_eBootState = state;
-
-	if (state == ServerBootState::Launched) {
-		_LogInfo_("%s 서버가 실행되었습니다.", InterServerClientType::Name[m_eClientType]);
-	} else if (state == ServerBootState::Stopped) {
-		_LogInfo_("%s 서버가 중지되었습니다.", InterServerClientType::Name[m_eClientType]);
-	}
-}
-
-

@@ -46,5 +46,5 @@ int main() {
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
 	Winsock::Finalize();
-	return 0;
+	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
 }

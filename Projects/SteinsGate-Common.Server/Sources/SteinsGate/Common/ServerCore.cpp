@@ -34,6 +34,7 @@ void InitializeServerCore() {
 	CoreCommandNameDictionary_v.Add<CES_YouNeedToDoThis>();
 	CoreCommandNameDictionary_v.Add<SS_HostMessage>();
 	CoreCommandNameDictionary_v.Add<SCE_NotifyBootState>();
+	CoreCommandNameDictionary_v.Add<SCE_NotifyOrderFailed>();
 	CoreCommandNameDictionary_v.Add<SCE_TimeSync>();
 	CoreCommandNameDictionary_v.Add<CES_TimeSyncAck>();
 	

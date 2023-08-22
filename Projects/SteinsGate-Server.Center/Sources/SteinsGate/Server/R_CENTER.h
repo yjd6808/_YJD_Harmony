@@ -15,8 +15,9 @@
 struct R_CENTER : InterServerRecvHelper
 {
 public:
-	static void RecvItsMe(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RecvCenterMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RecvNotifyBootState(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RecvTimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SCE_ItsMe(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SS_HostMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SCE_NotifyBootState(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SCE_NotifyOrderFailed(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SCE_TimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd);
 };

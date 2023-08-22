@@ -31,9 +31,9 @@ void InitializeLobbyCore() {
 	CoreGameDB_v->Initialize(ServerProcessType::Lobby);
 	CoreNetMaster_v					= LobbyNetMaster::Get();
 	CoreNetMaster_v->Initialize();
-	CoreNetGroup_v					= CoreNetMaster_v->GetNetGroup(NETGROUP_ID_MAIN).Get<LobbyNetGroup*>();
-	CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_INTERSERVER).Get<InterServerClientNetGroup*>();
-	CoreServer_v					= dynamic_cast<LobbyServer*>(CoreNetGroup_v->GetServer());
+	CoreNetGroup_v					= CoreNetMaster_v->GetNetGroup(Const::NetGroup::MainId).Get<LobbyNetGroup*>();
+	CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
+	CoreServer_v					= CoreNetGroup_v->GetLobbyTcp();
 
 	if (CoreCLIThread_v)	// 커몬코어에서 초기화되므로 체크
 		CoreCLIThread_v->SetListener(dbg_new CLIListener);

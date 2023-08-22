@@ -111,6 +111,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\ListenerHelperBase.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Position.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Const.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -232,7 +236,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\CharCommonInfo.h">
       <Filter>Data\CharCommon</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\EnumDefine.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Type.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\LogSpecifier.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
@@ -298,6 +301,13 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelperBase.h">
       <Filter>Net\Listener</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\IBroadcastable.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Position.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Namepsace.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -363,14 +373,14 @@
     <Filter Include="System">
       <UniqueIdentifier>{df07d7b3-ec11-400e-bd40-3989d5caf2ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Base">
-      <UniqueIdentifier>{22fee212-3e25-40e8-89e1-794cc68791dc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{a08a2ead-fee0-4ee6-aa74-41901c3681e6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Data\ChannelBase">
       <UniqueIdentifier>{a7851926-c0b9-465c-99d8-b322f51ea50f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{56aa07c9-aebe-44d8-8e9b-36b92699697e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

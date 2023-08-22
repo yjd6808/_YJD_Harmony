@@ -1,11 +1,10 @@
 #pragma once
 
+#include <SteinsGate/Common/Namepsace.h>
 
-
-namespace JCore
-{
-	struct TimeSpan;
-}
+NS_JC_BEGIN
+struct TimeSpan;
+NS_JC_END
 
 struct IUpdatable
 {

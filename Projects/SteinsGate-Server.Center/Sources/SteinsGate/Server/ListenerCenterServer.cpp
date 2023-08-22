@@ -21,10 +21,10 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerCenterServer::ListenerCenterServer(SGCommandParser* parser)
-	: ListenerServerCommon(parser) {
-
-}
+ListenerCenterServer::ListenerCenterServer(CenterServer* server, SGCommandParser* parser)
+	: ListenerServerCommon(parser)
+	, m_pCenterTcp(server)
+{}
 
 void ListenerCenterServer::OnStarted() {
 	ListenerServerCommon::OnStarted();

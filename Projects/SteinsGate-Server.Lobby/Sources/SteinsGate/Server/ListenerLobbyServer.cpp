@@ -18,8 +18,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerLobbyServer::ListenerLobbyServer(CommandParser* parser)
+ListenerLobbyServer::ListenerLobbyServer(LobbyServer* server, CommandParser* parser)
 	: ListenerServerCommon(parser)
+	, m_pLobbyTcp(server)
 {}
 
 void ListenerLobbyServer::OnStarted() {

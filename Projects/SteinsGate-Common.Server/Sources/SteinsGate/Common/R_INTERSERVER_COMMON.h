@@ -18,12 +18,12 @@ struct R_INTERSERVER_COMMON : InterServerRecvHelper
 {
 public:
 	// HOST
-	static void RecvWhoAreYou(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RecvAlreadyConnected(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RecvYouNeedToDoThis(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RecvTimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CES_WhoAreYou(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CES_AlreadyConnected(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CES_YouNeedToDoThis(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CES_TimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd);
 
 	// RELAY
-	static void RecvP2PRelayStaticTest(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RecvP2PRelayDynamicTest(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SS_P2PRelayStaticTest(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SS_P2PRelayDynamicTest(JNetwork::Session* session, JNetwork::ICommand* cmd);
 };

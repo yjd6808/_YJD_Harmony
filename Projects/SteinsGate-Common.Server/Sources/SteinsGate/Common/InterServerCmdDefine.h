@@ -8,9 +8,10 @@
 
 #pragma once
 
+#include <JCore/Define.h>
 #include <JNetwork/Packet/Command.h>
 #include <SteinsGate/Common/Const.h>
-#include <SteinsGate/Common/EnumDefine.h>
+
 
 struct InterServerCmdType : JNetwork::CmdType
 {

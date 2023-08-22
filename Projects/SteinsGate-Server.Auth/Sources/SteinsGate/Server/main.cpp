@@ -1,4 +1,4 @@
-#include "Auth.h"
+ï»¿#include "Auth.h"
 #include "AuthCoreHeader.h"
 
 #include <JCore/Random.h>
@@ -13,7 +13,7 @@ int main() {
 	new char;
 
 	// ======================================================
-	// ¸ŞÀÎ ¸®¼Ò½º ÃÊ±âÈ­
+	// ë©”ì¸ ë¦¬ì†ŒìŠ¤ ì´ˆê¸°í™”
 	// ======================================================
 
 	Random::EngineInitialize();
@@ -28,15 +28,17 @@ int main() {
 	InitializeAuthContents();
 
 	// ======================================================
-	// ¸ŞÀÎ ·çÆ¾
+	// ë©”ì¸ ë£¨í‹´
 	// ======================================================
+
+	
 
 	if (CoreInterServerClientNetGroup_v && CoreInterServerClientNetGroup_v->ConnectCenterServer(5)) {
 		CoreNetMaster_v->ProcessMainUpdate();
 	}
 
 	// ======================================================
-	// ¸ŞÀÎ ¸®¼Ò½º Á¤¸®
+	// ë©”ì¸ ë¦¬ì†ŒìŠ¤ ì •ë¦¬
 	// ======================================================
 
 	FinalizeAuthContents();
@@ -46,5 +48,5 @@ int main() {
 	FinalizeDefaultLogger();
 	FinalizeNetLogger();
 	Winsock::Finalize();
-	return 0;
+	return Console::ReadKeyWhile("Xí‚¤ ì…ë ¥ì‹œ ì¢…ë£Œ", ConsoleKey::X);
 }

@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\CLIListenerCommon.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\IComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_HOST.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmdDefine.h">
       <SubType>

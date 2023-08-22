@@ -34,7 +34,7 @@ void LobbyInterServerClientNetGroup::InitializeIOCP() {
 void LobbyInterServerClientNetGroup::InitializeInterServerTcp() {
 	auto spInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Lobby.BindInterServerTcp);
-	AddHost(spInterServerClient);
+	AddHost(Const::Host::LobbyInterServerTcpId, spInterServerClient);
 
 	m_pInterServerClientTcp = spInterServerClient.Get<TcpClient*>();
 	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Lobby, m_pParser });
@@ -43,7 +43,7 @@ void LobbyInterServerClientNetGroup::InitializeInterServerTcp() {
 void LobbyInterServerClientNetGroup::InitializeInterServerUdp() {
 	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Lobby.BindInterServerUdp);
-	AddHost(spInterServerClient);
+	AddHost(Const::Host::LobbyInterServerUdpId, spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
 	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Lobby, m_pParser });
 	m_pInterServerClientUdp->RecvFromAsync();

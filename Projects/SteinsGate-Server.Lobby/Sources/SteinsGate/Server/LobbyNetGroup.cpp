@@ -38,15 +38,15 @@ void LobbyNetGroup::InitializeParser() {
 void LobbyNetGroup::InitializeServer() {
 	auto spServer = MakeShared<LobbyServer>(m_spIOCP, m_spBufferPool);
 
-	AddHost(spServer);
+	AddHost(Const::Host::LobbyTcpId, spServer);
 
-	m_pServer = spServer.Get<LobbyServer*>();
-	m_pServer->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfoPackage_v->Lobby.MaxSessionCount));
-	m_pServer->SetEventListener(dbg_new ListenerLobbyServer{ m_pParser });
+	m_pLobbyTcp = spServer.Get<LobbyServer*>();
+	m_pLobbyTcp->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount));
+	m_pLobbyTcp->SetEventListener(dbg_new ListenerLobbyServer{ m_pLobbyTcp, m_pParser });
+
+	AddUpdatable(Const::Host::LobbyTcpId, m_pLobbyTcp);
 }
 
 void LobbyNetGroup::OnUpdate(const TimeSpan& elapsed) {
 
 }
-
-

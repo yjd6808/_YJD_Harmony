@@ -26,8 +26,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\GameInterServerClientNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\GameNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\GameNetMaster.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\LogicServer.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\LogicSession.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Q_CHAR.cpp">
       <Filter>Query</Filter>
     </ClCompile>
@@ -36,6 +34,36 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ChannelManager.cpp">
+      <Filter>Contents\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\Channel.cpp">
+      <Filter>Contents\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerAreaServer.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\LogicSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AreaServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\LogicServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AreaSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ChatServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ChatSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerChatServer.cpp">
+      <Filter>Listener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,9 +91,7 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\GameInterServerClientNetGroup.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\GameNetGroup.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\LogicServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\GameNetMaster.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\LogicSession.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_CHAR.h">
       <Filter>Query</Filter>
     </ClInclude>
@@ -74,6 +100,36 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ChannelManager.h">
+      <Filter>Contents\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\Channel.h">
+      <Filter>Contents\Channel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerAreaServer.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LogicSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AreaServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LogicServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AreaSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ChatServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ChatSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerChatServer.h">
+      <Filter>Listener</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +150,15 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{1f78515d-b123-4873-afd1-38797882ad85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Channel">
+      <UniqueIdentifier>{6a7ce506-3e22-422c-a971-57f18652495a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Actor">
+      <UniqueIdentifier>{77fbf526-3333-4d64-b628-f3189214fa9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{df50bce7-5292-456e-8757-0a91f14df1cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

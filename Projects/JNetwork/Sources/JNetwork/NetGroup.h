@@ -25,14 +25,33 @@ public:
 	void CreateBufferPool(const JCore::HashMap<int, int>& poolInfo);
 	void RunIocp();
 	IOCPPtr GetIocp();
-	void AddHost(const HostPtr& host);
+	bool AddHost(int id, const HostPtr& host);
 	void SetName(const JCore::String& name);
+
+	template <typename T>
+	T* GetHost(int id) {
+		static_assert(JCore::IsNaturalType_v<T>, "... T must be natural type");
+		const HostPtr* pFind = m_hHostMap.Find(id);
+
+		if (pFind == nullptr) {
+			_LogWarn_("%s그룹에서 %d 호스트 검색에 실패했습니다.", m_Name.Source(), id);
+			return nullptr;
+		}
+
+		T* pHost = dynamic_cast<T*>(pFind->GetPtr());
+		if (pHost == nullptr) {
+			_LogWarn_("%s그룹에서 %d 호스트는 %s 타입이 아닙니다.", m_Name.Source(), id, typeid(T).name());
+			return nullptr;
+		}
+
+		return pHost;
+	}
 
 	virtual void Initialize() = 0;
 	virtual void Finalize();
 protected:
 	IOCPPtr m_spIOCP;
-	JCore::Vector<HostPtr> m_vHostList;
+	JCore::HashMap<int, HostPtr> m_hHostMap;
 	JCore::MemoryPoolAbstractPtr m_spBufferPool;
 	JCore::String m_Name;
 	bool m_bFinalized;

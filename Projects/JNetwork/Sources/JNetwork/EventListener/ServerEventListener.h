@@ -31,7 +31,10 @@ class ServerEventListener
 public:
 	virtual ~ServerEventListener() = default;
 	virtual void OnStarted() {}
+	virtual void OnStartFailed(Int32U errorCode) {}
 	virtual void OnStopped() {}
+
+	// TODO: 함수명 Accept로 변경할것, 관련해서 TcpServer, Session도 수정해야할듯?
 	virtual void OnConnected(Session* session) {}
 	virtual void OnConnectFailed(Session* session, Int32U errorCode) {}
 	virtual void OnDisconnected(Session* session) {}

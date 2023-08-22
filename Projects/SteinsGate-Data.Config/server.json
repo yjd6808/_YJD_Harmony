@@ -9,10 +9,11 @@
             "name": "로컬 테스트",
             "center": {
                 "remote_center": "127.0.0.1:10100",
-                "remote_interserver": "127.0.0.1:10100",
+                "remote_interserver": "127.0.0.1:10101",
 
-                "bind_interserver_udp": "127.0.0.1:10100",
-                "bind_interserver_tcp": "127.0.0.1:10100",
+                "bind_interserver_udp": "127.0.0.1:10101",
+                "bind_center_tcp": "127.0.0.1:10100",
+                "bind_center_udp": "127.0.0.1:10100",
                 "server_id": 1,
                 "max_session_count": 50
             },
@@ -20,6 +21,7 @@
             "auth": {
                 "server_id": 2,
                 "bind_auth_tcp": "127.0.0.1:10110",
+                "bind_auth_udp": "127.0.0.1:10110",
                 "remote_auth": "127.0.0.1:10110",
 
                 "bind_interserver_udp": "127.0.0.1:10111",
@@ -31,6 +33,7 @@
             "lobby": {
                 "server_id": 3,
                 "bind_lobby_tcp": "127.0.0.1:10120",
+                "bind_lobby_udp": "127.0.0.1:10120",
                 "remote_lobby": "127.0.0.1:10120",
 
                 "bind_interserver_udp": "127.0.0.1:10121",
@@ -44,15 +47,16 @@
                 {
                     "game_server_type": 0,
                     "server_id": 4,
-                    "name": "루크",
                     "bind_logic_tcp": "127.0.0.1:10130",
                     "bind_logic_udp": "127.0.0.1:10130",
                     "remote_logic": "127.0.0.1:10130",
 
                     "bind_area_tcp": "127.0.0.1:10131",
+                    "bind_area_udp": "127.0.0.1:10131",
                     "remote_area": "127.0.0.1:10131",
 
                     "bind_chat_tcp": "127.0.0.1:10132",
+                    "bind_chat_udp": "127.0.0.1:10132",
                     "remote_chat": "127.0.0.1:10132",
 
                     "bind_interserver_udp": "127.0.0.1:10133",
@@ -72,15 +76,16 @@
                 {
                     "game_server_type": 1,
                     "server_id": 5,
-                    "name": "힐더",
                     "bind_logic_tcp": "127.0.0.1:10140",
                     "bind_logic_udp": "127.0.0.1:10140",
                     "remote_logic": "127.0.0.1:10140",
 
                     "bind_area_tcp": "127.0.0.1:10141",
+                    "bind_area_udp": "127.0.0.1:10141",
                     "remote_area": "127.0.0.1:10141",
 
                     "bind_chat_tcp": "127.0.0.1:10142",
+                    "bind_chat_udp": "127.0.0.1:10142",
                     "remote_chat": "127.0.0.1:10142",
 
                     "bind_interserver_udp": "127.0.0.1:10143",
@@ -94,37 +99,31 @@
                 {
                     "game_server_type": 2,
                     "server_id": 6,
-                    "name": "시로코",
                     "active": false
                 },
                 {
                     "game_server_type": 3,
                     "server_id": 7,
-                    "name": "프레이",
                     "active": false
                 },
                 {
                     "game_server_type": 4,
                     "server_id": 8,
-                    "name": "카시야스",
                     "active": false
                 },
                 {
                     "game_server_type": 5,
                     "server_id": 9,
-                    "name": "디레지에",
                     "active": false
                 },
                 {
                     "server_id": 10,
                     "game_server_type": 6,
-                    "name": "카인",
                     "active": false
                 },
                 {
                     "server_id": 11,
                     "game_server_type": 7,
-                    "name": "세리아",
                     "active": false
                 }
             ]

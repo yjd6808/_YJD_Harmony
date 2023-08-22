@@ -19,7 +19,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-GameNetMaster::GameNetMaster() : CommonNetMaster(LoopPerSecondGame_v) {}
+GameNetMaster::GameNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondGame) {}
 
 GameNetMaster::~GameNetMaster() {
 }
@@ -30,8 +30,8 @@ void GameNetMaster::Initialize() {
 	const auto spGameNetGroup = MakeShared<GameNetGroup>();
 	const auto spInterServerNetGroup = MakeShared<GameInterServerClientNetGroup>();
 
-	AddNetGroup(NETGROUP_ID_MAIN,			spGameNetGroup);
-	AddNetGroup(NETGROUP_ID_INTERSERVER,	spInterServerNetGroup);
+	AddNetGroup(Const::NetGroup::MainId, spGameNetGroup);
+	AddNetGroup(Const::NetGroup::InterServerId,	spInterServerNetGroup);
 
 	spGameNetGroup->Initialize();
 	spInterServerNetGroup->Initialize();

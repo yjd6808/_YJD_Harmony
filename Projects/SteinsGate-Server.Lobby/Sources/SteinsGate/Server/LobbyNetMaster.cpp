@@ -19,7 +19,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-LobbyNetMaster::LobbyNetMaster() : CommonNetMaster(LoopPerSecondLobby_v) {}
+LobbyNetMaster::LobbyNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondLobby) {}
 
 LobbyNetMaster::~LobbyNetMaster() {
 }
@@ -30,8 +30,8 @@ void LobbyNetMaster::Initialize() {
 	const auto spLobbyNetGroup = MakeShared<LobbyNetGroup>();
 	const auto spInterServerNetGroup = MakeShared<LobbyInterServerClientNetGroup>();
 
-	AddNetGroup(NETGROUP_ID_MAIN,			spLobbyNetGroup);
-	AddNetGroup(NETGROUP_ID_INTERSERVER,	spInterServerNetGroup);
+	AddNetGroup(Const::NetGroup::MainId, spLobbyNetGroup);
+	AddNetGroup(Const::NetGroup::InterServerId,	spInterServerNetGroup);
 
 	spLobbyNetGroup->Initialize();
 	spInterServerNetGroup->Initialize();

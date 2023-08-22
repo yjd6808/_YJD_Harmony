@@ -139,10 +139,29 @@ void TcpServer::Initialize() {
 
 
 bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
+
+	struct StartFailNotifyGuard
+	{
+		StartFailNotifyGuard(TcpServer* server) : Server(server) {}
+		~StartFailNotifyGuard() noexcept {
+			if (ErrorCode == 0)
+				return;
+
+			if (Server->m_pEventListener)
+				Server->m_pEventListener->OnStartFailed(ErrorCode);
+
+			Server->OnStartFailed(ErrorCode);
+		}
+
+		Int32U ErrorCode = 0;
+		TcpServer* Server;
+	} Notifier{this};
+
 	JCORE_LOCK_GUARD(m_Sync);
 
 	if (m_eState != eInitailized) {
 		_NetLogError_("서버가 초기화 상태여야 시작할 수 있습니다.");
+		Notifier.ErrorCode = WSANOTINITIALISED;
 		return false;
 	}
 	
@@ -152,12 +171,14 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 
 	if (m_Socket.Bind(localEndPoint) == SOCKET_ERROR) {
 		_NetLogError_("%s %s %s 바인드 실패 (%u)", TypeName(), localEndPoint.ToString().Source(), m_Socket.ProtocolName(), Winsock::LastError());
+		Notifier.ErrorCode = Winsock::LastError();
 		return false;
 	}
 	_NetLogDebug_("%s %s %s 바인드 완료", TypeName(), localEndPoint.ToString().Source(), m_Socket.ProtocolName());
 
 	if (m_Socket.Listen() == SOCKET_ERROR) {
 		_NetLogError_("서버 소켓 리슨 실패 (%d)", Winsock::LastError());
+		Notifier.ErrorCode = Winsock::LastError();
 		return false;
 	}
 
@@ -178,6 +199,7 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 		if (!session->AcceptAsync()) {
 			m_pContainer->DisconnectAll();
 			m_pContainer->Clear();
+			Notifier.ErrorCode = Winsock::LastError();
 			return false;
 		}
 		m_pContainer->Add(session);
@@ -186,6 +208,8 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 
 	if (m_pEventListener)
 		m_pEventListener->OnStarted();
+
+	OnStarted();
 	return bool(m_eState = eListening);
 }
 
@@ -212,6 +236,8 @@ bool TcpServer::Stop() {
 
 	if (m_pEventListener)
 		m_pEventListener->OnStopped();
+
+	OnStopped();
 	return true;
 }
 

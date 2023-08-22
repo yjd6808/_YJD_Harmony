@@ -12,12 +12,12 @@
 
 #include <SteinsGate/Common/ListenerServerCommon.h>
 #include <SteinsGate/Common/InterServerCmd_HOST.h>
-
+#include <SteinsGate/Server/CenterServer.h>
 
 class ListenerCenterServer : public ListenerServerCommon
 {
 public:
-	ListenerCenterServer(SGCommandParser* parser);
+	ListenerCenterServer(CenterServer* server, SGCommandParser* parser);
 protected:
 	void OnStarted() override;
 	void OnConnected(JNetwork::Session* connectedSession) override;
@@ -29,8 +29,8 @@ protected:
 
 	ServerType_t GetServerType() override { return ServerType::Center; }
 	void RelayCommand(JNetwork::ICommand* cmd, JNetwork::RelayCommandBase* relayCmd);
-
 private:
 	inline thread_local static JCore::HashSet<JNetwork::Session*> ms_tlsSenderMap;
+	CenterServer* m_pCenterTcp;
 };
 

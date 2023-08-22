@@ -23,12 +23,8 @@ SGTcpSession* AuthServer::CreateSession() {
 	return dbg_new AuthSession(this, m_spIocp, m_spBufferAllocator, 2048, 2048);
 }
 
-ServerInfo AuthServer::GetServerInfo() {
-	return { CoreServerProcessInfoPackage_v->Auth.BindAuthTcp, CoreServerProcessInfoPackage_v->Auth.MaxSessionCount };
-}
-
 void AuthServer::OnUpdate(const TimeSpan& elapsed) {
-
+	CommonServer::OnUpdate(elapsed);
 }
 
 

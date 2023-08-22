@@ -36,6 +36,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Const.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Core.cpp">
       <SubType>
       </SubType>
@@ -71,6 +75,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MapInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\PacketViewer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Position.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -170,6 +178,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\GameEnum.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\IBroadcastable.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ICLIListener.h">
       <SubType>
       </SubType>
@@ -199,7 +211,15 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MapInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Namepsace.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\PacketViewer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Position.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -245,10 +265,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Const.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Enum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfo.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\EnumDefine.h">
       <SubType>
       </SubType>
     </ClInclude>

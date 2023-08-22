@@ -16,17 +16,17 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_INTERSERVER_COMMON::RecvWhoAreYou(Session* session, ICommand* cmd) {
+void R_INTERSERVER_COMMON::RECV_CES_WhoAreYou(Session* session, ICommand* cmd) {
 	S_INTERSERVER_COMMON::SetInformation(CoreInterServerClientTcp_v, eSendAsync, LastFromId);
-	S_INTERSERVER_COMMON::SendItsMe(CoreCommonNetMaster_v->GetClientType(), InterServerSendHelperBase::GetSenderId());
+	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(CoreCommonNetMaster_v->GetClientType(), InterServerSendHelperBase::GetSenderId());
 }
 
-void R_INTERSERVER_COMMON::RecvAlreadyConnected(Session* session, ICommand* cmd) {
+void R_INTERSERVER_COMMON::RECV_CES_AlreadyConnected(Session* session, ICommand* cmd) {
 	_LogWarn_("이미 중앙서버에 접속중입니다. 프로세스를 종료합니다.");
 	CoreCommonNetMaster_v->Terminate();
 }
 
-void R_INTERSERVER_COMMON::RecvYouNeedToDoThis(Session* session, ICommand* cmd) {
+void R_INTERSERVER_COMMON::RECV_CES_YouNeedToDoThis(Session* session, ICommand* cmd) {
 	S_INTERSERVER_COMMON::AutoFlush _;
 	S_INTERSERVER_COMMON::SetInformation(session, eSendAlloc);
 	const CES_YouNeedToDoThis* pCmd = (CES_YouNeedToDoThis*)cmd;
@@ -36,25 +36,20 @@ void R_INTERSERVER_COMMON::RecvYouNeedToDoThis(Session* session, ICommand* cmd) 
 		return;
 	}
 
-	if (CoreCommonServer_v->ProcessOrder(pCmd->Order)) {
-		S_INTERSERVER_COMMON::SendNotifyBootState(CoreCommonServer_v->GetBootState());
-		return;
-	}
-
-	S_INTERSERVER_COMMON::SendCenterMessage("요청을 수행할 수 없는 상태입니다.");
+	CoreCommonNetGroup_v->ProcessOrder(pCmd->Order);
 }
 
-void R_INTERSERVER_COMMON::RecvTimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+void R_INTERSERVER_COMMON::RECV_CES_TimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd) {
 	const CES_TimeSyncAck* pCmd = (CES_TimeSyncAck*)cmd;
 	CoreTimeManager_v->UpdateMasterServerTime(pCmd->MasterServerTime);
 }
 
-void R_INTERSERVER_COMMON::RecvP2PRelayStaticTest(Session* session, ICommand* cmd) {
+void R_INTERSERVER_COMMON::RECV_SS_P2PRelayStaticTest(Session* session, ICommand* cmd) {
 	SS_P2PRelayStaticTest* pCmd = (SS_P2PRelayStaticTest*)cmd;
 	Console::WriteLine("%s", pCmd->Msg.Source);
 }
 
-void R_INTERSERVER_COMMON::RecvP2PRelayDynamicTest(Session* session, ICommand* cmd) {
+void R_INTERSERVER_COMMON::RECV_SS_P2PRelayDynamicTest(Session* session, ICommand* cmd) {
 	SS_P2PRelayDynamicTest* pCmd = (SS_P2PRelayDynamicTest*)cmd;
 	Console::WriteLine("%s", pCmd->Msg.Source);
 }

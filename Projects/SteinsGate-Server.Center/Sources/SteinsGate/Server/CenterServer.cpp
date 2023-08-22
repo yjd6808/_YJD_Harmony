@@ -25,10 +25,6 @@ SGTcpSession* CenterServer::CreateSession() {
 	return dbg_new CenterSession(this, m_spIocp, m_spBufferAllocator, 4096, 4096);
 }
 
-ServerInfo CenterServer::GetServerInfo() {
-	return { CoreServerProcessInfoPackage_v->Auth.BindAuthTcp, CoreServerProcessInfoPackage_v->Auth.MaxSessionCount };
-}
-
 void CenterServer::AddSession(CenterSession* session) {
 	DebugAssert(session->IsValid());
 	const Int8 id = session->GetServerId();
@@ -70,7 +66,7 @@ bool CenterServer::IsAllCenterSessionConnected() {
 }
 
 bool CenterServer::IsConnected(CenterSession* session) {
-	for (int i = 0; i < MaxServerId_v; ++i) {
+	for (int i = 0; i < Const::Server::MaxId; ++i) {
 		if (m_pSession[i].Session == session) {
 			return true;
 		}
@@ -86,8 +82,7 @@ bool CenterServer::IsConnected(int serverId) {
 }
 
 void CenterServer::OnUpdate(const TimeSpan& elapsed) {
-
-	
+	CommonServer::OnUpdate(elapsed);
 }
 
 

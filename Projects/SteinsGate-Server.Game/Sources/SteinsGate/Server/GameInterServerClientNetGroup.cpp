@@ -34,7 +34,7 @@ void GameInterServerClientNetGroup::InitializeIOCP() {
 void GameInterServerClientNetGroup::InitializeInterServerTcp() {
 	auto spInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(CoreGameServerProcessInfo_v->BindInterServerTcp);
-	AddHost(spInterServerClient);
+	AddHost(Const::Host::GameInterServerTcpId, spInterServerClient);
 
 	m_pInterServerClientTcp = spInterServerClient.Get<TcpClient*>();
 	m_pInterServerClientTcp->SetEventListener(dbg_new ListenerInterServerClient { InterServerClientType::Game, m_pParser });
@@ -43,7 +43,7 @@ void GameInterServerClientNetGroup::InitializeInterServerTcp() {
 void GameInterServerClientNetGroup::InitializeInterServerUdp() {
 	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
 	spInterServerClient->Bind(CoreGameServerProcessInfo_v->BindInterServerUdp);
-	AddHost(spInterServerClient);
+	AddHost(Const::Host::GameInterServerUdpId, spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
 	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Game, m_pParser });
 	m_pInterServerClientUdp->RecvFromAsync();

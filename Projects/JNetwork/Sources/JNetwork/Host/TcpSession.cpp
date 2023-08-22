@@ -60,7 +60,7 @@ bool TcpSession::AcceptAsync() {
 
 		Int32U uiError = Winsock::LastError();
 		if (uiError != WSA_IO_PENDING) {
-			DebugAssertMsg(false, "세션 AcceptEx 실패 (%d:%s)", uiError, Winsock::LastErrorMessage().Source());
+			_NetLogWarn_("세션 AcceptEx 실패 (%d:%s)", uiError, Winsock::LastErrorMessage().Source());
 			pOverlapped->Release();
 			return false;
 		}
@@ -102,7 +102,7 @@ void TcpSession::NotifyPacket(IRecvPacket* recvPacket) {
 
 void TcpSession::Connected() {
 	m_eState = State::eAccepted;
-	ConnectedInit();
+	OnConnected();
 	m_pServer->SessionConnected(this);
 }
 
@@ -111,6 +111,7 @@ void TcpSession::ConnectFailed(Int32U errorCode) {
 }
 
 void TcpSession::Disconnected() {
+	OnDisconnected();
 	m_pServer->SessionDisconnected(this);
 }
 

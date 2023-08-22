@@ -9,11 +9,12 @@
 #pragma once
 
 #include <SteinsGate/Common/ListenerServerCommon.h>
+#include <SteinsGate/Server/LogicServer.h>
 
 class ListenerLogicServer : public ListenerServerCommon
 {
 public:
-	ListenerLogicServer(JNetwork::CommandParser* parser);
+	ListenerLogicServer(LogicServer* server, JNetwork::CommandParser* parser);
 protected:
 	void OnStarted() override;
 	void OnConnected(JNetwork::Session* connectedSession) override;
@@ -24,4 +25,6 @@ protected:
 	void OnStopped() override;
 
 	ServerType_t GetServerType() override { return ServerType::Logic; }
+private:
+	LogicServer* m_pLogicTcp;
 };

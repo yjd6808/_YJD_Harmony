@@ -35,9 +35,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetMaster.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\CommonServer.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_HOST.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
@@ -76,12 +73,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\IUpdatable.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\UpdatableCollection.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CLIListenerCommon.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -93,6 +84,18 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerInterServerClient.h">
       <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\IComponent.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\IUpdatable.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\UpdatableCollection.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonServer.h">
+      <Filter>Net\Host</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,9 +129,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonNetMaster.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\CommonServer.cpp">
-      <Filter>Net</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ListenerServerCommon.cpp">
       <Filter>Net\Listener</Filter>
     </ClCompile>
@@ -147,9 +147,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\TimeManager.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\UpdatableCollection.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CLIListenerCommon.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -161,6 +158,12 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ListenerInterServerClient.cpp">
       <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\UpdatableCollection.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonServer.cpp">
+      <Filter>Net\Host</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,8 +188,11 @@
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{c33adf12-f613-4b94-95f7-fdd3446da358}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{6ab2279c-2d0e-4df7-b9f1-3b8b28e333ef}</UniqueIdentifier>
+    <Filter Include="Base">
+      <UniqueIdentifier>{e6d8fe09-415a-4176-8d54-77235b91080c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Host">
+      <UniqueIdentifier>{1276ae53-d126-4fe3-943e-41b0bf69f0f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

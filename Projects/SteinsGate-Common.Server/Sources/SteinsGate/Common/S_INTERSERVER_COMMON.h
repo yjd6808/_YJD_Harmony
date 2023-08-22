@@ -18,13 +18,14 @@ struct S_INTERSERVER_COMMON : InterServerSendHelper<S_INTERSERVER_COMMON>
 public:
 
 	// HOST
-	static bool SendItsMe(InterServerClientType_t clientType, int serverId);
-	static bool SendCenterMessage(const JCore::String& msg);
-	static bool SendNotifyBootState(ServerBootState_t state);
-	static bool SendTimeSync();
+	static bool SEND_SCE_ItsMe(InterServerClientType_t clientType, int serverId);
+	static bool SEND_SS_HostMessage(const JCore::String& msg);
+	static bool SEND_SCE_NotifyBootState(int serverId, ServerType_t serverType, ServerBootState_t state);
+	static bool SEND_SCE_NotifyOrderFailed(int serverId, ServerType_t serverType, CenterOrder_t failedOrder, Int32U errorCode);
+	static bool SEND_SCE_TimeSync();
 	
 
 	// RELAY
-	static bool SendP2PRelayStaticTest(const char* msg);
-	static bool SendP2PRelayDynamicTest(const char* msg);
+	static bool SEND_SS_P2PRelayStaticTest(const char* msg);
+	static bool SEND_SS_P2PRelayDynamicTest(const char* msg);
 };

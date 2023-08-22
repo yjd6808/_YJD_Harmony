@@ -13,8 +13,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerLogicServer::ListenerLogicServer(CommandParser* parser)
+ListenerLogicServer::ListenerLogicServer(LogicServer* server, CommandParser* parser)
 	: ListenerServerCommon(parser)
+	, m_pLogicTcp(server)
 {}
 
 void ListenerLogicServer::OnStarted() {

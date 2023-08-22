@@ -19,6 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Server\AreaServer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\AreaSession.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\Channel.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ChannelManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ChatServer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ChatSession.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CLIListener.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Game.cpp">
       <SubType>
@@ -36,6 +48,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerAreaServer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\ListenerChatServer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerLogicServer.cpp">
       <SubType>
       </SubType>
@@ -82,6 +96,18 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Server\AreaServer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\AreaSession.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\Channel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ChannelManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ChatServer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\ChatSession.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CLIListener.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Game.h">
       <SubType>
@@ -95,6 +121,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerAreaServer.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\ListenerChatServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerLogicServer.h">
       <SubType>
       </SubType>

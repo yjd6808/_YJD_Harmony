@@ -28,6 +28,10 @@ public:
 	virtual ISessionContainer* CreateSessionContainer();
 	virtual int CreateHandle();
 
+	virtual void OnStarted() {}
+	virtual void OnStartFailed(Int32U errorCode) {}
+	virtual void OnStopped() {}
+
 	ISessionContainer* GetSessionContainer();
 	ServerEventListener* GetEventListener();
 

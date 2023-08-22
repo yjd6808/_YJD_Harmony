@@ -26,14 +26,14 @@ void InitializeAuthCore() {
 	CoreDataManager_v						= DataManager::Get();
 	CoreCommonInfo_v						= CoreDataManager_v->getCommonInfo(1);
 	CoreServerProcessInfoPackage_v			= CoreDataManager_v->getServerProcessInfoPackage(1);				// 공통 라이브러리 주입
-	CoreServerProcessInfo_v					= &CoreServerProcessInfoPackage_v->Auth;								// 공통 라이브러리 주입
+	CoreServerProcessInfo_v					= &CoreServerProcessInfoPackage_v->Auth;							// 공통 라이브러리 주입
 	CoreGameDB_v							= dbg_new MysqlDatabase(CoreDataManager_v->getDatabaseInfo(DatabaseType::Game));
 	CoreGameDB_v->Initialize(ServerProcessType::Auth);
 	CoreNetMaster_v							= AuthNetMaster::Get();
 	CoreNetMaster_v->Initialize();
-	CoreNetGroup_v							= CoreNetMaster_v->GetNetGroup(NETGROUP_ID_MAIN).Get<AuthNetGroup*>();
-	CoreInterServerClientNetGroup_v			= CoreNetMaster_v->GetNetGroup(NETGROUP_ID_INTERSERVER).Get<InterServerClientNetGroup*>();
-	CoreServer_v						    = dynamic_cast<AuthServer*>(CoreNetGroup_v->GetServer());
+	CoreNetGroup_v							= CoreNetMaster_v->GetNetGroup(Const::NetGroup::MainId).Get<AuthNetGroup*>();
+	CoreInterServerClientNetGroup_v			= CoreNetMaster_v->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
+	CoreServer_v						    = CoreNetGroup_v->GetAuthTcp();
 	CoreTokenManager_v						= AuthenticationManager::Get();
 
 	if (CoreCLIThread_v)	// 커몬코어에서 초기화되므로 체크

@@ -10,23 +10,27 @@
 
 #include <JNetwork/NetGroup.h>
 
-#include <Jnetwork/Host/TcpServer.h>
-#include <Jnetwork/Host/TcpClient.h>
-#include <Jnetwork/Host/UdpClient.h>
+#include <SteinsGate/Common/UpdatableCollection.h>
 
 class JCORE_NOVTABLE CommonNetGroup : public JNetwork::NetGroup
 {
 public:
 	CommonNetGroup();
+	~CommonNetGroup() override;
 
 	void Initialize() override;
 	void Finalize() override;
 
 	void ProcessUpdate(const JCore::TimeSpan& elapsed);
+	void ProcessOrder(CenterOrder_t order);
 
-	JNetwork::TcpServer* GetServer() { return m_pServer; }
+	virtual void LaunchServer();
+	virtual void StopServer();
+
+	virtual CommonServer* GetMainTcp() const = 0;
+
+	bool AddUpdatable(int id, IUpdatable* updatable);
 protected:
-	
 	virtual void InitializeIOCP() = 0;
 	virtual void InitializeBufferPool() = 0;
 	virtual void InitializeServer() = 0;
@@ -34,6 +38,9 @@ protected:
 
 	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
 
-	JNetwork::TcpServer* m_pServer;
+	JCore::NormalLock m_ServerBootLock;
 	JNetwork::CommandParser* m_pParser;
+	UpdatableCollection m_UpdatableCollection;
+
+	inline static JCore::AtomicInt ms_iUpdatableSeq;
 };

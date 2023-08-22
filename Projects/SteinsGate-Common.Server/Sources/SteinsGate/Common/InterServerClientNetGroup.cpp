@@ -18,11 +18,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-InterServerClientNetGroup::InterServerClientNetGroup()
-	: m_pInterServerClientTcp(nullptr)
-	, m_pInterServerClientUdp(nullptr)
-	, m_pParser(dbg_new SGCommandParser)
-{}
+InterServerClientNetGroup::InterServerClientNetGroup() : m_pParser(dbg_new SGCommandParser) {}
 
 void InterServerClientNetGroup::Initialize() {
 	InitializeBufferPool();
@@ -48,12 +44,12 @@ void InterServerClientNetGroup::ProcessUpdate(const TimeSpan& elpased) {
 
 
 void InterServerClientNetGroup::InitializeParser() {
-	m_pParser->AddCommand<CES_AlreadyConnected>		(R_INTERSERVER_COMMON::RecvAlreadyConnected);
-	m_pParser->AddCommand<CES_WhoAreYou>			(R_INTERSERVER_COMMON::RecvWhoAreYou);
-	m_pParser->AddCommand<CES_YouNeedToDoThis>		(R_INTERSERVER_COMMON::RecvYouNeedToDoThis);
-	m_pParser->AddCommand<CES_TimeSyncAck>			(R_INTERSERVER_COMMON::RecvTimeSyncAck);
-	m_pParser->AddCommand<SS_P2PRelayStaticTest>	(R_INTERSERVER_COMMON::RecvP2PRelayStaticTest);
-	m_pParser->AddCommand<SS_P2PRelayDynamicTest>	(R_INTERSERVER_COMMON::RecvP2PRelayDynamicTest);
+	m_pParser->AddCommand<CES_AlreadyConnected>		(R_INTERSERVER_COMMON::RECV_CES_AlreadyConnected);
+	m_pParser->AddCommand<CES_WhoAreYou>			(R_INTERSERVER_COMMON::RECV_CES_WhoAreYou);
+	m_pParser->AddCommand<CES_YouNeedToDoThis>		(R_INTERSERVER_COMMON::RECV_CES_YouNeedToDoThis);
+	m_pParser->AddCommand<CES_TimeSyncAck>			(R_INTERSERVER_COMMON::RECV_CES_TimeSyncAck);
+	m_pParser->AddCommand<SS_P2PRelayStaticTest>	(R_INTERSERVER_COMMON::RECV_SS_P2PRelayStaticTest);
+	m_pParser->AddCommand<SS_P2PRelayDynamicTest>	(R_INTERSERVER_COMMON::RECV_SS_P2PRelayDynamicTest);
 }
 
 void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {

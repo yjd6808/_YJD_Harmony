@@ -13,18 +13,8 @@
 
 #include <SteinsGate/Common/Enum.h>
 
-// 메인 서버가 하나만 존재하는 서버 타입 (게임서버는 여러개 존재할 수 있으므로)
-SEnumBegin(SingleServerType)
-Center,
-Begin = Center,
-Auth,
-Lobby,
-End = Lobby,
-Max
-SEnumEnd(SingleServerType)
-
 // Center 서버를 경유해 릴레이통신을 수행하는 서버들
-SEnumBegin(InterServerClientType)
+JCORE_SENUM_BEGIN(InterServerClientType)
 None,
 Auth,
 Begin = Auth,
@@ -33,7 +23,7 @@ Lobby,
 Game,
 End = Game,
 Max
-SEnumMiddle(InterServerClientType)
+JCORE_SENUM_MIDDLE(InterServerClientType)
 static constexpr const char* Name[Max]{
 	"",
 	"인증",
@@ -42,19 +32,35 @@ static constexpr const char* Name[Max]{
 	"게임",
 };
 
-SEnumMiddleEnd(InterServerClientType)
+JCORE_SENUM_MIDDLE_END(InterServerClientType)
 
-SEnumBegin(CenterOrder)
-RebootServer,
+JCORE_SENUM_BEGIN(CenterOrder)
 LaunchServer,
-StopServer
-SEnumEnd(CenterOrder)
+StopServer,
+Max
+JCORE_SENUM_MIDDLE(CenterOrder)
+static constexpr const char* Name[Max] {
+	"서버 시작",
+	"서버 중지"
+};
+JCORE_SENUM_MIDDLE_END(CenterOrder)
 
-SEnumBegin(ServerBootState)
-Initialized,
+JCORE_SENUM_BEGIN(ServerBootState)
 Stopping,
 Stopped,
 Launching,
-Launched
-SEnumEnd(ServerBootState)
+Launched,
+Error,
+Max
+JCORE_SENUM_MIDDLE(ServerBootState)
+
+static constexpr const char* Name[Max]{
+	"중지중",
+	"중지",
+	"시작중",
+	"시작",
+	"오류발생",
+};
+
+JCORE_SENUM_MIDDLE_END(ServerBootState)
 

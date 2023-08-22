@@ -13,7 +13,7 @@
 class ListenerAuthServer : public ListenerServerCommon
 {
 public:
-	ListenerAuthServer(JNetwork::CommandParser* parser);
+	ListenerAuthServer(AuthServer* server, JNetwork::CommandParser* parser);
 protected:
 	void OnStarted() override;
 	void OnConnected(JNetwork::Session* connectedSession) override;
@@ -23,4 +23,6 @@ protected:
 	void OnStopped() override;
 
 	ServerType_t GetServerType() override { return ServerType::Auth; }
+private:
+	AuthServer* m_pAuthTcp;
 };

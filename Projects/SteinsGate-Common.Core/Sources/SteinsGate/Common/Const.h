@@ -81,7 +81,7 @@ namespace Item
 
 namespace Visual
 {
-	constexpr int MaxShapeCount = 3;			// 
+	constexpr int MaxShapeCount = 3;
 }
 
 

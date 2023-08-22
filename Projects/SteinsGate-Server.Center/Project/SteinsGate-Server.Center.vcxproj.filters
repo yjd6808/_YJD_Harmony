@@ -5,10 +5,8 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\DataManager.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\Center.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\CenterServer.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetMaster.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterNetGroup.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\CenterSession.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterServer.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
@@ -25,16 +23,23 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\BootStateManager.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterCoreHeader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Center.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\CenterServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetMaster.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterNetGroup.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\CenterSession.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterServer.h">
       <Filter>Listener</Filter>
     </ClInclude>
@@ -51,6 +56,15 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\BootStateManager.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Listener">
@@ -64,6 +78,12 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{a299b670-ab58-438c-bfe6-346d33399117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{dccda24d-5e50-4953-a362-f8c7be496cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{58865f5d-d1f2-4c5c-98cd-8e1f0dfbbc22}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

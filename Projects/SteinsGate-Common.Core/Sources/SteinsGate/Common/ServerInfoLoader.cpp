@@ -56,72 +56,91 @@ bool ServerInfoLoader::load() {
 
 void ServerInfoLoader::readCenterInfo(Json::Value& serverRoot, ServerProcessInfoPackage* serverInfo) {
 	SGString szBindInterServerUdp = JsonUtil::getString(serverRoot["bind_interserver_udp"]);
-	SGString szBindInterServerTcp = JsonUtil::getString(serverRoot["bind_interserver_tcp"]);
+	SGString szBindCenterTcp = JsonUtil::getString(serverRoot["bind_center_tcp"]);
+	SGString szBindCenterUdp = JsonUtil::getString(serverRoot["bind_center_udp"]);
 	SGString szRemoteInterServer = JsonUtil::getString(serverRoot["remote_interserver"]);
 	SGString szRemoteCenter = JsonUtil::getString(serverRoot["remote_center"]);
 	int iServerId = serverRoot["server_id"].asInt();
 
-	serverInfo->Center.BindInterServerUdp = szBindInterServerUdp;
-	serverInfo->Center.BindInterServerTcp = szBindInterServerTcp;
-	serverInfo->Center.RemoteEP = szRemoteCenter;
-	serverInfo->Center.RemoteInterServerEP = szRemoteInterServer;
-	serverInfo->Center.MaxSessionCount = serverRoot["max_session_count"].asInt();
-	serverInfo->Center.ServerId = iServerId;
-	DebugAssertMsg(serverInfo->Center.MaxSessionCount > 0, "센터 맥스 세션 수는 0보다 커야합니다.");
+	ServerProcessInfo& info = serverInfo->Center;
+
+	info.ProcessType = ServerProcessType::Center;
+	info.Name = "중앙";
+	info.BindInterServerUdp = szBindInterServerUdp;
+	info.BindInterServerTcp = SGEndPoint::Default;
+	info.BindTcp = szBindCenterTcp;
+	info.BindUdp = szBindCenterUdp;
+	info.RemoteEP = szRemoteCenter;
+	info.RemoteInterServerEP = szRemoteInterServer;
+	info.MaxSessionCount = serverRoot["max_session_count"].asInt();
+	info.ServerId = iServerId;
+	DebugAssertMsg(info.MaxSessionCount > 0, "센터 맥스 세션 수는 0보다 커야합니다.");
 
 	serverInfo->ActiveServerIdList.PushBack(iServerId);
-	serverInfo->InfoMap[iServerId] = &serverInfo->Center;
+	serverInfo->InfoMap[iServerId] = &info;
 }
 
 void ServerInfoLoader::readAuthInfo(Json::Value& serverRoot, ServerProcessInfoPackage* serverInfo) {
 	SGString szBindAuthTcp = JsonUtil::getString(serverRoot["bind_auth_tcp"]);
+	SGString szBindAuthUdp = JsonUtil::getString(serverRoot["bind_auth_udp"]);
 	SGString szRemoteAuth = JsonUtil::getString(serverRoot["remote_auth"]);
 	SGString szRemoteInterServer = JsonUtil::getString(serverRoot["remote_interserver"]);
 	SGString szBindInterServerUdp = JsonUtil::getString(serverRoot["bind_interserver_udp"]);
 	SGString szBindInterServerTcp = JsonUtil::getString(serverRoot["bind_interserver_tcp"]);
 	int iServerId = serverRoot["server_id"].asInt();
 
-	serverInfo->Auth.BindAuthTcp = szBindAuthTcp;
-	serverInfo->Auth.RemoteEP = szRemoteAuth;
-	serverInfo->Auth.RemoteInterServerEP = szRemoteInterServer;
-	serverInfo->Auth.BindInterServerUdp = szBindInterServerUdp;
-	serverInfo->Auth.BindInterServerTcp = szBindInterServerTcp;
-	serverInfo->Auth.ServerId = iServerId;
-	serverInfo->Auth.MaxSessionCount = serverRoot["max_session_count"].asInt();
-	DebugAssertMsg(serverInfo->Auth.MaxSessionCount > 0, "오쓰 맥스 세션 수는 0보다 커야합니다.");
+	ServerProcessInfo& info = serverInfo->Auth;
+
+	info.ProcessType = ServerProcessType::Auth;
+	info.Name = "인증";
+	info.BindTcp = szBindAuthTcp;
+	info.BindUdp = szBindAuthUdp;
+	info.RemoteEP = szRemoteAuth;
+	info.RemoteInterServerEP = szRemoteInterServer;
+	info.BindInterServerUdp = szBindInterServerUdp;
+	info.BindInterServerTcp = szBindInterServerTcp;
+	info.ServerId = iServerId;
+	info.MaxSessionCount = serverRoot["max_session_count"].asInt();
+	DebugAssertMsg(info.MaxSessionCount > 0, "오쓰 맥스 세션 수는 0보다 커야합니다.");
 
 	serverInfo->ActiveServerIdList.PushBack(iServerId);
-	serverInfo->InfoMap[iServerId] = &serverInfo->Auth;
+	serverInfo->InfoMap[iServerId] = &info;
 }
 
 void ServerInfoLoader::readLobbyInfo(Json::Value& serverRoot, ServerProcessInfoPackage* serverInfo) {
 	SGString szBindLobbyTcp = JsonUtil::getString(serverRoot["bind_lobby_tcp"]);
+	SGString szBindLobbyUdp = JsonUtil::getString(serverRoot["bind_lobby_udp"]);
 	SGString szRemoteLobby = JsonUtil::getString(serverRoot["remote_lobby"]);
 	SGString szRemoteInterServer = JsonUtil::getString(serverRoot["remote_interserver"]);
 	SGString szBindInterServerUdp = JsonUtil::getString(serverRoot["bind_interserver_udp"]);
 	SGString szBindInterServerTcp = JsonUtil::getString(serverRoot["bind_interserver_tcp"]);
 	int iServerId = serverRoot["server_id"].asInt();
 
-	serverInfo->Lobby.BindLobbyTcp = szBindLobbyTcp;
-	serverInfo->Lobby.RemoteEP = szRemoteLobby;
-	serverInfo->Lobby.RemoteInterServerEP = szRemoteInterServer;
-	serverInfo->Lobby.BindInterServerUdp = szBindInterServerUdp;
-	serverInfo->Lobby.BindInterServerTcp = szBindInterServerTcp;
-	serverInfo->Lobby.ServerId = iServerId;
-	serverInfo->Lobby.MaxSessionCount = serverRoot["max_session_count"].asInt();
-	DebugAssertMsg(serverInfo->Lobby.MaxSessionCount > 0, "로비 맥스 세션 수는 0보다 커야합니다.");
+
+	ServerProcessInfo& info = serverInfo->Lobby;
+	info.ProcessType = ServerProcessType::Lobby;
+	info.Name = "로비";
+	info.BindTcp = szBindLobbyTcp;
+	info.BindUdp = szBindLobbyUdp;
+	info.RemoteEP = szRemoteLobby;
+	info.RemoteInterServerEP = szRemoteInterServer;
+	info.BindInterServerUdp = szBindInterServerUdp;
+	info.BindInterServerTcp = szBindInterServerTcp;
+	info.ServerId = iServerId;
+	info.MaxSessionCount = serverRoot["max_session_count"].asInt();
+	DebugAssertMsg(info.MaxSessionCount > 0, "로비 맥스 세션 수는 0보다 커야합니다.");
 
 	serverInfo->ActiveServerIdList.PushBack(iServerId);
-	serverInfo->InfoMap[iServerId] = &serverInfo->Lobby;
+	serverInfo->InfoMap[iServerId] = &info;
 }
 
 
-void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProcessInfoPackage* serverInfo) {
+void ServerInfoLoader::readGameInfo(Value& serverRoot, JCORE_OUT ServerProcessInfoPackage* serverInfo) {
 
-	int iGameServerCount = (int)gameServerLostRoot.size();
+	const int iGameServerCount = (int)serverRoot.size();
 
 	for (int i = 0; i < iGameServerCount; ++i) {
-		Value& gameServerRoot = gameServerLostRoot[i];
+		Value& gameServerRoot = serverRoot[i];
 
 		bool bActive = gameServerRoot["active"].asBool();
 
@@ -140,9 +159,10 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 			continue;
 		}
 
-			
-		info.Type = (GameServerType_t)eGameServerType;
-		info.Name = JsonUtil::getString(gameServerRoot["name"]);
+
+		info.ProcessType = ServerProcessType::Game;
+		info.GameServerType = (GameServerType_t)eGameServerType;
+		info.Name = StringUtil::Format("게임(%s)", GameServerType::Name[eGameServerType]);
 		info.Active = true;
 		info.ServerId = iServerId;
 
@@ -152,9 +172,11 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 		SGString szRemoteInterServer = JsonUtil::getString(gameServerRoot["remote_interserver"]);
 
 		SGString szBindAreaTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_area_tcp"]);
+		SGString szBindAreaUdp = JsonUtil::getStringOrNull(gameServerRoot["bind_area_udp"]);
 		SGString szRemoteArea = JsonUtil::getStringOrNull(gameServerRoot["remote_area"]);
 
 		SGString szBindChatTcp = JsonUtil::getStringOrNull(gameServerRoot["bind_chat_tcp"]);
+		SGString szBindChatUdp = JsonUtil::getStringOrNull(gameServerRoot["bind_chat_udp"]);
 		SGString szRemoteChat = JsonUtil::getStringOrNull(gameServerRoot["remote_chat"]);
 
 		SGString szBindInterServerUdp = JsonUtil::getStringOrNull(gameServerRoot["bind_interserver_udp"]);
@@ -166,9 +188,11 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 			!szRemoteLogic.IsNull() &&
 
 			!szBindAreaTcp.IsNull() &&
+			!szBindAreaUdp.IsNull() &&
 			!szRemoteArea.IsNull() &&
 
 			!szBindChatTcp.IsNull() &&
+			!szBindChatUdp.IsNull() &&
 			!szRemoteChat.IsNull() &&
 
 			!szBindInterServerUdp.IsNull() &&
@@ -178,15 +202,18 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 		);
 
 		
-		info.BindLogicTcp = Move(szBindLogicTcp);
-		info.BindLogicUdp = Move(szBindLogicUdp);
+		info.BindTcp = Move(szBindLogicTcp);
+		info.BindUdp = Move(szBindLogicUdp);
+
 		info.RemoteEP = Move(szRemoteLogic);
 		info.RemoteInterServerEP = Move(szRemoteInterServer);
 		
 		info.BindAreaTcp = Move(szBindAreaTcp);
+		info.BindAreaUdp = Move(szBindAreaUdp);
 		info.RemoteArea = Move(szRemoteArea);
 
 		info.BindChatTcp = Move(szBindChatTcp);
+		info.BindChatUdp = Move(szBindChatUdp);
 		info.RemoteChat = Move(szRemoteChat);
 
 		info.BindInterServerUdp = Move(szBindInterServerUdp);
@@ -207,9 +234,9 @@ void ServerInfoLoader::readGameInfo(Json::Value& gameServerLostRoot, ServerProce
 			});
 		}
 
-		serverInfo->GameList.PushBack(Move(info));
+		serverInfo->GameServerList.PushBack(Move(info));
 		serverInfo->ActiveServerIdList.PushBack(iServerId);
-		serverInfo->InfoMap[iServerId] = &serverInfo->GameList[serverInfo->GameList.Size() - 1];
+		serverInfo->InfoMap[iServerId] = &serverInfo->GameServerList[serverInfo->GameServerList.Size() - 1];
 	}
 }
 

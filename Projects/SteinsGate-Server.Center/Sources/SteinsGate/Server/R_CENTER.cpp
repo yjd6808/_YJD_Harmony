@@ -17,7 +17,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
+void R_CENTER::RECV_SCE_ItsMe(Session* session, ICommand* cmd) {
 	S_CENTER::SetInformation(session, eSendAsync, LastFromId);
 	SCE_ItsMe* pCmd = (SCE_ItsMe*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
@@ -50,18 +50,35 @@ void R_CENTER::RecvItsMe(Session* session, ICommand* cmd) {
 }
 
 
-void R_CENTER::RecvCenterMessage(Session* session, ICommand* cmd) {
+void R_CENTER::RECV_SS_HostMessage(Session* session, ICommand* cmd) {
 	SS_HostMessage* pCmd = (SS_HostMessage*)cmd;
 	_LogInfo_(pCmd->Msg.Source);
 }
 
-void R_CENTER::RecvNotifyBootState(Session* session, ICommand* cmd) {
+void R_CENTER::RECV_SCE_NotifyBootState(Session* session, ICommand* cmd) {
 	SCE_NotifyBootState* pCmd = (SCE_NotifyBootState*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
-	pSession->SetBootState(pCmd->State);
+
+	ServerProcessInfo* pInfo = CoreServerProcessInfoPackage_v->getServerProcessInfo(pCmd->ServerId);
+	const String& szName = pInfo == nullptr ? StringUtil::Format("알 수 없음(%d)", pCmd->ServerId) : pInfo->Name;
+	_LogInfo_("%s 프로세스의 %s서버가 %s됨.", szName.Source(), ServerType::Name[pCmd->ServerType], ServerBootState::Name[pCmd->State]);
 }
 
-void R_CENTER::RecvTimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+void R_CENTER::RECV_SCE_NotifyOrderFailed(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+	SCE_NotifyOrderFailed* pCmd = (SCE_NotifyOrderFailed*)cmd;
+	CenterSession* pSession = (CenterSession*)session;
+
+	ServerProcessInfo* pInfo = CoreServerProcessInfoPackage_v->getServerProcessInfo(pCmd->ServerId);
+	const String& szName = pInfo == nullptr ? StringUtil::Format("알 수 없음(%d)", pCmd->ServerId) : pInfo->Name;
+	_LogInfo_("%s 프로세스의 %s서버가 %s에 실패했습니다. (EC: %u)", 
+		szName.Source(), 
+		ServerType::Name[pCmd->ServerType], 
+		CenterOrder::Name[pCmd->Order], 
+		pCmd->ErrorCode
+	);
+}
+
+void R_CENTER::RECV_SCE_TimeSync(JNetwork::Session* session, JNetwork::ICommand* cmd) {
 	SCE_TimeSync* pCmd = (SCE_TimeSync*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
 

@@ -8,4 +8,4 @@
 
 #pragma once
 
-#include <SteinsGate/Common/EnumDefine.h>
+#include <JCore/Define.h>

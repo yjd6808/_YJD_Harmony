@@ -40,9 +40,9 @@ bool InitializeGameCore(GameServerType_t gameServerType) {
 	CoreGameDB_v->Initialize(ServerProcessType::Game);
 	CoreNetMaster_v					= GameNetMaster::Get();
 	CoreNetMaster_v->Initialize();
-	CoreNetGroup_v					= CoreNetMaster_v->GetNetGroup(NETGROUP_ID_MAIN).Get<GameNetGroup*>();
-	CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(NETGROUP_ID_INTERSERVER).Get<InterServerClientNetGroup*>();
-	CoreServer_v					= dynamic_cast<LogicServer*>(CoreNetGroup_v->GetServer());
+	CoreNetGroup_v					= CoreNetMaster_v->GetNetGroup(Const::NetGroup::MainId).Get<GameNetGroup*>();
+	CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
+	CoreServer_v					= CoreNetGroup_v->GetLogicTcp();
 
 	if (CoreCLIThread_v)	// 커몬코어에서 초기화되므로 체크
 		CoreCLIThread_v->SetListener(dbg_new CLIListener);

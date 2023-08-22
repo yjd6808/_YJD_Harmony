@@ -23,13 +23,8 @@ SGTcpSession* LogicServer::CreateSession() {
 	return dbg_new LogicSession(this, m_spIocp, m_spBufferAllocator, 6144, 6144);
 }
 
-ServerInfo LogicServer::GetServerInfo() {
-	const GameServerProcessInfo* pProcInfo = (GameServerProcessInfo*)CoreServerProcessInfo_v;
-	return { pProcInfo->BindLogicTcp, pProcInfo->MaxSessionCount };
-}
-
 void LogicServer::OnUpdate(const TimeSpan& elapsed) {
-
+	CommonServer::OnUpdate(elapsed);
 }
 
 

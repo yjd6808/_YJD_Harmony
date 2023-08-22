@@ -8,12 +8,24 @@
 #include "Core.h"
 #include "ServerProcessInfo.h"
 
+ServerProcessInfo* ServerProcessInfoPackage::getServerProcessInfo(int serverId) {
+	if (Auth.ServerId == serverId) { return &Auth; }
+	if (Lobby.ServerId == serverId) { return &Lobby; }
+	if (Center.ServerId == serverId) { return &Center; }
+	for (int i = 0; i < GameServerList.Size(); ++i) {
+		if (GameServerList[i].ServerId == serverId) {
+			return &GameServerList[i];
+		}
+	}
+	return nullptr;
+}
+
 GameServerProcessInfo* ServerProcessInfoPackage::getGameServerProcessInfo(GameServerType_t gameServerType) {
 
-	for (int i = 0; i < GameList.Size(); ++i) {
-		GameServerProcessInfo& info = GameList[i];
+	for (int i = 0; i < GameServerList.Size(); ++i) {
+		GameServerProcessInfo& info = GameServerList[i];
 
-		if (info.Type == gameServerType) {
+		if (info.GameServerType == gameServerType) {
 			return &info;
 		}
 	}

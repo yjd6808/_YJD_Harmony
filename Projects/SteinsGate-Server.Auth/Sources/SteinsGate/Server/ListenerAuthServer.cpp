@@ -13,8 +13,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerAuthServer::ListenerAuthServer(CommandParser* parser)
+ListenerAuthServer::ListenerAuthServer(AuthServer* server, CommandParser* parser)
 	: ListenerServerCommon(parser)
+	, m_pAuthTcp(server)
 {}
 
 void ListenerAuthServer::OnStarted() {
