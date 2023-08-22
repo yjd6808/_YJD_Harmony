@@ -65,6 +65,12 @@ WinApi::GetStdoutHandle() {
 
 WinHandle
 JCORE_STDCALL
+WinApi::GetStdinHandle() {
+    return ::GetStdHandle(STD_INPUT_HANDLE);
+}
+
+WinHandle
+JCORE_STDCALL
 WinApi::CreateEventA(bool initialState, bool manualReset, const char* name) {
     return ::CreateEventA(NULL, manualReset ? TRUE : FALSE, initialState ? TRUE : FALSE, name);
 }

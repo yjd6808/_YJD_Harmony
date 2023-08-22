@@ -5,10 +5,12 @@
 #include <JCore/Core.h>
 #include <JCore/Utils/Console.h>
 
+#include <Windows.h>
+
+#include "JCore/Threading/Thread.h"
+
 NS_JC_BEGIN
-
-
-const char*      Console::VTForeColor[ConsoleColor::Max]{
+	const char*      Console::VTForeColor[ConsoleColor::Max]{
     // 사이에 공백 없도록 주의!
     CSI_GRAPHIC_RENDITION(0;30),  // Black  
     CSI_GRAPHIC_RENDITION(0;34),  // Blue
@@ -88,8 +90,9 @@ const char*     Console::VTBackToken[ConsoleColor::Max] {
 
 bool Console::Init() {
     ms_hStdout = WinApi::GetStdoutHandle();
+    ms_hStdin = WinApi::GetStdinHandle();
 
-    if (ms_hStdout == WinApi::InvalidHandleValue) {
+    if (ms_hStdout == WinApi::InvalidHandleValue || ms_hStdin == WinApi::InvalidHandleValue) {
         return false;
     }
 
@@ -156,6 +159,73 @@ String Console::ReadLine() {
         s += ch;
 
     return s;
+}
+
+String Console::ReadLine(const char* msg) {
+    Write("%s", msg);
+    return ReadLine();
+}
+
+ConsoleKeyInfo Console::ReadKey(const char* msg) {
+
+    // 멀티쓰레딩시 인풋 동기화를 위해 사용
+    static NormalLock s_Lock;
+
+    if (ms_hStdin == WinApi::InvalidHandleValue) {
+        return {};
+    }
+
+    if (msg != nullptr)
+		Write("%s", msg);
+
+    INPUT_RECORD inputRecord;
+    DWORD ulNumberOfeventRead;
+    BOOL iResult = FALSE;
+    char chKeyChar;
+    VirtualKey eVirtualKey;
+
+    JCORE_LOCK_GUARD(s_Lock);
+
+    for (;;) {
+        iResult = ReadConsoleInput(ms_hStdin, &inputRecord, 1, &ulNumberOfeventRead);
+
+        // 샐패하는 경우는 파일 또는 파이프로 리다이렉트 되는 경우
+        if (iResult == FALSE || ulNumberOfeventRead == 0) {
+            return {};
+        }
+
+        // 키 입력없는 경우 쉬엄쉬엄
+        if (inputRecord.EventType != KEY_EVENT || inputRecord.Event.KeyEvent.bKeyDown == FALSE) {
+            Thread::Sleep(10);
+            continue;
+        }
+
+        eVirtualKey = (VirtualKey)inputRecord.Event.KeyEvent.wVirtualKeyCode;
+        chKeyChar = inputRecord.Event.KeyEvent.uChar.AsciiChar;
+
+        if (chKeyChar == 0) {
+            if (eVirtualKey == VirtualKey::Alt || eVirtualKey == VirtualKey::ShiftKey || eVirtualKey == VirtualKey::CapsLock || eVirtualKey == VirtualKey::NumLock || eVirtualKey == VirtualKey::Scroll)
+                continue;
+        }
+
+        
+        break;
+    }
+
+    return ConsoleKeyInfo{ (ConsoleKey)eVirtualKey, chKeyChar };
+}
+
+ConsoleKeyInfo Console::ReadKeyWhile(const char* msg, ConsoleKey key) {
+
+    if (msg)
+        Write("%s", msg);
+
+    for (;;) {
+        ConsoleKeyInfo info = ReadKey(nullptr);
+        if (info && info.Key == key) { 
+            return info;
+        }
+    }
 }
 
 void Console::Clear() {

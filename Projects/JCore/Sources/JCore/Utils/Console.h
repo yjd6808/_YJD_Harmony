@@ -8,7 +8,10 @@
 
 #include <JCore/Sync/RecursiveLock.h>
 #include <JCore/Sync/UnusedLock.h>
+
+#include <JCore/Utils/VirtualKey.h>
 #include <JCore/Utils/ConsoleColor.h>
+#include <JCore/Utils/ConsoleKey.h>
 
 #include <JCore/Wrapper/CRuntime.h>
 #include <JCore/Wrapper/WinApi.h>
@@ -63,12 +66,31 @@
 
 NS_JC_BEGIN
 
+struct ConsoleKeyInfo
+{
+    ConsoleKeyInfo()
+	    : Key(ConsoleKey::None)
+		, KeyChar(NULL)
+		, Success(false) {}
+    ConsoleKeyInfo(ConsoleKey key, char keyChar)
+	    : Key(key)
+		, KeyChar(keyChar)
+		, Success(true) {}
+
+    ConsoleKey Key;
+    char KeyChar;
+    bool Success;           // 성공적으로 키입력을 받았는지.
+
+    operator bool() { return Success; }
+};
+
 class Console
 {
 	using TLockGuard = RecursiveLockGuard;
     using TLock = RecursiveLock;
 
     inline static WinHandle     ms_hStdout = (WinHandle)-1;
+    inline static WinHandle     ms_hStdin = (WinHandle)-1;
     inline static ConsoleColor	ms_iDefaultColor = LightGray;
     inline static TLock         ms_ConsoleLock{};
     inline static bool          ms_UseConsoleLock{};
@@ -125,6 +147,14 @@ public:
     }
 
     static String ReadLine();
+    static String ReadLine(const char* msg);
+
+    static ConsoleKeyInfo ReadKey() { return ReadKey(nullptr); }
+    static ConsoleKeyInfo ReadKey(const char* msg);
+
+    // 특정키를 입력받을때까지 체크
+    static ConsoleKeyInfo ReadKeyWhile(ConsoleKey key) { return ReadKeyWhile(nullptr, key); }
+    static ConsoleKeyInfo ReadKeyWhile(const char* msg, ConsoleKey key);
 
     template <typename... TArgs>
     static int WriteLine(ConsoleColor color, char* format, TArgs&&... args) {

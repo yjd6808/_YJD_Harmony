@@ -513,11 +513,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\ConsoleKey.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Utils\IProgressListener.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Utils\ProgressNotifier.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\VirtualKey.h">
       <SubType>
       </SubType>
     </ClInclude>

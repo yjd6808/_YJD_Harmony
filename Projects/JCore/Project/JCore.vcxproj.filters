@@ -533,6 +533,12 @@
     <ClInclude Include="..\Sources\JCore\Utils\IProgressListener.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\ConsoleKey.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Utils\VirtualKey.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

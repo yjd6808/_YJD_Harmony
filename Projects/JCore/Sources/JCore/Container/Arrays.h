@@ -275,6 +275,24 @@ struct Arrays final
 		return true;
 	}
 
+	template <typename T, Int32U Size>
+	static bool AllEqual(T(&arr)[Size], const T& v) {
+		return AllEqual(arr, Size, v);
+	}
+
+
+	template <typename T>
+	static bool AllEqual(T* arr, const int size, const T& v) {
+		DebugAssert(size > 0);
+
+		for (int i = 0; i < size; ++i) {
+			if (arr[i] != v) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	template <typename T, Int32U Size, typename TAction>
 	static void ForEach(T(&arr)[Size], TAction&& action) {
 		ForEach(Move(arr), Size, Move(action));
@@ -324,12 +342,6 @@ struct Arrays final
 	static void Fill(T(&arr)[Size], T&& value) {
 		for (int i = 0; i < Size; ++i) arr[i] = Forward<T>(value);
 	}
-
-	template <typename T, Int32U Size>
-	static void Fill(T(&arr)[Size], const T& value) {
-		for (int i = 0; i < Size; ++i) arr[i] = value;
-	}
-
 
 	template <typename T>
 	static void Fill(T* arr, int size, T&& value) {

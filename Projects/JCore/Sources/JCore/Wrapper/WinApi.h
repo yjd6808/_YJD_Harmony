@@ -71,6 +71,7 @@ struct WinApi {
      * \return The standard output device. Initially, this is the active console screen buffer,
      */
     static WinHandle       JCORE_STDCALL GetStdoutHandle();
+    static WinHandle       JCORE_STDCALL GetStdinHandle();
 
 
 

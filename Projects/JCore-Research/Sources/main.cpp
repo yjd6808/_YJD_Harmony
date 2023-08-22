@@ -1,9 +1,7 @@
 ﻿#include "header.h"
 
 int main() {
-	Console::WriteLine("%d", Const::a);
-
-	return 0;
+	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
 }
 
 
