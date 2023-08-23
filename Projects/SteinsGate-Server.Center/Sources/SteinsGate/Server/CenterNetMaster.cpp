@@ -17,7 +17,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CenterNetMaster::CenterNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondCenter) {}
+CenterNetMaster::CenterNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondCenter) {
+	SetName("센터");
+}
 
 CenterNetMaster::~CenterNetMaster() {
 }

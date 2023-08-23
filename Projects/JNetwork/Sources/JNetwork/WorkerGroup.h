@@ -68,10 +68,13 @@ public:
 		}
 	}
 
+	void SetName(const JCore::String& name) { m_szName = name; }
+	const JCore::String& GetName() const { return m_szName; }
 
 private:
 	JCore::Vector<Worker*> m_vWorkers;
 	JCore::Vector<JCore::AutoResetEvent> m_vHandles;
+	JCore::String m_szName;
 	
 	friend class IOCP;
 };

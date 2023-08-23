@@ -16,7 +16,7 @@ NetMaster::NetMaster()
 	, m_bFinalized(false)
 {}
 
-NetMaster::~NetMaster() {}
+NetMaster::~NetMaster() = default;
 
 void NetMaster::Finalize() {
 	if (m_bFinalized)
@@ -25,6 +25,11 @@ void NetMaster::Finalize() {
 	m_hNetGroup.ForEachValue([](NetGroupPtr& group) { group->Finalize(); });
 	m_hNetGroup.Clear();
 	m_bFinalized = true;
+	_LogInfo_("%s %s 정리완료", m_szName.Source(), TypeName());
+}
+
+void NetMaster::SetName(const JCore::String& name) {
+	m_szName = name;
 }
 
 void NetMaster::AddNetGroup(int groupId, const NetGroupPtr& group) {

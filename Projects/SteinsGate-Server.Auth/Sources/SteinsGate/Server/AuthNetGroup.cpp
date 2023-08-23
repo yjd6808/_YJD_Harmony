@@ -22,7 +22,11 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-AuthNetGroup::AuthNetGroup() {}
+AuthNetGroup::AuthNetGroup()
+	: m_pAuthTcp(nullptr)
+{
+	SetName("인증 메인");
+}
 AuthNetGroup::~AuthNetGroup() {}
 
 void AuthNetGroup::InitializeBufferPool() {

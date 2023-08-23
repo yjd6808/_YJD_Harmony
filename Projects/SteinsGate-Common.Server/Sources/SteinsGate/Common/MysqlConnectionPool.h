@@ -21,6 +21,8 @@ public:
 	~MysqlConnectionPool();
 
 	bool Init(const uint32_t initConn);
+
+	static constexpr const char* TypeName() { return "Mysql 커넥션 풀"; }
 private:
 	void TerminateAllConnections();
 	static void TerminateConnection(MysqlConnection* conn);

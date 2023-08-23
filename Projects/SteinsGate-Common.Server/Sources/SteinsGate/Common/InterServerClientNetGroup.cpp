@@ -78,7 +78,7 @@ void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {
 	static TimeCounter s_Timer(TimeCounterAttribute::FirstCheckFire | TimeCounterAttribute::TimeOverReset);
 	s_Timer.Elapsed += elapsed;
 
-	if (!s_Timer.ElapsedSeconds(10)) {
+	if (!s_Timer.ElapsedSeconds(0.2f)) {
 		return;
 	}
 

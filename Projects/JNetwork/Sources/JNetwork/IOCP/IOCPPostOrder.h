@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <JCore/Type.h>
 #include <JCore/Sync/WaitHandle.h>
+#include <JCore/Primitives/RefCountObject.h>
 
 #include <JNetwork/Namespace.h>
 
@@ -16,15 +16,15 @@ NS_JNET_BEGIN
 
 class IOCPWorker;
 
-struct IOCPPostOrder
+struct IOCPPostOrder : JCore::RefCountObject
 {
 	int Order = 0;
 	JCore::WaitHandle* Handle = nullptr;
 
 	// Order값 그대로 반환해줌
 	// 세부적인 처리를 진행하고 이후 Worker쓰레드에서 이 반환값을 확인하여 계속 진행할지 아니면 종료할지 등의 여부를 결정하도록 한다.
-	int Process(IOCPWorker* worker);	
-	void Release() const { delete this; }
+	int Process(IOCPWorker* worker);
+	void ReleaseAction() override { delete this; }
 };
 
 NS_JNET_END

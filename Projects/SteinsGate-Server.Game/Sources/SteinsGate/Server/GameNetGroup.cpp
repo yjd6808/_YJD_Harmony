@@ -24,7 +24,10 @@ GameNetGroup::GameNetGroup()
 	: m_pLogicTcp(nullptr)
 	, m_pAreaTcp(nullptr)
 	, m_pChatTcp(nullptr)
-{}
+{
+	SetName("게임 메인");
+}
+
 GameNetGroup::~GameNetGroup() {}
 
 void GameNetGroup::InitializeBufferPool() {

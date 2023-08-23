@@ -19,6 +19,7 @@ static constexpr int RecvBufferSize_v = 2048;
 static constexpr int SendBufferSize_v = 2048;
 
 CenterInterServerClientNetGroup::CenterInterServerClientNetGroup() {
+	SetName("센터 인터서버");
 }
 
 void CenterInterServerClientNetGroup::InitializeBufferPool() {

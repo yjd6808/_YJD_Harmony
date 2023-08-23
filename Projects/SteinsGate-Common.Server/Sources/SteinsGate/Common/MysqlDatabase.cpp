@@ -76,7 +76,7 @@ bool MysqlDatabase::Initialize(ServerProcessType_t serverProcessType) {
 	m_pIocp = dbg_new IOCP(iThreadCount);
 	m_pIocp->Run();
 	m_bInitialized = true;
-	_LogInfo_("%s IOCP 실행완료 (쓰레드 수: %d)", m_pInfo->Name.Source(), iThreadCount);
+	_LogInfo_("%s %s 실행완료 (쓰레드 수: %d)", m_pInfo->Name.Source(), IOCP::TypeName(), iThreadCount);
 	return true;
 }
 
@@ -85,15 +85,18 @@ void MysqlDatabase::Finalize() {
 	if (m_bInitialized == false)
 		return;
 
+	_LogInfo_("%s 파괴시작", m_pInfo->Name.Source());
 	m_bInitialized = false;
 
-	while (m_pIocp->GetPendingCount() != 0) {}
-
 	m_pIocp->Join();
+	_LogInfo_("%s %s 쪼인완료", m_pInfo->Name.Source(), IOCP::TypeName());
+
 	m_pIocp->Destroy();
+	_LogInfo_("%s %s 파괴완료", m_pInfo->Name.Source(), IOCP::TypeName());
 
 	if (m_pConnectionPool)
 		JCORE_DELETE_SAFE(m_pConnectionPool);
+	_LogInfo_("%s %s 파괴완료", m_pInfo->Name.Source(), IOCP::TypeName(),  MysqlConnectionPool::TypeName());
 
 
 	MysqlStatementBuilder::Finalize();

@@ -8,7 +8,9 @@
 #include <JNetwork/IOCP/IOCPPostOrder.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlapped.h>
 
-using namespace JCore;
+#include <JCore/Primitives/RefCountObjectPtr.h>
+
+USING_NS_JC;
 
 NS_JNET_BEGIN
 
@@ -28,7 +30,9 @@ void IOCPWorker::Run(void* param) {
 }
 
 void IOCPWorker::JoinWait(WaitHandle* waitHandle) {
-	IOCPPostOrder* pPostOrder = dbg_new IOCPPostOrder{ IOCP_POST_ORDER_TERMINATE, waitHandle };
+	IOCPPostOrder* pPostOrder = dbg_new IOCPPostOrder;
+	pPostOrder->Handle = waitHandle;
+	pPostOrder->Order = IOCP_POST_ORDER_TERMINATE;
 	const ULONG_PTR completionKey = (ULONG_PTR)pPostOrder;
 
 	if (m_pIocp->Post(0, completionKey, nullptr) == FALSE) {  // 어느 쓰레드가 꺠어날지 모르기 때문에 여기서 join을 수행하면 안됨
@@ -62,15 +66,16 @@ void IOCPWorker::WorkerThread(void* param) {
 		IOCPOverlapped* pIOCPOverlapped = static_cast<IOCPOverlapped*>(pOverlapped);		// dynamic_cast를 하고싶지만 OVERLAPPED는 가상 구조체가 아님
 
 		if (pIOCPOverlapped) {
+			JCORE_REF_COUNT_GUARD(pIOCPOverlapped, false);
 			// 각 오버랩 타입에 맞게 작업 처리
 			pIOCPOverlapped->Process(bResult, numberOfBytesTransffered, pIOCPPostOrder);
-			pIOCPOverlapped->Release();
 			continue;
 		}
 
-		if (numberOfBytesTransffered == 0 && completionKey != NULL) {
+		if (numberOfBytesTransffered == 0 && pIOCPPostOrder) {
+			JCORE_REF_COUNT_GUARD(pIOCPPostOrder, false);
+
 			// 실제 로직처리는 IOCPPostOrder의 Process() 함수에서 진행
-			// pIOCPPostOrder 메모리 해제는 Process 내부에서 처리
 			switch (pIOCPPostOrder->Process(this)) {
 			case IOCP_POST_ORDER_TERMINATE:
 				goto THREAD_END;
@@ -85,7 +90,7 @@ void IOCPWorker::WorkerThread(void* param) {
 	}
 
 THREAD_END:
-	_NetLogDebug_("IOCPWorker 쓰레드가 종료되었습니다. (%d)", Thread::GetThreadId());
+	_NetLogDebug_("%s IOCPWorker 쓰레드가 종료되었습니다. (%d)", m_pIocp->GetName().Source(), Thread::GetThreadId());
 	m_eState = State::eJoinWait;
 }
 

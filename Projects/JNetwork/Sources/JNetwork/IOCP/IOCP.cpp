@@ -14,6 +14,7 @@ IOCP::IOCP(int threadCount)
 	, m_hIOCP(INVALID_HANDLE_VALUE)
 	, m_uiThreadCount(threadCount)
 	, m_pWorkerManager(nullptr)
+	, m_szName(0)
 {
 	if ((m_hIOCP = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, (Int32UL)threadCount)) == INVALID_HANDLE_VALUE) {
 		DebugAssertMsg(false, "IOCP를 생성하는데 실패했습니다.");
@@ -111,6 +112,10 @@ BOOL IOCP::GetStatus(Int32UL* numberOfBytesTransffered, PULONG_PTR completionKey
 
 BOOL IOCP::Post(Int32UL dwNumberOfBytesTransferred, ULONG_PTR dwCompletionKey, LPOVERLAPPED pOverlapped) const {
 	return PostQueuedCompletionStatus(m_hIOCP, dwNumberOfBytesTransferred, dwCompletionKey, pOverlapped);
+}
+
+void IOCP::SetName(const JCore::String& name) {
+	m_szName = name;
 }
 
 NS_JNET_END

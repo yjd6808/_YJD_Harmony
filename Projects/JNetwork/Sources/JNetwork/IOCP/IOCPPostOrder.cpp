@@ -14,8 +14,6 @@
 NS_JNET_BEGIN
 
 int IOCPPostOrder::Process(IOCPWorker* worker) {
-	JCore::AutoPtr<IOCPPostOrder> autoPtrRelease(this, [](IOCPPostOrder* po) {po->Release(); });
-
 	switch (Order) {
 	case IOCP_POST_ORDER_TERMINATE:
 		Handle->Signal();

@@ -22,11 +22,6 @@ IOCPOverlapped::~IOCPOverlapped() {
 	m_pIocp->DecreasePendingCount();
 }
 
-// 무조건 제일 마지막에 호출
-void IOCPOverlapped::Release() {
-	delete this;
-}
-
 void IOCPOverlapped::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {}
 
 

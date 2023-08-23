@@ -19,7 +19,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-AuthNetMaster::AuthNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondAuth) {}
+AuthNetMaster::AuthNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondAuth) {
+	SetName("인증");
+}
 
 AuthNetMaster::~AuthNetMaster() {
 }

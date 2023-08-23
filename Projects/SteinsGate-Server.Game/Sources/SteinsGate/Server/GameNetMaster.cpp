@@ -19,7 +19,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-GameNetMaster::GameNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondGame) {}
+GameNetMaster::GameNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondGame) {
+	SetName("게임");
+}
 
 GameNetMaster::~GameNetMaster() {
 }

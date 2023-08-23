@@ -19,7 +19,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-LobbyNetMaster::LobbyNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondLobby) {}
+LobbyNetMaster::LobbyNetMaster() : CommonNetMaster(Const::Process::LoopPerSecondLobby) {
+	SetName("로비");
+}
 
 LobbyNetMaster::~LobbyNetMaster() {
 }

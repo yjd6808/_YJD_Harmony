@@ -17,7 +17,11 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CenterNetGroup::CenterNetGroup() {}
+CenterNetGroup::CenterNetGroup()
+	: m_pCenterTcp(nullptr)
+{
+	SetName("센터 메인");
+}
 CenterNetGroup::~CenterNetGroup() {}
 
 void CenterNetGroup::InitializeBufferPool() {

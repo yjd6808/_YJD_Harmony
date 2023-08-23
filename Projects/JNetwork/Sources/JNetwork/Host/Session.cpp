@@ -202,6 +202,7 @@ bool Session::RecvAsync() {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
 			_NetLogError_("RecvAsync 실패 (%u)", uiErrorCode);
+			pOverlapped->Release();
 			return false;
 		}
 	}
@@ -230,6 +231,7 @@ bool Session::RecvFromAsync() {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
 			DebugAssertMsg(false, "RecvFromAsync 실패 (%d)", uiErrorCode);
+			pRecvFromOverlapped->Release();
 			return false;
 		}
 	}

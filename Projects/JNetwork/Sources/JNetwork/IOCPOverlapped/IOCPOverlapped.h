@@ -6,13 +6,17 @@
 
 #include <WinSock2.h>
 
+#include <JCore/Primitives/RefCountObject.h>
+
 #include <JNetwork/IOCP/IOCP.h>
 #include <JNetwork/IOCP/IOCPPostOrder.h>
 
 
 NS_JNET_BEGIN
 
-class IOCPOverlapped : public OVERLAPPED
+class IOCPOverlapped
+	: public OVERLAPPED
+	, public JCore::RefCountObject
 {
 public:
 	enum class Type
@@ -28,12 +32,12 @@ public:
 	};
 public:
 	IOCPOverlapped(IOCP* iocp, Type type);
-	virtual ~IOCPOverlapped();
+	~IOCPOverlapped() override;
 public:
 	virtual void Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) = 0;
-	virtual void Release();
 	Type GetType() const { return m_eType; }
 
+	void ReleaseAction() override { delete this; }	// TODO: 풀링
 	bool IsFailed(BOOL result, JCORE_OUT Int32U& errorCode);
 	bool IsFailed(SOCKET hSocket, BOOL result, Int32UL bytesTransffered, JCORE_OUT Int32U& errorCode);
 protected:

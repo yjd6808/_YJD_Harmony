@@ -17,7 +17,11 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-LobbyNetGroup::LobbyNetGroup() {}
+LobbyNetGroup::LobbyNetGroup()
+	: m_pLobbyTcp(nullptr)
+{
+	SetName("로비 메인");
+}
 LobbyNetGroup::~LobbyNetGroup() {}
 
 void LobbyNetGroup::InitializeBufferPool() {

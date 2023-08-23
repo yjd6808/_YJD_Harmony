@@ -20,6 +20,7 @@ static constexpr int RecvBufferSize_v = 2048;
 static constexpr int SendBufferSize_v = 2048;
 
 GameInterServerClientNetGroup::GameInterServerClientNetGroup() {
+	SetName("게임 인터서버");
 }
 
 void GameInterServerClientNetGroup::InitializeBufferPool() {
