@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Actor">
-      <UniqueIdentifier>{29c9d34e-31c9-4a0e-a136-15bb7bcd3b91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI">
-      <UniqueIdentifier>{58c37cdd-8c5f-4ed2-8017-71e576c8870c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data">
       <UniqueIdentifier>{c229c058-5c89-42fa-96aa-4107a44b8854}</UniqueIdentifier>
     </Filter>
@@ -22,23 +16,11 @@
     <Filter Include="Data\AI">
       <UniqueIdentifier>{aa9500ff-549d-4d4e-a96c-163a6cd1ef3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Define">
-      <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture">
-      <UniqueIdentifier>{2c7479b6-6920-4f4d-8a18-d686a3dc17b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{8999073e-667a-4980-89a7-1353515ef72b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Data\AttackData">
       <UniqueIdentifier>{e39a0561-addf-41aa-89b8-849512666201}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\Util">
-      <UniqueIdentifier>{82f6b34f-ddb7-4d22-be73-14dee37a6233}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\Listener">
-      <UniqueIdentifier>{0fa2fea9-9552-4752-90b5-a9bf05025453}</UniqueIdentifier>
     </Filter>
     <Filter Include="Data\Action">
       <UniqueIdentifier>{0520369f-7e38-45ca-a074-74c59d0d3cb2}</UniqueIdentifier>
@@ -49,29 +31,11 @@
     <Filter Include="Data\Effect">
       <UniqueIdentifier>{926d1f0b-a511-4c7f-91aa-587ab0ce672f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{afcdb20a-f818-4212-9c08-704660a0e3bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Scene">
-      <UniqueIdentifier>{ad27e0ec-46ef-42d3-8cd8-4c190b5b8213}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Layer">
-      <UniqueIdentifier>{3d065bfc-aa30-4c21-ac0a-778e58e49571}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\UI">
       <UniqueIdentifier>{e1a5f450-8532-48da-ae6e-44f1e0253f12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\UI">
-      <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\Char">
       <UniqueIdentifier>{775407e0-933b-4f9f-a0db-5fb53a3fe12b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Action">
-      <UniqueIdentifier>{4811212e-a215-4545-90b1-d42941b6c07d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Action\Gunner">
-      <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net">
       <UniqueIdentifier>{afca49d9-5dad-4dcb-8803-7f73c14f3200}</UniqueIdentifier>
@@ -85,9 +49,6 @@
     <Filter Include="Net\Recv">
       <UniqueIdentifier>{95abad0d-5fc9-48a1-a3f1-0039e977b60b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\UI_M">
-      <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Net\Connection">
       <UniqueIdentifier>{bf59ba58-2f02-44e4-a7cd-452836a2dd40}</UniqueIdentifier>
     </Filter>
@@ -100,50 +61,14 @@
     <Filter Include="Data\FrameEvent">
       <UniqueIdentifier>{d5a45180-26a8-4266-a6b7-f2cb9e3600b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\Listener\Character">
-      <UniqueIdentifier>{db2db770-f105-45f0-a847-4dd3d248e338}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Data\Text">
       <UniqueIdentifier>{f98a811f-e686-4426-ba7c-4fe2cc0b617e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Data\Monster">
       <UniqueIdentifier>{2ba3e7ea-9add-427b-84b3-8539777e05e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actor\Component">
-      <UniqueIdentifier>{e2bffae1-e6b6-4d2c-a948-411e9267f569}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{f3c8eaa2-3cff-4932-a33b-be045449ca55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI\Activity">
-      <UniqueIdentifier>{76bc5b7f-5d57-4b1f-a16a-0b3d8b11bd05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI\Routine">
-      <UniqueIdentifier>{27843851-410d-4a69-becb-1448a5cb3fea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\Listener\Projectile">
-      <UniqueIdentifier>{39dcc5c9-1f06-4e8c-aa0a-99fb80ec8b27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\Listener\Monster">
-      <UniqueIdentifier>{ed8ea471-f4d4-402e-9eda-dd9784676ae3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI\Activity\Attack">
-      <UniqueIdentifier>{35f8f32a-7485-4f98-97ec-02a53d7b1d91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI\Activity\FallDown">
-      <UniqueIdentifier>{bdbe7cd1-bcf3-4204-b508-fe20973a96c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI\Activity\Hit">
-      <UniqueIdentifier>{cfefd1c6-ad6c-4b70-b3bd-05b4df6ba51d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI\Activity\Idle">
-      <UniqueIdentifier>{18e4d335-fbe1-43a4-9551-2342e0e804a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI\Activity\Sit">
-      <UniqueIdentifier>{1ca7ac92-3b31-4467-b93f-9ef354b26efc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actor\AI\Activity\Walk">
-      <UniqueIdentifier>{25d92293-7b32-4b9d-ba75-5ef59fe63987}</UniqueIdentifier>
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{d542f741-7eda-4d22-b1e1-fc031bc51b07}</UniqueIdentifier>
@@ -151,73 +76,154 @@
     <Filter Include="Data\Channel">
       <UniqueIdentifier>{7ce628d4-c979-4b15-b8d3-f03c3611a513}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{6ffa8ec9-2e87-47f2-90e3-73d68df33274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Actor">
+      <UniqueIdentifier>{29c9d34e-31c9-4a0e-a136-15bb7bcd3b91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Texture">
+      <UniqueIdentifier>{2c7479b6-6920-4f4d-8a18-d686a3dc17b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Action">
+      <UniqueIdentifier>{4811212e-a215-4545-90b1-d42941b6c07d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Action\Gunner">
+      <UniqueIdentifier>{12442359-bbbd-4451-bee3-d187451dc375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Contents">
+      <UniqueIdentifier>{aa3b8aac-e53b-4ec7-ad62-2aaa73674992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Layer">
+      <UniqueIdentifier>{3d065bfc-aa30-4c21-ac0a-778e58e49571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene">
+      <UniqueIdentifier>{ad27e0ec-46ef-42d3-8cd8-4c190b5b8213}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI">
+      <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI_M">
+      <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Define">
+      <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Helper">
+      <UniqueIdentifier>{62c231f5-2c23-4a23-8337-9397dce6d44c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Camera">
+      <UniqueIdentifier>{b83f0096-b0c2-41d8-b405-44b866993cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI">
+      <UniqueIdentifier>{58c37cdd-8c5f-4ed2-8017-71e576c8870c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity">
+      <UniqueIdentifier>{76bc5b7f-5d57-4b1f-a16a-0b3d8b11bd05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Attack">
+      <UniqueIdentifier>{35f8f32a-7485-4f98-97ec-02a53d7b1d91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Component">
+      <UniqueIdentifier>{e2bffae1-e6b6-4d2c-a948-411e9267f569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Listener">
+      <UniqueIdentifier>{0fa2fea9-9552-4752-90b5-a9bf05025453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Listener\Character">
+      <UniqueIdentifier>{db2db770-f105-45f0-a847-4dd3d248e338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Listener\Projectile">
+      <UniqueIdentifier>{39dcc5c9-1f06-4e8c-aa0a-99fb80ec8b27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Listener\Monster">
+      <UniqueIdentifier>{ed8ea471-f4d4-402e-9eda-dd9784676ae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Util">
+      <UniqueIdentifier>{82f6b34f-ddb7-4d22-be73-14dee37a6233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\FallDown">
+      <UniqueIdentifier>{bdbe7cd1-bcf3-4204-b508-fe20973a96c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Hit">
+      <UniqueIdentifier>{cfefd1c6-ad6c-4b70-b3bd-05b4df6ba51d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Idle">
+      <UniqueIdentifier>{18e4d335-fbe1-43a4-9551-2342e0e804a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Sit">
+      <UniqueIdentifier>{1ca7ac92-3b31-4467-b93f-9ef354b26efc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Activity\Walk">
+      <UniqueIdentifier>{25d92293-7b32-4b9d-ba75-5ef59fe63987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\AI\Routine">
+      <UniqueIdentifier>{adb72265-b421-4f78-832c-a1afd2ee293b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\ImagePackManager.cpp">
-      <Filter>Texture</Filter>
+      <Filter>Game\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ImagePack.cpp">
-      <Filter>Texture</Filter>
+      <Filter>Game\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\DataManager.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\Global.cpp">
       <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\JsonUtilEx.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ComboKeyList.cpp">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Actor.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Character.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Projectile.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Monster.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ActorSprite.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ActorPartSprite.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ActorPartAnimation.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\FrameTexture.cpp">
-      <Filter>Texture</Filter>
+      <Filter>Game\Texture</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SGAction.cpp">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ComboTree.cpp">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerIdle.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerJump.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerRun.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerSliding.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerWalk.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerGunShot.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\CharInfoLoader.cpp">
       <Filter>Data\Char</Filter>
@@ -238,13 +244,13 @@
       <Filter>Data\MapObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MapObject.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerHit.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerAction.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AIInfoLoader.cpp">
       <Filter>Data\AI</Filter>
@@ -255,22 +261,19 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\SGVec2Ex.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGApplication.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SteinsGateApp.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.cpp">
       <Filter>Data\AttackData</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerFallDown.cpp">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Struct.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\HitRecorder.cpp">
-      <Filter>Actor\Util</Filter>
+      <Filter>Game\Util</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerSitRecover.cpp">
-      <Filter>Action\Gunner</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerManager.cpp">
-      <Filter>Actor\Listener</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Tutturu.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\ActionInfoLoader.cpp">
@@ -281,16 +284,13 @@
       <Filter>Data\CharAnimation</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Effect.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\EffectInfoLoader.cpp">
       <Filter>Data\Effect</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileInfo.cpp">
       <Filter>Data\Projectile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\WorldScene.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ChannelSelectScene.cpp">
       <Filter>Game\Scene</Filter>
@@ -304,17 +304,11 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\MapLayer.cpp">
       <Filter>Game\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SceneBase.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UILayer.cpp">
       <Filter>Game\Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UIInfoLoader.cpp">
       <Filter>Data\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\ActorBox.cpp">
-      <Filter>Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UIGroup.cpp">
       <Filter>Game\UI</Filter>
@@ -328,44 +322,20 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Login.cpp">
       <Filter>Game\UI_M</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\UIManager.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UILabel.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UISprite.cpp">
       <Filter>Game\UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\FontPackage.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\GameCore.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\HostPlayer.cpp">
-      <Filter>Actor</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Player.cpp">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\PlayerController.cpp">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\PlayerPool.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\ActionMgr.cpp">
-      <Filter>Action</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\Inven.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\VisualHelper.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\MimicCamera.cpp">
-      <Filter>Game</Filter>
+      <Filter>Game\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UIEditBox.cpp">
       <Filter>Game\UI</Filter>
@@ -406,14 +376,8 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Popup.cpp">
       <Filter>Game\UI_M</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\PopupManager.cpp">
-      <Filter>Game\UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Test.cpp">
       <Filter>Game\UI_M</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\TimeManager.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\NetCore.cpp">
       <Filter>Net</Filter>
@@ -464,10 +428,10 @@
       <Filter>Data\FrameEvent</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\IActorListener.cpp">
-      <Filter>Actor\Listener</Filter>
+      <Filter>Game\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerCollection.cpp">
-      <Filter>Actor\Listener</Filter>
+      <Filter>Game\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.cpp">
       <Filter>Data\Text</Filter>
@@ -476,73 +440,64 @@
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MoveComponent.cpp">
-      <Filter>Actor\Component</Filter>
+      <Filter>Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\PhysicsComponent.cpp">
-      <Filter>Actor\Component</Filter>
+      <Filter>Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AIComponent.cpp">
-      <Filter>Actor\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\AIActivity.cpp">
-      <Filter>Actor\AI\Activity</Filter>
+      <Filter>Game\Component</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener_Gunner.cpp">
-      <Filter>Actor\Listener\Character</Filter>
+      <Filter>Game\Listener\Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileListener_GunnerBullet.cpp">
-      <Filter>Actor\Listener\Projectile</Filter>
+      <Filter>Game\Listener\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\CharacterListener.cpp">
-      <Filter>Actor\Listener\Character</Filter>
+      <Filter>Game\Listener\Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ProjectileListener.cpp">
-      <Filter>Actor\Listener\Projectile</Filter>
+      <Filter>Game\Listener\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MonsterListener.cpp">
-      <Filter>Actor\Listener\Monster</Filter>
+      <Filter>Game\Listener\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MonsterListener_NormalGoblin.cpp">
-      <Filter>Actor\Listener\Monster</Filter>
+      <Filter>Game\Listener\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\MonsterListener_DarkGoblin.cpp">
-      <Filter>Actor\Listener\Monster</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity.cpp">
-      <Filter>Actor\AI\Activity\Attack</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.cpp">
-      <Filter>Actor\AI\Activity\Attack</Filter>
+      <Filter>Game\Listener\Monster</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.cpp">
-      <Filter>Actor\AI\Activity\FallDown</Filter>
+      <Filter>Game\AI\Activity\FallDown</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity.cpp">
-      <Filter>Actor\AI\Activity\FallDown</Filter>
+      <Filter>Game\AI\Activity\FallDown</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\HitActivity.cpp">
-      <Filter>Actor\AI\Activity\Hit</Filter>
+      <Filter>Game\AI\Activity\Hit</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\HitActivity_Goblin.cpp">
-      <Filter>Actor\AI\Activity\Hit</Filter>
+      <Filter>Game\AI\Activity\Hit</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\IdleActivity.cpp">
-      <Filter>Actor\AI\Activity\Idle</Filter>
+      <Filter>Game\AI\Activity\Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SitActivity.cpp">
-      <Filter>Actor\AI\Activity\Sit</Filter>
+      <Filter>Game\AI\Activity\Sit</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\WalkActivity.cpp">
-      <Filter>Actor\AI\Activity\Walk</Filter>
+      <Filter>Game\AI\Activity\Walk</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\IdleActivity_Goblin.cpp">
-      <Filter>Actor\AI\Activity\Idle</Filter>
+      <Filter>Game\AI\Activity\Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\WalkActivity_Goblin.cpp">
-      <Filter>Actor\AI\Activity\Walk</Filter>
+      <Filter>Game\AI\Activity\Walk</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\SitActivity_Goblin.cpp">
-      <Filter>Actor\AI\Activity\Sit</Filter>
+      <Filter>Game\AI\Activity\Sit</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\RuntimeConfig.cpp">
       <Filter>System</Filter>
@@ -562,85 +517,137 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\UIInfo.cpp">
       <Filter>Data\UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\FontManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\Global.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\Inven.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\PopupManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\TimeManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\GameCore.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\WorldScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\SceneBase.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\VisualHelper.cpp">
+      <Filter>Game\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorListenerManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\UIManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\MimicCamera.cpp">
+      <Filter>Game\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\AIActivity.cpp">
+      <Filter>Game\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity.cpp">
+      <Filter>Game\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.cpp">
+      <Filter>Game\AI\Activity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorManager.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActionMgr.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\HostPlayer.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\Contents.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ImagePackManager.h">
-      <Filter>Texture</Filter>
+      <Filter>Game\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ImagePack.h">
-      <Filter>Texture</Filter>
+      <Filter>Game\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\DataManager.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\Global.h">
       <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\JsonUtilEx.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ComboKeyList.h">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Actor.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Character.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Projectile.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Monster.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorSprite.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorPartSprite.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorPartAnimation.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameTexture.h">
-      <Filter>Texture</Filter>
+      <Filter>Game\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SGAction.h">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ComboTree.h">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Animation.h">
-      <Filter>Define</Filter>
+      <Filter>Game\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Action.h">
-      <Filter>Define</Filter>
+      <Filter>Game\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerIdle.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerGunShot.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerJump.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerRun.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerSliding.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerWalk.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AllActions.h">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Projectile.h">
-      <Filter>Define</Filter>
+      <Filter>Game\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CharInfoLoader.h">
       <Filter>Data\Char</Filter>
@@ -679,13 +686,13 @@
       <Filter>Data\MapObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MapObject.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerHit.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerAction.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AIInfo.h">
       <Filter>Data\AI</Filter>
@@ -696,7 +703,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\SGVec2Ex.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGApplication.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SteinsGateApp.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Struct.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Tutturu.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.h">
@@ -706,22 +713,19 @@
       <Filter>Data\AttackData</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerFallDown.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\HitRecorder.h">
-      <Filter>Actor\Util</Filter>
+      <Filter>Game\Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerSitRecover.h">
-      <Filter>Action\Gunner</Filter>
+      <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_ActorListener.h">
-      <Filter>Define</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerManager.h">
-      <Filter>Actor\Listener</Filter>
+      <Filter>Game\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\IActorListener.h">
-      <Filter>Actor\Listener</Filter>
+      <Filter>Game\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActionInfo.h">
       <Filter>Data\Action</Filter>
@@ -733,22 +737,16 @@
       <Filter>Data\CharAnimation</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Effect.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Effect.h">
-      <Filter>Define</Filter>
+      <Filter>Game\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfo.h">
       <Filter>Data\Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfoLoader.h">
       <Filter>Data\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\WorldScene.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SceneBase.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ChannelSelectScene.h">
       <Filter>Game\Scene</Filter>
@@ -771,14 +769,8 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\UIInfoLoader.h">
       <Filter>Data\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\UIManager.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIElement.h">
       <Filter>Game\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ActorBox.h">
-      <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIButton.h">
       <Filter>Game\UI</Filter>
@@ -795,41 +787,17 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\UISprite.h">
       <Filter>Game\UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\FontPackage.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\GameCore.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Player.h">
-      <Filter>Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\HostPlayer.h">
-      <Filter>Actor</Filter>
+      <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\PlayerPool.h">
-      <Filter>Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ActionMgr.h">
-      <Filter>Action</Filter>
+      <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\PlayerController.h">
-      <Filter>Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\Inven.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\GameCoreHeader.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\VisualHelper.h">
-      <Filter>Game</Filter>
+      <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\PackHelper.h">
-      <Filter>Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\MimicCamera.h">
-      <Filter>Game</Filter>
+      <Filter>Game\Texture</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIEditBox.h">
       <Filter>Game\UI</Filter>
@@ -838,7 +806,7 @@
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_UI.h">
-      <Filter>Define</Filter>
+      <Filter>Game\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIGroupMaster.h">
       <Filter>Game\UI</Filter>
@@ -876,14 +844,8 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Popup.h">
       <Filter>Game\UI_M</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\PopupManager.h">
-      <Filter>Game\UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Test.h">
       <Filter>Game\UI_M</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\TimeManager.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\R_AUTH.h">
       <Filter>Net\Recv</Filter>
@@ -928,7 +890,7 @@
       <Filter>Net\Connection</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Popup.h">
-      <Filter>Define</Filter>
+      <Filter>Game\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameEventLoader.h">
       <Filter>Data\FrameEvent</Filter>
@@ -937,7 +899,7 @@
       <Filter>Data\FrameEvent</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerCollection.h">
-      <Filter>Actor\Listener</Filter>
+      <Filter>Game\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ClientTextInfoLoader.h">
       <Filter>Data\Text</Filter>
@@ -952,79 +914,70 @@
       <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ActorComponent.h">
-      <Filter>Actor\Component</Filter>
+      <Filter>Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MoveComponent.h">
-      <Filter>Actor\Component</Filter>
+      <Filter>Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\PhysicsComponent.h">
-      <Filter>Actor\Component</Filter>
+      <Filter>Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AIComponent.h">
-      <Filter>Actor\Component</Filter>
+      <Filter>Game\Component</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener_Gunner.h">
-      <Filter>Actor\Listener\Character</Filter>
+      <Filter>Game\Listener\Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileListener_GunnerBullet.h">
-      <Filter>Actor\Listener\Projectile</Filter>
+      <Filter>Game\Listener\Projectile</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h">
-      <Filter>Actor\Listener\Character</Filter>
+      <Filter>Game\Listener\Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ProjectileListener.h">
-      <Filter>Actor\Listener\Projectile</Filter>
+      <Filter>Game\Listener\Projectile</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MonsterListener.h">
-      <Filter>Actor\Listener\Monster</Filter>
+      <Filter>Game\Listener\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MonsterListener_NormalGoblin.h">
-      <Filter>Actor\Listener\Monster</Filter>
+      <Filter>Game\Listener\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\MonsterListener_DarkGoblin.h">
-      <Filter>Actor\Listener\Monster</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity.h">
-      <Filter>Actor\AI\Activity\Attack</Filter>
+      <Filter>Game\Listener\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Event.h">
-      <Filter>Define</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.h">
-      <Filter>Actor\AI\Activity\Attack</Filter>
+      <Filter>Game\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.h">
-      <Filter>Actor\AI\Activity\FallDown</Filter>
+      <Filter>Game\AI\Activity\FallDown</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity.h">
-      <Filter>Actor\AI\Activity\FallDown</Filter>
+      <Filter>Game\AI\Activity\FallDown</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\HitActivity.h">
-      <Filter>Actor\AI\Activity\Hit</Filter>
+      <Filter>Game\AI\Activity\Hit</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\HitActivity_Goblin.h">
-      <Filter>Actor\AI\Activity\Hit</Filter>
+      <Filter>Game\AI\Activity\Hit</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\IdleActivity.h">
-      <Filter>Actor\AI\Activity\Idle</Filter>
+      <Filter>Game\AI\Activity\Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SitActivity.h">
-      <Filter>Actor\AI\Activity\Sit</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\AIActivity.h">
-      <Filter>Actor\AI\Activity</Filter>
+      <Filter>Game\AI\Activity\Sit</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\WalkActivity.h">
-      <Filter>Actor\AI\Activity\Walk</Filter>
+      <Filter>Game\AI\Activity\Walk</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\IdleActivity_Goblin.h">
-      <Filter>Actor\AI\Activity\Idle</Filter>
+      <Filter>Game\AI\Activity\Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\WalkActivity_Goblin.h">
-      <Filter>Actor\AI\Activity\Walk</Filter>
+      <Filter>Game\AI\Activity\Walk</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SitActivity_Goblin.h">
-      <Filter>Actor\AI\Activity\Sit</Filter>
+      <Filter>Game\AI\Activity\Sit</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\RuntimeConfig.h">
       <Filter>System</Filter>
@@ -1045,5 +998,61 @@
       <Filter>Data\Channel</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\TimeManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\FontManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Global.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Inven.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\PopupManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\GameCoreHeader.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\GameCore.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\WorldScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\SceneBase.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\VisualHelper.h">
+      <Filter>Game\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorListenerManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\UIManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\MimicCamera.h">
+      <Filter>Game\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Contents.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\AIActivity.h">
+      <Filter>Game\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity.h">
+      <Filter>Game\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.h">
+      <Filter>Game\AI\Activity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorManager.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActionMgr.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\HostPlayer.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -31,7 +31,7 @@ Inven::~Inven() {
 
 void Inven::init() {
 	for (int i = 0; i < InvenItemType::Max; ++i) {
-		m_iAvailableSlotCount[i] = CoreCharCommon_v->DefaultInvenSlotCount[i];
+		m_iAvailableSlotCount[i] = Core::CharCommon->DefaultInvenSlotCount[i];
 	}
 }
 
@@ -39,7 +39,7 @@ WeaponType_t Inven::getWeaponType() {
 	InvenItemEquip* pItemWeapon = m_EquipedItemList[ItemType::Weapon];
 
 	if (pItemWeapon == nullptr) {
-		return CorePlayer_v->getBaseInfo()->DefaultWeaponType;
+		return Core::Contents.Player->getBaseInfo()->DefaultWeaponType;
 	}
 	std::bitset<128> g;
 	return pItemWeapon->Code.WeaponUn.WeaponType;
@@ -48,7 +48,7 @@ WeaponType_t Inven::getWeaponType() {
 VisualInfo Inven::getVisualInfo(int defaultCharType) {
 	VisualInfo info;
 
-	CharInfo* pCharInfo = CoreDataManager_v->getCharInfo(defaultCharType);
+	CharInfo* pCharInfo = Core::DataManager->getCharInfo(defaultCharType);
 	bool bEquiped[VisualType::Max]{};	// 착용중인지
 	VisualData data;
 

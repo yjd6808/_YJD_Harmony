@@ -96,7 +96,7 @@ void ActorPartAnimation::constructFrames(int sgaIndex, int imgIndex) {
 		if (iFrameIndex < 0 || iFrameIndex >= m_vFrames.Size()) {
 			// 예를들어서 애니메이션이 5프레임으로 구성하여 설정파일에 작성했는데
 			// 이미지를 구성하는 텍스쳐가 4개 밖에 없는 경우 5번째 프레임텍스쳐를 가져오는 것 자체가 불가능하므로.. 체크함.
-			CorePackManager_v->logTexture("ActorPartAnimation::constructFrames()", { m_iSgaIndex, m_iImgIndex, InvalidValue_v }, JCore::LoggerAbstract::eError);
+			Core::Contents.PackManager->logTexture("ActorPartAnimation::constructFrames()", { m_iSgaIndex, m_iImgIndex, InvalidValue_v }, JCore::LoggerAbstract::eError);
 			DebugAssertMsg(false, "전체 프레임 수(%d)에 포함되지 않는 애니메이션 프레임 인덱스(%d)입니다.", m_vFrames.Size(), iFrameIndex);
 		}
 		

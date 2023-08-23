@@ -117,7 +117,7 @@ void ConfigFileLoaderAbstract::DirectoryTree::constructTreeRecursive(JCORE_OUT D
 }
 
 void ConfigFileLoaderAbstract::DirectoryTree::loadRecursive(DirectoryTree* tree, DirectoryTreeNode* node) {
-	const SGString szDirectoryFullPath = JCore::Path::Combine(CoreCommonInfo_v->ConfigPath, node->DirectoryName);
+	const SGString szDirectoryFullPath = JCore::Path::Combine(Core::CommonInfo->ConfigPath, node->DirectoryName);
 
 	for (const std::filesystem::directory_entry& dirEntry : std::filesystem::directory_iterator(szDirectoryFullPath.Source())) {
 		if (dirEntry.is_regular_file()) {
@@ -162,8 +162,8 @@ ConfigFileLoaderAbstract::~ConfigFileLoaderAbstract() {
 }
 
 bool ConfigFileLoaderAbstract::loadJson(JCORE_OUT Json::Value& root) {
-	DebugAssertMsg(CoreCommonInfo_v != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
-	SGString path = JCore::Path::Combine(CoreCommonInfo_v->ConfigPath, getConfigFileName());
+	DebugAssertMsg(Core::CommonInfo != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
+	SGString path = JCore::Path::Combine(Core::CommonInfo->ConfigPath, getConfigFileName());
 
 	if (JCore::Path::Extension(path) != ".json") {
 		_LogWarn_("%s 설정파일은 json 형식의 파일이 아닙니다.", getConfigFileName());
@@ -182,8 +182,8 @@ bool ConfigFileLoaderAbstract::loadJson(JCORE_OUT Json::Value& root) {
 }
 
 bool ConfigFileLoaderAbstract::loadDirectory(JCORE_OUT DirectoryTree& tree) {
-	DebugAssertMsg(CoreCommonInfo_v != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
-	const SGString path = JCore::Path::Combine(CoreCommonInfo_v->ConfigPath, getConfigFileName());
+	DebugAssertMsg(Core::CommonInfo != nullptr, "프로그램 실행 후 즉시 CoreCommon_v를 초기화해서 설정/데이터 파일 경로를 확보해주세요. 데이터 매니저 생성시 곧바로 실행파일 경로의 common.json이 로딩되므로 원하는 설정 코드로 세팅하면 됩니다.");
+	const SGString path = JCore::Path::Combine(Core::CommonInfo->ConfigPath, getConfigFileName());
 
 	if (!JCore::Directory::Exist(path)) {
 		_LogWarn_("%s 디렉토리를 찾지 못했습니다.", path.Source());

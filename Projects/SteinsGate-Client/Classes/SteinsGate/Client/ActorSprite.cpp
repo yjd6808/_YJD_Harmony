@@ -6,9 +6,9 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "ActorSprite.h"
 
-#include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/Actor.h>
 
 USING_NS_CC;
@@ -59,7 +59,7 @@ bool ActorSprite::init() {
 	for (int i = 0; i < vPartsData.Size(); ++i) {
 
 		if (i == 0) {
-			CorePackManager_v->logTexture("ActorSprite::init()", { vPartsData[i].SgaIndex, vPartsData[i].ImgIndex, InvalidValue_v }, LoggerAbstract::eDebug);
+			Core::Contents.PackManager->logTexture("ActorSprite::init()", { vPartsData[i].SgaIndex, vPartsData[i].ImgIndex, InvalidValue_v }, LoggerAbstract::eDebug);
 		}
 
 		PartData partData = createPart(vPartsData[i], m_iFrameCount);

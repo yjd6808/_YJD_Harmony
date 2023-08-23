@@ -54,7 +54,7 @@ void R_CENTER::RECV_SCE_NotifyBootState(Session* session, ICommand* cmd) {
 	SCE_NotifyBootState* pCmd = (SCE_NotifyBootState*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
 
-	ServerProcessInfo* pInfo = CoreServerProcessInfoPackage_v->getServerProcessInfo(pCmd->ServerId);
+	ServerProcessInfo* pInfo = Core::ServerProcessInfoPackage->getServerProcessInfo(pCmd->ServerId);
 	const String& szName = pInfo == nullptr ? StringUtil::Format("알 수 없음(%d)", pCmd->ServerId) : pInfo->Name;
 	_LogInfo_("%s 프로세스의 %s서버가 %s됨.", szName.Source(), ServerType::Name[pCmd->ServerType], ServerBootState::Name[pCmd->State]);
 }
@@ -63,7 +63,7 @@ void R_CENTER::RECV_SCE_NotifyOrderFailed(JNetwork::Session* session, JNetwork::
 	SCE_NotifyOrderFailed* pCmd = (SCE_NotifyOrderFailed*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
 
-	ServerProcessInfo* pInfo = CoreServerProcessInfoPackage_v->getServerProcessInfo(pCmd->ServerId);
+	ServerProcessInfo* pInfo = Core::ServerProcessInfoPackage->getServerProcessInfo(pCmd->ServerId);
 	const String& szName = pInfo == nullptr ? StringUtil::Format("알 수 없음(%d)", pCmd->ServerId) : pInfo->Name;
 	_LogInfo_("%s 프로세스의 %s서버가 %s에 실패했습니다. (EC: %u)", 
 		szName.Source(), 

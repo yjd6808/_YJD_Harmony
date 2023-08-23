@@ -6,14 +6,12 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "ImagePack.h"
 
 #include <JCore/FileSystem/Path.h>
 #include <SteinsGate/Common/SgaSpriteAbstract.h>
 #include <SteinsGate/Common/SgaColorFormat.h>
-#include <SteinsGate/Client/Global.h>
-
-#include "ImagePackManager.h"
 
 USING_NS_CC;
 USING_NS_JC;
@@ -95,13 +93,13 @@ FrameTexture* ImagePack::createFrameTexture(int imgIndex, int frameIndex, bool l
 
 	if (!img.IndexLoaded() && !img.LoadIndexOnly()) {
 		_LogWarn_("%s (Img로딩 실패)", index.ToString().Source());
-		return CoreGlobal_v->getDefaultFrameTexture();
+		return Core::Contents.Global->getDefaultFrameTexture();
 	}
 
 	if (frameIndex < 0 || frameIndex >= img.Count()) {
 		_LogWarn_("%s (올바르지 않은 인덱스 범위)", index.ToString().Source());
 		DebugAssert(false);
-		return CoreGlobal_v->getDefaultFrameTexture();
+		return Core::Contents.Global->getDefaultFrameTexture();
 	}
 
 	SgaSpriteAbstract& sprite = img.GetAtRef(frameIndex);
@@ -118,7 +116,7 @@ FrameTexture* ImagePack::createFrameTexture(int imgIndex, int frameIndex, bool l
 
 	if (sprite.IsDummy()) {
 		_LogWarn_("%s (더미 스프라이트)", index.ToString().Source());
-		return CoreGlobal_v->getDefaultFrameTexture();
+		return Core::Contents.Global->getDefaultFrameTexture();
 	}
 
 	if (!sprite.Loaded())
@@ -145,7 +143,7 @@ FrameTexture* ImagePack::createFrameTexture(int imgIndex, int frameIndex, bool l
 	m_bHasLoadedData = true;
 	m_TextureCacheMap.Insert(index.Value, pSpriteTexture);
 #if DebugMode
-	CorePackManager_v->increaseCounter();
+	Core::Contents.PackManager->increaseCounter();
 #endif
 	return pSpriteTexture;
 }
@@ -156,7 +154,7 @@ void ImagePack::releaseFrameTexture(int imgIndex, int frameIndex) {
 	CC_SAFE_RELEASE(m_TextureCacheMap[index.Value]);
 	m_TextureCacheMap.Remove(index.Value);
 #if DebugMode
-	CorePackManager_v->decreaseCounter();
+	Core::Contents.PackManager->decreaseCounter();
 #endif
 }
 
@@ -165,7 +163,7 @@ void ImagePack::releaseFrameTexture(const SgaResourceIndex& sgaResourceIndex) {
 	CC_SAFE_RELEASE(m_TextureCacheMap[sgaResourceIndex.Value]);
 	m_TextureCacheMap.Remove(sgaResourceIndex.Value);
 #if DebugMode
-	CorePackManager_v->decreaseCounter();
+	Core::Contents.PackManager->decreaseCounter();
 #endif
 }
 
@@ -231,7 +229,7 @@ void ImagePack::clearCache() {
 	m_TextureCacheMap.ForEachValue([](FrameTexture* tex) {
 		//DebugAssertMsg(tex->getReferenceCount() == 1, "레퍼런스 카운트가 1이 아닙니다.");
 		CC_SAFE_RELEASE(tex);
-		CorePackManager_v->decreaseCounter();
+		Core::Contents.PackManager->decreaseCounter();
 	});
 	m_TextureCacheMap.Clear();
 }

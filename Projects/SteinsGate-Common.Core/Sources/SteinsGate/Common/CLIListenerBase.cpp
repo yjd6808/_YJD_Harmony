@@ -91,7 +91,7 @@ bool CLIListenerBase::CLI_SendCommandFilter(int argc, String* argv) {
 			return false;
 		}
 
-		CoreRuntimeConfigBase_v->SendCommandFilter.PushBack(iCmd);
+		Core::RuntimeConfigBase->SendCommandFilter.PushBack(iCmd);
 		Console::WriteLine("송신 커맨드 필터에 %d커맨드 추기완료", iCmd);
 	} else if (argv[1] == "remove") {
 		if (argc <= 2) {
@@ -105,10 +105,10 @@ bool CLIListenerBase::CLI_SendCommandFilter(int argc, String* argv) {
 			return false;
 		}
 
-		CoreRuntimeConfigBase_v->SendCommandFilter.Remove(iCmd);
+		Core::RuntimeConfigBase->SendCommandFilter.Remove(iCmd);
 		Console::WriteLine("송신 커맨드 필터에서 %d커맨드 제거완료", iCmd);
 	} else if (argv[1] == "show") {
-		CoreRuntimeConfigBase_v->ShowCommandFilter(JNetwork::Transmission::Send);
+		Core::RuntimeConfigBase->ShowCommandFilter(JNetwork::Transmission::Send);
 	} else {
 		Console::WriteLine("올바르지 않은 명령입니다.");
 	}
@@ -133,7 +133,7 @@ bool CLIListenerBase::CLI_RecvCommandFilter(int argc, String* argv) {
 			return false;
 		}
 
-		CoreRuntimeConfigBase_v->RecvCommandFilter.PushBack(iCmd);
+		Core::RuntimeConfigBase->RecvCommandFilter.PushBack(iCmd);
 		Console::WriteLine("수신 커맨드 필터에 %d커맨드 추가완료", iCmd);
 
 	} else if (argv[1] == "remove") {
@@ -148,10 +148,10 @@ bool CLIListenerBase::CLI_RecvCommandFilter(int argc, String* argv) {
 			return false;
 		}
 
-		CoreRuntimeConfigBase_v->RecvCommandFilter.Remove(iCmd);
+		Core::RuntimeConfigBase->RecvCommandFilter.Remove(iCmd);
 		Console::WriteLine("수신 커맨드 필터에서 %d커맨드 제거완료", iCmd);
 	} else if (argv[1] == "show") {
-		CoreRuntimeConfigBase_v->ShowCommandFilter(JNetwork::Transmission::Recv);
+		Core::RuntimeConfigBase->ShowCommandFilter(JNetwork::Transmission::Recv);
 	} else {
 		Console::WriteLine("올바르지 않은 명령입니다.");
 	}
@@ -169,7 +169,7 @@ bool CLIListenerBase::CLI_ShowSendCommand(int argc, String* argv) {
 		return false;
 	}
 
-	CoreRuntimeConfigBase_v->ShowSendCommand = bEnable;
+	Core::RuntimeConfigBase->ShowSendCommand = bEnable;
 
 	if (bEnable) {
 		Console::WriteLine("송신 커맨드 보기 활성화");
@@ -191,7 +191,7 @@ bool CLIListenerBase::CLI_ShowRecvCommand(int argc, String* argv) {
 		return false;
 	}
 
-	CoreRuntimeConfigBase_v->ShowRecvCommand = bEnable;
+	Core::RuntimeConfigBase->ShowRecvCommand = bEnable;
 
 	if (bEnable) {
 		Console::WriteLine("수신 커맨드 보기 활성화");
@@ -213,7 +213,7 @@ bool CLIListenerBase::CLI_ShowSendPacketHex(int argc, String* argv) {
 		return false;
 	}
 
-	CoreRuntimeConfigBase_v->ShowSendPacketHex = bEnable;
+	Core::RuntimeConfigBase->ShowSendPacketHex = bEnable;
 
 	if (bEnable) {
 		Console::WriteLine("송신 패킷 헥스 보기 활성화");
@@ -235,7 +235,7 @@ bool CLIListenerBase::CLI_ShowRecvPacketHex(int argc, String* argv) {
 		return false;
 	}
 
-	CoreRuntimeConfigBase_v->ShowRecvPacketHex = bEnable;
+	Core::RuntimeConfigBase->ShowRecvPacketHex = bEnable;
 
 	if (bEnable) {
 		Console::WriteLine("수신 패킷 헥스 보기 활성화");
@@ -262,8 +262,8 @@ bool CLIListenerBase::CLI_ConsoleLog(int argc, JCore::String* argv) {
 		if (bEnable == InvalidValue_v) {
 			return false;
 		}
-		CoreRuntimeConfigBase_v->ShowConsoleLog[eLevel] = bEnable;
-		CoreRuntimeConfigBase_v->ApplyLoggerOption();
+		Core::RuntimeConfigBase->ShowConsoleLog[eLevel] = bEnable;
+		Core::RuntimeConfigBase->ApplyLoggerOption();
 		return false;
 	} 
 
@@ -272,8 +272,8 @@ bool CLIListenerBase::CLI_ConsoleLog(int argc, JCore::String* argv) {
 		if (eColor == ConsoleColor::Max) {
 			Console::WriteLine("색상 문자열이 올바르지 않습니다.");
 		}
-		CoreRuntimeConfigBase_v->ConsoleLogColor[eLevel] = eColor;
-		CoreRuntimeConfigBase_v->ApplyLoggerOption();
+		Core::RuntimeConfigBase->ConsoleLogColor[eLevel] = eColor;
+		Core::RuntimeConfigBase->ApplyLoggerOption();
 		return false;
 	}
 
@@ -297,8 +297,8 @@ bool CLIListenerBase::CLI_ConsoleNetLog(int argc, String* argv) {
 		if (bEnable == InvalidValue_v) {
 			return false;
 		}
-		CoreRuntimeConfigBase_v->ShowConsoleNetLog[eLevel] = bEnable;
-		CoreRuntimeConfigBase_v->ApplyNetLoggerOption();
+		Core::RuntimeConfigBase->ShowConsoleNetLog[eLevel] = bEnable;
+		Core::RuntimeConfigBase->ApplyNetLoggerOption();
 		return false;
 	}
 
@@ -307,8 +307,8 @@ bool CLIListenerBase::CLI_ConsoleNetLog(int argc, String* argv) {
 		if (eColor == ConsoleColor::Max) {
 			Console::WriteLine("색상 문자열이 올바르지 않습니다.");
 		}
-		CoreRuntimeConfigBase_v->ConsoleNetLogColor[eLevel] = eColor;
-		CoreRuntimeConfigBase_v->ApplyNetLoggerOption();
+		Core::RuntimeConfigBase->ConsoleNetLogColor[eLevel] = eColor;
+		Core::RuntimeConfigBase->ApplyNetLoggerOption();
 		return false;
 	}
 
@@ -323,12 +323,12 @@ bool CLIListenerBase::CLI_RuntimeConfig(int argc, String* argv) {
 
 
 	if (argv[1] == "save") {
-		CoreRuntimeConfigBase_v->Save();
+		Core::RuntimeConfigBase->Save();
 		return false;
 	}
 
 	if (argv[1] == "delete") {
-		CoreRuntimeConfigBase_v->Delete();
+		Core::RuntimeConfigBase->Delete();
 		return false;
 	}
 	

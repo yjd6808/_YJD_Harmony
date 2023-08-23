@@ -31,8 +31,8 @@ HostPlayer::~HostPlayer() {
 
 void HostPlayer::initialize() {
 	m_PlayerData.CharType = CharType::Gunner;
-	m_VisualInfo = CoreInven_v->getVisualInfo(m_PlayerData.CharType);
-	m_pBaseInfo = CoreDataManager_v->getCharInfo(m_PlayerData.CharType);
+	m_VisualInfo = Core::Contents.Inven->getVisualInfo(m_PlayerData.CharType);
+	m_pBaseInfo = Core::DataManager->getCharInfo(m_PlayerData.CharType);
 
 	Player::initialize();
 	initActionManager();

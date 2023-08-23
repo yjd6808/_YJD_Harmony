@@ -45,7 +45,7 @@ bool UILayer::init() {
 		return false;
 
 	
-	_contentSize = CoreClientInfo_v->GameResolutionSize;
+	_contentSize = Core::ClientInfo->GameResolutionSize;
 	return true;
 }
 
@@ -162,11 +162,11 @@ void UILayer::update(float delta) {
 
 	for (int i = _children.size() - 1; i >= 0; i--) {
 		UIMasterGroup* uiGroup = static_cast<UIMasterGroup*>(_children.at(i));
-		uiGroup->forEachRecursiveSpecificType<UIStatic>([](auto child) { child->setDebugVisible(CoreGlobal_v->DrawUIStatic); });
+		uiGroup->forEachRecursiveSpecificType<UIStatic>([](auto child) { child->setDebugVisible(Core::Contents.Global->DrawUIStatic); });
 		uiGroup->onUpdate(delta);
 	}
 
-	CoreUIManager_v->onUpdate(delta);
+	Core::Contents.UIManager->onUpdate(delta);
 }
 
 void UILayer::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) {
@@ -206,7 +206,7 @@ void UILayer::forEach(const SGActionFn<UIMasterGroup*>& actionFn) {
 }
 
 void UILayer::addUIGroup(int groupCode, int zorder) {
-	UIMasterGroup* pGroup = CoreUIManager_v->getMasterGroup(groupCode);
+	UIMasterGroup* pGroup = Core::Contents.UIManager->getMasterGroup(groupCode);
 
 	if (pGroup == nullptr) {
 		_LogWarn_("%d 마스터 UI그룹을 찾지 못했습니다. %s파일을 확인해주세요.", ConfigFileType::FileName[ConfigFileType::UI]);
@@ -284,7 +284,7 @@ void UILayer::clear() {
 
 void UILayer::clearUnload() {
 	clear();
-	CoreUIManager_v->unloadAll();
+	Core::Contents.UIManager->unloadAll();
 }
 
 

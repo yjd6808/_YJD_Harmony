@@ -34,7 +34,7 @@ void IntializeScheduler() {
 
 	g_pAuthTokenManagerSchedule->Initialize();
 
-	CoreScheduler_v->AddFirstTask(g_pAuthTokenManagerSchedule);
+	Core::Scheduler->AddFirstTask(g_pAuthTokenManagerSchedule);
 }
 
 void FinalizeScheduler() {

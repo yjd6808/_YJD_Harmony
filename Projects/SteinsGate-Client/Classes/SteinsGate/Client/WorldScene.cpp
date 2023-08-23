@@ -16,14 +16,14 @@
 #include <SteinsGate/Client/ChannelSelectScene.h>
 #include <SteinsGate/Client/UILayer.h>
 
-#include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/ActorManager.h>
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/ActorListenerManager.h>
 #include <SteinsGate/Client/Global.h>
 #include <SteinsGate/Client/UIManager.h>
-#include <SteinsGate/Client/FontPackage.h>
+#include <SteinsGate/Client/FontManager.h>
 #include <SteinsGate/Client/WndMessage.h>
 #include <SteinsGate/Client/Win32Helper.h>
 
@@ -157,16 +157,16 @@ void WorldScene::updateScene(float dt) {
 }
 
 void WorldScene::updateNet(float dt) {
-	CoreNet_v->pollNetEvents();
+	Core::Net->pollNetEvents();
 }
 
 void WorldScene::updateTime(float dt) {
-	CoreTimeManager_v->updateAppTime();
-	CoreTimeManager_v->updateServerTime();
+	Core::Contents.TimeManager->updateAppTime();
+	Core::Contents.TimeManager->updateServerTime();
 }
 
 void WorldScene::updateCLI(float dt) {
-	CoreCLIThread_v->ProcessInputs();
+	Core::CLIThread->ProcessInputs();
 }
 
 void WorldScene::onWndMessageReceived(int code, WPARAM wParam, LPARAM lParam) {
@@ -228,8 +228,8 @@ void WorldScene::onKeyPressed(SGEventKeyboard::KeyCode keyCode, SGEvent* event) 
 		// m_UISize를 사용하지 않고 기존 노드 변수인 _contentSize와 _scale을 활용해서 UI가 "해상도에 맞게" 보이도록 해줘야함.
 		// 코드를 좀 많이 수정해줘야할 것 같다.
 
-		CoreApp_v->SetDesignResolutionSize(640.0f, 480.0f);
-		CoreApp_v->SetFrameSize(960.0f, 720.0f);
+		Core::App->SetDesignResolutionSize(640.0f, 480.0f);
+		Core::App->SetFrameSize(960.0f, 720.0f);
 	} else if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE) {
 		if (m_pGridLayer == nullptr) {
 			return;
@@ -257,16 +257,11 @@ void WorldScene::onKeyReleased(SGEventKeyboard::KeyCode keyCode, SGEvent* event)
 }
 
 void WorldScene::onMouseMove(SGEventMouse* mouseEvent) const {
-	_LogDebug_("마우스 움직임");
-
 	if (m_pRunningScene)
 		m_pRunningScene->onMouseMove(mouseEvent);
 
 	if (m_pUILayer)
 		m_pUILayer->onMouseMove(mouseEvent);
-
-
-	
 }
 
 void WorldScene::onMouseDown(SGEventMouse* mouseEvent) const {
@@ -284,7 +279,7 @@ void WorldScene::onMouseUp(SGEventMouse* mouseEvent) const {
 	if (m_pUILayer)
 		m_pUILayer->onMouseUp(mouseEvent);
 
-	CoreUIManager_v->dragEnd();
+	Core::Contents.UIManager->dragEnd();
 }
 
 void WorldScene::onMouseScroll(SGEventMouse* mouseEvent) const {

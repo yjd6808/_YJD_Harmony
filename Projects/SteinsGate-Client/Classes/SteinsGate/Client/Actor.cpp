@@ -122,7 +122,7 @@ void Actor::update(float dt) {
 	m_Components.onUpdate(dt);
 
 
-	if (CoreGlobal_v->DrawThicknessBox)
+	if (Core::Contents.Global->DrawThicknessBox)
 		m_pThicknessBox->setOpacity(0);
 	else
 		m_pThicknessBox->setOpacity(125);
@@ -331,7 +331,7 @@ void Actor::pauseAnimation(float delay) {
 void Actor::runFrameEventSpawn(FrameEventSpawnType_t spawnType,  int spawnCode) {
 	switch (spawnType) {
 	case FrameEventSpawnType::Projectile:
-		CoreActorBox_v->createProejctileOnMap(this, spawnCode);
+		Core::Contents.ActorManager->createProejctileOnMap(this, spawnCode);
 		break;
 	case FrameEventSpawnType::AttackBox:
 		DebugAssertMsg(false, "미구현");
@@ -344,7 +344,7 @@ void Actor::runFrameEvent(int frameEventCode) {
 	if (frameEventCode == InvalidValue_v)
 		return;
 
-	FrameEvent* pFrameEvent = CoreDataManager_v->getFrameEvent(getType(), frameEventCode);
+	FrameEvent* pFrameEvent = Core::DataManager->getFrameEvent(getType(), frameEventCode);
 
 	if (pFrameEvent == nullptr)
 		return;
@@ -504,14 +504,14 @@ void Actor::releaseActorSprite() {
 
 void Actor::cleanUpAtNextFrame() {
 	DebugAssertMsg(m_pMapLayer, "소속된 맵이 존재하지 않습니다.");
-	CoreActorBox_v->cleanUpAtNextFrame(this);
+	Core::Contents.ActorManager->cleanUpAtNextFrame(this);
 	m_bCleanUp = true;
 }
 
 void Actor::cleanUp() {
 	m_bCleanUp = true;
 	m_pMapLayer = nullptr;
-	CoreActorBox_v->cleanUp(this);
+	Core::Contents.ActorManager->cleanUp(this);
 }
 
 void Actor::attach(Actor* actor) {

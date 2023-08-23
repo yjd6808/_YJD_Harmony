@@ -10,11 +10,11 @@
 
 #include <SteinsGate/Client/Tutturu.h>
 
-class FontPackage final : public JCore::SingletonPointer<FontPackage>
+class FontManager final : public JCore::SingletonPointer<FontManager>
 {
 	friend class TSingleton;
-	FontPackage();
-	~FontPackage() override;
+	FontManager();
+	~FontManager() override;
 public:
 	void init();
 	SGString& getFontName(int fontCode);

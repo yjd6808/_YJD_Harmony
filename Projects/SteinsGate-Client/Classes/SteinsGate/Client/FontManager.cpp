@@ -7,7 +7,7 @@
 
 
 #include "Tutturu.h"
-#include "FontPackage.h"
+#include "FontManager.h"
 #include "GameCoreHeader.h"
 
 #include <SteinsGate/Client/ImagePackManager.h>
@@ -25,16 +25,16 @@
 USING_NS_JC;
 USING_NS_JS;
 
-FontPackage::FontPackage()
+FontManager::FontManager()
 	: m_hFontNameToCodeMap(8)
 	, m_hFontCodeToNameMap(8)
 {}
 
-FontPackage::~FontPackage() {
+FontManager::~FontManager() {
 }
 
-void FontPackage::init() {
-	SGString szFontDirPath = JCore::Path::Combine(CoreCommonInfo_v->DataPath, Const::Resource::FontDirName);
+void FontManager::init() {
+	SGString szFontDirPath = JCore::Path::Combine(Core::CommonInfo->DataPath, Const::Resource::FontDirName);
 	Vector<SGString> vFontFiles = Directory::Files(szFontDirPath.Source());
 
 	for (int i = 0; i < vFontFiles.Size(); ++i) {
@@ -47,12 +47,12 @@ void FontPackage::init() {
 
 }
 
-SGString& FontPackage::getFontName(int fontCode) {
+SGString& FontManager::getFontName(int fontCode) {
 	DebugAssertMsg(m_hFontCodeToNameMap.Exist(fontCode), "해당 폰트코드에 맞는 폰트 이름이 없습니다.");
 	return m_hFontCodeToNameMap[fontCode];
 }
 
-int FontPackage::getFontCode(const SGString& fontName) {
+int FontManager::getFontCode(const SGString& fontName) {
 	DebugAssertMsg(m_hFontNameToCodeMap.Exist(fontName), "해당 폰트이름에 맞는 폰트 코드가 없습니다.");
 	return m_hFontNameToCodeMap[fontName];
 }

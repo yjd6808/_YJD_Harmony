@@ -23,12 +23,12 @@ using MapObjectList = SGVector<MapObject*>;
 using EffectList = SGVector<Effect*>;
 
 class MapLayer;
-class ActorBox final : public JCore::SingletonPointer<ActorBox>
+class ActorManager final : public JCore::SingletonPointer<ActorManager>
 {
 private:
 	friend class TSingleton;
-	ActorBox();
-	~ActorBox() override;
+	ActorManager();
+	~ActorManager() override;
 public:
 	void init(MapLayer* mapLayer);
 	

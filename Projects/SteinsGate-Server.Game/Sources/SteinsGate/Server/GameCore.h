@@ -21,7 +21,7 @@ class GameTokenManager;
 struct GameServerProcessInfo;
 struct RuntimeConfig;
 
-extern DataManager* CoreDataManager_v;
+extern DataManager* Core::DataManager;
 extern MysqlDatabase* CoreGameDB_v;;
 extern GameNetMaster* CoreNetMaster_v;
 extern GameNetGroup* CoreNetGroup_v;
@@ -29,7 +29,7 @@ extern LogicServer* CoreServer_v;
 extern GameTokenManager* CoreTokenManager_v;
 extern GameServerType_t CoreGameServerType_v;
 extern GameServerProcessInfo* CoreGameServerProcessInfo_v;
-extern RuntimeConfig* CoreRuntimeConfig_v;
+extern RuntimeConfig* Core::RuntimeConfig;
 
 bool InitializeGameCore(GameServerType_t gameServerType);
 void FinalizeGameCore();

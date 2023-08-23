@@ -6,10 +6,9 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "UIManager.h"
 
-#include <SteinsGate/Client/DataManager.h>
-#include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/UIGroup.h>
 #include <SteinsGate/Client/UIMasterGroup.h>
 #include <SteinsGate/Client/Global.h>
@@ -87,7 +86,7 @@ void UIManager::registerUITexture(SgaResourceIndex index) {
 	const bool bInserted = m_hLoadedUITexture.Insert(index.Value, index);
 
 	if (bInserted) {
-		CorePackManager_v->logTexture("로드", index, LoggerAbstract::eDebug);
+		Core::Contents.PackManager->logTexture("로드", index, LoggerAbstract::eDebug);
 	}
 }
 
@@ -171,11 +170,11 @@ UIElement* UIManager::getElement(int elementCode) {
 }
 
 FrameTexture* UIManager::createUITexture(int sga, int img, int frame, bool linearDodge /* = false  */) {
-	ImagePack* pPack = CorePackManager_v->getPackUnsafe(sga);
+	ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(sga);
 
 	if (pPack == nullptr) {
-		CorePackManager_v->logTexture("UIManager::createUITexture()", SgaResourceIndex{sga, img, frame}, LoggerAbstract::eWarn);
-		return CoreGlobal_v->getDefaultFrameTexture();
+		Core::Contents.PackManager->logTexture("UIManager::createUITexture()", SgaResourceIndex{sga, img, frame}, LoggerAbstract::eWarn);
+		return Core::Contents.Global->getDefaultFrameTexture();
 	}
 
 	FrameTexture* pTexture = pPack->createFrameTexture(img, frame, linearDodge);

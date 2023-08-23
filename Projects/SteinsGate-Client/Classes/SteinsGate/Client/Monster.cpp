@@ -6,15 +6,13 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "Monster.h"
 
 #include <SteinsGate/Client/AttackDataInfo.h>
-#include <SteinsGate/Client/Struct.h>
 #include <SteinsGate/Client/MoveComponent.h>
 #include <SteinsGate/Client/PhysicsComponent.h>
 #include <SteinsGate/Client/AIComponent.h>
-
-#include "ActorListenerManager.h"
 
 USING_NS_CC;
 USING_NS_JC;
@@ -56,7 +54,7 @@ void Monster::initListeners() {
 	IActorListener* pListener = getListener(IActorListener::Type::eMonster);
 
 	if (pListener == nullptr) {
-		pListener = CoreActorListenerManager_v->createMonsterListener(this);
+		pListener = Core::Contents.ActorListenerManager->createMonsterListener(this);
 		addListener(pListener);
 	}
 }

@@ -6,13 +6,9 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "GameScene.h"
 
-#include <SteinsGate/Client/DataManager.h>
-#include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/ActorBox.h>
-#include <SteinsGate/Client/Global.h>
-#include <SteinsGate/Client/WorldScene.h>
 
 USING_NS_CC;
 
@@ -71,7 +67,7 @@ bool SGGameScene::init()
     m_pMapLayer->addChild(m_pGridLayer, 1);
     this->addChild(m_pMapLayer);
 
-    CoreActorBox_v->init(m_pMapLayer);                   // 맵 레이어 초기화
+    Core::Contents.ActorManager->init(m_pMapLayer);                   // 맵 레이어 초기화
 
     cmdEnterMap();
     cmdLoadChar();
@@ -81,13 +77,13 @@ bool SGGameScene::init()
 
 void SGGameScene::cmdLoadChar() {
 
-    CorePlayer_v->initialize();
-    CorePlayer_v->setPositionRealCenter(300, 200);
-    CorePlayer_v->setMapLayer(m_pMapLayer);
-    CorePlayer_v->setCleanUpFlag(Actor::CF_ReleaseActorSprite);
+    Core::Contents.Player->initialize();
+    Core::Contents.Player->setPositionRealCenter(300, 200);
+    Core::Contents.Player->setMapLayer(m_pMapLayer);
+    Core::Contents.Player->setCleanUpFlag(Actor::CF_ReleaseActorSprite);
 
-    CoreActorBox_v->registerPlayerOnMap(CorePlayer_v);
-    m_pMapLayer->getCamera()->setFollowTarget(CorePlayer_v);
+    Core::Contents.ActorManager->registerPlayerOnMap(Core::Contents.Player);
+    m_pMapLayer->getCamera()->setFollowTarget(Core::Contents.Player);
 }
 
 void SGGameScene::cmdEnterMap() {
@@ -95,7 +91,7 @@ void SGGameScene::cmdEnterMap() {
 }
 
 void SGGameScene::onExit() {
-    CorePlayer_v->cleanUp();
-    ActorBox::Get()->clearAll();
+    Core::Contents.Player->cleanUp();
+    ActorManager::Get()->clearAll();
     SceneBase::onExit();
 }

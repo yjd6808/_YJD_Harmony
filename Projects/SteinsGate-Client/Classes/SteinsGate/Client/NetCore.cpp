@@ -71,6 +71,6 @@ bool NetCore::connectAuthTcp() {
 		return false;
 	}
 
-	return m_pAuthTcp->ConnectAsync(CoreServerProcessInfoPackage_v->Auth.RemoteEP);
+	return m_pAuthTcp->ConnectAsync(Core::ServerProcessInfoPackage->Auth.RemoteEP);
 }
 

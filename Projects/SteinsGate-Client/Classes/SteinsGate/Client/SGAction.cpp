@@ -34,7 +34,7 @@ void SGAction::play() {
 	// 플레이어가 사용가능한지 체크
 	m_pHitRecorder = m_pPlayer->getHitRecorder();
 	m_pHitRecorder->clearAlreadyHitEnemies();
-	m_eWeaponType = CoreInven_v->getWeaponType();
+	m_eWeaponType = Core::Contents.Inven->getWeaponType();
 
 	onActionBegin();
 }

@@ -19,13 +19,13 @@ class AuthServer;
 class AuthenticationManager;
 struct RuntimeConfig;
 
-extern DataManager* CoreDataManager_v;
+extern DataManager* Core::DataManager;
 extern MysqlDatabase* CoreGameDB_v;;
 extern AuthNetMaster* CoreNetMaster_v;
 extern AuthNetGroup* CoreNetGroup_v;
 extern AuthServer* CoreServer_v;
 extern AuthenticationManager* CoreTokenManager_v;
-extern RuntimeConfig* CoreRuntimeConfig_v;
+extern RuntimeConfig* Core::RuntimeConfig;
 
 void InitializeAuthCore();
 void FinalizeAuthCore();

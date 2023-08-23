@@ -14,7 +14,7 @@
 #include <SteinsGate/Client/AttackDataInfo.h>
 #include <SteinsGate/Client/Define_Effect.h>
 #include <SteinsGate/Client/Define_Event.h>
-#include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/ActorManager.h>
 
 ProjectileListener_GunnerBullet::ProjectileListener_GunnerBullet(Projectile* projectile, Actor* spawner)
 	: ProjectileListener(projectile, spawner)
@@ -41,7 +41,7 @@ void ProjectileListener_GunnerBullet::onUpdate(float dt) {
 
 void ProjectileListener_GunnerBullet::onCollisionWithGround() {
 	ProjectileListener::onCollisionWithGround();
-	ActorBox::Get()->createEffectOnMapAbsolute(
+	ActorManager::Get()->createEffectOnMapAbsolute(
 		DEF_EFFECT_COLLISION_FLOOR,
 		m_pProjectile->getPositionRealCenterX(),
 		m_pProjectile->getPositionRealCenterY(),
@@ -54,7 +54,7 @@ void ProjectileListener_GunnerBullet::onEnemySingleHit(HitInfo& info) {
 		return;
 
 	EffectInfo* pHitEffectInfo = m_pProjectile->getHitEffectInfo();
-	ActorBox::Get()->createEffectOnMapTargetCollision(
+	ActorManager::Get()->createEffectOnMapTargetCollision(
 		pHitEffectInfo->Code,
 		SpriteDirection::Reverse[info.HitDirection],
 		info);

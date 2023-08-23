@@ -106,8 +106,8 @@ void UIElement::setInitialUISize(SGSize size) {
 		return;
 	}
 
-	size.width *= CoreClientInfo_v->UIScaleXFactor;
-	size.height *= CoreClientInfo_v->UIScaleYFactor;
+	size.width *= Core::ClientInfo->UIScaleXFactor;
+	size.height *= Core::ClientInfo->UIScaleYFactor;
 
 	_contentSize = size;
 	m_UISize = size;
@@ -143,7 +143,7 @@ bool UIElement::onMouseDownInternal(SGEventMouse* mouseEvent) {
 
 	// 마우스를 눌렀을 때는 실질적인 드래그를 수행하지는 않기 때문에
 	// 드래그 시작 위치만 계속 업데이트시키도록 한다.
-	if (m_bDraggable && !CoreUIManager_v->isDragging()) {
+	if (m_bDraggable && !Core::Contents.UIManager->isDragging()) {
 		DragState dragState;
 		dragState.Dragging = false;	// 아직 실제 드래그가 시작된 상태가 아니므로
 		dragState.StartCursorPosition = mouseEvent->getStartCursorPos();
@@ -159,7 +159,7 @@ bool UIElement::onMouseDownInternal(SGEventMouse* mouseEvent) {
 			dragState.TargetElement = this;
 		}
 
-		CoreUIManager_v->draginit(dragState);
+		Core::Contents.UIManager->draginit(dragState);
 	}
 	return bPropagate;
 }
@@ -168,7 +168,7 @@ bool UIElement::onMouseDownInternal(SGEventMouse* mouseEvent) {
 bool UIElement::onMouseMoveInternal(SGEventMouse* mouseEvent) {
 
 
-	const DragState& dragState = CoreUIManager_v->getDragState();
+	const DragState& dragState = Core::Contents.UIManager->getDragState();
 
 	// 주의사항: 스크롤바에 드래깅 활성화시 손잡이 드래그보다 먼저 Element에서 드래그 체크를 수행하기 때문에 손잡이 드래그가 안먹힌다.
 	// 만약 onMouseDown에서 드래그 초기화된 엘리먼트가 있는 경우
@@ -180,13 +180,13 @@ bool UIElement::onMouseMoveInternal(SGEventMouse* mouseEvent) {
 			return true;
 		}
 
-		CoreUIManager_v->dragMove(mouseEvent);
+		Core::Contents.UIManager->dragMove(mouseEvent);
 		return false;
 	}
 
 	// 드래그 중이 아닌데 드래그 타겟인 경우
 	if (dragState.TargetElement == this) {	
-		CoreUIManager_v->dragEnter(mouseEvent);
+		Core::Contents.UIManager->dragEnter(mouseEvent);
 		return false;
 	}
 
@@ -249,7 +249,7 @@ bool UIElement::onMouseUpInternal(SGEventMouse* mouseEvent) {
 	invokeMouseEvent(eMouseEventUpContained, mouseEvent);
 
 	// 마우스를 땠을때 드래그 중인 상태인 경우 자식 엘리먼트 구현체들(버튼, 스크롤바, 에딧박스..등등)에게 이벤트가 전달되지 않도록 한다.
-	if (!CoreUIManager_v->isDragging()) {
+	if (!Core::Contents.UIManager->isDragging()) {
 		if (m_bInternalDetailEventEnabled) {
 			bPropagate = onMouseUpContainedInternalDetail(mouseEvent);
 		}
@@ -328,18 +328,18 @@ SGVec2 UIElement::getRelativePosition() {
 }
 
 SGRect UIElement::getParentAbsoluteRect() {
-	return isMasterGroup() ? CoreClientInfo_v->getGameResolutionRect() : m_pParent->getWorldBoundingBox();
+	return isMasterGroup() ? Core::ClientInfo->getGameResolutionRect() : m_pParent->getWorldBoundingBox();
 }
 
 SGRect UIElement::getParentRect() {
 	return isMasterGroup() ? 
-		CoreClientInfo_v->getGameResolutionRect() :
+		Core::ClientInfo->getGameResolutionRect() :
 		SGRect{ 0, 0, m_pParent->m_UISize.width, m_pParent->m_UISize.height };
 }
 
 SGSize UIElement::getParentSize() {
 	return isMasterGroup() ?
-		CoreClientInfo_v->GameResolutionSize :
+		Core::ClientInfo->GameResolutionSize :
 		m_pParent->m_UISize;
 }
 

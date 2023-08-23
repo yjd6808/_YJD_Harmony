@@ -17,7 +17,7 @@
 #include <SteinsGate/Client/DataManager.h>
 #include <SteinsGate/Client/HostPlayer.h>
 #include <SteinsGate/Client/Define_Action.h>
-#include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/ActorManager.h>
 #include <SteinsGate/Client/CharacterListener.h>
 #include <SteinsGate/Client/MoveComponent.h>
 #include <SteinsGate/Client/PhysicsComponent.h>
@@ -61,7 +61,7 @@ void Character::initialize() {
 void Character::initActorSpriteData(const VisualInfo& visualInfo) {
 	DebugAssert(m_pBaseInfo != nullptr);
 	JCORE_DELETE_SAFE(m_pSpriteData);
-	SGVector<AnimationInfo*>& animationList = CoreDataManager_v->getCharAnimationInfoList(m_pBaseInfo->Code);
+	SGVector<AnimationInfo*>& animationList = Core::DataManager->getCharAnimationInfoList(m_pBaseInfo->Code);
 	m_pSpriteData = dbg_new ActorSpriteData(ActorPartSpritePositioningRule::InFrameSize, 15, animationList.Size());
 	m_pSpriteData->Parts = visualInfo;
 	m_pSpriteData->Parts.Sort([](ActorPartSpriteData& lhs, ActorPartSpriteData& rhs) { return lhs.ZOrder < rhs.ZOrder; });
@@ -85,7 +85,7 @@ void Character::initListeners() {
 	IActorListener* pListener = getListener(IActorListener::Type::eCharacter);
 
 	if (pListener == nullptr) {
-		pListener = CoreActorListenerManager_v->createCharacterListener(this);
+		pListener = Core::Contents.ActorListenerManager->createCharacterListener(this);
 		addListener(pListener);
 	}
 

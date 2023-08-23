@@ -123,8 +123,8 @@ void UIScrollBar::onLinkElementMouseScroll(SGEventMouse* mouseEvent) {
 void UIScrollBar::setInitialUISize(SGSize size) {
 	UIElement::setInitialUISize(size);
 
-	m_fUpButtonHeight *= CoreClientInfo_v->UIScaleYFactor;
-	m_fDownButtonHeight *= CoreClientInfo_v->UIScaleYFactor;
+	m_fUpButtonHeight *= Core::ClientInfo->UIScaleYFactor;
+	m_fDownButtonHeight *= Core::ClientInfo->UIScaleYFactor;
 	m_fTrackHeight = m_UISize.height - m_fUpButtonHeight - m_fDownButtonHeight;
 }
 
@@ -146,7 +146,7 @@ bool UIScrollBar::init() {
 		return false;
 	}
 
-	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+	const ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(m_pInfo->Sga);
 
 	// 위 아래 버튼높이 임시 추가 (이미지가 전혀 없더라도 스크롤바 기능이 가능토록. 하기위함)
 	setInitialUISize(m_pInfo->TrackSize + Size{ 0, m_fUpButtonHeight + m_fDownButtonHeight });
@@ -205,7 +205,7 @@ void UIScrollBar::load() {
 	//                       디폴트 컬러링
 	// 디폴트 텍스쳐인 경우 업버튼, 다운버튼, 손잡이, 트랙 색을 지정해서 구분 가능토록 만든다.
 	// =============================================================
-	const FrameTexture* pDefaultTexture = CoreGlobal_v->getDefaultFrameTexture();
+	const FrameTexture* pDefaultTexture = Core::Contents.Global->getDefaultFrameTexture();
 
 	// 업 버튼
 	if (m_pTexture[IndexUpNormal] == pDefaultTexture)
@@ -234,13 +234,13 @@ void UIScrollBar::load() {
 
 
 void UIScrollBar::createSprites() {
-	// ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+	// ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(m_pInfo->Sga);
 	// const bool bPackIsNull = pPack == nullptr;
-	// FrameTexture* pDefaultTexture = CoreGlobal_v->getDefaultFrameTexture();
+	// FrameTexture* pDefaultTexture = Core::Contents.Global->getDefaultFrameTexture();
 
 	for (int i = 0; i < TextureCount; ++i) {
 		//FrameTexture* pTexture = bPackIsNull || m_pInfo->Sprites[i] == InvalidValue_v ? pDefaultTexture : pPack->createFrameTexture(m_pInfo->Img, m_pInfo->Sprites[i]);
-		FrameTexture* pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprites[i]);
+		FrameTexture* pTexture = Core::Contents.UIManager->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprites[i]);
 		Sprite* pSprite;
 
 		// 나인 렉트의 중앙 렉트 크기는 setCapInsets로 설정할 수 있다.

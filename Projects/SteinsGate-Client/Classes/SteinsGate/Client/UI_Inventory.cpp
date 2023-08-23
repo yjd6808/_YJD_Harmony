@@ -32,20 +32,20 @@ void UI_Inventory::onInit() {
 	
 	
 
-	m_pInvenSlotGroup = CoreUIManager_v->getGroup(UI_INVENTORY_GROUP_INVEN_SLOTS);
+	m_pInvenSlotGroup = Core::Contents.UIManager->getGroup(UI_INVENTORY_GROUP_INVEN_SLOTS);
 	for (int i = 0; i < MAX_INVEN_SLOT_COUNT; ++i) {
-		m_pInvenSlotSprites[i] = CoreUIManager_v->getSprite(UI_INVENTORY_INVEN_SLOTS_SPRITE_SLOT10 + i);
+		m_pInvenSlotSprites[i] = Core::Contents.UIManager->getSprite(UI_INVENTORY_INVEN_SLOTS_SPRITE_SLOT10 + i);
 		m_pInvenSlotSprites[i]->setVisible(false);
 	}
 
-	m_pEquipSlotGroup = CoreUIManager_v->getGroup(UI_INVENTORY_GROUP_EQUIP_SLOTS);
+	m_pEquipSlotGroup = Core::Contents.UIManager->getGroup(UI_INVENTORY_GROUP_EQUIP_SLOTS);
 	for (int i = 0; i < ItemType::MaxInvenEquip; ++i) {
-		m_pEquipSlotStatics[i] = CoreUIManager_v->getStatic(UI_INVENTORY_EQUIP_SLOTS_STATIC_SHOULDER + i);
+		m_pEquipSlotStatics[i] = Core::Contents.UIManager->getStatic(UI_INVENTORY_EQUIP_SLOTS_STATIC_SHOULDER + i);
 		m_pEquipSlotStatics[i]->setVisible(false);
 	}
 
-	m_pBackground = CoreUIManager_v->getSprite(UI_INVENTORY_SPRITE_BACKGROUND);
-	m_pScrollBar = CoreUIManager_v->getScrollBar(UI_INVENTORY_SCROLLBAR);
+	m_pBackground = Core::Contents.UIManager->getSprite(UI_INVENTORY_SPRITE_BACKGROUND);
+	m_pScrollBar = Core::Contents.UIManager->getScrollBar(UI_INVENTORY_SCROLLBAR);
 	
 }
 
@@ -56,7 +56,7 @@ void UI_Inventory::onLoaded() {
 }
 
 void UI_Inventory::onAdded() {
-	const int iRowCount = CoreInven_v->getAvailableSlotCount(m_iCurTab) / INVEN_ITEM_COUNT_PER_ROW;
+	const int iRowCount = Core::Contents.Inven->getAvailableSlotCount(m_iCurTab) / INVEN_ITEM_COUNT_PER_ROW;
 	m_pScrollBar->setRowCount(iRowCount);
 }
 

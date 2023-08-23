@@ -104,10 +104,10 @@ bool UIEditBox::init() {
 void UIEditBox::setInitialUISize(SGSize size) {
 	UIElement::setInitialUISize(size);
 
-	m_fFontSize = m_pInfo->FontSize * CoreClientInfo_v->UIScaleYFactor;
+	m_fFontSize = m_pInfo->FontSize * Core::ClientInfo->UIScaleYFactor;
 	m_fFontSizeInitial = m_fFontSize;
 
-	m_fPlaceholderFontSize = m_pInfo->PlaceholderFontSize * CoreClientInfo_v->UIScaleYFactor;
+	m_fPlaceholderFontSize = m_pInfo->PlaceholderFontSize * Core::ClientInfo->UIScaleYFactor;
 	m_fPlaceholderFontSizeInitial = m_fPlaceholderFontSize;
 
 }

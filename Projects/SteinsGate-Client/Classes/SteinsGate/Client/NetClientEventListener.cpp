@@ -51,7 +51,7 @@ void NetClientEventListener::OnReceived(Session* session, IRecvPacket* recvPacke
 }
 
 void NetClientEventListener::SyncConnectionResult(ClientConnectServerType_t listenerType, Session* session, bool success, Int32U errorCode) {
-	ConnectionSynchronizer* pSynchronizer = CoreNet_v->getConnectionSynchronizer();
+	ConnectionSynchronizer* pSynchronizer = Core::Net->getConnectionSynchronizer();
 
 	if (pSynchronizer == nullptr) {
 		SGString szResult = StringUtil::ToString(success);
@@ -63,7 +63,7 @@ void NetClientEventListener::SyncConnectionResult(ClientConnectServerType_t list
 }
 
 void NetClientEventListener::SyncDisconnectionResult(ClientConnectServerType_t listenerType, Session* session) {
-	ConnectionSynchronizer* pSynchronizer = CoreNet_v->getConnectionSynchronizer();
+	ConnectionSynchronizer* pSynchronizer = Core::Net->getConnectionSynchronizer();
 
 	if (pSynchronizer == nullptr) {
 		_LogWarn_("동기화기가 소멸되어서 Disconnection의 후속처리를 수행할 수 없습니다. [타입:%d]", listenerType);
@@ -74,7 +74,7 @@ void NetClientEventListener::SyncDisconnectionResult(ClientConnectServerType_t l
 }
 
 void NetClientEventListener::SyncReceivedCommand(ClientConnectServerType_t listenerType, SGSession* session, ICommand* cmd) {
-	CommandSynchronizer* pSynchronizer = CoreNet_v->getCommandSynchronizer();
+	CommandSynchronizer* pSynchronizer = Core::Net->getCommandSynchronizer();
 
 	if (pSynchronizer == nullptr) {
 		_LogWarn_("커맨드를 수신했지만 동기화기가 소멸되어서 이를 메인쓰레드에서 받아서 처리할 수가 없습니다. (커맨드:%d)", cmd->GetCommand());

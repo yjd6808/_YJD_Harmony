@@ -13,7 +13,7 @@
 #include <SteinsGate/Client/ImagePackManager.h>
 #include <SteinsGate/Client/JsonUtilEx.h>
 #include <SteinsGate/Client/DataManager.h>
-#include <SteinsGate/Client/FontPackage.h>
+#include <SteinsGate/Client/FontManager.h>
 
 #include "UICheckBox.h"
 
@@ -152,7 +152,7 @@ UIElementInfo* UIInfoLoader::readElementLabel(Value& labelRoot) {
 	const SGString szFontName = JsonUtilEx::getString(labelRoot[JsonFontKey]);
 
 	pInfo->Type = UIElementType::Label;
-	pInfo->FontCode =  FontPackage::Get()->getFontCode(szFontName);
+	pInfo->FontCode =  FontManager::Get()->getFontCode(szFontName);
 	pInfo->FontSize = labelRoot[JsonFontSizeKey].asInt();
 	pInfo->TextWrap = labelRoot[JsonTextWrapKey].asBool();
 	JsonUtilEx::parseColor4B(labelRoot[JsonFontColorKey], pInfo->FontColor);

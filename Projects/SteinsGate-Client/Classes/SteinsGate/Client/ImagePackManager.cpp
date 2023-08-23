@@ -33,7 +33,7 @@ void ImagePackManager::loadAllPackages() {
 	constexpr int ThreadCount = Const::Resource::MaxSgaParallelLoadingThreadCount;
 
 	SGThread loaderThread[ThreadCount];
-	SGString imageDirPath = Path::Combine(CoreCommonInfo_v->DataPath, Const::Resource::ImageDirName);
+	SGString imageDirPath = Path::Combine(Core::CommonInfo->DataPath, Const::Resource::ImageDirName);
 	SGVector<SGString> paths = Directory::Files(imageDirPath, false);
 	SGVector<SGString> sgaPaths;
 

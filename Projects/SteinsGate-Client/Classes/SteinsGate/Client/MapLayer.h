@@ -6,7 +6,7 @@
 #include <SteinsGate/Common/MapInfo.h>
 #include <SteinsGate/Common/MapPhysicsInfo.h>
 
-#include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/ActorManager.h>
 #include <SteinsGate/Client/MimicCamera.h>
 
 class MapLayer : public SGLayer
@@ -42,7 +42,7 @@ public:
 	MapPhysicsInfo* m_pMapPhysicsInfo;
 	MapAreaInfo* m_pMapAreaInfo;
 	MapInfo* m_pMapInfo;
-	ActorBox* m_pActorBox;
+	ActorManager* m_pActorBox;
 };
 
 

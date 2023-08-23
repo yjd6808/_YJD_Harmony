@@ -50,18 +50,18 @@ void UI_Login::onInit() {
 	//#define UI_LOGIN_LOGIN_BOX_EDITBOX_ID	2006
 	//#define UI_LOGIN_LOGIN_BOX_EDITBOX_PW	2007
 
-	m_pLabelSource = CoreUIManager_v->getLabel(UI_LOGIN_LABEL_SOURCE);
-	m_pLabelDeveloper = CoreUIManager_v->getLabel(UI_LOGIN_LABEL_DEVELOPER);
+	m_pLabelSource = Core::Contents.UIManager->getLabel(UI_LOGIN_LABEL_SOURCE);
+	m_pLabelDeveloper = Core::Contents.UIManager->getLabel(UI_LOGIN_LABEL_DEVELOPER);
 
-	m_pGroupLoginBox = CoreUIManager_v->getGroup(UI_LOGIN_GROUP_LOGIN_BOX);
-	m_pSpriteBackground = CoreUIManager_v->getSprite(UI_LOGIN_LOGIN_BOX_SPRITE_BACKGROUND);
-	m_pTBtnHangameLogin = CoreUIManager_v->getToggleButton(UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_HANGAME_LOGIN);
-	m_pTBtnDnfLogin = CoreUIManager_v->getToggleButton(UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_DNF_LOGIN);
-	m_pBtnStart = CoreUIManager_v->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_START);
-	m_pBtnTerminate = CoreUIManager_v->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_TERMINATE);
-	m_pEbId = CoreUIManager_v->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_ID);
+	m_pGroupLoginBox = Core::Contents.UIManager->getGroup(UI_LOGIN_GROUP_LOGIN_BOX);
+	m_pSpriteBackground = Core::Contents.UIManager->getSprite(UI_LOGIN_LOGIN_BOX_SPRITE_BACKGROUND);
+	m_pTBtnHangameLogin = Core::Contents.UIManager->getToggleButton(UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_HANGAME_LOGIN);
+	m_pTBtnDnfLogin = Core::Contents.UIManager->getToggleButton(UI_LOGIN_LOGIN_BOX_TOGGLEBUTTON_DNF_LOGIN);
+	m_pBtnStart = Core::Contents.UIManager->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_START);
+	m_pBtnTerminate = Core::Contents.UIManager->getButton(UI_LOGIN_LOGIN_BOX_BUTTON_TERMINATE);
+	m_pEbId = Core::Contents.UIManager->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_ID);
 	m_pEbId->setMaxLength(Const::StringLen::AccountId);
-	m_pEbPass = CoreUIManager_v->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_PW);
+	m_pEbPass = Core::Contents.UIManager->getEditBox(UI_LOGIN_LOGIN_BOX_EDITBOX_PW);
 	m_pEbPass->setInputFlag(SGEditBox::InputFlag::PASSWORD);
 	m_pEbPass->setMaxLength(Const::StringLen::AccountPass);
 }
@@ -86,7 +86,7 @@ void UI_Login::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 		login();
 		break;
 	case UI_LOGIN_LOGIN_BOX_BUTTON_TERMINATE:
-		CoreWorld_v->terminate();
+		Core::Contents.World->terminate();
 		break;
 	default:
 		break;
@@ -140,19 +140,19 @@ void UI_Login::setTab(Tab tab) {
 
 void UI_Login::login() {
 	if (m_pEbId->getText().length() == 0 || m_pEbPass->getText().length() == 0) {
-		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_REQUIRED_ID_PASS"));
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_REQUIRED_ID_PASS"));
 		return;
 	}
 
 	// TODO: 벨리데이터 구현
-	AccountData& pData = CorePlayer_v->accountData();
+	AccountData& pData = Core::Contents.Player->accountData();
 	pData.Id.SetStringUnsafe(m_pEbId->getText());
 	pData.Pass.SetStringUnsafe(m_pEbPass->getText());
 
-	if (!CoreNet_v->connectAuthTcp()) {
-		CorePopupManager_v->showOk(SG_TEXT_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
+	if (!Core::Net->connectAuthTcp()) {
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
 		return;
 	}
 
-	CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_AUTH"), DEF_POPUP_LOGIN_WAIT);
+	Core::Contents.PopupManager->showNone(SG_TEXT_RAW("CONNECT_AUTH"), DEF_POPUP_LOGIN_WAIT);
 }

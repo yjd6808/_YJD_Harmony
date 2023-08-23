@@ -18,15 +18,15 @@ USING_NS_JNET;
 void ListenerHelperBase::LogCommand(TransportProtocol protocol, Transmission transmission, ICommand* cmd) {
 	const Cmd_t id = cmd->GetCommand();
 
-	if (transmission == Transmission::Recv && (!CoreRuntimeConfigBase_v->ShowRecvCommand || CoreRuntimeConfigBase_v->RecvCommandFilter.Exist(id))) {
+	if (transmission == Transmission::Recv && (!Core::RuntimeConfigBase->ShowRecvCommand || Core::RuntimeConfigBase->RecvCommandFilter.Exist(id))) {
 		return;
 	}
 
-	if (transmission == Transmission::Send && (!CoreRuntimeConfigBase_v->ShowSendCommand || CoreRuntimeConfigBase_v->SendCommandFilter.Exist(id))) {
+	if (transmission == Transmission::Send && (!Core::RuntimeConfigBase->ShowSendCommand || Core::RuntimeConfigBase->SendCommandFilter.Exist(id))) {
 		return;
 	}
 
-	const char* szName = CoreCommandNameDictionary_v.Get(id);
+	const char* szName = Core::CommandNameDictionary.Get(id);
 
 	_LogDebug_("%c %s %sB %s(%d)", 
 		TransmissionName(transmission),
@@ -39,11 +39,11 @@ void ListenerHelperBase::LogCommand(TransportProtocol protocol, Transmission tra
 }
 
 void ListenerHelperBase::LogPacketHex(IRecvPacket* recvPacket) {
-	if (CoreRuntimeConfigBase_v->ShowRecvPacketHex)
+	if (Core::RuntimeConfigBase->ShowRecvPacketHex)
 		PacketViewer::View(recvPacket);
 }
 
 void ListenerHelperBase::LogPacketHex(ISendPacket* sentPacket) {
-	if (CoreRuntimeConfigBase_v->ShowSendPacketHex)
+	if (Core::RuntimeConfigBase->ShowSendPacketHex)
 		PacketViewer::View(sentPacket);
 }

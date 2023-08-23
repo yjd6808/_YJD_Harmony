@@ -13,7 +13,7 @@
 #include <SteinsGate/Client/Define_Animation.h>
 #include <SteinsGate/Client/Define_Effect.h>
 #include <SteinsGate/Client/Define_Event.h>
-#include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/ActorManager.h>
 #include <SteinsGate/Client/PhysicsComponent.h>
 
 GunnerSliding::GunnerSliding(HostPlayer* player, ActionInfo* actionInfo)
@@ -62,7 +62,7 @@ void GunnerSliding::onFrameEnd(ActorPartAnimation* animation, FrameTexture* fram
 	if (animation->getFrameIndex() == 111) {
 		m_bSlidingStarted = true;
 
-		ActorBox::Get()->createEffectOnMapBySpawner(m_pPlayer, DEF_EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
+		ActorManager::Get()->createEffectOnMapBySpawner(m_pPlayer, DEF_EFFECT_GUNNER_SLIDING_BEGIN, 250, 140);
 
 		if (pPhysicsComponent == nullptr) {
 			return;
@@ -84,7 +84,7 @@ void GunnerSliding::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, info, true);
+	ActorManager::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

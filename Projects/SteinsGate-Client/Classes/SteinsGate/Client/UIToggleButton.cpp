@@ -147,7 +147,7 @@ bool UIToggleButton::init() {
 		return false;
 	}
 
-	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+	const ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(m_pInfo->Sga);
 	setInitialUISize(DefaultSize30);
 	if (pPack == nullptr) {
 		_LogWarn_("토글버튼 Sga패키지를 찾지 못했습니다.");
@@ -173,7 +173,7 @@ void UIToggleButton::load() {
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < eMax; ++j) {
 			const int iSprite = m_pInfo->Sprites[i][j];
-			FrameTexture* pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
+			FrameTexture* pTexture = Core::Contents.UIManager->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
 
 			Sprite* pSprite = Sprite::create();
 			pSprite->initWithTexture(pTexture->getTexture());

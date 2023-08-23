@@ -169,8 +169,8 @@ bool UICheckBox::init() {
 		return false;
 	}
 
-	const ImagePack* pBackgroundPack = CorePackManager_v->getPackUnsafe(m_pInfo->BackgroundSga);
-	const ImagePack* pCrossPack = CorePackManager_v->getPackUnsafe(m_pInfo->CrossSga);
+	const ImagePack* pBackgroundPack = Core::Contents.PackManager->getPackUnsafe(m_pInfo->BackgroundSga);
+	const ImagePack* pCrossPack = Core::Contents.PackManager->getPackUnsafe(m_pInfo->CrossSga);
 	setInitialUISize(DefaultSize30);
 	m_bChecked = m_pInfo->Check;
 
@@ -218,7 +218,7 @@ void UICheckBox::load() {
 			continue;
 		}
 
-		FrameTexture* pTexture = CoreUIManager_v->createUITextureRetained(Sga[i], Img[i], iSprite);
+		FrameTexture* pTexture = Core::Contents.UIManager->createUITextureRetained(Sga[i], Img[i], iSprite);
 		Sprite* pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());
 		pSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);

@@ -2,11 +2,11 @@
 
 #include "cocos2d.h"
 
-class SGApplication : public cocos2d::Application
+class SteinsGateApp : public cocos2d::Application
 {
 public:
-    SGApplication();
-    ~SGApplication() override;
+    SteinsGateApp();
+    ~SteinsGateApp() override;
 
     void initGLContextAttrs() override;
 

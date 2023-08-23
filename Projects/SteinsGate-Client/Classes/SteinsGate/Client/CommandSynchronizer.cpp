@@ -79,7 +79,7 @@ void CommandSynchronizer::processCommands() {
 
 		while (!pQueue->IsEmpty()) {
 			CommandHolder* pHolder = pQueue->Front();
-			CoreNet_v->runCommand(pHolder->ListenerType, pHolder->Sender, pHolder->Command);
+			Core::Net->runCommand(pHolder->ListenerType, pHolder->Sender, pHolder->Command);
 			pQueue->Dequeue();
 			delete pHolder;
 		}
@@ -89,7 +89,7 @@ void CommandSynchronizer::processCommands() {
 
 void CommandSynchronizer::filterUnusedCommandQueue() {
 	// 필터완료 전까지는 IOCP쓰레드가 아닌 쓰레드도 생성될 수 있으므로. 완료전까지 생성된 쓸모없는 패킷큐는 걸러줘야함
-	SGVector<Int32U> vIocpThreadIdList = CoreNet_v->getGroup()->GetIocp()->GetWorkThreadIdList();
+	SGVector<Int32U> vIocpThreadIdList = Core::Net->getGroup()->GetIocp()->GetWorkThreadIdList();
 	auto fnContained = [&vIocpThreadIdList](const IOCPThreadId$CommandQueuePair& pair) { return vIocpThreadIdList.Exist(pair.Key); };
 	m_vIOCPThreadAccessCommandQueueList = m_vIOCPThreadAccessCommandQueueList.Extension().Filter(fnContained).ToVector();
 	m_iPacketQueueCount = m_vIOCPThreadAccessCommandQueueList.Size();

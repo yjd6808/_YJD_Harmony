@@ -36,7 +36,7 @@ void AuthInterServerClientNetGroup::InitializeIOCP() {
 
 void AuthInterServerClientNetGroup::InitializeInterServerTcp() {
 	auto spInterServerClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
-	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Auth.BindInterServerTcp);
+	spInterServerClient->Bind(Core::ServerProcessInfoPackage->Auth.BindInterServerTcp);
 	AddHost(Const::Host::AuthInterServerTcpId, spInterServerClient);
 
 	m_pInterServerClientTcp = spInterServerClient.Get<TcpClient*>();
@@ -45,7 +45,7 @@ void AuthInterServerClientNetGroup::InitializeInterServerTcp() {
 
 void AuthInterServerClientNetGroup::InitializeInterServerUdp() {
 	auto spInterServerClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, RecvBufferSize_v, SendBufferSize_v);
-	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Auth.BindInterServerUdp);
+	spInterServerClient->Bind(Core::ServerProcessInfoPackage->Auth.BindInterServerUdp);
 	AddHost(Const::Host::AuthInterServerUdpId, spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
 	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Auth, m_pParser });

@@ -41,7 +41,7 @@ void CenterServer::RemoveSession(CenterSession* session) {
 }
 
 void CenterServer::BroadcastPacket(ISendPacket* packet) {
-	const Vector<int>& vActiveServerIdList = CoreServerProcessInfoPackage_v->ActiveServerIdList;
+	const Vector<int>& vActiveServerIdList = Core::ServerProcessInfoPackage->ActiveServerIdList;
 	const int iServerCount = vActiveServerIdList.Size();
 
 	for (int i = 0; i < iServerCount; ++i) {
@@ -54,7 +54,7 @@ void CenterServer::BroadcastPacket(ISendPacket* packet) {
 }
 
 bool CenterServer::IsAllCenterSessionConnected() {
-	const Vector<int>& vActiveServerIdList = CoreServerProcessInfoPackage_v->ActiveServerIdList;
+	const Vector<int>& vActiveServerIdList = Core::ServerProcessInfoPackage->ActiveServerIdList;
 	const int iServerCount = vActiveServerIdList.Size();
 
 	for (int i = 0; i < iServerCount; ++i) {

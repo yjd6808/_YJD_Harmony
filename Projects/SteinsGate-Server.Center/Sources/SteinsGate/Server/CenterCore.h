@@ -18,12 +18,12 @@ class CenterNetGroup;
 class CenterServer;
 struct RuntimeConfig;
 
-extern DataManager* CoreDataManager_v;
+extern DataManager* Core::DataManager;
 extern MysqlDatabase* CoreGameDB_v;;
 extern CenterNetMaster* CoreNetMaster_v;
 extern CenterNetGroup* CoreNetGroup_v;
 extern CenterServer* CoreServer_v;
-extern RuntimeConfig* CoreRuntimeConfig_v;
+extern RuntimeConfig* Core::RuntimeConfig;
 
 void InitializeCenterCore();
 void FinalizeCenterCore();

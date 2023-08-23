@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <JCore/Namespace.h>
-#include <JNetwork/Namespace.h>
+#include <SteinsGate/Common/Namepsace.h>
 
 NS_JC_BEGIN
 	class Scheduler;
@@ -26,14 +25,16 @@ struct CharCommonInfo;
 struct ServerProcessInfoPackage;
 struct RuntimeConfigBase;
 
-extern CLIThread* CoreCLIThread_v;
-extern CommonInfo* CoreCommonInfo_v;
-extern CharCommonInfo* CoreCharCommon_v;
-extern ServerProcessInfoPackage* CoreServerProcessInfoPackage_v;
-extern JCore::Scheduler* CoreScheduler_v;
-extern JCore::ThreadPool* CoreThreadPool_v;
-extern JNetwork::CommandNameDictionary CoreCommandNameDictionary_v;
-extern RuntimeConfigBase* CoreRuntimeConfigBase_v;
+NS_CORE_BEGIN
+extern CLIThread* CLIThread;
+extern CommonInfo* CommonInfo;
+extern CharCommonInfo* CharCommon;
+extern ServerProcessInfoPackage* ServerProcessInfoPackage;
+extern JCore::Scheduler* Scheduler;
+extern JCore::ThreadPool* ThreadPool;
+extern JNetwork::CommandNameDictionary CommandNameDictionary;
+extern RuntimeConfigBase* RuntimeConfigBase;
+NS_CORE_END
 
 
 void InitializeCommonCore();

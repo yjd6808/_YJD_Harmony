@@ -27,7 +27,7 @@ void InterServerClientNetGroup::Initialize() {
 	InitializeInterServerTcp();
 	InitializeInterServerUdp();
 	
-	InterServerSendHelperBase::InitDefaultToId(CoreServerProcessInfoPackage_v->Center.ServerId);
+	InterServerSendHelperBase::InitDefaultToId(Core::ServerProcessInfoPackage->Center.ServerId);
 	InterServerSendHelperBase::InitSingleServerIds();
 	InterServerSendHelperBase::InitSingleServerDestinations();
 }
@@ -81,7 +81,7 @@ bool InterServerClientNetGroup::ConnectCenterServer(int tryCount) {
 	int iTryCount = 0;
 
 	_LogDebug_("중앙 서버에 접속을 시도합니다...");
-	while (!m_pInterServerClientTcp->Connect(CoreServerProcessInfoPackage_v->Center.RemoteEP, CenterConnectionTimeout)) {
+	while (!m_pInterServerClientTcp->Connect(Core::ServerProcessInfoPackage->Center.RemoteEP, CenterConnectionTimeout)) {
 		++iTryCount;
 
 		if (iTryCount >= tryCount) {

@@ -78,7 +78,7 @@ void JsonUtilEx::parseActorSpriteData(Json::Value& actorSpriteDataRoot, JCORE_OU
 
 		SGString sgaName = getString(partRoot["sga"]);
 		SGString imgName = getString(partRoot["img"]);
-		ImagePack* pImgPack = CorePackManager_v->getPack(sgaName);
+		ImagePack* pImgPack = Core::Contents.PackManager->getPack(sgaName);
 
 		const int iZOrder = getIntDefault(partRoot["z_order"], iPrevPartZOrder + 1);	// z_order가 없는 경우 이전 파츠 인덱스보다 점점 더 커지도록 
 		const int iSga = pImgPack->getPackIndex();

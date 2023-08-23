@@ -71,7 +71,7 @@ void UIProgressBar::load() {
 	if (m_bLoaded)
 		return;
 
-	m_pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite);
+	m_pTexture = Core::Contents.UIManager->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite);
 
 	if (m_pTexture->isLink()) {
 		CC_SAFE_RELEASE_NULL(m_pTexture);

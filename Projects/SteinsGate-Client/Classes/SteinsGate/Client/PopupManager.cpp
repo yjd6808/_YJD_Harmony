@@ -26,7 +26,7 @@ PopupManager::~PopupManager() {
 }
 
 UI_Popup* PopupManager::createPopup() {
-	UIElementInfo* pInfo = CoreDataManager_v->getUIElementInfo(GROUP_UI_POPUP);
+	UIElementInfo* pInfo = Core::DataManager->getUIElementInfo(GROUP_UI_POPUP);
 	DebugAssertMsg(pInfo->Type == UIElementType::Group, "그룹 엘리먼트 타입이 아닙니다.");
 	UIMasterGroup* popup = dbg_new UI_Popup(static_cast<UIGroupInfo*>(pInfo));
 	popup->autorelease();
@@ -85,7 +85,7 @@ UI_Popup* PopupManager::showYesNo(
 	popup->setTextHAlign(halign);
 	popup->setTextVAlign(valign);
 	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	Core::Contents.World->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);
 	return popup;
 }
@@ -113,7 +113,7 @@ UI_Popup* PopupManager::showYesNo(
 	popup->setTextHAlign(halign);
 	popup->setTextVAlign(valign);
 	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	Core::Contents.World->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);
 	return popup;
 }
@@ -137,7 +137,7 @@ UI_Popup* PopupManager::showOk(
 	popup->setTextHAlign(halign);
 	popup->setTextVAlign(valign);
 	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	Core::Contents.World->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);
 	return popup;
 }
@@ -163,7 +163,7 @@ UI_Popup* PopupManager::showOk(
 	popup->setTextHAlign(halign);
 	popup->setTextVAlign(valign);
 	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	Core::Contents.World->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);
 	return popup;
 }
@@ -185,7 +185,7 @@ UI_Popup* PopupManager::showNone(
 	popup->setTextHAlign(halign);
 	popup->setTextVAlign(valign);
 	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	Core::Contents.World->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);
 	return popup;
 }
@@ -209,7 +209,7 @@ UI_Popup* PopupManager::showNone(
 	popup->setTextHAlign(halign);
 	popup->setTextVAlign(valign);
 	popup->adjust();
-	CoreWorld_v->getUILayer()->addUIGroup(popup);
+	Core::Contents.World->getUILayer()->addUIGroup(popup);
 	m_vOpendList.PushBack(popup);
 	return popup;
 }
@@ -221,7 +221,7 @@ bool PopupManager::close(UI_Popup* popup) {
 	}
 
 	popup->setClosed(true);
-	CoreWorld_v->getUILayer()->removeUIGroup(popup);
+	Core::Contents.World->getUILayer()->removeUIGroup(popup);
 	m_qPopupPool.Enqueue(popup);
 	return m_vOpendList.Remove(popup);
 }
@@ -260,7 +260,7 @@ void PopupManager::releaseAll() {
 
 	// 열린 팝업창 모두 제거
 	for (int i = 0; i < m_vOpendList.Size(); ++i) {
-		CoreWorld_v->getUILayer()->removeUIGroup(m_vOpendList[i]);
+		Core::Contents.World->getUILayer()->removeUIGroup(m_vOpendList[i]);
 		m_vOpendList[i]->release();
 	}
 

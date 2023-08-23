@@ -4,12 +4,12 @@
  */
 
 #include "Tutturu.h"
-#include "SGApplication.h"
+#include "SteinsGateApp.h"
 
 int main() {
     int iResult = -1;
     {
-        SGApplication app;
+        SteinsGateApp app;
         iResult = cocos2d::Application::getInstance()->run();
     }
     return iResult;

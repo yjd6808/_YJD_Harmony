@@ -26,6 +26,10 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\CLIListener.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\Contents.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\HitActivity_Goblin.cpp" />
@@ -76,13 +80,13 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\SGApplication.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\SteinsGateApp.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\GameCore.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\main.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\ActorBox.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\ActorManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -113,7 +117,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\EffectInfoLoader.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\FontPackage.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\FontManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -441,6 +445,10 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\CLIListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ComponentCollection.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Contents.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Event.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.h" />
@@ -487,7 +495,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\ActorBox.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\ActorManager.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -528,7 +536,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\SGApplication.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\SteinsGateApp.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Action.h">
       <SubType>
       </SubType>
@@ -636,7 +644,7 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfoLoader.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\FontPackage.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\FontManager.h">
       <SubType>
       </SubType>
     </ClInclude>

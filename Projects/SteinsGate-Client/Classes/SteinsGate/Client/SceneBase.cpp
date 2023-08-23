@@ -59,7 +59,7 @@ void SceneBase::onExit() {
 	_LogDebug_("%s 씬을 종료", SceneType::Name[getType()]);
 	Scene::onExit();
 	m_pUILayer->clearUnload();
-	CorePackManager_v->releaseAllFrameTexture();
+	Core::Contents.PackManager->releaseAllFrameTexture();
 	
 }
 

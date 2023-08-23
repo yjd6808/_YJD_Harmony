@@ -203,7 +203,7 @@ void UI_Popup::setTimeout(float timeout) {
 
 
 void UI_Popup::close() {
-	CorePopupManager_v->close(this);
+	Core::Contents.PopupManager->close(this);
 }
 
 
@@ -215,9 +215,9 @@ void UI_Popup::adjust() {
 	// 2. 팝업창의 너비는 패딩 길이를 포함한 너비이다.
 	// 3. 팝업의 하단부의 버튼영역과 상단부의 텍스트 영역으로 구분한다.
 	// 4. 팝업 상단부와 하단부 사이에 패딩 너비를 포함하여 여백의 미를 준다.
-	const float fPadding = CorePopupManager_v->getPadding();
+	const float fPadding = Core::Contents.PopupManager->getPadding();
 	const Size& buttonArea = m_pGroupButtonHolder->getUISize();	
-	const float fPopupAreaWidth = Math::Max(CorePopupManager_v->getWidth(), buttonArea.width + fPadding * 2);
+	const float fPopupAreaWidth = Math::Max(Core::Contents.PopupManager->getWidth(), buttonArea.width + fPadding * 2);
 	const float fPopupTextAreaWidth = fPopupAreaWidth - fPadding * 2;
 
 	// 라벨의 Dimension이 UI 설정파일상의 너비, 높이 정보로 처음 세팅되기 때문에

@@ -185,7 +185,7 @@ void GunnerGunShot::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_SMALL, info, true);
+	ActorManager::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_SMALL, info, true);
 	info.HitTarget->hit(info);
 }
 

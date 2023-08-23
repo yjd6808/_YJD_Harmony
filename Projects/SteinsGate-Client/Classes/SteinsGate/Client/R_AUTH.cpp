@@ -24,34 +24,34 @@ void R_AUTH::RECV_AUC_LoginAck(Session* session, ICommand* cmd) {
 	session->Disconnect();
 
 	AUC_LoginAck* pCmd = (AUC_LoginAck*)cmd;
-	CorePopupManager_v->closeByTag(DEF_POPUP_LOGIN);
+	Core::Contents.PopupManager->closeByTag(DEF_POPUP_LOGIN);
 	
 	switch (pCmd->Result) {
 	case LoginResult::LoginSuccess:
-		CorePopupManager_v->showOk(SG_TEXT_RAW("CONNECT_LOBBY"));
-		// CorePopupManager_v->showNone(SG_TEXT_RAW("CONNECT_LOBBY"), DEF_POPUP_LOBBY_WAIT);
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("CONNECT_LOBBY"));
+		// Core::Contents.PopupManager->showNone(SG_TEXT_RAW("CONNECT_LOBBY"), DEF_POPUP_LOBBY_WAIT);
 		// TODO: 로비서버 접속
 		break;
 	case LoginResult::RegisterSuccess:
-		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_RESULT_REGISTER_SUCCESS"));
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_REGISTER_SUCCESS"));
 		break;
 	case LoginResult::IdAlreadyExist:
-		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_RESULT_ID_ALREADY_EXIST"));
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_ID_ALREADY_EXIST"));
 		break;
 	case LoginResult::IdPasswordMismatch:
-		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_RESULT_ID_PASSWORD_MISMATCH"));
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_ID_PASSWORD_MISMATCH"));
 		break;
 	case LoginResult::Banned:
-		CorePopupManager_v->showOk(SG_TEXT_RAW_FMT_STD("LOGIN_RESULT_BANNED", pCmd->BanBeginDate.FormatMysqlTime().Source(), pCmd->BanEndDate.FormatMysqlTime().Source()));
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW_FMT_STD("LOGIN_RESULT_BANNED", pCmd->BanBeginDate.FormatMysqlTime().Source(), pCmd->BanEndDate.FormatMysqlTime().Source()));
 		break;
 	case LoginResult::Logined:
-		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_RESULT_LOGINED"));
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_LOGINED"));
 		break;
 	case LoginResult::QueryFailed:
-		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_RESULT_QUERY_FAILED"));
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_QUERY_FAILED"));
 		break;
 	default:
-		CorePopupManager_v->showOk(SG_TEXT_RAW("LOGIN_RESULT_UNKNONW"));
+		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("LOGIN_RESULT_UNKNONW"));
 		break;
 	}
 	

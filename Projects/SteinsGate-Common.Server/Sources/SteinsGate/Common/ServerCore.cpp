@@ -22,25 +22,25 @@ ServerProcessInfo* CoreServerProcessInfo_v;				// 메인 서버 프로그램에�
 InterServerClientNetGroup* CoreInterServerClientNetGroup_v;	// 메인 서버 프로그램에서 주입해줄 것
 TcpClient* CoreInterServerClientTcp_v;					// 메인 서버 프로그램에서 주입해줄 것
 UdpClient* CoreInterServerClientUdp_v;					// 메인 서버 프로그램에서 주입해줄 것
-TimeManager* CoreTimeManager_v;							// 메인 서버 프로그램에서 주입해줄 것
+TimeManager* Core::Contents.TimeManager;							// 메인 서버 프로그램에서 주입해줄 것
 RuntimeConfigCommon* CoreRuntimeConfigCommon_v;			// 메인 서버 프로그램에서 주입해줄 것
 
 void InitializeServerCore() {
 	// 공통 커맨드 이름 등록
 	// [ INTER_SERVER - HOST ]
-	CoreCommandNameDictionary_v.Add<CES_WhoAreYou>();
-	CoreCommandNameDictionary_v.Add<SCE_ItsMe>();
-	CoreCommandNameDictionary_v.Add<CES_AlreadyConnected>();
-	CoreCommandNameDictionary_v.Add<CES_YouNeedToDoThis>();
-	CoreCommandNameDictionary_v.Add<SS_HostMessage>();
-	CoreCommandNameDictionary_v.Add<SCE_NotifyBootState>();
-	CoreCommandNameDictionary_v.Add<SCE_NotifyOrderFailed>();
-	CoreCommandNameDictionary_v.Add<SCE_TimeSync>();
-	CoreCommandNameDictionary_v.Add<CES_TimeSyncAck>();
+	Core::CommandNameDictionary.Add<CES_WhoAreYou>();
+	Core::CommandNameDictionary.Add<SCE_ItsMe>();
+	Core::CommandNameDictionary.Add<CES_AlreadyConnected>();
+	Core::CommandNameDictionary.Add<CES_YouNeedToDoThis>();
+	Core::CommandNameDictionary.Add<SS_HostMessage>();
+	Core::CommandNameDictionary.Add<SCE_NotifyBootState>();
+	Core::CommandNameDictionary.Add<SCE_NotifyOrderFailed>();
+	Core::CommandNameDictionary.Add<SCE_TimeSync>();
+	Core::CommandNameDictionary.Add<CES_TimeSyncAck>();
 	
 	// [ INTER_SERVER - RELAY ]
-	CoreCommandNameDictionary_v.Add<SS_P2PRelayStaticTest>();
-	CoreCommandNameDictionary_v.Add<SS_P2PRelayDynamicTest>();
+	Core::CommandNameDictionary.Add<SS_P2PRelayStaticTest>();
+	Core::CommandNameDictionary.Add<SS_P2PRelayDynamicTest>();
 }
 
 void FinalizeServerCore() {

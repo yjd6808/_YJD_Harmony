@@ -84,8 +84,8 @@ void UIGroup::initChildrenPosition() {
 		UIElement* pElem = static_cast<UIElement*>(_children.at(i));
 		const UIGroupElemInfo& elemInfo = m_pInfo->InfoList[i];
 		pElem->setRelativePosition(
-			elemInfo.Pos.x * CoreClientInfo_v->UIScaleXFactor,
-			elemInfo.Pos.y * CoreClientInfo_v->UIScaleYFactor
+			elemInfo.Pos.x * Core::ClientInfo->UIScaleXFactor,
+			elemInfo.Pos.y * Core::ClientInfo->UIScaleYFactor
 		);
 
 		if (pElem->isGroup()) {
@@ -237,7 +237,7 @@ UIStatic* UIGroup::findStatic(int staticCode) { return findElementTemplated<UISt
 
 
 void UIGroup::addUIElement(UIGroupElemInfo* groupElemInfo) {
-	UIElementInfo* pElemInfo = CoreDataManager_v->getUIElementInfo(groupElemInfo->Code);
+	UIElementInfo* pElemInfo = Core::DataManager->getUIElementInfo(groupElemInfo->Code);
 	UIElement* pChildElement = nullptr;
 
 	switch (pElemInfo->Type) {

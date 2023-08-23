@@ -56,8 +56,8 @@ public:
 	SGString& getText(const SGString& szId);
 };
 
-#define SG_TEXT_RAW(id)					CoreDataManager_v->getTextRaw(id)
-#define SG_TEXT(id)						CoreDataManager_v->getText(id)
+#define SG_TEXT_RAW(id)					Core::DataManager->getTextRaw(id)
+#define SG_TEXT(id)						Core::DataManager->getText(id)
 
-#define SG_TEXT_RAW_FMT(id, ...)		JCore::StringUtil::Format(CoreDataManager_v->getTextRaw(id), __VA_ARGS__)
-#define SG_TEXT_RAW_FMT_STD(id, ...)	StringUtils::format(CoreDataManager_v->getTextRaw(id), __VA_ARGS__)
+#define SG_TEXT_RAW_FMT(id, ...)		JCore::StringUtil::Format(Core::DataManager->getTextRaw(id), __VA_ARGS__)
+#define SG_TEXT_RAW_FMT_STD(id, ...)	StringUtils::format(Core::DataManager->getTextRaw(id), __VA_ARGS__)

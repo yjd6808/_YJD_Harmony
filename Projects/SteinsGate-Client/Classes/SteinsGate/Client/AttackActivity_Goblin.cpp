@@ -9,7 +9,7 @@
 #include "AttackActivity_Goblin.h"
 
 #include <SteinsGate/Client/Monster.h>
-#include <SteinsGate/Client/ActorBox.h>
+#include <SteinsGate/Client/ActorManager.h>
 #include <SteinsGate/Client/PhysicsComponent.h>
 #include <SteinsGate/Client/Define_Animation.h>
 #include <SteinsGate/Client/Define_Event.h>
@@ -48,7 +48,7 @@ void AttackActivity_Goblin::onEnemySingleHit(HitInfo& info) {
 	if (m_pHitRecorder->isAlreadyHit(info.HitTarget))
 		return;
 
-	ActorBox::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, info, true);
+	ActorManager::Get()->createEffectOnMapTargetCollision(DEF_EFFECT_KNOCK_BIG, info, true);
 	info.HitTarget->hit(info);
 }
 

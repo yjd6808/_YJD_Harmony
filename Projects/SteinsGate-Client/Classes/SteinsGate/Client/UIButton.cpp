@@ -170,7 +170,7 @@ bool UIButton::init() {
 		return false;
 	}
 
-	const ImagePack* pPack = CorePackManager_v->getPackUnsafe(m_pInfo->Sga);
+	const ImagePack* pPack = Core::Contents.PackManager->getPackUnsafe(m_pInfo->Sga);
 	setInitialUISize(DefaultSize30);
 
 	if (pPack == nullptr) {
@@ -202,7 +202,7 @@ void UIButton::load() {
 			continue;
 		}
 
-		FrameTexture* pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
+		FrameTexture* pTexture = Core::Contents.UIManager->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, iSprite, m_pInfo->LinearDodge);
 
 		Sprite* pSprite = Sprite::create();
 		pSprite->initWithTexture(pTexture->getTexture());

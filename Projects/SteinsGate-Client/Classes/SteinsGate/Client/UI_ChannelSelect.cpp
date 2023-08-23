@@ -77,8 +77,8 @@ UI_ChannelSelect::ServerButton::ServerButton(GameServerType_t type)
 }
 
 void UI_ChannelSelect::ServerButton::initSprites(GameServerType_t type) {
-	Group = CoreUIManager_v->getGroup(UI_CHANNEL_SERVER_BUTTON_LIST_GROUP_LUKE + 1000 * type);
-	SpriteServerCharacter = CoreUIManager_v->getSprite(UI_CHANNEL_SERVER_CHARACTER_LIST_SPRITE_LUKE + type);
+	Group = Core::Contents.UIManager->getGroup(UI_CHANNEL_SERVER_BUTTON_LIST_GROUP_LUKE + 1000 * type);
+	SpriteServerCharacter = Core::Contents.UIManager->getSprite(UI_CHANNEL_SERVER_CHARACTER_LIST_SPRITE_LUKE + type);
 	SpriteServerCharacter->setVisible(false);
 	SpriteSelectedBackground = Group->getAtTemplated<UISprite>(0);
 	SpriteSelectedBackground->setOpacity(SG_SERVER_BUTTON_SELECTION_SPRITE_MIN_OPACITY);
@@ -170,16 +170,16 @@ UI_ChannelSelect::ChannelButton::ChannelButton(int index)
 
 void UI_ChannelSelect::ChannelButton::initSprites() {
 	// 6 = SLOT_1_TYPE_0 ~ SLOT_2_TYPE_0 사이의 엘리먼트 갯수가 6개이므로
-	TBtnEnteranceBackground[0] = CoreUIManager_v->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_0 + 6 * Index);
+	TBtnEnteranceBackground[0] = Core::Contents.UIManager->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_0 + 6 * Index);
 	TBtnEnteranceBackground[0]->setInternalDetailEventEnabled(false);
-	TBtnEnteranceBackground[1] = CoreUIManager_v->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_1 + 6 * Index);
+	TBtnEnteranceBackground[1] = Core::Contents.UIManager->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_1 + 6 * Index);
 	TBtnEnteranceBackground[1]->setInternalDetailEventEnabled(false);
-	TBtnEnteranceBackground[2] = CoreUIManager_v->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_2 + 6 * Index);
+	TBtnEnteranceBackground[2] = Core::Contents.UIManager->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_SLOT_1_TYPE_2 + 6 * Index);
 	TBtnEnteranceBackground[2]->setInternalDetailEventEnabled(false);
 
-	SpriteMouseOverBorder = CoreUIManager_v->getSprite(UI_CHANNEL_CHANNEL_LIST_SPRITE_SLOT_1_OVER + 6 * Index);
-	LabelName = CoreUIManager_v->getLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_SLOT_1_NAME + 6 * Index);
-	LabelDensity = CoreUIManager_v->getLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_SLOT_1_DENSITY + 6 * Index);
+	SpriteMouseOverBorder = Core::Contents.UIManager->getSprite(UI_CHANNEL_CHANNEL_LIST_SPRITE_SLOT_1_OVER + 6 * Index);
+	LabelName = Core::Contents.UIManager->getLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_SLOT_1_NAME + 6 * Index);
+	LabelDensity = Core::Contents.UIManager->getLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_SLOT_1_DENSITY + 6 * Index);
 	LabelDensity->source()->enableOutline(Color4B::BLACK, 3);
 }
 
@@ -256,7 +256,7 @@ void UI_ChannelSelect::ChannelButton::initMonsterSprites(UI_ChannelSelect* maste
 		_LogWarn_("ChannelButton::initMonsterSprites");
 	}
 
-	UIGroup* pParent = CoreUIManager_v->getGroup(UI_CHANNEL_GROUP_CHANNEL_LIST);
+	UIGroup* pParent = Core::Contents.UIManager->getGroup(UI_CHANNEL_GROUP_CHANNEL_LIST);
 
 	int iSelectedSprite = Info ? Info->SelectedSpriteIndex : InvalidValue_v;
 	int iNormalSprite = Info ? Info->NormalSpriteIndex : InvalidValue_v;
@@ -293,7 +293,7 @@ void UI_ChannelSelect::ChannelButton::initMonsterSprites(UI_ChannelSelect* maste
 }
 
 void UI_ChannelSelect::ChannelButton::setChannelInfo(const LobbyChannelInfo& channelData, char sequence) {
-	Info = CoreDataManager_v->getChannelInfo(channelData.Type);
+	Info = Core::DataManager->getChannelInfo(channelData.Type);
 	const SGString& szFmtName = LabelName->getInfo()->Text;	// szFmtName = "ch%02d.%s %c"
 	LabelName->setText(StringUtils::format(szFmtName.Source(), channelData.Number, Info->Name.Source(), sequence));
 
@@ -312,8 +312,8 @@ bool UI_ChannelSelect::ChannelButton::containsPoint(const SGVec2& pos) {
 
 void UI_ChannelSelect::onInit() {
 
-	m_iMonsterSpriteSgaIndex = CorePackManager_v->getPackIndexDefault(SG_MONSTER_SPRITE_SGA);
-	m_iMonsterSpriteImgIndex = CorePackManager_v->getImgIndexUnsafe(m_iMonsterSpriteSgaIndex, SG_MONSTER_SPRITE_IMG);
+	m_iMonsterSpriteSgaIndex = Core::Contents.PackManager->getPackIndexDefault(SG_MONSTER_SPRITE_SGA);
+	m_iMonsterSpriteImgIndex = Core::Contents.PackManager->getImgIndexUnsafe(m_iMonsterSpriteSgaIndex, SG_MONSTER_SPRITE_IMG);
 
 	if (m_iMonsterSpriteSgaIndex == InvalidValue_v) {
 		_LogWarn_("채널 몬스터 SgaIndex 정보를 얻는데 실패했습니다.");
@@ -323,14 +323,14 @@ void UI_ChannelSelect::onInit() {
 		_LogWarn_("채널 몬스터 ImngIndex 정보를 얻는데 실패했습니다.");
 	}
 
-	m_pSpriteBackgroundGear = CoreUIManager_v->getSprite(UI_CHANNEL_SPRITE_BACKGROUND_GEAR);
-	m_pBtnStart = CoreUIManager_v->getButton(UI_CHANNEL_BUTTON_START);
-	m_pBtnTerminate = CoreUIManager_v->getButton(UI_CHANNEL_BUTTON_TERMINATE);
+	m_pSpriteBackgroundGear = Core::Contents.UIManager->getSprite(UI_CHANNEL_SPRITE_BACKGROUND_GEAR);
+	m_pBtnStart = Core::Contents.UIManager->getButton(UI_CHANNEL_BUTTON_START);
+	m_pBtnTerminate = Core::Contents.UIManager->getButton(UI_CHANNEL_BUTTON_TERMINATE);
 
-	m_pBtnRefresh = CoreUIManager_v->getButton(UI_CHANNEL_CHANNEL_LIST_BUTTON_REFRESH);
-	m_pTBtnTeen = CoreUIManager_v->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_TEEN);
-	m_pTBtnAdult = CoreUIManager_v->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_ADULT);
-	m_pLabelPage = CoreUIManager_v->getLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_PAGE);
+	m_pBtnRefresh = Core::Contents.UIManager->getButton(UI_CHANNEL_CHANNEL_LIST_BUTTON_REFRESH);
+	m_pTBtnTeen = Core::Contents.UIManager->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_TEEN);
+	m_pTBtnAdult = Core::Contents.UIManager->getToggleButton(UI_CHANNEL_CHANNEL_LIST_TOGGLEBUTTON_ADULT);
+	m_pLabelPage = Core::Contents.UIManager->getLabel(UI_CHANNEL_CHANNEL_LIST_LABEL_PAGE);
 
 
 	for (int i = 0; i < GameServerType::Max; ++i) {
@@ -350,7 +350,7 @@ void UI_ChannelSelect::onLoaded() {
 
 	SGSprite* pGearSprite = m_pSpriteBackgroundGear->source();
 	pGearSprite->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	pGearSprite->setPosition(CoreClientInfo_v->UIResolutionSize.width / 2.0f, CoreClientInfo_v->UIResolutionSize.height / 2.0f);
+	pGearSprite->setPosition(Core::ClientInfo->UIResolutionSize.width / 2.0f, Core::ClientInfo->UIResolutionSize.height / 2.0f);
 
 	for (int i = 0; i < SG_UI_CHANNELSELECT_MAX_CHANNEL_COUNT; ++i) {
 		ChannelButton* pButton = m_arrChannelButtonList[i];

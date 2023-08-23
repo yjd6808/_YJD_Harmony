@@ -66,8 +66,8 @@ void UI_Test::onLoaded() {
 	// #define UI_TEST_O2_O21_BUTTON_T7	
 	// #define UI_TEST_O2_O21_EDITBOX_T8	
 
-	m_pGroupO1 = CoreUIManager_v->getGroup(UI_TEST_GROUP_O1);
-	m_pGroupO2 = CoreUIManager_v->getGroup(UI_TEST_GROUP_O2);
+	m_pGroupO1 = Core::Contents.UIManager->getGroup(UI_TEST_GROUP_O1);
+	m_pGroupO2 = Core::Contents.UIManager->getGroup(UI_TEST_GROUP_O2);
 
 	m_GroupO1DefaultSize = m_pGroupO1->getContentSize();
 	m_GroupO2DefaultSize = m_pGroupO2->getContentSize();
@@ -103,7 +103,7 @@ void UI_Test::onToggleStateChanged(UIToggleButton* toggleBtn, ToggleState state)
 void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 
 	if (element->getCode() == UI_TEST_LABEL_POPUP_TEST) {
-		CorePopupManager_v->showOk(
+		Core::Contents.PopupManager->showOk(
 			"안녕하세요\n안녕하세요2\n안녕하세요3\n안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요"
 		);
 	}
@@ -122,7 +122,7 @@ void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 		m_bTestFont = !m_bTestFont;
 
 		for (int i = 0; i < m_vTestLabelList.Size(); ++i) {
-			CoreWorld_v->removeChild(m_vTestLabelList[i]);
+			Core::Contents.World->removeChild(m_vTestLabelList[i]);
 		}
 		m_vTestLabelList.Clear();
 
@@ -138,8 +138,8 @@ void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 		// 7: N2GM.ttf
 
 		float fHeight = 0;
-		const SGString fontName = CoreFont_v->getFontName(m_iFontCode);
-		const SGString fontPath = Path::Combine(CoreCommonInfo_v->DataPath, Const::Resource::FontDirName, fontName);
+		const SGString fontName = Core::Contents.FontManager->getFontName(m_iFontCode);
+		const SGString fontPath = Path::Combine(Core::CommonInfo->DataPath, Const::Resource::FontDirName, fontName);
 		std::string txt;
 
 		_LogDebug_("폰트이름: %s", fontName.Source());
@@ -151,7 +151,7 @@ void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 			lb->setAnchorPoint(Vec2::ZERO);
 			_LogDebug_("txt: %s, lineHeight: %.f, width: %.f", txt.data(), lb->getLineHeight(), lb->getWidth());
 			fHeight += i;	// 폰트 크기가 곧 라벨 높이
-			CoreWorld_v->addChild(lb);
+			Core::Contents.World->addChild(lb);
 			m_vTestLabelList.PushBack(lb);
 		}
 
@@ -161,7 +161,7 @@ void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 		lb->setPosition(350.0f, 200);
 		lb->setAnchorPoint(Vec2::ZERO);
 		lb->setLineHeight(fSize);
-		CoreWorld_v->addChild(lb);
+		Core::Contents.World->addChild(lb);
 		m_vTestLabelList.PushBack(lb);
 
 		m_iFontCode++;
@@ -170,7 +170,7 @@ void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 		_LogDebug_("라인 수: %d", lb->getStringNumLines());
 		
 
-		if (m_iFontCode >= CoreFont_v->getFontCount()) {
+		if (m_iFontCode >= Core::Contents.FontManager->getFontCount()) {
 			m_iFontCode = 1;
 		}
 	}
@@ -180,7 +180,7 @@ void UI_Test::onMouseUpTarget(UIElement* element, SGEventMouse* mouseEvent) {
 			element->setDraggable(!element->isDraggable());
 		});
 
-		CoreUIManager_v->getToggleButton(UI_TEST_TOGGLEBUTTON_T1)->setDragLinkElement(this);
+		Core::Contents.UIManager->getToggleButton(UI_TEST_TOGGLEBUTTON_T1)->setDragLinkElement(this);
 	}
 
 	else if (element->getCode() == UI_TEST_LABEL_RESET_POSITION) {

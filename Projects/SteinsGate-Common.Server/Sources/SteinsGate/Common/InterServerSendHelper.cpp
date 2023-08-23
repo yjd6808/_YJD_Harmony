@@ -37,7 +37,7 @@ void InterServerSendHelperBase::SetInformation(JNetwork::Session* sender, JNetwo
 		return;
 
 	SendInformation.ToId = toServerId;
-	SendInformation.Destination = CoreServerProcessInfoPackage_v->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
+	SendInformation.Destination = Core::ServerProcessInfoPackage->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
 }
 
 void InterServerSendHelperBase::SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, SingleServerType_t toServerType) {
@@ -50,7 +50,7 @@ void InterServerSendHelperBase::SetInformation(JNetwork::Session* sender, JNetwo
 	SendInformation.Sender = sender;
 	SendInformation.Strategy = strategy;
 	SendInformation.ToId = SingleServerId[toServerType];
-	SendInformation.Destination = CoreServerProcessInfoPackage_v->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
+	SendInformation.Destination = Core::ServerProcessInfoPackage->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
 }
 
 void InterServerSendHelperBase::SetReceiverId(int serverId) {
@@ -143,15 +143,15 @@ bool InterServerSendHelperBase::IsUDPStrategy(JNetwork::SendStrategy strategy) {
 
 
 void InterServerSendHelperBase::InitSingleServerIds() {
-	SingleServerId[SingleServerType::Center] = CoreServerProcessInfoPackage_v->Center.ServerId;
-	SingleServerId[SingleServerType::Auth] = CoreServerProcessInfoPackage_v->Auth.ServerId;
-	SingleServerId[SingleServerType::Lobby] = CoreServerProcessInfoPackage_v->Lobby.ServerId;
+	SingleServerId[SingleServerType::Center] = Core::ServerProcessInfoPackage->Center.ServerId;
+	SingleServerId[SingleServerType::Auth] = Core::ServerProcessInfoPackage->Auth.ServerId;
+	SingleServerId[SingleServerType::Lobby] = Core::ServerProcessInfoPackage->Lobby.ServerId;
 }
 
 void InterServerSendHelperBase::InitSingleServerDestinations() {
-	SingleServerInterServerEP[SingleServerType::Center] = CoreServerProcessInfoPackage_v->Center.RemoteInterServerEP;
-	SingleServerInterServerEP[SingleServerType::Auth] = CoreServerProcessInfoPackage_v->Auth.RemoteInterServerEP;
-	SingleServerInterServerEP[SingleServerType::Lobby] = CoreServerProcessInfoPackage_v->Lobby.RemoteInterServerEP;
+	SingleServerInterServerEP[SingleServerType::Center] = Core::ServerProcessInfoPackage->Center.RemoteInterServerEP;
+	SingleServerInterServerEP[SingleServerType::Auth] = Core::ServerProcessInfoPackage->Auth.RemoteInterServerEP;
+	SingleServerInterServerEP[SingleServerType::Lobby] = Core::ServerProcessInfoPackage->Lobby.RemoteInterServerEP;
 }
 
 void InterServerSendHelperBase::InitDefaultToId(int id) {

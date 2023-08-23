@@ -11,18 +11,8 @@
 
 #include <SteinsGate/Common/CommonCoreHeader.h>
 
-#include <SteinsGate/Client/SGApplication.h>
+#include <SteinsGate/Client/SteinsGateApp.h>
 #include <SteinsGate/Client/DataManager.h>
-#include <SteinsGate/Client/UIManager.h>
-#include <SteinsGate/Client/HostPlayer.h>
-#include <SteinsGate/Client/Inven.h>
-#include <SteinsGate/Client/WorldScene.h>
-#include <SteinsGate/Client/FontPackage.h>
-#include <SteinsGate/Client/ActorListenerManager.h>
-#include <SteinsGate/Client/ActorBox.h>
-#include <SteinsGate/Client/Global.h>
-#include <SteinsGate/Client/ImagePackManager.h>
-#include <SteinsGate/Client/PopupManager.h>
-#include <SteinsGate/Client/TimeManager.h>
 #include <SteinsGate/Client/NetCore.h>
 #include <SteinsGate/Client/RuntimeConfig.h>
+#include <SteinsGate/Client/Contents.h>

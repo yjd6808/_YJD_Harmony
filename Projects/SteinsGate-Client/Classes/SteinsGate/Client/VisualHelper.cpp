@@ -17,7 +17,7 @@ USING_NS_CC;
 
 
 int VisualHelper::getVisualData(JCORE_OUT VisualData& visualData, int code) {
-	ItemVisualInfo* pVisualInfo = CoreDataManager_v->getVisualInfo(code);
+	ItemVisualInfo* pVisualInfo = Core::DataManager->getVisualInfo(code);
 	CharType_t eCharType = pVisualInfo->getCharType();
 	ItemType_t eItemType = pVisualInfo->getItemType();
 	VisualType_t eVisualType = pVisualInfo->getVisualType();
@@ -29,14 +29,14 @@ int VisualHelper::getVisualData(JCORE_OUT VisualData& visualData, int code) {
 	case ItemType::Avatar:
 	{
 		AvatarType_t eAvatarType = pVisualInfo->getAvatarType();
-		pPack = CorePackManager_v->getAvatarPack(eCharType, eAvatarType);
+		pPack = Core::Contents.PackManager->getAvatarPack(eCharType, eAvatarType);
 		ImgPrefix = (char*)AvatarType::ImgPrefix[eAvatarType];
 		break;
 	}
 	case ItemType::Weapon:
 	{
 		WeaponType_t eWeaponType = pVisualInfo->getWeaponType();
-		pPack = CorePackManager_v->getWeaponPack(eWeaponType);
+		pPack = Core::Contents.PackManager->getWeaponPack(eWeaponType);
 		ImgPrefix = (char*)WeaponType::ImgPrefix[eWeaponType];
 		break;
 	}

@@ -52,8 +52,8 @@ UILabel* UILabel::create(UIMasterGroup* master, UIGroup* parent, UILabelInfo* la
 }
 
 SGString UILabel::getFontPath() const {
-	const SGString fontName = CoreFont_v->getFontName(m_pInfo->FontCode);
-	const SGString fontPath = Path::Combine(CoreCommonInfo_v->DataPath, Const::Resource::FontDirName, fontName);
+	const SGString fontName = Core::Contents.FontManager->getFontName(m_pInfo->FontCode);
+	const SGString fontPath = Path::Combine(Core::CommonInfo->DataPath, Const::Resource::FontDirName, fontName);
 	return fontPath;
 }
 
@@ -158,6 +158,6 @@ bool UILabel::init() {
 
 void UILabel::setInitialUISize(SGSize size) {
 	UIElement::setInitialUISize(size);
-	m_fFontSize = m_pInfo->FontSize * CoreClientInfo_v->UIScaleYFactor;
+	m_fFontSize = m_pInfo->FontSize * Core::ClientInfo->UIScaleYFactor;
 	m_fInitialFontSize = m_fFontSize;
 }

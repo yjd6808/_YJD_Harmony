@@ -5,9 +5,11 @@
  *
  */
 
+#include "header.h"
+
 
 
 namespace Const
 {
-	int a = 200;
+	GG K;
 }

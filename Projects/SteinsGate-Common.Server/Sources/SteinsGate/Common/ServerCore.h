@@ -32,7 +32,7 @@ extern ServerProcessInfo* CoreServerProcessInfo_v;
 extern InterServerClientNetGroup* CoreInterServerClientNetGroup_v;
 extern JNetwork::TcpClient* CoreInterServerClientTcp_v;
 extern JNetwork::UdpClient* CoreInterServerClientUdp_v;
-extern TimeManager* CoreTimeManager_v;
+extern TimeManager* Core::Contents.TimeManager;
 extern RuntimeConfigCommon* CoreRuntimeConfigCommon_v;
 
 void InitializeServerCore();

@@ -349,7 +349,7 @@ void PhysicsComponent::updateDebugSub1(float dt) {
 	if (frameInfo.FrameEventCode == InvalidValue_v)
 		return;
 
-	const FrameEvent* pFrameEvent = CoreDataManager_v->getFrameEvent(m_pActor->getType(), frameInfo.FrameEventCode);
+	const FrameEvent* pFrameEvent = Core::DataManager->getFrameEvent(m_pActor->getType(), frameInfo.FrameEventCode);
 
 	if (pFrameEvent && pFrameEvent->Type != FrameEventType::AttackBoxInstant) {
 		return;

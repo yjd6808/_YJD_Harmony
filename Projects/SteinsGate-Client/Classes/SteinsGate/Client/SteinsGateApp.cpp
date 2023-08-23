@@ -1,5 +1,5 @@
 #include "Tutturu.h"
-#include "SGApplication.h"
+#include "SteinsGateApp.h"
 #include "GameCoreHeader.h"
 
 #include <JCore/Logger/ConsoleLogger.h>
@@ -17,11 +17,11 @@ USING_NS_JC_DETAIL;
 USING_NS_JNET;
 USING_NS_JNET_DETAIL;
 
-SGApplication::SGApplication()
+SteinsGateApp::SteinsGateApp()
 	: m_hWndProcHook(nullptr)
 {}
 
-SGApplication::~SGApplication() 
+SteinsGateApp::~SteinsGateApp() 
 {
     // 여기서 코코스관련 오브젝트 삭제되도록 하면 릭 발생위험 있음.
     // 예를 들어서 Label의 경우 _fontAtlas 멤버 변수가 포함되어있는데
@@ -36,17 +36,17 @@ SGApplication::~SGApplication()
     AudioPlayer::Finalize();
 }
 
-void SGApplication::SetDesignResolutionSize(float width, float height) {
+void SteinsGateApp::SetDesignResolutionSize(float width, float height) {
     DebugAssertMsg(View, "아직 View가 설정되지 않았습니다.");
-    View->setDesignResolutionSize(width, height, CoreClientInfo_v->GameResolutionPolicy);
+    View->setDesignResolutionSize(width, height, Core::ClientInfo->GameResolutionPolicy);
 }
 
-void SGApplication::SetFrameSize(float width, float height) {
+void SteinsGateApp::SetFrameSize(float width, float height) {
     DebugAssertMsg(View, "아직 View가 설정되지 않았습니다.");
     View->setFrameSize(width, height);
 }
 
-void SGApplication::initGLContextAttrs()
+void SteinsGateApp::initGLContextAttrs()
 {
     GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8, 0};
     GLView::setGLContextAttrs(glContextAttrs);
@@ -54,7 +54,7 @@ void SGApplication::initGLContextAttrs()
 
 
 
-bool SGApplication::applicationDidFinishLaunching() {
+bool SteinsGateApp::applicationDidFinishLaunching() {
 
     // ======================================================
 	// 메인 리소스 초기화
@@ -68,9 +68,9 @@ bool SGApplication::applicationDidFinishLaunching() {
 
     DataManager* pDataManager = DataManager::Get();
     pDataManager->initializeLoader();
-    CoreCommonInfo_v = pDataManager->getCommonInfo(1);
-    CoreClientInfo_v = pDataManager->getClientInfo(1);
-    CoreCharCommon_v = pDataManager->getCharCommonInfo(1);
+    Core::CommonInfo = pDataManager->getCommonInfo(1);
+    Core::ClientInfo = pDataManager->getClientInfo(1);
+    Core::CharCommon = pDataManager->getCharCommonInfo(1);
 
     CreateOpenGLWindow();
 	InitializeJCore();
@@ -85,18 +85,18 @@ bool SGApplication::applicationDidFinishLaunching() {
     return true;
 }
 
-void SGApplication::CreateOpenGLWindow() {
+void SteinsGateApp::CreateOpenGLWindow() {
 
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
-    Rect resolutionRect = CoreClientInfo_v->getGameResolutionRect();
-    Rect frameRect = CoreClientInfo_v->getFrameRect();
+    Rect resolutionRect = Core::ClientInfo->getGameResolutionRect();
+    Rect frameRect = Core::ClientInfo->getFrameRect();
 
     if (glview == nullptr) {
-        glview = CoreClientInfo_v->FullScreen ? 
+        glview = Core::ClientInfo->FullScreen ? 
             GLViewImpl::createWithFullScreen(AppName) :
-            GLViewImpl::createWithRect(AppName, frameRect, 1.0f, CoreClientInfo_v->Resizable);
-        glview->setDesignResolutionSize(resolutionRect.size.width, resolutionRect.size.height, CoreClientInfo_v->GameResolutionPolicy);
+            GLViewImpl::createWithRect(AppName, frameRect, 1.0f, Core::ClientInfo->Resizable);
+        glview->setDesignResolutionSize(resolutionRect.size.width, resolutionRect.size.height, Core::ClientInfo->GameResolutionPolicy);
     }
 
     director->setOpenGLView(glview);
@@ -109,16 +109,16 @@ void SGApplication::CreateOpenGLWindow() {
     View = (GLViewImpl*)glview;
 }
 
-void SGApplication::CreateWorldScene() {
+void SteinsGateApp::CreateWorldScene() {
     auto scene = WorldScene::get();
     scene->setAnchorPoint(Vec2::ZERO);
     DebugAssertMsg(scene, "월드씬 생성에 실패했습니다.");
     Director::getInstance()->runWithScene(scene);
 }
 
-LRESULT CALLBACK SGApplication::GLFWWindowHookProc(int code, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK SteinsGateApp::GLFWWindowHookProc(int code, WPARAM wParam, LPARAM lParam)
 {
-    SGApplication* pApp = (SGApplication*)Application::getInstance();
+    SteinsGateApp* pApp = (SteinsGateApp*)Application::getInstance();
     Scene* pRunningScene = Director::getInstance()->getRunningScene();
     WorldScene* pWorld;
 
@@ -131,9 +131,9 @@ LRESULT CALLBACK SGApplication::GLFWWindowHookProc(int code, WPARAM wParam, LPAR
 }
 
 
-LRESULT CALLBACK SGApplication::GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK SteinsGateApp::GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
-    SGApplication* pApp = (SGApplication*)Application::getInstance();
+    SteinsGateApp* pApp = (SteinsGateApp*)Application::getInstance();
     Scene* pRunningScene = Director::getInstance()->getRunningScene();
     WorldScene* pWorld;
 
@@ -142,7 +142,7 @@ LRESULT CALLBACK SGApplication::GLFWWindowProc(HWND hwnd, UINT uMsg, WPARAM wPar
 }
 
 
-void SGApplication::InitializeWindowProcedure() {
+void SteinsGateApp::InitializeWindowProcedure() {
     return;
 
     const HWND hWndCocos = Director::getInstance()->getOpenGLView()->getWin32Window();
@@ -159,11 +159,11 @@ void SGApplication::InitializeWindowProcedure() {
     // m_hPrevWndProc = (WNDPROC)SetWindowLongPtrW(hWndCocos, GWLP_WNDPROC, (LONG_PTR)GLFWWindowProc);
 }
 
-void SGApplication::applicationDidEnterBackground() {
+void SteinsGateApp::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 }
 
-void SGApplication::applicationWillEnterForeground() {
+void SteinsGateApp::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 }
 

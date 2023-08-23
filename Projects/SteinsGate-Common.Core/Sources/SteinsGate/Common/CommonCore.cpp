@@ -14,27 +14,29 @@
 
 USING_NS_JC;
 
-CLIThread* CoreCLIThread_v;
-ServerProcessInfoPackage* CoreServerProcessInfoPackage_v = nullptr;	// 메인 프로그램에서 주입해줄 것
-CommonInfo* CoreCommonInfo_v = nullptr;								// 메인 프로그램에서 주입해줄 것
-CharCommonInfo* CoreCharCommon_v = nullptr;							// 메인 프로그램에서 주입해줄 것
-ThreadPool* CoreThreadPool_v = nullptr;								// 메인 프로그램에서 주입해줄 것
-Scheduler* CoreScheduler_v = nullptr;								// 메인 프로그램에서 주입해줄 것
-RuntimeConfigBase* CoreRuntimeConfigBase_v = nullptr;				// 메인 프로그램에서 주입해줄 것
-JNetwork::CommandNameDictionary CoreCommandNameDictionary_v;
+NS_CORE_BEGIN
+	::CLIThread* CLIThread;
+	::ServerProcessInfoPackage* ServerProcessInfoPackage = nullptr;	// 메인 프로그램에서 주입해줄 것
+	::CommonInfo* CommonInfo = nullptr;								// 메인 프로그램에서 주입해줄 것
+	::CharCommonInfo* CharCommon = nullptr;							// 메인 프로그램에서 주입해줄 것
+	::ThreadPool* ThreadPool = nullptr;								// 메인 프로그램에서 주입해줄 것
+	::Scheduler* Scheduler = nullptr;								// 메인 프로그램에서 주입해줄 것
+	::RuntimeConfigBase* RuntimeConfigBase = nullptr;				// 메인 프로그램에서 주입해줄 것
+	JNetwork::CommandNameDictionary CommandNameDictionary;
+NS_CORE_END
 
 void InitializeCommonCore() {
-	CoreCLIThread_v = dbg_new CLIThread();
-	CoreCLIThread_v->Start();
+	Core::CLIThread = dbg_new CLIThread();
+	Core::CLIThread->Start();
 
 	// 공통 커맨드 이름 등록
 	// [ AUTH ]
-	CoreCommandNameDictionary_v.Add<CAU_Login>();
-	CoreCommandNameDictionary_v.Add<AUC_LoginAck>();
+	Core::CommandNameDictionary.Add<CAU_Login>();
+	Core::CommandNameDictionary.Add<AUC_LoginAck>();
 }
 
 void FinalizeCommonCore() {
-	CoreCLIThread_v->SendInterrupt();
-	CoreCLIThread_v->Join();
-	JCORE_DELETE_SAFE(CoreCLIThread_v);
+	Core::CLIThread->SendInterrupt();
+	Core::CLIThread->Join();
+	JCORE_DELETE_SAFE(Core::CLIThread);
 }

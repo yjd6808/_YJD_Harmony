@@ -57,7 +57,7 @@ bool UISprite::init() {
 	SGSize initialSize = m_pInfo->Size;
 
 	if (int(initialSize.width) == 0 || int(initialSize.width) == 0) {
-		initialSize = CorePackManager_v->getTextureSize(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite);
+		initialSize = Core::Contents.PackManager->getTextureSize(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite);
 	}
 
 	setInitialUISize(initialSize);
@@ -68,7 +68,7 @@ void UISprite::load() {
 	if (m_bLoaded)
 		return;
 
-	m_pTexture = CoreUIManager_v->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite, m_pInfo->LinearDodge);
+	m_pTexture = Core::Contents.UIManager->createUITextureRetained(m_pInfo->Sga, m_pInfo->Img, m_pInfo->Sprite, m_pInfo->LinearDodge);
 
 	if (m_pTexture->isLink()) {
 		CC_SAFE_RELEASE_NULL(m_pTexture);

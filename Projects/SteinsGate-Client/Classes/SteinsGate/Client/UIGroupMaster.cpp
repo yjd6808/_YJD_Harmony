@@ -71,7 +71,7 @@ void UIGroupMaster::forEach(const SGActionFn<UIMasterGroup*>& action) {
 }
 
 UIGroupMaster* UIGroupMaster::createRetain() {
-	UIGroupInfo* pGroupInfo = static_cast<UIGroupInfo*>(CoreDataManager_v->getUIElementInfo(GROUP_MASTER));
+	UIGroupInfo* pGroupInfo = static_cast<UIGroupInfo*>(Core::DataManager->getUIElementInfo(GROUP_MASTER));
 	UIGroupMaster* pMaster = dbg_new UIGroupMaster(pGroupInfo);
 	pMaster->init();
 	pMaster->autorelease();

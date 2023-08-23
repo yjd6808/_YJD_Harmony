@@ -3,16 +3,14 @@
  */
 
 #include "Tutturu.h"
+#include "GameCoreHeader.h"
 #include "MapLayer.h"
-
-#include <SteinsGate/Client/ImagePackManager.h>
-#include <SteinsGate/Client/DataManager.h>
-#include <SteinsGate/Client/Global.h>
-#include <SteinsGate/Client/Define_Action.h>
-#include <SteinsGate/Client/HostPlayer.h>
 
 #include <SteinsGate/Common/RectEx.h>
 #include <SteinsGate/Common/RectPoly.h>
+
+#include <SteinsGate/Client/Define_Action.h>
+
 
 USING_NS_CC;
 USING_NS_CCUI;
@@ -50,7 +48,7 @@ bool MapLayer::init() {
 		return false;
 	}
 
-	m_pActorBox = ActorBox::Get();
+	m_pActorBox = ActorManager::Get();
 	m_pCamera = MimicCamera::create();
 	this->addChild(m_pCamera);
 	return true;
@@ -89,9 +87,9 @@ void MapLayer::update(float dt) {
 }
 
 void MapLayer::loadMap(int mapCode) {
-	m_pMapInfo = CoreDataManager_v->getMapInfo(mapCode);
-	m_pMapAreaInfo = CoreDataManager_v->getMapAreaInfo(mapCode);
-	m_pMapPhysicsInfo = CoreDataManager_v->getMapPhysicsInfo(m_pMapInfo->PhysicsCode);
+	m_pMapInfo = Core::DataManager->getMapInfo(mapCode);
+	m_pMapAreaInfo = Core::DataManager->getMapAreaInfo(mapCode);
+	m_pMapPhysicsInfo = Core::DataManager->getMapPhysicsInfo(m_pMapInfo->PhysicsCode);
 
 	// 배경 로딩
 
@@ -101,8 +99,8 @@ void MapLayer::loadMap(int mapCode) {
 			const float fTileXPos = Const::Map::TileWidth * j;
 			const float fTileYPos = Const::Map::TileHeight * k;
 
-			const TileInfo* pTileInfo = CoreDataManager_v->getTileInfo(m_pMapInfo->TileArray[i][j]);
-			FrameTexture* pFrameTexture = CorePackManager_v->getPack(pTileInfo->SgaIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
+			const TileInfo* pTileInfo = Core::DataManager->getTileInfo(m_pMapInfo->TileArray[i][j]);
+			FrameTexture* pFrameTexture = Core::Contents.PackManager->getPack(pTileInfo->SgaIndex)->createFrameTexture(pTileInfo->ImgIndex, pTileInfo->SpriteIndex);
 
 			SGSprite* pTileSprite = SGSprite::createWithTexture(pFrameTexture->getTexture());
 			pTileSprite->setAnchorPoint(Vec2::ZERO);

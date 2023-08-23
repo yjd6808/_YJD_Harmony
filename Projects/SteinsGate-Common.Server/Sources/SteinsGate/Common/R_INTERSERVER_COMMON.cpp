@@ -41,7 +41,7 @@ void R_INTERSERVER_COMMON::RECV_CES_YouNeedToDoThis(Session* session, ICommand* 
 
 void R_INTERSERVER_COMMON::RECV_CES_TimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd) {
 	const CES_TimeSyncAck* pCmd = (CES_TimeSyncAck*)cmd;
-	CoreTimeManager_v->UpdateMasterServerTime(pCmd->MasterServerTime);
+	Core::Contents.TimeManager->UpdateMasterServerTime(pCmd->MasterServerTime);
 }
 
 void R_INTERSERVER_COMMON::RECV_SS_P2PRelayStaticTest(Session* session, ICommand* cmd) {

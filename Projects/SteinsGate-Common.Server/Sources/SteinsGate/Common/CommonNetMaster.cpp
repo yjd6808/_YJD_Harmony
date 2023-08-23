@@ -34,8 +34,8 @@ void CommonNetMaster::ProcessMainUpdate() {
 	pulser.Start();
 	while (m_bRunning) {
 
-		if (CoreCLIThread_v)
-			CoreCLIThread_v->ProcessInputs();
+		if (Core::CLIThread)
+			Core::CLIThread->ProcessInputs();
 
 		ProcessSubUpdate(elapsed);
 		OnUpdate(elapsed);

@@ -10,40 +10,44 @@
 
 #include <SteinsGate/Common/CommonCore.h>
 
-class SGApplication;
+class SteinsGateApp;
 class ClientInfo;
-class HostPlayer;
+//class HostPlayer;
 class DataManager;
-class UIManager;
-class Inven;
-class WorldScene;
-class FontPackage;
-class ActorListenerManager;
-class ActorBox;
-class ImagePackManager;
-class Global;
-class PopupManager;
-class TimeManager;
+//class UIManager;
+//class Inven;
+//class WorldScene;
+//class FontManager;
+//class ActorListenerManager;
+//class ActorManager;
+//class ImagePackManager;
+//class Global;
+//class PopupManager;
+//class TimeManager;
 class NetCore;
 
 struct RuntimeConfig;
+struct Contents;
 
-extern SGApplication* CoreApp_v;
-extern ClientInfo* CoreClientInfo_v;
-extern HostPlayer* CorePlayer_v;
-extern DataManager* CoreDataManager_v;
-extern UIManager* CoreUIManager_v;
-extern Inven* CoreInven_v;
-extern WorldScene* CoreWorld_v;
-extern FontPackage* CoreFont_v;
-extern ActorListenerManager* CoreActorListenerManager_v;
-extern ActorBox* CoreActorBox_v;
-extern ImagePackManager* CorePackManager_v;
-extern Global* CoreGlobal_v;
-extern PopupManager* CorePopupManager_v;
-extern TimeManager* CoreTimeManager_v;
-extern NetCore* CoreNet_v;
-extern RuntimeConfig* CoreRuntimeConfig_v;
+NS_CORE_BEGIN
+extern ::SteinsGateApp* App;
+extern ::ClientInfo* ClientInfo;
+extern ::Contents Contents;
+// extern ::HostPlayer* Player;
+extern ::DataManager* DataManager;
+// extern ::UIManager* UIManager;
+// extern ::Inven* Inven;
+// extern ::WorldScene* World;
+// extern ::FontManager* FontManager;
+// extern ::ActorListenerManager* ActorListenerManager;
+// extern ::ActorManager* ActorBox;
+// extern ::ImagePackManager* PackManager;
+// extern ::Global* Global;
+// extern ::PopupManager* PopupManager;
+// extern ::TimeManager* TimeManager;
+extern ::NetCore* Net;
+extern ::RuntimeConfig* RuntimeConfig;
+NS_CORE_END
 
 void InitializeClientCore();
 void FinalizeClientCore();
