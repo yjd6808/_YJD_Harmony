@@ -17,19 +17,22 @@ class MysqlDatabase;
 class GameNetMaster;
 class GameNetGroup;
 class LogicServer;
-class GameTokenManager;
+
 struct GameServerProcessInfo;
 struct RuntimeConfig;
+struct GameContents;
 
-extern DataManager* Core::DataManager;
-extern MysqlDatabase* CoreGameDB_v;;
-extern GameNetMaster* CoreNetMaster_v;
-extern GameNetGroup* CoreNetGroup_v;
-extern LogicServer* CoreServer_v;
-extern GameTokenManager* CoreTokenManager_v;
-extern GameServerType_t CoreGameServerType_v;
-extern GameServerProcessInfo* CoreGameServerProcessInfo_v;
-extern RuntimeConfig* Core::RuntimeConfig;
+NS_CORE_BEGIN
+extern ::DataManager*			DataManager;
+extern ::MysqlDatabase*			GameDB;
+extern ::GameNetMaster*			NetMaster;
+extern ::GameNetGroup*			NetGroup;
+extern ::LogicServer*			Server;
+extern ::GameServerType_t		GameServerType;
+extern ::GameServerProcessInfo* GameServerProcessInfo;
+extern ::RuntimeConfig*			RuntimeConfig;
+extern ::GameContents			Contents;
+NS_CORE_END
 
-bool InitializeGameCore(GameServerType_t gameServerType);
+void InitializeGameCore(GameServerType_t gameServerType);
 void FinalizeGameCore();

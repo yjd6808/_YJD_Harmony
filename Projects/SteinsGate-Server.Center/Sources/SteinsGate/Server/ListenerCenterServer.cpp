@@ -39,7 +39,7 @@ void ListenerCenterServer::OnDisconnected(Session* disconnetedSession) {
 	CenterSession* pSession = (CenterSession*)disconnetedSession;
 
 	if (pSession->IsValid()) {
-		CoreServer_v->RemoveSession(pSession);
+		Core::Server->RemoveSession(pSession);
 	}
 }
 
@@ -70,7 +70,7 @@ void ListenerCenterServer::OnReceived(Session* session, IRecvPacket* recvPacket)
 			R_CENTER::LastFromId = pInterServerCmd->From;
 
 			// 클라(나)가 수신처인 경우 그대로 처리
-			if (pInterServerCmd->To == CoreServerProcessInfo_v->ServerId)
+			if (pInterServerCmd->To == Core::ServerProcessInfo->ServerId)
 				ListenerServerCommon::OnReceived(session, cmd);
 			else
 				RelayCommand(cmd, pInterServerCmd);
@@ -96,7 +96,7 @@ void ListenerCenterServer::OnStopped() {
 
 // TODO: 하나의 패킷에 여러개의 커맨드가 담긴 경우가 있을 수 있으므로.
 void ListenerCenterServer::RelayCommand(ICommand* cmd, RelayCommandBase* relayCmd) {
-	Session* pSender = CoreServer_v->GetCenterSession(relayCmd->To);
+	Session* pSender = Core::Server->GetCenterSession(relayCmd->To);
 	pSender->SendAlloc(cmd);
 	ms_tlsSenderMap.Insert(pSender);
 }

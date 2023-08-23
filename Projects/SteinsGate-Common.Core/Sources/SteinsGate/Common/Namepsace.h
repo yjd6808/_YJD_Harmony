@@ -13,7 +13,8 @@
 #define NS_CONST_BEGIN namespace Const {
 #define NS_CONST_END   }
 
-#define USING_NS_CONST using namespace Const
-
 #define NS_CORE_BEGIN namespace Core {
 #define NS_CORE_END   }
+
+#define USING_NS_CORE	using namespace Core
+#define USING_NS_CONST	using namespace Const

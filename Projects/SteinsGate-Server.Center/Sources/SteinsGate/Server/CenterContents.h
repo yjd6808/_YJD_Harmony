@@ -9,11 +9,11 @@
 #pragma once
 
 #include <SteinsGate/Common/ServerContents.h>
-#include <SteinsGate/Server/AuthenticationManager.h>
+#include <SteinsGate/Server/BootStateManager.h>
 
-struct AuthContents : ServerContents
+struct CenterContents : ServerContents
 {
-	::AuthenticationManager* AuthenticationManager;
+	::BootStateManager* BootStateManager;
 
 	void Initialize() override;
 	void Finalize() override;

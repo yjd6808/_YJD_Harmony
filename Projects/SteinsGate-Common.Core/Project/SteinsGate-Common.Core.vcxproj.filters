@@ -90,9 +90,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.cpp">
       <Filter>Data\MonsterStat</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CLIThread.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -115,6 +112,12 @@
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Const.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\BaseContents.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h" />
@@ -277,9 +280,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MonsterStatInfoLoader.h">
       <Filter>Data\MonsterStat</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CLIThread.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -308,6 +308,12 @@
       <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Namepsace.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\BaseContents.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -367,9 +373,6 @@
     <Filter Include="Data\MonsterStat">
       <UniqueIdentifier>{7e87883b-be6f-4b81-85d1-7040d281963d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{7845d01b-e1ff-42ba-a673-676be240ab0c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{df07d7b3-ec11-400e-bd40-3989d5caf2ff}</UniqueIdentifier>
     </Filter>
@@ -381,6 +384,9 @@
     </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{56aa07c9-aebe-44d8-8e9b-36b92699697e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{93b72f5d-322a-4129-9fb9-1d3c09f8d2ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

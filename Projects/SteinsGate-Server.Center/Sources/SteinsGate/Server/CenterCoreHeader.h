@@ -16,3 +16,4 @@
 #include <SteinsGate/Server/CenterNetGroup.h>
 #include <SteinsGate/Server/CenterServer.h>
 #include <SteinsGate/Server/RuntimeConfig.h>
+#include <SteinsGate/Server/CenterContents.h>

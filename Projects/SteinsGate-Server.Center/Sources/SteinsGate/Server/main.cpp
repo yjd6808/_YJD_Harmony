@@ -26,11 +26,11 @@ int main() {
 	// 메인 루틴
 	// ======================================================
 
-	if (CoreNetGroup_v)
-		CoreNetGroup_v->LaunchServer();
+	if (Core::NetGroup)
+		Core::NetGroup->LaunchServer();
 
-	if (CoreNetMaster_v)
-		CoreNetMaster_v->ProcessMainUpdate();
+	if (Core::NetMaster)
+		Core::NetMaster->ProcessMainUpdate();
 
 	// ======================================================
 	// 메인 리소스 정리

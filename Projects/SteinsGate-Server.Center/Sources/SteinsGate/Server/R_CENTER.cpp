@@ -28,19 +28,19 @@ void R_CENTER::RECV_SCE_ItsMe(Session* session, ICommand* cmd) {
 		return;
 	}
 
-	if (CoreServer_v->IsConnected(pSession)) {
+	if (Core::Server->IsConnected(pSession)) {
 		// 이미 처리된 세션
 		return;
 	}
 
-	if (CoreServer_v->GetCenterSession(pCmd->ServerId) != nullptr) {
+	if (Core::Server->GetCenterSession(pCmd->ServerId) != nullptr) {
 		_LogWarn_("%s서버는 이미 접속중입니다.", ServerProcessType::Name[pCmd->ClientServerType]);
 		S_CENTER::SEND_CES_AlreadyConnected();
 		return;
 	}
 
 	pSession->SetClientInformation(pCmd->ClientServerType, pCmd->ServerId);
-	CoreServer_v->AddSession(pSession);
+	Core::Server->AddSession(pSession);
 	S_CENTER::SEND_CES_YouNeedToDoThis(CenterOrder::LaunchServer);
 }
 

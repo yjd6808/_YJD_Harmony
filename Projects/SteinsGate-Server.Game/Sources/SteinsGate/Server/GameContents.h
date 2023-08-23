@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
+ * 생성일: 8/23/2023 1:52:29 PM
  * =====================
  *
  */
@@ -8,6 +8,10 @@
 
 #pragma once
 
+#include <SteinsGate/Common/ServerContents.h>
 
-void InitializeGameContents();
-void FinalizeGameContents();
+struct GameContents : ServerContents
+{
+	void Initialize() override;
+	void Finalize() override;
+};

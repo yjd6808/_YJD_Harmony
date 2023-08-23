@@ -20,6 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\BaseContents.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ChannelBaseInfoLoader.cpp">
       <SubType>
       </SubType>
@@ -123,6 +127,10 @@
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\AuthEnum.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\BaseContents.h">
       <SubType>
       </SubType>
     </ClInclude>

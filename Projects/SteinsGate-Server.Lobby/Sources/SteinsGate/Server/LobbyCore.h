@@ -16,16 +16,19 @@ class MysqlDatabase;
 class LobbyNetMaster;
 class LobbyNetGroup;
 class LobbyServer;
-class LobbyTokenManager;
-struct RuntimeConfig;
 
-extern DataManager* Core::DataManager;
-extern MysqlDatabase* CoreGameDB_v;;
-extern LobbyNetMaster* CoreNetMaster_v;
-extern LobbyNetGroup* CoreNetGroup_v;
-extern LobbyServer* CoreServer_v;
-extern LobbyTokenManager* CoreTokenManager_v;
-extern RuntimeConfig* Core::RuntimeConfig;
+struct RuntimeConfig;
+struct LobbyContents;
+
+NS_CORE_BEGIN
+extern ::DataManager*		DataManager;
+extern ::MysqlDatabase*		GameDB;
+extern ::LobbyNetMaster*	NetMaster;
+extern ::LobbyNetGroup*		NetGroup;
+extern ::LobbyServer*		Server;
+extern ::RuntimeConfig*		RuntimeConfig;
+extern ::LobbyContents		Contents;
+NS_CORE_END
 
 void InitializeLobbyCore();
 void FinalizeLobbyCore();

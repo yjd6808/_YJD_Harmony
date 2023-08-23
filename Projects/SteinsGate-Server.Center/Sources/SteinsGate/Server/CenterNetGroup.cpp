@@ -43,7 +43,7 @@ void CenterNetGroup::InitializeServer() {
 
 	AddHost(Const::Host::CenterTcpId, spServer);
 
-	SessionContainer* pCenterSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
+	SessionContainer* pCenterSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
 	pCenterSessionContainer->SetInitialHandleSeq(Const::Host::CenterHandleSeq);
 
 	m_pCenterTcp = spServer.Get<CenterServer*>();

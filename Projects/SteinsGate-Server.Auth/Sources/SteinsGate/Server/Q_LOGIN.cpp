@@ -16,7 +16,7 @@ USING_NS_JNET;
 
 void Q_LOGIN::SelectAccountInfoList() {
 	Qry::SelectAccountInfoResult result;
-	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result);
+	Qry::SelectAccountInfo::Execute<THelper>(Core::GameDB, result);
 
 	do {
 
@@ -25,19 +25,19 @@ void Q_LOGIN::SelectAccountInfoList() {
 
 bool Q_LOGIN::CheckAccountExist(const char* id, const char* pass) {
 	Qry::SelectAccountInfoResult result;
-	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result, id, pass);
+	Qry::SelectAccountInfo::Execute<THelper>(Core::GameDB, result, id, pass);
 	return IsSuccess;
 }
 
 bool Q_LOGIN::RegisterAccount(const char* id, const char* pass) {
 	Qry::InsertResult result;
-	Qry::InsertAccountInfo::Execute<THelper>(CoreGameDB_v, result, id, pass);
+	Qry::InsertAccountInfo::Execute<THelper>(Core::GameDB, result, id, pass);
 	return IsSuccess;
 }
 
 bool Q_LOGIN::SelectAccountInfo(const char* id, JCORE_OUT AccountData& accountData) {
 	Qry::SelectAccountInfoResult result;
-	Qry::SelectAccountInfo::Execute<THelper>(CoreGameDB_v, result, id);
+	Qry::SelectAccountInfo::Execute<THelper>(Core::GameDB, result, id);
 
 	// 쿼리는 성공했지만 바인딩된 결과물이 없으면 실패로 간주
 	if (!IsSuccess || !result.HasBindedResult)

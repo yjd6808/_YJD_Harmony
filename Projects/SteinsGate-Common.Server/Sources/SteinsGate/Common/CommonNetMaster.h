@@ -21,6 +21,9 @@ public:
 
 	virtual ServerProcessType_t GetProcessType() = 0;
 
+	void SetProcessInfo(ServerProcessInfo* info);
+	ServerProcessInfo* GetProcessInfo() const { return m_pProcessInfo; }
+
 	void ProcessMainUpdate();
 	void ProcessSubUpdate(const JCore::TimeSpan& elapsed);
 	void Terminate() { m_bRunning = false; }
@@ -30,6 +33,7 @@ protected:
 private:
 	int m_iUpdatePerSecond;
 	bool m_bRunning;
+	ServerProcessInfo* m_pProcessInfo;
 };
 
 

@@ -32,6 +32,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterSession.cpp">
       <Filter>Host</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\CenterContents.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterCoreHeader.h" />
@@ -64,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterSession.h">
       <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\CenterContents.h">
+      <Filter>Contents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

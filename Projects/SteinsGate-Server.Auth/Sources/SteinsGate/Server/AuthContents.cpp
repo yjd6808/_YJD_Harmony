@@ -8,35 +8,20 @@
 
 #include "Auth.h"
 #include "AuthCoreHeader.h"
-#include "AuthenticationManager.h"
+#include "AuthContents.h"
 
 #include <SteinsGate/Server/AuthenticationManagerSchedule.h>
 
 USING_NS_JC;
 
-void IntializeScheduler();
-void FinalizeScheduler();
+void AuthContents::Initialize() {
+	AuthenticationManager = AuthenticationManager::Get();
 
-
-AuthenticationManagerSchedule* g_pAuthTokenManagerSchedule;
-
-void InitializeAuthContents() {
-	IntializeScheduler();
+	AddSchedule(dbg_new AuthenticationManagerSchedule);
 }
 
-void FinalizeAuthContents() {
-	FinalizeScheduler();
-}
+void AuthContents::Finalize() {
+	ClearSchedule();
 
-
-void IntializeScheduler() {
-	g_pAuthTokenManagerSchedule = dbg_new AuthenticationManagerSchedule();
-
-	g_pAuthTokenManagerSchedule->Initialize();
-
-	Core::Scheduler->AddFirstTask(g_pAuthTokenManagerSchedule);
-}
-
-void FinalizeScheduler() {
-	g_pAuthTokenManagerSchedule->Finalize();
+	JCORE_DELETE_SINGLETON_SAFE(AuthenticationManager);
 }

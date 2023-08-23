@@ -45,7 +45,7 @@ void AuthNetGroup::InitializeServer() {
 
 	AddHost(Const::Host::AuthTcpId, spServer);
 
-	SessionContainer* pAuthSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
+	SessionContainer* pAuthSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
 	pAuthSessionContainer->SetInitialHandleSeq(Const::Host::AuthHandleSeq);
 
 	m_pAuthTcp = spServer.Get<AuthServer*>();

@@ -16,14 +16,19 @@ class MysqlDatabase;
 class CenterNetMaster;
 class CenterNetGroup;
 class CenterServer;
-struct RuntimeConfig;
 
-extern DataManager* Core::DataManager;
-extern MysqlDatabase* CoreGameDB_v;;
-extern CenterNetMaster* CoreNetMaster_v;
-extern CenterNetGroup* CoreNetGroup_v;
-extern CenterServer* CoreServer_v;
-extern RuntimeConfig* Core::RuntimeConfig;
+struct RuntimeConfig;
+struct CenterContents;
+
+NS_CORE_BEGIN
+extern ::DataManager*		DataManager;
+extern ::MysqlDatabase*		GameDB;
+extern ::CenterNetMaster*	NetMaster;
+extern ::CenterNetGroup*	NetGroup;
+extern ::CenterServer*		Server;
+extern ::RuntimeConfig*		RuntimeConfig;
+extern ::CenterContents		Contents;
+NS_CORE_END
 
 void InitializeCenterCore();
 void FinalizeCenterCore();

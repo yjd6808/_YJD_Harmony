@@ -19,10 +19,19 @@ USING_NS_JNET;
 CommonNetMaster::CommonNetMaster(int updatePerSecond)
 	: m_iUpdatePerSecond(updatePerSecond)
 	, m_bRunning(true)
+	, m_pProcessInfo(nullptr)
 {}
 
 void CommonNetMaster::Initialize() {
 
+}
+
+void CommonNetMaster::SetProcessInfo(ServerProcessInfo* info) {
+	if (m_pProcessInfo) {
+		_LogWarn_("이미 주입된 정보가 있습니다.");
+		return;
+	}
+	m_pProcessInfo = info;
 }
 
 
@@ -49,10 +58,10 @@ void CommonNetMaster::ProcessMainUpdate() {
 }
 
 void CommonNetMaster::ProcessSubUpdate(const TimeSpan& elapsed) {
-	if (CoreCommonNetGroup_v)
-		CoreCommonNetGroup_v->ProcessUpdate(elapsed);
+	if (Core::CommonNetGroup)
+		Core::CommonNetGroup->ProcessUpdate(elapsed);
 
-	if (CoreInterServerClientNetGroup_v)
-		CoreInterServerClientNetGroup_v->ProcessUpdate(elapsed);
+	if (Core::InterServerClientNetGroup)
+		Core::InterServerClientNetGroup->ProcessUpdate(elapsed);
 }
 

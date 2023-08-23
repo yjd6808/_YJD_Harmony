@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 8/3/2023 9:10:29 AM [SteinsGate-Server.Lobby 프로젝트 복사 생성]
+ * 생성일: 8/23/2023 1:52:29 PM
  * =====================
  *
  */
@@ -8,23 +8,13 @@
 
 #include "Game.h"
 #include "GameCoreHeader.h"
+#include "GameContents.h"
 
 USING_NS_JC;
 
-void IntializeScheduler();
-void FinalizeScheduler();
-
-void InitializeGameContents() {
-	IntializeScheduler();
+void GameContents::Initialize() {
 }
 
-void FinalizeGameContents() {
-	FinalizeScheduler();
-}
-
-
-void IntializeScheduler() {
-}
-
-void FinalizeScheduler() {
+void GameContents::Finalize() {
+	ClearSchedule();
 }

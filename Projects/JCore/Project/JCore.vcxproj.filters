@@ -542,6 +542,9 @@
     <ClInclude Include="..\Sources\JCore\Primitives\Range.h">
       <Filter>Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Threading\SchedulerTask.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

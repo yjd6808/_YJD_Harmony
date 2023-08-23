@@ -13,10 +13,10 @@
  *	);
  *	
  *	char id[] = "wjdeh818";
- *	auto spQueryTask = CoreGameDB_v->QueryAsync("insert into t_account (c_id, c_pass) values (?, ?)", id, id);
+ *	auto spQueryTask = Core::GameDB->QueryAsync("insert into t_account (c_id, c_pass) values (?, ?)", id, id);
  *	auto& queryResult = spQueryTask->Wait();
  *	
- *	SharedPtr<MysqlQuerySelect> q = CoreGameDB_v->Query(
+ *	SharedPtr<MysqlQuerySelect> q = Core::GameDB->Query(
  *		"select c_account_id, c_id, c_pass, unix_timestamp(c_created) as c_created, unix_timestamp(c_created2) as c_created2, unix_timestamp(c_logined) as c_logined from t_account"
  *	);
  *	

@@ -17,15 +17,19 @@ class AuthNetMaster;
 class AuthNetGroup;
 class AuthServer;
 class AuthenticationManager;
-struct RuntimeConfig;
 
-extern DataManager* Core::DataManager;
-extern MysqlDatabase* CoreGameDB_v;;
-extern AuthNetMaster* CoreNetMaster_v;
-extern AuthNetGroup* CoreNetGroup_v;
-extern AuthServer* CoreServer_v;
-extern AuthenticationManager* CoreTokenManager_v;
-extern RuntimeConfig* Core::RuntimeConfig;
+struct RuntimeConfig;
+struct AuthContents;
+
+NS_CORE_BEGIN
+extern ::DataManager*		DataManager;
+extern ::MysqlDatabase*		GameDB;
+extern ::AuthNetMaster*		NetMaster;
+extern ::AuthNetGroup*		NetGroup;
+extern ::AuthServer*		Server;
+extern ::RuntimeConfig*		RuntimeConfig;
+extern ::AuthContents		Contents;
+NS_CORE_END
 
 void InitializeAuthCore();
 void FinalizeAuthCore();

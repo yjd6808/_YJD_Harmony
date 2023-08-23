@@ -295,23 +295,30 @@ void Session::Received(Int32UL receivedBytes) {
 
 
 void Session::WaitForZeroPending() {
+	int iPrevPendingCount = 0;
+	int iEqualCount = 0;
+
 	while (true) {
 
 		const int iPending = m_iOveralappedPendingCount;
 
 		if (iPending == 0)
 			break;
-#ifdef DebugMode
-		// 클라이언트 정상종료 테스트
-		if (GetType() == eClient) {
-			JCORE_PASS;
-		}
-#endif
 
 		if (iPending < 0) {
 			_NetLogWarn_("멍미 펜딩 카운트가 움수 인뎁쇼 (%d)", iPending);
-			Thread::Sleep(500);
+			break;
 		}
+
+		if (iPrevPendingCount == iPending)
+			iEqualCount++;
+
+		if (iEqualCount >= 1'000'000) {
+			iEqualCount = 0;
+			_NetLogWarn_("펜딩 카운트 기달 %d", iPending);
+		}
+
+		iPrevPendingCount = iPending;
 	}
 }
 

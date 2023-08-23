@@ -14,46 +14,61 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-DataManager*		Core::DataManager;
-MysqlDatabase*		CoreGameDB_v;
-CenterNetMaster*	CoreNetMaster_v;
-CenterNetGroup*		CoreNetGroup_v;
-CenterServer*		CoreServer_v;
-RuntimeConfig*		Core::RuntimeConfig;
+NS_CORE_BEGIN
+::DataManager*		DataManager;
+::MysqlDatabase*	GameDB;
+::CenterNetMaster*	NetMaster;
+::CenterNetGroup*	NetGroup;
+::CenterServer*		Server;
+::RuntimeConfig*	RuntimeConfig;
+::CenterContents	Contents;
+NS_CORE_END
 
 void InitializeCenterCore() {
 	Core::DataManager				= DataManager::Get();
 	Core::CommonInfo				= Core::DataManager->getCommonInfo(1);
 	Core::ServerProcessInfoPackage	= Core::DataManager->getServerProcessInfoPackage(1);
-	CoreServerProcessInfo_v			= &Core::ServerProcessInfoPackage->Center;
-	CoreGameDB_v					= dbg_new MysqlDatabase(Core::DataManager->getDatabaseInfo(DatabaseType::Game));
-	CoreGameDB_v->Initialize(ServerProcessType::Center);
-	CoreNetMaster_v					= CenterNetMaster::Get();
-	CoreNetMaster_v->Initialize();
-	CoreNetGroup_v					= CoreNetMaster_v->GetNetGroup(Const::NetGroup::MainId).Get<CenterNetGroup*>();
-	CoreServer_v					= CoreNetGroup_v->GetCenterTcp();
+	Core::ServerProcessInfo			= &Core::ServerProcessInfoPackage->Center;
+	Core::GameDB					= dbg_new MysqlDatabase(Core::DataManager->getDatabaseInfo(DatabaseType::Game));
+	Core::GameDB->Initialize(ServerProcessType::Center);
+	Core::NetMaster					= CenterNetMaster::Get();
+	Core::NetMaster->Initialize();
+	Core::NetGroup					= Core::NetMaster->GetNetGroup(Const::NetGroup::MainId).Get<CenterNetGroup*>();
+	Core::Server					= Core::NetGroup->GetCenterTcp();
+	Core::RuntimeConfig = RuntimeConfig::Get();
+	Core::RuntimeConfig->Load();
 
+	// BASE INJECTION
 	if (Core::CLIThread)
 		Core::CLIThread->SetListener(dbg_new CLIListener);
 
-	Core::RuntimeConfig = RuntimeConfig::Get();
-	Core::RuntimeConfig->Load();
-	
-	// 공통 라이브러리 주입용
-	{
-		CoreInterServerClientNetGroup_v = CoreNetMaster_v->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
-		CoreCommonNetMaster_v = CoreNetMaster_v;
-		CoreCommonNetGroup_v = CoreNetGroup_v;
-		CoreCommonServer_v = CoreServer_v;
+	Core::ServerProcessInfoPackage		= Core::DataManager->getServerProcessInfoPackage(1);		// 위에서 주입됨
+	Core::CommonInfo					= Core::DataManager->getCommonInfo(1);						// 위에서 주입됨
+	Core::CharCommon					= nullptr;													// 사용안함
+	Core::ThreadPool					= dbg_new ThreadPool{ 2 };
+	Core::Scheduler						= dbg_new Scheduler{ 2 };
+	Core::RuntimeConfigBase				= Core::RuntimeConfig;
 
-		Core::RuntimeConfigBase = Core::RuntimeConfig;
-		CoreRuntimeConfigCommon_v = Core::RuntimeConfig;
-	}
+	// COMMON INJECTION
+	Core::CommonNetMaster				= Core::NetMaster;
+	Core::CommonNetGroup				= Core::NetGroup;
+	Core::CommonServer					= Core::Server;
+	Core::ServerProcessInfo				= &Core::ServerProcessInfoPackage->Center;
+	Core::InterServerClientNetGroup		= Core::NetMaster->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
+	Core::InterServerClientTcp			= Core::InterServerClientNetGroup ? Core::InterServerClientNetGroup->GetInterServerClientTcp() : nullptr;
+	Core::InterServerClientUdp			= Core::InterServerClientNetGroup ? Core::InterServerClientNetGroup->GetInterServerClientUdp() : nullptr;
+	Core::TimeManager					= TimeManager::Get();
+	Core::RuntimeConfigCommon			= Core::RuntimeConfig;
+
+	Core::Contents.Initialize();
 }
 
 void FinalizeCenterCore() {
-	JCORE_DELETE_SINGLETON_SAFE(CoreNetMaster_v);
+	Core::Contents.Finalize();
+
 	JCORE_DELETE_SINGLETON_SAFE(Core::DataManager);
+	JCORE_DELETE_SINGLETON_SAFE(Core::TimeManager);
 	JCORE_DELETE_SINGLETON_SAFE(Core::RuntimeConfig);
-	JCORE_DELETE_SAFE(CoreGameDB_v);
+	JCORE_DELETE_SINGLETON_SAFE(Core::NetMaster);
+	JCORE_DELETE_SAFE(Core::GameDB);
 }

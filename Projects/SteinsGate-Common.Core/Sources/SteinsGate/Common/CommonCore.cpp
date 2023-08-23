@@ -15,14 +15,14 @@
 USING_NS_JC;
 
 NS_CORE_BEGIN
-	::CLIThread* CLIThread;
-	::ServerProcessInfoPackage* ServerProcessInfoPackage = nullptr;	// 메인 프로그램에서 주입해줄 것
-	::CommonInfo* CommonInfo = nullptr;								// 메인 프로그램에서 주입해줄 것
-	::CharCommonInfo* CharCommon = nullptr;							// 메인 프로그램에서 주입해줄 것
-	::ThreadPool* ThreadPool = nullptr;								// 메인 프로그램에서 주입해줄 것
-	::Scheduler* Scheduler = nullptr;								// 메인 프로그램에서 주입해줄 것
-	::RuntimeConfigBase* RuntimeConfigBase = nullptr;				// 메인 프로그램에서 주입해줄 것
-	JNetwork::CommandNameDictionary CommandNameDictionary;
+::CLIThread*					CLIThread;
+::ServerProcessInfoPackage*		ServerProcessInfoPackage;	// 메인 프로그램에서 주입해줄 것 (TODO: Common.Server로 옮기기)
+::CommonInfo*					CommonInfo;					// 메인 프로그램에서 주입해줄 것	
+::CharCommonInfo*				CharCommon;					// 메인 프로그램에서 주입해줄 것 (TODO: 전역으로 두기 좀 그럼)
+::ThreadPool*					ThreadPool;					// 메인 프로그램에서 주입해줄 것
+::Scheduler*					Scheduler;					// 메인 프로그램에서 주입해줄 것
+::RuntimeConfigBase*			RuntimeConfigBase;			// 메인 프로그램에서 주입해줄 것
+JNetwork::CommandNameDictionary CommandNameDictionary;
 NS_CORE_END
 
 void InitializeCommonCore() {
@@ -36,7 +36,16 @@ void InitializeCommonCore() {
 }
 
 void FinalizeCommonCore() {
+	if (Core::ThreadPool)
+		Core::ThreadPool->Join(ThreadPool::JoinStrategy::WaitAllTasks);
+
+	if (Core::Scheduler)
+		Core::Scheduler->Join(Scheduler::JoinStrategy::WaitOnlyRunningTask);
+
 	Core::CLIThread->SendInterrupt();
 	Core::CLIThread->Join();
+
 	JCORE_DELETE_SAFE(Core::CLIThread);
+	JCORE_DELETE_SAFE(Core::ThreadPool);
+	JCORE_DELETE_SAFE(Core::Scheduler);
 }

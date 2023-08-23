@@ -39,7 +39,7 @@ bool CLIListenerCommon::CLI_HelpCommon(int argc, JCore::String* argv) {
 }
 
 bool CLIListenerCommon::CLI_ExitCommon(int argc, JCore::String* argv) {
-	CoreCommonNetMaster_v->Terminate();
+	Core::CommonNetMaster->Terminate();
 	return true;
 }
 

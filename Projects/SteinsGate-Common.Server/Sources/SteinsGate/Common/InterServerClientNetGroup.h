@@ -15,6 +15,7 @@ class JCORE_NOVTABLE InterServerClientNetGroup : public JNetwork::NetGroup
 {
 public:
 	InterServerClientNetGroup();
+	~InterServerClientNetGroup() override;
 
 	void Initialize() override;
 	void Finalize() override;

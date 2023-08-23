@@ -24,16 +24,18 @@ class TcpClient;
 class UdpClient;
 NS_JNET_END
 
-extern CommonNetMaster* CoreCommonNetMaster_v;
-extern CommonNetGroup* CoreCommonNetGroup_v;
-extern CommonServer* CoreCommonServer_v;
-extern ServerProcessInfo* CoreServerProcessInfo_v;
+NS_CORE_BEGIN
+extern ::CommonNetMaster* CommonNetMaster;
+extern ::CommonNetGroup* CommonNetGroup;
+extern ::CommonServer* CommonServer;
+extern ::ServerProcessInfo* ServerProcessInfo;
 
-extern InterServerClientNetGroup* CoreInterServerClientNetGroup_v;
-extern JNetwork::TcpClient* CoreInterServerClientTcp_v;
-extern JNetwork::UdpClient* CoreInterServerClientUdp_v;
-extern TimeManager* Core::Contents.TimeManager;
-extern RuntimeConfigCommon* CoreRuntimeConfigCommon_v;
+extern ::InterServerClientNetGroup* InterServerClientNetGroup;
+extern ::JNetwork::TcpClient* InterServerClientTcp;
+extern ::JNetwork::UdpClient* InterServerClientUdp;
+extern ::TimeManager* TimeManager;
+extern ::RuntimeConfigCommon* RuntimeConfigCommon;
+NS_CORE_END
 
 void InitializeServerCore();
 void FinalizeServerCore();

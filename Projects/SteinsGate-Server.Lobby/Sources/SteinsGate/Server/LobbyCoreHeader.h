@@ -16,4 +16,4 @@
 #include <SteinsGate/Server/LobbyNetGroup.h>
 #include <SteinsGate/Server/LobbyServer.h>
 #include <SteinsGate/Server/RuntimeConfig.h>
-
+#include <SteinsGate/Server/LobbyContents.h>

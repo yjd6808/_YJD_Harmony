@@ -159,7 +159,7 @@ void InterServerSendHelperBase::InitDefaultToId(int id) {
 }
 
 int InterServerSendHelperBase::GetSenderId() {
-	const int iSenderId = CoreServerProcessInfo_v->ServerId;
+	const int iSenderId = Core::ServerProcessInfo->ServerId;
 	DebugAssert(iSenderId >= 0 && iSenderId <= Const::Server::MaxId);
 	return int(iSenderId);
 }

@@ -41,7 +41,7 @@ void LobbyNetGroup::InitializeServer() {
 	AddHost(Const::Host::LobbyTcpId, spServer);
 
 	m_pLobbyTcp = spServer.Get<LobbyServer*>();
-	m_pLobbyTcp->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount));
+	m_pLobbyTcp->SetSesssionContainer(dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount));
 	m_pLobbyTcp->SetEventListener(dbg_new ListenerLobbyServer{ m_pLobbyTcp, m_pParser });
 
 	AddUpdatable(Const::Host::LobbyTcpId, m_pLobbyTcp);

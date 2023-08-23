@@ -55,9 +55,9 @@ void GameNetGroup::InitializeServer() {
 	AddHost(Const::Host::AreaTcpId, spAreaTcp);
 	AddHost(Const::Host::ChatTcpId, spChatTcp);
 
-	SessionContainer* pLogicSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
-	SessionContainer* pAreaSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
-	SessionContainer* pChatSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
+	SessionContainer* pLogicSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	SessionContainer* pAreaSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	SessionContainer* pChatSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
 
 	pLogicSessionContainer->SetInitialHandleSeq(Const::Host::LogicHandleSeq);
 	pAreaSessionContainer->SetInitialHandleSeq(Const::Host::AreaHandleSeq);
@@ -95,9 +95,9 @@ void GameNetGroup::LaunchServer() {
 	s_Servers[0] = m_pChatTcp;
 	s_Servers[1] = m_pAreaTcp;
 	s_Servers[2] = m_pLogicTcp;
-	s_BindEP[0] = CoreGameServerProcessInfo_v->BindChatTcp;
-	s_BindEP[1] = CoreGameServerProcessInfo_v->BindAreaTcp;
-	s_BindEP[2] = CoreGameServerProcessInfo_v->BindTcp;
+	s_BindEP[0] = Core::GameServerProcessInfo->BindChatTcp;
+	s_BindEP[1] = Core::GameServerProcessInfo->BindAreaTcp;
+	s_BindEP[2] = Core::GameServerProcessInfo->BindTcp;
 	s_FailedServer[0] = nullptr;
 	s_FailedServer[1] = nullptr;
 	s_FailedServer[2] = nullptr;

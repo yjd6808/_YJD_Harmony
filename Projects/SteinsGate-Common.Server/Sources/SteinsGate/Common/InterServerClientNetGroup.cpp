@@ -18,9 +18,22 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-InterServerClientNetGroup::InterServerClientNetGroup() : m_pParser(dbg_new SGCommandParser) {}
+InterServerClientNetGroup::InterServerClientNetGroup()
+	: m_pInterServerClientTcp(nullptr)
+	, m_pInterServerClientUdp(nullptr)
+	, m_pParser(dbg_new SGCommandParser)
+{}
+
+InterServerClientNetGroup::~InterServerClientNetGroup() {
+	JCORE_DELETE_SAFE(m_pParser);
+}
 
 void InterServerClientNetGroup::Initialize() {
+	if (Core::ServerProcessInfo == nullptr) {
+		_LogWarn_("서버 정보가 없어서 네트그룹 초기화 실패 [인터서버 네트그룹]");
+		return;
+	}
+
 	InitializeBufferPool();
 	InitializeIOCP();
 	InitializeParser();
@@ -34,6 +47,7 @@ void InterServerClientNetGroup::Initialize() {
 
 void InterServerClientNetGroup::Finalize() {
 	NetGroup::Finalize();
+
 	JCORE_DELETE_SAFE(m_pParser);
 }
 
@@ -74,7 +88,11 @@ void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {
 }
 
 bool InterServerClientNetGroup::ConnectCenterServer(int tryCount) {
-	DebugAssertMsg(m_pInterServerClientTcp != nullptr, "인터서버 TCP 클라이언트가 초기화되어있지 않습니다.");
+
+	if (m_pInterServerClientTcp == nullptr) {
+		_LogWarn_("인터서버 TCP 클라이언트가 초기화되어있지 않습니다.");
+		return false;
+	}
 
 	constexpr int CenterConnectionTimeout = 1000;
 

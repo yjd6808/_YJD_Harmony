@@ -25,21 +25,19 @@ int main() {
 	InitializeServerCore();
 	InitializeServerLobbyLogo(true, 24);
 	InitializeLobbyCore();
-	InitializeLobbyContents();
 
 	// ======================================================
 	// 메인 루틴
 	// ======================================================
 
-	if (CoreInterServerClientNetGroup_v && CoreInterServerClientNetGroup_v->ConnectCenterServer(5)) {
-		CoreNetMaster_v->ProcessMainUpdate();
+	if (Core::InterServerClientNetGroup && Core::InterServerClientNetGroup->ConnectCenterServer(5)) {
+		Core::NetMaster->ProcessMainUpdate();
 	}
 
 	// ======================================================
 	// 메인 리소스 정리
 	// ======================================================
 
-	FinalizeLobbyContents();
 	FinalizeLobbyCore();
 	FinalizeServerCore();
 	FinalizeCommonCore();

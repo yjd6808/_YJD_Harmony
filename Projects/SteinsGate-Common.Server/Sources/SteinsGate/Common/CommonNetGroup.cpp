@@ -22,6 +22,12 @@ CommonNetGroup::~CommonNetGroup() {
 }
 
 void CommonNetGroup::Initialize() {
+
+	if (Core::ServerProcessInfo == nullptr) {
+		_LogWarn_("서버 정보가 없어서 네트그룹 초기화 실패 [메인 네트그룹]");
+		return;
+	}
+
 	InitializeBufferPool();
 	InitializeIOCP();
 	InitializeParser();
@@ -65,24 +71,24 @@ void CommonNetGroup::ProcessOrder(CenterOrder_t order) {
 
 void CommonNetGroup::LaunchServer() {
 	JCORE_LOCK_GUARD(m_ServerBootLock);
-	const ServerBootState_t eState = CoreCommonServer_v->GetBootState();
+	const ServerBootState_t eState = Core::CommonServer->GetBootState();
 
 	if (eState == ServerBootState::Launched || eState == ServerBootState::Launching) {
 		return;
 	}
 
-	CoreCommonServer_v->SetBootState(ServerBootState::Launching);
-	CoreCommonServer_v->Start(CoreServerProcessInfo_v->BindTcp);
+	Core::CommonServer->SetBootState(ServerBootState::Launching);
+	Core::CommonServer->Start(Core::ServerProcessInfo->BindTcp);
 }
 
 void CommonNetGroup::StopServer() {
 	JCORE_LOCK_GUARD(m_ServerBootLock);
-	const ServerBootState_t eState = CoreCommonServer_v->GetBootState();
+	const ServerBootState_t eState = Core::CommonServer->GetBootState();
 
 	if (eState == ServerBootState::Stopped || eState == ServerBootState::Stopping) {
 		return;
 	}
 
-	CoreCommonServer_v->SetBootState(ServerBootState::Stopping);
-	CoreCommonServer_v->Stop();
+	Core::CommonServer->SetBootState(ServerBootState::Stopping);
+	Core::CommonServer->Stop();
 }

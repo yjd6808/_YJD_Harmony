@@ -8,13 +8,14 @@
 
 #pragma once
 
+#include <JCore/Pattern/Singleton.h>
 #include <SteinsGate/Server/Center.h>
 
-class BootStateManager
+class BootStateManager : public JCore::SingletonStaticPointer<BootStateManager>
 {
-private:
+	friend class TSingleton;
 	BootStateManager() = default;
-	~BootStateManager() = default;
+	~BootStateManager() override = default;
 public:
 	void Initialize();
 
@@ -22,7 +23,6 @@ public:
 	ServerBootState_t GetState(int serverId);
 
 	ServerBootState_t m_eStates[Const::Server::MaxId];
-	friend class Contents;
 };
 
 

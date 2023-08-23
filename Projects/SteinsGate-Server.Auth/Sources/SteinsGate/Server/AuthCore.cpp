@@ -14,66 +14,61 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-DataManager*				Core::DataManager;
-MysqlDatabase*				CoreGameDB_v;
-AuthNetMaster*				CoreNetMaster_v;
-AuthNetGroup*				CoreNetGroup_v;
-AuthServer*					CoreServer_v;
-AuthenticationManager*		CoreTokenManager_v;
-RuntimeConfig*				Core::RuntimeConfig;
+NS_CORE_BEGIN
+::DataManager*			DataManager;
+::MysqlDatabase*		GameDB;
+::AuthNetMaster*		NetMaster;
+::AuthNetGroup*			NetGroup;
+::AuthServer*			Server;
+::AuthContents			Contents;
+::RuntimeConfig*		RuntimeConfig;
+NS_CORE_END
 
 void InitializeAuthCore() {
 	Core::DataManager						= DataManager::Get();
 	Core::CommonInfo						= Core::DataManager->getCommonInfo(1);
-	Core::ServerProcessInfoPackage			= Core::DataManager->getServerProcessInfoPackage(1);				// 공통 라이브러리 주입
-	CoreServerProcessInfo_v					= &Core::ServerProcessInfoPackage->Auth;							// 공통 라이브러리 주입
-	CoreGameDB_v							= dbg_new MysqlDatabase(Core::DataManager->getDatabaseInfo(DatabaseType::Game));
-	CoreGameDB_v->Initialize(ServerProcessType::Auth);
-	CoreNetMaster_v							= AuthNetMaster::Get();
-	CoreNetMaster_v->Initialize();
-	CoreNetGroup_v							= CoreNetMaster_v->GetNetGroup(Const::NetGroup::MainId).Get<AuthNetGroup*>();
-	CoreInterServerClientNetGroup_v			= CoreNetMaster_v->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
-	CoreServer_v						    = CoreNetGroup_v->GetAuthTcp();
-	CoreTokenManager_v						= AuthenticationManager::Get();
-
-	if (Core::CLIThread)	// 커몬코어에서 초기화되므로 체크
-		Core::CLIThread->SetListener(dbg_new CLIListener);
-
-	Core::RuntimeConfig = RuntimeConfig::Get();
+	Core::ServerProcessInfoPackage			= Core::DataManager->getServerProcessInfoPackage(1);
+	Core::ServerProcessInfo					= &Core::ServerProcessInfoPackage->Auth;
+	Core::GameDB							= dbg_new MysqlDatabase(Core::DataManager->getDatabaseInfo(DatabaseType::Game));
+	Core::GameDB->Initialize(ServerProcessType::Auth);
+	Core::NetMaster							= AuthNetMaster::Get();
+	Core::NetMaster->Initialize();
+	Core::NetGroup							= Core::NetMaster->GetNetGroup(Const::NetGroup::MainId).Get<AuthNetGroup*>();
+	Core::Server						    = Core::NetGroup->GetAuthTcp();
+	Core::RuntimeConfig						= RuntimeConfig::Get();
 	Core::RuntimeConfig->Load();
 
-	// 공통 라이브러리 주입
-	{
-		CoreCommonNetMaster_v = CoreNetMaster_v;
-		CoreCommonNetGroup_v = CoreNetGroup_v;
-		CoreCommonServer_v = CoreServer_v;
+	// BASE INJECTION
+	if (Core::CLIThread)
+		Core::CLIThread->SetListener(dbg_new CLIListener);
 
-		if (CoreInterServerClientNetGroup_v) {
-			CoreInterServerClientTcp_v = CoreInterServerClientNetGroup_v->GetInterServerClientTcp();
-			CoreInterServerClientUdp_v = CoreInterServerClientNetGroup_v->GetInterServerClientUdp();
-		}
+	Core::ServerProcessInfoPackage		= Core::DataManager->getServerProcessInfoPackage(1);		// 위에서 주입됨
+	Core::CommonInfo					= Core::DataManager->getCommonInfo(1);						// 위에서 주입됨
+	Core::CharCommon					= nullptr;													// 사용안함
+	Core::ThreadPool					= dbg_new ThreadPool{ 2 };
+	Core::Scheduler						= dbg_new Scheduler{ 2 };
+	Core::RuntimeConfigBase				= Core::RuntimeConfig;
 
-		Core::Contents.TimeManager = TimeManager::Get();
+	// COMMON INJECTION
+	Core::CommonNetMaster				= Core::NetMaster;
+	Core::CommonNetGroup				= Core::NetGroup;
+	Core::CommonServer					= Core::Server;
+	Core::ServerProcessInfo				= &Core::ServerProcessInfoPackage->Auth;
+	Core::InterServerClientNetGroup		= Core::NetMaster->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
+	Core::InterServerClientTcp			= Core::InterServerClientNetGroup ? Core::InterServerClientNetGroup->GetInterServerClientTcp() : nullptr;
+	Core::InterServerClientUdp			= Core::InterServerClientNetGroup ? Core::InterServerClientNetGroup->GetInterServerClientUdp() : nullptr;
+	Core::TimeManager					= TimeManager::Get();
+	Core::RuntimeConfigCommon			= Core::RuntimeConfig;
 
-		Core::ThreadPool = dbg_new ThreadPool{ 2 };
-		Core::Scheduler = dbg_new Scheduler{ 2 };
-
-		Core::RuntimeConfigBase = Core::RuntimeConfig;
-		CoreRuntimeConfigCommon_v = Core::RuntimeConfig;
-	}
-
+	Core::Contents.Initialize();
 }
 
 void FinalizeAuthCore() {
-	Core::ThreadPool->Join(ThreadPool::JoinStrategy::WaitAllTasks);
-	Core::Scheduler->Join(Scheduler::JoinStrategy::WaitOnlyRunningTask);
+	Core::Contents.Finalize();
 
 	JCORE_DELETE_SINGLETON_SAFE(Core::DataManager);
-	JCORE_DELETE_SINGLETON_SAFE(CoreTokenManager_v);
-	JCORE_DELETE_SINGLETON_SAFE(Core::Contents.TimeManager);
+	JCORE_DELETE_SINGLETON_SAFE(Core::TimeManager);
 	JCORE_DELETE_SINGLETON_SAFE(Core::RuntimeConfig);
-	JCORE_DELETE_SINGLETON_SAFE(CoreNetMaster_v);
-	JCORE_DELETE_SAFE(Core::ThreadPool);
-	JCORE_DELETE_SAFE(Core::Scheduler);
-	JCORE_DELETE_SAFE(CoreGameDB_v);
+	JCORE_DELETE_SINGLETON_SAFE(Core::NetMaster);
+	JCORE_DELETE_SAFE(Core::GameDB);
 }

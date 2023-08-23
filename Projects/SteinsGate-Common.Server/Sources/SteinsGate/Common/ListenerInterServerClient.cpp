@@ -29,7 +29,7 @@ ListenerInterServerClient::ListenerInterServerClient(ServerProcessType_t serverP
 void ListenerInterServerClient::OnConnected(SGSession* session) {
 	ListenerClientCommon::OnConnected(session);
 
-	S_INTERSERVER_COMMON::SetInformation(CoreInterServerClientTcp_v, eSendAsync, SingleServerType::Center);
+	S_INTERSERVER_COMMON::SetInformation(Core::InterServerClientTcp, eSendAsync, SingleServerType::Center);
 	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(m_eServerProcessType, InterServerSendHelperBase::GetSenderId());
 }
 

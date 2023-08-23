@@ -17,13 +17,13 @@ USING_NS_JC;
 USING_NS_JNET;
 
 void R_INTERSERVER_COMMON::RECV_CES_WhoAreYou(Session* session, ICommand* cmd) {
-	S_INTERSERVER_COMMON::SetInformation(CoreInterServerClientTcp_v, eSendAsync, LastFromId);
-	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(CoreCommonNetMaster_v->GetProcessType(), InterServerSendHelperBase::GetSenderId());
+	S_INTERSERVER_COMMON::SetInformation(Core::InterServerClientTcp, eSendAsync, LastFromId);
+	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(Core::CommonNetMaster->GetProcessType(), InterServerSendHelperBase::GetSenderId());
 }
 
 void R_INTERSERVER_COMMON::RECV_CES_AlreadyConnected(Session* session, ICommand* cmd) {
 	_LogWarn_("이미 중앙서버에 접속중입니다. 프로세스를 종료합니다.");
-	CoreCommonNetMaster_v->Terminate();
+	Core::CommonNetMaster->Terminate();
 }
 
 void R_INTERSERVER_COMMON::RECV_CES_YouNeedToDoThis(Session* session, ICommand* cmd) {
@@ -31,17 +31,17 @@ void R_INTERSERVER_COMMON::RECV_CES_YouNeedToDoThis(Session* session, ICommand* 
 	S_INTERSERVER_COMMON::SetInformation(session, eSendAlloc);
 	const CES_YouNeedToDoThis* pCmd = (CES_YouNeedToDoThis*)cmd;
 
-	if (CoreCommonNetMaster_v->GetProcessType() == ServerProcessType::Center) {
+	if (Core::CommonNetMaster->GetProcessType() == ServerProcessType::Center) {
 		_LogWarn_("잘못된 요청입니다.");
 		return;
 	}
 
-	CoreCommonNetGroup_v->ProcessOrder(pCmd->Order);
+	Core::CommonNetGroup->ProcessOrder(pCmd->Order);
 }
 
 void R_INTERSERVER_COMMON::RECV_CES_TimeSyncAck(JNetwork::Session* session, JNetwork::ICommand* cmd) {
 	const CES_TimeSyncAck* pCmd = (CES_TimeSyncAck*)cmd;
-	Core::Contents.TimeManager->UpdateMasterServerTime(pCmd->MasterServerTime);
+	Core::TimeManager->UpdateMasterServerTime(pCmd->MasterServerTime);
 }
 
 void R_INTERSERVER_COMMON::RECV_SS_P2PRelayStaticTest(Session* session, ICommand* cmd) {

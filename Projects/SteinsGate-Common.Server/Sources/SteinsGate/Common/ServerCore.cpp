@@ -15,15 +15,17 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-CommonNetMaster* CoreCommonNetMaster_v;					// 메인 서버 프로그램에서 주입해줄 것
-CommonNetGroup* CoreCommonNetGroup_v;					// 메인 서버 프로그램에서 주입해줄 것
-CommonServer* CoreCommonServer_v;						// 메인 서버 프로그램에서 주입해줄 것
-ServerProcessInfo* CoreServerProcessInfo_v;				// 메인 서버 프로그램에서 주입해줄 것
-InterServerClientNetGroup* CoreInterServerClientNetGroup_v;	// 메인 서버 프로그램에서 주입해줄 것
-TcpClient* CoreInterServerClientTcp_v;					// 메인 서버 프로그램에서 주입해줄 것
-UdpClient* CoreInterServerClientUdp_v;					// 메인 서버 프로그램에서 주입해줄 것
-TimeManager* Core::Contents.TimeManager;							// 메인 서버 프로그램에서 주입해줄 것
-RuntimeConfigCommon* CoreRuntimeConfigCommon_v;			// 메인 서버 프로그램에서 주입해줄 것
+NS_CORE_BEGIN
+::CommonNetMaster*				CommonNetMaster;			// 메인 서버 프로그램에서 주입해줄 것
+::CommonNetGroup*				CommonNetGroup;				// 메인 서버 프로그램에서 주입해줄 것
+::CommonServer*					CommonServer;				// 메인 서버 프로그램에서 주입해줄 것
+::ServerProcessInfo*			ServerProcessInfo;			// 메인 서버 프로그램에서 주입해줄 것
+::InterServerClientNetGroup*	InterServerClientNetGroup;	// 메인 서버 프로그램에서 주입해줄 것
+::TcpClient*					InterServerClientTcp;		// 메인 서버 프로그램에서 주입해줄 것
+::UdpClient*					InterServerClientUdp;		// 메인 서버 프로그램에서 주입해줄 것
+::TimeManager*					TimeManager;				// 메인 서버 프로그램에서 주입해줄 것
+::RuntimeConfigCommon*			RuntimeConfigCommon;		// 메인 서버 프로그램에서 주입해줄 것
+NS_CORE_END
 
 void InitializeServerCore() {
 	// 공통 커맨드 이름 등록

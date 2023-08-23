@@ -54,7 +54,7 @@ void R_AUTH::RECV_CAU_Login(Session* session, ICommand* cmd) {
 			return;
 		}
 
-		if (!CoreTokenManager_v->Issue(accountData.Id.Source)) {
+		if (!Core::Contents.AuthenticationManager->Issue(accountData.Id.Source)) {
 			eResult = LoginResult::Logined;
 		}
 	}

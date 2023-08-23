@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 8/3/2023 8:34:29 AM [SteinsGate-Server.Auth 프로젝트 복사 생성]
+ * 생성일: 8/23/2023 1:52:29 PM
  * =====================
  *
  */
@@ -8,23 +8,13 @@
 
 #include "Lobby.h"
 #include "LobbyCoreHeader.h"
+#include "LobbyContents.h"
 
 USING_NS_JC;
 
-void IntializeScheduler();
-void FinalizeScheduler();
-
-void InitializeLobbyContents() {
-	IntializeScheduler();
+void LobbyContents::Initialize() {
 }
 
-void FinalizeLobbyContents() {
-	FinalizeScheduler();
-}
-
-
-void IntializeScheduler() {
-}
-
-void FinalizeScheduler() {
+void LobbyContents::Finalize() {
+	ClearSchedule();
 }

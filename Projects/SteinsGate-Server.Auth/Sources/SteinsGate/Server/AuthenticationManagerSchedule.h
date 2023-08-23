@@ -8,16 +8,16 @@
 
 #pragma once
 
- #include <JCore/Threading/Scheduler.h>
+ #include <JCore/Threading/SchedulerTask.h>
 
-class AuthenticationManagerSchedule : public JCore::SchedulerTaskRunnableRepeat
+class AuthenticationManagerSchedule : public JCore::SchedulerTaskRunnable
 {
 public:
-	void OnFirstScheduled(SchedulerTask* task) override;
-	void OnScheduled(SchedulerTask* task) override;
+	void OnFirstScheduled() override;
+	void OnScheduled() override;
 
-	void Initialize();
-	void Finalize();
+	void Initialize() override;
+	void Finalize() override;
 
 	JCore::TimeSpan Interval() override { return JCore::TimeSpan::FromMiliSeocnd(994); }
 };

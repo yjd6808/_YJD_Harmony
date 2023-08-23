@@ -28,10 +28,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyContents.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyContents.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyInterServerClientNetGroup.cpp">
       <SubType>
       </SubType>
@@ -87,10 +84,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyContents.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyContents.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyInterServerClientNetGroup.h">
       <SubType>
       </SubType>

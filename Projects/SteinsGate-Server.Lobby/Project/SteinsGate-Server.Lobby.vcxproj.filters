@@ -20,9 +20,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\S_LOBBY.cpp">
       <Filter>Send</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyContents.cpp">
-      <Filter>Contents</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyInterServerClientNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyNetGroup.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyNetMaster.cpp" />
@@ -40,6 +37,9 @@
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbySession.cpp">
       <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\LobbyContents.cpp">
+      <Filter>Contents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,9 +62,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\S_LOBBY.h">
       <Filter>Send</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyContents.h">
-      <Filter>Contents</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyInterServerClientNetGroup.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyNetGroup.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyNetMaster.h" />
@@ -82,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbySession.h">
       <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\LobbyContents.h">
+      <Filter>Contents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -97,6 +97,9 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonServer.h">
       <Filter>Net\Host</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerContents.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
@@ -165,6 +168,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonServer.cpp">
       <Filter>Net\Host</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ServerContents.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Database">
@@ -193,6 +199,9 @@
     </Filter>
     <Filter Include="Net\Host">
       <UniqueIdentifier>{1276ae53-d126-4fe3-943e-41b0bf69f0f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{9c30e36e-d7bf-4f68-9df8-a1fc168a182f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

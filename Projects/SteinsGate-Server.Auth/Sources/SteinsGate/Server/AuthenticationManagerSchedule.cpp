@@ -18,12 +18,12 @@ void AuthenticationManagerSchedule::Initialize() {
 void AuthenticationManagerSchedule::Finalize() {
 }
 
-void AuthenticationManagerSchedule::OnFirstScheduled(SchedulerTask* task) {
+void AuthenticationManagerSchedule::OnFirstScheduled() {
 	JCORE_PASS;
 }
 
-void AuthenticationManagerSchedule::OnScheduled(SchedulerTask* task) {
-	AuthenticationManager::Get()->OnScheduled(task);
+void AuthenticationManagerSchedule::OnScheduled() {
+	AuthenticationManager::Get()->OnScheduled(this);
 }
 
 
