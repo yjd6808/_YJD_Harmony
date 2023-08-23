@@ -95,6 +95,7 @@ struct WinApi {
      * \return If the function succeeds, the return value indicates the event that caused the function to return. It can be one of the following values. (Note that WAIT_OBJECT_0 is defined as 0 and WAIT_ABANDONED_0 is defined as 0x00000080L.)
      */
     static Int32UL          JCORE_STDCALL WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle* handles, JCORE_IN bool waitAll, JCORE_IN Int32U timeout = JCORE_INFINITE, JCORE_IN bool alertable = false);
+    static Int32UL          JCORE_STDCALL WaitForSingleObject(JCORE_IN WinHandle handle, JCORE_IN Int32U timeout = JCORE_INFINITE);
     static Int32UL          JCORE_STDCALL GetLastError();
 
 

@@ -132,7 +132,7 @@ Thread::JoinResult Thread::Join(int timeoutMiliSeconds) {
     if (state == eJoined)
         return eAlreadyJoined;
 
-    const Int32U iWaitResult = WinApi::WaitForMultipleObjectsEx(1, &m_hHandle, true, timeoutMiliSeconds);
+    const Int32U iWaitResult = WinApi::WaitForSingleObject(m_hHandle, timeoutMiliSeconds);
 
     if (iWaitResult == WAIT_TIMEOUT) {
         return eTimeout;

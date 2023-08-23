@@ -83,6 +83,12 @@ WinApi::WaitForMultipleObjectsEx(JCORE_IN Int32U eventCount, JCORE_IN WinHandle*
 
 Int32UL
 JCORE_STDCALL
+WinApi::WaitForSingleObject(WinHandle handle, Int32U timeout) {
+    return ::WaitForSingleObject(handle, timeout);
+}
+
+Int32UL
+JCORE_STDCALL
 WinApi::GetLastError() {
     return ::GetLastError();
 }
