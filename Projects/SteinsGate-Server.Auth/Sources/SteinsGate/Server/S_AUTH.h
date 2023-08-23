@@ -15,7 +15,7 @@
 
 struct S_AUTH : JNetwork::SendHelper<S_AUTH>
 {
-	static void SendLoginAck(LoginResult_t result);
+	static void SEND_AUC_LoginAck(LoginResult_t result);
 };
 
 

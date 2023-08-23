@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include <Steinsgate/Common/Namepsace.h>
+#include <JCore/Primitives/Range.h>
+#include <SteinsGate/Common/Namepsace.h>
 
 constexpr int InvalidValue_v = -1;
 

@@ -18,6 +18,11 @@ class ISessionContainer
 public:
 	virtual ~ISessionContainer() = default;
 
+	virtual void SetInitialHandleSeq(int initialHandleSeq) = 0;
+	virtual int GetInitialHandleSeq() const = 0;
+	virtual int CreateHandle() = 0;
+	virtual void ResetHandleSeq() = 0;
+
 	virtual int Capacity() = 0;
 	virtual int Size() = 0;
 	virtual bool Add(Session* session) = 0;
@@ -27,7 +32,7 @@ public:
 	virtual void ForEachConnected(JCore::Action<Session*> action) = 0;
 	virtual void DisconnectAll() = 0;
 	virtual void Clear() = 0;
-	virtual bool IsValidHandle(int handle) = 0;
+	virtual bool IsValidHandle(int handleIndex) = 0;
 };
 
 NS_JNET_END

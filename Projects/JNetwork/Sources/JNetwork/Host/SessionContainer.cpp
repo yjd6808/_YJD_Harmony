@@ -12,7 +12,8 @@ USING_NS_JC;
 NS_JNET_BEGIN
 
 SessionContainer::SessionContainer(int capacity)
-	: m_iSize(0)
+	: m_iInitialHandleSeq(0)
+	, m_iSize(0)
 	, m_vSessionList(capacity, nullptr) {
 }
 
@@ -20,43 +21,52 @@ SessionContainer::~SessionContainer() {
 	SessionContainer::Clear();
 }
 
+int SessionContainer::CreateHandle() {
+	return m_iInitialHandleSeq + Interlocked<int>::Increment(&m_iHandleSeq) - 1;
+}
+
 bool SessionContainer::Add(Session* session) {
 	const int iHandle = session->GetHandle();
+	const int iHandleIndex = iHandle - m_iInitialHandleSeq;
 
-	if (!IsValidHandle(iHandle)) {
-		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다.");
+	if (!IsValidHandle(iHandleIndex)) {
+		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 1);
 		return false;
 	}
 
-	if (m_vSessionList[iHandle] != nullptr) {
+	if (m_vSessionList[iHandleIndex] != nullptr) {
 		_NetLogWarn_("동일한 핸들의 세션이 컨테이너에 존재합니다.");
 		return false;
 	}
 
-	m_vSessionList[iHandle] = session;
+	m_vSessionList[iHandleIndex] = session;
 	m_iSize++;
 	return true;
 }
 
 Session* SessionContainer::Get(int handle) {
-	if (!IsValidHandle(handle)) {
-		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다.");
+	const int iHandleIndex = handle - m_iInitialHandleSeq;
+
+	if (!IsValidHandle(iHandleIndex)) {
+		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 2);
 		return nullptr;
 	}
 
-	return m_vSessionList[handle];
+	return m_vSessionList[iHandleIndex];
 }
 
 bool SessionContainer::Remove(int handle) {
-	if (!IsValidHandle(handle)) {
-		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다.");
+	const int iHandleIndex = handle - m_iInitialHandleSeq;
+
+	if (!IsValidHandle(iHandleIndex)) {
+		_NetLogWarn_("세션 컨테이너 인덱스 범위를 벗어난 핸들입니다. %d", 3);
 		return false;
 	}
 
-	const Session* pSession = m_vSessionList[handle];
+	const Session* pSession = m_vSessionList[iHandleIndex];
 	if (pSession) {
 		delete pSession;
-		m_vSessionList[handle] = nullptr;
+		m_vSessionList[iHandleIndex] = nullptr;
 		return true;
 	}
 
@@ -121,8 +131,8 @@ void SessionContainer::ForEachConnected(Action<Session*> fn) {
 	}
 }
 
-bool SessionContainer::IsValidHandle(int handle) {
-	if (handle < 0 || handle >= m_vSessionList.Size()) {
+bool SessionContainer::IsValidHandle(int handleIndex) {
+	if (handleIndex < 0 || handleIndex >= 0 + m_vSessionList.Size()) {
 		return false;
 	}
 	return true;

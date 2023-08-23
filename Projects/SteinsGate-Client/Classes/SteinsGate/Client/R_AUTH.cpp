@@ -20,7 +20,7 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-void R_AUTH::RecvLoginAck(Session* session, ICommand* cmd) {
+void R_AUTH::RECV_AUC_LoginAck(Session* session, ICommand* cmd) {
 	session->Disconnect();
 
 	AUC_LoginAck* pCmd = (AUC_LoginAck*)cmd;

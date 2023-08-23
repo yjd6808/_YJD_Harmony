@@ -18,7 +18,7 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
+void R_AUTH::RECV_CAU_Login(Session* session, ICommand* cmd) {
 	CAU_Login* pCmd = (CAU_Login*)cmd;
 	S_AUTH::AutoFlush _;
 	S_AUTH::SetInformation(session, eSendAlloc);
@@ -30,7 +30,7 @@ void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 	bool bRegistered = false;
 
 	if (!Q_LOGIN::IsSuccess) {
-		S_AUTH::SendLoginAck(LoginResult::QueryFailed);
+		S_AUTH::SEND_AUC_LoginAck(LoginResult::QueryFailed);
 		return;
 	}
 
@@ -40,7 +40,7 @@ void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 		bRegistered = Q_LOGIN::RegisterAccount(pCmd->Id.Source, pCmd->Pass.Source);
 
 		if (!Q_LOGIN::IsSuccess) {
-			S_AUTH::SendLoginAck(LoginResult::QueryFailed);
+			S_AUTH::SEND_AUC_LoginAck(LoginResult::QueryFailed);
 			return;
 		}
 
@@ -50,7 +50,7 @@ void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 			eResult = LoginResult::IdAlreadyExist;
 	} else {
 		if (accountData.Pass != pCmd->Pass) {
-			S_AUTH::SendLoginAck(LoginResult::IdPasswordMismatch);
+			S_AUTH::SEND_AUC_LoginAck(LoginResult::IdPasswordMismatch);
 			return;
 		}
 
@@ -59,5 +59,5 @@ void R_AUTH::RecvLogin(Session* session, ICommand* cmd) {
 		}
 	}
 
-	S_AUTH::SendLoginAck(eResult);
+	S_AUTH::SEND_AUC_LoginAck(eResult);
 }

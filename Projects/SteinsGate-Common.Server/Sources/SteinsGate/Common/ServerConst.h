@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Namepsace.h>
+#include <SteinsGate/Common/Const.h>
 
 NS_CONST_BEGIN
 
@@ -53,6 +53,14 @@ namespace Host
 	constexpr int ChatUdpId = 35;
 	constexpr int GameInterServerTcpId = 36;
 	constexpr int GameInterServerUdpId = 37;
+
+	// 세션핸들
+	constexpr int AuthHandleSeq = 100000;
+	constexpr int LobbyHandleSeq = 200000;
+	constexpr int LogicHandleSeq = 300000;
+	constexpr int AreaHandleSeq = 400000;
+	constexpr int ChatHandleSeq = 500000;
+	constexpr int CenterHandleSeq = 600000;
 }
 
 NS_CONST_END

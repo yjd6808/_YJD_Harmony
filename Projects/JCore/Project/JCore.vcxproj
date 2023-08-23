@@ -411,6 +411,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Primitives\ObserverPtr.h" />
+    <ClInclude Include="..\Sources\JCore\Primitives\Range.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Primitives\RefCountObject.h" />
     <ClInclude Include="..\Sources\JCore\Primitives\RefCountObjectPtr.h">
       <SubType>

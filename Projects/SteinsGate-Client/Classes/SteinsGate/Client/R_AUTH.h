@@ -15,5 +15,5 @@
 struct R_AUTH
 {
 public:
-	static void RecvLoginAck(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_AUC_LoginAck(JNetwork::Session* session, JNetwork::ICommand* cmd);
 };

@@ -37,7 +37,7 @@ void AuthNetGroup::InitializeIOCP() {
 void AuthNetGroup::InitializeParser() {
 	CommonNetGroup::InitializeParser();
 
-	m_pParser->AddCommand<CAU_Login>(R_AUTH::RecvLogin);
+	m_pParser->AddCommand<CAU_Login>(R_AUTH::RECV_CAU_Login);
 }
 
 void AuthNetGroup::InitializeServer() {
@@ -45,8 +45,11 @@ void AuthNetGroup::InitializeServer() {
 
 	AddHost(Const::Host::AuthTcpId, spServer);
 
+	SessionContainer* pAuthSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
+	pAuthSessionContainer->SetInitialHandleSeq(Const::Host::AuthHandleSeq);
+
 	m_pAuthTcp = spServer.Get<AuthServer*>();
-	m_pAuthTcp->SetSesssionContainer(dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount));
+	m_pAuthTcp->SetSesssionContainer(pAuthSessionContainer);
 	m_pAuthTcp->SetEventListener(dbg_new ListenerAuthServer{ m_pAuthTcp, m_pParser });
 
 	AddUpdatable(Const::Host::AuthTcpId, m_pAuthTcp);

@@ -35,18 +35,13 @@ void R_CENTER::RECV_SCE_ItsMe(Session* session, ICommand* cmd) {
 
 	if (CoreServer_v->GetCenterSession(pCmd->ServerId) != nullptr) {
 		_LogWarn_("%s서버는 이미 접속중입니다.", ServerProcessType::Name[pCmd->ClientServerType]);
-		S_CENTER::SendAlreadyConnected();
+		S_CENTER::SEND_CES_AlreadyConnected();
 		return;
 	}
 
 	pSession->SetClientInformation(pCmd->ClientServerType, pCmd->ServerId);
 	CoreServer_v->AddSession(pSession);
-	S_CENTER::SendYouNeedToDoThis(CenterOrder::LaunchServer);
-
-	/*if (CoreServer_v->IsAllCenterSessionConnected()) {
-		S_CENTER::BroadcastYouNeedToDoThis(CoreServer_v, CenterOrder::LaunchServer);
-	}*/
-	
+	S_CENTER::SEND_CES_YouNeedToDoThis(CenterOrder::LaunchServer);
 }
 
 
@@ -84,7 +79,7 @@ void R_CENTER::RECV_SCE_TimeSync(JNetwork::Session* session, JNetwork::ICommand*
 
 	S_CENTER::AutoFlush _;
 	S_CENTER::SetInformation(session, eSendAsync);
-	S_CENTER::SendTimeSyncAck(*pCmd);
+	S_CENTER::SEND_CES_TimeSyncAck(*pCmd);
 }
 
 

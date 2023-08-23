@@ -55,16 +55,24 @@ void GameNetGroup::InitializeServer() {
 	AddHost(Const::Host::AreaTcpId, spAreaTcp);
 	AddHost(Const::Host::ChatTcpId, spChatTcp);
 
+	SessionContainer* pLogicSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
+	SessionContainer* pAreaSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
+	SessionContainer* pChatSessionContainer = dbg_new SessionContainer(CoreServerProcessInfo_v->MaxSessionCount);
+
+	pLogicSessionContainer->SetInitialHandleSeq(Const::Host::LogicHandleSeq);
+	pAreaSessionContainer->SetInitialHandleSeq(Const::Host::AreaHandleSeq);
+	pChatSessionContainer->SetInitialHandleSeq(Const::Host::ChatHandleSeq);
+
 	m_pLogicTcp = spLogicTcp.Get<LogicServer*>();
-	m_pLogicTcp->SetSesssionContainer(dbg_new SessionContainer(CoreGameServerProcessInfo_v->MaxSessionCount));
+	m_pLogicTcp->SetSesssionContainer(pLogicSessionContainer);
 	m_pLogicTcp->SetEventListener(dbg_new ListenerLogicServer{ m_pLogicTcp, m_pParser });
 
 	m_pAreaTcp = spAreaTcp.Get<AreaServer*>();
-	m_pAreaTcp->SetSesssionContainer(dbg_new SessionContainer(CoreGameServerProcessInfo_v->MaxSessionCount));
+	m_pAreaTcp->SetSesssionContainer(pAreaSessionContainer);
 	m_pAreaTcp->SetEventListener(dbg_new ListenerAreaServer{ m_pAreaTcp, m_pParser });
 
 	m_pChatTcp = spChatTcp.Get<ChatServer*>();
-	m_pChatTcp->SetSesssionContainer(dbg_new SessionContainer(CoreGameServerProcessInfo_v->MaxSessionCount));
+	m_pChatTcp->SetSesssionContainer(pChatSessionContainer);
 	m_pChatTcp->SetEventListener(dbg_new ListenerChatServer{ m_pChatTcp, m_pParser });
 
 	AddUpdatable(Const::Host::LogicTcpId, m_pLogicTcp);

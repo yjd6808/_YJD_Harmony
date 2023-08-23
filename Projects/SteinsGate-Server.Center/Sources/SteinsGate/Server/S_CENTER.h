@@ -18,12 +18,12 @@
 struct S_CENTER : InterServerSendHelper<S_CENTER>
 {
 public:
-	static bool SendWhoAreYou();
-	static bool SendAlreadyConnected();
-	static bool SendYouNeedToDoThis(CenterOrder_t order);
-	static bool SendTimeSyncAck(SCE_TimeSync& time);
+	static bool SEND_CES_WhoAreYou();
+	static bool SEND_CES_AlreadyConnected();
+	static bool SEND_CES_YouNeedToDoThis(CenterOrder_t order);
+	static bool SEND_CES_TimeSyncAck(SCE_TimeSync& time);
 
-	static bool BroadcastYouNeedToDoThis(JNetwork::TcpServer* server, CenterOrder_t order);
+	// static bool BroadcastYouNeedToDoThis(JNetwork::TcpServer* server, CenterOrder_t order);
 };
 
 

@@ -22,7 +22,7 @@ USING_NS_JNET;
 
 void C_AUTH::OnConnected(Session* session) {
 	const AccountData& accountData = CorePlayer_v->accountData();
-	S_AUTH::SendLogin(accountData.Id.Source, accountData.Pass.Source);
+	S_AUTH::SEND_CAU_Login(accountData.Id.Source, accountData.Pass.Source);
 
 	CorePopupManager_v->closeByTag(DEF_POPUP_LOGIN_WAIT);
 	CorePopupManager_v->showNone(SG_TEXT_RAW("LOGIN_BEGIN"), DEF_POPUP_LOGIN);

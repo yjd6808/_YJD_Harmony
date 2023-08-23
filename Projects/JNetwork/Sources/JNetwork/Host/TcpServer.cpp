@@ -34,13 +34,9 @@ TcpSession* TcpServer::CreateSession() {
 	return dbg_new TcpSession(this, m_spIocp, m_spBufferAllocator, 6000, 6000);
 }
 
+// 디폴트 세션 컨테이너, 서버시작전 외부에서 주입해줄 경우 호출안됨
 ISessionContainer* TcpServer::CreateSessionContainer() {
 	return dbg_new SessionContainer(10);
-}
-
-int TcpServer::CreateHandle() {
-	static int s_Handle = 0;
-	return JCore::Interlocked<int>::Increment(&s_Handle) - 1;
 }
 
 void TcpServer::SessionDisconnected(TcpSession* session) {
@@ -87,18 +83,6 @@ void TcpServer::SessionReceived(TcpSession* session, ICommand* command) {
 void TcpServer::SessionReceived(TcpSession* session, IRecvPacket* recvPacket) {
 	if (m_pEventListener)
 		m_pEventListener->OnReceived(session, recvPacket);
-}
-
-void TcpServer::BroadcastAsync(ISendPacket* packet) {
-	if (m_eState != eListening) {
-		_NetLogError_("리스닝 상태가 아니므로 브로드캐스트를 수행할 수 없습니다.");
-		return;
-	}
-
-	JCORE_REF_COUNT_GUARD(packet);
-	m_pContainer->ForEachConnected([packet](Session* session) {
-		session->SendAsync(packet);
-	});
 }
 
 ISessionContainer* TcpServer::GetSessionContainer() {
@@ -186,6 +170,7 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 		m_pContainer = CreateSessionContainer();
 	}
 
+	m_pContainer->ResetHandleSeq();
 	m_pContainer->Clear();
 	const int iMaxConn = m_pContainer->Capacity();
 
@@ -193,7 +178,7 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 	for (int i = 0; i < iMaxConn; i++) {
 		TcpSession* session = CreateSession();
 
-		session->SetHandle(CreateHandle());
+		session->SetHandle(m_pContainer->CreateHandle());
 		session->AcceptWait();
 
 		if (!session->AcceptAsync()) {

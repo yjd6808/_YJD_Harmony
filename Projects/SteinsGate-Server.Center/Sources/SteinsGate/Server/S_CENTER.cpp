@@ -15,32 +15,32 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-bool S_CENTER::SendWhoAreYou() {
+bool S_CENTER::SEND_CES_WhoAreYou() {
 	auto sending = SendBegin<CES_WhoAreYou>();
 	return true;
 }
 
-bool S_CENTER::SendAlreadyConnected() {
+bool S_CENTER::SEND_CES_AlreadyConnected() {
 	auto sending = SendBegin<CES_AlreadyConnected>();
 	return true;
 }
 
-bool S_CENTER::SendYouNeedToDoThis(CenterOrder_t order) {
+bool S_CENTER::SEND_CES_YouNeedToDoThis(CenterOrder_t order) {
 	auto sending = SendBegin<CES_YouNeedToDoThis>();
 	sending.Cmd.Order = order;
 	return true;
 }
 
-bool S_CENTER::SendTimeSyncAck(SCE_TimeSync& time) {
+bool S_CENTER::SEND_CES_TimeSyncAck(SCE_TimeSync& time) {
 	auto sending = SendBegin<CES_TimeSyncAck>();
 	sending.Cmd.PeerServerTime = time.PeerServerTime;
 	sending.Cmd.MasterServerTime = DateTime::Now().Tick - TimeSpan::FromHour(3).Tick;
 	return true;
 }
-
-bool S_CENTER::BroadcastYouNeedToDoThis(TcpServer* server, CenterOrder_t order) {
-	auto pPacket = dbg_new SinglePacket<CES_YouNeedToDoThis>();
-	pPacket->Cmd.Order = order;
-	server->BroadcastAsync(pPacket);
-	return true;
-}
+//
+//bool S_CENTER::BroadcastYouNeedToDoThis(TcpServer* server, CenterOrder_t order) {
+//	auto pPacket = dbg_new SinglePacket<CES_YouNeedToDoThis>();
+//	pPacket->Cmd.Order = order;
+//	server->BroadcastAsync(pPacket);
+//	return true;
+//}
