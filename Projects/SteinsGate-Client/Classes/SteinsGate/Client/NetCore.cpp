@@ -17,8 +17,8 @@ NetCore::NetCore()
 	: m_pNetGroup(nullptr)
 	, m_pAuthTcp(nullptr)
 	, m_pLobbyTcp(nullptr)
-	, m_pGameTcp(nullptr)
-	, m_pGameUdp(nullptr)
+	, m_pLogicTcp(nullptr)
+	, m_pLogicUdp(nullptr)
 	, m_pChatTcp(nullptr)
 	, m_pAreaTcp(nullptr)
 	, m_pCommandSynchronizer(CommandSynchronizer::Get())
@@ -40,8 +40,8 @@ void NetCore::Initialize() {
 
 	m_pAuthTcp = m_pNetGroup->AuthTcp;
 	m_pLobbyTcp = m_pNetGroup->LobbyTcp;
-	m_pGameTcp = m_pNetGroup->GameTcp;
-	m_pGameUdp = m_pNetGroup->GameUdp;
+	m_pLogicTcp = m_pNetGroup->LogicTcp;
+	m_pLogicUdp = m_pNetGroup->LogicUdp;
 	m_pChatTcp = m_pNetGroup->ChatTcp;
 	m_pAreaTcp = m_pNetGroup->AreaTcp;
 }

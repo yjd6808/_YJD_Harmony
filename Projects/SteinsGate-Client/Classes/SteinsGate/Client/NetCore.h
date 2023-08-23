@@ -28,8 +28,8 @@ public:
 	NetClientGroup* getGroup() const { return m_pNetGroup; }
 	SGTcpClient* getAuthTcp() const { return m_pAuthTcp; }
 	SGTcpClient* getLobbyTcp() const { return m_pLobbyTcp; }
-	SGTcpClient* getGameTcp() const { return m_pGameTcp; }
-	SGUdpClient* getGameUdp() const { return m_pGameUdp; }
+	SGTcpClient* getLogicTcp() const { return m_pLogicTcp; }
+	SGUdpClient* getLogicUdp() const { return m_pLogicUdp; }
 	SGTcpClient* getChatTcp() const { return m_pChatTcp; }
 	SGTcpClient* getAreaTcp() const { return m_pAreaTcp; }
 
@@ -42,8 +42,8 @@ private:
 	NetClientGroup* m_pNetGroup;
 	SGTcpClient* m_pAuthTcp;
 	SGTcpClient* m_pLobbyTcp;
-	SGTcpClient* m_pGameTcp;
-	SGUdpClient* m_pGameUdp;
+	SGTcpClient* m_pLogicTcp;
+	SGUdpClient* m_pLogicUdp;
 	SGTcpClient* m_pChatTcp;
 	SGTcpClient* m_pAreaTcp;
 

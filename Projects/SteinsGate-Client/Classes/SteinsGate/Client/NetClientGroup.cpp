@@ -32,11 +32,15 @@ static constexpr int LobbySendBufferSize_v = 6144;
 
 NetClientGroup::NetClientGroup()
 	: AuthTcp(nullptr)
-    , LobbyTcp(nullptr)
-    , GameTcp(nullptr)
-    , GameUdp(nullptr)
-    , AreaTcp(nullptr)
-    , ChatTcp(nullptr)
+	, AuthUdp(nullptr)
+	, LobbyTcp(nullptr)
+	, LobbyUdp(nullptr)
+	, LogicTcp(nullptr)
+	, LogicUdp(nullptr)
+	, AreaTcp(nullptr)
+	, AreaUdp(nullptr)
+	, ChatTcp(nullptr)
+	, ChatUdp(nullptr)
 {}
 
 NetClientGroup::~NetClientGroup() {
@@ -52,8 +56,8 @@ void NetClientGroup::Initialize() {
 	const auto spAuthTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, AuthRecvBufferSize_v, AuthSendBufferSize_v);
 	const auto spLobbyTcp = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, LobbyRecvBufferSize_v, LobbySendBufferSize_v);
 
-	AddHost(spAuthTcp);
-	AddHost(spLobbyTcp);
+	AddHost(Const::Host::AuthTcpId, spAuthTcp);
+	AddHost(Const::Host::LobbyTcpId, spLobbyTcp);
 
 	AuthTcp = spAuthTcp.Get<TcpClient*>();
 	AuthTcp->SetEventListener(dbg_new NetClientEventListener{ClientConnectServerType::Auth});
@@ -68,8 +72,8 @@ void NetClientGroup::Initialize() {
 
 	S_AUTH::SetInformation(AuthTcp, eSendAsync);
 	S_LOBBY::SetInformation(LobbyTcp, eSendAsync);
-	S_GAME::SetInformation(GameTcp, eSendAsync);
-	S_GAME_UDP::SetInformation(GameUdp, eSendToAsync);
+	S_GAME::SetInformation(LogicTcp, eSendAsync);
+	S_GAME_UDP::SetInformation(LogicUdp, eSendToAsync);
 	S_CHAT::SetInformation(ChatTcp, eSendAsync);
 	S_AREA::SetInformation(AreaTcp, eSendAsync);
 

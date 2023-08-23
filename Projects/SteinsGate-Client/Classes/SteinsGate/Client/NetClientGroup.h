@@ -21,11 +21,15 @@ public:
 	void Finalize() override;
 
 	SGTcpClient* AuthTcp;
+	SGUdpClient* AuthUdp;
 	SGTcpClient* LobbyTcp;
-	SGTcpClient* GameTcp;
-	SGUdpClient* GameUdp;
+	SGUdpClient* LobbyUdp;
+	SGTcpClient* LogicTcp;
+	SGUdpClient* LogicUdp;
 	SGTcpClient* AreaTcp;
+	SGUdpClient* AreaUdp;
 	SGTcpClient* ChatTcp;
+	SGUdpClient* ChatUdp;
 
 	SGCommandParser* getParser(ClientConnectServerType_t serverType);
 private:

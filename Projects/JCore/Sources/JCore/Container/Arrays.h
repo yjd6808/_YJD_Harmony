@@ -275,14 +275,14 @@ struct Arrays final
 		return true;
 	}
 
-	template <typename T, Int32U Size>
-	static bool AllEqual(T(&arr)[Size], const T& v) {
+	template <typename T, Int32U Size, typename TVal>
+	static bool AllEqual(T(&arr)[Size], const TVal& v) {
 		return AllEqual(arr, Size, v);
 	}
 
 
-	template <typename T>
-	static bool AllEqual(T* arr, const int size, const T& v) {
+	template <typename T, typename TVal>
+	static bool AllEqual(T* arr, const int size, const TVal& v) {
 		DebugAssert(size > 0);
 
 		for (int i = 0; i < size; ++i) {
@@ -338,14 +338,14 @@ struct Arrays final
 		return FindIf(arr, Size, Move(predicate));
 	}
 
-	template <typename T, Int32U Size>
-	static void Fill(T(&arr)[Size], T&& value) {
-		for (int i = 0; i < Size; ++i) arr[i] = Forward<T>(value);
+	template <typename T, Int32U Size, typename TVal>
+	static void Fill(T(&arr)[Size], TVal&& value) {
+		for (int i = 0; i < Size; ++i) arr[i] = Forward<TVal>(value);
 	}
 
-	template <typename T>
-	static void Fill(T* arr, int size, T&& value) {
-		for (int i = 0; i < size; ++i) arr[i] = Forward<T>(value);
+	template <typename T, typename TVal>
+	static void Fill(T* arr, int size, TVal&& value) {
+		for (int i = 0; i < size; ++i) arr[i] = Forward<TVal>(value);
 	}
 
 	template <typename T, Int32U Size>
