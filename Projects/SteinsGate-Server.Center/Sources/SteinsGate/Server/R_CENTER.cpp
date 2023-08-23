@@ -22,7 +22,7 @@ void R_CENTER::RECV_SCE_ItsMe(Session* session, ICommand* cmd) {
 	SCE_ItsMe* pCmd = (SCE_ItsMe*)cmd;
 	CenterSession* pSession = (CenterSession*)session;
 
-	if (pCmd->ClientType < InterServerClientType::Begin || pCmd->ClientType > InterServerClientType::End) {
+	if (pCmd->ClientServerType < ServerProcessType::Begin || pCmd->ClientServerType > ServerProcessType::End) {
 		_LogWarn_("누군지 알 수 없는 세션이 접속을 시도하였습니다.");
 		pSession->Disconnect();
 		return;
@@ -34,12 +34,12 @@ void R_CENTER::RECV_SCE_ItsMe(Session* session, ICommand* cmd) {
 	}
 
 	if (CoreServer_v->GetCenterSession(pCmd->ServerId) != nullptr) {
-		_LogWarn_("%s서버는 이미 접속중입니다.", InterServerClientType::Name[pCmd->ClientType]);
+		_LogWarn_("%s서버는 이미 접속중입니다.", ServerProcessType::Name[pCmd->ClientServerType]);
 		S_CENTER::SendAlreadyConnected();
 		return;
 	}
 
-	pSession->SetClientInformation(pCmd->ClientType, pCmd->ServerId);
+	pSession->SetClientInformation(pCmd->ClientServerType, pCmd->ServerId);
 	CoreServer_v->AddSession(pSession);
 	S_CENTER::SendYouNeedToDoThis(CenterOrder::LaunchServer);
 

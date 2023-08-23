@@ -19,23 +19,23 @@ CenterSession::CenterSession(
 	int recvBufferSize,
 	int sendBufferSize)
 	: TcpSession(server, iocp, bufferAllocator, recvBufferSize, sendBufferSize)
-	, m_eClientType(InterServerClientType::None)
+	, m_eClientType(ServerProcessType::None)
 	, m_iServerId(InvalidValue_v)
 {}
 
 void CenterSession::OnConnected() {
-	m_eClientType = InterServerClientType::None;
+	m_eClientType = ServerProcessType::None;
 }
 
 void CenterSession::OnDisconnected() {
 
 }
 
-void CenterSession::SetClientInformation(InterServerClientType_t type, Int8 serverId) {
+void CenterSession::SetClientInformation(ServerProcessType_t type, Int8 serverId) {
 	m_eClientType = type;
 	m_iServerId = serverId;
 }
 
 bool CenterSession::IsValid() const {
-	return m_eClientType != InterServerClientType::None && m_iServerId != InvalidValue_v;
+	return m_eClientType != ServerProcessType::None && m_iServerId != InvalidValue_v;
 }

@@ -31,14 +31,14 @@ public:
 	void OnConnected() override;
 	void OnDisconnected() override;
 
-	InterServerClientType_t GetClientType() const { return m_eClientType; }
+	ServerProcessType_t GetClientType() const { return m_eClientType; }
 	Int8 GetServerId() const { return m_iServerId; }
 
-	void SetClientType(InterServerClientType_t type) { m_eClientType = type; }
-	void SetClientInformation(InterServerClientType_t type, Int8 serverId);
+	void SetClientType(ServerProcessType_t type) { m_eClientType = type; }
+	void SetClientInformation(ServerProcessType_t type, Int8 serverId);
 	bool IsValid() const;
 private:
-	InterServerClientType_t m_eClientType;
+	ServerProcessType_t m_eClientType;
 	Int8 m_iServerId;
 };
 

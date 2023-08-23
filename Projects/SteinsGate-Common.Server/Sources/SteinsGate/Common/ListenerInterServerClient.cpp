@@ -21,16 +21,16 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-ListenerInterServerClient::ListenerInterServerClient(InterServerClientType_t interServerClientType, SGCommandParser* parser)
+ListenerInterServerClient::ListenerInterServerClient(ServerProcessType_t serverProcessType, SGCommandParser* parser)
 	: ListenerClientCommon(parser)
-	, m_eInterServerClientType(interServerClientType)
+	, m_eServerProcessType(serverProcessType)
 {}
 
 void ListenerInterServerClient::OnConnected(SGSession* session) {
 	ListenerClientCommon::OnConnected(session);
 
 	S_INTERSERVER_COMMON::SetInformation(CoreInterServerClientTcp_v, eSendAsync, SingleServerType::Center);
-	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(m_eInterServerClientType, InterServerSendHelperBase::GetSenderId());
+	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(m_eServerProcessType, InterServerSendHelperBase::GetSenderId());
 }
 
 void ListenerInterServerClient::OnDisconnected(SGSession* session) {

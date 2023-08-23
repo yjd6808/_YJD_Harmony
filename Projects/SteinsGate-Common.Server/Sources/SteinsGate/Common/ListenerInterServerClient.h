@@ -13,7 +13,7 @@
 class ListenerInterServerClient : public ListenerClientCommon
 {
 public:
-	ListenerInterServerClient(InterServerClientType_t interServerClientType, SGCommandParser* parser);
+	ListenerInterServerClient(ServerProcessType_t serverProcessType, SGCommandParser* parser);
 protected:
 	void OnConnected(JNetwork::Session* session) override;
 	void OnDisconnected(JNetwork::Session* session) override;
@@ -22,6 +22,6 @@ protected:
 	void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* recvPacket) override;
 	void OnConnectFailed(JNetwork::Session* session, Int32U errorCode) override;
 private:
-	InterServerClientType_t m_eInterServerClientType;
+	ServerProcessType_t m_eServerProcessType;
 };
 

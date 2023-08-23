@@ -43,7 +43,7 @@ HOST_STATIC_CMD_END(CES_WhoAreYou)
 
 
 HOST_STATIC_CMD_BEGIN(SCE_ItsMe, CMDID_SCE_ItsMe)
-InterServerClientType_t ClientType;
+ServerProcessType_t ClientServerType;
 int ServerId;
 HOST_STATIC_CMD_END(SCE_ItsMe)
 

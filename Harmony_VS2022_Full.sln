@@ -149,6 +149,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Center", 
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Lobby", "Projects\SteinsGate-Server.Lobby\Project\SteinsGate-Server.Lobby.vcxproj", "{807F840B-0920-4665-8105-94AC7C94B538}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59C54A2A-4525-46F7-9F25-CCCA6D58151F} = {59C54A2A-4525-46F7-9F25-CCCA6D58151F}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteinsGate-Server.Game", "Projects\SteinsGate-Server.Game\Project\SteinsGate-Server.Game.vcxproj", "{EE3650D7-28FB-4CD7-9836-606010001E90}"
 	ProjectSection(ProjectDependencies) = postProject

@@ -18,7 +18,7 @@ struct S_INTERSERVER_COMMON : InterServerSendHelper<S_INTERSERVER_COMMON>
 public:
 
 	// HOST
-	static bool SEND_SCE_ItsMe(InterServerClientType_t clientType, int serverId);
+	static bool SEND_SCE_ItsMe(ServerProcessType_t clientType, int serverId);
 	static bool SEND_SS_HostMessage(const JCore::String& msg);
 	static bool SEND_SCE_NotifyBootState(int serverId, ServerType_t serverType, ServerBootState_t state);
 	static bool SEND_SCE_NotifyOrderFailed(int serverId, ServerType_t serverType, CenterOrder_t failedOrder, Int32U errorCode);

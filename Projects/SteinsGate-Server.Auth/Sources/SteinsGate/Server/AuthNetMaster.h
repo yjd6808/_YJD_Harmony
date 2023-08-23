@@ -19,7 +19,6 @@ class AuthNetMaster final
 	~AuthNetMaster() override;
 public:
 	void Initialize() override;
-	InterServerClientType_t GetClientType() override { return InterServerClientType::Auth; }
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Auth; }
 protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;

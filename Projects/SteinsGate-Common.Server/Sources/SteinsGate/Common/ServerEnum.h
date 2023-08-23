@@ -13,26 +13,6 @@
 
 #include <SteinsGate/Common/Enum.h>
 
-// Center 서버를 경유해 릴레이통신을 수행하는 서버들
-JCORE_SENUM_BEGIN(InterServerClientType)
-None,
-Auth,
-Begin = Auth,
-Center,
-Lobby,
-Game,
-End = Game,
-Max
-JCORE_SENUM_MIDDLE(InterServerClientType)
-static constexpr const char* Name[Max]{
-	"",
-	"인증",
-	"중앙",
-	"로비",
-	"게임",
-};
-
-JCORE_SENUM_MIDDLE_END(InterServerClientType)
 
 JCORE_SENUM_BEGIN(CenterOrder)
 LaunchServer,

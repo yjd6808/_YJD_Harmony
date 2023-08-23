@@ -803,12 +803,24 @@ Game = 1
 JCORE_SENUM_END(DatabaseType)
 
 JCORE_SENUM_BEGIN(ServerProcessType)
-Center,
+None,
 Auth,
+Begin = Auth,
+Center,
 Lobby,
 Game,
-Max
-JCORE_SENUM_END(ServerProcessType)
+End = Game
+JCORE_SENUM_MIDDLE(ServerProcessType)
+static constexpr int Count = End;
+static constexpr const char* Name[Count + 1]{
+	"없음",
+	"인증",
+	"중앙",
+	"로비",
+	"게임",
+};
+
+JCORE_SENUM_MIDDLE_END(ServerProcessType)
 
 // 클라이언트가 게임을 플레이하는 동안 한번이라도 접속하게되는 서버타입
 JCORE_SENUM_BEGIN(ClientConnectServerType)

@@ -16,9 +16,9 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-bool S_INTERSERVER_COMMON::SEND_SCE_ItsMe(InterServerClientType_t clientType, int serverId) {
+bool S_INTERSERVER_COMMON::SEND_SCE_ItsMe(ServerProcessType_t clientType, int serverId) {
 	auto sending = SendBegin<SCE_ItsMe>();
-	sending.Cmd.ClientType = clientType;
+	sending.Cmd.ClientServerType = clientType;
 	sending.Cmd.ServerId = serverId;
 	return true;
 }

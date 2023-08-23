@@ -21,7 +21,6 @@ private:
 	~CenterNetMaster() override;
 public:
 	void Initialize() override;
-	InterServerClientType_t GetClientType() override { return InterServerClientType::None; }
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Center; }
 protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;

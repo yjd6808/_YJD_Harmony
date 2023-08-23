@@ -42,7 +42,7 @@ void CenterInterServerClientNetGroup::InitializeInterServerUdp() {
 	spInterServerClient->Bind(CoreServerProcessInfoPackage_v->Center.BindInterServerUdp);
 	AddHost(Const::Host::CenterInterServerUdpId, spInterServerClient);
 	m_pInterServerClientUdp = spInterServerClient.Get<UdpClient*>();
-	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ InterServerClientType::Center, m_pParser });
+	m_pInterServerClientUdp->SetEventListener(dbg_new ListenerInterServerClient{ ServerProcessType::Center, m_pParser });
 	m_pInterServerClientUdp->RecvFromAsync();
 
 	

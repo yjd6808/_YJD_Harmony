@@ -20,7 +20,6 @@ class LobbyNetMaster final
 	~LobbyNetMaster() override;
 public:
 	void Initialize() override;
-	InterServerClientType_t GetClientType() override { return InterServerClientType::Lobby; }
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Lobby; }
 protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;

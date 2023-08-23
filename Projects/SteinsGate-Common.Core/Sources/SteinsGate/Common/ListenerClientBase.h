@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JNetwork/EventListener/ClientEventListener.h>
+#include <SteinsGate/Common/Enum.h>
 
 class JCORE_NOVTABLE ListenerClientBase : public JNetwork::ClientEventListener
 {

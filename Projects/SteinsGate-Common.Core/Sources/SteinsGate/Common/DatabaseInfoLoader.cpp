@@ -50,10 +50,10 @@ void DatabaseInfoLoader::readDatabaseInfo(Value& databaseRoot, DatabaseInfo* dat
 	databaseInfo->Name = JsonUtil::getString(databaseRoot["name"]);
 	databaseInfo->HostName = JsonUtil::getString(databaseRoot["hostname"]);
 	databaseInfo->ConnectionPort = (Int16U)databaseRoot["connection_port"].asInt();
-	JsonUtil::parseIntNumberN(databaseRoot["use"], databaseInfo->Use, ServerProcessType::Max);
-	JsonUtil::parseIntNumberN(databaseRoot["connection_pool_size"], databaseInfo->ConnectionPoolSize, ServerProcessType::Max);
-	JsonUtil::parseIntNumberN(databaseRoot["max_connection"], databaseInfo->MaxConnection, ServerProcessType::Max);
-	JsonUtil::parseIntNumberN(databaseRoot["iocp_thread_count"], databaseInfo->IocpThreadCount, ServerProcessType::Max);
+	JsonUtil::parseIntNumberN(databaseRoot["use"], databaseInfo->Use, ServerProcessType::Count);
+	JsonUtil::parseIntNumberN(databaseRoot["connection_pool_size"], databaseInfo->ConnectionPoolSize, ServerProcessType::Count);
+	JsonUtil::parseIntNumberN(databaseRoot["max_connection"], databaseInfo->MaxConnection, ServerProcessType::Count);
+	JsonUtil::parseIntNumberN(databaseRoot["iocp_thread_count"], databaseInfo->IocpThreadCount, ServerProcessType::Count);
 	databaseInfo->AccountId = JsonUtil::getString(databaseRoot["account_id"]);
 	databaseInfo->AccountPass = JsonUtil::getString(databaseRoot["account_pass"]);
 	databaseInfo->SchemaName = JsonUtil::getString(databaseRoot["schema_name"]);

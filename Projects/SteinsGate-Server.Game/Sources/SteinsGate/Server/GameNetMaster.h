@@ -20,7 +20,6 @@ class GameNetMaster final
 	~GameNetMaster() override;
 public:
 	void Initialize() override;
-	InterServerClientType_t GetClientType() override { return InterServerClientType::Game; }
 	ServerProcessType_t GetProcessType() override { return ServerProcessType::Game; }
 protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;

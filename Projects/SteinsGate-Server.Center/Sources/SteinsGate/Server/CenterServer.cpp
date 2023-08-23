@@ -37,7 +37,7 @@ void CenterServer::RemoveSession(CenterSession* session) {
 	const Int8 id = session->GetServerId();
 
 	m_pSession[id].Session = nullptr;
-	m_pSession[id].Type = InterServerClientType::None;
+	m_pSession[id].Type = ServerProcessType::None;
 }
 
 void CenterServer::BroadcastPacket(ISendPacket* packet) {

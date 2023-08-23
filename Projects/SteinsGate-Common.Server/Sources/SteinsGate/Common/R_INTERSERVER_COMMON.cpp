@@ -18,7 +18,7 @@ USING_NS_JNET;
 
 void R_INTERSERVER_COMMON::RECV_CES_WhoAreYou(Session* session, ICommand* cmd) {
 	S_INTERSERVER_COMMON::SetInformation(CoreInterServerClientTcp_v, eSendAsync, LastFromId);
-	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(CoreCommonNetMaster_v->GetClientType(), InterServerSendHelperBase::GetSenderId());
+	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(CoreCommonNetMaster_v->GetProcessType(), InterServerSendHelperBase::GetSenderId());
 }
 
 void R_INTERSERVER_COMMON::RECV_CES_AlreadyConnected(Session* session, ICommand* cmd) {

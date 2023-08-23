@@ -18,7 +18,7 @@ public:
 	CommonNetMaster(int updatePerSecond);
 
 	void Initialize() override;
-	virtual InterServerClientType_t GetClientType() = 0;
+
 	virtual ServerProcessType_t GetProcessType() = 0;
 
 	void ProcessMainUpdate();

@@ -39,7 +39,7 @@ public:
 private:
 	ANONYMOUS_CACHE_ALIGNED_VAR(
 		CenterSession* Session = nullptr;
-		InterServerClientType_t Type = InterServerClientType::None;
+		ServerProcessType_t Type = ServerProcessType::None;
 	) m_pSession[Const::Server::MaxId];
 	bool m_bStartupLaunching;	// 모든 서버세션들이 접속완료되어서 서버 시작명령을 내렸는지 여부
 };
