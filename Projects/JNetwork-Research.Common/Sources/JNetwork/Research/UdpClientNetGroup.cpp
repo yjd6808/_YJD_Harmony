@@ -15,7 +15,6 @@ NS_JNET_BEGIN
 
 UdpClientNetGroup::UdpClientNetGroup(const JCore::String& name)
 	: NetGroup(StringUtil::Format("%s 그룹", name))
-	, m_Listener(name)
 {}
 
 UdpClientNetGroup::~UdpClientNetGroup() {
@@ -30,11 +29,12 @@ void UdpClientNetGroup::Initialize() {
 
 	RunIocp();
 
-	UdpClientPtr spUdpClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_Listener);
+	UdpClientPtr spUdpClient = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool);
 
-	AddHost(spUdpClient);
+	AddHost(1, spUdpClient);
 
 	m_spUdpClient = spUdpClient;
+	m_spUdpClient->SetEventListener(dbg_new ClientListener{ m_szName });
 }
 
 NS_JNET_END

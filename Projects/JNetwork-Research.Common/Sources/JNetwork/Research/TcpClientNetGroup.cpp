@@ -15,9 +15,6 @@ NS_JNET_BEGIN
 
 TcpClientNetGroup::TcpClientNetGroup()
 	: NetGroup("테스트 클라이언트 그룹")
-	, m_LoginListener("로그인 클라")
-	, m_ChannelListener("채널 클라")
-	, m_GameListener("게임 클라")
 {}
 
 TcpClientNetGroup::~TcpClientNetGroup() {
@@ -32,17 +29,20 @@ void TcpClientNetGroup::Initialize() {
 
 	RunIocp();
 
-	TcpClientPtr spLoginClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, &m_LoginListener);;
-	TcpClientPtr spChannelClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, &m_ChannelListener);
-	TcpClientPtr spGameClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool, &m_GameListener);
+	TcpClientPtr spLoginClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool);
+	TcpClientPtr spChannelClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool);
+	TcpClientPtr spGameClient = MakeShared<TcpClient>(m_spIOCP, m_spBufferPool);
 
-	AddHost(spLoginClient);
-	AddHost(spChannelClient);
-	AddHost(spGameClient);
+	AddHost(1, spLoginClient);
+	AddHost(2, spChannelClient);
+	AddHost(3, spGameClient);
 
 	m_spLoginClient = spLoginClient;
+	m_spLoginClient->SetEventListener(dbg_new ClientListener{ "로그인 클라" });
 	m_spChannelClient = spChannelClient;
+	m_spChannelClient->SetEventListener(dbg_new ClientListener{ "채널 클라" });
 	m_spGameClient = spGameClient;
+	m_spGameClient->SetEventListener(dbg_new ClientListener{ "게임 클라" });
 }
 
 NS_JNET_END

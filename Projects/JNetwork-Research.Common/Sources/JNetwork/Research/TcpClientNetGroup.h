@@ -29,10 +29,6 @@ private:
 	TcpClientWPtr m_spLoginClient;
 	TcpClientWPtr m_spChannelClient;
 	TcpClientWPtr m_spGameClient;
-
-	ClientListener m_LoginListener;
-	ClientListener m_ChannelListener;
-	ClientListener m_GameListener;
 };
 
 NS_JNET_END

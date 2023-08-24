@@ -25,7 +25,6 @@ public:
 	UdpClient* Get() { return m_spUdpClient.GetPtr(); }
 private:
 	UdpClientWPtr m_spUdpClient;
-	ClientListener m_Listener;
 };
 
 NS_JNET_END

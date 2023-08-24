@@ -12,9 +12,10 @@
 #include <JNetwork/Packet/SendPacket.h>
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedSendTo.h>
 
-NS_JNET_BEGIN
+#include <JCore/Primitives/RefCountObjectPtr.h>
 
-IOCPOverlappedSendTo::IOCPOverlappedSendTo(Session* sender, IOCP* iocp, ISendPacket* sentPacket)
+NS_JNET_BEGIN
+	IOCPOverlappedSendTo::IOCPOverlappedSendTo(Session* sender, IOCP* iocp, ISendPacket* sentPacket)
 	: IOCPOverlapped(iocp, Type::SendTo)
 	, m_pSender(sender)
 	, m_pSentPacket(sentPacket)
@@ -27,6 +28,7 @@ IOCPOverlappedSendTo::~IOCPOverlappedSendTo() {
 }
 
 void IOCPOverlappedSendTo::Process(BOOL result, Int32UL bytesTransffered, IOCPPostOrder* completionKey) {
+	JCORE_REF_COUNT_GUARD(m_pSentPacket, false);
 	const SOCKET hSentSock = m_pSender->SocketHandle();
 	Int32U uiErrorCode = 0;
 
@@ -35,7 +37,6 @@ void IOCPOverlappedSendTo::Process(BOOL result, Int32UL bytesTransffered, IOCPPo
 	}
 
 	m_pSender->Sent(m_pSentPacket, bytesTransffered);
-	m_pSentPacket->Release();
 }
 
 NS_JNET_END

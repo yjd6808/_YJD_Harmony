@@ -42,9 +42,6 @@ public:
 private:
 	TcpServerWPtr m_spLoginServer;
 	TcpServerWPtr m_spChannelServer;
-
-	ServerListener m_LoginListener;
-	ServerListener m_ChannelListener;
 };
 
 class ServerGameNetGroup : public NetGroup
@@ -58,7 +55,6 @@ public:
 	TcpServer* GetGame() { return m_spGameServer.GetPtr(); }
 private:
 	TcpServerWPtr m_spGameServer;
-	ServerListener m_GameListener;
 };
 
 class ServerUdpNetGroup : public NetGroup
@@ -77,10 +73,6 @@ private:
 	UdpClientWPtr m_spLoginUdpClient;
 	UdpClientWPtr m_spChannelUdpClient;
 	UdpClientWPtr m_spGameUdpClient;
-
-	ClientListener m_LoginListener;
-	ClientListener m_ChannelListener;
-	ClientListener m_GameListener;
 };
 
 

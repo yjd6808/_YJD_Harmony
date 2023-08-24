@@ -43,8 +43,6 @@ void ServerNetMaster::Initialize() {
 
 ServerLoginChannelNetGroup::ServerLoginChannelNetGroup()
 	: NetGroup("서버 TCP 로그인,채널 서버 그룹")
-	, m_LoginListener("로그인 서버")
-	, m_ChannelListener("채널 서버")
 {}
 
 ServerLoginChannelNetGroup::~ServerLoginChannelNetGroup() {
@@ -59,17 +57,19 @@ void ServerLoginChannelNetGroup::Initialize() {
 
 	RunIocp();
 
-	TcpServerPtr spLoginServer = MakeShared<TcpServer>(m_spIOCP, m_spBufferPool, &m_LoginListener);
+	TcpServerPtr spLoginServer = MakeShared<TcpServer>(m_spIOCP, m_spBufferPool);
 	spLoginServer->Start(ServerLoginTcpAddr);
 
-	TcpServerPtr spChannelServer = MakeShared<TcpServer>(m_spIOCP, m_spBufferPool, &m_ChannelListener);
+	TcpServerPtr spChannelServer = MakeShared<TcpServer>(m_spIOCP, m_spBufferPool);
 	spChannelServer->Start(ServerChannelTcpAddr);
 	
-	AddHost(spLoginServer);
-	AddHost(spChannelServer);
+	AddHost(1, spLoginServer);
+	AddHost(2, spChannelServer);
 
 	m_spLoginServer = spLoginServer;
+	m_spLoginServer->SetEventListener(dbg_new ServerListener{ "로그인 서버" });
 	m_spChannelServer = spChannelServer;
+	m_spChannelServer->SetEventListener(dbg_new ServerListener{ "채널 서버" });
 }
 
 
@@ -82,7 +82,6 @@ void ServerLoginChannelNetGroup::Initialize() {
 
 ServerGameNetGroup::ServerGameNetGroup()
 	: NetGroup("서버 TCP 게임 서버 그룹")
-	, m_GameListener("게임 서버")
 {}
 
 ServerGameNetGroup::~ServerGameNetGroup() {
@@ -97,12 +96,13 @@ void ServerGameNetGroup::Initialize() {
 
 	RunIocp();
 
-	TcpServerPtr spGameServer = MakeShared<TcpServer>(m_spIOCP, m_spBufferPool, &m_GameListener);
+	TcpServerPtr spGameServer = MakeShared<TcpServer>(m_spIOCP, m_spBufferPool);
 	spGameServer->Start(ServerGameTcpAddr);
 
-	AddHost(spGameServer);
+	AddHost(1, spGameServer);
 
 	m_spGameServer = spGameServer;
+	m_spGameServer->SetEventListener(dbg_new ServerListener{ "게임 서버 " });
 }
 
  /* =============================================================================
@@ -114,9 +114,6 @@ void ServerGameNetGroup::Initialize() {
 
 ServerUdpNetGroup::ServerUdpNetGroup()
 	: NetGroup("서버 UDP 그룹")
-	, m_LoginListener("로그인 UDP")
-	, m_ChannelListener("채널 UDP")
-	, m_GameListener("게임 UDP")
 {}
 
 ServerUdpNetGroup::~ServerUdpNetGroup() {
@@ -131,25 +128,28 @@ void ServerUdpNetGroup::Initialize() {
 
 	RunIocp();
 
-	UdpClientPtr spLoginUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_LoginListener);
+	UdpClientPtr spLoginUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool);
 	spLoginUdp->Bind(ServerLoginUdpAddr);
 	spLoginUdp->RecvFromAsync();
 
-	UdpClientPtr spChannelUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_ChannelListener);
+	UdpClientPtr spChannelUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool);
 	spChannelUdp->Bind(ServerChannelUdpAddr);
 	spChannelUdp->RecvFromAsync();
 
-	UdpClientPtr spGameUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool, &m_GameListener);
+	UdpClientPtr spGameUdp = MakeShared<UdpClient>(m_spIOCP, m_spBufferPool);
 	spGameUdp->Bind(ServerGameUdpAddr);
 	spGameUdp->RecvFromAsync();
 
-	AddHost(spLoginUdp);
-	AddHost(spChannelUdp);
-	AddHost(spGameUdp);
+	AddHost(1, spLoginUdp);
+	AddHost(2, spChannelUdp);
+	AddHost(3, spGameUdp);
 
 	m_spLoginUdpClient = spLoginUdp;
+	m_spLoginUdpClient->SetEventListener(dbg_new ClientListener{ "로그인 UDP" });
 	m_spChannelUdpClient = spChannelUdp;
+	m_spChannelUdpClient->SetEventListener(dbg_new ClientListener{ "채널 UDP" });
 	m_spGameUdpClient = spGameUdp;
+	m_spGameUdpClient->SetEventListener(dbg_new ClientListener{ "게임 UDP" });
 }
 
 
