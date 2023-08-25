@@ -11,6 +11,8 @@
 #include <SteinsGate/Common/Enum.h>
 #include <SteinsGate/Common/Struct.h>
 
+#include <SteinsGate/Client/Const.h>
+
 struct AnimationInfo;
 struct AttackDataInfo;
 

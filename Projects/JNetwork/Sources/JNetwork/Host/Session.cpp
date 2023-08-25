@@ -58,6 +58,7 @@ void Session::Initialize() {
 bool Session::Bind(const IPv4EndPoint& bindAddr) {
 	if (!m_Socket.IsValid()) {
 		_NetLogError_("바인드에 실패했습니다. INVALID_SOCKET 입니다.");
+		WSASetLastError(WSA_INVALID_HANDLE);
 		return false;
 	}
 

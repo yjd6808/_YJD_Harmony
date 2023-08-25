@@ -11,13 +11,7 @@
 
 #include <JNetwork/Packet/SendHelper.h>
 #include <SteinsGate/Common/ServerEnum.h>
-#include <SteinsGate/Common/GameEnum.h>
 
 struct S_LOGIC : JNetwork::SendHelper<S_LOGIC>
 {
 };
-
-
-
-
-

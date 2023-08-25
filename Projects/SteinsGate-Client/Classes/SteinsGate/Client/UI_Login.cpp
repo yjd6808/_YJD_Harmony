@@ -14,6 +14,8 @@
 #include <SteinsGate/Client/Define_Popup.h>
 #include <SteinsGate/Client/S_AUTH.h>
 
+#include "AuthenticationComponent.h"
+
 USING_NS_CC;
 USING_NS_CCUI;
 USING_NS_JC;
@@ -144,15 +146,13 @@ void UI_Login::login() {
 		return;
 	}
 
-	// TODO: 벨리데이터 구현
-	AccountData& pData = Core::Contents.Player->accountData();
-	pData.Id.SetStringUnsafe(m_pEbId->getText());
-	pData.Pass.SetStringUnsafe(m_pEbPass->getText());
+	AuthenticationComponent* pAuthenticationComponent = Core::Net->getAuthenticationComponent();
+	pAuthenticationComponent->setAccountIdPass(m_pEbId->getText().c_str(), m_pEbPass->getText().c_str());
 
 	if (!Core::Net->connectAuthTcp()) {
 		Core::Contents.PopupManager->showOk(SG_TEXT_RAW("CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE"));
 		return;
 	}
 
-	Core::Contents.PopupManager->showNone(SG_TEXT_RAW("CONNECT_AUTH"), DEF_POPUP_LOGIN_WAIT);
+	Core::Contents.PopupManager->showNone(SG_TEXT_RAW("CONNECT_AUTH"), DEF_POPUP_CONNECT_AUTH);
 }

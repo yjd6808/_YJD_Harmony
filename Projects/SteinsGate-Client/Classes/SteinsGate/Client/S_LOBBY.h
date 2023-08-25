@@ -9,9 +9,11 @@
 #pragma once
 
 #include <JNetwork/Packet/SendHelper.h>
+#include <SteinsGate/Client/Struct.h>
 
 struct S_LOBBY : JNetwork::SendHelper<S_LOBBY>
 {
+	static void SEND_CLO_JoinLobby();
 };
 
 

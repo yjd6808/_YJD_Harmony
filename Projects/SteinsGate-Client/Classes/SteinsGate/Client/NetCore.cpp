@@ -9,6 +9,8 @@
 #include "GameCoreHeader.h"
 #include "NetCore.h"
 
+#include <SteinsGate/Client/AuthenticationComponent.h>
+
 USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
@@ -44,6 +46,11 @@ void NetCore::Initialize() {
 	m_pLogicUdp = m_pNetGroup->LogicUdp;
 	m_pChatTcp = m_pNetGroup->ChatTcp;
 	m_pAreaTcp = m_pNetGroup->AreaTcp;
+
+
+	m_pAuthenticationComponent = dbg_new AuthenticationComponent;
+
+	m_ComponentCollection.add(m_pAuthenticationComponent);
 }
 
 void NetCore::Finalize() {
@@ -66,11 +73,23 @@ void NetCore::runCommand(ClientConnectServerType_t listenerType, Session* sessio
 	}
 }
 
+void NetCore::initializeComponents() {
+	m_ComponentCollection.initialize();
+}
+
 bool NetCore::connectAuthTcp() {
 	if (m_pAuthTcp == nullptr) {
 		return false;
 	}
 
 	return m_pAuthTcp->ConnectAsync(Core::ServerProcessInfoPackage->Auth.RemoteEP);
+}
+
+bool NetCore::connectLobbyTcp() {
+	if (m_pLobbyTcp == nullptr) {
+		return false;
+	}
+
+	return m_pLobbyTcp->ConnectAsync(Core::ServerProcessInfoPackage->Lobby.RemoteEP);
 }
 

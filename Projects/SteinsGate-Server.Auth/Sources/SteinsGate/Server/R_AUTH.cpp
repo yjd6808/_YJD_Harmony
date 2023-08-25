@@ -11,7 +11,7 @@
 #include "AuthCoreHeader.h"
 #include "R_AUTH.h"
 
-#include <SteinsGate/Common/Cmd_AUTH.h>
+#include <SteinsGate/Common/Cmd_AUTHENTICATION.h>
 #include <SteinsGate/Server/Q_LOGIN.h>
 #include <SteinsGate/Server/S_AUTH.h>
 
@@ -34,6 +34,7 @@ void R_AUTH::RECV_CAU_Login(Session* session, ICommand* cmd) {
 		return;
 	}
 
+	AuthenticationData* pAuthenticationData = nullptr;
 
 	// 계정이 없는 경우, 회원가입시도
 	if (!bHasAccount)  {
@@ -54,10 +55,11 @@ void R_AUTH::RECV_CAU_Login(Session* session, ICommand* cmd) {
 			return;
 		}
 
-		if (!Core::Contents.AuthenticationManager->Issue(accountData.Id.Source)) {
+		pAuthenticationData = Core::Contents.AuthenticationManager->Issue(accountData.Id.Source);
+		if (pAuthenticationData == nullptr) {
 			eResult = LoginResult::Logined;
 		}
 	}
 
-	S_AUTH::SEND_AUC_LoginAck(eResult);
+	S_AUTH::SEND_AUC_LoginAck(eResult, accountData.LastServer, pAuthenticationData->Serial);
 }

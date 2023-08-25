@@ -60,6 +60,10 @@ bool ComponentCollection::remove(IComponent::Type type) {
 	return true;
 }
 
+void ComponentCollection::initialize() {
+	m_hComponentMap.ForEachValue([](IComponent* component) { component->initialize(); });
+}
+
 void ComponentCollection::onUpdate(float dt) {
 	for (int i = 0; i < m_vUpdatables.Size(); ++i) {
 		m_vUpdatables[i]->onUpdate(dt);

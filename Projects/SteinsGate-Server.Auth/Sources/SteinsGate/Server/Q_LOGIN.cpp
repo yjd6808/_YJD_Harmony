@@ -43,9 +43,13 @@ bool Q_LOGIN::SelectAccountInfo(const char* id, JCORE_OUT AccountData& accountDa
 	if (!IsSuccess || !result.HasBindedResult)
 		return false;
 
+	if (result.LastServer < GameServerType::Begin || result.LastServer > GameServerType::End) {
+		DebugAssert(false);
+		return false;
+	}
+
 	accountData.LastLogin = DateTime::Now();
-	accountData.LastServer = result.LastServer;
-	accountData.DBTableId = result.AccountId;
+	accountData.LastServer = (GameServerType_t)result.LastServer;
 	accountData.Id = result.Id;
 	accountData.Pass = result.Pass;
 	return true;

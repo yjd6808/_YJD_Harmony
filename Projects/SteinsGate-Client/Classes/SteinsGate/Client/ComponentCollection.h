@@ -25,6 +25,7 @@ public:
 	bool add(IComponent* component);
 	bool has(IComponent::Type type) const;
 	bool remove(IComponent::Type type);
+	void initialize();
 
 	template <typename TComponent>
 	TComponent* get() const {

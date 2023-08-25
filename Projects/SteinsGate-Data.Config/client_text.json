@@ -4,10 +4,11 @@
     "text": [
         {"__comment__": "서버 접속관련"},
         ["CONNECT_AUTH",                                "인증서버에 접속중입니다."],
-        ["CONNECT_AUTH_FAILED_WITH_CODE",               "인증서버 접속에 실패했습니다. (%d)"],
+        ["CONNECT_AUTH_FAILED_WITH_CODE",               "인증서버 접속에 실패했습니다. (%u)"],
         ["CONNECT_AUTH_FAILED_UNCONNECTABLE_STATE",     "인증서버에 접속가능한 상태가 아닙니다."],
 
         ["CONNECT_LOBBY",                               "로그인 성공\n로비서버에 접속중입니다."],
+        ["CONNECT_LOBBY_FAILED_WITH_CODE",              "로비서버 접속에 실패했습니다. (%u)"]
 
         {"__comment__": "로그인 관련"},
         
@@ -23,7 +24,8 @@
         ["LOGIN_RESULT_UNKNONW",                        "알 수 없는 이유로 로그인에 실패했습니다."],
 
 
-        {"__comment__": "로그인 관련"}
+        {"__comment__": "인증 관련"},
+        ["AUTHENTICATION_LOBBY_BEGIN",                  "로비서버 접속성공\n인증 시퀀스를 진행중입니다."],
     ]
     
     

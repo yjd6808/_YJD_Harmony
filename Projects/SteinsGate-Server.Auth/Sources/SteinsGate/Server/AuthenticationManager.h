@@ -32,7 +32,7 @@ class AuthenticationManager : public JCore::SingletonPointer<AuthenticationManag
 	AuthenticationManager() = default;
 	~AuthenticationManager() override = default;
 public:
-	bool Issue(const char* accountId);																// 발급
+	AuthenticationData* Issue(const char* accountId);																// 발급
 	bool Exist(AuthenticationSerial_t serial, const char* accountId);								// 발급되었는지 확인
 	bool Update(AuthenticationSerial_t serial, const char* accountId, AuthenticationState_t state);	// 최신화시각 갱신 및 상태 업데이트
 	bool Remove(AuthenticationSerial_t serial, const char* accountId);
@@ -40,7 +40,7 @@ public:
 
 	void OnScheduled(JCore::SchedulerTask* task);					// 스케쥴링 될때마다 수행할 작업
 private:
-	bool IssueRaw(const char* id);
+	AuthenticationData* IssueRaw(const char* id);
 	AuthenticationData* FindRaw(const JCore::DateTime& timeId);
 	AuthenticationData* FindRaw(AuthenticationSerial_t serial);
 	AuthenticationData* FindRaw(AuthenticationSerial_t serial, const char* accountId);

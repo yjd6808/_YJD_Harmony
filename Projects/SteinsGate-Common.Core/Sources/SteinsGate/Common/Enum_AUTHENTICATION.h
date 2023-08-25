@@ -1,6 +1,6 @@
 /*
  * 작성자: 윤정도
- * 생성일: 6/14/2023 8:53:15 PM
+ * 생성일: 8/25/2023 8:11:15 PM
  * =====================
  *
  */
@@ -9,6 +9,26 @@
 #pragma once
 
 #include <JCore/Define.h>
+
+
+JCORE_SENUM_BEGIN(AuthenticationState)
+LobbyWait,
+Lobby,
+GameWait,
+Game,
+Max
+JCORE_SENUM_MIDDLE(AuthenticationState)
+
+static constexpr const char* Name[Max]{
+	"LobbyWait",
+	"Lobby",
+	"GameWait",
+	"Game"
+};
+
+JCORE_SENUM_MIDDLE_END(AuthenticationState)
+
+// ==========================================================================================
 
 JCORE_SENUM_BEGIN(LoginResult)
 LoginSuccess,				// 로그인 성공
@@ -21,3 +41,4 @@ QueryFailed,				// 서버에서 쿼리 수행중 오류가 발생하였습니다
 Max
 JCORE_SENUM_END(LoginResult)
 
+// ==========================================================================================

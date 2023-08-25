@@ -138,11 +138,12 @@ struct AccountData
 {
 	AccountData();
 
-	int DBTableId;	// 계정 고유 아이디
+	void Clear();
+
 	SGStaticString<Const::StringLen::AccountId> Id;
 	SGStaticString<Const::StringLen::AccountPass> Pass;
 	SGDateTime LastLogin;
-	int LastServer;
+	GameServerType_t LastServer;
 };
 
 struct PlayerData

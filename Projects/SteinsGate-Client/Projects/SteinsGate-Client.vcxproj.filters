@@ -160,6 +160,12 @@
     <Filter Include="Game\AI\Routine">
       <UniqueIdentifier>{adb72265-b421-4f78-832c-a1afd2ee293b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Net\Component">
+      <UniqueIdentifier>{223c4637-eb44-4a0e-9cec-3b21c0835806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Callback">
+      <UniqueIdentifier>{7a35713c-d4d7-4039-97f1-3be5de1e23bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Classes\SteinsGate\Client\ImagePackManager.cpp">
@@ -571,6 +577,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Contents.cpp">
       <Filter>Game\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\AuthenticationComponent.cpp">
+      <Filter>Net\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\Callback_POPUP_TIMEOUT.cpp">
+      <Filter>Game\Callback</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1054,5 +1066,13 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\HostPlayer.h">
       <Filter>Game\Contents</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\AuthenticationComponent.h">
+      <Filter>Net\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Callback_POPUP_TIMEOUT.h">
+      <Filter>Game\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Namespace.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define.h" />
   </ItemGroup>
 </Project>

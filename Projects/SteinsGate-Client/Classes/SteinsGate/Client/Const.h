@@ -32,6 +32,14 @@ namespace Host
 	constexpr int LogicUdpId = 12;
 	constexpr int AreaUdpId = 13;
 	constexpr int ChatUdpId = 14;
+
+	
+}
+
+
+namespace Timeout
+{
+	constexpr float LobbyConnection = 5.0f;
 }
 
 NS_CONST_END

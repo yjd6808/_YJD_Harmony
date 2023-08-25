@@ -11,7 +11,7 @@
 
 #include <JNetwork/Host/SessionContainer.h>
 
-#include <SteinsGate/Common/Cmd_AUTH.h>
+#include <SteinsGate/Common/Cmd_AUTHENTICATION.h>
 
 #include <SteinsGate/Server/AuthServer.h>
 #include <SteinsGate/Server/ListenerAuthServer.h>

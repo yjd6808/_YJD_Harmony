@@ -11,6 +11,9 @@
 #include <SteinsGate/Client/NetClientGroup.h>
 #include <SteinsGate/Client/CommandSynchronizer.h>
 #include <SteinsGate/Client/ConnectionSynchronizer.h>
+#include <SteinsGate/Client/ComponentCollection.h>
+
+class AuthenticationComponent;
 
 class NetCore
 	: public SGNetMaster
@@ -36,7 +39,12 @@ public:
 	CommandSynchronizer* getCommandSynchronizer() const { return m_pCommandSynchronizer; }
 	ConnectionSynchronizer* getConnectionSynchronizer() const { return m_pConnectionSynchronizer; }
 
+	void initializeComponents();
+
+	AuthenticationComponent* getAuthenticationComponent() const { return m_pAuthenticationComponent; }
+
 	bool connectAuthTcp();
+	bool connectLobbyTcp();
 	
 private:
 	NetClientGroup* m_pNetGroup;
@@ -49,6 +57,9 @@ private:
 
 	CommandSynchronizer* m_pCommandSynchronizer;
 	ConnectionSynchronizer* m_pConnectionSynchronizer;
+	ComponentCollection m_ComponentCollection;
+
+	AuthenticationComponent* m_pAuthenticationComponent;
 };
 
 

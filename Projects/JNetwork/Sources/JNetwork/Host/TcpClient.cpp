@@ -62,13 +62,21 @@ void TcpClient::Initialize() {
 bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) {
 
 	if (!m_Socket.IsValid()) {
-		_NetLogError_("연결에 실패했습니다. INVALID_SOCKET 입니다.", Winsock::LastError());
+		_NetLogError_("연결에 실패했습니다. INVALID_SOCKET 입니다.");
+
+		if (m_pEventListener)
+			m_pEventListener->OnConnectFailed(this, WSA_INVALID_HANDLE);
+
 		return false;
 	}
 
 
 	if (m_Socket.Option().SetNonBlockingEnabled(true) == SOCKET_ERROR) {
 		const Int32U uiErrorCode = Winsock::LastError();
+
+		if (m_pEventListener)
+			m_pEventListener->OnConnectFailed(this, uiErrorCode);
+
 		_NetLogError_("연결에 실패했습니다. 논블로킹 소켓 전환실패 (%u)", uiErrorCode);
 		return false;
 	}
@@ -79,6 +87,10 @@ bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) 
 
 		if (uiErrorCode != WSAEWOULDBLOCK) {
 			_NetLogError_("연결에 실패했습니다. (%u)", uiErrorCode);
+
+			if (m_pEventListener)
+				m_pEventListener->OnConnectFailed(this, uiErrorCode);
+
 			return false;
 		}
 
@@ -104,6 +116,7 @@ bool TcpClient::Connect(const IPv4EndPoint& remoteAddr, int timeoutMiliseconds) 
 
 			if (m_pEventListener)
 				m_pEventListener->OnConnectFailed(this, WSAETIMEDOUT);
+
 			return false;
 		}
 
@@ -138,6 +151,10 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 	// 초기화된 상태에서만 연결을 진행할 수 있습니다.
 	if (m_eState != eInitailized) {
+
+		if (m_pEventListener)
+			m_pEventListener->OnConnectFailed(this, WSANOTINITIALISED);
+
 		return false;
 	}
 
@@ -145,11 +162,19 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 
 	if (m_bIocpConneced == false) {
 		DebugAssertMsg(false, "IOCP와 연결해주세요.");
+
+		if (m_pEventListener)
+			m_pEventListener->OnConnectFailed(this, WSANOTINITIALISED);
+
 		return false;
 	}
 
 	// ConnectEx를 사용하기 위해서 클라이언트더라도 바인딩을 해줘야한다.
 	if (!m_Socket.IsBinded() && Bind({}) == false) {
+
+		if (m_pEventListener)
+			m_pEventListener->OnConnectFailed(this, Winsock::LastError());
+
 		return false;
 	}
 
@@ -178,6 +203,10 @@ bool TcpClient::ConnectAsync(const IPv4EndPoint& destination) {
 			DebugAssertMsg(false, "서버 접속에 실패하였습니다. (%u)", uiError);
 			Disconnect();
 			pOverlapped->Release();
+
+			if (m_pEventListener)
+				m_pEventListener->OnConnectFailed(this, uiError);
+
 			return false;
 		}
 	}

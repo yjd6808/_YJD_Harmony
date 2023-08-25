@@ -62,6 +62,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CLIThread.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\Enum_CHARACTER.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.cpp">
       <SubType>
@@ -126,10 +130,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\AudioPlayer.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\AuthEnum.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\BaseContents.h">
       <SubType>
       </SubType>
@@ -143,6 +143,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_CHAT.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_LOBBY.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonInfo.h">
       <SubType>
       </SubType>
@@ -185,7 +193,58 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\GameEnum.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_AI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_ANIMATION.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_AUTHENTICATION.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_CHANNEL.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_CHARACTER.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_CONFIG.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_DATABASE.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_ITEM.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_MAP.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_NETWORK.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_SCENE.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_SERVER.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_UI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\IBroadcastable.h">
       <SubType>
       </SubType>
@@ -204,7 +263,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerClientBase.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerServerBase.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelperBase.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyEnum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Logo.h">
       <SubType>
       </SubType>
@@ -285,7 +343,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_AUTH.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_AUTHENTICATION.h">
       <SubType>
       </SubType>
     </ClInclude>

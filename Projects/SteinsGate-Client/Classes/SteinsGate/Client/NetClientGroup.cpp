@@ -9,7 +9,7 @@
 #include "GameCoreHeader.h"
 #include "NetClientGroup.h"
 
-#include <SteinsGate/Common/Cmd_AUTH.h>
+#include <SteinsGate/Common/Cmd_AUTHENTICATION.h>
 #include <SteinsGate/Common/Cmd_CHAT.h>
 
 #include <SteinsGate/Client/S_AUTH.h>

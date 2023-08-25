@@ -11,7 +11,6 @@
 
 #include <JNetwork/Packet/SendHelper.h>
 #include <SteinsGate/Common/ServerEnum.h>
-#include <SteinsGate/Common/LobbyEnum.h>
 
 struct S_LOBBY : JNetwork::SendHelper<S_LOBBY>
 {

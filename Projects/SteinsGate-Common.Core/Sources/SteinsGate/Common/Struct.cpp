@@ -41,12 +41,18 @@ String SgaResourceIndex::ToString() const {
 }
 
 AccountData::AccountData()
-	: DBTableId(InvalidValue_v)
-	, Id{""}
+	: Id{""}
 	, Pass{""}
 	, LastLogin(0)
-	, LastServer(0)
+	, LastServer(GameServerType::Max)
 {}
+
+void AccountData::Clear() {
+	Id = "";
+	Pass = "";
+	LastLogin.Tick = 0;
+	LastServer = GameServerType::Max;
+}
 
 PlayerData::PlayerData()
 	: CharId(InvalidValue_v)

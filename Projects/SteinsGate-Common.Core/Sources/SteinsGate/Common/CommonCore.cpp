@@ -9,8 +9,7 @@
 #include "CommonCore.h"
 #include "CommonCoreHeader.h"
 
-#include <SteinsGate/Common/Cmd_AUTH.h>
-#include <SteinsGate/Common/Cmd_CHAT.h>
+#include <SteinsGate/Common/Cmd.h>
 
 USING_NS_JC;
 
@@ -30,9 +29,13 @@ void InitializeCommonCore() {
 	Core::CLIThread->Start();
 
 	// 공통 커맨드 이름 등록
-	// [ AUTH ]
+	// [ AUTHENTICATION ]
 	Core::CommandNameDictionary.Add<CAU_Login>();
 	Core::CommandNameDictionary.Add<AUC_LoginAck>();
+
+	// [ LOBBY ]
+	Core::CommandNameDictionary.Add<CLO_JoinLobby>();
+	Core::CommandNameDictionary.Add<LOC_JoinLobbyAck>();
 }
 
 void FinalizeCommonCore() {

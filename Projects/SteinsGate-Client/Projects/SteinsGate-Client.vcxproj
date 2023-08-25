@@ -24,6 +24,14 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.cpp" />
+    <ClCompile Include="..\Classes\SteinsGate\Client\AuthenticationComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\Callback_POPUP_TIMEOUT.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\CLIListener.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\Contents.cpp">
@@ -438,6 +446,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\AttackActivity_Goblin.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\AuthenticationComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Callback_POPUP_TIMEOUT.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfo.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\CharacterListener.h" />
@@ -446,6 +462,10 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\ComponentCollection.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Contents.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -488,6 +508,10 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\MonsterListener_DarkGoblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\MonsterListener_NormalGoblin.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\MoveComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Namespace.h">
       <SubType>
       </SubType>
     </ClInclude>

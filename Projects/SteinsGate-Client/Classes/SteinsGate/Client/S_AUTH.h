@@ -12,7 +12,7 @@
 
 struct S_AUTH : JNetwork::SendHelper<S_AUTH>
 {
-	static void SEND_CAU_Login(const char* id, const char* pw);
+	static void SEND_CAU_Login();
 };
 
 

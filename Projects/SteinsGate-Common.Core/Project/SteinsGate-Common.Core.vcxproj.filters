@@ -26,7 +26,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\SgaSprite.cpp">
       <Filter>Sga</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Struct.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\DataManagerAbstract.cpp">
       <Filter>Data</Filter>
     </ClCompile>
@@ -45,7 +44,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\CharBaseInfoLoader.cpp">
       <Filter>Data\CharBase</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Enum.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\ItemInfoLoader.cpp">
       <Filter>Data\Item</Filter>
     </ClCompile>
@@ -111,12 +109,23 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\Position.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\Const.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\AudioPlayer.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\BaseContents.cpp">
       <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Const.cpp">
+      <Filter>Const</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Struct.cpp">
+      <Filter>Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Enum.cpp">
+      <Filter>Enum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\Enum_CHARACTER.cpp">
+      <Filter>Enum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,9 +166,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\SgaSpriteRect.h">
       <Filter>Sga</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Struct.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Enum.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\Const.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MonsterBaseInfo.h">
       <Filter>Data\MonsterBase</Filter>
     </ClInclude>
@@ -244,23 +250,14 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\DataManagerAbstract.h">
       <Filter>Data</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_AUTH.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_AUTHENTICATION.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_CHAT.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\AuthEnum.h">
-      <Filter>Net\Enum</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\PacketViewer.h">
       <Filter>Net\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\GameEnum.h">
-      <Filter>Net\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\LobbyEnum.h">
-      <Filter>Net\Enum</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\MapInfo.h">
       <Filter>Data\Map</Filter>
@@ -314,6 +311,60 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\BaseContents.h">
       <Filter>Contents</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_LOBBY.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_CHANNEL.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_CHARACTER.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_AI.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_ITEM.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_SERVER.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_UI.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_MAP.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_ANIMATION.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_NETWORK.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_DATABASE.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_AUTHENTICATION.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_CONFIG.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Enum_SCENE.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
@@ -355,9 +406,6 @@
     <Filter Include="Net\Cmd">
       <UniqueIdentifier>{6468c181-5a92-447d-becd-6ce66d66ea74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Net\Enum">
-      <UniqueIdentifier>{c112c9b0-1e81-4ea0-a18d-01aa4bd40704}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Net\Util">
       <UniqueIdentifier>{ed25dfc5-ea7c-479b-a189-aeb099faab3b}</UniqueIdentifier>
     </Filter>
@@ -387,6 +435,15 @@
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{93b72f5d-322a-4129-9fb9-1d3c09f8d2ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enum">
+      <UniqueIdentifier>{f1968b37-bd79-4fdb-8ced-d6b5e199b099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Const">
+      <UniqueIdentifier>{4e039b5b-c76e-49e1-80d1-5c5e42dae4b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Struct">
+      <UniqueIdentifier>{cee0fccc-495f-40e7-a9f1-67de833ca29e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

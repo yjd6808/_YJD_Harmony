@@ -10,6 +10,8 @@
 
 #include <JCore/Declspec.h>
 
+#include <SteinsGate/Client/Struct.h>
+
 #define SG_COMPONENT_TYPE_GETTER(component_type)				\
 public:															\
 	Type getType() const override { return component_type; }	\
@@ -22,7 +24,8 @@ public:
 	{
 		eMove,
 		eAI,
-		ePhysics
+		ePhysics,
+		eAuthentication
 	};
 
 	virtual ~IComponent() = default;

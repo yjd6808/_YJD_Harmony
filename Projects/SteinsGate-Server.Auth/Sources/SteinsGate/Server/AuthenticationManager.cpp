@@ -17,7 +17,7 @@
 
 USING_NS_JC;
 
-bool AuthenticationManager::Issue(const char* accountId) {
+AuthenticationData* AuthenticationManager::Issue(const char* accountId) {
 	JCORE_LOCK_GUARD(m_Lock);
 	return IssueRaw(accountId);
 }
@@ -80,9 +80,9 @@ void AuthenticationManager::OnScheduled(SchedulerTask* task) {
 	s_vExpired.Clear();
 }
 
-bool AuthenticationManager::IssueRaw(const char* accountId) {
+AuthenticationData* AuthenticationManager::IssueRaw(const char* accountId) {
 	if (m_hmAccountIdMap.Exist(accountId)) {
-		return false;
+		return nullptr;
 	}
 
 	DateTime timeId;
@@ -90,17 +90,17 @@ bool AuthenticationManager::IssueRaw(const char* accountId) {
 
 	if (!GenerateSerial(iSerial)) {
 		_LogDebug_("시리얼 생성 실패");
-		return false;
+		return nullptr;
 	}
 
 	if (!GenerateTimeId(timeId, AuthenticationState::LobbyWait)) {
 		_LogDebug_("타임ID 생성 실패 %d", 1);
-		return false;
+		return nullptr;
 	}
 
 	if (AuthenticationData* pExistData = FindRaw(iSerial)) {
 		_LogDebug_("이미 해당 시리얼의 유저가 존재함. (%d:%s)", pExistData->Serial, pExistData->AccountId.Source);
-		return false;
+		return nullptr;
 	}
 
 	AuthenticationData* pToken = dbg_new AuthenticationData{};
@@ -111,15 +111,15 @@ bool AuthenticationManager::IssueRaw(const char* accountId) {
 	pToken->TimeId = timeId;
 
 	bAdded = m_tmTimeMap.Insert(timeId, pToken);
-	if (!bAdded) { DebugAssert(false); return false; }
+	if (!bAdded) { DebugAssert(false); return nullptr; }
 
 	bAdded = m_hmSerialMap.Insert(iSerial, pToken);
-	if (!bAdded) { DebugAssert(false); return false; }
+	if (!bAdded) { DebugAssert(false); return nullptr; }
 
 	bAdded = m_hmAccountIdMap.Insert(pToken->AccountId.Source, pToken);
-	if (!bAdded) { DebugAssert(false); return false; }
+	if (!bAdded) { DebugAssert(false); return nullptr; }
 
-	return true;
+	return pToken;
 }
 
 AuthenticationData* AuthenticationManager::FindRaw(const DateTime& timeId) {
