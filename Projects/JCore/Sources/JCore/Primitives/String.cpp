@@ -649,7 +649,17 @@ String& String::operator+=(const char* str) {
 }
 
 String& String::operator=(const String& other) {
-	return *this = other.Source();
+	if (other.m_pBuffer == nullptr) {
+		JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
+		m_iLen = 0;
+		m_iCapacity = 0;
+	} else {
+		ResizeIfNeeded(other.m_iLen);
+		m_iLen = other.m_iLen;
+		Memory::CopyUnsafe(m_pBuffer, other.m_pBuffer, m_iLen);
+		m_pBuffer[m_iLen] = NULL;
+	}
+	return *this;
 }
 
 // 씹어먹는 C++ 이동 생성자 & 이동 대입 연산자
@@ -677,6 +687,15 @@ String& String::operator=(const char* other) {
 
 	StringUtil::Copy(m_pBuffer, m_iCapacity, other);
 	m_iLen = iToLen;
+
+	return *this;
+}
+
+String& String::operator=(std::nullptr_t other) {
+	JCORE_DELETE_ARRAY_SAFE(m_pBuffer);
+
+	m_iCapacity = 0;
+	m_iLen = 0;
 
 	return *this;
 }

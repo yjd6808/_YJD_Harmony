@@ -106,9 +106,6 @@
     <Filter Include="Game\UI_M">
       <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Define">
-      <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Helper">
       <UniqueIdentifier>{62c231f5-2c23-4a23-8337-9397dce6d44c}</UniqueIdentifier>
     </Filter>
@@ -165,6 +162,15 @@
     </Filter>
     <Filter Include="Game\Callback">
       <UniqueIdentifier>{7a35713c-d4d7-4039-97f1-3be5de1e23bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Const">
+      <UniqueIdentifier>{e9085bd4-65c5-4e18-92a8-d143f75158e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Struct">
+      <UniqueIdentifier>{ee93dcde-8922-4bb3-b234-f260a8e990d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Define">
+      <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -274,7 +280,6 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\GunnerFallDown.cpp">
       <Filter>Game\Action\Gunner</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\Struct.cpp" />
     <ClCompile Include="..\Classes\SteinsGate\Client\HitRecorder.cpp">
       <Filter>Game\Util</Filter>
     </ClCompile>
@@ -584,6 +589,9 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\Callback_POPUP_TIMEOUT.cpp">
       <Filter>Game\Callback</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\Struct.cpp">
+      <Filter>Struct</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\SteinsGate\Client\ImagePackManager.h">
@@ -632,10 +640,10 @@
       <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Animation.h">
-      <Filter>Game\Define</Filter>
+      <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Action.h">
-      <Filter>Game\Define</Filter>
+      <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\GunnerIdle.h">
       <Filter>Game\Action\Gunner</Filter>
@@ -659,7 +667,7 @@
       <Filter>Game\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Projectile.h">
-      <Filter>Game\Define</Filter>
+      <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\CharInfoLoader.h">
       <Filter>Data\Char</Filter>
@@ -716,7 +724,6 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SteinsGateApp.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\Struct.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Tutturu.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\AttackDataInfoLoader.h">
       <Filter>Data\AttackData</Filter>
@@ -734,7 +741,7 @@
       <Filter>Game\Action\Gunner</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_ActorListener.h">
-      <Filter>Game\Define</Filter>
+      <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\IActorListener.h">
       <Filter>Game\Listener</Filter>
@@ -752,7 +759,7 @@
       <Filter>Game\Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Effect.h">
-      <Filter>Game\Define</Filter>
+      <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\EffectInfo.h">
       <Filter>Data\Effect</Filter>
@@ -818,7 +825,7 @@
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_UI.h">
-      <Filter>Game\Define</Filter>
+      <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIGroupMaster.h">
       <Filter>Game\UI</Filter>
@@ -902,7 +909,7 @@
       <Filter>Net\Connection</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Popup.h">
-      <Filter>Game\Define</Filter>
+      <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\FrameEventLoader.h">
       <Filter>Data\FrameEvent</Filter>
@@ -959,7 +966,7 @@
       <Filter>Game\Listener\Monster</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define_Event.h">
-      <Filter>Game\Define</Filter>
+      <Filter>Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\FallDownActivity_Goblin.h">
       <Filter>Game\AI\Activity\FallDown</Filter>
@@ -1009,7 +1016,6 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.h">
       <Filter>Data\Channel</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\TimeManager.h">
       <Filter>Game\Contents</Filter>
     </ClInclude>
@@ -1073,6 +1079,29 @@
       <Filter>Game\Callback</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Namespace.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\Define.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Struct.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Struct_ACTOR.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Struct_CHANNEL.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const_HOST.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const_NETGROUP.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const_TIMEOUT.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Define.h">
+      <Filter>Define</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

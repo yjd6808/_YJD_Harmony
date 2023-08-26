@@ -8,39 +8,15 @@
 
 #pragma once
 
-#include <SteinsGate/Common/Enum.h>
 #include <SteinsGate/Common/Struct.h>
-
 #include <SteinsGate/Client/Const.h>
 
-struct AnimationInfo;
+// ==============================================
+// 포워딩용 스페이스
+// ==============================================
 struct AttackDataInfo;
 
 class Actor;
 
-struct ActorRect
-{
-	SGRect ThicknessRect;
-	SGRect BodyRect;
-
-	bool isCollide(const ActorRect& rect, SpriteDirection_t& otherHitDirection, SGRect& hitRect);
-};
-
-struct HitInfo
-{
-	Actor* Attacker;
-	Actor* HitTarget;
-	SpriteDirection_t HitDirection;
-	SGRect HitRect;
-	AttackDataInfo* AttackDataInfo;
-};
-
-struct ChannelDensityEx : ChannelDensity
-{
-	inline const static SGColor3B Color[Max]{
-		SGColor3B{ 34, 139, 34 },	// 쾌적
-		SGColor3B{ 237, 145, 33 },	// 보통
-		SGColor3B{ 178, 34, 34 },	// 혼잡
-		SGColor3B{ 255, 64, 169 }	// 포화
-	};
-};
+#include <SteinsGate/Client/Struct_ACTOR.h>
+#include <SteinsGate/Client/Struct_CHANNEL.h>

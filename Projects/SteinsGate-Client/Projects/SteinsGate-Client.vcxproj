@@ -461,6 +461,9 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\CLIListener.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\ComponentCollection.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Const.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const_HOST.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const_NETGROUP.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Const_TIMEOUT.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\Contents.h">
       <SubType>
       </SubType>
@@ -583,6 +586,11 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\SitActivity_Goblin.h" />
+    <ClInclude Include="..\Classes\SteinsGate\Client\Struct_ACTOR.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\Struct_CHANNEL.h" />
     <ClInclude Include="..\Classes\SteinsGate\Client\S_AREA.h">
       <SubType>
       </SubType>

@@ -162,6 +162,7 @@ public:
 	String& operator=(const String& other);
 	String& operator=(String&& other) noexcept;
 	String& operator=(const char* other);
+	String& operator=(std::nullptr_t other);
 	bool operator==(const String& other) const;
 	bool operator==(const char* other) const;
 	bool operator!=(const String& other) const;

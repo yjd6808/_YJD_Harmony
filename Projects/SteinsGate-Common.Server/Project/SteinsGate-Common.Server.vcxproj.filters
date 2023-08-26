@@ -22,7 +22,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\ServerEnum.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
@@ -44,7 +43,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerClientCommon.h">
       <Filter>Net\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h">
       <Filter>Database</Filter>
     </ClInclude>
@@ -100,6 +98,21 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerContents.h">
       <Filter>Contents</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerEnum.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_PROCESS.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_NETGROUP.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_HOST.h">
+      <Filter>Const</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
@@ -119,7 +132,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\ServerEnum.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
@@ -171,6 +183,9 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerContents.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ServerEnum.cpp">
+      <Filter>Enum</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Database">
@@ -202,6 +217,12 @@
     </Filter>
     <Filter Include="Contents">
       <UniqueIdentifier>{9c30e36e-d7bf-4f68-9df8-a1fc168a182f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Const">
+      <UniqueIdentifier>{2f5494b8-ae54-445c-a598-9e6457f835fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enum">
+      <UniqueIdentifier>{84690f22-67e2-430f-94ef-504880346a34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -20,6 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\CLIListenerCommon.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_HOST.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_NETGROUP.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_PROCESS.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerContents.h">
       <SubType>
       </SubType>

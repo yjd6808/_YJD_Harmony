@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <JNetwork/Namespace.h>
+#include <SteinsGate/Common/Namepsace.h>
 
 #define NS_QRY_BEGIN namespace Qry {
 #define NS_QRY_END	 }

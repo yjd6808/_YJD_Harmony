@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include <JCore/Container/Pair.h>
-#include <JCore/Primitives/String.h>
-
 #include <SteinsGate/Common/Enum.h>
 
 

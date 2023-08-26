@@ -167,6 +167,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_MAP.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_MONSTER.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_STRINGLEN.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_CHARACTER.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_VISUAL.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_SERVER.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_ITEM.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_ACTION.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_RESOURCE.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_FPS.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Core.h">
       <SubType>
       </SubType>

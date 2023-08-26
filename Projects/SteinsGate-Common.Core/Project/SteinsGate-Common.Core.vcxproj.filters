@@ -365,6 +365,36 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Cmd.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_FPS.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_ACTION.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_RESOURCE.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_SERVER.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_VISUAL.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_ITEM.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_MAP.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_STRINGLEN.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_CHARACTER.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_MONSTER.h">
+      <Filter>Const</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
