@@ -29,6 +29,7 @@ STATIC_CMD_END(CLO_JoinLobby)
 
 
 STATIC_CMD_BEGIN(LOC_JoinLobbyAck, CMDID_LOC_JoinLobbyAck)
+bool Success;
 STATIC_CMD_END(LOC_JoinLobbyAck)
 
 

@@ -27,12 +27,12 @@ public:
 	bool HasComponent(int type);
 
 	template <typename TComponent>
-	TComponent* GetComponent(int type) const { return m_Components.Get<TComponent>(type); }
+	TComponent* GetComponent(bool addRef = false) const { return m_Components.Get<TComponent>(addRef); }
 
 	void OnCreated() override;
 	void OnConnected() override;
 	void OnDisconnected() override;
-private:
+protected:
 	ComponentCollection m_Components;
 };
 

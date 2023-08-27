@@ -8,7 +8,7 @@
 
 #include "Tutturu.h"
 #include "GameCoreHeader.h"
-#include "R_AUTH.h"
+#include "R_AUTHENTICATION.h"
 
 #include <SteinsGate/Common/Cmd_AUTHENTICATION.h>
 
@@ -22,7 +22,7 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_JNET;
 
-void R_AUTH::RECV_AUC_LoginAck(Session* session, ICommand* cmd) {
+void R_AUTHENTICATION::RECV_AUC_LoginAck(Session* session, ICommand* cmd) {
 	session->Disconnect();
 
 	AUC_LoginAck* pCmd = (AUC_LoginAck*)cmd;
@@ -30,7 +30,7 @@ void R_AUTH::RECV_AUC_LoginAck(Session* session, ICommand* cmd) {
 	
 	switch (pCmd->Result) {
 	case LoginResult::LoginSuccess: {
-		Core::Contents.PopupManager->showNone(SG_TEXT_RAW("CONNECT_LOBBY"), DEF_POPUP_CONNECT_LOBBY, false, Const::Timeout::LobbyConnection);
+		Core::Contents.PopupManager->showNone(SG_TEXT_RAW_FMT_STD("CONNECT_SERVER", ServerType::Name[ServerType::Lobby]), DEF_POPUP_CONNECT_LOBBY, false, Const::Timeout::LobbyConnection);
 
 		if (!Core::Net->connectLobbyTcp()) {
 			Core::Contents.PopupManager->closeByTag(DEF_POPUP_CONNECT_LOBBY);
@@ -39,6 +39,8 @@ void R_AUTH::RECV_AUC_LoginAck(Session* session, ICommand* cmd) {
 		}
 
 		AuthenticationComponent* pAuthenticationComponent = Core::Net->getAuthenticationComponent();
+		pAuthenticationComponent->setState(AuthenticationState::LobbyWait);
+		pAuthenticationComponent->setSerial(pCmd->Serial);
 		pAuthenticationComponent->setLastServer(pCmd->LastServer);
 		break;
 	}

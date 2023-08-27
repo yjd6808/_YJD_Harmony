@@ -171,7 +171,7 @@ bool AuthenticationManager::UpdateRaw(AuthenticationSerial_t serial, const char*
 		return false;
 	}
 
-	if (RemoveRaw(pData->TimeId)) {
+	if (!RemoveRaw(pData->TimeId)) {
 		_LogDebug_("기존 타임ID 제거 실패");
 		return false;
 	}
@@ -244,7 +244,7 @@ bool AuthenticationManager::GenerateSerial(JCORE_OUT AuthenticationSerial_t& dat
 	AuthenticationSerial_t iGeneratedSerial;
 	int iRetry = 0;
 	do {
-		iGeneratedSerial = Random::GenerateInt(100, 10000000);
+		iGeneratedSerial = Random::GenerateInt(Const::Authentication::SerialRange.Min, Const::Authentication::SerialRange.Max);
 		
 		if (!FindRaw(iGeneratedSerial)) {
 			break;
@@ -265,10 +265,10 @@ bool AuthenticationManager::GenerateTimeId(JCORE_OUT DateTime& timeId, Authentic
 	int iRetry = 0;
 
 	switch (state) {
-	case AuthenticationState::LobbyWait: generatedTime.AddMiliSecond(1000 * 15);	break;
-	case AuthenticationState::Lobby:	 generatedTime.AddMiliSecond(1000 * 900);	break;
-	case AuthenticationState::GameWait:  generatedTime.AddMiliSecond(1000 * 15);	break;
-	case AuthenticationState::Game:		 generatedTime.AddMiliSecond(1000 * 1800);	break;
+	case AuthenticationState::LobbyWait: generatedTime.AddMiliSecond(1000 * Const::Timeout::LobbyWait);	break;
+	case AuthenticationState::Lobby:	 generatedTime.AddMiliSecond(1000 * Const::Timeout::Lobby);		break;
+	case AuthenticationState::GameWait:  generatedTime.AddMiliSecond(1000 * Const::Timeout::GameWait);	break;
+	case AuthenticationState::Game:		 generatedTime.AddMiliSecond(1000 * Const::Timeout::Game);		break;
 	default: _LogWarn_("GenerateTimeId() 실패"); return false;
 	}
 

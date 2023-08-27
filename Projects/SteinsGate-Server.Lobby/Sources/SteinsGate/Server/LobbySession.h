@@ -26,8 +26,7 @@ public:
 	void OnConnected() override;
 	void OnDisconnected() override;
 
-	AuthenticationComponent* GetAuthenticationComponent() const { return m_pAuthenticationComponent; };
-
+	AuthenticationComponent* GetAuthenticationComponent(bool addRef = false);
 private:
 	AuthenticationComponent* m_pAuthenticationComponent;
 };

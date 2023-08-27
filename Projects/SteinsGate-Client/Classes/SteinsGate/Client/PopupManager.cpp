@@ -57,6 +57,7 @@ UI_Popup* PopupManager::pop() {
 		popup->retain();
 	} else {
 		popup = m_qPopupPool.Front();
+		popup->setTag(InvalidValue_v);	// 태그 초기화 해줘야함
 		m_qPopupPool.Dequeue();
 	}
 
@@ -101,6 +102,11 @@ UI_Popup* PopupManager::showYesNo(
 	HAlignment_t halign /* = HAlignment::Left */,
 	VAlignment_t valign /* = VAlignment::Top */
 ) {
+	UI_Popup* pOpendPopup = findByTag(tag);
+	if (pOpendPopup != nullptr) {
+		return pOpendPopup;
+	}
+
 	UI_Popup* popup = pop();
 	popup->setTag(tag);
 	popup->setText(text);
@@ -152,6 +158,11 @@ UI_Popup* PopupManager::showOk(
 	HAlignment_t halign /* = HAlignment::Left */,
 	VAlignment_t valign /* = VAlignment::Top */
 ) {
+	UI_Popup* pOpendPopup = findByTag(tag);
+	if (pOpendPopup != nullptr) {
+		return pOpendPopup;
+	}
+
 	UI_Popup* popup = pop();
 	popup->setTag(tag);
 	popup->setText(text);
@@ -199,6 +210,11 @@ UI_Popup* PopupManager::showNone(
 	HAlignment_t halign /* = HAlignment::Center */,
 	VAlignment_t valign /* = VAlignment::Center */
 ) {
+	UI_Popup* pOpendPopup = findByTag(tag);
+	if (pOpendPopup != nullptr) {
+		return pOpendPopup;
+	}
+
 	UI_Popup* popup = pop();
 	popup->setTag(tag);
 	popup->setText(text);

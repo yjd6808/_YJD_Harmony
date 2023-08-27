@@ -67,8 +67,8 @@ void NetCore::pollNetEvents() {
 	m_pCommandSynchronizer->processCommands();
 }
 
-void NetCore::runCommand(ClientConnectServerType_t listenerType, Session* session, ICommand* cmd) {
-	if (m_pNetGroup->getParser(listenerType)->RunCommand(session, cmd) == false) {
+void NetCore::runCommand(Session* session, ICommand* cmd) {
+	if (m_pNetGroup->getParser()->RunCommand(session, cmd) == false) {
 		_NetLogWarn_("처리 불가능한 커맨드(%d) 수신", cmd->GetCommand());
 	}
 }

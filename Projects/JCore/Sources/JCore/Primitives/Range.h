@@ -17,10 +17,14 @@ NS_JC_BEGIN
 template <typename TNumeric>
 struct Range
 {
-	TNumeric Min;
-	TNumeric Max;
+	TNumeric Min;	// Inclusive
+	TNumeric Max;	// Exclusive
 
-	constexpr TNumeric Average() {
+	constexpr bool Contain(TNumeric val) const {
+		return val >= Min && val < Max;
+	}
+
+	constexpr TNumeric Average() const {
 		return (Min + Max) / TNumeric(2);
 	}
 };

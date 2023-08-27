@@ -33,11 +33,8 @@ void CommonSession::OnCreated() {
 }
 
 void CommonSession::OnConnected() {
-	m_Components.Initialize();
-	m_Components.OnConnected();
 }
 
 void CommonSession::OnDisconnected() {
-	m_Components.OnDisconnected();
 }
 

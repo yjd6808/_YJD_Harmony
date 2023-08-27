@@ -23,6 +23,7 @@ public:
 
 	void SetState(AuthenticationState_t state);
 	void SetSerial(AuthenticationSerial_t serial);
+	void SetAccountId(const char* accountId);
 
 	AuthenticationState_t GetState() const { return m_eState; }
 	AuthenticationSerial_t GetSerial() const { return m_iSerial; }
@@ -32,6 +33,8 @@ public:
 protected:
 	void RemoveUnauthenticatedSession();
 private:
+	SGStaticString<Const::StringLen::AccountId> m_szAccountId;
+
 	AuthenticationState_t m_eState;
 	AuthenticationSerial_t m_iSerial;
 };

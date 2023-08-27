@@ -9,8 +9,7 @@
 #include "GameCoreHeader.h"
 #include "NetClientGroup.h"
 
-#include <SteinsGate/Common/Cmd_AUTHENTICATION.h>
-#include <SteinsGate/Common/Cmd_CHAT.h>
+#include <SteinsGate/Common/Cmd.h>
 
 #include <SteinsGate/Client/S_AUTH.h>
 #include <SteinsGate/Client/S_LOBBY.h>
@@ -19,7 +18,9 @@
 #include <SteinsGate/Client/S_CHAT.h>
 #include <SteinsGate/Client/S_AREA.h>
 
-#include <SteinsGate/Client/R_AUTH.h>
+#include <SteinsGate/Client/R_AUTHENTICATION.h>
+#include <SteinsGate/Client/R_MESSAGE.h>
+#include <SteinsGate/Client/R_LOBBY.h>
 
 USING_NS_JC;
 USING_NS_CC;
@@ -83,45 +84,18 @@ void NetClientGroup::Initialize() {
 	// 커맨드 초기화
 	// ==========================================================
 
-	SGCommandParser* parser = nullptr;
-	{
-		parser = &m_Parser[ClientConnectServerType::Auth];
-		parser->AddCommand<AUC_LoginAck>(R_AUTH::RECV_AUC_LoginAck);
-	}
+	// AUTHENTICATION
+	m_Parser.AddCommand<AUC_LoginAck>			(R_AUTHENTICATION::RECV_AUC_LoginAck);
 
-	{
-		parser = &m_Parser[ClientConnectServerType::Lobby];
+	// LOBBY
+	m_Parser.AddCommand<LOC_JoinLobbyAck>		(R_LOBBY::RECV_LOC_JoinLobbyAck);
 
-		// TCP
-
-
-		// UDP
-	}
-
-	{
-		parser = &m_Parser[ClientConnectServerType::Logic];
-
-		// TCP
-
-
-		// UDP
-	}
-
-	{
-		parser = &m_Parser[ClientConnectServerType::Chat];
-	}
-
-	{
-		parser = &m_Parser[ClientConnectServerType::Area];
-	}
+	// MESSAGE
+	m_Parser.AddCommand<SC_ClientText>			(R_MESSAGE::RECV_SC_ClientText);
 }
 
 void NetClientGroup::Finalize() {
 	NetGroup::Finalize();
-}
-
-SGCommandParser* NetClientGroup::getParser(ClientConnectServerType_t serverType) {
-	return &m_Parser[serverType];
 }
 
 

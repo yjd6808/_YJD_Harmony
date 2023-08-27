@@ -80,8 +80,11 @@ void UI_Popup::onUpdate(float dt) {
 
 	m_OpenedTime.Elapsed.Second += dt;
 
-	if (m_OpenedTime.ElapsedSeconds(m_fTimeout) && m_fnTimeout) {
-		m_fnTimeout();
+	if (m_OpenedTime.ElapsedSeconds(m_fTimeout)) {
+
+		if (m_fnTimeout) {
+			m_fnTimeout();
+		}
 		close();
 	}
 }

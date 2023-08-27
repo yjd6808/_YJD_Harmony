@@ -14,9 +14,10 @@
 USING_NS_JC;
 USING_NS_JNET;
 
-void S_AUTHENTICATION_IS::SEND_SAU_AuthenticationCheck(int sessionHandle, AuthenticationSerial_t serial) {
+void S_AUTHENTICATION_IS::SEND_SAU_AuthenticationCheck(int sessionHandle, const char* accountId, AuthenticationSerial_t serial) {
 	auto sending = SendBegin<SAU_AuthenticationCheck>();
 	sending.Cmd.SessionHandle = sessionHandle;
+	sending.Cmd.AccountId.SetString(accountId);
 	sending.Cmd.RequestedServer = ServerProcessType::Lobby;
 	sending.Cmd.Serial = serial;
 }

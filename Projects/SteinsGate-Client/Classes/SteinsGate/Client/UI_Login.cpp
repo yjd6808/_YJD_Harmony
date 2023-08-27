@@ -154,5 +154,5 @@ void UI_Login::login() {
 		return;
 	}
 
-	Core::Contents.PopupManager->showNone(SG_TEXT_RAW("CONNECT_AUTH"), DEF_POPUP_CONNECT_AUTH);
+	Core::Contents.PopupManager->showNone(SG_TEXT_RAW_FMT_STD("CONNECT_SERVER", ServerType::Name[ServerType::Auth]), DEF_POPUP_CONNECT_AUTH);
 }

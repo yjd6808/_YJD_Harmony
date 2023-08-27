@@ -393,7 +393,7 @@
     <ClCompile Include="..\Classes\SteinsGate\Client\NetCore.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\SteinsGate\Client\R_AUTH.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\R_AUTHENTICATION.cpp">
       <Filter>Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\S_AUTH.cpp">
@@ -591,6 +591,12 @@
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\Struct.cpp">
       <Filter>Struct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\R_MESSAGE.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\R_LOBBY.cpp">
+      <Filter>Net\Recv</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -866,7 +872,7 @@
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Test.h">
       <Filter>Game\UI_M</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\SteinsGate\Client\R_AUTH.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\R_AUTHENTICATION.h">
       <Filter>Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\S_AUTH.h">
@@ -1102,6 +1108,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\Define.h">
       <Filter>Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\R_MESSAGE.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\R_LOBBY.h">
+      <Filter>Net\Recv</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

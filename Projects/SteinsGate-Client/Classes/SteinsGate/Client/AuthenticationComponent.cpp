@@ -20,7 +20,7 @@ AuthenticationComponent::~AuthenticationComponent() {}
 void AuthenticationComponent::initialize() {
 	m_AccountData.Clear();
 
-	m_eState = AuthenticationState::LobbyWait;
+	m_eState = AuthenticationState::Initialized;
 	m_iSerial = InvalidValue_v;
 }
 
@@ -35,4 +35,8 @@ void AuthenticationComponent::setLastServer(GameServerType_t lastServer) {
 
 void AuthenticationComponent::setState(AuthenticationState_t state) {
 	m_eState = state;
+}
+
+void AuthenticationComponent::setSerial(AuthenticationSerial_t serial) {
+	m_iSerial = serial;
 }

@@ -18,6 +18,7 @@ namespace StringLen
 	constexpr int CharacterName = 16;
 	constexpr int AccountId = 16;
 	constexpr int AccountPass = 16;
+	constexpr int ClientTextKey = 48;
 }
 
 NS_CONST_END

@@ -123,6 +123,7 @@
     #define JCORE_IN_OPT
 	#define JCORE_NOT_NULL
 	#define JCORE_NULLABLE
+	#define JCORE_UNUSED
 	
 	#define JCORE_SWAP(val1, val2, type) do { type temp = val1; val1 = val2; val2 = temp; } while (0)
 

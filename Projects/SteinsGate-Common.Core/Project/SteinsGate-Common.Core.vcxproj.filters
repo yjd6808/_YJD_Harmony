@@ -398,6 +398,12 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ICreatable.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Cmd_MESSAGE.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Const_AUTHENTICATION.h">
+      <Filter>Const</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">

@@ -22,6 +22,7 @@ public:
 	void setAccountIdPass(const char* id, const char* pass);
 	void setLastServer(GameServerType_t lastServer);
 	void setState(AuthenticationState_t state);
+	void setSerial(AuthenticationSerial_t serial);
 
 	AuthenticationSerial_t getSerial() const { return m_iSerial; }
 	AuthenticationState_t getState() const { return m_eState; }

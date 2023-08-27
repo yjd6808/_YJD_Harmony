@@ -8,11 +8,9 @@
 
 #pragma once
 
-
-
 #include <JNetwork/Host/Session.h>
 
-struct R_AUTH
+struct R_AUTHENTICATION
 {
 public:
 	static void RECV_AUC_LoginAck(JNetwork::Session* session, JNetwork::ICommand* cmd);

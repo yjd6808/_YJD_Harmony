@@ -11,8 +11,9 @@
 
 #include <JNetwork/Host/SessionContainer.h>
 
-#include <SteinsGate/Server/ListenerCenterServer.h>
+#include <SteinsGate/Common/CommonSession.h>
 
+#include <SteinsGate/Server/ListenerCenterServer.h>
 #include <SteinsGate/Server/R_MESSAGE.h>
 #include <SteinsGate/Server/R_PING.h>
 #include <SteinsGate/Server/R_SETUP.h>
@@ -26,6 +27,25 @@ CenterNetGroup::CenterNetGroup()
 	SetName("센터 메인");
 }
 CenterNetGroup::~CenterNetGroup() {}
+
+SGISessionContainer* CenterNetGroup::GetSessionContainer(ServerType_t type) {
+	if (type == ServerType::Center) {
+		return m_pCenterSessionContainer;
+	}
+
+	DebugAssert(false);
+	return nullptr;
+}
+
+CommonSession* CenterNetGroup::GetSessionFromContainer(int handle) {
+	if (!Const::Host::LobbyHandleRange.Contain(handle)) {
+		DebugAssertMsg(false, "올바르지 않은 로비 세션핸들입니다. (%d)", handle);
+		return nullptr;
+	}
+
+
+	return dynamic_cast<CommonSession*>(m_pCenterSessionContainer->Get(handle));
+}
 
 void CenterNetGroup::InitializeBufferPool() {
 	CreateBufferPool({});
@@ -55,11 +75,11 @@ void CenterNetGroup::InitializeServer() {
 
 	AddHost(Const::Host::CenterTcpId, spServer);
 
-	SessionContainer* pCenterSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
-	pCenterSessionContainer->SetInitialHandleSeq(Const::Host::CenterHandleSeq);
+	m_pCenterSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	m_pCenterSessionContainer->SetInitialHandleSeq(Const::Host::CenterHandleRange.Min);
 
 	m_pCenterTcp = spServer.Get<CenterServer*>();
-	m_pCenterTcp->SetSesssionContainer(pCenterSessionContainer);
+	m_pCenterTcp->SetSesssionContainer(m_pCenterSessionContainer);
 	m_pCenterTcp->SetEventListener(dbg_new ListenerCenterServer{ m_pCenterTcp, m_pParser });
 
 	AddUpdatable(Const::Host::CenterTcpId, m_pCenterTcp);

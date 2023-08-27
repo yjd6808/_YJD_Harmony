@@ -59,6 +59,7 @@ public:
 	virtual DetailType GetDetailType() const = 0;
 	virtual const char* TypeName() = 0;
 	State GetState() { return (State)m_eState.Load(); }
+	bool IsConnected() { return m_eState.Load() == eConnected; }
 	bool CreateSocket(TransportProtocol protocol, bool nonBlocking = true);
 	bool ConnectIocp();
 	const Socketv4& Socket() const { return m_Socket; }

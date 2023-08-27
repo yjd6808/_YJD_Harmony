@@ -9,8 +9,12 @@
 #pragma once
 
 #include <JNetwork/NetGroup.h>
+#include <JNetwork/Host/SessionContainer.h>
 
 #include <SteinsGate/Common/UpdatableCollection.h>
+
+class CommonServer;
+class CommonSession;
 
 class JCORE_NOVTABLE CommonNetGroup : public JNetwork::NetGroup
 {
@@ -28,6 +32,8 @@ public:
 	virtual void StopServer();
 
 	virtual CommonServer* GetMainTcp() const = 0;
+	virtual CommonSession* GetSessionFromContainer(int handle) = 0;
+	virtual SGISessionContainer* GetSessionContainer(ServerType_t type) = 0;
 
 	bool AddUpdatable(int id, IUpdatable* updatable);
 protected:
@@ -38,8 +44,8 @@ protected:
 
 	virtual void OnUpdate(const JCore::TimeSpan& elapsed) = 0;
 
-	JCore::NormalLock m_ServerBootLock;
-	JNetwork::CommandParser* m_pParser;
+	SGNormalLock m_ServerBootLock;
+	SGCommandParser* m_pParser;
 	UpdatableCollection m_UpdatableCollection;
 
 	inline static JCore::AtomicInt ms_iUpdatableSeq;

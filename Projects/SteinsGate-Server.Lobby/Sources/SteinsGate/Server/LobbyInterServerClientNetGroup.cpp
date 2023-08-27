@@ -12,6 +12,9 @@
 
 #include <SteinsGate/Common/CmdHost.h>
 #include <SteinsGate/Common/ListenerInterServerClient.h>
+#include <SteinsGate/Common/CmdRelay_AUTHENTICATION.h>
+
+#include <SteinsGate/Server/R_AUTHENTICATION.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -30,6 +33,13 @@ void LobbyInterServerClientNetGroup::InitializeBufferPool() {
 void LobbyInterServerClientNetGroup::InitializeIOCP() {
 	CreateIocp(2);
 	RunIocp();
+}
+
+void LobbyInterServerClientNetGroup::InitializeParser() {
+	InterServerClientNetGroup::InitializeParser();
+
+	// AUTHENTICATION
+	m_pParser->AddCommand<AUS_AuthenticationCheckAck>(R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck);
 }
 
 void LobbyInterServerClientNetGroup::InitializeInterServerTcp() {

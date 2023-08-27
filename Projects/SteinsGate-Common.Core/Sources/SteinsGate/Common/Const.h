@@ -9,6 +9,7 @@
 #pragma once
 
 #include <SteinsGate/Common/Const_ACTION.h>
+#include <SteinsGate/Common/Const_AUTHENTICATION.h>
 #include <SteinsGate/Common/Const_CHARACTER.h>
 #include <SteinsGate/Common/Const_FPS.h>
 #include <SteinsGate/Common/Const_ITEM.h>

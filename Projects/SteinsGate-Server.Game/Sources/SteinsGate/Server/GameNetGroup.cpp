@@ -11,6 +11,8 @@
 
 #include <JNetwork/Host/SessionContainer.h>
 
+#include <SteinsGate/Common/CommonSession.h>
+
 #include <SteinsGate/Server/ListenerLogicServer.h>
 #include <SteinsGate/Server/ListenerAreaServer.h>
 #include <SteinsGate/Server/ListenerChatServer.h>
@@ -27,6 +29,33 @@ GameNetGroup::GameNetGroup()
 }
 
 GameNetGroup::~GameNetGroup() {}
+
+SGISessionContainer* GameNetGroup::GetSessionContainer(ServerType_t type) {
+	switch (type) {
+	case ServerType::Logic: return m_pLogicSessionContainer;
+	case ServerType::Chat: return m_pChatSessionContainer;
+	case ServerType::Area: return m_pAreaSessionContainer;
+	default: DebugAssert(false);
+	}
+	return nullptr;
+}
+
+CommonSession* GameNetGroup::GetSessionFromContainer(int handle) {
+	if (Const::Host::LogicHandleRange.Contain(handle)) {
+		return dynamic_cast<CommonSession*>(m_pLogicSessionContainer->Get(handle));
+	}
+
+	if (Const::Host::AreaHandleRange.Contain(handle)) {
+		return dynamic_cast<CommonSession*>(m_pAreaSessionContainer->Get(handle));
+	}
+
+	if (Const::Host::ChatHandleRange.Contain(handle)) {
+		return dynamic_cast<CommonSession*>(m_pChatSessionContainer->Get(handle));
+	}
+
+	DebugAssertMsg(false, "올바르지 않은 세션핸들입니다. (%d)", handle);
+	return nullptr;
+}
 
 void GameNetGroup::InitializeBufferPool() {
 	CreateBufferPool({});
@@ -56,24 +85,23 @@ void GameNetGroup::InitializeServer() {
 	AddHost(Const::Host::AreaTcpId, spAreaTcp);
 	AddHost(Const::Host::ChatTcpId, spChatTcp);
 
-	SessionContainer* pLogicSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
-	SessionContainer* pAreaSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
-	SessionContainer* pChatSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
-
-	pLogicSessionContainer->SetInitialHandleSeq(Const::Host::LogicHandleSeq);
-	pAreaSessionContainer->SetInitialHandleSeq(Const::Host::AreaHandleSeq);
-	pChatSessionContainer->SetInitialHandleSeq(Const::Host::ChatHandleSeq);
+	m_pLogicSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	m_pLogicSessionContainer->SetInitialHandleSeq(Const::Host::LogicHandleRange.Min);
+	m_pAreaSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	m_pAreaSessionContainer->SetInitialHandleSeq(Const::Host::AreaHandleRange.Min);
+	m_pChatSessionContainer = dbg_new SessionContainer(Core::ServerProcessInfo->MaxSessionCount);
+	m_pChatSessionContainer->SetInitialHandleSeq(Const::Host::ChatHandleRange.Min);
 
 	m_pLogicTcp = spLogicTcp.Get<LogicServer*>();
-	m_pLogicTcp->SetSesssionContainer(pLogicSessionContainer);
+	m_pLogicTcp->SetSesssionContainer(m_pLogicSessionContainer);
 	m_pLogicTcp->SetEventListener(dbg_new ListenerLogicServer{ m_pLogicTcp, m_pParser });
 
 	m_pAreaTcp = spAreaTcp.Get<AreaServer*>();
-	m_pAreaTcp->SetSesssionContainer(pAreaSessionContainer);
+	m_pAreaTcp->SetSesssionContainer(m_pAreaSessionContainer);
 	m_pAreaTcp->SetEventListener(dbg_new ListenerAreaServer{ m_pAreaTcp, m_pParser });
 
 	m_pChatTcp = spChatTcp.Get<ChatServer*>();
-	m_pChatTcp->SetSesssionContainer(pChatSessionContainer);
+	m_pChatTcp->SetSesssionContainer(m_pChatSessionContainer);
 	m_pChatTcp->SetEventListener(dbg_new ListenerChatServer{ m_pChatTcp, m_pParser });
 
 	AddUpdatable(Const::Host::LogicTcpId, m_pLogicTcp);

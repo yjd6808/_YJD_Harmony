@@ -26,7 +26,7 @@ public:
 	void Initialize() override;
 	void Finalize() override;
 	void pollNetEvents();
-	void runCommand(ClientConnectServerType_t listenerType, SGSession* session, JNetwork::ICommand* cmd);
+	void runCommand(SGSession* session, JNetwork::ICommand* cmd);
 
 	NetClientGroup* getGroup() const { return m_pNetGroup; }
 	SGTcpClient* getAuthTcp() const { return m_pAuthTcp; }

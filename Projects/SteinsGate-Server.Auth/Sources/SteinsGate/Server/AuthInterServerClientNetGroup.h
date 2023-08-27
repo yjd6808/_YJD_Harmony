@@ -17,6 +17,7 @@ public:
 	AuthInterServerClientNetGroup();
 	~AuthInterServerClientNetGroup() override;
 
+	void InitializeParser() override;
 	void InitializeIOCP() override;
 	void InitializeBufferPool() override;
 	void InitializeInterServerTcp() override;

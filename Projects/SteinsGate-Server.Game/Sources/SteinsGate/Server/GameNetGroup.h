@@ -29,6 +29,13 @@ public:
 
 	void LaunchServer() override;
 	void StopServer() override;
+
+	SGISessionContainer* GetLogicSessionContainer() const { return m_pLogicSessionContainer; }
+	SGISessionContainer* GetAreaSessionContainer() const { return m_pChatSessionContainer; }
+	SGISessionContainer* GetChatSessionContainer() const { return m_pAreaSessionContainer; }
+
+	SGISessionContainer* GetSessionContainer(ServerType_t type) override;
+	CommonSession* GetSessionFromContainer(int handle) override;
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
@@ -39,6 +46,10 @@ protected:
 	LogicServer* m_pLogicTcp;
 	AreaServer* m_pAreaTcp;
 	ChatServer* m_pChatTcp;
+
+	SGISessionContainer* m_pLogicSessionContainer;
+	SGISessionContainer* m_pChatSessionContainer;
+	SGISessionContainer* m_pAreaSessionContainer;
 };
 
 

@@ -16,10 +16,12 @@ class LobbyInterServerClientNetGroup : public InterServerClientNetGroup
 public:
 	LobbyInterServerClientNetGroup();
 
-	void InitializeIOCP() override;
 	void InitializeBufferPool() override;
+	void InitializeIOCP() override;
+	void InitializeParser() override;
 	void InitializeInterServerTcp() override;
 	void InitializeInterServerUdp() override;
+	
 protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 };

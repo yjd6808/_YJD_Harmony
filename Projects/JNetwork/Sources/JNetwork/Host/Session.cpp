@@ -37,8 +37,9 @@ Session::Session(
 Session::~Session() = default;
 
 void Session::Initialize() {
+	const int eState = m_eState.Load();
 
-	if (m_eState != eNone && m_eState != eDisconnected) {
+	if (eState == eConnectWait || eState == eConnected) {
 		_NetLogWarn_("초기화 되지 않았거나 혹은 연결이 끊긴 대상만 초기화를 진행할 수 있습니다.");
 		return;
 	}
@@ -64,11 +65,11 @@ bool Session::Bind(const IPv4EndPoint& bindAddr) {
 
 	const int iBindRet = m_Socket.Bind(bindAddr);
 	if (iBindRet == SOCKET_ERROR) {
-		_NetLogError_("%s %s %s 바인드 실패 (%u)", TypeName(), bindAddr.ToString().Source(), m_Socket.ProtocolName(), Winsock::LastError());
+		_NetLogError_("%s %s 바인드 실패 (%u)", TypeName(), bindAddr.ToString().Source(), Winsock::LastError());
 		return false;
 	}
 
-	_NetLogDebug_("%s %s %s 바인드 완료", TypeName(), bindAddr.ToString().Source(), m_Socket.ProtocolName());
+	_NetLogDebug_("%s %s 바인드 완료", TypeName(), bindAddr.ToString().Source());
 	m_LocalEndPoint = bindAddr;
 	return true;
 }

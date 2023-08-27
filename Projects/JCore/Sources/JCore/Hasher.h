@@ -109,7 +109,11 @@ template <typename T>
 struct Hasher<T*>
 {
 	constexpr Int32U operator()(T* val) const {
+#if defined(_WIN64)
+		return Hasher<Int64U>()((Int64U)val);
+#else
 		return Hasher<Int32U>()((Int32U)val);
+#endif
 	}
 };
 

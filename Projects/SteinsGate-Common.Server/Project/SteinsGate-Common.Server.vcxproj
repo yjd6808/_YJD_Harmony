@@ -158,6 +158,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\StatementType.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_MESSAGE_COMMON.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\S_PING_IS_COMMON.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\S_TEST_IS_COMMON.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\S_MESSAGE_IS_COMMON.h" />
@@ -252,6 +256,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\SessionComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_MESSAGE_COMMON.cpp">
       <SubType>
       </SubType>
     </ClCompile>

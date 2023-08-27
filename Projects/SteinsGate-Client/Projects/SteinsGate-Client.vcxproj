@@ -84,7 +84,15 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\RuntimeConfig.cpp" />
-    <ClCompile Include="..\Classes\SteinsGate\Client\R_AUTH.cpp">
+    <ClCompile Include="..\Classes\SteinsGate\Client\R_AUTHENTICATION.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\R_LOBBY.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\SteinsGate\Client\R_MESSAGE.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -559,7 +567,15 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\RuntimeConfig.h" />
-    <ClInclude Include="..\Classes\SteinsGate\Client\R_AUTH.h">
+    <ClInclude Include="..\Classes\SteinsGate\Client\R_AUTHENTICATION.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\R_LOBBY.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\SteinsGate\Client\R_MESSAGE.h">
       <SubType>
       </SubType>
     </ClInclude>

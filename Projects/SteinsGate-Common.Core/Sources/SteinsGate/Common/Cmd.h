@@ -11,4 +11,5 @@
 #include <SteinsGate/Common/Cmd_AUTHENTICATION.h>
 #include <SteinsGate/Common/Cmd_CHAT.h>
 #include <SteinsGate/Common/Cmd_LOBBY.h>
+#include <SteinsGate/Common/Cmd_MESSAGE.h>
 

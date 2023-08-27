@@ -110,6 +110,7 @@ using SGSocket = JNetwork::Socketv4;
 using SGEndPoint = JNetwork::IPv4EndPoint;
 using SGAddress = JNetwork::IPv4Address;
 using SGSession = JNetwork::Session;
+using SGISessionContainer = JNetwork::ISessionContainer;
 using SGTcpClient = JNetwork::TcpClient;
 using SGUdpClient = JNetwork::UdpClient;
 using SGTcpSession = JNetwork::TcpSession;

@@ -31,9 +31,9 @@ public:
 	SGTcpClient* ChatTcp;
 	SGUdpClient* ChatUdp;
 
-	SGCommandParser* getParser(ClientConnectServerType_t serverType);
+	SGCommandParser* getParser() { return &m_Parser; }
 private:
-	SGCommandParser m_Parser[ClientConnectServerType::Max];
+	SGCommandParser m_Parser;
 
 	friend class NetCore;
 };

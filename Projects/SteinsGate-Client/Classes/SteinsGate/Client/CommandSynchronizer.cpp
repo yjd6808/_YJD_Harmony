@@ -79,7 +79,7 @@ void CommandSynchronizer::processCommands() {
 
 		while (!pQueue->IsEmpty()) {
 			CommandHolder* pHolder = pQueue->Front();
-			Core::Net->runCommand(pHolder->ListenerType, pHolder->Sender, pHolder->Command);
+			Core::Net->runCommand(pHolder->Sender, pHolder->Command);
 			pQueue->Dequeue();
 			delete pHolder;
 		}

@@ -64,11 +64,16 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_LOBBY.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\S_AUTHENTICATION_IS.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_LOBBY.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\CLIListener.h" />
@@ -101,7 +106,8 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyCoreHeader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOBBY.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_LOBBY.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -114,6 +120,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\S_AUTHENTICATION_IS.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_LOBBY.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

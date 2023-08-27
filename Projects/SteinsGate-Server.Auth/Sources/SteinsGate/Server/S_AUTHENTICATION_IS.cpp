@@ -11,8 +11,8 @@
 
 #include <SteinsGate/Common/CmdRelay_AUTHENTICATION.h>
 
-void S_AUTHENTICATION_IS::SEND_SAU_AuthenticationCheckAck(int sessionHandle, AuthenticationSerial_t serial, AuthenticationState_t state, bool success) {
-	auto sending = SendBegin<SAU_AuthenticationCheckAck>();
+void S_AUTHENTICATION_IS::SEND_AUS_AuthenticationCheckAck(int sessionHandle, bool success) {
+	auto sending = SendBegin<AUS_AuthenticationCheckAck>();
 	sending.Cmd.Success = success;
 	sending.Cmd.SessionHandle = sessionHandle;
 }

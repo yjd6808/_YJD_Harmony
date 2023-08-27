@@ -61,7 +61,7 @@ void InitializeServerCore() {
 	// AUTHENTICATION
 	// ============================================================
 	Core::CommandNameDictionary.Add<SAU_AuthenticationCheck>();
-	Core::CommandNameDictionary.Add<SAU_AuthenticationCheckAck>();
+	Core::CommandNameDictionary.Add<AUS_AuthenticationCheckAck>();
 }
 
 void FinalizeServerCore() {

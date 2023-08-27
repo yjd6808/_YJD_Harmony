@@ -168,6 +168,9 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\S_PING_IS_COMMON.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_MESSAGE_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
@@ -272,6 +275,9 @@
       <Filter>Net\Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\S_PING_IS_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_MESSAGE_COMMON.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
   </ItemGroup>

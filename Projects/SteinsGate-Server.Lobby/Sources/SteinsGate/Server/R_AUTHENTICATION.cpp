@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 8/3/2023 8:34:29 AM [SteinsGate-Server.Auth 프로젝트 복사 생성]
+ * 생성일: 8/27/2023 4:14:29 PM
  * =====================
  *
  */
@@ -11,33 +11,47 @@
 #include "LobbyCoreHeader.h"
 #include "R_AUTHENTICATION.h"
 
-#include <SteinsGate/Common/Cmd_LOBBY.h>
-
-#include <SteinsGate/Server/Q_LOBBY.h>
-#include <SteinsGate/Server/S_AUTHENTICATION_IS.h>
-#include <SteinsGate/Server/LobbySession.h>
-
-#include <SteinsGate/Common/UnauthenticatedSessionManager.h>
 #include <SteinsGate/Common/AuthenticationComponent.h>
+#include <SteinsGate/Common/CmdRelay_AUTHENTICATION.h>
+#include <SteinsGate/Common/S_MESSAGE_COMMON.h>
+#include <SteinsGate/Common/UnauthenticatedSessionManager.h>
+
+#include <SteinsGate/Server/LobbySession.h>
+#include <SteinsGate/Server/S_LOBBY.h>
+
+
+
 
 USING_NS_JC;
 USING_NS_JNET;
 
-void R_AUTHENTICATION::RECV_CLO_JoinLobby(Session* session, ICommand* cmd) {
-	CLO_JoinLobby* pCmd = (CLO_JoinLobby*)cmd;
-	LobbySession* pSession = (LobbySession*)session;
+void R_AUTHENTICATION::RECV_AUS_AuthenticationCheckAck(JCORE_UNUSED Session* session, ICommand* cmd) {
+	AUS_AuthenticationCheckAck* pCmd = (AUS_AuthenticationCheckAck*)cmd;
+	LobbySession* pSession = (LobbySession*)Core::NetGroup->GetSessionFromContainer(pCmd->SessionHandle);
 
-	if (Core::Contents.UnauthenticatedSessionManager->Add(pCmd->Serial, pSession)) {
-		_LogNormal_("세션이 이미 포함되어있습니다.");
-		session->Disconnect();
+	if (pSession == nullptr || !pSession->IsConnected()) {
 		return;
 	}
 
-	AuthenticationComponent* pAuthenticationComponent = pSession->GetAuthenticationComponent();
-	pAuthenticationComponent->SetSerial(pCmd->Serial);
-	pAuthenticationComponent->SetState(AuthenticationState::LobbyWait);
+	if (!pCmd->Success) {
+		S_MESSAGE_COMMON::SetInformation(pSession, SendStrategy::SendAsync);
+		S_MESSAGE_COMMON::SEND_SC_ClientText("AUTHENTICATION_LOBBY_FAILED");
+		pSession->Disconnect();
+		return;
+	}
 
-	S_AUTHENTICATION_IS::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync, SingleServerType::Auth);
-	S_AUTHENTICATION_IS::SEND_SAU_AuthenticationCheck(pSession->GetHandle(), pCmd->Serial);
+	AuthenticationComponent* pAuthenticationComponent = pSession->GetAuthenticationComponent(true);
+	
+	if (!Core::Contents.UnauthenticatedSessionManager->Remove(pAuthenticationComponent->GetSerial())) {
+		_LogWarn_("인증이 성공했는데, 미인증 세션 목록에 없습니다.");
+		S_MESSAGE_COMMON::SetInformation(pSession, SendStrategy::SendAsync);
+		S_MESSAGE_COMMON::SEND_SC_ClientText("AUTHENTICATION_LOBBY_FAILED");
+		pSession->Disconnect();
+		return;
+	}
 
+	pAuthenticationComponent->SetState(AuthenticationState::Lobby);
+	S_LOBBY::SetInformation(pSession, SendStrategy::SendAsync);
+	S_LOBBY::SEND_LOC_JoinLobbyAck(pCmd->Success);
 }
+

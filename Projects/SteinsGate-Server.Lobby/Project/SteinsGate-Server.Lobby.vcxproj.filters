@@ -8,7 +8,7 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerLobbyServer.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_LOBBY.cpp">
       <Filter>Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\S_AUTHENTICATION_IS.cpp">
@@ -35,13 +35,19 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\LobbyContents.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_LOBBY.cpp">
+      <Filter>Send</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyCoreHeader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Lobby.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_LOBBY.h">
       <Filter>Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerLobbyServer.h">
@@ -70,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\LobbyContents.h">
       <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_LOBBY.h">
+      <Filter>Send</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

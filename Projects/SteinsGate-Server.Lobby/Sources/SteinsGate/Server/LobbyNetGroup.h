@@ -19,6 +19,10 @@ public:
 
 	CommonServer* GetMainTcp() const override { return m_pLobbyTcp; }
 	LobbyServer* GetLobbyTcp() const { return m_pLobbyTcp; }
+	SGISessionContainer* GetLobbySessionContainer() const { return m_pLobbySessionContainer; }
+	SGISessionContainer* GetSessionContainer(ServerType_t type) override;
+	CommonSession* GetSessionFromContainer(int handle) override;
+
 protected:
 	void InitializeBufferPool() override;
 	void InitializeIOCP() override;
@@ -28,6 +32,7 @@ protected:
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
 
 	LobbyServer* m_pLobbyTcp;
+	SGISessionContainer* m_pLobbySessionContainer;
 };
 
 

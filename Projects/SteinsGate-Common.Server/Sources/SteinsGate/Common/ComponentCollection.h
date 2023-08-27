@@ -34,7 +34,7 @@ public:
 	void Initialize();
 
 	template <typename TComponent>
-	TComponent* Get() const {
+	TComponent* Get(bool addRef = false) const {
 		static_assert(JCore::IsNaturalType_v<TComponent>, "... TComponent must be natural type");
 		static_assert(JCore::IsBaseOf_v<IComponent, TComponent>, "... TComponent must be derived from IComponent");
 
@@ -43,8 +43,9 @@ public:
 		if (ppFoundComponent == nullptr) {
 			return nullptr;
 		}
-
-		return dynamic_cast<TComponent*>(*ppFoundComponent);
+		TComponent* pComponent = dynamic_cast<TComponent*>(*ppFoundComponent);
+		if (addRef) pComponent->AddRef();
+		return pComponent;
 	}
 
 	template <typename TComponent>

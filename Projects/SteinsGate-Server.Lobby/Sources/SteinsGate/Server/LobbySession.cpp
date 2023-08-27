@@ -26,15 +26,33 @@ LobbySession::LobbySession(TcpServer* server,
 {}
 
 void LobbySession::OnCreated() {
-	AddComponent(m_pAuthenticationComponent = dbg_new AuthenticationComponent(this));
+
 }
 
 void LobbySession::OnConnected() {
-	CommonSession::OnConnected();
+	AddComponent(m_pAuthenticationComponent = dbg_new AuthenticationComponent(this));
+	m_Components.OnConnected();
+	m_pAuthenticationComponent->AddRef();
 }
 
 void LobbySession::OnDisconnected() {
-	CommonSession::OnDisconnected();
+	m_Components.OnDisconnected();
+	m_Components.Clear();
+
+	JCORE_RELEASE_SAFE(m_pAuthenticationComponent);
+}
+
+AuthenticationComponent* LobbySession::GetAuthenticationComponent(bool addRef) {
+	if (m_pAuthenticationComponent == nullptr) {
+		DebugAssert(false);
+		return nullptr;
+	}
+
+	if (addRef) {
+		m_pAuthenticationComponent->AddRef();
+	}
+
+	return m_pAuthenticationComponent; 
 }
 
 

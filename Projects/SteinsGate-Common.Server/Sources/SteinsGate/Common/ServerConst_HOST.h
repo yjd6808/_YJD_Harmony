@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <JCore/Primitives/Range.h>
 #include <SteinsGate/Common/ServerNamespace.h>
 
 NS_CONST_BEGIN
@@ -41,12 +42,14 @@ namespace Host
 	constexpr int GameInterServerUdpId = 37;
 
 	// 세션핸들
-	constexpr int AuthHandleSeq = 100000;
-	constexpr int LobbyHandleSeq = 200000;
-	constexpr int LogicHandleSeq = 300000;
-	constexpr int AreaHandleSeq = 400000;
-	constexpr int ChatHandleSeq = 500000;
-	constexpr int CenterHandleSeq = 600000;
+	constexpr int SeqUnit = 100000;
+
+	constexpr JCore::Range AuthHandleRange = { SeqUnit * 1, SeqUnit * 2 };		// 100000 ~ 200000
+	constexpr JCore::Range LobbyHandleRange = { SeqUnit * 2, SeqUnit * 3 };		// 200000 ~ 300000
+	constexpr JCore::Range LogicHandleRange = { SeqUnit * 3, SeqUnit * 4 };		// 300000 ~ 400000
+	constexpr JCore::Range AreaHandleRange = { SeqUnit * 4, SeqUnit * 5 };		// 400000 ~ 500000
+	constexpr JCore::Range ChatHandleRange = { SeqUnit * 5, SeqUnit * 6 };		// 500000 ~ 600000
+	constexpr JCore::Range CenterHandleRange = { SeqUnit * 6, SeqUnit * 7 };	// 600000 ~ 700000
 }
 
 

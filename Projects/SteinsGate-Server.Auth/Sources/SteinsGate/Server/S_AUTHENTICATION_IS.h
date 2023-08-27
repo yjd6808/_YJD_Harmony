@@ -12,6 +12,6 @@
 
 struct S_AUTHENTICATION_IS : InterServerSendHelper<S_AUTHENTICATION_IS>
 {
-	static void SEND_SAU_AuthenticationCheckAck(int sessionHandle, AuthenticationSerial_t serial, AuthenticationState_t state, bool success);
+	static void SEND_AUS_AuthenticationCheckAck(int sessionHandle, bool success);
 };
 

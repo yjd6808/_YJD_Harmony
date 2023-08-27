@@ -1,6 +1,6 @@
 ﻿/*
  * 작성자: 윤정도
- * 생성일: 8/3/2023 8:34:29 AM [SteinsGate-Server.Auth 프로젝트 복사 생성]
+ * 생성일: 8/27/2023 4:14:29 PM
  * =====================
  *
  */
@@ -12,6 +12,5 @@
 
 struct R_AUTHENTICATION
 {
-public:
-	static void RECV_CLO_JoinLobby(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_AUS_AuthenticationCheckAck(JCORE_UNUSED JNetwork::Session* NOT_USE, JNetwork::ICommand* cmd);
 };

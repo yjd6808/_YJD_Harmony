@@ -19,6 +19,7 @@ struct Winsock
 	static bool				IsFinalized() { return ms_bFinalized; }
 	static Int32U			LastError();
 	static JCore::String	LastErrorMessage();
+	static JCore::String	ErrorMessage(Int32U errorCode);
 private:
 	static bool ms_bInitailized;
 	static bool ms_bFinalized;

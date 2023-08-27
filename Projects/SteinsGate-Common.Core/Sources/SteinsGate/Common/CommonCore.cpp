@@ -36,6 +36,9 @@ void InitializeCommonCore() {
 	// [ LOBBY ]
 	Core::CommandNameDictionary.Add<CLO_JoinLobby>();
 	Core::CommandNameDictionary.Add<LOC_JoinLobbyAck>();
+
+	// [ MESSAGE ]
+	Core::CommandNameDictionary.Add<SC_ClientText>();
 }
 
 void FinalizeCommonCore() {

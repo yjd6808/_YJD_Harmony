@@ -61,15 +61,15 @@ Int32U Winsock::LastError() {
 }
 
 JCore::String Winsock::LastErrorMessage() {
+	return ErrorMessage(::WSAGetLastError());
+}
+
+JCore::String Winsock::ErrorMessage(Int32U errorCode) {
 	char buf[1024];
-
-	const Int32U errorCode = WSAGetLastError();
-
 	FormatMessageA(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL, errorCode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		buf, 1024, NULL);
-
 	return buf;
 }
 
