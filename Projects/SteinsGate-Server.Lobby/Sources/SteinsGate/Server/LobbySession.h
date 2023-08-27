@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <JNetwork/Host/TcpSession.h>
-#include <SteinsGate/Server/Lobby.h>
+#include <SteinsGate/Common/CommonSession.h>
 
-class LobbySession : public JNetwork::TcpSession
+class AuthenticationComponent;
+class LobbySession : public CommonSession
 {
 public:
 	LobbySession(
@@ -21,6 +21,15 @@ public:
 		int recvBufferSize,
 		int sendBufferSize
 	);
+
+	void OnCreated() override;
+	void OnConnected() override;
+	void OnDisconnected() override;
+
+	AuthenticationComponent* GetAuthenticationComponent() const { return m_pAuthenticationComponent; };
+
+private:
+	AuthenticationComponent* m_pAuthenticationComponent;
 };
 
 

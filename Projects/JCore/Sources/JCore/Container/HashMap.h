@@ -158,6 +158,10 @@ public:
 		Table.ForEachValueDelete();
 	}
 
+	void ForEachValueRelease() {
+		Table.ForEachValueRelease();
+	}
+
 	SharedPtr<TIterator> Begin() const override {
 		return MakeShared<THashMapIterator, TAllocator>(
 			this->GetOwner(), 

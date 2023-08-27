@@ -15,7 +15,7 @@
 
 #include <SteinsGate/Server/AuthServer.h>
 #include <SteinsGate/Server/ListenerAuthServer.h>
-#include <SteinsGate/Server/R_AUTH.h>
+#include <SteinsGate/Server/R_AUTHENTICATION.h>
 
 
 
@@ -41,7 +41,7 @@ void AuthNetGroup::InitializeIOCP() {
 void AuthNetGroup::InitializeParser() {
 	CommonNetGroup::InitializeParser();
 
-	m_pParser->AddCommand<CAU_Login>(R_AUTH::RECV_CAU_Login);
+	m_pParser->AddCommand<CAU_Login>(R_AUTHENTICATION::RECV_CAU_Login);
 }
 
 void AuthNetGroup::InitializeServer() {

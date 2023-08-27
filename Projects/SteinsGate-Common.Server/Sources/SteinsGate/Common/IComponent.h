@@ -9,11 +9,22 @@
 #pragma once
 
 #include <JCore/Declspec.h>
+#include <JCore/Primitives/RefCountObject.h>
 
-struct JCORE_NOVTABLE IComponent
+#include <SteinsGate/Common/ServerConst_COMPONENT.h>
+
+#define SG_COMPONENT_TYPE_GETTER(component_type)				\
+public:															\
+	int GetType() const override { return component_type; }		\
+	static int Type() { return component_type; }
+
+struct JCORE_NOVTABLE IComponent : JCore::RefCountObject
 {
-	virtual ~IComponent() = default;
+	~IComponent() override = default;
+
 	virtual void Initialize() = 0;
+	virtual int GetType() const = 0;
+	void ReleaseAction() override { delete this; }
 };
 
 

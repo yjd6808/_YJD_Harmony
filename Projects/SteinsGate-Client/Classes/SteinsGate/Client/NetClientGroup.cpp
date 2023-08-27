@@ -70,12 +70,12 @@ void NetClientGroup::Initialize() {
 	// 샌더 초기화
 	// ==========================================================
 
-	S_AUTH::SetInformation(AuthTcp, eSendAsync);
-	S_LOBBY::SetInformation(LobbyTcp, eSendAsync);
-	S_GAME::SetInformation(LogicTcp, eSendAsync);
-	S_GAME_UDP::SetInformation(LogicUdp, eSendToAsync);
-	S_CHAT::SetInformation(ChatTcp, eSendAsync);
-	S_AREA::SetInformation(AreaTcp, eSendAsync);
+	S_AUTH::SetInformation(AuthTcp, SendStrategy::SendAsync);
+	S_LOBBY::SetInformation(LobbyTcp, SendStrategy::SendAsync);
+	S_GAME::SetInformation(LogicTcp, SendStrategy::SendAsync);
+	S_GAME_UDP::SetInformation(LogicUdp, SendStrategy::SendToAsync);
+	S_CHAT::SetInformation(ChatTcp, SendStrategy::SendAsync);
+	S_AREA::SetInformation(AreaTcp, SendStrategy::SendAsync);
 
 
 

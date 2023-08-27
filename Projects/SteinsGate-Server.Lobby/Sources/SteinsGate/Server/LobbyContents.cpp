@@ -13,8 +13,11 @@
 USING_NS_JC;
 
 void LobbyContents::Initialize() {
+	ServerContents::Initialize();
 }
 
 void LobbyContents::Finalize() {
 	ClearSchedule();
+
+	ServerContents::Finalize();
 }

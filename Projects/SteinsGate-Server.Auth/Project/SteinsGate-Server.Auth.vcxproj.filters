@@ -10,16 +10,13 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerAuthServer.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_INTERSERVER.cpp">
-      <Filter>Recv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_INTERSERVER.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_AUTHENTICATION_IS.cpp">
       <Filter>Send</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTH.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.cpp">
       <Filter>Recv</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_AUTH.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_AUTHENTICATION.cpp">
       <Filter>Send</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\Q_LOGIN.cpp">
@@ -55,19 +52,16 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\Auth.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthNetMaster.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\AuthNetGroup.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTH.h">
-      <Filter>Recv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_INTERSERVER.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_AUTHENTICATION.h">
       <Filter>Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerAuthServer.h">
       <Filter>Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_INTERSERVER.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_AUTHENTICATION_IS.h">
       <Filter>Send</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_AUTH.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_AUTHENTICATION.h">
       <Filter>Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_LOGIN.h">

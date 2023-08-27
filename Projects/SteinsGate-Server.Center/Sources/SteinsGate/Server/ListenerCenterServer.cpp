@@ -10,11 +10,11 @@
 #include "CenterCoreHeader.h"
 #include "ListenerCenterServer.h"
 
-#include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/CmdHost.h>
 #include <SteinsGate/Common/ListenerHelperCommon.h>
 
-#include <SteinsGate/Server/R_CENTER.h>
-#include <SteinsGate/Server/S_CENTER.h>
+#include <SteinsGate/Server/R_SETUP.h>
+#include <SteinsGate/Server/S_SETUP_IS.h>
 
 
 
@@ -67,7 +67,7 @@ void ListenerCenterServer::OnReceived(Session* session, IRecvPacket* recvPacket)
 			else
 				pInterServerCmd = static_cast<RelayDynamicCommand*>(cmd);
 
-			R_CENTER::LastFromId = pInterServerCmd->From;
+			InterServerRecvHelper::LastFromId = pInterServerCmd->From;
 
 			// 클라(나)가 수신처인 경우 그대로 처리
 			if (pInterServerCmd->To == Core::ServerProcessInfo->ServerId)

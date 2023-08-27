@@ -9,8 +9,13 @@
 #pragma once
 
 #include <SteinsGate/Common/BaseContents.h>
+#include <SteinsGate/Common/ServerType.h>
 
 struct ServerContents : BaseContents
 {
+	::UnauthenticatedSessionManager* UnauthenticatedSessionManager;
+
+	void Initialize() override;
+	void Finalize() override;
 };
 

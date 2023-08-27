@@ -19,7 +19,59 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\SteinsGate\Common\AuthenticationComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CLIListenerCommon.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdHost_MESSAGE.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdHost_PING.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdHost_SETUP.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdRelay_AUTHENTICATION.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdRelay_TEST.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonSession.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ComponentCollection.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ISessionEventHandler.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_MESSAGE_COMMON.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_PING_COMMON.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_TEST_COMMON.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_COMPONENT.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_HOST.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_NETGROUP.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_PROCESS.h" />
@@ -31,7 +83,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_HOST.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdHost.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmdDefine.h">
       <SubType>
       </SubType>
@@ -49,7 +101,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_RELAY.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdRelay.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerRecvHelper.h">
       <SubType>
       </SubType>
@@ -85,7 +137,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_SETUP_COMMON.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Server.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
@@ -97,12 +149,27 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerType.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SessionComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\StatementType.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_PING_IS_COMMON.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_TEST_IS_COMMON.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_MESSAGE_IS_COMMON.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_SETUP_IS_COMMON.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\TimeManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\UnauthenticatedSessionManager.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -112,6 +179,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\SteinsGate\Common\AuthenticationComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonNetGroup.cpp">
       <SubType>
       </SubType>
@@ -122,6 +193,14 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CLIListenerCommon.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonSession.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ComponentCollection.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.cpp">
       <SubType>
       </SubType>
@@ -144,7 +223,19 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQuery.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Common\RuntimeConfigCommon.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_MESSAGE_COMMON.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_PING_COMMON.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_SETUP_COMMON.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_TEST_COMMON.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -160,11 +251,22 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\SessionComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_PING_IS_COMMON.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_TEST_IS_COMMON.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_MESSAGE_IS_COMMON.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_SETUP_IS_COMMON.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\TimeManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\UnauthenticatedSessionManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>

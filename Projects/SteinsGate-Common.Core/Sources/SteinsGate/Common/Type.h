@@ -98,6 +98,8 @@ template <typename T>
 using SGSingletonStatic = JCore::SingletonStatic<T>;
 template <typename T>
 using SGSingletonPointer = JCore::SingletonPointer<T>;
+template <typename T>
+using SGSingletonStaticPointer = JCore::SingletonStaticPointer<T>;
 
 
 // ============================================================

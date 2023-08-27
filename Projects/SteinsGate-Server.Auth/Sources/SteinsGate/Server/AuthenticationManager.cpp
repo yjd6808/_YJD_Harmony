@@ -162,6 +162,12 @@ bool AuthenticationManager::UpdateRaw(AuthenticationSerial_t serial, const char*
 	}
 
 	if (pData->AccountId != accountId) {
+		_LogWarn_("시리얼은 동일하지만 ID가 다른 유저입니다.");
+		return false;
+	}
+
+	if (pData->State == nextState) {
+		DebugAssertMsg(false, "동일한 인증상태로 업데이트를 시도했습니다.");
 		return false;
 	}
 

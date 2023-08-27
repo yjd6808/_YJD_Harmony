@@ -18,11 +18,15 @@ USING_NS_JNET;
 void ListenerHelperBase::LogCommand(TransportProtocol protocol, Transmission transmission, ICommand* cmd) {
 	const Cmd_t id = cmd->GetCommand();
 
-	if (transmission == Transmission::Recv && (!Core::RuntimeConfigBase->ShowRecvCommand || Core::RuntimeConfigBase->RecvCommandFilter.Exist(id))) {
+	if (transmission == Transmission::Recv && !Core::RuntimeConfigBase->ShowRecvCommand) {
 		return;
 	}
 
-	if (transmission == Transmission::Send && (!Core::RuntimeConfigBase->ShowSendCommand || Core::RuntimeConfigBase->SendCommandFilter.Exist(id))) {
+	if (transmission == Transmission::Send && !Core::RuntimeConfigBase->ShowSendCommand) {
+		return;
+	}
+
+	if (Core::RuntimeConfigBase->IsFilteredCommand(transmission, id)) {
 		return;
 	}
 

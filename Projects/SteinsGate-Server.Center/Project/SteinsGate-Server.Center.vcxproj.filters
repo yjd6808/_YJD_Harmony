@@ -10,10 +10,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerCenterServer.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_CENTER.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_SETUP_IS.cpp">
       <Filter>Send</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_CENTER.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_SETUP.cpp">
       <Filter>Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterInterServerClientNetGroup.cpp" />
@@ -35,6 +35,12 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterContents.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_PING.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_MESSAGE.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterCoreHeader.h" />
@@ -46,10 +52,10 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterServer.h">
       <Filter>Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_CENTER.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_SETUP_IS.h">
       <Filter>Send</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_CENTER.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_SETUP.h">
       <Filter>Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterInterServerClientNetGroup.h" />
@@ -70,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\CenterContents.h">
       <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_PING.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_MESSAGE.h">
+      <Filter>Recv</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

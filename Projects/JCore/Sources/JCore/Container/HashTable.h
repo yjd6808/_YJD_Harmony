@@ -687,6 +687,22 @@ public:
 		}
 	}
 
+	void ForEachValueRelease() {
+		if constexpr (!IsPointerType_v<TValue>) {
+			DebugAssert(false);
+			return;
+		}
+
+		TBucket* pCurBucket = m_pHeadBucket;
+		while (pCurBucket != nullptr) {
+			for (int i = 0; i < pCurBucket->Size; i++) {
+				TBucketNode& node = pCurBucket->GetAt(i);
+				node.Data.Value->Release();
+			}
+			pCurBucket = pCurBucket->Next;
+		}
+	}
+
 	void Expand(int capacity) {
 
 		// 0 용량 해쉬맵 기능 추가때문에

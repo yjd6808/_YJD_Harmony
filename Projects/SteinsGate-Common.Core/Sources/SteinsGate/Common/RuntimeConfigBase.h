@@ -31,17 +31,13 @@ struct JCORE_NOVTABLE RuntimeConfigBase
 	void WriteCore(Json::Value& root);
 
 	void ShowCommandFilter(JNetwork::Transmission transmission);
+	void FilterCommand(JNetwork::Transmission transmission, Cmd_t cmd);
+	void UnfilterCommand(JNetwork::Transmission transmission, Cmd_t cmd);
+	bool IsFilteredCommand(JNetwork::Transmission transmission, Cmd_t cmd);
 
 	void ApplyLoggerOption();
 	void ApplyNetLoggerOption();
 
-
-	// 특정 커맨드에 대해서 로그를 보여줄지
-	// 참고) 여러쓰레드에서 접근하지만, 정확성은 크게 중요치 않다. 성능을 위해 락을 사용하지 않음. 
-	// 오류로 프로그램 강종되는 경우가 중간에 Expand가 발생해서 잘못된 메모리를 참조해버리는 경우가 있을 수 있는데
-	// 넉넉하게 용량을 지정해놓으면 Expand 될일이 없으므로 상관없다.
-	SGVector<Cmd_t> RecvCommandFilter;
-	SGVector<Cmd_t> SendCommandFilter;
 
 	// 수신/송신 커맨드 로그를 출역할지 여부
 	bool ShowRecvCommand;
@@ -71,4 +67,10 @@ struct JCORE_NOVTABLE RuntimeConfigBase
 
 	static constexpr char ShowConsoleLogKey[] = "show_console_log";
 	static constexpr char ShowConsoleNetLogKey[] = "show_console_net_log";
+
+private:
+	// 테이블 크기를 크게 잡더라도 버킷 내부에서 확장이 발생할 수 있어서 락이 필요하지만 디버깅용으로만 쓰기땜에 락은 우선보류..
+	SGHashSet<Cmd_t> RecvCommandFilter;
+	SGHashSet<Cmd_t> SendCommandFilter;
+	SGNormalLock FilterLock;
 };

@@ -16,7 +16,7 @@
 
 template <typename T>
 struct InterServerSendHelper;
-struct InterServerSendHelperBase
+struct InterServerSendHelperBase : JNetwork::SendHelperBase
 {
 	struct Information
 	{
@@ -35,26 +35,17 @@ struct InterServerSendHelperBase
 
 	static void InitSingleServerIds();
 	static void InitSingleServerDestinations();
-	static void InitDefaultToId(int id = InvalidValue_v);
 
 	static void FlushSendBuffer();
 	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId = InvalidValue_v);
 	static void SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, SingleServerType_t toServerType);
 	static void SendEnd(JNetwork::ISendPacket* packet);
 
-	static void SetReceiverId(int serverId);
-	static void SetStrategy(JNetwork::SendStrategy strategy);
-
-	static bool IsUDPStrategy(JNetwork::SendStrategy strategy);
-
-	static bool IsValidInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy);
 	static bool IsValidInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId);
-	
 	
 	static int GetSenderId();
 
 	inline static thread_local Information SendInformation;
-	inline static /* readonly */ int DefaultToId = InvalidValue_v;	// 누구에게 보낼지 설정하지 않는 경우 중앙서버에게 기본적으로 보냄
 	inline static /* readonly */ int SingleServerId[SingleServerType::Max];
 	inline static /* readonly */ JNetwork::IPv4EndPoint SingleServerInterServerEP[SingleServerType::Max];
 };
@@ -105,7 +96,7 @@ struct InterServerSendHelper : InterServerSendHelperBase
 		// InterServerCommand를 상속받지않은 커맨드를 전달하려는 경우를 막아야함.
 		static_assert(IsInterServerCommand_v<TCommand>, "... TCommand is not InterServerCommand");
 
-		if (SendInformation.Strategy == JNetwork::eSendAlloc) {
+		if (SendInformation.Strategy == JNetwork::SendStrategy::SendAlloc) {
 			TCommand& cmd = SendInformation.Sender->template SendAlloc<TCommand>(count);
 			InitCommand(cmd);
 			return TSending<TCommand>(cmd, nullptr);

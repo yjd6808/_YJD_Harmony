@@ -12,7 +12,10 @@
 #include <JNetwork/Host/SessionContainer.h>
 
 #include <SteinsGate/Server/ListenerCenterServer.h>
-#include <SteinsGate/Server/R_CENTER.h>
+
+#include <SteinsGate/Server/R_MESSAGE.h>
+#include <SteinsGate/Server/R_PING.h>
+#include <SteinsGate/Server/R_SETUP.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -36,10 +39,15 @@ void CenterNetGroup::InitializeIOCP() {
 void CenterNetGroup::InitializeParser() {
 	CommonNetGroup::InitializeParser();
 
-	m_pParser->AddCommand<SCE_ItsMe>			(R_CENTER::RECV_SCE_ItsMe);
-    m_pParser->AddCommand<SS_HostMessage>		(R_CENTER::RECV_SS_HostMessage);
-    m_pParser->AddCommand<SCE_NotifyBootState>	(R_CENTER::RECV_SCE_NotifyBootState);
-    m_pParser->AddCommand<SCE_TimeSync>			(R_CENTER::RECV_SCE_TimeSync);
+	// SETUP
+	m_pParser->AddCommand<SCE_ItsMe>			(R_SETUP::RECV_SCE_ItsMe);
+    m_pParser->AddCommand<SCE_NotifyBootState>	(R_SETUP::RECV_SCE_NotifyBootState);
+
+	// MESSAGE
+	m_pParser->AddCommand<SS_HostMessage>		(R_MESSAGE::RECV_SS_HostMessage);
+
+	// PING
+    m_pParser->AddCommand<SCE_TimeSync>			(R_PING::RECV_SCE_TimeSync);
 }
 
 void CenterNetGroup::InitializeServer() {

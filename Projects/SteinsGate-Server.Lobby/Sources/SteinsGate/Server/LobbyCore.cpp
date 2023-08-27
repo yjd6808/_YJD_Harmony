@@ -54,12 +54,14 @@ void InitializeLobbyCore() {
 	Core::CommonNetMaster				= Core::NetMaster;
 	Core::CommonNetGroup				= Core::NetGroup;
 	Core::CommonServer					= Core::Server;
-	Core::ServerProcessInfo				= &Core::ServerProcessInfoPackage->Lobby;					// 위에서 주입됨
+	Core::CommonRuntimeConfig			= Core::RuntimeConfig;
+	Core::CommonContents				= &Core::Contents;
 	Core::InterServerClientNetGroup		= Core::NetMaster->GetNetGroup(Const::NetGroup::InterServerId).Get<InterServerClientNetGroup*>();
 	Core::InterServerClientTcp			= Core::InterServerClientNetGroup ? Core::InterServerClientNetGroup->GetInterServerClientTcp() : nullptr;
 	Core::InterServerClientUdp			= Core::InterServerClientNetGroup ? Core::InterServerClientNetGroup->GetInterServerClientUdp() : nullptr;
+	Core::ServerProcessInfo				= &Core::ServerProcessInfoPackage->Lobby;					// 위에서 주입됨
 	Core::TimeManager					= TimeManager::Get();
-	Core::RuntimeConfigCommon			= Core::RuntimeConfig;
+	
 
 	Core::Contents.Initialize();
 
@@ -68,9 +70,10 @@ void InitializeLobbyCore() {
 void FinalizeLobbyCore() {
 	Core::Contents.Finalize();
 
-	JCORE_DELETE_SINGLETON_SAFE(Core::DataManager);
+	JCORE_DELETE_SAFE(Core::GameDB);
 	JCORE_DELETE_SINGLETON_SAFE(Core::TimeManager);
 	JCORE_DELETE_SINGLETON_SAFE(Core::RuntimeConfig);
 	JCORE_DELETE_SINGLETON_SAFE(Core::NetMaster);
-	JCORE_DELETE_SAFE(Core::GameDB);
+	JCORE_DELETE_SINGLETON_SAFE(Core::DataManager);
+	
 }

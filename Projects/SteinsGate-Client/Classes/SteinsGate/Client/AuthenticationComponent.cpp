@@ -32,3 +32,7 @@ void AuthenticationComponent::setAccountIdPass(const char* id, const char* pass)
 void AuthenticationComponent::setLastServer(GameServerType_t lastServer) {
 	m_AccountData.LastServer = lastServer;
 }
+
+void AuthenticationComponent::setState(AuthenticationState_t state) {
+	m_eState = state;
+}

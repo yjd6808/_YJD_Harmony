@@ -11,9 +11,15 @@
 #include "InterServerClientNetGroup.h"
 
 #include <SteinsGate/Common/InterServerSendHelper.h>
-#include <SteinsGate/Common/R_INTERSERVER_COMMON.h>
-#include <SteinsGate/Common/InterServerCmd_HOST.h>
-#include <SteinsGate/Common/InterServerCmd_RELAY.h>
+
+#include <SteinsGate/Common/R_SETUP_COMMON.h>
+#include <SteinsGate/Common/R_PING_COMMON.h>
+#include <SteinsGate/Common/R_TEST_COMMON.h>
+
+#include <SteinsGate/Common/CmdHost.h>
+#include <SteinsGate/Common/CmdRelay.h>
+
+#include "S_PING_IS_COMMON.h"
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -40,7 +46,6 @@ void InterServerClientNetGroup::Initialize() {
 	InitializeInterServerTcp();
 	InitializeInterServerUdp();
 	
-	InterServerSendHelperBase::InitDefaultToId(Core::ServerProcessInfoPackage->Center.ServerId);
 	InterServerSendHelperBase::InitSingleServerIds();
 	InterServerSendHelperBase::InitSingleServerDestinations();
 }
@@ -58,12 +63,17 @@ void InterServerClientNetGroup::ProcessUpdate(const TimeSpan& elpased) {
 
 
 void InterServerClientNetGroup::InitializeParser() {
-	m_pParser->AddCommand<CES_AlreadyConnected>		(R_INTERSERVER_COMMON::RECV_CES_AlreadyConnected);
-	m_pParser->AddCommand<CES_WhoAreYou>			(R_INTERSERVER_COMMON::RECV_CES_WhoAreYou);
-	m_pParser->AddCommand<CES_YouNeedToDoThis>		(R_INTERSERVER_COMMON::RECV_CES_YouNeedToDoThis);
-	m_pParser->AddCommand<CES_TimeSyncAck>			(R_INTERSERVER_COMMON::RECV_CES_TimeSyncAck);
-	m_pParser->AddCommand<SS_P2PRelayStaticTest>	(R_INTERSERVER_COMMON::RECV_SS_P2PRelayStaticTest);
-	m_pParser->AddCommand<SS_P2PRelayDynamicTest>	(R_INTERSERVER_COMMON::RECV_SS_P2PRelayDynamicTest);
+	// SETUP
+	m_pParser->AddCommand<CES_AlreadyConnected>		(R_SETUP_COMMON::RECV_CES_AlreadyConnected);
+	m_pParser->AddCommand<CES_WhoAreYou>			(R_SETUP_COMMON::RECV_CES_WhoAreYou);
+	m_pParser->AddCommand<CES_YouNeedToDoThis>		(R_SETUP_COMMON::RECV_CES_YouNeedToDoThis);
+
+	// PING
+	m_pParser->AddCommand<CES_TimeSyncAck>			(R_PING_COMMON::RECV_CES_TimeSyncAck);
+
+	// TEST
+	m_pParser->AddCommand<SS_P2PRelayStaticTest>	(R_TEST_COMMON::RECV_SS_P2PRelayStaticTest);
+	m_pParser->AddCommand<SS_P2PRelayDynamicTest>	(R_TEST_COMMON::RECV_SS_P2PRelayDynamicTest);
 }
 
 void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {
@@ -82,9 +92,12 @@ void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {
 		return;
 	}
 
-	auto pPacket = dbg_new SinglePacket<SCE_TimeSync>;
-	pPacket->Cmd.PeerServerTime.Tick = DateTime::Now().Tick;
-	m_pInterServerClientTcp->SendAsync(pPacket);
+	S_PING_IS_COMMON::SetInformation(m_pInterServerClientTcp, SendStrategy::SendAsync);
+	S_PING_IS_COMMON::SEND_SCE_TimeSync();
+
+	// auto pPacket = dbg_new SinglePacket<SCE_TimeSync>;
+	// pPacket->Cmd.PeerServerTime.Tick = DateTime::Now().Tick;
+	// m_pInterServerClientTcp->SendAsync(pPacket);
 }
 
 bool InterServerClientNetGroup::ConnectCenterServer(int tryCount) {

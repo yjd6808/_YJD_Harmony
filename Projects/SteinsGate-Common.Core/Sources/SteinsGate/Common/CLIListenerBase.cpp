@@ -91,7 +91,7 @@ bool CLIListenerBase::CLI_SendCommandFilter(int argc, String* argv) {
 			return false;
 		}
 
-		Core::RuntimeConfigBase->SendCommandFilter.PushBack(iCmd);
+		Core::RuntimeConfigBase->FilterCommand(JNetwork::Transmission::Send, iCmd);
 		Console::WriteLine("송신 커맨드 필터에 %d커맨드 추기완료", iCmd);
 	} else if (argv[1] == "remove") {
 		if (argc <= 2) {
@@ -105,7 +105,7 @@ bool CLIListenerBase::CLI_SendCommandFilter(int argc, String* argv) {
 			return false;
 		}
 
-		Core::RuntimeConfigBase->SendCommandFilter.Remove(iCmd);
+		Core::RuntimeConfigBase->UnfilterCommand(JNetwork::Transmission::Send, iCmd);
 		Console::WriteLine("송신 커맨드 필터에서 %d커맨드 제거완료", iCmd);
 	} else if (argv[1] == "show") {
 		Core::RuntimeConfigBase->ShowCommandFilter(JNetwork::Transmission::Send);
@@ -133,7 +133,7 @@ bool CLIListenerBase::CLI_RecvCommandFilter(int argc, String* argv) {
 			return false;
 		}
 
-		Core::RuntimeConfigBase->RecvCommandFilter.PushBack(iCmd);
+		Core::RuntimeConfigBase->FilterCommand(JNetwork::Transmission::Recv, iCmd);
 		Console::WriteLine("수신 커맨드 필터에 %d커맨드 추가완료", iCmd);
 
 	} else if (argv[1] == "remove") {
@@ -148,7 +148,7 @@ bool CLIListenerBase::CLI_RecvCommandFilter(int argc, String* argv) {
 			return false;
 		}
 
-		Core::RuntimeConfigBase->RecvCommandFilter.Remove(iCmd);
+		Core::RuntimeConfigBase->UnfilterCommand(JNetwork::Transmission::Recv, iCmd);
 		Console::WriteLine("수신 커맨드 필터에서 %d커맨드 제거완료", iCmd);
 	} else if (argv[1] == "show") {
 		Core::RuntimeConfigBase->ShowCommandFilter(JNetwork::Transmission::Recv);

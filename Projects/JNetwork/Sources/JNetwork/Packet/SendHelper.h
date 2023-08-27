@@ -14,12 +14,12 @@
 
 NS_JNET_BEGIN
 
-enum SendStrategy
+enum class SendStrategy
 {
-	eSendAlloc,
-	eSendAsync,
-	eSendToAsync,
-	eSendToAsyncEcho
+	None,
+	SendAlloc,
+	SendAsync,
+	SendToAsync
 };
 
 template <typename>
@@ -39,10 +39,13 @@ struct Sending : JCore::NonCopyable
 	ISendPacket* Packet;
 };
 
-
+struct SendHelperBase
+{
+	static bool IsValidInformation(Session* sender, SendStrategy strategy);
+};
 
 template <typename T>	// 상속시 static 필드 공유를 선택적으로 설정가능하도록 만들기 위한 템플릿
-struct SendHelper
+struct SendHelper : SendHelperBase
 {
 	template <typename TCommand>
 	using TSending = Sending<T, TCommand>;
@@ -51,7 +54,7 @@ struct SendHelper
 	struct Information
 	{
 		Session* Sender = nullptr;
-		SendStrategy Strategy = eSendAsync;
+		SendStrategy Strategy = SendStrategy::SendAsync;
 		IPv4EndPoint Destination;
 	};
 
@@ -65,7 +68,7 @@ struct SendHelper
 	static TSending<TCommand> SendBegin(int count = 1) {
 		DebugAssertMsg(SendInformation.Sender, "샌더가 설정되어있지 않습니다.");
 
-		if (SendInformation.Strategy == eSendAlloc) {
+		if (SendInformation.Strategy == SendStrategy::SendAlloc) {
 			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(count), nullptr);
 		}
 
@@ -83,12 +86,6 @@ struct SendHelper
 		SendInformation.Sender->FlushSendBuffer();
 	}
 
-	
-
-	static void SetInformation(Session* sender) {
-		SendInformation.Sender = sender;
-	}
-
 	static void SetInformation(Session* sender, SendStrategy strategy) {
 		SendInformation.Sender = sender;
 		SendInformation.Strategy = strategy;
@@ -100,26 +97,27 @@ struct SendHelper
 		SendInformation.Destination = destination;
 	}
 
-	static void SetStrategy(SendStrategy strategy) {
-		SendInformation.Strategy = strategy;
-	}
-
-	static void SetDestination(const IPv4EndPoint& destination) {
-		SendInformation.Destination = destination;
-	}
+	
 
 	static void SendEnd(ISendPacket* packet) {
+		if (SendInformation.Sender == nullptr) {
+			_LogError_("센더가 설정되지 않았습니다.");
+			return;
+		}
+
+		if (SendInformation.Strategy == SendStrategy::None) {
+			_LogError_("송신 전략이 설정되지 않았습니다.");
+			return;
+		}
+
 		switch (SendInformation.Strategy) {
-		case eSendAsync:
+		case SendStrategy::SendAsync:
 			SendInformation.Sender->SendAsync(packet);
 			break;
-		case eSendToAsync:
+		case SendStrategy::SendToAsync:
 			SendInformation.Sender->SendToAsync(packet, SendInformation.Destination);
 			break;
-		case eSendToAsyncEcho: 
-			SendInformation.Sender->SendToAsyncEcho(packet);
-			break;
-		case eSendAlloc:
+		case SendStrategy::SendAlloc:
 			// 할거 없음
 			break;
 		default:

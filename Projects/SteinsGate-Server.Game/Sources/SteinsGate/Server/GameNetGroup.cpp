@@ -15,8 +15,6 @@
 #include <SteinsGate/Server/ListenerAreaServer.h>
 #include <SteinsGate/Server/ListenerChatServer.h>
 
-#include "SteinsGate/Common/S_INTERSERVER_COMMON.h"
-
 USING_NS_JC;
 USING_NS_JNET;
 

@@ -13,7 +13,7 @@
 #include <SteinsGate/Common/QueryDefine.h>
 #include <SteinsGate/Common/PacketViewer.h>
 
-#include <SteinsGate/Server/R_LOBBY.h>
+#include <SteinsGate/Server/R_AUTHENTICATION.h>
 
 USING_NS_JC;
 USING_NS_JNET;

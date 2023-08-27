@@ -267,6 +267,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CLIThread.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\ICreatable.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfo.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemInfoLoader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ItemOptInfoLoader.h">

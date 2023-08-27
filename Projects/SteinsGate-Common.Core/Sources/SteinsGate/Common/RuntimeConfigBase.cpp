@@ -87,11 +87,11 @@ void RuntimeConfigBase::Save() {
 
 void RuntimeConfigBase::ReadCore(Value& root) {
 	for (Value& v : root[RecvCommandFilterKey]) {
-		RecvCommandFilter.PushBack(v.asInt());
+		RecvCommandFilter.Insert(v.asInt());
 	}
 
 	for (Value& v : root[SendCommandFilterKey]) {
-		SendCommandFilter.PushBack(v.asInt());
+		SendCommandFilter.Insert(v.asInt());
 	}
 
 	ShowRecvCommand = root[ShowRecvCommandKey].asBool();
@@ -121,12 +121,15 @@ void RuntimeConfigBase::ReadCore(Value& root) {
 }
 
 void RuntimeConfigBase::WriteCore(Value& root) {
-	for (int i = 0; i < RecvCommandFilter.Size(); ++i) {
-		root[RecvCommandFilterKey].append(RecvCommandFilter[i]);
-	}
+	{
+		// JCORE_LOCK_GUARD(FilterLock);
+		RecvCommandFilter.ForEach([&root](Cmd_t cmd) {
+			root[RecvCommandFilterKey].append(cmd);
+		});
 
-	for (int i = 0; i < SendCommandFilter.Size(); ++i) {
-		root[SendCommandFilterKey].append(SendCommandFilter[i]);
+		SendCommandFilter.ForEach([&root](Cmd_t cmd) {
+			root[SendCommandFilterKey].append(cmd);
+		});
 	}
 
 	root[ShowRecvCommandKey] = ShowRecvCommand;
@@ -156,18 +159,43 @@ void RuntimeConfigBase::WriteCore(Value& root) {
 
 void RuntimeConfigBase::ShowCommandFilter(JNetwork::Transmission transmission) {
 	SGString szCommands{ 1024 };
-	const SGVector<Cmd_t>& vFilter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
+	SGHashSet<Cmd_t>& filter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
 
-	for (int i = 0; i < vFilter.Size(); ++i) {
-		if (i != 0 && i % 10 == 0) {
-			szCommands += '\n';
-		}
+	{
+		// JCORE_LOCK_GUARD(FilterLock);
+		int i = 0;
+		filter.ForEach([&](Cmd_t cmd) {
+			if (i != 0 && i % 10 == 0) {
+				szCommands += '\n';
+			}
 
-		szCommands += vFilter[i];
+			szCommands += cmd;
+			++i;
+		});
 	}
 
 	Console::WriteLine(szCommands.Source());
+	
 }
+
+void RuntimeConfigBase::FilterCommand(JNetwork::Transmission transmission, Cmd_t cmd) {
+	// JCORE_LOCK_GUARD(FilterLock);
+	SGHashSet<Cmd_t>& filter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
+	filter.Insert(cmd);
+}
+
+void RuntimeConfigBase::UnfilterCommand(JNetwork::Transmission transmission, Cmd_t cmd) {
+	// JCORE_LOCK_GUARD(FilterLock);
+	SGHashSet<Cmd_t>& filter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
+	filter.Remove(cmd);
+}
+
+bool RuntimeConfigBase::IsFilteredCommand(JNetwork::Transmission transmission, Cmd_t cmd) {
+	// JCORE_LOCK_GUARD(FilterLock);
+	SGHashSet<Cmd_t>& filter = transmission == JNetwork::Transmission::Send ? SendCommandFilter : RecvCommandFilter;
+	return filter.Exist(cmd);
+}
+
 
 void RuntimeConfigBase::ApplyLoggerOption() {
 

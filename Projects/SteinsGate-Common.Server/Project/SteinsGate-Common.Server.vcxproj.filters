@@ -22,10 +22,10 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_SETUP_IS_COMMON.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_SETUP_COMMON.h">
       <Filter>Net\Recv</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetGroup.h">
@@ -34,7 +34,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\CommonNetMaster.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_HOST.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdHost.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerServerCommon.h">
@@ -62,7 +62,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerRecvHelper.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\InterServerCmd_RELAY.h">
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdRelay.h">
       <Filter>Net\Cmd</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\TimeManager.h">
@@ -113,6 +113,61 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_HOST.h">
       <Filter>Const</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CommonSession.h">
+      <Filter>Net\Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ComponentCollection.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerConst_COMPONENT.h">
+      <Filter>Const</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\AuthenticationComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\UnauthenticatedSessionManager.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ServerType.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdHost_PING.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdHost_SETUP.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdHost_MESSAGE.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdRelay_AUTHENTICATION.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\SessionComponent.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\ISessionEventHandler.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\CmdRelay_TEST.h">
+      <Filter>Net\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_PING_COMMON.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_MESSAGE_COMMON.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\R_TEST_COMMON.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_TEST_IS_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_MESSAGE_IS_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\S_PING_IS_COMMON.h">
+      <Filter>Net\Send</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
@@ -132,10 +187,10 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\S_INTERSERVER_COMMON.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_SETUP_IS_COMMON.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\R_INTERSERVER_COMMON.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_SETUP_COMMON.cpp">
       <Filter>Net\Recv</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\CommonNetGroup.cpp">
@@ -186,6 +241,39 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerEnum.cpp">
       <Filter>Enum</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\CommonSession.cpp">
+      <Filter>Net\Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\ComponentCollection.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\AuthenticationComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\UnauthenticatedSessionManager.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\SessionComponent.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_PING_COMMON.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_MESSAGE_COMMON.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\R_TEST_COMMON.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_TEST_IS_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_MESSAGE_IS_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\S_PING_IS_COMMON.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Database">
@@ -223,6 +311,9 @@
     </Filter>
     <Filter Include="Enum">
       <UniqueIdentifier>{84690f22-67e2-430f-94ef-504880346a34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{c7afc042-9e6c-4936-b9bf-debc998d46a8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

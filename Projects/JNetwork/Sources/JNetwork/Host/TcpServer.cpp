@@ -178,6 +178,7 @@ bool TcpServer::Start(const IPv4EndPoint& localEndPoint) {
 	for (int i = 0; i < iMaxConn; i++) {
 		TcpSession* session = CreateSession();
 
+		session->OnCreated();
 		session->SetHandle(m_pContainer->CreateHandle());
 		session->AcceptWait();
 

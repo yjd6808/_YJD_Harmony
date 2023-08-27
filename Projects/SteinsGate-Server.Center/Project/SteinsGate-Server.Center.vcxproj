@@ -58,11 +58,13 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\main.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\CenterCore.cpp" />
     <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_CENTER.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_MESSAGE.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_PING.cpp" />
+    <ClCompile Include="..\Sources\SteinsGate\Server\R_SETUP.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_CENTER.cpp">
+    <ClCompile Include="..\Sources\SteinsGate\Server\S_SETUP_IS.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -103,11 +105,13 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerCenterServer.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_CENTER.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_MESSAGE.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_PING.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Server\R_SETUP.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_CENTER.h">
+    <ClInclude Include="..\Sources\SteinsGate\Server\S_SETUP_IS.h">
       <SubType>
       </SubType>
     </ClInclude>

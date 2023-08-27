@@ -12,11 +12,11 @@
 
 #include <JNetwork/Packet/SendHelper.h>
 
-#include <SteinsGate/Common/InterServerCmd_HOST.h>
-#include <SteinsGate/Common/InterServerCmd_RELAY.h>
+#include <SteinsGate/Common/CmdHost.h>
+#include <SteinsGate/Common/CmdRelay.h>
 
-#include <SteinsGate/Common/S_INTERSERVER_COMMON.h>
-#include <SteinsGate/Common/R_INTERSERVER_COMMON.h>
+#include <SteinsGate/Common/S_SETUP_IS_COMMON.h>
+#include <SteinsGate/Common/R_SETUP_COMMON.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -29,8 +29,8 @@ ListenerInterServerClient::ListenerInterServerClient(ServerProcessType_t serverP
 void ListenerInterServerClient::OnConnected(SGSession* session) {
 	ListenerClientCommon::OnConnected(session);
 
-	S_INTERSERVER_COMMON::SetInformation(Core::InterServerClientTcp, eSendAsync, SingleServerType::Center);
-	S_INTERSERVER_COMMON::SEND_SCE_ItsMe(m_eServerProcessType, InterServerSendHelperBase::GetSenderId());
+	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync, SingleServerType::Center);
+	S_SETUP_IS_COMMON::SEND_SCE_ItsMe(m_eServerProcessType, Core::ServerProcessInfo->ServerId);
 }
 
 void ListenerInterServerClient::OnDisconnected(SGSession* session) {

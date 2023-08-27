@@ -6,10 +6,3 @@
  */
 
 #include "header.h"
-
-
-
-namespace Const
-{
-	GG K;
-}

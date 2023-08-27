@@ -12,14 +12,15 @@
 
 
 JCORE_SENUM_BEGIN(AuthenticationState)
+Initialized,
 LobbyWait,
 Lobby,
 GameWait,
-Game,
-Max
+Game
 JCORE_SENUM_MIDDLE(AuthenticationState)
 
-static constexpr const char* Name[Max]{
+static constexpr const char* Name[Game + 1] {
+	"Initialized",
 	"LobbyWait",
 	"Lobby",
 	"GameWait",

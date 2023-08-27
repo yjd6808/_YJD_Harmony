@@ -81,19 +81,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\RuntimeConfig.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_LOGIC.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_INTERSERVER.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_LOGIC.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_INTERSERVER.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Server\AreaServer.h" />
@@ -143,24 +130,11 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\GameCoreHeader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Q_CHAR.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\RuntimeConfig.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_LOGIC.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\LogicSession.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_INTERSERVER.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_LOGIC.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_INTERSERVER.h">
       <SubType>
       </SubType>
     </ClInclude>

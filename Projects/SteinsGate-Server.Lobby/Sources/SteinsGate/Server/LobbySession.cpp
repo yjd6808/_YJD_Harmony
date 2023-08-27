@@ -9,15 +9,32 @@
 #include "LobbyCoreHeader.h"
 #include "LobbySession.h"
 
+#include <SteinsGate/Common/AuthenticationComponent.h>
+
+#include <SteinsGate/Common/UnauthenticatedSessionManager.h>
+
 USING_NS_JC;
 USING_NS_JNET;
 
-LobbySession::LobbySession(
-	TcpServer* server,
+LobbySession::LobbySession(TcpServer* server,
 	const IOCPPtr& iocp,
 	const JCore::MemoryPoolAbstractPtr& bufferAllocator,
 	int recvBufferSize,
-	int sendBufferSize) : TcpSession(server, iocp, bufferAllocator, recvBufferSize, sendBufferSize)
+	int sendBufferSize)
+	: CommonSession(server, iocp, bufferAllocator, recvBufferSize, sendBufferSize)
+	, m_pAuthenticationComponent(nullptr)
 {}
+
+void LobbySession::OnCreated() {
+	AddComponent(m_pAuthenticationComponent = dbg_new AuthenticationComponent(this));
+}
+
+void LobbySession::OnConnected() {
+	CommonSession::OnConnected();
+}
+
+void LobbySession::OnDisconnected() {
+	CommonSession::OnDisconnected();
+}
 
 

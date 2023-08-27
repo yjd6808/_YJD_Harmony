@@ -52,13 +52,3 @@
 USING_NS_JC;
 USING_NS_STD;
 
-struct GG
-{
-	int a = 20;
-};
-
-namespace Const
-{
-	extern GG K;
-}
-

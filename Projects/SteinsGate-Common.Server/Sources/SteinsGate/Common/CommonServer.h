@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <JCore/Threading/Pulser.h>
 #include <JNetwork/Host/TcpServer.h>
 #include <SteinsGate/Common/ServerEnum.h>
 #include <SteinsGate/Common/IUpdatable.h>

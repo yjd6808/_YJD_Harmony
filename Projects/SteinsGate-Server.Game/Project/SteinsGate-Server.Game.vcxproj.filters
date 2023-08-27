@@ -8,18 +8,6 @@
     <ClCompile Include="..\Sources\SteinsGate\Server\ListenerLogicServer.cpp">
       <Filter>Listener</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_INTERSERVER.cpp">
-      <Filter>Recv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_INTERSERVER.cpp">
-      <Filter>Send</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\R_LOGIC.cpp">
-      <Filter>Recv</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Server\S_LOGIC.cpp">
-      <Filter>Send</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Server\GameContents.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
@@ -71,20 +59,8 @@
     <ClInclude Include="..\Sources\SteinsGate\Server\GameCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\DataManager.h" />
     <ClInclude Include="..\Sources\SteinsGate\Server\Game.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_LOGIC.h">
-      <Filter>Recv</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\R_INTERSERVER.h">
-      <Filter>Recv</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\ListenerLogicServer.h">
       <Filter>Listener</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_INTERSERVER.h">
-      <Filter>Send</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Server\S_LOGIC.h">
-      <Filter>Send</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Server\GameContents.h">
       <Filter>Contents</Filter>

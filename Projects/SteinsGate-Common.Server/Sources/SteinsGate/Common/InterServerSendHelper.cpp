@@ -9,10 +9,11 @@
 #include "ServerCoreHeader.h"
 #include "InterServerSendHelper.h"
 
+USING_NS_JNET;
 
 InterServerSendHelperBase::Information::Information()
 	: Sender(nullptr)
-	, Strategy(JNetwork::eSendAlloc)
+	, Strategy(SendStrategy::SendAlloc)
 	, ToId(InvalidValue_v)
 {}
 
@@ -25,7 +26,7 @@ void InterServerSendHelperBase::FlushSendBuffer() {
 	SendInformation.Sender->FlushSendBuffer();
 }
 
-void InterServerSendHelperBase::SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId) {
+void InterServerSendHelperBase::SetInformation(Session* sender, SendStrategy strategy, int toServerId) {
 	if (!IsValidInformation(sender, strategy, toServerId)) {
 		return;
 	}
@@ -40,10 +41,10 @@ void InterServerSendHelperBase::SetInformation(JNetwork::Session* sender, JNetwo
 	SendInformation.Destination = Core::ServerProcessInfoPackage->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
 }
 
-void InterServerSendHelperBase::SetInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, SingleServerType_t toServerType) {
+void InterServerSendHelperBase::SetInformation(Session* sender, SendStrategy strategy, SingleServerType_t toServerType) {
 	DebugAssert(toServerType >= SingleServerType::Begin && toServerType <= SingleServerType::End);
 
-	if (!IsValidInformation(sender, strategy)) {
+	if (!SendHelperBase::IsValidInformation(sender, strategy)) {
 		return;
 	}
 
@@ -53,26 +54,15 @@ void InterServerSendHelperBase::SetInformation(JNetwork::Session* sender, JNetwo
 	SendInformation.Destination = Core::ServerProcessInfoPackage->InfoMap[SendInformation.ToId]->RemoteInterServerEP;
 }
 
-void InterServerSendHelperBase::SetReceiverId(int serverId) {
-	SendInformation.ToId = serverId;
-}
-
-void InterServerSendHelperBase::SetStrategy(JNetwork::SendStrategy strategy) {
-	SendInformation.Strategy = strategy;
-}
-
-void InterServerSendHelperBase::SendEnd(JNetwork::ISendPacket* packet) {
+void InterServerSendHelperBase::SendEnd(ISendPacket* packet) {
 	switch (SendInformation.Strategy) {
-	case JNetwork::eSendAsync:
+	case SendStrategy::SendAsync:
 		SendInformation.Sender->SendAsync(packet);
 		break;
-	case JNetwork::eSendToAsync:
+	case SendStrategy::SendToAsync:
 		SendInformation.Sender->SendToAsync(packet, SendInformation.Destination);
 		break;
-	case JNetwork::eSendToAsyncEcho:
-		SendInformation.Sender->SendToAsyncEcho(packet);
-		break;
-	case JNetwork::eSendAlloc:
+	case SendStrategy::SendAlloc:
 		// 할거 없음
 		break;
 	default:
@@ -80,27 +70,13 @@ void InterServerSendHelperBase::SendEnd(JNetwork::ISendPacket* packet) {
 	}
 }
 
-bool InterServerSendHelperBase::IsValidInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy, int toServerId) {
+bool InterServerSendHelperBase::IsValidInformation(Session* sender, SendStrategy strategy, int toServerId) {
 
-	const JNetwork::TransportProtocol eProtocol = sender->Protocol();
-
-	if (eProtocol == JNetwork::TransportProtocol::TCP) {
-
-		if (strategy == JNetwork::eSendToAsync || strategy == JNetwork::eSendToAsyncEcho) {
-			_LogWarn_("TCP인데 UDP 송신전략을 사용할려고합니다.");
-			return false;
-		}
-
-		// 릴레이패킷일 수 있으므로 TCP도 toServerId를 지정할 수도 있음
+	if (!SendHelperBase::IsValidInformation(sender, strategy)) {
+		return false;
 	}
 
-	if (eProtocol == JNetwork::TransportProtocol::UDP) {
-
-		if (strategy == JNetwork::eSendAlloc || strategy == JNetwork::eSendAsync) {
-			_LogWarn_("UDP인데 TCP 송신전략을 사용할려고합니다.");
-			return false;
-		}
-
+	if (sender->Protocol() == TransportProtocol::UDP) {
 		if (toServerId == InvalidValue_v) {
 			_LogWarn_("UDP인데 송신지 ID를 기입하지 않습니다.");
 			return false;
@@ -109,38 +85,6 @@ bool InterServerSendHelperBase::IsValidInformation(JNetwork::Session* sender, JN
 
 	return true;
 }
-
-bool InterServerSendHelperBase::IsValidInformation(JNetwork::Session* sender, JNetwork::SendStrategy strategy) {
-
-	const JNetwork::TransportProtocol eProtocol = sender->Protocol();
-
-	if (eProtocol == JNetwork::TransportProtocol::TCP) {
-
-		if (strategy == JNetwork::eSendToAsync || strategy == JNetwork::eSendToAsyncEcho) {
-			_LogWarn_("TCP인데 UDP 송신전략을 사용할려고합니다.");
-			return false;
-		}
-	}
-
-	if (eProtocol == JNetwork::TransportProtocol::UDP) {
-
-		if (strategy == JNetwork::eSendAlloc || strategy == JNetwork::eSendAsync) {
-			_LogWarn_("UDP인데 TCP 송신전략을 사용할려고합니다.");
-			return false;
-		}
-	}
-
-}
-
-
-bool InterServerSendHelperBase::IsUDPStrategy(JNetwork::SendStrategy strategy) {
-	if (strategy == JNetwork::eSendToAsync)
-		return true;
-	if (strategy == JNetwork::eSendToAsyncEcho)
-		return true;
-	return false;
-}
-
 
 void InterServerSendHelperBase::InitSingleServerIds() {
 	SingleServerId[SingleServerType::Center] = Core::ServerProcessInfoPackage->Center.ServerId;
@@ -152,10 +96,6 @@ void InterServerSendHelperBase::InitSingleServerDestinations() {
 	SingleServerInterServerEP[SingleServerType::Center] = Core::ServerProcessInfoPackage->Center.RemoteInterServerEP;
 	SingleServerInterServerEP[SingleServerType::Auth] = Core::ServerProcessInfoPackage->Auth.RemoteInterServerEP;
 	SingleServerInterServerEP[SingleServerType::Lobby] = Core::ServerProcessInfoPackage->Lobby.RemoteInterServerEP;
-}
-
-void InterServerSendHelperBase::InitDefaultToId(int id) {
-	DefaultToId = id;
 }
 
 int InterServerSendHelperBase::GetSenderId() {

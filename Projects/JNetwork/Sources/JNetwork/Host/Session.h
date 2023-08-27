@@ -37,9 +37,9 @@ public:
 
 	bool SendAsync(ISendPacket* packet);
 	bool SendAsync(const CommandBufferPtr& buffer);
+	bool SendToAsync(ISendPacket* packet);
 	bool SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination);
 	bool SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& destination);
-	bool SendToAsyncEcho(ISendPacket* packet);
 
 	bool RecvAsync();
 	bool RecvFromAsync();

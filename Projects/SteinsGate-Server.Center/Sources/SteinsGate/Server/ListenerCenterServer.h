@@ -11,7 +11,7 @@
 #include <JCore/Container/HashMap.h>
 
 #include <SteinsGate/Common/ListenerServerCommon.h>
-#include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/CmdHost.h>
 #include <SteinsGate/Server/CenterServer.h>
 
 class ListenerCenterServer : public ListenerServerCommon

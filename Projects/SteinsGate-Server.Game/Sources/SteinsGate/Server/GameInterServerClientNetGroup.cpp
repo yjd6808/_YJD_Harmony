@@ -10,7 +10,7 @@
 #include "GameCoreHeader.h"
 #include "GameInterServerClientNetGroup.h"
 
-#include <SteinsGate/Common/InterServerCmd_HOST.h>
+#include <SteinsGate/Common/CmdHost.h>
 #include <SteinsGate/Common/ListenerInterServerClient.h>
 
 USING_NS_JC;

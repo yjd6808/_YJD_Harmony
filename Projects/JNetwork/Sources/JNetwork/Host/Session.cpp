@@ -186,7 +186,7 @@ bool Session::SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& de
 	return SendToAsync(dbg_new CommandBufferPacket(buffer), destination);
 }
 
-bool Session::SendToAsyncEcho(ISendPacket* packet) {
+bool Session::SendToAsync(ISendPacket* packet) {
 	return SendToAsync(packet, m_RemoteEndPoint);
 }
 

@@ -10,7 +10,7 @@
 #include "ServerCoreHeader.h"
 #include "CommonServer.h"
 
-#include <SteinsGate/Common/S_INTERSERVER_COMMON.h>
+#include <SteinsGate/Common/S_SETUP_IS_COMMON.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -28,8 +28,8 @@ void CommonServer::OnStarted() {
 		return;
 
 	m_eBootState = ServerBootState::Launched;
-	S_INTERSERVER_COMMON::SetInformation(Core::InterServerClientTcp, eSendAsync);
-	S_INTERSERVER_COMMON::SEND_SCE_NotifyBootState(Core::ServerProcessInfo->ServerId, eType, ServerBootState::Launched);
+	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(Core::ServerProcessInfo->ServerId, eType, ServerBootState::Launched);
 }
 
 void CommonServer::OnStartFailed(Int32U errorCode) {
@@ -40,8 +40,8 @@ void CommonServer::OnStartFailed(Int32U errorCode) {
 		return;
 
 	m_eBootState = ServerBootState::Stopped;
-	S_INTERSERVER_COMMON::SetInformation(Core::InterServerClientTcp, eSendAsync);
-	S_INTERSERVER_COMMON::SEND_SCE_NotifyOrderFailed(Core::ServerProcessInfo->ServerId, eType, CenterOrder::LaunchServer, errorCode);
+	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyOrderFailed(Core::ServerProcessInfo->ServerId, eType, CenterOrder::LaunchServer, errorCode);
 }
 
 void CommonServer::OnStopped() {
@@ -52,8 +52,8 @@ void CommonServer::OnStopped() {
 		return;
 
 	m_eBootState = ServerBootState::Stopped;
-	S_INTERSERVER_COMMON::SetInformation(Core::InterServerClientTcp, eSendAsync);
-	S_INTERSERVER_COMMON::SEND_SCE_NotifyBootState(Core::ServerProcessInfo->ServerId, eType, ServerBootState::Stopped);
+	S_SETUP_IS_COMMON::SetInformation(Core::InterServerClientTcp, SendStrategy::SendAsync);
+	S_SETUP_IS_COMMON::SEND_SCE_NotifyBootState(Core::ServerProcessInfo->ServerId, eType, ServerBootState::Stopped);
 }
 
 void CommonServer::OnUpdate(const JCore::TimeSpan& elapsed) {
