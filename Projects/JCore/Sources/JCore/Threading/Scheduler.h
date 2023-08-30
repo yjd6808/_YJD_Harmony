@@ -43,7 +43,7 @@ public:
 	~Scheduler() noexcept;
 
 	template <typename TCallback>
-	static constexpr void ValidateCallbackType() { static_assert(IsSchedulerTaskCallback_v<RemoveQulifierReference_t<TCallback>>, "... TCallback is not SchedulerTaskCallBack type (std::function<void(SchedulerTask*)>)"); }
+	static constexpr void ValidateCallbackType() { static_assert(IsSchedulerTaskCallback_v<RemoveConstReference_t<TCallback>>, "... TCallback is not SchedulerTaskCallBack type (std::function<void(SchedulerTask*)>)"); }
 
 	template <typename TCallback>
 	void IntervalAt(TCallback&& callback, DateTime at, TimeSpan interval, Int32U repeat = INFINITE) {

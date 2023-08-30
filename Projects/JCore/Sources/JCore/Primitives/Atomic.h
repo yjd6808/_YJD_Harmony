@@ -52,7 +52,7 @@ public:
     T ExchangeAdd(T operand) { return TInterlocked::ExchangeAdd(&m_Value, operand); }
     T Exchange(T operand) { return TInterlocked::Exchange(&m_Value, operand); }
     T Increment() { return TInterlocked::Increment(&m_Value); }
-    T Decrement() { return TInterlocked::Decrement(&m_Value); }
+    T Decrement() { return TInterlocked::Increment(&m_Value); }
     T Xor(T operand) { return TInterlocked::Xor(&m_Value, operand); }
     T Or(T operand) { return TInterlocked::Or(&m_Value, operand); }
     T And(T operand) { return TInterlocked::And(&m_Value, operand); }

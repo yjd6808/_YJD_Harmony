@@ -383,7 +383,7 @@ public:
 	
 	template <typename Callable, typename... Args>
 	auto Run(Callable&& callable, Args&&... args) {
-		using _Callable = RemoveQulifierReference_t<Callable>;
+		using _Callable = RemoveConstReference_t<Callable>;
 		using _Ret = CallableSignatureReturn_t<_Callable>;
 
 		Func<_Ret> fn = std::bind(Forward<Callable>(callable), Forward<Args>(args)...);

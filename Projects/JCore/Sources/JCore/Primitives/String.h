@@ -59,6 +59,7 @@ public:
 		Append(ss.str());
 	}
 	void Append(const char ch);
+	void Append(char* str);
 	void Append(const char* str);
 	void Append(const std::string& str);
 	void Append(const String& str);
@@ -147,6 +148,7 @@ public:
 	String& operator+=(const T& other) { Append(other);  return *this; }
 	String& operator+=(const String& other);
 	String& operator+=(const char ch);
+	String& operator+=(char* str);
 	String& operator+=(const char* str);
 
 	template <typename T>

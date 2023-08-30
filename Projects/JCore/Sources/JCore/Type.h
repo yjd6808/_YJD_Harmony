@@ -17,6 +17,7 @@ using Int16U	= unsigned short;
 using Int8		= char;
 using Int8U		= unsigned char;
 using Char		= char;
+using Float		= float;
 using Double	= double;
 using LDouble	= long double;
 using Byte		= unsigned char;

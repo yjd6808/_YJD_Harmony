@@ -208,6 +208,9 @@ template <typename T>
 constexpr bool IsFloatType_v = Detail::IsFloatType<NaturalType_t<T>>::Value;
 
 template <typename T>
+constexpr bool IsNumericType_v = IsIntegerType_v<T> && IsFloatType_v<T>;
+
+template <typename T>
 constexpr bool IsCharaterType_v = Detail::IsCharaterType<NaturalType_t<T>>::Value;
 
 template <typename T>

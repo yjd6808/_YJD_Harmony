@@ -58,20 +58,6 @@ bool StringUtil::IsNullOrEmpty(const char* str) {
 	return false;
 }
 
-int StringUtil::Length(const char* str) {
-	if (str == nullptr) {
-		return -1;
-	}
-
-	int iSize = 0;
-	while (*str != NULL) {
-		iSize++;
-		str++;
-	}
-	return iSize;
-}
-
-
 int StringUtil::Copy(char* buffer, const int bufferSize, const char* copy) {
 	if (buffer == nullptr || copy == nullptr) {
 		return -1;

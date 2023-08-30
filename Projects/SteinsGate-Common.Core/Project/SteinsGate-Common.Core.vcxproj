@@ -373,6 +373,30 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\Struct.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_ACTOR.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_ANIMATION.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_AUTHENTICATION.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_CHANNEL.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_ITEM.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_RESOURCE.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\TextParser.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Type.h">
       <SubType>

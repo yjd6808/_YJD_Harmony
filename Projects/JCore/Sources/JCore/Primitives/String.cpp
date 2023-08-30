@@ -107,6 +107,20 @@ void String::Append(const char ch) {
 	m_iLen = iDstLen;
 }
 
+void String::Append(char* str) {
+	if (str == nullptr) {
+		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
+	}
+
+	const int iStrLen = StringUtil::Length(str);
+	const int iDstLen = m_iLen + iStrLen;
+	ResizeIfNeeded(iDstLen);
+
+	Memory::CopyUnsafe(m_pBuffer + m_iLen, str, iStrLen);
+	m_pBuffer[iDstLen] = NULL;
+	m_iLen = iDstLen;
+}
+
 void String::Append(const char* str) {
 	if (str == nullptr) {
 		throw NullPointerException("추가하고자 하는 문자열이 nullptr 입니다.");
@@ -640,6 +654,11 @@ String& String::operator+=(const String& other) {
 
 String& String::operator+=(const char ch) {
 	Append(ch);
+	return *this;
+}
+
+String& String::operator+=(char* str) {
+	Append(str);
 	return *this;
 }
 

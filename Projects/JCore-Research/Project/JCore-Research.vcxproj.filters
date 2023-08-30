@@ -3,8 +3,29 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\main.cpp" />
     <ClCompile Include="..\Sources\header.cpp" />
+    <ClCompile Include="..\Sources\Property.cpp" />
+    <ClCompile Include="..\Sources\Properties.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperator.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_INT.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_INT64.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_FLOAT.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_DOUBLE.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_STRING.cpp" />
+    <ClCompile Include="..\Sources\PropertyStatics.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_UNARY.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_SELECTORS.cpp" />
+    <ClCompile Include="..\Sources\PropertyBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\header.h" />
+    <ClInclude Include="..\Sources\Property.h" />
+    <ClInclude Include="..\Sources\Properties.h" />
+    <ClInclude Include="..\Sources\PropertyType.h" />
+    <ClInclude Include="..\Sources\PropertyTypeTraits.h" />
+    <ClInclude Include="..\Sources\PropertyOperator.h" />
+    <ClInclude Include="..\Sources\PropertyOperatorDefinitionMacro.h" />
+    <ClInclude Include="..\Sources\PropertyStatics.h" />
+    <ClInclude Include="..\Sources\PropertyBase.h" />
+    <ClInclude Include="..\Sources\PropertyFactory.h" />
   </ItemGroup>
 </Project>

@@ -8,32 +8,19 @@ NS_JC_BEGIN
 // 한정자 제거해주는 템플릿
 // 포인터 타입은 제거가 안댐
 template <typename T>
-struct RemoveQulifier
+struct RemoveConst
 {
     using Type = T;
 };
 
 template <typename T>
-struct RemoveQulifier<const T>
+struct RemoveConst<const T>
 {
     using Type = T;
 };
 
 template <typename T>
-struct RemoveQulifier<volatile T>
-{
-    using Type = T;
-};
-
-template <typename T>
-struct RemoveQulifier<volatile const T>
-{
-    using Type = T;
-};
-
-template <typename T>
-using RemoveQulifier_t = typename RemoveQulifier<T>::Type;
-
+using RemoveConst_t = typename RemoveConst<T>::Type;
 
 // 참조 제거자
 template <typename T>
@@ -58,7 +45,7 @@ template <typename T>
 using RemoveReference_t = typename RemoveReference<T>::Type;
 
 template <typename T>
-using RemoveQulifierReference_t = RemoveQulifier_t<RemoveReference_t<T>>;
+using RemoveConstReference_t = RemoveConst_t<RemoveReference_t<T>>;
 
 // 배열 괄호 제거해서 기본 타입만 얻도록 하는 템플릿
 template <typename T>
@@ -106,7 +93,7 @@ using RemovePointer_t = typename RevmovePointer<T>::Type;
 template <typename T>
 struct NaturalType
 {
-    using Type = RemoveQulifier_t<RemoveReference_t<T>>;
+    using Type = RemoveConst_t<RemoveReference_t<T>>;
 };
 
 // 한정자/참조자 제거

@@ -81,8 +81,20 @@ public:
 	template <typename TInteger>
 	static String ToString(TInteger integer);
 
+	constexpr static int Length(const char* str) {
+		if (str == nullptr) {
+			return -1;
+		}
+
+		int iSize = 0;
+		while (*str != NULL) {
+			iSize++;
+			str++;
+		}
+		return iSize;
+	}
+
 	static bool IsNullOrEmpty(const char* str);
-	static int Length(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);
 	static int CopyUnsafe(char* buffer, const char* copy);
 	static bool IsEqual(const char* src, const int srcLen, const char* dst, const int dstLen);

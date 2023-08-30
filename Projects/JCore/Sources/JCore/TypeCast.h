@@ -24,7 +24,7 @@ constexpr T&& Forward(RemoveReference_t<T>& arg) {
 
 template <typename T>
 constexpr T* AddressOf(T& arg) {
-	return __builtin_addressof((RemoveQulifier_t<T>&)arg);
+	return __builtin_addressof((RemoveConst_t<T>&)arg);
 }
 
 template<typename T>

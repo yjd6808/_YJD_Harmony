@@ -24,9 +24,75 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Sources\main.cpp" />
+    <ClCompile Include="..\Sources\Properties.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Property.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\PropertyBase.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\PropertyOperator.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_DOUBLE.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_FLOAT.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_INT.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\PropertyOperators_INT64.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_SELECTORS.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\PropertyOperators_STRING.cpp" />
+    <ClCompile Include="..\Sources\PropertyOperators_UNARY.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\PropertyStatics.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\header.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Properties.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Property.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\PropertyBase.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\PropertyFactory.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\PropertyOperator.h" />
+    <ClInclude Include="..\Sources\PropertyOperatorDefinitionMacro.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\PropertyStatics.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\PropertyType.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\PropertyTypeTraits.h">
       <SubType>
       </SubType>
     </ClInclude>

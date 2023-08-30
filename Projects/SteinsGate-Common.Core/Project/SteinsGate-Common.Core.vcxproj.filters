@@ -404,6 +404,24 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\Const_AUTHENTICATION.h">
       <Filter>Const</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_ANIMATION.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_ACTOR.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_ITEM.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_RESOURCE.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_AUTHENTICATION.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\Struct_CHANNEL.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Data">
