@@ -8,12 +8,12 @@
 #include "Property.h"
 
 
-void PropertyBase::LogGettingMismatchedType(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs) {
-	_LogWarn_(" 대해서 %s 타입의 프로퍼티로 가져올려고 시도했습니다.", PropertyArgumentType::Name[lhs], PropertyArgumentType::Name[rhs]);
+void PropertyBase::LogGettingMismatchedType(PropertyType_t lhs, PropertyType_t rhs) {
+	_LogWarn_("%s타입의 프로퍼티를 %s타입의 프로퍼티로 가져올려고 시도했습니다.", PropertyType::Name[lhs], PropertyType::Name[rhs]);
 }
 
-void PropertyBase::LogConversionFailed(PropertyArgumentType_t to, PropertyArgumentType_t from) {
-	_LogWarn_("%s타입의 프로퍼티에 %s 타입의 매개변수를 저장하는데 실패함.", PropertyArgumentType::Name[to], PropertyArgumentType::Name[from]);
+void PropertyBase::LogConversionFailed(PropertyType_t to, PropertyType_t from) {
+	_LogWarn_("%s타입의 프로퍼티에 %s타입의 매개변수를 저장하는데 실패함.", PropertyType::Name[to], PropertyType::Name[from]);
 }
 
 
@@ -63,58 +63,31 @@ Int64 PropertyBase::operator--(int) {
 	return pOperator->PostfixDecrement(this);
 }
 
-template <>
-Int& PropertyBase::GetValue() const {
-	using TProperty = Property<Int>;
-	const PropertyArgumentType_t eType = GetArgumentType();
-	if (eType != PropertyArgumentType::Int) {
-		LogGettingMismatchedType(eType, PropertyArgumentType::Int);
-		return TProperty::Default.Value;
-	}
-	return ((TProperty*)this)->Value;
-}
-//
-//template <>
-//Int64& PropertyBase::GetValue() const {
-//	using TProperty = Property<Int64>;
-//	const PropertyArgumentType_t eType = GetArgumentType();
-//	if (eType != PropertyArgumentType::Int64) {
-//		LogGettingMismatchedType(eType, PropertyArgumentType::Int64);
-//		return TProperty::Default.Value;
-//	}
-//	return ((TProperty*)this)->Value;
-//}
-//
-//template <>
-//Float& PropertyBase::GetValue() const {
-//	using TProperty = Property<Float>;
-//	const PropertyArgumentType_t eType = GetArgumentType();
-//	if (eType != PropertyArgumentType::Float) {
-//		LogGettingMismatchedType(eType, PropertyArgumentType::Float);
-//		return TProperty::Default.Value;
-//	}
-//	return ((TProperty*)this)->Value;
-//}
-//
-//template <>
-//Double& PropertyBase::GetValue() const {
-//	using TProperty = Property<Double>;
-//	const PropertyArgumentType_t eType = GetArgumentType();
-//	if (eType != PropertyArgumentType::Double) {
-//		LogGettingMismatchedType(eType, PropertyArgumentType::Double);
-//		return TProperty::Default.Value;
-//	}
-//	return ((TProperty*)this)->Value;
-//}
-//
-//template <>
-//String& PropertyBase::GetValue() const {
-//	using TProperty = Property<String>;
-//	const PropertyArgumentType_t eType = GetArgumentType();
-//	if (eType != PropertyArgumentType::String) {
-//		LogGettingMismatchedType(eType, PropertyArgumentType::String);
-//		return TProperty::Default.Value;
-//	}
-//	return ((TProperty*)this)->Value;
-//}
 
+#define SG_PROPERTY_GET_REF_IMPLMENTATION(property_type)							\
+template <>																			\
+property_type& PropertyBase::Ref() {												\
+	using TProperty = Property<property_type>;										\
+	const PropertyType_t eType = GetType();											\
+	if (eType != PropertyType::property_type) {										\
+		LogGettingMismatchedType(eType, PropertyType::property_type);				\
+		return TProperty::Default.Value;											\
+	}																				\
+	return ((TProperty*)this)->Value;												\
+}
+
+
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int8)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int8U)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int16)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int16U)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int32U)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int32L)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int32UL)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int64)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Int64U)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Float)
+SG_PROPERTY_GET_REF_IMPLMENTATION(Double)
+SG_PROPERTY_GET_REF_IMPLMENTATION(LDouble)
+SG_PROPERTY_GET_REF_IMPLMENTATION(String)

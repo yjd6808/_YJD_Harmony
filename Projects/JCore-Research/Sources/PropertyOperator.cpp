@@ -8,21 +8,21 @@
 #include "PropertyOperator.h"
 #include "Property.h"
 
-void LogLossDataPossible(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs, PropertyBinaryOperatorType_t operatorType) {
+void LogLossDataPossible(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType) {
 	if (!PropertyStatics::EnableOperatorLog) return;
-	_LogWarn_("%s %s %s연산을 수행하였습니다. (데이터가 잘릴 위험이 있습니다.)", PropertyArgumentType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyArgumentType::Name[rhs]);
+	_LogWarn_("%s %s %s연산을 수행하였습니다. (데이터가 잘릴 위험이 있습니다.)", PropertyType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyType::Name[rhs]);
 }
 
-void LogImpossibleOperation(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs, PropertyBinaryOperatorType_t operatorType) {
+void LogImpossibleOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType) {
 	if (!PropertyStatics::EnableOperatorLog) return;
-	_LogWarn_("%s %s %s연산은 수행이 불가능합니다.", PropertyArgumentType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyArgumentType::Name[rhs]);
+	_LogError_("%s %s %s연산은 수행이 불가능합니다.", PropertyType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyType::Name[rhs]);
 }
-void LogUnsafeOperation(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs, PropertyBinaryOperatorType_t operatorType) {
+void LogUnsafeOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType) {
 	if (!PropertyStatics::EnableOperatorLog) return;
-	_LogWarn_("%s %s %s연산은 안전하지 않습니다.", PropertyArgumentType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyArgumentType::Name[rhs]);
+	_LogWarn_("%s %s %s연산은 안전하지 않습니다.", PropertyType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyType::Name[rhs]);
 }
 
-void LogUnknownOperation(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs, PropertyBinaryOperatorType_t operatorType) {
+void LogUnknownOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType) {
 	if (!PropertyStatics::EnableOperatorLog) return;
-	_LogWarn_("%s %s %s연산을 수행하였습니다. (데이터가 잘릴 위험이 있습니다.)", PropertyArgumentType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyArgumentType::Name[rhs]);
+	_LogWarn_("%s %s %s연산을 수행하였습니다. (데이터가 잘릴 위험이 있습니다.)", PropertyType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyType::Name[rhs]);
 }

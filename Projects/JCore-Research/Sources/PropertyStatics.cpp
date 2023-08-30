@@ -9,57 +9,84 @@
 #include "Property.h"
 
 extern void InitializePropertyOperatorSelectors();
+extern void InitializePropertyOperatorInt8();
+extern void InitializePropertyOperatorInt8U();
+extern void InitializePropertyOperatorInt16();
+extern void InitializePropertyOperatorInt16U();
 extern void InitializePropertyOperatorInt();
+extern void InitializePropertyOperatorInt32U();
+extern void InitializePropertyOperatorInt32L();
+extern void InitializePropertyOperatorInt32UL();
 extern void InitializePropertyOperatorInt64();
+extern void InitializePropertyOperatorInt64U();
 extern void InitializePropertyOperatorFloat();
 extern void InitializePropertyOperatorDouble();
+extern void InitializePropertyOperatorLDouble();
 extern void InitializePropertyOperatorString();
 extern void InitializePropertyOperatorUnary();
 
+template <PropertyType_t I>
+static void CreateFactory() {
+	if constexpr (I == PropertyType::CharPtr) return;
+	else {
+		PropertyStatics::Factorys[I] = dbg_new PropertyFactory<typename PropertyDataTypeGetter<I>::Ty>();
+		CreateFactory<PropertyType_t(I + 1)>();
+	}
+	
+}
+
+
 void PropertyStatics::Initialize() {
 	InitializePropertyOperatorSelectors();
-	InitializePropertyOperatorInt();
-	InitializePropertyOperatorInt64();
-	InitializePropertyOperatorFloat();
-	InitializePropertyOperatorDouble();
-	InitializePropertyOperatorString();
 	InitializePropertyOperatorUnary();
 
-	Factorys[PropertyType::Int]		= dbg_new PropertyFactory<Int>;
-	Factorys[PropertyType::Int64]	= dbg_new PropertyFactory<Int64>;
-	Factorys[PropertyType::Float]	= dbg_new PropertyFactory<Float>;
-	Factorys[PropertyType::Double]	= dbg_new PropertyFactory<Double>;
-	Factorys[PropertyType::String]	= dbg_new PropertyFactory<String>;
+	InitializePropertyOperatorInt8();
+	InitializePropertyOperatorInt8U();
+	InitializePropertyOperatorInt16();
+	InitializePropertyOperatorInt16U();
+	InitializePropertyOperatorInt();
+	InitializePropertyOperatorInt32U();
+	InitializePropertyOperatorInt32L();
+	InitializePropertyOperatorInt32UL();
+	InitializePropertyOperatorInt64();
+	InitializePropertyOperatorInt64U();
+	InitializePropertyOperatorFloat();
+	InitializePropertyOperatorDouble();
+	InitializePropertyOperatorLDouble();
+	InitializePropertyOperatorString();
+
+	CreateFactory<PropertyType_t(0)>();
 }
 
 
 void PropertyStatics::Finalize() {
-	// FinalizePropertyOperatorSelectors()
 	for (int i = 0; i < PropertyType::Max; ++i) {
-		for (int j = 0; j < PropertyArgumentType::Max; ++j) {
+		for (int j = 0; j < PropertyType::Max; ++j) {
 			JCORE_DELETE_SAFE(BinaryOperatorSelectors[i][j]);
 		}
 	}
 
-	// FinalizePropertyOperatorInt()
-	// FinalizePropertyOperatorInt64()
-	// FinalizePropertyOperatorFloat()
-	// FinalizePropertyOperatorDouble()
-	// FinalizePropertyOperatorUnary()
 	for (int i = 0; i < PropertyBinaryOperatorType::Max; ++i) {
+		JCORE_DELETE_SAFE(BinaryOperators_Int8[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int8U[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int16[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int16U[i]);
 		JCORE_DELETE_SAFE(BinaryOperators_Int[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int32U[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int32L[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int32UL[i]);
 		JCORE_DELETE_SAFE(BinaryOperators_Int64[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_Int64U[i]);
 		JCORE_DELETE_SAFE(BinaryOperators_Float[i]);
 		JCORE_DELETE_SAFE(BinaryOperators_Double[i]);
+		JCORE_DELETE_SAFE(BinaryOperators_LDouble[i]);
 		JCORE_DELETE_SAFE(BinaryOperators_String[i]);
 	}
 
-	// FinalizePropertyOperatorUnary()
 	for (int i = 0; i < PropertyType::Max; ++i) {
 		JCORE_DELETE_SAFE(UnaryOperators[i]);
 	}
 
-	// FinalizePropertyFactory()
 	for (int i = 0; i < PropertyType::Max; ++i) {
 		JCORE_DELETE_SAFE(Factorys[i]);
 	}

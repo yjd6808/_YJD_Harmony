@@ -11,7 +11,7 @@
 #include "PropertyStatics.h"
 
 SG_OPERATION_DEF_BEGIN(String, Store)
-	SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = rhs)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(lhs = rhs)

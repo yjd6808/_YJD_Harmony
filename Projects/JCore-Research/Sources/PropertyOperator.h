@@ -11,10 +11,10 @@
 #include "PropertyType.h"
 #include "PropertyTypeTraits.h"
 
-void LogLossDataPossible(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs, PropertyBinaryOperatorType_t operatorType);
-void LogImpossibleOperation(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs, PropertyBinaryOperatorType_t operatorType);
-void LogUnsafeOperation(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs, PropertyBinaryOperatorType_t operatorType);
-void LogUnknownOperation(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs, PropertyBinaryOperatorType_t operatorType);
+void LogLossDataPossible(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
+void LogImpossibleOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
+void LogUnsafeOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
+void LogUnknownOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
 
 template <typename Ty>
 struct IPropertyValueBinaryOperator;
@@ -44,7 +44,7 @@ template <typename Ty>
 struct JCORE_NOVTABLE IPropertyValueBinaryOperator
 {
 	using ValTy = Ty;
-	static constexpr PropertyArgumentType_t LeftOperandType = PropertyArgumentTypeGetter<Ty>::Type;
+	static constexpr PropertyType_t LeftOperandType = PropertyTypeGetter<Ty>::Type;
 
 	virtual ~IPropertyValueBinaryOperator() = default;
 	virtual void Operate(Ty& lhs, const Int64& rhs)		= 0;

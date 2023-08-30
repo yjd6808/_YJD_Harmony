@@ -10,7 +10,7 @@
 
 #include "header.h"
 
-JCORE_SENUM_BEGIN(PropertyArgumentType)
+JCORE_SENUM_BEGIN(PropertyType)
 Int8,
 Int8U,
 Int16,
@@ -24,11 +24,11 @@ Int64U,
 Float,
 Double,
 LDouble,
-CharPtr,
 String,
+CharPtr,
 Unknown,
 Max
-JCORE_SENUM_MIDDLE(PropertyArgumentType)
+JCORE_SENUM_MIDDLE(PropertyType)
 static constexpr const char* Name[Max]{
 	"Int8",
 	"Int8U",
@@ -43,8 +43,8 @@ static constexpr const char* Name[Max]{
 	"Float",
 	"Double",
 	"LDouble",
-	"CharPtr",
 	"String",
+	"CharPtr",
 	"Unknown",
 };
 
@@ -105,56 +105,37 @@ static constexpr bool IsNumericType[Max]{
 	false
 };
 
-
-JCORE_SENUM_MIDDLE_END(PropertyArgumentType)
-
-JCORE_SENUM_BEGIN(PropertyType)
-Int,
-Int64,
-Float,
-Double,
-String,
-Unknown,
-Max
-JCORE_SENUM_MIDDLE(PropertyType)
-
-static constexpr PropertyArgumentType_t ToArgumentType[Max]{
-	PropertyArgumentType::Int,
-	PropertyArgumentType::Int64,
-	PropertyArgumentType::Float,
-	PropertyArgumentType::Double,
-	PropertyArgumentType::String,
-	PropertyArgumentType::Unknown
-};
-
-static constexpr const char* Name[Max]{
-	"Int"		,
-	"Int64"		,
-	"Float"		,
-	"Double"	,
-	"String"	,
-	"Unknown"
-};
-
-static constexpr bool IsIntegerType[Max]{
+static constexpr bool IsStringType[Max]{
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
 	true,
 	true,
-	false,
-	false,
-	false,
 	false
 };
 
-static constexpr bool IsFloatType[Max]{
-	false,
-	false,
+// CharPtr, Unknwon 제외
+static constexpr bool CanBeLeftOperand[Max]{
 	true,
 	true,
-	false,
-	false
-};
-
-static constexpr bool IsNumericType[Max]{
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
 	true,
 	true,
 	true,
@@ -163,8 +144,78 @@ static constexpr bool IsNumericType[Max]{
 	false
 };
 
+// Unknwon 제외
+static constexpr bool CanBeRightOperand[Max]{
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	false
+};
+
+// CharPtr, Unknwon 제외
+static constexpr bool CanConstruct[Max]{
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	false,
+	false
+};
+
+// CharPtr만
+static constexpr bool IsPtrType[Max]{
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+	true,
+	false
+};
+
+static constexpr bool IsConvertiable(PropertyType_t lhs, PropertyType_t rhs) {
+	if (IsNumericType[lhs] && IsNumericType[rhs]) {
+		return true;
+	}
+	if (IsStringType[lhs] && IsStringType[rhs]) {
+		return true;
+	}
+	return false;
+}
 
 JCORE_SENUM_MIDDLE_END(PropertyType)
+
 
 JCORE_SENUM_BEGIN(PropertyUnaryOperatorType)
 PrefixIncrement,

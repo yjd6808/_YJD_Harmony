@@ -10,9 +10,9 @@
 #include "PropertyOperatorDefinitionMacro.h"
 #include "PropertyStatics.h"
 
-SG_OPERATION_DEF_BEGIN(Int, Store)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, Store)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(lhs = rhs)
@@ -21,16 +21,16 @@ SG_OPERATION_OPERATE(const Int16&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int16U&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int8&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(lhs = rhs)
-SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, Move)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, Move)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(lhs = rhs)
@@ -39,16 +39,16 @@ SG_OPERATION_OPERATE(const Int16&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int16U&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int8&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(lhs = rhs)
-SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs = (Int)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs = (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, Plus)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs += (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs += (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, Plus)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs += (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs += (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(lhs += rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(lhs += rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(lhs += rhs)
@@ -57,16 +57,16 @@ SG_OPERATION_OPERATE(const Int16&)		SG_OPERATION_BODY(lhs += rhs)
 SG_OPERATION_OPERATE(const Int16U&)		SG_OPERATION_BODY(lhs += rhs)
 SG_OPERATION_OPERATE(const Int8&)		SG_OPERATION_BODY(lhs += rhs)
 SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(lhs += rhs)
-SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs += (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs += (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs += (Int)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs += (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs += (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs += (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, Minus)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs -= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs -= (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, Minus)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs -= (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs -= (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(lhs -= rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(lhs -= rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(lhs -= rhs)
@@ -75,16 +75,16 @@ SG_OPERATION_OPERATE(const Int16&)		SG_OPERATION_BODY(lhs -= rhs)
 SG_OPERATION_OPERATE(const Int16U&)		SG_OPERATION_BODY(lhs -= rhs)
 SG_OPERATION_OPERATE(const Int8&)		SG_OPERATION_BODY(lhs -= rhs)
 SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(lhs -= rhs)
-SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs -= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs -= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs -= (Int)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs -= (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs -= (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs -= (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, Multiply)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs *= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs *= (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, Multiply)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs *= (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs *= (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(lhs *= rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(lhs *= rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(lhs *= rhs)
@@ -93,17 +93,17 @@ SG_OPERATION_OPERATE(const Int16&)		SG_OPERATION_BODY(lhs *= rhs)
 SG_OPERATION_OPERATE(const Int16U&)		SG_OPERATION_BODY(lhs *= rhs)
 SG_OPERATION_OPERATE(const Int8&)		SG_OPERATION_BODY(lhs *= rhs)
 SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(lhs *= rhs)
-SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs *= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs *= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs *= (Int)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs *= (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs *= (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs *= (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
 // Int / long long이 데이터 손실날 경우는 뭐가있을까?
-SG_OPERATION_DEF_BEGIN(Int, Divide)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs /= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs /= (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, Divide)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs /= rhs)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs /= rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(lhs /= rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(lhs /= rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(lhs /= rhs)
@@ -112,14 +112,14 @@ SG_OPERATION_OPERATE(const Int16&)		SG_OPERATION_BODY(lhs /= rhs)
 SG_OPERATION_OPERATE(const Int16U&)		SG_OPERATION_BODY(lhs /= rhs)
 SG_OPERATION_OPERATE(const Int8&)		SG_OPERATION_BODY(lhs /= rhs)
 SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(lhs /= rhs)
-SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs /= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs /= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs /= (Int)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs /= (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs /= (Int32L)rhs, LogLossDataPossible)
+SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs /= (Int32L)rhs, LogLossDataPossible)
 SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, Modulus)
+SG_OPERATION_DEF_BEGIN(Int32L, Modulus)
 SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs %= rhs)
 SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(lhs %= rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(lhs %= rhs)
@@ -137,7 +137,7 @@ SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, Equal)
+SG_OPERATION_DEF_BEGIN(Int32L, Equal)
 SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs)
 SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs)
@@ -148,16 +148,16 @@ SG_OPERATION_OPERATE(const Int16&)		SG_OPERATION_BODY(PropertyStatics::Compariso
 SG_OPERATION_OPERATE(const Int16U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs)
 SG_OPERATION_OPERATE(const Int8&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs)
 SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs)
-SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == (Int)rhs, LogUnsafeOperation)
-SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == (Int)rhs, LogUnsafeOperation)
-SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == (Int)rhs, LogUnsafeOperation)
+SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs, LogUnsafeOperation)
+SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs, LogUnsafeOperation)
+SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs == rhs, LogUnsafeOperation)
 SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, NotEqual)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, NotEqual)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs)
@@ -166,16 +166,16 @@ SG_OPERATION_OPERATE(const Int16&)		SG_OPERATION_BODY(PropertyStatics::Compariso
 SG_OPERATION_OPERATE(const Int16U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs)
 SG_OPERATION_OPERATE(const Int8&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs)
 SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs)
-SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != (Int)rhs, LogUnsafeOperation)
-SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != (Int)rhs, LogUnsafeOperation)
-SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != (Int)rhs, LogUnsafeOperation)
+SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs, LogUnsafeOperation)
+SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs, LogUnsafeOperation)
+SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs != rhs, LogUnsafeOperation)
 SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, GreatorEqual)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs >= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs >= (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, GreatorEqual)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs >= rhs)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs >= rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs >= rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs >= rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs >= rhs)
@@ -192,9 +192,9 @@ SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
 
-SG_OPERATION_DEF_BEGIN(Int, Greator)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs > (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs > (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, Greator)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs > rhs)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs > rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs > rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs > rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs > rhs)
@@ -210,9 +210,9 @@ SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, LessEqual)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs <= (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs <= (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, LessEqual)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs <= rhs)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs <= rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs <= rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs <= rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs <= rhs)
@@ -228,9 +228,9 @@ SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
-SG_OPERATION_DEF_BEGIN(Int, Less)
-SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs < (Int)rhs, LogLossDataPossible)
-SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs < (Int)rhs, LogLossDataPossible)
+SG_OPERATION_DEF_BEGIN(Int32L, Less)
+SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs < rhs)
+SG_OPERATION_OPERATE(const Int64U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs < rhs)
 SG_OPERATION_OPERATE(const Int&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs < rhs)
 SG_OPERATION_OPERATE(const Int32U&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs < rhs)
 SG_OPERATION_OPERATE(const Int32L&)		SG_OPERATION_BODY(PropertyStatics::ComparisonResult = lhs < rhs)
@@ -247,19 +247,19 @@ SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(, LogImpossibleOperation)
 SG_OPERATION_DEF_END
 
 
-void InitializePropertyOperatorInt() {
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Store]			= dbg_new PropertyValueBinaryOperator_Int_Store{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Move]			= dbg_new PropertyValueBinaryOperator_Int_Move{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Plus]			= dbg_new PropertyValueBinaryOperator_Int_Plus{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Minus]			= dbg_new PropertyValueBinaryOperator_Int_Minus{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Multiply]		= dbg_new PropertyValueBinaryOperator_Int_Multiply{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Divide]		= dbg_new PropertyValueBinaryOperator_Int_Divide{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Modulus]		= dbg_new PropertyValueBinaryOperator_Int_Modulus{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Equal]			= dbg_new PropertyValueBinaryOperator_Int_Equal{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::NotEqual]		= dbg_new PropertyValueBinaryOperator_Int_NotEqual{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::GreatorEqual]	= dbg_new PropertyValueBinaryOperator_Int_GreatorEqual{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Greator]		= dbg_new PropertyValueBinaryOperator_Int_Greator{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::LessEqual]		= dbg_new PropertyValueBinaryOperator_Int_LessEqual{};
-	PropertyStatics::BinaryOperators_Int[PropertyBinaryOperatorType::Less]			= dbg_new PropertyValueBinaryOperator_Int_Less{};
+void InitializePropertyOperatorInt32L() {
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Store]			= dbg_new PropertyValueBinaryOperator_Int32L_Store{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Move]			= dbg_new PropertyValueBinaryOperator_Int32L_Move{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Plus]			= dbg_new PropertyValueBinaryOperator_Int32L_Plus{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Minus]			= dbg_new PropertyValueBinaryOperator_Int32L_Minus{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Multiply]		= dbg_new PropertyValueBinaryOperator_Int32L_Multiply{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Divide]			= dbg_new PropertyValueBinaryOperator_Int32L_Divide{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Modulus]		= dbg_new PropertyValueBinaryOperator_Int32L_Modulus{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Equal]			= dbg_new PropertyValueBinaryOperator_Int32L_Equal{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::NotEqual]		= dbg_new PropertyValueBinaryOperator_Int32L_NotEqual{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::GreatorEqual]	= dbg_new PropertyValueBinaryOperator_Int32L_GreatorEqual{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Greator]		= dbg_new PropertyValueBinaryOperator_Int32L_Greator{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::LessEqual]		= dbg_new PropertyValueBinaryOperator_Int32L_LessEqual{};
+	PropertyStatics::BinaryOperators_Int32L[PropertyBinaryOperatorType::Less]			= dbg_new PropertyValueBinaryOperator_Int32L_Less{};
 
 }

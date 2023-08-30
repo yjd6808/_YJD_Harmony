@@ -78,11 +78,15 @@ struct PropertyValueUnaryOperator<PropertyType::Int64> : IPropertyValueUnaryOper
 	}
 };
 
+template <PropertyType_t I>
+void CreateUnaryOperators() {
+	if constexpr (I == PropertyType::Unknown) return;
+	else {
+		PropertyStatics::UnaryOperators[I] = dbg_new PropertyValueUnaryOperator<I>{};
+		CreateUnaryOperators<PropertyType_t(I + 1)>();
+	}
+}
 
 void InitializePropertyOperatorUnary() {
-	PropertyStatics::UnaryOperators[PropertyType::Int] = dbg_new PropertyValueUnaryOperator<PropertyType::Int>{};
-	PropertyStatics::UnaryOperators[PropertyType::Int64] = dbg_new PropertyValueUnaryOperator<PropertyType::Int64>{};
-	PropertyStatics::UnaryOperators[PropertyType::Float] = nullptr;
-	PropertyStatics::UnaryOperators[PropertyType::Double] = nullptr;
-	PropertyStatics::UnaryOperators[PropertyType::String] = nullptr;
+	CreateUnaryOperators<PropertyType_t(0)>();
 }

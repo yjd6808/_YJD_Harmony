@@ -15,54 +15,68 @@ struct PropertyBase
 {
 	virtual ~PropertyBase() = default;
 	virtual PropertyType_t GetType() const = 0;
-	virtual PropertyArgumentType_t GetArgumentType() const = 0;
 	virtual const char* GetTypeName() const = 0;
 	virtual int* GetDecayedValue() const = 0;
 
-	virtual void Operate(PropertyArgumentType_t argumentType, int* decayedArgument, PropertyBinaryOperatorType_t operatorType) = 0;
+	virtual void Operate(PropertyType_t argumentType, int* decayedArgument, PropertyBinaryOperatorType_t operatorType) = 0;
 
-	static void LogGettingMismatchedType(PropertyArgumentType_t lhs, PropertyArgumentType_t rhs);
-	static void LogConversionFailed(PropertyArgumentType_t to, PropertyArgumentType_t from);
+	static void LogGettingMismatchedType(PropertyType_t lhs, PropertyType_t rhs);
+	static void LogConversionFailed(PropertyType_t to, PropertyType_t from);
+
+	template <typename T>
+	T As() const {
+		constexpr PropertyType_t eGetType = PropertyTypeGetter<T>::Type;
+		static_assert(PropertyType::CanBeLeftOperand[eGetType], "... GetValue<T> failed T cannot be left operand");
+		using TProperty = Property<T>;
+		const PropertyType_t eType = GetType();
+		T ret{ 0 };
+		if (PropertyType::IsConvertiable(eGetType, eType)) {
+			PropertyStatics::BinaryOperatorSelectors[eGetType][eType]->Select((int*)&ret, GetDecayedValue(), PropertyBinaryOperatorType::Store);
+		} else {
+			LogGettingMismatchedType(eType, eGetType);
+		}
+		return ret;
+	}
+
+	template <typename T>
+	T& Ref();
 
 	template <typename TVal>
-	TVal& GetValue() const;
-
-	template <typename TVal>
-	void SetValue(const TVal& other) {
-		using TDesc = PropertyArgumentDescription<TVal>;
-		static_assert(TDesc::ArgumentType != PropertyArgumentType::Unknown, "... right operand is unknwon argument type");
-		Operate(TDesc::ArgumentType, (int*)&other, PropertyBinaryOperatorType::Store);
+	void Set(const TVal& other) {
+		using TDesc = PropertyTypeDescription<TVal>;
+		static_assert(TDesc::Type != PropertyType::Unknown, "... right operand is unknwon argument type");
+		Operate(TDesc::Type, (int*)&other, PropertyBinaryOperatorType::Store);
 	}
 
 	template <typename TVal>
-	void SetValue(TVal&& other) {
-		using TDesc = PropertyArgumentDescription<TVal>;
-		static_assert(TDesc::ArgumentType != PropertyArgumentType::Unknown, "... right operand is unknwon argument type");
+	void Set(TVal&& other) {
+		using TDesc = PropertyTypeDescription<TVal>;
+		static_assert(TDesc::Type != PropertyType::Unknown, "... right operand is unknwon argument type");
 		Operate(TDesc::ArgumentTyp, (int*)&other, PropertyBinaryOperatorType::Move);
 	}
 
 	template <typename TVal>
 	PropertyBase& operator=(const TVal& other) {
-		using TDesc = PropertyArgumentDescription<TVal>;
-		static_assert(TDesc::ArgumentType != PropertyArgumentType::Unknown, "... right operand is unknwon argument type");
-		Operate(TDesc::ArgumentType, (int*)&other, PropertyBinaryOperatorType::Store);
+		using TDesc = PropertyTypeDescription<TVal>;
+		static_assert(TDesc::Type != PropertyType::Unknown, "... right operand is unknwon argument type");
+		Operate(TDesc::Type, (int*)&other, PropertyBinaryOperatorType::Store);
 		return *this;
 	}
 
 	template <typename TVal>
 	PropertyBase& operator=(TVal&& other) {
-		using TDesc = PropertyArgumentDescription<TVal>;
-		static_assert(TDesc::ArgumentType != PropertyArgumentType::Unknown, "... right operand is unknwon argument type");
-		Operate(TDesc::ArgumentType, (int*)&other, PropertyBinaryOperatorType::Move);
+		using TDesc = PropertyTypeDescription<TVal>;
+		static_assert(TDesc::Type != PropertyType::Unknown, "... right operand is unknwon argument type");
+		Operate(TDesc::Type, (int*)&other, PropertyBinaryOperatorType::Move);
 		return *this;
 	}
 
 	PropertyBase& operator=(const PropertyBase& other) {
-		Operate(other.GetArgumentType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Store);
+		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Store);
 		return *this;
 	}
 	PropertyBase& operator=(PropertyBase&& other) noexcept {
-		Operate(other.GetArgumentType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Move);
+		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Move);
 		return *this;
 	}
 
@@ -84,13 +98,13 @@ struct PropertyBase
 #define SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(op)															\
 template <typename TVal>																											\
 PropertyBase& operator##op(PropertyBase& lhs, const TVal& rhs) {																	\
-	using TDesc = PropertyArgumentDescription<TVal>;																				\
-	static_assert(TDesc::ArgumentType != PropertyArgumentType::Unknown, "... right operand is unknwon argument type");				\
+	using TDesc = PropertyTypeDescription<TVal>;																					\
+	static_assert(PropertyType::CanBeRightOperand[TDesc::Type], "... right operand cannot perfrom operation:" #op);			\
 	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;	\
-	if constexpr (TDesc::ArgumentType == PropertyArgumentType::CharPtr)																\
-		lhs.Operate(TDesc::ArgumentType, (int*)rhs, eOperatorType);																	\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])																				\
+		lhs.Operate(TDesc::Type, (int*)rhs, eOperatorType);																			\
 	else																															\
-		lhs.Operate(TDesc::ArgumentType, (int*)&rhs, eOperatorType);																\
+		lhs.Operate(TDesc::Type, (int*)&rhs, eOperatorType);																		\
 																																	\
 	return lhs;																														\
 }
@@ -98,47 +112,93 @@ PropertyBase& operator##op(PropertyBase& lhs, const TVal& rhs) {																
 #define SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(op)														\
 template <typename TVal>																											\
 bool operator##op(PropertyBase& lhs, const TVal& rhs) {																				\
-	using TDesc = PropertyArgumentDescription<TVal>;																				\
-	using TArg = typename TDesc::Ty;																								\
-	static_assert(TDesc::ArgumentType != PropertyArgumentType::Unknown, "... right operand is unknwon argument type");				\
-	TArg* arg = (TArg*)&rhs;																										\
+	using TDesc = PropertyTypeDescription<TVal>;																					\
+	static_assert(PropertyType::CanBeRightOperand[TDesc::Type], "... right operand cannot perfrom operation:" #op);					\
 	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;	\
-		if constexpr (TDesc::ArgumentType == PropertyArgumentType::CharPtr)															\
-		lhs.Operate(TDesc::ArgumentType, (int*)rhs, eOperatorType);																	\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])																				\
+		lhs.Operate(TDesc::Type, (int*)rhs, eOperatorType);																			\
 	else																															\
-		lhs.Operate(TDesc::ArgumentType, (int*)&rhs, eOperatorType);																\
+		lhs.Operate(TDesc::Type, (int*)&rhs, eOperatorType);																		\
 	const bool bRet = PropertyStatics::ComparisonResult;																			\
 	PropertyStatics::ComparisonResult = false;																						\
 	return bRet;																													\
 }
 
 
+#define SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)																			\
+template <typename TVal>																													\
+TVal operator##op(const TVal& lhs, const PropertyBase& rhs) {																				\
+	using TDesc = PropertyTypeDescription<TVal>;																							\
+	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation:" #op);							\
+	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;			\
+																																			\
+	TVal ret{ lhs };																														\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])																						\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)ret, rhs.GetDecayedValue(), eOperatorType);		\
+	else																																	\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)&ret, rhs.GetDecayedValue(), eOperatorType);		\
+	return ret;																																\
+}																																			
 
 
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(+)
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(-)
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(/)
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(*)
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(%)
-//
+#define SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)																\
+template <typename TVal>																													\
+bool operator##op(const TVal& lhs, const PropertyBase& rhs) {																				\
+	using TDesc = PropertyTypeDescription<TVal>;																							\
+	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation operation:" #op);					\
+	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;			\
+																																			\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])																						\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)lhs, rhs.GetDecayedValue(), eOperatorType);		\
+	else																																	\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)&lhs, rhs.GetDecayedValue(), eOperatorType);		\
+	const bool bRet = PropertyStatics::ComparisonResult;																					\
+	PropertyStatics::ComparisonResult = false;																								\
+	return bRet;																															\
+}
+
+
+
+
+#define SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(op)																	\
+template <typename TVal>																													\
+TVal& operator##op(TVal& lhs, const PropertyBase& rhs) {																					\
+	using TDesc = PropertyTypeDescription<TVal>;																							\
+	static_assert(PropertyType::CanBeLeftOperand[TDesc::Type], "... left operand cannot perfrom operation:" #op);							\
+	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;			\
+																																			\
+	if constexpr (PropertyType::IsPtrType[TDesc::Type])																						\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)lhs, rhs.GetDecayedValue(), eOperatorType);		\
+	else																																	\
+		PropertyStatics::BinaryOperatorSelectors[TDesc::Type][rhs.GetType()]->Select((int*)&lhs, rhs.GetDecayedValue(), eOperatorType);		\
+	return lhs;																																\
+}																																			
+
+
+
+// SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(+)
+// SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(-)
+// SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(/)
+// SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(*)
+// SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(%)
 
 SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(+=)
 SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(-=)
 SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(/=)
 SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(*=)
 SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(%=)
-//
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(+)
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(-)
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(/)
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(*)
-//SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(%)
-//
-//SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(+=)
-//SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(-=)
-//SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(/=)
-//SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(*=)
-//SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(%=)
+
+SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(+)
+SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(-)
+SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(/)
+SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(*)
+SG_PROPERTY_GLOBAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(%)
+
+SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(+=)
+SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(-=)
+SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(/=)
+SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(*=)
+SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(%=)
 
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(==)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(>=)
@@ -146,8 +206,8 @@ SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(<=)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(<)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(>)
 
-//SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(==)
-//SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(>=)
-//SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(<=)
-//SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(<)
-//SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(>)
+SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(==)
+SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(>=)
+SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(<=)
+SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(<)
+SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(>)

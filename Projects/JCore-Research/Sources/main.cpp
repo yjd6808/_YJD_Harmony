@@ -6,7 +6,7 @@ void k(const char* g) {
 
 template <typename A>
 void fn(const A& lhs) {
-	using T = typename PropertyArgumentDescription<A>::Ty;
+	using T = typename PropertyTypeDescription<A>::Ty;
 
 	//Console::WriteLine("%s", *a);
 }
@@ -18,23 +18,11 @@ int main() {
 	PropertyStatics::Initialize();
 	{
 		Properties properties;
-		//PropertyStatics::EnableOperatorLog = false;
-		constexpr int HP = 1;
-		constexpr int NAME = 2;
+		properties.AddProperty(1, PropertyType::Int16);
+		properties[1] += 200LL;
+		properties[1] += 10.5f;
 
-		/*properties.AddProperty(HP, PropertyType::Int);
-		properties[HP] += 20;
-		properties[HP] += 20.0;
-		properties[HP] /= 10.0;
-		Console::WriteLine("%d", properties[HP].GetValue<Int>());*/
-
-		
-		const char* zz = "gg";
-		properties.AddProperty(NAME, PropertyType::String);
-
-		properties[NAME] += zz;
-		properties[NAME] += "abcd";
-		properties[NAME] += "efg";
+		Console::WriteLine("%d", properties[1].As<Int16>());
 
 	}
 	PropertyStatics::Finalize();

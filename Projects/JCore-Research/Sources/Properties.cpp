@@ -15,7 +15,13 @@ void Properties::AddProperty(TKey propertyKey, PropertyType_t type) {
 		return;
 	}
 
-	PropertyBase* pNewProperty = PropertyStatics::Factorys[type]->CreateInstance();
+	IPropertyFactory* pFactory = PropertyStatics::Factorys[type];
+	if (pFactory == nullptr) {
+		_LogWarn_("%s 타입의 프로퍼티 팩토리가 없습니다.", PropertyType::Name[type]);
+		return;
+	}
+
+	PropertyBase* pNewProperty = pFactory->CreateInstance();
 	m_hProperties.Insert(propertyKey, pNewProperty);
 }
 
