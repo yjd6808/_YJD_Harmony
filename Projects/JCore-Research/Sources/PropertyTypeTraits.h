@@ -35,7 +35,6 @@ template <>				struct PropertyTypeOptimal<Float>	    { using Ty = Float	;	static
 template <>				struct PropertyTypeOptimal<Double>	    { using Ty = Double	;	static constexpr PropertyType_t Type = PropertyType::Double;	};
 template <>				struct PropertyTypeOptimal<LDouble>	    { using Ty = Double	;	static constexpr PropertyType_t Type = PropertyType::Double;	};
 template <>				struct PropertyTypeOptimal<char*>		{ using Ty = String	;	static constexpr PropertyType_t Type = PropertyType::String;	};
-template <Int Size>		struct PropertyTypeOptimal<char[Size]>	{ using Ty = String	;	static constexpr PropertyType_t Type = PropertyType::String;	};
 template <>				struct PropertyTypeOptimal<String>		{ using Ty = String	;	static constexpr PropertyType_t Type = PropertyType::String;	};
 
 
@@ -63,9 +62,7 @@ template <>				struct PropertyArgumentTypeGetter<Int8U>	    { static constexpr P
 template <>				struct PropertyArgumentTypeGetter<Float>	    { static constexpr PropertyArgumentType_t Type = PropertyArgumentType::Float;	    };
 template <>				struct PropertyArgumentTypeGetter<Double>	    { static constexpr PropertyArgumentType_t Type = PropertyArgumentType::Double;    };
 template <>				struct PropertyArgumentTypeGetter<LDouble>	    { static constexpr PropertyArgumentType_t Type = PropertyArgumentType::LDouble;   };
-template <>				struct PropertyArgumentTypeGetter<WideChar>     { static constexpr PropertyArgumentType_t Type = PropertyArgumentType::WideChar;	};
 template <>				struct PropertyArgumentTypeGetter<String>		{ static constexpr PropertyArgumentType_t Type = PropertyArgumentType::String;	};
-template <Int Size>		struct PropertyArgumentTypeGetter<char[Size]>	{ static constexpr PropertyArgumentType_t Type = PropertyArgumentType::CharArray;	};
 template <>				struct PropertyArgumentTypeGetter<char*>		{ static constexpr PropertyArgumentType_t Type = PropertyArgumentType::CharPtr;	};
 
 
@@ -83,9 +80,7 @@ template <>								struct PropertyArgumentDataTypeGetter<PropertyArgumentType::I
 template <>								struct PropertyArgumentDataTypeGetter<PropertyArgumentType::Float>				{ using Ty = Float;     };
 template <>								struct PropertyArgumentDataTypeGetter<PropertyArgumentType::Double>				{ using Ty = Double;    }; 
 template <>								struct PropertyArgumentDataTypeGetter<PropertyArgumentType::LDouble>			{ using Ty = LDouble;   };  
-template <>								struct PropertyArgumentDataTypeGetter<PropertyArgumentType::WideChar>			{ using Ty = WideChar;  };   
 template <>								struct PropertyArgumentDataTypeGetter<PropertyArgumentType::String>				{ using Ty = String; 	};
-template <>								struct PropertyArgumentDataTypeGetter<PropertyArgumentType::CharArray>			{ using Ty = char*; 	};
 template <>								struct PropertyArgumentDataTypeGetter<PropertyArgumentType::CharPtr>			{ using Ty = char*; 	};
 
 
@@ -123,9 +118,11 @@ private:
 	template <typename Y> struct RemoveConstPtr<Y*> { using Type = Y*; };
 	template <typename Y> struct RemoveConstPtr<const Y*> { using Type = Y*; };
 
-	using Ty = typename RemoveConstPtr<NaturalType_t<T>>::Type;	// Access 차단
+	
 public:
+	using Ty = Decay_t<typename RemoveConstPtr<NaturalType_t<T>>::Type>;
 	using OptimalTy = typename PropertyTypeOptimal<Ty>::Ty;
+	
 
 	static constexpr PropertyType_t Type = PropertyTypeOptimal<Ty>::Type;
 	static constexpr PropertyArgumentType_t ArgumentType = PropertyArgumentTypeGetter<Ty>::Type;

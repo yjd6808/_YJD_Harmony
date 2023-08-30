@@ -73,7 +73,12 @@ struct PropertyBase
 };
 
 
-
+/*
+ * const char* const 
+ * const char[Size]
+ * => 이 문자열 타입들에 대해서는 다른 기본자료형들과 다르게 주소를 얻지 않고 곧바로 int*로 붕괴시킨 후 연산을 수행토록 한다.
+ * 왜냐하면 const char[Size]같은 리터럴 문자열의 경우 이중 포인터를 얻는게 불가능하기때문이다.
+ */
 
 
 #define SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_LEFT_OPERAND(op)															\
@@ -81,9 +86,12 @@ template <typename TVal>																											\
 PropertyBase& operator##op(PropertyBase& lhs, const TVal& rhs) {																	\
 	using TDesc = PropertyArgumentDescription<TVal>;																				\
 	static_assert(TDesc::ArgumentType != PropertyArgumentType::Unknown, "... right operand is unknwon argument type");				\
-																																	\
 	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;	\
-	lhs.Operate(TDesc::ArgumentType, (int*)&rhs, eOperatorType);																	\
+	if constexpr (TDesc::ArgumentType == PropertyArgumentType::CharPtr)																\
+		lhs.Operate(TDesc::ArgumentType, (int*)rhs, eOperatorType);																	\
+	else																															\
+		lhs.Operate(TDesc::ArgumentType, (int*)&rhs, eOperatorType);																\
+																																	\
 	return lhs;																														\
 }
 
@@ -91,10 +99,14 @@ PropertyBase& operator##op(PropertyBase& lhs, const TVal& rhs) {																
 template <typename TVal>																											\
 bool operator##op(PropertyBase& lhs, const TVal& rhs) {																				\
 	using TDesc = PropertyArgumentDescription<TVal>;																				\
+	using TArg = typename TDesc::Ty;																								\
 	static_assert(TDesc::ArgumentType != PropertyArgumentType::Unknown, "... right operand is unknwon argument type");				\
-																																	\
+	TArg* arg = (TArg*)&rhs;																										\
 	constexpr PropertyBinaryOperatorType_t eOperatorType = PropertyBinaryOperatorTypeGetter<Hasher64<const char*>()(#op)>::Type;	\
-	lhs.Operate(TDesc::ArgumentType, (int*)&rhs, eOperatorType);																	\
+		if constexpr (TDesc::ArgumentType == PropertyArgumentType::CharPtr)															\
+		lhs.Operate(TDesc::ArgumentType, (int*)rhs, eOperatorType);																	\
+	else																															\
+		lhs.Operate(TDesc::ArgumentType, (int*)&rhs, eOperatorType);																\
 	const bool bRet = PropertyStatics::ComparisonResult;																			\
 	PropertyStatics::ComparisonResult = false;																						\
 	return bRet;																													\

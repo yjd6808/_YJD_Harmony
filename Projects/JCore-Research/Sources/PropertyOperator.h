@@ -57,11 +57,9 @@ struct JCORE_NOVTABLE IPropertyValueBinaryOperator
 	virtual void Operate(Ty& lhs, const Int16U& rhs)	= 0;
 	virtual void Operate(Ty& lhs, const Int8& rhs)		= 0;
 	virtual void Operate(Ty& lhs, const Int8U& rhs)		= 0;
-	virtual void Operate(Ty& lhs, const WideChar& rhs)	= 0;
 	virtual void Operate(Ty& lhs, const Float& rhs)		= 0;
 	virtual void Operate(Ty& lhs, const Double& rhs)	= 0;
 	virtual void Operate(Ty& lhs, const LDouble& rhs)	= 0;
 	virtual void Operate(Ty& lhs, const String& rhs)	= 0;
-	virtual void Operate(Ty& lhs, const char* rhs)		= 0;
 	virtual void Operate(Ty& lhs, char* rhs)			= 0;
 };

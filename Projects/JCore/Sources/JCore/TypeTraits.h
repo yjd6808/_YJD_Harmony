@@ -544,6 +544,8 @@ constexpr bool IsMoveConstructible_v = std::is_move_constructible_v<From>;
 template <typename Fn>
 constexpr bool IsFunction_v = std::is_function_v<Fn>;
 
+template <typename T>
+using Decay_t = std::decay_t<T>;
 
 template<bool Test, typename T = void>
 using EnableIf_t = typename Detail::EnableIf<Test, T>::Type;

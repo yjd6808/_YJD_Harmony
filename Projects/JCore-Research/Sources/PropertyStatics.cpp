@@ -22,13 +22,14 @@ void PropertyStatics::Initialize() {
 	InitializePropertyOperatorInt64();
 	InitializePropertyOperatorFloat();
 	InitializePropertyOperatorDouble();
+	InitializePropertyOperatorString();
 	InitializePropertyOperatorUnary();
 
 	Factorys[PropertyType::Int]		= dbg_new PropertyFactory<Int>;
 	Factorys[PropertyType::Int64]	= dbg_new PropertyFactory<Int64>;
 	Factorys[PropertyType::Float]	= dbg_new PropertyFactory<Float>;
 	Factorys[PropertyType::Double]	= dbg_new PropertyFactory<Double>;
-	Factorys[PropertyType::String]	= dbg_new PropertyFactory<Int>;
+	Factorys[PropertyType::String]	= dbg_new PropertyFactory<String>;
 }
 
 
