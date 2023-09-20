@@ -16,16 +16,19 @@ USING_NS_CC;
 USING_NS_JNET;
 
 NetCore::NetCore()
-	: m_pNetGroup(nullptr)
-	, m_pAuthTcp(nullptr)
-	, m_pLobbyTcp(nullptr)
-	, m_pLogicTcp(nullptr)
-	, m_pLogicUdp(nullptr)
-	, m_pChatTcp(nullptr)
-	, m_pAreaTcp(nullptr)
-	, m_pCommandSynchronizer(CommandSynchronizer::Get())
-	, m_pConnectionSynchronizer(ConnectionSynchronizer::Get())
-{}
+	: m_pNetGroup(nullptr),
+	  m_pAuthTcp(nullptr),
+	  m_pLobbyTcp(nullptr),
+	  m_pLogicTcp(nullptr),
+	  m_pLogicUdp(nullptr),
+	  m_pChatTcp(nullptr),
+	  m_pAreaTcp(nullptr),
+	  m_pCommandSynchronizer(CommandSynchronizer::Get()),
+	  m_pConnectionSynchronizer(ConnectionSynchronizer::Get()),
+	  m_pAuthenticationComponent(nullptr)
+{
+	SetName("클라");
+}
 
 NetCore::~NetCore() {
 	NetCore::Finalize();
