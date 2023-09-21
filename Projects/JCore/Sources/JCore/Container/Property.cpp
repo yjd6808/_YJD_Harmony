@@ -5,7 +5,10 @@
  *
  */
 
-#include "Property.h"
+#include <JCore/Core.h>
+#include <JCore/Container/Property.h>
+
+NS_JC_BEGIN
 
 Property<Int8>		Property<Int8>		::Default;
 Property<Int8U>		Property<Int8U>		::Default;
@@ -21,3 +24,5 @@ Property<Float>		Property<Float>		::Default;
 Property<Double>	Property<Double>	::Default;
 Property<LDouble>	Property<LDouble>	::Default;
 Property<String>	Property<String>	::Default;
+
+NS_JC_END

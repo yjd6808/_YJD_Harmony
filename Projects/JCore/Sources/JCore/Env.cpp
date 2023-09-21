@@ -24,7 +24,7 @@ String Env::CurrentDirectory() {
 }
 
 TimeSpan Env::AppTime() {
-	return DateTime::Now().Diff(AppTime_v);
+	return DateTime::Now().Diff(AppStartUpTime_v);
 }
 
 TimeSpan Env::SystemTime() {

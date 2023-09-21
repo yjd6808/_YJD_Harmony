@@ -5,9 +5,12 @@
  *
  */
 
+#include <JCore/Core.h>
+#include <JCore/Container/PropertyStatics.h>
+#include <JCore/Container/PropertyType.h>
 
-#include "PropertyStatics.h"
-#include "PropertyType.h"
+NS_JC_BEGIN
+
 
 // Argument를 Type으로 저장하도록함.
 template <PropertyType_t Type, PropertyType_t ArgumentType>
@@ -81,3 +84,6 @@ void InitializePropertyOperatorSelectors() {
 	CreateSelectors<PropertyType_t(0), PropertyType_t(0)>();
 }
 
+
+
+NS_JC_END

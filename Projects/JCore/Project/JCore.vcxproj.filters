@@ -46,6 +46,9 @@
     <Filter Include="Pattern">
       <UniqueIdentifier>{c79b1b73-228a-4f3a-96d3-5864db74e1b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Container\RelatedProperty">
+      <UniqueIdentifier>{ca97943b-966f-4a15-b961-ed19ec652ab1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Core.cpp" />
@@ -160,6 +163,75 @@
     </ClCompile>
     <ClCompile Include="..\Sources\JCore\Utils\ProgressNotifier.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\Properties.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\Property.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyBase.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyFactory.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperator.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_DOUBLE.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_FLOAT.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT8U.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT16U.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32L.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32U.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT32UL.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_INT64U.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_LDOUBLE.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_SELECTORS.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_STRING.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_UNARY.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyStatics.cpp">
+      <Filter>Container\RelatedProperty</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,6 +616,33 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Threading\SchedulerTask.h">
       <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Properties.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\Property.h">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\PropertyBase.h">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\PropertyFactory.h">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\PropertyOperator.h">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\PropertyOperatorDefinitionMacro.h">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\PropertyStatics.h">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\PropertyType.h">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\PropertyTypeTraits.h">
+      <Filter>Container\RelatedProperty</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

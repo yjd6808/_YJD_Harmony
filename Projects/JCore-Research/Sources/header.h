@@ -20,6 +20,7 @@
 #include <JCore/Container/TreeSet.h>
 #include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/Vector.h>
+#include <JCore/Container/Properties.h>
 
 #include <JCore/Primitives/Atomic.h>
 #include <JCore/Primitives/SmartPtr.h>
@@ -48,6 +49,8 @@
 #include <JCore/Threading/ThreadPool.h>
 #include <JCore/Threading/ThreadLocal.h>
 #include <JCore/Threading/Scheduler.h>
+
+
 
 USING_NS_JC;
 USING_NS_STD;

@@ -10,6 +10,8 @@
 
 #include "PropertyTypeTraits.h"
 
+NS_JC_BEGIN
+
 struct IPropertyFactory
 {
 	virtual ~IPropertyFactory() = default;
@@ -32,3 +34,5 @@ struct PropertyFactory : IPropertyFactory
 
 
 #pragma warning(pop)
+
+NS_JC_END

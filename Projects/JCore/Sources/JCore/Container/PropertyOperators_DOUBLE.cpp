@@ -5,10 +5,12 @@
  *
  */
 
+#include <JCore/Core.h>
+#include <JCore/Container/PropertyOperator.h>
+#include <JCore/Container/PropertyOperatorDefinitionMacro.h>
+#include <JCore/Container/PropertyStatics.h>
 
-#include "PropertyOperator.h"
-#include "PropertyOperatorDefinitionMacro.h"
-#include "PropertyStatics.h"
+NS_JC_BEGIN
 
 SG_OPERATION_DEF_BEGIN(Double, Store)
 SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = (Double)rhs, LogLossDataPossible)
@@ -264,3 +266,5 @@ void InitializePropertyOperatorDouble() {
 	PropertyStatics::BinaryOperators_Double[PropertyBinaryOperatorType::Less]			= dbg_new PropertyValueBinaryOperator_Double_Less{};
 
 }
+
+NS_JC_END

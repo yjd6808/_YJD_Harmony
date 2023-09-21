@@ -3,78 +3,8 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\main.cpp" />
     <ClCompile Include="..\Sources\header.cpp" />
-    <ClCompile Include="..\Sources\Property.cpp" />
-    <ClCompile Include="..\Sources\Properties.cpp" />
-    <ClCompile Include="..\Sources\PropertyOperator.cpp" />
-    <ClCompile Include="..\Sources\PropertyStatics.cpp" />
-    <ClCompile Include="..\Sources\PropertyBase.cpp" />
-    <ClCompile Include="..\Sources\PropertyOperators.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT8U.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT16.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT16U.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT32L.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT32U.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT32UL.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT64.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT64U.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_LDOUBLE.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_SELECTORS.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_STRING.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_UNARY.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_DOUBLE.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_FLOAT.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\PropertyOperators_INT8.cpp">
-      <Filter>Operators</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\header.h" />
-    <ClInclude Include="..\Sources\Property.h" />
-    <ClInclude Include="..\Sources\Properties.h" />
-    <ClInclude Include="..\Sources\PropertyType.h" />
-    <ClInclude Include="..\Sources\PropertyTypeTraits.h" />
-    <ClInclude Include="..\Sources\PropertyOperator.h" />
-    <ClInclude Include="..\Sources\PropertyOperatorDefinitionMacro.h" />
-    <ClInclude Include="..\Sources\PropertyStatics.h" />
-    <ClInclude Include="..\Sources\PropertyBase.h" />
-    <ClInclude Include="..\Sources\PropertyFactory.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Operators">
-      <UniqueIdentifier>{bb10e303-f1bc-4e3e-ad34-bad9479d90e6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

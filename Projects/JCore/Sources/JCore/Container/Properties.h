@@ -8,7 +8,10 @@
 
 #pragma once
 
-#include "Property.h"
+#include <JCore/Container/HashMap.h>
+#include <JCore/Container/Property.h>
+
+NS_JC_BEGIN
 
 class Properties {
 	using TKey = int;
@@ -23,7 +26,7 @@ public:
 	PropertyBase& operator[](TKey propertyKey);
 	int Count() { return m_hProperties.Size(); }
 
-	static void InitializeNameMap();
+	static void SetPropertyNameMap(const TNameMap& nameMap) { PropertyNameMap = nameMap; }
 	static const char* GetPropertyName(TKey key);
 private:
 	TPropertyMap m_hProperties;
@@ -31,3 +34,4 @@ private:
 	inline static TNameMap PropertyNameMap;
 };
 
+NS_JC_END

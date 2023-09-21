@@ -5,8 +5,11 @@
  *
  */
 
-#include "PropertyOperator.h"
-#include "Property.h"
+#include <JCore/Core.h>
+#include <JCore/Container/PropertyOperator.h>
+#include <JCore/Container/Property.h>
+
+NS_JC_BEGIN
 
 void LogLossDataPossible(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType) {
 	if (!PropertyStatics::EnableOperatorLog) return;
@@ -26,3 +29,6 @@ void LogUnknownOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryO
 	if (!PropertyStatics::EnableOperatorLog) return;
 	_LogWarn_("%s %s %s연산을 수행하였습니다. (데이터가 잘릴 위험이 있습니다.)", PropertyType::Name[lhs], PropertyBinaryOperatorType::Name[operatorType], PropertyType::Name[rhs]);
 }
+
+
+NS_JC_END

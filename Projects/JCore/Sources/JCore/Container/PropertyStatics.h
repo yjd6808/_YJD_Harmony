@@ -8,8 +8,10 @@
 
 #pragma once
 
-#include "PropertyOperator.h"
-#include "PropertyFactory.h"
+#include <JCore/Container/PropertyOperator.h>
+#include <JCore/Container/PropertyFactory.h>
+
+NS_JC_BEGIN
 
 struct PropertyStatics
 {
@@ -39,3 +41,4 @@ struct PropertyStatics
 	inline static thread_local bool							ComparisonResult{};
 };
 
+NS_JC_END

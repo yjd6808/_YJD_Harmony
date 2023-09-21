@@ -201,6 +201,16 @@ public:
 		return m_pTable != nullptr;
 	}
 
+
+	TBucket* Bucket(int index) const {
+		if (index < 0 || index >= m_iCapacity) {
+			DebugAssert(false);
+			return nullptr;
+		}
+
+		return m_pTable[index];
+	}
+
 	int BucketCount() {
 		int iCount = 0;
 		for (int i = 0; i < m_iCapacity; i++) {
@@ -616,6 +626,15 @@ public:
 
 	bool Valid() const {
 		return m_pTable != nullptr;
+	}
+
+	TBucket* Bucket(int index) const {
+		if (index < 0 || index >= m_iCapacity) {
+			DebugAssert(false);
+			return nullptr;
+		}
+
+		return m_pTable[index];
 	}
 
 	int BucketCount() {

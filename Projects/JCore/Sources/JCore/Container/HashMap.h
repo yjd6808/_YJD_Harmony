@@ -118,6 +118,10 @@ public:
 		Table.Clear();
 	}
 
+	typename THashTable::TBucket* Bucket(int index) const {
+		return Table.Bucket();
+	}
+
 	int BucketCount() {
 		return Table.BucketCount();
 	}

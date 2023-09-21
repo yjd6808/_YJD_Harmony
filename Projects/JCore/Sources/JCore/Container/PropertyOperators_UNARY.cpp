@@ -5,11 +5,13 @@
  *
  */
 
+#include <JCore/Core.h>
+#include <JCore/Container/PropertyOperator.h>
+#include <JCore/Container/Property.h>
+#include <JCore/Container/PropertyStatics.h>
 
-#include "PropertyOperator.h"
-#include "Property.h"
-#include "PropertyStatics.h"
 
+NS_JC_BEGIN
 
 // Argument를 Type으로 저장하도록함.
 template <PropertyType_t Type>
@@ -90,3 +92,5 @@ void CreateUnaryOperators() {
 void InitializePropertyOperatorUnary() {
 	CreateUnaryOperators<PropertyType_t(0)>();
 }
+
+NS_JC_END

@@ -6,9 +6,12 @@
  */
 
 
-#include "PropertyOperator.h"
-#include "PropertyOperatorDefinitionMacro.h"
-#include "PropertyStatics.h"
+#include <JCore/Core.h>
+#include <JCore/Container/PropertyOperator.h>
+#include <JCore/Container/PropertyOperatorDefinitionMacro.h>
+#include <JCore/Container/PropertyStatics.h>
+
+NS_JC_BEGIN
 
 SG_OPERATION_DEF_BEGIN(Int8U, Store)
 SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = (Int8U)rhs, LogLossDataPossible)
@@ -262,3 +265,5 @@ void InitializePropertyOperatorInt8U() {
 	PropertyStatics::BinaryOperators_Int8U[PropertyBinaryOperatorType::Less]			= dbg_new PropertyValueBinaryOperator_Int8U_Less{};
 
 }
+
+NS_JC_END

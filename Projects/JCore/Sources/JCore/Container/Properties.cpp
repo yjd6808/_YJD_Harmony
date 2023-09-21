@@ -6,7 +6,10 @@
  */
 
 
-#include "Properties.h"
+#include <JCore/Core.h>
+#include <JCore/Container/Properties.h>
+
+NS_JC_BEGIN
 
 void Properties::AddProperty(TKey propertyKey, PropertyType_t type) {
 	PropertyBase** ppProperty = m_hProperties.Find(propertyKey);
@@ -41,10 +44,6 @@ PropertyBase& Properties::operator[](TKey propertyKey) {
 	return **ppProperty;
 }
 
-void Properties::InitializeNameMap() {
-
-}
-
 const char* Properties::GetPropertyName(TKey key) {
 	const char** ppszName = PropertyNameMap.Find(key);
 	if (ppszName == nullptr) {
@@ -52,3 +51,5 @@ const char* Properties::GetPropertyName(TKey key) {
 	}
 	return *ppszName;
 }
+
+NS_JC_END

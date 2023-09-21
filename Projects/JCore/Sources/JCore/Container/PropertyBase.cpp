@@ -5,8 +5,10 @@
  *
  */
 
-#include "Property.h"
+#include <JCore/Core.h>
+#include <JCore/Container/Property.h>
 
+NS_JC_BEGIN 
 
 void PropertyBase::LogGettingMismatchedType(PropertyType_t lhs, PropertyType_t rhs) {
 	_LogWarn_("%s타입의 프로퍼티를 %s타입의 프로퍼티로 가져올려고 시도했습니다.", PropertyType::Name[lhs], PropertyType::Name[rhs]);
@@ -91,3 +93,5 @@ SG_PROPERTY_GET_REF_IMPLMENTATION(Float)
 SG_PROPERTY_GET_REF_IMPLMENTATION(Double)
 SG_PROPERTY_GET_REF_IMPLMENTATION(LDouble)
 SG_PROPERTY_GET_REF_IMPLMENTATION(String)
+
+NS_JC_END

@@ -8,8 +8,10 @@
 
 #pragma once
 
-#include "PropertyType.h"
-#include "PropertyTypeTraits.h"
+#include <JCore/Container/PropertyType.h>
+#include <JCore/Container/PropertyTypeTraits.h>
+
+NS_JC_BEGIN
 
 void LogLossDataPossible(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
 void LogImpossibleOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
@@ -63,3 +65,5 @@ struct JCORE_NOVTABLE IPropertyValueBinaryOperator
 	virtual void Operate(Ty& lhs, const String& rhs)	= 0;
 	virtual void Operate(Ty& lhs, char* rhs)			= 0;
 };
+
+NS_JC_END

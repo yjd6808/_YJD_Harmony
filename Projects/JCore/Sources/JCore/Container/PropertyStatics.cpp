@@ -5,8 +5,11 @@
  *
  */
 
-#include "PropertyStatics.h"
-#include "Property.h"
+#include <JCore/Core.h>
+#include <JCore/Container/PropertyStatics.h>
+#include <JCore/Container/Property.h>
+
+NS_JC_BEGIN
 
 extern void InitializePropertyOperatorSelectors();
 extern void InitializePropertyOperatorInt8();
@@ -97,3 +100,5 @@ void PropertyStatics::Finalize() {
 	Property<Double>::FreeAllObjects();
 	Property<String>::FreeAllObjects();
 }
+
+NS_JC_END

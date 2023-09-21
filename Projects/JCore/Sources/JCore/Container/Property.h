@@ -10,8 +10,11 @@
 
 
 
-#include "PropertyStatics.h"
-#include "PropertyBase.h"
+#include <JCore/Container/PropertyStatics.h>
+#include <JCore/Container/PropertyBase.h>
+#include <JCore/Pool/ObjectPool.h>
+
+NS_JC_BEGIN
 
 template <typename T>
 struct Property : PropertyBase, ObjectPool<Property<T>>
@@ -31,3 +34,5 @@ struct Property : PropertyBase, ObjectPool<Property<T>>
 	T Value;
 	static Property<T> Default;	
 };
+
+NS_JC_END

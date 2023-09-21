@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "PropertyType.h"
+#include <JCore/Container/PropertyType.h>
+#include <JCore/Hasher.h>
 
+NS_JC_BEGIN
 
 // 할당가능한 최적의 타입, 직접 사용 금지, PropertyTypeDescription을 통해서 사용할 것 (const, volatile, 레퍼런스 타입등에 대해서 특수화 안되어있기 때문)
-
-
 template <PropertyType_t Type>	struct PropertyDataTypeGetter							{ using Ty = void;		};	
 template <>						struct PropertyDataTypeGetter<PropertyType::Int64>		{ using Ty = Int64;		};
 template <>						struct PropertyDataTypeGetter<PropertyType::Int64U>		{ using Ty = Int64U;	};
@@ -86,3 +86,5 @@ public:
 	static constexpr PropertyType_t Type = PropertyTypeGetter<Ty>::Type;
 };
 
+
+NS_JC_END

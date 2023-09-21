@@ -6,9 +6,12 @@
  */
 
 
-#include "PropertyOperator.h"
-#include "PropertyOperatorDefinitionMacro.h"
-#include "PropertyStatics.h"
+#include <JCore/Core.h>
+#include <JCore/Container/PropertyOperator.h>
+#include <JCore/Container/PropertyOperatorDefinitionMacro.h>
+#include <JCore/Container/PropertyStatics.h>
+
+NS_JC_BEGIN
 
 SG_OPERATION_DEF_BEGIN(Int16U, Store)
 SG_OPERATION_OPERATE(const Int64&)		SG_OPERATION_BODY(lhs = (Int16U)rhs, LogLossDataPossible)
@@ -263,3 +266,5 @@ void InitializePropertyOperatorInt16U() {
 	PropertyStatics::BinaryOperators_Int16U[PropertyBinaryOperatorType::Less]			= dbg_new PropertyValueBinaryOperator_Int16U_Less{};
 
 }
+
+NS_JC_END

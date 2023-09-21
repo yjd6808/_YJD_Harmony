@@ -8,7 +8,13 @@
 
 #pragma once
 
-#include "header.h"
+#include <JCore/Namespace.h>
+#include <JCore/Define.h>
+#include <JCore/Declspec.h>
+#include <JCore/Macro.h>
+#include <JCore/Type.h>
+
+NS_JC_BEGIN
 
 JCORE_SENUM_BEGIN(PropertyType)
 Int8,
@@ -270,3 +276,6 @@ static constexpr const char* Name[Max] = {
 };
 
 JCORE_SENUM_MIDDLE_END(PropertyBinaryOperatorType)
+
+
+NS_JC_END

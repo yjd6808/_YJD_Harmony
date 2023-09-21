@@ -5,6 +5,8 @@
 
 #pragma once
 
+#pragma warning(push, 0)
+
 #pragma warning (disable : 4267)		// conversion from 'size_t' to 'type', possible loss of data
 #pragma warning (disable : 26439)		// This kind of function may not throw.Declare it 'noexcept' (f.6)
 #pragma warning (disable : 4018)		// '<': signed / unsigned mismatch
@@ -31,20 +33,31 @@
 #include <JCore/Macro.h>
 #include <JCore/Assert.h>
 
+#include <JCore/Pool/ObjectPool.h>
 
 NS_JC_BEGIN
-	NS_DETAIL_BEGIN
-	void InitializeJCore();
-	NS_DETAIL_END
 
-extern Int64 AppTime_v;
+struct JCoreLibManager
+{
+	JCoreLibManager();
+	~JCoreLibManager();
 
-inline auto JCoreInitializer = [] {
-	Detail::InitializeJCore();
-	return 0;
-}();
+	static int Initialize();
+	static int Finalize();
+	static int InitResult() { return ms_iInitResult; }
+private:
+	inline static bool ms_bInitialized = false;
+	inline static int ms_iInitResult = -1;
+};
+
+
+extern Int64 AppStartUpTime_v;
+
+// #if JCORE_OPTION_AUTO_INIT 1
+inline JCoreLibManager JCoreLibManager_v;
+// #endif
 
 NS_JC_END
 
 
-
+#pragma warning(pop)
