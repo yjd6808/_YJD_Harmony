@@ -1,6 +1,8 @@
 ﻿#include <JCoreTest/CoreTest.h>
 #include <JCore/Sync/Semaphore.h>
 
+#include <mutex>
+
 #if TEST_SemaphoreTest == ON
 
 namespace SemaphoreTest {

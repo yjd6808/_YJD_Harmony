@@ -6,9 +6,7 @@
 
 #pragma once
 
-#include <JCore/Sync/NormalLock.h>
-
-#include <condition_variable>
+#include <JCore/Sync/ConditionVariable.h>
 
 NS_JC_BEGIN
 
@@ -30,8 +28,8 @@ public:
     bool TryAcquire() { return TryLock(); }
     bool IsAcquired() { return IsLocked(); }
 private:
-	std::condition_variable m_Condvar;
-	std::mutex m_Mtx;
+	ConditionVariable m_Condvar;
+	NormalLock m_Mtx;
 	int m_iMaxCount;
 	int m_iUsableCount;
 };
