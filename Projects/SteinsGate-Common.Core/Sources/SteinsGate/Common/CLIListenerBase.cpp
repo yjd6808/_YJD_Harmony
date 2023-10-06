@@ -25,13 +25,16 @@ CLIListenerBase::CLIListenerBase() {
 	m_Table.Insert("runtime_config",							JCORE_CALLBACK_2(CLIListenerBase::CLI_RuntimeConfig, this));
 }
 
-bool CLIListenerBase::OnInputProcessing(int argc, String* argv) {
-	const TCLI_Callback* pCallback = m_Table.Find(argv[0].Source());
+bool CLIListenerBase::ExecuteCommand(int argc, String* argv, JCORE_REF_IN TCLI_Table& table) {
+	const TCLI_Callback* pCallback = table.Find(argv[0].Source());
 	if (pCallback) {
 		return (*pCallback)(argc, argv);
 	}
-
 	return true;
+}
+
+bool CLIListenerBase::OnInputProcessing(int argc, String* argv) {
+	return ExecuteCommand(argc, argv, m_Table);
 }
 
 bool CLIListenerBase::CLI_HelpBase(int argc, JCore::String* argv) {

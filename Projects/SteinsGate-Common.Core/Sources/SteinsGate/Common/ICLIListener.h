@@ -14,6 +14,6 @@ struct ICLIListener
 {
 	virtual ~ICLIListener() = default;
 
-	// 프로파게이션 여부를 반환한다.
+	// 터널링 여부를 반환한다.
 	virtual bool OnInputProcessing(int argc, JCore::String* argv) = 0;
 };

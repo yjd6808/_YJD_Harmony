@@ -19,7 +19,6 @@ public:
 	CLIListenerBase();
 
 	bool OnInputProcessing(int argc, JCore::String* argv) override;
-
 private:
 	bool CLI_HelpBase(int argc, JCore::String* argv);
 	bool CLI_SendCommandFilter(int argc, JCore::String* argv);
@@ -33,6 +32,14 @@ private:
 	bool CLI_RuntimeConfig(int argc, JCore::String* argv);
 
 protected:
+	/**
+	 * \brief 커맨드 실행
+	 * \param argc 커맨드 이름을 포함한 인자 갯수
+	 * \param argv argv[0] 커맨드 이름, argv[1,2, ...] 커맨드 인자
+	 * \return 이벤트 터널링 여부
+	 */
+	bool ExecuteCommand(int argc, SGString* argv, JCORE_REF_IN TCLI_Table& table);
+
 	JCore::LoggerAbstract::Level ConvertLogLevel(const SGString& logLevelString);
 	int ToNumber(const SGString& numString, int argIndex);
 private:

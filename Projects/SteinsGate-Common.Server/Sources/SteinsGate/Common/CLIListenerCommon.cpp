@@ -22,13 +22,7 @@ bool CLIListenerCommon::OnInputProcessing(int argc, JCore::String* argv) {
 		return false;
 	}
 
-	const TCLI_Callback* pCallback = m_Table.Find(argv[0].Source());
-
-	if (pCallback) {
-		return (*pCallback)(argc, argv);
-	}
-
-	return true;
+	return ExecuteCommand(argc, argv, m_Table);
 }
 
 bool CLIListenerCommon::CLI_HelpCommon(int argc, JCore::String* argv) {

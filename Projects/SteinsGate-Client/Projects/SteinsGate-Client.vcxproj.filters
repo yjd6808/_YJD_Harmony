@@ -103,9 +103,6 @@
     <Filter Include="Game\UI">
       <UniqueIdentifier>{0d7eb5f0-5cd7-445d-825e-1d7b3e291f6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\UI_M">
-      <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Helper">
       <UniqueIdentifier>{62c231f5-2c23-4a23-8337-9397dce6d44c}</UniqueIdentifier>
     </Filter>
@@ -171,6 +168,9 @@
     </Filter>
     <Filter Include="Define">
       <UniqueIdentifier>{438654f5-eaff-4964-afe5-bea9e182e705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI_Implementation">
+      <UniqueIdentifier>{1fffd7f0-6d76-4c4d-9c61-517e54eb58cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -331,7 +331,7 @@
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Login.cpp">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UILabel.cpp">
       <Filter>Game\UI</Filter>
@@ -367,7 +367,7 @@
       <Filter>Game\UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Inventory.cpp">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UIScrollBar.cpp">
       <Filter>Game\UI</Filter>
@@ -385,10 +385,10 @@
       <Filter>Net</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Popup.cpp">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_Test.cpp">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\NetCore.cpp">
       <Filter>Net</Filter>
@@ -520,7 +520,7 @@
       <Filter>Net\Listener</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\UI_ChannelSelect.cpp">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\SteinsGate\Client\ChannelInfoLoader.cpp">
       <Filter>Data\Channel</Filter>
@@ -804,7 +804,7 @@
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Login.h">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UILabel.h">
       <Filter>Game\UI</Filter>
@@ -846,7 +846,7 @@
       <Filter>Game\UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Inventory.h">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UIScrollBar.h">
       <Filter>Game\UI</Filter>
@@ -867,10 +867,10 @@
       <Filter>Net</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Popup.h">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_Test.h">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\R_AUTHENTICATION.h">
       <Filter>Net\Recv</Filter>
@@ -1014,7 +1014,7 @@
       <Filter>Net\Listener</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\UI_ChannelSelect.h">
-      <Filter>Game\UI_M</Filter>
+      <Filter>Game\UI_Implementation</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\SteinsGate\Client\ChannelInfo.h">
       <Filter>Data\Channel</Filter>

@@ -73,7 +73,6 @@ bool SteinsGateApp::applicationDidFinishLaunching() {
     Core::CharCommon = pDataManager->getCharCommonInfo(1);
 
     CreateOpenGLWindow();
-	InitializeJCore();
     InitializeNetLogger(LOG_SPECIFIER_CLIENT);
     InitializeDefaultLogger(LOG_SPECIFIER_CLIENT);
     InitializeCommonCore();
