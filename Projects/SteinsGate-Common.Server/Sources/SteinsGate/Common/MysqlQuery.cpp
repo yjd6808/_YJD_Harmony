@@ -13,7 +13,7 @@ MysqlQuery::MysqlQuery(MysqlConnection* conn, const String& preparedStatement, S
 
 StatementType MysqlQuery::ParseStatement(const String& statement) {
 	StatementType eStatement = StatementType::None;
-	const String statementPrefix = statement.GetRange(0, StatementPrefixLength - 1).ToLowerCase();
+	const String statementPrefix = statement.GetRange(0, 5).ToLowerCase();	// select, update, unsert, delete 모두 6글자이므로
 
 	// 각 스테이트먼트가 각 문자열로 시작하는지 확인
 	if (statementPrefix.Find("select") == 0) {
@@ -24,7 +24,10 @@ StatementType MysqlQuery::ParseStatement(const String& statement) {
 		eStatement = StatementType::Insert;
 	} else if (statementPrefix.Find("delete") == 0) {
 		eStatement = StatementType::Delete;
+	} else {
+		DebugAssertMsg(false, "올바른 스테이트먼트가 아닙니다.");
 	}
+
 
 	return eStatement;
 }

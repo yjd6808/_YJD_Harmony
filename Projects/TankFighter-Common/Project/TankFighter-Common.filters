@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\Sources\JNetwork\Network.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\IPAddress.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\IPEndPoint.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\Socket.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\Winsock.cpp" />
+    <ClCompile Include="..\Sources\JNetwork\Host\TcpServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Host\TcpSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Host\TcpSessionContainer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCP\IOCP.cpp">
+      <Filter>IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCP\IOCPWorker.cpp">
+      <Filter>IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Host\TcpClient.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCP\IOCPPostOrder.cpp">
+      <Filter>IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedConnect.cpp">
+      <Filter>IOCPOverlapped</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\JNetwork\Network.h" />
+    <ClInclude Include="..\Sources\JNetwork\IPEndPoint.h" />
+    <ClInclude Include="..\Sources\JNetwork\IPAddress.h" />
+    <ClInclude Include="..\Sources\JNetwork\Protocol.h" />
+    <ClInclude Include="..\Sources\JNetwork\Socket.h" />
+    <ClInclude Include="..\Sources\JNetwork\ByteOrder.h" />
+    <ClInclude Include="..\Sources\JNetwork\Winsock.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\TcpServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\TcpSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Buffer.h" />
+    <ClInclude Include="..\Sources\JNetwork\Host\TcpSessionContainer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\Server.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCP\IOCPWorker.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCP\IOCP.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCP\Worker.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCP\WorkerManager.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedAccept.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlapped.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\TcpServerEventListener.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\TcpClient.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Host\TcpClientEventListener.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCP\IOCPPostOrder.h">
+      <Filter>IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedReceive.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedSend.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Packet.h" />
+    <ClInclude Include="..\Sources\JNetwork\IOCPOverlapped\IOCPOverlappedConnect.h">
+      <Filter>IOCPOverlapped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Database\MySQL\MySQLConnection.h">
+      <Filter>Database\MySQL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Database\IConnection.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JNetwork\Database\MySQL\IDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Host">
+      <UniqueIdentifier>{c5acf45c-4f39-40a4-ba4b-5317d30049ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IOCP">
+      <UniqueIdentifier>{5578a5b5-a949-409d-be0b-72ad6147d5f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IOCPOverlapped">
+      <UniqueIdentifier>{d1067032-1442-4f1d-9a8c-7a577b68be80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{fe1129b4-e1a5-4a58-98f9-2d6539c9ae08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\MySQL">
+      <UniqueIdentifier>{fbeb9c7b-55b2-4446-a2c6-4471e9148796}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
