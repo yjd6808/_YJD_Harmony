@@ -35,6 +35,7 @@ struct PropertyStatics
 	inline static IPropertyValueBinaryOperatorSelector*		BinaryOperatorSelectors		[PropertyType::Max][PropertyType::Max]{};
 	inline static IPropertyValueUnaryOperator*				UnaryOperators				[PropertyType::Max]{};
 	inline static IPropertyFactory*							Factorys					[PropertyType::Max]{};
+	inline static PropertyBase*								DefaultPrperty				[PropertyType::Max]{};
 
 
 	inline static bool										EnableOperatorLog = true;

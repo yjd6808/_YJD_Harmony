@@ -57,6 +57,9 @@ struct PropertyBase
 		Operate(TDesc::ArgumentTyp, (int*)&other, PropertyBinaryOperatorType::Move);
 	}
 
+	// 프로퍼티 생성 당시의 초기값으로 변경
+	virtual void SetInitialValue() = 0;
+
 	template <typename TVal>
 	PropertyBase& operator=(const TVal& other) {
 		using TDesc = PropertyTypeDescription<TVal>;

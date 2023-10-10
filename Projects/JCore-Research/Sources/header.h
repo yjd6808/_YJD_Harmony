@@ -11,9 +11,6 @@
 #include <JCore/Natvis/NatvisByteOrder.h>
 #include <JCore/Utils/Concatenation.h>
 
-#include <JCore/Allocator/DefaultAllocator.h>
-#include <JCore/Allocator/DefaultArrayAllocator.h>
-
 #include <JCore/Container/HashMap.h>
 #include <JCore/Container/HashSet.h>
 #include <JCore/Container/TreeMap.h>

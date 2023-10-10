@@ -14,9 +14,10 @@ enum class CollectionType
 	List,
 	Map,
 	Set,
+	Properties,
 	Stream,
 	KeyCollection,
-	ValueCollection
+	ValueCollection,
 };
 
 

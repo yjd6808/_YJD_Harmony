@@ -3,6 +3,7 @@
 int main() {
 	InitializeDefaultLogger();
 
+	HashMap<int, int> s;
 
 	{
 		Properties properties;
@@ -10,8 +11,8 @@ int main() {
 		constexpr int HP = 1;
 		constexpr int Name = 3;
 
-		properties.AddProperty(HP, PropertyType::Int16);
-		properties.AddProperty(Name, PropertyType::String);
+		properties.Add(HP, PropertyType::Int16);
+		properties.Add(Name, PropertyType::String);
 
 		properties[HP] = 200;
 		properties[HP] += 1;
@@ -33,7 +34,12 @@ int main() {
 		Console::WriteLine("HP: %d", properties[HP].As<Int>());
 		Console::WriteLine("Name: %s", properties[Name].Ref<String>().Source());
 
+		properties.InitializeAllValues();
+		Console::WriteLine("HP: %d", properties[HP].As<Int>());
+		Console::WriteLine("Name: %s", properties[Name].Ref<String>().Source());
 	}
+
+	FinalizeDefaultLogger();
 
 	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
 }

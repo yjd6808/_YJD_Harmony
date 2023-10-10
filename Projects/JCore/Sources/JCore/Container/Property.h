@@ -30,6 +30,14 @@ struct Property : PropertyBase, ObjectPool<Property<T>>
 	void Operate(PropertyType_t argumentType, int* decayedArgument, PropertyBinaryOperatorType_t operatorType) override {
 		PropertyStatics::BinaryOperatorSelectors[Type][argumentType]->Select((int*)&Value, decayedArgument, operatorType);
 	}
+	void SetInitialValue() override {
+		if constexpr (PropertyType::IsNumericType[Type])
+			Value = 0;
+		else if constexpr (Type == PropertyType::String)
+			Value = nullptr;	// String::operator=(std::nullptr_t)
+		else
+			DebugAssert(false);	// 올바르지 않은 프로퍼티 타입인 경우 (ex: Unknown, CharPtr 같은)
+	}
 
 	T Value;
 	static Property<T> Default;	

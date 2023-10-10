@@ -11,10 +11,17 @@
 #include <JCore/Hasher.h>
 #include <JCore/Memory.h>
 
+#include <JCore/Allocator/DefaultAllocator.h>
 #include <JCore/Pattern/NonCopyableh.h>
 #include <JCore/Container/Pair.h>
 
 NS_JC_BEGIN
+
+enum class HashTableType
+{
+	Set,
+	Map
+};
 
 template <typename T>
 struct BucketNode

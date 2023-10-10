@@ -12,6 +12,7 @@
 
 NS_JC_BEGIN
 
+
 template <typename...>
 class HashTable;
 
@@ -860,6 +861,9 @@ protected:
 
 	template <typename, typename, typename> friend class HashMap;
 	template <typename, typename, typename> friend class HashMapIterator;
+
+	template <typename, typename> friend class Properties;
+	template <typename, typename> friend class PropertiesIterator;
 }; // class HashTable<TKey, TValue, TAllocator>
 
 #pragma endregion

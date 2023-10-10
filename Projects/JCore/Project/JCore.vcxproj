@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\JCore\Assert.cpp" />
-    <ClCompile Include="..\Sources\JCore\Container\Properties.cpp" />
     <ClCompile Include="..\Sources\JCore\Container\Property.cpp" />
     <ClCompile Include="..\Sources\JCore\Container\PropertyBase.cpp" />
     <ClCompile Include="..\Sources\JCore\Container\PropertyFactory.cpp" />
@@ -270,6 +269,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Properties.h" />
+    <ClInclude Include="..\Sources\JCore\Container\PropertiesIterator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\Property.h" />
     <ClInclude Include="..\Sources\JCore\Container\PropertyBase.h" />
     <ClInclude Include="..\Sources\JCore\Container\PropertyFactory.h" />

@@ -35,7 +35,15 @@ static void CreateFactory() {
 		PropertyStatics::Factorys[I] = dbg_new PropertyFactory<typename PropertyDataTypeGetter<I>::Ty>();
 		CreateFactory<PropertyType_t(I + 1)>();
 	}
-	
+}
+
+template <PropertyType_t I>
+static void InitDefaultProperty() {
+	if constexpr (I == PropertyType::CharPtr) return;
+	else {
+		PropertyStatics::DefaultPrperty[I] = &Property<typename PropertyDataTypeGetter<I>::Ty>::Default;
+		InitDefaultProperty<PropertyType_t(I + 1)>();
+	}
 }
 
 
@@ -59,6 +67,7 @@ void PropertyStatics::Initialize() {
 	InitializePropertyOperatorString();
 
 	CreateFactory<PropertyType_t(0)>();
+	InitDefaultProperty<PropertyType_t(0)>();
 }
 
 
@@ -94,10 +103,19 @@ void PropertyStatics::Finalize() {
 		JCORE_DELETE_SAFE(Factorys[i]);
 	}
 
+	Property<Int8>::FreeAllObjects();
+	Property<Int8U>::FreeAllObjects();
+	Property<Int16>::FreeAllObjects();
+	Property<Int16U>::FreeAllObjects();
 	Property<Int>::FreeAllObjects();
+	Property<Int32U>::FreeAllObjects();
+	Property<Int32L>::FreeAllObjects();
+	Property<Int32UL>::FreeAllObjects();
 	Property<Int64>::FreeAllObjects();
+	Property<Int64U>::FreeAllObjects();
 	Property<Float>::FreeAllObjects();
 	Property<Double>::FreeAllObjects();
+	Property<LDouble>::FreeAllObjects();
 	Property<String>::FreeAllObjects();
 }
 

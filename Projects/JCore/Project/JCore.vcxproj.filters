@@ -164,9 +164,6 @@
     <ClCompile Include="..\Sources\JCore\Utils\ProgressNotifier.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\JCore\Container\Properties.cpp">
-      <Filter>Container</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Container\Property.cpp">
       <Filter>Container\RelatedProperty</Filter>
     </ClCompile>
@@ -643,6 +640,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\JCore\Container\PropertyTypeTraits.h">
       <Filter>Container\RelatedProperty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Container\PropertiesIterator.h">
+      <Filter>Container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

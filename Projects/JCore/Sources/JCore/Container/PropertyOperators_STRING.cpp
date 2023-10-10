@@ -45,8 +45,8 @@ SG_OPERATION_OPERATE(const Int8U&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Float&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const Double&)		SG_OPERATION_BODY(lhs = rhs)
 SG_OPERATION_OPERATE(const LDouble&)	SG_OPERATION_BODY(lhs = rhs)
-SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(lhs = rhs)
-SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(lhs = rhs)
+SG_OPERATION_OPERATE(const String&)		SG_OPERATION_BODY(lhs = Move(rhs))
+SG_OPERATION_OPERATE(char*)				SG_OPERATION_BODY(lhs = rhs)		// 포인터타입은 리터럴인지 구분할 수 없으므로 복사하도록 함
 SG_OPERATION_DEF_END
 
 SG_OPERATION_DEF_BEGIN(String, Plus)
