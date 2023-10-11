@@ -21,6 +21,14 @@
   <ItemGroup>
     <ClCompile Include="..\Classes\TF\Client\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\TF\Client\main.cpp" />
+    <ClCompile Include="..\Classes\TF\Client\Net\Connection\C_GAME.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Net\Listener\L_GAME.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Classes\TF\Client\Pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -30,6 +38,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\TF\Client\AppDelegate.h" />
+    <ClInclude Include="..\Classes\TF\Client\Net\Connection\C_GAME.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Net\Listener\L_GAME.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Pch.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -20,6 +20,8 @@
 #include <JCore/Random.h>
 #include <JCore/Bit.h>
 
+#include <JCore/Logger/LoggerDefine.h>
+
 #include <JCore/Pool/BinarySearchMemoryPool.h>
 #include <JCore/Pool/IndexedMemoryPool.h>
 #include <JCore/Pool/ObjectPool.h>
@@ -57,6 +59,7 @@
 #include <JNetwork/IPEndPoint.h>
 #include <JNetwork/Socket.h>
 #include <JNetwork/Winsock.h>
+#include <JNetwork/NetLoggerDefine.h>
 
 #include <JNetwork/Host/TcpServer.h>
 #include <JNetwork/Host/TcpClient.h>

@@ -1,12 +1,11 @@
 ﻿#include "Pch.h"
 #include "AppDelegate.h"
 
+#include <TF/Common/Const.h>
+
 // #include <TF/Scenes/LoginScene.h>
 // #include <TF/Network/GameClient.h>
 // #include <TF/Network/ClientConfiguration.h>
-
-#include <TF/Common/Configuration.h>
-
 
 #include <JNetwork/Winsock.h>
 
@@ -29,8 +28,6 @@ using namespace CocosDenshion;
 #endif
 
 USING_NS_CC;
-
-static cocos2d::Size designResolutionSize = cocos2d::Size(MAP_WIDTH, MAP_HEIGHT);
 
 AppDelegate::AppDelegate()
 {
@@ -71,8 +68,8 @@ void AppDelegate::CreateOpenGLWindow() {
     auto glview = director->getOpenGLView();
 
     if (glview == nullptr) {
-        glview = GLViewImpl::createWithRect("TankFighter", { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT }, 1.0f, true);
-        glview->setDesignResolutionSize(SCREEN_WIDTH, SCREEN_HEIGHT, ResolutionPolicy::NO_BORDER);
+        glview = GLViewImpl::createWithRect("TankFighter", { 0, 0, Const::ScreenWidth, Const::ScreenHeight }, 1.0f, true);
+        glview->setDesignResolutionSize(Const::ScreenWidth, Const::ScreenHeight, ResolutionPolicy::NO_BORDER);
     }
 
     director->setOpenGLView(glview);

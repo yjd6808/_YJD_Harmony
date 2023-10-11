@@ -2,24 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="..\Sources\SteinsGate\Common\Server.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\StatementType.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnection.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCoreHeader.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\S_SETUP_IS_COMMON.h">
@@ -43,12 +25,6 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerClientCommon.h">
       <Filter>Net\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_AUTH.h">
-      <Filter>Database</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerNamespace.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\InterServerClientNetGroup.h">
       <Filter>Net</Filter>
@@ -67,9 +43,6 @@
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\TimeManager.h">
       <Filter>Net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h">
-      <Filter>Database</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\CLIListenerCommon.h">
       <Filter>System</Filter>
@@ -171,25 +144,37 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\S_MESSAGE_COMMON.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\StatementType.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnection.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h">
+      <Filter>Database\Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_AUTH.h">
+      <Filter>Database\Define</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\SteinsGate\Common\Server.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQuery.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnection.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\ServerCore.cpp" />
-    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp">
-      <Filter>Database</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\SteinsGate\Common\S_SETUP_IS_COMMON.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
@@ -280,6 +265,21 @@
     <ClCompile Include="..\Sources\SteinsGate\Common\S_MESSAGE_COMMON.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnection.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlDatabase.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlQuery.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.cpp">
+      <Filter>Database\Mysql</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Database">
@@ -320,6 +320,12 @@
     </Filter>
     <Filter Include="Component">
       <UniqueIdentifier>{c7afc042-9e6c-4936-b9bf-debc998d46a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Mysql">
+      <UniqueIdentifier>{e41719f4-8ed7-4099-883d-93349ca6f03c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Define">
+      <UniqueIdentifier>{b3953115-9b4c-4cce-9ca3-3b366468ae35}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

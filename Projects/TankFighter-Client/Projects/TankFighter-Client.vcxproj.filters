@@ -4,9 +4,59 @@
     <ClCompile Include="..\Classes\TF\Client\Pch.cpp" />
     <ClCompile Include="..\Classes\TF\Client\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\TF\Client\main.cpp" />
+    <ClCompile Include="..\Classes\TF\Client\Net\Listener\L_GAME.cpp">
+      <Filter>Net\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Net\Connection\C_GAME.cpp">
+      <Filter>Net\Connection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\TF\Client\Pch.h" />
     <ClInclude Include="..\Classes\TF\Client\AppDelegate.h" />
+    <ClInclude Include="..\Classes\TF\Client\Net\Listener\L_GAME.h">
+      <Filter>Net\Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Net\Connection\C_GAME.h">
+      <Filter>Net\Connection</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Net">
+      <UniqueIdentifier>{13d93dce-bc45-4821-8927-19dc9fffcb6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{d1938415-9277-4f94-897b-1c42355df026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{78b0b6da-25e0-4cb5-b7c6-208c61a5d48a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene">
+      <UniqueIdentifier>{e14b586f-d8d0-44fd-a459-08b75e530ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Layer">
+      <UniqueIdentifier>{7a3f5bb4-6b09-4f48-aace-7c9d966efbbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Listener">
+      <UniqueIdentifier>{615e4b71-b4c6-46c7-8305-214739b7a906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Object">
+      <UniqueIdentifier>{d961a3b0-92ee-480c-8b2c-ab678f600925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Send">
+      <UniqueIdentifier>{098c2bed-c65a-4607-8522-330cc28ae412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Recv">
+      <UniqueIdentifier>{b28b6744-bbaf-4ca9-bcfe-e8a4509a1970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Connection">
+      <UniqueIdentifier>{13a2760a-2ec2-487e-801e-88a16f26629a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Contents">
+      <UniqueIdentifier>{23cff2ff-0d4b-4817-ae55-ffafa00dd97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\UI">
+      <UniqueIdentifier>{cc7b59b5-6da5-4440-990b-93a14520cf50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\Sources\TF\Common\Command.h" />
+    <ClInclude Include="..\Sources\TF\Common\Const.h" />
+    <ClInclude Include="..\Sources\TF\Common\Enum.h" />
+    <ClInclude Include="..\Sources\TF\Common\Namespace.h" />
+    <ClInclude Include="..\Sources\TF\Common\PchBase.h" />
+    <ClInclude Include="..\Sources\TF\Common\Structure.h" />
+  </ItemGroup>
+</Project>

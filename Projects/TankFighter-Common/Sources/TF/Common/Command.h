@@ -109,150 +109,150 @@
 
 
 STATIC_CMD_BEGIN(CS_Login, CMDID_CS_LOGIN)
-char Id[ID_LEN]{};
-char Password[PASS_LEN]{};
+char Id[Const::IdLength]{};
+char Password[Const::PassLength]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_Login, CMDID_SC_LOGIN)
-int UID = INVALID_UID;
+int UID = Const::InvalidValue;
 bool Result;
-char Reason[REASON_LEN]{};
+char Reason[Const::ReasonLength]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_Register, CMDID_CS_REGISTER)
-char Id[ID_LEN]{};
-char Password[PASS_LEN]{};
+char Id[Const::IdLength]{};
+char Password[Const::PassLength]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_Register, CMDID_SC_REGISTER)
 bool Result;
-char Reason[REASON_LEN]{};
+char Reason[Const::ReasonLength]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_LoadChannelInfo, CMDID_CS_LOAD_CHANNEL_INFO)
 STATIC_CMD_END()
 
 // 최대 10개의 채널 정보까지 받을 수 있도록.
-STATIC_CMD_BEGIN(SC_LoadChannelInfo, CMDID_SC_LOAD_CHANNEL_INFO)
+DYNAMIC_CMD_BEGIN(SC_LoadChannelInfo, CMDID_SC_LOAD_CHANNEL_INFO, ChannelInfo)
 int Count = 0;
-ChannelInfo Info[COMMAND_ARRAY_LEN];
-STATIC_CMD_END()
+ChannelInfo Info[1];
+DYNAMIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_SelectChannel, CMDID_CS_SELECT_CHANNEL)
-int ChanneldUID = INVALID_UID;
+int ChanneldUID = Const::InvalidValue;
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_SelectChannel, CMDID_SC_SELECT_CHANNEL)
 bool Result{};
-char Reason[REASON_LEN]{};
+char Reason[Const::ReasonLength]{};
 int ChanneldUID{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_LoadCharacterInfo, CMDID_CS_LOAD_CHARACTER_INFO)
-int AccountUID = INVALID_UID;
-int ChannelUID = INVALID_UID;
+int AccountUID = Const::InvalidValue;
+int ChannelUID = Const::InvalidValue;
 STATIC_CMD_END()
 
-STATIC_CMD_BEGIN(SC_LoadCharacterInfo, CMDID_SC_LOAD_CHARACTER_INFO)
+DYNAMIC_CMD_BEGIN(SC_LoadCharacterInfo, CMDID_SC_LOAD_CHARACTER_INFO, CharacterInfo)
 int Count;
-CharacterInfo Info[COMMAND_ARRAY_LEN];
-STATIC_CMD_END()
+CharacterInfo Info[1];
+DYNAMIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_CreateCharacter, CMDID_CS_CREATE_CHARACTER)
-int AccountUID = INVALID_UID;
-int ChannelUID = INVALID_UID;
-char CharacterName[NAME_LEN];
+int AccountUID = Const::InvalidValue;
+int ChannelUID = Const::InvalidValue;
+char CharacterName[Const::NameLength];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_CreateCharacter, CMDID_SC_CREATE_CHARACTER)
 bool Result{};
-char Reason[REASON_LEN]{};
+char Reason[Const::ReasonLength]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_DeleteCharacter, CMDID_CS_DELETE_CHARACTER)
-int AccountUID = INVALID_UID;
-int ChannelUID = INVALID_UID;
-char CharacterName[NAME_LEN];
+int AccountUID = Const::InvalidValue;
+int ChannelUID = Const::InvalidValue;
+char CharacterName[Const::NameLength];
 STATIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(SC_DeleteCharacter, CMDID_SC_DELETE_CHARACTER)
-char Reason[REASON_LEN]{};
+char Reason[Const::ReasonLength]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_SelectCharacter, CMDID_CS_SELECT_CHARACTER)
-int AccountUID = INVALID_UID;
-int ChannelUID = INVALID_UID;
-int CharacterUID = INVALID_UID;
+int AccountUID = Const::InvalidValue;
+int ChannelUID = Const::InvalidValue;
+int CharacterUID = Const::InvalidValue;
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_SelectCharacter, CMDID_SC_SELECT_CHARACTER)
-int CharacterUID = INVALID_UID;
+int CharacterUID = Const::InvalidValue;
 bool Result{};
-char Reason[REASON_LEN]{};
+char Reason[Const::ReasonLength]{};
 STATIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(CS_JoinLobby, CMDID_CS_JOIN_LOBBY)
-int AccountUID = INVALID_UID;
-int ChannelUID = INVALID_UID;
-int CharacterUID = INVALID_UID;
+int AccountUID = Const::InvalidValue;
+int ChannelUID = Const::InvalidValue;
+int CharacterUID = Const::InvalidValue;
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_UpdateCharacterInfo, CMDID_SC_UPDATE_CHARACTER_INFO)
 bool Result{};
-char Reason[REASON_LEN];
+char Reason[Const::ReasonLength];
 CharacterInfo Info{};
 STATIC_CMD_END()
 
-STATIC_CMD_BEGIN(SC_UpdateRoomList, CMDID_SC_UPDATE_ROOMLIST)
+DYNAMIC_CMD_BEGIN(SC_UpdateRoomList, CMDID_SC_UPDATE_ROOMLIST, RoomInfo)
 int Count = 0;
 bool Result{};
-char Reason[REASON_LEN];
-RoomInfo Info[COMMAND_ARRAY_LEN];
-STATIC_CMD_END()
+char Reason[Const::ReasonLength];
+RoomInfo Info[1];
+DYNAMIC_CMD_END()
 
-STATIC_CMD_BEGIN(SC_UpdateFriendList, CMDID_SC_UPDATE_FRIENDLIST)
+DYNAMIC_CMD_BEGIN(SC_UpdateFriendList, CMDID_SC_UPDATE_FRIENDLIST, CharacterInfo)
 int Count = 0;
-CharacterInfo Info[COMMAND_ARRAY_LEN];
-STATIC_CMD_END()
+CharacterInfo Info[1];
+DYNAMIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_CreateRoom, CMDID_CS_CREATE_ROOM)
-char RoomName[NAME_LEN];
+char RoomName[Const::NameLength];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_CreateRoom, CMDID_SC_CREATE_ROOM)
 bool Result{};
-int RoomUID = INVALID_UID;
-char Reason[REASON_LEN];
+int RoomUID = Const::InvalidValue;
+char Reason[Const::ReasonLength];
 STATIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(CS_JoinRoom, CMDID_CS_JOIN_ROOM)
-int RoomUID = INVALID_UID;
+int RoomUID = Const::InvalidValue;
 STATIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(SC_JoinRoom, CMDID_SC_JOIN_ROOM)
-int RoomUID = INVALID_UID;
+int RoomUID = Const::InvalidValue;
 bool Result{};
-char Reason[REASON_LEN];
+char Reason[Const::ReasonLength];
 STATIC_CMD_END()
 
 
-STATIC_CMD_BEGIN(SC_UpdateRoomInfo, CMDID_SC_UPDATE_ROOMINFO)
+DYNAMIC_CMD_BEGIN(SC_UpdateRoomInfo, CMDID_SC_UPDATE_ROOMINFO, RoomCharacterInfo)
 int Count = 0;
-int HostCharacterUID = INVALID_UID;		// 방장
-RoomCharacterInfo Info[ROOM_MAX_PLAYER_COUNT];
-STATIC_CMD_END()
+int HostCharacterUID = Const::InvalidValue;		// 방장
+RoomCharacterInfo Info[1];
+DYNAMIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_AddFriend, CMDID_CS_ADD_FRIEND)
-char FriendName[NAME_LEN];
+char FriendName[Const::NameLength];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_AddFriend, CMDID_SC_ADD_FRIEND)
 bool Result;
-char Reason[REASON_LEN];
+char Reason[Const::ReasonLength];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_AddFriendRequest, CMDID_CS_ADD_FRIEND_REQUEST)
@@ -267,30 +267,30 @@ int AcceptedCharacterUID;
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_DeleteFriend, CMDID_CS_DELETE_FRIEND)
-int DeleteCharacterUID = INVALID_UID;
+int DeleteCharacterUID = Const::InvalidValue;
 STATIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(SC_DeleteFriend, CMDID_SC_DELETE_FRIEND)
 bool Result = false;				// 친구 삭제 성공/실패 여부
-char Reason[REASON_LEN];
+char Reason[Const::ReasonLength];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_ServerMessage, CMDID_CS_SERVER_MESSAGE)
-char Message[MESSAGE_LEN];
+char Message[Const::MessageLength];
 STATIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(CS_LoadRoomInfo, CMDID_CS_LOAD_ROOM_INFO)
-int AccountUID = INVALID_UID;
-int ChannelUID = INVALID_UID;
-int CharacterUID = INVALID_UID;
-int RoomUID = INVALID_UID;
+int AccountUID = Const::InvalidValue;
+int ChannelUID = Const::InvalidValue;
+int CharacterUID = Const::InvalidValue;
+int RoomUID = Const::InvalidValue;
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_LoadRoomInfo, CMDID_SC_LOAD_ROOM_INFO)
 bool Result;
-char Reason[REASON_LEN];
+char Reason[Const::ReasonLength];
 RoomInfo Info;
 STATIC_CMD_END()
 
@@ -298,10 +298,10 @@ STATIC_CMD_END()
 // 게임 시작/게임 난입 기능 동시에 처리하도록 함
 // 패킷 하나더 추가하면 되는데 귀찮기도 하고 걍 이래처리함
 STATIC_CMD_BEGIN(CS_RoomGameStart, CMDID_CS_ROOM_GAME_START)
-int AccountUID = INVALID_UID;
-int ChannelUID = INVALID_UID;
-int CharacterUID = INVALID_UID;
-int RoomUID = INVALID_UID;
+int AccountUID = Const::InvalidValue;
+int ChannelUID = Const::InvalidValue;
+int CharacterUID = Const::InvalidValue;
+int RoomUID = Const::InvalidValue;
 bool Intrude = false;
 STATIC_CMD_END()
 
@@ -310,7 +310,7 @@ STATIC_CMD_END()
 STATIC_CMD_BEGIN(SC_RoomGameStart, CMDID_SC_ROOM_GAME_START)
 RoomCharacterInfo IntruderInfo {};
 bool Result;
-char Reason[REASON_LEN];
+char Reason[Const::ReasonLength];
 STATIC_CMD_END()
 
 
@@ -326,7 +326,7 @@ STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_RoomLeave, CMDID_SC_ROOM_LEAVE)
 bool Result;
-char Reason[REASON_LEN];
+char Reason[Const::ReasonLength];
 STATIC_CMD_END()
 
 
@@ -358,13 +358,13 @@ float LeftTime;
 STATIC_CMD_END()
 
 
-STATIC_CMD_BEGIN(CS_BattleFieldPlayingEnd, CMDID_CS_BATTLE_FIELD_PLAYING_END)
+DYNAMIC_CMD_BEGIN(CS_BattleFieldPlayingEnd, CMDID_CS_BATTLE_FIELD_PLAYING_END, BattleInfo)
 RoomState RoomState;
 float LeftTime;
 int Count;
-BattleInfo Info[ROOM_MAX_PLAYER_COUNT]{};
-int WinnerCharacetrUID = INVALID_UID;		// 승자 UID
-STATIC_CMD_END()
+int WinnerCharacetrUID = Const::InvalidValue;		// 승자 UID
+BattleInfo Info[1]{};
+DYNAMIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(CS_BattleFieldEndWaitEnd, CMDID_CS_BATTLE_FIELD_ENDWAIT_END)
@@ -376,17 +376,17 @@ STATIC_CMD_BEGIN(CS_BattleFieldLeave, CMDID_CS_BATTLE_FIELD_LEAVE)
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_BattleFieldLeave, CMDID_SC_BATTLE_FIELD_LEAVE)
-int CharacterUID = INVALID_UID;		// 나간 유저의 UID 이걸 확인해서 필드의 탱크를 삭제시켜주도록 하자
+int CharacterUID = Const::InvalidValue;		// 나간 유저의 UID 이걸 확인해서 필드의 탱크를 삭제시켜주도록 하자
 									// 자기자신은 씬을 바꿔주도록 하자
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_ChatMessage, CMDID_CS_CHAT_MESSAGE)
 PlayerState PlayerState;
-char Message[MESSAGE_LEN];
+char Message[Const::MessageLength];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_ChatMessage, CMDID_SC_CHAT_MESSAGE)
-char Message[MESSAGE_LEN];
+char Message[Const::MessageLength];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_BattleFieldFire, CMDID_CS_BATTLE_FIELD_FIRE)
@@ -399,23 +399,23 @@ STATIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(CS_BattleFieldDeath, CMDID_CS_BATTLE_FIELD_DEATH)
-int CharacterUID = INVALID_UID;		// 누구한테 죽었는지
+int CharacterUID = Const::InvalidValue;		// 누구한테 죽었는지
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_BattleFieldDeath, CMDID_SC_BATTLE_FIELD_DEATH)
-int CharacterUID = INVALID_UID;		// 누가 죽었는지
+int CharacterUID = Const::InvalidValue;		// 누가 죽었는지
 float RevivalLeftTime;				// 부활까지 남은 시간
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_BattleFieldRevival, CMDID_CS_BATTLE_FIELD_REVIVAL)
-int CharacterUID = INVALID_UID;		// 누가 부활했는지
+int CharacterUID = Const::InvalidValue;		// 누가 부활했는지
 TankMove RevivalMove;						// 부활 위치
 STATIC_CMD_END()
 
-STATIC_CMD_BEGIN(CS_BattleFieldStatisticsUpdate, CMDID_CS_BATTLE_FILED_STATISTICS_UPDATE)
-int Count;
-BattleInfo Info[ROOM_MAX_PLAYER_COUNT];
-STATIC_CMD_END()
+DYNAMIC_CMD_BEGIN(CS_BattleFieldStatisticsUpdate, CMDID_CS_BATTLE_FILED_STATISTICS_UPDATE, BattleInfo)
+int Count = 0;
+BattleInfo Info[1];
+DYNAMIC_CMD_END()
 
 
 

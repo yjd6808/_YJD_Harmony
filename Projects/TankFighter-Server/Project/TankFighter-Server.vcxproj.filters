@@ -3,8 +3,77 @@
   <ItemGroup>
     <ClCompile Include="..\Sources\TF\Server\main.cpp" />
     <ClCompile Include="..\Sources\TF\Server\Pch.cpp" />
+    <ClCompile Include="..\Sources\TF\Server\Database\MysqlDatabase.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Database\MysqlQuery.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Database\MysqlStatementBuilder.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Database\MysqlConnection.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Database\MysqlConnectionPool.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Server\Pch.h" />
+    <ClInclude Include="..\Sources\TF\Server\Database\MysqlConnectionPool.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Database\MysqlDatabase.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Database\MysqlQuery.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Database\MysqlStatementBuilder.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Database\QueryDefine.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Database\QueryHelper.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Database\StatementType.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Database\MysqlConnection.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Namespace.h" />
+    <ClInclude Include="..\Sources\TF\Server\Database\DatabaseInfo.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Database\QueryDefine_AUTH.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Database">
+      <UniqueIdentifier>{6514a21d-3e61-497c-b0c3-4a8cecd7eb50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Send">
+      <UniqueIdentifier>{050ce44f-656a-4139-94aa-16eb5aaf3c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Recv">
+      <UniqueIdentifier>{c5c560e8-2b2b-4e32-a94d-59bad66a42ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{3da9f929-4dc0-4cd4-9109-6662172dab10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{21e5da9e-37c7-4a02-be8e-b6953d5518ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{e54bb540-a5bd-4828-bd4a-9f6d5952c0e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Query">
+      <UniqueIdentifier>{71763043-6b28-4397-a92e-450e20322ac7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

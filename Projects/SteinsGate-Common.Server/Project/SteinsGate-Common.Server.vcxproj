@@ -56,6 +56,13 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnection.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h" />
+    <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\R_MESSAGE_COMMON.h">
       <SubType>
       </SubType>
@@ -113,12 +120,7 @@
     <ClInclude Include="..\Sources\SteinsGate\Common\IUpdatable.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerHelperCommon.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerInterServerClient.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\QueryDefine_AUTH.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Sources\SteinsGate\Common\QueryHelper.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -132,11 +134,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\SteinsGate\Common\ListenerServerCommon.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnection.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlConnectionPool.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlDatabase.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlQuery.h" />
-    <ClInclude Include="..\Sources\SteinsGate\Common\MysqlStatementBuilder.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\R_SETUP_COMMON.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\Server.h" />
     <ClInclude Include="..\Sources\SteinsGate\Common\ServerCore.h" />

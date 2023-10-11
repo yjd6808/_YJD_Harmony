@@ -10,4 +10,8 @@
 
 #include <TF/Common/PchBase.h>
 
+#include <TF/Common/Structure.h>
+#include <TF/Common/Command.h>
+#include <TF/Common/Enum.h>
+
 #include <mysql.h>

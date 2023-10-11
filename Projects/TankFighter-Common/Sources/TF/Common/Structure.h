@@ -5,27 +5,16 @@
 #pragma once
 
 #include <JCore/Type.h>
+
 #include <TF/Common/Enum.h>
+#include <TF/Common/Const.h>
 
  // disable all warnings
 #pragma warning(push, 0)
 
-#define INVALID_UID			(-1)
-
-#define ID_LEN				40
-#define PASS_LEN			40
-#define NAME_LEN			40
-#define REASON_LEN			150
-#define MESSAGE_LEN			300
-
-// 가변 커맨드 전달 구현해야하는데 시간이 부족해서 일단 이렇게 만든다.
-#define COMMAND_ARRAY_LEN		10
-#define ROOM_MAX_PLAYER_COUNT	4
-
-
 struct TankMove
 {
-	int CharacterUID = INVALID_UID;
+	int CharacterUID = Const::InvalidValue;
 	float X;
 	float Y;
 	float MoveSpeed;
@@ -40,8 +29,8 @@ struct TankMove
 
 struct CharacterInfo
 {
-	int CharacterUID = INVALID_UID;
-	char Name[NAME_LEN];
+	int CharacterUID = Const::InvalidValue;
+	char Name[Const::NameLength];
 	int Win;
 	int Lose;
 	int Kill;
@@ -52,23 +41,23 @@ struct CharacterInfo
 
 struct RoomCharacterInfo : CharacterInfo
 {
-	int RoomUID = INVALID_UID;
+	int RoomUID = Const::InvalidValue;
 	bool Ready;
 	bool IsDeath;
 };
 
 struct ChannelInfo
 {
-	Int8 ChannelUID = INVALID_UID;
+	Int8 ChannelUID = Const::InvalidValue;
 	int PlayerCount;
 	int MaxPlayerCount;
-	char Name[NAME_LEN];
+	char Name[Const::NameLength];
 };
 
 struct RoomInfo
 {
-	char Name[NAME_LEN];
-	int RoomUID = INVALID_UID;
+	char Name[Const::NameLength];
+	int RoomUID = Const::InvalidValue;
 	int PlayerCount;
 	int MaxPlayerCount;
 	RoomState RoomState;
@@ -88,7 +77,7 @@ struct RoomInfo
 
 struct BattleInfo
 {
-	int CharacterUID = INVALID_UID;
+	int CharacterUID = Const::InvalidValue;
 	int Kill;
 	int Death;
 	int FireCount;
@@ -96,7 +85,7 @@ struct BattleInfo
 
 struct BulletInfo
 {
-	int CharacterUID = INVALID_UID;		// 발사한놈
+	int CharacterUID = Const::InvalidValue;		// 발사한놈
 	float X;
 	float Y;
 	float Rotation;

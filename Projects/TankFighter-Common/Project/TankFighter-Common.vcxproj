@@ -20,13 +20,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Common\Command.h" />
+    <ClInclude Include="..\Sources\TF\Common\Const.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\TF\Common\Enum.h" />
-    <ClInclude Include="..\Sources\TF\Common\Configuration.h" />
+    <ClInclude Include="..\Sources\TF\Common\Namespace.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\TF\Common\PchBase.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Common\Structure.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\TF\Common\Const.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
