@@ -18,8 +18,15 @@ NS_JC_BEGIN
 class MemoryPoolAbstract
 {
 public:
-	MemoryPoolAbstract(int slot, const String& name, bool skipIntialize) : m_iSlot(slot), m_Name(name), m_bInitialized(skipIntialize) {}
-	MemoryPoolAbstract(bool skipIntialize) : MemoryPoolAbstract(Detail::InvalidSlot_v, nullptr, skipIntialize) {}
+	MemoryPoolAbstract()
+		: m_Name(0)
+		, m_bInitialized(false)
+	{}
+
+	MemoryPoolAbstract(const String& name)
+		: m_Name(name)
+		, m_bInitialized(false)
+	{}
 	
 	virtual ~MemoryPoolAbstract() = default;
 
@@ -28,7 +35,6 @@ public:
 	virtual void* DynamicPop(int requestSize, int& realAllocatedSize) = 0;	// 요청한 바이트 크기와 반환된 바이트 크기
 	virtual void DynamicPush(void* memory, int returnSize) = 0;
 	virtual int Algorithm() = 0;
-	int Slot() { return m_iSlot; }
 	const String& Name() { return m_Name; }
 	bool IsInitialized() { return m_bInitialized; }
 	
@@ -143,7 +149,6 @@ protected:
 	void AddDeallocated(Int32 blockIndex) { }
 #endif 
 protected:
-	int m_iSlot;
 	String m_Name;
 	bool m_bInitialized;
 

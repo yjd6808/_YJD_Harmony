@@ -26,13 +26,13 @@ static void TestPool(TPool& pool);
 
 TEST(MemoryPoolTest, SingleBinarySearch) {
 	LeakCheck;
-	BinarySearchMemoryPool pool{ false };
+	BinarySearchMemoryPool pool{};
 	TestPool(pool);
 }
 
 TEST(MemoryPoolTest, SingleFullIndexing) {
 	LeakCheck;
-	IndexedMemoryPool pool{ false };
+	IndexedMemoryPool pool{};
 	TestPool(pool);
 }
 

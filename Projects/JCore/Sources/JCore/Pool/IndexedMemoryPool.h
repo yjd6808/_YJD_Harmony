@@ -24,6 +24,9 @@
  *	  512바이트 이하는 사이즈 그대로 인덱싱
  *	  512바이트 초과는 1000으로 나눠서 인덱싱 하도록 함.
  *
+ *	  단점은 타게터가 있기 떄문에 메모리풀이 너무 무겁다는 점이다.
+ *	  남용하면 안됨.
+ *
  * 3. 고정 사이즈를 할당해주는 효율적인 방법은 없을까?
  *    이건 나중에 고민하는걸로
  *
@@ -49,20 +52,15 @@ NS_JC_BEGIN
 
 class IndexedMemoryPool : public MemoryPoolAbstract
 {
-	using MemoryChunkQueueTargetrList = JCore::Vector<MemoryChunckQueue**>;
+	using MemoryChunkQueueTargetrList = Vector<MemoryChunckQueue**>;
 public:
-	IndexedMemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
+	IndexedMemoryPool(const String& name = nullptr) : MemoryPoolAbstract(name) {
+		IndexedMemoryPool::CreatePool();
+		IndexedMemoryPool::CreateTargeters();
+	}
+
+	IndexedMemoryPool(const HashMap<int, int>& allocationMap, const String& name = nullptr) : MemoryPoolAbstract(name) {
 		IndexedMemoryPool::Initialize(allocationMap);
-		IndexedMemoryPool::CreatePool();
-		IndexedMemoryPool::CreateTargeters();
-	}
-
-	IndexedMemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {
-		IndexedMemoryPool::CreatePool();
-		IndexedMemoryPool::CreateTargeters();
-	}
-
-	IndexedMemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {
 		IndexedMemoryPool::CreatePool();
 		IndexedMemoryPool::CreateTargeters();
 	}
