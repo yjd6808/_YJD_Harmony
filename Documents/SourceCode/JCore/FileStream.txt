@@ -1,0 +1,36 @@
+const char* szFileName = "a.txt";
+
+{
+	FileStream fs(szFileName, eWrite, eCreate);
+	fs.WriteInt16(10);
+	fs.WriteInt16(20);
+	fs.WriteInt16(30);
+	fs.WriteString("abcd");
+	fs.WriteInt64(102030405060);
+	fs.Close();
+}
+{
+	FileStream fs(szFileName, eRead, eOpen);
+	Console::WriteLine("%d", fs.ReadInt16());
+	Console::WriteLine("%d", fs.ReadInt16());
+	Console::WriteLine("%d", fs.ReadInt16());
+	Console::WriteLine("%s", fs.ReadString().Source());
+	Console::WriteLine("%lld", fs.ReadInt64());
+
+
+	Byte readBytes[1024];
+
+	fs.Seek(0, Stream::eBegin);
+	fs.Read(readBytes, 0, fs.GetLength());	// 모두 읽어서 readBytes에 담기
+
+	for (int i = 0; i < fs.GetLength(); ++i) {
+		Console::Write("%02x ", readBytes[i]);
+
+		if (i != 0 && i % 10 == 0)
+			Console::WriteLine("");
+	}
+
+	fs.Close();
+}
+
+File::Delete(szFileName);

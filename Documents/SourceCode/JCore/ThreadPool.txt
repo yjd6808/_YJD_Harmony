@@ -1,0 +1,38 @@
+constexpr int threadPoolCapacity = 16;
+ThreadPool threadPool(16);
+
+auto fnCalculateBigPrimeCount = [](int max) {
+	int count = 0;
+	for (int i = 2; i < max; ++i) {
+		bool isPrime = true;
+		for (int j = i - 1; j >= 2; j--) {
+			if (i % j == 0) {
+				isPrime = false;
+				break;
+			}
+		}
+		if (isPrime) { count++; }
+	}
+	return count;
+};
+
+Task<int> tasks[threadPoolCapacity];
+int result[threadPoolCapacity];
+
+StopWatch<StopWatchMode::HighResolution> stopWatch;
+stopWatch.Start();
+
+for (int i = 0; i < threadPoolCapacity; ++i) { tasks[i] = threadPool.Run(fnCalculateBigPrimeCount, 20000); }
+for (int i = 0; i < threadPoolCapacity; ++i) {
+	TaskWaitResult taskWaitResult;
+	if (!tasks[i].Wait(&result[i], TaskGetValueStrategy::Copy, &taskWaitResult)) {
+		Console::WriteLine("태스크 실패: %d", result);
+	}
+}
+Console::WriteLine("쓰레드풀 사용 O: %.4lf초가 걸림", stopWatch.Stop().GetTotalSeconds());
+
+stopWatch.Start();
+for (int i = 0; i < threadPoolCapacity; ++i) { result[i] = fnCalculateBigPrimeCount(20000); }
+Console::WriteLine("쓰레드풀 사용 X: %.4lf초가 걸림", stopWatch.Stop().GetTotalSeconds());
+
+threadPool.Join();

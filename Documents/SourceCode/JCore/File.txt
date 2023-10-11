@@ -1,0 +1,21 @@
+const char* szFileName = "a.txt";
+const char* szFileNameCopy = "b.txt";
+
+File::WriteAllText("안녕하세요", szFileName);
+Console::WriteLine("크기: %d", File::Size(szFileName));
+Console::WriteLine("내용: %s", File::ReadAllText(szFileName).Source());
+
+if (File::Copy(szFileName, szFileNameCopy)) {
+	Console::WriteLine("복사된 파일 크기: %d", File::Size(szFileNameCopy));
+	Console::WriteLine("복사된 파일 내용: %s", File::ReadAllText(szFileNameCopy).Source());
+} else {
+	Console::WriteLine("복사 실패");
+}
+
+if (File::Delete(szFileName)) {
+	Console::WriteLine("%s 파일 삭제완료", szFileName);
+}
+
+if (File::Delete(szFileNameCopy)) {
+	Console::WriteLine("%s 파일 삭제완료", szFileNameCopy);
+}

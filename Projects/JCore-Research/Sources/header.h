@@ -25,7 +25,11 @@
 #include <JCore/Primitives/StaticString.h>
 #include <JCore/Primitives/RefCountObjectPtr.h>
 
+#include <JCore/FileSystem/File.h>
+#include <JCore/FileSystem/FileStream.h>
+#include <JCore/FileSystem/Directory.h>
 #include <JCore/FileSystem/Path.h>
+
 #include <JCore/Encoding/CodePage.h>
 
 #include <JCore/Pool/IndexedMemoryPool.h>
@@ -34,6 +38,8 @@
 #include <JCore/Sync/SpinLock.h>
 #include <JCore/Sync/WaitHandle.h>
 #include <JCore/Sync/ConditionVariable.h>
+
+#include <JCore/Logger/ConsoleLogger.h>
 
 #include <JCore/Wrapper/WinApi.h>
 #include <JCore/Wrapper/CRuntime.h>

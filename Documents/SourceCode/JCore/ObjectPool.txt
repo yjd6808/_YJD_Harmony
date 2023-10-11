@@ -1,0 +1,19 @@
+struct Data : ObjectPool<Data> { int A; };
+
+Data* d1 = ObjectPool<Data>::PopObjectWithConstruct(); // new Data()와 동일
+Data* d2 = ObjectPool<Data>::PopObjectWithConstruct(); // new Data()와 동일
+Data* d3 = ObjectPool<Data>::PopObjectWithConstruct(); // new Data()와 동일
+
+ObjectPool<Data>::PushObjectWithDestroy(d1);			// delete Data와 동일
+ObjectPool<Data>::PushObjectWithDestroy(d2);			// delete Data와 동일
+ObjectPool<Data>::PushObjectWithDestroy(d3);			// delete Data와 동일
+
+d1 = new Data;
+d2 = new Data;
+d3 = new Data;
+
+delete d1;
+delete d2;
+delete d3;
+
+ObjectPool<Data>::FreeAllObjects();						// 관리중일 오브젝트들 모두 제거

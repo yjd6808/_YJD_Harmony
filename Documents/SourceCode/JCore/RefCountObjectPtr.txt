@@ -1,0 +1,24 @@
+// 레퍼런스 카운트를 상속받는다.
+struct TestObject : RefCountObject	
+{
+	int A = 100;
+	int B = 100;
+	int C = 100;
+
+	// 레퍼런스 카운트가 0이 될 때 수행할 액션 지정
+	void ReleaseAction() override { delete this; }	
+};
+
+TestObject* pObj = dbg_new TestObject;
+Console::WriteLine("레퍼런스 카운트: %d", pObj->GetRefCount());
+{
+	RefCountObjectPtr<TestObject> rpObj(pObj);
+
+	Console::WriteLine("\tA: %d", rpObj->A);
+	Console::WriteLine("\tB: %d", rpObj->B);
+	Console::WriteLine("\tC: %d", rpObj->C);
+
+	Console::WriteLine("\t레퍼런스 카운트: %d", pObj->GetRefCount());
+}
+Console::WriteLine("레퍼런스 카운트: %d", pObj->GetRefCount());
+pObj->Release();

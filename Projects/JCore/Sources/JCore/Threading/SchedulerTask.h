@@ -66,7 +66,7 @@ IsSameType_v<CallableSignatureParam_t<TCallback>, Detail::ParameterPack<Schedule
 class SchedulerTaskOnce : public SchedulerTask
 {
 public:
-	template <typename TCallback, DefaultEnableIf_t<IsSchedulerTaskCallback_v<TCallback>>>
+	template <typename TCallback, DefaultEnableIf_t<IsSchedulerTaskCallback_v<TCallback>> = nullptr>
 	SchedulerTaskOnce(DateTime at, TCallback&& callback)
 		: m_At(at)
 		, m_Callback(Forward<TCallback>(callback))
