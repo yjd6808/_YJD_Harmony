@@ -71,8 +71,6 @@ public:
 
 	template <int RequestSize>
 	void* StaticPop() {
-		constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
-
 		bool bNewAlloc;
 		MemoryChunckQueue* pChuckQueue = GetChunckQueue(RequestSize);
 
@@ -82,15 +80,17 @@ public:
 
 		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
 #ifdef DebugMode
+		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
 		AddAllocated(iIndex, bNewAlloc);
 #endif
 		return pMemoryBlock;
 	}
 
-
 	// TODO: 메모리할당 규칙이 Low와 High가 틀리기떄문에 벌어지는 현상이다.
 	//       BinarySearch와 Indexed를 똑같이 사용하기 위해서는 "요청한" 값을 기록해놓고 "요청한" 값을 반납해야한다.
-	//		 좀더 유연한 구조로 개선 필요. ㅠㅠ
+	//		 예를들어 617 Byte를 요청하면 1024바이트가 실제 할당되는데
+	//       BinarySearchMemoryPool의 경우 617바이트로 반환하든지, 1024바이트로 반환하든지 모두 올바른 반환이 이뤄지지만
+	//       IndexedMemoryPool의 경우 617바이트로 반환해야지 올바른 반환이 이뤄진다.
 	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
 
 		bool bNewAlloc;
@@ -99,7 +99,7 @@ public:
 		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
 		realAllocatedSize = pChuckQueue->ChunkSize();
 #ifdef DebugMode
-		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(realAllocatedSize);
 		AddAllocated(iIndex, bNewAlloc);
 #endif
 		return pMemoryBlock;
@@ -109,7 +109,8 @@ public:
 	void StaticPush(void* memory) {
 		MemoryChunckQueue* pChuckQueue = GetChunckQueue(PushSize);
 		if (pChuckQueue == nullptr) return;
-		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		const int iChunkSize = pChuckQueue->ChunkSize();
+		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iChunkSize);
 		AddDeallocated(iIndex);
 		pChuckQueue->Push(memory);
 	}
@@ -117,7 +118,8 @@ public:
 	void DynamicPush(void* memory, int returnSize) override {
 		MemoryChunckQueue* pChuckQueue = GetChunckQueue(returnSize);
 		if (pChuckQueue == nullptr) return;
-		const int index = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		const int iChunkSize = pChuckQueue->ChunkSize();
+		const int index = Detail::AllocationLengthMapConverter::ToIndex(iChunkSize);
 		AddDeallocated(index);
 		pChuckQueue->Push(memory);
 	}
@@ -265,7 +267,7 @@ public:
 
 	static constexpr int LowBoundarySize = 1 << LowBoundaryIndex;		// 512		3자리 중 제일 큰 수
 	static constexpr int HighBoundarySize = 1 << HighBoundaryIndex;		// 524'288	6자리 중 제일 큰 수
-	static constexpr int BoundarySizeMax = 1000;						// 3자리수 최대 + 1
+	static constexpr int BoundarySizeMax = 1000;							// 3자리수 최대 + 1
 
 	static constexpr int LowTargeterListCapacity = LowBoundarySize + 1;	// 513
 	static constexpr int HighTargeterListCapacity = HighBoundarySize / BoundarySizeMax;	// 524

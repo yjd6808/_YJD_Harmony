@@ -44,6 +44,15 @@ public:
 	Int64U GetTotalReturned() { return m_Statistics.GetTotalReturned(); }
 	Int64U GetInitAllocated() { return m_Statistics.GetInitAllocated(); }
 	Int64U GetNewAllocated() { return m_Statistics.GetNewAllocated(); }
+	Int64U GetTotalUsing() { return m_Statistics.GetTotalUsing();
+		/*
+		Int64U uiUsingSize = 0;
+		for (int i = 0; i < Detail::MemoryBlockSizeMapSize_v; ++i) {
+			uiUsingSize = GetBlockUsingCounter(i) * Detail::AllocationLengthMapConverter::ToSize(i);
+		}
+		return uiUsingSize;
+		*/
+	}
 
 	int GetBlockTotalCounter(int blockIndex) {
 		DebugAssertMsg(blockIndex >= 0 && blockIndex <= Detail::MemoryBlockSizeMapSize_v, "유효한 범위의 블록인덱스가 아닙니다.");
@@ -130,6 +139,7 @@ public:
 	Int64U GetTotalReturned() { return 0; }
 	Int64U GetInitAllocated() { return 0; }
 	Int64U GetNewAllocated() { return 0; }
+	Int64U GetTotalUsing() { return 0; }
 
 	int GetBlockTotalCounter(int blockIndex) { return 0; }
 	int GetBlockUsedCounter(int blockIndex) { return 0; }
