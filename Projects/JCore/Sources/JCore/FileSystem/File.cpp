@@ -144,7 +144,10 @@ String File::ReadAllText(const char* path) {
 	IoHandle hStream = CRuntime::FileOpen(path, szMode);
 	if (hStream == nullptr) throw RuntimeException("해당 파일이 없거나 이미 쓰기 모드로 사용중인듯?");
 
-	String szBuff(ReadBufferSize);
+	const int iFileSize = Size(path);
+	if (iFileSize == -1) throw RuntimeException("파일 사이즈 획득 실패");
+
+	String szBuff(iFileSize + 32);
 	int iReadCount;
 	int iOffset = 0;
 	while ((iReadCount = CRuntime::FileRead(szBuff.Source() + iOffset, 1, FileReadCount, hStream)) != 0) {
@@ -154,6 +157,8 @@ String File::ReadAllText(const char* path) {
 		szBuff.SetLength(iOffset);
 		szBuff.ResizeIfNeeded(iNextLen);
 	}
+
+	szBuff.Source()[iOffset] = '\0';
 
 	CRuntime::FileClose(hStream);
 	return szBuff;

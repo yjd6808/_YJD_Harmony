@@ -22,6 +22,27 @@ struct RemoveConst<const T>
 template <typename T>
 using RemoveConst_t = typename RemoveConst<T>::Type;
 
+template <typename T>
+struct RemoveVolatile
+{
+    using Type = T;
+};
+
+template <typename T>
+struct RemoveVolatile<const volatile T>
+{
+    using Type = const T;
+};
+
+template <typename T>
+struct RemoveVolatile<volatile T>
+{
+    using Type = T;
+};
+
+template <typename T>
+using RemoveVolatile_t = typename RemoveVolatile<T>::Type;
+
 // 참조 제거자
 template <typename T>
 struct RemoveReference
@@ -93,7 +114,7 @@ using RemovePointer_t = typename RevmovePointer<T>::Type;
 template <typename T>
 struct NaturalType
 {
-    using Type = RemoveConst_t<RemoveReference_t<T>>;
+    using Type = RemoveVolatile_t<RemoveConst_t<RemoveReference_t<T>>>;
 };
 
 // 한정자/참조자 제거
