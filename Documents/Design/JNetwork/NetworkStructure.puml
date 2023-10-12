@@ -41,7 +41,7 @@ rectangle EndPoint_Implementation {
     IPv6EndPoint -d-> IPv6Address
 }
 
-rectangle Server_Implementation {
+rectangle Host_Implementation {
     abstract Server {
        "서버"가 가지는 공통 인터페이스를 정의한다.
        ---
@@ -50,25 +50,13 @@ rectangle Server_Implementation {
        virtual Resume() = 0
        virtual Stop() = 0
     }
-    class TcpServer {
-        IOCP 모델의 TCP 서버이다.
+   
+
+    class SessionContainer {
+        서버에 접속된 Session들을 관리하는 컨테이너이다.
     }
 
-    class TcpSession {
-        1. 서버측에서는 접속한 클라이언트를 의미한다.
-        2. 클라이언트 측에서는 클라이언트의 기능 대부분을
-        가진 부모 클래스를 의미한다.
-        ---
-        SendAsync()
-        ReceiveAsync()
-        virtual Disconnect()
-    }
-
-    class TcpSessionContainer {
-        TcpSession을 관리하는 컨테이너이다.
-    }
-
-    interface TcpServerEventListener {
+    interface ServerEventListener {
         virtual OnStarted() = 0
         virtual OnConnected() = 0
         virtual OnDisconnected() = 0
@@ -79,26 +67,54 @@ rectangle Server_Implementation {
         virtual OnStopped() = 0
     }
 
-    TcpServer .u.|> Server
-    TcpServer --> TcpSessionContainer
-    TcpSessionContainer *--> TcpSession
-    TcpServer -r-> TcpServerEventListener
-    TcpSession .r.> TcpServerEventListener
-}
-
-rectangle Client_Implementation {
-    class TcpClient {
-        ConnectAsync()
-        virtual Disconnect()
+    abstract Host {
+        IOCP와 소켓을 다루는 최상위 객체
     }
-    class TcpClientEventListener {
+
+    abstract Session {
+    }
+
+     class TcpServer {
+        IOCP 모델의 TCP 서버이다.
+    }
+
+    class TcpSession {
+        1. 서버측에서는 접속한 클라이언트를 의미한다.
+        2. 클라이언트 측에서는 클라이언트의 기능 대부분을
+        가진 부모 클래스를 의미한다.
+    }
+
+    class TcpClient {
+    }
+
+    class UdpClient {
+    }
+
+    class ClientEventListener {
         virtual OnConnected() = 0
+        virtual OnConnectFailed() = 0
         virtual OnSent() = 0
         virtual OnReceived() = 0
         virtual OnDisconnected() = 0
     }
 
-    TcpClient -r-> TcpClientEventListener
+    TcpClient .u.|> Session
+    UdpClient .u.|> Session
+    TcpSession .u.|> Session
+
+    TcpClient .d.> ClientEventListener
+    UdpClient .d.> ClientEventListener
+
+    Session -u-|> Host
+    Server -u-|> Host
+    TcpServer .u.|> Server
+    TcpServer --> SessionContainer
+    SessionContainer *--> TcpSession
+    TcpServer -r-> ServerEventListener
+    TcpSession .r.> ServerEventListener
+
+    Server -[hidden]r->Session
+    SessionContainer -[hidden]l->ServerEventListener
 }
 
 rectangle IOCP_Implementation {
@@ -155,6 +171,7 @@ rectangle IOCP_Implementation {
     IOCPOverlappedConnect .u.|> IOCPOverlapped
     IOCPOverlappedReceive .u.|> IOCPOverlapped
     IOCPOverlappedAccept .u.|> IOCPOverlapped
+    IOCPOverlappedTask .u.|> IOCPOverlapped
 }
 
 rectangle Socket_Implementation {
@@ -224,7 +241,7 @@ rectangle Packet_Implementation {
 
     class Command<T>
 
-    class RefCount
+    class RefCountObject
     class ISendPacket {
     }
     class IRecvPacket {
@@ -237,19 +254,24 @@ rectangle Packet_Implementation {
     class DynamicPacket<CommandArgs...> {
         가변 길이의 커맨드들을 처리할 때 사용하는 패킷
     }
+    class CommandBufferPacket {
+        커맨드 버퍼 자체를 패킷에 담는다.
+    }
+    class SinglePacket<TCommand> {
+        고정 또는 가변 길이 패킷을 하나만 담아서 전달 할 때 사용
+    }
 
     Command -u-|> ICommand
-    ISendPacket -u-|> RefCount
+    ISendPacket -u-|> RefCountObject
     StaticPacket -u-|> ISendPacket
+    CommandBufferPacket -u-|> ISendPacket
+    SinglePacket -u-|> ISendPacket
     DynamicPacket -u-|> ISendPacket
+    SinglePacket -d-> ICommand
     DynamicPacket *-d-> ICommand
     StaticPacket *-d-> ICommand
 }
 
-TcpClient -u-|> TcpSession
-TcpServer -l-> IOCP
-TcpClient -r-> IOCP
-
-
+Host --> IOCP
 
 @enduml

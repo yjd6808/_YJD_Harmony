@@ -1,0 +1,9 @@
+IPv4EndPoint ep = IPv4EndPoint::Parse("172.30.1.25:12345");
+
+if (ep.IsValidEndPoint()) {
+	Console::WriteLine("EP: %s", ep.ToString().Source());
+	Console::WriteLine("IP: %s", ep.GetAddress().ToString().Source());
+	Console::WriteLine("PORT: %d", ep.GetPort());
+} else {
+	Console::WriteLine("올바르지 않은 주소입니다.");
+}

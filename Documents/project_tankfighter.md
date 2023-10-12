@@ -30,4 +30,4 @@
 
 <br>
 
-### [TankFighter 설명 영상 보기](https://youtu.be/2aqGhMcjXNk)
+### [TankFighter 시연 영상 보기](https://youtu.be/2aqGhMcjXNk)

@@ -7,8 +7,8 @@
 
 <br>
 
-### 클래스 구조
-![클래스 구조](Images/ContainerStructure.png)
+### 클래스 구조도
+![클래스 구조도](Images/JCore/ContainerStructure.png)
 
 <br>
 

@@ -1,0 +1,48 @@
+Winsock::Initialize(2, 2);
+
+// ==============================================================================
+// 리스너 소켓
+// ==============================================================================
+
+Thread listener([](void*) {
+	Socketv4 socket = Socketv4::CreateV4(TransportProtocol::TCP, false);
+
+	if (socket.Bind(IPv4EndPoint::Parse("127.0.0.1:12346")) == SOCKET_ERROR) {
+		Console::WriteLine("바인드 실패: %s", Winsock::LastErrorMessage().Source());
+		return;
+	}
+
+	if (socket.Listen() == SOCKET_ERROR) {
+		Console::WriteLine("리슨 실패: %u", Winsock::LastError());
+		return;
+	}
+
+	char helloMsg[] = "안녕하세요";
+	Socketv4 accepted = socket.Accept();
+	Console::WriteLine("[서버] %s 전송", helloMsg);
+	accepted.Send(helloMsg, sizeof(helloMsg));
+	accepted.Close();
+});
+
+// ==============================================================================
+// 연결 소켓
+// ==============================================================================
+
+const Socketv4 connector = Socketv4::CreateV4(TransportProtocol::TCP, false);
+if (connector.Connect("127.0.0.1:12346") == SOCKET_ERROR) {
+	Console::WriteLine("접속 실패");
+	listener.Abort();
+	return 0;
+} 
+
+char recv[1024];
+int recvBytes = SOCKET_ERROR;
+if ((recvBytes = connector.Receive(recv, 1024)) != SOCKET_ERROR) {
+	Console::WriteLine("[클라] %s 수신(%d 바이트)", recv, recvBytes);
+}
+if (connector.Receive(recv, 1024) == 0) {
+	Console::WriteLine("[클라] 연결이 끊어짐");
+}
+listener.Join();
+
+Winsock::Finalize();
