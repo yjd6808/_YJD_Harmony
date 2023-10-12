@@ -37,6 +37,7 @@ public:
 	int		GetPendingCount()				{ return m_iPendingOverlappedCount;}
 	void	WaitForZeroPending();
 	JCore::Vector<Int32U> GetWorkThreadIdList();
+	State	GetState() const				{ return m_eState; }
 
 	bool Connect(WinHandle handle, ULONG_PTR completionKey) const;
 	BOOL GetStatus(Int32UL* numberOfBytesTransffered, PULONG_PTR completionKey, LPOVERLAPPED* ppOverlapped) const;

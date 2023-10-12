@@ -1,0 +1,9 @@
+DateTime out;
+
+if (DateTime::TryParse(out, "yyyy-MM-dd", "1920-10-27")) {
+	Console::WriteLine("년: %d", out.GetYear());
+	Console::WriteLine("월: %d", out.GetMonth());
+	Console::WriteLine("일: %d", out.GetDay());
+} else {
+	Console::WriteLine("%s", DateTime::LastErrorMessage());
+}

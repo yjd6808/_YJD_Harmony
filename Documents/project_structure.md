@@ -18,11 +18,6 @@
 
 <br>
 
-### 프로젝트  구조
-![ProjectStructure](Images/ProjectStructure.png)
-
-<br>
-
 ### 프로젝트 디렉토리 구성
 
 1. Intermediate : 중간 파일들 출력되는 폴더

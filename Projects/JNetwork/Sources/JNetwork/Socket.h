@@ -132,6 +132,9 @@ public:
 	 
 	int Send(char* buff, Int32U len, Int32U flag = 0) const;
 	int SendTo(char* buff, Int32U len, const IPv4EndPoint& ipv4EndPoint, Int32U flag = 0) const;
+
+	// 반환: 연결이 정상적으로 닫힌경우 0반환
+	//		오류가 발생하지 않은 경우 수신된 바이트 크기를 반환
 	int Receive(char* buff, Int32U buffSize, Int32U flag = 0) const;
 	int ReceiveFrom(char* buff, Int32U buffSize, JCORE_OUT IPv4EndPoint* ipv4EndPoint, Int32U flag = 0) const;
 

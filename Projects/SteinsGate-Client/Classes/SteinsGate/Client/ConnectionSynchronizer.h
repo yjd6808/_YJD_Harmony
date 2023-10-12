@@ -14,7 +14,7 @@ class ConnectionSynchronizer final : public SGSingletonPointer<ConnectionSynchro
 {
 	friend class TSingleton;
 	ConnectionSynchronizer();
-	~ConnectionSynchronizer() override;
+	~ConnectionSynchronizer();
 
 	enum Type
 	{

@@ -14,7 +14,7 @@ class Inven final : public JCore::SingletonPointer<Inven>
 {
 	friend class TSingleton;
 	Inven();
-	~Inven() override;
+	~Inven();
 public:
 	void init();
 	WeaponType_t getWeaponType();

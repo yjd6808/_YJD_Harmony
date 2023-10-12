@@ -48,7 +48,7 @@ class UIManager final : public JCore::SingletonPointer<UIManager>
 private:
 	friend class TSingleton;
 	UIManager();
-	~UIManager() override;
+	~UIManager();
 public:
 	void init();
 	void initPublic();

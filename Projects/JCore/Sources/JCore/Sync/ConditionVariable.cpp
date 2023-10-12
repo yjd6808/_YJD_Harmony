@@ -19,7 +19,7 @@ void ConditionVariable::Wait(LockGuard<NormalLock>& lockGuard) {
 }
 
 int ConditionVariable::WaitFor(LockGuard<NormalLock>& lockGuard, const TimeSpan& ts) {
-	int ms = ts.GetTotalMiliSecondsInt();
+	int ms = int(ts.GetTotalMiliSecondsInt());
 	if (ms <= 0) { return CvStatus::eTimeout; }
 	if (!SleepConditionVariableCS((PCONDITION_VARIABLE)&m_Handle, (PCRITICAL_SECTION)&lockGuard.Handle()->m_CriticalSection, ms)) {
 		return CvStatus::eTimeout;

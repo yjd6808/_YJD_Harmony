@@ -32,16 +32,12 @@ class BinarySearchMemoryPool :  public MemoryPoolAbstract
 {
 	using Type = BinarySearchMemoryPool;
 public:
-	BinarySearchMemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
+	BinarySearchMemoryPool(const String& name = nullptr) : MemoryPoolAbstract(name) {
+		BinarySearchMemoryPool::CreatePool();
+	}
+
+	BinarySearchMemoryPool(const HashMap<int, int>& allocationMap, const String& name = nullptr) : MemoryPoolAbstract(name) {
 		BinarySearchMemoryPool::Initialize(allocationMap);
-	}
-
-	BinarySearchMemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {
-		BinarySearchMemoryPool::CreatePool();
-	}
-
-	BinarySearchMemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {
-		BinarySearchMemoryPool::CreatePool();
 	}
 
 	~BinarySearchMemoryPool() override {

@@ -17,7 +17,7 @@ class Global : public JCore::SingletonPointer<Global>
 private:
 	friend class TSingleton;
 	Global();
-	~Global() override;
+	~Global();
 public:
 	void init();
 	int convertAvatarPartNameToType(const SGString& str);

@@ -37,6 +37,7 @@ public:
 	int Size() const { return sizeof(InternetAddr); }
 
 	bool IsValidRemoteEndPoint() const;
+	bool IsValidEndPoint() const;
 
 	IPv4EndPoint& operator=(const IPv4EndPoint& other);
 	bool operator==(const IPv4EndPoint& other) const;
@@ -51,7 +52,7 @@ public:
 	
 	SOCKADDR_IN InternetAddr;
 
-	static IPv4EndPoint Default;
+	static IPv4EndPoint Invalid;
 };
 
 

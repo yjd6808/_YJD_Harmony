@@ -14,11 +14,11 @@ Visual Studio 2022 or 2019 [필수]
 
 <br>
 
-![VS2019_1](Images/VS2019_Setup_1.png)
+![VS2019_1](Images/Setup/VS2019_Setup_1.png)
 
 3. 플랫폼 툴셋은 2019로 변경합니다.
 
-![VS2019_1](Images/VS2019_Setup_2.png)
+![VS2019_1](Images/Setup/VS2019_Setup_2.png)
 
 <br>
 <br>
@@ -39,16 +39,16 @@ Visual Studio 2022 or 2019 [필수]
 1. [MySQL 통합 Installer - Community](/Installers/mysql-installer-web-community-8.0.31.0.msi)를 다운로드 받습니다.
 2. Custom 설치 선택 후 MySQL Server 5.7.x 버전과 MySQL Workbench를 선택하고 다운로드 받습니다.
 
-![Installer-01](/Images/Installers/01.png)
+![Installer-01](./Images/Setup/01.png)
 
 3. 서버 세팅을 완료 한 후 Worbench를 실행합니다.
 4. MySQL57 서버 인스턴스를 선택한 후 로그인을 합니다.
 
-![Installer-02](/Images/Installers/02.png)
+![Installer-02](./Images/Setup/02.png)
 
 5. \Projects\TankFighter-Server\SQL\TankFighter.sql 를 불러온 후 쿼리를 실행합니다.
 
-![Installer-03](/Images/Installers/03.png)
+![Installer-03](./Images/Setup/03.png)
 
 6. 이후 아래의 실행 방법 순서대로 진행하면 됩니다.
 

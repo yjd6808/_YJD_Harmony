@@ -8,7 +8,7 @@
 #pragma once
 
 #include <JCore/Sync/IRwLock.h>
-#include <condition_variable>
+#include <JCore/Sync/ConditionVariable.h>
 
 NS_JC_BEGIN
 
@@ -29,8 +29,8 @@ public:
 	void ReadUnlock() override;
 	bool IsReadLocked() override;
 private:
-	std::condition_variable m_Condvar;
-	std::mutex m_Mtx;
+	ConditionVariable m_CondVar;
+	NormalLock m_Lock;
 
 	int m_iReadCount;
 	bool m_bWriteFlag;

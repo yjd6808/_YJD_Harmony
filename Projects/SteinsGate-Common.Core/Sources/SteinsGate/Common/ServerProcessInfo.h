@@ -74,7 +74,7 @@ struct ServerProcessInfoPackage : ConfigDataAbstract
 	ServerProcessInfo Lobby;
 	SGVector<GameServerProcessInfo> GameServerList;
 	SGVector<int> ActiveServerIdList;
-	ServerProcessInfo* InfoMap[Const::Server::MaxId];
+	ServerProcessInfo* InfoMap[Const::Server::MaxProcessId];
 };
 
 

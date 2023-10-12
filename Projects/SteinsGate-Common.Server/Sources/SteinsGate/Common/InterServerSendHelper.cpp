@@ -100,7 +100,7 @@ void InterServerSendHelperBase::InitSingleServerDestinations() {
 
 int InterServerSendHelperBase::GetSenderId() {
 	const int iSenderId = Core::ServerProcessInfo->ServerId;
-	DebugAssert(iSenderId >= 0 && iSenderId <= Const::Server::MaxId);
+	DebugAssert(iSenderId >= 0 && iSenderId <= Const::Server::MaxProcessId);
 	return int(iSenderId);
 }
 

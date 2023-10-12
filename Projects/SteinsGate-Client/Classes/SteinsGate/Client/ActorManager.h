@@ -28,7 +28,7 @@ class ActorManager final : public JCore::SingletonPointer<ActorManager>
 private:
 	friend class TSingleton;
 	ActorManager();
-	~ActorManager() override;
+	~ActorManager();
 public:
 	void init(MapLayer* mapLayer);
 	

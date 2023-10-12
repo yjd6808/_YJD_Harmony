@@ -15,14 +15,14 @@ class BootStateManager : public JCore::SingletonStaticPointer<BootStateManager>
 {
 	friend class TSingleton;
 	BootStateManager() = default;
-	~BootStateManager() override = default;
+	~BootStateManager() = default;
 public:
 	void Initialize();
 
 	void SetState(int serverId, ServerBootState_t state);
 	ServerBootState_t GetState(int serverId);
 
-	ServerBootState_t m_eStates[Const::Server::MaxId];
+	ServerBootState_t m_eStates[Const::Server::MaxProcessId];
 };
 
 

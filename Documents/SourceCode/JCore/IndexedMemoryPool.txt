@@ -1,0 +1,38 @@
+IndexedMemoryPool memPool;
+
+int alloc1, alloc2, alloc3;
+struct Data1 { int A[10];	  }* chunkD1, *chunkS1;
+struct Data2 { int A[1000];	  }* chunkD2, *chunkS2;
+struct Data3 { int A[100000]; }* chunkD3, *chunkS3;
+
+auto fnPrintInfo = [&](Data1* c1, Data2* c2, Data3* c3) {
+	Console::WriteLine("현재 사용중인 메모리 크기: %d", memPool.GetTotalUsing());
+	Console::WriteLine("%d", c1->A[9]);
+	Console::WriteLine("%d", c2->A[999]);
+	Console::WriteLine("%d", c3->A[99999]);
+	Console::WriteLine("======================================");
+};
+
+chunkD1 = (Data1*)memPool.DynamicPop(sizeof(Data1), alloc1);
+chunkD2 = (Data2*)memPool.DynamicPop(sizeof(Data2), alloc2);
+chunkD3 = (Data3*)memPool.DynamicPop(sizeof(Data3), alloc3);
+chunkD1->A[9] = 1000;
+chunkD2->A[999]	= 1001;
+chunkD3->A[99999]= 1002;
+fnPrintInfo(chunkD1, chunkD2, chunkD3);
+
+chunkS1 = (Data1*)memPool.StaticPop<sizeof(Data1)>();
+chunkS2 = (Data2*)memPool.StaticPop<sizeof(Data2)>();
+chunkS3 = (Data3*)memPool.StaticPop<sizeof(Data3)>();
+chunkS1->A[9] = 2000;
+chunkS2->A[999] = 2001;
+chunkS3->A[99999] = 2002;
+fnPrintInfo(chunkS1, chunkS2, chunkS3);
+
+memPool.DynamicPush(chunkD1, sizeof(Data1));
+memPool.DynamicPush(chunkD2, sizeof(Data2));
+memPool.DynamicPush(chunkD3, sizeof(Data3));
+memPool.StaticPush<sizeof(Data1)>(chunkS1);
+memPool.StaticPush<sizeof(Data2)>(chunkS2);
+memPool.StaticPush<sizeof(Data3)>(chunkS3);
+Console::WriteLine("현재 사용중인 메모리 크기: %d", memPool.GetTotalUsing());

@@ -16,11 +16,11 @@ void BootStateManager::Initialize() {
 }
 
 void BootStateManager::SetState(int serverId, ServerBootState_t state) {
-	DebugAssert(serverId >= 0 && serverId <= Const::Server::MaxId);
+	DebugAssert(serverId >= 0 && serverId <= Const::Server::MaxProcessId);
 	m_eStates[serverId] = state;
 }
 
 ServerBootState_t BootStateManager::GetState(int serverId) {
-	DebugAssert(serverId >= 0 && serverId <= Const::Server::MaxId);
+	DebugAssert(serverId >= 0 && serverId <= Const::Server::MaxProcessId);
 	return m_eStates[serverId];
 }

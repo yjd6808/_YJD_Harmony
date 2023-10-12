@@ -24,6 +24,9 @@
  *	  512바이트 이하는 사이즈 그대로 인덱싱
  *	  512바이트 초과는 1000으로 나눠서 인덱싱 하도록 함.
  *
+ *	  단점은 타게터가 있기 떄문에 메모리풀이 너무 무겁다는 점이다.
+ *	  남용하면 안됨.
+ *
  * 3. 고정 사이즈를 할당해주는 효율적인 방법은 없을까?
  *    이건 나중에 고민하는걸로
  *
@@ -49,20 +52,15 @@ NS_JC_BEGIN
 
 class IndexedMemoryPool : public MemoryPoolAbstract
 {
-	using MemoryChunkQueueTargetrList = JCore::Vector<MemoryChunckQueue**>;
+	using MemoryChunkQueueTargetrList = Vector<MemoryChunckQueue**>;
 public:
-	IndexedMemoryPool(const HashMap<int, int>& allocationMap) : MemoryPoolAbstract(false) {
+	IndexedMemoryPool(const String& name = nullptr) : MemoryPoolAbstract(name) {
+		IndexedMemoryPool::CreatePool();
+		IndexedMemoryPool::CreateTargeters();
+	}
+
+	IndexedMemoryPool(const HashMap<int, int>& allocationMap, const String& name = nullptr) : MemoryPoolAbstract(name) {
 		IndexedMemoryPool::Initialize(allocationMap);
-		IndexedMemoryPool::CreatePool();
-		IndexedMemoryPool::CreateTargeters();
-	}
-
-	IndexedMemoryPool(bool skipInitialize) : MemoryPoolAbstract(skipInitialize) {
-		IndexedMemoryPool::CreatePool();
-		IndexedMemoryPool::CreateTargeters();
-	}
-
-	IndexedMemoryPool(int slot, const String& name, bool skipInitialize = false) : MemoryPoolAbstract(slot, name, skipInitialize) {
 		IndexedMemoryPool::CreatePool();
 		IndexedMemoryPool::CreateTargeters();
 	}
@@ -73,8 +71,6 @@ public:
 
 	template <int RequestSize>
 	void* StaticPop() {
-		constexpr int iIndex = Detail::AllocationLengthMapConverter::ToIndex<RequestSize>();
-
 		bool bNewAlloc;
 		MemoryChunckQueue* pChuckQueue = GetChunckQueue(RequestSize);
 
@@ -84,15 +80,17 @@ public:
 
 		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
 #ifdef DebugMode
+		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
 		AddAllocated(iIndex, bNewAlloc);
 #endif
 		return pMemoryBlock;
 	}
 
-
 	// TODO: 메모리할당 규칙이 Low와 High가 틀리기떄문에 벌어지는 현상이다.
 	//       BinarySearch와 Indexed를 똑같이 사용하기 위해서는 "요청한" 값을 기록해놓고 "요청한" 값을 반납해야한다.
-	//		 좀더 유연한 구조로 개선 필요. ㅠㅠ
+	//		 예를들어 617 Byte를 요청하면 1024바이트가 실제 할당되는데
+	//       BinarySearchMemoryPool의 경우 617바이트로 반환하든지, 1024바이트로 반환하든지 모두 올바른 반환이 이뤄지지만
+	//       IndexedMemoryPool의 경우 617바이트로 반환해야지 올바른 반환이 이뤄진다.
 	void* DynamicPop(int requestSize, int& realAllocatedSize) override {
 
 		bool bNewAlloc;
@@ -101,7 +99,7 @@ public:
 		void* pMemoryBlock = pChuckQueue->Pop(bNewAlloc);
 		realAllocatedSize = pChuckQueue->ChunkSize();
 #ifdef DebugMode
-		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(realAllocatedSize);
 		AddAllocated(iIndex, bNewAlloc);
 #endif
 		return pMemoryBlock;
@@ -111,7 +109,8 @@ public:
 	void StaticPush(void* memory) {
 		MemoryChunckQueue* pChuckQueue = GetChunckQueue(PushSize);
 		if (pChuckQueue == nullptr) return;
-		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		const int iChunkSize = pChuckQueue->ChunkSize();
+		const int iIndex = Detail::AllocationLengthMapConverter::ToIndex(iChunkSize);
 		AddDeallocated(iIndex);
 		pChuckQueue->Push(memory);
 	}
@@ -119,7 +118,8 @@ public:
 	void DynamicPush(void* memory, int returnSize) override {
 		MemoryChunckQueue* pChuckQueue = GetChunckQueue(returnSize);
 		if (pChuckQueue == nullptr) return;
-		const int index = Detail::AllocationLengthMapConverter::ToIndex(pChuckQueue->ChunkSize());
+		const int iChunkSize = pChuckQueue->ChunkSize();
+		const int index = Detail::AllocationLengthMapConverter::ToIndex(iChunkSize);
 		AddDeallocated(index);
 		pChuckQueue->Push(memory);
 	}
@@ -267,7 +267,7 @@ public:
 
 	static constexpr int LowBoundarySize = 1 << LowBoundaryIndex;		// 512		3자리 중 제일 큰 수
 	static constexpr int HighBoundarySize = 1 << HighBoundaryIndex;		// 524'288	6자리 중 제일 큰 수
-	static constexpr int BoundarySizeMax = 1000;						// 3자리수 최대 + 1
+	static constexpr int BoundarySizeMax = 1000;							// 3자리수 최대 + 1
 
 	static constexpr int LowTargeterListCapacity = LowBoundarySize + 1;	// 513
 	static constexpr int HighTargeterListCapacity = HighBoundarySize / BoundarySizeMax;	// 524

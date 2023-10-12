@@ -102,7 +102,7 @@ void CommandSynchronizer::allocateCommandQueue() {
 		CommandQueue* pSwapQueue = dbg_new CommandQueue(pHolder->InitialCapacity);
 
 		pHolder->Lock = dbg_new SGNormalLock;
-		pHolder->MemPool = dbg_new SGIndexMemroyPool(true);
+		pHolder->MemPool = dbg_new SGIndexMemroyPool();
 		pHolder->Queue = pReceiverQueue;
 		m_vSwapCommandQueue.PushBack(pSwapQueue);
 	};

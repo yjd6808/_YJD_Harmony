@@ -126,42 +126,77 @@ enum class TimeStandard
 };
 
 // https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
-enum class DateFormat
-{
-	d,			// 일 표시 -> 1 ~ 31
-	dd,			// 일 표시 -> 01 ~ 31
-	ddd,		// 요일 축약 이름-> Mon, Tue, Wed 
-	dddd,		// 요일 전체 이름 -> Monday, Tuesday, Wednesday
-	h,			// 12시간 단위 시간 -> 2
-	hh,			// 12시간 단위 시간 -> 02
-	H,			// 24시간 단위 시간 -> 2, 23
-	HH,			// 24시간 단위 시간 -> 02, 23
-	m,			// 분 -> 5
-	mm,			// 분 -> 05
-	M,			// 달 -> 1
-	MM,			// 달 -> 01
-	MMM,		// 달 축약 이름 -> Dec, Sep
-	MMMM,		// 달 전체 이름 -> December
-	s,			// 초 -> 5초
-	ss,			// 초 -> 05초
-	t,			// 오전 오후 -> A, P
-	tt,			// 오전 오후 -> AM, PM
-	y,			// 2자리년도 -> 2009 -> 9
-	yy,			// 2자리년도 -> 2009 -> 09
-	yyy,		// 4자리년도 -> 2022 -> 2022
-	yyyy,		// 4자리년도 -> 2022 -> 2022
-	K,			// 타임존 시간 (시간:분) -> +09:00
-	z,			// 타임존 시간 (시간) -> +9
-	zz,			// 타임존 시간 (시간) -> +09
-	zzz,		// 타임존 시간 (시간:분) -> +09:00
-	f,			// 밀리초 100의 자리까지 표시		10.123456 -> 1
-	ff,			// 밀리초 10의 자리까지 표시		10.123456 -> 12
-	fff,		// 밀리초 1의 자리까지 표시			10.123456 -> 123
-	ffff,		// 마이크로초 100의 자리까지 표시	10.123456 -> 1234
-	fffff,		// 마이크로초 10의 자리까지 표시	10.123456 -> 12345
-	ffffff,		// 마이크로초 1의 자리까지 표시		10.123456 -> 123456
-	// fffffff  // 나노초 100의 자리까지 표시 -> 마이크로초 까지만 지원하므로 제외한다.
+
+JCORE_SENUM_BEGIN(DateFormat)
+d,			// 일 표시 -> 1 ~ 31
+dd,			// 일 표시 -> 01 ~ 31
+ddd,		// 요일 축약 이름-> Mon, Tue, Wed 
+dddd,		// 요일 전체 이름 -> Monday, Tuesday, Wednesday
+h,			// 12시간 단위 시간 -> 2
+hh,			// 12시간 단위 시간 -> 02
+H,			// 24시간 단위 시간 -> 2, 23
+HH,			// 24시간 단위 시간 -> 02, 23
+m,			// 분 -> 5
+mm,			// 분 -> 05
+M,			// 달 -> 1
+MM,			// 달 -> 01
+MMM,		// 달 축약 이름 -> Dec, Sep
+MMMM,		// 달 전체 이름 -> December
+s,			// 초 -> 5초
+ss,			// 초 -> 05초
+t,			// 오전 오후 -> A, P
+tt,			// 오전 오후 -> AM, PM
+y,			// 2자리년도 -> 2009 -> 9
+yy,			// 2자리년도 -> 2009 -> 09
+yyy,		// 4자리년도 -> 2022 -> 2022
+yyyy,		// 4자리년도 -> 2022 -> 2022
+K,			// 타임존 시간 (시간:분) -> +09:00
+z,			// 타임존 시간 (시간) -> +9
+zz,			// 타임존 시간 (시간) -> +09
+zzz,		// 타임존 시간 (시간:분) -> +09:00
+f,			// 밀리초 100의 자리까지 표시		10.123456 -> 1
+ff,			// 밀리초 10의 자리까지 표시		10.123456 -> 12
+fff,		// 밀리초 1의 자리까지 표시			10.123456 -> 123
+ffff,		// 마이크로초 100의 자리까지 표시	10.123456 -> 1234
+fffff,		// 마이크로초 10의 자리까지 표시	10.123456 -> 12345
+ffffff,		// 마이크로초 1의 자리까지 표시		10.123456 -> 123456
+// fffffff  // 나노초 100의 자리까지 표시 -> 마이크로초 까지만 지원하므로 제외한다.
+JCORE_SENUM_MIDDLE(DateFormat)
+static constexpr const char* ToString[] = {
+		"d",
+		"dd",
+		"ddd",
+		"dddd",
+		"h",
+		"hh",
+		"H",
+		"HH",
+		"m",
+		"mm",
+		"M",
+		"MM",
+		"MMM",
+		"MMMM",
+		"s",
+		"ss",
+		"t",
+		"tt",
+		"y",
+		"yy",
+		"yyy",
+		"yyyy",
+		"K",
+		"z",
+		"zz",
+		"zzz",
+		"f",
+		"ff",
+		"fff",
+		"ffff",
+		"fffff",
+		"ffffff"
 };
+JCORE_SENUM_MIDDLE_END(DateFormat)
 
 /* =================================================================================== 
 	시간 단위
@@ -597,8 +632,8 @@ public: // public static
 	static DateTime FromUnixTime(double unixTimestamp, TimeStandard timeStandard = TimeStandard::Local);	// 초단위 스탬프를 DateTime으로 변환
 	static int LastError() { return ms_tlsiLastError; }
 	static const char* LastErrorMessage();
-	static Vector<DateFormat> ParseFormat(const String& fmt, JCORE_IN_OPT Vector<String>* delimiters = nullptr) { return ParseFormat(fmt.Source(), fmt.Length(), delimiters); }
-	static Vector<DateFormat> ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters = nullptr);
+	static Vector<DateFormat_t> ParseFormat(const String& fmt, JCORE_IN_OPT Vector<String>* delimiters = nullptr) { return ParseFormat(fmt.Source(), fmt.Length(), delimiters); }
+	static Vector<DateFormat_t> ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters = nullptr);
 
 	static const char* GetAbbreviationWeekendName(DayOfWeek week) {
 		return ms_szWeekAbbrevName[int(week)];

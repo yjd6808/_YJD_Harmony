@@ -15,8 +15,8 @@ NS_JC_BEGIN
 
 inline BinarySearchMemoryPool ArrayAllocatorPool_v
 {
+	/* 테스트 완료, 봉인
 	{
-		/* 테스트 완료, 봉인
 		{ 8, 0 },
 		{ 16, 64 },
 		{ 32, 128 },
@@ -30,8 +30,8 @@ inline BinarySearchMemoryPool ArrayAllocatorPool_v
 		{ 8192, 16 },
 		{ 8192 * 2, 8 },
 		{ 8192 * 4, 8 }
-		*/
 	}
+	*/
 };
 
 class DefaultArrayAllocator

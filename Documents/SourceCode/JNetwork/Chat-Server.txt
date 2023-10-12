@@ -1,0 +1,54 @@
+#include <JNetwork/Network.h>
+#include <JNetwork/Winsock.h>
+#include <JNetwork/Host/TcpServer.h>
+#include <JCore/Pool/IndexedMemoryPool.h>
+
+USING_NS_JC;
+USING_NS_JNET;
+
+DYNAMIC_CMD_BEGIN(ChatMessage, 100, StaticString<1>)
+StaticString<1> Msg;
+DYNAMIC_CMD_END()
+
+class Listener : public ServerEventListener
+{
+	void OnStarted() override { Console::WriteLine("[서버] 실행되었습니다."); }
+	void OnConnected(Session* conn) override { Console::WriteLine("[서버] 클라 접속함"); }
+	void OnDisconnected(Session* disconn) override { Console::WriteLine("[서버] 클라 연결끊김"); }
+	void OnSent(Session* sender, ISendPacket* packet, Int32UL sentBytes) override {
+		const int cmdIndex = 0; // 송신한 패킷의 제일 처음 커맨드
+		ChatMessage* pCmd = static_cast<ChatMessage*>(packet->GetCommand(cmdIndex));
+		Console::WriteLine("[서버] %s 메시지 전송", pCmd->Msg.Source);
+	}
+	void OnReceived(Session* receiver, ICommand* cmd) override {
+		ChatMessage* pCmd = static_cast<ChatMessage*>(cmd);
+		Console::WriteLine("[서버] %s 메시지 수신", pCmd->Msg.Source);
+
+		// 에코 수행
+		SinglePacket<ChatMessage>* pPacket = dbg_new SinglePacket<ChatMessage>(pCmd->Msg.LengthWithNull());
+		pPacket->Cmd.Msg.SetStringUnsafe(pCmd->Msg.Source);
+		receiver->SendAsync(pPacket);
+	}
+
+	void OnStopped() override { Console::WriteLine("[서버] 중지되었습니다."); }
+};
+
+int main() {
+	Winsock::Initialize(2, 2);
+	constexpr int ThreadCount = 1;
+	const IOCPPtr iocp = MakeShared<IOCP>(ThreadCount);
+	const MemoryPoolAbstractPtr memPool = MakeShared<IndexedMemoryPool>();
+	TcpServer server(iocp, memPool);
+
+	iocp->Run();
+	server.SetEventListener(dbg_new Listener);
+	server.Start("0.0.0.0:12345");
+
+	while (Console::ReadKeyWhile("x키 입력시 종료\n", ConsoleKey::X)) {
+		server.Stop();
+		iocp->Join();
+		iocp->Destroy();
+	}
+	Winsock::Finalize();
+	return 0;
+}

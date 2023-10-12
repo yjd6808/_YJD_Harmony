@@ -23,6 +23,7 @@ public:
 	Int64U GetNewAllocated() { return m_uiNewAlloctaed; }
 	Int64U GetTotalAllocated() { return m_uiInitAllocted + m_uiNewAlloctaed; }	// 메모리풀이 관리중인 메모리 크기
 	Int64U GetTotalUsed() { return m_uiTotalUsed; }
+	Int64U GetTotalUsing() { return m_uiTotalUsing; }
 	Int64U GetTotalReturned() { return m_uiTotalReturned; }
 
 	int GetBlockTotalCounter(int blockIndex) { return m_pBlockTotalCounter[blockIndex]; }
@@ -38,6 +39,7 @@ protected:
 	void AddAllocated(Int32 blockIndex, bool createNew) {
 		int iSize = Detail::AllocationLengthMapConverter::ToSize(blockIndex);
 
+		m_uiTotalUsing += iSize;
 		m_uiTotalUsed += iSize;
 
 		if (createNew) {
@@ -50,8 +52,11 @@ protected:
 	}
 
 	void AddDeallocated(Int32 blockIndex) {
+		const Int32 returnedSize = Detail::AllocationLengthMapConverter::ToSize(blockIndex);
+
 		--m_pBlockUsingCounter[blockIndex];
-		m_uiTotalReturned += Detail::AllocationLengthMapConverter::ToSize(blockIndex);
+		m_uiTotalUsing -= returnedSize;
+		m_uiTotalReturned += returnedSize;
 	}
 
 
@@ -61,6 +66,7 @@ protected:
 		m_uiNewAlloctaed = 0;
 		m_uiTotalUsed = 0;
 		m_uiTotalReturned = 0;
+		m_uiTotalUsing = 0;
 
 		Arrays::Fill(m_pBlockTotalCounter, 0);
 		Arrays::Fill(m_pBlockUsedCounter, 0);
@@ -75,6 +81,7 @@ protected:
 	Int64U m_uiNewAlloctaed{};		//	MemoryPool::Initialize()때 할당된 메모리외에! 추가로 새로 할당된 메모리양 (누적)
 	Int64U m_uiTotalUsed{};			//	메모리풀을 얼마나 사용했는지
 	Int64U m_uiTotalReturned{};		//  메모리풀로 얼마나 반환되었는지
+	Int64U m_uiTotalUsing{};		//  현재 얼마나 사용중인지
 
 	int m_pBlockTotalCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 현재 몇개가 있는지 기록
 	int m_pBlockUsedCounter[Detail::MemoryBlockSizeMapSize_v]{};			// 블록 종류별로 몇번 사용되었는지

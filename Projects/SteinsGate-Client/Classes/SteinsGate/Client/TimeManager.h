@@ -20,7 +20,7 @@ class TimeManager : public JCore::SingletonPointer<TimeManager>
 private:
 	friend class TSingleton;
 	TimeManager();
-	~TimeManager() override;
+	~TimeManager();
 public:
 	void updateAppTime();
 	void updateServerTime();

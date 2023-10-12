@@ -1,0 +1,25 @@
+AtomicInt Value1;
+Int Value2;
+
+int main() {
+	Thread th1;
+	Thread th2;
+
+	auto fnThreadRoutine = [](void*) {
+		for (int i = 0; i < 100000; ++i) {
+			++Value1;
+			++Value2;
+		}
+	};
+
+	th1.Start(fnThreadRoutine);
+	th2.Start(fnThreadRoutine);
+
+	th1.Join();
+	th2.Join();
+
+	Console::WriteLine("%d", Value1.Load());
+	Console::WriteLine("%d", Value2);
+
+	return Console::ReadKeyWhile("X키 입력시 종료", ConsoleKey::X) ? 0 : -1;
+}

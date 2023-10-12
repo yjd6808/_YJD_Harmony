@@ -1,0 +1,11 @@
+const char* szFilePathWin = "C:\\Documents\\A\\B\\C\\a.txt";
+const char* szFilePathUnix = "/Documents/A/B/C/a.txt";
+
+Console::WriteLine("확장자명(Win): %s", Path::Extension(szFilePathWin).Source());
+Console::WriteLine("확장자명(Unix): %s", Path::Extension(szFilePathUnix).Source());
+
+Console::WriteLine("파일명(Win): %s", Path::FileName(szFilePathWin).Source());
+Console::WriteLine("파일명(Unix): %s", Path::FileName(szFilePathUnix).Source());
+
+Console::WriteLine("깊이 2(Win): %s", Path::FileNameLevel(szFilePathWin, 2).Source());
+Console::WriteLine("깊이 2(Unix): %s", Path::FileNameLevel(szFilePathUnix, 2).Source());

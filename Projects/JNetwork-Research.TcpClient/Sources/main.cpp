@@ -1,6 +1,4 @@
-
-
-#include <JNetwork/Network.h>
+﻿#include <JNetwork/Network.h>
 #include <JNetwork/Winsock.h>
 #include <JNetwork/Research/TcpClientNetGroup.h>
 #include <JNetwork/Research/Command.h>
@@ -16,6 +14,7 @@ void PrintMenu();
 bool SelectMenu(int menu);
 
 TcpClientNetGroup* pClientGroup;
+
 
 int main() {
 	Winsock::Initialize(2, 2);
@@ -43,6 +42,7 @@ int main() {
 	Winsock::Finalize();
 	return 0;
 }
+
 
 void PrintMenu() {
 	cout << "1. 로그인 서버 접속\n";

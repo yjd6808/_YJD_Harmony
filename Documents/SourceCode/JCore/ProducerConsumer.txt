@@ -1,0 +1,63 @@
+bool produced;
+AtomicBool interrupted;
+ConditionVariable condVar;
+AutoResetEvent waitHandle(false);
+NormalLock lock;
+ArrayQueue<int> items;
+
+int main() {
+	Thread consumer([](void*) {
+		for (;;) {
+			NormalLockGuard lg(lock);
+			condVar.WaitFor(lg, TimeSpan::FromMiliSeocnd(500), []() { return interrupted || produced; });
+
+			if (produced) {
+				items.Extension().ForEach([](int item) { Console::WriteLine("[소비자] %d 아이템 생산됨", item); });
+				items.Clear();
+				produced = false;
+			} else {
+				Console::WriteLine("[소비자] 생산된 아이템이 없습니다.");
+			}
+
+			if (interrupted) {
+				Console::WriteLine("[소비자] 인터럽트");
+				break;
+			}
+			
+		}
+		
+	});
+
+	Thread producer([](void*) {
+		for (;;) {
+			Int32U waitHandleResult;
+			waitHandle.Wait(1000, &waitHandleResult);
+
+			if (interrupted) {
+				Console::WriteLine("[생산자] 인터럽트");
+				break;
+			}
+
+			int item = Random::GenerateInt(0, 100);
+			{
+				NormalLockGuard lg(lock);
+				items.Enqueue(item);
+				produced = true;
+			}
+			condVar.NotifyOne();
+			Console::WriteLine("[생산자] %d 생산", item);
+		}
+	});
+
+
+	if (Console::ReadKeyWhile("X키 입력시 종료\n", ConsoleKey::X)) {
+		interrupted = true;
+		condVar.NotifyOne();
+		waitHandle.Signal();
+
+		consumer.Join();
+		producer.Join();
+	}
+
+	return 0;
+}

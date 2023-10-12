@@ -18,6 +18,7 @@ NS_JNET_BEGIN
 TcpServer::TcpServer(const IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator)
 	: Server(iocp)
 	, m_spBufferAllocator(bufferAllocator)
+	, m_pEventListener(nullptr)
 	, m_pContainer(nullptr)
 {
 	TcpServer::Initialize();

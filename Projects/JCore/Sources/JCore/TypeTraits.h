@@ -330,12 +330,12 @@ NS_JC_BEGIN
         /* 1 */ template <typename Fn>
 		static constexpr typename SFINAE<decltype(&Fn::operator())>::Parameters TestParam(int*) { return {}; }
         /* 2 */ template <typename Fn>
-		static constexpr ParameterPack<__End__> TestParam(...) { return {}; }
+		static constexpr ParameterPack<> TestParam(...) { return {}; }
 
         /* 1 */ template <typename Fn>
         static constexpr typename SFINAE<decltype(&Fn::operator())>::Return TestReturn(int*) { return {}; }
         /* 2 */ template <typename Fn>
-        static constexpr ParameterPack<__End__> TestReturn(...) { return {}; }
+        static constexpr ParameterPack<> TestReturn(...) { return {}; }
 
         template <typename Fn>
         using Parameters = decltype(TestParam<Fn>(nullptr));
