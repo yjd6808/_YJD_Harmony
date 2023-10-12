@@ -14,7 +14,7 @@ class PopupManager : public JCore::SingletonPointer<PopupManager>
 {
 	friend class TSingleton;
 	PopupManager();
-	~PopupManager() override;
+	~PopupManager();
 public:
 	void setWidth(float width);
 	void setPadding(float padding);

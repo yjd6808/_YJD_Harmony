@@ -66,7 +66,7 @@ bool CenterServer::IsAllCenterSessionConnected() {
 }
 
 bool CenterServer::IsConnected(CenterSession* session) {
-	for (int i = 0; i < Const::Server::MaxId; ++i) {
+	for (int i = 0; i < Const::Server::MaxProcessId; ++i) {
 		if (m_pSession[i].Session == session) {
 			return true;
 		}

@@ -58,7 +58,7 @@ class CommandSynchronizer final : public SGSingletonPointer<CommandSynchronizer>
 
 	friend class TSingleton;
 	CommandSynchronizer();
-	~CommandSynchronizer() override;
+	~CommandSynchronizer();
 
 	void filterUnusedCommandQueue();	// 안쓰는 패킷큐는 해제 (메인 쓰레드에서 생성된 큐의 경우 쓸일이 없으므로)
 	void allocateCommandQueue();

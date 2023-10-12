@@ -21,7 +21,7 @@ private:
 
 	friend class TSingleton;
 	ActorListenerManager();
-	~ActorListenerManager() override;
+	~ActorListenerManager();
 public:
 	void init();
 

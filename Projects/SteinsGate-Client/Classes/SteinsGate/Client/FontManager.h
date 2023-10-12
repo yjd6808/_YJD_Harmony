@@ -14,7 +14,7 @@ class FontManager final : public JCore::SingletonPointer<FontManager>
 {
 	friend class TSingleton;
 	FontManager();
-	~FontManager() override;
+	~FontManager();
 public:
 	void init();
 	SGString& getFontName(int fontCode);
