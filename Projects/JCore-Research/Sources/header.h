@@ -15,6 +15,7 @@
 #include <JCore/Container/HashSet.h>
 #include <JCore/Container/TreeMap.h>
 #include <JCore/Container/TreeSet.h>
+#include <JCore/Container/ListQueue.h>
 #include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/Vector.h>
 #include <JCore/Container/Properties.h>
@@ -25,7 +26,11 @@
 #include <JCore/Primitives/StaticString.h>
 #include <JCore/Primitives/RefCountObjectPtr.h>
 
+#include <JCore/FileSystem/File.h>
+#include <JCore/FileSystem/FileStream.h>
+#include <JCore/FileSystem/Directory.h>
 #include <JCore/FileSystem/Path.h>
+
 #include <JCore/Encoding/CodePage.h>
 
 #include <JCore/Pool/IndexedMemoryPool.h>
@@ -34,6 +39,10 @@
 #include <JCore/Sync/SpinLock.h>
 #include <JCore/Sync/WaitHandle.h>
 #include <JCore/Sync/ConditionVariable.h>
+#include <JCore/Sync/ManualResetEvent.h>
+#include <JCore/Sync/AutoResetEvent.h>
+
+#include <JCore/Logger/ConsoleLogger.h>
 
 #include <JCore/Wrapper/WinApi.h>
 #include <JCore/Wrapper/CRuntime.h>

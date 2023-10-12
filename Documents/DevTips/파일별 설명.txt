@@ -1,0 +1,16 @@
+(CheatSheet) Binding.pdf
+WPF 프로젝트인 슈타인즈 게이트 툴 프로젝트들 코드 분석중
+바인딩에 대해서 처음 학습후 곧바로 개발에 적용해서 아직 어색한 느낌이 많다.
+바인딩이 특정 프로퍼티에 대해서 어떻게 적용되는지 기술된 문서이므로 참고하면 많은 도움이 된다.
+
+
+Text={Binding Name}의 경우 Text 프로퍼티에 현재 데이터 컨텍스트의 Name 프로퍼티를 바인딩한다.
+현재 데이터 컨텍스트가 MainViewModel일 경우
+
+class MainViewModel {
+	public string Name { get; }
+}
+
+위와 같이 MainViewModel의 Name프로퍼티가 바인딩된다는 말이다.
+
+======================================================

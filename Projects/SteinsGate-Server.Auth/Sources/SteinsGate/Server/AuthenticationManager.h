@@ -30,7 +30,7 @@ class AuthenticationManager : public JCore::SingletonPointer<AuthenticationManag
 
 	friend class TSingleton;
 	AuthenticationManager() = default;
-	~AuthenticationManager() override = default;
+	~AuthenticationManager() = default;
 public:
 	AuthenticationData* Issue(const char* accountId);																// 발급
 	bool Exist(AuthenticationSerial_t serial, const char* accountId);								// 발급되었는지 확인

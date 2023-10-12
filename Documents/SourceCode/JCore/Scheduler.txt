@@ -1,0 +1,36 @@
+#define RED													"\x1b[040;31m" 
+#define GRAY												"\x1b[040;39m"
+#define GREEN												"\x1b[040;92m"
+#define YELLOW												"\x1b[040;93m"
+
+constexpr int threadPoolCapacity = 16;
+Scheduler scheduler(threadPoolCapacity);
+
+SchedulerTask* task = dbg_new SchedulerTaskOnce(
+	DateTime::Now() + TimeSpan::FromSecond(3), /* 작업 시작 시각 */
+	[](SchedulerTask* task) { Console::WriteLine(GREEN "3초뒤에 호출되는 작업(Once)" GRAY); }
+);
+
+SchedulerTask* taskRepeat = dbg_new SchedulerTaskRepeat(
+	DateTime::Now(),			/* 작업 시작 시각 */
+	TimeSpan::FromSecond(1),	/*    인터벌		*/
+	[](SchedulerTask* task) {Console::WriteLine("1초마다 호출되는 작업(Repeat)"); },
+	10
+);
+
+// 상속받아서 구현
+struct ImplementedTask : SchedulerTaskRunnable 
+{
+	ImplementedTask()
+		: SchedulerTaskRunnable(DateTime::Now() + TimeSpan::FromSecond(3)) {} /* 작업 시작 시각 */
+	TimeSpan Interval() override { return TimeSpan::FromSecond(1); }		  /*     인터벌	  */
+	void Initialize() override {}
+	void Finalize() override {}
+	void OnScheduled() override { Console::WriteLine(YELLOW "3초뒤 1초마다 호출되는 작업(Runnable)" GRAY); }
+	void OnFirstScheduled() override {}
+};
+
+scheduler.AddFirstTask(task);
+scheduler.AddFirstTask(taskRepeat);
+scheduler.AddFirstTask(dbg_new ImplementedTask);
+scheduler.Join(Scheduler::JoinStrategy::WaitAllTasks);

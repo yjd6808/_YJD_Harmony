@@ -1,0 +1,60 @@
+#include <JNetwork/Network.h>
+#include <JNetwork/Winsock.h>
+#include <JNetwork/Host/TcpClient.h>
+
+#include <JCore/Pool/IndexedMemoryPool.h>
+
+using namespace JCore;
+using namespace JNetwork;
+
+DYNAMIC_CMD_BEGIN(ChatMessage, 100, StaticString<1>)
+StaticString<1> Msg;
+DYNAMIC_CMD_END()
+
+class Listener : public ClientEventListener
+{
+	void OnConnected(Session* session) override { Console::WriteLine("[클라] 접속성공"); }
+	void OnConnectFailed(Session* session, Int32U errorCode) override { Console::WriteLine("[클라] 접속실패"); }
+	void OnDisconnected(Session* session) override { Console::WriteLine("[클라] 연결끊김"); }
+	void OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) override {
+		const int cmdIndex = 0; // 송신한 패킷의 제일 처음 커맨드
+		ChatMessage* pCmd = static_cast<ChatMessage*>(sentPacket->GetCommand(cmdIndex));
+		Console::WriteLine("[클라] %s 메시지 전송", pCmd->Msg.Source);
+	}
+	void OnReceived(Session* session, ICommand* recvCmd) override {
+		ChatMessage* pCmd = static_cast<ChatMessage*>(recvCmd);
+		Console::WriteLine("[클라] %s 메시지 수신", pCmd->Msg.Source);
+	}
+	void OnReceived(Session* session, IRecvPacket* recvPacket) override {}
+};
+
+int main() {
+	Winsock::Initialize(2, 2);
+	constexpr int ThreadCount = 1;
+	const IOCPPtr iocp = MakeShared<IOCP>(ThreadCount);
+	const MemoryPoolAbstractPtr memPool = MakeShared<IndexedMemoryPool>();
+	TcpClient client(iocp, memPool);
+
+	iocp->Run();
+	client.SetEventListener(dbg_new Listener());
+
+	if (!client.Connect(IPv4EndPoint::Parse("127.0.0.1:12345"))) {
+		return -1;
+	}
+
+	Console::WriteLine("x 입력시 종료");
+
+	for (;;) {
+		String msg = Console::ReadLine();
+		SinglePacket<ChatMessage>* pPacket = dbg_new SinglePacket<ChatMessage>(msg.LengthWithNull());
+		pPacket->Cmd.Msg.SetStringUnsafe(msg);
+		if (pPacket->Cmd.Msg == "x") break;
+		client.SendAsync(pPacket);
+	}
+
+	client.Disconnect();
+	iocp->Join();
+	iocp->Destroy();
+	Winsock::Finalize();
+	return Console::ReadKeyWhile("프로그램이 성공적으로 수행되었습니다. X키 입력시 종료됩니다.\n", ConsoleKey::X);
+}

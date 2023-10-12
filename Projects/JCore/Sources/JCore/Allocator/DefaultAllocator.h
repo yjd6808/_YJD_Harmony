@@ -28,7 +28,8 @@ public:
 	// 명시적으로 사이즈 요청해서 반환하는 2가지 기능을 구현할 것
 	template <typename T>
 	static auto AllocateStatic() {	// Static
-		return Memory::Allocate<NakedType_t<T>*>(sizeof(NakedType_t<T>));
+		using Ty = NakedType_t<T>;
+		return Memory::Allocate<Ty*>(sizeof(Ty));
 	}
 
 	template <typename T>

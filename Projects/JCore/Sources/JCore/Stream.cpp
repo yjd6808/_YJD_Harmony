@@ -27,6 +27,7 @@ String Stream::ReadString() {
 		szRet.SetLength(iReadLength);
 		szRet.ResizeIfNeeded(iReadLength + 64);	// 좀 여유를 두고 확장
 	}
+	szRetBuffer[iReadLength] = NULL;
 
 	return szRet;
 }
@@ -97,7 +98,7 @@ Int64U Stream::ReadInt64U() {
 
 
 void Stream::WriteString(const String& str, bool withNull) {
-	Write((Byte*)str.Source(), withNull ? str.Length() : str.Length() + 1);
+	Write((Byte*)str.Source(), withNull ? str.Length() + 1 : str.Length());
 }
 
 

@@ -33,7 +33,7 @@ class SingletonStatic : private NonCopyableNonMovable
 {
 protected:
 	SingletonStatic() = default;
-	virtual ~SingletonStatic() = default;
+	~SingletonStatic() = default;
 public:
 	using TSingleton = SingletonStatic<T>;
 	static T* Get() {
@@ -50,7 +50,7 @@ class SingletonStaticPointer : private NonCopyableNonMovable
 	struct Guard { ~Guard() { JCORE_DELETE_SAFE(ms_pInst); } };
 protected:
 	SingletonStaticPointer() = default;
-	virtual ~SingletonStaticPointer() = default;
+	~SingletonStaticPointer() = default;
 public:
 	using TSingleton = SingletonStaticPointer<T>;
 	static T* Get() {
@@ -77,7 +77,7 @@ class SingletonPointer : private NonCopyableNonMovable
 {
 protected:
 	SingletonPointer() = default;
-	virtual ~SingletonPointer() = default;
+	~SingletonPointer() = default;
 public:
 	using TSingleton = SingletonPointer<T>;
 		
@@ -91,6 +91,7 @@ public:
 			ms_Lock.Lock();
 			if (ms_bDeleted) {
 				DebugAssertMsg(false, "삭제된 객체에 접근을 시도했습니다.");
+				ms_Lock.Unlock();
 				return nullptr;
 			}
 

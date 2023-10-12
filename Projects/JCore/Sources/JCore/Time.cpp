@@ -640,23 +640,23 @@ bool DateAndTime::operator==(const DateAndTime& other) {
 }
 
 bool DateAndTime::operator>(const DateTime& other) const {
-	return ToTick() > other.Tick;
+	return ToTick() > Int64(other.Tick);
 }
 
 bool DateAndTime::operator<(const DateTime& other) const {
-	return ToTick() < other.Tick;
+	return ToTick() < Int64(other.Tick);
 }
 
 bool DateAndTime::operator>=(const DateTime& other) const {
-	return ToTick() >= other.Tick;
+	return ToTick() >= Int64(other.Tick);
 }
 
 bool DateAndTime::operator<=(const DateTime& other) const {
-	return ToTick() <= other.Tick;
+	return ToTick() <= Int64(other.Tick);
 }
 
 bool DateAndTime::operator==(const DateTime& other) const {
-	return ToTick() == other.Tick;
+	return ToTick() == Int64(other.Tick);
 }
 
 /*=====================================================================================
@@ -690,7 +690,7 @@ thread_local int DateTime::ms_tlsiLastError;
 	그리고 y를 연속 5번 만나버린 경우. 즉 해당 포맷 문자에서 가증한 최대 문자 갯수를 초과한 경우는 오류를 뛰우기 위함
 */
 
-HashMap<char, Tuple<char, DateFormat, int>> FormatTokenMap_v =
+HashMap<char, Tuple<char, DateFormat_t, int>> FormatTokenMap_v =
 {
 	{'d', {'d', DateFormat::d, 4}},
 	{'h', {'h', DateFormat::h, 2}},
@@ -705,7 +705,7 @@ HashMap<char, Tuple<char, DateFormat, int>> FormatTokenMap_v =
 	{'f', {'f', DateFormat::f, 6}}
 };
 
-HashMap<String, DateFormat> DateFormatMap_v =
+HashMap<String, DateFormat_t> DateFormatMap_v =
 {
 	{ "d", DateFormat::d },
 	{ "dd", DateFormat::dd },
@@ -816,7 +816,7 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 
 	DateAndTime result;
 	Vector<String> vDelimiterList;
-	Vector<DateFormat> vFormatList = ParseFormat(fmt, fmtLen, &vDelimiterList);			// 1. dateString과 fmt을 1:1대응 시키기 위함 2. 동일한 포맷 토큰이 포함되어 있는지 (YYYY-mm-YYYY) 이런식으로 중복된 포멧이 있는 경우를 체크하는 용도
+	Vector<DateFormat_t> vFormatList = ParseFormat(fmt, fmtLen, &vDelimiterList);			// 1. dateString과 fmt을 1:1대응 시키기 위함 2. 동일한 포맷 토큰이 포함되어 있는지 (YYYY-mm-YYYY) 이런식으로 중복된 포멧이 있는 경우를 체크하는 용도
 	Vector<Pair<int, String>> vDateStringList;	// 기존 인덱스정보도 함께 저장
 
 	// ParseFormat 수행중 오류가 발생한 경우
@@ -906,14 +906,14 @@ bool DateTime::TryParse(DateTime& parsed, const char* fmt, int fmtLen, const cha
 		return s_DateFormatParsePriority[int(vFormatList[lhs.Key])] < s_DateFormatParsePriority[int(vFormatList[rhs.Key])];
 	});
 
-	vFormatList.Sort([](DateFormat& lhs, DateFormat& rhs) {
+	vFormatList.Sort([](DateFormat_t& lhs, DateFormat_t& rhs) {
 		return s_DateFormatParsePriority[int(lhs)] < s_DateFormatParsePriority[int(rhs)];
 	});
 
 	AMPM eAMPM = AMPM::None;
 	
 	for (int i = 0; i < vFormatList.Size(); ++i) {
-		const DateFormat eFormatToken = vFormatList[i];
+		const DateFormat_t eFormatToken = vFormatList[i];
 		String& szDateStringToken = vDateStringList[i].Value;
 
 		switch (eFormatToken) {
@@ -1178,7 +1178,7 @@ const char* DateTime::LastErrorMessage() {
 // fmtList = { YYYY, MM, dd }
 // delimiters = { -, -, === }
 // 이런식으로 파싱해주는 함수
-Vector<DateFormat> DateTime::ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters) {
+Vector<DateFormat_t> DateTime::ParseFormat(const char* fmt, int fmtLen, JCORE_IN_OPT Vector<String>* delimiters) {
 
 	static auto FnAddDelimiter = [](String& delimiter, Vector<String>* delimiterList)->void {
 		if (delimiterList == nullptr) return;
@@ -1187,11 +1187,11 @@ Vector<DateFormat> DateTime::ParseFormat(const char* fmt, int fmtLen, JCORE_IN_O
 		delimiter.Clear();
 	};
 
-	static auto FnAddDateFormat = [](String& dateFormat, Vector<DateFormat>& dateFormatList)->bool {
+	static auto FnAddDateFormat = [](String& dateFormat, Vector<DateFormat_t>& dateFormatList)->bool {
 		if (dateFormat.Length() == 0) 
 			return true;
 
-		const DateFormat* pFind = DateFormatMap_v.Find(dateFormat);
+		const DateFormat_t* pFind = DateFormatMap_v.Find(dateFormat);
 		dateFormat.Clear();
 
 		if (pFind == nullptr) {
@@ -1205,7 +1205,7 @@ Vector<DateFormat> DateTime::ParseFormat(const char* fmt, int fmtLen, JCORE_IN_O
 	};
 
 	HashMap<char, bool> hTokenDuplicateCheckMap;
-	Vector<DateFormat> fmtList;
+	Vector<DateFormat_t> fmtList;
 	String szTempDateFormat;
 	String szTempDelimiter;
 
@@ -1569,7 +1569,7 @@ void DateTime::ReflectFormat(const DateAndTime& time, String& ret, const char to
 
 	auto [item1, item2, item3] = *valuePtr;
 
-	const DateFormat format = static_cast<DateFormat>(static_cast<int>(item2) + count - 1);
+	const DateFormat_t format = static_cast<DateFormat_t>(static_cast<int>(item2) + count - 1);
 	const int iMaxCount = item3; // 연속으로 나열가능한 문자 최대 수
 
 	if (count > iMaxCount) {

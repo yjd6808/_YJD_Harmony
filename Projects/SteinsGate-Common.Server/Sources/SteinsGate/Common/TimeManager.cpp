@@ -12,6 +12,7 @@
 USING_NS_JC;
 
 TimeManager::TimeManager() {}
+TimeManager::~TimeManager() {}
 
 void TimeManager::UpdateMasterServerTime(const DateTime& masterServerTime) {
 	m_MasterServerTime = masterServerTime.Tick;

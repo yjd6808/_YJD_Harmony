@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<RootNamespace>SGToolsResearch</RootNamespace>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<BaseIntermediateOutputPath>..\Intermediate\</BaseIntermediateOutputPath>
+		<BaseOutputPath>..\Output\</BaseOutputPath>
+		<AssemblyName>SGToolsResearch</AssemblyName>
+		<RunPostBuildEvent>Always</RunPostBuildEvent>
+		<ApplicationIcon>Resource\Icon\logo.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="obj\**" />
+	  <Compile Remove="Resource\**" />
+	  <EmbeddedResource Remove="obj\**" />
+	  <EmbeddedResource Remove="Resource\**" />
+	  <None Remove="obj\**" />
+	  <None Remove="Resource\**" />
+	  <Page Remove="obj\**" />
+	  <Page Remove="Resource\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
+	  <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+	  <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+	  <PackageReference Include="WinCopies.AttachedCommandBehavior" Version="3.1.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\SteinsGate-Tools.Common\Project\SteinsGate-Tools.Common.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="View\AlbumView.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Bass24\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;&#xD;&#xA;xcopy /Y /Q &quot;$(SolutionDir)ThirdParty\Zlib12\lib\$(Platform)\*.dll&quot; &quot;$(OutDir)&quot;" />
+	</Target>
+
+</Project>

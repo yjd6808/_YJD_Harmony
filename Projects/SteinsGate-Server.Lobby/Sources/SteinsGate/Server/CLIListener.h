@@ -18,6 +18,8 @@ public:
 	bool OnInputProcessing(int argc, JCore::String* argv) override;
 private:
 	bool CLI_Example(int argc, JCore::String* argv);
+
+	TCLI_Table m_Table;
 };
 
 

@@ -1,0 +1,13 @@
+// 전역변수 Logger_v 직접 생성 및 설정해주면 된다. */
+Logger_v = dbg_new ConsoleLogger();
+Logger_v->SetEnableLock(true);
+Logger_v->SetAutoFlush(true);
+Logger_v->SetHeaderFormat(StringUtil::Format("%s[ level ✓  datetime ] ", "테스트"));
+Logger_v->ShowDateTime(true);
+Logger_v->ShowLevel(true);
+
+_LogWarn_("경고 출력");
+_LogError_("오류 출력");
+
+// 종료전 삭제
+delete Logger_v;

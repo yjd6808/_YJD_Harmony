@@ -26,7 +26,7 @@ class TimeManager : public JCore::SingletonPointer<TimeManager>
 private:
 	friend class TSingleton;
 	TimeManager();
-	~TimeManager() override = default;
+	~TimeManager();
 public:
 	void UpdateMasterServerTime(const JCore::DateTime& masterServerTime);
 	JCore::DateTime Now() const;

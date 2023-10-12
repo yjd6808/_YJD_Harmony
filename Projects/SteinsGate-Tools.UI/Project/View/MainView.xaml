@@ -1,6 +1,21 @@
 <!--
     작성자: 윤정도
     생성일: 2/27/2023
+    
+    바인딩에 대해서 처음 학습후 곧바로 개발에 적용해서 아직 어색한 느낌이 많다.
+    
+    Text={Binding Name}의 경우 Text 프로퍼티에 현재 데이터 컨텍스트의 Name 프로퍼티를 바인딩한다.
+    현재 데이터 컨텍스트가 MainViewModel일 경우
+
+    class MainViewModel {
+	    public string Name { get; }
+    }
+
+    위와 같이 MainViewModel의 Name프로퍼티가 바인딩된다는 말이다.
+    
+    바인딩 관련 자세한 내용은 루트 디렉토리/Document/DevTips 경로의 '(CheatSheet) Binding.pdf' 문서를 참고하면 된다.
+    이 문서는 바인딩이 특정 프로퍼티에 대해서 어떻게 적용되는지 기술된 문서이다.
+                                                                            - 2023/10/11(수) 정도가
 -->
 
 <Window x:Class="SGToolsUI.View.MainView"
