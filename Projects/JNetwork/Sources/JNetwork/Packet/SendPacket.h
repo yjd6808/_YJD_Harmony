@@ -70,6 +70,21 @@ struct ISendPacket : JCore::RefCountObject
 	virtual WSABUF GetWSABuf() const = 0;
 	virtual char* GetCommandSource() const = 0;		// 커맨드 시작위치 반환
 
+	ICommand* GetCommand(int index) {
+		if (index >= m_iCommandCount || index < 0) 
+			return nullptr; 
+
+		ICommand* pCmd = nullptr;
+		char* pCmdData = GetCommandSource();
+		int i = 0;
+		while (i < m_iCommandCount) {
+			pCmd = reinterpret_cast<ICommand*>(pCmdData);
+			pCmdData += pCmd->CmdLen;
+			++i;
+		}
+		return pCmd;
+	}
+
 	void ForEach(const JCore::Action<ICommand*>& consumer) {
 		int iCmdIndex = 0;
 		char* pCmdData = GetCommandSource();
