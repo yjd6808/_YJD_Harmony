@@ -17,15 +17,15 @@ NormalRwLock::NormalRwLock() :
 	m_bWriteFlag(false) {}
 
 void NormalRwLock::WriteLock() {
-	std::unique_lock lg(m_Mtx);
+	NormalLockGuard lg(m_Lock);
 	while (m_bWriteFlag || m_iReadCount)
-		m_Condvar.wait(lg);
+		m_CondVar.Wait(lg);
 
 	m_bWriteFlag = true;
 }
 
 bool NormalRwLock::TryWriteLock() {
-	std::unique_lock lg(m_Mtx);
+	NormalLockGuard lg(m_Lock);
 	if (m_bWriteFlag || m_iReadCount)
 		return false;
 
@@ -34,26 +34,26 @@ bool NormalRwLock::TryWriteLock() {
 }
 
 void NormalRwLock::WriteUnlock() {
-	std::unique_lock lg(m_Mtx);
+	NormalLockGuard lg(m_Lock);
 	m_bWriteFlag = false;
-	m_Condvar.notify_all();
+	m_CondVar.NotifyAll();
 }
 
 bool NormalRwLock::IsWriteLocked() {
-	std::unique_lock lg(m_Mtx);
+	NormalLockGuard lg(m_Lock);
 	return m_bWriteFlag;
 }
 
 void NormalRwLock::ReadLock() {
-	std::unique_lock lg(m_Mtx);
+	NormalLockGuard lg(m_Lock);
 	while (m_bWriteFlag)
-		m_Condvar.wait(lg);
+		m_CondVar.Wait(lg);
 
 	++m_iReadCount;
 }
 
 bool NormalRwLock::TryReadLock() {
-	std::unique_lock lg(m_Mtx);
+	NormalLockGuard lg(m_Lock);
 	if (m_bWriteFlag)
 		return false;
 
@@ -62,15 +62,15 @@ bool NormalRwLock::TryReadLock() {
 }
 
 void NormalRwLock::ReadUnlock() {
-	std::unique_lock lg(m_Mtx);
+	NormalLockGuard lg(m_Lock);
 	if (m_iReadCount > 0)
 		--m_iReadCount;
 
-	m_Condvar.notify_all();
+	m_CondVar.NotifyAll();
 }
 
 bool NormalRwLock::IsReadLocked() {
-	std::unique_lock lg(m_Mtx);
+	NormalLockGuard lg(m_Lock);
 	return m_iReadCount > 0;
 }
 
