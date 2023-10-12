@@ -1,0 +1,13 @@
+struct Data : SingletonStaticPointer<Data>
+{
+private:
+	friend class TSingleton; // 부모 클래스에서 생성가능하도록
+	Data() { Console::WriteLine("생성됨"); }
+	~Data() { Console::WriteLine("소멸됨"); }
+public:
+	int A;
+};
+
+Data* data = Data::Get();	// 생성 또는 가져오기
+data->A = 200;
+Data::Free();				// 소멸

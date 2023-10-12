@@ -1,23 +1,23 @@
 ### TankFighter 프로젝트
 제가 개발한 JCore 라이브러리와 JNetwork 라이브러리를 활용하여
-만든 간단한 게임입니다.
+만든 간단한 예제 게임입니다.
 
 <br>
 
-### TankFighter 프로젝트 구조
+### TankFighter 프로젝트별 세부 구조
 
 #### <서버 구조>
-![서버 구조](Images/ServerStructure.png)
+![서버 구조](Images/TankFighter/ServerStructure.png)
 
 <br>
 
 #### <데이터베이스 구조>
-![데이터베이스 구조](Images/DatabaseStructure.png)
+![데이터베이스 구조](Images/TankFighter/DatabaseStructure.png)
 
 <br>
 
 #### <클라이언트 구조>
-![클라이언트 구조](Images/ClientStructure.png)
+![클라이언트 구조](Images/TankFighter/ClientStructure.png)
 
 <br>
 

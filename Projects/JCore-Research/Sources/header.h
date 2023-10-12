@@ -15,6 +15,7 @@
 #include <JCore/Container/HashSet.h>
 #include <JCore/Container/TreeMap.h>
 #include <JCore/Container/TreeSet.h>
+#include <JCore/Container/ListQueue.h>
 #include <JCore/Container/ArrayQueue.h>
 #include <JCore/Container/Vector.h>
 #include <JCore/Container/Properties.h>
@@ -38,6 +39,8 @@
 #include <JCore/Sync/SpinLock.h>
 #include <JCore/Sync/WaitHandle.h>
 #include <JCore/Sync/ConditionVariable.h>
+#include <JCore/Sync/ManualResetEvent.h>
+#include <JCore/Sync/AutoResetEvent.h>
 
 #include <JCore/Logger/ConsoleLogger.h>
 

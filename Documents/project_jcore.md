@@ -45,7 +45,7 @@
    * Thread
    * ThreadPool
    * Scheduler
- - 동기화
+ - 동기화 객체 [설명 보기](./project_jcore-feature-sync.md)
    * WaitHandle
    * AutoResetEvent
    * ManualResetEvent
@@ -56,7 +56,7 @@
    * Semaphore
    * UnusedLock
    * SpinLock
- - 패턴
+ - 패턴 [설명 보기](./project_jcore-feature-pattern.md)
    * Singleton
 
 <br>
