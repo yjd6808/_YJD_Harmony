@@ -10,6 +10,40 @@
     <ClCompile Include="..\Classes\TF\Client\Net\Connection\C_GAME.cpp">
       <Filter>Net\Connection</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Net\NetCore.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Net\Host\GameClient.cpp">
+      <Filter>Net\Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\LoginScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\BaseScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Layer\GridLayer.cpp">
+      <Filter>Game\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Const.cpp" />
+    <ClCompile Include="..\Classes\TF\Client\Util\Color.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\UI\PopUp.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\UI\TextButton.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\UI\ChatBox.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\UI\ColoredListView.cpp">
+      <Filter>Game\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Net\Send\S_GAME.cpp">
+      <Filter>Net\Send</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\TF\Client\Pch.h" />
@@ -19,6 +53,42 @@
     </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Net\Connection\C_GAME.h">
       <Filter>Net\Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Net\NetCore.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\TypeDef.h" />
+    <ClInclude Include="..\Classes\TF\Client\Net\Host\GameClient.h">
+      <Filter>Net\Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\LoginScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\BaseScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Layer\GridLayer.h">
+      <Filter>Game\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Const.h" />
+    <ClInclude Include="..\Classes\TF\Client\Util\Color.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\UI\PopUp.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\UI\TextButton.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\UI\ChatBox.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\UI\ColoredListView.h">
+      <Filter>Game\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\GameCoreHeader.h" />
+    <ClInclude Include="..\Classes\TF\Client\Net\Send\S_GAME.h">
+      <Filter>Net\Send</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -33,9 +103,6 @@
     </Filter>
     <Filter Include="Game\Scene">
       <UniqueIdentifier>{e14b586f-d8d0-44fd-a459-08b75e530ab7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Layer">
-      <UniqueIdentifier>{7a3f5bb4-6b09-4f48-aace-7c9d966efbbf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{615e4b71-b4c6-46c7-8305-214739b7a906}</UniqueIdentifier>
@@ -52,11 +119,14 @@
     <Filter Include="Net\Connection">
       <UniqueIdentifier>{13a2760a-2ec2-487e-801e-88a16f26629a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Contents">
-      <UniqueIdentifier>{23cff2ff-0d4b-4817-ae55-ffafa00dd97b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\UI">
       <UniqueIdentifier>{cc7b59b5-6da5-4440-990b-93a14520cf50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net\Host">
+      <UniqueIdentifier>{f256700f-65dd-4f6c-a078-032cdfa151ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Layer">
+      <UniqueIdentifier>{9b52248e-e5dd-4e40-a753-86578ab15025}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -8,5 +8,10 @@
 
 #pragma once
 
-
-
+class C_GAME
+{
+public:
+	static void ConnectedSynchronized();
+	static void ConnectFailedSynchronized(Int32U errorCode);
+	static void DisconnectedSynchronized();
+};

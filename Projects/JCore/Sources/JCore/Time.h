@@ -715,7 +715,7 @@ enum class TimeCounterAttribute
 {
 	None				= 0b0000,
 	FirstCheckFire		= 0b0001,	// 처음 ElapsedSeconds가 실행되면 무조건 true 반환
-	FirstElpasedFire	= 0b0010,	// 처음 ElapsedSeconds만큼 시간이 경과되었을때만 true를 반환
+	FirstElpasedFire	= 0b0010,	// 처음 ElapsedSeconds만큼 시간이 경과되었을때만 true를 반환 (이후로 무조건 DontFire플래그가 켜져서 무조건 false반환)
 	TimeOverReset		= 0b0100,	// Elapsed만큼 경과시 0으로 초기화
 	DontFire			= 0b1000	// ElapsedSeconds함수가 무조건 false를 반환(Fire 특성들이 있더라도 이게 우선 적용됨)
 };

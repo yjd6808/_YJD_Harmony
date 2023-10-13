@@ -1,19 +1,11 @@
 ﻿#include "Pch.h"
 #include "AppDelegate.h"
 
-#include <TF/Common/Const.h>
-
-// #include <TF/Scenes/LoginScene.h>
-// #include <TF/Network/GameClient.h>
-// #include <TF/Network/ClientConfiguration.h>
-
 #include <JNetwork/Winsock.h>
 
+#include <TF/Client/Game/Scene/LoginScene.h>
 
 using namespace JNetwork;
-
-// #define USE_AUDIO_ENGINE 1
-// #define USE_SIMPLE_AUDIO_ENGINE 1
 
 #if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
 #error "Don't use AudioEngine and SimpleAudioEngine at the same time. Please just select one in your game!"
@@ -35,6 +27,12 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate() 
 {
+
+    FinalizeGameCore();
+    FinalizeNetLogger();
+    FinalizeDefaultLogger();
+    Winsock::Finalize();
+
 #if USE_AUDIO_ENGINE
     AudioEngine::end();
 #elif USE_SIMPLE_AUDIO_ENGINE
@@ -56,6 +54,9 @@ void AppDelegate::initGLContextAttrs()
 bool AppDelegate::applicationDidFinishLaunching() {
 
     Winsock::Initialize(2, 2);
+    InitializeDefaultLogger();
+    InitializeNetLogger();
+    InitializeGameCore();
     CreateOpenGLWindow();
     CreateScene();
 
@@ -68,8 +69,8 @@ void AppDelegate::CreateOpenGLWindow() {
     auto glview = director->getOpenGLView();
 
     if (glview == nullptr) {
-        glview = GLViewImpl::createWithRect("TankFighter", { 0, 0, Const::ScreenWidth, Const::ScreenHeight }, 1.0f, true);
-        glview->setDesignResolutionSize(Const::ScreenWidth, Const::ScreenHeight, ResolutionPolicy::NO_BORDER);
+        glview = GLViewImpl::createWithRect("TankFighter", { 0, 0, Const::Window::Width, Const::Window::Height }, 1.0f, true);
+        glview->setDesignResolutionSize(Const::Window::Width, Const::Window::Height, ResolutionPolicy::NO_BORDER);
     }
 
     director->setOpenGLView(glview);
@@ -79,10 +80,11 @@ void AppDelegate::CreateOpenGLWindow() {
 }
 
 void AppDelegate::CreateScene() {
-    /*auto scene = WorldScene::get();
+
+    auto scene = LoginScene::create();
     scene->setAnchorPoint(Vec2::ZERO);
     DebugAssertMsg(scene, "월드씬 생성에 실패했습니다.");
-    Director::getInstance()->runWithScene(scene);*/
+    Director::getInstance()->runWithScene(scene);
 }
 
 // This function will be called when the app is inactive. Note, when receiving a phone call it is invoked.

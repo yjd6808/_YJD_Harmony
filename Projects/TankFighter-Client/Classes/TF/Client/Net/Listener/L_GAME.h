@@ -10,12 +10,25 @@
 
 #include <JNetwork/EventListener/ClientEventListener.h>
 
-class L_GAME : JNetwork::ClientEventListener
+#include <TF/Client/TypeDef.h>
+
+class L_GAME : public JNetwork::ClientEventListener
 {
+public:
+	using TLock = JCore::SpinLock;
+
+	L_GAME();
+	~L_GAME() override;
+protected:
 	void OnConnected(JNetwork::Session* session) override;
 	void OnConnectFailed(JNetwork::Session* session, Int32U errorCode) override;
 	void OnDisconnected(JNetwork::Session* session) override;
 	void OnSent(JNetwork::Session* session, JNetwork::ISendPacket* sentPacket, Int32UL sentBytes) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* recvPacket) override;
+public:
+	void SwapCommandQueue(JCORE_REF_OUT CommandQueue** target);
+private:
+	TLock m_Lock;
+	CommandQueue* m_pCommandQueue;	// 확장시 ThreadLocal로 두는게 효율적임
 };

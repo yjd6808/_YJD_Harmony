@@ -22,17 +22,10 @@ struct IRecvPacket
 	Int16U	GetPacketLength() const { return m_iPacketLen; }
 	Int16U	GetCommandCount() const { return m_iCommandCount; }
 
-	void ForEach(const JCore::Action<ICommand*>& consumer) {
-		int iCmdIndex = 0;
-		char* pCmdData = reinterpret_cast<char*>(this) + PacketHeaderSize_v;
+	void ForEach(const JCore::Action<ICommand*>& consumer);
 
-		while (iCmdIndex < m_iCommandCount) {
-			ICommand* pCurCmd = reinterpret_cast<ICommand*>(pCmdData);
-			consumer(pCurCmd);
-			pCmdData += pCurCmd->CmdLen;
-			iCmdIndex += 1;
-		}
-	}
+	// 삭제시 필히 char*로 캐스팅 후 delete[] 해줄 것
+	IRecvPacket* Clone() const;
 protected:
 	Int16U m_iCommandCount;
 	Int16U m_iPacketLen;

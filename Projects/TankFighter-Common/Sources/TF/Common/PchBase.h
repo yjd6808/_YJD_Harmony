@@ -74,5 +74,6 @@
 #include <JNetwork/IOCP/IOCPTask.h>
 #include <JNetwork/Packet/CommandParser.h>
 
-#include <Windows.h>
+#include <TF/Common/Command.h>
+#include <TF/Common/Const.h>
 

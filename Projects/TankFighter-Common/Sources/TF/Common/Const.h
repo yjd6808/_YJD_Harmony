@@ -10,39 +10,50 @@
 
 #include <TF/Common/Namespace.h>
 
-
-
-
 NS_CONST_BEGIN
 
-// ====================================================
-// constexpr
-// ====================================================
+constexpr int InvalidValue = -1;
 
-constexpr int InvalidValue				= -1;
+namespace Length
+{
+	constexpr int Id = 40;
+	constexpr int Pass = 40;
+	constexpr int Name = 40;
+	constexpr int Reason = 150;
+	constexpr int Message = 300;
+}
 
-constexpr int IdLength					= 40;
-constexpr int PassLength				= 40;
-constexpr int NameLength				= 40;
-constexpr int ReasonLength				= 150;
-constexpr int MessageLength				= 300;
+namespace Net
+{
+	namespace EndPoint
+	{
+		extern const char Bind[];
+		extern const char Connect[];
+	}
+}
 
-constexpr int RoomMaxPlayerCount		= 4;
 
+namespace Object
+{
+	namespace Tank
+	{
+		extern const float MoveSpeed;
+		extern const float RotationSpeed;
+		extern const float FireDelay;
+		extern const float BulletSpeed;
+	}
 
-// ====================================================
-// const
-// ====================================================
+	namespace Room
+	{
+		constexpr int MaxPlayerCount = 4;
+	}
 
-extern const float ScreenWidth;
-extern const float ScreenHeight;
+	namespace Map
+	{
+		extern const float Width;
+		extern const float Height;
+	}
+}
 
-extern const float MapWidth;
-extern const float MapHeight;
-
-extern const float TankMoveSpeed;
-extern const float TankRotationSpeed;
-extern const float TankFireDelay;
-extern const float TankBulletSpeed;
 
 NS_CONST_END

@@ -14,9 +14,10 @@ NS_JNET_BEGIN
 
 CommandBuffer::CommandBuffer(const JCore::MemoryPoolAbstractPtr& allocator, int bufferSize)
 	: BufferAbstract()
-	, m_Allocator(allocator)
 	, m_iRequestBufferSize(0)
+	, m_Allocator(allocator)
 {
+	DebugAssertMsg(m_Allocator != nullptr, "할당자가 없습니다.");
 	int iRealAlloc;
 	m_pBuffer = (char*)m_Allocator->DynamicPop(bufferSize, iRealAlloc);
 	m_iBufferSize = iRealAlloc;

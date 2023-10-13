@@ -7,3 +7,17 @@
 
 
 #include "Pch.h"
+#include "C_GAME.h"
+
+void C_GAME::ConnectedSynchronized() {
+	
+}
+
+void C_GAME::ConnectFailedSynchronized(Int32U errorCode) {
+
+}
+
+void C_GAME::DisconnectedSynchronized() {
+	
+}
+

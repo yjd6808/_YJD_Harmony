@@ -116,6 +116,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Packet\RecvPacket.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\JNetwork\Packet\SendHelper.cpp">
       <SubType>
       </SubType>

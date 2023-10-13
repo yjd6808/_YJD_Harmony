@@ -186,4 +186,11 @@
 		x = x ^ y;															\
 		return x;															\
 	}
+
+
+	#define JCORE_FORWARD_TEMPLATE(n)	JCORE_FORWARD_TEMPLATE_##n
+	#define JCORE_FORWARD_TEMPLATE_1	template <typename>
+	#define JCORE_FORWARD_TEMPLATE_2	template <typename, typename>
+	#define JCORE_FORWARD_TEMPLATE_3	template <typename, typename, typename>
+	#define JCORE_FORWARD_TEMPLATE_4	template <typename, typename, typename, typename>
 #endif

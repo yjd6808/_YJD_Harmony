@@ -30,7 +30,7 @@ struct TankMove
 struct CharacterInfo
 {
 	int CharacterUID = Const::InvalidValue;
-	char Name[Const::NameLength];
+	char Name[Const::Length::Name];
 	int Win;
 	int Lose;
 	int Kill;
@@ -51,12 +51,12 @@ struct ChannelInfo
 	Int8 ChannelUID = Const::InvalidValue;
 	int PlayerCount;
 	int MaxPlayerCount;
-	char Name[Const::NameLength];
+	char Name[Const::Length::Name];
 };
 
 struct RoomInfo
 {
-	char Name[Const::NameLength];
+	char Name[Const::Length::Name];
 	int RoomUID = Const::InvalidValue;
 	int PlayerCount;
 	int MaxPlayerCount;

@@ -10,7 +10,6 @@
 #include <JNetwork/Packet/Command.h>
 
 #include <TF/Common/Structure.h>
-#include <TF/Common/Configuration.h>
 
 // TCP Commands
 #define CMDID_CS_LOGIN									100
@@ -109,24 +108,24 @@
 
 
 STATIC_CMD_BEGIN(CS_Login, CMDID_CS_LOGIN)
-char Id[Const::IdLength]{};
-char Password[Const::PassLength]{};
+JCore::StaticString<Const::Length::Id> Id;
+JCore::StaticString<Const::Length::Pass> Password;
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_Login, CMDID_SC_LOGIN)
 int UID = Const::InvalidValue;
 bool Result;
-char Reason[Const::ReasonLength]{};
+JCore::StaticString<Const::Length::Reason> Reason;
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_Register, CMDID_CS_REGISTER)
-char Id[Const::IdLength]{};
-char Password[Const::PassLength]{};
+JCore::StaticString<Const::Length::Id> Id;
+JCore::StaticString<Const::Length::Pass> Password;
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_Register, CMDID_SC_REGISTER)
 bool Result;
-char Reason[Const::ReasonLength]{};
+char Reason[Const::Length::Reason]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_LoadChannelInfo, CMDID_CS_LOAD_CHANNEL_INFO)
@@ -144,7 +143,7 @@ STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_SelectChannel, CMDID_SC_SELECT_CHANNEL)
 bool Result{};
-char Reason[Const::ReasonLength]{};
+char Reason[Const::Length::Reason]{};
 int ChanneldUID{};
 STATIC_CMD_END()
 
@@ -161,23 +160,23 @@ DYNAMIC_CMD_END()
 STATIC_CMD_BEGIN(CS_CreateCharacter, CMDID_CS_CREATE_CHARACTER)
 int AccountUID = Const::InvalidValue;
 int ChannelUID = Const::InvalidValue;
-char CharacterName[Const::NameLength];
+char CharacterName[Const::Length::Name];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_CreateCharacter, CMDID_SC_CREATE_CHARACTER)
 bool Result{};
-char Reason[Const::ReasonLength]{};
+char Reason[Const::Length::Reason]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_DeleteCharacter, CMDID_CS_DELETE_CHARACTER)
 int AccountUID = Const::InvalidValue;
 int ChannelUID = Const::InvalidValue;
-char CharacterName[Const::NameLength];
+char CharacterName[Const::Length::Name];
 STATIC_CMD_END()
 
 
 STATIC_CMD_BEGIN(SC_DeleteCharacter, CMDID_SC_DELETE_CHARACTER)
-char Reason[Const::ReasonLength]{};
+char Reason[Const::Length::Reason]{};
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_SelectCharacter, CMDID_CS_SELECT_CHARACTER)
@@ -189,7 +188,7 @@ STATIC_CMD_END()
 STATIC_CMD_BEGIN(SC_SelectCharacter, CMDID_SC_SELECT_CHARACTER)
 int CharacterUID = Const::InvalidValue;
 bool Result{};
-char Reason[Const::ReasonLength]{};
+char Reason[Const::Length::Reason]{};
 STATIC_CMD_END()
 
 
@@ -201,14 +200,14 @@ STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_UpdateCharacterInfo, CMDID_SC_UPDATE_CHARACTER_INFO)
 bool Result{};
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 CharacterInfo Info{};
 STATIC_CMD_END()
 
 DYNAMIC_CMD_BEGIN(SC_UpdateRoomList, CMDID_SC_UPDATE_ROOMLIST, RoomInfo)
 int Count = 0;
 bool Result{};
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 RoomInfo Info[1];
 DYNAMIC_CMD_END()
 
@@ -218,13 +217,13 @@ CharacterInfo Info[1];
 DYNAMIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_CreateRoom, CMDID_CS_CREATE_ROOM)
-char RoomName[Const::NameLength];
+char RoomName[Const::Length::Name];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_CreateRoom, CMDID_SC_CREATE_ROOM)
 bool Result{};
 int RoomUID = Const::InvalidValue;
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 STATIC_CMD_END()
 
 
@@ -236,7 +235,7 @@ STATIC_CMD_END()
 STATIC_CMD_BEGIN(SC_JoinRoom, CMDID_SC_JOIN_ROOM)
 int RoomUID = Const::InvalidValue;
 bool Result{};
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 STATIC_CMD_END()
 
 
@@ -247,12 +246,12 @@ RoomCharacterInfo Info[1];
 DYNAMIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_AddFriend, CMDID_CS_ADD_FRIEND)
-char FriendName[Const::NameLength];
+char FriendName[Const::Length::Name];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_AddFriend, CMDID_SC_ADD_FRIEND)
 bool Result;
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_AddFriendRequest, CMDID_CS_ADD_FRIEND_REQUEST)
@@ -273,11 +272,11 @@ STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_DeleteFriend, CMDID_SC_DELETE_FRIEND)
 bool Result = false;				// 친구 삭제 성공/실패 여부
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_ServerMessage, CMDID_CS_SERVER_MESSAGE)
-char Message[Const::MessageLength];
+char Message[Const::Length::Message];
 STATIC_CMD_END()
 
 
@@ -290,7 +289,7 @@ STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_LoadRoomInfo, CMDID_SC_LOAD_ROOM_INFO)
 bool Result;
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 RoomInfo Info;
 STATIC_CMD_END()
 
@@ -310,7 +309,7 @@ STATIC_CMD_END()
 STATIC_CMD_BEGIN(SC_RoomGameStart, CMDID_SC_ROOM_GAME_START)
 RoomCharacterInfo IntruderInfo {};
 bool Result;
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 STATIC_CMD_END()
 
 
@@ -326,7 +325,7 @@ STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_RoomLeave, CMDID_SC_ROOM_LEAVE)
 bool Result;
-char Reason[Const::ReasonLength];
+char Reason[Const::Length::Reason];
 STATIC_CMD_END()
 
 
@@ -382,11 +381,11 @@ STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_ChatMessage, CMDID_CS_CHAT_MESSAGE)
 PlayerState PlayerState;
-char Message[Const::MessageLength];
+char Message[Const::Length::Message];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(SC_ChatMessage, CMDID_SC_CHAT_MESSAGE)
-char Message[Const::MessageLength];
+char Message[Const::Length::Message];
 STATIC_CMD_END()
 
 STATIC_CMD_BEGIN(CS_BattleFieldFire, CMDID_CS_BATTLE_FIELD_FIRE)

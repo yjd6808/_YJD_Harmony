@@ -78,6 +78,9 @@
     <ClCompile Include="..\Sources\JNetwork\Packet\SendHelper.cpp">
       <Filter>Packet</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JNetwork\Packet\RecvPacket.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JNetwork\Network.h" />

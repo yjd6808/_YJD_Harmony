@@ -10,5 +10,26 @@
 
 #include <TF/Common/PchBase.h>
 
-#include <cocos2d.h>
+#include <TF/Client/Const.h>
 
+#include <TF/Client/Util/Color.h>
+
+#include <TF/Client/Net/NetCore.h>
+
+#include <TF/Client/Game/UI/PopUp.h>
+#include <TF/Client/Game/UI/TextButton.h>
+#include <TF/Client/Game/UI/ColoredListView.h>
+#include <TF/Client/Game/UI/ChatBox.h>
+
+#include <cocos2d.h>
+#include <cocos/ui/CocosGUI.h>
+
+#define USING_NS_CCUI	using namespace cocos2d::ui
+
+namespace Core
+{
+	inline ::NetCore* NetCore;
+}
+
+void InitializeGameCore();
+void FinalizeGameCore();
