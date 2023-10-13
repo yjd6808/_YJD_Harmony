@@ -1,0 +1,42 @@
+@startuml
+
+'theme 목록 : https://plantuml.com/ko/theme'
+'skinparam 목록 : https://plantuml.com/ko/skinparam'
+skinparam ClassFontSize 20
+skinparam ClassFontColor Black
+skinparam ClassAttributeFontSize 15
+skinparam ArrowColor Black
+skinparam ArrowThickness 2
+
+hide empty methods
+hide empty fields
+
+rectangle DesignView1 {
+    rectangle Iocp쓰레드1
+    rectangle Iocp쓰레드2
+    rectangle Iocp쓰레드3
+    rectangle Iocp쓰레드4
+
+    rectangle Iocp쓰레드큐1
+
+    rectangle 메인쓰레드큐1
+
+    circle 커맨드처리
+    
+    Iocp쓰레드1 -d-> Iocp쓰레드큐1
+    Iocp쓰레드2 -d-> Iocp쓰레드큐1
+    Iocp쓰레드3 -d-> Iocp쓰레드큐1
+    Iocp쓰레드4 -d-> Iocp쓰레드큐1
+
+    메인쓰레드큐1 <.u.> Iocp쓰레드큐1: 스왑
+
+    메인쓰레드큐1 -d-> 커맨드처리
+
+    Iocp쓰레드1 -[hidden]r-> Iocp쓰레드2
+    Iocp쓰레드2 -[hidden]r-> Iocp쓰레드3
+    Iocp쓰레드3 -[hidden]r-> Iocp쓰레드4
+}
+
+
+
+@enduml

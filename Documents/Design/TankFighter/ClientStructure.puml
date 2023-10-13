@@ -1,0 +1,114 @@
+@startuml
+
+'theme 목록 : https://plantuml.com/ko/theme'
+'skinparam 목록 : https://plantuml.com/ko/skinparam'
+skinparam ClassFontSize 20
+skinparam ClassFontColor Black
+skinparam ClassAttributeFontSize 15
+skinparam ArrowColor Black
+skinparam ArrowThickness 2
+
+hide empty methods
+hide empty fields
+
+note top of DesignView
+목표. 대략적인 클래스 구조를 설계 한 후 코드 작성을 해보도록 하자.
+end note
+
+rectangle DesignView {
+    rectangle Scene {
+        abstract BaseScene {
+            씬 전환시 각씬들이 공통적으로 수행하는 작업들을 수행한다
+            + void Update()
+            + void InitUI() virtual
+        }
+
+        class LoginScene implements BaseScene
+        class ChannelSelectScene implements BaseScene
+        class ChannelScene implements BaseScene
+        class LobbyScene implements BaseScene
+        class RoomScene implements BaseScene
+        class BattleFieldScene implements BaseScene
+    } 
+
+    rectangle Net {
+        class NetCore {
+            동기화된 패킷처리
+            + void Update()
+            --
+            R_GAME의 커맨드 큐와 매 프레임마다 
+            스왑하여 이전 프레임동안 쌓인 패킷들을 
+            몰아서 처리하도록 한다.
+            - CommandQueuePtr
+        } 
+
+        class GameClient {
+
+        }
+
+        class LISTENER_GAME {
+            연결시 로그인 정보 전송
+            # void OnConnected();
+            연결 끊길 시 강제로 로그인씬 이동
+            # void OnDisconnected();
+            # void OnReceived();
+            --
+            수신용 커맨드 큐
+            - CommandQueuePtr
+        }
+
+        class RECV_GAME {
+            수신 커맨드 파싱
+            --
+            + SC_Login()
+        }
+
+        class SEND_GAME {
+            커맨드 송신 기능 정의
+            --
+            + SC_Login
+        }
+
+        NetCore -d-> GameClient
+
+        '위치 고정용도'
+        GameClient .[hidden]d.> LISTENER_GAME
+        GameClient .[hidden]d.> RECV_GAME
+        GameClient .[hidden]d.> SEND_GAME
+    }
+
+
+    rectangle Entity {
+        class Tank 
+        class Player
+        class Bullet
+
+        Player -d-> Tank
+        Tank ..> Bullet
+    }
+
+    class RoomManager<<Singleton>> {
+        + GetRoom(int id)
+        + GetRoomList()
+        --
+        - RoomList
+    }
+
+    class Room {
+        - Name
+        - Id
+        - PlayerList
+    }
+
+    RoomManager *-d-> Room
+    Room *-r-> Player
+
+    BaseScene --> NetCore
+
+    RoomScene ..> RoomManager
+}
+
+
+
+
+@enduml

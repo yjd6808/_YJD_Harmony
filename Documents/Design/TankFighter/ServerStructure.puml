@@ -1,0 +1,88 @@
+@startuml
+
+'theme 목록 : https://plantuml.com/ko/theme'
+'skinparam 목록 : https://plantuml.com/ko/skinparam'
+skinparam ClassFontSize 20
+skinparam ClassFontColor Black
+skinparam ClassAttributeFontSize 15
+skinparam ArrowColor Black
+skinparam ArrowThickness 2
+
+hide empty methods
+hide empty fields
+
+class NetCore {
+    + void ProcessGameLoop()
+    + void Update()
+}
+
+note left
+BattleFiledRoutine {
+    if (State == PlayWait) StepPlayWait()
+    if (State == Playing) StepPlaying()
+    if (State == PlayEndWait) StepPlayEndWait()
+}
+end note
+
+class GameServer {
+
+}
+
+class GameSession {
+
+}
+
+class Routine extends IUpdatable {
+    + Routine(int interval)
+    --
+    + void Update() override;
+    + virtual void OnLoop() = 0;
+    --
+    - Name
+    - State
+}
+
+class ChannelManager {
+    + Initialize()
+    + void Update() override;
+    --
+    - List<Player>
+}
+
+class RoutineManager { 
+    BattleFieldRoutine
+    --
+    + Initialize()
+    + void Update() override;
+}
+
+class TimeManager {
+
+}
+
+class Channel {
+    + void Update() override;
+    --
+    - Id
+    - List<Player>
+}
+
+class Room {
+    --
+    - Id
+    - State
+    - List<Player>
+}
+
+class Player<<ObjectPool>> {
+
+}
+
+NetCore --> ChannelManager
+
+GameServer *-d-> GameSession
+GameSession .d.> Player
+
+
+
+@enduml
