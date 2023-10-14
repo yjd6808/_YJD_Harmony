@@ -113,6 +113,7 @@ bool Session::SendAsync(ISendPacket* packet) {
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
 			_NetLogError_("SendAsync 실패 (%u)", uiErrorCode);
+			packet->Release();
 			pOverlapped->Release();
 			return false;
 		}
@@ -172,6 +173,7 @@ bool Session::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination) 
 		Int32U uiErrorCode = Winsock::LastError();
 		if (uiErrorCode != WSA_IO_PENDING) {
 			DebugAssertMsg(false, "SendToAsync 실패 (%d)", uiErrorCode);
+			packet->Release();
 			pOverlapped->Release();
 			return false;
 		}
