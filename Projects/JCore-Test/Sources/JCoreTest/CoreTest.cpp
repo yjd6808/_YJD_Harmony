@@ -8,6 +8,8 @@
 #include <JCore/Utils/Console.h>
 #include <JCore/Random.h>
 
+#include "JCore/Container/PropertyStatics.h"
+
 int R(int min, int max) {
 	return Random::GenerateInt(min, max);
 }
@@ -29,11 +31,12 @@ TEST(JCoreTest, DeleteArraySafe) {
 
 #endif // TEST_CoreTest == ON
 
-
 // 원래 main 함수 필요없는데
 // 전 프로젝트 UTF8로 교체함에따라 main 함수 명시적으로 추가해줌
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	Random::EngineInitialize();
-    return RUN_ALL_TESTS();
+	const int ret = RUN_ALL_TESTS();
+	PropertyStatics::Finalize();
+    return ret;
 }

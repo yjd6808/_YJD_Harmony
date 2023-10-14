@@ -34,6 +34,7 @@
 #include <JCore/Encoding/CodePage.h>
 
 #include <JCore/Pool/IndexedMemoryPool.h>
+#include <JCore/Pool/AccessibleObjectPool.h>
 #include <JCore/Pool/ObjectPool.h>
 
 #include <JCore/Sync/SpinLock.h>
@@ -56,9 +57,16 @@
 #include <JCore/Threading/ThreadLocal.h>
 #include <JCore/Threading/Scheduler.h>
 
-
+#include <vector>
+#include <map>
+#include <set>
+#include <list>
+#include <iostream>
+#include <sstream>
+#include <unordered_map>
 
 USING_NS_JC;
 USING_NS_STD;
+
 
 

@@ -6,13 +6,6 @@
  */
 
 
-
- /*
-	 작성자 : 윤정도
-	 오토 오브젝트 테스트
- */
-
-
 #include <JCoreTest/CoreTest.h>
 #include <JCore/Pool/BinarySearchMemoryPool.h>
 #include <JCore/Pool/IndexedMemoryPool.h>

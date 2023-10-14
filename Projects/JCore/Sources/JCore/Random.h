@@ -19,12 +19,22 @@ struct Random final
 	Random();
 
 	template <typename T>
-	T Generate(T inclusiveBegin, T inclusiveEnd) {
+	static T Generate(T inclusiveBegin, T inclusiveEnd) {
 		if (inclusiveBegin > inclusiveEnd) {
 			throw InvalidArgumentException("begin > end 되면 안댐");
 		}
 
 		std::uniform_int_distribution<T> dist(inclusiveBegin, inclusiveEnd);
+		return dist(ms_DefaultRandomEngine);
+	}
+
+	template <typename T>
+	static T GenerateF(T inclusiveBegin, T inclusiveEnd) {
+		if (inclusiveBegin > inclusiveEnd) {
+			throw InvalidArgumentException("begin > end 되면 안댐");
+		}
+
+		std::uniform_real_distribution<T> dist(inclusiveBegin, inclusiveEnd);
 		return dist(ms_DefaultRandomEngine);
 	}
 
@@ -60,7 +70,11 @@ struct Random final
 	}
 
 	static char GenerateAlphabat();
-	
+
+	// 파라메터: 백분율로 표현된 확률
+	// ex) Chance(70.0f) -> 70% 확률로 true 반환
+	static bool Chance(float percentProbability);
+	static bool Chance(double percentProbability);
 	static void EngineInitialize();
 private:
 	inline static bool ms_bInitialized;

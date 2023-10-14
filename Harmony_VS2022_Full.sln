@@ -156,10 +156,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TankFighter", "TankFighter", "{FE9C09C7-514E-4385-923D-5C39BCD0D52D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Common", "Projects\TankFighter-Common\Project\TankFighter-Common.vcxproj", "{6F539DD7-E908-4AE4-BDD1-57704B859C70}"
+	ProjectSection(ProjectDependencies) = postProject
+		{16059BC9-855E-4B24-B3E9-C885EC453CEC} = {16059BC9-855E-4B24-B3E9-C885EC453CEC}
+		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Server", "Projects\TankFighter-Server\Project\TankFighter-Server.vcxproj", "{E55749CA-DA61-497B-BCA9-FC2D764B80EB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F539DD7-E908-4AE4-BDD1-57704B859C70} = {6F539DD7-E908-4AE4-BDD1-57704B859C70}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Client", "Projects\TankFighter-Client\Projects\TankFighter-Client.vcxproj", "{76A39BB2-9B84-4C65-98A5-654D86B86F2A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F539DD7-E908-4AE4-BDD1-57704B859C70} = {6F539DD7-E908-4AE4-BDD1-57704B859C70}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteinsGate-Tools.Research", "Projects\SteinsGate-Tools.Research\Project\SteinsGate-Tools.Research.csproj", "{C9B670EF-6003-4513-B40D-1AF66F6F73A1}"
 EndProject

@@ -647,6 +647,9 @@
     <ClInclude Include="..\Sources\JCore\Container\PropertiesIterator.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\JCore\Pool\AccessibleObjectPool.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\Sources\JCore\Natvis\ListQueue.natvis">

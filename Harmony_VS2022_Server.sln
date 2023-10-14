@@ -48,8 +48,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TankFighter", "TankFighter", "{58387FAE-067B-48E0-840B-9B98C7607D1B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Common", "Projects\TankFighter-Common\Project\TankFighter-Common.vcxproj", "{6F539DD7-E908-4AE4-BDD1-57704B859C70}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5ADBA306-F356-4E21-B037-9EF477DC321E} = {5ADBA306-F356-4E21-B037-9EF477DC321E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TankFighter-Server", "Projects\TankFighter-Server\Project\TankFighter-Server.vcxproj", "{E55749CA-DA61-497B-BCA9-FC2D764B80EB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F539DD7-E908-4AE4-BDD1-57704B859C70} = {6F539DD7-E908-4AE4-BDD1-57704B859C70}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

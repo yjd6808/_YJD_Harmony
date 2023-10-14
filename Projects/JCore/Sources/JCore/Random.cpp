@@ -50,5 +50,13 @@ char Random::GenerateAlphabat() {
 	return s_Alphabats[GenerateInt(0, sizeof s_Alphabats)];
 }
 
+bool Random::Chance(float percentProbability) {
+	return GenerateF(0.0f, 100.0f) <= percentProbability;
+}
+
+bool Random::Chance(double percentProbability) {
+	return GenerateF(0.0, 100.0) <= percentProbability;
+}
+
 
 NS_JC_END

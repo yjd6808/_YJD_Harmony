@@ -67,7 +67,7 @@ void ServerInfoLoader::readCenterInfo(Json::Value& serverRoot, ServerProcessInfo
 	info.ProcessType = ServerProcessType::Center;
 	info.Name = "중앙";
 	info.BindInterServerUdp = szBindInterServerUdp;
-	info.BindInterServerTcp = SGEndPoint::Default;
+	info.BindInterServerTcp = SGEndPoint::Invalid;
 	info.BindTcp = szBindCenterTcp;
 	info.BindUdp = szBindCenterUdp;
 	info.RemoteEP = szRemoteCenter;

@@ -140,6 +140,9 @@
     <ClCompile Include="..\Sources\JCoreTest\Primitives\BitFlagTest.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCoreTest\Pool\AccessibleObjectPoolTest.cpp">
+      <Filter>Pool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCoreTest\CoreTest.h" />
