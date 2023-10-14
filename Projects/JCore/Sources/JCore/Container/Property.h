@@ -27,7 +27,7 @@ struct Property : PropertyBase, ObjectPool<Property<T>>
 	PropertyType_t GetType() const override { return Type; }
 	const char* GetTypeName() const override { return PropertyType::Name[Type]; }
 	int* GetDecayedValue() const override { return (int*)&Value; }
-	void Operate(PropertyType_t argumentType, int* decayedArgument, PropertyBinaryOperatorType_t operatorType) override {
+	void Operate(PropertyType_t argumentType, int* decayedArgument, PropertyBinaryOperatorType_t operatorType) const override {
 		PropertyStatics::BinaryOperatorSelectors[Type][argumentType]->Select((int*)&Value, decayedArgument, operatorType);
 	}
 	void SetInitialValue() override {

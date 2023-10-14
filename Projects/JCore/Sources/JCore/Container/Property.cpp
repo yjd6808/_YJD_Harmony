@@ -10,6 +10,7 @@
 
 NS_JC_BEGIN
 
+Property<bool>		Property<bool>		::Default;
 Property<Int8>		Property<Int8>		::Default;
 Property<Int8U>		Property<Int8U>		::Default;
 Property<Int16>		Property<Int16>		::Default;

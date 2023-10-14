@@ -17,6 +17,7 @@ void LogLossDataPossible(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryO
 void LogImpossibleOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
 void LogUnsafeOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
 void LogUnknownOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
+void LogOperation(PropertyType_t lhs, PropertyType_t rhs, PropertyBinaryOperatorType_t operatorType);
 
 template <typename Ty>
 struct IPropertyValueBinaryOperator;
@@ -57,6 +58,7 @@ struct JCORE_NOVTABLE IPropertyValueBinaryOperator
 	virtual void Operate(Ty& lhs, const Int32UL& rhs)	= 0;
 	virtual void Operate(Ty& lhs, const Int16& rhs)		= 0;
 	virtual void Operate(Ty& lhs, const Int16U& rhs)	= 0;
+	virtual void Operate(Ty& lhs, const bool& rhs)		= 0;
 	virtual void Operate(Ty& lhs, const Int8& rhs)		= 0;
 	virtual void Operate(Ty& lhs, const Int8U& rhs)		= 0;
 	virtual void Operate(Ty& lhs, const Float& rhs)		= 0;

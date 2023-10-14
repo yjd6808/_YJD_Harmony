@@ -25,6 +25,10 @@
     <ClCompile Include="..\Sources\JCore\Container\PropertyFactory.cpp" />
     <ClCompile Include="..\Sources\JCore\Container\PropertyOperator.cpp" />
     <ClCompile Include="..\Sources\JCore\Container\PropertyOperators.cpp" />
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_BOOL.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_DOUBLE.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

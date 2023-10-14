@@ -17,6 +17,7 @@
 NS_JC_BEGIN
 
 JCORE_SENUM_BEGIN(PropertyType)
+Bool,
 Int8,
 Int8U,
 Int16,
@@ -36,6 +37,7 @@ Unknown,
 Max
 JCORE_SENUM_MIDDLE(PropertyType)
 static constexpr const char* Name[Max]{
+	"Bool",
 	"Int8",
 	"Int8U",
 	"Int16",
@@ -65,6 +67,7 @@ static constexpr bool IsIntegerType[Max]{
 	true,
 	true,
 	true,
+	true,
 	false,
 	false,
 	false,
@@ -74,6 +77,7 @@ static constexpr bool IsIntegerType[Max]{
 };
 
 static constexpr bool IsFloatType[Max]{
+	false,
 	false,
 	false,
 	false,
@@ -106,12 +110,14 @@ static constexpr bool IsNumericType[Max]{
 	true,
 	true,
 	true,
+	true,
 	false,
 	false,
 	false
 };
 
 static constexpr bool IsStringType[Max]{
+	false,
 	false,
 	false,
 	false,
@@ -132,6 +138,7 @@ static constexpr bool IsStringType[Max]{
 
 // CharPtr, Unknwon 제외
 static constexpr bool CanBeLeftOperand[Max]{
+	true,
 	true,
 	true,
 	true,
@@ -167,11 +174,13 @@ static constexpr bool CanBeRightOperand[Max]{
 	true,
 	true,
 	true,
+	true,
 	false
 };
 
 // CharPtr, Unknwon 제외
 static constexpr bool CanConstruct[Max]{
+	true,
 	true,
 	true,
 	true,
@@ -192,6 +201,7 @@ static constexpr bool CanConstruct[Max]{
 
 // CharPtr만
 static constexpr bool IsPtrType[Max]{
+	false,
 	false,
 	false,
 	false,

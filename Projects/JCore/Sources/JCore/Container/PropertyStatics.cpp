@@ -12,6 +12,7 @@
 NS_JC_BEGIN
 
 extern void InitializePropertyOperatorSelectors();
+extern void InitializePropertyOperatorBool();
 extern void InitializePropertyOperatorInt8();
 extern void InitializePropertyOperatorInt8U();
 extern void InitializePropertyOperatorInt16();
@@ -51,6 +52,7 @@ void PropertyStatics::Initialize() {
 	InitializePropertyOperatorSelectors();
 	InitializePropertyOperatorUnary();
 
+	InitializePropertyOperatorBool();
 	InitializePropertyOperatorInt8();
 	InitializePropertyOperatorInt8U();
 	InitializePropertyOperatorInt16();
@@ -79,6 +81,7 @@ void PropertyStatics::Finalize() {
 	}
 
 	for (int i = 0; i < PropertyBinaryOperatorType::Max; ++i) {
+		JCORE_DELETE_SAFE(BinaryOperators_bool[i]);
 		JCORE_DELETE_SAFE(BinaryOperators_Int8[i]);
 		JCORE_DELETE_SAFE(BinaryOperators_Int8U[i]);
 		JCORE_DELETE_SAFE(BinaryOperators_Int16[i]);
@@ -103,6 +106,7 @@ void PropertyStatics::Finalize() {
 		JCORE_DELETE_SAFE(Factorys[i]);
 	}
 
+	Property<bool>::FreeAllObjects();
 	Property<Int8>::FreeAllObjects();
 	Property<Int8U>::FreeAllObjects();
 	Property<Int16>::FreeAllObjects();

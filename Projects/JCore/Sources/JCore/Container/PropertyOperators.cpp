@@ -14,6 +14,7 @@
 
 #include <JCore/Container/PropertyOperators_Unary.cpp>
 #include <JCore/Container/PropertyOperators_Selectors.cpp>
+#include <JCore/Container/PropertyOperators_Bool.cpp>
 #include <JCore/Container/PropertyOperators_Int8.cpp>
 #include <JCore/Container/PropertyOperators_Int8U.cpp>
 #include <JCore/Container/PropertyOperators_Int16.cpp>

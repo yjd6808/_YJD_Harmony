@@ -230,6 +230,9 @@
     <ClCompile Include="..\Sources\JCore\Container\PropertyStatics.cpp">
       <Filter>Container\RelatedProperty</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\JCore\Container\PropertyOperators_BOOL.cpp">
+      <Filter>Container\RelatedProperty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\JCore\Core.h" />

@@ -20,7 +20,7 @@ struct PropertyBase
 	virtual const char* GetTypeName() const = 0;
 	virtual int* GetDecayedValue() const = 0;
 
-	virtual void Operate(PropertyType_t argumentType, int* decayedArgument, PropertyBinaryOperatorType_t operatorType) = 0;
+	virtual void Operate(PropertyType_t argumentType, int* decayedArgument, PropertyBinaryOperatorType_t operatorType) const = 0;
 
 	static void LogGettingMismatchedType(PropertyType_t lhs, PropertyType_t rhs);
 	static void LogConversionFailed(PropertyType_t to, PropertyType_t from);
@@ -85,6 +85,37 @@ struct PropertyBase
 		return *this;
 	}
 
+	bool operator==(const PropertyBase& other) const {
+		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Equal);
+		return PropertyStatics::ComparisonResult;
+	}
+
+	bool operator!=(const PropertyBase& other) const {
+		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::NotEqual);
+		return PropertyStatics::ComparisonResult;
+	}
+
+	bool operator>(const PropertyBase& other) const {
+		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Greator);
+		return PropertyStatics::ComparisonResult;
+	}
+
+	bool operator<(const PropertyBase& other) const {
+		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::Less);
+		return PropertyStatics::ComparisonResult;
+	}
+
+	bool operator<=(const PropertyBase& other) const {
+		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::LessEqual);
+		return PropertyStatics::ComparisonResult;
+	}
+
+	bool operator>=(const PropertyBase& other) const {
+		Operate(other.GetType(), other.GetDecayedValue(), PropertyBinaryOperatorType::GreatorEqual);
+		return PropertyStatics::ComparisonResult;
+	}
+
+
 	PropertyBase& operator++();
 	PropertyBase& operator--();
 	Int64 operator++(int);
@@ -114,8 +145,9 @@ PropertyBase& operator##op(PropertyBase& lhs, const TVal& rhs) {																
 	return lhs;																														\
 }
 
+
 #define SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(op)														\
-template <typename TVal>																											\
+template <typename TVal, JCore::DefaultEnableIf_t<!IsSameType_v<NaturalType_t<TVal>, PropertyBase>> = nullptr>					\
 bool operator##op(PropertyBase& lhs, const TVal& rhs) {																				\
 	using TDesc = PropertyTypeDescription<TVal>;																					\
 	static_assert(PropertyType::CanBeRightOperand[TDesc::Type], "... right operand cannot perfrom operation:" #op);					\
@@ -206,12 +238,14 @@ SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(*=)
 SG_PROPERTY_GLOBAL_EQUAL_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(%=)
 
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(==)
+SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(!=)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(>=)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(<=)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(<)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_LEFT_OPERAND(>)
 
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(==)
+SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(!=)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(>=)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(<=)
 SG_PROPERTY_GLOBAL_COMPARISON_OPERATOR_IMPLEMENATION_RIGHT_OPERAND(<)

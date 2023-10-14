@@ -21,7 +21,8 @@ struct PropertyValueBinaryOperatorSelector : IPropertyValueBinaryOperatorSelecto
 	using ArgTy = typename PropertyDataTypeGetter<ArgumentType>::Ty;
 
 	// 올바른 타입정보를 얻지 못한 경우
-	static_assert(!IsVoidType_v<Ty>&& !IsVoidType_v<ArgTy>, "... ty and argty must not be void type");
+	static_assert(!IsVoidType_v<Ty>, "... ty must not be void type");
+	static_assert(!IsVoidType_v<ArgTy>, "... argty must not be void type");
 
 	void Select(int* decayedLhs, int* decayedRhs, PropertyBinaryOperatorType_t binaryOperator) override {
 		Ty* lhs = (Ty*)decayedLhs;
@@ -29,7 +30,8 @@ struct PropertyValueBinaryOperatorSelector : IPropertyValueBinaryOperatorSelecto
 		if constexpr (ArgumentType == PropertyType::CharPtr) {
 			ArgTy rhs = (ArgTy)decayedRhs;
 
-			if constexpr (Type == PropertyType::Int8)			PropertyStatics::BinaryOperators_Int8[binaryOperator]->Operate(*lhs, rhs);
+			if constexpr (Type == PropertyType::Bool)			PropertyStatics::BinaryOperators_bool[binaryOperator]->Operate(*lhs, rhs);
+			else if constexpr (Type == PropertyType::Int8)		PropertyStatics::BinaryOperators_Int8[binaryOperator]->Operate(*lhs, rhs);
 			else if constexpr (Type == PropertyType::Int8U)		PropertyStatics::BinaryOperators_Int8U[binaryOperator]->Operate(*lhs, rhs);
 			else if constexpr (Type == PropertyType::Int16)		PropertyStatics::BinaryOperators_Int16[binaryOperator]->Operate(*lhs, rhs);
 			else if constexpr (Type == PropertyType::Int16U)	PropertyStatics::BinaryOperators_Int16U[binaryOperator]->Operate(*lhs, rhs);
@@ -45,7 +47,8 @@ struct PropertyValueBinaryOperatorSelector : IPropertyValueBinaryOperatorSelecto
 			else if constexpr (Type == PropertyType::String)	PropertyStatics::BinaryOperators_String[binaryOperator]->Operate(*lhs, rhs);
 		} else {
 			ArgTy* rhs = (ArgTy*)decayedRhs;
-			if constexpr (Type == PropertyType::Int8)			PropertyStatics::BinaryOperators_Int8[binaryOperator]->Operate(*lhs, *rhs);
+			if constexpr (Type == PropertyType::Bool)			PropertyStatics::BinaryOperators_bool[binaryOperator]->Operate(*lhs, *rhs);
+			else if constexpr (Type == PropertyType::Int8)		PropertyStatics::BinaryOperators_Int8[binaryOperator]->Operate(*lhs, *rhs);
 			else if constexpr (Type == PropertyType::Int8U)		PropertyStatics::BinaryOperators_Int8U[binaryOperator]->Operate(*lhs, *rhs);
 			else if constexpr (Type == PropertyType::Int16)		PropertyStatics::BinaryOperators_Int16[binaryOperator]->Operate(*lhs, *rhs);
 			else if constexpr (Type == PropertyType::Int16U)	PropertyStatics::BinaryOperators_Int16U[binaryOperator]->Operate(*lhs, *rhs);

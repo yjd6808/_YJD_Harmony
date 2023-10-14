@@ -18,6 +18,7 @@ struct PropertyStatics
 	static void Initialize();
 	static void Finalize();
 
+	inline static IPropertyValueBinaryOperator<bool>*		BinaryOperators_bool		[PropertyBinaryOperatorType::Max]{};
 	inline static IPropertyValueBinaryOperator<Int8>*		BinaryOperators_Int8		[PropertyBinaryOperatorType::Max]{};
 	inline static IPropertyValueBinaryOperator<Int8U>*		BinaryOperators_Int8U		[PropertyBinaryOperatorType::Max]{};
 	inline static IPropertyValueBinaryOperator<Int16>*		BinaryOperators_Int16		[PropertyBinaryOperatorType::Max]{};
