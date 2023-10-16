@@ -13,6 +13,7 @@
 NS_CONST_BEGIN
 
 constexpr int InvalidValue = -1;
+constexpr int Success = 0;
 
 namespace Length
 {
@@ -25,35 +26,42 @@ namespace Length
 
 namespace Net
 {
-	namespace EndPoint
+	namespace Server
 	{
-		extern const char Bind[];
-		extern const char Connect[];
+		extern const char GameBindEndPoint[];
+		extern const char GameConnectEndPoint[];
 	}
 }
 
-
-namespace Object
+namespace Channel
 {
-	namespace Tank
-	{
-		extern const float MoveSpeed;
-		extern const float RotationSpeed;
-		extern const float FireDelay;
-		extern const float BulletSpeed;
-	}
-
-	namespace Room
-	{
-		constexpr int MaxPlayerCount = 4;
-	}
-
-	namespace Map
-	{
-		extern const float Width;
-		extern const float Height;
-	}
+	extern const int PoolSize;			// 가능한 최대 채널 갯수
 }
+
+namespace Room
+{
+	extern const int PoolSize;			// 가능한 최대 방 갯수
+
+	constexpr int MaxPlayerCount = 4;
+}
+
+namespace Map
+{
+	extern const float Width;
+	extern const float Height;
+}
+
+namespace Tank
+{
+	extern const float MoveSpeed;
+	extern const float RotationSpeed;
+	extern const float FireDelay;
+	extern const float BulletSpeed;
+}
+
+
+
+
 
 
 NS_CONST_END

@@ -131,7 +131,7 @@ struct __struct__ : HostStaticCommand {															\
 	static constexpr const char* Name() { return #__struct__; }									\
 	static constexpr int Command() { return __cmd__; }											
 
-#define HOST_STATIC_CMD_END(__struct__) };
+#define HOST_STATIC_CMD_END };
 
 
 #define HOST_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)												\
@@ -146,7 +146,7 @@ struct __struct__ : HostDynamicCommand {																					\
 	static constexpr const char* Name() { return #__struct__; }																\
 	static constexpr int Command() { return __cmd__; }																		
 
-#define HOST_DYNAMIC_CMD_END(__struct__)	};
+#define HOST_DYNAMIC_CMD_END	};
 
 
 #define RELAY_STATIC_CMD_BEGIN(__struct__, __cmd__)												\
@@ -160,7 +160,7 @@ struct __struct__ : RelayStaticCommand {														\
 	static constexpr int Size(int count = 1) { return sizeof(__struct__); }						\
 	static constexpr const char* Name() { return #__struct__; }									\
 	static constexpr int Command() { return __cmd__; }											
-#define RELAY_STATIC_CMD_END(__struct__) };
+#define RELAY_STATIC_CMD_END };
 
 
 #define RELAY_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)											\
@@ -175,4 +175,4 @@ struct __struct__ : RelayDynamicCommand {																					\
 	static constexpr const char* Name() { return #__struct__; }																\
 	static constexpr int Command() { return __cmd__; }																		
 
-#define RELAY_DYNAMIC_CMD_END(__struct__)	};
+#define RELAY_DYNAMIC_CMD_END	};

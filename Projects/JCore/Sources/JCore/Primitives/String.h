@@ -23,11 +23,12 @@ class Vector;
 
 class String final
 {
-public:
-	
 	inline static const int DefaultBufferSize = 32;	// 초기 버퍼의 크기
 	inline static const int ExpandingFactor = 2;		// 더해준 문자열과 기존 문자열의 길이를 합쳤을 때 용량을 초과할 경우 배열 크기를 몇배 확장시켜줄지
-	inline static const char* EmptyString = "";
+	inline static const char* EmptySource = "";
+public:
+	static String Empty;
+	static String Null;
 
 	String();
 	String(const int capacity);
@@ -45,7 +46,7 @@ public:
 	int LengthWithNull() const { return m_iLen + 1; }
 	void SetLength(int len) { m_iLen = len; }
 	void ExchangeSource(char* src, int len);
-	bool Empty() const { return m_iLen == 0; }
+	bool IsEmpty() const { return m_iLen == 0; }
     bool IsNull() const { return m_pBuffer == nullptr; }
 	bool IsValidIndex(const int idx) const { return idx >= 0 || idx < m_iLen; }
 	bool IsValidIndexRange(const int startIdx, const int endIdx) const {

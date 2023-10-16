@@ -15,7 +15,7 @@ NS_JNET_BEGIN
 
 const char* CommandNameDictionary::Get(Cmd_t cmd) const {
 	if (!m_CommandNameMap.Exist(cmd)) {
-		return "";
+		return "Unknown";
 	}
 
 	return m_CommandNameMap.Get(cmd);

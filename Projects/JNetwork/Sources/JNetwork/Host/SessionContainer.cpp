@@ -92,7 +92,7 @@ void SessionContainer::DisconnectAll() {
 
 		notifier.Progress(i + 1);
 	}
-	
+	_NetLogDebug_("모든 세션 연결종료 완료");
 }
 
 void SessionContainer::Clear() {
@@ -108,6 +108,7 @@ void SessionContainer::Clear() {
 	}
 
 	m_iSize = 0;
+	_NetLogDebug_("모든 세션 삭제완료");
 }
 
 void SessionContainer::ForEach(Action<Session*> fn) {

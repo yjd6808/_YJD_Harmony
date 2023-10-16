@@ -20,6 +20,15 @@ USING_NS_CCUI;
 #define BUTTON_POPUP_YES		3
 #define BUTTON_POPUP_NO 		4
 
+PopUp* PopUp::createInRunningScene(const char* text, bool bgClickable, std::function<void()> callback) {
+	auto pScene = Director::getInstance()->getRunningScene();
+	if (pScene == nullptr) {
+		_LogWarn_("%s", text);
+		return nullptr;
+	}
+	return createInParent(text, pScene, bgClickable, callback);
+}
+
 PopUp* PopUp::createInParent(const char * text, Node* parent, bool bgClickable, std::function<void()> callback)
 {
 	PopUp *ret = new (std::nothrow) PopUp();

@@ -32,6 +32,15 @@ StatementType MysqlQuery::ParseStatement(const String& statement) {
 	return eStatement;
 }
 
+Int32U MysqlQuery::GetRowCount() const {
+
+	if (!IsSuccess()) {
+		_LogError_("%s 쿼리 수행이 실패하여 영향받은 행 갯수를 가져오지 못했습니다.", StatementName(m_eType));
+		return 0;
+	}
+
+	return (Int32U)mysql_affected_rows(m_pConn->GetConnection());
+}
 
 bool MysqlQueryUpdate::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {
@@ -110,7 +119,7 @@ DateTime MysqlQuerySelect::GetDateTime(const char* fieldName) {
 	// TryParse 소수점 파싱 구현을 좀 범용성있게 했기땜에 ".ffffff"와 "" 두개로만 구분해도 무방함.
 	// 일단 처음 구현할때 자릿수별로 세분화했기 땜에 그냥 두도록 한다.
 	// TODO: GetDateTime 추후 좀더 간결하게 수정할 것
-	static const char* DecimalPointFormats[]{
+	static constexpr const char* DecimalPointFormats[] {
 		"",
 		".f",
 		".ff",
@@ -120,11 +129,14 @@ DateTime MysqlQuerySelect::GetDateTime(const char* fieldName) {
 		".ffffff"
 	};
 
+	// Mysql 날짜형식 포맷
+	static constexpr char szDateFormat[64] = "yyyy-MM-dd HH:mm:ss%s";	
+
 	const char* pRawString = GetRawString(fieldName);
 	if (pRawString == nullptr) return 0;
 	DateTime parsed;
 
-	char szDateFormat[64] = "yyyy-MM-dd HH:mm:ss%s";	// Mysql 날짜형식 포맷
+	
 	char szDateFormatBuff[64];
 	int iDecimalPointPos = StringUtil::FindCharReverse(pRawString, '.') ;
 	int iDecimalPlaceCount = 0;

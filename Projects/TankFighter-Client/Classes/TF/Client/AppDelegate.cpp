@@ -52,13 +52,14 @@ void AppDelegate::initGLContextAttrs()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
-
     Winsock::Initialize(2, 2);
     InitializeDefaultLogger();
     InitializeNetLogger();
-    InitializeGameCore();
+    InitializeCommon();
     CreateOpenGLWindow();
     CreateScene();
+
+    InitializeGameCore();   // 씬 실행후 초기화
 
     return true;
 }
@@ -69,7 +70,7 @@ void AppDelegate::CreateOpenGLWindow() {
     auto glview = director->getOpenGLView();
 
     if (glview == nullptr) {
-        glview = GLViewImpl::createWithRect("TankFighter", { 0, 0, Const::Window::Width, Const::Window::Height }, 1.0f, true);
+        glview = GLViewImpl::createWithRect("TankFighter", { 0, 0, Const::Window::Width, Const::Window::Height }, 1.0f, false);
         glview->setDesignResolutionSize(Const::Window::Width, Const::Window::Height, ResolutionPolicy::NO_BORDER);
     }
 

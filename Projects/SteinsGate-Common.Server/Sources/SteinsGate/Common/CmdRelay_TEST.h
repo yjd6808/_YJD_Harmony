@@ -24,10 +24,10 @@
 
 RELAY_STATIC_CMD_BEGIN(SS_P2PRelayStaticTest, CMDID_SS_P2PRelayStaticTest)
 JCore::StaticString<64> Msg;
-RELAY_STATIC_CMD_END(SS_P2PRelayStaticTest)
+RELAY_STATIC_CMD_END
 
 RELAY_DYNAMIC_CMD_BEGIN(SS_P2PRelayDynamicTest, CMDID_SS_P2PRelayDynamicTest, JCore::StaticString<1>)
 JCore::StaticString<1> Msg;
-RELAY_DYNAMIC_CMD_END(SS_P2PRelayDynamicTest)
+RELAY_DYNAMIC_CMD_END
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)

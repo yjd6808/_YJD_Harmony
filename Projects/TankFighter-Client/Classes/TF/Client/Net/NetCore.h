@@ -29,6 +29,8 @@ public:
 	void initializeHost();
 	void initializeParser();
 
+	void runCommand(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	void clearCommandQueue();
 	void update(const JCore::TimeSpan& elpased);
 	GameClient* getGameClient() const { return m_spGameClient.GetPtr(); }
 

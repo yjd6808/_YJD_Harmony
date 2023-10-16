@@ -44,6 +44,15 @@
     <ClCompile Include="..\Classes\TF\Client\Net\Send\S_GAME.cpp">
       <Filter>Net\Send</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Net\Recv\R_GAME.cpp">
+      <Filter>Net\Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\ChannelScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\CharacterSelectScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\TF\Client\Pch.h" />
@@ -90,6 +99,21 @@
     <ClInclude Include="..\Classes\TF\Client\Net\Send\S_GAME.h">
       <Filter>Net\Send</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Net\Recv\R_GAME.h">
+      <Filter>Net\Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\ChannelScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Object\Tank.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Object\Character.h">
+      <Filter>Game\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\CharacterSelectScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Net">
@@ -106,9 +130,6 @@
     </Filter>
     <Filter Include="Net\Listener">
       <UniqueIdentifier>{615e4b71-b4c6-46c7-8305-214739b7a906}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Object">
-      <UniqueIdentifier>{d961a3b0-92ee-480c-8b2c-ab678f600925}</UniqueIdentifier>
     </Filter>
     <Filter Include="Net\Send">
       <UniqueIdentifier>{098c2bed-c65a-4607-8522-330cc28ae412}</UniqueIdentifier>
@@ -127,6 +148,9 @@
     </Filter>
     <Filter Include="Game\Layer">
       <UniqueIdentifier>{9b52248e-e5dd-4e40-a753-86578ab15025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Contents">
+      <UniqueIdentifier>{d961a3b0-92ee-480c-8b2c-ab678f600925}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

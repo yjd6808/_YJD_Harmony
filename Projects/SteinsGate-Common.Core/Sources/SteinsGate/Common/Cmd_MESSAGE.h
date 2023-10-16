@@ -24,7 +24,7 @@
 
 STATIC_CMD_BEGIN(SC_ClientText, CMDID_SC_ClientText)
 SGStaticString<Const::StringLen::ClientTextKey> Key;
-STATIC_CMD_END(SC_ClientText)
+STATIC_CMD_END
 
 #pragma pack(pop)
 

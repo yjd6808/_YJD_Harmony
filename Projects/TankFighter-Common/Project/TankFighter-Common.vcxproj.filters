@@ -7,5 +7,38 @@
     <ClInclude Include="..\Sources\TF\Common\Namespace.h" />
     <ClInclude Include="..\Sources\TF\Common\PchBase.h" />
     <ClInclude Include="..\Sources\TF\Common\Structure.h" />
+    <ClInclude Include="..\Sources\TF\Common\Base\ComponentCollection.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Common\Base\IComponent.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Common\Base\IUpdatable.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Common\Base\ISessionEventHandler.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Common\Base\SessionComponent.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Common\Base\IBroadcastable.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\TF\Common\Const.cpp" />
+    <ClCompile Include="..\Sources\TF\Common\Base\ComponentCollection.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Common\Base\SessionComponent.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Common\PchBase.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Base">
+      <UniqueIdentifier>{e5fc42dd-cbf3-4873-807e-958e5be69839}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

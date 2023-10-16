@@ -14,8 +14,14 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_CCUI;
 
-#define EDITBOX_ID				16
-#define EDITBOX_PW				17
+LoginScene::LoginScene()
+	: m_pIdEditBox(nullptr)
+	, m_pPassEditBox(nullptr)
+{}
+
+LoginScene::~LoginScene()
+{}
+
 
 bool LoginScene::init() {
 
@@ -26,20 +32,18 @@ bool LoginScene::init() {
 	Text* pLogoText = Text::create("탱크 파이터!", Const::Resource::FontName, 72);
 	pLogoText->setSkewX(30.0f);
 	pLogoText->setPosition({ 500, 500 });
-	this->addChild(pLogoText);
+	m_pUILayer->addChild(pLogoText);
 
 	Text* pInfoText = Text::create("개발자 : 윤정도", Const::Resource::FontName, 25);
 	pInfoText->enableGlow(Color4B::GRAY);
 	pInfoText->setColor(ColorList::AbsoluteZero_v);
 	pInfoText->setAnchorPoint(Vec2::ANCHOR_MIDDLE_BOTTOM);
-	pInfoText->setSkewX(30.0f);
 	pInfoText->setPosition({ 500, 400 });
-	this->addChild(pInfoText);
+	m_pUILayer->addChild(pInfoText);
 
 
 	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
 	keyboardListener->onKeyPressed = CC_CALLBACK_2(LoginScene::onKeyPressed, this);
-	keyboardListener->onKeyReleased = CC_CALLBACK_2(LoginScene::onKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
 
 	TextButton* loginBtn = TextButton::create(200, 45, "로그인", 15);
@@ -48,7 +52,7 @@ bool LoginScene::init() {
 	loginBtn->setBackgroundColor(ColorList::Camel_v);
 	loginBtn->setFontColor(Color3B::BLACK);
 	loginBtn->setClickEvent(CC_CALLBACK_1(LoginScene::OnClickedLoginButton, this));
-	this->addChild(loginBtn);
+	m_pUILayer->addChild(loginBtn);
 	Button::create();
 
 	TextButton* registerBtn = TextButton::create(200, 45, "회원가입", 15);
@@ -57,7 +61,7 @@ bool LoginScene::init() {
 	registerBtn->setBackgroundColor(ColorList::Camel_v);
 	registerBtn->setFontColor(Color3B::BLACK);
 	registerBtn->setClickEvent(CC_CALLBACK_1(LoginScene::OnClickedRegisterButton, this));
-	this->addChild(registerBtn);
+	m_pUILayer->addChild(registerBtn);
 
 	TextButton* reconnectBtn = TextButton::create(200, 45, "서버 재접속 시도", 15);
 	reconnectBtn->setAnchorPoint(Vec2::ZERO);
@@ -65,21 +69,10 @@ bool LoginScene::init() {
 	reconnectBtn->setBackgroundColor(ColorList::Camel_v);
 	reconnectBtn->setFontColor(Color3B::BLACK);
 	reconnectBtn->setClickEvent(CC_CALLBACK_1(LoginScene::OnClickedReconnectButton, this));
-	this->addChild(reconnectBtn);
-
-	EditBox* pIDEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(Const::Resource::WhiteRectFileName));
-	pIDEditBox->setPosition({ 400, 300 });
-	pIDEditBox->setFontColor(Color4B::WHITE);
-	pIDEditBox->setColor(ColorList::Africanviolet_v);
-	pIDEditBox->setFontSize(18.0f);
-	pIDEditBox->setPlaceHolder("ID");
-	pIDEditBox->setAnchorPoint(Vec2::ZERO);
-	pIDEditBox->setPlaceholderFontColor(Color4B::GRAY);
-	pIDEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
-	this->addChild(pIDEditBox, 0, EDITBOX_ID);
+	m_pUILayer->addChild(reconnectBtn);
 
 	// 빠른 로그인을 위해 복붙
-	HashMap<int, Tuple<std::string, std::string>> randIdPwMap {
+	HashMap<int, Tuple<std::string, std::string>> randIdPwMap{
 		{1, { "wjdeh515", "wjdeh414" }},
 		{2, { "wjdeh616", "wjdeh515" }},
 		{3, { "wjdeh717", "wjdeh616" }},
@@ -89,21 +82,36 @@ bool LoginScene::init() {
 		{7 ,{ "wjdeh11111", "wjdeh10110" }},
 	};
 
-	int r = Random().GenerateInt(1, 8);
-	pIDEditBox->setText(randIdPwMap[r].item1.c_str());
+	const int idCode = Random().GenerateInt(1, 8);
 
-	EditBox* pPasswordEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(Const::Resource::WhiteRectFileName));
-	pPasswordEditBox->setPosition(Vec2(400, 250));
-	pPasswordEditBox->setFontColor(Color4B::BLACK);
-	pPasswordEditBox->setFontSize(18.0f);
-	pPasswordEditBox->setColor(ColorList::Etonblue_v);
-	pPasswordEditBox->setPlaceHolder("PASS");
-	pPasswordEditBox->setAnchorPoint(Vec2::ZERO);
-	pPasswordEditBox->setPlaceholderFontColor(Color4B::GRAY);
-	pPasswordEditBox->setInputFlag(EditBox::InputFlag::PASSWORD);
-	pPasswordEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
-	this->addChild(pPasswordEditBox, 0, EDITBOX_PW);
-	pPasswordEditBox->setText(randIdPwMap[r].item2.c_str());
+	m_pIdEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(Const::Resource::WhiteRectFileName));
+	m_pIdEditBox->addClickEventListener([](Ref* ref) { ((EditBox*)ref)->openKeyboard(); });
+	m_pIdEditBox->setPosition({ 400, 300 });
+	m_pIdEditBox->setFontColor(Color4B::WHITE);
+	m_pIdEditBox->setColor(ColorList::Africanviolet_v);
+	m_pIdEditBox->setFontSize(18.0f);
+	m_pIdEditBox->setPlaceHolder("ID");
+	m_pIdEditBox->setAnchorPoint(Vec2::ZERO);
+	m_pIdEditBox->setPlaceholderFontColor(Color4B::GRAY);
+	m_pIdEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
+	m_pIdEditBox->setText(randIdPwMap[idCode].item1.c_str());
+	m_pUILayer->addChild(m_pIdEditBox, 0);
+	
+	m_pPassEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(Const::Resource::WhiteRectFileName));
+	m_pPassEditBox->addClickEventListener([](Ref* ref) { ((EditBox*)ref)->openKeyboard(); });
+	m_pPassEditBox->setPosition(Vec2(400, 250));
+	m_pPassEditBox->setFontColor(Color4B::BLACK);
+	m_pPassEditBox->setFontSize(18.0f);
+	m_pPassEditBox->setColor(ColorList::Etonblue_v);
+	m_pPassEditBox->setPlaceHolder("PASS");
+	m_pPassEditBox->setAnchorPoint(Vec2::ZERO);
+	m_pPassEditBox->setPlaceholderFontColor(Color4B::GRAY);
+	m_pPassEditBox->setInputFlag(EditBox::InputFlag::PASSWORD);
+	m_pPassEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
+	m_pPassEditBox->setText(randIdPwMap[idCode].item2.c_str());
+	m_pUILayer->addChild(m_pPassEditBox, 0);
+
+	
 
 	this->scheduleUpdate();
 
@@ -113,16 +121,13 @@ bool LoginScene::init() {
 
 void LoginScene::update(float delta) {
 	BaseScene::update(delta);
-
 }
 
 void LoginScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
+		OnClickedLoginButton(nullptr);
+	}
 }
-
-void LoginScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
-
-}
-
 
 bool IsAvailableIDPW(JCore::String& id)
 {
@@ -141,11 +146,8 @@ bool IsAvailableIDPW(JCore::String& id)
 }
 
 void LoginScene::OnClickedLoginButton(TextButton* sender) {
-	EditBox* pIDEditBox = (EditBox*)this->getChildByTag(EDITBOX_ID);
-	EditBox* pPWEditBox = (EditBox*)this->getChildByTag(EDITBOX_PW);
-
-	JCore::String id = pIDEditBox->getText();
-	JCore::String pw = pPWEditBox->getText();
+	JCore::String id = m_pIdEditBox->getText();
+	JCore::String pw = m_pPassEditBox->getText();
 
 	if (id.Length() > Const::Length::Id || pw.Length() > Const::Length::Pass) {
 		PopUp::createInParent("아이디 비밀번호는 영문 + 숫자만 가능", this, false);
@@ -161,9 +163,8 @@ void LoginScene::OnClickedLoginButton(TextButton* sender) {
 }
 
 void LoginScene::OnClickedRegisterButton(TextButton* sender) {
-
-	EditBox* pIDEditBox = (EditBox*)this->getChildByTag(EDITBOX_ID);
-	EditBox* pPWEditBox = (EditBox*)this->getChildByTag(EDITBOX_PW);
+	EditBox* pIDEditBox = m_pIdEditBox;
+	EditBox* pPWEditBox = m_pPassEditBox;
 
 	JCore::String id = pIDEditBox->getText();
 	JCore::String pw = pPWEditBox->getText();
@@ -185,7 +186,12 @@ void LoginScene::OnClickedReconnectButton(TextButton* sender) {
 	GameClient* pClient = Core::NetCore->getGameClient();
 	if (pClient == nullptr) return;
 
-	if (pClient->ConnectAsync(JNetwork::IPv4EndPoint::Parse(Const::Net::EndPoint::Connect)) == false) {
-		PopUp::createInParent("재접속에 실패하였습니다.", this, false);
+	if (pClient->GetState() == JNetwork::Host::eConnected) {
+		PopUp::createInParent("이미 게임서버와 연결되어 있습니다.", this, false);
+		return;
 	}
+
+	Core::GameClient->SetReconnectMode(true);
+	pClient->ConnectAsync(JNetwork::IPv4EndPoint::Parse(Const::Net::Server::GameConnectEndPoint));
 }
+xx

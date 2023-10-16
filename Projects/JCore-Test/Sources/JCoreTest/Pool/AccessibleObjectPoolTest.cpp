@@ -35,7 +35,6 @@ constexpr int ThreadSize = 16;
 TEST(AccessibleObjectPoolTest, General) {
 	Random::EngineInitialize();
 	Data::InitPool(1000, 10);
-
 	ThreadPool th(ThreadSize);
 	Task<void> tasks[ThreadSize];
 	Tuple<bool, Data*> maps[20000]{};

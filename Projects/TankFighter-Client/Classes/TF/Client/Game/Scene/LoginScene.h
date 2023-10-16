@@ -13,14 +13,20 @@
 class LoginScene : public BaseScene
 {
 public:
+	LoginScene();
+	~LoginScene() override;
+
 	CREATE_FUNC(LoginScene);
 	bool init() override;
 
-	void update(float delta) override;
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
+	void update(float delta) override;
 
 	void OnClickedReconnectButton(TextButton* sender);
 	void OnClickedLoginButton(TextButton* sender);
 	void OnClickedRegisterButton(TextButton* sender);
+	Type getType() const override { return Login; }
+private:
+	cocos2d::ui::EditBox* m_pIdEditBox;
+	cocos2d::ui::EditBox* m_pPassEditBox;
 };

@@ -25,18 +25,33 @@ enum class SendStrategy
 template <typename>
 struct SendHelper;
 
-template <typename T, typename TCommand>
-struct Sending : JCore::NonCopyable
+struct SendingBase
 {
-	Sending(TCommand& cmd, ISendPacket* packet)
-		: Cmd(cmd)
-		, Packet(packet)
+	SendingBase(ISendPacket* packet)
+		: Packet(packet)
+		, Sended(false)
 	{}
 
-	~Sending() { SendHelper<T>::SendEnd(Packet); }
+	ISendPacket* Packet;
+	bool Sended;
+};
+
+template <typename T, typename TCommand>
+struct Sending : JCore::NonCopyable, SendingBase
+{
+	Sending(TCommand& cmd, ISendPacket* packet)
+		: SendingBase(packet)
+		, Cmd(cmd)
+	{}
+
+	~Sending() {
+		if (!Sended) {
+			SendHelper<T>::SendEnd(Packet);
+			Sended = true;
+		}
+	}
 
 	TCommand& Cmd;
-	ISendPacket* Packet;
 };
 
 struct SendHelperBase
@@ -99,30 +114,37 @@ struct SendHelper : SendHelperBase
 
 	
 
-	static void SendEnd(ISendPacket* packet) {
+	static bool SendEnd(ISendPacket* packet) {
 		if (SendInformation.Sender == nullptr) {
 			_LogError_("센더가 설정되지 않았습니다.");
-			return;
+			return false;
 		}
 
 		if (SendInformation.Strategy == SendStrategy::None) {
 			_LogError_("송신 전략이 설정되지 않았습니다.");
-			return;
+			return false;
 		}
 
 		switch (SendInformation.Strategy) {
 		case SendStrategy::SendAsync:
-			SendInformation.Sender->SendAsync(packet);
-			break;
+			return SendInformation.Sender->SendAsync(packet);
 		case SendStrategy::SendToAsync:
-			SendInformation.Sender->SendToAsync(packet, SendInformation.Destination);
-			break;
+			return SendInformation.Sender->SendToAsync(packet, SendInformation.Destination);
 		case SendStrategy::SendAlloc:
 			// 할거 없음
 			break;
 		default:
 			_LogWarn_("전송전략이 제대로 설정되어있지 않습니다. (커맨드 유실 위험)");
 		}
+
+		return true;
+	}
+
+
+	static bool SendEndExplicit(SendingBase& sending) {
+		ISendPacket* packet = sending.Packet;
+		sending.Sended = true;
+		return SendEnd(packet);
 	}
 
 

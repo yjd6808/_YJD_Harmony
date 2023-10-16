@@ -188,9 +188,28 @@
 	}
 
 
+	// 템플릿 전방선언시 갯수를 표시해서 좀 더 알아보기 쉽게 하기 위함.
 	#define JCORE_FORWARD_TEMPLATE(n)	JCORE_FORWARD_TEMPLATE_##n
 	#define JCORE_FORWARD_TEMPLATE_1	template <typename>
 	#define JCORE_FORWARD_TEMPLATE_2	template <typename, typename>
 	#define JCORE_FORWARD_TEMPLATE_3	template <typename, typename, typename>
 	#define JCORE_FORWARD_TEMPLATE_4	template <typename, typename, typename, typename>
+
+
+	// 게터/세터
+	#define JCORE_GETTER_L(type, function_name, variable_name)  type get##function_name() const { return variable_name; }
+	#define JCORE_SETTER_L(type, function_name, variable_name)  void set##function_name(type _##function_name) { variable_name = _##function_name; }
+	#define JCORE_GETTER_SETTER_L(type, function_name, variable_name)	\
+	JCORE_GETTER_U(type, function_name, variable_name)					\
+	JCORE_SETTER_U(type, function_name, variable_name)
+	
+	#define JCORE_GETTER_U(type, function_name, variable_name)  type Get##function_name() const { return variable_name; }
+	#define JCORE_SETTER_U(type, function_name, variable_name)  void Set##function_name(type _##function_name) { variable_name = _##function_name; }
+	#define JCORE_GETTER_SETTER_U(type, function_name, variable_name)	\
+	JCORE_GETTER_U(type, function_name, variable_name)					\
+	JCORE_SETTER_U(type, function_name, variable_name)
+
+	#define JCORE_GETTER_SETTER(character_case, type, function_name, variable_name) JCORE_GETTER_SETTER_##character_case(type, function_name, variable_name)
+	#define JCORE_GETTER(character_case, type, function_name, variable_name)		JCORE_GETTER_##character_case(type, function_name, variable_name)
+	#define JCORE_SETTER(character_case, type, function_name, variable_name)		JCORE_SETTER_##character_case(type, function_name, variable_name)
 #endif

@@ -22,7 +22,7 @@
 
 HOST_DYNAMIC_CMD_BEGIN(SS_HostMessage, CMDID_SS_HostMessage, JCore::StaticString<1>)
 JCore::StaticString<1> Msg;
-HOST_DYNAMIC_CMD_END(SS_HostMessage)
+HOST_DYNAMIC_CMD_END
 
 // ===============================================================================================================
 

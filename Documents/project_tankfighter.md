@@ -23,7 +23,7 @@
 
 ### 주요 구현 내역
  - 스왑 큐를 활용한 클라이언트 패킷 동기화 [설명 보기](./project_tankfighter-explain-swap-queue.md)
- - 지속적인 확인으로 메모리 누수가 발생하지 않는 게임 개발 [설명 보기]()
+ - 지속적인 확인으로 메모리 누수가 발생하지 않는 게임 개발 [설명 보기](./)
  - 쿼리 빌더 구현 [(코드 보기)](../Projects/TankFighter-Server/Sources/TF/Database/MysqlStatementBuilder.h)
  - 비동기 쿼리 처리 구현 [(코드 보기)](../Projects/TankFighter-Server/Sources/TF/Database/MysqlQueryFuture.h)
  - 배틀 중 난입 기능 구현 [(코드 보기)](../Projects/TankFighter-Server/Sources/TF/Worker/BattleFieldWorker.cpp)  

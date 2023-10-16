@@ -34,6 +34,16 @@ StatementType MysqlQuery::ParseStatement(const String& statement) {
 	return eStatement;
 }
 
+Int32U MysqlQuery::GetRowCount() const {
+
+	if (!IsSuccess()) {
+		_LogError_("%s 쿼리 수행이 실패하여 영향받은 행 갯수를 가져오지 못했습니다.", StatementName(m_eType));
+		return 0;
+	}
+
+	return (Int32U)mysql_affected_rows(m_pConn->GetConnection());
+}
+
 
 bool MysqlQueryUpdate::Execute() {
 	if (mysql_query(m_pConn->GetConnection(), m_PreparedStatement.Source())) {

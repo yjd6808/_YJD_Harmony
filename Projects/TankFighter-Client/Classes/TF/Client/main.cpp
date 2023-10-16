@@ -11,7 +11,10 @@
 USING_NS_CC;
 
 int main() {
-    // create the application instance
-    AppDelegate app;
-    return Application::getInstance()->run();
+    int iExit = -1;
+    {
+        AppDelegate app;
+        iExit = Application::getInstance()->run();
+    }
+    return iExit;
 }

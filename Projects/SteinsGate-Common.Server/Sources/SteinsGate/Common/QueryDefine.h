@@ -74,29 +74,36 @@ struct Visitable<struct_name>																							\
 
 #define QRY_RESULT_DEBUG_ASSERT DebugAssertMsg(Query != nullptr, "쿼리 변수가 NULL임");
 
+struct Result
+{
+	int LastErrorCode = InvalidValue_v;
+	int RowCount{};
+	bool Success{};
+};
+
 template <typename TQryResult>
-struct SelectResult
+struct SelectResult : Result
 {
 	MysqlQuerySelectPtr Query;
 	bool HasBindedResult = false;
-	bool Success = false;
+
 
 	bool HasNext() const {
 		QRY_RESULT_DEBUG_ASSERT
-		if (!Success) return false;
+			if (!Success) return false;
 		return Query->HasNext();
 	}
 
 	void FetchCurrentRow() {
 		QRY_RESULT_DEBUG_ASSERT
-		TQryResult& result = static_cast<TQryResult&>(*this);
+			TQryResult& result = static_cast<TQryResult&>(*this);
 		BindSelectResult(result, Query.GetPtr());
 		HasBindedResult = true;
 	}
 
 	bool FetchNextRow() {
 		QRY_RESULT_DEBUG_ASSERT
-		if (!Success) return false;
+			if (!Success) return false;
 
 		if (Query->Next()) {
 			TQryResult& result = static_cast<TQryResult&>(*this);
@@ -108,13 +115,6 @@ struct SelectResult
 		HasBindedResult = false;
 		return false;
 	}
-
-	int GetRowCount() {
-		QRY_RESULT_DEBUG_ASSERT
-		if (!Success) return 0;
-		return Query->GetRowCount();
-	}
-
 };
 
 struct SelectResultBinder
@@ -123,16 +123,19 @@ struct SelectResultBinder
 	constexpr static void BindField(const char* fieldName, TField& fieldVariable, MysqlQuerySelect* executedQuery) {
 		if constexpr (JCore::IsString_v<TField>) {
 			fieldVariable = executedQuery->GetRawString(fieldName);
-		} else if constexpr (
+		}
+		else if constexpr (
 			JCore::Or_v<
-				JCore::IsIntegerType_v<TField>, 
-				JCore::IsCharaterType_v<TField>, 
-				JCore::IsFloatType_v<TField>
+			JCore::IsIntegerType_v<TField>,
+			JCore::IsCharaterType_v<TField>,
+			JCore::IsFloatType_v<TField>
 			>) {
 			fieldVariable = executedQuery->GetNumber<TField>(fieldName);
-		} else if constexpr (JCore::IsDateTime_v<TField>) {
+		}
+		else if constexpr (JCore::IsDateTime_v<TField>) {
 			fieldVariable = executedQuery->GetDateTime(fieldName);
-		} else {
+		}
+		else {
 			DebugAssertMsg(false, "바인딩 할 수 없는 필드입니다. (TField = %s)", typeid(TField).name());
 		}
 	}
@@ -148,11 +151,11 @@ struct SelectStatement
 		static_assert(IsQryHelper_v<THelper>, "... THelper is not QueryHelper<T>");
 
 		THelper::SetLastErrorCode(InvalidValue_v);
-
-		if constexpr (SGStringUtil::CTCountChar(TQry::Script, '?') != sizeof...(args)) {
+		static_assert(JCore::StringUtil::CTCountChar(TQry::Script, '?') == sizeof...(args));
+		/*if constexpr (JCore::StringUtil::CTCountChar(TQry::Script, '?') != sizeof...(args)) {
 			_LogWarn_("쿼리 스크립트에서 요구하는 인자갯수와 전달받은 인자 갯수가 틀립니다.");
 			return;
-		}
+		}*/
 
 		auto spQuery = database->Query(TQry::Script, JCore::Forward<Args>(args)...);
 
@@ -162,8 +165,14 @@ struct SelectStatement
 
 		DebugAssertMsg(spQuery->GetStatementType() == StatementType::Select, "셀렉트 스테이트먼트가 아닙니다.");
 
+		const int iErrorCode = spQuery->GetErrorCode();
+
 		result.Query = spQuery;
-		THelper::SetLastErrorCode(spQuery->GetErrorCode());
+		result.Success = iErrorCode == 0;
+		result.LastErrorCode = iErrorCode;
+		result.RowCount = iErrorCode == 0 ? spQuery->GetRowCount() : 0;
+
+		THelper::SetLastErrorCode(iErrorCode);
 
 		if (!result.Query->HasNext()) {
 			return;
@@ -173,30 +182,47 @@ struct SelectStatement
 	}
 };
 
-struct InsertResult
+struct InsertResult : Result
 {
 	MysqlQueryInsertPtr Query;
 
 	Int64U GetInsertId() {
 		QRY_RESULT_DEBUG_ASSERT
-		if (Query->IsFailed()) return 0;
+			if (Query->IsFailed()) return 0;
 		return Query->GetInsertId();
 	}
 };
 
-template <typename TQry>
-struct InsertStatement
+struct DeleteResult : Result
+{
+	MysqlQueryDeletePtr Query;
+};
+
+struct UpdateResult : Result
+{
+	MysqlQueryUpdatePtr Query;
+};
+
+
+template <StatementType StatementType> struct ResultTyGetter { using Ty = void; };
+template <> struct ResultTyGetter<StatementType::Insert> { using Ty = InsertResult; };
+template <> struct ResultTyGetter<StatementType::Delete> { using Ty = DeleteResult; };
+template <> struct ResultTyGetter<StatementType::Update> { using Ty = UpdateResult; };
+
+
+template <StatementType StatementType, typename TQry>
+struct Statement
 {
 	template <typename THelper, typename... Args>
-	constexpr static void Execute(MysqlDatabase* database, InsertResult& result, Args&&... args) {
+	constexpr static void Execute(MysqlDatabase* database, typename ResultTyGetter<StatementType>::Ty& result, Args&&... args) {
 		static_assert(IsQryHelper_v<THelper>, "... THelper is not QueryHelper<T>");
 
 		THelper::SetLastErrorCode(InvalidValue_v);
-
-		if constexpr (SGStringUtil::CTCountChar(TQry::Script, '?') != sizeof...(args)) {
+		static_assert(JCore::StringUtil::CTCountChar(TQry::Script, '?') == sizeof...(args));
+		/*if constexpr (JCore::StringUtil::CTCountChar(TQry::Script, '?') != sizeof...(args)) {
 			_LogWarn_("쿼리 스크립트에서 요구하는 인자갯수와 전달받은 인자 갯수가 틀립니다.");
 			return;
-		}
+		}*/
 
 		auto spQuery = database->Query(TQry::Script, JCore::Forward<Args>(args)...);
 
@@ -204,41 +230,34 @@ struct InsertStatement
 			return;
 		}
 
-		DebugAssertMsg(spQuery->GetStatementType() == StatementType::Insert, "인설트 스테이트먼트가 아닙니다.");
+		DebugAssertMsg(spQuery->GetStatementType() == StatementType, "%s 스테이트먼트가 아닙니다.", StatementName(StatementType));
+		const int iErrorCode = spQuery->GetErrorCode();
+
 		result.Query = spQuery;
+		result.Success = iErrorCode == 0;
+		result.LastErrorCode = iErrorCode;
+		result.RowCount = iErrorCode == 0 ? spQuery->GetRowCount() : 0;
 
 		THelper::SetLastErrorCode(spQuery->GetErrorCode());
 	}
 };
-
-struct DeleteResult
-{
-	MysqlQueryInsertPtr Query;
-};
-
-
-struct UpdateResult
-{
-	MysqlQueryUpdatePtr Query;
-};
-
 
 
 
 NS_QRY_END
 
 #define QRY_SELECT_STATEMENT_BEGIN(struct_name) struct struct_name : SelectStatement<struct_name> {
-#define QRY_SELECT_STATEMENT_END(struct_name) };
+#define QRY_SELECT_STATEMENT_END };
 
 #define QRY_SELECT_RESULT_BEGIN(struct_name) struct struct_name : SelectResult<struct_name> {
-#define QRY_SELECT_RESULT_END(struct_name) };
+#define QRY_SELECT_RESULT_END };
 
 
-#define QRY_INSERT_STATEMENT_BEGIN(struct_name) struct struct_name : InsertStatement<struct_name> {
-#define QRY_INSERT_STATEMENT_END(struct_name) };
+#define QRY_INSERT_STATEMENT_BEGIN(struct_name) struct struct_name : Statement<StatementType::Insert, struct_name> {
+#define QRY_INSERT_STATEMENT_END };
 
-#define QRY_DELETE_STATEMENT_BEGIN(struct_name) struct struct_name : DeleteStatement<struct_name> {
-#define QRY_DELETE_STATEMENT_END(struct_name) };
+#define QRY_DELETE_STATEMENT_BEGIN(struct_name) struct struct_name : Statement<StatementType::Delete, struct_name> {
+#define QRY_DELETE_STATEMENT_END };
 
-#define QRY_UPDATE_STATEMENT_BEGIN(struct_name) struct struct_name : UpdateStatement<struct_name> {
-#define QRY_UPDATE_STATEMENT_END(struct_name) };
+#define QRY_UPDATE_STATEMENT_BEGIN(struct_name) struct struct_name : Statement<StatementType::Update, struct_name> {
+#define QRY_UPDATE_STATEMENT_END };

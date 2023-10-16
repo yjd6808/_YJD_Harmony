@@ -18,6 +18,38 @@
     <ClCompile Include="..\Sources\TF\Server\Database\MysqlConnectionPool.cpp">
       <Filter>Database</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\NetCore.cpp" />
+    <ClCompile Include="..\Sources\TF\Server\Host\GameServer.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Host\GameSession.cpp">
+      <Filter>Host</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\World.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Const.cpp" />
+    <ClCompile Include="..\Sources\TF\Server\Recv\R_GAME.cpp">
+      <Filter>Recv</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Send\S_GAME.cpp">
+      <Filter>Send</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Query\Q_GAME.cpp">
+      <Filter>Query</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Listener\L_GAME.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\Player.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\Channel.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\Room.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Server\Pch.h" />
@@ -49,8 +81,40 @@
     <ClInclude Include="..\Sources\TF\Server\Database\DatabaseInfo.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\TF\Server\Database\QueryDefine_AUTH.h">
+    <ClInclude Include="..\Sources\TF\Server\NetCore.h" />
+    <ClInclude Include="..\Sources\TF\Server\Host\GameServer.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Host\GameSession.h">
+      <Filter>Host</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\World.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Const.h" />
+    <ClInclude Include="..\Sources\TF\Server\Recv\R_GAME.h">
+      <Filter>Recv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Send\S_GAME.h">
+      <Filter>Send</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Query\Q_GAME.h">
       <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Query\QueryDefine_Game.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Listener\L_GAME.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\Player.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\Channel.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\Room.h">
+      <Filter>Contents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -69,11 +133,11 @@
     <Filter Include="Listener">
       <UniqueIdentifier>{21e5da9e-37c7-4a02-be8e-b6953d5518ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{e54bb540-a5bd-4828-bd4a-9f6d5952c0e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Query">
       <UniqueIdentifier>{71763043-6b28-4397-a92e-450e20322ac7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Host">
+      <UniqueIdentifier>{087bf145-e995-4ee7-9eae-c21ddadd9775}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -31,25 +31,25 @@
 #pragma pack(push, CMD_ALIGNMENT)
 
 HOST_STATIC_CMD_BEGIN(CES_WhoAreYou, CMDID_CES_WhoAreYou)
-HOST_STATIC_CMD_END(CES_WhoAreYou)
+HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(SCE_ItsMe, CMDID_SCE_ItsMe)
 ServerProcessType_t ClientServerType;
 int ServerId;
-HOST_STATIC_CMD_END(SCE_ItsMe)
+HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(CES_AlreadyConnected, CMDID_CES_AlreadyConnected)
-HOST_STATIC_CMD_END(CES_AlreadyConnected)
+HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(CES_YouNeedToDoThis, CMDID_CES_YouNeedToDoThis)
 CenterOrder_t Order;
-HOST_STATIC_CMD_END(CES_YouNeedToDoThis)
+HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
@@ -57,7 +57,7 @@ HOST_STATIC_CMD_BEGIN(SCE_NotifyBootState, CMDID_SCE_NotifyBootState)
 int ServerId;
 ServerType_t ServerType;
 ServerBootState_t State;
-HOST_STATIC_CMD_END(SCE_NotifyBootState)
+HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
@@ -66,7 +66,7 @@ int ServerId;
 ServerType_t ServerType;
 CenterOrder_t Order;
 Int32U ErrorCode;
-HOST_STATIC_CMD_END(SCE_NotifyOrderFailed)
+HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 

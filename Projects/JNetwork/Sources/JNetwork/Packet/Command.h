@@ -183,7 +183,7 @@ struct __struct__ : JNetwork::StaticCommand {									\
 	static constexpr int Command() { return __cmd__; }							\
 	
 
-#define STATIC_CMD_END(__struct__) };
+#define STATIC_CMD_END };
 
 
 // @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
@@ -199,4 +199,4 @@ struct __struct__ : JNetwork::DynamicCommand {																				\
 	static constexpr const char* Name() { return #__struct__; }																\
 	static constexpr int Command() { return __cmd__; }																		\
 
-#define DYNAMIC_CMD_END(__struct__)	};
+#define DYNAMIC_CMD_END	};

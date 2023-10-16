@@ -29,6 +29,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\ChannelScene.cpp" />
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\CharacterSelectScene.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Scene\LoginScene.cpp">
       <SubType>
       </SubType>
@@ -48,6 +50,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\Classes\TF\Client\Net\NetCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Net\Recv\R_GAME.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -74,10 +80,20 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Game\Layer\GridLayer.h" />
+    <ClInclude Include="..\Classes\TF\Client\Game\Object\Character.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Object\Tank.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\BaseScene.h">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\ChannelScene.h" />
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\CharacterSelectScene.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\LoginScene.h">
       <SubType>
       </SubType>
@@ -96,6 +112,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Net\NetCore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Net\Recv\R_GAME.h">
       <SubType>
       </SubType>
     </ClInclude>

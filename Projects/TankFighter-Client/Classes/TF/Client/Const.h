@@ -37,4 +37,18 @@ namespace Window
 	extern const float Height;
 }
 
+namespace Properties
+{
+	namespace GameClient
+	{
+		extern const int Reconnecting;
+		extern const int AccountPrimaryKey;
+		extern const int ChannelPrimaryKey;
+		extern const int CharacterPrimaryKey;
+		extern const int TankAccessKey;
+	}
+}
+
+
+
 NS_CONST_END

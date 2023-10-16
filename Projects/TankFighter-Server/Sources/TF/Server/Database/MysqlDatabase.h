@@ -59,6 +59,7 @@ public:
 	bool Initialize();
 	void Finalize();
 
+	const JCore::String& GetName() const;
 	MysqlConnectionPool* GetConnectionPool() const { return m_pConnectionPool; }
 
 	/*
@@ -116,7 +117,6 @@ public:
 		return spQuery;
 	}
 private:
-	
 	JNetwork::IOCP* m_pIocp;
 	MysqlConnectionPool* m_pConnectionPool;
 	DatabaseInfo* m_pInfo{};

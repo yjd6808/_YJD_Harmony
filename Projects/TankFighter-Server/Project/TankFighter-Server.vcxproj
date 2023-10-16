@@ -19,12 +19,48 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\TF\Server\Const.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\Channel.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\World.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\Player.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\Room.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\TF\Server\Database\MysqlConnection.cpp" />
     <ClCompile Include="..\Sources\TF\Server\Database\MysqlConnectionPool.cpp" />
     <ClCompile Include="..\Sources\TF\Server\Database\MysqlDatabase.cpp" />
     <ClCompile Include="..\Sources\TF\Server\Database\MysqlQuery.cpp" />
     <ClCompile Include="..\Sources\TF\Server\Database\MysqlStatementBuilder.cpp" />
+    <ClCompile Include="..\Sources\TF\Server\Host\GameServer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Host\GameSession.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Listener\L_GAME.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\TF\Server\main.cpp" />
+    <ClCompile Include="..\Sources\TF\Server\NetCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\TF\Server\Pch.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)Pch.pch</PrecompiledHeaderOutputFile>
@@ -39,8 +75,37 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Query\Q_GAME.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Recv\R_GAME.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Send\S_GAME.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Sources\TF\Server\Const.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\Channel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\World.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\Player.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\Room.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\TF\Server\Database\DatabaseInfo.h">
       <SubType>
       </SubType>
@@ -51,14 +116,39 @@
     <ClInclude Include="..\Sources\TF\Server\Database\MysqlQuery.h" />
     <ClInclude Include="..\Sources\TF\Server\Database\MysqlStatementBuilder.h" />
     <ClInclude Include="..\Sources\TF\Server\Database\QueryDefine.h" />
-    <ClInclude Include="..\Sources\TF\Server\Database\QueryDefine_AUTH.h" />
     <ClInclude Include="..\Sources\TF\Server\Database\QueryHelper.h" />
     <ClInclude Include="..\Sources\TF\Server\Database\StatementType.h" />
+    <ClInclude Include="..\Sources\TF\Server\Host\GameServer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Host\GameSession.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Listener\L_GAME.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\TF\Server\Namespace.h">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\NetCore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\TF\Server\Pch.h" />
+    <ClInclude Include="..\Sources\TF\Server\Query\QueryDefine_Game.h" />
+    <ClInclude Include="..\Sources\TF\Server\Query\Q_GAME.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Recv\R_GAME.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Send\S_GAME.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -157,11 +247,10 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;JCore.lib;JNetwork.lib;libmysql.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;JCore.lib;JNetwork.lib;TankFighter-Common.lib;libmysql.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL57\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -180,11 +269,10 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;JCore.lib;JNetwork.lib;libmysql.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;JCore.lib;JNetwork.lib;TankFighter-Common.lib;libmysql.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -208,11 +296,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;JCore.lib;JNetwork.lib;libmysql.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;JCore.lib;JNetwork.lib;TankFighter-Common.lib;libmysql.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL57\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -236,11 +323,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;JCore.lib;JNetwork.lib;libmysql.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;JCore.lib;JNetwork.lib;TankFighter-Common.lib;libmysql.lib;Mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\MySQL80\lib\$(Platform)\*.dll" "$(OutDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

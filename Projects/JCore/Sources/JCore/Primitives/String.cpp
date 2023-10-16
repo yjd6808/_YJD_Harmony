@@ -15,6 +15,9 @@
 
 NS_JC_BEGIN
 
+String String::Empty;
+String String::Null(0);
+
 String::String() {
 	Initialize();
 }
@@ -25,7 +28,7 @@ String::String(const int capacity)  {
 		m_iCapacity = 0;
 		m_iLen = 0;
 	} else {
-		*this = String(EmptyString, capacity);
+		*this = String(EmptySource, capacity);
 	}
 }
 
@@ -538,7 +541,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 	const int iDelimiterLen = StringUtil::Length(delimiter);
 	if (iOffset - 1 < 0) {
 		if (includeEmpty) {
-			vecTokens.EmplaceBack(EmptyString);
+			vecTokens.EmplaceBack(EmptySource);
 		}
 	} else {
 		vecTokens.EmplaceBack(GetRange(0, iOffset - 1));
@@ -555,7 +558,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 		
 		if (iNextOffset <= iOffset) {
 			if (includeEmpty) {
-				vecTokens.EmplaceBack(EmptyString);
+				vecTokens.EmplaceBack(EmptySource);
 			}
 		} else {
 			vecTokens.EmplaceBack(GetRange(iOffset, iNextOffset - 1));
@@ -567,7 +570,7 @@ Vector<String> String::Split(const char* delimiter, const bool includeEmpty) con
 		vecTokens.EmplaceBack(GetRange(iOffset, m_iLen - 1));
 	} else {
 		if (includeEmpty) {
-			vecTokens.EmplaceBack(EmptyString);
+			vecTokens.EmplaceBack(EmptySource);
 		}
 	}
 

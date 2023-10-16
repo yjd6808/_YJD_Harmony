@@ -27,23 +27,18 @@ insert into t_channel (c_name, c_max_player_count, c_time) values ('초고수 �
 # 32
 create table t_account (
 	c_uid					int 			primary key auto_increment		comment	'계정 고유 아이디',
-    c_id					varchar(40)		not null						comment '계정 아이디',
+    c_id					varchar(40)		not null unique					comment '계정 아이디',
     c_pass					char(32)		not	null						comment	'계정 MD5 비밀번호',
     c_last_logout_time		timestamp(6)									comment '마지막으로 로그아웃한 시간',
     c_last_login_time		timestamp(6)									comment '마지막으로 로그인한 시간'
 ) character set utf8 collate utf8_unicode_520_ci;
 
-# 임시 계정 넣기
--- insert into t_account values (1, 'wjdeh515', md5('wjdeh414'), now(6), now(6));
--- insert into t_account values (2, 'wjdeh616', md5('wjdeh515'), now(6), now(6));
--- insert into t_account values (3, 'wjdeh717', md5('wjdeh616'), now(6), now(6));
--- insert into t_account values (4, 'wjdeh818', md5('wjdeh717'), now(6), now(6));
--- insert into t_account values (5, 'wjdeh919', md5('wjdeh818'), now(6), now(6));
--- insert into t_account values (6, 'wjdeh10110', md5('wjdeh919'), now(6), now(6));
--- insert into t_account values (7, 'wjdeh11111', md5('wjdeh10110'), now(6), now(6));
-
 # 캐릭터 테이블
 # 계정이 삭제되면 관련 캐릭터들도 모두 삭제 처리 되도록 on delete cascade 사용
+# [인덱스]
+# 이름으로 검색을 자주할 수 있으니 이름은 인덱스를 걸음
+# [유니크]
+# 채널당 별로 이름은 유일해야하므로 채널 ID와 이름을 unique로 묶음
 create table t_character (
 	c_uid					int				primary key auto_increment		comment '캐릭터 고유 아이디',
     c_account_uid			int				not null 						comment	'해당 캐릭터를 가진 계정 고유 아이디',
@@ -54,9 +49,10 @@ create table t_character (
     c_kill					int				not null default 0				comment '캐릭터의 킬 수',
     c_death					int				not null default 0				comment '캐릭터의 데스 수',
     c_money					int				not null default 0				comment	'캐릭터가 소지중인 금액',
- 
+	index t_character_ky_name(c_name), 
 	constraint t_character_fk_account_uid 	foreign key (c_account_uid) references t_account(c_uid) on delete cascade,
-    constraint t_character_fk_channed_uid 	foreign key (c_channel_uid) references t_channel(c_uid) on delete cascade
+    constraint t_character_fk_channed_uid 	foreign key (c_channel_uid) references t_channel(c_uid) on delete cascade,
+    constraint t_character_uc_name          unique (c_channel_uid, c_name)
 ) character set utf8 collate utf8_unicode_520_ci;
 
 

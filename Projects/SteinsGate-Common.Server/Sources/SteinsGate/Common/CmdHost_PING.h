@@ -24,14 +24,14 @@
 
 HOST_STATIC_CMD_BEGIN(SCE_TimeSync, CMDID_SCE_TimeSync)
 JCore::DateTime PeerServerTime;
-HOST_STATIC_CMD_END(SCE_TimeSync)
+HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 
 HOST_STATIC_CMD_BEGIN(CES_TimeSyncAck, CMDID_CES_TimeSyncAck)
 JCore::DateTime PeerServerTime;
 JCore::DateTime MasterServerTime;
-HOST_STATIC_CMD_END(CES_TimeSyncAck)
+HOST_STATIC_CMD_END
 
 // ===============================================================================================================
 

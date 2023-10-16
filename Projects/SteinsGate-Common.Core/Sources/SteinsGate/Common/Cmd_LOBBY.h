@@ -25,12 +25,12 @@
 STATIC_CMD_BEGIN(CLO_JoinLobby, CMDID_CLO_JoinLobby)
 SGStaticString<Const::StringLen::AccountId> AccountId;
 AuthenticationSerial_t Serial;
-STATIC_CMD_END(CLO_JoinLobby)
+STATIC_CMD_END
 
 
 STATIC_CMD_BEGIN(LOC_JoinLobbyAck, CMDID_LOC_JoinLobbyAck)
 bool Success;
-STATIC_CMD_END(LOC_JoinLobbyAck)
+STATIC_CMD_END
 
 
 #pragma pack(pop)

@@ -29,8 +29,8 @@ struct TankMove
 
 struct CharacterInfo
 {
-	int CharacterUID = Const::InvalidValue;
-	char Name[Const::Length::Name];
+	int PrimaryKey = Const::InvalidValue;
+	JCore::StaticString<Const::Length::Name> Name;
 	int Win;
 	int Lose;
 	int Kill;
@@ -48,10 +48,10 @@ struct RoomCharacterInfo : CharacterInfo
 
 struct ChannelInfo
 {
-	Int8 ChannelUID = Const::InvalidValue;
+	int PrimaryKey = Const::InvalidValue;
 	int PlayerCount;
 	int MaxPlayerCount;
-	char Name[Const::Length::Name];
+	JCore::StaticString<Const::Length::Name> Name;
 };
 
 struct RoomInfo

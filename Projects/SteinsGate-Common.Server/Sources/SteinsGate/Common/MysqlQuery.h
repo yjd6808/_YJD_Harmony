@@ -82,6 +82,9 @@ public:
 	bool IsFailed() const { return m_iErrorCode != 0; }
 	int GetErrorCode() const { return m_iErrorCode; }
 
+	// Insert Update Delete는 영향받은 행 수를 반환한다.
+	virtual Int32U GetRowCount() const;
+
 	StatementType GetStatementType() { return m_eType; }
 protected:
 	StatementType m_eType;
@@ -172,7 +175,7 @@ public:
 		return JCore::StringUtil::ToNumber<TInteger>(pRawString);
 	}
 
-	Int32U GetRowCount() const;
+	Int32U GetRowCount() const override;
 	Int32U GetFieldCount() const;
 
 private:

@@ -27,7 +27,8 @@ protected:
 	void OnReceived(JNetwork::Session* session, JNetwork::ICommand* recvCmd) override;
 	void OnReceived(JNetwork::Session* session, JNetwork::IRecvPacket* recvPacket) override;
 public:
-	void SwapCommandQueue(JCORE_REF_OUT CommandQueue** target);
+	void ClearCommandQueue();
+	bool SwapCommandQueue(JCORE_REF_OUT CommandQueue** target);
 private:
 	TLock m_Lock;
 	CommandQueue* m_pCommandQueue;	// 확장시 ThreadLocal로 두는게 효율적임

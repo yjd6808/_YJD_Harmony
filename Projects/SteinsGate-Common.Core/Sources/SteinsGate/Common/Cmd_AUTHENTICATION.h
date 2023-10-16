@@ -26,7 +26,7 @@
 STATIC_CMD_BEGIN(CAU_Login, CMDID_CAU_Login)
 SGStaticString<Const::StringLen::AccountId> Id;
 SGStaticString<Const::StringLen::AccountPass> Pass;
-STATIC_CMD_END(CAU_Login)
+STATIC_CMD_END
 
 
 STATIC_CMD_BEGIN(AUC_LoginAck, CMDID_AUC_LoginAck)
@@ -35,7 +35,7 @@ AuthenticationSerial_t Serial;
 GameServerType_t LastServer;
 JCore::DateTime BanBeginDate;
 JCore::DateTime BanEndDate;
-STATIC_CMD_END(AUC_LoginAck)
+STATIC_CMD_END
 
 
 #pragma pack(pop)

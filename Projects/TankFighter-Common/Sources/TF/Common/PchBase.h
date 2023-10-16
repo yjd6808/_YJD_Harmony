@@ -72,8 +72,17 @@
 #include <JNetwork/IOCPOverlapped/IOCPOverlappedTask.h>
 
 #include <JNetwork/IOCP/IOCPTask.h>
+#include <JNetwork/Packet/CommandNameDictionary.h>
 #include <JNetwork/Packet/CommandParser.h>
 
-#include <TF/Common/Command.h>
-#include <TF/Common/Const.h>
+#include <TF/Common/Base/ComponentCollection.h>
+#include <TF/Common/Base/SessionComponent.h>
 
+
+namespace Core
+{
+	inline JNetwork::CommandNameDictionary CommandNameMap;
+}
+
+void InitializeCommon();
+void FinalizeCommon();

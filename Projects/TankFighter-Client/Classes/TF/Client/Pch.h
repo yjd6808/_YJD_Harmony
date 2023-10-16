@@ -15,6 +15,7 @@
 #include <TF/Client/Util/Color.h>
 
 #include <TF/Client/Net/NetCore.h>
+#include <TF/Client/Net/Host/GameClient.h>
 
 #include <TF/Client/Game/UI/PopUp.h>
 #include <TF/Client/Game/UI/TextButton.h>
@@ -29,6 +30,7 @@
 namespace Core
 {
 	inline ::NetCore* NetCore;
+	inline ::GameClient* GameClient;
 }
 
 void InitializeGameCore();

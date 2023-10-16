@@ -11,8 +11,9 @@
 
 void InitializeGameCore() {
 	Core::NetCore = dbg_new NetCore;
-
 	Core::NetCore->Initialize();
+
+	Core::GameClient = Core::NetCore->getGameClient();
 }
 
 void FinalizeGameCore() {

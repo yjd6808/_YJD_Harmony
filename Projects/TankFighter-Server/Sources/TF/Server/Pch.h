@@ -10,8 +10,18 @@
 
 #include <TF/Common/PchBase.h>
 
-#include <TF/Common/Structure.h>
-#include <TF/Common/Command.h>
-#include <TF/Common/Enum.h>
+#include <TF/Server/NetCore.h>
+#include <TF/Server/Database/MysqlDatabase.h>
+#include <TF/Server/Contents/World.h>
 
 #include <mysql.h>
+
+namespace Core
+{
+	inline ::NetCore* NetCore;
+	inline ::MysqlDatabase* GameDB;
+	inline ::World* World;
+}
+
+void InitializeCore();
+void FinalizeCore();

@@ -43,8 +43,14 @@ public:
 	AccessibleObjectPool() : m_iAccessId(-1) {}
 	virtual ~AccessibleObjectPool() = default;
 
+	// new를 통한 생성을 금함.
+	// Push, Pop으로만 객체 얻을 수 있도록 하기위함.
+	void* operator new(size_t size, int blockUse, char const* fileName, int lineNumber) = delete;
+	void* operator new(size_t size) = delete;
+
 	static void InitPool(int capacity, int size, int startId = 0) {
 		DebugAssertMsg(ms_vAccessTable == nullptr, "이미 풀이 초기화되어 있습니다.");
+		DebugAssert(capacity >= size);
 
 		ms_vAccessTable = dbg_new Vector<T*>(capacity, nullptr);
 		ms_iStartId = startId;
@@ -52,7 +58,7 @@ public:
 		ms_iCount = 0;
 
 		for (int i = 0; i < size; ++i) {
-			T* obj = dbg_new T();
+			T* obj = CreateObject();
 			obj->m_iAccessId = startId + ms_iCount;
 			ms_vAccessTable->At(i) = obj;
 			ms_lPool.PushBack(obj);
@@ -98,7 +104,7 @@ public:
 			ms_lPool.PopFront();
 		} else {
 			const int iIndex = ms_iCount;
-			pObject = dbg_new T();
+			pObject = CreateObject();
 			pObject->m_iAccessId = ms_iStartId + iIndex;
 			DebugAssert(ms_vAccessTable->At(iIndex) == nullptr);
 			ms_vAccessTable->At(iIndex) = pObject;
@@ -135,7 +141,6 @@ public:
 		JCORE_DELETE_SAFE(ms_vAccessTableForSwap);
 	}
 
-
 	// 메모리 할당된 모든 객체수
 	static int GetTotalCount() {
 		JCORE_LOCK_GUARD(ms_Sync);
@@ -154,9 +159,22 @@ public:
 		return ms_lPool.Size();
 	}
 
-	virtual void OnPopped() = 0;		// 풀에서 팝될때 실행할 작업들 처리
+	virtual void OnPopped() = 0;		// 가져올때 실행할 작업 처리
+	virtual void OnPushed() = 0;		// 넣을때 실행할 작업처리
 
 	int GetAccessId() const { return m_iAccessId; }
+
+private:
+	static T* CreateObject() {
+		T* pObj = (T*)::dbg_operator_new(sizeof(T));
+		::new(pObj) T();
+		return pObj;
+	}
+
+	static void DeleteObject(T* obj) {
+		obj->~T();
+		::dbg_operator_delete(obj);
+	}
 
 protected:
 	int m_iAccessId;

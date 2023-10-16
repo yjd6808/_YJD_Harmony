@@ -94,6 +94,10 @@ public:
 		return iSize;
 	}
 
+	constexpr static int LengthWithNull(const char* str) {
+		return Length(str) + 1;
+	}
+
 	static bool IsNullOrEmpty(const char* str);
 	static int Copy(char* buffer, const int bufferSize, const char* copy);
 	static int CopyUnsafe(char* buffer, const char* copy);

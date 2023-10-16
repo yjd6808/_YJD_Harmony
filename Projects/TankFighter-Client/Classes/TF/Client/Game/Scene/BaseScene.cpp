@@ -50,6 +50,11 @@ bool BaseScene::init() {
 }
 
 void BaseScene::update(float delta) {
+	const TimeSpan elapsed = Int64(delta * 1'000'000);
+
+	if (Core::NetCore)
+		Core::NetCore->update(elapsed);
+
 	static TimeCounterF s_pingCounter(TimeCounterAttribute::TimeOverReset);
 	s_pingCounter.Elapsed += delta;
 	if (s_pingCounter.ElapsedMiliSeconds(Const::Ping::Delay)) {
@@ -62,8 +67,11 @@ void BaseScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::E
 	switch (keyCode) {
 	case EventKeyboard::KeyCode::KEY_ESCAPE:
 		Director::getInstance()->setDisplayStats(!Director::getInstance()->isDisplayStats());
-		m_pGridLayer->setVisible(!m_pGridLayer->isVisible());
-		m_pNetInfo->setVisible(!m_pGridLayer->isVisible());
+		if (m_pGridLayer)
+			m_pGridLayer->setVisible(!m_pGridLayer->isVisible());
+
+		if (m_pNetInfo)
+			m_pNetInfo->setVisible(!m_pNetInfo->isVisible());
 		break;
 	}
 }

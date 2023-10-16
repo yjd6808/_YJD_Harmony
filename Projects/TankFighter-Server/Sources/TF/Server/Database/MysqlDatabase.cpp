@@ -104,4 +104,12 @@ void MysqlDatabase::Finalize() {
 	MysqlStatementBuilder::Finalize();
 }
 
+const String& MysqlDatabase::GetName() const {
+	if (m_pInfo == nullptr) {
+		return String(0);
+	}
+
+	return m_pInfo->Name;
+}
+
 

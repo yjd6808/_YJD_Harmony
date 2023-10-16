@@ -35,4 +35,16 @@ namespace Window
 	const float Height = 600;
 }
 
+namespace Properties
+{
+	namespace GameClient
+	{
+		const int Reconnecting = 1;
+		const int AccountPrimaryKey = 2;
+		const int ChannelPrimaryKey = 3;
+		const int CharacterPrimaryKey = 4;
+		const int TankAccessKey = 5;
+	}
+}
+
 NS_CONST_END

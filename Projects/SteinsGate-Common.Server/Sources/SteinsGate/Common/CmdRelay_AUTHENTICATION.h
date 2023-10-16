@@ -27,12 +27,12 @@ int SessionHandle;
 SGStaticString<Const::StringLen::AccountId> AccountId;
 ServerProcessType_t RequestedServer;	// 요청한 서버
 AuthenticationSerial_t Serial;			// 체크해야하는 시리얼
-RELAY_STATIC_CMD_END(SAU_AuthenticationCheck)
+RELAY_STATIC_CMD_END
 
 RELAY_STATIC_CMD_BEGIN(AUS_AuthenticationCheckAck, CMDID_AUS_AuthenticationCheckAck)
 int SessionHandle;
 bool Success;			// 실패시 만료 혹은 이상한유저
-RELAY_STATIC_CMD_END(AUS_AuthenticationCheckAck)
+RELAY_STATIC_CMD_END
 
 
 #pragma pack(pop)	// #pragma pack(push, CMD_ALIGNMENT)
