@@ -21,7 +21,7 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static void SEND_CS_CreateCharacter(const char* nickName);
 	static void SEND_CS_DeleteCharacter(const char* nickName);
 	static void SEND_CS_SelectCharacter(int characterPrimaryKey);
-	// static void SEND_CS_JoinLobby();
+	static bool SEND_CS_JoinLobby();
 	// static void SEND_CS_CreateRoom();
 	// static void SEND_CS_JoinRoom();
 	// static void SEND_CS_AddFriend();

@@ -40,8 +40,6 @@ namespace Channel
 
 namespace Room
 {
-	extern const int PoolSize;			// 가능한 최대 방 갯수
-
 	constexpr int MaxPlayerCount = 4;
 }
 

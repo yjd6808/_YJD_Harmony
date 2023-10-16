@@ -42,8 +42,6 @@ namespace Properties
 		const int Reconnecting = 1;
 		const int AccountPrimaryKey = 2;
 		const int ChannelPrimaryKey = 3;
-		const int CharacterPrimaryKey = 4;
-		const int TankAccessKey = 5;
 	}
 }
 

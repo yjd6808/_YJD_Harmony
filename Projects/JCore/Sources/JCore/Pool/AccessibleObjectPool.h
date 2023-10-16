@@ -67,6 +67,8 @@ public:
 	}
 
 	static void Expand(int capacity) {
+		DebugAssertMsg(ms_vAccessTable != nullptr, "초기화를 우선 해주세요.");
+
 		const int iCurSize = ms_vAccessTable->Size();
 		const bool bShirink = capacity < iCurSize;
 
@@ -92,6 +94,8 @@ public:
 	}
 
 	static T* Pop() {
+		DebugAssertMsg(ms_vAccessTable != nullptr, "초기화를 우선 해주세요.");
+
 		JCORE_LOCK_GUARD(ms_Sync);
 
 		if (ms_iCount == ms_iCapacity) {
@@ -118,6 +122,8 @@ public:
 		JCORE_LOCK_GUARD(ms_Sync);
 		ms_lPool.PushBack(obj);
 	}
+
+	static TAccessTable* GetTable() { return ms_vAccessTable; }
 
 	static T* GetByAccessId(int accessId) {
 		const int iIndex = accessId - ms_iStartId;

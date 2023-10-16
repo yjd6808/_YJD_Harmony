@@ -125,14 +125,14 @@ REGISTER_QRY_STRUCT
 );
 
 // ==================================================================
-// SelectCharacterInfo
+// SelectCharacterInfoList
 // ==================================================================
 
-QRY_SELECT_STATEMENT_BEGIN(SelectCharacterInfo)
+QRY_SELECT_STATEMENT_BEGIN(SelectCharacterInfoList)
 static constexpr const char* Script = "select c_uid, c_name, c_win, c_lose, c_kill, c_death, c_money from t_character where c_account_uid = ? and c_channel_uid = ?";
 QRY_SELECT_STATEMENT_END
 
-QRY_SELECT_RESULT_BEGIN(SelectCharacterInfoResult)
+QRY_SELECT_RESULT_BEGIN(SelectCharacterInfoListResult)
 int PrimaryKey;
 JCore::String Name;
 int Win;
@@ -144,7 +144,7 @@ QRY_SELECT_RESULT_END
 
 REGISTER_QRY_STRUCT
 (
-	SelectCharacterInfoResult
+	SelectCharacterInfoListResult
 	, PrimaryKey, "c_uid"
 	, Name, "c_name"
 	, Win, "c_win"
@@ -187,6 +187,38 @@ QRY_INSERT_STATEMENT_END
 QRY_DELETE_STATEMENT_BEGIN(DeleteCharacter)
 static constexpr const char* Script = "delete from t_character where c_account_uid = ? and c_channel_uid = ? and c_name = ?";
 QRY_DELETE_STATEMENT_END
+
+
+// ==================================================================
+// SelectCharacterInfo
+// ==================================================================
+
+QRY_SELECT_STATEMENT_BEGIN(SelectCharacterInfo)
+static constexpr const char* Script = "select c_uid, c_name, c_win, c_lose, c_kill, c_death, c_money from t_character where c_account_uid = ? and c_channel_uid = ? and c_uid = ?";
+QRY_SELECT_STATEMENT_END
+
+QRY_SELECT_RESULT_BEGIN(SelectCharacterInfoResult)
+int PrimaryKey;
+JCore::String Name;
+int Win;
+int Lose;
+int Kill;
+int Death;
+int Money;
+QRY_SELECT_RESULT_END
+
+REGISTER_QRY_STRUCT
+(
+	SelectCharacterInfoResult
+	, PrimaryKey, "c_uid"
+	, Name, "c_name"
+	, Win, "c_win"
+	, Lose, "c_lose"
+	, Kill, "c_kill"
+	, Death, "c_death"
+	, Money, "c_money"
+);
+
 
 NS_QRY_END
 

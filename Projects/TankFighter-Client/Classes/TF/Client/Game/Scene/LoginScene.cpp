@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 10/13/2023 2:32:29 PM
  * =====================
@@ -194,4 +194,3 @@ void LoginScene::OnClickedReconnectButton(TextButton* sender) {
 	Core::GameClient->SetReconnectMode(true);
 	pClient->ConnectAsync(JNetwork::IPv4EndPoint::Parse(Const::Net::Server::GameConnectEndPoint));
 }
-xx

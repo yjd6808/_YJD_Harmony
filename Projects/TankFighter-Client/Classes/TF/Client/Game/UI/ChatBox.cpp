@@ -51,6 +51,7 @@ bool ChatBox::init(const Size& size)
 	this->addChild(m_pListView);
 
 	m_pChatEditBox = EditBox::create(Size(fullSize.width - ms_fChatSendButtonWidth, ms_fChatEditBoxHeight), Scale9Sprite::create(Const::Resource::WhiteRectFileName));
+	m_pChatEditBox->addClickEventListener([](Ref* ref) { ((EditBox*)ref)->openKeyboard(); });
 	m_pChatEditBox->setFontColor(Color4B::WHITE);
 	m_pChatEditBox->setColor(ColorList::Africanviolet_v);
 	m_pChatEditBox->setFontSize(15.0f);

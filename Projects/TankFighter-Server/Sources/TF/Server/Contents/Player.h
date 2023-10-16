@@ -11,6 +11,7 @@
 #include <JCore/Pool/AccessibleObjectPool.h>
 #include <JCore/Primitives/String.h>
 
+class Character;
 class Channel;
 class Room;
 class GameSession;
@@ -35,6 +36,7 @@ public:
 	JCORE_GETTER_SETTER(U, GameSession*,			Session,			m_pSession)
 	JCORE_GETTER_SETTER(U, Channel*,				Channel,			m_pChannel)
 	JCORE_GETTER_SETTER(U, Room*,					Room,				m_pRoom)
+	JCORE_GETTER_SETTER(U, Character*,				Character,			m_pCharacter)
 
 	int GetChannelPrimaryKey() const;
 
@@ -46,6 +48,7 @@ private:
 	GameSession* m_pSession;
 	Channel* m_pChannel;
 	Room* m_pRoom;
+	Character* m_pCharacter;
 };
 
 

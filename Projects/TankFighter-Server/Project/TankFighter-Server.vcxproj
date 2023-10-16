@@ -27,6 +27,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\Character.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\Sources\TF\Server\Contents\World.cpp">
       <SubType>
       </SubType>
@@ -91,6 +95,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Server\Contents\Channel.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\Character.h">
       <SubType>
       </SubType>
     </ClInclude>

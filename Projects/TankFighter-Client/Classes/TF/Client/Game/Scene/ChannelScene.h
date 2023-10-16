@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 10/13/2023 2:30:51 PM
  * =====================
@@ -19,7 +19,7 @@ public:
 	ChannelScene();
 	~ChannelScene() override;
 
-	CREATE_FUNC(ChannelScene);
+	CREATE_FUNC(ChannelScene)
 
 	bool init() override;
 	void onEnterTransitionDidFinish() override;

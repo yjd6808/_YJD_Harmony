@@ -13,6 +13,7 @@
 #include <TF/Client/Game/Scene/ChannelScene.h>
 #include <TF/Client/Game/Scene/CharacterSelectScene.h>
 #include <TF/Client/Game/Scene/LoginScene.h>
+#include <TF/Client/Game/Scene/LobbyScene.h>
 
 #include <TF/Client/Net/Send/S_GAME.h>
 
@@ -76,7 +77,12 @@ void R_GAME::RECV_SC_LoadCharacterInfo(Session* session, ICommand* cmd) {
 
 void R_GAME::RECV_SC_SelectCharacter(Session* session, ICommand* cmd) {
 	SC_SelectCharacter* pCmd = (SC_SelectCharacter*)cmd;
+	Core::GameClient->SetCharacterInfo(pCmd->info);
+	LobbyScene* pLobbyScene = LobbyScene::create();
+	Director::getInstance()->replaceScene(pLobbyScene);
+	pLobbyScene->refreshCharacterInfo(pCmd->info);
 }
+
 void R_GAME::RECV_SC_UpdateCharacterInfo(Session* session, ICommand* cmd) {
 	SC_UpdateCharacterInfo* pCmd = (SC_UpdateCharacterInfo*)cmd;
 }

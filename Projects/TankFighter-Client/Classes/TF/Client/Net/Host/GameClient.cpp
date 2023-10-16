@@ -17,7 +17,6 @@ GameClient::GameClient(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbs
 	m_Properties.Add(Const::Properties::GameClient::Reconnecting, PropertyType::Bool);
 	m_Properties.Add(Const::Properties::GameClient::AccountPrimaryKey, PropertyType::Int);
 	m_Properties.Add(Const::Properties::GameClient::ChannelPrimaryKey, PropertyType::Int);
-	m_Properties.Add(Const::Properties::GameClient::CharacterPrimaryKey, PropertyType::Int);
 }
 
 void GameClient::SetReconnectMode(bool mode) {
@@ -45,9 +44,13 @@ void GameClient::SetChannelPrimaryKey(int primaryKey) {
 }
 
 int GameClient::GetCharacterPrimaryKey() const {
-	return m_Properties[Const::Properties::GameClient::CharacterPrimaryKey].As<int>();
+	return m_CharacterInfo.PrimaryKey;
 }
 
 void GameClient::SetCharacterPrimaryKey(int primaryKey) {
-	m_Properties[Const::Properties::GameClient::CharacterPrimaryKey] = primaryKey;
+	m_CharacterInfo.PrimaryKey = primaryKey;
+}
+
+void GameClient::SetCharacterInfo(const CharacterInfo& info) {
+	m_CharacterInfo = info;
 }

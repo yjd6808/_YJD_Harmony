@@ -21,7 +21,7 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static void SEND_SC_SelectChannel(int channelPrimaryKey);
 	static void SEND_SC_LeaveChannel();
 	static void SEND_SC_LoadCharacterInfo(int accountPrimaryKey, int channelPrimaryKey);
-	//static void SEND_SC_SelectCharacter();
+	static void SEND_SC_SelectCharacter(const CharacterInfo& info);
 	//static void SEND_SC_UpdateCharacterInfo();
 	//static void SEND_SC_UpdateRoomList();
 	//static void SEND_SC_UpdateFriendList();

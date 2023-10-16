@@ -10,16 +10,21 @@
 
 #include <TF/Server/Const.h>
 #include <TF/Server/Host/GameSession.h>
+#include <TF/Server/Contents/Character.h>
 
 USING_NS_JC;
 USING_NS_JNET;
 
+// Empty로 둔 이유
+// null체크 하기 귀찮아서 그냥 null인 상태를 안만들도록 함.
+// 이렇게 해보고 불편한점이 생기면 슈타인즈 게이트 프로젝트에선 이렇게 하지말자.
 Player::Player()
 	: m_iAccountPrimaryKey(Const::InvalidValue)
 	, m_szAccountId(0)
 	, m_pSession(nullptr)
 	, m_pChannel(&Channel::Empty)
 	, m_pRoom(&Room::Empty)
+	, m_pCharacter(&Character::Empty)
 {}
 
 Player::~Player() {
@@ -32,6 +37,7 @@ void Player::OnPopped() {
 	m_szAccountId = nullptr;
 	m_pChannel = &Channel::Empty;
 	m_pRoom = &Room::Empty;
+	m_pCharacter = &Character::Empty;
 }
 
 void Player::OnPushed() {
@@ -42,13 +48,14 @@ void Player::OnConnected() {
 }
 
 void Player::OnDisconnected() {
-	Channel* pChannel = m_pChannel;
-
 	Core::World->RemovePlayer(this);
-
-	if (pChannel)
-		pChannel->RemovePlayer(this);
+	m_pChannel->RemovePlayer(this);
 	// m_pRoom->RemovePlayer(this);
+
+	Character* pCharacter = m_pCharacter;
+
+	if (pCharacter != &Character::Empty)
+		Character::Push(pCharacter);
 
 	Push(this);
 }

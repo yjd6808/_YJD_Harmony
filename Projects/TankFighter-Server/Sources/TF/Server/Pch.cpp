@@ -10,6 +10,7 @@
 
 #include <TF/Server/Const.h>
 #include <TF/Server/Contents/Room.h>
+#include <TF/Server/Contents/Character.h>
 
 void InitializeCore() {
 	Player::InitPool(
@@ -22,6 +23,12 @@ void InitializeCore() {
 		Const::AccessibleObject::InitCapacity::Room,
 		Const::AccessibleObject::InitSize::Room,
 		Const::AccessibleObject::StartId::Room
+	);
+
+	Character::InitPool(
+		Const::AccessibleObject::InitCapacity::Character,
+		Const::AccessibleObject::InitSize::Character,
+		Const::AccessibleObject::StartId::Character
 	);
 
 	DatabaseInfo* pDatabaseInfo = dbg_new DatabaseInfo;
@@ -51,6 +58,7 @@ void InitializeCore() {
 void FinalizeCore() {
 	Core::World->Finalize();
 
+	Character::FreeAllObjects();
 	Room::FreeAllObjects();
 	Player::FreeAllObjects();
 

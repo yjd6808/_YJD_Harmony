@@ -67,3 +67,11 @@ void S_GAME::SEND_CS_SelectCharacter(int characterPrimaryKey) {
 	sending.Cmd.CharacterPrimaryKey = characterPrimaryKey;
 }
 
+bool S_GAME::SEND_CS_JoinLobby() {
+	auto sending = SendBegin<CS_JoinLobby>();
+	sending.Cmd.AccountPrimaryKey = Core::GameClient->GetAccountPrimaryKey();
+	sending.Cmd.ChannelPrimaryKey = Core::GameClient->GetChannelPrimaryKey();
+	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
+	return SendEndExplicit(sending);
+}
+

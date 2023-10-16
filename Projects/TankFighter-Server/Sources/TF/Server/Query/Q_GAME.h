@@ -19,7 +19,8 @@ struct Q_GAME : Qry::QryHelper<Q_GAME>
 	static void UpdateLoginDate(int accountPrimaryKey);
 	static bool CheckAccountIdExist(const char* id, JCORE_OUT_OPT int* accountPrimaryKey = nullptr);
 	static Qry::SelectChannelInfoResult SelectChannelInfo();
-	static Qry::SelectCharacterInfoResult SelectCharacterInfo(int accountPrimaryKey, int channelPrimaryKey);
+	static Qry::SelectCharacterInfoListResult SelectCharacterInfoList(int accountPrimaryKey, int channelPrimaryKey);
+	static Qry::SelectCharacterInfoResult SelectCharacterInfo(int accountPrimaryKey, int channelPrimaryKey, int characterPrimaryKey);
 	static bool CheckCharacterNameExist(const char* name, int channelPrimaryKey);
 	static bool CreateCharacter(int accountPrimaryKey, int channelPrimaryKey, const char* name, int win, int lose, int kill, int death, int money);
 	static bool DeleteCharacter(int accountPrimaryKey, int channelPrimaryKey, const char* name);

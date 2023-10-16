@@ -52,9 +52,15 @@ Qry::SelectChannelInfoResult Q_GAME::SelectChannelInfo() {
 	return result;
 }
 
-Qry::SelectCharacterInfoResult Q_GAME::SelectCharacterInfo(int accountPrimaryKey, int channelPrimaryKey) {
+Qry::SelectCharacterInfoListResult Q_GAME::SelectCharacterInfoList(int accountPrimaryKey, int channelPrimaryKey) {
+	Qry::SelectCharacterInfoListResult result;
+	Qry::SelectCharacterInfoList::Execute<THelper>(Core::GameDB, result, accountPrimaryKey, channelPrimaryKey);
+	return result;
+}
+
+Qry::SelectCharacterInfoResult Q_GAME::SelectCharacterInfo(int accountPrimaryKey, int channelPrimaryKey, int characterPrimaryKey) {
 	Qry::SelectCharacterInfoResult result;
-	Qry::SelectCharacterInfo::Execute<THelper>(Core::GameDB, result, accountPrimaryKey, channelPrimaryKey);
+	Qry::SelectCharacterInfo::Execute<THelper>(Core::GameDB, result, accountPrimaryKey, channelPrimaryKey, characterPrimaryKey);
 	return result;
 }
 

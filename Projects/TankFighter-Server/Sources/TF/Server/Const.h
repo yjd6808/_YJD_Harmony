@@ -29,18 +29,21 @@ namespace AccessibleObject
 	{
 		extern const int Player;
 		extern const int Room;
+		extern const int Character;
 	}
 
 	namespace InitCapacity
 	{
 		extern const int Player;
 		extern const int Room;
+		extern const int Character;
 	}
 
 	namespace InitSize
 	{
 		extern const int Player;
 		extern const int Room;
+		extern const int Character;
 	}
 }
 

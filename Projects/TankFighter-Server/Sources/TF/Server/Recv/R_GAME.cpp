@@ -15,6 +15,7 @@
 #include <TF/Server/Contents/Player.h>
 #include <TF/Server/Contents/Room.h>
 #include <TF/Server/Contents/Channel.h>
+#include <TF/Server/Contents/Character.h>
 #include <TF/Server/Contents/World.h>
 
 #include <TF/Server/Query/Q_GAME.h>
@@ -202,12 +203,44 @@ void R_GAME::RECV_CS_DeleteCharacter(Session* session, ICommand* cmd) {
 }
 
 void R_GAME::RECV_CS_SelectCharacter(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
 	CS_SelectCharacter* pCmd = (CS_SelectCharacter*)cmd;
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr) return;
+
+	const int iAccountPrimaryKey = pPlayer->GetAccountPrimaryKey();
+	if (iAccountPrimaryKey != pCmd->AccountPrimaryKey) return;
+
+	const int iChannelPrimaryKey = pPlayer->GetChannelPrimaryKey();
+	if (iChannelPrimaryKey != pCmd->ChannelPrimaryKey) return;
+
+	S_GAME::AutoFlush _;
+	S_GAME::SetInformation(session, SendStrategy::SendAlloc);
+
+	const Qry::SelectCharacterInfoResult selectQryResult = Q_GAME::SelectCharacterInfo(iAccountPrimaryKey, iChannelPrimaryKey, pCmd->CharacterPrimaryKey);
+	if (!selectQryResult.HasBindedResult) {
+		S_GAME::SEND_SC_ServerMessage("캐릭터 정보가 잘못되었습니다.");
+		return;
+	}
+
+	CharacterInfo info;
+	info.PrimaryKey = selectQryResult.PrimaryKey;
+	info.Name = selectQryResult.Name;
+	info.Win = selectQryResult.Win;
+	info.Lose = selectQryResult.Lose;
+	info.Kill = selectQryResult.Kill;
+	info.Death = selectQryResult.Death;
+	info.Money = selectQryResult.Money;
+	Character* pCharacter = Character::Pop();
+	pPlayer->SetCharacter(pCharacter);
+	S_GAME::SEND_SC_SelectCharacter(info);
 }
 
 void R_GAME::RECV_CS_JoinLobby(Session* session, ICommand* cmd) {
 	CS_JoinLobby* pCmd = (CS_JoinLobby*)cmd;
 }
+
 void R_GAME::RECV_CS_CreateRoom(Session* session, ICommand* cmd) {
 	CS_CreateRoom* pCmd = (CS_CreateRoom*)cmd;
 }

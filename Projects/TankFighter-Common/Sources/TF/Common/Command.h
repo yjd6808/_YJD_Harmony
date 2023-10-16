@@ -154,9 +154,7 @@ int CharacterPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_SelectCharacter, CMDID_SC_SELECT_CHARACTER)
-int CharacterPrimaryKey = Const::InvalidValue;
-bool Result{};
-char Reason[Const::Length::Reason]{};
+CharacterInfo info;
 STATIC_CMD_END
 
 

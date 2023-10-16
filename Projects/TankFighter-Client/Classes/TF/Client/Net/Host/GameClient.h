@@ -10,6 +10,7 @@
 
 #include <JCore/Container/Properties.h>
 #include <JNetwork/Host/TcpClient.h>
+#include <TF/Common/Structure.h>
 
 class GameClient : public JNetwork::TcpClient
 {
@@ -27,6 +28,10 @@ public:
 
 	int GetCharacterPrimaryKey() const;
 	void SetCharacterPrimaryKey(int primaryKey);
+
+	void SetCharacterInfo(const CharacterInfo& info);
+	const CharacterInfo& GetCharacterInfo() const { return m_CharacterInfo; }
 private:
 	JCore::Properties<int> m_Properties;
+	CharacterInfo m_CharacterInfo;
 };

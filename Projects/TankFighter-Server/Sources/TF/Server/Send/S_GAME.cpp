@@ -44,26 +44,33 @@ void S_GAME::SEND_SC_LeaveChannel() {
 }
 
 void S_GAME::SEND_SC_LoadCharacterInfo(int accountPrimaryKey, int channelPrimaryKey) {
-	Qry::SelectCharacterInfoResult selectQryResult = Q_GAME::SelectCharacterInfo(accountPrimaryKey, channelPrimaryKey);
+	Qry::SelectCharacterInfoListResult selectQryResult = Q_GAME::SelectCharacterInfoList(accountPrimaryKey, channelPrimaryKey);
 	Vector<CharacterInfo> vCharacterInfoList(selectQryResult.RowCount);
 
-	do {
-		CharacterInfo info;
-		info.PrimaryKey = selectQryResult.PrimaryKey;
-		info.Name = selectQryResult.Name;
-		info.Win = selectQryResult.Win;
-		info.Lose = selectQryResult.Lose;
-		info.Kill = selectQryResult.Kill;
-		info.Death = selectQryResult.Death;
-		info.Money = selectQryResult.Money;
-		vCharacterInfoList.PushBack(Move(info));
-	} while (selectQryResult.FetchNextRow());
-
+	if (selectQryResult.HasBindedResult) {
+		do {
+			CharacterInfo info;
+			info.PrimaryKey = selectQryResult.PrimaryKey;
+			info.Name = selectQryResult.Name;
+			info.Win = selectQryResult.Win;
+			info.Lose = selectQryResult.Lose;
+			info.Kill = selectQryResult.Kill;
+			info.Death = selectQryResult.Death;
+			info.Money = selectQryResult.Money;
+			vCharacterInfoList.PushBack(Move(info));
+		} while (selectQryResult.FetchNextRow());
+	}
+	
 	int iCount = vCharacterInfoList.Size();
 	auto sending = SendBegin<SC_LoadCharacterInfo>(iCount);
 	for (int i = 0; i < iCount; ++i) {
 		sending.Cmd.Info[i] = vCharacterInfoList[i];
 	}
+}
+
+void S_GAME::SEND_SC_SelectCharacter(const CharacterInfo& info) {
+	auto sending = SendBegin<SC_SelectCharacter>();
+	sending.Cmd.info = info;
 }
 
 void S_GAME::SEND_SC_ServerMessage(const char* msg) {

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 작성자: 윤정도
  * 생성일: 10/13/2023 2:30:51 PM
  * =====================
@@ -20,7 +20,7 @@ public:
 	CharacterSelectScene();
 	~CharacterSelectScene() override;
 
-	CREATE_FUNC(CharacterSelectScene);
+	CREATE_FUNC(CharacterSelectScene)
 
 	bool init() override;
 	void onEnterTransitionDidFinish() override;

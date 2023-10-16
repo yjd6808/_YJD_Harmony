@@ -24,6 +24,7 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<CS_CreateCharacter>();
 	Core::CommandNameMap.Add<CS_DeleteCharacter>();
 	Core::CommandNameMap.Add<CS_SelectCharacter>();
+	Core::CommandNameMap.Add<SC_SelectCharacter>();
 	Core::CommandNameMap.Add<CS_JoinLobby>();
 	Core::CommandNameMap.Add<SC_UpdateCharacterInfo>();
 	Core::CommandNameMap.Add<SC_UpdateRoomList>();

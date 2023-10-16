@@ -36,7 +36,6 @@ struct CharacterInfo
 	int Kill;
 	int Death;
 	int Money;
-	PlayerState PlayerState;
 };
 
 struct RoomCharacterInfo : CharacterInfo
@@ -56,8 +55,8 @@ struct ChannelInfo
 
 struct RoomInfo
 {
-	char Name[Const::Length::Name];
-	int RoomUID = Const::InvalidValue;
+	JCore::StaticString<Const::Length::Name> Name;
+	int AccessId = Const::InvalidValue;
 	int PlayerCount;
 	int MaxPlayerCount;
 	RoomState RoomState;
