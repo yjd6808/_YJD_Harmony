@@ -170,33 +170,36 @@ NS_JNET_END
 					  아래 규칙에 맞게 커맨드를 생성토록 한다.
  =====================================================================================*/
 
-#define STATIC_CMD_BEGIN(__struct__, __cmd__)									\
-struct __struct__ : JNetwork::StaticCommand {									\
-	__struct__(int count = 1) {													\
-		Type = JNetwork::CmdType::Static;										\
-		Cmd = __cmd__;															\
-		CmdLen = sizeof(__struct__);											\
-	}																			\
-																				\
-	static constexpr int Size(int count = 1) { return sizeof(__struct__); }		\
-	static constexpr const char* Name() { return #__struct__; }					\
-	static constexpr int Command() { return __cmd__; }							\
-	
+#define CMD_FUNCSIG_SIZE	static constexpr int _Size(int count = 1)
+#define CMD_FUNCSIG_NAME	static constexpr const char* _Name()
+#define CMD_FUNCSIG_COMMAND static constexpr int _Command()
 
+#define STATIC_CMD_BEGIN(__struct__, __cmd__)						\
+struct __struct__ : JNetwork::StaticCommand {						\
+	__struct__(int count = 1) {										\
+		Type = JNetwork::CmdType::Static;							\
+		Cmd = __cmd__;												\
+		CmdLen = sizeof(__struct__);								\
+	}																\
+																	\
+	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__); }				\
+	CMD_FUNCSIG_NAME	{ return #__struct__; }						\
+	CMD_FUNCSIG_COMMAND { return __cmd__; }							\
+	
 #define STATIC_CMD_END };
 
 
 // @https://stackoverflow.com/questions/35196871/what-is-the-optimal-order-of-members-in-a-class
-#define DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)														\
-struct __struct__ : JNetwork::DynamicCommand {																				\
-	__struct__(int count) {																									\
-		Type = JNetwork::CmdType::Dynamic;																					\
-		Cmd = __cmd__;																										\
-		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);										\
-		Count = count;																										\
-	}																														\
-	static constexpr int Size(int count) { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
-	static constexpr const char* Name() { return #__struct__; }																\
-	static constexpr int Command() { return __cmd__; }																		\
+#define DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)									\
+struct __struct__ : JNetwork::DynamicCommand {															\
+	__struct__(int count) {																				\
+		Type = JNetwork::CmdType::Dynamic;																\
+		Cmd = __cmd__;																					\
+		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);					\
+		Count = count;																					\
+	}																									\
+	CMD_FUNCSIG_SIZE { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
+	CMD_FUNCSIG_NAME { return #__struct__; }															\
+	CMD_FUNCSIG_COMMAND { return __cmd__; }																\
 
 #define DYNAMIC_CMD_END	};

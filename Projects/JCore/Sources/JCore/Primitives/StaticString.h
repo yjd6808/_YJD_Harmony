@@ -251,6 +251,18 @@ struct StaticString
 	}
 
 
+	// 이건 안들어오고 최적화된것마냥 알아서 원소복사를 해주네.
+	// StaticString<32> a;
+	// StaticString<32> b;
+	// s.operator=(b); // 실행해도 안들어옴, 어셈블리 확인하면 하나씩 복사해주는 코드가 알아서들어가는 걸로보인다.
+	template <Int32U SrcSize>
+	StaticString<Size>& operator=(const StaticString<SrcSize>&& str) {
+		int iCopySize = StringUtil::Copy(Source, Size, str.Source);
+		DebugAssertMsg(iCopySize != -1, "복사에 실패했습니다.");
+		return *this;
+	}
+
+	// Source의 Capacity는 고려하지 않고 str의 문자들을 모두 복사
 	int SetStringUnsafe(const char* str) {
 		return StringUtil::CopyUnsafe(Source, str);
 	}

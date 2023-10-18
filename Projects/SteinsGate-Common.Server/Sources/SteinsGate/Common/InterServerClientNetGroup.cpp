@@ -94,10 +94,6 @@ void InterServerClientNetGroup::SyncPeerServerTime(const TimeSpan& elapsed) {
 
 	S_PING_IS_COMMON::SetInformation(m_pInterServerClientTcp, SendStrategy::SendAsync);
 	S_PING_IS_COMMON::SEND_SCE_TimeSync();
-
-	// auto pPacket = dbg_new SinglePacket<SCE_TimeSync>;
-	// pPacket->Cmd.PeerServerTime.Tick = DateTime::Now().Tick;
-	// m_pInterServerClientTcp->SendAsync(pPacket);
 }
 
 bool InterServerClientNetGroup::ConnectCenterServer(int tryCount) {

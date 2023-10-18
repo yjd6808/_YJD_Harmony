@@ -49,7 +49,7 @@ public:
 	TCommand& SendAlloc(int count = 1) {
 		JCORE_LOCK_GUARD(m_SendBufferLock);
 
-		const int CmdSize = TCommand::Size(count);
+		const int CmdSize = TCommand::_Size(count);
 		if (m_spSendBuffer->GetWritePos() + CmdSize >= MAX_MSS) {
 			FlushSendBuffer();
 		}

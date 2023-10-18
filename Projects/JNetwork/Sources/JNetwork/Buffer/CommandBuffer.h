@@ -31,7 +31,7 @@ public:
 	template <typename TCommand>
 	TCommand& Alloc(int count) {
 		static_assert(JCore::IsBaseOf_v<ICommand, TCommand>, "... TCommand is not command [1]");
-		const int CmdSize = TCommand::Size(count);
+		const int CmdSize = TCommand::_Size(count);
 
 		if (MoveWritePos(CmdSize) == false) {
 			DebugAssertMsg(false, "버퍼에 커맨드를 쓸 공간이 부족합니다.");

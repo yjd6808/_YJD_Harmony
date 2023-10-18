@@ -16,7 +16,7 @@ IOCPOverlapped::IOCPOverlapped(IOCP* iocp, Type type)
     , m_pIocp(iocp)
 {
 	m_pIocp->AddPendingCount();
-	DebugAssert(iocp->GetState() == IOCP::State::eRunning, "IOCP가 Running 상태가 아닙니다.");
+	DebugAssertMsg(iocp->GetState() == IOCP::State::eRunning, "IOCP가 Running 상태가 아닙니다.");
 }
 
 IOCPOverlapped::~IOCPOverlapped() {

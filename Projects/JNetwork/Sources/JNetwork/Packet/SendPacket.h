@@ -12,10 +12,8 @@
 
 #pragma once
 
-#include <JCore/Type.h>
-#include <JCore/TypeCast.h>
 #include <JCore/TypeTraits.h>
-#include <JCore/Primitives/RefCountObject.h>
+#include <JCore/Primitives/RefCountObjectPtr.h>
 
 #include <WinSock2.h>
 
@@ -92,6 +90,12 @@ struct ISendPacket : JCore::RefCountObject
 		while (iCmdIndex < m_iCommandCount) {
 			ICommand* pCurCmd = reinterpret_cast<ICommand*>(pCmdData);
 			consumer(pCurCmd);
+
+			if (pCurCmd->CmdLen >= 2500) {
+				DebugAssert(false);
+				break;
+			}
+
 			pCmdData += pCurCmd->CmdLen;
 			iCmdIndex += 1;
 		}
@@ -203,7 +207,11 @@ private:
 /*=====================================================================================
 
 								 따이나믹 패킷 : 가변크기의 커맨드들을 담는 녀석
-
+  
+  현재 사용금지, count가 0인 경우에 대해서 Placement New 수행시 메모리 커럽션 발생 문제가 생길 수 있음
+  SinglePacket에 대해서는 해당 문제를 수정했으므로 그걸 사용하도록 할 것
+  시간이 촉박하고 따이나믹 패킷을 복수로 보내는일은 아직까진 없었으므로.. 수정하진 않는다.
+  추후 사용하게 된다면 필히 수정 후 사용할 것!!!
   ===================================================================================== */
 template <typename... CommandArgs>
 class DynamicPacket : public ISendPacket
@@ -327,7 +335,9 @@ private:
 
 							   싱글 패킷 (커맨드 한개만 전송하는 용도)
 							   다이나믹, 스태릭 커맨드 아무거나 가능
-  ===================================================================================== */
+
+ TODO: 다이나믹 버퍼는 메모리풀에서 할당받도록 하는게 좋아보인다.
+ ===================================================================================== */
 template <typename TCommand>
 class SinglePacket : public ISendPacket
 {
@@ -335,8 +345,8 @@ class SinglePacket : public ISendPacket
 public:
 	SinglePacket() : SinglePacket(1, true) {}
 	SinglePacket(int count, bool noCount = false)
-		: ISendPacket(1, TCommand::Size(count))
-		, m_pDynamicBuf(dbg_new char[PacketHeaderSize_v + this->m_iPacketLen])
+		: ISendPacket(1, TCommand::_Size(count)) // 실제 보낼 패킷데이터 크기(m_iPacketLen)만큼만 보내기 위해서 m_iPacketLen은 올바르게 설정해줘야한다.
+		, m_pDynamicBuf(dbg_new char[PacketHeaderSize_v + TCommand::_Size(count <= 0 ? 1 : count)])	// count가 0일 경우 구조체 일부가 잘리기 때문에 PlacementNew 수행시 메모리 커럽션이 발생하게 된다. 따라서 생성시에는 count가 0이더라도 1로 가정하고 처리하도록 한다.
 		, Cmd(*reinterpret_cast<TCommand*>(m_pDynamicBuf + PacketHeaderSize_v))
 	{
 		// 다이나믹 커맨드인데 count 인자를 명시적으로 전달안한 경우
@@ -344,6 +354,7 @@ public:
 			DebugAssertMsg(false, "다이나맥 커맨드는 명시적으로 count 인자를 전달해줘야합니다.");
 		}
 
+		// m_pDynamicBuf가 최소 sizeof(TCommand)보다는 커야지 메모리 커럽션이 발생하지 않는다.
 		JCore::Memory::PlacementNew(Cmd, count);
 	}
 	~SinglePacket() override {
@@ -369,8 +380,9 @@ public:
 	TCommand& Cmd;
 };
 
-
-
 using ISendPacketPtr = JCore::SharedPtr<ISendPacket>;
+using ISendPacketGuard = JCore::RefCountObjectPtr<ISendPacket>;
+
+#define JNET_SEND_PACKET_AUTO_RELEASE_GUARD(packet) ISendPacketGuard JCORE_CONCAT_COUNTER(__autorelease_guard__)(packet, false)
 
 NS_JNET_END

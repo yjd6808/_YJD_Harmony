@@ -1,7 +1,5 @@
 ﻿#include "header.h"
 
-constexpr int ThreadSize = 16;
-
 int main() {
 	new char;
 	InitializeDefaultLogger();

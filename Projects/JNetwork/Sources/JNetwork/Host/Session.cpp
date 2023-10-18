@@ -101,7 +101,7 @@ bool Session::Disconnect() {
 
 
 bool Session::SendAsync(ISendPacket* packet) {
-	JCORE_REF_COUNT_GUARD(packet);
+	packet->AddRef();
 	WSABUF buf = packet->GetWSABuf();
 	Int32UL uiSendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSend(this, m_spIocp.GetPtr(), packet);
@@ -153,6 +153,7 @@ CommandBufferPacket* Session::GetCommandBufferForSending() {
 
 void Session::FlushSendBuffer() {
 	CommandBufferPacket* pWrappedPacket = GetCommandBufferForSending();
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pWrappedPacket);
 	if (pWrappedPacket) SendAsync(pWrappedPacket);
 }
 
@@ -163,7 +164,7 @@ bool Session::SendToAsync(ISendPacket* packet, const IPv4EndPoint& destination) 
 		return false;
 	}
 
-	JCORE_REF_COUNT_GUARD(packet);
+	packet->AddRef();
 	WSABUF buf = packet->GetWSABuf();
 	Int32UL uiSendBytes = 0;
 	IOCPOverlapped* pOverlapped = dbg_new IOCPOverlappedSendTo(this, m_spIocp.GetPtr(), packet);

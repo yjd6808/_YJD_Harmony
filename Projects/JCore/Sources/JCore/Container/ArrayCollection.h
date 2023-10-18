@@ -232,8 +232,8 @@ protected:
 	/// </summary>
 	virtual void CopyFrom(std::initializer_list<T> other) {
 		Clear();
-		ExpandIfNeeded(other.size());
-		this->m_iSize = other.size();
+		ExpandIfNeeded(int(other.size()));
+		this->m_iSize = int(other.size());
 
 		int i = 0;
 		for (const T& otherElem : other) {

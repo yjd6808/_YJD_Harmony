@@ -27,7 +27,7 @@ NS_JC_BEGIN
         const int diffResult = _CrtMemDifference(&stateDiff, &m_State, &stateNow);
         m_bDetecting = false;
         if (diffResult) {
-            return stateDiff.lSizes[_NORMAL_BLOCK];
+            return int(stateDiff.lSizes[_NORMAL_BLOCK]);
         }
         return 0;
     }
@@ -56,7 +56,7 @@ NS_JC_BEGIN
         const int diffResult = _CrtMemDifference(&stateDiff, &m_State, &stateNow);
 
         if (diffResult && m_Callback) {
-            m_Callback(stateDiff.lSizes[1]);
+            m_Callback(int(stateDiff.lSizes[1]));
             _CrtMemDumpStatistics(&stateDiff);
         }
 

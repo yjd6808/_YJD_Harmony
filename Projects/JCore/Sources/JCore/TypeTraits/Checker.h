@@ -8,6 +8,8 @@ NS_JC_BEGIN
 class DateTime;
 class String;
 
+template <Int32U> struct StaticString;
+
 	NS_DETAIL_BEGIN
     // 포인터 타입인지 확인하는 템플릿
     template <typename T>
@@ -119,6 +121,8 @@ class String;
     struct IsStringType<const wchar_t*> : TrueType {};
     template <>
     struct IsStringType<String> : TrueType {};
+    template <Int32U Size>
+    struct IsStringType<StaticString<Size>> : TrueType {};
     template <Int32U Size>
     struct IsStringType<char[Size]> : TrueType {};
     template <Int32U Size>

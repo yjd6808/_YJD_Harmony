@@ -23,12 +23,12 @@ public:
 	void Add() {
 		static_assert(JCore::IsBaseOf_v<ICommand, Cmd>, "... template parameter is not derived from ICommand");
 
-		if (m_CommandNameMap.Exist(Cmd::Command())) {
+		if (m_CommandNameMap.Exist(Cmd::_Command())) {
 			DebugAssertMsg(false, "해당 커맨드가 이미 있습니다.");
 			return;
 		}
 
-		m_CommandNameMap.Insert(Cmd::Command(), Cmd::Name());
+		m_CommandNameMap.Insert(Cmd::_Command(), Cmd::_Name());
 	}
 
 

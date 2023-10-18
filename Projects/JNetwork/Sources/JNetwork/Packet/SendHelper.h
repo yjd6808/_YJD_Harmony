@@ -3,6 +3,7 @@
  * 생성일: 4/22/2023 7:30:19 PM
  * =====================
  * 다양한 송신 방식을 하나로 통합하기 위함.
+ * TODO 단일 세션을 대상으로만 동작하므로.. 복수 세션도 통합하여 전송가능하도록 전반적인 구조 및 기능 개선이 필요하다!!
  */
 
 
@@ -49,6 +50,9 @@ struct Sending : JCore::NonCopyable, SendingBase
 			SendHelper<T>::SendEnd(Packet);
 			Sended = true;
 		}
+
+		if (Packet)
+			Packet->Release();
 	}
 
 	TCommand& Cmd;
@@ -80,14 +84,19 @@ struct SendHelper : SendHelperBase
 
 
 	template <typename TCommand>
-	static TSending<TCommand> SendBegin(int count = 1) {
+	static TSending<TCommand> SendBegin() {
+		return SendBegin<TCommand>(1, true);
+	}
+
+	template <typename TCommand>
+	static TSending<TCommand> SendBegin(int count, bool noCount = false) {
 		DebugAssertMsg(SendInformation.Sender, "샌더가 설정되어있지 않습니다.");
 
 		if (SendInformation.Strategy == SendStrategy::SendAlloc) {
 			return TSending<TCommand>(SendInformation.Sender->template SendAlloc<TCommand>(count), nullptr);
 		}
 
-		auto pPacket = dbg_new SinglePacket<TCommand>(count);
+		auto pPacket = dbg_new SinglePacket<TCommand>(count, noCount);	// 해제는 소멸자에서함
 		return TSending<TCommand>(pPacket->Cmd, pPacket);
 	}
 

@@ -26,12 +26,12 @@ public:
 	void AddCommand(JCore::Action<Session*, ICommand*> fn) {
 		static_assert(JCore::IsBaseOf_v<ICommand, Cmd>, "... template parameter is not derived from ICommand");
 
-		if (m_CommandActionMap.Exist(Cmd::Command())) {
+		if (m_CommandActionMap.Exist(Cmd::_Command())) {
 			DebugAssertMsg(false, "해당 커맨드가 이미 있습니다.");
 			return;
 		}
 
-		m_CommandActionMap.Insert(Cmd::Command(), fn);
+		m_CommandActionMap.Insert(Cmd::_Command(), fn);
 	}
 	virtual bool RunCommand(Session* session, JNetwork::ICommand* cmd) const;
 private:

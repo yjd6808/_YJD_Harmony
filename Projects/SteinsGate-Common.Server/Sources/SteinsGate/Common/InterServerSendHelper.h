@@ -91,7 +91,7 @@ struct InterServerSendHelper : InterServerSendHelperBase
 
 	template <typename TCommand>
 	static TSending<TCommand> SendBegin(int count = 1) {
-		DebugAssertMsg(SendInformation.Sender, "샌더가 설정되어있지 않습니다.");
+		DebugAssertMsg(SendInformation.Sender, "%s 샌더가 설정되어있지 않습니다.", TCommand::_Name());
 
 		// InterServerCommand를 상속받지않은 커맨드를 전달하려는 경우를 막아야함.
 		static_assert(IsInterServerCommand_v<TCommand>, "... TCommand is not InterServerCommand");

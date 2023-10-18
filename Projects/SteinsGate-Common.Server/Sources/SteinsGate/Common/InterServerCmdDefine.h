@@ -127,52 +127,52 @@ struct __struct__ : HostStaticCommand {															\
 		CmdLen = sizeof(__struct__);															\
 	}																							\
 																								\
-	static constexpr int Size(int count = 1) { return sizeof(__struct__); }						\
-	static constexpr const char* Name() { return #__struct__; }									\
-	static constexpr int Command() { return __cmd__; }											
+	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__); }											\
+	CMD_FUNCSIG_NAME	{ return #__struct__; }													\
+	CMD_FUNCSIG_COMMAND { return __cmd__; }											
 
 #define HOST_STATIC_CMD_END };
 
 
-#define HOST_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)												\
-struct __struct__ : HostDynamicCommand {																					\
-	__struct__(int count) {																									\
-		Type = InterServerCmdType::HostDynamic;																				\
-		Cmd = __cmd__;																										\
-		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);										\
-		Count = count;																										\
-	}																														\
-	static constexpr int Size(int count) { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
-	static constexpr const char* Name() { return #__struct__; }																\
-	static constexpr int Command() { return __cmd__; }																		
+#define HOST_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)							\
+struct __struct__ : HostDynamicCommand {																\
+	__struct__(int count) {																				\
+		Type = InterServerCmdType::HostDynamic;															\
+		Cmd = __cmd__;																					\
+		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);					\
+		Count = count;																					\
+	}																									\
+	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}	\
+	CMD_FUNCSIG_NAME	{ return #__struct__; }															\
+	CMD_FUNCSIG_COMMAND { return __cmd__; }																		
 
 #define HOST_DYNAMIC_CMD_END	};
 
 
-#define RELAY_STATIC_CMD_BEGIN(__struct__, __cmd__)												\
-struct __struct__ : RelayStaticCommand {														\
-	__struct__(int count = 1) {																	\
-		Type = InterServerCmdType::RelayStatic;													\
-		Cmd = __cmd__;																			\
-		CmdLen = sizeof(__struct__);															\
-	}																							\
-																								\
-	static constexpr int Size(int count = 1) { return sizeof(__struct__); }						\
-	static constexpr const char* Name() { return #__struct__; }									\
-	static constexpr int Command() { return __cmd__; }											
+#define RELAY_STATIC_CMD_BEGIN(__struct__, __cmd__)						\
+struct __struct__ : RelayStaticCommand {								\
+	__struct__(int count = 1) {											\
+		Type = InterServerCmdType::RelayStatic;							\
+		Cmd = __cmd__;													\
+		CmdLen = sizeof(__struct__);									\
+	}																	\
+																		\
+	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__); }					\
+	CMD_FUNCSIG_NAME	{ return #__struct__; }							\
+	CMD_FUNCSIG_COMMAND { return __cmd__; }											
 #define RELAY_STATIC_CMD_END };
 
 
-#define RELAY_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)											\
-struct __struct__ : RelayDynamicCommand {																					\
-	__struct__(int count) {																									\
-		Type = InterServerCmdType::RelayDynamic;																			\
-		Cmd = __cmd__;																										\
-		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);										\
-		Count = count;																										\
-	}																														\
-	static constexpr int Size(int count) { return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
-	static constexpr const char* Name() { return #__struct__; }																\
-	static constexpr int Command() { return __cmd__; }																		
+#define RELAY_DYNAMIC_CMD_BEGIN(__struct__, __cmd__, __countable_elem_type__)								\
+struct __struct__ : RelayDynamicCommand {																	\
+	__struct__(int count) {																					\
+		Type = InterServerCmdType::RelayDynamic;															\
+		Cmd = __cmd__;																						\
+		CmdLen = sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);						\
+		Count = count;																						\
+	}																										\
+	CMD_FUNCSIG_SIZE	{ return sizeof(__struct__) + sizeof(__countable_elem_type__ ) * (count - 1);}		\
+	CMD_FUNCSIG_NAME	{ return #__struct__; }																\
+	CMD_FUNCSIG_COMMAND { return __cmd__; }																		
 
 #define RELAY_DYNAMIC_CMD_END	};
