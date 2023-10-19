@@ -19,6 +19,16 @@ namespace Broadcast
 		const int StateLobby = 1;
 		const int StateMax = 2;
 	}
+
+	namespace Room
+	{
+		const int StateAny = 0;
+	}
+
+	namespace BattleField
+	{
+		const int StateAny = 0;
+	}
 }
 
 namespace AccessibleObject

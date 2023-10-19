@@ -167,12 +167,22 @@ bool S_GAME::SEND_SC_Disconnect(Session* session) {
 	return session->Disconnect();
 }
 
-void S_GAME::SEND_SC_ChatMessageBroadcast(IBroadcastable* broadcastable, const char* msg, int state) {
+void S_GAME::SEND_SC_ChatMessageBroadcastLobby(IBroadcastable* broadcastable, const char* msg) {
 	const int iMsgLen = StringUtil::LengthWithNull(msg);
 	const auto pPacket = dbg_new SinglePacket<SC_ChatMessage>(iMsgLen);
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
 	pPacket->Cmd.Message.SetStringUnsafe(msg);
-	broadcastable->BroadcastPacket(pPacket, state);
+	pPacket->Cmd.PlayerState = PlayerState::Lobby;
+	broadcastable->BroadcastPacket(pPacket, Const::Broadcast::Lobby::StateLobby);
+}
+
+void S_GAME::SEND_SC_ChatMessageBroadcastBattleField(IBroadcastable* broadcastable, const char* msg) {
+	const int iMsgLen = StringUtil::LengthWithNull(msg);
+	const auto pPacket = dbg_new SinglePacket<SC_ChatMessage>(iMsgLen);
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.Message.SetStringUnsafe(msg);
+	pPacket->Cmd.PlayerState = PlayerState::BattleField;
+	broadcastable->BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
 void S_GAME::SEND_SC_UpdatePlayerListInLobby(ChannelLobby* pLobby) {

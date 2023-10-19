@@ -112,5 +112,6 @@ void S_GAME::SEND_CS_ChatMessage(const char* msg) {
 	int iMsgLen = StringUtil::LengthWithNull(msg);
 	auto sending = SendBegin<CS_ChatMessage>(iMsgLen);
 	sending.Cmd.Message.SetStringUnsafe(msg);
+	sending.Cmd.PlayerState = Core::GameClient->GetPlayerState();
 }
 

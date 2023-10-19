@@ -597,13 +597,18 @@ void R_GAME::RECV_CS_ChatMessage(Session* session, ICommand* cmd) {
 	CS_ChatMessage* pCmd = (CS_ChatMessage*)cmd;
 
 	Player* pPlayer = pSession->GetPlayer();
+
 	if (pPlayer == nullptr)
 		return;
 
-	if (pCmd->PlayerState == PlayerState::Lobby) {
-		S_GAME::SEND_SC_ChatMessageBroadcast(pPlayer->GetChannelLobby(), pCmd->Message.Source, Const::Broadcast::Lobby::StateLobby);
-	} else if (pCmd->PlayerState == PlayerState::BattleField) {
+	if (pPlayer->GetPlayerState() != pCmd->PlayerState)
+		return;
 
+
+	if (pCmd->PlayerState == PlayerState::Lobby) {
+		S_GAME::SEND_SC_ChatMessageBroadcastLobby(pPlayer->GetChannelLobby(), pCmd->Message.Source);
+	} else if (pCmd->PlayerState == PlayerState::BattleField) {
+		S_GAME::SEND_SC_ChatMessageBroadcastBattleField(pPlayer->GetRoom(), pCmd->Message.Source);
 	}
 
 }

@@ -21,6 +21,16 @@ namespace Broadcast
 		extern const int StateLobby;
 		extern const int StateMax;
 	}
+
+	namespace Room
+	{
+		extern const int StateAny;
+	}
+
+	namespace BattleField
+	{
+		extern const int StateAny;
+	}
 }
 
 

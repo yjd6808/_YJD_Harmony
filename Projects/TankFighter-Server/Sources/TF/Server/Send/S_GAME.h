@@ -48,7 +48,8 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	//static void SEND_SC_BattleFieldStatisticsUpdate();
 	//static void SEND_SC_TcpRTT();
 	static bool SEND_SC_Disconnect(JNetwork::Session* session);
-	static void SEND_SC_ChatMessageBroadcast(IBroadcastable* broadcastable, const char* msg, int state);
+	static void SEND_SC_ChatMessageBroadcastLobby(IBroadcastable* broadcastable, const char* msg);
+	static void SEND_SC_ChatMessageBroadcastBattleField(IBroadcastable* broadcastable, const char* msg);
 	static void SEND_SC_UpdatePlayerListInLobby(ChannelLobby* pLobby);
 };
 
