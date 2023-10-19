@@ -278,6 +278,10 @@ protected:
 	/// </summary>
 	/// <param name="newCapacity">기존 용량보다 더 큰 값</param>
 	virtual void Expand(int newCapacity) {
+		if (m_iCapacity == newCapacity) {
+			return;
+		}
+
 		DebugAssertMsg(newCapacity > m_iCapacity, "현재 용량보다 더 작은 용량입니다.");
 		int iAllocatedSize;
 		T* pNewArray = TAllocator::template AllocateDynamic<T*>(newCapacity * sizeof(T), iAllocatedSize);

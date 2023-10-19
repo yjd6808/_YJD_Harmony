@@ -10,6 +10,7 @@
 
 #include <JCore/Hasher.h>
 #include <JCore/Memory.h>
+#include <JCore/TypeTraits.h>
 
 #include <JCore/Allocator/DefaultAllocator.h>
 #include <JCore/Pattern/NonCopyableh.h>
@@ -154,7 +155,8 @@ struct Bucket<TKey, TAllocator>
 		Size = 0;
 	}
 
-	bool Exist(const TKey& key) {
+	template <typename Ky>
+	bool Exist(const Ky& key) {
 		for (int i = 0; i < Size; i++) {
 			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
 				return true;
@@ -164,7 +166,8 @@ struct Bucket<TKey, TAllocator>
 		return false;
 	}
 
-	TKey* Find(const TKey& key) {
+	template <typename Ky>
+	TKey* Find(const Ky& key) {
 		for (int i = 0; i < Size; i++) {
 			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
 				return AddressOf(DynamicArray[i].Data);
@@ -174,7 +177,8 @@ struct Bucket<TKey, TAllocator>
 		return nullptr;
 	}
 
-	bool Remove(const TKey& key) {
+	template <typename Ky>
+	bool Remove(const Ky& key) {
 		int iFind = -1;
 		for (int i = 0; i < Size; i++) {
 			if (Comparator<TKey>()(DynamicArray[i].Data, key) == 0) {
@@ -313,7 +317,8 @@ struct Bucket<TKey, TValue, TAllocator>
 		Size = 0;
 	}
 
-	bool Exist(const TKey& key) {
+	template <typename Ky>
+	bool Exist(const Ky& key) {
 		for (int i = 0; i < Size; i++) {
 			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {
 				return true;
@@ -323,7 +328,8 @@ struct Bucket<TKey, TValue, TAllocator>
 		return false;
 	}
 
-	TValue* Find(const TKey& key) {
+	template <typename Ky>
+	TValue* Find(const Ky& key) {
 		for (int i = 0; i < Size; i++) {
 			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {
 				return AddressOf(DynamicArray[i].Data.Value);
@@ -333,7 +339,8 @@ struct Bucket<TKey, TValue, TAllocator>
 		return nullptr;
 	}
 
-	bool Remove(const TKey& key) {
+	template <typename Ky>
+	bool Remove(const Ky& key) {
 		int iFind = -1;
 		for (int i = 0; i < Size; i++) {
 			if (Comparator<TKey>()(DynamicArray[i].Data.Key, key) == 0) {

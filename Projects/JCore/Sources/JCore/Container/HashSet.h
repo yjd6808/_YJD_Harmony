@@ -61,8 +61,18 @@ public:
 		return Table.Insert(Move(key));
 	}
 
+	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
+	bool Exist(const char* key) const {
+		return Table.Exist(key);
+	}
+
 	bool Exist(const TKey& key) const override {
 		return Table.Exist(key);
+	}
+
+	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
+	bool Remove(const char* key) const {
+		return Table.Remove(key);
 	}
 
 	bool Remove(const TKey& key) override {

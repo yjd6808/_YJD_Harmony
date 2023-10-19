@@ -143,12 +143,14 @@ public:
 		return true;
 	}
 
-	bool Exist(const TKey& key) const {
+	template <typename Ky>
+	bool Exist(const Ky& key) const {
 		if (m_pTable == nullptr) return false;
 		return m_pTable[HashBucket(key)].Exist(key);
 	}
 
-	bool Remove(const TKey& key) {
+	template <typename Ky>
+	bool Remove(const Ky& key) {
 		TBucket& bucket = m_pTable[HashBucket(key)];
 
 		if (!bucket.Remove(key)) {
@@ -372,11 +374,13 @@ protected:
 		return hash % m_iCapacity;
 	}
 
-	Int32U Hash(const TKey& key) const {
+	template <typename Ky>
+	Int32U Hash(const Ky& key) const {
 		return THasher()(key);
 	}
 
-	Int32U HashBucket(const TKey& key) const {
+	template <typename Ky>
+	Int32U HashBucket(const Ky& key) const {
 		return BucketIndex(Hash(key));
 	}
 
@@ -547,12 +551,14 @@ public:
 		return true;
 	}
 
-	bool Exist(const TKey& key) const {
+	template <typename Ky>
+	bool Exist(const Ky& key) const {
 		if (m_pTable == nullptr) return false;
 		return m_pTable[HashBucket(key)].Exist(key);
 	}
 
-	TValue* Find(const TKey& key) const {
+	template <typename Ky>
+	TValue* Find(const Ky& key) const {
 		if (m_pTable == nullptr) return nullptr;
 
 		TValue* pVal = m_pTable[HashBucket(key)].Find(key);
@@ -564,7 +570,8 @@ public:
 		return pVal;
 	}
 
-	TValue& Get(const TKey& key) const {
+	template <typename Ky>
+	TValue& Get(const Ky& key) const {
 		if (m_pTable == nullptr) 
 			throw InvalidOperationException("초기화 되지 않은 해쉬맵입니다.");;
 
@@ -577,7 +584,8 @@ public:
 		return *pVal;
 	}
 
-	bool Remove(const TKey& key) {
+	template <typename Ky>
+	bool Remove(const Ky& key) {
 		TBucket& bucket = m_pTable[HashBucket(key)];
 
 		if (!bucket.Remove(key)) {
@@ -838,11 +846,13 @@ protected:
 		return hash % m_iCapacity;
 	}
 
-	Int32U Hash(const TKey& key) const {
+	template <typename Ky>
+	Int32U Hash(const Ky& key) const {
 		return THasher()(key);
 	}
 
-	Int32U HashBucket(const TKey& key) const {
+	template <typename Ky>
+	Int32U HashBucket(const Ky& key) const {
 		return BucketIndex(Hash(key));
 	}
 

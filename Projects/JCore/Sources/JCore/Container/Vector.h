@@ -405,6 +405,16 @@ public:
 		}
 	}
 
+	template <typename Predicate>
+	T* FindIf(Predicate&& predicate) {
+		for (int i = 0; i < this->m_iSize; ++i) {
+			if (predicate(this->m_pArray[i])) {
+				return &this->m_pArray[i];
+			}
+		}
+		return nullptr;
+	}
+
 	ContainerType GetContainerType() override { return ContainerType::Vector; }
 
 	struct Iterator 

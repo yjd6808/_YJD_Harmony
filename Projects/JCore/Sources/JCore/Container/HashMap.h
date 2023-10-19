@@ -98,16 +98,31 @@ public:
 		return Table.Insert(Move(pair.Key), Move(pair.Value));
 	}
 
+	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
+	bool Exist(const char* key) const {
+		return Table.Exist(key);
+	}
+
 	bool Exist(const TKey& key) const override {
 		return Table.Exist(key);
 	}
 
-	virtual TValue* Find(const TKey& key) const {
+	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
+	TValue* Find(const char* key) const {
+		return Table.Find(key);
+	}
+
+	TValue* Find(const TKey& key) const {
 		return Table.Find(key);
 	}
 
 	TValue& Get(const TKey& key) const override {
 		return Table.Get(key);
+	}
+
+	template <typename = DefaultEnableIf_t<IsStringType_v<TKey>>>
+	bool Remove(const char* key) {
+		return Table.Remove(key);
 	}
 
 	bool Remove(const TKey& key) override {
