@@ -27,12 +27,6 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate() 
 {
-
-    FinalizeGameCore();
-    FinalizeNetLogger();
-    FinalizeDefaultLogger();
-    Winsock::Finalize();
-
 #if USE_AUDIO_ENGINE
     AudioEngine::end();
 #elif USE_SIMPLE_AUDIO_ENGINE
@@ -64,13 +58,20 @@ bool AppDelegate::applicationDidFinishLaunching() {
     return true;
 }
 
+void AppDelegate::applicationDidExit() {
+    FinalizeGameCore();
+    FinalizeNetLogger();
+    FinalizeDefaultLogger();
+    Winsock::Finalize();
+}
+
 
 void AppDelegate::CreateOpenGLWindow() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
 
     if (glview == nullptr) {
-        glview = GLViewImpl::createWithRect("TankFighter", { 0, 0, Const::Window::Width, Const::Window::Height }, 1.0f, false);
+        glview = GLViewImpl::createWithRect(Const::Window::ViewName, { 0, 0, Const::Window::Width, Const::Window::Height }, 1.0f, false);
         glview->setDesignResolutionSize(Const::Window::Width, Const::Window::Height, ResolutionPolicy::NO_BORDER);
     }
 

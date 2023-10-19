@@ -89,6 +89,9 @@ public:
     int getMonitorCount() const;
     Size getMonitorSize() const;
 
+    // 윈도우 타이틀도 같이 변경되도록 수정
+    void setViewName(const std::string& viewname) override;
+
     /* override functions */
     virtual bool isOpenGLReady() override;
     virtual void end() override;

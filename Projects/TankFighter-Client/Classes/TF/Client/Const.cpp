@@ -33,6 +33,7 @@ namespace Window
 {
 	const float Width = 1000;
 	const float Height = 600;
+	const char ViewName[] = "탱크파이터";
 }
 
 namespace Properties
@@ -42,6 +43,8 @@ namespace Properties
 		const int Reconnecting = 1;
 		const int AccountPrimaryKey = 2;
 		const int ChannelPrimaryKey = 3;
+		const int PlayerState = 4;
+		const int RoomAccessId = 5;
 	}
 }
 

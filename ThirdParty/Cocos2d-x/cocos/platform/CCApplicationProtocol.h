@@ -79,6 +79,12 @@ public:
     */
     virtual bool applicationDidFinishLaunching() = 0;
 
+
+
+    // 애플리케이션 종료전 호출
+    virtual void applicationDidExit() = 0;
+
+
     /**
     * @brief  This function will be called when the application enters background.
     * @js NA

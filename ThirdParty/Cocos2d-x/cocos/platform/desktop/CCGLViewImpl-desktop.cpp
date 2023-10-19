@@ -649,6 +649,13 @@ Size GLViewImpl::getMonitorSize() const {
     return Size::ZERO;
 }
 
+void GLViewImpl::setViewName(const std::string& viewname) {
+	GLView::setViewName(viewname);
+
+    if (_mainWindow)
+		glfwSetWindowTitle(_mainWindow, viewname.c_str());
+}
+
 void GLViewImpl::updateFrameSize()
 {
     if (_screenSize.width > 0 && _screenSize.height > 0)
