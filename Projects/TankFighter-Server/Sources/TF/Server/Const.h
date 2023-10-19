@@ -13,11 +13,13 @@
 
 NS_CONST_BEGIN
 
-namespace Database
+namespace Broadcast
 {
-	namespace Game
+	namespace Lobby
 	{
-		
+		extern const int StateAny;
+		extern const int StateLobby;
+		extern const int StateMax;
 	}
 }
 
@@ -53,6 +55,14 @@ namespace Failed
 	{
 		extern const int AddFailedAlreadyExist;
 		extern const int AddFailedFull;
+		extern const int AddFailedClosed;
+	}
+
+	namespace Room
+	{
+		extern const int AddFailedAlreadyExist;
+		extern const int AddFailedFull;
+		extern const int AddFailedClosed;
 	}
 }
 

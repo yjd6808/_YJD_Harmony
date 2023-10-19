@@ -29,8 +29,14 @@ public:
 	int GetCharacterPrimaryKey() const;
 	void SetCharacterPrimaryKey(int primaryKey);
 
+	PlayerState GetPlayerState() const;
+	void SetPlayerState(PlayerState state);
+
 	void SetCharacterInfo(const CharacterInfo& info);
 	const CharacterInfo& GetCharacterInfo() const { return m_CharacterInfo; }
+
+	void SetRoomAccessId(int accessId);
+	int GetRoomAccessId() const;
 private:
 	JCore::Properties<int> m_Properties;
 	CharacterInfo m_CharacterInfo;

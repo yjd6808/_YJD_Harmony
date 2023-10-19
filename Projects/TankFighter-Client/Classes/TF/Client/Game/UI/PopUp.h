@@ -30,6 +30,7 @@ private:
 
 public:
 	static  PopUp* createInRunningScene(const char* text, bool bgClickable, std::function<void()> callback = nullptr);
+	static  PopUp* createInRunningScene(const char* text, bool bgClickable, std::function<void()> yesFunc, std::function<void()> noFunc);
 	static  PopUp* createInParent(const char* text, Node* paren, bool bgClickable, std::function<void()> callback = nullptr);
 	static  PopUp* createInParent(const char* text, Node* parent, bool bgClickable, std::function<void()> yesFunc, std::function<void()> noFunc);
 

@@ -36,6 +36,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\RoomScene.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\UI\ChatBox.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\UI\ColoredListView.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\UI\PopUp.cpp" />
@@ -100,6 +101,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\RoomScene.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\UI\ChatBox.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\UI\ColoredListView.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\UI\PopUp.h" />
@@ -235,6 +237,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;</IncludePath>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
@@ -245,6 +248,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Platform)\$(Configuration)\;$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)Projects\JCore\Sources;$(SolutionDir)Projects\JNetwork\Sources;$(SolutionDir)Projects\TankFighter-Common\Sources;</IncludePath>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(SolutionDir)Projects\JNetwork\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\JCore\Output\$(Platform)\$(Configuration)\;$(SolutionDir)Projects\TankFighter-Common\Output\$(Platform)\$(Configuration)\;$(LibraryPath)</LibraryPath>
@@ -275,7 +279,7 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /C /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
@@ -333,6 +337,10 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <PreBuildEvent>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">탱크파이터 예제 프로그램은 x86 플랫폼으로만 빌드 가능합니다.</Command>
     </PreBuildEvent>
+    <PreBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -363,12 +371,16 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /C /Y /Q "$(SolutionDir)ThirdParty\Cocos2d-x\Output\$(Platform)\$(Configuration)\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
       <Command>
       </Command>
     </PreLinkEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

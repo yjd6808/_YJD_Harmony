@@ -22,11 +22,12 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static void SEND_CS_DeleteCharacter(const char* nickName);
 	static void SEND_CS_SelectCharacter(int characterPrimaryKey);
 	static bool SEND_CS_JoinLobby();
-	// static void SEND_CS_CreateRoom();
-	// static void SEND_CS_JoinRoom();
-	// static void SEND_CS_AddFriend();
-	// static void SEND_CS_AddFriendRequest();
-	// static void SEND_CS_DeleteFriend();
+	static void SEND_CS_CreateRoom(const JCore::String& roomName);
+	static void SEND_CS_JoinRoom(int roomAccessId);
+	static void SEND_CS_AddFriend(const char* nickName);
+	static void SEND_CS_AddFriendRequest(bool accecpt, int requestCharacterPrimaryKey);
+	static void SEND_CS_DeleteFriend(int characterPrimaryKey);
+	static void SEND_CS_LeaveLobby();
 	// static void SEND_CS_ServerMessage();
 	// static void SEND_CS_LoadRoomInfo();
 	// static void SEND_CS_RoomGameStart();
@@ -40,7 +41,9 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	// static void SEND_CS_BattleFieldPlayingEnd();
 	// static void SEND_CS_BattleFieldEndWaitEnd();
 	// static void SEND_CS_BattleFieldLeave();
-	// static void SEND_CS_ChatMessage();
+	static void SEND_CS_ChatMessage(const char* msg);
+	
+
 	// static void SEND_CS_BattleFieldFire();
 	// static void SEND_CS_BattleFieldDeath();
 	// static void SEND_CS_BattleFieldRevival();

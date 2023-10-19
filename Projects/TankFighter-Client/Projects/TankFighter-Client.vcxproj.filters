@@ -56,6 +56,9 @@
     <ClCompile Include="..\Classes\TF\Client\Game\Scene\LobbyScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Scene\RoomScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\TF\Client\Pch.h" />
@@ -118,6 +121,9 @@
       <Filter>Game\Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\LobbyScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Scene\RoomScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
   </ItemGroup>

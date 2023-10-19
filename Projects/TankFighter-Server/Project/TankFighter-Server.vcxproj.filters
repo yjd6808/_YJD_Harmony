@@ -53,6 +53,9 @@
     <ClCompile Include="..\Sources\TF\Server\Contents\Character.cpp">
       <Filter>Contents</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\TF\Server\Contents\ChannelLobby.cpp">
+      <Filter>Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\TF\Server\Pch.h" />
@@ -120,6 +123,9 @@
       <Filter>Contents</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Server\Contents\Character.h">
+      <Filter>Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\TF\Server\Contents\ChannelLobby.h">
       <Filter>Contents</Filter>
     </ClInclude>
   </ItemGroup>

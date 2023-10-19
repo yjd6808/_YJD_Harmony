@@ -25,6 +25,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\Sources\TF\Common\Base\IComponent.h" />
+    <ClInclude Include="..\Sources\TF\Common\Base\IOpenCloseable.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\Sources\TF\Common\Base\ISessionEventHandler.h" />
     <ClInclude Include="..\Sources\TF\Common\Base\IUpdatable.h" />
     <ClInclude Include="..\Sources\TF\Common\Base\SessionComponent.h" />

@@ -17,6 +17,8 @@ GameClient::GameClient(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbs
 	m_Properties.Add(Const::Properties::GameClient::Reconnecting, PropertyType::Bool);
 	m_Properties.Add(Const::Properties::GameClient::AccountPrimaryKey, PropertyType::Int);
 	m_Properties.Add(Const::Properties::GameClient::ChannelPrimaryKey, PropertyType::Int);
+	m_Properties.Add(Const::Properties::GameClient::PlayerState, PropertyType::Int);
+	m_Properties.Add(Const::Properties::GameClient::RoomAccessId, PropertyType::Int);
 }
 
 void GameClient::SetReconnectMode(bool mode) {
@@ -51,6 +53,22 @@ void GameClient::SetCharacterPrimaryKey(int primaryKey) {
 	m_CharacterInfo.PrimaryKey = primaryKey;
 }
 
+PlayerState GameClient::GetPlayerState() const {
+	return PlayerState(m_Properties[Const::Properties::GameClient::PlayerState].As<int>());
+}
+
+void GameClient::SetPlayerState(PlayerState state) {
+	m_Properties[Const::Properties::GameClient::PlayerState] = int(state);
+}
+
 void GameClient::SetCharacterInfo(const CharacterInfo& info) {
 	m_CharacterInfo = info;
+}
+
+void GameClient::SetRoomAccessId(int accessId) {
+	m_Properties[Const::Properties::GameClient::RoomAccessId] = accessId;
+}
+
+int GameClient::GetRoomAccessId() const {
+	return m_Properties[Const::Properties::GameClient::RoomAccessId].As<int>();
 }

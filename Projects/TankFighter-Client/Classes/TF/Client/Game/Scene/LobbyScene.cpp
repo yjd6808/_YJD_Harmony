@@ -18,7 +18,10 @@ USING_NS_CCUI;
 
 LobbyScene::LobbyScene()
 	: m_pChatBox(nullptr)
+	, m_pRoomListText(nullptr)
+	, m_pPlayerListText(nullptr)
 	, m_pRoomListView(nullptr)
+	, m_pPlayerListView(nullptr)
 	, m_pRoomTitleEditBox(nullptr)
 	, m_pCreateRoomBtn(nullptr)
 	, m_pFriendNameEditBox(nullptr)
@@ -27,6 +30,7 @@ LobbyScene::LobbyScene()
 	, m_pFriendListView(nullptr)
 	, m_pTerminateGameButton(nullptr)
 	, m_pSelectChannelButton(nullptr)
+	, m_pSelectCharacterButton(nullptr)
 	, m_pNyInfoButton(nullptr)
 {}
 
@@ -47,13 +51,36 @@ bool LobbyScene::init() {
 		return false;
 	}
 
+	m_pRoomListText = TextButton::create(400, 50, "생성된 방 목록", 16);
+	m_pRoomListText->setBackgroundColor(ColorList::Darkorange_v);
+	m_pRoomListText->setFontColor(ColorList::Black_v);
+	m_pRoomListText->setAnchorPoint(Vec2::ZERO);
+	m_pRoomListText->setPosition({ 0, 550 });
+	m_pUILayer->addChild(m_pRoomListText);
+
+	m_pPlayerListText = TextButton::create(200, 50, "접속중인 유저 목록", 16);
+	m_pPlayerListText->setBackgroundColor(ColorList::Darkorange_v);
+	m_pPlayerListText->setFontColor(ColorList::Black_v);
+	m_pPlayerListText->setAnchorPoint(Vec2::ZERO);
+	m_pPlayerListText->setPosition({ 400, 550 });
+	m_pUILayer->addChild(m_pPlayerListText);
+
+
 	m_pRoomListView = ColoredListView::create(ColorUtil::To4B(ColorList::AoEnglish_v));
-	m_pRoomListView->SetContantSize({ 600, Director::getInstance()->getWinSize().height - 200.0f });
+	m_pRoomListView->SetContantSize({ 600, Director::getInstance()->getWinSize().height - 250.0f });
 	m_pRoomListView->setPosition(0, 200.0);
 	m_pRoomListView->GetListView()->setInnerContainerPosition(Vec2::ZERO);
 	m_pRoomListView->setAnchorPoint(Vec2::ZERO);
 	m_pRoomListView->GetListView()->setPadding(10.0f, 10.0f, 10.0f, 10.0f);
 	m_pUILayer->addChild(m_pRoomListView);
+
+	m_pPlayerListView = ColoredListView::create(ColorUtil::To4B(ColorList::Almond_v));
+	m_pPlayerListView->SetContantSize({ 200, Director::getInstance()->getWinSize().height - 250.0f });
+	m_pPlayerListView->setPosition(400, 200.0);
+	m_pPlayerListView->GetListView()->setInnerContainerPosition(Vec2::ZERO);
+	m_pPlayerListView->setAnchorPoint(Vec2::ZERO);
+	m_pPlayerListView->GetListView()->setPadding(10.0f, 10.0f, 10.0f, 10.0f);
+	m_pUILayer->addChild(m_pPlayerListView);
 
 	m_pRoomTitleEditBox = EditBox::create(Size(200, 50), Scale9Sprite::create(Const::Resource::WhiteRectFileName));
 	m_pRoomTitleEditBox->addClickEventListener([](Ref* ref) { ((EditBox*)ref)->openKeyboard(); });
@@ -121,7 +148,7 @@ bool LobbyScene::init() {
 	m_pTerminateGameButton->setClickEvent(CC_CALLBACK_1(LobbyScene::onClickedTerminateGameButton, this));
 	m_pUILayer->addChild(m_pTerminateGameButton);
 
-	m_pSelectChannelButton = TextButton::create(200, 50, "채널 선택", 16);
+	m_pSelectChannelButton = TextButton::create(200, 50, "채널 나가기", 16);
 	m_pSelectChannelButton->setBackgroundColor(ColorList::Beaublue_v);
 	m_pSelectChannelButton->setFontColor(ColorList::Black_v);
 	m_pSelectChannelButton->setAnchorPoint(Vec2::ZERO);
@@ -129,7 +156,15 @@ bool LobbyScene::init() {
 	m_pSelectChannelButton->setClickEvent(CC_CALLBACK_1(LobbyScene::onClickedSelectChannelButton, this));
 	m_pUILayer->addChild(m_pSelectChannelButton);
 
-	m_pNyInfoButton = TextButton::create(200, 150, "내 정보", 16);
+	m_pSelectCharacterButton = TextButton::create(200, 50, "로비 나가기", 16);
+	m_pSelectCharacterButton->setBackgroundColor(ColorList::Beaublue_v);
+	m_pSelectCharacterButton->setFontColor(ColorList::Black_v);
+	m_pSelectCharacterButton->setAnchorPoint(Vec2::ZERO);
+	m_pSelectCharacterButton->setPosition({ 800, 50 });
+	m_pSelectCharacterButton->setClickEvent(CC_CALLBACK_1(LobbyScene::onClickedSelectCharacterButton, this));
+	m_pUILayer->addChild(m_pSelectCharacterButton);
+
+	m_pNyInfoButton = TextButton::create(200, 100, "내 정보", 16);
 	m_pNyInfoButton->setBackgroundColor(ColorList::Blackcoral_v);
 	m_pNyInfoButton->setFontColor(ColorList::BlackShadows_v);
 	m_pNyInfoButton->setAnchorPoint(Vec2::ZERO);
@@ -144,6 +179,7 @@ bool LobbyScene::init() {
 	m_pUILayer->addChild(m_pChatBox);
 
 	this->scheduleUpdate();
+
 	return true;
 }
 
@@ -153,10 +189,10 @@ void LobbyScene::onClickedChatSendButton(ChatBox* chatBox) {
 	if (message.Length() == 0) {
 		return;
 	}
-	//SendFn::SendChatMessage(message);
+	S_GAME::SEND_CS_ChatMessage(message.Source());
 }
 
-// 방 생성 / CREATE_ROOM_SYN 120
+// 방 생성
 void LobbyScene::onClickedCreateRoomButton(TextButton* btn) {
 	const JCore::String roomName = m_pRoomTitleEditBox->getText();
 
@@ -170,7 +206,7 @@ void LobbyScene::onClickedCreateRoomButton(TextButton* btn) {
 		return;
 	}
 
-	//SendFn::SendCreateRoomSyn(roomName);
+	S_GAME::SEND_CS_CreateRoom(roomName);
 }
 
 // 게임 종료
@@ -186,11 +222,15 @@ void LobbyScene::onClickedSelectChannelButton(TextButton* btn) {
 	S_GAME::SEND_CS_LeaveChannel(Core::GameClient->GetChannelPrimaryKey());
 }
 
-// 방 참가 / JOIN_ROOM_SYN 121
+void LobbyScene::onClickedSelectCharacterButton(TextButton* btn) {
+	S_GAME::SEND_CS_LeaveLobby();
+}
+
+// 방 참가
 void LobbyScene::onClickedJoinRoomButton(TextButton* btn) {
 
-	// 버튼에 지정된 태그에 해당 참가하고자 하는 방의 CharacterUID 정보를 저장해놓음
-	// SendFn::SendJoinRoomSyn(btn->getTag());
+	// 버튼에 지정된 태그에 해당 참가하고자 하는 방의 엑세스키 정보를 저장해놓음
+	S_GAME::SEND_CS_JoinRoom(btn->getTag());
 }
 
 
@@ -199,7 +239,6 @@ void LobbyScene::onClickedFriendListButton(TextButton* btn) {
 	PopUp::createInParent("개발자 : 윤정도", this, false);
 }
 
-// 친구 추가 / ADD_FRIEND_SYN 122
 void LobbyScene::onClickedAddFriendButton(TextButton* btn) {
 	const JCore::String friendName = m_pFriendNameEditBox->getText();
 
@@ -213,18 +252,33 @@ void LobbyScene::onClickedAddFriendButton(TextButton* btn) {
 		return;
 	}
 
-	// SendFn::SendAddFriendSyn(friendName);
+	S_GAME::SEND_CS_AddFriend(friendName.Source());
 }
 
-// 친구 삭제 / DELETE_FRIEND_SYN 123
 void LobbyScene::onClickedDeleteFriendButton(TextButton* btn) {
-
-	// 버튼에 지정된 태그에 해당 캐릭터 CharacterUID 정보를 저장해놓음
-	// SendFn::SendDeleteFriendSyn(btn->getTag());
+	int iTargetPrimaryKey = btn->getTag();
+	PopUp::createInRunningScene("정말로 친구 삭제하시겠습니까?", false,
+		[iTargetPrimaryKey] { S_GAME::SEND_CS_DeleteFriend(iTargetPrimaryKey); },
+		[iTargetPrimaryKey] {}
+	);
 }
 
 void LobbyScene::onClickedMyInfoButton(TextButton* btn) {
 	PopUp::createInParent("ㄷㄷ", this, false);
+}
+
+
+void LobbyScene::refreshPlayerList(CharacterInfo* characterList, int count) {
+	m_pPlayerListView->GetListView()->removeAllItems();
+
+	for (int i = 0; i < count; ++i) {
+		const CharacterInfo& info = characterList[i];
+		const auto pPlayerBtn = TextButton::create(180, 40, info.Name.Source, 16);
+		pPlayerBtn->setAnchorPoint(Vec2::ZERO);
+		pPlayerBtn->setBackgroundColor(info.LoggedIn ? ColorList::Acidgreen_v : ColorList::Aero_v);
+		pPlayerBtn->setTag(info.PrimaryKey);	// 태그를 캐릭터 PrimaryKey로 지정
+		m_pPlayerListView->GetListView()->pushBackCustomItem(pPlayerBtn);
+	}
 }
 
 
@@ -239,15 +293,15 @@ void LobbyScene::refreshCharacterInfo(const CharacterInfo& info) {
 	));
 }
 
-void LobbyScene::refreshFriendList(CharacterInfo* characterList, int count) {
+void LobbyScene::refreshFriendList(FriendCharacterInfo* characterList, int count) {
 	m_pFriendListView->GetListView()->removeAllItems();
 
 	for (int i = 0; i < count; i++) {
-		const CharacterInfo& info = characterList[i];
-		const auto pFriendButton = TextButton::create(380, 40, info.Name.Source, 16);
+		const FriendCharacterInfo& info = characterList[i];
+		const auto pFriendButton = TextButton::create(380, 40, info.LoggedIn ? StringUtils::format("%s (접속중)", info.Name.Source) : info.Name.Source , 16);
 		pFriendButton->setAnchorPoint(Vec2::ZERO);
-		pFriendButton->setBackgroundColor(ColorList::Aero_v);
-		pFriendButton->setTag(info.PrimaryKey);	// 태그를 친구 PrimaryKey로 지정
+		pFriendButton->setBackgroundColor(info.LoggedIn ? ColorList::Acidgreen_v : ColorList::Aero_v);
+		pFriendButton->setTag(info.PrimaryKey);	// 태그를 캐릭터 PrimaryKey로 지정
 		pFriendButton->setClickEvent(CC_CALLBACK_1(LobbyScene::onClickedDeleteFriendButton, this));
 		m_pFriendListView->GetListView()->pushBackCustomItem(pFriendButton);
 	}
@@ -258,11 +312,15 @@ void LobbyScene::refreshRoomList(RoomInfo* roomList, int count) {
 
 	for (int i = 0; i < count; i++) {
 		const RoomInfo& info = roomList[i];
-		const auto pRoomButton = TextButton::create(580, 40, StringUtils::format("%s (%d/%d)", info.Name, info.PlayerCount, info.MaxPlayerCount), 16);
+		const auto pRoomButton = TextButton::create(580, 40, StringUtils::format("%s (%d/%d)", info.Name.Source, info.PlayerCount, info.MaxPlayerCount), 16);
 		pRoomButton->setAnchorPoint(Vec2::ZERO);
-		pRoomButton->setBackgroundColor(ColorList::Aero_v);
+		pRoomButton->setBackgroundColor(info.PlayerCount >= info.MaxPlayerCount ? ColorList::Babypink_v : ColorList::Aero_v);
 		pRoomButton->setTag(info.AccessId);	// 태그를 방 AccessId로 지정
 		pRoomButton->setClickEvent(CC_CALLBACK_1(LobbyScene::onClickedJoinRoomButton, this));
 		m_pRoomListView->GetListView()->pushBackCustomItem(pRoomButton);
 	}
+}
+
+void LobbyScene::addChatMssage(const char* str) {
+	m_pChatBox->AddChatMessage(str);
 }

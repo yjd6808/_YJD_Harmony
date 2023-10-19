@@ -25,17 +25,24 @@ struct TankMove
 	float RotationSpeed;
 };
 
-
-
 struct CharacterInfo
 {
+	int AccessId = Const::InvalidValue;
 	int PrimaryKey = Const::InvalidValue;
 	JCore::StaticString<Const::Length::Name> Name;
-	int Win;
-	int Lose;
-	int Kill;
-	int Death;
-	int Money;
+	int Win{};
+	int Lose{};
+	int Kill{};
+	int Death{};
+	int Money{};
+	bool LoggedIn{};
+};
+
+struct FriendCharacterInfo
+{
+	int PrimaryKey;
+	JCore::StaticString<Const::Length::Name> Name;
+	bool LoggedIn;
 };
 
 struct RoomCharacterInfo : CharacterInfo

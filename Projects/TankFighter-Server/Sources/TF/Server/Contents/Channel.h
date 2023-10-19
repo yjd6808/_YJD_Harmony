@@ -8,11 +8,12 @@
 
 #pragma once
 
+#include <TF/Common/Base/IOpenCloseable.h>
 #include <TF/Server/Contents/Room.h>
 
 struct ChannelInfo;
 
-class Channel : public IBroadcastable, public IUpdatable
+class Channel : public IBroadcastable, public IUpdatable, public IOpenCloseable
 {
 public:
 	Channel();
@@ -23,22 +24,28 @@ public:
 	JCORE_GETTER(U, int, MaxPlayerCount, m_iMaxPlayerCount)
 	JCORE_GETTER(U, JCore::DateTime, GeneratedTime, m_dtGeneratedTime)
 
+	JCORE_GETTER_SETTER(U, bool, Closed, m_bClosed)
+
+	void Close() override;
+	void Open() override;
+	bool IsClosed() override { return m_bClosed; }
+	bool IsOpened() override { return !m_bClosed; }
+
 	void OnUpdate(const JCore::TimeSpan& elapsed) override;
-	void BroadcastPacket(JNetwork::ISendPacket* packet) override;
+	void BroadcastPacket(JNetwork::ISendPacket* packet, int state) override;
 
 	ChannelInfo GetInfo();
+
+	int Join(Player* player);
+	bool Leave(Player* player);
 
 	int AddPlayer(Player* player);
 	bool RemovePlayer(Player* player);
 
-	bool AddRoom(Room* room);
-	bool RemoveRoom(Room* room);
-	Room* GetRoomByName(const JCore::String& name);
-
-	static Channel Empty;
-
 	JCore::String ToString() const;
 private:
+	JCore::AtomicBool m_bClosed;
+
 	int m_iPrimaryKey;
 	JCore::String m_szName;
 	int m_iMaxPlayerCount;
@@ -46,10 +53,6 @@ private:
 
 	JCore::NormalLock m_PlayerListLock;
 	JCore::HashSet<Player*> m_hsPlayerSet;
-
-	JCore::NormalLock m_RoomListLock;
-	JCore::HashSet<Room*> m_hsRoomSet;
-	JCore::HashMap<JCore::String, Room*> m_hmRoomMapByName;
 };
 
 

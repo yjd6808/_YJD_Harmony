@@ -24,5 +24,10 @@ struct Q_GAME : Qry::QryHelper<Q_GAME>
 	static bool CheckCharacterNameExist(const char* name, int channelPrimaryKey);
 	static bool CreateCharacter(int accountPrimaryKey, int channelPrimaryKey, const char* name, int win, int lose, int kill, int death, int money);
 	static bool DeleteCharacter(int accountPrimaryKey, int channelPrimaryKey, const char* name);
+
+	static Qry::SelectFriendCharacterInfoListResult SelectFriendCharacterInfoList(int characterPrimaryKey);
+	static Qry::CheckFriendResult CheckFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey);
+	static bool AddFriendship(int requestCharacterPrimaryKey, int acceptCharacterPrimaryKey);
+	static bool DeleteFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey, JCORE_OUT int* deletedCount = nullptr);
 };
 

@@ -75,3 +75,42 @@ bool S_GAME::SEND_CS_JoinLobby() {
 	return SendEndExplicit(sending);
 }
 
+void S_GAME::SEND_CS_CreateRoom(const String& roomName) {
+	auto sending = SendBegin<CS_CreateRoom>();
+	sending.Cmd.RoomName = roomName;
+}
+
+void S_GAME::SEND_CS_JoinRoom(int roomAccessId) {
+	auto sending = SendBegin<CS_JoinRoom>();
+	sending.Cmd.RoomAccessId = roomAccessId;
+}
+
+void S_GAME::SEND_CS_AddFriend(const char* nickName) {
+	auto sending = SendBegin<CS_AddFriend>();
+	sending.Cmd.FriendName = nickName;
+}
+
+void S_GAME::SEND_CS_AddFriendRequest(bool accecpt, int requestCharacterAccessId) {
+	auto sending = SendBegin<CS_AddFriendRequest>();
+	sending.Cmd.Accept = accecpt;
+	sending.Cmd.RequestCharacterAccessId = requestCharacterAccessId;
+}
+
+void S_GAME::SEND_CS_DeleteFriend(int characterPrimaryKey) {
+	auto sending = SendBegin<CS_DeleteFriend>();
+	sending.Cmd.DeleteCharacterPrimaryKey = characterPrimaryKey;
+}
+
+void S_GAME::SEND_CS_LeaveLobby() {
+	auto sending = SendBegin<CS_LeaveLobby>();
+	sending.Cmd.AccountPrimaryKey = Core::GameClient->GetAccountPrimaryKey();
+	sending.Cmd.ChannelPrimaryKey = Core::GameClient->GetChannelPrimaryKey();
+	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
+}
+
+void S_GAME::SEND_CS_ChatMessage(const char* msg) {
+	int iMsgLen = StringUtil::LengthWithNull(msg);
+	auto sending = SendBegin<CS_ChatMessage>(iMsgLen);
+	sending.Cmd.Message.SetStringUnsafe(msg);
+}
+

@@ -23,6 +23,7 @@ public:
 	static void RECV_CS_DeleteCharacter(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_SelectCharacter(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_JoinLobby(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_LeaveLobby(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_CreateRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_JoinRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_AddFriend(JNetwork::Session* session, JNetwork::ICommand* cmd);

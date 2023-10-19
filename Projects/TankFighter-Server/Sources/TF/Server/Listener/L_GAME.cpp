@@ -21,7 +21,10 @@ void L_GAME::OnStartFailed(Int32U errorCode) {
 }
 
 void L_GAME::OnStopped() { _LogInfo_("서버가 중지되었습니다.");  }
-void L_GAME::OnConnected(Session* session) { _LogInfo_("%s가 접속하였습니다.", session->GetRemoteEndPoint().ToString().Source()); }
+void L_GAME::OnConnected(Session* session) {
+	_LogInfo_("%s가 접속하였습니다.", session->GetRemoteEndPoint().ToString().Source());
+}
+
 void L_GAME::OnConnectFailed(Session* session, Int32U errorCode) {}
 void L_GAME::OnDisconnected(Session* session) {
 	_LogInfo_("%s가 연결 종료하였습니다.", session->GetRemoteEndPoint().ToString().Source());
@@ -36,7 +39,9 @@ void L_GAME::OnDisconnected(Session* session) {
 }
 
 void L_GAME::OnSent(Session* session, ISendPacket* sentPacket, Int32UL sentBytes) {
-	sentPacket->ForEach([](ICommand* cmd) { _LogInfo_("%s(%d) 송신", Core::CommandNameMap.Get(cmd->GetCommand()), cmd->GetCommand()); });
+	sentPacket->ForEach([](ICommand* cmd) {
+		_LogInfo_("%s(%d) 송신", Core::CommandNameMap.Get(cmd->GetCommand()), cmd->GetCommand());
+	});
 }
 
 void L_GAME::OnReceived(Session* session, ICommand* recvCmd) {

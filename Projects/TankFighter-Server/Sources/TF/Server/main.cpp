@@ -8,6 +8,7 @@
 #include "Pch.h"
 
 #include <TF/Server/NetCore.h>
+#include <TF/Common/Command.h>
 
 USING_NS_JC;
 USING_NS_JNET;

@@ -28,20 +28,32 @@ void World::Initialize() {
 
 	do {
 		Channel* pChannel = dbg_new Channel(
-			result.Uid,
+			result.PrimaryKey,
 			result.Name,
 			result.MaxPlayerCount,
 			result.GeneratedTime
 		);
+		ChannelLobby* pChannelLobby = dbg_new ChannelLobby();
 
-		m_hmChannelMapByPrimaryKey.Insert(result.Uid, pChannel);
+		m_hmChannelMapByPrimaryKey.Insert(result.PrimaryKey, pChannel);
+		m_hmLobbyMapByPrimaryKey.Insert(result.PrimaryKey, pChannelLobby);
 		m_vChannelList.PushBack(pChannel);
+		m_vChannelLobbyList.PushBack(pChannelLobby);
 	} while (result.FetchNextRow());
 }
 
 void World::Finalize() {
 	m_vChannelList.ForEachDelete();
 	m_vChannelList.Clear();
+
+	for (int i = 0; i < m_vChannelLobbyList.Size(); ++i) {
+		ChannelLobby* pChannelLobby = m_vChannelLobbyList[i];
+		pChannelLobby->Finalize();
+	}
+
+	m_vChannelLobbyList.ForEachDelete();
+	m_vChannelLobbyList.Clear();
+
 }
 
 void World::OnUpdate(const JCore::TimeSpan& elapsed) {
@@ -50,7 +62,7 @@ void World::OnUpdate(const JCore::TimeSpan& elapsed) {
 	}
 }
 
-void World::BroadcastPacket(JNetwork::ISendPacket* packet) {
+void World::BroadcastPacket(JNetwork::ISendPacket* packet, int state) {
 	JCORE_REF_COUNT_GUARD(packet);
 	JCORE_LOCK_GUARD(m_PlayerListSync);
 	m_hsPlayerList.ForEach([=](Player* player) { player->SendPacket(packet); });
@@ -69,6 +81,12 @@ Channel* World::GetChannelByPrimaryKey(int primaryKey) {
 	Channel** ppChannel = m_hmChannelMapByPrimaryKey.Find(primaryKey);
 	if (ppChannel == nullptr) { return nullptr; }
 	return *ppChannel;
+}
+
+ChannelLobby* World::GetChannelLobbyByPrimaryKey(int channelPrimaryKey) {
+	ChannelLobby** ppChannelLobby = m_hmLobbyMapByPrimaryKey.Find(channelPrimaryKey);
+	if (ppChannelLobby == nullptr) { return nullptr; }
+	return *ppChannelLobby;
 }
 
 void World::AddPlayer(Player* player) {

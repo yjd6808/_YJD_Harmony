@@ -29,6 +29,15 @@ PopUp* PopUp::createInRunningScene(const char* text, bool bgClickable, std::func
 	return createInParent(text, pScene, bgClickable, callback);
 }
 
+PopUp* PopUp::createInRunningScene(const char* text, bool bgClickable, std::function<void()> yesFunc, std::function<void()> noFunc) {
+	auto pScene = Director::getInstance()->getRunningScene();
+	if (pScene == nullptr) {
+		_LogWarn_("%s", text);
+		return nullptr;
+	}
+	return createInParent(text, pScene, bgClickable, yesFunc, noFunc);
+}
+
 PopUp* PopUp::createInParent(const char * text, Node* parent, bool bgClickable, std::function<void()> callback)
 {
 	PopUp *ret = new (std::nothrow) PopUp();

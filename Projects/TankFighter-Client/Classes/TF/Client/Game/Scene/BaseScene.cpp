@@ -27,6 +27,7 @@ bool BaseScene::init() {
 	}
 
 	m_pUILayer = Layer::create();
+	m_pUILayer->setContentSize(Director::getInstance()->getWinSize());
 	m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
 
 	m_pNetInfo = Text::create("", Const::Resource::FontName, 13);

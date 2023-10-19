@@ -60,34 +60,22 @@ create table t_character (
 
 
 # 친구 관계
+# [인덱스]
+# 친구 요청자를 빠르게 찾기위해 req 인덱스처리
+# 친구 수락자를 빠르게 찾기위해 ack 인덱스처리
+# [유니크]
+# 중복 친구 방지를 위해 req, ack uid를 묶어서 unique 처리함
 create table t_friendship (
 	c_req_character_uid		int				not null				comment	'친구를 요청한 캐릭터의 고유 ID',
     c_ack_character_uid		int				not null				comment '친구를 수락한 캐릭터의 고유 ID',
     
-    constraint t_character_fk_req_character_uid 	foreign key (c_req_character_uid) references t_character(c_uid) on delete cascade, 
-    constraint t_character_fk_ack_character_uid 	foreign key (c_ack_character_uid) references t_character(c_uid) on delete cascade
+    index t_friendship_ky_req_uid(c_req_character_uid),
+    index t_friendship_ky_ack_uid(c_ack_character_uid),
+    constraint t_friendship_fk_req_character_uid 	foreign key (c_req_character_uid) references t_character(c_uid) on delete cascade, 
+    constraint t_friendship_fk_ack_character_uid 	foreign key (c_ack_character_uid) references t_character(c_uid) on delete cascade,
+    constraint t_friendship_uc_req_ack_uid			unique(c_req_character_uid, c_ack_character_uid)
 ) character set utf8 collate utf8_unicode_520_ci;
 
-# 인벤토리
-create table t_inventory (
-	c_uid					int				primary key auto_increment	comment	'인벤토리 고유 아이디',
-    c_character_uid			int				not null					comment '이 인벤토리를 소요한 캐릭터의 고유 ID',
-    c_size					int				not null					comment '인벤토리 크기',
-
-	constraint t_inventory_fk_character_uid foreign key (c_character_uid) references t_character(c_uid) on delete cascade
-) character set utf8 collate utf8_unicode_520_ci;
-
-# 소지중인 아이템 정보
-# 아이템 고유 아이디는 설정 파일에서 값이 정의됨
-create table t_inventoryitem (
-	c_inventory_uid			int				not null					comment '이 아이템이 속한 인벤토리의 고유 ID',
-    c_character_uid			int				not null					comment '이 아이템을 소지한 캐릭터의 ID',
-    c_item_uid				int				not null					comment	'아이템 고유 ID',
-    c_quantity				int				not null					comment	'소지중인 아이템 수',
-    
-	constraint t_inventoryitem_fk_inventory_uid foreign key (c_inventory_uid) references t_inventory(c_uid) on delete cascade,
-    constraint t_inventoryitem_fk_character_uid foreign key (c_character_uid) references t_character(c_uid) on delete cascade   
-) character set utf8 collate utf8_unicode_520_ci
 
 
 /* 참고사항 1

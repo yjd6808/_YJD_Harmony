@@ -19,6 +19,8 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<SC_LoadChannelInfo>();
 	Core::CommandNameMap.Add<CS_SelectChannel>();
 	Core::CommandNameMap.Add<SC_SelectChannel>();
+	Core::CommandNameMap.Add<CS_LeaveChannel>();
+	Core::CommandNameMap.Add<SC_LeaveChannel>();
 	Core::CommandNameMap.Add<CS_LoadCharacterInfo>();
 	Core::CommandNameMap.Add<SC_LoadCharacterInfo>();
 	Core::CommandNameMap.Add<CS_CreateCharacter>();
@@ -26,20 +28,21 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<CS_SelectCharacter>();
 	Core::CommandNameMap.Add<SC_SelectCharacter>();
 	Core::CommandNameMap.Add<CS_JoinLobby>();
+	Core::CommandNameMap.Add<CS_LeaveLobby>();
+	Core::CommandNameMap.Add<SC_LeaveLobby>();
 	Core::CommandNameMap.Add<SC_UpdateCharacterInfo>();
 	Core::CommandNameMap.Add<SC_UpdateRoomList>();
 	Core::CommandNameMap.Add<SC_UpdateFriendList>();
+	Core::CommandNameMap.Add<SC_UpdatePlayerList>();
 	Core::CommandNameMap.Add<CS_CreateRoom>();
 	Core::CommandNameMap.Add<SC_CreateRoom>();
 	Core::CommandNameMap.Add<CS_JoinRoom>();
 	Core::CommandNameMap.Add<SC_JoinRoom>();
 	Core::CommandNameMap.Add<SC_UpdateRoomInfo>();
 	Core::CommandNameMap.Add<CS_AddFriend>();
-	Core::CommandNameMap.Add<SC_AddFriend>();
 	Core::CommandNameMap.Add<CS_AddFriendRequest>();
 	Core::CommandNameMap.Add<SC_AddFriendRequest>();
 	Core::CommandNameMap.Add<CS_DeleteFriend>();
-	Core::CommandNameMap.Add<SC_DeleteFriend>();
 	Core::CommandNameMap.Add<CS_LoadRoomInfo>();
 	Core::CommandNameMap.Add<SC_LoadRoomInfo>();
 	Core::CommandNameMap.Add<CS_RoomGameStart>();
@@ -68,9 +71,7 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<CS_BattleFieldStatisticsUpdate>();
 	Core::CommandNameMap.Add<CS_TcpRTT>();
 	Core::CommandNameMap.Add<SC_TcpRTT>();
-
-	Core::CommandNameMap.Add<CS_LeaveChannel>();
-	Core::CommandNameMap.Add<SC_LeaveChannel>();
+	Core::CommandNameMap.Add<SC_Disconnect>();
 }
 
 void FinalizeCommon() {

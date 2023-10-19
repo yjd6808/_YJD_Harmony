@@ -58,11 +58,11 @@ void InitializeCore() {
 void FinalizeCore() {
 	Core::World->Finalize();
 
-	Character::FreeAllObjects();
-	Room::FreeAllObjects();
-	Player::FreeAllObjects();
-
 	JCORE_DELETE_SAFE(Core::NetCore);
 	JCORE_DELETE_SAFE(Core::World);
 	JCORE_DELETE_SAFE(Core::GameDB);
+
+	Character::FreeAllObjects();
+	Room::FreeAllObjects();
+	Player::FreeAllObjects();
 }

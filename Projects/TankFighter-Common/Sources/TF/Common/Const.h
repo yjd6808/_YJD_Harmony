@@ -35,7 +35,6 @@ namespace Net
 
 namespace Channel
 {
-	extern const int PoolSize;			// 가능한 최대 채널 갯수
 }
 
 namespace Room
@@ -56,10 +55,6 @@ namespace Tank
 	extern const float FireDelay;
 	extern const float BulletSpeed;
 }
-
-
-
-
 
 
 NS_CONST_END

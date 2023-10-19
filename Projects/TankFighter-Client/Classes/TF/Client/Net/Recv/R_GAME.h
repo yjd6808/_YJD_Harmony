@@ -18,16 +18,16 @@ struct R_GAME
 	static void RECV_SC_SelectChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_LeaveChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_LoadCharacterInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_LeaveLobby(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_SelectCharacter(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_UpdateCharacterInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_UpdateRoomList(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_UpdatePlayerList(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_UpdateFriendList(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_CreateRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_JoinRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_UpdateRoomInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_SC_AddFriend(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_AddFriendRequest(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_SC_DeleteFriend(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldLoad(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldLeave(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_ServerMessage(JNetwork::Session* session, JNetwork::ICommand* cmd);

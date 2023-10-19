@@ -13,14 +13,16 @@
 #include <TF/Server/Const.h>
 #include <TF/Server/Query/Q_GAME.h>
 #include <TF/Server/Contents/Character.h>
+#include <TF/Server/Send/S_GAME.h>
+
+#include "Host/GameSession.h"
 
 USING_NS_JC;
 USING_NS_JNET;
 
-Character Character::Empty;
-
 Character::Character()
-	: m_iPrimaryKey(Const::InvalidValue)
+	: m_pPlayer(nullptr)
+	, m_iPrimaryKey(Const::InvalidValue)
 	, m_szName(String::Null)
 	, m_iWin(0)
 	, m_iLose(0)
@@ -33,6 +35,7 @@ Character::Character()
 Character::~Character() {}
 
 void Character::OnPopped() {
+	m_pPlayer = nullptr;
 	m_iPrimaryKey = Const::InvalidValue;
 	m_szName = String::Null;
 	m_iWin = 0;
@@ -105,6 +108,122 @@ void Character::ApplyToDatabase() {
 	m_bDirty = false;
 }
 
+int Character::GetFriendCount() const {
+	JCORE_LOCK_GUARD(m_FriendLock);
+	return m_vFriendList.Size();
+}
+
+void Character::GetFriendList(JCORE_OUT FriendCharacterInfo* friendArray, int capacity) {
+	JCORE_LOCK_GUARD(m_FriendLock);
+	for (int i = 0; i < m_vFriendList.Size() && i < capacity; ++i) {
+		friendArray[i] = m_vFriendList[i];
+	}
+}
+
+bool Character::IsFriend(int characterPrimaryKey) {
+	JCORE_LOCK_GUARD(m_FriendLock);
+	for (int i = 0; i < m_vFriendList.Size(); ++i) {
+		if (m_vFriendList[i].PrimaryKey == characterPrimaryKey) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void Character::AddFriend(Character* friendCharactor) {
+	FriendCharacterInfo friendInfo;
+	friendCharactor->GetFriendInfo(friendInfo);
+	JCORE_LOCK_GUARD(m_FriendLock);
+	m_vFriendList.PushBack(Move(friendInfo));
+}
+
+void Character::DeleteFriend(int characterPrimaryKey) {
+	JCORE_LOCK_GUARD(m_FriendLock);
+	m_vFriendList.RemoveIf([=](FriendCharacterInfo& info) { return info.PrimaryKey == characterPrimaryKey; });
+}
+
+void Character::ChangeFriendState(int friendCharacterPrimaryKey, bool login) {
+	JCORE_LOCK_GUARD(m_FriendLock);
+	FriendCharacterInfo* pInfo = m_vFriendList.FindIf([=](FriendCharacterInfo& info) { return info.PrimaryKey == friendCharacterPrimaryKey; });
+
+	if (pInfo == nullptr) {
+		return;
+	}
+	pInfo->LoggedIn = login;
+}
+
+void Character::NotifyLoginStateToFriends(bool login) {
+	Vector<int> vFriendPrimaryKeyList(0);
+
+	{
+		JCORE_LOCK_GUARD(m_FriendLock);
+		vFriendPrimaryKeyList.Resize(m_vFriendList.Size());
+
+		for (int i = 0; i < m_vFriendList.Size(); ++i) {
+			vFriendPrimaryKeyList.PushBack(m_vFriendList[i].PrimaryKey);
+		}
+	}
+
+	const int iFriendCount = vFriendPrimaryKeyList.Size();
+	if (iFriendCount <= 0) {
+		return;
+	}
+
+	ChannelLobby* pLobby = m_pPlayer->GetChannelLobby();
+	if (pLobby == nullptr) {
+		DebugAssert(false);
+		return;
+	}
+
+	// 로그인 중인 친구 플레이어 목록
+	Vector<Player*> vLoginedFriendPlayerList(iFriendCount);
+	pLobby->GetPlayerListByCharacterPrimaryKeyList(vFriendPrimaryKeyList, vLoginedFriendPlayerList);
+
+	for (int i = 0; i < vLoginedFriendPlayerList.Size(); ++i) {
+		Player* pFriendPlayer = vLoginedFriendPlayerList[i];
+		Character* pFriendCharacter = pFriendPlayer->GetCharacter();
+		if (pFriendCharacter == nullptr) {
+			continue;
+		}
+
+		pFriendCharacter->ChangeFriendState(m_iPrimaryKey, login);
+		S_GAME::SetInformation(pFriendPlayer->GetSession(), SendStrategy::SendAsync);
+		S_GAME::SEND_SC_UpdateFriendList(pFriendCharacter);
+	}
+}
+
+void Character::LoadFriendList(ChannelLobby* channelLobby) {
+	if (m_iPrimaryKey <= Const::InvalidValue) {
+		return;
+	}
+
+	Qry::SelectFriendCharacterInfoListResult result = Q_GAME::SelectFriendCharacterInfoList(m_iPrimaryKey);
+
+	JCORE_LOCK_GUARD(m_FriendLock);
+	m_vFriendList.Clear();
+
+	for (int i = 0; i < result.RowCount; ++i, result.FetchNextRow()) {
+		FriendCharacterInfo info;
+		info.Name = result.Name;
+		info.PrimaryKey = result.PrimaryKey;
+		info.LoggedIn = false;
+
+		const Player* pFriend = channelLobby->GetPlayerByCharacterPrimaryKey(result.PrimaryKey);
+
+		if (pFriend != nullptr) {
+			const Character* pFriendCharacter = pFriend->GetCharacter();
+
+			if (pFriendCharacter == nullptr)
+				continue;
+
+			info.LoggedIn = true;
+		}
+
+		m_vFriendList.PushBack(Move(info));
+	}
+
+}
+
 void Character::SetInfo(const CharacterInfo& info, bool dirty /*= true*/) {
 	m_iPrimaryKey = info.PrimaryKey;
 	m_szName = info.Name;
@@ -116,8 +235,8 @@ void Character::SetInfo(const CharacterInfo& info, bool dirty /*= true*/) {
 	m_bDirty = dirty;
 }
 
-CharacterInfo Character::GetInfo() const {
-	CharacterInfo info;
+void Character::GetInfo(JCORE_REF_OUT CharacterInfo& info) {
+	info.AccessId = m_iAccessId;
 	info.PrimaryKey = m_iPrimaryKey;
 	info.Name = m_szName;
 	info.Win = m_iWin;
@@ -125,7 +244,13 @@ CharacterInfo Character::GetInfo() const {
 	info.Kill = m_iKill;
 	info.Death = m_iDeath;
 	info.Money = m_iMoney;
-	return info;
+	info.LoggedIn = true;
+}
+
+void Character::GetFriendInfo(JCORE_REF_OUT FriendCharacterInfo& info) {
+	info.PrimaryKey = m_iPrimaryKey;
+	info.Name = m_szName;
+	info.LoggedIn = true;
 }
 
 String Character::ToString() { return StringUtil::Format("%s(%d)", m_szName.Source(), m_iPrimaryKey); }

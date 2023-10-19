@@ -98,6 +98,7 @@ void NetCore::InitializeParser() {
 	m_Parser.AddCommand<CS_DeleteCharacter>(R_GAME::RECV_CS_DeleteCharacter);
 	m_Parser.AddCommand<CS_SelectCharacter>(R_GAME::RECV_CS_SelectCharacter);
 	m_Parser.AddCommand<CS_JoinLobby>(R_GAME::RECV_CS_JoinLobby);
+	m_Parser.AddCommand<CS_LeaveLobby>(R_GAME::RECV_CS_LeaveLobby);
 	m_Parser.AddCommand<CS_CreateRoom>(R_GAME::RECV_CS_CreateRoom);
 	m_Parser.AddCommand<CS_JoinRoom>(R_GAME::RECV_CS_JoinRoom);
 	m_Parser.AddCommand<CS_AddFriend>(R_GAME::RECV_CS_AddFriend);

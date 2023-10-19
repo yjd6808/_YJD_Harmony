@@ -9,6 +9,8 @@
 #include "Pch.h"
 #include "Q_GAME.h"
 
+#include <TF/Server/Contents/Character.h>
+
 bool Q_GAME::CheckAccountExist(JCORE_REF_OUT int& accountPrimaryKey, const char* id, const char* pass) {
 	Qry::SelectAccountInfoResult result;
 	Qry::SelectAccountInfo::Execute<THelper>(Core::GameDB, result, id, pass);
@@ -80,4 +82,32 @@ bool Q_GAME::DeleteCharacter(int accountPrimaryKey, int channelPrimaryKey, const
 	Qry::DeleteResult result;
 	Qry::DeleteCharacter::Execute<THelper>(Core::GameDB, result, accountPrimaryKey, channelPrimaryKey, name);
 	return result.RowCount > 0;
+}
+
+Qry::SelectFriendCharacterInfoListResult Q_GAME::SelectFriendCharacterInfoList(int characterPrimaryKey) {
+	Qry::SelectFriendCharacterInfoListResult result;
+	Qry::SelectFriendCharacterInfoList::Execute<THelper>(Core::GameDB, result, characterPrimaryKey, characterPrimaryKey);
+	return result;
+}
+
+Qry::CheckFriendResult Q_GAME::CheckFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey) {
+	Qry::CheckFriendResult result;
+	Qry::CheckFriend::Execute<THelper>(Core::GameDB, result, lhsCharacterPrimaryKey, rhsCharacterPrimaryKey, rhsCharacterPrimaryKey, lhsCharacterPrimaryKey);
+	return result;
+}
+
+bool Q_GAME::AddFriendship(int requestCharacterPrimaryKey, int acceptCharacterPrimaryKey) {
+	Qry::InsertResult result;
+	Qry::AddFriendship::Execute<THelper>(Core::GameDB, result, requestCharacterPrimaryKey, acceptCharacterPrimaryKey);
+	return IsSuccess;
+}
+
+bool Q_GAME::DeleteFriend(int lhsCharacterPrimaryKey, int rhsCharacterPrimaryKey, JCORE_OUT int* deletedCount /*= nullptr*/) {
+	Qry::DeleteResult result;
+	Qry::DeleteFriend::Execute<THelper>(Core::GameDB, result, lhsCharacterPrimaryKey, rhsCharacterPrimaryKey, rhsCharacterPrimaryKey, lhsCharacterPrimaryKey);
+
+	if (IsSuccess && deletedCount)
+		*deletedCount = result.RowCount;
+
+	return IsSuccess;
 }

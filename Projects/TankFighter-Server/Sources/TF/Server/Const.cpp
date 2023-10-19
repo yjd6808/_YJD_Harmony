@@ -11,6 +11,16 @@
 
 NS_CONST_BEGIN
 
+namespace Broadcast
+{
+	namespace Lobby
+	{
+		const int StateAny = 0;
+		const int StateLobby = 1;
+		const int StateMax = 2;
+	}
+}
+
 namespace AccessibleObject
 {
 	// ID 시작 인덱스
@@ -42,6 +52,14 @@ namespace Failed
 	{
 		const int AddFailedAlreadyExist	= 1;
 		const int AddFailedFull = 2;
+		const int AddFailedClosed = 3;
+	}
+
+	namespace Room
+	{
+		const int AddFailedAlreadyExist = 1;
+		const int AddFailedFull = 2;
+		const int AddFailedClosed = 3;
 	}
 }
 

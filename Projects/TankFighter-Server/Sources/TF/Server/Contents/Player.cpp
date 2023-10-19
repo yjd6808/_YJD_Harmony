@@ -11,6 +11,7 @@
 #include <TF/Server/Const.h>
 #include <TF/Server/Host/GameSession.h>
 #include <TF/Server/Contents/Character.h>
+#include <TF/Server/Send/S_GAME.h>
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -19,12 +20,14 @@ USING_NS_JNET;
 // null체크 하기 귀찮아서 그냥 null인 상태를 안만들도록 함.
 // 이렇게 해보고 불편한점이 생기면 슈타인즈 게이트 프로젝트에선 이렇게 하지말자.
 Player::Player()
-	: m_iAccountPrimaryKey(Const::InvalidValue)
+	: m_eState(PlayerState::Initialized)
+	, m_iAccountPrimaryKey(Const::InvalidValue)
 	, m_szAccountId(0)
 	, m_pSession(nullptr)
-	, m_pChannel(&Channel::Empty)
-	, m_pRoom(&Room::Empty)
-	, m_pCharacter(&Character::Empty)
+	, m_pChannel(nullptr)
+	, m_pRoom(nullptr)
+	, m_pCharacter(nullptr)
+	, m_pChannelLobby(nullptr)
 {}
 
 Player::~Player() {
@@ -33,15 +36,16 @@ Player::~Player() {
 
 
 void Player::OnPopped() {
-	m_pSession = nullptr;
-	m_szAccountId = nullptr;
-	m_pChannel = &Channel::Empty;
-	m_pRoom = &Room::Empty;
-	m_pCharacter = &Character::Empty;
+
 }
 
 void Player::OnPushed() {
-
+	m_pSession = nullptr;
+	m_szAccountId = nullptr;
+	m_pChannel = nullptr;
+	m_pRoom = nullptr;
+	m_pCharacter = nullptr;
+	m_pChannelLobby = nullptr;
 }
 
 void Player::OnConnected() {
@@ -49,30 +53,54 @@ void Player::OnConnected() {
 
 void Player::OnDisconnected() {
 	Core::World->RemovePlayer(this);
-	m_pChannel->RemovePlayer(this);
-	// m_pRoom->RemovePlayer(this);
-
-	Character* pCharacter = m_pCharacter;
-
-	if (pCharacter != &Character::Empty)
-		Character::Push(pCharacter);
-
+	LeaveChannel();
 	Push(this);
 }
 
-void Player::OnUpdate(const JCore::TimeSpan& elapsed) {
+void Player::OnUpdate(const TimeSpan& elapsed) {
+}
+
+void Player::OnLobbyJoin(ChannelLobby* lobby) {
+	m_pChannelLobby = lobby;
+	m_eState = PlayerState::Lobby;
+	m_pCharacter->NotifyLoginStateToFriends(true);
+}
+
+void Player::OnLobbyLeave() {
+	LeaveRoom();
+
+	Character* pCharacter = m_pCharacter;
+
+	if (pCharacter != nullptr) {
+		pCharacter->NotifyLoginStateToFriends(false);
+		Character::Push(pCharacter);
+	}
+
+	m_pChannelLobby = nullptr;
+	m_pCharacter = nullptr;
+}
+
+void Player::OnChannelJoin(Channel* channel) {
+	m_pChannel = channel;
+	m_eState = PlayerState::Channel;
+}
+
+void Player::OnChannelLeave() {
+	LeaveLobby();
+
+	m_pChannel = nullptr;
+}
+
+void Player::OnRoomJoin(Room* room) {
+	m_eState = PlayerState::Room;
+	m_pRoom = room;
+}
+
+void Player::OnRoomLeave() {
+	m_pRoom = nullptr;
 }
 
 void Player::SendPacket(ISendPacket* packet) {
-
-	/*
-	 * 이 방식은 멀티쓰레드에서 안전하지 않음!
-	 * 나도 모르게 이렇게 작성했던데.. 주의하도록 하자.
-	 *
-	 * if (m_pSession)
-	 *		m_pSession->SendAsync(packet);
-	 */
-
 	Session* session = m_pSession;
 
 	if (session == nullptr) 
@@ -88,6 +116,41 @@ int Player::GetChannelPrimaryKey() const {
 		return Const::InvalidValue;
 
 	return pChannel->GetPrimaryKey();
+}
+
+bool Player::LeaveChannel() {
+	Channel* pChannel = m_pChannel;
+
+	if (pChannel == nullptr)
+		return false;
+
+	return pChannel->Leave(this);
+}
+
+bool Player::LeaveLobby() {
+	ChannelLobby* pChannelLobby = m_pChannelLobby;
+
+	if (pChannelLobby == nullptr)
+		return false;
+
+	return pChannelLobby->Leave(this);
+}
+
+bool Player::LeaveRoom() {
+	Room* pRoom = m_pRoom;
+	if (pRoom == nullptr)
+		return false;
+
+	return pRoom->Leave(this);
+}
+
+bool Player::Disconnect() {
+	Session* session = m_pSession;
+
+	if (session == nullptr)
+		return false;
+
+	return session->Disconnect();
 }
 
 String Player::ToString() {

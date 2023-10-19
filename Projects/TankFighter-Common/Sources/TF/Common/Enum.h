@@ -38,13 +38,13 @@ enum class ObstacleShape
 
 enum class PlayerState
 {
+	Initialized     = -1,
 	Disconnected	= -1,		// 연결 끊긴 상태 혹은 초기화된 상태
-	LoginStage		= 0,		// 로그인 스테이지
-	ChannelSelect	= 1,		// 채널 선택 스테이지
+	Channel			= 1,		// 채널 선택 스테이지
 	CharacterSelect = 2,		// 캐릭터 선택 스테이지
 	Lobby			= 3,		// 채널 로비
-	RoomLobby		= 4,		// 방 로비에 있는 상태
-	RoomBattle		= 5			// 방에서 게임을 시작한 상태
+	Room			= 4,		// 방 로비에 있는 상태
+	BattleField		= 5			// 방에서 게임을 시작한 상태
 };
 
 enum class RoomState

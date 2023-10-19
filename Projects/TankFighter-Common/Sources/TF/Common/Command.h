@@ -38,11 +38,9 @@
 #define CMDID_SC_JOIN_ROOM								125
 #define CMDID_SC_UPDATE_ROOMINFO						126		// 다른 유저가 방에 참가하거나, 방에 있던 유저가 나가는 경우
 #define CMDID_CS_ADD_FRIEND								122		// 친구 추가 버튼 클릭시
-#define CMDID_SC_ADD_FRIEND								127		// 친구 추가 요청에 대한 결과를 보낸다.
-#define CMDID_CS_ADD_FRIEND_REQUEST						128		// 친구 추가 요청 대상에게 요청정보를 전달한다.
-#define CMDID_SC_ADD_FRIEND_REQUEST						128		// 친구 요청을 받은 클라이언트가 수락/거부의 결과를 서버로 전송한다.
+#define CMDID_CS_ADD_FRIEND_REQUEST						128		// 친구 요청을 받은 클라이언트가 수락/거부의 결과를 서버로 전송한다.
+#define CMDID_SC_ADD_FRIEND_REQUEST						128		// 친구 추가 요청 대상에게 요청정보를 전달한다.
 #define CMDID_CS_DELETE_FRIEND							123		// 친구 삭제 / 친구 목록(리스트뷰)의 친구 버튼 클릭시
-#define CMDID_SC_DELETE_FRIEND							130		// 삭제된 대상이 접속중인 경우 대상에게도 삭제되었다고 송신하고 삭제한 사람에게도 송신한다. 그리고 친구 목록도 갱신해줌
 #define CMDID_CS_LOAD_ROOM_INFO							131		// (방 진입 시) 각종 방 정보를 요청한다.
 #define CMDID_SC_LOAD_ROOM_INFO							132
 #define CMDID_CS_ROOM_GAME_START						133		// 게임 시작 버튼 클릭
@@ -75,7 +73,11 @@
 #define CMDID_SC_TCP_RTT								201
 
 #define CMDID_CS_LEAVE_CHANNEL							202		// ChannelLayer에서 채널 버튼 클릭시
-#define CMDID_SC_LEAVE_CHANNEL							203
+#define CMDID_SC_LEAVE_CHANNEL							203		// 서버에서 처리 후 클라한테 알림
+#define CMDID_CS_LEAVE_LOBBY							204		// LobbyLayer에서 캐릭터 선택 이동버튼 클릭시
+#define CMDID_SC_LEAVE_LOBBY							205		// 서버에서 처리 후 클라한테 알림
+#define CMDID_SC_DISCONNECT								206		// 서버측에서 접속 종료시킬때
+#define CMDID_SC_UPDATE_PLAYERLIST						207		// 유저목록 업데이트
 
 // UDP Commands
 #define CMDID_CS_UDP_PING								2000
@@ -164,81 +166,64 @@ int ChannelPrimaryKey = Const::InvalidValue;
 int CharacterPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
+STATIC_CMD_BEGIN(CS_LeaveLobby, CMDID_CS_LEAVE_LOBBY)
+int AccountPrimaryKey = Const::InvalidValue;
+int ChannelPrimaryKey = Const::InvalidValue;
+int CharacterPrimaryKey = Const::InvalidValue;
+STATIC_CMD_END
+
+STATIC_CMD_BEGIN(SC_LeaveLobby, CMDID_SC_LEAVE_LOBBY)
+STATIC_CMD_END
+
 STATIC_CMD_BEGIN(SC_UpdateCharacterInfo, CMDID_SC_UPDATE_CHARACTER_INFO)
-bool Result{};
-char Reason[Const::Length::Reason];
 CharacterInfo Info{};
 STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_UpdateRoomList, CMDID_SC_UPDATE_ROOMLIST, RoomInfo)
-int Count = 0;
-bool Result{};
-char Reason[Const::Length::Reason];
 RoomInfo Info[1];
 DYNAMIC_CMD_END
 
-DYNAMIC_CMD_BEGIN(SC_UpdateFriendList, CMDID_SC_UPDATE_FRIENDLIST, CharacterInfo)
-int Count = 0;
-CharacterInfo Info[1];
+DYNAMIC_CMD_BEGIN(SC_UpdateFriendList, CMDID_SC_UPDATE_FRIENDLIST, FriendCharacterInfo)
+FriendCharacterInfo Info[1];
 DYNAMIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_CreateRoom, CMDID_CS_CREATE_ROOM)
-char RoomName[Const::Length::Name];
+JCore::StaticString<Const::Length::Name> RoomName;
 STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_CreateRoom, CMDID_SC_CREATE_ROOM)
-bool Result{};
-int RoomUID = Const::InvalidValue;
-char Reason[Const::Length::Reason];
+int RoomAccessId = Const::InvalidValue;
 STATIC_CMD_END
 
-
 STATIC_CMD_BEGIN(CS_JoinRoom, CMDID_CS_JOIN_ROOM)
-int RoomUID = Const::InvalidValue;
+int RoomAccessId = Const::InvalidValue;
 STATIC_CMD_END
 
 
 STATIC_CMD_BEGIN(SC_JoinRoom, CMDID_SC_JOIN_ROOM)
-int RoomUID = Const::InvalidValue;
-bool Result{};
-char Reason[Const::Length::Reason];
+int RoomAccessId = Const::InvalidValue;
 STATIC_CMD_END
 
-
 DYNAMIC_CMD_BEGIN(SC_UpdateRoomInfo, CMDID_SC_UPDATE_ROOMINFO, RoomCharacterInfo)
-int Count = 0;
 int HostCharacterPrimaryKey = Const::InvalidValue;		// 방장
 RoomCharacterInfo Info[1];
 DYNAMIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_AddFriend, CMDID_CS_ADD_FRIEND)
-char FriendName[Const::Length::Name];
-STATIC_CMD_END
-
-STATIC_CMD_BEGIN(SC_AddFriend, CMDID_SC_ADD_FRIEND)
-bool Result;
-char Reason[Const::Length::Reason];
-STATIC_CMD_END
-
-STATIC_CMD_BEGIN(CS_AddFriendRequest, CMDID_CS_ADD_FRIEND_REQUEST)
-int RequestCharacterPrimaryKey;	// 친구 요청을 보낸 사람의 UID
-CharacterInfo Info;
+JCore::StaticString<Const::Length::Name> FriendName;
 STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_AddFriendRequest, CMDID_SC_ADD_FRIEND_REQUEST)
+CharacterInfo Info;					// 친구 요청을 보낸 사람의 캐릭터 정보
+STATIC_CMD_END
+
+STATIC_CMD_BEGIN(CS_AddFriendRequest, CMDID_CS_ADD_FRIEND_REQUEST)
 bool Accept = false;				// 친구 요청 수락/거부 여부
-int RequestCharacterPrimaryKey;
-int AcceptedCharacterPrimaryKey;
+int RequestCharacterAccessId;		// 친구 요청한 사람의 ID
 STATIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_DeleteFriend, CMDID_CS_DELETE_FRIEND)
 int DeleteCharacterPrimaryKey = Const::InvalidValue;
-STATIC_CMD_END
-
-
-STATIC_CMD_BEGIN(SC_DeleteFriend, CMDID_SC_DELETE_FRIEND)
-bool Result = false;				// 친구 삭제 성공/실패 여부
-char Reason[Const::Length::Reason];
 STATIC_CMD_END
 
 DYNAMIC_CMD_BEGIN(SC_ServerMessage, CMDID_CS_SERVER_MESSAGE, JCore::StaticString<1>)
@@ -344,14 +329,15 @@ int CharacterPrimaryKey = Const::InvalidValue;		// 나간 유저의 UID 이걸 �
 									// 자기자신은 씬을 바꿔주도록 하자
 STATIC_CMD_END
 
-STATIC_CMD_BEGIN(CS_ChatMessage, CMDID_CS_CHAT_MESSAGE)
+DYNAMIC_CMD_BEGIN(CS_ChatMessage, CMDID_CS_CHAT_MESSAGE, JCore::StaticString<1>)
 PlayerState PlayerState;
-char Message[Const::Length::Message];
-STATIC_CMD_END
+JCore::StaticString<1> Message;
+DYNAMIC_CMD_END
 
-STATIC_CMD_BEGIN(SC_ChatMessage, CMDID_SC_CHAT_MESSAGE)
-char Message[Const::Length::Message];
-STATIC_CMD_END
+DYNAMIC_CMD_BEGIN(SC_ChatMessage, CMDID_SC_CHAT_MESSAGE, JCore::StaticString<1>)
+PlayerState PlayerState;
+JCore::StaticString<1> Message;
+DYNAMIC_CMD_END
 
 STATIC_CMD_BEGIN(CS_BattleFieldFire, CMDID_CS_BATTLE_FIELD_FIRE)
 BulletInfo BulletInfo;
@@ -381,7 +367,8 @@ int Count = 0;
 BattleInfo Info[1];
 DYNAMIC_CMD_END
 
-
+STATIC_CMD_BEGIN(SC_Disconnect, CMDID_SC_DISCONNECT)
+STATIC_CMD_END
 
 // 일정 주기마다 클라가 TCP 서버로 시간을 전송한다.
 // 서버는 이를 수신하고 수신한 시각을 클라이언트 정보에 기록한다.
@@ -398,6 +385,12 @@ Int64U Tick;			// 서버에서 수신한 시각을 담아서 클라로 전달
 						// 전달한 시각과 이 Tick과의 차이를 비교해서 Latency를 구하고
 						// 이전에보낸시각과 수신한 시각을 비교해서 RTT를 구할 수 있겠다.
 STATIC_CMD_END
+
+
+DYNAMIC_CMD_BEGIN(SC_UpdatePlayerList, CMDID_SC_UPDATE_PLAYERLIST, CharacterInfo)
+PlayerState State;		// 이 State인 경우 업데이트
+CharacterInfo Info[1];
+DYNAMIC_CMD_END
+
 #pragma pack(pop)
 
-#pragma warning(pop)
