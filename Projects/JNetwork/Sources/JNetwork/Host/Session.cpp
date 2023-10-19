@@ -144,6 +144,7 @@ CommandBufferPacket* Session::GetCommandBufferForSending() {
 	
 #ifdef DebugMode
 	if (!spOldSendBuffer->IsValid()) {
+		delete pWrappedPacket;
 		_NetLogError_("무야! 보내고자하는 커맨드 센드 버퍼 데이터가 이상합니다.");
 		return nullptr;
 	}
@@ -187,7 +188,9 @@ bool Session::SendToAsync(const CommandBufferPtr& buffer, const IPv4EndPoint& de
 #ifdef DebugMode
 	DebugAssertMsg(buffer->IsValid(), "보내고자하는 커맨드 버퍼 데이터가 이상합니다.");
 #endif
-	return SendToAsync(dbg_new CommandBufferPacket(buffer), destination);
+	auto pPacket = dbg_new CommandBufferPacket(buffer);
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	return SendToAsync(pPacket, destination);
 }
 
 bool Session::SendToAsync(ISendPacket* packet) {
