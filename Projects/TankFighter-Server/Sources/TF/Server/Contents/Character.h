@@ -61,6 +61,7 @@ public:
 	
 	void SetInfo(const CharacterInfo& info, bool dirty = true);
 	void GetInfo(JCORE_REF_OUT CharacterInfo& info);
+	void GetRoomInfo(JCORE_REF_OUT RoomCharacterInfo& info);
 	void GetFriendInfo(JCORE_REF_OUT FriendCharacterInfo& info);
 
 	JCore::String ToString();
@@ -81,5 +82,8 @@ private:
 	JCore::AtomicInt m_iDeath;
 	JCore::AtomicInt m_iKill;
 	JCore::AtomicInt m_iMoney;
+
+	bool m_bReady;				// 방 레디 여부
+	bool m_bDeath;				// 사망여부
 	bool m_bDirty;
 };

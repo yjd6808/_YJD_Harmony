@@ -47,8 +47,11 @@ public:
 	bool AddPlayer(Player* player);
 	bool RemovePlayer(Player* player);
 
-	RoomInfo GetRoomInfo();
+	void GetRoomInfo(JCORE_REF_OUT RoomInfo& info);
+	void GetRoomMemberInfoList(JCORE_OUT RoomCharacterInfo* info);
+	void GetRoomMemberInfoListRaw(JCORE_OUT RoomCharacterInfo* info);
 	bool GetHostPlayer() const { return m_pLeader; }
+	void BroadcastRoomMemberListInfo();
 private:
 	void ChooseNewLeaderRaw();
 	int AddPlayerRaw(Player* player);
@@ -59,7 +62,7 @@ private:
 	RoomState m_eState;
 	JCore::String m_szName;
 	JCore::AtomicBool m_bClosed;
-	JCore::NormalLock m_Sync;
+	mutable JCore::RecursiveLock m_Sync;
 	JCore::Vector<Player*> m_vPlayerList;
 	Player* m_pLeader;
 };

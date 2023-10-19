@@ -108,6 +108,12 @@ void S_GAME::SEND_CS_LeaveLobby() {
 	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
 }
 
+bool S_GAME::SEND_CS_LoadRoomInfo(int roomAccessId) {
+	auto sending = SendBegin<CS_LoadRoomInfo>();
+	sending.Cmd.RoomAccessId = roomAccessId;
+	return SendEndExplicit(sending);
+}
+
 void S_GAME::SEND_CS_ChatMessage(const char* msg) {
 	int iMsgLen = StringUtil::LengthWithNull(msg);
 	auto sending = SendBegin<CS_ChatMessage>(iMsgLen);

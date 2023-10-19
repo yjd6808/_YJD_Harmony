@@ -31,10 +31,14 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static void SEND_SC_UpdateRoomList(ChannelLobby* lobby);
 	static void SEND_SC_UpdateRoomListBroadcast(ChannelLobby* lobby, Room* room);
 	static void SEND_SC_UpdateFriendList(Character* character);
+	static void SEND_SC_UpdatePlayerListInLobby(ChannelLobby* pLobby);
 	static void SEND_SC_LeaveLobby();
 	static void SEND_SC_CreateRoom(int roomAccessId);
 	static void SEND_SC_JoinRoom(int roomAccessId);
-	//static void SEND_SC_UpdateRoomInfo();
+	static void SEND_SC_LoadRoomInfo(Room* room);
+	
+	
+	//static void SEND_SC_UpdateRoomMemberList();
 	static void SEND_SC_AddFriendRequest(Character* character);
 	//static void SEND_SC_DeleteFriend();
 	//static void SEND_SC_BattleFieldLoad();
@@ -50,6 +54,7 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static bool SEND_SC_Disconnect(JNetwork::Session* session);
 	static void SEND_SC_ChatMessageBroadcastLobby(IBroadcastable* broadcastable, const char* msg);
 	static void SEND_SC_ChatMessageBroadcastBattleField(IBroadcastable* broadcastable, const char* msg);
-	static void SEND_SC_UpdatePlayerListInLobby(ChannelLobby* pLobby);
+	
+
 };
 

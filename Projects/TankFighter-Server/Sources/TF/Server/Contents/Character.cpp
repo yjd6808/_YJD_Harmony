@@ -29,6 +29,8 @@ Character::Character()
 	, m_iDeath(0)
 	, m_iKill(0)
 	, m_iMoney(0)
+	, m_bReady(false)
+	, m_bDeath(false)
 	, m_bDirty(false)
 {}
 
@@ -245,6 +247,12 @@ void Character::GetInfo(JCORE_REF_OUT CharacterInfo& info) {
 	info.Death = m_iDeath;
 	info.Money = m_iMoney;
 	info.LoggedIn = true;
+}
+
+void Character::GetRoomInfo(RoomCharacterInfo& info) {
+	GetInfo(info);
+	info.Ready = m_bReady;
+	info.Death = m_bDeath;
 }
 
 void Character::GetFriendInfo(JCORE_REF_OUT FriendCharacterInfo& info) {

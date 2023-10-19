@@ -28,8 +28,7 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static void SEND_CS_AddFriendRequest(bool accecpt, int requestCharacterPrimaryKey);
 	static void SEND_CS_DeleteFriend(int characterPrimaryKey);
 	static void SEND_CS_LeaveLobby();
-	// static void SEND_CS_ServerMessage();
-	// static void SEND_CS_LoadRoomInfo();
+	static bool SEND_CS_LoadRoomInfo(int roomAccessId);
 	// static void SEND_CS_RoomGameStart();
 	// static void SEND_CS_RoomGameReady();
 	// static void SEND_CS_RoomGameReadyCancel();
@@ -43,6 +42,8 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	// static void SEND_CS_BattleFieldLeave();
 	static void SEND_CS_ChatMessage(const char* msg);
 	
+
+
 
 	// static void SEND_CS_BattleFieldFire();
 	// static void SEND_CS_BattleFieldDeath();

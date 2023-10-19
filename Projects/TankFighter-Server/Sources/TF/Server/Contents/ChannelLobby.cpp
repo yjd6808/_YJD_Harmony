@@ -168,7 +168,9 @@ Vector<RoomInfo> ChannelLobby::GetRoomInfoList() {
 	JCORE_LOCK_GUARD(m_RoomListLock);
 	Vector<RoomInfo> vInfoList(m_hsRoomSet.Size());
 	m_hsRoomSet.ForEach([&vInfoList](Room* room) {
-		vInfoList.PushBack(room->GetRoomInfo());
+		RoomInfo info;
+		room->GetRoomInfo(info);
+		vInfoList.PushBack(Move(info));
 	});
 	return vInfoList;
 }

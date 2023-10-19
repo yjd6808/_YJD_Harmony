@@ -38,7 +38,7 @@ void InitializeCommon() {
 	Core::CommandNameMap.Add<SC_CreateRoom>();
 	Core::CommandNameMap.Add<CS_JoinRoom>();
 	Core::CommandNameMap.Add<SC_JoinRoom>();
-	Core::CommandNameMap.Add<SC_UpdateRoomInfo>();
+	Core::CommandNameMap.Add<SC_UpdateRoomMemberList>();
 	Core::CommandNameMap.Add<CS_AddFriend>();
 	Core::CommandNameMap.Add<CS_AddFriendRequest>();
 	Core::CommandNameMap.Add<SC_AddFriendRequest>();

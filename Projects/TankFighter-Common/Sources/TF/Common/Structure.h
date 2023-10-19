@@ -47,7 +47,6 @@ struct FriendCharacterInfo
 
 struct RoomCharacterInfo : CharacterInfo
 {
-	int RoomUID = Const::InvalidValue;
 	bool Ready;
 	bool IsDeath;
 };

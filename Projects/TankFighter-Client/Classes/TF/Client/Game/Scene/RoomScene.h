@@ -22,5 +22,8 @@ public:
 	void onEnterTransitionDidFinish() override;
 
 	Type getType() const override { return Room; }
+
+	void refreshRoomInfo(RoomInfo& info);
+	void refreshRoomMemberInfoList(RoomCharacterInfo* roomCharacterInfoList, int count, int hostCharacterPrimaryKey);
 private:
 };

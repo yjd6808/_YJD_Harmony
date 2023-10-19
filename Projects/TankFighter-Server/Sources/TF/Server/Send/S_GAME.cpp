@@ -107,7 +107,6 @@ void S_GAME::SEND_SC_UpdateRoomListBroadcast(ChannelLobby* lobby, Room* room) {
 	const auto vRoomInfoList = lobby->GetRoomInfoList();
 	const auto pPacket = dbg_new SinglePacket<SC_UpdateRoomList>(vRoomInfoList.Size());
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-	
 	for (int i = 0; i < vRoomInfoList.Size(); ++i) {
 		RoomInfo& dst = pPacket->Cmd.Info[i];
 		const RoomInfo& src = vRoomInfoList[i];
@@ -140,6 +139,11 @@ void S_GAME::SEND_SC_CreateRoom(int roomAccessId) {
 void S_GAME::SEND_SC_JoinRoom(int roomAccessId) {
 	auto sending = SendBegin<SC_JoinRoom>();
 	sending.Cmd.RoomAccessId = roomAccessId;
+}
+
+void S_GAME::SEND_SC_LoadRoomInfo(Room* room) {
+	auto sending = SendBegin<SC_LoadRoomInfo>();
+	room->GetRoomInfo(sending.Cmd.Info);
 }
 
 void S_GAME::SEND_SC_AddFriendRequest(Character* character) {

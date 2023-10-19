@@ -36,7 +36,7 @@
 #define CMDID_SC_CREATE_ROOM							124
 #define CMDID_CS_JOIN_ROOM								121		// 방 참가 / 방 목록(리스트뷰)의 방 버튼 클릭시
 #define CMDID_SC_JOIN_ROOM								125
-#define CMDID_SC_UPDATE_ROOMINFO						126		// 다른 유저가 방에 참가하거나, 방에 있던 유저가 나가는 경우
+#define CMDID_SC_UPDATE_ROOM_MEMBER_LIST						126		// 다른 유저가 방에 참가하거나, 방에 있던 유저가 나가는 경우
 #define CMDID_CS_ADD_FRIEND								122		// 친구 추가 버튼 클릭시
 #define CMDID_CS_ADD_FRIEND_REQUEST						128		// 친구 요청을 받은 클라이언트가 수락/거부의 결과를 서버로 전송한다.
 #define CMDID_SC_ADD_FRIEND_REQUEST						128		// 친구 추가 요청 대상에게 요청정보를 전달한다.
@@ -204,7 +204,7 @@ STATIC_CMD_BEGIN(SC_JoinRoom, CMDID_SC_JOIN_ROOM)
 int RoomAccessId = Const::InvalidValue;
 STATIC_CMD_END
 
-DYNAMIC_CMD_BEGIN(SC_UpdateRoomInfo, CMDID_SC_UPDATE_ROOMINFO, RoomCharacterInfo)
+DYNAMIC_CMD_BEGIN(SC_UpdateRoomMemberList, CMDID_SC_UPDATE_ROOM_MEMBER_LIST, RoomCharacterInfo)
 int HostCharacterPrimaryKey = Const::InvalidValue;		// 방장
 RoomCharacterInfo Info[1];
 DYNAMIC_CMD_END
@@ -232,15 +232,10 @@ DYNAMIC_CMD_END
 
 
 STATIC_CMD_BEGIN(CS_LoadRoomInfo, CMDID_CS_LOAD_ROOM_INFO)
-int AccountPrimaryKey = Const::InvalidValue;
-int ChannelPrimaryKey = Const::InvalidValue;
-int CharacterPrimaryKey = Const::InvalidValue;
-int RoomUID = Const::InvalidValue;
+int RoomAccessId = Const::InvalidValue;
 STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_LoadRoomInfo, CMDID_SC_LOAD_ROOM_INFO)
-bool Result;
-char Reason[Const::Length::Reason];
 RoomInfo Info;
 STATIC_CMD_END
 

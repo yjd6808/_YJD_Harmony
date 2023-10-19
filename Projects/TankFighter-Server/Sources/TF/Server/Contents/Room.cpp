@@ -9,19 +9,32 @@
 #include "Pch.h"
 #include "Room.h"
 
+#include <TF/Common/Command.h>
 #include <TF/Server/Const.h>
 
+#include "Character.h"
+
 USING_NS_JC;
+USING_NS_JNET;
 
 Room::Room()
-	: m_vPlayerList(0)			// Lazy-Intialization
+	: m_eState(RoomState::ReadyWait)			
+	, m_szName(0)
+	, m_vPlayerList(0)						// Lazy-Intialization
 	, m_pLeader(nullptr)
 {}
 
 void Room::OnUpdate(const TimeSpan& elapsed) {
 }
 
-void Room::BroadcastPacket(JNetwork::ISendPacket* packet, int state) {
+void Room::BroadcastPacket(ISendPacket* packet, int state) {
+	static auto fnStateAny = [&](Player* player) {
+		player->SendPacket(packet);
+	};
+
+	if (state == Const::Broadcast::Room::StateAny) {
+		m_vPlayerList.ForEach(fnStateAny);
+	}
 }
 
 void Room::OnPopped() {
@@ -95,7 +108,7 @@ int Room::Join(Player* player) {
 }
 
 bool Room::Leave(Player* player) {
-	NormalLockGuard guard(m_Sync);
+	JCORE_LOCK_GUARD(m_Sync);
 
 	const bool bPlayerRemoved = RemovePlayerRaw(player);
 	const bool bHost = m_pLeader == player;
@@ -128,8 +141,7 @@ bool Room::RemovePlayer(Player* player) {
 	return RemovePlayerRaw(player);
 }
 
-RoomInfo Room::GetRoomInfo() {
-	RoomInfo info;
+void Room::GetRoomInfo(JCORE_REF_OUT RoomInfo& info) {
 	info.AccessId = m_iAccessId;
 	info.MaxPlayerCount = Const::Room::MaxPlayerCount;
 	info.RoomState = m_eState;
@@ -138,7 +150,41 @@ RoomInfo Room::GetRoomInfo() {
 		info.PlayerCount = m_vPlayerList.Size();
 		info.Name = m_szName;
 	}
-	return info;
+}
+
+void Room::GetRoomMemberInfoList(RoomCharacterInfo* info) {
+	JCORE_LOCK_GUARD(m_Sync);
+	GetRoomMemberInfoListRaw(info);
+}
+
+void Room::GetRoomMemberInfoListRaw(RoomCharacterInfo* info) {
+	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
+		Character* pCharacter = m_vPlayerList[i]->GetCharacter();
+
+		if (pCharacter == nullptr) {
+			info[i] = {};
+			continue;
+		}
+
+		pCharacter->GetRoomInfo(info[i]);
+	}
+}
+
+void Room::BroadcastRoomMemberListInfo() {
+	Player* pLeader = m_pLeader;
+
+	if (pLeader == nullptr) {
+		DebugAssert(false);
+		return;
+	}
+
+	JCORE_LOCK_GUARD(m_Sync);
+	int iCount = m_vPlayerList.Size();
+	auto pPacket = dbg_new SinglePacket<SC_UpdateRoomMemberList>(iCount);
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.HostCharacterPrimaryKey = pLeader->GetChannelPrimaryKey();
+	GetRoomMemberInfoListRaw(pPacket->Cmd.Info);
+	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
 void Room::ChooseNewLeaderRaw() {

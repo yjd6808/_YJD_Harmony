@@ -556,8 +556,27 @@ void R_GAME::RECV_CS_DeleteFriend(Session* session, ICommand* cmd) {
 	
 }
 
+// Create 또는 Join 이후 방씬으로 전환완료된 후 클라가 각종 정보들 로딩을 요청함.
 void R_GAME::RECV_CS_LoadRoomInfo(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
 	CS_LoadRoomInfo* pCmd = (CS_LoadRoomInfo*)cmd;
+
+	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
+	if (pRoom == nullptr) {
+		return;
+	}
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+
+	pRoom->BroadcastRoomMemberListInfo();
+
+	S_GAME::AutoFlush _;
+	S_GAME::SetInformation(pSession, SendStrategy::SendAlloc);
+	S_GAME::SEND_SC_LoadRoomInfo(pRoom);
+	S_GAME::SEND_SC_UpdateCharacterInfo(pPlayer->GetCharacter());
 }
 void R_GAME::RECV_CS_RoomGameStart(Session* session, ICommand* cmd) {
 	CS_RoomGameStart* pCmd = (CS_RoomGameStart*)cmd;

@@ -25,10 +25,11 @@ RoomScene::~RoomScene()
 void RoomScene::onEnterTransitionDidFinish() {
 	BaseScene::onEnterTransitionDidFinish();
 
-	if (S_GAME::SEND_CS_LoadCharacterInfo(Core::GameClient->GetAccountPrimaryKey(), Core::GameClient->GetChannelPrimaryKey()) == false) {
-		PopUp::createInParent("캐릭터 정보 요청이 실패하였습니다.", this, false);
+	if (S_GAME::SEND_CS_LoadRoomInfo(Core::GameClient->GetRoomAccessId()) == false) {
+		PopUp::createInParent("방 정보 요청이 실패하였습니다.", this, false);
 	}
 }
+
 
 bool RoomScene::init() {
 
@@ -41,3 +42,10 @@ bool RoomScene::init() {
 	return true;
 }
 
+
+void RoomScene::refreshRoomInfo(RoomInfo& info) {
+}
+
+void RoomScene::refreshRoomMemberInfoList(RoomCharacterInfo* roomCharacterInfoList, int count, int hostCharacterPrimaryKey) {
+
+}

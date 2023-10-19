@@ -167,8 +167,26 @@ void R_GAME::RECV_SC_JoinRoom(Session* session, ICommand* cmd) {
 	Director::getInstance()->replaceScene(RoomScene::create());
 }
 
-void R_GAME::RECV_SC_UpdateRoomInfo(Session* session, ICommand* cmd) {
-	SC_UpdateRoomInfo* pCmd = (SC_UpdateRoomInfo*)cmd;
+void R_GAME::RECV_SC_LoadRoomInfo(Session* session, ICommand* cmd) {
+	SC_LoadRoomInfo* pCmd = (SC_LoadRoomInfo*)cmd;
+	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
+	if (pRoomScene == nullptr) {
+		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
+		return;
+	}
+	pRoomScene->refreshRoomInfo(pCmd->Info);
+}
+
+
+void R_GAME::RECV_SC_UpdateRoomMemberList(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+	SC_UpdateRoomMemberList* pCmd = (SC_UpdateRoomMemberList*)cmd;
+	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
+	if (pRoomScene == nullptr) {
+		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
+		return;
+	}
+
+	pRoomScene->refreshRoomMemberInfoList(pCmd->Info, pCmd->Count, pCmd->HostCharacterPrimaryKey);
 }
 
 void R_GAME::RECV_SC_AddFriendRequest(Session* session, ICommand* cmd) {

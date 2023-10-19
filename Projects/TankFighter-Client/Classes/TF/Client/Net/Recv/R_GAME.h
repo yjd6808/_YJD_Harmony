@@ -26,7 +26,8 @@ struct R_GAME
 	static void RECV_SC_UpdateFriendList(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_CreateRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_JoinRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_SC_UpdateRoomInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_LoadRoomInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_UpdateRoomMemberList(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_AddFriendRequest(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldLoad(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_BattleFieldLeave(JNetwork::Session* session, JNetwork::ICommand* cmd);

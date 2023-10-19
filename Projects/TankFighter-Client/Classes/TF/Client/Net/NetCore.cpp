@@ -69,9 +69,10 @@ void NetCore::initializeParser() {
 	m_Parser.AddCommand<SC_UpdateRoomList>(R_GAME::RECV_SC_UpdateRoomList);
 	m_Parser.AddCommand<SC_UpdateFriendList>(R_GAME::RECV_SC_UpdateFriendList);
 	m_Parser.AddCommand<SC_JoinRoom>(R_GAME::RECV_SC_JoinRoom);
-	m_Parser.AddCommand<SC_UpdateRoomInfo>(R_GAME::RECV_SC_UpdateRoomInfo);
+	m_Parser.AddCommand<SC_LoadRoomInfo>(R_GAME::RECV_SC_LoadRoomInfo);
 	m_Parser.AddCommand<SC_UpdatePlayerList>(R_GAME::RECV_SC_UpdatePlayerList);
 	m_Parser.AddCommand<SC_AddFriendRequest>(R_GAME::RECV_SC_AddFriendRequest);
+	m_Parser.AddCommand<SC_UpdateRoomMemberList>(R_GAME::RECV_SC_UpdateRoomMemberList);
 	m_Parser.AddCommand<SC_BattleFieldLoad>(R_GAME::RECV_SC_BattleFieldLoad);
 	m_Parser.AddCommand<SC_BattleFieldLeave>(R_GAME::RECV_SC_BattleFieldLeave);
 	m_Parser.AddCommand<SC_ServerMessage>(R_GAME::RECV_SC_ServerMessage);
