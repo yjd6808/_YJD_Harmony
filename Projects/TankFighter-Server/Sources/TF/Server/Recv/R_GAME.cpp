@@ -270,6 +270,8 @@ void R_GAME::RECV_CS_SelectCharacterAndJoinLobby(Session* session, ICommand* cmd
 	pCharacter->SetInfo(info, false);
 	pCharacter->LoadFriendList(pLobby);
 
+	// Join수행전 PlayerState를 Lobby로 수정해놓음(Join()에서 플레이어 목록을 브로드 캐스트할때 현재 참가한 유저기 LobbyState여야지 유저 정보가 포함되어 브로드캐스트 되기 때문)
+	pPlayer->SetPlayerState(PlayerState::Lobby);
 	pPlayer->SetCharacter(pCharacter);
 
 	if (!pLobby->Join(pPlayer)) {

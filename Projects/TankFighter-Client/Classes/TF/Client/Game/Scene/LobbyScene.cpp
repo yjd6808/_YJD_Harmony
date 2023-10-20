@@ -267,7 +267,7 @@ void LobbyScene::onClickedMyInfoButton(TextButton* btn) {
 
 
 void LobbyScene::refreshPlayerList(CharacterInfo* characterList, int count) {
-	if (count <= 0 || m_pPlayerListView == nullptr)
+	if (m_pPlayerListView == nullptr)
 		return;
 
 	m_pPlayerListView->GetListView()->removeAllItems();
@@ -295,7 +295,7 @@ void LobbyScene::refreshCharacterInfo(const CharacterInfo& info) {
 }
 
 void LobbyScene::refreshFriendList(FriendCharacterInfo* characterList, int count) {
-	if (count <= 0 || m_pFriendListView == nullptr)
+	if (m_pFriendListView == nullptr)
 		return;
 
 	m_pFriendListView->GetListView()->removeAllItems();
@@ -312,7 +312,7 @@ void LobbyScene::refreshFriendList(FriendCharacterInfo* characterList, int count
 }
 
 void LobbyScene::refreshRoomList(RoomInfo* roomList, int count) {
-	if (count <= 0 || m_pRoomListView == nullptr)
+	if (m_pRoomListView == nullptr)
 		return;
 
 	m_pRoomListView->GetListView()->removeAllItems();
