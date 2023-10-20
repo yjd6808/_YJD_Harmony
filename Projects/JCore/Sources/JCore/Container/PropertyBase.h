@@ -11,9 +11,10 @@
 #include <JCore/Container/PropertyTypeTraits.h>
 #include <JCore/Container/PropertyStatics.h>
 
-NS_JC_BEGIN
+#include "Property.h"
 
-struct PropertyBase
+NS_JC_BEGIN
+	struct PropertyBase
 {
 	virtual ~PropertyBase() = default;
 	virtual PropertyType_t GetType() const = 0;
@@ -25,11 +26,22 @@ struct PropertyBase
 	static void LogGettingMismatchedType(PropertyType_t lhs, PropertyType_t rhs);
 	static void LogConversionFailed(PropertyType_t to, PropertyType_t from);
 
+
+	// 소스파일에 특정 프로퍼티 타입들에 대해서 명시적으로 정의함.
 	template <typename T>
+	T As() const;
+
+	template <typename T>
+	const T& CRef() const;
+
+	template <typename T>
+	T& Ref();
+
+	/*template <typename T>
 	T As() const {
 		constexpr PropertyType_t eGetType = PropertyTypeGetter<T>::Type;
-		static_assert(PropertyType::CanBeLeftOperand[eGetType], "... GetValue<T> failed T cannot be left operand");
-		using TProperty = Property<T>;
+		static_assert(JCore::IsNaturalType_v<T>, "... T is not natural type");
+		static_assert(PropertyType::CanBeLeftOperand[eGetType], "... As<T>() failed T cannot be left operand. so cannot get value");
 		const PropertyType_t eType = GetType();
 		T ret{ 0 };
 		if (PropertyType::IsConvertiable(eGetType, eType)) {
@@ -40,8 +52,32 @@ struct PropertyBase
 		return ret;
 	}
 
+	
 	template <typename T>
-	T& Ref();
+	const T& CRef() const {
+		constexpr PropertyType_t eGetType = PropertyTypeGetter<T>::Type;
+		static_assert(JCore::IsNaturalType_v<T>, "... T is not natural type");
+		static_assert(PropertyType::CanBeLeftOperand[eGetType], "... CRef<T>() failed T cannot be left operand. so cannot get value");
+		const PropertyType_t eType = GetType();
+		if (eGetType != eType) {
+			return Property<T>::Default.Value;
+		}
+		return *(T*)GetDecayedValue();
+	}
+
+
+	template <typename T>
+	T& Ref() {
+		constexpr PropertyType_t eGetType = PropertyTypeGetter<T>::Type;
+		static_assert(JCore::IsNaturalType_v<T>, "... T is not natural type");
+		static_assert(PropertyType::CanBeLeftOperand[eGetType], "... Ref<T>() failed T cannot be left operand. so cannot get value");
+		const PropertyType_t eType = GetType();
+		if (eGetType != eType) {
+			return Property<T>::Default.Value;
+		}
+		return *(T*)GetDecayedValue();
+	}*/
+
 
 	template <typename TVal>
 	void Set(const TVal& other) {

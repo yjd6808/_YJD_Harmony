@@ -168,14 +168,6 @@ void SteinsGateApp::applicationWillEnterForeground() {
 
 void SteinsGateApp::applicationDidExit() {
 
-    // ======================================================
-	// 리소스 정리
-	// ======================================================
-
-    FinalizeClientCore();
-    FinalizeCommonCore();
-    FinalizeDefaultLogger();
-    FinalizeNetLogger();
-    Winsock::Finalize();
+    
 }
 

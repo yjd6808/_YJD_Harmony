@@ -200,8 +200,8 @@
 	#define JCORE_GETTER_L(type, function_name, variable_name)  type get##function_name() const { return variable_name; }
 	#define JCORE_SETTER_L(type, function_name, variable_name)  void set##function_name(type _##function_name) { variable_name = _##function_name; }
 	#define JCORE_GETTER_SETTER_L(type, function_name, variable_name)	\
-	JCORE_GETTER_U(type, function_name, variable_name)					\
-	JCORE_SETTER_U(type, function_name, variable_name)
+	JCORE_GETTER_L(type, function_name, variable_name)					\
+	JCORE_SETTER_L(type, function_name, variable_name)
 	
 	#define JCORE_GETTER_U(type, function_name, variable_name)  type Get##function_name() const { return variable_name; }
 	#define JCORE_SETTER_U(type, function_name, variable_name)  void Set##function_name(type _##function_name) { variable_name = _##function_name; }

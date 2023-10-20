@@ -62,7 +62,7 @@ public:
 	template <typename Ky>
 	PropertyBase* Get(Ky&& propertyKey) const {
 		PropertyBase** ppProperty = m_hProperties.Find(Forward<Ky>(propertyKey));
-		if (ppProperty != nullptr) {
+		if (ppProperty == nullptr) {
 			return nullptr;
 		}
 		return *ppProperty;
