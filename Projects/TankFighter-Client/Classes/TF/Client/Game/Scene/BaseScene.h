@@ -15,7 +15,7 @@
 class BaseScene : public cocos2d::Scene
 {
 public:
-	enum Type
+	enum class Type
 	{
 		Login,
 		Channel,
@@ -34,16 +34,16 @@ public:
 
 	static constexpr const char* getTypeName(Type type) {
 		switch (type) {
-		case Login: return "로그인";
-		case Channel: return "채널";
-		case CharacterSelect: return "캐릭터선택";
-		case Lobby: return "로비";
-		case Room: return "방";
-		case BattleField: return "배틀필드";
+		case Type::Login: return "로그인";
+		case Type::Channel: return "채널";
+		case Type::CharacterSelect: return "캐릭터선택";
+		case Type::Lobby: return "로비";
+		case Type::Room: return "방";
+		case Type::BattleField: return "배틀필드";
 		}
 		return "무슨?";
 	}
-private:
+
 	virtual void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 protected:
 	cocos2d::Layer* m_pUILayer;

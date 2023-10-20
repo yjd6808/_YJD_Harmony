@@ -24,6 +24,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Contents\Room.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Layer\GridLayer.cpp" />
     <ClCompile Include="..\Classes\TF\Client\Game\Scene\BaseScene.cpp">
       <SubType>
@@ -81,15 +82,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Contents\Room.h" />
     <ClInclude Include="..\Classes\TF\Client\Game\Layer\GridLayer.h" />
-    <ClInclude Include="..\Classes\TF\Client\Game\Object\Character.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\Classes\TF\Client\Game\Object\Tank.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\BaseScene.h">
       <SubType>
       </SubType>

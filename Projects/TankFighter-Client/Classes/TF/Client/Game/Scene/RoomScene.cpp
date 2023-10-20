@@ -17,20 +17,34 @@ USING_NS_JC;
 USING_NS_CC;
 USING_NS_CCUI;
 
-RoomScene::RoomScene()
-	: m_pGameStartBtn(nullptr)
+RoomScene::RoomScene(Room* room)
+	: m_pRoom(room)
+	, m_pGameStartBtn(nullptr)
 	, m_pGameReadyBtn(nullptr)
 	, m_pGameReadyCancelBtn(nullptr)
 	, m_pLeaveRoomBtn(nullptr)
 	, m_pRoomTitle(nullptr)
 	, m_pSlot()
 	, m_pMarkSlot()
-	, m_iHostCharacterPrimaryKey(Const::InvalidValue)
-	, m_RoomMember()
 {}
 
 RoomScene::~RoomScene()
 {}
+
+RoomScene* RoomScene::create(Room* room) {
+	if (room == nullptr)
+		return nullptr;
+
+	RoomScene* pScene = dbg_new RoomScene(room);
+
+	if (pScene->init()) {
+		pScene->autorelease();
+		return pScene;
+	}
+
+	delete pScene;
+	return nullptr;
+}
 
 void RoomScene::onEnterTransitionDidFinish() {
 	BaseScene::onEnterTransitionDidFinish();
@@ -121,47 +135,42 @@ bool RoomScene::init() {
 
 
 void RoomScene::onClickedGameStartButton(TextButton* btn) {
-	if (m_RoomInfo.IsBattleEndingState()) {
+
+	if (m_pRoom->IsBattleEndingState()) {
 		PopUp::createInParent("게임이 거의 끝나갑니다. 기다려주세요!!", this, false);
 		return;
 	}
 
-	if (m_RoomInfo.IsBattlePlayingState()) {
+	if (m_pRoom->IsBattlePlayingState()) {
 		PopUp::createInParent("이미 게임이 진행중입니다. 난입하시겠습니까?", this, false,
 			[]() { S_GAME::SEND_CS_RoomGameIntrude(); },				// 수락
 			[]() {});													// 거절
 		return;
 	}
 
-	if (Core::GameClient->GetCharacterPrimaryKey() != m_iHostCharacterPrimaryKey) {
+	const RoomInfo& roomInfo = m_pRoom->getRoomInfo();
+	const int iHostCharacterPrimaryKey = m_pRoom->getHostCharacterPrimaryKey();
+	const int iReadyCount = m_pRoom->getReadyCount();
+
+	if (Core::GameClient->GetCharacterPrimaryKey() != iHostCharacterPrimaryKey) {
 		PopUp::createInParent("방장만 게임을 시작할 수 있습니다.", this, false);
 		return;
 	}
 
-	if (m_RoomInfo.PlayerCount == 0) {
+	if (roomInfo.PlayerCount == 0) {
 
 		// 방 정보를 못받은 경우 로비로 이동
 		PopUp::createInParent("방 정보를 받지 못했습니다. 다시 접속해주세요.", this, false);
 		return;
 	}
 
-	int iReadyCount = 0;
-
-	for (int i = 0; i < m_RoomInfo.PlayerCount; i++) {
-		if (m_RoomMember[i].PrimaryKey == m_iHostCharacterPrimaryKey)
-			continue;
-
-		if (m_RoomMember[i].Ready)
-			iReadyCount++;
-	}
-
-	if (iReadyCount == m_RoomInfo.PlayerCount - 1) {
+	if (iReadyCount == roomInfo.PlayerCount - 1) {
 		S_GAME::SEND_CS_RoomGameStart();
 	}
 }
 
 void RoomScene::onClickedGameReadyButton(TextButton* btn) {
-	if (Core::GameClient->GetCharacterPrimaryKey() == m_iHostCharacterPrimaryKey) {
+	if (Core::GameClient->GetCharacterPrimaryKey() == m_pRoom->getHostCharacterPrimaryKey()) {
 		PopUp::createInParent("방장은 게임 준비를 할 수 없습니다.", this, false);
 		return;
 	}
@@ -171,7 +180,7 @@ void RoomScene::onClickedGameReadyButton(TextButton* btn) {
 
 void RoomScene::onClickedGameReadyCancelButton(TextButton* btn) {
 	// 방장 여부 체크 후 방장이 아니면 게임준비해제 패킷 전송
-	if (Core::GameClient->GetCharacterPrimaryKey() == m_iHostCharacterPrimaryKey) {
+	if (Core::GameClient->GetCharacterPrimaryKey() == m_pRoom->getHostCharacterPrimaryKey()) {
 		PopUp::createInParent("방장은 게임 준비를 할 수 없습니다.", this, false);
 		return;
 	}
@@ -185,94 +194,65 @@ void RoomScene::onClickedGameLeaveRoomButton(TextButton* btn) {
 }
 
 
-void RoomScene::refreshRoomInfo(RoomInfo& info) {
-	m_RoomInfo = info;
-	m_pRoomTitle->setText(StringUtils::format("[%d] %s (%d/%d)", m_RoomInfo.AccessId - Const::AccessibleObject::StartId::Room, m_RoomInfo.Name.Source, m_RoomInfo.PlayerCount, m_RoomInfo.MaxPlayerCount));
+void RoomScene::refreshRoomInfo() {
+	const RoomInfo& info = m_pRoom->getRoomInfo();
+	m_pRoomTitle->setText(StringUtils::format("[%d] %s (%d/%d)", info.AccessId - Const::AccessibleObject::StartId::Room, info.Name.Source, info.PlayerCount, info.MaxPlayerCount));
 
-	if (m_RoomInfo.IsBattlePlayingState()) {
+	if (info.IsBattlePlayingState()) {
 		m_pGameStartBtn->setText("게임 난입");
-	} else if (m_RoomInfo.IsLobbyState()) {
+	} else if (info.IsLobbyState()) {
 		m_pGameStartBtn->setText("게임 시작");
 	}
 }
 
-void RoomScene::refreshRoomMemberInfoList(RoomCharacterInfo* roomCharacterInfoList, int count, int hostCharacterPrimaryKey) {
-	const int iMyCharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
+void RoomScene::refreshRoomMemberInfoList() {
+	const int iRoomMemberCount = m_pRoom->getRoomMemberCount();
 
 	for (int i = 0; i < Const::Room::MaxPlayerCount; i++) {
 		m_pSlot[i]->setVisible(false);
 		m_pMarkSlot[i]->setVisible(false);
 	}
 
-	if (count > Const::Room::MaxPlayerCount) {
-		DebugAssertMsg(false, "ROOM_MAX_PLAYER_COUNT 수치 초과하는 Count를 받음");
-		count = Const::Room::MaxPlayerCount;
-	}
-
-	m_iHostCharacterPrimaryKey = hostCharacterPrimaryKey;
-
-	for (int i = 0; i < count; i++) {
-
+	for (int i = 0; i < iRoomMemberCount && i < Const::Room::MaxPlayerCount; i++) {
 		m_pSlot[i]->setVisible(true);
 		m_pMarkSlot[i]->setVisible(true);
 
-		RoomCharacterInfo& info = roomCharacterInfoList[i];
-		m_RoomMember[i] = info;
-
 		refreshRoomMemberReadyState(i);
-		refreshRoomMemberInfo(i, &info);
+		refreshRoomMemberInfo(i);
 	}
 }
 
 void RoomScene::refreshRoomMemberReadyState(int memberIndex) {
-	DebugAssert(memberIndex >= 0 && memberIndex < Const::Room::MaxPlayerCount);
+	const RoomCharacterInfo* pInfo = m_pRoom->getRoomMemberByIndex(memberIndex);
+	const int iHostCharacterPrimaryKey = m_pRoom->getHostCharacterPrimaryKey();
 
-	RoomCharacterInfo& info = m_RoomMember[memberIndex];
+	if (pInfo == nullptr) {
+		return;
+	}
 
 	const int iMyCharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
 
-	if (info.PrimaryKey != m_iHostCharacterPrimaryKey) {
-		if (iMyCharacterPrimaryKey == info.PrimaryKey)
-			m_pMarkSlot[memberIndex]->setText(info.Ready ? "(나) 준비 완료" : "(나)");
+	if (pInfo->PrimaryKey != iHostCharacterPrimaryKey) {
+		if (iMyCharacterPrimaryKey == pInfo->PrimaryKey)
+			m_pMarkSlot[memberIndex]->setText(pInfo->Ready ? "(나) 준비 완료" : "(나)");
 		else
-			m_pMarkSlot[memberIndex]->setText(info.Ready ? "준비 완료" : "");
+			m_pMarkSlot[memberIndex]->setText(pInfo->Ready ? "준비 완료" : "");
 	} else {
-		if (iMyCharacterPrimaryKey == info.PrimaryKey)
+		if (iMyCharacterPrimaryKey == pInfo->PrimaryKey)
 			m_pMarkSlot[memberIndex]->setText("(나) 방장");
 		else
 			m_pMarkSlot[memberIndex]->setText("방장");
 	}
 }
 
-void RoomScene::refreshRoomMemberInfo(int memberIndex, RoomCharacterInfo* info) {
-	DebugAssert(memberIndex >= 0 && memberIndex < Const::Room::MaxPlayerCount);
+void RoomScene::refreshRoomMemberInfo(int memberIndex) {
+	RoomCharacterInfo* pInfo = m_pRoom->getRoomMemberByIndex(memberIndex);
 	m_pSlot[memberIndex]->setText(StringUtils::format("%s\n%d킬 %d데스\n%d승리 %d패배\n%d 골드",
-		info->Name.Source,
-		info->Kill,
-		info->Death,
-		info->Win,
-		info->Lose,
-		info->Money
+		pInfo->Name.Source,
+		pInfo->Kill,
+		pInfo->Death,
+		pInfo->Win,
+		pInfo->Lose,
+		pInfo->Money
 	));
-}
-
-void RoomScene::updateRoomMemberReadyState(int characterPrimaryKey, bool ready) {
-	const int iMemberIndex = getRoomMemberIndexByPrimaryKey(characterPrimaryKey);
-	if (iMemberIndex == Const::InvalidValue) {
-		return;
-	}
-
-	m_RoomMember[iMemberIndex].Ready = ready;
-	refreshRoomMemberReadyState(iMemberIndex);
-}
-
-
-RoomCharacterInfo* RoomScene::getRoomMemberByPrimaryKey(int characterPrimaryKey) {
-	int iIndex = Arrays::FindIf(m_RoomMember, [=](RoomCharacterInfo& info) { return info.PrimaryKey == characterPrimaryKey; });
-	if (iIndex == Const::InvalidValue) return nullptr;
-	return &m_RoomMember[iIndex];
-}
-
-int RoomScene::getRoomMemberIndexByPrimaryKey(int characterPrimaryKey) {
-	return Arrays::FindIf(m_RoomMember, [=](RoomCharacterInfo& info) { return info.PrimaryKey == characterPrimaryKey; });
 }

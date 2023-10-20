@@ -60,7 +60,7 @@ void NetCore::initializeParser() {
 	m_Parser.AddCommand<SC_Disconnect>(R_GAME::RECV_SC_Login);
 	m_Parser.AddCommand<SC_Register>(R_GAME::RECV_SC_Register);
 	m_Parser.AddCommand<SC_LoadChannelInfo>(R_GAME::RECV_SC_LoadChannelInfo);
-	m_Parser.AddCommand<SC_JoinChannel>(R_GAME::RECV_SC_SelectChannel);
+	m_Parser.AddCommand<SC_JoinChannel>(R_GAME::RECV_SC_JoinChannel);
 	m_Parser.AddCommand<SC_LeaveChannel>(R_GAME::RECV_SC_LeaveChannel);
 	m_Parser.AddCommand<SC_LoadCharacterInfo>(R_GAME::RECV_SC_LoadCharacterInfo);
 	m_Parser.AddCommand<SC_LeaveLobby>(R_GAME::RECV_SC_LeaveLobby);

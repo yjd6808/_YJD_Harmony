@@ -30,7 +30,6 @@ bool ColoredListView::init()
 
 	m_pListView = ListView::create();
 	m_pListView->setDirection(ScrollView::Direction::VERTICAL);
-	m_pListView->setContentSize(this->getContentSize());
 	m_pListView->setScrollBarEnabled(true);
 	m_pListView->setScrollBarAutoHideEnabled(false);
 	m_pListView->setAnchorPoint(Vec2::ZERO);
@@ -42,6 +41,9 @@ bool ColoredListView::init()
 
 void ColoredListView::SetContantSize(const Size& size) {
 	this->setContentSize(size);
+
+	// ListView 컨텐츠 사이즈를 강제로 변경하면 경고뜸
+	// "Inner height <= scrollview height, it will be force sized!" 경고 뜸 일단 주석처리함.
 	m_pListView->setContentSize(size);
 }
 

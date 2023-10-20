@@ -103,6 +103,9 @@ void ChatBox::onKeyReleased(EventKeyboard::KeyCode keyCode, cocos2d::Event* even
 void ChatBox::SetContentSize(const Size& size) {
 	this->setContentSize(size);
 	Size fullSize = this->getContentSize();
+
+	// ListView 컨텐츠 사이즈를 강제로 변경하면 경고?뜸
+	// "Inner height <= scrollview height, it will be force sized!" 경고 뜸 일단 주석처리함.
 	m_pListView->setContentSize(fullSize - Size{ 0.0f, ms_fChatEditBoxHeight });
 }
 

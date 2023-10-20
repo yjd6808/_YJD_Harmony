@@ -14,8 +14,11 @@ void InitializeGameCore() {
 	Core::NetCore->Initialize();
 
 	Core::GameClient = Core::NetCore->getGameClient();
+	Core::Room = dbg_new Room;
 }
 
 void FinalizeGameCore() {
-	delete Core::NetCore;
+	JCORE_DELETE_SAFE(Core::Room);
+	JCORE_DELETE_SAFE(Core::NetCore);
+
 }

@@ -11,11 +11,12 @@
 
 USING_NS_JC;
 
-GameClient::GameClient(const JNetwork::IOCPPtr& iocp, const JCore::MemoryPoolAbstractPtr& bufferAllocator)
+GameClient::GameClient(const JNetwork::IOCPPtr& iocp, const MemoryPoolAbstractPtr& bufferAllocator)
 	: TcpClient(iocp, bufferAllocator)
 {
 	m_Properties.Add(Const::Properties::GameClient::Reconnecting, PropertyType::Bool);
 	m_Properties.Add(Const::Properties::GameClient::AccountPrimaryKey, PropertyType::Int);
+	m_Properties.Add(Const::Properties::GameClient::AccountIdKey, PropertyType::String);
 	m_Properties.Add(Const::Properties::GameClient::ChannelPrimaryKey, PropertyType::Int);
 	m_Properties.Add(Const::Properties::GameClient::PlayerState, PropertyType::Int);
 	m_Properties.Add(Const::Properties::GameClient::RoomAccessId, PropertyType::Int);
@@ -35,6 +36,14 @@ int GameClient::GetAccountPrimaryKey() const {
 
 void GameClient::SetAccountPrimaryKey(int primaryKey) {
 	m_Properties[Const::Properties::GameClient::AccountPrimaryKey] = primaryKey;
+}
+
+const String& GameClient::GetAccountId() const {
+	return m_Properties[Const::Properties::GameClient::AccountIdKey].CRef<String>();
+}
+
+void GameClient::SetAccountId(const String& accountId) {
+	m_Properties[Const::Properties::GameClient::AccountIdKey] = accountId;
 }
 
 int GameClient::GetChannelPrimaryKey() const {

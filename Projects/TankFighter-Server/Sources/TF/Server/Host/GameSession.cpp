@@ -13,4 +13,6 @@ GameSession::GameSession(
 	const JNetwork::IOCPPtr& iocp,
 	const JCore::MemoryPoolAbstractPtr& bufferAllocator)
 	: TcpSession(server, iocp, bufferAllocator, 4096, 4096)
+	, m_pPlayer(nullptr)
 {}
+

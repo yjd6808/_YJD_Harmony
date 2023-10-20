@@ -34,6 +34,7 @@ void C_GAME::ConnectFailedSynchronized(Int32U errorCode) {
 void C_GAME::DisconnectedSynchronized() {
 	Core::GameClient->SetReconnectMode(false);
 	Core::GameClient->SetAccountPrimaryKey(Const::InvalidValue);
+	Core::GameClient->SetAccountId("");
 	Core::GameClient->SetChannelPrimaryKey(Const::InvalidValue);
 	Core::GameClient->SetCharacterPrimaryKey(Const::InvalidValue);
 	Core::GameClient->SetRoomAccessId(Const::InvalidValue);

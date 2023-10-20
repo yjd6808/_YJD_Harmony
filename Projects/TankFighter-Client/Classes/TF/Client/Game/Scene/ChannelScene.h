@@ -26,5 +26,5 @@ public:
 
 	void refreshChannelList(ChannelInfo* channelList, int count);
 	void onChannelBtnClick(TextButton* textButton);
-	Type getType() const override { return Channel; }
+	Type getType() const override { return Type::Login; }
 };

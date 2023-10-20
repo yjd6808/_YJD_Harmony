@@ -41,17 +41,12 @@ bool LoginScene::init() {
 	pInfoText->setPosition({ 500, 400 });
 	m_pUILayer->addChild(pInfoText);
 
-
-	EventListenerKeyboard* keyboardListener = EventListenerKeyboard::create();
-	keyboardListener->onKeyPressed = CC_CALLBACK_2(LoginScene::onKeyPressed, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
-
 	TextButton* loginBtn = TextButton::create(200, 45, "로그인", 15);
 	loginBtn->setAnchorPoint(Vec2::ZERO);
 	loginBtn->setPosition({ 400, 200 });
 	loginBtn->setBackgroundColor(ColorList::Camel_v);
 	loginBtn->setFontColor(Color3B::BLACK);
-	loginBtn->setClickEvent(CC_CALLBACK_1(LoginScene::OnClickedLoginButton, this));
+	loginBtn->setClickEvent(CC_CALLBACK_1(LoginScene::onClickedLoginButton, this));
 	m_pUILayer->addChild(loginBtn);
 	Button::create();
 
@@ -60,7 +55,7 @@ bool LoginScene::init() {
 	registerBtn->setPosition({ 400, 150 });
 	registerBtn->setBackgroundColor(ColorList::Camel_v);
 	registerBtn->setFontColor(Color3B::BLACK);
-	registerBtn->setClickEvent(CC_CALLBACK_1(LoginScene::OnClickedRegisterButton, this));
+	registerBtn->setClickEvent(CC_CALLBACK_1(LoginScene::onClickedRegisterButton, this));
 	m_pUILayer->addChild(registerBtn);
 
 	TextButton* reconnectBtn = TextButton::create(200, 45, "서버 재접속 시도", 15);
@@ -68,21 +63,8 @@ bool LoginScene::init() {
 	reconnectBtn->setPosition({ 400, 100 });
 	reconnectBtn->setBackgroundColor(ColorList::Camel_v);
 	reconnectBtn->setFontColor(Color3B::BLACK);
-	reconnectBtn->setClickEvent(CC_CALLBACK_1(LoginScene::OnClickedReconnectButton, this));
+	reconnectBtn->setClickEvent(CC_CALLBACK_1(LoginScene::onClickedReconnectButton, this));
 	m_pUILayer->addChild(reconnectBtn);
-
-	// 빠른 로그인을 위해 복붙
-	HashMap<int, Tuple<std::string, std::string>> randIdPwMap{
-		{1, { "wjdeh515", "wjdeh414" }},
-		{2, { "wjdeh616", "wjdeh515" }},
-		{3, { "wjdeh717", "wjdeh616" }},
-		{4, { "wjdeh818", "wjdeh717" }},
-		{5, { "wjdeh919", "wjdeh818" }},
-		{6, { "wjdeh10110", "wjdeh919" }},
-		{7 ,{ "wjdeh11111", "wjdeh10110" }},
-	};
-
-	const int idCode = Random().GenerateInt(1, 8);
 
 	m_pIdEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(Const::Resource::WhiteRectFileName));
 	m_pIdEditBox->addClickEventListener([](Ref* ref) { ((EditBox*)ref)->openKeyboard(); });
@@ -94,7 +76,6 @@ bool LoginScene::init() {
 	m_pIdEditBox->setAnchorPoint(Vec2::ZERO);
 	m_pIdEditBox->setPlaceholderFontColor(Color4B::GRAY);
 	m_pIdEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
-	m_pIdEditBox->setText(randIdPwMap[idCode].item1.c_str());
 	m_pUILayer->addChild(m_pIdEditBox, 0);
 	
 	m_pPassEditBox = EditBox::create(Size(200, 45), Scale9Sprite::create(Const::Resource::WhiteRectFileName));
@@ -108,8 +89,9 @@ bool LoginScene::init() {
 	m_pPassEditBox->setPlaceholderFontColor(Color4B::GRAY);
 	m_pPassEditBox->setInputFlag(EditBox::InputFlag::PASSWORD);
 	m_pPassEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
-	m_pPassEditBox->setText(randIdPwMap[idCode].item2.c_str());
 	m_pUILayer->addChild(m_pPassEditBox, 0);
+
+	refreshIdPass();
 
 	return true;
 
@@ -120,8 +102,12 @@ void LoginScene::update(float delta) {
 }
 
 void LoginScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+	BaseScene::onKeyPressed(keyCode, event);
+
 	if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) {
-		OnClickedLoginButton(nullptr);
+		onClickedLoginButton(nullptr);
+	} else if (keyCode == EventKeyboard::KeyCode::KEY_F1) {
+		refreshIdPass();
 	}
 }
 
@@ -141,7 +127,7 @@ bool IsAvailableIDPW(JCore::String& id)
 	return true;
 }
 
-void LoginScene::OnClickedLoginButton(TextButton* sender) {
+void LoginScene::onClickedLoginButton(TextButton* sender) {
 	JCore::String id = m_pIdEditBox->getText();
 	JCore::String pw = m_pPassEditBox->getText();
 
@@ -151,6 +137,7 @@ void LoginScene::OnClickedLoginButton(TextButton* sender) {
 	}
 
 	if (IsAvailableIDPW(id) && IsAvailableIDPW(pw)) {
+		Core::GameClient->SetAccountId(id);
 		S_GAME::SEND_CS_Login(id, pw);
 		return;
 	}
@@ -158,7 +145,7 @@ void LoginScene::OnClickedLoginButton(TextButton* sender) {
 	PopUp::createInParent("아이디 비밀번호를 똑바로 입력해주세요.", this, false);
 }
 
-void LoginScene::OnClickedRegisterButton(TextButton* sender) {
+void LoginScene::onClickedRegisterButton(TextButton* sender) {
 	EditBox* pIDEditBox = m_pIdEditBox;
 	EditBox* pPWEditBox = m_pPassEditBox;
 
@@ -177,8 +164,15 @@ void LoginScene::OnClickedRegisterButton(TextButton* sender) {
 	PopUp::createInParent("아이디 비밀번호를 똑바로 입력해주세요.", this, false);
 }
 
+void LoginScene::refreshIdPass() {
+	const int iIndex = Random::GenerateInt(0, 100);
+	const std::string szIdPass = StringUtils::format("wjdeh%d", iIndex).c_str();
+	m_pIdEditBox->setText(szIdPass.c_str());
+	m_pPassEditBox->setText(szIdPass.c_str());
+}
 
-void LoginScene::OnClickedReconnectButton(TextButton* sender) {
+
+void LoginScene::onClickedReconnectButton(TextButton* sender) {
 	GameClient* pClient = Core::NetCore->getGameClient();
 	if (pClient == nullptr) return;
 

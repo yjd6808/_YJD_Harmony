@@ -49,14 +49,15 @@ void R_GAME::RECV_SC_LoadChannelInfo(Session* session, ICommand* cmd) {
 	SC_LoadChannelInfo* pCmd = (SC_LoadChannelInfo*)cmd;
 	ChannelScene* pChannelScene = dynamic_cast<ChannelScene*>(Director::getInstance()->getRunningScene());
 	if (pChannelScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Channel));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Channel));
 		return;
 	}
 
+	Director::getInstance()->getOpenGLView()->setViewName(StringUtils::format("%s [계정: %s]", Const::Window::ViewName, Core::GameClient->GetAccountId().Source()));
 	pChannelScene->refreshChannelList(pCmd->Info, pCmd->Count);
 }
 
-void R_GAME::RECV_SC_SelectChannel(Session* session, ICommand* cmd) {
+void R_GAME::RECV_SC_JoinChannel(Session* session, ICommand* cmd) {
 	SC_JoinChannel* pCmd = (SC_JoinChannel*)cmd;
 	if (pCmd->ChannelPrimaryKey <= Const::InvalidValue) return;
 	Core::GameClient->SetChannelPrimaryKey(pCmd->ChannelPrimaryKey);
@@ -71,7 +72,6 @@ void R_GAME::RECV_SC_LeaveChannel(Session* session, ICommand* cmd) {
 	Core::GameClient->SetCharacterPrimaryKey(Const::InvalidValue);
 	Core::GameClient->SetRoomAccessId(Const::InvalidValue);
 	Core::GameClient->SetPlayerState(PlayerState::Channel);
-	Director::getInstance()->getOpenGLView()->setViewName(Const::Window::ViewName);
 	Director::getInstance()->replaceScene(ChannelScene::create());
 }
 
@@ -79,10 +79,11 @@ void R_GAME::RECV_SC_LoadCharacterInfo(Session* session, ICommand* cmd) {
 	SC_LoadCharacterInfo* pCmd = (SC_LoadCharacterInfo*)cmd;
 	CharacterSelectScene* pCharacterSelectScene = dynamic_cast<CharacterSelectScene*>(Director::getInstance()->getRunningScene());
 	if (pCharacterSelectScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::CharacterSelect));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::CharacterSelect));
 		return;
 	}
 
+	Director::getInstance()->getOpenGLView()->setViewName(StringUtils::format("%s [계정: %s]", Const::Window::ViewName, Core::GameClient->GetAccountId().Source()));
 	pCharacterSelectScene->refreshCharacterList(pCmd->Info, pCmd->Count);
 }
 
@@ -91,7 +92,6 @@ void R_GAME::RECV_SC_LeaveLobby(Session* session, ICommand* cmd) {
 	Core::GameClient->SetCharacterPrimaryKey(Const::InvalidValue);
 	Core::GameClient->SetCharacterInfo({});
 	Core::GameClient->SetPlayerState(PlayerState::CharacterSelect);
-	Director::getInstance()->getOpenGLView()->setViewName(Const::Window::ViewName);
 	Director::getInstance()->replaceScene(CharacterSelectScene::create());
 }
 
@@ -100,7 +100,7 @@ void R_GAME::RECV_SC_SelectCharacter(Session* session, ICommand* cmd) {
 	Core::GameClient->SetCharacterInfo(pCmd->info);
 	LobbyScene* pLobbyScene = LobbyScene::create();
 	Core::GameClient->SetPlayerState(PlayerState::Lobby);
-	Director::getInstance()->getOpenGLView()->setViewName(StringUtils::format("%s [%s]", Const::Window::ViewName, pCmd->info.Name.Source));
+	Director::getInstance()->getOpenGLView()->setViewName(StringUtils::format("%s [계정: %s][캐릭터: %s]", Const::Window::ViewName, Core::GameClient->GetAccountId().Source(), pCmd->info.Name.Source));
 	Director::getInstance()->replaceScene(pLobbyScene);
 	pLobbyScene->refreshCharacterInfo(pCmd->info);
 }
@@ -109,7 +109,7 @@ void R_GAME::RECV_SC_UpdateCharacterInfo(Session* session, ICommand* cmd) {
 	SC_UpdateCharacterInfo* pCmd = (SC_UpdateCharacterInfo*)cmd;
 	LobbyScene* pLobbyScene = dynamic_cast<LobbyScene*>(Director::getInstance()->getRunningScene());
 	if (pLobbyScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 		return;
 	}
 	pLobbyScene->refreshCharacterInfo(pCmd->Info);
@@ -119,7 +119,7 @@ void R_GAME::RECV_SC_UpdateRoomList(Session* session, ICommand* cmd) {
 	SC_UpdateRoomList* pCmd = (SC_UpdateRoomList*)cmd;
 	LobbyScene* pLobbyScene = dynamic_cast<LobbyScene*>(Director::getInstance()->getRunningScene());
 	if (pLobbyScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 		return;
 	}
 	pLobbyScene->refreshRoomList(pCmd->Info, pCmd->Count);
@@ -129,7 +129,7 @@ void R_GAME::RECV_SC_UpdatePlayerList(Session* session, ICommand* cmd) {
 	SC_UpdatePlayerList* pCmd = (SC_UpdatePlayerList*)cmd;
 	LobbyScene* pLobbyScene = dynamic_cast<LobbyScene*>(Director::getInstance()->getRunningScene());
 	if (pLobbyScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 		return;
 	}
 
@@ -140,7 +140,7 @@ void R_GAME::RECV_SC_UpdateFriendList(Session* session, ICommand* cmd) {
 	SC_UpdateFriendList* pCmd = (SC_UpdateFriendList*)cmd;
 	LobbyScene* pLobbyScene = dynamic_cast<LobbyScene*>(Director::getInstance()->getRunningScene());
 	if (pLobbyScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 		return;
 	}
 	pLobbyScene->refreshFriendList(pCmd->Info, pCmd->Count);
@@ -150,26 +150,26 @@ void R_GAME::RECV_SC_CreateRoom(Session* session, ICommand* cmd) {
 	SC_CreateRoom* pCmd = (SC_CreateRoom*)cmd;
 	LobbyScene* pLobbyScene = dynamic_cast<LobbyScene*>(Director::getInstance()->getRunningScene());
 	if (pLobbyScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 		return;
 	}
 
 	Core::GameClient->SetRoomAccessId(pCmd->RoomAccessId);
 	Core::GameClient->SetPlayerState(PlayerState::Room);
-	Director::getInstance()->replaceScene(RoomScene::create());
+	Director::getInstance()->replaceScene(RoomScene::create(Core::Room));
 }
 
 void R_GAME::RECV_SC_JoinRoom(Session* session, ICommand* cmd) {
 	SC_JoinRoom* pCmd = (SC_JoinRoom*)cmd;
 	LobbyScene* pLobbyScene = dynamic_cast<LobbyScene*>(Director::getInstance()->getRunningScene());
 	if (pLobbyScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 		return;
 	}
 
 	Core::GameClient->SetRoomAccessId(pCmd->RoomAccessId);
 	Core::GameClient->SetPlayerState(PlayerState::Room);
-	Director::getInstance()->replaceScene(RoomScene::create());
+	Director::getInstance()->replaceScene(RoomScene::create(Core::Room));
 }
 
 void R_GAME::RECV_SC_RoomGameStart(Session* session, ICommand* cmd) {
@@ -179,12 +179,14 @@ void R_GAME::RECV_SC_RoomGameStart(Session* session, ICommand* cmd) {
 
 void R_GAME::RECV_SC_RoomGameReady(Session* session, ICommand* cmd) {
 	SC_RoomGameReady* pCmd = (SC_RoomGameReady*)cmd;
+	const int iMemberIndex = Core::Room->updateRoomMemberReadyState(pCmd->CharacterPrimaryKey, pCmd->Ready);
+
 	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
 	if (pRoomScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
 		return;
 	}
-	pRoomScene->updateRoomMemberReadyState(pCmd->CharacterPrimaryKey, pCmd->Ready);
+	pRoomScene->refreshRoomMemberReadyState(iMemberIndex);
 }
 
 void R_GAME::RECV_SC_RoomGameIntrude(Session* session, ICommand* cmd) {
@@ -194,29 +196,36 @@ void R_GAME::RECV_SC_RoomLeave(Session* session, ICommand* cmd) {
 	SC_RoomLeave* pCmd = (SC_RoomLeave*)cmd;
 	Core::GameClient->SetRoomAccessId(Const::InvalidValue);
 	Core::GameClient->SetPlayerState(PlayerState::Lobby);
+	Core::Room->leave();
 	Director::getInstance()->replaceScene(LobbyScene::create());
 }
 
 void R_GAME::RECV_SC_LoadRoomInfo(Session* session, ICommand* cmd) {
 	SC_LoadRoomInfo* pCmd = (SC_LoadRoomInfo*)cmd;
+	Core::Room->updateRoomInfo(pCmd->Info);
+
+
 	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
 	if (pRoomScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
 		return;
 	}
-	pRoomScene->refreshRoomInfo(pCmd->Info);
+	
+	pRoomScene->refreshRoomInfo();
 }
 
 
 void R_GAME::RECV_SC_UpdateRoomMemberList(Session* session, ICommand* cmd) {
 	SC_UpdateRoomMemberList* pCmd = (SC_UpdateRoomMemberList*)cmd;
+	Core::Room->updateRoomMemberList(pCmd->Info, pCmd->Count, pCmd->HostCharacterPrimaryKey);
+
 	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
 	if (pRoomScene == nullptr) {
-		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
+		_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
 		return;
 	}
 
-	pRoomScene->refreshRoomMemberInfoList(pCmd->Info, pCmd->Count, pCmd->HostCharacterPrimaryKey);
+	pRoomScene->refreshRoomMemberInfoList();
 }
 
 void R_GAME::RECV_SC_AddFriendRequest(Session* session, ICommand* cmd) {
@@ -246,7 +255,7 @@ void R_GAME::RECV_SC_ChatMessage(Session* session, ICommand* cmd) {
 	if (pCmd->PlayerState == PlayerState::Lobby) {
 		LobbyScene* pLobbyScene = dynamic_cast<LobbyScene*>(Director::getInstance()->getRunningScene());
 		if (pLobbyScene == nullptr) {
-			_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
+			_LogWarn_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Lobby));
 			return;
 		}
 

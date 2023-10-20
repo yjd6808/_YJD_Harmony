@@ -46,7 +46,7 @@ public:
 	void refreshRoomList(RoomInfo* roomList, int count);
 	void addChatMssage(const char* str);
 
-	Type getType() const override { return Lobby; }
+	Type getType() const override { return Type::Login; }
 private:
 	ChatBox* m_pChatBox;
 	TextButton* m_pRoomListText;

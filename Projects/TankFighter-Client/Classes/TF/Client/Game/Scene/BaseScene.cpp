@@ -29,6 +29,7 @@ bool BaseScene::init() {
 	m_pUILayer = Layer::create();
 	m_pUILayer->setContentSize(Director::getInstance()->getWinSize());
 	m_pGridLayer = GridLayer::create(100, Color4F(Color3B::GREEN, 0.2f), GridLayer::GridEvent::ShowGridAndMousePoint);
+	m_pGridLayer->setVisible(false);
 
 	m_pNetInfo = Text::create("", Const::Resource::FontName, 13);
 	m_pNetInfo->setVisible(false);
@@ -64,7 +65,7 @@ void BaseScene::update(float delta) {
 }
 
 
-void BaseScene::onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+void BaseScene::onKeyPressed(EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
 	switch (keyCode) {
 	case EventKeyboard::KeyCode::KEY_ESCAPE:
 		Director::getInstance()->setDisplayStats(!Director::getInstance()->isDisplayStats());

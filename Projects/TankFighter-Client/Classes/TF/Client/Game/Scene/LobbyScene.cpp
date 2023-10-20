@@ -67,7 +67,7 @@ bool LobbyScene::init() {
 
 
 	m_pRoomListView = ColoredListView::create(ColorUtil::To4B(ColorList::AoEnglish_v));
-	m_pRoomListView->SetContantSize({ 600, Director::getInstance()->getWinSize().height - 250.0f });
+	m_pRoomListView->SetContantSize({ 400, Director::getInstance()->getWinSize().height - 250.0f });
 	m_pRoomListView->setPosition(0, 200.0);
 	m_pRoomListView->GetListView()->setInnerContainerPosition(Vec2::ZERO);
 	m_pRoomListView->setAnchorPoint(Vec2::ZERO);
@@ -267,11 +267,14 @@ void LobbyScene::onClickedMyInfoButton(TextButton* btn) {
 
 
 void LobbyScene::refreshPlayerList(CharacterInfo* characterList, int count) {
+	if (count <= 0 || m_pPlayerListView == nullptr)
+		return;
+
 	m_pPlayerListView->GetListView()->removeAllItems();
 
 	for (int i = 0; i < count; ++i) {
 		const CharacterInfo& info = characterList[i];
-		const auto pPlayerBtn = TextButton::create(180, 40, info.Name.Source, 16);
+		const auto pPlayerBtn = TextButton::create(150, 40, info.Name.Source, 16);
 		pPlayerBtn->setAnchorPoint(Vec2::ZERO);
 		pPlayerBtn->setBackgroundColor(info.LoggedIn ? ColorList::Acidgreen_v : ColorList::Aero_v);
 		pPlayerBtn->setTag(info.PrimaryKey);	// 태그를 캐릭터 PrimaryKey로 지정
@@ -292,11 +295,14 @@ void LobbyScene::refreshCharacterInfo(const CharacterInfo& info) {
 }
 
 void LobbyScene::refreshFriendList(FriendCharacterInfo* characterList, int count) {
+	if (count <= 0 || m_pFriendListView == nullptr)
+		return;
+
 	m_pFriendListView->GetListView()->removeAllItems();
 
 	for (int i = 0; i < count; i++) {
 		const FriendCharacterInfo& info = characterList[i];
-		const auto pFriendButton = TextButton::create(380, 40, info.LoggedIn ? StringUtils::format("%s (접속중)", info.Name.Source) : info.Name.Source , 16);
+		const auto pFriendButton = TextButton::create(350, 40, info.LoggedIn ? StringUtils::format("%s (접속중)", info.Name.Source) : info.Name.Source , 16);
 		pFriendButton->setAnchorPoint(Vec2::ZERO);
 		pFriendButton->setBackgroundColor(info.LoggedIn ? ColorList::Acidgreen_v : ColorList::Aero_v);
 		pFriendButton->setTag(info.PrimaryKey);	// 태그를 캐릭터 PrimaryKey로 지정
@@ -306,11 +312,14 @@ void LobbyScene::refreshFriendList(FriendCharacterInfo* characterList, int count
 }
 
 void LobbyScene::refreshRoomList(RoomInfo* roomList, int count) {
+	if (count <= 0 || m_pRoomListView == nullptr)
+		return;
+
 	m_pRoomListView->GetListView()->removeAllItems();
 
 	for (int i = 0; i < count; i++) {
 		const RoomInfo& info = roomList[i];
-		const auto pRoomButton = TextButton::create(580, 40, StringUtils::format("%s (%d/%d)", info.Name.Source, info.PlayerCount, info.MaxPlayerCount), 16);
+		const auto pRoomButton = TextButton::create(350, 40, StringUtils::format("%s (%d/%d)", info.Name.Source, info.PlayerCount, info.MaxPlayerCount), 16);
 		pRoomButton->setAnchorPoint(Vec2::ZERO);
 		pRoomButton->setBackgroundColor(info.PlayerCount >= info.MaxPlayerCount ? ColorList::Babypink_v : ColorList::Aero_v);
 		pRoomButton->setTag(info.AccessId);	// 태그를 방 AccessId로 지정

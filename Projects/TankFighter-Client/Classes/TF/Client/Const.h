@@ -44,6 +44,7 @@ namespace Properties
 	{
 		extern const int Reconnecting;
 		extern const int AccountPrimaryKey;
+		extern const int AccountIdKey;
 		extern const int ChannelPrimaryKey;
 		extern const int PlayerState;
 		extern const int RoomAccessId;

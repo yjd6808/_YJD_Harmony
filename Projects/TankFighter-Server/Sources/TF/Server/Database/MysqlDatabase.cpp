@@ -76,6 +76,7 @@ bool MysqlDatabase::Initialize() {
 	);
 
 	m_pIocp = dbg_new IOCP(iThreadCount);
+	m_pIocp->SetName(m_pInfo->Name);
 	m_pIocp->Run();
 	m_bInitialized = true;
 	_LogInfo_("%s %s 실행완료 (쓰레드 수: %d)", m_pInfo->Name.Source(), IOCP::TypeName(), iThreadCount);
@@ -98,7 +99,6 @@ void MysqlDatabase::Finalize() {
 
 	if (m_pConnectionPool)
 		JCORE_DELETE_SAFE(m_pConnectionPool);
-	_LogInfo_("%s %s 파괴완료", m_pInfo->Name.Source(), IOCP::TypeName(),  MysqlConnectionPool::TypeName());
 
 
 	MysqlStatementBuilder::Finalize();

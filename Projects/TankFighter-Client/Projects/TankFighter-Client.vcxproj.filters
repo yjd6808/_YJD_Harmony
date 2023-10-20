@@ -59,6 +59,9 @@
     <ClCompile Include="..\Classes\TF\Client\Game\Scene\RoomScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\TF\Client\Game\Contents\Room.cpp">
+      <Filter>Game\Contents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Classes\TF\Client\Pch.h" />
@@ -111,12 +114,6 @@
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\ChannelScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\TF\Client\Game\Object\Tank.h">
-      <Filter>Game\Contents</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\TF\Client\Game\Object\Character.h">
-      <Filter>Game\Contents</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\CharacterSelectScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\TF\Client\Game\Scene\RoomScene.h">
       <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\TF\Client\Game\Contents\Room.h">
+      <Filter>Game\Contents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

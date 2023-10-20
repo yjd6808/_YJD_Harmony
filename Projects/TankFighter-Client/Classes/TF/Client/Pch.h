@@ -22,6 +22,8 @@
 #include <TF/Client/Game/UI/ColoredListView.h>
 #include <TF/Client/Game/UI/ChatBox.h>
 
+#include <TF/Client/Game/Contents/Room.h>
+
 #include <cocos2d.h>
 #include <cocos/ui/CocosGUI.h>
 
@@ -31,6 +33,7 @@ namespace Core
 {
 	inline ::NetCore* NetCore;
 	inline ::GameClient* GameClient;
+	inline ::Room* Room;
 }
 
 void InitializeGameCore();

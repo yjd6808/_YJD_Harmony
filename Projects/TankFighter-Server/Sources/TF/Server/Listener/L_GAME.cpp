@@ -28,7 +28,12 @@ void L_GAME::OnConnected(Session* session) {
 void L_GAME::OnConnectFailed(Session* session, Int32U errorCode) {}
 void L_GAME::OnDisconnected(Session* session) {
 	_LogInfo_("%s가 연결 종료하였습니다.", session->GetRemoteEndPoint().ToString().Source());
-	GameSession* pSession = (GameSession*)session;
+	GameSession* pSession = dynamic_cast<GameSession*>(session);
+	if (pSession == nullptr) {
+		DebugAssertMsg(false, "뭐야!! 어떻게 겜세션이 아닐수가 있는거지!!");
+		return;
+	}
+
 	Player* pPlayer = pSession->GetPlayer();
 	if (pPlayer == nullptr) {
 		return;

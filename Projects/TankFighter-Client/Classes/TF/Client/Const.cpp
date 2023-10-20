@@ -42,9 +42,10 @@ namespace Properties
 	{
 		const int Reconnecting = 1;
 		const int AccountPrimaryKey = 2;
-		const int ChannelPrimaryKey = 3;
-		const int PlayerState = 4;
-		const int RoomAccessId = 5;
+		const int AccountIdKey = 3;
+		const int ChannelPrimaryKey = 4;
+		const int PlayerState = 5;
+		const int RoomAccessId = 6;
 	}
 }
 

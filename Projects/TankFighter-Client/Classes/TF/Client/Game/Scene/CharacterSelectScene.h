@@ -33,7 +33,7 @@ public:
 
 	void refreshCharacterList(CharacterInfo* characterList, int count);
 
-	Type getType() const override { return CharacterSelect; }
+	Type getType() const override { return Type::Login; }
 private:
 	cocos2d::ui::EditBox* m_pCharacterNickNameEditBox;
 	TextButton* m_pCreateCharacterButton;

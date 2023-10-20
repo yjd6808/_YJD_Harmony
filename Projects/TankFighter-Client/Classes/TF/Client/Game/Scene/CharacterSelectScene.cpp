@@ -17,6 +17,10 @@ USING_NS_CC;
 USING_NS_CCUI;
 
 CharacterSelectScene::CharacterSelectScene()
+	: m_pCharacterNickNameEditBox(nullptr)
+	, m_pCreateCharacterButton(nullptr)
+	, m_pDeleteCharacterButton(nullptr)
+	, m_pChannelSelectButton(nullptr)
 {}
 
 CharacterSelectScene::~CharacterSelectScene()

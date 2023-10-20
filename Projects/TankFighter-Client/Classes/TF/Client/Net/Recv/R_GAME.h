@@ -16,7 +16,7 @@ struct R_GAME
 	static void RECV_SC_Disconnect(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_Register(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_LoadChannelInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_SC_SelectChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_JoinChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_LeaveChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_LoadCharacterInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_LeaveLobby(JNetwork::Session* session, JNetwork::ICommand* cmd);

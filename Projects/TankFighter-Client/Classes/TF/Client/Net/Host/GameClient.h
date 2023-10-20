@@ -23,6 +23,9 @@ public:
 	int GetAccountPrimaryKey() const;
 	void SetAccountPrimaryKey(int primaryKey);
 
+	const JCore::String& GetAccountId() const;
+	void SetAccountId(const JCore::String& accountId);
+
 	int GetChannelPrimaryKey() const;
 	void SetChannelPrimaryKey(int primaryKey);
 
