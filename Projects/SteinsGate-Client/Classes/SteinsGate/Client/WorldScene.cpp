@@ -296,9 +296,8 @@ void WorldScene::onMouseScroll(SGEventMouse* mouseEvent) const {
 }
 
 void WorldScene::onExit() {
-
 	// ======================================================
-	// 메인 리소스 정리
+	// 리소스 정리
 	// ======================================================
 
 	// 삭제전 마지막 발악, 모든 UI 리소스 정리
@@ -310,6 +309,7 @@ void WorldScene::onExit() {
 	// 자식노드 모두 정리 (onExit에서 제거하는줄 알았는데 아니네; 그냥 재귀 onExit 호출함.. 하..)
 	// 씬 정리되기전에 모든 레퍼런스 카운트가 0가 되어야함.
 	removeAllChildren();
+
 
 	FinalizeClientCore();
 	FinalizeCommonCore();

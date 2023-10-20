@@ -39,7 +39,7 @@ void S_GAME::SEND_SC_LoadChannelInfo(const Vector<ChannelInfo>& channelInfoList)
 }
 
 void S_GAME::SEND_SC_SelectChannel(int channelPrimaryKey) {
-	auto sending = SendBegin<SC_SelectChannel>();
+	auto sending = SendBegin<SC_JoinChannel>();
 	sending.Cmd.ChannelPrimaryKey = channelPrimaryKey;
 }
 
@@ -72,8 +72,8 @@ void S_GAME::SEND_SC_LoadCharacterInfo(int accountPrimaryKey, int channelPrimary
 	}
 }
 
-void S_GAME::SEND_SC_SelectCharacter(const CharacterInfo& info) {
-	auto sending = SendBegin<SC_SelectCharacter>();
+void S_GAME::SEND_SC_SelectCharacterAndJoinLobby(const CharacterInfo& info) {
+	auto sending = SendBegin<SC_SelectCharacterAndJoinLobby>();
 	sending.Cmd.info = info;
 }
 
@@ -98,27 +98,6 @@ void S_GAME::SEND_SC_UpdateRoomList(ChannelLobby* lobby) {
 		dst.Name = src.Name;
 		dst.RoomState = src.RoomState;
 	}
-}
-
-void S_GAME::SEND_SC_UpdateRoomListBroadcast(ChannelLobby* lobby, Room* room) {
-	if (room == nullptr || lobby == nullptr)
-		return;
-
-	const auto vRoomInfoList = lobby->GetRoomInfoList();
-	const auto pPacket = dbg_new SinglePacket<SC_UpdateRoomList>(vRoomInfoList.Size());
-	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-	for (int i = 0; i < vRoomInfoList.Size(); ++i) {
-		RoomInfo& dst = pPacket->Cmd.Info[i];
-		const RoomInfo& src = vRoomInfoList[i];
-
-		dst.AccessId = src.AccessId;
-		dst.PlayerCount = src.PlayerCount;
-		dst.MaxPlayerCount = src.MaxPlayerCount;
-		dst.Name = src.Name;
-		dst.RoomState = src.RoomState;
-	}
-
-	lobby->BroadcastPacket(pPacket, Const::Broadcast::Lobby::StateLobby);
 }
 
 void S_GAME::SEND_SC_UpdateFriendList(Character* character) {
@@ -149,6 +128,18 @@ void S_GAME::SEND_SC_LoadRoomInfo(Room* room) {
 void S_GAME::SEND_SC_AddFriendRequest(Character* character) {
 	auto sending = SendBegin<SC_AddFriendRequest>();
 	character->GetInfo(sending.Cmd.Info);
+}
+
+void S_GAME::SEND_SC_RoomGameReadyBroadcast(Room* room, int characterPrimaryKey, bool ready) {
+	auto pPacket = dbg_new SinglePacket<SC_RoomGameReady>;
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	pPacket->Cmd.CharacterPrimaryKey = characterPrimaryKey;
+	pPacket->Cmd.Ready = ready;
+	room->BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
+}
+
+void S_GAME::SEND_SC_RoomLeave() {
+	auto sending = SendBegin<SC_RoomLeave>();
 }
 
 void S_GAME::SEND_SC_ServerMessage(const char* msg) {
@@ -189,7 +180,7 @@ void S_GAME::SEND_SC_ChatMessageBroadcastBattleField(IBroadcastable* broadcastab
 	broadcastable->BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
 
-void S_GAME::SEND_SC_UpdatePlayerListInLobby(ChannelLobby* pLobby) {
+void S_GAME::SEND_SC_UpdatePlayerListBroadcastInLobby(ChannelLobby* pLobby) {
 	Vector<CharacterInfo> vInfoList = pLobby->GetPlayerInfoList(PlayerState::Lobby);
 	int iCount = vInfoList.Size();
 	const auto pPacket = dbg_new SinglePacket<SC_UpdatePlayerList>(iCount);
@@ -199,4 +190,14 @@ void S_GAME::SEND_SC_UpdatePlayerListInLobby(ChannelLobby* pLobby) {
 		pPacket->Cmd.Info[i] = vInfoList[i];
 	}
 	pLobby->BroadcastPacket(pPacket, Const::Broadcast::Lobby::StateLobby);
+}
+
+void S_GAME::SEND_SC_UpdatePlayerList(ChannelLobby* pLobby) {
+	Vector<CharacterInfo> vInfoList = pLobby->GetPlayerInfoList(PlayerState::Lobby);
+	int iCount = vInfoList.Size();
+	auto sending = SendBegin<SC_UpdatePlayerList>(iCount);
+	sending.Cmd.State = PlayerState::Lobby;
+	for (int i = 0; i < iCount; ++i) {
+		sending.Cmd.Info[i] = vInfoList[i];
+	}
 }

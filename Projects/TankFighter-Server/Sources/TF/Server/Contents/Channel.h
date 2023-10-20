@@ -44,6 +44,9 @@ public:
 
 	JCore::String ToString() const;
 private:
+	mutable JCore::NormalLock m_PlayerListLock;
+	JCore::HashSet<Player*> m_hsPlayerSet;
+
 	JCore::AtomicBool m_bClosed;
 
 	int m_iPrimaryKey;
@@ -51,8 +54,7 @@ private:
 	int m_iMaxPlayerCount;
 	JCore::DateTime m_dtGeneratedTime;		// DB테이블에 추가된 시날짜
 
-	JCore::NormalLock m_PlayerListLock;
-	JCore::HashSet<Player*> m_hsPlayerSet;
+	
 };
 
 

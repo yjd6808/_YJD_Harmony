@@ -49,33 +49,12 @@ void Character::OnPopped() {
 
 void Character::OnPushed() {}
 
-void Character::SetPrimaryKey(int primaryKey) {
-	m_iPrimaryKey = primaryKey;
+void Character::SetDeath(bool death) {
+	m_bDeath = death;
 }
 
-void Character::SetName(const String& name, bool dirty /* = true */) {
-	m_szName = name;
-	m_bDirty = dirty;
-}
-
-void Character::SetWin(int win, bool dirty /* = true */) {
-	m_iWin = win;
-	m_bDirty = dirty;
-}
-
-void Character::SetLose(int lose, bool dirty /* = true */) {
-	m_iLose = lose;
-	m_bDirty = dirty;
-}
-
-void Character::SetDeath(int death, bool dirty /* = true */) {
-	m_iDeath = death;
-	m_bDirty = dirty;
-}
-
-void Character::SetKill(int kill, bool dirty /* = true */) {
-	m_iKill = kill;
-	m_bDirty = dirty;
+void Character::SetReady(bool ready) {
+	m_bReady = ready;
 }
 
 void Character::AddWin(int win, bool dirty /* = true */) {

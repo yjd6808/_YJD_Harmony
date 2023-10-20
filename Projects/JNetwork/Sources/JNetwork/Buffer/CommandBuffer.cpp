@@ -28,8 +28,8 @@ CommandBuffer::CommandBuffer(const JCore::MemoryPoolAbstractPtr& allocator, int 
 
 CommandBuffer::CommandBuffer(const CommandBuffer& other)
 	: BufferAbstract()
-	, m_Allocator(other.m_Allocator)
 	, m_iRequestBufferSize(0)
+	, m_Allocator(other.m_Allocator)
 {
 	int iRealAlloc;
 	m_pBuffer = (char*)m_Allocator->DynamicPop(other.m_iRequestBufferSize, iRealAlloc);

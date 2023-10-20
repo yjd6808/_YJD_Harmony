@@ -36,7 +36,6 @@ bool ChannelScene::init() {
 		return false;
 	}
 
-	this->scheduleUpdate();
 	return true;
 }
 
@@ -57,6 +56,6 @@ void ChannelScene::refreshChannelList(ChannelInfo* channelList, int count) {
 }
 
 void ChannelScene::onChannelBtnClick(TextButton* textButton) {
-	S_GAME::SEND_CS_SelectChannel(textButton->getTag()); // 버튼 태그가 채널 UID임 CmdLoadChannelInfoAck() 참고
+	S_GAME::SEND_CS_JoinChannel(textButton->getTag()); // 버튼 태그가 채널 UID임 CmdLoadChannelInfoAck() 참고
 }
 

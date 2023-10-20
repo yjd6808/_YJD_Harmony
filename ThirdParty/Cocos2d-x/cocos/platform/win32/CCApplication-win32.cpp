@@ -125,10 +125,12 @@ int Application::run()
         }
     }
 
+
+    applicationDidExit();
+
     // Director should still do a cleanup if the window was closed manually.
     if (glview->isOpenGLReady())
     {
-        applicationDidExit();
         director->end();
         director->mainLoop();
         director = nullptr;

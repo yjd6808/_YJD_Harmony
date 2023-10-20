@@ -36,6 +36,7 @@ void C_GAME::DisconnectedSynchronized() {
 	Core::GameClient->SetAccountPrimaryKey(Const::InvalidValue);
 	Core::GameClient->SetChannelPrimaryKey(Const::InvalidValue);
 	Core::GameClient->SetCharacterPrimaryKey(Const::InvalidValue);
+	Core::GameClient->SetRoomAccessId(Const::InvalidValue);
 	Core::GameClient->SetPlayerState(PlayerState::Disconnected);
 	Director::getInstance()->getOpenGLView()->setViewName(Const::Window::ViewName);
 	Director::getInstance()->replaceScene(LoginScene::create());

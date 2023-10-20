@@ -85,16 +85,23 @@ void R_GAME::RECV_CS_Register(Session* session, ICommand* cmd) {
 }
 
 void R_GAME::RECV_CS_LoadChannelInfo(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
 	CS_LoadChannelInfo* pCmd = (CS_LoadChannelInfo*)cmd;
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+	pPlayer->SetPlayerState(PlayerState::Channel);
 	S_GAME::AutoFlush _;
 	S_GAME::SetInformation(session, SendStrategy::SendAlloc);
 	const Vector<ChannelInfo> infoList = Core::World->GetChannelInfoList();
 	S_GAME::SEND_SC_LoadChannelInfo(infoList);
 }
 
-void R_GAME::RECV_CS_SelectChannel(Session* session, ICommand* cmd) {
+void R_GAME::RECV_CS_JoinChannel(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
-	CS_SelectChannel* pCmd = (CS_SelectChannel*)cmd;
+	CS_JoinChannel* pCmd = (CS_JoinChannel*)cmd;
 
 	Player* pPlayer = pSession->GetPlayer();
 	if (pPlayer == nullptr) 
@@ -158,6 +165,8 @@ void R_GAME::RECV_CS_LoadCharacterInfo(Session* session, ICommand* cmd) {
 	if (iChannelPrimaryKey != pCmd->ChannelPrimaryKey) 
 		return;
 
+	pPlayer->SetPlayerState(PlayerState::CharacterSelect);
+
 	S_GAME::AutoFlush _;
 	S_GAME::SetInformation(session, SendStrategy::SendAlloc);
 	S_GAME::SEND_SC_LoadCharacterInfo(iAccountPrimaryKey, iChannelPrimaryKey);
@@ -219,9 +228,9 @@ void R_GAME::RECV_CS_DeleteCharacter(Session* session, ICommand* cmd) {
 	}
 }
 
-void R_GAME::RECV_CS_SelectCharacter(Session* session, ICommand* cmd) {
+void R_GAME::RECV_CS_SelectCharacterAndJoinLobby(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
-	CS_SelectCharacter* pCmd = (CS_SelectCharacter*)cmd;
+	CS_SelectCharacterAndJoinLobby* pCmd = (CS_SelectCharacterAndJoinLobby*)cmd;
 
 	Player* pPlayer = pSession->GetPlayer();
 	if (pPlayer == nullptr) 
@@ -235,12 +244,16 @@ void R_GAME::RECV_CS_SelectCharacter(Session* session, ICommand* cmd) {
 	if (iChannelPrimaryKey != pCmd->ChannelPrimaryKey) 
 		return;
 
-	S_GAME::AutoFlush _;
-	S_GAME::SetInformation(session, SendStrategy::SendAlloc);
-
 	const Qry::SelectCharacterInfoResult selectQryResult = Q_GAME::SelectCharacterInfo(iAccountPrimaryKey, iChannelPrimaryKey, pCmd->CharacterPrimaryKey);
 	if (!selectQryResult.HasBindedResult) {
+		S_GAME::SetInformation(session, SendStrategy::SendAsync);
 		S_GAME::SEND_SC_ServerMessage("캐릭터 정보가 잘못되었습니다.");
+		return;
+	}
+
+	ChannelLobby* pLobby = Core::World->GetChannelLobbyByPrimaryKey(pCmd->ChannelPrimaryKey);
+	if (pLobby == nullptr) {
+		DebugAssert(false);
 		return;
 	}
 
@@ -255,17 +268,27 @@ void R_GAME::RECV_CS_SelectCharacter(Session* session, ICommand* cmd) {
 	Character* pCharacter = Character::Pop();
 	pCharacter->SetPlayer(pPlayer);
 	pCharacter->SetInfo(info, false);
+	pCharacter->LoadFriendList(pLobby);
 
 	pPlayer->SetCharacter(pCharacter);
-	S_GAME::SEND_SC_SelectCharacter(info);
+
+	if (!pLobby->Join(pPlayer)) {
+		S_GAME::SetInformation(session, SendStrategy::SendAsync);
+		S_GAME::SEND_SC_Disconnect(pSession);
+		return;
+	}
+
+	S_GAME::SetInformation(session, SendStrategy::SendAsync);
+	S_GAME::SEND_SC_SelectCharacterAndJoinLobby(info);
 }
 
-void R_GAME::RECV_CS_JoinLobby(Session* session, ICommand* cmd) {
+void R_GAME::RECV_CS_LoadLobbyInfo(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
-	CS_JoinLobby* pCmd = (CS_JoinLobby*)cmd;
+	CS_LoadLobbyInfo* pCmd = (CS_LoadLobbyInfo*)cmd;
 	Player* pPlayer = pSession->GetPlayer();
 	if (pPlayer == nullptr) 
 		return;
+
 
 	const int iAccountPrimaryKey = pPlayer->GetAccountPrimaryKey();
 	if (iAccountPrimaryKey != pCmd->AccountPrimaryKey) 
@@ -281,20 +304,15 @@ void R_GAME::RECV_CS_JoinLobby(Session* session, ICommand* cmd) {
 	if (pCharacter == nullptr) 
 		return;
 
+	pPlayer->SetPlayerState(PlayerState::Lobby);
 	ChannelLobby* pLobby = Core::World->GetChannelLobbyByPrimaryKey(pCmd->ChannelPrimaryKey);
-	pCharacter->LoadFriendList(pLobby);
-
-	if (!pLobby->Join(pPlayer)) {
-		S_GAME::SetInformation(session, SendStrategy::SendAsync);
-		S_GAME::SEND_SC_Disconnect(pSession);
-		return;
-	}
 
 	S_GAME::AutoFlush _;
 	S_GAME::SetInformation(session, SendStrategy::SendAlloc);
 	S_GAME::SEND_SC_UpdateCharacterInfo(pCharacter);
 	S_GAME::SEND_SC_UpdateRoomList(pLobby);
 	S_GAME::SEND_SC_UpdateFriendList(pCharacter);
+	S_GAME::SEND_SC_UpdatePlayerList(pLobby);
 }
 
 void R_GAME::RECV_CS_LeaveLobby(Session* session, ICommand* cmd) {
@@ -324,73 +342,18 @@ void R_GAME::RECV_CS_LeaveLobby(Session* session, ICommand* cmd) {
 	}
 }
 
-void R_GAME::RECV_CS_CreateRoom(Session* session, ICommand* cmd) {
-	GameSession* pSession = (GameSession*)session;
-	CS_CreateRoom* pCmd = (CS_CreateRoom*)cmd;
-
-	Player* pPlayer = pSession->GetPlayer();
-	if (pPlayer == nullptr) 
-		return;
-
-	ChannelLobby* pChannelLobby = pPlayer->GetChannelLobby();
-	if (pChannelLobby == nullptr) 
-		return;
-
-	S_GAME::AutoFlush _;
-	S_GAME::SetInformation(session, SendStrategy::SendAlloc);
-
-	Room* pRoom = Room::Pop();
-	pRoom->SetNameRaw(pCmd->RoomName.Source);
-	const int iJoinResult = pRoom->Join(pPlayer);
-
-	if (iJoinResult == Const::Success) {
-		S_GAME::SEND_SC_CreateRoom(pRoom->GetAccessId());
-		return;
-	}
-
-	S_GAME::SEND_SC_ServerMessage("방 생성에 실패했습니다.");
-}
-
-void R_GAME::RECV_CS_JoinRoom(Session* session, ICommand* cmd) {
-	GameSession* pSession = (GameSession*)session;
-	CS_JoinRoom* pCmd = (CS_JoinRoom*)cmd;
-	Player* pPlayer = pSession->GetPlayer();
-	if (pPlayer == nullptr) return;
-
-	// 로비여부 검사
-	ChannelLobby* pLobby = pPlayer->GetChannelLobby();
-	if (pLobby == nullptr) 
-		return;
-
-	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
-
-	S_GAME::AutoFlush _;
-	S_GAME::SetInformation(session, SendStrategy::SendAlloc);
-	const int iJoinResult = pRoom->Join(pPlayer);
-
-	if (iJoinResult == Const::Success) {
-		S_GAME::SEND_SC_JoinRoom(pRoom->GetAccessId());
-		S_GAME::SEND_SC_UpdateRoomListBroadcast(pLobby, pRoom);
-		return;
-	}
-
-	if (iJoinResult == Const::Failed::Room::AddFailedAlreadyExist)	S_GAME::SEND_SC_ServerMessage("이미 참여중인 방입니다.");
-	else if (iJoinResult == Const::Failed::Room::AddFailedClosed)	S_GAME::SEND_SC_ServerMessage("닫힌 방입니다.");
-	else if (iJoinResult == Const::Failed::Room::AddFailedFull)		S_GAME::SEND_SC_ServerMessage("꽉찬 방입니다.");
-}
-
 
 void R_GAME::RECV_CS_AddFriend(Session* session, ICommand* cmd) {
 	GameSession* pSession = (GameSession*)session;
 	CS_AddFriend* pCmd = (CS_AddFriend*)cmd;
 
 	Player* pPlayer = pSession->GetPlayer();
-	if (pPlayer == nullptr) 
+	if (pPlayer == nullptr)
 		return;
 
 	// 로비여부 검사
 	ChannelLobby* pLobby = pPlayer->GetChannelLobby();
-	if (pLobby == nullptr) 
+	if (pLobby == nullptr)
 		return;
 
 	S_GAME::SetInformation(session, SendStrategy::SendAsync);
@@ -421,7 +384,7 @@ void R_GAME::RECV_CS_AddFriend(Session* session, ICommand* cmd) {
 		S_GAME::SEND_SC_ServerMessage("이미 친구추가된 상태입니다.");
 		return;
 	}
-	
+
 	// 상대방에게 친구요청을 보냄
 	S_GAME::SetInformation(pTargetPlayer->GetSession(), SendStrategy::SendAsync);
 	S_GAME::SEND_SC_AddFriendRequest(pCharacter);
@@ -436,15 +399,15 @@ void R_GAME::RECV_CS_AddFriendRequest(Session* session, ICommand* cmd) {
 	CS_AddFriendRequest* pCmd = (CS_AddFriendRequest*)cmd;
 
 	Player* pAcceptPlayer = pSession->GetPlayer();
-	if (pAcceptPlayer == nullptr) 
+	if (pAcceptPlayer == nullptr)
 		return;
 
 	Character* pRequestCharactor = Character::GetByAccessId(pCmd->RequestCharacterAccessId);
 	Character* pAcceptCharactor = pAcceptPlayer->GetCharacter();
 
-	if (pAcceptCharactor == nullptr) 
+	if (pAcceptCharactor == nullptr)
 		return;
-	if (pRequestCharactor == nullptr) 
+	if (pRequestCharactor == nullptr)
 		return;
 
 	Player* pRequestPlayer = pRequestCharactor->GetPlayer();
@@ -476,7 +439,7 @@ void R_GAME::RECV_CS_AddFriendRequest(Session* session, ICommand* cmd) {
 	pRequestCharactor->AddFriend(pAcceptCharactor);
 	pAcceptCharactor->AddFriend(pRequestCharactor);
 
-	
+
 	// 수락자 친구 목록 업데이트
 	S_GAME::SetInformation(pAcceptPlayer->GetSession(), SendStrategy::SendAsync);
 	S_GAME::SEND_SC_UpdateFriendList(pAcceptCharactor);
@@ -486,7 +449,7 @@ void R_GAME::RECV_CS_AddFriendRequest(Session* session, ICommand* cmd) {
 		S_GAME::SetInformation(pRequestPlayer->GetSession(), SendStrategy::SendAsync);
 		S_GAME::SEND_SC_UpdateFriendList(pRequestCharactor);
 	}
-	
+
 }
 
 void R_GAME::RECV_CS_DeleteFriend(Session* session, ICommand* cmd) {
@@ -494,11 +457,11 @@ void R_GAME::RECV_CS_DeleteFriend(Session* session, ICommand* cmd) {
 	CS_DeleteFriend* pCmd = (CS_DeleteFriend*)cmd;
 
 	Player* pPlayer = pSession->GetPlayer();
-	if (pPlayer == nullptr) 
+	if (pPlayer == nullptr)
 		return;
 
 	Character* pCharacter = pPlayer->GetCharacter();
-	if (pCharacter == nullptr) 
+	if (pCharacter == nullptr)
 		return;
 
 	if (pCmd->DeleteCharacterPrimaryKey == pCharacter->GetPrimaryKey()) {
@@ -530,11 +493,11 @@ void R_GAME::RECV_CS_DeleteFriend(Session* session, ICommand* cmd) {
 
 	// 삭제된 대상이 접속중인 경우 알려줌.
 	ChannelLobby* pLobby = pPlayer->GetChannelLobby();
-	if (pLobby == nullptr) 
+	if (pLobby == nullptr)
 		return;
 
 	Player* pDeletedPlayer = pLobby->GetPlayerByCharacterPrimaryKey(pCmd->DeleteCharacterPrimaryKey);
-	if (pDeletedPlayer == nullptr) 
+	if (pDeletedPlayer == nullptr)
 		return;
 
 	Character* pDeletedCharacter = pDeletedPlayer->GetCharacter();
@@ -553,8 +516,71 @@ void R_GAME::RECV_CS_DeleteFriend(Session* session, ICommand* cmd) {
 		S_GAME::SEND_SC_UpdateFriendList(pDeletedCharacter);
 		S_GAME::SEND_SC_ServerMessage(szMsg);
 	}
-	
+
 }
+
+
+void R_GAME::RECV_CS_CreateRoom(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_CreateRoom* pCmd = (CS_CreateRoom*)cmd;
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr) 
+		return;
+
+	ChannelLobby* pChannelLobby = pPlayer->GetChannelLobby();
+	if (pChannelLobby == nullptr) 
+		return;
+
+
+	Room* pNewRoom = Room::Pop();
+	if (!pChannelLobby->AddRoom(pNewRoom)) {
+		DebugAssert(false);
+		Room::Push(pNewRoom);
+		return;
+	}
+
+	pNewRoom->SetLobby(pChannelLobby);
+	pNewRoom->SetNameRaw(pCmd->RoomName.Source);
+	const int iJoinResult = pNewRoom->Join(pPlayer);
+
+	if (iJoinResult == Const::Success) {
+		S_GAME::SetInformation(session, SendStrategy::SendAsync);
+		S_GAME::SEND_SC_CreateRoom(pNewRoom->GetAccessId());
+		return;
+	}
+
+	S_GAME::SetInformation(session, SendStrategy::SendAsync);
+	S_GAME::SEND_SC_ServerMessage("방 생성에 실패했습니다.");
+}
+
+void R_GAME::RECV_CS_JoinRoom(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_JoinRoom* pCmd = (CS_JoinRoom*)cmd;
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr) return;
+
+	// 로비여부 검사
+	ChannelLobby* pLobby = pPlayer->GetChannelLobby();
+	if (pLobby == nullptr) 
+		return;
+
+	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
+
+	const int iJoinResult = pRoom->Join(pPlayer);
+
+	if (iJoinResult == Const::Success) {
+		S_GAME::SetInformation(session, SendStrategy::SendAsync);
+		S_GAME::SEND_SC_JoinRoom(pRoom->GetAccessId());
+		return;
+	}
+
+	S_GAME::SetInformation(session, SendStrategy::SendAsync);
+	if (iJoinResult == Const::Failed::Room::AddFailedAlreadyExist)	S_GAME::SEND_SC_ServerMessage("이미 참여중인 방입니다.");
+	else if (iJoinResult == Const::Failed::Room::AddFailedClosed)	S_GAME::SEND_SC_ServerMessage("닫힌 방입니다.");
+	else if (iJoinResult == Const::Failed::Room::AddFailedFull)		S_GAME::SEND_SC_ServerMessage("꽉찬 방입니다.");
+}
+
 
 // Create 또는 Join 이후 방씬으로 전환완료된 후 클라가 각종 정보들 로딩을 요청함.
 void R_GAME::RECV_CS_LoadRoomInfo(Session* session, ICommand* cmd) {
@@ -578,18 +604,57 @@ void R_GAME::RECV_CS_LoadRoomInfo(Session* session, ICommand* cmd) {
 	S_GAME::SEND_SC_LoadRoomInfo(pRoom);
 	S_GAME::SEND_SC_UpdateCharacterInfo(pPlayer->GetCharacter());
 }
-void R_GAME::RECV_CS_RoomGameStart(Session* session, ICommand* cmd) {
-	CS_RoomGameStart* pCmd = (CS_RoomGameStart*)cmd;
-}
+
 void R_GAME::RECV_CS_RoomGameReady(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
 	CS_RoomGameReady* pCmd = (CS_RoomGameReady*)cmd;
+
+	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
+	if (pRoom == nullptr) {
+		return;
+	}
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+	Character* pCharacter = pPlayer->GetCharacter();
+	if (pPlayer == nullptr)
+		return;
+
+	pCharacter->SetReady(pCmd->Ready);
+	S_GAME::SEND_SC_RoomGameReadyBroadcast(pRoom, pCharacter->GetPrimaryKey(), pCmd->Ready);
 }
-void R_GAME::RECV_CS_RoomGameReadyCancel(Session* session, ICommand* cmd) {
-	CS_RoomGameReadyCancel* pCmd = (CS_RoomGameReadyCancel*)cmd;
+
+void R_GAME::RECV_CS_RoomGameStart(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
+	CS_RoomGameStart* pCmd = (CS_RoomGameStart*)cmd;
+
+	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
+	if (pRoom == nullptr) {
+		return;
+	}
 }
+
 void R_GAME::RECV_CS_RoomLeave(Session* session, ICommand* cmd) {
+	GameSession* pSession = (GameSession*)session;
 	CS_RoomLeave* pCmd = (CS_RoomLeave*)cmd;
+
+	Room* pRoom = Room::GetByAccessId(pCmd->RoomAccessId);
+	if (pRoom == nullptr) {
+		return;
+	}
+
+	Player* pPlayer = pSession->GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+
+	pPlayer->LeaveRoom();
+
+	S_GAME::SetInformation(pSession, SendStrategy::SendAsync);
+	S_GAME::SEND_SC_RoomLeave();
 }
+
 void R_GAME::RECV_CS_BattleFieldLoad(Session* session, ICommand* cmd) {
 	CS_BattleFieldLoad* pCmd = (CS_BattleFieldLoad*)cmd;
 }

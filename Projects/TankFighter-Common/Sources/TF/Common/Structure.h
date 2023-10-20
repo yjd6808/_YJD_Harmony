@@ -63,9 +63,9 @@ struct RoomInfo
 {
 	JCore::StaticString<Const::Length::Name> Name;
 	int AccessId = Const::InvalidValue;
-	int PlayerCount;
-	int MaxPlayerCount;
-	RoomState RoomState;
+	int PlayerCount = 0;
+	int MaxPlayerCount = 0;
+	RoomState RoomState = RoomState::ReadyWait;
 
 	bool IsBattleEndingState() const {
 		return RoomState >= RoomState::EndWait;

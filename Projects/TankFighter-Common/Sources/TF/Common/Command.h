@@ -16,27 +16,33 @@
 #define CMDID_SC_LOGIN									101
 #define CMDID_CS_REGISTER								102
 #define CMDID_SC_REGISTER								103
+#define CMDID_SC_DISCONNECT								206		// 서버측에서 접속 종료시킬때
 #define CMDID_CS_LOAD_CHANNEL_INFO						104		// 채널 진입시
 #define CMDID_SC_LOAD_CHANNEL_INFO						105
-#define CMDID_CS_SELECT_CHANNEL							106		// ChannelLayer에서 채널 버튼 클릭시
-#define CMDID_SC_SELECT_CHANNEL							107
+#define CMDID_CS_JOIN_CHANNEL							106		// ChannelLayer에서 채널 버튼 클릭시
+#define CMDID_SC_JOIN_CHANNEL							107
+#define CMDID_CS_LEAVE_CHANNEL							202		// ChannelLayer에서 채널 버튼 클릭시
+#define CMDID_SC_LEAVE_CHANNEL							203		// 서버에서 처리 후 클라한테 알림
 #define CMDID_CS_LOAD_CHARACTER_INFO					108		// 캐릭터 선택 진입시
 #define CMDID_SC_LOAD_CHARACTER_INFO					109
 #define CMDID_CS_CREATE_CHARACTER						110		// CharacterSelectLayer에서 캐릭터 생성 버튼 클릭시 전송
 #define CMDID_SC_CREATE_CHARACTER						111
 #define CMDID_CS_DELETE_CHARACTER						112		// CharacterSelectLayer에서 캐릭터 제거 버튼 클릭시 전송
 #define CMDID_SC_DELETE_CHARACTER						113
-#define CMDID_CS_SELECT_CHARACTER						114		// CharacterSelectLayer에서 로딩된 캐릭터 버튼 클릭시 전송
-#define CMDID_SC_SELECT_CHARACTER						115
+#define CMDID_CS_SELECT_CHARACTER_AND_JOIN_LOBBY						114		// CharacterSelectLayer에서 로딩된 캐릭터 버튼 클릭시 전송
+#define CMDID_SC_SELECT_CHARACTER_AND_JOIN_LOBBY						115
 #define CMDID_CS_JOIN_LOBBY								116		// (로비 진입시) 각종 로비 정보를 요청한다.
+#define CMDID_CS_LEAVE_LOBBY							204		// LobbyLayer에서 캐릭터 선택 이동버튼 클릭시
+#define CMDID_SC_LEAVE_LOBBY							205		// 서버에서 처리 후 클라한테 알림
 #define CMDID_SC_UPDATE_CHARACTER_INFO					117		// 업데이트된 캐릭터 정보를 전송한다.
 #define CMDID_SC_UPDATE_ROOMLIST						118		// 업데트된 방 정보들을 전송한다.
 #define CMDID_SC_UPDATE_FRIENDLIST						119		// 친구 관계 정보를 전송한다.
+#define CMDID_SC_UPDATE_PLAYERLIST						207		// 로비 유저목록 업데이트
 #define CMDID_CS_CREATE_ROOM							120		// 방 생성 버튼 클릭시
 #define CMDID_SC_CREATE_ROOM							124
 #define CMDID_CS_JOIN_ROOM								121		// 방 참가 / 방 목록(리스트뷰)의 방 버튼 클릭시
 #define CMDID_SC_JOIN_ROOM								125
-#define CMDID_SC_UPDATE_ROOM_MEMBER_LIST						126		// 다른 유저가 방에 참가하거나, 방에 있던 유저가 나가는 경우
+#define CMDID_SC_UPDATE_ROOM_MEMBER_LIST				126		// 다른 유저가 방에 참가하거나, 방에 있던 유저가 나가는 경우
 #define CMDID_CS_ADD_FRIEND								122		// 친구 추가 버튼 클릭시
 #define CMDID_CS_ADD_FRIEND_REQUEST						128		// 친구 요청을 받은 클라이언트가 수락/거부의 결과를 서버로 전송한다.
 #define CMDID_SC_ADD_FRIEND_REQUEST						128		// 친구 추가 요청 대상에게 요청정보를 전달한다.
@@ -45,6 +51,8 @@
 #define CMDID_SC_LOAD_ROOM_INFO							132
 #define CMDID_CS_ROOM_GAME_START						133		// 게임 시작 버튼 클릭
 #define CMDID_SC_ROOM_GAME_START						137		// 방 안의 멤버들에게 게임 시작 패킷 전송
+#define CMDID_CS_ROOM_GAME_INTRUDE						208		// 게임 난입 버튼 클릭
+#define CMDID_SC_ROOM_GAME_INTRUDE						209		// 난입 유저에게 알려줌
 #define CMDID_CS_ROOM_GAME_READY						134		// 게임 준비 버튼 클릭
 #define CMDID_SC_ROOM_GAME_READY						137		// 준비 요청에 대한 응답
 #define CMDID_CS_ROOM_GAME_READY_CANCEL					135		// 준비 해제 버튼 클릭
@@ -72,12 +80,10 @@
 #define CMDID_CS_TCP_RTT								200		// RTT/레이턴시 계산을 위해 현재 시간을 담아서 전달
 #define CMDID_SC_TCP_RTT								201
 
-#define CMDID_CS_LEAVE_CHANNEL							202		// ChannelLayer에서 채널 버튼 클릭시
-#define CMDID_SC_LEAVE_CHANNEL							203		// 서버에서 처리 후 클라한테 알림
-#define CMDID_CS_LEAVE_LOBBY							204		// LobbyLayer에서 캐릭터 선택 이동버튼 클릭시
-#define CMDID_SC_LEAVE_LOBBY							205		// 서버에서 처리 후 클라한테 알림
-#define CMDID_SC_DISCONNECT								206		// 서버측에서 접속 종료시킬때
-#define CMDID_SC_UPDATE_PLAYERLIST						207		// 유저목록 업데이트
+
+
+
+
 
 // UDP Commands
 #define CMDID_CS_UDP_PING								2000
@@ -113,11 +119,11 @@ DYNAMIC_CMD_BEGIN(SC_LoadChannelInfo, CMDID_SC_LOAD_CHANNEL_INFO, ChannelInfo)
 ChannelInfo Info[1];
 DYNAMIC_CMD_END
 
-STATIC_CMD_BEGIN(CS_SelectChannel, CMDID_CS_SELECT_CHANNEL)
+STATIC_CMD_BEGIN(CS_JoinChannel, CMDID_CS_JOIN_CHANNEL)
 int ChannelPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
-STATIC_CMD_BEGIN(SC_SelectChannel, CMDID_SC_SELECT_CHANNEL)
+STATIC_CMD_BEGIN(SC_JoinChannel, CMDID_SC_JOIN_CHANNEL)
 int ChannelPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
@@ -149,18 +155,18 @@ int ChannelPrimaryKey = Const::InvalidValue;
 JCore::StaticString<Const::Length::Name> CharacterName;
 STATIC_CMD_END
 
-STATIC_CMD_BEGIN(CS_SelectCharacter, CMDID_CS_SELECT_CHARACTER)
+STATIC_CMD_BEGIN(CS_SelectCharacterAndJoinLobby, CMDID_CS_SELECT_CHARACTER_AND_JOIN_LOBBY)
 int AccountPrimaryKey = Const::InvalidValue;
 int ChannelPrimaryKey = Const::InvalidValue;
 int CharacterPrimaryKey = Const::InvalidValue;
 STATIC_CMD_END
 
-STATIC_CMD_BEGIN(SC_SelectCharacter, CMDID_SC_SELECT_CHARACTER)
+STATIC_CMD_BEGIN(SC_SelectCharacterAndJoinLobby, CMDID_SC_SELECT_CHARACTER_AND_JOIN_LOBBY)
 CharacterInfo info;
 STATIC_CMD_END
 
 
-STATIC_CMD_BEGIN(CS_JoinLobby, CMDID_CS_JOIN_LOBBY)
+STATIC_CMD_BEGIN(CS_LoadLobbyInfo, CMDID_CS_JOIN_LOBBY)
 int AccountPrimaryKey = Const::InvalidValue;
 int ChannelPrimaryKey = Const::InvalidValue;
 int CharacterPrimaryKey = Const::InvalidValue;
@@ -243,15 +249,26 @@ STATIC_CMD_END
 // 게임 시작/게임 난입 기능 동시에 처리하도록 함
 // 패킷 하나더 추가하면 되는데 귀찮기도 하고 걍 이래처리함
 STATIC_CMD_BEGIN(CS_RoomGameStart, CMDID_CS_ROOM_GAME_START)
-int AccountPrimaryKey = Const::InvalidValue;
-int ChannelPrimaryKey = Const::InvalidValue;
 int CharacterPrimaryKey = Const::InvalidValue;
-int RoomUID = Const::InvalidValue;
-bool Intrude = false;
+int RoomAccessId = Const::InvalidValue;
+STATIC_CMD_END
+
+STATIC_CMD_BEGIN(CS_RoomGameIntrude, CMDID_CS_ROOM_GAME_INTRUDE)
+int CharacterPrimaryKey = Const::InvalidValue;
+int RoomAccessId = Const::InvalidValue;
+STATIC_CMD_END
+
+STATIC_CMD_BEGIN(SC_RoomGameIntrude, CMDID_SC_ROOM_GAME_INTRUDE)
 STATIC_CMD_END
 
 // 게임 시작으로 동작할 경우 Result와 Reason만 사용됨
 // 게임 난입으로 동작할 경우 BattleFieldScene에서 해당 패킷을 모든 플레이어가 수신하여 난입자를 확인할 수 있도록 한다.
+//STATIC_CMD_BEGIN(SC_RoomGameStart, CMDID_SC_ROOM_GAME_START)
+//RoomCharacterInfo IntruderInfo {};
+//bool Result;
+//char Reason[Const::Length::Reason];
+//STATIC_CMD_END
+
 STATIC_CMD_BEGIN(SC_RoomGameStart, CMDID_SC_ROOM_GAME_START)
 RoomCharacterInfo IntruderInfo {};
 bool Result;
@@ -260,20 +277,22 @@ STATIC_CMD_END
 
 
 STATIC_CMD_BEGIN(CS_RoomGameReady, CMDID_CS_ROOM_GAME_READY)
+int CharacterPrimaryKey = Const::InvalidValue;
+int RoomAccessId = Const::InvalidValue;
+bool Ready;
 STATIC_CMD_END
 
-STATIC_CMD_BEGIN(CS_RoomGameReadyCancel, CMDID_CS_ROOM_GAME_READY_CANCEL)
+STATIC_CMD_BEGIN(SC_RoomGameReady, CMDID_CS_ROOM_GAME_READY)
+int CharacterPrimaryKey;
+bool Ready;
 STATIC_CMD_END
-
 
 STATIC_CMD_BEGIN(CS_RoomLeave, CMDID_CS_ROOM_LEAVE)
+int RoomAccessId = Const::InvalidValue;
 STATIC_CMD_END
 
 STATIC_CMD_BEGIN(SC_RoomLeave, CMDID_SC_ROOM_LEAVE)
-bool Result;
-char Reason[Const::Length::Reason];
 STATIC_CMD_END
-
 
 STATIC_CMD_BEGIN(CS_BattleFieldLoad, CMDID_CS_BATTLE_FIELD_LOAD)
 STATIC_CMD_END

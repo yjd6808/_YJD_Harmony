@@ -31,31 +31,6 @@ namespace Broadcast
 	}
 }
 
-namespace AccessibleObject
-{
-	// ID 시작 인덱스
-	namespace StartId
-	{
-		const int Player = 100'000;
-		const int Room = 200'000;
-		const int Character = 300'000;
-	}
-
-	namespace InitCapacity
-	{
-		const int Player = 1'000;
-		const int Room = 1'000;
-		const int Character = 1'000;
-	}
-
-	namespace InitSize
-	{
-		const int Player = 10;
-		const int Room = 10;
-		const int Character = 10;
-	}
-}
-
 namespace Failed
 {
 	namespace Channel

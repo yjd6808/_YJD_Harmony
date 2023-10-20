@@ -33,19 +33,24 @@ public:
     @return true    작업 성공시 앱은 계속 실행된다.
     @return false   앱 종료
     */
-    virtual bool applicationDidFinishLaunching();
+    bool applicationDidFinishLaunching() override;
 
     /**
     @brief  백그라운드 어플리케이션으로 이동시 호출
     @param  애플리케이션 포인터
     */
-    virtual void applicationDidEnterBackground();
+    void applicationDidEnterBackground() override;
 
     /**
     @brief  포그라운드 애플리케이션으로 이동시 호출
     @param  애플리케이션 포인터
     */
-    virtual void applicationWillEnterForeground();
+    void applicationWillEnterForeground() override;
+
+    /**
+     * \brief 앱 종료시 호출
+     */
+    void applicationDidExit() override;
 
 public:
     cocos2d::GLViewImpl* View;

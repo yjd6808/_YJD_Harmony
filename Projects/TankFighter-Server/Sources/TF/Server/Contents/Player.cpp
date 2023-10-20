@@ -62,7 +62,6 @@ void Player::OnUpdate(const TimeSpan& elapsed) {
 
 void Player::OnLobbyJoin(ChannelLobby* lobby) {
 	m_pChannelLobby = lobby;
-	m_eState = PlayerState::Lobby;
 	m_pCharacter->NotifyLoginStateToFriends(true);
 }
 
@@ -82,7 +81,6 @@ void Player::OnLobbyLeave() {
 
 void Player::OnChannelJoin(Channel* channel) {
 	m_pChannel = channel;
-	m_eState = PlayerState::Channel;
 }
 
 void Player::OnChannelLeave() {
@@ -92,7 +90,6 @@ void Player::OnChannelLeave() {
 }
 
 void Player::OnRoomJoin(Room* room) {
-	m_eState = PlayerState::Room;
 	m_pRoom = room;
 }
 

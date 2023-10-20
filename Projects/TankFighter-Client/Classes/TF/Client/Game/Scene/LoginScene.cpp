@@ -111,10 +111,6 @@ bool LoginScene::init() {
 	m_pPassEditBox->setText(randIdPwMap[idCode].item2.c_str());
 	m_pUILayer->addChild(m_pPassEditBox, 0);
 
-	
-
-	this->scheduleUpdate();
-
 	return true;
 
 }

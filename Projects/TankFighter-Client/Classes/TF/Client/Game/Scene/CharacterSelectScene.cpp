@@ -48,7 +48,7 @@ bool CharacterSelectScene::init() {
 	m_pCharacterNickNameEditBox->setAnchorPoint(Vec2::ZERO);
 	m_pCharacterNickNameEditBox->setPlaceholderFontColor(Color4B::BLACK);
 	m_pCharacterNickNameEditBox->setInputMode(EditBox::InputMode::EMAIL_ADDRESS);
-	this->addChild(m_pCharacterNickNameEditBox);
+	m_pUILayer->addChild(m_pCharacterNickNameEditBox);
 
 	m_pCreateCharacterButton = TextButton::create(200, 45, "캐릭터 생성", 16);
 	m_pCreateCharacterButton->setPosition({ 600, 300 });
@@ -56,7 +56,7 @@ bool CharacterSelectScene::init() {
 	m_pCreateCharacterButton->setColor(ColorList::Babypink_v);
 	m_pCreateCharacterButton->setFontColor(ColorList::Black_v);
 	m_pCreateCharacterButton->setClickEvent(CC_CALLBACK_1(CharacterSelectScene::onClickedCreateCharacterButton, this));
-	this->addChild(m_pCreateCharacterButton);
+	m_pUILayer->addChild(m_pCreateCharacterButton);
 
 	m_pDeleteCharacterButton = TextButton::create(200, 45, "캐릭터 삭제", 16);
 	m_pDeleteCharacterButton->setPosition({ 600, 250 });
@@ -64,7 +64,7 @@ bool CharacterSelectScene::init() {
 	m_pDeleteCharacterButton->setColor(ColorList::Babypink_v);
 	m_pDeleteCharacterButton->setFontColor(ColorList::Black_v);
 	m_pDeleteCharacterButton->setClickEvent(CC_CALLBACK_1(CharacterSelectScene::onClickedDeleteCharacterButton, this));
-	this->addChild(m_pDeleteCharacterButton);
+	m_pUILayer->addChild(m_pDeleteCharacterButton);
 
 	m_pChannelSelectButton = TextButton::create(200, 45, "채널 선택", 16);
 	m_pChannelSelectButton->setPosition({ 600, 200 });
@@ -72,9 +72,8 @@ bool CharacterSelectScene::init() {
 	m_pChannelSelectButton->setColor(ColorList::Babypink_v);
 	m_pChannelSelectButton->setFontColor(ColorList::Black_v);
 	m_pChannelSelectButton->setClickEvent(CC_CALLBACK_1(CharacterSelectScene::onClickedChannelSelectButton, this));
-	this->addChild(m_pChannelSelectButton);
+	m_pUILayer->addChild(m_pChannelSelectButton);
 
-	this->scheduleUpdate();
 	return true;
 }
 
@@ -91,7 +90,7 @@ bool CharacterSelectScene::isValidNickName(std::string& nick) {
 
 void CharacterSelectScene::onClickedCharacterButton(TextButton* btn) {
 	// 버튼의 태그에 캐릭터 CharacterUID 정보가 들어있으므로
-	S_GAME::SEND_CS_SelectCharacter(btn->getTag());
+	S_GAME::SEND_CS_SelectCharacterAndJoinLobby(btn->getTag());
 }
 
 

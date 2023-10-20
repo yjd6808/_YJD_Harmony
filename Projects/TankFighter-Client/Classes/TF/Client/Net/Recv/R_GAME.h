@@ -13,6 +13,7 @@
 struct R_GAME
 {
 	static void RECV_SC_Login(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_Disconnect(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_Register(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_LoadChannelInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_SelectChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
@@ -26,6 +27,10 @@ struct R_GAME
 	static void RECV_SC_UpdateFriendList(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_CreateRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_JoinRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_RoomGameStart(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_RoomGameReady(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_RoomGameIntrude(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_SC_RoomLeave(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_LoadRoomInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_UpdateRoomMemberList(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_SC_AddFriendRequest(JNetwork::Session* session, JNetwork::ICommand* cmd);

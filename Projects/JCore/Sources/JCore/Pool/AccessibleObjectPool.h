@@ -120,7 +120,7 @@ public:
 
 	static void Push(T* obj) {
 		JCORE_LOCK_GUARD(ms_Sync);
-		ms_lPool.PushBack(obj);
+		ms_lPool.PushFront(obj);
 	}
 
 	static TAccessTable* GetTable() { return ms_vAccessTable; }

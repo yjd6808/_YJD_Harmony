@@ -29,8 +29,8 @@ bool S_GAME::SEND_CS_LoadChannelInfo() {
 	return SendEndExplicit(sending);
 }
 
-void S_GAME::SEND_CS_SelectChannel(int channelPrimaryKey) {
-	auto sending = SendBegin<CS_SelectChannel>();
+void S_GAME::SEND_CS_JoinChannel(int channelPrimaryKey) {
+	auto sending = SendBegin<CS_JoinChannel>();
 	sending.Cmd.ChannelPrimaryKey = channelPrimaryKey;
 }
 
@@ -60,15 +60,15 @@ void S_GAME::SEND_CS_DeleteCharacter(const char* nickName) {
 	sending.Cmd.CharacterName = nickName;
 }
 
-void S_GAME::SEND_CS_SelectCharacter(int characterPrimaryKey) {
-	auto sending = SendBegin<CS_SelectCharacter>();
+void S_GAME::SEND_CS_SelectCharacterAndJoinLobby(int characterPrimaryKey) {
+	auto sending = SendBegin<CS_SelectCharacterAndJoinLobby>();
 	sending.Cmd.AccountPrimaryKey = Core::GameClient->GetAccountPrimaryKey();
 	sending.Cmd.ChannelPrimaryKey = Core::GameClient->GetChannelPrimaryKey();
 	sending.Cmd.CharacterPrimaryKey = characterPrimaryKey;
 }
 
-bool S_GAME::SEND_CS_JoinLobby() {
-	auto sending = SendBegin<CS_JoinLobby>();
+bool S_GAME::SEND_CS_LoadLobbyInfo() {
+	auto sending = SendBegin<CS_LoadLobbyInfo>();
 	sending.Cmd.AccountPrimaryKey = Core::GameClient->GetAccountPrimaryKey();
 	sending.Cmd.ChannelPrimaryKey = Core::GameClient->GetChannelPrimaryKey();
 	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetCharacterPrimaryKey();
@@ -112,6 +112,29 @@ bool S_GAME::SEND_CS_LoadRoomInfo(int roomAccessId) {
 	auto sending = SendBegin<CS_LoadRoomInfo>();
 	sending.Cmd.RoomAccessId = roomAccessId;
 	return SendEndExplicit(sending);
+}
+
+void S_GAME::SEND_CS_RoomGameStart() {
+	auto sending = SendBegin<CS_RoomGameStart>();
+	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetChannelPrimaryKey();
+	sending.Cmd.RoomAccessId = Core::GameClient->GetRoomAccessId();
+}
+
+void S_GAME::SEND_CS_RoomGameIntrude() {
+	auto sending = SendBegin<CS_RoomGameIntrude>();
+	sending.Cmd.CharacterPrimaryKey = Core::GameClient->GetChannelPrimaryKey();
+	sending.Cmd.RoomAccessId = Core::GameClient->GetRoomAccessId();
+}
+
+void S_GAME::SEND_CS_RoomGameReady(bool ready) {
+	auto sending = SendBegin<CS_RoomGameReady>();
+	sending.Cmd.RoomAccessId = Core::GameClient->GetRoomAccessId();
+	sending.Cmd.Ready = ready;
+}
+
+void S_GAME::SEND_CS_RoomLeave() {
+	auto sending = SendBegin<CS_RoomLeave>();
+	sending.Cmd.RoomAccessId = Core::GameClient->GetRoomAccessId();
 }
 
 void S_GAME::SEND_CS_ChatMessage(const char* msg) {

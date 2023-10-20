@@ -40,7 +40,7 @@ LobbyScene::~LobbyScene()
 void LobbyScene::onEnterTransitionDidFinish() {
 	BaseScene::onEnterTransitionDidFinish();
 
-	if (S_GAME::SEND_CS_JoinLobby() == false) {
+	if (S_GAME::SEND_CS_LoadLobbyInfo() == false) {
 		PopUp::createInParent("캐릭터 정보 요청이 실패하였습니다.", this, false);
 	}
 }
@@ -177,8 +177,6 @@ bool LobbyScene::init() {
 	m_pChatBox->SetSendButtonClickEvent(CC_CALLBACK_1(LobbyScene::onClickedChatSendButton, this));
 	m_pChatBox->SetContentSize({ 600, 200 });
 	m_pUILayer->addChild(m_pChatBox);
-
-	this->scheduleUpdate();
 
 	return true;
 }

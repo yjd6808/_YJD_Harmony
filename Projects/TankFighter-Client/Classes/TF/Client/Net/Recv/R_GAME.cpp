@@ -36,6 +36,11 @@ void R_GAME::RECV_SC_Login(Session* session, ICommand* cmd){
 	Director::getInstance()->replaceScene(ChannelScene::create());
 
 }
+
+void R_GAME::RECV_SC_Disconnect(Session* session, ICommand* cmd) {
+	session->Disconnect();
+}
+
 void R_GAME::RECV_SC_Register(Session* session, ICommand* cmd) {
 	SC_Register* pCmd = (SC_Register*)cmd;
 }
@@ -52,7 +57,7 @@ void R_GAME::RECV_SC_LoadChannelInfo(Session* session, ICommand* cmd) {
 }
 
 void R_GAME::RECV_SC_SelectChannel(Session* session, ICommand* cmd) {
-	SC_SelectChannel* pCmd = (SC_SelectChannel*)cmd;
+	SC_JoinChannel* pCmd = (SC_JoinChannel*)cmd;
 	if (pCmd->ChannelPrimaryKey <= Const::InvalidValue) return;
 	Core::GameClient->SetChannelPrimaryKey(pCmd->ChannelPrimaryKey);
 	Core::GameClient->SetPlayerState(PlayerState::CharacterSelect);
@@ -91,7 +96,7 @@ void R_GAME::RECV_SC_LeaveLobby(Session* session, ICommand* cmd) {
 }
 
 void R_GAME::RECV_SC_SelectCharacter(Session* session, ICommand* cmd) {
-	SC_SelectCharacter* pCmd = (SC_SelectCharacter*)cmd;
+	SC_SelectCharacterAndJoinLobby* pCmd = (SC_SelectCharacterAndJoinLobby*)cmd;
 	Core::GameClient->SetCharacterInfo(pCmd->info);
 	LobbyScene* pLobbyScene = LobbyScene::create();
 	Core::GameClient->SetPlayerState(PlayerState::Lobby);
@@ -167,6 +172,31 @@ void R_GAME::RECV_SC_JoinRoom(Session* session, ICommand* cmd) {
 	Director::getInstance()->replaceScene(RoomScene::create());
 }
 
+void R_GAME::RECV_SC_RoomGameStart(Session* session, ICommand* cmd) {
+
+}
+
+
+void R_GAME::RECV_SC_RoomGameReady(Session* session, ICommand* cmd) {
+	SC_RoomGameReady* pCmd = (SC_RoomGameReady*)cmd;
+	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
+	if (pRoomScene == nullptr) {
+		_LogError_("%s씬이 아닙니다.", BaseScene::getTypeName(BaseScene::Type::Room));
+		return;
+	}
+	pRoomScene->updateRoomMemberReadyState(pCmd->CharacterPrimaryKey, pCmd->Ready);
+}
+
+void R_GAME::RECV_SC_RoomGameIntrude(Session* session, ICommand* cmd) {
+}
+
+void R_GAME::RECV_SC_RoomLeave(Session* session, ICommand* cmd) {
+	SC_RoomLeave* pCmd = (SC_RoomLeave*)cmd;
+	Core::GameClient->SetRoomAccessId(Const::InvalidValue);
+	Core::GameClient->SetPlayerState(PlayerState::Lobby);
+	Director::getInstance()->replaceScene(LobbyScene::create());
+}
+
 void R_GAME::RECV_SC_LoadRoomInfo(Session* session, ICommand* cmd) {
 	SC_LoadRoomInfo* pCmd = (SC_LoadRoomInfo*)cmd;
 	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
@@ -178,7 +208,7 @@ void R_GAME::RECV_SC_LoadRoomInfo(Session* session, ICommand* cmd) {
 }
 
 
-void R_GAME::RECV_SC_UpdateRoomMemberList(JNetwork::Session* session, JNetwork::ICommand* cmd) {
+void R_GAME::RECV_SC_UpdateRoomMemberList(Session* session, ICommand* cmd) {
 	SC_UpdateRoomMemberList* pCmd = (SC_UpdateRoomMemberList*)cmd;
 	RoomScene* pRoomScene = dynamic_cast<RoomScene*>(Director::getInstance()->getRunningScene());
 	if (pRoomScene == nullptr) {

@@ -34,31 +34,6 @@ namespace Broadcast
 }
 
 
-namespace AccessibleObject
-{
-	// ID 시작 인덱스
-	namespace StartId
-	{
-		extern const int Player;
-		extern const int Room;
-		extern const int Character;
-	}
-
-	namespace InitCapacity
-	{
-		extern const int Player;
-		extern const int Room;
-		extern const int Character;
-	}
-
-	namespace InitSize
-	{
-		extern const int Player;
-		extern const int Room;
-		extern const int Character;
-	}
-}
-
 namespace Failed
 {
 	namespace Channel

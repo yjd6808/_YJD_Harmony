@@ -13,6 +13,7 @@
 #include <TF/Server/Const.h>
 
 #include "Character.h"
+#include "Send/S_GAME.h"
 
 USING_NS_JC;
 USING_NS_JNET;
@@ -28,7 +29,7 @@ void Room::OnUpdate(const TimeSpan& elapsed) {
 }
 
 void Room::BroadcastPacket(ISendPacket* packet, int state) {
-	static auto fnStateAny = [&](Player* player) {
+	auto fnStateAny = [=](Player* player) {
 		player->SendPacket(packet);
 	};
 
@@ -43,6 +44,7 @@ void Room::OnPopped() {
 }
 
 void Room::OnPushed() {
+	m_pLobby = nullptr;
 	m_bClosed = true;
 	m_pLeader = nullptr;
 	m_vPlayerList.Clear();
@@ -57,6 +59,10 @@ void Room::Open() {
 void Room::SetName(const String& name) {
 	JCORE_LOCK_GUARD(m_Sync);
 	m_szName = name;
+}
+
+void Room::SetLobby(ChannelLobby* lobby) {
+	m_pLobby = lobby;
 }
 
 void Room::SetNameRaw(const char* name) {
@@ -103,7 +109,9 @@ int Room::Join(Player* player) {
 		}
 	}
 
+
 	player->OnRoomJoin(this);
+	BroadcastRoomListInfo();
 	return Const::Success;
 }
 
@@ -114,20 +122,27 @@ bool Room::Leave(Player* player) {
 	const bool bHost = m_pLeader == player;
 	const bool bEmpty = IsEmptyRaw();
 
-	if (bPlayerRemoved) {
-		m_Sync.Unlock();
-		player->OnRoomLeave();
-		m_Sync.Lock();
-	}
+
 
 	if (bEmpty) {
 		Push(this);
-		return bPlayerRemoved;
+		m_pLobby->RemoveRoom(this);
+	} else {
+		if (bHost && bPlayerRemoved)
+			ChooseNewLeaderRaw();
 	}
 
-	if (bHost && bPlayerRemoved)
-		ChooseNewLeaderRaw();
+	if (bPlayerRemoved) {
+		m_Sync.Unlock();
+		player->OnRoomLeave();
 
+		BroadcastRoomListInfo();
+		BroadcastRoomMemberListInfo();
+
+		m_Sync.Lock();
+	}
+
+	
 	return bPlayerRemoved;
 }
 
@@ -145,6 +160,7 @@ void Room::GetRoomInfo(JCORE_REF_OUT RoomInfo& info) {
 	info.AccessId = m_iAccessId;
 	info.MaxPlayerCount = Const::Room::MaxPlayerCount;
 	info.RoomState = m_eState;
+
 	{
 		JCORE_LOCK_GUARD(m_Sync);
 		info.PlayerCount = m_vPlayerList.Size();
@@ -152,12 +168,12 @@ void Room::GetRoomInfo(JCORE_REF_OUT RoomInfo& info) {
 	}
 }
 
-void Room::GetRoomMemberInfoList(RoomCharacterInfo* info) {
+void Room::GetRoomMemberInfoList(JCORE_OUT RoomCharacterInfo* info) {
 	JCORE_LOCK_GUARD(m_Sync);
 	GetRoomMemberInfoListRaw(info);
 }
 
-void Room::GetRoomMemberInfoListRaw(RoomCharacterInfo* info) {
+void Room::GetRoomMemberInfoListRaw(JCORE_OUT RoomCharacterInfo* info) {
 	for (int i = 0; i < m_vPlayerList.Size(); ++i) {
 		Character* pCharacter = m_vPlayerList[i]->GetCharacter();
 
@@ -178,14 +194,40 @@ void Room::BroadcastRoomMemberListInfo() {
 		return;
 	}
 
+	Character* pLeaderCharacter = pLeader->GetCharacter();
+
+	if (pLeaderCharacter == nullptr) {
+		DebugAssert(false);
+		return;
+	}
+
 	JCORE_LOCK_GUARD(m_Sync);
 	int iCount = m_vPlayerList.Size();
 	auto pPacket = dbg_new SinglePacket<SC_UpdateRoomMemberList>(iCount);
 	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
-	pPacket->Cmd.HostCharacterPrimaryKey = pLeader->GetChannelPrimaryKey();
+	pPacket->Cmd.HostCharacterPrimaryKey = pLeaderCharacter->GetPrimaryKey();
 	GetRoomMemberInfoListRaw(pPacket->Cmd.Info);
 	BroadcastPacket(pPacket, Const::Broadcast::Room::StateAny);
 }
+
+void Room::BroadcastRoomListInfo() {
+	const auto vRoomInfoList = m_pLobby->GetRoomInfoList();
+	const auto pPacket = dbg_new SinglePacket<SC_UpdateRoomList>(vRoomInfoList.Size());
+	JNET_SEND_PACKET_AUTO_RELEASE_GUARD(pPacket);
+	for (int i = 0; i < vRoomInfoList.Size(); ++i) {
+		RoomInfo& dst = pPacket->Cmd.Info[i];
+		const RoomInfo& src = vRoomInfoList[i];
+
+		dst.AccessId = src.AccessId;
+		dst.PlayerCount = src.PlayerCount;
+		dst.MaxPlayerCount = src.MaxPlayerCount;
+		dst.Name = src.Name;
+		dst.RoomState = src.RoomState;
+	}
+
+	m_pLobby->BroadcastPacket(pPacket, Const::Broadcast::Lobby::StateLobby);
+}
+	
 
 void Room::ChooseNewLeaderRaw() {
 	const int iLeftPlayerCount = m_vPlayerList.Size();

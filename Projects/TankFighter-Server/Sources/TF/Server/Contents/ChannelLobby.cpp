@@ -59,7 +59,7 @@ bool ChannelLobby::Join(Player* player) {
 	const bool bAdded = AddPlayer(player);
 	if (bAdded) {
 		player->OnLobbyJoin(this);
-		S_GAME::SEND_SC_UpdatePlayerListInLobby(this);
+		S_GAME::SEND_SC_UpdatePlayerListBroadcastInLobby(this);
 	}
 	return bAdded;
 }
@@ -69,7 +69,7 @@ bool ChannelLobby::Leave(Player* player) {
 
 	if (bRemoved) {
 		player->OnLobbyLeave();
-		S_GAME::SEND_SC_UpdatePlayerListInLobby(this);
+		S_GAME::SEND_SC_UpdatePlayerListBroadcastInLobby(this);
 	}
 
 	return bRemoved;

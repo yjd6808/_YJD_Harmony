@@ -39,9 +39,9 @@ private:
 	JCore::HashMap<int, ChannelLobby*> m_hmLobbyMapByPrimaryKey;		// Access 용도
 	JCore::Vector<ChannelLobby*> m_vChannelLobbyList;					// Update 용도
 
-	JCore::NormalLock m_PlayerListSync;
+	mutable JCore::NormalLock m_PlayerListSync;
 	JCore::HashSet<Player*>	m_hsPlayerList;
 
-	JCore::NormalLock m_PlayerMapSync;
+	mutable JCore::NormalLock m_PlayerMapSync;
 	JCore::HashMap<JCore::String, Player*> m_hmPlayerMapByAccountId;
 };

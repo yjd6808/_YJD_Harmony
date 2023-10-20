@@ -32,16 +32,13 @@ public:
 	const JCore::String& GetName() const { return m_szName; }
 	int GetWin() const { return m_iWin; }
 	int GetLose() const { return m_iLose; }
-	int GetDeath() const { return m_iDeath; }
 	int GetKill() const { return m_iKill; }
+	bool IsDeath() const { return m_iDeath; }
+	bool IsReady() const { return m_bReady; }
 
 	void SetPlayer(Player* player) { m_pPlayer = player; }
-	void SetPrimaryKey(int primaryKey);
-	void SetName(const JCore::String& name, bool dirty = true);
-	void SetWin(int win, bool dirty = true);
-	void SetLose(int lose, bool dirty = true);
-	void SetDeath(int death, bool dirty = true);
-	void SetKill(int kill, bool dirty = true);
+	void SetDeath(bool death);
+	void SetReady(bool ready);
 
 	void AddWin(int win, bool dirty = true);
 	void AddLose(int lose, bool dirty = true);

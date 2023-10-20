@@ -16,13 +16,13 @@ public:
 	static void RECV_CS_Login(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_Register(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_LoadChannelInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_SelectChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_JoinChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_LeaveChannel(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_LoadCharacterInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_CreateCharacter(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_DeleteCharacter(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_SelectCharacter(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_JoinLobby(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_SelectCharacterAndJoinLobby(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_LoadLobbyInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_LeaveLobby(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_CreateRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_JoinRoom(JNetwork::Session* session, JNetwork::ICommand* cmd);
@@ -30,9 +30,8 @@ public:
 	static void RECV_CS_AddFriendRequest(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_DeleteFriend(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_LoadRoomInfo(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_RoomGameStart(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_RoomGameReady(JNetwork::Session* session, JNetwork::ICommand* cmd);
-	static void RECV_CS_RoomGameReadyCancel(JNetwork::Session* session, JNetwork::ICommand* cmd);
+	static void RECV_CS_RoomGameStart(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_RoomLeave(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_BattleFieldLoad(JNetwork::Session* session, JNetwork::ICommand* cmd);
 	static void RECV_CS_BattileFieldTankMove(JNetwork::Session* session, JNetwork::ICommand* cmd);

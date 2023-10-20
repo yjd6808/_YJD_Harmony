@@ -26,21 +26,19 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	static void SEND_SC_SelectChannel(int channelPrimaryKey);
 	static void SEND_SC_LeaveChannel();
 	static void SEND_SC_LoadCharacterInfo(int accountPrimaryKey, int channelPrimaryKey);
-	static void SEND_SC_SelectCharacter(const CharacterInfo& info);
+	static void SEND_SC_SelectCharacterAndJoinLobby(const CharacterInfo& info);
 	static void SEND_SC_UpdateCharacterInfo(Character* character);
 	static void SEND_SC_UpdateRoomList(ChannelLobby* lobby);
-	static void SEND_SC_UpdateRoomListBroadcast(ChannelLobby* lobby, Room* room);
 	static void SEND_SC_UpdateFriendList(Character* character);
-	static void SEND_SC_UpdatePlayerListInLobby(ChannelLobby* pLobby);
+	static void SEND_SC_UpdatePlayerListBroadcastInLobby(ChannelLobby* pLobby);
+	static void SEND_SC_UpdatePlayerList(ChannelLobby* pLobby);
 	static void SEND_SC_LeaveLobby();
 	static void SEND_SC_CreateRoom(int roomAccessId);
 	static void SEND_SC_JoinRoom(int roomAccessId);
 	static void SEND_SC_LoadRoomInfo(Room* room);
-	
-	
-	//static void SEND_SC_UpdateRoomMemberList();
 	static void SEND_SC_AddFriendRequest(Character* character);
-	//static void SEND_SC_DeleteFriend();
+	static void SEND_SC_RoomGameReadyBroadcast(Room* room, int characterPrimaryKey, bool ready);
+	static void SEND_SC_RoomLeave();
 	//static void SEND_SC_BattleFieldLoad();
 	//static void SEND_SC_BattleFieldLeave();
 	static void SEND_SC_ServerMessage(const char* msg);
@@ -57,4 +55,5 @@ struct S_GAME : JNetwork::SendHelper<S_GAME>
 	
 
 };
+
 

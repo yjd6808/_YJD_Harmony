@@ -60,6 +60,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 void AppDelegate::applicationDidExit() {
     FinalizeGameCore();
+    FinalizeCommon();
     FinalizeNetLogger();
     FinalizeDefaultLogger();
     Winsock::Finalize();
