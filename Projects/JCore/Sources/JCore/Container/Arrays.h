@@ -325,7 +325,7 @@ struct Arrays final
 	}
 
 	template <typename T, typename TPredicate>
-	static int FindIf(T* arr, const int size, TPredicate&& predicate) {
+	static int FindIf(const T* arr, const int size, TPredicate&& predicate) {
 		for (int i = 0; i < size; ++i)
 			if (predicate(arr[i]))
 				return i;
@@ -334,7 +334,7 @@ struct Arrays final
 	}
 
 	template <typename T, Int32U Size, typename TPredicate>
-	static int FindIf(T(&arr)[Size], TPredicate&& predicate) {
+	static int FindIf(const T(&arr)[Size], TPredicate&& predicate) {
 		return FindIf(arr, Size, Move(predicate));
 	}
 

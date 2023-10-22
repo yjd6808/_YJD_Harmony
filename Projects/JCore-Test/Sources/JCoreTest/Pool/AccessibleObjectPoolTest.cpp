@@ -23,18 +23,17 @@ using namespace std;
 
 class Data : public AccessibleObjectPool<Data>
 {
-	friend class TObjectPool;
-	Data() {}
 public:
-	
 	void OnPopped() override {}
+	void OnPushed() override {}
 };
 
+constexpr int ElementCount = 100;
 constexpr int ThreadSize = 16;
 
 TEST(AccessibleObjectPoolTest, General) {
 	Random::EngineInitialize();
-	Data::InitPool(1000, 10);
+	Data::InitPool(ElementCount, 10);
 	ThreadPool th(ThreadSize);
 	Task<void> tasks[ThreadSize];
 	Tuple<bool, Data*> maps[20000]{};
@@ -42,7 +41,7 @@ TEST(AccessibleObjectPoolTest, General) {
 
 	for (int i = 0; i < ThreadSize; ++i) {
 		tasks[i] = th.Run([&, i] {
-			for (int j = 0; j < 1000; ++j) {
+			for (int j = 0; j < ElementCount; ++j) {
 				Data* data = Data::Pop();
 				const int id = data->GetAccessId();
 				EXPECT_FALSE(maps[id].item1);		// 중복된 ID 발급 확인
@@ -51,12 +50,13 @@ TEST(AccessibleObjectPoolTest, General) {
 				if (Random::Chance(40.0f)) {
 					Data::Push(data);
 					++pushCount[i];
-				} else {
+				}
+				else {
 					maps[id].item1 = true;
 					maps[id].item2 = data;
 				}
 			}
-		});
+			});
 	}
 
 	// push를 수행한 횟수
@@ -76,12 +76,12 @@ TEST(AccessibleObjectPoolTest, General) {
 	int releasedCount = Data::GetRelasedCount();	// 반환된 객체 수
 	int operatedCount = totalCount + totalPushCount - releasedCount;	// for 반복문을 몇번돌았는지 엘리먼트 수를 확인
 
-	EXPECT_TRUE(ThreadSize * 1000 == operatedCount);
+	EXPECT_TRUE(ThreadSize * ElementCount == operatedCount);
 
-		for (int i = 0; i < ThreadSize; ++i) {
+	for (int i = 0; i < ThreadSize; ++i) {
 		tasks[i] = th.Run([&, i] {
-			const int start = 1000 * i;
-			const int end = 1000 * (i + 1);
+			const int start = ElementCount * i;
+		const int end = ElementCount * (i + 1);
 
 			for (int j = start; j < end; ++j) {
 				if (maps[j].item1) {

@@ -36,17 +36,17 @@ NS_JC_BEGIN
 template <typename T>
 class AccessibleObjectPool
 {
-protected:
+public:
 	using TAccessTable = Vector<T*>;
 	using TObjectPool = AccessibleObjectPool<T>;
-public:
+
 	AccessibleObjectPool() : m_iAccessId(-1) {}
 	virtual ~AccessibleObjectPool() = default;
 
 	// new를 통한 생성을 금함.
 	// Push, Pop으로만 객체 얻을 수 있도록 하기위함.
-	void* operator new(size_t size, int blockUse, char const* fileName, int lineNumber) = delete;
-	void* operator new(size_t size) = delete;
+	 void* operator new(size_t size, int blockUse, char const* fileName, int lineNumber) = delete;
+	 void* operator new(size_t size) = delete;
 
 	static void InitPool(int capacity, int size, int startId = 0) {
 		DebugAssertMsg(ms_vAccessTable == nullptr, "이미 풀이 초기화되어 있습니다.");
@@ -97,7 +97,6 @@ public:
 		DebugAssertMsg(ms_vAccessTable != nullptr, "초기화를 우선 해주세요.");
 
 		JCORE_LOCK_GUARD(ms_Sync);
-
 		if (ms_iCount == ms_iCapacity) {
 			Expand(ms_iCapacity * 4);
 		}
@@ -120,6 +119,7 @@ public:
 
 	static void Push(T* obj) {
 		JCORE_LOCK_GUARD(ms_Sync);
+		DebugAssert(ms_lPool.Exist(obj) == false);
 		ms_lPool.PushFront(obj);
 	}
 
@@ -140,7 +140,7 @@ public:
 		DebugAssertMsg(ms_iCount == ms_lPool.Size(), "%s 아직 반환되지 않은 오브젝트가 존재합니다.", typeid(T).name());
 
 		for (int i = 0; i < ms_iCount; ++i) {
-			delete ms_vAccessTable->At(i);
+			DeleteObject(ms_vAccessTable->At(i));
 		}
 
 		JCORE_DELETE_SAFE(ms_vAccessTable);

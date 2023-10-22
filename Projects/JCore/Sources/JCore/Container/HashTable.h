@@ -613,6 +613,13 @@ public:
 		} else {
 			ConnectBucket(bucket->Previous, bucket->Next);
 		}
+
+		// 연결리스트는 발견된 노드를 삭제하기 때문에 Next, Previous를 null로 설정할 필요가 없었는데
+		// 해쉬테이블은 노드를 삭제한게 아니기 땜에 Next, Previous를 null로 설정해놔야한다. ㅠㅠ
+		// 작성된 코드에는 문제가 없었고.. 추가를 해줬어야했다 ㅠㅠ 논리적 오류가 있을 줄 알앗는데.. 아니었다.
+		// 1시간 30분동안이나 디버깅 해서 겨우 찾음 ㅠㅠ;
+		bucket->Next = nullptr;
+		bucket->Previous = nullptr;
 	}
 
 	void Clear() noexcept {

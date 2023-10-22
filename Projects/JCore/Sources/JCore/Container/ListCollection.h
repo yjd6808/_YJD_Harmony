@@ -95,7 +95,7 @@ public:
 		TListNode* pCur = m_pHead;
 		while (pCur != nullptr) {
 			TListNode* pNext = pCur->Next;
-			consumer(pCur->value);
+			consumer(pCur->Value);
 			pCur = pNext;
 		}
 	}
@@ -361,12 +361,16 @@ protected:
 
 	virtual void PushFront(const T& data) {
 		TListNode* pNewNode = CreateNewNode(data);
+		DebugAssert(pNewNode->Previous == nullptr);
 		PushFrontNewNode(pNewNode);
 		++this->m_iSize;
 	}
 
+
+
 	virtual void PushFront(T&& data) {
 		TListNode* pNewNode = CreateNewNode(Move(data));
+		DebugAssert(pNewNode->Previous == nullptr);
 		PushFrontNewNode(pNewNode);
 		++this->m_iSize;
 	}
@@ -387,6 +391,7 @@ protected:
 		if (m_pHead == nullptr) {
 			m_pHead = newNode;
 			m_pTail = newNode;
+			return;
 		}
 
 		/*
@@ -401,6 +406,7 @@ protected:
 
 		ConnectNode(newNode, m_pHead);
 		m_pHead = newNode;
+		DebugAssert(m_pHead->Previous == nullptr);
 	}
 
 	template <typename... Args>
@@ -420,13 +426,15 @@ protected:
 
 	virtual void PopFront() {
 		DebugAssertMsg(this->m_iSize != 0, "데이터가 없습니다.");
-		
+
 		TListNode* pDel = m_pHead;
 		m_pHead = m_pHead->Next;
 		if (m_pHead == nullptr) m_pTail = nullptr;
 		else m_pHead->Previous = nullptr;
 		pDel->DeleteSelf();
 		--this->m_iSize;
+
+		
 	}
 
 	virtual void PopBack() {
@@ -436,7 +444,6 @@ protected:
 		m_pTail = m_pTail->Previous;
 		if (m_pTail == nullptr) m_pHead = nullptr;
 		else m_pTail->Next = nullptr;
-
 		pDel->DeleteSelf();
 		--this->m_iSize;
 	}
